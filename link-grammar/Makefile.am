@@ -14,7 +14,7 @@ install-libtool-import-lib:
 uninstall-libtool-import-lib:
 endif
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)/en:/\"
+DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir):/\"
 
 INCLUDES = -I$(top_srcdir) $(OTS_CFLAGS) $(ANSI_CFLAGS)
 
