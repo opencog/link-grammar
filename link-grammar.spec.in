@@ -10,12 +10,12 @@ Release: %{release}
 Group: System Environment/Libraries
 License: LGPL
 
-#Source: ftp://ftp.gnome.org/pub/GNOME/unstable/sources/link-grammar/%{name}-%{version}.tar.gz
+Source: %{name}-%{version}.tar.gz
 Buildroot: /var/tmp/%{name}-%{version}-%{release}-root
 URL: http://www.link.cs.cmu.edu/link/
 
-Requires: 
-BuildRequires: 
+#Requires: 
+#BuildRequires: 
 
 %description
 A grammar checking library
@@ -59,6 +59,7 @@ find $RPM_BUILD_ROOT/%{_libdir} -name \*.la -exec rm -f \{\} \;
 %doc LICENSE README
 %attr(755,root,root)%{_bindir}/*
 %{_libdir}/lib*.so*
+%{_datadir}/link-grammar/*
 
 %files devel
 %defattr(644,root,root,755)
@@ -70,5 +71,5 @@ find $RPM_BUILD_ROOT/%{_libdir} -name \*.la -exec rm -f \{\} \;
 %__rm -r $RPM_BUILD_ROOT
 
 %changelog
-* Sat Feb 5, 2005 Dom Lachowicz <cinamod@hotmail.com>
+* Sat Feb 5 2005 Dom Lachowicz <cinamod@hotmail.com>
 - Initial version
