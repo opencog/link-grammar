@@ -50,7 +50,7 @@ WORDS=			\
 	words.v.8.5	\
 	words.y
 
-wordsdir=$(pkgdatadir)/words
+wordsdir=$(pkgdatadir)/en/words
 words_DATA = $(WORDS)
 
 EXTRA_DIST = $(WORDS)

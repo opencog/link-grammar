@@ -8,6 +8,7 @@ DICTS=					\
 	4.0.knowledge			\
 	tiny.dict
 
-pkgdata_DATA = $(DICTS)
+dictdir=$(pkgdatadir)/en
+dict_DATA = $(DICTS)
 
 EXTRA_DIST = $(DICTS)
