@@ -1,0 +1,73 @@
+AC_INIT(link-grammar/parse.c)
+
+dnl Set release number
+dnl This is derived from "Versioning" chapter of info libtool documentation.
+PACKAGE=link-grammar
+dnl     4a) Increment when removing or changing interfaces.
+LINK_MAJOR_VERSION=4
+dnl     4a) 5) Increment when adding interfaces.
+dnl     6) Set to zero when removing or changing interfaces.
+LINK_MINOR_VERSION=1
+dnl     3) Increment when interfaces not changed at all,
+dnl               only bug fixes or internal changes made.
+dnl     4b) Set to zero when adding, removing or changing interfaces.
+LINK_MICRO_VERSION=1
+dnl
+dnl     Set this too
+MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
+dnl
+VERSION=$LINK_MAJOR_VERSION.$LINK_MINOR_VERSION.$LINK_MICRO_VERSION
+dnl Version info for libraries = CURRENT:REVISION:AGE
+VERSION_INFO=$MAJOR_VERSION_PLUS_MINOR_VERSION:$LINK_MICRO_VERSION:$LINK_MINOR_VERSION
+AC_SUBST(VERSION_INFO)
+AC_SUBST(LINK_MAJOR_VERSION)
+AC_SUBST(LINK_MINOR_VERSION)
+AC_SUBST(LINK_MICRO_VERSION)
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+AM_MAINTAINER_MODE
+
+dnl Checks for programs.
+AC_ISC_POSIX
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_STDC_HEADERS
+AC_LIBTOOL_WIN32_DLL
+AM_PROG_LIBTOOL
+
+AC_C_CONST
+
+AC_MSG_CHECKING([for native Win32])
+case "$host" in
+  *-*-mingw*)
+    native_win32=yes
+    ;;
+  *)
+    native_win32=no
+    ;;
+esac
+AC_MSG_RESULT([$native_win32])
+AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
+
+dnl =======================================================================================
+
+AC_OUTPUT([
+Makefile
+link-grammar.pc
+link-grammar.spec
+link-grammar/Makefile
+data/Makefile
+data/en/Makefile
+data/en/words/Makefile
+])
+
+dnl ===========================================================================================
+echo "
+$PACKAGE-$VERSION
+
+	prefix:                         ${prefix}
+	compiler:                       ${CC}
+"
