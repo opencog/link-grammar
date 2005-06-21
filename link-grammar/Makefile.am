@@ -14,14 +14,20 @@ install-libtool-import-lib:
 uninstall-libtool-import-lib:
 endif
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir):/\"
+AM_CPPFLAGS = $(BINRELOC_CFLAGS)
+
+DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir):\"
 
 INCLUDES = -I$(top_srcdir) $(OTS_CFLAGS) $(ANSI_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 
 liblink_grammar_la_LIBADD  = 
-liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined)
+if WITH_BINRELOC
+	liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined) -lpthread
+else
+	liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined)
+endif
 liblink_grammar_la_SOURCES =		\
 	analyze-linkage.c		\
 	and.c				\
@@ -49,7 +55,8 @@ liblink_grammar_la_SOURCES =		\
 	string-set.c			\
 	tokenize.c			\
 	utilities.c			\
-	word-file.c
+	word-file.c			\
+	prefix.c
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS = 	\
@@ -88,7 +95,7 @@ EXTRA_DIST=				\
 	command-line.h
 
 bin_PROGRAMS=grammar-parse
-grammar_parse_SOURCES=parse.c
+grammar_parse_SOURCES=parse.c prefix-parse.c
 ldadd = $(top_builddir)/link-grammar/liblink-grammar.la
 
 grammar_parse_LDADD=$(ldadd)

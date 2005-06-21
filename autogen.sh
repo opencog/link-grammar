@@ -29,9 +29,10 @@ libtoolize --force --copy || {
 
 # Produce aclocal.m4, so autoconf gets the automake macros it needs
 # 
-echo "Creating aclocal.m4: aclocal $ACLOCAL_FLAGS"
+ACLOCAL_BINRELOC='-I ac-helpers'
+echo "Creating aclocal.m4: aclocal $ACLOCAL_FLAGS $ACLOCAL_BINRELOC"
 
-aclocal $ACLOCAL_FLAGS 2>> autogen.err
+aclocal $ACLOCAL_FLAGS $ACLOCAL_BINRELOC 2>> autogen.err
 
 # Produce all the `GNUmakefile.in's and create neat missing things
 # like `install-sh', etc.

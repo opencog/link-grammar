@@ -13,8 +13,14 @@
 
 #include <link-grammar/link-includes.h>
 
-#define DEFAULTPATH ".:./data:"DICTIONARY_DIR  /* Appended to the end of the 
-						  environment dictpath */
+/* Appended to the end of the environment dictpath */
+#ifdef ENABLE_BINRELOC
+#include "prefix.h"
+#define DEFAULTPATH ".:./data:"
+#else
+#define DEFAULTPATH ".:./data:"DICTIONARY_DIR
+#endif /* BINRELOC */
+
 
 /* This file contains certain general utilities. */
 
@@ -379,18 +385,11 @@ FILE *old_dictopen(char *dictname, char *filename, char *how) {
     int filenamelen, len;
     FILE *fp;
 
+#ifdef ENABLE_BINRELOC
+    sprintf(fullpath, "%s%s%s:", getenv(DICTPATH), DEFAULTPATH, BR_DATADIR("/link-grammar"));
+#else
     sprintf(fullpath, "%s%s", getenv(DICTPATH), DEFAULTPATH);
-    dictpath = fullpath;
-
-    if (dictpath == NULL && dictname != NULL) {
-	/* look in the dictname part */
-	safe_strcpy(dummy, dictname, sizeof(dummy));
-	pos = strrchr(dummy, '/');
-	if (pos != NULL) {
-	    *pos = '\0';
-	    dictpath = dummy;
-	}
-    }
+#endif /* ENABLE_BINRELOC */
 
     dictpath = fullpath;
 
@@ -404,6 +403,17 @@ FILE *old_dictopen(char *dictname, char *filename, char *how) {
 	}
     }
 
+    dictpath = fullpath;
+
+    if (dictpath == NULL && dictname != NULL) {
+	/* look in the dictname part */
+	safe_strcpy(dummy, dictname, sizeof(dummy));
+	pos = strrchr(dummy, '/');
+	if (pos != NULL) {
+	    *pos = '\0';
+	    dictpath = dummy;
+	}
+    }
 
     if (dictpath == NULL) {
 	printf("   Opening %s\n", filename); 
@@ -418,22 +428,29 @@ FILE *old_dictopen(char *dictname, char *filename, char *how) {
     oldpos = dictpath;
     fp = NULL;
     while ((pos = strchr(oldpos, ':')) != NULL) {
-	strncpy(completename, oldpos, (pos-oldpos));
-	*(completename+(pos-oldpos)) = '/';
-	strcpy(completename+(pos-oldpos)+1,filename);
-	if ((fp = fopen(completename, how)) != NULL) {
-	    printf("   Opening %s\n", completename); 
-	    return fp;
-	}
-	oldpos = pos+1;
+		strncpy(completename, oldpos, (pos-oldpos));
+		*(completename+(pos-oldpos)) = '/';
+		strcpy(completename+(pos-oldpos)+1,filename);
+		if ((fp = fopen(completename, how)) != NULL) {
+		    printf("   Opening %s\n", completename); 
+		    return fp;
+		}
+		else {
+			printf("   could not open '%s'\n", completename);
+		}
+		oldpos = pos+1;
     }
     pos = oldpos+strlen(oldpos);
     strcpy(completename, oldpos);
     *(completename+(pos-oldpos)) = '/';
     strcpy(completename+(pos-oldpos)+1,filename);
-    fp = fopen(completename,how);
-    printf("   Opening %s\n", completename); 
-    return fp;
+    if ((fp = fopen(completename, how)) != NULL) {
+    	printf("   Opening %s\n", completename); 
+    	return fp;
+	}
+    else {
+    	printf("   could not open '%s'\n", completename);
+    }
 }
 
 
@@ -495,10 +512,14 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
     */
     /* dp2 now points to the part of the dictpath due to the environment var */
 
+#ifdef ENABLE_BINRELOC
+    sprintf(fulldictpath, "%s%s%s%s:", dp1, dp2, DEFAULTPATH, BR_DATADIR("/link-grammar"));
+#else		
     sprintf(fulldictpath, "%s%s%s", dp1, dp2, DEFAULTPATH);
+#endif
     /* now fulldictpath is our dictpath, where each entry is followed by a ":"
        including the last one */
-    
+
     filenamelen = strlen(filename);
     len = strlen(fulldictpath)+ filenamelen + 1 + 1;
     oldpos = fulldictpath;
@@ -507,7 +528,6 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
 	*(completename+(pos-oldpos)) = '/';
 	strcpy(completename+(pos-oldpos)+1,filename);
 	if ((fp = fopen(completename, how)) != NULL) {
-	    printf("   Opening %s\n", completename); 
 	    return fp;
 	}
 	oldpos = pos+1;

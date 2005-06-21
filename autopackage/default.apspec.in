@@ -1,0 +1,42 @@
+# -*-shell-script-*-
+
+[Meta]
+RootName: abisource.org/link-grammar:@VERSION@
+DisplayName: An english grammar checker
+ShortName: link-grammar
+Maintainer: Link-Grammar Team - http://www.cs.cmu.edu
+Packager: Robert Staudinger <robsta@stereolyzer.net>
+Summary: An english grammar checker.
+SoftwareVersion: @VERSION@
+AutopackageTarget: 1.0
+PackageVersion: 1
+
+# Only uncomment InterfaceVersion if your package exposes interfaces to other software,
+# for instance if it includes DSOs or python/perl modules. See the developer guide for more info,
+# or ask on autopackage-dev if you don't understand interface versioning in autopackage.
+
+InterfaceVersion: 4.1
+
+[Description]
+An english grammar checker.
+
+[BuildPrepare]
+prepareBuild --prefix=/break/if/binreloc/breaks --enable-binreloc --disable-debug
+
+[BuildUnprepare]
+unprepareBuild
+
+[Imports]
+echo '*' | import
+
+[Prepare]
+# avoid warning
+echo "nothing to prepare"
+
+[Install]
+#doesn't work installExe ./bin/grammar-parse
+installLib ./lib/*.so.*.*.*
+installData ./share/*
+
+[Uninstall]
+uninstallFromLog
