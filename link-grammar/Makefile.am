@@ -14,19 +14,17 @@ install-libtool-import-lib:
 uninstall-libtool-import-lib:
 endif
 
-AM_CPPFLAGS = $(BINRELOC_CFLAGS)
-
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir):\"
 
-INCLUDES = -I$(top_srcdir) $(OTS_CFLAGS) $(ANSI_CFLAGS)
+INCLUDES = -I$(top_srcdir) $(OTS_CFLAGS) $(ANSI_CFLAGS) $(BINRELOC_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 
-liblink_grammar_la_LIBADD  = 
+liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined) 
 if WITH_BINRELOC
-	liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined) -lpthread
+	liblink_grammar_la_LIBADD  = -lpthread
 else
-	liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined)
+	liblink_grammar_la_LIBADD  = 
 endif
 liblink_grammar_la_SOURCES =		\
 	analyze-linkage.c		\
