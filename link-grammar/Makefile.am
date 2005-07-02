@@ -93,7 +93,7 @@ EXTRA_DIST=				\
 	command-line.h
 
 bin_PROGRAMS=grammar-parse
-grammar_parse_SOURCES=parse.c prefix-parse.c
+grammar_parse_SOURCES=parse.c
 ldadd = $(top_builddir)/link-grammar/liblink-grammar.la
 
 grammar_parse_LDADD=$(ldadd)
