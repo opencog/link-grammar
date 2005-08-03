@@ -90,6 +90,7 @@ liblink_grammar_include_HEADERS = 	\
 	word-file.h
 
 EXTRA_DIST=				\
+	prefix.h			\
 	command-line.h
 
 bin_PROGRAMS=grammar-parse
