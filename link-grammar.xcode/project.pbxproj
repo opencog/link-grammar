@@ -1662,13 +1662,13 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				PRODUCT_NAME = "link-grammar";
+				PRODUCT_NAME = "liblink-grammar";
 				VERSIONING_SYSTEM = "";
 			};
 			dependencies = (
 			);
 			isa = PBXNativeTarget;
-			name = "link-grammar";
+			name = "liblink-grammar";
 			productName = "link-grammar";
 			productReference = D2AAC0630554660B00DB518D;
 			productType = "com.apple.product-type.library.dynamic";
@@ -1677,7 +1677,7 @@
 			explicitFileType = "compiled.mach-o.dylib";
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = "link-grammar.dylib";
+			path = "liblink-grammar.dylib";
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
