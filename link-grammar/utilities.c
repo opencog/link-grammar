@@ -481,9 +481,10 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
     char completename[MAX_PATH_NAME+1];
     char fulldictpath[MAX_PATH_NAME+1];
     char dummy1[MAX_PATH_NAME+1];
-    char *dp1, *dp2;
+    char dummy2[MAX_PATH_NAME+1];
+    char *dp1, *dp2, *dp2_envvar;
     char *pos, *oldpos;
-    int filenamelen, len;
+    int filenamelen, len, dp2_length;
     FILE *fp;
 
     if (filename[0] == '/') {
@@ -504,12 +505,12 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
     /* dp1 now points to the part of the dictpath due to dictname */
     
     dp2 = "";
-    /*  We're no longer using the dictpath in the environment
-    if (strlen(getenv(DICTPATH)) > 0) {
-	sprintf(dummy2, "%s:", getenv(DICTPATH));
+    dp2_envvar = getenv(DICTPATH);
+    dp2_length = dp2_envvar ? strlen(dp2_envvar) : 0;
+    if ((dp2_length > 0) && (dp2_length < MAX_PATH_NAME)) {
+	sprintf(dummy2, "%s:", dp2_envvar);
 	dp2 = dummy2;
     }
-    */
     /* dp2 now points to the part of the dictpath due to the environment var */
 
 #ifdef ENABLE_BINRELOC
