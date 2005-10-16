@@ -1,7 +1,7 @@
 # -*-shell-script-*-
 
 [Meta]
-RootName: abisource.org/link-grammar:@VERSION@
+RootName: @abisource.org/link-grammar:@VERSION@
 DisplayName: An english grammar checker
 ShortName: link-grammar
 Maintainer: Link-Grammar Team - http://www.cs.cmu.edu
@@ -21,6 +21,12 @@ InterfaceVersion: 4.1
 An english grammar checker.
 
 [BuildPrepare]
+# create configure wrapper when building out of the source tree
+if [ ! -e "configure" ] ; then
+        echo '#!/bin/bash' > configure
+        echo '../link-grammar/configure $@' >> configure
+        chmod +x configure
+fi
 prepareBuild --prefix=/break/if/binreloc/breaks --enable-binreloc --disable-debug
 
 [BuildUnprepare]
