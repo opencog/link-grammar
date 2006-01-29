@@ -14,9 +14,9 @@ install-libtool-import-lib:
 uninstall-libtool-import-lib:
 endif
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir):\"
+DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)/en:\"
 
-INCLUDES = -I$(top_srcdir) $(OTS_CFLAGS) $(ANSI_CFLAGS) $(BINRELOC_CFLAGS)
+INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 

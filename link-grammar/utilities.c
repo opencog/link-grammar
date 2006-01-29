@@ -16,7 +16,7 @@
 /* Appended to the end of the environment dictpath */
 #ifdef ENABLE_BINRELOC
 #include "prefix.h"
-#define DEFAULTPATH ".:./data:"
+#define DEFAULTPATH ".:./data:"DICTIONARY_DIR
 #else
 #define DEFAULTPATH ".:./data:"DICTIONARY_DIR
 #endif /* BINRELOC */

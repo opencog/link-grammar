@@ -65,7 +65,7 @@ PL-CAPITALIZED-WORDS:
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+); 
 % capitalized words ending in s
 
-/en/words/words.n.p: % words that are also proper names
+/words/words.n.p: % words that are also proper names
 {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+); 
 
@@ -90,32 +90,32 @@ or [[({@AN-} & {@A-} & (({D-} & <noun-sub-x> & (<noun-main-x> or B*m+)) or
  U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
-/en/words/words.n.1: 
+/words/words.n.1: 
  ({@AN-} & {@A- & {[[@AN-]]}} & 
 ((Ds- & <noun-sub-s> & (<noun-main-s> or Bsm+))
 or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 
-/en/words/words.n.2.s:  % plural nouns ending in "s"
+/words/words.n.2.s:  % plural nouns ending in "s"
  ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or Bpm+))
 or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
 
-/en/words/words.n.2.x:  % plural nouns not ending in "s"
+/words/words.n.2.x:  % plural nouns not ending in "s"
  ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or Bpm+))
 or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
 
-/en/words/words.n.3:  % nouns that are mass only
+/words/words.n.3:  % nouns that are mass only
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) 
 or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 
-/en/words/words.n.4:  % nouns that can be mass or countable
+/words/words.n.4:  % nouns that can be mass or countable
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 
-/en/words/words.s: % US state names and abbreviations
+/words/words.s: % US state names and abbreviations
 ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({MG+} & {@MX+} & (JG- or <noun-main-s>)) or G+ or 
 ({[[MG+]]} & (AN+ or YS+ or YP+)))) or (Xc+ & Xd- & G- & AN+);
@@ -134,7 +134,7 @@ carte_blanche:
 (<noun-main-m> or Bsm+)) or
 Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 
-/en/words/words.n.t: % title nouns (president, chairman)
+/words/words.n.t: % title nouns (president, chairman)
 {@AN-} & {@A- & {[[@AN-]]}} & {@M+} & (BIt- or (Xd- & (Xc+ or [[[()]]]) & MX-) or TI-);
 
 majority.n minority.n number.n bunch.n batch.n bulk.n handful.n group.n:
@@ -484,7 +484,7 @@ fiscal.i: TY+ & <noun-main-s>;
 
 or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
-/en/words/words.y:  % year numbers
+/words/words.y:  % year numbers
 NN+ or NIa- or AN+ or 
 ((Xd- & TY- & Xc+) or TY-) 
 or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
@@ -693,37 +693,37 @@ or [[()]]));
 
 <vc-intrans>: {@MV+};
 % common intransitive verbs
-/en/words/words.v.1.1:  
+/words/words.v.1.1:  
 <verb-pl,i> & <vc-intrans>;
-/en/words/words.v.1.2:  
+/words/words.v.1.2:  
 <verb-s> & <vc-intrans>;
-/en/words/words.v.1.3:  
+/words/words.v.1.3:  
 <verb-sp,pp> & <vc-intrans>;
-/en/words/words.v.1.4:  
+/words/words.v.1.4:  
 (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 arisen.v: {@E-} & PP- & {@MV+};
 
 <vc-walk>: {K+} & {@MV+}; 
 % intransitive verbs that can take particles like "up" and "out"
-/en/words/words.v.5.1: 
+/words/words.v.5.1: 
 <verb-pl,i> & <vc-walk>;
-/en/words/words.v.5.2:
+/words/words.v.5.2:
 <verb-s> & <vc-walk>;
-/en/words/words.v.5.3:
+/words/words.v.5.3:
 <verb-sp,pp> & <vc-walk>;
 come.v: (<verb-pl,i> or <verb-pp>) & <vc-walk>;
 swam.v lay.x came.v: <verb-sp> & <vc-walk>; 
 swum.v lain.v: <verb-pp> & <vc-walk>;
-/en/words/words.v.5.4: (<vc-walk> & <verb-pg,ge>) or ({@E-} & A+)
+/words/words.v.5.4: (<vc-walk> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
 
 <vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
 % optionally transitive verbs
-/en/words/words.v.2.1:
+/words/words.v.2.1:
 <verb-pl,i> & <vc-tr,intr>;
-/en/words/words.v.2.2:  
+/words/words.v.2.2:  
 <verb-s> & <vc-tr,intr>;
-/en/words/words.v.2.3:  
+/words/words.v.2.3:  
 (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 shrank.v sang.v withdrew.v sank.v forgave.v:
 <verb-sp> & <vc-tr,intr>;
@@ -732,9 +732,9 @@ shrunk.v sung.v withdrawn.v sunk.v forgiven.v:
 bid.v hurt.v thrust.v broadcast.v:
 ((<verb-pl,i> or <verb-sp,pp>) & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+)
 or <verb-po>;
-/en/words/words.v.2.4:  
+/words/words.v.2.4:  
 <verb-pg> & <vc-tr,intr>;
-/en/words/words.v.2.5:  
+/words/words.v.2.5:  
 (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 <vc-rise>: {K+ or OD+} & {@MV+};
@@ -749,9 +749,9 @@ or <verb-ge-d>;
 <vc-fill>: ((K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+}) or
 [[@MV+ & O*n+]]) & {@MV+};
 % optionally transitive verbs that can take particles like "up" and "out"
-/en/words/words.v.6.1: <verb-pl,i> & <vc-fill>; 
-/en/words/words.v.6.2: <verb-s> & <vc-fill>;
-/en/words/words.v.6.3:
+/words/words.v.6.1: <verb-pl,i> & <vc-fill>; 
+/words/words.v.6.2: <verb-s> & <vc-fill>;
+/words/words.v.6.3:
 (<verb-sp,pp> & <vc-fill>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
 split.v spread.v beat.v fit.v shut.v cast.v: ((<verb-pl,i> or <verb-sp,pp>) & 
@@ -763,18 +763,18 @@ frozen.v drawn.v sprung.v: (<verb-pp> & <vc-fill>) or
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
-/en/words/words.v.6.4:
+/words/words.v.6.4:
 <verb-pg> & <vc-fill>;
-/en/words/words.v.6.5:
+/words/words.v.6.5:
 (<vc-fill> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
 <vc-trans>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
 % common transitive verbs
-/en/words/words.v.4.1:  
+/words/words.v.4.1:  
 <verb-pl,i> & <vc-trans>;
-/en/words/words.v.4.2:  
+/words/words.v.4.2:  
 <verb-s> & <vc-trans>;
-/en/words/words.v.4.3:  
+/words/words.v.4.3:  
 (<verb-sp,pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 forsook.v overrode.v overtook.v rewrote.v undid.v overran.v mistook.v underwrote.v: 
 <verb-sp> & <vc-trans>;
@@ -783,30 +783,30 @@ hit.v misread.v shed.v rid.v overcome.v offset.v overrun.v upset.v undercut.v:
 or <verb-po>;
 forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v: 
 (<verb-pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-/en/words/words.v.4.4:  
+/words/words.v.4.4:  
 <verb-pg> & <vc-trans>;
-/en/words/words.v.4.5: 
+/words/words.v.4.5: 
 (<vc-trans> & <verb-ge>) or <verb-ge-d>;
 
 <vc-kick>: ((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+}) or 
 [[@MV+ & O*n+]]) & {@MV+};
 % transitive verbs that can take particles like "up" and "out"
-/en/words/words.v.8.1: 
+/words/words.v.8.1: 
 <verb-pl,i> & <vc-kick>;
-/en/words/words.v.8.2:
+/words/words.v.8.2:
 <verb-s> & <vc-kick>;
 bit.v threw.v stole.v drank.v shook.v wore.v blew.v tore.v: 
 <verb-sp> & <vc-kick>;
 bitten.v thrown.v stolen.v shaken.v worn.v blown.v torn.v:
 (<verb-pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
-/en/words/words.v.8.3:
+/words/words.v.8.3:
 (<verb-sp,pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
 cut.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-kick>) or
 (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>);
-/en/words/words.v.8.4: <verb-pg> & <vc-kick>;
-/en/words/words.v.8.5:
+/words/words.v.8.4: <verb-pg> & <vc-kick>;
+/words/words.v.8.5:
 (<vc-kick> & <verb-ge>) or <verb-ge-d>;
 
 <vc-raise>: (((O+ or B-) & {OD+}) or [[@MV+ & O*n+]]) & {@MV+};
@@ -2298,7 +2298,7 @@ ends_up: <verb-s-s> & <vc-end-up>;
 ended_up: <verb-s-sp,pp> & <vc-end-up>;
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
-/en/words/words.v.1.p: <verb-pv> or <verb-po>; % two-word passives
+/words/words.v.1.p: <verb-pv> or <verb-po>; % two-word passives
 
 <vc-paraph>: 
 {@MV+} & (((Xd- or Xq-) & (Xc+ or [[[()]]]) & (COq+ or (CP- & {CC+}) or Eq+)) 
@@ -2310,15 +2310,15 @@ or [(Xc+ or Xe+) & Ce+]);
 (CPi- & {CC+}) or Eqi+);
 
 % paraphrasing verbs like "say", "reply"
-/en/words/words.v.10.1: [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
-/en/words/words.v.10.2: [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
-/en/words/words.v.10.3: 
+/words/words.v.10.1: [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+/words/words.v.10.2: [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
+/words/words.v.10.3: 
 {@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)
 or [[Pvf- & <vc-it-paraph>]]);
 read.q: {@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 wrote.q: {@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 written.q: {@E-} & PP- & <vc-paraph>;
-/en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
+/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
 
 seem.i appear.i: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
 seems.i appears.i: [[{@E-} & SFs- & <vc-it-paraph>]];
@@ -2753,7 +2753,7 @@ n't: N- or EB-;
 <adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
 ({@E-} & {@MV+} & ([[{Xd-} & Xc+ & COp+]] or (Xd- & Xc+ & MX*a-))); 
 
-/en/words/words.adj.1:  % ordinary adjectives
+/words/words.adj.1:  % ordinary adjectives
    {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
  & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
 
@@ -2975,7 +2975,7 @@ far.c infinitely: EC+;
 significantly substantially: {EE- or EF+} & 
 (EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & CO+));
 
-/en/words/words.adj.2: % comparative adjectives
+/words/words.adj.2: % comparative adjectives
 ({ECa-} & (((Pam- or Mam- or AFm+) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+)))
  or 
 (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
@@ -3026,7 +3026,7 @@ an_additional up_to as_much_as no_fewer_than no_less_than: EN+;
 at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
 all_but: EN+ or E+;
 
-/en/words/words.adj.3: % superlative adjectives
+/words/words.adj.3: % superlative adjectives
 ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
 ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
@@ -3089,7 +3089,7 @@ barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
 partly largely mostly chiefly simply
 purely solely: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
-/en/words/words.adv.3: % adverbs like "biochemically"
+/words/words.adv.3: % adverbs like "biochemically"
  EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} &
  CO+);
 in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
@@ -3157,7 +3157,7 @@ mysteriously naturally oddly plainly truthfully appropriately:
 occasionally often specifically generally originally: 
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
-/en/words/words.adv.1:  % ordinary manner adverbs
+/words/words.adv.1:  % ordinary manner adverbs
 {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & {Xd-}} & CO+) or Qe+
  or Ca+ or [[EA+]]);
 shortly: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
@@ -3168,7 +3168,7 @@ soon: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
 
 certainly possibly probably:	
 {EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-);
-/en/words/words.adv.2: % ordinary clausal adverbs
+/words/words.adv.2: % ordinary clausal adverbs
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
 not_suprisingly:
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
