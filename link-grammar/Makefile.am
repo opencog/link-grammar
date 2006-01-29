@@ -21,11 +21,13 @@ INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS)
 lib_LTLIBRARIES = liblink-grammar.la
 
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined) 
+
 if WITH_BINRELOC
-	liblink_grammar_la_LIBADD  = -lpthread
+liblink_grammar_la_LIBADD  = -lpthread
 else
-	liblink_grammar_la_LIBADD  = 
+liblink_grammar_la_LIBADD  = 
 endif
+
 liblink_grammar_la_SOURCES =		\
 	analyze-linkage.c		\
 	and.c				\
