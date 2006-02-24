@@ -16,9 +16,9 @@
 /* Appended to the end of the environment dictpath */
 #ifdef ENABLE_BINRELOC
 #include "prefix.h"
-#define DEFAULTPATH ".:./data:"DICTIONARY_DIR
+#define DEFAULTPATH DICTIONARY_DIR
 #else
-#define DEFAULTPATH ".:./data:"DICTIONARY_DIR
+#define DEFAULTPATH DICTIONARY_DIR
 #endif /* BINRELOC */
 
 
@@ -480,9 +480,6 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
 
     char completename[MAX_PATH_NAME+1];
     char fulldictpath[MAX_PATH_NAME+1];
-    char dummy1[MAX_PATH_NAME+1];
-    char dummy2[MAX_PATH_NAME+1];
-    char *dp1, *dp2, *dp2_envvar;
     char *pos, *oldpos;
     int filenamelen, len, dp2_length;
     FILE *fp;
@@ -491,32 +488,10 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
 	return fopen(filename, how);  /* If the file does not exist NULL is returned */
     }
 
-    dp1 = "";
-    /*    if (dictname != NULL && dictname[0] == '/') { */
-    if (dictname != NULL) {
-	safe_strcpy(dummy1, dictname, sizeof(dummy1));
-	pos = strrchr(dummy1, '/');
-	if (pos != NULL) {
-	    *pos = ':';
-	    *(pos+1) = '\0';
-	    dp1 = dummy1;
-	}
-    }
-    /* dp1 now points to the part of the dictpath due to dictname */
-    
-    dp2 = "";
-    dp2_envvar = getenv(DICTPATH);
-    dp2_length = dp2_envvar ? strlen(dp2_envvar) : 0;
-    if ((dp2_length > 0) && (dp2_length < MAX_PATH_NAME)) {
-	sprintf(dummy2, "%s:", dp2_envvar);
-	dp2 = dummy2;
-    }
-    /* dp2 now points to the part of the dictpath due to the environment var */
-
 #ifdef ENABLE_BINRELOC
-    sprintf(fulldictpath, "%s%s%s%s:", dp1, dp2, DEFAULTPATH, BR_DATADIR("/link-grammar"));
+    sprintf(fulldictpath, "%s%s:", DEFAULTPATH, BR_DATADIR("/link-grammar"));
 #else		
-    sprintf(fulldictpath, "%s%s%s", dp1, dp2, DEFAULTPATH);
+    sprintf(fulldictpath, "%s", DEFAULTPATH);
 #endif
     /* now fulldictpath is our dictpath, where each entry is followed by a ":"
        including the last one */

@@ -288,8 +288,7 @@ void setup_panic_parse_options(Parse_Options opts) {
 
 void print_usage(char *str) {
     fprintf(stderr, 
-	    "Usage: %s [dict_file] [-pp pp_knowledge_file]\n"
-	    "          [-c constituent_knowledge_file] [-a affix_file]\n"
+	    "Usage: %s [language]\n"
 	    "          [-ppoff] [-coff] [-aoff] [-batch] [-<special \"!\" command>]\n", str);
     exit(-1);
 }
@@ -298,10 +297,7 @@ int main(int argc, char * argv[]) {
 
     Dictionary      dict;
     Sentence        sent;
-    char            *dictionary_file=NULL;
-    char            *post_process_knowledge_file=NULL;
-    char            *constituent_knowledge_file=NULL;
-    char            *affix_file=NULL;
+    char            *language=NULL;
     int             pp_on=TRUE;
     int             af_on=TRUE;
     int             cons_on=TRUE;
@@ -314,29 +310,13 @@ int main(int argc, char * argv[]) {
     i = 1;
     if ((argc > 1) && (argv[1][0] != '-')) {
 	/* the dictionary is the first argument if it doesn't begin with "-" */
-	dictionary_file = argv[1];	
+	language = argv[1];	
 	i++;
     }
 
     for (; i<argc; i++) {
 	if (argv[i][0] == '-') {
-	    if (strcmp("-pp", argv[i])==0) {
-		if ((post_process_knowledge_file != NULL) || (i+1 == argc)) 
-		  print_usage(argv[0]);
-		post_process_knowledge_file = argv[i+1];
-		i++;
-	    } else 
-	    if (strcmp("-c", argv[i])==0) {
-		if ((constituent_knowledge_file != NULL) || (i+1 == argc)) 
-		  print_usage(argv[0]);
-		constituent_knowledge_file = argv[i+1];
-		i++;
-	    } else 
-	    if (strcmp("-a", argv[i])==0) {
-		if ((affix_file != NULL) || (i+1 == argc)) print_usage(argv[0]);
-		affix_file = argv[i+1];
-		i++;
-	    } else if (strcmp("-ppoff", argv[i])==0) {
+	    if (strcmp("-ppoff", argv[i])==0) {
 		pp_on = FALSE;
 	    } else if (strcmp("-coff", argv[i])==0) {
 		cons_on = FALSE;
@@ -350,32 +330,7 @@ int main(int argc, char * argv[]) {
 	} else {
 	    print_usage(argv[0]);
 	}
-    }
-
-    if (!pp_on && post_process_knowledge_file != NULL) print_usage(argv[0]);
-
-    if (dictionary_file == NULL) {
-	dictionary_file = "4.0.dict";
-        fprintf(stderr, "No dictionary file specified.  Using %s.\n", 
-		dictionary_file);
-    }
-
-    if (af_on && affix_file == NULL) {
-	affix_file = "4.0.affix";
-        fprintf(stderr, "No affix file specified.  Using %s.\n", affix_file);
-    }
-
-    if (pp_on && post_process_knowledge_file == NULL) {
-	post_process_knowledge_file = "4.0.knowledge";
-        fprintf(stderr, "No post process knowledge file specified.  Using %s.\n",
-		post_process_knowledge_file);
-    }
-
-    if (cons_on && constituent_knowledge_file == NULL) {
-        constituent_knowledge_file = "4.0.constituent-knowledge"; 
-	fprintf(stderr, "No constituent knowledge file specified.  Using %s.\n", 
-		constituent_knowledge_file);
-    }
+    }    
 
     opts = parse_options_create();
     if (opts == NULL) {
@@ -395,10 +350,11 @@ int main(int argc, char * argv[]) {
     parse_options_set_linkage_limit(opts, 1000);
     parse_options_set_short_length(opts, 10);
 
-    dict = dictionary_create(dictionary_file, 
-			     post_process_knowledge_file,
-			     constituent_knowledge_file,
-			     affix_file);
+    if(language && *language)
+      dict = dictionary_create_lang(language);
+    else
+      dict = dictionary_create_default_lang();
+
     if (dict == NULL) {
 	fprintf(stderr, "%s\n", lperrmsg);
 	exit(-1);

@@ -19,6 +19,9 @@
 
 
 Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name);
+Dictionary dictionary_create_lang(char * lang);
+Dictionary dictionary_create_default_lang(void);
+
 int           dictionary_delete(Dictionary dict);
 int           dictionary_get_max_cost(Dictionary dict);
 /*  obsolete *DS*
