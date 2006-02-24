@@ -512,6 +512,8 @@ Dictionary dictionary_create_default_lang(void)
 
   dictionary = dictionary_create_lang(locale);
 
+  free(locale);
+
   return dictionary;
 }
 
