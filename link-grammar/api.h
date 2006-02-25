@@ -11,12 +11,18 @@
 /*                                                                              */
 /********************************************************************************/
 
+#ifndef LINK_GRAMMAR_API_H
+#define LINK_GRAMMAR_API_H
+
 /*****************************************************************************
 *
 * Functions to manipulate Dictionaries
 *
 *****************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name);
 Dictionary dictionary_create_lang(char * lang);
@@ -24,10 +30,6 @@ Dictionary dictionary_create_default_lang(void);
 
 int           dictionary_delete(Dictionary dict);
 int           dictionary_get_max_cost(Dictionary dict);
-/*  obsolete *DS*
-void          dictionary_open_affix_file(Dictionary dict, char * affix_file);
-void          dictionary_open_constituent_knowledge(Dictionary dict, char * cons_file);
-*/
 
 /*****************************************************************************
 *
@@ -177,3 +179,8 @@ Postprocessor * post_process_open(char *dictname, char *path);
 void            post_process_close(PostProcessor postprocessor);
 void            linkage_post_process(Linkage linkage, PostProcessor postprocessor);
 
+#ifdef  __cplusplus
+}
+#endif
+
+#endif

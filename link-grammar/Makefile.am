@@ -56,10 +56,7 @@ liblink_grammar_la_SOURCES =		\
 	tokenize.c			\
 	utilities.c			\
 	word-file.c			\
-	prefix.c
-
-liblink_grammar_includedir = $(includedir)/link-grammar
-liblink_grammar_include_HEADERS = 	\
+	prefix.c			\
 	link-includes.h			\
 	structures.h			\
 	api-structures.h		\
@@ -90,6 +87,10 @@ liblink_grammar_include_HEADERS = 	\
 	tokenize.h			\
 	utilities.h			\
 	word-file.h
+
+liblink_grammar_includedir = $(includedir)/link-grammar
+liblink_grammar_include_HEADERS = 	\
+	api.h
 
 EXTRA_DIST=				\
 	prefix.h			\
