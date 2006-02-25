@@ -53,6 +53,7 @@ liblink_grammar_la_SOURCES =		\
 	utilities.c			\
 	word-file.c			\
 	prefix.c			\
+	api.h				\
 	link-includes.h			\
 	structures.h			\
 	api-structures.h		\
@@ -61,6 +62,7 @@ liblink_grammar_la_SOURCES =		\
 	analyze-linkage.h		\
 	and.h				\
 	build-disjuncts.h		\
+	command-line.h			\
 	constituents.h			\
 	count.h				\
 	error.h				\
@@ -86,11 +88,10 @@ liblink_grammar_la_SOURCES =		\
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS = 	\
-	api.h
+	link-includes.h
 
 EXTRA_DIST=				\
-	prefix.h			\
-	command-line.h
+	prefix.h
 
 bin_PROGRAMS=grammar-parse
 grammar_parse_SOURCES=parse.c

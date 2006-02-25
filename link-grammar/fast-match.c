@@ -11,7 +11,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 int left_disjunct_list_length(Disjunct * d) {
 /* returns the number of disjuncts in the list that have non-null

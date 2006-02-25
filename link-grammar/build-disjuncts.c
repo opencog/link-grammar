@@ -13,7 +13,7 @@
 
 /* stuff for transforming a dictionary entry into a disjunct list */
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 /*Temporary connectors used while converting expressions into disjunct lists */
 typedef struct Tconnector_struct Tconnector;

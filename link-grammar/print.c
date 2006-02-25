@@ -13,7 +13,7 @@
 
 
 #include <stdarg.h>
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 static int center[MAX_SENTENCE];
 static int N_words_to_print;  /* version of N_words in this file for printing links */

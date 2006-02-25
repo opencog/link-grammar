@@ -11,7 +11,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 /* The first thing we do is we build a data structure to represent the
    result of the entire parse search.  There will be a set of nodes

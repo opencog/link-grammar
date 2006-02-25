@@ -11,7 +11,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>

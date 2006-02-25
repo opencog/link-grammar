@@ -12,7 +12,7 @@
 /********************************************************************************/
 
 #include <stdarg.h>
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 #include "constituents.h"
 
 #define MAXCONSTITUENTS 1024

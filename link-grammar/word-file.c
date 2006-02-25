@@ -11,7 +11,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 char * get_a_word(Dictionary dict, FILE * fp) {
 /* Reads in one word from the file, allocates space for it,

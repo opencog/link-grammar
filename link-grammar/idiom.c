@@ -11,7 +11,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
      
 int contains_underbar(char * s) {
     /* Returns TRUE if the string contains an underbar character.

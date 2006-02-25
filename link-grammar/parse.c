@@ -38,7 +38,7 @@
 #include <error.h>
 #include <string.h>
 
-#include <link-grammar/api.h>
+#include <link-grammar/link-includes.h>
 #include <link-grammar/structures.h>
 
 #include "command-line.h"

@@ -19,7 +19,7 @@
  pp_lexer.h
 ***********************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */
 

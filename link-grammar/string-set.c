@@ -11,7 +11,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 /* Suppose you have a program that generates strings and keeps pointers to them. 
    The program never needs to change these strings once they're generated.

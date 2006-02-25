@@ -509,7 +509,7 @@ char *yytext;
 **************************************************************************/
 
 #include <stdarg.h>
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 #undef yywrap
 

@@ -21,7 +21,7 @@ to the caller to ensure that the pointers always point to something useful.
 
 #include <memory.h>
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 #define LINKSET_SPARSENESS 2
 #define LINKSET_SEED_VALUE 37

@@ -13,7 +13,7 @@
 
 
 #include <stdarg.h>
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 
 /* The functions in this file do several things: () take a linkage
  involving fat links and expand it into a sequence of linkages

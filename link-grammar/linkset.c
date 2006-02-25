@@ -11,7 +11,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
 #include <memory.h>
 
 static LINKSET_SET ss[LINKSET_MAX_SETS];
