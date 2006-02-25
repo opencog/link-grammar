@@ -49,7 +49,6 @@ struct Resources_s {
     int    timer_expired;
 };
 
-typedef struct Parse_Options_s * Parse_Options;
 struct Parse_Options_s {
   int verbosity;         /* Level of detail to give about the computation 0 */
   int linkage_limit;     /* The maximum number of linkages processed 10000 */
@@ -92,9 +91,7 @@ typedef struct {
 } Connector_set;
 
 typedef struct Postprocessor_s Postprocessor;
-typedef struct Postprocessor_s * PostProcessor;
 
-typedef struct Dictionary_s * Dictionary;
 struct Dictionary_s {
     Dict_node *     root;
     char *          name;
@@ -160,7 +157,6 @@ struct Parse_info_struct {
     struct Link_s  link_array[MAX_LINKS];
 };    
 
-typedef struct Sentence_s * Sentence;
 struct Sentence_s {
     Dictionary  dict;           /* words are defined from this dictionary */
     int    length;              /* number of words */
@@ -261,7 +257,6 @@ struct Sublinkage_s {
 };
 
 
-typedef struct Linkage_s * Linkage;
 struct Linkage_s {
     int             num_words;  /* number of (tokenized) words */
     char *        * word;       /* array of word spellings */

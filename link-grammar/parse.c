@@ -33,8 +33,14 @@
  *     
  ****************************************************************************/
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <error.h>
+#include <string.h>
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/api.h>
+#include <link-grammar/structures.h>
+
 #include "command-line.h"
 
 #define MAXINPUT 1024
@@ -45,6 +51,7 @@ static int batch_errors = 0;
 static int input_pending=FALSE;
 static Parse_Options  opts;
 static Parse_Options  panic_parse_opts;
+static int verbosity = 0;
 
 typedef enum {UNGRAMMATICAL='*', 
 	      PARSE_WITH_DISJUNCT_COST_GT_0=':',
@@ -71,7 +78,7 @@ int fget_input_char(FILE *in, FILE *out, Parse_Options opts) {
 *  
 *  This procedure displays a linkage graphically.  Since the diagrams 
 *  are passed as character strings, they need to be deleted with a 
-*  call to string_delete.
+*  call to free.
 *
 **************************************************************************/
 
@@ -92,24 +99,24 @@ void process_linkage(Linkage linkage, Parse_Options opts) {
 	if (parse_options_get_display_on(opts)) {
 	    string = linkage_print_diagram(linkage);
 	    fprintf(stdout, "%s", string);
-	    string_delete(string);
+	    free(string);
 	}
 	if (parse_options_get_display_links(opts)) {
 	    string = linkage_print_links_and_domains(linkage);
 	    fprintf(stdout, "%s", string);
-	    string_delete(string);
+	    free(string);
 	}
 	if (parse_options_get_display_postscript(opts)) {
 	    string = linkage_print_postscript(linkage, FALSE);
 	    fprintf(stdout, "%s\n", string);
-	    string_delete(string);
+	    free(string);
 	}
     }
     if ((mode=parse_options_get_display_constituents(opts))) {
 	string = linkage_print_constituent_tree(linkage, mode);
 	if (string != NULL) {
 	    fprintf(stdout, "%s\n", string);
-	    string_delete(string);
+	    free(string);
 	} else {
 	    fprintf(stderr, "Can't generate constituents.\n");
 	    fprintf(stderr, "Constituent processing has been turned off.\n");
@@ -304,8 +311,6 @@ int main(int argc, char * argv[]) {
     int             num_linkages, i;
     char            input_string[MAXINPUT];
     Label           label = NO_LABEL;  
-    int             parsing_space_leaked, reported_leak, dictionary_and_option_space;
-
 
     i = 1;
     if ((argc > 1) && (argv[1][0] != '-')) {
@@ -334,7 +339,7 @@ int main(int argc, char * argv[]) {
 
     opts = parse_options_create();
     if (opts == NULL) {
-	fprintf(stderr, "%s\n", lperrmsg);
+        fprintf(stderr, "%s\n", lperrmsg);
 	exit(-1);
     }
 
@@ -373,17 +378,9 @@ int main(int argc, char * argv[]) {
 	}
     }
 
-    dictionary_and_option_space = space_in_use;  
-    reported_leak = external_space_in_use = 0;
     verbosity = parse_options_get_verbosity(opts);
 
     while (fget_input_string(input_string, stdin, stdout, opts)) {
-
-	if (space_in_use != dictionary_and_option_space + reported_leak) {
-	    fprintf(stderr, "Warning: %d bytes of space leaked.\n",
-		    space_in_use-dictionary_and_option_space-reported_leak);
-	    reported_leak = space_in_use - dictionary_and_option_space;
-	}
 
 	if ((strcmp(input_string, "quit\n")==0) ||
 	    (strcmp(input_string, "exit\n")==0)) break;
@@ -442,7 +439,7 @@ int main(int argc, char * argv[]) {
 	if ((num_linkages == 0) && 
 	    parse_options_resources_exhausted(opts) &&
 	    parse_options_get_panic_mode(opts)) {
-	    print_total_time(opts);
+	    /* print_total_time(opts); */
 	    if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
 	    parse_options_reset_resources(panic_parse_opts);
 	    parse_options_set_verbosity(panic_parse_opts, verbosity);
@@ -452,7 +449,7 @@ int main(int argc, char * argv[]) {
 	    }
 	}
 
-	print_total_time(opts);
+	/* print_total_time(opts); */
 
 	if (parse_options_get_batch_mode(opts)) {
 	    batch_process_some_linkages(label, sent, opts);
@@ -462,41 +459,17 @@ int main(int argc, char * argv[]) {
 	}
 
 	sentence_delete(sent);
-	if (external_space_in_use != 0) {
-	    fprintf(stderr, "Warning: %d bytes of external space leaked.\n", 
-		    external_space_in_use);
-	}
     }
 
     if (parse_options_get_batch_mode(opts)) {
-	print_time(opts, "Total");
+        /* print_time(opts, "Total"); */
 	fprintf(stderr, 
 		"%d error%s.\n", batch_errors, (batch_errors==1) ? "" : "s");
-    }
-
-    parsing_space_leaked = space_in_use - dictionary_and_option_space;
-    if (parsing_space_leaked != 0) {
-        fprintf(stderr, "Warning: %d bytes of space leaked during parsing.\n", 
-		parsing_space_leaked);
     }
 
     parse_options_delete(panic_parse_opts);
     parse_options_delete(opts);
     dictionary_delete(dict);
-
-    if (space_in_use != parsing_space_leaked) {
-        fprintf(stderr, 
-		"Warning: %d bytes of dictionary and option space leaked.\n", 
-		space_in_use - parsing_space_leaked);
-    } 
-    else if (parsing_space_leaked == 0) {
-        fprintf(stderr, "Good news: no space leaked.\n");
-    }
-
-    if (external_space_in_use != 0) {
-        fprintf(stderr, "Warning: %d bytes of external space leaked.\n", 
-		external_space_in_use);
-    }
 
     return 0;
 }

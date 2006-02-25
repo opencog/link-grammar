@@ -180,42 +180,18 @@ int max_external_space_in_use;
 int external_space_in_use;
 
 void * xalloc(int size) {
-/* To allow printing of a nice error message, and keep track of the
-   space allocated.
-*/   
-    char * p = (char *) malloc(size);
-    space_in_use += size;
-    if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
-    if ((p == NULL) && (size != 0)){
-        printf("Ran out of space.\n");
-	abort();
-        exit(1);
-    }
-    return (void *) p;
+    return malloc(size);
 }
 
 void xfree(void * p, int size) {
-    space_in_use -= size;
     free(p);
 }
 
 void * exalloc(int size) {
-
-    char * p = (char *) malloc(size);
-    external_space_in_use += size;
-    if (external_space_in_use > max_external_space_in_use) {
-	max_external_space_in_use = external_space_in_use;
-    }
-    if ((p == NULL) && (size != 0)){
-        printf("Ran out of space.\n");
-	abort();
-        exit(1);
-    }
-    return (void *) p;
+    return malloc(size);
 }
 
 void exfree(void * p, int size) {
-    external_space_in_use -= size;
     free(p);
 }
 
@@ -394,7 +370,7 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
     char completename[MAX_PATH_NAME+1];
     char fulldictpath[MAX_PATH_NAME+1];
     char *pos, *oldpos;
-    int filenamelen, len, dp2_length;
+    int filenamelen, len;
     FILE *fp;
 
     if (filename[0] == '/') {

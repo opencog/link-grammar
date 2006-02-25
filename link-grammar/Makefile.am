@@ -1,8 +1,4 @@
 if OS_WIN32
-no_undefined = -no-undefined
-endif
-
-if OS_WIN32
 
 install-libtool-import-lib:
 	$(INSTALL) .libs/liblink-grammar.dll.a $(DESTDIR)$(libdir)
@@ -20,7 +16,7 @@ INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 
-liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(no_undefined) 
+liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
 
 if WITH_BINRELOC
 liblink_grammar_la_LIBADD  = -lpthread

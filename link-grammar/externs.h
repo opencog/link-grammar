@@ -23,6 +23,3 @@ extern int max_external_space_in_use; /* maximum of the above */
 
 extern unsigned int randtable[RTSIZE];   /* random table for hashing */
 
-/* from error.c */
-extern int   lperrno;
-extern char  lperrmsg[];

@@ -26,6 +26,5 @@ struct CNode_s {
 
 CNode * linkage_constituent_tree(Linkage linkage);
 void    linkage_free_constituent_tree(CNode * n);
-char *  linkage_print_constituent_tree(Linkage linkage, int mode);
 
 #endif

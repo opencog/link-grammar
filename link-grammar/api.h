@@ -24,6 +24,8 @@
 extern "C" {
 #endif
 
+typedef struct Dictionary_s * Dictionary;
+
 Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name);
 Dictionary dictionary_create_lang(char * lang);
 Dictionary dictionary_create_default_lang(void);
@@ -36,6 +38,8 @@ int           dictionary_get_max_cost(Dictionary dict);
 * Functions to manipulate Parse Options 
 *
 *****************************************************************************/
+
+typedef struct Parse_Options_s * Parse_Options;
 
 Parse_Options  parse_options_create();
 int            parse_options_delete(Parse_Options opts);
@@ -112,6 +116,7 @@ int            parse_options_get_echo_on(Parse_Options opts);
 *
 *****************************************************************************/
 
+typedef struct Sentence_s * Sentence;
 
 Sentence     sentence_create(char *input_string, Dictionary dict);
 void         sentence_delete(Sentence sent);
@@ -136,6 +141,7 @@ int          sentence_disjunct_cost(Sentence sent, int i);
 *
 *****************************************************************************/
 
+typedef struct Linkage_s * Linkage;
 
 Linkage      linkage_create(int index, Sentence sent, Parse_Options opts);
 int          linkage_set_current_sublinkage(Linkage linkage, int index);
@@ -155,6 +161,7 @@ char **      linkage_get_link_domain_names(Linkage linkage, int index);
 char **      linkage_get_words(Linkage linkage);
 char *       linkage_get_word(Linkage linkage, int w);
 char *       linkage_print_links_and_domains(Linkage linkage);
+char *       linkage_print_constituent_tree(Linkage linkage, int mode);
 char *       linkage_print_postscript(Linkage linkage, int mode);
 char *       linkage_print_diagram(Linkage linkage);
 char *       linkage_print_constituents(Linkage linkage);
@@ -175,9 +182,17 @@ char *       linkage_get_violation_name(Linkage linkage);
 *
 *****************************************************************************/
 
-Postprocessor * post_process_open(char *dictname, char *path);
+typedef struct Postprocessor_s * PostProcessor;
+
+PostProcessor   post_process_open(char *dictname, char *path);
 void            post_process_close(PostProcessor postprocessor);
 void            linkage_post_process(Linkage linkage, PostProcessor postprocessor);
+
+void issue_special_command(char * line, Parse_Options opts, Dictionary dict);
+
+/* from error.c */
+extern int   lperrno;
+extern char  lperrmsg[];
 
 #ifdef  __cplusplus
 }

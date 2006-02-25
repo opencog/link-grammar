@@ -19,8 +19,8 @@
 #include <ctype.h>
 
 #include <link-grammar/structures.h>
-#include <link-grammar/api-structures.h>
 #include <link-grammar/api.h>
+#include <link-grammar/api-structures.h>
 #include <link-grammar/externs.h>
 
 #include <link-grammar/analyze-linkage.h>
