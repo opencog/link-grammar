@@ -15,11 +15,20 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #ifdef ENABLE_BINRELOC
 #include "prefix.h"
 #endif /* BINRELOC */
 
+#ifdef _WIN32
+#  include <windows.h>
+#  define DIR_SEPARATOR '\\'
+#else
+#  define DIR_SEPARATOR '/'
+#endif
+
+#define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR == (ch))
 #define DEFAULTPATH DICTIONARY_DIR
 
 /* This file contains certain general utilities. */
@@ -369,6 +378,123 @@ int conj_in_range(Sentence sent, int lw, int rw) {
     return FALSE;
 }
 
+/* borrowed from glib */
+static char*
+path_get_dirname (const char	   *file_name)
+{
+  register char *base;
+  register int len;    
+  
+  base = strrchr (file_name, DIR_SEPARATOR);
+#ifdef _WIN32
+  {
+    char *q = strrchr (file_name, '/');
+    if (base == NULL || (q != NULL && q > base))
+	base = q;
+  }
+#endif
+  if (!base)
+    {
+#ifdef _WIN32
+      if (isalpha (file_name[0]) && file_name[1] == ':')
+	{
+	  char drive_colon_dot[4];
+
+	  drive_colon_dot[0] = file_name[0];
+	  drive_colon_dot[1] = ':';
+	  drive_colon_dot[2] = '.';
+	  drive_colon_dot[3] = '\0';
+
+	  return strdup (drive_colon_dot);
+	}
+#endif
+    return strdup (".");
+    }
+
+  while (base > file_name && IS_DIR_SEPARATOR (*base))
+    base--;
+
+#ifdef _WIN32
+  /* base points to the char before the last slash.
+   *
+   * In case file_name is the root of a drive (X:\) or a child of the
+   * root of a drive (X:\foo), include the slash.
+   *
+   * In case file_name is the root share of an UNC path
+   * (\\server\share), add a slash, returning \\server\share\ .
+   *
+   * In case file_name is a direct child of a share in an UNC path
+   * (\\server\share\foo), include the slash after the share name,
+   * returning \\server\share\ .
+   */
+  if (base == file_name + 1 && isalpha (file_name[0]) && file_name[1] == ':')
+    base++;
+  else if (IS_DIR_SEPARATOR (file_name[0]) &&
+	   IS_DIR_SEPARATOR (file_name[1]) &&
+	   file_name[2] &&
+	   !IS_DIR_SEPARATOR (file_name[2]) &&
+	   base >= file_name + 2)
+    {
+      const char *p = file_name + 2;
+      while (*p && !IS_DIR_SEPARATOR (*p))
+	p++;
+      if (p == base + 1)
+	{
+	  len = (int) strlen (file_name) + 1;
+	  base = (char *)malloc(len + 1);
+	  strcpy (base, file_name);
+	  base[len-1] = G_DIR_SEPARATOR;
+	  base[len] = 0;
+	  return base;
+	}
+      if (IS_DIR_SEPARATOR (*p))
+	{
+	  p++;
+	  while (*p && !IS_DIR_SEPARATOR (*p))
+	    p++;
+	  if (p == base + 1)
+	    base++;
+	}
+    }
+#endif
+
+  len = (int) 1 + base - file_name;
+  
+  base = (char *)malloc(len + 1);
+  memmove (base, file_name, len);
+  base[len] = 0;
+  
+  return base;
+}
+
+static char * get_datadir(void)
+{
+  char * data_dir = NULL;
+
+#ifdef ENABLE_BINRELOC
+  data_dir = strdup (BR_DATADIR("/link-grammar"));
+#elif defined(_WIN32)
+  /* Dynamically locate library and return containing directory */
+  HINSTANCE hInstance = GetModuleHandle("liblinkgrammar");
+  if(hInstance != NULL)
+    {
+      char dll_path[MAX_PATH];
+      
+      if(GetModuleFileName(hInstance,dll_path,MAX_PATH)) {
+	char * prefix = path_get_dirname(dll_path);
+	if(prefix) {
+	  char * path = join_path(prefix, "share");
+	  data_dir = join_path(path, "link-grammar");
+	  free(path);
+	  free(prefix);
+	}
+      }
+    }
+#endif
+
+  return data_dir;
+}
+
 FILE *dictopen(char *dictname, char *filename, char *how) {
 
     /* This function is used to open a dictionary file or a word file,
@@ -401,11 +527,17 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
 	return fopen(filename, how);  /* If the file does not exist NULL is returned */
     }
 
-#ifdef ENABLE_BINRELOC
-    sprintf(fulldictpath, "%s%s:", DEFAULTPATH, BR_DATADIR("/link-grammar"));
-#else		
-    sprintf(fulldictpath, "%s", DEFAULTPATH);
-#endif
+    {
+      char * data_dir = get_datadir();
+      if(data_dir) {
+	sprintf(fulldictpath, "%s%s:", DEFAULTPATH, data_dir);
+	free(data_dir);
+      }
+      else {
+	strcpy(fulldictpath, DEFAULTPATH);
+      }
+    }
+
     /* now fulldictpath is our dictpath, where each entry is followed by a ":"
        including the last one */
 
@@ -604,8 +736,6 @@ int word_has_connector(Dict_node * dn, char * cs, int direction) {
 }
 
 #ifdef _WIN32
-#  include <windows.h>
-#  define PATH_SEPARATOR "\\"
 
 /**
  * win32_getlocale:
@@ -1575,8 +1705,6 @@ win32_getlocale (void)
 
   return strdup (bfr);
 }
-#else
-#  define PATH_SEPARATOR "/"
 #endif
 
 char * join_path(char * prefix, char * suffix)
@@ -1584,11 +1712,11 @@ char * join_path(char * prefix, char * suffix)
   char * path;
   int path_len;
 
-  path_len = strlen(prefix) + strlen(PATH_SEPARATOR) + strlen(suffix);
+  path_len = strlen(prefix) + 1 /* len(DIR_SEPARATOR) */ + strlen(suffix);
   path = malloc(path_len + 1);
 
   strcpy(path, prefix);
-  strcat(path, PATH_SEPARATOR);
+  path[strlen(path)] = DIR_SEPARATOR;
   strcat(path, suffix);
   path[path_len] = '\0';
 
