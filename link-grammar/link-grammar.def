@@ -105,6 +105,6 @@ EXPORTS
 	post_process_open
 	post_process_close
 	linkage_post_process
+	issue_special_command
 	lperrno
 	lperrmsg
-	issue_special_command
