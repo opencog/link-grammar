@@ -19,6 +19,12 @@
 #include <string.h>
 #include <ctype.h>
 
+#if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__)
+#define link_private		__attribute__((__visibility__("hidden")))
+#else
+#define link_private
+#endif
+
 #include <link-grammar/structures.h>
 #include <link-grammar/link-includes.h>
 #include <link-grammar/api-structures.h>

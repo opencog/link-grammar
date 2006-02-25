@@ -1,0 +1,22 @@
+#ifndef LINK_FEATURES_H
+#define LINK_FEATURES_H
+
+#ifdef  __cplusplus
+# define LINK_BEGIN_DECLS  extern "C" {
+# define LINK_END_DECLS    }
+#else
+# define LINK_BEGIN_DECLS
+# define LINK_END_DECLS
+#endif
+
+#ifndef link_public_api
+# define link_public_api(x) x
+#endif
+
+#define LINK_MAJOR_VERSION @LINK_MAJOR_VERSION@
+#define LINK_MINOR_VERSION @LINK_MINOR_VERSION@
+#define LINK_MICRO_VERSION @LINK_MICRO_VERSION@
+
+#define LINK_VERSION_STRING "@LINK_MAJOR_VERSION@.@LINK_MINOR_VERSION@.@LINK_MICRO_VERSION@"
+
+#endif

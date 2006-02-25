@@ -88,7 +88,8 @@ liblink_grammar_la_SOURCES =		\
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS = 	\
-	link-includes.h
+	link-includes.h			\
+	link-features.h
 
 EXTRA_DIST=				\
 	prefix.h

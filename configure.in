@@ -76,6 +76,7 @@ Makefile
 link-grammar.pc
 link-grammar.spec
 link-grammar/Makefile
+link-grammar/link-features.h
 data/Makefile
 data/en/Makefile
 data/en/words/Makefile
