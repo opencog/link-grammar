@@ -55,6 +55,20 @@ AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
 AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
+AC_DEFUN([GLIB_LC_MESSAGES],
+  [AC_CHECK_HEADERS([locale.h])
+    if test $ac_cv_header_locale_h = yes; then
+    AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
+      [AC_TRY_LINK([#include <locale.h>], [return LC_MESSAGES],
+       am_cv_val_LC_MESSAGES=yes, am_cv_val_LC_MESSAGES=no)])
+    if test $am_cv_val_LC_MESSAGES = yes; then
+      AC_DEFINE(HAVE_LC_MESSAGES, 1,
+        [Define if your <locale.h> file defines LC_MESSAGES.])
+    fi
+  fi])
+
+GLIB_LC_MESSAGES
+
 dnl =======================================================================================
 
 AC_OUTPUT([

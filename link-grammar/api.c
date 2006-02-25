@@ -12,9 +12,6 @@
 /********************************************************************************/
 
 #include <link-grammar/link-includes.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <string.h>
 
 /***************************************************************
 *
@@ -418,61 +415,6 @@ static Dictionary internal_dictionary_create(char * dict_name, char * pp_name, c
 
 Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name) {
     return internal_dictionary_create(dict_name, pp_name, cons_name, affix_name, NULL);
-}
-
-#define PATH_SEPARATOR "/"
-
-static char * join_path(char * prefix, char * suffix)
-{
-  char * path;
-  int path_len;
-
-  path_len = strlen(prefix) + strlen(PATH_SEPARATOR) + strlen(suffix);
-  path = malloc(path_len + 1);
-
-  strcpy(path, prefix);
-  strcat(path, PATH_SEPARATOR);
-  strcat(path, suffix);
-  path[path_len] = '\0';
-
-  return path;
-}
-
-static char * get_default_locale(void)
-{
-  char * locale, * needle;
-
-  locale = NULL;
-
-  if(!locale)
-    locale = strdup (getenv ("LANG"));
-		
-#if defined(HAVE_LC_MESSAGES)
-  if(!locale)
-    locale = strdup (setlocale (LC_MESSAGES, NULL));
-#endif
-  
-  if(!locale)
-    locale = strdup (setlocale (LC_ALL, NULL));
-		
-  if(!locale || strcmp(locale, "C") == 0) {
-    free(locale);
-    locale = strdup("en");
-  }
-
-  /* strip off "@euro" from en_GB@euro */
-  if ((needle = strchr (locale, '@')) != NULL)
-    *needle = '\0';
-  
-  /* strip off ".UTF-8" from en_GB.UTF-8 */
-  if ((needle = strchr (locale, '.')) != NULL)
-    *needle = '\0';
-
-  /* strip off "_GB" from en_GB */
-  if ((needle = strchr (locale, '_')) != NULL)
-    *needle = '\0';
-
-  return locale;
 }
 
 Dictionary dictionary_create_lang(char * lang)

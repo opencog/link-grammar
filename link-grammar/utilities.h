@@ -60,6 +60,9 @@ Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
 int match_in_connector_set(Connector_set *conset, Connector * c, int d);
 
+char * get_default_locale(void);
+char * join_path(char * prefix, char * suffix);
+
 #define DICTPATH "DICTPATH" /* PATH environ variable for dictionary files */
 FILE *dictopen(char *dictname, char *filename, char *how);
 FILE *ppopen(char *);
