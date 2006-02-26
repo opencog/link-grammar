@@ -827,7 +827,9 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
     Postprocessor * postprocessor;
     Sublinkage *sublinkage;
     Parse_info * pi = sent->parse_info;
+
     build_digraph(pi);
+    memset(&li, 0, sizeof(li));
 
     sublinkage = x_create_sublinkage(pi);
     postprocessor = sent->dict->postprocessor;

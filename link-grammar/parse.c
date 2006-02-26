@@ -35,11 +35,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <error.h>
 #include <string.h>
 
 #include <link-grammar/link-includes.h>
 #include <link-grammar/structures.h>
+#include <link-grammar/error.h>
 
 #include "command-line.h"
 

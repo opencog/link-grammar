@@ -443,7 +443,7 @@ path_get_dirname (const char	   *file_name)
 	  len = (int) strlen (file_name) + 1;
 	  base = (char *)malloc(len + 1);
 	  strcpy (base, file_name);
-	  base[len-1] = G_DIR_SEPARATOR;
+	  base[len-1] = DIR_SEPARATOR;
 	  base[len] = 0;
 	  return base;
 	}
@@ -475,7 +475,7 @@ static char * get_datadir(void)
   data_dir = strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
   /* Dynamically locate library and return containing directory */
-  HINSTANCE hInstance = GetModuleHandle("liblinkgrammar");
+  HINSTANCE hInstance = GetModuleHandle(NULL);
   if(hInstance != NULL)
     {
       char dll_path[MAX_PATH];
@@ -1716,9 +1716,9 @@ char * join_path(char * prefix, char * suffix)
   path = malloc(path_len + 1);
 
   strcpy(path, prefix);
+  path[strlen(path)+1] = '\0';
   path[strlen(path)] = DIR_SEPARATOR;
   strcat(path, suffix);
-  path[path_len] = '\0';
 
   return path;
 }
