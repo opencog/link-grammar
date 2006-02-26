@@ -475,7 +475,7 @@ static char * get_datadir(void)
   data_dir = strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
   /* Dynamically locate library and return containing directory */
-  HINSTANCE hInstance = GetModuleHandle(NULL);
+  HINSTANCE hInstance = GetModuleHandle("link-grammar");
   if(hInstance != NULL)
     {
       char dll_path[MAX_PATH];
