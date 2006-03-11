@@ -92,7 +92,8 @@ liblink_grammar_include_HEADERS = 	\
 	link-features.h
 
 EXTRA_DIST=				\
-	prefix.h
+	prefix.h			\
+	link-grammar.def
 
 bin_PROGRAMS=grammar-parse
 grammar_parse_SOURCES=parse.c
