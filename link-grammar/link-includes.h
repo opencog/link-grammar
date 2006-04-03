@@ -96,8 +96,6 @@ link_public_api(int)
 link_public_api(void)
      parse_options_set_cost_model_type(Parse_Options opts, int cm);
 link_public_api(int)
-     parse_options_get_cost_model_type(Parse_Options opts);
-link_public_api(int)
      parse_options_timer_expired(Parse_Options opts);
 link_public_api(int)
      parse_options_memory_exhausted(Parse_Options opts);
@@ -256,8 +254,6 @@ link_public_api(char *)
      linkage_print_postscript(Linkage linkage, int mode);
 link_public_api(char *)
      linkage_print_diagram(Linkage linkage);
-link_public_api(char *)
-     linkage_print_constituents(Linkage linkage);
 link_public_api(int)
      linkage_compute_union(Linkage linkage);
 link_public_api(int)
