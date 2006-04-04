@@ -69,6 +69,8 @@ sentence_num_valid_linkages
 sentence_num_linkages_post_processed
 sentence_num_violations
 sentence_disjunct_cost
+sentence_get_nth_word
+sentence_nth_word_has_disjunction
 linkage_create
 linkage_set_current_sublinkage
 linkage_delete

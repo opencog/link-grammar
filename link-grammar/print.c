@@ -235,7 +235,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage) {
        */
     int i, l;
     char * s, *t, *u;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
     char * chosen_words[MAX_SENTENCE];
     Parse_Options opts = linkage->opts;
 

@@ -627,6 +627,14 @@ int sentence_disjunct_cost(Sentence sent, int i) {
     return sent->link_info[i].disjunct_cost;
 }
 
+char * sentence_get_nth_word(Sentence sent, int i) {
+  return sent->word[i].string;
+}
+
+int sentence_nth_word_has_disjunction(Sentence sent, int i) {
+  return (sent->parse_info->chosen_disjuncts[i] != NULL);
+}
+
 /***************************************************************
 *
 * Routines for postprocessing

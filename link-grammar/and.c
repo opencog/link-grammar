@@ -1202,7 +1202,7 @@ int set_has_fat_down(Sentence sent) {
    fat down label.
 */
     int link, w, N_fat;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     N_fat = 0;
 
@@ -1222,7 +1222,7 @@ int set_has_fat_down(Sentence sent) {
     return (N_fat > 0);
 }
 
-void free_image_array(Parse_info * pi) {
+void free_image_array(Parse_info pi) {
     int w;
     Image_node * in, * inx;
     for (w=0; w<pi->N_words; w++) {
@@ -1240,7 +1240,7 @@ void build_image_array(Sentence sent) {
     Connector * this_end_con, *other_end_con, * upcon, * updiscon, *clist;
     Disjunct * dis, * updis;
     Image_node * in;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     for (word=0; word<pi->N_words; word++) {
 	image_array[word] = NULL;
@@ -1363,7 +1363,7 @@ int is_canonical_linkage(Sentence sent) {
     Connector *d_c, *c, dummy_connector, *upcon;
     Disjunct *dis, *chosen_d;
     Image_node * in;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     dummy_connector.priority = UP_priority;
     init_connector(&dummy_connector);
@@ -1457,7 +1457,7 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
     int link, end, word, place;
     Connector * this_end_con, * upcon, * updiscon, *clist, *con, *mycon;
     Disjunct * dis, * updis, *mydis;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     for (end = -1; end <= 1; end += 2) {
 	for (link=0; link<pi->N_links; link++) {

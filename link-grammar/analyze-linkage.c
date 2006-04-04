@@ -87,7 +87,7 @@ struct Links_to_patch_struct {
 };
 
 
-static Sublinkage * x_create_sublinkage(Parse_info * pi) {
+static Sublinkage * x_create_sublinkage(Parse_info pi) {
     int i;
     Sublinkage *s = (Sublinkage *) xalloc (sizeof(Sublinkage));
     s->link = (Link *) xalloc(MAX_LINKS*sizeof(Link));
@@ -100,7 +100,7 @@ static Sublinkage * x_create_sublinkage(Parse_info * pi) {
 }
 
 
-static Sublinkage * ex_create_sublinkage(Parse_info * pi) {
+static Sublinkage * ex_create_sublinkage(Parse_info pi) {
     int i;
     Sublinkage *s = (Sublinkage *) exalloc (sizeof(Sublinkage));
     s->link = (Link *) exalloc(pi->N_links*sizeof(Link));
@@ -136,7 +136,7 @@ static void copy_full_link(Link *dest, Link src) {
 /* end new code 9/97 ALB */
 
 
-static void build_digraph(Parse_info * pi) {
+static void build_digraph(Parse_info pi) {
 /* Constructs a graph in the word_links array based on the contents of    */
 /* the global link_array.  Makes the word_links array point to a list of  */
 /* words neighboring each word (actually a list of links).  This is a     */
@@ -290,7 +290,7 @@ int comp_height(int *a, int *b) {
 
 #define COMPARE_TYPE int (*)(const void *, const void *)
 
-static DIS_node * build_DIS_CON_tree(Parse_info * pi) {
+static DIS_node * build_DIS_CON_tree(Parse_info pi) {
     int xw, w;
     DIS_node * dnroot, * dn;
     CON_list * child, * xchild;
@@ -424,7 +424,7 @@ static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp) {
     fill_patch_array_DIS(cn->current->dn, ltp);
 }
 
-static void free_digraph(Parse_info * pi) 
+static void free_digraph(Parse_info pi) 
 {
   List_o_links * lol, *lolx;
   int i;
@@ -511,7 +511,7 @@ Andlist * build_andlist(Sentence sent) {
     int w, i, min, max, j, cost;
     char * s;
     Andlist * new_andlist, * old_andlist;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     old_andlist = NULL;
     cost = 0;
@@ -572,7 +572,7 @@ static int cost_for_length(int length) {
       return length-1;
 }
 
-static int link_cost(Parse_info * pi) {
+static int link_cost(Parse_info pi) {
 /* computes the cost of the current parse of the current sentence */
 /* due to the length of the links                                 */
     int lcost, i;
@@ -583,13 +583,13 @@ static int link_cost(Parse_info * pi) {
     return lcost;
 }
 
-static int null_cost(Parse_info * pi) {
+static int null_cost(Parse_info pi) {
   /* computes the number of null links in the linkage */
   /* No one seems to care about this -- ALB */
   return 0;
 }
 
-static int unused_word_cost(Parse_info * pi) {
+static int unused_word_cost(Parse_info pi) {
     int lcost, i;
     lcost =  0;
     for (i=0; i<pi->N_words; i++) 
@@ -598,7 +598,7 @@ static int unused_word_cost(Parse_info * pi) {
 }
 
 
-static int disjunct_cost(Parse_info * pi) {
+static int disjunct_cost(Parse_info pi) {
 /* computes the cost of the current parse of the current sentence     */
 /* due to the cost of the chosen disjuncts                            */
     int lcost, i;
@@ -648,7 +648,7 @@ static void compute_link_names(Sentence sent) {
    its two endpoints.
 */
     int i;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     for (i=0; i<pi->N_links; i++) {
 	pi->link_array[i].name = intersect_strings(sent, 
@@ -670,7 +670,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 */
     int i;
     char * s;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     for (i=0; i<pi->N_links; i++) 
       {
@@ -700,7 +700,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
     PP_node *pp;
     Postprocessor *postprocessor;
     Sublinkage *sublinkage;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
     PP_node accum;               /* for domain ancestry check */
     D_type_list * dtl0, * dtl1;  /* for domain ancestry check */
 
@@ -826,7 +826,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
     PP_node * pp;
     Postprocessor * postprocessor;
     Sublinkage *sublinkage;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     build_digraph(pi);
     memset(&li, 0, sizeof(li));
@@ -878,7 +878,7 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 {
     int i;
     Sublinkage *sublinkage;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     sublinkage = x_create_sublinkage(pi);
     compute_link_names(sent);
@@ -906,7 +906,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage) {
     DIS_node *d_root;
     int num_sublinkages;
     Sublinkage * sublinkage;
-    Parse_info * pi = sent->parse_info;
+    Parse_info pi = sent->parse_info;
 
     sublinkage = x_create_sublinkage(pi);
     build_digraph(pi);

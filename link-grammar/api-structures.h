@@ -145,8 +145,7 @@ struct And_data_s {
     Label_node * hash_table[HT_SIZE];
 };
 
-
-typedef struct Parse_info_struct Parse_info;
+typedef struct Parse_info_struct *Parse_info;
 struct Parse_info_struct {
     int            x_table_size;
     X_table_connector ** x_table;
@@ -176,7 +175,7 @@ struct Sentence_s {
 				   because some may be non-canonical. */
     int    num_valid_linkages;  /* number with no pp violations */
     int    null_count;          /* number of null links in linkages */
-    Parse_info *   parse_info;  /* set of parses for the sentence */
+    Parse_info     parse_info;  /* set of parses for the sentence */
     Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
     String_set *   string_set;  /* used for word names, not connectors */
     And_data       and_data;    /* used to keep track of fat disjuncts */ 

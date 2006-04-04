@@ -199,6 +199,10 @@ link_public_api(int)
 link_public_api(int)
      sentence_disjunct_cost(Sentence sent, int i);
 
+link_public_api(char *)
+     sentence_get_nth_word(Sentence sent, int i);
+link_public_api(int)
+     sentence_nth_word_has_disjunction(Sentence sent, int i);
 
 /*****************************************************************************
 *
