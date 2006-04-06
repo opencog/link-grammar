@@ -4,7 +4,7 @@
 /* All rights reserved                                                          */
 /*                                                                              */
 /* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */ 
+/* license set forth in the LICENSE file included with this software,           */
 /* and also available at http://www.link.cs.cmu.edu/link/license.html           */
 /* This license allows free redistribution and use in source and binary         */
 /* forms, with or without modification, subject to certain conditions.          */
@@ -24,8 +24,10 @@
 #ifdef _WIN32
 #  include <windows.h>
 #  define DIR_SEPARATOR '\\'
+#  define PATH_SEPARATOR ';'
 #else
 #  define DIR_SEPARATOR '/'
+#  define PATH_SEPARATOR ':'
 #endif
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR == (ch))
@@ -37,7 +39,7 @@ int   verbosity;
 
 void safe_strcpy(char *u, char * v, int usize) {
 /* Copies as much of v into u as it can assuming u is of size usize */
-/* guaranteed to terminate u with a '\0'.                           */    
+/* guaranteed to terminate u with a '\0'.                           */
     strncpy(u, v, usize-1);
     u[usize-1] = '\0';
 }
@@ -47,11 +49,11 @@ void safe_strcat(char *u, char *v, int usize) {
 /* guaranteed to terminate u with a '\0'.  Assumes u and v are null terminated.  */
     strncat(u, v, usize-strlen(u)-1);
     u[usize-1] = '\0';
-}    
+}
 
 void free_connectors(Connector *e) {
 /* free the list of connectors pointed to by e
-   (does not free any strings) 
+   (does not free any strings)
 */
     Connector * n;
     for(;e != NULL; e = n) {
@@ -62,7 +64,7 @@ void free_connectors(Connector *e) {
 
 void free_disjuncts(Disjunct *c) {
 /* free the list of disjuncts pointed to by c
-   (does not free any strings) 
+   (does not free any strings)
 */
     Disjunct *c1;
     for (;c != NULL; c = c1) {
@@ -191,7 +193,7 @@ int external_space_in_use;
 void * xalloc(int size) {
 /* To allow printing of a nice error message, and keep track of the
    space allocated.
-*/   
+*/
     char * p = (char *) malloc(size);
     space_in_use += size;
     if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
@@ -284,7 +286,7 @@ void exfree_link(Link l) {
 Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2) {
 /* Destructively catenates the two disjunct lists d1 followed by d2. */
 /* Doesn't change the contents of the disjuncts */
-/* Traverses the first list, but not the second */    
+/* Traverses the first list, but not the second */
     Disjunct * dis = d1;
 
     if (d1 == NULL) return d2;
@@ -297,7 +299,7 @@ Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2) {
 X_node * catenate_X_nodes(X_node *d1, X_node *d2) {
 /* Destructively catenates the two disjunct lists d1 followed by d2. */
 /* Doesn't change the contents of the disjuncts */
-/* Traverses the first list, but not the second */    
+/* Traverses the first list, but not the second */
     X_node * dis = d1;
 
     if (d1 == NULL) return d2;
@@ -383,8 +385,8 @@ static char*
 path_get_dirname (const char	   *file_name)
 {
   register char *base;
-  register int len;    
-  
+  register int len;
+
   base = strrchr (file_name, DIR_SEPARATOR);
 #ifdef _WIN32
   {
@@ -459,11 +461,11 @@ path_get_dirname (const char	   *file_name)
 #endif
 
   len = (int) 1 + base - file_name;
-  
+
   base = (char *)malloc(len + 1);
   memmove (base, file_name, len);
   base[len] = 0;
-  
+
   return base;
 }
 
@@ -475,11 +477,11 @@ static char * get_datadir(void)
   data_dir = strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
   /* Dynamically locate library and return containing directory */
-  HINSTANCE hInstance = GetModuleHandle("link-grammar");
+  HINSTANCE hInstance = GetModuleHandle(NULL);
   if(hInstance != NULL)
     {
       char dll_path[MAX_PATH];
-      
+
       if(GetModuleFileName(hInstance,dll_path,MAX_PATH)) {
 	char * prefix = path_get_dirname(dll_path);
 	if(prefix) {
@@ -530,7 +532,7 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
     {
       char * data_dir = get_datadir();
       if(data_dir) {
-	sprintf(fulldictpath, "%s%s:", DEFAULTPATH, data_dir);
+	sprintf(fulldictpath, "%s%c%s%c", data_dir, PATH_SEPARATOR, DEFAULTPATH, PATH_SEPARATOR);
 	free(data_dir);
       }
       else {
@@ -544,9 +546,9 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
     filenamelen = strlen(filename);
     len = strlen(fulldictpath)+ filenamelen + 1 + 1;
     oldpos = fulldictpath;
-    while ((pos = strchr(oldpos, ':')) != NULL) {
+    while ((pos = strchr(oldpos, PATH_SEPARATOR)) != NULL) {
 	strncpy(completename, oldpos, (pos-oldpos));
-	*(completename+(pos-oldpos)) = '/';
+	*(completename+(pos-oldpos)) = DIR_SEPARATOR;
 	strcpy(completename+(pos-oldpos)+1,filename);
 	if ((fp = fopen(completename, how)) != NULL) {
 	    return fp;
@@ -569,7 +571,7 @@ int step_generator(int d) {
 
 void my_random_initialize(int seed) {
     assert(!random_inited, "Random number generator not finalized.");
-    
+
     seed = (seed < 0) ? -seed : seed;
     seed = seed % (1 << 30);
 
@@ -628,7 +630,7 @@ void build_connector_set_from_expression(Connector_set * conset, Exp * e) {
 	    build_connector_set_from_expression(conset, l->e);
 	}
     }
-}	
+}
 
 Connector_set * connector_set_create(Exp *e) {
     int i;
@@ -687,7 +689,7 @@ void free_listed_dictionary(Dict_node *dn) {
 
 int easy_match(char * s, char * t) {
 
-    /* This is like the basic "match" function in count.c - the basic connector-matching 
+    /* This is like the basic "match" function in count.c - the basic connector-matching
        function used in parsing - except it ignores "priority" (used to handle fat links) */
 
     while(isupper((int)*s) || isupper((int)*t)) {
@@ -712,7 +714,7 @@ int word_has_connector(Dict_node * dn, char * cs, int direction) {
   /* This function takes a dict_node (corresponding to an entry in a given dictionary), a
      string (representing a connector), and a direction (0 = right-pointing, 1 = left-pointing);
      it returns 1 if the dictionary expression for the word includes the connector, 0 otherwise.
-     This can be used to see if a word is in a certain category (checking for a category 
+     This can be used to see if a word is in a certain category (checking for a category
      connector in a table), or to see if a word has a connector in a normal dictionary. The
      connector check uses a "smart-match", the same kind used by the parser. */
 
@@ -721,7 +723,7 @@ int word_has_connector(Dict_node * dn, char * cs, int direction) {
     if(dn == NULL) return -1;
     d0 = d = build_disjuncts_for_dict_node(dn);
     if(d == NULL) return 0;
-    for(; d!=NULL; d=d->next) { 
+    for(; d!=NULL; d=d->next) {
       if(direction==0) c2 = d->right;
       if(direction==1) c2 = d->left;
       for(; c2!=NULL; c2=c2->next) {
@@ -1508,7 +1510,7 @@ win32_getlocale (void)
       sl = "IN";
       break;
     case LANG_KOREAN: l = "ko"; sl = "KR"; break;
-    case LANG_KYRGYZ: l = "ky"; sl = "KG"; break; 
+    case LANG_KYRGYZ: l = "ky"; sl = "KG"; break;
     case LANG_LAO: l = "lo"; sl = "LA"; break;
     case LANG_LATIN: l = "la"; sl = "VA"; break;
     case LANG_LATVIAN: l = "lv"; sl = "LV"; break;
@@ -1630,7 +1632,7 @@ win32_getlocale (void)
 	case SUBLANG_SPANISH_PUERTO_RICO: sl = "PR"; break;
 	}
       break;
-    case LANG_SUTU: l = "bnt"; sl = "TZ"; break; /* or "st_LS" or "nso_ZA"? */ 
+    case LANG_SUTU: l = "bnt"; sl = "TZ"; break; /* or "st_LS" or "nso_ZA"? */
     case LANG_SWAHILI: l = "sw"; sl = "KE"; break;
     case LANG_SWEDISH:
       l = "sv";
@@ -1736,15 +1738,15 @@ char * get_default_locale(void)
 
   if(!locale)
     locale = strdup (getenv ("LANG"));
-		
+
 #if defined(HAVE_LC_MESSAGES)
   if(!locale)
     locale = strdup (setlocale (LC_MESSAGES, NULL));
 #endif
-  
+
   if(!locale)
     locale = strdup (setlocale (LC_ALL, NULL));
-		
+
   if(!locale || strcmp(locale, "C") == 0) {
     free(locale);
     locale = strdup("en");
@@ -1753,7 +1755,7 @@ char * get_default_locale(void)
   /* strip off "@euro" from en_GB@euro */
   if ((needle = strchr (locale, '@')) != NULL)
     *needle = '\0';
-  
+
   /* strip off ".UTF-8" from en_GB.UTF-8 */
   if ((needle = strchr (locale, '.')) != NULL)
     *needle = '\0';

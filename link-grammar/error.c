@@ -22,8 +22,8 @@
 static char   buf[1024];
 #define CRLF  printf("\n")
 
-int    lperrno;
-char   lperrmsg[1024];
+int    lperrno = 0;
+char   lperrmsg[1024] = "";
 
 const char * msg_of_lperror(int lperr) {
     switch(lperr) {
