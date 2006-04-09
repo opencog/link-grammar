@@ -29,44 +29,35 @@ const char * msg_of_lperror(int lperr) {
     switch(lperr) {
     case NODICT:
 	return "Could not open dictionary ";
-	break;
     case DICTPARSE:
 	return "Error parsing dictionary ";
-	break;
     case WORDFILE:
 	return "Error opening word file ";
-	break;
     case SEPARATE:
 	return "Error separating sentence ";
-	break;
     case NOTINDICT:
 	return "Sentence not in dictionary ";
-	break;
     case BUILDEXPR:
 	return "Could not build sentence expressions ";
-	break;
     case INTERNALERROR:
 	return "Internal error.  Send mail to link@juno.com ";
-	break;
     default:
 	return "";
-	break;
     }
-    return NULL;
+    return "";
 }
 
-
 void lperror(int lperr, char *fmt, ...) {
-    char temp[1024];
+    char temp[1024] = "";
     va_list args;
 
     va_start(args, fmt);
-    sprintf(lperrmsg, "PARSER-API: %s", msg_of_lperror(lperr));
     vsprintf(temp, fmt, args); 
-    strcat(lperrmsg, temp);
     va_end(args);
+
+    strcpy(lperrmsg, msg_of_lperror(lperr));
+    strcat(lperrmsg, temp);
     lperrno = lperr;
-    fflush(stderr);
 }
 
 void error(char *fmt, ...) {
@@ -81,7 +72,6 @@ void error(char *fmt, ...) {
 	fprintf(stderr, buf);
 	fprintf(stderr, "\n");
     }
-    fflush(stderr);
     fflush(stdout);
     fprintf(stderr, "Parser quitting.\n");
     exit(1); /* Always fail and print out this file name */
