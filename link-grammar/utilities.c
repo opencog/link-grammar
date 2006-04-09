@@ -483,13 +483,7 @@ static char * get_datadir(void)
       char dll_path[MAX_PATH];
 
       if(GetModuleFileName(hInstance,dll_path,MAX_PATH)) {
-	char * prefix = path_get_dirname(dll_path);
-	if(prefix) {
-	  char * path = join_path(prefix, "share");
-	  data_dir = join_path(path, "link-grammar");
-	  free(path);
-	  free(prefix);
-	}
+	data_dir = path_get_dirname(dll_path);
       }
     }
 #endif
