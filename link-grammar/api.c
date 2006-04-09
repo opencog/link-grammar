@@ -420,25 +420,27 @@ Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name,
 Dictionary dictionary_create_lang(char * lang)
 {
   Dictionary dictionary;
-  char * dict_name;
-  char * pp_name;
-  char * cons_name;
-  char * affix_name;  
 
-  if(!(lang && *lang))
-    return NULL;
+  if(lang && *lang) {
+    char * dict_name;
+    char * pp_name;
+    char * cons_name;
+    char * affix_name;  
 
-  dict_name = join_path(lang, "4.0.dict");
-  pp_name = join_path(lang, "4.0.knowledge");
-  cons_name = join_path(lang, "4.0.constituent-knowledge");
-  affix_name = join_path(lang, "4.0.affix");
-
-  dictionary = dictionary_create(dict_name, pp_name, cons_name, affix_name);
-
-  free(affix_name);
-  free(cons_name);
-  free(pp_name);
-  free(dict_name);
+    dict_name = join_path(lang, "4.0.dict");
+    pp_name = join_path(lang, "4.0.knowledge");
+    cons_name = join_path(lang, "4.0.constituent-knowledge");
+    affix_name = join_path(lang, "4.0.affix");
+    
+    dictionary = dictionary_create(dict_name, pp_name, cons_name, affix_name);
+    
+    free(affix_name);
+    free(cons_name);
+    free(pp_name);
+    free(dict_name);
+  } else {
+    dictionary = NULL;
+  }
 
   return dictionary;
 }
@@ -446,34 +448,18 @@ Dictionary dictionary_create_lang(char * lang)
 Dictionary dictionary_create_default_lang(void)
 {
   Dictionary dictionary;
-  char * locale;
+  char * lang;
 
-  locale = get_default_locale();
-  if(!(locale && *locale))
-    return NULL;
-
-  dictionary = dictionary_create_lang(locale);
-
-  free(locale);
+  lang = get_default_locale();
+  if(lang && *lang) {
+    dictionary = dictionary_create_lang(lang);
+    free(lang);
+  } else {
+    dictionary = NULL;
+  }
 
   return dictionary;
 }
-
-/* obsolete *DS*
-void dictionary_open_affix_file(Dictionary dict, char * affix_file) {
-    dict->affix_table = dictionary_create(affix_file, NULL);
-    if (dict->affix_table == NULL) {
-        fprintf(stderr, "%s\n", lperrmsg);
-	exit(-1);
-    }
-}
-*/
-
-/* obsolete *DS*
-void dictionary_open_constituent_knowledge(Dictionary dict, char * cons_file) {
-    dict->constituent_pp = post_process_open(dict->name, cons_file);
-}
-*/
 
 int dictionary_delete(Dictionary dict) {
 
