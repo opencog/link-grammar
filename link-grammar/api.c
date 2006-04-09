@@ -425,7 +425,7 @@ Dictionary dictionary_create_lang(char * lang)
   char * cons_name;
   char * affix_name;  
 
-  if(!lang && *lang)
+  if(!lang || !(*lang))
     return NULL;
 
   dict_name = join_path(lang, "4.0.dict");
@@ -449,7 +449,7 @@ Dictionary dictionary_create_default_lang(void)
   char * locale;
 
   locale = get_default_locale();
-  if(!locale && *locale)
+  if(!locale || !(*locale))
     return NULL;
 
   dictionary = dictionary_create_lang(locale);
