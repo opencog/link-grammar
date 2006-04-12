@@ -81,6 +81,7 @@ data/Makefile
 data/en/Makefile
 data/en/words/Makefile
 autopackage/default.apspec
+link-grammar.xcode/Makefile
 ])
 
 dnl ===========================================================================================
