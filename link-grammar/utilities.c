@@ -520,7 +520,8 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
     FILE *fp;
 
     if (filename[0] == '/') {
-	return fopen(filename, how);  /* If the file does not exist NULL is returned */
+	fp = fopen(filename, how);  /* If the file does not exist NULL is returned */
+	if(fp) return fp;
     }
 
     {
