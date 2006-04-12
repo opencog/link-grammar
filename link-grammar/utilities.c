@@ -531,7 +531,9 @@ FILE *dictopen(char *dictname, char *filename, char *how) {
 	free(data_dir);
       }
       else {
-	strcpy(fulldictpath, DEFAULTPATH);
+	/* always make sure that it ends with a path separator char 
+	   for the below while() loop. */
+	sprintf(fulldictpath, "%s%c", DEFAULTPATH, PATH_SEPARATOR);
       }
     }
 
