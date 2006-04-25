@@ -37,6 +37,12 @@
 
 int   verbosity;
 
+char *safe_strdup(char *u) {
+  if(u)
+    return strdup(u);
+  return NULL;
+}
+
 void safe_strcpy(char *u, char * v, int usize) {
 /* Copies as much of v into u as it can assuming u is of size usize */
 /* guaranteed to terminate u with a '\0'.                           */
@@ -407,10 +413,10 @@ path_get_dirname (const char	   *file_name)
 	  drive_colon_dot[2] = '.';
 	  drive_colon_dot[3] = '\0';
 
-	  return strdup (drive_colon_dot);
+	  return safe_strdup (drive_colon_dot);
 	}
 #endif
-    return strdup (".");
+    return safe_strdup (".");
     }
 
   while (base > file_name && IS_DIR_SEPARATOR (*base))
@@ -474,7 +480,7 @@ static char * get_datadir(void)
   char * data_dir = NULL;
 
 #ifdef ENABLE_BINRELOC
-  data_dir = strdup (BR_DATADIR("/link-grammar"));
+  data_dir = safe_strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
   /* Dynamically locate library and return containing directory */
   HINSTANCE hInstance = GetModuleHandle(NULL);
@@ -1296,7 +1302,7 @@ win32_getlocale (void)
   if (((ev = getenv ("LC_ALL")) != NULL && ev[0] != '\0')
       || ((ev = getenv ("LC_MESSAGES")) != NULL && ev[0] != '\0')
       || ((ev = getenv ("LANG")) != NULL && ev[0] != '\0'))
-    return strdup (ev);
+    return safe_strdup (ev);
 
   /* Use native Win32 API locale ID.  */
   lcid = GetThreadLocale ();
@@ -1702,7 +1708,7 @@ win32_getlocale (void)
       strcat (bfr, sl);
     }
 
-  return strdup (bfr);
+  return safe_strdup (bfr);
 }
 #endif
 
@@ -1734,19 +1740,19 @@ char * get_default_locale(void)
 #endif
 
   if(!locale)
-    locale = strdup (getenv ("LANG"));
+    locale = safe_strdup (getenv ("LANG"));
 
 #if defined(HAVE_LC_MESSAGES)
   if(!locale)
-    locale = strdup (setlocale (LC_MESSAGES, NULL));
+    locale = safe_strdup (setlocale (LC_MESSAGES, NULL));
 #endif
 
   if(!locale)
-    locale = strdup (setlocale (LC_ALL, NULL));
+    locale = safe_strdup (setlocale (LC_ALL, NULL));
 
   if(!locale || strcmp(locale, "C") == 0) {
     free(locale);
-    locale = strdup("en");
+    locale = safe_strdup("en");
   }
 
   /* strip off "@euro" from en_GB@euro */

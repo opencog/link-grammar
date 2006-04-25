@@ -146,7 +146,7 @@ br_locate (void *symbol)
 			}
 
 			fclose(f);
-			return strdup (path);
+			return safe_strdup (path);
 		}
 	}
 
@@ -210,7 +210,7 @@ br_prepend_prefix (void *symbol, char *path)
 	if (!tmp) return NULL;
 
 	if (strcmp (tmp, "/") == 0)
-		newpath = strdup (path);
+		newpath = safe_strdup (path);
 	else
 		newpath = br_strcat (tmp, path);
 
@@ -370,7 +370,7 @@ br_strndup (char *str, size_t size)
 	br_return_val_if_fail (str != (char *) NULL, (char *) NULL);
 
 	len = strlen (str);
-	if (!len) return strdup ("");
+	if (!len) return safe_strdup ("");
 	if (size > len) size = len;
 
 	result = (char *) calloc (sizeof (char), len + 1);
@@ -398,7 +398,7 @@ br_extract_dir (const char *path)
 	br_return_val_if_fail (path != (char *) NULL, (char *) NULL);
 
 	end = strrchr (path, '/');
-	if (!end) return strdup (".");
+	if (!end) return safe_strdup (".");
 
 	while (end > path && *end == '/')
 		end--;
@@ -406,7 +406,7 @@ br_extract_dir (const char *path)
 	if (!*result)
 	{
 		free (result);
-		return strdup ("/");
+		return safe_strdup ("/");
 	} else
 		return result;
 }
@@ -432,15 +432,15 @@ br_extract_prefix (const char *path)
 
 	br_return_val_if_fail (path != (char *) NULL, (char *) NULL);
 
-	if (!*path) return strdup ("/");
+	if (!*path) return safe_strdup ("/");
 	end = strrchr (path, '/');
-	if (!end) return strdup (path);
+	if (!end) return safe_strdup (path);
 
 	tmp = br_strndup ((char *) path, end - path);
 	if (!*tmp)
 	{
 		free (tmp);
-		return strdup ("/");
+		return safe_strdup ("/");
 	}
 	end = strrchr (tmp, '/');
 	if (!end) return tmp;
@@ -451,7 +451,7 @@ br_extract_prefix (const char *path)
 	if (!*result)
 	{
 		free (result);
-		result = strdup ("/");
+		result = safe_strdup ("/");
 	}
 
 	return result;

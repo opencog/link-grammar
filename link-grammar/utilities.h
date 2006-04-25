@@ -15,6 +15,7 @@
 
 void safe_strcpy(char *u, char * v, int usize);
 void safe_strcat(char *u, char *v, int usize);
+char *safe_strdup(char *u);
 void xfree(void *, int);
 void exfree(void *, int);
 void free_disjuncts(Disjunct *);
