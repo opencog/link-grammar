@@ -402,12 +402,12 @@ int main(int argc, char * argv[]) {
 	    else continue;
 	} 
 	if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
-	    sentence_delete(sent);
 	    if (verbosity > 0) {
 	      fprintf(stdout, 
 		      "Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 		    sentence_length(sent), parse_options_get_max_sentence_length(opts));
 	    }
+	    sentence_delete(sent);
 	    continue;
 	}
 
