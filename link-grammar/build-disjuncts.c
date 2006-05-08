@@ -32,7 +32,7 @@ struct clause_struct {
     Tconnector * c;
 };
 
-Tconnector * copy_Tconnectors(Tconnector * c) {
+static Tconnector * copy_Tconnectors(Tconnector * c) {
 /* This builds a new copy of the connector list pointed to by c.
    Strings, as usual, are not copied.
 */
@@ -44,7 +44,7 @@ Tconnector * copy_Tconnectors(Tconnector * c) {
     return c1;
 }
 
-void free_Tconnectors(Tconnector *e) {
+static void free_Tconnectors(Tconnector *e) {
     Tconnector * n;
     for(;e != NULL; e=n) {
 	n = e->next;
@@ -52,7 +52,7 @@ void free_Tconnectors(Tconnector *e) {
     }
 }
 
-void free_clause_list(Clause *c) {
+static void free_clause_list(Clause *c) {
     Clause *c1;
     while (c != NULL) {
 	c1 = c->next;
@@ -62,7 +62,7 @@ void free_clause_list(Clause *c) {
     }
 }
 
-Clause * copy_clause(Clause * d) {
+static Clause * copy_clause(Clause * d) {
 /* This builds a new copy of the clause pointed to by d (except for the
    next field which is set to NULL).  Strings, as usual, are not copied.
 */
@@ -75,7 +75,7 @@ Clause * copy_clause(Clause * d) {
     return d1;
 }
 
-Tconnector * Treverse(Tconnector *e) {
+static Tconnector * Treverse(Tconnector *e) {
 /* reverse the order of the list e.  destructive */
     Tconnector * head, *x;
     head = NULL;
@@ -88,7 +88,7 @@ Tconnector * Treverse(Tconnector *e) {
     return head;
 }    
 
-Connector * reverse(Connector *e) {
+static Connector * reverse(Connector *e) {
 /* reverse the order of the list e.  destructive */
     Connector * head, *x;
     head = NULL;
@@ -101,7 +101,7 @@ Connector * reverse(Connector *e) {
     return head;
 }    
 
-Tconnector * catenate(Tconnector * e1, Tconnector * e2) {
+static Tconnector * catenate(Tconnector * e1, Tconnector * e2) {
 /* Builds a new list of connectors that is the catenation of e1 with e2.
    does not effect lists e1 or e2.   Order is maintained. */
 
@@ -122,7 +122,7 @@ Tconnector * catenate(Tconnector * e1, Tconnector * e2) {
     return Treverse(head);
 }
 
-Tconnector * build_terminal(Exp * e) {
+static Tconnector * build_terminal(Exp * e) {
     /* build the connector for the terminal node n */
     Tconnector * c;
     c = (Tconnector *) xalloc(sizeof(Tconnector));
@@ -133,7 +133,7 @@ Tconnector * build_terminal(Exp * e) {
     return c;
 }
 
-int maxcost_of_expression(Exp *e) {
+static int maxcost_of_expression(Exp *e) {
     E_list * e_list;
     int m, m1;
 
@@ -148,7 +148,7 @@ int maxcost_of_expression(Exp *e) {
     return (m + e->cost);
 }
 
-int maxcost_of_sentence(Sentence sent) {
+static int maxcost_of_sentence(Sentence sent) {
 /* This returns the maximum maxcost of any disjunct in the sentence */
 /* assumes the sentence expressions have been constructed */
     X_node * x;
@@ -165,7 +165,7 @@ int maxcost_of_sentence(Sentence sent) {
 }
 
 
-Clause * build_clause(Exp *e, int cost_cutoff) {
+static Clause * build_clause(Exp *e, int cost_cutoff) {
 /* Build the clause for the expression e.  Does not change e */
     Clause *c=NULL, *c1, *c2, *c3, *c4, *c_head;
     E_list * e_list;
@@ -228,7 +228,7 @@ Clause * build_clause(Exp *e, int cost_cutoff) {
     return c;
 }
 
-void print_connector_list(Connector * e) {
+static void print_connector_list(Connector * e) {
     for (;e != NULL; e=e->next) {
 	printf("%s",e->string);
 	if (e->label != NORMAL_LABEL) {
@@ -240,7 +240,7 @@ void print_connector_list(Connector * e) {
     }
 }
 
-void print_Tconnector_list(Tconnector * e) {
+static void print_Tconnector_list(Tconnector * e) {
     for (;e != NULL; e=e->next) {
 	if (e->multi) printf("@");
 	printf("%s",e->string);
@@ -249,7 +249,7 @@ void print_Tconnector_list(Tconnector * e) {
     }
 }
 
-void print_clause_list(Clause * c) {
+static void print_clause_list(Clause * c) {
     for (;c != NULL; c=c->next) {
 	printf("  Clause: ");
 	printf("(%2d, %2d)", c->cost, c->maxcost);
@@ -258,7 +258,7 @@ void print_clause_list(Clause * c) {
     }
 }
 
-void print_disjunct_list(Disjunct * c) {
+static void print_disjunct_list(Disjunct * c) {
     for (;c != NULL; c=c->next) {
 	printf("%10s: ", c->string);
 	printf("(%2d)", c->cost);
@@ -269,7 +269,7 @@ void print_disjunct_list(Disjunct * c) {
     }
 }
 
-Connector * extract_connectors(Tconnector *e, int c) {
+static Connector * extract_connectors(Tconnector *e, int c) {
 /* Build a new list of connectors starting from the Tconnectors
    in the list pointed to by e.  Keep only those whose strings whose
    direction has the value c.
@@ -290,7 +290,7 @@ Connector * extract_connectors(Tconnector *e, int c) {
     }
 }	
 
-Disjunct * build_disjunct(Clause * cl, char * string, int cost_cutoff) {
+static Disjunct * build_disjunct(Clause * cl, char * string, int cost_cutoff) {
 /* build a disjunct list out of the clause list c */
 /* string is the print name of word that generated this disjunct */
 
@@ -310,7 +310,7 @@ Disjunct * build_disjunct(Clause * cl, char * string, int cost_cutoff) {
     return dis;
 }
 
-Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff) {
+static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff) {
     Clause *c ;
     Disjunct * dis;
     c = build_clause(x->exp, cost_cutoff);

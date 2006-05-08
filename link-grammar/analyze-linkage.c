@@ -284,7 +284,7 @@ void height_dfs(int w, int height) {
     }
 }
 
-int comp_height(int *a, int *b) {
+static int comp_height(int *a, int *b) {
     return dfs_height[*b] - dfs_height[*a];
 }
 
@@ -503,7 +503,7 @@ static void and_dfs_commas(Sentence sent, int w) {
     }
 }
 
-Andlist * build_andlist(Sentence sent) {
+static Andlist * build_andlist(Sentence sent) {
 /* This function computes the "and cost", resulting from inequalities in the length of 
    and-list elements. It also computes other information used to construct the "andlist"
    structure of linkage_info. */
@@ -558,7 +558,7 @@ Andlist * build_andlist(Sentence sent) {
     return old_andlist;
 }
 
-void islands_dfs(int w) {
+static void islands_dfs(int w) {
     List_o_links *lol;
     if (visited[w]) return;
     visited[w] = TRUE;

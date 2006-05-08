@@ -26,14 +26,14 @@
 static Word * local_sent;
 static int    islands_ok;
 
-Parse_set * dummy_set() {
+static Parse_set * dummy_set() {
     static Parse_set ds;
     ds.first = ds.current = NULL;
     ds.count = 1;
     return &ds;
 }
 
-Parse_set * empty_set(void) {
+static Parse_set * empty_set(void) {
     /* returns an empty set of parses */
     Parse_set *s;
     s = (Parse_set *) xalloc(sizeof(Parse_set));
@@ -42,7 +42,7 @@ Parse_set * empty_set(void) {
     return s;
 }
 
-void free_set(Parse_set *s) {
+static void free_set(Parse_set *s) {
     Parse_choice *p, *xp;
     if (s == NULL) return;
     for (p=s->first; p != NULL; p = xp) {
@@ -52,7 +52,7 @@ void free_set(Parse_set *s) {
     xfree((void *)s, sizeof(*s));
 }
 
-Parse_choice * make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
+static Parse_choice * make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
 			   Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
 			   Disjunct *ld, Disjunct *md, Disjunct *rd) {
     Parse_choice *pc;
@@ -74,7 +74,7 @@ Parse_choice * make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, C
     return pc;
 }
 
-void put_choice_in_set(Parse_set *s, Parse_choice *pc) {
+static void put_choice_in_set(Parse_set *s, Parse_choice *pc) {
 /* Put this parse_choice into a given set.  The current pointer is always
    left pointing to the end of the list. */
     if (s->first == NULL) {
@@ -86,7 +86,7 @@ void put_choice_in_set(Parse_set *s, Parse_choice *pc) {
     pc->next = NULL;
 }
 
-int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_info pi) {
+static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_info pi) {
     int i;
     i = 0;
     
@@ -98,7 +98,7 @@ int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_info pi
     return i & (pi->x_table_size-1);
 }
 
-void init_x_table(Sentence sent) {
+static void init_x_table(Sentence sent) {
     /* A piecewise exponential function determines the size of the hash table.      */
     /* Probably should make use of the actual number of disjuncts, rather than just */
     /* the number of words                                                          */
@@ -126,7 +126,7 @@ void init_x_table(Sentence sent) {
     }
 }
     
-void free_x_table(Parse_info pi) {
+static void free_x_table(Parse_info pi) {
 /* This is the function that should be used to free tha set structure. Since
    it's a dag, a recursive free function won't work.  Every time we create
    a set element, we put it in the hash table, so this is OK.*/
@@ -151,7 +151,7 @@ void free_x_table(Parse_info pi) {
     pi->x_table = NULL;
 }
 
-X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connector *re, 
+static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connector *re, 
 				    int cost, Parse_info pi) {
     /* returns the pointer to this info, NULL if not there */
     X_table_connector *t;
@@ -172,7 +172,7 @@ Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
 }
 #endif
 
-X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re, 
+static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re, 
 				  int cost, Parse_set * set, Parse_info pi) {
     /* Stores the value in the x_table.  Assumes it's not already there */
     X_table_connector *t, *n;
@@ -188,7 +188,7 @@ X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re,
     return n;
 }
 
-void x_table_update(int lw, int rw, Connector *le, Connector *re, 
+static void x_table_update(int lw, int rw, Connector *le, Connector *re, 
 		    int cost, Parse_set * set, Parse_info pi) {
     /* Stores the value in the x_table.  Unlike x_table_store, it assumes it's already there */
     X_table_connector *t = x_table_pointer(lw, rw, le, re, cost, pi);
@@ -198,7 +198,7 @@ void x_table_update(int lw, int rw, Connector *le, Connector *re,
 }
 
 
-Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw, 
+static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw, 
 		      Connector *le, Connector *re, int cost, Parse_info pi) {
     /* returns NULL if there are no ways to parse, or returns a pointer
        to a set structure representing all the ways to parse */
@@ -359,7 +359,7 @@ Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
     return xt->set;
 }
 
-int verify_set_node(Parse_set *set) {
+static int verify_set_node(Parse_set *set) {
     Parse_choice *pc;
     double dn;
     int n;
@@ -373,7 +373,7 @@ int verify_set_node(Parse_set *set) {
     return (n < 0) || (n != (int) dn);
 }
 
-int verify_set(Parse_info pi) {
+static int verify_set(Parse_info pi) {
     X_table_connector *t;
     int i;
     int overflowed;
@@ -441,7 +441,7 @@ void initialize_links(Parse_info pi) {
     }
 }
 
-void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, struct Link_s link) {
+static void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, struct Link_s link) {
     assert(pi->N_links <= MAX_LINKS-1, "Too many links"); 
     pi->link_array[pi->N_links] = link;
     pi->N_links++;
@@ -450,7 +450,7 @@ void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, struct Link_s link)
     pi->chosen_disjuncts[link.r] = rd;
 }
 
-void issue_links_for_choice(Parse_info pi, Parse_choice *pc) {
+static void issue_links_for_choice(Parse_info pi, Parse_choice *pc) {
     if (pc->link[0].lc != NULL) { /* there is a link to generate */
 	issue_link(pi, pc->ld, pc->md, pc->link[0]);
     }
@@ -459,7 +459,7 @@ void issue_links_for_choice(Parse_info pi, Parse_choice *pc) {
     }
 }
 
-void build_current_linkage_recursive(Parse_info pi, Parse_set *set) {
+static void build_current_linkage_recursive(Parse_info pi, Parse_set *set) {
     if (set == NULL) return;
     if (set->current == NULL) return;
 
@@ -476,7 +476,7 @@ void build_current_linkage(Parse_info pi) {
     build_current_linkage_recursive(pi, pi->parse_set);
 }
 
-int advance_linkage(Parse_info pi, Parse_set * set) {
+static int advance_linkage(Parse_info pi, Parse_set * set) {
     /* Advance the "current" linkage to the next one
        return 1 if there's a "carry" from this node,
        which indicates that the scan of this node has
@@ -496,11 +496,11 @@ int advance_linkage(Parse_info pi, Parse_set * set) {
     return 0;
 }
 
-void advance_parse_set(Parse_info pi) {
+static void advance_parse_set(Parse_info pi) {
      advance_linkage(pi, pi->parse_set);
 }
 
-void list_links(Parse_info pi, Parse_set * set, int index) {
+static void list_links(Parse_info pi, Parse_set * set, int index) {
      Parse_choice *pc;
      int n;
 
@@ -516,7 +516,7 @@ void list_links(Parse_info pi, Parse_set * set, int index) {
      list_links(pi, pc->set[1], index / pc->set[0]->count);
 }
 
-void list_random_links(Parse_info pi, Parse_set * set) {
+static void list_random_links(Parse_info pi, Parse_set * set) {
      Parse_choice *pc;
      int num_pc, new_index;
 

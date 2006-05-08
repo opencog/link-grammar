@@ -22,7 +22,7 @@
 
 typedef enum {OPEN, CLOSE, WORD} CType;
 typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
-String_set * phrase_ss;
+static String_set * phrase_ss;
 
 struct {
   int left;
@@ -1317,7 +1317,7 @@ static char * print_flat_constituents(Linkage linkage) {
     return q;
 }
 
-CType token_type (char *token) {
+static CType token_type (char *token) {
     if ((token[0]==OPEN_BRACKET) && (strlen(token)>1)) 
 	return OPEN;
     if ((strlen(token)>1) && (token[strlen(token)-1]==CLOSE_BRACKET)) 
@@ -1325,7 +1325,7 @@ CType token_type (char *token) {
     return WORD;
 }
 
-CNode * make_CNode(char *q) {
+static CNode * make_CNode(char *q) {
     CNode * cn;
     cn = exalloc(sizeof(CNode));
     cn->label = (char *) exalloc(sizeof(char)*(strlen(q)+1));
@@ -1336,7 +1336,7 @@ CNode * make_CNode(char *q) {
     return cn;
 }
 
-CNode * parse_string(CNode * n) {
+static CNode * parse_string(CNode * n) {
     char *q;
     CNode *m, *last_child=NULL;
 

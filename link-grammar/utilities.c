@@ -142,7 +142,7 @@ void init_randtable(void) {
 }
 
 /* Build a copy of the given expression (don't copy strings, of course) */
-E_list * copy_E_list(E_list * l);
+static E_list * copy_E_list(E_list * l);
 Exp * copy_Exp(Exp * e) {
     Exp * n;
     if (e == NULL) return NULL;
@@ -154,7 +154,7 @@ Exp * copy_Exp(Exp * e) {
     return n;
 }
 
-E_list * copy_E_list(E_list * l) {
+static E_list * copy_E_list(E_list * l) {
     E_list * nl;
     if (l == NULL) return NULL;
     nl = (E_list *) xalloc(sizeof(E_list));
@@ -565,7 +565,7 @@ static int random_state[2] = {0,0};
 static int random_count = 0;
 static int random_inited = FALSE;
 
-int step_generator(int d) {
+static int step_generator(int d) {
     /* no overflow should occur, so this is machine independent */
     random_state[0] = ((random_state[0] * 3) + d + 104729) % 179424673;
     random_state[1] = ((random_state[1] * 7) + d + 48611) % 86028121;
@@ -606,7 +606,7 @@ typedef struct {
 } Connector_set;
 #endif
 
-int connector_set_hash(Connector_set *conset, char * s, int d) {
+static int connector_set_hash(Connector_set *conset, char * s, int d) {
 /* This hash function only looks at the leading upper case letters of
    the string, and the direction, '+' or '-'.
 */
@@ -615,7 +615,7 @@ int connector_set_hash(Connector_set *conset, char * s, int d) {
     return (i & (conset->table_size-1));
 }
 
-void build_connector_set_from_expression(Connector_set * conset, Exp * e) {
+static void build_connector_set_from_expression(Connector_set * conset, Exp * e) {
     E_list * l;
     Connector * c;
     int h;
@@ -690,7 +690,7 @@ void free_listed_dictionary(Dict_node *dn) {
     }
 }
 
-int easy_match(char * s, char * t) {
+static int easy_match(char * s, char * t) {
 
     /* This is like the basic "match" function in count.c - the basic connector-matching
        function used in parsing - except it ignores "priority" (used to handle fat links) */

@@ -284,14 +284,14 @@ Accepted (4 linkages, 4 with no P.P. violations) at stage 1
 static int STAT_N_disjuncts;      /* keeping statistics */
 static int STAT_calls_to_equality_test;
 
-void init_LT(Sentence sent) {
+static void init_LT(Sentence sent) {
     sent->and_data.LT_bound = 20;
     sent->and_data.LT_size = 0;
     sent->and_data.label_table = 
 	(Disjunct **) xalloc(sent->and_data.LT_bound * sizeof(Disjunct *));
 }
 
-void grow_LT(Sentence sent) {
+static void grow_LT(Sentence sent) {
     space_in_use -= sent->and_data.LT_bound * sizeof(Disjunct *);
     sent->and_data.LT_bound = (3*sent->and_data.LT_bound)/2;
     sent->and_data.label_table = 
@@ -305,14 +305,14 @@ void grow_LT(Sentence sent) {
     }
 }
     
-void init_HT(Sentence sent) {
+static void init_HT(Sentence sent) {
     int i;
     for (i=0; i<HT_SIZE; i++) {
 	sent->and_data.hash_table[i] = NULL;
     }
 }
 
-void free_HT(Sentence sent) {
+static void free_HT(Sentence sent) {
     int i;
     Label_node * la, * la1;
     for (i=0; i<HT_SIZE; i++) {
@@ -324,7 +324,7 @@ void free_HT(Sentence sent) {
     }
 }
 
-void free_LT(Sentence sent) {
+static void free_LT(Sentence sent) {
     int i;
     for (i=0; i<sent->and_data.LT_size; i++) {
 	free_disjuncts(sent->and_data.label_table[i]);
@@ -351,7 +351,7 @@ void initialize_conjunction_tables(Sentence sent) {
     }
 }
 
-int and_connector_hash(Connector * c, int i) {
+static int and_connector_hash(Connector * c, int i) {
 /* This hash function that takes a connector and a seed value i.
    It only looks at the leading upper case letters of
    the string, and the label.  This ensures that if two connectors
@@ -368,7 +368,7 @@ int and_connector_hash(Connector * c, int i) {
     return (i & (HT_SIZE-1));
 }
 
-int and_hash_disjunct(Disjunct *d) {
+static int and_hash_disjunct(Disjunct *d) {
 /* This is a hash function for disjuncts */
     int i;
     Connector *e;
@@ -384,7 +384,7 @@ int and_hash_disjunct(Disjunct *d) {
 }
 
 
-int is_appropriate(Sentence sent, Disjunct * d) {
+static int is_appropriate(Sentence sent, Disjunct * d) {
 /* returns TRUE if the disjunct is appropriate to be made into fat links.
    Check here that the connectors are from some small set.
    This will disallow, for example "the and their dog ran".
@@ -402,7 +402,7 @@ int is_appropriate(Sentence sent, Disjunct * d) {
     return TRUE;
 }
 
-int connector_types_equal(Connector * c1, Connector * c2) {
+static int connector_types_equal(Connector * c1, Connector * c2) {
 /* Two connectors are said to be of the same type if they have
    the same label, and the initial upper case letters of their
    strings match.
@@ -419,7 +419,7 @@ int connector_types_equal(Connector * c1, Connector * c2) {
     return TRUE;
 }
 
-int disjunct_types_equal(Disjunct * d1, Disjunct * d2) {
+static int disjunct_types_equal(Disjunct * d1, Disjunct * d2) {
 /* Two disjuncts are said to be the same type if they're the same
    ignoring the multi fields, the priority fields, and the subscripts
    of the connectors (and the string field of the disjunct of course).
@@ -1222,7 +1222,7 @@ int set_has_fat_down(Sentence sent) {
     return (N_fat > 0);
 }
 
-void free_image_array(Parse_info pi) {
+static void free_image_array(Parse_info pi) {
     int w;
     Image_node * in, * inx;
     for (w=0; w<pi->N_words; w++) {
@@ -1233,7 +1233,7 @@ void free_image_array(Parse_info pi) {
     }
 }	    
     
-void build_image_array(Sentence sent) {
+static void build_image_array(Sentence sent) {
 /* uses link_array, chosen_disjuncts, and down_label to construct
    image_array */
     int link, end, word;
