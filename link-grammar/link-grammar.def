@@ -105,5 +105,12 @@ post_process_open
 post_process_close
 linkage_post_process
 issue_special_command
+linkage_constituent_tree
+linkage_free_constituent_tree
+linkage_constituent_node_get_label
+linkage_constituent_node_get_child
+linkage_constituent_node_get_next
+linkage_constituent_node_get_start
+linkage_constituent_node_get_end
 lperrno
 lperrmsg

@@ -1485,3 +1485,29 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode) {
     assert(0, "Illegal mode in linkage_print_constituent_tree");
     return NULL;
 }
+
+char * linkage_constituent_node_get_label(const CNode *n)
+{
+  return n->label;
+}
+
+
+CNode * linkage_constituent_node_get_child(const CNode *n)
+{
+  return n->child;
+}
+
+CNode * linkage_constituent_node_get_next(const CNode *n)
+{
+  return n->next;
+}
+
+int linkage_constituent_node_get_start(const CNode *n)
+{
+  return n->start;
+}
+
+int linkage_constituent_node_get_end(const CNode *n)
+{
+  return n->end;
+}

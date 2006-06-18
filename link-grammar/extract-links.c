@@ -98,7 +98,7 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
     return i & (pi->x_table_size-1);
 }
 
-static void init_x_table(Sentence sent) {
+void init_x_table(Sentence sent) {
     /* A piecewise exponential function determines the size of the hash table.      */
     /* Probably should make use of the actual number of disjuncts, rather than just */
     /* the number of words                                                          */

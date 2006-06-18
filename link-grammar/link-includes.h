@@ -296,6 +296,29 @@ link_public_api(void)
 link_public_api(void)
      issue_special_command(char * line, Parse_Options opts, Dictionary dict);
 
+/*****************************************************************************
+* 
+* Constituent node
+*
+*****************************************************************************/
+
+typedef struct CNode_s CNode;
+
+link_public_api(CNode *) 
+     linkage_constituent_tree(Linkage linkage);
+link_public_api(void)
+     linkage_free_constituent_tree(CNode * n);
+link_public_api(char *)
+     linkage_constituent_node_get_label(const CNode *n);
+link_public_api(CNode *)
+     linkage_constituent_node_get_child(const CNode *n);
+link_public_api(CNode *)
+     linkage_constituent_node_get_next(const CNode *n);
+link_public_api(int)
+     linkage_constituent_node_get_start(const CNode *n);
+link_public_api(int)
+     linkage_constituent_node_get_end(const CNode *n);
+
 /* from error.c */
 extern link_public_api(int) 
      lperrno;

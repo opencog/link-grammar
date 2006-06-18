@@ -48,6 +48,8 @@ Exp *       copy_Exp(Exp *);
 
 Connector * init_connector(Connector *c);
 
+void init_x_table(Sentence sent);
+
 /* utility routines moved from parse.c */
 int sentence_contains(Sentence sent, char * s);
 void set_is_conjunction(Sentence sent);
