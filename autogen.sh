@@ -61,7 +61,22 @@ autoconf 2>> autogen.err || {
     echo ""
 }
 
-echo ""
-echo "You can run ./configure now."
-echo ""
+run_configure=true
+for arg in $*; do
+    case $arg in
+        --no-configure)
+            run_configure=false
+            ;;
+        *)
+            ;;
+    esac
+done
 
+if $run_configure; then
+    ./configure --enable-maintainer-mode "$@"
+    echo
+    echo "Now type 'make' to compile link-grammar."
+else
+    echo
+    echo "Now run 'configure' and 'make' to compile link-grammar."
+fi
