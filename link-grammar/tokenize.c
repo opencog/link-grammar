@@ -364,6 +364,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
     }
 
     for (i=n_r_stripped-1; i>=0; i--) {
+	if (r_stripped[i] > strlen(*strip_right)) continue;
 	if (!issue_sentence_word(sent, strip_right[r_stripped[i]])) return FALSE;
     }
 
