@@ -1,1 +1,7 @@
+Makefile
 Makefile.in
+grammar-parse
+.deps
+.libs
+*.la
+*.lo
