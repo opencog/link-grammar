@@ -172,7 +172,8 @@ static int issue_sentence_word(Sentence sent, char * s) {
     used in a sentence.
 */
 
-
+#undef	MIN
+#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
 static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found) {
     /* w points to a string, wend points to the char one after the end.  The
@@ -256,8 +257,8 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
     for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) {
 
-	strncpy(word, w, wend-w);
-	word[wend-w] = '\0';
+	strncpy(word, w, MIN(wend-w, MAX_WORD));
+	word[MIN(wend-w, MAX_WORD)] = '\0';
 	if (wend == w) break;  /* it will work without this */
 	
 	if (boolean_dictionary_lookup(sent->dict, word) || is_initials_word(word)) break;
@@ -285,8 +286,8 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
     /* Now we strip off suffixes...w points to the remaining word, "wend" to the end of the word. */
 
     s_stripped = -1;
-    strncpy(word, w, wend-w);
-    word[wend-w] = '\0';
+    strncpy(word, w, MIN(wend-w, MAX_WORD));
+    word[MIN(wend-w, MAX_WORD)] = '\0';
     word_is_in_dict=0;
 
     if (boolean_dictionary_lookup(sent->dict, word) || is_initials_word(word)) word_is_in_dict=1;
@@ -309,16 +310,16 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
 	if(s_ok==1 || i==s_strippable) {
 	  
-	  strncpy(newword, w, (wend-len)-w);
-	  newword[(wend-len)-w] = '\0';
+	  strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
+	  newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
 
 	  /* Check if the remainder is in the dictionary; for the no-suffix case, it won't be */	  
 	  if (boolean_dictionary_lookup(sent->dict, newword)) {
 	    if(verbosity>1) if(i< s_strippable) printf("Splitting word into two: %s-%s\n", newword, suffix[i]); 
 	    s_stripped = i;
 	    wend -= len;
-	    strncpy(word, w, wend-w);
-	    word[wend-w] = '\0';
+	    strncpy(word, w, MIN(wend-w, MAX_WORD));
+	    word[MIN(wend-w, MAX_WORD)] = '\0';
 	    break;
 	  }
 
@@ -326,17 +327,17 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	  else {
 	    for (j=0; j<p_strippable; j++) {
 	      if (strncmp(w, prefix[j], strlen(prefix[j])) == 0) {
-		strncpy(newword, w+strlen(prefix[j]), (wend-len)-(w+strlen(prefix[j])));
-		newword[(wend-len)-(w+strlen(prefix[j]))]='\0';
+		strncpy(newword, w+strlen(prefix[j]), MIN((wend-len)-(w+strlen(prefix[j])), MAX_WORD));
+		newword[MIN((wend-len)-(w+strlen(prefix[j])), MAX_WORD)]='\0';
 		if(boolean_dictionary_lookup(sent->dict, newword)) {
 		  if(verbosity>1) if(i < s_strippable) printf("Splitting word into three: %s-%s-%s\n", prefix[j], newword, suffix[i]); 
 		  if (!issue_sentence_word(sent, prefix[j])) return FALSE;
 		  if(i < s_strippable) s_stripped = i;
 		  wend -= len;
 		  w += strlen(prefix[j]);
-		  strncpy(word, w, wend-w);
-		word[wend-w] = '\0';
-		break;
+		  strncpy(word, w, MIN(wend-w, MAX_WORD));
+		  word[MIN(wend-w, MAX_WORD)] = '\0';
+		  break;
 		}
 	      }
 	    }
