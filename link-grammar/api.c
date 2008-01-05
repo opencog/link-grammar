@@ -333,7 +333,7 @@ static Dictionary internal_dictionary_create(char * dict_name, char * pp_name, c
 
     if (!rand_table_inited) {
         init_randtable();
-	rand_table_inited=TRUE;
+        rand_table_inited=TRUE;
     }
 
     dict->string_set = string_set_create();
@@ -349,26 +349,26 @@ static Dictionary internal_dictionary_create(char * dict_name, char * pp_name, c
 
     /*  *DS*  remove this
     if (pp_name != NULL) {
-	dict->post_process_filename = string_set_add(pp_name, dict->string_set);
+        dict->post_process_filename = string_set_add(pp_name, dict->string_set);
     }
     else {
-	dict->post_process_filename = NULL;
+        dict->post_process_filename = NULL;
     }
     */
     
     if (path != NULL) dictionary_path_name = path; else dictionary_path_name = dict_name;
 
     if (!open_dictionary(dictionary_path_name, dict)) {
-	lperror(NODICT, dict_name);
-	string_set_delete(dict->string_set);
-	xfree(dict, sizeof(struct Dictionary_s));
-	return NULL;
+        lperror(NODICT, dict_name);
+        string_set_delete(dict->string_set);
+        xfree(dict, sizeof(struct Dictionary_s));
+        return NULL;
     }
 
     if (!read_dictionary(dict)) {
-	string_set_delete(dict->string_set);
-	xfree(dict, sizeof(struct Dictionary_s));
-	return NULL;
+        string_set_delete(dict->string_set);
+        xfree(dict, sizeof(struct Dictionary_s));
+        return NULL;
     }
 
     dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
