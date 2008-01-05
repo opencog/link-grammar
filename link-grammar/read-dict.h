@@ -22,7 +22,7 @@ int  delete_dictionary_words(Dictionary dict, char *);
 void free_lookup_list(void); 
             /* really doesn't need to be called outside 
                of the dictionary lookup code.  */
-Dict_node * dictionary_lookup(Dictionary dict, char *);    
+Dict_node * dictionary_lookup(Dictionary dict, const char *);
             /* remember, this returns a list  */
 Dict_node * abridged_lookup(Dictionary dict, char *);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);

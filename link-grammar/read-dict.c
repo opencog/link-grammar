@@ -786,7 +786,8 @@ int read_dictionary(Dictionary dict) {
     return 1;
 }
 
-int dict_match(char * s, char * t) {
+static int dict_match(const char * s, const char * t)
+{
 /* assuming that s is a pointer to a dictionary string, and that
    t is a pointer to a search string, this returns 0 if they
    match, >0 if s>t, and <0 if s<t.
@@ -807,7 +808,8 @@ int dict_match(char * s, char * t) {
 /* followes the last "." in the word, and it does not begin     */
 /* with a digit.                                                */
 
-int true_dict_match(char * s, char * t) {
+static int true_dict_match(char * s, const char * t)
+{
     char *ds, *dt;
     ds = strrchr(s, '.');
     dt = strrchr(t, '.');
@@ -830,7 +832,8 @@ int true_dict_match(char * s, char * t) {
 static Dict_node * lookup_list = NULL;
           /* a pointer to the temporary lookup list */
 
-void prune_lookup_list(char * s) {
+void prune_lookup_list(const char * s)
+{
     Dict_node *dn, *dnx, *dn_new;
     dn_new = NULL;
     for (dn = lookup_list; dn!=NULL; dn = dnx) {
@@ -861,8 +864,9 @@ void free_lookup_list(void) {
     }
 }
 
-void rdictionary_lookup(Dict_node * dn, char * s) {
-/* see comment in dictionary_lookup below */
+void rdictionary_lookup(Dict_node * dn, const char * s)
+{
+	/* see comment in dictionary_lookup below */
     int m;
     Dict_node * dn_new;
     if (dn == NULL) return;
@@ -881,8 +885,9 @@ void rdictionary_lookup(Dict_node * dn, char * s) {
     }
 }
 
-Dict_node * dictionary_lookup(Dictionary dict, char *s) {
-/* Returns a pointer to a lookup list of the words in the dictionary.
+Dict_node * dictionary_lookup(Dictionary dict, const char *s)
+{
+	/* Returns a pointer to a lookup list of the words in the dictionary.
    This list is made up of Dict_nodes, linked by their right pointers.
    The node, file and string fields are copied from the dictionary.
    
