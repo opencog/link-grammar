@@ -1,4 +1,13 @@
 
+               Link Grammar Parser - Patched Version
+               -------------------------------------
+This directory contains a *patched* version of the Link Grammer Parser.
+It has been patched to fix a few bugs, add a few enhancements, and, in
+general, make the Link Grammar Parser easier to use.  Below follows the
+original version of the Link Grammar Parser README file.
+
+  -enjoy
+
 This directory is the distribution of version 4.1b of the link grammar
 parsing system for UNIX.  This version was created in January, 2005.
 It is essentially the same as version 4.1, but is now being released
