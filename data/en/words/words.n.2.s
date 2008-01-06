@@ -1306,15 +1306,15 @@ pistachios.n pistils.n pistols.n pistons.n pitchers.n pitches.n
 pitchforks.n pitfalls.n pitheads.n pities.n pits.n pittances.n 
 pituitaries.n pivots.n pixies.n pizzas.n placards.n placebos.n 
 placements.n placeseekers.n plagiarists.n plagues.n plaice.p plains.n 
-plaintiffs.n planes.n planetariums.n planets.n planks.n planners.n 
-plantains.n plantations.n planters.n plants.n plaques.n plasters.n 
+plaintiffs.n planes.n planetariums.n planets.n planks.n planners.n
+plantains.n plantations.n planters.n plants.n plaques.n plasters.n
 plastics.n plateaus.n platefuls.n plates.n platforms.n platitudes.n 
 platoons.n platters.n platypuses.n plaudits.n playbills.n playboys.n 
 players.n playgoers.n playgrounds.n playhouses.n playmates.n 
 playoffs.n playpens.n playrooms.n plays.n playschools.n playthings.n 
 playwrights.n plazas.n pleas.n pleasantries.n pleasures.n pleats.n 
 plebeians.n plebiscites.n plectrums.n plenipotentiaries.n plenums.n 
-plethoras.n plexus.p plights.n plodders.n plops.n plots.n plotters.n 
+plethoras.n plexus.p plights.n plodders.n plops.n plotters.n 
 ploughboys.n ploughs.n ploughshares.n plows.n ploys.n plucks.n 
 plugholes.n plugs.n plumbers.n plumbs.n plumes.n plumps.n plums.n 
 plunderers.n plungers.n plunges.n pluperfects.n pluralists.n 
