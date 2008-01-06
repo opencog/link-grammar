@@ -48,7 +48,8 @@ WORDS=			\
 	words.v.8.3	\
 	words.v.8.4	\
 	words.v.8.5	\
-	words.y
+	words.y		\
+	words.entities.sing
 
 wordsdir=$(pkgdatadir)/en/words
 words_DATA = $(WORDS)
