@@ -32,10 +32,10 @@
  % John wants more cookies than Dave wants.
  %
  % Rw is used similarly to Ct, Cta, and Rn to link question words to the relative clauses
- % that follow them.
- % For auxillary verbs, replaced "{Q-}" with "(Rw- or Q-}".
- % For nouns, replaced "B#m+" with "(Rw+ & B#m+)" (for any #)
- %
+ % that follow them.  
+ % For auxillary verbs, replaced "{Q-}" with "(Rw- or Q-}".  
+ % For nouns and others, replaced "B#m+" with "(Rw+ & B#m+)" (for any #)
+ % For who,what,which,whom, replaced "B#" with "(R+ & B#+)" (for any #)
  %
 
 % NOUNS
@@ -2756,19 +2756,19 @@ degrees_Fahrenheit degrees_Centigrade: ND- & <noun-main-s>;
 %({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
 
 who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) 
-or ({EL+} & (S**w+ or (Rw+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
-({MVp+ or MVx+} & (S**w+ or (Rw+ & B*w+)) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
+or ({EL+} & (S**w+ or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
+({MVp+ or MVx+} & (S**w+ or (R+ & B*w+)) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
 
-what: ({EL+} & (D**w+ or Ss*w+ or (Rw+ & (Bsw+ or BW+))) & (Wq- or Ws- or QI*d-
-or BIqd-)) or ((Ss*d+ or (Rw+ & (Bsd+ or BW+))) &
+what: ({EL+} & (D**w+ or Ss*w+ or (R+ & (Bsw+ or BW+))) & (Wq- or Ws- or QI*d-
+or BIqd-)) or ((Ss*d+ or (R+ & (Bsd+ or BW+))) &
 (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t-)) or (D+ & JQ-);
 
 which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or 
-((D**w+ or ({OF+} & (S**w+ or (Rw+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
+((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
  or Jw- or (JQ- & D+) or ({MVp+ or MVx+} & (S**w+ or B*w+) & 
 ((Xc+ or [[[()]]]) & Xd- & MX*r-));
 
-whom: (R- & Cr+) or (Rw+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*r-)))
+whom: (R- & Cr+) or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*r-)))
  or (Jr- & (RS+ or Cr+)) or Jw-;
 
 whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*d-))) 
