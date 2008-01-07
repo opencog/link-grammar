@@ -2,6 +2,8 @@
  * Java JNI interfaces
  */
 
+#ifdef BUILD_JNI_CLIENT
+
 #include <jni.h>
 #include <stdio.h>
 
@@ -454,5 +456,4 @@ Java_relex_parser_LinkParserJNIClient_cIsEntity(JNIEnv *env, jclass cls, jstring
 	return FALSE;
 }
 
-
-
+#endif /* BUILD_JNI_CLIENT */
