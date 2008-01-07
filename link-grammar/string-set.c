@@ -41,14 +41,18 @@
 
    */
 
-int hash_string(unsigned char *str, String_set *ss) {
+int hash_string(const char *sa, const String_set *ss)
+{
+    unsigned char *str = (unsigned char *) sa;
     unsigned int accum = 0;
     for (;*str != '\0'; str++) accum = ((256*accum) + (*str)) % (ss->size);
     return accum;
 }
 
-int stride_hash_string(unsigned char *str, String_set *ss) {
-  /* This is the stride used, so we have to make sure that its value is not 0 */
+int stride_hash_string(const char *sa, const String_set *ss)
+{
+    unsigned char *str = (unsigned char *) sa;
+    /* This is the stride used, so we have to make sure that its value is not 0 */
     unsigned int accum = 0;
     for (;*str != '\0'; str++) accum = ((17*accum) + (*str)) % (ss->size);
     if (accum == 0) accum = 1;

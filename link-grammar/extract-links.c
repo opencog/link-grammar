@@ -188,6 +188,7 @@ static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connecto
     return n;
 }
 
+#ifdef UNUSED_FUNCTION
 static void x_table_update(int lw, int rw, Connector *le, Connector *re, 
 		    int cost, Parse_set * set, Parse_info pi) {
     /* Stores the value in the x_table.  Unlike x_table_store, it assumes it's already there */
@@ -196,6 +197,7 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
     assert(t != NULL, "This entry is supposed to be in the x_table.");
     t->set = set;
 }
+#endif
 
 
 static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw, 
@@ -496,9 +498,11 @@ static int advance_linkage(Parse_info pi, Parse_set * set) {
     return 0;
 }
 
+#ifdef UNUSED_FUNCTION
 static void advance_parse_set(Parse_info pi) {
      advance_linkage(pi, pi->parse_set);
 }
+#endif
 
 static void list_links(Parse_info pi, Parse_set * set, int index) {
      Parse_choice *pc;

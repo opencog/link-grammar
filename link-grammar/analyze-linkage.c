@@ -691,10 +691,13 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 
 /********************** exported functions *****************************/
 
-Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_pass) {
-  /* This uses link_array.  It enumerates and post-processes
-	 all the linkages represented by this one.  We know this contains
-	 at least one fat link. */
+/**
+ * This uses link_array.  It enumerates and post-processes
+ * all the linkages represented by this one.  We know this contains
+ * at least one fat link.
+ */
+Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_pass)
+{
 	int i;
 	Linkage_info li;
 	DIS_node *d_root;
@@ -718,11 +721,11 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	li.disjunct_cost = disjunct_cost(pi);
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
+	li.and_cost = 0;
+	li.andlist = NULL;
 
 	if (structure_violation) {
 		li.N_violations++;
-		li.and_cost = 0;	  /* ? */
-		li.andlist = NULL;
 		free_sublinkage(sublinkage);
 		free_digraph(pi);
 		free_DIS_tree(d_root);
@@ -817,11 +820,13 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	return li;
 }
 
+/**
+ * This uses link_array.  It post-processes
+ * this linkage, and prints the appropriate thing.  There are no fat
+ * links in it.
+ */
 Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze_pass)
 {
-	/* This uses link_array.  It post-processes
-	   this linkage, and prints the appropriate thing.  There are no fat
-	   links in it. */
 	int i;
 	Linkage_info li;
 	PP_node * pp;
@@ -847,15 +852,14 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 		return li;
 	}
 
-	li.N_violations = 0;
-	li.and_cost = 0;
-
 	/* The code below can be used to generate the "islands" array. For this to work,
 	 * however, you have to call "build_digraph" first (as in analyze_fat_linkage).
 	 * and then "free_digraph". For some reason this causes a space leak. */
 
 	pp = post_process(postprocessor, opts, sent, sublinkage, TRUE);
 
+	li.N_violations = 0;
+	li.and_cost = 0;
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
 	li.improper_fat_linkage = FALSE;
 	li.inconsistent_domains = FALSE;

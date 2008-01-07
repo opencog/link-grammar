@@ -62,6 +62,7 @@ static void free_clause_list(Clause *c) {
     }
 }
 
+#ifdef UNUSED_FUNCTION
 static Clause * copy_clause(Clause * d) {
 /* This builds a new copy of the clause pointed to by d (except for the
    next field which is set to NULL).  Strings, as usual, are not copied.
@@ -74,6 +75,7 @@ static Clause * copy_clause(Clause * d) {
     d1->c = copy_Tconnectors(d->c);
     return d1;
 }
+#endif /* UNUSED_FUNCTION */
 
 static Tconnector * Treverse(Tconnector *e) {
 /* reverse the order of the list e.  destructive */
@@ -148,6 +150,7 @@ static int maxcost_of_expression(Exp *e) {
     return (m + e->cost);
 }
 
+#ifdef UNUSED_FUNCTION
 static int maxcost_of_sentence(Sentence sent) {
 /* This returns the maximum maxcost of any disjunct in the sentence */
 /* assumes the sentence expressions have been constructed */
@@ -163,6 +166,7 @@ static int maxcost_of_sentence(Sentence sent) {
     }
     return m;
 }
+#endif /* UNUSED_FUNCTION */
 
 
 static Clause * build_clause(Exp *e, int cost_cutoff) {
@@ -228,6 +232,7 @@ static Clause * build_clause(Exp *e, int cost_cutoff) {
     return c;
 }
 
+#ifdef UNUSED_FUNCTION
 static void print_connector_list(Connector * e) {
     for (;e != NULL; e=e->next) {
 	printf("%s",e->string);
@@ -268,6 +273,7 @@ static void print_disjunct_list(Disjunct * c) {
 	printf("\n");
     }
 }
+#endif /* UNUSED_FUNCTION */
 
 static Connector * extract_connectors(Tconnector *e, int c) {
 /* Build a new list of connectors starting from the Tconnectors

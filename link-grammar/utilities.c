@@ -386,9 +386,10 @@ int conj_in_range(Sentence sent, int lw, int rw) {
     return FALSE;
 }
 
+#ifdef UNUSED_FUNCTION
 /* borrowed from glib */
 static char*
-path_get_dirname (const char	   *file_name)
+xxx_path_get_dirname (const char	   *file_name)
 {
   register char *base;
   register int len;
@@ -474,6 +475,7 @@ path_get_dirname (const char	   *file_name)
 
   return base;
 }
+#endif /* UNUSED_FUNCTION */
 
 static char * get_datadir(void)
 {
