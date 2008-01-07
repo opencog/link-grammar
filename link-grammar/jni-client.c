@@ -15,8 +15,8 @@ static Dictionary    dict;
 static Parse_Options opts, panic_parse_opts;
 static Sentence      sent=NULL;
 static Linkage       linkage=NULL;
-static char *        diagram;
-//CNode*        tree;
+// static char *        diagram;
+// CNode*        tree;
 static int           num_linkages, cur_linkage;
 
 static void setup_panic_parse_options(Parse_Options opts)
@@ -34,10 +34,12 @@ static void setup_panic_parse_options(Parse_Options opts)
 
 static void test(void)
 {
-	//printf("%d\n",word_contains("said",PAST_TENSE_FORM_MARKER,dict));
-	//printf("%d\n",word_contains("gave.v",PAST_TENSE_FORM_MARKER,dict));
-	//printf("%d\n",word_contains("have",PAST_TENSE_FORM_MARKER,dict));
-	//printf("%d\n",word_contains("had",PAST_TENSE_FORM_MARKER,dict));
+#ifdef DEBUG
+	printf("%d\n",word_contains("said",PAST_TENSE_FORM_MARKER,dict));
+	printf("%d\n",word_contains("gave.v",PAST_TENSE_FORM_MARKER,dict));
+	printf("%d\n",word_contains("have",PAST_TENSE_FORM_MARKER,dict));
+	printf("%d\n",word_contains("had",PAST_TENSE_FORM_MARKER,dict));
+#endif
 }
 
 static void init(char* linkparser_dir)
@@ -61,6 +63,7 @@ static void init(char* linkparser_dir)
 	test();
 }
 
+#ifdef DEBUG
 static void r_printTree(CNode* cn, int level)
 {
 	int i;
@@ -68,19 +71,19 @@ static void r_printTree(CNode* cn, int level)
 
 	if (cn==NULL) return;
 
-	//Print Spacer
+	// Print Spacer
 	for(i=0;i<level;i++) {
 		printf("	");
 	}
 
-	//print label
+	// print label
 	if (cn->label != NULL) {
 		printf("%s\n",cn->label);
 	} else {
 		printf("NULL\n");
 	}
 
-	//recurse on children
+	// Recurse on children.
 	for(c = cn->child; c!=NULL; c=c->next) {
 		r_printTree(c,level+1);
 	}
@@ -91,6 +94,7 @@ static void printTree(CNode* cn)
 	r_printTree(cn,0);
 	printf("\n");
 }
+#endif /* DEBUG */
 
 static void jParse(char* inputString)
 {
