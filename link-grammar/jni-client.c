@@ -15,9 +15,10 @@ static Dictionary    dict;
 static Parse_Options opts, panic_parse_opts;
 static Sentence      sent=NULL;
 static Linkage       linkage=NULL;
-// static char *        diagram;
-// CNode*        tree;
 static int           num_linkages, cur_linkage;
+#if DO_PHRASE_TREE
+CNode*        tree;
+#endif
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
@@ -63,7 +64,7 @@ static void init(char* linkparser_dir)
 	test();
 }
 
-#ifdef DEBUG
+#ifdef DEBUG_DO_PHRASE_TREE
 static void r_printTree(CNode* cn, int level)
 {
 	int i;
@@ -71,22 +72,23 @@ static void r_printTree(CNode* cn, int level)
 
 	if (cn==NULL) return;
 
-	// Print Spacer
-	for(i=0;i<level;i++) {
-		printf("	");
-	}
-
 	// print label
 	if (cn->label != NULL) {
-		printf("%s\n",cn->label);
+		printf("(%s ", cn->label);
 	} else {
 		printf("NULL\n");
 	}
 
 	// Recurse on children.
-	for(c = cn->child; c!=NULL; c=c->next) {
-		r_printTree(c,level+1);
+	for (c = cn->child; c!=NULL; c=c->next) {
+		if (c->child)
+			r_printTree(c, level+1);
+		else
+			printf("%s ", c->label);
 	}
+	printf(")\n");
+	for (i=0; i<=level; i++)
+		printf ("   ");
 }
 
 static void printTree(CNode* cn)
@@ -166,16 +168,25 @@ static void makeLinkage(int i)
 		linkage = linkage_create(i,sent,opts);
 		linkage_compute_union(linkage);
 		linkage_set_current_sublinkage(linkage,linkage_get_num_sublinkages(linkage)-1);
-		//	tree = linkage_constituent_tree(linkage);
+
+#if DO_PHRASE_TREE
+		if (tree)
+			linkage_free_constituent_tree(tree);
+		tree = linkage_constituent_tree(linkage);
+		printTree(tree);
+#endif
 	}
 }
 
 static void finish(void)
 {
-	if (sent!=NULL)
+	if (sent)
 		sentence_delete(sent);
-	//	linkage_free_constituent_tree(tree);
-	if (linkage!=NULL)
+#if DO_PHRASE_TREE
+	if (tree)
+		linkage_free_constituent_tree(tree);
+#endif
+	if (linkage)
 		linkage_delete(linkage);
 	dictionary_delete(dict);
 	parse_options_delete(opts);
@@ -203,7 +214,8 @@ Java_relex_parser_LinkParserJNIClient_cSetMaxCost(JNIEnv *env, jclass cls, jint 
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls, jstring str) {
+Java_relex_parser_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls, jstring str)
+{
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	char* tmp = strdup(cStr);
 	init(tmp);
@@ -415,7 +427,12 @@ Java_relex_parser_LinkParserJNIClient_cLinkLabel(JNIEnv *env, jclass cls, jint i
 JNIEXPORT jstring JNICALL
 Java_relex_parser_LinkParserJNIClient_cConstituentString(JNIEnv *env, jclass cls)
 {
-	char *s = linkage_print_constituent_tree(linkage, 1);
+	/* mode 1 prints a lisp-style string, nicely indented.
+	 * mode 2 prints a lisp-style string, but with square brackets.
+	 * mode 3 prints a lisp-style string, one one single line.
+	 */
+	// char *s = linkage_print_constituent_tree(linkage, 1);
+	char *s = linkage_print_constituent_tree(linkage, 3);
 	jstring j = (*env)->NewStringUTF(env, s);
 	exfree (s, strlen(s)+1);
 	return j;
