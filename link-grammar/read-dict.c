@@ -641,12 +641,15 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * new) {
 	return n;
 }
 
-void insert_list(Dictionary dict, Dict_node * p, int l) {
-/* p points to a list of dict_nodes connected by their left pointers   */
-/* l is the length of this list (the last ptr may not be NULL)         */
-/* It inserts the list into the dictionary.                            */
-/* It does the middle one first, then the left half, then the right.   */
-
+/**
+ * insert_list() -
+ * p points to a list of dict_nodes connected by their left pointers.
+ * l is the length of this list (the last ptr may not be NULL).
+ * It inserts the list into the dictionary.
+ * It does the middle one first, then the left half, then the right.
+ */
+void insert_list(Dictionary dict, Dict_node * p, int l)
+{
 	Dict_node * dn, *dnx, *dn_second_half;
 	int k, i; /* length of first half */
 
@@ -669,8 +672,8 @@ void insert_list(Dictionary dict, Dict_node * p, int l) {
 		xfree((char *)dn, sizeof(Dict_node));
 	} else if ((dnx = abridged_lookup(dict, dn->string))!= NULL) {
 		printf("*** The word \"%s\"", dn->string);
-		printf(" found near line %d matches the following words:\n",
-			   dict->line_number);
+		printf(" found near line %d of %s matches the following words:\n",
+			   dict->line_number, dict->name);
 		for (;dnx != NULL; dnx = dnx->right) {
 			printf(" %s", dnx->string);
 		}
