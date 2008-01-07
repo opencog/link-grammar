@@ -9,15 +9,15 @@
 #include "command-line.h"
 #include "jni-client.h"
 
-Dictionary    dict;
-Parse_Options opts, panic_parse_opts;
-Sentence      sent=NULL;
-Linkage       linkage=NULL;
-char *        diagram;
+static Dictionary    dict;
+static Parse_Options opts, panic_parse_opts;
+static Sentence      sent=NULL;
+static Linkage       linkage=NULL;
+static char *        diagram;
 //CNode*        tree;
-int           num_linkages, cur_linkage;
+static int           num_linkages, cur_linkage;
 
-void setup_panic_parse_options(Parse_Options opts)
+static void setup_panic_parse_options(Parse_Options opts)
 {
 	parse_options_set_disjunct_cost(opts, 3);
 	parse_options_set_min_null_count(opts, 1);
@@ -30,7 +30,7 @@ void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_verbosity(opts,0);
 }
 
-void test(void)
+static void test(void)
 {
 	//printf("%d\n",word_contains("said",PAST_TENSE_FORM_MARKER,dict));
 	//printf("%d\n",word_contains("gave.v",PAST_TENSE_FORM_MARKER,dict));
@@ -38,7 +38,7 @@ void test(void)
 	//printf("%d\n",word_contains("had",PAST_TENSE_FORM_MARKER,dict));
 }
 
-void init(char* linkparser_dir)
+static void init(char* linkparser_dir)
 {
 	panic_parse_opts = parse_options_create();
 	opts	= parse_options_create();
@@ -59,7 +59,7 @@ void init(char* linkparser_dir)
 	test();
 }
 
-void r_printTree(CNode* cn, int level)
+static void r_printTree(CNode* cn, int level)
 {
 	int i;
 	CNode* c;
@@ -84,13 +84,13 @@ void r_printTree(CNode* cn, int level)
 	}
 }
 
-void printTree(CNode* cn)
+static void printTree(CNode* cn)
 {
 	r_printTree(cn,0);
 	printf("\n");
 }
 
-void jParse(char* inputString)
+static void jParse(char* inputString)
 {
 	sent = sentence_create(inputString, dict);
 	num_linkages=0;
@@ -150,7 +150,7 @@ void jParse(char* inputString)
 	}
 }
 
-void makeLinkage(int i)
+static void makeLinkage(int i)
 {
 	if (i<num_linkages) {
 		linkage = linkage_create(i,sent,opts);
@@ -160,7 +160,7 @@ void makeLinkage(int i)
 	}
 }
 
-void finish(void)
+static void finish(void)
 {
 	if (sent!=NULL)
 		sentence_delete(sent);
@@ -170,6 +170,9 @@ void finish(void)
 	dictionary_delete(dict);
 	parse_options_delete(opts);
 }
+
+/* =========================================================================== */
+/* Java JNI wrappers */
 
 JNIEXPORT void JNICALL
 Java_relex_parser_LinkParserJNIClient_cSetMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
