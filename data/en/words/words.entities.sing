@@ -1,5 +1,5 @@
 Comoros CN 
-Jane_Smith Jane Smith Ms_Smith 
+Jane_Smith Jane Ms_Smith 
 Micronesia FM Federated_States_Of_Micronesia 
 West_Bank WE 
 Vietnam VM 
@@ -105,7 +105,7 @@ Gibraltar GI
 United_Arab_Emirates AE 
 No_Man's_Land NM 
 Belarus BO 
-Congo CG Democratic_Republic_Of_Congo 
+Congo CF CG Democratic_Republic_Of_Congo 
 Swaziland WZ 
 Bolivia BL 
 Maldives MV 
@@ -116,7 +116,7 @@ San_Marino SM
 Argentina AR 
 Sweden SW 
 Ashmore_And_Cartier_Islands AT 
-Delhi Delhi 
+Delhi 
 Ireland EI 
 Yemen YM 
 Austria AU 
@@ -135,7 +135,7 @@ Botswana BC
 Poland PL 
 East_Timor TT 
 Nauru NR 
-Guinea BISSAU 
+Guinea GV BISSAU 
 Oceans OS 
 Reunion RE 
 British_Indian_Ocean_Territory IO 
@@ -183,10 +183,9 @@ Tanzania TZ
 Aruba AA 
 Benin BN 
 Luxembourg LU 
-Michael_Ross Mike_Ross Michael Ross Mike Mr_Ross 
+Michael_Ross Mike_Ross Michael Ross Mr_Ross 
 Hungary HU 
 Serbia_And_Montenegro YI Serbia Montenegro 
-China CH 
 Paraguay PA 
 Italy IT 
 Laos LA 
@@ -212,7 +211,6 @@ Haiti HA
 Peru PE 
 Netherlands_Antilles NT 
 Libya LY 
-Guinea GV 
 Ben_Goertzel Ben Goertzel Mr_Goertzel 
 Bosnia_And_Herzegovina BK 
 Rwanda RW 
@@ -249,13 +247,12 @@ Cassio_Penachin Cassio Penachin Mr_Panachin
 Cape_Verde CV 
 Togo TO 
 Eritrea ER 
-Joe_Smith Joe Smith Mr_Smith 
+Joe_Smith Joe Mr_Smith 
 Heard_Island_And_McDonald_Islands HM Heard_Island McDonald_Islands 
 Turkey TU 
 Cayman_Islands CJ 
 Turks_And_Caicos_Islands TK Turks Caicos_Islands 
 Martinique MB 
-Congo CF 
 Bassas_Da_India BS 
 Pakistan PK 
 Bouvet_Island BV 
