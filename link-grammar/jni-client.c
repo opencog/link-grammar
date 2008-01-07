@@ -196,25 +196,25 @@ static void finish(void)
 /* Java JNI wrappers */
 
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cSetMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
+Java_LinkParserJNIClient_cSetMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
 {
 	parse_options_set_max_parse_time(opts, maxParseSeconds);
 }
 
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cSetMaxCost(JNIEnv *env, jclass cls, jint maxCost)
+Java_LinkParserJNIClient_cSetMaxCost(JNIEnv *env, jclass cls, jint maxCost)
 {
 	parse_options_set_disjunct_cost(opts, maxCost);
 }
 
 /* Inaccessible static: singleton */
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cInit
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls, jstring str)
+Java_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	char* tmp = strdup(cStr);
@@ -227,24 +227,24 @@ Java_relex_parser_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls, jstring str
 ///
 /* Inaccessible static: singleton */
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cInit
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cTest(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cTest(JNIEnv *env, jclass cls)
 {
 	if (verbosity > 0)
 		 printf("\n\n***************JNI WORKING**************\n\n");
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cParse
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cParse(JNIEnv *env, jclass cls, jstring str)
+Java_LinkParserJNIClient_cParse(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	char* tmp = strdup(cStr);
@@ -254,34 +254,34 @@ Java_relex_parser_LinkParserJNIClient_cParse(JNIEnv *env, jclass cls, jstring st
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cClose
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cClose(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cClose(JNIEnv *env, jclass cls)
 {
 	finish();
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cNumWords
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cNumWords(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cNumWords(JNIEnv *env, jclass cls)
 {
 	return linkage_get_num_words(linkage);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cGetWord
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_relex_parser_LinkParserJNIClient_cGetWord(JNIEnv *env, jclass cls, jint i)
+Java_LinkParserJNIClient_cGetWord(JNIEnv *env, jclass cls, jint i)
 {
 	char* w = sentence_get_word(sent, i); /* does not need to be freed, points into sentence */
 	jstring j = (*env)->NewStringUTF(env, w);
@@ -289,101 +289,101 @@ Java_relex_parser_LinkParserJNIClient_cGetWord(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cNumSkippedWords
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cNumSkippedWords(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cNumSkippedWords(JNIEnv *env, jclass cls)
 {
 	return sentence_null_count(sent);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cNumLinkages
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cNumLinkages(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cNumLinkages(JNIEnv *env, jclass cls)
 {
 	return sentence_num_valid_linkages(sent);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cMakeLinkage
  * Signature: (I)I
  */
 JNIEXPORT void JNICALL
-Java_relex_parser_LinkParserJNIClient_cMakeLinkage(JNIEnv *env, jclass cls, jint i)
+Java_LinkParserJNIClient_cMakeLinkage(JNIEnv *env, jclass cls, jint i)
 {
 	cur_linkage = i;
 	makeLinkage(cur_linkage);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cLinkageNumViolations
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkageNumViolations(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cLinkageNumViolations(JNIEnv *env, jclass cls)
 {
 	return sentence_num_violations(sent, cur_linkage);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cLinkageDisjunctCost
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkageDisjunctCost(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cLinkageDisjunctCost(JNIEnv *env, jclass cls)
 {
 	return sentence_disjunct_cost(sent, cur_linkage);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cNumLinks
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cNumLinks(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cNumLinks(JNIEnv *env, jclass cls)
 {
 	return linkage_get_num_links(linkage);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cLinkLWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkLWord(JNIEnv *env, jclass cls, jint i)
+Java_LinkParserJNIClient_cLinkLWord(JNIEnv *env, jclass cls, jint i)
 {
 	return linkage_get_link_lword(linkage, i);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cLinkRWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkRWord(JNIEnv *env, jclass cls, jint i)
+Java_LinkParserJNIClient_cLinkRWord(JNIEnv *env, jclass cls, jint i)
 {
 	return linkage_get_link_rword(linkage, i);
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cLinkLLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkLLabel(JNIEnv *env, jclass cls, jint i)
+Java_LinkParserJNIClient_cLinkLLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_llabel(linkage, i);
@@ -392,12 +392,12 @@ Java_relex_parser_LinkParserJNIClient_cLinkLLabel(JNIEnv *env, jclass cls, jint 
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cLinkRLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkRLabel(JNIEnv *env, jclass cls, jint i)
+Java_LinkParserJNIClient_cLinkRLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_rlabel(linkage, i);
@@ -406,12 +406,12 @@ Java_relex_parser_LinkParserJNIClient_cLinkRLabel(JNIEnv *env, jclass cls, jint 
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cLinkLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkLabel(JNIEnv *env, jclass cls, jint i)
+Java_LinkParserJNIClient_cLinkLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_label(linkage, i);
@@ -420,12 +420,12 @@ Java_relex_parser_LinkParserJNIClient_cLinkLabel(JNIEnv *env, jclass cls, jint i
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cConstituentString
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_relex_parser_LinkParserJNIClient_cConstituentString(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cConstituentString(JNIEnv *env, jclass cls)
 {
 	/* mode 1 prints a lisp-style string, nicely indented.
 	 * mode 2 prints a lisp-style string, but with square brackets.
@@ -439,12 +439,12 @@ Java_relex_parser_LinkParserJNIClient_cConstituentString(JNIEnv *env, jclass cls
 }
 
 /*
- * Class:		 relex_parser_LinkParserJNIClient
+ * Class:		 LinkParserJNIClient
  * Method:		cConstituentString
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_relex_parser_LinkParserJNIClient_cLinkString(JNIEnv *env, jclass cls)
+Java_LinkParserJNIClient_cLinkString(JNIEnv *env, jclass cls)
 {
 	char *s = linkage_print_diagram(linkage);
 	jstring j = (*env)->NewStringUTF(env, s);
@@ -453,12 +453,12 @@ Java_relex_parser_LinkParserJNIClient_cLinkString(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 relex_0002fLinkParser
+ * Class:		 LinkParser
  * Method:		cIsPastTenseForm
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_relex_parser_LinkParserJNIClient_cIsPastTenseForm(JNIEnv *env, jclass cls, jstring str)
+Java_LinkParserJNIClient_cIsPastTenseForm(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (isPastTenseForm(cStr,dict)==1)
@@ -467,12 +467,12 @@ Java_relex_parser_LinkParserJNIClient_cIsPastTenseForm(JNIEnv *env, jclass cls, 
 }
 
 /*
- * Class:		 relex_0002fLinkParser
+ * Class:		 LinkParser
  * Method:		cIsPastTenseForm
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_relex_parser_LinkParserJNIClient_cIsEntity(JNIEnv *env, jclass cls, jstring str)
+Java_LinkParserJNIClient_cIsEntity(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (isEntity(cStr,dict)==1)

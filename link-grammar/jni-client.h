@@ -1,6 +1,6 @@
 
 #include <jni.h>
-/* Header for class relex_parser_LinkParserJNIClient */
+/* Header for class LinkParserJNIClient */
 
 #ifndef _LinkParserJNIClient
 #define _LinkParserJNIClient
@@ -8,190 +8,190 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef relex_parser_LinkParserJNIClient_verbosity
-#define relex_parser_LinkParserJNIClient_verbosity 1L
+#undef LinkParserJNIClient_verbosity
+#define LinkParserJNIClient_verbosity 1L
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cSetMaxParseSeconds
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_relex_parser_LinkParserJNIClient_cSetMaxParseSeconds
+JNIEXPORT void JNICALL Java_LinkParserJNIClient_cSetMaxParseSeconds
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cSetMaxCost
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_relex_parser_LinkParserJNIClient_cSetMaxCost
+JNIEXPORT void JNICALL Java_LinkParserJNIClient_cSetMaxCost
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cInit
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_relex_parser_LinkParserJNIClient_cInit
+JNIEXPORT void JNICALL Java_LinkParserJNIClient_cInit
 	(JNIEnv *, jclass, jstring);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cTest
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_relex_parser_LinkParserJNIClient_cTest
+JNIEXPORT void JNICALL Java_LinkParserJNIClient_cTest
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cParse
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_relex_parser_LinkParserJNIClient_cParse
+JNIEXPORT void JNICALL Java_LinkParserJNIClient_cParse
 	(JNIEnv *, jclass, jstring);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cClose
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_relex_parser_LinkParserJNIClient_cClose
+JNIEXPORT void JNICALL Java_LinkParserJNIClient_cClose
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cNumWords
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cNumWords
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumWords
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cGetWord
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_relex_parser_LinkParserJNIClient_cGetWord
+JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cGetWord
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cNumSkippedWords
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cNumSkippedWords
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumSkippedWords
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cNumLinkages
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cNumLinkages
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumLinkages
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cMakeLinkage
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_relex_parser_LinkParserJNIClient_cMakeLinkage
+JNIEXPORT void JNICALL Java_LinkParserJNIClient_cMakeLinkage
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkageNumViolations
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cLinkageNumViolations
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkageNumViolations
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkageDisjunctCost
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cLinkageDisjunctCost
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkageDisjunctCost
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cNumLinks
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cNumLinks
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumLinks
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkLWord
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cLinkLWord
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkLWord
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkRWord
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_relex_parser_LinkParserJNIClient_cLinkRWord
+JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkRWord
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkLLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_relex_parser_LinkParserJNIClient_cLinkLLabel
+JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkLLabel
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkRLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_relex_parser_LinkParserJNIClient_cLinkRLabel
+JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkRLabel
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_relex_parser_LinkParserJNIClient_cLinkLabel
+JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkLabel
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cConstituentString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_relex_parser_LinkParserJNIClient_cConstituentString
+JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cConstituentString
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cLinkString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_relex_parser_LinkParserJNIClient_cLinkString
+JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkString
 	(JNIEnv *, jclass);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cIsPastTenseForm
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_relex_parser_LinkParserJNIClient_cIsPastTenseForm
+JNIEXPORT jboolean JNICALL Java_LinkParserJNIClient_cIsPastTenseForm
 	(JNIEnv *, jclass, jstring);
 
 /*
- * Class:     relex_parser_LinkParserJNIClient
+ * Class:     LinkParserJNIClient
  * Method:    cIsEntity
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_relex_parser_LinkParserJNIClient_cIsEntity
+JNIEXPORT jboolean JNICALL Java_LinkParserJNIClient_cIsEntity
 	(JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
