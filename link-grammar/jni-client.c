@@ -98,6 +98,8 @@ static void printTree(CNode* cn)
 
 static void jParse(char* inputString)
 {
+	if (sent)
+		sentence_delete(sent);
 	sent = sentence_create(inputString, dict);
 	num_linkages=0;
 
@@ -159,6 +161,8 @@ static void jParse(char* inputString)
 static void makeLinkage(int i)
 {
 	if (i<num_linkages) {
+		if (linkage)
+			linkage_delete(linkage);
 		linkage = linkage_create(i,sent,opts);
 		linkage_compute_union(linkage);
 		linkage_set_current_sublinkage(linkage,linkage_get_num_sublinkages(linkage)-1);
@@ -267,9 +271,8 @@ Java_relex_parser_LinkParserJNIClient_cNumWords(JNIEnv *env, jclass cls)
 JNIEXPORT jstring JNICALL
 Java_relex_parser_LinkParserJNIClient_cGetWord(JNIEnv *env, jclass cls, jint i)
 {
-	char* w = sentence_get_word(sent, i);
+	char* w = sentence_get_word(sent, i); /* does not need to be freed, points into sentence */
 	jstring j = (*env)->NewStringUTF(env, w);
-	//	delete[] w;
 	return j;
 }
 
@@ -359,7 +362,7 @@ Java_relex_parser_LinkParserJNIClient_cLinkLWord(JNIEnv *env, jclass cls, jint i
 JNIEXPORT jint JNICALL
 Java_relex_parser_LinkParserJNIClient_cLinkRWord(JNIEnv *env, jclass cls, jint i)
 {
-		return linkage_get_link_rword(linkage, i);
+	return linkage_get_link_rword(linkage, i);
 }
 
 /*
@@ -370,10 +373,10 @@ Java_relex_parser_LinkParserJNIClient_cLinkRWord(JNIEnv *env, jclass cls, jint i
 JNIEXPORT jstring JNICALL
 Java_relex_parser_LinkParserJNIClient_cLinkLLabel(JNIEnv *env, jclass cls, jint i)
 {
-		char *s = linkage_get_link_llabel(linkage, i);
-		jstring j = (*env)->NewStringUTF(env, s);
-		//	delete[] s;
-		return j;
+ 	/* Does not need to be freed, points into linkage */
+	char *s = linkage_get_link_llabel(linkage, i);
+	jstring j = (*env)->NewStringUTF(env, s);
+	return j;
 }
 
 /*
@@ -384,10 +387,10 @@ Java_relex_parser_LinkParserJNIClient_cLinkLLabel(JNIEnv *env, jclass cls, jint 
 JNIEXPORT jstring JNICALL
 Java_relex_parser_LinkParserJNIClient_cLinkRLabel(JNIEnv *env, jclass cls, jint i)
 {
-		char *s = linkage_get_link_rlabel(linkage, i);
-		jstring j = (*env)->NewStringUTF(env, s);
-		//	delete[] s;
-		return j;
+ 	/* Does not need to be freed, points into linkage */
+	char *s = linkage_get_link_rlabel(linkage, i);
+	jstring j = (*env)->NewStringUTF(env, s);
+	return j;
 }
 
 /*
@@ -398,9 +401,9 @@ Java_relex_parser_LinkParserJNIClient_cLinkRLabel(JNIEnv *env, jclass cls, jint 
 JNIEXPORT jstring JNICALL
 Java_relex_parser_LinkParserJNIClient_cLinkLabel(JNIEnv *env, jclass cls, jint i)
 {
+ 	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_label(linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
-	//	delete[] s;
 	return j;
 }
 
@@ -414,7 +417,7 @@ Java_relex_parser_LinkParserJNIClient_cConstituentString(JNIEnv *env, jclass cls
 {
 	char *s = linkage_print_constituent_tree(linkage, 1);
 	jstring j = (*env)->NewStringUTF(env, s);
-	//	delete[] s;
+	exfree (s, strlen(s)+1);
 	return j;
 }
 
@@ -428,7 +431,7 @@ Java_relex_parser_LinkParserJNIClient_cLinkString(JNIEnv *env, jclass cls)
 {
 	char *s = linkage_print_diagram(linkage);
 	jstring j = (*env)->NewStringUTF(env, s);
-	//	delete[] s;
+	exfree(s, strlen(s)+1);
 	return j;
 }
 
