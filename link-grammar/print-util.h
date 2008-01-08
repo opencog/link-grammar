@@ -20,7 +20,7 @@ struct String_s {
     char * eos;
 };
 
-String * String_create();
+String * String_create(void);
 int append_string(String * string, char *fmt, ...);
 
 #endif

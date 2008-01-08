@@ -30,7 +30,7 @@ int  size_of_expression(Exp *);
 void left_print_string(FILE* fp, char *, char *);
 
 void my_random_initialize(int seed);
-void my_random_finalize();
+void my_random_finalize(void);
 int  my_random(void);
 
 /* routines for copying basic objects */

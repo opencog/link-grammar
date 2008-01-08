@@ -12,7 +12,7 @@ endif
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS)
+INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 

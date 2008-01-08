@@ -25,5 +25,5 @@ void      resources_print_time(int verbosity, Resources r, char * s);
 int       resources_timer_expired(Resources r);
 int       resources_memory_exhausted(Resources r);
 int       resources_exhausted(Resources r);
-Resources resources_create(); 
+Resources resources_create(void); 
 void      resources_delete(Resources ti);

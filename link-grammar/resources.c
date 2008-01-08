@@ -60,7 +60,7 @@ void print_total_space(Parse_Options opts) {
     resources_print_total_space(opts->verbosity, opts->resources);
 }
 
-Resources resources_create() {
+Resources resources_create(void) {
     Resources r;
 
     r = (Resources) xalloc(sizeof(struct Resources_s));

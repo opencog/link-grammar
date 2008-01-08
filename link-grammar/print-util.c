@@ -19,7 +19,7 @@
    a time, we keep around a pointer to the end of string to prevent
    the algorithm from being quadratic. */
 
-String * String_create() {
+String * String_create(void) {
     String * string;
     string = (String *) exalloc(sizeof(String));
     string->allocated = 1;

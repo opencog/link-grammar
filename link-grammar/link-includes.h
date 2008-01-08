@@ -46,7 +46,7 @@ link_public_api(int)
 typedef struct Parse_Options_s * Parse_Options;
 
 link_public_api(Parse_Options)
-     parse_options_create();
+     parse_options_create(void);
 link_public_api(int)
      parse_options_delete(Parse_Options opts);
 link_public_api(void)

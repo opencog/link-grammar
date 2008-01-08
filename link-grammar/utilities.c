@@ -587,7 +587,7 @@ void my_random_initialize(int seed) {
     random_inited = TRUE;
 }
 
-void my_random_finalize() {
+void my_random_finalize(void) {
     assert(random_inited, "Random number generator not initialized.");
     random_inited = FALSE;
 }
