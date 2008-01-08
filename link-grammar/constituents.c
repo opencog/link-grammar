@@ -66,7 +66,7 @@ static int  find_next_element(Linkage linkage,
 /*                      sublinkage                       */
 /*********************************************************/
 
-static int uppercompare(char * s, char * t) {
+static int uppercompare(const char * s, const char * t) {
   while(isupper((int) *s) || isupper((int) *t)) {
       if (*s != *t) return 1;
       s++;
@@ -76,7 +76,7 @@ static int uppercompare(char * s, char * t) {
 }  
 
 static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl, 
-		    char * ctype1, char * ctype2, char * ctype3, int x) {
+		    const char * ctype1, const char * ctype2, const char * ctype3, int x) {
 
     /* This function looks for constituents of type ctype1. Say it finds 
        one, call it c1. It searches for the next larger constituent of 
@@ -871,7 +871,7 @@ static void count_words_used(Linkage linkage) {
 static int r_limit=0;
 
 static void add_constituent(int * cons, Linkage linkage, Domain domain, 
-		     int l, int r, char * name) {
+			    int l, int r, const char * name) {
     int c = *cons;
     c++;
 

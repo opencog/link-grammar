@@ -146,7 +146,7 @@ static Disjunct * add_one_connector(int label, int dir, char *cs, Disjunct * d) 
     return d;
 }    
 
-static Disjunct * special_disjunct(int label, int dir, char *cs, char * ds) {
+static Disjunct * special_disjunct(int label, int dir, const char *cs, const char * ds) {
 /* Builds a new disjunct with one connector pointing in direction dir
    (which is '+' or '-').  The label and string of the connector
    are specified, as well as the string of the disjunct.

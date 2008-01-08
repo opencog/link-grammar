@@ -13,9 +13,9 @@
 #ifndef _UTILITIESH_
 #define _UTILITIESH_
 
-void safe_strcpy(char *u, char * v, int usize);
-void safe_strcat(char *u, char *v, int usize);
-char *safe_strdup(char *u);
+void safe_strcpy(char *u, const char * v, int usize);
+void safe_strcat(char *u, const char *v, int usize);
+char *safe_strdup(const char *u);
 void xfree(void *, int);
 void exfree(void *, int);
 void free_disjuncts(Disjunct *);
@@ -23,11 +23,11 @@ void free_X_nodes(X_node *);
 void free_connectors(Connector *);
 void init_randtable(void);
 int  next_power_of_two_up(int);
-int  upper_case_match(char *, char *);
+int  upper_case_match(const char *, const char *);
 void free_Exp(Exp *);
 void free_E_list(E_list *);
 int  size_of_expression(Exp *);
-void left_print_string(FILE* fp, char *, char *);
+void left_print_string(FILE* fp, const char *, const char *);
 
 void my_random_initialize(int seed);
 void my_random_finalize(void);
@@ -51,7 +51,7 @@ Connector * init_connector(Connector *c);
 void init_x_table(Sentence sent);
 
 /* utility routines moved from parse.c */
-int sentence_contains(Sentence sent, char * s);
+int sentence_contains(Sentence sent, const char * s);
 void set_is_conjunction(Sentence sent);
 int sentence_contains_conjunction(Sentence sent);
 int conj_in_range(Sentence sent, int lw, int rw);
@@ -64,14 +64,12 @@ void connector_set_delete(Connector_set * conset);
 int match_in_connector_set(Connector_set *conset, Connector * c, int d);
 
 char * get_default_locale(void);
-char * join_path(char * prefix, char * suffix);
+char * join_path(const char * prefix, const char * suffix);
 
 #define DICTPATH "DICTPATH" /* PATH environ variable for dictionary files */
-FILE *dictopen(char *dictname, char *filename, char *how);
-FILE *ppopen(char *);
+FILE *dictopen(const char *dictname, const char *filename, const char *how);
 
 Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
-int word_has_connector(Dict_node *, char *, int);
-int my_match(char *, char *);
+int word_has_connector(Dict_node *, const char *, int);
 
 #endif

@@ -39,7 +39,7 @@ static int row_starts[MAX_SENTENCE];
 static int N_rows;
   /* the number of rows */
 
-void left_append_string(String * string, char * s, char * t) {
+static void left_append_string(String * string, const char * s, const char * t) {
 /* prints s then prints the last |t|-|s| characters of t.
    if s is longer than t, it truncates s.
 */

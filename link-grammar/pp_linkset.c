@@ -32,7 +32,7 @@ static void initialize(pp_linkset *ls, int size);
 static pp_linkset_node *add_internal(pp_linkset *ls, char *str);
 static int compute_hash(pp_linkset *ls, const char *str);
  
-extern int post_process_match(char *s, char *t);
+extern int post_process_match(const char *s, const char *t);
 
 
 pp_linkset *pp_linkset_open(int size)

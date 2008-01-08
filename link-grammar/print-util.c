@@ -29,7 +29,7 @@ String * String_create(void) {
     return string;
 }
 
-int append_string(String * string, char *fmt, ...) {
+int append_string(String * string, const char *fmt, ...) {
     char temp_string[1024];
     char * p;
     int new_size;

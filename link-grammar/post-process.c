@@ -21,7 +21,7 @@
 
 /***************** utility routines (not exported) ***********************/
 
-static int string_in_list(char * s, char * a[]) 
+static int string_in_list(const char * s, char * a[]) 
 {
   /* returns FALSE if the string s does not match anything in 
      the array.  The array elements are post-processing symbols */
@@ -31,7 +31,7 @@ static int string_in_list(char * s, char * a[])
   return FALSE;
 }
 
-static int find_domain_name(Postprocessor *pp, char *link) 
+static int find_domain_name(Postprocessor *pp, const char *link) 
 {
   /* Return the name of the domain associated with the provided starting 
      link. Return -1 if link isn't associated with a domain. */
@@ -959,7 +959,7 @@ PP_node *post_process(Postprocessor *pp, Parse_Options opts,
   functions 
   */
 
-int post_process_match(char *s, char *t) 
+int post_process_match(const char *s, const char *t) 
 {
   char c;
   while(isupper((int)*s) || isupper((int)*t)) 

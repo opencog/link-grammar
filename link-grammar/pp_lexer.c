@@ -513,7 +513,7 @@ char *yytext;
 
 #undef yywrap
 
-extern void error(char *fmt, ...);
+extern void error(const char *fmt, ...);
 
 /* forward references for non-exported functions (and static variable) */
 static void check_string(const char *str);

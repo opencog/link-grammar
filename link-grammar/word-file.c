@@ -13,7 +13,7 @@
 
 #include <link-grammar/api.h>
 
-char * get_a_word(Dictionary dict, FILE * fp) {
+static char * get_a_word(Dictionary dict, FILE * fp) {
 /* Reads in one word from the file, allocates space for it,
    and returns it.
 */
@@ -84,29 +84,6 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename) {
 
 #define LINE_LIMIT 70
 int xwhere_in_line;
-
-void routput_dictionary(Dict_node * dn, FILE *fp, Word_file *wf) {
-/* scan the entire dictionary rooted at dn and print into the file
-   pf all of the words whose origin is the file wf.
-*/
-    if (dn == NULL) return;
-    routput_dictionary(dn->left, fp, wf);
-    if (dn->file == wf) {
-	if (xwhere_in_line+strlen(dn->string) > LINE_LIMIT) {
-	    xwhere_in_line = 0;
-	    fprintf(fp,"\n");
-	}
-	xwhere_in_line += strlen(dn->string) + 1;
-	fprintf(fp,"%s ", dn->string);
-    }
-    routput_dictionary(dn->right, fp, wf);
-}
-
-void output_dictionary(Dict_node * dn, FILE *fp, Word_file *wf) {
-    xwhere_in_line = 0;
-    routput_dictionary(dn, fp, wf);
-    fprintf(fp,"\n");
-}
 
 void save_files(Dictionary dict) {
     Word_file *wf;

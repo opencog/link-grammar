@@ -30,8 +30,8 @@ typedef enum {
 #define GNUC_PRINTF( format_idx, arg_idx )
 #endif
 
-void lperror(int lperr, char *fmt, ...) GNUC_PRINTF(2,3);
-void error(char *fmt, ...) GNUC_PRINTF(1,2);
+void lperror(int lperr, const char *fmt, ...) GNUC_PRINTF(2,3);
+void error(const char *fmt, ...) GNUC_PRINTF(1,2);
 
 #endif
 

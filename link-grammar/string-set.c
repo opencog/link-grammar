@@ -86,7 +86,7 @@ String_set * string_set_create(void) {
     return ss;
 }
 
-int find_place(char * str, String_set *ss) {
+static int find_place(const char * str, String_set *ss) {
     /* lookup the given string in the table.  Return a pointer
        to the place it is, or the place where it should be. */
     int h, s, i;
@@ -97,7 +97,7 @@ int find_place(char * str, String_set *ss) {
     }
 }
 
-void grow_table(String_set *ss) {
+static void grow_table(String_set *ss) {
     String_set old;
     int i, p;
     
@@ -118,7 +118,7 @@ void grow_table(String_set *ss) {
     xfree((char *) old.table, old.size * sizeof(char *));
 }
 
-char * string_set_add(char * source_string, String_set * ss) {
+char * string_set_add(const char * source_string, String_set * ss) {
     char * str;
     int len, p;
     
@@ -141,7 +141,7 @@ char * string_set_add(char * source_string, String_set * ss) {
     return str;
 }
 
-char * string_set_lookup(char * source_string, String_set * ss) {
+char * string_set_lookup(const char * source_string, String_set * ss) {
     int p;
     
     p = find_place(source_string, ss);

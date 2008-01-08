@@ -28,7 +28,7 @@ struct String_s {
 };
 
 String * String_create(void);
-int append_string(String * string, char *fmt, ...) GNUC_PRINTF(2,3);
+int append_string(String * string, const char *fmt, ...) GNUC_PRINTF(2,3);
 
 #endif
 

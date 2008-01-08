@@ -37,9 +37,9 @@ static struct {
 } local;
 
 typedef struct {
-    char * string;
+    const char * string;
     int    isboolean;
-    char * description;
+    const char * description;
     int  * p;
 } Switch;
 
@@ -67,7 +67,7 @@ Switch default_switches[] = {
     {NULL,           1,  NULL,                              NULL}
 };
 
-struct {char * s; char * str;} user_command[] = {
+struct {const char * s; const char * str;} user_command[] = {
     {"variables",    "List user-settable variables and their functions"},
     {"help",         "List the commands and what they do"},
     {NULL,           NULL}

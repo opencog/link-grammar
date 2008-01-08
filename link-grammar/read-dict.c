@@ -87,7 +87,7 @@
 
 static int link_advance(Dictionary dict);
 
-static void dict_error(Dictionary dict, char * s) {
+static void dict_error(Dictionary dict, const char * s) {
 	int i;
 	char tokens[1024], t[128];
 
@@ -101,7 +101,7 @@ static void dict_error(Dictionary dict, char * s) {
 			s, dict->line_number, tokens);
 }
 
-void warning(Dictionary dict, char * s) {
+void warning(Dictionary dict, const char * s) {
 	printf("\nWarning: %s\n",s);
 	printf("line %d, current token = \"%s\"\n", dict->line_number, dict->token);
 }
@@ -220,7 +220,7 @@ int is_equal(Dictionary dict, int c) {
 	return (dict->is_special && c==dict->token[0] && dict->token[1] == '\0');
 }
 
-int check_connector(Dictionary dict, char * s) {
+int check_connector(Dictionary dict, const char * s) {
 	/* makes sure the string s is a valid connector */
 	int i;
 	i = strlen(s);
@@ -614,7 +614,7 @@ int dict_compare(char *s, char *t) {
 */
 
 /* terse version */
-int dict_compare(char *s, char *t) {
+int dict_compare(const char *s, const char *t) {
 	while (*s != '\0' && *s == *t) {s++; t++;}
 	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
 }
@@ -817,7 +817,7 @@ static int dict_match(const char * s, const char * t)
 /* followes the last "." in the word, and it does not begin     */
 /* with a digit.                                                */
 
-static int true_dict_match(char * s, const char * t)
+static int true_dict_match(const char * s, const char * t)
 {
 	char *ds, *dt;
 	ds = strrchr(s, '.');
@@ -909,7 +909,7 @@ Dict_node * dictionary_lookup(Dictionary dict, const char *s)
    return lookup_list;
 }
 
-int boolean_dictionary_lookup(Dictionary dict, char *s) {
+int boolean_dictionary_lookup(Dictionary dict, const char *s) {
 	return (dictionary_lookup(dict, s) != NULL);
 }
 
@@ -919,7 +919,7 @@ int boolean_dictionary_lookup(Dictionary dict, char *s) {
  * only they do not consider the idiom words
  */
 
-void rabridged_lookup(Dict_node * dn, char * s) {
+void rabridged_lookup(Dict_node * dn, const char * s) {
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return;
@@ -938,14 +938,14 @@ void rabridged_lookup(Dict_node * dn, char * s) {
 	}
 }
 
-Dict_node * abridged_lookup(Dictionary dict, char *s) {
+Dict_node * abridged_lookup(Dictionary dict, const char *s) {
    free_lookup_list();
    rabridged_lookup(dict->root, s);
    prune_lookup_list(s);
    return lookup_list;
 }
 
-int boolean_abridged_lookup(Dictionary dict, char *s) {
+int boolean_abridged_lookup(Dictionary dict, const char *s) {
 /* returns true if in the dictionary, false otherwise */
 	return (abridged_lookup(dict, s) != NULL);
 }
@@ -956,7 +956,7 @@ static Dict_node * parent;
 static Dict_node * to_be_deleted;
 
 
-int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, char * s) {
+int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s) {
 /* Returns true if it finds a non-idiom dict_node in a file that matches
    the string s.
 
@@ -997,7 +997,7 @@ void set_parent_of_node(Dictionary dict,
 	}
 }
 
-int delete_dictionary_words(Dictionary dict, char * s) {
+int delete_dictionary_words(Dictionary dict, const char * s) {
 /* This deletes all the non-idiom words of the dictionary that match
    the given string.  Returns TRUE if some deleted, FALSE otherwise.
 */
@@ -1082,7 +1082,7 @@ void free_dictionary(Dictionary dict) {
 	free_Exp_list(dict->exp_list);
 }
 
-void dict_display_word_info(Dictionary dict, char * s) {
+void dict_display_word_info(Dictionary dict, const char * s) {
 	/* display the information about the given word */
 	Dict_node * dn;
 	Disjunct * d1, * d2;

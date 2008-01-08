@@ -48,7 +48,7 @@ static double current_usage_time(void) {
 #endif
 }
 
-void print_time(Parse_Options opts, char * s) {
+void print_time(Parse_Options opts, const char * s) {
     resources_print_time(opts->verbosity, opts->resources, s);
 }
 
@@ -116,7 +116,7 @@ int resources_memory_exhausted(Resources r) {
     else return (r->memory_exhausted || (space_in_use > r->max_memory));
 }
 
-void resources_print_time(int verbosity, Resources r, char * s) {
+void resources_print_time(int verbosity, Resources r, const char * s) {
 /* print out the cpu ticks since this was last called */
     double new_t;
     new_t = current_usage_time();

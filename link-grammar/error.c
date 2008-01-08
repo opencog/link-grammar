@@ -47,7 +47,7 @@ static const char * msg_of_lperror(int lperr) {
     return "";
 }
 
-void lperror(int lperr, char *fmt, ...) {
+void lperror(int lperr, const char *fmt, ...) {
     char temp[1024] = "";
     va_list args;
 
@@ -60,7 +60,7 @@ void lperror(int lperr, char *fmt, ...) {
     lperrno = lperr;
 }
 
-void error(char *fmt, ...) {
+void error(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args); CRLF;

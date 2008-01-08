@@ -881,14 +881,6 @@ static void exfree_pp_info(PP_info ppi) {
 	exfree(ppi.domain_name, sizeof(char *)*ppi.num_domains);
 }
 
-static void xfree_pp_info(PP_info ppi) {
-    int i;
-    for (i=0; i<ppi.num_domains; ++i) {
-	xfree(ppi.domain_name[i], strlen(ppi.domain_name[i])+1);
-    }
-    xfree(ppi.domain_name, sizeof(char *)*ppi.num_domains);
-}
-
 void linkage_delete(Linkage linkage) {
     int i, j;
     Sublinkage *s;

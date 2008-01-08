@@ -95,7 +95,7 @@ static int is_ly_word(char * s) {
     return FALSE;
 }
 
-static int issue_sentence_word(Sentence sent, char * s) {
+static int issue_sentence_word(Sentence sent, const char * s) {
     /* the string s is the next word of the sentence do not issue the empty
      * string.  return false if too many words or the word is too long.  */
     if (*s == '\0') return TRUE;
@@ -192,10 +192,10 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
     char word[MAX_WORD+1];
     char newword[MAX_WORD+1];
     Dict_node * dn, * dn2, * start_dn;
-    char * rpunc_con = "RPUNC";
-    char * lpunc_con = "LPUNC";
-    char * suf_con = "SUF";
-    char * pre_con = "PRE";
+    const char * rpunc_con = "RPUNC";
+    const char * lpunc_con = "LPUNC";
+    const char * suf_con = "SUF";
+    const char * pre_con = "PRE";
 
     if(sent->dict->affix_table!=NULL) {
 

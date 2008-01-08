@@ -15,7 +15,7 @@
 
 static int null_links;
 
-void print_statistics() {
+static void print_statistics(void) {
 }
 
 void free_deletable(Sentence sent) {
@@ -30,7 +30,7 @@ void free_deletable(Sentence sent) {
     }
 }
 
-void build_deletable(Sentence sent, int has_conjunction) {
+static void build_deletable(Sentence sent, int has_conjunction) {
 /* Initialize the array deletable[i][j] to indicate if the words           */
 /* i+1...j-1 could be non existant in one of the multiple linkages.  This  */
 /* array is used in conjunction_prune and power_prune.  Regions of length  */
@@ -98,7 +98,7 @@ void free_effective_dist(Sentence sent) {
     }
 }
 
-void build_effective_dist(Sentence sent, int has_conjunction) {
+static void build_effective_dist(Sentence sent, int has_conjunction) {
   /*
     The "effective distance" between two words is the actual distance minus
     the largest deletable region strictly between the two words.  If the

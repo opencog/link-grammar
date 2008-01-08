@@ -57,8 +57,8 @@ typedef enum {UNGRAMMATICAL='*',
 	      PARSE_WITH_DISJUNCT_COST_GT_0=':',
 	      NO_LABEL=' '} Label;
 
-int fget_input_string(char *input_string, FILE *in, FILE *out, 
-		      Parse_Options opts) {
+static int fget_input_string(char *input_string, FILE *in, FILE *out, 
+			     Parse_Options opts) {
     if ((!parse_options_get_batch_mode(opts)) && (verbosity > 0)
 	&& (!input_pending)) fprintf(out, "linkparser> ");
     fflush(out);
@@ -67,7 +67,7 @@ int fget_input_string(char *input_string, FILE *in, FILE *out,
     else return 0;
 }
 
-int fget_input_char(FILE *in, FILE *out, Parse_Options opts) {
+static int fget_input_char(FILE *in, FILE *out, Parse_Options opts) {
     if (!parse_options_get_batch_mode(opts) && (verbosity > 0)) 
       fprintf(out, "linkparser> ");
     fflush(out);
@@ -82,7 +82,7 @@ int fget_input_char(FILE *in, FILE *out, Parse_Options opts) {
 *
 **************************************************************************/
 
-void process_linkage(Linkage linkage, Parse_Options opts) {
+static void process_linkage(Linkage linkage, Parse_Options opts) {
     char * string;
     int    j, mode, first_sublinkage;
 
@@ -124,7 +124,7 @@ void process_linkage(Linkage linkage, Parse_Options opts) {
     }
 }
 
-void print_parse_statistics(Sentence sent, Parse_Options opts) {
+static void print_parse_statistics(Sentence sent, Parse_Options opts) {
     if (sentence_num_linkages_found(sent) > 0) {
 	if (sentence_num_linkages_found(sent) > 
 	    parse_options_get_linkage_limit(opts)) {
@@ -149,7 +149,7 @@ void print_parse_statistics(Sentence sent, Parse_Options opts) {
 }
 
 
-void process_some_linkages(Sentence sent, Parse_Options opts) {
+static void process_some_linkages(Sentence sent, Parse_Options opts) {
     int i, c, num_displayed, num_to_query;
     Linkage linkage;
    
@@ -217,7 +217,7 @@ void process_some_linkages(Sentence sent, Parse_Options opts) {
     }
 }
 
-int there_was_an_error(Label label, Sentence sent, Parse_Options opts) {
+static int there_was_an_error(Label label, Sentence sent, Parse_Options opts) {
 
     if (sentence_num_valid_linkages(sent) > 0) {
 	if (label == UNGRAMMATICAL) {
@@ -238,7 +238,7 @@ int there_was_an_error(Label label, Sentence sent, Parse_Options opts) {
     return FALSE;
 }
 
-void batch_process_some_linkages(Label label, Sentence sent, Parse_Options opts) {
+static void batch_process_some_linkages(Label label, Sentence sent, Parse_Options opts) {
     Linkage linkage;
    
     if (there_was_an_error(label, sent, opts)) {
@@ -251,7 +251,7 @@ void batch_process_some_linkages(Label label, Sentence sent, Parse_Options opts)
     }
 }
 
-int special_command(char *input_string, Dictionary dict) {
+static int special_command(char *input_string, Dictionary dict) {
 
     if (input_string[0] == '\n') return TRUE;
     if (input_string[0] == COMMENT_CHAR) return TRUE;
@@ -267,7 +267,7 @@ int special_command(char *input_string, Dictionary dict) {
     return FALSE;
 }
 
-Label strip_off_label(char * input_string) {
+static Label strip_off_label(char * input_string) {
     int c;
 
     c = input_string[0];
@@ -282,7 +282,7 @@ Label strip_off_label(char * input_string) {
     }	
 }
 
-void setup_panic_parse_options(Parse_Options opts) {
+static void setup_panic_parse_options(Parse_Options opts) {
     parse_options_set_disjunct_cost(opts, 3);
     parse_options_set_min_null_count(opts, 1);
     parse_options_set_max_null_count(opts, MAX_SENTENCE);
@@ -293,7 +293,7 @@ void setup_panic_parse_options(Parse_Options opts) {
     parse_options_set_linkage_limit(opts, 100);
 }
 
-void print_usage(char *str) {
+static void print_usage(char *str) {
     fprintf(stderr, 
 	    "Usage: %s [language]\n"
 	    "          [-ppoff] [-coff] [-aoff] [-batch] [-<special \"!\" command>]\n", str);

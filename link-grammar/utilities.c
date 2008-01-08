@@ -37,20 +37,20 @@
 
 int   verbosity;
 
-char *safe_strdup(char *u) {
+char *safe_strdup(const char *u) {
   if(u)
     return strdup(u);
   return NULL;
 }
 
-void safe_strcpy(char *u, char * v, int usize) {
+void safe_strcpy(char *u, const char * v, int usize) {
 /* Copies as much of v into u as it can assuming u is of size usize */
 /* guaranteed to terminate u with a '\0'.                           */
     strncpy(u, v, usize-1);
     u[usize-1] = '\0';
 }
 
-void safe_strcat(char *u, char *v, int usize) {
+void safe_strcat(char *u, const char *v, int usize) {
 /* catenates as much of v onto u as it can assuming u is of size usize           */
 /* guaranteed to terminate u with a '\0'.  Assumes u and v are null terminated.  */
     strncat(u, v, usize-strlen(u)-1);
@@ -322,7 +322,7 @@ int next_power_of_two_up(int i) {
     return j;
 }
 
-int upper_case_match(char *s, char *t) {
+int upper_case_match(const char *s, const char *t) {
 /* returns TRUE if the initial upper case letters of s and t match */
     while(isupper((int)*s) || isupper((int)*t)) {
 	if (*s != *t) return FALSE;
@@ -332,7 +332,7 @@ int upper_case_match(char *s, char *t) {
     return (!isupper((int)*s) && !isupper((int)*t));
 }
 
-void left_print_string(FILE * fp, char * s, char * t) {
+void left_print_string(FILE * fp, const char * s, const char * t) {
 /* prints s then prints the last |t|-|s| characters of t.
    if s is longer than t, it truncates s.
 */
@@ -348,7 +348,7 @@ void left_print_string(FILE * fp, char * s, char * t) {
     }
 }
 
-int sentence_contains(Sentence sent, char * s) {
+int sentence_contains(Sentence sent, const char * s) {
 /* Returns TRUE if one of the words in the sentence is s */
     int w;
     for (w=0; w<sent->length; w++) {
@@ -500,7 +500,7 @@ static char * get_datadir(void)
   return data_dir;
 }
 
-FILE *dictopen(char *dictname, char *filename, char *how) {
+FILE *dictopen(const char *dictname, const char *filename, const char *how) {
 
     /* This function is used to open a dictionary file or a word file,
        or any associated data file (like a post process knowledge file).
@@ -684,16 +684,7 @@ Dict_node * list_whole_dictionary(Dict_node *root, Dict_node *dn) {
     return c;
 }
 
-void free_listed_dictionary(Dict_node *dn) {
-    Dict_node * dn2;
-    while(dn!=NULL) {
-      dn2=dn->right;
-      xfree(dn, sizeof(Dict_node));
-      dn=dn2;
-    }
-}
-
-static int easy_match(char * s, char * t) {
+static int easy_match(const char * s, const char * t) {
 
     /* This is like the basic "match" function in count.c - the basic connector-matching
        function used in parsing - except it ignores "priority" (used to handle fat links) */
@@ -715,7 +706,7 @@ static int easy_match(char * s, char * t) {
 
 }
 
-int word_has_connector(Dict_node * dn, char * cs, int direction) {
+int word_has_connector(Dict_node * dn, const char * cs, int direction) {
 
   /* This function takes a dict_node (corresponding to an entry in a given dictionary), a
      string (representing a connector), and a direction (0 = right-pointing, 1 = left-pointing);
@@ -828,7 +819,7 @@ win32_getlocale (void)
 
 #endif
 
-char * join_path(char * prefix, char * suffix)
+char * join_path(const char * prefix, const char * suffix)
 {
   char * path;
   int path_len;
