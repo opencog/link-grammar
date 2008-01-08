@@ -185,7 +185,7 @@ static int compute_hash(const int unit, const char *str)
   return hashval;
 }
 
-static int take_a_unit() {
+static int take_a_unit(void) {
   /* hands out free units */
   int i;
   static int q_first = 1;

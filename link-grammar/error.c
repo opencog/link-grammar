@@ -25,7 +25,7 @@ static char   buf[1024];
 int    lperrno = 0;
 char   lperrmsg[1024] = "";
 
-const char * msg_of_lperror(int lperr) {
+static const char * msg_of_lperror(int lperr) {
     switch(lperr) {
     case NODICT:
 	return "Could not open dictionary ";

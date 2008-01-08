@@ -207,7 +207,7 @@ void x_issue_special_command(char * line, Parse_Options opts, Dictionary dict) {
     printf("I can't interpret \"%s\" as a command.  Try \"!help\".\n", myline);
 }
 
-void put_opts_in_local_vars(Parse_Options opts) {
+static void put_opts_in_local_vars(Parse_Options opts) {
     local.verbosity = parse_options_get_verbosity(opts);
     local.timeout = parse_options_get_max_parse_time(opts);;
     local.memory = parse_options_get_max_memory(opts);;
@@ -231,7 +231,7 @@ void put_opts_in_local_vars(Parse_Options opts) {
     local.display_union = parse_options_get_display_union(opts);
 }
 
-void put_local_vars_in_opts(Parse_Options opts) {
+static void put_local_vars_in_opts(Parse_Options opts) {
     parse_options_set_verbosity(opts, local.verbosity);
     parse_options_set_max_parse_time(opts, local.timeout);
     parse_options_set_max_memory(opts, local.memory);

@@ -26,7 +26,7 @@
 static Word * local_sent;
 static int    islands_ok;
 
-static Parse_set * dummy_set() {
+static Parse_set * dummy_set(void) {
     static Parse_set ds;
     ds.first = ds.current = NULL;
     ds.count = 1;

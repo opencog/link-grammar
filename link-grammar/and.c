@@ -491,7 +491,7 @@ char * intersect_strings(Sentence sent, char * s, char * t) {
     }
 }
 
-int connectors_equal_AND(Connector *c1, Connector *c2) {
+static int connectors_equal_AND(Connector *c1, Connector *c2) {
 /* Two connectors are said to be equal if they are of the same type
    (defined above), they have the same multi field, and they have
    exactly the same connectors (including lower case chars).
@@ -503,7 +503,7 @@ int connectors_equal_AND(Connector *c1, Connector *c2) {
 }
 
 
-int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2) {
+static int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2) {
 /* Return true if the disjuncts are equal (ignoring priority fields)
    and the string of the disjunct.
 */
@@ -528,7 +528,7 @@ int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2) {
     return TRUE;
 }
 
-Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d2) {
+static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d2) {
 /* Create a new disjunct that is the GCD of d1 and d2.
    It assumes that the disjuncts are of the same type, so the
    GCD will not be empty.
@@ -555,7 +555,7 @@ Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d2) {
     return d;
 }
 
-void put_disjunct_into_table(Sentence sent, Disjunct *d) {
+static void put_disjunct_into_table(Sentence sent, Disjunct *d) {
 /* (1) look for the given disjunct in the table structures
        if it's already in the table structures, do nothing
    (2) otherwise make a copy of it, and put it into the table structures
@@ -642,7 +642,7 @@ void put_disjunct_into_table(Sentence sent, Disjunct *d) {
 }
 
 
-void extract_all_fat_links(Sentence sent, Disjunct * d) {
+static void extract_all_fat_links(Sentence sent, Disjunct * d) {
 /*  A sub disjuct of d is any disjunct obtained by killing the tail
     of either connector list at any point.
     Here we go through each sub-disjunct of d, and put it into our
@@ -685,7 +685,7 @@ void extract_all_fat_links(Sentence sent, Disjunct * d) {
     }
 }
 
-char * stick_in_one_connector(char *s, Connector *c, int len) {
+static char * stick_in_one_connector(char *s, Connector *c, int len) {
 /* put the next len characters from c->string (skipping upper
    case ones) into s.  If there are fewer than this, pad with '*'s.
    Then put in a character for the multi match bit of c.
@@ -707,7 +707,7 @@ char * stick_in_one_connector(char *s, Connector *c, int len) {
     return s;
 }
 
-void compute_matchers_for_a_label(Sentence sent, int k) {
+static void compute_matchers_for_a_label(Sentence sent, int k) {
 /* This takes a label k, modifies the list of disjuncts with that
    label.  For each such disjunct, it computes the string that
    will be used in the fat connector that represents it.
@@ -803,7 +803,7 @@ void print_AND_statistics(Sentence sent) {
     printf("Number of equality tests: %d\n", STAT_calls_to_equality_test);
 }
 
-void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) {
+static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) {
 /* Fill in the fields of c for the disjunct.  This must be in
    the table data structures.  The label field and the string field
    are filled in appropriately.  Priority is set to UP_priority.
@@ -841,7 +841,7 @@ void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) {
 }
 
 
-Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d) {
+static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d) {
 /* This function allocates and returns a list of disjuncts.
    This is the one obtained by substituting each contiguous
    non-empty subrange of d (incident on the center) by an appropriate
@@ -1308,7 +1308,7 @@ static void build_image_array(Sentence sent) {
     }
 }
 
-int strictly_smaller(char * s, char * t) {
+static int strictly_smaller(char * s, char * t) {
 /* returns TRUE if string s represents a strictly smaller match set
    than does t
 */
@@ -1326,7 +1326,7 @@ int strictly_smaller(char * s, char * t) {
     return (strictness > 0);  
 }
 
-Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label) {
+static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label) {
 /* dis points to a disjunct in the label_table.  label is the label
    of a different set of disjuncts.  These can be derived from the label
    of dis.  Find the specific disjunct of in label_table[label]

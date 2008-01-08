@@ -23,8 +23,15 @@ typedef enum {
     INTERNALERROR,
 }   LP_error_type;
 
-void lperror(int lperr, char *fmt, ...);
-void error(char *fmt, ...);
+#if     __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
+#define GNUC_PRINTF( format_idx, arg_idx )    \
+  __attribute__((__format__ (__printf__, format_idx, arg_idx)))
+#else
+#define GNUC_PRINTF( format_idx, arg_idx )
+#endif
+
+void lperror(int lperr, char *fmt, ...) GNUC_PRINTF(2,3);
+void error(char *fmt, ...) GNUC_PRINTF(1,2);
 
 #endif
 

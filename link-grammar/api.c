@@ -563,7 +563,7 @@ void sentence_delete(Sentence sent) {
     xfree((char *) sent, sizeof(struct Sentence_s));
 }
 
-void free_andlists(Sentence sent) {
+static void free_andlists(Sentence sent) {
 
   int L;
   Andlist * andlist, * next;
@@ -628,7 +628,7 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i) {
 ****************************************************************/
 
 
-void post_process_linkages(Sentence sent, Parse_Options opts) {
+static void post_process_linkages(Sentence sent, Parse_Options opts) {
 
     int *indices;
     int in, block_bottom, block_top;
@@ -872,7 +872,7 @@ int linkage_set_current_sublinkage(Linkage linkage, int index) {
     return 1;
 }
 
-void exfree_pp_info(PP_info ppi) {
+static void exfree_pp_info(PP_info ppi) {
     int i;
     for (i=0; i<ppi.num_domains; ++i) {
 	exfree(ppi.domain_name[i], strlen(ppi.domain_name[i])+1);
@@ -881,7 +881,7 @@ void exfree_pp_info(PP_info ppi) {
 	exfree(ppi.domain_name, sizeof(char *)*ppi.num_domains);
 }
 
-void xfree_pp_info(PP_info ppi) {
+static void xfree_pp_info(PP_info ppi) {
     int i;
     for (i=0; i<ppi.num_domains; ++i) {
 	xfree(ppi.domain_name[i], strlen(ppi.domain_name[i])+1);
@@ -918,11 +918,11 @@ void linkage_delete(Linkage linkage) {
     exfree(linkage, sizeof(struct Linkage_s));
 }
 
-int links_are_equal(Link l, Link m) {
+static int links_are_equal(Link l, Link m) {
     return ((l->l == m->l) && (l->r == m->r) && (strcmp(l->name, m->name)==0));
 }
 
-int link_already_appears(Linkage linkage, Link link, int a) {
+static int link_already_appears(Linkage linkage, Link link, int a) {
     int i, j;
 
     for (i=0; i<a; ++i) {
@@ -933,7 +933,7 @@ int link_already_appears(Linkage linkage, Link link, int a) {
     return FALSE;
 }
 
-PP_info excopy_pp_info(PP_info ppi) {
+static PP_info excopy_pp_info(PP_info ppi) {
      static PP_info newppi;
      int i;
 
@@ -947,7 +947,7 @@ PP_info excopy_pp_info(PP_info ppi) {
 }
 
 
-Sublinkage unionize_linkage(Linkage linkage) {
+static Sublinkage unionize_linkage(Linkage linkage) {
     int i, j, num_in_union=0;
     Sublinkage u;
     Link link;

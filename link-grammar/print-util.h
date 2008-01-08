@@ -13,6 +13,13 @@
 #ifndef _PRINTUTILH_
 #define _PRINTUTILH_
 
+#if     __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
+#define GNUC_PRINTF( format_idx, arg_idx )    \
+  __attribute__((__format__ (__printf__, format_idx, arg_idx)))
+#else
+#define GNUC_PRINTF( format_idx, arg_idx )
+#endif
+
 typedef struct String_s String;
 struct String_s {
     unsigned int allocated;  /* Unsigned so VC++ doesn't complain about comparisons */
@@ -21,7 +28,7 @@ struct String_s {
 };
 
 String * String_create(void);
-int append_string(String * string, char *fmt, ...);
+int append_string(String * string, char *fmt, ...) GNUC_PRINTF(2,3);
 
 #endif
 

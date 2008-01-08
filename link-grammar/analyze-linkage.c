@@ -54,7 +54,7 @@ typedef struct CON_node_struct CON_node;
 typedef struct CON_list_struct CON_list;
 typedef struct DIS_list_struct DIS_list;
 typedef struct Links_to_patch_struct Links_to_patch;
-typedef void (*void_returning_function)();
+typedef void (*void_returning_function)(void);
 
 struct DIS_node_struct {
 	CON_list * cl;     /* the list of children */
@@ -275,7 +275,7 @@ static DIS_node * build_DIS_node(int w) {
 	return dn;
 }
 
-void height_dfs(int w, int height) {
+static void height_dfs(int w, int height) {
 	List_o_links * lol;
 	if (dfs_height[w] != 0) return;
 	dfs_height[w] = height;
