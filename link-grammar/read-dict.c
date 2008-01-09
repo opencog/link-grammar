@@ -951,7 +951,7 @@ static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char
 	if (dn == NULL) return llist;
 	m = dict_match(s, dn->string);
 	if (m >= 0) {
-		rabridged_lookup(llist, dn->right, s);
+		llist = rabridged_lookup(llist, dn->right, s);
 	}
 	if ((m == 0) && (!is_idiom_word(dn->string))) {
 		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
