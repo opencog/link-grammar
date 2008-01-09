@@ -11,29 +11,6 @@
 
 static Dict_node * lookup_list2 = NULL;
 
-static void prune_lookup_list2(const char * s)
-{
-	Dict_node *dn, *dnx, *dn_new;
-	dn_new = NULL;
-	for (dn = lookup_list2; dn!=NULL; dn = dnx) {
-		dnx = dn->right;
-		/* now put dn onto the answer list, or free it */
-		if (true_dict_match(dn->string, s)) {
-			dn->right = dn_new;
-			dn_new = dn;
-		} else {
-			xfree((char *)dn, sizeof(Dict_node));
-		}
-	}
-	/* now reverse the list back */
-	lookup_list2 = NULL;
-	for (dn = dn_new; dn!=NULL; dn = dnx) {
-		dnx = dn->right;
-		dn->right = lookup_list2;
-		lookup_list2 = dn;
-	}
-}
-
 static void rdictionary_lookup2(Dict_node * dn, const char * s)
 {
 	/* see comment in dictionary_lookup below */
@@ -68,7 +45,7 @@ Dict_node * dictionary_lookup2(Dictionary dict, const char *s)
 {
 	free_lookup_list(lookup_list2);
 	rdictionary_lookup2(dict->root, s);
-	prune_lookup_list2(s);
+	lookup_list2 = prune_lookup_list2(lookup_list2, s);
 	return lookup_list2;
 }
 

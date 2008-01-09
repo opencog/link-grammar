@@ -841,11 +841,11 @@ static int true_dict_match(const char * s, const char * t)
 /* Pointer to the temporary lookup list */
 Dict_node * lookup_list = NULL;
 
-static void prune_lookup_list(const char * s)
+Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 {
 	Dict_node *dn, *dnx, *dn_new;
 	dn_new = NULL;
-	for (dn = lookup_list; dn!=NULL; dn = dnx) {
+	for (dn = llist; dn!=NULL; dn = dnx) {
 		dnx = dn->right;
 		/* now put dn onto the answer list, or free it */
 		if (true_dict_match(dn->string, s)) {
@@ -856,12 +856,13 @@ static void prune_lookup_list(const char * s)
 		}
 	}
 	/* now reverse the list back */
-	lookup_list = NULL;
+	llist = NULL;
 	for (dn = dn_new; dn!=NULL; dn = dnx) {
 		dnx = dn->right;
-		dn->right = lookup_list;
-		lookup_list = dn;
+		dn->right = llist;
+		llist = dn;
 	}
+	return llist;
 }
 
 void free_lookup_list(Dict_node *llist)
@@ -908,7 +909,7 @@ Dict_node * dictionary_lookup(Dictionary dict, const char *s)
 {
    free_lookup_list(lookup_list);
    rdictionary_lookup(dict->root, s);
-   prune_lookup_list(s);
+   lookup_list = prune_lookup_list(lookup_list, s);
    return lookup_list;
 }
 
@@ -945,7 +946,7 @@ Dict_node * abridged_lookup(Dictionary dict, const char *s)
 {
    free_lookup_list(lookup_list);
    rabridged_lookup(dict->root, s);
-   prune_lookup_list(s);
+   lookup_list = prune_lookup_list(lookup_list, s);
    return lookup_list;
 }
 
