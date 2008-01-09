@@ -21,7 +21,7 @@ static char q_unit_is_used[LINKSET_MAX_SETS];
 static void clear_hash_table(const int unit);
 static void initialize_unit(const int unit, const int size);
 static LINKSET_NODE *linkset_add_internal(const int unit, char *str);
-static int  take_a_unit();
+static int  take_a_unit(void);
 static int  compute_hash(const int unit, const char *str);
 static char *local_alloc (int nbytes);
  

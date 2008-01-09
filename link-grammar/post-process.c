@@ -768,7 +768,7 @@ internal_process(Postprocessor *pp,Sublinkage *sublinkage,char **msg)
 }
 
   
-void prune_irrelevant_rules(Postprocessor *pp)
+static void prune_irrelevant_rules(Postprocessor *pp)
 {
   /* call this (a) after having called post_process_scan_linkage() on all
      generated linkages, but (b) before calling post_process() on any

@@ -371,7 +371,7 @@ OBS     return dis;
 OBS }
 #endif
 
-X_node * build_word_expressions(Sentence sent, char * s) {
+X_node * build_word_expressions(Sentence sent, const char * s) {
 /* Looks up the word s in the dictionary.  Returns NULL if it's not there.
    If there, it builds the list of expressions for the word, and returns
    a pointer to it.

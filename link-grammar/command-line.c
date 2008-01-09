@@ -43,7 +43,7 @@ typedef struct {
     int  * p;
 } Switch;
 
-Switch default_switches[] = {
+static Switch default_switches[] = {
     {"verbosity",    0, "Level of detail in output",        &local.verbosity},
     {"timeout",      0, "Abort parsing after this long",    &local.timeout},
     {"memory",       0, "Max memory allowed",               &local.memory},
@@ -73,7 +73,7 @@ struct {const char * s; const char * str;} user_command[] = {
     {NULL,           NULL}
 };
 
-void clean_up_string(char * s) {
+static void clean_up_string(char * s) {
     /* gets rid of all the white space in the string s.  Changes s */
     char * x, * y;
     y = x = s;
@@ -87,7 +87,7 @@ void clean_up_string(char * s) {
     *y = '\0';
 }
 
-int is_numerical_rhs(char *s) {
+static int is_numerical_rhs(char *s) {
     /* return TRUE if s points to a number:
      optional + or - followed by 1 or more
      digits.
@@ -98,7 +98,7 @@ int is_numerical_rhs(char *s) {
     return TRUE;
 }
 
-void x_issue_special_command(char * line, Parse_Options opts, Dictionary dict) {
+static void x_issue_special_command(char * line, Parse_Options opts, Dictionary dict) {
     char *s, myline[1000], *x, *y;
     int i, count, j, k;
     Switch * as = default_switches;

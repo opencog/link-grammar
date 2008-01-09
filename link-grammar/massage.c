@@ -122,7 +122,7 @@ static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary) {
     return catenate_disjuncts(d, d_list);
 }
 
-static Disjunct * add_one_connector(int label, int dir, char *cs, Disjunct * d) {
+static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct * d) {
 /* This adds one connector onto the beginning of the left (or right)
    connector list of d.  The label and string of the connector are
    specified

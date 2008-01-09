@@ -148,7 +148,7 @@ void init_table(Sentence sent) {
     }
 }
 
-int hash(int lw, int rw, Connector *le, Connector *re, int cost) {
+static int hash(int lw, int rw, Connector *le, Connector *re, int cost) {
     int i;
     i = 0;
     
@@ -173,7 +173,7 @@ void free_table(Sentence sent) {
     xfree((void *) table, table_size * sizeof(Table_connector*));
 }
 
-Table_connector * table_store(int lw, int rw, Connector *le, Connector *re, int cost, int count){
+static Table_connector * table_store(int lw, int rw, Connector *le, Connector *re, int cost, int count){
     /* Stores the value in the table.  Assumes it's not already there */
     Table_connector *t, *n;
     int h;
@@ -189,7 +189,7 @@ Table_connector * table_store(int lw, int rw, Connector *le, Connector *re, int 
 }
 
 
-Table_connector * table_pointer(int lw, int rw, Connector *le, Connector *re, int cost) {
+static Table_connector * table_pointer(int lw, int rw, Connector *le, Connector *re, int cost) {
     /* returns the pointer to this info, NULL if not there */
     Table_connector *t;
     t = table[hash(lw, rw, le, re, cost)];
@@ -211,7 +211,7 @@ int table_lookup(int lw, int rw, Connector *le, Connector *re, int cost) {
     if (t == NULL) return -1; else return t->count;
 }
 
-void table_update(int lw, int rw, Connector *le, Connector *re, int cost, int count) {
+static void table_update(int lw, int rw, Connector *le, Connector *re, int cost, int count) {
     /* Stores the value in the table.  Unlike table_store, it assumes it's already there */
     Table_connector *t = table_pointer(lw, rw, le, re, cost);
     
@@ -220,7 +220,7 @@ void table_update(int lw, int rw, Connector *le, Connector *re, int cost, int co
 }
 
 
-int pseudocount(int lw, int rw, Connector *le, Connector *re, int cost) {
+static int pseudocount(int lw, int rw, Connector *le, Connector *re, int cost) {
 /* returns 0 if and only if this entry is in the hash table with a count value of 0 */
     int count;
     count = table_lookup(lw, rw, le, re, cost);
@@ -442,7 +442,7 @@ int parse(Sentence sent, int cost, Parse_Options opts) {
    2  This region can be completed, and it's been marked.
    */  
 
-int region_valid(int lw, int rw, Connector *le, Connector *re) {
+static int region_valid(int lw, int rw, Connector *le, Connector *re) {
     /* Returns 0 if this range cannot be successfully filled in with           */
     /* links.  Returns 1 if it can, and it's not been marked, and returns      */
     /* 2 if it can and it has been marked.                                     */
@@ -507,7 +507,7 @@ int region_valid(int lw, int rw, Connector *le, Connector *re) {
     return found;
 }
 
-void mark_region(int lw, int rw, Connector *le, Connector *re) {
+static void mark_region(int lw, int rw, Connector *le, Connector *re) {
     /* Mark as useful all disjuncts involved in some way to complete the structure  */
     /* within the current region.  Note that only disjuncts strictly between        */
     /* lw and rw will be marked.  If it so happens that this region itself is not   */

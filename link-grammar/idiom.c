@@ -23,7 +23,7 @@ int contains_underbar(char * s) {
     return FALSE;
 }
 
-int is_idiom_string(char * s) {
+static int is_idiom_string(char * s) {
     /* Returns FALSE if it is not a correctly formed idiom string.
        correct such string:
        () contains no "."
@@ -46,7 +46,7 @@ int is_idiom_string(char * s) {
     return TRUE;
 }    
 
-int is_number(char *s) {
+static int is_number(char *s) {
     /* return TRUE if the string s is a sequence of digits. */
     while(*s != '\0') {
 	if (!isdigit((int)*s)) return FALSE;
@@ -55,7 +55,7 @@ int is_number(char *s) {
     return TRUE;
 }
 
-int numberfy(char * s) {
+static int numberfy(char * s) {
     /* if the string contains a single ".", and ends in ".Ix" where
        x is a number, return x.  Return -1 if not of this form.
        */
@@ -67,7 +67,7 @@ int numberfy(char * s) {
     return atoi(s);
 }
 
-int max_postfix_found(Dict_node * d) {
+static int max_postfix_found(Dict_node * d) {
     /* Look for words that end in ".Ix" where x is a number.
        Return the largest x found.
        */
@@ -81,7 +81,7 @@ int max_postfix_found(Dict_node * d) {
     return i;
 }
 
-char * build_idiom_word_name(Dictionary dict, char * s) {
+static char * build_idiom_word_name(Dictionary dict, char * s) {
     /* Allocates string space and returns a pointer to it.
        In this string is placed the idiomized name of the given string s.
        This is the same as s, but with a postfix of ".Ix", where x is an
@@ -107,7 +107,7 @@ char * build_idiom_word_name(Dictionary dict, char * s) {
     return id;
 }
 
-Dict_node * make_idiom_Dict_nodes(Dictionary dict, char * string) {
+static Dict_node * make_idiom_Dict_nodes(Dictionary dict, char * string) {
     /* Tear the idiom string apart.
        Destroys the string s, but does not free it.
        Put the parts into a list of Dict_nodes (connected by their right pointers)
@@ -150,7 +150,7 @@ Dict_node * make_idiom_Dict_nodes(Dictionary dict, char * string) {
 static char current_name[] = "AAAAAAAA";
 #define CN_size (sizeof(current_name)-1)
 
-void increment_current_name(void) {
+static void increment_current_name(void) {
     int i, carry;
     i = CN_size-1;
     carry = 1;
@@ -166,7 +166,7 @@ void increment_current_name(void) {
     }
 }
 
-char * generate_id_connector(Dictionary dict) {
+static char * generate_id_connector(Dictionary dict) {
     /* generate a new connector name
        obtained from the current_name
        allocate string space for it.

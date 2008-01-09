@@ -229,9 +229,9 @@ static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
     return numcon_subl;
 }
 
-void adjust_subordinate_clauses(Linkage linkage, 
-				int numcon_total, 
-				int numcon_subl) {
+static void adjust_subordinate_clauses(Linkage linkage, 
+				       int numcon_total, 
+				       int numcon_subl) {
 
   /* Look for a constituent started by an MVs or MVg. 
      Find any VP's or ADJP's that contain it (without going 

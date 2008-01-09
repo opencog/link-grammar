@@ -19,7 +19,7 @@ int post_quote[MAX_SENTENCE];
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
 
-static int is_initials_word(char * word) {
+static int is_initials_word(const char * word) {
     /* This is rather esoteric and not terribly important.
        It returns TRUE if the word matches the pattern /[A-Z]\.]+/
        */
@@ -31,7 +31,7 @@ static int is_initials_word(char * word) {
     return TRUE;
 }
 
-static int is_number(char * s) {
+static int is_number(const char * s) {
     if (!isdigit((int)*s)) return FALSE;
     for (; *s != '\0'; s++) {
 	if (isdigit((int)*s) || (*s == '.') || (*s == ',') || (*s == ':')) continue;
@@ -41,7 +41,7 @@ static int is_number(char * s) {
     return TRUE;
 }
 
-static int ishyphenated(char * s) {
+static int ishyphenated(const char * s) {
 /* returns TRUE iff it's an appropriately formed hyphenated word.
    This means all letters, numbers, or hyphens, not beginning and
    ending with a hyphen.
@@ -58,7 +58,7 @@ static int ishyphenated(char * s) {
     return ((*(s-1)!='-') && (hyp>0));
 }
 
-static int is_ing_word(char * s) {
+static int is_ing_word(const char * s) {
 
     int i=0;
     for (; *s != '\0'; s++) i++;
@@ -67,7 +67,7 @@ static int is_ing_word(char * s) {
     return FALSE;
 }
 
-static int is_s_word(char * s) {
+static int is_s_word(const char * s) {
 
     for (; *s != '\0'; s++);
     s--;
@@ -77,7 +77,7 @@ static int is_s_word(char * s) {
     return TRUE;
 }
 
-static int is_ed_word(char * s) {
+static int is_ed_word(const char * s) {
 
     int i=0;
     for (; *s != '\0'; s++) i++;
@@ -86,7 +86,7 @@ static int is_ed_word(char * s) {
     return FALSE;
 }
 
-static int is_ly_word(char * s) {
+static int is_ly_word(const char * s) {
 
     int i=0;
     for (; *s != '\0'; s++) i++;
@@ -415,7 +415,7 @@ int separate_sentence(char * s, Sentence sent) {
     return (sent->length > dict->left_wall_defined + dict->right_wall_defined);
 }
 
-static int special_string(Sentence sent, int i, char * s) {
+static int special_string(Sentence sent, int i, const char * s) {
     X_node * e;
     if (boolean_dictionary_lookup(sent->dict, s)) {
 	sent->word[i].x = build_word_expressions(sent, s);
@@ -430,7 +430,7 @@ static int special_string(Sentence sent, int i, char * s) {
     }
 }
 
-static int guessed_string(Sentence sent, int i, char * s, char * type) {
+static int guessed_string(Sentence sent, int i, const char * s, const char * type) {
     X_node * e;
     char *t, *u;
     char str[MAX_WORD+1];

@@ -214,8 +214,8 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
   k->bounded_rules[k->n_bounded_rules].msg = 0;
 }
 
-static void read_contains_rules(pp_knowledge *k, char *label, pp_rule **rules, 
-				int *nRules)
+static void read_contains_rules(pp_knowledge *k, const char *label, 
+				pp_rule **rules, int *nRules)
 {
   /* Reading the 'contains_one_rules' and reading the 
      'contains_none_rules' into their respective arrays */

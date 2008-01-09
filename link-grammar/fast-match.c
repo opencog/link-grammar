@@ -13,7 +13,7 @@
 
 #include <link-grammar/api.h>
 
-int left_disjunct_list_length(Disjunct * d) {
+static int left_disjunct_list_length(Disjunct * d) {
 /* returns the number of disjuncts in the list that have non-null
    left connector lists */
     int i;
@@ -22,7 +22,7 @@ int left_disjunct_list_length(Disjunct * d) {
     }
     return i;
 }
-int right_disjunct_list_length(Disjunct * d) {
+static int right_disjunct_list_length(Disjunct * d) {
     int i;
     for (i=0; d!=NULL; d=d->next) {
 	if (d->right != NULL) i++;
@@ -42,7 +42,7 @@ static Match_node ** r_table[MAX_SENTENCE];
 static Match_node * mn_free_list = NULL;
    /* I'll pedantically maintain my own list of these cells */
 
-Match_node * get_match_node(void) {
+static Match_node * get_match_node(void) {
 /* return a match node to be used by the caller */
     Match_node * m;
     if (mn_free_list != NULL) {
@@ -64,7 +64,7 @@ void put_match_list(Match_node *m) {
     }
 }
 
-void free_match_list(Match_node * t) {
+static void free_match_list(Match_node * t) {
     Match_node *xt;
     for (; t!=NULL; t=xt) {
 	xt = t->next;
@@ -91,7 +91,7 @@ void free_fast_matcher(Sentence sent) {
     mn_free_list = NULL;
 }
 
-int fast_match_hash(Connector * c) {
+static int fast_match_hash(Connector * c) {
 /* This hash function only looks at the leading upper case letters of
    the connector string, and the label fields.  This ensures that if two
    strings match (formally), then they must hash to the same place.
@@ -108,7 +108,7 @@ int fast_match_hash(Connector * c) {
     return i;
 }
 
-Match_node * add_to_right_table_list(Match_node * m, Match_node * l) {
+static Match_node * add_to_right_table_list(Match_node * m, Match_node * l) {
 /* Adds the match node m to the sorted list of match nodes l.
    The parameter dir determines the order of the sorting to be used.
    Makes the list sorted from smallest to largest.
@@ -123,7 +123,7 @@ Match_node * add_to_right_table_list(Match_node * m, Match_node * l) {
     }
 }
 
-Match_node * add_to_left_table_list(Match_node * m, Match_node * l) {
+static Match_node * add_to_left_table_list(Match_node * m, Match_node * l) {
 /* Adds the match node m to the sorted list of match nodes l.
    The parameter dir determines the order of the sorting to be used.
    Makes the list sorted from largest to smallest
@@ -138,8 +138,8 @@ Match_node * add_to_left_table_list(Match_node * m, Match_node * l) {
     }
 }
 
-void put_into_match_table(int size, Match_node ** t,
-			  Disjunct * d, Connector * c, int dir ) {
+static void put_into_match_table(int size, Match_node ** t,
+				 Disjunct * d, Connector * c, int dir ) {
 /* The disjunct d (whose left or right pointer points to c) is put
    into the appropriate hash table
    dir =  1, we're putting this into a right table.

@@ -101,7 +101,7 @@ static void dict_error(Dictionary dict, const char * s) {
 			s, dict->line_number, tokens);
 }
 
-void warning(Dictionary dict, const char * s) {
+static void warning(Dictionary dict, const char * s) {
 	printf("\nWarning: %s\n",s);
 	printf("line %d, current token = \"%s\"\n", dict->line_number, dict->token);
 }
@@ -116,7 +116,7 @@ Exp * Exp_create(Dictionary dict) {
 	return e;
 }
 
-int get_character(Dictionary dict, int quote_mode) {
+static int get_character(Dictionary dict, int quote_mode) {
 /* This gets the next character from the input, eliminating comments.
    If we're in quote mode, it does not consider the % character for
    comments */
@@ -215,12 +215,12 @@ static int link_advance(Dictionary dict) {
 	return 1;
 }
 
-int is_equal(Dictionary dict, int c) {
+static int is_equal(Dictionary dict, int c) {
 /* returns TRUE if this token is a special token and it is equal to c */
 	return (dict->is_special && c==dict->token[0] && dict->token[1] == '\0');
 }
 
-int check_connector(Dictionary dict, const char * s) {
+static int check_connector(Dictionary dict, const char * s) {
 	/* makes sure the string s is a valid connector */
 	int i;
 	i = strlen(s);
@@ -254,7 +254,7 @@ int check_connector(Dictionary dict, const char * s) {
 
 Exp * make_unary_node(Dictionary dict, Exp * e);
 
-Exp * connector(Dictionary dict) {
+static Exp * connector(Dictionary dict) {
 /* the current token is a connector (or a dictionary word)           */
 /* make a node for it                                                */
 
@@ -318,7 +318,7 @@ Exp * make_unary_node(Dictionary dict, Exp * e) {
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
-Exp * make_zeroary_node(Dictionary dict) {
+static Exp * make_zeroary_node(Dictionary dict) {
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
@@ -327,7 +327,7 @@ Exp * make_zeroary_node(Dictionary dict) {
 	return n;
 }
 
-Exp * make_optional_node(Dictionary dict, Exp * e) {
+static Exp * make_optional_node(Dictionary dict, Exp * e) {
 /* This creates an OR node with two children, one the given node,
    and the other as zeroary node.  This has the effect of creating
    what used to be called an optional node.
@@ -614,7 +614,7 @@ int dict_compare(char *s, char *t) {
 */
 
 /* terse version */
-int dict_compare(const char *s, const char *t) {
+static int dict_compare(const char *s, const char *t) {
 	while (*s != '\0' && *s == *t) {s++; t++;}
 	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
 }
@@ -648,7 +648,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * new) {
  * It inserts the list into the dictionary.
  * It does the middle one first, then the left half, then the right.
  */
-void insert_list(Dictionary dict, Dict_node * p, int l)
+static void insert_list(Dictionary dict, Dict_node * p, int l)
 {
 	Dict_node * dn, *dnx, *dn_second_half;
 	int k, i; /* length of first half */
@@ -688,7 +688,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	insert_list(dict, dn_second_half, l-k-1);
 }
 
-int read_entry(Dictionary dict) {
+static int read_entry(Dictionary dict) {
 /* Starting with the current token parse one dictionary entry.         */
 /* Add these words to the dictionary                                   */
     Exp *n;
@@ -765,7 +765,7 @@ void print_expression(Exp * n) {
 	}
 }
 
-void rprint_dictionary_data(Dict_node * n) {
+static void rprint_dictionary_data(Dict_node * n) {
 		if (n==NULL) return;
 		rprint_dictionary_data(n->left);
 		printf("%s: ", n->string);
@@ -841,7 +841,7 @@ static int true_dict_match(const char * s, const char * t)
 static Dict_node * lookup_list = NULL;
 		  /* a pointer to the temporary lookup list */
 
-void prune_lookup_list(const char * s)
+static void prune_lookup_list(const char * s)
 {
 	Dict_node *dn, *dnx, *dn_new;
 	dn_new = NULL;
@@ -873,7 +873,7 @@ void free_lookup_list(void) {
 	}
 }
 
-void rdictionary_lookup(Dict_node * dn, const char * s)
+static void rdictionary_lookup(Dict_node * dn, const char * s)
 {
 		/* see comment in dictionary_lookup below */
 	int m;
@@ -919,7 +919,7 @@ int boolean_dictionary_lookup(Dictionary dict, const char *s) {
  * only they do not consider the idiom words
  */
 
-void rabridged_lookup(Dict_node * dn, const char * s) {
+static void rabridged_lookup(Dict_node * dn, const char * s) {
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return;
@@ -956,7 +956,7 @@ static Dict_node * parent;
 static Dict_node * to_be_deleted;
 
 
-int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s) {
+static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s) {
 /* Returns true if it finds a non-idiom dict_node in a file that matches
    the string s.
 
@@ -982,7 +982,7 @@ int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s) {
 	return FALSE;
 }
 
-void set_parent_of_node(Dictionary dict,
+static void set_parent_of_node(Dictionary dict,
 						Dict_node *p, Dict_node * del, Dict_node * new) {
 	if (p == NULL) {
 		dict->root = new;
@@ -1036,7 +1036,7 @@ int open_dictionary(char * dict_path_name, Dictionary dict) {
 }
 
 
-void free_Word_file(Word_file * wf) {
+static void free_Word_file(Word_file * wf) {
 	Word_file *wf1;
 
 	for (;wf != NULL; wf = wf1) {
@@ -1069,7 +1069,7 @@ static void free_Exp_list(Exp * e) {
 	}
 }
 
-void free_Dict_node(Dict_node * dn) {
+static void free_Dict_node(Dict_node * dn) {
 	if (dn == NULL) return;
 	free_Dict_node(dn->left);
 	free_Dict_node(dn->right);

@@ -20,7 +20,7 @@ static int N_words_to_print;  /* version of N_words in this file for printing li
 char * trailer(int mode);
 char * header(int mode);
 
-void set_centers(Linkage linkage, int print_word_0) {
+static void set_centers(Linkage linkage, int print_word_0) {
     int i, len, tot;
     tot = 0;
     if (print_word_0) i=0; else i=1;
@@ -57,7 +57,7 @@ static void left_append_string(String * string, const char * s, const char * t) 
 
 
 
-void print_a_link(String * s, Linkage linkage, int link) {
+static void print_a_link(String * s, Linkage linkage, int link) {
     Sentence sent = linkage_get_sentence(linkage);
     Dictionary dict = sent->dict;
     int l, r;
@@ -127,7 +127,7 @@ char * linkage_print_links_and_domains(Linkage linkage) {
     return links_string; 
 }
 
-char * build_linkage_postscript_string(Linkage linkage) {
+static char * build_linkage_postscript_string(Linkage linkage) {
     int link, i,j;
     int d;
     int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;

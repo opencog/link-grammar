@@ -161,7 +161,7 @@ int prune_match(Connector *a, Connector *b, int aw, int bw) {
 static int s_table_size;
 static Connector ** table;
 
-void free_S(void) {
+static void free_S(void) {
 /* This function removes all connectors from the set S */
     int i;
     for (i=0; i<s_table_size; i++) {
@@ -171,7 +171,7 @@ void free_S(void) {
     }
 }
 
-int hash_S(Connector * c) {
+static int hash_S(Connector * c) {
 /* This hash function only looks at the leading upper case letters of
    the connector string, and the label fields.  This ensures that if two
    strings match (formally), then they must hash to the same place.
@@ -187,7 +187,7 @@ int hash_S(Connector * c) {
     return (i & (s_table_size-1));
 }
 
-void insert_S(Connector * c) {
+static void insert_S(Connector * c) {
 /* this function puts a copy of c into S if one like it isn't already there */
     int h;
     Connector * e;
@@ -207,7 +207,7 @@ void insert_S(Connector * c) {
 }
 
 
-void zero_S(void) {
+static void zero_S(void) {
     int i;
     for (i=0; i<s_table_size; i++) {
 	table[i] = NULL;
@@ -229,7 +229,7 @@ OBS     }
 OBS }
 #endif
 
-int matches_S(Connector * c, int dir) {
+static int matches_S(Connector * c, int dir) {
 /* returns TRUE if c can match anything in the set S */
 /* because of the horrible kludge, prune match is assymetric, and   */
 /* direction is '-' if this is an l->r pass, and '+' if an r->l pass.   */
@@ -250,7 +250,7 @@ int matches_S(Connector * c, int dir) {
     return FALSE;
 }
 
-void clean_up(Sentence sent, int w) {
+static void clean_up(Sentence sent, int w) {
 /* This removes the disjuncts that are empty from the list corresponding
    to word w of the sentence.
 */
@@ -272,7 +272,7 @@ void clean_up(Sentence sent, int w) {
     sent->word[w].d = head_disjunct.next;
 }
 
-int count_disjuncts(Disjunct * d) {
+static int count_disjuncts(Disjunct * d) {
 /* returns the number of disjuncts in the list pointed to by d */
     int count = 0;
     for (; d!=NULL; d=d->next) {
@@ -281,7 +281,7 @@ int count_disjuncts(Disjunct * d) {
     return count;
 }
 
-int count_disjuncts_in_sentence(Sentence sent) {
+static int count_disjuncts_in_sentence(Sentence sent) {
 /* returns the total number of disjuncts in the sentence */
     int w, count;
     count = 0;
@@ -378,7 +378,7 @@ void prune(Sentence sent) {
 static int dup_table_size;
 static Disjunct ** dup_table;
 
-int string_hash(char * s, int i) {
+static int string_hash(char * s, int i) {
 /* hash function that takes a string and a seed value i */
     for(;*s != '\0';s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
     return (i & (dup_table_size-1));
@@ -605,7 +605,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
    equality.
 */
 
-int old_hash_disjunct(Disjunct * d) {
+static int old_hash_disjunct(Disjunct * d) {
 /* This is a hash function for disjuncts */
     int i;
     Connector *e;
@@ -619,7 +619,7 @@ int old_hash_disjunct(Disjunct * d) {
     return string_hash(d->string, i);
 }
 
-int connectors_equal_prune(Connector *c1, Connector *c2) {
+static int connectors_equal_prune(Connector *c1, Connector *c2) {
 /* The connectors must be exactly equal.  A similar function
    is connectors_equal_AND(), but that ignores priorities,
    this does not.
@@ -630,7 +630,7 @@ int connectors_equal_prune(Connector *c1, Connector *c2) {
            (strcmp(c1->string, c2->string) == 0);
 }
 
-int disjuncts_equal(Disjunct * d1, Disjunct * d2) {
+static int disjuncts_equal(Disjunct * d1, Disjunct * d2) {
 /* returns TRUE if the disjuncts are exactly the same */
     Connector *e1, *e2;
     e1 = d1->left;
@@ -702,7 +702,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
    by prune.
 */
 
-int size_of_sentence_expressions(Sentence sent) {
+static int size_of_sentence_expressions(Sentence sent) {
 /* Computes and returns the number of connectors in all of the expressions 
    of the sentence.
 */
@@ -728,7 +728,7 @@ int size_of_sentence_expressions(Sentence sent) {
 int and_purge_E_list(E_list * l);
 E_list * or_purge_E_list(E_list * l);
 
-Exp* purge_Exp(Exp *e) {
+static Exp* purge_Exp(Exp *e) {
 /* Must be called with a non-null expression                                */
 /* Return NULL iff the expression has no disjuncts.                         */
 /*  Exp * ne; */
@@ -800,7 +800,7 @@ E_list * or_purge_E_list(E_list * l) {
     return l;
 }
 
-int mark_dead_connectors(Exp * e, int dir) {
+static int mark_dead_connectors(Exp * e, int dir) {
 /* Mark as dead all of the dir-pointing connectors
    in e that are not matched by anything in the current set.
    Returns the number of connectors so marked.
@@ -829,7 +829,7 @@ int mark_dead_connectors(Exp * e, int dir) {
     return count;
 }
 
-void insert_connectors(Exp * e, int dir) {
+static void insert_connectors(Exp * e, int dir) {
 /* Put into the set S all of the dir-pointing connectors still in e.    */
     Connector dummy;
     E_list *l;
@@ -850,7 +850,7 @@ void insert_connectors(Exp * e, int dir) {
     }
 }
 
-void clean_up_expressions(Sentence sent, int w) {
+static void clean_up_expressions(Sentence sent, int w) {
 /* This removes the expressions that are empty from the list corresponding
    to word w of the sentence.
 */
@@ -999,7 +999,7 @@ static int power_cost;
 static int power_prune_mode;  /* either GENTLE or RUTHLESS */
                               /* obviates excessive paramater passing */
 
-int left_connector_count(Disjunct * d) {
+static int left_connector_count(Disjunct * d) {
 /* returns the number of connectors in the left lists of the disjuncts. */
     Connector *c;
     int i=0;
@@ -1008,7 +1008,7 @@ int left_connector_count(Disjunct * d) {
     }
     return i;
 }
-int right_connector_count(Disjunct * d) {
+static int right_connector_count(Disjunct * d) {
     Connector *c;
     int i=0;
     for (;d!=NULL; d=d->next) {
@@ -1029,7 +1029,7 @@ static C_list ** l_table[MAX_SENTENCE];
                  /* the beginnings of the hash tables */
 static C_list ** r_table[MAX_SENTENCE];
 
-void free_C_list(C_list * t) {
+static void free_C_list(C_list * t) {
     C_list *xt;
     for (; t!=NULL; t=xt) {
 	xt = t->next;
@@ -1037,7 +1037,7 @@ void free_C_list(C_list * t) {
     }
 }
 
-void free_power_tables(Sentence sent) {
+static void free_power_tables(Sentence sent) {
 /* free all of the hash tables and C_lists */
     int w;
     int i;
@@ -1053,7 +1053,7 @@ void free_power_tables(Sentence sent) {
     }
 }
 
-int power_hash(Connector * c) {
+static int power_hash(Connector * c) {
 /* This hash function only looks at the leading upper case letters of
    the connector string, and the label fields.  This ensures that if two
    strings match (formally), then they must hash to the same place.
@@ -1072,7 +1072,7 @@ int power_hash(Connector * c) {
     return i;
 }
 
-void put_into_power_table(int size, C_list ** t, Connector * c, int shal ) {
+static void put_into_power_table(int size, C_list ** t, Connector * c, int shal ) {
 /* The disjunct d (whose left or right pointer points to c) is put
    into the appropriate hash table
 */
@@ -1086,7 +1086,7 @@ void put_into_power_table(int size, C_list ** t, Connector * c, int shal ) {
     m->shallow = shal;
 }
 
-int set_dist_fields(Connector * c, int w, int delta) {
+static int set_dist_fields(Connector * c, int w, int delta) {
     int i;
     if (c==NULL) return w;
     i = set_dist_fields(c->next, w, delta) + delta;
@@ -1094,7 +1094,7 @@ int set_dist_fields(Connector * c, int w, int delta) {
     return i;
 }
 
-void init_power(Sentence sent) {
+static void init_power(Sentence sent) {
 /* allocates and builds the initial power hash tables */
     int w, len, size, i;
     C_list ** t;
@@ -1157,7 +1157,7 @@ void init_power(Sentence sent) {
     }
 }
 
-void clean_table(int size, C_list ** t) {
+static void clean_table(int size, C_list ** t) {
 /* This runs through all the connectors in this table, and eliminates those
    who are obsolete.  The word fields of an obsolete one has been set to
    BAD_WORD.
@@ -1179,9 +1179,9 @@ void clean_table(int size, C_list ** t) {
     }
 }
 
-int possible_connection(Connector *lc, Connector *rc,
-                      int lshallow, int rshallow,
-                      int lword, int rword) {
+static int possible_connection(Connector *lc, Connector *rc,
+			       int lshallow, int rshallow,
+			       int lword, int rword) {
 /* this takes two connectors (and whether these are shallow or not)
    (and the two words that these came from) and returns TRUE if it is
    possible for these two to match based on local considerations.
@@ -1222,7 +1222,7 @@ int possible_connection(Connector *lc, Connector *rc,
 }
 
 
-int right_table_search(int w, Connector *c, int shallow, int word_c) {
+static int right_table_search(int w, Connector *c, int shallow, int word_c) {
 /* this returns TRUE if the right table of word w contains
    a connector that can match to c.  shallow tells if c is shallow */
     int size, h;
@@ -1237,7 +1237,7 @@ int right_table_search(int w, Connector *c, int shallow, int word_c) {
     return FALSE;
 }
 
-int left_table_search(int w, Connector *c, int shallow, int word_c) {
+static int left_table_search(int w, Connector *c, int shallow, int word_c) {
 /* this returns TRUE if the right table of word w contains
    a connector that can match to c.  shallows tells if c is shallow
 */
@@ -1256,7 +1256,7 @@ int left_table_search(int w, Connector *c, int shallow, int word_c) {
 static int N_changed;   /* counts the number of changes
 			   of c->word fields in a pass */
 
-int ok_cwords(Sentence sent, Connector *c){
+static int ok_cwords(Sentence sent, Connector *c){
     for (; c != NULL; c=c->next) {
 	if (c->word == BAD_WORD) return FALSE;
 	if (c->word >= sent->length) return FALSE;
@@ -1264,7 +1264,7 @@ int ok_cwords(Sentence sent, Connector *c){
     return TRUE;
 }
 
-int left_connector_list_update(Connector *c, int word_c, int w, int shallow) {
+static int left_connector_list_update(Connector *c, int word_c, int w, int shallow) {
 /* take this connector list, and try to match it with the words
    w-1, w-2, w-3...Returns the word to which the first connector of the
    list could possibly be matched.  If c is NULL, returns w.  If there
@@ -1295,7 +1295,7 @@ int left_connector_list_update(Connector *c, int word_c, int w, int shallow) {
     return (foundmatch ? n : -1);
 }
 
-int right_connector_list_update(Sentence sent, Connector *c, int word_c, int w, int shallow) {
+static int right_connector_list_update(Sentence sent, Connector *c, int word_c, int w, int shallow) {
 /* take this connector list, and try to match it with the words
    w+1, w+2, w+3...Returns the word to which the first connector of the
    list could possibly be matched.  If c is NULL, returns w.  If there
@@ -1527,14 +1527,14 @@ struct cms_struct {
 #define CMS_SIZE (2<<10)
 static Cms * cms_table[CMS_SIZE];
 
-void init_cms_table(void) {
+static void init_cms_table(void) {
     int i;
     for (i=0; i<CMS_SIZE; i++) {
 	cms_table[i] = NULL;
     }
 }
 
-void free_cms_table(void) {
+static void free_cms_table(void) {
     Cms * cms, *xcms;
     int i;
     for (i=0; i<CMS_SIZE; i++) {
@@ -1545,7 +1545,7 @@ void free_cms_table(void) {
     }
 }
 
-int cms_hash(char * s) {
+static int cms_hash(char * s) {
     int i=0;
     while(isupper((int)*s)) {
 	i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
@@ -1554,7 +1554,7 @@ int cms_hash(char * s) {
     return (i & (CMS_SIZE-1));
 }
 
-int match_in_cms_table(char * pp_match_name) {
+static int match_in_cms_table(char * pp_match_name) {
     /* This returns TRUE if there is a connector name C in the table
        such that post_process_match(pp_match_name, C) is TRUE */
     Cms * cms;
@@ -1564,7 +1564,7 @@ int match_in_cms_table(char * pp_match_name) {
     return FALSE;
 }
 
-Cms * lookup_in_cms_table(char * str) {
+static Cms * lookup_in_cms_table(char * str) {
     Cms * cms;
     for (cms = cms_table[cms_hash(str)]; cms!=NULL; cms=cms->next) {
 	if(strcmp(str, cms->name) == 0) return cms;
@@ -1580,7 +1580,7 @@ int is_in_cms_table(char * str) {
 }
 */
 
-void insert_in_cms_table(char * str) {
+static void insert_in_cms_table(char * str) {
     Cms * cms;
     int h;
     cms = lookup_in_cms_table(str);
@@ -1597,7 +1597,7 @@ void insert_in_cms_table(char * str) {
     }
 }
 
-int delete_from_cms_table(char * str) {
+static int delete_from_cms_table(char * str) {
     /* Delete the given string from the table.  Return TRUE if
        this caused a count to go to 0, return FALSE otherwise */
     Cms * cms;
@@ -1609,7 +1609,7 @@ int delete_from_cms_table(char * str) {
     return FALSE;
 }
 
-int rule_satisfiable(pp_linkset *ls) {
+static int rule_satisfiable(pp_linkset *ls) {
     int hashval;
     char name[20], *s, *t;
     pp_linkset_node *p;
@@ -1655,7 +1655,7 @@ int rule_satisfiable(pp_linkset *ls) {
     return FALSE;
 }
 
-int pp_prune(Sentence sent, Parse_Options opts) {
+static int pp_prune(Sentence sent, Parse_Options opts) {
     pp_knowledge * knowledge;
     pp_rule rule;
     char * selector;

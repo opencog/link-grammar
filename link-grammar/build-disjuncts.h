@@ -11,5 +11,5 @@
 /*                                                                              */
 /********************************************************************************/
 void build_sentence_disjuncts(Sentence sent, int cost_cutoff);
-X_node *   build_word_expressions(Sentence sent, char *);
+X_node *   build_word_expressions(Sentence sent, const char *);
 Disjunct * build_disjuncts_for_dict_node(Dict_node *);

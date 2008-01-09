@@ -23,7 +23,7 @@ void          free_sentence_disjuncts(Sentence sent);
 void          free_post_processing(Sentence sent);
 
 
-int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2) {
+static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2) {
     /* for sorting the linkages in postprocessing */
     if (p1->N_violations != p2->N_violations) {
 	return (p1->N_violations - p2->N_violations);

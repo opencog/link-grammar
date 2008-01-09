@@ -41,7 +41,7 @@
 
    */
 
-int hash_string(const char *sa, const String_set *ss)
+static int hash_string(const char *sa, const String_set *ss)
 {
     unsigned char *str = (unsigned char *) sa;
     unsigned int accum = 0;
@@ -49,7 +49,7 @@ int hash_string(const char *sa, const String_set *ss)
     return accum;
 }
 
-int stride_hash_string(const char *sa, const String_set *ss)
+static int stride_hash_string(const char *sa, const String_set *ss)
 {
     unsigned char *str = (unsigned char *) sa;
     /* This is the stride used, so we have to make sure that its value is not 0 */
@@ -59,7 +59,7 @@ int stride_hash_string(const char *sa, const String_set *ss)
     return accum;
 }
 
-int next_prime_up(int start) {
+static int next_prime_up(int start) {
 /* return the next prime up from start */
     int i;
     start = start | 1; /* make it odd */

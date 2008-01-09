@@ -435,7 +435,7 @@ void free_parse_set(Sentence sent) {
     }
 }
 
-void initialize_links(Parse_info pi) {
+static void initialize_links(Parse_info pi) {
     int i;
     pi->N_links = 0;
     for (i=0; i<pi->N_words; ++i) {
