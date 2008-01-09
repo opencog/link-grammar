@@ -500,9 +500,6 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	Sentence sent;
 	int i;
 
-	free_lookup_list(lookup_list);
-	lookup_list = NULL;
-
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	sent->dict = dict;
 	sent->length = 0;
@@ -559,8 +556,6 @@ void sentence_delete(Sentence sent)
 	free_parse_set(sent);
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
-	free_lookup_list(lookup_list);
-	lookup_list = NULL;
 	free_deletable(sent);
 	free_effective_dist(sent);
 	xfree(sent->is_conjunction, sizeof(char)*sent->length);

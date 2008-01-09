@@ -21,15 +21,9 @@ int  boolean_dictionary_lookup(Dictionary dict, const char *);
 int  boolean_abridged_lookup(Dictionary dict, const char *);
 int  delete_dictionary_words(Dictionary dict, const char *);
 
-/* free_lookup_list really doesn't need to be called outside 
- * of the dictionary lookup code.
- */
-void free_lookup_list(Dict_node *); 
-extern Dict_node *lookup_list;
-
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
+void free_lookup_list(Dict_node *); 
 
-Dict_node * abridged_lookup(Dictionary dict, const char *);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 void        free_dictionary(Dictionary dict);
 Exp *       Exp_create(Dictionary dict);

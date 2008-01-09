@@ -86,6 +86,7 @@
 */
 
 static int link_advance(Dictionary dict);
+static Dict_node * abridged_lookup_list(Dictionary dict, const char *s);
 
 static void dict_error(Dictionary dict, const char * s) {
 	int i;
@@ -254,28 +255,34 @@ static int check_connector(Dictionary dict, const char * s) {
 
 Exp * make_unary_node(Dictionary dict, Exp * e);
 
-static Exp * connector(Dictionary dict) {
-/* the current token is a connector (or a dictionary word)           */
-/* make a node for it                                                */
-
+/**
+ * connector() -- make a node for a connector or dictionary word.
+ *
+ * Assumes the current token is a connector or dictionary word.
+ */
+static Exp * connector(Dictionary dict)
+{
 	Exp * n;
-	Dict_node * dn;
+	Dict_node *dn, *dn_head;
 	int i;
 
 	i = strlen(dict->token)-1;  /* this must be + or - if a connector */
 	if ((dict->token[i] != '+') && (dict->token[i] != '-')) {
-		dn = abridged_lookup(dict, dict->token);
+		dn_head = abridged_lookup_list(dict, dict->token);
+		dn = dn_head;
 		while((dn != NULL) && (strcmp(dn->string, dict->token) != 0)) {
 			dn = dn->right;
 		}
-		if (dn == NULL) {
-
+		if (dn == NULL)
+		{
+			free_lookup_list(dn_head);
 			dict_error(dict, "\nPerhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the suffix on a word.\n"
 			                 "Or perhaps a word is used before it is defined.\n");
 			return NULL;
 		}
 		n = make_unary_node(dict, dn->exp);
+		free_lookup_list(dn_head);
 	} else {
 		if (!check_connector(dict, dict->token)) {
 			return NULL;
@@ -650,7 +657,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * new) {
  */
 static void insert_list(Dictionary dict, Dict_node * p, int l)
 {
-	Dict_node * dn, *dnx, *dn_second_half;
+	Dict_node * dn, *dn_head, *dn_second_half;
 	int k, i; /* length of first half */
 
 	if (l == 0) return;
@@ -663,23 +670,33 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	/* dn now points to the middle element */
 	dn_second_half = dn->left;
 	dn->left = dn->right = NULL;
-	if (contains_underbar(dn->string)) {
+
+	if (contains_underbar(dn->string))
+	{
 		insert_idiom(dict, dn);
-	} else if (is_idiom_word(dn->string)) {
+	} 
+	else if (is_idiom_word(dn->string))
+	{
 		printf("*** Word \"%s\" found near line %d.\n", dn->string, dict->line_number);
 		printf("	Words ending \".Ix\" (x a number) are reserved for idioms.\n");
 		printf("	This word will be ignored.\n");
 		xfree((char *)dn, sizeof(Dict_node));
-	} else if ((dnx = abridged_lookup(dict, dn->string))!= NULL) {
+	}
+	else if ((dn_head = abridged_lookup_list(dict, dn->string))!= NULL)
+	{
+		Dict_node *dnx;
 		printf("*** The word \"%s\"", dn->string);
 		printf(" found near line %d of %s matches the following words:\n",
 			   dict->line_number, dict->name);
-		for (;dnx != NULL; dnx = dnx->right) {
+		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
 			printf(" %s", dnx->string);
 		}
 		printf("\n	This word will be ignored.\n");
+		free_lookup_list(dn_head);
 		xfree((char *)dn, sizeof(Dict_node));
-	} else {
+	}
+	else
+	{
 		dict->root = insert_dict(dict, dict->root, dn);
 		dict->num_entries++;
 	}
@@ -840,8 +857,7 @@ static int true_dict_match(const char * s, const char * t)
 	}
 }
 
-/* Pointer to the temporary lookup list */
-Dict_node * lookup_list = NULL;
+/* ======================================================================= */
 
 static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 {
@@ -900,26 +916,19 @@ static Dict_node * rdictionary_lookup(Dict_node *llist, Dict_node * dn, const ch
 }
 
 /** 
- * dictionary-lookup() - return lookup list of words in the dicationary
+ * dictionary_lookup_list() - return lookup list of words in the dictionary
+ *
  * Returns a pointer to a lookup list of the words in the dictionary.
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
- * Freeing this list elsewhere is unnecessary, as long as the rest of
- * the program merely examines the list (doesn't change it)
+ * The returned list must be freed with free_lookup_list().
  */
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 {
    Dict_node * llist = rdictionary_lookup(NULL, dict->root, s);
    llist = prune_lookup_list(llist, s);
    return llist;
-}
-
-static Dict_node * dictionary_lookup(Dictionary dict, const char *s)
-{
-   free_lookup_list(lookup_list);
-   lookup_list = dictionary_lookup_list(dict, s);
-   return lookup_list;
 }
 
 int boolean_dictionary_lookup(Dictionary dict, const char *s) 
@@ -930,13 +939,12 @@ int boolean_dictionary_lookup(Dictionary dict, const char *s)
 	return bool;
 }
 
-
 /**
  * The following routines are exactly the same as those above,
  * only they do not consider the idiom words
  */
 
-static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char * s) 
+static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char * s)
 {
 	int m;
 	Dict_node * dn_new;
@@ -957,12 +965,12 @@ static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char
 	return llist;
 }
 
-Dict_node * abridged_lookup(Dictionary dict, const char *s) 
+static Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
-   free_lookup_list(lookup_list);
-   lookup_list = rabridged_lookup(NULL, dict->root, s);
-   lookup_list = prune_lookup_list(lookup_list, s);
-   return lookup_list;
+	Dict_node *llist;
+   llist = rabridged_lookup(NULL, dict->root, s);
+   llist = prune_lookup_list(llist, s);
+   return llist;
 }
 
 /**
@@ -970,7 +978,10 @@ Dict_node * abridged_lookup(Dictionary dict, const char *s)
  */
 int boolean_abridged_lookup(Dictionary dict, const char *s)
 {
-	return (abridged_lookup(dict, s) != NULL);
+	Dict_node *dn = abridged_lookup_list(dict, s);
+	int bool = (dn != NULL);
+	free_lookup_list(dn);
+	return bool;
 }
 
 /* the following functions are for handling deletion */
@@ -1107,18 +1118,23 @@ void free_dictionary(Dictionary dict)
 	free_Exp_list(dict->exp_list);
 }
 
+/**
+ *  dict_display_word_info() - display the information about the given word.
+ */
 void dict_display_word_info(Dictionary dict, const char * s) 
 {
-	/* display the information about the given word */
-	Dict_node * dn;
+	Dict_node *dn, *dn_head;
 	Disjunct * d1, * d2;
 	int len;
-	if ((dn=dictionary_lookup(dict, s)) == NULL) {
+	dn_head = dictionary_lookup_list(dict, s);
+	if (dn_head == NULL)
+	{
 		printf("	\"%s\" matches nothing in the dictionary.\n", s);
 		return;
 	}
 	printf("Matches:\n");
-	for (;dn != NULL; dn = dn->right) {
+	for (dn = dn_head; dn != NULL; dn = dn->right)
+	{
 		len=0;
 		d1 = build_disjuncts_for_dict_node(dn);
 		for(d2 = d1 ; d2!=NULL; d2 = d2->next){
@@ -1133,7 +1149,6 @@ void dict_display_word_info(Dictionary dict, const char * s)
 		}
 		printf("\n");
 	}
-	free_lookup_list(lookup_list);
-	lookup_list = NULL;
+	free_lookup_list(dn_head);
 	return;
 }
