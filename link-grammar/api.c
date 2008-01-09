@@ -318,6 +318,14 @@ void parse_options_reset_resources(Parse_Options opts) {
 *
 ****************************************************************/
 
+static int open_dictionary(char * dict_path_name, Dictionary dict)
+{
+	if ((dict->fp = dictopen(dict_path_name, dict->name, "r")) == NULL) {
+		return 0;
+	}
+	return 1;
+}
+
 /**
  * The following function is dictionary_create with an extra paramater called "path".
  * If this is non-null, then the path used to find the file is taken from that path.
@@ -418,7 +426,8 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 	return dict;
 }
 
-Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name) {
+Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name) 
+{
 	return internal_dictionary_create(dict_name, pp_name, cons_name, affix_name, NULL);
 }
 
@@ -466,8 +475,8 @@ Dictionary dictionary_create_default_lang(void)
 	return dictionary;
 }
 
-int dictionary_delete(Dictionary dict) {
-
+int dictionary_delete(Dictionary dict)
+{
 	if (verbosity > 0) {
 		fprintf(stderr, "Freeing dictionary %s\n", dict->name);
 	}
@@ -488,7 +497,8 @@ int dictionary_delete(Dictionary dict) {
 	return 0;
 }
 
-int dictionary_get_max_cost(Dictionary dict) {
+int dictionary_get_max_cost(Dictionary dict)
+{
 	return dict->max_cost;
 }
 

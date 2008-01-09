@@ -1062,14 +1062,6 @@ int delete_dictionary_words(Dictionary dict, const char * s) {
 	}
 }
 
-int open_dictionary(char * dict_path_name, Dictionary dict) {
-	if ((dict->fp = dictopen(dict_path_name, dict->name, "r")) == NULL) {
-		return 0;
-	}
-	return 1;
-}
-
-
 static void free_Word_file(Word_file * wf) {
 	Word_file *wf1;
 

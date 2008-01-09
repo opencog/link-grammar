@@ -11,7 +11,6 @@
 /*                                                                              */
 /********************************************************************************/
 
-int open_dictionary(char * dict_path_name, Dictionary dict);
 int  read_dictionary(Dictionary dict);
 void dict_display_word_info(Dictionary dict, const char * s);
 void print_dictionary_data(Dictionary dict);
