@@ -2,7 +2,7 @@
  * Java JNI interfaces
  */
 
-#define BUILD_JNI_CLIENT 1
+// #define BUILD_JNI_CLIENT 1
 #ifdef BUILD_JNI_CLIENT
 
 #include <jni.h>
@@ -192,25 +192,25 @@ static void finish(void)
 /* Java JNI wrappers */
 
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cSetMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
+Java_org_linkgrammar_LinkGrammar_cSetMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
 {
 	parse_options_set_max_parse_time(opts, maxParseSeconds);
 }
 
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cSetMaxCost(JNIEnv *env, jclass cls, jint maxCost)
+Java_org_linkgrammar_LinkGrammar_cSetMaxCost(JNIEnv *env, jclass cls, jint maxCost)
 {
 	parse_options_set_disjunct_cost(opts, maxCost);
 }
 
 /* Inaccessible static: singleton */
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cInit
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cInit(JNIEnv *env, jclass cls)
 {
 	init();
 }
@@ -218,24 +218,24 @@ Java_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls)
 ///
 /* Inaccessible static: singleton */
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cInit
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cTest(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cTest(JNIEnv *env, jclass cls)
 {
 	if (verbosity > 0)
 		 printf("\n\n***************JNI WORKING**************\n\n");
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cParse
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cParse(JNIEnv *env, jclass cls, jstring str)
+Java_org_linkgrammar_LinkGrammar_cParse(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	char* tmp = strdup(cStr);
@@ -245,34 +245,34 @@ Java_LinkParserJNIClient_cParse(JNIEnv *env, jclass cls, jstring str)
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cClose
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cClose(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cClose(JNIEnv *env, jclass cls)
 {
 	finish();
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cNumWords
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cNumWords(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cNumWords(JNIEnv *env, jclass cls)
 {
 	return linkage_get_num_words(linkage);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cGetWord
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_LinkParserJNIClient_cGetWord(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_cGetWord(JNIEnv *env, jclass cls, jint i)
 {
 	char* w = sentence_get_word(sent, i); /* does not need to be freed, points into sentence */
 	jstring j = (*env)->NewStringUTF(env, w);
@@ -280,101 +280,101 @@ Java_LinkParserJNIClient_cGetWord(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cNumSkippedWords
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cNumSkippedWords(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cNumSkippedWords(JNIEnv *env, jclass cls)
 {
 	return sentence_null_count(sent);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cNumLinkages
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cNumLinkages(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cNumLinkages(JNIEnv *env, jclass cls)
 {
 	return sentence_num_valid_linkages(sent);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cMakeLinkage
  * Signature: (I)I
  */
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cMakeLinkage(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_cMakeLinkage(JNIEnv *env, jclass cls, jint i)
 {
 	cur_linkage = i;
 	makeLinkage(cur_linkage);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cLinkageNumViolations
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cLinkageNumViolations(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cLinkageNumViolations(JNIEnv *env, jclass cls)
 {
 	return sentence_num_violations(sent, cur_linkage);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cLinkageDisjunctCost
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cLinkageDisjunctCost(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cLinkageDisjunctCost(JNIEnv *env, jclass cls)
 {
 	return sentence_disjunct_cost(sent, cur_linkage);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cNumLinks
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cNumLinks(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cNumLinks(JNIEnv *env, jclass cls)
 {
 	return linkage_get_num_links(linkage);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cLinkLWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cLinkLWord(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_cLinkLWord(JNIEnv *env, jclass cls, jint i)
 {
 	return linkage_get_link_lword(linkage, i);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cLinkRWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_LinkParserJNIClient_cLinkRWord(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_cLinkRWord(JNIEnv *env, jclass cls, jint i)
 {
 	return linkage_get_link_rword(linkage, i);
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cLinkLLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_LinkParserJNIClient_cLinkLLabel(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_cLinkLLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_llabel(linkage, i);
@@ -383,12 +383,12 @@ Java_LinkParserJNIClient_cLinkLLabel(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cLinkRLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_LinkParserJNIClient_cLinkRLabel(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_cLinkRLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_rlabel(linkage, i);
@@ -397,12 +397,12 @@ Java_LinkParserJNIClient_cLinkRLabel(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cLinkLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_LinkParserJNIClient_cLinkLabel(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_cLinkLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_label(linkage, i);
@@ -411,12 +411,12 @@ Java_LinkParserJNIClient_cLinkLabel(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cConstituentString
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_LinkParserJNIClient_cConstituentString(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cConstituentString(JNIEnv *env, jclass cls)
 {
 	/* mode 1 prints a lisp-style string, nicely indented.
 	 * mode 2 prints a lisp-style string, but with square brackets.
@@ -430,12 +430,12 @@ Java_LinkParserJNIClient_cConstituentString(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkParserJNIClient
+ * Class:		 LinkGrammar
  * Method:		cConstituentString
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_LinkParserJNIClient_cLinkString(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_cLinkString(JNIEnv *env, jclass cls)
 {
 	char *s = linkage_print_diagram(linkage);
 	jstring j = (*env)->NewStringUTF(env, s);
@@ -449,7 +449,7 @@ Java_LinkParserJNIClient_cLinkString(JNIEnv *env, jclass cls)
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_LinkParserJNIClient_cIsPastTenseForm(JNIEnv *env, jclass cls, jstring str)
+Java_org_linkgrammar_LinkGrammar_cIsPastTenseForm(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (is_past_tense_form(cStr,dict) == 1)
@@ -463,7 +463,7 @@ Java_LinkParserJNIClient_cIsPastTenseForm(JNIEnv *env, jclass cls, jstring str)
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_LinkParserJNIClient_cIsEntity(JNIEnv *env, jclass cls, jstring str)
+Java_org_linkgrammar_LinkGrammar_cIsEntity(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (is_entity(cStr,dict) == 1)

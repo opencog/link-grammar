@@ -36,6 +36,7 @@ liblink_grammar_la_SOURCES =		\
 	extract-links.c			\
 	fast-match.c			\
 	idiom.c				\
+	jni-client.c \
 	linkset.c			\
 	massage.c			\
 	post-process.c			\
@@ -70,6 +71,7 @@ liblink_grammar_la_SOURCES =		\
 	extract-links.h			\
 	fast-match.h			\
 	idiom.h				\
+	jni-client.h \
 	linkset.h			\
 	massage.h			\
 	post-process.h			\

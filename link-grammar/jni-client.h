@@ -1,197 +1,197 @@
 
 #include <jni.h>
-/* Header for class LinkParserJNIClient */
+/* Header for class LinkGrammar */
 
-#ifndef _LinkParserJNIClient
-#define _LinkParserJNIClient
+#ifndef _LinkGrammar
+#define _LinkGrammar
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef LinkParserJNIClient_verbosity
-#define LinkParserJNIClient_verbosity 1L
+#undef LinkGrammar_verbosity
+#define LinkGrammar_verbosity 1L
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cSetMaxParseSeconds
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_LinkParserJNIClient_cSetMaxParseSeconds
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_cSetMaxParseSeconds
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cSetMaxCost
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_LinkParserJNIClient_cSetMaxCost
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_cSetMaxCost
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cInit
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_LinkParserJNIClient_cInit
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_cInit
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cTest
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_LinkParserJNIClient_cTest
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_cTest
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cParse
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_LinkParserJNIClient_cParse
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_cParse
 	(JNIEnv *, jclass, jstring);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cClose
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_LinkParserJNIClient_cClose
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_cClose
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cNumWords
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumWords
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cNumWords
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cGetWord
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cGetWord
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_cGetWord
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cNumSkippedWords
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumSkippedWords
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cNumSkippedWords
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cNumLinkages
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumLinkages
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cNumLinkages
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cMakeLinkage
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_LinkParserJNIClient_cMakeLinkage
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_cMakeLinkage
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkageNumViolations
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkageNumViolations
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cLinkageNumViolations
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkageDisjunctCost
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkageDisjunctCost
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cLinkageDisjunctCost
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cNumLinks
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cNumLinks
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cNumLinks
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkLWord
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkLWord
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cLinkLWord
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkRWord
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_LinkParserJNIClient_cLinkRWord
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_cLinkRWord
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkLLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkLLabel
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_cLinkLLabel
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkRLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkRLabel
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_cLinkRLabel
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkLabel
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_cLinkLabel
 	(JNIEnv *, jclass, jint);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cConstituentString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cConstituentString
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_cConstituentString
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cLinkString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_LinkParserJNIClient_cLinkString
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_cLinkString
 	(JNIEnv *, jclass);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cIsPastTenseForm
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_LinkParserJNIClient_cIsPastTenseForm
+JNIEXPORT jboolean JNICALL Java_org_linkgrammar_LinkGrammar_cIsPastTenseForm
 	(JNIEnv *, jclass, jstring);
 
 /*
- * Class:     LinkParserJNIClient
+ * Class:     LinkGrammar
  * Method:    cIsEntity
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_LinkParserJNIClient_cIsEntity
+JNIEXPORT jboolean JNICALL Java_org_linkgrammar_LinkGrammar_cIsEntity
 	(JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
