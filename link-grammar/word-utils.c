@@ -1,17 +1,17 @@
 /*
- * Miscellaneous utilities
+ * Miscellaneous utilities for dealing with word types.
  */
 
 #include "link-includes.h"
-#include "utils.h"
+#include "word-utils.h"
 #include <stdio.h>
 
-#define PAST_TENSE_FORM_MARKER "<xxx-past>"
-#define ENTITY_MARKER "<xxx-entity>"
+#define PAST_TENSE_FORM_MARKER "<marker-past>"
+#define ENTITY_MARKER "<marker-entity>"
 
-Dict_node * lookup_list2 = NULL;
+static Dict_node * lookup_list2 = NULL;
 
-void prune_lookup_list2(const char * s)
+static void prune_lookup_list2(const char * s)
 {
 	Dict_node *dn, *dnx, *dn_new;
 	dn_new = NULL;
@@ -82,10 +82,9 @@ Dict_node * dictionary_lookup2(Dictionary dict, const char *s)
 }
 
 
-
 //1 for equal
 //0 for unequal
-int exp_compare(Exp * e1, Exp * e2)
+static int exp_compare(Exp * e1, Exp * e2)
 {
 	E_list *el1, *el2;
 
@@ -125,7 +124,7 @@ int exp_compare(Exp * e1, Exp * e2)
 
 //1 if sub is non-NULL and contained in super
 //0 otherwise
-int exp_contains(Exp * super, Exp * sub) {
+static int exp_contains(Exp * super, Exp * sub) {
 	E_list * el;
 
 	//printf("\nSUP:");
@@ -147,8 +146,9 @@ int exp_contains(Exp * super, Exp * sub) {
 	return 0;
 }
 
-//1 if word's expression contains macro's expression
-//0 otherwise
+/** 
+ * Return true if word's expression contains macro's expression, false otherwise.
+ */
 int word_contains(const char * word, const char * macro, Dictionary dict)
 {
 	Dict_node *w_dn;
@@ -179,16 +179,22 @@ int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
 	return 0;
 }
 
-int isPastTenseForm(const char * str, Dictionary dict)
+int is_past_tense_form(const char * str, Dictionary dict)
 {
-	if (word_contains(str,PAST_TENSE_FORM_MARKER,dict)==1)
+	if (word_contains(str, PAST_TENSE_FORM_MARKER, dict) == 1)
 		return 1;
 	return 0;
 }
 
-int isEntity(const char * str, Dictionary dict)
+/**
+ * is_entity - Return true if word is entity.
+ * Entities are proper names (geographical names, 
+ * names of people), street addresses, phone numbers,
+ * etc.
+ */
+int is_entity(const char * str, Dictionary dict)
 {
-	if (word_contains(str,ENTITY_MARKER,dict)==1)
+	if (word_contains(str,  ENTITY_MARKER, dict) == 1)
 		return 1;
 	return 0;
 }

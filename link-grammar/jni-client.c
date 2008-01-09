@@ -10,6 +10,7 @@
 #include "link-includes.h"
 #include "command-line.h"
 #include "jni-client.h"
+#include "word-utils.h"
 
 static Dictionary    dict;
 static Parse_Options opts, panic_parse_opts;
@@ -461,7 +462,7 @@ JNIEXPORT jboolean JNICALL
 Java_LinkParserJNIClient_cIsPastTenseForm(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (isPastTenseForm(cStr,dict)==1)
+	if (is_past_tense_form(cStr,dict) == 1)
 		return TRUE;
 	return FALSE;
 }
@@ -475,7 +476,7 @@ JNIEXPORT jboolean JNICALL
 Java_LinkParserJNIClient_cIsEntity(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (isEntity(cStr,dict)==1)
+	if (is_entity(cStr,dict) == 1)
 		return TRUE;
 	return FALSE;
 }
