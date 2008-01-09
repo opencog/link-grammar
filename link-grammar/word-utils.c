@@ -2,7 +2,7 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
-#include "link-includes.h"
+#include <link-grammar/api.h>
 #include "word-utils.h"
 #include <stdio.h>
 
@@ -10,27 +10,6 @@
 #define ENTITY_MARKER "<marker-entity>"
 
 static Dict_node * lookup_list2 = NULL;
-
-static void rdictionary_lookup2(Dict_node * dn, const char * s)
-{
-	/* see comment in dictionary_lookup below */
-	int m;
-	Dict_node * dn_new;
-	if (dn == NULL) return;
-	m = dict_match(s, dn->string);
-	if (m >= 0) {
-		rdictionary_lookup2(dn->right, s);
-	}
-	if (m == 0) {
-		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
-		*dn_new = *dn;
-		dn_new->right = lookup_list2;
-		lookup_list2 = dn_new;
-	}
-	if (m <= 0) {
-		rdictionary_lookup2(dn->left, s);
-	}
-}
 
 /** 
  * Returns a pointer to a lookup list of the words in the dictionary.
@@ -44,8 +23,8 @@ static void rdictionary_lookup2(Dict_node * dn, const char * s)
 Dict_node * dictionary_lookup2(Dictionary dict, const char *s)
 {
 	free_lookup_list(lookup_list2);
-	rdictionary_lookup2(dict->root, s);
-	lookup_list2 = prune_lookup_list2(lookup_list2, s);
+	lookup_list2 = rdictionary_lookup(lookup_list2, dict->root, s);
+	lookup_list2 = prune_lookup_list(lookup_list2, s);
 	return lookup_list2;
 }
 

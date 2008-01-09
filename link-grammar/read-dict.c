@@ -795,18 +795,20 @@ int read_dictionary(Dictionary dict) {
 	return 1;
 }
 
+/**
+ * dict_match() -- 
+ * Assuming that s is a pointer to a dictionary string, and that
+ * t is a pointer to a search string, this returns 0 if they
+ * match, >0 if s>t, and <0 if s<t.
+ *
+ * The matching is done as follows.  Walk down the strings until
+ * you come to the end of one of them, or until you find unequal
+ * characters.  A "*" matches anything.  Otherwise, replace "."
+ * by "\0", and take the difference.  This behavior matches that
+ * of the function dict_compare().
+ */
 static int dict_match(const char * s, const char * t)
 {
-/* assuming that s is a pointer to a dictionary string, and that
-   t is a pointer to a search string, this returns 0 if they
-   match, >0 if s>t, and <0 if s<t.
-
-   The matching is done as follows.  Walk down the strings until
-   you come to the end of one of them, or until you find unequal
-   characters.  A "*" matches anything.  Otherwise, replace "."
-   by "\0", and take the difference.  This behavior matches that
-   of the function dict_compare().
-*/
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
 	if ((*s == '*') || (*t == '*')) return 0;
 	return (((*s == '.')?('\0'):(*s))  -  ((*t == '.')?('\0'):(*t)));
@@ -875,25 +877,26 @@ void free_lookup_list(Dict_node *llist)
 	}
 }
 
-static void rdictionary_lookup(Dict_node * dn, const char * s)
+Dict_node * rdictionary_lookup(Dict_node *llist, Dict_node * dn, const char * s)
 {
 	/* see comment in dictionary_lookup below */
 	int m;
 	Dict_node * dn_new;
-	if (dn == NULL) return;
+	if (dn == NULL) return llist;
 	m = dict_match(s, dn->string);
 	if (m >= 0) {
-		rdictionary_lookup(dn->right, s);
+		llist = rdictionary_lookup(llist, dn->right, s);
 	}
 	if (m == 0) {
 		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
 		*dn_new = *dn;
-		dn_new->right = lookup_list;
-		lookup_list = dn_new;
+		dn_new->right = llist;
+		llist = dn_new;
 	}
 	if (m <= 0) {
-		rdictionary_lookup(dn->left, s);
+		llist = rdictionary_lookup(llist, dn->left, s);
 	}
+	return llist;
 }
 
 /** 
@@ -908,7 +911,7 @@ static void rdictionary_lookup(Dict_node * dn, const char * s)
 Dict_node * dictionary_lookup(Dictionary dict, const char *s)
 {
    free_lookup_list(lookup_list);
-   rdictionary_lookup(dict->root, s);
+   lookup_list = rdictionary_lookup(lookup_list, dict->root, s);
    lookup_list = prune_lookup_list(lookup_list, s);
    return lookup_list;
 }
