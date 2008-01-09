@@ -32,7 +32,7 @@ JNIEXPORT void JNICALL Java_LinkParserJNIClient_cSetMaxCost
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_LinkParserJNIClient_cInit
-	(JNIEnv *, jclass, jstring);
+	(JNIEnv *, jclass);
 
 /*
  * Class:     LinkParserJNIClient

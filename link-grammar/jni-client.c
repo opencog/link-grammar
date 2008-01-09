@@ -2,15 +2,14 @@
  * Java JNI interfaces
  */
 
+#define BUILD_JNI_CLIENT 1
 #ifdef BUILD_JNI_CLIENT
 
 #include <jni.h>
 #include <stdio.h>
 
-#include "link-includes.h"
-#include "command-line.h"
+#include <link-grammar/api.h>
 #include "jni-client.h"
-#include "word-utils.h"
 
 static Dictionary    dict;
 static Parse_Options opts, panic_parse_opts;
@@ -44,7 +43,7 @@ static void test(void)
 #endif
 }
 
-static void init(char* linkparser_dir)
+static void init(void)
 {
 	panic_parse_opts = parse_options_create();
 	opts	= parse_options_create();
@@ -57,11 +56,7 @@ static void init(char* linkparser_dir)
 	parse_options_set_short_length(opts, 10);
 	parse_options_set_verbosity(opts,0);
 
-	char* dictName = "4.0.dict";
-	char* knowName = "4.0.knowledge";
-	char* consName = "4.0.constituent-knowledge";
-	char* affiName = "4.0.affix";
-	dict	= dictionary_create2(dictName, knowName, consName, affiName, linkparser_dir);
+	dict = dictionary_create_default_lang();
 	test();
 }
 
@@ -215,14 +210,9 @@ Java_LinkParserJNIClient_cSetMaxCost(JNIEnv *env, jclass cls, jint maxCost)
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
-Java_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls, jstring str)
+Java_LinkParserJNIClient_cInit(JNIEnv *env, jclass cls)
 {
-	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	char* tmp = strdup(cStr);
-	init(tmp);
-	free(tmp);
-	(*env)->ReleaseStringUTFChars(env,str,cStr);
-
+	init();
 }
 
 ///
