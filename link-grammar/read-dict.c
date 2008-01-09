@@ -843,7 +843,7 @@ static int true_dict_match(const char * s, const char * t)
 /* Pointer to the temporary lookup list */
 Dict_node * lookup_list = NULL;
 
-Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
+static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 {
 	Dict_node *dn, *dnx, *dn_new;
 	dn_new = NULL;
@@ -877,7 +877,7 @@ void free_lookup_list(Dict_node *llist)
 	}
 }
 
-Dict_node * rdictionary_lookup(Dict_node *llist, Dict_node * dn, const char * s)
+static Dict_node * rdictionary_lookup(Dict_node *llist, Dict_node * dn, const char * s)
 {
 	/* see comment in dictionary_lookup below */
 	int m;
@@ -908,15 +908,22 @@ Dict_node * rdictionary_lookup(Dict_node *llist, Dict_node * dn, const char * s)
  * Freeing this list elsewhere is unnecessary, as long as the rest of
  * the program merely examines the list (doesn't change it)
  */
+Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
+{
+   Dict_node * llist = rdictionary_lookup(NULL, dict->root, s);
+   llist = prune_lookup_list(llist, s);
+   return llist;
+}
+
 Dict_node * dictionary_lookup(Dictionary dict, const char *s)
 {
    free_lookup_list(lookup_list);
-   lookup_list = rdictionary_lookup(lookup_list, dict->root, s);
-   lookup_list = prune_lookup_list(lookup_list, s);
+   lookup_list = dictionary_lookup_list(dict, s);
    return lookup_list;
 }
 
-int boolean_dictionary_lookup(Dictionary dict, const char *s) {
+int boolean_dictionary_lookup(Dictionary dict, const char *s) 
+{
 	return (dictionary_lookup(dict, s) != NULL);
 }
 
@@ -926,35 +933,40 @@ int boolean_dictionary_lookup(Dictionary dict, const char *s) {
  * only they do not consider the idiom words
  */
 
-static void rabridged_lookup(Dict_node * dn, const char * s) {
+static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char * s) 
+{
 	int m;
 	Dict_node * dn_new;
-	if (dn == NULL) return;
+	if (dn == NULL) return llist;
 	m = dict_match(s, dn->string);
 	if (m >= 0) {
-		rabridged_lookup(dn->right, s);
+		rabridged_lookup(llist, dn->right, s);
 	}
 	if ((m == 0) && (!is_idiom_word(dn->string))) {
 		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
 		*dn_new = *dn;
-		dn_new->right = lookup_list;
-		lookup_list = dn_new;
+		dn_new->right = llist;
+		llist = dn_new;
 	}
 	if (m <= 0) {
-		rabridged_lookup(dn->left, s);
+		llist = rabridged_lookup(llist, dn->left, s);
 	}
+	return llist;
 }
 
 Dict_node * abridged_lookup(Dictionary dict, const char *s) 
 {
    free_lookup_list(lookup_list);
-   rabridged_lookup(dict->root, s);
+   lookup_list = rabridged_lookup(NULL, dict->root, s);
    lookup_list = prune_lookup_list(lookup_list, s);
    return lookup_list;
 }
 
-int boolean_abridged_lookup(Dictionary dict, const char *s) {
-/* returns true if in the dictionary, false otherwise */
+/**
+ *  boolean_abridged_lookup() - returns true if in the dictionary, false otherwise
+ */
+int boolean_abridged_lookup(Dictionary dict, const char *s)
+{
 	return (abridged_lookup(dict, s) != NULL);
 }
 
@@ -1077,14 +1089,16 @@ static void free_Exp_list(Exp * e) {
 	}
 }
 
-static void free_Dict_node(Dict_node * dn) {
+static void free_Dict_node(Dict_node * dn)
+{
 	if (dn == NULL) return;
 	free_Dict_node(dn->left);
 	free_Dict_node(dn->right);
 	xfree(dn, sizeof(Dict_node));
 }
 
-void free_dictionary(Dictionary dict) {
+void free_dictionary(Dictionary dict)
+{
 	free_Dict_node(dict->root);
 	free_Word_file(dict->word_file_header);
 	free_Exp_list(dict->exp_list);
@@ -1117,5 +1131,6 @@ void dict_display_word_info(Dictionary dict, const char * s)
 		printf("\n");
 	}
 	free_lookup_list(lookup_list);
+	lookup_list = NULL;
 	return;
 }

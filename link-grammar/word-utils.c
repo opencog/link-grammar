@@ -9,25 +9,6 @@
 #define PAST_TENSE_FORM_MARKER "<marker-past>"
 #define ENTITY_MARKER "<marker-entity>"
 
-static Dict_node * lookup_list2 = NULL;
-
-/** 
- * Returns a pointer to a lookup list of the words in the dictionary.
- * This list is made up of Dict_nodes, linked by their right pointers.
- * The node, file and string fields are copied from the dictionary.
- *
- * Freeing this list elsewhere is unnecessary, as long as the rest of
- * the program merely examines the list (doesn't change it)
- */
-
-Dict_node * dictionary_lookup2(Dictionary dict, const char *s)
-{
-	free_lookup_list(lookup_list2);
-	lookup_list2 = rdictionary_lookup(lookup_list2, dict->root, s);
-	lookup_list2 = prune_lookup_list(lookup_list2, s);
-	return lookup_list2;
-}
-
 
 //1 for equal
 //0 for unequal
@@ -120,9 +101,9 @@ int word_contains(const char * word, const char * macro, Dictionary dict)
 {
 	Dict_node *w_dn;
 	int ret;
-	w_dn = dictionary_lookup2(dict, word);
+	w_dn = dictionary_lookup_list(NULL, dict, word);
 	ret = dn_word_contains(w_dn, macro, dict);
-	free_lookup_list(lookup_list2);
+	free_lookup_list(w_dn);
 	return ret;
 }
 

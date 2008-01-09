@@ -410,6 +410,7 @@ static Dictionary internal_dictionary_create(char * dict_name, char * pp_name, c
 	}
 
 	free_lookup_list(lookup_list);
+	lookup_list = NULL;
 	return dict;
 }
 
@@ -500,6 +501,7 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	int i;
 
 	free_lookup_list(lookup_list);
+	lookup_list = NULL;
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	sent->dict = dict;
@@ -558,6 +560,7 @@ void sentence_delete(Sentence sent)
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
 	free_lookup_list(lookup_list);
+	lookup_list = NULL;
 	free_deletable(sent);
 	free_effective_dist(sent);
 	xfree(sent->is_conjunction, sizeof(char)*sent->length);
