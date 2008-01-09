@@ -52,6 +52,7 @@ liblink_grammar_la_SOURCES =		\
 	tokenize.c			\
 	utilities.c			\
 	word-file.c			\
+	word-utils.c			\
 	prefix.c			\
 	api.h				\
 	link-includes.h			\
@@ -84,7 +85,8 @@ liblink_grammar_la_SOURCES =		\
 	string-set.h			\
 	tokenize.h			\
 	utilities.h			\
-	word-file.h
+	word-file.h \
+	word-utils.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS = 	\

@@ -55,5 +55,6 @@
 #include <link-grammar/tokenize.h>
 #include <link-grammar/utilities.h>
 #include <link-grammar/word-file.h>
+#include <link-grammar/word-utils.h>
 
 #endif
