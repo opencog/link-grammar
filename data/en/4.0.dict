@@ -40,7 +40,7 @@
 
 % NOUNS
 
-<xxx-entity>: XXXENTITY+;
+<marker-entity>: XXXENTITY+;
 
 <CLAUSE>: {({@COd-} & C-) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
 
@@ -69,26 +69,26 @@
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
 CAPITALIZED-WORDS NAME: 
-<xxx-entity> or (
+<marker-entity> or (
 {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+)); 
 % the generic category for words with a capitalized first character
 
 PL-CAPITALIZED-WORDS: 
-<xxx-entity> or (
+<marker-entity> or (
 {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)); 
 % capitalized words ending in s
 
 /en/words/words.n.p: % words that are also proper names
-<xxx-entity> or (
+<marker-entity> or (
 {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
 % Art Bell Bill Bob Buck Bud Chase Chemical China Congress Continental 
 
 %
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
-% deleted "<xxx-entity> or"
+% deleted "<marker-entity> or"
 <entity-id>: (
 {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)); 
@@ -185,7 +185,7 @@ or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
 
 /en/words/words.s: % US state names and abbreviations
-<xxx-entity> or
+<marker-entity> or
 ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({MG+} & {@MX+} & (JG- or <noun-main-s>)) or G+ or 
 ({[[MG+]]} & (AN+ or YS+ or YP+)))) or (Xc+ & Xd- & G- & AN+);
@@ -193,7 +193,7 @@ or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 
 % SINGULAR ENTITIES FOR ENTITY EXTRACTION (SAME AS CAPITALIZED-WORDS NAME)
 % This must appear after other categories so it doesnt interfere with those.
-/en/words/words.entities.sing: <xxx-entity> or ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
+/en/words/words.entities.sing: <marker-entity> or ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
 
 alter_ego au_pair mise_en_scene faux_pas non_sequitur fait_accompli
 modus_vivendi head_of_state tour_de_force:
@@ -616,16 +616,16 @@ DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 %VERBS
 
 % These are the verb-form expressions for ordinary verbs.
-% <xxx-past> is a marker which should never be used in a link.  
+% <marker-past> is a marker which should never be used in a link.  
 % It is used to flag past-tense forms in the dictionary
 
-<xxx-past>: XXXPAST+;
+<marker-past>: XXXPAST+;
 <verb-pl,i>: {@E-} & (Sp- or (RS- & Bp-) or I- or Wi-);
 <verb-pl>: {@E-} & (Sp- or (RS- & Bp-));
 <verb-s>: {@E-} & (Ss- or (RS- & Bs-));
 <verb-i>: {@E-} & I-;
-<verb-sp,pp>: <xxx-past> or ({@E-} & (S- or (RS- & B-) or PP-));
-<verb-sp>: <xxx-past> or ({@E-} & (S- or (RS- & B-)));
+<verb-sp,pp>: <marker-past> or ({@E-} & (S- or (RS- & B-) or PP-));
+<verb-sp>: <marker-past> or ({@E-} & (S- or (RS- & B-)));
 <verb-pp>: {@E-} & PP-;
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
@@ -652,8 +652,8 @@ or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
 
 <verb-s-pl,i>: {@E-} & (Sp- or If- or (RS- & Bp-) or Wi-);
 <verb-s-s>: {@E-} & (Ss- or SFsi- or (RS- & Bs-));
-<verb-s-sp,pp>: <xxx-past> or ({@E-} & (S- or SFsi- or PPf- or (RS- & B-)));
-<verb-s-sp>:  <xxx-past> or ({@E-} & (S- or SFsi- or (RS- & B-)));
+<verb-s-sp,pp>: <marker-past> or ({@E-} & (S- or SFsi- or PPf- or (RS- & B-)));
+<verb-s-sp>:  <marker-past> or ({@E-} & (S- or SFsi- or (RS- & B-)));
 <verb-s-pp>: {@E-} & PPf-;
 <verb-s-pg>: {@E-} & (Pgf- or Mg-);
 <verb-s-pv>: {@E-} & (Pvf- or Mv-) & {@MV+};
@@ -664,8 +664,8 @@ or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
 
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or  If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
-<verb-x-sp,pp>: <xxx-past> or ({@E-} & (S- or SF- or (RS- & B-) or PPf-));
-<verb-x-sp>: <xxx-past> or ({@E-} & (S- or SF- or (RS- & B-)));
+<verb-x-sp,pp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-) or PPf-));
+<verb-x-sp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-)));
 <verb-x-pp>: {@E-} & PPf-;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>: {@E-} & (Pgf- or Mg- or ({[DP-]} & ((Ss*g+ & <CLAUSE>) 
@@ -691,7 +691,7 @@ or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
 %(RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
 %doesn't: (({Q-} & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
 %(I*d+ or [[()]]);
-%didn't: <xxx-past> or ((({Q-} & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
+%didn't: <marker-past> or ((({Q-} & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
 %(RS- & B-)))) & (I*d+ or [[()]]));
 
 %Mike replaced "{Q-}" with "(Rw- or Q- or [()])"
@@ -712,7 +712,7 @@ don't: (((Rw- or Q- or [()]) & (SIp+ or SFIp+) & I*d+) or ({@E-} & (Sp- or SFp- 
 (RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
 doesn't: (((Rw- or Q- or [()]) & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
 (I*d+ or [[()]]);
-didn't: <xxx-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
+didn't: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
 (RS- & B-)))) & (I*d+ or [[()]]));
 
 <vc-have>: ({@MV+} & TO+) or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]})
@@ -732,7 +732,7 @@ hasn't: (((Rw- or Q- or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 haven't: (((Rw- or Q- or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or 
 (RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-hadn't: <xxx-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & 
+hadn't: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & 
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]));
 
@@ -746,12 +746,12 @@ is.v: ((<verb-x-s>) or
 (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ 
 or (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+})
 or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or Pg+ or Pv+ or PP+)]];
-was.v: <xxx-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
+was.v: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
 (SFIs+ or SIs+ or SXI+))) & <vc-be>);
 % MIKE ROSS added [[Ss-]] option to are.v: for "What are the aliases of Jim?"
 are.v: (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) or ((Rw- or Q- or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>;
-were.v: <xxx-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or 
+were.v: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or 
 (RS- & Bp-))) or ((Rw- or Q- or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>) or [[(SI*j+ or SFI**j+) & <vc-be> &
 ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]]);
@@ -764,11 +764,11 @@ or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or
 
 isn't: (<verb-x-s> or 
 ((Rw- or Q- or [()]) & (SIs+ or SFIs+))) & <vc-be>;
-wasn't: <xxx-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
+wasn't: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
 (SI*+ or SXI+ or SFIs+))) & <vc-be>);
 aren't: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or Q- or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
-weren't: <xxx-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+weren't: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or Q- or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
 
 will.v can.v may.v must.v could.v might.v shall.v: 
@@ -2432,31 +2432,31 @@ or [(Xc+ or Xe+) & Ce+]);
 /en/words/words.v.10.1: [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 /en/words/words.v.10.2: [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
 /en/words/words.v.10.3: 
-<xxx-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)
+<marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)
 or [[Pvf- & <vc-it-paraph>]]));
-read.q: <xxx-past> or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
-wrote.q: <xxx-past> or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+read.q: <marker-past> or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+wrote.q: <marker-past> or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
 written.q: {@E-} & PP- & <vc-paraph>;
 /en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
 
 seem.i appear.i: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
 seems.i appears.i: [[{@E-} & SFs- & <vc-it-paraph>]];
-seemed.i appeared.i: <xxx-past> or ({@E-} & (SF- or PPf-) & <vc-it-paraph>);
+seemed.i appeared.i: <marker-past> or ({@E-} & (SF- or PPf-) & <vc-it-paraph>);
 seeming.i appearing.i: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q: {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
 says.q: {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
-said.q: <xxx-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+said.q: <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
 saying.q: {@E-} & Pg- & <vc-paraph>;
 
 tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
 tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
-told.q: <xxx-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
+told.q: <marker-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
 telling.q: [[{@E-} & Pg- & O+ & <vc-paraph>]];
 
 ask.q: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
 asks.q: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
-asked.q: <xxx-past> or ({@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>);
+asked.q: <marker-past> or ({@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>);
 asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 
 <vc-vote>: Vv+ & {@MV+};
