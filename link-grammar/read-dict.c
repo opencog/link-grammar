@@ -839,7 +839,7 @@ static int true_dict_match(const char * s, const char * t)
 }
 
 /* Pointer to the temporary lookup list */
-static Dict_node * lookup_list = NULL;
+Dict_node * lookup_list = NULL;
 
 static void prune_lookup_list(const char * s)
 {
@@ -864,13 +864,13 @@ static void prune_lookup_list(const char * s)
 	}
 }
 
-void free_lookup_list(void)
+void free_lookup_list(Dict_node *llist)
 {
 	Dict_node * n;
-	while(lookup_list != NULL) {
-		n = lookup_list->right;
-		xfree((char *)lookup_list, sizeof(Dict_node));
-		lookup_list = n;
+	while(llist != NULL) {
+		n = llist->right;
+		xfree((char *)llist, sizeof(Dict_node));
+		llist = n;
 	}
 }
 
@@ -906,7 +906,7 @@ static void rdictionary_lookup(Dict_node * dn, const char * s)
  */
 Dict_node * dictionary_lookup(Dictionary dict, const char *s)
 {
-   free_lookup_list();
+   free_lookup_list(lookup_list);
    rdictionary_lookup(dict->root, s);
    prune_lookup_list(s);
    return lookup_list;
@@ -941,8 +941,9 @@ static void rabridged_lookup(Dict_node * dn, const char * s) {
 	}
 }
 
-Dict_node * abridged_lookup(Dictionary dict, const char *s) {
-   free_lookup_list();
+Dict_node * abridged_lookup(Dictionary dict, const char *s) 
+{
+   free_lookup_list(lookup_list);
    rabridged_lookup(dict->root, s);
    prune_lookup_list(s);
    return lookup_list;
@@ -1085,7 +1086,8 @@ void free_dictionary(Dictionary dict) {
 	free_Exp_list(dict->exp_list);
 }
 
-void dict_display_word_info(Dictionary dict, const char * s) {
+void dict_display_word_info(Dictionary dict, const char * s) 
+{
 	/* display the information about the given word */
 	Dict_node * dn;
 	Disjunct * d1, * d2;
@@ -1110,6 +1112,6 @@ void dict_display_word_info(Dictionary dict, const char * s) {
 		}
 		printf("\n");
 	}
-	free_lookup_list();
+	free_lookup_list(lookup_list);
 	return;
 }

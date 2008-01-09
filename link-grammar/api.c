@@ -409,7 +409,7 @@ static Dictionary internal_dictionary_create(char * dict_name, char * pp_name, c
 		dict->unlimited_connector_set = NULL;
 	}
 
-	free_lookup_list();
+	free_lookup_list(lookup_list);
 	return dict;
 }
 
@@ -494,11 +494,12 @@ int dictionary_get_max_cost(Dictionary dict) {
 *
 ****************************************************************/
 
-Sentence sentence_create(char *input_string, Dictionary dict) {
+Sentence sentence_create(char *input_string, Dictionary dict)
+{
 	Sentence sent;
 	int i;
 
-	free_lookup_list();
+	free_lookup_list(lookup_list);
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	sent->dict = dict;
@@ -547,8 +548,8 @@ Sentence sentence_create(char *input_string, Dictionary dict) {
 	return sent;
 }
 
-void sentence_delete(Sentence sent) {
-
+void sentence_delete(Sentence sent) 
+{
   /*free_andlists(sent); */
 	free_sentence_disjuncts(sent);
 	free_sentence_expressions(sent);
@@ -556,7 +557,7 @@ void sentence_delete(Sentence sent) {
 	free_parse_set(sent);
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
-	free_lookup_list();
+	free_lookup_list(lookup_list);
 	free_deletable(sent);
 	free_effective_dist(sent);
 	xfree(sent->is_conjunction, sizeof(char)*sent->length);

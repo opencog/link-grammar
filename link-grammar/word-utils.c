@@ -34,16 +34,6 @@ static void prune_lookup_list2(const char * s)
 	}
 }
 
-void free_lookup_list2(void)
-{
-	Dict_node * n;
-	while(lookup_list2 != NULL) {
-		n = lookup_list2->right;
-		xfree((char *)lookup_list2, sizeof(Dict_node));
-		lookup_list2 = n;
-	}
-}
-
 static void rdictionary_lookup2(Dict_node * dn, const char * s)
 {
 	/* see comment in dictionary_lookup below */
@@ -76,7 +66,7 @@ static void rdictionary_lookup2(Dict_node * dn, const char * s)
 
 Dict_node * dictionary_lookup2(Dictionary dict, const char *s)
 {
-	free_lookup_list2();
+	free_lookup_list(lookup_list2);
 	rdictionary_lookup2(dict->root, s);
 	prune_lookup_list2(s);
 	return lookup_list2;
@@ -176,7 +166,7 @@ int word_contains(const char * word, const char * macro, Dictionary dict)
 	int ret;
 	w_dn = dictionary_lookup2(dict, word);
 	ret = dn_word_contains(w_dn, macro, dict);
-	free_lookup_list2();
+	free_lookup_list(lookup_list2);
 	return ret;
 }
 

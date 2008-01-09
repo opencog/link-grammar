@@ -10,6 +10,7 @@
 /* forms, with or without modification, subject to certain conditions.          */
 /*                                                                              */
 /********************************************************************************/
+
 int open_dictionary(char * dict_path_name, Dictionary dict);
 int  read_dictionary(Dictionary dict);
 void dict_display_word_info(Dictionary dict, const char * s);
@@ -19,9 +20,13 @@ void print_expression(Exp *);
 int  boolean_dictionary_lookup(Dictionary dict, const char *);
 int  boolean_abridged_lookup(Dictionary dict, const char *);
 int  delete_dictionary_words(Dictionary dict, const char *);
-void free_lookup_list(void); 
-            /* really doesn't need to be called outside 
-               of the dictionary lookup code.  */
+
+/* free_lookup_list really doesn't need to be called outside 
+ * of the dictionary lookup code.
+ */
+void free_lookup_list(Dict_node *); 
+extern Dict_node *lookup_list;
+
 Dict_node * dictionary_lookup(Dictionary dict, const char *);
             /* remember, this returns a list  */
 Dict_node * abridged_lookup(Dictionary dict, const char *);
