@@ -81,17 +81,23 @@ static int max_postfix_found(Dict_node * d) {
 	return i;
 }
 
-static char * build_idiom_word_name(Dictionary dict, char * s) {
-	/* Allocates string space and returns a pointer to it.
-	   In this string is placed the idiomized name of the given string s.
-	   This is the same as s, but with a postfix of ".Ix", where x is an
-	   appropriate number.  x is the minimum number that distinguishes
-	   this word from others in the dictionary.
-	   */
+/**
+ * build_idiom_word_name() -- return idiomized name of given string.
+ *
+ * Allocates string space and returns a pointer to it.
+ * In this string is placed the idiomized name of the given string s.
+ * This is the same as s, but with a postfix of ".Ix", where x is an
+ * appropriate number.  x is the minimum number that distinguishes
+ * this word from others in the dictionary.
+ */
+static char * build_idiom_word_name(Dictionary dict, char * s)
+{
 	char * new_s, * x, *id;
 	int count, sz;
 
-	count = max_postfix_found(dictionary_lookup(dict, s))+1;
+	Dict_node *dn = dictionary_lookup_list(dict, s);
+	count = max_postfix_found(dn)+1;
+	free_lookup_list(dn);
 
 	sz = strlen(s)+10;
 	new_s = x = (char *) xalloc(sz); /* fails if > 10**10 idioms */

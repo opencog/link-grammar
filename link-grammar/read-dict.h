@@ -27,8 +27,8 @@ int  delete_dictionary_words(Dictionary dict, const char *);
 void free_lookup_list(Dict_node *); 
 extern Dict_node *lookup_list;
 
-Dict_node * dictionary_lookup(Dictionary dict, const char *);
-            /* remember, this returns a list  */
+Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
+
 Dict_node * abridged_lookup(Dictionary dict, const char *);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 void        free_dictionary(Dictionary dict);

@@ -371,15 +371,20 @@ OBS	 return dis;
 OBS }
 #endif
 
-X_node * build_word_expressions(Sentence sent, const char * s) {
-/* Looks up the word s in the dictionary.  Returns NULL if it's not there.
-   If there, it builds the list of expressions for the word, and returns
-   a pointer to it.
-*/
-	Dict_node * dn;
+/**
+ * build_word_expressions() -- build list of expressions for a word
+ *
+ * Looks up the word s in the dictionary.  Returns NULL if it's not there.
+ * If there, it builds the list of expressions for the word, and returns
+ * a pointer to it.
+ */
+X_node * build_word_expressions(Sentence sent, const char * s)
+{
+	Dict_node * dn, *dn_head;
 	X_node * x, * y;
 
-	dn = dictionary_lookup(sent->dict, s);
+	dn_head = dictionary_lookup_list(sent->dict, s);
+	dn = dn_head;
 
 	x = NULL;
 	while (dn != NULL) {
@@ -390,6 +395,7 @@ X_node * build_word_expressions(Sentence sent, const char * s) {
 		x->string = dn->string;
 		dn = dn->right;
 	}
+	free_lookup_list (dn_head);
 	return x;
 }
 

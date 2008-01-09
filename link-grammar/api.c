@@ -397,20 +397,20 @@ static Dictionary internal_dictionary_create(char * dict_name, char * pp_name, c
 	dict->ly_word_defined = boolean_dictionary_lookup(dict, LY_WORD);
 	dict->max_cost = 1000;
 
-	if ((dict_node = dictionary_lookup(dict, ANDABLE_CONNECTORS_WORD)) != NULL) {
+	if ((dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD)) != NULL) {
 		dict->andable_connector_set = connector_set_create(dict_node->exp);
 	} else {
 		dict->andable_connector_set = NULL;
 	}
+	free_lookup_list(dict_node);
 
-	if ((dict_node = dictionary_lookup(dict, UNLIMITED_CONNECTORS_WORD)) != NULL) {
+	if ((dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD)) != NULL) {
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
 	} else {
 		dict->unlimited_connector_set = NULL;
 	}
+	free_lookup_list(dict_node);
 
-	free_lookup_list(lookup_list);
-	lookup_list = NULL;
 	return dict;
 }
 

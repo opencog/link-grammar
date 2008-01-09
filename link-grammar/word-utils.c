@@ -77,17 +77,21 @@ static int exp_contains(Exp * super, Exp * sub) {
 int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
 {
 	Dict_node *m_dn;
-	m_dn = dictionary_lookup(dict, macro);
+	m_dn = dictionary_lookup_list(dict, macro);
 
 	if ((w_dn == NULL)||(m_dn == NULL))
 		return 0;
-	//printf("\n\nWORD:");
-	//print_expression(w_dn->exp);
-	//printf("\nMACR:\n");
-	//print_expression(m_dn->exp);
+
+	Exp * m_exp = m_dn->exp;
+	free_lookup_list(m_dn);
+
+	// printf("\n\nWORD:");
+	// print_expression(w_dn->exp);
+	// printf("\nMACR:\n");
+	// print_expression(m_exp);
 
 	for (;w_dn != NULL; w_dn = w_dn->right) {
-		if (exp_contains(w_dn->exp, m_dn->exp)==1)
+		if (exp_contains(w_dn->exp, m_exp)==1)
 			return 1;
 	}
 
@@ -101,7 +105,7 @@ int word_contains(const char * word, const char * macro, Dictionary dict)
 {
 	Dict_node *w_dn;
 	int ret;
-	w_dn = dictionary_lookup_list(NULL, dict, word);
+	w_dn = dictionary_lookup_list(dict, word);
 	ret = dn_word_contains(w_dn, macro, dict);
 	free_lookup_list(w_dn);
 	return ret;

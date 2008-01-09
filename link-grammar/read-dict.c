@@ -915,7 +915,7 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
    return llist;
 }
 
-Dict_node * dictionary_lookup(Dictionary dict, const char *s)
+static Dict_node * dictionary_lookup(Dictionary dict, const char *s)
 {
    free_lookup_list(lookup_list);
    lookup_list = dictionary_lookup_list(dict, s);
@@ -924,7 +924,10 @@ Dict_node * dictionary_lookup(Dictionary dict, const char *s)
 
 int boolean_dictionary_lookup(Dictionary dict, const char *s) 
 {
-	return (dictionary_lookup(dict, s) != NULL);
+	Dict_node *llist = dictionary_lookup_list(dict, s);
+	int bool = (llist != NULL);
+	free_lookup_list(llist);
+	return bool;
 }
 
 
