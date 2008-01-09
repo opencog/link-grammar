@@ -44,7 +44,7 @@ void free_lookup_list2(void)
 	}
 }
 
-void rdictionary_lookup2(Dict_node * dn, const char * s)
+static void rdictionary_lookup2(Dict_node * dn, const char * s)
 {
 	/* see comment in dictionary_lookup below */
 	int m;
@@ -65,16 +65,17 @@ void rdictionary_lookup2(Dict_node * dn, const char * s)
 	}
 }
 
+/** 
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * Freeing this list elsewhere is unnecessary, as long as the rest of
+ * the program merely examines the list (doesn't change it)
+ */
+
 Dict_node * dictionary_lookup2(Dictionary dict, const char *s)
 {
-	/* Returns a pointer to a lookup list of the words in the dictionary.
-	 * This list is made up of Dict_nodes, linked by their right pointers.
-	 * The node, file and string fields are copied from the dictionary.
-	 *
-	 * Freeing this list elsewhere is unnecessary, as long as the rest of
-	 * the program merely examines the list (doesn't change it)
-	 */
-
 	free_lookup_list2();
 	rdictionary_lookup2(dict->root, s);
 	prune_lookup_list2(s);
@@ -146,19 +147,6 @@ static int exp_contains(Exp * super, Exp * sub) {
 	return 0;
 }
 
-/** 
- * Return true if word's expression contains macro's expression, false otherwise.
- */
-int word_contains(const char * word, const char * macro, Dictionary dict)
-{
-	Dict_node *w_dn;
-	int ret;
-	w_dn = dictionary_lookup2(dict, word);
-	ret = dn_word_contains(w_dn, macro, dict);
-	free_lookup_list2();
-	return ret;
-}
-
 int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
 {
 	Dict_node *m_dn;
@@ -179,6 +167,19 @@ int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
 	return 0;
 }
 
+/** 
+ * Return true if word's expression contains macro's expression, false otherwise.
+ */
+int word_contains(const char * word, const char * macro, Dictionary dict)
+{
+	Dict_node *w_dn;
+	int ret;
+	w_dn = dictionary_lookup2(dict, word);
+	ret = dn_word_contains(w_dn, macro, dict);
+	free_lookup_list2();
+	return ret;
+}
+
 int is_past_tense_form(const char * str, Dictionary dict)
 {
 	if (word_contains(str, PAST_TENSE_FORM_MARKER, dict) == 1)
@@ -194,7 +195,7 @@ int is_past_tense_form(const char * str, Dictionary dict)
  */
 int is_entity(const char * str, Dictionary dict)
 {
-	if (word_contains(str,  ENTITY_MARKER, dict) == 1)
+	if (word_contains(str, ENTITY_MARKER, dict) == 1)
 		return 1;
 	return 0;
 }

@@ -838,8 +838,8 @@ static int true_dict_match(const char * s, const char * t)
 	}
 }
 
+/* Pointer to the temporary lookup list */
 static Dict_node * lookup_list = NULL;
-		  /* a pointer to the temporary lookup list */
 
 static void prune_lookup_list(const char * s)
 {
@@ -864,7 +864,8 @@ static void prune_lookup_list(const char * s)
 	}
 }
 
-void free_lookup_list(void) {
+void free_lookup_list(void)
+{
 	Dict_node * n;
 	while(lookup_list != NULL) {
 		n = lookup_list->right;
@@ -875,7 +876,7 @@ void free_lookup_list(void) {
 
 static void rdictionary_lookup(Dict_node * dn, const char * s)
 {
-		/* see comment in dictionary_lookup below */
+	/* see comment in dictionary_lookup below */
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return;
@@ -894,15 +895,17 @@ static void rdictionary_lookup(Dict_node * dn, const char * s)
 	}
 }
 
+/** 
+ * dictionary-lookup() - return lookup list of words in the dicationary
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * Freeing this list elsewhere is unnecessary, as long as the rest of
+ * the program merely examines the list (doesn't change it)
+ */
 Dict_node * dictionary_lookup(Dictionary dict, const char *s)
 {
-		/* Returns a pointer to a lookup list of the words in the dictionary.
-   This list is made up of Dict_nodes, linked by their right pointers.
-   The node, file and string fields are copied from the dictionary.
-
-   Freeing this list elsewhere is unnecessary, as long as the rest of
-   the program merely examines the list (doesn't change it) */
-
    free_lookup_list();
    rdictionary_lookup(dict->root, s);
    prune_lookup_list(s);
