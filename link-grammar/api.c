@@ -43,7 +43,7 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2) {
 }
 
 Parse_Options parse_options_create(void) {
-  /* create and initialize a Parse_Options object */
+	/* create and initialize a Parse_Options object */
 	Parse_Options po;
 
 	po = (Parse_Options) xalloc(sizeof(struct Parse_Options_s));
@@ -318,12 +318,16 @@ void parse_options_reset_resources(Parse_Options opts) {
 *
 ****************************************************************/
 
-/* The following function is dictionary_create with an extra paramater called "path".
-   If this is non-null, then the path used to find the file is taken from that path.
-   Otherwise the path is taken from the dict_name.  This is only needed because
-   an affix_file is opened by a recursive call to this function.
+/**
+ * The following function is dictionary_create with an extra paramater called "path".
+ * If this is non-null, then the path used to find the file is taken from that path.
+ * Otherwise the path is taken from the dict_name.  This is only needed because
+ * an affix_file is opened by a recursive call to this function.
  */
-static Dictionary internal_dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name, char * path) {
+static Dictionary 
+internal_dictionary_create(char * dict_name, char * pp_name, 
+                           char * cons_name, char * affix_name, char * path)
+{
 	Dictionary dict;
 	static int rand_table_inited=FALSE;
 	Dict_node *dict_node;
@@ -420,46 +424,46 @@ Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name,
 
 Dictionary dictionary_create_lang(char * lang)
 {
-  Dictionary dictionary;
+	Dictionary dictionary;
 
-  if(lang && *lang) {
-	char * dict_name;
-	char * pp_name;
-	char * cons_name;
-	char * affix_name;
+	if(lang && *lang) {
+		char * dict_name;
+		char * pp_name;
+		char * cons_name;
+		char * affix_name;
+	
+		dict_name = join_path(lang, "4.0.dict");
+		pp_name = join_path(lang, "4.0.knowledge");
+		cons_name = join_path(lang, "4.0.constituent-knowledge");
+		affix_name = join_path(lang, "4.0.affix");
+	
+		dictionary = dictionary_create(dict_name, pp_name, cons_name, affix_name);
+	
+		free(affix_name);
+		free(cons_name);
+		free(pp_name);
+		free(dict_name);
+	} else {
+		dictionary = NULL;
+	}
 
-	dict_name = join_path(lang, "4.0.dict");
-	pp_name = join_path(lang, "4.0.knowledge");
-	cons_name = join_path(lang, "4.0.constituent-knowledge");
-	affix_name = join_path(lang, "4.0.affix");
-
-	dictionary = dictionary_create(dict_name, pp_name, cons_name, affix_name);
-
-	free(affix_name);
-	free(cons_name);
-	free(pp_name);
-	free(dict_name);
-  } else {
-	dictionary = NULL;
-  }
-
-  return dictionary;
+	return dictionary;
 }
 
 Dictionary dictionary_create_default_lang(void)
 {
-  Dictionary dictionary;
-  char * lang;
+	Dictionary dictionary;
+	char * lang;
 
-  lang = get_default_locale();
-  if(lang && *lang) {
-	dictionary = dictionary_create_lang(lang);
-	free(lang);
-  } else {
-	dictionary = NULL;
-  }
+	lang = get_default_locale();
+	if(lang && *lang) {
+		dictionary = dictionary_create_lang(lang);
+		free(lang);
+	} else {
+		dictionary = NULL;
+	}
 
-  return dictionary;
+	return dictionary;
 }
 
 int dictionary_delete(Dictionary dict) {
@@ -549,7 +553,7 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 
 void sentence_delete(Sentence sent) 
 {
-  /*free_andlists(sent); */
+	/* free_andlists(sent); */
 	free_sentence_disjuncts(sent);
 	free_sentence_expressions(sent);
 	string_set_delete(sent->string_set);
@@ -562,22 +566,22 @@ void sentence_delete(Sentence sent)
 	xfree((char *) sent, sizeof(struct Sentence_s));
 }
 
-static void free_andlists(Sentence sent) {
-
-  int L;
-  Andlist * andlist, * next;
-  for(L=0; L<sent->num_linkages_post_processed; L++) {
-	/* printf("%d ", sent->link_info[L].canonical);  */
-	/* if (sent->link_info[L].canonical==0) continue; */
-	andlist = sent->link_info[L].andlist;
-	while(1) {
-	  if(andlist == NULL) break;
-	  next = andlist->next;
-	  xfree((char *) andlist, sizeof(Andlist));
-	  andlist = next;
+static void free_andlists(Sentence sent) 
+{
+	int L;
+	Andlist * andlist, * next;
+	for(L=0; L<sent->num_linkages_post_processed; L++) {
+		/* printf("%d ", sent->link_info[L].canonical);  */
+		/* if (sent->link_info[L].canonical==0) continue; */
+		andlist = sent->link_info[L].andlist;
+		while(1) {
+			if(andlist == NULL) break;
+			next = andlist->next;
+			xfree((char *) andlist, sizeof(Andlist));
+			andlist = next;
+		}
 	}
-  }
-  /* printf("\n"); */
+	/* printf("\n"); */
 }
 
 int sentence_length(Sentence sent) {
@@ -613,11 +617,11 @@ int sentence_disjunct_cost(Sentence sent, int i) {
 }
 
 char * sentence_get_nth_word(Sentence sent, int i) {
-  return sent->word[i].string;
+	return sent->word[i].string;
 }
 
 int sentence_nth_word_has_disjunction(Sentence sent, int i) {
-  return (sent->parse_info->chosen_disjuncts[i] != NULL);
+	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
 /***************************************************************
