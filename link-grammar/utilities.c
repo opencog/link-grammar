@@ -271,28 +271,30 @@ static char * get_datadir(void)
   return data_dir;
 }
 
-FILE *dictopen(const char *dictname, const char *filename, const char *how) {
-
-    /* This function is used to open a dictionary file or a word file,
-       or any associated data file (like a post process knowledge file).
-
-       It works as follows.  If the file name begins with a "/", then
-       it's assumed to be an absolute file name and it tries to open
-       that exact file.
-
-       If the filename does not begin with a "/", then it uses the
-       dictpath mechanism to find the right file to open.  This looks
-       for the file in a sequence of directories until it finds it.  The
-       sequence of directories is specified in a dictpath string, in
-       which each directory is followed by a ":".
-
-       The dictpath that it uses is constructed as follows.  If the
-       dictname is non-null, and is an absolute path name (beginning
-       with a "/", then the part after the last "/" is removed and this
-       is the first directory on the dictpath.  After this comes the
-       DICTPATH environment variable, followed by the DEFAULTPATH
-    */
-
+/**
+ * dictopen() - open a dictionary
+ *
+ * This function is used to open a dictionary file or a word file,
+ * or any associated data file (like a post process knowledge file).
+ *
+ * It works as follows.  If the file name begins with a "/", then
+ * it's assumed to be an absolute file name and it tries to open
+ * that exact file.
+ *
+ * If the filename does not begin with a "/", then it uses the
+ * dictpath mechanism to find the right file to open.  This looks
+ * for the file in a sequence of directories until it finds it.  The
+ * sequence of directories is specified in a dictpath string, in
+ * which each directory is followed by a ":".
+ *
+ * The dictpath that it uses is constructed as follows.  If the
+ * dictname is non-null, and is an absolute path name (beginning
+ * with a "/", then the part after the last "/" is removed and this
+ * is the first directory on the dictpath.  After this comes the
+ * DICTPATH environment variable, followed by the DEFAULTPATH
+ */
+FILE *dictopen(const char *dictname, const char *filename, const char *how)
+{
     char completename[MAX_PATH_NAME+1];
     char fulldictpath[MAX_PATH_NAME+1];
     char *pos, *oldpos;
@@ -300,37 +302,37 @@ FILE *dictopen(const char *dictname, const char *filename, const char *how) {
     FILE *fp;
 
     if (filename[0] == '/') {
-	fp = fopen(filename, how);  /* If the file does not exist NULL is returned */
-	if(fp) return fp;
+        fp = fopen(filename, how);  /* If the file does not exist NULL is returned */
+        if(fp) return fp;
     }
 
     {
-      char * data_dir = get_datadir();
-      if(data_dir) {
-	sprintf(fulldictpath, "%s%c%s%c", data_dir, PATH_SEPARATOR, DEFAULTPATH, PATH_SEPARATOR);
-	free(data_dir);
-      }
-      else {
-	/* always make sure that it ends with a path separator char 
-	   for the below while() loop. */
-	sprintf(fulldictpath, "%s%c", DEFAULTPATH, PATH_SEPARATOR);
-      }
+        char * data_dir = get_datadir();
+        if (data_dir) {
+            sprintf(fulldictpath, "%s%c%s%c", data_dir, PATH_SEPARATOR, DEFAULTPATH, PATH_SEPARATOR);
+            free(data_dir);
+        }
+        else {
+            /* always make sure that it ends with a path separator char 
+             * for the below while() loop. */
+            sprintf(fulldictpath, "%s%c", DEFAULTPATH, PATH_SEPARATOR);
+        }
     }
 
-    /* now fulldictpath is our dictpath, where each entry is followed by a ":"
-       including the last one */
+    /* Now fulldictpath is our dictpath, where each entry is followed by a ":"
+     * including the last one */
 
     filenamelen = strlen(filename);
     len = strlen(fulldictpath)+ filenamelen + 1 + 1;
     oldpos = fulldictpath;
     while ((pos = strchr(oldpos, PATH_SEPARATOR)) != NULL) {
-	strncpy(completename, oldpos, (pos-oldpos));
-	*(completename+(pos-oldpos)) = DIR_SEPARATOR;
-	strcpy(completename+(pos-oldpos)+1,filename);
-	if ((fp = fopen(completename, how)) != NULL) {
-	    return fp;
-	}
-	oldpos = pos+1;
+        strncpy(completename, oldpos, (pos-oldpos));
+        *(completename+(pos-oldpos)) = DIR_SEPARATOR;
+        strcpy(completename+(pos-oldpos)+1,filename);
+        if ((fp = fopen(completename, how)) != NULL) {
+            return fp;
+        }
+        oldpos = pos+1;
     }
     return NULL;
 }
