@@ -54,7 +54,7 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_close
  * Method:    numWords
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_numWords
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getNumWords
 	(JNIEnv *, jclass);
 
 /*
@@ -70,7 +70,7 @@ JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getWord
  * Method:    numSkippedWords
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_numSkippedWords
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getNumSkippedWords
 	(JNIEnv *, jclass);
 
 /*
@@ -78,7 +78,7 @@ JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_numSkippedWords
  * Method:    numLinkages
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_numLinkages
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getNumLinkages
 	(JNIEnv *, jclass);
 
 /*
@@ -94,7 +94,7 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_makeLinkage
  * Method:    linkageNumViolations
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_linkageNumViolations
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations
 	(JNIEnv *, jclass);
 
 /*
@@ -102,7 +102,7 @@ JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_linkageNumViolations
  * Method:    linkageDisjunctCost
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_linkageDisjunctCost
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost
 	(JNIEnv *, jclass);
 
 /*
@@ -110,47 +110,47 @@ JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_linkageDisjunctCost
  * Method:    numLinks
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_numLinks
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getNumLinks
 	(JNIEnv *, jclass);
 
 /*
  * Class:     LinkGrammar
- * Method:    linkLWord
+ * Method:    getLinkLWord
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_linkLWord
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkLWord
 	(JNIEnv *, jclass, jint);
 
 /*
  * Class:     LinkGrammar
- * Method:    linkRWord
+ * Method:    getLinkRWord
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_linkRWord
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkRWord
 	(JNIEnv *, jclass, jint);
 
 /*
  * Class:     LinkGrammar
- * Method:    linkLLabel
+ * Method:    getLinkLLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_linkLLabel
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkLLabel
 	(JNIEnv *, jclass, jint);
 
 /*
  * Class:     LinkGrammar
- * Method:    linkRLabel
+ * Method:    getLinkRLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_linkRLabel
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkRLabel
 	(JNIEnv *, jclass, jint);
 
 /*
  * Class:     LinkGrammar
- * Method:    linkLabel
+ * Method:    getLinkLabel
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_linkLabel
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkLabel
 	(JNIEnv *, jclass, jint);
 
 /*
@@ -158,15 +158,15 @@ JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_linkLabel
  * Method:    constituentString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_constituentString
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getConstituentString
 	(JNIEnv *, jclass);
 
 /*
  * Class:     LinkGrammar
- * Method:    linkString
+ * Method:    getLinkString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_linkString
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkString
 	(JNIEnv *, jclass);
 
 /*

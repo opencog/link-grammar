@@ -29,36 +29,36 @@ public class LinkGrammar {
     public static native void close();
 
     // C sentence access functions
-    public static native int numWords();
+    public static native int getNumWords();
 
     public static native String getWord(int i);
 
-    public static native int numSkippedWords();
+    public static native int getNumSkippedWords();
 
     // C linkage access functions
-    public static native int numLinkages();
+    public static native int getNumLinkages();
 
     public static native void makeLinkage(int index);
 
-    public static native int linkageNumViolations();
+    public static native int getLinkageNumViolations();
 
-    public static native int linkageDisjunctCost();
+    public static native int getLinkageDisjunctCost();
 
-    public static native int numLinks();
+    public static native int getNumLinks();
 
-    public static native int linkLWord(int link);
+    public static native int getLinkLWord(int link);
 
-    public static native int linkRWord(int link);
+    public static native int getLinkRWord(int link);
 
-    public static native String linkLLabel(int link);
+    public static native String getLinkLLabel(int link);
 
-    public static native String linkRLabel(int link);
+    public static native String getLinkRLabel(int link);
 
-    public static native String linkLabel(int link);
+    public static native String getLinkLabel(int link);
 
-    public static native String constituentString();
+    public static native String getConstituentString();
 
-    public static native String linkString();
+    public static native String getLinkString();
 
     // OTHER UTILITY C FUNCTIONS
     public static native boolean isPastTenseForm(String word);

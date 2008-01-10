@@ -249,7 +249,7 @@ Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_numWords(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getNumWords(JNIEnv *env, jclass cls)
 {
 	return linkage_get_num_words(linkage);
 }
@@ -273,7 +273,7 @@ Java_org_linkgrammar_LinkGrammar_getWord(JNIEnv *env, jclass cls, jint i)
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_numSkippedWords(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getNumSkippedWords(JNIEnv *env, jclass cls)
 {
 	return sentence_null_count(sent);
 }
@@ -284,7 +284,7 @@ Java_org_linkgrammar_LinkGrammar_numSkippedWords(JNIEnv *env, jclass cls)
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_numLinkages(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getNumLinkages(JNIEnv *env, jclass cls)
 {
 	return sentence_num_valid_linkages(sent);
 }
@@ -307,7 +307,7 @@ Java_org_linkgrammar_LinkGrammar_makeLinkage(JNIEnv *env, jclass cls, jint i)
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_linkageNumViolations(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls)
 {
 	return sentence_num_violations(sent, cur_linkage);
 }
@@ -318,51 +318,51 @@ Java_org_linkgrammar_LinkGrammar_linkageNumViolations(JNIEnv *env, jclass cls)
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_linkageDisjunctCost(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost(JNIEnv *env, jclass cls)
 {
 	return sentence_disjunct_cost(sent, cur_linkage);
 }
 
 /*
  * Class:		 LinkGrammar
- * Method:		numLinks
+ * Method:		getNumLinks
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_numLinks(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getNumLinks(JNIEnv *env, jclass cls)
 {
 	return linkage_get_num_links(linkage);
 }
 
 /*
  * Class:		 LinkGrammar
- * Method:		linkLWord
+ * Method:		getLinkLWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_linkLWord(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_getLinkLWord(JNIEnv *env, jclass cls, jint i)
 {
 	return linkage_get_link_lword(linkage, i);
 }
 
 /*
  * Class:		 LinkGrammar
- * Method:		linkRWord
+ * Method:		getLinkRWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_linkRWord(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_getLinkRWord(JNIEnv *env, jclass cls, jint i)
 {
 	return linkage_get_link_rword(linkage, i);
 }
 
 /*
  * Class:		 LinkGrammar
- * Method:		linkLLabel
+ * Method:		getLinkLLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_linkLLabel(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_getLinkLLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_llabel(linkage, i);
@@ -372,11 +372,11 @@ Java_org_linkgrammar_LinkGrammar_linkLLabel(JNIEnv *env, jclass cls, jint i)
 
 /*
  * Class:		 LinkGrammar
- * Method:		linkRLabel
+ * Method:		getLinkRLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_linkRLabel(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_getLinkRLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_rlabel(linkage, i);
@@ -386,11 +386,11 @@ Java_org_linkgrammar_LinkGrammar_linkRLabel(JNIEnv *env, jclass cls, jint i)
 
 /*
  * Class:		 LinkGrammar
- * Method:		linkLabel
+ * Method:		getLinkLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_linkLabel(JNIEnv *env, jclass cls, jint i)
+Java_org_linkgrammar_LinkGrammar_getLinkLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
 	char *s = linkage_get_link_label(linkage, i);
@@ -404,7 +404,7 @@ Java_org_linkgrammar_LinkGrammar_linkLabel(JNIEnv *env, jclass cls, jint i)
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_constituentString(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getConstituentString(JNIEnv *env, jclass cls)
 {
 	/* mode 1 prints a lisp-style string, nicely indented.
 	 * mode 2 prints a lisp-style string, but with square brackets.
@@ -423,7 +423,7 @@ Java_org_linkgrammar_LinkGrammar_constituentString(JNIEnv *env, jclass cls)
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_linkString(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 {
 	char *s = linkage_print_diagram(linkage);
 	jstring j = (*env)->NewStringUTF(env, s);
