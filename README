@@ -1,69 +1,70 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
-This directory contains a *patched* version of the Link Grammer Parser.
-It has been patched to fix a few bugs, add a few enhancements, and, in
-general, make the Link Grammar Parser easier to use.  Below follows the
-original version of the Link Grammar Parser README file.
+This directory contains a *patched* version of the final original 
+release of the Link Grammer Parser.  It has been patched to fix a 
+few bugs, add a few enhancements, and, in general, make the Link 
+Grammar Parser easier to use. It includes Java bindings.
 
-  -enjoy
-
-This directory is the distribution of version 4.1b of the link grammar
-parsing system for UNIX.  This version was created in January, 2005.
-It is essentially the same as version 4.1, but is now being released
-under a new GPL compatible license, making it freely available for
-research and commercial use, with few restrictions.  The terms of the
-license are given in the LICENSE file included with this software, and
-also available at http://www.link.cs.cmu.edu/link/license.html.
+It is released under the BSD license (which is GPL compatible), 
+making it freely available for private and commercial use, with 
+few restrictions.  The terms of the license are given in the 
+LICENSE file included with this software, and also available at 
+http://www.link.cs.cmu.edu/link/license.html.
 
 Please see our web page http://www.link.cs.cmu.edu/link for more
 information, including documentation.
 
 CONTENTS of this directory:
 
-   LICENSE            The license describing terms of use
+   LICENSE                  The license describing terms of use
 
-   src/*.c            The program.  (Written in ANSI-C)
-   include/*.h
+   link-grammar/*.c         The program.  (Written in ANSI-C)
    
-   obj/*.o            Object files
+   data/en/4.0.dict         The file containing the dictionary definitions.
 
-   data/4.0.dict      The file containing the dictionary definitions.
+   data/en/4.0.knowledge    The post-processing knowledge file.
 
-   data/4.0.knowledge The post-processing knowledge file.
+   data/en/4.0.constituents The constituent knowledge file.
 
-   data/4.0.constituents    The constituent knowledge file.
+   data/en/4.0.affix        The affix file.
 
-   data/4.0.affix     The affix file.
+   data/en/tiny.dict        A small sample dictionary.
 
-   data/tiny.dict     A small sample dictionary.
+   data/en/words/*          A directory full of word lists.
 
-   data/words/*       A directory full of word lists.
+   data/en/4.0.batch        This is a batch file of sentences (both grammatical
+                            and ungrammatical ones) that are handled correctly
+                            by this release of the system.  Feed this into the
+                            parser with "./parse 4.0.dict < 4.0.batch"
 
-   data/4.0.batch     This is a batch file of sentences (both grammatical
-                      and ungrammatical ones) that are handled correctly
-                      by this release of the system.  Feed this into the
-                      parser with "./parse 4.0.dict < 4.0.batch"
-
-   Makefile           The makefile for creating the program "parse".
+   configure                The GNU configuration script
 
 CREATING the system:
 
-   To compile the demonstration program included here, simply go to the
-   directory containing these files and type:
+   To compile the link-grammar shared library and demonstration program, 
+   at the command line, type:
 
+        ./configure
         make
 
-   This creates a binary file called "parse".  If there are errors, you
-   may need to customize the Makefile for your own systems.  Read the
-   comments in the Makefile.  This program has been compiled under
-   DEC, HP, SUN, LINUX, and BSDI.
+   To install, change user to "root" and say
+
+        make install
+
+   This will install the lib-link-grammar.so libarary into /usr/local/lib
+   the header files in /usr/local/include/link-grammar
+   and the dictionaries into /usr/local/share/link-grammar.
+
+   The /usr/local install target can be over-ridden using standard 
+   GNU configure options.
+
 
 RUNNING the program:
 
    To run the program issue the unix command:
 
-       ./parse 
+       ./grammar-parse 
 
    This starts the program.  Help is available there with "!help".  A
    number of user-settable variables control what happens.  "!var" shows
@@ -73,7 +74,7 @@ RUNNING the program:
    number of sentences.  The following command runs the parser on
    3.0.batch
 
-       ./parse 4.0.dict < 4.0.batch
+       ./grammar-parse 4.0.dict < 4.0.batch
 
    The line "!batch" near the top of 4.0.batch turns on batch mode.  In
    this mode sentences labeled with an initial "*" should be rejected
@@ -89,9 +90,9 @@ USING the parser in your own applications:
 COMMERCIAL use:
 
    We feel that our system (or a derivative of it) could be useful in a
-   number of commercial applications.  This is allowed under an Apache-style 
-   license for release 4.1a. We would be pleased to discuss terms with
-   those wanting to use our system under a paid contract.
+   number of commercial applications.  This is allowed under the BSD
+   license for release 4.1b and later. We would be pleased to discuss 
+   terms with those wanting to use our system under a paid contract.
 
    Of course all academic products or papers should reference our work.
 
@@ -106,8 +107,8 @@ ADDRESSES
      Pittsburgh, PA 15213              
 
      Davy Temperley                    dtemp@theory.esm.rochester.edu
-     Eastman School of Music	       716-274-1557
-     26 Gibbs St.	               www.link.cs.cmu.edu/temperley
+     Eastman School of Music           716-274-1557
+     26 Gibbs St.                      www.link.cs.cmu.edu/temperley
      Rochester, NY 14604
 
      John Lafferty                     lafferty@cs.cmu.edu
