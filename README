@@ -87,7 +87,7 @@ USING the parser in your own applications:
    makes it easy to incorporate it into your own applications.  This is
    documented on our web site.
 
-	This release includes a very simple Java binding.  It can be
+   This release includes a very simple Java binding.  It can be
    accessed by copying the file LinkGrammar.java into your java project.
 
 COMMERCIAL use:
