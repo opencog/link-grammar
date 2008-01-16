@@ -4,7 +4,7 @@
 /* All rights reserved                                                          */
 /*                                                                              */
 /* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */ 
+/* license set forth in the LICENSE file included with this software,           */
 /* and also available at http://www.link.cs.cmu.edu/link/license.html           */
 /* This license allows free redistribution and use in source and binary         */
 /* forms, with or without modification, subject to certain conditions.          */
@@ -167,7 +167,7 @@
 
   (Left is DOWN, right is UP)
 
-     Sa <---> S^ <---> S            or             Sa <---> Sa <---> S 
+     Sa <---> S^ <---> S            or             Sa <---> Sa <---> S
 	 fat      thin                                 fat      thin
 
   Here two of the disjunct types are given by "S^" and "Sa".  Notice that
@@ -192,7 +192,7 @@
   on "and" this particular one will be generated.  Therefore rejecting
   a linkage in which a root fat disjunct can be replaced by a smaller one
   is ok (since the smaller one will be generated separately).  What about
-  a fat disjunct that is not the root.  We consider the set of linkages in 
+  a fat disjunct that is not the root.  We consider the set of linkages in
   which the root is minimal (the ones for which it's not have already been
   eliminated).  Now, consider one of the children of the root in precisely
   the way we just considered the root.  The same argument holds.  The only
@@ -215,9 +215,9 @@ Problems with this stuff:
      reason, other than just the fact that the dictionary entries are
      more complex than they used to be.   The number of linkages has also
      increased significantly.
-  
+
   2) Each element of an and list must be attached through only one word.
-     This disallows "there is time enough and space enough for both of us", 
+     This disallows "there is time enough and space enough for both of us",
      and many other reasonable sounding things.  The combinatorial
      explosion that would occur if you allowed two different connection
      points would be tremendous, and the number of solutions would also
@@ -241,7 +241,7 @@ Accepted (4 linkages, 4 with no P.P. violations) at stage 1
        +-----CC-----+------Wd------+-d^^*i^-+     |      
   +-Wd-+Spi+-Pa+    |   +--Ds-+d^^*+   +-Ds-+     +--Pv-+
   |    |   |   |    |   |     |    |   |    |     |     |
-///// I.p am big.a and the bike.n and the car.n were broken 
+///// I.p am big.a and the bike.n and the car.n were broken
 
        /////          RW      <---RW---->  RW        /////
        /////          Wd      <---Wd---->  Wd        I.p
@@ -257,7 +257,7 @@ Accepted (4 linkages, 4 with no P.P. violations) at stage 1
        were           Pv      <---Pv---->  Pv        broken
 
 (press return for another)
-> 
+>
   Linkage 2, cost vector = (0, 0, 18)
 
                                    +------Spx-----+      
@@ -281,106 +281,106 @@ Accepted (4 linkages, 4 with no P.P. violations) at stage 1
 
 */
 
-static int STAT_N_disjuncts;      /* keeping statistics */
+static int STAT_N_disjuncts;	  /* keeping statistics */
 static int STAT_calls_to_equality_test;
 
 static void init_LT(Sentence sent) {
-    sent->and_data.LT_bound = 20;
-    sent->and_data.LT_size = 0;
-    sent->and_data.label_table = 
-	(Disjunct **) xalloc(sent->and_data.LT_bound * sizeof(Disjunct *));
+	sent->and_data.LT_bound = 20;
+	sent->and_data.LT_size = 0;
+	sent->and_data.label_table =
+		(Disjunct **) xalloc(sent->and_data.LT_bound * sizeof(Disjunct *));
 }
 
 static void grow_LT(Sentence sent) {
-    space_in_use -= sent->and_data.LT_bound * sizeof(Disjunct *);
-    sent->and_data.LT_bound = (3*sent->and_data.LT_bound)/2;
-    sent->and_data.label_table = 
-	(Disjunct **) realloc((void *)sent->and_data.label_table,
-			      sent->and_data.LT_bound * sizeof(Disjunct *));
-    space_in_use += sent->and_data.LT_bound * sizeof(Disjunct *);
-    if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
-    if (sent->and_data.label_table == NULL) {
-	printf("Ran out of space reallocing the label table\n");
-	exit(1);
-    }
+	space_in_use -= sent->and_data.LT_bound * sizeof(Disjunct *);
+	sent->and_data.LT_bound = (3*sent->and_data.LT_bound)/2;
+	sent->and_data.label_table =
+		(Disjunct **) realloc((void *)sent->and_data.label_table,
+							  sent->and_data.LT_bound * sizeof(Disjunct *));
+	space_in_use += sent->and_data.LT_bound * sizeof(Disjunct *);
+	if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
+	if (sent->and_data.label_table == NULL) {
+		printf("Ran out of space reallocing the label table\n");
+		exit(1);
+	}
 }
-    
+
 static void init_HT(Sentence sent) {
-    int i;
-    for (i=0; i<HT_SIZE; i++) {
-	sent->and_data.hash_table[i] = NULL;
-    }
+	int i;
+	for (i=0; i<HT_SIZE; i++) {
+		sent->and_data.hash_table[i] = NULL;
+	}
 }
 
 static void free_HT(Sentence sent) {
-    int i;
-    Label_node * la, * la1;
-    for (i=0; i<HT_SIZE; i++) {
-	for (la=sent->and_data.hash_table[i]; la != NULL; la = la1) {
-	    la1 = la->next;
-	    xfree((char *)la, sizeof(Label_node));
+	int i;
+	Label_node * la, * la1;
+	for (i=0; i<HT_SIZE; i++) {
+		for (la=sent->and_data.hash_table[i]; la != NULL; la = la1) {
+			la1 = la->next;
+			xfree((char *)la, sizeof(Label_node));
+		}
+		sent->and_data.hash_table[i] = NULL;
 	}
-	sent->and_data.hash_table[i] = NULL;
-    }
 }
 
 static void free_LT(Sentence sent) {
-    int i;
-    for (i=0; i<sent->and_data.LT_size; i++) {
-	free_disjuncts(sent->and_data.label_table[i]);
-    }
-    xfree((char *) sent->and_data.label_table, 
-	  sent->and_data.LT_bound * sizeof(Disjunct*));
-    sent->and_data.LT_bound = 0;
-    sent->and_data.LT_size = 0;
-    sent->and_data.label_table = NULL;
+	int i;
+	for (i=0; i<sent->and_data.LT_size; i++) {
+		free_disjuncts(sent->and_data.label_table[i]);
+	}
+	xfree((char *) sent->and_data.label_table,
+		  sent->and_data.LT_bound * sizeof(Disjunct*));
+	sent->and_data.LT_bound = 0;
+	sent->and_data.LT_size = 0;
+	sent->and_data.label_table = NULL;
 }
 
 void free_AND_tables(Sentence sent) {
-    free_LT(sent);
-    free_HT(sent);
+	free_LT(sent);
+	free_HT(sent);
 }
 
 void initialize_conjunction_tables(Sentence sent) {
-    int i;
-    sent->and_data.LT_bound = 0;
-    sent->and_data.LT_size = 0;
-    sent->and_data.label_table = NULL;
-    for (i=0; i<HT_SIZE; i++) {
-	sent->and_data.hash_table[i] = NULL;
-    }
+	int i;
+	sent->and_data.LT_bound = 0;
+	sent->and_data.LT_size = 0;
+	sent->and_data.label_table = NULL;
+	for (i=0; i<HT_SIZE; i++) {
+		sent->and_data.hash_table[i] = NULL;
+	}
 }
 
 static int and_connector_hash(Connector * c, int i) {
 /* This hash function that takes a connector and a seed value i.
    It only looks at the leading upper case letters of
    the string, and the label.  This ensures that if two connectors
-   match, then they must hash to the same place. 
+   match, then they must hash to the same place.
 */
-    char * s;
-    s = c->string;
+	char * s;
+	s = c->string;
 
-    i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
-    while(isupper((int)*s)) {
-	i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-	s++;
-    }
-    return (i & (HT_SIZE-1));
+	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
+	while(isupper((int)*s)) {
+		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		s++;
+	}
+	return (i & (HT_SIZE-1));
 }
 
 static int and_hash_disjunct(Disjunct *d) {
 /* This is a hash function for disjuncts */
-    int i;
-    Connector *e;
-    i = 0;
-    for (e = d->left ; e != NULL; e = e->next) {
-	i = and_connector_hash(e, i);
-    }
-    i = i + (i<<1) + randtable[i & (RTSIZE-1)];
-    for (e = d->right ; e != NULL; e = e->next) {
-	i = and_connector_hash(e, i);
-    }
-    return (i & (HT_SIZE-1));
+	int i;
+	Connector *e;
+	i = 0;
+	for (e = d->left ; e != NULL; e = e->next) {
+		i = and_connector_hash(e, i);
+	}
+	i = i + (i<<1) + randtable[i & (RTSIZE-1)];
+	for (e = d->right ; e != NULL; e = e->next) {
+		i = and_connector_hash(e, i);
+	}
+	return (i & (HT_SIZE-1));
 }
 
 
@@ -389,17 +389,17 @@ static int is_appropriate(Sentence sent, Disjunct * d) {
    Check here that the connectors are from some small set.
    This will disallow, for example "the and their dog ran".
 */
-    Connector * c;
+	Connector * c;
 
-    if (sent->dict->andable_connector_set == NULL) return TRUE;
-    /* if no set, then everything is considered andable */
-    for (c = d->right; c!=NULL; c=c->next) {
-	if (!match_in_connector_set(sent->dict->andable_connector_set, c, '+')) return FALSE;
-    }
-    for (c = d->left; c!=NULL; c=c->next) {
-	if (!match_in_connector_set(sent->dict->andable_connector_set, c, '-')) return FALSE;
-    }
-    return TRUE;
+	if (sent->dict->andable_connector_set == NULL) return TRUE;
+	/* if no set, then everything is considered andable */
+	for (c = d->right; c!=NULL; c=c->next) {
+		if (!match_in_connector_set(sent->dict->andable_connector_set, c, '+')) return FALSE;
+	}
+	for (c = d->left; c!=NULL; c=c->next) {
+		if (!match_in_connector_set(sent->dict->andable_connector_set, c, '-')) return FALSE;
+	}
+	return TRUE;
 }
 
 static int connector_types_equal(Connector * c1, Connector * c2) {
@@ -407,16 +407,16 @@ static int connector_types_equal(Connector * c1, Connector * c2) {
    the same label, and the initial upper case letters of their
    strings match.
 */
-    char * s, * t;
-    if (c1->label != c2->label) return FALSE;
-    s = c1->string;
-    t = c2->string;
-    while(isupper((int)*s) || isupper((int)*t)) {
-	if (*s != *t) return FALSE;
-	s++;
-	t++;
-    }
-    return TRUE;
+	char * s, * t;
+	if (c1->label != c2->label) return FALSE;
+	s = c1->string;
+	t = c2->string;
+	while(isupper((int)*s) || isupper((int)*t)) {
+		if (*s != *t) return FALSE;
+		s++;
+		t++;
+	}
+	return TRUE;
 }
 
 static int disjunct_types_equal(Disjunct * d1, Disjunct * d2) {
@@ -427,25 +427,25 @@ static int disjunct_types_equal(Disjunct * d1, Disjunct * d2) {
 
    This returns TRUE if they are of the same type.
 */
-    Connector *e1, *e2;
+	Connector *e1, *e2;
 
-    e1 = d1->left;
-    e2 = d2->left;
-    while((e1!=NULL) && (e2!=NULL)) {
-	if (!connector_types_equal(e1,e2)) break;
-	e1 = e1->next;
-	e2 = e2->next;
-    }
-    if ((e1!=NULL) || (e2!=NULL)) return FALSE;
-    e1 = d1->right;
-    e2 = d2->right;
-    while((e1!=NULL) && (e2!=NULL)) {
-	if (!connector_types_equal(e1,e2)) break;
-	e1 = e1->next;
-	e2 = e2->next;
-    }
-    if ((e1!=NULL) || (e2!=NULL)) return FALSE;
-    return TRUE;
+	e1 = d1->left;
+	e2 = d2->left;
+	while((e1!=NULL) && (e2!=NULL)) {
+		if (!connector_types_equal(e1,e2)) break;
+		e1 = e1->next;
+		e2 = e2->next;
+	}
+	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	e1 = d1->right;
+	e2 = d2->right;
+	while((e1!=NULL) && (e2!=NULL)) {
+		if (!connector_types_equal(e1,e2)) break;
+		e1 = e1->next;
+		e2 = e2->next;
+	}
+	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	return TRUE;
 }
 
 char * intersect_strings(Sentence sent, char * s, char * t) {
@@ -454,41 +454,41 @@ char * intersect_strings(Sentence sent, char * s, char * t) {
    Otherwise a new string for the GCD is xalloced and put on the
    "free later" list.
 */
-    int len, i, j, d;
-    char * u, *u0, *s0;
-    if (strcmp(s,t)==0) return s;  /* would work without this */
-    i = strlen(s);
-    j = strlen(t);
-    if (j > i) {
-	u = s; s = t; t = u;
-	len = j;
-    } else {
-	len = i;
-    }
-    /* s is now the longer (at least not the shorter) string */
-    /* and len is its length */
-    u0 = u = (char *) xalloc(len+1);
-    d = 0;
-    s0 = s;
-    while (*t != '\0') {
-	if ((*s == *t) || (*t == '*')) {
-	    *u = *s;
+	int len, i, j, d;
+	char * u, *u0, *s0;
+	if (strcmp(s,t)==0) return s;  /* would work without this */
+	i = strlen(s);
+	j = strlen(t);
+	if (j > i) {
+		u = s; s = t; t = u;
+		len = j;
 	} else {
-	    d++;
-	    if (*s == '*') *u = *t;
-	    else *u = '^';
+		len = i;
 	}
-	s++; t++; u++;
-    }
-    if (d==0) {
-	xfree(u0, len+1);
-	return s0;
-    } else {
-	strcpy(u, s);   /* get the remainder of s */
-	u = string_set_add(u0, sent->string_set);
-	xfree(u0, len+1);
-	return u;
-    }
+	/* s is now the longer (at least not the shorter) string */
+	/* and len is its length */
+	u0 = u = (char *) xalloc(len+1);
+	d = 0;
+	s0 = s;
+	while (*t != '\0') {
+		if ((*s == *t) || (*t == '*')) {
+			*u = *s;
+		} else {
+			d++;
+			if (*s == '*') *u = *t;
+			else *u = '^';
+		}
+		s++; t++; u++;
+	}
+	if (d==0) {
+		xfree(u0, len+1);
+		return s0;
+	} else {
+		strcpy(u, s);   /* get the remainder of s */
+		u = string_set_add(u0, sent->string_set);
+		xfree(u0, len+1);
+		return u;
+	}
 }
 
 static int connectors_equal_AND(Connector *c1, Connector *c2) {
@@ -497,9 +497,9 @@ static int connectors_equal_AND(Connector *c1, Connector *c2) {
    exactly the same connectors (including lower case chars).
    (priorities ignored).
 */
-    return (c1->label == c2->label) &&
-	   (c1->multi == c2->multi) && 
-           (strcmp(c1->string, c2->string) == 0);
+	return (c1->label == c2->label) &&
+		   (c1->multi == c2->multi) &&
+		   (strcmp(c1->string, c2->string) == 0);
 }
 
 
@@ -507,25 +507,25 @@ static int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2) {
 /* Return true if the disjuncts are equal (ignoring priority fields)
    and the string of the disjunct.
 */
-    Connector *e1, *e2;
-    STAT_calls_to_equality_test++;
-    e1 = d1->left;
-    e2 = d2->left;
-    while((e1!=NULL) && (e2!=NULL)) {
-	if (!connectors_equal_AND(e1, e2)) break;
-	e1 = e1->next;
-	e2 = e2->next;
-    }
-    if ((e1!=NULL) || (e2!=NULL)) return FALSE;
-    e1 = d1->right;
-    e2 = d2->right;
-    while((e1!=NULL) && (e2!=NULL)) {
-	if (!connectors_equal_AND(e1, e2)) break;
-	e1 = e1->next;
-	e2 = e2->next;
-    }
-    if ((e1!=NULL) || (e2!=NULL)) return FALSE;
-    return TRUE;
+	Connector *e1, *e2;
+	STAT_calls_to_equality_test++;
+	e1 = d1->left;
+	e2 = d2->left;
+	while((e1!=NULL) && (e2!=NULL)) {
+		if (!connectors_equal_AND(e1, e2)) break;
+		e1 = e1->next;
+		e2 = e2->next;
+	}
+	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	e1 = d1->right;
+	e2 = d2->right;
+	while((e1!=NULL) && (e2!=NULL)) {
+		if (!connectors_equal_AND(e1, e2)) break;
+		e1 = e1->next;
+		e2 = e2->next;
+	}
+	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	return TRUE;
 }
 
 static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d2) {
@@ -533,112 +533,112 @@ static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d
    It assumes that the disjuncts are of the same type, so the
    GCD will not be empty.
 */
-    Disjunct * d;
-    Connector *c1, *c2, *c;
-    d = copy_disjunct(d1);
-    c = d->left;
-    c1 = d1->left;
-    c2 = d2->left;
-    while (c1!=NULL) {
-	c->string = intersect_strings(sent, c1->string, c2->string);
-	c->multi = (c1->multi) && (c2->multi);
-	c = c->next; c1 = c1->next; c2 = c2->next;
-    }
-    c = d->right;
-    c1 = d1->right;
-    c2 = d2->right;
-    while (c1!=NULL) {
-	c->string = intersect_strings(sent, c1->string, c2->string);
-	c->multi = (c1->multi) && (c2->multi);
-	c = c->next; c1 = c1->next; c2 = c2->next;
-    }
-    return d;
+	Disjunct * d;
+	Connector *c1, *c2, *c;
+	d = copy_disjunct(d1);
+	c = d->left;
+	c1 = d1->left;
+	c2 = d2->left;
+	while (c1!=NULL) {
+		c->string = intersect_strings(sent, c1->string, c2->string);
+		c->multi = (c1->multi) && (c2->multi);
+		c = c->next; c1 = c1->next; c2 = c2->next;
+	}
+	c = d->right;
+	c1 = d1->right;
+	c2 = d2->right;
+	while (c1!=NULL) {
+		c->string = intersect_strings(sent, c1->string, c2->string);
+		c->multi = (c1->multi) && (c2->multi);
+		c = c->next; c1 = c1->next; c2 = c2->next;
+	}
+	return d;
 }
 
 static void put_disjunct_into_table(Sentence sent, Disjunct *d) {
 /* (1) look for the given disjunct in the table structures
-       if it's already in the table structures, do nothing
+	   if it's already in the table structures, do nothing
    (2) otherwise make a copy of it, and put it into the table structures
    (3) also put all of the GCDs of this disjunct with all of the
-       other matching disjuncts into the table.
+	   other matching disjuncts into the table.
 
    The costs are set to zero.
    Note that this has no effect on disjunct d.
 */
-    Disjunct *d1=NULL, *d2, *di, *d_copy;
-    Label_node * lp;
-    int h, k;
+	Disjunct *d1=NULL, *d2, *di, *d_copy;
+	Label_node * lp;
+	int h, k;
 
-    h = and_hash_disjunct(d);
+	h = and_hash_disjunct(d);
 
-    for (lp = sent->and_data.hash_table[h]; lp != NULL; lp = lp->next) {
-	d1 = sent->and_data.label_table[lp->label];
-	if (disjunct_types_equal(d,d1)) break;
-    }
-    if (lp != NULL) {
-	/* there is already a label for disjuncts of this type */
-	/* d1 points to the list of disjuncts of this type already there */
-	while(d1 != NULL) {
-	    if (disjuncts_equal_AND(d1, d)) return;
-	    d1 = d1->next;
+	for (lp = sent->and_data.hash_table[h]; lp != NULL; lp = lp->next) {
+		d1 = sent->and_data.label_table[lp->label];
+		if (disjunct_types_equal(d,d1)) break;
 	}
-	/* now we must put the d disjunct in there, and all of the GCDs of
-           it with the ones already there.
+	if (lp != NULL) {
+		/* there is already a label for disjuncts of this type */
+		/* d1 points to the list of disjuncts of this type already there */
+		while(d1 != NULL) {
+			if (disjuncts_equal_AND(d1, d)) return;
+			d1 = d1->next;
+		}
+		/* now we must put the d disjunct in there, and all of the GCDs of
+		   it with the ones already there.
 
-	   This is done as follows.  We scan through the list of disjuncts
-           computing the gcd of the new one with each of the others, putting
-           the resulting disjuncts onto another list rooted at d2.
-	   Now insert d into the the list already there.  Now for each
-           one on the d2 list, put it in if it isn't already there.
+		   This is done as follows.  We scan through the list of disjuncts
+		   computing the gcd of the new one with each of the others, putting
+		   the resulting disjuncts onto another list rooted at d2.
+		   Now insert d into the the list already there.  Now for each
+		   one on the d2 list, put it in if it isn't already there.
 
-	   Here we're making use of the following theorem: Given a
-           collection of sets s1, s2 ... sn closed under intersection,
-	   to if we add a new set s to the collection and also add
-           all the intersections between s and s1...sn to the collection,
-           then the collection is still closed under intersection.
+		   Here we're making use of the following theorem: Given a
+		   collection of sets s1, s2 ... sn closed under intersection,
+		   to if we add a new set s to the collection and also add
+		   all the intersections between s and s1...sn to the collection,
+		   then the collection is still closed under intersection.
 
-	   Use a Venn diagram to prove this theorem.
+		   Use a Venn diagram to prove this theorem.
 
-	*/
-	d_copy = copy_disjunct(d);
-	d_copy->cost = 0;
-	k = lp->label;
-	d2 = NULL;
-	for (d1=sent->and_data.label_table[k]; d1!=NULL; d1 = d1->next) {
-	    di = intersect_disjuncts(sent, d_copy, d1);
-	    di->next = d2;
-	    d2 = di;
-	}
-	d_copy->next = sent->and_data.label_table[k];
-	sent->and_data.label_table[k] = d_copy;
-	for (;d2 != NULL; d2 = di) {
-	    di = d2->next;
-	    for (d1 = sent->and_data.label_table[k]; d1 != NULL; d1 = d1->next) {
-		if (disjuncts_equal_AND(d1, d2)) break;
-	    }
-	    if (d1 == NULL) {
+		*/
+		d_copy = copy_disjunct(d);
+		d_copy->cost = 0;
+		k = lp->label;
+		d2 = NULL;
+		for (d1=sent->and_data.label_table[k]; d1!=NULL; d1 = d1->next) {
+			di = intersect_disjuncts(sent, d_copy, d1);
+			di->next = d2;
+			d2 = di;
+		}
+		d_copy->next = sent->and_data.label_table[k];
+		sent->and_data.label_table[k] = d_copy;
+		for (;d2 != NULL; d2 = di) {
+			di = d2->next;
+			for (d1 = sent->and_data.label_table[k]; d1 != NULL; d1 = d1->next) {
+				if (disjuncts_equal_AND(d1, d2)) break;
+			}
+			if (d1 == NULL) {
+				STAT_N_disjuncts++;
+				d2->next = sent->and_data.label_table[k];
+				sent->and_data.label_table[k] = d2;
+			} else {
+				d2->next = NULL;
+				free_disjuncts(d2);
+			}
+		}
+	} else {
+		/* create a new label for disjuncts of this type */
+		d_copy = copy_disjunct(d);
+		d_copy->cost = 0;
+		d_copy->next = NULL;
+		if (sent->and_data.LT_size == sent->and_data.LT_bound) grow_LT(sent);
+		lp = (Label_node *) xalloc(sizeof(Label_node));
+		lp->next = sent->and_data.hash_table[h];
+		sent->and_data.hash_table[h] = lp;
+		lp->label = sent->and_data.LT_size;
+		sent->and_data.label_table[sent->and_data.LT_size] = d_copy;
+		sent->and_data.LT_size++;
 		STAT_N_disjuncts++;
-		d2->next = sent->and_data.label_table[k];
-		sent->and_data.label_table[k] = d2;
-	    } else {
-		d2->next = NULL;
-		free_disjuncts(d2);
-	    }
 	}
-    } else {
-	/* create a new label for disjuncts of this type */
-	d_copy = copy_disjunct(d);
-	d_copy->cost = 0;
-	d_copy->next = NULL;
-	if (sent->and_data.LT_size == sent->and_data.LT_bound) grow_LT(sent);
-	lp = (Label_node *) xalloc(sizeof(Label_node));
-	lp->next = sent->and_data.hash_table[h];
-	sent->and_data.hash_table[h] = lp;
-	lp->label = sent->and_data.LT_size;
-	sent->and_data.label_table[sent->and_data.LT_size] = d_copy;
-	sent->and_data.LT_size++;
-	STAT_N_disjuncts++;
-    }
 }
 
 
@@ -650,39 +650,39 @@ static void extract_all_fat_links(Sentence sent, Disjunct * d) {
 
     The function has no side effects on d.
  */
-    Connector * cl, * cr, *tl, *tr;
-    tl = d->left;
-    d->left = NULL;
-    for (cr = d->right; cr!=NULL; cr = cr->next) {
-	tr = cr->next;
-	cr->next = NULL;
-	if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
-	cr->next = tr;
-    }
-    d->left = tl;
-
-    tr = d->right;
-    d->right = NULL;
-    for (cl = d->left; cl!=NULL; cl = cl->next) {
-	tl = cl->next;
-	cl->next = NULL;
-	if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
-	cl->next = tl;
-    }
-    d->right = tr;
-
-    for (cl = d->left; cl!=NULL; cl = cl->next) {
+	Connector * cl, * cr, *tl, *tr;
+	tl = d->left;
+	d->left = NULL;
 	for (cr = d->right; cr!=NULL; cr = cr->next) {
-	    tl = cl->next;
-	    tr = cr->next;
-	    cl->next = cr->next = NULL;
-
-	    if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
-
-	    cl->next = tl;
-	    cr->next = tr;
+		tr = cr->next;
+		cr->next = NULL;
+		if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
+		cr->next = tr;
 	}
-    }
+	d->left = tl;
+
+	tr = d->right;
+	d->right = NULL;
+	for (cl = d->left; cl!=NULL; cl = cl->next) {
+		tl = cl->next;
+		cl->next = NULL;
+		if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
+		cl->next = tl;
+	}
+	d->right = tr;
+
+	for (cl = d->left; cl!=NULL; cl = cl->next) {
+		for (cr = d->right; cr!=NULL; cr = cr->next) {
+			tl = cl->next;
+			tr = cr->next;
+			cl->next = cr->next = NULL;
+
+			if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
+
+			cl->next = tl;
+			cr->next = tr;
+		}
+	}
 }
 
 static char * stick_in_one_connector(char *s, Connector *c, int len) {
@@ -691,20 +691,20 @@ static char * stick_in_one_connector(char *s, Connector *c, int len) {
    Then put in a character for the multi match bit of c.
    Then put in a '\0', and return a pointer to this place.
 */
-    char * t;
-    for (t = c->string; isupper((int)*t); t++)
-      ;
-    while (*t != '\0') {
-	*s++ = *t++;
-	len--;
-    }
-    while (len > 0) {
-	*s++ = '*';
-	len--;
-    }
-    if (c->multi) *s++ = '*'; else *s++ = '^';  /* check this sometime */
-    *s = '\0';
-    return s;
+	char * t;
+	for (t = c->string; isupper((int)*t); t++)
+	  ;
+	while (*t != '\0') {
+		*s++ = *t++;
+		len--;
+	}
+	while (len > 0) {
+		*s++ = '*';
+		len--;
+	}
+	if (c->multi) *s++ = '*'; else *s++ = '^';  /* check this sometime */
+	*s = '\0';
+	return s;
 }
 
 static void compute_matchers_for_a_label(Sentence sent, int k) {
@@ -714,93 +714,93 @@ static void compute_matchers_for_a_label(Sentence sent, int k) {
 
    The only hard part is finding the length of each of the strings
    so that "*" can be put in.  A better explanation will have to wait.
-*/   
+*/
 
-    int * lengths;
-    int N_connectors, i, j, tot_len;
-    Connector * c;
-    Disjunct * d;
-    char *s, *os;
+	int * lengths;
+	int N_connectors, i, j, tot_len;
+	Connector * c;
+	Disjunct * d;
+	char *s, *os;
 
-    d = sent->and_data.label_table[k];
+	d = sent->and_data.label_table[k];
 
-    N_connectors = 0;
-    for (c=d->left; c != NULL; c = c->next) N_connectors ++;
-    for (c=d->right; c != NULL; c = c->next) N_connectors ++;
+	N_connectors = 0;
+	for (c=d->left; c != NULL; c = c->next) N_connectors ++;
+	for (c=d->right; c != NULL; c = c->next) N_connectors ++;
 
-    lengths = (int *) xalloc(N_connectors*sizeof(int));
-    for (i=0; i<N_connectors; i++) lengths[i] = 0;
-    while(d != NULL) {
-	i = 0;
-	for (c=d->left; c != NULL; c = c->next) {
-	    s = c->string;
-	    while(isupper((int)*s)) s++;
-	    j = strlen(s);
-	    if (j > lengths[i]) lengths[i] = j;
-	    i++;
+	lengths = (int *) xalloc(N_connectors*sizeof(int));
+	for (i=0; i<N_connectors; i++) lengths[i] = 0;
+	while(d != NULL) {
+		i = 0;
+		for (c=d->left; c != NULL; c = c->next) {
+			s = c->string;
+			while(isupper((int)*s)) s++;
+			j = strlen(s);
+			if (j > lengths[i]) lengths[i] = j;
+			i++;
+		}
+		for (c=d->right; c != NULL; c = c->next) {
+			s = c->string;
+			while(isupper((int)*s)) s++;
+			j = strlen(s);
+			if (j > lengths[i]) lengths[i] = j;
+			i++;
+		}
+		d = d->next;
 	}
-	for (c=d->right; c != NULL; c = c->next) {
-	    s = c->string;
-	    while(isupper((int)*s)) s++;
-	    j = strlen(s);
-	    if (j > lengths[i]) lengths[i] = j;
-	    i++;
-	}
-	d = d->next;
-    }
 
-    tot_len = 0;
-    for (i=0; i<N_connectors; i++) tot_len += lengths[i]+1;
-                     /* +1 is for the multi-match character */
-    for (d = sent->and_data.label_table[k]; d!= NULL; d = d->next) {
-	i=0;
-	os = s = (char *) xalloc(tot_len+1);
-	for (c=d->left; c != NULL; c = c->next) {
-	    s = stick_in_one_connector(s, c, lengths[i]);
-	    i++;
+	tot_len = 0;
+	for (i=0; i<N_connectors; i++) tot_len += lengths[i]+1;
+					 /* +1 is for the multi-match character */
+	for (d = sent->and_data.label_table[k]; d!= NULL; d = d->next) {
+		i=0;
+		os = s = (char *) xalloc(tot_len+1);
+		for (c=d->left; c != NULL; c = c->next) {
+			s = stick_in_one_connector(s, c, lengths[i]);
+			i++;
+		}
+		for (c=d->right; c != NULL; c = c->next) {
+			s = stick_in_one_connector(s, c, lengths[i]);
+			i++;
+		}
+		s = string_set_add(os, sent->string_set);
+		xfree(os, tot_len+1);
+		d->string = s;
 	}
-	for (c=d->right; c != NULL; c = c->next) {
-	    s = stick_in_one_connector(s, c, lengths[i]);
-	    i++;
-	}
-	s = string_set_add(os, sent->string_set);
-	xfree(os, tot_len+1);
-	d->string = s;
-    }
-    xfree((char *)lengths, N_connectors*sizeof(int));
+	xfree((char *)lengths, N_connectors*sizeof(int));
 }
 
 void build_conjunction_tables(Sentence sent) {
 /* Goes through the entire sentence and builds the fat link tables
    for all the disjuncts of all the words.
 */
-    int w;
-    int k;
-    Disjunct * d;
+	int w;
+	int k;
+	Disjunct * d;
 
-    init_HT(sent);
-    init_LT(sent);
-    STAT_N_disjuncts = STAT_calls_to_equality_test = 0;
+	init_HT(sent);
+	init_LT(sent);
+	STAT_N_disjuncts = STAT_calls_to_equality_test = 0;
 
-    for (w=0; w<sent->length; w++) {
-	for (d=sent->word[w].d; d!=NULL; d=d->next) {
-	    extract_all_fat_links(sent, d);
+	for (w=0; w<sent->length; w++) {
+		for (d=sent->word[w].d; d!=NULL; d=d->next) {
+			extract_all_fat_links(sent, d);
+		}
 	}
-    }
 
-    for (k=0; k<sent->and_data.LT_size; k++) {
-	compute_matchers_for_a_label(sent, k);
-    }
+	for (k=0; k<sent->and_data.LT_size; k++) {
+		compute_matchers_for_a_label(sent, k);
+	}
 }
 
 void print_AND_statistics(Sentence sent) {
-    printf("Number of disjunct types (labels): %d\n", sent->and_data.LT_size);
-    printf("Number of disjuncts in the table: %d\n", STAT_N_disjuncts);
-    if (sent->and_data.LT_size != 0) {
-      printf("average list length: %f\n",
-	     (float)STAT_N_disjuncts/sent->and_data.LT_size);
-    }
-    printf("Number of equality tests: %d\n", STAT_calls_to_equality_test);
+	printf("Number of disjunct types (labels): %d\n", sent->and_data.LT_size);
+	printf("Number of disjuncts in the table: %d\n", STAT_N_disjuncts);
+	if (sent->and_data.LT_size != 0) {
+	  printf("average list length: %f\n",
+			 (float)STAT_N_disjuncts/sent->and_data.LT_size);
+	}
+	printf("Number of equality tests: %d\n", STAT_calls_to_equality_test);
 }
 
 static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) {
@@ -808,36 +808,36 @@ static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) 
    the table data structures.  The label field and the string field
    are filled in appropriately.  Priority is set to UP_priority.
 */
-    int h;
-    Disjunct * d1=NULL;
-    Label_node * lp;
+	int h;
+	Disjunct * d1=NULL;
+	Label_node * lp;
 
-    h = and_hash_disjunct(d);
+	h = and_hash_disjunct(d);
 
-    for (lp = sent->and_data.hash_table[h]; lp != NULL; lp = lp->next) {
-	d1 = sent->and_data.label_table[lp->label];
-	if (disjunct_types_equal(d,d1)) break;
-    }
-    assert(lp!=NULL, "A disjunct I inserted was not there. (1)");
+	for (lp = sent->and_data.hash_table[h]; lp != NULL; lp = lp->next) {
+		d1 = sent->and_data.label_table[lp->label];
+		if (disjunct_types_equal(d,d1)) break;
+	}
+	assert(lp!=NULL, "A disjunct I inserted was not there. (1)");
 /*
   I don't know what these lines were for.  I replaced them by
   the above assertion.
-    if (lp == NULL) {
-	printf("error: A disjunct I inserted was not there\n");
-        lp = lp->next;  (to force an error)
-    }
+	if (lp == NULL) {
+		printf("error: A disjunct I inserted was not there\n");
+		lp = lp->next;  (to force an error)
+	}
 */
-    while(d1 != NULL) {
-	if (disjuncts_equal_AND(d1, d)) break;
-	d1 = d1->next;
-    }
+	while(d1 != NULL) {
+		if (disjuncts_equal_AND(d1, d)) break;
+		d1 = d1->next;
+	}
 
-    assert(d1!=NULL, "A disjunct I inserted was not there. (2)");
-    
-    c->label = lp->label;
-    c->string = d1->string;
-    c->priority = UP_priority;
-    c->multi = FALSE;
+	assert(d1!=NULL, "A disjunct I inserted was not there. (2)");
+
+	c->label = lp->label;
+	c->string = d1->string;
+	c->priority = UP_priority;
+	c->multi = FALSE;
 }
 
 
@@ -848,98 +848,98 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d) {
    fat link, in two possible positions.  Does not effect d.
    The cost of d is inherited by all of the disjuncts in the result.
 */
-    Connector * cl, * cr, *tl, *tr, *wc, work_connector;
-    Disjunct *d1, *wd, work_disjunct, *d_list;
-    if (d==NULL) return NULL;
-    wd = & work_disjunct;
-    wc = init_connector(& work_connector);
-    d_list = NULL;
-    *wd = *d;
-    tl = d->left;
-    d->left = NULL;
-    for (cr = d->right; cr!=NULL; cr = cr->next) {
-	tr = cr->next;
-	cr->next = NULL;
-	if (is_appropriate(sent, d)) {
-	    connector_for_disjunct(sent, d, wc);
-	    wd->left = tl;
-	    wd->right = wc;
-	    wc->next = tr;
-	    d1 = copy_disjunct(wd);
-	    d1->next = d_list;
-	    d_list = d1;
-	    wd->left = wc;
-	    wc->next = tl;
-	    wd->right = tr;
-	    d1 = copy_disjunct(wd);
-	    d1->next = d_list;
-	    d_list = d1;
-	}
-	cr->next = tr;
-    }
-    d->left = tl;
-    
-    tr = d->right;
-    d->right = NULL;
-    for (cl = d->left; cl!=NULL; cl = cl->next) {
-	tl = cl->next;
-	cl->next = NULL;
-	if (is_appropriate(sent, d)) {
-	    connector_for_disjunct(sent, d, wc);
-	    wd->left = tl;
-	    wd->right = wc;
-	    wc->next = tr;
-	    d1 = copy_disjunct(wd);
-	    d1->next = d_list;
-	    d_list = d1;
-	    wd->left = wc;
-	    wc->next = tl;
-	    wd->right = tr;
-	    d1 = copy_disjunct(wd);
-	    d1->next = d_list;
-	    d_list = d1;
-	}
-	cl->next = tl;
-    }
-    d->right = tr;
-    
-    for (cl = d->left; cl!=NULL; cl = cl->next) {
+	Connector * cl, * cr, *tl, *tr, *wc, work_connector;
+	Disjunct *d1, *wd, work_disjunct, *d_list;
+	if (d==NULL) return NULL;
+	wd = & work_disjunct;
+	wc = init_connector(& work_connector);
+	d_list = NULL;
+	*wd = *d;
+	tl = d->left;
+	d->left = NULL;
 	for (cr = d->right; cr!=NULL; cr = cr->next) {
-	    tl = cl->next;
-	    tr = cr->next;
-	    cl->next = cr->next = NULL;
-	    if (is_appropriate(sent, d)) {
-		connector_for_disjunct(sent, d, wc);
-		wd->left = tl;
-		wd->right = wc;
-		wc->next = tr;
-		d1 = copy_disjunct(wd);
-		d1->next = d_list;
-		d_list = d1;
-		wd->left = wc;
-		wc->next = tl;
-		wd->right = tr;
-		d1 = copy_disjunct(wd);
-		d1->next = d_list;
-		d_list = d1;
-	    }
-	    cl->next = tl;
-	    cr->next = tr;
+		tr = cr->next;
+		cr->next = NULL;
+		if (is_appropriate(sent, d)) {
+			connector_for_disjunct(sent, d, wc);
+			wd->left = tl;
+			wd->right = wc;
+			wc->next = tr;
+			d1 = copy_disjunct(wd);
+			d1->next = d_list;
+			d_list = d1;
+			wd->left = wc;
+			wc->next = tl;
+			wd->right = tr;
+			d1 = copy_disjunct(wd);
+			d1->next = d_list;
+			d_list = d1;
+		}
+		cr->next = tr;
 	}
-    }
-    return d_list;
+	d->left = tl;
+
+	tr = d->right;
+	d->right = NULL;
+	for (cl = d->left; cl!=NULL; cl = cl->next) {
+		tl = cl->next;
+		cl->next = NULL;
+		if (is_appropriate(sent, d)) {
+			connector_for_disjunct(sent, d, wc);
+			wd->left = tl;
+			wd->right = wc;
+			wc->next = tr;
+			d1 = copy_disjunct(wd);
+			d1->next = d_list;
+			d_list = d1;
+			wd->left = wc;
+			wc->next = tl;
+			wd->right = tr;
+			d1 = copy_disjunct(wd);
+			d1->next = d_list;
+			d_list = d1;
+		}
+		cl->next = tl;
+	}
+	d->right = tr;
+
+	for (cl = d->left; cl!=NULL; cl = cl->next) {
+		for (cr = d->right; cr!=NULL; cr = cr->next) {
+			tl = cl->next;
+			tr = cr->next;
+			cl->next = cr->next = NULL;
+			if (is_appropriate(sent, d)) {
+				connector_for_disjunct(sent, d, wc);
+				wd->left = tl;
+				wd->right = wc;
+				wc->next = tr;
+				d1 = copy_disjunct(wd);
+				d1->next = d_list;
+				d_list = d1;
+				wd->left = wc;
+				wc->next = tl;
+				wd->right = tr;
+				d1 = copy_disjunct(wd);
+				d1->next = d_list;
+				d_list = d1;
+			}
+			cl->next = tl;
+			cr->next = tr;
+		}
+	}
+	return d_list;
 }
 
 Disjunct * explode_disjunct_list(Sentence sent, Disjunct *d) {
 /*  This is basically a "map" function for build_fat_link_substitutions.
-     It's applied to the disjuncts for all regular words of the sentence.
+    It's applied to the disjuncts for all regular words of the sentence.
 */
    Disjunct *d1;
 
    d1 = NULL;
 
    for (; d!=NULL; d = d->next) {
-       d1 = catenate_disjuncts(d1, build_fat_link_substitutions(sent, d));
+	   d1 = catenate_disjuncts(d1, build_fat_link_substitutions(sent, d));
    }
    return d1;
 }
@@ -950,123 +950,123 @@ Disjunct * build_COMMA_disjunct_list(Sentence sent) {
     Does not deal with the ", and" issue, nor the other uses
     of comma.
 */
-    int lab;
-    Disjunct *d1, *d2, *d, work_disjunct, *wd;
-    Connector work_connector1, work_connector2, *c1, *c2;
-    Connector work_connector3, *c3;
-    c1 = init_connector(& work_connector1);
-    c2 = init_connector(& work_connector2);
-    c3 = init_connector(& work_connector3);
-    wd = & work_disjunct;
-    
-    d1 = NULL;  /* where we put the list we're building */
-    
-    c1->next = NULL;
-    c2->next = c3;
-    c3->next = NULL;
-    c1->priority = c3->priority = DOWN_priority;
-    c2->priority = UP_priority;
-    c1->multi = c2->multi = c3->multi = FALSE;
-    wd->left = c1;
-    wd->right = c2;
-    wd->string = ",";  /* *** fix this later?? */
-    wd->next = NULL;
-    wd->cost = 0;
-    for (lab = 0; lab < sent->and_data.LT_size; lab++) {
-	for (d = sent->and_data.label_table[lab]; d!=NULL; d=d->next) {
-	    c1->string = c2->string = c3->string = d->string;
-	    c1->label = c2->label = c3->label = lab;
-	    d2 = copy_disjunct(wd);
-	    d2->next = d1;
-	    d1 = d2;
+	int lab;
+	Disjunct *d1, *d2, *d, work_disjunct, *wd;
+	Connector work_connector1, work_connector2, *c1, *c2;
+	Connector work_connector3, *c3;
+	c1 = init_connector(& work_connector1);
+	c2 = init_connector(& work_connector2);
+	c3 = init_connector(& work_connector3);
+	wd = & work_disjunct;
+
+	d1 = NULL;  /* where we put the list we're building */
+
+	c1->next = NULL;
+	c2->next = c3;
+	c3->next = NULL;
+	c1->priority = c3->priority = DOWN_priority;
+	c2->priority = UP_priority;
+	c1->multi = c2->multi = c3->multi = FALSE;
+	wd->left = c1;
+	wd->right = c2;
+	wd->string = ",";  /* *** fix this later?? */
+	wd->next = NULL;
+	wd->cost = 0;
+	for (lab = 0; lab < sent->and_data.LT_size; lab++) {
+		for (d = sent->and_data.label_table[lab]; d!=NULL; d=d->next) {
+			c1->string = c2->string = c3->string = d->string;
+			c1->label = c2->label = c3->label = lab;
+			d2 = copy_disjunct(wd);
+			d2->next = d1;
+			d1 = d2;
+		}
 	}
-    }
-    return d1;
+	return d1;
 }
 
 Disjunct * build_AND_disjunct_list(Sentence sent, char * s) {
  /* Builds and returns a disjunct list for "and", "or" and "nor" */
  /* for each disjunct in the label_table, we build three disjuncts */
  /* this means that "Danny and Tycho and Billy" will be parsable in */
- /* two ways.  I don't know an easy way to avoid this */    
+ /* two ways.  I don't know an easy way to avoid this */
  /* the string is either "and", or "or", or "nor" at the moment */
 
-    int lab;
-    Disjunct *d_list, *d1, *d3, *d, *d_copy;
-    Connector *c1, *c2, *c3;
-    
-    d_list = NULL;  /* where we put the list we're building */
-    
-    for (lab = 0; lab < sent->and_data.LT_size; lab++) {
-	for (d = sent->and_data.label_table[lab]; d!=NULL; d=d->next) {
-	    d1 = build_fat_link_substitutions(sent, d);
-	    d_copy = copy_disjunct(d);  /* also include the thing itself! */
-	    d_copy->next = d1;
-	    d1 = d_copy;
-	    for(;d1 != NULL; d1 = d3) {
-		d3 = d1->next;
+	int lab;
+	Disjunct *d_list, *d1, *d3, *d, *d_copy;
+	Connector *c1, *c2, *c3;
 
-		c1 = init_connector((Connector *) xalloc(sizeof(Connector)));
-		c2 = init_connector((Connector *) xalloc(sizeof(Connector)));
-		c1->next = NULL;
-		c2->next = NULL;
-		c1->priority = c2->priority = DOWN_priority;
-		c1->multi = c2->multi = FALSE;
-		c1->string = c2->string = d->string;
-		c1->label = c2->label = lab;
-	    
-		d1->string = s;
-	    
-		if (d1->right == NULL) {
-		    d1->right = c2;
-		} else {
-		    for (c3=d1->right; c3->next != NULL; c3 = c3->next)
-		      ;
-		    c3->next = c2;
+	d_list = NULL;  /* where we put the list we're building */
+
+	for (lab = 0; lab < sent->and_data.LT_size; lab++) {
+		for (d = sent->and_data.label_table[lab]; d!=NULL; d=d->next) {
+			d1 = build_fat_link_substitutions(sent, d);
+			d_copy = copy_disjunct(d);  /* also include the thing itself! */
+			d_copy->next = d1;
+			d1 = d_copy;
+			for(;d1 != NULL; d1 = d3) {
+				d3 = d1->next;
+
+				c1 = init_connector((Connector *) xalloc(sizeof(Connector)));
+				c2 = init_connector((Connector *) xalloc(sizeof(Connector)));
+				c1->next = NULL;
+				c2->next = NULL;
+				c1->priority = c2->priority = DOWN_priority;
+				c1->multi = c2->multi = FALSE;
+				c1->string = c2->string = d->string;
+				c1->label = c2->label = lab;
+
+				d1->string = s;
+
+				if (d1->right == NULL) {
+					d1->right = c2;
+				} else {
+					for (c3=d1->right; c3->next != NULL; c3 = c3->next)
+					  ;
+					c3->next = c2;
+				}
+				if (d1->left == NULL) {
+					d1->left = c1;
+				} else {
+					for (c3=d1->left; c3->next != NULL; c3 = c3->next)
+					  ;
+					c3->next = c1;
+				}
+				d1->next = d_list;
+				d_list = d1;
+			}
 		}
-		if (d1->left == NULL) {
-		    d1->left = c1;
-		} else {
-		    for (c3=d1->left; c3->next != NULL; c3 = c3->next)
-		      ;
-		    c3->next = c1;
-		}
-		d1->next = d_list;
-		d_list = d1;
-	    }
 	}
-    }
 #if defined(PLURALIZATION)
-    /* here is where "and" makes singular into plural. */
-    /* must accommodate "he and I are good", "Davy and I are good"
-       "Danny and Davy are good", and reject all of these with "is"
-       instead of "are".
+	/* here is where "and" makes singular into plural. */
+	/* must accommodate "he and I are good", "Davy and I are good"
+	   "Danny and Davy are good", and reject all of these with "is"
+	   instead of "are".
 
-       The SI connectors must also be modified to accommodate "are John
-       and Dave here", but kill "is John and Dave here"
-    */
-    if (strcmp(s,"and")==0) {
-	for (d1 = d_list; d1!=NULL; d1=d1->next) {
-	    for (c1=d1->right; c1!=NULL; c1=c1->next) {
-		if ((c1->string[0] == 'S') &&
-		    ((c1->string[1]=='^') ||
-		     (c1->string[1]=='s') ||
-		     (c1->string[1]=='p') ||
-		     (c1->string[1]=='\0'))) {
-		    c1->string = "Sp";
+	   The SI connectors must also be modified to accommodate "are John
+	   and Dave here", but kill "is John and Dave here"
+	*/
+	if (strcmp(s,"and")==0) {
+		for (d1 = d_list; d1!=NULL; d1=d1->next) {
+			for (c1=d1->right; c1!=NULL; c1=c1->next) {
+				if ((c1->string[0] == 'S') &&
+					((c1->string[1]=='^') ||
+					 (c1->string[1]=='s') ||
+					 (c1->string[1]=='p') ||
+					 (c1->string[1]=='\0'))) {
+					c1->string = "Sp";
+				}
+			}
+			for (c1=d1->left; c1!=NULL; c1=c1->next) {
+				if ((c1->string[0] == 'S') && (c1->string[1]=='I') &&
+					((c1->string[2]=='^') ||
+					 (c1->string[2]=='s') ||
+					 (c1->string[2]=='p') ||
+					 (c1->string[2]=='\0'))) {
+					c1->string = "SIp";
+				}
+			}
 		}
-	    }
-	    for (c1=d1->left; c1!=NULL; c1=c1->next) {
-		if ((c1->string[0] == 'S') && (c1->string[1]=='I') &&
-		    ((c1->string[2]=='^') ||
-		     (c1->string[2]=='s') ||
-		     (c1->string[2]=='p') ||
-		     (c1->string[2]=='\0'))) {
-		    c1->string = "SIp";
-		}
-	    }
 	}
-    } 
 /*
   "a cat or a dog is here"  vs  "a cat or a dog are here"
   The first seems right, the second seems wrong.  I'll stick with this.
@@ -1082,68 +1082,68 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s) {
    and accepting "I or my friend know what happened"
 
    The more generous code for "nor" has been used instead
-*/   
+*/
 /*
-    else if (strcmp(s,"or")==0) {
-	for (d1 = d_list; d1!=NULL; d1=d1->next) {
-	    for (c1=d1->right; c1!=NULL; c1=c1->next) {
-		if (c1->string[0] == 'S') {
-		    if (c1->string[1]=='^') {
-			if (c1->string[2]=='a') {
-			    c1->string = "Ss"; 
-			} else {
-			    c1->string = "Sp";
+	else if (strcmp(s,"or")==0) {
+		for (d1 = d_list; d1!=NULL; d1=d1->next) {
+			for (c1=d1->right; c1!=NULL; c1=c1->next) {
+				if (c1->string[0] == 'S') {
+					if (c1->string[1]=='^') {
+						if (c1->string[2]=='a') {
+							c1->string = "Ss";
+						} else {
+							c1->string = "Sp";
+						}
+					} else if ((c1->string[1]=='p') && (c1->string[2]=='a')){
+						c1->string = "Sp";
+					}
+				}
 			}
-		    } else if ((c1->string[1]=='p') && (c1->string[2]=='a')){
-			c1->string = "Sp";
-		    }
-		}
-	    }
-	    for (c1=d1->left; c1!=NULL; c1=c1->next) {
-		if ((c1->string[0] == 'S') && (c1->string[1] == 'I')) {
-		    if (c1->string[2]=='^') {
-			if (c1->string[3]=='a') {
-			    c1->string = "Ss"; 
-			} else {
-			    c1->string = "Sp";
+			for (c1=d1->left; c1!=NULL; c1=c1->next) {
+				if ((c1->string[0] == 'S') && (c1->string[1] == 'I')) {
+					if (c1->string[2]=='^') {
+						if (c1->string[3]=='a') {
+							c1->string = "Ss";
+						} else {
+							c1->string = "Sp";
+						}
+					} else if ((c1->string[2]=='p') && (c1->string[3]=='a')){
+						c1->string = "Sp";
+					}
+				}
 			}
-		    } else if ((c1->string[2]=='p') && (c1->string[3]=='a')){
-			c1->string = "Sp";
-		    }
 		}
-	    }
 	}
-    }
-*/    
+*/
 /*
-    It appears that the "nor" of two things can be either singular or
-    plural.  "neither she nor John likes dogs"
+	It appears that the "nor" of two things can be either singular or
+	plural.  "neither she nor John likes dogs"
              "neither she nor John like dogs"
 
 */
-    else if ((strcmp(s,"nor")==0) || (strcmp(s,"or")==0)) {
-	for (d1 = d_list; d1!=NULL; d1=d1->next) {
-	    for (c1=d1->right; c1!=NULL; c1=c1->next) {
-		if ((c1->string[0] == 'S') &&
-		    ((c1->string[1]=='^') ||
-		     (c1->string[1]=='s') ||
-		     (c1->string[1]=='p'))) {
-		    c1->string = "S";		
+	else if ((strcmp(s,"nor")==0) || (strcmp(s,"or")==0)) {
+		for (d1 = d_list; d1!=NULL; d1=d1->next) {
+			for (c1=d1->right; c1!=NULL; c1=c1->next) {
+				if ((c1->string[0] == 'S') &&
+					((c1->string[1]=='^') ||
+					 (c1->string[1]=='s') ||
+					 (c1->string[1]=='p'))) {
+					c1->string = "S";
+				}
+			}
+			for (c1=d1->left; c1!=NULL; c1=c1->next) {
+				if ((c1->string[0] == 'S') && (c1->string[1] == 'I') &&
+					((c1->string[2]=='^') ||
+					 (c1->string[2]=='s') ||
+					 (c1->string[2]=='p'))) {
+					c1->string = "SI";
+				}
+			}
 		}
-	    }
-	    for (c1=d1->left; c1!=NULL; c1=c1->next) {
-		if ((c1->string[0] == 'S') && (c1->string[1] == 'I') &&
-		    ((c1->string[2]=='^') ||
-		     (c1->string[2]=='s') ||
-		     (c1->string[2]=='p'))) {
-		    c1->string = "SI";		
-		}
-	    }
 	}
-    }
 
-#endif    
-    return d_list;
+#endif
+	return d_list;
 }
 
 
@@ -1171,11 +1171,11 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s) {
    (1) find all the words with fat disjuncts
    (2) scan all links and build, for each fat disjucnt used,
         an "image" structure that contains what this disjunct must
-	connect to in the rest of the linkage.
+        connect to in the rest of the linkage.
    (3) For each fat disjunct, run through the label_table for disjuncts
         with the same label, considering only those with strictly more
         restricted match sets (this uses the string fields of the disjuncts
-	from the table).
+        from the table).
    (4) For each that passes this test, we see if it can replace the chosen
         disjunct.  This is performed by examining how this disjunct
         compares with the image structure for this word.
@@ -1183,147 +1183,147 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s) {
 
 typedef struct Image_node_struct Image_node;
 struct Image_node_struct {
-    Image_node * next;
-    Connector * c;  /* the connector the place on the disjunct must match */
-    int place;      /* Indicates the place in the fat disjunct where this
-		       connector must connect.  If 0 then this is a fat
-		       connector.  If >0 then go place to the right, if
-                       <0 then go -place to the left. */
+	Image_node * next;
+	Connector * c;  /* the connector the place on the disjunct must match */
+	int place;	  /* Indicates the place in the fat disjunct where this
+					   connector must connect.  If 0 then this is a fat
+					   connector.  If >0 then go place to the right, if
+					   <0 then go -place to the left. */
 };
 
 static Image_node * image_array[MAX_SENTENCE];
 /* points to the image structure for eacch word.  NULL if not a fat word. */
 
 static char has_fat_down[MAX_SENTENCE];  /* TRUE if this word has a fat down link
-				     FALSE otherise */
+									 FALSE otherise */
 int set_has_fat_down(Sentence sent) {
 /* Fill in the has_fat_down array.  Uses link_array[].
    Returns TRUE if there exists at least one word with a
    fat down label.
 */
-    int link, w, N_fat;
-    Parse_info pi = sent->parse_info;
+	int link, w, N_fat;
+	Parse_info pi = sent->parse_info;
 
-    N_fat = 0;
+	N_fat = 0;
 
-    for (w=0; w<pi->N_words; w++) {
-	has_fat_down[w] = FALSE;
-    }
-    
-    for (link=0; link<pi->N_links; link++) {
-	if (pi->link_array[link].lc->priority == DOWN_priority) {
-	    N_fat ++;
-	    has_fat_down[pi->link_array[link].l] = TRUE;
-	} else if (pi->link_array[link].rc->priority == DOWN_priority) {
-	    N_fat ++;
-	    has_fat_down[pi->link_array[link].r] = TRUE;
+	for (w=0; w<pi->N_words; w++) {
+		has_fat_down[w] = FALSE;
 	}
-    }
-    return (N_fat > 0);
+
+	for (link=0; link<pi->N_links; link++) {
+		if (pi->link_array[link].lc->priority == DOWN_priority) {
+			N_fat ++;
+			has_fat_down[pi->link_array[link].l] = TRUE;
+		} else if (pi->link_array[link].rc->priority == DOWN_priority) {
+			N_fat ++;
+			has_fat_down[pi->link_array[link].r] = TRUE;
+		}
+	}
+	return (N_fat > 0);
 }
 
 static void free_image_array(Parse_info pi) {
-    int w;
-    Image_node * in, * inx;
-    for (w=0; w<pi->N_words; w++) {
-	for (in=image_array[w]; in!=NULL; in=inx) {
-	    inx = in->next;
-	    xfree((char *)in, sizeof(Image_node));
+	int w;
+	Image_node * in, * inx;
+	for (w=0; w<pi->N_words; w++) {
+		for (in=image_array[w]; in!=NULL; in=inx) {
+			inx = in->next;
+			xfree((char *)in, sizeof(Image_node));
+		}
 	}
-    }
-}	    
-    
+}
+
 static void build_image_array(Sentence sent) {
 /* uses link_array, chosen_disjuncts, and down_label to construct
    image_array */
-    int link, end, word;
-    Connector * this_end_con, *other_end_con, * upcon, * updiscon, *clist;
-    Disjunct * dis, * updis;
-    Image_node * in;
-    Parse_info pi = sent->parse_info;
+	int link, end, word;
+	Connector * this_end_con, *other_end_con, * upcon, * updiscon, *clist;
+	Disjunct * dis, * updis;
+	Image_node * in;
+	Parse_info pi = sent->parse_info;
 
-    for (word=0; word<pi->N_words; word++) {
-	image_array[word] = NULL;
-    }
-
-    for (end = -1; end <= 1; end += 2) {
-	for (link=0; link<pi->N_links; link++) {
-	    if (end<0) {
-		word = pi->link_array[link].l;
-		if (!has_fat_down[word]) continue;
-		this_end_con = pi->link_array[link].lc;
-		other_end_con = pi->link_array[link].rc;
-		dis = pi->chosen_disjuncts[word];
-		clist = dis->right;
-	    } else {
-		word =pi->link_array[link].r;
-		if (!has_fat_down[word]) continue;
-		this_end_con =pi->link_array[link].rc;
-		other_end_con =pi->link_array[link].lc;
-		dis = pi->chosen_disjuncts[word];
-		clist = dis->left;
-	    }
-
-	    if (this_end_con->priority == DOWN_priority) continue;
-	    if ((this_end_con->label != NORMAL_LABEL) &&
-		(this_end_con->label < 0)) continue;
-	    /* no need to construct an image node for down links,
-	       or commas links or either/neither links */
-
-	    in = (Image_node *) xalloc(sizeof(Image_node));
-	    in->next = image_array[word];
-	    image_array[word] = in;
-	    in->c = other_end_con;
-	    /* the rest of this code is for computing in->place */
-	    if (this_end_con->priority == UP_priority) {
-		in->place = 0;
-	    } else {
-		in->place = 1;
-		if ((dis->left != NULL) &&
-		    (dis->left->priority == UP_priority)) {
-		    upcon = dis->left;
-		} else if ((dis->right != NULL) &&
-			   (dis->right->priority == UP_priority)) {
-		    upcon = dis->right;
-		} else {
-		    upcon = NULL;
-		}
-		if (upcon != NULL) { /* add on extra for a fat up link */
-		    updis = sent->and_data.label_table[upcon->label];
-		    if (end > 0) {
-			updiscon = updis->left;
-		    } else {
-			updiscon = updis->right;
-		    }
-		    for (;updiscon != NULL; updiscon = updiscon->next) {
-			in->place ++;
-		    }
-		}
-		for (; clist != this_end_con; clist = clist->next) {
-		    if (clist->label < 0) in->place++;
-		}
-		in->place = in->place * (-end);
-	    }
+	for (word=0; word<pi->N_words; word++) {
+		image_array[word] = NULL;
 	}
-    }
+
+	for (end = -1; end <= 1; end += 2) {
+		for (link=0; link<pi->N_links; link++) {
+			if (end<0) {
+				word = pi->link_array[link].l;
+				if (!has_fat_down[word]) continue;
+				this_end_con = pi->link_array[link].lc;
+				other_end_con = pi->link_array[link].rc;
+				dis = pi->chosen_disjuncts[word];
+				clist = dis->right;
+			} else {
+				word =pi->link_array[link].r;
+				if (!has_fat_down[word]) continue;
+				this_end_con =pi->link_array[link].rc;
+				other_end_con =pi->link_array[link].lc;
+				dis = pi->chosen_disjuncts[word];
+				clist = dis->left;
+			}
+
+			if (this_end_con->priority == DOWN_priority) continue;
+			if ((this_end_con->label != NORMAL_LABEL) &&
+				(this_end_con->label < 0)) continue;
+			/* no need to construct an image node for down links,
+			   or commas links or either/neither links */
+
+			in = (Image_node *) xalloc(sizeof(Image_node));
+			in->next = image_array[word];
+			image_array[word] = in;
+			in->c = other_end_con;
+			/* the rest of this code is for computing in->place */
+			if (this_end_con->priority == UP_priority) {
+				in->place = 0;
+			} else {
+				in->place = 1;
+				if ((dis->left != NULL) &&
+					(dis->left->priority == UP_priority)) {
+					upcon = dis->left;
+				} else if ((dis->right != NULL) &&
+						   (dis->right->priority == UP_priority)) {
+					upcon = dis->right;
+				} else {
+					upcon = NULL;
+				}
+				if (upcon != NULL) { /* add on extra for a fat up link */
+					updis = sent->and_data.label_table[upcon->label];
+					if (end > 0) {
+						updiscon = updis->left;
+					} else {
+						updiscon = updis->right;
+					}
+					for (;updiscon != NULL; updiscon = updiscon->next) {
+						in->place ++;
+					}
+				}
+				for (; clist != this_end_con; clist = clist->next) {
+					if (clist->label < 0) in->place++;
+				}
+				in->place = in->place * (-end);
+			}
+		}
+	}
 }
 
 static int strictly_smaller(char * s, char * t) {
 /* returns TRUE if string s represents a strictly smaller match set
    than does t
 */
-    int strictness;
-    strictness = 0;
-    for (;(*s!='\0') && (*t!='\0'); s++,t++) {
-	if (*s == *t) continue;
-	if ((*t == '*') || (*s == '^')) {
-	    strictness++;
-	} else {
-	    return FALSE;
+	int strictness;
+	strictness = 0;
+	for (;(*s!='\0') && (*t!='\0'); s++,t++) {
+		if (*s == *t) continue;
+		if ((*t == '*') || (*s == '^')) {
+			strictness++;
+		} else {
+			return FALSE;
+		}
 	}
-    }
-    assert(! ((*s!='\0') || (*t!='\0')), "s and t should be the same length!");
-    return (strictness > 0);  
+	assert(! ((*s!='\0') || (*t!='\0')), "s and t should be the same length!");
+	return (strictness > 0);
 }
 
 static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label) {
@@ -1332,24 +1332,24 @@ static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label) {
    of dis.  Find the specific disjunct of in label_table[label]
    which corresponds to dis.
 */
-    Disjunct * d;
-    Connector * cx, *cy;
-    for (d=sent->and_data.label_table[label]; d!=NULL; d=d->next) {
-	for (cx=d->left, cy=dis->left; cx!=NULL; cx=cx->next,cy=cy->next) {
-/*	    if ((cx->string != cy->string) || */
-	    if ((strcmp(cx->string, cy->string) != 0) ||
-		(cx->multi != cy->multi)) break;/* have to check multi? */
+	Disjunct * d;
+	Connector * cx, *cy;
+	for (d=sent->and_data.label_table[label]; d!=NULL; d=d->next) {
+		for (cx=d->left, cy=dis->left; cx!=NULL; cx=cx->next,cy=cy->next) {
+/*			if ((cx->string != cy->string) || */
+			if ((strcmp(cx->string, cy->string) != 0) ||
+				(cx->multi != cy->multi)) break;/* have to check multi? */
+		}
+		if (cx!=NULL) continue;
+		for (cx=d->right, cy=dis->right; cx!=NULL; cx=cx->next,cy=cy->next) {
+/*			if ((cx->string != cy->string) || */
+			if ((strcmp(cx->string, cy->string) != 0) ||
+				(cx->multi != cy->multi)) break;
+		}
+		if (cx==NULL) break;
 	}
-	if (cx!=NULL) continue;
-	for (cx=d->right, cy=dis->right; cx!=NULL; cx=cx->next,cy=cy->next) {
-/*	    if ((cx->string != cy->string) || */
-	    if ((strcmp(cx->string, cy->string) != 0) ||
-		(cx->multi != cy->multi)) break;
-	}
-	if (cx==NULL) break;
-    }
-    assert(d!=NULL, "Never found subdisjunct");
-    return d;
+	assert(d!=NULL, "Never found subdisjunct");
+	return d;
 }
 
 int is_canonical_linkage(Sentence sent) {
@@ -1359,89 +1359,89 @@ int is_canonical_linkage(Sentence sent) {
    See the comments above for more information about how it works
 */
 
-    int w, d_label=0, place;
-    Connector *d_c, *c, dummy_connector, *upcon;
-    Disjunct *dis, *chosen_d;
-    Image_node * in;
-    Parse_info pi = sent->parse_info;
+	int w, d_label=0, place;
+	Connector *d_c, *c, dummy_connector, *upcon;
+	Disjunct *dis, *chosen_d;
+	Image_node * in;
+	Parse_info pi = sent->parse_info;
 
-    dummy_connector.priority = UP_priority;
-    init_connector(&dummy_connector);
+	dummy_connector.priority = UP_priority;
+	init_connector(&dummy_connector);
 
-    build_image_array(sent);
+	build_image_array(sent);
 
-    for (w=0; w<pi->N_words; w++) {
-	if (!has_fat_down[w]) continue;
-	chosen_d = pi->chosen_disjuncts[w];
+	for (w=0; w<pi->N_words; w++) {
+		if (!has_fat_down[w]) continue;
+		chosen_d = pi->chosen_disjuncts[w];
 
-        /* there must be a down connector in both the left and right list */
-	for (d_c = chosen_d->left; d_c!=NULL; d_c=d_c->next) {
-	    if (d_c->priority == DOWN_priority) {
-		d_label = d_c->label;
-		break;
-	    }
-	}
-	assert(d_c != NULL, "Should have found the down link.");
-
-	if ((chosen_d->left != NULL) &&
-	    (chosen_d->left->priority == UP_priority)) {
-	    upcon = chosen_d->left;
-	} else if ((chosen_d->right != NULL) &&
-		   (chosen_d->right->priority == UP_priority)) {
-	    upcon = chosen_d->right;
-	} else {
-	    upcon = NULL;
-	}
-	
-	/* check that the disjunct on w is minimal (canonical) */
-	
-	for (dis=sent->and_data.label_table[d_label]; dis!=NULL; dis=dis->next) {
-	    
-	    /* now, reject a disjunct if it's not strictly below the old */
-	    if(!strictly_smaller(dis->string, d_c->string)) continue;
-
-	    /* Now, it has to match the image connectors */
-
-	    for (in=image_array[w]; in!=NULL; in=in->next) {
-
-		place = in->place;
-		if (place == 0) {
-	
-		    assert(upcon != NULL, "Should have found an up link");
-		    dummy_connector.label = upcon->label;
-
-		    /* now we have to compute the string of the
-		       disjunct with upcon->label that corresponds
-		       to dis  */
-
-		    if (upcon->label == d_label) {
-			dummy_connector.string = dis->string;
-		    } else {
-			dummy_connector.string =
-			  find_subdisjunct(sent, dis, upcon->label)->string;
-		    }
-		    if (!x_match(&dummy_connector, in->c)) break;  /* I hope using x_match here is right */
-		} else if (place > 0) {
-		    for (c=dis->right; place > 1; place--) {
-			c = c->next;
-		    }
-		    if (!x_match(c, in->c)) break;    /* Ditto above comment  --DS 07/97*/
-		} else {
-		    for (c=dis->left; place < -1; place++) {
-			c = c->next;
-		    }
-		    if (!x_match(c, in->c)) break;  /* Ditto Ditto */
+		/* there must be a down connector in both the left and right list */
+		for (d_c = chosen_d->left; d_c!=NULL; d_c=d_c->next) {
+			if (d_c->priority == DOWN_priority) {
+				d_label = d_c->label;
+				break;
+			}
 		}
-	    }
+		assert(d_c != NULL, "Should have found the down link.");
 
-	    if (in == NULL) break;
+		if ((chosen_d->left != NULL) &&
+			(chosen_d->left->priority == UP_priority)) {
+			upcon = chosen_d->left;
+		} else if ((chosen_d->right != NULL) &&
+				   (chosen_d->right->priority == UP_priority)) {
+			upcon = chosen_d->right;
+		} else {
+			upcon = NULL;
+		}
+
+		/* check that the disjunct on w is minimal (canonical) */
+
+		for (dis=sent->and_data.label_table[d_label]; dis!=NULL; dis=dis->next) {
+
+			/* now, reject a disjunct if it's not strictly below the old */
+			if(!strictly_smaller(dis->string, d_c->string)) continue;
+
+			/* Now, it has to match the image connectors */
+
+			for (in=image_array[w]; in!=NULL; in=in->next) {
+
+				place = in->place;
+				if (place == 0) {
+
+					assert(upcon != NULL, "Should have found an up link");
+					dummy_connector.label = upcon->label;
+
+					/* now we have to compute the string of the
+					   disjunct with upcon->label that corresponds
+					   to dis  */
+
+					if (upcon->label == d_label) {
+						dummy_connector.string = dis->string;
+					} else {
+						dummy_connector.string =
+						  find_subdisjunct(sent, dis, upcon->label)->string;
+					}
+					if (!x_match(&dummy_connector, in->c)) break;  /* I hope using x_match here is right */
+				} else if (place > 0) {
+					for (c=dis->right; place > 1; place--) {
+						c = c->next;
+					}
+					if (!x_match(c, in->c)) break;	/* Ditto above comment  --DS 07/97*/
+				} else {
+					for (c=dis->left; place < -1; place++) {
+						c = c->next;
+					}
+					if (!x_match(c, in->c)) break;  /* Ditto Ditto */
+				}
+			}
+
+			if (in == NULL) break;
+		}
+		if (dis != NULL) break;
+		/* there is a better disjunct that the one we're using, so this
+		   word is bad, so we're done */
 	}
-	if (dis != NULL) break;
-	/* there is a better disjunct that the one we're using, so this
-	   word is bad, so we're done */
-    }
-    free_image_array(pi);
-    return (w == pi->N_words);
+	free_image_array(pi);
+	return (w == pi->N_words);
 }
 
 void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
@@ -1454,95 +1454,95 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
    been initialized with the values from link_array.  We also assume
    that there are fat links.
 */
-    int link, end, word, place;
-    Connector * this_end_con, * upcon, * updiscon, *clist, *con, *mycon;
-    Disjunct * dis, * updis, *mydis;
-    Parse_info pi = sent->parse_info;
+	int link, end, word, place;
+	Connector * this_end_con, * upcon, * updiscon, *clist, *con, *mycon;
+	Disjunct * dis, * updis, *mydis;
+	Parse_info pi = sent->parse_info;
 
-    for (end = -1; end <= 1; end += 2) {
-	for (link=0; link<pi->N_links; link++) {
-	    if (sublinkage->link[link]->l == -1) continue;
-	    if (end<0) {
-		word = pi->link_array[link].l;
-		if (!has_fat_down[word]) continue;
-		this_end_con = pi->link_array[link].lc;
-		dis = pi->chosen_disjuncts[word];
-		mydis = pi->chosen_disjuncts[sublinkage->link[link]->l];
-		clist = dis->right;
-	    } else {
-		word = pi->link_array[link].r;
-		if (!has_fat_down[word]) continue;
-		this_end_con = pi->link_array[link].rc;
-		dis = pi->chosen_disjuncts[word];
-		mydis = pi->chosen_disjuncts[sublinkage->link[link]->r];
-		clist = dis->left;
-	    }
+	for (end = -1; end <= 1; end += 2) {
+		for (link=0; link<pi->N_links; link++) {
+			if (sublinkage->link[link]->l == -1) continue;
+			if (end<0) {
+				word = pi->link_array[link].l;
+				if (!has_fat_down[word]) continue;
+				this_end_con = pi->link_array[link].lc;
+				dis = pi->chosen_disjuncts[word];
+				mydis = pi->chosen_disjuncts[sublinkage->link[link]->l];
+				clist = dis->right;
+			} else {
+				word = pi->link_array[link].r;
+				if (!has_fat_down[word]) continue;
+				this_end_con = pi->link_array[link].rc;
+				dis = pi->chosen_disjuncts[word];
+				mydis = pi->chosen_disjuncts[sublinkage->link[link]->r];
+				clist = dis->left;
+			}
 
-	    if (this_end_con->label != NORMAL_LABEL) continue;
-	    /* no need to construct a connector for up links,
-	       or commas links or either/neither links */
+			if (this_end_con->label != NORMAL_LABEL) continue;
+			/* no need to construct a connector for up links,
+			   or commas links or either/neither links */
 
-	    /* Now compute the place */
-	    place = 0;
-	    if ((dis->left != NULL) &&
-		(dis->left->priority == UP_priority)) {
-		upcon = dis->left;
-	    } else if ((dis->right != NULL) &&
-		       (dis->right->priority == UP_priority)) {
-		upcon = dis->right;
-	    } else {
-		upcon = NULL;
-	    }
-	    if (upcon != NULL) { /* add on extra for a fat up link */
-		updis = sent->and_data.label_table[upcon->label];
-		if (end > 0) {
-		    updiscon = updis->left;
-		} else {
-		    updiscon = updis->right;
+			/* Now compute the place */
+			place = 0;
+			if ((dis->left != NULL) &&
+				(dis->left->priority == UP_priority)) {
+				upcon = dis->left;
+			} else if ((dis->right != NULL) &&
+					   (dis->right->priority == UP_priority)) {
+				upcon = dis->right;
+			} else {
+				upcon = NULL;
+			}
+			if (upcon != NULL) { /* add on extra for a fat up link */
+				updis = sent->and_data.label_table[upcon->label];
+				if (end > 0) {
+					updiscon = updis->left;
+				} else {
+					updiscon = updis->right;
+				}
+				for (;updiscon != NULL; updiscon = updiscon->next) {
+					place ++;
+				}
+			}
+			for (; clist != this_end_con; clist = clist->next) {
+				if (clist->label < 0) place++;
+			}
+			/* place has just been computed */
+
+			/* now find the right disjunct in the table */
+			if ((mydis->left != NULL) &&
+				(mydis->left->priority == UP_priority)) {
+				mycon = mydis->left;
+			} else if ((mydis->right != NULL) &&
+					   (mydis->right->priority == UP_priority)) {
+				mycon = mydis->right;
+			} else {
+				printf("word = %d\n", word);
+				printf("fat link: [%d, %d]\n",
+					   pi->link_array[link].l, pi->link_array[link].r);
+				printf("thin link: [%d, %d]\n",
+					   sublinkage->link[link]->l, sublinkage->link[link]->r);
+				assert(FALSE, "There should be a fat UP link here");
+			}
+
+			for (dis=sent->and_data.label_table[mycon->label];
+				 dis != NULL; dis=dis->next) {
+				if (dis->string == mycon->string) break;
+			}
+			assert(dis!=NULL, "Should have found this connector string");
+			/* the disjunct in the table has just been found */
+
+			if (end < 0) {
+			  for (con = dis->right; place > 0; place--, con=con->next);
+				/* sublinkage->link[link]->lc = con; OLD CODE */
+			  exfree_connectors(sublinkage->link[link]->lc);
+			  sublinkage->link[link]->lc = excopy_connectors(con);
+			} else {
+				for (con = dis->left; place > 0; place--, con=con->next);
+				/* sublinkage->link[link]->rc = con; OLD CODE */
+				exfree_connectors(sublinkage->link[link]->rc);
+				sublinkage->link[link]->rc = excopy_connectors(con);
+			}
 		}
-		for (;updiscon != NULL; updiscon = updiscon->next) {
-		    place ++;
-		}
-	    }
-	    for (; clist != this_end_con; clist = clist->next) {
-		if (clist->label < 0) place++;
-	    }
-	    /* place has just been computed */
-
-	    /* now find the right disjunct in the table */
-	    if ((mydis->left != NULL) &&
-		(mydis->left->priority == UP_priority)) {
-		mycon = mydis->left;
-	    } else if ((mydis->right != NULL) &&
-		       (mydis->right->priority == UP_priority)) {
-		mycon = mydis->right;
-	    } else {
-		printf("word = %d\n", word);
-		printf("fat link: [%d, %d]\n", 
-		       pi->link_array[link].l, pi->link_array[link].r);
-		printf("thin link: [%d, %d]\n", 
-		       sublinkage->link[link]->l, sublinkage->link[link]->r);
-		assert(FALSE, "There should be a fat UP link here");
-	    }
-
-	    for (dis=sent->and_data.label_table[mycon->label]; 
-		 dis != NULL; dis=dis->next) {
-		if (dis->string == mycon->string) break;
-	    }
-	    assert(dis!=NULL, "Should have found this connector string");
-	    /* the disjunct in the table has just been found */
-
-	    if (end < 0) {
-	      for (con = dis->right; place > 0; place--, con=con->next);
-		/* sublinkage->link[link]->lc = con; OLD CODE */
-	      exfree_connectors(sublinkage->link[link]->lc);
-	      sublinkage->link[link]->lc = excopy_connectors(con);
-	    } else {
-		for (con = dis->left; place > 0; place--, con=con->next);
-		/* sublinkage->link[link]->rc = con; OLD CODE */
-		exfree_connectors(sublinkage->link[link]->rc);
-		sublinkage->link[link]->rc = excopy_connectors(con);
-	    }
 	}
-    }
 }
