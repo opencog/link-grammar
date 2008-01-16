@@ -21,5 +21,5 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char *);
 Disjunct * build_COMMA_disjunct_list(Sentence sent);
 Disjunct * explode_disjunct_list(Sentence sent, Disjunct *);
 void       build_conjunction_tables(Sentence);
-char *     intersect_strings(Sentence sent, char * s, char * t);
+const char * intersect_strings(Sentence sent, const char * s, const char * t);
 void       compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage);
