@@ -51,10 +51,13 @@
    certain conditions
 */
 
-static Disjunct * glom_comma_connector(Disjunct * d) {
-/* In this case the connector is to connect to the comma to the
-   left of an "and" or an "or".  Only gets added next to a fat link
-*/
+/**
+ * glom_comma_connector() -- 
+ * In this case the connector is to connect to the comma to the
+ * left of an "and" or an "or".  Only gets added next to a fat link
+ */
+static Disjunct * glom_comma_connector(Disjunct * d)
+{
 	Disjunct * d_list, * d1, * d2;
 	Connector * c, * c1;
 	d_list = NULL;
@@ -69,10 +72,10 @@ static Disjunct * glom_comma_connector(Disjunct * d) {
 		d_list = d2;
 
 		c1 = init_connector((Connector *)xalloc(sizeof(Connector)));
-		c1->string="";
+		c1->string = "";
 		c1->label = COMMA_LABEL;
 		c1->priority = THIN_priority;
-		c1->multi=FALSE;
+		c1->multi = FALSE;
 		c1->next = NULL;
 
 		c->next = c1;
@@ -105,10 +108,10 @@ static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary) {
 		}
 
 		c1 = init_connector((Connector *)xalloc(sizeof(Connector)));
-		c1->string="";
+		c1->string = "";
 		c1->label = label;
 		c1->priority = THIN_priority;
-		c1->multi=FALSE;
+		c1->multi = FALSE;
 		c1->next = c;
 
 		if (d1->left == c) {
@@ -130,10 +133,10 @@ static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct
 	Connector * c;
 
 	c = init_connector((Connector *)xalloc(sizeof(Connector)));
-	c->string= cs;
+	c->string = cs;
 	c->label = label;
 	c->priority = THIN_priority;
-	c->multi=FALSE;
+	c->multi = FALSE;
 	c->next = NULL;
 
 	if (dir == '+') {
@@ -146,13 +149,16 @@ static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct
 	return d;
 }
 
-static Disjunct * special_disjunct(int label, int dir, const char *cs, const char * ds) {
-/* Builds a new disjunct with one connector pointing in direction dir
-   (which is '+' or '-').  The label and string of the connector
-   are specified, as well as the string of the disjunct.
-   The next pointer of the new disjunct set to NULL, so it can be
-   regarded as a list.
-*/
+/** 
+ * special_disjunct() -- 
+ * Builds a new disjunct with one connector pointing in direction dir
+ * (which is '+' or '-').  The label and string of the connector
+ * are specified, as well as the string of the disjunct.
+ * The next pointer of the new disjunct set to NULL, so it can be
+ * regarded as a list.
+ */
+static Disjunct * special_disjunct(int label, int dir, const char *cs, const char * ds)
+{
 	Disjunct * d1;
 	Connector * c;
 	d1 = (Disjunct *) xalloc(sizeof(Disjunct));
@@ -161,10 +167,10 @@ static Disjunct * special_disjunct(int label, int dir, const char *cs, const cha
 	d1->next = NULL;
 
 	c = init_connector((Connector *)xalloc(sizeof(Connector)));
-	c->string= cs;
+	c->string = cs;
 	c->label = label;
 	c->priority = THIN_priority;
-	c->multi=FALSE;
+	c->multi = FALSE;
 	c->next = NULL;
 
 	if (dir == '+') {
