@@ -204,15 +204,16 @@ struct Connector_struct
     char priority;/* one of the three priorities above */
     char multi;   /* TRUE if this is a multi-connector */
     Connector * next;
-    char * string;
+    const char * string;
 };
 
 typedef struct Disjunct_struct Disjunct;
-struct Disjunct_struct {
+struct Disjunct_struct
+{
     Disjunct *next;
     short cost;
     char marked;
-    char * string;
+    const char * string;
     Connector *left, *right;
 };
 
