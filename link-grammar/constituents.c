@@ -890,7 +890,8 @@ static void add_constituent(int * cons, Linkage linkage, Domain domain,
 	*cons = c;
 }
 
-static char * cons_of_domain(char domain_type) {
+static const char * cons_of_domain(char domain_type)
+{
 	switch (domain_type) {
 	case 'a':
 		return "ADJP";
@@ -943,7 +944,7 @@ static int read_constituents_from_domains(Linkage linkage,
 	List_o_links * dlink;
 	int rootright, rootleft, adjustment_made;
 	Sublinkage * subl;
-	char * name;
+	const char * name;
 	Domain domain;
 
 	r_limit = linkage->num_words-2; /**PV**/
