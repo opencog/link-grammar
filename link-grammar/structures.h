@@ -4,7 +4,7 @@
 /* All rights reserved                                                          */
 /*                                                                              */
 /* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */ 
+/* license set forth in the LICENSE file included with this software,           */
 /* and also available at http://www.link.cs.cmu.edu/link/license.html           */
 /* This license allows free redistribution and use in source and binary         */
 /* forms, with or without modification, subject to certain conditions.          */
@@ -50,16 +50,16 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
     Contains for each word, a pointer to a list of disjuncts for this word.
     Computed by: parepare_to_parse(), but modified by pruning and power
     pruning.
- 
+
  link_array[]
     This is an array of links.  These links define the current linkage.
     It is computed by extract_links().  It is used by analyze_linkage() to
     compute pp_linkage[].  It may contain fat links.
 
- pp_link_array[]   ** eliminated (ALB) 
+ pp_link_array[]   ** eliminated (ALB)
     Another array of links.  Here all fat links have been expunged.
     It is computed by analyze_linkage(), and used by post_process() and by
-    print_links();   
+    print_links();
 
  chosen_disjuncts[]
     This is an array pointers to disjuncts, one for each word, that is
@@ -82,7 +82,8 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 
  is_conjunction[]
     An array of chars, one for each word.  TRUE if the word is a conjunction
-    ("and", "or", "nor", or "but" at the moment).  False otherwise. */                                                         
+    ("and", "or", "nor", or "but" at the moment).  False otherwise. */
+
 #ifndef TRUE
 #define TRUE  1
 #endif
@@ -91,11 +92,11 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #endif
 #define OBS
 
-#define assert(ex,string) {                                               \
-    if (!(ex)) {							  \
-	printf("Assertion failed: %s\n", string); 		          \
-	exit(1);                            				  \
-    }									  \
+#define assert(ex,string) {                                       \
+    if (!(ex)) {                                                  \
+        printf("Assertion failed: %s\n", string);                 \
+        exit(1);                                                  \
+    }                                                             \
 }
 
 #define NEGATIVECOST -1000000
@@ -117,7 +118,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
-				  /* then suppress the display of the wall  */
+                                  /* then suppress the display of the wall  */
                                   /* bogus name to prevent ever suppressing */
 #define RIGHT_WALL_DISPLAY  ("RIGHT-WALL")   /* the string to use to show the wall */
 #define RIGHT_WALL_SUPPRESS ("RW") /* If this connector is used on the wall, */
@@ -151,7 +152,7 @@ OBS #define AMPERSAND_WORD   ("AMPERSAND")
 #define UNKNOWN_WORD     ("UNKNOWN-WORD")
 
 #define MAX_PATH_NAME 200     /* file names (including paths)
-				 should not be longer than this */
+                                 should not be longer than this */
 
 /*      Some size definitions.  Reduce these for small machines */
 #define MAX_WORD 60           /* maximum number of chars in a word */
@@ -185,18 +186,19 @@ OBS #define AMPERSAND_WORD   ("AMPERSAND")
 #define NO_WORD 255
 
 typedef struct Connector_struct Connector;
-struct Connector_struct{
+struct Connector_struct
+{
     short label;
     unsigned char word;
                    /* The nearest word to my left (or right) that
                       this could connect to.  Computed by power pruning */
-    unsigned char length_limit; 
+    unsigned char length_limit;
                   /* If this is a length limited connector, this
-		     gives the limit of the length of the link
-		     that can be used on this connector.  Since
-		     this is strictly a funcion of the connector
-		     name, efficiency is the only reason to store
-		     this.  If no limit, the value is set to 255. */
+                     gives the limit of the length of the link
+                     that can be used on this connector.  Since
+                     this is strictly a funcion of the connector
+                     name, efficiency is the only reason to store
+                     this.  If no limit, the value is set to 255. */
   /*    unsigned char my_word; */  /* not used now */
                   /* The word that this connector arises from */
     char priority;/* one of the three priorities above */
@@ -253,12 +255,12 @@ typedef struct E_list_struct E_list;
 struct Exp_struct {
     char type;            /* one of three types, see below */
     unsigned char cost;   /* The cost of using this expression.
-			     Only used for non-terminals */
+                             Only used for non-terminals */
     char dir;   /* '-' means to the left, '+' means to right (for connector) */
     char multi; /* TRUE if a multi-connector (for connector)  */
     union {
-	E_list * l;       /* only needed for non-terminals */
-	char * string;    /* only needed if it's a connector */
+        E_list * l;       /* only needed for non-terminals */
+        char * string;    /* only needed if it's a connector */
     }u;
     Exp * next;
 };
@@ -290,7 +292,7 @@ typedef struct Dict_node_struct Dict_node;
 struct Dict_node_struct {
     char      * string;  /* the word itself */
     Word_file * file;    /* the file the word came from (NULL if dict file) */
-    Exp       * exp;     
+    Exp       * exp;
     Dict_node *left, *right;
 };
 
@@ -300,7 +302,7 @@ struct D_type_list_struct {
     D_type_list * next;
     int type;
 };
- 
+
 typedef struct PP_node_struct PP_node;
 struct PP_node_struct {
     D_type_list *d_type_array[MAX_LINKS];
@@ -393,89 +395,89 @@ typedef struct {
 
 /* from pp_linkset.c */
 typedef struct pp_linkset_node_s
-{   
-  char *str;
-  struct pp_linkset_node_s *next;
+{
+    char *str;
+    struct pp_linkset_node_s *next;
 } pp_linkset_node;
 
 typedef struct pp_linkset_s
 {
-  int hash_table_size;
-  int population;
-  pp_linkset_node **hash_table;    /* data actually lives here */
+    int hash_table_size;
+    int population;
+    pp_linkset_node **hash_table;    /* data actually lives here */
 } pp_linkset;
 
 
 /* from pp_lexer.c */
 #define PP_LEXER_MAX_LABELS 512
 
-typedef struct pp_label_node_s 
+typedef struct pp_label_node_s
 {
-  /* linked list of strings associated with a label in the table */
-  char *str;                     
-  struct pp_label_node_s *next;
+    /* linked list of strings associated with a label in the table */
+    char *str;
+    struct pp_label_node_s *next;
 } pp_label_node;                 /* next=NULL: end of list */
 
 
 typedef struct PPLexTable_s
 {
-  String_set *string_set;
-  char *labels[PP_LEXER_MAX_LABELS];    /* array of labels (NULL-terminated) */
-  pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /* str. for each label */
-  pp_label_node *last_node_of_label[PP_LEXER_MAX_LABELS];      /* efficiency */
-  pp_label_node *current_node_of_active_label;/*state: current node of label */
-  int idx_of_active_label;                      /* read state: current label */
+    String_set *string_set;
+    char *labels[PP_LEXER_MAX_LABELS];    /* array of labels (NULL-terminated) */
+    pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /* str. for each label */
+    pp_label_node *last_node_of_label[PP_LEXER_MAX_LABELS];      /* efficiency */
+    pp_label_node *current_node_of_active_label;/*state: current node of label */
+    int idx_of_active_label;                      /* read state: current label */
 } PPLexTable;
 
 /* from pp_knowledge.c */
-typedef struct StartingLinkAndDomain_s 
+typedef struct StartingLinkAndDomain_s
 {
-  char* starting_link;              
-  int   domain;       /* domain which the link belongs to (-1: terminator)*/
+    char* starting_link;
+    int   domain;       /* domain which the link belongs to (-1: terminator)*/
 } StartingLinkAndDomain;
 
 typedef struct pp_rule_s
 {
-  /* Holds a single post-processing rule. Since rules come in many 
-     flavors, not all fields of the following are always relevant  */
-  char *selector;       /* name of link to which rule applies      */
-  int   domain;         /* type of domain to which rule applies    */
-  pp_linkset *link_set; /* handle to set of links relevant to rule */
-  int   link_set_size;  /* size of this set                        */
-  char  **link_array;   /* array containing the spelled-out names  */
-  char  *msg;           /* explanation (NULL=end sentinel in array)*/
+    /* Holds a single post-processing rule. Since rules come in many
+       flavors, not all fields of the following are always relevant  */
+    char *selector;       /* name of link to which rule applies      */
+    int   domain;         /* type of domain to which rule applies    */
+    pp_linkset *link_set; /* handle to set of links relevant to rule */
+    int   link_set_size;  /* size of this set                        */
+    char  **link_array;   /* array containing the spelled-out names  */
+    char  *msg;           /* explanation (NULL=end sentinel in array)*/
 } pp_rule;
 
 typedef struct pp_knowledge_s
 {
-  PPLexTable *lt; /* Internal rep'n of sets of strings from knowledge file */
-  char *path;     /* Name of file we loaded from */
-  
-  /* handles to sets of links specified in knowledge file. These constitute
-     auxiliary data, necessary to implement the rules, below. See comments
-   in post-process.c for a description of these. */
-  pp_linkset *domain_starter_links;
-  pp_linkset *urfl_domain_starter_links;
-  pp_linkset *urfl_only_domain_starter_links;
-  pp_linkset *domain_contains_links;
-  pp_linkset *must_form_a_cycle_links;
-  pp_linkset *restricted_links;
-  pp_linkset *ignore_these_links;
-  pp_linkset *left_domain_starter_links;
+    PPLexTable *lt; /* Internal rep'n of sets of strings from knowledge file */
+    char *path;     /* Name of file we loaded from */
 
-  /* arrays of rules specified in knowledge file */
-  pp_rule *connected_rules, *form_a_cycle_rules;
-  pp_rule *contains_one_rules, *contains_none_rules;
-  pp_rule *bounded_rules;
+    /* handles to sets of links specified in knowledge file. These constitute
+       auxiliary data, necessary to implement the rules, below. See comments
+       in post-process.c for a description of these. */
+    pp_linkset *domain_starter_links;
+    pp_linkset *urfl_domain_starter_links;
+    pp_linkset *urfl_only_domain_starter_links;
+    pp_linkset *domain_contains_links;
+    pp_linkset *must_form_a_cycle_links;
+    pp_linkset *restricted_links;
+    pp_linkset *ignore_these_links;
+    pp_linkset *left_domain_starter_links;
 
-  int n_connected_rules, n_form_a_cycle_rules;
-  int n_contains_one_rules, n_contains_none_rules;
-  int n_bounded_rules;
+    /* arrays of rules specified in knowledge file */
+    pp_rule *connected_rules, *form_a_cycle_rules;
+    pp_rule *contains_one_rules, *contains_none_rules;
+    pp_rule *bounded_rules;
 
-  pp_linkset *set_of_links_starting_bounded_domain;
-  StartingLinkAndDomain *starting_link_lookup_table; 
-  int nStartingLinks;
-  String_set *string_set;              
+    int n_connected_rules, n_form_a_cycle_rules;
+    int n_contains_one_rules, n_contains_none_rules;
+    int n_bounded_rules;
+
+    pp_linkset *set_of_links_starting_bounded_domain;
+    StartingLinkAndDomain *starting_link_lookup_table;
+    int nStartingLinks;
+    String_set *string_set;
 } pp_knowledge;
 
 
