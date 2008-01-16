@@ -22,10 +22,12 @@
 #define ENTITY_MARKER "<marker-entity>"
 
 
-void free_connectors(Connector *e) {
-/* free the list of connectors pointed to by e
-   (does not free any strings)
-*/
+/**
+ * free_connectors() -- free the list of connectors pointed to by e
+ * (does not free any strings)
+ */
+void free_connectors(Connector *e)
+{
 	Connector * n;
 	for(;e != NULL; e = n) {
 		n = e->next;
@@ -33,10 +35,12 @@ void free_connectors(Connector *e) {
 	}
 }
 
-void free_disjuncts(Disjunct *c) {
-/* free the list of disjuncts pointed to by c
-   (does not free any strings)
-*/
+/**
+ * free_disjuncts() -- free the list of disjuncts pointed to by c
+ * (does not free any strings)
+ */
+void free_disjuncts(Disjunct *c)
+{
 	Disjunct *c1;
 	for (;c != NULL; c = c1) {
 		c1 = c->next;
