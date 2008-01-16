@@ -357,7 +357,7 @@ static int and_connector_hash(Connector * c, int i) {
    the string, and the label.  This ensures that if two connectors
    match, then they must hash to the same place.
 */
-	char * s;
+	const char * s;
 	s = c->string;
 
 	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
@@ -402,12 +402,13 @@ static int is_appropriate(Sentence sent, Disjunct * d) {
 	return TRUE;
 }
 
-static int connector_types_equal(Connector * c1, Connector * c2) {
+static int connector_types_equal(Connector * c1, Connector * c2)
+{
 /* Two connectors are said to be of the same type if they have
    the same label, and the initial upper case letters of their
    strings match.
 */
-	char * s, * t;
+	const char * s, * t;
 	if (c1->label != c2->label) return FALSE;
 	s = c1->string;
 	t = c2->string;
@@ -448,19 +449,22 @@ static int disjunct_types_equal(Disjunct * d1, Disjunct * d2) {
 	return TRUE;
 }
 
-char * intersect_strings(Sentence sent, char * s, char * t) {
-/* This returns a string that is the the GCD of the two given strings.
-   If the GCD is equal to one of them, a pointer to it is returned.
-   Otherwise a new string for the GCD is xalloced and put on the
-   "free later" list.
-*/
+/**
+ * This returns a string that is the the GCD of the two given strings.
+ * If the GCD is equal to one of them, a pointer to it is returned.
+ * Otherwise a new string for the GCD is xalloced and put on the
+ * "free later" list.
+ */
+const char * intersect_strings(Sentence sent, const char * s, const char * t)
+{
 	int len, i, j, d;
-	char * u, *u0, *s0;
+	const char *w, *s0;
+	char *u, *u0;
 	if (strcmp(s,t)==0) return s;  /* would work without this */
 	i = strlen(s);
 	j = strlen(t);
 	if (j > i) {
-		u = s; s = t; t = u;
+		w = s; s = t; t = w;
 		len = j;
 	} else {
 		len = i;
@@ -528,7 +532,8 @@ static int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2) {
 	return TRUE;
 }
 
-static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d2) {
+static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d2)
+{
 /* Create a new disjunct that is the GCD of d1 and d2.
    It assumes that the disjuncts are of the same type, so the
    GCD will not be empty.
@@ -685,13 +690,15 @@ static void extract_all_fat_links(Sentence sent, Disjunct * d) {
 	}
 }
 
-static char * stick_in_one_connector(char *s, Connector *c, int len) {
-/* put the next len characters from c->string (skipping upper
-   case ones) into s.  If there are fewer than this, pad with '*'s.
-   Then put in a character for the multi match bit of c.
-   Then put in a '\0', and return a pointer to this place.
-*/
-	char * t;
+/** 
+ * put the next len characters from c->string (skipping upper
+ * case ones) into s.  If there are fewer than this, pad with '*'s.
+ * Then put in a character for the multi match bit of c.
+ * Then put in a '\0', and return a pointer to this place.
+ */
+static char * stick_in_one_connector(char *s, Connector *c, int len)
+{
+	const char * t;
 	for (t = c->string; isupper((int)*t); t++)
 	  ;
 	while (*t != '\0') {
@@ -720,6 +727,7 @@ static void compute_matchers_for_a_label(Sentence sent, int k) {
 	int N_connectors, i, j, tot_len;
 	Connector * c;
 	Disjunct * d;
+	const char *cs;
 	char *s, *os;
 
 	d = sent->and_data.label_table[k];
@@ -733,16 +741,16 @@ static void compute_matchers_for_a_label(Sentence sent, int k) {
 	while(d != NULL) {
 		i = 0;
 		for (c=d->left; c != NULL; c = c->next) {
-			s = c->string;
-			while(isupper((int)*s)) s++;
-			j = strlen(s);
+			cs = c->string;
+			while(isupper((int)*cs)) cs++;
+			j = strlen(cs);
 			if (j > lengths[i]) lengths[i] = j;
 			i++;
 		}
 		for (c=d->right; c != NULL; c = c->next) {
-			s = c->string;
-			while(isupper((int)*s)) s++;
-			j = strlen(s);
+			cs = c->string;
+			while(isupper((int)*cs)) cs++;
+			j = strlen(cs);
 			if (j > lengths[i]) lengths[i] = j;
 			i++;
 		}
@@ -1308,10 +1316,12 @@ static void build_image_array(Sentence sent) {
 	}
 }
 
-static int strictly_smaller(char * s, char * t) {
-/* returns TRUE if string s represents a strictly smaller match set
-   than does t
-*/
+/** 
+ * returns TRUE if string s represents a strictly smaller match set
+ * than does t
+ */
+static int strictly_smaller(const char * s, const char * t)
+{
 	int strictness;
 	strictness = 0;
 	for (;(*s!='\0') && (*t!='\0'); s++,t++) {
@@ -1352,13 +1362,14 @@ static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label) {
 	return d;
 }
 
-int is_canonical_linkage(Sentence sent) {
-/*
-   This uses link_array[], chosen_disjuncts[], has_fat_down[].
-   It assumes that there is a fat link in the current linkage.
-   See the comments above for more information about how it works
-*/
-
+/**
+ * is_canonical_linkage -- 
+ * This uses link_array[], chosen_disjuncts[], has_fat_down[].
+ * It assumes that there is a fat link in the current linkage.
+ * See the comments above for more information about how it works
+ */
+int is_canonical_linkage(Sentence sent)
+{
 	int w, d_label=0, place;
 	Connector *d_c, *c, dummy_connector, *upcon;
 	Disjunct *dis, *chosen_d;
