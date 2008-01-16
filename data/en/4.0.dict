@@ -80,10 +80,20 @@ PL-CAPITALIZED-WORDS:
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)); 
 % capitalized words ending in s
 
-/en/words/words.n.p: % words that are also proper names
-<marker-entity> or (
+<proper-name>: (
 {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
+
+% Just pure singular entities, no mass nouns 
+<entity-singular>:
+({G-} & {[MG+]} & (
+  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or YS+))
+or AN+ or G+));
+
+personID0 personID1: <entity-singular>;
+
+/en/words/words.n.p: % words that are also proper names
+<marker-entity> or <proper-name>;
 % Art Bell Bill Bob Buck Bud Chase Chemical China Congress Continental 
 
 %
@@ -101,12 +111,13 @@ entityID40 entityID41 entityID42 entityID43 entityID44 entityID45 entityID46 ent
 entityID50 entityID51 entityID52 entityID53 entityID54 entityID55 entityID56 entityID57 entityID58 entityID59
 entityID60: <entity-id>;
 
-%from words.n.4
+% Same as pattern used in words.n.4 -- mass nouns or countable nouns
 <generic-singular-id>: ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or (Rw+ & Bsm+))) or 
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 
-%from words.n.2.s
+
+% Same pattern used for words.n.2.s
 <generic-plural-id>:  ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or (Rw+ & Bpm+)))
 or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
@@ -193,7 +204,8 @@ or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 
 % SINGULAR ENTITIES FOR ENTITY EXTRACTION (SAME AS CAPITALIZED-WORDS NAME)
 % This must appear after other categories so it doesnt interfere with those.
-/en/words/words.entities.sing: <marker-entity> or ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
+/en/words/words.entities.sing: 
+<marker-entity> or <entity-singular>;
 
 alter_ego au_pair mise_en_scene faux_pas non_sequitur fait_accompli
 modus_vivendi head_of_state tour_de_force:
@@ -3005,7 +3017,7 @@ proud.a scared.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) & 
 {@MV+} & {(TO+ or TH+ or (OF+ & {@MV+})) & {LE+}}) or AA+ or [[DD- & 
 <noun-main-p>]] or ({TO+ or TH+ or OF+} & <adj-op>));
-tired.a full.a sick.a critical.a guilty.a typical.a
+tired.a pooped.a full.a sick.a critical.a guilty.a typical.a
 capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
 appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
