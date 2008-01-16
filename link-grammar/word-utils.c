@@ -244,8 +244,11 @@ int sentence_contains_conjunction(Sentence sent) {
 	return FALSE;
 }
 
-int conj_in_range(Sentence sent, int lw, int rw) {
-/* Returns true if the range lw...rw inclusive contains a conjunction */
+/**
+ *  Returns true if the range lw...rw inclusive contains a conjunction 
+ */
+int conj_in_range(Sentence sent, int lw, int rw)
+{
 	for (;lw <= rw; lw++) {
 		if (sent->is_conjunction[lw]) return TRUE;
 	}
@@ -448,13 +451,14 @@ static int exp_contains(Exp * super, Exp * sub) {
 
 int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
 {
+	Exp * m_exp;
 	Dict_node *m_dn;
 	m_dn = dictionary_lookup_list(dict, macro);
 
 	if ((w_dn == NULL)||(m_dn == NULL))
 		return 0;
 
-	Exp * m_exp = m_dn->exp;
+	m_exp = m_dn->exp;
 	free_lookup_list(m_dn);
 
 	// printf("\n\nWORD:");
