@@ -365,7 +365,22 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	}
 
 	for (i=n_r_stripped-1; i>=0; i--) {
-		if (r_stripped[i] > strlen(*strip_right)) continue;
+
+		/* Revert fix r22566, which had a commit message:
+		 * "Fix Bug 9756, crash when grammar checking Word document."
+		 * This fix added the line:
+		 *    if (r_stripped[i] > strlen(*strip_right)) continue;
+		 * However, the addition of this line will break
+		 * the parsing of "Doogie's mother bit her."
+		 *
+		 * The fix is incorrect, because a NULL has been inserted into strip_right,
+		 * making it very short (length 2). Meanwhile, the offset to the 's 
+		 * is 9 chars (greater than 2!)  The string at strip_right[r_stripped[i]]
+		 * is pointing at the 's.
+		 *
+		 * Thus, I'm reverting this fix for now; whatever the problem is,
+		 * it needs to be handled in some other way.
+		 */
 		if (!issue_sentence_word(sent, strip_right[r_stripped[i]])) return FALSE;
 	}
 
