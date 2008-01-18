@@ -117,6 +117,8 @@ linkage_constituent_node_get_start
 linkage_constituent_node_get_end
 lperrno
 lperrmsg
+is_entity
+is_past_tense_form
 Java_org_linkgrammar_LinkGrammar_close
 Java_org_linkgrammar_LinkGrammar_getConstituentString
 Java_org_linkgrammar_LinkGrammar_getWord
