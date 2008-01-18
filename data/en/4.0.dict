@@ -207,6 +207,10 @@ or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 /en/words/words.entities.sing: 
 <marker-entity> or <entity-singular>;
 
+% "Mother likes her"
+aunt.e brother.e father.e grandmother.e grandfather.e mother.e sister.e uncle.e:
+<entity-singular>;
+
 alter_ego au_pair mise_en_scene faux_pas non_sequitur fait_accompli
 modus_vivendi head_of_state tour_de_force:
  ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & <noun-sub-s> & 
