@@ -285,8 +285,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage) {
 static char picture[MAX_HEIGHT][MAX_LINE];
 static char xpicture[MAX_HEIGHT][MAX_LINE];
 
-/* String allocated with exalloc.  Needs to be freed with exfree */
-char * linkage_print_diagram(Linkage linkage) {
+/** 
+ * String allocated with exalloc.  
+ * Needs to be freed with linkage_free_diagram()
+ */
+char * linkage_print_diagram(Linkage linkage)
+{
     int i, j, k, cl, cr, row, top_row, width, flag;
     char *t, *s;
     int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
@@ -513,7 +517,13 @@ char * linkage_print_diagram(Linkage linkage) {
     return gr_string; 
 }
 
-char * linkage_print_postscript(Linkage linkage, int mode) {
+void linkage_free_diagram(char * s)
+{
+	exfree(s, strlen(s)+1);
+}
+
+char * linkage_print_postscript(Linkage linkage, int mode)
+{
     char * ps, * qs;
     int size;
 
@@ -525,6 +535,11 @@ char * linkage_print_postscript(Linkage linkage, int mode) {
     exfree(ps, strlen(ps)+1);
 						      
     return qs;
+}
+
+void linkage_free_postscript(char * s)
+{
+	exfree(s, strlen(s)+1);
 }
 
 void print_disjunct_counts(Sentence sent) {

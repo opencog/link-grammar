@@ -254,10 +254,16 @@ link_public_api(char *)
      linkage_print_links_and_domains(Linkage linkage);
 link_public_api(char *)
      linkage_print_constituent_tree(Linkage linkage, int mode);
+link_public_api(void)
+     linkage_free_constituent_tree_str(char *str);
 link_public_api(char *)
      linkage_print_postscript(Linkage linkage, int mode);
+link_public_api(void)
+     linkage_free_postscript(char * str);
 link_public_api(char *)
      linkage_print_diagram(Linkage linkage);
+link_public_api(void)
+     linkage_free_diagram(char * str);
 link_public_api(int)
      linkage_compute_union(Linkage linkage);
 link_public_api(int)

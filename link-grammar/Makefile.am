@@ -14,14 +14,17 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS)
 
-lib_LTLIBRARIES = liblink-grammar.la
+lib_LTLIBRARIES = liblink-grammar.la liblink-grammar-java.la
 
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
+liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
 
 if WITH_BINRELOC
 liblink_grammar_la_LIBADD  = -lpthread
+liblink_grammar_java_la_LIBADD  = -lpthread
 else
 liblink_grammar_la_LIBADD  = 
+liblink_grammar_java_la_LIBADD  = 
 endif
 
 liblink_grammar_la_SOURCES =		\
@@ -93,10 +96,12 @@ liblink_grammar_include_HEADERS = 	\
 	link-includes.h			\
 	link-features.h
 
+liblink_grammar_java_la_SOURCES =		\
+	jni-client.h			\
+	jni-client.c
+
 EXTRA_DIST=				\
 	prefix.h			\
-	jni-client.h			\
-	jni-client.c			\
 	LinkGrammar.java		\
 	link-grammar.def
 

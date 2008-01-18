@@ -99,20 +99,18 @@ static void printTree(CNode* cn)
 
 static void jParse(char* inputString)
 {
+	int jverbosity = parse_options_get_verbosity(opts);
 	if (sent)
 		sentence_delete(sent);
 	sent = sentence_create(inputString, dict);
 	num_linkages=0;
 
-	if (sent == NULL) {
-		if (verbosity > 0) fprintf(stderr, "%s\n", lperrmsg);
-		if (lperrno != NOTINDICT) exit(-1);
-		else return;
-	}
+	if (sent == NULL)
+		return;
 
 	if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
 		sentence_delete(sent);
-		if (verbosity > 0) {
+		if (jverbosity > 0) {
 			fprintf(stdout,
 				"Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 				sentence_length(sent), parse_options_get_max_sentence_length(opts));
@@ -130,7 +128,7 @@ static void jParse(char* inputString)
 
 	/* Now parse with null links */
 	if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts))) {
-		if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
+		if (jverbosity > 0) fprintf(stdout, "No complete linkages found.\n");
 		if (parse_options_get_allow_null(opts)) {
 			parse_options_set_min_null_count(opts, 1);
 			parse_options_set_max_null_count(opts, sentence_length(sent));
@@ -139,22 +137,22 @@ static void jParse(char* inputString)
 	}
 
 	if (parse_options_timer_expired(opts)) {
-		if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
+		if (jverbosity > 0) fprintf(stdout, "Timer is expired!\n");
 	}
 	if (parse_options_memory_exhausted(opts)) {
-		if (verbosity > 0) fprintf(stdout, "Memory is exhausted!\n");
+		if (jverbosity > 0) fprintf(stdout, "Memory is exhausted!\n");
 	}
 
 	if ((num_linkages == 0) &&
 			parse_options_resources_exhausted(opts) &&
 			parse_options_get_panic_mode(opts)) {
 		print_total_time(opts);
-		if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
+		if (jverbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
 		parse_options_reset_resources(panic_parse_opts);
-		parse_options_set_verbosity(panic_parse_opts, verbosity);
+		parse_options_set_verbosity(panic_parse_opts, jverbosity);
 		num_linkages = sentence_parse(sent, panic_parse_opts);
 		if (parse_options_timer_expired(panic_parse_opts)) {
-			if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
+			if (jverbosity > 0) fprintf(stdout, "Timer is expired!\n");
 		}
 	}
 }
@@ -413,7 +411,7 @@ Java_org_linkgrammar_LinkGrammar_getConstituentString(JNIEnv *env, jclass cls)
 	// char *s = linkage_print_constituent_tree(linkage, 1);
 	char *s = linkage_print_constituent_tree(linkage, 3);
 	jstring j = (*env)->NewStringUTF(env, s);
-	exfree (s, strlen(s)+1);
+	linkage_free_constituent_tree(s);
 	return j;
 }
 
@@ -427,7 +425,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 {
 	char *s = linkage_print_diagram(linkage);
 	jstring j = (*env)->NewStringUTF(env, s);
-	exfree(s, strlen(s)+1);
+	linkage_free_diagram(s);
 	return j;
 }
 

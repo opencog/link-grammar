@@ -1455,12 +1455,15 @@ void linkage_free_constituent_tree(CNode * n) {
 }
 
 
-/* Print out the constituent tree.
-   mode 1: treebank-style constituent tree
-   mode 2: flat, bracketed tree [A like [B this B] A]
-   mode 3: flat, treebank-style tree (A like (B this) ) */
+/**
+ * Print out the constituent tree.
+ * mode 1: treebank-style constituent tree
+ * mode 2: flat, bracketed tree [A like [B this B] A]
+ * mode 3: flat, treebank-style tree (A like (B this) )
+ */
 
-char * linkage_print_constituent_tree(Linkage linkage, int mode) {
+char * linkage_print_constituent_tree(Linkage linkage, int mode)
+{
 	String * cs;
 	CNode * root;
 	char * p;
@@ -1485,6 +1488,11 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode) {
 	}
 	assert(0, "Illegal mode in linkage_print_constituent_tree");
 	return NULL;
+}
+
+void linkage_free_constituent_tree_str(char * s)
+{
+	exfree(s, strlen(s)+1);
 }
 
 char * linkage_constituent_node_get_label(const CNode *n)
