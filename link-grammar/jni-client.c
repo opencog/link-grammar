@@ -411,7 +411,7 @@ Java_org_linkgrammar_LinkGrammar_getConstituentString(JNIEnv *env, jclass cls)
 	// char *s = linkage_print_constituent_tree(linkage, 1);
 	char *s = linkage_print_constituent_tree(linkage, 3);
 	jstring j = (*env)->NewStringUTF(env, s);
-	linkage_free_constituent_tree(s);
+	linkage_free_constituent_tree_str(s);
 	return j;
 }
 
