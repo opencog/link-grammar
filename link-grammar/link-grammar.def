@@ -44,6 +44,7 @@ parse_options_set_batch_mode
 parse_options_get_batch_mode
 parse_options_set_panic_mode
 parse_options_get_panic_mode
+print_total_time
 parse_options_set_display_on
 parse_options_get_display_on
 parse_options_set_display_postscript
