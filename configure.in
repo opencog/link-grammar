@@ -7,11 +7,11 @@ dnl     4a) Increment when removing or changing interfaces.
 LINK_MAJOR_VERSION=4
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=2
+LINK_MINOR_VERSION=3
 dnl     3) Increment when interfaces not changed at all,
 dnl               only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=5
+LINK_MICRO_VERSION=0
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -144,6 +144,19 @@ AC_SUBST(LINK_CFLAGS)
 
 dnl =======================================================================================
 
+AC_MSG_CHECKING(for jni.h)
+AC_TRY_CPP( [#include <jni.h>], 
+       [AC_MSG_RESULT([yes, will build java libs])
+        JNIfound=yes], 
+       [ AC_MSG_ERROR([cannot find jni.h header, needed for Java bindings support.]) 
+        JNIfound=no])
+if test x${JNIfound} = xyes ; then
+	CPPFLAGS="${CPPFLAGS} -DBUILD_JNI_CLIENT=1"
+fi
+AC_SUBST(CPPFLAGS)
+
+dnl =======================================================================================
+
 AC_OUTPUT([
 Makefile
 link-grammar.pc
@@ -164,4 +177,5 @@ $PACKAGE-$VERSION
 	prefix:                         ${prefix}
 	compiler:                       ${CC}
 	autopackage:                    ${br_cv_binreloc}
+	java interfaces:                ${JNIfound}
 "
