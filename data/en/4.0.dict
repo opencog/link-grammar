@@ -98,6 +98,22 @@ personID40 personID41 personID42 personID43 personID44 personID45 personID46 per
 personID50 personID51 personID52 personID53 personID54 personID55 personID56 personID57 personID58 personID59
 personID60: <marker-entity> or <entity-singular>;
 
+organizationID0 organizationID1 organizationID2 organizationID3 organizationID4 organizationID5 organizationID6 organizationID7 organizationID8 organizationID9
+organizationID10 organizationID11 organizationID12 organizationID13 organizationID14 organizationID15 organizationID16 organizationID17 organizationID18 organizationID19
+organizationID20 organizationID21 organizationID22 organizationID23 organizationID24 organizationID25 organizationID26 organizationID27 organizationID28 organizationID29
+organizationID30 organizationID31 organizationID32 organizationID33 organizationID34 organizationID35 organizationID36 organizationID37 organizationID38 organizationID39
+organizationID40 organizationID41 organizationID42 organizationID43 organizationID44 organizationID45 organizationID46 organizationID47 organizationID48 organizationID49
+organizationID50 organizationID51 organizationID52 organizationID53 organizationID54 organizationID55 organizationID56 organizationID57 organizationID58 organizationID59
+organizationID60: <marker-entity> or <entity-singular>;
+
+locationID0 locationID1 locationID2 locationID3 locationID4 locationID5 locationID6 locationID7 locationID8 locationID9
+locationID10 locationID11 locationID12 locationID13 locationID14 locationID15 locationID16 locationID17 locationID18 locationID19
+locationID20 locationID21 locationID22 locationID23 locationID24 locationID25 locationID26 locationID27 locationID28 locationID29
+locationID30 locationID31 locationID32 locationID33 locationID34 locationID35 locationID36 locationID37 locationID38 locationID39
+locationID40 locationID41 locationID42 locationID43 locationID44 locationID45 locationID46 locationID47 locationID48 locationID49
+locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 locationID56 locationID57 locationID58 locationID59
+locationID60: <marker-entity> or <entity-singular>;
+
 /en/words/words.n.p: % words that are also proper names
 <marker-entity> or <proper-name>;
 % Art Bell Bill Bob Buck Bud Chase Chemical China Congress Continental 
@@ -133,7 +149,7 @@ genericID20 genericID21 genericID22 genericID23 genericID24 genericID25 genericI
 genericID30 genericID31 genericID32 genericID33 genericID34 genericID35 genericID36 genericID37 genericID38 genericID39
 genericID40 genericID41 genericID42 genericID43 genericID44 genericID45 genericID46 genericID47 genericID48 genericID49
 genericID50 genericID51 genericID52 genericID53 genericID54 genericID55 genericID56 genericID57 genericID58 genericID59
-genericID60: <generic-singular-id> or <generic-plural-id>;
+genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
 
 %from words.y year numbers
 <date-id>: NN+ or NIa- or AN+ or 
