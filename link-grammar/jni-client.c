@@ -431,28 +431,15 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 
 /*
  * Class:		 LinkParser
- * Method:		isPastTenseForm
+ * Method:		ruleContains
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL
-Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstring str)
+Java_org_linkgrammar_LinkGrammar_wordContains(JNIEnv *env, jclass cls, jstring word, jstring rule)
 {
-	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (is_past_tense_form(cStr,dict) == 1)
-		return TRUE;
-	return FALSE;
-}
-
-/*
- * Class:		 LinkParser
- * Method:		isEntity
- * Signature: (Ljava/lang/String;)Z
- */
-JNIEXPORT jboolean JNICALL
-Java_org_linkgrammar_LinkGrammar_isEntity(JNIEnv *env, jclass cls, jstring str)
-{
-	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (is_entity(cStr,dict) == 1)
+	const char *cWord = (*env)->GetStringUTFChars(env,word,0);
+	const char *cRule = (*env)->GetStringUTFChars(env,rule,0);
+	if (word_contains(cWord,cRule,dict) == 1)
 		return TRUE;
 	return FALSE;
 }

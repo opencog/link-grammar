@@ -45,8 +45,6 @@ int sentence_contains_conjunction(Sentence sent);
 int conj_in_range(Sentence sent, int lw, int rw);
 int max_link_length(Connector * c);
 void string_delete(char * p);
-int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict);
-
 
 /* Connector_set routines */
 Connector_set * connector_set_create(Exp *e);

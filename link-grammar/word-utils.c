@@ -18,10 +18,6 @@
 #include "word-utils.h"
 #include <stdio.h>
 
-#define PAST_TENSE_FORM_MARKER "<marker-past>"
-#define ENTITY_MARKER "<marker-entity>"
-
-
 /**
  * free_connectors() -- free the list of connectors pointed to by e
  * (does not free any strings)
@@ -431,7 +427,8 @@ static int exp_compare(Exp * e1, Exp * e2)
 
 //1 if sub is non-NULL and contained in super
 //0 otherwise
-static int exp_contains(Exp * super, Exp * sub) {
+static int exp_contains(Exp * super, Exp * sub)
+{
 	E_list * el;
 
 	//printf("\nSUP:");
@@ -453,14 +450,15 @@ static int exp_contains(Exp * super, Exp * sub) {
 	return 0;
 }
 
-int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
+static int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
 {
 	Exp * m_exp;
 	Dict_node *m_dn;
-	m_dn = dictionary_lookup_list(dict, macro);
 
-	if ((w_dn == NULL)||(m_dn == NULL))
-		return 0;
+	if (w_dn == NULL) return 0;
+
+	m_dn = dictionary_lookup_list(dict, macro);
+	if (m_dn == NULL) return 0;
 
 	m_exp = m_dn->exp;
 	free_lookup_list(m_dn);
@@ -479,7 +477,9 @@ int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
 }
 
 /**
- * Return true if word's expression contains macro's expression, false otherwise.
+ * word_contains: return true if the word may involve application of a rule.
+ *
+ * @return: true if word's expression contains macro's expression, false otherwise.
  */
 int word_contains(const char * word, const char * macro, Dictionary dict)
 {
@@ -489,26 +489,6 @@ int word_contains(const char * word, const char * macro, Dictionary dict)
 	ret = dn_word_contains(w_dn, macro, dict);
 	free_lookup_list(w_dn);
 	return ret;
-}
-
-int is_past_tense_form(const char * str, Dictionary dict)
-{
-	if (word_contains(str, PAST_TENSE_FORM_MARKER, dict) == 1)
-		return 1;
-	return 0;
-}
-
-/**
- * is_entity - Return true if word is entity.
- * Entities are proper names (geographical names,
- * names of people), street addresses, phone numbers,
- * etc.
- */
-int is_entity(const char * str, Dictionary dict)
-{
-	if (word_contains(str, ENTITY_MARKER, dict) == 1)
-		return 1;
-	return 0;
 }
 
 /* ========================= END OF FILE ============================== */

@@ -5,7 +5,7 @@ package org.linkgrammar;
  * It provides a simple public Java API to the equivalent public C API.
  *
  * Unfortunately, this class is not at all OOP in style; it operates on 
- * the * single, current sentence and linkage.  This could be improved.
+ * the single, current sentence and linkage.  This could be improved.
  */
 
 public class LinkGrammar {
@@ -61,8 +61,6 @@ public class LinkGrammar {
     public static native String getLinkString();
 
     // OTHER UTILITY C FUNCTIONS
-    public static native boolean isPastTenseForm(String word);
-
-    public static native boolean isEntity(String word);
+    public static native boolean wordContains(String word, String macro);
 }
 
