@@ -90,7 +90,13 @@ PL-CAPITALIZED-WORDS:
   ({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or YS+))
 or AN+ or G+));
 
-personID0 personID1: <entity-singular>;
+personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
+personID10 personID11 personID12 personID13 personID14 personID15 personID16 personID17 personID18 personID19
+personID20 personID21 personID22 personID23 personID24 personID25 personID26 personID27 personID28 personID29
+personID30 personID31 personID32 personID33 personID34 personID35 personID36 personID37 personID38 personID39
+personID40 personID41 personID42 personID43 personID44 personID45 personID46 personID47 personID48 personID49
+personID50 personID51 personID52 personID53 personID54 personID55 personID56 personID57 personID58 personID59
+personID60: <marker-entity> or <entity-singular>;
 
 /en/words/words.n.p: % words that are also proper names
 <marker-entity> or <proper-name>;
@@ -98,7 +104,6 @@ personID0 personID1: <entity-singular>;
 
 %
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
-% deleted "<marker-entity> or"
 <entity-id>: (
 {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)); 
@@ -109,7 +114,7 @@ entityID20 entityID21 entityID22 entityID23 entityID24 entityID25 entityID26 ent
 entityID30 entityID31 entityID32 entityID33 entityID34 entityID35 entityID36 entityID37 entityID38 entityID39
 entityID40 entityID41 entityID42 entityID43 entityID44 entityID45 entityID46 entityID47 entityID48 entityID49
 entityID50 entityID51 entityID52 entityID53 entityID54 entityID55 entityID56 entityID57 entityID58 entityID59
-entityID60: <entity-id>;
+entityID60: <marker-entity> or <entity-id>;
 
 % Same as pattern used in words.n.4 -- mass nouns or countable nouns
 <generic-singular-id>: ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
