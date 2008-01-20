@@ -61,6 +61,8 @@ public class LinkGrammar {
     public static native String getLinkString();
 
     // OTHER UTILITY C FUNCTIONS
-    public static native boolean wordContains(String word, String macro);
+    public static native boolean isPastTenseForm(String word);
+
+    public static native boolean isEntity(String word);
 }
 

@@ -491,4 +491,27 @@ int word_contains(const char * word, const char * macro, Dictionary dict)
 	return ret;
 }
 
+#define PAST_TENSE_FORM_MARKER "<marker-past>"
+#define ENTITY_MARKER          "<marker-entity>"
+
+int is_past_tense_form(const char * str, Dictionary dict)
+{
+	if (word_contains(str, PAST_TENSE_FORM_MARKER, dict) == 1)
+		return 1;
+	return 0;
+}
+
+/**
+ * is_entity - Return true if word is entity.
+ * Entities are proper names (geographical names,
+ * names of people), street addresses, phone numbers,
+ * etc.
+ */
+int is_entity(const char * str, Dictionary dict)
+{
+	if (word_contains(str, ENTITY_MARKER, dict) == 1)
+		return 1;
+	return 0;
+}
+
 /* ========================= END OF FILE ============================== */
