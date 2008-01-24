@@ -1114,6 +1114,10 @@ wonders.v inquires.v: <verb-s> & <vc-wonder>;
 wondered.v inquired.v: <verb-sp,pp> & <vc-wonder>;
 wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 
+% Imperative go: "go play ball", "go take a walk", "go swimming"
+% Same pattern as "please.e" -- "please play ball" etc.
+go.e: Wi- & I+;
+
 <vc-go>: {K+ or [[Pa+]] or [[Pg+]]} & {@MV+}; 
 go.v: <verb-pl,i> & <vc-go>;
 goes.v: <verb-s> & <vc-go>;
