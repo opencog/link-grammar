@@ -841,6 +841,9 @@ or [[()]]));
 <verb-pl,i> & <vc-intrans>;
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
 
+/en/words/words-medical.v.1.1:  
+<verb-pl,i> & <vc-intrans>;
+
 /en/words/words.v.1.2:  
 <verb-s> & <vc-intrans>;
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v 
@@ -874,6 +877,9 @@ or <verb-ge-d>;
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v 
 /en/words/words.v.2.1:
 <verb-pl,i> & <vc-tr,intr>;
+/en/words/words-medical.v.2.1:
+<verb-pl,i> & <vc-tr,intr>;
+
 /en/words/words.v.2.2:  
 <verb-s> & <vc-tr,intr>;
 /en/words/words.v.2.3:  
@@ -927,10 +933,22 @@ run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or
 % abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v 
 /en/words/words.v.4.1:  
 <verb-pl,i> & <vc-trans>;
+/en/words/words-medical.v.4.1:  
+<verb-pl,i> & <vc-trans>;
+
 /en/words/words.v.4.2:  
 <verb-s> & <vc-trans>;
+/en/words/words-medical.v.4.2:  
+<verb-s> & <vc-trans>;
+
 /en/words/words.v.4.3:  
 (<verb-sp,pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+
+% !?XXX many of the new additions fail some common sentences, such as:
+% The candle guttered. It plummeted to the bottom. Prices plummeted!
+/en/words/words-medical.v.4.3:  
+(<verb-sp,pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+
 forsook.v overrode.v overtook.v rewrote.v undid.v overran.v mistook.v underwrote.v: 
 <verb-sp> & <vc-trans>;
 hit.v misread.v shed.v rid.v overcome.v offset.v overrun.v upset.v undercut.v: 
@@ -940,7 +958,10 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 (<verb-pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 /en/words/words.v.4.4:  
 <verb-pg> & <vc-trans>;
+
 /en/words/words.v.4.5: 
+(<vc-trans> & <verb-ge>) or <verb-ge-d>;
+/en/words/words-medical.v.4.5: 
 (<vc-trans> & <verb-ge>) or <verb-ge-d>;
 
 <vc-kick>: ((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+}) or 
