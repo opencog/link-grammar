@@ -1,3 +1,6 @@
+Version 4.3.1 includes the following changes:
+ * A merger of significant parts of the "medical terms" dictionary
+   from Peter Szolovits.  This includes thousands of additional words.
 
 Version 4.3.0 includes the following changes:
  * New link types (Ct, Cta, Rn, Rw) for comparatives, so as to link
