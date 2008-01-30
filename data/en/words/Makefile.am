@@ -1,4 +1,8 @@
 WORDS=			\
+	entities.famous.sing \
+	entities.given-names.sing \
+	entities.national.sing \
+	entities.us-states.sing \
 	words.adj.1	\
 	words.adj.2	\
 	words-medical.adj.2	\
@@ -13,13 +17,8 @@ WORDS=			\
 	words.n.2.x	\
 	words.n.3	\
 	words.n.4	\
-	words.n.c.1	\
-	words.n.c.2	\
-	words.n.p	\
-	words-medical.n.p	\
 	words.n.t	\
 	words-medical.prep.1	\
-	words.s		\
 	words.v.10.1	\
 	words.v.10.2	\
 	words.v.10.3	\
@@ -59,8 +58,7 @@ WORDS=			\
 	words.v.8.3	\
 	words.v.8.4	\
 	words.v.8.5	\
-	words.y		\
-	words.entities.sing
+	words.y
 
 
 wordsdir=$(pkgdatadir)/en/words

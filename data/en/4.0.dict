@@ -68,27 +68,16 @@
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
-CAPITALIZED-WORDS NAME: 
-<marker-entity> or (
-{G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+)); 
-% the generic category for words with a capitalized first character
-
-PL-CAPITALIZED-WORDS: 
-<marker-entity> or (
-{G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
-(({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)); 
-% capitalized words ending in s
-
-<proper-name>: (
-{G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
-
 % Just pure singular entities, no mass nouns 
 <entity-singular>:
-({G-} & {[MG+]} & (
-  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or YS+))
-or AN+ or G+));
+({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+(({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
+
+% capitalized words ending in s
+% -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
+<proper-names>:
+({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
 
 personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
 personID10 personID11 personID12 personID13 personID14 personID15 personID16 personID17 personID18 personID19
@@ -115,11 +104,12 @@ locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 lo
 locationID60: <marker-entity> or <entity-singular>;
 
 % words that are also proper names
-% Art Bell Bill Bob Buck Bud Chase Chemical China Congress Continental 
-/en/words/words.n.p:
-<marker-entity> or <proper-name>;
-/en/words/words-medical.n.p:
-<marker-entity> or <proper-name>;
+% Art Bell Bill Bob Buck Bud  
+/en/words/entities.given-names.sing:
+<marker-entity> or <entity-singular>;
+
+/en/words/entities.famous.sing: 
+<marker-entity> or <entity-singular>;
 
 %
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
@@ -219,16 +209,17 @@ or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
 
-/en/words/words.s: % US state names and abbreviations
+% US state names and abbreviations
+% NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
+/en/words/entities.us-states.sing:
 <marker-entity> or
 ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({MG+} & {@MX+} & (JG- or <noun-main-s>)) or G+ or 
 ({[[MG+]]} & (AN+ or YS+ or YP+)))) or (Xc+ & Xd- & G- & AN+);
-% NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
 
-% SINGULAR ENTITIES FOR ENTITY EXTRACTION (SAME AS CAPITALIZED-WORDS NAME)
+% SINGULAR ENTITIES FOR ENTITY EXTRACTION 
 % This must appear after other categories so it doesnt interfere with those.
-/en/words/words.entities.sing: 
+/en/words/entities.national.sing: 
 <marker-entity> or <entity-singular>;
 
 % Enable parsing of "Mother likes her"
