@@ -1,8 +1,11 @@
 WORDS=			\
 	words.adj.1	\
 	words.adj.2	\
+	words-medical.adj.2	\
 	words.adj.3	\
+	words-medical.adj.3	\
 	words.adv.1	\
+	words-medical.adv.1	\
 	words.adv.2	\
 	words.adv.3	\
 	words.n.1	\
@@ -13,7 +16,9 @@ WORDS=			\
 	words.n.c.1	\
 	words.n.c.2	\
 	words.n.p	\
+	words-medical.n.p	\
 	words.n.t	\
+	words-medical.prep.1	\
 	words.s		\
 	words.v.10.1	\
 	words.v.10.2	\

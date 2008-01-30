@@ -114,9 +114,12 @@ locationID40 locationID41 locationID42 locationID43 locationID44 locationID45 lo
 locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 locationID56 locationID57 locationID58 locationID59
 locationID60: <marker-entity> or <entity-singular>;
 
-/en/words/words.n.p: % words that are also proper names
-<marker-entity> or <proper-name>;
+% words that are also proper names
 % Art Bell Bill Bob Buck Bud Chase Chemical China Congress Continental 
+/en/words/words.n.p:
+<marker-entity> or <proper-name>;
+/en/words/words-medical.n.p:
+<marker-entity> or <proper-name>;
 
 %
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
@@ -2669,6 +2672,8 @@ MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-));
 uptown downtown.e underground.e out_of_town: 
 MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
 
+<common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
+
 forward.e backward forwards.e backwards sideways ashore abreast aft
 half-way two-fold downhill southward underfoot westward eastward
 northward overnight.e on_hold on_track in_situ in_toto off_balance
@@ -2676,8 +2681,9 @@ in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
 behind_schedule ahead_of_schedule for_good for_keeps in_phase
 out_of_step out_of_phase in_tune out_of_tune in_session out_of_session
-in_phase neck_and_neck under_contract: MVp- or Pp- or (Xc+ & Xd- &
-MVx-);
+in_phase neck_and_neck under_contract: <common-prep>;
+
+/en/words/words-medical.prep.1: <common-prep>;
 
 indoors outdoors upstream downstream underwater.e:
 MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-); 
@@ -3175,11 +3181,15 @@ far.c infinitely: EC+;
 significantly substantially: {EE- or EF+} & 
 (EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & CO+));
 
-/en/words/words.adj.2: % comparative adjectives
+% comparative adjectives
+% angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a 
+<comp-adj>:
 ({ECa-} & (((Pam- or Mam- or AFm+) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+)))
  or 
 (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
-% angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a 
+
+/en/words/words.adj.2: <comp-adj>;
+/en/words/words-medical.adj.2: <comp-adj>;
 
 easier.a: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) 
 & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}))) or 
@@ -3220,10 +3230,14 @@ an_additional up_to as_much_as no_fewer_than no_less_than: EN+;
 at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
 all_but: EN+ or E+;
 
-/en/words/words.adj.3: % superlative adjectives
+% superlative adjectives
+% angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a 
+<superlatives>: 
 ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
 ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
-% angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a 
+
+/en/words/words.adj.3: <superlatives>;
+/en/words/words-medical.adj.3: <superlatives>;
 
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
 same.a own.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
@@ -3355,10 +3369,14 @@ occasionally often specifically generally originally:
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
 
-/en/words/words.adv.1:  % ordinary manner adverbs
+% ordinary manner adverbs
+% abjectly ably abnormally abortively abruptly absent-mindedly absently 
+<ordinary-adv>:
 {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & {Xd-}} & CO+) or Qe+
  or Ca+ or [[EA+]]);
-% abjectly ably abnormally abortively abruptly absent-mindedly absently 
+
+/en/words/words.adv.1: <ordinary-adv>;
+/en/words/words-medical.adv.1: <ordinary-adv>;
 
 shortly: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or Qe+ or Ca+);
