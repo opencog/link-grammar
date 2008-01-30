@@ -1,10 +1,12 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
+                       Version 4.3.0
+
 This directory contains a *patched* version of the final original 
 release of the Link Grammer Parser.  It has been patched to fix a 
 few bugs, add a few enhancements, and, in general, make the Link 
-Grammar Parser easier to use. It includes Java bindings.
+Grammar Parser easier to use. This version includes Java bindings.
 
 It is released under the BSD license (which is GPL compatible), 
 making it freely available for private and commercial use, with 
@@ -12,8 +14,9 @@ few restrictions.  The terms of the license are given in the
 LICENSE file included with this software, and also available at 
 http://www.link.cs.cmu.edu/link/license.html.
 
-Please see our web page http://www.link.cs.cmu.edu/link for more
-information, including documentation.
+Please see the web page http://www.abisource.com/projects/link-grammar/
+for more information.  The original website, including documetation,
+is located at http://www.link.cs.cmu.edu/link 
 
 CONTENTS of this directory:
 
@@ -56,8 +59,10 @@ CREATING the system:
    the header files in /usr/local/include/link-grammar
    and the dictionaries into /usr/local/share/link-grammar.
 
-   The /usr/local install target can be over-ridden using standard 
-   GNU configure options.
+   The /usr/local install target can be over-ridden using the 
+   standard GNU configure --prefix option, so for example:
+
+      ./configure --prefix=/opt/link-grammar
 
 
 RUNNING the program:
@@ -70,11 +75,11 @@ RUNNING the program:
    number of user-settable variables control what happens.  "!var" shows
    these variables and their current values.
 
-   We've used a special batch mode for testing the system on a large
+   The program can run in batch mode for testing the system on a large
    number of sentences.  The following command runs the parser on
-   3.0.batch
+   a file called 4.0.batch
 
-       ./grammar-parse 4.0.dict < 4.0.batch
+       ./grammar-parse < 4.0.batch
 
    The line "!batch" near the top of 4.0.batch turns on batch mode.  In
    this mode sentences labeled with an initial "*" should be rejected
@@ -92,17 +97,22 @@ USING the parser in your own applications:
 
 COMMERCIAL use:
 
-   We feel that our system (or a derivative of it) could be useful in a
-   number of commercial applications.  This is allowed under the BSD
-   license for release 4.1b and later. We would be pleased to discuss 
-   terms with those wanting to use our system under a paid contract.
+   The original authors would be pleased to discuss alternate 
+   licensing terms and/or additional research work, with those 
+   wanting to use this system under a paid contract.
 
-   Of course all academic products or papers should reference our work.
+   Academic products or papers should reference the verious
+   link grammar publications.
 
 ADDRESSES
 
-   If you have any questions, or find any bugs, please feel free to send
-   a note to:
+   If you have any questions, or find any bugs, please feel free 
+   to send a note to the current maintainers:
+
+     Dom Lachowicz - <domlachowicz@gmail.com>
+     Linas Vepstas - <linasvepstas@gmail.com>
+
+   The original authors of the Link Grammar parser are:
 
      Daniel Sleator                    sleator@cs.cmu.edu  
      Computer Science Department       412-268-7563
