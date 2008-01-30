@@ -9,7 +9,7 @@ Colombians.n Communists.n Corsicans.n Croatians.n Croats.n Cubans.n
 Cypriotes.n Czechs.n Danes.n Democrats.n Djiboutians.n Dominicans.n 
 Ecuadorians.n Egyptians.n Eritreans.n Estonians.n Ethiopians.n 
 Europeans.n Fijians.n Filipinos.n Finns.n Gabonians.n Gambians.n 
-Georgians.n Germans.n Ghanaians.n Greeks.n Grenadans.n Guatemalans.n 
+Georgians.n Germans.n Ghanaians.n Governors.n Greeks.n Grenadans.n Guatemalans.n 
 Guineans.n Haitians.n Hindus.n Hondurans.n Hungarians.n Indians.n 
 Indonesians.n Iranians.n Iraqis.n Israelis.n Italians.n Ivorians.n 
 Jamaicans.n Jews.n Jordanians.n Justices.n Kazakhis.n Kenyans.n 

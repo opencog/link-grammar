@@ -2,6 +2,7 @@ WORDS=			\
 	entities.famous.sing \
 	entities.given-names.sing \
 	entities.national.sing \
+	entities.organizations.sing \
 	entities.us-states.sing \
 	words.adj.1	\
 	words.adj.2	\

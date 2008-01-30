@@ -108,6 +108,9 @@ locationID60: <marker-entity> or <entity-singular>;
 /en/words/entities.given-names.sing:
 <marker-entity> or <entity-singular>;
 
+/en/words/entities.organizations.sing:
+<marker-entity> or <entity-singular>;
+
 /en/words/entities.famous.sing: 
 <marker-entity> or <entity-singular>;
 
