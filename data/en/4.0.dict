@@ -3495,3 +3495,180 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
       S+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+ & RW+ & Xp+ & Xx+ & CP+
       & SFsx+;
 
+% Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
+% "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual 
+% Symposium, xx-yy.
+% Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
+%
+% Copyright (c) 2003, Peter Szolovits and MIT.
+
+disincline.v:
+ <verb-pl,i> & <vc-design>;
+
+in_as_much_as whilst whereas whereof wherein:
+ Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
+
+e.g. i.e.:
+ E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
+
+endeavor.v:
+ <verb-pl,i> & <vc-consent>;
+
+benumbed.a bespattered.a non_compos_mentis dead_on_arrival 
+ bedimmed.a null_and_void bedewed.a au_fait 
+ dead_of_other_causes right_sacrotransverse above_board 
+ K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a 
+ haywire.a:
+ ((Ma- or Pa-) & {@MV+}) or <adj-op>;
+
+anally intra-arterially incisionally intravascularly 
+ intramuscularly intraperitoneally endotracheally 
+ up_and_down dermally intrathecally ventrally:
+ {Xd- & Xc+} & MVa-;
+
+subject_to status_post in_conjunction_with sensu 
+ in_relation_to neath amidst across_from circa astride 
+ previous_to together_with as_regards s/p aka amongst unto 
+ apropos_of w W:
+ ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
+
+agriculturally histochemically generically behaviorally 
+ putatively ethnoculturally syllabically societally 
+ archeologically actuarially gynaecologically 
+ aetiopathogenetically assumedly biotically atypically 
+ cognitively prognostically synoptically pathogenetically 
+ esthetically heretofore:
+ EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} & CO+);
+
+questionably neonatally axially ante_meridiem 
+ revolutionally nonspecifically cardiovascularly 
+ cytochemically maddeningly interictally overridingly 
+ neurally thereto morbidly neuroectodermally 
+ therapeutically lastingly immunophenotypically:
+ EA+ or EE+;
+
+drowse.v riffle.v caw.v ruck.v agonize.v:
+ <verb-pl,i> & <vc-walk>;
+
+oftenest correctliest soonest disquietingliest:
+ EA+;
+
+proof-reads.v proof_reads gells.v O.K.'s.v OK's.v:
+ <verb-s> & <vc-intrans>;
+
+propension.n:
+ ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+
+avow.q:
+ [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+
+test-drove.v forbore.v oversaw.v strove.v throve.v shrove.v 
+ countersank.v outgrew.v strode.v offsetted.v overthrew.v 
+ partook.v begot.v overdid.v smote.v stank.v quick-froze.v 
+ backbit.v awoke.v redid.v chidded.v reran.v rived.v 
+ befell.v outrode.v betrode.v outdid.v ridded.v 
+ deep-froze.v forbad.v deep-freezed.v retook.v interwove.v 
+ bespoke.v underwent.v slew.v overdrew.v overcame.v 
+ outwore.v foreknew.v wove.v trod.v outwent.v:
+ <verb-sp> & <vc-fill>;
+
+longest-term.a:
+ ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
+
+daren't mayn't shan't oughtn't mightn't:
+ ({Q-} & (SI+ or SFI+) & I+) or ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+
+longer-term.a:
+ ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
+
+prognostic.a:
+ {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) & {@MV+} & {OF+ & {@MV+}}) or AA+ or [[DD- & <noun-main-p>]] or ({OF+ & {@MV+}} & <adj-op>));
+
+attestation.n:
+ ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
+
+O.K.'d.v OK'd.v:
+ <verb-sp,pp> & <vc-intrans>;
+
+whence whither:
+ {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)));
+
+articulo_mortis intra_vitam in_articulo_mortis in_extremis 
+ post_cibum post_coitum:
+ <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
+
+befallen.v interwoven.v overborne.v outgone.v outgrown.v 
+ test-driven.v outdone.v shrunken.v countersunk.v 
+ bespoken.v underlain.v partaken.v redone.v overdone.v 
+ outridden.v deep-frozen.v bestrid.v undergone.v 
+ outbidden.v shorn.v outworn.v bestridden.v stunk.v borne.v 
+ slain.v woven.v riven.v backbitten.v overlain.v bestrewn.v 
+ forborne.v quick-frozen.v browbeaten.v aquitted.v 
+ overseen.v smitten.v overdrawn.v striven.v thriven.v 
+ shriven.v backslidden.v retaken.v trodden.v chidden.v 
+ begotten.v sown.v sewn.v sawn.v hewn.v cloven.v 
+ foreknown.v overthrown.v strewn.v awoken.v bidden.v 
+ stridden.v:
+ (<verb-pp> & <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+
+epidurally.e:
+ {EE- or EF+} & (({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+) or Ca+ or Qe+);
+
+forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
+ foresworn.v overeaten.v:
+ (<verb-pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+
+lest:
+ (Cs+ or Mgp+ or Mv+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
+
+disbelieve.v frizz.v frizzle.v prink.v slough.v scuff.v 
+ tog.v swot.v:
+ <verb-pl,i> & <vc-fill>;
+
+whyever:
+ ({EL+} & ((Wq- & Q+) or (QI- & (Cs+ or TOn+)) or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-)))) or [[{@CO-} & Wc- & Wi+]];
+
+well-known.a:
+ {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+
+poetical.a:
+ {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+
+contrarily namely neurologically coincidentally reversibly 
+ viz:
+ E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
+
+albeit:
+ (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
+
+whichever:
+ ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) & (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or [[(O- or J-) & CX+]])) or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
+
+skittle.v:
+ <verb-pl,i> & <vc-kick>;
+
+proof-reading.v proof_reading O.K.'ing.v OK'ing.v:
+ (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
+
+and/or:
+ [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
+
+overate.v over-ate.v forewent.v oversewed.v forswore.v 
+ foreswore.v forwent.v:
+ <verb-sp> & <vc-kick>;
+
+whomever:
+ (R- & Cr+) or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*r-))) or (Jr- & (RS+ or Cr+)) or Jw-;
+
+thyself oneself one's:
+ J- or O- or E+ or MVa-;
+
+ensheathing.v roughcasting.v chemosensitizing.v 
+ over-feeding.v stabilising.v over-hanging.v overstaging.v 
+ curetting.v overhanging.v poleaxing.v whizzing.v 
+ re-equilibrating.v crossmatching.v oversewing.v 
+ lassooing.v over-eating.v breast-feeding.v 
+ chemosensitising.v pre-setting.v psyching.v taring.v 
+ KO'ing.v pole-axing.v rough-casting.v premiering.v 
+ under-feeding.v presetting.v tinging.v underfeeding.v:
+ <verb-pg> & <vc-trans>;
