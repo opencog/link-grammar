@@ -2873,7 +2873,6 @@ if_only: ((MVp+ or MVa+ or MVs+) & ({Xd- & Xc+} & MVp-))
 or (Wd+ & Wc-);
 no_wonder: Wd+ & Wc-;
 although: (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
-whereas: (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
 while: ((Cs+ or Mgp+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) 
 or (Xd- & Xc+ & E+)));
 once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or 
@@ -3505,6 +3504,10 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 disincline.v:
  <verb-pl,i> & <vc-design>;
 
+% whereas: 
+% (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
+
+% ??? should "although" (listed above) be listed here instead?
 in_as_much_as whilst whereas whereof wherein:
  Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
 
