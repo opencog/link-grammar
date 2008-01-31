@@ -14,7 +14,7 @@
 #include <link-grammar/api.h>
 #include <time.h>
 
-#if !defined(WIN32)
+#if !defined(_WIN32)
    #include <sys/time.h>
    #include <sys/resource.h>
 #endif
@@ -39,7 +39,7 @@ int getrusage(int who, struct rusage *rusage);
 
 static double current_usage_time(void) {
 /* returns the current usage time clock in seconds */
-#if !defined(WIN32)
+#if !defined(_WIN32)
     struct rusage u;
     getrusage (RUSAGE_SELF, &u);
     return (u.ru_utime.tv_sec + ((double) u.ru_utime.tv_usec) / 1000000.0);

@@ -14,7 +14,7 @@
 #ifndef _STRUCTURESH_
 #define _STRUCTURESH_
 
-#if defined(WIN32)
+#if defined(_WIN32)
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
 
