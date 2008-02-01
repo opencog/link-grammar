@@ -106,7 +106,7 @@ EXTRA_DIST=				\
 	link-grammar.def
 
 bin_PROGRAMS=grammar-parse
-grammar_parse_SOURCES=parse.c
+grammar_parse_SOURCES=grammar-parse.c
 ldadd = $(top_builddir)/link-grammar/liblink-grammar.la
 
 grammar_parse_LDADD=$(ldadd)
