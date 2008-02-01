@@ -155,6 +155,13 @@ if test x${JNIfound} = xyes ; then
 fi
 AC_SUBST(CPPFLAGS)
 
+# Hmm .. there seems to be a missing pkgconfig for ordinary java ... 
+# There's libgcj-4.2.pc  and libgcj8.pc but nothing for ordinary java??
+# PKG_CHECK_MODULES(LIBJDK, libjdk-1.5 >= $LIBJDK_REQUIRED)
+# AC_SUBST(LIBJDK_CFLAGS)
+# AC_SUBST(LIBJDK_LIBS)
+
+
 dnl =======================================================================================
 
 AC_OUTPUT([
@@ -175,7 +182,7 @@ echo "
 $PACKAGE-$VERSION
 
 	prefix:                         ${prefix}
-	compiler:                       ${CC}
+	compiler:                       ${CC} ${CPPFLAGS}
 	autopackage:                    ${br_cv_binreloc}
 	java interfaces:                ${JNIfound}
 "
