@@ -469,7 +469,8 @@ Dictionary dictionary_create_default_lang(void)
 		dictionary = dictionary_create_lang(lang);
 		free(lang);
 	} else {
-		dictionary = NULL;
+		/* Default to en when locales are broken (e.g. WIN32) */
+		dictionary = dictionary_create_lang("en");
 	}
 
 	return dictionary;
