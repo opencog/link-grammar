@@ -2,7 +2,7 @@
 %define version @VERSION@
 %define release 1
 
-Summary: An Grammar Checking Library
+Summary: A Natural Language Parser based on Link Grammar Theory
 
 Name: %{name}
 Version: %{version}
@@ -18,7 +18,8 @@ URL: http://www.link.cs.cmu.edu/link/
 #BuildRequires: 
 
 %description
-A grammar checking library
+The Link Grammar Parser is a natural language parser based on 
+link grammar theories of natural language. 
 
 %package devel
 Summary: Support files necessary to compile applications with link-grammar.
