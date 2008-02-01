@@ -8,11 +8,13 @@ package org.linkgrammar;
  * the single, current sentence and linkage.  This could be improved.
  */
 
-public class LinkGrammar {
-
-    static {
+public class LinkGrammar
+{
+    static
+    {
         // On a linux system, the actual name of the library is prefixed 
         // with "lib" and suffixed with ".so" -- e.g. "liblink-grammar.so"
+        System.loadLibrary("link-grammar-java");
         System.loadLibrary("link-grammar");
     }
 
