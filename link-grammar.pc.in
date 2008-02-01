@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: link-grammar
-Description: A grammar checking library
+Description: A natural language parser based on link grammar theory
 Version: @VERSION@
 Libs: -L${libdir} -llink-grammar
 Cflags: -I${includedir}
