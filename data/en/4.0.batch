@@ -949,7 +949,9 @@ We need a President who understands us
 We need a president who understands us
 *We need a Melvin who understand us
 The Zongle of Bongle Dongle resigned today
-*A Zongle with a Bongle Dongle resigned today
+% A Zongle with a bad haircut resigned today -- is valid.
+% A Zongle with a Mercedes Benz resigned today -- is valid.
+% *A Zongle with a Bongle Dongle resigned today
 The National Association of Linguists is meeting here
 *An Association that many Linguists belong to is meeting here
 An association that many linguists belong to is meeting here
