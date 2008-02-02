@@ -148,7 +148,7 @@ AC_MSG_CHECKING(for jni.h)
 AC_TRY_CPP( [#include <jni.h>], 
        [AC_MSG_RESULT([yes, will build java libs])
         JNIfound=yes], 
-       [ AC_MSG_ERROR([cannot find jni.h header, needed for Java bindings support.]) 
+       [ AC_MSG_WARN([cannot find jni.h header, needed for Java bindings support.]) 
         JNIfound=no])
 if test x${JNIfound} = xyes ; then
 	CPPFLAGS="${CPPFLAGS} -DBUILD_JNI_CLIENT=1"
