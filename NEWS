@@ -1,3 +1,7 @@
+Version 4.3.3 includes the following changes:
+ * Missing java is a warning, not an error.
+ * man page for link-grammar.
+
 Version 4.3.2 includes the following changes:
  * Compile fixes for WIN32
  * Dictionary fixes for given names. (Fixes a serious problem with 4.3.1)
