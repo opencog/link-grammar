@@ -1,0 +1,131 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH LINK-GRAMMAR 1 "April 23, 2006"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+link-grammar \- parses natural language sentences
+.SH SYNOPSIS
+.B link-grammar
+.RI [language] [\-pp pp_knowledge_file] [\-c constituent_knowledge_file]
+[\-a affix_file] [\-ppoff] [\-coff] [\-aoff] [\-batch] [\-<special "!" command>]
+.SH DESCRIPTION
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+.\" respectively.
+In Selator, D. and Temperly, D. "Parsing English with a Link Grammar"
+(1991), the authors defined a new formal grammatical system called a
+"link grammar". A sequence of words is in the language of a link
+grammar if there is a way to draw "links" between words in such a way
+that the local requirements of each word are satisfied, the links do
+not cross, and the words form a consistent connected graph. The authors encoded
+English grammar into such a system, and wrote \fBlink\-grammar\fP to 
+parse English using this grammar.
+.PP
+This package can be used for linguistic parsing for information
+retrieval or extraction from natural language documents. Abiword also
+uses it as a grammar checker.
+.SH OPTIONS
+.TP
+.B \-pp pp_knowledge_file
+.TP
+.B \-c constituent_knowledge_file
+.TP
+.B \-a affix_file
+.TP
+.B \-ppoff
+.TP
+.B \-coff
+.TP
+.B \-aoff
+.TP
+.B \-batch
+.TP
+.B \-<special "!" command> \"Can special commands be commandline arguments?
+.SH USE
+.PP
+link\-grammar, when invoked manually, will take control of the
+terminal; link\-grammar will then attempt to analyze the grammar of 
+all input, unless escaped with an exclamation mark, according to the 
+dictionary file provided as an argument. If escaped, the input
+will be treated as a "special command"; "!help" lists all special
+commands available.
+.PP
+link\-grammar depends on a link\-grammar dictionary which contains
+lists of words and associated metadata about their grammatical
+properties in order to analyze sentences. A link\-grammar dictionary
+provided by the authors of link\-grammar is usually included with the 
+link\-grammar package, and can often be found somewhere in the
+/usr/share/link\-grammar/ hierarchy. When this is the case, only the 
+two\-letter language code needs to be specified on the command\-line. 
+Alternatively, a user can provide
+their own dictionary as an argument, in which case the dictionary's 
+directory should be specified. Hence, either of the commands
+.TP
+.B link\-grammar en
+.TP
+.B link\-grammar /usr/share/link\-grammar/en
+will run link\-grammar using the english dictionary included with the 
+parser.
+.PP
+While in a link\-grammar session, some example output could be:
+.PP
+.RS
+.B linkparser> Reading a man page is informative.
+.PP
+++++Time                                          0.00 seconds (0.01
+total)
+.PP
+Found 1 linkage (1 had no P.P. violations)
+  Unique linkage, cost vector = (UNUSED=0 DIS=0 AND=0 LEN=12)
+
+    +------------------------Xp-----------------------+
+    |         +---------Ss*g---------+                |
+    |         +-------Os-------+     |                |
+    |         |     +----Ds----+     |                |
+    +----Wd---+     |   +--AN--+     +---Pa---+       |
+    |         |     |   |      |     |        |       |
+.PP
+LEFT\-WALL reading.g a man.n page.n is.v informative.a . 
+.RE
+.PP
+link\-grammar can also be used non\-interactively, either through its
+API, or via the \-batch option.  When used with the \-batch option,
+link\-grammar passively receives input from standard input, and when
+the stream finishes, it then outputs its analysis. So one could
+construct an ad\-hoc grammar checker by piping text through
+link\-grammar with a batch option, and seeing what sentences fail to
+parse as valid:
+.RS
+.B cat thesis.txt | link\-grammar /usr/share/link\-grammar/en/4.0.dict \-batch
+.RE
+.SH SEE ALSO
+.br
+Information on the shared\-library API and the link types used in the 
+parse is avavailable from the authors' website at 
+.B http://www.link.cs.cmu.edu/link/dict/index.html.
+.br
+Peer\-reviewed papers explaining link\-grammar can be found at the same 
+site at
+.B http://www.link.cs.cmu.edu/link/papers/index.html.
+.SH AUTHOR
+.nh
+link\-grammar was written by Daniel Sleator <sleator@cs.cmu.edu>, 
+Davy Temperley <dtemp@theory.esm.rochester.edu>, and John Lafferty 
+<lafferty@cs.cmu.edu>
+.PP
+This manual page was written by Ken Bloom <kbloom@gmail.com>,
+for the Debian project (but may be used by others).
