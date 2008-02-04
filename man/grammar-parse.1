@@ -16,9 +16,9 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-link-grammar \- parses natural language sentences
+grammar-parse \- parses natural language sentences
 .SH SYNOPSIS
-.B link-grammar
+.B grammar-parse
 .RI [language]
 [\-pp pp_knowledge_file] [\-c constituent_knowledge_file]
 [\-a affix_file] [\-ppoff] [\-coff] [\-aoff] [\-batch] [\-<special "!" command>]
@@ -33,7 +33,7 @@ In Selator, D. and Temperly, D. "Parsing English with a Link Grammar"
 grammar if there is a way to draw "links" between words in such a way
 that the local requirements of each word are satisfied, the links do
 not cross, and the words form a consistent connected graph. The authors encoded
-English grammar into such a system, and wrote \fBlink\-grammar\fP to 
+English grammar into such a system, and wrote \fBgrammar\-parse\fP to 
 parse English using this grammar.
 .PP
 This package can be used for linguistic parsing for information
@@ -58,31 +58,31 @@ uses it as a grammar checker.
 .B \-<special "!" command> \"Can special commands be commandline arguments?
 .SH USE
 .PP
-link\-grammar, when invoked manually, will take control of the
-terminal; link\-grammar will then attempt to analyze the grammar of 
+grammar\-parse, when invoked manually, will take control of the
+terminal; grammar\-parse will then attempt to analyze the grammar of 
 all input, unless escaped with an exclamation mark, according to the 
 dictionary file provided as an argument. If escaped, the input
 will be treated as a "special command"; "!help" lists all special
 commands available.
 .PP
-link\-grammar depends on a link\-grammar dictionary which contains
+grammar\-parse depends on a grammar\-parse dictionary which contains
 lists of words and associated metadata about their grammatical
-properties in order to analyze sentences. A link\-grammar dictionary
-provided by the authors of link\-grammar is usually included with the 
-link\-grammar package, and can often be found somewhere in the
-/usr/share/link\-grammar/ hierarchy. When this is the case, only the 
+properties in order to analyze sentences. A grammar\-parse dictionary
+provided by the authors of grammar\-parse is usually included with the 
+grammar\-parse package, and can often be found somewhere in the
+/usr/share/grammar\-parse/ hierarchy. When this is the case, only the 
 two\-letter language code needs to be specified on the command\-line. 
 Alternatively, a user can provide
 their own dictionary as an argument, in which case the dictionary's 
 directory should be specified. Hence, either of the commands
 .TP
-.B link\-grammar en
+.B grammar\-parse en
 .TP
-.B link\-grammar /usr/share/link\-grammar/en
-will run link\-grammar using the english dictionary included with the 
+.B grammar\-parse /usr/share/grammar\-parse/en
+will run grammar\-parse using the english dictionary included with the 
 parser.
 .PP
-While in a link\-grammar session, some example output could be:
+While in a grammar\-parse session, some example output could be:
 .PP
 .RS
 .B linkparser> Reading a man page is informative.
@@ -103,15 +103,15 @@ Found 1 linkage (1 had no P.P. violations)
 LEFT\-WALL reading.g a man.n page.n is.v informative.a . 
 .RE
 .PP
-link\-grammar can also be used non\-interactively, either through its
+grammar\-parse can also be used non\-interactively, either through its
 API, or via the \-batch option.  When used with the \-batch option,
-link\-grammar passively receives input from standard input, and when
+grammar\-parse passively receives input from standard input, and when
 the stream finishes, it then outputs its analysis. So one could
 construct an ad\-hoc grammar checker by piping text through
-link\-grammar with a batch option, and seeing what sentences fail to
+grammar\-parse with a batch option, and seeing what sentences fail to
 parse as valid:
 .RS
-.B cat thesis.txt | link\-grammar /usr/share/link\-grammar/en/4.0.dict \-batch
+.B cat thesis.txt | grammar\-parse /usr/share/grammar\-parse/en/4.0.dict \-batch
 .RE
 .SH SEE ALSO
 .br
@@ -119,12 +119,12 @@ Information on the shared\-library API and the link types used in the
 parse is avavailable from the authors' website at 
 .B http://www.link.cs.cmu.edu/link/dict/index.html.
 .br
-Peer\-reviewed papers explaining link\-grammar can be found at the same 
+Peer\-reviewed papers explaining grammar\-parse can be found at the same 
 site at
 .B http://www.link.cs.cmu.edu/link/papers/index.html.
 .SH AUTHOR
 .nh
-link\-grammar was written by Daniel Sleator <sleator@cs.cmu.edu>, 
+grammar\-parse was written by Daniel Sleator <sleator@cs.cmu.edu>, 
 Davy Temperley <dtemp@theory.esm.rochester.edu>, and John Lafferty 
 <lafferty@cs.cmu.edu>
 .PP
