@@ -1,0 +1,8 @@
+
+
+List of ideas for possible improvements:
+----------------------------------------
+
+ * Use wordnet to reduce the number for parses for sentences containing
+   compound verb phrases, such as "give up", "give off", etc.
+

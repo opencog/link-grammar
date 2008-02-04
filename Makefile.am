@@ -8,7 +8,8 @@ EXTRA_DIST =			\
 	link-grammar.pc.in	\
 	link-grammar.spec.in	\
 	link-grammar.spec	\
-	README 			\
-	LICENSE			\
 	AUTHORS			\
-	MAINTAINERS
+	LICENSE			\
+	MAINTAINERS		\
+	README 			\
+	TODO
