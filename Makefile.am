@@ -1,4 +1,4 @@
-SUBDIRS=link-grammar data link-grammar.xcode
+SUBDIRS=link-grammar data man link-grammar.xcode
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = link-grammar.pc
