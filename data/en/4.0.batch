@@ -1012,10 +1012,19 @@ Alice took a bite out of it.
 % Buggy sentences that need fixing:
 His works disclose a mastery of composition.
 
-% He turned left. works, these others do not.
+% more failures: "He turned left." works, these others do not.
 He angled left.
 He dodged left.
 He jumped left.
 It was he that did it.
 Below the ground lay the treasure.
 John likes joking around.
+He's right, isn't he?
+
+% If... then constructs are broken
+If paid weekly, bring the last six pay stubs.
+If paid weekly, then bring six stubs.
+If it is broken, then remove it.
+If broken, then remove.
+Check the lid; if craked, then replace.
+Check the valve, replace if cracked.
