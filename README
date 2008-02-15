@@ -1,7 +1,7 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
-                       Version 4.3.2
+                       Version 4.3.3
 
 This directory contains a *patched* version of the final original 
 release of the Link Grammer Parser.  It has been patched to fix a 
@@ -64,6 +64,8 @@ CREATING the system:
 
       ./configure --prefix=/opt/link-grammar
 
+	By using pkg-config (see below), non-standard install locations
+	can be automatically detected.
 
 RUNNING the program:
 
@@ -89,11 +91,39 @@ RUNNING the program:
 USING the parser in your own applications:
 
    There is a API (application program interface) to the parser.  This
-   makes it easy to incorporate it into your own applications.  This is
-   documented on our web site.
+   makes it easy to incorporate it into your own applications.  The API
+   documented on the web site.
 
-   This release includes a very simple Java binding.  It can be
-   accessed by copying the file LinkGrammar.java into your java project.
+USING pkg-config:
+
+	To make compling and linking easier, the current release uses 
+	the pkg-config system. To determine the location of the link-grammar
+	header files, say `pkg-config --cflags link-grammar`  To obtain
+	the location of the libraries, say `pkg-config --libs link-grammar`
+	Thus, for example, a typical makefile might include the targets:
+
+	.c.o:
+   	cc -O2 -g -Wall -c $< `pkg-config --cflags link-grammar`
+
+	$(EXE): $(OBJS)
+   	cc -g -o $@ $^ `pkg-config --libs link-grammar`
+
+JAVA bindings:
+
+   This release includes a very simple Java binding.  Its use is optional. 
+	It can be accessed by copying the file LinkGrammar.java into your java
+	project.
+
+	The bindings will be built automatically if jni.h can be found.  
+	Some common java jvm distributions (most notably, the ones from Sun) 
+	place this file in unusual locations, where it cannot be found. 
+	To remedy this, specify the location with the CPPFLAGS variable: 
+	so, for example,
+
+		export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
+
+	Please note that the use of /opt is non-standard, and most system
+	tools will fail to find packages installed there.
 
 COMMERCIAL use:
 
