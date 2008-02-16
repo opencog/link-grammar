@@ -1022,9 +1022,20 @@ John likes joking around.
 He's right, isn't he?
 
 % If... then constructs are broken
+% Typical language used in instruction manuals, directives.
 If paid weekly, bring the last six pay stubs.
 If paid weekly, then bring six stubs.
 If it is broken, then remove it.
 If broken, then remove.
 Check the lid; if craked, then replace.
 Check the valve, replace if cracked.
+
+% Newspaper headline declarations
+% Missing definite articles (with definite articles, these would parse)
+% Perhaps a modal parse: if the ordinary parse failed, try another
+% with definite articles auto-inserted ?
+Thief invades boathouse.
+Burglars attack museum.
+Thief empties pockets of all they hold.
+
+
