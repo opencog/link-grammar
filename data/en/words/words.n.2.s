@@ -210,7 +210,8 @@ blows.n blowtorches.n bludgeons.n bluebells.n bluebottles.n
 blueprints.n blues.n bluestockings.n bluffers.n bluffs.n 
 blunderbusses.n blunderers.n blunders.n blurbs.n blurs.n blushes.n 
 boarders.n boardings.n boardrooms.n boards.n boardwalks.n boars.n 
-boas.n boasters.n boasts.n boaters.n boats.n boatswains.n bobbies.n 
+boas.n boasters.n boasts.n boaters.n boathouses.n 
+boats.n boatswains.n bobbies.n 
 bobsleds.n bobsleighs.n bobtails.n bodegas.n bodices.n bodies.n 
 bodyguards.n bogeys.n bogies.n bogs.n bohemians.n boilers.n boils.n 
 boleros.n bollocks.n bolsters.n bolts.n bombardiers.n bombers.n 
@@ -572,7 +573,8 @@ diviners.n divines.n divinities.n divisions.n divisors.n divorcees.n
 dockets.n docks.n dockyards.n doctorates.n doctors.n doctrinaires.n 
 doctrines.n documents.n dodderers.n dodgers.n dodges.n dodos.n doers.n 
 doges.n dogfish.p doggies.n doghouses.n dogmas.n dogs.n dogsbodies.n 
-dogwoods.n doilies.n dollars.n dollies.n dollops.n dolls.n dolmens.n 
+dogwoods.n doilies.n dollars.n dollhouses.n 
+dollies.n dollops.n dolls.n dolmens.n 
 dolphins.n dolts.n domains.n domes.n domiciles.n dominions.n dominos.n 
 donations.n donkeys.n donors.n dons.n doodlebugs.n dooms.n doorbells.n 
 doorcases.n doorframes.n doorhandles.n doorkeepers.n doorknobs.n 
