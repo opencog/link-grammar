@@ -302,15 +302,15 @@ static void print_usage(char *str) {
 
 int main(int argc, char * argv[]) {
 
-	Dictionary	  dict;
-	Sentence		sent;
-	char			*language=NULL;
-	int			 pp_on=TRUE;
-	int			 af_on=TRUE;
-	int			 cons_on=TRUE;
-	int			 num_linkages, i;
-	char			input_string[MAXINPUT];
-	Label		   label = NO_LABEL;
+	Dictionary      dict;
+	Sentence        sent;
+	char            *language="en";  // default to english, and not locale
+	int             pp_on=TRUE;
+	int             af_on=TRUE;
+	int             cons_on=TRUE;
+	int             num_linkages, i;
+	char            input_string[MAXINPUT];
+	Label           label = NO_LABEL;
 
 	i = 1;
 	if ((argc > 1) && (argv[1][0] != '-')) {
