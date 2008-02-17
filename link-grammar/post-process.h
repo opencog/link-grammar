@@ -28,7 +28,7 @@
 #define PP_FIRST_PASS  1
 #define PP_SECOND_PASS 2
 
-/* Postprocessor * post_process_open(char *dictname, char *path);  this is in api-prototypes.h */
+/* Postprocessor * post_process_open(char *path);  this is in api-prototypes.h */
 
 void     post_process_free_data(PP_data * ppd);
 void     post_process_close_sentence(Postprocessor *);

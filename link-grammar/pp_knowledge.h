@@ -10,5 +10,5 @@
 /* forms, with or without modification, subject to certain conditions.          */
 /*                                                                              */
 /********************************************************************************/
-pp_knowledge *pp_knowledge_open(char *dictname, char *path);
+pp_knowledge *pp_knowledge_open(char *path);
 void pp_knowledge_close(pp_knowledge *knowledge);

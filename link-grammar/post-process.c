@@ -817,20 +817,17 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 /***************** definitions of exported functions ***********************/
 
-Postprocessor * post_process_open(char *dictname, char *path)
+/**
+ * read rules from path and initialize the appropriate fields in 
+ * a postprocessor structure, a pointer to which is returned.
+ */
+Postprocessor * post_process_open(char *path)
 {
-  /* read rules from path and initialize the appropriate fields in 
-     a postprocessor structure, a pointer to which is returned.
-     The only reason we need the dictname is to used it for the
-     path, in case there is no DICTPATH set up.  If the dictname
-     is null, and there is no DICTPATH, it just uses the filename
-     as the full path.
-  */
   Postprocessor *pp;
   if (path==NULL) return NULL;
 
   pp = (Postprocessor *) xalloc (sizeof(Postprocessor));
-  pp->knowledge  = pp_knowledge_open(dictname, path);
+  pp->knowledge  = pp_knowledge_open(path);
   pp->sentence_link_name_set = string_set_create();
   pp->set_of_links_of_sentence = pp_linkset_open(1024);
   pp->set_of_links_in_an_active_rule=pp_linkset_open(1024);

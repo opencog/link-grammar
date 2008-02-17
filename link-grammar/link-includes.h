@@ -293,7 +293,7 @@ link_public_api(char *)
 typedef struct Postprocessor_s * PostProcessor;
 
 link_public_api(PostProcessor)
-     post_process_open(char *dictname, char *path);
+     post_process_open(char *path);
 link_public_api(void)
      post_process_close(PostProcessor postprocessor);
 link_public_api(void)
