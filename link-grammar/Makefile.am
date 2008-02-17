@@ -17,7 +17,8 @@ INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS)
 lib_LTLIBRARIES = liblink-grammar.la liblink-grammar-java.la
 
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
-liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
+
+liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar-java.def
 
 if WITH_BINRELOC
 liblink_grammar_la_LIBADD  = -lpthread
@@ -103,7 +104,8 @@ liblink_grammar_java_la_SOURCES =		\
 EXTRA_DIST=				\
 	prefix.h			\
 	LinkGrammar.java		\
-	link-grammar.def
+	link-grammar.def		\
+	link-grammar-java.def
 
 bin_PROGRAMS=grammar-parse
 grammar_parse_SOURCES=grammar-parse.c
