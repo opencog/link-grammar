@@ -121,6 +121,8 @@ JAVA bindings:
    so, for example,
 
       export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
+   or
+      export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
 
    Please note that the use of /opt is non-standard, and most system
    tools will fail to find packages installed there.
