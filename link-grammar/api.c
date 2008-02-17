@@ -318,19 +318,13 @@ void parse_options_reset_resources(Parse_Options opts) {
 *
 ****************************************************************/
 
-static int open_dictionary(char * dict_path_name, Dictionary dict)
-{
-	if ((dict->fp = dictopen(dict_path_name, dict->name, "r")) == NULL) {
-		return 0;
-	}
-	return 1;
-}
-
 /**
- * The following function is dictionary_create with an extra paramater called "path".
- * If this is non-null, then the path used to find the file is taken from that path.
- * Otherwise the path is taken from the dict_name.  This is only needed because
- * an affix_file is opened by a recursive call to this function.
+ * The following function is dictionary_create with an extra 
+ * paramater called "path". If this is non-null, then the path 
+ * used to find the file is taken from that path. Otherwise,
+ * the path is taken from the dict_name.  This is only needed 
+ * because an affix_file is opened by a recursive call to this
+ * function.
  */
 static Dictionary 
 internal_dictionary_create(char * dict_name, char * pp_name, 
@@ -359,18 +353,13 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
 
-	/*  *DS*  remove this
-	if (pp_name != NULL) {
-		dict->post_process_filename = string_set_add(pp_name, dict->string_set);
-	}
-	else {
-		dict->post_process_filename = NULL;
-	}
-	*/
+	if (path != NULL)
+		dictionary_path_name = path;
+	else
+		dictionary_path_name = dict_name;
 
-	if (path != NULL) dictionary_path_name = path; else dictionary_path_name = dict_name;
-
-	if (!open_dictionary(dictionary_path_name, dict)) {
+	dict->fp = dictopen(dictionary_path_name, dict->name, "r");
+	if (dict->fp == NULL) {
 		lperror(NODICT, dict_name);
 		string_set_delete(dict->string_set);
 		xfree(dict, sizeof(struct Dictionary_s));
