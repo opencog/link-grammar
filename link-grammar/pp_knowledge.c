@@ -20,6 +20,7 @@
 ***********************************************************************/
 
 #include <link-grammar/api.h>
+#include "utilities.h"
 
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */
 
@@ -304,7 +305,7 @@ static void free_rules(pp_knowledge *k)
 pp_knowledge *pp_knowledge_open(char *dictname, char *path)
 {
   /* read knowledge from disk into pp_knowledge */
-  FILE *f=dictopen(dictname, path, "r");
+  FILE *f=dictopen(path, "r");
   pp_knowledge *k = (pp_knowledge *) xalloc (sizeof(pp_knowledge));
   if (!f) error("Couldn't find post-process knowledge file %s", path);
   k->lt = pp_lexer_open(f);

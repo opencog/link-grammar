@@ -287,14 +287,8 @@ static char * get_datadir(void)
  * for the file in a sequence of directories until it finds it.  The
  * sequence of directories is specified in a dictpath string, in
  * which each directory is followed by a ":".
- *
- * The dictpath that it uses is constructed as follows.  If the
- * dictname is non-null, and is an absolute path name (beginning
- * with a "/", then the part after the last "/" is removed and this
- * is the first directory on the dictpath.  After this comes the
- * DICTPATH environment variable, followed by the DEFAULTPATH
  */
-FILE *dictopen(const char *dictname, const char *filename, const char *how)
+FILE *dictopen(const char *filename, const char *how)
 {
 	char completename[MAX_PATH_NAME+1];
 	char fulldictpath[MAX_PATH_NAME+1];

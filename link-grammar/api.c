@@ -358,7 +358,7 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 	else
 		dictionary_path_name = dict_name;
 
-	dict->fp = dictopen(dictionary_path_name, dict->name, "r");
+	dict->fp = dictopen(dict->name, "r");
 	if (dict->fp == NULL) {
 		lperror(NODICT, dict_name);
 		string_set_delete(dict->string_set);

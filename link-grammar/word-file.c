@@ -57,7 +57,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename) {
 
     safe_strcpy(file_name_copy, filename+1, sizeof(file_name_copy)); /* get rid of leading '/' */
 
-    if ((fp = dictopen(dict->name, file_name_copy, "r")) == NULL) {
+    if ((fp = dictopen(file_name_copy, "r")) == NULL) {
 	lperror(WORDFILE, "%s\n", file_name_copy);
 	return NULL;
     }

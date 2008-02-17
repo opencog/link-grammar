@@ -34,7 +34,6 @@ void *      exalloc(int);
 char * get_default_locale(void);
 char * join_path(const char * prefix, const char * suffix);
 
-#define DICTPATH "DICTPATH" /* PATH environ variable for dictionary files */
-FILE *dictopen(const char *dictname, const char *filename, const char *how);
+FILE *dictopen(const char *filename, const char *how);
 
 #endif
