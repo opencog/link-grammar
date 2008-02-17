@@ -333,7 +333,6 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 	Dictionary dict;
 	static int rand_table_inited=FALSE;
 	Dict_node *dict_node;
-	char * dictionary_path_name;
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 
@@ -352,11 +351,6 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 	dict->word_file_header = NULL;
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
-
-	if (path != NULL)
-		dictionary_path_name = path;
-	else
-		dictionary_path_name = dict_name;
 
 	dict->fp = dictopen(dict->name, "r");
 	if (dict->fp == NULL) {
