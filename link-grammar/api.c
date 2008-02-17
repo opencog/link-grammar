@@ -326,9 +326,9 @@ void parse_options_reset_resources(Parse_Options opts) {
  * because an affix_file is opened by a recursive call to this
  * function.
  */
-static Dictionary 
-internal_dictionary_create(char * dict_name, char * pp_name, 
-                           char * cons_name, char * affix_name, char * path)
+Dictionary 
+dictionary_create(char * dict_name, char * pp_name, 
+                  char * cons_name, char * affix_name)
 {
 	Dictionary dict;
 	static int rand_table_inited=FALSE;
@@ -369,7 +369,7 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 
 	dict->affix_table = NULL;
 	if (affix_name != NULL) {
-		dict->affix_table = internal_dictionary_create(affix_name, NULL, NULL, NULL, dict_name);
+		dict->affix_table = dictionary_create(affix_name, NULL, NULL, NULL);
 		if (dict->affix_table == NULL) {
 			fprintf(stderr, "%s\n", lperrmsg);
 			goto failure;
@@ -408,11 +408,6 @@ failure:
 	string_set_delete(dict->string_set);
 	xfree(dict, sizeof(struct Dictionary_s));
 	return NULL;
-}
-
-Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name) 
-{
-	return internal_dictionary_create(dict_name, pp_name, cons_name, affix_name, NULL);
 }
 
 Dictionary dictionary_create_lang(char * lang)
