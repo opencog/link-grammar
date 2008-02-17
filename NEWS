@@ -1,6 +1,10 @@
 Version 4.3.3 includes the following changes:
  * Missing java is a warning, not an error.
- * man page for link-grammar.
+ * man page for grammar-parse.
+ * Removed cruft from the dictionary open routines.
+ * configure tries to guess some non-standard jni.h locations
+ * Split up java library exports, should help cygwin builds.
+ * Minor dictionary additions.
 
 Version 4.3.2 includes the following changes:
  * Compile fixes for WIN32
