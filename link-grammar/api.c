@@ -355,15 +355,11 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 	dict->fp = dictopen(dict->name, "r");
 	if (dict->fp == NULL) {
 		lperror(NODICT, dict_name);
-		string_set_delete(dict->string_set);
-		xfree(dict, sizeof(struct Dictionary_s));
-		return NULL;
+		goto failure;
 	}
 
 	if (!read_dictionary(dict)) {
-		string_set_delete(dict->string_set);
-		xfree(dict, sizeof(struct Dictionary_s));
-		return NULL;
+		goto failure;
 	}
 
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
@@ -376,7 +372,7 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 		dict->affix_table = internal_dictionary_create(affix_name, NULL, NULL, NULL, dict_name);
 		if (dict->affix_table == NULL) {
 			fprintf(stderr, "%s\n", lperrmsg);
-			exit(-1);
+			goto failure;
 		}
 	}
 
@@ -407,6 +403,11 @@ internal_dictionary_create(char * dict_name, char * pp_name,
 	free_lookup_list(dict_node);
 
 	return dict;
+
+failure:
+	string_set_delete(dict->string_set);
+	xfree(dict, sizeof(struct Dictionary_s));
+	return NULL;
 }
 
 Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name) 
