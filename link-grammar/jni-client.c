@@ -59,7 +59,10 @@ static void init(void)
 	parse_options_set_short_length(opts, 10);
 	parse_options_set_verbosity(opts,0);
 
-	dict = dictionary_create_default_lang();
+	/* Default to the english language; will need to fix 
+	 * this if/when more languages are supported.
+	 */
+	dict = dictionary_create_lang("en");
 	test();
 }
 
