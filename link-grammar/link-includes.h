@@ -290,14 +290,14 @@ link_public_api(char *)
 *
 *****************************************************************************/
 
-typedef struct Postprocessor_s * PostProcessor;
+typedef struct Postprocessor_s PostProcessor;
 
-link_public_api(PostProcessor)
+link_public_api(PostProcessor *)
      post_process_open(char *path);
 link_public_api(void)
-     post_process_close(PostProcessor postprocessor);
+     post_process_close(PostProcessor *);
 link_public_api(void)
-     linkage_post_process(Linkage linkage, PostProcessor postprocessor);
+     linkage_post_process(Linkage, PostProcessor *);
 
 link_public_api(void)
      issue_special_command(char * line, Parse_Options opts, Dictionary dict);
