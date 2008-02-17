@@ -297,20 +297,24 @@ FILE *dictopen(const char *filename, const char *how)
 	FILE *fp;
 
 	if (filename[0] == '/') {
-		fp = fopen(filename, how);  /* If the file does not exist NULL is returned */
+		/* fopen returns NULL if the file does not exist. */
+		fp = fopen(filename, how);
 		if(fp) return fp;
 	}
 
 	{
 		char * data_dir = get_datadir();
 		if (data_dir) {
-			sprintf(fulldictpath, "%s%c%s%c", data_dir, PATH_SEPARATOR, DEFAULTPATH, PATH_SEPARATOR);
+			snprintf(fulldictpath, MAX_PATH_NAME, 
+			         %s%c%s%c", data_dir, PATH_SEPARATOR, 
+			                    DEFAULTPATH, PATH_SEPARATOR);
 			free(data_dir);
 		}
 		else {
 			/* always make sure that it ends with a path separator char
 			 * for the below while() loop. */
-			sprintf(fulldictpath, "%s%c", DEFAULTPATH, PATH_SEPARATOR);
+			snprintf(fulldictpath, MAX_PATH_NAME,
+			         "%s%c", DEFAULTPATH, PATH_SEPARATOR);
 		}
 	}
 
