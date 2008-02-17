@@ -362,11 +362,6 @@ dictionary_create(char * dict_name, char * pp_name,
 		goto failure;
 	}
 
-	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
-	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
-	dict->postprocessor	  = post_process_open(pp_name);
-	dict->constituent_pp	 = post_process_open(cons_name);
-
 	dict->affix_table = NULL;
 	if (affix_name != NULL) {
 		dict->affix_table = dictionary_create(affix_name, NULL, NULL, NULL);
@@ -375,6 +370,11 @@ dictionary_create(char * dict_name, char * pp_name,
 			goto failure;
 		}
 	}
+
+	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
+	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
+	dict->postprocessor	  = post_process_open(pp_name);
+	dict->constituent_pp	 = post_process_open(cons_name);
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = TRUE;
