@@ -306,7 +306,7 @@ FILE *dictopen(const char *filename, const char *how)
 		char * data_dir = get_datadir();
 		if (data_dir) {
 			snprintf(fulldictpath, MAX_PATH_NAME, 
-			         %s%c%s%c", data_dir, PATH_SEPARATOR, 
+			         "%s%c%s%c", data_dir, PATH_SEPARATOR, 
 			                    DEFAULTPATH, PATH_SEPARATOR);
 			free(data_dir);
 		}
