@@ -111,19 +111,19 @@ USING pkg-config:
 JAVA bindings:
 
    This release includes a very simple Java binding.  Its use is optional. 
-	It can be accessed by copying the file LinkGrammar.java into your java
-	project.
+   It can be accessed by copying the file LinkGrammar.java into your java
+   project.
 
-	The bindings will be built automatically if jni.h can be found.  
-	Some common java jvm distributions (most notably, the ones from Sun) 
-	place this file in unusual locations, where it cannot be found. 
-	To remedy this, specify the location with the CPPFLAGS variable: 
-	so, for example,
+   The bindings will be built automatically if jni.h can be found.  
+   Some common java jvm distributions (most notably, the ones from Sun) 
+   place this file in unusual locations, where it cannot be found. 
+   To remedy this, specify the location with the CPPFLAGS variable: 
+   so, for example,
 
-		export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
+      export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
 
-	Please note that the use of /opt is non-standard, and most system
-	tools will fail to find packages installed there.
+   Please note that the use of /opt is non-standard, and most system
+   tools will fail to find packages installed there.
 
 COMMERCIAL use:
 
