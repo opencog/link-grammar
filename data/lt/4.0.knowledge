@@ -23,10 +23,7 @@
 ; table below (STARTING_LINK_TYPE_TABLE)
   
 DOMAIN_STARTER_LINKS: 
- W   Ce   Cs   Ca   Cc   Ci   R*   Rn   Re   RSe  Mr   QI#d   Mv*   Jr  Mj   Qd  
- TOn   TOi   Mg*   MVi  Ss#d   Bsd   ER   Z  Ma#*   SIs#g  BIqx   MX#p   MX#a  
- MX#r   MX#j   MV#o   MV#p  Eq   COq   CCq  AFd   PFc 
-
+ W   
 
 
 ; ----------------------------------------------------------------------
@@ -37,49 +34,5 @@ DOMAIN_STARTER_LINKS:
 ; type, and the second is the domain to which that link type belongs.
 
 STARTING_LINK_TYPE_TABLE: 
- Ce    e  
- R*    r  
- Rn    r
- Re    r  
  W     m  
- RSe   e  
- Cs    s  
- Ca    s  
- Jr    e  
- Mr    r  
- Cc    s  
- Mv*   e  
- QI#d  s  
- BIqx  s  
- TOn   e  
- TOi   e  
- MVi   e  
- MV#o  s  
- MV#p  s  
- AFd   s  
- PFc   s  
- Mg*   e  
- Mj    j  
- Qd    m  
- MX#j  j  
- TOo   x  
- I#j   x  
- Pa##j x  
- CP    x
- COp   d  
- SFsx  d  
- Ss#g  d  
- SIs#g s  
- Ss#d  s  
- Bsd   s  
- ER    s  
- Z     s  
- Ma#*  e  
- MX#p  e  
- Ci    e  
- MX#a  e  
- Eq    e  
- COq   e  
- CCq   s  
- MX#r  r 
 
