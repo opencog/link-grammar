@@ -3,6 +3,6 @@
 % just enough to parse
 % "Jonas skaite knyga"
 
-Jonas: S+;
-skaite: S- & {O+};
+Jonas Linas Audra Gintare Saulius: S+;
+skaite skaito skaitys: S- & {O+};
 knyga: O-;
