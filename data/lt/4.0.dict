@@ -1,6 +1,8 @@
 % 
 % Lithuanian dictionary, experimental and utterly incomplete.
-%
-labas: A;
+% just enough to parse
+% "Jonas skaite knyga"
 
-rytas: AN
+Jonas: S+;
+skaite: S- & {O+};
+knyga: O-;
