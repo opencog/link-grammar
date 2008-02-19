@@ -3,17 +3,25 @@
 % just enough to parse
 % "Jonas skaite knyga"
 %
-% D == Daiktavardis 
+% Ą Č Ę Ė Į Š Ų Ū Ž
+% ą č ė ę į š ū ų ž
+% ą == ,a  irgi ę į ų
+% č == <c irgi š ž
+% ė == .e   Ė
+% ū == -u   Ū
+% 
+% 
+% D  == Daiktavardis 
 % Dv == Vardininkas Kas?
 % Dk == Kilmininkas Ko?
 % Dn == Naudininkas Kam?
-% Dg == Galininkas ka?
+% Dg == Galininkas Ką?
 % Di == Inagininkas Kuo?
-% Du == Vietininkas Kur
-% Ds == Sauksmininkas O
+% Du == Vietininkas Kur?
+% Ds == Sauksmininkas O!
 %
-% V == Vieksmazodis
-% Va == As
+% V  == Vieksmažodis
+% Va == Aš
 % Vt == Tu
 % Vj == Jis, Ji
 % Vm == Mes
