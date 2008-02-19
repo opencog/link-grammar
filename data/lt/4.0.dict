@@ -2,7 +2,26 @@
 % Lithuanian dictionary, experimental and utterly incomplete.
 % just enough to parse
 % "Jonas skaite knyga"
+%
+% D == Daiktavardis 
+% Dv == Vardininkas Kas?
+% Dk == Kilmininkas Ko?
+% Dn == Naudininkas Kam?
+% Dg == Galininkas ka?
+% Di == Inagininkas Kuo?
+% Du == Vietininkas Kur
+% Ds == Sauksmininkas O
+%
+% V == Vieksmazodis
+% Va == As
+% Vt == Tu
+% Vj == Jis, Ji
+% Vm == Mes
+% Vu == Jus
+% Vo == Jie, Jos
+%
 
-Jonas Linas Audra Gintare Saulius: S+;
-irkluoja skaite skaito skaitys: S- & {O+};
-laiveli knyga: O-;
+Jonas Linas Audra Gintare Saulius: Vj+;      % reikalauja vieks. ant desines.
+irkluoja skaite skaito skaitys: Vj- & {Dg+}; % gali tureti galininka ant desines.
+laiveli knyga: Dg-;   % reikalauja veiksmazodi ant kaires.
+
