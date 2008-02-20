@@ -211,23 +211,33 @@ int table_lookup(int lw, int rw, Connector *le, Connector *re, int cost) {
 	if (t == NULL) return -1; else return t->count;
 }
 
-static void table_update(int lw, int rw, Connector *le, Connector *re, int cost, int count) {
-	/* Stores the value in the table.  Unlike table_store, it assumes it's already there */
+/**
+ * Stores the value in the table.  Unlike table_store, it assumes 
+ * it's already there
+ */
+static void table_update(int lw, int rw, 
+                         Connector *le, Connector *re,
+                         int cost, int count)
+{
 	Table_connector *t = table_pointer(lw, rw, le, re, cost);
 
 	assert(t != NULL, "This entry is supposed to be in the table.");
 	t->count = count;
 }
 
-
-static int pseudocount(int lw, int rw, Connector *le, Connector *re, int cost) {
-/* returns 0 if and only if this entry is in the hash table with a count value of 0 */
+/**
+ * Returns 0 if and only if this entry is in the hash table 
+ * with a count value of 0.
+ */
+static int pseudocount(int lw, int rw, Connector *le, Connector *re, int cost)
+{
 	int count;
 	count = table_lookup(lw, rw, le, re, cost);
 	if (count == 0) return 0; else return 1;
 }
 
-int count(int lw, int rw, Connector *le, Connector *re, int cost) {
+int count(int lw, int rw, Connector *le, Connector *re, int cost)
+{
 	Disjunct * d;
 	int total, pseudototal;
 	int start_word, end_word, w;
@@ -312,12 +322,11 @@ int count(int lw, int rw, Connector *le, Connector *re, int cost) {
 			d = m->d;
 			for (lcost = 0; lcost <= cost; lcost++) {
 				rcost = cost-lcost;
-				/* now lcost and rcost are the costs we're assigning to those parts respectively */
-
+				/* Now lcost and rcost are the costs we're assigning
+				 * to those parts respectively */
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-
 				Lmatch = (le != NULL) && (d->left != NULL) && match(le, d->left, lw, w);
 				Rmatch = (d->right != NULL) && (re != NULL) && match(d->right, re, w, rw);
 
@@ -384,10 +393,13 @@ int count(int lw, int rw, Connector *le, Connector *re, int cost) {
 	return total;
 }
 
-int parse(Sentence sent, int cost, Parse_Options opts) {
-	/* Returns the number of ways the sentence can be parsed with the
-	   specified cost Assumes that the hash table has already been
-	   initialized, and is freed later.  */
+/** 
+ * Returns the number of ways the sentence can be parsed with the
+ * specified cost Assumes that the hash table has already been
+ * initialized, and is freed later.
+ */
+int parse(Sentence sent, int cost, Parse_Options opts)
+{
 	int total;
 
 	count_set_effective_distance(sent);
