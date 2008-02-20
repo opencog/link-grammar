@@ -42,8 +42,11 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2) {
 	}
 }
 
-Parse_Options parse_options_create(void) {
-	/* create and initialize a Parse_Options object */
+/** 
+ * Create and initialize a Parse_Options object
+ */
+Parse_Options parse_options_create(void)
+{
 	Parse_Options po;
 
 	po = (Parse_Options) xalloc(sizeof(struct Parse_Options_s));
