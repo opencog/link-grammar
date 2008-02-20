@@ -577,7 +577,9 @@ static void free_andlists(Sentence sent)
 	/* printf("\n"); */
 }
 
-int sentence_length(Sentence sent) {
+int sentence_length(Sentence sent)
+{
+	if (!sent) return 0;
 	return sent->length;
 }
 
