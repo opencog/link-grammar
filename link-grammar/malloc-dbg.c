@@ -31,6 +31,16 @@ typedef struct {
 static loc_t loc[TBLSZ];
 static int mcnt = 0;
 
+static FILE *fh = NULL;
+
+static void init_io(void)
+{
+	if (fh) return;
+	fh = fopen("/tmp/m", "w");
+	fh = stdout;
+}
+
+
 static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 {
 	__realloc_hook = old_realloc_hook;
@@ -47,7 +57,7 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 			loc[i].caller = (void *) -1;
 			loc[i].sz = n_bytes;
 			// loc[i].cnt = -1;
-			// printf("realloc %d %p\n", i, mem);
+			// fprintf(fh, "realloc %d %p\n", i, mem);
 			break;
 		}
 	}
@@ -60,7 +70,7 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 			loc[i].sz = n_bytes;
 			loc[i].caller = caller;
 			loc[i].cnt = -2;
-			// printf("realloc %d %p\n", i, mem);
+			// fprintf(fh, "realloc %d %p\n", i, mem);
 			break;
 		}
 	}
@@ -76,6 +86,7 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 	old_malloc_hook = __malloc_hook;
 	old_free_hook = __free_hook;
 
+	init_io();
 	int i;
 	for (i=0; i<TBLSZ; i++)
 	{
@@ -83,7 +94,7 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 		{
 			loc[i].mem = mem;
 			loc[i].caller = caller;
-			// printf("malloc %d %p\n", i, mem);
+			// fprintf(fh,"malloc %d %p\n", i, mem);
 			mcnt ++;
 			loc[i].cnt = mcnt;
 			loc[i].sz = n_bytes;
@@ -98,11 +109,11 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 		for (i=0; i<TBLSZ; i++)
 		{
 			// size_t off = loc[i].caller - (void *) my_malloc_hook;
-			printf("%d caller=%p sz=%x %d\n",
+			fprintf(fh, "%d caller=%p sz=%x %d\n",
 			       i, loc[i].caller, loc[i].sz, loc[i].cnt);
 			totsz += loc[i].sz;
 		}
-		printf ("Total Size=%x\n", totsz);
+		fprintf (fh, "Total Size=%x\n", totsz);
 *((int *)0) = 1; // Force a crash, pop into debugger.
 		exit(1);
 	}
@@ -125,7 +136,7 @@ static void my_free_hook(void * mem, const void * caller)
 			loc[i].caller = 0;
 			loc[i].sz = 0;
 			loc[i].cnt = -3;
-			// printf("free %d %p\n", i, mem);
+			// fprintf(fh, "free %d %p\n", i, mem);
 			break;
 		}
 	}
@@ -136,12 +147,12 @@ static void my_free_hook(void * mem, const void * caller)
 		int i;
 #define BTSZ 10
 		void * btbuf[BTSZ];
-		printf("Double free of mem location %p\n", mem);
+		fprintf(fh, "Double free of mem location %p\n", mem);
 		int nt = backtrace (btbuf, BTSZ);
 		char ** bt = backtrace_symbols(btbuf, nt);
 		for (i=0; i<nt; i++)
 		{
-			printf("\t%s\n", bt[i]);
+			fprintf(fh, "\t%s\n", bt[i]);
 		}
 
 *((int *)0) = 1; // Force a crash, pop into debugger.
@@ -168,10 +179,10 @@ void report_mem_dbg(void)
 			totsz += loc[i].sz;
 		}
 	}
-	printf ("tbl slots used = %d alloc mem=%d\n", cnt, totsz);
+	fprintf (fh, "tbl slots used = %d alloc mem=%d\n", cnt, totsz);
 }
 
-static void my_init_hook(void)
+void my_init_hook(void)
 {
 	old_malloc_hook = __malloc_hook;
 	__malloc_hook = my_malloc_hook;
