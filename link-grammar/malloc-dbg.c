@@ -7,6 +7,7 @@
  * Copyright (c) 2008 Linas Vepstas <linas@linas.org>
  */
 
+#include <execinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -89,6 +90,8 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 			break;
 		}
 	}
+
+	/* This will be hit if there is a slow memory leak */
 	if (i == TBLSZ)
 	{
 		size_t totsz=0;
@@ -100,7 +103,7 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 			totsz += loc[i].sz;
 		}
 		printf ("Total Size=%x\n", totsz);
-*((int *)0) = 1;
+*((int *)0) = 1; // Force a crash, pop into debugger.
 		exit(1);
 	}
 
@@ -126,6 +129,25 @@ static void my_free_hook(void * mem, const void * caller)
 			break;
 		}
 	}
+
+	/* Its a double-free if the mem address wasn't found! */
+	if (TBLSZ == i)
+	{
+		int i;
+#define BTSZ 10
+		void * btbuf[BTSZ];
+		printf("Double free of mem location %p\n", mem);
+		int nt = backtrace (btbuf, BTSZ);
+		char ** bt = backtrace_symbols(btbuf, nt);
+		for (i=0; i<nt; i++)
+		{
+			printf("\t%s\n", bt[i]);
+		}
+
+*((int *)0) = 1; // Force a crash, pop into debugger.
+		exit(1);
+	}
+
 	__malloc_hook = my_malloc_hook;
 
 	free(mem);
