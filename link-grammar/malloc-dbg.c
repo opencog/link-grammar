@@ -56,8 +56,8 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 			loc[i].mem = nm;
 			loc[i].caller = (void *) -1;
 			loc[i].sz = n_bytes;
-			// loc[i].cnt = -1;
-			// fprintf(fh, "realloc %d %p\n", i, mem);
+			/* loc[i].cnt = -1;
+			   fprintf(fh, "realloc %d %p\n", i, mem); */
 			break;
 		}
 	}
@@ -70,7 +70,7 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 			loc[i].sz = n_bytes;
 			loc[i].caller = caller;
 			loc[i].cnt = -2;
-			// fprintf(fh, "realloc %d %p\n", i, mem);
+			/* fprintf(fh, "realloc %d %p\n", i, mem); */
 			break;
 		}
 	}
@@ -94,7 +94,7 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 		{
 			loc[i].mem = mem;
 			loc[i].caller = caller;
-			// fprintf(fh,"malloc %d %p\n", i, mem);
+			/* fprintf(fh,"malloc %d %p\n", i, mem); */
 			mcnt ++;
 			loc[i].cnt = mcnt;
 			loc[i].sz = n_bytes;
@@ -108,13 +108,13 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 		size_t totsz=0;
 		for (i=0; i<TBLSZ; i++)
 		{
-			// size_t off = loc[i].caller - (void *) my_malloc_hook;
+		  /* size_t off = loc[i].caller - (void *) my_malloc_hook; */
 			fprintf(fh, "%d caller=%p sz=%x %d\n",
 			       i, loc[i].caller, loc[i].sz, loc[i].cnt);
 			totsz += loc[i].sz;
 		}
 		fprintf (fh, "Total Size=%x\n", totsz);
-*((int *)0) = 1; // Force a crash, pop into debugger.
+		*((int *)0) = 1; /* Force a crash, pop into debugger. */
 		exit(1);
 	}
 
@@ -136,7 +136,7 @@ static void my_free_hook(void * mem, const void * caller)
 			loc[i].caller = 0;
 			loc[i].sz = 0;
 			loc[i].cnt = -3;
-			// fprintf(fh, "free %d %p\n", i, mem);
+			/* fprintf(fh, "free %d %p\n", i, mem); */
 			break;
 		}
 	}
@@ -155,7 +155,7 @@ static void my_free_hook(void * mem, const void * caller)
 			fprintf(fh, "\t%s\n", bt[i]);
 		}
 
-*((int *)0) = 1; // Force a crash, pop into debugger.
+		*((int *)0) = 1; /* Force a crash, pop into debugger. */
 		exit(1);
 	}
 

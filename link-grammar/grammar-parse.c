@@ -304,7 +304,7 @@ int main(int argc, char * argv[]) {
 
 	Dictionary      dict;
 	Sentence        sent;
-	char            *language="en";  // default to english, and not locale
+	char            *language="en";  /* default to english, and not locale */
 	int             pp_on=TRUE;
 	int             af_on=TRUE;
 	int             cons_on=TRUE;

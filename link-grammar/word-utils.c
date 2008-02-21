@@ -385,16 +385,15 @@ int word_has_connector(Dict_node * dn, const char * cs, int direction)
 
 /* ============================================================================= */
 
-//1 for equal
-//0 for unequal
+/* 1 for equal, 0 for unequal */
 static int exp_compare(Exp * e1, Exp * e2)
 {
 	E_list *el1, *el2;
 
 	if ((e1 == NULL) && (e2 == NULL))
-		return 1; //they are equal
+	  return 1; /* they are equal */
 	if ((e1 == NULL) || (e2 == NULL))
-		return 0; //they are not equal
+	  return 0; /* they are not equal */
 	if (e1->type != e2->type)
 		return 0;
 	if (e1->cost != e2->cost)
@@ -402,18 +401,18 @@ static int exp_compare(Exp * e1, Exp * e2)
 	if (e1->type == CONNECTOR_type) {
 		if (e1->dir != e2->dir)
 			return 0;
-		//printf("%s %s\n",e1->u.string,e2->u.string);
+		/* printf("%s %s\n",e1->u.string,e2->u.string); */
 		if (strcmp(e1->u.string,e2->u.string)!=0)
 			return 0;
 	} else {
 		el1 = e1->u.l;
 		el2 = e2->u.l;
-		//while at least 1 is non-null
+		/* while at least 1 is non-null */
 		for (;(el1!=NULL)||(el2!=NULL);) {
-			//fail if 1 is null
+		  /*fail if 1 is null */
 			if ((el1==NULL)||(el2==NULL))
 				return 0;
-			//fail if they are not compared
+			/* fail if they are not compared */
 			if (exp_compare(el1->e, el2->e) == 0)
 				return 0;
 			if (el1!=NULL)
@@ -422,27 +421,27 @@ static int exp_compare(Exp * e1, Exp * e2)
 				el2 = el2->next;
 		}
 	}
-	return 1; //if never returned 0, return 1
+	return 1; /* if never returned 0, return 1 */
 }
 
-//1 if sub is non-NULL and contained in super
-//0 otherwise
+/* 1 if sub is non-NULL and contained in super, 0 otherwise */
 static int exp_contains(Exp * super, Exp * sub)
 {
 	E_list * el;
 
-	//printf("\nSUP:");
-	//if (super!=NULL)
-	//	print_expression(super);
+	/* printf("\nSUP:");
+	   if (super!=NULL)
+	   print_expression(super); */
 
 	if (sub==NULL || super==NULL)
 		return 0;
 	if (exp_compare(sub,super)==1)
 		return 1;
 	if (super->type==CONNECTOR_type)
-		return 0; //super is a leaf
-	//proceed through supers children and return 1 if sub
-	//is contained in any of them
+	  return 0; /* super is a leaf */
+
+	/* proceed through supers children and return 1 if sub
+	   is contained in any of them */
 	for(el = super->u.l; el!=NULL; el=el->next) {
 		if (exp_contains(el->e, sub)==1)
 			return 1;
@@ -463,10 +462,10 @@ static int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dic
 	m_exp = m_dn->exp;
 	free_lookup_list(m_dn);
 
-	// printf("\n\nWORD:");
-	// print_expression(w_dn->exp);
-	// printf("\nMACR:\n");
-	// print_expression(m_exp);
+	/* printf("\n\nWORD:");
+	 print_expression(w_dn->exp);
+	 printf("\nMACR:\n");
+	 print_expression(m_exp); */
 
 	for (;w_dn != NULL; w_dn = w_dn->right) {
 		if (exp_contains(w_dn->exp, m_exp)==1)

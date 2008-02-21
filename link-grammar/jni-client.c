@@ -5,7 +5,7 @@
  * It could be improved.
  */
 
-// #define BUILD_JNI_CLIENT 1
+/* #define BUILD_JNI_CLIENT 1 */
 #ifdef BUILD_JNI_CLIENT
 
 #include <jni.h>
@@ -74,14 +74,14 @@ static void r_printTree(CNode* cn, int level)
 
 	if (cn==NULL) return;
 
-	// print label
+	/* print label */
 	if (cn->label != NULL) {
 		printf("(%s ", cn->label);
 	} else {
 		printf("NULL\n");
 	}
 
-	// Recurse on children.
+	/* Recurse on children. */
 	for (c = cn->child; c!=NULL; c=c->next) {
 		if (c->child)
 			r_printTree(c, level+1);
@@ -411,7 +411,7 @@ Java_org_linkgrammar_LinkGrammar_getConstituentString(JNIEnv *env, jclass cls)
 	 * mode 2 prints a lisp-style string, but with square brackets.
 	 * mode 3 prints a lisp-style string, one one single line.
 	 */
-	// char *s = linkage_print_constituent_tree(linkage, 1);
+	/* char *s = linkage_print_constituent_tree(linkage, 1); */
 	char *s = linkage_print_constituent_tree(linkage, 3);
 	jstring j = (*env)->NewStringUTF(env, s);
 	linkage_free_constituent_tree_str(s);
