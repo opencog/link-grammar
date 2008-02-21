@@ -13,9 +13,8 @@ public class LinkGrammar
     static
     {
         // On a linux system, the actual name of the library is prefixed 
-        // with "lib" and suffixed with ".so" -- e.g. "liblink-grammar.so"
+        // with "lib" and suffixed with ".so" -- e.g. "liblink-grammar-java.so"
         System.loadLibrary("link-grammar-java");
-        System.loadLibrary("link-grammar");
     }
 
     // C functions for changing linkparser options
