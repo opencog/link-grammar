@@ -200,7 +200,12 @@ void install_fat_connectors(Sentence sent) {
 	}
 }
 
-static void set_connector_list_length_limit(Connector *c, Connector_set *conset, int short_len, Parse_Options opts) {
+static void 
+set_connector_list_length_limit(Connector *c,
+                                Connector_set *conset,
+                                int short_len,
+                                Parse_Options opts)
+{
 	for (; c!=NULL; c=c->next) {
 		if (parse_options_get_all_short_connectors(opts)) {
 			c->length_limit = short_len;
@@ -213,7 +218,8 @@ static void set_connector_list_length_limit(Connector *c, Connector_set *conset,
 	}
 }
 
-static void set_connector_length_limits(Sentence sent, Parse_Options opts) {
+static void set_connector_length_limits(Sentence sent, Parse_Options opts)
+{
 	int i;
 	int len;
 	Disjunct *d;
@@ -229,7 +235,8 @@ static void set_connector_length_limits(Sentence sent, Parse_Options opts) {
 	}
 }
 
-void free_sentence_expressions(Sentence sent) {
+void free_sentence_expressions(Sentence sent)
+{
   int i;
   for (i=0; i<sent->length; i++) {
 	free_X_nodes(sent->word[i].x);
@@ -247,15 +254,17 @@ void free_sentence_disjuncts(Sentence sent) {
 }
 
 
-void prepare_to_parse(Sentence sent, Parse_Options opts) {
-/* assumes that the sentence expression lists have been generated	 */
-/* this does all the necessary pruning and building of and			*/
-/* structures.														*/
+/**
+ * Assumes that the sentence expression lists have been generated.
+ * This does all the necessary pruning and building of and structures.
+ */
+void prepare_to_parse(Sentence sent, Parse_Options opts)
+{
 	int i, has_conjunction;
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost);
 	if (verbosity > 2) {
-		printf("After expanding expressions into disjuncts:") ;
+		printf("After expanding expressions into disjuncts:");
 		print_disjunct_counts(sent);
 	}
 	print_time(opts, "Built disjuncts");
@@ -276,11 +285,11 @@ void prepare_to_parse(Sentence sent, Parse_Options opts) {
 	set_connector_length_limits(sent, opts);
 	build_deletable(sent, has_conjunction);
 	build_effective_dist(sent, has_conjunction);
-	/* why do we do these here instead of in
+	/* Why do we do these here instead of in
 	   first_prepare_to_parse() only?  The
 	   reason is that the deletable region
 	   depends on if null links are in use.
-	   with null_links everything is deletable */
+	   With null_links everything is deletable */
 
 	if (!has_conjunction) {
 		pp_and_power_prune(sent, RUTHLESS, opts);
@@ -308,8 +317,8 @@ void prepare_to_parse(Sentence sent, Parse_Options opts) {
 			print_disjunct_counts(sent);
 		}
 		set_connector_length_limits(sent, opts);
-			  /* have to do this again cause of the
-				 new fat connectors and disjuncts */
+		/* have to do this again cause of the
+		 * new fat connectors and disjuncts */
 
 		print_time(opts, "Constructed fat disjuncts");
 
