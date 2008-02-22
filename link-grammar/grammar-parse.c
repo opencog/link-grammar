@@ -398,8 +398,8 @@ int main(int argc, char * argv[]) {
 
 		if (sent == NULL) {
 			if (verbosity > 0) fprintf(stderr, "%s\n", lperrmsg);
-			if (lperrno != NOTINDICT) exit(-1);
-			else continue;
+			/* if (lperrno != NOTINDICT) exit(-1); */
+			continue;
 		}
 		if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
 			if (verbosity > 0) {
@@ -471,5 +471,6 @@ int main(int argc, char * argv[]) {
 	parse_options_delete(opts);
 	dictionary_delete(dict);
 
+	printf ("Bye.\n");
 	return 0;
 }
