@@ -1,10 +1,17 @@
 % 
+% This file uses utf-8 characater encoding.
+% If editing with "vi", be sure to "set encoding=utf-8"
+% and also be sure to configure the terminal to use utf-8 encoding.
+%
 % Lithuanian dictionary, experimental and utterly incomplete.
 % just enough to parse
-% "Jonas skaite knyga"
+% "Jonas skaite knygą"
 %
+% Ženklai:
 % Ą Č Ę Ė Į Š Ų Ū Ž
 % ą č ė ę į š ū ų ž
+%
+% Kaip išmušti ženklus:
 % ą == ,a  irgi ę į ų
 % č == <c irgi š ž
 % ė == .e   Ė
@@ -12,24 +19,54 @@
 % 
 % 
 % D  == Daiktavardis 
-% Dv == Vardininkas Kas?
+% Dv == Vardininkas Kas?  Dvm == moteriška giminė
 % Dk == Kilmininkas Ko?
 % Dn == Naudininkas Kam?
 % Dg == Galininkas Ką?
-% Di == Inagininkas Kuo?
+% Di == Įnagininkas Kuo?
 % Du == Vietininkas Kur?
 % Ds == Sauksmininkas O!
+%
 %
 % V  == Vieksmažodis
 % Va == Aš
 % Vt == Tu
-% Vj == Jis, Ji
+% Vj == Jis
+% Vjm == Ji
 % Vm == Mes
 % Vu == Jus
 % Vo == Jie, Jos
 %
 
-Jonas Linas Audra Gintare Saulius: Vj+;      % reikalauja vieks. ant desines.
-irkluoja skaite skaito skaitys: Vj- & {Dg+}; % gali tureti galininka ant desines.
-laiveli knyga: Dg-;   % reikalauja veiksmazodi ant kaires.
+% reikalauja vieks. ant desines.
+aš: Va+;
+jis: Vj+;
+ji: Vjm+;
+Jonas Linas Audra Gintare Saulius: Vj+;
+mes: Vm+;
+
+% "Aš esu studentas."
+esu: Va- & (Dv+ or Dvm+);
+
+% giminė turi sueiti: negalima sakyti "jis yra studentė"
+yra: (Vj- & Dv+) or (Vjm- & Dvm+);
+
+% vietininka ant dešinės "Mes einame namo"
+einame: Vm- & Du+;
+eina: Vj- & Dg+;
+
+% Daiktavardžai ...
+mokytojas studentas: Dv-;
+mokytoja studentė: Dvm-;
+
+namo: Du-;
+
+% gali turėti galininka ant dešines.
+irkluoja skaite skaito skaitys: Vj- & {Dg+}; 
+
+% Daiktavardi ant dešines:
+į: Dg+;
+
+% reikalauja veiksmažodi ant kairės.
+laiveli knygą mokyklą: Dg-;
 
