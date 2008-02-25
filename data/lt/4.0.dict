@@ -37,6 +37,10 @@
 % Vu == Jus
 % Vo == Jie, Jos
 %
+% P == Prielinksnis
+% Pk == su kilminiku
+% Pg == su galininku
+% Pi == su įnagininku
 
 % reikalauja vieks. ant desines.
 aš: Va+;
@@ -53,8 +57,11 @@ esu: Va- & (Dv+ or Dvm+);
 yra: (Vj- & Dv+) or (Vjm- & Dvm+);
 
 % vietininka ant dešinės "Mes einame namo"
-einame: Vm- & Du+;
-eina: Vj- & Dg+;
+% arba prielinksni: "eina į mokyklą
+einame: {Vm-} & (Pi+ or Du+);
+eina: {Vj-} & (Pi+ or Du+);
+
+atvažiavom: {Vm-} & (Pi+ or Du+);
 
 % Daiktavardžai ...
 mokytojas studentas: Dv-;
@@ -65,9 +72,9 @@ namo: Du-;
 % gali turėti galininka ant dešines.
 irkluoja skaite skaito skaitys: Vj- & {Dg+}; 
 
-% Daiktavardi ant dešines:
+% Prielinksnai su galininku: Daiktavardi ant dešines:
 į: Dg+;
 
 % reikalauja veiksmažodi ant kairės.
-laiveli knygą mokyklą: Dg-;
+laivelį knygą mokyklą sodžių: Dg- & {Pi-};
 
