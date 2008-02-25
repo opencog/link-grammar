@@ -39,7 +39,7 @@ CONTENTS of this directory:
    data/en/4.0.batch        This is a batch file of sentences (both grammatical
                             and ungrammatical ones) that are handled correctly
                             by this release of the system.  Feed this into the
-                            parser with "./parse 4.0.dict < 4.0.batch"
+                            parser with "./grammar-parse < 4.0.batch"
 
    configure                The GNU configuration script
 
