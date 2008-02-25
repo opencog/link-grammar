@@ -190,6 +190,7 @@ link-grammar/link-features.h
 data/Makefile
 data/en/Makefile
 data/en/words/Makefile
+data/lt/Makefile
 man/Makefile
 autopackage/default.apspec
 link-grammar.xcode/Makefile
