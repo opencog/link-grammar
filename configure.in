@@ -145,6 +145,7 @@ AC_SUBST(LINK_CFLAGS)
 dnl =====================================================================
 
 JNI_GUESS=" \
+   -I/usr/include/classpath/ \
    -I/opt/jdk1.5/include/ \
    -I/opt/jdk1.5/include/linux \
    -I/usr/lib/jvm/java-6-sun/include/ \
