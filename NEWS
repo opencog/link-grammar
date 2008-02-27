@@ -5,8 +5,8 @@ Version 4.3.3 includes the following changes:
  * configure tries to guess some non-standard jni.h locations.
  * Split up java library exports, should help cygwin builds.
  * Fix java library pre-linking bug.
- * Minor en dictionary additions.
- * prototype Lithuanian (lt) dictionary.
+ * Minor English dictionary additions.
+ * Prototype Lithuanian (lt) dictionary.
 
 Version 4.3.2 includes the following changes:
  * Compile fixes for WIN32
