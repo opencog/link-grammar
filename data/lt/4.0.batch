@@ -2,6 +2,13 @@
 % * reiškia kad tai blogas sakinys, ir turetu buti atmestas.
 %
 
+!verbosity=1
+!echo
+!limit=1000
+!batch
+!short=20
+!constituents=1
+
 Jonas skaite knygą
 aš esu studentas
 ji yra studentė
