@@ -18,63 +18,71 @@
 % ū == -u   Ū
 % 
 % 
-% D  == Daiktavardis 
-% Dv == Vardininkas Kas?  Dvm == moteriška giminė
-% Dk == Kilmininkas Ko?
-% Dn == Naudininkas Kam?
-% Dg == Galininkas Ką?
-% Di == Įnagininkas Kuo?
-% Du == Vietininkas Kur?
-% Ds == Sauksmininkas O!
+% D  == Daiktavardis
+% DV == Vardininkas Kas?  DVv == vyriška, DVm == moteriška giminė
+% DK == Kilmininkas Ko?
+% DN == Naudininkas Kam?
+% DG == Galininkas Ką?
+% DI == Įnagininkas Kuo?
+% DU == Vietininkas Kur?
+% DS == Sauksmininkas O!
 %
 %
 % V  == Vieksmažodis
-% Va == Aš
-% Vt == Tu
-% Vj == Jis
-% Vjm == Ji
-% Vm == Mes
-% Vu == Jus
-% Vo == Jie, Jos
+% VA == Aš
+% VT == Tu
+% VJv == Jis  (v == vyriška gimine)
+% VJm == Ji   (m == moteriška giminė)
+% VM == Mes
+% VU == Jus
+% VO == Jie, Jos
 %
-% P == Prielinksnis
-% Pk == su kilminiku
-% Pg == su galininku
-% Pi == su įnagininku
+% P == Prieveiksmis
+% PB == būdo
+% PL == laiko
+% PP == priežasties
+% PV == vietos
+% PD == Prieveiksminės dalelytės.
+%
+% L == Prielinksnis
+% LK == su kilminiku
+% LG == su galininku
+% LI == su įnagininku
 
-% reikalauja vieks. ant desines.
-aš: Va+;
-jis: Vj+;
-ji: Vjm+;
-Jonas Linas Saulius: Vj+;
-Audra Gintarė: Vjm+;
-mes: Vm+;
+% reikalauja vieks. iš desines.
+aš: VA+;
+jis: VJv+;
+ji: VJm+;
+Jonas Linas Saulius: VJv+;
+Audra Gintarė: VJm+;
+mes: VM+;
 
-% "Aš esu studentas."
-esu: Va- & (Dv+ or Dvm+);
+% "Aš esu studentas.", "Aš esu studentė"
+esu: VA- & DV+;
 
 % giminė turi sueiti: negalima sakyti "jis yra studentė"
-yra: (Vj- & Dv+) or (Vjm- & Dvm+);
+yra: (VJ- & DV+);
 
-% vietininka ant dešinės "Mes einame namo"
-% arba prielinksni: "eina į mokyklą
-einame: {Vm-} & (Pi+ or Du+);
-eina: {Vj-} & (Pi+ or Du+);
+% vietininka iš dešinės "Mes einame namo"
+% arba prielinksni: "eina į mokyklą"
+einame: {VM-} & (LI+ or PV+);
+eina: {VJ-} & (LI+ or PV+);
 
-atvažiavom: {Vm-} & (Pi+ or Du+);
+atvažiavom: {VM-} & (LI+ or PV+);
 
 % Daiktavardžai ...
-mokytojas studentas: Dv-;
-mokytoja studentė: Dvm-;
+mokytojas studentas: DVv-;
+mokytoja studentė: DVm-;
 
-namo: Du-;
+% Prieveiksmiai ... 
+laukan miškan oran namo kairėn dešinėn: PV-;
 
-% gali turėti galininka ant dešines.
-irkluoja skaite skaito skaitys: Vj- & {Dg+}; 
+% gali turėti galininka iš dešines.
+irkluoja skaite skaito skaitys: VJ- & {DG+}; 
 
 % Prielinksnai su galininku: Daiktavardi ant dešines:
-į: Dg+;
+į: DG+;
 
 % reikalauja veiksmažodi ant kairės.
-laivelį knygą mokyklą sodžių: Dg- & {Pi-};
+laivelį knygą mokyklą sodžių: DG- & {LI-};
 
