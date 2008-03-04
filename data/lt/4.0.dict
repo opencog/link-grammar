@@ -49,6 +49,10 @@
 % LK == su kilminiku
 % LG == su galininku
 % LI == su įnagininku
+%
+%
+% Xp == taškas gale sakinio (panašiai į anglų žodyna)
+
 
 % reikalauja vieks. iš desines.
 aš:  VA+;
@@ -79,12 +83,12 @@ eina: {VJ-} & (LI+ or PV+);
 svečiai: VO+;
 
 svečias: DV-;
-mokytojas studentas: DVv-;
-mokytoja studentė: DVm-;
+mokytojas studentas: DVv- & {Xp+};
+mokytoja studentė: DVm- & {Xp+};
 
 % -------------------------------
 % Veiksmažodžiai
-išvažiavo: {PV-} & VO-;
+išvažiavo: {PV-} & VO- & {Xp+};
 
 atvažiavom: {VM-} & (LI+ or PV+);
 
@@ -95,11 +99,13 @@ irkluoja skaite skaito skaitys: VJ- & {DG+};
 % Prieveiksmiai ... 
 laukan miškan oran kairėn dešinėn: PV-;
 % "Einame namo", "Svečiai namo išvažiavo"
-namo: PV+ or PV-;
+namo: PV+ or (PV- & {Xp+});
 
 % Prielinksnai su galininku: Daiktavardi ant dešines:
 į: DG+;
 
 % reikalauja veiksmažodi ant kairės.
-laivelį knygą mokyklą sodžių: DG- & {LI-};
+laivelį knygą mokyklą sodžių: DG- & {LI-} & {Xp+};
+
+".": Xp-;
 
