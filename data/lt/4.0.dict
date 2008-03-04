@@ -38,6 +38,8 @@
 % VOv == Jie
 % VOm == Jos
 %
+% B == Būdvardis
+%
 % P == Prieveiksmis
 % PB == būdo
 % PL == laiko
@@ -53,15 +55,6 @@
 %
 % Xp == taškas gale sakinio (panašiai į anglų žodyna)
 
-aš:  VA+  & {Wd-};
-tu:  VT+  & {Wd-};
-jis: VJv+ & {Wd-};
-ji:  VJm+ & {Wd-};
-mes: VM+  & {Wd-};
-jus: VU+  & {Wd-};
-jie: VOv+ & {Wd-};
-jos: VOm+ & {Wd-};
-
 Jonas Linas Saulius: VJv+ & {Wd-};
 Audra Gintarė: VJm+ & {Wd-};
 
@@ -69,9 +62,9 @@ Audra Gintarė: VJm+ & {Wd-};
 esu: VA- & DV+;
 
 % giminė turi sueiti: negalima sakyti "jis yra studentė"
-yra: (VJv- & DVv+) or (VJm- & DVm+);
+yra: (VJv- & (DVv+ or Bv+)) or (VJm- & (DVm+ or Bm+));
 
-% vietininka iš dešinės "Mes einame namo"
+% prieveiksmi iš dešinės: "Mes einame namo"
 % arba prielinksni: "eina į mokyklą"
 einame: {VM-} & (LI+ or PV+) & {Wd-};
 eina: {VJ-} & (LI+ or PV+);
@@ -80,9 +73,18 @@ eina: {VJ-} & (LI+ or PV+);
 % Daiktavardžai ...
 svečiai: VO+ & {Wd-};
 
-svečias: DV- & {Wd-};
+namas svečias: DVv- & VJv+ & {Wd-};
 mokytojas studentas: DVv- & {Xp+} & {Wd-};
 mokytoja studentė: DVm- & {Xp+} & {Wd-};
+
+% reikalauja veiksmažodi ant kairės.
+laivelį knygą mokyklą sodžių: DG- & {LI-} & {Xp+};
+
+% -------------------------------
+% Būdvardžiai
+
+didelis geras gražus medinis: Bv- & {Xp+};
+didelė gera graži medine: Bm- & {Xp+};
 
 % -------------------------------
 % Veiksmažodžiai
@@ -94,6 +96,21 @@ atvažiavom: {VM-} & (LI+ or PV+) & {Wd-};
 irkluoja skaite skaito skaitys: VJ- & {DG+}; 
 
 % -------------------------------
+% Įvardžiai
+% Asmeniniai įvardžiai
+aš:  VA+  & {Wd-};
+tu:  VT+  & {Wd-};
+jis: VJv+ & {Wd-};
+ji:  VJm+ & {Wd-};
+mes: VM+  & {Wd-};
+jus: VU+  & {Wd-};
+jie: VOv+ & {Wd-};
+jos: VOm+ & {Wd-};
+
+% Savybiniai įvardžiai
+mano tavo savo: DV+ & {Wd-};
+
+% -------------------------------
 % Prieveiksmiai ... 
 laukan miškan oran kairėn dešinėn: PV-;
 % "Einame namo", "Svečiai namo išvažiavo"
@@ -101,9 +118,6 @@ namo: PV+ or (PV- & {Xp+});
 
 % Prielinksnai su galininku: Daiktavardi ant dešines:
 į: DG+;
-
-% reikalauja veiksmažodi ant kairės.
-laivelį knygą mokyklą sodžių: DG- & {LI-} & {Xp+};
 
 % taškas
 ".": Xp-;
