@@ -1,3 +1,7 @@
+Version 4.3.4 includes the following changes:
+ * Fix regression in the handling of capitalization at the start of sentences.
+ * Ongoing minor expansion of the Lithuanian (lt) dictionary.
+
 Version 4.3.3 includes the following changes:
  * Missing java is a warning, not an error.
  * man page for grammar-parse.
