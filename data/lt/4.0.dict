@@ -1,11 +1,16 @@
 % 
+%  ========== Lietuvių kalbos žodynas ir gramatika ==============
+%  =========== Lithuanian link-grammar dictionary ===============
+%
+% Experimental and incomplete ... 
+% It can parse 4.0.batch more ore less correctly.
+%
+% Copyright (c) 2008 Linas Vepstas (Vepštas) linas@linas.org
+%
 % This file uses utf-8 characater encoding.
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
-% Lithuanian dictionary, experimental and utterly incomplete.
-% just enough to parse
-% "Jonas skaite knygą"
 %
 % Ženklai:
 % Ą Č Ę Ė Į Š Ų Ū Ž
@@ -119,6 +124,9 @@ namo: PV+ or (PV- & {Xp+});
 % Prielinksnai su galininku: Daiktavardi ant dešines:
 į: DG+;
 
+% -------------------------------
+% Sakinio pradžia ir galūnė
+%
 % taškas
 ".": Xp-;
 
