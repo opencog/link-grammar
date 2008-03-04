@@ -53,19 +53,17 @@
 %
 % Xp == taškas gale sakinio (panašiai į anglų žodyna)
 
+aš:  VA+  & {Wd-};
+tu:  VT+  & {Wd-};
+jis: VJv+ & {Wd-};
+ji:  VJm+ & {Wd-};
+mes: VM+  & {Wd-};
+jus: VU+  & {Wd-};
+jie: VOv+ & {Wd-};
+jos: VOm+ & {Wd-};
 
-% reikalauja vieks. iš desines.
-aš:  VA+;
-tu:  VT+;
-jis: VJv+;
-ji:  VJm+;
-mes: VM+;
-jus: VU+;
-jie: VOv+;
-jos: VOm+;
-
-Jonas Linas Saulius: VJv+;
-Audra Gintarė: VJm+;
+Jonas Linas Saulius: VJv+ & {Wd-};
+Audra Gintarė: VJm+ & {Wd-};
 
 % "Aš esu studentas.", "Aš esu studentė"
 esu: VA- & DV+;
@@ -75,22 +73,22 @@ yra: (VJv- & DVv+) or (VJm- & DVm+);
 
 % vietininka iš dešinės "Mes einame namo"
 % arba prielinksni: "eina į mokyklą"
-einame: {VM-} & (LI+ or PV+);
+einame: {VM-} & (LI+ or PV+) & {Wd-};
 eina: {VJ-} & (LI+ or PV+);
 
 % -------------------------------
 % Daiktavardžai ...
-svečiai: VO+;
+svečiai: VO+ & {Wd-};
 
-svečias: DV-;
-mokytojas studentas: DVv- & {Xp+};
-mokytoja studentė: DVm- & {Xp+};
+svečias: DV- & {Wd-};
+mokytojas studentas: DVv- & {Xp+} & {Wd-};
+mokytoja studentė: DVm- & {Xp+} & {Wd-};
 
 % -------------------------------
 % Veiksmažodžiai
 išvažiavo: {PV-} & VO- & {Xp+};
 
-atvažiavom: {VM-} & (LI+ or PV+);
+atvažiavom: {VM-} & (LI+ or PV+) & {Wd-};
 
 % gali turėti galininka iš dešines.
 irkluoja skaite skaito skaitys: VJ- & {DG+}; 
@@ -107,5 +105,9 @@ namo: PV+ or (PV- & {Xp+});
 % reikalauja veiksmažodi ant kairės.
 laivelį knygą mokyklą sodžių: DG- & {LI-} & {Xp+};
 
+% taškas
 ".": Xp-;
 
+% Žodžiai, kurie gali pradėti sakini.
+CAPITALIZED-WORDS: Wd-;
+LEFT-WALL: Wd+;
