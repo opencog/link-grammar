@@ -413,7 +413,7 @@ failure:
 	return NULL;
 }
 
-Dictionary dictionary_create_lang(char * lang)
+Dictionary dictionary_create_lang(const char * lang)
 {
 	Dictionary dictionary;
 

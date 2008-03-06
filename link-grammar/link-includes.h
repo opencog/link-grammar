@@ -28,7 +28,7 @@ typedef struct Dictionary_s * Dictionary;
 link_public_api(Dictionary) 
      dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name);
 link_public_api(Dictionary)
-     dictionary_create_lang(char * lang);
+     dictionary_create_lang(const char * lang);
 link_public_api(Dictionary)
      dictionary_create_default_lang(void);
 
