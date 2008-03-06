@@ -1532,9 +1532,10 @@ int power_prune(Sentence sent, int mode, Parse_Options opts) {
   */
 
 typedef struct cms_struct Cms;
-struct cms_struct {
+struct cms_struct
+{
 	Cms * next;
-	char * name;
+	const char * name;
 	int count;	  /* the number of times this is in the multiset */
 };
 
