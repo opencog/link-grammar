@@ -64,15 +64,17 @@ int x_prune_match(Connector *a, Connector *b) {
 	return prune_match(a, b, 0, 0);
 }
 
-int prune_match(Connector *a, Connector *b, int aw, int bw) {
-/* This is almost identical to match().  Its reason for existance
-   is the rather subtle fact that with "and" can transform a "Ss"
-   connector into "Sp".  This means that in order for pruning to
-   work, we must allow a "Ss" connector on word match an "Sp" connector
-   on a word to its right.  This is what this version of match allows.
-   we assume that a is on a word to the left of b.
-*/
-	char *s, *t;
+/**
+ * This is almost identical to match().  Its reason for existance
+ * is the rather subtle fact that with "and" can transform a "Ss"
+ * connector into "Sp".  This means that in order for pruning to
+ * work, we must allow a "Ss" connector on word match an "Sp" connector
+ * on a word to its right.  This is what this version of match allows.
+ * we assume that a is on a word to the left of b.
+ */
+int prune_match(Connector *a, Connector *b, int aw, int bw)
+{
+	const char *s, *t;
 	int x, y, dist;
 	if (a->label != b->label) return FALSE;
 	x = a->priority;
@@ -171,12 +173,14 @@ static void free_S(void) {
 	}
 }
 
-static int hash_S(Connector * c) {
-/* This hash function only looks at the leading upper case letters of
-   the connector string, and the label fields.  This ensures that if two
-   strings match (formally), then they must hash to the same place.
-*/
-	char *s;
+/**
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ */
+static int hash_S(Connector * c)
+{
+	const char *s;
 	int i;
 	i = c->label;
 	s = c->string;
@@ -378,8 +382,11 @@ void prune(Sentence sent) {
 static int dup_table_size;
 static Disjunct ** dup_table;
 
-static int string_hash(char * s, int i) {
-/* hash function that takes a string and a seed value i */
+/**
+ * hash function that takes a string and a seed value i
+ */
+static int string_hash(const char * s, int i) 
+{
 	for(;*s != '\0';s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
 	return (i & (dup_table_size-1));
 }
@@ -600,13 +607,14 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
 
 #endif
 
-/*
-   Here is the old version that doesn't check for domination, just
-   equality.
-*/
-
-static int old_hash_disjunct(Disjunct * d) {
-/* This is a hash function for disjuncts */
+/**
+ * This is a hash function for disjuncts
+ *
+ * This is the old version that doesn't check for domination, just
+ * equality.
+ */
+static int old_hash_disjunct(Disjunct * d) 
+{
 	int i;
 	Connector *e;
 	i = 0;
@@ -963,7 +971,8 @@ void expression_prune(Sentence sent){
    These nodes also store if the chosen connector is shallow.
 */
 typedef struct c_list_struct C_list;
-struct c_list_struct {
+struct c_list_struct
+{
 	Connector * c;
 	int shallow;
 	C_list * next;
@@ -1053,15 +1062,17 @@ static void free_power_tables(Sentence sent) {
 	}
 }
 
-static int power_hash(Connector * c) {
-/* This hash function only looks at the leading upper case letters of
-   the connector string, and the label fields.  This ensures that if two
-   strings match (formally), then they must hash to the same place.
-   The answer must be masked to the appropriate table size.
-
-   This is exactly the same hash function used in fast-match.
-*/
-	char *s;
+/** 
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ * The answer must be masked to the appropriate table size.
+ *
+ * This is exactly the same hash function used in fast-match.
+ */
+static int power_hash(Connector * c)
+{
+	const char *s;
 	int i;
 	i = randtable[c->label & (RTSIZE-1)];
 	s = c->string;
@@ -1256,13 +1267,16 @@ static int left_table_search(int w, Connector *c, int shallow, int word_c) {
 static int N_changed;   /* counts the number of changes
 						   of c->word fields in a pass */
 
-static int ok_cwords(Sentence sent, Connector *c){
+#if NOT_USED_NOW
+static int ok_cwords(Sentence sent, Connector *c)
+{
 	for (; c != NULL; c=c->next) {
 		if (c->word == BAD_WORD) return FALSE;
 		if (c->word >= sent->length) return FALSE;
 	}
 	return TRUE;
 }
+#endif
 
 static int left_connector_list_update(Connector *c, int word_c, int w, int shallow) {
 /* take this connector list, and try to match it with the words
@@ -1527,14 +1541,16 @@ struct cms_struct {
 #define CMS_SIZE (2<<10)
 static Cms * cms_table[CMS_SIZE];
 
-static void init_cms_table(void) {
+static void init_cms_table(void)
+{
 	int i;
 	for (i=0; i<CMS_SIZE; i++) {
 		cms_table[i] = NULL;
 	}
 }
 
-static void free_cms_table(void) {
+static void free_cms_table(void)
+{
 	Cms * cms, *xcms;
 	int i;
 	for (i=0; i<CMS_SIZE; i++) {
@@ -1545,7 +1561,8 @@ static void free_cms_table(void) {
 	}
 }
 
-static int cms_hash(char * s) {
+static int cms_hash(const char * s)
+{
 	int i=0;
 	while(isupper((int)*s)) {
 		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
@@ -1554,7 +1571,8 @@ static int cms_hash(char * s) {
 	return (i & (CMS_SIZE-1));
 }
 
-static int match_in_cms_table(char * pp_match_name) {
+static int match_in_cms_table(const char * pp_match_name)
+{
 	/* This returns TRUE if there is a connector name C in the table
 	   such that post_process_match(pp_match_name, C) is TRUE */
 	Cms * cms;
@@ -1564,7 +1582,8 @@ static int match_in_cms_table(char * pp_match_name) {
 	return FALSE;
 }
 
-static Cms * lookup_in_cms_table(char * str) {
+static Cms * lookup_in_cms_table(const char * str)
+{
 	Cms * cms;
 	for (cms = cms_table[cms_hash(str)]; cms!=NULL; cms=cms->next) {
 		if(strcmp(str, cms->name) == 0) return cms;
@@ -1580,7 +1599,8 @@ int is_in_cms_table(char * str) {
 }
 */
 
-static void insert_in_cms_table(char * str) {
+static void insert_in_cms_table(const char * str)
+{
 	Cms * cms;
 	int h;
 	cms = lookup_in_cms_table(str);
@@ -1597,9 +1617,12 @@ static void insert_in_cms_table(char * str) {
 	}
 }
 
-static int delete_from_cms_table(char * str) {
-	/* Delete the given string from the table.  Return TRUE if
-	   this caused a count to go to 0, return FALSE otherwise */
+/**
+ * Delete the given string from the table.  Return TRUE if
+ * this caused a count to go to 0, return FALSE otherwise.
+ */
+static int delete_from_cms_table(const char * str)
+{
 	Cms * cms;
 	cms = lookup_in_cms_table(str);
 	if (cms != NULL && cms->count > 0) {
@@ -1655,7 +1678,8 @@ static int rule_satisfiable(pp_linkset *ls) {
 	return FALSE;
 }
 
-static int pp_prune(Sentence sent, Parse_Options opts) {
+static int pp_prune(Sentence sent, Parse_Options opts)
+{
 	pp_knowledge * knowledge;
 	pp_rule rule;
 	char * selector;
