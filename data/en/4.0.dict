@@ -69,9 +69,17 @@
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
 % Just pure singular entities, no mass nouns 
-<entity-singular>:
+% Note that "CAPITALIZED-WORDS" has special meaning within the link parser.
+% These are the words that can occur at the start of the sentence, and be
+% capitalized ...
+CAPITALIZED-WORDS NAME <entity-singular>:
 ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
+
+% Plural of words that can appear at the start of a sentence.
+PL-CAPITALIZED-WORDS: 
+{G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
+(({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+); 
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
