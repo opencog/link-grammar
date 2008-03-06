@@ -1012,12 +1012,18 @@ Alice took a bite out of it.
 % Buggy sentences that need fixing:
 His works disclose a mastery of composition.
 
+% prepositional difficulties
+It fell when the clock chimed.
+
+% inverted subject-object
+The treasure lay below the ground.
+Below the ground lay the treasure.
+
 % more failures: "He turned left." works, these others do not.
 He angled left.
 He dodged left.
 He jumped left.
 It was he that did it.
-Below the ground lay the treasure.
 John likes joking around.
 He's right, isn't he?
 
