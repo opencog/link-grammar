@@ -22,6 +22,9 @@ public class LinkGrammar
 
     public static native void setMaxCost(int maxCost);
 
+    // Defaults to /usr/local/share/link-grammar/
+    public static native void setDictionariesPath(String path);
+    
     // C functions in the linkparser API
     public static native void init();
 

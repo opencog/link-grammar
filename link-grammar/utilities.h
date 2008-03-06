@@ -35,5 +35,6 @@ char * get_default_locale(void);
 char * join_path(const char * prefix, const char * suffix);
 
 FILE *dictopen(const char *filename, const char *how);
+void set_data_dir(const char * path);
 
 #endif

@@ -250,10 +250,23 @@ path_get_dirname (const char *file_name)
 }
 #endif /* _WIN32 */
 
+char * custom_data_dir = NULL;
+
+void set_data_dir(const char * path)
+{
+	if (custom_data_dir) free (custom_data_dir);
+	custom_data_dir = safe_strdup(path);
+}
+
 static char * get_datadir(void)
 {
 	char * data_dir = NULL;
 
+	if (custom_data_dir != NULL) {
+		data_dir = safe_strdup(custom_data_dir);
+		return data_dir; 
+	}
+	
 #ifdef ENABLE_BINRELOC
 	data_dir = safe_strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)

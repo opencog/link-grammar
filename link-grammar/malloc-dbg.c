@@ -20,7 +20,7 @@ static void *(*old_realloc_hook)(void *, size_t, const void *);
 static void my_free_hook(void * mem, const void * caller);
 static void * my_malloc_hook(size_t n_bytes, const void * caller);
 
-#define TBLSZ 6000
+#define TBLSZ 366000
 typedef struct {
 	void * mem;
 	const void * caller;
@@ -36,7 +36,7 @@ static FILE *fh = NULL;
 static void init_io(void)
 {
 	if (fh) return;
-	fh = fopen("/tmp/m", "w");
+	// fh = fopen("/tmp/m", "w");
 	fh = stdout;
 }
 
@@ -125,6 +125,7 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller)
 
 static void my_free_hook(void * mem, const void * caller)
 {
+	if (0x0 == mem) return;
 	__malloc_hook = old_malloc_hook;
 	__free_hook = old_free_hook;
 	int i;

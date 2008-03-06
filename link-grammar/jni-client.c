@@ -10,6 +10,7 @@
 
 #include <jni.h>
 #include <stdio.h>
+#include <utilities.h>
 
 #include <link-grammar/api.h>
 #include "jni-client.h"
@@ -205,6 +206,15 @@ JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setMaxCost(JNIEnv *env, jclass cls, jint maxCost)
 {
 	parse_options_set_disjunct_cost(opts, maxCost);
+}
+
+JNIEXPORT void JNICALL 
+Java_org_linkgrammar_LinkGrammar_setDictionariesPath
+  (JNIEnv *env, jclass cls, jstring path)
+{
+    const char *nativePath = (*env)->GetStringUTFChars(env,path, 0);
+    set_data_dir(nativePath);
+    (*env)->ReleaseStringUTFChars(env,path, nativePath);
 }
 
 /*

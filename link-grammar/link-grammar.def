@@ -120,3 +120,4 @@ lperrno
 lperrmsg
 is_entity
 is_past_tense_form
+set_data_dir
