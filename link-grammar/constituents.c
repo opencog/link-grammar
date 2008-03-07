@@ -27,9 +27,9 @@ static String_set * phrase_ss;
 struct {
   int left;
   int right;
-  char * type;
+  const char * type;
   char domain_type;
-  char * start_link;
+  const char * start_link;
   int start_num;
   int subl;
   int canon;
@@ -648,7 +648,7 @@ static void generate_misc_word_info(Linkage linkage) {
 	   (This function is called once for each sublinkage.) */
 	
 	int l1, l2, w1, w2;
-	char * label1, * label2;
+	const char * label1, * label2;
 
 	for (w1=0; w1<linkage->num_words; w1++)
 		wordtype[w1]=NONE;
