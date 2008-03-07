@@ -242,42 +242,42 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
     Parse_Options opts = linkage->opts;
 
     for (i=0; i<sent->length; i++) {   /* get rid of those ugly ".Ixx" */
-	chosen_words[i] = sent->word[i].string;
-	if (pi->chosen_disjuncts[i] == NULL) {  
-	    /* no disjunct is used on this word because of null-links */
-	    t = chosen_words[i];
-	    l = strlen(t) + 2;
-	    s = (char *) xalloc(l+1);
-	    sprintf(s, "[%s]", t);
-	    t = string_set_add(s, sent->string_set);
-	    xfree(s, l+1);
-	    chosen_words[i] = t;
-	} else if (opts->display_word_subscripts) {
-	    t = pi->chosen_disjuncts[i]->string;	
-	    if (is_idiom_word(t)) {
-		l = strlen(t);
-		s = (char *) xalloc(l+1);
-		strcpy(s,t);
-		for (u=s; *u != '.'; u++)
-		  ;
-		*u = '\0';
-		t = string_set_add(s, sent->string_set);
-		xfree(s, l+1);
-		chosen_words[i] = t;
-	    } else {
-		chosen_words[i] = t;
-	    }
-	}
+        chosen_words[i] = sent->word[i].string;
+        if (pi->chosen_disjuncts[i] == NULL) {  
+            /* no disjunct is used on this word because of null-links */
+            t = chosen_words[i];
+            l = strlen(t) + 2;
+            s = (char *) xalloc(l+1);
+            sprintf(s, "[%s]", t);
+            t = string_set_add(s, sent->string_set);
+            xfree(s, l+1);
+            chosen_words[i] = t;
+        } else if (opts->display_word_subscripts) {
+            t = pi->chosen_disjuncts[i]->string;        
+            if (is_idiom_word(t)) {
+                l = strlen(t);
+                s = (char *) xalloc(l+1);
+                strcpy(s,t);
+                for (u=s; *u != '.'; u++)
+                  ;
+                *u = '\0';
+                t = string_set_add(s, sent->string_set);
+                xfree(s, l+1);
+                chosen_words[i] = t;
+            } else {
+                chosen_words[i] = t;
+            }
+        }
     }
     if (sent->dict->left_wall_defined) {
-	chosen_words[0] = LEFT_WALL_DISPLAY;
+        chosen_words[0] = LEFT_WALL_DISPLAY;
     }
     if (sent->dict->right_wall_defined) {
-	chosen_words[sent->length-1] = RIGHT_WALL_DISPLAY;
+        chosen_words[sent->length-1] = RIGHT_WALL_DISPLAY;
     }
     for (i=0; i<linkage->num_words; ++i) {
-	linkage->word[i] = (char *) exalloc(strlen(chosen_words[i])+1);
-	strcpy(linkage->word[i], chosen_words[i]);
+        linkage->word[i] = (char *) exalloc(strlen(chosen_words[i])+1);
+        strcpy(linkage->word[i], chosen_words[i]);
     }
 }
 
