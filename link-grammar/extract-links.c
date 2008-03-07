@@ -200,11 +200,13 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
 #endif
 
 
+/** 
+ * returns NULL if there are no ways to parse, or returns a pointer
+ * to a set structure representing all the ways to parse.
+ */
 static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
-					  Connector *le, Connector *re, int cost, Parse_info pi) {
-	/* returns NULL if there are no ways to parse, or returns a pointer
-	   to a set structure representing all the ways to parse */
-
+					  Connector *le, Connector *re, int cost, Parse_info pi)
+{
 	Disjunct * d, * dis;
 	int start_word, end_word, w;
 	int lcost, rcost, Lmatch, Rmatch;
@@ -285,7 +287,7 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 		end_word = re->word;
 	}
 
-	for (w=start_word; w <= end_word; w++) {
+	for (w=start_word; w < end_word+1; w++) {
 		m1 = m = form_match_list(w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
