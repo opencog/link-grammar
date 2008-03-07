@@ -17,8 +17,8 @@
 
 static int center[MAX_SENTENCE];
 static int N_words_to_print;  /* version of N_words in this file for printing links */
-char * trailer(int mode);
-char * header(int mode);
+const char * trailer(int mode);
+const char * header(int mode);
 
 static void set_centers(Linkage linkage, int print_word_0) {
     int i, len, tot;
@@ -295,7 +295,8 @@ static char xpicture[MAX_HEIGHT][MAX_LINE];
 char * linkage_print_diagram(Linkage linkage)
 {
     int i, j, k, cl, cr, row, top_row, width, flag;
-    char *t, *s;
+    const char *s;
+    char *t;
     int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
     char connector[MAX_TOKEN_LENGTH];
     int line_len, link_length;
@@ -401,10 +402,10 @@ char * linkage_print_diagram(Linkage linkage)
             s = ppla[j]->name;
             
             if (opts->display_link_subscripts) {
-              if (!isalpha((int)*s))
+              if (!isalpha(*s))
                 s = "";
             } else {
-              if (!isupper((int)*s)) {
+              if (!isupper(*s)) {
                 s = "";   /* Don't print fat link connector name */
               }
             }
@@ -440,18 +441,18 @@ char * linkage_print_diagram(Linkage linkage)
     
     /* we have the link picture, now put in the words and extra "|"s */
     
-    s = xpicture[0];
+    t = xpicture[0];
     if (print_word_0) k = 0; else k = 1;
     for (; k<N_words_to_print; k++) {
-        t = linkage->word[k];
+        s = linkage->word[k];
         i=0;
-        while(*t != '\0') {
-            *s++ = *t++;
+        while(*s != '\0') {
+            *t++ = *s++;
             i++;
         }
-        *s++ = ' ';
+        *t++ = ' ';
     }
-    *s = '\0';
+    *t = '\0';
     
     if (opts->display_short) {
         for (k=0; picture[0][k] != '\0'; k++) {
@@ -462,12 +463,12 @@ char * linkage_print_diagram(Linkage linkage)
             }
         }
         xpicture[1][k] = '\0';
-        for (row=0; row <= top_row; row++) {
+        for (row=0; row < top_row+1; row++) {
             strcpy(xpicture[row+2],picture[row]);
         }
         top_row = top_row+2;
     } else {
-        for (row=0; row <= top_row; row++) {
+        for (row=0; row < top_row+1; row++) {
             strcpy(xpicture[2*row+2],picture[row]);
             for (k=0; picture[row][k] != '\0'; k++) {
                 if ((picture[row][k] == '+') || (picture[row][k] == '|')) {
@@ -572,29 +573,34 @@ void print_expression_sizes(Sentence sent) {
     printf("\n\n");
 }
 
-void print_sentence(FILE *fp, Sentence sent, int w) {
-/* this version just prints it on one line.  */
+/**
+ * this version just prints it on one line. 
+ */
+void print_sentence(FILE *fp, Sentence sent, int w)
+{
     int i;
     if (sent->dict->left_wall_defined) i=1; else i=0;
     for (; i<sent->length - sent->dict->right_wall_defined; i++) {
-	fprintf(fp, "%s ", sent->word[i].string);
+        fprintf(fp, "%s ", sent->word[i].string);
     }
     fprintf(fp, "\n");
 }
 
-char * trailer(int mode) {
-    static char * trailer_string=
+const char * trailer(int mode)
+{
+    static const char * trailer_string=
         "diagram\n"
-	"\n"
-	"%%EndDocument\n"
-	;
+        "\n"
+        "%%EndDocument\n"
+        ;
 
     if (mode==1) return trailer_string;
     else return "";
 }
 
-char * header(int mode) {
-    static char * header_string=
+const char * header(int mode)
+{
+    static const char * header_string=
         "%!PS-Adobe-2.0 EPSF-1.2\n"
         "%%Pages: 1\n"
         "%%BoundingBox: 0 -20 500 200\n"
