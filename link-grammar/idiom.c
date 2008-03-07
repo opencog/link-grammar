@@ -13,9 +13,11 @@
 
 #include <link-grammar/api.h>
 
-int contains_underbar(char * s) {
-	/* Returns TRUE if the string contains an underbar character.
-	 */
+/** 
+ * Returns TRUE if the string contains an underbar character.
+ */
+int contains_underbar(const char * s)
+{
 	while(*s != '\0') {
 		if (*s == '_') return TRUE;
 		s++;
@@ -23,13 +25,15 @@ int contains_underbar(char * s) {
 	return FALSE;
 }
 
-static int is_idiom_string(char * s) {
-	/* Returns FALSE if it is not a correctly formed idiom string.
-	   correct such string:
-	   () contains no "."
-	   () non-empty strings separated by _
-	   */
-	char * t;
+/** 
+ * Returns FALSE if it is not a correctly formed idiom string.
+ *  correct such string:
+ *   () contains no "."
+ *   () non-empty strings separated by _
+ */
+static int is_idiom_string(const char * s)
+{
+	const char * t;
 	for (t=s; *t != '\0'; t++) {
 		if (*t == '.') {
 			return FALSE;
@@ -46,8 +50,11 @@ static int is_idiom_string(char * s) {
 	return TRUE;
 }
 
-static int is_number(char *s) {
-	/* return TRUE if the string s is a sequence of digits. */
+/** 
+ * return TRUE if the string s is a sequence of digits.
+ */
+static int is_number(const char *s)
+{
 	while(*s != '\0') {
 		if (!isdigit((int)*s)) return FALSE;
 		s++;
@@ -55,10 +62,12 @@ static int is_number(char *s) {
 	return TRUE;
 }
 
-static int numberfy(char * s) {
-	/* if the string contains a single ".", and ends in ".Ix" where
-	   x is a number, return x.  Return -1 if not of this form.
-	   */
+/**
+ * If the string contains a single ".", and ends in ".Ix" where
+ * x is a number, return x.  Return -1 if not of this form.
+ */
+static int numberfy(const char * s)
+{
 	for (; (*s != '\0') && (*s != '.'); s++)
 	  ;
 	if (*s++ != '.') return -1;
@@ -67,10 +76,12 @@ static int numberfy(char * s) {
 	return atoi(s);
 }
 
-static int max_postfix_found(Dict_node * d) {
-	/* Look for words that end in ".Ix" where x is a number.
-	   Return the largest x found.
-	   */
+/** 
+ * Look for words that end in ".Ix" where x is a number.
+ * Return the largest x found.
+ */
+static int max_postfix_found(Dict_node * d)
+{
 	int i, j;
 	i = 0;
 	while(d != NULL) {
@@ -113,16 +124,18 @@ static char * build_idiom_word_name(Dictionary dict, char * s)
 	return id;
 }
 
-static Dict_node * make_idiom_Dict_nodes(Dictionary dict, char * string) {
-	/* Tear the idiom string apart.
-	   Destroys the string s, but does not free it.
-	   Put the parts into a list of Dict_nodes (connected by their right pointers)
-	   Sets the string fields of these Dict_nodes pointing to the
-	   fragments of the string s.  Later these will be replaced by
-	   correct names (with .Ix suffixes).
-	   The list is reversed from the way they occur in the string.
-	   A pointer to this list is returned.
-	   */
+/**
+ * Tear the idiom string apart.
+ * Destroys the string s, but does not free it.
+ * Put the parts into a list of Dict_nodes (connected by their right pointers)
+ * Sets the string fields of these Dict_nodes pointing to the
+ * fragments of the string s.  Later these will be replaced by
+ * correct names (with .Ix suffixes).
+ * The list is reversed from the way they occur in the string.
+ * A pointer to this list is returned.
+ */
+static Dict_node * make_idiom_Dict_nodes(Dictionary dict, char * string)
+{
 	Dict_node * dn, * dn_new;
 	char * t, *s, *p;
 	int more, sz;
@@ -156,7 +169,8 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, char * string) {
 static char current_name[] = "AAAAAAAA";
 #define CN_size (sizeof(current_name)-1)
 
-static void increment_current_name(void) {
+static void increment_current_name(void)
+{
 	int i, carry;
 	i = CN_size-1;
 	carry = 1;
@@ -172,13 +186,15 @@ static void increment_current_name(void) {
 	}
 }
 
-static char * generate_id_connector(Dictionary dict) {
-	/* generate a new connector name
-	   obtained from the current_name
-	   allocate string space for it.
-	   return a pointer to it.
-	 */
-	int i, sz;
+/**
+ * generate a new connector name
+ * obtained from the current_name
+ * allocate string space for it.
+ * return a pointer to it.
+ */
+static char * generate_id_connector(Dictionary dict)
+{
+	unsigned int i, sz;
 	char * t, * s, *id;
 
 	for (i=0; current_name[i] == 'A'; i++)
@@ -197,16 +213,18 @@ static char * generate_id_connector(Dictionary dict) {
 	return id;
 }
 
-void insert_idiom(Dictionary dict, Dict_node * dn) {
-	/* Takes as input a pointer to a Dict_node.
-	   The string of this Dict_node is an idiom string.
-	   This string is torn apart, and its components are inserted into the
-	   dictionary as special idiom words (ending in .I*, where * is a number).
-	   The expression of this Dict_node (its node field) has already been
-	   read and constructed.  This will be used to construct the special idiom
-	   expressions.
-	   The given dict node is freed.  The string is also freed.
-	   */
+/**
+ * Takes as input a pointer to a Dict_node.
+ * The string of this Dict_node is an idiom string.
+ * This string is torn apart, and its components are inserted into the
+ * dictionary as special idiom words (ending in .I*, where * is a number).
+ * The expression of this Dict_node (its node field) has already been
+ * read and constructed.  This will be used to construct the special idiom
+ * expressions.
+ * The given dict node is freed.  The string is also freed.
+ */
+void insert_idiom(Dictionary dict, Dict_node * dn)
+{
 	Exp * nc, * no, * n1;
 	E_list *ell, *elr;
 	char * s;
@@ -321,22 +339,27 @@ void insert_idiom(Dictionary dict, Dict_node * dn) {
 	/* xfree((char *)s, s_length+1); strings are handled by string_set */
 }
 
-int is_idiom_word(char * s) {
-	/* returns TRUE if this is a word ending in ".Ix", where x is a number. */
+/** 
+ * returns TRUE if this is a word ending in ".Ix", where x is a number.
+ */
+int is_idiom_word(const char * s)
+{
 	return (numberfy(s) != -1) ;
 }
 
+#ifdef THIS_IS_NOT_USED
 /*
-  int only_idiom_words(Dict_node * dn) {
   returns TRUE if the list of words contains only words that are
   idiom words.  This is useful, because under this condition you want
    to be able to insert the word anyway, as long as it doesn't match
    exactly.
-
+*/
+int only_idiom_words(Dict_node * dn)
+{
 	while(dn != NULL) {
 		if (!is_idiom_word(dn->string)) return FALSE;
 		dn = dn->right;
 	}
 	return TRUE;
 }
-*/
+#endif
