@@ -57,11 +57,12 @@ static void left_append_string(String * string, const char * s, const char * t) 
 
 
 
-static void print_a_link(String * s, Linkage linkage, int link) {
+static void print_a_link(String * s, Linkage linkage, int link)
+{
     Sentence sent = linkage_get_sentence(linkage);
     Dictionary dict = sent->dict;
     int l, r;
-    char *label, *llabel, *rlabel;
+    const char *label, *llabel, *rlabel;
     
     l      = linkage_get_link_lword(linkage, link);
     r      = linkage_get_link_rword(linkage, link);
@@ -70,11 +71,11 @@ static void print_a_link(String * s, Linkage linkage, int link) {
     rlabel = linkage_get_link_rlabel(linkage, link);
 
     if ((l == 0) && dict->left_wall_defined) {
-	left_append_string(s, LEFT_WALL_DISPLAY,"               ");
+        left_append_string(s, LEFT_WALL_DISPLAY,"               ");
     } else if ((l == (linkage_get_num_words(linkage)-1)) && dict->right_wall_defined) {
-	left_append_string(s, RIGHT_WALL_DISPLAY,"               ");	
+        left_append_string(s, RIGHT_WALL_DISPLAY,"               ");	
     } else {
-	left_append_string(s, linkage_get_word(linkage, l), "               ");
+        left_append_string(s, linkage_get_word(linkage, l), "               ");
     }
     left_append_string(s, llabel, "     ");
     append_string(s, "   <---"); 
@@ -228,11 +229,12 @@ static char * build_linkage_postscript_string(Linkage linkage) {
     return ps_string; 
 }
 
-void compute_chosen_words(Sentence sent, Linkage linkage) {
-    /*
-       This takes the current chosen_disjuncts array and uses it to
-       compute the chosen_words array.  "I.xx" suffixes are eliminated.
-       */
+/**
+ * This takes the current chosen_disjuncts array and uses it to
+ * compute the chosen_words array.  "I.xx" suffixes are eliminated.
+ */
+void compute_chosen_words(Sentence sent, Linkage linkage)
+{
     int i, l;
     char * s, *t, *u;
     Parse_info pi = sent->parse_info;
