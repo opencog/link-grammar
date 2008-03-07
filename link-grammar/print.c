@@ -312,40 +312,40 @@ char * linkage_print_diagram(Linkage linkage)
 
     N_wall_connectors = 0;
     if (dict->left_wall_defined) {
-	suppressor_used = FALSE;
-	if (!opts->display_walls) 
-	    for (j=0; j<N_links; j++) {
-		if ((ppla[j]->l == 0)) {
-		    if (ppla[j]->r == linkage->num_words-1) continue;
-		    N_wall_connectors ++;
-		    if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0){
-			suppressor_used = TRUE;
-		    }
-		}
-	    }
-	print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0)) 
-			|| (N_wall_connectors > 1) || opts->display_walls);
+        suppressor_used = FALSE;
+        if (!opts->display_walls) 
+            for (j=0; j<N_links; j++) {
+                if ((ppla[j]->l == 0)) {
+                    if (ppla[j]->r == linkage->num_words-1) continue;
+                    N_wall_connectors ++;
+                    if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0){
+                        suppressor_used = TRUE;
+                    }
+                }
+            }
+        print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0)) 
+                        || (N_wall_connectors > 1) || opts->display_walls);
     } 
     else {
-	print_word_0 = TRUE;
+        print_word_0 = TRUE;
     }
 
     N_wall_connectors = 0;
     if (dict->right_wall_defined) {
-	suppressor_used = FALSE;
-	for (j=0; j<N_links; j++) {
-	    if (ppla[j]->r == linkage->num_words-1) {
-		N_wall_connectors ++;
-		if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
-		    suppressor_used = TRUE;
-		}
-	    }
-	}
-	print_word_N = (((!suppressor_used) && (N_wall_connectors != 0)) 
-			|| (N_wall_connectors > 1) || opts->display_walls);
+        suppressor_used = FALSE;
+        for (j=0; j<N_links; j++) {
+            if (ppla[j]->r == linkage->num_words-1) {
+                N_wall_connectors ++;
+                if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
+                    suppressor_used = TRUE;
+                }
+            }
+        }
+        print_word_N = (((!suppressor_used) && (N_wall_connectors != 0)) 
+                        || (N_wall_connectors > 1) || opts->display_walls);
     } 
     else {
-	print_word_N = TRUE;
+        print_word_N = TRUE;
     }
 
     N_words_to_print = linkage->num_words;
@@ -355,87 +355,87 @@ char * linkage_print_diagram(Linkage linkage)
     line_len = center[N_words_to_print-1]+1;
     
     for (k=0; k<MAX_HEIGHT; k++) {
-	for (j=0; j<line_len; j++) picture[k][j] = ' ';
-	picture[k][line_len] = '\0';
+        for (j=0; j<line_len; j++) picture[k][j] = ' ';
+        picture[k][line_len] = '\0';
     }
     top_row = 0;
     
     for (link_length = 1; link_length < N_words_to_print; link_length++) {
-	for (j=0; j<N_links; j++) {
-	    if (ppla[j]->l == -1) continue;
-	    if ((ppla[j]->r - ppla[j]->l) != link_length)
-	      continue;
-	    if (!print_word_0 && (ppla[j]->l == 0)) continue;
-	    /* gets rid of the irrelevant link to the left wall */
-	    if (!print_word_N && (ppla[j]->r == linkage->num_words-1)) continue;	    
-	    /* gets rid of the irrelevant link to the right wall */
+        for (j=0; j<N_links; j++) {
+            if (ppla[j]->l == -1) continue;
+            if ((ppla[j]->r - ppla[j]->l) != link_length)
+              continue;
+            if (!print_word_0 && (ppla[j]->l == 0)) continue;
+            /* gets rid of the irrelevant link to the left wall */
+            if (!print_word_N && (ppla[j]->r == linkage->num_words-1)) continue;            
+            /* gets rid of the irrelevant link to the right wall */
 
-	    /* put it into the lowest position */
-	    cl = center[ppla[j]->l];
-	    cr = center[ppla[j]->r];
-	    for (row=0; row < MAX_HEIGHT; row++) {
-		for (k=cl+1; k<cr; k++) {
-		    if (picture[row][k] != ' ') break;
-		}
-		if (k == cr) break;
-	    }
-	    /* we know it fits, so put it in this row */
+            /* put it into the lowest position */
+            cl = center[ppla[j]->l];
+            cr = center[ppla[j]->r];
+            for (row=0; row < MAX_HEIGHT; row++) {
+                for (k=cl+1; k<cr; k++) {
+                    if (picture[row][k] != ' ') break;
+                }
+                if (k == cr) break;
+            }
+            /* we know it fits, so put it in this row */
 
-	    link_heights[j] = row;
-	    
-	    if (2*row+2 > MAX_HEIGHT-1) {
-		append_string(string, "The diagram is too high.\n");
-		gr_string = exalloc(strlen(string->p)+1);
-		strcpy(gr_string, string->p);
-		exfree(string->p, sizeof(char)*string->allocated);
-		exfree(string, sizeof(String));
-		return gr_string; 
-	    }
-	    if (row > top_row) top_row = row;
-	    
-	    picture[row][cl] = '+';
-	    picture[row][cr] = '+';
-	    for (k=cl+1; k<cr; k++) {
-		picture[row][k] = '-';
-	    }
-	    s = ppla[j]->name;
-	    
-	    if (opts->display_link_subscripts) {
-	      if (!isalpha((int)*s))
-		s = "";
-	    } else {
-	      if (!isupper((int)*s)) {
-		s = "";   /* Don't print fat link connector name */
-	      }
-	    }
-	    strncpy(connector, s, MAX_TOKEN_LENGTH-1);
-	    connector[MAX_TOKEN_LENGTH-1] = '\0';
-	    k=0;
-	    if (opts->display_link_subscripts)
-	      k = strlen(connector);
-	    else
-	      for (t=connector; isupper((int)*t); t++) k++; /* uppercase len of conn*/
-	    if ((cl+cr-k)/2 + 1 <= cl) {
-		t = picture[row] + cl + 1;
-	    } else {
-		t = picture[row] + (cl+cr-k)/2 + 1;
-	    }
-	    s = connector;
-	    if (opts->display_link_subscripts)
-	      while((*s != '\0') && (*t == '-')) *t++ = *s++; 
-	    else
-	      while(isupper((int)*s) && (*t == '-')) *t++ = *s++; 
+            link_heights[j] = row;
+            
+            if (2*row+2 > MAX_HEIGHT-1) {
+                append_string(string, "The diagram is too high.\n");
+                gr_string = exalloc(strlen(string->p)+1);
+                strcpy(gr_string, string->p);
+                exfree(string->p, sizeof(char)*string->allocated);
+                exfree(string, sizeof(String));
+                return gr_string; 
+            }
+            if (row > top_row) top_row = row;
+            
+            picture[row][cl] = '+';
+            picture[row][cr] = '+';
+            for (k=cl+1; k<cr; k++) {
+                picture[row][k] = '-';
+            }
+            s = ppla[j]->name;
+            
+            if (opts->display_link_subscripts) {
+              if (!isalpha((int)*s))
+                s = "";
+            } else {
+              if (!isupper((int)*s)) {
+                s = "";   /* Don't print fat link connector name */
+              }
+            }
+            strncpy(connector, s, MAX_TOKEN_LENGTH-1);
+            connector[MAX_TOKEN_LENGTH-1] = '\0';
+            k=0;
+            if (opts->display_link_subscripts)
+              k = strlen(connector);
+            else
+              for (t=connector; isupper((int)*t); t++) k++; /* uppercase len of conn*/
+            if ((cl+cr-k)/2 + 1 <= cl) {
+                t = picture[row] + cl + 1;
+            } else {
+                t = picture[row] + (cl+cr-k)/2 + 1;
+            }
+            s = connector;
+            if (opts->display_link_subscripts)
+              while((*s != '\0') && (*t == '-')) *t++ = *s++; 
+            else
+              while(isupper((int)*s) && (*t == '-')) *t++ = *s++; 
 
-	    /* now put in the | below this one, where needed */
-	    for (k=0; k<row; k++) {
-		if (picture[k][cl] == ' ') {
-		    picture[k][cl] = '|';
-		}
-		if (picture[k][cr] == ' ') {
-		    picture[k][cr] = '|';
-		}
-	    }
-	}
+            /* now put in the | below this one, where needed */
+            for (k=0; k<row; k++) {
+                if (picture[k][cl] == ' ') {
+                    picture[k][cl] = '|';
+                }
+                if (picture[k][cr] == ' ') {
+                    picture[k][cr] = '|';
+                }
+            }
+        }
     }
     
     /* we have the link picture, now put in the words and extra "|"s */
@@ -443,42 +443,42 @@ char * linkage_print_diagram(Linkage linkage)
     s = xpicture[0];
     if (print_word_0) k = 0; else k = 1;
     for (; k<N_words_to_print; k++) {
-	t = linkage->word[k];
-	i=0;
-	while(*t != '\0') {
-	    *s++ = *t++;
-	    i++;
-	}
-	*s++ = ' ';
+        t = linkage->word[k];
+        i=0;
+        while(*t != '\0') {
+            *s++ = *t++;
+            i++;
+        }
+        *s++ = ' ';
     }
     *s = '\0';
     
     if (opts->display_short) {
-	for (k=0; picture[0][k] != '\0'; k++) {
-	    if ((picture[0][k] == '+') || (picture[0][k] == '|')) {
-		xpicture[1][k] = '|';
-	    } else {
-		xpicture[1][k] = ' ';
-	    }
-	}
-	xpicture[1][k] = '\0';
-	for (row=0; row <= top_row; row++) {
-	    strcpy(xpicture[row+2],picture[row]);
-	}
-	top_row = top_row+2;
+        for (k=0; picture[0][k] != '\0'; k++) {
+            if ((picture[0][k] == '+') || (picture[0][k] == '|')) {
+                xpicture[1][k] = '|';
+            } else {
+                xpicture[1][k] = ' ';
+            }
+        }
+        xpicture[1][k] = '\0';
+        for (row=0; row <= top_row; row++) {
+            strcpy(xpicture[row+2],picture[row]);
+        }
+        top_row = top_row+2;
     } else {
-	for (row=0; row <= top_row; row++) {
-	    strcpy(xpicture[2*row+2],picture[row]);
-	    for (k=0; picture[row][k] != '\0'; k++) {
-		if ((picture[row][k] == '+') || (picture[row][k] == '|')) {
-		    xpicture[2*row+1][k] = '|';
-		} else {
-		    xpicture[2*row+1][k] = ' ';
-		}
-	    }
-	    xpicture[2*row+1][k] = '\0';
-	}
-	top_row = 2*top_row + 2;
+        for (row=0; row <= top_row; row++) {
+            strcpy(xpicture[2*row+2],picture[row]);
+            for (k=0; picture[row][k] != '\0'; k++) {
+                if ((picture[row][k] == '+') || (picture[row][k] == '|')) {
+                    xpicture[2*row+1][k] = '|';
+                } else {
+                    xpicture[2*row+1][k] = ' ';
+                }
+            }
+            xpicture[2*row+1][k] = '\0';
+        }
+        top_row = 2*top_row + 2;
     }
     
     /* we've built the picture, now print it out */
@@ -489,29 +489,29 @@ char * linkage_print_diagram(Linkage linkage)
     row_starts[N_rows] = 0;
     N_rows++;
     while(i < N_words_to_print) {
-	append_string(string, "\n");
-	width = 0;
-	do {
-	    width += strlen(linkage->word[i])+1;
-	    i++;
-	} while((i<N_words_to_print) &&
-	      (width + ((int)strlen(linkage->word[i]))+1 < x_screen_width));
-	row_starts[N_rows] = i - (!print_word_0);    /* PS junk */
-	if (i<N_words_to_print) N_rows++;     /* same */
-	for (row = top_row; row >= 0; row--) {
-	    flag = TRUE;
-	    for (j=k;flag&&(j<k+width)&&(xpicture[row][j]!='\0'); j++){
-		flag = flag && (xpicture[row][j] == ' ');
-	    }
-	    if (!flag) {
-		for (j=k;(j<k+width)&&(xpicture[row][j]!='\0'); j++){
-		    append_string(string, "%c", xpicture[row][j]);
-		}
-		append_string(string, "\n");
-	    }
-	}
-	append_string(string, "\n");
-	k += width;
+        append_string(string, "\n");
+        width = 0;
+        do {
+            width += strlen(linkage->word[i])+1;
+            i++;
+        } while((i<N_words_to_print) &&
+              (width + ((int)strlen(linkage->word[i]))+1 < x_screen_width));
+        row_starts[N_rows] = i - (!print_word_0);    /* PS junk */
+        if (i<N_words_to_print) N_rows++;     /* same */
+        for (row = top_row; row >= 0; row--) {
+            flag = TRUE;
+            for (j=k;flag&&(j<k+width)&&(xpicture[row][j]!='\0'); j++){
+                flag = flag && (xpicture[row][j] == ' ');
+            }
+            if (!flag) {
+                for (j=k;(j<k+width)&&(xpicture[row][j]!='\0'); j++){
+                    append_string(string, "%c", xpicture[row][j]);
+                }
+                append_string(string, "\n");
+            }
+        }
+        append_string(string, "\n");
+        k += width;
     }
     gr_string = exalloc(strlen(string->p)+1);
     strcpy(gr_string, string->p);
