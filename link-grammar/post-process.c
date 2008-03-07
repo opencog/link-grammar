@@ -138,11 +138,12 @@ void post_process_free_data(PP_data * ppd)
 }
 
 static void connectivity_dfs(Postprocessor *pp, Sublinkage *sublinkage,
-								 int w, pp_linkset *ls)
+                             int w, pp_linkset *ls)
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
 		if (!pp->visited[lol->word] &&
 				!pp_linkset_match(ls, sublinkage->link[lol->link]->name))
 			connectivity_dfs(pp, sublinkage, lol->word, ls);
@@ -418,18 +419,19 @@ static void reachable_without_dfs(Postprocessor *pp, Sublinkage *sublinkage, int
 		}
 }
 
+/**
+ * Returns TRUE if the linkage is connected when ignoring the links
+ * whose names are in the given list of link names.
+ * Actually, what it does is this: it returns FALSE if the connectivity
+ * of the subgraph reachable from word 0 changes as a result of deleting
+ * these links.
+ */
 static int
 apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 {
-	/* Returns TRUE if the linkage is connected when ignoring the links
-		 whose names are in the given list of link names.
-		 Actually, what it does is this: it returns FALSE if the connectivity
-		 of the subgraph reachable from word 0 changes as a result of deleting
-		 these links. */
-
-		List_o_links *lol;
-		int w;
-		for (w=0; w<pp->pp_data.length; w++) {
+	List_o_links *lol;
+	int w;
+	for (w=0; w<pp->pp_data.length; w++) {
 		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
 				if (w > lol->word) continue;	/* only consider each edge once */
 				if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->name)) continue;
@@ -437,18 +439,18 @@ apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 				reachable_without_dfs(pp, sublinkage, w, lol->word, w);
 				if (!pp->visited[lol->word]) return FALSE;
 		}
-		}
+	}
 
-		for (lol = pp->pp_data.links_to_ignore; lol != NULL; lol = lol->next) {
+	for (lol = pp->pp_data.links_to_ignore; lol != NULL; lol = lol->next) {
 		w = sublinkage->link[lol->link]->l;
 		/* (w, lol->word) are the left and right ends of the edge we're considering */
 		if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->name)) continue;
 		memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 		reachable_without_dfs(pp, sublinkage, w, lol->word, w);
 		if (!pp->visited[lol->word]) return FALSE;
-		}
+	}
 
-		return TRUE;
+	return TRUE;
 }
 
 #endif
@@ -512,12 +514,13 @@ static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 }
 
 static void setup_domain_array(Postprocessor *pp,
-									 int n, char *string, int start_link)
+									 int n, const char *string, int start_link)
 {
-	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));/* set pp->visited[i] to FALSE */
+	/* set pp->visited[i] to FALSE */
+	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 	pp->pp_data.domain_array[n].string = string;
-	pp->pp_data.domain_array[n].lol				= NULL;
-	pp->pp_data.domain_array[n].size			 = 0;
+	pp->pp_data.domain_array[n].lol    = NULL;
+	pp->pp_data.domain_array[n].size   = 0;
 	pp->pp_data.domain_array[n].start_link = start_link;
 }
 
@@ -611,7 +614,7 @@ static int domain_compare(const Domain * d1, const Domain * d2)
 static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 {
 	int link, i, d;
-	char *s;
+	const char *s;
 	pp->pp_data.N_domains = 0;
 
 	for (link = 0; link<sublinkage->num_links; link++) {

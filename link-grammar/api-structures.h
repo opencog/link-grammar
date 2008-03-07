@@ -191,7 +191,7 @@ struct Sentence_s {
 typedef struct DTreeLeaf_s DTreeLeaf;
 typedef struct Domain_s Domain;
 struct Domain_s {
-  char *         string;
+  const char *   string;
   int            size;
   List_o_links * lol;
   int            start_link;  /* the link that started this domain */

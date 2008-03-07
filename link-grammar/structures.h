@@ -398,7 +398,7 @@ typedef struct {
 /* from pp_linkset.c */
 typedef struct pp_linkset_node_s
 {
-    char *str;
+    const char *str;
     struct pp_linkset_node_s *next;
 } pp_linkset_node;
 
