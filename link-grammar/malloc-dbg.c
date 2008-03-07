@@ -36,7 +36,7 @@ static FILE *fh = NULL;
 static void init_io(void)
 {
 	if (fh) return;
-	// fh = fopen("/tmp/m", "w");
+	/* fh = fopen("/tmp/m", "w"); */
 	fh = stdout;
 }
 
