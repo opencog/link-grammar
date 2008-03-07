@@ -298,7 +298,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	}
 	if(word_is_in_dict==0) {
 	  j=0;
-	  for (i=0; i <= s_strippable; i++) {
+	  for (i=0; i < s_strippable+1; i++) {
 		s_ok = 0;
 		/* Go through once for each suffix; then go through one final time for the no-suffix case */
 		if(i < s_strippable) {
