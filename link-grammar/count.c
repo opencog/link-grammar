@@ -33,20 +33,22 @@ void count_unset_effective_distance(Sentence sent) {
 	effective_dist = NULL;
 }
 
-int match(Connector *a, Connector *b, int aw, int bw) {
-  /*
-	 Returns TRUE if s and t match according to the connector matching
-	 rules.  The connector strings must be properly formed, starting with
-	 zero or more upper case letters, followed by some other letters, and
-	 The algorithm is symmetric with respect to a and b.
-	
-	 It works as follows:  The labels must match.  The priorities must be
-	 compatible (both THIN_priority, or one UP_priority and one DOWN_priority).
-	 The sequence of upper case letters must match exactly.  After these comes
-	 a sequence of lower case letters "*"s or "^"s.  The matching algorithm
-	 is different depending on which of the two priority cases is being
-	 considered.  See the comments below.  */
-	char *s, *t;
+/*
+ * Returns TRUE if s and t match according to the connector matching
+ * rules.  The connector strings must be properly formed, starting with
+ * zero or more upper case letters, followed by some other letters, and
+ * The algorithm is symmetric with respect to a and b.
+ *
+ * It works as follows:  The labels must match.  The priorities must be
+ * compatible (both THIN_priority, or one UP_priority and one DOWN_priority).
+ * The sequence of upper case letters must match exactly.  After these comes
+ * a sequence of lower case letters "*"s or "^"s.  The matching algorithm
+ * is different depending on which of the two priority cases is being
+ * considered.  See the comments below. 
+ */
+int match(Connector *a, Connector *b, int aw, int bw)
+{
+	const char *s, *t;
 	int x, y, dist;
 	if (a->label != b->label) return FALSE;
 	x = a->priority;
@@ -316,7 +318,7 @@ int count(int lw, int rw, Connector *le, Connector *re, int cost)
 
 	total = 0;
 
-	for (w=start_word; w <= end_word; w++) {
+	for (w=start_word; w < end_word+1; w++) {
 		m1 = m = form_match_list(w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
@@ -486,7 +488,7 @@ static int region_valid(int lw, int rw, Connector *le, Connector *re) {
 
 	found = 0;
 
-	for (w=start_word; w <= end_word; w++) {
+	for (w=start_word; w < end_word+1; w++) {
 		m1 = m = form_match_list(w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
@@ -559,7 +561,7 @@ static void mark_region(int lw, int rw, Connector *le, Connector *re) {
 		end_word = re->word;
 	}
 
-	for (w=start_word; w <= end_word; w++) {
+	for (w=start_word; w < end_word+1; w++) {
 		m1 = m = form_match_list(w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
