@@ -112,10 +112,12 @@ static E_list * copy_E_list(E_list * l) {
 	return nl;
 }
 
-Connector * copy_connectors(Connector * c) {
-/* This builds a new copy of the connector list pointed to by c.
-   Strings, as usual, are not copied.
-*/
+/**
+ * This builds a new copy of the connector list pointed to by c.
+ * Strings, as usual, are not copied.
+ */
+Connector * copy_connectors(Connector * c)
+{
 	Connector *c1;
 	if (c == NULL) return NULL;
 	c1 = init_connector((Connector *) xalloc(sizeof(Connector)));
@@ -124,11 +126,13 @@ Connector * copy_connectors(Connector * c) {
 	return c1;
 }
 
-Disjunct * copy_disjunct(Disjunct * d) {
-/* This builds a new copy of the disjunct pointed to by d (except for the
-   next field which is set to NULL).  Strings, as usual,
-   are not copied.
-*/
+/**
+ * This builds a new copy of the disjunct pointed to by d (except for the
+ * next field which is set to NULL).  Strings, as usual,
+ * are not copied.
+ */
+Disjunct * copy_disjunct(Disjunct * d)
+{
 	Disjunct * d1;
 	if (d == NULL) return NULL;
 	d1 = (Disjunct *) xalloc(sizeof(Disjunct));
@@ -139,39 +143,44 @@ Disjunct * copy_disjunct(Disjunct * d) {
 	return d1;
 }
 
-void exfree_connectors(Connector *e) {
+void exfree_connectors(Connector *e)
+{
 	Connector * n;
 	for(;e != NULL; e = n) {
 		n = e->next;
-		exfree(e->string, sizeof(char)*(strlen(e->string)+1));
+		exfree((char *) e->string, sizeof(char)*(strlen(e->string)+1));
 		exfree(e, sizeof(Connector));
 	}
 }
 
-Connector * excopy_connectors(Connector * c) {
+Connector * excopy_connectors(Connector * c)
+{
+	char * s;
 	Connector *c1;
 
 	if (c == NULL) return NULL;
 
 	c1 = init_connector((Connector *) exalloc(sizeof(Connector)));
 	*c1 = *c;
-	c1->string = (char *) exalloc(sizeof(char)*(strlen(c->string)+1));
-	strcpy(c1->string, c->string);
+	s = (char *) exalloc(sizeof(char)*(strlen(c->string)+1));
+	strcpy(s, c->string);
+	c1->string = s;
 	c1->next = excopy_connectors(c->next);
 
 	return c1;
 }
 
-
 Link excopy_link(Link l)
 {
+	char * s;
 	Link newl;
 
 	if (l == NULL) return NULL;
 
 	newl = (Link) exalloc(sizeof(struct Link_s));
-	newl->name = (char *) exalloc(sizeof(char)*(strlen(l->name)+1));
-	strcpy(newl->name, l->name);
+	s = (char *) exalloc(sizeof(char)*(strlen(l->name)+1));
+	strcpy(s, l->name);
+	newl->name = s;
 	newl->l = l->l;
 	newl->r = l->r;
 	newl->lc = excopy_connectors(l->lc);
@@ -180,10 +189,11 @@ Link excopy_link(Link l)
 	return newl;
 }
 
-void exfree_link(Link l) {
+void exfree_link(Link l)
+{
 	exfree_connectors(l->rc);
 	exfree_connectors(l->lc);
-	exfree(l->name, sizeof(char)*(strlen(l->name)+1));
+	exfree((char *)l->name, sizeof(char)*(strlen(l->name)+1));
 	exfree(l, sizeof(struct Link_s));
 }
 
@@ -249,22 +259,25 @@ int sentence_contains_conjunction(Sentence sent) {
  */
 int conj_in_range(Sentence sent, int lw, int rw)
 {
-	for (;lw <= rw; lw++) {
+	for (;lw < rw+1; lw++) {
 		if (sent->is_conjunction[lw]) return TRUE;
 	}
 	return FALSE;
 }
 
-static int connector_set_hash(Connector_set *conset, char * s, int d) {
-/* This hash function only looks at the leading upper case letters of
-   the string, and the direction, '+' or '-'.
-*/
+/**
+ * This hash function only looks at the leading upper case letters of
+ * the string, and the direction, '+' or '-'.
+ */
+static int connector_set_hash(Connector_set *conset, const char * s, int d)
+{
 	int i;
 	for(i=d; isupper((int)*s); s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
 	return (i & (conset->table_size-1));
 }
 
-static void build_connector_set_from_expression(Connector_set * conset, Exp * e) {
+static void build_connector_set_from_expression(Connector_set * conset, Exp * e)
+{
 	E_list * l;
 	Connector * c;
 	int h;
