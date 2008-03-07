@@ -97,7 +97,7 @@ static int fast_match_hash(Connector * c) {
    strings match (formally), then they must hash to the same place.
    The answer must be masked to the appropriate table size.
 */
-    char *s;
+    const char *s;
     int i;
     i = randtable[c->label & (RTSIZE-1)];
     s = c->string;
