@@ -1635,7 +1635,8 @@ static int delete_from_cms_table(const char * str)
 
 static int rule_satisfiable(pp_linkset *ls) {
 	int hashval;
-	char name[20], *s, *t;
+	const char * t;
+	char name[20], *s;
 	pp_linkset_node *p;
 	int bad, n_subscripts;
 	for (hashval = 0; hashval < ls->hash_table_size; hashval++) {
