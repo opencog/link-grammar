@@ -251,14 +251,14 @@ struct Sublinkage_s {
     int       num_links;          /* Number of links in array */
     Link *    link;               /* Array of links */
     PP_info * pp_info;            /* PP info for each link */
-    char *    violation;          /* Name of violation, if any */
+    const char * violation;       /* Name of violation, if any */
     PP_data   pp_data;
 };
 
 
 struct Linkage_s {
     int             num_words;  /* number of (tokenized) words */
-    char *        * word;       /* array of word spellings */
+    const char *  * word;       /* array of word spellings */
     Linkage_info    info;       /* index and cost information */
     int             num_sublinkages; /* One for thin linkages, bigger for fat */
     int             current;    /* Allows user to select particular sublinkage */

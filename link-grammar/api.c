@@ -833,7 +833,7 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts) {
 	linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
 
 	linkage->num_words = sent->length;
-	linkage->word = (char **) exalloc(linkage->num_words*sizeof(char *));
+	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
 	linkage->current = 0;
 	linkage->num_sublinkages=0;
 	linkage->sublinkage = NULL;
@@ -879,12 +879,13 @@ static void exfree_pp_info(PP_info ppi) {
 		exfree(ppi.domain_name, sizeof(char *)*ppi.num_domains);
 }
 
-void linkage_delete(Linkage linkage) {
+void linkage_delete(Linkage linkage)
+{
 	int i, j;
 	Sublinkage *s;
 
 	for (i=0; i<linkage->num_words; ++i) {
-		exfree(linkage->word[i], strlen(linkage->word[i])+1);
+		exfree((char *) linkage->word[i], strlen(linkage->word[i])+1);
 	}
 	exfree(linkage->word, sizeof(char *)*linkage->num_words);
 	for (i=0; i<linkage->num_sublinkages; ++i) {
@@ -901,7 +902,7 @@ void linkage_delete(Linkage linkage) {
 			post_process_free_data(&s->pp_data);
 		}
 		if (s->violation != NULL) {
-			exfree(s->violation, sizeof(char)*(strlen(s->violation)+1));
+			exfree((char *) s->violation, sizeof(char)*(strlen(s->violation)+1));
 		}
 	}
 	exfree(linkage->sublinkage, sizeof(Sublinkage)*linkage->num_sublinkages);
@@ -937,11 +938,12 @@ static PP_info excopy_pp_info(PP_info ppi) {
 }
 
 
-static Sublinkage unionize_linkage(Linkage linkage) {
+static Sublinkage unionize_linkage(Linkage linkage)
+{
 	int i, j, num_in_union=0;
 	Sublinkage u;
 	Link link;
-	char *p;
+	const char *p;
 
 	for (i=0; i<linkage->num_sublinkages; ++i) {
 		for (j=0; j<linkage->sublinkage[i].num_links; ++j) {
@@ -965,8 +967,9 @@ static Sublinkage unionize_linkage(Linkage linkage) {
 				u.pp_info[num_in_union] = excopy_pp_info(linkage->sublinkage[i].pp_info[j]);
 				if (((p=linkage->sublinkage[i].violation) != NULL) &&
 					(u.violation == NULL)) {
-					u.violation = (char *) exalloc((strlen(p)+1)*sizeof(char));
-					strcpy(u.violation, p);
+					char *s = (char *) exalloc((strlen(p)+1)*sizeof(char));
+					strcpy(s, p);
+					u.violation = s;
 				}
 				num_in_union++;
 			}
@@ -1100,7 +1103,7 @@ const char * linkage_get_link_rlabel(Linkage linkage, int index)
 	return link->rc->string;
 }
 
-char ** linkage_get_words(Linkage linkage) {
+const char ** linkage_get_words(Linkage linkage) {
 	return linkage->word;
 }
 
@@ -1108,7 +1111,7 @@ Sentence linkage_get_sentence(Linkage linkage) {
 	return linkage->sent;
 }
 
-char * linkage_get_word(Linkage linkage, int w) {
+const char * linkage_get_word(Linkage linkage, int w) {
 	return linkage->word[w];
 }
 
@@ -1142,7 +1145,7 @@ char ** linkage_get_link_domain_names(Linkage linkage, int index) {
 	return pp_info.domain_name;
 }
 
-char * linkage_get_violation_name(Linkage linkage) {
+const char * linkage_get_violation_name(Linkage linkage) {
 	return linkage->sublinkage[linkage->current].violation;
 }
 
@@ -1158,7 +1161,8 @@ int linkage_has_inconsistent_domains(Linkage linkage) {
 	return linkage->info.inconsistent_domains;
 }
 
-void linkage_post_process(Linkage linkage, Postprocessor * postprocessor) {
+void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
+{
 	int N_sublinkages = linkage_get_num_sublinkages(linkage);
 	Parse_Options opts = linkage->opts;
 	Sentence sent = linkage->sent;
@@ -1183,7 +1187,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor) {
 			subl->pp_info[j].domain_name = NULL;
 		}
 		if (subl->violation != NULL) {
-			exfree(subl->violation, sizeof(char)*(strlen(subl->violation)+1));
+			exfree((char *)subl->violation, sizeof(char)*(strlen(subl->violation)+1));
 			subl->violation = NULL;
 		}
 
@@ -1218,9 +1222,9 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor) {
 			}
 			subl->pp_data = postprocessor->pp_data;
 			if (pp->violation != NULL) {
-				subl->violation =
-					(char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
-				strcpy(subl->violation, pp->violation);
+				char * s = (char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
+				strcpy(s, pp->violation);
+				subl->violation = s;
 			}
 		}
 	}

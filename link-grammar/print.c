@@ -277,8 +277,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
         chosen_words[sent->length-1] = RIGHT_WALL_DISPLAY;
     }
     for (i=0; i<linkage->num_words; ++i) {
-        linkage->word[i] = (char *) exalloc(strlen(chosen_words[i])+1);
-        strcpy(linkage->word[i], chosen_words[i]);
+        s = (char *) exalloc(strlen(chosen_words[i])+1);
+        strcpy(s, chosen_words[i]);
+        linkage->word[i] = s;
     }
 }
 
