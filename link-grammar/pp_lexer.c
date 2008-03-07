@@ -647,8 +647,9 @@ YY_MALLOC_DECL
 				(yytext[yyleng - 1] == '\n'); \
 	YY_USER_ACTION
 
+YY_DECL;
 YY_DECL
-	{
+{
 	register yy_state_type yy_current_state;
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
@@ -933,8 +934,8 @@ ECHO;
  *	EOB_ACT_END_OF_FILE - end of file
  */
 
-static int yy_get_next_buffer()
-	{
+static int yy_get_next_buffer(void)
+{
 	register char *dest = yy_current_buffer->yy_ch_buf;
 	register char *source = yytext_ptr;
 	register int number_to_move, i;
@@ -1063,8 +1064,8 @@ static int yy_get_next_buffer()
 
 /* yy_get_previous_state - get the state just before the EOB char was reached */
 
-static yy_state_type yy_get_previous_state()
-	{
+static yy_state_type yy_get_previous_state(void)
+{
 	register yy_state_type yy_current_state;
 	register char *yy_cp;
 
@@ -1166,11 +1167,11 @@ register char *yy_bp;
 #endif  /* --DS */
 
 #ifdef __cplusplus
-static int yyinput()
+static int yyinput(void)
 #else
-static int input()
+static int input(void)
 #endif
-	{
+{
 	int c;
 
 	*yy_c_buf_p = yy_hold_char;
@@ -1750,7 +1751,7 @@ char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt,int *n_tokens)
 }
 
 
-int yywrap()
+int yywrap(void)
 {
   /* must return 1 for end of input, 0 otherwise */
   return 1;
