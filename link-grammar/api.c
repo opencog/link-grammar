@@ -1084,14 +1084,16 @@ char * linkage_get_link_label(Linkage linkage, int index) {
 	return link->name;
 }
 
-char * linkage_get_link_llabel(Linkage linkage, int index) {
+const char * linkage_get_link_llabel(Linkage linkage, int index)
+{
 	Link link;
 	if (!verify_link_index(linkage, index)) return NULL;
 	link = linkage->sublinkage[linkage->current].link[index];
 	return link->lc->string;
 }
 
-char * linkage_get_link_rlabel(Linkage linkage, int index) {
+const char * linkage_get_link_rlabel(Linkage linkage, int index)
+{
 	Link link;
 	if (!verify_link_index(linkage, index)) return NULL;
 	link = linkage->sublinkage[linkage->current].link[index];

@@ -376,7 +376,7 @@ JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkLLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
-	char *s = linkage_get_link_llabel(linkage, i);
+	const char *s = linkage_get_link_llabel(linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;
 }
@@ -390,7 +390,7 @@ JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkRLabel(JNIEnv *env, jclass cls, jint i)
 {
  	/* Does not need to be freed, points into linkage */
-	char *s = linkage_get_link_rlabel(linkage, i);
+	const char *s = linkage_get_link_rlabel(linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;
 }
