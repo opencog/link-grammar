@@ -218,10 +218,11 @@ struct Disjunct_struct
 };
 
 typedef struct Link_s * Link;
-struct Link_s {
+struct Link_s
+{
     int l, r;
     Connector * lc, * rc;
-    char * name;              /* spelling of full link name */
+    const char * name;              /* spelling of full link name */
 };
 
 typedef struct Match_node_struct Match_node;

@@ -113,7 +113,8 @@ static Sublinkage * ex_create_sublinkage(Parse_info pi) {
 }
 
 
-static void free_sublinkage(Sublinkage *s) {
+static void free_sublinkage(Sublinkage *s)
+{
 	int i;
 	for (i=0; i<MAX_LINKS; i++) {
 		if (s->link[i]!=NULL) exfree_link(s->link[i]);
@@ -122,10 +123,13 @@ static void free_sublinkage(Sublinkage *s) {
 	xfree(s, sizeof(Sublinkage));
 }
 
-static void replace_link_name(Link l, char *s) {
-	exfree(l->name, sizeof(char)*(strlen(l->name)+1));
-	l->name = (char *) exalloc(sizeof(char)*(strlen(s)+1));
-	strcpy(l->name, s);
+static void replace_link_name(Link l, const char *s)
+{
+	char * t;
+	exfree((char *) l->name, sizeof(char)*(strlen(l->name)+1));
+	t = (char *) exalloc(sizeof(char)*(strlen(s)+1));
+	strcpy(t, s);
+	l->name = t;
 }
 
 static void copy_full_link(Link *dest, Link src) {
@@ -611,13 +615,14 @@ static int disjunct_cost(Parse_info pi) {
 	return lcost;
 }
 
-static int strictly_smaller_name(char * s, char * t) {
-/*
-   Returns TRUE if string s represents a strictly smaller match set
-   than does t.  An almost identical function appears in and.c.
-   The difference is that here we don't require s and t to be the
-   same length.
-*/
+/**
+ * Returns TRUE if string s represents a strictly smaller match set
+ * than does t.  An almost identical function appears in and.c.
+ * The difference is that here we don't require s and t to be the
+ * same length.
+ */
+static int strictly_smaller_name(const char * s, const char * t)
+{
 	int strictness, ss, tt;
 	strictness = 0;
 	while ((*s!='\0') || (*t!='\0')) {
@@ -643,11 +648,12 @@ static int strictly_smaller_name(char * s, char * t) {
 	return (strictness > 0);
 }
 
-static void compute_link_names(Sentence sent) {
-/*
-   The name of the link is set to be the GCD of the names of
-   its two endpoints.
-*/
+/**
+ * The name of the link is set to be the GCD of the names of
+ * its two endpoints.
+ */
+static void compute_link_names(Sentence sent)
+{
 	int i;
 	Parse_info pi = sent->parse_info;
 
@@ -657,20 +663,20 @@ static void compute_link_names(Sentence sent) {
 	}
 }
 
+/**
+ * This fills in the sublinkage->link[].name field.  We assume that
+ * link_array[].name have already been filled in.  As above, in the
+ * standard case, the name is just the GCD of the two end points.
+ * If pluralization has occurred, then we want to use the name
+ * already in link_array[].name.  We detect this in two ways.
+ * If the endpoints don't match, then we know pluralization
+ * has occured.  If they do, but the name in link_array[].name
+ * is *less* restrictive, then pluralization must have occured.
+ */
 static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 {
-/*
-   This fills in the sublinkage->link[].name field.  We assume that
-   link_array[].name have already been filled in.  As above, in the
-   standard case, the name is just the GCD of the two end points.
-   If pluralization has occurred, then we want to use the name
-   already in link_array[].name.  We detect this in two ways.
-   If the endpoints don't match, then we know pluralization
-   has occured.  If they do, but the name in link_array[].name
-   is *less* restrictive, then pluralization must have occured.
-*/
 	int i;
-	char * s;
+	const char * s;
 	Parse_info pi = sent->parse_info;
 
 	for (i=0; i<pi->N_links; i++)
