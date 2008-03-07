@@ -236,9 +236,10 @@ static char * build_linkage_postscript_string(Linkage linkage) {
 void compute_chosen_words(Sentence sent, Linkage linkage)
 {
     int i, l;
-    char * s, *t, *u;
+    const char *t;
+    char * s, *u;
     Parse_info pi = sent->parse_info;
-    char * chosen_words[MAX_SENTENCE];
+    const char * chosen_words[MAX_SENTENCE];
     Parse_Options opts = linkage->opts;
 
     for (i=0; i<sent->length; i++) {   /* get rid of those ugly ".Ixx" */
