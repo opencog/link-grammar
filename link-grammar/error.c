@@ -41,7 +41,7 @@ static const char * msg_of_lperror(int lperr)
 	case BUILDEXPR:
 		return "Could not build sentence expressions ";
 	case INTERNALERROR:
-		return "Internal error.  Send mail to link@juno.com ";
+		return "Internal error.  Send mail to link-grammar@googlegroups.com ";
 	default:
 		return "";
 	}
