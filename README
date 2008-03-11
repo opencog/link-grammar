@@ -1,10 +1,10 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
-                       Version 4.3.3
+                       Version 4.3.4
 
 This directory contains a *patched* version of the final original 
-release of the Link Grammer Parser.  It has been patched to fix a 
+release of the Link Grammar Parser.  It has been patched to fix a 
 few bugs, add a few enhancements, and, in general, make the Link 
 Grammar Parser easier to use. This version includes Java bindings.
 
@@ -15,7 +15,7 @@ LICENSE file included with this software, and also available at
 http://www.link.cs.cmu.edu/link/license.html.
 
 Please see the web page http://www.abisource.com/projects/link-grammar/
-for more information.  The original website, including documetation,
+for more information.  The original website, including documentation,
 is located at http://www.link.cs.cmu.edu/link 
 
 CONTENTS of this directory:
@@ -55,7 +55,7 @@ CREATING the system:
 
         make install
 
-   This will install the lib-link-grammar.so libarary into /usr/local/lib
+   This will install the lib-link-grammar.so library into /usr/local/lib
    the header files in /usr/local/include/link-grammar
    and the dictionaries into /usr/local/share/link-grammar.
 
@@ -67,9 +67,13 @@ CREATING the system:
 	By using pkg-config (see below), non-standard install locations
 	can be automatically detected.
 
+   The system has been tested and works well on 32 and 64-bit Linux
+   systems, as well as on many Microsoft Windows systems, under the
+   CYGWIN development environment.
+
 RUNNING the program:
 
-   To run the program issue the unix command:
+   To run the program issue the Unix command:
 
        ./grammar-parse 
 
@@ -96,7 +100,7 @@ USING the parser in your own applications:
 
 USING pkg-config:
 
-	To make compling and linking easier, the current release uses 
+	To make compiling and linking easier, the current release uses 
 	the pkg-config system. To determine the location of the link-grammar
 	header files, say `pkg-config --cflags link-grammar`  To obtain
 	the location of the libraries, say `pkg-config --libs link-grammar`
@@ -115,7 +119,7 @@ JAVA bindings:
    project.
 
    The bindings will be built automatically if jni.h can be found.  
-   Some common java jvm distributions (most notably, the ones from Sun) 
+   Some common java JVM distributions (most notably, the ones from Sun) 
    place this file in unusual locations, where it cannot be found. 
    To remedy this, specify the location with the CPPFLAGS variable: 
    so, for example,
@@ -133,13 +137,18 @@ COMMERCIAL use:
    licensing terms and/or additional research work, with those 
    wanting to use this system under a paid contract.
 
-   Academic products or papers should reference the verious
+   Academic products or papers should reference the various
    link grammar publications.
 
 ADDRESSES
 
    If you have any questions, or find any bugs, please feel free 
-   to send a note to the current maintainers:
+   to send a note to the mailing list:
+
+      link-grammar@googlegroups.com 
+
+   Although all messages should go to the mailing list, the current
+   maintainers can be contacted at:
 
      Dom Lachowicz - <domlachowicz@gmail.com>
      Linas Vepstas - <linasvepstas@gmail.com>
