@@ -305,10 +305,23 @@ FILE *dictopen(const char *filename, const char *how)
 {
 	char completename[MAX_PATH_NAME+1];
 	char fulldictpath[MAX_PATH_NAME+1];
+	static char prevpath[MAX_PATH_NAME+1] = "";
+	static int first_time_ever = 1;
 	char *pos, *oldpos;
 	int filenamelen, len;
 	FILE *fp;
 
+	/* Record the first path ever used, so that we can recycle it */
+	if (first_time_ever)
+	{
+		strncpy (prevpath, filename, MAX_PATH_NAME);
+		prevpath[MAX_PATH_NAME] = 0;
+		pos = strrchr(prevpath, '/');
+		if (pos) *pos = 0;
+		pos = strrchr(prevpath, '/');
+		if (pos) *(pos+1) = 0;
+		first_time_ever = 0;
+	}
 	if (filename[0] == '/') {
 		/* fopen returns NULL if the file does not exist. */
 		fp = fopen(filename, how);
@@ -324,20 +337,27 @@ FILE *dictopen(const char *filename, const char *how)
 			free(data_dir);
 		}
 		else {
-			/* always make sure that it ends with a path separator char
-			 * for the below while() loop. */
+			/* Always make sure that it ends with a path
+			 * separator char for the below while() loop. */
 			snprintf(fulldictpath, MAX_PATH_NAME,
-			         "%s%c", DEFAULTPATH, PATH_SEPARATOR);
+			         "%s%c%s%c%s%c%s%c%s%c%s%c",
+				 prevpath, PATH_SEPARATOR,
+				 DEFAULTPATH, PATH_SEPARATOR,
+				 ".", PATH_SEPARATOR,
+				 "data", PATH_SEPARATOR,
+				 "..", PATH_SEPARATOR,
+				 "../data", PATH_SEPARATOR);
 		}
 	}
 
-	/* Now fulldictpath is our dictpath, where each entry is followed by a ":"
-	 * including the last one */
+	/* Now fulldictpath is our dictpath, where each entry is
+	 * followed by a ":" including the last one */
 
 	filenamelen = strlen(filename);
 	len = strlen(fulldictpath)+ filenamelen + 1 + 1;
 	oldpos = fulldictpath;
-	while ((pos = strchr(oldpos, PATH_SEPARATOR)) != NULL) {
+	while ((pos = strchr(oldpos, PATH_SEPARATOR)) != NULL)
+	{
 		strncpy(completename, oldpos, (pos-oldpos));
 		*(completename+(pos-oldpos)) = DIR_SEPARATOR;
 		strcpy(completename+(pos-oldpos)+1,filename);
