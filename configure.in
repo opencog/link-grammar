@@ -143,6 +143,9 @@ LINK_CC_TRY_FLAG([-fno-strict-aliasing],
 AC_SUBST(LINK_CFLAGS)
 
 dnl =====================================================================
+dnl Try to guess location of the jni.h file.
+dnl Might be useful to look at env variables $JDK_HOME and $JAVA_HOME for these.
+dnl
 
 JNI_GUESS=" \
    -I/usr/include/classpath/ \
