@@ -19,11 +19,10 @@
 
 #include "error.h"
 
-static char   buf[1024];
-#define CRLF  printf("\n")
+#define MSGSZ 1024
 
-int    lperrno = 0;
-char   lperrmsg[1024] = "";
+int  lperrno = 0;
+char lperrmsg[MSGSZ];
 
 static const char * msg_of_lperror(int lperr)
 {
@@ -50,30 +49,31 @@ static const char * msg_of_lperror(int lperr)
 
 void lperror(int lperr, const char *fmt, ...)
 {
-	char temp[1024] = "";
+	char temp[MSGSZ] = "";
 	va_list args;
 
 	va_start(args, fmt);
-	vsprintf(temp, fmt, args);
+	vsnprintf(temp, MSGSZ, fmt, args);
 	va_end(args);
 
-	strcpy(lperrmsg, msg_of_lperror(lperr));
-	strcat(lperrmsg, temp);
+	strncpy(lperrmsg, msg_of_lperror(lperr), MSGSZ);
+	strncat(lperrmsg, temp, MSGSZ);
+	lperrmsg[MSGSZ-1]=0; /* Null terminate at all costs */
 	lperrno = lperr;
 }
 
 void error(const char *fmt, ...)
 {
+	int norr = errno;
 	va_list args;
 	va_start(args, fmt);
-	vfprintf(stderr, fmt, args); CRLF;
+	vfprintf(stderr, fmt, args);
 	va_end(args);
 	fprintf(stderr, "\n");
-	if (errno > 0) {
-		perror(buf);
-		fprintf(stderr, "errno=%d\n", errno);
-		fprintf(stderr, buf);
-		fprintf(stderr, "\n");
+	if (norr > 0)
+	{
+		perror(NULL);
+		fprintf(stderr, "errno=%d\n\n", norr);
 	}
 	fflush(stdout);
 	fprintf(stderr, "Parser quitting.\n");
