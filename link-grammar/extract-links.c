@@ -363,7 +363,11 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 	return xt->set;
 }
 
-static int verify_set_node(Parse_set *set) {
+/**
+ * return TRUE if and only if overflow in the number of parses occured.
+ */
+static int verify_set_node(Parse_set *set) 
+{
 	Parse_choice *pc;
 	double dn;
 	int n;
@@ -392,22 +396,24 @@ static int verify_set(Parse_info pi) {
 	return overflowed;
 }
 
-int build_parse_set(Sentence sent, int cost, Parse_Options opts) {
-	/* This is the top level call that computes the whole parse_set.  It
-	   points whole_set at the result.  It creates the necessary hash
-	   table (x_table) which will be freed at the same time the
-	   whole_set is freed.
+/**
+ * This is the top level call that computes the whole parse_set.  It
+ * points whole_set at the result.  It creates the necessary hash
+ * table (x_table) which will be freed at the same time the
+ * whole_set is freed.
+ *
+ * It also assumes that count() has been run, and that hash table is
+ * filled with the values thus computed.  Therefore this function
+ * must be structured just like parse() (the main function for
+ * count()).
+ *
+ * If the number of linkages gets huge, then the counts can overflow.
+ * We check if this has happened when verifying the parse set.
+ * This routine returns TRUE iff overflowed occurred.
+ */
 
-	   It also assumes that count() has been run, and that hash table is
-	   filled with the values thus computed.  Therefore this function
-	   must be structured just like parse() (the main function for
-	   count()).
-
-	   If the number of linkages gets huge, then the counts can overflow.
-	   We check if this has happened when verifying the parse set.
-	   This routine returns TRUE iff overflowed occurred.
-	*/
-
+int build_parse_set(Sentence sent, int cost, Parse_Options opts)
+{
 	Parse_set * whole_set;
 
 	local_sent = sent->word;
