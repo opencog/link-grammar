@@ -196,7 +196,7 @@ static Table_connector * table_store(int lw, int rw,
 }
 
 /** returns the pointer to this info, NULL if not there */
-static Table_connector * table_pointer(int lw, int rw, 
+static Table_connector * find_table_pointer(int lw, int rw, 
                                        Connector *le, Connector *re,
                                        int cost)
 {
@@ -207,6 +207,9 @@ static Table_connector * table_pointer(int lw, int rw,
 			&& (t->cost == cost))  return t;
 	}
 
+	/* Create a new connector only if resources are exhausted.
+	 * (???) Huh? I guess we're in panic parse mode in that case.
+	 */
 	if ((current_resources != NULL) && resources_exhausted(current_resources)) {
 		return table_store(lw, rw, le, re, cost, 0);
 	}
@@ -216,7 +219,7 @@ static Table_connector * table_pointer(int lw, int rw,
 /** returns the count for this quintuple if there, -1 otherwise */
 int table_lookup(int lw, int rw, Connector *le, Connector *re, int cost)
 {
-	Table_connector *t = table_pointer(lw, rw, le, re, cost);
+	Table_connector *t = find_table_pointer(lw, rw, le, re, cost);
 
 	if (t == NULL) return -1; else return t->count;
 }
@@ -229,7 +232,7 @@ static void table_update(int lw, int rw,
                          Connector *le, Connector *re,
                          int cost, int count)
 {
-	Table_connector *t = table_pointer(lw, rw, le, re, cost);
+	Table_connector *t = find_table_pointer(lw, rw, le, re, cost);
 
 	assert(t != NULL, "This entry is supposed to be in the table.");
 	t->count = count;
@@ -259,11 +262,12 @@ int count(int lw, int rw, Connector *le, Connector *re, int cost)
 
 	if (cost < 0) return 0;  /* will we ever call it with cost<0 ? */
 
-	t = table_pointer(lw, rw, le, re, cost);
+	t = find_table_pointer(lw, rw, le, re, cost);
 
 	if (t == NULL) {
-		t = table_store(lw, rw, le, re, cost, 0);  /* create the table entry with a tentative cost of 0 */
-												   /* this cost must be updated before we return */
+		/* Create the table entry with a tentative cost of 0. 
+	    * This cost must be updated before we return. */
+		t = table_store(lw, rw, le, re, cost, 0);
 	} else {
 		return t->count;
 	}
@@ -464,11 +468,13 @@ int parse(Sentence sent, int cost, Parse_Options opts)
    2  This region can be completed, and it's been marked.
    */
 
-static int region_valid(int lw, int rw, Connector *le, Connector *re) {
-	/* Returns 0 if this range cannot be successfully filled in with		   */
-	/* links.  Returns 1 if it can, and it's not been marked, and returns	  */
-	/* 2 if it can and it has been marked.									 */
-
+/**
+ * Returns 0 if this range cannot be successfully filled in with
+ * links.  Returns 1 if it can, and it's not been marked, and returns
+ * 2 if it can and it has been marked.
+ */
+static int region_valid(int lw, int rw, Connector *le, Connector *re)
+{
 	Disjunct * d;
 	int left_valid, right_valid, found;
 	int i, start_word, end_word;
@@ -529,11 +535,15 @@ static int region_valid(int lw, int rw, Connector *le, Connector *re) {
 	return found;
 }
 
-static void mark_region(int lw, int rw, Connector *le, Connector *re) {
-	/* Mark as useful all disjuncts involved in some way to complete the structure  */
-	/* within the current region.  Note that only disjuncts strictly between		*/
-	/* lw and rw will be marked.  If it so happens that this region itself is not   */
-	/* valid, then this fact will be recorded in the table, and nothing else happens*/
+/**
+ * Mark as useful all disjuncts involved in some way to complete the
+ * structure within the current region.  Note that only disjuncts
+ * strictly between lw and rw will be marked.  If it so happens that
+ * this region itself is not valid, then this fact will be recorded
+ * in the table, and nothing else happens.
+ */
+static void mark_region(int lw, int rw, Connector *le, Connector *re)
+{
 
 	Disjunct * d;
 	int left_valid, right_valid, i;
@@ -643,18 +653,18 @@ void delete_unmarked_disjuncts(Sentence sent){
 	}
 }
 
-void conjunction_prune(Sentence sent, Parse_Options opts) {
-	/*
-	   We've already built the sentence disjuncts, and we've pruned them
-	   and power_pruned(GENTLE) them also.  The sentence contains a
-	   conjunction.  deletable[][] has been initialized to indicate the
-	   ranges which may be deleted in the final linkage.
-	
-	   This routine deletes irrelevant disjuncts.  It finds them by first
-	   marking them all as irrelevant, and then marking the ones that
-	   might be useable.  Finally, the unmarked ones are removed.
-
-	   */
+/**
+ * We've already built the sentence disjuncts, and we've pruned them
+ * and power_pruned(GENTLE) them also.  The sentence contains a
+ * conjunction.  deletable[][] has been initialized to indicate the
+ * ranges which may be deleted in the final linkage.
+ *
+ * This routine deletes irrelevant disjuncts.  It finds them by first
+ * marking them all as irrelevant, and then marking the ones that
+ * might be useable.  Finally, the unmarked ones are removed.
+ */
+void conjunction_prune(Sentence sent, Parse_Options opts)
+{
 	Disjunct * d;
 	int w;
 
@@ -662,7 +672,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts) {
 	deletable = sent->deletable;
 	count_set_effective_distance(sent);
 
-	/* we begin by unmarking all disjuncts.  This would not be necessary if
+	/* We begin by unmarking all disjuncts.  This would not be necessary if
 	   whenever we created a disjunct we cleared its marked field.
 	   I didn't want to search the program for all such places, so
 	   I did this way.
