@@ -626,8 +626,8 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i) {
 ****************************************************************/
 
 
-static void post_process_linkages(Sentence sent, Parse_Options opts) {
-
+static void post_process_linkages(Sentence sent, Parse_Options opts)
+{
 	int *indices;
 	int in, block_bottom, block_top;
 	int N_linkages_found, N_linkages_alloced;
@@ -662,14 +662,14 @@ static void post_process_linkages(Sentence sent, Parse_Options opts) {
 	}
 
 	if (N_linkages_found > opts->linkage_limit)
-	  {
+	{
 		N_linkages_alloced = opts->linkage_limit;
 		if (opts->verbosity > 1) {
 		  fprintf(stdout,
 				  "Warning: Considering a random subset of %d of %d linkages\n",
 				  N_linkages_alloced, N_linkages_found);
 		}
-	  }
+	}
 	else N_linkages_alloced = N_linkages_found;
 
 	link_info=(Linkage_info *)xalloc(N_linkages_alloced * sizeof(Linkage_info));
@@ -768,7 +768,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts) {
 	/*if(N_valid_linkages == 0) free_andlists(sent); */
 }
 
-void free_post_processing(Sentence sent) {
+void free_post_processing(Sentence sent)
+{
 	if (sent->link_info != NULL) {
 		/* postprocessing must have been done */
 		free_andlists(sent);
@@ -777,7 +778,8 @@ void free_post_processing(Sentence sent) {
 	}
 }
 
-int sentence_parse(Sentence sent, Parse_Options opts) {
+int sentence_parse(Sentence sent, Parse_Options opts)
+{
 	int nl;
 
 	verbosity = opts->verbosity;
@@ -798,12 +800,14 @@ int sentence_parse(Sentence sent, Parse_Options opts) {
 	init_table(sent);
 
 	/* A parse set may have been already been built for this sentence,
-	   if it was previously parsed.  If so we free it up before building another.  */
+	 * if it was previously parsed.  If so we free it up before
+	 * building another.  */
 	free_parse_set(sent);
 	init_x_table(sent);
 
-	for (nl = opts->min_null_count;
-		 (nl<=opts->max_null_count) && (!resources_exhausted(opts->resources)); ++nl) {
+	for (nl = opts->min_null_count; nl<=opts->max_null_count ; ++nl)
+	{
+		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
 		sent->num_linkages_found = parse(sent, sent->null_count, opts);
 		print_time(opts, "Counted parses");
