@@ -1340,8 +1340,9 @@ static int right_connector_list_update(Sentence sent, Connector *c, int word_c, 
 	return (foundmatch ? n : sent->length);
 }
 
-int power_prune(Sentence sent, int mode, Parse_Options opts) {
-/* The return value is the number of disjuncts deleted */
+/** The return value is the number of disjuncts deleted */
+int power_prune(Sentence sent, int mode, Parse_Options opts)
+{
 	Disjunct *d, *free_later, *dx, *nd;
 	Connector *c;
 	int w, N_deleted, total_deleted;
@@ -1359,10 +1360,10 @@ int power_prune(Sentence sent, int mode, Parse_Options opts) {
 
 	total_deleted = 0;
 
-	while (!parse_options_resources_exhausted(opts)) {
+	while (1)
+	{
 		/* left-to-right pass */
-
-		for (w = 0; (w < sent->length) && (!parse_options_resources_exhausted(opts)); w++) {
+		for (w = 0; w < sent->length; w++) {
 			if (parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
@@ -1397,7 +1398,8 @@ int power_prune(Sentence sent, int mode, Parse_Options opts) {
 		N_changed = N_deleted = 0;
 		/* right-to-left pass */
 
-		for (w = sent->length-1; (w >= 0) && (!parse_options_resources_exhausted(opts)); w--) {
+		for (w = sent->length-1; w >= 0; w--) {
+			if (parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
 				if (right_connector_list_update(sent, d->right,w,w,TRUE) >= sent->length){
