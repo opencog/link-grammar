@@ -175,8 +175,13 @@ void free_table(Sentence sent) {
 	xfree((void *) table, table_size * sizeof(Table_connector*));
 }
 
-static Table_connector * table_store(int lw, int rw, Connector *le, Connector *re, int cost, int count){
-	/* Stores the value in the table.  Assumes it's not already there */
+/** 
+ * Stores the value in the table.  Assumes it's not already there.
+ */
+static Table_connector * table_store(int lw, int rw,
+                                     Connector *le, Connector *re,
+                                     int cost, int count)
+{
 	Table_connector *t, *n;
 	int h;
 
@@ -190,9 +195,11 @@ static Table_connector * table_store(int lw, int rw, Connector *le, Connector *r
 	return n;
 }
 
-
-static Table_connector * table_pointer(int lw, int rw, Connector *le, Connector *re, int cost) {
-	/* returns the pointer to this info, NULL if not there */
+/** returns the pointer to this info, NULL if not there */
+static Table_connector * table_pointer(int lw, int rw, 
+                                       Connector *le, Connector *re,
+                                       int cost)
+{
 	Table_connector *t;
 	t = table[hash(lw, rw, le, re, cost)];
 	for (; t != NULL; t = t->next) {
@@ -200,14 +207,15 @@ static Table_connector * table_pointer(int lw, int rw, Connector *le, Connector 
 			&& (t->cost == cost))  return t;
 	}
 
-	if ((current_resources != NULL) &&		 resources_exhausted(current_resources)) {
+	if ((current_resources != NULL) && resources_exhausted(current_resources)) {
 		return table_store(lw, rw, le, re, cost, 0);
 	}
 	else return NULL;
 }
 
-int table_lookup(int lw, int rw, Connector *le, Connector *re, int cost) {
-	/* returns the count for this quintuple if there, -1 otherwise */
+/** returns the count for this quintuple if there, -1 otherwise */
+int table_lookup(int lw, int rw, Connector *le, Connector *re, int cost)
+{
 	Table_connector *t = table_pointer(lw, rw, le, re, cost);
 
 	if (t == NULL) return -1; else return t->count;
