@@ -119,7 +119,8 @@ int resources_exhausted(Resources r)
 int resources_timer_expired(Resources r)
 {
 	if (r->max_parse_time == MAX_PARSE_TIME_DEFAULT) return 0;
-	else return (r->timer_expired || (current_usage_time() - r->time_when_parse_started > r->max_parse_time));
+	else return (r->timer_expired || 
+	     (current_usage_time() - r->time_when_parse_started > r->max_parse_time));
 }
 
 int resources_memory_exhausted(Resources r)
