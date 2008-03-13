@@ -1780,11 +1780,13 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 }
 
 
-void pp_and_power_prune(Sentence sent, int mode, Parse_Options opts) {
-	/* do the following pruning steps until nothing happens:
-	   power pp power pp power pp....
-	   Make sure you do them both at least once.
-	   */
+/**
+ * Do the following pruning steps until nothing happens:
+ * power pp power pp power pp....
+ * Make sure you do them both at least once.
+ */
+void pp_and_power_prune(Sentence sent, int mode, Parse_Options opts)
+{
 	power_prune(sent, mode, opts);
 
 	for (;;) {
@@ -1793,6 +1795,5 @@ void pp_and_power_prune(Sentence sent, int mode, Parse_Options opts) {
 		if (parse_options_resources_exhausted(opts)) break;
 		if (power_prune(sent, mode, opts) == 0) break;
 	}
-
 }
 
