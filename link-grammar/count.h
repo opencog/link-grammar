@@ -10,10 +10,11 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-int  table_lookup(int, int, Connector *, Connector *, int);
+typedef long long s64; /* signed 64-bit int, even on 32-bit cpus */
+
+s64  table_lookup(int, int, Connector *, Connector *, int);
 int  match(Connector *a, Connector *b, int wa, int wb);
 int  x_match(Connector *a, Connector *b);
-int  count(int lw, int rw, Connector *le, Connector *re, int cost);
 void init_table(Sentence sent);
 void free_table(Sentence sent);
 int  parse(Sentence sent, int mincost, Parse_Options opts);

@@ -118,13 +118,14 @@ int match(Connector *a, Connector *b, int aw, int bw)
 	} else return FALSE;
 }
 
-typedef struct Table_connector Table_connector;
-struct Table_connector {
-	short			  lw, rw;
-	Connector		 *le, *re;
-	short			  cost;
-	int				count;
-	Table_connector   *next;
+typedef struct Table_connector_s Table_connector;
+struct Table_connector_s
+{
+	short            lw, rw;
+	Connector        *le, *re;
+	short            cost;
+	s64              count;
+	Table_connector  *next;
 };
 
 static int table_size;
@@ -180,7 +181,7 @@ void free_table(Sentence sent) {
  */
 static Table_connector * table_store(int lw, int rw,
                                      Connector *le, Connector *re,
-                                     int cost, int count)
+                                     int cost, s64 count)
 {
 	Table_connector *t, *n;
 	int h;
@@ -217,7 +218,7 @@ static Table_connector * find_table_pointer(int lw, int rw,
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
-int table_lookup(int lw, int rw, Connector *le, Connector *re, int cost)
+s64 table_lookup(int lw, int rw, Connector *le, Connector *re, int cost)
 {
 	Table_connector *t = find_table_pointer(lw, rw, le, re, cost);
 
@@ -230,7 +231,7 @@ int table_lookup(int lw, int rw, Connector *le, Connector *re, int cost)
  */
 static void table_update(int lw, int rw, 
                          Connector *le, Connector *re,
-                         int cost, int count)
+                         int cost, s64 count)
 {
 	Table_connector *t = find_table_pointer(lw, rw, le, re, cost);
 
@@ -242,19 +243,19 @@ static void table_update(int lw, int rw,
  * Returns 0 if and only if this entry is in the hash table 
  * with a count value of 0.
  */
-static int pseudocount(int lw, int rw, Connector *le, Connector *re, int cost)
+static s64 pseudocount(int lw, int rw, Connector *le, Connector *re, int cost)
 {
-	int count;
+	s64 count;
 	count = table_lookup(lw, rw, le, re, cost);
 	if (count == 0) return 0; else return 1;
 }
 
-int count(int lw, int rw, Connector *le, Connector *re, int cost)
+static s64 count(int lw, int rw, Connector *le, Connector *re, int cost)
 {
 	Disjunct * d;
-	int total, pseudototal;
+	s64 total, pseudototal;
 	int start_word, end_word, w;
-	int leftcount, rightcount;
+	s64 leftcount, rightcount;
 	int lcost, rcost, Lmatch, Rmatch;
 
 	Match_node * m, *m1;
@@ -414,7 +415,7 @@ int count(int lw, int rw, Connector *le, Connector *re, int cost)
  */
 int parse(Sentence sent, int cost, Parse_Options opts)
 {
-	int total;
+	s64 total;
 
 	count_set_effective_distance(sent);
 	current_resources = opts->resources;
@@ -425,15 +426,15 @@ int parse(Sentence sent, int cost, Parse_Options opts)
 
 	total = count(-1, sent->length, NULL, NULL, cost+1);
 	if (verbosity > 1) {
-		printf("Total count with %d null links:   %d\n", cost, total);
+		printf("Total count with %d null links:   %lld\n", cost, total);
 	}
-	if (total < 0) {
-		printf("WARNING: Overflow in count!\n");
+	if ((1LL<<31) < total) {
+		fprintf(stderr, "WARNING: Overflow in count! cnt=%lld\n", total);
 	}
 
 	local_sent = NULL;
 	current_resources = NULL;
-	return total;
+	return (int) total;
 }
 
 /*
