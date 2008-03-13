@@ -413,7 +413,7 @@ static s64 count(int lw, int rw, Connector *le, Connector *re, int cost)
  * specified cost Assumes that the hash table has already been
  * initialized, and is freed later.
  */
-int parse(Sentence sent, int cost, Parse_Options opts)
+s64 parse(Sentence sent, int cost, Parse_Options opts)
 {
 	s64 total;
 
@@ -434,7 +434,7 @@ int parse(Sentence sent, int cost, Parse_Options opts)
 
 	local_sent = NULL;
 	current_resources = NULL;
-	return (int) total;
+	return total;
 }
 
 /*

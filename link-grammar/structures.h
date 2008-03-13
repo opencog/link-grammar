@@ -185,6 +185,8 @@ OBS #define AMPERSAND_WORD   ("AMPERSAND")
 #define SHORT_LEN 6
 #define NO_WORD 255
 
+typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
+
 typedef struct Connector_struct Connector;
 struct Connector_struct
 {
@@ -373,7 +375,7 @@ struct Parse_choice_struct {
     Disjunct *ld, *md, *rd;  /* the chosen disjuncts for the relevant three words */
 };
 struct Parse_set_struct {
-    int count;  /* the number of ways */
+    s64 count;  /* the number of ways */
     Parse_choice * first;
     Parse_choice * current;  /* used to enumerate linkages */
 };

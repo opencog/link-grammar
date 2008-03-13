@@ -781,6 +781,7 @@ void free_post_processing(Sentence sent)
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
+	s64 total;
 
 	verbosity = opts->verbosity;
 
@@ -809,10 +810,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	{
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
-		sent->num_linkages_found = parse(sent, sent->null_count, opts);
+		total = parse(sent, sent->null_count, opts);
+		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
+
+		/* Give up if the parse count is overflowing */
+		if ((1LL<<31) < total) break;
 	}
 
 	free_table(sent);

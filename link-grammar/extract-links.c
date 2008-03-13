@@ -216,7 +216,7 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 
 	Match_node * m, *m1;
 	X_table_connector *xt;
-	int count;
+	s64 count;
 
 	assert(cost >= 0, "parse_set() called with cost < 0.");
 
@@ -365,20 +365,19 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 
 /**
  * return TRUE if and only if overflow in the number of parses occured.
+ * Use a 64-bit int for counting.
  */
 static int verify_set_node(Parse_set *set) 
 {
 	Parse_choice *pc;
-	double dn;
-	int n;
+	s64 n;
 	if (set == NULL || set->first == NULL) return FALSE;
-	dn = n = 0;
+	n = 0;
 	for (pc = set->first; pc != NULL; pc = pc->next) {
 		n  += pc->set[0]->count * pc->set[1]->count;
-		dn += ((double) pc->set[0]->count) * ((double) pc->set[1]->count);
+		if ((1LL<<31) < n) return 1;
 	}
-	assert(n == set->count, "verify_set failed");
-	return (n < 0) || (n != (int) dn);
+	return 0;
 }
 
 static int verify_set(Parse_info pi) {
@@ -512,9 +511,10 @@ static void advance_parse_set(Parse_info pi) {
 }
 #endif
 
-static void list_links(Parse_info pi, Parse_set * set, int index) {
+static void list_links(Parse_info pi, Parse_set * set, int index)
+{
 	 Parse_choice *pc;
-	 int n;
+	 s64 n;
 
 	 if (set == NULL || set->first == NULL) return;
 	 for (pc = set->first; pc != NULL; pc = pc->next) {

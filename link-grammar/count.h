@@ -10,14 +10,13 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-typedef long long s64; /* signed 64-bit int, even on 32-bit cpus */
 
 s64  table_lookup(int, int, Connector *, Connector *, int);
 int  match(Connector *a, Connector *b, int wa, int wb);
 int  x_match(Connector *a, Connector *b);
 void init_table(Sentence sent);
 void free_table(Sentence sent);
-int  parse(Sentence sent, int mincost, Parse_Options opts);
+s64  parse(Sentence sent, int mincost, Parse_Options opts);
 void conjunction_prune(Sentence sent, Parse_Options opts);
 void count_set_effective_distance(Sentence sent);
 void count_unset_effective_distance(Sentence sent);
