@@ -100,10 +100,12 @@ static int check_domain_nesting(Postprocessor *pp, int num_links)
 }
 #endif
 
+/** 
+ * Free the list of links pointed to by lol
+ * (does not free any strings)
+ */
 static void free_List_o_links(List_o_links *lol)
 {
-	/* free the list of links pointed to by lol
-		 (does not free any strings) */
 	List_o_links * xlol;
 	while(lol != NULL) {
 		xlol = lol->next;
@@ -122,17 +124,24 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
 	}
 }
 
+/** 
+ * Gets called after every invocation of post_process()
+ */
 void post_process_free_data(PP_data * ppd)
 {
-	/* gets called after every invocation of post_process() */
 	int w, d;
-	for (w=0; w<ppd->length; w++)
+	for (w = 0; w < ppd->length; w++)
+	{
 		free_List_o_links(ppd->word_links[w]);
-	for (d=0; d<ppd->N_domains; d++)
-		{
-			free_List_o_links(ppd->domain_array[d].lol);
-			free_D_tree_leaves(ppd->domain_array[d].child);
-		}
+		ppd->word_links[w] = NULL;
+	}
+	for (d = 0; d < ppd->N_domains; d++)
+	{
+		free_List_o_links(ppd->domain_array[d].lol);
+		ppd->domain_array[d].lol = NULL;
+		free_D_tree_leaves(ppd->domain_array[d].child);
+		ppd->domain_array[d].child = NULL;
+	}
 	free_List_o_links(ppd->links_to_ignore);
 	ppd->links_to_ignore = NULL;
 }
@@ -180,58 +189,66 @@ static void build_type_array(Postprocessor *pp)
 	int d;
 	List_o_links * lol;
 	for (d=0; d<pp->pp_data.N_domains; d++)
-		{
-			for (lol=pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
+	{
+		for (lol=pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
 			dtl = (D_type_list *) xalloc(sizeof(D_type_list));
 			dtl->next = pp->pp_node->d_type_array[lol->link];
 			pp->pp_node->d_type_array[lol->link] = dtl;
 			dtl->type = pp->pp_data.domain_array[d].type;
 		}
-		}
+	}
 }
 
-void free_d_type(D_type_list * dtl) {
-		D_type_list * dtlx;
-		for (; dtl!=NULL; dtl=dtlx) {
+void free_d_type(D_type_list * dtl)
+{
+	D_type_list * dtlx;
+	for (; dtl!=NULL; dtl=dtlx) {
 		dtlx = dtl->next;
 		xfree((void*) dtl, sizeof(D_type_list));
-		}
+	}
 }
 
-D_type_list * copy_d_type(D_type_list * dtl) {
-		D_type_list *dtlx, *dtlcurr=NULL, *dtlhead=NULL;
-		for (; dtl!=NULL; dtl=dtl->next) {
+D_type_list * copy_d_type(D_type_list * dtl)
+{
+	D_type_list *dtlx, *dtlcurr=NULL, *dtlhead=NULL;
+	for (; dtl!=NULL; dtl=dtl->next)
+	{
 		dtlx = (D_type_list *) xalloc(sizeof(D_type_list));
 		*dtlx = *dtl;
-		if (dtlhead == NULL) {
-				dtlhead = dtlx;
-				dtlcurr = dtlx;
+		if (dtlhead == NULL)
+		{
+			dtlhead = dtlx;
+			dtlcurr = dtlx;
 		}
-		else {
-				dtlcurr->next = dtlx;
-				dtlcurr = dtlx;
+		else
+		{
+			dtlcurr->next = dtlx;
+			dtlcurr = dtlx;
 		}
-		}
-		return dtlhead;
+	}
+	return dtlhead;
 }
 
+/** free the pp node from last time */
 static void free_pp_node(Postprocessor *pp)
 {
-	/* free the pp node from last time */
 	int i;
-	if (pp->pp_node==NULL) return;
-	for (i=0; i<MAX_LINKS; i++) {
-			free_d_type(pp->pp_node->d_type_array[i]);
-	}
-	xfree((void*) pp->pp_node, sizeof(PP_node));
+	PP_node *ppn = pp->pp_node;
 	pp->pp_node = NULL;
+	if (ppn == NULL) return;
+
+	for (i=0; i<MAX_LINKS; i++)
+	{
+		free_d_type(ppn->d_type_array[i]);
+	}
+	xfree((void*) ppn, sizeof(PP_node));
 }
 
 
+/** set up a fresh pp_node for later use */
 static void alloc_pp_node(Postprocessor *pp)
 {
-	/* set up a fresh pp_node for later use */
 	int i;
 	pp->pp_node=(PP_node *) xalloc(sizeof(PP_node));
 	pp->pp_node->violation = NULL;
@@ -899,14 +916,16 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 		}
 }
 
+/**
+ * Takes a sublinkage and returns:
+ *  . for each link, the domain structure of that link
+ *  . a list of the violation strings
+ * NB: sublinkage->link[i]->l=-1 means that this connector
+ * is to be ignored
+ */
 PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 							Sentence sent, Sublinkage *sublinkage, int cleanup)
 {
-	/* Takes a sublinkage and returns:
-		 . for each link, the domain structure of that link
-		 . a list of the violation strings
-		 NB: sublinkage->link[i]->l=-1 means that this connector is to be ignored*/
-
 	char *msg;
 
 	if (pp==NULL) return NULL;
@@ -915,18 +934,18 @@ PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 	pp->pp_data.length = sent->length;
 
 	/* In the name of responsible memory management, we retain a copy of the
-		 returned data structure pp_node as a field in pp, so that we can clear
-		 it out after every call, without relying on the user to do so. */
+	 * returned data structure pp_node as a field in pp, so that we can clear
+	 * it out after every call, without relying on the user to do so. */
 	reset_pp_node(pp);
 
 	/* The first time we see a sentence, prune the rules which we won't be
-		 needing during postprocessing the linkages of this sentence */
+	 * needing during postprocessing the linkages of this sentence */
 	if (sent->q_pruned_rules==FALSE && sent->length >= opts->twopass_length)
 		prune_irrelevant_rules(pp);
 	sent->q_pruned_rules=TRUE;
 
 	switch(internal_process(pp, sublinkage, &msg))
-		{
+	{
 		case -1:
 			/* some global test failed even before we had to build the domains */
 			pp->n_global_rules_firing++;
@@ -942,10 +961,13 @@ PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 			/* This linkage is legal according to the post processing rules */
 			pp->pp_node->violation = NULL;
 			break;
-		}
+	}
 
 	build_type_array(pp);
-	if (cleanup) post_process_free_data(&pp->pp_data);
+	if (cleanup)
+	{
+		post_process_free_data(&pp->pp_data);
+	}
 	return pp->pp_node;
 }
 
