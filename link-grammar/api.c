@@ -91,7 +91,8 @@ int parse_options_delete(Parse_Options  opts) {
 	return 0;
 }
 
-void parse_options_set_cost_model_type(Parse_Options opts, int cm) {
+void parse_options_set_cost_model_type(Parse_Options opts, int cm)
+{
 	switch(cm) {
 	case VDAL:
 		opts->cost_model.type = VDAL;
@@ -102,7 +103,8 @@ void parse_options_set_cost_model_type(Parse_Options opts, int cm) {
 	}
 }
 
-void parse_options_set_verbosity(Parse_Options opts, int dummy) {
+void parse_options_set_verbosity(Parse_Options opts, int dummy)
+{
 	opts->verbosity = dummy;
 	verbosity = opts->verbosity;
 	/* this is one of the only global variables. */
@@ -972,6 +974,7 @@ static Sublinkage unionize_linkage(Linkage linkage)
 	}
 
 	u.link = (Link *) exalloc(sizeof(Link)*num_in_union);
+	u.num_links = num_in_union;
 	zero_sublinkage(&u);
 
 	u.pp_info = (PP_info *) exalloc(sizeof(PP_info)*num_in_union);
@@ -1003,7 +1006,7 @@ static Sublinkage unionize_linkage(Linkage linkage)
 int linkage_compute_union(Linkage linkage)
 {
 	int i, num_subs=linkage->num_sublinkages;
-	Sublinkage * new_sublinkage;
+	Sublinkage * new_sublinkage, *s;
 
 	if (linkage->unionized) {
 		linkage->current = linkage->num_sublinkages-1;
@@ -1022,15 +1025,13 @@ int linkage_compute_union(Linkage linkage)
 	}
 	exfree(linkage->sublinkage, sizeof(Sublinkage)*num_subs);
 	linkage->sublinkage = new_sublinkage;
-	linkage->sublinkage[num_subs] = unionize_linkage(linkage);
 
-	/* The domain data will not be needed for the union -- zero it out */
-	linkage->sublinkage[num_subs].pp_data.N_domains=0;
-	linkage->sublinkage[num_subs].pp_data.length=0;
-	linkage->sublinkage[num_subs].pp_data.links_to_ignore=NULL;
-	for (i=0; i<MAX_SENTENCE; ++i) {
-	  linkage->sublinkage[num_subs].pp_data.word_links[i] = NULL;
-	}
+	/* Zero out the new sublinkage, then unionize it. */
+	s = &new_sublinkage[num_subs];
+	s->link = NULL;
+	s->num_links = 0;
+	zero_sublinkage(s);
+	linkage->sublinkage[num_subs] = unionize_linkage(linkage);
 
 	linkage->num_sublinkages++;
 
