@@ -428,8 +428,8 @@ s64 parse(Sentence sent, int cost, Parse_Options opts)
 	if (verbosity > 1) {
 		printf("Total count with %d null links:   %lld\n", cost, total);
 	}
-	if ((1LL<<31) < total) {
-		fprintf(stderr, "WARNING: Overflow in count! cnt=%lld\n", total);
+	if ((verbosity > 0) && (PARSE_NUM_OVERFLOW < total)) {
+		printf("WARNING: Overflow in count! cnt=%lld\n", total);
 	}
 
 	local_sent = NULL;

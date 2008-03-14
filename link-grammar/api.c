@@ -813,7 +813,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		total = parse(sent, sent->null_count, opts);
 
 		/* Give up if the parse count is overflowing */
-		if ((1LL<<31) < total) break;
+		if (PARSE_NUM_OVERFLOW < total) break;
 
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");

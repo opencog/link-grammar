@@ -185,6 +185,7 @@ OBS #define AMPERSAND_WORD   ("AMPERSAND")
 #define SHORT_LEN 6
 #define NO_WORD 255
 
+#define PARSE_NUM_OVERFLOW (1LL<<24)  
 typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
 
 typedef struct Connector_struct Connector;

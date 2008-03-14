@@ -375,7 +375,7 @@ static int verify_set_node(Parse_set *set)
 	n = 0;
 	for (pc = set->first; pc != NULL; pc = pc->next) {
 		n  += pc->set[0]->count * pc->set[1]->count;
-		if ((1LL<<31) < n) return 1;
+		if (PARSE_NUM_OVERFLOW < n) return 1;
 	}
 	return 0;
 }
