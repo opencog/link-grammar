@@ -1,7 +1,8 @@
 Version 4.3.4 includes the following changes:
- * Fix regression in the handling of capitalization at the start of sentences.
+ * Fix regression of handling of capitalization at the start of sentences.
+ * Fix dictionary search path so that it respects command-line input.
+ * Fix rare but nasty crash when parsing long sentences in panic mode.
  * Add a method to set the dictionary path.
- * Fix dictionary search path system so that it respects command-line input.
  * Fix all remaining compiler warnings.
  * Ongoing minor expansion of the Lithuanian (lt) dictionary.
 
