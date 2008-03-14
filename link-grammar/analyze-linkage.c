@@ -86,32 +86,40 @@ struct Links_to_patch_struct {
 	int new;	/* the new value of the end to be patched */
 };
 
-
-static Sublinkage * x_create_sublinkage(Parse_info pi) {
+void zero_sublinkage(Sublinkage *s)
+{
 	int i;
+	s->pp_info = NULL;
+	s->violation = NULL;
+	for (i=0; i<s->num_links; i++) s->link[i] = NULL;
+
+	memset(&s->pp_data, 0, sizeof(PP_data));
+}
+
+static Sublinkage * x_create_sublinkage(Parse_info pi)
+{
 	Sublinkage *s = (Sublinkage *) xalloc (sizeof(Sublinkage));
 	s->link = (Link *) xalloc(MAX_LINKS*sizeof(Link));
-	s->pp_info = NULL;
-	s->violation = NULL;
-	for (i=0; i<MAX_LINKS; i++)		s->link[i] = NULL;
+	s->num_links = MAX_LINKS;
+
+	zero_sublinkage(s);
+
 	s->num_links = pi->N_links;
 	assert(pi->N_links < MAX_LINKS, "Too many links");
 	return s;
 }
 
-
-static Sublinkage * ex_create_sublinkage(Parse_info pi) {
-	int i;
+static Sublinkage * ex_create_sublinkage(Parse_info pi)
+{
 	Sublinkage *s = (Sublinkage *) exalloc (sizeof(Sublinkage));
 	s->link = (Link *) exalloc(pi->N_links*sizeof(Link));
-	s->pp_info = NULL;
-	s->violation = NULL;
-	for (i=0; i<pi->N_links; i++) s->link[i] = NULL;
 	s->num_links = pi->N_links;
+
+	zero_sublinkage(s);
+
 	assert(pi->N_links < MAX_LINKS, "Too many links");
 	return s;
 }
-
 
 static void free_sublinkage(Sublinkage *s)
 {
@@ -132,7 +140,8 @@ static void replace_link_name(Link l, const char *s)
 	l->name = t;
 }
 
-static void copy_full_link(Link *dest, Link src) {
+static void copy_full_link(Link *dest, Link src)
+{
 	if (*dest != NULL) exfree_link(*dest);
 	*dest = excopy_link(src);
 }
@@ -908,11 +917,13 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 }
 
 
-void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage) {
-  /* This procedure mimics analyze_fat_linkage in order to
-	 extract the sublinkages and copy them to the Linkage
-	 data structure passed in.
-	 */
+/**
+ * This procedure mimics analyze_fat_linkage in order to
+ * extract the sublinkages and copy them to the Linkage
+ * data structure passed in.
+ */
+void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
+{
 	int i, j, N_thin_links;
 	DIS_node *d_root;
 	int num_sublinkages;
@@ -955,6 +966,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage) {
 	linkage->sublinkage =
 		(Sublinkage *) exalloc(sizeof(Sublinkage)*num_sublinkages);
 	for (i=0; i<num_sublinkages; ++i) {
+		linkage->sublinkage[i].link = NULL;
 		linkage->sublinkage[i].pp_info = NULL;
 		linkage->sublinkage[i].violation = NULL;
 	}
