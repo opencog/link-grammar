@@ -811,13 +811,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
 		total = parse(sent, sent->null_count, opts);
+
+		/* Give up if the parse count is overflowing */
+		if ((1LL<<31) < total) break;
+
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
-
-		/* Give up if the parse count is overflowing */
-		if ((1LL<<31) < total) break;
 	}
 
 	free_table(sent);
@@ -833,10 +834,11 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 *
 ****************************************************************/
 
-Linkage linkage_create(int k, Sentence sent, Parse_Options opts) {
+Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
+{
 	Linkage linkage;
 
-	assert((k < sent->num_linkages_post_processed) && (k >= 0), "index out of range");
+	if ((k >= sent->num_linkages_post_processed) || (k < 0)) return NULL;
 
 	/* Using exalloc since this is external to the parser itself. */
 	linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
@@ -879,13 +881,16 @@ int linkage_set_current_sublinkage(Linkage linkage, int index) {
 	return 1;
 }
 
-static void exfree_pp_info(PP_info ppi) {
+static void exfree_pp_info(PP_info *ppi)
+{
 	int i;
-	for (i=0; i<ppi.num_domains; ++i) {
-		exfree(ppi.domain_name[i], strlen(ppi.domain_name[i])+1);
+	for (i=0; i<ppi->num_domains; ++i) {
+		exfree(ppi->domain_name[i], strlen(ppi->domain_name[i])+1);
 	}
-	if (ppi.num_domains > 0)
-		exfree(ppi.domain_name, sizeof(char *)*ppi.num_domains);
+	if (ppi->num_domains > 0)
+		exfree(ppi->domain_name, sizeof(char *)*ppi->num_domains);
+	ppi->domain_name = NULL;
+	ppi->num_domains = 0;
 }
 
 void linkage_delete(Linkage linkage)
@@ -893,21 +898,26 @@ void linkage_delete(Linkage linkage)
 	int i, j;
 	Sublinkage *s;
 
+	/* Can happen on panic timeout or user error */
+	if (NULL == linkage) return;
+
 	for (i=0; i<linkage->num_words; ++i) {
 		exfree((char *) linkage->word[i], strlen(linkage->word[i])+1);
 	}
 	exfree(linkage->word, sizeof(char *)*linkage->num_words);
-	for (i=0; i<linkage->num_sublinkages; ++i) {
+	for (i=0; i<linkage->num_sublinkages; ++i)
+	{
 		s = &(linkage->sublinkage[i]);
 		for (j=0; j<s->num_links; ++j) {
-		  exfree_link(s->link[j]);
+			exfree_link(s->link[j]);
 		}
 		exfree(s->link, sizeof(Link)*s->num_links);
 		if (s->pp_info != NULL) {
 			for (j=0; j<s->num_links; ++j) {
-				exfree_pp_info(s->pp_info[j]);
+				exfree_pp_info(&s->pp_info[j]);
 			}
 			exfree(s->pp_info, sizeof(PP_info)*s->num_links);
+			s->pp_info = NULL;
 			post_process_free_data(&s->pp_data);
 		}
 		if (s->violation != NULL) {
@@ -961,10 +971,12 @@ static Sublinkage unionize_linkage(Linkage linkage)
 		}
 	}
 
-	u.num_links = num_in_union;
 	u.link = (Link *) exalloc(sizeof(Link)*num_in_union);
+	zero_sublinkage(&u);
+
 	u.pp_info = (PP_info *) exalloc(sizeof(PP_info)*num_in_union);
 	u.violation = NULL;
+	u.num_links = num_in_union;
 
 	num_in_union = 0;
 
@@ -988,7 +1000,8 @@ static Sublinkage unionize_linkage(Linkage linkage)
 	return u;
 }
 
-int linkage_compute_union(Linkage linkage) {
+int linkage_compute_union(Linkage linkage)
+{
 	int i, num_subs=linkage->num_sublinkages;
 	Sublinkage * new_sublinkage;
 
@@ -1185,7 +1198,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 		subl = &linkage->sublinkage[i];
 		if (subl->pp_info != NULL) {
 			for (j=0; j<subl->num_links; ++j) {
-				exfree_pp_info(subl->pp_info[j]);
+				exfree_pp_info(&subl->pp_info[j]);
 			}
 			post_process_free_data(&subl->pp_data);
 			exfree(subl->pp_info, sizeof(PP_info)*subl->num_links);
