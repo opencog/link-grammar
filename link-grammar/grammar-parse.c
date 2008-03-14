@@ -82,9 +82,13 @@ static int fget_input_char(FILE *in, FILE *out, Parse_Options opts) {
 *
 **************************************************************************/
 
-static void process_linkage(Linkage linkage, Parse_Options opts) {
+static void process_linkage(Linkage linkage, Parse_Options opts)
+{
 	char * string;
-	int	j, mode, first_sublinkage;
+	int j, mode, first_sublinkage;
+	int nlink;
+
+	if (!linkage) return;  /* Can happen in timeout mode */
 
 	if (parse_options_get_display_union(opts)) {
 		linkage_compute_union(linkage);
@@ -94,7 +98,9 @@ static void process_linkage(Linkage linkage, Parse_Options opts) {
 		first_sublinkage = 0;
 	}
 
-	for (j=first_sublinkage; j<linkage_get_num_sublinkages(linkage); ++j) {
+	nlink = linkage_get_num_sublinkages(linkage);
+	for (j=first_sublinkage; j<nlink; ++j)
+	{
 		linkage_set_current_sublinkage(linkage, j);
 		if (parse_options_get_display_on(opts)) {
 			string = linkage_print_diagram(linkage);
@@ -238,7 +244,10 @@ static int there_was_an_error(Label label, Sentence sent, Parse_Options opts) {
 	return FALSE;
 }
 
-static void batch_process_some_linkages(Label label, Sentence sent, Parse_Options opts) {
+static void batch_process_some_linkages(Label label, 
+                                        Sentence sent,
+                                        Parse_Options opts)
+{
 	Linkage linkage;
 
 	if (there_was_an_error(label, sent, opts)) {
@@ -251,8 +260,8 @@ static void batch_process_some_linkages(Label label, Sentence sent, Parse_Option
 	}
 }
 
-static int special_command(char *input_string, Dictionary dict) {
-
+static int special_command(char *input_string, Dictionary dict)
+{
 	if (input_string[0] == '\n') return TRUE;
 	if (input_string[0] == COMMENT_CHAR) return TRUE;
 	if (input_string[0] == '!') {
