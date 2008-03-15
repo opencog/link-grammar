@@ -232,7 +232,7 @@ struct yy_buffer_state
 	int yy_is_our_buffer;
 
 	/* Whether this is an "interactive" input source; if so, and
-	 * if we're using stdio for input, then we want to use getc()
+	 * if we're using stdio for input, then we want to use getwc()
 	 * instead of fread(), to make sure we stop fetching input after
 	 * each newline.
 	 */
