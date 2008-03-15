@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <wchar.h>
+#include <wctype.h>
 #include <link-grammar/api.h>
 
 /*
@@ -88,12 +90,14 @@
 static int link_advance(Dictionary dict);
 static Dict_node * abridged_lookup_list(Dictionary dict, const char *s);
 
-static void dict_error(Dictionary dict, const char * s) {
+static void dict_error(Dictionary dict, const char * s)
+{
 	int i;
 	char tokens[1024], t[128];
 
 	tokens[0] = '\0';
-	for (i=0; i<5 && dict->token[0] != '\0' ; i++) {
+	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
+	{
 		sprintf(t, "\"%s\" ", dict->token);
 		strcat(tokens, t);
 		(void) link_advance(dict);
@@ -102,12 +106,14 @@ static void dict_error(Dictionary dict, const char * s) {
 			s, dict->line_number, tokens);
 }
 
-static void warning(Dictionary dict, const char * s) {
+static void warning(Dictionary dict, const char * s)
+{
 	printf("\nWarning: %s\n",s);
 	printf("line %d, current token = \"%s\"\n", dict->line_number, dict->token);
 }
 
-Exp * Exp_create(Dictionary dict) {
+Exp * Exp_create(Dictionary dict)
+{
 	/* allocate a new Exp node and link it into the
 	   exp_list for freeing later */
 	Exp * e;
@@ -117,16 +123,18 @@ Exp * Exp_create(Dictionary dict) {
 	return e;
 }
 
-static int get_character(Dictionary dict, int quote_mode) {
-/* This gets the next character from the input, eliminating comments.
-   If we're in quote mode, it does not consider the % character for
-   comments */
+/**
+ * This gets the next character from the input, eliminating comments.
+ * If we're in quote mode, it does not consider the % character for
+ * comments.
+ */
+static wint_t get_character(Dictionary dict, int quote_mode)
+{
+	wint_t c;
 
-	int c;
-
-	c = fgetc(dict->fp);
+	c = fgetwc(dict->fp);
 	if ((c == '%') && (!quote_mode)) {
-		while((c != EOF) && (c != '\n')) c = fgetc(dict->fp);
+		while((c != WEOF) && (c != '\n')) c = fgetwc(dict->fp);
 	}
 	if (c == '\n') dict->line_number++;
 	return c;
@@ -138,9 +146,13 @@ static int get_character(Dictionary dict, int quote_mode) {
 */
 #define SPECIAL "(){};[]&|:"
 
-static int link_advance(Dictionary dict) {
-   /* this reads the next token from the input into token */
-	int c, i;
+/**
+ * This reads the next token from the input into token.
+ */
+static int link_advance(Dictionary dict)
+{
+	wint_t c;
+	int i;
 	int quote_mode;
 
 	dict->is_special = FALSE;
@@ -157,13 +169,13 @@ static int link_advance(Dictionary dict) {
 		return 1;
 	}
 
-	do c=get_character(dict, FALSE); while (isspace(c));
+	do { c = get_character(dict, FALSE); } while (iswspace(c)); 
 
 	quote_mode = FALSE;
 
 	i = 0;
 	for (;;) {
-		if (i > MAX_TOKEN_LENGTH-1) {
+		if (i > MAX_TOKEN_LENGTH-3) {  /* 3 for multui-byte tokens */
 			dict_error(dict, "Token too long");
 			return 0;
 		}
@@ -173,15 +185,14 @@ static int link_advance(Dictionary dict) {
 				dict->token[i] = '\0';
 				return 1;
 			}
-			if (isspace(c)) {
+			if (iswspace(c)) {
 				dict_error(dict, "White space inside of token");
 				return 0;
 			}
-			dict->token[i] = c;
-			i++;
+			i += wctomb(&dict->token[i], c);
 		} else {
 			if (strchr(SPECIAL, c) != NULL) {
-				if (i==0) {
+				if (i == 0) {
 					dict->token[0] = c;
 					dict->token[1] = '\0';
 					dict->is_special = TRUE;
@@ -191,8 +202,8 @@ static int link_advance(Dictionary dict) {
 				dict->already_got_it = c;
 				return 1;
 			}
-			if (c==EOF) {
-				if (i==0) {
+			if (c == WEOF) {
+				if (i == 0) {
 					dict->token[0] = '\0';
 					return 1;
 				}
@@ -200,7 +211,7 @@ static int link_advance(Dictionary dict) {
 				dict->already_got_it = c;
 				return 1;
 			}
-			if (isspace(c)) {
+			if (iswspace(c)) {
 				dict->token[i] = '\0';
 				return 1;
 			}
@@ -216,9 +227,14 @@ static int link_advance(Dictionary dict) {
 	return 1;
 }
 
-static int is_equal(Dictionary dict, int c) {
-/* returns TRUE if this token is a special token and it is equal to c */
-	return (dict->is_special && c==dict->token[0] && dict->token[1] == '\0');
+/**
+ * Returns TRUE if this token is a special token and it is equal to c
+ */
+static int is_equal(Dictionary dict, wint_t c)
+{
+	return (dict->is_special && 
+	        wctob(c) == dict->token[0] && 
+	        dict->token[1] == '\0');
 }
 
 static int check_connector(Dictionary dict, const char * s) {
@@ -831,20 +847,24 @@ static int dict_match(const char * s, const char * t)
 	return (((*s == '.')?('\0'):(*s))  -  ((*t == '.')?('\0'):(*t)));
 }
 
-/* We need to prune out the lists thus generated.               */
-/* A sub string will only be considered a subscript if it       */
-/* followes the last "." in the word, and it does not begin     */
-/* with a digit.                                                */
-
+/**
+ * We need to prune out the lists thus generated. 
+ * A sub string will only be considered a subscript if it
+ * followes the last "." in the word, and it does not begin
+ * with a digit.
+ */
 static int true_dict_match(const char * s, const char * t)
 {
 	char *ds, *dt;
 	ds = strrchr(s, '.');
 	dt = strrchr(t, '.');
 
-	/* a dot at the end or a dot followed by a number is NOT considered a subscript */
-	if ((dt != NULL) && ((*(dt+1) == '\0') || (isdigit((int)*(dt+1))))) dt = NULL;
-	if ((ds != NULL) && ((*(ds+1) == '\0') || (isdigit((int)*(ds+1))))) ds = NULL;
+	/* a dot at the end or a dot followed by a number is NOT 
+	 * considered a subscript */
+	if ((dt != NULL) && ((*(dt+1) == '\0') || 
+	    (isdigit((int)*(dt+1))))) dt = NULL;
+	if ((ds != NULL) && ((*(ds+1) == '\0') ||
+	    (isdigit((int)*(ds+1))))) ds = NULL;
 
 	if (dt == NULL && ds != NULL) {
 		if (((int)strlen(t)) > (ds-s)) return FALSE;   /* we need to do this to ensure that */
