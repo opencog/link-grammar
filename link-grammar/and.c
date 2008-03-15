@@ -351,19 +351,25 @@ void initialize_conjunction_tables(Sentence sent) {
 	}
 }
 
-static int and_connector_hash(Connector * c, int i) {
-/* This hash function that takes a connector and a seed value i.
-   It only looks at the leading upper case letters of
-   the string, and the label.  This ensures that if two connectors
-   match, then they must hash to the same place.
-*/
+/**
+ * This hash function that takes a connector and a seed value i.
+ * It only looks at the leading upper case letters of
+ * the string, and the label.  This ensures that if two connectors
+ * match, then they must hash to the same place.
+ */
+static int and_connector_hash(Connector * c, int i)
+{
+	int nb;
 	const char * s;
 	s = c->string;
 
 	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
-	while(isupper((int)*s)) {
+	nb = is_utf8_upper(s);
+	while(nb)
+	{
 		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s++;
+		s += nb;
+		nb = is_utf8_upper(s);
 	}
 	return (i & (HT_SIZE-1));
 }
@@ -402,32 +408,44 @@ static int is_appropriate(Sentence sent, Disjunct * d) {
 	return TRUE;
 }
 
+/**
+ * Two connectors are said to be of the same type if they have
+ * the same label, and the initial upper case letters of their
+ * strings match.
+ */
 static int connector_types_equal(Connector * c1, Connector * c2)
 {
-/* Two connectors are said to be of the same type if they have
-   the same label, and the initial upper case letters of their
-   strings match.
-*/
-	const char * s, * t;
+	const char *s, *t;
+	wchar_t ws, wt;
+	int ns, nt;
+
 	if (c1->label != c2->label) return FALSE;
 	s = c1->string;
 	t = c2->string;
-	while(isupper((int)*s) || isupper((int)*t)) {
-		if (*s != *t) return FALSE;
-		s++;
-		t++;
+
+	ns = mbtowc(&ws, s, 4);
+	nt = mbtowc(&wt, s, 4);
+	while (iswupper(ws) || iswupper(wt))
+	{
+		if (ws != wt) return FALSE;
+		s += ns;
+		t += nt;
+		ns = mbtowc(&ws, s, 4);
+		nt = mbtowc(&wt, s, 4);
 	}
 	return TRUE;
 }
 
-static int disjunct_types_equal(Disjunct * d1, Disjunct * d2) {
-/* Two disjuncts are said to be the same type if they're the same
-   ignoring the multi fields, the priority fields, and the subscripts
-   of the connectors (and the string field of the disjunct of course).
-   Disjuncts of the same type are located in the same label_table list.
-
-   This returns TRUE if they are of the same type.
-*/
+/**
+ * Two disjuncts are said to be the same type if they're the same
+ * ignoring the multi fields, the priority fields, and the subscripts
+ * of the connectors (and the string field of the disjunct of course).
+ * Disjuncts of the same type are located in the same label_table list.
+ *
+ * This returns TRUE if they are of the same type.
+ */
+static int disjunct_types_equal(Disjunct * d1, Disjunct * d2)
+{
 	Connector *e1, *e2;
 
 	e1 = d1->left;
@@ -699,8 +717,9 @@ static void extract_all_fat_links(Sentence sent, Disjunct * d) {
 static char * stick_in_one_connector(char *s, Connector *c, int len)
 {
 	const char * t;
-	for (t = c->string; isupper((int)*t); t++)
-	  ;
+
+	t = skip_utf8_upper(c->string);
+
 	while (*t != '\0') {
 		*s++ = *t++;
 		len--;
@@ -714,15 +733,16 @@ static char * stick_in_one_connector(char *s, Connector *c, int len)
 	return s;
 }
 
-static void compute_matchers_for_a_label(Sentence sent, int k) {
-/* This takes a label k, modifies the list of disjuncts with that
-   label.  For each such disjunct, it computes the string that
-   will be used in the fat connector that represents it.
-
-   The only hard part is finding the length of each of the strings
-   so that "*" can be put in.  A better explanation will have to wait.
-*/
-
+/**
+ * This takes a label k, modifies the list of disjuncts with that
+ * label.  For each such disjunct, it computes the string that
+ * will be used in the fat connector that represents it.
+ *
+ * The only hard part is finding the length of each of the strings
+ * so that "*" can be put in.  A better explanation will have to wait.
+ */
+static void compute_matchers_for_a_label(Sentence sent, int k)
+{
 	int * lengths;
 	int N_connectors, i, j, tot_len;
 	Connector * c;
@@ -741,15 +761,14 @@ static void compute_matchers_for_a_label(Sentence sent, int k) {
 	while(d != NULL) {
 		i = 0;
 		for (c=d->left; c != NULL; c = c->next) {
-			cs = c->string;
-			while(isupper((int)*cs)) cs++;
+         cs = skip_utf8_upper(c->string);
 			j = strlen(cs);
 			if (j > lengths[i]) lengths[i] = j;
 			i++;
 		}
 		for (c=d->right; c != NULL; c = c->next) {
 			cs = c->string;
-			while(isupper((int)*cs)) cs++;
+			cs = skip_utf8_upper(cs);
 			j = strlen(cs);
 			if (j > lengths[i]) lengths[i] = j;
 			i++;

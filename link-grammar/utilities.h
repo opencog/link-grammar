@@ -13,6 +13,36 @@
 #ifndef _UTILITIESH_
 #define _UTILITIESH_
 
+#include <stdlib.h>
+#include <wchar.h>
+#include <wctype.h>
+
+static inline int is_utf8_upper(const char *s)
+{
+	wchar_t c;
+	int nbytes = mbtowc(&c, s, 4);
+	if (iswupper(c)) return nbytes;
+	return 0;
+}
+static inline int is_utf8_alpha(const char *s)
+{
+	wchar_t c;
+	int nbytes = mbtowc(&c, s, 4);
+	if (iswalpha(c)) return nbytes;
+	return 0;
+}
+
+static inline const char * skip_utf8_upper(const char * s)
+{
+	int nb = is_utf8_upper(s);
+	while (nb)
+	{
+		s += nb;
+		nb = is_utf8_upper(s);
+	}
+	return s;
+}
+
 void safe_strcpy(char *u, const char * v, int usize);
 void safe_strcat(char *u, const char *v, int usize);
 char *safe_strdup(const char *u);

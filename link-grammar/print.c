@@ -402,21 +402,24 @@ char * linkage_print_diagram(Linkage linkage)
             }
             s = ppla[j]->name;
             
-            if (opts->display_link_subscripts) {
-              if (!isalpha(*s))
-                s = "";
-            } else {
-              if (!isupper(*s)) {
-                s = "";   /* Don't print fat link connector name */
-              }
+            if (opts->display_link_subscripts)
+            {
+                if (!is_utf8_alpha(s))
+                  s = "";
+            }
+            else
+            {
+                if (!is_utf8_upper(s)) {
+                  s = "";   /* Don't print fat link connector name */
+                }
             }
             strncpy(connector, s, MAX_TOKEN_LENGTH-1);
             connector[MAX_TOKEN_LENGTH-1] = '\0';
             k=0;
             if (opts->display_link_subscripts)
-              k = strlen(connector);
+                k = strlen(connector);
             else
-              for (t=connector; isupper((int)*t); t++) k++; /* uppercase len of conn*/
+                for (t=connector; isupper((int)*t); t++) k++; /* uppercase len of conn*/
             if ((cl+cr-k)/2 + 1 <= cl) {
                 t = picture[row] + cl + 1;
             } else {
@@ -424,9 +427,9 @@ char * linkage_print_diagram(Linkage linkage)
             }
             s = connector;
             if (opts->display_link_subscripts)
-              while((*s != '\0') && (*t == '-')) *t++ = *s++; 
+                while((*s != '\0') && (*t == '-')) *t++ = *s++; 
             else
-              while(isupper((int)*s) && (*t == '-')) *t++ = *s++; 
+                while(isupper((int)*s) && (*t == '-')) *t++ = *s++; 
 
             /* now put in the | below this one, where needed */
             for (k=0; k<row; k++) {
