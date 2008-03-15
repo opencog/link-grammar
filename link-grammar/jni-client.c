@@ -106,14 +106,17 @@ static void jParse(char* inputString)
 	int jverbosity = parse_options_get_verbosity(opts);
 	if (sent)
 		sentence_delete(sent);
+
 	sent = sentence_create(inputString, dict);
 	num_linkages=0;
 
 	if (sent == NULL)
 		return;
 
-	if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
+	if (sentence_length(sent) > parse_options_get_max_sentence_length(opts))
+	{
 		sentence_delete(sent);
+		sent = NULL;
 		if (jverbosity > 0) {
 			fprintf(stdout,
 				"Sentence length (%d words) exceeds maximum allowable (%d words)\n",
@@ -149,7 +152,8 @@ static void jParse(char* inputString)
 
 	if ((num_linkages == 0) &&
 			parse_options_resources_exhausted(opts) &&
-			parse_options_get_panic_mode(opts)) {
+			parse_options_get_panic_mode(opts))
+	{
 		print_total_time(opts);
 		if (jverbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
 		parse_options_reset_resources(panic_parse_opts);
@@ -183,14 +187,26 @@ static void finish(void)
 {
 	if (sent)
 		sentence_delete(sent);
+	sent = NULL;
+
 #if DO_PHRASE_TREE
 	if (tree)
 		linkage_free_constituent_tree(tree);
+	tree = NULL;
 #endif
+
 	if (linkage)
 		linkage_delete(linkage);
+	linkage = NULL;
+
 	dictionary_delete(dict);
+	dict = NULL;
+
 	parse_options_delete(opts);
+	opts = NULL;
+
+	parse_options_delete(panic_parse_opts);
+	panic_parse_opts = NULL;
 }
 
 /* =========================================================================== */
