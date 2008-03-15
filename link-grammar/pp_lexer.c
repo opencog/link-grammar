@@ -1,15 +1,19 @@
-/********************************************************************************/
-/* Copyright (c) 2004                                                           */
-/* Daniel Sleator, David Temperley, and John Lafferty                           */
-/* All rights reserved                                                          */
-/*                                                                              */
-/* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */ 
-/* and also available at http://www.link.cs.cmu.edu/link/license.html           */
-/* This license allows free redistribution and use in source and binary         */
-/* forms, with or without modification, subject to certain conditions.          */
-/*                                                                              */
-/********************************************************************************/
+/*************************************************************************/
+/* Copyright (c) 2004                                                    */
+/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software,    */ 
+/* and also available at http://www.link.cs.cmu.edu/link/license.html    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
+
+#include <wchar.h>
+
+/* XXX the original flex source for this file is missing !! */
 
 /* I edited this file to eliminate compiler warnings.  I've documented here
    all the changes.  The .fl file from which this is derived is in
@@ -589,13 +593,13 @@ YY_MALLOC_DECL
 #define YY_INPUT(buf,result,max_size) \
 	if ( yy_current_buffer->yy_is_interactive ) \
 		{ \
-		int c = '*', n; \
+		wint_t c = '*', n; \
 		for ( n = 0; n < max_size && \
-			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
-			buf[n] = (char) c; \
+			     (c = fgetwc( yyin )) != WEOF && c != '\n'; ) \
+			n += wctomb(&buf[n], c); \
 		if ( c == '\n' ) \
-			buf[n++] = (char) c; \
-		if ( c == EOF && ferror( yyin ) ) \
+			buf[n++] = '\n'; \
+		if ( c == WEOF && ferror( yyin ) ) \
 			YY_FATAL_ERROR( "input in flex scanner failed" ); \
 		result = n; \
 		} \
