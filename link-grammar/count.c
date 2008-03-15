@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <wchar.h>
+#include <wctype.h>
 #include <link-grammar/api.h>
 
 /* This file contains the exhaustive search algorithm. */
@@ -20,10 +22,6 @@ static char ** effective_dist;
 static Word *  local_sent;
 static int	 null_block, islands_ok, null_links;
 static Resources current_resources;
-
-int x_match(Connector *a, Connector *b) {
-	return match(a, b, 0, 0);
-}
 
 void count_set_effective_distance(Sentence sent) {
 	effective_dist = sent->effective_dist;
@@ -46,10 +44,13 @@ void count_unset_effective_distance(Sentence sent) {
  * is different depending on which of the two priority cases is being
  * considered.  See the comments below. 
  */
-int match(Connector *a, Connector *b, int aw, int bw)
+int plu_match(Connector *a, Connector *b, int aw, int bw, int pluralize)
 {
 	const char *s, *t;
 	int x, y, dist;
+	wchar_t ws, wt;
+	int ns, nt;
+
 	if (a->label != b->label) return FALSE;
 	x = a->priority;
 	y = b->priority;
@@ -57,10 +58,15 @@ int match(Connector *a, Connector *b, int aw, int bw)
 	s = a->string;
 	t = b->string;
 
-	while(isupper((int)*s) || isupper((int)*t)) {
-		if (*s != *t) return FALSE;
-		s++;
-		t++;
+	ns = mbtowc(&ws, s, 4);
+	nt = mbtowc(&wt, s, 4);
+	while (iswupper(ws) || iswupper(wt))
+	{
+		if (ws != wt) return FALSE;
+		s += ns;
+		t += nt;
+		ns = mbtowc(&ws, s, 4);
+		nt = mbtowc(&wt, s, 4);
 	}
 
 	if (aw==0 && bw==0) {  /* probably not necessary, as long as effective_dist[0][0]=0 and is defined */
@@ -74,6 +80,32 @@ int match(Connector *a, Connector *b, int aw, int bw)
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
 	if ((x==THIN_priority) && (y==THIN_priority)) {
+#ifdef PLURALIZATION
+		if (pluralize) {
+			/* 
+			 * if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&  (*t=='p')) 
+			 *     return TRUE;
+			 *
+			 * The above is a kludge to stop pruning from killing off disjuncts
+			 * which (because of pluralization in and) might become valid later.
+			 * Recall that "and" converts a singular subject into a plural one.
+			 * The (*s=='p') part is so that "he and I are good" doesn't get 
+			 * killed off. The above hack is subsumed by the following one:
+			 */
+			if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&
+				((*t=='p') || (*t=='s')) &&
+				((s-1 == a->string) || ((s-2 == a->string) && (*(s-1) == 'I')))){
+				return TRUE;
+			}
+			/*
+			 * This change is to accommodate "nor".  In particular we need to
+			 * prevent "neither John nor I likes dogs" from being killed off.
+			 * We want to allow this to apply to "are neither a dog nor a cat here"
+			 * and "is neither a dog nor a cat here".  This uses the "SI" connector.
+			 * The third line above ensures that the connector is either "S" or "SI".
+			 */
+		}
+#endif /* PLURALIZATION */
 		/*
 		   Remember that "*" matches anything, and "^" matches nothing
 		   (except "*").  Otherwise two characters match if and only if
@@ -116,6 +148,16 @@ int match(Connector *a, Connector *b, int aw, int bw)
 		}
 		return TRUE;
 	} else return FALSE;
+}
+
+int match(Connector *a, Connector *b, int aw, int bw)
+{
+	return plu_match(a,b,aw,bw,0);
+}
+
+int x_match(Connector *a, Connector *b)
+{
+	return match(a, b, 0, 0);
 }
 
 typedef struct Table_connector_s Table_connector;
