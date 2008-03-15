@@ -13,7 +13,6 @@
 
 s64  table_lookup(int, int, Connector *, Connector *, int);
 int  match(Connector *a, Connector *b, int wa, int wb);
-int  plu_match(Connector *a, Connector *b, int wa, int wb, int);
 int  x_match(Connector *a, Connector *b);
 void init_table(Sentence sent);
 void free_table(Sentence sent);

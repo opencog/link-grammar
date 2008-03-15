@@ -63,6 +63,7 @@ static inline int utf8_upper_match(const char * s, const char * t)
 
 	ns = mbtowc(&ws, s, 4);
 	nt = mbtowc(&wt, s, 4);
+	if ((ns && !nt) || (!ns && nt)) return FALSE;
 	while (iswupper(ws) || iswupper(wt))
 	{
 		if (ws != wt) return FALSE;
@@ -70,6 +71,7 @@ static inline int utf8_upper_match(const char * s, const char * t)
 		t += nt;
 		ns = mbtowc(&ws, s, 4);
 		nt = mbtowc(&wt, s, 4);
+		if ((ns && !nt) || (!ns && nt)) return FALSE;
 	}
 	return TRUE;
 }

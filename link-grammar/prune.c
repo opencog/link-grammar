@@ -74,7 +74,90 @@ int x_prune_match(Connector *a, Connector *b) {
  */
 int prune_match(Connector *a, Connector *b, int aw, int bw)
 {
-	plu_match(a,b,aw,bw,1);
+	const char *s, *t;
+	int x, y, dist;
+	if (a->label != b->label) return FALSE;
+	x = a->priority;
+	y = b->priority;
+
+	s = a->string;
+	t = b->string;
+
+	while(isupper((int)*s) || isupper((int)*t)) {
+		if (*s != *t) return FALSE;
+		s++;
+		t++;
+	}
+
+
+	if (aw==0 && bw==0) {  /* probably not necessary, as long as effective_dist[0][0]=0 and is defined */
+		dist = 0;
+	} else {
+		assert(aw < bw, "prune_match() did not receive params in the natural order.");
+		dist = effective_dist[aw][bw];
+	}
+	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
+		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
+	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
+
+
+	if ((x==THIN_priority) && (y==THIN_priority)) {
+#if defined(PLURALIZATION)
+/*
+		if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&  (*t=='p')) {
+			return TRUE;
+		}
+*/
+/*
+   The above is a kludge to stop pruning from killing off disjuncts
+   which (because of pluralization in and) might become valid later.
+   Recall that "and" converts a singular subject into a plural one.
+   The (*s=='p') part is so that "he and I are good" doesn't get killed off.
+   The above hack is subsumed by the following one:
+*/
+		if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&
+			((*t=='p') || (*t=='s')) &&
+			((s-1 == a->string) || ((s-2 == a->string) && (*(s-1) == 'I')))){
+			return TRUE;
+		}
+/*
+   This change is to accommodate "nor".  In particular we need to
+   prevent "neither John nor I likes dogs" from being killed off.
+   We want to allow this to apply to "are neither a dog nor a cat here"
+   and "is neither a dog nor a cat here".  This uses the "SI" connector.
+   The third line above ensures that the connector is either "S" or "SI".
+*/
+#endif
+		while ((*s!='\0') && (*t!='\0')) {
+			if ((*s == '*') || (*t == '*') ||
+				((*s == *t) && (*s != '^'))) {
+			  /* this last case here is rather obscure.  It prevents
+				 '^' from matching '^'.....Is this necessary?
+					 ......yes, I think it is.   */
+				s++;
+				t++;
+			} else return FALSE;
+		}
+		return TRUE;
+	} else if ((x==UP_priority) && (y==DOWN_priority)) {
+		while ((*s!='\0') && (*t!='\0')) {
+			if ((*s == *t) || (*s == '*') || (*t == '^')) {
+				/* that '^' should match on the DOWN_priority
+				   node is subtle, but correct */
+				s++;
+				t++;
+			} else return FALSE;
+		}
+		return TRUE;
+	} else if ((y==UP_priority) && (x==DOWN_priority)) {
+		while ((*s!='\0') && (*t!='\0')) {
+			if ((*s == *t) || (*t == '*') || (*s == '^')) {
+				s++;
+				t++;
+			} else return FALSE;
+		}
+		return TRUE;
+	} else return FALSE;
 }
 
 static int s_table_size;
@@ -95,17 +178,21 @@ static void free_S(void) {
  * the connector string, and the label fields.  This ensures that if two
  * strings match (formally), then they must hash to the same place.
  */
-static inline int hash_S(Connector * c)
+static int hash_S(Connector * c)
 {
-	int i = connector_hash (c, 0);
+	const char *s;
+	int i;
+	i = c->label;
+	s = c->string;
+	while(isupper((int)*s)) {
+		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		s++;
+	}
 	return (i & (s_table_size-1));
 }
 
-/** 
- * This function puts a copy of c into S if one like it isn't already there.
- */
-static void insert_S(Connector * c)
-{
+static void insert_S(Connector * c) {
+/* this function puts a copy of c into S if one like it isn't already there */
 	int h;
 	Connector * e;
 
