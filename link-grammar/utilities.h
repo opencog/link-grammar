@@ -32,11 +32,28 @@ static inline int is_utf8_upper(const char *s)
 	if (iswupper(c)) return nbytes;
 	return 0;
 }
+
 static inline int is_utf8_alpha(const char *s)
 {
 	wchar_t c;
 	int nbytes = mbtowc(&c, s, 4);
 	if (iswalpha(c)) return nbytes;
+	return 0;
+}
+
+static inline int is_utf8_digit(const char *s)
+{
+	wchar_t c;
+	int nbytes = mbtowc(&c, s, 4);
+	if (iswdigit(c)) return nbytes;
+	return 0;
+}
+
+static inline int is_utf8_space(const char *s)
+{
+	wchar_t c;
+	int nbytes = mbtowc(&c, s, 4);
+	if (iswspace(c)) return nbytes;
 	return 0;
 }
 

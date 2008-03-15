@@ -19,33 +19,54 @@ int post_quote[MAX_SENTENCE];
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
 
-static int is_initials_word(const char * word) {
-	/* This is rather esoteric and not terribly important.
-	   It returns TRUE if the word matches the pattern /[A-Z]\.]+/
-	   */
-	int i;
-	for (i=0; word[i] != '\0'; i += 2) {
-		if (!isupper((int)word[i])) return FALSE;
-		if (word[i+1] != '.') return FALSE;
+/**
+ * This is rather esoteric and not terribly important.
+ * It returns TRUE if the word matches the pattern /[A-Z]\.]+/
+ */
+static int is_initials_word(const char * word)
+{
+	int i=0;
+	while (word[i])
+	{
+		int nb = is_utf8_upper(&word[i]);
+		if (!nb) return FALSE;
+		i += nb;
+		if (word[i] != '.') return FALSE;
+		i++;
 	}
 	return TRUE;
 }
 
-static int is_number(const char * s) {
-	if (!isdigit((int)*s)) return FALSE;
-	for (; *s != '\0'; s++) {
-		if (isdigit((int)*s) || (*s == '.') || (*s == ',') || (*s == ':')) continue;
-		/* The ":" is included here so we allow "10:30" to be a number. */
-		return FALSE;
+/**
+ * The ":" is included here so we allow "10:30" to be a number.
+ * We also allow U+00A0 "no-break space"
+ */
+static int is_number(const char * s)
+{
+	wchar_t c;
+	if (!is_utf8_digit(s)) return FALSE;
+
+	while (*s != 0)
+	{
+		int nb = mbtowc(&c, s, 4);
+		if (iswdigit(c)) { s += nb; }
+
+		/* U+00A0 no break space */
+		else if (0xa0 == c) { s += nb; }
+
+		else if ((*s == '.') || (*s == ',') || (*s == ':')) { s++; }
+		else return FALSE;
 	}
 	return TRUE;
 }
 
-static int ishyphenated(const char * s) {
-/* returns TRUE iff it's an appropriately formed hyphenated word.
-   This means all letters, numbers, or hyphens, not beginning and
-   ending with a hyphen.
-*/
+/**
+ * Returns TRUE iff it's an appropriately formed hyphenated word.
+ * This means all letters, numbers, or hyphens, not beginning and
+ * ending with a hyphen.
+ */
+static int ishyphenated(const char * s)
+{
 	int hyp, nonalpha;
 	hyp = nonalpha = 0;
 	if (*s == '-') return FALSE;
@@ -183,8 +204,10 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	 * parts.  The process is described above.  returns TRUE of OK, FALSE if
 	 * too many punctuation marks */
 	int i, j, k, l, len;
-	int r_strippable=0, l_strippable=0, s_strippable=0, p_strippable=0, n_r_stripped, s_stripped,
-	  word_is_in_dict, s_ok;
+	int r_strippable=0, l_strippable=0;
+	int s_strippable=0, p_strippable=0;
+	int  n_r_stripped, s_stripped;
+	int word_is_in_dict, s_ok;
 	int r_stripped[MAX_STRIP];  /* these were stripped from the right */
 	const char ** strip_left=NULL;
 	const char ** strip_right=NULL;
@@ -198,14 +221,15 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	const char * suf_con = "SUF";
 	const char * pre_con = "PRE";
 
-	if(sent->dict->affix_table!=NULL) {
-
+	if (sent->dict->affix_table!=NULL)
+	{
 		start_dn = list_whole_dictionary(sent->dict->affix_table->root, NULL);
-		for(dn=start_dn; dn!=NULL; dn=dn->right) {
-			if(word_has_connector(dn, rpunc_con, 0)) r_strippable++;
-			if(word_has_connector(dn, lpunc_con, 0)) l_strippable++;
-			if(word_has_connector(dn, suf_con, 0)) s_strippable++;
-			if(word_has_connector(dn, pre_con, 0)) p_strippable++;
+		for (dn = start_dn; dn != NULL; dn = dn->right)
+		{
+			if (word_has_connector(dn, rpunc_con, 0)) r_strippable++;
+			if (word_has_connector(dn, lpunc_con, 0)) l_strippable++;
+			if (word_has_connector(dn, suf_con, 0)) s_strippable++;
+			if (word_has_connector(dn, pre_con, 0)) p_strippable++;
 	  	}
 		strip_right = (const char **) xalloc(r_strippable * sizeof(char *));
 		strip_left = (const char **) xalloc(l_strippable * sizeof(char *));
@@ -216,8 +240,9 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 		j=0;
 		k=0;
 		l=0;
-		dn=start_dn;
-		while(dn!=NULL) {
+		dn = start_dn;
+		while (dn != NULL)
+		{
 			if(word_has_connector(dn, rpunc_con, 0)) {
 				strip_right[i] = dn->string;
 				i++;
@@ -394,12 +419,14 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	return TRUE;
 }
 
-int separate_sentence(char * s, Sentence sent) {
-	/* The string s has just been read in from standard input.
-	   This function breaks it up into words and stores these words in
-	   the sent->word[] array.  Returns TRUE if all is well, FALSE otherwise.
-	   Quote marks are treated just like blanks.
-	   */
+/**
+ * The string s has just been read in from standard input.
+ * This function breaks it up into words and stores these words in
+ * the sent->word[] array.  Returns TRUE if all is well, FALSE otherwise.
+ * Quote marks are treated just like blanks.
+ */
+int separate_sentence(char * s, Sentence sent)
+{
 	char *t;
 	int i, is_first, quote_found;
 	Dictionary dict = sent->dict;
@@ -411,14 +438,30 @@ int separate_sentence(char * s, Sentence sent) {
 		if (!issue_sentence_word(sent, LEFT_WALL_WORD)) return FALSE;
 
 	is_first = TRUE;
-	for(;;) {
+	for(;;) 
+	{
+		wchar_t c;
+		int nb = mbtowc(&c, s, 4);
 		quote_found = FALSE;
-		while(isspace((int)*s) || (*s == '\"')) {
-		  s++;
-		  if(*s == '\"') quote_found=TRUE;
+
+		/* skip all whitespace */
+		while (iswspace(c) || (c == '\"'))
+		{
+			s += nb;
+			if(*s == '\"') quote_found=TRUE;
+			nb = mbtowc(&c, s, 4);
 		}
+
 		if (*s == '\0') break;
-		for (t=s; !((isspace((int)*t) || (*t == '\"')) || *t=='\0'); t++);
+
+		t = s;
+		nb = mbtowc(&c, t, 4);
+		while (!iswspace(c) && (c != '\"') && (c != 0))
+		{
+			t += nb;
+			nb = mbtowc(&c, t, 4);
+		}
+
 		if (!separate_word(sent, s, t, is_first, quote_found)) return FALSE;
 		is_first = FALSE;
 		s = t;
@@ -630,7 +673,8 @@ int build_sentence_expressions(Sentence sent) {
    It has no side effect on the sentence.  Returns TRUE if all
    went well.
  */
-int sentence_in_dictionary(Sentence sent){
+int sentence_in_dictionary(Sentence sent)
+{
 	int w, ok_so_far;
 	char * s;
 	Dictionary dict = sent->dict;
