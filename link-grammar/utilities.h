@@ -81,7 +81,6 @@ void xfree(void *, int);
 void exfree(void *, int);
 void init_randtable(void);
 int  next_power_of_two_up(int);
-int  upper_case_match(const char *, const char *);
 void left_print_string(FILE* fp, const char *, const char *);
 
 void my_random_initialize(int seed);

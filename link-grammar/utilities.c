@@ -132,16 +132,6 @@ int next_power_of_two_up(int i) {
 	return j;
 }
 
-int upper_case_match(const char *s, const char *t) {
-/* returns TRUE if the initial upper case letters of s and t match */
-	while(isupper((int)*s) || isupper((int)*t)) {
-		if (*s != *t) return FALSE;
-		s++;
-		t++;
-	}
-	return (!isupper((int)*s) && !isupper((int)*t));
-}
-
 void left_print_string(FILE * fp, const char * s, const char * t) {
 /* prints s then prints the last |t|-|s| characters of t.
    if s is longer than t, it truncates s.
