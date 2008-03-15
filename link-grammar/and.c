@@ -415,25 +415,8 @@ static int is_appropriate(Sentence sent, Disjunct * d) {
  */
 static int connector_types_equal(Connector * c1, Connector * c2)
 {
-	const char *s, *t;
-	wchar_t ws, wt;
-	int ns, nt;
-
 	if (c1->label != c2->label) return FALSE;
-	s = c1->string;
-	t = c2->string;
-
-	ns = mbtowc(&ws, s, 4);
-	nt = mbtowc(&wt, s, 4);
-	while (iswupper(ws) || iswupper(wt))
-	{
-		if (ws != wt) return FALSE;
-		s += ns;
-		t += nt;
-		ns = mbtowc(&ws, s, 4);
-		nt = mbtowc(&wt, s, 4);
-	}
-	return TRUE;
+	return utf8_upper_match(c1->string, c2->string);
 }
 
 /**

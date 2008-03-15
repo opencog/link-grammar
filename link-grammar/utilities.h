@@ -17,6 +17,14 @@
 #include <wchar.h>
 #include <wctype.h>
 
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+
 static inline int is_utf8_upper(const char *s)
 {
 	wchar_t c;
@@ -41,6 +49,29 @@ static inline const char * skip_utf8_upper(const char * s)
 		nb = is_utf8_upper(s);
 	}
 	return s;
+}
+
+/**
+ * Return true if the intial upper-case letters of the
+ * two input strings match. Comparison stops when the 
+ * both srings descend to lowercase.
+ */
+static inline int utf8_upper_match(const char * s, const char * t)
+{
+	wchar_t ws, wt;
+	int ns, nt;
+
+	ns = mbtowc(&ws, s, 4);
+	nt = mbtowc(&wt, s, 4);
+	while (iswupper(ws) || iswupper(wt))
+	{
+		if (ws != wt) return FALSE;
+		s += ns;
+		t += nt;
+		ns = mbtowc(&ws, s, 4);
+		nt = mbtowc(&wt, s, 4);
+	}
+	return TRUE;
 }
 
 void safe_strcpy(char *u, const char * v, int usize);

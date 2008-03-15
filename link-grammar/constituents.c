@@ -1,15 +1,15 @@
-/********************************************************************************/
-/* Copyright (c) 2004                                                           */
-/* Daniel Sleator, David Temperley, and John Lafferty                           */
-/* All rights reserved                                                          */
-/*                                                                              */
-/* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */
-/* and also available at http://www.link.cs.cmu.edu/link/license.html           */
-/* This license allows free redistribution and use in source and binary         */
-/* forms, with or without modification, subject to certain conditions.          */
-/*                                                                              */
-/********************************************************************************/
+/*************************************************************************/
+/* Copyright (c) 2004                                                    */
+/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software,    */
+/* and also available at http://www.link.cs.cmu.edu/link/license.html    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
 
 #include <stdarg.h>
 #include <link-grammar/api.h>
@@ -60,19 +60,15 @@ static int  find_next_element(Linkage linkage,
 							  int num_elements,
 							  int num_lists);
 
-/*********************************************************/
-/*		These functions do the bulk of the actual	  */
-/* constituent-generating; they're called once for each  */
-/*					  sublinkage					   */
-/*********************************************************/
+/******************************************************
+ *        These functions do the bulk of the actual
+ * constituent-generating; they're called once for each
+ *                      sublinkage
+ *********************************************************/
 
-static int uppercompare(const char * s, const char * t) {
-  while(isupper((int) *s) || isupper((int) *t)) {
-	  if (*s != *t) return 1;
-	  s++;
-	  t++;
-  }
-  return 0;
+static inline int uppercompare(const char * s, const char * t)
+{
+	return (FALSE == utf8_upper_match(s,t));
 }
 
 static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
