@@ -95,21 +95,17 @@ static void free_S(void) {
  * the connector string, and the label fields.  This ensures that if two
  * strings match (formally), then they must hash to the same place.
  */
-static int hash_S(Connector * c)
+static inline int hash_S(Connector * c)
 {
-	const char *s;
-	int i;
-	i = c->label;
-	s = c->string;
-	while(isupper((int)*s)) {
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s++;
-	}
+	int i = connector_hash (c, 0);
 	return (i & (s_table_size-1));
 }
 
-static void insert_S(Connector * c) {
-/* this function puts a copy of c into S if one like it isn't already there */
+/** 
+ * This function puts a copy of c into S if one like it isn't already there.
+ */
+static void insert_S(Connector * c)
+{
 	int h;
 	Connector * e;
 

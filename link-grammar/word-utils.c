@@ -1,15 +1,15 @@
-/********************************************************************************/
-/* Copyright (c) 2004                                                           */
-/* Daniel Sleator, David Temperley, and John Lafferty                           */
-/* All rights reserved                                                          */
-/*                                                                              */
-/* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */
-/* and also available at http://www.link.cs.cmu.edu/link/license.html           */
-/* This license allows free redistribution and use in source and binary         */
-/* forms, with or without modification, subject to certain conditions.          */
-/*                                                                              */
-/********************************************************************************/
+/*************************************************************************/
+/* Copyright (c) 2004                                                    */
+/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software,    */
+/* and also available at http://www.link.cs.cmu.edu/link/license.html    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
 /*
  * Miscellaneous utilities for dealing with word types.
  */
@@ -17,6 +17,29 @@
 #include <link-grammar/api.h>
 #include "word-utils.h"
 #include <stdio.h>
+
+/**
+ * This hash function that takes a connector and a seed value i.
+ * It only looks at the leading upper case letters of
+ * the string, and the label.  This ensures that if two connectors
+ * match, then they must hash to the same place.
+ */
+int connector_hash(Connector * c, int i)
+{
+	int nb;
+	const char * s;
+	s = c->string;
+
+	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
+	nb = is_utf8_upper(s);
+	while(nb)
+	{
+		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		s += nb;
+		nb = is_utf8_upper(s);
+	}
+	return i;
+}
 
 /**
  * free_connectors() -- free the list of connectors pointed to by e

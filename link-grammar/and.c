@@ -359,23 +359,15 @@ void initialize_conjunction_tables(Sentence sent) {
  */
 static int and_connector_hash(Connector * c, int i)
 {
-	int nb;
-	const char * s;
-	s = c->string;
-
-	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
-	nb = is_utf8_upper(s);
-	while(nb)
-	{
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s += nb;
-		nb = is_utf8_upper(s);
-	}
+	i = connector_hash(c, i);
 	return (i & (HT_SIZE-1));
 }
 
-static int and_hash_disjunct(Disjunct *d) {
-/* This is a hash function for disjuncts */
+/**
+ * This is a hash function for disjuncts
+ */
+static int and_hash_disjunct(Disjunct *d)
+{
 	int i;
 	Connector *e;
 	i = 0;
