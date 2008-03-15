@@ -175,7 +175,8 @@ static int issue_sentence_word(Sentence sent, const char * s) {
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found) {
+static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found)
+{
 	/* w points to a string, wend points to the char one after the end.  The
 	 * "word" w contains no blanks.  This function splits up the word if
 	 * necessary, and calls "issue_sentence_word()" on each of the resulting
@@ -185,10 +186,10 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	int r_strippable=0, l_strippable=0, s_strippable=0, p_strippable=0, n_r_stripped, s_stripped,
 	  word_is_in_dict, s_ok;
 	int r_stripped[MAX_STRIP];  /* these were stripped from the right */
-	char ** strip_left=NULL;
-	char ** strip_right=NULL;
-	char ** prefix=NULL;
-	char ** suffix=NULL;
+	const char ** strip_left=NULL;
+	const char ** strip_right=NULL;
+	const char ** prefix=NULL;
+	const char ** suffix=NULL;
 	char word[MAX_WORD+1];
 	char newword[MAX_WORD+1];
 	Dict_node * dn, * dn2, * start_dn;
@@ -199,44 +200,44 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
 	if(sent->dict->affix_table!=NULL) {
 
-	  start_dn = list_whole_dictionary(sent->dict->affix_table->root, NULL);
-	  for(dn=start_dn; dn!=NULL; dn=dn->right) {
-		if(word_has_connector(dn, rpunc_con, 0)) r_strippable++;
-		if(word_has_connector(dn, lpunc_con, 0)) l_strippable++;
-		if(word_has_connector(dn, suf_con, 0)) s_strippable++;
-		if(word_has_connector(dn, pre_con, 0)) p_strippable++;
-	  }
-	  strip_right = (char **) xalloc(r_strippable * sizeof(char *));
-	  strip_left = (char **) xalloc(l_strippable * sizeof(char *));
-	  suffix = (char **) xalloc(s_strippable * sizeof(char *));
-	  prefix = (char **) xalloc(p_strippable * sizeof(char *));
+		start_dn = list_whole_dictionary(sent->dict->affix_table->root, NULL);
+		for(dn=start_dn; dn!=NULL; dn=dn->right) {
+			if(word_has_connector(dn, rpunc_con, 0)) r_strippable++;
+			if(word_has_connector(dn, lpunc_con, 0)) l_strippable++;
+			if(word_has_connector(dn, suf_con, 0)) s_strippable++;
+			if(word_has_connector(dn, pre_con, 0)) p_strippable++;
+	  	}
+		strip_right = (const char **) xalloc(r_strippable * sizeof(char *));
+		strip_left = (const char **) xalloc(l_strippable * sizeof(char *));
+		suffix = (const char **) xalloc(s_strippable * sizeof(char *));
+		prefix = (const char **) xalloc(p_strippable * sizeof(char *));
 
-	  i=0;
-	  j=0;
-	  k=0;
-	  l=0;
-	  dn=start_dn;
-	  while(dn!=NULL) {
-		if(word_has_connector(dn, rpunc_con, 0)) {
-		  strip_right[i] = dn->string;
-		  i++;
+		i=0;
+		j=0;
+		k=0;
+		l=0;
+		dn=start_dn;
+		while(dn!=NULL) {
+			if(word_has_connector(dn, rpunc_con, 0)) {
+				strip_right[i] = dn->string;
+				i++;
+			}
+			if(word_has_connector(dn, lpunc_con, 0)) {
+				strip_left[j] = dn->string;
+				j++;
+			}
+			if(word_has_connector(dn, suf_con, 0)) {
+				suffix[k] = dn->string;
+				k++;
+			}
+			if(word_has_connector(dn, pre_con, 0)) {
+				prefix[l] = dn->string;
+				l++;
+			}
+			dn2=dn->right;
+			xfree(dn, sizeof(Dict_node));
+			dn=dn2;
 		}
-		if(word_has_connector(dn, lpunc_con, 0)) {
-		  strip_left[j] = dn->string;
-		  j++;
-		}
-		if(word_has_connector(dn, suf_con, 0)) {
-		  suffix[k] = dn->string;
-		  k++;
-		}
-		if(word_has_connector(dn, pre_con, 0)) {
-		  prefix[l] = dn->string;
-		  l++;
-		}
-		dn2=dn->right;
-		xfree(dn, sizeof(Dict_node));
-		dn=dn2;
-	  }
 	}
 
 	for (;;) {

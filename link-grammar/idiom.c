@@ -101,7 +101,7 @@ static int max_postfix_found(Dict_node * d)
  * appropriate number.  x is the minimum number that distinguishes
  * this word from others in the dictionary.
  */
-static char * build_idiom_word_name(Dictionary dict, char * s)
+static char * build_idiom_word_name(Dictionary dict, const char * s)
 {
 	char * new_s, * x, *id;
 	int count, sz;
@@ -134,7 +134,7 @@ static char * build_idiom_word_name(Dictionary dict, char * s)
  * The list is reversed from the way they occur in the string.
  * A pointer to this list is returned.
  */
-static Dict_node * make_idiom_Dict_nodes(Dictionary dict, char * string)
+static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 {
 	Dict_node * dn, * dn_new;
 	char * t, *s, *p;
@@ -227,7 +227,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 {
 	Exp * nc, * no, * n1;
 	E_list *ell, *elr;
-	char * s;
+	const char * s;
 	int s_length;
 	Dict_node * dn_list, * xdn, * start_dn_list;
 

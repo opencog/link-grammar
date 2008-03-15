@@ -275,11 +275,13 @@ static void print_disjunct_list(Disjunct * c) {
 }
 #endif /* UNUSED_FUNCTION */
 
-static Connector * extract_connectors(Tconnector *e, int c) {
-/* Build a new list of connectors starting from the Tconnectors
-   in the list pointed to by e.  Keep only those whose strings whose
-   direction has the value c.
-*/
+/**
+ * Build a new list of connectors starting from the Tconnectors
+ * in the list pointed to by e.  Keep only those whose strings whose
+ * direction has the value c.
+ */
+static Connector * extract_connectors(Tconnector *e, int c)
+{
 	Connector *e1;
 	if (e == NULL) return NULL;
 	if (e->dir == c) {
@@ -296,10 +298,13 @@ static Connector * extract_connectors(Tconnector *e, int c) {
 	}
 }
 
-static Disjunct * build_disjunct(Clause * cl, char * string, int cost_cutoff) {
-/* build a disjunct list out of the clause list c */
-/* string is the print name of word that generated this disjunct */
-
+/**
+ * build a disjunct list out of the clause list c.
+ * string is the print name of word that generated this disjunct.
+ */
+static Disjunct * 
+build_disjunct(Clause * cl, const char * string, int cost_cutoff)
+{
 	Disjunct *dis, *ndis;
 	dis = NULL;
 	for (;cl != NULL; cl=cl->next) {
@@ -316,7 +321,8 @@ static Disjunct * build_disjunct(Clause * cl, char * string, int cost_cutoff) {
 	return dis;
 }
 
-static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff) {
+static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff)
+{
 	Clause *c ;
 	Disjunct * dis;
 	c = build_clause(x->exp, cost_cutoff);
@@ -325,7 +331,8 @@ static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff) {
 	return dis;
 }
 
-Disjunct * build_disjuncts_for_dict_node(Dict_node *dn) {
+Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
+{
 /* still need this for counting the number of disjuncts */
 	Clause *c ;
 	Disjunct * dis;
@@ -399,10 +406,12 @@ X_node * build_word_expressions(Sentence sent, const char * s)
 	return x;
 }
 
-void build_sentence_disjuncts(Sentence sent, int cost_cutoff) {
-/* We've already built the sentence expressions.  This turns them into
-   disjuncts.
-*/
+/**
+ * We've already built the sentence expressions.  This turns them into
+ * disjuncts.
+ */
+void build_sentence_disjuncts(Sentence sent, int cost_cutoff)
+{
 	Disjunct * d;
 	X_node * x;
 	int w;

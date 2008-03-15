@@ -236,8 +236,9 @@ struct Match_node_struct {
 
 typedef struct Exp_struct Exp;
 typedef struct X_node_struct X_node;
-struct X_node_struct {
-    char * string;  /* the word itself */
+struct X_node_struct
+{
+    const char * string;  /* the word itself */
     Exp * exp;
     X_node *next;
 };
@@ -294,8 +295,9 @@ struct Word_file_struct {
 /* the result of a dictionary lookup.                                     */
 
 typedef struct Dict_node_struct Dict_node;
-struct Dict_node_struct {
-    char      * string;  /* the word itself */
+struct Dict_node_struct
+{
+    const char * string;  /* the word itself */
     Word_file * file;    /* the file the word came from (NULL if dict file) */
     Exp       * exp;
     Dict_node *left, *right;

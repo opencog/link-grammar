@@ -13,10 +13,11 @@
 
 #include <link-grammar/api.h>
 
-/* Reads in one word from the file, allocates space for it,
- *  and returns it.
+/**
+ * Reads in one word from the file, allocates space for it,
+ * and returns it.
  */
-static char * get_a_word(Dictionary dict, FILE * fp)
+static const char * get_a_word(Dictionary dict, FILE * fp)
 {
 	char word[MAX_WORD+1];
 	char * s;
@@ -53,7 +54,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	Dict_node * dn_new;
 	Word_file * wf;
 	FILE * fp;
-	char * s;
+	const char * s;
 	char file_name_copy[MAX_PATH_NAME+1];
 
 	safe_strcpy(file_name_copy, filename+1, sizeof(file_name_copy)); /* get rid of leading '/' */
