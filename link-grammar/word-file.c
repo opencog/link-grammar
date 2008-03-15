@@ -11,6 +11,8 @@
 /*                                                                         */
 /***************************************************************************/
 
+#include <wchar.h>
+#include <wctype.h>
 #include <link-grammar/api.h>
 
 /**
@@ -19,20 +21,22 @@
  */
 static const char * get_a_word(Dictionary dict, FILE * fp)
 {
-	char word[MAX_WORD+1];
+	char word[MAX_WORD+4]; /* allow for 4-byte wide chars */
 	char * s;
-	int c, j;
+	wint_t c;
+	int j;
 	do {
-		c = getc(fp);
-	} while ((c != EOF) && isspace(c));
-	if (c == EOF) return NULL;
+		c = fgetwc(fp);
+	} while ((c != WEOF) && iswspace(c));
+	if (c == WEOF) return NULL;
 
-	for (j=0; (j <= MAX_WORD-1) && (!isspace(c)) && (c != EOF); j++) {
-		word[j] = c;
-		c = getc(fp);
+	for (j=0; (j <= MAX_WORD-1) && (!iswspace(c)) && (c != WEOF);)
+	{
+		j += wctomb(&word[j], c);
+		c = fgetwc(fp);
 	}
 
-	if (j == MAX_WORD) {
+	if (j >= MAX_WORD) {
 		error("The dictionary contains a word that is too long.");
 	}
 	word[j] = '\0';
