@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
 
 #include <link-grammar/link-includes.h>
 #include <link-grammar/structures.h>
@@ -60,23 +61,29 @@ typedef enum
 	NO_LABEL=' '
 } Label;
 
-static int fget_input_string(char *input_string, FILE *in, FILE *out,
-							 Parse_Options opts)
+static wint_t 
+fget_input_string(char *input_string, size_t maxlen,
+                  FILE *in, FILE *out, Parse_Options opts)
 {
-	if ((!parse_options_get_batch_mode(opts)) && (verbosity > 0)
-		&& (!input_pending)) fprintf(out, "linkparser> ");
-	fflush(out);
+	if ((!parse_options_get_batch_mode(opts)) && 
+	    (verbosity > 0) && 
+	    (!input_pending))
+	{
+		fprintf(out, "linkparser> ");
+		fflush(out);
+	}
 	input_pending = FALSE;
-	if (fgets(input_string, MAXINPUT, in)) return 1;
+
+	if (fgets(input_string, maxlen, in)) return 1;
 	else return 0;
 }
 
-static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
+static wint_t fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 {
 	if (!parse_options_get_batch_mode(opts) && (verbosity > 0))
 		fprintf(out, "linkparser> ");
 	fflush(out);
-	return getc(in);
+	return fgetwc(in);
 }
 
 /**************************************************************************
@@ -160,8 +167,10 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts) {
 }
 
 
-static void process_some_linkages(Sentence sent, Parse_Options opts) {
-	int i, c, num_displayed, num_to_query;
+static void process_some_linkages(Sentence sent, Parse_Options opts)
+{
+	wint_t c;
+	int i, num_displayed, num_to_query;
 	Linkage linkage;
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
@@ -222,8 +231,9 @@ static void process_some_linkages(Sentence sent, Parse_Options opts) {
 			if (verbosity > 0) {
 				fprintf(stdout, "Press RETURN for the next linkage.\n");
 			}
-			if ((c=fget_input_char(stdin, stdout, opts)) != '\n') {
-				ungetc(c, stdin);
+			if ((c = fget_input_char(stdin, stdout, opts)) != '\n')
+			{
+				ungetwc(c, stdin);
 				input_pending = TRUE;
 				break;
 			}
@@ -317,8 +327,8 @@ static void print_usage(char *str) {
 	exit(-1);
 }
 
-int main(int argc, char * argv[]) {
-
+int main(int argc, char * argv[])
+{
 	Dictionary      dict;
 	Sentence        sent;
 	const char     *language="en";  /* default to english, and not locale */
@@ -400,7 +410,7 @@ int main(int argc, char * argv[]) {
 
 	verbosity = parse_options_get_verbosity(opts);
 
-	while (fget_input_string(input_string, stdin, stdout, opts)) {
+	while (fget_input_string(input_string, MAXINPUT, stdin, stdout, opts)) {
 
 		if ((strcmp(input_string, "quit\n")==0) ||
 			(strcmp(input_string, "exit\n")==0)) break;
