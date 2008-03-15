@@ -98,9 +98,9 @@ void save_files(Dictionary dict)
 	for (wf = dict->word_file_header; wf != NULL; wf = wf->next) {
 		if (wf->changed) {
 			if ((fp = fopen(wf->file, "w")) == NULL) {
-			 printf("\nCannot open %s. Gee, this shouldn't happen.\n", wf->file);
-			 printf("file not saved\n");
-			 return;
+				printf("\nCannot open %s. Gee, this shouldn't happen.\n", wf->file);
+				printf("file not saved\n");
+				return;
 			}
 			printf("   saving file \"%s\"\n", wf->file);
 			/*output_dictionary(dict_root, fp, wf);*/
