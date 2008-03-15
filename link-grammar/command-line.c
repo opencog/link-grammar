@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <wchar.h>
+#include <wctype.h>
 #include <link-grammar/api.h>
 
 static struct {
@@ -73,32 +75,63 @@ struct {const char * s; const char * str;} user_command[] = {
 	{NULL,		   NULL}
 };
 
-static void clean_up_string(char * s) {
-	/* gets rid of all the white space in the string s.  Changes s */
+/**
+ *  Gets rid of all the white space in the string s.  Changes s
+ */
+static void clean_up_string(char * s)
+{
 	char * x, * y;
+	wchar_t p;
+	size_t len, w;
+	mbstate_t state;
+	memset (&state, 0, sizeof(mbstate_t));
+
+	len = strlen(s);
 	y = x = s;
-	while(*x != '\0') {
-		if (!isspace((int)*x)) {
-			*y = *x; x++; y++;
+	while(*x != '\0')
+	{
+		w = mbrtowc(&p, x, len, &state); 
+		if (0 == w) break;
+		len -= w;
+
+		if (!iswspace(p)) {
+			while(w) { *y = *x; x++; y++; w--; }
 		} else {
-			x++;
+			x += w;
 		}
 	}
 	*y = '\0';
 }
 
-static int is_numerical_rhs(char *s) {
-	/* return TRUE if s points to a number:
-	 optional + or - followed by 1 or more
-	 digits.
-	 */
+/** 
+ * Return TRUE if s points to a number:
+ * optional + or - followed by 1 or more
+ *	digits.
+ */
+static int is_numerical_rhs(char *s)
+{
+	wchar_t p;
+	size_t len, w;
+	mbstate_t state;
+	memset (&state, 0, sizeof(mbstate_t));
+
+	len = strlen(s);
+
 	if (*s=='+' || *s == '-') s++;
 	if (*s == '\0') return FALSE;
-	for (; *s != '\0'; s++) if (!isdigit((int)*s)) return FALSE;
+
+	for (; *s != '\0'; s+=w)
+	{
+		w = mbrtowc(&p, s, len, &state); 
+		if (0 == w) break;
+		len -= w;
+		if(!iswdigit(p)) return FALSE;
+	}
 	return TRUE;
 }
 
-static void x_issue_special_command(char * line, Parse_Options opts, Dictionary dict) {
+static void x_issue_special_command(char * line, Parse_Options opts, Dictionary dict)
+{
 	char *s, myline[1000], *x, *y;
 	int i, count, j, k;
 	Switch * as = default_switches;
@@ -142,12 +175,12 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 
 
 	if (strcmp(s, "variables")==0) {
-		printf(" Variable	 Controls									  Value\n");
-		printf(" --------	 --------									  -----\n");
+        printf(" Variable     Controls                                      Value\n");
+        printf(" --------     --------                                      -----\n");
 		for (i=0; as[i].string != NULL; i++) {
 			printf(" ");
-			left_print_string(stdout, as[i].string, "			 ");
-			left_print_string(stdout, as[i].description, "											  ");
+            left_print_string(stdout, as[i].string, "             ");
+            left_print_string(stdout, as[i].description, "                                              ");
 			printf("%5d", *as[i].p);
 			if (as[i].isboolean) {
 				if (*as[i].p) printf(" (On)"); else printf(" (Off)");
@@ -164,8 +197,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		printf("can be abbreviated.  Here is a list of the commands:\n\n");
 		for (i=0; user_command[i].s != NULL; i++) {
 			printf(" !");
-			left_print_string(stdout, user_command[i].s, "				  ");
-			left_print_string(stdout, user_command[i].str, "													");
+            left_print_string(stdout, user_command[i].s, "                  ");
+            left_print_string(stdout, user_command[i].str, "                                                    ");
 			printf("\n");
 		}
 		printf(" !!<string>		 Print all the dictionary words matching <string>.\n");
@@ -207,7 +240,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	printf("I can't interpret \"%s\" as a command.  Try \"!help\".\n", myline);
 }
 
-static void put_opts_in_local_vars(Parse_Options opts) {
+static void put_opts_in_local_vars(Parse_Options opts)
+{
 	local.verbosity = parse_options_get_verbosity(opts);
 	local.timeout = parse_options_get_max_parse_time(opts);;
 	local.memory = parse_options_get_max_memory(opts);;
@@ -231,7 +265,8 @@ static void put_opts_in_local_vars(Parse_Options opts) {
 	local.display_union = parse_options_get_display_union(opts);
 }
 
-static void put_local_vars_in_opts(Parse_Options opts) {
+static void put_local_vars_in_opts(Parse_Options opts)
+{
 	parse_options_set_verbosity(opts, local.verbosity);
 	parse_options_set_max_parse_time(opts, local.timeout);
 	parse_options_set_max_memory(opts, local.memory);
@@ -255,7 +290,8 @@ static void put_local_vars_in_opts(Parse_Options opts) {
 	parse_options_set_display_union(opts, local.display_union);
 }
 
-void issue_special_command(char * line, Parse_Options opts, Dictionary dict) {
+void issue_special_command(char * line, Parse_Options opts, Dictionary dict)
+{
 	put_opts_in_local_vars(opts);
 	x_issue_special_command(line, opts, dict);
 	put_local_vars_in_opts(opts);
