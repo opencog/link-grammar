@@ -67,29 +67,40 @@ static int is_number(const char * s)
  */
 static int ishyphenated(const char * s)
 {
+	wchar_t c;
 	int hyp, nonalpha;
 	hyp = nonalpha = 0;
+
 	if (*s == '-') return FALSE;
-	while (*s != '\0') {
-		if (!isalpha((int)*s) && !isdigit((int)*s) && (*s!='.') && (*s!=',')
+
+	while (*s != '\0')
+	{
+		int nb = mbtowc(&c, s, 4);
+
+		if (!iswalpha(c) && !iswdigit(c) && (*s!='.') && (*s!=',')
 			&& (*s!='-')) return FALSE;
 		if (*s == '-') hyp++;
-		s++;
+		s += nb;
 	}
 	return ((*(s-1)!='-') && (hyp>0));
 }
 
-static int is_ing_word(const char * s) {
-
+/** 
+ * The following four routines implement a cheap-hack morphology for
+ * English.
+ * XXX this is wrong for non-english
+ */
+static int is_ing_word(const char * s)
+{
 	int i=0;
 	for (; *s != '\0'; s++) i++;
-	if(i<5) return FALSE;
-	if(strncmp("ing", s-3, 3)==0) return TRUE;
+	if (i<5) return FALSE;
+	if (strncmp("ing", s-3, 3)==0) return TRUE;
 	return FALSE;
 }
 
-static int is_s_word(const char * s) {
-
+static int is_s_word(const char * s)
+{
 	for (; *s != '\0'; s++);
 	s--;
 	if(*s != 's') return FALSE;
@@ -98,27 +109,31 @@ static int is_s_word(const char * s) {
 	return TRUE;
 }
 
-static int is_ed_word(const char * s) {
-
+static int is_ed_word(const char * s)
+{
 	int i=0;
 	for (; *s != '\0'; s++) i++;
-	if(i<4) return FALSE;
-	if(strncmp("ed", s-2, 2)==0) return TRUE;
+	if (i<4) return FALSE;
+	if (strncmp("ed", s-2, 2)==0) return TRUE;
 	return FALSE;
 }
 
-static int is_ly_word(const char * s) {
-
+static int is_ly_word(const char * s)
+{
 	int i=0;
 	for (; *s != '\0'; s++) i++;
-	if(i<4) return FALSE;
-	if(strncmp("ly", s-2, 2)==0) return TRUE;
+	if (i<4) return FALSE;
+	if (strncmp("ly", s-2, 2)==0) return TRUE;
 	return FALSE;
 }
 
-static int issue_sentence_word(Sentence sent, const char * s) {
-	/* the string s is the next word of the sentence do not issue the empty
-	 * string.  return false if too many words or the word is too long.  */
+/** 
+ * The string s is the next word of the sentence. 
+ * Do not issue the empty string.  
+ * Return false if too many words or the word is too long. 
+ */
+static int issue_sentence_word(Sentence sent, const char * s)
+{
 	if (*s == '\0') return TRUE;
 	if (strlen(s) > MAX_WORD) {
 		lperror(SEPARATE,
@@ -131,11 +146,13 @@ static int issue_sentence_word(Sentence sent, const char * s) {
 		lperror(SEPARATE, ". The sentence has too many words.\n");
 		return FALSE;
 	}
+
 	strcpy(sent->word[sent->length].string, s);
+
 	/* Now we record whether the first character of the word is upper-case.
 	   (The first character may be made lower-case
 	   later, but we may want to get at the original version) */
-	if(isupper((int)s[0])) sent->word[sent->length].firstupper=1;
+	if (is_utf8_upper(s)) sent->word[sent->length].firstupper=1;
 	else sent->word[sent->length].firstupper = 0;
 	sent->length++;
 	return TRUE;
@@ -195,6 +212,32 @@ static int issue_sentence_word(Sentence sent, const char * s) {
 
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
+
+static int downcase_is_in_dict(Dictionary dict, char * word, int is_first_word)
+{
+	int i, rc;
+	char low[MB_CUR_MAX];
+	char save[MB_CUR_MAX];
+	wchar_t c;
+	int nbl, nbh;
+
+	if (!is_first_word || !is_utf8_upper(word)) return FALSE;
+
+	nbh = mbtowc (&c, word, 4);
+	c = towlower(c);
+	nbl = wctomb(low, c);
+	if (nbh != nbl)
+	{
+		fprintf(stderr, "Error: can't downcase multi-byte string!\n");
+		return FALSE;
+	}
+
+	for (i=0; i<nbh; i++) { save[i] = word[i]; word[i] = low[i]; }
+	rc = boolean_dictionary_lookup(dict, word);
+	for (i=0; i<nbh; i++) { word[i] = save[i]; }
+
+	return rc; 
+}
 
 static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found)
 {
@@ -276,53 +319,57 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 		if (i==l_strippable) break;
 	}
 
-	/* Now w points to the string starting just to the right of any left-stripped characters. */
-	/* stripped[] is an array of numbers, indicating the index numbers (in the strip_right array) of any
-	   strings stripped off; stripped[0] is the number of the first string stripped off, etc. When it
-	   breaks out of this loop, n_stripped will be the number of strings stripped off. */
-
-	for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) {
-
+	/* Now w points to the string starting just to the right of
+	 * any left-stripped characters.
+	 * stripped[] is an array of numbers, indicating the index
+	 * numbers (in the strip_right array) of any strings stripped off;
+	 * stripped[0] is the number of the first string stripped off, etc.
+	 * When it breaks out of this loop, n_stripped will be the number
+	 * of strings stripped off.
+	 */
+	for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+	{
 		strncpy(word, w, MIN(wend-w, MAX_WORD));
 		word[MIN(wend-w, MAX_WORD)] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
 		if (boolean_dictionary_lookup(sent->dict, word) || is_initials_word(word)) break;
-		if (is_first_word && isupper((int)word[0])) {
-		  /* This should happen if it's a word after a colon, also! */
-			word[0] = tolower(word[0]);
-			if (boolean_dictionary_lookup(sent->dict, word)) {
-				word[0] = toupper(word[0]);  /* restore word to what it was */
-				break;
-			}
-			word[0] = toupper(word[0]);
-		}
-		for (i=0; i < r_strippable; i++) {
+
+		/* This could happen if it's a word after a colon, also! */
+		if (downcase_is_in_dict (sent->dict, word, is_first_word)) break;
+
+		for (i=0; i < r_strippable; i++)
+		{
 			len = strlen(strip_right[i]);
-			if ((wend-w) < len) continue;  /* the remaining w is too short for a possible match */
+
+			/* the remaining w is too short for a possible match */
+			if ((wend-w) < len) continue;
 			if (strncmp(wend-len, strip_right[i], len) == 0) {
 				r_stripped[n_r_stripped] = i;
 				wend -= len;
 				break;
 			}
 		}
-		if(i==r_strippable) break;
+		if (i == r_strippable) break;
 	}
 
-	/* Now we strip off suffixes...w points to the remaining word, "wend" to the end of the word. */
+	/* Now we strip off suffixes...w points to the remaining word, 
+	 * "wend" to the end of the word. */
 
 	s_stripped = -1;
 	strncpy(word, w, MIN(wend-w, MAX_WORD));
 	word[MIN(wend-w, MAX_WORD)] = '\0';
 	word_is_in_dict=0;
 
-	if (boolean_dictionary_lookup(sent->dict, word) || is_initials_word(word)) word_is_in_dict=1;
-	if (is_first_word && isupper((int)word[0])) {
-	  word[0] = tolower(word[0]);
-	  if (boolean_dictionary_lookup(sent->dict, word)) word_is_in_dict=1;
-	  word[0] = toupper(word[0]);
-	}
-	if(word_is_in_dict==0) {
+	if (boolean_dictionary_lookup(sent->dict, word))
+		word_is_in_dict = 1;
+	else if (is_initials_word(word))
+		word_is_in_dict = 1;
+	else if (downcase_is_in_dict (sent->dict, word, is_first_word))
+		word_is_in_dict = 1;
+
+	if(word_is_in_dict==0)
+	{
 	  j=0;
 	  for (i=0; i < s_strippable+1; i++) {
 		s_ok = 0;
