@@ -53,12 +53,16 @@ static Parse_Options  opts;
 static Parse_Options  panic_parse_opts;
 static int verbosity = 0;
 
-typedef enum {UNGRAMMATICAL='*',
-			  PARSE_WITH_DISJUNCT_COST_GT_0=':',
-			  NO_LABEL=' '} Label;
+typedef enum
+{
+	UNGRAMMATICAL='*',
+	PARSE_WITH_DISJUNCT_COST_GT_0=':',
+	NO_LABEL=' '
+} Label;
 
 static int fget_input_string(char *input_string, FILE *in, FILE *out,
-							 Parse_Options opts) {
+							 Parse_Options opts)
+{
 	if ((!parse_options_get_batch_mode(opts)) && (verbosity > 0)
 		&& (!input_pending)) fprintf(out, "linkparser> ");
 	fflush(out);
@@ -67,9 +71,10 @@ static int fget_input_string(char *input_string, FILE *in, FILE *out,
 	else return 0;
 }
 
-static int fget_input_char(FILE *in, FILE *out, Parse_Options opts) {
+static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
+{
 	if (!parse_options_get_batch_mode(opts) && (verbosity > 0))
-	  fprintf(out, "linkparser> ");
+		fprintf(out, "linkparser> ");
 	fflush(out);
 	return getc(in);
 }
@@ -165,7 +170,7 @@ static void process_some_linkages(Sentence sent, Parse_Options opts) {
 	}
 	else {
 		num_to_query = MIN(sentence_num_linkages_post_processed(sent),
-						   DISPLAY_MAX);
+		                   DISPLAY_MAX);
 	}
 
 	for (i=0, num_displayed=0; i<num_to_query; ++i) {
@@ -178,33 +183,36 @@ static void process_some_linkages(Sentence sent, Parse_Options opts) {
 		linkage = linkage_create(i, sent, opts);
 
 		if (verbosity > 0) {
-		  if ((sentence_num_valid_linkages(sent) == 1) &&
-			  (!parse_options_get_display_bad(opts))) {
-			fprintf(stdout, "  Unique linkage, ");
-		  }
-		  else if ((parse_options_get_display_bad(opts)) &&
-				   (sentence_num_violations(sent, i) > 0)) {
-			fprintf(stdout, "  Linkage %d (bad), ", i+1);
-		  }
-		  else {
-			fprintf(stdout, "  Linkage %d, ", i+1);
-		  }
+			if ((sentence_num_valid_linkages(sent) == 1) &&
+				(!parse_options_get_display_bad(opts)))
+			{
+				fprintf(stdout, "	Unique linkage, ");
+			}
+			else if ((parse_options_get_display_bad(opts)) &&
+			         (sentence_num_violations(sent, i) > 0))
+			{
+				fprintf(stdout, "	Linkage %d (bad), ", i+1);
+			}
+			else
+			{
+				fprintf(stdout, "	Linkage %d, ", i+1);
+			}
 
-		  if (!linkage_is_canonical(linkage)) {
-			fprintf(stdout, "non-canonical, ");
-		  }
-		  if (linkage_is_improper(linkage)) {
-			fprintf(stdout, "improper fat linkage, ");
-		  }
-		  if (linkage_has_inconsistent_domains(linkage)) {
-			fprintf(stdout, "inconsistent domains, ");
-		  }
+			if (!linkage_is_canonical(linkage)) {
+				fprintf(stdout, "non-canonical, ");
+			}
+			if (linkage_is_improper(linkage)) {
+				fprintf(stdout, "improper fat linkage, ");
+			}
+			if (linkage_has_inconsistent_domains(linkage)) {
+				fprintf(stdout, "inconsistent domains, ");
+			}
 
-		  fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d AND=%d LEN=%d)\n",
-				  linkage_unused_word_cost(linkage),
-				  linkage_disjunct_cost(linkage),
-				  linkage_and_cost(linkage),
-				  linkage_link_cost(linkage));
+			fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d AND=%d LEN=%d)\n",
+			       linkage_unused_word_cost(linkage),
+			       linkage_disjunct_cost(linkage),
+			       linkage_and_cost(linkage),
+			       linkage_link_cost(linkage));
 		}
 
 		process_linkage(linkage, opts);
@@ -236,7 +244,7 @@ static int there_was_an_error(Label label, Sentence sent, Parse_Options opts) {
 			return PARSE_WITH_DISJUNCT_COST_GT_0;
 		}
 	} else {
-		if  (label != UNGRAMMATICAL) {
+		if (label != UNGRAMMATICAL) {
 			batch_errors++;
 			return UNGRAMMATICAL;
 		}
@@ -365,9 +373,9 @@ int main(int argc, char * argv[]) {
 	parse_options_set_short_length(opts, 10);
 
 	if(language && *language)
-	  dict = dictionary_create_lang(language);
+		dict = dictionary_create_lang(language);
 	else
-	  dict = dictionary_create_default_lang();
+		dict = dictionary_create_default_lang();
 
 	if (dict == NULL) {
 		fprintf(stderr, "%s\n", lperrmsg);
@@ -378,12 +386,15 @@ int main(int argc, char * argv[]) {
 	for (i=1; i<argc; i++) {
 		if ((strcmp("-pp", argv[i])==0) ||
 			(strcmp("-c", argv[i])==0) ||
-			(strcmp("-a", argv[i])==0)) {
-		  i++;
-		} else if ((argv[i][0] == '-') && (strcmp("-ppoff", argv[i])!=0) &&
-				   (argv[i][0] == '-') && (strcmp("-coff", argv[i])!=0) &&
-				   (argv[i][0] == '-') && (strcmp("-aoff", argv[i])!=0)) {
-		  issue_special_command(argv[i]+1, opts, dict);
+			(strcmp("-a", argv[i])==0))
+		{
+			i++;
+		}
+		else if ((argv[i][0] == '-') && (strcmp("-ppoff", argv[i])!=0) &&
+		         (argv[i][0] == '-') && (strcmp("-coff", argv[i])!=0) &&
+		         (argv[i][0] == '-') && (strcmp("-aoff", argv[i])!=0))
+		{
+			issue_special_command(argv[i]+1, opts, dict);
 		}
 	}
 
@@ -412,8 +423,8 @@ int main(int argc, char * argv[]) {
 		}
 		if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
 			if (verbosity > 0) {
-			  fprintf(stdout,
-					  "Sentence length (%d words) exceeds maximum allowable (%d words)\n",
+				fprintf(stdout,
+				       "Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 					sentence_length(sent), parse_options_get_max_sentence_length(opts));
 			}
 			sentence_delete(sent);
