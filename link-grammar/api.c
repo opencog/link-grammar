@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/api.h>
+#include "preparation.h"
 
 /***************************************************************
 *
@@ -19,11 +20,8 @@
 *
 ****************************************************************/
 
-void		  free_sentence_disjuncts(Sentence sent);
-void		  free_post_processing(Sentence sent);
-
-
-static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2) {
+static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
+{
 	/* for sorting the linkages in postprocessing */
 	if (p1->N_violations != p2->N_violations) {
 		return (p1->N_violations - p2->N_violations);
@@ -546,21 +544,6 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	return sent;
 }
 
-void sentence_delete(Sentence sent) 
-{
-	/* free_andlists(sent); */
-	free_sentence_disjuncts(sent);
-	free_sentence_expressions(sent);
-	string_set_delete(sent->string_set);
-	free_parse_set(sent);
-	free_post_processing(sent);
-	post_process_close_sentence(sent->dict->postprocessor);
-	free_deletable(sent);
-	free_effective_dist(sent);
-	xfree(sent->is_conjunction, sizeof(char)*sent->length);
-	xfree((char *) sent, sizeof(struct Sentence_s));
-}
-
 static void free_andlists(Sentence sent) 
 {
 	int L;
@@ -577,6 +560,31 @@ static void free_andlists(Sentence sent)
 		}
 	}
 	/* printf("\n"); */
+}
+
+static void free_post_processing(Sentence sent)
+{
+	if (sent->link_info != NULL) {
+		/* postprocessing must have been done */
+		free_andlists(sent);
+		xfree((char *) sent->link_info, sent->num_linkages_alloced*sizeof(Linkage_info));
+		sent->link_info = NULL;
+	}
+}
+
+void sentence_delete(Sentence sent) 
+{
+	/* free_andlists(sent); */
+	free_sentence_disjuncts(sent);
+	free_sentence_expressions(sent);
+	string_set_delete(sent->string_set);
+	free_parse_set(sent);
+	free_post_processing(sent);
+	post_process_close_sentence(sent->dict->postprocessor);
+	free_deletable(sent);
+	free_effective_dist(sent);
+	xfree(sent->is_conjunction, sizeof(char)*sent->length);
+	xfree((char *) sent, sizeof(struct Sentence_s));
 }
 
 int sentence_length(Sentence sent)
@@ -768,16 +776,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	xfree(indices, N_linkages_alloced * sizeof(int));
 	/*if(N_valid_linkages == 0) free_andlists(sent); */
-}
-
-void free_post_processing(Sentence sent)
-{
-	if (sent->link_info != NULL) {
-		/* postprocessing must have been done */
-		free_andlists(sent);
-		xfree((char *) sent->link_info, sent->num_linkages_alloced*sizeof(Linkage_info));
-		sent->link_info = NULL;
-	}
 }
 
 int sentence_parse(Sentence sent, Parse_Options opts)
