@@ -493,20 +493,9 @@ int connector_matches_alam(Connector * a, Connector * b) {
 	return (*s == '\0');
 }
 
-int connector_hash(Connector * c, int i) {
-/* This hash function that takes a connector and a seed value i.
-   It only looks at the leading upper case letters of
-   the string, and the label.  This ensures that if two connectors
-   match, then they must hash to the same place.
-*/
-	char * s;
-	s = c->string;
-
-	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
-	while(isupper(*s)) {
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s++;
-	}
+static inline int pconnector_hash(Connector * c, int i)
+{
+	i = connector_hash(c, i);
 	return (i & (dup_table_size-1));
 }
 
@@ -516,10 +505,10 @@ int hash_disjunct(Disjunct * d) {
 	Connector *e;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i = connector_hash(e, i);
+		i = pconnector_hash(e, i);
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i = connector_hash(e, i);
+		i = pconnector_hash(e, i);
 	}
 	return string_hash(d->string, i);
 }
