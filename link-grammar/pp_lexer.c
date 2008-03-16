@@ -593,7 +593,8 @@ YY_MALLOC_DECL
 #define YY_INPUT(buf,result,max_size) \
 	if ( yy_current_buffer->yy_is_interactive ) \
 		{ \
-		wint_t c = '*', n; \
+		wint_t c = '*'; \
+		int n; \
 		for ( n = 0; n < max_size && \
 			     (c = fgetwc( yyin )) != WEOF && c != '\n'; ) \
 			n += wctomb(&buf[n], c); \
