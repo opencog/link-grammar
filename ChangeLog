@@ -4,6 +4,7 @@ Version 4.3.4 includes the following changes:
  * Fix rare but nasty crash when parsing long sentences in panic mode.
  * Add a method to set the dictionary path.
  * Fix all remaining compiler warnings.
+ * Make parser capable of handling UTF8 strings and dictionaries.
  * Ongoing minor expansion of the Lithuanian (lt) dictionary.
 
 Version 4.3.3 includes the following changes:
