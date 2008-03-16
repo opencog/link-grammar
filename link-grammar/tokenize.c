@@ -213,29 +213,6 @@ static int issue_sentence_word(Sentence sent, const char * s)
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-static void downcase_str(char *to, const char * from)
-{
-	wchar_t c;
-	int i, nbl, nbh;
-	char low[MB_CUR_MAX];
-
-	nbh = mbtowc (&c, from, 4);
-	c = towlower(c);
-	nbl = wctomb(low, c);
-	if ((nbh < nbl) && (to == from))
-	{
-		fprintf(stderr, "Error: can't downcase multi-byte string!\n");
-		return;
-	}
-
-	/* Downcase */
-	for (i=0; i<nbl; i++) { to[i] = low[i]; }
-
-	from += nbh;
-	to += nbl;
-	safe_strcpy(to, from, MAX_WORD-nbl);
-}
-
 static int downcase_is_in_dict(Dictionary dict, char * word)
 {
 	int i, rc;
@@ -724,7 +701,7 @@ int build_sentence_expressions(Sentence sent)
 
 		if (is_utf8_upper(s))
 		{
-			downcase_str(temp_word, s);
+			downcase_utf8_str(temp_word, s, MAX_WORD);
 			u = string_set_add(temp_word, sent->string_set);
 
 			/* If the lower-case version is in the dictionary... */

@@ -44,18 +44,87 @@ char *safe_strdup(const char *u)
 	return NULL;
 }
 
-void safe_strcpy(char *u, const char * v, int usize) {
-/* Copies as much of v into u as it can assuming u is of size usize */
-/* guaranteed to terminate u with a '\0'.						   */
+/**
+ * Copies as much of v into u as it can assuming u is of size usize
+ * guaranteed to terminate u with a '\0'.
+ */
+void safe_strcpy(char *u, const char * v, size_t usize)
+{
 	strncpy(u, v, usize-1);
 	u[usize-1] = '\0';
 }
 
-void safe_strcat(char *u, const char *v, int usize) {
-/* catenates as much of v onto u as it can assuming u is of size usize		   */
-/* guaranteed to terminate u with a '\0'.  Assumes u and v are null terminated.  */
+/**
+ * Catenates as much of v onto u as it can assuming u is of size usize
+ * guaranteed to terminate u with a '\0'.  Assumes u and v are null
+ * terminated.
+ */
+void safe_strcat(char *u, const char *v, size_t usize)
+{
 	strncat(u, v, usize-strlen(u)-1);
 	u[usize-1] = '\0';
+}
+
+/**
+ * Downcase the first letter of the word.
+ */
+void downcase_utf8_str(char *to, const char * from, size_t usize)
+{
+	wchar_t c;
+	int i, nbl, nbh;
+	char low[MB_CUR_MAX];
+
+	nbh = mbtowc (&c, from, 4);
+	c = towlower(c);
+	nbl = wctomb(low, c);
+
+	/* Check for error on an in-place copy */
+	if ((nbh < nbl) && (to == from))
+	{
+		/* I'm to lazy to fix this */
+		fprintf(stderr, "Error: can't downcase multi-byte string!\n");
+		return;
+	}
+
+	/* Downcase */
+	for (i=0; i<nbl; i++) { to[i] = low[i]; }
+
+	if ((nbh == nbl) && (to == from)) return;
+
+	from += nbh;
+	to += nbl;
+	safe_strcpy(to, from, usize-nbl);
+}
+
+/**
+ * Upcase the first letter of the word.
+ */
+void upcase_utf8_str(char *to, const char * from, size_t usize)
+{
+	wchar_t c;
+	int i, nbl, nbh;
+	char low[MB_CUR_MAX];
+
+	nbh = mbtowc (&c, from, 4);
+	c = towupper(c);
+	nbl = wctomb(low, c);
+
+	/* Check for error on an in-place copy */
+	if ((nbh < nbl) && (to == from))
+	{
+		/* I'm to lazy to fix this */
+		fprintf(stderr, "Error: can't upcase multi-byte string!\n");
+		return;
+	}
+
+	/* Upcase */
+	for (i=0; i<nbl; i++) { to[i] = low[i]; }
+
+	if ((nbh == nbl) && (to == from)) return;
+
+	from += nbh;
+	to += nbl;
+	safe_strcpy(to, from, usize-nbl);
 }
 
 unsigned int randtable[RTSIZE];

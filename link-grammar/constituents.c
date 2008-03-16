@@ -1247,7 +1247,7 @@ static char * exprint_constituent_structure(Linkage linkage, int numcon_total) {
 			/* Now, if the first character of the word was
 			   originally uppercase, we put it back that way */
 			if (sent->word[w].firstupper ==1 )
-				s[0]=toupper(s[0]);
+				upcase_utf8_str(s, s, MAX_WORD);
 			append_string(cs, "%s ", s);
 		}
 

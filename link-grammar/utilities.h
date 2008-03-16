@@ -93,9 +93,13 @@ static inline int utf8_upper_match(const char * s, const char * t)
 	return TRUE;
 }
 
-void safe_strcpy(char *u, const char * v, int usize);
-void safe_strcat(char *u, const char *v, int usize);
+void downcase_utf8_str(char *to, const char * from, size_t usize);
+void upcase_utf8_str(char *to, const char * from, size_t usize);
+
+void safe_strcpy(char *u, const char * v, size_t usize);
+void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
+
 void xfree(void *, int);
 void exfree(void *, int);
 void init_randtable(void);
