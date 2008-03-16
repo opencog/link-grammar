@@ -772,17 +772,19 @@ int sentence_in_dictionary(Sentence sent)
 	char temp[1024];
 
 	ok_so_far = TRUE;
-	for (w=0; w<sent->length; w++) {
+	for (w=0; w<sent->length; w++)
+	{
 		s = sent->word[w].string;
 		if (!boolean_dictionary_lookup(dict, s) &&
-			!(isupper((int)s[0])   && dict->capitalized_word_defined) &&
-			!(isupper((int)s[0]) && is_s_word(s) && dict->pl_capitalized_word_defined) &&
-			!(ishyphenated(s) && dict->hyphenated_word_defined)  &&
-			!(is_number(s)	&& dict->number_word_defined) &&
-			!(is_ing_word(s)  && dict->ing_word_defined)  &&
-			!(is_s_word(s)	&& dict->s_word_defined)  &&
-			!(is_ed_word(s)   && dict->ed_word_defined)  &&
-			!(is_ly_word(s)   && dict->ly_word_defined)) {
+		    !(is_utf8_upper(s)   && dict->capitalized_word_defined) &&
+		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) &&
+		    !(ishyphenated(s) && dict->hyphenated_word_defined)  &&
+		    !(is_number(s)	&& dict->number_word_defined) &&
+		    !(is_ing_word(s)  && dict->ing_word_defined)  &&
+		    !(is_s_word(s)	&& dict->s_word_defined)  &&
+		    !(is_ed_word(s)   && dict->ed_word_defined)  &&
+		    !(is_ly_word(s)   && dict->ly_word_defined))
+		{
 			if (ok_so_far) {
 				safe_strcpy(temp, "The following words are not in the dictionary:", sizeof(temp));
 				ok_so_far = FALSE;
