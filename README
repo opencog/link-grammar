@@ -43,6 +43,28 @@ CONTENTS of this directory:
 
    configure                The GNU configuration script
 
+UNPACKING and signature verification:
+
+   The system is distributed using the normal tar.gz format; it can be
+   extracted using the "tar -zxf link-grammar.tar.gz" command at the
+   command line.
+
+   The files have been digitally signed to make sure that there was no 
+   corruption of the dataset during download, and to help ensure that
+   no malicious changes were made to the code internals by third
+   parties. The signatures can be checked with the gpg command:
+
+   gpg --verify link-grammar-4.3.4.tar.gz.asc
+
+   which should generate output identical to (except for the date):
+
+   gpg: Signature made Tue Feb 26 19:41:07 2008 CST using RSA key ID C0389241
+   gpg: Good signature from "Linas Vepstas (current active email; others are inactive) <linasvepstas@gmail.com>"
+
+   Alternately, the md5 checksums can be verified. These do not provide
+   cryptographic security, but they can detect simple corruption. To
+   verify the checksums, issue "md5sum -c MD5SUM" at the command line.
+
 CREATING the system:
 
    To compile the link-grammar shared library and demonstration program, 
