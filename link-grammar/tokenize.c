@@ -213,7 +213,30 @@ static int issue_sentence_word(Sentence sent, const char * s)
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-static int downcase_is_in_dict(Dictionary dict, char * word, int is_first_word)
+static void downcase_str(char *to, const char * from)
+{
+	wchar_t c;
+	int i, nbl, nbh;
+	char low[MB_CUR_MAX];
+
+	nbh = mbtowc (&c, from, 4);
+	c = towlower(c);
+	nbl = wctomb(low, c);
+	if ((nbh < nbl) && (to == from))
+	{
+		fprintf(stderr, "Error: can't downcase multi-byte string!\n");
+		return;
+	}
+
+	/* Downcase */
+	for (i=0; i<nbl; i++) { to[i] = low[i]; }
+
+	from += nbh;
+	to += nbl;
+	safe_strcpy(to, from, MAX_WORD-nbl);
+}
+
+static int downcase_is_in_dict(Dictionary dict, char * word)
 {
 	int i, rc;
 	char low[MB_CUR_MAX];
@@ -221,7 +244,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word, int is_first_word)
 	wchar_t c;
 	int nbl, nbh;
 
-	if (!is_first_word || !is_utf8_upper(word)) return FALSE;
+	if (!is_utf8_upper(word)) return FALSE;
 
 	nbh = mbtowc (&c, word, 4);
 	c = towlower(c);
@@ -232,7 +255,10 @@ static int downcase_is_in_dict(Dictionary dict, char * word, int is_first_word)
 		return FALSE;
 	}
 
-	for (i=0; i<nbh; i++) { save[i] = word[i]; word[i] = low[i]; }
+	/* Downcase */
+	for (i=0; i<nbl; i++) { save[i] = word[i]; word[i] = low[i]; }
+
+	/* Look it up, then restore old value */
 	rc = boolean_dictionary_lookup(dict, word);
 	for (i=0; i<nbh; i++) { word[i] = save[i]; }
 
@@ -336,7 +362,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 		if (boolean_dictionary_lookup(sent->dict, word) || is_initials_word(word)) break;
 
 		/* This could happen if it's a word after a colon, also! */
-		if (downcase_is_in_dict (sent->dict, word, is_first_word)) break;
+		if (is_first_word && downcase_is_in_dict (sent->dict, word)) break;
 
 		for (i=0; i < r_strippable; i++)
 		{
@@ -365,7 +391,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 		word_is_in_dict = 1;
 	else if (is_initials_word(word))
 		word_is_in_dict = 1;
-	else if (downcase_is_in_dict (sent->dict, word, is_first_word))
+	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
 		word_is_in_dict = 1;
 
 	if(word_is_in_dict==0)
@@ -373,30 +399,36 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	  j=0;
 	  for (i=0; i < s_strippable+1; i++) {
 		s_ok = 0;
-		/* Go through once for each suffix; then go through one final time for the no-suffix case */
+		/* Go through once for each suffix; then go through one 
+		 * final time for the no-suffix case */
 		if(i < s_strippable) {
 		  len = strlen(suffix[i]);
-		  if ((wend-w) < len) continue;  /* the remaining w is too short for a possible match */
+
+		  /* the remaining w is too short for a possible match */
+		  if ((wend-w) < len) continue;
+
 		  if (strncmp(wend-len, suffix[i], len) == 0) s_ok=1;
 				  }
 		else len=0;
 
-		if(s_ok==1 || i==s_strippable) {
+		if(s_ok==1 || i==s_strippable)
+		{
+			strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
+			newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
 
-		  strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
-		  newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
+			/* Check if the remainder is in the dictionary;
+			 * for the no-suffix case, it won't be */
+			if (boolean_dictionary_lookup(sent->dict, newword)) {
+				if(verbosity>1) if(i< s_strippable) printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
+				s_stripped = i;
+				wend -= len;
+				strncpy(word, w, MIN(wend-w, MAX_WORD));
+				word[MIN(wend-w, MAX_WORD)] = '\0';
+				break;
+			}
 
-		  /* Check if the remainder is in the dictionary; for the no-suffix case, it won't be */
-		  if (boolean_dictionary_lookup(sent->dict, newword)) {
-			if(verbosity>1) if(i< s_strippable) printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
-			s_stripped = i;
-			wend -= len;
-			strncpy(word, w, MIN(wend-w, MAX_WORD));
-			word[MIN(wend-w, MAX_WORD)] = '\0';
-			break;
-		  }
-
-		  /* If the remainder isn't in the dictionary, try stripping off prefixes */
+			/* If the remainder isn't in the dictionary, 
+			 * try stripping off prefixes */
 		  else {
 			for (j=0; j<p_strippable; j++) {
 			  if (strncmp(w, prefix[j], strlen(prefix[j])) == 0) {
@@ -616,28 +648,29 @@ static void handle_unknown_word(Sentence sent, int i, char * s) {
 	}
 }
 
-int build_sentence_expressions(Sentence sent) {
-	/* Corrects case of first word, fills in other proper nouns, and
-	   builds the expression lists for the resulting words.
-
-	   Algorithm:
-	   Apply the following step to all words w:
-	   if w is in the dictionary, use it.
-	   else if w is upper case use PROPER_WORD disjuncts for w.
-	   else if it's hyphenated, use HYPHENATED_WORD
-	   else if it's a number, use NUMBER_WORD.
-
-	   Now, we correct the first word, w.
-	   if w is upper case, let w' be the lower case version of w.
-	   if both w and w' are in the dict, concatenate these disjncts.
-	   else if w' is in dict, use disjuncts of w'
-	   else leave the disjuncts alone
-	   */
+/**
+ * Corrects case of first word, fills in other proper nouns, and
+ * builds the expression lists for the resulting words.
+ *
+ * Algorithm:
+ * Apply the following step to all words w:
+ * if w is in the dictionary, use it.
+ * else if w is upper case use PROPER_WORD disjuncts for w.
+ * else if it's hyphenated, use HYPHENATED_WORD
+ * else if it's a number, use NUMBER_WORD.
+ *
+ * Now, we correct the first word, w.
+ * if w is upper case, let w' be the lower case version of w.
+ * if both w and w' are in the dict, concatenate these disjncts.
+ * else if w' is in dict, use disjuncts of w'
+ * else leave the disjuncts alone
+ */
+int build_sentence_expressions(Sentence sent)
+{
 	int i, first_word;  /* the index of the first word after the wall */
 	char *s, *u, temp_word[MAX_WORD+1];
 	X_node * e;
 	Dictionary dict = sent->dict;
-
 
 	if (dict->left_wall_defined) {
 		first_word = 1;
@@ -647,7 +680,8 @@ int build_sentence_expressions(Sentence sent) {
 
 	/* the following loop treats all words the same
 	   (nothing special for 1st word) */
-	for (i=0; i<sent->length; i++) {
+	for (i=0; i<sent->length; i++)
+	{
 		s = sent->word[i].string;
 		if (boolean_dictionary_lookup(sent->dict, s)) {
 			sent->word[i].x = build_word_expressions(sent, s);
@@ -679,30 +713,39 @@ int build_sentence_expressions(Sentence sent) {
 		}
 	}
 
-	/* Under certain cases--if it's the first word of the sentence, or if it follows a colon
-	   or a quotation mark--a word that's capitalized has to be looked up as an uncapitalized
-	   word (as well as a capitalized word). */
-
-
+	/* Under certain cases--if it's the first word of the sentence,
+	 * or if it follows a colon or a quotation mark--a word that's 
+	 * capitalized has to be looked up as an uncapitalized word
+	 * (as well as a capitalized word).
+	 */
 	for (i=0; i<sent->length; i++) {
 		if (! (i==first_word || (i>0 && strcmp(":", sent->word[i-1].string)==0) || post_quote[i]==1) ) continue;
 		s = sent->word[i].string;
-		if (isupper((int)s[0])) {
-			safe_strcpy(temp_word, s, sizeof(temp_word));
-			temp_word[0] = tolower(temp_word[0]);
+
+		if (is_utf8_upper(s))
+		{
+			downcase_str(temp_word, s);
 			u = string_set_add(temp_word, sent->string_set);
+
 			/* If the lower-case version is in the dictionary... */
-			if (boolean_dictionary_lookup(sent->dict, u)) {
-				/* Then check if the upper-case version is there. If it is, the disjuncts for
-				   the upper-case version have been put there already. So add on the disjuncts
-				   for the lower-case version. */
-				if (boolean_dictionary_lookup(sent->dict, s)) {
+			if (boolean_dictionary_lookup(sent->dict, u))
+			{
+				/* Then check if the upper-case version is there. 
+				 * If it is, the disjuncts for the upper-case version 
+				 * have been put there already. So add on the disjuncts
+				 * for the lower-case version. */
+				if (boolean_dictionary_lookup(sent->dict, s))
+				{
 					e = build_word_expressions(sent, u);
 					sent->word[i].x =
 						catenate_X_nodes(sent->word[i].x, e);
-				} else {
-				  /* If the upper-case version isn't there, replace the u.c. disjuncts with l.c. ones */
-					s[0] = tolower(s[0]);
+				} 
+				else
+				{
+					/* If the upper-case version isn't there,
+					 * replace the u.c. disjuncts with l.c. ones.
+					 */
+					safe_strcpy(s,u, MAX_WORD);
 					e = build_word_expressions(sent, s);
 					free_X_nodes(sent->word[i].x);
 					sent->word[i].x = e;
@@ -715,10 +758,11 @@ int build_sentence_expressions(Sentence sent) {
 }
 
 
-/* This just looks up all the words in the sentence, and builds
-   up an appropriate error message in case some are not there.
-   It has no side effect on the sentence.  Returns TRUE if all
-   went well.
+/**
+ * This just looks up all the words in the sentence, and builds
+ * up an appropriate error message in case some are not there.
+ * It has no side effect on the sentence.  Returns TRUE if all
+ * went well.
  */
 int sentence_in_dictionary(Sentence sent)
 {
