@@ -261,7 +261,7 @@ static int check_connector(Dictionary dict, const char * s) {
 	}
 	while (*(s+1)) {
 		if ((!isalnum((int)*s)) && (*s != '*') && (*s != '^')) {
-			dict_error(dict, "All letters of a connector must be alpha-numeric.");
+			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
 			return 0;
 		}
 		s++;

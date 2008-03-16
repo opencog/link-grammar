@@ -237,7 +237,7 @@ path_get_dirname (const char *file_name)
 	if (!base)
 	{
 #ifdef _WIN32
-		if (isalpha (file_name[0]) && file_name[1] == ':')
+		if (is_utf8_alpha (file_name) && file_name[1] == ':')
 		{
 			char drive_colon_dot[4];
 
@@ -268,7 +268,7 @@ path_get_dirname (const char *file_name)
 	 * (\\server\share\foo), include the slash after the share name,
 	 * returning \\server\share\ .
 	 */
-	if (base == file_name + 1 && isalpha (file_name[0]) && file_name[1] == ':')
+	if (base == file_name + 1 && is_utf8_alpha (file_name) && file_name[1] == ':')
 		base++;
 	else if (IS_DIR_SEPARATOR (file_name[0]) &&
 	         IS_DIR_SEPARATOR (file_name[1]) &&

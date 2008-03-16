@@ -55,9 +55,11 @@ static int is_idiom_string(const char * s)
  */
 static int is_number(const char *s)
 {
+	int nb;
 	while(*s != '\0') {
-		if (!isdigit((int)*s)) return FALSE;
-		s++;
+		nb = is_utf8_digit(s);
+		if (!nb) return FALSE;
+		s += nb;
 	}
 	return TRUE;
 }
