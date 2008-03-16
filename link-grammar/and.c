@@ -1,15 +1,15 @@
-/********************************************************************************/
-/* Copyright (c) 2004                                                           */
-/* Daniel Sleator, David Temperley, and John Lafferty                           */
-/* All rights reserved                                                          */
-/*                                                                              */
-/* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */
-/* and also available at http://www.link.cs.cmu.edu/link/license.html           */
-/* This license allows free redistribution and use in source and binary         */
-/* forms, with or without modification, subject to certain conditions.          */
-/*                                                                              */
-/********************************************************************************/
+/*************************************************************************/
+/* Copyright (c) 2004                                                    */
+/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software,    */
+/* and also available at http://www.link.cs.cmu.edu/link/license.html    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
 
 #include <link-grammar/api.h>
 
@@ -805,11 +805,12 @@ void print_AND_statistics(Sentence sent) {
 	printf("Number of equality tests: %d\n", STAT_calls_to_equality_test);
 }
 
+/**
+ * Fill in the fields of c for the disjunct.  This must be in
+ * the table data structures.  The label field and the string field
+ * are filled in appropriately.  Priority is set to UP_priority.
+ */
 static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) {
-/* Fill in the fields of c for the disjunct.  This must be in
-   the table data structures.  The label field and the string field
-   are filled in appropriately.  Priority is set to UP_priority.
-*/
 	int h;
 	Disjunct * d1=NULL;
 	Label_node * lp;
@@ -820,21 +821,14 @@ static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) 
 		d1 = sent->and_data.label_table[lp->label];
 		if (disjunct_types_equal(d,d1)) break;
 	}
-	assert(lp!=NULL, "A disjunct I inserted was not there. (1)");
-/*
-  I don't know what these lines were for.  I replaced them by
-  the above assertion.
-	if (lp == NULL) {
-		printf("error: A disjunct I inserted was not there\n");
-		lp = lp->next;  (to force an error)
-	}
-*/
+	assert(lp != NULL, "A disjunct I inserted was not there. (1)");
+
 	while(d1 != NULL) {
 		if (disjuncts_equal_AND(d1, d)) break;
 		d1 = d1->next;
 	}
 
-	assert(d1!=NULL, "A disjunct I inserted was not there. (2)");
+	assert(d1 != NULL, "A disjunct I inserted was not there. (2)");
 
 	c->label = lp->label;
 	c->string = d1->string;
@@ -843,13 +837,15 @@ static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) 
 }
 
 
-static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d) {
-/* This function allocates and returns a list of disjuncts.
-   This is the one obtained by substituting each contiguous
-   non-empty subrange of d (incident on the center) by an appropriate
-   fat link, in two possible positions.  Does not effect d.
-   The cost of d is inherited by all of the disjuncts in the result.
-*/
+/**
+ * This function allocates and returns a list of disjuncts.
+ * This is the one obtained by substituting each contiguous
+ * non-empty subrange of d (incident on the center) by an appropriate
+ * fat link, in two possible positions.  Does not effect d.
+ * The cost of d is inherited by all of the disjuncts in the result.
+ */
+static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
+{
 	Connector * cl, * cr, *tl, *tr, *wc, work_connector;
 	Disjunct *d1, *wd, work_disjunct, *d_list;
 	if (d==NULL) return NULL;
