@@ -662,9 +662,9 @@ int build_sentence_expressions(Sentence sent)
 		s = sent->word[i].string;
 		if (boolean_dictionary_lookup(sent->dict, s)) {
 			sent->word[i].x = build_word_expressions(sent, s);
-		} else if (isupper((int)s[0]) && is_s_word(s) && dict->pl_capitalized_word_defined) {
+		} else if (is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) {
 			if (!special_string(sent, i, PL_PROPER_WORD)) return FALSE;
-		} else if (isupper((int)s[0]) && dict->capitalized_word_defined) {
+		} else if (is_utf8_upper(s) && dict->capitalized_word_defined) {
 			if (!special_string(sent, i, PROPER_WORD)) return FALSE;
 		} else if (is_number(s) && dict->number_word_defined) {
 			/* we know it's a plural number, or 1 */
