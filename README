@@ -138,7 +138,8 @@ JAVA bindings:
 
    This release includes a very simple Java binding.  Its use is optional. 
    It can be accessed by copying the file LinkGrammar.java into your java
-   project.
+   project.  Alternately, "ant" can be used, with the build.xml file, to 
+   build the appropriate jar file.
 
    The bindings will be built automatically if jni.h can be found.  
    Some common java JVM distributions (most notably, the ones from Sun) 
