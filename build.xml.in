@@ -21,8 +21,6 @@
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
             <src path="link-grammar/java"/>
         </javac>
-    </target>
-    <target name="jar">
         <jar basedir="bin" destfile="link-grammar-@VERSION@.jar">
             <manifest>
                 <attribute name="Implementation-Title" value="Link Grammar Parser Java Bindings"/>
