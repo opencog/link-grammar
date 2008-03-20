@@ -23,12 +23,12 @@
         </javac>
     </target>
     <target name="jar">
-        <jar basedir="bin" destfile="link-grammar-4.3.4.jar">
+        <jar basedir="bin" destfile="link-grammar-@VERSION@.jar">
             <manifest>
                 <attribute name="Implementation-Title" value="Link Grammar Parser Java Bindings"/>
                 <attribute name="Implementation-URL" value="http://www.abisource.com/projects/link-grammar/"/>
-                <attribute name="Specification-Version" value="4.3"/>
-                <attribute name="Implementation-Version" value="4.3.4"/>
+                <attribute name="Specification-Version" value="@LINK_MAJOR_VERSION@.@LINK_MINOR_VERSION@"/>
+                <attribute name="Implementation-Version" value="@VERSION@"/>
             </manifest>
         </jar>
     </target>
