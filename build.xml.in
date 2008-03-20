@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="link-grammar">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.5"/>
+    <property name="source" value="1.5"/>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="link-grammar/java" excludes="**/*.java"/>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="link-grammar/java"/>
+        </javac>
+    </target>
+    <target name="jar">
+        <jar basedir="bin" destfile="link-grammar-4.3.4.jar">
+            <manifest>
+                <attribute name="Implementation-Title" value="Link Grammar Parser Java Bindings"/>
+                <attribute name="Implementation-URL" value="http://www.abisource.com/projects/link-grammar/"/>
+                <attribute name="Specification-Version" value="4.3"/>
+                <attribute name="Implementation-Version" value="4.3.4"/>
+            </manifest>
+        </jar>
+    </target>
+</project>
