@@ -187,6 +187,7 @@ dnl ============================================================================
 
 AC_OUTPUT([
 Makefile
+build.xml
 link-grammar.pc
 link-grammar.spec
 link-grammar/Makefile
