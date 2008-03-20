@@ -69,9 +69,9 @@ AC_DEFUN([GLIB_LC_MESSAGES],
 
 GLIB_LC_MESSAGES
 
-dnl =======================================================================================
+dnl ====================================================================
 
-dnl ===========================================================================
+dnl ====================================================================
 dnl check compiler flags
 AC_DEFUN([LINK_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
@@ -182,8 +182,12 @@ AC_SUBST(CPPFLAGS)
 # AC_SUBST(LIBJDK_CFLAGS)
 # AC_SUBST(LIBJDK_LIBS)
 
+# For now, we assume that if the jni files are there, then the javac
+# ant, and jar compilers/builders are install as well. This is used
+# to build the jar file and install it.
+AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
 
-dnl =======================================================================================
+dnl ===================================================================
 
 AC_OUTPUT([
 Makefile

@@ -8,8 +8,10 @@ pkgconfig_DATA = link-grammar.pc
 link-grammar-@VERSION@.jar:
 	ant
 
+if HAVE_JAVA
 javadir=$(datadir)/java
 java_DATA = link-grammar-@VERSION@.jar
+endif 
 
 
 EXTRA_DIST =			\
