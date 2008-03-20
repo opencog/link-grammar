@@ -1,3 +1,6 @@
+Version 4.3.5 includes the following changes:
+ * added ant build file to create the link-grammar jar file.
+
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.
  * Fix dictionary search path so that it respects command-line input.
