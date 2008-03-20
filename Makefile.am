@@ -9,6 +9,7 @@ EXTRA_DIST =			\
 	link-grammar.spec.in	\
 	link-grammar.spec	\
 	AUTHORS			\
+	ChangeLog		\
 	LICENSE			\
 	MAINTAINERS		\
 	README 			\
