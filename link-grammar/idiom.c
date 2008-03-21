@@ -128,7 +128,6 @@ static char * build_idiom_word_name(Dictionary dict, const char * s)
 
 /**
  * Tear the idiom string apart.
- * Destroys the string s, but does not free it.
  * Put the parts into a list of Dict_nodes (connected by their right pointers)
  * Sets the string fields of these Dict_nodes pointing to the
  * fragments of the string s.  Later these will be replaced by
@@ -149,7 +148,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 
 	while (*s != '\0') {
 		t = s;
-			while((*s != '\0') && (*s != '_')) s++;
+		while((*s != '\0') && (*s != '_')) s++;
 		if (*s == '_') {
 			more = TRUE;
 			*s = '\0';
@@ -189,10 +188,9 @@ static void increment_current_name(void)
 }
 
 /**
- * generate a new connector name
- * obtained from the current_name
+ * Generate a new connector name obtained from the current_name.
  * allocate string space for it.
- * return a pointer to it.
+ * @return a pointer to connector name.
  */
 static char * generate_id_connector(Dictionary dict)
 {
@@ -204,6 +202,8 @@ static char * generate_id_connector(Dictionary dict)
 	/* i is now the number of characters of current_name to skip */
 	sz = CN_size - i + 2 + 1 + 1;
 	s = t = (char *) xalloc(sz);
+
+	/* All idiom connector names start with the two letters "ID" */
 	*t++ = 'I';
 	*t++ = 'D';
 	for (; i < CN_size; i++ ) {
