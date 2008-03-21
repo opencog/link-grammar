@@ -2418,18 +2418,25 @@ catches_on files_suit picks_up takes_off breaks_free takes_over
 jumps_ship sees_fit lets_go takes_note comes_true comes_clean
 comes_of_age: 			
 <verb-s> & <vc-intrans>;
+
 showed_up pleaded_guilty pleaded_innocent made_way caught_up caught_on
 filed_suit picked_up jumped_ship:  
 <verb-sp,pp> & <vc-intrans>;
+
 plead_guilty plead_innocent: (<verb-pl,i> or <verb-sp,pp>) & <vc-intrans>;
+
 let_go: ((<verb-pl,i> or <verb-sp,pp>) & <vc-intrans>) or <verb-pv>;
+
 did_so took_place took_office did_battle gave_way took_part took_off
 broke_free took_over saw_fit took_note came_true came_clean came_of_age: 
 <verb-sp> & <vc-intrans>;
+
 done_so taken_place shown_up taken_office done_battle given_way
 taken_part taken_off broken_free taken_over seen_fit taken_note: 
 <verb-pp> & <vc-intrans>;
+
 come_true come_clean come_of_age: (<verb-pl,i> or <verb-pp>) & <vc-intrans>;
+
 doing_so taking_place showing_up pleading_guilty pleading_innocent
 taking_office
 doing_battle giving_way making_way taking_part catching_up catching_on
