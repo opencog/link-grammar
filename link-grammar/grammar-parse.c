@@ -61,7 +61,7 @@ typedef enum
 	NO_LABEL=' '
 } Label;
 
-static wint_t 
+static int
 fget_input_string(char *input_string, size_t maxlen,
                   FILE *in, FILE *out, Parse_Options opts)
 {
@@ -74,16 +74,21 @@ fget_input_string(char *input_string, size_t maxlen,
 	}
 	input_pending = FALSE;
 
+	/* For UTF-8 input, I think its still technically correct to
+	 * use fgets() and not fgetws() at this point. */
 	if (fgets(input_string, maxlen, in)) return 1;
 	else return 0;
 }
 
-static wint_t fget_input_char(FILE *in, FILE *out, Parse_Options opts)
+static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 {
 	if (!parse_options_get_batch_mode(opts) && (verbosity > 0))
 		fprintf(out, "linkparser> ");
 	fflush(out);
-	return fgetwc(in);
+
+	/* For UTF-8 input, I think its still technically correct to
+	 * use fgetc() and not fgetwc() at this point. */
+	return fgetc(in);
 }
 
 /**************************************************************************
@@ -169,7 +174,7 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts) {
 
 static void process_some_linkages(Sentence sent, Parse_Options opts)
 {
-	wint_t c;
+	int c;
 	int i, num_displayed, num_to_query;
 	Linkage linkage;
 
@@ -182,8 +187,8 @@ static void process_some_linkages(Sentence sent, Parse_Options opts)
 		                   DISPLAY_MAX);
 	}
 
-	for (i=0, num_displayed=0; i<num_to_query; ++i) {
-
+	for (i=0, num_displayed=0; i<num_to_query; i++)
+	{
 		if ((sentence_num_violations(sent, i) > 0) &&
 			(!parse_options_get_display_bad(opts))) {
 			continue;
@@ -231,9 +236,10 @@ static void process_some_linkages(Sentence sent, Parse_Options opts)
 			if (verbosity > 0) {
 				fprintf(stdout, "Press RETURN for the next linkage.\n");
 			}
-			if ((c = fget_input_char(stdin, stdout, opts)) != '\n')
+			c = fget_input_char(stdin, stdout, opts);
+			if (c != '\n')
 			{
-				ungetwc(c, stdin);
+				ungetc(c, stdin);
 				input_pending = TRUE;
 				break;
 			}
@@ -241,8 +247,8 @@ static void process_some_linkages(Sentence sent, Parse_Options opts)
 	}
 }
 
-static int there_was_an_error(Label label, Sentence sent, Parse_Options opts) {
-
+static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
+{
 	if (sentence_num_valid_linkages(sent) > 0) {
 		if (label == UNGRAMMATICAL) {
 			batch_errors++;
@@ -410,8 +416,8 @@ int main(int argc, char * argv[])
 
 	verbosity = parse_options_get_verbosity(opts);
 
-	while (fget_input_string(input_string, MAXINPUT, stdin, stdout, opts)) {
-
+	while (fget_input_string(input_string, MAXINPUT, stdin, stdout, opts)) 
+	{
 		if ((strcmp(input_string, "quit\n")==0) ||
 			(strcmp(input_string, "exit\n")==0)) break;
 
