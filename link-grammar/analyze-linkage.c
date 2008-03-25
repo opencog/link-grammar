@@ -83,7 +83,6 @@ struct Links_to_patch_struct {
 	int link;
 	char dir;   /* this is 'r' or 'l' depending on which end of the link
 				      is to be patched. */
-	int new;	/* the new value of the end to be patched */
 };
 
 void zero_sublinkage(Sublinkage *s)
@@ -389,15 +388,20 @@ static int advance_CON(CON_node * cn) {
 
 static void fill_patch_array_CON(CON_node *, Links_to_patch *);
 
-static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp) {
-/* Patches up appropriate links in the patch_array for this DIS_node     */
-/* and this patch list.                                                  */
+/**
+ * Patches up appropriate links in the patch_array for this DIS_node
+ * and this patch list.
+ */
+static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp)
+{
 	CON_list * cl;
 	List_o_links * lol;
 	Links_to_patch * ltpx;
+
 	for (lol=dn->lol; lol != NULL; lol=lol->next) {
 		patch_array[lol->link].used = TRUE;
 	}
+
 	if ((dn->cl == NULL) || (dn->cl->cn->word != dn->word)) {
 		for (; ltp != NULL; ltp = ltpx) {
 			ltpx = ltp->next;
@@ -410,6 +414,7 @@ static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp) {
 			xfree((void *) ltp, sizeof(Links_to_patch));
 		}
 	}
+
 	/* ltp != NULL at this point means that dn has child which is a cn
 	   which is the same word */
 	for (cl=dn->cl; cl!=NULL; cl=cl->next) {
@@ -418,15 +423,16 @@ static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp) {
 	}
 }
 
-static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp) {
+static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp)
+{
 	List_o_links * lol;
 	Links_to_patch *ltpx;
+
 	for (lol=word_links[cn->word]; lol != NULL; lol = lol->next) {
 		if (lol->dir == 0) {
 			ltpx = (Links_to_patch *) xalloc(sizeof(Links_to_patch));
 			ltpx->next = ltp;
 			ltp = ltpx;
-			ltp->new = cn->word;
 			ltp->link = lol->link;
 			if (lol->word > cn->word) {
 				ltp->dir = 'l';
