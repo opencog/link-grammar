@@ -19,6 +19,7 @@ typedef enum {
     WORDFILE,
     SEPARATE,
     NOTINDICT,
+    CHARSET,
     BUILDEXPR,
     INTERNALERROR,
 }   LP_error_type;

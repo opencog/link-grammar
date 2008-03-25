@@ -37,6 +37,8 @@ static const char * msg_of_lperror(int lperr)
 		return "Error separating sentence ";
 	case NOTINDICT:
 		return "Sentence not in dictionary ";
+	case CHARSET:
+		return "Unable to process character string in this locale ";
 	case BUILDEXPR:
 		return "Could not build sentence expressions ";
 	case INTERNALERROR:
