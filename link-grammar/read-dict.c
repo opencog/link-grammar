@@ -642,22 +642,25 @@ static int dict_compare(const char *s, const char *t) {
 	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
 }
 
-Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * new) {
-/* Insert the new node into the dictionary below node n                  */
-/* give error message if the new element's string is already there       */
-/* assumes that the "n" field of new is already set, and the left        */
-/* and right fields of it are NULL                                       */
+/**
+ * Insert the new node into the dictionary below node n.
+ * Give error message if the new element's string is already there.
+ * Assumes that the "n" field of new is already set, and the left
+ * and right fields of it are NULL.
+ */
+Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
+{
 	int comp;
 	char t[128];
 
-	if (n == NULL) return new;
-	comp = dict_compare(new->string, n->string);
+	if (n == NULL) return newnode;
+	comp = dict_compare(newnode->string, n->string);
 	if (comp < 0) {
-		n->left = insert_dict(dict, n->left, new);
+		n->left = insert_dict(dict, n->left, newnode);
 	} else if (comp > 0) {
-		n->right = insert_dict(dict, n->right, new);
+		n->right = insert_dict(dict, n->right, newnode);
 	} else {
-		sprintf(t, "The word \"%s\" has been multiply defined\n", new->string);
+		sprintf(t, "The word \"%s\" has been multiply defined\n", newnode->string);
 		dict_error(dict, t);
 		return NULL;
 	}
@@ -1037,14 +1040,15 @@ static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s
 }
 
 static void set_parent_of_node(Dictionary dict,
-						Dict_node *p, Dict_node * del, Dict_node * new) {
+						Dict_node *p, Dict_node * del, Dict_node * newnode)
+{
 	if (p == NULL) {
-		dict->root = new;
+		dict->root = newnode;
 	} else {
 		if (p->left == del) {
-			p->left = new;
+			p->left = newnode;
 		} else if (p->right == del) {
-			p->right = new;
+			p->right = newnode;
 		} else {
 			assert(FALSE, "Dictionary broken?");
 		}
