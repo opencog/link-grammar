@@ -26,7 +26,11 @@ static void set_centers(Linkage linkage, int print_word_0)
 	tot = 0;
 	if (print_word_0) i=0; else i=1;
 	for (; i<N_words_to_print; i++) {
-		len = strlen(linkage->word[i]);
+		/* Centers obtained by counting the characters, 
+		 * not the bytes in the string.
+		 * len = strlen(linkage->word[i]);
+		 */
+		len = mbstowcs(NULL, linkage->word[i], 0);
 		center[i] = tot + (len/2);
 		tot += len+1;
 	}
@@ -34,11 +38,11 @@ static void set_centers(Linkage linkage, int print_word_0)
 
 /* the following are all for generating postscript */
 static int link_heights[MAX_LINKS];
-  /* tells the height of the links above the sentence */
+/* tells the height of the links above the sentence */
 static int row_starts[MAX_SENTENCE];
-  /* the word beginning each row of the display */
+/* the word beginning each row of the display */
 static int N_rows;
-  /* the number of rows */
+/* the number of rows */
 
 /**
  * prints s then prints the last |t|-|s| characters of t.
