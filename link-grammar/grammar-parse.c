@@ -33,6 +33,7 @@
  *
  ****************************************************************************/
 
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -351,6 +352,11 @@ int main(int argc, char * argv[])
 		language = argv[1];
 		i++;
 	}
+
+	/* Get the locale from the environment... 
+	 * perhaps we should someday get it from the dictionary ??
+	 */
+	setlocale(LC_ALL, "");
 
 	for (; i<argc; i++) {
 		if (argv[i][0] == '-') {
