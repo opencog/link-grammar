@@ -25,6 +25,11 @@
 #define TRUE 1
 #endif
 
+#ifdef _WIN32
+/* Windows compilers don't support the "inline" keyword. */
+#define inline
+#endif
+
 static inline int is_utf8_upper(const char *s)
 {
 	wchar_t c;
