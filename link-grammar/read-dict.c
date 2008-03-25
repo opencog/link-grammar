@@ -142,7 +142,7 @@ static wint_t get_character(Dictionary dict, int quote_mode)
 
 
 /*
-   This set of 10 characters are the ones defining the syntax of the dictionary.
+ * This set of 10 characters are the ones defining the syntax of the dictionary.
 */
 #define SPECIAL "(){};[]&|:"
 
@@ -175,7 +175,7 @@ static int link_advance(Dictionary dict)
 
 	i = 0;
 	for (;;) {
-		if (i > MAX_TOKEN_LENGTH-3) {  /* 3 for multui-byte tokens */
+		if (i > MAX_TOKEN_LENGTH-3) {  /* 3 for multi-byte tokens */
 			dict_error(dict, "Token too long");
 			return 0;
 		}
@@ -189,6 +189,7 @@ static int link_advance(Dictionary dict)
 				dict_error(dict, "White space inside of token");
 				return 0;
 			}
+			/* store UTF8 internally, always. */
 			i += wctomb(&dict->token[i], c);
 		} else {
 			if (strchr(SPECIAL, c) != NULL) {
@@ -218,8 +219,8 @@ static int link_advance(Dictionary dict)
 			if (c == '\"') {
 				quote_mode = TRUE;
 			} else {
-				dict->token[i] = c;
-				i++;
+				/* store UTF8 internally, always. */
+				i += wctomb(&dict->token[i], c);
 			}
 		}
 		c = get_character(dict, quote_mode);
@@ -724,9 +725,12 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	insert_list(dict, dn_second_half, l-k-1);
 }
 
-static int read_entry(Dictionary dict) {
-/* Starting with the current token parse one dictionary entry.         */
-/* Add these words to the dictionary                                   */
+/**
+ * Starting with the current token parse one dictionary entry.
+ * Add these words to the dictionary.
+ */
+static int read_entry(Dictionary dict)
+{
     Exp *n;
     int i;
 
@@ -815,7 +819,8 @@ void print_dictionary_data(Dictionary dict) {
 }
 
 
-int read_dictionary(Dictionary dict) {
+int read_dictionary(Dictionary dict)
+{
 	lperrno = 0;
 	if (!link_advance(dict)) {
 		fclose(dict->fp);
@@ -916,7 +921,12 @@ void free_lookup_list(Dict_node *llist)
 	}
 }
 
-static Dict_node * rdictionary_lookup(Dict_node *llist, Dict_node * dn, const char * s)
+/**
+ * rdictionary_lookup() --recursive dictionary lookup
+ * Walks binary tree.
+ */
+static Dict_node * rdictionary_lookup(Dict_node *llist, 
+                                      Dict_node * dn, const char * s)
 {
 	/* see comment in dictionary_lookup below */
 	int m;
