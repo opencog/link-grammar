@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/api.h>
+#include <limits.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,7 +73,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 {
 	wchar_t c;
 	int i, nbl, nbh;
-	char low[MB_CUR_MAX];
+	char low[MB_LEN_MAX];
 
 	nbh = mbtowc (&c, from, 4);
 	c = towlower(c);
@@ -103,7 +104,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 {
 	wchar_t c;
 	int i, nbl, nbh;
-	char low[MB_CUR_MAX];
+	char low[MB_LEN_MAX];
 
 	nbh = mbtowc (&c, from, 4);
 	c = towupper(c);

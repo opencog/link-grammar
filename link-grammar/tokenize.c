@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <limits.h>
 #include <link-grammar/api.h>
 
 #define MAX_STRIP 10
@@ -216,8 +217,8 @@ static int issue_sentence_word(Sentence sent, const char * s)
 static int downcase_is_in_dict(Dictionary dict, char * word)
 {
 	int i, rc;
-	char low[MB_CUR_MAX];
-	char save[MB_CUR_MAX];
+	char low[MB_LEN_MAX];
+	char save[MB_LEN_MAX];
 	wchar_t c;
 	int nbl, nbh;
 

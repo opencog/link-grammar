@@ -1,6 +1,7 @@
 Version 4.3.5 includes the following changes:
  * Added ant build file to create the link-grammar jar file.
  * Fix regression in command-line client of multiple-parse display.
+ * Use MB_LEN_MAX, not MB_CUR_MAX for UTF8 support.
 
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.
