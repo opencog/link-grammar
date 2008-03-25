@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <langinfo.h>
 #include <limits.h>
 #include <link-grammar/api.h>
 
@@ -306,9 +307,10 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 				prefix[l] = dn->string;
 				l++;
 			}
-			dn2=dn->right;
+			dn2 = dn->right;
+			dn->right = NULL;
 			xfree(dn, sizeof(Dict_node));
-			dn=dn2;
+			dn = dn2;
 		}
 	}
 
@@ -494,6 +496,9 @@ int separate_sentence(char * s, Sentence sent)
 	if (dict->left_wall_defined)
 		if (!issue_sentence_word(sent, LEFT_WALL_WORD)) return FALSE;
 
+	/* Reset the multibyte shift state to the initial state */
+	mbtowc(NULL, NULL, 4);
+
 	is_first = TRUE;
 	for(;;) 
 	{
@@ -501,22 +506,27 @@ int separate_sentence(char * s, Sentence sent)
 		int nb = mbtowc(&c, s, 4);
 		quote_found = FALSE;
 
+		if (0 > nb) goto failure;
+
 		/* skip all whitespace */
 		while (iswspace(c) || (c == '\"'))
 		{
 			s += nb;
 			if(*s == '\"') quote_found=TRUE;
 			nb = mbtowc(&c, s, 4);
+			if (0 > nb) goto failure;
 		}
 
 		if (*s == '\0') break;
 
 		t = s;
-		nb = mbtowc(&c, t, 4);
-		while (!iswspace(c) && (c != '\"') && (c != 0))
+		nb = mbtowc(&c, t, 6);
+		if (0 > nb) goto failure;
+		while (!iswspace(c) && (c != '\"') && (c != 0) && (nb != 0))
 		{
 			t += nb;
 			nb = mbtowc(&c, t, 4);
+			if (0 > nb) goto failure;
 		}
 
 		if (!separate_word(sent, s, t, is_first, quote_found)) return FALSE;
@@ -529,6 +539,10 @@ int separate_sentence(char * s, Sentence sent)
 		if (!issue_sentence_word(sent, RIGHT_WALL_WORD)) return FALSE;
 
 	return (sent->length > dict->left_wall_defined + dict->right_wall_defined);
+
+failure:
+	lperror(CHARSET, "%s\n", nl_langinfo(CODESET));
+	return FALSE;
 }
 
 static int special_string(Sentence sent, int i, const char * s) {
