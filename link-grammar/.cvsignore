@@ -1,6 +1,8 @@
 Makefile
 Makefile.in
 grammar-parse
+link-features.h
+svn-commit.tmp*
 .deps
 .libs
 *.la

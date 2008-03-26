@@ -15,3 +15,11 @@ autogen.err
 aclocal.m4
 Makefile.in
 Makefile
+INSTALL
+NEWS
+build.xml
+.pc
+patches
+bin
+link-grammar-*.jar
+svn-commit.tmp*
