@@ -574,6 +574,7 @@ static void free_post_processing(Sentence sent)
 
 void sentence_delete(Sentence sent) 
 {
+	if (!sent) return;
 	/* free_andlists(sent); */
 	free_sentence_disjuncts(sent);
 	free_sentence_expressions(sent);
@@ -594,38 +595,47 @@ int sentence_length(Sentence sent)
 }
 
 char * sentence_get_word(Sentence sent, int index) {
+	if (!sent) return NULL;
 	return sent->word[index].string;
 }
 
 int sentence_null_count(Sentence sent) {
+	if (!sent) return 0;
 	return sent->null_count;
 }
 
 int sentence_num_linkages_found(Sentence sent) {
+	if (!sent) return 0;
 	return sent->num_linkages_found;
 }
 
 int sentence_num_valid_linkages(Sentence sent) {
+	if (!sent) return 0;
 	return sent->num_valid_linkages;
 }
 
 int sentence_num_linkages_post_processed(Sentence sent) {
+	if (!sent) return 0;
 	return sent->num_linkages_post_processed;
 }
 
 int sentence_num_violations(Sentence sent, int i) {
+	if (!sent) return 0;
 	return sent->link_info[i].N_violations;
 }
 
 int sentence_disjunct_cost(Sentence sent, int i) {
+	if (!sent) return 0;
 	return sent->link_info[i].disjunct_cost;
 }
 
 char * sentence_get_nth_word(Sentence sent, int i) {
+	if (!sent) return NULL;
 	return sent->word[i].string;
 }
 
 int sentence_nth_word_has_disjunction(Sentence sent, int i) {
+	if (!sent) return 0;
 	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
