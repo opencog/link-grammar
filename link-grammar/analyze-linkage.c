@@ -148,21 +148,21 @@ static void copy_full_link(Link *dest, Link src)
 /* end new code 9/97 ALB */
 
 
-/* Constructs a graph in the word_links array based on the contents of    */
-/* the global link_array.  Makes the word_links array point to a list of  */
+/* Constructs a graph in the wordlinks array based on the contents of    */
+/* the global link_array.  Makes the wordlinks array point to a list of  */
 /* words neighboring each word (actually a list of links).  This is a     */
 /* directed graph, constructed for dealing with "and".  For a link in     */
 /* which the priorities are UP or DOWN_priority, the edge goes from the   */
 /* one labeled DOWN to the one labeled UP.                                */
 /* Don't generate links edges for the bogus comma connectors              */
-static void build_digraph(Parse_info pi)
+static void build_digraph(Parse_info pi, List_o_links **wordlinks)
 {
 	int i, link, N_fat;
 	Link lp;
 	List_o_links * lol;
 	N_fat = 0;
 	for (i=0; i<pi->N_words; i++) {
-		word_links[i] = NULL;
+		wordlinks[i] = NULL;
 	}
 	for (link=0; link<pi->N_links; link++) {
 		lp = &(pi->link_array[link]);
@@ -171,8 +171,8 @@ static void build_digraph(Parse_info pi)
 			continue;
 		}
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = word_links[lp->l];
-		word_links[lp->l] = lol;
+		lol->next = wordlinks[lp->l];
+		wordlinks[lp->l] = lol;
 		lol->link = link;
 		lol->word = lp->r;
 		i = lp->lc->priority;
@@ -184,8 +184,8 @@ static void build_digraph(Parse_info pi)
 			lol->dir = -1;
 		}
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = word_links[lp->r];
-		word_links[lp->r] = lol;
+		lol->next = wordlinks[lp->r];
+		wordlinks[lp->r] = lol;
 		lol->link = link;
 		lol->word = lp->l;
 		i = lp->rc->priority;
@@ -199,10 +199,13 @@ static void build_digraph(Parse_info pi)
 	}
 }
 
-static int is_CON_word(int w) {
-/* Returns TRUE if there is at least one fat link pointing out of this word. */
+/**
+ * Returns TRUE if there is at least one fat link pointing out of this word.
+ */
+static int is_CON_word(int w, List_o_links **wordlinks)
+{
 	List_o_links * lol;
-	for (lol = word_links[w]; lol!=NULL; lol = lol->next) {
+	for (lol = wordlinks[w]; lol!=NULL; lol = lol->next) {
 		if (lol->dir == 1) {
 			return TRUE;
 		}
@@ -210,21 +213,23 @@ static int is_CON_word(int w) {
 	return FALSE;
 }
 
-static DIS_node * build_DIS_node(int);
-static CON_list * c_dfs(int, DIS_node *, CON_list *);
+static DIS_node * build_DIS_node(int, List_o_links **);
 
-static CON_node * build_CON_node(int w) {
-/* This word is a CON word (has fat links down).  Build the tree for it.  */
+/** 
+ * This word is a CON word (has fat links down).  Build the tree for it.
+ */
+static CON_node * build_CON_node(int w, List_o_links **wordlinks) 
+{
 	List_o_links * lol;
 	CON_node * a;
 	DIS_list * d, *dx;
 	d = NULL;
-	for (lol = word_links[w]; lol!=NULL; lol = lol->next) {
+	for (lol = wordlinks[w]; lol!=NULL; lol = lol->next) {
 		if (lol->dir == 1) {
 			dx = (DIS_list *) xalloc (sizeof (DIS_list));
 			dx->next = d;
 			d = dx;
-			d->dn = build_DIS_node(lol->word);
+			d->dn = build_DIS_node(lol->word, wordlinks);
 		}
 	}
 	a = (CON_node *) xalloc(sizeof (CON_node));
@@ -233,16 +238,19 @@ static CON_node * build_CON_node(int w) {
 	return a;
 }
 
-static CON_list * c_dfs(int w, DIS_node * start_dn, CON_list * c) {
-/* Does a depth-first-search starting from w.  Puts on the front of the
-   list pointed to by c all of the CON nodes it finds, and returns the
-   result.  Also construct the list of all edges reached as part of this
-   DIS_node search and append it to the lol list of start_dn.
-
-   Both of the structure violations actually occur, and represent
-   linkages that have improper structure.  Fortunately, they
-   seem to be rather rare.
-*/
+/**
+ * Does a depth-first-search starting from w.  Puts on the front of the
+ * list pointed to by c all of the CON nodes it finds, and returns the
+ * result.  Also construct the list of all edges reached as part of this
+ * DIS_node search and append it to the lol list of start_dn.
+ *
+ * Both of the structure violations actually occur, and represent
+ * linkages that have improper structure.  Fortunately, they
+ * seem to be rather rare.
+ */
+static CON_list * c_dfs(int w, DIS_node * start_dn, CON_list * c,
+                        List_o_links **wordlinks)
+{
 	CON_list *cx;
 	List_o_links * lol, *lolx;
 	if (dfs_root_word[w] != -1) {
@@ -252,7 +260,7 @@ static CON_list * c_dfs(int w, DIS_node * start_dn, CON_list * c) {
 		return c;
 	}
 	dfs_root_word[w] = start_dn->word;
-	for (lol=word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol=wordlinks[w]; lol != NULL; lol = lol->next) {
 		if (lol->dir < 0) {  /* a backwards link */
 			if (dfs_root_word[lol->word] == -1) {
 				structure_violation = TRUE;
@@ -262,38 +270,41 @@ static CON_list * c_dfs(int w, DIS_node * start_dn, CON_list * c) {
 			lolx->next = start_dn->lol;
 			lolx->link = lol->link;
 			start_dn->lol = lolx;
-			c = c_dfs(lol->word, start_dn, c);
+			c = c_dfs(lol->word, start_dn, c, wordlinks);
 		}
 	}
-	if (is_CON_word(w)) {  /* if the current node is CON, put it first */
+	if (is_CON_word(w, wordlinks)) {  /* if the current node is CON, put it first */
 		cx = (CON_list *) xalloc(sizeof(CON_list));
 		cx->next = c;
 		c = cx;
-		c->cn = build_CON_node(w);
+		c->cn = build_CON_node(w, wordlinks);
 	}
 	return c;
 }
 
-static DIS_node * build_DIS_node(int w) {
-/* This node is connected to its parent via a fat link.  Search the
-   region reachable via thin links, and put all reachable nodes with fat
-   links out of them in its list of children.
-*/
+/**
+ * This node is connected to its parent via a fat link.  Search the
+ * region reachable via thin links, and put all reachable nodes with fat
+ * links out of them in its list of children.
+ */
+static DIS_node * build_DIS_node(int w, List_o_links **wordlinks)
+{
 	DIS_node * dn;
 	dn = (DIS_node *) xalloc(sizeof (DIS_node));
 	dn->word = w;   /* must do this before dfs so it knows the start word */
 	dn->lol = NULL;
-	dn->cl = c_dfs(w, dn, NULL);
+	dn->cl = c_dfs(w, dn, NULL, wordlinks);
 	return dn;
 }
 
-static void height_dfs(int w, int height) {
+static void height_dfs(int w, int height, List_o_links **wordlinks)
+{
 	List_o_links * lol;
 	if (dfs_height[w] != 0) return;
 	dfs_height[w] = height;
-	for (lol=word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol=wordlinks[w]; lol != NULL; lol = lol->next) {
 		/* The dir is 1 for a down link. */
-		height_dfs(lol->word, height - lol->dir);
+		height_dfs(lol->word, height - lol->dir, wordlinks);
 	}
 }
 
@@ -303,7 +314,8 @@ static int comp_height(int *a, int *b) {
 
 #define COMPARE_TYPE int (*)(const void *, const void *)
 
-static DIS_node * build_DIS_CON_tree(Parse_info pi) {
+static DIS_node * build_DIS_CON_tree(Parse_info pi, List_o_links **wordlinks)
+{
 	int xw, w;
 	DIS_node * dnroot, * dn;
 	CON_list * child, * xchild;
@@ -321,7 +333,7 @@ static DIS_node * build_DIS_CON_tree(Parse_info pi) {
 	 */
 
 	for (w=0; w < pi->N_words; w++) dfs_height[w] = 0;
-	for (w=0; w < pi->N_words; w++) height_dfs(w, MAX_SENTENCE);
+	for (w=0; w < pi->N_words; w++) height_dfs(w, MAX_SENTENCE, wordlinks);
 
 	for (w=0; w < pi->N_words; w++) height_perm[w] = w;
 	qsort(height_perm, pi->N_words, sizeof(height_perm[0]), (COMPARE_TYPE) comp_height);
@@ -332,7 +344,7 @@ static DIS_node * build_DIS_CON_tree(Parse_info pi) {
 	for (xw=0; xw < pi->N_words; xw++) {
 		w = height_perm[xw];
 		if (dfs_root_word[w] == -1) {
-			dn = build_DIS_node(w);
+			dn = build_DIS_node(w, wordlinks);
 			if (dnroot == NULL) {
 				dnroot = dn;
 			} else {
@@ -386,13 +398,14 @@ static int advance_CON(CON_node * cn) {
 	}
 }
 
-static void fill_patch_array_CON(CON_node *, Links_to_patch *);
+static void fill_patch_array_CON(CON_node *, Links_to_patch *, List_o_links**);
 
 /**
  * Patches up appropriate links in the patch_array for this DIS_node
  * and this patch list.
  */
-static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp)
+static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp,
+                                 List_o_links **wordlinks)
 {
 	CON_list * cl;
 	List_o_links * lol;
@@ -418,17 +431,18 @@ static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp)
 	/* ltp != NULL at this point means that dn has child which is a cn
 	   which is the same word */
 	for (cl=dn->cl; cl!=NULL; cl=cl->next) {
-		fill_patch_array_CON(cl->cn, ltp);
+		fill_patch_array_CON(cl->cn, ltp, wordlinks);
 		ltp = NULL;
 	}
 }
 
-static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp)
+static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp,
+                                 List_o_links **wordlinks)
 {
 	List_o_links * lol;
 	Links_to_patch *ltpx;
 
-	for (lol=word_links[cn->word]; lol != NULL; lol = lol->next) {
+	for (lol=wordlinks[cn->word]; lol != NULL; lol = lol->next) {
 		if (lol->dir == 0) {
 			ltpx = (Links_to_patch *) xalloc(sizeof(Links_to_patch));
 			ltpx->next = ltp;
@@ -441,16 +455,16 @@ static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp)
 			}
 		}
 	}
-	fill_patch_array_DIS(cn->current->dn, ltp);
+	fill_patch_array_DIS(cn->current->dn, ltp, wordlinks);
 }
 
-static void free_digraph(Parse_info pi)
+static void free_digraph(Parse_info pi, List_o_links **wordlinks)
 {
   List_o_links * lol, *lolx;
   int i;
   for (i=0; i<pi->N_words; i++)
 	{
-	  for (lol=word_links[i]; lol!=NULL; lol=lolx)
+	  for (lol=wordlinks[i]; lol!=NULL; lol=lolx)
 		{
 		  lolx = lol->next;
 		  xfree((void *) lol, sizeof(List_o_links));
@@ -484,35 +498,37 @@ static void free_CON_tree(CON_node * cn) {
 	xfree((void *) cn, sizeof(CON_node));
 }
 
-static void and_dfs_full(int w) {
-/* scope out this and element */
+/** scope out this and element */
+static void and_dfs_full(int w, List_o_links **wordlinks)
+{
 	List_o_links *lol;
 	if (visited[w]) return;
 	visited[w] = TRUE;
 	and_element_sizes[N_and_elements]++;
 
-	for (lol = word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol = wordlinks[w]; lol != NULL; lol = lol->next) {
 		if (lol->dir >= 0) {
-			and_dfs_full(lol->word);
+			and_dfs_full(lol->word, wordlinks);
 		}
 	}
 }
 
-static void and_dfs_commas(Sentence sent, int w) {
-/* get down the tree past all the commas */
+/** get down the tree past all the commas */
+static void and_dfs_commas(Sentence sent, int w, List_o_links **wordlinks)
+{
 	List_o_links *lol;
 	if (visited[w]) return;
 	visited[w] = TRUE;
-	for (lol = word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol = wordlinks[w]; lol != NULL; lol = lol->next) {
 		if (lol->dir == 1) {
 			 /* we only consider UP or DOWN priority links here */
 
 			if (strcmp(sent->word[lol->word].string, ",")==0) {
 					/* pointing to a comma */
-				and_dfs_commas(sent, lol->word);
+				and_dfs_commas(sent, lol->word, wordlinks);
 			} else {
 				and_element[N_and_elements]=lol->word;
-				and_dfs_full(lol->word);
+				and_dfs_full(lol->word, wordlinks);
 				N_and_elements++;
 			}
 		}
@@ -523,11 +539,13 @@ static void and_dfs_commas(Sentence sent, int w) {
 	}
 }
 
-static Andlist * build_andlist(Sentence sent) {
-/* This function computes the "and cost", resulting from inequalities in the length of
-   and-list elements. It also computes other information used to construct the "andlist"
-   structure of linkage_info. */
-
+/** 
+ * This function computes the "and cost", resulting from inequalities
+ * in the length of and-list elements. It also computes other
+ * information used to construct the "andlist" structure of linkage_info.
+ */
+static Andlist * build_andlist(Sentence sent, List_o_links **wordlinks)
+{
 	int w, i, min, max, j, cost;
 	char * s;
 	Andlist * new_andlist, * old_andlist;
@@ -547,7 +565,7 @@ static Andlist * build_andlist(Sentence sent) {
 			}
 			if (sent->dict->left_wall_defined)
 				visited[0] = TRUE;
-			and_dfs_commas(sent, w);
+			and_dfs_commas(sent, w, wordlinks);
 			if(N_and_elements == 0) continue;
 			  new_andlist = (Andlist *) xalloc(sizeof(Andlist));
 			new_andlist->num_elements = N_and_elements;
@@ -578,14 +596,17 @@ static Andlist * build_andlist(Sentence sent) {
 	return old_andlist;
 }
 
-static void islands_dfs(int w) {
+#ifdef DEAD_CODE
+static void islands_dfs(int w, List_o_links **wordlinks)
+{
 	List_o_links *lol;
 	if (visited[w]) return;
 	visited[w] = TRUE;
-	for (lol = word_links[w]; lol != NULL; lol = lol->next) {
-	  islands_dfs(lol->word);
+	for (lol = wordlinks[w]; lol != NULL; lol = lol->next) {
+	  islands_dfs(lol->word, wordlinks);
 	}
 }
+#endif /* DEAD_CODE */
 
 static int cost_for_length(int length) {
 /* this function defines the cost of a link as a function of its length */
@@ -731,9 +752,9 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 
 	sublinkage = x_create_sublinkage(pi);
 	postprocessor = sent->dict->postprocessor;
-	build_digraph(pi);
+	build_digraph(pi, word_links);
 	structure_violation = FALSE;
-	d_root = build_DIS_CON_tree(pi); /* may set structure_violation to TRUE */
+	d_root = build_DIS_CON_tree(pi, word_links); /* may set structure_violation to TRUE */
 
 	li.N_violations = 0;
 	li.improper_fat_linkage = structure_violation;
@@ -748,13 +769,13 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	if (structure_violation) {
 		li.N_violations++;
 		free_sublinkage(sublinkage);
-		free_digraph(pi);
+		free_digraph(pi, word_links);
 		free_DIS_tree(d_root);
 		return li;
 	}
 
 	if (analyze_pass==PP_SECOND_PASS) {
-	  li.andlist = build_andlist(sent);
+	  li.andlist = build_andlist(sent, word_links);
 	  li.and_cost = li.andlist->cost;
 	}
 	else li.and_cost = 0;
@@ -770,7 +791,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 			patch_array[i].newr = pi->link_array[i].r;
 			copy_full_link(&sublinkage->link[i], &(pi->link_array[i]));
 		}
-		fill_patch_array_DIS(d_root, NULL);
+		fill_patch_array_DIS(d_root, NULL, word_links);
 
 		for (i=0; i<pi->N_links; i++) {
 			if (patch_array[i].changed || patch_array[i].used) {
@@ -836,7 +857,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	   (verbosity > 3) && should_print_messages)
 	   printf("P.P. violation in one part of conjunction.\n"); */
 	free_sublinkage(sublinkage);
-	free_digraph(pi);
+	free_digraph(pi, word_links);
 	free_DIS_tree(d_root);
 	return li;
 }
@@ -855,7 +876,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	Sublinkage *sublinkage;
 	Parse_info pi = sent->parse_info;
 
-	build_digraph(pi);
+	build_digraph(pi, word_links);
 	memset(&li, 0, sizeof(li));
 
 	sublinkage = x_create_sublinkage(pi);
@@ -869,7 +890,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	if (analyze_pass==PP_FIRST_PASS) {
 		post_process_scan_linkage(postprocessor, opts, sent, sublinkage);
 		free_sublinkage(sublinkage);
-		free_digraph(pi);
+		free_digraph(pi, word_links);
 		return li;
 	}
 
@@ -896,7 +917,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	}
 
 	free_sublinkage(sublinkage);
-	free_digraph(pi);
+	free_digraph(pi, word_links);
 	return li;
 }
 
@@ -937,9 +958,9 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	Parse_info pi = sent->parse_info;
 
 	sublinkage = x_create_sublinkage(pi);
-	build_digraph(pi);
+	build_digraph(pi, word_links);
 	structure_violation = FALSE;
-	d_root = build_DIS_CON_tree(pi);
+	d_root = build_DIS_CON_tree(pi, word_links);
 
 	if (structure_violation) {
 		compute_link_names(sent);
@@ -956,7 +977,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		}
 
 		free_sublinkage(sublinkage);
-		free_digraph(pi);
+		free_digraph(pi, word_links);
 		free_DIS_tree(d_root);
 		return;
 	}
@@ -988,7 +1009,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 			patch_array[i].newr = pi->link_array[i].r;
 			copy_full_link(&sublinkage->link[i], &(pi->link_array[i]));
 		}
-		fill_patch_array_DIS(d_root, NULL);
+		fill_patch_array_DIS(d_root, NULL, word_links);
 
 		for (i=0; i<pi->N_links; i++) {
 			if (patch_array[i].changed || patch_array[i].used) {
@@ -1028,7 +1049,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	}
 
 	free_sublinkage(sublinkage);
-	free_digraph(pi);
+	free_digraph(pi, word_links);
 	free_DIS_tree(d_root);
 }
 
