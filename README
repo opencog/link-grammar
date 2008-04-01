@@ -193,3 +193,10 @@ ADDRESSES
      Carnegie Mellon University        www.cs.cmu.edu/~lafferty
      Pittsburgh, PA 15213              
 
+
+TODO:
+   Some working notes.
+	read-dict.c: after running insert_dict() to create dictionary tree,
+      the tree is hihgly unbalanced, and should be rebalanced before use.
+      This would provide a minor performance improvement.
+

@@ -638,7 +638,8 @@ int dict_compare(char *s, char *t) {
 */
 
 /* terse version */
-static int dict_compare(const char *s, const char *t) {
+static int dict_compare(const char *s, const char *t)
+{
 	while (*s != '\0' && *s == *t) {s++; t++;}
 	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
 }
@@ -648,6 +649,10 @@ static int dict_compare(const char *s, const char *t) {
  * Give error message if the new element's string is already there.
  * Assumes that the "n" field of new is already set, and the left
  * and right fields of it are NULL.
+ *
+ * XXX The resulting tree is rather highly unbalanced. It would improve
+ * performance of rdictionary_lookup() by a factor of two if a tree
+ * balancing step was run after the dictionary creation. XXX
  */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
