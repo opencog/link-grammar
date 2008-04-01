@@ -59,7 +59,7 @@ void lperror(int lperr, const char *fmt, ...)
 	va_end(args);
 
 	strncpy(lperrmsg, msg_of_lperror(lperr), MSGSZ);
-	strncat(lperrmsg, temp, MSGSZ);
+	strncat(lperrmsg, temp, MSGSZ-strlen(lperrmsg)-1);
 	lperrmsg[MSGSZ-1]=0; /* Null terminate at all costs */
 	lperrno = lperr;
 }
