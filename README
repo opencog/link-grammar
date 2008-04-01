@@ -200,3 +200,7 @@ TODO:
       the tree is hihgly unbalanced, and should be rebalanced before use.
       This would provide a minor performance improvement.
 
+   tokenize.c: build_sentence_expressions() contains some 
+      English-language-specific morphology guessing.  This should be 
+      refactored out, as it doesn't really apply to non-English
+      lnagugages.

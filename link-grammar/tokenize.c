@@ -675,32 +675,60 @@ int build_sentence_expressions(Sentence sent)
 	for (i=0; i<sent->length; i++)
 	{
 		s = sent->word[i].string;
-		if (boolean_dictionary_lookup(sent->dict, s)) {
+		if (boolean_dictionary_lookup(sent->dict, s))
+		{
 			sent->word[i].x = build_word_expressions(sent, s);
-		} else if (is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) {
+		}
+		else if (is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) 
+		{
 			if (!special_string(sent, i, PL_PROPER_WORD)) return FALSE;
-		} else if (is_utf8_upper(s) && dict->capitalized_word_defined) {
+		}
+		else if (is_utf8_upper(s) && dict->capitalized_word_defined)
+		{
 			if (!special_string(sent, i, PROPER_WORD)) return FALSE;
-		} else if (is_number(s) && dict->number_word_defined) {
+		}
+		else if (is_number(s) && dict->number_word_defined)
+		{
 			/* we know it's a plural number, or 1 */
 			/* if the string is 1, we'll only be here if 1's not in the dictionary */
 			if (!special_string(sent, i, NUMBER_WORD)) return FALSE;
-		} else if (ishyphenated(s) && dict->hyphenated_word_defined) {
+		}
+		else if (ishyphenated(s) && dict->hyphenated_word_defined)
+		{
 			/* singular hyphenated */
 			if (!special_string(sent, i, HYPHENATED_WORD)) return FALSE;
-		} else if (is_ing_word(s) && dict->ing_word_defined) {
+		} 
+		/* XXX
+		 * The following does some morphology-guessing for words that
+		 * that are not in the dictionary. This should be replaced by
+		 * a generic morphology-guesser for langauges that aren't english.
+		 * XXX
+		 */
+		else if (is_ing_word(s) && dict->ing_word_defined) 
+		{
 			if (!guessed_string(sent, i, s, ING_WORD)) return FALSE;
-		} else if (is_s_word(s) && dict->s_word_defined) {
+		}
+		else if (is_s_word(s) && dict->s_word_defined)
+		{
 			if (!guessed_string(sent, i, s, S_WORD)) return FALSE;
-		} else if (is_ed_word(s) && dict->ed_word_defined) {
+		}
+		else if (is_ed_word(s) && dict->ed_word_defined)
+		{
 			if (!guessed_string(sent, i, s, ED_WORD)) return FALSE;
-		} else if (is_ly_word(s) && dict->ly_word_defined) {
+		}
+		else if (is_ly_word(s) && dict->ly_word_defined)
+		{
 			if (!guessed_string(sent, i, s, LY_WORD)) return FALSE;
-		} else if (dict->unknown_word_defined && dict->use_unknown_word) {
+		}
+		else if (dict->unknown_word_defined && dict->use_unknown_word)
+		{
 			handle_unknown_word(sent, i, s);
-		} else {
-			/* the reason I can assert this is that the word
-			   should have been looked up already if we get here. */
+		}
+		else 
+		{
+			/* The reason I can assert this is that the word
+			 * should have been looked up already if we get here.
+			 */
 			assert(FALSE, "I should have found that word.");
 		}
 	}
@@ -710,7 +738,8 @@ int build_sentence_expressions(Sentence sent)
 	 * capitalized has to be looked up as an uncapitalized word
 	 * (as well as a capitalized word).
 	 */
-	for (i=0; i<sent->length; i++) {
+	for (i=0; i<sent->length; i++)
+	{
 		if (! (i==first_word || (i>0 && strcmp(":", sent->word[i-1].string)==0) || post_quote[i]==1) ) continue;
 		s = sent->word[i].string;
 
