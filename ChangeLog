@@ -5,6 +5,7 @@ Version 4.3.5 includes the following changes:
  * Fix a WIN32 compiler regression (no inline support in Windows).
  * Fix error in handling of UTF8 dictionaries.
  * Fix strncat() misuse in error.c
+ * Fix capitalization errors in country names.
 
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.

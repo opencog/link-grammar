@@ -1,7 +1,7 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
-                       Version 4.3.4
+                       Version 4.3.5
 
 This directory contains a *patched* version of the final original 
 release of the Link Grammar Parser.  It has been patched to fix a 
@@ -54,7 +54,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.3.4.tar.gz.asc
+   gpg --verify link-grammar-4.3.5.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -197,10 +197,10 @@ ADDRESSES
 TODO:
    Some working notes.
 	read-dict.c: after running insert_dict() to create dictionary tree,
-      the tree is hihgly unbalanced, and should be rebalanced before use.
+      the tree is highly unbalanced, and should be rebalanced before use.
       This would provide a minor performance improvement.
 
    tokenize.c: build_sentence_expressions() contains some 
       English-language-specific morphology guessing.  This should be 
       refactored out, as it doesn't really apply to non-English
-      lnagugages.
+      languages.
