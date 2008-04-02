@@ -204,3 +204,8 @@ TODO:
       English-language-specific morphology guessing.  This should be 
       refactored out, as it doesn't really apply to non-English
       languages.
+
+   no-links-cross: Link Grammar uses a constraint that al linakges must
+      be planar graphs. While this is mostly correct, it would probably 
+      be more correct to use "landmark transitivity" as articulated by
+      Hudson in the Word Grammar theory.
