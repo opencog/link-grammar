@@ -214,4 +214,12 @@ TODO:
       This is done by making each link directional: one end of the link
       is the parent. (e.g. noun, noun-modifier: the noun is the parent).
       Parents are landmarks for children.  Transitivity is applied to 
-      parent-child relationships. See http://goertzel.org/ProwlGrammar.pdf
+      parent-child relationships. Specifically, the no-links-cross
+      rule is replaced by two landmark transitivity rules:
+
+      -- If B is a landmark for C, then  A is also a type-L landmark for C
+      -- If A is a landmark for C, then B is also a landmark for C
+
+      where type-L means either a right-going or left-going link.
+
+     See http://goertzel.org/ProwlGrammar.pdf for details.
