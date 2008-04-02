@@ -208,4 +208,10 @@ TODO:
    no-links-cross: Link Grammar uses a constraint that al linakges must
       be planar graphs. While this is mostly correct, it would probably 
       be more correct to use "landmark transitivity" as articulated by
-      Hudson in the Word Grammar theory.
+      Hudson in the Word Grammar theory.  This might allow the elimination
+      of most or all post-processing rules.
+
+      This is done by making each link directional: one end of the link
+      is the parent. (e.g. noun, noun-modifier: the noun is the parent).
+      Parents are landmarks for children.  Transitivity is applied to 
+      parent-child relationships. See http://goertzel.org/ProwlGrammar.pdf
