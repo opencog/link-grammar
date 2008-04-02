@@ -1019,10 +1019,16 @@ It fell when the clock chimed.
 The treasure lay below the ground.
 Below the ground lay the treasure.
 
-% more failures: "He turned left." works, these others do not.
+% more failures: "He turned left." parses, but not correctly.
+% "He turned around", "he jumped around", "he jumped up" use "K"
+% as a particle link, and that seems wrong (??)
+% "He dodged sideways." uses MVp
+He turned left.
 He angled left.
+He angled around.
 He dodged left.
 He jumped left.
+
 It was he that did it.
 John likes joking around.
 He's right, isn't he?
@@ -1051,4 +1057,5 @@ Thief empties pockets of all they hold.
 
 % Idiomatic phrases
 It's a good bet he did it.
+It's a good bet that he did it.
 
