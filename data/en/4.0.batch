@@ -1047,7 +1047,7 @@ If broken, then remove.
 Check the lid; if craked, then replace.
 Check the valve, replace if cracked.
 
-% Newspaper headline declarations
+% Registers -- Newspaper headline declarations
 % Missing definite articles (with definite articles, these would parse)
 % Perhaps a modal parse: if the ordinary parse failed, try another
 % with definite articles auto-inserted ?
@@ -1058,4 +1058,8 @@ Thief empties pockets of all they hold.
 % Idiomatic phrases
 It's a good bet he did it.
 It's a good bet that he did it.
+He's not the least bit interested.
 
+% Automatic possesive guessing broken when entity is also a verb:
+Flumblqwerty's shoes are red.
+Marry's shoes are red.
