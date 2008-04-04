@@ -1038,8 +1038,12 @@ It sure is.
 It sure is great.
 The book sure is great.
 
-% If... then constructs are broken
-% Typical language used in instruction manuals, directives.
+% broken lexical chunk recognition:
+% ... not only, ... but also ...
+The deal includes not only junk, but also crap.
+
+% If... then ... lexical constructs are broken.
+% Registers: Typical language used in instruction manuals, directives.
 If paid weekly, bring the last six pay stubs.
 If paid weekly, then bring six stubs.
 If it is broken, then remove it.
