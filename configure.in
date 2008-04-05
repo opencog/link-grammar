@@ -171,9 +171,6 @@ AC_TRY_CPP( [#include <jni.h>],
                 CPPFLAGS=${SAVE_CPPFLAGS}
                 JNIfound=no])
        ])
-if test x${JNIfound} = xyes ; then
-	CPPFLAGS="${CPPFLAGS} -DBUILD_JNI_CLIENT=1"
-fi
 AC_SUBST(CPPFLAGS)
 
 # Hmm .. there seems to be a missing pkgconfig for ordinary java ... 

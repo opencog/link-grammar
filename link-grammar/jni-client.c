@@ -5,9 +5,6 @@
  * It could be improved.
  */
 
-/* #define BUILD_JNI_CLIENT 1 */
-#ifdef BUILD_JNI_CLIENT
-
 #include <jni.h>
 #include <stdio.h>
 #include <utilities.h>
@@ -485,5 +482,3 @@ Java_org_linkgrammar_LinkGrammar_isEntity(JNIEnv *env, jclass cls, jstring str)
 		return TRUE;
 	return FALSE;
 }
-
-#endif /* BUILD_JNI_CLIENT */

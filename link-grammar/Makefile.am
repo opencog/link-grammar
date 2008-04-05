@@ -14,7 +14,11 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS)
 
-lib_LTLIBRARIES = liblink-grammar.la liblink-grammar-java.la
+lib_LTLIBRARIES = liblink-grammar.la
+
+if HAVE_JAVA
+lib_LTLIBRARIES += liblink-grammar-java.la
+endif
 
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
 
