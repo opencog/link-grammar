@@ -225,15 +225,16 @@ static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
 	return numcon_subl;
 }
 
+/**
+ * Look for a constituent started by an MVs or MVg.
+ * Find any VP's or ADJP's that contain it (without going
+ * beyond a larger S or NP). Adjust them so that
+ * they end right before the m domain starts.
+ */
 static void adjust_subordinate_clauses(Linkage linkage,
-									   int numcon_total,
-									   int numcon_subl) {
-
-  /* Look for a constituent started by an MVs or MVg.
-	 Find any VP's or ADJP's that contain it (without going
-	 beyond a larger S or NP). Adjust them so that
-	 they end right before the m domain starts. */
-
+                                       int numcon_total,
+                                       int numcon_subl)
+{
 	int c, w, c2, w2, done;
 
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
@@ -271,7 +272,8 @@ static void adjust_subordinate_clauses(Linkage linkage,
 	}
 }
 
-static void print_constituent(Linkage linkage, int c) {
+static void print_constituent(Linkage linkage, int c)
+{
 	int w;
 	/* Sentence sent;
 	   sent = linkage_get_sentence(linkage); **PV* using linkage->word not sent->word */
@@ -318,15 +320,15 @@ static void adjust_for_right_comma(Linkage linkage, int c) {
 	constituent[c].right = w;
 }
 
-/**********************************************************/
-/* These functions are called once, after constituents	*/
-/* for each sublinkage have been generated, to merge them */
-/*		together and fix up some other things		   */
-/*														*/
-/**********************************************************/
+/******************************************************
+ * These functions are called once, after constituents
+ * for each sublinkage have been generated, to merge them
+ * together and fix up some other things.
+ *
+ ********************************************************/
 
-static int merge_constituents(Linkage linkage, int numcon_total) {
-
+static int merge_constituents(Linkage linkage, int numcon_total)
+{
 	int c1, c2=0, c3, ok, a, n, a2, n2, match, listmatch, a3;
 	int num_lists, num_elements;
 	int leftend, rightend;
@@ -684,8 +686,8 @@ static void generate_misc_word_info(Linkage linkage) {
 	}
 }
 
-static int last_minute_fixes(Linkage linkage, int numcon_total) {
-
+static int last_minute_fixes(Linkage linkage, int numcon_total)
+{
 	int c, c2, global_leftend_found, adjustment_made,
 		global_rightend_found, lastword, newcon_total=0;
 	Sentence sent;
@@ -833,12 +835,13 @@ static int last_minute_fixes(Linkage linkage, int numcon_total) {
 	return numcon_total;
 }
 
-static void count_words_used(Linkage linkage) {
-
-	/*This function generates a table, word_used[i][w], showing
-	  whether each word w is used in each sublinkage i; if so,
-	  the value for that cell of the table is 1 */
-
+/** 
+ * This function generates a table, word_used[i][w], showing
+ * whether each word w is used in each sublinkage i; if so,
+ * the value for that cell of the table is 1.
+ */
+static void count_words_used(Linkage linkage)
+{
 	int i, w, link, num_subl;
 
 	num_subl = linkage->num_sublinkages;
@@ -867,7 +870,8 @@ static void count_words_used(Linkage linkage) {
 static int r_limit=0;
 
 static void add_constituent(int * cons, Linkage linkage, Domain domain,
-							int l, int r, const char * name) {
+                            int l, int r, const char * name)
+{
 	int c = *cons;
 	c++;
 
@@ -934,8 +938,8 @@ static const char * cons_of_domain(char domain_type)
 }
 
 static int read_constituents_from_domains(Linkage linkage,
-										  int numcon_total, int s) {
-
+                                          int numcon_total, int s)
+{
 	int d, c, leftlimit, l, leftmost, rightmost, w, c2, numcon_subl=0, w2;
 	List_o_links * dlink;
 	int rootright, rootleft, adjustment_made;
@@ -1124,10 +1128,11 @@ static int read_constituents_from_domains(Linkage linkage,
 		}
 	}
 
-	/* Make sure the constituents are nested. If two constituents are not nested: whichever
-	   constituent has the furthest left boundary, shift that boundary rightwards to the left
-	   boundary of the other one */
-
+	/* Make sure the constituents are nested. If two constituents
+	 * are not nested: whichever constituent has the furthest left
+	 * boundary, shift that boundary rightwards to the left boundary
+	 * of the other one.
+	 */
 	while (1) {
 		adjustment_made=0;
 		for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
@@ -1198,7 +1203,8 @@ static int read_constituents_from_domains(Linkage linkage,
 	return numcon_subl;
 }
 
-static char * exprint_constituent_structure(Linkage linkage, int numcon_total) {
+static char * exprint_constituent_structure(Linkage linkage, int numcon_total)
+{
 	int c, w;
 	int leftdone[MAXCONSTITUENTS];
 	int rightdone[MAXCONSTITUENTS];
@@ -1279,7 +1285,8 @@ static char * exprint_constituent_structure(Linkage linkage, int numcon_total) {
 	return p;
 }
 
-static char * print_flat_constituents(Linkage linkage) {
+static char * print_flat_constituents(Linkage linkage)
+{
 	int num_words;
 	Sentence sent;
 	Postprocessor * pp;
