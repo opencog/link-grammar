@@ -1042,6 +1042,9 @@ The book sure is great.
 % ... not only, ... but also ...
 The deal includes not only junk, but also crap.
 
+% lists:
+He has three jobs: counting, measuring and listing.
+
 % If... then ... lexical constructs are broken.
 % Registers: Typical language used in instruction manuals, directives.
 If paid weekly, bring the last six pay stubs.
