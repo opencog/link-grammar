@@ -1054,6 +1054,15 @@ If broken, then remove.
 Check the lid; if craked, then replace.
 Check the valve, replace if cracked.
 
+%
+% Institutionalized phrases:
+% We want the comma to act as a left-wall.
+By the way, did you have some?
+By the way, how was it?
+Since we are talking about it, how was it?
+Now that you mention it, what happened?
+While we're on the topic, was it good?
+
 % Registers -- Newspaper headline declarations
 % Missing definite articles (with definite articles, these would parse)
 % Perhaps a modal parse: if the ordinary parse failed, try another
@@ -1066,6 +1075,7 @@ Thief empties pockets of all they hold.
 It's a good bet he did it.
 It's a good bet that he did it.
 He's not the least bit interested.
+Let me tell you this: it stank.
 
 % Automatic possesive guessing broken when entity is also a verb:
 Flumblqwerty's shoes are red.

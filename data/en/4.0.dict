@@ -3526,7 +3526,7 @@ UNKNOWN-WORD.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
  Ma-)  & {@MV+}) or AA+ or <adj-op>);
 
 LEFT-WALL: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+) & 
-{CP+} & {Xx+} & {RW+ or Xp+};       
+{CP+} & {Xx+} & {RW+ or Xp+};
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
 
