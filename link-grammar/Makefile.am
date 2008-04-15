@@ -26,10 +26,10 @@ liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -
 
 if WITH_BINRELOC
 liblink_grammar_la_LIBADD  = -lpthread
-liblink_grammar_java_la_LIBADD  = -lpthread -llink-grammar
+liblink_grammar_java_la_LIBADD  = -lpthread liblink-grammar.la
 else
 liblink_grammar_la_LIBADD  = 
-liblink_grammar_java_la_LIBADD  = -llink-grammar
+liblink_grammar_java_la_LIBADD  = liblink-grammar.la
 endif
 
 liblink_grammar_la_SOURCES =		\
