@@ -9,6 +9,7 @@ Version 4.3.5 includes the following changes:
  * Fix parsing of "he angled left, he dodged left, he turned left".
  * Don't build the JNI library if Java isn't found. Fixes build on Windows.
  * Fix install bug for NetBSD systems.
+ * pre-detected entities cannot participate in G links.
 
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.

@@ -87,13 +87,19 @@ PL-CAPITALIZED-WORDS:
 ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
 
+% Whole, entire entities, cannot participate in G links
+% because the entire entity has already been identified.
+<entity-entire>:
+(({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+(({@MX+} & <noun-main-s>) or YS+)) or AN+);
+
 personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
 personID10 personID11 personID12 personID13 personID14 personID15 personID16 personID17 personID18 personID19
 personID20 personID21 personID22 personID23 personID24 personID25 personID26 personID27 personID28 personID29
 personID30 personID31 personID32 personID33 personID34 personID35 personID36 personID37 personID38 personID39
 personID40 personID41 personID42 personID43 personID44 personID45 personID46 personID47 personID48 personID49
 personID50 personID51 personID52 personID53 personID54 personID55 personID56 personID57 personID58 personID59
-personID60: <marker-entity> or <entity-singular>;
+personID60: <marker-entity> or <entity-entire>;
 
 organizationID0 organizationID1 organizationID2 organizationID3 organizationID4 organizationID5 organizationID6 organizationID7 organizationID8 organizationID9
 organizationID10 organizationID11 organizationID12 organizationID13 organizationID14 organizationID15 organizationID16 organizationID17 organizationID18 organizationID19
@@ -101,7 +107,7 @@ organizationID20 organizationID21 organizationID22 organizationID23 organization
 organizationID30 organizationID31 organizationID32 organizationID33 organizationID34 organizationID35 organizationID36 organizationID37 organizationID38 organizationID39
 organizationID40 organizationID41 organizationID42 organizationID43 organizationID44 organizationID45 organizationID46 organizationID47 organizationID48 organizationID49
 organizationID50 organizationID51 organizationID52 organizationID53 organizationID54 organizationID55 organizationID56 organizationID57 organizationID58 organizationID59
-organizationID60: <marker-entity> or <entity-singular>;
+organizationID60: <marker-entity> or <entity-entire>;
 
 locationID0 locationID1 locationID2 locationID3 locationID4 locationID5 locationID6 locationID7 locationID8 locationID9
 locationID10 locationID11 locationID12 locationID13 locationID14 locationID15 locationID16 locationID17 locationID18 locationID19
@@ -109,7 +115,7 @@ locationID20 locationID21 locationID22 locationID23 locationID24 locationID25 lo
 locationID30 locationID31 locationID32 locationID33 locationID34 locationID35 locationID36 locationID37 locationID38 locationID39
 locationID40 locationID41 locationID42 locationID43 locationID44 locationID45 locationID46 locationID47 locationID48 locationID49
 locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 locationID56 locationID57 locationID58 locationID59
-locationID60: <marker-entity> or <entity-singular>;
+locationID60: <marker-entity> or <entity-entire>;
 
 % words that are also proper names
 % Art Bell Bill Bob Buck Bud  
@@ -124,9 +130,8 @@ locationID60: <marker-entity> or <entity-singular>;
 
 %
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
-<entity-id>: (
-{G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)); 
+<entity-id>: (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+(({@MX+} & <noun-main-x>) or YS+ or YP+)) or AN+); 
 
 entityID0 entityID1 entityID2 entityID3 entityID4 entityID5 entityID6 entityID7 entityID8 entityID9
 entityID10 entityID11 entityID12 entityID13 entityID14 entityID15 entityID16 entityID17 entityID18 entityID19
