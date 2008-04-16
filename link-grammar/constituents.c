@@ -41,7 +41,6 @@ struct {
 } constituent[MAXCONSTITUENTS];
 
 /*PV* made global vars static */
-static int templist[100];
 static struct {
   int num;
   int e[10];
@@ -55,17 +54,13 @@ typedef struct
 {
 	WType wordtype[MAX_SENTENCE];
 	int word_used[MAXSUBL][MAX_SENTENCE];
+	int templist[100];
 } con_ctxt;
 
 static con_ctxt global_ctxt;
 
 /* forward declarations */
 static void print_constituent(Linkage linkage, int c);
-static int  find_next_element(Linkage linkage,
-							  int start,
-							  int numcon_total,
-							  int num_elements,
-							  int num_lists);
 
 /******************************************************
  *        These functions do the bulk of the actual
@@ -336,7 +331,77 @@ static void print_constituent(Linkage linkage, int c)
  *
  ********************************************************/
 
-static int merge_constituents(Linkage linkage, int numcon_total)
+/**
+ * Here we're looking for the next andlist element to add on
+ * to a conjectural andlist, stored in the array templist.
+ * We go through the constituents, starting at "start".
+ */
+static int find_next_element(con_ctxt *ctxt,
+                             Linkage linkage,
+                             int start,
+                             int numcon_total,
+                             int num_elements,
+                             int num_lists)
+{
+	int c, a, ok, c2, c3, addedone=0, n;
+
+	n = num_lists;
+	for (c=start+1; c<numcon_total; c++) {
+		if (constituent[c].valid==0)
+			continue;
+		if (strcmp(constituent[ctxt->templist[0]].type, constituent[c].type)!=0)
+			continue;
+		ok=1;
+
+		/* We're considering adding constituent c to the andlist.
+		   If c is in the same sublinkage as one of the other andlist
+		   elements, don't add it. If it overlaps with one of the other
+		   constituents, don't add it. If there's a constituent
+		   identical to c that occurs in a sublinkage in which one of
+		   the other elements occurs, don't add it. */
+
+		for (a=0; a<num_elements; a++) {
+			if (constituent[c].subl==constituent[ctxt->templist[a]].subl)
+				ok=0;
+			if (((constituent[c].left<constituent[ctxt->templist[a]].left) &&
+				 (constituent[c].right>constituent[ctxt->templist[a]].left))
+				||
+				((constituent[c].right>constituent[ctxt->templist[a]].right) &&
+				 (constituent[c].left<constituent[ctxt->templist[a]].right))
+				||
+				((constituent[c].right>constituent[ctxt->templist[a]].right) &&
+				 (constituent[c].left<constituent[ctxt->templist[a]].right))
+				||
+				((constituent[c].left>constituent[ctxt->templist[a]].left) &&
+				 (constituent[c].right<constituent[ctxt->templist[a]].right)))
+				ok=0;
+			for (c2=0; c2<numcon_total; c2++) {
+				if (constituent[c2].canon != constituent[c].canon)
+					continue;
+				for (c3=0; c3<numcon_total; c3++) {
+					if ((constituent[c3].canon==constituent[ctxt->templist[a]].canon)
+						&& (constituent[c3].subl==constituent[c2].subl))
+						ok=0;
+				}
+			}
+		}
+		if (ok==0) continue;
+		ctxt->templist[num_elements]=c;
+		addedone=1;
+		num_lists = find_next_element(ctxt, linkage, c, numcon_total,
+									  num_elements+1, num_lists);
+	}
+	if (addedone==0 && num_elements>1) {
+		for (a=0; a<num_elements; a++) {
+			andlist[num_lists].e[a] = ctxt->templist[a];
+			andlist[num_lists].num=num_elements;
+		}
+		num_lists++;
+	}
+	return num_lists;
+}
+
+static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 {
 	int c1, c2=0, c3, ok, a, n, a2, n2, match, listmatch, a3;
 	int num_lists, num_elements;
@@ -423,11 +488,11 @@ static int merge_constituents(Linkage linkage, int numcon_total)
 
 	num_lists=0;
 	for (c1=0; c1<numcon_total; c1++) {
-		if (constituent[c1].valid==0) continue;
-		num_elements=1;
-		templist[0]=c1;
+		if (constituent[c1].valid == 0) continue;
+		num_elements = 1;
+		ctxt->templist[0] = c1;
 		num_lists =
-			find_next_element(linkage, c1, numcon_total,
+			find_next_element(ctxt, linkage, c1, numcon_total,
 							  num_elements, num_lists);
 	}
 
@@ -576,73 +641,6 @@ static int merge_constituents(Linkage linkage, int numcon_total)
 	}
 	numcon_total=c1;
 	return numcon_total;
-}
-
-static int find_next_element(Linkage linkage,
-							 int start,
-							 int numcon_total,
-							 int num_elements,
-							 int num_lists) {
-	/* Here we're looking for the next andlist element to add on
-	   to a conjectural andlist, stored in the array templist.
-	   We go through the constituents, starting at "start". */
-
-	int c, a, ok, c2, c3, addedone=0, n;
-
-	n = num_lists;
-	for (c=start+1; c<numcon_total; c++) {
-		if (constituent[c].valid==0)
-			continue;
-		if (strcmp(constituent[templist[0]].type, constituent[c].type)!=0)
-			continue;
-		ok=1;
-
-		/* We're considering adding constituent c to the andlist.
-		   If c is in the same sublinkage as one of the other andlist
-		   elements, don't add it. If it overlaps with one of the other
-		   constituents, don't add it. If there's a constituent
-		   identical to c that occurs in a sublinkage in which one of
-		   the other elements occurs, don't add it. */
-
-		for (a=0; a<num_elements; a++) {
-			if (constituent[c].subl==constituent[templist[a]].subl)
-				ok=0;
-			if (((constituent[c].left<constituent[templist[a]].left) &&
-				 (constituent[c].right>constituent[templist[a]].left))
-				||
-				((constituent[c].right>constituent[templist[a]].right) &&
-				 (constituent[c].left<constituent[templist[a]].right))
-				||
-				((constituent[c].right>constituent[templist[a]].right) &&
-				 (constituent[c].left<constituent[templist[a]].right))
-				||
-				((constituent[c].left>constituent[templist[a]].left) &&
-				 (constituent[c].right<constituent[templist[a]].right)))
-				ok=0;
-			for (c2=0; c2<numcon_total; c2++) {
-				if (constituent[c2].canon != constituent[c].canon)
-					continue;
-				for (c3=0; c3<numcon_total; c3++) {
-					if ((constituent[c3].canon==constituent[templist[a]].canon)
-						&& (constituent[c3].subl==constituent[c2].subl))
-						ok=0;
-				}
-			}
-		}
-		if (ok==0) continue;
-		templist[num_elements]=c;
-		addedone=1;
-		num_lists = find_next_element(linkage, c, numcon_total,
-									  num_elements+1, num_lists);
-	}
-	if (addedone==0 && num_elements>1) {
-		for (a=0; a<num_elements; a++) {
-			andlist[num_lists].e[a]=templist[a];
-			andlist[num_lists].num=num_elements;
-		}
-		num_lists++;
-	}
-	return num_lists;
 }
 
 /**
@@ -1325,7 +1323,7 @@ static char * print_flat_constituents(con_ctxt *ctxt, Linkage linkage)
 		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total, s);
 		numcon_total = numcon_total + numcon_subl;
 	}
-	numcon_total = merge_constituents(linkage, numcon_total);
+	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
 	numcon_total = last_minute_fixes(linkage, numcon_total);
 	q = exprint_constituent_structure(linkage, numcon_total);
 	string_set_delete(phrase_ss);
