@@ -22,7 +22,6 @@
 
 typedef enum {OPEN, CLOSE, WORD} CType;
 typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
-static String_set * phrase_ss;
 
 typedef struct
 {
@@ -56,6 +55,7 @@ typedef struct
 #define MAX_ANDS 1024
 typedef struct
 {
+	String_set * phrase_ss;
 	WType wordtype[MAX_SENTENCE];
 	int word_used[MAXSUBL][MAX_SENTENCE];
 	int templist[MAX_ELTS];
@@ -258,10 +258,10 @@ static int gen_comp(con_ctxt *ctxt, Linkage linkage, int numcon_total, int numco
 					adjust_for_right_comma(ctxt, linkage, c1);
 
 					ctxt->constituent[c].type =
-						string_set_add(ctype3, phrase_ss);
+						string_set_add(ctype3, ctxt->phrase_ss);
 					ctxt->constituent[c].domain_type = 'x';
 					ctxt->constituent[c].start_link =
-						string_set_add("XX", phrase_ss);
+						string_set_add("XX", ctxt->phrase_ss);
 					ctxt->constituent[c].start_num =
 						ctxt->constituent[c1].start_num; /* bogus */
 					if (verbosity >= 2)
@@ -750,20 +750,22 @@ static int last_minute_fixes(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	Sentence sent;
 	sent = linkage_get_sentence(linkage);
 
-	for (c=0; c<numcon_total; c++) {
-
+	for (c=0; c<numcon_total; c++)
+	{
 		/* In a paraphrase construction ("John ran, he said"),
 		   the paraphrasing clause doesn't get
 		   an S. (This is true in Treebank II, not Treebank I) */
 
-		if (uppercompare(ctxt->constituent[c].start_link, "CP")==0) {
+		if (uppercompare(ctxt->constituent[c].start_link, "CP") == 0)
+		{
 			ctxt->constituent[c].valid = 0;
 		}
 
 		/* If it's a possessive with an "'s", the NP on the left
 		   should be extended to include the "'s". */
-		if ((uppercompare(ctxt->constituent[c].start_link, "YS")==0) ||
-			(uppercompare(ctxt->constituent[c].start_link, "YP")==0)) {
+		if ((uppercompare(ctxt->constituent[c].start_link, "YS") == 0) ||
+			(uppercompare(ctxt->constituent[c].start_link, "YP") == 0))
+		{
 			ctxt->constituent[c].right++;
 		}
 
@@ -771,21 +773,25 @@ static int last_minute_fixes(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 		   expression like "last week"; label it as a noun phrase
 		   (incorrectly) */
 
-		if (strcmp(ctxt->constituent[c].start_link, "MVpn")==0) {
-			ctxt->constituent[c].type = string_set_add("NP", phrase_ss);
+		if (strcmp(ctxt->constituent[c].start_link, "MVpn") == 0)
+		{
+			ctxt->constituent[c].type = string_set_add("NP", ctxt->phrase_ss);
 		}
-		if (strcmp(ctxt->constituent[c].start_link, "COn")==0) {
-			ctxt->constituent[c].type = string_set_add("NP", phrase_ss);
+		if (strcmp(ctxt->constituent[c].start_link, "COn") == 0)
+		{
+			ctxt->constituent[c].type = string_set_add("NP", ctxt->phrase_ss);
 		}
-		if (strcmp(ctxt->constituent[c].start_link, "Mpn")==0) {
-			ctxt->constituent[c].type = string_set_add("NP", phrase_ss);
+		if (strcmp(ctxt->constituent[c].start_link, "Mpn") == 0)
+		{
+			ctxt->constituent[c].type = string_set_add("NP", ctxt->phrase_ss);
 		}
 
 		/* If the constituent is an S started by "but" or "and" at
 		   the beginning of the sentence, it should be ignored. */
 
-		if ((strcmp(ctxt->constituent[c].start_link, "Wdc")==0) &&
-			(ctxt->constituent[c].left==2)) {
+		if ((strcmp(ctxt->constituent[c].start_link, "Wdc") == 0) &&
+			(ctxt->constituent[c].left == 2))
+		{
 			ctxt->constituent[c].valid = 0;
 		}
 
@@ -816,11 +822,13 @@ static int last_minute_fixes(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 		   type to "X". If its aux value is 1, set "valid" to 0. (This
 		   applies to Treebank I only) */
 
-		if (ctxt->constituent[c].aux==2) {
-			ctxt->constituent[c].type = string_set_add("X", phrase_ss);
+		if (ctxt->constituent[c].aux == 2)
+		{
+			ctxt->constituent[c].type = string_set_add("X", ctxt->phrase_ss);
 		}
-		if (ctxt->constituent[c].aux==1) {
-			ctxt->constituent[c].valid=0;
+		if (ctxt->constituent[c].aux == 1)
+		{
+			ctxt->constituent[c].valid = 0;
 		}
 	}
 
@@ -858,7 +866,7 @@ static int last_minute_fixes(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 		c = numcon_total;
 		ctxt->constituent[c].left = 1;
 		ctxt->constituent[c].right = linkage->num_words-1;
-		ctxt->constituent[c].type = string_set_add("S", phrase_ss);
+		ctxt->constituent[c].type = string_set_add("S", ctxt->phrase_ss);
 		ctxt->constituent[c].valid = 1;
 		ctxt->constituent[c].domain_type = 'x';
 		numcon_total++;
@@ -943,7 +951,7 @@ static int add_constituent(con_ctxt *ctxt, int c, Linkage linkage, Domain domain
 	ctxt->constituent[c].start_link =
 		linkage_get_link_label(linkage, domain.start_link);
 	ctxt->constituent[c].start_num = domain.start_link;
-	ctxt->constituent[c].type = string_set_add(name, phrase_ss);
+	ctxt->constituent[c].type = string_set_add(name, ctxt->phrase_ss);
 	return c;
 }
 
@@ -1354,7 +1362,7 @@ static char * print_flat_constituents(con_ctxt *ctxt, Linkage linkage)
 	char * q;
 
 	sent = linkage_get_sentence(linkage);
-	phrase_ss = string_set_create();
+	ctxt->phrase_ss = string_set_create();
 	pp = linkage->sent->dict->constituent_pp;
 	numcon_total = 0;
 
@@ -1377,7 +1385,8 @@ static char * print_flat_constituents(con_ctxt *ctxt, Linkage linkage)
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
 	numcon_total = last_minute_fixes(ctxt, linkage, numcon_total);
 	q = exprint_constituent_structure(ctxt, linkage, numcon_total);
-	string_set_delete(phrase_ss);
+	string_set_delete(ctxt->phrase_ss);
+	ctxt->phrase_ss = NULL;
 	return q;
 }
 
