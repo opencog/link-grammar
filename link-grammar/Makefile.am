@@ -112,10 +112,12 @@ EXTRA_DIST=				\
 	link-grammar-java.def
 
 bin_PROGRAMS=grammar-parse
-grammar_parse_SOURCES=grammar-parse.c
-ldadd = $(top_builddir)/link-grammar/liblink-grammar.la
+grammar_parse_SOURCES = grammar-parse.c
+grammar_parse_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
-grammar_parse_LDADD=$(ldadd)
+if HAVE_EDITLINE
+grammar_parse_LDADD += -ledit
+endif
 
 install-data-local: install-libtool-import-lib
 

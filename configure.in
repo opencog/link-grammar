@@ -71,6 +71,9 @@ GLIB_LC_MESSAGES
 
 dnl ====================================================================
 
+AC_CHECK_HEADER([editline/readline.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_EDITLINE=1"
+	AM_CONDITIONAL(HAVE_EDITLINE, true)], )
+
 dnl ====================================================================
 dnl check compiler flags
 AC_DEFUN([LINK_CC_TRY_FLAG], [

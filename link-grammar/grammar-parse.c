@@ -39,7 +39,7 @@
 #include <string.h>
 #include <wchar.h>
 
-#ifdef USE_READLINE
+#ifdef HAVE_EDITLINE
 #include <editline/readline.h>
 #endif 
 
@@ -70,7 +70,7 @@ static int
 fget_input_string(char *input_string, size_t maxlen,
                   FILE *in, FILE *out, Parse_Options opts)
 {
-#ifdef USE_READLINE
+#ifdef HAVE_EDITLINE
 	char * pline;
 	const char * prompt = "linkparser> ";
 
