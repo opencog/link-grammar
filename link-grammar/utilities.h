@@ -28,6 +28,15 @@
 #ifdef _WIN32
 /* Windows compilers don't support the "inline" keyword. */
 #define inline
+
+/* Windows doesn't have UTF8 support, or wide chars, or any of that. */
+#define wchar_t char
+#define wint_t int
+#define mbtowc(x,y,z)  (1)
+#define iswupper  isupper
+#define iswalpha  isalpha
+#define iswdigit  isdigit
+#define iswspace  isspace
 #endif
 
 static inline int is_utf8_upper(const char *s)

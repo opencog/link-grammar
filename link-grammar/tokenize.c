@@ -11,7 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _WIN32
 #include <langinfo.h>
+#endif
 #include <limits.h>
 #include <link-grammar/api.h>
 
@@ -541,7 +543,9 @@ int separate_sentence(char * s, Sentence sent)
 	return (sent->length > dict->left_wall_defined + dict->right_wall_defined);
 
 failure:
+#ifndef _WIN32
 	lperror(CHARSET, "%s\n", nl_langinfo(CODESET));
+#endif
 	return FALSE;
 }
 
