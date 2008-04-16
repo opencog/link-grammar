@@ -24,7 +24,7 @@ typedef enum {OPEN, CLOSE, WORD} CType;
 typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
 static String_set * phrase_ss;
 
-struct {
+typedef struct {
   int left;
   int right;
   const char * type;
@@ -38,7 +38,9 @@ struct {
   /* 0: it's an ordinary VP (or other type);
 	 1: it's an AUX, don't print it;
 	 2: it's an AUX, and print it */
-} constituent[MAXCONSTITUENTS];
+} constituent_t;
+
+constituent_t constituent[MAXCONSTITUENTS];
 
 /*PV* made global vars static */
 static struct {
@@ -50,11 +52,12 @@ static struct {
 /* Global context for a single sentence.
  * Goal: put all globals here, so that we can become thread-safe.
  */
+#define MAX_ELTS 100
 typedef struct
 {
 	WType wordtype[MAX_SENTENCE];
 	int word_used[MAXSUBL][MAX_SENTENCE];
-	int templist[100];
+	int templist[MAX_ELTS];
 } con_ctxt;
 
 static con_ctxt global_ctxt;
@@ -346,12 +349,15 @@ static int find_next_element(con_ctxt *ctxt,
 	int c, a, ok, c2, c3, addedone=0, n;
 
 	n = num_lists;
-	for (c=start+1; c<numcon_total; c++) {
-		if (constituent[c].valid==0)
+	for (c=start+1; c<numcon_total; c++)
+	{
+		constituent_t *cc = &constituent[c];
+
+		if (cc->valid == 0)
 			continue;
-		if (strcmp(constituent[ctxt->templist[0]].type, constituent[c].type)!=0)
+		if (strcmp(constituent[ctxt->templist[0]].type, cc->type)!=0)
 			continue;
-		ok=1;
+		ok = 1;
 
 		/* We're considering adding constituent c to the andlist.
 		   If c is in the same sublinkage as one of the other andlist
@@ -360,32 +366,38 @@ static int find_next_element(con_ctxt *ctxt,
 		   identical to c that occurs in a sublinkage in which one of
 		   the other elements occurs, don't add it. */
 
-		for (a=0; a<num_elements; a++) {
-			if (constituent[c].subl==constituent[ctxt->templist[a]].subl)
+		/* XXX *must* be less than 100 else it breaks! */
+		assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
+		for (a=0; a<num_elements; a++)
+		{
+			int t = ctxt->templist[a];
+			constituent_t *ct = &constituent[t];
+
+			if (cc->subl == ct->subl)
 				ok=0;
-			if (((constituent[c].left<constituent[ctxt->templist[a]].left) &&
-				 (constituent[c].right>constituent[ctxt->templist[a]].left))
+			if (((cc->left < ct->left) && (cc->right > ct->left))
 				||
-				((constituent[c].right>constituent[ctxt->templist[a]].right) &&
-				 (constituent[c].left<constituent[ctxt->templist[a]].right))
+				((cc->right > ct->right) && (cc->left < ct->right))
 				||
-				((constituent[c].right>constituent[ctxt->templist[a]].right) &&
-				 (constituent[c].left<constituent[ctxt->templist[a]].right))
+				((cc->right > ct->right) && (cc->left < ct->right))
 				||
-				((constituent[c].left>constituent[ctxt->templist[a]].left) &&
-				 (constituent[c].right<constituent[ctxt->templist[a]].right)))
+				((cc->left > ct->left) && (cc->right < ct->right)))
 				ok=0;
-			for (c2=0; c2<numcon_total; c2++) {
-				if (constituent[c2].canon != constituent[c].canon)
+
+			for (c2=0; c2<numcon_total; c2++)
+			{
+				if (constituent[c2].canon != cc->canon)
 					continue;
-				for (c3=0; c3<numcon_total; c3++) {
-					if ((constituent[c3].canon==constituent[ctxt->templist[a]].canon)
-						&& (constituent[c3].subl==constituent[c2].subl))
+				for (c3=0; c3<numcon_total; c3++)
+				{
+					if ((constituent[c3].canon == ct->canon)
+						&& (constituent[c3].subl == constituent[c2].subl))
 						ok=0;
 				}
 			}
 		}
-		if (ok==0) continue;
+		if (ok == 0) continue;
+
 		ctxt->templist[num_elements]=c;
 		addedone=1;
 		num_lists = find_next_element(ctxt, linkage, c, numcon_total,
