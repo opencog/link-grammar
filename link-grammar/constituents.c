@@ -24,7 +24,8 @@ typedef enum {OPEN, CLOSE, WORD} CType;
 typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
 static String_set * phrase_ss;
 
-typedef struct {
+typedef struct
+{
   int left;
   int right;
   const char * type;
@@ -42,22 +43,24 @@ typedef struct {
 
 constituent_t constituent[MAXCONSTITUENTS];
 
-/*PV* made global vars static */
-static struct {
+typedef struct
+{
   int num;
   int e[10];
   int valid;
-} andlist[1024];
+} andlist_t; 
 
 /* Global context for a single sentence.
  * Goal: put all globals here, so that we can become thread-safe.
  */
 #define MAX_ELTS 100
+#define MAX_ANDS 1024
 typedef struct
 {
 	WType wordtype[MAX_SENTENCE];
 	int word_used[MAXSUBL][MAX_SENTENCE];
 	int templist[MAX_ELTS];
+	andlist_t andlist[MAX_ANDS];
 } con_ctxt;
 
 static con_ctxt global_ctxt;
@@ -403,12 +406,14 @@ static int find_next_element(con_ctxt *ctxt,
 		num_lists = find_next_element(ctxt, linkage, c, numcon_total,
 									  num_elements+1, num_lists);
 	}
-	if (addedone==0 && num_elements>1) {
+	if (addedone == 0 && num_elements > 1)
+	{
 		for (a=0; a<num_elements; a++) {
-			andlist[num_lists].e[a] = ctxt->templist[a];
-			andlist[num_lists].num=num_elements;
+			ctxt->andlist[num_lists].e[a] = ctxt->templist[a];
+			ctxt->andlist[num_lists].num = num_elements;
 		}
 		num_lists++;
+		assert(num_lists < MAX_ANDS, "Constituent overflowed andlist!\n");
 	}
 	return num_lists;
 }
@@ -512,8 +517,8 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 		printf("And-lists:\n");
 		for (n=0; n<num_lists; n++) {
 			printf("  %d: ", n);
-			for (a=0; a<andlist[n].num; a++) {
-				printf("%d ", andlist[n].e[a]);
+			for (a=0; a < ctxt->andlist[n].num; a++) {
+				printf("%d ", ctxt->andlist[n].e[a]);
 			}
 			printf("\n");
 		}
@@ -524,38 +529,43 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	   and Y contains A B and C, we throw out X */
 
 	for (n=0; n<num_lists; n++) {
-		andlist[n].valid=1;
+		ctxt->andlist[n].valid=1;
 		for (n2=0; n2<num_lists; n2++) {
 			if (n2==n) continue;
-			if (andlist[n2].num < andlist[n].num)
+			if (ctxt->andlist[n2].num < ctxt->andlist[n].num)
 				continue;
 			listmatch=1;
-			for (a=0; a<andlist[n].num; a++) {
+			for (a=0; a < ctxt->andlist[n].num; a++) {
 				match=0;
-				for (a2=0; a2<andlist[n2].num; a2++) {
-					if (andlist[n2].e[a2]==andlist[n].e[a])
+				for (a2=0; a2 < ctxt->andlist[n2].num; a2++)
+				{
+					if (ctxt->andlist[n2].e[a2] == ctxt->andlist[n].e[a])
 						match=1;
 				}
-				if (match==0) listmatch=0;
+				if (match == 0) listmatch = 0;
 				/* At least one element was not matched by n2 */
 			}
-			if (listmatch==1) andlist[n].valid=0;
+			if (listmatch == 1) ctxt->andlist[n].valid = 0;
 		}
 	}
 
 	/* If an element of an andlist contains an element of another
 	   andlist, it must contain the entire andlist. */
 
-	for (n=0; n<num_lists; n++) {
-		if (andlist[n].valid==0)
+	for (n=0; n<num_lists; n++)
+	{
+		if (ctxt->andlist[n].valid == 0)
 			continue;
-		for (a=0; (a<andlist[n].num) && (andlist[n].valid); a++) {
-			for (n2=0; (n2<num_lists) && (andlist[n].valid); n2++) {
-				if ((n2==n) || (andlist[n2].valid==0))
+		for (a=0; (a < ctxt->andlist[n].num) && (ctxt->andlist[n].valid); a++)
+		{
+			for (n2=0; (n2 < num_lists) && (ctxt->andlist[n].valid); n2++)
+			{
+				if ((n2==n) || (ctxt->andlist[n2].valid==0))
 					continue;
-				for (a2=0; (a2<andlist[n2].num) && (andlist[n].valid); a2++) {
-					c1=andlist[n].e[a];
-					c2=andlist[n2].e[a2];
+				for (a2=0; (a2 < ctxt->andlist[n2].num) && (ctxt->andlist[n].valid); a2++)
+				{
+					c1 = ctxt->andlist[n].e[a];
+					c2 = ctxt->andlist[n2].e[a2];
 					if (c1==c2)
 						continue;
 					if (!((constituent[c2].left<=constituent[c1].left) &&
@@ -571,21 +581,21 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 					   contains ALL the elements of n.
 					   If not, n is invalid. */
 
-					for (a3=0; a3<andlist[n].num; a3++) {
-						c3=andlist[n].e[a3];
+					for (a3=0; a3 < ctxt->andlist[n].num; a3++) {
+						c3 = ctxt->andlist[n].e[a3];
 						if ((constituent[c2].left>constituent[c3].left) ||
 							(constituent[c2].right<constituent[c3].right))
 							ok=0;
 					}
 					if (ok != 0)
 						continue;
-					andlist[n].valid=0;
+					ctxt->andlist[n].valid = 0;
 					if (verbosity>=2) {
 						printf("Eliminating andlist, " \
 							   "n=%d, a=%d, n2=%d, a2=%d: ",
 							   n, a, n2, a2);
-						for (a3=0; a3<andlist[n].num; a3++) {
-							printf("%d ", andlist[n].e[a3]);
+						for (a3=0; a3 < ctxt->andlist[n].num; a3++) {
+							printf("%d ", ctxt->andlist[n].e[a3]);
 						}
 						printf("\n");
 					}
@@ -598,23 +608,23 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	if (verbosity>=2) {
 		printf("And-lists after pruning:\n");
 		for (n=0; n<num_lists; n++) {
-			if (andlist[n].valid==0)
+			if (ctxt->andlist[n].valid==0)
 				continue;
 			printf("  %d: ", n);
-			for (a=0; a<andlist[n].num; a++) {
-				printf("%d ", andlist[n].e[a]);
+			for (a=0; a<ctxt->andlist[n].num; a++) {
+				printf("%d ", ctxt->andlist[n].e[a]);
 			}
 			printf("\n");
 		}
 	}
 
-	c1=numcon_total;
+	c1 = numcon_total;
 	for (n=0; n<num_lists; n++) {
-		if (andlist[n].valid==0) continue;
+		if (ctxt->andlist[n].valid == 0) continue;
 		leftend=256;
 		rightend=-1;
-		for (a=0; a<andlist[n].num; a++) {
-			c2=andlist[n].e[a];
+		for (a=0; a < ctxt->andlist[n].num; a++) {
+			c2 = ctxt->andlist[n].e[a];
 			if (constituent[c2].left<leftend) {
 				leftend=constituent[c2].left;
 			}
@@ -638,8 +648,9 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 		   constituent going in, the same thing should be done,
 		   though I doubt this ever happens.) */
 
-		for (a=0; a<andlist[n].num; a++) {
-			c2=andlist[n].e[a];
+		for (a = 0; a < ctxt->andlist[n].num; a++)
+		{
+			c2 = ctxt->andlist[n].e[a];
 			if ((constituent[c2].aux==1) || (constituent[c2].aux==2)) {
 				constituent[c1].aux=2;
 				constituent[c2].aux=2;
