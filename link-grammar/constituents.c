@@ -41,7 +41,6 @@ struct {
 } constituent[MAXCONSTITUENTS];
 
 /*PV* made global vars static */
-static WType wordtype[MAX_SENTENCE];
 static int word_used[MAXSUBL][MAX_SENTENCE];
 static int templist[100];
 static struct {
@@ -49,6 +48,17 @@ static struct {
   int e[10];
   int valid;
 } andlist[1024];
+
+/* Global context for a single sentence.
+ * Goal: put all globals here, so that we can become thread-safe.
+ */
+typedef struct
+{
+	WType wordtype[MAX_SENTENCE];
+
+} con_ctxt;
+
+static con_ctxt global_ctxt;
 
 /* forward declarations */
 static void print_constituent(Linkage linkage, int c);
@@ -636,20 +646,21 @@ static int find_next_element(Linkage linkage,
 	return num_lists;
 }
 
-static void generate_misc_word_info(Linkage linkage) {
-
-	/* Go through all the words. If a word is on the right end of
-	   an S (or SF or SX), wordtype[w]=STYPE.  If it's also on the left end of a
-	   Pg*b, I, PP, or Pv, wordtype[w]=PTYPE. If it's a question-word
-	   used in an indirect question, wordtype[w]=QTYPE. If it's a
-	   question-word determiner,  wordtype[w]=QDTYPE. Else wordtype[w]=NONE.
-	   (This function is called once for each sublinkage.) */
-	
+/**
+ * Go through all the words. If a word is on the right end of
+ * an S (or SF or SX), wordtype[w]=STYPE.  If it's also on the left end of a
+ * Pg*b, I, PP, or Pv, wordtype[w]=PTYPE. If it's a question-word
+ * used in an indirect question, wordtype[w]=QTYPE. If it's a
+ * question-word determiner,  wordtype[w]=QDTYPE. Else wordtype[w]=NONE.
+ * (This function is called once for each sublinkage.)
+ */
+static void generate_misc_word_info(con_ctxt * ctxt, Linkage linkage)
+{
 	int l1, l2, w1, w2;
 	const char * label1, * label2;
 
 	for (w1=0; w1<linkage->num_words; w1++)
-		wordtype[w1]=NONE;
+		ctxt->wordtype[w1]=NONE;
 
 	for (l1=0; l1<linkage_get_num_links(linkage); l1++) {	
 		w1=linkage_get_link_rword(linkage, l1);
@@ -657,7 +668,7 @@ static void generate_misc_word_info(Linkage linkage) {
 		if ((uppercompare(label1, "S")==0) ||
 			(uppercompare(label1, "SX")==0) ||
 			(uppercompare(label1, "SF")==0)) {
-			wordtype[w1] = STYPE;
+			ctxt->wordtype[w1] = STYPE;
 			for (l2=0; l2<linkage_get_num_links(linkage); l2++) {
 				w2=linkage_get_link_lword(linkage, l2);
 				label2 = linkage_get_link_label(linkage, l2);
@@ -667,22 +678,22 @@ static void generate_misc_word_info(Linkage linkage) {
 					 (uppercompare(label2, "PP")==0) ||
 					 (post_process_match("Pv", label2)==1))) {
 					/* Pvf, Pgf? */
-					wordtype[w1] = PTYPE;
+					ctxt->wordtype[w1] = PTYPE;
 				}
 			}
 		}
 		if (post_process_match("QI#d", label1)==1) {
-			wordtype[w1] = QTYPE;
+			ctxt->wordtype[w1] = QTYPE;
 			for (l2=0; l2<linkage_get_num_links(linkage); l2++) {
 				w2=linkage_get_link_lword(linkage, l2);
 				label2 = linkage_get_link_label(linkage, l2);
 				if ((w1==w2) && (post_process_match("D##w", label2)==1)) {
-					wordtype[w1] = QDTYPE;
+					ctxt->wordtype[w1] = QDTYPE;
 				}
 			}
 		}
-		if (post_process_match("Mr", label1)==1) wordtype[w1] = QDTYPE;
-		if (post_process_match("MX#d", label1)==1) wordtype[w1] = QDTYPE;
+		if (post_process_match("Mr", label1)==1) ctxt->wordtype[w1] = QDTYPE;
+		if (post_process_match("MX#d", label1)==1) ctxt->wordtype[w1] = QDTYPE;
 	}
 }
 
@@ -936,7 +947,7 @@ static const char * cons_of_domain(char domain_type)
 	}
 }
 
-static int read_constituents_from_domains(Linkage linkage,
+static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
                                           int numcon_total, int s)
 {
 	int d, c, leftlimit, l, leftmost, rightmost, w, c2, numcon_subl=0, w2;
@@ -1042,22 +1053,22 @@ static int read_constituents_from_domains(Linkage linkage,
 			(post_process_match("MX#d", constituent[c].start_link)==1)) {
 			w = leftmost;
 			if (strcmp(linkage->word[w], ",")==0) w++;
-			if (wordtype[w] == NONE)
+			if (ctxt->wordtype[w] == NONE)
 				name = "WHADVP";
-			else if (wordtype[w] == QTYPE)
+			else if (ctxt->wordtype[w] == QTYPE)
 				name = "WHNP";
-			else if (wordtype[w] == QDTYPE)
+			else if (ctxt->wordtype[w] == QDTYPE)
 				name = "WHNP";
 			else
 				assert(0, "Unexpected word type");
 			c = add_constituent(c, linkage, domain, w, w, name);
 
-			if (wordtype[w] == QDTYPE) {
+			if (ctxt->wordtype[w] == QDTYPE) {
 				/* Now find the finite verb to the right, start an S */
 				/* Limit w2 to sentence length. */
 				// for( w2=w+1; w2 < r_limit-1; w2++ )
 				for (w2 = w+1; w2 < rightmost; w2++)
-				  if ((wordtype[w2] == STYPE) || (wordtype[w2] == PTYPE)) break;
+				  if ((ctxt->wordtype[w2] == STYPE) || (ctxt->wordtype[w2] == PTYPE)) break;
 
 				/* Adjust the right boundary of previous constituent */
 				constituent[c].right = w2-1;
@@ -1186,7 +1197,7 @@ static int read_constituents_from_domains(Linkage linkage,
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
 		constituent[c].subl = linkage->current;
 		if (((constituent[c].domain_type == 'v') &&
-			(wordtype[linkage_get_link_rword(linkage,
+			(ctxt->wordtype[linkage_get_link_rword(linkage,
 											 constituent[c].start_num)]==PTYPE))
 		   ||
 		   ((constituent[c].domain_type == 't') &&
@@ -1286,7 +1297,7 @@ static char * exprint_constituent_structure(Linkage linkage, int numcon_total)
 	return p;
 }
 
-static char * print_flat_constituents(Linkage linkage)
+static char * print_flat_constituents(con_ctxt *ctxt, Linkage linkage)
 {
 	int num_words;
 	Sentence sent;
@@ -1311,8 +1322,8 @@ static char * print_flat_constituents(Linkage linkage)
 		linkage_set_current_sublinkage(linkage, s);
 		linkage_post_process(linkage, pp);
 		num_words = linkage_get_num_words(linkage);
-		generate_misc_word_info(linkage);
-		numcon_subl = read_constituents_from_domains(linkage, numcon_total, s);
+		generate_misc_word_info(ctxt, linkage);
+		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total, s);
 		numcon_total = numcon_total + numcon_subl;
 	}
 	numcon_total = merge_constituents(linkage, numcon_total);
@@ -1433,11 +1444,12 @@ static int assign_spans(CNode * n, int start) {
 	return num_words;
 }
 
-CNode * linkage_constituent_tree(Linkage linkage) {
+CNode * linkage_constituent_tree(Linkage linkage)
+{
 	static char *p, *q;
 	int len;
 	CNode * root;
-	p = print_flat_constituents(linkage);
+	p = print_flat_constituents(&global_ctxt, linkage);
 	len = strlen(p);
 	q = strtok(p, " ");
 	assert(token_type(q) == OPEN, "Illegal beginning of string");
@@ -1488,7 +1500,7 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode)
 		return p;
 	}
 	else if (mode == 2) {
-		return print_flat_constituents(linkage);
+		return print_flat_constituents(&global_ctxt, linkage);
 	}
 	assert(0, "Illegal mode in linkage_print_constituent_tree");
 	return NULL;
