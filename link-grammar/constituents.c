@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <stdarg.h>
+#include <string.h>
 #include <link-grammar/api.h>
 #include "constituents.h"
 
@@ -1408,12 +1409,12 @@ static CNode * make_CNode(char *q) {
 	return cn;
 }
 
-static CNode * parse_string(CNode * n)
+static CNode * parse_string(CNode * n, char **saveptr)
 {
 	char *q;
 	CNode *m, *last_child=NULL;
 
-	while ((q=strtok(NULL, " "))) {
+	while ((q = strtok_r(NULL, " ", saveptr))) {
 		switch (token_type(q)) {
 		case CLOSE :
 			q[strlen(q)-1]='\0';
@@ -1423,7 +1424,7 @@ static CNode * parse_string(CNode * n)
 			break;
 		case OPEN:
 			m = make_CNode(q+1);
-			m = parse_string(m);
+			m = parse_string(m, saveptr);
 			break;
 		case WORD:
 			m = make_CNode(q);
@@ -1443,7 +1444,8 @@ static CNode * parse_string(CNode * n)
 	return NULL;
 }
 
-static void print_tree(String * cs, int indent, CNode * n, int o1, int o2) {
+static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
+{
 	int i, child_offset;
 	CNode * m;
 
@@ -1503,7 +1505,7 @@ static int assign_spans(CNode * n, int start) {
 
 CNode * linkage_constituent_tree(Linkage linkage)
 {
-	static char *p, *q;  /* XXX global */
+	char *p, *q, *saveptr;
 	int len;
 	CNode * root;
 	con_context_t *ctxt;
@@ -1513,10 +1515,10 @@ CNode * linkage_constituent_tree(Linkage linkage)
 	free(ctxt);
 
 	len = strlen(p);
-	q = strtok(p, " ");
+	q = strtok_r(p, " ", &saveptr);
 	assert(token_type(q) == OPEN, "Illegal beginning of string");
 	root = make_CNode(q+1);
-	root = parse_string(root);
+	root = parse_string(root, &saveptr);
 	assign_spans(root, 0);
 	exfree(p, sizeof(char)*(len+1));
 	return root;
@@ -1549,7 +1551,7 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode)
 	{
 		return NULL;
 	}
-	else if (mode==1 || mode==3)
+	else if (mode == 1 || mode == 3)
 	{
 		cs = String_create();
 		root = linkage_constituent_tree(linkage);
