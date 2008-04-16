@@ -253,10 +253,14 @@ int parse_options_get_display_postscript(Parse_Options opts) {
 	return opts->display_postscript;
 }
 
-void parse_options_set_display_constituents(Parse_Options opts, int dummy) {
-	if ((dummy < 0) || (dummy > 2)) {
+void parse_options_set_display_constituents(Parse_Options opts, int dummy)
+{
+	if ((dummy < 0) || (dummy > 3)) {
 	   fprintf(stderr, "Possible values for constituents: \n");
-	   fprintf(stderr, "   0 (no display) 1 (treebank style) or 2 (flat tree)\n");
+	   fprintf(stderr, "   0 (no display)\n");
+	   fprintf(stderr, "   1 (treebank style, multi-line indented)\n");
+	   fprintf(stderr, "   2 (flat tree, square brackets)\n");
+	   fprintf(stderr, "   3 (flat treebank style)\n");
 	   opts->display_constituents = 0;
 	}
 	else opts->display_constituents = dummy;
