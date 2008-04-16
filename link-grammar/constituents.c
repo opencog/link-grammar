@@ -49,8 +49,9 @@ typedef struct
   int valid;
 } andlist_t; 
 
-/* Global context for a single sentence.
- * Goal: put all globals here, so that we can become thread-safe.
+/*
+ * Context used to store assorted intermediate data
+ * when the constituent string is being generated.
  */
 #define MAX_ANDS 1024
 typedef struct
@@ -61,9 +62,7 @@ typedef struct
 	int templist[MAX_ELTS];
 	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
-} con_ctxt;
-
-static con_ctxt global_ctxt;
+} con_context_t;
 
 /* ================================================================ */
 
@@ -77,7 +76,7 @@ static inline int uppercompare(const char * s, const char * t)
  * comma. (We continue to shift the boundary until we get to
  * something inside the current sublinkage)
  */
-static void adjust_for_left_comma(con_ctxt * ctxt, Linkage linkage, int c)
+static void adjust_for_left_comma(con_context_t * ctxt, Linkage linkage, int c)
 {
 	int w;
 	w = ctxt->constituent[c].left;
@@ -92,7 +91,7 @@ static void adjust_for_left_comma(con_ctxt * ctxt, Linkage linkage, int c)
 	ctxt->constituent[c].left = w;
 }
 
-static void adjust_for_right_comma(con_ctxt *ctxt, Linkage linkage, int c)
+static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 {
 	int w;
 	w = ctxt->constituent[c].right;
@@ -109,7 +108,7 @@ static void adjust_for_right_comma(con_ctxt *ctxt, Linkage linkage, int c)
 	ctxt->constituent[c].right = w;
 }
 
-static void print_constituent(con_ctxt *ctxt, Linkage linkage, int c)
+static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 {
 	int w;
 	/* Sentence sent;
@@ -136,7 +135,7 @@ static void print_constituent(con_ctxt *ctxt, Linkage linkage, int c)
  * type ctype2, call it c2. It then generates a new constituent of
  * ctype3, containing all the words in c2 but not c1.
  */
-static int gen_comp(con_ctxt *ctxt, Linkage linkage, int numcon_total, int numcon_subl,
+static int gen_comp(con_context_t *ctxt, Linkage linkage, int numcon_total, int numcon_subl,
 					const char * ctype1, const char * ctype2, const char * ctype3, int x)
 {
 	int w, w2, w3, c, c1, c2, done;
@@ -293,7 +292,7 @@ static int gen_comp(con_ctxt *ctxt, Linkage linkage, int numcon_total, int numco
  * beyond a larger S or NP). Adjust them so that
  * they end right before the m domain starts.
  */
-static void adjust_subordinate_clauses(con_ctxt *ctxt, Linkage linkage,
+static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
                                        int numcon_total,
                                        int numcon_subl)
 {
@@ -346,7 +345,7 @@ static void adjust_subordinate_clauses(con_ctxt *ctxt, Linkage linkage,
  * to a conjectural andlist, stored in the array templist.
  * We go through the constituents, starting at "start".
  */
-static int find_next_element(con_ctxt *ctxt,
+static int find_next_element(con_context_t *ctxt,
                              Linkage linkage,
                              int start,
                              int numcon_total,
@@ -422,7 +421,7 @@ static int find_next_element(con_ctxt *ctxt,
 	return num_lists;
 }
 
-static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
+static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
 	int c1, c2=0, c3, ok, a, n, a2, n2, match, listmatch, a3;
 	int num_lists, num_elements;
@@ -700,7 +699,7 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
  * question-word determiner,  wordtype[w]=QDTYPE. Else wordtype[w]=NONE.
  * (This function is called once for each sublinkage.)
  */
-static void generate_misc_word_info(con_ctxt * ctxt, Linkage linkage)
+static void generate_misc_word_info(con_context_t * ctxt, Linkage linkage)
 {
 	int l1, l2, w1, w2;
 	const char * label1, * label2;
@@ -743,7 +742,7 @@ static void generate_misc_word_info(con_ctxt * ctxt, Linkage linkage)
 	}
 }
 
-static int last_minute_fixes(con_ctxt *ctxt, Linkage linkage, int numcon_total)
+static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
 	int c, c2, global_leftend_found, adjustment_made,
 		global_rightend_found, lastword, newcon_total=0;
@@ -906,7 +905,7 @@ static int last_minute_fixes(con_ctxt *ctxt, Linkage linkage, int numcon_total)
  * whether each word w is used in each sublinkage i; if so,
  * the value for that cell of the table is 1.
  */
-static void count_words_used(con_ctxt *ctxt, Linkage linkage)
+static void count_words_used(con_context_t *ctxt, Linkage linkage)
 {
 	int i, w, link, num_subl;
 
@@ -935,7 +934,7 @@ static void count_words_used(con_ctxt *ctxt, Linkage linkage)
 
 static int r_limit=0;
 
-static int add_constituent(con_ctxt *ctxt, int c, Linkage linkage, Domain domain,
+static int add_constituent(con_context_t *ctxt, int c, Linkage linkage, Domain domain,
                            int l, int r, const char * name)
 {
 	c++;
@@ -1002,7 +1001,7 @@ static const char * cons_of_domain(char domain_type)
 	}
 }
 
-static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
+static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
                                           int numcon_total, int s)
 {
 	int d, c, leftlimit, l, leftmost, rightmost, w, c2, numcon_subl=0, w2;
@@ -1271,7 +1270,7 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 	return numcon_subl;
 }
 
-static char * exprint_constituent_structure(con_ctxt *ctxt, Linkage linkage, int numcon_total)
+static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
 	int c, w;
 	int leftdone[MAXCONSTITUENTS];
@@ -1353,7 +1352,7 @@ static char * exprint_constituent_structure(con_ctxt *ctxt, Linkage linkage, int
 	return p;
 }
 
-static char * print_flat_constituents(con_ctxt *ctxt, Linkage linkage)
+static char * print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
 	int num_words;
 	Sentence sent;
@@ -1409,7 +1408,8 @@ static CNode * make_CNode(char *q) {
 	return cn;
 }
 
-static CNode * parse_string(CNode * n) {
+static CNode * parse_string(CNode * n)
+{
 	char *q;
 	CNode *m, *last_child=NULL;
 
@@ -1503,10 +1503,15 @@ static int assign_spans(CNode * n, int start) {
 
 CNode * linkage_constituent_tree(Linkage linkage)
 {
-	static char *p, *q;
+	static char *p, *q;  /* XXX global */
 	int len;
 	CNode * root;
-	p = print_flat_constituents(&global_ctxt, linkage);
+	con_context_t *ctxt;
+
+	ctxt = (con_context_t *) malloc(sizeof(con_context_t));
+	p = print_flat_constituents(ctxt, linkage);
+	free(ctxt);
+
 	len = strlen(p);
 	q = strtok(p, " ");
 	assert(token_type(q) == OPEN, "Illegal beginning of string");
@@ -1517,7 +1522,8 @@ CNode * linkage_constituent_tree(Linkage linkage)
 	return root;
 }
 
-void linkage_free_constituent_tree(CNode * n) {
+void linkage_free_constituent_tree(CNode * n)
+{
 	CNode *m, *x;
 	for (m=n->child; m!=NULL; m=x) {
 		x=m->next;
@@ -1527,24 +1533,24 @@ void linkage_free_constituent_tree(CNode * n) {
 	exfree(n, sizeof(CNode));
 }
 
-
 /**
  * Print out the constituent tree.
  * mode 1: treebank-style constituent tree
  * mode 2: flat, bracketed tree [A like [B this B] A]
  * mode 3: flat, treebank-style tree (A like (B this) )
  */
-
 char * linkage_print_constituent_tree(Linkage linkage, int mode)
 {
 	String * cs;
 	CNode * root;
 	char * p;
 
-	if ((mode == 0) || (linkage->sent->dict->constituent_pp == NULL)) {
+	if ((mode == 0) || (linkage->sent->dict->constituent_pp == NULL))
+	{
 		return NULL;
 	}
-	else if (mode==1 || mode==3) {
+	else if (mode==1 || mode==3)
+	{
 		cs = String_create();
 		root = linkage_constituent_tree(linkage);
 		print_tree(cs, (mode==1), root, 0, 0);
@@ -1556,8 +1562,16 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode)
 		exfree(cs, sizeof(String));
 		return p;
 	}
-	else if (mode == 2) {
-		return print_flat_constituents(&global_ctxt, linkage);
+	else if (mode == 2)
+	{
+		char * str;
+		con_context_t *ctxt;
+
+		ctxt = (con_context_t *) malloc(sizeof(con_context_t));
+		str = print_flat_constituents(ctxt, linkage);
+		free(ctxt);
+
+		return str;
 	}
 	assert(0, "Illegal mode in linkage_print_constituent_tree");
 	return NULL;
