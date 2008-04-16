@@ -41,8 +41,6 @@ typedef struct
 	 2: it's an AUX, and print it */
 } constituent_t;
 
-constituent_t constituent[MAXCONSTITUENTS];
-
 /* XXX it seems like the old code worked fine with MAX_ELTS=10 */
 #define MAX_ELTS 100
 typedef struct
@@ -61,19 +59,13 @@ typedef struct
 	WType wordtype[MAX_SENTENCE];
 	int word_used[MAXSUBL][MAX_SENTENCE];
 	int templist[MAX_ELTS];
+	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
 } con_ctxt;
 
 static con_ctxt global_ctxt;
 
-/* forward declarations */
-static void print_constituent(Linkage linkage, int c);
-
-/******************************************************
- *        These functions do the bulk of the actual
- * constituent-generating; they're called once for each
- *                      sublinkage
- *********************************************************/
+/* ================================================================ */
 
 static inline int uppercompare(const char * s, const char * t)
 {
@@ -88,31 +80,55 @@ static inline int uppercompare(const char * s, const char * t)
 static void adjust_for_left_comma(con_ctxt * ctxt, Linkage linkage, int c)
 {
 	int w;
-	w = constituent[c].left;
-	if (strcmp(linkage->word[constituent[c].left], ",")==0) {
+	w = ctxt->constituent[c].left;
+	if (strcmp(linkage->word[w], ",") == 0)
+	{
 		w++;
 		while (1) {
-			if (ctxt->word_used[linkage->current][w]==1) break;
+			if (ctxt->word_used[linkage->current][w] == 1) break;
 			w++;
 		}
 	}
-	constituent[c].left = w;
+	ctxt->constituent[c].left = w;
 }
 
 static void adjust_for_right_comma(con_ctxt *ctxt, Linkage linkage, int c)
 {
 	int w;
-	w = constituent[c].right;
-	if ((strcmp(linkage->word[constituent[c].right], ",")==0) ||
-		(strcmp(linkage->word[constituent[c].right], "RIGHT-WALL")==0)) {
+	w = ctxt->constituent[c].right;
+	if ((strcmp(linkage->word[w], ",") == 0) ||
+	    (strcmp(linkage->word[w], "RIGHT-WALL") == 0))
+	{
 		w--;
-		while (1) {
+		while (1)
+		{
 			if (ctxt->word_used[linkage->current][w]==1) break;
 			w--;
 		}
 	}
-	constituent[c].right = w;
+	ctxt->constituent[c].right = w;
 }
+
+static void print_constituent(con_ctxt *ctxt, Linkage linkage, int c)
+{
+	int w;
+	/* Sentence sent;
+	   sent = linkage_get_sentence(linkage); **PV* using linkage->word not sent->word */
+	if (verbosity<2) return;
+	printf("  c %2d %4s [%c] (%2d-%2d): ",
+		   c, ctxt->constituent[c].type, ctxt->constituent[c].domain_type,
+		   ctxt->constituent[c].left, ctxt->constituent[c].right);
+	for (w = ctxt->constituent[c].left; w <= ctxt->constituent[c].right; w++) {
+		printf("%s ", linkage->word[w]); /**PV**/
+	}
+	printf("\n");
+}
+
+/******************************************************
+ *        These functions do the bulk of the actual
+ * constituent-generating; they're called once for each
+ *                      sublinkage
+ *********************************************************/
 
 /**
  * This function looks for constituents of type ctype1. Say it finds
@@ -129,75 +145,75 @@ static int gen_comp(con_ctxt *ctxt, Linkage linkage, int numcon_total, int numco
 	for (c1=numcon_total; c1<numcon_total + numcon_subl; c1++) {
 
 		/* If ctype1 is NP, it has to be an appositive to continue */
-		if ((x==4) && (post_process_match("MX#*", constituent[c1].start_link)==0))
+		if ((x==4) && (post_process_match("MX#*", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* If ctype1 is X, and domain_type is t, it's an infinitive - skip it */
-		if ((x==2) && (constituent[c1].domain_type=='t'))
+		if ((x==2) && (ctxt->constituent[c1].domain_type=='t'))
 			continue;
 
 		/* If it's domain-type z, it's a subject-relative clause;
 		   the VP doesn't need an NP */
-		if (constituent[c1].domain_type=='z')
+		if (ctxt->constituent[c1].domain_type=='z')
 			continue;
 
 		/* If ctype1 is X or VP, and it's not started by an S, don't generate an NP
 		 (Neither of the two previous checks are necessary now, right?) */
 		if ((x==1 || x==2) &&
-			(((post_process_match("S", constituent[c1].start_link)==0) &&
-			  (post_process_match("SX", constituent[c1].start_link)==0) &&
-			  (post_process_match("SF", constituent[c1].start_link)==0)) ||
-			 (post_process_match("S##w", constituent[c1].start_link)!=0)))
+			(((post_process_match("S", ctxt->constituent[c1].start_link) == 0) &&
+			  (post_process_match("SX", ctxt->constituent[c1].start_link) == 0) &&
+			  (post_process_match("SF", ctxt->constituent[c1].start_link) == 0)) ||
+			 (post_process_match("S##w", ctxt->constituent[c1].start_link) != 0)))
 			continue;
 
 		/* If it's an SBAR (relative clause case), it has to be a relative clause */
 		if ((x==3) &&
-			((post_process_match("Rn", constituent[c1].start_link)==0) &&
-			 (post_process_match("R*", constituent[c1].start_link)==0) &&
-			 (post_process_match("MX#r", constituent[c1].start_link)==0) &&
-			 (post_process_match("Mr", constituent[c1].start_link)==0) &&
-			 (post_process_match("MX#d", constituent[c1].start_link)==0)))
+			((post_process_match("Rn", ctxt->constituent[c1].start_link) == 0) &&
+			 (post_process_match("R*", ctxt->constituent[c1].start_link) == 0) &&
+			 (post_process_match("MX#r", ctxt->constituent[c1].start_link) == 0) &&
+			 (post_process_match("Mr", ctxt->constituent[c1].start_link) == 0) &&
+			 (post_process_match("MX#d", ctxt->constituent[c1].start_link) == 0)))
 			continue;
 
 		/* If ctype1 is SBAR (clause opener case), it has to be an f domain */
-		if ((x==5) && (constituent[c1].domain_type!='f'))
+		if ((x==5) && (ctxt->constituent[c1].domain_type!='f'))
 			continue;
 
 		/* If ctype1 is SBAR (pp opener case), it has to be a g domain */
-		if ((x==6) && (constituent[c1].domain_type!='g'))
+		if ((x==6) && (ctxt->constituent[c1].domain_type!='g'))
 			continue;
 
 		/* If ctype1 is NP (paraphrase case), it has to be started by an SI */
-		if ((x==7) && (post_process_match("SI", constituent[c1].start_link)==0))
+		if ((x==7) && (post_process_match("SI", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* If ctype1 is VP (participle modifier case), it has to be
 		   started by an Mv or Mg */
-		if ((x==8) && (post_process_match("M", constituent[c1].start_link)==0))
+		if ((x==8) && (post_process_match("M", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* If ctype1 is VP (participle opener case), it has
 		   to be started by a COp */
-		if ((x==9) && (post_process_match("COp", constituent[c1].start_link)==0))
+		if ((x==9) && (post_process_match("COp", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* Now start at the bounds of c1, and work outwards until you
 		   find a larger constituent of type ctype2 */
-		if (!(strcmp(constituent[c1].type, ctype1)==0))
+		if (!(strcmp(ctxt->constituent[c1].type, ctype1)==0))
 			continue;
 
 		if (verbosity>=2)
 			printf("Generating complement constituent for c %d of type %s\n",
 				   c1, ctype1);
 		done=0;
-		for (w2=constituent[c1].left; (done==0) && (w2>=0); w2--) {
-			for (w3=constituent[c1].right; w3<linkage->num_words; w3++) {
+		for (w2=ctxt->constituent[c1].left; (done==0) && (w2>=0); w2--) {
+			for (w3=ctxt->constituent[c1].right; w3<linkage->num_words; w3++) {
 				for (c2=numcon_total; (done==0) &&
 						 (c2 < numcon_total + numcon_subl); c2++) {
-					if (!((constituent[c2].left==w2) &&
-						  (constituent[c2].right==w3)) || (c2==c1))
+					if (!((ctxt->constituent[c2].left==w2) &&
+						  (ctxt->constituent[c2].right==w3)) || (c2==c1))
 						continue;
-					if (!(strcmp(constituent[c2].type, ctype2)==0))
+					if (!(strcmp(ctxt->constituent[c2].type, ctype2)==0))
 						continue;
 
 					/* if the new constituent (c) is to the left
@@ -209,53 +225,55 @@ static int gen_comp(con_ctxt *ctxt, Linkage linkage, int numcon_total, int numco
 					if ((x==5) || (x==6) || (x==9)) {
 								/* This is the case where c is to the
 								   RIGHT of c1 */
-						w=constituent[c1].right+1;
+						w = ctxt->constituent[c1].right+1;
 						while(1) {
 							if (ctxt->word_used[linkage->current][w]==1)
 								break;
 							w++;
 						}
-						if (w>constituent[c2].right) {
+						if (w > ctxt->constituent[c2].right)
+						{
 							done=1;
 							continue;
 						}
-						constituent[c].left=w;
-						constituent[c].right=constituent[c2].right;
+						ctxt->constituent[c].left = w;
+						ctxt->constituent[c].right = ctxt->constituent[c2].right;
 					}
 					else {
-						w=constituent[c1].left-1;
+						w = ctxt->constituent[c1].left-1;
 						while(1) {
-							if (ctxt->word_used[linkage->current][w]==1)
+							if (ctxt->word_used[linkage->current][w] == 1)
 								break;
 							w--;
 						}
-						if (w<constituent[c2].left) {
+						if (w < ctxt->constituent[c2].left) {
 							done=1;
 							continue;
 						}
-						constituent[c].right=w;
-						constituent[c].left=constituent[c2].left;
+						ctxt->constituent[c].right = w;
+						ctxt->constituent[c].left = ctxt->constituent[c2].left;
 					}
 
 					adjust_for_left_comma(ctxt, linkage, c1);
 					adjust_for_right_comma(ctxt, linkage, c1);
 
-					constituent[c].type =
+					ctxt->constituent[c].type =
 						string_set_add(ctype3, phrase_ss);
-					constituent[c].domain_type = 'x';
-					constituent[c].start_link =
+					ctxt->constituent[c].domain_type = 'x';
+					ctxt->constituent[c].start_link =
 						string_set_add("XX", phrase_ss);
-					constituent[c].start_num =
-						constituent[c1].start_num; /* bogus */
-					if (verbosity>=2) {
+					ctxt->constituent[c].start_num =
+						ctxt->constituent[c1].start_num; /* bogus */
+					if (verbosity >= 2)
+					{
 						printf("Larger c found: c %d (%s); ",
 							   c2, ctype2);
 						printf("Adding constituent:\n");
-						print_constituent(linkage, c);
+						print_constituent(ctxt, linkage, c);
 					}
 					c++;
 					assert(c < MAXCONSTITUENTS, "Too many constituents");
-					done=1;
+					done = 1;
 				}
 			}
 		}
@@ -282,53 +300,38 @@ static void adjust_subordinate_clauses(con_ctxt *ctxt, Linkage linkage,
 	int c, w, c2, w2, done;
 
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
-		if ((post_process_match("MVs", constituent[c].start_link)==1) ||
-			(post_process_match("MVg", constituent[c].start_link)==1)) {
+		if ((post_process_match("MVs", ctxt->constituent[c].start_link) == 1) ||
+			(post_process_match("MVg", ctxt->constituent[c].start_link)==1)) {
 			done=0;
-			for (w2=constituent[c].left-1; (done==0) && w2>=0; w2--) {
+			for (w2=ctxt->constituent[c].left-1; (done==0) && w2>=0; w2--) {
 				for (c2=numcon_total; c2<numcon_total + numcon_subl; c2++) {
-					if (!((constituent[c2].left==w2) &&
-						  (constituent[c2].right >= constituent[c].right)))
+					if (!((ctxt->constituent[c2].left==w2) &&
+						  (ctxt->constituent[c2].right >= ctxt->constituent[c].right)))
 						continue;
-					if ((strcmp(constituent[c2].type, "S")==0) ||
-						(strcmp(constituent[c2].type, "NP")==0)) {
+					if ((strcmp(ctxt->constituent[c2].type, "S") == 0) ||
+						(strcmp(ctxt->constituent[c2].type, "NP") == 0)) {
 						done=1;
 						break;
 					}
-					if ((constituent[c2].domain_type=='v') ||
-						(constituent[c2].domain_type=='a')) {
-						w = constituent[c].left-1;
+					if ((ctxt->constituent[c2].domain_type == 'v') ||
+						(ctxt->constituent[c2].domain_type == 'a')) {
+						w = ctxt->constituent[c].left-1;
 						while (1) {
-							if (ctxt->word_used[linkage->current][w]==1) break;
+							if (ctxt->word_used[linkage->current][w] == 1) break;
 							w--;
 						}
-						constituent[c2].right = w;
+						ctxt->constituent[c2].right = w;
 
-						if (verbosity>=2)
+						if (verbosity >= 2)
 							printf("Adjusting constituent %d:\n", c2);
-						print_constituent(linkage, c2);
+						print_constituent(ctxt, linkage, c2);
 					}
 				}
 			}
-			if (strcmp(linkage->word[constituent[c].left], ",")==0)
-				constituent[c].left++;
+			if (strcmp(linkage->word[ctxt->constituent[c].left], ",") == 0)
+				ctxt->constituent[c].left++;
 		}	
 	}
-}
-
-static void print_constituent(Linkage linkage, int c)
-{
-	int w;
-	/* Sentence sent;
-	   sent = linkage_get_sentence(linkage); **PV* using linkage->word not sent->word */
-	if (verbosity<2) return;
-	printf("  c %2d %4s [%c] (%2d-%2d): ",
-		   c, constituent[c].type, constituent[c].domain_type,
-		   constituent[c].left, constituent[c].right);
-	for (w=constituent[c].left; w<=constituent[c].right; w++) {
-		printf("%s ", linkage->word[w]); /**PV**/
-	}
-	printf("\n");
 }
 
 /******************************************************
@@ -357,11 +360,11 @@ static int find_next_element(con_ctxt *ctxt,
 	n = num_lists;
 	for (c=start+1; c<numcon_total; c++)
 	{
-		constituent_t *cc = &constituent[c];
+		constituent_t *cc = &ctxt->constituent[c];
 
 		if (cc->valid == 0)
 			continue;
-		if (strcmp(constituent[ctxt->templist[0]].type, cc->type)!=0)
+		if (strcmp(ctxt->constituent[ctxt->templist[0]].type, cc->type)!=0)
 			continue;
 		ok = 1;
 
@@ -375,7 +378,7 @@ static int find_next_element(con_ctxt *ctxt,
 		for (a=0; a<num_elements; a++)
 		{
 			int t = ctxt->templist[a];
-			constituent_t *ct = &constituent[t];
+			constituent_t *ct = &ctxt->constituent[t];
 
 			if (cc->subl == ct->subl)
 				ok=0;
@@ -390,12 +393,12 @@ static int find_next_element(con_ctxt *ctxt,
 
 			for (c2=0; c2<numcon_total; c2++)
 			{
-				if (constituent[c2].canon != cc->canon)
+				if (ctxt->constituent[c2].canon != cc->canon)
 					continue;
 				for (c3=0; c3<numcon_total; c3++)
 				{
-					if ((constituent[c3].canon == ct->canon)
-						&& (constituent[c3].subl == constituent[c2].subl))
+					if ((ctxt->constituent[c3].canon == ct->canon)
+						&& (ctxt->constituent[c3].subl == ctxt->constituent[c2].subl))
 						ok=0;
 				}
 			}
@@ -426,27 +429,33 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	int leftend, rightend;
 
 
-	for (c1=0; c1<numcon_total; c1++) {
-		constituent[c1].valid = 1;
+	for (c1=0; c1<numcon_total; c1++)
+	{
+		ctxt->constituent[c1].valid = 1;
+
 		/* Find and invalidate any constituents with negative length */
-		if(constituent[c1].right<constituent[c1].left) {
-		  if(verbosity>=2) printf("WARNING: Constituent %d has negative length. Deleting it.\n", c1);
-		  constituent[c1].valid=0;
+		if(ctxt->constituent[c1].right < ctxt->constituent[c1].left)
+		{
+		  if(verbosity >= 2) printf("WARNING: Constituent %d has negative length. Deleting it.\n", c1);
+		  ctxt->constituent[c1].valid = 0;
 		}
-		constituent[c1].canon=c1;
+		ctxt->constituent[c1].canon = c1;
 	}
 
 	/* First go through and give each constituent a canonical number
 	   (the index number of the lowest-numbered constituent
 	   identical to it) */
 
-	for (c1=0; c1<numcon_total; c1++) {
-		if (constituent[c1].canon!=c1) continue;
-		for (c2=c1+1; c2<numcon_total; c2++) {
-			if ((constituent[c1].left == constituent[c2].left) &&
-				(constituent[c1].right == constituent[c2].right) &&
-				(strcmp(constituent[c1].type, constituent[c2].type)==0)) {
-				constituent[c2].canon=c1;
+	for (c1=0; c1<numcon_total; c1++)
+	{
+		if (ctxt->constituent[c1].canon != c1) continue;
+		for (c2=c1+1; c2<numcon_total; c2++)
+		{
+			if ((ctxt->constituent[c1].left == ctxt->constituent[c2].left) &&
+				(ctxt->constituent[c1].right == ctxt->constituent[c2].right) &&
+				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
+			{
+				ctxt->constituent[c2].canon = c1;
 			}
 		}
 	}
@@ -456,34 +465,40 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	   and B has no duplicate in X, then declare B invalid. (Example:
 	   " [A [B We saw the cat B] and the dog A] " */
 
-	for (c1=0; c1<numcon_total; c1++) {
-		if (constituent[c1].valid==0) continue;
-		for (c2=0; c2<numcon_total; c2++) {
-			if (constituent[c2].subl == constituent[c1].subl) continue;
+	for (c1=0; c1<numcon_total; c1++)
+	{
+		if (ctxt->constituent[c1].valid == 0) continue;
+		for (c2=0; c2<numcon_total; c2++)
+		{
+			if (ctxt->constituent[c2].subl == ctxt->constituent[c1].subl) continue;
 			ok=1;
-		/* Does c2 have a duplicate in the sublinkage containing c1?
-		   If so, bag it */
-			for (c3=0; c3<numcon_total; c3++) {
-				if ((constituent[c2].canon == constituent[c3].canon) &&
-					(constituent[c3].subl == constituent[c1].subl))
+			/* Does c2 have a duplicate in the sublinkage containing c1?
+			   If so, bag it */
+			for (c3=0; c3<numcon_total; c3++)
+			{
+				if ((ctxt->constituent[c2].canon == ctxt->constituent[c3].canon) &&
+					(ctxt->constituent[c3].subl == ctxt->constituent[c1].subl))
 					ok=0;
 			}
-			for (c3=0; c3<numcon_total; c3++) {
-				if ((constituent[c1].canon == constituent[c3].canon) &&
-					(constituent[c3].subl == constituent[c2].subl))
+			for (c3=0; c3<numcon_total; c3++)
+			{
+				if ((ctxt->constituent[c1].canon == ctxt->constituent[c3].canon) &&
+					(ctxt->constituent[c3].subl == ctxt->constituent[c2].subl))
 					ok=0;
 			}
 			if (ok==0) continue;
-			if ((constituent[c1].left == constituent[c2].left) &&
-				(constituent[c1].right > constituent[c2].right) &&
-				(strcmp(constituent[c1].type, constituent[c2].type)==0)) {
-				constituent[c2].valid=0;
+			if ((ctxt->constituent[c1].left == ctxt->constituent[c2].left) &&
+				(ctxt->constituent[c1].right > ctxt->constituent[c2].right) &&
+				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
+			{
+				ctxt->constituent[c2].valid = 0;
 			}
 
-			if ((constituent[c1].left < constituent[c2].left) &&
-				(constituent[c1].right == constituent[c2].right) &&
-				(strcmp(constituent[c1].type, constituent[c2].type)==0)) {
-				constituent[c2].valid=0;
+			if ((ctxt->constituent[c1].left < ctxt->constituent[c2].left) &&
+				(ctxt->constituent[c1].right == ctxt->constituent[c2].right) &&
+				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
+			{
+				ctxt->constituent[c2].valid = 0;
 			}
 		}
 	}
@@ -492,11 +507,13 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	   mark one as invalid. (It doesn't matter if they're in the
 	   same sublinkage or not) */
 
-	for (c1=0; c1<numcon_total; c1++) {
-		if (constituent[c1].valid==0) continue;
-		for (c2=c1+1; c2<numcon_total; c2++) {
-			if (constituent[c2].canon == constituent[c1].canon)
-				constituent[c2].valid=0;
+	for (c1=0; c1<numcon_total; c1++)
+	{
+		if (ctxt->constituent[c1].valid == 0) continue;
+		for (c2=c1+1; c2<numcon_total; c2++)
+		{
+			if (ctxt->constituent[c2].canon == ctxt->constituent[c1].canon)
+				ctxt->constituent[c2].valid=0;
 		}
 	}
 
@@ -505,8 +522,9 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	   be present in the same sublinkage as any of the others. */
 
 	num_lists=0;
-	for (c1=0; c1<numcon_total; c1++) {
-		if (constituent[c1].valid == 0) continue;
+	for (c1=0; c1<numcon_total; c1++)
+	{
+		if (ctxt->constituent[c1].valid == 0) continue;
 		num_elements = 1;
 		ctxt->templist[0] = c1;
 		num_lists =
@@ -514,11 +532,14 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 							  num_elements, num_lists);
 	}
 
-	if (verbosity>=2) {
+	if (verbosity>=2)
+	{
 		printf("And-lists:\n");
-		for (n=0; n<num_lists; n++) {
+		for (n=0; n<num_lists; n++)
+		{
 			printf("  %d: ", n);
-			for (a=0; a < ctxt->andlist[n].num; a++) {
+			for (a=0; a < ctxt->andlist[n].num; a++)
+			{
 				printf("%d ", ctxt->andlist[n].e[a]);
 			}
 			printf("\n");
@@ -529,19 +550,23 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 	   andlists--e.g. if andlist X contains constituents A and B,
 	   and Y contains A B and C, we throw out X */
 
-	for (n=0; n<num_lists; n++) {
-		ctxt->andlist[n].valid=1;
-		for (n2=0; n2<num_lists; n2++) {
+	for (n=0; n < num_lists; n++)
+	{
+		ctxt->andlist[n].valid = 1;
+		for (n2=0; n2 < num_lists; n2++)
+		{
 			if (n2==n) continue;
 			if (ctxt->andlist[n2].num < ctxt->andlist[n].num)
 				continue;
-			listmatch=1;
-			for (a=0; a < ctxt->andlist[n].num; a++) {
-				match=0;
+
+			listmatch = 1;
+			for (a=0; a < ctxt->andlist[n].num; a++)
+			{
+				match = 0;
 				for (a2=0; a2 < ctxt->andlist[n2].num; a2++)
 				{
 					if (ctxt->andlist[n2].e[a2] == ctxt->andlist[n].e[a])
-						match=1;
+						match = 1;
 				}
 				if (match == 0) listmatch = 0;
 				/* At least one element was not matched by n2 */
@@ -569,8 +594,8 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 					c2 = ctxt->andlist[n2].e[a2];
 					if (c1==c2)
 						continue;
-					if (!((constituent[c2].left<=constituent[c1].left) &&
-						  (constituent[c2].right>=constituent[c1].right)))
+					if (!((ctxt->constituent[c2].left<=ctxt->constituent[c1].left) &&
+						  (ctxt->constituent[c2].right>=ctxt->constituent[c1].right)))
 						continue;
 					if (verbosity>=2)
 						printf("Found that c%d in list %d is bigger " \
@@ -584,8 +609,8 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 
 					for (a3=0; a3 < ctxt->andlist[n].num; a3++) {
 						c3 = ctxt->andlist[n].e[a3];
-						if ((constituent[c2].left>constituent[c3].left) ||
-							(constituent[c2].right<constituent[c3].right))
+						if ((ctxt->constituent[c2].left>ctxt->constituent[c3].left) ||
+							(ctxt->constituent[c2].right<ctxt->constituent[c3].right))
 							ok=0;
 					}
 					if (ok != 0)
@@ -626,21 +651,21 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 		rightend=-1;
 		for (a=0; a < ctxt->andlist[n].num; a++) {
 			c2 = ctxt->andlist[n].e[a];
-			if (constituent[c2].left<leftend) {
-				leftend=constituent[c2].left;
+			if (ctxt->constituent[c2].left<leftend) {
+				leftend=ctxt->constituent[c2].left;
 			}
-			if (constituent[c2].right>rightend) {
-				rightend=constituent[c2].right;
+			if (ctxt->constituent[c2].right>rightend) {
+				rightend=ctxt->constituent[c2].right;
 			}
 		}
 
-		constituent[c1].left=leftend;
-		constituent[c1].right=rightend;
-		constituent[c1].type = constituent[c2].type;
-		constituent[c1].domain_type = 'x';
-		constituent[c1].valid=1;
-		constituent[c1].start_link = constituent[c2].start_link;  /* bogus */
-		constituent[c1].start_num = constituent[c2].start_num;	/* bogus */
+		ctxt->constituent[c1].left=leftend;
+		ctxt->constituent[c1].right=rightend;
+		ctxt->constituent[c1].type = ctxt->constituent[c2].type;
+		ctxt->constituent[c1].domain_type = 'x';
+		ctxt->constituent[c1].valid=1;
+		ctxt->constituent[c1].start_link = ctxt->constituent[c2].start_link;  /* bogus */
+		ctxt->constituent[c1].start_num = ctxt->constituent[c2].start_num;	/* bogus */
 
 		/* If a constituent within the andlist is an aux (aux==1),
 		   set aux for the whole-list constituent to 2, also set
@@ -652,18 +677,18 @@ static int merge_constituents(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 		for (a = 0; a < ctxt->andlist[n].num; a++)
 		{
 			c2 = ctxt->andlist[n].e[a];
-			if ((constituent[c2].aux==1) || (constituent[c2].aux==2)) {
-				constituent[c1].aux=2;
-				constituent[c2].aux=2;
+			if ((ctxt->constituent[c2].aux==1) || (ctxt->constituent[c2].aux==2)) {
+				ctxt->constituent[c1].aux=2;
+				ctxt->constituent[c2].aux=2;
 			}
 		}
 
-		if (verbosity>=2)
+		if (verbosity >= 2)
 			printf("Adding constituent:\n");
-		print_constituent(linkage, c1);
+		print_constituent(ctxt, linkage, c1);
 		c1++;
 	}
-	numcon_total=c1;
+	numcon_total = c1;
 	return numcon_total;
 }
 
@@ -718,7 +743,7 @@ static void generate_misc_word_info(con_ctxt * ctxt, Linkage linkage)
 	}
 }
 
-static int last_minute_fixes(Linkage linkage, int numcon_total)
+static int last_minute_fixes(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 {
 	int c, c2, global_leftend_found, adjustment_made,
 		global_rightend_found, lastword, newcon_total=0;
@@ -731,37 +756,37 @@ static int last_minute_fixes(Linkage linkage, int numcon_total)
 		   the paraphrasing clause doesn't get
 		   an S. (This is true in Treebank II, not Treebank I) */
 
-		if (uppercompare(constituent[c].start_link, "CP")==0) {
-			constituent[c].valid = 0;
+		if (uppercompare(ctxt->constituent[c].start_link, "CP")==0) {
+			ctxt->constituent[c].valid = 0;
 		}
 
 		/* If it's a possessive with an "'s", the NP on the left
 		   should be extended to include the "'s". */
-		if ((uppercompare(constituent[c].start_link, "YS")==0) ||
-			(uppercompare(constituent[c].start_link, "YP")==0)) {
-			constituent[c].right++;
+		if ((uppercompare(ctxt->constituent[c].start_link, "YS")==0) ||
+			(uppercompare(ctxt->constituent[c].start_link, "YP")==0)) {
+			ctxt->constituent[c].right++;
 		}
 
 		/* If a constituent has starting link MVpn, it's a time
 		   expression like "last week"; label it as a noun phrase
 		   (incorrectly) */
 
-		if (strcmp(constituent[c].start_link, "MVpn")==0) {
-			constituent[c].type = string_set_add("NP", phrase_ss);
+		if (strcmp(ctxt->constituent[c].start_link, "MVpn")==0) {
+			ctxt->constituent[c].type = string_set_add("NP", phrase_ss);
 		}
-		if (strcmp(constituent[c].start_link, "COn")==0) {
-			constituent[c].type = string_set_add("NP", phrase_ss);
+		if (strcmp(ctxt->constituent[c].start_link, "COn")==0) {
+			ctxt->constituent[c].type = string_set_add("NP", phrase_ss);
 		}
-		if (strcmp(constituent[c].start_link, "Mpn")==0) {
-			constituent[c].type = string_set_add("NP", phrase_ss);
+		if (strcmp(ctxt->constituent[c].start_link, "Mpn")==0) {
+			ctxt->constituent[c].type = string_set_add("NP", phrase_ss);
 		}
 
 		/* If the constituent is an S started by "but" or "and" at
 		   the beginning of the sentence, it should be ignored. */
 
-		if ((strcmp(constituent[c].start_link, "Wdc")==0) &&
-			(constituent[c].left==2)) {
-			constituent[c].valid = 0;
+		if ((strcmp(ctxt->constituent[c].start_link, "Wdc")==0) &&
+			(ctxt->constituent[c].left==2)) {
+			ctxt->constituent[c].valid = 0;
 		}
 
 		/* For prenominal adjectives, an ADJP constituent is assigned
@@ -773,17 +798,17 @@ static int last_minute_fixes(Linkage linkage, int numcon_total)
 		   seems to apply to prenominal adjectives (of all kinds).
 		   However, it also applies to number expressions ("QP"). */
 
-		if ((post_process_match("A", constituent[c].start_link)==1) ||
-			(constituent[c].domain_type=='d') ||
-			(constituent[c].domain_type=='h')) {
-			if (constituent[c].right-constituent[c].left==0) {
-				constituent[c].valid=0;
+		if ((post_process_match("A", ctxt->constituent[c].start_link)==1) ||
+			(ctxt->constituent[c].domain_type=='d') ||
+			(ctxt->constituent[c].domain_type=='h')) {
+			if (ctxt->constituent[c].right-ctxt->constituent[c].left==0) {
+				ctxt->constituent[c].valid=0;
 			}
 		}
 
-		if ((constituent[c].domain_type=='h') &&
-			(strcmp(linkage->word[constituent[c].left-1], "$")==0)) {
-			constituent[c].left--;
+		if ((ctxt->constituent[c].domain_type=='h') &&
+			(strcmp(linkage->word[ctxt->constituent[c].left-1], "$")==0)) {
+			ctxt->constituent[c].left--;
 		}
 
 		/* If a constituent has type VP and its aux value is 2,
@@ -791,11 +816,11 @@ static int last_minute_fixes(Linkage linkage, int numcon_total)
 		   type to "X". If its aux value is 1, set "valid" to 0. (This
 		   applies to Treebank I only) */
 
-		if (constituent[c].aux==2) {
-			constituent[c].type = string_set_add("X", phrase_ss);
+		if (ctxt->constituent[c].aux==2) {
+			ctxt->constituent[c].type = string_set_add("X", phrase_ss);
 		}
-		if (constituent[c].aux==1) {
-			constituent[c].valid=0;
+		if (ctxt->constituent[c].aux==1) {
+			ctxt->constituent[c].valid=0;
 		}
 	}
 
@@ -805,11 +830,11 @@ static int last_minute_fixes(Linkage linkage, int numcon_total)
 	   except a final period or question mark, extend it by one word */
 
 	for (c=0; c<numcon_total; c++) {
-		if ((constituent[c].right==(linkage->num_words)-3) &&
-			(constituent[c].left==1) &&
-			(strcmp(constituent[c].type, "S")==0) &&
+		if ((ctxt->constituent[c].right==(linkage->num_words)-3) &&
+			(ctxt->constituent[c].left==1) &&
+			(strcmp(ctxt->constituent[c].type, "S")==0) &&
 			(strcmp(sent->word[(linkage->num_words)-2].string, ".")==0))
-			constituent[c].right++;
+			ctxt->constituent[c].right++;
 	}
 
 	/* If there's no S boundary at the very left end of the sentence,
@@ -819,26 +844,27 @@ static int last_minute_fixes(Linkage linkage, int numcon_total)
 	global_leftend_found = 0;
 	global_rightend_found = 0;
 	for (c=0; c<numcon_total; c++) {
-		if ((constituent[c].left==1) && (strcmp(constituent[c].type, "S")==0) &&
-			(constituent[c].valid==1))
+		if ((ctxt->constituent[c].left==1) && (strcmp(ctxt->constituent[c].type, "S")==0) &&
+			(ctxt->constituent[c].valid==1))
 			global_leftend_found=1;
 	}
 	for (c=0; c<numcon_total; c++) {
-		if ((constituent[c].right>=lastword) &&
-			(strcmp(constituent[c].type, "S")==0) && (constituent[c].valid==1))
+		if ((ctxt->constituent[c].right>=lastword) &&
+			(strcmp(ctxt->constituent[c].type, "S")==0) && (ctxt->constituent[c].valid==1))
 			global_rightend_found=1;
 	}
-	if ((global_leftend_found==0) || (global_rightend_found==0)) {
-		c=numcon_total;
-		constituent[c].left=1;
-		constituent[c].right=linkage->num_words-1;
-		constituent[c].type = string_set_add("S", phrase_ss);
-		constituent[c].valid=1;
-		constituent[c].domain_type = 'x';
+	if ((global_leftend_found==0) || (global_rightend_found==0))
+	{
+		c = numcon_total;
+		ctxt->constituent[c].left = 1;
+		ctxt->constituent[c].right = linkage->num_words-1;
+		ctxt->constituent[c].type = string_set_add("S", phrase_ss);
+		ctxt->constituent[c].valid = 1;
+		ctxt->constituent[c].domain_type = 'x';
 		numcon_total++;
-		if (verbosity>=2)
+		if (verbosity >= 2)
 			printf("Adding global sentence constituent:\n");
-		print_constituent(linkage, c);
+		print_constituent(ctxt, linkage, c);
 	}
 
 	/* Check once more to see if constituents are nested (checking BETWEEN sublinkages
@@ -847,18 +873,18 @@ static int last_minute_fixes(Linkage linkage, int numcon_total)
 	while (1) {
 		adjustment_made=0;
 		for (c=0; c<numcon_total; c++) {
-			if(constituent[c].valid==0) continue;
+			if(ctxt->constituent[c].valid==0) continue;
 			for (c2=0; c2<numcon_total; c2++) {
-				if(constituent[c2].valid==0) continue;
-				if ((constituent[c].left < constituent[c2].left) &&
-					(constituent[c].right < constituent[c2].right) &&
-					(constituent[c].right >= constituent[c2].left)) {
+				if(ctxt->constituent[c2].valid==0) continue;
+				if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
+					(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
+					(ctxt->constituent[c].right >= ctxt->constituent[c2].left)) {
 
 					if (verbosity>=2) {
 					  printf("WARNING: the constituents aren't nested! Adjusting them." \
 							   "(%d, %d)\n", c, c2);
 					  }
-					constituent[c].left = constituent[c2].left;
+					ctxt->constituent[c].left = ctxt->constituent[c2].left;
 				}
 			}
 		}
@@ -901,7 +927,7 @@ static void count_words_used(con_ctxt *ctxt, Linkage linkage)
 
 static int r_limit=0;
 
-static int add_constituent(int c, Linkage linkage, Domain domain,
+static int add_constituent(con_ctxt *ctxt, int c, Linkage linkage, Domain domain,
                            int l, int r, const char * name)
 {
 	c++;
@@ -911,13 +937,13 @@ static int add_constituent(int c, Linkage linkage, Domain domain,
 	if (r > r_limit) r = r_limit;
 	assert(l <= r, "negative constituent length!" );
 
-	constituent[c].left = l;
-	constituent[c].right = r;
-	constituent[c].domain_type = domain.type;
-	constituent[c].start_link =
+	ctxt->constituent[c].left = l;
+	ctxt->constituent[c].right = r;
+	ctxt->constituent[c].domain_type = domain.type;
+	ctxt->constituent[c].start_link =
 		linkage_get_link_label(linkage, domain.start_link);
-	constituent[c].start_num = domain.start_link;
-	constituent[c].type = string_set_add(name, phrase_ss);
+	ctxt->constituent[c].start_num = domain.start_link;
+	ctxt->constituent[c].type = string_set_add(name, phrase_ss);
 	return c;
 }
 
@@ -1021,57 +1047,57 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 		}
 
 		c--;
-		c = add_constituent(c, linkage, domain, leftmost, rightmost,
+		c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost,
 						cons_of_domain(domain.type));
 
 		if (domain.type=='z') {
-			c = add_constituent(c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
 		}
 		if (domain.type=='c') {
-			c = add_constituent(c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
 		}
-		if ((post_process_match("Ce*", constituent[c].start_link)==1) ||
-			(post_process_match("Rn", constituent[c].start_link)==1)) {
-			c = add_constituent(c, linkage, domain, leftmost, rightmost, "SBAR");
+		if ((post_process_match("Ce*", ctxt->constituent[c].start_link)==1) ||
+			(post_process_match("Rn", ctxt->constituent[c].start_link)==1)) {
+			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "SBAR");
 		}
-		if ((post_process_match("R*", constituent[c].start_link)==1) ||
-			(post_process_match("MX#r", constituent[c].start_link)==1)) {
+		if ((post_process_match("R*", ctxt->constituent[c].start_link)==1) ||
+			(post_process_match("MX#r", ctxt->constituent[c].start_link)==1)) {
 			w=leftmost;
 			if (strcmp(linkage->word[w], ",")==0) w++;
-			c = add_constituent(c, linkage, domain, w, w, "WHNP");
+			c = add_constituent(ctxt, c, linkage, domain, w, w, "WHNP");
 		}
-		if (post_process_match("Mj", constituent[c].start_link)==1) {
+		if (post_process_match("Mj", ctxt->constituent[c].start_link)==1) {
 			w=leftmost;
 			if (strcmp(linkage->word[w], ",")==0) w++;
-			c = add_constituent(c, linkage, domain, w, w+1, "WHPP");
-			c = add_constituent(c, linkage, domain, w+1, w+1, "WHNP");
+			c = add_constituent(ctxt, c, linkage, domain, w, w+1, "WHPP");
+			c = add_constituent(ctxt, c, linkage, domain, w+1, w+1, "WHNP");
 		}
-		if ((post_process_match("Ss#d", constituent[c].start_link)==1) ||
-			(post_process_match("B#d", constituent[c].start_link)==1)) {
-			c = add_constituent(c, linkage, domain, rootleft, rootleft, "WHNP");
-			c = add_constituent(c, linkage, domain,
-							rootleft, constituent[c-1].right, "SBAR");
+		if ((post_process_match("Ss#d", ctxt->constituent[c].start_link)==1) ||
+			(post_process_match("B#d", ctxt->constituent[c].start_link)==1)) {
+			c = add_constituent(ctxt, c, linkage, domain, rootleft, rootleft, "WHNP");
+			c = add_constituent(ctxt, c, linkage, domain,
+							rootleft, ctxt->constituent[c-1].right, "SBAR");
 		}
-		if (post_process_match("CP", constituent[c].start_link)==1) {
+		if (post_process_match("CP", ctxt->constituent[c].start_link)==1) {
 			if (strcmp(linkage->word[leftmost], ",")==0)
-				constituent[c].left++;
-			c = add_constituent(c, linkage, domain, 1, linkage->num_words-1, "S");
+				ctxt->constituent[c].left++;
+			c = add_constituent(ctxt, c, linkage, domain, 1, linkage->num_words-1, "S");
 		}
-		if ((post_process_match("MVs", constituent[c].start_link)==1) ||
+		if ((post_process_match("MVs", ctxt->constituent[c].start_link)==1) ||
 			(domain.type=='f')) {
-			w=constituent[c].left;
+			w=ctxt->constituent[c].left;
 			if (strcmp(linkage->word[w], ",")==0)
 				w++;
 			if (strcmp(linkage->word[w], "when")==0) {
-				c = add_constituent(c, linkage, domain, w, w, "WHADVP");
+				c = add_constituent(ctxt, c, linkage, domain, w, w, "WHADVP");
 			}
 		}
 		if (domain.type=='t') {
-			c = add_constituent(c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
 		}
-		if ((post_process_match("QI", constituent[c].start_link)==1) ||
-			(post_process_match("Mr", constituent[c].start_link)==1) ||
-			(post_process_match("MX#d", constituent[c].start_link)==1)) {
+		if ((post_process_match("QI", ctxt->constituent[c].start_link)==1) ||
+			(post_process_match("Mr", ctxt->constituent[c].start_link)==1) ||
+			(post_process_match("MX#d", ctxt->constituent[c].start_link)==1)) {
 			w = leftmost;
 			if (strcmp(linkage->word[w], ",")==0) w++;
 			if (ctxt->wordtype[w] == NONE)
@@ -1082,7 +1108,7 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 				name = "WHNP";
 			else
 				assert(0, "Unexpected word type");
-			c = add_constituent(c, linkage, domain, w, w, name);
+			c = add_constituent(ctxt, c, linkage, domain, w, w, name);
 
 			if (ctxt->wordtype[w] == QDTYPE) {
 				/* Now find the finite verb to the right, start an S */
@@ -1092,15 +1118,15 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 				  if ((ctxt->wordtype[w2] == STYPE) || (ctxt->wordtype[w2] == PTYPE)) break;
 
 				/* Adjust the right boundary of previous constituent */
-				constituent[c].right = w2-1;
-				c = add_constituent(c, linkage, domain, w2, rightmost, "S");
+				ctxt->constituent[c].right = w2-1;
+				c = add_constituent(ctxt, c, linkage, domain, w2, rightmost, "S");
 			  }
 		}
 
-		if (constituent[c].domain_type=='\0') {
+		if (ctxt->constituent[c].domain_type=='\0') {
 			error("Error: no domain type assigned to constituent\n");
 		}
-		if (constituent[c].start_link==NULL) {
+		if (ctxt->constituent[c].start_link==NULL) {
 			error("Error: no type assigned to constituent\n");
 		}
 	}
@@ -1108,11 +1134,12 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 	numcon_subl = c - numcon_total;
 	/* numcon_subl = handle_islands(linkage, numcon_total, numcon_subl);  */
 
-	if (verbosity>=2)
+	if (verbosity >= 2)
 		printf("Constituents added at first stage for subl %d:\n",
 			   linkage->current);
-	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
-		print_constituent(linkage, c);
+	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
+	{
+		print_constituent(ctxt, linkage, c);
 	}
 
 	/* Opener case - generates S around main clause.
@@ -1155,9 +1182,9 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 
 	adjust_subordinate_clauses(ctxt, linkage, numcon_total, numcon_subl);
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
-		if ((constituent[c].domain_type=='p') &&
-			(strcmp(linkage->word[constituent[c].left], ",")==0)) {
-			constituent[c].left++;
+		if ((ctxt->constituent[c].domain_type=='p') &&
+			(strcmp(linkage->word[ctxt->constituent[c].left], ",")==0)) {
+			ctxt->constituent[c].left++;
 		}
 	}
 
@@ -1170,24 +1197,24 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 		adjustment_made=0;
 		for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
 			for (c2=numcon_total; c2<numcon_total + numcon_subl; c2++) {
-				if ((constituent[c].left < constituent[c2].left) &&
-					(constituent[c].right < constituent[c2].right) &&
-					(constituent[c].right >= constituent[c2].left)) {
+				if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
+					(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
+					(ctxt->constituent[c].right >= ctxt->constituent[c2].left)) {
 
 					/* We've found two overlapping constituents.
 					   If one is larger, except the smaller one
 					   includes an extra comma, adjust the smaller one
 					   to exclude the comma */
 
-					if ((strcmp(linkage->word[constituent[c2].right], ",")==0) ||
-						(strcmp(linkage->word[constituent[c2].right],
+					if ((strcmp(linkage->word[ctxt->constituent[c2].right], ",")==0) ||
+						(strcmp(linkage->word[ctxt->constituent[c2].right],
 								"RIGHT-WALL")==0)) {
 						if (verbosity>=2)
 							printf("Adjusting %d to fix comma overlap\n", c2);
 						adjust_for_right_comma(ctxt, linkage, c2);
 						adjustment_made=1;
 					}
-					else if (strcmp(linkage->word[constituent[c].left], ",")==0) {
+					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",")==0) {
 						if (verbosity>=2)
 							printf("Adjusting c %d to fix comma overlap\n", c);
 						adjust_for_left_comma(ctxt, linkage, c);
@@ -1198,7 +1225,7 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 						printf("WARNING: the constituents aren't nested! Adjusting them." \
 							   "(%d, %d)\n", c, c2);
 					  }
-					  constituent[c].left = constituent[c2].left;
+					  ctxt->constituent[c].left = ctxt->constituent[c2].left;
 					}
 				}
 			}
@@ -1216,27 +1243,27 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 
 
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
-		constituent[c].subl = linkage->current;
-		if (((constituent[c].domain_type == 'v') &&
+		ctxt->constituent[c].subl = linkage->current;
+		if (((ctxt->constituent[c].domain_type == 'v') &&
 			(ctxt->wordtype[linkage_get_link_rword(linkage,
-											 constituent[c].start_num)]==PTYPE))
+											 ctxt->constituent[c].start_num)]==PTYPE))
 		   ||
-		   ((constituent[c].domain_type == 't') &&
-			(strcmp(constituent[c].type, "VP")==0))) {
-			constituent[c].aux=1;
+		   ((ctxt->constituent[c].domain_type == 't') &&
+			(strcmp(ctxt->constituent[c].type, "VP")==0))) {
+			ctxt->constituent[c].aux=1;
 		}
-		else constituent[c].aux=0;
+		else ctxt->constituent[c].aux=0;
 	}
 
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
-		constituent[c].subl = linkage->current;
-		constituent[c].aux=0;
+		ctxt->constituent[c].subl = linkage->current;
+		ctxt->constituent[c].aux=0;
 	}
 
 	return numcon_subl;
 }
 
-static char * exprint_constituent_structure(Linkage linkage, int numcon_total)
+static char * exprint_constituent_structure(con_ctxt *ctxt, Linkage linkage, int numcon_total)
 {
 	int c, w;
 	int leftdone[MAXCONSTITUENTS];
@@ -1265,18 +1292,18 @@ static char * exprint_constituent_structure(Linkage linkage, int numcon_total)
 			best = -1;
 			bestright = -1;
 			for(c=0; c<numcon_total; c++) {
-				if ((constituent[c].left==w) &&
-					(leftdone[c]==0) && (constituent[c].valid==1) &&
-					(constituent[c].right >= bestright)) {
+				if ((ctxt->constituent[c].left==w) &&
+					(leftdone[c]==0) && (ctxt->constituent[c].valid==1) &&
+					(ctxt->constituent[c].right >= bestright)) {
 					best = c;
-					bestright = constituent[c].right;
+					bestright = ctxt->constituent[c].right;
 				}
 			}
 			if (best==-1)
 				break;
 			leftdone[best]=1;
-			if(constituent[best].aux==1) continue;
-			append_string(cs, "%c%s ", OPEN_BRACKET, constituent[best].type);
+			if(ctxt->constituent[best].aux==1) continue;
+			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
 		}
 
 		if (w<linkage->num_words-1) {
@@ -1294,19 +1321,19 @@ static char * exprint_constituent_structure(Linkage linkage, int numcon_total)
 			best = -1;
 			bestleft = -1;
 			for(c=0; c<numcon_total; c++) {
-				if ((constituent[c].right==w) &&
-					(rightdone[c]==0) && (constituent[c].valid==1) &&
-					(constituent[c].left > bestleft)) {
+				if ((ctxt->constituent[c].right==w) &&
+					(rightdone[c]==0) && (ctxt->constituent[c].valid==1) &&
+					(ctxt->constituent[c].left > bestleft)) {
 					best = c;
-					bestleft = constituent[c].left;
+					bestleft = ctxt->constituent[c].left;
 				}
 			}
 			if (best==-1)
 				break;
 			rightdone[best]=1;
-			if (constituent[best].aux==1)
+			if (ctxt->constituent[best].aux==1)
 				continue;
-			append_string(cs, "%s%c ", constituent[best].type, CLOSE_BRACKET);
+			append_string(cs, "%s%c ", ctxt->constituent[best].type, CLOSE_BRACKET);
 		}
 	}
 
@@ -1348,8 +1375,8 @@ static char * print_flat_constituents(con_ctxt *ctxt, Linkage linkage)
 		numcon_total = numcon_total + numcon_subl;
 	}
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
-	numcon_total = last_minute_fixes(linkage, numcon_total);
-	q = exprint_constituent_structure(linkage, numcon_total);
+	numcon_total = last_minute_fixes(ctxt, linkage, numcon_total);
+	q = exprint_constituent_structure(ctxt, linkage, numcon_total);
 	string_set_delete(phrase_ss);
 	return q;
 }
