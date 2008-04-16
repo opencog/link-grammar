@@ -21,7 +21,7 @@
 #define OPEN_BRACKET '['
 #define CLOSE_BRACKET ']'
 
-typedef enum {OPEN, CLOSE, WORD} CType;
+typedef enum {OPEN_TOK, CLOSE_TOK, WORD_TOK} CType;
 typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
 
 typedef struct
@@ -1390,12 +1390,13 @@ static char * print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	return q;
 }
 
-static CType token_type (char *token) {
-	if ((token[0]==OPEN_BRACKET) && (strlen(token)>1))
-		return OPEN;
-	if ((strlen(token)>1) && (token[strlen(token)-1]==CLOSE_BRACKET))
-		return CLOSE;
-	return WORD;
+static CType token_type (char *token)
+{
+	if ((token[0] == OPEN_BRACKET) && (strlen(token)>1))
+		return OPEN_TOK;
+	if ((strlen(token)>1) && (token[strlen(token)-1] == CLOSE_BRACKET))
+		return CLOSE_TOK;
+	return WORD_TOK;
 }
 
 static CNode * make_CNode(char *q) {
@@ -1416,17 +1417,17 @@ static CNode * parse_string(CNode * n, char **saveptr)
 
 	while ((q = strtok_r(NULL, " ", saveptr))) {
 		switch (token_type(q)) {
-		case CLOSE :
+		case CLOSE_TOK :
 			q[strlen(q)-1]='\0';
 			assert(strcmp(q, n->label)==0,
 				   "Constituent tree: Labels do not match.");
 			return n;
 			break;
-		case OPEN:
+		case OPEN_TOK:
 			m = make_CNode(q+1);
 			m = parse_string(m, saveptr);
 			break;
-		case WORD:
+		case WORD_TOK:
 			m = make_CNode(q);
 			break;
 		default:
@@ -1516,7 +1517,7 @@ CNode * linkage_constituent_tree(Linkage linkage)
 
 	len = strlen(p);
 	q = strtok_r(p, " ", &saveptr);
-	assert(token_type(q) == OPEN, "Illegal beginning of string");
+	assert(token_type(q) == OPEN_TOK, "Illegal beginning of string");
 	root = make_CNode(q+1);
 	root = parse_string(root, &saveptr);
 	assign_spans(root, 0);
