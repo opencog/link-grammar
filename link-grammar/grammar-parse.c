@@ -136,7 +136,8 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 			free(string);
 		}
 	}
-	if ((mode=parse_options_get_display_constituents(opts))) {
+	if ((mode = parse_options_get_display_constituents(opts)))
+	{
 		string = linkage_print_constituent_tree(linkage, mode);
 		if (string != NULL) {
 			fprintf(stdout, "%s\n", string);
@@ -148,7 +149,8 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 	}
 }
 
-static void print_parse_statistics(Sentence sent, Parse_Options opts) {
+static void print_parse_statistics(Sentence sent, Parse_Options opts)
+{
 	if (sentence_num_linkages_found(sent) > 0) {
 		if (sentence_num_linkages_found(sent) >
 			parse_options_get_linkage_limit(opts)) {

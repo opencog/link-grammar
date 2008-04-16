@@ -12,6 +12,9 @@ Version 4.3.5 includes the following changes:
  * Pre-detected entities cannot participate in G links.
  * There is no UTF8 support in windows, so stub it out.
  * Fix crash in constituent output, bug #22 in googlecode bugtacker
+ * Some small steps taken to eventually make library thread-safe.
+ * There are three constituent string styles, enable all three.
+ * Make the command-line flag errors less cyrptic.
 
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.

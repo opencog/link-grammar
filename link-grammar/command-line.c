@@ -143,38 +143,53 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	s = myline;
 	j = k = -1;
 	count = 0;
-	for (i=0; as[i].string != NULL; i++) {
-		if (as[i].isboolean && strncasecmp(s, as[i].string, strlen(s)) == 0) {
+
+	/* Look for boolean flippers */
+	for (i=0; as[i].string != NULL; i++)
+	{
+		if (as[i].isboolean && strncasecmp(s, as[i].string, strlen(s)) == 0)
+		{
 			count++;
 			j = i;
 		}
 	}
-	for (i=0; user_command[i].s != NULL; i++) {
-		if (strncasecmp(s, user_command[i].s, strlen(s)) == 0) {
+
+	/* Look for abbreviations */
+	for (i=0; user_command[i].s != NULL; i++)
+	{
+		if (strncasecmp(s, user_command[i].s, strlen(s)) == 0)
+		{
 			count++;
 			k = i;
 		}
 	}
 
-	if (count > 1) {
+	if (count > 1)
+	{
 		printf("Ambiguous command.  Type \"!help\" or \"!variables\"\n");
 		return;
 	}
-	else if (count == 1) {
-		if (j >= 0) {
+	else if (count == 1)
+	{
+		/* flip boolean value */
+		if (j >= 0)
+		{
 			*as[j].p = !(*as[j].p);
 			printf("%s turned %s.\n", as[j].description, (*as[j].p)? "on" : "off");
 			return;
 		}
-		else {
-			/* replace the abbreviated command by the full one */
+		else
+		{
+			/* Found an abbreviated command, but it wasn't a boolean */
+			/* Replace the abbreviated command by the full one */
+			/* Basically, this just fixes !v and !h for use below. */
 			strcpy(s, user_command[k].s);
 		}
 	}
 
 
-
-	if (strcmp(s, "variables")==0) {
+	if (strcmp(s, "variables")==0)
+	{
         printf(" Variable     Controls                                      Value\n");
         printf(" --------     --------                                      -----\n");
 		for (i=0; as[i].string != NULL; i++) {
@@ -192,7 +207,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		printf("set a variable as in \"!width=100\".\n");
 		return;
 	}
-	if (strcmp(s, "help")==0) {
+	if (strcmp(s, "help")==0)
+	{
 		printf("Special commands always begin with \"!\".  Command and variable names\n");
 		printf("can be abbreviated.  Here is a list of the commands:\n\n");
 		for (i=0; user_command[i].s != NULL; i++) {
@@ -209,7 +225,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		return;
 	}
 
-	if(s[0] == '!') {
+	if(s[0] == '!')
+	{
 		dict_display_word_info(dict, s+1);
 		return;
 	}
@@ -217,24 +234,71 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	/* test here for an equation */
 	for (x=s; (*x != '=') && (*x != '\0') ; x++)
 	  ;
-	if (*x == '=') {
+	if (*x == '=')
+	{
+		int val;
+
 		*x = '\0';
 		y = x+1;
 		x = s;
 		/* now x is the first word and y is the rest */
 
-		if (is_numerical_rhs(y)) {
-			for (i=0; as[i].string != NULL; i++) {
-				if (strcmp(x, as[i].string) == 0) break;
+		/* Figure out which command it is .. it'll be the j'th one */
+		j = -1;
+		for (i=0; as[i].string != NULL; i++)
+		{
+			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
+			{
+				j = i;
+				count ++;
 			}
-			if (as[i].string  == NULL) {
-				printf("There is no user variable called \"%s\".\n", x);
-			} else {
-				*(as[i].p) = atoi(y);
-				printf("%s set to %d\n", x, atoi(y));
-			}
+		}
+
+		if (j<0)
+		{
+			printf("There is no user variable called \"%s\".\n", x);
 			return;
 		}
+
+		if (count > 1)
+		{
+			printf("Ambiguous variable.  Type \"!help\" or \"!variables\"\n");
+			return;
+		}
+
+		val = -1;
+		if (is_numerical_rhs(y)) val = atoi(y);
+
+		if ((0 == strcasecmp(y, "true")) || (0 == strcasecmp(y, "t"))) val = 1;
+		if ((0 == strcasecmp(y, "false")) || (0 == strcasecmp(y, "f"))) val = 0;
+
+		if (val < 0)
+		{
+			printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+			return;
+		}
+
+		*(as[j].p) = val;
+		printf("%s set to %d\n", as[j].string, val);
+		return;
+	}
+
+	/* Look for valid commands, but ones that needed an argument */
+	j = -1;
+	count = 0;
+	for (i=0; as[i].string != NULL; i++)
+	{
+		if (!as[i].isboolean && strncasecmp(s, as[i].string, strlen(s)) == 0)
+		{
+			j = i;
+			count++;
+		}
+	}
+
+	if (0 < count)
+	{
+		printf("Variable \"%s\" requires a value.  Try \"!help\".\n", as[j].string);
+		return;
 	}
 
 	printf("I can't interpret \"%s\" as a command.  Try \"!help\".\n", myline);
