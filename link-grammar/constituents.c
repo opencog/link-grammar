@@ -43,17 +43,18 @@ typedef struct
 
 constituent_t constituent[MAXCONSTITUENTS];
 
+/* XXX it seems like the old code worked fine with MAX_ELTS=10 */
+#define MAX_ELTS 100
 typedef struct
 {
   int num;
-  int e[10];
+  int e[MAX_ELTS];
   int valid;
 } andlist_t; 
 
 /* Global context for a single sentence.
  * Goal: put all globals here, so that we can become thread-safe.
  */
-#define MAX_ELTS 100
 #define MAX_ANDS 1024
 typedef struct
 {
@@ -351,6 +352,8 @@ static int find_next_element(con_ctxt *ctxt,
 {
 	int c, a, ok, c2, c3, addedone=0, n;
 
+	assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
+
 	n = num_lists;
 	for (c=start+1; c<numcon_total; c++)
 	{
@@ -369,8 +372,6 @@ static int find_next_element(con_ctxt *ctxt,
 		   identical to c that occurs in a sublinkage in which one of
 		   the other elements occurs, don't add it. */
 
-		/* XXX *must* be less than 100 else it breaks! */
-		assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
 		for (a=0; a<num_elements; a++)
 		{
 			int t = ctxt->templist[a];
