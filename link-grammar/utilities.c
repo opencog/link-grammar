@@ -35,8 +35,10 @@
 #define DEFAULTPATH DICTIONARY_DIR
 
 /* This file contains certain general utilities. */
-
 int   verbosity;
+
+/* ============================================================= */
+/* String utilities */
 
 char *safe_strdup(const char *u)
 {
@@ -65,6 +67,27 @@ void safe_strcat(char *u, const char *v, size_t usize)
 	strncat(u, v, usize-strlen(u)-1);
 	u[usize-1] = '\0';
 }
+
+/**
+ * prints s then prints the last |t|-|s| characters of t.
+ * if s is longer than t, it truncates s.
+ */
+void left_print_string(FILE * fp, const char * s, const char * t)
+{
+	int i, j, k;
+	j = strlen(t);
+	k = strlen(s);
+	for (i=0; i<j; i++) {
+		if (i<k) {
+			fprintf(fp, "%c", s[i]);
+		} else {
+			fprintf(fp, "%c", t[i]);
+		}
+	}
+}
+
+/* ============================================================= */
+/* UTF8 utilities */
 
 /**
  * Downcase the first letter of the word.
@@ -128,32 +151,20 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	safe_strcpy(to, from, usize-nbl);
 }
 
-unsigned int randtable[RTSIZE];
-
-/* There is a legitimate question of whether having the hash function	*/
-/* depend on a large array is a good idea.  It might not be fastest on   */
-/* a machine that depends on caching for its efficiency.  On the other   */
-/* hand, Phong Vo's hash (and probably other linear-congruential) is	 */
-/* pretty bad.  So, mine is a "competitive" hash function -- you can't   */
-/* make it perform horribly.											 */
-
-void init_randtable(void) {
-	int i;
-	srand(10);
-	for (i=0; i<RTSIZE; i++) {
-		randtable[i] = rand();
-	}
-}
+/* ============================================================= */
+/* memory alloc routines below */
 
 int max_space_in_use;
 int space_in_use;
 int max_external_space_in_use;
 int external_space_in_use;
 
-void * xalloc(int size) {
-/* To allow printing of a nice error message, and keep track of the
-   space allocated.
-*/
+/**
+ * To allow printing of a nice error message, and keep track of the
+ *  space allocated.
+ */
+void * xalloc(int size)
+{
 	char * p = (char *) malloc(size);
 	space_in_use += size;
 	if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
@@ -165,13 +176,14 @@ void * xalloc(int size) {
 	return (void *) p;
 }
 
-void xfree(void * p, int size) {
+void xfree(void * p, int size)
+{
 	space_in_use -= size;
 	free(p);
 }
 
-void * exalloc(int size) {
-
+void * exalloc(int size)
+{
 	char * p = (char *) malloc(size);
 	external_space_in_use += size;
 	if (external_space_in_use > max_external_space_in_use) {
@@ -195,27 +207,31 @@ void string_delete(char * p) {
 	exfree(p, strlen(p)+1);
 }
 
-int next_power_of_two_up(int i) {
 /* Returns the smallest power of two that is at least i and at least 1 */
+int next_power_of_two_up(int i)
+{
 	int j=1;
 	while(j<i) j = j<<1;
 	return j;
 }
 
-void left_print_string(FILE * fp, const char * s, const char * t) {
-/* prints s then prints the last |t|-|s| characters of t.
-   if s is longer than t, it truncates s.
-*/
-	int i, j, k;
-	j = strlen(t);
-	k = strlen(s);
-	for (i=0; i<j; i++) {
-		if (i<k) {
-			fprintf(fp, "%c", s[i]);
-		} else {
-			fprintf(fp, "%c", t[i]);
-		}
-	}
+/* =========================================================== */
+/* File path and dictionary open routines below */
+
+char * join_path(const char * prefix, const char * suffix)
+{
+	char * path;
+	int path_len;
+
+	path_len = strlen(prefix) + 1 /* len(DIR_SEPARATOR) */ + strlen(suffix);
+	path = malloc(path_len + 1);
+
+	strcpy(path, prefix);
+	path[strlen(path)+1] = '\0';
+	path[strlen(path)] = DIR_SEPARATOR;
+	strcat(path, suffix);
+
+	return path;
 }
 
 #ifdef _WIN32
@@ -440,18 +456,44 @@ FILE *dictopen(const char *filename, const char *how)
 	return NULL;
 }
 
+/* ======================================================== */
+/* Random number stuff below. Can this be replaced by 
+ * standard system API's ??
+ */
+
+unsigned int randtable[RTSIZE];
+
+/* There is a legitimate question of whether having the hash function	*/
+/* depend on a large array is a good idea.  It might not be fastest on   */
+/* a machine that depends on caching for its efficiency.  On the other   */
+/* hand, Phong Vo's hash (and probably other linear-congruential) is	 */
+/* pretty bad.  So, mine is a "competitive" hash function -- you can't   */
+/* make it perform horribly.											 */
+
+void init_randtable(void)
+{
+	int i;
+	srand(10);
+	for (i=0; i<RTSIZE; i++) {
+		randtable[i] = rand();
+	}
+}
+
+
 static int random_state[2] = {0,0};
 static int random_count = 0;
 static int random_inited = FALSE;
 
-static int step_generator(int d) {
+static int step_generator(int d)
+{
 	/* no overflow should occur, so this is machine independent */
 	random_state[0] = ((random_state[0] * 3) + d + 104729) % 179424673;
 	random_state[1] = ((random_state[1] * 7) + d + 48611) % 86028121;
 	return random_state[0] + random_state[1];;
 }
 
-void my_random_initialize(int seed) {
+void my_random_initialize(int seed) 
+{
 	assert(!random_inited, "Random number generator not finalized.");
 
 	seed = (seed < 0) ? -seed : seed;
@@ -472,6 +514,9 @@ int my_random(void) {
 	random_count++;
 	return (step_generator(random_count));
 }
+
+/* ======================================================== */
+/* Locale routines */
 
 #ifdef _WIN32
 
@@ -558,22 +603,6 @@ win32_getlocale (void)
 
 #endif
 
-char * join_path(const char * prefix, const char * suffix)
-{
-	char * path;
-	int path_len;
-
-	path_len = strlen(prefix) + 1 /* len(DIR_SEPARATOR) */ + strlen(suffix);
-	path = malloc(path_len + 1);
-
-	strcpy(path, prefix);
-	path[strlen(path)+1] = '\0';
-	path[strlen(path)] = DIR_SEPARATOR;
-	strcat(path, suffix);
-
-	return path;
-}
-
 char * get_default_locale(void)
 {
 	char * locale, * needle;
@@ -615,3 +644,5 @@ char * get_default_locale(void)
 
 	return locale;
 }
+
+/* ========================== END OF FILE =================== */
