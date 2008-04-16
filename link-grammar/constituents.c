@@ -41,7 +41,6 @@ struct {
 } constituent[MAXCONSTITUENTS];
 
 /*PV* made global vars static */
-static int word_used[MAXSUBL][MAX_SENTENCE];
 static int templist[100];
 static struct {
   int num;
@@ -55,15 +54,13 @@ static struct {
 typedef struct
 {
 	WType wordtype[MAX_SENTENCE];
-
+	int word_used[MAXSUBL][MAX_SENTENCE];
 } con_ctxt;
 
 static con_ctxt global_ctxt;
 
 /* forward declarations */
 static void print_constituent(Linkage linkage, int c);
-static void adjust_for_left_comma(Linkage linkage, int c);
-static void adjust_for_right_comma(Linkage linkage, int c);
 static int  find_next_element(Linkage linkage,
 							  int start,
 							  int numcon_total,
@@ -81,14 +78,49 @@ static inline int uppercompare(const char * s, const char * t)
 	return (FALSE == utf8_upper_match(s,t));
 }
 
-static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
-					const char * ctype1, const char * ctype2, const char * ctype3, int x) {
+/**
+ * If a constituent c has a comma at either end, we exclude the
+ * comma. (We continue to shift the boundary until we get to
+ * something inside the current sublinkage)
+ */
+static void adjust_for_left_comma(con_ctxt * ctxt, Linkage linkage, int c)
+{
+	int w;
+	w = constituent[c].left;
+	if (strcmp(linkage->word[constituent[c].left], ",")==0) {
+		w++;
+		while (1) {
+			if (ctxt->word_used[linkage->current][w]==1) break;
+			w++;
+		}
+	}
+	constituent[c].left = w;
+}
 
-	/* This function looks for constituents of type ctype1. Say it finds
-	   one, call it c1. It searches for the next larger constituent of
-	   type ctype2, call it c2. It then generates a new constituent of
-	   ctype3, containing all the words in c2 but not c1. */
+static void adjust_for_right_comma(con_ctxt *ctxt, Linkage linkage, int c)
+{
+	int w;
+	w = constituent[c].right;
+	if ((strcmp(linkage->word[constituent[c].right], ",")==0) ||
+		(strcmp(linkage->word[constituent[c].right], "RIGHT-WALL")==0)) {
+		w--;
+		while (1) {
+			if (ctxt->word_used[linkage->current][w]==1) break;
+			w--;
+		}
+	}
+	constituent[c].right = w;
+}
 
+/**
+ * This function looks for constituents of type ctype1. Say it finds
+ * one, call it c1. It searches for the next larger constituent of
+ * type ctype2, call it c2. It then generates a new constituent of
+ * ctype3, containing all the words in c2 but not c1.
+ */
+static int gen_comp(con_ctxt *ctxt, Linkage linkage, int numcon_total, int numcon_subl,
+					const char * ctype1, const char * ctype2, const char * ctype3, int x)
+{
 	int w, w2, w3, c, c1, c2, done;
 	c = numcon_total + numcon_subl;
 
@@ -177,7 +209,7 @@ static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
 								   RIGHT of c1 */
 						w=constituent[c1].right+1;
 						while(1) {
-							if (word_used[linkage->current][w]==1)
+							if (ctxt->word_used[linkage->current][w]==1)
 								break;
 							w++;
 						}
@@ -191,7 +223,7 @@ static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
 					else {
 						w=constituent[c1].left-1;
 						while(1) {
-							if (word_used[linkage->current][w]==1)
+							if (ctxt->word_used[linkage->current][w]==1)
 								break;
 							w--;
 						}
@@ -203,8 +235,8 @@ static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
 						constituent[c].left=constituent[c2].left;
 					}
 
-					adjust_for_left_comma(linkage, c1);
-					adjust_for_right_comma(linkage, c1);
+					adjust_for_left_comma(ctxt, linkage, c1);
+					adjust_for_right_comma(ctxt, linkage, c1);
 
 					constituent[c].type =
 						string_set_add(ctype3, phrase_ss);
@@ -241,7 +273,7 @@ static int gen_comp(Linkage linkage, int numcon_total, int numcon_subl,
  * beyond a larger S or NP). Adjust them so that
  * they end right before the m domain starts.
  */
-static void adjust_subordinate_clauses(Linkage linkage,
+static void adjust_subordinate_clauses(con_ctxt *ctxt, Linkage linkage,
                                        int numcon_total,
                                        int numcon_subl)
 {
@@ -265,7 +297,7 @@ static void adjust_subordinate_clauses(Linkage linkage,
 						(constituent[c2].domain_type=='a')) {
 						w = constituent[c].left-1;
 						while (1) {
-							if (word_used[linkage->current][w]==1) break;
+							if (ctxt->word_used[linkage->current][w]==1) break;
 							w--;
 						}
 						constituent[c2].right = w;
@@ -295,39 +327,6 @@ static void print_constituent(Linkage linkage, int c)
 		printf("%s ", linkage->word[w]); /**PV**/
 	}
 	printf("\n");
-}
-
-static void adjust_for_left_comma(Linkage linkage, int c) {
-
-	/* If a constituent c has a comma at either end, we exclude the
-	   comma. (We continue to shift the boundary until we get to
-	   something inside the current sublinkage) */
-	int w;
-
-	w=constituent[c].left;
-	if (strcmp(linkage->word[constituent[c].left], ",")==0) {
-		w++;
-		while (1) {
-			if (word_used[linkage->current][w]==1) break;
-			w++;
-		}
-	}
-	constituent[c].left = w;
-}
-
-static void adjust_for_right_comma(Linkage linkage, int c) {
-
-	int w;
-	w=constituent[c].right;
-	if ((strcmp(linkage->word[constituent[c].right], ",")==0) ||
-		(strcmp(linkage->word[constituent[c].right], "RIGHT-WALL")==0)) {
-		w--;
-		while (1) {
-			if (word_used[linkage->current][w]==1) break;
-			w--;
-		}
-	}
-	constituent[c].right = w;
 }
 
 /******************************************************
@@ -851,7 +850,7 @@ static int last_minute_fixes(Linkage linkage, int numcon_total)
  * whether each word w is used in each sublinkage i; if so,
  * the value for that cell of the table is 1.
  */
-static void count_words_used(Linkage linkage)
+static void count_words_used(con_ctxt *ctxt, Linkage linkage)
 {
 	int i, w, link, num_subl;
 
@@ -861,17 +860,17 @@ static void count_words_used(Linkage linkage)
 	if (verbosity>=2)
 		printf("Number of sublinkages = %d\n", num_subl);
 	for (i=0; i<num_subl; i++) {
-		for (w=0; w<linkage->num_words; w++) word_used[i][w]=0;
+		for (w=0; w<linkage->num_words; w++) ctxt->word_used[i][w]=0;
 		linkage->current=i;
 		for (link=0; link<linkage_get_num_links(linkage); link++) {
-			word_used[i][linkage_get_link_lword(linkage, link)]=1;
-			word_used[i][linkage_get_link_rword(linkage, link)]=1;
+			ctxt->word_used[i][linkage_get_link_lword(linkage, link)]=1;
+			ctxt->word_used[i][linkage_get_link_rword(linkage, link)]=1;
 		}
 		if (verbosity>=2) {
 			printf("Sublinkage %d: ", i);
 			for (w=0; w<linkage->num_words; w++) {
-				if (word_used[i][w]==0) printf("0 ");
-				if (word_used[i][w]==1) printf("1 ");
+				if (ctxt->word_used[i][w]==0) printf("0 ");
+				if (ctxt->word_used[i][w]==1) printf("1 ");
 			}
 			printf("\n");
 		}
@@ -1098,41 +1097,41 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 	   (This must be done first; the S generated will be needed for
 	   later cases.) */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "SBAR", "S", "S", 5);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "SBAR", "S", "S", 5);
 
 	/* pp opener case */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "PP", "S", "S", 6);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "PP", "S", "S", 6);
 
 	/* participle opener case */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "S", "S", "S", 9);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "S", "S", "S", 9);
 
 	/* Subject-phrase case; every main VP generates an S */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "VP", "S", "NP", 1);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "VP", "S", "NP", 1);
 
 	/* Relative clause case; an SBAR generates a complement NP */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "SBAR", "NP", "NP", 3);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "SBAR", "NP", "NP", 3);
 
 	/* Participle modifier case */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "VP", "NP", "NP", 8);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "VP", "NP", "NP", 8);
 
 	/* PP modifying NP */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "PP", "NP", "NP", 8);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "PP", "NP", "NP", 8);
 
 	/* Appositive case */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "NP", "NP", "NP", 4);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "NP", "NP", "NP", 4);
 
 	/* S-V inversion case; an NP generates a complement VP */
 	numcon_subl =
-		gen_comp(linkage, numcon_total, numcon_subl, "NP", "SINV", "VP", 7);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "NP", "SINV", "VP", 7);
 
-	adjust_subordinate_clauses(linkage, numcon_total, numcon_subl);
+	adjust_subordinate_clauses(ctxt, linkage, numcon_total, numcon_subl);
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
 		if ((constituent[c].domain_type=='p') &&
 			(strcmp(linkage->word[constituent[c].left], ",")==0)) {
@@ -1163,13 +1162,13 @@ static int read_constituents_from_domains(con_ctxt *ctxt, Linkage linkage,
 								"RIGHT-WALL")==0)) {
 						if (verbosity>=2)
 							printf("Adjusting %d to fix comma overlap\n", c2);
-						adjust_for_right_comma(linkage, c2);
+						adjust_for_right_comma(ctxt, linkage, c2);
 						adjustment_made=1;
 					}
 					else if (strcmp(linkage->word[constituent[c].left], ",")==0) {
 						if (verbosity>=2)
 							printf("Adjusting c %d to fix comma overlap\n", c);
-						adjust_for_left_comma(linkage, c);
+						adjust_for_left_comma(ctxt, linkage, c);
 						adjustment_made=1;
 					}
 					else {
@@ -1310,7 +1309,7 @@ static char * print_flat_constituents(con_ctxt *ctxt, Linkage linkage)
 	pp = linkage->sent->dict->constituent_pp;
 	numcon_total = 0;
 
-	count_words_used(linkage);
+	count_words_used(ctxt, linkage);
 
 	num_subl = linkage->num_sublinkages;
 	if(num_subl > MAXSUBL) {
