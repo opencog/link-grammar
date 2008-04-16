@@ -875,10 +875,10 @@ static void add_constituent(int * cons, Linkage linkage, Domain domain,
 	int c = *cons;
 	c++;
 
-	/* Avoid running off end to walls **PV**/
-	if( l<1 ) l=1;
-	if( r>r_limit ) r=r_limit;
-	assert( l<=r, "negative constituent length!" );
+	/* Avoid running off end, to walls. */
+	if (l < 1) l=1;
+	if (r > r_limit) r = r_limit;
+	assert(l <= r, "negative constituent length!" );
 
 	constituent[c].left = l;
 	constituent[c].right = r;
@@ -1041,7 +1041,7 @@ static int read_constituents_from_domains(Linkage linkage,
 		if ((post_process_match("QI", constituent[c].start_link)==1) ||
 			(post_process_match("Mr", constituent[c].start_link)==1) ||
 			(post_process_match("MX#d", constituent[c].start_link)==1)) {
-			w=leftmost;
+			w = leftmost;
 			if (strcmp(linkage->word[w], ",")==0) w++;
 			if (wordtype[w] == NONE)
 				name = "WHADVP";
@@ -1055,10 +1055,12 @@ static int read_constituents_from_domains(Linkage linkage,
 
 			if (wordtype[w] == QDTYPE) {
 				/* Now find the finite verb to the right, start an S */
-				/*PV* limited w2 to sentence len*/
-				for( w2=w+1; w2 < r_limit-1; w2++ )
+				/* Limit w2 to sentence length. */
+				// for( w2=w+1; w2 < r_limit-1; w2++ )
+				for (w2 = w+1; w2 < rightmost; w2++)
 				  if ((wordtype[w2] == STYPE) || (wordtype[w2] == PTYPE)) break;
-				/* adjust the right boundary of previous constituent */
+
+				/* Adjust the right boundary of previous constituent */
 				constituent[c].right = w2-1;
 				add_constituent(&c, linkage, domain, w2, rightmost, "S");
 			  }

@@ -11,6 +11,7 @@ Version 4.3.5 includes the following changes:
  * Fix install bug for NetBSD systems.
  * Pre-detected entities cannot participate in G links.
  * There is no UTF8 support in windows, so stub it out.
+ * Fix crash in constituent output, bug #22 in googlecode bugtacker
 
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.
