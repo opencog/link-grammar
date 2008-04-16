@@ -376,16 +376,22 @@ FILE *dictopen(const char *filename, const char *how)
 	{
 		strncpy (prevpath, filename, MAX_PATH_NAME);
 		prevpath[MAX_PATH_NAME] = 0;
-		pos = strrchr(prevpath, '/');
+		pos = strrchr(prevpath, DIR_SEPARATOR);
 		if (pos) *pos = 0;
-		pos = strrchr(prevpath, '/');
+		pos = strrchr(prevpath, DIR_SEPARATOR);
 		if (pos) *(pos+1) = 0;
 		first_time_ever = 0;
 	}
-	if (filename[0] == '/') {
+
+	/* Look for absolute filename.
+	 * Unix: starts with leading slash.
+	 * Windows: starts with C:\  except that the drive letter may differ.
+	 */
+	if ((filename[0] == '/') || ((filename[1] == ':') && (filename[2] == '\\'))) 
+   {
 		/* fopen returns NULL if the file does not exist. */
 		fp = fopen(filename, how);
-		if(fp) return fp;
+		if (fp) return fp;
 	}
 
 	{
@@ -398,15 +404,20 @@ FILE *dictopen(const char *filename, const char *how)
 		}
 		else {
 			/* Always make sure that it ends with a path
-			 * separator char for the below while() loop. */
+			 * separator char for the below while() loop.
+			 * For unix, this should look like:
+			 * /usr/share/link-grammar:.:data:..:../data:
+			 * For windows:
+			 * C:\SOMWHERE;.;data;..;..\data;
+			 */
 			snprintf(fulldictpath, MAX_PATH_NAME,
-			         "%s%c%s%c%s%c%s%c%s%c%s%c",
+			         "%s%c%s%c%s%c%s%c%s%c%s%c%s%c",
 				 prevpath, PATH_SEPARATOR,
 				 DEFAULTPATH, PATH_SEPARATOR,
 				 ".", PATH_SEPARATOR,
 				 "data", PATH_SEPARATOR,
 				 "..", PATH_SEPARATOR,
-				 "../data", PATH_SEPARATOR);
+				 "..", DIR_SEPARATOR, "data", PATH_SEPARATOR);
 		}
 	}
 

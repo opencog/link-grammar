@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <wchar.h>
+#include "utilities.h"
 
 /* XXX the original flex source for this file is missing !! */
 

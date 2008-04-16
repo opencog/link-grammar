@@ -13,6 +13,7 @@
 #ifndef _UTILITIESH_
 #define _UTILITIESH_
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
 #include <wctype.h>
@@ -25,18 +26,28 @@
 #define TRUE 1
 #endif
 
+#ifdef CYGWIN
+#define _WIN32 1
+#endif /* CYGWIN */
+
 #ifdef _WIN32
+#include <windows.h>
+
 /* Windows compilers don't support the "inline" keyword. */
 #define inline
 
-/* Windows doesn't have UTF8 support, or wide chars, or any of that. */
-#define wchar_t char
-#define wint_t int
+/* Windows doesn't have UTF8 support, or wide chars, or any of that. 
+ * Or at least, CYGWIN doesn't ?? */
 #define mbtowc(x,y,z)  (1)
 #define iswupper  isupper
 #define iswalpha  isalpha
 #define iswdigit  isdigit
 #define iswspace  isspace
+#ifdef CYGWIN
+#define wchar_t   char
+#define wint_t    int
+#define fgetwc    fgetc
+#endif
 #endif
 
 static inline int is_utf8_upper(const char *s)
@@ -84,7 +95,7 @@ static inline const char * skip_utf8_upper(const char * s)
 
 /**
  * Return true if the intial upper-case letters of the
- * two input strings match. Comparison stops when the 
+ * two input strings match. Comparison stops when
  * both srings descend to lowercase.
  */
 static inline int utf8_upper_match(const char * s, const char * t)
