@@ -39,6 +39,10 @@
 #include <string.h>
 #include <wchar.h>
 
+#ifdef USE_READLINE
+#include <editline/readline.h>
+#endif 
+
 #include <link-grammar/link-includes.h>
 #include <link-grammar/structures.h>
 #include <link-grammar/error.h>
@@ -66,6 +70,32 @@ static int
 fget_input_string(char *input_string, size_t maxlen,
                   FILE *in, FILE *out, Parse_Options opts)
 {
+#ifdef USE_READLINE
+	char * pline;
+	const char * prompt = "linkparser> ";
+
+	if (parse_options_get_batch_mode(opts) ||
+	    (verbosity == 0) ||
+	    input_pending)
+	{
+		prompt = "";
+	}
+	input_pending = FALSE;
+	pline = readline(prompt);
+
+	/* Save non-blank lines */
+	if (pline && *pline) add_history(pline);
+	
+	strncpy (input_string, pline, maxlen);
+
+	if (pline)
+	{
+		free(pline); 
+		return 1;
+	}
+	return 0;
+
+#else
 	if ((!parse_options_get_batch_mode(opts)) && 
 	    (verbosity > 0) && 
 	    (!input_pending))
@@ -79,6 +109,7 @@ fget_input_string(char *input_string, size_t maxlen,
 	 * use fgets() and not fgetws() at this point. */
 	if (fgets(input_string, maxlen, in)) return 1;
 	else return 0;
+#endif
 }
 
 static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
@@ -318,7 +349,8 @@ static Label strip_off_label(char * input_string) {
 	}
 }
 
-static void setup_panic_parse_options(Parse_Options opts) {
+static void setup_panic_parse_options(Parse_Options opts)
+{
 	parse_options_set_disjunct_cost(opts, 3);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
@@ -424,6 +456,7 @@ int main(int argc, char * argv[])
 
 	verbosity = parse_options_get_verbosity(opts);
 
+	/* Main input loop */
 	while (fget_input_string(input_string, MAXINPUT, stdin, stdout, opts)) 
 	{
 		if ((strcmp(input_string, "quit\n")==0) ||
