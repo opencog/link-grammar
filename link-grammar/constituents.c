@@ -869,10 +869,9 @@ static void count_words_used(Linkage linkage)
 
 static int r_limit=0;
 
-static void add_constituent(int * cons, Linkage linkage, Domain domain,
-                            int l, int r, const char * name)
+static int add_constituent(int c, Linkage linkage, Domain domain,
+                           int l, int r, const char * name)
 {
-	int c = *cons;
 	c++;
 
 	/* Avoid running off end, to walls. */
@@ -887,7 +886,7 @@ static void add_constituent(int * cons, Linkage linkage, Domain domain,
 		linkage_get_link_label(linkage, domain.start_link);
 	constituent[c].start_num = domain.start_link;
 	constituent[c].type = string_set_add(name, phrase_ss);
-	*cons = c;
+	return c;
 }
 
 static const char * cons_of_domain(char domain_type)
@@ -990,41 +989,41 @@ static int read_constituents_from_domains(Linkage linkage,
 		}
 
 		c--;
-		add_constituent(&c, linkage, domain, leftmost, rightmost,
+		c = add_constituent(c, linkage, domain, leftmost, rightmost,
 						cons_of_domain(domain.type));
 
 		if (domain.type=='z') {
-			add_constituent(&c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(c, linkage, domain, leftmost, rightmost, "S");
 		}
 		if (domain.type=='c') {
-			add_constituent(&c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(c, linkage, domain, leftmost, rightmost, "S");
 		}
 		if ((post_process_match("Ce*", constituent[c].start_link)==1) ||
 			(post_process_match("Rn", constituent[c].start_link)==1)) {
-			add_constituent(&c, linkage, domain, leftmost, rightmost, "SBAR");
+			c = add_constituent(c, linkage, domain, leftmost, rightmost, "SBAR");
 		}
 		if ((post_process_match("R*", constituent[c].start_link)==1) ||
 			(post_process_match("MX#r", constituent[c].start_link)==1)) {
 			w=leftmost;
 			if (strcmp(linkage->word[w], ",")==0) w++;
-			add_constituent(&c, linkage, domain, w, w, "WHNP");
+			c = add_constituent(c, linkage, domain, w, w, "WHNP");
 		}
 		if (post_process_match("Mj", constituent[c].start_link)==1) {
 			w=leftmost;
 			if (strcmp(linkage->word[w], ",")==0) w++;
-			add_constituent(&c, linkage, domain, w, w+1, "WHPP");
-			add_constituent(&c, linkage, domain, w+1, w+1, "WHNP");
+			c = add_constituent(c, linkage, domain, w, w+1, "WHPP");
+			c = add_constituent(c, linkage, domain, w+1, w+1, "WHNP");
 		}
 		if ((post_process_match("Ss#d", constituent[c].start_link)==1) ||
 			(post_process_match("B#d", constituent[c].start_link)==1)) {
-			add_constituent(&c, linkage, domain, rootleft, rootleft, "WHNP");
-			add_constituent(&c, linkage, domain,
+			c = add_constituent(c, linkage, domain, rootleft, rootleft, "WHNP");
+			c = add_constituent(c, linkage, domain,
 							rootleft, constituent[c-1].right, "SBAR");
 		}
 		if (post_process_match("CP", constituent[c].start_link)==1) {
 			if (strcmp(linkage->word[leftmost], ",")==0)
 				constituent[c].left++;
-			add_constituent(&c, linkage, domain, 1, linkage->num_words-1, "S");
+			c = add_constituent(c, linkage, domain, 1, linkage->num_words-1, "S");
 		}
 		if ((post_process_match("MVs", constituent[c].start_link)==1) ||
 			(domain.type=='f')) {
@@ -1032,11 +1031,11 @@ static int read_constituents_from_domains(Linkage linkage,
 			if (strcmp(linkage->word[w], ",")==0)
 				w++;
 			if (strcmp(linkage->word[w], "when")==0) {
-				add_constituent(&c, linkage, domain, w, w, "WHADVP");
+				c = add_constituent(c, linkage, domain, w, w, "WHADVP");
 			}
 		}
 		if (domain.type=='t') {
-			add_constituent(&c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(c, linkage, domain, leftmost, rightmost, "S");
 		}
 		if ((post_process_match("QI", constituent[c].start_link)==1) ||
 			(post_process_match("Mr", constituent[c].start_link)==1) ||
@@ -1051,7 +1050,7 @@ static int read_constituents_from_domains(Linkage linkage,
 				name = "WHNP";
 			else
 				assert(0, "Unexpected word type");
-			add_constituent(&c, linkage, domain, w, w, name);
+			c = add_constituent(c, linkage, domain, w, w, name);
 
 			if (wordtype[w] == QDTYPE) {
 				/* Now find the finite verb to the right, start an S */
@@ -1062,7 +1061,7 @@ static int read_constituents_from_domains(Linkage linkage,
 
 				/* Adjust the right boundary of previous constituent */
 				constituent[c].right = w2-1;
-				add_constituent(&c, linkage, domain, w2, rightmost, "S");
+				c = add_constituent(c, linkage, domain, w2, rightmost, "S");
 			  }
 		}
 
