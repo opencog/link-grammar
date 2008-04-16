@@ -83,13 +83,12 @@ fget_input_string(char *input_string, size_t maxlen,
 	input_pending = FALSE;
 	pline = readline(prompt);
 
-	/* Save non-blank lines */
-	if (pline && *pline) add_history(pline);
-	
-	strncpy (input_string, pline, maxlen);
-
 	if (pline)
 	{
+		/* Save non-blank lines */
+		if (*pline) add_history(pline);
+
+		strncpy (input_string, pline, maxlen);
 		free(pline); 
 		return 1;
 	}
