@@ -15,7 +15,8 @@
 #include <wctype.h>
 #include <link-grammar/api.h>
 
-static struct {
+static struct
+{
 	int verbosity;
 	int timeout;
 	int memory;
@@ -38,14 +39,16 @@ static struct {
 	int display_union;
 } local;
 
-typedef struct {
+typedef struct
+{
 	const char * string;
 	int	isboolean;
 	const char * description;
 	int  * p;
 } Switch;
 
-static Switch default_switches[] = {
+static Switch default_switches[] =
+{
 	{"verbosity",	0, "Level of detail in output",		&local.verbosity},
 	{"timeout",	  0, "Abort parsing after this long",	&local.timeout},
 	{"memory",	   0, "Max memory allowed",			   &local.memory},
@@ -69,7 +72,8 @@ static Switch default_switches[] = {
 	{NULL,		   1,  NULL,							  NULL}
 };
 
-struct {const char * s; const char * str;} user_command[] = {
+struct {const char * s; const char * str;} user_command[] =
+{
 	{"variables",	"List user-settable variables and their functions"},
 	{"help",		 "List the commands and what they do"},
 	{NULL,		   NULL}
@@ -187,7 +191,6 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		}
 	}
 
-
 	if (strcmp(s, "variables")==0)
 	{
         printf(" Variable     Controls                                      Value\n");
@@ -207,6 +210,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		printf("set a variable as in \"!width=100\".\n");
 		return;
 	}
+
 	if (strcmp(s, "help")==0)
 	{
 		printf("Special commands always begin with \"!\".  Command and variable names\n");
@@ -231,7 +235,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		return;
 	}
 
-	/* test here for an equation */
+	/* Test here for an equation i.e. does the command line hold an equals sign? */
 	for (x=s; (*x != '=') && (*x != '\0') ; x++)
 	  ;
 	if (*x == '=')
