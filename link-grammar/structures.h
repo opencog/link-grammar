@@ -185,8 +185,14 @@ OBS #define AMPERSAND_WORD   ("AMPERSAND")
 #define SHORT_LEN 6
 #define NO_WORD 255
 
-#define PARSE_NUM_OVERFLOW (1LL<<24)  
+#ifndef _MSC_VER
 typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
+#define PARSE_NUM_OVERFLOW (1LL<<24)  
+#else
+/* Microsoft Visual C Version 6 doesn't support long long. */
+typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
+#define PARSE_NUM_OVERFLOW (((s64)1)<<24)  
+#endif
 
 typedef struct Connector_struct Connector;
 struct Connector_struct

@@ -376,6 +376,9 @@ void set_data_dir(const char * path)
 
 static char * get_datadir(void)
 {
+#ifdef _WIN32
+	HINSTANCE hInstance;
+#endif
 	char * data_dir = NULL;
 
 	if (custom_data_dir != NULL) {
@@ -387,7 +390,7 @@ static char * get_datadir(void)
 	data_dir = safe_strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
 	/* Dynamically locate library and return containing directory */
-	HINSTANCE hInstance = GetModuleHandle(NULL);
+	hInstance = GetModuleHandle(NULL);
 	if(hInstance != NULL)
 	{
 		char dll_path[MAX_PATH];
