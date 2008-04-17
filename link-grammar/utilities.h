@@ -40,8 +40,10 @@
 /* Windows compilers don't support the "inline" keyword. */
 #define inline
 
-/* Windows doesn't have UTF8 support, or wide chars, or any of that. 
- * Or at least, CYGWIN doesn't ?? */
+/* CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
+ * However, MS Visual C appearnetly does ... 
+ */
+#ifdef CYGWIN
 #define mbtowc(c,s,n)  ({*((char *)(c)) = *(s)); 1;})
 #define iswupper  isupper
 #define iswalpha  isalpha
@@ -50,6 +52,7 @@
 #define wchar_t   char
 #define wint_t    int
 #define fgetwc    fgetc
+#endif
 
 /* strtok_r is missing in windows */
 char * strtok_r (char *s, const char *delim, char **saveptr);
