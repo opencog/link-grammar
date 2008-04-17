@@ -52,7 +52,7 @@
 /* strtok_r is missing in windows */
 char * strtok_r (char *s, const char *delim, char **saveptr);
 
-#endif
+#endif /* _WIN32 */
 
 static inline int is_utf8_upper(const char *s)
 {
