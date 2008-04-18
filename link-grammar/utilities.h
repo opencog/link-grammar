@@ -44,7 +44,8 @@
  * However, MS Visual C appearnetly does ... 
  */
 #ifdef CYGWIN
-#define mbtowc(c,s,n)  ({*((char *)(c)) = *(s); 1;})
+#define mbtowc(w,s,n)  ({*((char *)(w)) = *(s); 1;})
+#define wctomb(s,w)    ({*((char *)(s)) = ((char)(w)); 1;})
 #define iswupper  isupper
 #define iswalpha  isalpha
 #define iswdigit  isdigit
@@ -52,6 +53,7 @@
 #define wchar_t   char
 #define wint_t    int
 #define fgetwc    fgetc
+#define WEOF      EOF
 #endif
 
 /* strtok_r is missing in windows */
