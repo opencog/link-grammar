@@ -16,6 +16,8 @@ Version 4.3.5 includes the following changes:
  * There are three constituent string styles, enable all three.
  * Make the command-line flag errors less cyrptic.
  * Add readline (BSD editline) support.
+ * Rename "grammar-parse" to the more logical "link-parser".
+ * Small man page updates.
 
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.

@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in.
 
-man_MANS = grammar-parse.1
+man_MANS = link-parser.1
 
-EXTRA_DIST = grammar-parse.1
+EXTRA_DIST = link-parser.1
 

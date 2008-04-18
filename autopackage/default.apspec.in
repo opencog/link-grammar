@@ -40,7 +40,7 @@ echo '*' | import
 echo "nothing to prepare"
 
 [Install]
-#doesn't work installExe ./bin/grammar-parse
+#doesn't work installExe ./bin/link-parser
 installLib ./lib/*.so.*.*.*
 installData ./share/*
 

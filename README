@@ -39,7 +39,7 @@ CONTENTS of this directory:
    data/en/4.0.batch        This is a batch file of sentences (both grammatical
                             and ungrammatical ones) that are handled correctly
                             by this release of the system.  Feed this into the
-                            parser with "./grammar-parse < 4.0.batch"
+                            parser with "./link-parser < 4.0.batch"
 
    configure                The GNU configuration script
 
@@ -97,7 +97,7 @@ RUNNING the program:
 
    To run the program issue the Unix command:
 
-       ./grammar-parse 
+       ./link-parser
 
    This starts the program.  Help is available there with "!help".  A
    number of user-settable variables control what happens.  "!var" shows
@@ -107,7 +107,7 @@ RUNNING the program:
    number of sentences.  The following command runs the parser on
    a file called 4.0.batch
 
-       ./grammar-parse < 4.0.batch
+       ./link-parser < 4.0.batch
 
    The line "!batch" near the top of 4.0.batch turns on batch mode.  In
    this mode sentences labeled with an initial "*" should be rejected

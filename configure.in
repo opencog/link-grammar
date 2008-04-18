@@ -1,4 +1,4 @@
-AC_INIT(link-grammar/grammar-parse.c)
+AC_INIT(link-grammar/link-parser.c)
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
