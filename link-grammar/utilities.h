@@ -10,8 +10,8 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-#ifndef _UTILITIESH_
-#define _UTILITIESH_
+#ifndef _LINK_GRAMMAR_UTILITIES_H_
+#define _LINK_GRAMMAR_UTILITIES_H_
 
 #include <stdio.h>
 #include <stdlib.h>
