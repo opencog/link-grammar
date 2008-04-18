@@ -44,7 +44,7 @@
  * However, MS Visual C appearnetly does ... 
  */
 #ifdef CYGWIN
-#define mbtowc(c,s,n)  ({*((char *)(c)) = *(s)); 1;})
+#define mbtowc(c,s,n)  ({*((char *)(c)) = *(s); 1;})
 #define iswupper  isupper
 #define iswalpha  isalpha
 #define iswdigit  isdigit
