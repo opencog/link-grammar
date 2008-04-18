@@ -11,8 +11,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "utilities.h"
-
 /* XXX the original flex source for this file is missing !! */
 
 /* I edited this file to eliminate compiler warnings.  I've documented here
@@ -122,7 +120,6 @@ int fileno( FILE *stream);
 #define const
 #endif
 #endif
-
 
 #ifdef YY_USE_PROTOS
 #define YY_PROTO(proto) proto
@@ -516,8 +513,6 @@ char *yytext;
 #include <link-grammar/api.h>
 
 #undef yywrap
-
-extern void error(const char *fmt, ...);
 
 /* forward references for non-exported functions (and static variable) */
 static void check_string(const char *str);
