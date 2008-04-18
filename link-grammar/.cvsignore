@@ -1,6 +1,6 @@
 Makefile
 Makefile.in
-grammar-parse
+link-parser
 link-features.h
 svn-commit.tmp*
 .deps
