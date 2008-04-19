@@ -4,7 +4,7 @@ package org.linkgrammar;
  * This class serves as a wrapper to the C Link Grammar Parser library.
  * It provides a simple public Java API to the equivalent public C API.
  *
- * Unfortunately, this class is not at all OOP in style; it operates on 
+ * Unfortunately, this class is not at all OOP in style; it operates on
  * the single, current sentence and linkage.  This could be improved.
  */
 
@@ -12,8 +12,19 @@ public class LinkGrammar
 {
     static
     {
-        // On a linux system, the actual name of the library is prefixed 
-        // with "lib" and suffixed with ".so" -- e.g. "liblink-grammar-java.so"
+        // On a Linux system, the actual name of the library
+        // is prefixed with "lib" and suffixed with ".so"
+        // -- e.g. "liblink-grammar-java.so"
+        // Windows looks for "link-grammar-java.dll"
+        //
+        // On a Windows system, we also need to load the prequisite
+        // libraries first. (Linux loaders do this automatically).
+        //
+        String osname = System.getProperty("os.name");
+        if (osname.indexOf("win") > -1 || osname.indexOf("Win") > -1)
+        {
+            System.loadLibrary("link-grammar");
+        }
         System.loadLibrary("link-grammar-java");
     }
 
@@ -24,7 +35,7 @@ public class LinkGrammar
 
     // Defaults to /usr/local/share/link-grammar/
     public static native void setDictionariesPath(String path);
-    
+
     // C functions in the linkparser API
     public static native void init();
 
