@@ -49,7 +49,7 @@
 
 #include "command-line.h"
 
-#define MAXINPUT 1024
+#define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
 
@@ -66,14 +66,18 @@ typedef enum
 	NO_LABEL=' '
 } Label;
 
-static int
-fget_input_string(char *input_string, size_t maxlen,
-                  FILE *in, FILE *out, Parse_Options opts)
+static char *
+fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 {
 #ifdef HAVE_EDITLINE
-	char * pline;
+	static char * pline = NULL;
 	const char * prompt = "linkparser> ";
 
+	if (input_pending && pline != NULL)
+	{
+		input_pending = FALSE;
+		return pline;
+	}
 	if (parse_options_get_batch_mode(opts) ||
 	    (verbosity == 0) ||
 	    input_pending)
@@ -81,20 +85,19 @@ fget_input_string(char *input_string, size_t maxlen,
 		prompt = "";
 	}
 	input_pending = FALSE;
+	if (pline) free(pline);
 	pline = readline(prompt);
 
-	if (pline)
+	/* Save non-blank lines */
+	if (pline && *pline)
 	{
-		/* Save non-blank lines */
 		if (*pline) add_history(pline);
-
-		strncpy (input_string, pline, maxlen);
-		free(pline); 
-		return 1;
 	}
-	return 0;
+	return pline;
 
 #else
+	static char input_string[MAX_INPUT];
+
 	if ((!parse_options_get_batch_mode(opts)) && 
 	    (verbosity > 0) && 
 	    (!input_pending))
@@ -106,20 +109,40 @@ fget_input_string(char *input_string, size_t maxlen,
 
 	/* For UTF-8 input, I think its still technically correct to
 	 * use fgets() and not fgetws() at this point. */
-	if (fgets(input_string, maxlen, in)) return 1;
-	else return 0;
+	if (fgets(input_string, MAX_INPUT, in)) return input_string;
+	else return NULL;
 #endif
 }
 
 static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 {
+#ifdef HAVE_EDITLINE
+	char * pline = fget_input_string(in, out, opts);
+	if (NULL == pline) return EOF;
+	if (*pline)
+	{
+		input_pending = TRUE;
+		return *pline;
+	}
+	return '\n';
+
+#else
+	int c;
+
 	if (!parse_options_get_batch_mode(opts) && (verbosity > 0))
 		fprintf(out, "linkparser> ");
 	fflush(out);
 
 	/* For UTF-8 input, I think its still technically correct to
 	 * use fgetc() and not fgetwc() at this point. */
-	return fgetc(in);
+	c = fgetc(in);
+	if (c != '\n')
+	{
+		ungetc(c, in);
+		input_pending = TRUE;
+	}
+	return c;
+#endif
 }
 
 /**************************************************************************
@@ -205,7 +228,7 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
 }
 
 
-static void process_some_linkages(Sentence sent, Parse_Options opts)
+static int process_some_linkages(Sentence sent, Parse_Options opts)
 {
 	int c;
 	int i, num_displayed, num_to_query;
@@ -270,14 +293,10 @@ static void process_some_linkages(Sentence sent, Parse_Options opts)
 				fprintf(stdout, "Press RETURN for the next linkage.\n");
 			}
 			c = fget_input_char(stdin, stdout, opts);
-			if (c != '\n')
-			{
-				ungetc(c, stdin);
-				input_pending = TRUE;
-				break;
-			}
+			if (c != '\n') return c;
 		}
 	}
+	return 'x';
 }
 
 static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
@@ -333,7 +352,8 @@ static int special_command(char *input_string, Dictionary dict)
 	return FALSE;
 }
 
-static Label strip_off_label(char * input_string) {
+static Label strip_off_label(char * input_string)
+{
 	int c;
 
 	c = input_string[0];
@@ -376,7 +396,7 @@ int main(int argc, char * argv[])
 	int             af_on=TRUE;
 	int             cons_on=TRUE;
 	int             num_linkages, i;
-	char            input_string[MAXINPUT];
+	char            *input_string;
 	Label           label = NO_LABEL;
 
 	i = 1;
@@ -456,7 +476,7 @@ int main(int argc, char * argv[])
 	verbosity = parse_options_get_verbosity(opts);
 
 	/* Main input loop */
-	while (fget_input_string(input_string, MAXINPUT, stdin, stdout, opts)) 
+	while (NULL != (input_string = fget_input_string(stdin, stdout, opts)))
 	{
 		if ((strcmp(input_string, "quit\n")==0) ||
 			(strcmp(input_string, "exit\n")==0)) break;
@@ -531,7 +551,8 @@ int main(int argc, char * argv[])
 			batch_process_some_linkages(label, sent, opts);
 		}
 		else {
-			process_some_linkages(sent, opts);
+			int c = process_some_linkages(sent, opts);
+			if (c == EOF) break;
 		}
 
 		sentence_delete(sent);
