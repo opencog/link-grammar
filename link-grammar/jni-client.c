@@ -342,7 +342,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_getAndDisjunctCost(JNIEnv *env, jclass cls)
+Java_org_linkgrammar_LinkGrammar_getLinkageAndCost(JNIEnv *env, jclass cls)
 {
 	return sentence_and_cost(sent, cur_linkage);
 }
