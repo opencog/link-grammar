@@ -49,9 +49,6 @@ struct cms_struct
 #define CMS_SIZE (2<<10)
 static Cms * cms_table[CMS_SIZE];
 
-static int N_changed;   /* counts the number of changes
-						   of c->word fields in a pass */
-
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
@@ -60,6 +57,9 @@ struct prune_context_s
 	char ** effective_dist;
 	int power_cost;
 	int power_prune_mode;  /* either GENTLE or RUTHLESS */
+	int N_changed;   /* counts the number of changes
+						   of c->word fields in a pass */
+
 };
 
 static prune_context *global_prune_context = NULL;
@@ -337,7 +337,8 @@ static int count_disjuncts_in_sentence(Sentence sent)
 	return count;
 }
 
-void prune(Sentence sent) {
+void prune(Sentence sent)
+{
 	int N_deleted;
 	Disjunct *d;
 	Connector *e;
@@ -924,7 +925,8 @@ static void clean_up_expressions(Sentence sent, int w)
 	sent->word[w].x = head_node.next;
 }
 
-void expression_prune(Sentence sent){
+void expression_prune(Sentence sent)
+{
 	int N_deleted;
 	X_node * x;
 	int w;
@@ -1344,7 +1346,7 @@ static int left_connector_list_update(prune_context *pc, Connector *c, int word_
 	}
 	if (n < ((int) c->word)) {
 		c->word = n;
-		N_changed++;
+		pc->N_changed++;
 	}
 	return (foundmatch ? n : -1);
 }
@@ -1378,7 +1380,7 @@ static int right_connector_list_update(prune_context *pc, Sentence sent, Connect
 	}
 	if (n > c->word) {
 		c->word = n;
-		N_changed++;
+		pc->N_changed++;
 	}
 	return (foundmatch ? n : sent->length);
 }
@@ -1395,12 +1397,12 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	pc->power_cost = 0;
 	pc->power_prune_mode = mode; 
 	pc->null_links = (opts->min_null_count > 0);
+	pc->N_changed = 1;  /* forces it always to make at least two passes */
 
 	count_set_effective_distance(sent);
 
 	init_power(pc, sent);
 	free_later = NULL;
-	N_changed = 1;  /* forces it always to make at least two passes */
 	N_deleted = 0;
 
 	total_deleted = 0;
@@ -1435,12 +1437,12 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 		if (verbosity > 2) {
-		   printf("l->r pass changed %d and deleted %d\n",N_changed,N_deleted);
+		   printf("l->r pass changed %d and deleted %d\n",pc->N_changed,N_deleted);
 		}
 
-		if (N_changed == 0) break;
+		if (pc->N_changed == 0) break;
 
-		N_changed = N_deleted = 0;
+		pc->N_changed = N_deleted = 0;
 		/* right-to-left pass */
 
 		for (w = sent->length-1; w >= 0; w--) {
@@ -1470,11 +1472,11 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		}
 
 		if (verbosity > 2) {
-		   printf("r->l pass changed %d and deleted %d\n",N_changed,N_deleted);
+		   printf("r->l pass changed %d and deleted %d\n", pc->N_changed,N_deleted);
 		}
 
-		if (N_changed == 0) break;
-		N_changed = N_deleted = 0;
+		if (pc->N_changed == 0) break;
+		pc->N_changed = N_deleted = 0;
 	}
 	free_disjuncts(free_later);
 	free_power_tables(sent);
