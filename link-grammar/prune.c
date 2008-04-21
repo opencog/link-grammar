@@ -13,17 +13,56 @@
 
 #include <link-grammar/api.h>
 
-static char ** deletable;
-static char ** effective_dist;
+static int s_table_size;
+static Connector ** table;
+
+static int dup_table_size;
+static Disjunct ** dup_table;
+
+/* the indiction in a word field that this connector cannot
+ * be used -- is obsolete.
+ */
+#define BAD_WORD (MAX_SENTENCE+1)
+
+static int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
+static int r_table_size[MAX_SENTENCE];
+
+typedef struct c_list_struct C_list;
+struct c_list_struct
+{
+	Connector * c;
+	int shallow;
+	C_list * next;
+};
+static C_list ** l_table[MAX_SENTENCE];
+				 /* the beginnings of the hash tables */
+static C_list ** r_table[MAX_SENTENCE];
+
+typedef struct cms_struct Cms;
+struct cms_struct
+{
+	Cms * next;
+	const char * name;
+	int count;	  /* the number of times this is in the multiset */
+};
+
+#define CMS_SIZE (2<<10)
+static Cms * cms_table[CMS_SIZE];
+
+static int N_changed;   /* counts the number of changes
+						   of c->word fields in a pass */
 
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
 	int null_links;
+	char ** deletable;
+	char ** effective_dist;
 	int power_cost;
 	int power_prune_mode;  /* either GENTLE or RUTHLESS */
 };
 
+static prune_context *global_prune_context = NULL;
 
 /*
 
@@ -68,7 +107,8 @@ struct prune_context_s
 
 */
 
-int x_prune_match(Connector *a, Connector *b) {
+static int x_prune_match(Connector *a, Connector *b)
+{
 	return prune_match(a, b, 0, 0);
 }
 
@@ -84,6 +124,9 @@ int prune_match(Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
 	int x, y, dist;
+
+	prune_context *pc = global_prune_context; /* cough cough hack hack */
+
 	if (a->label != b->label) return FALSE;
 	x = a->priority;
 	y = b->priority;
@@ -102,7 +145,7 @@ int prune_match(Connector *a, Connector *b, int aw, int bw)
 		dist = 0;
 	} else {
 		assert(aw < bw, "prune_match() did not receive params in the natural order.");
-		dist = effective_dist[aw][bw];
+		dist = pc->effective_dist[aw][bw];
 	}
 	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
 		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
@@ -168,11 +211,11 @@ int prune_match(Connector *a, Connector *b, int aw, int bw)
 	} else return FALSE;
 }
 
-static int s_table_size;
-static Connector ** table;
-
-static void free_S(void) {
-/* This function removes all connectors from the set S */
+/** 
+ * This function removes all connectors from the set S
+ */
+static void free_S(void)
+{
 	int i;
 	for (i=0; i<s_table_size; i++) {
 		if (table[i] == NULL) continue; /* a prehaps stupid optimization */
@@ -226,26 +269,13 @@ static void zero_S(void) {
 	}
 }
 
-#if 0
-OBS void init_S(Connector * c) {
-OBS /* put a copy of the the connector list c into S.  Assumes S is empty */
-OBS	 int h;
-OBS	 Connector *c1;
-OBS	 for (; c!=NULL; c = c->next) {
-OBS		 h = hash_S(c);
-OBS		 c1 = new_connector();
-OBS		 *c1 = *c;
-OBS		 c1->next = table[h];
-OBS		 table[h] = c1;
-OBS	 }
-OBS }
-#endif
-
-static int matches_S(Connector * c, int dir) {
-/* returns TRUE if c can match anything in the set S */
-/* because of the horrible kludge, prune match is assymetric, and   */
-/* direction is '-' if this is an l->r pass, and '+' if an r->l pass.   */
-
+/** 
+ * Returns TRUE if c can match anything in the set S.
+ * Because of the horrible kludge, prune match is assymetric, and
+ * direction is '-' if this is an l->r pass, and '+' if an r->l pass.
+ */
+static int matches_S(Connector * c, int dir)
+{
 	int h;
 	Connector * e;
 
@@ -262,10 +292,12 @@ static int matches_S(Connector * c, int dir) {
 	return FALSE;
 }
 
-static void clean_up(Sentence sent, int w) {
-/* This removes the disjuncts that are empty from the list corresponding
-   to word w of the sentence.
-*/
+/**
+ * This removes the disjuncts that are empty from the list corresponding
+ * to word w of the sentence.
+ */
+static void clean_up(Sentence sent, int w)
+{
 	Disjunct head_disjunct, *d, *d1;
 
 	d = &head_disjunct;
@@ -284,8 +316,9 @@ static void clean_up(Sentence sent, int w) {
 	sent->word[w].d = head_disjunct.next;
 }
 
-static int count_disjuncts(Disjunct * d) {
-/* returns the number of disjuncts in the list pointed to by d */
+/** returns the number of disjuncts in the list pointed to by d */
+static int count_disjuncts(Disjunct * d)
+{
 	int count = 0;
 	for (; d!=NULL; d=d->next) {
 		count++;
@@ -293,7 +326,8 @@ static int count_disjuncts(Disjunct * d) {
 	return count;
 }
 
-static int count_disjuncts_in_sentence(Sentence sent) {
+static int count_disjuncts_in_sentence(Sentence sent)
+{
 /* returns the total number of disjuncts in the sentence */
 	int w, count;
 	count = 0;
@@ -386,9 +420,6 @@ void prune(Sentence sent) {
    The second algorithm eliminates disjuncts that are dominated by
    another.  It works by hashing them all, and checking for domination.
 */
-
-static int dup_table_size;
-static Disjunct ** dup_table;
 
 /**
  * hash function that takes a string and a seed value i
@@ -624,19 +655,22 @@ static int old_hash_disjunct(Disjunct * d)
 	return string_hash(d->string, i);
 }
 
-static int connectors_equal_prune(Connector *c1, Connector *c2) {
-/* The connectors must be exactly equal.  A similar function
-   is connectors_equal_AND(), but that ignores priorities,
-   this does not.
-*/
+/**
+ * The connectors must be exactly equal.  A similar function
+ * is connectors_equal_AND(), but that ignores priorities,
+ * this does not.
+ */
+static int connectors_equal_prune(Connector *c1, Connector *c2)
+{
 	return (c1->label == c2->label) &&
 		   (c1->multi == c2->multi) &&
 		   (c1->priority == c2->priority) &&
 		   (strcmp(c1->string, c2->string) == 0);
 }
 
-static int disjuncts_equal(Disjunct * d1, Disjunct * d2) {
-/* returns TRUE if the disjuncts are exactly the same */
+/** returns TRUE if the disjuncts are exactly the same */
+static int disjuncts_equal(Disjunct * d1, Disjunct * d2)
+{
 	Connector *e1, *e2;
 	e1 = d1->left;
 	e2 = d2->left;
@@ -700,6 +734,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
 }
 
 
+/* ================================================================= */
 /* Here is expression pruning.  This is done even before the expressions
    are turned into lists of disjuncts.
 
@@ -707,10 +742,12 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
    by prune.
 */
 
-static int size_of_sentence_expressions(Sentence sent) {
-/* Computes and returns the number of connectors in all of the expressions
-   of the sentence.
-*/
+/**
+ * Computes and returns the number of connectors in all of the expressions
+ * of the sentence.
+ */
+static int size_of_sentence_expressions(Sentence sent)
+{
 	X_node * x;
 	int w, size;
 	size = 0;
@@ -730,14 +767,50 @@ static int size_of_sentence_expressions(Sentence sent) {
 /* If an OR or AND type expression node has one child, we can replace it by */
 /* its child.  This, of course, is not really necessary					 */
 
-int and_purge_E_list(E_list * l);
-E_list * or_purge_E_list(E_list * l);
+static Exp* purge_Exp(Exp *);
 
-static Exp* purge_Exp(Exp *e) {
-/* Must be called with a non-null expression								*/
-/* Return NULL iff the expression has no disjuncts.						 */
-/*  Exp * ne; */
+/**
+ * get rid of the elements with null expressions
+ */
+static E_list * or_purge_E_list(E_list * l)
+{
+	E_list * el;
+	if (l == NULL) return NULL;
+	if ((l->e = purge_Exp(l->e)) == NULL) {
+		el = or_purge_E_list(l->next);
+		xfree((char *)l, sizeof(E_list));
+		return el;
+	}
+	l->next = or_purge_E_list(l->next);
+	return l;
+}
 
+/**
+ * Returns 0 iff the length of the disjunct list is 0.
+ * If this is the case, it frees the structure rooted at l.
+ */
+static int and_purge_E_list(E_list * l)
+{
+	if (l == NULL) return 1;
+	if ((l->e = purge_Exp(l->e)) == NULL) {
+		free_E_list(l->next);
+		xfree((char *)l, sizeof(E_list));
+		return 0;
+	}
+	if (and_purge_E_list(l->next) == 0) {
+		free_Exp(l->e);
+		xfree((char *)l, sizeof(E_list));
+		return 0;
+	}
+	return 1;
+}
+
+/**
+ * Must be called with a non-null expression.
+ * Return NULL iff the expression has no disjuncts.
+ */
+static Exp* purge_Exp(Exp *e)
+{
 	if (e->type == CONNECTOR_type) {
 		if (e->u.string == NULL) {
 			xfree((char *)e, sizeof(Exp));
@@ -775,41 +848,13 @@ static Exp* purge_Exp(Exp *e) {
 	return e;
 }
 
-int and_purge_E_list(E_list * l) {
-/* Returns 0 iff the length of the disjunct list is 0.		  */
-/* If this is the case, it frees the structure rooted at l.	 */
-	if (l == NULL) return 1;
-	if ((l->e = purge_Exp(l->e)) == NULL) {
-		free_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
-		return 0;
-	}
-	if (and_purge_E_list(l->next) == 0) {
-		free_Exp(l->e);
-		xfree((char *)l, sizeof(E_list));
-		return 0;
-	}
-	return 1;
-}
-
-E_list * or_purge_E_list(E_list * l) {
-/* get rid of the elements with null expressions */
-	E_list * el;
-	if (l == NULL) return NULL;
-	if ((l->e = purge_Exp(l->e)) == NULL) {
-		el = or_purge_E_list(l->next);
-		xfree((char *)l, sizeof(E_list));
-		return el;
-	}
-	l->next = or_purge_E_list(l->next);
-	return l;
-}
-
-static int mark_dead_connectors(Exp * e, int dir) {
-/* Mark as dead all of the dir-pointing connectors
-   in e that are not matched by anything in the current set.
-   Returns the number of connectors so marked.
-*/
+/**
+ * Mark as dead all of the dir-pointing connectors
+ * in e that are not matched by anything in the current set.
+ * Returns the number of connectors so marked.
+ */
+static int mark_dead_connectors(Exp * e, int dir)
+{
 	Connector dummy;
 	int count;
 	E_list *l;
@@ -834,8 +879,11 @@ static int mark_dead_connectors(Exp * e, int dir) {
 	return count;
 }
 
-static void insert_connectors(Exp * e, int dir) {
-/* Put into the set S all of the dir-pointing connectors still in e.	*/
+/** 
+ * Put into the set S all of the dir-pointing connectors still in e.
+ */
+static void insert_connectors(Exp * e, int dir)
+{
 	Connector dummy;
 	E_list *l;
 	init_connector(&dummy);
@@ -855,10 +903,12 @@ static void insert_connectors(Exp * e, int dir) {
 	}
 }
 
-static void clean_up_expressions(Sentence sent, int w) {
-/* This removes the expressions that are empty from the list corresponding
-   to word w of the sentence.
-*/
+/**
+ * This removes the expressions that are empty from the list corresponding
+ * to word w of the sentence.
+ */
+static void clean_up_expressions(Sentence sent, int w)
+{
 	X_node head_node, *d, *d1;
 	d = &head_node;
 	d->next = sent->word[w].x;
@@ -967,13 +1017,6 @@ void expression_prune(Sentence sent){
    Each bucket of a hash table has a list of pointers to connectors.
    These nodes also store if the chosen connector is shallow.
 */
-typedef struct c_list_struct C_list;
-struct c_list_struct
-{
-	Connector * c;
-	int shallow;
-	C_list * next;
-};
 /*
    As with normal pruning, we make alternate left->right and right->left
    passes.  In the R->L pass, when we're on a word w, we make use of
@@ -1001,8 +1044,11 @@ struct c_list_struct
    deletable, this is equivalent to RUTHLESS.   --DS, 7/97
 */
 
-static int left_connector_count(Disjunct * d) {
-/* returns the number of connectors in the left lists of the disjuncts. */
+/** 
+ * returns the number of connectors in the left lists of the disjuncts.
+ */
+static int left_connector_count(Disjunct * d)
+{
 	Connector *c;
 	int i=0;
 	for (;d!=NULL; d=d->next) {
@@ -1010,7 +1056,9 @@ static int left_connector_count(Disjunct * d) {
 	}
 	return i;
 }
-static int right_connector_count(Disjunct * d) {
+
+static int right_connector_count(Disjunct * d)
+{
 	Connector *c;
 	int i=0;
 	for (;d!=NULL; d=d->next) {
@@ -1019,19 +1067,8 @@ static int right_connector_count(Disjunct * d) {
 	return i;
 }
 
-#define BAD_WORD (MAX_SENTENCE+1)
-   /* the indiction in a word field that this connector cannot
-	  be used -- is obsolete.
-   */
-
-static int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
-static int r_table_size[MAX_SENTENCE];
-
-static C_list ** l_table[MAX_SENTENCE];
-				 /* the beginnings of the hash tables */
-static C_list ** r_table[MAX_SENTENCE];
-
-static void free_C_list(C_list * t) {
+static void free_C_list(C_list * t)
+{
 	C_list *xt;
 	for (; t!=NULL; t=xt) {
 		xt = t->next;
@@ -1098,15 +1135,16 @@ static int set_dist_fields(Connector * c, int w, int delta) {
 	return i;
 }
 
-static void init_power(Sentence sent) {
-/* allocates and builds the initial power hash tables */
+/** Allocates and builds the initial power hash tables */
+static void init_power(prune_context *pc, Sentence sent)
+{
 	int w, len, size, i;
 	C_list ** t;
 	Disjunct * d, * xd, * head;
 	Connector * c;
 
-	deletable = sent->deletable;
-	effective_dist = sent->effective_dist;
+	pc->deletable = sent->deletable;
+	pc->effective_dist = sent->effective_dist;
 
    /* first we initialize the word fields of the connectors, and
 	  eliminate those disjuncts with illegal connectors */
@@ -1161,11 +1199,13 @@ static void init_power(Sentence sent) {
 	}
 }
 
-static void clean_table(int size, C_list ** t) {
-/* This runs through all the connectors in this table, and eliminates those
-   who are obsolete.  The word fields of an obsolete one has been set to
-   BAD_WORD.
-*/
+/**
+ * This runs through all the connectors in this table, and eliminates those
+ * who are obsolete.  The word fields of an obsolete one has been set to
+ * BAD_WORD.
+ */
+static void clean_table(int size, C_list ** t)
+{
 	int i;
 	C_list * m, * xm, * head;
 	for (i=0; i<size; i++) {
@@ -1220,7 +1260,7 @@ static int possible_connection(prune_context *pc,
 		} else {
 			if ((!pc->null_links) &&
 				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi) &&
-				!deletable[lword][rword]) {
+				!pc->deletable[lword][rword]) {
 				return FALSE;
 			}
 		}
@@ -1264,9 +1304,6 @@ static int left_table_search(prune_context *pc, int w, Connector *c, int shallow
 	}
 	return FALSE;
 }
-
-static int N_changed;   /* counts the number of changes
-						   of c->word fields in a pass */
 
 #if NOT_USED_NOW
 static int ok_cwords(Sentence sent, Connector *c)
@@ -1354,13 +1391,14 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	int w, N_deleted, total_deleted;
 
 	prune_context *pc = (prune_context *) malloc (sizeof(prune_context));
+	global_prune_context = pc; /* XXX fix me make global go away */
 	pc->power_cost = 0;
 	pc->power_prune_mode = mode; 
 	pc->null_links = (opts->min_null_count > 0);
 
 	count_set_effective_distance(sent);
 
-	init_power(sent);
+	init_power(pc, sent);
 	free_later = NULL;
 	N_changed = 1;  /* forces it always to make at least two passes */
 	N_deleted = 0;
@@ -1457,11 +1495,12 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
+	global_prune_context = NULL;
 	free(pc);
 	return total_deleted;
 }
 
-/*
+/* ===================================================================
    PP Pruning
 
    The "contains one" post-processing constraints give us a new way to
@@ -1540,17 +1579,6 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		the need for the last pass.)
 
   */
-
-typedef struct cms_struct Cms;
-struct cms_struct
-{
-	Cms * next;
-	const char * name;
-	int count;	  /* the number of times this is in the multiset */
-};
-
-#define CMS_SIZE (2<<10)
-static Cms * cms_table[CMS_SIZE];
 
 static void init_cms_table(void)
 {
@@ -1643,7 +1671,8 @@ static int delete_from_cms_table(const char * str)
 	return FALSE;
 }
 
-static int rule_satisfiable(pp_linkset *ls) {
+static int rule_satisfiable(pp_linkset *ls)
+{
 	int hashval;
 	const char * t;
 	char name[20], *s;
