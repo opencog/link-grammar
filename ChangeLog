@@ -18,6 +18,7 @@ Version 4.3.5 includes the following changes:
  * Add readline (BSD editline) support.
  * Rename "grammar-parse" to the more logical "link-parser".
  * Small man page updates.
+ * Export and cost, link cost via public API.
 
 Version 4.3.4 includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.

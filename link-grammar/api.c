@@ -628,9 +628,19 @@ int sentence_num_violations(Sentence sent, int i) {
 	return sent->link_info[i].N_violations;
 }
 
+int sentence_and_cost(Sentence sent, int i) {
+	if (!sent) return 0;
+	return sent->link_info[i].and_cost;
+}
+
 int sentence_disjunct_cost(Sentence sent, int i) {
 	if (!sent) return 0;
 	return sent->link_info[i].disjunct_cost;
+}
+
+int sentence_link_cost(Sentence sent, int i) {
+	if (!sent) return 0;
+	return sent->link_info[i].link_cost;
 }
 
 char * sentence_get_nth_word(Sentence sent, int i) {

@@ -338,6 +338,17 @@ Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls
 
 /*
  * Class:		 LinkGrammar
+ * Method:		linkageAndCost
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL
+Java_org_linkgrammar_LinkGrammar_getAndDisjunctCost(JNIEnv *env, jclass cls)
+{
+	return sentence_and_cost(sent, cur_linkage);
+}
+
+/*
+ * Class:		 LinkGrammar
  * Method:		linkageDisjunctCost
  * Signature: ()I
  */
@@ -345,6 +356,17 @@ JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost(JNIEnv *env, jclass cls)
 {
 	return sentence_disjunct_cost(sent, cur_linkage);
+}
+
+/*
+ * Class:		 LinkGrammar
+ * Method:		linkageLinkCost
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL
+Java_org_linkgrammar_LinkGrammar_getLinkageLinkCost(JNIEnv *env, jclass cls)
+{
+	return sentence_link_cost(sent, cur_linkage);
 }
 
 /*

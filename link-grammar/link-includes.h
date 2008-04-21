@@ -197,7 +197,11 @@ link_public_api(int)
 link_public_api(int)
      sentence_num_violations(Sentence sent, int i);
 link_public_api(int)
+     sentence_and_cost(Sentence sent, int i);
+link_public_api(int)
      sentence_disjunct_cost(Sentence sent, int i);
+link_public_api(int)
+     sentence_link_cost(Sentence sent, int i);
 
 link_public_api(char *)
      sentence_get_nth_word(Sentence sent, int i);
