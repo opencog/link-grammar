@@ -59,7 +59,11 @@ struct cms_struct
 };
 
 #define CMS_SIZE (2<<10)
-static Cms * cms_table[CMS_SIZE];
+typedef struct multiset_table_s multiset_table;
+struct multiset_table_s
+{
+	Cms * cms_table[CMS_SIZE];
+};
 
 typedef struct prune_context_s prune_context;
 struct prune_context_s
@@ -1704,69 +1708,74 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 
   */
 
-static void init_cms_table(void)
+static multiset_table * cms_table_new(void)
 {
+	multiset_table *mt;
 	int i;
+
+	mt = (multiset_table *) malloc(sizeof(multiset_table));
+
 	for (i=0; i<CMS_SIZE; i++) {
-		cms_table[i] = NULL;
+		mt->cms_table[i] = NULL;
 	}
+	return mt;
 }
 
-static void free_cms_table(void)
+static void cms_table_delete(multiset_table *mt)
 {
 	Cms * cms, *xcms;
 	int i;
-	for (i=0; i<CMS_SIZE; i++) {
-		for (cms = cms_table[i]; cms!=NULL; cms=xcms) {
+	for (i=0; i<CMS_SIZE; i++)
+	{
+		for (cms = mt->cms_table[i]; cms != NULL; cms = xcms)
+		{
 			xcms = cms->next;
 			xfree(cms, sizeof(Cms));
 		}
 	}
+	free(mt);
 }
 
 static int cms_hash(const char * s)
 {
 	int i=0;
-	while(isupper((int)*s)) {
+	while (isupper((int)*s)) /* connector names are not yet UTF8-capable */
+	{
 		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
 		s++;
 	}
 	return (i & (CMS_SIZE-1));
 }
 
-static int match_in_cms_table(const char * pp_match_name)
+/**
+ * This returns TRUE if there is a connector name C in the table
+ * such that post_process_match(pp_match_name, C) is TRUE
+ */
+static int match_in_cms_table(multiset_table *cmt, const char * pp_match_name)
 {
-	/* This returns TRUE if there is a connector name C in the table
-	   such that post_process_match(pp_match_name, C) is TRUE */
 	Cms * cms;
-	for (cms = cms_table[cms_hash(pp_match_name)]; cms!=NULL; cms=cms->next) {
+	for (cms = cmt->cms_table[cms_hash(pp_match_name)]; cms != NULL; cms = cms->next)
+	{
 		if(post_process_match(pp_match_name, cms->name)) return TRUE;
 	}
 	return FALSE;
 }
 
-static Cms * lookup_in_cms_table(const char * str)
+static Cms * lookup_in_cms_table(multiset_table *cmt, const char * str)
 {
 	Cms * cms;
-	for (cms = cms_table[cms_hash(str)]; cms!=NULL; cms=cms->next) {
+	for (cms = cmt->cms_table[cms_hash(str)]; cms != NULL; cms = cms->next)
+	{
 		if(strcmp(str, cms->name) == 0) return cms;
 	}
 	return NULL;
 }
 
-/*  This is not used currently */
-/*
-int is_in_cms_table(char * str) {
-	Cms * cms = lookup_in_cms_table(str);
-	return (cms != NULL && cms->count > 0);
-}
-*/
-
-static void insert_in_cms_table(const char * str)
+static void insert_in_cms_table(multiset_table *cmt, const char * str)
 {
 	Cms * cms;
 	int h;
-	cms = lookup_in_cms_table(str);
+	cms = lookup_in_cms_table(cmt, str);
 	if (cms != NULL) {
 		cms->count++;
 	} else {
@@ -1775,8 +1784,8 @@ static void insert_in_cms_table(const char * str)
 							 we won't free these later */
 		cms->count = 1;
 		h = cms_hash(str);
-		cms->next = cms_table[h];
-		cms_table[h] = cms;
+		cms->next = cmt->cms_table[h];
+		cmt->cms_table[h] = cms;
 	}
 }
 
@@ -1784,10 +1793,10 @@ static void insert_in_cms_table(const char * str)
  * Delete the given string from the table.  Return TRUE if
  * this caused a count to go to 0, return FALSE otherwise.
  */
-static int delete_from_cms_table(const char * str)
+static int delete_from_cms_table(multiset_table *cmt, const char * str)
 {
 	Cms * cms;
-	cms = lookup_in_cms_table(str);
+	cms = lookup_in_cms_table(cmt, str);
 	if (cms != NULL && cms->count > 0) {
 		cms->count--;
 		return (cms->count == 0);
@@ -1795,16 +1804,18 @@ static int delete_from_cms_table(const char * str)
 	return FALSE;
 }
 
-static int rule_satisfiable(pp_linkset *ls)
+static int rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 {
 	int hashval;
 	const char * t;
 	char name[20], *s;
 	pp_linkset_node *p;
 	int bad, n_subscripts;
-	for (hashval = 0; hashval < ls->hash_table_size; hashval++) {
-		for (p = ls->hash_table[hashval]; p!=NULL; p=p->next) {
 
+	for (hashval = 0; hashval < ls->hash_table_size; hashval++)
+	{
+		for (p = ls->hash_table[hashval]; p!=NULL; p=p->next)
+		{
 			/* ok, we've got our hands on one of the criterion links */
 			strncpy(name, p->str, sizeof(name)-1);
 			/* could actually use the string in place because we change it back */
@@ -1824,14 +1835,14 @@ static int rule_satisfiable(pp_linkset *ls)
 				n_subscripts++;
 				/* after the upper case part, and is not a * so must be a regular subscript */
 				*s = *t;
-				if (!match_in_cms_table(name)) bad++;
+				if (!match_in_cms_table(cmt, name)) bad++;
 				*s = '#';
 			}
 
 			if (n_subscripts == 0) {
 				/* now we handle the special case which occurs if there
 				   were 0 subscripts */
-				if (!match_in_cms_table(name)) bad++;
+				if (!match_in_cms_table(cmt, name)) bad++;
 			}
 
 			/* now if bad==0 this criterion link does the job
@@ -1853,19 +1864,20 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	Disjunct *d;
 	Connector *c;
 	int change, total_deleted, N_deleted, deleteme;
+	multiset_table *cmt;
 
 	if (sent->dict->postprocessor == NULL) return 0;
 
 	knowledge = sent->dict->postprocessor->knowledge;
 
-	init_cms_table();
+	cmt = cms_table_new();
 
 	for (w = 0; w < sent->length; w++) {
 		for (d = sent->word[w].d; d != NULL; d = d->next) {
 			d->marked = TRUE;
 			for (dir=0; dir < 2; dir++) {
 				for (c = ( (dir)?(d->left):(d->right) ); c!=NULL; c=c->next) {
-					insert_in_cms_table(c->string);
+					insert_in_cms_table(cmt, c->string);
 				}
 			}
 		}
@@ -1899,7 +1911,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 							/* We know c matches the trigger link of the rule. */
 							/* Now check the criterion links */
 
-							if (!rule_satisfiable(link_set)) {
+							if (!rule_satisfiable(cmt, link_set)) {
 								deleteme = TRUE;
 							}
 							if (deleteme) break;
@@ -1915,7 +1927,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 					d->marked = FALSE; /* mark for deletion later */
 					for (dir=0; dir < 2; dir++) {
 						for (c = ( (dir)?(d->left):(d->right) ); c!=NULL; c=c->next) {
-							change += delete_from_cms_table(c->string);
+							change += delete_from_cms_table(cmt, c->string);
 						}
 					}
 				}
@@ -1928,7 +1940,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 	}
 	delete_unmarked_disjuncts(sent);
-	free_cms_table();
+	cms_table_delete(cmt);
 
 	if (verbosity > 2) {
 		printf("\nAfter pp_pruning:\n");
