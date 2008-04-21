@@ -16,10 +16,7 @@
 /* This file contains the exhaustive search algorithm. */
 
 static char ** deletable;
-static char ** effective_dist; /* variable with same name appears in prune_context,
-                                * and is maybe expected to hiold identical data !?
-                                * which is used by prune_match !? Need to investigate!
-                                */
+static char ** effective_dist; 
 static Word *  local_sent;
 static int	 null_block, islands_ok, null_links;
 static Resources current_resources;
@@ -472,6 +469,15 @@ s64 parse(Sentence sent, int cost, Parse_Options opts)
    2  This region can be completed, and it's been marked.
    */
 
+static int x_prune_match(Connector *le, Connector *re, int lw, int rw)
+{
+	int dist;
+
+	assert(lw < rw, "prune_match() did not receive params in the natural order.");
+	dist = effective_dist[lw][rw];
+	return prune_match(dist, le, re);
+}
+
 /**
  * Returns 0 if this range cannot be successfully filled in with
  * links.  Returns 1 if it can, and it's not been marked, and returns
@@ -513,7 +519,7 @@ static int region_valid(int lw, int rw, Connector *le, Connector *re)
 			/* mark_cost++;*/
 			/* in the following expressions we use the fact that 0=FALSE. Could eliminate
 			   by always saying "region_valid(...) != 0"  */
-			left_valid = (((le != NULL) && (d->left != NULL) && prune_match(le, d->left, lw, w)) &&
+			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(le, d->left, lw, w)) &&
 						  ((region_valid(lw, w, le->next, d->left->next)) ||
 						   ((le->multi) && region_valid(lw, w, le, d->left->next)) ||
 						   ((d->left->multi) && region_valid(lw, w, le->next, d->left)) ||
@@ -522,7 +528,7 @@ static int region_valid(int lw, int rw, Connector *le, Connector *re)
 				found = 1;
 				break;
 			}
-			right_valid = (((d->right != NULL) && (re != NULL) && prune_match(d->right, re, w, rw)) &&
+			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(d->right, re, w, rw)) &&
 						   ((region_valid(w, rw, d->right->next,re->next))	||
 							((d->right->multi) && region_valid(w,rw,d->right,re->next))  ||
 							((re->multi) && region_valid(w, rw, d->right->next, re))  ||
@@ -588,12 +594,12 @@ static void mark_region(int lw, int rw, Connector *le, Connector *re)
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
 			/* mark_cost++;*/
-			left_valid = (((le != NULL) && (d->left != NULL) && prune_match(le, d->left, lw, w)) &&
+			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(le, d->left, lw, w)) &&
 						  ((region_valid(lw, w, le->next, d->left->next)) ||
 						   ((le->multi) && region_valid(lw, w, le, d->left->next)) ||
 						   ((d->left->multi) && region_valid(lw, w, le->next, d->left)) ||
 						   ((le->multi && d->left->multi) && region_valid(lw, w, le, d->left))));
-			right_valid = (((d->right != NULL) && (re != NULL) && prune_match(d->right, re, w, rw)) &&
+			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(d->right, re, w, rw)) &&
 						   ((region_valid(w, rw, d->right->next,re->next)) ||
 							((d->right->multi) && region_valid(w,rw,d->right,re->next))  ||
 							((re->multi) && region_valid(w, rw, d->right->next, re)) ||

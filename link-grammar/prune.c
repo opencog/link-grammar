@@ -79,8 +79,6 @@ struct prune_context_s
 	power_table *pt;
 };
 
-static prune_context *global_prune_context = NULL;
-
 /*
 
   The algorithms in this file prune disjuncts from the disjunct list
@@ -124,11 +122,6 @@ static prune_context *global_prune_context = NULL;
 
 */
 
-static int x_prune_match(Connector *a, Connector *b)
-{
-	return prune_match(a, b, 0, 0);
-}
-
 /**
  * This is almost identical to match().  Its reason for existance
  * is the rather subtle fact that with "and" can transform a "Ss"
@@ -137,12 +130,10 @@ static int x_prune_match(Connector *a, Connector *b)
  * on a word to its right.  This is what this version of match allows.
  * We assume that a is on a word to the left of b.
  */
-int prune_match(Connector *a, Connector *b, int aw, int bw)
+int prune_match(int dist, Connector *a, Connector *b)
 {
 	const char *s, *t;
-	int x, y, dist;
-
-	prune_context *pc = global_prune_context; /* cough cough hack hack */
+	int x, y;
 
 	if (a->label != b->label) return FALSE;
 	x = a->priority;
@@ -151,21 +142,15 @@ int prune_match(Connector *a, Connector *b, int aw, int bw)
 	s = a->string;
 	t = b->string;
 
-	while(isupper((int)*s) || isupper((int)*t)) { /* connector names are not yet UTF8-capable */
+	while(isupper((int)*s) || isupper((int)*t)) /* connector names are not yet UTF8-capable */
+	{
 		if (*s != *t) return FALSE;
 		s++;
 		t++;
 	}
 
-
-	if (aw==0 && bw==0) {  /* probably not necessary, as long as effective_dist[0][0]=0 and is defined */
-		dist = 0;
-	} else {
-		assert(aw < bw, "prune_match() did not receive params in the natural order.");
-		dist = pc->effective_dist[aw][bw];
-	}
-	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
-		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
+	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  a->ll=%d b->ll=%d  dist=%d\n",
+		   s, t, x, y, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
 
@@ -322,11 +307,11 @@ static int matches_S(connector_table *ct, Connector * c, int dir)
 	h = hash_S(ct, c);
 	if (dir=='-') {
 		for (e = ct->table[h]; e != NULL; e = e->next) {
-			if (x_prune_match(e, c)) return TRUE;
+			if (prune_match(0, e, c)) return TRUE;
 		}
 	} else {
 		for (e = ct->table[h]; e != NULL; e = e->next) {
-			if (x_prune_match(c, e)) return TRUE;
+			if (prune_match(0, c, e)) return TRUE;
 		}
 	}
 	return FALSE;
@@ -1350,6 +1335,8 @@ static int possible_connection(prune_context *pc,
 	if ((lc->word > rword) || (rc->word < lword)) return FALSE;
 	  /* word range constraints */
 
+	assert(lword < rword, "Bad word order in possible connection.");
+
 	/* Now, notice that the only differences between the following two
 	   cases is that (1) ruthless uses match and gentle uses prune_match.
 	   and (2) ruthless doesn't use deletable[][].  This latter fact is
@@ -1376,7 +1363,7 @@ static int possible_connection(prune_context *pc,
 				return FALSE;
 			}
 		}
-		return prune_match(lc, rc, lword, rword);
+		return prune_match(pc->effective_dist[lword][rword], lc, rc);
 	}
 }
 
@@ -1515,7 +1502,6 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	int w, N_deleted, total_deleted;
 
 	pc = (prune_context *) malloc (sizeof(prune_context));
-	global_prune_context = pc; /* XXX fix me make global go away */
 	pc->power_cost = 0;
 	pc->power_prune_mode = mode; 
 	pc->null_links = (opts->min_null_count > 0);
@@ -1626,7 +1612,6 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
-	global_prune_context = NULL;
 	free(pc);
 	return total_deleted;
 }
