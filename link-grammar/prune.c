@@ -20,8 +20,12 @@ struct connector_table_s
 	Connector ** table;
 };
 
-static int dup_table_size;
-static Disjunct ** dup_table;
+typedef struct disjunct_dup_table_s disjunct_dup_table;
+struct disjunct_dup_table_s
+{
+	int dup_table_size;
+	Disjunct ** dup_table;
+};
 
 /* the indiction in a word field that this connector cannot
  * be used -- is obsolete.
@@ -453,10 +457,10 @@ void prune(Sentence sent)
 /**
  * hash function that takes a string and a seed value i
  */
-static int string_hash(const char * s, int i) 
+static int string_hash(disjunct_dup_table *dt, const char * s, int i) 
 {
 	for(;*s != '\0';s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-	return (i & (dup_table_size-1));
+	return (i & (dt->dup_table_size-1));
 }
 
 #if FALSE
@@ -561,30 +565,38 @@ int connector_matches_alam(Connector * a, Connector * b) {
 	return (*s == '\0');
 }
 
-static inline int pconnector_hash(Connector * c, int i)
+static inline int pconnector_hash(disjunct_dup_table *dt, Connector * c, int i)
 {
 	i = connector_hash(c, i);
-	return (i & (dup_table_size-1));
+	return (i & (ct->dup_table_size-1));
 }
 
-int hash_disjunct(Disjunct * d) {
-/* This is a hash function for disjuncts */
+/**
+ * This is a hash function for disjuncts 
+ */
+static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
+{
 	int i;
 	Connector *e;
 	i = 0;
-	for (e = d->left ; e != NULL; e = e->next) {
-		i = pconnector_hash(e, i);
+	for (e = d->left ; e != NULL; e = e->next)
+	{
+		i = pconnector_hash(dt, e, i);
 	}
-	for (e = d->right ; e != NULL; e = e->next) {
-		i = pconnector_hash(e, i);
+	for (e = d->right ; e != NULL; e = e->next)
+	{
+		i = pconnector_hash(dt, e, i);
 	}
-	return string_hash(d->string, i);
+	return string_hash(dt, d->string, i);
 }
 
-int disjunct_matches_alam(Disjunct * d1, Disjunct * d2) {
-/* returns TRUE if disjunct d1 can match anything that d2 can	   */
-/* if this happens, it constitutes a proof that there is absolutely */
-/* no use for d2. */
+/**
+ * Returns TRUE if disjunct d1 can match anything that d2 can
+ * if this happens, it constitutes a proof that there is absolutely 
+ * no use for d2.
+ */
+int disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
+{
 	Connector *e1, *e2;
 	if (d1->cost > d2->cost) return FALSE;
 	e1 = d1->left;
@@ -606,25 +618,31 @@ int disjunct_matches_alam(Disjunct * d1, Disjunct * d2) {
 	return (strcmp(d1->string, d2->string) == 0);
 }
 
-Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
-/* Takes the list of disjuncts pointed to by d, eliminates all
-   duplicates, and returns a pointer to a new list.
-   It frees the disjuncts that are eliminated.
-*/
+/**
+ * Takes the list of disjuncts pointed to by d, eliminates all
+ * duplicates, and returns a pointer to a new list.
+ * It frees the disjuncts that are eliminated.
+ */
+Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
+{
 	int i, h, count;
 	Disjunct *dn, *dx, *dxn, *front;
 	count = 0;
-	dup_table_size = next_power_of_two_up(2 * count_disjuncts(d));
-	dup_table = (Disjunct **) xalloc(dup_table_size * sizeof(Disjunct *));
-	for (i=0; i<dup_table_size; i++) dup_table[i] = NULL;
-	for (;d!=NULL; d = dn) {
+	disjunct_dup_table *dt;
+
+	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(d)));
+
+	for (;d!=NULL; d = dn)
+	{
 		dn = d->next;
 		h = hash_disjunct(d);
 
 		front = NULL;
-		for (dx = dup_table[h]; dx!=NULL; dx=dxn) {
+		for (dx = dt->dup_table[h]; dx != NULL; dx = dxn)
+		{
 			dxn = dx->next;
-			if (disjunct_matches_alam(dx,d)) {
+			if (disjunct_matches_alam(dx,d))
+			{
 				/* we know that d should be killed */
 				d->next = NULL;
 				free_disjuncts(d);
@@ -647,18 +665,23 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
 			d->next = front;
 			front = d;
 		}
-		dup_table[h] = front;
+		dt->dup_table[h] = front;
 	}
+
 	/* d is now NULL */
-	for (i=0; i<dup_table_size; i++) {
-		for (dx = dup_table[i]; dx != NULL; dx = dxn) {
+	for (i = 0; i < dt->dup_table_size; i++)
+	{
+		for (dx = dt->dup_table[i]; dx != NULL; dx = dxn)
+		{
 			dxn = dx->next;
 			dx->next = d;
 			d = dx;
 		}
 	}
-	xfree((char *) dup_table, dup_table_size * sizeof(Disjunct *));
-	if ((verbosity > 2)&&(count != 0)) printf("killed %d duplicates\n",count);
+
+	if ((verbosity > 2) && (count != 0)) printf("killed %d duplicates\n", count);
+
+	disjunct_dup_table_delete(dt);
 	return d;
 }
 
@@ -670,18 +693,18 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static int old_hash_disjunct(Disjunct * d) 
+static int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d) 
 {
 	int i;
 	Connector *e;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i = string_hash(e->string, i);
+		i = string_hash(dt, e->string, i);
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i = string_hash(e->string, i);
+		i = string_hash(dt, e->string, i);
 	}
-	return string_hash(d->string, i);
+	return string_hash(dt, d->string, i);
 }
 
 /**
@@ -720,28 +743,56 @@ static int disjuncts_equal(Disjunct * d1, Disjunct * d2)
 	return (strcmp(d1->string, d2->string) == 0);
 }
 
-Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
-/* Takes the list of disjuncts pointed to by d, eliminates all
-   duplicates, and returns a pointer to a new list.
-   It frees the disjuncts that are eliminated.
-*/
+static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
+{
+	size_t i;
+	disjunct_dup_table *dt;
+	dt = (disjunct_dup_table *) malloc(sizeof(disjunct_dup_table));
+
+	dt->dup_table_size = sz;
+	dt->dup_table = (Disjunct **) xalloc(sz * sizeof(Disjunct *));
+
+	for (i=0; i<sz; i++) dt->dup_table[i] = NULL;
+
+	return dt;
+}
+
+static void disjunct_dup_table_delete(disjunct_dup_table *dt)
+{
+	xfree((char *) dt->dup_table, dt->dup_table_size * sizeof(Disjunct *));
+	free(dt);
+}
+
+/**
+ * Takes the list of disjuncts pointed to by d, eliminates all
+ * duplicates, and returns a pointer to a new list.
+ * It frees the disjuncts that are eliminated.
+ */
+Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
+{
 	int i, h, count;
 	Disjunct *dn, *dx;
-	count = 0;
-	dup_table_size = next_power_of_two_up(2 * count_disjuncts(d));
-	dup_table = (Disjunct **) xalloc(dup_table_size * sizeof(Disjunct *));
-	for (i=0; i<dup_table_size; i++) dup_table[i] = NULL;
-	while (d!=NULL) {
-		dn = d->next;
-		h = old_hash_disjunct(d);
+	disjunct_dup_table *dt;
 
-		for (dx = dup_table[h]; dx!=NULL; dx=dx->next) {
+	count = 0;
+	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(d)));
+
+	while (d!=NULL)
+	{
+		dn = d->next;
+		h = old_hash_disjunct(dt, d);
+
+		for (dx = dt->dup_table[h]; dx!=NULL; dx=dx->next)
+		{
 			if (disjuncts_equal(dx, d)) break;
 		}
-		if (dx==NULL) {
-			d->next = dup_table[h];
-			dup_table[h] = d;
-		} else {
+		if (dx == NULL)
+		{
+			d->next = dt->dup_table[h];
+			dt->dup_table[h] = d;
+		}
+		else
+		{
 			d->next = NULL;  /* to prevent it from freeing the whole list */
 			if (d->cost < dx->cost) dx->cost = d->cost;
 			free_disjuncts(d);
@@ -749,16 +800,20 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d) {
 		}
 		d = dn;
 	}
+
 	/* d is already null */
-	for (i=0; i<dup_table_size; i++) {
-		for (dn = dup_table[i]; dn != NULL; dn = dx) {
+	for (i=0; i<dt->dup_table_size; i++)
+	{
+		for (dn = dt->dup_table[i]; dn != NULL; dn = dx) {
 			dx = dn->next;
 			dn->next = d;
 			d = dn;
 		}
 	}
-	xfree((char *) dup_table, dup_table_size * sizeof(Disjunct *));
-	if ((verbosity > 2)&&(count != 0)) printf("killed %d duplicates\n",count);
+
+	if ((verbosity > 2) && (count != 0)) printf("killed %d duplicates\n", count);
+
+	disjunct_dup_table_delete(dt);
 	return d;
 }
 
