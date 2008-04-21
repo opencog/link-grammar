@@ -32,19 +32,23 @@ struct disjunct_dup_table_s
  */
 #define BAD_WORD (MAX_SENTENCE+1)
 
-static int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
-static int r_table_size[MAX_SENTENCE];
-
-typedef struct c_list_struct C_list;
-struct c_list_struct
+typedef struct c_list_s C_list;
+struct c_list_s
 {
 	Connector * c;
 	int shallow;
 	C_list * next;
 };
-static C_list ** l_table[MAX_SENTENCE];
-				 /* the beginnings of the hash tables */
-static C_list ** r_table[MAX_SENTENCE];
+
+typedef struct power_table_s power_table;
+struct power_table_s
+{
+	int power_table_size;
+	int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
+	int r_table_size[MAX_SENTENCE];
+	C_list ** l_table[MAX_SENTENCE];
+	C_list ** r_table[MAX_SENTENCE];
+};
 
 typedef struct cms_struct Cms;
 struct cms_struct
@@ -68,6 +72,7 @@ struct prune_context_s
 	int N_changed;   /* counts the number of changes
 						   of c->word fields in a pass */
 
+	power_table *pt;
 };
 
 static prune_context *global_prune_context = NULL;
@@ -1160,20 +1165,29 @@ static void free_C_list(C_list * t)
 	}
 }
 
-static void free_power_tables(Sentence sent) {
-/* free all of the hash tables and C_lists */
+/**
+ * free all of the hash tables and C_lists
+ */
+static void power_table_delete(power_table *pt)
+{
 	int w;
 	int i;
-	for (w=0; w<sent->length; w++) {
-		for (i=0; i<l_table_size[w]; i++) {
-			free_C_list(l_table[w][i]);
+
+	for (w = 0; w < pt->power_table_size; w++)
+	{
+		for (i = 0; i < pt->l_table_size[w]; i++)
+		{
+			free_C_list(pt->l_table[w][i]);
 		}
-		xfree((char *)l_table[w], l_table_size[w] * sizeof (C_list *));
-		for (i=0; i<r_table_size[w]; i++) {
-			free_C_list(r_table[w][i]);
+		xfree((char *)pt->l_table[w], pt->l_table_size[w] * sizeof (C_list *));
+
+		for (i = 0; i < pt->r_table_size[w]; i++)
+		{
+			free_C_list(pt->r_table[w][i]);
 		}
-		xfree((char *)r_table[w], r_table_size[w] * sizeof (C_list *));
+		xfree((char *)pt->r_table[w], pt->r_table_size[w] * sizeof (C_list *));
 	}
+	free(pt);
 }
 
 /** 
@@ -1219,20 +1233,24 @@ static int set_dist_fields(Connector * c, int w, int delta) {
 	return i;
 }
 
-/** Allocates and builds the initial power hash tables */
-static void init_power(prune_context *pc, Sentence sent)
+/** 
+ * Allocates and builds the initial power hash tables
+ */
+static power_table * power_table_new(Sentence sent)
 {
+	power_table *pt;
 	int w, len, size, i;
 	C_list ** t;
 	Disjunct * d, * xd, * head;
 	Connector * c;
 
-	pc->deletable = sent->deletable;
-	pc->effective_dist = sent->effective_dist;
+	pt = (power_table *) malloc (sizeof(power_table));
+	pt->power_table_size = sent->length;
 
    /* first we initialize the word fields of the connectors, and
 	  eliminate those disjuncts with illegal connectors */
-	for (w=0; w<sent->length; w++) {
+	for (w=0; w<sent->length; w++)
+	{
 	  head = NULL;
 	  for (d=sent->word[w].d; d!=NULL; d=xd) {
 		  xd = d->next;
@@ -1248,11 +1266,12 @@ static void init_power(prune_context *pc, Sentence sent)
 	  sent->word[w].d = head;
 	}
 
-	for (w=0; w<sent->length; w++) {
+	for (w=0; w<sent->length; w++)
+	{
 		len = left_connector_count(sent->word[w].d);
 		size = next_power_of_two_up(len);
-		l_table_size[w] = size;
-		t = l_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
+		pt->l_table_size[w] = size;
+		t = pt->l_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
 
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
@@ -1267,8 +1286,8 @@ static void init_power(prune_context *pc, Sentence sent)
 
 		len = right_connector_count(sent->word[w].d);
 		size = next_power_of_two_up(len);
-		r_table_size[w] = size;
-		t = r_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
+		pt->r_table_size[w] = size;
+		t = pt->r_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
 
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
@@ -1281,6 +1300,8 @@ static void init_power(prune_context *pc, Sentence sent)
 			}
 		}
 	}
+
+	return pt;
 }
 
 /**
@@ -1361,10 +1382,15 @@ static int right_table_search(prune_context *pc, int w, Connector *c, int shallo
 {
 	int size, h;
 	C_list *cl;
-	size = r_table_size[w];
+	power_table *pt;
+
+	pt = pc->pt;
+	size = pt->r_table_size[w];
 	h = power_hash(c) & (size-1);
-	for (cl = r_table[w][h]; cl!=NULL; cl = cl->next) {
-		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c)) {
+	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
+	{
+		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c))
+		{
 			return TRUE;
 		}
 	}
@@ -1379,10 +1405,15 @@ static int left_table_search(prune_context *pc, int w, Connector *c, int shallow
 {
 	int size, h;
 	C_list *cl;
-	size = l_table_size[w];
+	power_table *pt;
+
+	pt = pc->pt;
+	size = pt->l_table_size[w];
 	h = power_hash(c) & (size-1);
-	for (cl = l_table[w][h]; cl!=NULL; cl = cl->next) {
-	  if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w)) {
+	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
+	{
+	  if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
+		{
 		  return TRUE;
 	  }
 	}
@@ -1470,20 +1501,26 @@ static int right_connector_list_update(prune_context *pc, Sentence sent, Connect
 /** The return value is the number of disjuncts deleted */
 int power_prune(Sentence sent, int mode, Parse_Options opts)
 {
+	power_table *pt;
+	prune_context *pc;
 	Disjunct *d, *free_later, *dx, *nd;
 	Connector *c;
 	int w, N_deleted, total_deleted;
 
-	prune_context *pc = (prune_context *) malloc (sizeof(prune_context));
+	pc = (prune_context *) malloc (sizeof(prune_context));
 	global_prune_context = pc; /* XXX fix me make global go away */
 	pc->power_cost = 0;
 	pc->power_prune_mode = mode; 
 	pc->null_links = (opts->min_null_count > 0);
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
+	pc->deletable = sent->deletable;
+	pc->effective_dist = sent->effective_dist;
 
 	count_set_effective_distance(sent);
 
-	init_power(pc, sent);
+	pt = power_table_new(sent);
+	pc->pt = pt;
+
 	free_later = NULL;
 	N_deleted = 0;
 
@@ -1504,7 +1541,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 				}
 			}
 
-			clean_table(r_table_size[w], r_table[w]);
+			clean_table(pt->r_table_size[w], pt->r_table[w]);
 			nd = NULL;
 			for (d = sent->word[w].d; d != NULL; d = dx) {
 				dx = d->next;
@@ -1538,7 +1575,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 					total_deleted++;
 				}
 			}
-			clean_table(l_table_size[w], l_table[w]);
+			clean_table(pt->l_table_size[w], pt->l_table[w]);
 			nd = NULL;
 			for (d = sent->word[w].d; d != NULL; d = dx) {
 				dx = d->next;
@@ -1561,7 +1598,10 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		pc->N_changed = N_deleted = 0;
 	}
 	free_disjuncts(free_later);
-	free_power_tables(sent);
+	power_table_delete(pt);
+	pt = NULL;
+	pc->pt = NULL;
+	
 	if (verbosity > 2) printf("%d power prune cost:\n", pc->power_cost);
 
 	if (mode == RUTHLESS) {
