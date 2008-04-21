@@ -135,7 +135,7 @@ static int x_prune_match(Connector *a, Connector *b)
  * connector into "Sp".  This means that in order for pruning to
  * work, we must allow a "Ss" connector on word match an "Sp" connector
  * on a word to its right.  This is what this version of match allows.
- * we assume that a is on a word to the left of b.
+ * We assume that a is on a word to the left of b.
  */
 int prune_match(Connector *a, Connector *b, int aw, int bw)
 {
@@ -151,7 +151,7 @@ int prune_match(Connector *a, Connector *b, int aw, int bw)
 	s = a->string;
 	t = b->string;
 
-	while(isupper((int)*s) || isupper((int)*t)) {
+	while(isupper((int)*s) || isupper((int)*t)) { /* connector names are not yet UTF8-capable */
 		if (*s != *t) return FALSE;
 		s++;
 		t++;
@@ -1208,17 +1208,19 @@ static int power_hash(Connector * c)
 	int i;
 	i = randtable[c->label & (RTSIZE-1)];
 	s = c->string;
-	while(isupper((int)*s)) {
+	while (isupper((int)*s)) {  /* Connector names are not yet UTF8-capable */
 		i = i + (i<<1) + randtable[((*s) + i) & (RTSIZE-1)];
 		s++;
 	}
 	return i;
 }
 
-static void put_into_power_table(int size, C_list ** t, Connector * c, int shal ) {
-/* The disjunct d (whose left or right pointer points to c) is put
-   into the appropriate hash table
-*/
+/**
+ * The disjunct d (whose left or right pointer points to c) is put
+ * into the appropriate hash table
+ */
+static void put_into_power_table(int size, C_list ** t, Connector * c, int shal)
+{
 	int h;
 	C_list * m;
 	h = power_hash(c) & (size-1);
@@ -1229,7 +1231,8 @@ static void put_into_power_table(int size, C_list ** t, Connector * c, int shal 
 	m->shallow = shal;
 }
 
-static int set_dist_fields(Connector * c, int w, int delta) {
+static int set_dist_fields(Connector * c, int w, int delta)
+{
 	int i;
 	if (c==NULL) return w;
 	i = set_dist_fields(c->next, w, delta) + delta;

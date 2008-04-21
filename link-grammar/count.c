@@ -16,7 +16,10 @@
 /* This file contains the exhaustive search algorithm. */
 
 static char ** deletable;
-static char ** effective_dist;
+static char ** effective_dist; /* variable with same name appears in prune_context,
+                                * and is maybe expected to hiold identical data !?
+                                * which is used by prune_match !? Need to investigate!
+                                */
 static Word *  local_sent;
 static int	 null_block, islands_ok, null_links;
 static Resources current_resources;
