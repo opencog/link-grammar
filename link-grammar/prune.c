@@ -15,14 +15,15 @@
 
 static char ** deletable;
 static char ** effective_dist;
-static int     null_links;
 
 typedef struct prune_context_s prune_context;
-struct prune_context_s {
+struct prune_context_s
+{
+	int null_links;
 	int power_cost;
+	int power_prune_mode;  /* either GENTLE or RUTHLESS */
 };
 
-static int power_prune_mode;  /* either GENTLE or RUTHLESS */
 
 /*
 
@@ -1182,13 +1183,16 @@ static void clean_table(int size, C_list ** t) {
 	}
 }
 
-static int possible_connection(Connector *lc, Connector *rc,
-							   int lshallow, int rshallow,
-							   int lword, int rword) {
-/* this takes two connectors (and whether these are shallow or not)
-   (and the two words that these came from) and returns TRUE if it is
-   possible for these two to match based on local considerations.
-*/
+/**
+ * This takes two connectors (and whether these are shallow or not)
+ * (and the two words that these came from) and returns TRUE if it is
+ * possible for these two to match based on local considerations.
+ */
+static int possible_connection(prune_context *pc,
+                               Connector *lc, Connector *rc,
+                               int lshallow, int rshallow,
+                               int lword, int rword)
+{
 	if ((!lshallow) && (!rshallow)) return FALSE;
 	  /* two deep connectors can't work */
 	if ((lc->word > rword) || (rc->word < lword)) return FALSE;
@@ -1200,11 +1204,11 @@ static int possible_connection(Connector *lc, Connector *rc,
 	   irrelevant, since deletable[][] is now guaranteed to have been
 	   created. */
 
-	if (power_prune_mode == RUTHLESS) {
+	if (pc->power_prune_mode == RUTHLESS) {
 		if (lword == rword-1) {
 			if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
 		} else {
-			if ((!null_links) &&
+			if ((!pc->null_links) &&
 				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi)) {
 				return FALSE;
 			}
@@ -1214,7 +1218,7 @@ static int possible_connection(Connector *lc, Connector *rc,
 		if (lword == rword-1) {
 			if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
 		} else {
-			if ((!null_links) &&
+			if ((!pc->null_links) &&
 				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi) &&
 				!deletable[lword][rword]) {
 				return FALSE;
@@ -1225,31 +1229,36 @@ static int possible_connection(Connector *lc, Connector *rc,
 }
 
 
-static int right_table_search(int w, Connector *c, int shallow, int word_c) {
-/* this returns TRUE if the right table of word w contains
-   a connector that can match to c.  shallow tells if c is shallow */
+/**
+ * This returns TRUE if the right table of word w contains
+ * a connector that can match to c.  shallow tells if c is shallow.
+ */
+static int right_table_search(prune_context *pc, int w, Connector *c, int shallow, int word_c)
+{
 	int size, h;
 	C_list *cl;
 	size = r_table_size[w];
 	h = power_hash(c) & (size-1);
 	for (cl = r_table[w][h]; cl!=NULL; cl = cl->next) {
-		if (possible_connection(cl->c, c, cl->shallow, shallow, w, word_c)) {
+		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c)) {
 			return TRUE;
 		}
 	}
 	return FALSE;
 }
 
-static int left_table_search(int w, Connector *c, int shallow, int word_c) {
-/* this returns TRUE if the right table of word w contains
-   a connector that can match to c.  shallows tells if c is shallow
-*/
+/**
+ * This returns TRUE if the right table of word w contains
+ * a connector that can match to c.  shallows tells if c is shallow
+ */
+static int left_table_search(prune_context *pc, int w, Connector *c, int shallow, int word_c)
+{
 	int size, h;
 	C_list *cl;
 	size = l_table_size[w];
 	h = power_hash(c) & (size-1);
 	for (cl = l_table[w][h]; cl!=NULL; cl = cl->next) {
-	  if (possible_connection(c, cl->c, shallow, cl->shallow, word_c, w)) {
+	  if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w)) {
 		  return TRUE;
 	  }
 	}
@@ -1291,7 +1300,7 @@ static int left_connector_list_update(prune_context *pc, Connector *c, int word_
 	foundmatch = FALSE;
 	for (; (n >= 0) && ((w-n) <= MAX_SENTENCE); n--) {
 		pc->power_cost++;
-		if (right_table_search(n, c, shallow, word_c)) {
+		if (right_table_search(pc, n, c, shallow, word_c)) {
 			foundmatch = TRUE;
 			break;
 		}
@@ -1325,7 +1334,7 @@ static int right_connector_list_update(prune_context *pc, Sentence sent, Connect
 	foundmatch = FALSE;
 	for (; (n < sent->length) && ((n-w) <= MAX_SENTENCE); n++) {
 		pc->power_cost++;
-		if (left_table_search(n, c, shallow, word_c)) {
+		if (left_table_search(pc, n, c, shallow, word_c)) {
 			foundmatch = TRUE;
 			break;
 		}
@@ -1346,10 +1355,9 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 
 	prune_context *pc = (prune_context *) malloc (sizeof(prune_context));
 	pc->power_cost = 0;
+	pc->power_prune_mode = mode; 
+	pc->null_links = (opts->min_null_count > 0);
 
-	power_prune_mode = mode; /* this global variable avoids lots of
-								parameter passing */
-	null_links = (opts->min_null_count > 0);
 	count_set_effective_distance(sent);
 
 	init_power(sent);
