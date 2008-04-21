@@ -13,8 +13,12 @@
 
 #include <link-grammar/api.h>
 
-static int s_table_size;
-static Connector ** table;
+typedef struct connector_table_s connector_table;
+struct connector_table_s
+{
+	int s_table_size;
+	Connector ** table;
+};
 
 static int dup_table_size;
 static Disjunct ** dup_table;
@@ -214,14 +218,22 @@ int prune_match(Connector *a, Connector *b, int aw, int bw)
 /** 
  * This function removes all connectors from the set S
  */
-static void free_S(void)
+static void free_S(connector_table *ct)
 {
 	int i;
-	for (i=0; i<s_table_size; i++) {
-		if (table[i] == NULL) continue; /* a prehaps stupid optimization */
-		free_connectors(table[i]);
-		table[i] = NULL;
+	for (i = 0; i < ct->s_table_size; i++)
+	{
+		if (ct->table[i] == NULL) continue; /* a prehaps stupid optimization */
+		free_connectors(ct->table[i]);
+		ct->table[i] = NULL;
 	}
+}
+
+static void connector_table_delete(connector_table *ct)
+{
+	free_S(ct);
+	xfree((char *)ct->table, ct->s_table_size * sizeof (Connector *));
+	free(ct);
 }
 
 /**
@@ -229,44 +241,59 @@ static void free_S(void)
  * the connector string, and the label fields.  This ensures that if two
  * strings match (formally), then they must hash to the same place.
  */
-static int hash_S(Connector * c)
+static int hash_S(connector_table *ct, Connector * c)
 {
 	const char *s;
 	int i;
 	i = c->label;
 	s = c->string;
-	while(isupper((int)*s)) {
+	while(isupper((int)*s)) /* connector tables cannt contain UTF8, yet */
+	{
 		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
 		s++;
 	}
-	return (i & (s_table_size-1));
+	return (i & (ct->s_table_size-1));
 }
 
-static void insert_S(Connector * c) {
-/* this function puts a copy of c into S if one like it isn't already there */
+/** 
+ * This function puts a copy of c into S if one like it isn't already there 
+ */
+static void insert_S(connector_table *ct, Connector * c)
+{
 	int h;
 	Connector * e;
 
-	h = hash_S(c);
+	h = hash_S(ct, c);
 
-	for (e = table[h]; e != NULL; e = e->next) {
+	for (e = ct->table[h]; e != NULL; e = e->next)
+	{
 		if ((strcmp(c->string, e->string) == 0) &&
-			(c->label == e->label) && (c->priority == e->priority)) {
+			(c->label == e->label) && (c->priority == e->priority))
+		{
 			return;
 		}
 	}
 	e = init_connector((Connector *) xalloc(sizeof(Connector)));
 	*e = *c;
-	e->next = table[h];
-	table[h] = e;
+	e->next = ct->table[h];
+	ct->table[h] = e;
 }
 
 
-static void zero_S(void) {
+static connector_table * connector_table_new(size_t sz)
+{
 	int i;
-	for (i=0; i<s_table_size; i++) {
-		table[i] = NULL;
+	connector_table *ct;
+
+	ct = (connector_table *) malloc (sizeof(connector_table));
+	ct->s_table_size = sz;
+
+	ct-> table = (Connector **) xalloc(sz * sizeof (Connector *));
+	for (i = 0; i < ct->s_table_size; i++)
+	{
+		ct->table[i] = NULL;
 	}
+	return ct;
 }
 
 /** 
@@ -274,18 +301,18 @@ static void zero_S(void) {
  * Because of the horrible kludge, prune match is assymetric, and
  * direction is '-' if this is an l->r pass, and '+' if an r->l pass.
  */
-static int matches_S(Connector * c, int dir)
+static int matches_S(connector_table *ct, Connector * c, int dir)
 {
 	int h;
 	Connector * e;
 
-	h = hash_S(c);
+	h = hash_S(ct, c);
 	if (dir=='-') {
-		for (e = table[h]; e != NULL; e = e->next) {
+		for (e = ct->table[h]; e != NULL; e = e->next) {
 			if (x_prune_match(e, c)) return TRUE;
 		}
 	} else {
-		for (e = table[h]; e != NULL; e = e->next) {
+		for (e = ct->table[h]; e != NULL; e = e->next) {
 			if (x_prune_match(c, e)) return TRUE;
 		}
 	}
@@ -344,12 +371,13 @@ void prune(Sentence sent)
 	Connector *e;
 	int w;
 
-	s_table_size = next_power_of_two_up(count_disjuncts_in_sentence(sent));
-	table = (Connector **) xalloc(s_table_size * sizeof (Connector *));
+	connector_table *ct;
+
+	ct = connector_table_new (next_power_of_two_up(count_disjuncts_in_sentence(sent)));
+
 /* You know, I don't think this makes much sense.  This is probably much  */
 /* too big.  There are many fewer connectors than disjuncts.			  */
 
-	zero_S();
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	count_set_effective_distance(sent);
 
@@ -359,7 +387,7 @@ void prune(Sentence sent)
 		for (w = 0; w < sent->length; w++) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				for (e = d->left; e != NULL; e = e->next) {
-					if (!matches_S(e, '-')) break;
+					if (!matches_S(ct, e, '-')) break;
 				}
 				if (e != NULL) {
 					/* we know this disjunct is dead */
@@ -372,7 +400,7 @@ void prune(Sentence sent)
 			clean_up(sent, w);
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				for (e = d->right; e != NULL; e = e->next) {
-					insert_S(e);
+					insert_S(ct, e);
 				}
 			}
 		}
@@ -381,7 +409,7 @@ void prune(Sentence sent)
 			printf("l->r pass removed %d\n",N_deleted);
 			print_disjunct_counts(sent);
 		}
-		free_S();
+		free_S(ct);
 		if (N_deleted == 0) break;
 
 		/* right-to-left pass */
@@ -389,7 +417,7 @@ void prune(Sentence sent)
 		for (w = sent->length-1; w >= 0; w--) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				for (e = d->right; e != NULL; e = e->next) {
-					if (!matches_S(e,'+')) break;
+					if (!matches_S(ct, e,'+')) break;
 				}
 				if (e != NULL) {
 					/* we know this disjunct is dead */
@@ -402,7 +430,7 @@ void prune(Sentence sent)
 			clean_up(sent, w);
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				for (e = d->left; e != NULL; e = e->next) {
-					insert_S(e);
+					insert_S(ct, e);
 				}
 			}
 		}
@@ -410,11 +438,11 @@ void prune(Sentence sent)
 			printf("r->l pass removed %d\n",N_deleted);
 			print_disjunct_counts(sent);
 		}
-		free_S();
+		free_S(ct);
 		if (N_deleted == 0) break;
 		N_deleted = 0;
 	}
-	xfree((char *)table, s_table_size * sizeof (Connector *));
+	connector_table_delete(ct);
 }
 
 /*
@@ -854,7 +882,7 @@ static Exp* purge_Exp(Exp *e)
  * in e that are not matched by anything in the current set.
  * Returns the number of connectors so marked.
  */
-static int mark_dead_connectors(Exp * e, int dir)
+static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 {
 	Connector dummy;
 	int count;
@@ -867,14 +895,14 @@ static int mark_dead_connectors(Exp * e, int dir)
 	if (e->type == CONNECTOR_type) {
 		if (e->dir == dir) {
 			dummy.string = e->u.string;
-			if (!matches_S(&dummy,dir)) {
+			if (!matches_S(ct, &dummy,dir)) {
 				e->u.string = NULL;
 				count++;
 			}
 		}
 	} else {
 		for (l=e->u.l; l!=NULL; l=l->next) {
-			count += mark_dead_connectors(l->e, dir);
+			count += mark_dead_connectors(ct, l->e, dir);
 		}
 	}
 	return count;
@@ -883,7 +911,7 @@ static int mark_dead_connectors(Exp * e, int dir)
 /** 
  * Put into the set S all of the dir-pointing connectors still in e.
  */
-static void insert_connectors(Exp * e, int dir)
+static void insert_connectors(connector_table *ct, Exp * e, int dir)
 {
 	Connector dummy;
 	E_list *l;
@@ -895,11 +923,11 @@ static void insert_connectors(Exp * e, int dir)
 	if (e->type == CONNECTOR_type) {
 		if (e->dir == dir) {
 			dummy.string = e->u.string;
-			insert_S(&dummy);
+			insert_S(ct, &dummy);
 		}
 	} else {
 		for (l=e->u.l; l!=NULL; l=l->next) {
-			insert_connectors(l->e, dir);
+			insert_connectors(ct, l->e, dir);
 		}
 	}
 }
@@ -930,11 +958,10 @@ void expression_prune(Sentence sent)
 	int N_deleted;
 	X_node * x;
 	int w;
+	connector_table *ct;
 
-	s_table_size = next_power_of_two_up(size_of_sentence_expressions(sent));
-	table = (Connector **) xalloc(s_table_size * sizeof (Connector *));
+	ct = connector_table_new(next_power_of_two_up(size_of_sentence_expressions(sent)));
 
-	zero_S();
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
 	for (;;) {
@@ -942,7 +969,7 @@ void expression_prune(Sentence sent)
 		for (w = 0; w < sent->length; w++) {
 			for (x = sent->word[w].x; x != NULL; x = x->next) {
 /*	 printf("before marking: "); print_expression(x->exp); printf("\n"); */
-				N_deleted += mark_dead_connectors(x->exp, '-');
+				N_deleted += mark_dead_connectors(ct, x->exp, '-');
 /*	 printf("after marking marking: "); print_expression(x->exp); printf("\n"); */
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next) {
@@ -952,7 +979,7 @@ void expression_prune(Sentence sent)
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next) {
-				insert_connectors(x->exp,'+');
+				insert_connectors(ct, x->exp,'+');
 			}
 		}
 
@@ -961,7 +988,7 @@ void expression_prune(Sentence sent)
 			print_expression_sizes(sent);
 		}
 
-		free_S();
+		free_S(ct);
 		if (N_deleted == 0) break;
 
 		/* right-to-left pass */
@@ -969,7 +996,7 @@ void expression_prune(Sentence sent)
 		for (w = sent->length-1; w >= 0; w--) {
 			for (x = sent->word[w].x; x != NULL; x = x->next) {
 /*	 printf("before marking: "); print_expression(x->exp); printf("\n"); */
-				N_deleted += mark_dead_connectors(x->exp, '+');
+				N_deleted += mark_dead_connectors(ct, x->exp, '+');
 /*	 printf("after marking: "); print_expression(x->exp); printf("\n"); */
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next) {
@@ -979,7 +1006,7 @@ void expression_prune(Sentence sent)
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next) {
-				insert_connectors(x->exp, '-');
+				insert_connectors(ct, x->exp, '-');
 			}
 		}
 
@@ -987,11 +1014,11 @@ void expression_prune(Sentence sent)
 			printf("r->l pass removed %d\n",N_deleted);
 			print_expression_sizes(sent);
 		}
-		free_S();
+		free_S(ct);
 		if (N_deleted == 0) break;
 		N_deleted = 0;
 	}
-	xfree((char *)table, s_table_size * sizeof (Connector *));
+	connector_table_delete(ct);
 }
 
 
