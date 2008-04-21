@@ -17,6 +17,13 @@ static char ** deletable;
 static char ** effective_dist;
 static int     null_links;
 
+typedef struct prune_context_s prune_context;
+struct prune_context_s {
+	int power_cost;
+};
+
+static int power_prune_mode;  /* either GENTLE or RUTHLESS */
+
 /*
 
   The algorithms in this file prune disjuncts from the disjunct list
@@ -993,10 +1000,6 @@ struct c_list_struct
    deletable, this is equivalent to RUTHLESS.   --DS, 7/97
 */
 
-static int power_cost;
-static int power_prune_mode;  /* either GENTLE or RUTHLESS */
-							  /* obviates excessive paramater passing */
-
 static int left_connector_count(Disjunct * d) {
 /* returns the number of connectors in the left lists of the disjuncts. */
 	Connector *c;
@@ -1267,25 +1270,27 @@ static int ok_cwords(Sentence sent, Connector *c)
 }
 #endif
 
-static int left_connector_list_update(Connector *c, int word_c, int w, int shallow) {
-/* take this connector list, and try to match it with the words
-   w-1, w-2, w-3...Returns the word to which the first connector of the
-   list could possibly be matched.  If c is NULL, returns w.  If there
-   is no way to match this list, it returns a negative number.
-   If it does find a way to match it, it updates the c->word fields
-   correctly.
-*/
+/**
+ * take this connector list, and try to match it with the words
+ * w-1, w-2, w-3...Returns the word to which the first connector of the
+ * list could possibly be matched.  If c is NULL, returns w.  If there
+ * is no way to match this list, it returns a negative number.
+ * If it does find a way to match it, it updates the c->word fields
+ * correctly.
+ */
+static int left_connector_list_update(prune_context *pc, Connector *c, int word_c, int w, int shallow)
+{
 	int n;
 	int foundmatch;
 
 	if (c==NULL) return w;
-	n = left_connector_list_update(c->next, word_c, w, FALSE) - 1;
+	n = left_connector_list_update(pc, c->next, word_c, w, FALSE) - 1;
 	if (((int) c->word) < n) n = c->word;
 
 	/* n is now the rightmost word we need to check */
 	foundmatch = FALSE;
 	for (; (n >= 0) && ((w-n) <= MAX_SENTENCE); n--) {
-		power_cost++;
+		pc->power_cost++;
 		if (right_table_search(n, c, shallow, word_c)) {
 			foundmatch = TRUE;
 			break;
@@ -1298,25 +1303,28 @@ static int left_connector_list_update(Connector *c, int word_c, int w, int shall
 	return (foundmatch ? n : -1);
 }
 
-static int right_connector_list_update(Sentence sent, Connector *c, int word_c, int w, int shallow) {
-/* take this connector list, and try to match it with the words
-   w+1, w+2, w+3...Returns the word to which the first connector of the
-   list could possibly be matched.  If c is NULL, returns w.  If there
-   is no way to match this list, it returns a number greater than N_words-1
-   If it does find a way to match it, it updates the c->word fields
-   correctly.
-*/
+/**
+ * take this connector list, and try to match it with the words
+ * w+1, w+2, w+3...Returns the word to which the first connector of the
+ * list could possibly be matched.  If c is NULL, returns w.  If there
+ * is no way to match this list, it returns a number greater than N_words-1
+ * If it does find a way to match it, it updates the c->word fields
+ * correctly.
+ */
+static int right_connector_list_update(prune_context *pc, Sentence sent, Connector *c, 
+                                       int word_c, int w, int shallow)
+{
 	int n;
 	int foundmatch;
 
 	if (c==NULL) return w;
-	n = right_connector_list_update(sent, c->next, word_c, w, FALSE) + 1;
+	n = right_connector_list_update(pc, sent, c->next, word_c, w, FALSE) + 1;
 	if (c->word > n) n = c->word;
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = FALSE;
 	for (; (n < sent->length) && ((n-w) <= MAX_SENTENCE); n++) {
-		power_cost++;
+		pc->power_cost++;
 		if (left_table_search(n, c, shallow, word_c)) {
 			foundmatch = TRUE;
 			break;
@@ -1336,13 +1344,15 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	Connector *c;
 	int w, N_deleted, total_deleted;
 
+	prune_context *pc = (prune_context *) malloc (sizeof(prune_context));
+	pc->power_cost = 0;
+
 	power_prune_mode = mode; /* this global variable avoids lots of
 								parameter passing */
 	null_links = (opts->min_null_count > 0);
 	count_set_effective_distance(sent);
 
 	init_power(sent);
-	power_cost = 0;
 	free_later = NULL;
 	N_changed = 1;  /* forces it always to make at least two passes */
 	N_deleted = 0;
@@ -1356,7 +1366,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			if (parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
-				if (left_connector_list_update(d->left, w, w, TRUE) < 0) {
+				if (left_connector_list_update(pc, d->left, w, w, TRUE) < 0) {
 					for (c=d->left  ;c!=NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->right ;c!=NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
@@ -1391,7 +1401,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			if (parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
-				if (right_connector_list_update(sent, d->right,w,w,TRUE) >= sent->length){
+				if (right_connector_list_update(pc, sent, d->right,w,w,TRUE) >= sent->length){
 					for (c=d->right;c!=NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->left ;c!=NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
@@ -1422,7 +1432,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	}
 	free_disjuncts(free_later);
 	free_power_tables(sent);
-	if (verbosity > 2) printf("%d power prune cost:\n", power_cost);
+	if (verbosity > 2) printf("%d power prune cost:\n", pc->power_cost);
 
 	if (mode == RUTHLESS) {
 		print_time(opts, "power pruned (ruthless)");
@@ -1439,6 +1449,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
+	free(pc);
 	return total_deleted;
 }
 
