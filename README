@@ -223,3 +223,36 @@ TODO:
       where type-L means either a right-going or left-going link.
 
      See http://goertzel.org/ProwlGrammar.pdf for details.
+
+  "to be fishing": Link grammar offers four parses of "I was fishing for
+     evidence", two of which are given low scores, and two are given
+     high scores. Of the two with high scores, one parse is clearly bad.
+     Its links "to be fishing.noun" as opposed to the correct 
+     "to be fishing.gerund". That is, I can be happy, healthy and wise,
+     but I certainly cannot be fishing.noun.  This is perhaps not
+     just a bug in the structure of the dictionary, but is perhaps 
+     deeper: link-grammar has little or no concept of lexical units
+     (i.e. collocations, idioms, institutional phrases), which thus
+     allows parses with bad word-senses to sneak in.
+
+     The goal is to introduce more knowledge of lexical units into LG.
+
+  incremental parsing: to avoid a combinatorial explosion of parses,
+    it would be nice to have an incremental parsing, phrase by phrase,
+    using a Viterbi-like algorithm to obtain the parse. Thus, for example,
+    the parse of the last half of a long, run-on sentence should not be
+    sensitive to the parse of the begining of the sentence. 
+
+    Doing so would help with combinatorial explosion. So, for example,
+    if the first half of a sentence has 4 plausible parses, and the
+    last half has 4 more, then link-grammar reports 16 parses total.
+    It would be much, much more useful to instead be given the 
+    factored results: i.e. the for plausbile parses for the 
+    first half, and the four plausible parses for the last half.
+    The lower combinatoric stress would ease the burden on 
+    downstream users of link-grammar.
+
+    (This somewhat resembles the application of construction grammar
+    ideas to the link-grammar dictionary).
+
+
