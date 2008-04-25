@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=3
 dnl     3) Increment when interfaces not changed at all,
 dnl               only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=4
+LINK_MICRO_VERSION=5
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -157,7 +157,9 @@ JNI_GUESS=" \
    -I/usr/lib/jvm/java-6-sun/include/ \
    -I/usr/lib/jvm/java-6-sun/include/linux \
    -I/c/java/jdk1.6.0/include/ \
-   -I/c/java/jdk1.6.0/include/win32/ "
+   -I/c/java/jdk1.6.0/include/win32/ \
+   -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
+   -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ "
 
 AC_MSG_CHECKING(for jni.h)
 AC_TRY_CPP( [#include <jni.h>], 
