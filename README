@@ -93,6 +93,17 @@ CREATING the system:
    systems, as well as on many Microsoft Windows systems, under the
    CYGWIN development environment.
 
+   Windows users may need to also do the following:
+
+gcc -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at .libs/analyze-linkage.o .libs/and.o .libs/api.o .libs/build-disjuncts.o
+.libs/command-line.o .libs/constituents.o .libs/count.o .libs/error.o .libs/extract-links.o .libs/fast-match.o .libs/idiom.o
+.libs/linkset.o .libs/massage.o .libs/post-process.o .libs/pp_knowledge.o .libs/pp_lexer.o .libs/pp_linkset.o .libs/preparation.o
+.libs/print.o .libs/print-util.o .libs/prune.o .libs/read-dict.o .libs/resources.o .libs/string-set.o .libs/tokenize.o
+.libs/utilities.o .libs/word-file.o .libs/word-utils.o .libs/prefix.o -o /usr/local/bin/link-grammar.dll
+
+gcc -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at .libs/jni-client.o  /usr/local/bin/link-grammar.dll -o
+/usr/local/bin/link-grammar-java.dll
+
 RUNNING the program:
 
    To run the program issue the Unix command:

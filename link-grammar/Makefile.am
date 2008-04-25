@@ -24,6 +24,11 @@ liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-un
 
 liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar-java.def
 
+if OS_WIN32
+liblink_grammar_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
+liblink_grammar_java_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
+endif
+
 if WITH_BINRELOC
 liblink_grammar_la_LIBADD  = -lpthread
 liblink_grammar_java_la_LIBADD  = -lpthread liblink-grammar.la
