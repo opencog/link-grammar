@@ -43,6 +43,10 @@
 #include <editline/readline.h>
 #endif 
 
+#ifdef _MSC_VER
+#define LINK_GRAMMAR_DLL_EXPORT 0
+#endif
+
 #include <link-grammar/link-includes.h>
 #include <link-grammar/structures.h>
 #include <link-grammar/error.h>
@@ -176,17 +180,17 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 		if (parse_options_get_display_on(opts)) {
 			string = linkage_print_diagram(linkage);
 			fprintf(stdout, "%s", string);
-			free(string);
+			linkage_free_diagram(string);
 		}
 		if (parse_options_get_display_links(opts)) {
 			string = linkage_print_links_and_domains(linkage);
 			fprintf(stdout, "%s", string);
-			free(string);
+			linkage_free_links_and_domains(string);
 		}
 		if (parse_options_get_display_postscript(opts)) {
 			string = linkage_print_postscript(linkage, FALSE);
 			fprintf(stdout, "%s\n", string);
-			free(string);
+			linkage_free_postscript(string);
 		}
 	}
 	if ((mode = parse_options_get_display_constituents(opts)))
@@ -194,7 +198,7 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 		string = linkage_print_constituent_tree(linkage, mode);
 		if (string != NULL) {
 			fprintf(stdout, "%s\n", string);
-			free(string);
+			linkage_free_constituent_tree_str(string);
 		} else {
 			fprintf(stderr, "Can't generate constituents.\n");
 			fprintf(stderr, "Constituent processing has been turned off.\n");

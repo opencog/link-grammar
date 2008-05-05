@@ -1,6 +1,10 @@
 #ifndef LINK_FEATURES_H
 #define LINK_FEATURES_H
 
+#if defined(_MSC_VER) && !defined(LINK_GRAMMAR_DLL_EXPORT)
+#define LINK_GRAMMAR_DLL_EXPORT 1
+#endif
+
 #ifdef  __cplusplus
 # define LINK_BEGIN_DECLS  extern "C" {
 # define LINK_END_DECLS    }
@@ -10,7 +14,18 @@
 #endif
 
 #ifndef link_public_api
-# define link_public_api(x) x
+# ifdef _MSC_VER
+#  if !defined LINK_GRAMMAR_DLL_EXPORT
+#   error !defined LINK_GRAMMAR_DLL_EXPORT
+#  endif
+#  if LINK_GRAMMAR_DLL_EXPORT
+#   define link_public_api(x) __declspec(dllexport) x
+#  else
+#   define link_public_api(x) __declspec(dllimport) x
+#  endif
+# else
+#  define link_public_api(x) x
+# endif
 #endif
 
 #define LINK_MAJOR_VERSION @LINK_MAJOR_VERSION@

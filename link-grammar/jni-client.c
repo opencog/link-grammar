@@ -44,7 +44,17 @@ static void test(void)
 #endif
 }
 
-static void init(void)
+/* message: The string is encoded in modified UTF-8, per JNI 1.5 spec. */
+void throwException(JNIEnv *env, const char* message)
+{
+	jclass exceptionClazz;
+	if ((*env)->ExceptionOccurred(env) != NULL) return;
+	exceptionClazz = (*env)->FindClass(env, "java/lang/RuntimeException");
+	if ((*env)->ThrowNew(env, exceptionClazz, message) != 0)
+		(*env)->FatalError(env, "Cannot throw");
+}
+
+static void init(JNIEnv *env)
 {
 	panic_parse_opts = parse_options_create();
 	opts	= parse_options_create();
@@ -61,7 +71,8 @@ static void init(void)
 	 * this if/when more languages are supported.
 	 */
 	dict = dictionary_create_lang("en");
-	test();
+	if (!dict) throwException(env, "link-grammar: dictionary not found");
+	else test();
 }
 
 #ifdef DEBUG_DO_PHRASE_TREE
@@ -104,6 +115,8 @@ static void jParse(char* inputString)
 	if (sent)
 		sentence_delete(sent);
 
+	if (dict == 0) fprintf(stderr, "jParse: dict is 0\n");
+	if (inputString == 0) fprintf(stderr, "jParse: inputString is 0\n");
 	sent = sentence_create(inputString, dict);
 	num_linkages=0;
 
@@ -238,7 +251,7 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 {
-	init();
+	init(env);
 }
 
 /*
@@ -249,8 +262,10 @@ Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 {
-	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	char* tmp = strdup(cStr);
+	const char *cStr;
+	char* tmp;
+	cStr = (*env)->GetStringUTFChars(env,str,0);
+	tmp = strdup(cStr);
 	jParse(tmp);
 	free(tmp);
 	(*env)->ReleaseStringUTFChars(env,str,cStr);

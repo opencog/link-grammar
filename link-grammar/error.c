@@ -21,8 +21,14 @@
 
 #define MSGSZ 1024
 
-int  lperrno = 0;
-char lperrmsg[MSGSZ];
+#ifdef _MSC_VER
+#define DLLEXPORT __declspec(dllexport)
+#else
+#define DLLEXPORT
+#endif
+
+DLLEXPORT int  lperrno = 0;
+DLLEXPORT char lperrmsg[MSGSZ];
 
 static const char * msg_of_lperror(int lperr)
 {
@@ -52,6 +58,9 @@ static const char * msg_of_lperror(int lperr)
 void lperror(int lperr, const char *fmt, ...)
 {
 	char temp[MSGSZ] = "";
+#if (defined _MSC_VER) && _MFC_VER < 0x0700
+#define vsnprintf _vsnprintf
+#endif		
 	va_list args;
 
 	va_start(args, fmt);

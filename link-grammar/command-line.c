@@ -273,6 +273,9 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		val = -1;
 		if (is_numerical_rhs(y)) val = atoi(y);
 
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif		
 		if ((0 == strcasecmp(y, "true")) || (0 == strcasecmp(y, "t"))) val = 1;
 		if ((0 == strcasecmp(y, "false")) || (0 == strcasecmp(y, "f"))) val = 0;
 

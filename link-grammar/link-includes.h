@@ -256,6 +256,8 @@ link_public_api(const char *)
      linkage_get_word(Linkage linkage, int w);
 link_public_api(char *)
      linkage_print_links_and_domains(Linkage linkage);
+link_public_api(void)
+     linkage_free_links_and_domains(char *str);
 link_public_api(char *)
      linkage_print_constituent_tree(Linkage linkage, int mode);
 link_public_api(void)

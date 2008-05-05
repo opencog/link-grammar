@@ -537,6 +537,11 @@ void linkage_free_diagram(char * s)
 		exfree(s, strlen(s)+1);
 }
 
+void linkage_free_links_and_domains(char * s)
+{
+		exfree(s, strlen(s)+1);
+}
+
 char * linkage_print_postscript(Linkage linkage, int mode)
 {
 	char * ps, * qs;

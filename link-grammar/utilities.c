@@ -32,6 +32,9 @@
 #endif
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR == (ch))
+#ifdef _MSC_VER
+#define DICTIONARY_DIR "."
+#endif
 #define DEFAULTPATH DICTIONARY_DIR
 
 /* This file contains certain general utilities. */
@@ -390,12 +393,15 @@ static char * get_datadir(void)
 	data_dir = safe_strdup (BR_DATADIR("/link-grammar"));
 #elif defined(_WIN32)
 	/* Dynamically locate library and return containing directory */
-	hInstance = GetModuleHandle(NULL);
+	hInstance = GetModuleHandle("link-grammar.dll");
 	if(hInstance != NULL)
 	{
 		char dll_path[MAX_PATH];
 
 		if(GetModuleFileName(hInstance,dll_path,MAX_PATH)) {
+#ifdef _DEBUG
+		fprintf(stderr, "GetModuleFileName=%s\n", (dll_path?dll_path:"NULL"));
+#endif
 			data_dir = path_get_dirname(dll_path);
 		}
 	}
@@ -455,6 +461,9 @@ FILE *dictopen(const char *filename, const char *how)
 
 	{
 		char * data_dir = get_datadir();
+#ifdef _DEBUG
+		fprintf(stderr, "data_dir=%s\n", (data_dir?data_dir:"NULL"));
+#endif
 		if (data_dir) {
 			snprintf(fulldictpath, MAX_PATH_NAME, 
 			         "%s%c%s%c", data_dir, PATH_SEPARATOR, 
@@ -491,6 +500,9 @@ FILE *dictopen(const char *filename, const char *how)
 		strncpy(completename, oldpos, (pos-oldpos));
 		*(completename+(pos-oldpos)) = DIR_SEPARATOR;
 		strcpy(completename+(pos-oldpos)+1,filename);
+#ifdef _DEBUG
+		fprintf(stderr, "Trying %s\n", completename);
+#endif
 		if ((fp = fopen(completename, how)) != NULL) {
 			return fp;
 		}

@@ -7,6 +7,7 @@
  * Copyright (c) 2008 Linas Vepstas <linas@linas.org>
  */
 
+#ifndef _MSC_VER
 #include <execinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,3 +206,4 @@ void my_init_hook(void)
 }
 
 void (*__malloc_initialize_hook)(void) = my_init_hook;
+#endif //_MSC_VER
