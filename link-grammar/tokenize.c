@@ -498,8 +498,10 @@ int separate_sentence(char * s, Sentence sent)
 	if (dict->left_wall_defined)
 		if (!issue_sentence_word(sent, LEFT_WALL_WORD)) return FALSE;
 
+#ifndef __CYGWIN__
 	/* Reset the multibyte shift state to the initial state */
 	mbtowc(NULL, NULL, 4);
+#endif
 
 	is_first = TRUE;
 	for(;;) 

@@ -15,8 +15,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifndef __CYGWIN__
 #include <wchar.h>
 #include <wctype.h>
+#endif
 
 #ifndef FALSE
 #define FALSE 0
@@ -26,24 +29,26 @@
 #define TRUE 1
 #endif
 
-#ifdef CYGWIN
+#ifdef __CYGWIN__
 #define _WIN32 1
-#endif /* CYGWIN */
+#endif /* __CYGWIN__ */
 
 #ifdef _WIN32
 #include <windows.h>
+
+#ifndef _MSC_VER
+   /* CYGWIN/MINGW compilers don't support the "inline" keyword. */
+#define inline
+#endif
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
 
-/* Windows compilers don't support the "inline" keyword. */
-#define inline
-
 /* CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
  * However, MS Visual C appearnetly does ... 
  */
-#ifdef CYGWIN
+#ifdef __CYGWIN__
 #define mbtowc(w,s,n)  ({*((char *)(w)) = *(s); 1;})
 #define wctomb(s,w)    ({*((char *)(s)) = ((char)(w)); 1;})
 #define iswupper  isupper
@@ -54,6 +59,8 @@
 #define wint_t    int
 #define fgetwc    fgetc
 #define WEOF      EOF
+#define towlower  tolower
+#define towupper  toupper
 #endif
 
 /* strtok_r is missing in windows */
