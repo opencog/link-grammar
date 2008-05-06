@@ -43,6 +43,8 @@ CONTENTS of this directory:
 
    configure                The GNU configuration script
 
+   msvc6                    Microsoft Visual-C project files
+
 UNPACKING and signature verification:
 
    The system is distributed using the normal tar.gz format; it can be
@@ -90,8 +92,8 @@ CREATING the system:
 	can be automatically detected.
 
    The system has been tested and works well on 32 and 64-bit Linux
-   systems, as well as on many Microsoft Windows systems, under the
-   CYGWIN development environment.
+   systems, as well as on many Microsoft Windows systems, under 
+   various different Windows development environments.
 
    Windows users may need to also do the following:
 
@@ -103,6 +105,9 @@ gcc -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at .libs/analyze-linkage.o .
 
 gcc -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at .libs/jni-client.o  /usr/local/bin/link-grammar.dll -o
 /usr/local/bin/link-grammar-java.dll
+
+   Alternately, Windows users who have access to the "Microsoft Visual C" 
+   product may wish to use the project files in the msvc6 directory.
 
 RUNNING the program:
 
