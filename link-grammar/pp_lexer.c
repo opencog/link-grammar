@@ -115,9 +115,6 @@ int fileno( FILE *stream);
 #define YY_USE_PROTOS
 #endif
 
-/* Provide portability defines for fgetwc, etc. */
-#include "utilities.h"
-
 #ifndef YY_USE_CONST
 #ifndef const
 #define const
