@@ -1008,6 +1008,14 @@ John is bigger than Dave is.
 John wants more cookies than Dave wants.
 It was covered with bites.
 Alice took a bite out of it.
+He walked the dog.
+He walked up to the counter.
+He sailed the boat into the pier.
+He sailed up to the bar.
+He clicked the mouse.
+*He clicked up the mouse.
+He zeroed the counter.
+He zeroed out the counter.
 
 % Buggy sentences that need fixing:
 His works disclose a mastery of composition.
@@ -1080,6 +1088,15 @@ Let me tell you this: it stank.
 
 Watch out that you don't hit your head on the low beam.
 
+% Compound queries
+% Typically, the two subphrases parse correctly, but, 
+% put together, they do not.
+What is a motor, and how does it work?
+What is a motor; how does it work?
+Who invented sliced bread, and when did they do it?
+Who invented sliced bread; when did they do it?
+
 % Automatic possesive guessing broken when entity is also a verb:
+% "to marry" is a verb, this breaks identification of "Marry" as entity:
 Flumblqwerty's shoes are red.
 Marry's shoes are red.
