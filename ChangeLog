@@ -1,5 +1,6 @@
 Version 4.3.6 includes the following changes:
  * Fixes for Windows MS Visual-C builds.
+ * Fix parsing of "He walked the dog.", "He sailed the boat."
 
 Version 4.3.5 includes the following changes:
  * Added ant build file to create the link-grammar jar file.
