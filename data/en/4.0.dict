@@ -463,20 +463,20 @@ it_all them_all us_all you_all: Ox- or J-;
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
 %({N+} & (Pg+ or Pv+))) & <CLAUSE>;
 
-'m: SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
+’m 'm: SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
 ({N+} & (Pg+ or Pv+)));
-'re: Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
+’re 're: Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
 ({N+} & (Pg+ or Pv+)));
 
 %I've they've you've we've: PP+ & <CLAUSE>;
 
-'ve: Sp- & PP+;
+’ve 've: Sp- & PP+;
 
 %we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
 %I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
 
-'d: Sp- & (PP+ or I+);
-'ll: S- & I+;
+’d 'd: Sp- & (PP+ or I+);
+’ll 'll: S- & I+;
 
 something someone somebody:
 {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or YS+);
@@ -3493,8 +3493,8 @@ SIs-]])))));
 
 "&": G- & {Xd- & G-} & G+;
 
-"'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
-"'s.p": YS- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+"’" "'": YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
+"'s.p" "’s.p": YS- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
 "(": {EBx+} & Xd+;
 ")": {@Xca-} & Xc-;
