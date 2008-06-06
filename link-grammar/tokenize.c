@@ -246,13 +246,15 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 	return rc; 
 }
 
+/**
+ * w points to a string, wend points to the char one after the end.  The
+ * "word" w contains no blanks.  This function splits up the word if
+ * necessary, and calls "issue_sentence_word()" on each of the resulting
+ * parts.  The process is described above.  returns TRUE of OK, FALSE if
+ * too many punctuation marks 
+ */
 static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found)
 {
-	/* w points to a string, wend points to the char one after the end.  The
-	 * "word" w contains no blanks.  This function splits up the word if
-	 * necessary, and calls "issue_sentence_word()" on each of the resulting
-	 * parts.  The process is described above.  returns TRUE of OK, FALSE if
-	 * too many punctuation marks */
 	int i, j, k, l, len;
 	int r_strippable=0, l_strippable=0;
 	int s_strippable=0, p_strippable=0;
