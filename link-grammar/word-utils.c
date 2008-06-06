@@ -390,12 +390,14 @@ static int easy_match(const char * s, const char * t) {
 
 /**
  * word_has_connector() -- return TRUE if dictionary expression has connector
- * This function takes a dict_node (corresponding to an entry in a given dictionary), a
- * string (representing a connector), and a direction (0 = right-pointing, 1 = left-pointing);
- * it returns 1 if the dictionary expression for the word includes the connector, 0 otherwise.
- * This can be used to see if a word is in a certain category (checking for a category
- * connector in a table), or to see if a word has a connector in a normal dictionary. The
- * connector check uses a "smart-match", the same kind used by the parser.
+ * This function takes a dict_node (corresponding to an entry in a
+ * given dictionary), a string (representing a connector), and a
+ * direction (0 = right-pointing, 1 = left-pointing); it returns 1
+ * if the dictionary expression for the word includes the connector,
+ * 0 otherwise.  This can be used to see if a word is in a certain
+ * category (checking for a category connector in a table), or to see
+ * if a word has a connector in a normal dictionary. The connector
+ * check uses a "smart-match", the same kind used by the parser.
  */
 
 int word_has_connector(Dict_node * dn, const char * cs, int direction)
