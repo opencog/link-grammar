@@ -1353,7 +1353,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 	return p;
 }
 
-static char * print_flat_constituents(con_context_t *ctxt, Linkage linkage)
+static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
 	int num_words;
 	Sentence sent;
@@ -1388,6 +1388,12 @@ static char * print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	string_set_delete(ctxt->phrase_ss);
 	ctxt->phrase_ss = NULL;
 	return q;
+}
+
+static char * print_flat_constituents(Linkage linkage)
+{
+	con_context_t ctxt;
+	return do_print_flat_constituents(&ctxt, linkage);
 }
 
 static CType token_type (char *token)
@@ -1509,11 +1515,8 @@ CNode * linkage_constituent_tree(Linkage linkage)
 	char *p, *q, *saveptr;
 	int len;
 	CNode * root;
-	con_context_t *ctxt;
 
-	ctxt = (con_context_t *) malloc(sizeof(con_context_t));
-	p = print_flat_constituents(ctxt, linkage);
-	free(ctxt);
+	p = print_flat_constituents(linkage);
 
 	len = strlen(p);
 	q = strtok_r(p, " ", &saveptr);
@@ -1567,14 +1570,7 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode)
 	}
 	else if (mode == 2)
 	{
-		char * str;
-		con_context_t *ctxt;
-
-		ctxt = (con_context_t *) malloc(sizeof(con_context_t));
-		str = print_flat_constituents(ctxt, linkage);
-		free(ctxt);
-
-		return str;
+		return print_flat_constituents(linkage);
 	}
 	assert(0, "Illegal mode in linkage_print_constituent_tree");
 	return NULL;
