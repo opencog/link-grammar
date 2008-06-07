@@ -88,9 +88,6 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	return dn;
 }
 
-#define LINE_LIMIT 70
-int xwhere_in_line;
-
 void save_files(Dictionary dict)
 {
 	Word_file *wf;
