@@ -95,6 +95,9 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	int i;
 	char tokens[1024], t[128];
 
+	if (dict->recursive_error) return;
+	dict->recursive_error = TRUE;
+
 	tokens[0] = '\0';
 	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
 	{
@@ -112,6 +115,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 		lperror(DICTPARSE, ". %s\n\t line %d, tokens = %s\n",
 				s, dict->line_number, tokens);
 	}
+	dict->recursive_error = FALSE;
 }
 
 static void dict_error(Dictionary dict, const char * s)

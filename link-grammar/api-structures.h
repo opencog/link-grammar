@@ -89,7 +89,8 @@ struct Parse_Options_s
 	int display_links;            /* if true, a list o' links is printed out */
 };
 
-typedef struct {
+typedef struct
+{
 	Connector ** hash_table;
 	int          table_size;
 	int          is_defined;  /* if 0 then there is no such set */
@@ -135,6 +136,7 @@ struct Dictionary_s
 	int             is_special;
 	int             already_got_it;
 	int             line_number;
+	int             recursive_error;
 };
 
 typedef struct Label_node_s Label_node;

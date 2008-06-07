@@ -341,12 +341,13 @@ dictionary_create(char * dict_name, char * pp_name,
 	static int rand_table_inited=FALSE;
 	Dict_node *dict_node;
 
-	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
-
 	if (!rand_table_inited) {
 		init_randtable();
 		rand_table_inited=TRUE;
 	}
+
+	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
+	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	dict->string_set = string_set_create();
 	dict->name = string_set_add(dict_name, dict->string_set);
@@ -358,6 +359,7 @@ dictionary_create(char * dict_name, char * pp_name,
 	dict->word_file_header = NULL;
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
+	dict->recursive_error = FALSE;
 
 	dict->fp = dictopen(dict->name, "r");
 	if (dict->fp == NULL) {
