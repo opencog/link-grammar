@@ -1273,6 +1273,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
+	int have_opened = 1;
 	int c, w;
 	int leftdone[MAXCONSTITUENTS];
 	int rightdone[MAXCONSTITUENTS];
@@ -1310,11 +1311,15 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			if (best==-1)
 				break;
 			leftdone[best]=1;
-			if(ctxt->constituent[best].aux==1) continue;
+			/* have_open is a hack to avoid printing anything until 
+			 * bracket is opened */
+			if (w == 1) have_opened = 0; 
+			if (ctxt->constituent[best].aux == 1) continue;
+			have_opened = 1;
 			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
 		}
 
-		if (w<linkage->num_words-1) {
+		if (have_opened && (w < linkage->num_words - 1)) {
 			/* Don't print out right wall */
 			strcpy(s, sent->word[w].string);
 
