@@ -11,10 +11,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _WIN32
-#include <langinfo.h>
-#endif
-
 #include <wchar.h>
 #include <wctype.h>
 #include <link-grammar/api.h>
@@ -194,15 +190,7 @@ static int link_advance(Dictionary dict)
 				return 0;
 			}
 			/* store UTF8 internally, always. */
-			nr = wctomb(&dict->token[i], c);
-			if (nr < 0) {
-#ifndef _WIN32
-				error(CHARSET, "%s\n", nl_langinfo(CODESET));
-#else
-				error(CHARSET, "(unknown character set)\n");
-#endif
-			}
-			i += nr;
+			i += wctomb_check(&dict->token[i], c);
 		} else {
 			if (strchr(SPECIAL, c) != NULL) {
 				if (i == 0) {
@@ -232,15 +220,7 @@ static int link_advance(Dictionary dict)
 				quote_mode = TRUE;
 			} else {
 				/* store UTF8 internally, always. */
-				nr = wctomb(&dict->token[i], c);
-				if (nr < 0) {
-#ifndef _WIN32
-					error(CHARSET, "%s\n", nl_langinfo(CODESET));
-#else
-					error(CHARSET, "(unknown character set)\n");
-#endif
-				}
-				i += nr;
+				i += wctomb_check(&dict->token[i], c);
 			}
 		}
 		c = get_character(dict, quote_mode);

@@ -32,7 +32,7 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 
 	for (j=0; (j <= MAX_WORD-1) && (!iswspace(c)) && (c != WEOF);)
 	{
-		j += wctomb(&word[j], c);
+		j += wctomb_check(&word[j], c);
 		c = fgetwc(fp);
 	}
 

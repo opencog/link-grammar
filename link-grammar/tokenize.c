@@ -229,7 +229,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 
 	nbh = mbtowc (&c, word, 4);
 	c = towlower(c);
-	nbl = wctomb(low, c);
+	nbl = wctomb_check(low, c);
 	if (nbh != nbl)
 	{
 		fprintf(stderr, "Error: can't downcase multi-byte string!\n");

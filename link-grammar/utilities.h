@@ -13,6 +13,10 @@
 #ifndef _LINK_GRAMMAR_UTILITIES_H_
 #define _LINK_GRAMMAR_UTILITIES_H_
 
+#ifndef _WIN32
+#include <langinfo.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -20,6 +24,8 @@
 #include <wchar.h>
 #include <wctype.h>
 #endif
+
+#include "error.h"
 
 #ifndef FALSE
 #define FALSE 0
@@ -67,6 +73,20 @@
 char * strtok_r (char *s, const char *delim, char **saveptr);
 
 #endif /* _WIN32 */
+
+static inline int wctomb_check(char *s, wchar_t wc)
+{
+	int nr = wctomb(s, wc);
+	if (nr < 0) {
+#ifndef _WIN32
+		lperror(CHARSET, "%s\n", nl_langinfo(CODESET));
+#else
+		lperror(CHARSET, "(unknown character set)\n");
+#endif
+		exit(1);
+	}
+	return nr;
+}
 
 static inline int is_utf8_upper(const char *s)
 {
