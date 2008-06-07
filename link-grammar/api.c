@@ -366,8 +366,10 @@ dictionary_create(char * dict_name, char * pp_name,
 	}
 
 	if (!read_dictionary(dict)) {
+		fclose(dict->fp);
 		goto failure;
 	}
+	fclose(dict->fp);
 
 	dict->affix_table = NULL;
 	if (affix_name != NULL) {

@@ -11,6 +11,10 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _WIN32
+#include <langinfo.h>
+#endif
+
 #include <wchar.h>
 #include <wctype.h>
 #include <link-grammar/api.h>
@@ -152,7 +156,7 @@ static wint_t get_character(Dictionary dict, int quote_mode)
 static int link_advance(Dictionary dict)
 {
 	wint_t c;
-	int i;
+	int nr, i;
 	int quote_mode;
 
 	dict->is_special = FALSE;
@@ -190,7 +194,15 @@ static int link_advance(Dictionary dict)
 				return 0;
 			}
 			/* store UTF8 internally, always. */
-			i += wctomb(&dict->token[i], c);
+			nr = wctomb(&dict->token[i], c);
+			if (nr < 0) {
+#ifndef _WIN32
+				error(CHARSET, "%s\n", nl_langinfo(CODESET));
+#else
+				error(CHARSET, "(unknown character set)\n");
+#endif
+			}
+			i += nr;
 		} else {
 			if (strchr(SPECIAL, c) != NULL) {
 				if (i == 0) {
@@ -220,7 +232,15 @@ static int link_advance(Dictionary dict)
 				quote_mode = TRUE;
 			} else {
 				/* store UTF8 internally, always. */
-				i += wctomb(&dict->token[i], c);
+				nr = wctomb(&dict->token[i], c);
+				if (nr < 0) {
+#ifndef _WIN32
+					error(CHARSET, "%s\n", nl_langinfo(CODESET));
+#else
+					error(CHARSET, "(unknown character set)\n");
+#endif
+				}
+				i += nr;
 			}
 		}
 		c = get_character(dict, quote_mode);
@@ -736,8 +756,8 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
  */
 static int read_entry(Dictionary dict)
 {
-    Exp *n;
-    int i;
+	Exp *n;
+	int i;
 
 	Dict_node  *dn_new, *dnx, *dn = NULL;
 
@@ -787,7 +807,8 @@ static int read_entry(Dictionary dict)
 	return 1;
 }
 
-void print_expression(Exp * n) {
+void print_expression(Exp * n)
+{
 	E_list * el; int i;
 	if (n == NULL) {
 		printf("NULL expression");
@@ -810,7 +831,8 @@ void print_expression(Exp * n) {
 	}
 }
 
-static void rprint_dictionary_data(Dict_node * n) {
+static void rprint_dictionary_data(Dict_node * n)
+{
 		if (n==NULL) return;
 		rprint_dictionary_data(n->left);
 		printf("%s: ", n->string);
@@ -819,25 +841,22 @@ static void rprint_dictionary_data(Dict_node * n) {
 		rprint_dictionary_data(n->right);
 }
 
-void print_dictionary_data(Dictionary dict) {
+void print_dictionary_data(Dictionary dict)
+{
 	rprint_dictionary_data(dict->root);
 }
-
 
 int read_dictionary(Dictionary dict)
 {
 	lperrno = 0;
 	if (!link_advance(dict)) {
-		fclose(dict->fp);
 		return 0;
 	}
 	while(dict->token[0] != '\0') {
 			if (!read_entry(dict)) {
-			fclose(dict->fp);
 			return 0;
 		}
 	}
-	fclose(dict->fp);
 	return 1;
 }
 
