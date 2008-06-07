@@ -194,6 +194,7 @@ struct Sentence_s
 	String_set *   string_set;  /* used for word names, not connectors */
 	And_data       and_data;    /* used to keep track of fat disjuncts */
 	char  q_pruned_rules;       /* don't prune rules more than once in p.p. */
+	int   post_quote[MAX_SENTENCE];
 };
 
 /*********************************************************

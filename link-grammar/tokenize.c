@@ -19,7 +19,6 @@
 
 #define MAX_STRIP 10
 
-int post_quote[MAX_SENTENCE];
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
 
@@ -445,7 +444,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 		return FALSE;
 	} */
 
-	if (quote_found==1) post_quote[sent->length]=1;
+	if (quote_found == TRUE) sent->post_quote[sent->length]=1;
 
 	if (!issue_sentence_word(sent, word)) return FALSE;
 
@@ -494,7 +493,7 @@ int separate_sentence(char * s, Sentence sent)
 	int i, is_first, quote_found;
 	Dictionary dict = sent->dict;
 
-	for(i=0; i<MAX_SENTENCE; i++) post_quote[i]=0;
+	for(i=0; i<MAX_SENTENCE; i++) sent->post_quote[i] = 0;
 	sent->length = 0;
 
 	if (dict->left_wall_defined)
@@ -518,7 +517,7 @@ int separate_sentence(char * s, Sentence sent)
 		while (iswspace(c) || (c == '\"'))
 		{
 			s += nb;
-			if(*s == '\"') quote_found=TRUE;
+			if (*s == '\"') quote_found = TRUE;
 			nb = mbtowc(&c, s, 4);
 			if (0 > nb) goto failure;
 		}
@@ -748,7 +747,9 @@ int build_sentence_expressions(Sentence sent)
 	 */
 	for (i=0; i<sent->length; i++)
 	{
-		if (! (i==first_word || (i>0 && strcmp(":", sent->word[i-1].string)==0) || post_quote[i]==1) ) continue;
+		if (! (i == first_word ||
+		      (i > 0 && strcmp(":", sent->word[i-1].string)==0) || 
+		       sent->post_quote[i] == 1)) continue;
 		s = sent->word[i].string;
 
 		if (is_utf8_upper(s))
