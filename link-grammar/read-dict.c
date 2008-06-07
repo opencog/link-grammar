@@ -876,11 +876,14 @@ void print_dictionary_data(Dictionary dict)
 int read_dictionary(Dictionary dict)
 {
 	lperrno = 0;
-	if (!link_advance(dict)) {
+	if (!link_advance(dict))
+	{
 		return 0;
 	}
-	while(dict->token[0] != '\0') {
-			if (!read_entry(dict)) {
+	while (dict->token[0] != '\0')
+	{
+		if (!read_entry(dict))
+		{
 			return 0;
 		}
 	}
