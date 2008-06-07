@@ -3482,7 +3482,7 @@ er um umm uh oh yeah gee gosh wow ah eh hmm hmmm: NO+;
 
 ";": {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
 
-":": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
+"…" ":": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
 
 "%": (ND- & {DD-} & <noun-sub-x> & (<noun-main-x>)) or (ND- & (OD- or AN+));
@@ -3499,7 +3499,7 @@ SIs-]])))));
 "(": {EBx+} & Xd+;
 ")": {@Xca-} & Xc-;
 
--- -: [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
+– -- -: [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
 ({@Xca-} & (({EBx+} & Xd+) or Xc-));
 
 foo: F+;
