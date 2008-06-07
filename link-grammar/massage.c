@@ -1,15 +1,15 @@
-/********************************************************************************/
-/* Copyright (c) 2004                                                           */
-/* Daniel Sleator, David Temperley, and John Lafferty                           */
-/* All rights reserved                                                          */
-/*                                                                              */
-/* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */
-/* and also available at http://www.link.cs.cmu.edu/link/license.html           */
-/* This license allows free redistribution and use in source and binary         */
-/* forms, with or without modification, subject to certain conditions.          */
-/*                                                                              */
-/********************************************************************************/
+/*************************************************************************/
+/* Copyright (c) 2004                                                    */
+/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software,    */
+/* and also available at http://www.link.cs.cmu.edu/link/license.html    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
 
 #include <link-grammar/api.h>
 
@@ -52,7 +52,7 @@
 */
 
 /**
- * glom_comma_connector() -- 
+ * glom_comma_connector() --
  * In this case the connector is to connect to the comma to the
  * left of an "and" or an "or".  Only gets added next to a fat link
  */
@@ -83,15 +83,17 @@ static Disjunct * glom_comma_connector(Disjunct * d)
 	return catenate_disjuncts(d, d_list);
 }
 
-static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary) {
-/* In this case the connector is to connect to the "either", "neither",
-   "not", or some auxilliary d to the current which is a conjunction.
-   Only gets added next to a fat link, but before it (not after it)
-   In the case of "nor", we don't create new disjuncts, we merely modify
-   existing ones.  This forces the fat link uses of "nor" to
-   use a neither.  (Not the case with "or".)  If necessary=FALSE, then
-   duplication is done, otherwise it isn't
-*/
+/**
+ * In this case the connector is to connect to the "either", "neither",
+ * "not", or some auxilliary d to the current which is a conjunction.
+ * Only gets added next to a fat link, but before it (not after it)
+ * In the case of "nor", we don't create new disjuncts, we merely modify
+ * existing ones.  This forces the fat link uses of "nor" to
+ * use a neither.  (Not the case with "or".)  If necessary=FALSE, then
+ * duplication is done, otherwise it isn't
+ */
+static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary)
+{
 	Disjunct * d_list, * d1, * d2;
 	Connector * c, * c1, *c2;
 	d_list = NULL;
@@ -125,11 +127,13 @@ static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary) {
 	return catenate_disjuncts(d, d_list);
 }
 
-static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct * d) {
-/* This adds one connector onto the beginning of the left (or right)
-   connector list of d.  The label and string of the connector are
-   specified
-*/
+/**
+ * This adds one connector onto the beginning of the left (or right)
+ * connector list of d.  The label and string of the connector are
+ * specified
+ */
+static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct * d)
+{
 	Connector * c;
 
 	c = init_connector((Connector *)xalloc(sizeof(Connector)));
@@ -149,8 +153,8 @@ static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct
 	return d;
 }
 
-/** 
- * special_disjunct() -- 
+/**
+ * special_disjunct() --
  * Builds a new disjunct with one connector pointing in direction dir
  * (which is '+' or '-').  The label and string of the connector
  * are specified, as well as the string of the disjunct.
@@ -183,12 +187,14 @@ static Disjunct * special_disjunct(int label, int dir, const char *cs, const cha
 	return d1;
 }
 
-static void construct_comma(Sentence sent) {
-/* Finds all places in the sentence where a comma is followed by
-   a conjunction ("and", "or", "but", or "nor").  It modifies these comma
-   disjuncts, and those of the following word, to allow the following
-   word to absorb the comma (if used as a conjunction).
-*/
+/**
+ * Finds all places in the sentence where a comma is followed by
+ * a conjunction ("and", "or", "but", or "nor").  It modifies these comma
+ * disjuncts, and those of the following word, to allow the following
+ * word to absorb the comma (if used as a conjunction).
+ */
+static void construct_comma(Sentence sent)
+{
 	int w;
 	for (w=0; w<sent->length-1; w++) {
 		if ((strcmp(sent->word[w].string, ",")==0) && sent->is_conjunction[w+1]) {
@@ -202,7 +208,8 @@ static void construct_comma(Sentence sent) {
    words to be used with conjunctions.  Examples: either, neither,
    both...and..., not only...but...
 */
-static void construct_either(Sentence sent) {
+static void construct_either(Sentence sent)
+{
 	int w;
 	if (!sentence_contains(sent, "either")) return;
 	for (w=0; w<sent->length; w++) {
@@ -219,7 +226,8 @@ static void construct_either(Sentence sent) {
 	}
 }
 
-static void construct_neither(Sentence sent) {
+static void construct_neither(Sentence sent)
+{
 	int w;
 	if (!sentence_contains(sent, "neither")) {
 		/* I don't see the point removing disjuncts on "nor".  I
@@ -248,7 +256,8 @@ static void construct_neither(Sentence sent) {
 	}
 }
 
-static void construct_notonlybut(Sentence sent) {
+static void construct_notonlybut(Sentence sent)
+{
 	int w;
 	Disjunct *d;
 	if (!sentence_contains(sent, "not")) {
@@ -289,7 +298,8 @@ static void construct_notonlybut(Sentence sent) {
 	}
 }
 
-static void construct_both(Sentence sent) {
+static void construct_both(Sentence sent)
+{
 	int w;
 	if (!sentence_contains(sent, "both")) return;
 	for (w=0; w<sent->length; w++) {
@@ -305,7 +315,8 @@ static void construct_both(Sentence sent) {
 	}
 }
 
-void install_special_conjunctive_connectors(Sentence sent) {
+void install_special_conjunctive_connectors(Sentence sent)
+{
 	construct_either(sent);      /* special connectors for "either" */
 	construct_neither(sent);     /* special connectors for "neither" */
 	construct_notonlybut(sent);  /* special connectors for "not..but.." */
