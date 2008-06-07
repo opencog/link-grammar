@@ -782,6 +782,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 }
 
 /**
+ * read_entry() -- read one dictionary entry
  * Starting with the current token parse one dictionary entry.
  * Add these words to the dictionary.
  */
@@ -790,47 +791,65 @@ static int read_entry(Dictionary dict)
 	Exp *n;
 	int i;
 
-	Dict_node  *dn_new, *dnx, *dn = NULL;
+	Dict_node *dn_new, *dnx, *dn = NULL;
 
-	for (; !is_equal(dict, ':') ; link_advance(dict)) {
-		  if (dict->is_special) {
-			  dict_error(dict, "I expected a word but didn\'t get it.");
-			  return 0;
-		  }
-		  if (dict->token[0] == '/') {
-			  /* it's a word-file name */
-			  dn = read_word_file(dict, dn, dict->token);
-			  if (dn == NULL) {
-				  lperror(WORDFILE, " %s\n", dict->token);
-				  return 0;
-			  }
-		  } else {
-			  dn_new = (Dict_node *) xalloc(sizeof(Dict_node));
-			  dn_new->left = dn;
-			  dn = dn_new;
-			  dn->file = NULL;
-			  dn->string = string_set_add(dict->token, dict->string_set);
-		  }
+	while (!is_equal(dict, ':'))
+	{
+		if (dict->is_special)
+		{
+			dict_error(dict, "I expected a word but didn\'t get it.");
+			return 0;
+		}
+
+		/* if it's a word-file name */
+		if (dict->token[0] == '/') {
+			dn = read_word_file(dict, dn, dict->token);
+			if (dn == NULL)
+			{
+				lperror(WORDFILE, " %s\n", dict->token);
+				return 0;
+			}
+		} else {
+			dn_new = (Dict_node *) xalloc(sizeof(Dict_node));
+			dn_new->left = dn;
+			dn = dn_new;
+			dn->file = NULL;
+			dn->string = string_set_add(dict->token, dict->string_set);
+		}
+
+		/* Advance to next entry, unless error */
+		if (0 == link_advance(dict)) return 0;
 	}
-	if (!link_advance(dict)) {  /* pass the : */
+
+	/* pass the : */
+	if (!link_advance(dict))
+	{
 		return 0;
 	}
+
 	n = expression(dict);
-	if (n == NULL) {
+	if (n == NULL)
+	{
 		return 0;
 	}
-	if (!is_equal(dict, ';')) {
+
+	if (!is_equal(dict, ';'))
+	{
 		dict_error(dict, "Expecting \";\" at the end of an entry.");
 		return 0;
 	}
-	if (!link_advance(dict)) {  /* pass the ; */
+
+	/* pass the ; */
+	if (!link_advance(dict))
+	{
 		return 0;
 	}
 
-	/* at this point, dn points to a list of Dict_nodes connected by	  */
-	/* their left pointers.  These are to be inserted into the dictionary */
+	/* at this point, dn points to a list of Dict_nodes connected by */
+	/* their left pointers. These are to be inserted into the dictionary */
 	i = 0;
-	for (dnx = dn; dnx != NULL; dnx = dnx->left) {
+	for (dnx = dn; dnx != NULL; dnx = dnx->left)
+	{
 		dnx->exp = n;
 		i++;
 	}
