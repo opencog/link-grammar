@@ -26,15 +26,50 @@ to the caller to ensure that the pointers always point to something useful.
 #define LINKSET_SPARSENESS 2
 #define LINKSET_SEED_VALUE 37
 
-/* forward declarations of non-exported functions */
-static void clear_hash_table(pp_linkset *ls);
-static void initialize(pp_linkset *ls, int size);
-static pp_linkset_node *add_internal(pp_linkset *ls, const char *str);
-static int compute_hash(pp_linkset *ls, const char *str);
+static void clear_hash_table(pp_linkset *ls)
+{
+  memset(ls->hash_table,0,ls->hash_table_size*sizeof(pp_linkset_node *));
+}
+
+static void initialize(pp_linkset *ls, int size) 
+{
+  ls->hash_table_size = size*LINKSET_SPARSENESS;
+  ls->population = 0;
+  ls->hash_table = 
+    (pp_linkset_node**) xalloc (ls->hash_table_size*sizeof(pp_linkset_node *));
+  clear_hash_table(ls);
+}
+
+static int compute_hash(pp_linkset *ls, const char *str)
+ {
+   /* hash is computed from capitalized prefix only */
+  int i, hashval;
+  hashval=LINKSET_SEED_VALUE;
+  for (i=0; isupper((int)str[i]); i++)
+    hashval = str[i] + 31*hashval;
+  hashval = hashval % ls->hash_table_size;
+  if (hashval<0) hashval*=-1;
+  return hashval;
+}
+
+static pp_linkset_node *add_internal(pp_linkset *ls, const char *str)
+{
+  pp_linkset_node *p, *n;
+  int hashval;
+  
+  /* look for str (exactly) in linkset */
+  hashval = compute_hash(ls, str);
+  for (p=ls->hash_table[hashval]; p!=0; p=p->next)
+    if (!strcmp(p->str,str)) return NULL;  /* already present */
+  
+  /* create a new node for u; stick it at head of linked list */
+  n = (pp_linkset_node *) xalloc (sizeof(pp_linkset_node));      
+  n->next = ls->hash_table[hashval];
+  n->str = str;
+  ls->hash_table[hashval] = n;
+  return n;
+}
  
-extern int post_process_match(const char *s, const char *t);
-
-
 pp_linkset *pp_linkset_open(int size)
 {
   pp_linkset *ls;
@@ -112,53 +147,8 @@ int pp_linkset_match_bw(pp_linkset *ls, const char *str)
   return 0;
 }
 
-int pp_linkset_population(pp_linkset *ls) {
+int pp_linkset_population(pp_linkset *ls)
+{
   return (ls==NULL)? 0 : ls->population; 
-}
-
-/*********************** non-exported functions ************************/
-
-static void clear_hash_table(pp_linkset *ls)
-{
-  memset(ls->hash_table,0,ls->hash_table_size*sizeof(pp_linkset_node *));
-}
-
-static void initialize(pp_linkset *ls, int size) 
-{
-  ls->hash_table_size = size*LINKSET_SPARSENESS;
-  ls->population = 0;
-  ls->hash_table = 
-    (pp_linkset_node**) xalloc (ls->hash_table_size*sizeof(pp_linkset_node *));
-  clear_hash_table(ls);
-}
-
-static pp_linkset_node *add_internal(pp_linkset *ls, const char *str)
-{
-  pp_linkset_node *p, *n;
-  int hashval;
-  
-  /* look for str (exactly) in linkset */
-  hashval = compute_hash(ls, str);
-  for (p=ls->hash_table[hashval]; p!=0; p=p->next)
-    if (!strcmp(p->str,str)) return NULL;  /* already present */
-  
-  /* create a new node for u; stick it at head of linked list */
-  n = (pp_linkset_node *) xalloc (sizeof(pp_linkset_node));      
-  n->next = ls->hash_table[hashval];
-  n->str = str;
-  ls->hash_table[hashval] = n;
-  return n;
-}
-
-static int compute_hash(pp_linkset *ls, const char *str)
- {
-   /* hash is computed from capitalized prefix only */
-  int i, hashval;
-  hashval=LINKSET_SEED_VALUE;
-  for (i=0; isupper((int)str[i]); i++)
-    hashval = str[i] + 31*hashval;
-  hashval = hashval % ls->hash_table_size;
-  if (hashval<0) hashval*=-1;
-  return hashval;
 }
 
