@@ -271,4 +271,43 @@ TODO:
     (This somewhat resembles the application of construction grammar
     ideas to the link-grammar dictionary).
 
+  Thread safety: link-grammar is slowly being converted to be 
+    thead-safe. The work is about half-done. So far, the following 
+    files are thread-safe, unless otherwise noted:
+      api.c
+      build-disjuncts.c
+      command-line.c
+      constituents.c
+      idiom.c
+      linkparser.c
+      massage.c
+      post-process.c
+      pp_knowledge.c
+      pp_linkset.c
+      preparation.c
+      print-util.c
+      prune.c
+      read-dict.c
+      resources.c
+      string-set.c
+      tokenize.c
+      utilities.c - has global "verbosity" and space maanagement globals.
+      word-file.c
+      word-utils.c
 
+    Not thread safe: 
+      analyze-linkage.c
+      and.c
+      count.c
+      error.c
+      extract-links.c
+      fast-match.c
+      jni-client.c
+      linkset.c
+      malloc-dbg.c - not thread safe, not normally used;
+                     only for debugging.
+      prefix.c - but maybe doesn't need to be; used only 
+                 during initialization, and only if binreloc turned
+                 on.
+      print.c
+      pp_lexer.c -- autogened code, original lex sources lost.
