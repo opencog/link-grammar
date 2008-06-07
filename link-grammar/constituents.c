@@ -63,6 +63,7 @@ typedef struct
 	int templist[MAX_ELTS];
 	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
+	int r_limit;
 } con_context_t;
 
 /* ================================================================ */
@@ -933,8 +934,6 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 	}
 }
 
-static int r_limit=0;
-
 static int add_constituent(con_context_t *ctxt, int c, Linkage linkage, Domain domain,
                            int l, int r, const char * name)
 {
@@ -942,7 +941,7 @@ static int add_constituent(con_context_t *ctxt, int c, Linkage linkage, Domain d
 
 	/* Avoid running off end, to walls. */
 	if (l < 1) l=1;
-	if (r > r_limit) r = r_limit;
+	if (r > ctxt->r_limit) r = ctxt->r_limit;
 	assert(l <= r, "negative constituent length!" );
 
 	ctxt->constituent[c].left = l;
@@ -1012,7 +1011,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	const char * name;
 	Domain domain;
 
-	r_limit = linkage->num_words-2; /**PV**/
+	ctxt->r_limit = linkage->num_words-2; /**PV**/
 
 	subl = &linkage->sublinkage[s];
 
@@ -1121,7 +1120,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 			if (ctxt->wordtype[w] == QDTYPE) {
 				/* Now find the finite verb to the right, start an S */
 				/* Limit w2 to sentence length. */
-				// for( w2=w+1; w2 < r_limit-1; w2++ )
+				// for( w2=w+1; w2 < ctxt->r_limit-1; w2++ )
 				for (w2 = w+1; w2 < rightmost; w2++)
 				  if ((ctxt->wordtype[w2] == STYPE) || (ctxt->wordtype[w2] == PTYPE)) break;
 
