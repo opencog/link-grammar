@@ -15,10 +15,8 @@
 
 static int null_links;
 
-static void print_statistics(void) {
-}
-
-void free_deletable(Sentence sent) {
+void free_deletable(Sentence sent)
+{
 	int w;
 	if (sent->deletable != NULL) {
 		for (w = -1; w<sent->length; w++) {
@@ -30,7 +28,8 @@ void free_deletable(Sentence sent) {
 	}
 }
 
-static void build_deletable(Sentence sent, int has_conjunction) {
+static void build_deletable(Sentence sent, int has_conjunction)
+{
 /* Initialize the array deletable[i][j] to indicate if the words		   */
 /* i+1...j-1 could be non existant in one of the multiple linkages.  This  */
 /* array is used in conjunction_prune and power_prune.  Regions of length  */
@@ -87,7 +86,8 @@ static void build_deletable(Sentence sent, int has_conjunction) {
 	}
 }
 
-void free_effective_dist(Sentence sent) {
+void free_effective_dist(Sentence sent)
+{
 	int w;
 	if (sent->effective_dist != NULL) {
 		for (w=0; w<sent->length; w++) {
@@ -98,27 +98,27 @@ void free_effective_dist(Sentence sent) {
 	}
 }
 
-static void build_effective_dist(Sentence sent, int has_conjunction) {
-  /*
-	The "effective distance" between two words is the actual distance minus
-	the largest deletable region strictly between the two words.  If the
-	effective distance between two words is greater than a connector's max
-	link length, then that connector cannot be satisfied by linking these
-	two words.
-
-	[Note: The effective distance is not monotically increasing as you move
-	away from a word.]
-
-	This function creates effective_dist[][].  It assumes that deleteble[][]
-	has already been computed.
-
-	Dynamic programming is used to compute this.  The order used is smallest
-	region to largest.
-
-	Just as deletable[i][j] is constructed for j=N_words (which is one
-	off the end of the sentence) we do that for effective_dist[][].
-  */
-
+/**
+ * The "effective distance" between two words is the actual distance minus
+ * the largest deletable region strictly between the two words.  If the
+ * effective distance between two words is greater than a connector's max
+ * link length, then that connector cannot be satisfied by linking these
+ * two words.
+ *
+ * [Note: The effective distance is not monotically increasing as you move
+ * away from a word.]
+ *
+ * This function creates effective_dist[][].  It assumes that deleteble[][]
+ * has already been computed.
+ *
+ * Dynamic programming is used to compute this.  The order used is smallest
+ * region to largest.
+ *
+ * Just as deletable[i][j] is constructed for j=N_words (which is one
+ * off the end of the sentence) we do that for effective_dist[][].
+ */
+static void build_effective_dist(Sentence sent, int has_conjunction)
+{
 	int i, j, diff;
 
 	free_effective_dist(sent);
@@ -181,9 +181,12 @@ static void build_effective_dist(Sentence sent, int has_conjunction) {
 	*/
 }
 
-void install_fat_connectors(Sentence sent) {
-/* Installs all the special fat disjuncts on all of the words of the   */
-/* sentence */
+/**
+ * Installs all the special fat disjuncts on all of the words of the
+ * sentence
+ */
+void install_fat_connectors(Sentence sent)
+{
 	int i;
 	for (i=0; i<sent->length; i++) {
 		if (sent->is_conjunction[i]) {
@@ -243,7 +246,8 @@ void free_sentence_expressions(Sentence sent)
   }
 }
 
-void free_sentence_disjuncts(Sentence sent) {
+void free_sentence_disjuncts(Sentence sent)
+{
 	int i;
 
 	for (i=0; i<sent->length; ++i) {
@@ -306,7 +310,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		if (verbosity > 2) {
 			printf("\nAfter conjunction pruning:\n");
 			print_disjunct_counts(sent);
-			print_statistics();
 		}
 		print_time(opts, "Done conjunction pruning");
 		build_conjunction_tables(sent);
