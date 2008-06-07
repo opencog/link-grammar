@@ -13,8 +13,6 @@
 
 #include <link-grammar/api.h>
 
-static int null_links;
-
 void free_deletable(Sentence sent)
 {
 	int w;
@@ -57,7 +55,7 @@ static void build_deletable(Sentence sent, int has_conjunction)
 		for (j=0; j<= sent->length; j++) {
 			if (j == i+1) {
 				sent->deletable[i][j] = TRUE;
-			} else if (null_links) {
+			} else if (sent->null_links) {
 				sent->deletable[i][j] = TRUE;
 			} else if (!has_conjunction) {
 				sent->deletable[i][j] = FALSE;
@@ -136,7 +134,7 @@ static void build_effective_dist(Sentence sent, int has_conjunction)
 
 	/* what is the rationale for ignoring the effective_dist
 	   if null links are allowed? */
-	if (null_links) {
+	if (sent->null_links) {
 		for (i=0; i<sent->length; i++) {
 			for (j=0; j<=sent->length; j++) {
 				sent->effective_dist[i][j] = j-i;
@@ -283,7 +281,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
-	null_links = (opts->min_null_count > 0);
+	sent->null_links = (opts->min_null_count > 0);
 
 	has_conjunction = sentence_contains_conjunction(sent);
 	set_connector_length_limits(sent, opts);

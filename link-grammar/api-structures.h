@@ -188,6 +188,7 @@ struct Sentence_s
 				   this is not the same as num alloced
 				   because some may be non-canonical. */
 	int    num_valid_linkages;  /* number with no pp violations */
+	int    null_links;          /* null links allowed */
 	int    null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
