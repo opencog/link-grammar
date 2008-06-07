@@ -272,7 +272,8 @@ static int is_equal(Dictionary dict, wint_t c)
 	        dict->token[1] == '\0');
 }
 
-static int check_connector(Dictionary dict, const char * s) {
+static int check_connector(Dictionary dict, const char * s)
+{
 	/* makes sure the string s is a valid connector */
 	int i;
 	i = strlen(s);
@@ -376,7 +377,8 @@ Exp * make_unary_node(Dictionary dict, Exp * e) {
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
-static Exp * make_zeroary_node(Dictionary dict) {
+static Exp * make_zeroary_node(Dictionary dict)
+{
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
@@ -385,11 +387,13 @@ static Exp * make_zeroary_node(Dictionary dict) {
 	return n;
 }
 
-static Exp * make_optional_node(Dictionary dict, Exp * e) {
-/* This creates an OR node with two children, one the given node,
-   and the other as zeroary node.  This has the effect of creating
-   what used to be called an optional node.
-*/
+/**
+ * This creates an OR node with two children, one the given node,
+ * and the other as zeroary node.  This has the effect of creating
+ * what used to be called an optional node.
+ */
+static Exp * make_optional_node(Dictionary dict, Exp * e)
+{
 	Exp * n;
 	E_list *el, *elx;
 	n = Exp_create(dict);
@@ -407,10 +411,13 @@ Exp * expression(Dictionary dict);
 
 #if ! defined INFIX_NOTATION
 
-Exp * operator_exp(Dictionary dict, int type) {
-/* We're looking at the first of the stuff after an "and" or "or".	 */
-/* Build a Exp node for this expression.  Set the cost and optional	*/
-/* fields to the default values.  Set the type field according to type */
+/** 
+ * We're looking at the first of the stuff after an "and" or "or".
+ * Build a Exp node for this expression.  Set the cost and optional
+ * fields to the default values.  Set the type field according to type
+ */
+Exp * operator_exp(Dictionary dict, int type)
+{
 	Exp * n;
 	E_list first;
 	E_list * elist;
@@ -457,11 +464,13 @@ Exp * in_parens(Dictionary dict) {
 	}
 }
 
-Exp * expression(Dictionary dict) {
-/* Build (and return the root of) the tree for the expression beginning	 */
-/* with the current token.  At the end, the token is the first one not part */
-/* of this expression.													  */
-
+/** 
+ * Build (and return the root of) the tree for the expression beginning
+ * with the current token.  At the end, the token is the first one not
+ * part of this expression.
+ */
+Exp * expression(Dictionary dict)
+{
 	Exp * n;
 	if (is_equal(dict, '(')) {
 		if (!link_advance(dict)) {
@@ -522,14 +531,18 @@ Exp * expression(Dictionary dict) {
 
 Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok);
 
-Exp * expression(Dictionary dict) {
-/* Build (and return the root of) the tree for the expression beginning  */
-/* with the current token.  At the end, the token is the first one not   */
-/* part of this expression.											  */
+/**
+ * Build (and return the root of) the tree for the expression beginning
+ * with the current token.  At the end, the token is the first one not
+ * part of this expression.
+ */
+Exp * expression(Dictionary dict)
+{
 	return restricted_expression(dict, TRUE,TRUE);
 }
 
-Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok) {
+Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
+{
 	Exp * nl=NULL, * nr, * n;
 	E_list *ell, *elr;
 	if (is_equal(dict, '(')) {
