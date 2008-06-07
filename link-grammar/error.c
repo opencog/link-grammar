@@ -58,6 +58,8 @@ static const char * msg_of_lperror(int lperr)
 void lperror(int lperr, const char *fmt, ...)
 {
 	char temp[MSGSZ] = "";
+	char stack[MSGSZ] = "";
+
 #if (defined _MSC_VER) && _MFC_VER < 0x0700
 #define vsnprintf _vsnprintf
 #endif		
@@ -67,10 +69,19 @@ void lperror(int lperr, const char *fmt, ...)
 	vsnprintf(temp, MSGSZ, fmt, args);
 	va_end(args);
 
-	strncpy(lperrmsg, msg_of_lperror(lperr), MSGSZ);
+	/* Maintain a stack of errors, earliest error first */
+	strncat(lperrmsg, msg_of_lperror(lperr), MSGSZ-strlen(lperrmsg)-1);
 	strncat(lperrmsg, temp, MSGSZ-strlen(lperrmsg)-1);
+	strncat(lperrmsg, "\n", MSGSZ-strlen(lperrmsg)-1);
 	lperrmsg[MSGSZ-1]=0; /* Null terminate at all costs */
+
 	lperrno = lperr;
+}
+
+void lperror_clear(void)
+{
+	lperrmsg[0] = 0x0;
+	lperrno = 0;
 }
 
 void error(const char *fmt, ...)

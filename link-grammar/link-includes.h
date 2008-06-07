@@ -15,13 +15,22 @@
 
 #include <link-grammar/link-features.h>
 
+LINK_BEGIN_DECLS
+
+/*****************************************************************************
+*
+* System initialization
+*
+*****************************************************************************/
+
+link_public_api(void)
+     lperror_clear(void);
+
 /*****************************************************************************
 *
 * Functions to manipulate Dictionaries
 *
 *****************************************************************************/
-
-LINK_BEGIN_DECLS
 
 typedef struct Dictionary_s * Dictionary;
 

@@ -377,7 +377,6 @@ dictionary_create(char * dict_name, char * pp_name,
 	if (affix_name != NULL) {
 		dict->affix_table = dictionary_create(affix_name, NULL, NULL, NULL);
 		if (dict->affix_table == NULL) {
-			fprintf(stderr, "%s\n", lperrmsg);
 			goto failure;
 		}
 	}

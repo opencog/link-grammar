@@ -107,13 +107,15 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	}
 	if (s2)
 	{
-		lperror(DICTPARSE, ". %s %s\n\t line %d, tokens = %s\n",
-				s, s2, dict->line_number, tokens);
+		lperror(DICTPARSE, "%s.\n%s %s\n\t line %d, tokens = %s\n",
+		        dict->name,
+		        s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		lperror(DICTPARSE, ". %s\n\t line %d, tokens = %s\n",
-				s, dict->line_number, tokens);
+		lperror(DICTPARSE, "%s.\n%s\n\t line %d, tokens = %s\n",
+		        dict->name,
+		        s, dict->line_number, tokens);
 	}
 	dict->recursive_error = FALSE;
 }

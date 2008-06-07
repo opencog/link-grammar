@@ -6,6 +6,7 @@
  */
 
 #include <jni.h>
+#include <locale.h>
 #include <stdio.h>
 
 #include "api.h"
@@ -56,6 +57,12 @@ void throwException(JNIEnv *env, const char* message)
 
 static void init(JNIEnv *env)
 {
+	/* Get the locale from the environment...
+	 * perhaps we should someday get it from the dictionary ??
+	 */
+	setlocale(LC_ALL, "");
+
+	lperror_clear();
 	panic_parse_opts = parse_options_create();
 	opts	= parse_options_create();
 	setup_panic_parse_options(panic_parse_opts);
