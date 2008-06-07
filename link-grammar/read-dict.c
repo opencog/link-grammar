@@ -1100,12 +1100,6 @@ int boolean_abridged_lookup(Dictionary dict, const char *s)
 }
 
 /* the following functions are for handling deletion */
-
-static Dict_node * parent;
-static Dict_node * to_be_deleted;
-
-// xxxxxxxx
-
 /**
  * Returns true if it finds a non-idiom dict_node in a file that matches
  * the string s.
@@ -1114,22 +1108,24 @@ static Dict_node * to_be_deleted;
  *
  * Also sets parent and to_be_deleted appropriately.
  */
-static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s)
+static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
+                                   const char * s,
+                                   Dict_node **parent, Dict_node **to_be_deleted)
 {
 	int m;
 	if (dn == NULL) return FALSE;
 	m = dict_match(s, dn->string);
 	if (m <= 0) {
-		if (find_one_non_idiom_node(dn,dn->left, s)) return TRUE;
+		if (find_one_non_idiom_node(dn,dn->left, s, parent, to_be_deleted)) return TRUE;
 	}
 /*	if ((m == 0) && (!is_idiom_word(dn->string)) && (dn->file != NULL)) { */
 	if ((m == 0) && (!is_idiom_word(dn->string))) {
-		to_be_deleted = dn;
-		parent = p;
+		*to_be_deleted = dn;
+		*parent = p;
 		return TRUE;
 	}
 	if (m >= 0) {
-		if (find_one_non_idiom_node(dn,dn->right, s)) return TRUE;
+		if (find_one_non_idiom_node(dn,dn->right, s, parent, to_be_deleted)) return TRUE;
 	}
 	return FALSE;
 }
@@ -1159,7 +1155,9 @@ static void set_parent_of_node(Dictionary dict,
 int delete_dictionary_words(Dictionary dict, const char * s)
 {
 	Dict_node *pred, *pred_parent;
-	if (!find_one_non_idiom_node(NULL, dict->root, s)) return FALSE;
+	Dict_node *parent, *to_be_deleted;
+
+	if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return FALSE;
 	for(;;) {
 		/* now parent and to_be_deleted are set */
 		if (to_be_deleted->file != NULL) {
@@ -1181,7 +1179,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 			set_parent_of_node(dict, pred_parent, pred, pred->left);
 			xfree((char *)pred, sizeof(Dict_node));
 		}
-		if (!find_one_non_idiom_node(NULL, dict->root, s)) return TRUE;
+		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return TRUE;
 	}
 }
 
