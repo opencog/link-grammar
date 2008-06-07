@@ -368,7 +368,8 @@ static Exp * connector(Dictionary dict)
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
  */
-Exp * make_unary_node(Dictionary dict, Exp * e) {
+Exp * make_unary_node(Dictionary dict, Exp * e)
+{
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
@@ -452,7 +453,8 @@ Exp * operator_exp(Dictionary dict, int type)
  * Looks for the stuff that is allowed to be inside of parentheses
  * either & or | followed by a list, or a terminal symbol.
  */
-Exp * in_parens(Dictionary dict) {
+Exp * in_parens(Dictionary dict)
+{
 	Exp * e;
 
 	if (is_equal(dict, '&') || (strcmp(token, "and")==0)) {
@@ -670,7 +672,8 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 
 /* verbose version */
 /*
-int dict_compare(char *s, char *t) {
+int dict_compare(char *s, char *t)
+{
 	int ss, tt;
 	while (*s != '\0' && *s == *t) {
 		s++;
@@ -1101,15 +1104,18 @@ int boolean_abridged_lookup(Dictionary dict, const char *s)
 static Dict_node * parent;
 static Dict_node * to_be_deleted;
 
+// xxxxxxxx
 
-static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s) {
-/* Returns true if it finds a non-idiom dict_node in a file that matches
-   the string s.
-
-   ** note: this now DOES include non-file words in its search.
-
-	Also sets parent and to_be_deleted appropriately.
-*/
+/**
+ * Returns true if it finds a non-idiom dict_node in a file that matches
+ * the string s.
+ *
+ ** note: this now DOES include non-file words in its search.
+ *
+ * Also sets parent and to_be_deleted appropriately.
+ */
+static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s)
+{
 	int m;
 	if (dn == NULL) return FALSE;
 	m = dict_match(s, dn->string);
@@ -1129,7 +1135,9 @@ static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn, const char * s
 }
 
 static void set_parent_of_node(Dictionary dict,
-						Dict_node *p, Dict_node * del, Dict_node * newnode)
+                               Dict_node *p,
+                               Dict_node * del,
+                               Dict_node * newnode)
 {
 	if (p == NULL) {
 		dict->root = newnode;
@@ -1144,10 +1152,12 @@ static void set_parent_of_node(Dictionary dict,
 	}
 }
 
-int delete_dictionary_words(Dictionary dict, const char * s) {
-/* This deletes all the non-idiom words of the dictionary that match
-   the given string.  Returns TRUE if some deleted, FALSE otherwise.
-*/
+/**
+ * This deletes all the non-idiom words of the dictionary that match
+ * the given string.  Returns TRUE if some deleted, FALSE otherwise.
+ */
+int delete_dictionary_words(Dictionary dict, const char * s)
+{
 	Dict_node *pred, *pred_parent;
 	if (!find_one_non_idiom_node(NULL, dict->root, s)) return FALSE;
 	for(;;) {
@@ -1175,7 +1185,8 @@ int delete_dictionary_words(Dictionary dict, const char * s) {
 	}
 }
 
-static void free_Word_file(Word_file * wf) {
+static void free_Word_file(Word_file * wf)
+{
 	Word_file *wf1;
 
 	for (;wf != NULL; wf = wf1) {
@@ -1184,11 +1195,13 @@ static void free_Word_file(Word_file * wf) {
 	}
 }
 
-/* The following two functions free the Exp s and the
-   E_lists of the dictionary.  Not to be confused with
-   free_E_list in utilities.c
+/**
+ * The following two functions free the Exp s and the
+ * E_lists of the dictionary.  Not to be confused with
+ * free_E_list in utilities.c
  */
-static void free_Elist(E_list * l) {
+static void free_Elist(E_list * l)
+{
 	E_list * l1;
 
 	for (; l != NULL; l = l1) {
@@ -1197,7 +1210,8 @@ static void free_Elist(E_list * l) {
 	}
 }
 
-static void free_Exp_list(Exp * e) {
+static void free_Exp_list(Exp * e)
+{
 	Exp * e1;
 	for (; e != NULL; e = e1) {
 		e1 = e->next;
