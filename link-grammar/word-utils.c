@@ -75,8 +75,11 @@ Connector * init_connector(Connector *c) {
 	return c;
 }
 
-void free_X_nodes(X_node * x) {
-/* frees the list of X_nodes pointed to by x, and all of the expressions */
+/** 
+ * frees the list of X_nodes pointed to by x, and all of the expressions
+ */
+void free_X_nodes(X_node * x)
+{
 	X_node * y;
 	for (; x!= NULL; x = y) {
 		y = x->next;
@@ -86,22 +89,25 @@ void free_X_nodes(X_node * x) {
 }
 
 void free_E_list(E_list *);
-void free_Exp(Exp * e) {
+void free_Exp(Exp * e)
+{
 	if (e->type != CONNECTOR_type) {
 		free_E_list(e->u.l);
 	}
 	xfree((char *)e, sizeof(Exp));
 }
 
-void free_E_list(E_list * l) {
+void free_E_list(E_list * l)
+{
 	if (l == NULL) return;
 	free_E_list(l->next);
 	free_Exp(l->e);
 	xfree((char *)l, sizeof(E_list));
 }
 
-int size_of_expression(Exp * e) {
 /* Returns the number of connectors in the expression e */
+int size_of_expression(Exp * e)
+{
 	int size;
 	E_list * l;
 	if (e->type == CONNECTOR_type) return 1;
@@ -114,7 +120,8 @@ int size_of_expression(Exp * e) {
 
 /* Build a copy of the given expression (don't copy strings, of course) */
 static E_list * copy_E_list(E_list * l);
-Exp * copy_Exp(Exp * e) {
+Exp * copy_Exp(Exp * e)
+{
 	Exp * n;
 	if (e == NULL) return NULL;
 	n = (Exp *) xalloc(sizeof(Exp));
@@ -125,7 +132,8 @@ Exp * copy_Exp(Exp * e) {
 	return n;
 }
 
-static E_list * copy_E_list(E_list * l) {
+static E_list * copy_E_list(E_list * l)
+{
 	E_list * nl;
 	if (l == NULL) return NULL;
 	nl = (E_list *) xalloc(sizeof(E_list));
@@ -221,10 +229,13 @@ void exfree_link(Link l)
 }
 
 
-Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2) {
-/* Destructively catenates the two disjunct lists d1 followed by d2. */
-/* Doesn't change the contents of the disjuncts */
-/* Traverses the first list, but not the second */
+/**
+ * Destructively catenates the two disjunct lists d1 followed by d2.
+ * Doesn't change the contents of the disjuncts.
+ * Traverses the first list, but not the second.
+ */
+Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
+{
 	Disjunct * dis = d1;
 
 	if (d1 == NULL) return d2;
@@ -234,10 +245,13 @@ Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2) {
 	return d1;
 }
 
-X_node * catenate_X_nodes(X_node *d1, X_node *d2) {
-/* Destructively catenates the two disjunct lists d1 followed by d2. */
-/* Doesn't change the contents of the disjuncts */
-/* Traverses the first list, but not the second */
+/**
+ * Destructively catenates the two disjunct lists d1 followed by d2.
+ * Doesn't change the contents of the disjuncts.
+ * Traverses the first list, but not the second.
+ */
+X_node * catenate_X_nodes(X_node *d1, X_node *d2)
+{
 	X_node * dis = d1;
 
 	if (d1 == NULL) return d2;
@@ -247,8 +261,9 @@ X_node * catenate_X_nodes(X_node *d1, X_node *d2) {
 	return d1;
 }
 
-int sentence_contains(Sentence sent, const char * s) {
-/* Returns TRUE if one of the words in the sentence is s */
+/** Returns TRUE if one of the words in the sentence is s */
+int sentence_contains(Sentence sent, const char * s)
+{
 	int w;
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].string, s) == 0) return TRUE;
@@ -256,7 +271,8 @@ int sentence_contains(Sentence sent, const char * s) {
 	return FALSE;
 }
 
-void set_is_conjunction(Sentence sent) {
+void set_is_conjunction(Sentence sent)
+{
 	int w;
 	char * s;
 	for (w=0; w<sent->length; w++) {
@@ -266,10 +282,12 @@ void set_is_conjunction(Sentence sent) {
 	}
 }
 
-int sentence_contains_conjunction(Sentence sent) {
-/* Return true if the sentence contains a conjunction.  Assumes
-   is_conjunction[] has been initialized.
-*/
+/**
+ * Return true if the sentence contains a conjunction.  Assumes
+ * is_conjunction[] has been initialized.
+ */
+int sentence_contains_conjunction(Sentence sent)
+{
 	int w;
 	for (w=0; w<sent->length; w++) {
 		if (sent->is_conjunction[w]) return TRUE;
@@ -320,7 +338,8 @@ static void build_connector_set_from_expression(Connector_set * conset, Exp * e)
 	}
 }
 
-Connector_set * connector_set_create(Exp *e) {
+Connector_set * connector_set_create(Exp *e)
+{
 	int i;
 	Connector_set *conset;
 
@@ -333,7 +352,8 @@ Connector_set * connector_set_create(Exp *e) {
 	return conset;
 }
 
-void connector_set_delete(Connector_set * conset) {
+void connector_set_delete(Connector_set * conset)
+{
 	int i;
 	if (conset == NULL) return;
 	for (i=0; i<conset->table_size; i++) free_connectors(conset->hash_table[i]);
@@ -341,11 +361,13 @@ void connector_set_delete(Connector_set * conset) {
 	xfree(conset, sizeof(Connector_set));
 }
 
-int match_in_connector_set(Connector_set *conset, Connector * c, int d) {
-/* Returns TRUE the given connector is in this conset.  FALSE otherwise.
-   d='+' means this connector is on the right side of the disjunct.
-   d='-' means this connector is on the left side of the disjunct.
-*/
+/**
+ * Returns TRUE the given connector is in this conset.  FALSE otherwise.
+ * d='+' means this connector is on the right side of the disjunct.
+ * d='-' means this connector is on the left side of the disjunct.
+ */
+int match_in_connector_set(Connector_set *conset, Connector * c, int d)
+{
 	int h;
 	Connector * c1;
 	if (conset == NULL) return FALSE;
@@ -356,7 +378,8 @@ int match_in_connector_set(Connector_set *conset, Connector * c, int d) {
 	return FALSE;
 }
 
-Dict_node * list_whole_dictionary(Dict_node *root, Dict_node *dn) {
+Dict_node * list_whole_dictionary(Dict_node *root, Dict_node *dn)
+{
 	Dict_node *c, *d;
 	if (root == NULL) return dn;
 	c = (Dict_node *) xalloc(sizeof(Dict_node));
@@ -366,11 +389,13 @@ Dict_node * list_whole_dictionary(Dict_node *root, Dict_node *dn) {
 	return c;
 }
 
-static int easy_match(const char * s, const char * t) {
-
-	/* This is like the basic "match" function in count.c - the basic connector-matching
-	   function used in parsing - except it ignores "priority" (used to handle fat links) */
-
+/**
+ * This is like the basic "match" function in count.c - the basic
+ * connector-matching function used in parsing - except it ignores
+ * "priority" (used to handle fat links)
+ */
+static int easy_match(const char * s, const char * t)
+{
 	while(isupper((int)*s) || isupper((int)*t)) {
 		if (*s != *t) return FALSE;
 		s++;
@@ -385,7 +410,6 @@ static int easy_match(const char * s, const char * t) {
 		} else return FALSE;
 	}
 	return TRUE;
-
 }
 
 /**
@@ -399,7 +423,6 @@ static int easy_match(const char * s, const char * t) {
  * if a word has a connector in a normal dictionary. The connector
  * check uses a "smart-match", the same kind used by the parser.
  */
-
 int word_has_connector(Dict_node * dn, const char * cs, int direction)
 {
 	Connector * c2=NULL;
