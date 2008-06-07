@@ -48,10 +48,16 @@ static void test(void)
 /* message: The string is encoded in modified UTF-8, per JNI 1.5 spec. */
 void throwException(JNIEnv *env, const char* message)
 {
+	char *msg;
 	jclass exceptionClazz;
 	if ((*env)->ExceptionOccurred(env) != NULL) return;
+
+	
+	msg = (char *) malloc(50+strlen(message));
+	strcpy(msg, "link-parser:\n");
+	strcat(msg, message);
 	exceptionClazz = (*env)->FindClass(env, "java/lang/RuntimeException");
-	if ((*env)->ThrowNew(env, exceptionClazz, message) != 0)
+	if ((*env)->ThrowNew(env, exceptionClazz, msg) != 0)
 		(*env)->FatalError(env, "Cannot throw");
 }
 
@@ -78,7 +84,7 @@ static void init(JNIEnv *env)
 	 * this if/when more languages are supported.
 	 */
 	dict = dictionary_create_lang("en");
-	if (!dict) throwException(env, "link-grammar: dictionary not found");
+	if (!dict) throwException(env, lperrmsg);
 	else test();
 }
 
