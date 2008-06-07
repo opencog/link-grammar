@@ -90,7 +90,7 @@
 static int link_advance(Dictionary dict);
 static Dict_node * abridged_lookup_list(Dictionary dict, const char *s);
 
-static void dict_error(Dictionary dict, const char * s)
+static void dict_error2(Dictionary dict, const char * s, const char *s2)
 {
 	int i;
 	char tokens[1024], t[128];
@@ -100,10 +100,23 @@ static void dict_error(Dictionary dict, const char * s)
 	{
 		sprintf(t, "\"%s\" ", dict->token);
 		strcat(tokens, t);
-		(void) link_advance(dict);
+		link_advance(dict);
 	}
-	lperror(DICTPARSE, ". %s\n\t line %d, tokens = %s\n",
-			s, dict->line_number, tokens);
+	if (s2)
+	{
+		lperror(DICTPARSE, ". %s %s\n\t line %d, tokens = %s\n",
+				s, s2, dict->line_number, tokens);
+	}
+	else
+	{
+		lperror(DICTPARSE, ". %s\n\t line %d, tokens = %s\n",
+				s, dict->line_number, tokens);
+	}
+}
+
+static void dict_error(Dictionary dict, const char * s)
+{
+	dict_error2(dict, s, NULL);
 }
 
 static void warning(Dictionary dict, const char * s)
@@ -189,8 +202,19 @@ static int link_advance(Dictionary dict)
 				dict_error(dict, "White space inside of token");
 				return 0;
 			}
+
 			/* store UTF8 internally, always. */
-			i += wctomb_check(&dict->token[i], c);
+			nr = wctomb(&dict->token[i], c);
+			if (nr < 0) {
+#ifndef _WIN32
+				dict_error2(dict, "Unable to read UTF8 string in current locale",
+				         nl_langinfo(CODESET));
+#else
+				dict_error(dict, "Unable to read UTF8 string in current locale");
+#endif
+				return 0;
+			}
+			i += nr;
 		} else {
 			if (strchr(SPECIAL, c) != NULL) {
 				if (i == 0) {
@@ -220,7 +244,17 @@ static int link_advance(Dictionary dict)
 				quote_mode = TRUE;
 			} else {
 				/* store UTF8 internally, always. */
-				i += wctomb_check(&dict->token[i], c);
+				nr = wctomb_check(&dict->token[i], c);
+				if (nr < 0) {
+#ifndef _WIN32
+					dict_error2(dict, "Unable to read UTF8 string in current locale",
+					         nl_langinfo(CODESET));
+#else
+					dict_error(dict, "Unable to read UTF8 string in current locale");
+#endif
+					return 0;
+				}
+				i += nr;
 			}
 		}
 		c = get_character(dict, quote_mode);

@@ -44,7 +44,7 @@ static const char * msg_of_lperror(int lperr)
 	case NOTINDICT:
 		return "Sentence not in dictionary ";
 	case CHARSET:
-		return "Unable to process input string in current locale ";
+		return "Unable to process UTF8 input string in current locale ";
 	case BUILDEXPR:
 		return "Could not build sentence expressions ";
 	case INTERNALERROR:
