@@ -119,6 +119,14 @@ RUNNING the program:
    number of user-settable variables control what happens.  "!var" shows
    these variables and their current values.
 
+   The dictionaries contain some utf-8 punctuation. These may generate
+   errors for users in a non-utf-8 locale, such as the "C" locale.
+   The locale can be set, for example, by saying 
+
+       export LANG=en_US.UTF-8
+
+   at the shell prompt.
+
    The program can run in batch mode for testing the system on a large
    number of sentences.  The following command runs the parser on
    a file called 4.0.batch
@@ -127,8 +135,9 @@ RUNNING the program:
 
    The line "!batch" near the top of 4.0.batch turns on batch mode.  In
    this mode sentences labeled with an initial "*" should be rejected
-   and those not starting with a "*" should be accepted.  Any deviation
-   from this behavior is reported as an error.
+   and those not starting with a "*" should be accepted.  The current
+   batch file does report some errors; there are a collection of 
+   failing parses located at the end. Work is ongoing to fix these.
 
 USING the parser in your own applications:
 
