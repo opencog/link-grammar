@@ -235,12 +235,17 @@ Java_org_linkgrammar_LinkGrammar_setMaxCost(JNIEnv *env, jclass cls, jint maxCos
 }
 
 JNIEXPORT void JNICALL 
-Java_org_linkgrammar_LinkGrammar_setDictionariesPath
-  (JNIEnv *env, jclass cls, jstring path)
+Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
+                                              jclass cls, jstring path)
 {
-    const char *nativePath = (*env)->GetStringUTFChars(env,path, 0);
-    set_data_dir(nativePath);
-    (*env)->ReleaseStringUTFChars(env,path, nativePath);
+	const char *nativePath = (*env)->GetStringUTFChars(env,path, 0);
+
+	// Java passes null pointers as the string "null"
+	if (nativePath && strcmp(nativePath, "null")) 
+	{
+		set_data_dir(nativePath);
+	}
+	(*env)->ReleaseStringUTFChars(env,path, nativePath);
 }
 
 /*
