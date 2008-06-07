@@ -83,6 +83,7 @@ static inline int wctomb_check(char *s, wchar_t wc)
 #else
 		lperror(CHARSET, "(unknown character set)\n");
 #endif
+		fprintf(stderr, "Error: liblinkparser: %s", lperrmsg);
 		exit(1);
 	}
 	return nr;

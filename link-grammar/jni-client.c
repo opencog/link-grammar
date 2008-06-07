@@ -7,10 +7,10 @@
 
 #include <jni.h>
 #include <stdio.h>
-#include <utilities.h>
 
-#include <link-grammar/api.h>
+#include "api.h"
 #include "jni-client.h"
+#include "utilities.h"
 
 static Dictionary    dict;
 static Parse_Options opts, panic_parse_opts;
