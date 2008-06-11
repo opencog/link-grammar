@@ -300,7 +300,6 @@ TODO:
       resources.c
       string-set.c
       tokenize.c
-      utilities.c - has global "verbosity" and space maanagement globals.
       word-file.c
       word-utils.c
 
@@ -311,7 +310,8 @@ TODO:
       error.c
       extract-links.c
       fast-match.c
-      jni-client.c
+      jni-client.c - uses per-thread struct, but needs to be attached
+                     to JNIEnv somehow.
       linkset.c
       malloc-dbg.c - not thread safe, not normally used;
                      only for debugging.
@@ -320,3 +320,4 @@ TODO:
                  on.
       print.c
       pp_lexer.c -- autogened code, original lex sources lost.
+      utilities.c - has global "verbosity" and space management globals.
