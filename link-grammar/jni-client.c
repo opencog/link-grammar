@@ -25,8 +25,13 @@ typedef struct
 #endif
 } per_thread_data;
 
+/* XXX FIXME
+ * The per_thread_data struct should ideally be somehow 
+ * fetched from JNIEnv, or as an opaque pointer in the class.
+ * Not clear how to do this .. perhaps use NewDirectByteBuffer()
+ * and the java.nio.ByteBuffer class ?
+ */
 static per_thread_data * global_ptd = NULL;
-
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
