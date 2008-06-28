@@ -28,6 +28,9 @@ public class LinkGrammar
         System.loadLibrary("link-grammar-java");
     }
 
+    // Get the version string for the parser.
+    public static native String getVersion();
+
     // C functions for changing linkparser options
     public static native void setMaxParseSeconds(int maxParseSeconds);
 

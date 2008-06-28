@@ -261,6 +261,19 @@ static void finish(per_thread_data *ptd)
 /* =========================================================================== */
 /* Java JNI wrappers */
 
+/*
+ * Class:		 LinkGrammar
+ * Method:		getVersion
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL
+Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *env, jclass cls)
+{
+	const char *s = "link-grammar-" LINK_VERSION_STRING;
+	jstring j = (*env)->NewStringUTF(env, s);
+	return j;
+}
+
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
 {

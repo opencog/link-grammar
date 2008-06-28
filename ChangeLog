@@ -6,6 +6,7 @@ Version 4.3.6 includes the following changes:
  * Fix crash on printing constituent tree of certain long sentences.
  * Avoid recursive error reporting for UTF8 dictionary errors.
  * Clarify error logging and error printing.
+ * Add java getVersion() to return link-grammar version string.
 
 Version 4.3.5 includes the following changes:
  * Added ant build file to create the link-grammar jar file.
