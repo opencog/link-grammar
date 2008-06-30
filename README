@@ -287,6 +287,7 @@ TODO:
       build-disjuncts.c
       command-line.c
       constituents.c
+      fast-match.c
       idiom.c
       linkparser.c
       massage.c
@@ -309,7 +310,6 @@ TODO:
       count.c
       error.c
       extract-links.c
-      fast-match.c
       jni-client.c - uses per-thread struct, but needs to be attached
                      to JNIEnv somehow.
       linkset.c

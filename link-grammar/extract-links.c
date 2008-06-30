@@ -358,7 +358,7 @@ static Parse_set * parse_set(Sentence sent,
 				}
 			}
 		}
-		put_match_list(m1);
+		put_match_list(sent, m1);
 	}
 	xt->set->current = xt->set->first;
 	return xt->set;

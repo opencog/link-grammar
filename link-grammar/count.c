@@ -403,7 +403,7 @@ static s64 count(Sentence sent, int lw, int rw,
 			}
 		}
 
-		put_match_list(m1);
+		put_match_list(sent, m1);
 	}
 	t->count = total;
 	return total;
@@ -539,7 +539,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 				break;
 			}
 		}
-		put_match_list(m1);
+		put_match_list(sent, m1);
 		if (found != 0) break;
 	}
 	table_store(lw, rw, le, re, 0, found);
@@ -641,11 +641,12 @@ static void mark_region(Sentence sent,
 				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
 			}
 		}
-		put_match_list(m1);
+		put_match_list(sent, m1);
 	}
 }
 
-void delete_unmarked_disjuncts(Sentence sent){
+void delete_unmarked_disjuncts(Sentence sent)
+{
 	int w;
 	Disjunct *d_head, *d, *dx;
 

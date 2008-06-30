@@ -36,47 +36,57 @@ static int right_disjunct_list_length(Disjunct * d)
 	return i;
 }
 
-struct match_context_s {
+struct match_context_s
+{
 	int match_cost;
-};
+	int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
+	int r_table_size[MAX_SENTENCE];
 
-static int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
-static int r_table_size[MAX_SENTENCE];
+	/* the beginnings of the hash tables */
+	Match_node ** l_table[MAX_SENTENCE];
+	Match_node ** r_table[MAX_SENTENCE];
 
-static Match_node ** l_table[MAX_SENTENCE];
-				 /* the beginnings of the hash tables */
-static Match_node ** r_table[MAX_SENTENCE];
-
-static Match_node * mn_free_list = NULL;
    /* I'll pedantically maintain my own list of these cells */
+	Match_node * mn_free_list;
+};
 
 
 /**
  * Return a match node to be used by the caller
  */
-static Match_node * get_match_node(void)
+static Match_node * get_match_node(match_context_t *ctxt)
 {
 	Match_node * m;
-	if (mn_free_list != NULL) {
-		m = mn_free_list;
-		mn_free_list = m->next;
-	} else {
+	if (ctxt->mn_free_list != NULL)
+	{
+		m = ctxt->mn_free_list;
+		ctxt->mn_free_list = m->next;
+	}
+	else
+	{
 		m = (Match_node *) xalloc(sizeof(Match_node));
 	}
 	return m;
 }
 
-void put_match_list(Match_node *m) {
-/* put these nodes back onto my free list */
+/**
+ * Put these nodes back onto my free list
+ */
+void put_match_list(Sentence sent, Match_node *m)
+{
 	Match_node * xm;
-	for (; m != NULL; m = xm) {
+	match_context_t *ctxt = sent->match_ctxt;
+
+	for (; m != NULL; m = xm)
+	{
 		xm = m->next;
-		m->next = mn_free_list;
-		mn_free_list = m;
+		m->next = ctxt->mn_free_list;
+		ctxt->mn_free_list = m;
 	}
 }
 
-static void free_match_list(Match_node * t) {
+static void free_match_list(Match_node * t)
+{
 	Match_node *xt;
 	for (; t!=NULL; t=xt) {
 		xt = t->next;
@@ -94,29 +104,34 @@ void free_fast_matcher(Sentence sent)
 	match_context_t *ctxt = sent->match_ctxt;
 
 	if (verbosity > 1) printf("%d Match cost\n", ctxt->match_cost);
-	for (w=0; w<sent->length; w++) {
-		for (i=0; i<l_table_size[w]; i++) {
-			free_match_list(l_table[w][i]);
+	for (w = 0; w < sent->length; w++)
+	{
+		for (i = 0; i < ctxt->l_table_size[w]; i++)
+		{
+			free_match_list(ctxt->l_table[w][i]);
 		}
-		xfree((char *)l_table[w], l_table_size[w] * sizeof (Match_node *));
-		for (i=0; i<r_table_size[w]; i++) {
-			free_match_list(r_table[w][i]);
+		xfree((char *)ctxt->l_table[w], ctxt->l_table_size[w] * sizeof (Match_node *));
+		for (i = 0; i < ctxt->r_table_size[w]; i++)
+		{
+			free_match_list(ctxt->r_table[w][i]);
 		}
-		xfree((char *)r_table[w], r_table_size[w] * sizeof (Match_node *));
+		xfree((char *)ctxt->r_table[w], ctxt->r_table_size[w] * sizeof (Match_node *));
 	}
-	free_match_list(mn_free_list);
-	mn_free_list = NULL;
+	free_match_list(ctxt->mn_free_list);
+	ctxt->mn_free_list = NULL;
 
 	free(ctxt);
 	sent->match_ctxt = NULL;
 }
 
-static int fast_match_hash(Connector * c) {
-/* This hash function only looks at the leading upper case letters of
-   the connector string, and the label fields.  This ensures that if two
-   strings match (formally), then they must hash to the same place.
-   The answer must be masked to the appropriate table size.
-*/
+/**
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ * The answer must be masked to the appropriate table size.
+ */
+static int fast_match_hash(Connector * c)
+{
 	const char *s;
 	int i;
 	i = randtable[c->label & (RTSIZE-1)];
@@ -128,12 +143,14 @@ static int fast_match_hash(Connector * c) {
 	return i;
 }
 
-static Match_node * add_to_right_table_list(Match_node * m, Match_node * l) {
-/* Adds the match node m to the sorted list of match nodes l.
-   The parameter dir determines the order of the sorting to be used.
-   Makes the list sorted from smallest to largest.
-*/
-	if (l==NULL) return m;
+/**
+ * Adds the match node m to the sorted list of match nodes l.
+ * The parameter dir determines the order of the sorting to be used.
+ * Makes the list sorted from smallest to largest.
+ */
+static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
+{
+	if (l == NULL) return m;
 	if ((m->d->right->word) <= (l->d->right->word)) {
 		m->next = l;
 		return m;
@@ -143,11 +160,13 @@ static Match_node * add_to_right_table_list(Match_node * m, Match_node * l) {
 	}
 }
 
-static Match_node * add_to_left_table_list(Match_node * m, Match_node * l) {
-/* Adds the match node m to the sorted list of match nodes l.
-   The parameter dir determines the order of the sorting to be used.
-   Makes the list sorted from largest to smallest
-*/
+/**
+ * Adds the match node m to the sorted list of match nodes l.
+ * The parameter dir determines the order of the sorting to be used.
+ * Makes the list sorted from largest to smallest
+ */
+static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
+{
 	if (l==NULL) return m;
 	if ((m->d->left->word) >= (l->d->left->word)) {
 		m->next = l;
@@ -158,13 +177,15 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l) {
 	}
 }
 
+/**
+ * The disjunct d (whose left or right pointer points to c) is put
+ *  into the appropriate hash table
+ * dir =  1, we're putting this into a right table.
+ * dir = -1, we're putting this into a left table.
+ */
 static void put_into_match_table(int size, Match_node ** t,
-								 Disjunct * d, Connector * c, int dir ) {
-/* The disjunct d (whose left or right pointer points to c) is put
-   into the appropriate hash table
-   dir =  1, we're putting this into a right table.
-   dir = -1, we're putting this into a left table.
-*/
+								 Disjunct * d, Connector * c, int dir )
+{
 	int h;
 	Match_node * m;
 	h = fast_match_hash(c) & (size-1);
@@ -189,29 +210,34 @@ void init_fast_matcher(Sentence sent)
 	sent->match_ctxt = ctxt;
 
 	ctxt->match_cost = 0;
+	ctxt->mn_free_list = NULL;
 
 	for (w=0; w<sent->length; w++)
 	{
 		len = left_disjunct_list_length(sent->word[w].d);
 		size = next_power_of_two_up(len);
-		l_table_size[w] = size;
-		t = l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
-		for (i=0; i<size; i++) t[i] = NULL;
+		ctxt->l_table_size[w] = size;
+		t = ctxt->l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
+		for (i = 0; i < size; i++) t[i] = NULL;
 
-		for (d=sent->word[w].d; d!=NULL; d=d->next) {
-			if (d->left != NULL) {
+		for (d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			if (d->left != NULL)
+			{
 				put_into_match_table(size, t, d, d->left, -1);
 			}
 		}
 
 		len = right_disjunct_list_length(sent->word[w].d);
 		size = next_power_of_two_up(len);
-		r_table_size[w] = size;
-		t = r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
-		for (i=0; i<size; i++) t[i] = NULL;
+		ctxt->r_table_size[w] = size;
+		t = ctxt->r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
+		for (i = 0; i < size; i++) t[i] = NULL;
 
-		for (d=sent->word[w].d; d!=NULL; d=d->next) {
-			if (d->right != NULL) {
+		for (d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			if (d->right != NULL)
+			{
 				put_into_match_table(size, t, d, d->right, 1);
 			}
 		}
@@ -235,21 +261,22 @@ form_match_list(Sentence sent, int w,
 
 	match_context_t *ctxt = sent->match_ctxt;
 
-	if (lc!=NULL) {
-		ml = l_table[w][fast_match_hash(lc) & (l_table_size[w]-1)];
+	if (lc != NULL) {
+		ml = ctxt->l_table[w][fast_match_hash(lc) & (ctxt->l_table_size[w]-1)];
 	} else {
 		ml = NULL;
 	}
-	if (rc!=NULL) {
-		mr = r_table[w][fast_match_hash(rc) & (r_table_size[w]-1)];
+	if (rc != NULL) {
+		mr = ctxt->r_table[w][fast_match_hash(rc) & (ctxt->r_table_size[w]-1)];
 	} else {
 		mr = NULL;
 	}
 
 	front = NULL;
-	for (mx = ml; mx!=NULL; mx=mx->next) {
+	for (mx = ml; mx != NULL; mx = mx->next)
+	{
 		if (mx->d->left->word < lw) break;
-		my = get_match_node();
+		my = get_match_node(ctxt);
 		my->d = mx->d;
 		my->next = front;
 		front = my;
@@ -257,9 +284,10 @@ form_match_list(Sentence sent, int w,
 	ml = front;   /* ml is now the list of things that could match the left */
 
 	front = NULL;
-	for (mx = mr; mx!=NULL; mx=mx->next) {
+	for (mx = mr; mx != NULL; mx = mx->next)
+	{
 		if (mx->d->right->word > rw) break;
-		my = get_match_node();
+		my = get_match_node(ctxt);
 		my->d = mx->d;
 		my->next = front;
 		front = my;
@@ -270,7 +298,8 @@ form_match_list(Sentence sent, int w,
 
 	free_later = NULL;
 	front = NULL;
-	for(mx = mr; mx != NULL; mx=mz) {
+	for (mx = mr; mx != NULL; mx = mz)
+	{
 		/* see if mx in first list, put it in if its not */
 		mz = mx->next;
 		ctxt->match_cost++;
@@ -288,7 +317,7 @@ form_match_list(Sentence sent, int w,
 		}
 	}
 	mr = front;  /* mr is now the abbreviated right list */
-	put_match_list(free_later);
+	put_match_list(sent, free_later);
 
 	/* now catenate the two lists */
 	if (mr == NULL) return ml;
