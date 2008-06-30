@@ -718,7 +718,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 	for (i=0; i<pi->N_links; i++)
 	  {
 		if (sublinkage->link[i]->l == -1) continue;
-		if (!x_match(sublinkage->link[i]->lc, sublinkage->link[i]->rc))
+		if (!x_match(sent, sublinkage->link[i]->lc, sublinkage->link[i]->rc))
 		  replace_link_name(sublinkage->link[i], pi->link_array[i].name);
 		else
 		  {

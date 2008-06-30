@@ -202,7 +202,8 @@ void install_fat_connectors(Sentence sent)
 }
 
 static void 
-set_connector_list_length_limit(Connector *c,
+set_connector_list_length_limit(Sentence sent,
+                                Connector *c,
                                 Connector_set *conset,
                                 int short_len,
                                 Parse_Options opts)
@@ -211,7 +212,7 @@ set_connector_list_length_limit(Connector *c,
 		if (parse_options_get_all_short_connectors(opts)) {
 			c->length_limit = short_len;
 		}
-		else if (conset == NULL || match_in_connector_set(conset, c, '+')) {
+		else if (conset == NULL || match_in_connector_set(sent, conset, c, '+')) {
 			c->length_limit = UNLIMITED_LEN;
 		} else {
 			c->length_limit = short_len;
@@ -230,8 +231,8 @@ static void set_connector_length_limits(Sentence sent, Parse_Options opts)
 
 	for (i=0; i<sent->length; i++) {
 		for (d = sent->word[i].d; d != NULL; d = d->next) {
-			set_connector_list_length_limit(d->left, sent->dict->unlimited_connector_set, len, opts);
-			set_connector_list_length_limit(d->right, sent->dict->unlimited_connector_set, len, opts);
+			set_connector_list_length_limit(sent, d->left, sent->dict->unlimited_connector_set, len, opts);
+			set_connector_list_length_limit(sent, d->right, sent->dict->unlimited_connector_set, len, opts);
 		}
 	}
 }

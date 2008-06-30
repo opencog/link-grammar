@@ -283,6 +283,7 @@ TODO:
   Thread safety: link-grammar is slowly being converted to be 
     thead-safe. The work is about half-done. So far, the following 
     files are thread-safe, unless otherwise noted:
+
       and.c
       api.c
       build-disjuncts.c

@@ -398,10 +398,10 @@ static int is_appropriate(Sentence sent, Disjunct * d)
 	if (sent->dict->andable_connector_set == NULL) return TRUE;
 	/* if no set, then everything is considered andable */
 	for (c = d->right; c!=NULL; c=c->next) {
-		if (!match_in_connector_set(sent->dict->andable_connector_set, c, '+')) return FALSE;
+		if (!match_in_connector_set(sent, sent->dict->andable_connector_set, c, '+')) return FALSE;
 	}
 	for (c = d->left; c!=NULL; c=c->next) {
-		if (!match_in_connector_set(sent->dict->andable_connector_set, c, '-')) return FALSE;
+		if (!match_in_connector_set(sent, sent->dict->andable_connector_set, c, '-')) return FALSE;
 	}
 	return TRUE;
 }
@@ -1481,17 +1481,17 @@ int is_canonical_linkage(Sentence sent)
 						dummy_connector.string =
 						  find_subdisjunct(sent, dis, upcon->label)->string;
 					}
-					if (!x_match(&dummy_connector, in->c)) break;  /* I hope using x_match here is right */
+					if (!x_match(sent, &dummy_connector, in->c)) break;  /* I hope using x_match here is right */
 				} else if (place > 0) {
 					for (c=dis->right; place > 1; place--) {
 						c = c->next;
 					}
-					if (!x_match(c, in->c)) break;	/* Ditto above comment  --DS 07/97*/
+					if (!x_match(sent, c, in->c)) break;	/* Ditto above comment  --DS 07/97*/
 				} else {
 					for (c=dis->left; place < -1; place++) {
 						c = c->next;
 					}
-					if (!x_match(c, in->c)) break;  /* Ditto Ditto */
+					if (!x_match(sent, c, in->c)) break;  /* Ditto Ditto */
 				}
 			}
 

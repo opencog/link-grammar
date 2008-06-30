@@ -591,6 +591,7 @@ void sentence_delete(Sentence sent)
 	post_process_close_sentence(sent->dict->postprocessor);
 	free_deletable(sent);
 	free_effective_dist(sent);
+	free_count(sent);
 	xfree(sent->is_conjunction, sizeof(char)*sent->length);
 	xfree((char *) sent, sizeof(struct Sentence_s));
 }
@@ -819,6 +820,8 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		sent->num_valid_linkages = 0;
 		return 0;
 	}
+
+	init_count(sent);
 
 	expression_prune(sent);
 	print_time(opts, "Finished expression pruning");

@@ -77,6 +77,7 @@ struct prune_context_s
 						   of c->word fields in a pass */
 
 	power_table *pt;
+	Sentence sent;
 };
 
 /*
@@ -1352,7 +1353,7 @@ static int possible_connection(prune_context *pc,
 				return FALSE;
 			}
 		}
-		return match(lc, rc, lword, rword);
+		return match(pc->sent, lc, rc, lword, rword);
 	} else {
 		if (lword == rword-1) {
 			if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
@@ -1508,6 +1509,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
 	pc->deletable = sent->deletable;
 	pc->effective_dist = sent->effective_dist;
+	pc->sent = sent;
 
 	count_set_effective_distance(sent);
 

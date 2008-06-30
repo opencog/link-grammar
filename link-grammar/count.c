@@ -15,22 +15,28 @@
 
 /* This file contains the exhaustive search algorithm. */
 
-static char ** deletable;
-static char ** effective_dist; 
+struct count_context_s {
+	char ** deletable;
+	char ** effective_dist; 
+};
+
 static Word *  local_sent;
 static int	 null_block, islands_ok, null_links;
 static Resources current_resources;
 
-int x_match(Connector *a, Connector *b) {
-	return match(a, b, 0, 0);
+int x_match(Sentence sent, Connector *a, Connector *b)
+{
+	return match(sent, a, b, 0, 0);
 }
 
-void count_set_effective_distance(Sentence sent) {
-	effective_dist = sent->effective_dist;
+void count_set_effective_distance(Sentence sent)
+{
+	sent->count_ctxt->effective_dist = sent->effective_dist;
 }
 
-void count_unset_effective_distance(Sentence sent) {
-	effective_dist = NULL;
+void count_unset_effective_distance(Sentence sent)
+{
+	sent->count_ctxt->effective_dist = NULL;
 }
 
 /*
@@ -46,18 +52,24 @@ void count_unset_effective_distance(Sentence sent) {
  * is different depending on which of the two priority cases is being
  * considered.  See the comments below. 
  */
-int match(Connector *a, Connector *b, int aw, int bw)
+int match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
 	int x, y, dist;
+	count_context_t *ctxt;
+
 	if (a->label != b->label) return FALSE;
+
+	ctxt = sent->count_ctxt;
+
 	x = a->priority;
 	y = b->priority;
 
 	s = a->string;
 	t = b->string;
 
-	while(isupper((int)*s) || isupper((int)*t)) {
+	while(isupper((int)*s) || isupper((int)*t))
+	{
 		if (*s != *t) return FALSE;
 		s++;
 		t++;
@@ -67,7 +79,7 @@ int match(Connector *a, Connector *b, int aw, int bw)
 		dist = 0;
 	} else {
 		assert(aw < bw, "match() did not receive params in the natural order.");
-		dist = effective_dist[aw][bw];
+		dist = ctxt->effective_dist[aw][bw];
 	}
 	/*	printf("M: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
 		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
@@ -163,7 +175,8 @@ static int hash(int lw, int rw, Connector *le, Connector *re, int cost) {
 	return i & (table_size-1);
 }
 
-void free_table(Sentence sent) {
+void free_table(Sentence sent)
+{
 	int i;
 	Table_connector *t, *x;
 
@@ -343,8 +356,8 @@ static s64 count(Sentence sent, int lw, int rw,
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-				Lmatch = (le != NULL) && (d->left != NULL) && match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) && match(d->right, re, w, rw);
+				Lmatch = (le != NULL) && (d->left != NULL) && match(sent, le, d->left, lw, w);
+				Rmatch = (d->right != NULL) && (re != NULL) && match(sent, d->right, re, w, rw);
 
 				rightcount = leftcount = 0;
 				if (Lmatch) {
@@ -417,11 +430,12 @@ static s64 count(Sentence sent, int lw, int rw,
 s64 parse(Sentence sent, int cost, Parse_Options opts)
 {
 	s64 total;
+	count_context_t *ctxt = sent->count_ctxt;
 
 	count_set_effective_distance(sent);
 	current_resources = opts->resources;
 	local_sent = sent->word;
-	deletable = sent->deletable;
+	ctxt->deletable = sent->deletable;
 	null_block = opts->null_block;
 	islands_ok = opts->islands_ok;
 
@@ -470,12 +484,13 @@ s64 parse(Sentence sent, int cost, Parse_Options opts)
    2  This region can be completed, and it's been marked.
    */
 
-static int x_prune_match(Connector *le, Connector *re, int lw, int rw)
+static int x_prune_match(count_context_t *ctxt,
+                         Connector *le, Connector *re, int lw, int rw)
 {
 	int dist;
 
 	assert(lw < rw, "prune_match() did not receive params in the natural order.");
-	dist = effective_dist[lw][rw];
+	dist = ctxt->effective_dist[lw][rw];
 	return prune_match(dist, le, re);
 }
 
@@ -492,10 +507,12 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 	int w;
 	Match_node * m, *m1;
 
+	count_context_t *ctxt = sent->count_ctxt;
+
 	i = table_lookup(lw, rw, le, re, 0);
 	if (i >= 0) return i;
 
-	if ((le == NULL) && (re == NULL) && deletable[lw][rw]) {
+	if ((le == NULL) && (re == NULL) && ctxt->deletable[lw][rw]) {
 		table_store(lw, rw, le, re, 0, 1);
 		return 1;
 	}
@@ -520,7 +537,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 			/* mark_cost++;*/
 			/* in the following expressions we use the fact that 0=FALSE. Could eliminate
 			   by always saying "region_valid(...) != 0"  */
-			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(le, d->left, lw, w)) &&
+			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(ctxt, le, d->left, lw, w)) &&
 						  ((region_valid(sent, lw, w, le->next, d->left->next)) ||
 						   ((le->multi) && region_valid(sent, lw, w, le, d->left->next)) ||
 						   ((d->left->multi) && region_valid(sent, lw, w, le->next, d->left)) ||
@@ -529,7 +546,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 				found = 1;
 				break;
 			}
-			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(d->right, re, w, rw)) &&
+			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(ctxt, d->right, re, w, rw)) &&
 						   ((region_valid(sent, w, rw, d->right->next,re->next))	||
 							((d->right->multi) && region_valid(sent, w,rw,d->right,re->next))  ||
 							((re->multi) && region_valid(sent, w, rw, d->right->next, re))  ||
@@ -562,6 +579,7 @@ static void mark_region(Sentence sent,
 	int start_word, end_word;
 	int w;
 	Match_node * m, *m1;
+	count_context_t *ctxt = sent->count_ctxt;
 
 	i = region_valid(sent, lw, rw, le, re);
 	if ((i==0) || (i==2)) return;
@@ -596,12 +614,12 @@ static void mark_region(Sentence sent,
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
 			/* mark_cost++;*/
-			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(le, d->left, lw, w)) &&
+			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(ctxt, le, d->left, lw, w)) &&
 						  ((region_valid(sent, lw, w, le->next, d->left->next)) ||
 						   ((le->multi) && region_valid(sent, lw, w, le, d->left->next)) ||
 						   ((d->left->multi) && region_valid(sent, lw, w, le->next, d->left)) ||
 						   ((le->multi && d->left->multi) && region_valid(sent, lw, w, le, d->left))));
-			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(d->right, re, w, rw)) &&
+			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(ctxt, d->right, re, w, rw)) &&
 						   ((region_valid(sent, w, rw, d->right->next,re->next)) ||
 							((d->right->multi) && region_valid(sent, w,rw,d->right,re->next))  ||
 							((re->multi) && region_valid(sent, w, rw, d->right->next, re)) ||
@@ -680,9 +698,10 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 {
 	Disjunct * d;
 	int w;
+	count_context_t *ctxt = sent->count_ctxt;
 
 	current_resources = opts->resources;
-	deletable = sent->deletable;
+	ctxt->deletable = sent->deletable;
 	count_set_effective_distance(sent);
 
 	/* We begin by unmarking all disjuncts.  This would not be necessary if
@@ -716,7 +735,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 		for (w=0; w<sent->length; w++) {
 		  /* consider removing the words [0,w-1] from the beginning
 			 of the sentence */
-			if (deletable[-1][w]) {
+			if (ctxt->deletable[-1][w]) {
 				for (d = sent->word[w].d; d != NULL; d = d->next) {
 					if ((d->left == NULL) && region_valid(sent, w, sent->length, d->right, NULL)) {
 						mark_region(sent, w, sent->length, d->right, NULL);
@@ -734,6 +753,18 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 
 	local_sent = NULL;
 	current_resources = NULL;
-	deletable = NULL;
+	ctxt->deletable = NULL;
 	count_unset_effective_distance(sent);
+}
+
+void init_count(Sentence sent)
+{
+	sent->count_ctxt = (count_context_t *) malloc (sizeof(count_context_t));
+	bzero(sent->count_ctxt, sizeof(count_context_t));
+}
+
+void free_count(Sentence sent)
+{
+	free(sent->count_ctxt);
+	sent->count_ctxt = NULL;
 }

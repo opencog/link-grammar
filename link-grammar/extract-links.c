@@ -299,8 +299,8 @@ static Parse_set * parse_set(Sentence sent,
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
 
-				Lmatch = (le != NULL) && (d->left != NULL) && match(le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) && match(d->right, re, w, rw);
+				Lmatch = (le != NULL) && (d->left != NULL) && match(sent, le, d->left, lw, w);
+				Rmatch = (d->right != NULL) && (re != NULL) && match(sent, d->right, re, w, rw);
 				for (i=0; i<4; i++) {ls[i] = rs[i] = NULL;}
 				if (Lmatch) {
 					ls[0] = parse_set(sent, ld, d, lw, w, le->next, d->left->next, lcost, pi);

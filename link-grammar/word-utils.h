@@ -51,7 +51,7 @@ void string_delete(char * p);
 /* Connector_set routines */
 Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
-int match_in_connector_set(Connector_set *conset, Connector * c, int d);
+int match_in_connector_set(Sentence, Connector_set *conset, Connector * c, int d);
 
 Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
 int word_has_connector(Dict_node *, const char *, int);
