@@ -1021,14 +1021,14 @@ He zeroed out the counter.
 His works disclose a mastery of composition.
 I heard a bark in the distance.
 
-% prepositional difficulties
+% Prepositional difficulties
 It fell when the clock chimed.
 
-% inverted subject-object
+% Inverted subject-object
 The treasure lay below the ground.
 Below the ground lay the treasure.
 
-% more failures: "He turned left." parses, but not correctly.
+% More failures: "He turned left." parses, but not correctly.
 % "He turned around", "he jumped around", "he jumped up" use "K"
 % as a particle link, and that seems wrong (??)
 % "He dodged sideways." uses MVp
@@ -1071,6 +1071,7 @@ By the way, how was it?
 Since we are talking about it, how was it?
 Now that you mention it, what happened?
 While we're on the topic, was it good?
+Kenny sure is a bastard.
 
 % Registers -- Newspaper headline declarations
 % Missing definite articles (with definite articles, these would parse)
@@ -1100,3 +1101,6 @@ Who invented sliced bread; when did they do it?
 % "to marry" is a verb, this breaks identification of "Marry" as entity:
 Flumblqwerty's shoes are red.
 Marry's shoes are red.
+
+% Overly long sentences leading to overflow
+I think one of the chief differences between the main Filipino language, which is Tagalog, and English, when I hear Tagalog speakers speaking English, is that they tend to place the stress on the wrong syllable of a word or they stress the wrong word in the sentence or in the question.
