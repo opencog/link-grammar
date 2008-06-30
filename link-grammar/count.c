@@ -250,7 +250,8 @@ static s64 pseudocount(int lw, int rw, Connector *le, Connector *re, int cost)
 	if (count == 0) return 0; else return 1;
 }
 
-static s64 count(int lw, int rw, Connector *le, Connector *re, int cost)
+static s64 count(Sentence sent, int lw, int rw,
+                 Connector *le, Connector *re, int cost)
 {
 	Disjunct * d;
 	s64 total, pseudototal;
@@ -308,10 +309,10 @@ static s64 count(int lw, int rw, Connector *le, Connector *re, int cost)
 			w = lw+1;
 			for (d = local_sent[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) {
-					total += count(w, rw, d->right, NULL, cost-1);
+					total += count(sent, w, rw, d->right, NULL, cost-1);
 				}
 			}
-			total += count(w, rw, NULL, NULL, cost-1);
+			total += count(sent, w, rw, NULL, NULL, cost-1);
 			t->count = total;
 		}
 		return t->count;
@@ -332,7 +333,7 @@ static s64 count(int lw, int rw, Connector *le, Connector *re, int cost)
 	total = 0;
 
 	for (w=start_word; w < end_word+1; w++) {
-		m1 = m = form_match_list(w, le, lw, re, rw);
+		m1 = m = form_match_list(sent, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
 			for (lcost = 0; lcost <= cost; lcost++) {
@@ -375,28 +376,28 @@ static s64 count(int lw, int rw, Connector *le, Connector *re, int cost)
 				if (pseudototal != 0) {
 					rightcount = leftcount = 0;
 					if (Lmatch) {
-						leftcount = count(lw, w, le->next, d->left->next, lcost);
-						if (le->multi) leftcount += count(lw, w, le, d->left->next, lcost);
-						if (d->left->multi) leftcount += count(lw, w, le->next, d->left, lcost);
-						if (le->multi && d->left->multi) leftcount += count(lw, w, le, d->left, lcost);
+						leftcount = count(sent, lw, w, le->next, d->left->next, lcost);
+						if (le->multi) leftcount += count(sent, lw, w, le, d->left->next, lcost);
+						if (d->left->multi) leftcount += count(sent, lw, w, le->next, d->left, lcost);
+						if (le->multi && d->left->multi) leftcount += count(sent, lw, w, le, d->left, lcost);
 					}
 
 					if (Rmatch) {
-						rightcount = count(w, rw, d->right->next, re->next, rcost);
-						if (d->right->multi) rightcount += count(w,rw,d->right,re->next, rcost);
-						if (re->multi) rightcount += count(w, rw, d->right->next, re, rcost);
-						if (d->right->multi && re->multi) rightcount += count(w, rw, d->right, re, rcost);
+						rightcount = count(sent, w, rw, d->right->next, re->next, rcost);
+						if (d->right->multi) rightcount += count(sent, w,rw,d->right,re->next, rcost);
+						if (re->multi) rightcount += count(sent, w, rw, d->right->next, re, rcost);
+						if (d->right->multi && re->multi) rightcount += count(sent, w, rw, d->right, re, rcost);
 					}
 
 					total += leftcount*rightcount;  /* total number where links are used on both sides */
 
 					if (leftcount > 0) {
 						/* evaluate using the left match, but not the right */
-						total += leftcount * count(w, rw, d->right, re, rcost);
+						total += leftcount * count(sent, w, rw, d->right, re, rcost);
 					}
 					if ((le == NULL) && (rightcount > 0)) {
 						/* evaluate using the right match, but not the left */
-						total += rightcount * count(lw, w, le, d->left, lcost);
+						total += rightcount * count(sent, lw, w, le, d->left, lcost);
 					}
 				}
 			}
@@ -424,7 +425,7 @@ s64 parse(Sentence sent, int cost, Parse_Options opts)
 	null_block = opts->null_block;
 	islands_ok = opts->islands_ok;
 
-	total = count(-1, sent->length, NULL, NULL, cost+1);
+	total = count(sent, -1, sent->length, NULL, NULL, cost+1);
 	if (verbosity > 1) {
 		printf("Total count with %d null links:   %lld\n", cost, total);
 	}
@@ -483,7 +484,7 @@ static int x_prune_match(Connector *le, Connector *re, int lw, int rw)
  * links.  Returns 1 if it can, and it's not been marked, and returns
  * 2 if it can and it has been marked.
  */
-static int region_valid(int lw, int rw, Connector *le, Connector *re)
+static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector *re)
 {
 	Disjunct * d;
 	int left_valid, right_valid, found;
@@ -513,27 +514,27 @@ static int region_valid(int lw, int rw, Connector *le, Connector *re)
 	found = 0;
 
 	for (w=start_word; w < end_word+1; w++) {
-		m1 = m = form_match_list(w, le, lw, re, rw);
+		m1 = m = form_match_list(sent, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
 			/* mark_cost++;*/
 			/* in the following expressions we use the fact that 0=FALSE. Could eliminate
 			   by always saying "region_valid(...) != 0"  */
 			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(le, d->left, lw, w)) &&
-						  ((region_valid(lw, w, le->next, d->left->next)) ||
-						   ((le->multi) && region_valid(lw, w, le, d->left->next)) ||
-						   ((d->left->multi) && region_valid(lw, w, le->next, d->left)) ||
-						   ((le->multi && d->left->multi) && region_valid(lw, w, le, d->left))));
-			if (left_valid && region_valid(w, rw, d->right, re)) {
+						  ((region_valid(sent, lw, w, le->next, d->left->next)) ||
+						   ((le->multi) && region_valid(sent, lw, w, le, d->left->next)) ||
+						   ((d->left->multi) && region_valid(sent, lw, w, le->next, d->left)) ||
+						   ((le->multi && d->left->multi) && region_valid(sent, lw, w, le, d->left))));
+			if (left_valid && region_valid(sent, w, rw, d->right, re)) {
 				found = 1;
 				break;
 			}
 			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(d->right, re, w, rw)) &&
-						   ((region_valid(w, rw, d->right->next,re->next))	||
-							((d->right->multi) && region_valid(w,rw,d->right,re->next))  ||
-							((re->multi) && region_valid(w, rw, d->right->next, re))  ||
-							((d->right->multi && re->multi) && region_valid(w, rw, d->right, re))));
-			if ((left_valid && right_valid) || (right_valid && region_valid(lw, w, le, d->left))) {
+						   ((region_valid(sent, w, rw, d->right->next,re->next))	||
+							((d->right->multi) && region_valid(sent, w,rw,d->right,re->next))  ||
+							((re->multi) && region_valid(sent, w, rw, d->right->next, re))  ||
+							((d->right->multi && re->multi) && region_valid(sent, w, rw, d->right, re))));
+			if ((left_valid && right_valid) || (right_valid && region_valid(sent, lw, w, le, d->left))) {
 				found = 1;
 				break;
 			}
@@ -552,7 +553,8 @@ static int region_valid(int lw, int rw, Connector *le, Connector *re)
  * this region itself is not valid, then this fact will be recorded
  * in the table, and nothing else happens.
  */
-static void mark_region(int lw, int rw, Connector *le, Connector *re)
+static void mark_region(Sentence sent,
+                        int lw, int rw, Connector *le, Connector *re)
 {
 
 	Disjunct * d;
@@ -561,7 +563,7 @@ static void mark_region(int lw, int rw, Connector *le, Connector *re)
 	int w;
 	Match_node * m, *m1;
 
-	i = region_valid(lw, rw, le, re);
+	i = region_valid(sent, lw, rw, le, re);
 	if ((i==0) || (i==2)) return;
 	/* we only reach this point if it's a valid unmarked region, i=1 */
 	table_update(lw, rw, le, re, 0, 2);
@@ -569,12 +571,12 @@ static void mark_region(int lw, int rw, Connector *le, Connector *re)
 	if ((le == NULL) && (re == NULL) && (null_links) && (rw != 1+lw)) {
 		w = lw+1;
 		for (d = local_sent[w].d; d != NULL; d = d->next) {
-			if ((d->left == NULL) && region_valid(w, rw, d->right, NULL)) {
+			if ((d->left == NULL) && region_valid(sent, w, rw, d->right, NULL)) {
 				d->marked = TRUE;
-				mark_region(w, rw, d->right, NULL);
+				mark_region(sent, w, rw, d->right, NULL);
 			}
 		}
-		mark_region(w, rw, NULL, NULL);
+		mark_region(sent, w, rw, NULL, NULL);
 		return;
 	}
 
@@ -590,53 +592,53 @@ static void mark_region(int lw, int rw, Connector *le, Connector *re)
 	}
 
 	for (w=start_word; w < end_word+1; w++) {
-		m1 = m = form_match_list(w, le, lw, re, rw);
+		m1 = m = form_match_list(sent, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
 			/* mark_cost++;*/
 			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(le, d->left, lw, w)) &&
-						  ((region_valid(lw, w, le->next, d->left->next)) ||
-						   ((le->multi) && region_valid(lw, w, le, d->left->next)) ||
-						   ((d->left->multi) && region_valid(lw, w, le->next, d->left)) ||
-						   ((le->multi && d->left->multi) && region_valid(lw, w, le, d->left))));
+						  ((region_valid(sent, lw, w, le->next, d->left->next)) ||
+						   ((le->multi) && region_valid(sent, lw, w, le, d->left->next)) ||
+						   ((d->left->multi) && region_valid(sent, lw, w, le->next, d->left)) ||
+						   ((le->multi && d->left->multi) && region_valid(sent, lw, w, le, d->left))));
 			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(d->right, re, w, rw)) &&
-						   ((region_valid(w, rw, d->right->next,re->next)) ||
-							((d->right->multi) && region_valid(w,rw,d->right,re->next))  ||
-							((re->multi) && region_valid(w, rw, d->right->next, re)) ||
-							((d->right->multi && re->multi) && region_valid(w, rw, d->right, re))));
+						   ((region_valid(sent, w, rw, d->right->next,re->next)) ||
+							((d->right->multi) && region_valid(sent, w,rw,d->right,re->next))  ||
+							((re->multi) && region_valid(sent, w, rw, d->right->next, re)) ||
+							((d->right->multi && re->multi) && region_valid(sent, w, rw, d->right, re))));
 
 			/* The following if statements could be restructured to avoid superfluous calls
 			   to mark_region.  It didn't seem a high priority, so I didn't optimize this.
 			   */
 
-			if (left_valid && region_valid(w, rw, d->right, re)) {
+			if (left_valid && region_valid(sent, w, rw, d->right, re)) {
 				d->marked = TRUE;
-				mark_region(w, rw, d->right, re);
-				mark_region(lw, w, le->next, d->left->next);
-				if (le->multi) mark_region(lw, w, le, d->left->next);
-				if (d->left->multi) mark_region(lw, w, le->next, d->left);
-				if (le->multi && d->left->multi) mark_region(lw, w, le, d->left);
+				mark_region(sent, w, rw, d->right, re);
+				mark_region(sent, lw, w, le->next, d->left->next);
+				if (le->multi) mark_region(sent, lw, w, le, d->left->next);
+				if (d->left->multi) mark_region(sent, lw, w, le->next, d->left);
+				if (le->multi && d->left->multi) mark_region(sent, lw, w, le, d->left);
 			}
 
-			if (right_valid && region_valid(lw, w, le, d->left)) {
+			if (right_valid && region_valid(sent, lw, w, le, d->left)) {
 				d->marked = TRUE;
-				mark_region(lw, w, le, d->left);
-				mark_region(w, rw, d->right->next,re->next);
-				if (d->right->multi) mark_region(w,rw,d->right,re->next);
-				if (re->multi) mark_region(w, rw, d->right->next, re);
-				if (d->right->multi && re->multi) mark_region(w, rw, d->right, re);
+				mark_region(sent, lw, w, le, d->left);
+				mark_region(sent, w, rw, d->right->next,re->next);
+				if (d->right->multi) mark_region(sent, w,rw,d->right,re->next);
+				if (re->multi) mark_region(sent, w, rw, d->right->next, re);
+				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
 			}
 
 			if (left_valid && right_valid) {
 				d->marked = TRUE;
-				mark_region(lw, w, le->next, d->left->next);
-				if (le->multi) mark_region(lw, w, le, d->left->next);
-				if (d->left->multi) mark_region(lw, w, le->next, d->left);
-				if (le->multi && d->left->multi) mark_region(lw, w, le, d->left);
-				mark_region(w, rw, d->right->next,re->next);
-				if (d->right->multi) mark_region(w,rw,d->right,re->next);
-				if (re->multi) mark_region(w, rw, d->right->next, re);
-				if (d->right->multi && re->multi) mark_region(w, rw, d->right, re);
+				mark_region(sent, lw, w, le->next, d->left->next);
+				if (le->multi) mark_region(sent, lw, w, le, d->left->next);
+				if (d->left->multi) mark_region(sent, lw, w, le->next, d->left);
+				if (le->multi && d->left->multi) mark_region(sent, lw, w, le, d->left);
+				mark_region(sent, w, rw, d->right->next,re->next);
+				if (d->right->multi) mark_region(sent, w,rw,d->right,re->next);
+				if (re->multi) mark_region(sent, w, rw, d->right->next, re);
+				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
 			}
 		}
 		put_match_list(m1);
@@ -699,24 +701,24 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	null_links = (opts->min_null_count > 0);
 	/*
 	for (d = sent->word[0].d; d != NULL; d = d->next) {
-		if ((d->left == NULL) && region_valid(0, sent->length, d->right, NULL)) {
-			mark_region(0, sent->length, d->right, NULL);
+		if ((d->left == NULL) && region_valid(sent, 0, sent->length, d->right, NULL)) {
+			mark_region(sent, 0, sent->length, d->right, NULL);
 			d->marked = TRUE;
 		}
 	}
-	mark_region(0, sent->length, NULL, NULL);
+	mark_region(sent, 0, sent->length, NULL, NULL);
 	*/
 
 	if (null_links) {
-		mark_region(-1, sent->length, NULL, NULL);
+		mark_region(sent, -1, sent->length, NULL, NULL);
 	} else {
 		for (w=0; w<sent->length; w++) {
 		  /* consider removing the words [0,w-1] from the beginning
 			 of the sentence */
 			if (deletable[-1][w]) {
 				for (d = sent->word[w].d; d != NULL; d = d->next) {
-					if ((d->left == NULL) && region_valid(w, sent->length, d->right, NULL)) {
-						mark_region(w, sent->length, d->right, NULL);
+					if ((d->left == NULL) && region_valid(sent, w, sent->length, d->right, NULL)) {
+						mark_region(sent, w, sent->length, d->right, NULL);
 						d->marked = TRUE;
 					}
 				}

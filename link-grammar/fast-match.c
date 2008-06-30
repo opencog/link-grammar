@@ -12,17 +12,23 @@
 /**************************************************************************/
 
 #include <link-grammar/api.h>
+#include "fast-match.h"
 
-static int left_disjunct_list_length(Disjunct * d) {
-/* returns the number of disjuncts in the list that have non-null
-   left connector lists */
+/** 
+ * returns the number of disjuncts in the list that have non-null
+ * left connector lists.
+ */
+static int left_disjunct_list_length(Disjunct * d)
+{
 	int i;
 	for (i=0; d!=NULL; d=d->next) {
 		if (d->left != NULL) i++;
 	}
 	return i;
 }
-static int right_disjunct_list_length(Disjunct * d) {
+
+static int right_disjunct_list_length(Disjunct * d)
+{
 	int i;
 	for (i=0; d!=NULL; d=d->next) {
 		if (d->right != NULL) i++;
@@ -30,7 +36,9 @@ static int right_disjunct_list_length(Disjunct * d) {
 	return i;
 }
 
-static int match_cost;
+struct match_context_s {
+	int match_cost;
+};
 
 static int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
 static int r_table_size[MAX_SENTENCE];
@@ -42,8 +50,12 @@ static Match_node ** r_table[MAX_SENTENCE];
 static Match_node * mn_free_list = NULL;
    /* I'll pedantically maintain my own list of these cells */
 
-static Match_node * get_match_node(void) {
-/* return a match node to be used by the caller */
+
+/**
+ * Return a match node to be used by the caller
+ */
+static Match_node * get_match_node(void)
+{
 	Match_node * m;
 	if (mn_free_list != NULL) {
 		m = mn_free_list;
@@ -72,11 +84,16 @@ static void free_match_list(Match_node * t) {
 	}
 }
 
-void free_fast_matcher(Sentence sent) {
-/* free all of the hash tables and Match_nodes */
+/**
+ * Free all of the hash tables and Match_nodes 
+ */
+void free_fast_matcher(Sentence sent)
+{
 	int w;
 	int i;
-	if (verbosity > 1) printf("%d Match cost\n", match_cost);
+	match_context_t *ctxt = sent->match_ctxt;
+
+	if (verbosity > 1) printf("%d Match cost\n", ctxt->match_cost);
 	for (w=0; w<sent->length; w++) {
 		for (i=0; i<l_table_size[w]; i++) {
 			free_match_list(l_table[w][i]);
@@ -89,6 +106,9 @@ void free_fast_matcher(Sentence sent) {
 	}
 	free_match_list(mn_free_list);
 	mn_free_list = NULL;
+
+	free(ctxt);
+	sent->match_ctxt = NULL;
 }
 
 static int fast_match_hash(Connector * c) {
@@ -158,12 +178,20 @@ static void put_into_match_table(int size, Match_node ** t,
 	}
 }
 
-void init_fast_matcher(Sentence sent) {
+void init_fast_matcher(Sentence sent)
+{
 	int w, len, size, i;
 	Match_node ** t;
 	Disjunct * d;
-	match_cost = 0;
-	for (w=0; w<sent->length; w++) {
+	match_context_t *ctxt;
+
+	ctxt = (match_context_t *) malloc(sizeof(match_context_t));
+	sent->match_ctxt = ctxt;
+
+	ctxt->match_cost = 0;
+
+	for (w=0; w<sent->length; w++)
+	{
 		len = left_disjunct_list_length(sent->word[w].d);
 		size = next_power_of_two_up(len);
 		l_table_size[w] = size;
@@ -190,17 +218,22 @@ void init_fast_matcher(Sentence sent) {
 	}
 }
 
-Match_node * form_match_list
-	  (int w, Connector *lc, int lw, Connector *rc, int rw) {
-/* Forms and returns a list of disjuncts that might match lc or rc or both.
-   lw and rw are the words from which lc and rc came respectively.
-   The list is formed by the link pointers of Match_nodes.
-   The list contains no duplicates.  A quadratic algorithm is used to
-   eliminate duplicates.  In practice the match_cost is less than the
-   parse_cost (and the loop is tiny), so there's no reason to bother
-   to fix this.
-*/
+/**
+ * Forms and returns a list of disjuncts that might match lc or rc or both.
+ * lw and rw are the words from which lc and rc came respectively.
+ * The list is formed by the link pointers of Match_nodes.
+ * The list contains no duplicates.  A quadratic algorithm is used to
+ * eliminate duplicates.  In practice the match_cost is less than the
+ * parse_cost (and the loop is tiny), so there's no reason to bother
+ * to fix this.
+ */
+Match_node * 
+form_match_list(Sentence sent, int w, 
+                Connector *lc, int lw, Connector *rc, int rw)
+{
 	Match_node *ml, *mr, *mx, *my, * mz, *front, *free_later;
+
+	match_context_t *ctxt = sent->match_ctxt;
 
 	if (lc!=NULL) {
 		ml = l_table[w][fast_match_hash(lc) & (l_table_size[w]-1)];
@@ -240,9 +273,9 @@ Match_node * form_match_list
 	for(mx = mr; mx != NULL; mx=mz) {
 		/* see if mx in first list, put it in if its not */
 		mz = mx->next;
-		match_cost++;
+		ctxt->match_cost++;
 		for (my=ml; my!=NULL; my=my->next) {
-			match_cost++;
+			ctxt->match_cost++;
 			if (mx->d == my->d) break;
 		}
 		if (my != NULL) { /* mx was in the l list */

@@ -169,6 +169,8 @@ struct Parse_info_struct
 	struct Link_s  link_array[MAX_LINKS];
 };
 
+typedef struct match_context_s match_context_t;
+
 struct Sentence_s
 {
 	Dictionary  dict;           /* words are defined from this dictionary */
@@ -196,6 +198,8 @@ struct Sentence_s
 	And_data       and_data;    /* used to keep track of fat disjuncts */
 	char  q_pruned_rules;       /* don't prune rules more than once in p.p. */
 	int   post_quote[MAX_SENTENCE];
+
+	match_context_t * match_ctxt; /* private state info used for matching */
 };
 
 /*********************************************************

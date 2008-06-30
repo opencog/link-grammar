@@ -204,7 +204,8 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
  */
-static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
+static Parse_set * parse_set(Sentence sent, 
+                 Disjunct *ld, Disjunct *rd, int lw, int rw,
 					  Connector *le, Connector *re, int cost, Parse_info pi)
 {
 	Disjunct * d, * dis;
@@ -255,7 +256,7 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 			w = lw+1;
 			for (dis = local_sent[w].d; dis != NULL; dis = dis->next) {
 				if (dis->left == NULL) {
-					rs[0] = parse_set(dis, NULL, w, rw, dis->right, NULL, cost-1, pi);
+					rs[0] = parse_set(sent, dis, NULL, w, rw, dis->right, NULL, cost-1, pi);
 					if (rs[0] == NULL) continue;
 					a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
 										   rs[0], w, rw, NULL, NULL,
@@ -263,7 +264,7 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 					put_choice_in_set(xt->set, a_choice);
 				}
 			}
-			rs[0] = parse_set(NULL, NULL, w, rw, NULL, NULL, cost-1, pi);
+			rs[0] = parse_set(sent, NULL, NULL, w, rw, NULL, NULL, cost-1, pi);
 			if (rs[0] != NULL) {
 				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
 									   rs[0], w, rw, NULL, NULL,
@@ -288,7 +289,7 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 	}
 
 	for (w=start_word; w < end_word+1; w++) {
-		m1 = m = form_match_list(w, le, lw, re, rw);
+		m1 = m = form_match_list(sent, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next) {
 			d = m->d;
 			for (lcost = 0; lcost <= cost; lcost++) {
@@ -302,16 +303,16 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 				Rmatch = (d->right != NULL) && (re != NULL) && match(d->right, re, w, rw);
 				for (i=0; i<4; i++) {ls[i] = rs[i] = NULL;}
 				if (Lmatch) {
-					ls[0] = parse_set(ld, d, lw, w, le->next, d->left->next, lcost, pi);
-					if (le->multi) ls[1] = parse_set(ld, d, lw, w, le, d->left->next, lcost, pi);
-					if (d->left->multi) ls[2] = parse_set(ld, d, lw, w, le->next, d->left, lcost, pi);
-					if (le->multi && d->left->multi) ls[3] = parse_set(ld, d, lw, w, le, d->left, lcost, pi);
+					ls[0] = parse_set(sent, ld, d, lw, w, le->next, d->left->next, lcost, pi);
+					if (le->multi) ls[1] = parse_set(sent, ld, d, lw, w, le, d->left->next, lcost, pi);
+					if (d->left->multi) ls[2] = parse_set(sent, ld, d, lw, w, le->next, d->left, lcost, pi);
+					if (le->multi && d->left->multi) ls[3] = parse_set(sent, ld, d, lw, w, le, d->left, lcost, pi);
 				}
 				if (Rmatch) {
-					rs[0] = parse_set(d, rd, w, rw, d->right->next, re->next, rcost, pi);
-					if (d->right->multi) rs[1] = parse_set(d, rd, w,rw,d->right,re->next, rcost, pi);
-					if (re->multi) rs[2] = parse_set(d, rd, w, rw, d->right->next, re, rcost, pi);
-					if (d->right->multi && re->multi) rs[3] = parse_set(d, rd, w, rw, d->right, re, rcost, pi);
+					rs[0] = parse_set(sent, d, rd, w, rw, d->right->next, re->next, rcost, pi);
+					if (d->right->multi) rs[1] = parse_set(sent, d, rd, w,rw,d->right,re->next, rcost, pi);
+					if (re->multi) rs[2] = parse_set(sent, d, rd, w, rw, d->right->next, re, rcost, pi);
+					if (d->right->multi && re->multi) rs[3] = parse_set(sent, d, rd, w, rw, d->right, re, rcost, pi);
 				}
 
 				for (i=0; i<4; i++) {
@@ -328,7 +329,7 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 
 				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL) {
 					/* evaluate using the left match, but not the right */
-					rset = parse_set(d, rd, w, rw, d->right, re, rcost, pi);
+					rset = parse_set(sent, d, rd, w, rw, d->right, re, rcost, pi);
 					if (rset != NULL) {
 						for (i=0; i<4; i++) {
 							if (ls[i] == NULL) continue;
@@ -342,7 +343,7 @@ static Parse_set * parse_set(Disjunct *ld, Disjunct *rd, int lw, int rw,
 				}
 				if ((le == NULL) && (rs[0] != NULL || rs[1] != NULL || rs[2] != NULL || rs[3] != NULL)) {
 					/* evaluate using the right match, but not the left */
-					lset = parse_set(ld, d, lw, w, le, d->left, lcost, pi);
+					lset = parse_set(sent, ld, d, lw, w, le, d->left, lcost, pi);
 
 					if (lset != NULL) {
 						for (i=0; i<4; i++) {
@@ -419,7 +420,7 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 	islands_ok = opts->islands_ok;
 
 	whole_set =
-		parse_set(NULL, NULL, -1, sent->length, NULL, NULL, cost+1, sent->parse_info);
+		parse_set(sent, NULL, NULL, -1, sent->length, NULL, NULL, cost+1, sent->parse_info);
 
 	if ((whole_set != NULL) && (whole_set->current != NULL)) {
 		whole_set->current = whole_set->first;
@@ -431,7 +432,8 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 	return verify_set(sent->parse_info);
 }
 
-void free_parse_set(Sentence sent) {
+void free_parse_set(Sentence sent)
+{
 	/* This uses the x_table to free the whole parse set (the set itself
 	   cannot be used cause it's a dag).  called from the outside world */
 	if (sent->parse_info != NULL) {
@@ -506,7 +508,8 @@ static int advance_linkage(Parse_info pi, Parse_set * set) {
 }
 
 #ifdef UNUSED_FUNCTION
-static void advance_parse_set(Parse_info pi) {
+static void advance_parse_set(Parse_info pi)
+{
 	 advance_linkage(pi, pi->parse_set);
 }
 #endif
