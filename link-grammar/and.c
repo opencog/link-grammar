@@ -284,14 +284,16 @@ Accepted (4 linkages, 4 with no P.P. violations) at stage 1
 static int STAT_N_disjuncts;	  /* keeping statistics */
 static int STAT_calls_to_equality_test;
 
-static void init_LT(Sentence sent) {
+static void init_LT(Sentence sent)
+{
 	sent->and_data.LT_bound = 20;
 	sent->and_data.LT_size = 0;
 	sent->and_data.label_table =
 		(Disjunct **) xalloc(sent->and_data.LT_bound * sizeof(Disjunct *));
 }
 
-static void grow_LT(Sentence sent) {
+static void grow_LT(Sentence sent)
+{
 	space_in_use -= sent->and_data.LT_bound * sizeof(Disjunct *);
 	sent->and_data.LT_bound = (3*sent->and_data.LT_bound)/2;
 	sent->and_data.label_table =
@@ -305,14 +307,16 @@ static void grow_LT(Sentence sent) {
 	}
 }
 
-static void init_HT(Sentence sent) {
+static void init_HT(Sentence sent)
+{
 	int i;
 	for (i=0; i<HT_SIZE; i++) {
 		sent->and_data.hash_table[i] = NULL;
 	}
 }
 
-static void free_HT(Sentence sent) {
+static void free_HT(Sentence sent)
+{
 	int i;
 	Label_node * la, * la1;
 	for (i=0; i<HT_SIZE; i++) {
@@ -324,7 +328,8 @@ static void free_HT(Sentence sent) {
 	}
 }
 
-static void free_LT(Sentence sent) {
+static void free_LT(Sentence sent)
+{
 	int i;
 	for (i=0; i<sent->and_data.LT_size; i++) {
 		free_disjuncts(sent->and_data.label_table[i]);
@@ -336,12 +341,14 @@ static void free_LT(Sentence sent) {
 	sent->and_data.label_table = NULL;
 }
 
-void free_AND_tables(Sentence sent) {
+void free_AND_tables(Sentence sent)
+{
 	free_LT(sent);
 	free_HT(sent);
 }
 
-void initialize_conjunction_tables(Sentence sent) {
+void initialize_conjunction_tables(Sentence sent)
+{
 	int i;
 	sent->and_data.LT_bound = 0;
 	sent->and_data.LT_size = 0;
@@ -382,11 +389,13 @@ static int and_hash_disjunct(Disjunct *d)
 }
 
 
-static int is_appropriate(Sentence sent, Disjunct * d) {
-/* returns TRUE if the disjunct is appropriate to be made into fat links.
-   Check here that the connectors are from some small set.
-   This will disallow, for example "the and their dog ran".
-*/
+/** 
+ * Returns TRUE if the disjunct is appropriate to be made into fat links.
+ * Check here that the connectors are from some small set.
+ * This will disallow, for example "the and their dog ran".
+ */
+static int is_appropriate(Sentence sent, Disjunct * d)
+{
 	Connector * c;
 
 	if (sent->dict->andable_connector_set == NULL) return TRUE;
@@ -488,22 +497,25 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 	}
 }
 
-static int connectors_equal_AND(Connector *c1, Connector *c2) {
-/* Two connectors are said to be equal if they are of the same type
-   (defined above), they have the same multi field, and they have
-   exactly the same connectors (including lower case chars).
-   (priorities ignored).
-*/
+/**
+ * Two connectors are said to be equal if they are of the same type
+ * (defined above), they have the same multi field, and they have
+ *  exactly the same connectors (including lower case chars).
+ * (priorities ignored).
+ */
+static int connectors_equal_AND(Connector *c1, Connector *c2)
+{
 	return (c1->label == c2->label) &&
 		   (c1->multi == c2->multi) &&
 		   (strcmp(c1->string, c2->string) == 0);
 }
 
-
-static int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2) {
-/* Return true if the disjuncts are equal (ignoring priority fields)
-   and the string of the disjunct.
-*/
+/**
+ * Return true if the disjuncts are equal (ignoring priority fields)
+ * and the string of the disjunct.
+ */
+static int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2)
+{
 	Connector *e1, *e2;
 	STAT_calls_to_equality_test++;
 	e1 = d1->left;
@@ -525,12 +537,13 @@ static int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2) {
 	return TRUE;
 }
 
+/**
+ * Create a new disjunct that is the GCD of d1 and d2.
+ * It assumes that the disjuncts are of the same type, so the
+ * GCD will not be empty.
+ */
 static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d2)
 {
-/* Create a new disjunct that is the GCD of d1 and d2.
-   It assumes that the disjuncts are of the same type, so the
-   GCD will not be empty.
-*/
 	Disjunct * d;
 	Connector *c1, *c2, *c;
 	d = copy_disjunct(d1);
@@ -553,30 +566,35 @@ static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d
 	return d;
 }
 
-static void put_disjunct_into_table(Sentence sent, Disjunct *d) {
-/* (1) look for the given disjunct in the table structures
-	   if it's already in the table structures, do nothing
-   (2) otherwise make a copy of it, and put it into the table structures
-   (3) also put all of the GCDs of this disjunct with all of the
-	   other matching disjuncts into the table.
-
-   The costs are set to zero.
-   Note that this has no effect on disjunct d.
-*/
+/**
+ * (1) look for the given disjunct in the table structures
+ *     if it's already in the table structures, do nothing
+ * (2) otherwise make a copy of it, and put it into the table structures
+ * (3) also put all of the GCDs of this disjunct with all of the
+ *     other matching disjuncts into the table.
+ *
+ * The costs are set to zero.
+ * Note that this has no effect on disjunct d.
+ */
+static void put_disjunct_into_table(Sentence sent, Disjunct *d)
+{
 	Disjunct *d1=NULL, *d2, *di, *d_copy;
 	Label_node * lp;
 	int h, k;
 
 	h = and_hash_disjunct(d);
 
-	for (lp = sent->and_data.hash_table[h]; lp != NULL; lp = lp->next) {
+	for (lp = sent->and_data.hash_table[h]; lp != NULL; lp = lp->next)
+	{
 		d1 = sent->and_data.label_table[lp->label];
 		if (disjunct_types_equal(d,d1)) break;
 	}
-	if (lp != NULL) {
+	if (lp != NULL)
+	{
 		/* there is already a label for disjuncts of this type */
 		/* d1 points to the list of disjuncts of this type already there */
-		while(d1 != NULL) {
+		while(d1 != NULL)
+		{
 			if (disjuncts_equal_AND(d1, d)) return;
 			d1 = d1->next;
 		}
@@ -639,15 +657,16 @@ static void put_disjunct_into_table(Sentence sent, Disjunct *d) {
 	}
 }
 
-
-static void extract_all_fat_links(Sentence sent, Disjunct * d) {
-/*  A sub disjuct of d is any disjunct obtained by killing the tail
-    of either connector list at any point.
-    Here we go through each sub-disjunct of d, and put it into our
-    table data structure.
-
-    The function has no side effects on d.
+/**
+ * A sub disjuct of d is any disjunct obtained by killing the tail
+ *  of either connector list at any point.
+ *  Here we go through each sub-disjunct of d, and put it into our
+ *  table data structure.
+ *
+ *  The function has no side effects on d.
  */
+static void extract_all_fat_links(Sentence sent, Disjunct * d)
+{
 	Connector * cl, * cr, *tl, *tr;
 	tl = d->left;
 	d->left = NULL;
@@ -772,10 +791,12 @@ static void compute_matchers_for_a_label(Sentence sent, int k)
 	xfree((char *)lengths, N_connectors*sizeof(int));
 }
 
-void build_conjunction_tables(Sentence sent) {
-/* Goes through the entire sentence and builds the fat link tables
-   for all the disjuncts of all the words.
-*/
+/**
+ * Goes through the entire sentence and builds the fat link tables
+ * for all the disjuncts of all the words.
+ */
+void build_conjunction_tables(Sentence sent)
+{
 	int w;
 	int k;
 	Disjunct * d;
@@ -795,7 +816,8 @@ void build_conjunction_tables(Sentence sent) {
 	}
 }
 
-void print_AND_statistics(Sentence sent) {
+void print_AND_statistics(Sentence sent)
+{
 	printf("Number of disjunct types (labels): %d\n", sent->and_data.LT_size);
 	printf("Number of disjuncts in the table: %d\n", STAT_N_disjuncts);
 	if (sent->and_data.LT_size != 0) {
@@ -928,10 +950,12 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
 	return d_list;
 }
 
-Disjunct * explode_disjunct_list(Sentence sent, Disjunct *d) {
-/*  This is basically a "map" function for build_fat_link_substitutions.
-    It's applied to the disjuncts for all regular words of the sentence.
-*/
+/**
+ * This is basically a "map" function for build_fat_link_substitutions.
+ * It's applied to the disjuncts for all regular words of the sentence.
+ */
+Disjunct * explode_disjunct_list(Sentence sent, Disjunct *d)
+{
    Disjunct *d1;
 
    d1 = NULL;
@@ -942,12 +966,14 @@ Disjunct * explode_disjunct_list(Sentence sent, Disjunct *d) {
    return d1;
 }
 
-Disjunct * build_COMMA_disjunct_list(Sentence sent) {
-/*  Builds and returns a disjunct list for the comma.  These are the
-    disjuncts that are used when "," operates in conjunction with "and".
-    Does not deal with the ", and" issue, nor the other uses
-    of comma.
-*/
+/**
+ * Builds and returns a disjunct list for the comma.  These are the
+ * disjuncts that are used when "," operates in conjunction with "and".
+ * Does not deal with the ", and" issue, nor the other uses
+ * of comma.
+ */
+Disjunct * build_COMMA_disjunct_list(Sentence sent)
+{
 	int lab;
 	Disjunct *d1, *d2, *d, work_disjunct, *wd;
 	Connector work_connector1, work_connector2, *c1, *c2;
@@ -982,13 +1008,15 @@ Disjunct * build_COMMA_disjunct_list(Sentence sent) {
 	return d1;
 }
 
-Disjunct * build_AND_disjunct_list(Sentence sent, char * s) {
- /* Builds and returns a disjunct list for "and", "or" and "nor" */
- /* for each disjunct in the label_table, we build three disjuncts */
- /* this means that "Danny and Tycho and Billy" will be parsable in */
- /* two ways.  I don't know an easy way to avoid this */
- /* the string is either "and", or "or", or "nor" at the moment */
-
+/**
+ * Builds and returns a disjunct list for "and", "or" and "nor"
+ * for each disjunct in the label_table, we build three disjuncts
+ * this means that "Danny and Tycho and Billy" will be parsable in
+ * two ways.  I don't know an easy way to avoid this
+ * the string is either "and", or "or", or "nor" at the moment.
+ */
+Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
+{
 	int lab;
 	Disjunct *d_list, *d1, *d3, *d, *d_copy;
 	Connector *c1, *c2, *c3;
@@ -1194,11 +1222,13 @@ static Image_node * image_array[MAX_SENTENCE];
 
 static char has_fat_down[MAX_SENTENCE];  /* TRUE if this word has a fat down link
 									 FALSE otherise */
-int set_has_fat_down(Sentence sent) {
-/* Fill in the has_fat_down array.  Uses link_array[].
-   Returns TRUE if there exists at least one word with a
-   fat down label.
-*/
+
+/** Fill in the has_fat_down array.  Uses link_array[].
+ * Returns TRUE if there exists at least one word with a
+ * fat down label.
+ */
+int set_has_fat_down(Sentence sent)
+{
 	int link, w, N_fat;
 	Parse_info pi = sent->parse_info;
 
@@ -1220,7 +1250,8 @@ int set_has_fat_down(Sentence sent) {
 	return (N_fat > 0);
 }
 
-static void free_image_array(Parse_info pi) {
+static void free_image_array(Parse_info pi)
+{
 	int w;
 	Image_node * in, * inx;
 	for (w=0; w<pi->N_words; w++) {
@@ -1231,9 +1262,12 @@ static void free_image_array(Parse_info pi) {
 	}
 }
 
-static void build_image_array(Sentence sent) {
-/* uses link_array, chosen_disjuncts, and down_label to construct
-   image_array */
+/**
+ * Uses link_array, chosen_disjuncts, and down_label to construct
+ * image_array
+ */
+static void build_image_array(Sentence sent)
+{
 	int link, end, word;
 	Connector * this_end_con, *other_end_con, * upcon, * updiscon, *clist;
 	Disjunct * dis, * updis;
@@ -1326,12 +1360,14 @@ static int strictly_smaller(const char * s, const char * t)
 	return (strictness > 0);
 }
 
-static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label) {
-/* dis points to a disjunct in the label_table.  label is the label
-   of a different set of disjuncts.  These can be derived from the label
-   of dis.  Find the specific disjunct of in label_table[label]
-   which corresponds to dis.
-*/
+/**
+ * dis points to a disjunct in the label_table.  label is the label
+ * of a different set of disjuncts.  These can be derived from the label
+ * of dis.  Find the specific disjunct of in label_table[label]
+ * which corresponds to dis.
+ */
+static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label)
+{
 	Disjunct * d;
 	Connector * cx, *cy;
 	for (d=sent->and_data.label_table[label]; d!=NULL; d=d->next) {
@@ -1445,16 +1481,16 @@ int is_canonical_linkage(Sentence sent)
 	return (w == pi->N_words);
 }
 
+/**
+ * This takes as input link_array[], sublinkage->link[]->l and
+ * sublinkage->link[]->r (and also has_fat_down[word], which has been
+ * computed in a prior call to is_canonical()), and from these
+ * computes sublinkage->link[].lc and .rc.  We assume these have
+ * been initialized with the values from link_array.  We also assume
+ * that there are fat links.
+ */
 void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 {
-/*
-   This takes as input link_array[], sublinkage->link[]->l and
-   sublinkage->link[]->r (and also has_fat_down[word], which has been
-   computed in a prior call to is_canonical()), and from these
-   computes sublinkage->link[].lc and .rc.  We assume these have
-   been initialized with the values from link_array.  We also assume
-   that there are fat links.
-*/
 	int link, end, word, place;
 	Connector * this_end_con, * upcon, * updiscon, *clist, *con, *mycon;
 	Disjunct * dis, * updis, *mydis;
