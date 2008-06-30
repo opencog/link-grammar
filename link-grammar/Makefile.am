@@ -49,7 +49,6 @@ liblink_grammar_la_SOURCES =		\
 	extract-links.c			\
 	fast-match.c			\
 	idiom.c				\
-	linkset.c			\
 	massage.c			\
 	post-process.c			\
 	pp_knowledge.c			\
@@ -83,7 +82,6 @@ liblink_grammar_la_SOURCES =		\
 	extract-links.h			\
 	fast-match.h			\
 	idiom.h				\
-	linkset.h			\
 	massage.h			\
 	post-process.h			\
 	pp_knowledge.h			\

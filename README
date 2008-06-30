@@ -312,7 +312,6 @@ TODO:
       extract-links.c
       jni-client.c - uses per-thread struct, but needs to be attached
                      to JNIEnv somehow.
-      linkset.c
       malloc-dbg.c - not thread safe, not normally used;
                      only for debugging.
       prefix.c - but maybe doesn't need to be; used only 

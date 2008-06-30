@@ -39,7 +39,6 @@
 #include <link-grammar/extract-links.h>
 #include <link-grammar/fast-match.h>
 #include <link-grammar/idiom.h>
-#include <link-grammar/linkset.h>
 #include <link-grammar/massage.h>
 #include <link-grammar/post-process.h>
 #include <link-grammar/pp_knowledge.h>
