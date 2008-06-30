@@ -14,16 +14,59 @@
 #include <link-grammar/api.h>
 #include <memory.h>
 
-static LINKSET_SET ss[LINKSET_MAX_SETS];
-static char q_unit_is_used[LINKSET_MAX_SETS];
+typedef struct
+{
+	LINKSET_SET ss[LINKSET_MAX_SETS];
+	char q_unit_is_used[LINKSET_MAX_SETS];
+} linkset_context_t;
 
-/* delcarations of non-exported functions */
-static void clear_hash_table(const int unit);
-static void initialize_unit(const int unit, const int size);
-static LINKSET_NODE *linkset_add_internal(const int unit, char *str);
-static int  take_a_unit(void);
-static int  compute_hash(const int unit, const char *str);
-static char *local_alloc (int nbytes);
+/** hands out free units */
+static int take_a_unit(void)
+{
+	int i;
+	static int q_first = 1;
+	if (q_first) {
+		memset(q_unit_is_used, 0, LINKSET_MAX_SETS*sizeof(char));
+		q_first = 0;
+	}
+	for (i=0; i<LINKSET_MAX_SETS; i++)
+		if (!q_unit_is_used[i]) break;
+	if (i==LINKSET_MAX_SETS) {
+		printf("linkset.h: No more free units");
+		abort();
+	}
+	q_unit_is_used[i] = 1;
+	return i;
+}
+
+static char *local_alloc (int nbytes)
+{
+	char * p;
+	p = (char *) malloc (nbytes);
+	if (!p) {
+		printf("linkset: out of memory");
+		abort();
+	}
+	return p;
+}
+
+static void clear_hash_table(const int unit)
+{
+	memset(ss[unit].hash_table, 0,
+				 ss[unit].hash_table_size*sizeof(LINKSET_NODE *));
+}
+
+static void initialize_unit(const int unit, const int size)
+{
+	if(size<=0) {
+		 printf("size too small!");
+		 abort();
+	}
+	ss[unit].hash_table_size = (int) ((float) size*LINKSET_SPARSENESS);
+	ss[unit].hash_table = (LINKSET_NODE**)
+				local_alloc (ss[unit].hash_table_size*sizeof(LINKSET_NODE *));
+	clear_hash_table(unit);
+}
 
 int linkset_open(const int size)
 {
@@ -56,6 +99,36 @@ void linkset_clear(const int unit)
 		}
 	}
 	clear_hash_table(unit);
+}
+
+/** hash is computed from capitalized prefix only */
+static int compute_hash(const int unit, const char *str)
+{
+	int i, hashval;
+	hashval=LINKSET_DEFAULT_SEED;
+	for (i=0; isupper((int)str[i]); i++)
+		hashval = str[i] + 31*hashval;
+	hashval = hashval % ss[unit].hash_table_size;
+	if (hashval<0) hashval*=-1;
+	return hashval;
+}
+
+static LINKSET_NODE *linkset_add_internal(const int unit, char *str)
+{
+	LINKSET_NODE *p, *n;
+	int hashval;
+
+	/* look for str in set */
+	hashval = compute_hash(unit, str);
+	for (p=ss[unit].hash_table[hashval]; p!=0; p=p->next)
+		if (!strcmp(p->str,str)) return NULL;	/* already present */
+
+	/* create a new node for u; stick it at head of linked list */
+	n = (LINKSET_NODE *) local_alloc (sizeof(LINKSET_NODE));
+	n->next = ss[unit].hash_table[hashval];
+	n->str = str;
+	ss[unit].hash_table[hashval] = n;
+	return n;
 }
 
 int linkset_add(const int unit, char *str)
@@ -139,81 +212,4 @@ int linkset_match_bw(const int unit, char *str)
 }
 
 /***********************************************************************/
-static void clear_hash_table(const int unit)
-{
-	memset(ss[unit].hash_table, 0,
-				 ss[unit].hash_table_size*sizeof(LINKSET_NODE *));
-}
-
-static void initialize_unit(const int unit, const int size)
-{
-	if(size<=0) {
-		 printf("size too small!");
-		 abort();
-	}
-	ss[unit].hash_table_size = (int) ((float) size*LINKSET_SPARSENESS);
-	ss[unit].hash_table = (LINKSET_NODE**)
-				local_alloc (ss[unit].hash_table_size*sizeof(LINKSET_NODE *));
-	clear_hash_table(unit);
-}
-
-static LINKSET_NODE *linkset_add_internal(const int unit, char *str)
-{
-	LINKSET_NODE *p, *n;
-	int hashval;
-
-	/* look for str in set */
-	hashval = compute_hash(unit, str);
-	for (p=ss[unit].hash_table[hashval]; p!=0; p=p->next)
-		if (!strcmp(p->str,str)) return NULL;	/* already present */
-
-	/* create a new node for u; stick it at head of linked list */
-	n = (LINKSET_NODE *) local_alloc (sizeof(LINKSET_NODE));
-	n->next = ss[unit].hash_table[hashval];
-	n->str = str;
-	ss[unit].hash_table[hashval] = n;
-	return n;
-}
-
-/** hash is computed from capitalized prefix only */
-static int compute_hash(const int unit, const char *str)
-{
-	int i, hashval;
-	hashval=LINKSET_DEFAULT_SEED;
-	for (i=0; isupper((int)str[i]); i++)
-		hashval = str[i] + 31*hashval;
-	hashval = hashval % ss[unit].hash_table_size;
-	if (hashval<0) hashval*=-1;
-	return hashval;
-}
-
-/** hands out free units */
-static int take_a_unit(void)
-{
-	int i;
-	static int q_first = 1;
-	if (q_first) {
-		memset(q_unit_is_used, 0, LINKSET_MAX_SETS*sizeof(char));
-		q_first = 0;
-	}
-	for (i=0; i<LINKSET_MAX_SETS; i++)
-		if (!q_unit_is_used[i]) break;
-	if (i==LINKSET_MAX_SETS) {
-		printf("linkset.h: No more free units");
-		abort();
-	}
-	q_unit_is_used[i] = 1;
-	return i;
-}
-
-static char *local_alloc (int nbytes)
-{
-	char * p;
-	p = (char *) malloc (nbytes);
-	if (!p) {
-		printf("linkset: out of memory");
-		abort();
-	}
-	return p;
-}
 
