@@ -17,6 +17,7 @@
  stores either a copy of name, or the actual object. However,
  the memory used by *solid* objects is not freed!
 --------------------------------------------------------------------- */
+#if 0
 
 #ifndef _LINKSETH_
 #define _LINKSETH_
@@ -40,13 +41,14 @@ typedef struct {
 
 
 /* declarations of exported functions */
-int   linkset_open(const int size); 
-void  linkset_clear(const int unit);
-void  linkset_close(const int unit);
-int   linkset_add(const int unit, char *str);
-int   linkset_add_solid(const int unit, char *str);
+// int   linkset_open(const int size); 
+// void  linkset_clear(const int unit);
+// void  linkset_close(const int unit);
+// int   linkset_add(const int unit, char *str);
+// int   linkset_add_solid(const int unit, char *str);
 int   linkset_remove(const int unit, char *str);
 int   linkset_match(const int unit, char *str);
 int   linkset_match_bw(const int unit, char *str);
 
+#endif
 #endif
