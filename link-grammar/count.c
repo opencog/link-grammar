@@ -15,14 +15,16 @@
 
 /* This file contains the exhaustive search algorithm. */
 
-struct count_context_s {
+struct count_context_s
+{
 	char ** deletable;
 	char ** effective_dist; 
+	Word *  local_sent;
+	int     null_block;
+	int     islands_ok;
+	int     null_links;
+	Resources current_resources;
 };
-
-static Word *  local_sent;
-static int	 null_block, islands_ok, null_links;
-static Resources current_resources;
 
 int x_match(Sentence sent, Connector *a, Connector *b)
 {
@@ -210,9 +212,11 @@ static Table_connector * table_store(int lw, int rw,
 }
 
 /** returns the pointer to this info, NULL if not there */
-static Table_connector * find_table_pointer(int lw, int rw, 
-                                       Connector *le, Connector *re,
-                                       int cost)
+static Table_connector * 
+find_table_pointer(count_context_t *ctxt,
+                   int lw, int rw, 
+                   Connector *le, Connector *re,
+                   int cost)
 {
 	Table_connector *t;
 	t = table[hash(lw, rw, le, re, cost)];
@@ -224,16 +228,19 @@ static Table_connector * find_table_pointer(int lw, int rw,
 	/* Create a new connector only if resources are exhausted.
 	 * (???) Huh? I guess we're in panic parse mode in that case.
 	 */
-	if ((current_resources != NULL) && resources_exhausted(current_resources)) {
+	if ((ctxt->current_resources != NULL) && 
+	     resources_exhausted(ctxt->current_resources))
+	{
 		return table_store(lw, rw, le, re, cost, 0);
 	}
 	else return NULL;
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
-s64 table_lookup(int lw, int rw, Connector *le, Connector *re, int cost)
+s64 table_lookup(Sentence sent, 
+                 int lw, int rw, Connector *le, Connector *re, int cost)
 {
-	Table_connector *t = find_table_pointer(lw, rw, le, re, cost);
+	Table_connector *t = find_table_pointer(sent->count_ctxt, lw, rw, le, re, cost);
 
 	if (t == NULL) return -1; else return t->count;
 }
@@ -242,11 +249,11 @@ s64 table_lookup(int lw, int rw, Connector *le, Connector *re, int cost)
  * Stores the value in the table.  Unlike table_store, it assumes 
  * it's already there
  */
-static void table_update(int lw, int rw, 
+static void table_update(count_context_t *ctxt, int lw, int rw, 
                          Connector *le, Connector *re,
                          int cost, s64 count)
 {
-	Table_connector *t = find_table_pointer(lw, rw, le, re, cost);
+	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
 
 	assert(t != NULL, "This entry is supposed to be in the table.");
 	t->count = count;
@@ -256,10 +263,11 @@ static void table_update(int lw, int rw,
  * Returns 0 if and only if this entry is in the hash table 
  * with a count value of 0.
  */
-static s64 pseudocount(int lw, int rw, Connector *le, Connector *re, int cost)
+static s64 pseudocount(Sentence sent,
+                       int lw, int rw, Connector *le, Connector *re, int cost)
 {
 	s64 count;
-	count = table_lookup(lw, rw, le, re, cost);
+	count = table_lookup(sent, lw, rw, le, re, cost);
 	if (count == 0) return 0; else return 1;
 }
 
@@ -275,9 +283,11 @@ static s64 count(Sentence sent, int lw, int rw,
 	Match_node * m, *m1;
 	Table_connector *t;
 
+	count_context_t *ctxt = sent->count_ctxt;
+
 	if (cost < 0) return 0;  /* will we ever call it with cost<0 ? */
 
-	t = find_table_pointer(lw, rw, le, re, cost);
+	t = find_table_pointer(sent->count_ctxt, lw, rw, le, re, cost);
 
 	if (t == NULL) {
 		/* Create the table entry with a tentative cost of 0. 
@@ -299,11 +309,11 @@ static s64 count(Sentence sent, int lw, int rw,
 	}
 
 	if ((le == NULL) && (re == NULL)) {
-		if (!islands_ok && (lw != -1)) {
+		if (!ctxt->islands_ok && (lw != -1)) {
 		  /* if we don't allow islands (a set of words linked together but
 			 separate from the rest of the sentence) then  the cost of skipping
 			 n words is just n */
-			if (cost == ((rw-lw-1)+null_block-1)/null_block) {
+			if (cost == ((rw-lw-1) + ctxt->null_block-1)/ctxt->null_block) {
 				/* if null_block=4 then the cost of
 				   1,2,3,4 nulls is 1, 5,6,7,8 is 2 etc. */
 				t->count = 1;
@@ -320,7 +330,7 @@ static s64 count(Sentence sent, int lw, int rw,
 		} else {
 			total = 0;
 			w = lw+1;
-			for (d = local_sent[w].d; d != NULL; d = d->next) {
+			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) {
 					total += count(sent, w, rw, d->right, NULL, cost-1);
 				}
@@ -361,28 +371,29 @@ static s64 count(Sentence sent, int lw, int rw,
 
 				rightcount = leftcount = 0;
 				if (Lmatch) {
-					leftcount = pseudocount(lw, w, le->next, d->left->next, lcost);
-					if (le->multi) leftcount += pseudocount(lw, w, le, d->left->next, lcost);
-					if (d->left->multi) leftcount += pseudocount(lw, w, le->next, d->left, lcost);
-					if (le->multi && d->left->multi) leftcount += pseudocount(lw, w, le, d->left, lcost);
+					leftcount = pseudocount(sent, lw, w, le->next, d->left->next, lcost);
+					if (le->multi) leftcount += pseudocount(sent, lw, w, le, d->left->next, lcost);
+					if (d->left->multi) leftcount += pseudocount(sent, lw, w, le->next, d->left, lcost);
+					if (le->multi && d->left->multi) leftcount += pseudocount(sent, lw, w, le, d->left, lcost);
 				}
 
 				if (Rmatch) {
-					rightcount = pseudocount(w, rw, d->right->next, re->next, rcost);
-					if (d->right->multi) rightcount += pseudocount(w,rw,d->right,re->next, rcost);
-					if (re->multi) rightcount += pseudocount(w, rw, d->right->next, re, rcost);
-					if (d->right->multi && re->multi) rightcount += pseudocount(w, rw, d->right, re, rcost);
+					rightcount = pseudocount(sent, w, rw, d->right->next, re->next, rcost);
+					if (d->right->multi) rightcount += pseudocount(sent, w,rw,d->right,re->next, rcost);
+					if (re->multi) rightcount += pseudocount(sent, w, rw, d->right->next, re, rcost);
+					if (d->right->multi && re->multi) rightcount += pseudocount(sent, w, rw, d->right, re, rcost);
 				}
 
-				pseudototal = leftcount*rightcount;  /* total number where links are used on both sides */
+				/* total number where links are used on both sides */
+				pseudototal = leftcount*rightcount;
 
 				if (leftcount > 0) {
 					/* evaluate using the left match, but not the right */
-					pseudototal += leftcount * pseudocount(w, rw, d->right, re, rcost);
+					pseudototal += leftcount * pseudocount(sent, w, rw, d->right, re, rcost);
 				}
 				if ((le == NULL) && (rightcount > 0)) {
 					/* evaluate using the right match, but not the left */
-					pseudototal += rightcount * pseudocount(lw, w, le, d->left, lcost);
+					pseudototal += rightcount * pseudocount(sent, lw, w, le, d->left, lcost);
 				}
 
 				/* now pseudototal is 0 implies that we know that the true total is 0 */
@@ -433,11 +444,11 @@ s64 parse(Sentence sent, int cost, Parse_Options opts)
 	count_context_t *ctxt = sent->count_ctxt;
 
 	count_set_effective_distance(sent);
-	current_resources = opts->resources;
-	local_sent = sent->word;
+	ctxt->current_resources = opts->resources;
+	ctxt->local_sent = sent->word;
 	ctxt->deletable = sent->deletable;
-	null_block = opts->null_block;
-	islands_ok = opts->islands_ok;
+	ctxt->null_block = opts->null_block;
+	ctxt->islands_ok = opts->islands_ok;
 
 	total = count(sent, -1, sent->length, NULL, NULL, cost+1);
 	if (verbosity > 1) {
@@ -447,8 +458,8 @@ s64 parse(Sentence sent, int cost, Parse_Options opts)
 		printf("WARNING: Overflow in count! cnt=%lld\n", total);
 	}
 
-	local_sent = NULL;
-	current_resources = NULL;
+	ctxt->local_sent = NULL;
+	ctxt->current_resources = NULL;
 	return total;
 }
 
@@ -509,7 +520,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 
 	count_context_t *ctxt = sent->count_ctxt;
 
-	i = table_lookup(lw, rw, le, re, 0);
+	i = table_lookup(sent, lw, rw, le, re, 0);
 	if (i >= 0) return i;
 
 	if ((le == NULL) && (re == NULL) && ctxt->deletable[lw][rw]) {
@@ -584,11 +595,11 @@ static void mark_region(Sentence sent,
 	i = region_valid(sent, lw, rw, le, re);
 	if ((i==0) || (i==2)) return;
 	/* we only reach this point if it's a valid unmarked region, i=1 */
-	table_update(lw, rw, le, re, 0, 2);
+	table_update(ctxt, lw, rw, le, re, 0, 2);
 
-	if ((le == NULL) && (re == NULL) && (null_links) && (rw != 1+lw)) {
+	if ((le == NULL) && (re == NULL) && (ctxt->null_links) && (rw != 1+lw)) {
 		w = lw+1;
-		for (d = local_sent[w].d; d != NULL; d = d->next) {
+		for (d = ctxt->local_sent[w].d; d != NULL; d = d->next) {
 			if ((d->left == NULL) && region_valid(sent, w, rw, d->right, NULL)) {
 				d->marked = TRUE;
 				mark_region(sent, w, rw, d->right, NULL);
@@ -700,7 +711,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	int w;
 	count_context_t *ctxt = sent->count_ctxt;
 
-	current_resources = opts->resources;
+	ctxt->current_resources = opts->resources;
 	ctxt->deletable = sent->deletable;
 	count_set_effective_distance(sent);
 
@@ -717,8 +728,8 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 
 	init_fast_matcher(sent);
 	init_table(sent);
-	local_sent = sent->word;
-	null_links = (opts->min_null_count > 0);
+	ctxt->local_sent = sent->word;
+	ctxt->null_links = (opts->min_null_count > 0);
 	/*
 	for (d = sent->word[0].d; d != NULL; d = d->next) {
 		if ((d->left == NULL) && region_valid(sent, 0, sent->length, d->right, NULL)) {
@@ -729,7 +740,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	mark_region(sent, 0, sent->length, NULL, NULL);
 	*/
 
-	if (null_links) {
+	if (ctxt->null_links) {
 		mark_region(sent, -1, sent->length, NULL, NULL);
 	} else {
 		for (w=0; w<sent->length; w++) {
@@ -751,8 +762,8 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	free_fast_matcher(sent);
 	free_table(sent);
 
-	local_sent = NULL;
-	current_resources = NULL;
+	ctxt->local_sent = NULL;
+	ctxt->current_resources = NULL;
 	ctxt->deletable = NULL;
 	count_unset_effective_distance(sent);
 }

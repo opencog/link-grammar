@@ -289,6 +289,7 @@ TODO:
       build-disjuncts.c
       command-line.c
       constituents.c
+      count.c
       fast-match.c
       idiom.c
       linkparser.c
@@ -308,7 +309,6 @@ TODO:
 
     Not thread safe: 
       analyze-linkage.c
-      count.c
       error.c
       extract-links.c
       jni-client.c - uses per-thread struct, but needs to be attached

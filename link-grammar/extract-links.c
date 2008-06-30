@@ -221,7 +221,7 @@ static Parse_set * parse_set(Sentence sent,
 
 	assert(cost >= 0, "parse_set() called with cost < 0.");
 
-	count = table_lookup(lw, rw, le, re, cost);
+	count = table_lookup(sent, lw, rw, le, re, cost);
 
 	/*
 	  assert(count >= 0, "parse_set() called on params that were not in the table.");
