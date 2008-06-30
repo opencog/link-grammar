@@ -281,7 +281,7 @@ TODO:
     ideas to the link-grammar dictionary).
 
   Thread safety: link-grammar is slowly being converted to be 
-    thead-safe. The work is about half-done. So far, the following 
+    thead-safe. The work is about nearly done. So far, the following 
     files are thread-safe, unless otherwise noted:
 
       and.c
