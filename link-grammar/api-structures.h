@@ -155,6 +155,10 @@ struct And_data_s
 	int          LT_size;
 	Disjunct **  label_table;
 	Label_node * hash_table[HT_SIZE];
+
+	/* keeping statistics */
+	int STAT_N_disjuncts;
+	int STAT_calls_to_equality_test;
 };
 
 typedef struct Parse_info_struct *Parse_info;

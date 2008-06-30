@@ -281,9 +281,6 @@ Accepted (4 linkages, 4 with no P.P. violations) at stage 1
 
 */
 
-static int STAT_N_disjuncts;	  /* keeping statistics */
-static int STAT_calls_to_equality_test;
-
 static void init_LT(Sentence sent)
 {
 	sent->and_data.LT_bound = 20;
@@ -389,7 +386,7 @@ static int and_hash_disjunct(Disjunct *d)
 }
 
 
-/** 
+/**
  * Returns TRUE if the disjunct is appropriate to be made into fat links.
  * Check here that the connectors are from some small set.
  * This will disallow, for example "the and their dog ran".
@@ -514,10 +511,10 @@ static int connectors_equal_AND(Connector *c1, Connector *c2)
  * Return true if the disjuncts are equal (ignoring priority fields)
  * and the string of the disjunct.
  */
-static int disjuncts_equal_AND(Disjunct * d1, Disjunct * d2)
+static int disjuncts_equal_AND(Sentence sent, Disjunct * d1, Disjunct * d2)
 {
 	Connector *e1, *e2;
-	STAT_calls_to_equality_test++;
+	sent->and_data.STAT_calls_to_equality_test++;
 	e1 = d1->left;
 	e2 = d2->left;
 	while((e1!=NULL) && (e2!=NULL)) {
@@ -595,7 +592,7 @@ static void put_disjunct_into_table(Sentence sent, Disjunct *d)
 		/* d1 points to the list of disjuncts of this type already there */
 		while(d1 != NULL)
 		{
-			if (disjuncts_equal_AND(d1, d)) return;
+			if (disjuncts_equal_AND(sent, d1, d)) return;
 			d1 = d1->next;
 		}
 		/* now we must put the d disjunct in there, and all of the GCDs of
@@ -630,10 +627,10 @@ static void put_disjunct_into_table(Sentence sent, Disjunct *d)
 		for (;d2 != NULL; d2 = di) {
 			di = d2->next;
 			for (d1 = sent->and_data.label_table[k]; d1 != NULL; d1 = d1->next) {
-				if (disjuncts_equal_AND(d1, d2)) break;
+				if (disjuncts_equal_AND(sent, d1, d2)) break;
 			}
 			if (d1 == NULL) {
-				STAT_N_disjuncts++;
+				sent->and_data.STAT_N_disjuncts++;
 				d2->next = sent->and_data.label_table[k];
 				sent->and_data.label_table[k] = d2;
 			} else {
@@ -653,7 +650,7 @@ static void put_disjunct_into_table(Sentence sent, Disjunct *d)
 		lp->label = sent->and_data.LT_size;
 		sent->and_data.label_table[sent->and_data.LT_size] = d_copy;
 		sent->and_data.LT_size++;
-		STAT_N_disjuncts++;
+		sent->and_data.STAT_N_disjuncts++;
 	}
 }
 
@@ -702,7 +699,7 @@ static void extract_all_fat_links(Sentence sent, Disjunct * d)
 	}
 }
 
-/** 
+/**
  * put the next len characters from c->string (skipping upper
  * case ones) into s.  If there are fewer than this, pad with '*'s.
  * Then put in a character for the multi match bit of c.
@@ -803,7 +800,8 @@ void build_conjunction_tables(Sentence sent)
 
 	init_HT(sent);
 	init_LT(sent);
-	STAT_N_disjuncts = STAT_calls_to_equality_test = 0;
+	sent->and_data.STAT_N_disjuncts = 0;
+	sent->and_data.STAT_calls_to_equality_test = 0;
 
 	for (w=0; w<sent->length; w++) {
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
@@ -819,12 +817,12 @@ void build_conjunction_tables(Sentence sent)
 void print_AND_statistics(Sentence sent)
 {
 	printf("Number of disjunct types (labels): %d\n", sent->and_data.LT_size);
-	printf("Number of disjuncts in the table: %d\n", STAT_N_disjuncts);
+	printf("Number of disjuncts in the table: %d\n", sent->and_data.STAT_N_disjuncts);
 	if (sent->and_data.LT_size != 0) {
 	  printf("average list length: %f\n",
-			 (float)STAT_N_disjuncts/sent->and_data.LT_size);
+			 (float)sent->and_data.STAT_N_disjuncts/sent->and_data.LT_size);
 	}
-	printf("Number of equality tests: %d\n", STAT_calls_to_equality_test);
+	printf("Number of equality tests: %d\n", sent->and_data.STAT_calls_to_equality_test);
 }
 
 /**
@@ -846,7 +844,7 @@ static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) 
 	assert(lp != NULL, "A disjunct I inserted was not there. (1)");
 
 	while(d1 != NULL) {
-		if (disjuncts_equal_AND(d1, d)) break;
+		if (disjuncts_equal_AND(sent, d1, d)) break;
 		d1 = d1->next;
 	}
 
@@ -1340,7 +1338,7 @@ static void build_image_array(Sentence sent)
 	}
 }
 
-/** 
+/**
  * returns TRUE if string s represents a strictly smaller match set
  * than does t
  */
@@ -1389,7 +1387,7 @@ static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label)
 }
 
 /**
- * is_canonical_linkage -- 
+ * is_canonical_linkage --
  * This uses link_array[], chosen_disjuncts[], has_fat_down[].
  * It assumes that there is a fat link in the current linkage.
  * See the comments above for more information about how it works
