@@ -161,6 +161,8 @@ struct And_data_s
 	int STAT_calls_to_equality_test;
 };
 
+typedef struct Image_node_struct Image_node;
+
 typedef struct Parse_info_struct *Parse_info;
 struct Parse_info_struct
 {
@@ -171,6 +173,13 @@ struct Parse_info_struct
 	Disjunct *     chosen_disjuncts[MAX_SENTENCE];
 	int            N_links;
 	struct Link_s  link_array[MAX_LINKS];
+
+	/* Points to the image structure for each word.
+	 * NULL if not a fat word. */
+	Image_node * image_array[MAX_SENTENCE];
+
+	/* TRUE if this word has a fat down link. FALSE otherise */
+	char has_fat_down[MAX_SENTENCE];
 };
 
 typedef struct match_context_s match_context_t;

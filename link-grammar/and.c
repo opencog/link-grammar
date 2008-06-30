@@ -1205,7 +1205,6 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
         compares with the image structure for this word.
 */
 
-typedef struct Image_node_struct Image_node;
 struct Image_node_struct {
 	Image_node * next;
 	Connector * c;  /* the connector the place on the disjunct must match */
@@ -1215,13 +1214,8 @@ struct Image_node_struct {
 					   <0 then go -place to the left. */
 };
 
-static Image_node * image_array[MAX_SENTENCE];
-/* points to the image structure for eacch word.  NULL if not a fat word. */
-
-static char has_fat_down[MAX_SENTENCE];  /* TRUE if this word has a fat down link
-									 FALSE otherise */
-
-/** Fill in the has_fat_down array.  Uses link_array[].
+/**
+ * Fill in the has_fat_down array.  Uses link_array[].
  * Returns TRUE if there exists at least one word with a
  * fat down label.
  */
@@ -1232,17 +1226,22 @@ int set_has_fat_down(Sentence sent)
 
 	N_fat = 0;
 
-	for (w=0; w<pi->N_words; w++) {
-		has_fat_down[w] = FALSE;
+	for (w = 0; w < pi->N_words; w++)
+	{
+		pi->has_fat_down[w] = FALSE;
 	}
 
-	for (link=0; link<pi->N_links; link++) {
-		if (pi->link_array[link].lc->priority == DOWN_priority) {
+	for (link = 0; link < pi->N_links; link++)
+	{
+		if (pi->link_array[link].lc->priority == DOWN_priority)
+		{
 			N_fat ++;
-			has_fat_down[pi->link_array[link].l] = TRUE;
-		} else if (pi->link_array[link].rc->priority == DOWN_priority) {
+			pi->has_fat_down[pi->link_array[link].l] = TRUE;
+		}
+		else if (pi->link_array[link].rc->priority == DOWN_priority)
+		{
 			N_fat ++;
-			has_fat_down[pi->link_array[link].r] = TRUE;
+			pi->has_fat_down[pi->link_array[link].r] = TRUE;
 		}
 	}
 	return (N_fat > 0);
@@ -1252,11 +1251,14 @@ static void free_image_array(Parse_info pi)
 {
 	int w;
 	Image_node * in, * inx;
-	for (w=0; w<pi->N_words; w++) {
-		for (in=image_array[w]; in!=NULL; in=inx) {
+	for (w = 0; w < pi->N_words; w++)
+	{
+		for (in = pi->image_array[w]; in != NULL; in = inx)
+		{
 			inx = in->next;
 			xfree((char *)in, sizeof(Image_node));
 		}
+		pi->image_array[w] = NULL;
 	}
 }
 
@@ -1272,24 +1274,30 @@ static void build_image_array(Sentence sent)
 	Image_node * in;
 	Parse_info pi = sent->parse_info;
 
-	for (word=0; word<pi->N_words; word++) {
-		image_array[word] = NULL;
+	for (word=0; word<pi->N_words; word++)
+	{
+		pi->image_array[word] = NULL;
 	}
 
-	for (end = -1; end <= 1; end += 2) {
-		for (link=0; link<pi->N_links; link++) {
-			if (end<0) {
+	for (end = -1; end <= 1; end += 2)
+	{
+		for (link = 0; link < pi->N_links; link++)
+		{
+			if (end < 0)
+			{
 				word = pi->link_array[link].l;
-				if (!has_fat_down[word]) continue;
+				if (!pi->has_fat_down[word]) continue;
 				this_end_con = pi->link_array[link].lc;
 				other_end_con = pi->link_array[link].rc;
 				dis = pi->chosen_disjuncts[word];
 				clist = dis->right;
-			} else {
-				word =pi->link_array[link].r;
-				if (!has_fat_down[word]) continue;
-				this_end_con =pi->link_array[link].rc;
-				other_end_con =pi->link_array[link].lc;
+			}
+			else
+			{
+				word = pi->link_array[link].r;
+				if (!pi->has_fat_down[word]) continue;
+				this_end_con = pi->link_array[link].rc;
+				other_end_con = pi->link_array[link].lc;
 				dis = pi->chosen_disjuncts[word];
 				clist = dis->left;
 			}
@@ -1301,35 +1309,51 @@ static void build_image_array(Sentence sent)
 			   or commas links or either/neither links */
 
 			in = (Image_node *) xalloc(sizeof(Image_node));
-			in->next = image_array[word];
-			image_array[word] = in;
+			in->next = pi->image_array[word];
+			pi->image_array[word] = in;
 			in->c = other_end_con;
+
 			/* the rest of this code is for computing in->place */
-			if (this_end_con->priority == UP_priority) {
+			if (this_end_con->priority == UP_priority)
+			{
 				in->place = 0;
-			} else {
+			}
+			else
+			{
 				in->place = 1;
 				if ((dis->left != NULL) &&
-					(dis->left->priority == UP_priority)) {
+					(dis->left->priority == UP_priority))
+				{
 					upcon = dis->left;
-				} else if ((dis->right != NULL) &&
-						   (dis->right->priority == UP_priority)) {
+				}
+				else if ((dis->right != NULL) &&
+						   (dis->right->priority == UP_priority))
+				{
 					upcon = dis->right;
-				} else {
+				}
+				else
+				{
 					upcon = NULL;
 				}
-				if (upcon != NULL) { /* add on extra for a fat up link */
+				if (upcon != NULL)
+				{
+					/* add on extra for a fat up link */
 					updis = sent->and_data.label_table[upcon->label];
-					if (end > 0) {
+					if (end > 0)
+					{
 						updiscon = updis->left;
-					} else {
+					}
+					else
+					{
 						updiscon = updis->right;
 					}
-					for (;updiscon != NULL; updiscon = updiscon->next) {
+					for (;updiscon != NULL; updiscon = updiscon->next)
+					{
 						in->place ++;
 					}
 				}
-				for (; clist != this_end_con; clist = clist->next) {
+				for (; clist != this_end_con; clist = clist->next)
+				{
 					if (clist->label < 0) in->place++;
 				}
 				in->place = in->place * (-end);
@@ -1405,13 +1429,16 @@ int is_canonical_linkage(Sentence sent)
 
 	build_image_array(sent);
 
-	for (w=0; w<pi->N_words; w++) {
-		if (!has_fat_down[w]) continue;
+	for (w=0; w<pi->N_words; w++)
+	{
+		if (!pi->has_fat_down[w]) continue;
 		chosen_d = pi->chosen_disjuncts[w];
 
 		/* there must be a down connector in both the left and right list */
-		for (d_c = chosen_d->left; d_c!=NULL; d_c=d_c->next) {
-			if (d_c->priority == DOWN_priority) {
+		for (d_c = chosen_d->left; d_c!=NULL; d_c=d_c->next)
+		{
+			if (d_c->priority == DOWN_priority)
+			{
 				d_label = d_c->label;
 				break;
 			}
@@ -1430,26 +1457,25 @@ int is_canonical_linkage(Sentence sent)
 
 		/* check that the disjunct on w is minimal (canonical) */
 
-		for (dis=sent->and_data.label_table[d_label]; dis!=NULL; dis=dis->next) {
-
+		for (dis=sent->and_data.label_table[d_label]; dis!=NULL; dis=dis->next)
+		{
 			/* now, reject a disjunct if it's not strictly below the old */
 			if(!strictly_smaller(dis->string, d_c->string)) continue;
 
 			/* Now, it has to match the image connectors */
-
-			for (in=image_array[w]; in!=NULL; in=in->next) {
-
+			for (in = pi->image_array[w]; in != NULL; in = in->next)
+			{
 				place = in->place;
-				if (place == 0) {
-
+				if (place == 0)
+				{
 					assert(upcon != NULL, "Should have found an up link");
 					dummy_connector.label = upcon->label;
 
 					/* now we have to compute the string of the
 					   disjunct with upcon->label that corresponds
 					   to dis  */
-
-					if (upcon->label == d_label) {
+					if (upcon->label == d_label)
+					{
 						dummy_connector.string = dis->string;
 					} else {
 						dummy_connector.string =
@@ -1494,19 +1520,24 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 	Disjunct * dis, * updis, *mydis;
 	Parse_info pi = sent->parse_info;
 
-	for (end = -1; end <= 1; end += 2) {
-		for (link=0; link<pi->N_links; link++) {
+	for (end = -1; end <= 1; end += 2)
+	{
+		for (link=0; link<pi->N_links; link++)
+		{
 			if (sublinkage->link[link]->l == -1) continue;
-			if (end<0) {
+			if (end < 0)
+			{
 				word = pi->link_array[link].l;
-				if (!has_fat_down[word]) continue;
+				if (!pi->has_fat_down[word]) continue;
 				this_end_con = pi->link_array[link].lc;
 				dis = pi->chosen_disjuncts[word];
 				mydis = pi->chosen_disjuncts[sublinkage->link[link]->l];
 				clist = dis->right;
-			} else {
+			}
+			else
+			{
 				word = pi->link_array[link].r;
-				if (!has_fat_down[word]) continue;
+				if (!pi->has_fat_down[word]) continue;
 				this_end_con = pi->link_array[link].rc;
 				dis = pi->chosen_disjuncts[word];
 				mydis = pi->chosen_disjuncts[sublinkage->link[link]->r];
