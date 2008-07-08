@@ -143,7 +143,7 @@ backbiters.n backboards.n backbones.n backdoors.n backdrops.n
 backers.n backgrounds.n backings.n backlashes.n backlogs.n backrooms.n 
 backs.n backscratchers.n backseats.n backsides.n backstrokes.n 
 backups.n backwaters.n bacteriologists.n badgers.n badges.n badlands.n 
-baffles.n bagatelles.n bagpipes.n bags.n baileys.n bailiffs.n 
+baffles.n bagatelles.n bagels.n bagpipes.n bags.n baileys.n bailiffs.n 
 bailouts.n bails.n baits.n bakeries.n bakers.n balalaikas.n balances.n 
 balconies.n bales.n balks.n ballades.n ballads.n ballbearings.n 
 ballcocks.n ballerinas.n ballets.n balloonists.n balloons.n ballots.n 
@@ -260,7 +260,8 @@ bungalows.n bunglers.n bungs.n bunions.n bunkers.n bunks.n bunnies.n
 buns.n buoys.n burdens.n bureaucracies.n bureaucrats.n bureaus.n 
 burettes.n burgesses.n burghers.n burghs.n burglaries.n burglars.n 
 burgomasters.n burgs.n burials.n burlesques.n burners.n burns.n 
-burps.n burrows.n burrs.n bursaries.n bursars.n bursts.n burthens.n 
+burps.n burritos.n burros.n burrows.n burrs.n bursaries.n 
+bursars.n bursts.n burthens.n 
 buses.n bushels.n bushes.n businesses.n buskers.n busters.n bustles.n 
 busts.n busybodies.n butchers.n butlers.n buttercups.n butterflies.n 
 butteries.n buttocks.n buttonholes.n buttonhooks.n buttons.n 
@@ -329,7 +330,10 @@ checkups.n cheekbones.n cheeks.n cheeps.n cheerleaders.n cheers.n
 cheesecakes.n cheesecloths.n cheetahs.n chefs.n chemicals.n chemises.n 
 chemists.n chequebooks.n cheques.n cherries.n cherubs.n chessboards.n 
 chesterfields.n chestnuts.n chests.n chews.n chickens.n chickpeas.n 
-chicks.n chiefs.n chieftains.n childhoods.n chills.n chimeras.n 
+chicks.n chiefs.n chieftains.n childhoods.n 
+chile_poblanos chile_rellenos chile_verdes
+chiles.n chiles_poblanos chiles_rellenos chiles_verdes
+chills.n chimeras.n 
 chimes.n chimneypots.n chimneys.n chimneysweepers.n chimneysweeps.n 
 chimpanzees.n chimps.n chinchillas.n chinks.n chins.n chipmunks.n 
 chips.n chiropodists.n chiropractors.n chirps.n chirrups.n chisels.n 
@@ -576,7 +580,8 @@ doges.n dogfish.p doggies.n doghouses.n dogmas.n dogs.n dogsbodies.n
 dogwoods.n doilies.n dollars.n dollhouses.n 
 dollies.n dollops.n dolls.n dolmens.n 
 dolphins.n dolts.n domains.n domes.n domiciles.n dominions.n dominos.n 
-donations.n donkeys.n donors.n dons.n doodlebugs.n dooms.n doorbells.n 
+donations.n donkeys.n donors.n dons.n donuts.n 
+doodlebugs.n dooms.n doorbells.n 
 doorcases.n doorframes.n doorhandles.n doorkeepers.n doorknobs.n 
 doorknockers.n doormats.n doornails.n doorposts.n doors.n doorsteps.n 
 doorstoppers.n doorways.n dopes.n dories.n dormers.n dormitories.n 
@@ -624,7 +629,8 @@ emblems.n embodiments.n embraces.n embryos.n emendations.n emeralds.n
 emergencies.n emigrants.n emigres.n eminences.n emirates.n emirs.n 
 emissaries.n emissions.n emotions.n emperors.n empires.n empiricists.n 
 employees.n employers.n emporiums.n empresses.n emulsions.n emus.n 
-enactments.n encampments.n enchantments.n enchantresses.n enclaves.n 
+enactments.n encampments.n enchantments.n enchantresses.n enchiladas.n
+enchiladas_rancheros enchiladas_verdes enclaves.n 
 enclosures.n encomiums.n encounters.n encouragements.n encroachments.n 
 encumbrances.n encyclicals.n encyclopaedias.n encyclopedias.n 
 endeavours.n endemics.n endings.n endives.n endorsements.n 
@@ -676,7 +682,7 @@ fabrications.n fabrics.n facades.n faces.n facets.n facials.n
 facilitators.n facilities.n facsimiles.n factions.n factories.n 
 factors.n factotums.n faculties.n fads.n faeries.n faggots.n fags.n 
 failings.n fairgrounds.n fairies.n fairs.n fairways.n fairylands.n 
-fairytales.n faiths.n fakes.n fakirs.n falcons.n falsehoods.n 
+fairytales.n faiths.n fajitas.n fakes.n fakirs.n falcons.n falsehoods.n 
 falsettos.n falsifications.n falsities.n familiarities.n families.n 
 famines.n fanaticisms.n fanatics.n fanciers.n fancies.n fandangos.n 
 fanfares.n fangs.n fanlights.n fannies.n fans.n fantasias.n 
@@ -711,7 +717,8 @@ flagships.n flagstaffs.n flairs.n flakes.n flames.n flamethrowers.n
 flamingos.n flanges.n flanks.n flannels.n flans.n flapjacks.n 
 flappers.n flaps.n flares.n flashbacks.n flashbulbs.n flashes.n 
 flashlights.n flashpoints.n flasks.n flatfish.p flats.n flatterers.n 
-flatteries.n flautists.n flavors.n flavourings.n flavours.n flaws.n 
+flatteries.n flautas.n 
+flautists.n flavors.n flavourings.n flavours.n flaws.n 
 fleas.n flecks.n fledgelings.n fledglings.n fleets.n flexes.n 
 flickers.n flicks.n fliers.n flies.n flights.n flings.n flints.n 
 flippers.n flips.n flirtations.n flirts.n floatations.n floats.n 
@@ -878,6 +885,7 @@ horrors.n horseflies.n horseraces.n horseradishes.n horses.n
 horseshoes.n horsewhips.n horticulturists.n hosepipes.n hoses.n 
 hosiers.n hospices.n hospitalizations.n hospitals.n hostages.n 
 hostelries.n hostels.n hostesses.n hostilities.n hosts.n hotbeds.n 
+hotdogs.n
 hoteliers.n hotels.n hotheads.n hothouses.n hotplates.n hounds.n 
 hourglasses.n houseboats.n housebreakers.n housedogs.n houseflies.n 
 housefuls.n householders.n households.n housekeepers.n housemaids.n 
@@ -1154,7 +1162,8 @@ mushrooms.n musicals.n musicians.n musketeers.n muskets.n muskrats.n
 mussels.n mustachios.n mustangs.n musters.n mutations.n mutes.n 
 mutilations.n mutineers.n mutinies.n mutterers.n mutts.n muzzles.n 
 mynahs.n mynas.n myriads.n mysteries.n mystics.n mystiques.n 
-mythologies.n mythologists.n nadirs.n nailfiles.n nails.n nameplates.n 
+mythologies.n mythologists.n nachos.n 
+nadirs.n nailfiles.n nails.n nameplates.n 
 names.n namesakes.n nannies.n napes.n napkins.n nappies.n naps.n 
 narcotics.n narrations.n narratives.n narrators.n nasals.n 
 nationalists.n nationalities.n nationalizations.n nationals.n 
@@ -1409,7 +1418,8 @@ qualifiers.n qualities.n qualms.n quandaries.n quantities.n
 quarantines.n quarks.n quarrels.n quarries.n quarterbacks.n 
 quarterfinals.n quarterlies.n quarters.n quartets.n quarts.n quasars.n 
 quatercentenaries.n quatrains.n quavers.n quays.n queens.n queers.n 
-queries.n questioners.n questionnaires.n quests.n queues.n quibbles.n 
+queries.n quesadillas.n
+questioners.n questionnaires.n quests.n queues.n quibbles.n 
 quiches.n quickies.n quicksteps.n quid.p quietists.n quills.n quilts.n 
 quincentenaries.n quinces.n quintessences.n quintets.n quintuplets.n 
 quips.n quirks.n quitters.n quivers.n quizes.n quizmasters.n quorums.n 
@@ -1461,7 +1471,8 @@ reimbursements.n reimpositions.n reincarnations.n reindeer.p
 reinforcements.n reins.n reinterpretations.n reissues.n reiterations.n 
 rejections.n rejects.n rejoinders.n relapses.n relations.n 
 relationships.n relatives.n relaxations.n relays.n releases.n relics.n 
-religions.n remainders.n remains.n remakes.n remarriages.n remedies.n 
+religions.n rellenos.n 
+remainders.n remains.n remakes.n remarriages.n remedies.n 
 remembrances.n reminders.n reminiscences.n remissions.n remittances.n 
 remnants.n remonstrances.n removals.n removers.n renaissances.n 
 renascences.n renderings.n rendezvous.p renditions.n renegades.n 
@@ -1636,7 +1647,8 @@ softeners.n softies.n soirees.n sojourners.n solaces.n soldiers.n
 soles.n solicitors.n solids.n soliloquies.n solitudes.n soloists.n 
 solos.n solstices.n solutions.n solvents.n sombreros.n somersaults.n 
 somnambulists.n sonars.n sonatas.n songbirds.n songbooks.n songs.n 
-sonnets.n sonnies.n sonorities.n sons.n soothsayers.n sophisms.n 
+sonnets.n sonnies.n sonorities.n sons.n soothsayers.n sopapillas.n 
+sophisms.n 
 sophists.n sophomores.n sopranos.n sops.n sorbets.n sorcerers.n 
 sorceresses.n sores.n sororities.n sorrels.n sorrows.n sorters.n 
 sorties.n sorts.n soubriquets.n souffles.n souls.n sounds.n 
@@ -1746,7 +1758,8 @@ symptoms.n synagogues.n syncopations.n syndicates.n syndromes.n
 synods.n synonyms.n syphons.n syringes.n syrups.n systems.n tabbies.n 
 tabernacles.n tablecloths.n tablemats.n tables.n tablespoonfuls.n 
 tablespoons.n tablets.n tabloids.n taboos.n tabs.n tabulations.n 
-tackles.n tacks.n tacticians.n tactics.n tadpoles.n taffies.n tags.n 
+tacitos.n tackles.n tacks.n tacos.n 
+tacticians.n tactics.n tadpoles.n taffies.n tags.n 
 tailgates.n tailors.n tailpieces.n tails.n tailspins.n take-offs.n 
 takeoffs.n takeovers.n takers.n talents.n tales.n talismans.n 
 talkers.n talkies.n talks.n tallboys.n tallies.n talons.n tamales.n 
@@ -1804,7 +1817,8 @@ toothbrushes.n toothpicks.n toots.n topcoats.n topics.n topmasts.n
 toppers.n toppings.n tops.n topsails.n torches.n toreadors.n 
 tormentors.n torments.n tornadoes.n torpedoes.n torpors.n torques.n 
 torrents.n torsos.n tortillas.n tortoises.n torturers.n tortures.n 
-tosses.n totals.n totems.n tots.n toucans.n touchdowns.n touches.n 
+tosses.n tostadas.n
+totals.n totems.n tots.n toucans.n touchdowns.n touches.n 
 touchstones.n toughies.n toughs.n toupees.n tourists.n tournaments.n 
 tourneys.n tourniquets.n tours.n towels.n towers.n towns.n townships.n 
 towpaths.n towropes.n toxicologists.n toxins.n toys.n toyshops.n 
@@ -1948,4 +1962,4 @@ yeas.n yells.n yeomanries.n yetis.n yews.n yields.n yobs.n yodellers.n
 yodels.n yoghourts.n yoghurts.n yogis.n yogurts.n yokels.n yokes.n 
 yolks.n youngsters.n youths.n yuppies.n zealots.n zebras.n zeniths.n 
 zephyrs.n zeppelins.n zeros.n zippers.n zips.n zithers.n zlotys.n 
-zodiacs.n zombies.n zones.n zoologists.n zoos.n 
+zodiacs.n zombies.n zones.n zoologists.n zoos.n zuchinis.n

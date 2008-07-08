@@ -8,6 +8,7 @@ Version 4.3.6 includes the following changes:
  * Clarify error logging and error printing.
  * Add java getVersion() to return link-grammar version string.
  * Add more numbers to dict (e.g. twenty-seven, bazillion, half-dozen, etc.)
+ * Foodstuffs: bagels, lox, tacos, guacamole, roe, neufchatel, mayo, etc.
 
 Version 4.3.5 includes the following changes:
  * Added ant build file to create the link-grammar jar file.
