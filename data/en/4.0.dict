@@ -641,8 +641,8 @@ teens: ({TA-} & DG- & <noun-main-x>) or <generic-plural-id>;
 hundred thousand half-thousand million half-million quarter-million 
 billion half-billion quarter-billion trillion half-trillion 
 quarter-trillion dozen half-dozen 
-bajillion bazillion gadzillion gagillion gajillion gazillion godzillian
-jillian jizillion kabillion kajillion katrillion killion umptillion:
+bajillion bazillion gadzillion gagillion gajillion gazillion godzillion
+jillion jizillion kabillion kajillion katrillion killion umptillion:
 NN- & (NNy+ or NIa- or
 ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
