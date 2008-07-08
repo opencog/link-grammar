@@ -201,10 +201,8 @@ or [[({@AN-} & {@A-} & (({D-} & <noun-sub-x> & (<noun-main-x> or (Rw+ & B*m+))) 
 or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 
-/en/words/words.n.2.s:  % plural nouns ending in "s"
- ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or (Rw+ & Bpm+)))
-or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
+% plural nouns ending in "s"
+/en/words/words.n.2.s: <generic-plural-id>;
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
 
 /en/words/words.n.2.x:  % plural nouns not ending in "s"
@@ -579,8 +577,24 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 % NUMERICAL EXPRESSIONS
 
 two three four five six seven eight nine ten eleven twelve thirteen
-fourteen fifteen sixteen seventeen eighteen nineteen twenty thirty forty
-fifty sixty seventy eighty ninety several: 
+fourteen fifteen sixteen seventeen eighteen nineteen 
+twenty twenty-one twenty-two twenty-three twenty-four 
+twenty-five twenty-six twenty-seven twenty-eight twenty-nine 
+thirty thirty-one thirty-two thirty-three thirty-four 
+thirty-five thirty-six thirty-seven thirty-eight thirty-nine 
+forty forty-one forty-two forty-three forty-four 
+forty-five forty-six forty-seven forty-eight forty-nine 
+fifty fifty-one fifty-two fifty-three fifty-four 
+fifty-five fifty-six fifty-seven fifty-eight fifty-nine 
+sixty sixty-one sixty-two sixty-three sixty-four 
+sixty-five sixty-six sixty-seven sixty-eight sixty-nine 
+seventy seventy-one seventy-two seventy-three seventy-four 
+seventy-five seventy-six seventy-seven seventy-eight seventy-nine 
+eighty eighty-one eighty-two eighty-three eighty-four 
+eighty-five eighty-six eighty-seven eighty-eight eighty-nine 
+ninty ninty-one ninty-two ninty-three ninty-four 
+ninty-five ninty-six ninty-seven ninty-eight ninty-nine 
+several: 
 NN+ or NW+ or NIa- or
 ({EN- or NIc-} & (ND+ or ({{@L+} & DD-} & 
 (Dmc+ or (<noun-sub-p> & <noun-main-p>)))));
@@ -618,9 +632,17 @@ or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &
 
 1900s 1910s 1920s 1930s 1940s 1950s 1960s 1970s 1980s 1990s
 1900's 1910's 1920's 1930's 1940's 1950's 1960's 1970's 1980's 1990's
+twenties thirties, forties fifties sixties seventies eighties nineties
 '20s '30s '40s '50s '60s '70s '80s '90s: {TA-} & DG- & <noun-main-x>;
 
-hundred thousand million billion trillion dozen:
+% teens could be above or teenagers (words.n.2)
+teens: ({TA-} & DG- & <noun-main-x>) or <generic-plural-id>;
+
+hundred thousand half-thousand million half-million quarter-million 
+billion half-billion quarter-billion trillion half-trillion 
+quarter-trillion dozen half-dozen 
+bajillion bazillion gadzillion gagillion gajillion gazillion godzillian
+jillian jizillion kabillion kajillion katrillion killion umptillion:
 NN- & (NNy+ or NIa- or
 ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
