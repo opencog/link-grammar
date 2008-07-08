@@ -498,8 +498,8 @@ int main(int argc, char * argv[])
 		sent = sentence_create(input_string, dict);
 
 		if (sent == NULL) {
-			if (verbosity > 0) fprintf(stderr, "Warning: %s\n", lperrmsg);
-			/* if (lperrno != NOTINDICT) exit(-1); */
+			if ((verbosity > 0) && (lperrno != 0))
+				fprintf(stderr, "Warning: %s\n", lperrmsg);
 			continue;
 		}
 		if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
