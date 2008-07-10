@@ -21,41 +21,46 @@
 
 String * String_create(void)
 {
+#define INITSZ 30
 	String * string;
 	string = (String *) exalloc(sizeof(String));
-	string->allocated = 1;
-	string->p = (char *) exalloc(sizeof(char));
+	string->allocated = INITSZ;
+	string->p = (char *) exalloc(INITSZ*sizeof(char));
 	string->p[0] = '\0';
-	string->eos = string->p;
+	string->eos = 0;
 	return string;
 }
 
-int append_string(String * string, const char *fmt, ...)
+void append_string(String * string, const char *fmt, ...)
 {
-	char temp_string[1024];
+#define TMPLEN 1024
+	char temp_string[TMPLEN];
+	size_t templen;
 	char * p;
-	int new_size;
+	size_t new_size;
 	va_list args;
 
 	va_start(args, fmt);
-	vsprintf(temp_string, fmt, args);
+	templen = vsnprintf(temp_string, TMPLEN, fmt, args);
 	va_end(args);
 
-	if (string->allocated <= strlen(string->p)+strlen(temp_string)) {
-		new_size = 2*string->allocated+strlen(temp_string)+1;
+	if (string->allocated <= string->eos + templen)
+	{
+		new_size = 2 * string->allocated + templen + 1;
 		p = exalloc(sizeof(char)*new_size);
 		strcpy(p, string->p);
-		strcat(p, temp_string);
-		exfree(string->p, sizeof(char)*string->allocated);
-		string->p = p;
-		string->eos = strchr(p,'\0');
-		string->allocated = new_size;
-	}
-	else {
-		strcat(string->eos, temp_string);
-		string->eos += strlen(temp_string);
-	}
+		strcpy(p + string->eos, temp_string);
 
-	return 0;
+		exfree(string->p, sizeof(char)*string->allocated);
+
+		string->p = p;
+		string->allocated = new_size;
+		string->eos += templen;
+	}
+	else
+	{
+		strcpy(string->p + string->eos, temp_string);
+		string->eos += templen;
+	}
 }
 
