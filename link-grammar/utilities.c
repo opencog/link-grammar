@@ -245,11 +245,6 @@ void exfree(void * p, int size) {
 	free(p);
 }
 
-/* This is provided as part of the API */
-void string_delete(char * p) {
-	exfree(p, strlen(p)+1);
-}
-
 /* Returns the smallest power of two that is at least i and at least 1 */
 int next_power_of_two_up(int i)
 {

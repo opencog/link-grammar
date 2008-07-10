@@ -19,7 +19,14 @@
    a time, we keep around a pointer to the end of string to prevent
    the algorithm from being quadratic. */
 
-String * String_create(void)
+struct String_s
+{
+	size_t allocated;  /* Unsigned so VC++ doesn't complain about comparisons */
+	size_t eos; /* offset to end of string */
+	char * p;
+};
+
+String * string_new(void)
 {
 #define INITSZ 30
 	String * string;
@@ -29,6 +36,19 @@ String * String_create(void)
 	string->p[0] = '\0';
 	string->eos = 0;
 	return string;
+}
+
+void string_delete(String *s)
+{
+	exfree(s->p, s->allocated*sizeof(char));
+	exfree(s, sizeof(String));
+}
+
+char * string_copy(String *s)
+{
+	char * p = exalloc(s->eos + 1);
+	strcpy(p, s->p);
+	return p;
 }
 
 void append_string(String * string, const char *fmt, ...)

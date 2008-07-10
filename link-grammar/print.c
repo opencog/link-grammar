@@ -99,7 +99,7 @@ char * linkage_print_links_and_domains(Linkage linkage)
 {
 	int link, longest, j;
 	int N_links = linkage_get_num_links(linkage);
-	String * s = String_create();
+	String * s = string_new();
 	char * links_string;
 	char ** dname;
 
@@ -127,19 +127,17 @@ char * linkage_print_links_and_domains(Linkage linkage)
 		append_string(s, "        %s\n\n", linkage_get_violation_name(linkage));
 	}
 	
-	links_string = exalloc(strlen(s->p)+1);
-	strcpy(links_string, s->p);
-	exfree(s->p, sizeof(char)*s->allocated);
-	exfree(s, sizeof(String));
-
+	links_string = string_copy(s);
+	string_delete(s);
 	return links_string; 
 }
 
-static char * build_linkage_postscript_string(Linkage linkage) {
+static char * build_linkage_postscript_string(Linkage linkage)
+{
 	int link, i,j;
 	int d;
 	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
-	Sublinkage *sublinkage=&(linkage->sublinkage[linkage->current]);
+	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
 	int N_links = sublinkage->num_links;
 	Link *ppla = sublinkage->link;
 	String  * string;
@@ -147,7 +145,7 @@ static char * build_linkage_postscript_string(Linkage linkage) {
 	Dictionary dict = linkage->sent->dict;
 	Parse_Options opts = linkage->opts;
 
-	string = String_create();
+	string = string_new();
 
 	N_wall_connectors = 0;
 	if (dict->left_wall_defined) {
@@ -228,11 +226,8 @@ static char * build_linkage_postscript_string(Linkage linkage) {
 	}
 	append_string(string,"]\n");
 
-	ps_string = exalloc(strlen(string->p)+1);
-	strcpy(ps_string, string->p);
-	exfree(string->p, sizeof(char)*string->allocated);
-	exfree(string, sizeof(String));
-
+	ps_string = string_copy(string);
+	string_delete(string);
 	return ps_string; 
 }
 
@@ -249,7 +244,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	const char * chosen_words[MAX_SENTENCE];
 	Parse_Options opts = linkage->opts;
 
-	for (i=0; i<sent->length; i++) {   /* get rid of those ugly ".Ixx" */
+	for (i=0; i<sent->length; i++)
+	{   /* get rid of those ugly ".Ixx" */
 		chosen_words[i] = sent->word[i].string;
 		if (pi->chosen_disjuncts[i] == NULL) {  
 			/* no disjunct is used on this word because of null-links */
@@ -317,7 +313,7 @@ char * linkage_print_diagram(Linkage linkage)
 	Parse_Options opts = linkage->opts;
 	int x_screen_width = parse_options_get_screen_width(opts);
 
-	string = String_create();
+	string = string_new();
 
 	N_wall_connectors = 0;
 	if (dict->left_wall_defined) {
@@ -394,10 +390,8 @@ char * linkage_print_diagram(Linkage linkage)
 			
 			if (2*row+2 > MAX_HEIGHT-1) {
 				append_string(string, "The diagram is too high.\n");
-				gr_string = exalloc(strlen(string->p)+1);
-				strcpy(gr_string, string->p);
-				exfree(string->p, sizeof(char)*string->allocated);
-				exfree(string, sizeof(String));
+				gr_string = string_copy(string);
+				string_delete(string);
 				return gr_string; 
 			}
 			if (row > top_row) top_row = row;
@@ -525,10 +519,8 @@ char * linkage_print_diagram(Linkage linkage)
 		append_string(string, "\n");
 		k += width;
 	}
-	gr_string = exalloc(strlen(string->p)+1);
-	strcpy(gr_string, string->p);
-	exfree(string->p, sizeof(char)*string->allocated);
-	exfree(string, sizeof(String));
+	gr_string = string_copy(string);
+	string_delete(string);
 	return gr_string; 
 }
 

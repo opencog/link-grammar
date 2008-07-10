@@ -1279,12 +1279,13 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 	int best, bestright, bestleft;
 	Sentence sent;
 	char s[100], * p;
-	String * cs = String_create();
+	String * cs = string_new();
 
 	assert (numcon_total < MAXCONSTITUENTS, "Too many constituents");
 	sent = linkage_get_sentence(linkage);
 
-	for(c=0; c<numcon_total; c++) {
+	for (c = 0; c < numcon_total; c++)
+	{
 		leftdone[c]=0;
 		rightdone[c]=0;
 	}
@@ -1350,10 +1351,8 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 	}
 
 	append_string(cs, "\n");
-	p = exalloc(strlen(cs->p)+1);
-	strcpy(p, cs->p);
-	exfree(cs->p, sizeof(char)*cs->allocated);
-	exfree(cs, sizeof(String));
+	p = string_copy(cs);
+	string_delete(cs);
 	return p;
 }
 
@@ -1561,15 +1560,13 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode)
 	}
 	else if (mode == 1 || mode == 3)
 	{
-		cs = String_create();
+		cs = string_new();
 		root = linkage_constituent_tree(linkage);
 		print_tree(cs, (mode==1), root, 0, 0);
 		linkage_free_constituent_tree(root);
 		append_string(cs, "\n");
-		p = exalloc(strlen(cs->p)+1);
-		strcpy(p, cs->p);
-		exfree(cs->p, sizeof(char)*cs->allocated);
-		exfree(cs, sizeof(String));
+		p = string_copy(cs);
+		string_delete(cs);
 		return p;
 	}
 	else if (mode == 2)

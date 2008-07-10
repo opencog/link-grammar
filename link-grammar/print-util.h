@@ -21,14 +21,10 @@
 #endif
 
 typedef struct String_s String;
-struct String_s
-{
-	size_t allocated;  /* Unsigned so VC++ doesn't complain about comparisons */
-	size_t eos; /* offset to end of string */
-	char * p;
-};
 
-String * String_create(void);
+String * string_new(void);
+void string_delete(String *);
+char * string_copy(String *);
 void append_string(String * string, const char *fmt, ...) GNUC_PRINTF(2,3);
 
 #endif
