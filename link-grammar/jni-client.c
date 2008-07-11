@@ -163,8 +163,8 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 		sentence_delete(ptd->sent);
 		ptd->sent = NULL;
 		if (jverbosity > 0) {
-			fprintf(stdout,
-				"Sentence length (%d words) exceeds maximum allowable (%d words)\n",
+			fprintf(stderr,
+				"Error: Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 				sentence_length(ptd->sent), maxlen);
 		}
 		return;
@@ -181,7 +181,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	/* Now parse with null links */
 	if ((ptd->num_linkages == 0) && (!parse_options_get_batch_mode(ptd->opts)))
 	{
-		if (jverbosity > 0) fprintf(stdout, "No complete linkages found.\n");
+		if (jverbosity > 0) fprintf(stderr, "Warning: No complete linkages found.\n");
 		if (parse_options_get_allow_null(opts)) {
 			parse_options_set_min_null_count(opts, 1);
 			parse_options_set_max_null_count(opts, sentence_length(ptd->sent));
@@ -190,10 +190,10 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	}
 
 	if (parse_options_timer_expired(opts)) {
-		if (jverbosity > 0) fprintf(stdout, "Timer is expired!\n");
+		if (jverbosity > 0) fprintf(stderr, "Warning: Timer is expired!\n");
 	}
 	if (parse_options_memory_exhausted(opts)) {
-		if (jverbosity > 0) fprintf(stdout, "Memory is exhausted!\n");
+		if (jverbosity > 0) fprintf(stderr, "Warning: Memory is exhausted!\n");
 	}
 
 	if ((ptd->num_linkages == 0) &&
@@ -201,12 +201,12 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 			parse_options_get_panic_mode(opts))
 	{
 		print_total_time(opts);
-		if (jverbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
+		if (jverbosity > 0) fprintf(stderr, "Warning: Entering \"panic\" mode...\n");
 		parse_options_reset_resources(ptd->panic_parse_opts);
 		parse_options_set_verbosity(ptd->panic_parse_opts, jverbosity);
 		ptd->num_linkages = sentence_parse(ptd->sent, ptd->panic_parse_opts);
 		if (parse_options_timer_expired(ptd->panic_parse_opts)) {
-			if (jverbosity > 0) fprintf(stdout, "Timer is expired!\n");
+			if (jverbosity > 0) fprintf(stderr, "Error: Timer is expired!\n");
 		}
 	}
 }
