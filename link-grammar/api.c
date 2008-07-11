@@ -732,16 +732,21 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 
 	only_canonical_allowed = (!(overflowed || (N_linkages_found > 2*opts->linkage_limit)));
-	/* When we're processing only a small subset of the linkages, don't worry
-	   about restricting the set we consider to be canonical ones.  In the extreme
-	   case where we are only generating 1 in a million linkages, it's very unlikely
-	   that we'll hit two symmetric variants of the same linkage anyway. */
-
+	/* When we're processing only a small subset of the linkages,
+	 * don't worry about restricting the set we consider to be
+	 * canonical ones.  In the extreme case where we are only 
+	 * generating 1 in a million linkages, it's very unlikely
+	 * that we'll hit two symmetric variants of the same linkage
+	 * anyway.
+	 */ 
 	/* (optional) first pass: just visit the linkages */
-	/* The purpose of these two passes is to make the post-processing more
-	   efficient.  Because (hopefully) by the time you do the real work
-	   in the 2nd pass you've pruned the relevant rule set in the first pass. */
-	if (sent->length >= opts->twopass_length) {
+	/* The purpose of these two passes is to make the post-processing
+	 * more efficient.  Because (hopefully) by the time you do the
+	 * real work in the 2nd pass you've pruned the relevant rule set
+	 * in the first pass.
+	 */
+	if (sent->length >= opts->twopass_length)
+	{
 		for (in=0; (in < N_linkages_alloced) &&
 				   (!resources_exhausted(opts->resources)); in++) {
 			extract_links(indices[in], sent->null_count, sent->parse_info);
@@ -757,7 +762,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	/* second pass: actually perform post-processing */
 	for (in=0; (in < N_linkages_alloced) &&
-			   (!resources_exhausted(opts->resources)); in++) {
+			   (!resources_exhausted(opts->resources)); in++)
+	{
 		extract_links(indices[in], sent->null_count, sent->parse_info);
 		if (set_has_fat_down(sent)) {
 			canonical = is_canonical_linkage(sent);
