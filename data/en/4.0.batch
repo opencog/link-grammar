@@ -1107,9 +1107,13 @@ Marry's shoes are red.
 % Overly long sentences leading to overflow
 I think one of the chief differences between the main Filipino language, which is Tagalog, and English, when I hear Tagalog speakers speaking English, is that they tend to place the stress on the wrong syllable of a word or they stress the wrong word in the sentence or in the question.
 
+% long sentence leading to crash.
+Cortes in his various letters again and again claims the Emperor's patronage of his bold defiance of the Emperor's officers on the ground that the latter in their action were moved solely by considerations of their personal gain, whereas he, Cortes, was striving to endow his sovereign with a rich new empire and boundless treasure whilst carrying into the dark pagan land, at the sword's point, the gentle creed of the Christian God.
+
 % A no-canonical-parses error
 Well, say, Joe, you can be Friar Tuck or Much the miller's son, and lam me with a quarter-staff; or I'll be the Sheriff of Nottingham and you be Robin Hood a little while and kill me.
 
-% A and-list overflow error:
+% When constituent tree printing is enabled, this causes 
+% a cascade of and-list overflow errors:
 I have not seen the grysbok, or the suni, or the dibitag, or the lechwi, or the aoul, or the gerenuk, or the blaauwbok, or the chevrotain, or lots of others, but who in the world could guess what they were or what they looked like, judging only from the names?
 
