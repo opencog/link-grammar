@@ -804,6 +804,14 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		    (N_linkages_found > 0) &&
 		    (N_linkages_found < opts->linkage_limit))
 		{
+			/* With the current parser, the following sentence will elicit
+			 * this error:
+			 *
+			 * Well, say, Joe, you can be Friar Tuck or Much the miller's
+			 * son, and lam me with a quarter-staff; or I'll be the Sheriff
+			 * of Nottingham and you be Robin Hood a little while and kill
+			 * me.
+			 */
 			fprintf(stderr, "Error: None of the linkages is canonical\n"
 			                "\tN_linkages_post_processed=%d "
 			                "N_linkages_found=%d\n",

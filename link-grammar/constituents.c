@@ -406,8 +406,8 @@ static int find_next_element(con_context_t *ctxt,
 		}
 		if (ok == 0) continue;
 
-		ctxt->templist[num_elements]=c;
-		addedone=1;
+		ctxt->templist[num_elements] = c;
+		addedone = 1;
 		num_lists = find_next_element(ctxt, linkage, c, numcon_total,
 									  num_elements+1, num_lists);
 	}
@@ -418,7 +418,20 @@ static int find_next_element(con_context_t *ctxt,
 			ctxt->andlist[num_lists].num = num_elements;
 		}
 		num_lists++;
-		assert(num_lists < MAX_ANDS, "Constituent overflowed andlist!\n");
+		if (MAX_ANDS <= num_lists)
+		{
+			/* With the current parser, the following will cause an
+			 * overflow:
+			 *
+			 * I have not seen the grysbok, or the suni, or the dibitag, or
+			 * the lechwi, or the aoul, or the gerenuk, or the blaauwbok,
+			 * or the chevrotain, or lots of others, but who in the world
+			 * could guess what they were or what they looked like, judging
+			 * only from the names?
+			 */
+			fprintf(stderr, "Error: Constituent overflowed andlist!\n");
+			return (num_lists-1); 
+		}
 	}
 	return num_lists;
 }
