@@ -776,6 +776,6 @@ void init_count(Sentence sent)
 
 void free_count(Sentence sent)
 {
-	free(sent->count_ctxt);
+	if (sent->count_ctxt != NULL) free(sent->count_ctxt);
 	sent->count_ctxt = NULL;
 }
