@@ -505,6 +505,7 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	int i;
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
+	bzero(sent, sizeof(struct Sentence_s));
 	sent->dict = dict;
 	sent->length = 0;
 	sent->num_linkages_found = 0;
@@ -519,7 +520,8 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	sent->parse_info = NULL;
 	sent->string_set = string_set_create();
 
-	if (!separate_sentence(input_string, sent)) {
+	if (!separate_sentence(input_string, sent))
+	{
 		string_set_delete(sent->string_set);
 		xfree(sent, sizeof(struct Sentence_s));
 		return NULL;
@@ -530,13 +532,15 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	set_is_conjunction(sent);
 	initialize_conjunction_tables(sent);
 
-	for (i=0; i<sent->length; i++) {
+	for (i=0; i<sent->length; i++)
+	{
 		/* in case we free these before they set to anything else */
 		sent->word[i].x = NULL;
 		sent->word[i].d = NULL;
 	}
 
-	if (!(dict->unknown_word_defined && dict->use_unknown_word)) {
+	if (!(dict->unknown_word_defined && dict->use_unknown_word))
+	{
 		if (!sentence_in_dictionary(sent)) {
 			sentence_delete(sent);
 			return NULL;
