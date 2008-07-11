@@ -299,7 +299,7 @@ static void grow_LT(Sentence sent)
 	space_in_use += sent->and_data.LT_bound * sizeof(Disjunct *);
 	if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
 	if (sent->and_data.label_table == NULL) {
-		printf("Ran out of space reallocing the label table\n");
+		fprintf(stderr, "Fatal Error: Ran out of space reallocing the label table\n");
 		exit(1);
 	}
 }

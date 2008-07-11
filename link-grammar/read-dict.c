@@ -127,8 +127,9 @@ static void dict_error(Dictionary dict, const char * s)
 
 static void warning(Dictionary dict, const char * s)
 {
-	printf("\nWarning: %s\n",s);
-	printf("line %d, current token = \"%s\"\n", dict->line_number, dict->token);
+	fprintf(stderr, "\nWarning: %s\n",s);
+	fprintf(stderr, "\tline %d, current token = \"%s\"\n",
+	                dict->line_number, dict->token);
 }
 
 Exp * Exp_create(Dictionary dict)
@@ -758,21 +759,22 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	} 
 	else if (is_idiom_word(dn->string))
 	{
-		printf("*** Word \"%s\" found near line %d.\n", dn->string, dict->line_number);
-		printf("	Words ending \".Ix\" (x a number) are reserved for idioms.\n");
-		printf("	This word will be ignored.\n");
+		fprintf(stderr, "Warning: Word \"%s\" found near line %d.\n"
+		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
+		        "\tThis word will be ignored.\n",
+		        dn->string, dict->line_number);
 		xfree((char *)dn, sizeof(Dict_node));
 	}
 	else if ((dn_head = abridged_lookup_list(dict, dn->string))!= NULL)
 	{
 		Dict_node *dnx;
-		printf("*** The word \"%s\"", dn->string);
-		printf(" found near line %d of %s matches the following words:\n",
-			   dict->line_number, dict->name);
+		fprintf(stderr, "Warning: The word \"%s\" "
+		                "found near line %d of %s matches the following words:\n",
+	                   dn->string, dict->line_number, dict->name);
 		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
-			printf(" %s", dnx->string);
+			fprintf(stderr, "\t%s", dnx->string);
 		}
-		printf("\n	This word will be ignored.\n");
+		fprintf(stderr, "\n\tThis word will be ignored.\n");
 		free_lookup_list(dn_head);
 		xfree((char *)dn, sizeof(Dict_node));
 	}
