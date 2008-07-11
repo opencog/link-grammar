@@ -89,7 +89,7 @@ static per_thread_data * init(JNIEnv *env)
 
 	ptd->opts = parse_options_create();
 	parse_options_set_disjunct_cost(ptd->opts, 3);
-	parse_options_set_max_sentence_length(ptd->opts, 70);
+	parse_options_set_max_sentence_length(ptd->opts, 170);
 	parse_options_set_panic_mode(ptd->opts, TRUE);
 	parse_options_set_max_parse_time(ptd->opts, 30);
 	parse_options_set_linkage_limit(ptd->opts, 1000);

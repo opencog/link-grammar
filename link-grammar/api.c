@@ -62,7 +62,7 @@ Parse_Options parse_options_create(void)
 	po->short_length = 6;
 	po->all_short = FALSE;
 	po->twopass_length = 30;
-	po->max_sentence_length = 70;
+	po->max_sentence_length = 170;
 	po->resources = resources_create();
 	po->display_short = TRUE;
 	po->display_word_subscripts = TRUE;
