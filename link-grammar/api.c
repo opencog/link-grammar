@@ -684,7 +684,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		/* We know that sent->num_linkages_found is bogus, possibly negative */
 		sent->num_linkages_found = opts->linkage_limit;
 		if (opts->verbosity > 1)
-		  fprintf(stdout,
+		  fprintf(stderr,
 				  "Warning: Count overflow.\n"
 				  "Considering a random subset of %d of an unknown and large number of linkages\n",
 				  opts->linkage_limit);
@@ -703,26 +703,30 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		N_linkages_alloced = opts->linkage_limit;
 		if (opts->verbosity > 1) {
-		  fprintf(stdout,
+		  fprintf(stderr,
 				  "Warning: Considering a random subset of %d of %d linkages\n",
 				  N_linkages_alloced, N_linkages_found);
 		}
 	}
 	else N_linkages_alloced = N_linkages_found;
 
-	link_info=(Linkage_info *)xalloc(N_linkages_alloced * sizeof(Linkage_info));
+	link_info = (Linkage_info *) xalloc(N_linkages_alloced * sizeof(Linkage_info));
 	N_linkages_post_processed = N_valid_linkages = 0;
 
-	/* generate an array of linkage indices to examine */
+	/* Generate an array of linkage indices to examine */
 	indices = (int *) xalloc(N_linkages_alloced * sizeof(int));
-	if (overflowed) {
-		for (in=0; in<N_linkages_alloced; in++) {
+	if (overflowed)
+	{
+		for (in=0; in < N_linkages_alloced; in++)
+		{
 			indices[in] = -(in+1);
 		}
 	}
-	else {
+	else
+	{
 		my_random_initialize(N_linkages_found + sent->length);
-		for (in=0; in<N_linkages_alloced; in++) {
+		for (in=0; in<N_linkages_alloced; in++)
+		{
 			denom = (double) N_linkages_alloced;
 			block_bottom = (int) (((double)in*(double) N_linkages_found)/denom);
 			block_top = (int) (((double)(in+1)*(double)N_linkages_found)/denom);
@@ -748,13 +752,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	if (sent->length >= opts->twopass_length)
 	{
 		for (in=0; (in < N_linkages_alloced) &&
-				   (!resources_exhausted(opts->resources)); in++) {
+				   (!resources_exhausted(opts->resources)); in++)
+		{
 			extract_links(indices[in], sent->null_count, sent->parse_info);
-			if (set_has_fat_down(sent)) {
+			if (set_has_fat_down(sent))
+			{
 				if (only_canonical_allowed && !is_canonical_linkage(sent)) continue;
 				analyze_fat_linkage(sent, opts, PP_FIRST_PASS);
 			}
-			else {
+			else
+			{
 				analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
 			}
 		}
@@ -765,7 +772,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			   (!resources_exhausted(opts->resources)); in++)
 	{
 		extract_links(indices[in], sent->null_count, sent->parse_info);
-		if (set_has_fat_down(sent)) {
+		if (set_has_fat_down(sent))
+		{
 			canonical = is_canonical_linkage(sent);
 			if (only_canonical_allowed && !canonical) continue;
 			link_info[N_linkages_post_processed] =
@@ -773,7 +781,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			link_info[N_linkages_post_processed].fat = TRUE;
 			link_info[N_linkages_post_processed].canonical = canonical;
 		}
-		else {
+		else
+		{
 			link_info[N_linkages_post_processed] =
 				analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
 			link_info[N_linkages_post_processed].fat = FALSE;
@@ -789,15 +798,22 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	qsort((void *)link_info, N_linkages_post_processed, sizeof(Linkage_info),
 		  (int (*)(const void *, const void *)) opts->cost_model.compare_fn);
 
-	if (!resources_exhausted(opts->resources)) {
-		assert(! ((N_linkages_post_processed == 0) &&
-				  (N_linkages_found > 0) &&
-				  (N_linkages_found < opts->linkage_limit)),
-			   "None of the linkages is canonical");
+	if (!resources_exhausted(opts->resources))
+	{
+		if ((N_linkages_post_processed == 0) &&
+		    (N_linkages_found > 0) &&
+		    (N_linkages_found < opts->linkage_limit))
+		{
+			fprintf(stderr, "Error: None of the linkages is canonical\n"
+			                "\tN_linkages_post_processed=%d "
+			                "N_linkages_found=%d\n",
+			                N_linkages_post_processed,
+			                N_linkages_found);
+		}
 	}
 
 	if (opts->verbosity > 1) {
-		fprintf(stdout, "%d of %d linkages with no P.P. violations\n",
+		fprintf(stderr, "%d of %d linkages with no P.P. violations\n",
 				N_valid_linkages, N_linkages_post_processed);
 	}
 
