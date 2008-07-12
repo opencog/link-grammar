@@ -161,20 +161,33 @@ void safe_strcpy(char *u, const char * v, size_t usize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
 
-void xfree(void *, int);
-void exfree(void *, int);
 void init_randtable(void);
-int  next_power_of_two_up(int);
 void left_print_string(FILE* fp, const char *, const char *);
 
-/* routines for copying basic objects */
-void *      xalloc(int);
-void *      exalloc(int);
+/* routines for allocating basic objects */
+void * xalloc(size_t);
+void * xrealloc(void *, size_t oldsize, size_t newsize);
+void xfree(void *, size_t);
+void * exalloc(size_t);
+void exfree(void *, size_t);
+size_t get_space_in_use(void);
+size_t get_max_space_used(void);
+
 
 char * get_default_locale(void);
 char * join_path(const char * prefix, const char * suffix);
 
 FILE *dictopen(const char *filename, const char *how);
 void set_data_dir(const char * path);
+
+/**
+ * Returns the smallest power of two that is at least i and at least 1
+ */
+static inline int next_power_of_two_up(int i)
+{
+   int j=1;
+   while(j<i) j = j<<1;
+   return j;
+}
 
 #endif

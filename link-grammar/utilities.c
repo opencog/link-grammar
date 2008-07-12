@@ -195,62 +195,96 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 }
 
 /* ============================================================= */
-/* memory alloc routines below */
+/* Memory alloc routines below. These routines attempt to keep
+ * track of how much space is getting used during a parse. 
+ */
 
-int max_space_in_use;
-int space_in_use;
-int max_external_space_in_use;
-int external_space_in_use;
+static size_t max_space_used;
+static size_t space_in_use;
+static size_t max_external_space_used;
+static size_t external_space_in_use;
+
+/**
+ * space used but not yet freed during parse
+ */
+size_t get_space_in_use(void)
+{
+	return space_in_use;
+}
+
+/**
+ * maximum space used during the parse
+ */
+size_t get_max_space_used(void)
+{
+	return max_space_used;
+}
+
+static void atomic_inc(size_t *max, size_t *val, size_t inc)
+{
+	*val += inc;
+	if (*max < *val) *max = *val;
+}
+
+static void atomic_dec(size_t *val, size_t dec)
+{
+	*val -= dec;
+}
 
 /**
  * To allow printing of a nice error message, and keep track of the
  *  space allocated.
  */
-void * xalloc(int size)
+void * xalloc(size_t size)
 {
-	char * p = (char *) malloc(size);
-	space_in_use += size;
-	if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
-	if ((p == NULL) && (size != 0)){
-		printf("Ran out of space.\n");
+	void * p = malloc(size);
+	atomic_inc(&max_space_used, &space_in_use, size);
+	if ((p == NULL) && (size != 0))
+	{
+		prt_error("Fatal Error: Ran out of space.\n");
 		abort();
 		exit(1);
 	}
-	return (void *) p;
+	return p;
 }
 
-void xfree(void * p, int size)
+void * xrealloc(void *p, size_t oldsize, size_t newsize)
 {
-	space_in_use -= size;
-	free(p);
-}
-
-void * exalloc(int size)
-{
-	char * p = (char *) malloc(size);
-	external_space_in_use += size;
-	if (external_space_in_use > max_external_space_in_use) {
-		max_external_space_in_use = external_space_in_use;
-	}
-	if ((p == NULL) && (size != 0)){
-		printf("Ran out of space.\n");
+	atomic_dec(&space_in_use, oldsize);
+	p = realloc(p, newsize);
+	if ((p == NULL) && (newsize != 0))
+	{
+		prt_error("Fatal Error: Ran out of space on realloc.\n");
 		abort();
 		exit(1);
 	}
-	return (void *) p;
+	atomic_inc(&max_space_used, &space_in_use, newsize);
+	return p;
 }
 
-void exfree(void * p, int size) {
-	external_space_in_use -= size;
+void xfree(void * p, size_t size)
+{
+	atomic_dec(&space_in_use, size);
 	free(p);
 }
 
-/* Returns the smallest power of two that is at least i and at least 1 */
-int next_power_of_two_up(int i)
+void * exalloc(size_t size)
 {
-	int j=1;
-	while(j<i) j = j<<1;
-	return j;
+	void * p = malloc(size);
+	atomic_inc(&max_external_space_used, &external_space_in_use, size);
+	if ((p == NULL) && (size != 0))
+	{
+		prt_error("Fatal Error: Ran out of space.\n");
+		abort();
+		exit(1);
+	}
+	return p;
+}
+
+void exfree(void * p, size_t size)
+{
+	atomic_dec(&external_space_in_use, size);
+	free(p);
 }
 
 /* =========================================================== */
@@ -364,7 +398,11 @@ path_get_dirname (const char *file_name)
 }
 #endif /* _WIN32 */
 
-char * custom_data_dir = NULL;
+/* global - but thats OK, since this is set only during initialization,
+ * and is is thenceforth a read-only item. So it doesn't need to be
+ * locked.
+ */
+static char * custom_data_dir = NULL;
 
 void set_data_dir(const char * path)
 {

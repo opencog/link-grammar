@@ -291,17 +291,12 @@ static void init_LT(Sentence sent)
 
 static void grow_LT(Sentence sent)
 {
-	space_in_use -= sent->and_data.LT_bound * sizeof(Disjunct *);
+	size_t oldsize = sent->and_data.LT_bound * sizeof(Disjunct *);
 	sent->and_data.LT_bound = (3*sent->and_data.LT_bound)/2;
 	sent->and_data.label_table =
-		(Disjunct **) realloc((void *)sent->and_data.label_table,
-							  sent->and_data.LT_bound * sizeof(Disjunct *));
-	space_in_use += sent->and_data.LT_bound * sizeof(Disjunct *);
-	if (space_in_use > max_space_in_use) max_space_in_use = space_in_use;
-	if (sent->and_data.label_table == NULL) {
-		fprintf(stderr, "Fatal Error: Ran out of space reallocing the label table\n");
-		exit(1);
-	}
+		(Disjunct **) xrealloc(sent->and_data.label_table,
+	                     oldsize,
+		                  sent->and_data.LT_bound * sizeof(Disjunct *));
 }
 
 static void init_HT(Sentence sent)

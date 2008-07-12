@@ -73,7 +73,7 @@ Resources resources_create(void)
 	r->when_created = current_usage_time();
 	r->when_last_called = current_usage_time();
 	r->time_when_parse_started = current_usage_time();
-	r->space_when_parse_started = space_in_use;
+	r->space_when_parse_started = get_space_in_use();
 	r->max_memory = MAX_MEMORY_DEFAULT;
 	r->cumulative_time = 0;
 	r->memory_exhausted = FALSE;
@@ -90,7 +90,7 @@ void resources_delete(Resources r)
 void resources_reset(Resources r)
 {
 	r->when_last_called = r->time_when_parse_started = current_usage_time();
-	r->space_when_parse_started = space_in_use;
+	r->space_when_parse_started = get_space_in_use();
 	r->timer_expired = FALSE;
 	r->memory_exhausted = FALSE;
 }
@@ -102,7 +102,7 @@ void resources_reset_time(Resources r)
 
 void resources_reset_space(Resources r)
 {
-	r->space_when_parse_started = space_in_use;
+	r->space_when_parse_started = get_space_in_use();
 }
 
 int resources_exhausted(Resources r)
@@ -126,7 +126,7 @@ int resources_timer_expired(Resources r)
 int resources_memory_exhausted(Resources r)
 {
 	if (r->max_memory == MAX_MEMORY_DEFAULT) return 0;
-	else return (r->memory_exhausted || (space_in_use > r->max_memory));
+	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));
 }
 
 /** print out the cpu ticks since this was last called */
@@ -164,7 +164,7 @@ void resources_print_total_space(int verbosity, Resources r)
 		printf("++++");
 		left_print_string(stdout, "Total space",
 		                  "                                            ");
-		printf("%d bytes (%d max)\n", space_in_use, max_space_in_use);
+		printf("%d bytes (%d max)\n", get_space_in_use(), get_max_space_used());
 	}
 }
 
