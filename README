@@ -284,6 +284,7 @@ TODO:
     thead-safe. The work is about nearly done. So far, the following 
     files are thread-safe, unless otherwise noted:
 
+      analyze-linkage.c
       and.c
       api.c
       build-disjuncts.c
@@ -308,7 +309,6 @@ TODO:
       word-utils.c
 
     Not thread safe: 
-      analyze-linkage.c
       error.c
       extract-links.c
       jni-client.c - uses per-thread struct, but needs to be attached

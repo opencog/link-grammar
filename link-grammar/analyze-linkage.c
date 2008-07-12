@@ -56,7 +56,6 @@ typedef struct CON_node_struct CON_node;
 typedef struct CON_list_struct CON_list;
 typedef struct DIS_list_struct DIS_list;
 typedef struct Links_to_patch_struct Links_to_patch;
-typedef void (*void_returning_function)(void);
 
 struct DIS_node_struct {
 	CON_list * cl;     /* the list of children */
@@ -403,11 +402,14 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 }
 
 static int advance_CON(CON_node *);
-static int advance_DIS(DIS_node * dn) {
-/* Cycically advance the current state of this DIS node.
-   If it's now at the beginning of its cycle" return FALSE;
-   Otherwise return TRUE;
-*/
+
+/**
+ * Cycically advance the current state of this DIS node.
+ * If it's now at the beginning of its cycle" return FALSE;
+ * Otherwise return TRUE;
+ */
+static int advance_DIS(DIS_node * dn)
+{
 	CON_list * cl;
 	for (cl = dn->cl; cl!=NULL; cl=cl->next) {
 		if (advance_CON(cl->cn)) {
@@ -417,11 +419,13 @@ static int advance_DIS(DIS_node * dn) {
 	return FALSE;
 }
 
-static int advance_CON(CON_node * cn) {
-/* Cycically advance the current state of this CON node.
-   If it's now at the beginning of its cycle return FALSE;
-   Otherwise return TRUE;
-*/
+/**
+ * Cycically advance the current state of this CON node.
+ * If it's now at the beginning of its cycle return FALSE;
+ * Otherwise return TRUE;
+ */
+static int advance_CON(CON_node * cn)
+{
 	if (advance_DIS(cn->current->dn)) {
 		return TRUE;
 	} else {
@@ -664,26 +668,20 @@ static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
 	return old_andlist;
 }
 
-#ifdef DEAD_CODE
-static void islands_dfs(int w, List_o_links **wordlinks)
+/** 
+ * This function defines the cost of a link as a function of its length.
+ */
+static inline int cost_for_length(int length)
 {
-	List_o_links *lol;
-	if (visited[w]) return;
-	visited[w] = TRUE;
-	for (lol = wordlinks[w]; lol != NULL; lol = lol->next) {
-	  islands_dfs(lol->word, wordlinks);
-	}
-}
-#endif /* DEAD_CODE */
-
-static int cost_for_length(int length) {
-/* this function defines the cost of a link as a function of its length */
 	  return length-1;
 }
 
-static int link_cost(Parse_info pi) {
-/* computes the cost of the current parse of the current sentence */
-/* due to the length of the links                                 */
+/**
+ * Computes the cost of the current parse of the current sentence,
+ * due to the length of the links.
+ */
+static int link_cost(Parse_info pi)
+{
 	int lcost, i;
 	lcost =  0;
 	for (i=0; i<pi->N_links; i++) {
@@ -692,13 +690,15 @@ static int link_cost(Parse_info pi) {
 	return lcost;
 }
 
-static int null_cost(Parse_info pi) {
+static int null_cost(Parse_info pi)
+{
   /* computes the number of null links in the linkage */
   /* No one seems to care about this -- ALB */
   return 0;
 }
 
-static int unused_word_cost(Parse_info pi) {
+static int unused_word_cost(Parse_info pi)
+{
 	int lcost, i;
 	lcost =  0;
 	for (i=0; i<pi->N_words; i++)
@@ -707,7 +707,8 @@ static int unused_word_cost(Parse_info pi) {
 }
 
 
-static int disjunct_cost(Parse_info pi) {
+static int disjunct_cost(Parse_info pi)
+{
 /* computes the cost of the current parse of the current sentence     */
 /* due to the cost of the chosen disjuncts                            */
 	int lcost, i;
