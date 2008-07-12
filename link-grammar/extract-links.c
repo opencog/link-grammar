@@ -13,17 +13,15 @@
 
 #include <link-grammar/api.h>
 
-/* The first thing we do is we build a data structure to represent the
-   result of the entire parse search.  There will be a set of nodes
-   built for each call to the count() function that returned a non-zero
-   value, AND which is part of a valid linkage.  Each of these nodes
-   represents a valid continuation, and contains pointers to two other
-   sets (one for the left continuation and one for the right
-   continuation).
-
+/**
+ * The first thing we do is we build a data structure to represent the
+ * result of the entire parse search.  There will be a set of nodes
+ * built for each call to the count() function that returned a non-zero
+ * value, AND which is part of a valid linkage.  Each of these nodes
+ * represents a valid continuation, and contains pointers to two other
+ * sets (one for the left continuation and one for the right
+ * continuation).
  */
-
-static Word * local_sent;
 
 static Parse_set * dummy_set(void)
 {
@@ -164,7 +162,7 @@ static void free_x_table(Parse_info pi)
 	pi->x_table = NULL;
 }
 
-/** 
+/**
  * Returns the pointer to this info, NULL if not there.
  */
 static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connector *re,
@@ -225,7 +223,7 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  */
 static Parse_set * parse_set(Sentence sent,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
-					  Connector *le, Connector *re, int cost, 
+					  Connector *le, Connector *re, int cost,
                  int islands_ok, Parse_info pi)
 {
 	Disjunct * d, * dis;
@@ -274,7 +272,7 @@ static Parse_set * parse_set(Sentence sent,
 			return xt->set;
 		} else {
 			w = lw+1;
-			for (dis = local_sent[w].d; dis != NULL; dis = dis->next) {
+			for (dis = sent->word[w].d; dis != NULL; dis = dis->next) {
 				if (dis->left == NULL) {
 					rs[0] = parse_set(sent, dis, NULL, w, rw, dis->right, NULL, cost-1, islands_ok, pi);
 					if (rs[0] == NULL) continue;
@@ -436,8 +434,6 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 {
 	Parse_set * whole_set;
 
-	local_sent = sent->word;
-
 	whole_set =
 		parse_set(sent, NULL, NULL, -1, sent->length, NULL, NULL, cost+1,
 		          opts->islands_ok, sent->parse_info);
@@ -448,7 +444,6 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 
 	sent->parse_info->parse_set = whole_set;
 
-	local_sent = NULL;
 	return verify_set(sent->parse_info);
 }
 
@@ -507,12 +502,15 @@ void build_current_linkage(Parse_info pi) {
 	build_current_linkage_recursive(pi, pi->parse_set);
 }
 
-static int advance_linkage(Parse_info pi, Parse_set * set) {
-	/* Advance the "current" linkage to the next one
-	   return 1 if there's a "carry" from this node,
-	   which indicates that the scan of this node has
-	   just been completed, and it's now back to it's
-	   starting state. */
+/**
+ * Advance the "current" linkage to the next one
+ * return 1 if there's a "carry" from this node,
+ * which indicates that the scan of this node has
+ * just been completed, and it's now back to it's
+ * starting state.
+ */
+static int advance_linkage(Parse_info pi, Parse_set * set)
+{
 	if (set == NULL) return 1;  /* probably can't happen */
 	if (set->first == NULL) return 1;  /* the empty set */
 	if (advance_linkage(pi, set->current->set[0]) == 1) {
@@ -551,7 +549,8 @@ static void list_links(Parse_info pi, Parse_set * set, int index)
 	 list_links(pi, pc->set[1], index / pc->set[0]->count);
 }
 
-static void list_random_links(Parse_info pi, Parse_set * set) {
+static void list_random_links(Parse_info pi, Parse_set * set)
+{
 	 Parse_choice *pc;
 	 int num_pc, new_index;
 
