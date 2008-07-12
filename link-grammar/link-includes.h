@@ -1,15 +1,15 @@
-/********************************************************************************/
-/* Copyright (c) 2004                                                           */
-/* Daniel Sleator, David Temperley, and John Lafferty                           */
-/* All rights reserved                                                          */
-/*                                                                              */
-/* Use of the link grammar parsing system is subject to the terms of the        */
-/* license set forth in the LICENSE file included with this software,           */ 
-/* and also available at http://www.link.cs.cmu.edu/link/license.html           */
-/* This license allows free redistribution and use in source and binary         */
-/* forms, with or without modification, subject to certain conditions.          */
-/*                                                                              */
-/********************************************************************************/
+/*************************************************************************/
+/* Copyright (c) 2004                                                    */
+/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* All rights reserved                                                   */
+/*                                                                       */
+/* Use of the link grammar parsing system is subject to the terms of the */
+/* license set forth in the LICENSE file included with this software,    */
+/* and also available at http://www.link.cs.cmu.edu/link/license.html    */
+/* This license allows free redistribution and use in source and binary  */
+/* forms, with or without modification, subject to certain conditions.   */
+/*                                                                       */
+/*************************************************************************/
 #ifndef _LINKINCLUDESH_
 #define _LINKINCLUDESH_
 
@@ -17,24 +17,24 @@
 
 LINK_BEGIN_DECLS
 
-/*****************************************************************************
+/**********************************************************************
 *
 * System initialization
 *
-*****************************************************************************/
+***********************************************************************/
 
 link_public_api(void)
      lperror_clear(void);
 
-/*****************************************************************************
+/**********************************************************************
 *
 * Functions to manipulate Dictionaries
 *
-*****************************************************************************/
+***********************************************************************/
 
 typedef struct Dictionary_s * Dictionary;
 
-link_public_api(Dictionary) 
+link_public_api(Dictionary)
      dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name);
 link_public_api(Dictionary)
      dictionary_create_lang(const char * lang);
@@ -46,11 +46,11 @@ link_public_api(int)
 link_public_api(int)
      dictionary_get_max_cost(Dictionary dict);
 
-/*****************************************************************************
+/**********************************************************************
 *
-* Functions to manipulate Parse Options 
+* Functions to manipulate Parse Options
 *
-*****************************************************************************/
+***********************************************************************/
 
 typedef struct Parse_Options_s * Parse_Options;
 
@@ -130,7 +130,7 @@ link_public_api(void)
      parse_options_reset_resources(Parse_Options opts);
 
 
-/*****************************************************************************
+/**********************************************************************
 *
 * The following Parse_Options functions do not directly affect the
 * operation of the parser, but they can be useful for organizing the
@@ -138,7 +138,7 @@ link_public_api(void)
 * convenience in implementing the "standard" version of the link parser
 * using the API.
 *
-*****************************************************************************/
+***********************************************************************/
 
 link_public_api(void)
      parse_options_set_batch_mode(Parse_Options opts, int val);
@@ -177,11 +177,11 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_echo_on(Parse_Options opts);
 
-/*****************************************************************************
+/**********************************************************************
 *
 * Functions to manipulate Sentences
 *
-*****************************************************************************/
+***********************************************************************/
 
 typedef struct Sentence_s * Sentence;
 
@@ -217,7 +217,7 @@ link_public_api(char *)
 link_public_api(int)
      sentence_nth_word_has_disjunction(Sentence sent, int i);
 
-/*****************************************************************************
+/**********************************************************************
 *
 * Functions that create and manipulate Linkages.
 * When a Linkage is requested, the user is given a
@@ -225,7 +225,7 @@ link_public_api(int)
 * for freeing up the storage when he/she is finished, using
 * the routines provided below.
 *
-*****************************************************************************/
+***********************************************************************/
 
 typedef struct Linkage_s * Linkage;
 
@@ -299,11 +299,11 @@ link_public_api(const char *)
      linkage_get_violation_name(Linkage linkage);
 
 
-/*****************************************************************************
-* 
-* Functions that allow special-purpose post-processing of linkages 
+/**********************************************************************
 *
-*****************************************************************************/
+* Functions that allow special-purpose post-processing of linkages
+*
+***********************************************************************/
 
 typedef struct Postprocessor_s PostProcessor;
 
@@ -317,15 +317,15 @@ link_public_api(void)
 link_public_api(void)
      issue_special_command(char * line, Parse_Options opts, Dictionary dict);
 
-/*****************************************************************************
-* 
+/**********************************************************************
+*
 * Constituent node
 *
-*****************************************************************************/
+***********************************************************************/
 
 typedef struct CNode_s CNode;
 
-link_public_api(CNode *) 
+link_public_api(CNode *)
      linkage_constituent_tree(Linkage linkage);
 link_public_api(void)
      linkage_free_constituent_tree(CNode * n);
@@ -341,9 +341,9 @@ link_public_api(int)
      linkage_constituent_node_get_end(const CNode *n);
 
 /* from error.c */
-extern link_public_api(int) 
+extern link_public_api(int)
      lperrno;
-extern link_public_api(char) 
+extern link_public_api(char)
      lperrmsg[];
 
 LINK_END_DECLS
