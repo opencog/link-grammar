@@ -273,7 +273,11 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage, int numcon_total, int 
 						print_constituent(ctxt, linkage, c);
 					}
 					c++;
-					assert(c < MAXCONSTITUENTS, "Too many constituents");
+					if (MAXCONSTITUENTS <= c)
+					{
+						fprintf(stderr, "Error: Too many constituents\n");
+						c--;
+					}
 					done = 1;
 				}
 			}
