@@ -16,6 +16,10 @@
 #include <string.h>
 #include <stdarg.h>
 
+#ifdef USE_PTHREADS
+#include <pthread.h>
+#endif
+
 #include "error.h"
 
 #ifdef _MSC_VER
@@ -30,6 +34,7 @@
 DLLEXPORT int  lperrno = 0;
 DLLEXPORT char lperrmsg[1];
 
+extern void lperror_clear(void);
 void lperror_clear(void)
 {
 	lperrmsg[0] = 0x0;
@@ -39,24 +44,48 @@ void lperror_clear(void)
 /* The sentence currently being parsed: needed for reporting parser
  * errors.  This needs to be made thread-safe at some point.
  */
+#ifdef USE_PTHREADS
+static pthread_key_t failing_sentence_key;
+static pthread_once_t sentence_key_once = PTHREAD_ONCE_INIT;
+
+static void sentence_key_alloc(void)
+{
+	pthread_key_create(&failing_sentence_key, NULL);
+}
+
+#else
 static const char * failing_sentence = NULL;
+#endif
 
 void error_report_set_sentence(const char * s)
 {
+#ifdef USE_PTHREADS
+	pthread_once(&sentence_key_once, sentence_key_alloc);
+	pthread_setspecific(failing_sentence_key, s);
+#else
 	failing_sentence = s;
+#endif
 }
 
 void prt_error(const char *fmt, ...)
 {
+	char * sentence;
+	int is_info;
+
 	va_list args;
 	va_start(args, fmt);
 	vfprintf(stderr, fmt, args);
 	va_end(args);
 
-	int is_info = (0 == strncmp(fmt, "Info:", 5));
-	if (!is_info && failing_sentence != NULL && failing_sentence[0] != 0x0)
+#ifdef USE_PTHREADS
+	sentence = pthread_getspecific(failing_sentence_key);
+#else
+	sentence = failing_sentence;
+#endif
+	is_info = (0 == strncmp(fmt, "Info:", 5));
+	if (!is_info && sentence != NULL && sentence[0] != 0x0)
 	{
 		fprintf(stderr, "\tFailing sentence was:\n");
-		fprintf(stderr, "\t%s\n", failing_sentence);
+		fprintf(stderr, "\t%s\n", sentence);
 	}
 }

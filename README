@@ -291,6 +291,7 @@ TODO:
       command-line.c
       constituents.c
       count.c
+      error.c -- uses pthreads to access error message area.
       extract-links.c
       fast-match.c
       idiom.c
@@ -311,7 +312,6 @@ TODO:
       word-utils.c
 
     Not thread safe: 
-      error.c
       jni-client.c - uses per-thread struct, but needs to be attached
                      to JNIEnv somehow.
       malloc-dbg.c - not thread safe, not normally used;
