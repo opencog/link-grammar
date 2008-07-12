@@ -37,7 +37,10 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 	}
 
 	if (j >= MAX_WORD) {
-		error("The dictionary contains a word that is too long.");
+		word[MAX_WORD] = 0x0;
+		prt_error("Fatal Error: The dictionary contains a word that "
+		          "is too long. The word was: %s", word);
+		exit(1);
 	}
 	word[j] = '\0';
 	s = string_set_add(word, dict->string_set);

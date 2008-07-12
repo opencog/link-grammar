@@ -1163,10 +1163,10 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		}
 
 		if (ctxt->constituent[c].domain_type=='\0') {
-			error("Error: no domain type assigned to constituent\n");
+			prt_error("Error: no domain type assigned to constituent\n");
 		}
 		if (ctxt->constituent[c].start_link==NULL) {
-			error("Error: no type assigned to constituent\n");
+			prt_error("Error: no type assigned to constituent\n");
 		}
 	}
 

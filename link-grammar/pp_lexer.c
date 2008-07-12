@@ -785,7 +785,7 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 	/* #line 66 "pp_lexer.fl" --DS */
-{ error("pp_lexer: unable to parse knowledge file (line %i).\n",yylineno); }
+{ prt_error("Fatal Error: pp_lexer: unable to parse knowledge file (line %i).\n",yylineno); exit(1); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
@@ -1651,7 +1651,11 @@ int main()
 PPLexTable *pp_lexer_open(FILE *f)
 {
   PPLexTable *lt;
-  if (f==NULL) error("pp_lexer_open: passed a NULL file pointer");
+  if (f == NULL)
+  {
+    prt_error("Fatal Error: pp_lexer_open: passed a NULL file pointer");
+    exit(1);
+  }
   yyin = f;            /* redirect lex to look at the specified file */
   lt = (PPLexTable*) xalloc (sizeof(PPLexTable));
   setup(lt);
@@ -1696,7 +1700,10 @@ int pp_lexer_count_tokens_of_label(PPLexTable *lt)
   int n;
   pp_label_node *p;
   if (lt->idx_of_active_label==-1) 
-	error("pp_lexer: current label is invalid");
+  {
+	 prt_error("Fatal Error: pp_lexer: current label is invalid");
+    exit(1);
+  }
   for (n=0, p=lt->nodes_of_label[lt->idx_of_active_label]; p;p=p->next, n++);
   return n;
 }
@@ -1716,7 +1723,11 @@ int pp_lexer_count_commas_of_label(PPLexTable *lt)
 {
   int n;
   pp_label_node *p;
-  if (lt->idx_of_active_label==-1) error("pp_lexer: current label is invalid");
+  if (lt->idx_of_active_label==-1)
+  {
+    prt_error("Fatal Error: pp_lexer: current label is invalid");
+    exit(1);
+  }
   for (n=0,p=lt->nodes_of_label[lt->idx_of_active_label];p!=NULL;p=p->next)
     if (!strcmp(p->str, ",")) n++;
   return n;
@@ -1780,17 +1791,27 @@ static void set_label(PPLexTable *lt, const char *label)
   /* check for and then slice off the trailing colon */
   label_sans_colon = strdup(label);
   c=&(label_sans_colon[strlen(label_sans_colon)-1]);
-  if (*c != ':') error("Label %s must end with :", label);
+  if (*c != ':')
+  {
+    prt_error("Fatal Error: Label %s must end with :", label);
+    exit(1);
+  }
   *c = 0;
 
   /* have we seen this label already? If so, abort */
   for (i=0;lt->labels[i]!=NULL && strcmp(lt->labels[i],label_sans_colon);i++);
   if (lt->labels[i]!=NULL) 
-    error("pp_lexer: label %s multiply defined!", label_sans_colon);
+  {
+    prt_error("Fatal Error: pp_lexer: label %s multiply defined!", label_sans_colon);
+    exit(1);
+  }
 
   /* new label. Store it */
   if (i == PP_LEXER_MAX_LABELS-1) 
-    error("pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
+  {
+    prt_error("Fatal Error: pp_lexer: too many labels. Raise PP_LEXER_MAX_LABELS");
+    exit(1);
+  }
   lt->labels[i] = string_set_add(label_sans_colon, lt->string_set);
   lt->idx_of_active_label = i;
 
@@ -1803,8 +1824,11 @@ static void add_string_to_label(PPLexTable *lt, char *str)
   /* add the single string str to the set of strings associated with label */
   pp_label_node *new_node;
 
-  if (lt->idx_of_active_label==-1)
-    error("pp_lexer: invalid syntax (line %i)",yylineno);
+  if (lt->idx_of_active_label == -1)
+  {
+    prt_error("Fatal Error: pp_lexer: invalid syntax (line %i)",yylineno);
+    exit(1);
+  }
 
   /* make sure string is legal */
   check_string(str);
@@ -1836,10 +1860,16 @@ static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
   pp_label_node *p;
   int idx_of_label_of_set;
   if (lt->idx_of_active_label==-1)
-    error("pp_lexer: invalid syntax (line %i)",yylineno);
+  {
+    prt_error("Fatal Error: pp_lexer: invalid syntax (line %i)",yylineno);
+    exit(1);
+  }
   if ((idx_of_label_of_set = get_index_of_label(lt, label_of_set))==-1)
-    error("pp_lexer: label %s must be defined before it's referred to (line %i)"
+  {
+    prt_error("Fatal Error: pp_lexer: label %s must be defined before it's referred to (line %i)"
 	  ,label_of_set, yylineno);
+    exit(1);
+  }
   for (p=lt->nodes_of_label[idx_of_label_of_set]; p!=NULL; p=p->next)
     add_string_to_label(lt, p->str);
 }
@@ -1866,7 +1896,7 @@ static void show_bindings(PPLexTable *lt)
 }
 #endif
 
-static int get_index_of_label(PPLexTable *lt, const char *label) 
+static int get_index_of_label(PPLexTable *lt, const char *label)
 {
   int i;
   for (i=0; lt->labels[i]!=NULL; i++) 
@@ -1876,8 +1906,11 @@ static int get_index_of_label(PPLexTable *lt, const char *label)
     
 static void check_string(const char *str)
 {
-   if (strlen(str)>1 && strchr(str, ',')!=NULL)
-      error("pp_lexer: string %s contains a comma, which is a no-no.",str);
+  if (strlen(str)>1 && strchr(str, ',')!=NULL)
+  {
+    prt_error("Fatal Error: pp_lexer: string %s contains a comma, which is a no-no.",str);
+    exit(1);
+  }
 }
 
 

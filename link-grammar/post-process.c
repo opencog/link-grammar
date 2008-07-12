@@ -694,8 +694,8 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 	/* sanity check: all links in all domains have a legal domain name */
 	for (d=0; d<pp->pp_data.N_domains; d++) {
 		i = find_domain_name(pp, pp->pp_data.domain_array[d].string);
-		if (i==-1)
-			 error("\tpost_process: Need an entry for %s in LINK_TYPE_TABLE",
+		if (i == -1)
+			 prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE",
 					 pp->pp_data.domain_array[d].string);
 		pp->pp_data.domain_array[d].type = i;
 	}

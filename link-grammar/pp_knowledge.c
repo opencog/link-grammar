@@ -28,8 +28,11 @@
 
 static void check_domain_is_legal(char *p)
 {
-  if (strlen(p)>1)
-    error("post_process: Domain (%s) must be a single character", p);
+  if (strlen(p) > 1)
+  {
+    prt_error("Fatal Error: post_process(): Domain (%s) must be a single character", p);
+    exit(1);
+  }
 }
 
 static void initialize_set_of_links_starting_bounded_domain(pp_knowledge *k)
@@ -56,10 +59,16 @@ static void read_starting_link_table(pp_knowledge *k)
   const char label[] = "STARTING_LINK_TYPE_TABLE";
   int i, n_tokens;
   if (!pp_lexer_set_label(k->lt, label))
-    error("post_process: Couldn't find starting link table %s",label);
+  {
+    prt_error("Fatal error: post_process: Couldn't find starting link table %s",label);
+    exit(1);
+  }
   n_tokens = pp_lexer_count_tokens_of_label(k->lt);
   if (n_tokens %2)
-    error("post_process: Link table must have format [<link> <domain name>]+");
+  {
+    prt_error("Fatal error: post_process: Link table must have format [<link> <domain name>]+");
+    exit(1);
+  }
   k->nStartingLinks = n_tokens/2;
   k->starting_link_lookup_table = (StartingLinkAndDomain*)
     xalloc((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain));
@@ -140,7 +149,10 @@ static void read_connected_rule(pp_knowledge *k, const char *label)
       return;
     }
   if (pp_lexer_count_tokens_of_label(k->lt)>1)
-    error("post_process: Invalid syntax in %s", label);
+  {
+    prt_error("Fatal Error: post_process(): Invalid syntax in %s", label);
+    exit(1);
+  }
   k->connected_rules[0].msg =
     string_set_add(pp_lexer_get_next_token_of_label(k->lt), k->string_set);
 }
@@ -166,16 +178,23 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
     {
       /* read link set */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
-      if (n_tokens <= 0) error("syntax error in knowledge file");
+      if (n_tokens <= 0)
+      {
+        prt_error("Fatal Error: syntax error in knowledge file");
+        exit(1);
+      }
       lsHandle = pp_linkset_open(n_tokens);
       for (i=0; i<n_tokens; i++)
-	pp_linkset_add(lsHandle,string_set_add(tokens[i], k->string_set));
+          pp_linkset_add(lsHandle,string_set_add(tokens[i], k->string_set));
       k->form_a_cycle_rules[r].link_set=lsHandle;
 
       /* read error message */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
-      if (n_tokens>1)
-	error("post_process: Invalid syntax (rule %i of %s)",r+1,label);
+      if (n_tokens > 1)
+      {
+         prt_error("Fatal Error: post_process: Invalid syntax (rule %i of %s)",r+1,label);
+         exit(1);
+      }
       k->form_a_cycle_rules[r].msg=string_set_add(tokens[0],k->string_set);
     }
 
@@ -201,13 +220,19 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
       /* read domain */	
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
-	error("post_process: Invalid syntax: rule %i of %s",r+1,label);
+      {
+        prt_error("Fatal Error: post_process: Invalid syntax: rule %i of %s",r+1,label);
+        exit(1);
+      }
       k->bounded_rules[r].domain = (int) tokens[0][0];
 
       /* read error message */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
-	error("post_process: Invalid syntax: rule %i of %s",r+1,label);
+      {
+        prt_error("Fatal Error: post_process: Invalid syntax: rule %i of %s",r+1,label);
+        exit(1);
+      }
       k->bounded_rules[r].msg = string_set_add(tokens[0], k->string_set);
     }
 
@@ -236,7 +261,10 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
       /* first read link */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens>1)
-	error("post_process: Invalid syntax in %s (rule %i)",label,r+1);
+      {
+        prt_error("Fatal Error: post_process: Invalid syntax in %s (rule %i)",label,r+1);
+        exit(1);
+      }
       (*rules)[r].selector = string_set_add(tokens[0], k->string_set);
 
       /* read link set */
@@ -255,7 +283,10 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
       /* read error message */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens>1)
-	error("post_process: Invalid syntax in %s (rule %i)",label,r+1);
+      {
+        prt_error("Fatal Error: post_process: Invalid syntax in %s (rule %i)",label,r+1);
+        exit(1);
+      }
       (*rules)[r].msg = string_set_add(tokens[0], k->string_set);
     }
 
@@ -307,7 +338,11 @@ pp_knowledge *pp_knowledge_open(char *path)
   /* read knowledge from disk into pp_knowledge */
   FILE *f=dictopen(path, "r");
   pp_knowledge *k = (pp_knowledge *) xalloc (sizeof(pp_knowledge));
-  if (!f) error("Couldn't find post-process knowledge file %s", path);
+  if (!f)
+  {
+    prt_error("Fatal Error: Couldn't find post-process knowledge file %s", path);
+    exit(1);
+  }
   k->lt = pp_lexer_open(f);
   fclose(f);
   k->string_set = string_set_create();

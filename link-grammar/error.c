@@ -83,24 +83,6 @@ void lperror_clear(void)
 	lperrno = 0;
 }
 
-void error(const char *fmt, ...)
-{
-	int norr = errno;
-	va_list args;
-	va_start(args, fmt);
-	vfprintf(stderr, fmt, args);
-	va_end(args);
-	fprintf(stderr, "\n");
-	if (norr > 0)
-	{
-		perror(NULL);
-		fprintf(stderr, "errno=%d\n\n", norr);
-	}
-	fflush(stdout);
-	fprintf(stderr, "Parser quitting.\n");
-	exit(1); /* Always fail and print out this file name */
-}
-
 /* The sentence currently being parsed: needed for reporting parser
  * errors.  This needs to be made thread-safe at some point.
  */

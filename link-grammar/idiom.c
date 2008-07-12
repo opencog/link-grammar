@@ -252,7 +252,8 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	xfree((char *)dn, sizeof (Dict_node));
 
 	if (dn_list->right == NULL) {
-	  error("Idiom string with only one connector -- should have been caught");
+	  prt_error("Fatal Error: Idiom string with only one connector -- should have been caught");
+		exit(1);
 	}
 
 	/* first make the nodes for the base word of the idiom (last word) */
