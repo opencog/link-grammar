@@ -182,8 +182,9 @@ struct Parse_info_struct
 	char has_fat_down[MAX_SENTENCE];
 };
 
-typedef struct match_context_s match_context_t;
+typedef struct analyze_context_s analyze_context_t;
 typedef struct count_context_s count_context_t;
+typedef struct match_context_s match_context_t;
 
 struct Sentence_s
 {
@@ -213,6 +214,7 @@ struct Sentence_s
 	char  q_pruned_rules;       /* don't prune rules more than once in p.p. */
 	int   post_quote[MAX_SENTENCE];
 
+	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
 	count_context_t * count_ctxt; /* private state info used for counting */
 	match_context_t * match_ctxt; /* private state info used for matching */
 };

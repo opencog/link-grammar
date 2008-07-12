@@ -599,6 +599,7 @@ void sentence_delete(Sentence sent)
 	free_deletable(sent);
 	free_effective_dist(sent);
 	free_count(sent);
+	free_analyze(sent);
 	xfree(sent->is_conjunction, sizeof(char)*sent->length);
 	xfree((char *) sent, sizeof(struct Sentence_s));
 
@@ -859,6 +860,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		return 0;
 	}
 
+	init_analyze(sent);
 	init_count(sent);
 
 	expression_prune(sent);

@@ -10,10 +10,14 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-void          extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage);
-void          extract_fat_linkage (Sentence sent, Parse_Options opts, Linkage linkage);
-Linkage_info  analyze_fat_linkage (Sentence sent, Parse_Options opts, int pass);
-Linkage_info  analyze_thin_linkage(Sentence sent, Parse_Options opts, int pass);
+
+void init_analyze(Sentence);
+void free_analyze(Sentence);
+
+void          extract_thin_linkage(Sentence, Parse_Options, Linkage);
+void          extract_fat_linkage (Sentence, Parse_Options, Linkage);
+Linkage_info  analyze_fat_linkage (Sentence, Parse_Options, int pass);
+Linkage_info  analyze_thin_linkage(Sentence, Parse_Options, int pass);
 
 void zero_sublinkage(Sublinkage *s);
 

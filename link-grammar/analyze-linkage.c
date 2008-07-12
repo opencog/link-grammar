@@ -23,8 +23,11 @@
  linkages has a consistent post-processing behavior.  () compute the
  cost of the linkage. */
 
+struct analyze_context_s
+{
+	List_o_links *word_links[MAX_SENTENCE]; /* ptr to l.o.l. out of word */
+};
 
-static List_o_links *word_links[MAX_SENTENCE]; /* ptr to l.o.l. out of word */
 static int structure_violation;
 static int dfs_root_word[MAX_SENTENCE]; /* for the depth-first search */
 static int dfs_height[MAX_SENTENCE];    /* to determine the order to do the root word dfs */
@@ -148,13 +151,15 @@ static void copy_full_link(Link *dest, Link src)
 /* end new code 9/97 ALB */
 
 
-/* Constructs a graph in the wordlinks array based on the contents of    */
-/* the global link_array.  Makes the wordlinks array point to a list of  */
-/* words neighboring each word (actually a list of links).  This is a     */
-/* directed graph, constructed for dealing with "and".  For a link in     */
-/* which the priorities are UP or DOWN_priority, the edge goes from the   */
-/* one labeled DOWN to the one labeled UP.                                */
-/* Don't generate links edges for the bogus comma connectors              */
+/** 
+ * Constructs a graph in the wordlinks array based on the contents of
+ * the global link_array.  Makes the wordlinks array point to a list of
+ * words neighboring each word (actually a list of links).  This is a
+ * directed graph, constructed for dealing with "and".  For a link in
+ * which the priorities are UP or DOWN_priority, the edge goes from the
+ * one labeled DOWN to the one labeled UP.
+ * Don't generate links edges for the bogus comma connectors.
+ */
 static void build_digraph(Parse_info pi, List_o_links **wordlinks)
 {
 	int i, link, N_fat;
@@ -733,6 +738,17 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 
 /********************** exported functions *****************************/
 
+void init_analyze(Sentence s)
+{
+	s->analyze_ctxt = (analyze_context_t *) malloc (sizeof(analyze_context_t));
+}
+
+void free_analyze(Sentence s)
+{
+	if (s->analyze_ctxt != NULL) free(s->analyze_ctxt);
+	s->analyze_ctxt = NULL;
+}
+
 /**
  * This uses link_array.  It enumerates and post-processes
  * all the linkages represented by this one.  We know this contains
@@ -749,6 +765,8 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	Parse_info pi = sent->parse_info;
 	PP_node accum;			   /* for domain ancestry check */
 	D_type_list * dtl0, * dtl1;  /* for domain ancestry check */
+
+	List_o_links **word_links = sent->analyze_ctxt->word_links;
 
 	sublinkage = x_create_sublinkage(pi);
 	postprocessor = sent->dict->postprocessor;
@@ -876,6 +894,8 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	Sublinkage *sublinkage;
 	Parse_info pi = sent->parse_info;
 
+	List_o_links **word_links = sent->analyze_ctxt->word_links;
+
 	build_digraph(pi, word_links);
 	memset(&li, 0, sizeof(li));
 
@@ -956,6 +976,8 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	int num_sublinkages;
 	Sublinkage * sublinkage;
 	Parse_info pi = sent->parse_info;
+
+	List_o_links **word_links = sent->analyze_ctxt->word_links;
 
 	sublinkage = x_create_sublinkage(pi);
 	build_digraph(pi, word_links);
