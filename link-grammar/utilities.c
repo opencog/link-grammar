@@ -18,6 +18,12 @@
 #include <string.h>
 #include <ctype.h>
 
+#ifdef USE_PTHREADS
+#include <pthread.h>
+#endif
+
+
+
 #ifdef ENABLE_BINRELOC
 #include "prefix.h"
 #endif /* BINRELOC */
@@ -197,19 +203,66 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 /* ============================================================= */
 /* Memory alloc routines below. These routines attempt to keep
  * track of how much space is getting used during a parse. 
+ *
+ * This code is probably obsolescent, and should probably be dumped.
  */
 
-static size_t max_space_used;
-static size_t space_in_use;
-static size_t max_external_space_used;
-static size_t external_space_in_use;
+typedef struct
+{
+	size_t max_space_used;
+	size_t space_in_use;
+	size_t max_external_space_used;
+	size_t external_space_in_use;
+} space_t;
+
+#ifdef USE_PTHREADS
+static pthread_key_t space_key;
+static pthread_once_t space_key_once = PTHREAD_ONCE_INIT;
+
+static void space_key_alloc(void)
+{
+	pthread_key_create(&space_key, free);
+}
+#else
+static space_t space;
+#endif
+
+void init_memusage(void)
+{
+	static int mem_inited = FALSE;
+	if (mem_inited) return;
+	mem_inited = TRUE;
+
+	space_t *s;
+#ifdef USE_PTHREADS
+	pthread_once(&space_key_once, space_key_alloc);
+	s = (space_t *) malloc(sizeof(space_t));
+	pthread_setspecific(space_key, s);
+#else
+	s = &space;
+#endif
+
+	s->max_space_used = 0;
+	s->space_in_use = 0;
+	s->max_external_space_used = 0;
+	s->external_space_in_use = 0;
+}
+
+static inline space_t *getspace(void)
+{
+#ifdef USE_PTHREADS
+	return pthread_getspecific(space_key);
+#else
+	return &space;
+#endif
+}
 
 /**
  * space used but not yet freed during parse
  */
 size_t get_space_in_use(void)
 {
-	return space_in_use;
+	return getspace()->space_in_use;
 }
 
 /**
@@ -217,28 +270,18 @@ size_t get_space_in_use(void)
  */
 size_t get_max_space_used(void)
 {
-	return max_space_used;
-}
-
-static void atomic_inc(size_t *max, size_t *val, size_t inc)
-{
-	*val += inc;
-	if (*max < *val) *max = *val;
-}
-
-static void atomic_dec(size_t *val, size_t dec)
-{
-	*val -= dec;
+	return getspace()->max_space_used;
 }
 
 /**
- * To allow printing of a nice error message, and keep track of the
- *  space allocated.
+ * alloc some memory, and keep track of the space allocated.
  */
 void * xalloc(size_t size)
 {
 	void * p = malloc(size);
-	atomic_inc(&max_space_used, &space_in_use, size);
+	space_t *s = getspace();
+	s->space_in_use += size;
+	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
 	if ((p == NULL) && (size != 0))
 	{
 		prt_error("Fatal Error: Ran out of space.\n");
@@ -250,7 +293,8 @@ void * xalloc(size_t size)
 
 void * xrealloc(void *p, size_t oldsize, size_t newsize)
 {
-	atomic_dec(&space_in_use, oldsize);
+	space_t *s = getspace();
+	s->space_in_use -= oldsize;
 	p = realloc(p, newsize);
 	if ((p == NULL) && (newsize != 0))
 	{
@@ -258,20 +302,25 @@ void * xrealloc(void *p, size_t oldsize, size_t newsize)
 		abort();
 		exit(1);
 	}
-	atomic_inc(&max_space_used, &space_in_use, newsize);
+	s->space_in_use += newsize;
+	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
 	return p;
 }
 
 void xfree(void * p, size_t size)
 {
-	atomic_dec(&space_in_use, size);
+	getspace()->space_in_use -= size;
 	free(p);
 }
 
 void * exalloc(size_t size)
 {
 	void * p = malloc(size);
-	atomic_inc(&max_external_space_used, &external_space_in_use, size);
+	space_t *s = getspace();
+	s->external_space_in_use += size;
+	if (s->max_external_space_used < s->external_space_in_use)
+		s->max_external_space_used = s->external_space_in_use;
+
 	if ((p == NULL) && (size != 0))
 	{
 		prt_error("Fatal Error: Ran out of space.\n");
@@ -283,7 +332,7 @@ void * exalloc(size_t size)
 
 void exfree(void * p, size_t size)
 {
-	atomic_dec(&external_space_in_use, size);
+	getspace()->external_space_in_use -= size;
 	free(p);
 }
 
@@ -563,6 +612,10 @@ unsigned int randtable[RTSIZE];
 void init_randtable(void)
 {
 	int i;
+	static int rand_table_inited = FALSE;
+	if (rand_table_inited) return;
+	rand_table_inited = TRUE;
+
 	srand(10);
 	for (i=0; i<RTSIZE; i++) {
 		randtable[i] = rand();

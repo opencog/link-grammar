@@ -308,6 +308,7 @@ TODO:
       resources.c
       string-set.c
       tokenize.c
+      utilities.c - has global "verbosity"
       word-file.c
       word-utils.c
 
@@ -323,4 +324,3 @@ TODO:
                     This is only used when reading dictionaries,
                     during initialization, and so maybe doesn't need
                     to be thread safe.
-      utilities.c - has global "verbosity" and space management globals.

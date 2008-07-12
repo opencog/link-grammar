@@ -339,13 +339,10 @@ dictionary_create(char * dict_name, char * pp_name,
                   char * cons_name, char * affix_name)
 {
 	Dictionary dict;
-	static int rand_table_inited = FALSE;
 	Dict_node *dict_node;
 
-	if (!rand_table_inited) {
-		init_randtable();
-		rand_table_inited = TRUE;
-	}
+	init_memusage();
+	init_randtable();
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));

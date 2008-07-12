@@ -165,6 +165,7 @@ void init_randtable(void);
 void left_print_string(FILE* fp, const char *, const char *);
 
 /* routines for allocating basic objects */
+void init_memusage(void);
 void * xalloc(size_t);
 void * xrealloc(void *, size_t oldsize, size_t newsize);
 void xfree(void *, size_t);
