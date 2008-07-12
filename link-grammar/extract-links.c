@@ -18,7 +18,7 @@
    built for each call to the count() function that returned a non-zero
    value, AND which is part of a valid linkage.  Each of these nodes
    represents a valid continuation, and contains pointers to two other
-   sets (one for the left continuation and one for the righ
+   sets (one for the left continuation and one for the right
    continuation).
 
  */
@@ -26,15 +26,17 @@
 static Word * local_sent;
 static int	islands_ok;
 
-static Parse_set * dummy_set(void) {
+static Parse_set * dummy_set(void)
+{
 	static Parse_set ds;
 	ds.first = ds.current = NULL;
 	ds.count = 1;
 	return &ds;
 }
 
-static Parse_set * empty_set(void) {
-	/* returns an empty set of parses */
+/** Returns an empty set of parses */
+static Parse_set * empty_set(void)
+{
 	Parse_set *s;
 	s = (Parse_set *) xalloc(sizeof(Parse_set));
 	s->first = s->current = NULL;
@@ -42,7 +44,8 @@ static Parse_set * empty_set(void) {
 	return s;
 }
 
-static void free_set(Parse_set *s) {
+static void free_set(Parse_set *s)
+{
 	Parse_choice *p, *xp;
 	if (s == NULL) return;
 	for (p=s->first; p != NULL; p = xp) {
@@ -54,7 +57,8 @@ static void free_set(Parse_set *s) {
 
 static Parse_choice * make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
 						   Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
-						   Disjunct *ld, Disjunct *md, Disjunct *rd) {
+						   Disjunct *ld, Disjunct *md, Disjunct *rd)
+{
 	Parse_choice *pc;
 	pc = (Parse_choice *) xalloc(sizeof(*pc));
 	pc->next = NULL;
@@ -74,9 +78,12 @@ static Parse_choice * make_choice(Parse_set *lset, int llw, int lrw, Connector *
 	return pc;
 }
 
-static void put_choice_in_set(Parse_set *s, Parse_choice *pc) {
-/* Put this parse_choice into a given set.  The current pointer is always
-   left pointing to the end of the list. */
+/**
+ * Put this parse_choice into a given set.  The current pointer is always
+ * left pointing to the end of the list.
+ */
+static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
+{
 	if (s->first == NULL) {
 		s->first = pc;
 	} else {
@@ -86,7 +93,8 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc) {
 	pc->next = NULL;
 }
 
-static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_info pi) {
+static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_info pi)
+{
 	int i;
 	i = 0;
 
@@ -98,10 +106,13 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
 	return i & (pi->x_table_size-1);
 }
 
-void init_x_table(Sentence sent) {
-	/* A piecewise exponential function determines the size of the hash table.	  */
-	/* Probably should make use of the actual number of disjuncts, rather than just */
-	/* the number of words														  */
+/**
+ * A piecewise exponential function determines the size of the hash
+ * table.  Probably should make use of the actual number of disjuncts,
+ * rather than just the number of words.
+ */
+void init_x_table(Sentence sent)
+{
 	int i, x_table_size;
 	Parse_info pi;
 
@@ -126,10 +137,13 @@ void init_x_table(Sentence sent) {
 	}
 }
 
-static void free_x_table(Parse_info pi) {
-/* This is the function that should be used to free tha set structure. Since
-   it's a dag, a recursive free function won't work.  Every time we create
-   a set element, we put it in the hash table, so this is OK.*/
+/**
+ * This is the function that should be used to free tha set structure. Since
+ * it's a dag, a recursive free function won't work.  Every time we create
+ * a set element, we put it in the hash table, so this is OK.
+ */
+static void free_x_table(Parse_info pi)
+{
 	int i;
 	X_table_connector *t, *x;
 
@@ -151,9 +165,12 @@ static void free_x_table(Parse_info pi) {
 	pi->x_table = NULL;
 }
 
+/** 
+ * Returns the pointer to this info, NULL if not there.
+ */
 static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connector *re,
-									int cost, Parse_info pi) {
-	/* returns the pointer to this info, NULL if not there */
+									int cost, Parse_info pi)
+{
 	X_table_connector *t;
 	t = pi->x_table[x_hash(lw, rw, le, re, cost, pi)];
 	for (; t != NULL; t = t->next) {
@@ -162,7 +179,7 @@ static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connec
 	return NULL;
 }
 
-#if 0
+#if DEAD_CODE
 Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
 						   int cost, Parse_info pi) {
 	/* returns the count for this quintuple if there, -1 otherwise */
@@ -172,9 +189,12 @@ Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
 }
 #endif
 
+/**
+ * Stores the value in the x_table.  Assumes it's not already there.
+ */
 static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re,
-								  int cost, Parse_set * set, Parse_info pi) {
-	/* Stores the value in the x_table.  Assumes it's not already there */
+								  int cost, Parse_set * set, Parse_info pi)
+{
 	X_table_connector *t, *n;
 	int h;
 
@@ -200,11 +220,11 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
 #endif
 
 
-/** 
+/**
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
  */
-static Parse_set * parse_set(Sentence sent, 
+static Parse_set * parse_set(Sentence sent,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
 					  Connector *le, Connector *re, int cost, Parse_info pi)
 {
@@ -368,7 +388,7 @@ static Parse_set * parse_set(Sentence sent,
  * return TRUE if and only if overflow in the number of parses occured.
  * Use a 64-bit int for counting.
  */
-static int verify_set_node(Parse_set *set) 
+static int verify_set_node(Parse_set *set)
 {
 	Parse_choice *pc;
 	s64 n;
