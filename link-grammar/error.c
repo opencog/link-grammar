@@ -117,9 +117,9 @@ void prt_error(const char *fmt, ...)
 	va_start(args, fmt);
 	vfprintf(stderr, fmt, args);
 	va_end(args);
-	fprintf(stderr, "\n");
 
-	if (failing_sentence != NULL)
+	int is_info = (0 == strncmp(fmt, "Info:", 5));
+	if (!is_info && failing_sentence != NULL && failing_sentence[0] != 0x0)
 	{
 		fprintf(stderr, "\tFailing sentence was:\n");
 		fprintf(stderr, "\t%s\n", failing_sentence);
