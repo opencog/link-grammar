@@ -15,17 +15,16 @@
 #include <stdarg.h>
 #include <link-grammar/api.h>
 
-static int center[MAX_SENTENCE];
-static int N_words_to_print;  /* version of N_words in this file for printing links */
 const char * trailer(int mode);
 const char * header(int mode);
 
-static void set_centers(Linkage linkage, int print_word_0)
+static void set_centers(Linkage linkage, int center[], int print_word_0, int N_words_to_print)
 {
 	int i, len, tot;
 	tot = 0;
 	if (print_word_0) i=0; else i=1;
-	for (; i<N_words_to_print; i++) {
+	for (; i < N_words_to_print; i++)
+	{
 		/* Centers obtained by counting the characters, 
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
@@ -144,6 +143,7 @@ static char * build_linkage_postscript_string(Linkage linkage)
 	char * ps_string;
 	Dictionary dict = linkage->sent->dict;
 	Parse_Options opts = linkage->opts;
+	int N_words_to_print;
 
 	string = string_new();
 
@@ -183,7 +183,6 @@ static char * build_linkage_postscript_string(Linkage linkage)
 	else {
 		print_word_N = TRUE;
 	}
-
 
 	if (print_word_0) d=0; else d=1;
 
@@ -302,6 +301,7 @@ char * linkage_print_diagram(Linkage linkage)
 	const char *s;
 	char *t;
 	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
+	int center[MAX_SENTENCE];
 	char connector[MAX_TOKEN_LENGTH];
 	int line_len, link_length;
 	Sublinkage *sublinkage=&(linkage->sublinkage[linkage->current]);
@@ -312,6 +312,7 @@ char * linkage_print_diagram(Linkage linkage)
 	Dictionary dict = linkage->sent->dict;
 	Parse_Options opts = linkage->opts;
 	int x_screen_width = parse_options_get_screen_width(opts);
+	int N_words_to_print;
 
 	string = string_new();
 
@@ -356,7 +357,7 @@ char * linkage_print_diagram(Linkage linkage)
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
 	
-	set_centers(linkage, print_word_0);
+	set_centers(linkage, center, print_word_0, N_words_to_print);
 	line_len = center[N_words_to_print-1]+1;
 	
 	for (k=0; k<MAX_HEIGHT; k++) {
