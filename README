@@ -300,6 +300,7 @@ TODO:
       pp_knowledge.c
       pp_linkset.c
       preparation.c
+      print.c
       print-util.c
       prune.c
       read-dict.c
@@ -318,6 +319,5 @@ TODO:
       prefix.c - but maybe doesn't need to be; used only 
                  during initialization, and only if binreloc turned
                  on.
-      print.c
       pp_lexer.c -- autogened code, original lex sources lost.
       utilities.c - has global "verbosity" and space management globals.

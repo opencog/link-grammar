@@ -36,12 +36,14 @@ static void set_centers(Linkage linkage, int center[], int print_word_0, int N_w
 }
 
 /* the following are all for generating postscript */
-static int link_heights[MAX_LINKS];
-/* tells the height of the links above the sentence */
-static int row_starts[MAX_SENTENCE];
-/* the word beginning each row of the display */
-static int N_rows;
-/* the number of rows */
+typedef struct
+{
+	int N_rows; /* N_rows -- the number of rows */
+	/* tells the height of the links above the sentence */
+	int link_heights[MAX_LINKS];
+	/* the word beginning each row of the display */
+	int row_starts[MAX_SENTENCE];
+} ps_ctxt_t;
 
 /**
  * prints s then prints the last |t|-|s| characters of t.
@@ -131,7 +133,9 @@ char * linkage_print_links_and_domains(Linkage linkage)
 	return links_string; 
 }
 
-static char * build_linkage_postscript_string(Linkage linkage)
+/**
+ */
+static char * build_linkage_postscript_string(Linkage linkage, ps_ctxt_t *pctx)
 {
 	int link, i,j;
 	int d;
@@ -209,7 +213,7 @@ static char * build_linkage_postscript_string(Linkage linkage)
 		j++;
 		append_string(string,"[%d %d %d",
 				ppla[link]->l-d, ppla[link]->r-d, 
-				link_heights[link]);
+				pctx->link_heights[link]);
 		if (ppla[link]->lc->label < 0) {
 			append_string(string," (%s)]", ppla[link]->name);
 		} else {
@@ -219,9 +223,10 @@ static char * build_linkage_postscript_string(Linkage linkage)
 	append_string(string,"]");
 	append_string(string,"\n");
 	append_string(string,"[");
-	for (j=0; j<N_rows; j++ ){
-		if (j>0) append_string(string, " %d", row_starts[j]);
-		else append_string(string,"%d", row_starts[j]);
+	for (j=0; j < pctx->N_rows; j++ )
+	{
+		if (j>0) append_string(string, " %d", pctx->row_starts[j]);
+		else append_string(string,"%d", pctx->row_starts[j]);
 	}
 	append_string(string,"]\n");
 
@@ -288,14 +293,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 
 #define MAX_HEIGHT 30
 
-static char picture[MAX_HEIGHT][MAX_LINE];
-static char xpicture[MAX_HEIGHT][MAX_LINE];
-
 /** 
  * String allocated with exalloc.  
  * Needs to be freed with linkage_free_diagram()
  */
-char * linkage_print_diagram(Linkage linkage)
+static char * linkage_print_diagram_ctxt(Linkage linkage, ps_ctxt_t *pctx)
 {
 	int i, j, k, cl, cr, row, top_row, width, flag;
 	const char *s;
@@ -313,6 +315,10 @@ char * linkage_print_diagram(Linkage linkage)
 	Parse_Options opts = linkage->opts;
 	int x_screen_width = parse_options_get_screen_width(opts);
 	int N_words_to_print;
+
+	char picture[MAX_HEIGHT][MAX_LINE];
+	char xpicture[MAX_HEIGHT][MAX_LINE];
+
 
 	string = string_new();
 
@@ -387,7 +393,7 @@ char * linkage_print_diagram(Linkage linkage)
 			}
 			/* we know it fits, so put it in this row */
 
-			link_heights[j] = row;
+			pctx->link_heights[j] = row;
 			
 			if (2*row+2 > MAX_HEIGHT-1) {
 				append_string(string, "The diagram is too high.\n");
@@ -492,9 +498,9 @@ char * linkage_print_diagram(Linkage linkage)
 	
 	if (print_word_0) i = 0; else i = 1;
 	k = 0;
-	N_rows = 0;
-	row_starts[N_rows] = 0;
-	N_rows++;
+	pctx->N_rows = 0;
+	pctx->row_starts[pctx->N_rows] = 0;
+	pctx->N_rows++;
 	while(i < N_words_to_print) {
 		append_string(string, "\n");
 		width = 0;
@@ -503,8 +509,8 @@ char * linkage_print_diagram(Linkage linkage)
 			i++;
 		} while((i<N_words_to_print) &&
 			  (width + ((int)strlen(linkage->word[i]))+1 < x_screen_width));
-		row_starts[N_rows] = i - (!print_word_0);    /* PS junk */
-		if (i<N_words_to_print) N_rows++;     /* same */
+		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
+		if (i<N_words_to_print) pctx->N_rows++;     /* same */
 		for (row = top_row; row >= 0; row--) {
 			flag = TRUE;
 			for (j=k;flag&&(j<k+width)&&(xpicture[row][j]!='\0'); j++){
@@ -525,6 +531,12 @@ char * linkage_print_diagram(Linkage linkage)
 	return gr_string; 
 }
 
+char * linkage_print_diagram(Linkage linkage)
+{
+	ps_ctxt_t ctx;
+	return linkage_print_diagram_ctxt(linkage, &ctx);
+}
+
 void linkage_free_diagram(char * s)
 {
 		exfree(s, strlen(s)+1);
@@ -540,7 +552,12 @@ char * linkage_print_postscript(Linkage linkage, int mode)
 	char * ps, * qs;
 	int size;
 
-	ps = build_linkage_postscript_string(linkage);
+	/* call the ascii printer to initialize the row size stuff. */
+	ps_ctxt_t ctx;
+	char * ascii = linkage_print_diagram_ctxt(linkage, &ctx);
+	linkage_free_diagram(ascii);
+
+	ps = build_linkage_postscript_string(linkage, &ctx);
 	size = strlen(header(mode)) + strlen(ps) + strlen(trailer(mode)) + 1;
 	
 	qs = exalloc(sizeof(char)*size);
