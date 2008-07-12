@@ -159,24 +159,27 @@ static void copy_full_link(Link *dest, Link src)
  * one labeled DOWN to the one labeled UP.
  * Don't generate links edges for the bogus comma connectors.
  */
-static void build_digraph(Parse_info pi, List_o_links **wordlinks)
+static void build_digraph(analyze_context_t *actx, Parse_info pi)
 {
 	int i, link, N_fat;
 	Link lp;
 	List_o_links * lol;
 	N_fat = 0;
-	for (i=0; i<pi->N_words; i++) {
-		wordlinks[i] = NULL;
+
+	for (i=0; i<pi->N_words; i++)
+	{
+		actx->word_links[i] = NULL;
 	}
-	for (link=0; link<pi->N_links; link++) {
+	for (link=0; link<pi->N_links; link++)
+	{
 		lp = &(pi->link_array[link]);
 		i = lp->lc->label;
 		if (i < NORMAL_LABEL) {   /* one of those special links for either-or, etc */
 			continue;
 		}
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = wordlinks[lp->l];
-		wordlinks[lp->l] = lol;
+		lol->next = actx->word_links[lp->l];
+		actx->word_links[lp->l] = lol;
 		lol->link = link;
 		lol->word = lp->r;
 		i = lp->lc->priority;
@@ -188,8 +191,8 @@ static void build_digraph(Parse_info pi, List_o_links **wordlinks)
 			lol->dir = -1;
 		}
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = wordlinks[lp->r];
-		wordlinks[lp->r] = lol;
+		lol->next = actx->word_links[lp->r];
+		actx->word_links[lp->r] = lol;
 		lol->link = link;
 		lol->word = lp->l;
 		i = lp->rc->priority;
@@ -501,16 +504,16 @@ static void fill_patch_array_CON(analyze_context_t *actx,
 	fill_patch_array_DIS(actx, cn->current->dn, ltp);
 }
 
-static void free_digraph(Parse_info pi, List_o_links **wordlinks)
+static void free_digraph(analyze_context_t *actx, Parse_info pi)
 {
-  List_o_links * lol, *lolx;
-  int i;
-  for (i=0; i<pi->N_words; i++)
+	List_o_links * lol, *lolx;
+	int i;
+	for (i = 0; i < pi->N_words; i++)
 	{
-	  for (lol=wordlinks[i]; lol!=NULL; lol=lolx)
+		for (lol = actx->word_links[i]; lol != NULL; lol = lolx)
 		{
-		  lolx = lol->next;
-		  xfree((void *) lol, sizeof(List_o_links));
+			lolx = lol->next;
+			xfree((void *) lol, sizeof(List_o_links));
 		}
 	}
 }
@@ -832,11 +835,10 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	D_type_list * dtl0, * dtl1;  /* for domain ancestry check */
 
 	analyze_context_t *actx = sent->analyze_ctxt;
-	List_o_links **word_links = sent->analyze_ctxt->word_links;
 
 	sublinkage = x_create_sublinkage(pi);
 	postprocessor = sent->dict->postprocessor;
-	build_digraph(pi, word_links);
+	build_digraph(actx, pi);
 	actx->structure_violation = FALSE;
 	d_root = build_DIS_CON_tree(actx, pi); /* may set structure_violation to TRUE */
 
@@ -850,15 +852,17 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	li.and_cost = 0;
 	li.andlist = NULL;
 
-	if (actx->structure_violation) {
+	if (actx->structure_violation)
+	{
 		li.N_violations++;
 		free_sublinkage(sublinkage);
-		free_digraph(pi, word_links);
+		free_digraph(actx, pi);
 		free_DIS_tree(d_root);
 		return li;
 	}
 
-	if (analyze_pass==PP_SECOND_PASS) {
+	if (analyze_pass==PP_SECOND_PASS)
+	{
 	  li.andlist = build_andlist(actx, sent);
 	  li.and_cost = li.andlist->cost;
 	}
@@ -947,7 +951,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	   (verbosity > 3) && should_print_messages)
 	   printf("P.P. violation in one part of conjunction.\n"); */
 	free_sublinkage(sublinkage);
-	free_digraph(pi, word_links);
+	free_digraph(actx, pi);
 	free_DIS_tree(d_root);
 	return li;
 }
@@ -965,31 +969,33 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	Postprocessor * postprocessor;
 	Sublinkage *sublinkage;
 	Parse_info pi = sent->parse_info;
+	analyze_context_t *actx = sent->analyze_ctxt;
 
-	List_o_links **word_links = sent->analyze_ctxt->word_links;
-
-	build_digraph(pi, word_links);
+	build_digraph(actx, pi);
 	memset(&li, 0, sizeof(li));
 
 	sublinkage = x_create_sublinkage(pi);
 	postprocessor = sent->dict->postprocessor;
 
 	compute_link_names(sent);
-	for (i=0; i<pi->N_links; i++) {
+	for (i=0; i<pi->N_links; i++)
+	{
 	  copy_full_link(&(sublinkage->link[i]), &(pi->link_array[i]));
 	}
 
-	if (analyze_pass==PP_FIRST_PASS) {
+	if (analyze_pass==PP_FIRST_PASS)
+	{
 		post_process_scan_linkage(postprocessor, opts, sent, sublinkage);
 		free_sublinkage(sublinkage);
-		free_digraph(pi, word_links);
+		free_digraph(actx, pi);
 		return li;
 	}
 
-	/* The code below can be used to generate the "islands" array. For this to work,
-	 * however, you have to call "build_digraph" first (as in analyze_fat_linkage).
-	 * and then "free_digraph". For some reason this causes a space leak. */
-
+	/* The code below can be used to generate the "islands" array.
+	 * For this to work, however, you have to call "build_digraph"
+	 * first (as in analyze_fat_linkage). and then "free_digraph".
+	 * For some reason this causes a space leak. XXX !! FIXME!?
+	 */
 	pp = post_process(postprocessor, opts, sent, sublinkage, TRUE);
 
 	li.N_violations = 0;
@@ -1002,14 +1008,17 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	li.link_cost = link_cost(pi);
 	li.andlist = NULL;
 
-	if (pp==NULL) {
+	if (pp == NULL)
+	{
 		if (postprocessor != NULL) li.N_violations = 1;
-	} else if (pp->violation!=NULL) {
+	}
+	else if (pp->violation != NULL)
+	{
 		li.N_violations++;
 	}
 
 	free_sublinkage(sublinkage);
-	free_digraph(pi, word_links);
+	free_digraph(actx, pi);
 	return li;
 }
 
@@ -1052,7 +1061,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	analyze_context_t *actx = sent->analyze_ctxt;
 
 	sublinkage = x_create_sublinkage(pi);
-	build_digraph(pi, actx->word_links);
+	build_digraph(actx, pi);
 	actx->structure_violation = FALSE;
 	d_root = build_DIS_CON_tree(actx, pi);
 
@@ -1074,7 +1083,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		}
 
 		free_sublinkage(sublinkage);
-		free_digraph(pi, actx->word_links);
+		free_digraph(actx, pi);
 		free_DIS_tree(d_root);
 		return;
 	}
@@ -1152,7 +1161,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	}
 
 	free_sublinkage(sublinkage);
-	free_digraph(pi, actx->word_links);
+	free_digraph(actx, pi);
 	free_DIS_tree(d_root);
 }
 
