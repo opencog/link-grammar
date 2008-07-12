@@ -83,7 +83,8 @@ Parse_Options parse_options_create(void)
 	return po;
 }
 
-int parse_options_delete(Parse_Options  opts) {
+int parse_options_delete(Parse_Options  opts)
+{
 	resources_delete(opts->resources);
 	xfree(opts, sizeof(struct Parse_Options_s));
 	return 0;
@@ -256,11 +257,11 @@ int parse_options_get_display_postscript(Parse_Options opts) {
 void parse_options_set_display_constituents(Parse_Options opts, int dummy)
 {
 	if ((dummy < 0) || (dummy > 3)) {
-	   fprintf(stderr, "Possible values for constituents: \n");
-	   fprintf(stderr, "   0 (no display)\n");
-	   fprintf(stderr, "   1 (treebank style, multi-line indented)\n");
-	   fprintf(stderr, "   2 (flat tree, square brackets)\n");
-	   fprintf(stderr, "   3 (flat treebank style)\n");
+	   prt_error("Possible values for constituents: \n"
+	             "   0 (no display)\n"
+	             "   1 (treebank style, multi-line indented)\n"
+	             "   2 (flat tree, square brackets)\n"
+	             "   3 (flat treebank style)\n");
 	   opts->display_constituents = 0;
 	}
 	else opts->display_constituents = dummy;
@@ -468,7 +469,7 @@ Dictionary dictionary_create_default_lang(void)
 int dictionary_delete(Dictionary dict)
 {
 	if (verbosity > 0) {
-		fprintf(stderr, "Freeing dictionary %s\n", dict->name);
+		prt_error("Info: Freeing dictionary %s\n", dict->name);
 	}
 
 	if (dict->affix_table != NULL) {
@@ -503,6 +504,8 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 {
 	Sentence sent;
 	int i;
+
+	error_report_set_sentence(input_string);
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	bzero(sent, sizeof(struct Sentence_s));
@@ -598,6 +601,8 @@ void sentence_delete(Sentence sent)
 	free_count(sent);
 	xfree(sent->is_conjunction, sizeof(char)*sent->length);
 	xfree((char *) sent, sizeof(struct Sentence_s));
+
+	error_report_set_sentence(NULL);
 }
 
 int sentence_length(Sentence sent)
@@ -606,7 +611,8 @@ int sentence_length(Sentence sent)
 	return sent->length;
 }
 
-char * sentence_get_word(Sentence sent, int index) {
+char * sentence_get_word(Sentence sent, int index)
+{
 	if (!sent) return NULL;
 	return sent->word[index].string;
 }
@@ -688,10 +694,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		/* We know that sent->num_linkages_found is bogus, possibly negative */
 		sent->num_linkages_found = opts->linkage_limit;
 		if (opts->verbosity > 1)
-		  fprintf(stderr,
-				  "Warning: Count overflow.\n"
-				  "Considering a random subset of %d of an unknown and large number of linkages\n",
-				  opts->linkage_limit);
+		  prt_error("Warning: Count overflow.\n"
+			  "Considering a random subset of %d of an unknown and large number of linkages\n",
+				opts->linkage_limit);
 	}
 	N_linkages_found = sent->num_linkages_found;
 
@@ -707,8 +712,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		N_linkages_alloced = opts->linkage_limit;
 		if (opts->verbosity > 1) {
-		  fprintf(stderr,
-				  "Warning: Considering a random subset of %d of %d linkages\n",
+		  prt_error("Warning: Considering a random subset of %d of %d linkages\n",
 				  N_linkages_alloced, N_linkages_found);
 		}
 	}
@@ -816,16 +820,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			 * of Nottingham and you be Robin Hood a little while and kill
 			 * me.
 			 */
-			fprintf(stderr, "Error: None of the linkages is canonical\n"
-			                "\tN_linkages_post_processed=%d "
-			                "N_linkages_found=%d\n",
-			                N_linkages_post_processed,
-			                N_linkages_found);
+			prt_error("Error: None of the linkages is canonical\n"
+			          "\tN_linkages_post_processed=%d "
+			          "N_linkages_found=%d\n",
+			          N_linkages_post_processed,
+			          N_linkages_found);
 		}
 	}
 
 	if (opts->verbosity > 1) {
-		fprintf(stderr, "%d of %d linkages with no P.P. violations\n",
+		prt_error("Info: %d of %d linkages with no P.P. violations\n",
 				N_valid_linkages, N_linkages_post_processed);
 	}
 

@@ -58,7 +58,6 @@ static const char * msg_of_lperror(int lperr)
 void lperror(int lperr, const char *fmt, ...)
 {
 	char temp[MSGSZ] = "";
-	char stack[MSGSZ] = "";
 
 #if (defined _MSC_VER) && _MFC_VER < 0x0700
 #define vsnprintf _vsnprintf
@@ -100,4 +99,29 @@ void error(const char *fmt, ...)
 	fflush(stdout);
 	fprintf(stderr, "Parser quitting.\n");
 	exit(1); /* Always fail and print out this file name */
+}
+
+/* The sentence currently being parsed: needed for reporting parser
+ * errors.  This needs to be made thread-safe at some point.
+ */
+static const char * failing_sentence = NULL;
+
+void error_report_set_sentence(const char * s)
+{
+	failing_sentence = s;
+}
+
+void prt_error(const char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	vfprintf(stderr, fmt, args);
+	va_end(args);
+	fprintf(stderr, "\n");
+
+	if (failing_sentence != NULL)
+	{
+		fprintf(stderr, "\tFailing sentence was:\n");
+		fprintf(stderr, "\t%s\n", failing_sentence);
+	}
 }

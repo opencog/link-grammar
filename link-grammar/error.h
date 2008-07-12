@@ -35,5 +35,8 @@ void lperror(int lperr, const char *fmt, ...) GNUC_PRINTF(2,3);
 void error(const char *fmt, ...) GNUC_PRINTF(1,2);
 void lperror_clear(void);
 
+void error_report_set_sentence(const char * s);
+void prt_error(const char *fmt, ...) GNUC_PRINTF(1,2);
+
 #endif
 
