@@ -79,11 +79,10 @@ static inline int wctomb_check(char *s, wchar_t wc)
 	int nr = wctomb(s, wc);
 	if (nr < 0) {
 #ifndef _WIN32
-		lperror(CHARSET, "%s\n", nl_langinfo(CODESET));
+		prt_error("Fatal Error: unknwon character set %s\n", nl_langinfo(CODESET));
 #else
-		lperror(CHARSET, "(unknown character set)\n");
+		prt_error("Fatal Error: unknown character set\n");
 #endif
-		fprintf(stderr, "Error: liblinkparser: %s", lperrmsg);
 		exit(1);
 	}
 	return nr;

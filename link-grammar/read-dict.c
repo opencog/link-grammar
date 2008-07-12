@@ -107,13 +107,15 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	}
 	if (s2)
 	{
-		lperror(DICTPARSE, "%s.\n%s %s\n\t line %d, tokens = %s\n",
+		prt_error("Error parsing dictionary %s.\n"
+		          "%s %s\n\t line %d, tokens = %s\n",
 		        dict->name,
 		        s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		lperror(DICTPARSE, "%s.\n%s\n\t line %d, tokens = %s\n",
+		prt_error("Error parsing dictionary %s.\n"
+		          "%s\n\t line %d, tokens = %s\n",
 		        dict->name,
 		        s, dict->line_number, tokens);
 	}
@@ -813,7 +815,7 @@ static int read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				lperror(WORDFILE, " %s\n", dict->token);
+				prt_error("Error opening word file %s\n", dict->token);
 				return 0;
 			}
 		} else {
@@ -905,7 +907,6 @@ void print_dictionary_data(Dictionary dict)
 
 int read_dictionary(Dictionary dict)
 {
-	lperrno = 0;
 	if (!link_advance(dict))
 	{
 		return 0;

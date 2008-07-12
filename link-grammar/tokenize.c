@@ -139,14 +139,13 @@ static int issue_sentence_word(Sentence sent, const char * s)
 {
 	if (*s == '\0') return TRUE;
 	if (strlen(s) > MAX_WORD) {
-		lperror(SEPARATE,
-				". The word \"%s\" is too long.\n"
+		prt_error("Error separating sentence. The word \"%s\" is too long.\n"
 				"A word can have a maximum of %d characters.\n", s, MAX_WORD);
 		return FALSE;
 	}
 
 	if (sent->length == MAX_SENTENCE) {
-		lperror(SEPARATE, ". The sentence has too many words.\n");
+		prt_error("Error separating sentence. The sentence has too many words.\n");
 		return FALSE;
 	}
 
@@ -439,8 +438,8 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
 	/*
 	if (n_stripped == MAX_STRIP) {
-		lperror(SEPARATE,
-				".\n\"%s\" is followed by too many punctuation marks.\n", word);
+		prt_error("Error separating sentence.\n"
+		          "\"%s\" is followed by too many punctuation marks.\n", word);
 		return FALSE;
 	} */
 
@@ -547,12 +546,14 @@ int separate_sentence(char * s, Sentence sent)
 
 failure:
 #ifndef _WIN32
-	lperror(CHARSET, "%s\n", nl_langinfo(CODESET));
+	prt_error("Unable to process UTF8 input string in current locale %s\n",
+		nl_langinfo(CODESET));
 #endif
 	return FALSE;
 }
 
-static int special_string(Sentence sent, int i, const char * s) {
+static int special_string(Sentence sent, int i, const char * s)
+{
 	X_node * e;
 	if (boolean_dictionary_lookup(sent->dict, s)) {
 		sent->word[i].x = build_word_expressions(sent, s);
@@ -561,8 +562,9 @@ static int special_string(Sentence sent, int i, const char * s) {
 		}
 		return TRUE;
 	} else {
-		lperror(BUILDEXPR, ".\n To process this sentence your dictionary "
-				"needs the word \"%s\".\n", s);
+		prt_error("Error: Could not build sentence expressions.\n"
+		          "To process this sentence your dictionary "
+ 		          "needs the word \"%s\".\n", s);
 		return FALSE;
 	}
 }
@@ -612,8 +614,9 @@ static int guessed_string(Sentence sent, int i, const char * s, const char * typ
 		  return TRUE;
 
 	} else {
-		lperror(BUILDEXPR, ".\n To process this sentence your dictionary "
-				"needs the word \"%s\".\n", type);
+		prt_error("Could not build sentence expressions.\n"
+		          "To process this sentence your dictionary "
+		          "needs the word \"%s\".\n", type);
 		return FALSE;
 	}
 }
@@ -825,7 +828,7 @@ int sentence_in_dictionary(Sentence sent)
 		}
 	}
 	if (!ok_so_far) {
-		lperror(NOTINDICT, "\n%s\n", temp);
+		prt_error("Error: Sentence not in dictionary\n%s\n", temp);
 	}
 	return ok_so_far;
 }

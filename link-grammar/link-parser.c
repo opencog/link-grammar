@@ -433,16 +433,15 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	lperror_clear();
 	opts = parse_options_create();
 	if (opts == NULL) {
-		fprintf(stderr, "%s: Fatal error: %s\n", argv[0], lperrmsg);
+		fprintf(stderr, "%s: Fatal error: unable to create parse options\n", argv[0]);
 		exit(-1);
 	}
 
 	panic_parse_opts = parse_options_create();
 	if (panic_parse_opts == NULL) {
-		fprintf(stderr, "%s: Fatal error: %s\n", argv[0], lperrmsg);
+		fprintf(stderr, "%s: Fatal error: unable to create panic parse options\n", argv[0]);
 		exit(-1);
 	}
 	setup_panic_parse_options(panic_parse_opts);
@@ -458,7 +457,7 @@ int main(int argc, char * argv[])
 		dict = dictionary_create_default_lang();
 
 	if (dict == NULL) {
-		fprintf(stderr, "%s: Fatal error: %s\n", argv[0], lperrmsg);
+		fprintf(stderr, "%s: Fatal error: Unable to open  dictionary.\n", argv[0]);
 		exit(-1);
 	}
 
@@ -497,11 +496,8 @@ int main(int argc, char * argv[])
 
 		sent = sentence_create(input_string, dict);
 
-		if (sent == NULL) {
-			if ((verbosity > 0) && (lperrno != 0))
-				fprintf(stderr, "Warning: %s\n", lperrmsg);
-			continue;
-		}
+		if (sent == NULL) continue;
+
 		if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
 			if (verbosity > 0) {
 				fprintf(stdout,

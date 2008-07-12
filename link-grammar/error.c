@@ -13,13 +13,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
 #include <stdarg.h>
 
 #include "error.h"
-
-#define MSGSZ 1024
 
 #ifdef _MSC_VER
 #define DLLEXPORT __declspec(dllexport)
@@ -27,55 +24,11 @@
 #define DLLEXPORT
 #endif
 
+/* These are deprecated, obsolete, and unused, but are still here 
+ * because these are exported in the public API. Do not use these.
+ */
 DLLEXPORT int  lperrno = 0;
-DLLEXPORT char lperrmsg[MSGSZ];
-
-static const char * msg_of_lperror(int lperr)
-{
-	switch(lperr) {
-	case NODICT:
-		return "Could not open dictionary ";
-	case DICTPARSE:
-		return "Error parsing dictionary ";
-	case WORDFILE:
-		return "Error opening word file ";
-	case SEPARATE:
-		return "Error separating sentence ";
-	case NOTINDICT:
-		return "Sentence not in dictionary ";
-	case CHARSET:
-		return "Unable to process UTF8 input string in current locale ";
-	case BUILDEXPR:
-		return "Could not build sentence expressions ";
-	case INTERNALERROR:
-		return "Internal error.  Send mail to link-grammar@googlegroups.com ";
-	default:
-		return "";
-	}
-	return "";
-}
-
-void lperror(int lperr, const char *fmt, ...)
-{
-	char temp[MSGSZ] = "";
-
-#if (defined _MSC_VER) && _MFC_VER < 0x0700
-#define vsnprintf _vsnprintf
-#endif		
-	va_list args;
-
-	va_start(args, fmt);
-	vsnprintf(temp, MSGSZ, fmt, args);
-	va_end(args);
-
-	/* Maintain a stack of errors, earliest error first */
-	strncat(lperrmsg, msg_of_lperror(lperr), MSGSZ-strlen(lperrmsg)-1);
-	strncat(lperrmsg, temp, MSGSZ-strlen(lperrmsg)-1);
-	strncat(lperrmsg, "\n", MSGSZ-strlen(lperrmsg)-1);
-	lperrmsg[MSGSZ-1]=0; /* Null terminate at all costs */
-
-	lperrno = lperr;
-}
+DLLEXPORT char lperrmsg[1];
 
 void lperror_clear(void)
 {

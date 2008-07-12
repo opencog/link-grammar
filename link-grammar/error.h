@@ -13,26 +13,12 @@
 #ifndef _ERRORH_
 #define _ERRORH_
 
-typedef enum {
-    NODICT=1,
-    DICTPARSE,
-    WORDFILE,
-    SEPARATE,
-    NOTINDICT,
-    CHARSET,
-    BUILDEXPR,
-    INTERNALERROR,
-}   LP_error_type;
-
 #if     __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
 #define GNUC_PRINTF( format_idx, arg_idx )    \
   __attribute__((__format__ (__printf__, format_idx, arg_idx)))
 #else
 #define GNUC_PRINTF( format_idx, arg_idx )
 #endif
-
-void lperror(int lperr, const char *fmt, ...) GNUC_PRINTF(2,3);
-void lperror_clear(void);
 
 void error_report_set_sentence(const char * s);
 void prt_error(const char *fmt, ...) GNUC_PRINTF(1,2);

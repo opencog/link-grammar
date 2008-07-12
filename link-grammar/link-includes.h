@@ -24,7 +24,7 @@ LINK_BEGIN_DECLS
 ***********************************************************************/
 
 link_public_api(void)
-     lperror_clear(void);
+     lperror_clear(void);  /* -- deprecated/obsolete */
 
 /**********************************************************************
 *
@@ -340,7 +340,7 @@ link_public_api(int)
 link_public_api(int)
      linkage_constituent_node_get_end(const CNode *n);
 
-/* from error.c */
+/* from error.c -- these are both obsolete. */
 extern link_public_api(int)
      lperrno;
 extern link_public_api(char)

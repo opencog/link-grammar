@@ -364,7 +364,7 @@ dictionary_create(char * dict_name, char * pp_name,
 
 	dict->fp = dictopen(dict->name, "r");
 	if (dict->fp == NULL) {
-		lperror(NODICT, dict_name);
+		prt_error("Error: Could not open dictionary %s\n", dict_name);
 		goto failure;
 	}
 

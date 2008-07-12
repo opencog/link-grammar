@@ -83,7 +83,6 @@ static per_thread_data * init(JNIEnv *env)
 	ptd = (per_thread_data *) malloc(sizeof(per_thread_data));
 	memset(ptd, 0, sizeof(per_thread_data));
 
-	lperror_clear();
 	ptd->panic_parse_opts = parse_options_create();
 	setup_panic_parse_options(ptd->panic_parse_opts);
 
@@ -100,7 +99,7 @@ static per_thread_data * init(JNIEnv *env)
 	 * this if/when more languages are supported.
 	 */
 	ptd->dict = dictionary_create_lang("en");
-	if (!ptd->dict) throwException(env, lperrmsg);
+	if (!ptd->dict) throwException(env, "Error: unable to open dictionary");
 	else test();
 
 	return ptd;
