@@ -113,9 +113,8 @@ static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 {
 	int w;
-	/* Sentence sent;
-	   sent = linkage_get_sentence(linkage); **PV* using linkage->word not sent->word */
-	if (verbosity<2) return;
+	if (verbosity < 2) return;
+
 	printf("  c %2d %4s [%c] (%2d-%2d): ",
 		   c, ctxt->constituent[c].type, ctxt->constituent[c].domain_type,
 		   ctxt->constituent[c].left, ctxt->constituent[c].right);
@@ -137,14 +136,16 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
  * type ctype2, call it c2. It then generates a new constituent of
  * ctype3, containing all the words in c2 but not c1.
  */
-static int gen_comp(con_context_t *ctxt, Linkage linkage, int numcon_total, int numcon_subl,
-					const char * ctype1, const char * ctype2, const char * ctype3, int x)
+static int gen_comp(con_context_t *ctxt, Linkage linkage,
+                    int numcon_total, int numcon_subl,
+					     const char * ctype1, const char * ctype2,
+                    const char * ctype3, int x)
 {
 	int w, w2, w3, c, c1, c2, done;
 	c = numcon_total + numcon_subl;
 
-	for (c1=numcon_total; c1<numcon_total + numcon_subl; c1++) {
-
+	for (c1=numcon_total; c1<numcon_total + numcon_subl; c1++)
+	{
 		/* If ctype1 is NP, it has to be an appositive to continue */
 		if ((x==4) && (post_process_match("MX#*", ctxt->constituent[c1].start_link)==0))
 			continue;
@@ -203,10 +204,10 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage, int numcon_total, int 
 		if (!(strcmp(ctxt->constituent[c1].type, ctype1)==0))
 			continue;
 
-		if (verbosity>=2)
+		if (verbosity >= 2)
 			printf("Generating complement constituent for c %d of type %s\n",
 				   c1, ctype1);
-		done=0;
+		done = 0;
 		for (w2=ctxt->constituent[c1].left; (done==0) && (w2>=0); w2--) {
 			for (w3=ctxt->constituent[c1].right; w3<linkage->num_words; w3++) {
 				for (c2=numcon_total; (done==0) &&
@@ -275,17 +276,18 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage, int numcon_total, int 
 					c++;
 					if (MAXCONSTITUENTS <= c)
 					{
-						fprintf(stderr, "Error: Too many constituents\n");
+						prt_error("Error: Too many constituents.\n");
 						c--;
 					}
 					done = 1;
 				}
 			}
 		}
-		if (verbosity>=2) {
-		  if (done==0)
-			printf("No constituent added, because no larger %s " \
-				   " was found\n", ctype2);
+		if (verbosity >= 2)
+		{
+			if (done == 0)
+				printf("No constituent added, because no larger %s " \
+					   " was found\n", ctype2);
 		}
 	}
 	numcon_subl = c - numcon_total;
@@ -433,7 +435,7 @@ static int find_next_element(con_context_t *ctxt,
 			 * could guess what they were or what they looked like, judging
 			 * only from the names?
 			 */
-			fprintf(stderr, "Error: Constituent overflowed andlist!\n");
+			prt_error("Error: Constituent overflowed andlist!\n");
 			return (num_lists-1); 
 		}
 	}
@@ -454,8 +456,9 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		/* Find and invalidate any constituents with negative length */
 		if(ctxt->constituent[c1].right < ctxt->constituent[c1].left)
 		{
-		  if(verbosity >= 2) printf("WARNING: Constituent %d has negative length. Deleting it.\n", c1);
-		  ctxt->constituent[c1].valid = 0;
+			if(verbosity >= 2)
+				prt_error("Warning: Constituent %d has negative length. Deleting it.\n", c1);
+			ctxt->constituent[c1].valid = 0;
 		}
 		ctxt->constituent[c1].canon = c1;
 	}
@@ -615,7 +618,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 					if (!((ctxt->constituent[c2].left<=ctxt->constituent[c1].left) &&
 						  (ctxt->constituent[c2].right>=ctxt->constituent[c1].right)))
 						continue;
-					if (verbosity>=2)
+					if (verbosity >= 2)
 						printf("Found that c%d in list %d is bigger " \
 							   "than c%d in list %d\n", c2, n2, c1, n);
 					ok=1;
@@ -625,7 +628,8 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 					   contains ALL the elements of n.
 					   If not, n is invalid. */
 
-					for (a3=0; a3 < ctxt->andlist[n].num; a3++) {
+					for (a3=0; a3 < ctxt->andlist[n].num; a3++)
+					{
 						c3 = ctxt->andlist[n].e[a3];
 						if ((ctxt->constituent[c2].left>ctxt->constituent[c3].left) ||
 							(ctxt->constituent[c2].right<ctxt->constituent[c3].right))
@@ -634,7 +638,8 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 					if (ok != 0)
 						continue;
 					ctxt->andlist[n].valid = 0;
-					if (verbosity>=2) {
+					if (verbosity >= 2)
+					{
 						printf("Eliminating andlist, " \
 							   "n=%d, a=%d, n2=%d, a2=%d: ",
 							   n, a, n2, a2);
@@ -649,7 +654,8 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	}
 
 
-	if (verbosity>=2) {
+	if (verbosity >= 2)
+	{
 		printf("And-lists after pruning:\n");
 		for (n=0; n<num_lists; n++) {
 			if (ctxt->andlist[n].valid==0)
@@ -896,20 +902,24 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	/* Check once more to see if constituents are nested (checking BETWEEN sublinkages
 	   this time) */
 
-	while (1) {
+	while (1)
+	{
 		adjustment_made=0;
-		for (c=0; c<numcon_total; c++) {
+		for (c=0; c<numcon_total; c++)
+		{
 			if(ctxt->constituent[c].valid==0) continue;
-			for (c2=0; c2<numcon_total; c2++) {
+			for (c2=0; c2<numcon_total; c2++)
+			{
 				if(ctxt->constituent[c2].valid==0) continue;
 				if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
 					(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
-					(ctxt->constituent[c].right >= ctxt->constituent[c2].left)) {
-
-					if (verbosity>=2) {
-					  printf("WARNING: the constituents aren't nested! Adjusting them." \
-							   "(%d, %d)\n", c, c2);
-					  }
+					(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
+				{
+					if (verbosity >= 2)
+					{
+						prt_error("Warning: the constituents aren't nested! "
+						          "Adjusting them. (%d, %d)\n", c, c2);
+					}
 					ctxt->constituent[c].left = ctxt->constituent[c2].left;
 				}
 			}
@@ -931,18 +941,23 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 	num_subl = linkage->num_sublinkages;
 	if(linkage->unionized==1 && num_subl>1) num_subl--;
 
-	if (verbosity>=2)
+	if (verbosity >= 2)
 		printf("Number of sublinkages = %d\n", num_subl);
-	for (i=0; i<num_subl; i++) {
+
+	for (i=0; i<num_subl; i++)
+	{
 		for (w=0; w<linkage->num_words; w++) ctxt->word_used[i][w]=0;
 		linkage->current=i;
-		for (link=0; link<linkage_get_num_links(linkage); link++) {
+		for (link=0; link<linkage_get_num_links(linkage); link++)
+		{
 			ctxt->word_used[i][linkage_get_link_lword(linkage, link)]=1;
 			ctxt->word_used[i][linkage_get_link_rword(linkage, link)]=1;
 		}
-		if (verbosity>=2) {
+		if (verbosity >= 2)
+		{
 			printf("Sublinkage %d: ", i);
-			for (w=0; w<linkage->num_words; w++) {
+			for (w=0; w<linkage->num_words; w++)
+			{
 				if (ctxt->word_used[i][w]==0) printf("0 ");
 				if (ctxt->word_used[i][w]==1) printf("1 ");
 			}
@@ -1013,8 +1028,8 @@ static const char * cons_of_domain(char domain_type)
 	case 'z':
 		return "VP";
 	default:
-		printf("Illegal domain: %c\n", domain_type);
-		assert(0, "Illegal domain");
+		prt_error("Error: Illegal domain: %c\n", domain_type);
+		return "";
 	}
 }
 
@@ -1233,21 +1248,22 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 					if ((strcmp(linkage->word[ctxt->constituent[c2].right], ",")==0) ||
 						(strcmp(linkage->word[ctxt->constituent[c2].right],
 								"RIGHT-WALL")==0)) {
-						if (verbosity>=2)
+						if (verbosity >= 2)
 							printf("Adjusting %d to fix comma overlap\n", c2);
 						adjust_for_right_comma(ctxt, linkage, c2);
 						adjustment_made=1;
 					}
 					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",")==0) {
-						if (verbosity>=2)
+						if (verbosity >= 2)
 							printf("Adjusting c %d to fix comma overlap\n", c);
 						adjust_for_left_comma(ctxt, linkage, c);
 						adjustment_made=1;
 					}
 					else {
-					  if (verbosity>=2) {
-						printf("WARNING: the constituents aren't nested! Adjusting them." \
-							   "(%d, %d)\n", c, c2);
+						if (verbosity >= 2)
+						{
+							prt_error("Warning: the constituents aren't nested! "
+							          "Adjusting them. (%d, %d)\n", c, c2);
 					  }
 					  ctxt->constituent[c].left = ctxt->constituent[c2].left;
 					}
@@ -1307,17 +1323,20 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 		rightdone[c]=0;
 	}
 
-	if(verbosity>=2)
+	if (verbosity >= 2)
 		printf("\n");			
 
-	for(w=1; w<linkage->num_words; w++) {	
+	for (w=1; w<linkage->num_words; w++)
+	{
 		/* Skip left wall; don't skip right wall, since it may
 		   have constituent boundaries */
 
-		while(1) {
+		while(1)
+		{
 			best = -1;
 			bestright = -1;
-			for(c=0; c<numcon_total; c++) {
+			for (c=0; c<numcon_total; c++)
+			{
 				if ((ctxt->constituent[c].left==w) &&
 					(leftdone[c]==0) && (ctxt->constituent[c].valid==1) &&
 					(ctxt->constituent[c].right >= bestright)) {
@@ -1325,9 +1344,10 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 					bestright = ctxt->constituent[c].right;
 				}
 			}
-			if (best==-1)
+			if (best == -1)
 				break;
-			leftdone[best]=1;
+
+			leftdone[best] = 1;
 			/* have_open is a hack to avoid printing anything until 
 			 * bracket is opened */
 			if (w == 1) have_opened = 0; 
@@ -1336,7 +1356,8 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
 		}
 
-		if (have_opened && (w < linkage->num_words - 1)) {
+		if (have_opened && (w < linkage->num_words - 1))
+		{
 			/* Don't print out right wall */
 			strcpy(s, sent->word[w].string);
 
@@ -1347,7 +1368,8 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			append_string(cs, "%s ", s);
 		}
 
-		while(1) {
+		while(1)
+		{
 			best = -1;
 			bestleft = -1;
 			for(c=0; c<numcon_total; c++) {
@@ -1389,12 +1411,15 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	count_words_used(ctxt, linkage);
 
 	num_subl = linkage->num_sublinkages;
-	if(num_subl > MAXSUBL) {
-	  num_subl=MAXSUBL;
-	  if(verbosity>=2) printf("Number of sublinkages exceeds maximum: only considering first %d sublinkages\n", MAXSUBL);
+	if (num_subl > MAXSUBL)
+	{
+	  num_subl = MAXSUBL;
+	  if (verbosity >= 2)
+		printf("Number of sublinkages exceeds maximum: only considering first %d sublinkages\n", MAXSUBL);
 	}
-	if(linkage->unionized==1 && num_subl>1) num_subl--;
-	for (s=0; s<num_subl; s++) {
+	if (linkage->unionized==1 && num_subl>1) num_subl--;
+	for (s=0; s<num_subl; s++)
+	{
 		linkage_set_current_sublinkage(linkage, s);
 		linkage_post_process(linkage, pp);
 		num_words = linkage_get_num_words(linkage);

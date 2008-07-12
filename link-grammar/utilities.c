@@ -149,7 +149,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		fprintf(stderr, "Error: can't downcase multi-byte string!\n");
+		prt_error("Error: can't downcase multi-byte string!\n");
 		return;
 	}
 
@@ -180,7 +180,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		fprintf(stderr, "Error: can't upcase multi-byte string!\n");
+		prt_error("Error: can't upcase multi-byte string!\n");
 		return;
 	}
 
@@ -395,7 +395,7 @@ static char * get_datadir(void)
 
 		if(GetModuleFileName(hInstance,dll_path,MAX_PATH)) {
 #ifdef _DEBUG
-		fprintf(stderr, "GetModuleFileName=%s\n", (dll_path?dll_path:"NULL"));
+			prt_error("Ifno: GetModuleFileName=%s\n", (dll_path?dll_path:"NULL"));
 #endif
 			data_dir = path_get_dirname(dll_path);
 		}
@@ -457,7 +457,7 @@ FILE *dictopen(const char *filename, const char *how)
 	{
 		char * data_dir = get_datadir();
 #ifdef _DEBUG
-		fprintf(stderr, "data_dir=%s\n", (data_dir?data_dir:"NULL"));
+		prt_error("Info: data_dir=%s\n", (data_dir?data_dir:"NULL"));
 #endif
 		if (data_dir) {
 			snprintf(fulldictpath, MAX_PATH_NAME, 
@@ -496,7 +496,7 @@ FILE *dictopen(const char *filename, const char *how)
 		*(completename+(pos-oldpos)) = DIR_SEPARATOR;
 		strcpy(completename+(pos-oldpos)+1,filename);
 #ifdef _DEBUG
-		fprintf(stderr, "Trying %s\n", completename);
+		prt_error("Info: dictopen() trying %s\n", completename);
 #endif
 		if ((fp = fopen(completename, how)) != NULL) {
 			return fp;

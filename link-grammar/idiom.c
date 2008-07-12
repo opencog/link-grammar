@@ -239,10 +239,10 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	if (!is_idiom_string(s))
 	{
-		fprintf(stderr, "Warning: Word \"%s\" on line %d is not "
-		                "a correctly formed idiom string.\n"
-		                "\tThis word will be ignored\n",
-		                s, dict->line_number);
+		prt_error("Warning: Word \"%s\" on line %d is not "
+		          "a correctly formed idiom string.\n"
+		          "\tThis word will be ignored\n",
+		          s, dict->line_number);
 
 		xfree((char *)dn, sizeof (Dict_node));
 		return;
