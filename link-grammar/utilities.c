@@ -507,8 +507,10 @@ FILE *dictopen(const char *filename, const char *how)
 }
 
 /* ======================================================== */
-/* Random number stuff below. Can this be replaced by 
- * standard system API's ??
+/*
+ * A static array of precomputed random values. This is used in a
+ * read-only fashion, and thus is thread-safe, despite being a global.
+ * Its initialized only once, during startup.
  */
 
 unsigned int randtable[RTSIZE];
@@ -527,42 +529,6 @@ void init_randtable(void)
 	for (i=0; i<RTSIZE; i++) {
 		randtable[i] = rand();
 	}
-}
-
-
-static int random_state[2] = {0,0};
-static int random_count = 0;
-static int random_inited = FALSE;
-
-static int step_generator(int d)
-{
-	/* no overflow should occur, so this is machine independent */
-	random_state[0] = ((random_state[0] * 3) + d + 104729) % 179424673;
-	random_state[1] = ((random_state[1] * 7) + d + 48611) % 86028121;
-	return random_state[0] + random_state[1];;
-}
-
-void my_random_initialize(int seed) 
-{
-	assert(!random_inited, "Random number generator not finalized.");
-
-	seed = (seed < 0) ? -seed : seed;
-	seed = seed % (1 << 30);
-
-	random_state[0] = seed % 3;
-	random_state[1] = seed % 5;
-	random_count = seed;
-	random_inited = TRUE;
-}
-
-void my_random_finalize(void) {
-	assert(random_inited, "Random number generator not initialized.");
-	random_inited = FALSE;
-}
-
-int my_random(void) {
-	random_count++;
-	return (step_generator(random_count));
 }
 
 /* ======================================================== */

@@ -560,7 +560,7 @@ static void list_random_links(Parse_info pi, Parse_set * set)
 		  num_pc++;
 	 }
 
-	 new_index = my_random() % num_pc;
+	 new_index = rand_r(&pi->rand_state) % num_pc;
 
 	 num_pc = 0;
 	 for (pc = set->first; pc != NULL; pc = pc->next) {
@@ -574,15 +574,17 @@ static void list_random_links(Parse_info pi, Parse_set * set)
 	 list_random_links(pi, pc->set[1]);
 }
 
-void extract_links(int index, int cost, Parse_info pi) {
-/* Generate the list of all links of the indexth parsing of the
-   sentence.  For this to work, you must have already called parse, and
-   already built the whole_set. */
+/**
+ * Generate the list of all links of the index'th parsing of the
+ * sentence.  For this to work, you must have already called parse, and
+ * already built the whole_set.
+ */
+void extract_links(int index, int cost, Parse_info pi)
+{
 	initialize_links(pi);
+	pi->rand_state = index;
 	if (index < 0) {
-		my_random_initialize(index);
 		list_random_links(pi, pi->parse_set);
-		my_random_finalize();
 	}
 	else {
 		list_links(pi, pi->parse_set, index);

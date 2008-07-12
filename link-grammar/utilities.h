@@ -167,10 +167,6 @@ void init_randtable(void);
 int  next_power_of_two_up(int);
 void left_print_string(FILE* fp, const char *, const char *);
 
-void my_random_initialize(int seed);
-void my_random_finalize(void);
-int  my_random(void);
-
 /* routines for copying basic objects */
 void *      xalloc(int);
 void *      exalloc(int);

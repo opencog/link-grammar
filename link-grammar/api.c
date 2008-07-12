@@ -339,12 +339,12 @@ dictionary_create(char * dict_name, char * pp_name,
                   char * cons_name, char * affix_name)
 {
 	Dictionary dict;
-	static int rand_table_inited=FALSE;
+	static int rand_table_inited = FALSE;
 	Dict_node *dict_node;
 
 	if (!rand_table_inited) {
 		init_randtable();
-		rand_table_inited=TRUE;
+		rand_table_inited = TRUE;
 	}
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
@@ -733,15 +733,14 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 	else
 	{
-		my_random_initialize(N_linkages_found + sent->length);
+		sent->rand_state = N_linkages_found + sent->length;
 		for (in=0; in<N_linkages_alloced; in++)
 		{
 			denom = (double) N_linkages_alloced;
 			block_bottom = (int) (((double)in*(double) N_linkages_found)/denom);
 			block_top = (int) (((double)(in+1)*(double)N_linkages_found)/denom);
-			indices[in] = block_bottom + (my_random() % (block_top-block_bottom));
+			indices[in] = block_bottom + (rand_r(&sent->rand_state) % (block_top-block_bottom));
 		}
-		my_random_finalize();
 	}
 
 	only_canonical_allowed = (!(overflowed || (N_linkages_found > 2*opts->linkage_limit)));

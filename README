@@ -320,4 +320,7 @@ TODO:
                  during initialization, and only if binreloc turned
                  on.
       pp_lexer.c -- autogened code, original lex sources lost.
+                    This is only used when reading dictionaries,
+                    during initialization, and so maybe doesn't need
+                    to be thread safe.
       utilities.c - has global "verbosity" and space management globals.

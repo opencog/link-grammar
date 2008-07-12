@@ -180,6 +180,9 @@ struct Parse_info_struct
 
 	/* TRUE if this word has a fat down link. FALSE otherise */
 	char has_fat_down[MAX_SENTENCE];
+
+	/* thread-safe random number state */
+	unsigned int rand_state;
 };
 
 typedef struct analyze_context_s analyze_context_t;
@@ -217,6 +220,8 @@ struct Sentence_s
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
 	count_context_t * count_ctxt; /* private state info used for counting */
 	match_context_t * match_ctxt; /* private state info used for matching */
+	/* thread-safe random number state */
+	unsigned int rand_state;
 };
 
 /*********************************************************
