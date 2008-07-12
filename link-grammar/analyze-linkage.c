@@ -26,9 +26,9 @@
 struct analyze_context_s
 {
 	List_o_links *word_links[MAX_SENTENCE]; /* ptr to l.o.l. out of word */
+	int structure_violation;
 };
 
-static int structure_violation;
 static int dfs_root_word[MAX_SENTENCE]; /* for the depth-first search */
 static int dfs_height[MAX_SENTENCE];    /* to determine the order to do the root word dfs */
 static int height_perm[MAX_SENTENCE];   /* permute the vertices from highest to lowest */
@@ -218,12 +218,13 @@ static int is_CON_word(int w, List_o_links **wordlinks)
 	return FALSE;
 }
 
-static DIS_node * build_DIS_node(int, List_o_links **);
+static DIS_node * build_DIS_node(analyze_context_t*, int, List_o_links **);
 
 /** 
  * This word is a CON word (has fat links down).  Build the tree for it.
  */
-static CON_node * build_CON_node(int w, List_o_links **wordlinks) 
+static CON_node * build_CON_node(analyze_context_t *actx, 
+                                 int w, List_o_links **wordlinks) 
 {
 	List_o_links * lol;
 	CON_node * a;
@@ -234,7 +235,7 @@ static CON_node * build_CON_node(int w, List_o_links **wordlinks)
 			dx = (DIS_list *) xalloc (sizeof (DIS_list));
 			dx->next = d;
 			d = dx;
-			d->dn = build_DIS_node(lol->word, wordlinks);
+			d->dn = build_DIS_node(actx, lol->word, wordlinks);
 		}
 	}
 	a = (CON_node *) xalloc(sizeof (CON_node));
@@ -253,14 +254,15 @@ static CON_node * build_CON_node(int w, List_o_links **wordlinks)
  * linkages that have improper structure.  Fortunately, they
  * seem to be rather rare.
  */
-static CON_list * c_dfs(int w, DIS_node * start_dn, CON_list * c,
+static CON_list * c_dfs(analyze_context_t *actx,
+                        int w, DIS_node * start_dn, CON_list * c,
                         List_o_links **wordlinks)
 {
 	CON_list *cx;
 	List_o_links * lol, *lolx;
 	if (dfs_root_word[w] != -1) {
 		if (dfs_root_word[w] != start_dn->word) {
-			structure_violation = TRUE;
+			actx->structure_violation = TRUE;
 		}
 		return c;
 	}
@@ -268,21 +270,21 @@ static CON_list * c_dfs(int w, DIS_node * start_dn, CON_list * c,
 	for (lol=wordlinks[w]; lol != NULL; lol = lol->next) {
 		if (lol->dir < 0) {  /* a backwards link */
 			if (dfs_root_word[lol->word] == -1) {
-				structure_violation = TRUE;
+				actx->structure_violation = TRUE;
 			}
 		} else if (lol->dir == 0) {
 			lolx = (List_o_links *) xalloc(sizeof(List_o_links));
 			lolx->next = start_dn->lol;
 			lolx->link = lol->link;
 			start_dn->lol = lolx;
-			c = c_dfs(lol->word, start_dn, c, wordlinks);
+			c = c_dfs(actx, lol->word, start_dn, c, wordlinks);
 		}
 	}
 	if (is_CON_word(w, wordlinks)) {  /* if the current node is CON, put it first */
 		cx = (CON_list *) xalloc(sizeof(CON_list));
 		cx->next = c;
 		c = cx;
-		c->cn = build_CON_node(w, wordlinks);
+		c->cn = build_CON_node(actx, w, wordlinks);
 	}
 	return c;
 }
@@ -292,13 +294,14 @@ static CON_list * c_dfs(int w, DIS_node * start_dn, CON_list * c,
  * region reachable via thin links, and put all reachable nodes with fat
  * links out of them in its list of children.
  */
-static DIS_node * build_DIS_node(int w, List_o_links **wordlinks)
+static DIS_node * build_DIS_node(analyze_context_t *actx, 
+                                 int w, List_o_links **wordlinks)
 {
 	DIS_node * dn;
 	dn = (DIS_node *) xalloc(sizeof (DIS_node));
 	dn->word = w;   /* must do this before dfs so it knows the start word */
 	dn->lol = NULL;
-	dn->cl = c_dfs(w, dn, NULL, wordlinks);
+	dn->cl = c_dfs(actx, w, dn, NULL, wordlinks);
 	return dn;
 }
 
@@ -319,12 +322,14 @@ static int comp_height(int *a, int *b) {
 
 #define COMPARE_TYPE int (*)(const void *, const void *)
 
-static DIS_node * build_DIS_CON_tree(Parse_info pi, List_o_links **wordlinks)
+static DIS_node * build_DIS_CON_tree(analyze_context_t *actx,
+                                     Parse_info pi)
 {
 	int xw, w;
 	DIS_node * dnroot, * dn;
 	CON_list * child, * xchild;
 	List_o_links * lol, * xlol;
+	List_o_links **wordlinks = actx->word_links;
 
 	/* The algorithm used here to build the DIS_CON tree depends on
 	   the search percolating down from the "top" of the tree.  The
@@ -346,14 +351,20 @@ static DIS_node * build_DIS_CON_tree(Parse_info pi, List_o_links **wordlinks)
 	for (w=0; w<pi->N_words; w++) dfs_root_word[w] = -1;
 
 	dnroot = NULL;
-	for (xw=0; xw < pi->N_words; xw++) {
+	for (xw=0; xw < pi->N_words; xw++)
+	{
 		w = height_perm[xw];
-		if (dfs_root_word[w] == -1) {
-			dn = build_DIS_node(w, wordlinks);
-			if (dnroot == NULL) {
+		if (dfs_root_word[w] == -1)
+		{
+			dn = build_DIS_node(actx, w, wordlinks);
+			if (dnroot == NULL)
+			{
 				dnroot = dn;
-			} else {
-				for (child = dn->cl; child != NULL; child = xchild) {
+			}
+			else
+			{
+				for (child = dn->cl; child != NULL; child = xchild)
+				{
 					xchild = child->next;
 					child->next = dnroot->cl;
 					dnroot->cl = child;
@@ -740,7 +751,12 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 
 void init_analyze(Sentence s)
 {
-	s->analyze_ctxt = (analyze_context_t *) malloc (sizeof(analyze_context_t));
+	analyze_context_t *actx;
+
+	actx = (analyze_context_t *) malloc (sizeof(analyze_context_t));
+	actx->structure_violation = FALSE;
+
+	s->analyze_ctxt = actx;
 }
 
 void free_analyze(Sentence s)
@@ -766,16 +782,17 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	PP_node accum;			   /* for domain ancestry check */
 	D_type_list * dtl0, * dtl1;  /* for domain ancestry check */
 
+	analyze_context_t *actx = sent->analyze_ctxt;
 	List_o_links **word_links = sent->analyze_ctxt->word_links;
 
 	sublinkage = x_create_sublinkage(pi);
 	postprocessor = sent->dict->postprocessor;
 	build_digraph(pi, word_links);
-	structure_violation = FALSE;
-	d_root = build_DIS_CON_tree(pi, word_links); /* may set structure_violation to TRUE */
+	actx->structure_violation = FALSE;
+	d_root = build_DIS_CON_tree(actx, pi); /* may set structure_violation to TRUE */
 
 	li.N_violations = 0;
-	li.improper_fat_linkage = structure_violation;
+	li.improper_fat_linkage = actx->structure_violation;
 	li.inconsistent_domains = FALSE;
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
 	li.disjunct_cost = disjunct_cost(pi);
@@ -784,7 +801,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	li.and_cost = 0;
 	li.andlist = NULL;
 
-	if (structure_violation) {
+	if (actx->structure_violation) {
 		li.N_violations++;
 		free_sublinkage(sublinkage);
 		free_digraph(pi, word_links);
@@ -977,16 +994,19 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	Sublinkage * sublinkage;
 	Parse_info pi = sent->parse_info;
 
+	analyze_context_t *actx = sent->analyze_ctxt;
 	List_o_links **word_links = sent->analyze_ctxt->word_links;
 
 	sublinkage = x_create_sublinkage(pi);
 	build_digraph(pi, word_links);
-	structure_violation = FALSE;
-	d_root = build_DIS_CON_tree(pi, word_links);
+	actx->structure_violation = FALSE;
+	d_root = build_DIS_CON_tree(actx, pi);
 
-	if (structure_violation) {
+	if (actx->structure_violation)
+	{
 		compute_link_names(sent);
-		for (i=0; i<pi->N_links; i++) {
+		for (i=0; i<pi->N_links; i++)
+		{
 			copy_full_link(&sublinkage->link[i],&(pi->link_array[i]));
 		}
 
@@ -994,7 +1014,8 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		linkage->sublinkage = ex_create_sublinkage(pi);
 
 		/* This will have fat links! */
-		for (i=0; i<pi->N_links; ++i) {
+		for (i=0; i<pi->N_links; ++i)
+		{
 			linkage->sublinkage->link[i] = excopy_link(sublinkage->link[i]);
 		}
 
