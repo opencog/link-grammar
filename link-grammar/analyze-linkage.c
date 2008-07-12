@@ -27,11 +27,12 @@ struct analyze_context_s
 {
 	List_o_links *word_links[MAX_SENTENCE]; /* ptr to l.o.l. out of word */
 	int structure_violation;
+
+	int dfs_root_word[MAX_SENTENCE]; /* for the depth-first search */
+	int dfs_height[MAX_SENTENCE];    /* to determine the order to do the root word dfs */
+	int height_perm[MAX_SENTENCE];   /* permute the vertices from highest to lowest */
 };
 
-static int dfs_root_word[MAX_SENTENCE]; /* for the depth-first search */
-static int dfs_height[MAX_SENTENCE];    /* to determine the order to do the root word dfs */
-static int height_perm[MAX_SENTENCE];   /* permute the vertices from highest to lowest */
 
 /* The following three functions are all for computing the cost of and lists */
 static int visited[MAX_SENTENCE];
@@ -218,24 +219,25 @@ static int is_CON_word(int w, List_o_links **wordlinks)
 	return FALSE;
 }
 
-static DIS_node * build_DIS_node(analyze_context_t*, int, List_o_links **);
+static DIS_node * build_DIS_node(analyze_context_t*, int);
 
 /** 
  * This word is a CON word (has fat links down).  Build the tree for it.
  */
-static CON_node * build_CON_node(analyze_context_t *actx, 
-                                 int w, List_o_links **wordlinks) 
+static CON_node * build_CON_node(analyze_context_t *actx, int w)
 {
 	List_o_links * lol;
 	CON_node * a;
 	DIS_list * d, *dx;
 	d = NULL;
-	for (lol = wordlinks[w]; lol!=NULL; lol = lol->next) {
-		if (lol->dir == 1) {
+	for (lol = actx->word_links[w]; lol!=NULL; lol = lol->next)
+	{
+		if (lol->dir == 1)
+		{
 			dx = (DIS_list *) xalloc (sizeof (DIS_list));
 			dx->next = d;
 			d = dx;
-			d->dn = build_DIS_node(actx, lol->word, wordlinks);
+			d->dn = build_DIS_node(actx, lol->word);
 		}
 	}
 	a = (CON_node *) xalloc(sizeof (CON_node));
@@ -255,36 +257,45 @@ static CON_node * build_CON_node(analyze_context_t *actx,
  * seem to be rather rare.
  */
 static CON_list * c_dfs(analyze_context_t *actx,
-                        int w, DIS_node * start_dn, CON_list * c,
-                        List_o_links **wordlinks)
+                        int w, DIS_node * start_dn, CON_list * c)
 {
 	CON_list *cx;
 	List_o_links * lol, *lolx;
-	if (dfs_root_word[w] != -1) {
-		if (dfs_root_word[w] != start_dn->word) {
+	if (actx->dfs_root_word[w] != -1)
+	{
+		if (actx->dfs_root_word[w] != start_dn->word)
+		{
 			actx->structure_violation = TRUE;
 		}
 		return c;
 	}
-	dfs_root_word[w] = start_dn->word;
-	for (lol=wordlinks[w]; lol != NULL; lol = lol->next) {
-		if (lol->dir < 0) {  /* a backwards link */
-			if (dfs_root_word[lol->word] == -1) {
+	actx->dfs_root_word[w] = start_dn->word;
+	for (lol = actx->word_links[w]; lol != NULL; lol = lol->next)
+	{
+		if (lol->dir < 0)  /* a backwards link */
+		{
+			if (actx->dfs_root_word[lol->word] == -1)
+			{
 				actx->structure_violation = TRUE;
 			}
-		} else if (lol->dir == 0) {
+		}
+		else if (lol->dir == 0)
+		{
 			lolx = (List_o_links *) xalloc(sizeof(List_o_links));
 			lolx->next = start_dn->lol;
 			lolx->link = lol->link;
 			start_dn->lol = lolx;
-			c = c_dfs(actx, lol->word, start_dn, c, wordlinks);
+			c = c_dfs(actx, lol->word, start_dn, c);
 		}
 	}
-	if (is_CON_word(w, wordlinks)) {  /* if the current node is CON, put it first */
+
+	/* if the current node is CON, put it first */
+	if (is_CON_word(w, actx->word_links))
+	{
 		cx = (CON_list *) xalloc(sizeof(CON_list));
 		cx->next = c;
 		c = cx;
-		c->cn = build_CON_node(actx, w, wordlinks);
+		c->cn = build_CON_node(actx, w);
 	}
 	return c;
 }
@@ -295,41 +306,48 @@ static CON_list * c_dfs(analyze_context_t *actx,
  * links out of them in its list of children.
  */
 static DIS_node * build_DIS_node(analyze_context_t *actx, 
-                                 int w, List_o_links **wordlinks)
+                                 int w)
 {
 	DIS_node * dn;
 	dn = (DIS_node *) xalloc(sizeof (DIS_node));
 	dn->word = w;   /* must do this before dfs so it knows the start word */
 	dn->lol = NULL;
-	dn->cl = c_dfs(actx, w, dn, NULL, wordlinks);
+	dn->cl = c_dfs(actx, w, dn, NULL);
 	return dn;
 }
 
-static void height_dfs(int w, int height, List_o_links **wordlinks)
+static void height_dfs(analyze_context_t *actx, int w, int height)
 {
 	List_o_links * lol;
-	if (dfs_height[w] != 0) return;
-	dfs_height[w] = height;
-	for (lol=wordlinks[w]; lol != NULL; lol = lol->next) {
+	if (actx->dfs_height[w] != 0) return;
+
+	actx->dfs_height[w] = height;
+
+	for (lol = actx->word_links[w]; lol != NULL; lol = lol->next)
+	{
 		/* The dir is 1 for a down link. */
-		height_dfs(lol->word, height - lol->dir, wordlinks);
+		height_dfs(actx, lol->word, height - lol->dir);
 	}
 }
 
-static int comp_height(int *a, int *b) {
-	return dfs_height[*b] - dfs_height[*a];
-}
-
-#define COMPARE_TYPE int (*)(const void *, const void *)
-
-static DIS_node * build_DIS_CON_tree(analyze_context_t *actx,
-                                     Parse_info pi)
+static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 {
 	int xw, w;
 	DIS_node * dnroot, * dn;
 	CON_list * child, * xchild;
 	List_o_links * lol, * xlol;
-	List_o_links **wordlinks = actx->word_links;
+
+	/* Declare the compar function here, since it needs access to the
+	 * stack varaiable actx, which would otherwise need to be delcared
+	 * global (and thus not thread-safe).
+	 */
+
+	int comp_height(const void *va, const void *vb)
+	{
+		const int *a = va; 
+		const int *b = vb;
+		return actx->dfs_height[*b] - actx->dfs_height[*a];
+	};
 
 	/* The algorithm used here to build the DIS_CON tree depends on
 	   the search percolating down from the "top" of the tree.  The
@@ -342,21 +360,23 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx,
 	   dfs_height[] for this.
 	 */
 
-	for (w=0; w < pi->N_words; w++) dfs_height[w] = 0;
-	for (w=0; w < pi->N_words; w++) height_dfs(w, MAX_SENTENCE, wordlinks);
+	for (w=0; w < pi->N_words; w++) actx->dfs_height[w] = 0;
+	for (w=0; w < pi->N_words; w++) height_dfs(actx, w, MAX_SENTENCE);
 
-	for (w=0; w < pi->N_words; w++) height_perm[w] = w;
-	qsort(height_perm, pi->N_words, sizeof(height_perm[0]), (COMPARE_TYPE) comp_height);
+	for (w=0; w < pi->N_words; w++) actx->height_perm[w] = w;
 
-	for (w=0; w<pi->N_words; w++) dfs_root_word[w] = -1;
+	qsort(actx->height_perm, pi->N_words, 
+		sizeof(actx->height_perm[0]), comp_height);
+
+	for (w=0; w<pi->N_words; w++) actx->dfs_root_word[w] = -1;
 
 	dnroot = NULL;
 	for (xw=0; xw < pi->N_words; xw++)
 	{
-		w = height_perm[xw];
-		if (dfs_root_word[w] == -1)
+		w = actx->height_perm[xw];
+		if (actx->dfs_root_word[w] == -1)
 		{
-			dn = build_DIS_node(actx, w, wordlinks);
+			dn = build_DIS_node(actx, w);
 			if (dnroot == NULL)
 			{
 				dnroot = dn;
@@ -833,8 +853,8 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 				sublinkage->link[i]->l = patch_array[i].newl;
 				sublinkage->link[i]->r = patch_array[i].newr;
 			}
-			else if ((dfs_root_word[pi->link_array[i].l] != -1) &&
-					 (dfs_root_word[pi->link_array[i].r] != -1)) {
+			else if ((actx->dfs_root_word[pi->link_array[i].l] != -1) &&
+					 (actx->dfs_root_word[pi->link_array[i].r] != -1)) {
 				sublinkage->link[i]->l = -1;
 			}
 		}
@@ -1054,12 +1074,16 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		}
 		fill_patch_array_DIS(d_root, NULL, word_links);
 
-		for (i=0; i<pi->N_links; i++) {
-			if (patch_array[i].changed || patch_array[i].used) {
+		for (i=0; i<pi->N_links; i++)
+		{
+			if (patch_array[i].changed || patch_array[i].used)
+			{
 				sublinkage->link[i]->l = patch_array[i].newl;
 				sublinkage->link[i]->r = patch_array[i].newr;
-			} else if ((dfs_root_word[pi->link_array[i].l] != -1) &&
-					   (dfs_root_word[pi->link_array[i].r] != -1)) {
+			}
+			else if ((actx->dfs_root_word[pi->link_array[i].l] != -1) &&
+					   (actx->dfs_root_word[pi->link_array[i].r] != -1))
+			{
 				sublinkage->link[i]->l = -1;
 			}
 		}
