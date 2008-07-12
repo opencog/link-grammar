@@ -31,16 +31,16 @@ struct analyze_context_s
 	int dfs_root_word[MAX_SENTENCE]; /* for the depth-first search */
 	int dfs_height[MAX_SENTENCE];    /* to determine the order to do the root word dfs */
 	int height_perm[MAX_SENTENCE];   /* permute the vertices from highest to lowest */
+
+	/* The following are all for computing the cost of and lists */
+	int visited[MAX_SENTENCE];
+	int and_element_sizes[MAX_SENTENCE];
+	int and_element[MAX_SENTENCE];
+	int N_and_elements;
+	int outside_word[MAX_SENTENCE];
+	int N_outside_words;
 };
 
-
-/* The following three functions are all for computing the cost of and lists */
-static int visited[MAX_SENTENCE];
-static int and_element_sizes[MAX_SENTENCE];
-static int and_element[MAX_SENTENCE];
-static int N_and_elements;
-static int outside_word[MAX_SENTENCE];
-static int N_outside_words;
 
 typedef struct patch_element_struct Patch_element;
 struct patch_element_struct
@@ -509,7 +509,9 @@ static void free_digraph(Parse_info pi, List_o_links **wordlinks)
 }
 
 static void free_CON_tree(CON_node *);
-static void free_DIS_tree(DIS_node * dn) {
+
+static void free_DIS_tree(DIS_node * dn)
+{
 	List_o_links * lol, *lolx;
 	CON_list *cl, *clx;
 	for (lol=dn->lol; lol!=NULL; lol=lolx) {
@@ -524,7 +526,8 @@ static void free_DIS_tree(DIS_node * dn) {
 	xfree((void *) dn, sizeof(DIS_node));
 }
 
-static void free_CON_tree(CON_node * cn) {
+static void free_CON_tree(CON_node * cn)
+{
 	DIS_list *dl, *dlx;
 	for (dl = cn->dl; dl!=NULL; dl=dlx) {
 		dlx = dl->next;
@@ -535,42 +538,51 @@ static void free_CON_tree(CON_node * cn) {
 }
 
 /** scope out this and element */
-static void and_dfs_full(int w, List_o_links **wordlinks)
+static void and_dfs_full(analyze_context_t *actx, int w)
 {
 	List_o_links *lol;
-	if (visited[w]) return;
-	visited[w] = TRUE;
-	and_element_sizes[N_and_elements]++;
+	if (actx->visited[w]) return;
+	actx->visited[w] = TRUE;
+	actx->and_element_sizes[actx->N_and_elements]++;
 
-	for (lol = wordlinks[w]; lol != NULL; lol = lol->next) {
-		if (lol->dir >= 0) {
-			and_dfs_full(lol->word, wordlinks);
+	for (lol = actx->word_links[w]; lol != NULL; lol = lol->next)
+	{
+		if (lol->dir >= 0)
+		{
+			and_dfs_full(actx, lol->word);
 		}
 	}
 }
 
 /** get down the tree past all the commas */
-static void and_dfs_commas(Sentence sent, int w, List_o_links **wordlinks)
+static void and_dfs_commas(analyze_context_t *actx, Sentence sent, int w)
 {
 	List_o_links *lol;
-	if (visited[w]) return;
-	visited[w] = TRUE;
-	for (lol = wordlinks[w]; lol != NULL; lol = lol->next) {
-		if (lol->dir == 1) {
-			 /* we only consider UP or DOWN priority links here */
+	if (actx->visited[w]) return;
 
-			if (strcmp(sent->word[lol->word].string, ",")==0) {
-					/* pointing to a comma */
-				and_dfs_commas(sent, lol->word, wordlinks);
-			} else {
-				and_element[N_and_elements]=lol->word;
-				and_dfs_full(lol->word, wordlinks);
-				N_and_elements++;
+	actx->visited[w] = TRUE;
+
+	for (lol = actx->word_links[w]; lol != NULL; lol = lol->next)
+	{
+		/* we only consider UP or DOWN priority links here */
+		if (lol->dir == 1)
+		{
+			if (strcmp(sent->word[lol->word].string, ",") == 0)
+			{
+				/* pointing to a comma */
+				and_dfs_commas(actx, sent, lol->word);
+			}
+			else
+			{
+				actx->and_element[actx->N_and_elements] = lol->word;
+				and_dfs_full(actx, lol->word);
+				actx->N_and_elements++;
 			}
 		}
-		if (lol->dir == 0) {
-		  outside_word[N_outside_words]=lol->word;
-		  N_outside_words++;
+		if (lol->dir == 0)
+		{
+		  actx->outside_word[actx->N_outside_words] = lol->word;
+		  actx->N_outside_words++;
 		}
 	}
 }
@@ -580,7 +592,7 @@ static void and_dfs_commas(Sentence sent, int w, List_o_links **wordlinks)
  * in the length of and-list elements. It also computes other
  * information used to construct the "andlist" structure of linkage_info.
  */
-static Andlist * build_andlist(Sentence sent, List_o_links **wordlinks)
+static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
 {
 	int w, i, min, max, j, cost;
 	char * s;
@@ -590,39 +602,49 @@ static Andlist * build_andlist(Sentence sent, List_o_links **wordlinks)
 	old_andlist = NULL;
 	cost = 0;
 
-	for(w = 0; w<pi->N_words; w++) {
+	for(w = 0; w<pi->N_words; w++)
+	{
 		s = sent->word[w].string;
-		if (sent->is_conjunction[w]) {
-			N_and_elements = 0;
-			N_outside_words = 0;
-			for(i=0; i<pi->N_words; i++) {
-				visited[i] = FALSE;
-				and_element_sizes[i] = 0;
+		if (sent->is_conjunction[w])
+		{
+			actx->N_and_elements = 0;
+			actx->N_outside_words = 0;
+			for(i=0; i<pi->N_words; i++)
+			{
+				actx->visited[i] = FALSE;
+				actx->and_element_sizes[i] = 0;
 			}
 			if (sent->dict->left_wall_defined)
-				visited[0] = TRUE;
-			and_dfs_commas(sent, w, wordlinks);
-			if(N_and_elements == 0) continue;
-			  new_andlist = (Andlist *) xalloc(sizeof(Andlist));
-			new_andlist->num_elements = N_and_elements;
-			new_andlist->num_outside_words = N_outside_words;
-			for (i=0; i<N_and_elements; i++) {
-			  new_andlist->element[i] = and_element[i];
+				actx->visited[0] = TRUE;
+
+			and_dfs_commas(actx, sent, w);
+			if (actx->N_and_elements == 0) continue;
+
+			new_andlist = (Andlist *) xalloc(sizeof(Andlist));
+			new_andlist->num_elements = actx->N_and_elements;
+			new_andlist->num_outside_words = actx->N_outside_words;
+
+			for (i=0; i < actx->N_and_elements; i++)
+			{
+				new_andlist->element[i] = actx->and_element[i];
 			}
-			for (i=0; i<N_outside_words; i++) {
-			  new_andlist->outside_word[i] = outside_word[i];
+			for (i=0; i < actx->N_outside_words; i++)
+			{
+				new_andlist->outside_word[i] = actx->outside_word[i];
 			}
 			new_andlist->conjunction = w;
 			new_andlist->next = old_andlist;
 			old_andlist = new_andlist;
 
-			if (N_and_elements > 0) {
-				min=MAX_SENTENCE;
-				max=0;
-				for (i=0; i<N_and_elements; i++) {
-					j = and_element_sizes[i];
-					if (j < min) min=j;
-					if (j > max) max=j;
+			if (actx->N_and_elements > 0)
+			{
+				min = MAX_SENTENCE;
+				max = 0;
+				for (i=0; i < actx->N_and_elements; i++)
+				{
+					j = actx->and_element_sizes[i];
+					if (j < min) min = j;
+					if (j > max) max = j;
 				}
 				cost += max-min;
 			}
@@ -830,7 +852,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	}
 
 	if (analyze_pass==PP_SECOND_PASS) {
-	  li.andlist = build_andlist(sent, word_links);
+	  li.andlist = build_andlist(actx, sent);
 	  li.and_cost = li.andlist->cost;
 	}
 	else li.and_cost = 0;
