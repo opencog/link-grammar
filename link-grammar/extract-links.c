@@ -24,7 +24,6 @@
  */
 
 static Word * local_sent;
-static int	islands_ok;
 
 static Parse_set * dummy_set(void)
 {
@@ -226,7 +225,8 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  */
 static Parse_set * parse_set(Sentence sent,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
-					  Connector *le, Connector *re, int cost, Parse_info pi)
+					  Connector *le, Connector *re, int cost, 
+                 int islands_ok, Parse_info pi)
 {
 	Disjunct * d, * dis;
 	int start_word, end_word, w;
@@ -276,7 +276,7 @@ static Parse_set * parse_set(Sentence sent,
 			w = lw+1;
 			for (dis = local_sent[w].d; dis != NULL; dis = dis->next) {
 				if (dis->left == NULL) {
-					rs[0] = parse_set(sent, dis, NULL, w, rw, dis->right, NULL, cost-1, pi);
+					rs[0] = parse_set(sent, dis, NULL, w, rw, dis->right, NULL, cost-1, islands_ok, pi);
 					if (rs[0] == NULL) continue;
 					a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
 										   rs[0], w, rw, NULL, NULL,
@@ -284,7 +284,7 @@ static Parse_set * parse_set(Sentence sent,
 					put_choice_in_set(xt->set, a_choice);
 				}
 			}
-			rs[0] = parse_set(sent, NULL, NULL, w, rw, NULL, NULL, cost-1, pi);
+			rs[0] = parse_set(sent, NULL, NULL, w, rw, NULL, NULL, cost-1, islands_ok, pi);
 			if (rs[0] != NULL) {
 				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
 									   rs[0], w, rw, NULL, NULL,
@@ -323,16 +323,16 @@ static Parse_set * parse_set(Sentence sent,
 				Rmatch = (d->right != NULL) && (re != NULL) && match(sent, d->right, re, w, rw);
 				for (i=0; i<4; i++) {ls[i] = rs[i] = NULL;}
 				if (Lmatch) {
-					ls[0] = parse_set(sent, ld, d, lw, w, le->next, d->left->next, lcost, pi);
-					if (le->multi) ls[1] = parse_set(sent, ld, d, lw, w, le, d->left->next, lcost, pi);
-					if (d->left->multi) ls[2] = parse_set(sent, ld, d, lw, w, le->next, d->left, lcost, pi);
-					if (le->multi && d->left->multi) ls[3] = parse_set(sent, ld, d, lw, w, le, d->left, lcost, pi);
+					ls[0] = parse_set(sent, ld, d, lw, w, le->next, d->left->next, lcost, islands_ok, pi);
+					if (le->multi) ls[1] = parse_set(sent, ld, d, lw, w, le, d->left->next, lcost, islands_ok, pi);
+					if (d->left->multi) ls[2] = parse_set(sent, ld, d, lw, w, le->next, d->left, lcost, islands_ok, pi);
+					if (le->multi && d->left->multi) ls[3] = parse_set(sent, ld, d, lw, w, le, d->left, lcost, islands_ok, pi);
 				}
 				if (Rmatch) {
-					rs[0] = parse_set(sent, d, rd, w, rw, d->right->next, re->next, rcost, pi);
-					if (d->right->multi) rs[1] = parse_set(sent, d, rd, w,rw,d->right,re->next, rcost, pi);
-					if (re->multi) rs[2] = parse_set(sent, d, rd, w, rw, d->right->next, re, rcost, pi);
-					if (d->right->multi && re->multi) rs[3] = parse_set(sent, d, rd, w, rw, d->right, re, rcost, pi);
+					rs[0] = parse_set(sent, d, rd, w, rw, d->right->next, re->next, rcost, islands_ok, pi);
+					if (d->right->multi) rs[1] = parse_set(sent, d, rd, w,rw,d->right,re->next, rcost, islands_ok, pi);
+					if (re->multi) rs[2] = parse_set(sent, d, rd, w, rw, d->right->next, re, rcost, islands_ok, pi);
+					if (d->right->multi && re->multi) rs[3] = parse_set(sent, d, rd, w, rw, d->right, re, rcost, islands_ok, pi);
 				}
 
 				for (i=0; i<4; i++) {
@@ -349,7 +349,7 @@ static Parse_set * parse_set(Sentence sent,
 
 				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL) {
 					/* evaluate using the left match, but not the right */
-					rset = parse_set(sent, d, rd, w, rw, d->right, re, rcost, pi);
+					rset = parse_set(sent, d, rd, w, rw, d->right, re, rcost, islands_ok, pi);
 					if (rset != NULL) {
 						for (i=0; i<4; i++) {
 							if (ls[i] == NULL) continue;
@@ -363,7 +363,7 @@ static Parse_set * parse_set(Sentence sent,
 				}
 				if ((le == NULL) && (rs[0] != NULL || rs[1] != NULL || rs[2] != NULL || rs[3] != NULL)) {
 					/* evaluate using the right match, but not the left */
-					lset = parse_set(sent, ld, d, lw, w, le, d->left, lcost, pi);
+					lset = parse_set(sent, ld, d, lw, w, le, d->left, lcost, islands_ok, pi);
 
 					if (lset != NULL) {
 						for (i=0; i<4; i++) {
@@ -437,10 +437,10 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 	Parse_set * whole_set;
 
 	local_sent = sent->word;
-	islands_ok = opts->islands_ok;
 
 	whole_set =
-		parse_set(sent, NULL, NULL, -1, sent->length, NULL, NULL, cost+1, sent->parse_info);
+		parse_set(sent, NULL, NULL, -1, sent->length, NULL, NULL, cost+1,
+		          opts->islands_ok, sent->parse_info);
 
 	if ((whole_set != NULL) && (whole_set->current != NULL)) {
 		whole_set->current = whole_set->first;
