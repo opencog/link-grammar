@@ -23,6 +23,15 @@
  linkages has a consistent post-processing behavior.  () compute the
  cost of the linkage. */
 
+typedef struct patch_element_struct Patch_element;
+struct patch_element_struct
+{
+	char used;   /* TRUE if this link is used, else FALSE  */
+	char changed;/* TRUE if this link changed, else FALSE  */
+	int newl;    /* the new value of the left end          */
+	int newr;    /* the new value of the right end         */
+};
+
 struct analyze_context_s
 {
 	List_o_links *word_links[MAX_SENTENCE]; /* ptr to l.o.l. out of word */
@@ -39,19 +48,8 @@ struct analyze_context_s
 	int N_and_elements;
 	int outside_word[MAX_SENTENCE];
 	int N_outside_words;
+	Patch_element patch_array[MAX_LINKS];
 };
-
-
-typedef struct patch_element_struct Patch_element;
-struct patch_element_struct
-{
-	char used;   /* TRUE if this link is used, else FALSE  */
-	char changed;/* TRUE if this link changed, else FALSE  */
-	int newl;    /* the new value of the left end          */
-	int newr;    /* the new value of the right end         */
-};
-
-static Patch_element patch_array[MAX_LINKS];
 
 typedef struct DIS_node_struct DIS_node;
 typedef struct CON_node_struct CON_node;
@@ -434,31 +432,37 @@ static int advance_CON(CON_node * cn) {
 	}
 }
 
-static void fill_patch_array_CON(CON_node *, Links_to_patch *, List_o_links**);
+static void fill_patch_array_CON(analyze_context_t *, CON_node *, Links_to_patch *);
 
 /**
  * Patches up appropriate links in the patch_array for this DIS_node
  * and this patch list.
  */
-static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp,
-                                 List_o_links **wordlinks)
+static void fill_patch_array_DIS(analyze_context_t *actx, 
+                                 DIS_node * dn, Links_to_patch * ltp)
 {
 	CON_list * cl;
 	List_o_links * lol;
 	Links_to_patch * ltpx;
 
-	for (lol=dn->lol; lol != NULL; lol=lol->next) {
-		patch_array[lol->link].used = TRUE;
+	for (lol = dn->lol; lol != NULL; lol=lol->next)
+	{
+		actx->patch_array[lol->link].used = TRUE;
 	}
 
-	if ((dn->cl == NULL) || (dn->cl->cn->word != dn->word)) {
-		for (; ltp != NULL; ltp = ltpx) {
+	if ((dn->cl == NULL) || (dn->cl->cn->word != dn->word))
+	{
+		for (; ltp != NULL; ltp = ltpx)
+		{
 			ltpx = ltp->next;
-			patch_array[ltp->link].changed = TRUE;
-			if (ltp->dir == 'l') {
-				patch_array[ltp->link].newl = dn->word;
-			} else {
-				patch_array[ltp->link].newr = dn->word;
+			actx->patch_array[ltp->link].changed = TRUE;
+			if (ltp->dir == 'l')
+			{
+				actx->patch_array[ltp->link].newl = dn->word;
+			}
+			else
+			{
+				actx->patch_array[ltp->link].newr = dn->word;
 			}
 			xfree((void *) ltp, sizeof(Links_to_patch));
 		}
@@ -466,20 +470,23 @@ static void fill_patch_array_DIS(DIS_node * dn, Links_to_patch * ltp,
 
 	/* ltp != NULL at this point means that dn has child which is a cn
 	   which is the same word */
-	for (cl=dn->cl; cl!=NULL; cl=cl->next) {
-		fill_patch_array_CON(cl->cn, ltp, wordlinks);
+	for (cl = dn->cl; cl != NULL; cl = cl->next)
+	{
+		fill_patch_array_CON(actx, cl->cn, ltp);
 		ltp = NULL;
 	}
 }
 
-static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp,
-                                 List_o_links **wordlinks)
+static void fill_patch_array_CON(analyze_context_t *actx, 
+                                 CON_node * cn, Links_to_patch * ltp)
 {
 	List_o_links * lol;
 	Links_to_patch *ltpx;
 
-	for (lol=wordlinks[cn->word]; lol != NULL; lol = lol->next) {
-		if (lol->dir == 0) {
+	for (lol = actx->word_links[cn->word]; lol != NULL; lol = lol->next)
+	{
+		if (lol->dir == 0)
+		{
 			ltpx = (Links_to_patch *) xalloc(sizeof(Links_to_patch));
 			ltpx->next = ltp;
 			ltp = ltpx;
@@ -491,7 +498,7 @@ static void fill_patch_array_CON(CON_node * cn, Links_to_patch * ltp,
 			}
 		}
 	}
-	fill_patch_array_DIS(cn->current->dn, ltp, wordlinks);
+	fill_patch_array_DIS(actx, cn->current->dn, ltp);
 }
 
 static void free_digraph(Parse_info pi, List_o_links **wordlinks)
@@ -861,22 +868,28 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 
 	for (i=0; i<pi->N_links; i++) accum.d_type_array[i] = NULL;
 
-	for (;;) {		/* loop through all the sub linkages */
-		for (i=0; i<pi->N_links; i++) {
-			patch_array[i].used = patch_array[i].changed = FALSE;
-			patch_array[i].newl = pi->link_array[i].l;
-			patch_array[i].newr = pi->link_array[i].r;
+	/* loop through all the sub linkages */
+	for (;;)
+	{
+		for (i=0; i<pi->N_links; i++)
+		{
+			actx->patch_array[i].used = actx->patch_array[i].changed = FALSE;
+			actx->patch_array[i].newl = pi->link_array[i].l;
+			actx->patch_array[i].newr = pi->link_array[i].r;
 			copy_full_link(&sublinkage->link[i], &(pi->link_array[i]));
 		}
-		fill_patch_array_DIS(d_root, NULL, word_links);
+		fill_patch_array_DIS(actx, d_root, NULL);
 
-		for (i=0; i<pi->N_links; i++) {
-			if (patch_array[i].changed || patch_array[i].used) {
-				sublinkage->link[i]->l = patch_array[i].newl;
-				sublinkage->link[i]->r = patch_array[i].newr;
+		for (i=0; i<pi->N_links; i++)
+		{
+			if (actx->patch_array[i].changed || actx->patch_array[i].used)
+			{
+				sublinkage->link[i]->l = actx->patch_array[i].newl;
+				sublinkage->link[i]->r = actx->patch_array[i].newr;
 			}
 			else if ((actx->dfs_root_word[pi->link_array[i].l] != -1) &&
-					 (actx->dfs_root_word[pi->link_array[i].r] != -1)) {
+					 (actx->dfs_root_word[pi->link_array[i].r] != -1))
+			{
 				sublinkage->link[i]->l = -1;
 			}
 		}
@@ -1037,10 +1050,9 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	Parse_info pi = sent->parse_info;
 
 	analyze_context_t *actx = sent->analyze_ctxt;
-	List_o_links **word_links = sent->analyze_ctxt->word_links;
 
 	sublinkage = x_create_sublinkage(pi);
-	build_digraph(pi, word_links);
+	build_digraph(pi, actx->word_links);
 	actx->structure_violation = FALSE;
 	d_root = build_DIS_CON_tree(actx, pi);
 
@@ -1062,7 +1074,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		}
 
 		free_sublinkage(sublinkage);
-		free_digraph(pi, word_links);
+		free_digraph(pi, actx->word_links);
 		free_DIS_tree(d_root);
 		return;
 	}
@@ -1087,21 +1099,23 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	compute_link_names(sent);
 
 	num_sublinkages = 0;
-	for (;;) {
-		for (i=0; i<pi->N_links; i++) {
-			patch_array[i].used = patch_array[i].changed = FALSE;
-			patch_array[i].newl = pi->link_array[i].l;
-			patch_array[i].newr = pi->link_array[i].r;
+	for (;;)
+	{
+		for (i=0; i<pi->N_links; i++)
+		{
+			actx->patch_array[i].used = actx->patch_array[i].changed = FALSE;
+			actx->patch_array[i].newl = pi->link_array[i].l;
+			actx->patch_array[i].newr = pi->link_array[i].r;
 			copy_full_link(&sublinkage->link[i], &(pi->link_array[i]));
 		}
-		fill_patch_array_DIS(d_root, NULL, word_links);
+		fill_patch_array_DIS(actx, d_root, NULL);
 
 		for (i=0; i<pi->N_links; i++)
 		{
-			if (patch_array[i].changed || patch_array[i].used)
+			if (actx->patch_array[i].changed || actx->patch_array[i].used)
 			{
-				sublinkage->link[i]->l = patch_array[i].newl;
-				sublinkage->link[i]->r = patch_array[i].newr;
+				sublinkage->link[i]->l = actx->patch_array[i].newl;
+				sublinkage->link[i]->r = actx->patch_array[i].newr;
 			}
 			else if ((actx->dfs_root_word[pi->link_array[i].l] != -1) &&
 					   (actx->dfs_root_word[pi->link_array[i].r] != -1))
@@ -1138,7 +1152,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	}
 
 	free_sublinkage(sublinkage);
-	free_digraph(pi, word_links);
+	free_digraph(pi, actx->word_links);
 	free_DIS_tree(d_root);
 }
 
