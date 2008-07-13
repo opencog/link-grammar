@@ -9,6 +9,10 @@
 #include <locale.h>
 #include <stdio.h>
 
+#ifdef USE_PTHREADS
+#include <pthread.h>
+#endif
+
 #include "api.h"
 #include "jni-client.h"
 #include "utilities.h"
@@ -31,7 +35,26 @@ typedef struct
  * Not clear how to do this .. perhaps use NewDirectByteBuffer()
  * and the java.nio.ByteBuffer class ?
  */
+#ifdef USE_PTHREADS
+static pthread_key_t java_key;
+static pthread_once_t java_key_once = PTHREAD_ONCE_INIT;
+
+static void java_key_alloc(void)
+{
+   pthread_key_create(&java_key, free);
+}
+#else
 static per_thread_data * global_ptd = NULL;
+#endif
+
+static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
+{
+#ifdef USE_PTHREADS
+	return pthread_getspecific(java_key);
+#else
+	return global_ptd;
+#endif
+}
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
@@ -72,9 +95,10 @@ static void throwException(JNIEnv *env, const char* message)
 		(*env)->FatalError(env, "Cannot throw");
 }
 
-static per_thread_data * init(JNIEnv *env)
+static per_thread_data * init(JNIEnv *env, jclass cls)
 {
 	per_thread_data *ptd;
+
 	/* Get the locale from the environment...
 	 * perhaps we should someday get it from the dictionary ??
 	 */
@@ -277,14 +301,14 @@ Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);;
 	parse_options_set_max_parse_time(ptd->opts, maxParseSeconds);
 }
 
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setMaxCost(JNIEnv *env, jclass cls, jint maxCost)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);;
 	parse_options_set_disjunct_cost(ptd->opts, maxCost);
 }
 
@@ -310,7 +334,14 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 {
-	global_ptd = init(env);
+#ifdef USE_PTHREADS
+	per_thread_data *ptd;
+	pthread_once(&java_key_once, java_key_alloc);
+	ptd = init(env, cls);
+	pthread_setspecific(java_key, ptd);
+#else
+	global_ptd = init(env, cls);
+#endif
 }
 
 /*
@@ -321,9 +352,9 @@ Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 {
-	per_thread_data *ptd = global_ptd;
 	const char *cStr;
-	char* tmp;
+	char * tmp;
+	per_thread_data *ptd = get_ptd(env, cls);;
 	cStr = (*env)->GetStringUTFChars(env,str,0);
 	tmp = strdup(cStr);
 	jParse(env, ptd, tmp);
@@ -339,7 +370,7 @@ Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);;
 	finish(ptd);
 }
 
@@ -351,7 +382,7 @@ Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getNumWords(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);;
 	return linkage_get_num_words(ptd->linkage);
 }
 
@@ -363,7 +394,7 @@ Java_org_linkgrammar_LinkGrammar_getNumWords(JNIEnv *env, jclass cls)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getWord(JNIEnv *env, jclass cls, jint i)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 
 	/* does not need to be freed, points into sentence */
 	char* w = sentence_get_word(ptd->sent, i);
@@ -379,7 +410,7 @@ Java_org_linkgrammar_LinkGrammar_getWord(JNIEnv *env, jclass cls, jint i)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getNumSkippedWords(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return sentence_null_count(ptd->sent);
 }
 
@@ -391,7 +422,7 @@ Java_org_linkgrammar_LinkGrammar_getNumSkippedWords(JNIEnv *env, jclass cls)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getNumLinkages(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return sentence_num_valid_linkages(ptd->sent);
 }
 
@@ -403,7 +434,7 @@ Java_org_linkgrammar_LinkGrammar_getNumLinkages(JNIEnv *env, jclass cls)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_makeLinkage(JNIEnv *env, jclass cls, jint i)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	ptd->cur_linkage = i;
 	makeLinkage(ptd);
 }
@@ -416,7 +447,7 @@ Java_org_linkgrammar_LinkGrammar_makeLinkage(JNIEnv *env, jclass cls, jint i)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return sentence_num_violations(ptd->sent, ptd->cur_linkage);
 }
 
@@ -428,7 +459,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageAndCost(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return sentence_and_cost(ptd->sent, ptd->cur_linkage);
 }
 
@@ -440,7 +471,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageAndCost(JNIEnv *env, jclass cls)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return sentence_disjunct_cost(ptd->sent, ptd->cur_linkage);
 }
 
@@ -452,7 +483,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost(JNIEnv *env, jclass cls)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageLinkCost(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return sentence_link_cost(ptd->sent, ptd->cur_linkage);
 }
 
@@ -464,7 +495,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageLinkCost(JNIEnv *env, jclass cls)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getNumLinks(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return linkage_get_num_links(ptd->linkage);
 }
 
@@ -476,7 +507,7 @@ Java_org_linkgrammar_LinkGrammar_getNumLinks(JNIEnv *env, jclass cls)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkLWord(JNIEnv *env, jclass cls, jint i)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return linkage_get_link_lword(ptd->linkage, i);
 }
 
@@ -488,7 +519,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkLWord(JNIEnv *env, jclass cls, jint i)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkRWord(JNIEnv *env, jclass cls, jint i)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return linkage_get_link_rword(ptd->linkage, i);
 }
 
@@ -500,7 +531,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkRWord(JNIEnv *env, jclass cls, jint i)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkLLabel(JNIEnv *env, jclass cls, jint i)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
  	/* Does not need to be freed, points into linkage */
 	const char *s = linkage_get_link_llabel(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
@@ -515,7 +546,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkLLabel(JNIEnv *env, jclass cls, jint i)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkRLabel(JNIEnv *env, jclass cls, jint i)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
  	/* Does not need to be freed, points into linkage */
 	const char *s = linkage_get_link_rlabel(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
@@ -530,7 +561,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkRLabel(JNIEnv *env, jclass cls, jint i)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkLabel(JNIEnv *env, jclass cls, jint i)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
  	/* Does not need to be freed, points into linkage */
 	const char *s = linkage_get_link_label(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, s);
@@ -545,7 +576,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkLabel(JNIEnv *env, jclass cls, jint i)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getConstituentString(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	/* mode 1 prints a lisp-style string, nicely indented.
 	 * mode 2 prints a lisp-style string, but with square brackets.
 	 * mode 3 prints a lisp-style string, one one single line.
@@ -565,7 +596,7 @@ Java_org_linkgrammar_LinkGrammar_getConstituentString(JNIEnv *env, jclass cls)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	char *s = linkage_print_diagram(ptd->linkage);
 	jstring j = (*env)->NewStringUTF(env, s);
 	linkage_free_diagram(s);
@@ -580,7 +611,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 JNIEXPORT jboolean JNICALL
 Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstring str)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (is_past_tense_form(cStr,ptd->dict) == 1)
 		return TRUE;
@@ -595,7 +626,7 @@ Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstrin
 JNIEXPORT jboolean JNICALL
 Java_org_linkgrammar_LinkGrammar_isEntity(JNIEnv *env, jclass cls, jstring str)
 {
-	per_thread_data *ptd = global_ptd;
+	per_thread_data *ptd = get_ptd(env, cls);
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (is_entity(cStr,ptd->dict) == 1)
 		return TRUE;
