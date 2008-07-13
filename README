@@ -179,6 +179,26 @@ JAVA bindings:
    Please note that the use of /opt is non-standard, and most system
    tools will fail to find packages installed there.
 
+MULTI-THREADED USE:
+
+   The link-grammar library should be thread-safe as of version 4.3.6,
+   although this has not yet been tested very well, and may possibly be
+   buggy.  To enable the thread-safe version of the library, run 
+   ./configure like so:
+
+      ./configure --enable-pthreads
+
+   The resulting library is thread-safe for all parsing and general
+   use, with the exception of the startup/initialization code.  That
+   is, the initial open/creation of the parser dictionary should be 
+   done only once, from a single thread, and parsing should not be
+   started until after the dictionary has been read and initialized.
+
+	Parse options can be set on a per-thread basis, with the exception 
+   of verbosity, which is treated as a global.
+
+   See the to-do notes below for technical details.
+
 COMMERCIAL use:
 
    The original authors would be pleased to discuss alternate 
@@ -280,47 +300,21 @@ TODO:
     (This somewhat resembles the application of construction grammar
     ideas to the link-grammar dictionary).
 
-  Thread safety: link-grammar is slowly being converted to be 
-    thead-safe. The work is about nearly done. So far, the following 
-    files are thread-safe, unless otherwise noted:
+  Thread safety: link-grammar has been converted to be thead-safe. 
+    The following exceptions and special notes apply:
 
-      analyze-linkage.c
-      and.c
-      api.c
-      build-disjuncts.c
-      command-line.c
-      constituents.c
-      count.c
       error.c -- uses pthreads to access error message area.
-      extract-links.c
-      fast-match.c
-      idiom.c
-      linkparser.c
-      massage.c
-      post-process.c
-      pp_knowledge.c
-      pp_linkset.c
-      preparation.c
-      print.c
-      print-util.c
-      prune.c
-      read-dict.c
-      resources.c
-      string-set.c
-      tokenize.c
-      utilities.c - has global "verbosity"
-      word-file.c
-      word-utils.c
-
-    Not thread safe: 
+      utilities.c -- has global "verbosity". Uses pthreads for tracking
+                     memory usage. The memory usage code is just about
+                     obsolete, and could probably be discarded.
       jni-client.c - uses per-thread struct, but needs to be attached
                      to JNIEnv somehow.
       malloc-dbg.c - not thread safe, not normally used;
                      only for debugging.
-      prefix.c - but maybe doesn't need to be; used only 
+      prefix.c - not thread-safe, but doesn't need to be; used only 
                  during initialization, and only if binreloc turned
                  on.
       pp_lexer.c -- autogened code, original lex sources lost.
                     This is only used when reading dictionaries,
-                    during initialization, and so maybe doesn't need
+                    during initialization, and so doesn't need
                     to be thread safe.
