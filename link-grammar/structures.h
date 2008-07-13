@@ -11,8 +11,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _STRUCTURESH_
-#define _STRUCTURESH_
+#ifndef _STRUCTURES_H_
+#define _STRUCTURES_H_
+
+#include "api-types.h"
 
 #if defined(_WIN32)
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
@@ -157,13 +159,6 @@ OBS #define AMPERSAND_WORD   ("AMPERSAND")
 /*      Some size definitions.  Reduce these for small machines */
 #define MAX_WORD 60           /* maximum number of chars in a word */
 #define MAX_LINE 1500         /* maximum number of chars in a sentence */
-#define MAX_SENTENCE 250      /* maximum number of words in a sentence */
-   /* This cannot be more than 254, because I use word MAX_SENTENCE+1 to
-      indicate that nothing can connect to this connector, and this
-      should fit in one byte (if the word field of a connector is an
-      unsigned char) */
-#define MAX_LINKS (2*MAX_SENTENCE-3) /* maximum number of links allowed */
-#define MAX_TOKEN_LENGTH 50          /* maximum number of chars in a token */
 #define MAX_DISJUNCT_COST 10000
 
 /* conditional compiling flags */
@@ -194,7 +189,6 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 #define PARSE_NUM_OVERFLOW (((s64)1)<<24)  
 #endif
 
-typedef struct Connector_struct Connector;
 struct Connector_struct
 {
     short label;
@@ -216,7 +210,6 @@ struct Connector_struct
     const char * string;
 };
 
-typedef struct Disjunct_struct Disjunct;
 struct Disjunct_struct
 {
     Disjunct *next;
@@ -226,21 +219,13 @@ struct Disjunct_struct
     Connector *left, *right;
 };
 
-typedef struct Link_s * Link;
-struct Link_s
-{
-    int l, r;
-    Connector * lc, * rc;
-    const char * name;              /* spelling of full link name */
-};
-
 typedef struct Match_node_struct Match_node;
-struct Match_node_struct {
+struct Match_node_struct
+{
     Match_node * next;
     Disjunct * d;
 };
 
-typedef struct Exp_struct Exp;
 typedef struct X_node_struct X_node;
 struct X_node_struct
 {
@@ -249,8 +234,8 @@ struct X_node_struct
     X_node *next;
 };
 
-typedef struct Word_struct Word;
-struct Word_struct {
+struct Word_struct
+{
     char string[MAX_WORD+1];
     X_node * x;      /* sentence starts out with these */
     Disjunct * d;    /* eventually these get generated */
@@ -288,9 +273,8 @@ struct E_list_struct {
 #define CONNECTOR_type 2
 
 /* The structure below stores a list of dictionary word files. */
-
-typedef struct Word_file_struct Word_file;
-struct Word_file_struct {
+struct Word_file_struct
+{
     char file[MAX_PATH_NAME+1];   /* the file name */
     int changed;             /* TRUE if this file has been changed */
     Word_file * next;
@@ -300,7 +284,6 @@ struct Word_file_struct {
 /* nodes.  A list of these (via right pointers) is used to return         */
 /* the result of a dictionary lookup.                                     */
 
-typedef struct Dict_node_struct Dict_node;
 struct Dict_node_struct
 {
     const char * string;  /* the word itself */
@@ -311,7 +294,8 @@ struct Dict_node_struct
 
 /* The following three structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;
-struct D_type_list_struct {
+struct D_type_list_struct
+{
     D_type_list * next;
     int type;
 };
@@ -338,7 +322,6 @@ struct Andlist_struct {
 /* This is for building the graphs of links in post-processing and          */
 /* fat link extraction.                                                     */
 
-typedef struct Linkage_info_struct Linkage_info;
 struct Linkage_info_struct {
     int index;
     char fat;
@@ -350,7 +333,6 @@ struct Linkage_info_struct {
     int island[MAX_SENTENCE];
 };
 
-typedef struct List_o_links_struct List_o_links;
 struct List_o_links_struct{
     int link;       /* the link number */
     int word;       /* the word at the other end of this link */
@@ -375,22 +357,31 @@ struct string_node_struct {
 };
 
 typedef struct Parse_choice_struct Parse_choice;
-typedef struct Parse_set_struct Parse_set;
 
-struct Parse_choice_struct {
+struct Link_s
+{
+	int l, r;
+	Connector * lc, * rc;
+	const char * name;              /* spelling of full link name */
+};
+
+struct Parse_choice_struct
+{
     Parse_choice * next;
     Parse_set * set[2];
-    struct Link_s link[2];   /* the lc fields of these is NULL if there is no link used */
+    Link        link[2];   /* the lc fields of these is NULL if there is no link used */
     Disjunct *ld, *md, *rd;  /* the chosen disjuncts for the relevant three words */
 };
-struct Parse_set_struct {
+
+struct Parse_set_struct
+{
     s64 count;  /* the number of ways */
     Parse_choice * first;
     Parse_choice * current;  /* used to enumerate linkages */
 };
 
-typedef struct X_table_connector_struct X_table_connector;
-struct X_table_connector_struct {
+struct X_table_connector_struct
+{
     short             lw, rw;
     short             cost;
     Parse_set         *set;
@@ -399,11 +390,11 @@ struct X_table_connector_struct {
 };
 
 /* from string-set.c */
-typedef struct {
+struct String_set_s {
     int size;       /* the current size of the table */
     int count;      /* number of things currently in the table */
     char ** table;  /* the table itself */
-} String_set;
+};
 
 
 /* from pp_linkset.c */
@@ -461,7 +452,7 @@ typedef struct pp_rule_s
     char  *msg;           /* explanation (NULL=end sentinel in array)*/
 } pp_rule;
 
-typedef struct pp_knowledge_s
+struct pp_knowledge_s
 {
     PPLexTable *lt; /* Internal rep'n of sets of strings from knowledge file */
     char *path;     /* Name of file we loaded from */
@@ -491,7 +482,7 @@ typedef struct pp_knowledge_s
     StartingLinkAndDomain *starting_link_lookup_table;
     int nStartingLinks;
     String_set *string_set;
-} pp_knowledge;
+};
 
 
 #endif

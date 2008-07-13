@@ -21,6 +21,8 @@
 #endif
 
 #include "error.h"
+#include "structures.h"
+#include "api-structures.h"
 
 #ifdef _MSC_VER
 #define DLLEXPORT __declspec(dllexport)
@@ -54,10 +56,10 @@ static void sentence_key_alloc(void)
 }
 
 #else
-static const char * failing_sentence = NULL;
+static Sentence failing_sentence = NULL;
 #endif
 
-void error_report_set_sentence(const char * s)
+void error_report_set_sentence(const Sentence s)
 {
 #ifdef USE_PTHREADS
 	pthread_once(&sentence_key_once, sentence_key_alloc);
@@ -69,7 +71,7 @@ void error_report_set_sentence(const char * s)
 
 void prt_error(const char *fmt, ...)
 {
-	char * sentence;
+	Sentence sentence;
 	int is_info;
 
 	va_list args;
@@ -83,9 +85,14 @@ void prt_error(const char *fmt, ...)
 	sentence = failing_sentence;
 #endif
 	is_info = (0 == strncmp(fmt, "Info:", 5));
-	if (!is_info && sentence != NULL && sentence[0] != 0x0)
+	if (!is_info && sentence != NULL)
 	{
-		fprintf(stderr, "\tFailing sentence was:\n");
-		fprintf(stderr, "\t%s\n", sentence);
+		int i;
+		fprintf(stderr, "\tFailing sentence was:\n\t");
+		for (i=0; i<sentence->length; i++)
+		{
+			fprintf(stderr, "%s ", sentence->word[i]);
+		}
+		fprintf(stderr, "\n");
 	}
 }

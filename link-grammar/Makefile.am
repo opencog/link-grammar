@@ -72,11 +72,8 @@ liblink_grammar_la_SOURCES =        \
 	word-utils.c                     \
 	prefix.c                         \
 	api.h                            \
-	link-includes.h                  \
-	structures.h                     \
 	api-structures.h                 \
-	api.h                            \
-	externs.h                        \
+	api-types.h                      \
 	analyze-linkage.h                \
 	and.h                            \
 	build-disjuncts.h                \
@@ -84,9 +81,11 @@ liblink_grammar_la_SOURCES =        \
 	constituents.h                   \
 	count.h                          \
 	error.h                          \
+	externs.h                        \
 	extract-links.h                  \
 	fast-match.h                     \
 	idiom.h                          \
+	link-includes.h                  \
 	massage.h                        \
 	post-process.h                   \
 	pp_knowledge.h                   \
@@ -99,6 +98,7 @@ liblink_grammar_la_SOURCES =        \
 	read-dict.h                      \
 	resources.h                      \
 	string-set.h                     \
+	structures.h                     \
 	tokenize.h                       \
 	utilities.h                      \
 	word-file.h                      \

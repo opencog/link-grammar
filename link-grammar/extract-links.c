@@ -467,7 +467,8 @@ static void initialize_links(Parse_info pi) {
 	}
 }
 
-static void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, struct Link_s link) {
+static void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, Link link)
+{
 	assert(pi->N_links <= MAX_LINKS-1, "Too many links");
 	pi->link_array[pi->N_links] = link;
 	pi->N_links++;
@@ -476,7 +477,8 @@ static void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, struct Link_
 	pi->chosen_disjuncts[link.r] = rd;
 }
 
-static void issue_links_for_choice(Parse_info pi, Parse_choice *pc) {
+static void issue_links_for_choice(Parse_info pi, Parse_choice *pc)
+{
 	if (pc->link[0].lc != NULL) { /* there is a link to generate */
 		issue_link(pi, pc->ld, pc->md, pc->link[0]);
 	}

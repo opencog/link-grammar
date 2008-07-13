@@ -28,8 +28,8 @@ int  size_of_expression(Exp *);
 /* routines for copying basic objects */
 Disjunct *  copy_disjunct(Disjunct * );
 void        exfree_connectors(Connector *);
-Link        excopy_link(Link);
-void        exfree_link(Link);
+Link *      excopy_link(Link *);
+void        exfree_link(Link *);
 Connector * copy_connectors(Connector *);
 Connector * excopy_connectors(Connector * c);
 Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);

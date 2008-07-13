@@ -201,14 +201,14 @@ Connector * excopy_connectors(Connector * c)
 	return c1;
 }
 
-Link excopy_link(Link l)
+Link * excopy_link(Link * l)
 {
 	char * s;
-	Link newl;
+	Link * newl;
 
 	if (l == NULL) return NULL;
 
-	newl = (Link) exalloc(sizeof(struct Link_s));
+	newl = (Link *) exalloc(sizeof(Link));
 	s = (char *) exalloc(sizeof(char)*(strlen(l->name)+1));
 	strcpy(s, l->name);
 	newl->name = s;
@@ -220,12 +220,12 @@ Link excopy_link(Link l)
 	return newl;
 }
 
-void exfree_link(Link l)
+void exfree_link(Link * l)
 {
 	exfree_connectors(l->rc);
 	exfree_connectors(l->lc);
 	exfree((char *)l->name, sizeof(char)*(strlen(l->name)+1));
-	exfree(l, sizeof(struct Link_s));
+	exfree(l, sizeof(Link));
 }
 
 

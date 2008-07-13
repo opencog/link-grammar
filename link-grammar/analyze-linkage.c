@@ -99,7 +99,7 @@ void zero_sublinkage(Sublinkage *s)
 static Sublinkage * x_create_sublinkage(Parse_info pi)
 {
 	Sublinkage *s = (Sublinkage *) xalloc (sizeof(Sublinkage));
-	s->link = (Link *) xalloc(MAX_LINKS*sizeof(Link));
+	s->link = (Link **) xalloc(MAX_LINKS*sizeof(Link *));
 	s->num_links = MAX_LINKS;
 
 	zero_sublinkage(s);
@@ -112,7 +112,7 @@ static Sublinkage * x_create_sublinkage(Parse_info pi)
 static Sublinkage * ex_create_sublinkage(Parse_info pi)
 {
 	Sublinkage *s = (Sublinkage *) exalloc (sizeof(Sublinkage));
-	s->link = (Link *) exalloc(pi->N_links*sizeof(Link));
+	s->link = (Link **) exalloc(pi->N_links*sizeof(Link *));
 	s->num_links = pi->N_links;
 
 	zero_sublinkage(s);
@@ -131,7 +131,7 @@ static void free_sublinkage(Sublinkage *s)
 	xfree(s, sizeof(Sublinkage));
 }
 
-static void replace_link_name(Link l, const char *s)
+static void replace_link_name(Link *l, const char *s)
 {
 	char * t;
 	exfree((char *) l->name, sizeof(char)*(strlen(l->name)+1));
@@ -140,7 +140,7 @@ static void replace_link_name(Link l, const char *s)
 	l->name = t;
 }
 
-static void copy_full_link(Link *dest, Link src)
+static void copy_full_link(Link **dest, Link *src)
 {
 	if (*dest != NULL) exfree_link(*dest);
 	*dest = excopy_link(src);
@@ -161,7 +161,7 @@ static void copy_full_link(Link *dest, Link src)
 static void build_digraph(analyze_context_t *actx, Parse_info pi)
 {
 	int i, link, N_fat;
-	Link lp;
+	Link *lp;
 	List_o_links * lol;
 	N_fat = 0;
 
@@ -1145,7 +1145,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 
 		linkage->sublinkage[num_sublinkages].num_links = N_thin_links;
 		linkage->sublinkage[num_sublinkages].link =
-			(Link *) exalloc(sizeof(Link)*N_thin_links);
+			(Link **) exalloc(sizeof(Link *)*N_thin_links);
 		linkage->sublinkage[num_sublinkages].pp_info = NULL;
 		linkage->sublinkage[num_sublinkages].violation = NULL;
 

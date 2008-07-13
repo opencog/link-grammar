@@ -142,7 +142,7 @@ static char * build_linkage_postscript_string(Linkage linkage, ps_ctxt_t *pctx)
 	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
 	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
 	int N_links = sublinkage->num_links;
-	Link *ppla = sublinkage->link;
+	Link **ppla = sublinkage->link;
 	String  * string;
 	char * ps_string;
 	Dictionary dict = linkage->sent->dict;
@@ -308,7 +308,7 @@ static char * linkage_print_diagram_ctxt(Linkage linkage, ps_ctxt_t *pctx)
 	int line_len, link_length;
 	Sublinkage *sublinkage=&(linkage->sublinkage[linkage->current]);
 	int N_links = sublinkage->num_links;
-	Link *ppla = sublinkage->link;
+	Link **ppla = sublinkage->link;
 	String * string;
 	char * gr_string;
 	Dictionary dict = linkage->sent->dict;

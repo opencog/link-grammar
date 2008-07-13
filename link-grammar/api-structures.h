@@ -27,19 +27,19 @@
 #ifndef _API_STRUCTURESH_
 #define _API_STRUCTURESH_
 
+#include "api-types.h"
+
 typedef enum
 {
 	VDAL, /* sort by Violations, Disjunct cost, And cost, Link cost */
 }  Cost_Model_type;
 
-typedef struct Cost_Model_s Cost_Model;
 struct Cost_Model_s
 {
 	Cost_Model_type type;
 	int (*compare_fn)(Linkage_info *, Linkage_info *);
 };
 
-typedef struct Resources_s * Resources;
 struct Resources_s
 {
 	int    max_parse_time;
@@ -96,8 +96,6 @@ typedef struct
 	int          is_defined;  /* if 0 then there is no such set */
 } Connector_set;
 
-typedef struct Postprocessor_s Postprocessor;
-
 struct Dictionary_s
 {
 	Dict_node *     root;
@@ -139,7 +137,6 @@ struct Dictionary_s
 	int             recursive_error;
 };
 
-typedef struct Label_node_s Label_node;
 struct Label_node_s
 {
 	int          label;
@@ -148,7 +145,6 @@ struct Label_node_s
 
 #define HT_SIZE (1<<10)
 
-typedef struct And_data_s And_data;
 struct And_data_s
 {
 	int          LT_bound;
@@ -161,9 +157,6 @@ struct And_data_s
 	int STAT_calls_to_equality_test;
 };
 
-typedef struct Image_node_struct Image_node;
-
-typedef struct Parse_info_struct *Parse_info;
 struct Parse_info_struct
 {
 	int            x_table_size;
@@ -172,7 +165,7 @@ struct Parse_info_struct
 	int            N_words;
 	Disjunct *     chosen_disjuncts[MAX_SENTENCE];
 	int            N_links;
-	struct Link_s  link_array[MAX_LINKS];
+	Link          link_array[MAX_LINKS];
 
 	/* Points to the image structure for each word.
 	 * NULL if not a fat word. */
@@ -184,10 +177,6 @@ struct Parse_info_struct
 	/* thread-safe random number state */
 	unsigned int rand_state;
 };
-
-typedef struct analyze_context_s analyze_context_t;
-typedef struct count_context_s count_context_t;
-typedef struct match_context_s match_context_t;
 
 struct Sentence_s
 {
@@ -230,8 +219,6 @@ struct Sentence_s
 *
 **********************************************************/
 
-typedef struct DTreeLeaf_s DTreeLeaf;
-typedef struct Domain_s Domain;
 struct Domain_s
 {
 	const char *   string;
@@ -251,7 +238,6 @@ struct DTreeLeaf_s
 	DTreeLeaf * next;
 };
 
-typedef struct PP_data_s PP_data;
 struct PP_data_s
 {
 	int N_domains;
@@ -290,13 +276,10 @@ struct Postprocessor_s
 *
 **********************************************************/
 
-typedef struct PP_info_s PP_info;
-
-typedef struct Sublinkage_s Sublinkage;
 struct Sublinkage_s
 {
 	int       num_links;          /* Number of links in array */
-	Link *    link;               /* Array of links */
+	Link **   link;               /* Array of links */
 	PP_info * pp_info;            /* PP info for each link */
 	const char * violation;       /* Name of violation, if any */
 	PP_data   pp_data;

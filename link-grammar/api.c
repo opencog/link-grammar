@@ -503,8 +503,6 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	Sentence sent;
 	int i;
 
-	error_report_set_sentence(input_string);
-
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	bzero(sent, sizeof(struct Sentence_s));
 	sent->dict = dict;
@@ -527,6 +525,8 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 		xfree(sent, sizeof(struct Sentence_s));
 		return NULL;
 	}
+
+	error_report_set_sentence(sent);
 
 	sent->q_pruned_rules = FALSE; /* for post processing */
 	sent->is_conjunction = (char *) xalloc(sizeof(char)*sent->length);
@@ -600,7 +600,6 @@ void sentence_delete(Sentence sent)
 	free_analyze(sent);
 	xfree(sent->is_conjunction, sizeof(char)*sent->length);
 	xfree((char *) sent, sizeof(struct Sentence_s));
-
 	error_report_set_sentence(NULL);
 }
 
@@ -995,11 +994,13 @@ void linkage_delete(Linkage linkage)
 	exfree(linkage, sizeof(struct Linkage_s));
 }
 
-static int links_are_equal(Link l, Link m) {
+static int links_are_equal(Link *l, Link *m)
+{
 	return ((l->l == m->l) && (l->r == m->r) && (strcmp(l->name, m->name)==0));
 }
 
-static int link_already_appears(Linkage linkage, Link link, int a) {
+static int link_already_appears(Linkage linkage, Link *link, int a)
+{
 	int i, j;
 
 	for (i=0; i<a; ++i) {
@@ -1028,7 +1029,7 @@ static Sublinkage unionize_linkage(Linkage linkage)
 {
 	int i, j, num_in_union=0;
 	Sublinkage u;
-	Link link;
+	Link *link;
 	const char *p;
 
 	for (i=0; i<linkage->num_sublinkages; ++i) {
@@ -1038,7 +1039,7 @@ static Sublinkage unionize_linkage(Linkage linkage)
 		}
 	}
 
-	u.link = (Link *) exalloc(sizeof(Link)*num_in_union);
+	u.link = (Link **) exalloc(sizeof(Link *)*num_in_union);
 	u.num_links = num_in_union;
 	zero_sublinkage(&u);
 
@@ -1118,7 +1119,8 @@ int linkage_get_num_links(Linkage linkage) {
 	return linkage->sublinkage[current].num_links;
 }
 
-static int verify_link_index(Linkage linkage, int index) {
+static int verify_link_index(Linkage linkage, int index)
+{
 	int errno;
 	if ((index < 0) ||
 		(index >= linkage->sublinkage[linkage->current].num_links)) {
@@ -1128,8 +1130,9 @@ static int verify_link_index(Linkage linkage, int index) {
 	return 1;
 }
 
-int linkage_get_link_length(Linkage linkage, int index) {
-	Link link;
+int linkage_get_link_length(Linkage linkage, int index)
+{
+	Link *link;
 	int word_has_link[MAX_SENTENCE];
 	int i, length;
 	int current = linkage->current;
@@ -1154,22 +1157,25 @@ int linkage_get_link_length(Linkage linkage, int index) {
 	return length;
 }
 
-int linkage_get_link_lword(Linkage linkage, int index) {
-	Link link;
+int linkage_get_link_lword(Linkage linkage, int index)
+{
+	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
 	link = linkage->sublinkage[linkage->current].link[index];
 	return link->l;
 }
 
-int linkage_get_link_rword(Linkage linkage, int index) {
-	Link link;
+int linkage_get_link_rword(Linkage linkage, int index)
+{
+	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
 	link = linkage->sublinkage[linkage->current].link[index];
 	return link->r;
 }
 
-const char * linkage_get_link_label(Linkage linkage, int index) {
-	Link link;
+const char * linkage_get_link_label(Linkage linkage, int index)
+{
+	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
 	link = linkage->sublinkage[linkage->current].link[index];
 	return link->name;
@@ -1177,7 +1183,7 @@ const char * linkage_get_link_label(Linkage linkage, int index) {
 
 const char * linkage_get_link_llabel(Linkage linkage, int index)
 {
-	Link link;
+	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
 	link = linkage->sublinkage[linkage->current].link[index];
 	return link->lc->string;
@@ -1185,7 +1191,7 @@ const char * linkage_get_link_llabel(Linkage linkage, int index)
 
 const char * linkage_get_link_rlabel(Linkage linkage, int index)
 {
-	Link link;
+	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
 	link = linkage->sublinkage[linkage->current].link[index];
 	return link->rc->string;
