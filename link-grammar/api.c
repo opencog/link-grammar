@@ -47,6 +47,7 @@ Parse_Options parse_options_create(void)
 {
 	Parse_Options po;
 
+	init_memusage();
 	po = (Parse_Options) xalloc(sizeof(struct Parse_Options_s));
 
 	/* Here's where the values are initialized */
