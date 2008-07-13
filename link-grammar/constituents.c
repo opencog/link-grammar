@@ -16,7 +16,7 @@
 #include <link-grammar/api.h>
 #include "constituents.h"
 
-#define MAXCONSTITUENTS 1024
+#define MAXCONSTITUENTS 8192
 #define MAXSUBL 16
 #define OPEN_BRACKET '['
 #define CLOSE_BRACKET ']'
@@ -276,7 +276,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					c++;
 					if (MAXCONSTITUENTS <= c)
 					{
-						prt_error("Error: Too many constituents.\n");
+						prt_error("Error: Too many constituents (a).\n");
 						c--;
 					}
 					done = 1;
@@ -1314,7 +1314,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 	char s[100], * p;
 	String * cs = string_new();
 
-	assert (numcon_total < MAXCONSTITUENTS, "Too many constituents");
+	assert (numcon_total < MAXCONSTITUENTS, "Too many constituents (b)");
 	sent = linkage_get_sentence(linkage);
 
 	for (c = 0; c < numcon_total; c++)
@@ -1445,9 +1445,25 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 		generate_misc_word_info(ctxt, linkage);
 		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total, s);
 		numcon_total = numcon_total + numcon_subl;
+		if (MAXCONSTITUENTS <= numcon_total)
+		{
+			prt_error("Error: Too many constituents (c).\n");
+			numcon_total = MAXCONSTITUENTS-1;
+			break;
+		}
 	}
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
+	if (MAXCONSTITUENTS <= numcon_total)
+	{
+		prt_error("Error: Too many constituents (d).\n");
+		numcon_total = MAXCONSTITUENTS-1;
+	}
 	numcon_total = last_minute_fixes(ctxt, linkage, numcon_total);
+	if (MAXCONSTITUENTS <= numcon_total)
+	{
+		prt_error("Error: Too many constituents (e).\n");
+		numcon_total = MAXCONSTITUENTS-1;
+	}
 	q = exprint_constituent_structure(ctxt, linkage, numcon_total);
 	string_set_delete(ctxt->phrase_ss);
 	ctxt->phrase_ss = NULL;

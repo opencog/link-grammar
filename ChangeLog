@@ -11,7 +11,8 @@ Version 4.3.6 includes the following changes:
  * Foodstuffs: bagels, lox, tacos, guacamole, roe, neufchatel, mayo, etc.
  * Performance improvements in printing of link-tree.
  * Convert assert into warning when no canonical linkages can be found.
- * Convert assert into wanring when constituent andlist overflows.
+ * Convert assert into warning when constituent andlist overflows.
+ * Provide additional checks for constituent overflows.
  * Convert most error printfs into a formal error reporting system.
  * Remove all globals, library is now thread-safe.
  * Fix crash when sentence has square bracket, and doing constituents.
