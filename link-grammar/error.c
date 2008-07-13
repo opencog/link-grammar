@@ -91,7 +91,7 @@ void prt_error(const char *fmt, ...)
 		fprintf(stderr, "\tFailing sentence was:\n\t");
 		for (i=0; i<sentence->length; i++)
 		{
-			fprintf(stderr, "%s ", sentence->word[i]);
+			fprintf(stderr, "%s ", sentence->word[i].string);
 		}
 		fprintf(stderr, "\n");
 	}
