@@ -14,6 +14,7 @@ Version 4.3.6 includes the following changes:
  * Convert assert into wanring when constituent andlist overflows.
  * Convert most error printfs into a formal error reporting system.
  * Remove all globals, library is now thread-safe.
+ * Fix crash when sentence has square bracket, and doing constituents.
 
 Version 4.3.5 includes the following changes:
  * Added ant build file to create the link-grammar jar file.

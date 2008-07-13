@@ -1335,10 +1335,10 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 		{
 			best = -1;
 			bestright = -1;
-			for (c=0; c<numcon_total; c++)
+			for (c=0; c < numcon_total; c++)
 			{
-				if ((ctxt->constituent[c].left==w) &&
-					(leftdone[c]==0) && (ctxt->constituent[c].valid==1) &&
+				if ((ctxt->constituent[c].left == w) &&
+					(leftdone[c] == 0) && (ctxt->constituent[c].valid == 1) &&
 					(ctxt->constituent[c].right >= bestright)) {
 					best = c;
 					bestright = ctxt->constituent[c].right;
@@ -1356,14 +1356,33 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
 		}
 
+		/* Don't print out right wall */
 		if (have_opened && (w < linkage->num_words - 1))
 		{
-			/* Don't print out right wall */
+			char *p;
 			strcpy(s, sent->word[w].string);
 
+			/* Constituent processing will crash if the sentence contains
+			 * square brackets, so we have to do something ... replace 
+			 * them with curly braces ... will have to do.
+			 */
+			p = strchr(s, OPEN_BRACKET);
+			while(p)
+			{
+				*p = '{';
+				p = strchr(p, OPEN_BRACKET);
+			}
+
+			p = strchr(s, CLOSE_BRACKET);
+			while(p)
+			{
+				*p = '}';
+				p = strchr(p, CLOSE_BRACKET);
+			}
+			
 			/* Now, if the first character of the word was
 			   originally uppercase, we put it back that way */
-			if (sent->word[w].firstupper ==1 )
+			if (sent->word[w].firstupper == 1)
 				upcase_utf8_str(s, s, MAX_WORD);
 			append_string(cs, "%s ", s);
 		}
