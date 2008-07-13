@@ -33,85 +33,90 @@ if WITH_BINRELOC
 liblink_grammar_la_LIBADD  = -lpthread
 liblink_grammar_java_la_LIBADD  = -lpthread liblink-grammar.la
 else
+if WITH_PTHREADS
+liblink_grammar_la_LIBADD  = -lpthread
+liblink_grammar_java_la_LIBADD  = -lpthread liblink-grammar.la
+else
 liblink_grammar_la_LIBADD  = 
 liblink_grammar_java_la_LIBADD  = liblink-grammar.la
 endif
+endif
 
-liblink_grammar_la_SOURCES =		\
-	analyze-linkage.c		\
-	and.c				\
-	api.c				\
-	build-disjuncts.c		\
-	command-line.c			\
-	constituents.c			\
-	count.c				\
-	error.c				\
-	extract-links.c			\
-	fast-match.c			\
-	idiom.c				\
-	massage.c			\
-	post-process.c			\
-	pp_knowledge.c			\
-	pp_lexer.c			\
-	pp_linkset.c			\
-	preparation.c			\
-	print.c				\
-	print-util.c			\
-	prune.c				\
-	read-dict.c			\
-	resources.c			\
-	string-set.c			\
-	tokenize.c			\
-	utilities.c			\
-	word-file.c			\
-	word-utils.c			\
-	prefix.c			\
-	api.h				\
-	link-includes.h			\
-	structures.h			\
-	api-structures.h		\
-	api.h				\
-	externs.h			\
-	analyze-linkage.h		\
-	and.h				\
-	build-disjuncts.h		\
-	command-line.h			\
-	constituents.h			\
-	count.h				\
-	error.h				\
-	extract-links.h			\
-	fast-match.h			\
-	idiom.h				\
-	massage.h			\
-	post-process.h			\
-	pp_knowledge.h			\
-	pp_lexer.h			\
-	pp_linkset.h			\
-	preparation.h			\
-	print.h				\
-	print-util.h			\
-	prune.h				\
-	read-dict.h			\
-	resources.h			\
-	string-set.h			\
-	tokenize.h			\
-	utilities.h			\
-	word-file.h \
+liblink_grammar_la_SOURCES =        \
+	analyze-linkage.c                \
+	and.c                            \
+	api.c                            \
+	build-disjuncts.c                \
+	command-line.c                   \
+	constituents.c                   \
+	count.c                          \
+	error.c                          \
+	extract-links.c                  \
+	fast-match.c                     \
+	idiom.c                          \
+	massage.c                        \
+	post-process.c                   \
+	pp_knowledge.c                   \
+	pp_lexer.c                       \
+	pp_linkset.c                     \
+	preparation.c                    \
+	print.c                          \
+	print-util.c                     \
+	prune.c                          \
+	read-dict.c                      \
+	resources.c                      \
+	string-set.c                     \
+	tokenize.c                       \
+	utilities.c                      \
+	word-file.c                      \
+	word-utils.c                     \
+	prefix.c                         \
+	api.h                            \
+	link-includes.h                  \
+	structures.h                     \
+	api-structures.h                 \
+	api.h                            \
+	externs.h                        \
+	analyze-linkage.h                \
+	and.h                            \
+	build-disjuncts.h                \
+	command-line.h                   \
+	constituents.h                   \
+	count.h                          \
+	error.h                          \
+	extract-links.h                  \
+	fast-match.h                     \
+	idiom.h                          \
+	massage.h                        \
+	post-process.h                   \
+	pp_knowledge.h                   \
+	pp_lexer.h                       \
+	pp_linkset.h                     \
+	preparation.h                    \
+	print.h                          \
+	print-util.h                     \
+	prune.h                          \
+	read-dict.h                      \
+	resources.h                      \
+	string-set.h                     \
+	tokenize.h                       \
+	utilities.h                      \
+	word-file.h                      \
 	word-utils.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar
-liblink_grammar_include_HEADERS = 	\
-	link-includes.h			\
+liblink_grammar_include_HEADERS =   \
+	link-includes.h                  \
 	link-features.h
 
-liblink_grammar_java_la_SOURCES =		\
-	jni-client.h			\
+liblink_grammar_java_la_SOURCES =   \
+	jni-client.h                     \
 	jni-client.c
 
-EXTRA_DIST=				\
-	prefix.h			\
-	java/org/link-grammar/LinkGrammar.java		\
-	link-grammar.def		\
+EXTRA_DIST=                               \
+	prefix.h                               \
+	java/org/link-grammar/LinkGrammar.java \
+	link-grammar.def                       \
 	link-grammar-java.def
 
 bin_PROGRAMS=link-parser
