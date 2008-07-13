@@ -229,11 +229,12 @@ static space_t space;
 
 void init_memusage(void)
 {
+	space_t *s;
+
 	static int mem_inited = FALSE;
 	if (mem_inited) return;
 	mem_inited = TRUE;
 
-	space_t *s;
 #ifdef USE_PTHREADS
 	pthread_once(&space_key_once, space_key_alloc);
 	s = (space_t *) malloc(sizeof(space_t));

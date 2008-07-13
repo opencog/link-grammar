@@ -337,11 +337,10 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	CON_list * child, * xchild;
 	List_o_links * lol, * xlol;
 
-	/* Declare the compar function here, since it needs access to the
+	/* Declare the compare function here, since it needs access to the
 	 * stack varaiable actx, which would otherwise need to be delcared
 	 * global (and thus not thread-safe).
 	 */
-
 	int comp_height(const void *va, const void *vb)
 	{
 		const int *a = va; 

@@ -42,10 +42,10 @@ struct Cost_Model_s
 typedef struct Resources_s * Resources;
 struct Resources_s
 {
-	int    max_parse_time;  /* was double before --DS */
-	int    max_memory;
+	int    max_parse_time;
+	size_t max_memory;
 	double time_when_parse_started;
-	int    space_when_parse_started;
+	size_t space_when_parse_started;
 	double when_created;
 	double when_last_called;
 	double cumulative_time;
