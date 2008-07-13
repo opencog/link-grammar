@@ -1379,7 +1379,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 				*p = '}';
 				p = strchr(p, CLOSE_BRACKET);
 			}
-			
+
 			/* Now, if the first character of the word was
 			   originally uppercase, we put it back that way */
 			if (sent->word[w].firstupper == 1)
@@ -1469,7 +1469,8 @@ static CType token_type (char *token)
 	return WORD_TOK;
 }
 
-static CNode * make_CNode(char *q) {
+static CNode * make_CNode(char *q)
+{
 	CNode * cn;
 	cn = exalloc(sizeof(CNode));
 	cn->label = (char *) exalloc(sizeof(char)*(strlen(q)+1));
@@ -1520,33 +1521,59 @@ static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
 	int i, child_offset;
 	CNode * m;
 
-	if (n==NULL) return;
+	if (n == NULL) return;
 
 	if (indent)
-		for (i=0; i<o1; ++i)
+		for (i = 0; i < o1; ++i)
 			append_string(cs, " ");
 	append_string(cs, "(%s ", n->label);
-	child_offset = o2 + strlen(n->label)+2;
+	child_offset = o2 + strlen(n->label) + 2;
 
-	for (m=n->child; m!=NULL; m=m->next) {
-		if (m->child == NULL) {
+	for (m = n->child; m != NULL; m = m->next)
+	{
+		if (m->child == NULL)
+		{
+			char * p;
+			/* If the original string has left or right parens in it,
+			 * the printed string will be messed up by these ... 
+			 * so replace them by curly braces. What else can one do?
+			 */
+			p = strchr(m->label, '(');
+			while(p)
+			{
+				*p = '{';
+				p = strchr(p, '(');
+			}
+
+			p = strchr(m->label, ')');
+			while(p)
+			{
+				*p = '}';
+				p = strchr(p, ')');
+			}
+
 			append_string(cs, "%s", m->label);
 			if ((m->next != NULL) && (m->next->child == NULL))
 				append_string(cs, " ");
 		}
-		else {
-			if (m != n->child) {
+		else
+		{
+			if (m != n->child)
+			{
 				if (indent) append_string(cs, "\n");
 				else append_string(cs, " ");
 				print_tree(cs, indent, m, child_offset, child_offset);
 			}
-			else {
+			else
+			{
 				print_tree(cs, indent, m, 0, child_offset);
 			}
-			if ((m->next != NULL) && (m->next->child == NULL)) {
-				if (indent) {
+			if ((m->next != NULL) && (m->next->child == NULL))
+			{
+				if (indent)
+				{
 					append_string(cs, "\n");
-					for (i=0; i<child_offset; ++i)
+					for (i = 0; i < child_offset; ++i)
 						append_string(cs, " ");
 				}
 				else append_string(cs, " ");
