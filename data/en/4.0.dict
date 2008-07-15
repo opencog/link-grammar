@@ -3514,12 +3514,12 @@ er um umm uh oh yeah gee gosh wow ah eh hmm hmmm: NO+;
 
 ";": {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
 
-"…" ":": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
+"…" ":" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
 
 "%": (ND- & {DD-} & <noun-sub-x> & (<noun-main-x>)) or (ND- & (OD- or AN+));
 
-"$" US$ C$: NIax+ & (AN+ or NIay- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
+"$" US$ C$ "€": NIax+ & (AN+ or NIay- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
 (OD- or ({DD-} & {[[@M+]]} & (<noun-main-p> or [[(Ss+ & <CLAUSE>) or 
 SIs-]])))));
 
