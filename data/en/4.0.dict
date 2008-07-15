@@ -2839,10 +2839,16 @@ every_time: {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or
 (Xd- & Xc+ & MVx-)));
 
 % AU is abbreviation for "astronomical units"
-AU.p au.p astronomical_units feet.p miles.p yards.p inches.p meters.p blocks.p light-years.p:
+blocks.p feet.p miles.p yards.p inches.p 
+meters.p millimeters.p centimeters.p micrometers.p kilometers.p 
+microns.p Angstroms.p wavelengths.p
+AU.p au.p astronomical_units light-years.p:
 (ND- or [()] or [[EN-]]) & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
 
-astronomical_unit foot.p mile.p yard.p inch.p block.p light-year.p:
+block.p foot.p mile.p yard.p inch.p 
+meter.p millimeter.p centimeter.p micrometer.p kilometer.p 
+micron.p Angstrom.p wavelength.p
+astronomical_unit light-year.p:
 NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
 a_long_way: Yd+;
 point.p percentage_point:
@@ -2856,7 +2862,9 @@ share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
 dollar.i cent.i: ((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: MVp- or A+;
+
 °C °F degrees_Fahrenheit degrees_Centigrade: ND- & <noun-main-s>;
+km² mi² in² ft² m² cm² mm² yds² micron²: ND- & <noun-main-s>;
 
 %QUESTION WORDS & CONJUNCTIONS
 
