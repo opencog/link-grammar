@@ -1017,6 +1017,15 @@ He clicked the mouse.
 He zeroed the counter.
 He zeroed out the counter.
 
+% buggy coppula and copula contractions
+% "here is the ball" generats Wq and PF and SIs which is just wrong.
+% "there is the ball" is much better, but the SFst seems wrong to me.
+Here is the ball.
+Here's the ball.
+There is the ball!
+Where's the ball?
+Here's Johhny!
+
 % Buggy sentences that need fixing:
 His works disclose a mastery of composition.
 I heard a bark in the distance.
