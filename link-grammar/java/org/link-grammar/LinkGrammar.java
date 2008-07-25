@@ -51,6 +51,9 @@ public class LinkGrammar
 
     public static native String getWord(int i);
 
+    // Get the inflected form of the word.
+    public static native String getLinkageWord(int i);
+
     public static native int getNumSkippedWords();
 
     // C linkage access functions

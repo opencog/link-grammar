@@ -1,5 +1,6 @@
 Version 4.3.7 includes the following changes:
  * Expanded list of given names to include those from 2005 US Census
+ * Export a new java jni function, to get the inflected word.
 
 Version 4.3.6 includes the following changes:
  * Fixes for Windows MS Visual-C builds.
