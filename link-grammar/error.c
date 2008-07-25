@@ -80,6 +80,7 @@ void prt_error(const char *fmt, ...)
 	va_end(args);
 
 #ifdef USE_PTHREADS
+	pthread_once(&sentence_key_once, sentence_key_alloc);
 	sentence = pthread_getspecific(failing_sentence_key);
 #else
 	sentence = failing_sentence;
