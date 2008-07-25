@@ -119,7 +119,9 @@ locationID60: <marker-entity> or <entity-entire>;
 
 % words that are also proper names
 % Art Bell Bill Bob Buck Bud  
-/en/words/entities.given-names.sing:
+/en/words/entities.given-female.sing
+/en/words/entities.given-male.sing
+/en/words/entities.given-bisex.sing:
 <marker-entity> or <entity-singular>;
 
 /en/words/entities.organizations.sing:
@@ -2794,7 +2796,7 @@ Monday Tuesday Wednesday Thursday Friday Saturday Sunday:
 (YS+ or <prep-main-t> or JT- or ON- or [[<noun-main-s>]])) or [[AN+]];
 
 morning.i afternoon.i night.i evening.i: TD-;
-January February March April May.i June July August September October
+January February March April.i May.i June.i July August September October
 November December: 
 ((DTn- or DTie- or ({TA-} & {TY+})) & (JT- or IN- or [[<noun-main-s>]] or YS+))
  or ((DTn- or DTie-) & <prep-main-t>) or

@@ -1,6 +1,8 @@
 WORDS=			\
 	entities.famous.sing \
-	entities.given-names.sing \
+	entities.given-bisex.sing \
+	entities.given-female.sing \
+	entities.given-male.sing \
 	entities.national.sing \
 	entities.organizations.sing \
 	entities.us-states.sing \
