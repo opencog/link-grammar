@@ -901,7 +901,7 @@ arisen.v: {@E-} & PP- & {@MV+};
 /en/words/words.v.5.3:
 <verb-sp,pp> & <vc-walk>;
 come.v: (<verb-pl,i> or <verb-pp>) & <vc-walk>;
-swam.v lay.x came.v: <verb-sp> & <vc-walk>; 
+swam.v lay.w came.v: <verb-sp> & <vc-walk>; 
 swum.v lain.v: <verb-pp> & <vc-walk>;
 /en/words/words.v.5.4: (<vc-walk> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
