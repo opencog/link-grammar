@@ -5,7 +5,7 @@ Andorra AN
 Angola AO 
 Anguilla AV 
 Antigua_and_Barbuda AC 
-Argentina AR 
+Argentina.l AR 
 Armenia AM 
 Aruba AA 
 Ashmore_and_Cartier_Islands AT 
@@ -33,7 +33,7 @@ British_Virgin_Islands VI
 Brunei BX 
 Bulgaria BU 
 Burkina_Faso UV 
-Burma BM 
+Burma.l BM 
 Burundi BY 
 Cambodia CB 
 Cameroon CM 
@@ -41,9 +41,9 @@ Canada CA
 Cape_Verde CV 
 Cayman_Islands CJ 
 Central_African_Republic CT 
-Chad  
+Chad.l  
 Chile CI 
-China
+China.l
 Christmas_Island KT 
 Clipperton_Island IP 
 Cocos_Islands CK 
@@ -61,7 +61,7 @@ Czech_Republic EZ
 Delhi 
 Denmark DA 
 Djibouti DJ 
-Dominica DO 
+Dominica.l DO 
 Dominican_Republic DR 
 East_Timor TT 
 Ecuador EC 
@@ -76,14 +76,14 @@ Falkland_Islands FK Islas_Malvinas
 Faroe_Islands FO 
 Fiji FJ 
 Finland FI 
-France FR 
+France.l FR 
 French_Guiana FG 
 French_Polynesia FP 
 French_Southern_and_Antarctic_Lands FS 
 Gabon GB 
 Gambia GA 
 Gaza_Strip GZ 
-Georgia GG 
+Georgia.l GG 
 Germany GM 
 Ghana GH 
 Gibraltar GI 
@@ -102,22 +102,22 @@ Honduras HO
 Hong_Kong HK 
 Hungary HU 
 Iceland IC 
-India IN 
+India.l IN 
 Indonesia ID 
 Iran IR 
 Iraq IZ 
 Ireland EI 
 Isle_of_Man IM 
-Israel IS 
+Israel.l IS 
 Italy IT 
 Jamaica JM 
 Jan_Mayen JN 
 Japan JA 
 Jersey JE 
-Jordan JO 
+Jordan.l JO 
 Juan_de_Nova_Island JU 
 Kazakhstan KZ 
-Kenya KE 
+Kenya.l KE 
 Kiribati KR 
 Kuwait KU 
 Kyrgyzstan KG 
@@ -234,7 +234,7 @@ Ukraine UP
 Undersea_Features UF 
 United_Arab_Emirates AE 
 United_Kingdom UK 
-United_States_of_America United_States USA US America 
+United_States_of_America United_States USA US America.l
 Uruguay UY 
 Uzbekistan UZ 
 Vanuatu  
