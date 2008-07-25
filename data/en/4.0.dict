@@ -127,7 +127,7 @@ locationID60: <marker-entity> or <entity-entire>;
 /en/words/entities.organizations.sing:
 <marker-entity> or <entity-singular>;
 
-/en/words/entities.famous.sing: 
+/en/words/entities.locations.sing: 
 <marker-entity> or <entity-singular>;
 
 %
