@@ -27,25 +27,29 @@ int contains_underbar(const char * s)
 
 /** 
  * Returns FALSE if it is not a correctly formed idiom string.
- *  correct such string:
+ * Such a string is correct if it:
  *   () contains no "."
  *   () non-empty strings separated by _
  */
 static int is_idiom_string(const char * s)
 {
+	size_t len;
 	const char * t;
-	for (t=s; *t != '\0'; t++) {
-		if (*t == '.') {
-			return FALSE;
-		}
+
+	for (t = s; *t != '\0'; t++)
+	{
+		if (*t == '.') return FALSE;
 	}
-	if ((s[0] == '_') || (s[strlen(s)-1] == '_')) {
+
+	len = strlen(s);
+	if ((s[0] == '_') || (s[len-1] == '_'))
+	{
 		return FALSE;
 	}
-	for (t=s; *t != '\0'; t++) {
-		if ((*t == '_') && (*(t+1) == '_')) {
-			return FALSE;
-		}
+
+	for (t = s; *t != '\0'; t++)
+	{
+		if ((*t == '_') && (*(t+1) == '_')) return FALSE;
 	}
 	return TRUE;
 }
@@ -239,8 +243,8 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	if (!is_idiom_string(s))
 	{
-		prt_error("Warning: Word \"%s\" on line %d is not "
-		          "a correctly formed idiom string.\n"
+		prt_error("Warning: Word \"%s\" on line %d "
+		          "is not a correctly formed idiom string.\n"
 		          "\tThis word will be ignored\n",
 		          s, dict->line_number);
 
