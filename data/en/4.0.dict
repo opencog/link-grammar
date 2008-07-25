@@ -278,7 +278,7 @@ kinds_of types_of sorts_of breeds_of:
  {{@AN-} & @A-} & U+ & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or (Rw+ & Bpm+))) or Up-);
 
-percent.s: 
+percent.u: 
 ({@AN-} & {@A- & {[[@AN-]]}} & ((ND- & {DD-} & <noun-sub-x> & 
 (<noun-main-x> or B*x+)) or
 U-)) or (ND- & (OD- or AN+ or YS+));
@@ -2812,23 +2812,23 @@ fall.i spring.i winter.i summer.i:
 ((DTn- or DTi-) & <prep-main-t>)
 or (DTi- & (JT- or YS+ or [[<noun-main-s>]]));
 
-weeks.p days.p hours.p minutes.p seconds.p months.p years.p decades.p
-centuries.p semesters.p terms.p nights.p:
+weeks.u days.u hours.u minutes.u seconds.u months.u years.u decades.u
+centuries.u semesters.u terms.u nights.u:
 ((ND- or [[EN-]] or [()]) & (Yt+ or OT-)) or (ND- & Ye-) or (TQ- & BT+);
-week.p day.p hour.p minute.p second.p month.p year.p decade.p century.p
-semester.p term.p night.p:
+week.u day.u hour.u minute.u second.u month.u year.u decade.u century.u
+semester.u term.u night.u:
 (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-))) or
 (NSa- & [[Mp- or Ys-]]) or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) 
 or MVp- or (Xd- & Xc+ & MVx-))) or Yt+)); 
 year_and_a_half: NSa- & {EN-} & (Yt+ or OT-);
-moment.p: (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-))) or 
+moment.u: (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-))) or 
 ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) 
 or MVp- or (Xd- & Xc+ & MVx-))) or Yt+)); 
 a_while: J- or Yt+ or OT-;
 now.i then.i: JT- or FM-;
 now_on then_on: FM-;
 from_now: Yt- & <prep-main-t>;
-a_long_time some_time a_few_moments moments.p: Yt+ or OT-;
+a_long_time some_time a_few_moments moments.u: Yt+ or OT-;
 ago: Yt- & (<prep-main-e> or Ca+ or Qe+ or JT-);
 every.i: {EN-} & Ye+ & <prep-main-t>;
 times.i: (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+
@@ -2841,21 +2841,21 @@ every_time: {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or
 (Xd- & Xc+ & MVx-)));
 
 % AU is abbreviation for "astronomical units"
-blocks.p feet.p miles.p yards.p inches.p 
-meters.p millimeters.p centimeters.p micrometers.p kilometers.p 
-microns.p Angstroms.p wavelengths.p
-AU.p au.p astronomical_units light-years.p:
+blocks.u feet.u miles.u yards.u inches.u 
+meters.u millimeters.u centimeters.u micrometers.u kilometers.u 
+microns.u Angstroms.u wavelengths.u
+AU.u au.u astronomical_units light-years.u:
 (ND- or [()] or [[EN-]]) & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
 
-block.p foot.p mile.p yard.p inch.p 
-meter.p millimeter.p centimeter.p micrometer.p kilometer.p 
-micron.p Angstrom.p wavelength.p
-astronomical_unit light-year.p:
+block.u foot.u mile.u yard.u inch.u 
+meter.u millimeter.u centimeter.u micrometer.u kilometer.u 
+micron.u Angstrom.u wavelength.u
+astronomical_unit light-year.u:
 NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
 a_long_way: Yd+;
-point.p percentage_point:
+point.u percentage_point:
 (NS- or NIe-) & {NJ-} & (Yd+ or OD-);
-points.p percentage_points: ND- & (Yd+ or MVp-);
+points.u percentage_points: ND- & (Yd+ or MVp-);
 
 dollars.i cents.i:  ND- & (EC+ or Yd+ or OD-);
 1_dollar one_dollar a_dollar 1_cent 
@@ -2865,8 +2865,8 @@ dollar.i cent.i: ((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or O
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: MVp- or A+;
 
-°C °F degrees_Fahrenheit degrees_Centigrade: ND- & <noun-main-s>;
-km² mi² in² ft² m² cm² mm² yds² micron²: ND- & <noun-main-s>;
+°C.u °F.u degrees_Fahrenheit degrees_Centigrade: ND- & <noun-main-s>;
+km².u mi².u in².u ft².u m².u cm².u mm².u yds².u micron².u: ND- & <noun-main-s>;
 
 %QUESTION WORDS & CONJUNCTIONS
 
