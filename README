@@ -1,7 +1,7 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
-                       Version 4.3.6
+                       Version 4.3.7
 
 This directory contains a *patched* version of the final original 
 release of the Link Grammar Parser.  It has been patched to fix a 
@@ -250,7 +250,7 @@ TODO:
       refactored out, as it doesn't really apply to non-English
       languages.
 
-   no-links-cross: Link Grammar uses a constraint that al linakges must
+   no-links-cross: Link Grammar uses a constraint that all linakges must
       be planar graphs. While this is mostly correct, it would probably 
       be more correct to use "landmark transitivity" as articulated by
       Hudson in the Word Grammar theory.  This might allow the elimination
@@ -281,6 +281,18 @@ TODO:
      allows parses with bad word-senses to sneak in.
 
      The goal is to introduce more knowledge of lexical units into LG.
+
+     Different word senses can have different grammar rules (and thus,
+     the links employed reveal the sense of the word): for example:
+     "I tend to agree" vs. "I tend to the sheep" -- these employ two 
+     different meanings for the verb "tend", and the grammatical
+     constructions allowed for one meaning are not the same as those
+     allowed for the other. Yet, the link rules for "tend.v" have
+     to accomodate both senses, thus making the rules rather complex.
+     Worse, it potentially allows for non-sense constructions.
+     If, instead, we allowed the dictionary to contain different 
+     rules for "tend.meaning1" and "tend.meaning2", the rules would
+     simplify (at the cost of inflating the size of the dictionary).
 
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,

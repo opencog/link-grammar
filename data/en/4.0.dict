@@ -1028,6 +1028,15 @@ raised.v lowered.v: (<verb-sp,pp> & <vc-raise>) or <verb-pv> or ({@E-} & A+)
 raising.v lowering.v: <verb-pg> & <vc-raise>;
 raising.g lowering.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 
+% much like words.v.2.1, except can have "TO" link.
+% tending.g remains in words.v.2.5
+% I tended for years to believe that shepherds tend sheep.
+tend.v: <verb-pl,i> & <vc-tr,intr> & ({@MV+} & {TO+});
+tends.v: <verb-s> & <vc-tr,intr> & ({@MV+} & {TO+});
+tended.v:  (<verb-sp,pp> & <vc-tr,intr> & {@MV+} & {TO+}) or 
+<verb-pv> or ({@E-} & A+) or <verb-po>;
+tending.v: <verb-pg> & <vc-tr,intr> & ({@MV+} & {TO+});
+
 % INTRANSITIVE COMPLEX VERBS (those that do not take O+)
 
 <vc-consent>: {@MV+} & {TO+};
@@ -1886,6 +1895,7 @@ or ({@MV+} & {TO+} & <verb-po>);
 choosing.g: (<vc-choose> & <verb-ge>) or <verb-ge-d>;
 choosing.v: <verb-pg> & <vc-choose>;
 
+% <vc-prepare> is identical to <vc-choose>
 <vc-prepare>: ({@MV+} & {TO+}) or ((O+ or B-) & {@MV+} & {TOo+}) or
 ([[@MV+ & O*n+]]);
 prepare.v press.v: <verb-pl,i> & <vc-prepare>;
