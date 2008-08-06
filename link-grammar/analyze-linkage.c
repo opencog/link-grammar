@@ -341,6 +341,7 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	 * stack varaiable actx, which would otherwise need to be delcared
 	 * global (and thus not thread-safe).
 	 */
+	auto int comp_height(const void *, const void *);
 	int comp_height(const void *va, const void *vb)
 	{
 		const int *a = va; 
