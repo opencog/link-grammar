@@ -122,6 +122,7 @@ linkage_constituent_node_get_end
 lperrno
 lperrmsg
 lperror_clear
+prt_error
 is_entity
 is_past_tense_form
 set_data_dir
