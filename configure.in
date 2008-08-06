@@ -171,6 +171,10 @@ AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
 WARN_CFLAGS="$link_cv_warn_cflags"
 LINK_CFLAGS="$LINK_CFLAGS $WARN_CFLAGS"
 
+dnl Per email, -fnested-functions is needed on Macintosh OS/X
+LINK_CC_TRY_FLAG([-fnested-functions],
+		  [LINK_CFLAGS="$LINK_CFLAGS -fnested-functions"])
+
 LINK_CC_TRY_FLAG([-fno-strict-aliasing],
 		  [LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
 
