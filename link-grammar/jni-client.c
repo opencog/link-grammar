@@ -409,7 +409,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageWord(JNIEnv *env, jclass cls, jint i)
 
 	/* does not need to be freed, points into data structures */
 	/* returns the inflected word. */
-	char* w = linkage_get_word(ptd->linkage, i);
+	const char * w = linkage_get_word(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, w);
 	return j;
 }
