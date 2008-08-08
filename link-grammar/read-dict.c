@@ -218,6 +218,7 @@ static int link_advance(Dictionary dict)
 #ifndef _WIN32
 				dict_error2(dict, "Unable to read UTF8 string in current locale",
 				         nl_langinfo(CODESET));
+				fprintf (stderr, "\tTry setting the locale with \"export LANG=en_US.UTF-8\"\n");
 #else
 				dict_error(dict, "Unable to read UTF8 string in current locale");
 #endif
@@ -258,6 +259,7 @@ static int link_advance(Dictionary dict)
 #ifndef _WIN32
 					dict_error2(dict, "Unable to read UTF8 string in current locale",
 					         nl_langinfo(CODESET));
+					fprintf (stderr, "\tTry setting the locale with \"export LANG=en_US.UTF-8\"\n");
 #else
 					dict_error(dict, "Unable to read UTF8 string in current locale");
 #endif
