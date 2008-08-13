@@ -76,6 +76,7 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 #define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
 
 /* Windows doesn't have a thread-safe rand (???) */
+/* XXX FIXME -- this breaks thread safety on windows */
 #define rand_r(seedp) rand()
 
 #endif /* _WIN32 */

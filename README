@@ -330,3 +330,8 @@ TODO:
                     This is only used when reading dictionaries,
                     during initialization, and so doesn't need
                     to be thread safe.
+
+      utilities.h -- Windows doesn't have a thread-safe random-number
+                     generator, which means link-grammar for Windows
+                     is not currently thread-safe.
+
