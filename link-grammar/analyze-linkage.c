@@ -149,7 +149,7 @@ static void copy_full_link(Link **dest, Link *src)
 /* end new code 9/97 ALB */
 
 
-/** 
+/**
  * Constructs a graph in the wordlinks array based on the contents of
  * the global link_array.  Makes the wordlinks array point to a list of
  * words neighboring each word (actually a list of links).  This is a
@@ -221,7 +221,7 @@ static int is_CON_word(int w, List_o_links **wordlinks)
 
 static DIS_node * build_DIS_node(analyze_context_t*, int);
 
-/** 
+/**
  * This word is a CON word (has fat links down).  Build the tree for it.
  */
 static CON_node * build_CON_node(analyze_context_t *actx, int w)
@@ -305,7 +305,7 @@ static CON_list * c_dfs(analyze_context_t *actx,
  * region reachable via thin links, and put all reachable nodes with fat
  * links out of them in its list of children.
  */
-static DIS_node * build_DIS_node(analyze_context_t *actx, 
+static DIS_node * build_DIS_node(analyze_context_t *actx,
                                  int w)
 {
 	DIS_node * dn;
@@ -344,7 +344,7 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	auto int comp_height(const void *, const void *);
 	int comp_height(const void *va, const void *vb)
 	{
-		const int *a = va; 
+		const int *a = va;
 		const int *b = vb;
 		return actx->dfs_height[*b] - actx->dfs_height[*a];
 	};
@@ -365,7 +365,7 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 
 	for (w=0; w < pi->N_words; w++) actx->height_perm[w] = w;
 
-	qsort(actx->height_perm, pi->N_words, 
+	qsort(actx->height_perm, pi->N_words,
 		sizeof(actx->height_perm[0]), comp_height);
 
 	for (w=0; w<pi->N_words; w++) actx->dfs_root_word[w] = -1;
@@ -445,7 +445,7 @@ static void fill_patch_array_CON(analyze_context_t *, CON_node *, Links_to_patch
  * Patches up appropriate links in the patch_array for this DIS_node
  * and this patch list.
  */
-static void fill_patch_array_DIS(analyze_context_t *actx, 
+static void fill_patch_array_DIS(analyze_context_t *actx,
                                  DIS_node * dn, Links_to_patch * ltp)
 {
 	CON_list * cl;
@@ -484,7 +484,7 @@ static void fill_patch_array_DIS(analyze_context_t *actx,
 	}
 }
 
-static void fill_patch_array_CON(analyze_context_t *actx, 
+static void fill_patch_array_CON(analyze_context_t *actx,
                                  CON_node * cn, Links_to_patch * ltp)
 {
 	List_o_links * lol;
@@ -601,7 +601,7 @@ static void and_dfs_commas(analyze_context_t *actx, Sentence sent, int w)
 	}
 }
 
-/** 
+/**
  * This function computes the "and cost", resulting from inequalities
  * in the length of and-list elements. It also computes other
  * information used to construct the "andlist" structure of linkage_info.
@@ -668,7 +668,7 @@ static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
 	return old_andlist;
 }
 
-/** 
+/**
  * This function defines the cost of a link as a function of its length.
  */
 static inline int cost_for_length(int length)
@@ -1158,7 +1158,6 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 			linkage->sublinkage[num_sublinkages].link[j++] =
 				excopy_link(sublinkage->link[i]);
 		}
-
 
 		num_sublinkages++;
 		if (!advance_DIS(d_root)) break;
