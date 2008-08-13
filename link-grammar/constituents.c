@@ -26,17 +26,17 @@ typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
 
 typedef struct
 {
-  int left;
-  int right;
-  const char * type;
-  char domain_type;
-  const char * start_link;
-  int start_num;
-  int subl;
-  int canon;
-  int valid;
-  int aux;	
-  /* 0: it's an ordinary VP (or other type);
+	int left;
+	int right;
+	const char * type;
+	char domain_type;
+	const char * start_link;
+	int start_num;
+	int subl;
+	int canon;
+	int valid;
+	int aux;	
+	/* 0: it's an ordinary VP (or other type);
 	 1: it's an AUX, don't print it;
 	 2: it's an AUX, and print it */
 } constituent_t;
@@ -45,10 +45,10 @@ typedef struct
 #define MAX_ELTS 100
 typedef struct
 {
-  int num;
-  int e[MAX_ELTS];
-  int valid;
-} andlist_t; 
+	int num;
+	int e[MAX_ELTS];
+	int valid;
+} andlist_t;
 
 /*
  * Context used to store assorted intermediate data
@@ -436,7 +436,7 @@ static int find_next_element(con_context_t *ctxt,
 			 * only from the names?
 			 */
 			prt_error("Error: Constituent overflowed andlist!\n");
-			return (num_lists-1); 
+			return (num_lists-1);
 		}
 	}
 	return num_lists;
@@ -929,7 +929,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	return numcon_total;
 }
 
-/** 
+/**
  * This function generates a table, word_used[i][w], showing
  * whether each word w is used in each sublinkage i; if so,
  * the value for that cell of the table is 1.
@@ -1232,34 +1232,40 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	 * boundary, shift that boundary rightwards to the left boundary
 	 * of the other one.
 	 */
-	while (1) {
-		adjustment_made=0;
-		for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
-			for (c2=numcon_total; c2<numcon_total + numcon_subl; c2++) {
+	while (1)
+	{
+		adjustment_made = 0;
+		for (c = numcon_total; c < numcon_total + numcon_subl; c++)
+		{
+			for (c2 = numcon_total; c2 < numcon_total + numcon_subl; c2++)
+			{
 				if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
 					(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
-					(ctxt->constituent[c].right >= ctxt->constituent[c2].left)) {
-
+					(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
+				{
 					/* We've found two overlapping constituents.
 					   If one is larger, except the smaller one
 					   includes an extra comma, adjust the smaller one
 					   to exclude the comma */
 
-					if ((strcmp(linkage->word[ctxt->constituent[c2].right], ",")==0) ||
+					if ((strcmp(linkage->word[ctxt->constituent[c2].right], ",") == 0) ||
 						(strcmp(linkage->word[ctxt->constituent[c2].right],
-								"RIGHT-WALL")==0)) {
+								"RIGHT-WALL") == 0))
+					{
 						if (verbosity >= 2)
 							printf("Adjusting %d to fix comma overlap\n", c2);
 						adjust_for_right_comma(ctxt, linkage, c2);
-						adjustment_made=1;
+						adjustment_made = 1;
 					}
-					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",")==0) {
+					else if (strcmp(linkage->word[ctxt->constituent[c].left], ",") == 0)
+					{
 						if (verbosity >= 2)
 							printf("Adjusting c %d to fix comma overlap\n", c);
 						adjust_for_left_comma(ctxt, linkage, c);
-						adjustment_made=1;
+						adjustment_made = 1;
 					}
-					else {
+					else
+					{
 						if (verbosity >= 2)
 						{
 							prt_error("Warning: the constituents aren't nested! "
@@ -1270,34 +1276,39 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 				}
 			}
 		}
-		if (adjustment_made==0) break;
+		if (adjustment_made == 0) break;
 	}
 
 	/* This labels certain words as auxiliaries (such as forms of "be"
-	   with passives, forms of "have" wth past participles,
-	   "to" with infinitives). These words start VP's which include
-	   them. In Treebank I, these don't get printed unless they're part of an
-	   andlist, in which case they get labeled "X". (this is why we need to
-	   label them as "aux".) In Treebank II, however, they seem to be treated
-	   just like other verbs, so the "aux" stuff isn't needed. */
-
-
-	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
+	 * with passives, forms of "have" wth past participles,
+	 * "to" with infinitives). These words start VP's which include
+	 * them. In Treebank I, these don't get printed unless they're part of an
+	 * andlist, in which case they get labeled "X". (this is why we need to
+	 * label them as "aux".) In Treebank II, however, they seem to be treated
+	 * just like other verbs, so the "aux" stuff isn't needed.
+	 */
+	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
+	{
 		ctxt->constituent[c].subl = linkage->current;
 		if (((ctxt->constituent[c].domain_type == 'v') &&
 			(ctxt->wordtype[linkage_get_link_rword(linkage,
-											 ctxt->constituent[c].start_num)]==PTYPE))
+											 ctxt->constituent[c].start_num)] == PTYPE))
 		   ||
 		   ((ctxt->constituent[c].domain_type == 't') &&
-			(strcmp(ctxt->constituent[c].type, "VP")==0))) {
-			ctxt->constituent[c].aux=1;
+			(strcmp(ctxt->constituent[c].type, "VP") == 0)))
+		{
+			ctxt->constituent[c].aux = 1;
 		}
-		else ctxt->constituent[c].aux=0;
+		else
+		{
+			ctxt->constituent[c].aux = 0;
+		}
 	}
 
-	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
+	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
+	{
 		ctxt->constituent[c].subl = linkage->current;
-		ctxt->constituent[c].aux=0;
+		ctxt->constituent[c].aux = 0;
 	}
 
 	return numcon_subl;
@@ -1319,14 +1330,14 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 
 	for (c = 0; c < numcon_total; c++)
 	{
-		leftdone[c]=0;
-		rightdone[c]=0;
+		leftdone[c] = 0;
+		rightdone[c] = 0;
 	}
 
 	if (verbosity >= 2)
 		printf("\n");			
 
-	for (w=1; w<linkage->num_words; w++)
+	for (w = 1; w < linkage->num_words; w++)
 	{
 		/* Skip left wall; don't skip right wall, since it may
 		   have constituent boundaries */
@@ -1335,7 +1346,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 		{
 			best = -1;
 			bestright = -1;
-			for (c=0; c < numcon_total; c++)
+			for (c = 0; c < numcon_total; c++)
 			{
 				if ((ctxt->constituent[c].left == w) &&
 					(leftdone[c] == 0) && (ctxt->constituent[c].valid == 1) &&
@@ -1348,9 +1359,9 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 				break;
 
 			leftdone[best] = 1;
-			/* have_open is a hack to avoid printing anything until 
+			/* have_open is a hack to avoid printing anything until
 			 * bracket is opened */
-			if (w == 1) have_opened = 0; 
+			if (w == 1) have_opened = 0;
 			if (ctxt->constituent[best].aux == 1) continue;
 			have_opened = 1;
 			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
@@ -1363,7 +1374,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			strcpy(s, sent->word[w].string);
 
 			/* Constituent processing will crash if the sentence contains
-			 * square brackets, so we have to do something ... replace 
+			 * square brackets, so we have to do something ... replace
 			 * them with curly braces ... will have to do.
 			 */
 			p = strchr(s, OPEN_BRACKET);
@@ -1391,18 +1402,19 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 		{
 			best = -1;
 			bestleft = -1;
-			for(c=0; c<numcon_total; c++) {
-				if ((ctxt->constituent[c].right==w) &&
-					(rightdone[c]==0) && (ctxt->constituent[c].valid==1) &&
+			for(c = 0; c < numcon_total; c++)
+			{
+				if ((ctxt->constituent[c].right == w) &&
+					(rightdone[c] == 0) && (ctxt->constituent[c].valid == 1) &&
 					(ctxt->constituent[c].left > bestleft)) {
 					best = c;
 					bestleft = ctxt->constituent[c].left;
 				}
 			}
-			if (best==-1)
+			if (best == -1)
 				break;
-			rightdone[best]=1;
-			if (ctxt->constituent[best].aux==1)
+			rightdone[best] = 1;
+			if (ctxt->constituent[best].aux == 1)
 				continue;
 			append_string(cs, "%s%c ", ctxt->constituent[best].type, CLOSE_BRACKET);
 		}
@@ -1473,6 +1485,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 static char * print_flat_constituents(Linkage linkage)
 {
 	con_context_t ctxt;
+	bzero (&ctxt, sizeof(con_context_t));
 	return do_print_flat_constituents(&ctxt, linkage);
 }
 
@@ -1551,7 +1564,7 @@ static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
 		{
 			char * p;
 			/* If the original string has left or right parens in it,
-			 * the printed string will be messed up by these ... 
+			 * the printed string will be messed up by these ...
 			 * so replace them by curly braces. What else can one do?
 			 */
 			p = strchr(m->label, '(');
@@ -1688,26 +1701,26 @@ void linkage_free_constituent_tree_str(char * s)
 
 char * linkage_constituent_node_get_label(const CNode *n)
 {
-  return n->label;
+	return n->label;
 }
 
 
 CNode * linkage_constituent_node_get_child(const CNode *n)
 {
-  return n->child;
+	return n->child;
 }
 
 CNode * linkage_constituent_node_get_next(const CNode *n)
 {
-  return n->next;
+	return n->next;
 }
 
 int linkage_constituent_node_get_start(const CNode *n)
 {
-  return n->start;
+	return n->start;
 }
 
 int linkage_constituent_node_get_end(const CNode *n)
 {
-  return n->end;
+	return n->end;
 }

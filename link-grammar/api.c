@@ -3,7 +3,7 @@
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
 /* All rights reserved                                                   */
 /*                                                                       */
-/* Use of the link grammar parsing system is subject to the terms of the */ 
+/* Use of the link grammar parsing system is subject to the terms of the */
 /* license set forth in the LICENSE file included with this software,    */
 /* and also available at http://www.link.cs.cmu.edu/link/license.html    */
 /* This license allows free redistribution and use in source and binary  */
@@ -40,7 +40,7 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	}
 }
 
-/** 
+/**
  * Create and initialize a Parse_Options object
  */
 Parse_Options parse_options_create(void)
@@ -328,15 +328,15 @@ void parse_options_reset_resources(Parse_Options opts) {
 ****************************************************************/
 
 /**
- * The following function is dictionary_create with an extra 
- * paramater called "path". If this is non-null, then the path 
+ * The following function is dictionary_create with an extra
+ * paramater called "path". If this is non-null, then the path
  * used to find the file is taken from that path. Otherwise,
- * the path is taken from the dict_name.  This is only needed 
+ * the path is taken from the dict_name.  This is only needed
  * because an affix_file is opened by a recursive call to this
  * function.
  */
-Dictionary 
-dictionary_create(char * dict_name, char * pp_name, 
+Dictionary
+dictionary_create(char * dict_name, char * pp_name,
                   char * cons_name, char * affix_name)
 {
 	Dictionary dict;
@@ -556,7 +556,7 @@ Sentence sentence_create(char *input_string, Dictionary dict)
 	return sent;
 }
 
-static void free_andlists(Sentence sent) 
+static void free_andlists(Sentence sent)
 {
 	int L;
 	Andlist * andlist, * next;
@@ -584,7 +584,7 @@ static void free_post_processing(Sentence sent)
 	}
 }
 
-void sentence_delete(Sentence sent) 
+void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
 	/* free_andlists(sent); */
@@ -743,11 +743,11 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	only_canonical_allowed = (!(overflowed || (N_linkages_found > 2*opts->linkage_limit)));
 	/* When we're processing only a small subset of the linkages,
 	 * don't worry about restricting the set we consider to be
-	 * canonical ones.  In the extreme case where we are only 
+	 * canonical ones.  In the extreme case where we are only
 	 * generating 1 in a million linkages, it's very unlikely
 	 * that we'll hit two symmetric variants of the same linkage
 	 * anyway.
-	 */ 
+	 */
 	/* (optional) first pass: just visit the linkages */
 	/* The purpose of these two passes is to make the post-processing
 	 * more efficient.  Because (hopefully) by the time you do the
@@ -1197,61 +1197,74 @@ const char * linkage_get_link_rlabel(Linkage linkage, int index)
 	return link->rc->string;
 }
 
-const char ** linkage_get_words(Linkage linkage) {
+const char ** linkage_get_words(Linkage linkage)
+{
 	return linkage->word;
 }
 
-Sentence linkage_get_sentence(Linkage linkage) {
+Sentence linkage_get_sentence(Linkage linkage)
+{
 	return linkage->sent;
 }
 
-const char * linkage_get_word(Linkage linkage, int w) {
+const char * linkage_get_word(Linkage linkage, int w)
+{
 	return linkage->word[w];
 }
 
-int linkage_unused_word_cost(Linkage linkage) {
+int linkage_unused_word_cost(Linkage linkage)
+{
 	return linkage->info.unused_word_cost;
 }
 
-int linkage_disjunct_cost(Linkage linkage) {
+int linkage_disjunct_cost(Linkage linkage)
+{
 	return linkage->info.disjunct_cost;
 }
 
-int linkage_and_cost(Linkage linkage) {
+int linkage_and_cost(Linkage linkage)
+{
 	return linkage->info.and_cost;
 }
 
-int linkage_link_cost(Linkage linkage) {
+int linkage_link_cost(Linkage linkage)
+{
 	return linkage->info.link_cost;
 }
 
-int linkage_get_link_num_domains(Linkage linkage, int index) {
+int linkage_get_link_num_domains(Linkage linkage, int index)
+{
 	PP_info pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
 	pp_info = linkage->sublinkage[linkage->current].pp_info[index];
 	return pp_info.num_domains;
 }
 
-char ** linkage_get_link_domain_names(Linkage linkage, int index) {
+char ** linkage_get_link_domain_names(Linkage linkage, int index)
+{
 	PP_info pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
 	pp_info = linkage->sublinkage[linkage->current].pp_info[index];
 	return pp_info.domain_name;
 }
 
-const char * linkage_get_violation_name(Linkage linkage) {
+const char * linkage_get_violation_name(Linkage linkage)
+{
 	return linkage->sublinkage[linkage->current].violation;
 }
 
-int linkage_is_canonical(Linkage linkage) {
+int linkage_is_canonical(Linkage linkage)
+{
 	return linkage->info.canonical;
 }
 
-int linkage_is_improper(Linkage linkage) {
+int linkage_is_improper(Linkage linkage)
+{
 	return linkage->info.improper_fat_linkage;
 }
 
-int linkage_has_inconsistent_domains(Linkage linkage) {
+int linkage_has_inconsistent_domains(Linkage linkage)
+{
 	return linkage->info.inconsistent_domains;
 }
 
@@ -1265,57 +1278,71 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 	int i, j, k;
 	D_type_list * d;
 
-	for (i=0; i<N_sublinkages; ++i) {
-
+	for (i = 0; i < N_sublinkages; ++i)
+	{
 		subl = &linkage->sublinkage[i];
-		if (subl->pp_info != NULL) {
-			for (j=0; j<subl->num_links; ++j) {
+		if (subl->pp_info != NULL)
+		{
+			for (j = 0; j < subl->num_links; ++j)
+			{
 				exfree_pp_info(&subl->pp_info[j]);
 			}
 			post_process_free_data(&subl->pp_data);
 			exfree(subl->pp_info, sizeof(PP_info)*subl->num_links);
 		}
 		subl->pp_info = (PP_info *) exalloc(sizeof(PP_info)*subl->num_links);
-		for (j=0; j<subl->num_links; ++j) {
+		for (j = 0; j < subl->num_links; ++j)
+		{
 			subl->pp_info[j].num_domains = 0;
 			subl->pp_info[j].domain_name = NULL;
 		}
-		if (subl->violation != NULL) {
+		if (subl->violation != NULL)
+		{
 			exfree((char *)subl->violation, sizeof(char)*(strlen(subl->violation)+1));
 			subl->violation = NULL;
 		}
 
-		if (linkage->info.improper_fat_linkage) {
+		if (linkage->info.improper_fat_linkage)
+		{
 			pp = NULL;
-		} else {
+		}
+		else
+		{
 			pp = post_process(postprocessor, opts, sent, subl, FALSE);
 			/* This can return NULL, for example if there is no
 			   post-processor */
 		}
 
-		if (pp == NULL) {
-			for (j=0; j<subl->num_links; ++j) {
+		if (pp == NULL)
+		{
+			for (j = 0; j < subl->num_links; ++j)
+			{
 				subl->pp_info[j].num_domains = 0;
 				subl->pp_info[j].domain_name = NULL;
 			}
 		}
-		else {
-			for (j=0; j<subl->num_links; ++j) {
-				k=0;
-				for (d = pp->d_type_array[j]; d!=NULL; d=d->next) k++;
+		else
+		{
+			for (j = 0; j < subl->num_links; ++j)
+			{
+				k = 0;
+				for (d = pp->d_type_array[j]; d != NULL; d = d->next) k++;
 				subl->pp_info[j].num_domains = k;
-				if (k > 0) {
+				if (k > 0)
+				{
 					subl->pp_info[j].domain_name = (char **) exalloc(sizeof(char *)*k);
 				}
 				k = 0;
-				for (d = pp->d_type_array[j]; d!=NULL; d=d->next) {
+				for (d = pp->d_type_array[j]; d != NULL; d = d->next)
+				{
 					subl->pp_info[j].domain_name[k] = (char *) exalloc(sizeof(char)*2);
 					sprintf(subl->pp_info[j].domain_name[k], "%c", d->type);
 					k++;
 				}
 			}
 			subl->pp_data = postprocessor->pp_data;
-			if (pp->violation != NULL) {
+			if (pp->violation != NULL)
+			{
 				char * s = (char *) exalloc(sizeof(char)*(strlen(pp->violation)+1));
 				strcpy(s, pp->violation);
 				subl->violation = s;
