@@ -936,11 +936,11 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	return linkage;
 }
 
-int linkage_set_current_sublinkage(Linkage linkage, int index) {
-	int errno;
+int linkage_set_current_sublinkage(Linkage linkage, int index)
+{
 	if ((index < 0) ||
-		(index >= linkage->num_sublinkages)) {
-		errno = -1;
+		(index >= linkage->num_sublinkages))
+	{
 		return 0;
 	}
 	linkage->current = index;
@@ -1110,21 +1110,22 @@ int linkage_get_num_sublinkages(Linkage linkage) {
 	return linkage->num_sublinkages;
 }
 
-int linkage_get_num_words(Linkage linkage) {
+int linkage_get_num_words(Linkage linkage)
+{
 	return linkage->num_words;
 }
 
-int linkage_get_num_links(Linkage linkage) {
+int linkage_get_num_links(Linkage linkage)
+{
 	int current = linkage->current;
 	return linkage->sublinkage[current].num_links;
 }
 
-static int verify_link_index(Linkage linkage, int index)
+static inline int verify_link_index(Linkage linkage, int index)
 {
-	int errno;
 	if ((index < 0) ||
-		(index >= linkage->sublinkage[linkage->current].num_links)) {
-		errno = -1;
+		(index >= linkage->sublinkage[linkage->current].num_links))
+	{
 		return 0;
 	}
 	return 1;
