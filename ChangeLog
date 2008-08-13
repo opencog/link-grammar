@@ -1,6 +1,9 @@
+Version 4.3.9 includes the following changes:
+ * (NONE YET)
+
 Version 4.3.8 includes the following changes:
  * Build fixes for Windows (missing bzero and thread-safe rand)
- * Fix several mem leaks, one in the java jni code.
+ * Fix several mem leaks, one in the Java jni code.
  * Fix crash of java6 jvm, due to blown stack limits.
 
 Version 4.3.7 includes the following changes:
