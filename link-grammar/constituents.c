@@ -467,10 +467,10 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	   (the index number of the lowest-numbered constituent
 	   identical to it) */
 
-	for (c1=0; c1<numcon_total; c1++)
+	for (c1 = 0; c1 < numcon_total; c1++)
 	{
 		if (ctxt->constituent[c1].canon != c1) continue;
-		for (c2=c1+1; c2<numcon_total; c2++)
+		for (c2 = c1 + 1; c2 < numcon_total; c2++)
 		{
 			if ((ctxt->constituent[c1].left == ctxt->constituent[c2].left) &&
 				(ctxt->constituent[c1].right == ctxt->constituent[c2].right) &&
@@ -482,32 +482,32 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	}
 
 	/* If constituents A and B in different sublinkages X and Y
-	   have one endpoint in common, but A is larger at the other end,
-	   and B has no duplicate in X, then declare B invalid. (Example:
-	   " [A [B We saw the cat B] and the dog A] " */
-
-	for (c1=0; c1<numcon_total; c1++)
+	 * have one endpoint in common, but A is larger at the other end,
+	 * and B has no duplicate in X, then declare B invalid. (Example:
+	 * " [A [B We saw the cat B] and the dog A] "
+	 */
+	for (c1 = 0; c1 < numcon_total; c1++)
 	{
 		if (ctxt->constituent[c1].valid == 0) continue;
-		for (c2=0; c2<numcon_total; c2++)
+		for (c2 = 0; c2 < numcon_total; c2++)
 		{
 			if (ctxt->constituent[c2].subl == ctxt->constituent[c1].subl) continue;
-			ok=1;
+			ok = 1;
 			/* Does c2 have a duplicate in the sublinkage containing c1?
 			   If so, bag it */
-			for (c3=0; c3<numcon_total; c3++)
+			for (c3 = 0; c3 < numcon_total; c3++)
 			{
 				if ((ctxt->constituent[c2].canon == ctxt->constituent[c3].canon) &&
 					(ctxt->constituent[c3].subl == ctxt->constituent[c1].subl))
-					ok=0;
+					ok = 0;
 			}
-			for (c3=0; c3<numcon_total; c3++)
+			for (c3 = 0; c3 < numcon_total; c3++)
 			{
 				if ((ctxt->constituent[c1].canon == ctxt->constituent[c3].canon) &&
 					(ctxt->constituent[c3].subl == ctxt->constituent[c2].subl))
-					ok=0;
+					ok = 0;
 			}
-			if (ok==0) continue;
+			if (ok == 0) continue;
 			if ((ctxt->constituent[c1].left == ctxt->constituent[c2].left) &&
 				(ctxt->constituent[c1].right > ctxt->constituent[c2].right) &&
 				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
@@ -525,25 +525,25 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	}
 
 	/* Now go through and find duplicates; if a pair is found,
-	   mark one as invalid. (It doesn't matter if they're in the
-	   same sublinkage or not) */
-
-	for (c1=0; c1<numcon_total; c1++)
+	 * mark one as invalid. (It doesn't matter if they're in the
+	 * same sublinkage or not)
+	 */
+	for (c1 = 0; c1 < numcon_total; c1++)
 	{
 		if (ctxt->constituent[c1].valid == 0) continue;
-		for (c2=c1+1; c2<numcon_total; c2++)
+		for (c2 = c1 + 1; c2 < numcon_total; c2++)
 		{
 			if (ctxt->constituent[c2].canon == ctxt->constituent[c1].canon)
-				ctxt->constituent[c2].valid=0;
+				ctxt->constituent[c2].valid = 0;
 		}
 	}
 
 	/* Now we generate the and-lists. An and-list is a set of mutually
-	   exclusive constituents. Each constituent in the list may not
-	   be present in the same sublinkage as any of the others. */
-
-	num_lists=0;
-	for (c1=0; c1<numcon_total; c1++)
+	 * exclusive constituents. Each constituent in the list may not
+	 * be present in the same sublinkage as any of the others.
+	 */
+	num_lists = 0;
+	for (c1 = 0; c1 < numcon_total; c1++)
 	{
 		if (ctxt->constituent[c1].valid == 0) continue;
 		num_elements = 1;
@@ -553,7 +553,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 							  num_elements, num_lists);
 	}
 
-	if (verbosity>=2)
+	if (verbosity >= 2)
 	{
 		printf("And-lists:\n");
 		for (n=0; n<num_lists; n++)
@@ -568,23 +568,23 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	}
 
 	/* Now we prune out any andlists that are subsumed by other
-	   andlists--e.g. if andlist X contains constituents A and B,
-	   and Y contains A B and C, we throw out X */
-
-	for (n=0; n < num_lists; n++)
+	 * andlists--e.g. if andlist X contains constituents A and B,
+	 * and Y contains A B and C, we throw out X
+	 */
+	for (n = 0; n < num_lists; n++)
 	{
 		ctxt->andlist[n].valid = 1;
-		for (n2=0; n2 < num_lists; n2++)
+		for (n2 = 0; n2 < num_lists; n2++)
 		{
-			if (n2==n) continue;
+			if (n2 == n) continue;
 			if (ctxt->andlist[n2].num < ctxt->andlist[n].num)
 				continue;
 
 			listmatch = 1;
-			for (a=0; a < ctxt->andlist[n].num; a++)
+			for (a = 0; a < ctxt->andlist[n].num; a++)
 			{
 				match = 0;
-				for (a2=0; a2 < ctxt->andlist[n2].num; a2++)
+				for (a2 = 0; a2 < ctxt->andlist[n2].num; a2++)
 				{
 					if (ctxt->andlist[n2].e[a2] == ctxt->andlist[n].e[a])
 						match = 1;
@@ -597,43 +597,43 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	}
 
 	/* If an element of an andlist contains an element of another
-	   andlist, it must contain the entire andlist. */
-
-	for (n=0; n<num_lists; n++)
+	 * andlist, it must contain the entire andlist.
+	 */
+	for (n = 0; n < num_lists; n++)
 	{
 		if (ctxt->andlist[n].valid == 0)
 			continue;
-		for (a=0; (a < ctxt->andlist[n].num) && (ctxt->andlist[n].valid); a++)
+		for (a = 0; (a < ctxt->andlist[n].num) && (ctxt->andlist[n].valid); a++)
 		{
-			for (n2=0; (n2 < num_lists) && (ctxt->andlist[n].valid); n2++)
+			for (n2 = 0; (n2 < num_lists) && (ctxt->andlist[n].valid); n2++)
 			{
-				if ((n2==n) || (ctxt->andlist[n2].valid==0))
+				if ((n2 == n) || (ctxt->andlist[n2].valid == 0))
 					continue;
-				for (a2=0; (a2 < ctxt->andlist[n2].num) && (ctxt->andlist[n].valid); a2++)
+				for (a2 = 0; (a2 < ctxt->andlist[n2].num) && (ctxt->andlist[n].valid); a2++)
 				{
 					c1 = ctxt->andlist[n].e[a];
 					c2 = ctxt->andlist[n2].e[a2];
-					if (c1==c2)
+					if (c1 == c2)
 						continue;
-					if (!((ctxt->constituent[c2].left<=ctxt->constituent[c1].left) &&
-						  (ctxt->constituent[c2].right>=ctxt->constituent[c1].right)))
+					if (!((ctxt->constituent[c2].left <= ctxt->constituent[c1].left) &&
+						  (ctxt->constituent[c2].right >= ctxt->constituent[c1].right)))
 						continue;
 					if (verbosity >= 2)
 						printf("Found that c%d in list %d is bigger " \
 							   "than c%d in list %d\n", c2, n2, c1, n);
-					ok=1;
+					ok = 1;
 
 					/* An element of n2 contains an element of n.
-					   Now, we check to see if that element of n2
-					   contains ALL the elements of n.
-					   If not, n is invalid. */
-
-					for (a3=0; a3 < ctxt->andlist[n].num; a3++)
+					 * Now, we check to see if that element of n2
+					 * contains ALL the elements of n.
+					 * If not, n is invalid.
+					 */
+					for (a3 = 0; a3 < ctxt->andlist[n].num; a3++)
 					{
 						c3 = ctxt->andlist[n].e[a3];
 						if ((ctxt->constituent[c2].left>ctxt->constituent[c3].left) ||
 							(ctxt->constituent[c2].right<ctxt->constituent[c3].right))
-							ok=0;
+							ok = 0;
 					}
 					if (ok != 0)
 						continue;
@@ -643,7 +643,8 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 						printf("Eliminating andlist, " \
 							   "n=%d, a=%d, n2=%d, a2=%d: ",
 							   n, a, n2, a2);
-						for (a3=0; a3 < ctxt->andlist[n].num; a3++) {
+						for (a3 = 0; a3 < ctxt->andlist[n].num; a3++)
+						{
 							printf("%d ", ctxt->andlist[n].e[a3]);
 						}
 						printf("\n");
@@ -652,7 +653,6 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 			}
 		}
 	}
-
 
 	if (verbosity >= 2)
 	{
@@ -669,41 +669,46 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	}
 
 	c1 = numcon_total;
-	for (n=0; n<num_lists; n++) {
+	for (n = 0; n < num_lists; n++)
+	{
 		if (ctxt->andlist[n].valid == 0) continue;
-		leftend=256;
-		rightend=-1;
-		for (a=0; a < ctxt->andlist[n].num; a++) {
+		leftend = 256;
+		rightend = -1;
+		for (a = 0; a < ctxt->andlist[n].num; a++)
+		{
 			c2 = ctxt->andlist[n].e[a];
-			if (ctxt->constituent[c2].left<leftend) {
-				leftend=ctxt->constituent[c2].left;
+			if (ctxt->constituent[c2].left < leftend)
+			{
+				leftend = ctxt->constituent[c2].left;
 			}
-			if (ctxt->constituent[c2].right>rightend) {
+			if (ctxt->constituent[c2].right > rightend)
+			{
 				rightend=ctxt->constituent[c2].right;
 			}
 		}
 
-		ctxt->constituent[c1].left=leftend;
-		ctxt->constituent[c1].right=rightend;
+		ctxt->constituent[c1].left = leftend;
+		ctxt->constituent[c1].right = rightend;
 		ctxt->constituent[c1].type = ctxt->constituent[c2].type;
 		ctxt->constituent[c1].domain_type = 'x';
-		ctxt->constituent[c1].valid=1;
+		ctxt->constituent[c1].valid = 1;
 		ctxt->constituent[c1].start_link = ctxt->constituent[c2].start_link;  /* bogus */
 		ctxt->constituent[c1].start_num = ctxt->constituent[c2].start_num;	/* bogus */
 
 		/* If a constituent within the andlist is an aux (aux==1),
-		   set aux for the whole-list constituent to 2, also set
-		   aux for the smaller constituent to 2, meaning they'll both
-		   be printed (as an "X"). (If aux is 2 for the smaller
-		   constituent going in, the same thing should be done,
-		   though I doubt this ever happens.) */
-
+		 * set aux for the whole-list constituent to 2, also set
+		 * aux for the smaller constituent to 2, meaning they'll both
+		 * be printed (as an "X"). (If aux is 2 for the smaller
+		 * constituent going in, the same thing should be done,
+		 * though I doubt this ever happens.)
+		 */
 		for (a = 0; a < ctxt->andlist[n].num; a++)
 		{
 			c2 = ctxt->andlist[n].e[a];
-			if ((ctxt->constituent[c2].aux==1) || (ctxt->constituent[c2].aux==2)) {
-				ctxt->constituent[c1].aux=2;
-				ctxt->constituent[c2].aux=2;
+			if ((ctxt->constituent[c2].aux == 1) || (ctxt->constituent[c2].aux == 2))
+			{
+				ctxt->constituent[c1].aux = 2;
+				ctxt->constituent[c2].aux = 2;
 			}
 		}
 
@@ -770,7 +775,7 @@ static void generate_misc_word_info(con_context_t * ctxt, Linkage linkage)
 static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
 	int c, c2, global_leftend_found, adjustment_made,
-		global_rightend_found, lastword, newcon_total=0;
+		global_rightend_found, lastword, newcon_total = 0;
 	Sentence sent;
 	sent = linkage_get_sentence(linkage);
 
