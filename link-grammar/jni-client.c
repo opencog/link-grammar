@@ -623,11 +623,14 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 JNIEXPORT jboolean JNICALL
 Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstring str)
 {
+	jboolean rv = FALSE;
+
 	per_thread_data *ptd = get_ptd(env, cls);
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (is_past_tense_form(cStr,ptd->dict) == 1)
-		return TRUE;
-	return FALSE;
+		rv = TRUE;
+	(*env)->ReleaseStringUTFChars(env,str,cStr);
+	return rv;
 }
 
 /*
@@ -638,9 +641,12 @@ Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstrin
 JNIEXPORT jboolean JNICALL
 Java_org_linkgrammar_LinkGrammar_isEntity(JNIEnv *env, jclass cls, jstring str)
 {
+	jboolean rv = FALSE;
+
 	per_thread_data *ptd = get_ptd(env, cls);
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
 	if (is_entity(cStr,ptd->dict) == 1)
-		return TRUE;
-	return FALSE;
+		rv = TRUE;
+	(*env)->ReleaseStringUTFChars(env,str,cStr);
+	return rv;
 }

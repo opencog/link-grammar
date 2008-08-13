@@ -1,5 +1,6 @@
 Version 4.3.8 includes the following changes:
  * Build fixes for Windows (missing bzero and thread-safe rand)
+ * Fix several mem leaks, one in the java jni code.
 
 Version 4.3.7 includes the following changes:
  * Expanded list of given names to include those from 2005 US Census
