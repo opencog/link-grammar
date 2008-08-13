@@ -69,8 +69,14 @@
 #define towupper  toupper
 #endif
 
-/* strtok_r is missing in windows */
+/* strtok_r is missing in Windows */
 char * strtok_r (char *s, const char *delim, char **saveptr);
+
+/* bzero is missing in Windows */
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+
+/* Windows doesn't have a thread-safe rand (???) */
+#define rand_r(seedp) rand()
 
 #endif /* _WIN32 */
 
