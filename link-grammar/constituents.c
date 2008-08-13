@@ -774,7 +774,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	Sentence sent;
 	sent = linkage_get_sentence(linkage);
 
-	for (c=0; c<numcon_total; c++)
+	for (c = 0; c < numcon_total; c++)
 	{
 		/* In a paraphrase construction ("John ran, he said"),
 		   the paraphrasing clause doesn't get
@@ -828,16 +828,18 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		   seems to apply to prenominal adjectives (of all kinds).
 		   However, it also applies to number expressions ("QP"). */
 
-		if ((post_process_match("A", ctxt->constituent[c].start_link)==1) ||
-			(ctxt->constituent[c].domain_type=='d') ||
-			(ctxt->constituent[c].domain_type=='h')) {
-			if (ctxt->constituent[c].right-ctxt->constituent[c].left==0) {
-				ctxt->constituent[c].valid=0;
+		if ((post_process_match("A", ctxt->constituent[c].start_link) == 1) ||
+			(ctxt->constituent[c].domain_type == 'd') ||
+			(ctxt->constituent[c].domain_type == 'h')) {
+			if (ctxt->constituent[c].right-ctxt->constituent[c].left == 0)
+			{
+				ctxt->constituent[c].valid = 0;
 			}
 		}
 
-		if ((ctxt->constituent[c].domain_type=='h') &&
-			(strcmp(linkage->word[ctxt->constituent[c].left-1], "$")==0)) {
+		if ((ctxt->constituent[c].domain_type == 'h') &&
+			(strcmp(linkage->word[ctxt->constituent[c].left - 1], "$") == 0))
+		{
 			ctxt->constituent[c].left--;
 		}
 
@@ -861,31 +863,38 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	/* If there's a global S constituent that includes everything
 	   except a final period or question mark, extend it by one word */
 
-	for (c=0; c<numcon_total; c++) {
-		if ((ctxt->constituent[c].right==(linkage->num_words)-3) &&
-			(ctxt->constituent[c].left==1) &&
-			(strcmp(ctxt->constituent[c].type, "S")==0) &&
-			(strcmp(sent->word[(linkage->num_words)-2].string, ".")==0))
+	for (c = 0; c < numcon_total; c++)
+	{
+		if ((ctxt->constituent[c].right == linkage->num_words -3) &&
+			(ctxt->constituent[c].left == 1) &&
+			(strcmp(ctxt->constituent[c].type, "S") == 0) &&
+			(strcmp(sent->word[linkage->num_words -2].string, ".") == 0))
 			ctxt->constituent[c].right++;
 	}
 
 	/* If there's no S boundary at the very left end of the sentence,
 	   or the very right end, create a new S spanning the entire sentence */
 
-	lastword=(linkage->num_words)-2;
+	lastword = linkage->num_words - 2;
 	global_leftend_found = 0;
 	global_rightend_found = 0;
-	for (c=0; c<numcon_total; c++) {
-		if ((ctxt->constituent[c].left==1) && (strcmp(ctxt->constituent[c].type, "S")==0) &&
-			(ctxt->constituent[c].valid==1))
-			global_leftend_found=1;
+	for (c = 0; c < numcon_total; c++)
+	{
+		if ((ctxt->constituent[c].left == 1) && (strcmp(ctxt->constituent[c].type, "S") == 0) &&
+			(ctxt->constituent[c].valid == 1))
+		{
+			global_leftend_found = 1;
+		}
 	}
-	for (c=0; c<numcon_total; c++) {
-		if ((ctxt->constituent[c].right>=lastword) &&
-			(strcmp(ctxt->constituent[c].type, "S")==0) && (ctxt->constituent[c].valid==1))
-			global_rightend_found=1;
+	for (c = 0; c < numcon_total; c++)
+	{
+		if ((ctxt->constituent[c].right >= lastword) &&
+			(strcmp(ctxt->constituent[c].type, "S") == 0) && (ctxt->constituent[c].valid == 1))
+		{
+			global_rightend_found = 1;
+		}
 	}
-	if ((global_leftend_found==0) || (global_rightend_found==0))
+	if ((global_leftend_found == 0) || (global_rightend_found == 0))
 	{
 		c = numcon_total;
 		ctxt->constituent[c].left = 1;
@@ -905,12 +914,12 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	while (1)
 	{
 		adjustment_made=0;
-		for (c=0; c<numcon_total; c++)
+		for (c = 0; c < numcon_total; c++)
 		{
-			if(ctxt->constituent[c].valid==0) continue;
-			for (c2=0; c2<numcon_total; c2++)
+			if(ctxt->constituent[c].valid == 0) continue;
+			for (c2 = 0; c2 < numcon_total; c2++)
 			{
-				if(ctxt->constituent[c2].valid==0) continue;
+				if(ctxt->constituent[c2].valid == 0) continue;
 				if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
 					(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
 					(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
@@ -924,7 +933,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 				}
 			}
 		}
-		if (adjustment_made==0) break;
+		if (adjustment_made == 0) break;
 	}
 	return numcon_total;
 }
@@ -939,27 +948,27 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 	int i, w, link, num_subl;
 
 	num_subl = linkage->num_sublinkages;
-	if(linkage->unionized==1 && num_subl>1) num_subl--;
+	if(linkage->unionized == 1 && num_subl > 1) num_subl--;
 
 	if (verbosity >= 2)
 		printf("Number of sublinkages = %d\n", num_subl);
 
 	for (i=0; i<num_subl; i++)
 	{
-		for (w=0; w<linkage->num_words; w++) ctxt->word_used[i][w]=0;
-		linkage->current=i;
-		for (link=0; link<linkage_get_num_links(linkage); link++)
+		for (w = 0; w < linkage->num_words; w++) ctxt->word_used[i][w] = 0;
+		linkage->current = i;
+		for (link = 0; link < linkage_get_num_links(linkage); link++)
 		{
-			ctxt->word_used[i][linkage_get_link_lword(linkage, link)]=1;
-			ctxt->word_used[i][linkage_get_link_rword(linkage, link)]=1;
+			ctxt->word_used[i][linkage_get_link_lword(linkage, link)] = 1;
+			ctxt->word_used[i][linkage_get_link_rword(linkage, link)] = 1;
 		}
 		if (verbosity >= 2)
 		{
 			printf("Sublinkage %d: ", i);
-			for (w=0; w<linkage->num_words; w++)
+			for (w = 0; w < linkage->num_words; w++)
 			{
-				if (ctxt->word_used[i][w]==0) printf("0 ");
-				if (ctxt->word_used[i][w]==1) printf("1 ");
+				if (ctxt->word_used[i][w] == 0) printf("0 ");
+				if (ctxt->word_used[i][w] == 1) printf("1 ");
 			}
 			printf("\n");
 		}
@@ -1036,7 +1045,7 @@ static const char * cons_of_domain(char domain_type)
 static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
                                           int numcon_total, int s)
 {
-	int d, c, leftlimit, l, leftmost, rightmost, w, c2, numcon_subl=0, w2;
+	int d, c, leftlimit, l, leftmost, rightmost, w, c2, numcon_subl = 0, w2;
 	List_o_links * dlink;
 	int rootright, rootleft, adjustment_made;
 	Sublinkage * subl;
@@ -1047,7 +1056,8 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	subl = &linkage->sublinkage[s];
 
-	for (d=0, c=numcon_total; d<subl->pp_data.N_domains; d++, c++) {
+	for (d = 0, c = numcon_total; d < subl->pp_data.N_domains; d++, c++)
+	{
 		domain = subl->pp_data.domain_array[d];
 		rootright = linkage_get_link_rword(linkage, domain.start_link);
 		rootleft =  linkage_get_link_lword(linkage, domain.start_link);
@@ -1058,87 +1068,105 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 			(domain.type=='f') ||
 			(domain.type=='g') ||
 			(domain.type=='u') ||
-			(domain.type=='y')) {
+			(domain.type=='y'))
+		{
 			leftlimit = 0;
 			leftmost = linkage_get_link_lword(linkage, domain.start_link);
 			rightmost = linkage_get_link_lword(linkage, domain.start_link);
 		}
-		else {
-			leftlimit = linkage_get_link_lword(linkage, domain.start_link)+1;
+		else
+		{
+			leftlimit = linkage_get_link_lword(linkage, domain.start_link) + 1;
 			leftmost = linkage_get_link_rword(linkage, domain.start_link);
 			rightmost = linkage_get_link_rword(linkage, domain.start_link);
 		}
 
 		/* Start by assigning both left and right limits to the
-		   right word of the start link. This will always be contained
-		   in the constituent. This will also handle the case
-		   where the domain contains no links. */
-
-		for (dlink = domain.lol; dlink!=NULL; dlink=dlink->next) {
-			l=dlink->link;
+		 * right word of the start link. This will always be contained
+		 * in the constituent. This will also handle the case
+		 * where the domain contains no links.
+		 */
+		for (dlink = domain.lol; dlink != NULL; dlink = dlink->next)
+		{
+			l = dlink->link;
 
 			if ((linkage_get_link_lword(linkage, l) < leftmost) &&
 				(linkage_get_link_lword(linkage, l) >= leftlimit))
+			{
 				leftmost = linkage_get_link_lword(linkage, l);
+			}
 
 			if (linkage_get_link_rword(linkage, l) > rightmost)
+			{
 				rightmost = linkage_get_link_rword(linkage, l);
+			}
 		}
 
 		c--;
 		c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost,
 						cons_of_domain(domain.type));
 
-		if (domain.type=='z') {
+		if (domain.type == 'z')
+		{
 			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
 		}
-		if (domain.type=='c') {
+		if (domain.type=='c')
+		{
 			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
 		}
 		if ((post_process_match("Ce*", ctxt->constituent[c].start_link)==1) ||
-			(post_process_match("Rn", ctxt->constituent[c].start_link)==1)) {
+			(post_process_match("Rn", ctxt->constituent[c].start_link)==1))
+		{
 			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "SBAR");
 		}
 		if ((post_process_match("R*", ctxt->constituent[c].start_link)==1) ||
-			(post_process_match("MX#r", ctxt->constituent[c].start_link)==1)) {
-			w=leftmost;
-			if (strcmp(linkage->word[w], ",")==0) w++;
+			(post_process_match("MX#r", ctxt->constituent[c].start_link)==1))
+		{
+			w = leftmost;
+			if (strcmp(linkage->word[w], ",") == 0) w++;
 			c = add_constituent(ctxt, c, linkage, domain, w, w, "WHNP");
 		}
-		if (post_process_match("Mj", ctxt->constituent[c].start_link)==1) {
-			w=leftmost;
-			if (strcmp(linkage->word[w], ",")==0) w++;
+		if (post_process_match("Mj", ctxt->constituent[c].start_link) == 1)
+		{
+			w = leftmost;
+			if (strcmp(linkage->word[w], ",") == 0) w++;
 			c = add_constituent(ctxt, c, linkage, domain, w, w+1, "WHPP");
 			c = add_constituent(ctxt, c, linkage, domain, w+1, w+1, "WHNP");
 		}
 		if ((post_process_match("Ss#d", ctxt->constituent[c].start_link)==1) ||
-			(post_process_match("B#d", ctxt->constituent[c].start_link)==1)) {
+			(post_process_match("B#d", ctxt->constituent[c].start_link)==1))
+		{
 			c = add_constituent(ctxt, c, linkage, domain, rootleft, rootleft, "WHNP");
 			c = add_constituent(ctxt, c, linkage, domain,
 							rootleft, ctxt->constituent[c-1].right, "SBAR");
 		}
-		if (post_process_match("CP", ctxt->constituent[c].start_link)==1) {
-			if (strcmp(linkage->word[leftmost], ",")==0)
+		if (post_process_match("CP", ctxt->constituent[c].start_link)==1)
+		{
+			if (strcmp(linkage->word[leftmost], ",") == 0)
 				ctxt->constituent[c].left++;
 			c = add_constituent(ctxt, c, linkage, domain, 1, linkage->num_words-1, "S");
 		}
 		if ((post_process_match("MVs", ctxt->constituent[c].start_link)==1) ||
-			(domain.type=='f')) {
-			w=ctxt->constituent[c].left;
-			if (strcmp(linkage->word[w], ",")==0)
+			(domain.type=='f'))
+		{
+			w = ctxt->constituent[c].left;
+			if (strcmp(linkage->word[w], ",") == 0)
 				w++;
-			if (strcmp(linkage->word[w], "when")==0) {
+			if (strcmp(linkage->word[w], "when") == 0)
+			{
 				c = add_constituent(ctxt, c, linkage, domain, w, w, "WHADVP");
 			}
 		}
-		if (domain.type=='t') {
+		if (domain.type=='t')
+		{
 			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
 		}
-		if ((post_process_match("QI", ctxt->constituent[c].start_link)==1) ||
-			(post_process_match("Mr", ctxt->constituent[c].start_link)==1) ||
-			(post_process_match("MX#d", ctxt->constituent[c].start_link)==1)) {
+		if ((post_process_match("QI", ctxt->constituent[c].start_link) == 1) ||
+			(post_process_match("Mr", ctxt->constituent[c].start_link) == 1) ||
+			(post_process_match("MX#d", ctxt->constituent[c].start_link) == 1))
+		{
 			w = leftmost;
-			if (strcmp(linkage->word[w], ",")==0) w++;
+			if (strcmp(linkage->word[w], ",") == 0) w++;
 			if (ctxt->wordtype[w] == NONE)
 				name = "WHADVP";
 			else if (ctxt->wordtype[w] == QTYPE)
@@ -1149,7 +1177,8 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 				assert(0, "Unexpected word type");
 			c = add_constituent(ctxt, c, linkage, domain, w, w, name);
 
-			if (ctxt->wordtype[w] == QDTYPE) {
+			if (ctxt->wordtype[w] == QDTYPE)
+			{
 				/* Now find the finite verb to the right, start an S */
 				/* Limit w2 to sentence length. */
 				// for( w2=w+1; w2 < ctxt->r_limit-1; w2++ )
@@ -1157,15 +1186,17 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 				  if ((ctxt->wordtype[w2] == STYPE) || (ctxt->wordtype[w2] == PTYPE)) break;
 
 				/* Adjust the right boundary of previous constituent */
-				ctxt->constituent[c].right = w2-1;
+				ctxt->constituent[c].right = w2 - 1;
 				c = add_constituent(ctxt, c, linkage, domain, w2, rightmost, "S");
-			  }
+			}
 		}
 
-		if (ctxt->constituent[c].domain_type=='\0') {
+		if (ctxt->constituent[c].domain_type == '\0')
+		{
 			prt_error("Error: no domain type assigned to constituent\n");
 		}
-		if (ctxt->constituent[c].start_link==NULL) {
+		if (ctxt->constituent[c].start_link == NULL)
+		{
 			prt_error("Error: no type assigned to constituent\n");
 		}
 	}
@@ -1220,9 +1251,11 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "NP", "SINV", "VP", 7);
 
 	adjust_subordinate_clauses(ctxt, linkage, numcon_total, numcon_subl);
-	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
+	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
+	{
 		if ((ctxt->constituent[c].domain_type=='p') &&
-			(strcmp(linkage->word[ctxt->constituent[c].left], ",")==0)) {
+			(strcmp(linkage->word[ctxt->constituent[c].left], ",")==0))
+		{
 			ctxt->constituent[c].left++;
 		}
 	}
@@ -1448,8 +1481,9 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	  if (verbosity >= 2)
 		printf("Number of sublinkages exceeds maximum: only considering first %d sublinkages\n", MAXSUBL);
 	}
-	if (linkage->unionized==1 && num_subl>1) num_subl--;
-	for (s=0; s<num_subl; s++)
+
+	if (linkage->unionized == 1 && num_subl > 1) num_subl--;
+	for (s = 0; s < num_subl; s++)
 	{
 		linkage_set_current_sublinkage(linkage, s);
 		linkage_post_process(linkage, pp);
@@ -1491,9 +1525,9 @@ static char * print_flat_constituents(Linkage linkage)
 
 static CType token_type (char *token)
 {
-	if ((token[0] == OPEN_BRACKET) && (strlen(token)>1))
+	if ((token[0] == OPEN_BRACKET) && (strlen(token) > 1))
 		return OPEN_TOK;
-	if ((strlen(token)>1) && (token[strlen(token)-1] == CLOSE_BRACKET))
+	if ((strlen(token) > 1) && (token[strlen(token) - 1] == CLOSE_BRACKET))
 		return CLOSE_TOK;
 	return WORD_TOK;
 }
