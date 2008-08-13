@@ -309,7 +309,8 @@ struct PP_node_struct {
 /* Davy added these */
 
 typedef struct Andlist_struct Andlist;
-struct Andlist_struct {
+struct Andlist_struct
+{
     Andlist * next;
     int conjunction;
     int num_elements;
@@ -322,7 +323,8 @@ struct Andlist_struct {
 /* This is for building the graphs of links in post-processing and          */
 /* fat link extraction.                                                     */
 
-struct Linkage_info_struct {
+struct Linkage_info_struct
+{
     int index;
     char fat;
     char canonical;
@@ -333,24 +335,24 @@ struct Linkage_info_struct {
     int island[MAX_SENTENCE];
 };
 
-struct List_o_links_struct{
+struct List_o_links_struct
+{
     int link;       /* the link number */
     int word;       /* the word at the other end of this link */
     int dir;        /* 0: undirected, 1: away from me, -1: toward me */
     List_o_links * next;
 };
 
+/* These parameters tell power_pruning, to tell whether this is before
+ * or after generating and disjuncts.  GENTLE is before RUTHLESS is 
+ * after.
+ */
 #define GENTLE 1
 #define RUTHLESS 0
-/* These parameters tell power_pruning, to tell whether this is before or after
-   generating and disjuncts.  GENTLE is before RUTHLESS is after. */
-
-/* int srandom(int);
-int random(void); */
-
 
 typedef struct string_node_struct String_node;
-struct string_node_struct {
+struct string_node_struct
+{
     char * string;
     int size;
     String_node * next;
@@ -390,7 +392,8 @@ struct X_table_connector_struct
 };
 
 /* from string-set.c */
-struct String_set_s {
+struct String_set_s
+{
     int size;       /* the current size of the table */
     int count;      /* number of things currently in the table */
     char ** table;  /* the table itself */
