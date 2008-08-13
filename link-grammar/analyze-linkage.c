@@ -804,12 +804,15 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 
 void init_analyze(Sentence s)
 {
-	analyze_context_t *actx;
+	analyze_context_t *actx = s->analyze_ctxt;
 
-	actx = (analyze_context_t *) malloc (sizeof(analyze_context_t));
+	if (NULL == actx)
+	{
+		actx = (analyze_context_t *) malloc (sizeof(analyze_context_t));
+		s->analyze_ctxt = actx;
+	}
+
 	actx->structure_violation = FALSE;
-
-	s->analyze_ctxt = actx;
 }
 
 void free_analyze(Sentence s)

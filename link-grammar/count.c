@@ -770,7 +770,8 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 
 void init_count(Sentence sent)
 {
-	sent->count_ctxt = (count_context_t *) malloc (sizeof(count_context_t));
+	if (NULL == sent->count_ctxt)
+		sent->count_ctxt = (count_context_t *) malloc (sizeof(count_context_t));
 	bzero(sent->count_ctxt, sizeof(count_context_t));
 }
 
