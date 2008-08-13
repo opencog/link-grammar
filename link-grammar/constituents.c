@@ -1550,9 +1550,18 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 static char * print_flat_constituents(Linkage linkage)
 {
-	con_context_t ctxt;
-	bzero (&ctxt, sizeof(con_context_t));
-	return do_print_flat_constituents(&ctxt, linkage);
+	/* In principle, the ctxt could be allocated on stack, instead of
+	 * with malloc(). However, The java6 jvm (and MS Windows jvm's)
+	 * gives JNI clients only a small amount of stack space. Alloc'ing
+	 * this (rather large) structure  on stack will blow up the JVM.
+	 * This was discovered only after much work. Bummer.
+	 */
+	char * p;
+	con_context_t *ctxt = (con_context_t *) malloc (sizeof(con_context_t));
+	bzero(ctxt, sizeof(con_context_t));
+	p = do_print_flat_constituents(ctxt, linkage);
+	free(ctxt);
+	return p;
 }
 
 static CType token_type (char *token)
