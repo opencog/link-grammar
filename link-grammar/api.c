@@ -922,14 +922,17 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	extract_links(sent->link_info[k].index, sent->null_count, sent->parse_info);
 	compute_chosen_words(sent, linkage);
 
-	if (set_has_fat_down(sent)) {
+	if (set_has_fat_down(sent))
+	{
 		extract_fat_linkage(sent, opts, linkage);
 	}
-	else {
+	else
+	{
 		extract_thin_linkage(sent, opts, linkage);
 	}
 
-	if (sent->dict->postprocessor != NULL) {
+	if (sent->dict->postprocessor != NULL)
+	{
 	   linkage_post_process(linkage, sent->dict->postprocessor);
 	}
 
@@ -950,7 +953,8 @@ int linkage_set_current_sublinkage(Linkage linkage, int index)
 static void exfree_pp_info(PP_info *ppi)
 {
 	int i;
-	for (i=0; i<ppi->num_domains; ++i) {
+	for (i=0; i<ppi->num_domains; ++i)
+	{
 		exfree(ppi->domain_name[i], strlen(ppi->domain_name[i])+1);
 	}
 	if (ppi->num_domains > 0)
@@ -967,10 +971,12 @@ void linkage_delete(Linkage linkage)
 	/* Can happen on panic timeout or user error */
 	if (NULL == linkage) return;
 
-	for (i=0; i<linkage->num_words; ++i) {
+	for (i=0; i<linkage->num_words; ++i)
+	{
 		exfree((char *) linkage->word[i], strlen(linkage->word[i])+1);
 	}
 	exfree(linkage->word, sizeof(char *)*linkage->num_words);
+
 	for (i=0; i<linkage->num_sublinkages; ++i)
 	{
 		s = &(linkage->sublinkage[i]);
