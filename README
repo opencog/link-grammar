@@ -3,27 +3,27 @@
                -------------------------------------
                        Version 4.3.8
 
-This directory contains a *patched* version of the final original 
-release of the Link Grammar Parser.  It has been patched to fix a 
-few bugs, add a few enhancements, and, in general, make the Link 
+This directory contains a *patched* version of the final original
+release of the Link Grammar Parser.  It has been patched to fix a
+few bugs, add a few enhancements, and, in general, make the Link
 Grammar Parser easier to use. This version includes Java bindings.
 
-It is released under the BSD license (which is GPL compatible), 
-making it freely available for private and commercial use, with 
-few restrictions.  The terms of the license are given in the 
-LICENSE file included with this software, and also available at 
+It is released under the BSD license (which is GPL compatible),
+making it freely available for private and commercial use, with
+few restrictions.  The terms of the license are given in the
+LICENSE file included with this software, and also available at
 http://www.link.cs.cmu.edu/link/license.html.
 
 Please see the web page http://www.abisource.com/projects/link-grammar/
 for more information.  The original website, including documentation,
-is located at http://www.link.cs.cmu.edu/link 
+is located at http://www.link.cs.cmu.edu/link
 
 CONTENTS of this directory:
 
    LICENSE                  The license describing terms of use
 
    link-grammar/*.c         The program.  (Written in ANSI-C)
-   
+
    data/en/4.0.dict         The file containing the dictionary definitions.
 
    data/en/4.0.knowledge    The post-processing knowledge file.
@@ -51,7 +51,7 @@ UNPACKING and signature verification:
    extracted using the "tar -zxf link-grammar.tar.gz" command at the
    command line.
 
-   The files have been digitally signed to make sure that there was no 
+   The files have been digitally signed to make sure that there was no
    corruption of the dataset during download, and to help ensure that
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
@@ -69,7 +69,7 @@ UNPACKING and signature verification:
 
 CREATING the system:
 
-   To compile the link-grammar shared library and demonstration program, 
+   To compile the link-grammar shared library and demonstration program,
    at the command line, type:
 
         ./configure
@@ -83,31 +83,61 @@ CREATING the system:
    the header files in /usr/local/include/link-grammar
    and the dictionaries into /usr/local/share/link-grammar.
 
-   The /usr/local install target can be over-ridden using the 
+   The /usr/local install target can be over-ridden using the
    standard GNU configure --prefix option, so for example:
 
       ./configure --prefix=/opt/link-grammar
 
-	By using pkg-config (see below), non-standard install locations
-	can be automatically detected.
+   By using pkg-config (see below), non-standard install locations
+   can be automatically detected.
 
    The system has been tested and works well on 32 and 64-bit Linux
-   systems, as well as on many Microsoft Windows systems, under 
+   systems, as well as on many Microsoft Windows systems, under
    various different Windows development environments.
 
-   Windows users may need to also do the following:
+BUILDING on Windows:
 
-gcc -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at .libs/analyze-linkage.o .libs/and.o .libs/api.o .libs/build-disjuncts.o
-.libs/command-line.o .libs/constituents.o .libs/count.o .libs/error.o .libs/extract-links.o .libs/fast-match.o .libs/idiom.o
-.libs/linkset.o .libs/massage.o .libs/post-process.o .libs/pp_knowledge.o .libs/pp_lexer.o .libs/pp_linkset.o .libs/preparation.o
-.libs/print.o .libs/print-util.o .libs/prune.o .libs/read-dict.o .libs/resources.o .libs/string-set.o .libs/tokenize.o
-.libs/utilities.o .libs/word-file.o .libs/word-utils.o .libs/prefix.o -o /usr/local/bin/link-grammar.dll
+    The easiest way to have link-grammar working on MS Windows, especially
+    if you want the Java bindings, is to use MinGW/MSYS, a minimalist
+    GNU environment for Windows that includes gcc, bash, automake, and many
+    other utilities.  Download and install MinGW, MSYS and MSYS-DTK from
+    http://mingw.org .
 
-gcc -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at .libs/jni-client.o  /usr/local/bin/link-grammar.dll -o
-/usr/local/bin/link-grammar-java.dll
+    Then build and install link-grammar with
 
-   Alternately, Windows users who have access to the "Microsoft Visual C" 
-   product may wish to use the project files in the msvc6 directory.
+       ./configure
+       make
+       make install
+
+    If you used the standard installation paths, the directory /usr/ is mapped
+    to C:\msys\1.0, so after 'make install', the libraries and executable
+    will be found at C:\msys\1.0\local\bin and the dictionary files at
+    C:\msys\1.0\local\share\link-grammar.
+
+    In order to use the Java bindings you'll need to build two extra DLLs, running
+    from the link-grammar base directory the following commands:
+
+       cd link-grammar
+
+       gcc -g -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at \
+       .libs/analyze-linkage.o .libs/and.o .libs/api.o .libs/build-disjuncts.o .libs/command-line.o \
+       .libs/constituents.o .libs/count.o .libs/error.o .libs/extract-links.o .libs/fast-match.o \
+       .libs/idiom.o .libs/massage.o .libs/post-process.o .libs/pp_knowledge.o .libs/pp_lexer.o \
+       .libs/pp_linkset.o .libs/prefix.o .libs/preparation.o .libs/print-util.o .libs/print.o \
+       .libs/prune.o .libs/read-dict.o .libs/resources.o .libs/string-set.o .libs/tokenize.o \
+       .libs/utilities.o .libs/word-file.o .libs/word-utils.o \
+       -o /usr/local/bin/link-grammar.dll
+
+       gcc -g -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at \
+       .libs/jni-client.o /usr/local/bin/link-grammar.dll \
+       -o /usr/local/bin/link-grammar-java.dll
+
+    This will create link-grammar.dll and link-grammar-java.dll in the directory
+    c:\msys\1.0\local\bin . These files, together with link-grammar-*.jar, will
+    be used by Java programs.
+
+    Alternately, Windows users who have access to the "Microsoft Visual C"
+    product may wish to use the project files in the msvc6 directory.
 
 RUNNING the program:
 
@@ -121,7 +151,7 @@ RUNNING the program:
 
    The dictionaries contain some utf-8 punctuation. These may generate
    errors for users in a non-utf-8 locale, such as the "C" locale.
-   The locale can be set, for example, by saying 
+   The locale can be set, for example, by saying
 
        export LANG=en_US.UTF-8
 
@@ -136,7 +166,7 @@ RUNNING the program:
    The line "!batch" near the top of 4.0.batch turns on batch mode.  In
    this mode sentences labeled with an initial "*" should be rejected
    and those not starting with a "*" should be accepted.  The current
-   batch file does report some errors; there are a collection of 
+   batch file does report some errors; there are a collection of
    failing parses located at the end. Work is ongoing to fix these.
 
 USING the parser in your own applications:
@@ -147,29 +177,29 @@ USING the parser in your own applications:
 
 USING pkg-config:
 
-	To make compiling and linking easier, the current release uses 
-	the pkg-config system. To determine the location of the link-grammar
-	header files, say `pkg-config --cflags link-grammar`  To obtain
-	the location of the libraries, say `pkg-config --libs link-grammar`
-	Thus, for example, a typical makefile might include the targets:
+   To make compiling and linking easier, the current release uses
+   the pkg-config system. To determine the location of the link-grammar
+   header files, say `pkg-config --cflags link-grammar`  To obtain
+   the location of the libraries, say `pkg-config --libs link-grammar`
+   Thus, for example, a typical makefile might include the targets:
 
-	.c.o:
-   	cc -O2 -g -Wall -c $< `pkg-config --cflags link-grammar`
+      .c.o:
+         cc -O2 -g -Wall -c $< `pkg-config --cflags link-grammar`
 
-	$(EXE): $(OBJS)
-   	cc -g -o $@ $^ `pkg-config --libs link-grammar`
+      $(EXE): $(OBJS)
+         cc -g -o $@ $^ `pkg-config --libs link-grammar`
 
 JAVA bindings:
 
-   This release includes a very simple Java binding.  Its use is optional. 
+   This release includes a very simple Java binding.  Its use is optional.
    It can be accessed by copying the file LinkGrammar.java into your java
-   project.  Alternately, "ant" can be used, with the build.xml file, to 
+   project.  Alternately, "ant" can be used, with the build.xml file, to
    build the appropriate jar file.
 
-   The bindings will be built automatically if jni.h can be found.  
-   Some common java JVM distributions (most notably, the ones from Sun) 
-   place this file in unusual locations, where it cannot be found. 
-   To remedy this, specify the location with the CPPFLAGS variable: 
+   The bindings will be built automatically if jni.h can be found.
+   Some common java JVM distributions (most notably, the ones from Sun)
+   place this file in unusual locations, where it cannot be found.
+   To remedy this, specify the location with the CPPFLAGS variable:
    so, for example,
 
       export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
@@ -183,26 +213,26 @@ MULTI-THREADED USE:
 
    The link-grammar library should be thread-safe as of version 4.3.6,
    although this has not yet been tested very well, and may possibly be
-   buggy.  To enable the thread-safe version of the library, run 
+   buggy.  To enable the thread-safe version of the library, run
    ./configure like so:
 
       ./configure --enable-pthreads
 
    The resulting library is thread-safe for all parsing and general
    use, with the exception of the startup/initialization code.  That
-   is, the initial open/creation of the parser dictionary should be 
+   is, the initial open/creation of the parser dictionary should be
    done only once, from a single thread, and parsing should not be
    started until after the dictionary has been read and initialized.
 
-	Parse options can be set on a per-thread basis, with the exception 
+   Parse options can be set on a per-thread basis, with the exception
    of verbosity, which is treated as a global.
 
    See the to-do notes below for technical details.
 
 COMMERCIAL use:
 
-   The original authors would be pleased to discuss alternate 
-   licensing terms and/or additional research work, with those 
+   The original authors would be pleased to discuss alternate
+   licensing terms and/or additional research work, with those
    wanting to use this system under a paid contract.
 
    Academic products or papers should reference the various
@@ -210,10 +240,10 @@ COMMERCIAL use:
 
 ADDRESSES
 
-   If you have any questions, or find any bugs, please feel free 
+   If you have any questions, or find any bugs, please feel free
    to send a note to the mailing list:
 
-      link-grammar@googlegroups.com 
+      link-grammar@googlegroups.com
 
    Although all messages should go to the mailing list, the current
    maintainers can be contacted at:
@@ -223,10 +253,10 @@ ADDRESSES
 
    The original authors of the Link Grammar parser are:
 
-     Daniel Sleator                    sleator@cs.cmu.edu  
+     Daniel Sleator                    sleator@cs.cmu.edu
      Computer Science Department       412-268-7563
      Carnegie Mellon University        www.cs.cmu.edu/~sleator
-     Pittsburgh, PA 15213              
+     Pittsburgh, PA 15213
 
      Davy Temperley                    dtemp@theory.esm.rochester.edu
      Eastman School of Music           716-274-1557
@@ -236,29 +266,29 @@ ADDRESSES
      John Lafferty                     lafferty@cs.cmu.edu
      Computer Science Department       412-268-6791
      Carnegie Mellon University        www.cs.cmu.edu/~lafferty
-     Pittsburgh, PA 15213              
+     Pittsburgh, PA 15213
 
 
 TODO:
    Some working notes.
-	read-dict.c: after running insert_dict() to create dictionary tree,
+   read-dict.c: after running insert_dict() to create dictionary tree,
       the tree is highly unbalanced, and should be rebalanced before use.
       This would provide a minor performance improvement.
 
-   tokenize.c: build_sentence_expressions() contains some 
-      English-language-specific morphology guessing.  This should be 
+   tokenize.c: build_sentence_expressions() contains some
+      English-language-specific morphology guessing.  This should be
       refactored out, as it doesn't really apply to non-English
       languages.
 
    no-links-cross: Link Grammar uses a constraint that all linakges must
-      be planar graphs. While this is mostly correct, it would probably 
+      be planar graphs. While this is mostly correct, it would probably
       be more correct to use "landmark transitivity" as articulated by
       Hudson in the Word Grammar theory.  This might allow the elimination
       of most or all post-processing rules.
 
       This is done by making each link directional: one end of the link
       is the parent. (e.g. noun, noun-modifier: the noun is the parent).
-      Parents are landmarks for children.  Transitivity is applied to 
+      Parents are landmarks for children.  Transitivity is applied to
       parent-child relationships. Specifically, the no-links-cross
       rule is replaced by two landmark transitivity rules:
 
@@ -272,10 +302,10 @@ TODO:
   "to be fishing": Link grammar offers four parses of "I was fishing for
      evidence", two of which are given low scores, and two are given
      high scores. Of the two with high scores, one parse is clearly bad.
-     Its links "to be fishing.noun" as opposed to the correct 
+     Its links "to be fishing.noun" as opposed to the correct
      "to be fishing.gerund". That is, I can be happy, healthy and wise,
      but I certainly cannot be fishing.noun.  This is perhaps not
-     just a bug in the structure of the dictionary, but is perhaps 
+     just a bug in the structure of the dictionary, but is perhaps
      deeper: link-grammar has little or no concept of lexical units
      (i.e. collocations, idioms, institutional phrases), which thus
      allows parses with bad word-senses to sneak in.
@@ -284,13 +314,13 @@ TODO:
 
      Different word senses can have different grammar rules (and thus,
      the links employed reveal the sense of the word): for example:
-     "I tend to agree" vs. "I tend to the sheep" -- these employ two 
+     "I tend to agree" vs. "I tend to the sheep" -- these employ two
      different meanings for the verb "tend", and the grammatical
      constructions allowed for one meaning are not the same as those
      allowed for the other. Yet, the link rules for "tend.v" have
      to accomodate both senses, thus making the rules rather complex.
      Worse, it potentially allows for non-sense constructions.
-     If, instead, we allowed the dictionary to contain different 
+     If, instead, we allowed the dictionary to contain different
      rules for "tend.meaning1" and "tend.meaning2", the rules would
      simplify (at the cost of inflating the size of the dictionary).
 
@@ -298,21 +328,21 @@ TODO:
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,
     the parse of the last half of a long, run-on sentence should not be
-    sensitive to the parse of the begining of the sentence. 
+    sensitive to the parse of the begining of the sentence.
 
     Doing so would help with combinatorial explosion. So, for example,
     if the first half of a sentence has 4 plausible parses, and the
     last half has 4 more, then link-grammar reports 16 parses total.
-    It would be much, much more useful to instead be given the 
-    factored results: i.e. the for plausbile parses for the 
+    It would be much, much more useful to instead be given the
+    factored results: i.e. the for plausbile parses for the
     first half, and the four plausible parses for the last half.
-    The lower combinatoric stress would ease the burden on 
+    The lower combinatoric stress would ease the burden on
     downstream users of link-grammar.
 
     (This somewhat resembles the application of construction grammar
     ideas to the link-grammar dictionary).
 
-  Thread safety: link-grammar has been converted to be thead-safe. 
+  Thread safety: link-grammar has been converted to be thead-safe.
     The following exceptions and special notes apply:
 
       error.c -- uses pthreads to access error message area.
@@ -323,7 +353,7 @@ TODO:
                      to JNIEnv somehow.
       malloc-dbg.c - not thread safe, not normally used;
                      only for debugging.
-      prefix.c - not thread-safe, but doesn't need to be; used only 
+      prefix.c - not thread-safe, but doesn't need to be; used only
                  during initialization, and only if binreloc turned
                  on.
       pp_lexer.c -- autogened code, original lex sources lost.
