@@ -1312,6 +1312,10 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		if (adjustment_made == 0) break;
 	}
 
+#ifdef DEAD_CODE
+/* The code here is ifdef-dead as it appears to be dead, as the computation it does
+ * is immediately undone in the very next block.
+ */
 	/* This labels certain words as auxiliaries (such as forms of "be"
 	 * with passives, forms of "have" wth past participles,
 	 * "to" with infinitives). These words start VP's which include
@@ -1337,7 +1341,13 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 			ctxt->constituent[c].aux = 0;
 		}
 	}
+#endif /* DEAD_CODE */
 
+	if (MAXCONSTITUENTS <= numcon_total + numcon_subl)
+	{
+		prt_error("Error: Too many constituents (a2).\n");
+		numcon_total = MAXCONSTITUENTS - numcon_subl;
+	}
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
 	{
 		ctxt->constituent[c].subl = linkage->current;
