@@ -35,10 +35,17 @@ typedef struct
 	int subl;
 	int canon;
 	int valid;
+#ifdef AUX_CODE_IS_DEAD
+	/* The only code that actually sets aux to a non-zero value is code
+	 * followed by code that zets it to zero. -- its dead code, and so 
+	 * aux is never actually used. Comment this code out.
+	 */
 	int aux;	
 	/* 0: it's an ordinary VP (or other type);
-	 1: it's an AUX, don't print it;
-	 2: it's an AUX, and print it */
+	 * 1: it's an AUX, don't print it;
+	 * 2: it's an AUX, and print it
+	 */
+#endif /* AUX_CODE_IS_DEAD */
 } constituent_t;
 
 /* XXX it seems like the old code worked fine with MAX_ELTS=10 */
@@ -695,6 +702,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		ctxt->constituent[c1].start_link = ctxt->constituent[c2].start_link;  /* bogus */
 		ctxt->constituent[c1].start_num = ctxt->constituent[c2].start_num;	/* bogus */
 
+#ifdef AUX_CODE_IS_DEAD /* See comments above */
 		/* If a constituent within the andlist is an aux (aux==1),
 		 * set aux for the whole-list constituent to 2, also set
 		 * aux for the smaller constituent to 2, meaning they'll both
@@ -711,6 +719,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 				ctxt->constituent[c2].aux = 2;
 			}
 		}
+#endif /* AUX_CODE_IS_DEAD */
 
 		if (verbosity >= 2)
 			printf("Adding constituent:\n");
@@ -848,6 +857,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 			ctxt->constituent[c].left--;
 		}
 
+#ifdef AUX_CODE_IS_DEAD /* See comments at top */
 		/* If a constituent has type VP and its aux value is 2,
 		   this means it's an aux that should be printed; change its
 		   type to "X". If its aux value is 1, set "valid" to 0. (This
@@ -861,6 +871,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		{
 			ctxt->constituent[c].valid = 0;
 		}
+#endif /* AUX_CODE_IS_DEAD */
 	}
 
 	numcon_total = numcon_total + newcon_total;
@@ -1317,7 +1328,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		if (adjustment_made == 0) break;
 	}
 
-#ifdef DEAD_CODE
+#ifdef AUX_CODE_IS_DEAD 
 /* The code here is ifdef-dead as it appears to be dead, as the computation it does
  * is immediately undone in the very next block.
  */
@@ -1346,7 +1357,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 			ctxt->constituent[c].aux = 0;
 		}
 	}
-#endif /* DEAD_CODE */
+#endif /* AUX_CODE_IS_DEAD */
 
 	if (MAXCONSTITUENTS <= numcon_total + numcon_subl)
 	{
@@ -1356,7 +1367,9 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
 	{
 		ctxt->constituent[c].subl = linkage->current;
+#ifdef AUX_CODE_IS_DEAD /* See comments at top */
 		ctxt->constituent[c].aux = 0;
+#endif /* AUX_CODE_IS_DEAD */
 	}
 
 	return numcon_subl;
@@ -1410,7 +1423,9 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			/* have_open is a hack to avoid printing anything until
 			 * bracket is opened */
 			if (w == 1) have_opened = 0;
+#ifdef AUX_CODE_IS_DEAD /* See comments at top */
 			if (ctxt->constituent[best].aux == 1) continue;
+#endif /* AUX_CODE_IS_DEAD */
 			have_opened = 1;
 			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
 		}
@@ -1462,8 +1477,10 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			if (best == -1)
 				break;
 			rightdone[best] = 1;
+#ifdef AUX_CODE_IS_DEAD /* See comments at top */
 			if (ctxt->constituent[best].aux == 1)
 				continue;
+#endif /* AUX_CODE_IS_DEAD */
 			append_string(cs, "%s%c ", ctxt->constituent[best].type, CLOSE_BRACKET);
 		}
 	}
