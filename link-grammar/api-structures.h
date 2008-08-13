@@ -185,6 +185,7 @@ struct Sentence_s
 	Word   word[MAX_SENTENCE];  /* array of words after tokenization */
 	char * is_conjunction;      /* TRUE if conjunction, as defined by dictionary */
 	char** deletable;           /* deletable regions in a sentence with conjunction */
+	char** dptr;                /* private pointer for mem management only */
 	char** effective_dist;
 	int    num_linkages_found;  /* total number before postprocessing.  This
 				   is returned by the count() function */

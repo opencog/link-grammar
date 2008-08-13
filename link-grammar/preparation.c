@@ -16,14 +16,14 @@
 void free_deletable(Sentence sent)
 {
 	int w;
-	if (sent->deletable != NULL)
+	if (sent->dptr != NULL)
 	{
-		for (w = -1; w < sent->length; w++)
+		for (w = 0; w <= sent->length; w++)
 		{
-			xfree((char *)sent->deletable[w], sizeof(char) * (sent->length + 1));
+			xfree((char *)sent->dptr[w], sizeof(char) * (sent->length + 1));
 		}
-		sent->deletable--;
-		xfree((char *) sent->deletable, (sent->length + 1)*sizeof(char *));
+		xfree((char *) sent->dptr, (sent->length + 1)*sizeof(char *));
+		sent->dptr = NULL;
 		sent->deletable = NULL;
 	}
 }
@@ -48,8 +48,8 @@ static void build_deletable(Sentence sent, int has_conjunction)
 	free_deletable(sent);
 	assert(sent->length < MAX_SENTENCE, "sent->length too big");
 
-	sent->deletable = (char **) xalloc((sent->length+1)*sizeof(char *));
-	sent->deletable++;  /* we need to be able to access the [-1] position in this array */
+	sent->dptr = (char **) xalloc((sent->length + 1) * sizeof(char *));
+	sent->deletable = sent->dptr + 1;  /* we need to be able to access the [-1] position in this array */
 
 	for (i = -1; i<sent->length; i++)
 	{
@@ -70,12 +70,12 @@ static void build_deletable(Sentence sent, int has_conjunction)
 			{
 				sent->deletable[i][j] = FALSE;
 			}
-			else if ((j>i+2)&&(sent->is_conjunction[i+1] ||
+			else if ((j > i + 2) && (sent->is_conjunction[i+1] ||
 								 sent->is_conjunction[j-1] ||
-								(strcmp(",",sent->word[i+1].string)==0 &&
-								 conj_in_range(sent, i+2,j-1)) ||
-								 (strcmp(",",sent->word[j-1].string)==0 &&
-								 conj_in_range(sent, j,sent->length-1))))
+								(strcmp(",", sent->word[i+1].string) == 0 &&
+								 conj_in_range(sent, i+2, j-1)) ||
+								 (strcmp(",",sent->word[j-1].string) == 0 &&
+								 conj_in_range(sent, j, sent->length - 1))))
 			{
 				sent->deletable[i][j] = TRUE;
 			}
