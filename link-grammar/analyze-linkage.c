@@ -404,35 +404,44 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 static int advance_CON(CON_node *);
 
 /**
- * Cycically advance the current state of this DIS node.
- * If it's now at the beginning of its cycle" return FALSE;
- * Otherwise return TRUE;
+ * Cyclically advance the current state of this DIS node.
+ * If it's now at the beginning of its cycle, return FALSE;
+ * otherwise return TRUE. Together with the advance_CON()
+ * function, this can be used to iterate over the entire 
+ * DIS_CON tree.
  */
 static int advance_DIS(DIS_node * dn)
 {
 	CON_list * cl;
-	for (cl = dn->cl; cl!=NULL; cl=cl->next) {
-		if (advance_CON(cl->cn)) {
-			return TRUE;
-		}
+	for (cl = dn->cl; cl != NULL; cl = cl->next)
+	{
+		if (advance_CON(cl->cn)) return TRUE;
 	}
 	return FALSE;
 }
 
 /**
- * Cycically advance the current state of this CON node.
- * If it's now at the beginning of its cycle return FALSE;
- * Otherwise return TRUE;
+ * Cyclically advance the current state of this CON node.
+ * If it's now at the beginning of its cycle return FALSE,
+ * otherwise return TRUE. Together with the advance_CON()
+ * function, this can be used to iterate over the entire 
+ * DIS_CON tree.
  */
 static int advance_CON(CON_node * cn)
 {
-	if (advance_DIS(cn->current->dn)) {
+	if (advance_DIS(cn->current->dn))
+	{
 		return TRUE;
-	} else {
-		if (cn->current->next == NULL) {
+	}
+	else
+	{
+		if (cn->current->next == NULL)
+		{
 			cn->current = cn->dl;
 			return FALSE;
-		} else {
+		}
+		else
+		{
 			cn->current = cn->current->next;
 			return TRUE;
 		}
@@ -1114,7 +1123,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	num_sublinkages = 0;
 	for (;;)
 	{
-		for (i=0; i<pi->N_links; i++)
+		for (i = 0; i < pi->N_links; i++)
 		{
 			actx->patch_array[i].used = actx->patch_array[i].changed = FALSE;
 			actx->patch_array[i].newl = pi->link_array[i].l;
@@ -1123,7 +1132,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		}
 		fill_patch_array_DIS(actx, d_root, NULL);
 
-		for (i=0; i<pi->N_links; i++)
+		for (i = 0; i < pi->N_links; i++)
 		{
 			if (actx->patch_array[i].changed || actx->patch_array[i].used)
 			{
@@ -1142,7 +1151,8 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 
 		/* Don't copy the fat links into the linkage */
 		N_thin_links = 0;
-		for (i= 0; i<pi->N_links; ++i) {
+		for (i = 0; i < pi->N_links; ++i)
+		{
 			if (sublinkage->link[i]->l == -1) continue;
 			N_thin_links++;
 		}
@@ -1153,7 +1163,8 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		linkage->sublinkage[num_sublinkages].pp_info = NULL;
 		linkage->sublinkage[num_sublinkages].violation = NULL;
 
-		for (i=0, j=0; i<pi->N_links; ++i) {
+		for (i = 0, j = 0; i < pi->N_links; ++i)
+		{
 			if (sublinkage->link[i]->l == -1) continue;
 			linkage->sublinkage[num_sublinkages].link[j++] =
 				excopy_link(sublinkage->link[i]);
