@@ -69,9 +69,9 @@ void free_disjuncts(Disjunct *c)
 	}
 }
 
-Connector * init_connector(Connector *c) {
+Connector * init_connector(Connector *c)
+{
 	c->length_limit = UNLIMITED_LEN;
-	/*	c->my_word = NO_WORD;  */  /* mark it unset, to make sure it gets set later */
 	return c;
 }
 

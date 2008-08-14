@@ -940,7 +940,6 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 	init_connector(&dummy);
 	dummy.label = NORMAL_LABEL;
 	dummy.priority = THIN_priority;
-	/*	dummy.my_word = NO_WORD; */  /* turn off the length part of the matching */
 	count = 0;
 	if (e->type == CONNECTOR_type) {
 		if (e->dir == dir) {
@@ -968,7 +967,6 @@ static void insert_connectors(connector_table *ct, Exp * e, int dir)
 	init_connector(&dummy);
 	dummy.label = NORMAL_LABEL;
 	dummy.priority = THIN_priority;
-	/*	dummy.my_word = NO_WORD; */ /* turn off the length part of the matching */
 
 	if (e->type == CONNECTOR_type) {
 		if (e->dir == dir) {

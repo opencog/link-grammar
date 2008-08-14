@@ -202,8 +202,6 @@ struct Connector_struct
                      this is strictly a funcion of the connector
                      name, efficiency is the only reason to store
                      this.  If no limit, the value is set to 255. */
-  /*    unsigned char my_word; */  /* not used now */
-                  /* The word that this connector arises from */
     char priority;/* one of the three priorities above */
     char multi;   /* TRUE if this is a multi-connector */
     Connector * next;
