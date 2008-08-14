@@ -169,17 +169,19 @@ static void build_digraph(analyze_context_t *actx, Parse_info pi)
 	List_o_links * lol;
 	N_fat = 0;
 
-	for (i=0; i<pi->N_words; i++)
+	for (i = 0; i < pi->N_words; i++)
 	{
 		actx->word_links[i] = NULL;
 	}
-	for (link=0; link<pi->N_links; link++)
+
+	for (link = 0; link < pi->N_links; link++)
 	{
 		lp = &(pi->link_array[link]);
 		i = lp->lc->label;
 		if (i < NORMAL_LABEL) {   /* one of those special links for either-or, etc */
 			continue;
 		}
+
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
 		lol->next = actx->word_links[lp->l];
 		actx->word_links[lp->l] = lol;
@@ -193,6 +195,7 @@ static void build_digraph(analyze_context_t *actx, Parse_info pi)
 		} else {
 			lol->dir = -1;
 		}
+
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
 		lol->next = actx->word_links[lp->r];
 		actx->word_links[lp->r] = lol;
@@ -215,10 +218,9 @@ static void build_digraph(analyze_context_t *actx, Parse_info pi)
 static int is_CON_word(int w, List_o_links **wordlinks)
 {
 	List_o_links * lol;
-	for (lol = wordlinks[w]; lol!=NULL; lol = lol->next) {
-		if (lol->dir == 1) {
-			return TRUE;
-		}
+	for (lol = wordlinks[w]; lol != NULL; lol = lol->next)
+	{
+		if (lol->dir == 1) return TRUE;
 	}
 	return FALSE;
 }
@@ -234,7 +236,7 @@ static CON_node * build_CON_node(analyze_context_t *actx, int w)
 	CON_node * a;
 	DIS_list * d, *dx;
 	d = NULL;
-	for (lol = actx->word_links[w]; lol!=NULL; lol = lol->next)
+	for (lol = actx->word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if (lol->dir == 1)
 		{
@@ -393,7 +395,8 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 					child->next = dnroot->cl;
 					dnroot->cl = child;
 				}
-				for (lol = dn->lol; lol != NULL; lol = xlol) {
+				for (lol = dn->lol; lol != NULL; lol = xlol)
+				{
 					xlol = lol->next;
 					lol->next = dnroot->lol;
 					dnroot->lol = lol;
@@ -465,7 +468,7 @@ static void fill_patch_array_DIS(analyze_context_t *actx,
 	List_o_links * lol;
 	Links_to_patch * ltpx;
 
-	for (lol = dn->lol; lol != NULL; lol=lol->next)
+	for (lol = dn->lol; lol != NULL; lol = lol->next)
 	{
 		actx->patch_array[lol->link].used = TRUE;
 	}
