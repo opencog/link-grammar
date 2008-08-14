@@ -15,13 +15,15 @@
 #include <stdarg.h>
 #include <link-grammar/api.h>
 
-/* The functions in this file do several things: () take a linkage
- involving fat links and expand it into a sequence of linkages
- (involving a subset of the given words), one for each way of
- eliminating the conjunctions.  () determine if a linkage involving
- fat links has a structural violation.  () make sure each of the expanded
- linkages has a consistent post-processing behavior.  () compute the
- cost of the linkage. */
+/**
+ * The functions in this file do several things: () take a linkage
+ * involving fat links and expand it into a sequence of linkages
+ * (involving a subset of the given words), one for each way of
+ * eliminating the conjunctions.  () determine if a linkage involving
+ * fat links has a structural violation.  () make sure each of the expanded
+ * linkages has a consistent post-processing behavior.  () compute the
+ * cost of the linkage.
+ */
 
 typedef struct patch_element_struct Patch_element;
 struct patch_element_struct
@@ -1076,6 +1078,44 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	free_sublinkage(sublinkage);
 }
 
+#ifdef DBG
+static void prt_con_list(Sentence, CON_list *);
+static void prt_dis_list(Sentence sent, DIS_list *dis)
+{
+	while(dis)
+	{
+		if (dis->dn->cl)
+		{
+			prt_con_list(sent, dis->dn->cl);
+		}
+		else
+		{
+			int wd = dis->dn->word;
+			printf("%s ", sent->word[wd].string);
+		}
+		dis = dis->next;
+	}
+}
+
+static void prt_con_list(Sentence sent, CON_list *con)
+{
+	while(con)
+	{
+		int wd = con->cn->word;
+		printf("(%s ", sent->word[wd].string);
+		prt_dis_list(sent, con->cn->dl);
+		printf(") ");
+		con = con->next;
+	}
+}
+static void prt_dis_con_tree(Sentence sent, DIS_node *dis)
+{
+	prt_con_list(sent, dis->cl);
+}
+#else
+static inline void prt_dis_con_tree(Sentence sent, DIS_node *dis) {}
+#endif
+
 /**
  * This procedure mimics analyze_fat_linkage in order to
  * extract the sublinkages and copy them to the Linkage
@@ -1197,5 +1237,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	if (linkage->dis_con_tree)
 		free_DIS_tree(linkage->dis_con_tree);
 	linkage->dis_con_tree = d_root;
+
+	prt_dis_con_tree(sent, d_root);
 }
 
