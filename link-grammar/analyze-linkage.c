@@ -51,35 +51,39 @@ struct analyze_context_s
 	Patch_element patch_array[MAX_LINKS];
 };
 
-typedef struct DIS_node_struct DIS_node;
 typedef struct CON_node_struct CON_node;
 typedef struct CON_list_struct CON_list;
 typedef struct DIS_list_struct DIS_list;
 typedef struct Links_to_patch_struct Links_to_patch;
 
-struct DIS_node_struct {
+struct DIS_node_struct
+{
 	CON_list * cl;     /* the list of children */
 	List_o_links * lol;/* the links that comprise this region of the graph */
 	int word;          /* the word defining this node */
 };
 
-struct CON_node_struct {
+struct CON_node_struct
+{
 	DIS_list * dl;     /* the list of children */
 	DIS_list * current;/* defines the current child */
 	int word;          /* the word defining this node */
 };
 
-struct DIS_list_struct {
+struct DIS_list_struct
+{
 	DIS_list * next;
 	DIS_node * dn;
 };
 
-struct CON_list_struct {
+struct CON_list_struct
+{
 	CON_list * next;
 	CON_node * cn;
 };
 
-struct Links_to_patch_struct {
+struct Links_to_patch_struct
+{
 	Links_to_patch * next;
 	int link;
 	char dir;   /* this is 'r' or 'l' depending on which end of the link
@@ -533,15 +537,17 @@ static void free_digraph(analyze_context_t *actx, Parse_info pi)
 
 static void free_CON_tree(CON_node *);
 
-static void free_DIS_tree(DIS_node * dn)
+void free_DIS_tree(DIS_node * dn)
 {
 	List_o_links * lol, *lolx;
 	CON_list *cl, *clx;
-	for (lol=dn->lol; lol!=NULL; lol=lolx) {
+	for (lol = dn->lol; lol != NULL; lol = lolx)
+	{
 		lolx = lol->next;
 		xfree((void *) lol, sizeof(List_o_links));
 	}
-	for (cl = dn->cl; cl!=NULL; cl=clx) {
+	for (cl = dn->cl; cl != NULL; cl = clx)
+	{
 		clx = cl->next;
 		free_CON_tree(cl->cn);
 		xfree((void *) cl, sizeof(CON_list));
@@ -552,7 +558,8 @@ static void free_DIS_tree(DIS_node * dn)
 static void free_CON_tree(CON_node * cn)
 {
 	DIS_list *dl, *dlx;
-	for (dl = cn->dl; dl!=NULL; dl=dlx) {
+	for (dl = cn->dl; dl != NULL; dl = dlx)
+	{
 		dlx = dl->next;
 		free_DIS_tree(dl->dn);
 		xfree((void *) dl, sizeof(DIS_list));
@@ -1176,8 +1183,8 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 
 	free_sublinkage(sublinkage);
 	free_digraph(actx, pi);
-	free_DIS_tree(d_root);
+	if (linkage->dis_con_tree)
+		free_DIS_tree(linkage->dis_con_tree);
+	linkage->dis_con_tree = d_root;
 }
-
-
 

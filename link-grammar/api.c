@@ -918,6 +918,7 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	linkage->sent = sent;
 	linkage->opts = opts;
 	linkage->info = sent->link_info[k];
+	linkage->dis_con_tree = NULL;
 
 	extract_links(sent->link_info[k].index, sent->null_count, sent->parse_info);
 	compute_chosen_words(sent, linkage);
@@ -997,6 +998,8 @@ void linkage_delete(Linkage linkage)
 		}
 	}
 	exfree(linkage->sublinkage, sizeof(Sublinkage)*linkage->num_sublinkages);
+	if (linkage->dis_con_tree)
+		free_DIS_tree(linkage->dis_con_tree);
 	exfree(linkage, sizeof(struct Linkage_s));
 }
 
