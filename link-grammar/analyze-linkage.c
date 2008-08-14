@@ -289,9 +289,14 @@ static CON_list * c_dfs(analyze_context_t *actx,
 		}
 		else if (lol->dir == 0)
 		{
+			/* Make a copy of the link */
 			lolx = (List_o_links *) xalloc(sizeof(List_o_links));
-			lolx->next = start_dn->lol;
+			lolx->word = lol->word;
+			lolx->dir = lol->dir;
 			lolx->link = lol->link;
+
+			/* Chain it into place */
+			lolx->next = start_dn->lol;
 			start_dn->lol = lolx;
 			c = c_dfs(actx, lol->word, start_dn, c);
 		}
@@ -358,14 +363,14 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	};
 
 	/* The algorithm used here to build the DIS_CON tree depends on
-	   the search percolating down from the "top" of the tree.  The
-	   original version of this started its search at the wall.  This
-	   was fine because doing a DFS from the wall explore the tree in
-	   the right order.
-
-	   However, in order to handle null links correctly, a more careful
-	   ordering process must be used to explore the tree.  We use
-	   dfs_height[] for this.
+	 * the search percolating down from the "top" of the tree.  The
+	 * original version of this started its search at the wall.  This
+	 * was fine because doing a DFS from the wall explore the tree in
+	 * the right order.
+	 *
+	 * However, in order to handle null links correctly, a more careful
+	 * ordering process must be used to explore the tree.  We use
+	 * dfs_height[] for this.
 	 */
 
 	for (w=0; w < pi->N_words; w++) actx->dfs_height[w] = 0;
@@ -379,7 +384,7 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	for (w=0; w<pi->N_words; w++) actx->dfs_root_word[w] = -1;
 
 	dnroot = NULL;
-	for (xw=0; xw < pi->N_words; xw++)
+	for (xw = 0; xw < pi->N_words; xw++)
 	{
 		w = actx->height_perm[xw];
 		if (actx->dfs_root_word[w] == -1)
@@ -1079,16 +1084,40 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 }
 
 #ifdef DBG
+static void prt_lol(Sentence sent , List_o_links *lol)
+{
+	/* It appears that the list of links is always even in length:
+	 * The head word first, followed by a modifier. 
+	 */
+	while (lol)
+	{
+		// printf ("%d ", lol->link);
+		printf ("%s ", sent->word[lol->word].string);
+		lol = lol->next;
+	}
+}
+
 static void prt_con_list(Sentence, CON_list *);
 static void prt_dis_list(Sentence sent, DIS_list *dis)
 {
 	while(dis)
 	{
+		/* There are three possibilities:
+ 		 * Either there's another conjunction (and we should print it)
+ 		 * Or there's a head word, with its modifiers in its list-o-links,
+ 		 * Or there's just the bare, naked word by itself.
+ 		 */
 		if (dis->dn->cl)
 		{
 			prt_con_list(sent, dis->dn->cl);
 		}
-		else
+		else if (dis->dn->lol)
+		{
+			printf("[");
+			prt_lol(sent, dis->dn->lol);
+			printf("]");
+		}
+		else 
 		{
 			int wd = dis->dn->word;
 			printf("%s ", sent->word[wd].string);
@@ -1111,6 +1140,7 @@ static void prt_con_list(Sentence sent, CON_list *con)
 static void prt_dis_con_tree(Sentence sent, DIS_node *dis)
 {
 	prt_con_list(sent, dis->cl);
+	printf ("\n");
 }
 #else
 static inline void prt_dis_con_tree(Sentence sent, DIS_node *dis) {}
