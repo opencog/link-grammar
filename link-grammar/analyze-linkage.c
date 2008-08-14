@@ -703,7 +703,8 @@ static int link_cost(Parse_info pi)
 {
 	int lcost, i;
 	lcost =  0;
-	for (i=0; i<pi->N_links; i++) {
+	for (i = 0; i < pi->N_links; i++)
+	{
 		lcost += cost_for_length(pi->link_array[i].r - pi->link_array[i].l);
 	}
 	return lcost;
@@ -720,21 +721,23 @@ static int unused_word_cost(Parse_info pi)
 {
 	int lcost, i;
 	lcost =  0;
-	for (i=0; i<pi->N_words; i++)
+	for (i = 0; i < pi->N_words; i++)
 		lcost += (pi->chosen_disjuncts[i] == NULL);
 	return lcost;
 }
 
-
+/** 
+ * Computes the cost of the current parse of the current sentence
+ * due to the cost of the chosen disjuncts.
+ */
 static int disjunct_cost(Parse_info pi)
 {
-/* computes the cost of the current parse of the current sentence     */
-/* due to the cost of the chosen disjuncts                            */
 	int lcost, i;
 	lcost =  0;
-	for (i=0; i<pi->N_words; i++) {
-	  if (pi->chosen_disjuncts[i] != NULL)
-		lcost += pi->chosen_disjuncts[i]->cost;
+	for (i = 0; i < pi->N_words; i++)
+	{
+		if (pi->chosen_disjuncts[i] != NULL)
+			lcost += pi->chosen_disjuncts[i]->cost;
 	}
 	return lcost;
 }
@@ -749,7 +752,8 @@ static int strictly_smaller_name(const char * s, const char * t)
 {
 	int strictness, ss, tt;
 	strictness = 0;
-	while ((*s!='\0') || (*t!='\0')) {
+	while ((*s!='\0') || (*t!='\0'))
+	{
 		if (*s == '\0') {
 			ss = '*';
 		} else {
@@ -781,7 +785,8 @@ static void compute_link_names(Sentence sent)
 	int i;
 	Parse_info pi = sent->parse_info;
 
-	for (i=0; i<pi->N_links; i++) {
+	for (i = 0; i < pi->N_links; i++)
+	{
 		pi->link_array[i].name = intersect_strings(sent,
 		   pi->link_array[i].lc->string, pi->link_array[i].rc->string);
 	}
@@ -803,19 +808,23 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 	const char * s;
 	Parse_info pi = sent->parse_info;
 
-	for (i=0; i<pi->N_links; i++)
-	  {
+	for (i = 0; i < pi->N_links; i++)
+	{
 		if (sublinkage->link[i]->l == -1) continue;
 		if (!x_match(sent, sublinkage->link[i]->lc, sublinkage->link[i]->rc))
-		  replace_link_name(sublinkage->link[i], pi->link_array[i].name);
+		{
+			replace_link_name(sublinkage->link[i], pi->link_array[i].name);
+		}
 		else
-		  {
+		{
 			s = intersect_strings(sent, sublinkage->link[i]->lc->string,
 								  sublinkage->link[i]->rc->string);
+
 			if (strictly_smaller_name(s, pi->link_array[i].name))
-			  replace_link_name(sublinkage->link[i], pi->link_array[i].name);
-			else replace_link_name(sublinkage->link[i], s);
-		  }
+				replace_link_name(sublinkage->link[i], pi->link_array[i].name);
+			else
+				replace_link_name(sublinkage->link[i], s);
+		}
 	}
 }
 
@@ -1066,7 +1075,6 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 
 	free_sublinkage(sublinkage);
 }
-
 
 /**
  * This procedure mimics analyze_fat_linkage in order to
