@@ -3335,7 +3335,7 @@ very: EA+ or EE+ or [[La-]];
 real.e: [[EA+ or EE+]];
 quite: EA+ or EE+ or EZ+ or [[Em+]];
 amazingly strangely incredibly: 
-EA+ or EE+ or ({Xd- & Xc+} & Em+) or ({Xc+ & {Xd-}} & CO+) or EBm- or 
+({EE-} & EA+) or EE+ or ({Xd- & Xc+} & Em+) or ({Xc+ & {Xd-}} & CO+) or EBm- or 
 (Xd- & Xc+ & MVa-);
 rather: EA+ or EE+ or Vw- or ({Xc+ & {Xd-}} & CO+);
 particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
