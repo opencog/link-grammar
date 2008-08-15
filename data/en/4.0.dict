@@ -3318,8 +3318,8 @@ or [[E+]]);
 %ADVERBS
 
 %ADVERBS WHOSE MAIN USE IS ADJECTIVAL
-far_from: EA+;
-a_bit a_little_bit: EA+ or EC+ or EE+ or ({Xd- & Xc+} & MVa-);
+far_from: {EE-} & EA+;
+a_bit a_little_bit: ({EE-} & EA+) or EC+ or EE+ or ({Xd- & Xc+} & MVa-);
 pretty.e extremely very_very very_very_very exceptionally
 notoriously unbelievably incurably extraordinarily
 jolly.e mighty.e damn.e exceedingly overly downright plumb
@@ -3330,10 +3330,10 @@ awfully decidedly demonstrably fashionably frighteningly horrifyingly
 indescribably intolerably laughably predominantly ridiculously unacceptably
 unalterably unarguably undeniably undisputedly unimaginably unpardonably
 unreasonably unusually hugely infernally:
-EA+ or EE+;
-very: EA+ or EE+ or [[La-]];
+({EE-} & EA+) or EE+;
+very: ({EE-} & EA+) or EE+ or [[La-]];
 real.e: [[EA+ or EE+]];
-quite: EA+ or EE+ or EZ+ or [[Em+]];
+quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
 amazingly strangely incredibly: 
 ({EE-} & EA+) or EE+ or ({Xd- & Xc+} & Em+) or ({Xc+ & {Xd-}} & CO+) or EBm- or 
 (Xd- & Xc+ & MVa-);
