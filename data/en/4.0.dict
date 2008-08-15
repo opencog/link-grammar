@@ -3320,17 +3320,27 @@ or [[E+]]);
 %ADVERBS WHOSE MAIN USE IS ADJECTIVAL
 far_from: {EE-} & EA+;
 a_bit a_little_bit: ({EE-} & EA+) or EC+ or EE+ or ({Xd- & Xc+} & MVa-);
+
+% 
 pretty.e extremely very_very very_very_very exceptionally
 notoriously unbelievably incurably extraordinarily
 jolly.e mighty.e damn.e exceedingly overly downright plumb
-vitally relatively abundantly chronically fabulously frightfully genuinely
-humanly incomparably inherently marginally moderately patently
+vitally abundantly chronically frightfully genuinely
+humanly patently
 singularly supremely unbearably unmistakably unspeakably
 awfully decidedly demonstrably fashionably frighteningly horrifyingly
-indescribably intolerably laughably predominantly ridiculously unacceptably
-unalterably unarguably undeniably undisputedly unimaginably unpardonably
+indescribably intolerably laughably predominantly 
+unalterably undisputedly unpardonably
 unreasonably unusually hugely infernally:
 ({EE-} & EA+) or EE+;
+
+% Adverbs whose main use is adjectiveal, but can be used with 
+% adverbs such as "faster", "dumber", etc. "That one is marginally better".
+fabulously incomparably inherently marginally moderately 
+relatively ridiculously 
+unacceptably unarguably undeniably unimaginably:
+({EE-} & EA+) or EE+ or EBm-;
+
 very: ({EE-} & EA+) or EE+ or [[La-]];
 real.e: [[EA+ or EE+]];
 quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
