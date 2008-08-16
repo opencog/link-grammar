@@ -1,18 +1,18 @@
-Democrat.i Republican.i abbot.i accompanist.i accountant.i 
-administrator.i admiral.i adviser.i advisor.i agent.i aide.i 
-ambassador.i analyst.i arbitrator.i archbishop.i archdeacon.i 
-architect.i archivist.i assessor.i assistant.i associate.i attorney.i 
-auditor.i bailiff.i broker.i brother.i buyer.i candidate.i captain.i cardinal.i 
-chairman.i chairwoman.i chancellor.i chaplain.i chief.i clerk.i 
-commander.i commissioner.i complainant.i comptroller.i congressman.i 
-contractor.i coordinator.i coroner.i correspondent.i councillor.i 
-counsellor.i counselor.i dean.i defendant.i defender.i delegate.i 
-deputy.i diplomat.i director.i economist.i editor.i emissary.i 
-emperor.i empress.i engineer.i executive.i executor.i father.i foreman.i 
-founder.i governor.i head.i headmaster.i headmistress.i inspector.i 
-intern.i lawyer.i leader.i librarian.i lobbyist.i manager.i mayor.i 
-minister.i mother.i officer.i owner.i partner.i pastor.i postmaster.i premier.i 
-president.i professor.i prosecutor.i secretary.i senator.i sheriff.i sister.i
-solicitor.i speaker.i spokesman.i spokesperson.i spokeswoman.i 
-sponsor.i superintendent.i treasurer.i undersecretary.i underwriter.i 
-warden.i best_man maid_of_honor proprietor.i
+Democrat.t Republican.t abbot.t accompanist.t accountant.t 
+administrator.t admiral.t adviser.t advisor.t agent.t aide.t 
+ambassador.t analyst.t arbitrator.t archbishop.t archdeacon.t 
+architect.t archivist.t assessor.t assistant.t associate.t attorney.t 
+auditor.t bailiff.t broker.t brother.t buyer.t candidate.t captain.t cardinal.t 
+chairman.t chairwoman.t chancellor.t chaplain.t chief.t clerk.t 
+commander.t commissioner.t complainant.t comptroller.t congressman.t 
+contractor.t coordinator.t coroner.t correspondent.t councillor.t 
+counsellor.t counselor.t dean.t defendant.t defender.t delegate.t 
+deputy.t diplomat.t director.t economist.t editor.t emissary.t 
+emperor.t empress.t engineer.t executive.t executor.t father.t foreman.t 
+founder.t governor.t head.t headmaster.t headmistress.t inspector.t 
+intern.t lawyer.t leader.t librarian.t lobbyist.t manager.t mayor.t 
+minister.t mother.t officer.t owner.t partner.t pastor.t postmaster.t premier.t 
+president.t professor.t prosecutor.t secretary.t senator.t sheriff.t sister.t
+solicitor.t speaker.t spokesman.t spokesperson.t spokeswoman.t 
+sponsor.t superintendent.t treasurer.t undersecretary.t underwriter.t 
+warden.t best_man maid_of_honor proprietor.t

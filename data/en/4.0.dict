@@ -260,7 +260,7 @@ Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 
 /en/words/words.n.t: % title nouns (president, chairman)
 {@AN-} & {@A- & {[[@AN-]]}} & {@M+} & (BIt- or (Xd- & (Xc+ or [[[()]]]) & MX-) or TI-);
-% auditor.i bailiff.i broker.i buyer.i candidate.i captain.i cardinal.i 
+% auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t 
 
 majority.n minority.n number.n bunch.n batch.n bulk.n handful.n group.n:
  ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & <noun-sub-x> &
@@ -2639,7 +2639,7 @@ into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or (MVp- & B-);
 about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or 
 (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-));
 
-off across along through: 
+off across along through.p: 
 ({JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
 past.p: 
 ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
