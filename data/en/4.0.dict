@@ -776,7 +776,11 @@ or ((SIp+ or SFIp+) & (((Rw- or Q- or [()]) & I*d+) or CQ-)) or
 ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & (((Rw- or Q- or [()]) & I*d+) or CQ-));
 did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & (((Rw- or Q- or [()]) & I*d+) or CQ-));
-done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-pv> or <verb-po>;
+
+% done, finished, as an adjectival modifier: "I am done working" (I have started working)
+done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-pv> or <verb-po> 
+or ({@E-} & Pv- & {Pg+ or Os+});
+
 doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 fine.i: Vd-;

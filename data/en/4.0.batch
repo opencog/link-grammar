@@ -1069,6 +1069,12 @@ John is quite certainly a better choice.
 John is boundlessly, charmingly polite.
 John is stupidly, insanely dull.
 
+% done, finished, started
+I have started working.
+I will start working.
+I am done working.
+I am done being angry.
+
 % buggy coppula and copula contractions
 % "here is the ball" generats Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.
