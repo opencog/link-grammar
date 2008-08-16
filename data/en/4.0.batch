@@ -1082,6 +1082,12 @@ It's a done deed.
 I am doing fine.
 I am doing poorly.
 
+I asked him a question.
+I was asked a number of questions.
+I told Jim a story.
+He enquired my whereabouts.
+He inquired at the door.
+
 % buggy coppula and copula contractions
 % "here is the ball" generats Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.

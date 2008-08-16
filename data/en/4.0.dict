@@ -2238,7 +2238,7 @@ told.v: (<verb-sp,pp> & <vc-tell>) or (<verb-pv> &
 telling.g: (<vc-tell> & <verb-ge>) or <verb-ge-d>;
 telling.v: <verb-pg> & <vc-tell>;
 
-<vc-ask>: ({O+ or B-} & {@MV+} & {TS+ or TOo+ or QI+ or BW-}) or 
+<vc-ask>: ({(O+ & {O*n+}) or B-} & {@MV+} & {TS+ or TOo+ or QI+ or BW-}) or 
 ([[@MV+ & O*n+ & {@MV+}]]);
 ask.v: <verb-pl,i> & <vc-ask>;
 asks.v: <verb-s> & <vc-ask>;
