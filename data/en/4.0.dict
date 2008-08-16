@@ -2794,8 +2794,8 @@ this_time that_time these_days: <prep-main-t> or [[E+]];
 last_time next_time: 
 <prep-main-t> or JT- or YS+ or [[<noun-main-s>]];
 
-day.t week.t month.t year.t weekend.t morning.t afternoon.t evening.t
-night.t semester.t term.t season.t session.t:
+day.u week.u month.u year.u weekend.u morning.u afternoon.u evening.u
+night.u semester.u term.u season.u session.u:
 ((DTn- or DTi-) & (<prep-main-t> or [[E+]])) or 
 (DTi- & (JT- or [[<noun-main-s>]] or YS+)) or (DTa- & <prep-main-t>);
 the_next the_previous the_following this_past: DTn+;
