@@ -239,9 +239,9 @@ or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 <marker-entity> or <entity-singular>;
 
 % Enable parsing of "Mother likes her"
-aunt.e auntie.e brother.e dad.e daddy.e father.e grandmother.e granny.e 
-granddad.e grandfather.e grandpa.e grandpop.e mom.e mommy.e mother.e 
-pop.e papa.e poppy.e pops.e sis.e sister.e uncle.e:
+aunt.f auntie.f brother.m dad.m daddy.m father.m grandmother.f granny.f 
+granddad.m grandfather.m grandpa.f grandpop.m mom.f mommy.f mother.f 
+pop.m papa.m poppy.m pops.m sis.f sister.f uncle.m:
 <entity-singular>;
 
 alter_ego au_pair mise_en_scene faux_pas non_sequitur fait_accompli
