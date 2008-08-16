@@ -758,7 +758,6 @@ or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
 %done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-pv> or <verb-po>;
 %doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 %doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
-%fine.i: Vd-;
 %
 %don't: (({Q-} & (SIp+ or SFIp+) & I*d+) or ({@E-} & (Sp- or SFp- or
 %(RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
@@ -783,7 +782,7 @@ done.a finished.a through.a: ({@E-} & Pa- & {Pg+ or Os+});
 
 doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
-fine.i: Vd-;
+fine.i poorly.i well.i: Vd-;
 
 don't: (((Rw- or Q- or [()]) & (SIp+ or SFIp+) & I*d+) or ({@E-} & (Sp- or SFp- or
 (RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
