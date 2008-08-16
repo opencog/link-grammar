@@ -2230,11 +2230,12 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 <vc-tell>: (((O+ & {O*n+}) or B-) & {@MV+} & 
 {TH+ or Ce+ or RSe+ or Zs- or TOo+ or QI+ or BW-}) or ([[@MV+ & O*n+ & {@MV+}]]);
 tell.v: <verb-pl,i> & <vc-tell>;
-tell.i: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-);
+tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-);
 tells.v: <verb-s> & <vc-tell>;
-told.v: (<verb-sp,pp> & <vc-tell>) or (<verb-pv> & 
-{TH+ or Ce+ or RSe+ or Zs- or TO+ or QI+ or BW-}) or ({{@MV+} &
-(Ce+ or TO+ or QI+ or TH+)} & <verb-po>);
+told.v: (<verb-sp,pp> & <vc-tell>) or 
+        (<verb-pv> & {TH+ or Ce+ or RSe+ or Zs- or TO+ or QI+ or BW-}) or 
+        (<verb-pv-b> & O+ & {@MV+}) or 
+        ({{@MV+} & (Ce+ or TO+ or QI+ or TH+)} & <verb-po>);
 telling.g: (<vc-tell> & <verb-ge>) or <verb-ge-d>;
 telling.v: <verb-pg> & <vc-tell>;
 
@@ -2242,8 +2243,10 @@ telling.v: <verb-pg> & <vc-tell>;
 ([[@MV+ & O*n+ & {@MV+}]]);
 ask.v: <verb-pl,i> & <vc-ask>;
 asks.v: <verb-s> & <vc-ask>;
-asked.v: (<verb-sp,pp> & <vc-ask>) or (<verb-pv> & {TO+ or QI+ or BW- or TH+ or
- TS+}) or ({{@MV+} & (TO+ or QI+ or TH+ or TS+)} & <verb-po>);
+asked.v: (<verb-sp,pp> & <vc-ask>) or 
+         (<verb-pv> & {TO+ or QI+ or BW- or TH+ or TS+}) or 
+         (<verb-pv-b> & O+ & {@MV+}) or 
+         ({{@MV+} & (TO+ or QI+ or TH+ or TS+)} & <verb-po>);
 asking.g: (<vc-ask> & <verb-ge>) or <verb-ge-d>;
 asking.v: <verb-pg> & <vc-ask>;
 
