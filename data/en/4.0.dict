@@ -775,10 +775,10 @@ or ((SIp+ or SFIp+) & (((Rw- or Q- or [()]) & I*d+) or CQ-)) or
 ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & (((Rw- or Q- or [()]) & I*d+) or CQ-));
 did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & (((Rw- or Q- or [()]) & I*d+) or CQ-));
-done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-pv> or <verb-po>;
+done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-po>;
 
 % adjectival modifier: "I am done working", "I am through being mad"
-done.a finished.a through.a: ({@E-} & Pa- & {Pg+ or Os+});
+done.a finished.a through.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+});
 
 doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
@@ -1641,7 +1641,11 @@ anticipating.v favoring.v:
 <vc-finish>: ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & Pg+);
 finish.v practice.v resist.v: <verb-pl,i> & <vc-finish>;
 finishes.v practices.v resists.v quits.v: <verb-s> & <vc-finish>;
-finished.v practiced.v resisted.v quitted.v: 
+
+% no <verb-pv> for "finished", since its not passive, is adjectival.
+finished.v: (<verb-sp,pp> & <vc-finish>) or ({@E-} & A+) or <verb-po>;
+
+practiced.v resisted.v quitted.v: 
 (<verb-sp,pp> & <vc-finish>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 quit.v: ((<verb-sp,pp> or <verb-pl,i>) & <vc-finish>) or <verb-pv> or 
 ({@E-} & A+) or <verb-po>;
@@ -3018,8 +3022,8 @@ n't: N- or EB-;
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a 
 
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
-<adj-stuff>:   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
- & {@MV+}) or AA+ or [[DD- & <noun-main-p>]]);
+<adj-stuff>:   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
+              ((AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]]);
 done.c through.c: <adj-stuff>;
 
 responsible.a accountable.a:
