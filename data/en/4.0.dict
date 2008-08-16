@@ -2227,7 +2227,7 @@ convinced.v persuaded.v: (<verb-sp,pp> & <vc-convince>) or (<verb-pv> &
 convincing.g persuading.g: (<vc-convince> & <verb-ge>) or <verb-ge-d>;
 convincing.v persuading.v: <verb-pg> & <vc-convince>;
 
-<vc-tell>: ((O+ or B-) & {@MV+} & 
+<vc-tell>: (((O+ & {O*n+}) or B-) & {@MV+} & 
 {TH+ or Ce+ or RSe+ or Zs- or TOo+ or QI+ or BW-}) or ([[@MV+ & O*n+ & {@MV+}]]);
 tell.v: <verb-pl,i> & <vc-tell>;
 tell.i: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-);
