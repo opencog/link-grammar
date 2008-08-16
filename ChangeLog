@@ -4,6 +4,7 @@ Version 4.3.9 includes the following changes:
  * Dictionary fixes for 'marginally', etc. "That one is marginally better"
  * Issue 7: Dictionary fixes for 'done': "I am done working"
  * dictionary entries for walk-up drivethru car-wash
+ * dictionary: "I am through being mad", "It was a through flight", etc.
 
 Version 4.3.8 includes the following changes:
  * Build fixes for Windows (missing bzero and thread-safe rand)
