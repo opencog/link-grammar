@@ -2639,14 +2639,14 @@ into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or (MVp- & B-);
 about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or 
 (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-));
 
-off across along through.p: 
+off across along through.r: 
 ({JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
 past.p: 
 ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
 around:
 ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
 or [EN+];
-out up down.e:
+out up down.r:
 ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or K- 
 or (MVp- & B-);
 by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
@@ -2677,7 +2677,7 @@ so_as_to: I+ & {Xd- & Xc+} & MVi-;
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 
-inside.e outside.e underneath alongside:
+inside.r outside.r underneath alongside:
 {J+} & (<prep-main-b> or FM-);
 amid plus.p minus.p via onto: 
 J+ & (<prep-main-b> or [Wq- & PF+]);
@@ -2707,9 +2707,9 @@ due_to along_with en_route_to in_connection_with: J+ & <prep-main-b>;
 regardless_of as_to irrespective_of: (J+ or QI+) & 
 (MVp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
 
-overhead.e midway in_public in_private en_route 
+overhead.r midway in_public in_private en_route 
 a_la_mode a_la_carte side_by_side from_coast_to_coast: <prep-main-b>;
-abroad upstairs.e downstairs.e overseas.e next_door: 
+abroad upstairs.r downstairs.r overseas.r next_door: 
 <prep-main-b> or FM-;
 elsewhere: <prep-main-b> or FM- or [[J-]];
 ahead at_hand in_store in_reverse in_place in_town 
@@ -2719,16 +2719,16 @@ on_file in_line on_line in_loco_parentis on_board en_route in_bed
 out_of_bed on_strike on_top from_afar at_stake in_question
 at_issue on_lease on_trial in_league in_cahoots in_front in_back
 on_break on_camera in_command in_concert by_association in_association
-on_deck on_disk on_file on_foot on_location on_line online.e:
+on_deck on_disk on_file on_foot on_location on_line online.r:
 MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-)); 
-uptown downtown.e underground.e out_of_town: 
+uptown downtown.r underground.r out_of_town: 
 MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
 
 <common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
 
-forward.e backward forwards.e backwards sideways ashore abreast aft
+forward.r backward forwards.r backwards sideways ashore abreast aft
 half-way two-fold downhill southward underfoot westward eastward
-northward overnight.e on_hold on_track in_situ in_toto off_balance
+northward overnight.r on_hold on_track in_situ in_toto off_balance
 in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
 behind_schedule ahead_of_schedule for_good for_keeps in_phase
@@ -2737,7 +2737,7 @@ in_phase neck_and_neck under_contract: <common-prep>;
 
 /en/words/words-medical.prep.1: <common-prep>;
 
-indoors outdoors upstream downstream underwater.e:
+indoors outdoors upstream downstream underwater.r:
 MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-); 
 everywhere anywhere: {EL+} & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or 
 ({Xd- & Xc+} & MVs-))) or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
@@ -2751,9 +2751,9 @@ MVp- or Mp- or ({Xc+ & {Xd-}} & CO+) or (Xc+ & Xd- & (MVx- or MX*x-));
 
 recently: {EE- or EF+} & (({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
 {Xd-}} & CO+) or EB- or JT- or Ca+ or Qe+ or [[Mp-]]); 
-now.e: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ & {Xd-}} & CO+) or
+now.r: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ & {Xd-}} & CO+) or
 EB- or [[Mp-]]; 
-then.e: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
+then.r: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
 {Xd-}} & CO+) or EB- or (S+ & Xd- & Xc+ & MVs-) or [[Mp-]];
 
 later earlier: ({ECa- or Yt-} & (E+ or Mp- or Pp- or MVb- 
@@ -3205,7 +3205,7 @@ or ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-])) or
 fewer: ({ECn-} & (Dmcm+ or Om- or Jm- or (Sp+ & <CLAUSE>))) 
 or (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
 farther: ({ECa-} & {K+} & (MVb- or Qe+ or Ca+)) or A+;
-further.e: ({ECa-} & {K+} & (MVb- or Qe+ or Ca+)) or A+ or E+
+further.r: ({ECa-} & {K+} & (MVb- or Qe+ or Ca+)) or A+ or E+
 or ({Xd-} & Xc+ & CO+);
 
 as.y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
