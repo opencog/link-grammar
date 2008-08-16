@@ -1074,6 +1074,7 @@ I have started working.
 I will start working.
 I am done working.
 I am done being angry.
+I am done with being angry.
 I am finished being angry.
 I am through being angry.
 We took a through flight.
@@ -1096,7 +1097,7 @@ He enquired my whereabouts.
 He inquired at the door.
 
 % buggy coppula and copula contractions
-% "here is the ball" generats Wq and PF and SIs which is just wrong.
+% "here is the ball" generates Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.
 Here is the ball.
 Here's the ball.
