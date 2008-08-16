@@ -1183,9 +1183,9 @@ wondered.v inquired.v: <verb-sp,pp> & <vc-wonder>;
 wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 
 % Imperative go: "go play ball", "go take a walk", "go swimming"
-% Same pattern as "please.e" -- "please play ball" etc.
+% Same pattern as "please.w" -- "please play ball" etc.
 % "You and Rover go play with the ball." requires an S- link.
-go.e: (Wi- or S-) & I+;
+go.w: (Wi- or S-) & I+;
 
 <vc-go>: {K+ or [[Pa+]] or [[Pg+]]} & {@MV+}; 
 go.v: <verb-pl,i> & <vc-go>;
@@ -3522,7 +3522,7 @@ or (Wq- & (PF+ or CQ+));
 sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-); 
 so_that: Cs+ & {Xd- & Xc+} & MVs-;
 
-please.e: Wi- & I+;
+please.w: Wi- & I+;
 
 
 % MISCELLANEOUS WORDS AND PUNCTUATION
