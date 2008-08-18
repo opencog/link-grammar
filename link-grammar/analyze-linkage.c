@@ -343,6 +343,21 @@ static void height_dfs(analyze_context_t *actx, int w, int height)
 	}
 }
 
+#ifdef __APPLE__ /* assume this is OSX */
+/* Apple Mac, as a security precaution, uses a non-executable stack, 
+ * with a broken trampoline, and seg-faults on automatic functions.
+ * The alternative is to declare a static global, which, of course,
+ * is not thread-safe.
+ */
+static analyze_context_t *global_actx;
+static int comp_height(const void *va, const void *vb)
+{
+	const int *a = va;
+	const int *b = vb;
+	return global_actx->dfs_height[*b] - global_actx->dfs_height[*a];
+};
+#endif /* __APPLE__ */
+
 static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 {
 	int xw, w;
@@ -350,6 +365,13 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	CON_list * child, * xchild;
 	List_o_links * lol, * xlol;
 
+#ifdef __APPLE__
+#ifdef USE_PTHREADS
+#error pthreads not supported on OSX until the use of this global is fixed!
+#else
+	global_actx = actx;
+#endif /* USE_PTHREADS */
+#else
 	/* Declare the compare function here, since it needs access to the
 	 * stack varaiable actx, which would otherwise need to be delcared
 	 * global (and thus not thread-safe).
@@ -361,6 +383,7 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 		const int *b = vb;
 		return actx->dfs_height[*b] - actx->dfs_height[*a];
 	};
+#endif /* __APPLE__ */
 
 	/* The algorithm used here to build the DIS_CON tree depends on
 	 * the search percolating down from the "top" of the tree.  The

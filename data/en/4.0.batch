@@ -1096,6 +1096,9 @@ I was told the whole story by Maybeline.
 He enquired my whereabouts.
 He inquired at the door.
 
+% Good sentences ... 
+I heard a bark in the distance.
+
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.
@@ -1104,10 +1107,11 @@ Here's the ball.
 There is the ball!
 Where's the ball?
 Here's Johhny!
+There goes the neighborhood!
+But for the grace of God, there go I.
 
 % Buggy sentences that need fixing:
 His works disclose a mastery of composition.
-I heard a bark in the distance.
 
 % Prepositional difficulties
 It fell when the clock chimed.
