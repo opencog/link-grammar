@@ -82,6 +82,14 @@ AC_ARG_ENABLE( pthreads,
 
 AM_CONDITIONAL(WITH_PTHREADS, test x${do_pth} = xyes)
 
+buildSAT=no
+AC_ARG_ENABLE( sat-solver,
+  [  --enable-sat-solver             use the boolean SAT solver],
+       CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
+       buildSAT=yes)
+
+AM_CONDITIONAL(WITH_SAT_SOLVER, test x${buildSAT} = xyes)
+
 dnl ====================================================================
 
 AC_DEFUN([GLIB_LC_MESSAGES],
@@ -223,12 +231,6 @@ AC_SUBST(CPPFLAGS)
 # ant, and jar compilers/builders are install as well. This is used
 # to build the jar file and install it.
 AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
-
-dnl ===================================================================
-# stub for the sat solver
-
-buildSAT=no
-AM_CONDITIONAL(WITH_SAT_SOLVER, false)
 
 dnl ===================================================================
 
