@@ -877,8 +877,10 @@ void print_expression(Exp * n)
 	}
 	if (n->type == CONNECTOR_type) {
 		for (i=0; i<n->cost; i++) printf("[");
+		if (n->multi) printf("@");
 		printf("%s%c",n->u.string, n->dir);
-		for (i=0; i<n->cost; i++) printf("] ");
+		for (i=0; i<n->cost; i++) printf("]");
+		if (n->cost > 0) printf(" ");
 	} else {
 		for (i=0; i<n->cost; i++) printf("[");
 		if (n->cost == 0) printf("(");
@@ -887,7 +889,8 @@ void print_expression(Exp * n)
 		for (el = n->u.l; el != NULL; el = el->next) {
 			print_expression(el->e);
 		}
-		for (i=0; i<n->cost; i++) printf("] ");
+		for (i=0; i<n->cost; i++) printf("]");
+		if (n->cost > 0) printf(" ");
 		if (n->cost == 0) printf(") ");
 	}
 }
