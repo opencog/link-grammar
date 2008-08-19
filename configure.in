@@ -225,6 +225,12 @@ AC_SUBST(CPPFLAGS)
 AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
 
 dnl ===================================================================
+# stub for the sat solver
+
+buildSAT=no
+AM_CONDITIONAL(WITH_SAT_SOLVER, false)
+
+dnl ===================================================================
 
 AC_OUTPUT([
 Makefile
@@ -232,6 +238,8 @@ build.xml
 link-grammar.pc
 link-grammar.spec
 link-grammar/Makefile
+link-grammar/minisat/Makefile
+link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
 data/Makefile
 data/en/Makefile
@@ -250,4 +258,5 @@ $PACKAGE-$VERSION
 	compiler:                       ${CC} ${CPPFLAGS} ${CFLAGS}
 	autopackage:                    ${br_cv_binreloc}
 	java interfaces:                ${JNIfound}
+	SAT solver:                     ${buildSAT}
 "

@@ -3,11 +3,11 @@ VERSION=0.0.1
 dnl Version info for libraries = CURRENT:REVISION:AGE
 SATSOLVER_VERSION_INFO=0:0:1
 
-libsat-solver_la_LDFLAGS = -version-info $(SATSOLVER_VERSION_INFO)
+libsatsolver_la_LDFLAGS = -version-info $(SATSOLVER_VERSION_INFO)
 
-lib_LTLIBRARIES = libsat-solver.la
+lib_LTLIBRARIES = libsatsolver.la
 
-libsat-solver_la_SOURCES = \
+libsatsolver_la_SOURCES = \
 	clock.hpp         \
 	fast-sprintf.cpp  \
 	fast-sprintf.hpp  \
