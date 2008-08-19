@@ -34,17 +34,22 @@ liblink_grammar_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
 liblink_grammar_java_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
 endif
 
-if WITH_BINRELOC
-liblink_grammar_la_LIBADD  = -lpthread
-liblink_grammar_java_la_LIBADD  = -lpthread liblink-grammar.la
-else
-if WITH_PTHREADS
-liblink_grammar_la_LIBADD  = -lpthread
-liblink_grammar_java_la_LIBADD  = -lpthread liblink-grammar.la
-else
 liblink_grammar_la_LIBADD  = 
 liblink_grammar_java_la_LIBADD  = liblink-grammar.la
+
+if WITH_SAT_SOLVER
+liblink_grammar_la_LIBADD  += -lsatsolver -lminisat
+liblink_grammar_java_la_LIBADD  += -lsatsolver -lminisat
 endif
+
+if WITH_BINRELOC
+liblink_grammar_la_LIBADD  += -lpthread
+liblink_grammar_java_la_LIBADD  += -lpthread
+endif
+
+if WITH_PTHREADS
+liblink_grammar_la_LIBADD  += -lpthread
+liblink_grammar_java_la_LIBADD  += -lpthread
 endif
 
 liblink_grammar_la_SOURCES =        \
@@ -126,7 +131,14 @@ EXTRA_DIST=                               \
 
 bin_PROGRAMS=link-parser
 link_parser_SOURCES = link-parser.c
-link_parser_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
+link_parser_LDADD = 
+
+if WITH_SAT_SOLVER
+link_parser_LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
+link_parser_LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
+endif
+
+link_parser_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
 
 if HAVE_EDITLINE
 link_parser_LDADD += -ledit
