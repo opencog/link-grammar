@@ -41,7 +41,7 @@ void free_deletable(Sentence sent)
  * words "either", "neither", "both", "not" and "not only" are all
  * deletable.
  */
-static void build_deletable(Sentence sent, int has_conjunction)
+void build_deletable(Sentence sent, int has_conjunction)
 {
 	int i,j,k;
 
@@ -132,7 +132,7 @@ void free_effective_dist(Sentence sent)
  * Just as deletable[i][j] is constructed for j=N_words (which is one
  * off the end of the sentence) we do that for effective_dist[][].
  */
-static void build_effective_dist(Sentence sent, int has_conjunction)
+void build_effective_dist(Sentence sent, int has_conjunction)
 {
 	int i, j, diff;
 

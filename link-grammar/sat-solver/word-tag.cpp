@@ -1,4 +1,4 @@
-#include <link-grammar/word-tag.hpp>
+#include "word-tag.hpp"
 #include "fast-sprintf.hpp"
 
 void WordTag::insert_connectors(Exp* exp, int& dfs_position, 
