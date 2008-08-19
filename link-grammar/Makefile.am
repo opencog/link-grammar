@@ -38,8 +38,10 @@ liblink_grammar_la_LIBADD  =
 liblink_grammar_java_la_LIBADD  = liblink-grammar.la
 
 if WITH_SAT_SOLVER
-liblink_grammar_la_LIBADD  += -lsatsolver -lminisat
-liblink_grammar_java_la_LIBADD  += -lsatsolver -lminisat
+liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
+liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
+liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
+liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
 if WITH_BINRELOC
