@@ -13,6 +13,9 @@
 
 #include <link-grammar/api.h>
 #include "preparation.h"
+#ifdef USE_SAT_SOLVER
+#include "sat-solver/sat-encoder.h"
+#endif
 
 /***************************************************************
 *
@@ -861,6 +864,9 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	expression_prune(sent);
 	print_time(opts, "Finished expression pruning");
+#ifdef USE_SAT_SOLVER
+	sat_parse(sent, opts);
+#else
 	prepare_to_parse(sent, opts);
 
 	init_fast_matcher(sent);
@@ -889,6 +895,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	free_table(sent);
 	free_fast_matcher(sent);
+#endif /* USE_SAT_SOLVER */
 	print_time(opts, "Finished parse");
 
 	return sent->num_valid_linkages;
