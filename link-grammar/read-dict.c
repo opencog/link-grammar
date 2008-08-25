@@ -1005,6 +1005,11 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
  * l is the length of this list (the last ptr may not be NULL).
  * It inserts the list into the dictionary.
  * It does the middle one first, then the left half, then the right.
+ *
+ * XXX -- I think this insert middle, then left, then right, is a lame
+ * attempt to hack around the fact that the binary tree is rather
+ * badly unbalanced. Really, the correct thing to do would have been
+ * to just-plain balance the tree. See the other XXX above.
  */
 static void insert_list(Dictionary dict, Dict_node * p, int l)
 {
@@ -1144,23 +1149,30 @@ syntax_error:
 
 void print_expression(Exp * n)
 {
-	E_list * el; int i;
-	if (n == NULL) {
+	E_list * el;
+	int i;
+
+	if (n == NULL)
+	{
 		printf("NULL expression");
 		return;
 	}
-	if (n->type == CONNECTOR_type) {
+	if (n->type == CONNECTOR_type)
+	{
 		for (i=0; i<n->cost; i++) printf("[");
 		if (n->multi) printf("@");
 		printf("%s%c",n->u.string, n->dir);
 		for (i=0; i<n->cost; i++) printf("]");
 		if (n->cost > 0) printf(" ");
-	} else {
+	}
+	else
+	{
 		for (i=0; i<n->cost; i++) printf("[");
 		if (n->cost == 0) printf("(");
 		if (n->type == AND_type) printf("& ");
 		if (n->type == OR_type) printf("or ");
-		for (el = n->u.l; el != NULL; el = el->next) {
+		for (el = n->u.l; el != NULL; el = el->next)
+		{
 			print_expression(el->e);
 		}
 		for (i=0; i<n->cost; i++) printf("]");
@@ -1253,6 +1265,9 @@ static void set_parent_of_node(Dictionary dict,
 /**
  * This deletes all the non-idiom words of the dictionary that match
  * the given string.  Returns TRUE if some deleted, FALSE otherwise.
+ *
+ * XXX Note: this function is not currently used anywhere in the code,
+ * but it could be useful for general dictionary editing.
  */
 int delete_dictionary_words(Dictionary dict, const char * s)
 {
@@ -1348,16 +1363,18 @@ void dict_display_word_info(Dictionary dict, const char * s)
 	printf("Matches:\n");
 	for (dn = dn_head; dn != NULL; dn = dn->right)
 	{
-		len=0;
+		len = 0;
 		d1 = build_disjuncts_for_dict_node(dn);
-		for(d2 = d1 ; d2!=NULL; d2 = d2->next){
+		for(d2 = d1 ; d2 != NULL; d2 = d2->next)
+		{
 			len++;
 		}
 		free_disjuncts(d1);
 		printf("		  ");
 		left_print_string(stdout, dn->string, "				  ");
 		printf(" %5d  ", len);
-		if (dn->file != NULL) {
+		if (dn->file != NULL)
+		{
 			printf("<%s>", dn->file->file);
 		}
 		printf("\n");
