@@ -25,13 +25,16 @@
   The dictionary file is a sequence of ENTRIES.  Each ENTRY is one or
   more WORDS (a sequence of upper or lower case letters) separated by
   spaces, followed by a ":", followed by an EXPRESSION followed by a
-  ";".  An EXPRESSION is a lisp expression where the functions are "&"
+  ";".  An EXPRESSION is an expression where the operators are "&"
   or "and" or "|" or "or", and there are three types of parentheses:
   "()", "{}", and "[]".  The terminal symbols of this grammar are the
-  connectors, which are strings of letters or numbers or *s.  (This
-  description applies to the prefix form of the dictionary.  the current
-  dictionary is written in infix form.  If the defined constant
-  INFIX_NOTATION is defined, then infix is used otherwise prefix is used.)
+  connectors, which are strings of letters or numbers or *s.
+  Expressions may be written in prefix or infix form. In prefix-form,
+  the expressions are lisp-like, with the operators &, | preceeding
+  the operands. In infix-form, the operators are in the middle. The
+  current dictionaries are in infix form.  If the C preprocessor
+  constant INFIX_NOTATION is defined, then the dictionary is assumed
+  to be in infix form.
 
   The connector begins with an optinal @, which is followed by an upper
   case sequence of letters. Each subsequent *, lower case letter or
