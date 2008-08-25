@@ -240,15 +240,24 @@ struct Word_struct
     int firstupper;
 };
 
-/* The E_list an Exp structures defined below comprise the expression      */
-/* trees that are stored in the dictionary.  The expression has a type     */
-/* (AND, OR or TERMINAL).  If it is not a terminal it has a list           */
-/* (an E_list) of children.                                                */
+/** 
+ * Types of Exp_struct structures
+ */
+#define OR_type 0
+#define AND_type 1
+#define CONNECTOR_type 2
 
+/** 
+ * The E_list and Exp structures defined below comprise the expression
+ * trees that are stored in the dictionary.  The expression has a type
+ * (AND, OR or TERMINAL).  If it is not a terminal it has a list
+ * (an E_list) of children.
+ */
 typedef struct E_list_struct E_list;
 
-struct Exp_struct {
-    char type;            /* one of three types, see below */
+struct Exp_struct
+{
+    char type;            /* one of three types, see above */
     unsigned char cost;   /* The cost of using this expression.
                              Only used for non-terminals */
     char dir;   /* '-' means to the left, '+' means to right (for connector) */
@@ -256,19 +265,15 @@ struct Exp_struct {
     union {
         E_list * l;       /* only needed for non-terminals */
         char * string;    /* only needed if it's a connector */
-    }u;
+    } u;
     Exp * next;
 };
 
-struct E_list_struct {
+struct E_list_struct
+{
     E_list * next;
     Exp * e;
 };
-
-/* Here are the types */
-#define OR_type 0
-#define AND_type 1
-#define CONNECTOR_type 2
 
 /* The structure below stores a list of dictionary word files. */
 struct Word_file_struct
@@ -300,7 +305,8 @@ struct D_type_list_struct
 };
 
 typedef struct PP_node_struct PP_node;
-struct PP_node_struct {
+struct PP_node_struct
+{
     D_type_list *d_type_array[MAX_LINKS];
     char *violation;
 };

@@ -88,6 +88,12 @@
   "ID".  This is reserved for the connectors automatically
   generated for idioms.
 
+  Dictionary words may be followed by a dot (period, "."), and a "subscript"
+  identifying the word type. The subscript may be one or more letters or 
+  numbers, but must begin with a letter. Currently, the dictionary contains
+  (mostly?) subscripts consisting of a single letter, and these serve mostly
+  to identify the part-of-speech. In general, subscripts can also be used
+  to distinguish different word senses.
 */
 
 static int link_advance(Dictionary dict);
@@ -315,8 +321,51 @@ static int check_connector(Dictionary dict, const char * s)
 }
 
 /* ======================================================================== */
+/** 
+ * dict_compare - compar two dictionary words for sort order.
+ * The data structure storing the dictionary is simply a binary tree.
+ * There is one catch however.  The ordering of the words is not
+ * exactly the order given by strcmp.  It was necessary to
+ * modify the order to make it so that "make" < "make.n" < "make-up"
+ * The problem is that if some other string could  lie between '\0'
+ * and '.' (such as '-' which strcmp would give) then it makes it much 
+ * harder to return all the strings that match a given word.
+ * For example, if "make-up" was inserted, then "make" was inserted 
+ * the a search was done for "make.n", the obvious algorithm would 
+ * not find the match.
+ */
+/* verbose version */
+/*
+int dict_compare(char *s, char *t)
+{
+	int ss, tt;
+	while (*s != '\0' && *s == *t) {
+		s++;
+		t++;
+	}
+	if (*s == '.') {
+		ss = 1;
+	} else {
+		ss = (*s)<<1;
+	}
+	if (*t == '.') {
+		tt = 1;
+	} else {
+		tt = (*t)<<1;
+	}
+	return (ss - tt);
+}
+*/
+
+/* terse version */
+static int dict_compare(const char *s, const char *t)
+{
+	while (*s != '\0' && *s == *t) {s++; t++;}
+	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
+}
+
 /**
- * dict_match() --
+ * dict_match() -- compare dictionary strings.
  * Assuming that s is a pointer to a dictionary string, and that
  * t is a pointer to a search string, this returns 0 if they
  * match, >0 if s>t, and <0 if s<t.
@@ -793,47 +842,6 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 }
 
 #endif
-
-/* The data structure storing the dictionary is simply a binary tree.  */
-/* There is one catch however.  The ordering of the words is not       */
-/* exactly the order given by strcmp.  It was necessary to             */
-/* modify the order to make it so that "make" < "make.n" < "make-up"   */
-/* The problem is that if some other string could  lie between '\0'    */
-/* and '.' (such as '-' which strcmp would give) then it makes it much */
-/* harder to return all the strings that match a given word.           */
-/* For example, if "make-up" was inserted, then "make" was inserted    */
-/* the a search was done for "make.n", the obvious algorithm would     */
-/* not find the match.                                                 */
-
-/* verbose version */
-/*
-int dict_compare(char *s, char *t)
-{
-	int ss, tt;
-	while (*s != '\0' && *s == *t) {
-		s++;
-		t++;
-	}
-	if (*s == '.') {
-		ss = 1;
-	} else {
-		ss = (*s)<<1;
-	}
-	if (*t == '.') {
-		tt = 1;
-	} else {
-		tt = (*t)<<1;
-	}
-	return (ss - tt);
-}
-*/
-
-/* terse version */
-static int dict_compare(const char *s, const char *t)
-{
-	while (*s != '\0' && *s == *t) {s++; t++;}
-	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
-}
 
 /**
  * Insert the new node into the dictionary below node n.
