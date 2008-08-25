@@ -232,6 +232,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	if(s[0] == '!')
 	{
 		dict_display_word_info(dict, s+1);
+		dict_display_word_expr(dict, s+1);
 		return;
 	}
 

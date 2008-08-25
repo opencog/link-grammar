@@ -1147,6 +1147,9 @@ syntax_error:
 	return 0;
 }
 
+/**
+ * print the expression, in prefix-style
+ */
 void print_expression(Exp * n)
 {
 	E_list * el;
@@ -1183,7 +1186,7 @@ void print_expression(Exp * n)
 
 static void rprint_dictionary_data(Dict_node * n)
 {
-		if (n==NULL) return;
+		if (n == NULL) return;
 		rprint_dictionary_data(n->left);
 		printf("%s: ", n->string);
 		print_expression(n->exp);
@@ -1191,6 +1194,11 @@ static void rprint_dictionary_data(Dict_node * n)
 		rprint_dictionary_data(n->right);
 }
 
+/**
+ * Dump the entire contents of the dictionary
+ * XXX This is not currently called by anything, but is a "good thing
+ * to keep around".
+ */
 void print_dictionary_data(Dictionary dict)
 {
 	rprint_dictionary_data(dict->root);
@@ -1378,6 +1386,32 @@ void dict_display_word_info(Dictionary dict, const char * s)
 		{
 			printf("<%s>", dn->file->file);
 		}
+		printf("\n");
+	}
+	free_lookup_list(dn_head);
+	return;
+}
+
+/**
+ *  dict_display_word_expr() - display the connector info for a given word.
+ */
+void dict_display_word_expr(Dictionary dict, const char * s)
+{
+	Dict_node *dn, *dn_head;
+
+	dn_head = dictionary_lookup_list(dict, s);
+	if (dn_head == NULL)
+	{
+		printf("	\"%s\" matches nothing in the dictionary.\n", s);
+		return;
+	}
+	printf("\nExpressions:\n");
+	for (dn = dn_head; dn != NULL; dn = dn->right)
+	{
+		printf("    ");
+		left_print_string(stdout, dn->string,
+			"                         ");
+		print_expression(dn->exp);
 		printf("\n");
 	}
 	free_lookup_list(dn_head);
