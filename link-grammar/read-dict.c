@@ -321,22 +321,33 @@ static int check_connector(Dictionary dict, const char * s)
 }
 
 /* ======================================================================== */
-/** 
- * dict_compare - compar two dictionary words for sort order.
+/**
+ * Dictionary entry comparison and ordering functions.
+ *
  * The data structure storing the dictionary is simply a binary tree.
- * There is one catch however.  The ordering of the words is not
- * exactly the order given by strcmp.  It was necessary to
- * modify the order to make it so that "make" < "make.n" < "make-up"
- * The problem is that if some other string could  lie between '\0'
- * and '.' (such as '-' which strcmp would give) then it makes it much 
- * harder to return all the strings that match a given word.
- * For example, if "make-up" was inserted, then "make" was inserted 
- * the a search was done for "make.n", the obvious algorithm would 
- * not find the match.
+ * The entries in the binary tree are sorted by alphabetical order.
+ * There is one catch, however: words may have suffixes (a dot, followed
+ * by the suffix), and these suffixes are to be handled appripriately
+ * during sorting and comparison.
+ *
+ * The use of suffixes means that the ordering of the words is not
+ * exactly the order given by strcmp.  The order must be such that, for
+ * example, "make" < "make.n" < "make-up" -- suffixed words come after
+ * the bare words, but before any other other words with non-ascii-alpha
+ * characters (such as the hyphen in "make-up", or possibly UTF8
+ * characters). Thus, stright "strcmp" can't be used to determine 
+ * dictionary order. 
+ *
+ * Thus, a set of specialized string comparison and ordering functions
+ * are provided. These "do the right thing" when matching string with
+ * and without suffixes.
+ */
+/** 
+ * dict_order - order two dictionary words in proper sort order.
  */
 /* verbose version */
 /*
-int dict_compare(char *s, char *t)
+int dict_order(char *s, char *t)
 {
 	int ss, tt;
 	while (*s != '\0' && *s == *t) {
@@ -358,14 +369,14 @@ int dict_compare(char *s, char *t)
 */
 
 /* terse version */
-static int dict_compare(const char *s, const char *t)
+static int dict_order(const char *s, const char *t)
 {
 	while (*s != '\0' && *s == *t) {s++; t++;}
 	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
 }
 
 /**
- * dict_match() -- compare dictionary strings.
+ * dict_match() -- order dictionary strings, with wildcard.
  * Assuming that s is a pointer to a dictionary string, and that
  * t is a pointer to a search string, this returns 0 if they
  * match, >0 if s>t, and <0 if s<t.
@@ -374,7 +385,7 @@ static int dict_compare(const char *s, const char *t)
  * you come to the end of one of them, or until you find unequal
  * characters.  A "*" matches anything.  Otherwise, replace "."
  * by "\0", and take the difference.  This behavior matches that
- * of the function dict_compare().
+ * of the function dict_order().
  */
 static int dict_match(const char * s, const char * t)
 {
@@ -384,7 +395,7 @@ static int dict_match(const char * s, const char * t)
 }
 
 /**
- * We need to prune out the lists thus generated.
+ * Com
  * A sub string will only be considered a subscript if it
  * followes the last "." in the word, and it does not begin
  * with a digit.
@@ -402,9 +413,10 @@ static int true_dict_match(const char * s, const char * t)
 	if ((ds != NULL) && ((*(ds+1) == '\0') ||
 	    (isdigit((int)*(ds+1))))) ds = NULL;
 
+	/* dt is NULL when there's no prefix ... */
 	if (dt == NULL && ds != NULL) {
 		if (((int)strlen(t)) > (ds-s)) return FALSE;   /* we need to do this to ensure that */
-		return (strncmp(s, t, ds-s) == 0);	  /*"i.e." does not match "i.e" */
+		return (strncmp(s, t, ds-s) == 0);	           /* "i.e." does not match "i.e" */
 	} else if (dt != NULL && ds == NULL) {
 		if (((int)strlen(s)) > (dt-t)) return FALSE;
 		return (strncmp(s, t, dt-t) == 0);
@@ -413,15 +425,20 @@ static int true_dict_match(const char * s, const char * t)
 	}
 }
 
-
+/* ======================================================================== */
+/**
+ * prune stuff ...
+ */
 static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 {
 	Dict_node *dn, *dnx, *dn_new;
 	dn_new = NULL;
-	for (dn = llist; dn!=NULL; dn = dnx) {
+	for (dn = llist; dn!=NULL; dn = dnx)
+	{
 		dnx = dn->right;
 		/* now put dn onto the answer list, or free it */
-		if (true_dict_match(dn->string, s)) {
+		if (true_dict_match(dn->string, s))
+		{
 			dn->right = dn_new;
 			dn_new = dn;
 		} else {
@@ -859,7 +876,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 	char t[128];
 
 	if (n == NULL) return newnode;
-	comp = dict_compare(newnode->string, n->string);
+	comp = dict_order(newnode->string, n->string);
 	if (comp < 0) {
 		n->left = insert_dict(dict, n->left, newnode);
 	} else if (comp > 0) {
