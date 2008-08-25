@@ -576,6 +576,12 @@ Exp * Exp_create(Dictionary dict)
 	return e;
 }
 
+static inline void exp_free(Exp * e)
+{
+	xfree((char *)e, sizeof(Exp));
+}
+
+/* ======================================================================== */
 /**
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
@@ -592,7 +598,6 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	return n;
 }
 
-
 /**
  * connector() -- make a node for a connector or dictionary word.
  *
@@ -604,12 +609,14 @@ static Exp * connector(Dictionary dict)
 	Dict_node *dn, *dn_head;
 	int i;
 
-	i = strlen(dict->token)-1;  /* this must be + or - if a connector */
+	i = strlen(dict->token) - 1;  /* this must be + or - if a connector */
 	if ((dict->token[i] != '+') && (dict->token[i] != '-'))
 	{
+		/* If we are here, token is a word */
 		dn_head = abridged_lookup_list(dict, dict->token);
 		dn = dn_head;
-		while((dn != NULL) && (strcmp(dn->string, dict->token) != 0)) {
+		while ((dn != NULL) && (strcmp(dn->string, dict->token) != 0))
+		{
 			dn = dn->right;
 		}
 		if (dn == NULL)
@@ -622,24 +629,34 @@ static Exp * connector(Dictionary dict)
 		}
 		n = make_unary_node(dict, dn->exp);
 		free_lookup_list(dn_head);
-	} else {
-		if (!check_connector(dict, dict->token)) {
+	} 
+	else
+	{
+		/* If we are here, token is a connector */
+		if (!check_connector(dict, dict->token))
+		{
 			return NULL;
 		}
 		n = Exp_create(dict);
 		n->dir = dict->token[i];
 		dict->token[i] = '\0';				   /* get rid of the + or - */
-		if (dict->token[0] == '@') {
+		if (dict->token[0] == '@')
+		{
 			n->u.string = string_set_add(dict->token+1, dict->string_set);
 			n->multi = TRUE;
-		} else {
+		}
+		else
+		{
 			n->u.string = string_set_add(dict->token, dict->string_set);
 			n->multi = FALSE;
 		}
 		n->type = CONNECTOR_type;
 		n->cost = 0;
 	}
-	if (!link_advance(dict)) {
+
+	if (!link_advance(dict))
+	{
+		exp_free(n);
 		return NULL;
 	}
 	return n;
@@ -1258,12 +1275,14 @@ static void free_Elist(E_list * l)
 static void free_Exp_list(Exp * e)
 {
 	Exp * e1;
-	for (; e != NULL; e = e1) {
+	for (; e != NULL; e = e1)
+	{
 		e1 = e->next;
-		if (e->type != CONNECTOR_type) {
+		if (e->type != CONNECTOR_type)
+		{
 		   free_Elist(e->u.l);
 		}
-		xfree((char *)e, sizeof(Exp));
+		exp_free(e);
 	}
 }
 
