@@ -1370,8 +1370,9 @@ void dict_display_word_info(Dictionary dict, const char * s)
 			len++;
 		}
 		free_disjuncts(d1);
-		printf("		  ");
-		left_print_string(stdout, dn->string, "				  ");
+		printf("    ");
+		left_print_string(stdout, dn->string,
+			"                         ");
 		printf(" %5d  ", len);
 		if (dn->file != NULL)
 		{
