@@ -431,28 +431,42 @@ static int dict_match(const char * s, const char * t)
 }
 
 /* ======================================================================== */
+
+static inline void free_dict_node(Dict_node *dn)
+{
+	xfree((char *)dn, sizeof(Dict_node));
+}
+
 /**
- * prune stuff ...
+ * prune_lookup_list -- discard all list entries that don't match string
+ * Walk the lookup list (of right links), discarding all nodes that do
+ * not match the dictionary string s. The matching is dictionary matching:
+ * suffixed entries will match "bare" entries.
  */
 static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 {
-	Dict_node *dn, *dnx, *dn_new;
-	dn_new = NULL;
-	for (dn = llist; dn!=NULL; dn = dnx)
+	Dict_node *dn, *dnx, *list_new;
+
+	list_new = NULL;
+	for (dn = llist; dn != NULL; dn = dnx)
 	{
 		dnx = dn->right;
 		/* now put dn onto the answer list, or free it */
 		if (dict_match(dn->string, s))
 		{
-			dn->right = dn_new;
-			dn_new = dn;
-		} else {
-			xfree((char *)dn, sizeof(Dict_node));
+			dn->right = list_new;
+			list_new = dn;
+		}
+		else
+		{
+			free_dict_node(dn);
 		}
 	}
+
 	/* now reverse the list back */
 	llist = NULL;
-	for (dn = dn_new; dn!=NULL; dn = dnx) {
+	for (dn = list_new; dn != NULL; dn = dnx)
+	{
 		dnx = dn->right;
 		dn->right = llist;
 		llist = dn;
@@ -465,7 +479,7 @@ void free_lookup_list(Dict_node *llist)
 	Dict_node * n;
 	while(llist != NULL) {
 		n = llist->right;
-		xfree((char *)llist, sizeof(Dict_node));
+		free_dict_node(llist);
 		llist = n;
 	}
 }
@@ -927,7 +941,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.\n",
 		        dn->string, dict->line_number);
-		xfree((char *)dn, sizeof(Dict_node));
+		free_dict_node(dn);
 	}
 	else if ((dn_head = abridged_lookup_list(dict, dn->string))!= NULL)
 	{
@@ -940,7 +954,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 		}
 		fprintf(stderr, "\n\tThis word will be ignored.\n");
 		free_lookup_list(dn_head);
-		xfree((char *)dn, sizeof(Dict_node));
+		free_dict_node(dn);
 	}
 	else
 	{
@@ -1215,7 +1229,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 		}
 		if (to_be_deleted->left == NULL) {
 			set_parent_of_node(dict, parent, to_be_deleted, to_be_deleted->right);
-			xfree((char *)to_be_deleted, sizeof(Dict_node));
+			free_dict_node(to_be_deleted);
 		} else {
 			pred_parent = to_be_deleted;
 			pred = to_be_deleted->left;
@@ -1227,7 +1241,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 			to_be_deleted->file = pred->file;
 			to_be_deleted->exp = pred->exp;
 			set_parent_of_node(dict, pred_parent, pred, pred->left);
-			xfree((char *)pred, sizeof(Dict_node));
+			free_dict_node(pred);
 		}
 		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return TRUE;
 	}
@@ -1270,17 +1284,17 @@ static void free_Exp_list(Exp * e)
 	}
 }
 
-static void free_Dict_node(Dict_node * dn)
+static void free_dict_node_recursive(Dict_node * dn)
 {
 	if (dn == NULL) return;
-	free_Dict_node(dn->left);
-	free_Dict_node(dn->right);
-	xfree(dn, sizeof(Dict_node));
+	free_dict_node_recursive(dn->left);
+	free_dict_node_recursive(dn->right);
+	free_dict_node(dn);
 }
 
 void free_dictionary(Dictionary dict)
 {
-	free_Dict_node(dict->root);
+	free_dict_node_recursive(dict->root);
 	free_Word_file(dict->word_file_header);
 	free_Exp_list(dict->exp_list);
 }
