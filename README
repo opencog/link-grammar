@@ -227,7 +227,32 @@ MULTI-THREADED USE:
    Parse options can be set on a per-thread basis, with the exception
    of verbosity, which is treated as a global.
 
-   See the to-do notes below for technical details.
+   The library uses pthreads for the few spots where it needs to manage
+   per-thread storage. It is possibly quite reasonable to abolish these 
+   few spots, thus making the library not only thread-safe, but thread
+   agnostic (i.e. not require pthreads).
+
+   The following exceptions and special notes apply:
+
+      error.c -- uses pthreads to access error message area.
+      utilities.c -- has global "verbosity". Uses pthreads for tracking
+                     memory usage. The memory usage code is just about
+                     obsolete, and could probably be discarded.
+      jni-client.c - uses per-thread struct, but needs to be attached
+                     to JNIEnv somehow.
+      malloc-dbg.c - not thread safe, not normally used;
+                     only for debugging.
+      prefix.c - not thread-safe, but doesn't need to be; used only
+                 during initialization, and only if binreloc turned
+                 on.
+      pp_lexer.c -- autogened code, original lex sources lost.
+                    This is only used when reading dictionaries,
+                    during initialization, and so doesn't need
+                    to be thread safe.
+      utilities.h -- Windows doesn't have a thread-safe random-number
+                     generator, which means link-grammar for Windows
+                     is not currently thread-safe.
+
 
 COMMERCIAL use:
 
@@ -269,7 +294,7 @@ ADDRESSES
      Pittsburgh, PA 15213
 
 
-TODO:
+TODO -- Working Notes:
    Some working notes.
    read-dict.c: after running insert_dict() to create dictionary tree,
       the tree is highly unbalanced, and should be rebalanced before use.
@@ -324,6 +349,32 @@ TODO:
      rules for "tend.meaning1" and "tend.meaning2", the rules would
      simplify (at the cost of inflating the size of the dictionary).
 
+     (Mechaninical work item: extend dictionary suffixes to allow
+     multi-letter suffixes.
+
+  "holes" in collocations:
+     The link-grammar does not support circumpositions (or even more 
+     complicated multi-word structures), when such structures have 
+     "holes" in the middle. For example, the adposition:
+
+        ... from [xxx] on.
+
+            "He never said another word from then on."
+            "I promise to be quiet from now on."
+            "Keep going straight from that point on."
+            "We went straight from here on."
+            ... from there on.
+            "We went straight, from the house on to the woods."
+            "We drove straight, from the hill onwards."
+ 
+    Note that multiple words can fit in the slot [xxx].
+    Note the tangling of another prepositional phrase: 
+    "... from [xxx] on to [yyy]"
+
+    More complicated collocations with holes include 
+    "First.. next...", and "if ... then ..."
+
+
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,
@@ -341,27 +392,4 @@ TODO:
 
     (This somewhat resembles the application of construction grammar
     ideas to the link-grammar dictionary).
-
-  Thread safety: link-grammar has been converted to be thead-safe.
-    The following exceptions and special notes apply:
-
-      error.c -- uses pthreads to access error message area.
-      utilities.c -- has global "verbosity". Uses pthreads for tracking
-                     memory usage. The memory usage code is just about
-                     obsolete, and could probably be discarded.
-      jni-client.c - uses per-thread struct, but needs to be attached
-                     to JNIEnv somehow.
-      malloc-dbg.c - not thread safe, not normally used;
-                     only for debugging.
-      prefix.c - not thread-safe, but doesn't need to be; used only
-                 during initialization, and only if binreloc turned
-                 on.
-      pp_lexer.c -- autogened code, original lex sources lost.
-                    This is only used when reading dictionaries,
-                    during initialization, and so doesn't need
-                    to be thread safe.
-
-      utilities.h -- Windows doesn't have a thread-safe random-number
-                     generator, which means link-grammar for Windows
-                     is not currently thread-safe.
 
