@@ -432,6 +432,11 @@ static int dict_match(const char * s, const char * t)
 
 /* ======================================================================== */
 
+static inline Dict_node * dict_node_new(void)
+{
+	return (Dict_node*) xalloc(sizeof(Dict_node));
+}
+
 static inline void free_dict_node(Dict_node *dn)
 {
 	xfree((char *)dn, sizeof(Dict_node));
@@ -477,15 +482,88 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 void free_lookup_list(Dict_node *llist)
 {
 	Dict_node * n;
-	while(llist != NULL) {
+	while(llist != NULL)
+	{
 		n = llist->right;
 		free_dict_node(llist);
 		llist = n;
 	}
 }
 
-/* ======================================================================== */
+static void free_dict_node_recursive(Dict_node * dn)
+{
+	if (dn == NULL) return;
+	free_dict_node_recursive(dn->left);
+	free_dict_node_recursive(dn->right);
+	free_dict_node(dn);
+}
 
+/* ======================================================================== */
+/**
+ * rdictionary_lookup() -- recursive dictionary lookup
+ * Walk binary tree, given by 'dn', looking for the string 's'.
+ * For every node in the tree where 's' matches (including wildcards)
+ * make a copy of that node, and append it to llist.
+ */
+static Dict_node * rdictionary_lookup(Dict_node *llist,
+                                      Dict_node * dn, const char * s, int match_idiom)
+{
+	/* see comment in dictionary_lookup below */
+	int m;
+	Dict_node * dn_new;
+	if (dn == NULL) return llist;
+	m = dict_order_wild(s, dn->string);
+	if (m >= 0)
+	{
+		llist = rdictionary_lookup(llist, dn->right, s, match_idiom);
+	}
+	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)))
+	{
+		dn_new = dict_node_new();
+		*dn_new = *dn;
+		dn_new->right = llist;
+		llist = dn_new;
+	}
+	if (m <= 0)
+	{
+		llist = rdictionary_lookup(llist, dn->left, s, match_idiom);
+	}
+	return llist;
+}
+
+/**
+ * dictionary_lookup_list() - return lookup list of words in the dictionary
+ *
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * The returned list must be freed with free_lookup_list().
+ */
+Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
+{
+   Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE);
+   llist = prune_lookup_list(llist, s);
+   return llist;
+}
+
+static Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
+{
+	Dict_node *llist;
+   llist = rdictionary_lookup(NULL, dict->root, s, FALSE);
+   llist = prune_lookup_list(llist, s);
+   return llist;
+}
+
+int boolean_dictionary_lookup(Dictionary dict, const char *s)
+{
+	Dict_node *llist = dictionary_lookup_list(dict, s);
+	int bool = (llist != NULL);
+	free_lookup_list(llist);
+	return bool;
+}
+
+/* ======================================================================== */
 /**
  * Allocate a new Exp node and link it into the exp_list for freeing later.
  */
@@ -512,39 +590,6 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	n->u.l->next = NULL;
 	n->u.l->e = e;
 	return n;
-}
-
-/**
- * The abridged_* routines are exactly the same as the dictionary_* routines,
- * only they do not consider the idiom words
- */
-static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char * s)
-{
-	int m;
-	Dict_node * dn_new;
-	if (dn == NULL) return llist;
-	m = dict_order_wild(s, dn->string);
-	if (m >= 0) {
-		llist = rabridged_lookup(llist, dn->right, s);
-	}
-	if ((m == 0) && (!is_idiom_word(dn->string))) {
-		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
-		*dn_new = *dn;
-		dn_new->right = llist;
-		llist = dn_new;
-	}
-	if (m <= 0) {
-		llist = rabridged_lookup(llist, dn->left, s);
-	}
-	return llist;
-}
-
-static Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
-{
-	Dict_node *llist;
-   llist = rabridged_lookup(NULL, dict->root, s);
-   llist = prune_lookup_list(llist, s);
-   return llist;
 }
 
 
@@ -995,7 +1040,7 @@ static int read_entry(Dictionary dict)
 				return 0;
 			}
 		} else {
-			dn_new = (Dict_node *) xalloc(sizeof(Dict_node));
+			dn_new = dict_node_new();
 			dn_new->left = dn;
 			dn = dn_new;
 			dn->file = NULL;
@@ -1101,68 +1146,6 @@ int read_dictionary(Dictionary dict)
 }
 
 /* ======================================================================= */
-/**
- * rdictionary_lookup() --recursive dictionary lookup
- * Walks binary tree.
- */
-static Dict_node * rdictionary_lookup(Dict_node *llist,
-                                      Dict_node * dn, const char * s)
-{
-	/* see comment in dictionary_lookup below */
-	int m;
-	Dict_node * dn_new;
-	if (dn == NULL) return llist;
-	m = dict_order_wild(s, dn->string);
-	if (m >= 0) {
-		llist = rdictionary_lookup(llist, dn->right, s);
-	}
-	if (m == 0) {
-		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
-		*dn_new = *dn;
-		dn_new->right = llist;
-		llist = dn_new;
-	}
-	if (m <= 0) {
-		llist = rdictionary_lookup(llist, dn->left, s);
-	}
-	return llist;
-}
-
-/**
- * dictionary_lookup_list() - return lookup list of words in the dictionary
- *
- * Returns a pointer to a lookup list of the words in the dictionary.
- * This list is made up of Dict_nodes, linked by their right pointers.
- * The node, file and string fields are copied from the dictionary.
- *
- * The returned list must be freed with free_lookup_list().
- */
-Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
-{
-   Dict_node * llist = rdictionary_lookup(NULL, dict->root, s);
-   llist = prune_lookup_list(llist, s);
-   return llist;
-}
-
-int boolean_dictionary_lookup(Dictionary dict, const char *s)
-{
-	Dict_node *llist = dictionary_lookup_list(dict, s);
-	int bool = (llist != NULL);
-	free_lookup_list(llist);
-	return bool;
-}
-
-/**
- *  boolean_abridged_lookup() - returns true if in the dictionary, false otherwise
- */
-int boolean_abridged_lookup(Dictionary dict, const char *s)
-{
-	Dict_node *dn = abridged_lookup_list(dict, s);
-	int bool = (dn != NULL);
-	free_lookup_list(dn);
-	return bool;
-}
-
 /* the following functions are for handling deletion */
 /**
  * Returns true if it finds a non-idiom dict_node in a file that matches
@@ -1282,14 +1265,6 @@ static void free_Exp_list(Exp * e)
 		}
 		xfree((char *)e, sizeof(Exp));
 	}
-}
-
-static void free_dict_node_recursive(Dict_node * dn)
-{
-	if (dn == NULL) return;
-	free_dict_node_recursive(dn->left);
-	free_dict_node_recursive(dn->right);
-	free_dict_node(dn);
 }
 
 void free_dictionary(Dictionary dict)
