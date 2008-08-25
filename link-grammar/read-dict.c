@@ -344,6 +344,8 @@ static int check_connector(Dictionary dict, const char * s)
  */
 /** 
  * dict_order - order two dictionary words in proper sort order.
+ * Return zero if the strings match, else return standard 
+ * (locale-dependent) UTF8 sort order.
  */
 /* verbose version */
 /*
@@ -376,7 +378,7 @@ static int dict_order(const char *s, const char *t)
 }
 
 /**
- * dict_match() -- order dictionary strings, with wildcard.
+ * dict_order_wild() -- order dictionary strings, with wildcard.
  * Assuming that s is a pointer to a dictionary string, and that
  * t is a pointer to a search string, this returns 0 if they
  * match, >0 if s>t, and <0 if s<t.
@@ -387,7 +389,7 @@ static int dict_order(const char *s, const char *t)
  * by "\0", and take the difference.  This behavior matches that
  * of the function dict_order().
  */
-static int dict_match(const char * s, const char * t)
+static int dict_order_wild(const char * s, const char * t)
 {
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
 	if ((*s == '*') || (*t == '*')) return 0;
@@ -395,12 +397,15 @@ static int dict_match(const char * s, const char * t)
 }
 
 /**
- * Com
- * A sub string will only be considered a subscript if it
- * followes the last "." in the word, and it does not begin
- * with a digit.
+ * dict_match --  return true if strings match, else false.
+ * A "bare" string (one without a suffix) will match any corresponding 
+ * string with a suffix; so, for example, "make" and "make.n" are 
+ * a match.  If both strings have suffixes, then the suffixes must match.
+ *
+ * A subscript is the part that followes the last "." in the word, and 
+ * that does not begin with a digit.
  */
-static int true_dict_match(const char * s, const char * t)
+static int dict_match(const char * s, const char * t)
 {
 	char *ds, *dt;
 	ds = strrchr(s, '.');
@@ -437,7 +442,7 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 	{
 		dnx = dn->right;
 		/* now put dn onto the answer list, or free it */
-		if (true_dict_match(dn->string, s))
+		if (dict_match(dn->string, s))
 		{
 			dn->right = dn_new;
 			dn_new = dn;
@@ -504,7 +509,7 @@ static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return llist;
-	m = dict_match(s, dn->string);
+	m = dict_order_wild(s, dn->string);
 	if (m >= 0) {
 		llist = rabridged_lookup(llist, dn->right, s);
 	}
@@ -1093,7 +1098,7 @@ static Dict_node * rdictionary_lookup(Dict_node *llist,
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return llist;
-	m = dict_match(s, dn->string);
+	m = dict_order_wild(s, dn->string);
 	if (m >= 0) {
 		llist = rdictionary_lookup(llist, dn->right, s);
 	}
@@ -1159,7 +1164,7 @@ static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
 {
 	int m;
 	if (dn == NULL) return FALSE;
-	m = dict_match(s, dn->string);
+	m = dict_order_wild(s, dn->string);
 	if (m <= 0) {
 		if (find_one_non_idiom_node(dn,dn->left, s, parent, to_be_deleted)) return TRUE;
 	}
