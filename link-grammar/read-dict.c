@@ -91,7 +91,6 @@
 */
 
 static int link_advance(Dictionary dict);
-static Dict_node * abridged_lookup_list(Dictionary dict, const char *s);
 
 static void dict_error2(Dictionary dict, const char * s, const char *s2)
 {
@@ -135,18 +134,6 @@ static void warning(Dictionary dict, const char * s)
 	prt_error("Warning: %s\n"
 	          "\tline %d, current token = \"%s\"\n",
 	          s, dict->line_number, dict->token);
-}
-
-/**
- * Allocate a new Exp node and link it into the exp_list for freeing later.
- */
-Exp * Exp_create(Dictionary dict)
-{
-	Exp * e;
-	e = (Exp *) xalloc(sizeof(Exp));
-	e->next = dict->exp_list;
-	dict->exp_list = e;
-	return e;
 }
 
 /**
@@ -327,11 +314,110 @@ static int check_connector(Dictionary dict, const char * s)
 	return 1;
 }
 
+/* ======================================================================== */
+/**
+ * dict_match() --
+ * Assuming that s is a pointer to a dictionary string, and that
+ * t is a pointer to a search string, this returns 0 if they
+ * match, >0 if s>t, and <0 if s<t.
+ *
+ * The matching is done as follows.  Walk down the strings until
+ * you come to the end of one of them, or until you find unequal
+ * characters.  A "*" matches anything.  Otherwise, replace "."
+ * by "\0", and take the difference.  This behavior matches that
+ * of the function dict_compare().
+ */
+static int dict_match(const char * s, const char * t)
+{
+	while((*s != '\0') && (*s == *t)) {s++; t++;}
+	if ((*s == '*') || (*t == '*')) return 0;
+	return (((*s == '.')?('\0'):(*s))  -  ((*t == '.')?('\0'):(*t)));
+}
+
+/**
+ * We need to prune out the lists thus generated.
+ * A sub string will only be considered a subscript if it
+ * followes the last "." in the word, and it does not begin
+ * with a digit.
+ */
+static int true_dict_match(const char * s, const char * t)
+{
+	char *ds, *dt;
+	ds = strrchr(s, '.');
+	dt = strrchr(t, '.');
+
+	/* a dot at the end or a dot followed by a number is NOT
+	 * considered a subscript */
+	if ((dt != NULL) && ((*(dt+1) == '\0') ||
+	    (isdigit((int)*(dt+1))))) dt = NULL;
+	if ((ds != NULL) && ((*(ds+1) == '\0') ||
+	    (isdigit((int)*(ds+1))))) ds = NULL;
+
+	if (dt == NULL && ds != NULL) {
+		if (((int)strlen(t)) > (ds-s)) return FALSE;   /* we need to do this to ensure that */
+		return (strncmp(s, t, ds-s) == 0);	  /*"i.e." does not match "i.e" */
+	} else if (dt != NULL && ds == NULL) {
+		if (((int)strlen(s)) > (dt-t)) return FALSE;
+		return (strncmp(s, t, dt-t) == 0);
+	} else {
+		return (strcmp(s, t) == 0);
+	}
+}
+
+
+static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
+{
+	Dict_node *dn, *dnx, *dn_new;
+	dn_new = NULL;
+	for (dn = llist; dn!=NULL; dn = dnx) {
+		dnx = dn->right;
+		/* now put dn onto the answer list, or free it */
+		if (true_dict_match(dn->string, s)) {
+			dn->right = dn_new;
+			dn_new = dn;
+		} else {
+			xfree((char *)dn, sizeof(Dict_node));
+		}
+	}
+	/* now reverse the list back */
+	llist = NULL;
+	for (dn = dn_new; dn!=NULL; dn = dnx) {
+		dnx = dn->right;
+		dn->right = llist;
+		llist = dn;
+	}
+	return llist;
+}
+
+void free_lookup_list(Dict_node *llist)
+{
+	Dict_node * n;
+	while(llist != NULL) {
+		n = llist->right;
+		xfree((char *)llist, sizeof(Dict_node));
+		llist = n;
+	}
+}
+
+/* ======================================================================== */
+
+/**
+ * Allocate a new Exp node and link it into the exp_list for freeing later.
+ */
+Exp * Exp_create(Dictionary dict)
+{
+	Exp * e;
+	e = (Exp *) xalloc(sizeof(Exp));
+	e->next = dict->exp_list;
+	dict->exp_list = e;
+	return e;
+}
+
 /**
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
  */
-Exp * make_unary_node(Dictionary dict, Exp * e)
+static Exp * make_unary_node(Dictionary dict, Exp * e)
 {
 	Exp * n;
 	n = Exp_create(dict);
@@ -341,6 +427,39 @@ Exp * make_unary_node(Dictionary dict, Exp * e)
 	n->u.l->next = NULL;
 	n->u.l->e = e;
 	return n;
+}
+
+/**
+ * The abridged_* routines are exactly the same as the dictionary_* routines,
+ * only they do not consider the idiom words
+ */
+static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char * s)
+{
+	int m;
+	Dict_node * dn_new;
+	if (dn == NULL) return llist;
+	m = dict_match(s, dn->string);
+	if (m >= 0) {
+		llist = rabridged_lookup(llist, dn->right, s);
+	}
+	if ((m == 0) && (!is_idiom_word(dn->string))) {
+		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
+		*dn_new = *dn;
+		dn_new->right = llist;
+		llist = dn_new;
+	}
+	if (m <= 0) {
+		llist = rabridged_lookup(llist, dn->left, s);
+	}
+	return llist;
+}
+
+static Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
+{
+	Dict_node *llist;
+   llist = rabridged_lookup(NULL, dict->root, s);
+   llist = prune_lookup_list(llist, s);
+   return llist;
 }
 
 
@@ -937,91 +1056,7 @@ int read_dictionary(Dictionary dict)
 	return 1;
 }
 
-/**
- * dict_match() --
- * Assuming that s is a pointer to a dictionary string, and that
- * t is a pointer to a search string, this returns 0 if they
- * match, >0 if s>t, and <0 if s<t.
- *
- * The matching is done as follows.  Walk down the strings until
- * you come to the end of one of them, or until you find unequal
- * characters.  A "*" matches anything.  Otherwise, replace "."
- * by "\0", and take the difference.  This behavior matches that
- * of the function dict_compare().
- */
-static int dict_match(const char * s, const char * t)
-{
-	while((*s != '\0') && (*s == *t)) {s++; t++;}
-	if ((*s == '*') || (*t == '*')) return 0;
-	return (((*s == '.')?('\0'):(*s))  -  ((*t == '.')?('\0'):(*t)));
-}
-
-/**
- * We need to prune out the lists thus generated.
- * A sub string will only be considered a subscript if it
- * followes the last "." in the word, and it does not begin
- * with a digit.
- */
-static int true_dict_match(const char * s, const char * t)
-{
-	char *ds, *dt;
-	ds = strrchr(s, '.');
-	dt = strrchr(t, '.');
-
-	/* a dot at the end or a dot followed by a number is NOT
-	 * considered a subscript */
-	if ((dt != NULL) && ((*(dt+1) == '\0') ||
-	    (isdigit((int)*(dt+1))))) dt = NULL;
-	if ((ds != NULL) && ((*(ds+1) == '\0') ||
-	    (isdigit((int)*(ds+1))))) ds = NULL;
-
-	if (dt == NULL && ds != NULL) {
-		if (((int)strlen(t)) > (ds-s)) return FALSE;   /* we need to do this to ensure that */
-		return (strncmp(s, t, ds-s) == 0);	  /*"i.e." does not match "i.e" */
-	} else if (dt != NULL && ds == NULL) {
-		if (((int)strlen(s)) > (dt-t)) return FALSE;
-		return (strncmp(s, t, dt-t) == 0);
-	} else {
-		return (strcmp(s, t) == 0);
-	}
-}
-
 /* ======================================================================= */
-
-static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
-{
-	Dict_node *dn, *dnx, *dn_new;
-	dn_new = NULL;
-	for (dn = llist; dn!=NULL; dn = dnx) {
-		dnx = dn->right;
-		/* now put dn onto the answer list, or free it */
-		if (true_dict_match(dn->string, s)) {
-			dn->right = dn_new;
-			dn_new = dn;
-		} else {
-			xfree((char *)dn, sizeof(Dict_node));
-		}
-	}
-	/* now reverse the list back */
-	llist = NULL;
-	for (dn = dn_new; dn!=NULL; dn = dnx) {
-		dnx = dn->right;
-		dn->right = llist;
-		llist = dn;
-	}
-	return llist;
-}
-
-void free_lookup_list(Dict_node *llist)
-{
-	Dict_node * n;
-	while(llist != NULL) {
-		n = llist->right;
-		xfree((char *)llist, sizeof(Dict_node));
-		llist = n;
-	}
-}
-
 /**
  * rdictionary_lookup() --recursive dictionary lookup
  * Walks binary tree.
@@ -1071,40 +1106,6 @@ int boolean_dictionary_lookup(Dictionary dict, const char *s)
 	int bool = (llist != NULL);
 	free_lookup_list(llist);
 	return bool;
-}
-
-/**
- * The following routines are exactly the same as those above,
- * only they do not consider the idiom words
- */
-
-static Dict_node * rabridged_lookup(Dict_node *llist, Dict_node * dn, const char * s)
-{
-	int m;
-	Dict_node * dn_new;
-	if (dn == NULL) return llist;
-	m = dict_match(s, dn->string);
-	if (m >= 0) {
-		llist = rabridged_lookup(llist, dn->right, s);
-	}
-	if ((m == 0) && (!is_idiom_word(dn->string))) {
-		dn_new = (Dict_node*) xalloc(sizeof(Dict_node));
-		*dn_new = *dn;
-		dn_new->right = llist;
-		llist = dn_new;
-	}
-	if (m <= 0) {
-		llist = rabridged_lookup(llist, dn->left, s);
-	}
-	return llist;
-}
-
-static Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
-{
-	Dict_node *llist;
-   llist = rabridged_lookup(NULL, dict->root, s);
-   llist = prune_lookup_list(llist, s);
-   return llist;
 }
 
 /**
