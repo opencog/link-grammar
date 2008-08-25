@@ -276,7 +276,7 @@ static int link_advance(Dictionary dict)
 /**
  * Returns TRUE if this token is a special token and it is equal to c
  */
-static int is_equal(Dictionary dict, wint_t c)
+static inline int is_equal(Dictionary dict, wint_t c)
 {
 	return (dict->is_special &&
 	        wctob(c) == dict->token[0] &&
@@ -696,10 +696,11 @@ static Exp * make_optional_node(Dictionary dict, Exp * e)
 	return n;
 }
 
-Exp * expression(Dictionary dict);
+/* ======================================================================== */
 
 #if ! defined INFIX_NOTATION
 
+Exp * expression(Dictionary dict);
 /**
  * We're looking at the first of the stuff after an "and" or "or".
  * Build a Exp node for this expression.  Set the cost and optional
@@ -815,27 +816,28 @@ Exp * expression(Dictionary dict)
 	return n;
 }
 
-#else
+/* ======================================================================== */
+#else /* This is for infix notation */
 
-/* This is for infix notation */
-
-Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok);
+static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok);
 
 /**
  * Build (and return the root of) the tree for the expression beginning
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
  */
-Exp * expression(Dictionary dict)
+static Exp * expression(Dictionary dict)
 {
-	return restricted_expression(dict, TRUE,TRUE);
+	return restricted_expression(dict, TRUE, TRUE);
 }
 
-Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
+static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 {
-	Exp * nl=NULL, * nr, * n;
+	Exp *nl = NULL, *nr;
 	E_list *ell, *elr;
-	if (is_equal(dict, '(')) {
+
+	if (is_equal(dict, '('))
+	{
 		if (!link_advance(dict)) {
 			return NULL;
 		}
@@ -850,7 +852,9 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-	} else if (is_equal(dict, '{')) {
+	}
+	else if (is_equal(dict, '{'))
+	{
 		if (!link_advance(dict)) {
 			return NULL;
 		}
@@ -866,7 +870,9 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 			return NULL;
 		}
 		nl = make_optional_node(dict, nl);
-	} else if (is_equal(dict, '[')) {
+	}
+	else if (is_equal(dict, '['))
+	{
 		if (!link_advance(dict)) {
 			return NULL;
 		}
@@ -882,27 +888,36 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 			return NULL;
 		}
 		nl->cost += 1;
-	} else if (!dict->is_special) {
+	}
+	else if (!dict->is_special)
+	{
 		nl = connector(dict);
 		if (nl == NULL) {
 			return NULL;
 		}
-	} else if (is_equal(dict, ')') || is_equal(dict, ']')) {
+	}
+	else if (is_equal(dict, ')') || is_equal(dict, ']'))
+	{
 		/* allows "()" or "[]" */
 		nl = make_zeroary_node(dict);
-	} else {
-			dict_error(dict, "Connector, \"(\", \"[\", or \"{\" expected.");
+	}
+	else
+	{
+		dict_error(dict, "Connector, \"(\", \"[\", or \"{\" expected.");
 		return NULL;
 	}
 
-	if (is_equal(dict, '&') || (strcmp(dict->token, "and")==0)) {
+	if (is_equal(dict, '&') || (strcmp(dict->token, "and") == 0))
+	{
+		Exp *n;
+
 		if (!and_ok) {
 			warning(dict, "\"and\" and \"or\" at the same level in an expression");
 		}
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nr = restricted_expression(dict, TRUE,FALSE);
+		nr = restricted_expression(dict, TRUE, FALSE);
 		if (nr == NULL) {
 			return NULL;
 		}
@@ -915,7 +930,12 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		elr->e = nr;
 		n->type = AND_type;
 		n->cost = 0;
-	} else if (is_equal(dict, '|') || (strcmp(dict->token, "or")==0)) {
+		return n;
+	}
+	else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
+	{
+		Exp *n;
+
 		if (!or_ok) {
 			warning(dict, "\"and\" and \"or\" at the same level in an expression");
 		}
@@ -935,12 +955,15 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		elr->e = nr;
 		n->type = OR_type;
 		n->cost = 0;
-	} else return nl;
-	return n;
+		return n;
+	} 
+
+	return nl;
 }
 
 #endif
 
+/* ======================================================================== */
 /**
  * Insert the new node into the dictionary below node n.
  * Give error message if the new element's string is already there.
@@ -954,16 +977,21 @@ Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
 	int comp;
-	char t[128];
 
 	if (n == NULL) return newnode;
 	comp = dict_order(newnode->string, n->string);
-	if (comp < 0) {
+	if (comp < 0)
+	{
 		n->left = insert_dict(dict, n->left, newnode);
-	} else if (comp > 0) {
+	}
+	else if (comp > 0)
+	{
 		n->right = insert_dict(dict, n->right, newnode);
-	} else {
-		sprintf(t, "The word \"%s\" has been multiply defined\n", newnode->string);
+	}
+	else
+	{
+		char t[256];
+		snprintf(t, 256, "The word \"%s\" has been multiply defined\n", newnode->string);
 		dict_error(dict, t);
 		return NULL;
 	}
