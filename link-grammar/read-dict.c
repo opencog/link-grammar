@@ -971,14 +971,15 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
  * and right fields of it are NULL.
  *
  * XXX The resulting tree is rather highly unbalanced. It would improve
- * performance of rdictionary_lookup() by a factor of two if a tree
- * balancing step was run after the dictionary creation. XXX
+ * performance of rdictionary_lookup() by (at least!) a factor of two 
+ * if a tree balancing step was run after the dictionary creation! XXX
  */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
 	int comp;
 
 	if (n == NULL) return newnode;
+
 	comp = dict_order(newnode->string, n->string);
 	if (comp < 0)
 	{
@@ -1014,9 +1015,11 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 
 	k = (l-1)/2;
 	dn = p;
-	for (i=0; i<k; i++) {
+	for (i = 0; i < k; i++)
+	{
 		dn = dn->left;
 	}
+
 	/* dn now points to the middle element */
 	dn_second_half = dn->left;
 	dn->left = dn->right = NULL;
@@ -1033,7 +1036,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 		        dn->string, dict->line_number);
 		free_dict_node(dn);
 	}
-	else if ((dn_head = abridged_lookup_list(dict, dn->string))!= NULL)
+	else if ((dn_head = abridged_lookup_list(dict, dn->string)) != NULL)
 	{
 		Dict_node *dnx;
 		prt_error("Warning: The word \"%s\" "
@@ -1077,14 +1080,17 @@ static int read_entry(Dictionary dict)
 		}
 
 		/* if it's a word-file name */
-		if (dict->token[0] == '/') {
+		if (dict->token[0] == '/')
+		{
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
 				prt_error("Error opening word file %s\n", dict->token);
 				return 0;
 			}
-		} else {
+		}
+		else
+		{
 			dn_new = dict_node_new();
 			dn_new->left = dn;
 			dn = dn_new;
@@ -1093,35 +1099,35 @@ static int read_entry(Dictionary dict)
 		}
 
 		/* Advance to next entry, unless error */
-		if (0 == link_advance(dict)) return 0;
+		if (0 == link_advance(dict)) goto syntax_error;
 	}
 
 	/* pass the : */
 	if (!link_advance(dict))
 	{
-		return 0;
+		goto syntax_error;
 	}
 
 	n = expression(dict);
 	if (n == NULL)
 	{
-		return 0;
+		goto syntax_error;
 	}
 
 	if (!is_equal(dict, ';'))
 	{
 		dict_error(dict, "Expecting \";\" at the end of an entry.");
-		return 0;
+		goto syntax_error;
 	}
 
 	/* pass the ; */
 	if (!link_advance(dict))
 	{
-		return 0;
+		goto syntax_error;
 	}
 
-	/* at this point, dn points to a list of Dict_nodes connected by */
-	/* their left pointers. These are to be inserted into the dictionary */
+	/* At this point, dn points to a list of Dict_nodes connected by
+	 * their left pointers. These are to be inserted into the dictionary */
 	i = 0;
 	for (dnx = dn; dnx != NULL; dnx = dnx->left)
 	{
@@ -1130,6 +1136,10 @@ static int read_entry(Dictionary dict)
 	}
 	insert_list(dict, dn, i);
 	return 1;
+
+syntax_error:
+	free_lookup_list(dn);
+	return 0;
 }
 
 void print_expression(Exp * n)
