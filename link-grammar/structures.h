@@ -278,10 +278,11 @@ struct Word_file_struct
     Word_file * next;
 };
 
-/* The dictionary is stored as a binary tree comprised of the following   */
-/* nodes.  A list of these (via right pointers) is used to return         */
-/* the result of a dictionary lookup.                                     */
-
+/** 
+ * The dictionary is stored as a binary tree comprised of the following
+ * nodes.  A list of these (via right pointers) is used to return
+ * the result of a dictionary lookup.
+ */
 struct Dict_node_struct
 {
     const char * string;  /* the word itself */

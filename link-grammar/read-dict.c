@@ -137,10 +137,11 @@ static void warning(Dictionary dict, const char * s)
 	          s, dict->line_number, dict->token);
 }
 
+/**
+ * Allocate a new Exp node and link it into the exp_list for freeing later.
+ */
 Exp * Exp_create(Dictionary dict)
 {
-	/* allocate a new Exp node and link it into the
-	   exp_list for freeing later */
 	Exp * e;
 	e = (Exp *) xalloc(sizeof(Exp));
 	e->next = dict->exp_list;
@@ -168,11 +169,12 @@ static wint_t get_character(Dictionary dict, int quote_mode)
 
 /*
  * This set of 10 characters are the ones defining the syntax of the dictionary.
-*/
+ */
 #define SPECIAL "(){};[]&|:"
 
 /**
  * This reads the next token from the input into token.
+ * Return 1 if a character was read, else return 0 (and print a warning).
  */
 static int link_advance(Dictionary dict)
 {
@@ -182,7 +184,8 @@ static int link_advance(Dictionary dict)
 
 	dict->is_special = FALSE;
 
-	if (dict->already_got_it != '\0') {
+	if (dict->already_got_it != '\0')
+	{
 		dict->is_special = (strchr(SPECIAL, dict->already_got_it) != NULL);
 		if (dict->already_got_it == EOF) {
 			dict->token[0] = '\0';
@@ -194,12 +197,13 @@ static int link_advance(Dictionary dict)
 		return 1;
 	}
 
-	do { c = get_character(dict, FALSE); } while (iswspace(c)); 
+	do { c = get_character(dict, FALSE); } while (iswspace(c));
 
 	quote_mode = FALSE;
 
 	i = 0;
-	for (;;) {
+	for (;;)
+	{
 		if (i > MAX_TOKEN_LENGTH-3) {  /* 3 for multi-byte tokens */
 			dict_error(dict, "Token too long");
 			return 0;
@@ -215,7 +219,7 @@ static int link_advance(Dictionary dict)
 				return 0;
 			}
 
-			/* store UTF8 internally, always. */
+			/* Although we read wide chars, we store UTF8 internally, always. */
 			nr = wctomb(&dict->token[i], c);
 			if (nr < 0) {
 #ifndef _WIN32
@@ -281,14 +285,18 @@ static int link_advance(Dictionary dict)
  */
 static int is_equal(Dictionary dict, wint_t c)
 {
-	return (dict->is_special && 
-	        wctob(c) == dict->token[0] && 
+	return (dict->is_special &&
+	        wctob(c) == dict->token[0] &&
 	        dict->token[1] == '\0');
 }
 
+/** 
+ * Make sure the string s is a valid connector.
+ * Return 1 if the connector is valid, else return 0,
+ * and print an appropriate warning message.
+ */
 static int check_connector(Dictionary dict, const char * s)
 {
-	/* makes sure the string s is a valid connector */
 	int i;
 	i = strlen(s);
 	if (i < 1) {
@@ -305,7 +313,7 @@ static int check_connector(Dictionary dict, const char * s)
 		dict_error(dict, "The first letter of a connector must be in [A--Z].");
 		return 0;
 	}
-	if ((*s=='I') && (*(s+1)=='D')) {
+	if ((*s == 'I') && (*(s+1) == 'D')) {
 		dict_error(dict, "Connectors beginning with \"ID\" are forbidden");
 		return 0;
 	}
@@ -319,7 +327,22 @@ static int check_connector(Dictionary dict, const char * s)
 	return 1;
 }
 
-Exp * make_unary_node(Dictionary dict, Exp * e);
+/**
+ * This creates a node with one child (namely e).  Initializes
+ * the cost to zero.
+ */
+Exp * make_unary_node(Dictionary dict, Exp * e)
+{
+	Exp * n;
+	n = Exp_create(dict);
+	n->type = AND_type;  /* these must be AND types */
+	n->cost = 0;
+	n->u.l = (E_list *) xalloc(sizeof(E_list));
+	n->u.l->next = NULL;
+	n->u.l->e = e;
+	return n;
+}
+
 
 /**
  * connector() -- make a node for a connector or dictionary word.
@@ -333,7 +356,8 @@ static Exp * connector(Dictionary dict)
 	int i;
 
 	i = strlen(dict->token)-1;  /* this must be + or - if a connector */
-	if ((dict->token[i] != '+') && (dict->token[i] != '-')) {
+	if ((dict->token[i] != '+') && (dict->token[i] != '-'))
+	{
 		dn_head = abridged_lookup_list(dict, dict->token);
 		dn = dn_head;
 		while((dn != NULL) && (strcmp(dn->string, dict->token) != 0)) {
@@ -372,23 +396,7 @@ static Exp * connector(Dictionary dict)
 	return n;
 }
 
-/** 
- * This creates a node with one child (namely e).  Initializes
- * the cost to zero.
- */
-Exp * make_unary_node(Dictionary dict, Exp * e)
-{
-	Exp * n;
-	n = Exp_create(dict);
-	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0;
-	n->u.l = (E_list *) xalloc(sizeof(E_list));
-	n->u.l->next = NULL;
-	n->u.l->e = e;
-	return n;
-}
-
-/** 
+/**
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
@@ -426,7 +434,7 @@ Exp * expression(Dictionary dict);
 
 #if ! defined INFIX_NOTATION
 
-/** 
+/**
  * We're looking at the first of the stuff after an "and" or "or".
  * Build a Exp node for this expression.  Set the cost and optional
  * fields to the default values.  Set the type field according to type
@@ -457,7 +465,7 @@ Exp * operator_exp(Dictionary dict, int type)
 	return n;
 }
 
-/** 
+/**
  * Looks for the stuff that is allowed to be inside of parentheses
  * either & or | followed by a list, or a terminal symbol.
  */
@@ -480,7 +488,7 @@ Exp * in_parens(Dictionary dict)
 	}
 }
 
-/** 
+/**
  * Build (and return the root of) the tree for the expression beginning
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
@@ -763,7 +771,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	if (contains_underbar(dn->string))
 	{
 		insert_idiom(dict, dn);
-	} 
+	}
 	else if (is_idiom_word(dn->string))
 	{
 		prt_error("Warning: Word \"%s\" found near line %d.\n"
@@ -930,7 +938,7 @@ int read_dictionary(Dictionary dict)
 }
 
 /**
- * dict_match() -- 
+ * dict_match() --
  * Assuming that s is a pointer to a dictionary string, and that
  * t is a pointer to a search string, this returns 0 if they
  * match, >0 if s>t, and <0 if s<t.
@@ -949,7 +957,7 @@ static int dict_match(const char * s, const char * t)
 }
 
 /**
- * We need to prune out the lists thus generated. 
+ * We need to prune out the lists thus generated.
  * A sub string will only be considered a subscript if it
  * followes the last "." in the word, and it does not begin
  * with a digit.
@@ -960,9 +968,9 @@ static int true_dict_match(const char * s, const char * t)
 	ds = strrchr(s, '.');
 	dt = strrchr(t, '.');
 
-	/* a dot at the end or a dot followed by a number is NOT 
+	/* a dot at the end or a dot followed by a number is NOT
 	 * considered a subscript */
-	if ((dt != NULL) && ((*(dt+1) == '\0') || 
+	if ((dt != NULL) && ((*(dt+1) == '\0') ||
 	    (isdigit((int)*(dt+1))))) dt = NULL;
 	if ((ds != NULL) && ((*(ds+1) == '\0') ||
 	    (isdigit((int)*(ds+1))))) ds = NULL;
@@ -1018,7 +1026,7 @@ void free_lookup_list(Dict_node *llist)
  * rdictionary_lookup() --recursive dictionary lookup
  * Walks binary tree.
  */
-static Dict_node * rdictionary_lookup(Dict_node *llist, 
+static Dict_node * rdictionary_lookup(Dict_node *llist,
                                       Dict_node * dn, const char * s)
 {
 	/* see comment in dictionary_lookup below */
@@ -1041,7 +1049,7 @@ static Dict_node * rdictionary_lookup(Dict_node *llist,
 	return llist;
 }
 
-/** 
+/**
  * dictionary_lookup_list() - return lookup list of words in the dictionary
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
@@ -1057,7 +1065,7 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
    return llist;
 }
 
-int boolean_dictionary_lookup(Dictionary dict, const char *s) 
+int boolean_dictionary_lookup(Dictionary dict, const char *s)
 {
 	Dict_node *llist = dictionary_lookup_list(dict, s);
 	int bool = (llist != NULL);
@@ -1249,7 +1257,7 @@ void free_dictionary(Dictionary dict)
 /**
  *  dict_display_word_info() - display the information about the given word.
  */
-void dict_display_word_info(Dictionary dict, const char * s) 
+void dict_display_word_info(Dictionary dict, const char * s)
 {
 	Dict_node *dn, *dn_head;
 	Disjunct * d1, * d2;
