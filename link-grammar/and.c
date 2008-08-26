@@ -1025,12 +1025,9 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
 			for(;d1 != NULL; d1 = d3) {
 				d3 = d1->next;
 
-				c1 = init_connector((Connector *) xalloc(sizeof(Connector)));
-				c2 = init_connector((Connector *) xalloc(sizeof(Connector)));
-				c1->next = NULL;
-				c2->next = NULL;
+				c1 = connector_new();
+				c2 = connector_new();
 				c1->priority = c2->priority = DOWN_priority;
-				c1->multi = c2->multi = FALSE;
 				c1->string = c2->string = d->string;
 				c1->label = c2->label = lab;
 

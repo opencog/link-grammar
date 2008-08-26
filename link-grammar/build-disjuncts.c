@@ -325,7 +325,7 @@ static Connector * extract_connectors(Tconnector *e, int c)
 	if (e == NULL) return NULL;
 	if (e->dir == c)
 	{
-		e1 = init_connector((Connector *) xalloc(sizeof(Connector)));
+		e1 = connector_new();
 		e1->next = extract_connectors(e->next,c);
 		e1->multi = e->multi;
 		e1->string = e->string;

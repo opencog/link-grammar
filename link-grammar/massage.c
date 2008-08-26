@@ -71,12 +71,9 @@ static Disjunct * glom_comma_connector(Disjunct * d)
 		d2->next = d_list;
 		d_list = d2;
 
-		c1 = init_connector((Connector *)xalloc(sizeof(Connector)));
-		c1->string = "";
+		c1 = connector_new();
 		c1->label = COMMA_LABEL;
 		c1->priority = THIN_priority;
-		c1->multi = FALSE;
-		c1->next = NULL;
 
 		c->next = c1;
 	}
@@ -109,11 +106,9 @@ static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary)
 			d_list = d2;
 		}
 
-		c1 = init_connector((Connector *)xalloc(sizeof(Connector)));
-		c1->string = "";
+		c1 = connector_new();
 		c1->label = label;
 		c1->priority = THIN_priority;
-		c1->multi = FALSE;
 		c1->next = c;
 
 		if (d1->left == c) {
@@ -136,12 +131,10 @@ static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct
 {
 	Connector * c;
 
-	c = init_connector((Connector *)xalloc(sizeof(Connector)));
+	c = connector_new();
 	c->string = cs;
 	c->label = label;
 	c->priority = THIN_priority;
-	c->multi = FALSE;
-	c->next = NULL;
 
 	if (dir == '+') {
 		c->next = d->right;
@@ -170,12 +163,10 @@ static Disjunct * special_disjunct(int label, int dir, const char *cs, const cha
 	d1->string = ds;
 	d1->next = NULL;
 
-	c = init_connector((Connector *)xalloc(sizeof(Connector)));
+	c = connector_new();
 	c->string = cs;
 	c->label = label;
 	c->priority = THIN_priority;
-	c->multi = FALSE;
-	c->next = NULL;
 
 	if (dir == '+') {
 		d1->left = NULL;

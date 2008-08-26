@@ -36,6 +36,7 @@ Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);
 X_node *    catenate_X_nodes(X_node *, X_node *);
 Exp *       copy_Exp(Exp *);
 
+Connector * connector_new(void);
 Connector * init_connector(Connector *c);
 
 void init_x_table(Sentence sent);

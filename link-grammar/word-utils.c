@@ -48,7 +48,8 @@ int connector_hash(Connector * c, int i)
 void free_connectors(Connector *e)
 {
 	Connector * n;
-	for(;e != NULL; e = n) {
+	for (; e != NULL; e = n)
+	{
 		n = e->next;
 		xfree((char *)e, sizeof(Connector));
 	}
@@ -67,6 +68,18 @@ void free_disjuncts(Disjunct *c)
 		free_connectors(c->right);
 		xfree((char *)c, sizeof(Disjunct));
 	}
+}
+
+Connector * connector_new(void)
+{
+	Connector *c = (Connector *) xalloc(sizeof(Connector));
+	c->length_limit = UNLIMITED_LEN;
+	c->string = "";
+	c->label = NULL;
+	c->priority = THIN_priority;
+	c->multi = FALSE;
+	c->next = NULL;
+	return c;
 }
 
 Connector * init_connector(Connector *c)
@@ -151,7 +164,7 @@ Connector * copy_connectors(Connector * c)
 {
 	Connector *c1;
 	if (c == NULL) return NULL;
-	c1 = init_connector((Connector *) xalloc(sizeof(Connector)));
+	c1 = connector_new();
 	*c1 = *c;
 	c1->next = copy_connectors(c->next);
 	return c1;
@@ -191,7 +204,7 @@ Connector * excopy_connectors(Connector * c)
 
 	if (c == NULL) return NULL;
 
-	c1 = init_connector((Connector *) exalloc(sizeof(Connector)));
+	c1 = connector_new();
 	*c1 = *c;
 	s = (char *) exalloc(sizeof(char)*(strlen(c->string)+1));
 	strcpy(s, c->string);
@@ -322,8 +335,9 @@ static void build_connector_set_from_expression(Connector_set * conset, Exp * e)
 	E_list * l;
 	Connector * c;
 	int h;
-	if (e->type == CONNECTOR_type) {
-		c = init_connector((Connector *) xalloc(sizeof(Connector)));
+	if (e->type == CONNECTOR_type)
+	{
+		c = connector_new();
 		c->string = e->u.string;
 		c->label = NORMAL_LABEL;		/* so we can use match() */
 		c->priority = THIN_priority;

@@ -272,7 +272,7 @@ static void insert_S(connector_table *ct, Connector * c)
 			return;
 		}
 	}
-	e = init_connector((Connector *) xalloc(sizeof(Connector)));
+	e = connector_new();
 	*e = *c;
 	e->next = ct->table[h];
 	ct->table[h] = e;
