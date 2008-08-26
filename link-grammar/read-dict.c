@@ -1147,6 +1147,7 @@ syntax_error:
 	return 0;
 }
 
+#if ! defined INFIX_NOTATION
 /**
  * print the expression, in prefix-style
  */
@@ -1183,6 +1184,96 @@ void print_expression(Exp * n)
 		if (n->cost == 0) printf(") ");
 	}
 }
+
+#else /* INFIX_NOTATION */
+
+/**
+ * print the expression, in infix-style
+ */
+static void print_expression_parens(Exp * n, int need_parens)
+{
+	E_list * el;
+	int i;
+
+	if (n == NULL)
+	{
+		printf("NULL expression");
+		return;
+	}
+
+	/* print the connector only */
+	if (n->type == CONNECTOR_type)
+	{
+		for (i=0; i<n->cost; i++) printf("[");
+		if (n->multi) printf("@");
+		printf("%s%c",n->u.string, n->dir);
+		for (i=0; i<n->cost; i++) printf("]");
+		return;
+	}
+
+	/* Look for optional, and print only that */
+	el = n->u.l; 
+	if (el == NULL)
+	{
+		for (i=0; i<n->cost; i++) printf("[");
+		printf ("()");
+		for (i=0; i<n->cost; i++) printf("]");
+		return;
+	}
+
+	for (i=0; i<n->cost; i++) printf("[");
+	if ((n->type == OR_type) &&
+	    el && el->e && (NULL == el->e->u.l))
+	{
+		printf ("{");
+		print_expression_parens(el->next->e, FALSE);
+		printf ("}");
+		return;
+	}
+
+	if ((n->cost == 0) && need_parens) printf("(");
+
+	/* print left side of binary expr */
+	print_expression_parens(el->e, TRUE);
+
+	/* get a funny "and optional" when its a named expression thing. */
+	if ((n->type == AND_type) && (el->next == NULL))
+	{
+		return;
+	}
+
+	if (n->type == AND_type) printf(" & ");
+	if (n->type == OR_type) printf(" or ");
+
+	/* print right side of binary expr */
+	el = el->next;
+	if (el == NULL)
+	{
+		printf ("()");
+	}
+	else
+	{
+		if (el->e->type == n->type)
+		{
+			print_expression_parens(el->e, FALSE);
+		}
+		else
+		{
+			print_expression_parens(el->e, TRUE);
+		}
+		if (el->next != NULL)
+			printf ("\nERROR! Unexpected list!\n");
+	}
+
+	for (i=0; i<n->cost; i++) printf("]");
+	if ((n->cost == 0) && need_parens) printf(")");
+}
+
+void print_expression(Exp * n)
+{
+	print_expression_parens(n, FALSE);
+}
+#endif /* INFIX_NOTATION */
 
 static void rprint_dictionary_data(Dict_node * n)
 {
