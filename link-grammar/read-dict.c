@@ -1503,7 +1503,7 @@ void dict_display_word_expr(Dictionary dict, const char * s)
 		left_print_string(stdout, dn->string,
 			"                         ");
 		print_expression(dn->exp);
-		printf("\n");
+		printf("\n\n");
 	}
 	free_lookup_list(dn_head);
 	return;
