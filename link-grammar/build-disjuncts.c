@@ -259,14 +259,21 @@ static Clause * build_clause(Exp *e, int cost_cutoff)
 	for (c1 = c; c1 != NULL; c1 = c1->next)
 	{
 		c1->cost += e->cost;
-/*		c1->maxcost = MAX(c1->maxcost,e->cost);  */  /* <---- This is how Dennis had it.
-														I prefer the line below */
+		/*	c1->maxcost = MAX(c1->maxcost,e->cost);  */ 
+		/* Above is how Dennis had it. Someone changed it to below.
+		 * However, this can sometimes lead to a maxcost that is less 
+		 * than the cost ! -- which seems wrong to me ... seems Dennis
+		 * had it right!?
+		 */
 		c1->maxcost += e->cost;
 	}
 	return c;
 }
 
-#ifdef UNUSED_FUNCTION
+/* #define DEBUG */
+#ifdef DEBUG
+/* Misc printing functions, useful for debugging */
+
 static void print_connector_list(Connector * e)
 {
 	for (;e != NULL; e=e->next)
@@ -295,7 +302,7 @@ static void print_clause_list(Clause * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("  Clause: ");
-		printf("(%2d, %2d)", c->cost, c->maxcost);
+		printf("(%2d, %2d) ", c->cost, c->maxcost);
 		print_Tconnector_list(c->c);
 		printf("\n");
 	}
@@ -305,7 +312,7 @@ static void print_disjunct_list(Disjunct * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("%10s: ", c->string);
-		printf("(%2d)", c->cost);
+		printf("(%d) ", c->cost);
 		print_connector_list(c->left);
 		printf(" <--> ");
 		print_connector_list(c->right);
@@ -375,16 +382,22 @@ static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff)
 	return dis;
 }
 
+/**
+ * Build a list of disjuncts.
+ *
+ * This is mostly used only for counting the number of disjuncts
+ * (but is otherwise "almost" obsolete ??)
+ */
 Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 {
-/* still need this for counting the number of disjuncts */
 	Clause *c ;
 	Disjunct * dis;
-/*				 print_expression(dn->exp);   */
-/*				 printf("\n");				*/
+	/*	 print_expression(dn->exp);   */
+	/*	 printf("\n");				*/
 	c = build_clause(dn->exp, NOCUTOFF);
-/*				 print_clause_list(c);		*/
+	/* print_clause_list(c); */
 	dis = build_disjunct(c, dn->string, NOCUTOFF);
+	/* print_disjunct_list(dis); */
 	free_clause_list(c);
 	return dis;
 }
