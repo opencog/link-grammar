@@ -75,7 +75,7 @@ Connector * connector_new(void)
 	Connector *c = (Connector *) xalloc(sizeof(Connector));
 	c->length_limit = UNLIMITED_LEN;
 	c->string = "";
-	c->label = NULL;
+	c->label = 0;
 	c->priority = THIN_priority;
 	c->multi = FALSE;
 	c->next = NULL;
