@@ -26,7 +26,7 @@ struct Tconnector_struct
 };
 
 typedef struct clause_struct Clause;
-struct clause_struct 
+struct clause_struct
 {
 	Clause * next;
 	int cost;
@@ -141,7 +141,7 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
 }
 
 /**
- * build the connector for the terminal node n 
+ * build the connector for the terminal node n
  */
 static Tconnector * build_terminal(Exp * e)
 {
@@ -171,15 +171,20 @@ static int maxcost_of_expression(Exp *e)
 }
 
 #ifdef UNUSED_FUNCTION
-static int maxcost_of_sentence(Sentence sent) {
-/* This returns the maximum maxcost of any disjunct in the sentence */
-/* assumes the sentence expressions have been constructed */
+/**
+ * This returns the maximum maxcost of any disjunct in the sentence
+ * Assumes the sentence expressions have been constructed
+ */
+static int maxcost_of_sentence(Sentence sent)
+{
 	X_node * x;
 	int w, m, m1;
 	m = 0;
 
-	for (w=0; w<sent->length; w++) {
-		for (x=sent->word[w].x; x!=NULL; x = x->next){
+	for (w = 0; w < sent->length; w++)
+	{
+		for (x = sent->word[w].x; x != NULL; x = x->next)
+		{
 			m1 = maxcost_of_expression(x->exp),
 			m = MAX(m, m1);
 		}
@@ -259,9 +264,9 @@ static Clause * build_clause(Exp *e, int cost_cutoff)
 	for (c1 = c; c1 != NULL; c1 = c1->next)
 	{
 		c1->cost += e->cost;
-		/*	c1->maxcost = MAX(c1->maxcost,e->cost);  */ 
+		/*	c1->maxcost = MAX(c1->maxcost,e->cost);  */
 		/* Above is how Dennis had it. Someone changed it to below.
-		 * However, this can sometimes lead to a maxcost that is less 
+		 * However, this can sometimes lead to a maxcost that is less
 		 * than the cost ! -- which seems wrong to me ... seems Dennis
 		 * had it right!?
 		 */
@@ -351,7 +356,7 @@ static Connector * extract_connectors(Tconnector *e, int c)
  * Build a disjunct list out of the clause list c.
  * string is the print name of word that generated this disjunct.
  */
-static Disjunct * 
+static Disjunct *
 build_disjunct(Clause * cl, const char * string, int cost_cutoff)
 {
 	Disjunct *dis, *ndis;
@@ -418,7 +423,8 @@ X_node * build_word_expressions(Sentence sent, const char * s)
 	dn = dn_head;
 
 	x = NULL;
-	while (dn != NULL) {
+	while (dn != NULL)
+	{
 		y = (X_node *) xalloc(sizeof(X_node));
 		y->next = x;
 		x = y;
@@ -431,18 +437,21 @@ X_node * build_word_expressions(Sentence sent, const char * s)
 }
 
 /**
- * We've already built the sentence expressions.  This turns them into
- * disjuncts.
+ * Turn sentence expressions into disjuncts.
+ * Sentence expressions must have been built, before calling this routine.
  */
 void build_sentence_disjuncts(Sentence sent, int cost_cutoff)
 {
 	Disjunct * d;
 	X_node * x;
 	int w;
-	for (w=0; w<sent->length; w++) {
+	for (w = 0; w < sent->length; w++)
+	{
 		d = NULL;
-		for (x=sent->word[w].x; x!=NULL; x = x->next){
-			d = catenate_disjuncts(build_disjuncts_for_X_node(x, cost_cutoff),d);
+		for (x = sent->word[w].x; x != NULL; x = x->next)
+		{
+			Disjunct *dx = build_disjuncts_for_X_node(x, cost_cutoff);
+			d = catenate_disjuncts(dx, d);
 		}
 		sent->word[w].d = d;
 	}
