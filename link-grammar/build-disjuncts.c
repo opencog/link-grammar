@@ -15,9 +15,10 @@
 
 #include <link-grammar/api.h>
 
-/*Temporary connectors used while converting expressions into disjunct lists */
+/* Temporary connectors used while converting expressions into disjunct lists */
 typedef struct Tconnector_struct Tconnector;
-struct Tconnector_struct{
+struct Tconnector_struct
+{
 	char multi;   /* TRUE if this is a multi-connector */
 	char dir;	 /* '-' for left and '+' for right */
 	Tconnector * next;
@@ -25,17 +26,20 @@ struct Tconnector_struct{
 };
 
 typedef struct clause_struct Clause;
-struct clause_struct {
+struct clause_struct 
+{
 	Clause * next;
 	int cost;
 	int maxcost;
 	Tconnector * c;
 };
 
-static Tconnector * copy_Tconnectors(Tconnector * c) {
-/* This builds a new copy of the connector list pointed to by c.
-   Strings, as usual, are not copied.
-*/
+/**
+ * This builds a new copy of the connector list pointed to by c.
+ * Strings, as usual, are not copied.
+ */
+static Tconnector * copy_Tconnectors(Tconnector * c)
+{
 	Tconnector *c1;
 	if (c == NULL) return NULL;
 	c1 = (Tconnector *) xalloc(sizeof(Tconnector));
@@ -44,17 +48,21 @@ static Tconnector * copy_Tconnectors(Tconnector * c) {
 	return c1;
 }
 
-static void free_Tconnectors(Tconnector *e) {
+static void free_Tconnectors(Tconnector *e)
+{
 	Tconnector * n;
-	for(;e != NULL; e=n) {
+	for(;e != NULL; e=n)
+	{
 		n = e->next;
 		xfree((char *)e, sizeof(Tconnector));
 	}
 }
 
-static void free_clause_list(Clause *c) {
+static void free_clause_list(Clause *c)
+{
 	Clause *c1;
-	while (c != NULL) {
+	while (c != NULL)
+	{
 		c1 = c->next;
 		free_Tconnectors(c->c);
 		xfree((char *)c, sizeof(Clause));
@@ -77,8 +85,11 @@ static Clause * copy_clause(Clause * d) {
 }
 #endif /* UNUSED_FUNCTION */
 
-static Tconnector * Treverse(Tconnector *e) {
-/* reverse the order of the list e.  destructive */
+/**
+ * reverse the order of the list e.  destructive
+ */
+static Tconnector * Treverse(Tconnector *e)
+{
 	Tconnector * head, *x;
 	head = NULL;
 	while (e != NULL) {
@@ -90,8 +101,11 @@ static Tconnector * Treverse(Tconnector *e) {
 	return head;
 }
 
-static Connector * reverse(Connector *e) {
-/* reverse the order of the list e.  destructive */
+/**
+ * reverse the order of the list e.  destructive
+ */
+static Connector * reverse(Connector *e)
+{
 	Connector * head, *x;
 	head = NULL;
 	while (e != NULL) {
@@ -103,10 +117,12 @@ static Connector * reverse(Connector *e) {
 	return head;
 }
 
-static Tconnector * catenate(Tconnector * e1, Tconnector * e2) {
-/* Builds a new list of connectors that is the catenation of e1 with e2.
-   does not effect lists e1 or e2.   Order is maintained. */
-
+/**
+ * Builds a new list of connectors that is the catenation of e1 with e2.
+ * does not effect lists e1 or e2.   Order is maintained.
+ */
+static Tconnector * catenate(Tconnector * e1, Tconnector * e2)
+{
 	Tconnector * e, * head;
 	head = NULL;
 	for (;e1 != NULL; e1 = e1->next) {
@@ -124,8 +140,11 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2) {
 	return Treverse(head);
 }
 
-static Tconnector * build_terminal(Exp * e) {
-	/* build the connector for the terminal node n */
+/**
+ * build the connector for the terminal node n 
+ */
+static Tconnector * build_terminal(Exp * e)
+{
 	Tconnector * c;
 	c = (Tconnector *) xalloc(sizeof(Tconnector));
 	c->string = e->u.string;
@@ -135,7 +154,8 @@ static Tconnector * build_terminal(Exp * e) {
 	return c;
 }
 
-static int maxcost_of_expression(Exp *e) {
+static int maxcost_of_expression(Exp *e)
+{
 	E_list * e_list;
 	int m, m1;
 
@@ -169,23 +189,30 @@ static int maxcost_of_sentence(Sentence sent) {
 #endif /* UNUSED_FUNCTION */
 
 
-static Clause * build_clause(Exp *e, int cost_cutoff) {
-/* Build the clause for the expression e.  Does not change e */
-	Clause *c=NULL, *c1, *c2, *c3, *c4, *c_head;
+/**
+ * Build the clause for the expression e.  Does not change e
+ */
+static Clause * build_clause(Exp *e, int cost_cutoff)
+{
+	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
 	E_list * e_list;
 
 	assert(e != NULL, "build_clause called with null parameter");
-	if (e->type == AND_type) {
+	if (e->type == AND_type)
+	{
 		c1 = (Clause *) xalloc(sizeof (Clause));
 		c1->c = NULL;
 		c1->next = NULL;
 		c1->cost = 0;
 		c1->maxcost = 0 ;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next) {
+		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		{
 			c2 = build_clause(e_list->e, cost_cutoff);
 			c_head = NULL;
-			for (c3 = c1; c3 != NULL; c3 = c3->next) {
-				for (c4 = c2; c4 != NULL; c4 = c4->next) {
+			for (c3 = c1; c3 != NULL; c3 = c3->next)
+			{
+				for (c4 = c2; c4 != NULL; c4 = c4->next)
+				{
 					c = (Clause *) xalloc(sizeof (Clause));
 					c->cost = c3->cost + c4->cost;
 					c->maxcost = MAX(c3->maxcost,c4->maxcost);
@@ -199,10 +226,13 @@ static Clause * build_clause(Exp *e, int cost_cutoff) {
 			c1 = c_head;
 		}
 		c = c1;
-	} else if (e->type == OR_type) {
+	}
+	else if (e->type == OR_type)
+	{
 		/* we'll catenate the lists of clauses */
 		c = NULL;
-		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next) {
+		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+		{
 			c1 = build_clause(e_list->e, cost_cutoff);
 			while(c1 != NULL) {
 				c3 = c1->next;
@@ -211,19 +241,23 @@ static Clause * build_clause(Exp *e, int cost_cutoff) {
 				c1 = c3;
 			}
 		}
-	} else if (e->type == CONNECTOR_type) {
+	}
+	else if (e->type == CONNECTOR_type)
+	{
 		c = (Clause *) xalloc(sizeof(Clause));
 		c->c = build_terminal(e);
 		c->cost = 0;
 		c->maxcost = 0;
 		c->next = NULL;
-	} else {
+	}
+	else
+	{
 		assert(FALSE, "an expression node with no type");
 	}
 
 	/* c now points to the list of clauses */
-
-	for (c1=c; c1!=NULL; c1 = c1->next) {
+	for (c1 = c; c1 != NULL; c1 = c1->next)
+	{
 		c1->cost += e->cost;
 /*		c1->maxcost = MAX(c1->maxcost,e->cost);  */  /* <---- This is how Dennis had it.
 														I prefer the line below */
@@ -233,8 +267,10 @@ static Clause * build_clause(Exp *e, int cost_cutoff) {
 }
 
 #ifdef UNUSED_FUNCTION
-static void print_connector_list(Connector * e) {
-	for (;e != NULL; e=e->next) {
+static void print_connector_list(Connector * e)
+{
+	for (;e != NULL; e=e->next)
+	{
 		printf("%s",e->string);
 		if (e->label != NORMAL_LABEL) {
 			printf("%3d", e->label);
@@ -245,7 +281,8 @@ static void print_connector_list(Connector * e) {
 	}
 }
 
-static void print_Tconnector_list(Tconnector * e) {
+static void print_Tconnector_list(Tconnector * e)
+{
 	for (;e != NULL; e=e->next) {
 		if (e->multi) printf("@");
 		printf("%s",e->string);
@@ -254,7 +291,8 @@ static void print_Tconnector_list(Tconnector * e) {
 	}
 }
 
-static void print_clause_list(Clause * c) {
+static void print_clause_list(Clause * c)
+{
 	for (;c != NULL; c=c->next) {
 		printf("  Clause: ");
 		printf("(%2d, %2d)", c->cost, c->maxcost);
@@ -263,7 +301,8 @@ static void print_clause_list(Clause * c) {
 	}
 }
 
-static void print_disjunct_list(Disjunct * c) {
+static void print_disjunct_list(Disjunct * c)
+{
 	for (;c != NULL; c=c->next) {
 		printf("%10s: ", c->string);
 		printf("(%2d)", c->cost);
@@ -284,7 +323,8 @@ static Connector * extract_connectors(Tconnector *e, int c)
 {
 	Connector *e1;
 	if (e == NULL) return NULL;
-	if (e->dir == c) {
+	if (e->dir == c)
+	{
 		e1 = init_connector((Connector *) xalloc(sizeof(Connector)));
 		e1->next = extract_connectors(e->next,c);
 		e1->multi = e->multi;
@@ -293,13 +333,15 @@ static Connector * extract_connectors(Tconnector *e, int c)
 		e1->priority = THIN_priority;
 		e1->word = 0;
 		return e1;
-	} else {
+	}
+	else
+	{
 		return extract_connectors(e->next,c);
 	}
 }
 
 /**
- * build a disjunct list out of the clause list c.
+ * Build a disjunct list out of the clause list c.
  * string is the print name of word that generated this disjunct.
  */
 static Disjunct * 
@@ -307,8 +349,10 @@ build_disjunct(Clause * cl, const char * string, int cost_cutoff)
 {
 	Disjunct *dis, *ndis;
 	dis = NULL;
-	for (;cl != NULL; cl=cl->next) {
-		if (cl->maxcost <= cost_cutoff) {
+	for (; cl != NULL; cl = cl->next)
+	{
+		if (cl->maxcost <= cost_cutoff)
+		{
 			ndis = (Disjunct *) xalloc(sizeof(Disjunct));
 			ndis->left = reverse(extract_connectors(cl->c, '-'));
 			ndis->right = reverse(extract_connectors(cl->c, '+'));
