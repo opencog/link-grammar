@@ -389,39 +389,6 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 	return dis;
 }
 
-#if 0
-OBS
-OBS Disjunct * build_word_disjuncts(char * s) {
-OBS /* Looks up the word s in the dictionary.  Returns NULL if it's not there.
-OBS	If there, it builds the disjunct structure for the word, and returns
-OBS	a pointer to it.
-OBS */
-OBS	 Dict_node * dn;
-OBS	 Disjunct * dis;
-OBS
-OBS	 dn = dictionary_lookup(s);
-OBS
-OBS /*
-OBS	 x = dn;
-OBS	 printf("%s :", s);
-OBS	 while (dn != NULL) {
-OBS		printf("%s \n", dn->string);
-OBS		print_expression(dn->node);
-OBS		dn = dn->right;
-OBS	 }
-OBS	 dn = x;
-OBS */
-OBS	 dis = NULL;
-OBS
-OBS	 while (dn != NULL) {
-OBS		 dis = catenate_disjuncts(build_disjuncts_for_dict_node(dn), dis);
-OBS		 dn = dn->right;
-OBS	 }
-OBS				 /*	print_disjunct_list(dis); */
-OBS	 return dis;
-OBS }
-#endif
-
 /**
  * build_word_expressions() -- build list of expressions for a word
  *
