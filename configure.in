@@ -197,6 +197,8 @@ JNI_GUESS=" \
    -I/usr/include/classpath/ \
    -I/opt/jdk1.5/include/ \
    -I/opt/jdk1.5/include/linux \
+   -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include \
+   -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/linux \
    -I/usr/lib/jvm/java-6-sun/include/ \
    -I/usr/lib/jvm/java-6-sun/include/linux \
    -I/c/java/jdk1.6.0/include/ \
