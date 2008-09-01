@@ -230,7 +230,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 	nbl = wctomb_check(low, c);
 	if (nbh != nbl)
 	{
-		prt_error("Error: can't downcase multi-byte string!\n");
+		prt_error("Warning: can't downcase multi-byte string!\n");
 		return FALSE;
 	}
 
