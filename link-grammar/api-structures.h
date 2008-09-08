@@ -100,17 +100,22 @@ struct Dictionary_s
 {
 	Dict_node *     root;
 	char *          name;
-	/* char *          post_process_filename; */  /* was not being used *DS* */
+
 	int             use_unknown_word;
 	int             unknown_word_defined;
 	int             capitalized_word_defined;
 	int             pl_capitalized_word_defined;
 	int             hyphenated_word_defined;
 	int             number_word_defined;
+
+	/* English language morphology bits
+	 * XXX should be replaced by language-indep morphology.
+	 */
 	int             ing_word_defined;
 	int             s_word_defined;
 	int             ed_word_defined;
 	int             ly_word_defined;
+
 	int             left_wall_defined;
 	int             right_wall_defined;
 	Postprocessor * postprocessor;
@@ -122,13 +127,16 @@ struct Dictionary_s
 	int             max_cost;
 	String_set *    string_set;  /* Set of link names constructed during parsing */
 	int             num_entries;
-	/*   Dict_node *     dict_root; OBSOLETE, replaced by "root" above? */
 	Word_file *     word_file_header;
 
 	/* exp_list links together all the Exp structs that are allocated
 	 * in reading this dictionary.  Needed for freeing the dictionary
 	 */
 	Exp *           exp_list;
+
+	/* Private data elements that come in play only while distionary
+	 * is being read. 
+	 */
 	FILE *          fp;
 	char            token[MAX_TOKEN_LENGTH];
 	int             is_special;
