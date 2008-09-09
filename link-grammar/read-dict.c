@@ -1472,7 +1472,7 @@ void dict_display_word_info(Dictionary dict, const char * s)
 		printf("    ");
 		left_print_string(stdout, dn->string,
 			"                         ");
-		printf(" %5d  ", len);
+		printf(" %5d  disjuncts ", len);
 		if (dn->file != NULL)
 		{
 			printf("<%s>", dn->file->file);
