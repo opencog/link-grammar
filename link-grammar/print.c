@@ -323,32 +323,43 @@ static char * linkage_print_diagram_ctxt(Linkage linkage, ps_ctxt_t *pctx)
 	string = string_new();
 
 	N_wall_connectors = 0;
-	if (dict->left_wall_defined) {
+	if (dict->left_wall_defined)
+	{
 		suppressor_used = FALSE;
 		if (!opts->display_walls) 
-			for (j=0; j<N_links; j++) {
-				if ((ppla[j]->l == 0)) {
+		{
+			for (j=0; j<N_links; j++)
+			{
+				if ((ppla[j]->l == 0))
+				{
 					if (ppla[j]->r == linkage->num_words-1) continue;
 					N_wall_connectors ++;
-					if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0){
+					if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0)
+					{
 						suppressor_used = TRUE;
 					}
 				}
 			}
+		}
 		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0)) 
 						|| (N_wall_connectors > 1) || opts->display_walls);
 	} 
-	else {
+	else
+	{
 		print_word_0 = TRUE;
 	}
 
 	N_wall_connectors = 0;
-	if (dict->right_wall_defined) {
+	if (dict->right_wall_defined)
+	{
 		suppressor_used = FALSE;
-		for (j=0; j<N_links; j++) {
-			if (ppla[j]->r == linkage->num_words-1) {
+		for (j=0; j<N_links; j++)
+		{
+			if (ppla[j]->r == linkage->num_words-1)
+			{
 				N_wall_connectors ++;
-				if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
+				if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0)
+				{
 					suppressor_used = TRUE;
 				}
 			}
@@ -356,7 +367,8 @@ static char * linkage_print_diagram_ctxt(Linkage linkage, ps_ctxt_t *pctx)
 		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0)) 
 						|| (N_wall_connectors > 1) || opts->display_walls);
 	} 
-	else {
+	else
+	{
 		print_word_N = TRUE;
 	}
 
