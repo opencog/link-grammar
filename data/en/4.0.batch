@@ -1099,9 +1099,11 @@ He inquired at the door.
 % Good sentences ... 
 I heard a bark in the distance.
 
-% verb modifiers for talk, etc.
+% verb modifiers for talk, consist, etc.
 He talked quietly of revolt.
 He disapproved passionately of sex.
+He talks, mostly of revolution.
+It consists largely of sand.
 
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.

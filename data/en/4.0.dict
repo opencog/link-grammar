@@ -1212,14 +1212,14 @@ looks.v: <verb-s> & <vc-look>;
 looked.v: <verb-sp,pp> & <vc-look>;
 looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-repent>: {{@MV+} & OF+};
+<vc-repent>: {{@MV+ or ({Xc+} & @EB+)} & OF+};
 repent.v disapprove.v talk.v: <verb-pl,i> & <vc-repent>;
 repents.v disapproves.v talks.v: <verb-s> & <vc-repent>;
 repented.v disapproved.v talked.v: <verb-sp,pp> & <vc-repent>;
 repenting.v disapproving.v talking.v: 
 (<vc-repent> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-consist>: OF+ & {@MV+};
+<vc-consist>: {@MV+ or @EB+} & OF+;
 consist.v: <verb-pl,i> & <vc-consist>;
 consists.v: <verb-s> & <vc-consist>;
 consisted.v: <verb-sp,pp> & <vc-consist>; 
