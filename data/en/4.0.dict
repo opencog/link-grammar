@@ -1213,11 +1213,15 @@ looked.v: <verb-sp,pp> & <vc-look>;
 looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-repent>: {{@MV+ or ({Xc+} & @EB+)} & OF+};
-repent.v disapprove.v talk.v: <verb-pl,i> & <vc-repent>;
-repents.v disapproves.v talks.v: <verb-s> & <vc-repent>;
-repented.v disapproved.v talked.v: <verb-sp,pp> & <vc-repent>;
-repenting.v disapproving.v talking.v: 
-(<vc-repent> & <verb-pg,ge>) or <verb-ge-d>;
+repent.v disapprove.v: <verb-pl,i> & <vc-repent>;
+repents.v disapproves.v: <verb-s> & <vc-repent>;
+repented.v disapproved.v: <verb-sp,pp> & <vc-repent>;
+repenting.v disapproving.v: (<vc-repent> & <verb-pg,ge>) or <verb-ge-d>;
+
+talk.v: <verb-pl,i> & <vc-repent> & <vc-fill>;
+talks.v: <verb-s> & <vc-repent> & <vc-fill>;
+talked.v: <verb-sp,pp> & <vc-repent> & <vc-fill>;
+talking.v: (<vc-repent> & <verb-pg,ge> & <vc-fill>) or <verb-ge-d>;
 
 <vc-consist>: {@MV+ or @EB+} & OF+;
 consist.v: <verb-pl,i> & <vc-consist>;
