@@ -11,6 +11,7 @@ Version 4.3.9 includes the following changes:
  * Passive subjects with objects: "I was told that crap, too" "...was asked..."
  * Fixes for Apple Mac OSX (crash on non-executable stack)
  * Early version of Filip Maric's boolean SAT solver
+ * fix: "He talked quietly of revolt." 
 
 Version 4.3.8 includes the following changes:
  * Build fixes for Windows (missing bzero and thread-safe rand)

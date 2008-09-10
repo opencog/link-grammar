@@ -1099,6 +1099,10 @@ He inquired at the door.
 % Good sentences ... 
 I heard a bark in the distance.
 
+% verb modifiers for talk, etc.
+He talked quietly of revolt.
+He disapproved passionately of sex.
+
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.
