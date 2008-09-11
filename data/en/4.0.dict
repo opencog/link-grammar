@@ -3241,8 +3241,8 @@ as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
 as_realized as_proposed as_intended as_supposed: MVz- or 
 (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-));
 
-%MODIFIED 'THAN' so that it links to the clause following it
-%using 'C' links -- like a relative clause
+% MODIFIED 'THAN' so that it links to the clause following it
+% using 'C' links -- like a relative clause
 than: (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+}) or 
                Mpc+ or S**c+ or MVat+ or MVpt+ or Cc+ or Pafc+))
 or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+)) 
@@ -3301,7 +3301,7 @@ different.a: {ECa- or EA- or EF+} &
  & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
 
 than_expected than_imagined than_proposed than_suspected than_realized 
-than_intended than_supposed than_reported than_ever: MVt-;
+than_intended than_supposed than_reported than_ever than_usual: MVt-;
 	
 more_than no_more_than fewer_than less_than as_many_as an_estimated 
 an_additional up_to as_much_as no_fewer_than no_less_than: EN+;

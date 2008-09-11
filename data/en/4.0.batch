@@ -1142,6 +1142,9 @@ He angled around.
 He dodged left.
 He jumped left.
 
+He looked about.
+He turned about.
+
 It was he that did it.
 John likes joking around.
 He's right, isn't he?
@@ -1156,6 +1159,17 @@ It sure is great.
 The book sure is great.
 The sushi was best.
 How about the bubble tea?
+
+The results bear out the method
+The results bear looking at.
+It bears looking at.
+
+He talked longer than usual.
+He is taking longer than usual.
+He is working harder than usual.
+He hit harder.
+He hits hard.
+
 
 % broken lexical chunk recognition:
 % ... not only, ... but also ...
