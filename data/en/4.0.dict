@@ -1728,11 +1728,11 @@ tasting.v: <verb-pg> & <vc-taste>;
 
 <vc-smell>: ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+)) or 
 ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+});
-smell.v: <verb-pl,i> & <vc-smell>;
-smells.v: <verb-s> & <vc-smell>;
-smelled.v: (<verb-sp,pp> & <vc-smell>) or <verb-pv> or <verb-po>;
-smelling.g: (<vc-smell> & <verb-ge>) or <verb-ge-d>;
-smelling.v: <verb-pg> & <vc-smell>;
+reek.v smell.v: <verb-pl,i> & <vc-smell>;
+reeks.v smells.v: <verb-s> & <vc-smell>;
+reeked.v smelled.v: (<verb-sp,pp> & <vc-smell>) or <verb-pv> or <verb-po>;
+reeking.g smelling.g: (<vc-smell> & <verb-ge>) or <verb-ge-d>;
+reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
 <vc-take>: 
 (((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+ or Vt+}) or [[@MV+ & O*n+]]) 

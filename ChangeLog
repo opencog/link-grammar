@@ -15,6 +15,7 @@ Version 4.3.9 includes the following changes:
  * fix: "It consists mostly of sand.", "He talks, mostly of revolution."
  * fix: "He talked mostly to Ann.", "He talks a lot."
  * fix: than_usual: "He is taking longer than usual."
+ * fix: a batch of new verbs from Roman Khlupin
 
 Version 4.3.8 includes the following changes:
  * Build fixes for Windows (missing bzero and thread-safe rand)
