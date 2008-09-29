@@ -343,7 +343,8 @@ static void height_dfs(analyze_context_t *actx, int w, int height)
 	}
 }
 
-#ifdef __APPLE__ /* assume this is OSX */
+#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
+/* Assume this is OSX */
 /* Apple Mac, as a security precaution, uses a non-executable stack, 
  * with a broken trampoline, and seg-faults on automatic functions.
  * The alternative is to declare a static global, which, of course,
@@ -365,7 +366,7 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	CON_list * child, * xchild;
 	List_o_links * lol, * xlol;
 
-#ifdef __APPLE__
+#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #ifdef USE_PTHREADS
 #error pthreads not supported on OSX until the use of this global is fixed!
 #else
