@@ -1111,6 +1111,9 @@ he talked a mean streak longer than I'd hoped
 He is talking up some chicks.
 He talks a lot.
 
+% Buggy use of disjuncts: and so is linked with Wq
+Rama ate the apple, and so did Mohan.
+
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.
