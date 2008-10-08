@@ -184,7 +184,7 @@ Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x Adm.x Corp.x St.x Mt.x Ft.x:
 (Xi+ or [[()]]) & G+;
 
 St.y Ave.y Av.y Pl.y Ct.y Dr.y Gr.y Rd.y Blvd.y Pkwy.y Hwy.y Assn.y
-Corp.y Co.y Inc.y Pty.y Ltd.y Bldg.y and_Co: G- & {Xi+} & {[MG+]} &
+Corp.y Co.y Esq.y Inc.y Pty.y Ltd.y Bldg.y and_Co: G- & {Xi+} & {[MG+]} &
 (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or
 <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
 
@@ -2796,7 +2796,7 @@ here: J- or <prep-main-b> or [Wq- & PF+];
 there: J- or <prep-main-b> or 
 ((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt-;
 
-de du des del von: {G-} & G+;
+de de_la du des del von: {G-} & G+;
 y: G- & G+;
 
 % TIME AND PLACE EXPRESSIONS 
