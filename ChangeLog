@@ -18,6 +18,7 @@ Version 4.3.9 includes the following changes:
  * fix: a batch of new verbs from Roman Khlupin
  * fix: Fix crash on Apple Macintosh by correctly identifying the platform.
  * fix: "San Gabriel" "Block Island" "Great Southern Bank" "de la Rente"
+ * fix: "I biked Johnson Creek."
 
 Version 4.3.8 includes the following changes:
  * Build fixes for Windows (missing bzero and thread-safe rand)
