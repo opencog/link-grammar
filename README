@@ -300,6 +300,12 @@ TODO -- Working Notes:
       the tree is highly unbalanced, and should be rebalanced before use.
       This would provide a minor performance improvement.
 
+   Quotations: Currently, tokenize.c ignores all ASCII double-quotes 
+      (grep for "quote_found" in the source). However, it does not do this
+      for the various "curly" UTF8 quotes, such as ‘these’ and “these”.
+      This results is some ugly parsing for sentences containing such 
+      quotes. (Note that these are in 4.0.affix).
+
    tokenize.c: build_sentence_expressions() contains some
       English-language-specific morphology guessing.  This should be
       refactored out, as it doesn't really apply to non-English
