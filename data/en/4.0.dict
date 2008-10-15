@@ -634,8 +634,10 @@ or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &
 
 1900s 1910s 1920s 1930s 1940s 1950s 1960s 1970s 1980s 1990s
 1900's 1910's 1920's 1930's 1940's 1950's 1960's 1970's 1980's 1990's
+1900’s 1910’s 1920’s 1930’s 1940’s 1950’s 1960’s 1970’s 1980’s 1990’s
 twenties thirties, forties fifties sixties seventies eighties nineties
-'20s '30s '40s '50s '60s '70s '80s '90s: {TA-} & DG- & <noun-main-x>;
+'20s '30s '40s '50s '60s '70s '80s '90s
+‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s: {TA-} & DG- & <noun-main-x>;
 
 % teens could be above or teenagers (words.n.2)
 teens: ({TA-} & DG- & <noun-main-x>) or <generic-plural-id>;
@@ -784,11 +786,11 @@ doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 fine.i poorly.i well.i: Vd-;
 
-don't: (((Rw- or Q- or [()]) & (SIp+ or SFIp+) & I*d+) or ({@E-} & (Sp- or SFp- or
+don't don’t: (((Rw- or Q- or [()]) & (SIp+ or SFIp+) & I*d+) or ({@E-} & (Sp- or SFp- or
 (RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
-doesn't: (((Rw- or Q- or [()]) & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
+doesn't doesn’t: (((Rw- or Q- or [()]) & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
 (I*d+ or [[()]]);
-didn't: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
+didn't didn’t: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
 (RS- & B-)))) & (I*d+ or [[()]]));
 
 <vc-have>: ({@MV+} & TO+) or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]})
@@ -804,11 +806,11 @@ or (<verb-x-pp> & (TO+ or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
-hasn't: (((Rw- or Q- or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
+hasn't hasn’t: (((Rw- or Q- or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-haven't: (((Rw- or Q- or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or 
+haven't haven’t: (((Rw- or Q- or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or 
 (RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-hadn't: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & 
+hadn't hadn’t: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & 
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]));
 
@@ -818,7 +820,8 @@ or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or
 ({N+} & (AF- or Pg*b+ or Pv+));
 is.v: ((<verb-x-s>) or 
 ((Rw- or Q- or [()]) & (SIs+ or SFIs+))) & <vc-be>;
-'s.v: [[<verb-x-s> & 
+
+'s.v ’s.v: [[<verb-x-s> & 
 (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ 
 or (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+})
 or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or Pg+ or Pv+ or PP+)]];
@@ -838,13 +841,13 @@ being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
 or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or 
 <verb-ge-d>;
 
-isn't: (<verb-x-s> or 
+isn't isn’t: (<verb-x-s> or 
 ((Rw- or Q- or [()]) & (SIs+ or SFIs+))) & <vc-be>;
-wasn't: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
+wasn't wasn’t: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
 (SI*+ or SXI+ or SFIs+))) & <vc-be>);
-aren't: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+aren't aren’t: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or Q- or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
-weren't: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+weren't weren’t: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or Q- or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
 
 will.v can.v may.v must.v could.v might.v shall.v: 
@@ -860,10 +863,11 @@ would.v: ((SI+ or SFI+) & (((Rw- or Q- or [()]) & {Vw+} & I+) or CQ-)) or
 or [[()]]));
 ought.v: (((Rw- or Q- or [()]) & (SI+ or SFI+)) or
 ({@E-} & (S- or SF- or (RS- & B-)))) & (TO+ or (N+ & I+));
-won't can't mustn't couldn't shouldn't cannot needn't: 
+won't can't mustn't couldn't shouldn't cannot needn't 
+won’t can’t mustn’t couldn’t shouldn’t needn’t: 
 ((Rw- or Q- or [()]) & (SI+ or SFI+) & I+) or
 ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
-wouldn't: ((Rw- or Q- or [()]) & (SI+ or SFI+) & {RT+} & I+) or
+wouldn't wouldn’t: ((Rw- or Q- or [()]) & (SI+ or SFI+) & {RT+} & I+) or
 ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) 
 or [[()]]));
 
@@ -2309,7 +2313,7 @@ lets.v: <verb-s> & <vc-let>;
 letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
-let's: Wi- & I+;
+let's let’s: Wi- & I+;
 
 <vc-watch>: ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or ([[@MV+ & O*n+ & {@MV+}]])
 or {@MV+};
@@ -3013,7 +3017,7 @@ not: EB- or ({@E-} & N-) or NT+ or [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+)
 or (Mg- & Mgn+) or (Mv- & Mvn+) or (Mp- & Mp+) or (Ma- & Ma*n+)]];
 
 % We include this, though it's not one of the strippable strings
-n't: N- or EB-;
+n't n’t: N- or EB-;
 
 %ADJECTIVES
 
@@ -3739,7 +3743,7 @@ drowse.v riffle.v caw.v ruck.v agonize.v:
 oftenest correctliest soonest disquietingliest:
  EA+;
 
-proof-reads.v proof_reads gells.v O.K.'s.v OK's.v:
+proof-reads.v proof_reads gells.v O.K.'s.v OK's.v O.K.’s OK’s:
  <verb-s> & <vc-intrans>;
 
 propension.n:
@@ -3761,7 +3765,8 @@ test-drove.v forbore.v oversaw.v strove.v throve.v shrove.v
 longest-term.a:
  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
 
-daren't mayn't shan't oughtn't mightn't:
+daren't mayn't shan't oughtn't mightn't
+daren’t mayn’t shan’t oughtn’t mightn’t:
  ({Q-} & (SI+ or SFI+) & I+) or ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
 
 longer-term.a:
@@ -3773,7 +3778,7 @@ prognostic.a:
 attestation.n:
  ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
-O.K.'d.v OK'd.v:
+O.K.'d.v OK'd.v O.K.’d.v OK’d.v:
  <verb-sp,pp> & <vc-intrans>;
 
 whence whither:
@@ -3833,7 +3838,9 @@ whichever:
 skittle.v:
  <verb-pl,i> & <vc-kick>;
 
-proof-reading.v proof_reading O.K.'ing.v OK'ing.v:
+proof-reading.v proof_reading 
+O.K.'ing.v OK'ing.v
+O.K.’ing.v OK’ing.v:
  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 and/or:
@@ -3846,7 +3853,7 @@ overate.v over-ate.v forewent.v oversewed.v forswore.v
 whomever:
  (R- & Cr+) or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*r-))) or (Jr- & (RS+ or Cr+)) or Jw-;
 
-thyself oneself one's:
+thyself oneself one's one’s:
  J- or O- or E+ or MVa-;
 
 ensheathing.v roughcasting.v chemosensitizing.v 
@@ -3855,6 +3862,6 @@ ensheathing.v roughcasting.v chemosensitizing.v
  re-equilibrating.v crossmatching.v oversewing.v 
  lassooing.v over-eating.v breast-feeding.v 
  chemosensitising.v pre-setting.v psyching.v taring.v 
- KO'ing.v pole-axing.v rough-casting.v premiering.v 
+ KO'ing.v KO’ing.v pole-axing.v rough-casting.v premiering.v 
  under-feeding.v presetting.v tinging.v underfeeding.v:
  <verb-pg> & <vc-trans>;
