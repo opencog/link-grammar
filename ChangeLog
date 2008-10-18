@@ -1,5 +1,6 @@
 Version 4.3.10 includes the following changes:
  * fix: recognize curly-single-quote ’ where straight quote can be used.
+ * recognize and explicitly ignore emoticon types.
 
 Version 4.3.9 includes the following changes:
  * Issue 13: "John is altogether amazingly quick."

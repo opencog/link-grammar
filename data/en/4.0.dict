@@ -3552,7 +3552,20 @@ so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
 <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or M- or MV-;
 
 er errr um umm uh uhh oh ohh ooo yeah woo_hoo
-gee gosh wow ah ahh eh ehh hmm hmmm hoo zowie: NO+;
+gee gosh wow ah ahh eh ehh hmm hmmm hoo zowie
+emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
+emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
+emoticonID10 emoticonID11 emoticonID12 emoticonID13 emoticonID14
+emoticonID15 emoticonID16 emoticonID17 emoticonID18 emoticonID19
+emoticonID20 emoticonID21 emoticonID22 emoticonID23 emoticonID24
+emoticonID25 emoticonID26 emoticonID27 emoticonID28 emoticonID29
+emoticonID30 emoticonID31 emoticonID32 emoticonID33 emoticonID34
+emoticonID35 emoticonID36 emoticonID37 emoticonID38 emoticonID39
+emoticonID40 emoticonID41 emoticonID42 emoticonID43 emoticonID44
+emoticonID45 emoticonID46 emoticonID47 emoticonID48 emoticonID49
+emoticonID50 emoticonID51 emoticonID52 emoticonID53 emoticonID54
+emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59
+: NO+;
 
 ".": ((Xp- or ({@Xca-} & Xc-)) & RW+) or Xi-;
 
