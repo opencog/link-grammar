@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="link grammar dll" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="link-grammar-dll" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=link grammar dll - Win32 Debug
+CFG=link-grammar-dll - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "link grammar dll.mak".
+!MESSAGE NMAKE /f "link-grammar-dll.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "link grammar dll.mak" CFG="link grammar dll - Win32 Debug"
+!MESSAGE NMAKE /f "link-grammar-dll.mak" CFG="link-grammar-dll - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "link grammar dll - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "link grammar dll - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "link-grammar-dll - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "link-grammar-dll - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "link grammar dll - Win32 Release"
+!IF  "$(CFG)" == "link-grammar-dll - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -55,7 +55,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /out:"../../data/link-grammar.dll"
 
-!ELSEIF  "$(CFG)" == "link grammar dll - Win32 Debug"
+!ELSEIF  "$(CFG)" == "link-grammar-dll - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -85,8 +85,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "link grammar dll - Win32 Release"
-# Name "link grammar dll - Win32 Debug"
+# Name "link-grammar-dll - Win32 Release"
+# Name "link-grammar-dll - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -365,27 +365,27 @@ SOURCE="..\..\link-grammar\word-utils.h"
 # End Group
 # End Target
 # End Project
-# Microsoft Developer Studio Project File - Name="link grammar dll" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="link-grammar-dll" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=link grammar dll - Win32 Debug
+CFG=link-grammar-dll - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "link grammar dll.mak".
+!MESSAGE NMAKE /f "link-grammar-dll.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "link grammar dll.mak" CFG="link grammar dll - Win32 Debug"
+!MESSAGE NMAKE /f "link-grammar-dll.mak" CFG="link-grammar-dll - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "link grammar dll - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "link grammar dll - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "link-grammar-dll - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "link-grammar-dll - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -396,7 +396,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "link grammar dll - Win32 Release"
+!IF  "$(CFG)" == "link-grammar-dll - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -422,7 +422,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386 /out:"../../data/link-grammar.dll"
 
-!ELSEIF  "$(CFG)" == "link grammar dll - Win32 Debug"
+!ELSEIF  "$(CFG)" == "link-grammar-dll - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -452,8 +452,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "link grammar dll - Win32 Release"
-# Name "link grammar dll - Win32 Debug"
+# Name "link-grammar-dll - Win32 Release"
+# Name "link-grammar-dll - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

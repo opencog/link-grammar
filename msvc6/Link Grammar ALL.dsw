@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "link grammar dll"=".\link grammar dll\link grammar dll.dsp" - Package Owner=<4>
+Project: "link-grammar-dll"=".\link-grammar-dll\link-grammar-dll.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -15,7 +15,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "link grammar exe"=".\link grammar exe\link grammar exe.dsp" - Package Owner=<4>
+Project: "link-grammar-exe"=".\link-grammar-exe\link-grammar-exe.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -24,13 +24,13 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name link grammar dll
+    Project_Dep_Name link-grammar-exe
     End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "link grammar java dll"=".\link grammar java dll\link grammar java dll.dsp" - Package Owner=<4>
+Project: "link-grammar-java-dll"=".\link-grammar-java-dll\link-grammar-java-dll.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -39,7 +39,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name link grammar dll
+    Project_Dep_Name link-grammar-java-dll
     End Project Dependency
 }}}
 
@@ -62,7 +62,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "link grammar dll"=".\link grammar dll\link grammar dll.dsp" - Package Owner=<4>
+Project: "link-grammar-dll"=".\link-grammar-dll\link-grammar-dll.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -74,7 +74,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "link grammar exe"=".\link grammar exe\link grammar exe.dsp" - Package Owner=<4>
+Project: "link-grammar-exe"=".\link-grammar-exe\link-grammar-exe.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -83,13 +83,13 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name link grammar dll
+    Project_Dep_Name link-grammar-dll
     End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "link grammar java dll"=".\link grammar java dll\link grammar java dll.dsp" - Package Owner=<4>
+Project: "link-grammar-java-dll"=".\link-grammar-java-dll\link-grammar-java-dll.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -98,7 +98,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name link grammar dll
+    Project_Dep_Name link-grammar-dll
     End Project Dependency
 }}}
 
