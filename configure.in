@@ -252,6 +252,10 @@ data/lt/Makefile
 man/Makefile
 autopackage/default.apspec
 link-grammar.xcode/Makefile
+msvc6/Makefile
+msvc6/link-grammar-dll/Makefile
+msvc6/link-grammar-exe/Makefile
+msvc6/link-grammar-java-dll/Makefile
 ])
 
 dnl ====================================================================

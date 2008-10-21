@@ -1,4 +1,4 @@
-SUBDIRS=link-grammar data man link-grammar.xcode
+SUBDIRS=link-grammar data man link-grammar.xcode msvc6
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = link-grammar.pc
@@ -19,16 +19,9 @@ EXTRA_DIST =            \
 	link-grammar.pc.in   \
 	link-grammar.spec.in \
 	link-grammar.spec    \
-	msvc6                \
 	AUTHORS              \
 	ChangeLog            \
 	LICENSE              \
 	MAINTAINERS          \
 	README               \
 	TODO
-
-# Specifying `msvc6' in EXTRA_DIST causes the .svn to also get
-# sucked in. But we don't want to actually distribute these.
-dist-hook:
-	rm -rf $(distdir)/msvc6/.svn
-	rm -rf $(distdir)/msvc6/*/.svn
