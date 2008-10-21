@@ -14,14 +14,21 @@ java_DATA = link-grammar-@VERSION@.jar
 endif 
 
 
-EXTRA_DIST =			\
-	autogen.sh		\
-	link-grammar.pc.in	\
-	link-grammar.spec.in	\
-	link-grammar.spec	\
-	AUTHORS			\
-	ChangeLog		\
-	LICENSE			\
-	MAINTAINERS		\
-	README 			\
+EXTRA_DIST =            \
+	autogen.sh           \
+	link-grammar.pc.in   \
+	link-grammar.spec.in \
+	link-grammar.spec    \
+	msvc6                \
+	AUTHORS              \
+	ChangeLog            \
+	LICENSE              \
+	MAINTAINERS          \
+	README               \
 	TODO
+
+# Specifying `msvc6' in EXTRA_DIST causes the .svn to also get
+# sucked in. But we don't want to actually distribute these.
+dist-hook:
+	rm -rf $(distdir)/msvc6/.svn
+	rm -rf $(distdir)/msvc6/*/.svn
