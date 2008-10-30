@@ -211,10 +211,10 @@ struct Connector_struct
 struct Disjunct_struct
 {
     Disjunct *next;
-    short cost;
-    char marked;
     const char * string;
     Connector *left, *right;
+    float cost;
+    char marked;
 };
 
 typedef struct Match_node_struct Match_node;
