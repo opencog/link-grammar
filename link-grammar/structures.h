@@ -257,16 +257,16 @@ typedef struct E_list_struct E_list;
 
 struct Exp_struct
 {
+    Exp * next;
     char type;            /* one of three types, see above */
-    unsigned char cost;   /* The cost of using this expression.
-                             Only used for non-terminals */
     char dir;   /* '-' means to the left, '+' means to right (for connector) */
     char multi; /* TRUE if a multi-connector (for connector)  */
     union {
         E_list * l;       /* only needed for non-terminals */
         char * string;    /* only needed if it's a connector */
     } u;
-    Exp * next;
+    float cost;   /* The cost of using this expression.
+                     Only used for non-terminals */
 };
 
 struct E_list_struct

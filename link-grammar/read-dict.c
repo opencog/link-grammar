@@ -591,7 +591,7 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0;
+	n->cost = 0.0f;
 	n->u.l = (E_list *) xalloc(sizeof(E_list));
 	n->u.l->next = NULL;
 	n->u.l->e = e;
@@ -651,7 +651,7 @@ static Exp * connector(Dictionary dict)
 			n->multi = FALSE;
 		}
 		n->type = CONNECTOR_type;
-		n->cost = 0;
+		n->cost = 0.0f;
 	}
 
 	if (!link_advance(dict))
@@ -671,7 +671,7 @@ static Exp * make_zeroary_node(Dictionary dict)
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0;
+	n->cost = 0.0f;
 	n->u.l = NULL;
 	return n;
 }
@@ -687,7 +687,7 @@ static Exp * make_optional_node(Dictionary dict, Exp * e)
 	E_list *el, *elx;
 	n = Exp_create(dict);
 	n->type = OR_type;
-	n->cost = 0;
+	n->cost = 0.0f;
 	n->u.l = el = (E_list *) xalloc(sizeof(E_list));
 	el->e = make_zeroary_node(dict);
 	el->next = elx = (E_list *) xalloc(sizeof(E_list));
@@ -713,7 +713,7 @@ Exp * operator_exp(Dictionary dict, int type)
 	E_list * elist;
 	n = Exp_create(dict);
 	n->type = type;
-	n->cost = 0;
+	n->cost = 0.0f;
 	elist = &first;
 	while((!is_equal(dict, ')')) && (!is_equal(dict, ']')) && (!is_equal(dict, '}'))) {
 		elist->next = (E_list *) xalloc(sizeof(E_list));
@@ -800,7 +800,7 @@ Exp * expression(Dictionary dict)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		n->cost += 1;
+		n->cost += 1.0f;
 	} else if (!dict->is_special) {
 		n = connector(dict);
 		if (n == NULL) {
@@ -887,7 +887,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nl->cost += 1;
+		nl->cost += 1.0f;
 	}
 	else if (!dict->is_special)
 	{
@@ -929,7 +929,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		ell->e = nl;
 		elr->e = nr;
 		n->type = AND_type;
-		n->cost = 0;
+		n->cost = 0.0f;
 		return n;
 	}
 	else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
@@ -954,7 +954,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		ell->e = nl;
 		elr->e = nr;
 		n->type = OR_type;
-		n->cost = 0;
+		n->cost = 0.0f;
 		return n;
 	} 
 
@@ -1154,34 +1154,36 @@ syntax_error:
 void print_expression(Exp * n)
 {
 	E_list * el;
-	int i;
+	int i, icost;
 
 	if (n == NULL)
 	{
 		printf("NULL expression");
 		return;
 	}
+
+	icost = (int) (n->cost);
 	if (n->type == CONNECTOR_type)
 	{
-		for (i=0; i<n->cost; i++) printf("[");
+		for (i=0; i<icost; i++) printf("[");
 		if (n->multi) printf("@");
 		printf("%s%c",n->u.string, n->dir);
-		for (i=0; i<n->cost; i++) printf("]");
-		if (n->cost > 0) printf(" ");
+		for (i=0; i<icost; i++) printf("]");
+		if (icost > 0) printf(" ");
 	}
 	else
 	{
-		for (i=0; i<n->cost; i++) printf("[");
-		if (n->cost == 0) printf("(");
+		for (i=0; i<icost; i++) printf("[");
+		if (icost == 0) printf("(");
 		if (n->type == AND_type) printf("& ");
 		if (n->type == OR_type) printf("or ");
 		for (el = n->u.l; el != NULL; el = el->next)
 		{
 			print_expression(el->e);
 		}
-		for (i=0; i<n->cost; i++) printf("]");
-		if (n->cost > 0) printf(" ");
-		if (n->cost == 0) printf(") ");
+		for (i=0; i<icost; i++) printf("]");
+		if (icost > 0) printf(" ");
+		if (icost == 0) printf(") ");
 	}
 }
 
@@ -1193,7 +1195,7 @@ void print_expression(Exp * n)
 static void print_expression_parens(Exp * n, int need_parens)
 {
 	E_list * el;
-	int i;
+	int i, icost;
 
 	if (n == NULL)
 	{
@@ -1201,13 +1203,14 @@ static void print_expression_parens(Exp * n, int need_parens)
 		return;
 	}
 
+	icost = (int) (n->cost);
 	/* print the connector only */
 	if (n->type == CONNECTOR_type)
 	{
-		for (i=0; i<n->cost; i++) printf("[");
+		for (i=0; i<icost; i++) printf("[");
 		if (n->multi) printf("@");
 		printf("%s%c",n->u.string, n->dir);
-		for (i=0; i<n->cost; i++) printf("]");
+		for (i=0; i<icost; i++) printf("]");
 		return;
 	}
 
@@ -1215,13 +1218,13 @@ static void print_expression_parens(Exp * n, int need_parens)
 	el = n->u.l; 
 	if (el == NULL)
 	{
-		for (i=0; i<n->cost; i++) printf("[");
+		for (i=0; i<icost; i++) printf("[");
 		printf ("()");
-		for (i=0; i<n->cost; i++) printf("]");
+		for (i=0; i<icost; i++) printf("]");
 		return;
 	}
 
-	for (i=0; i<n->cost; i++) printf("[");
+	for (i=0; i<icost; i++) printf("[");
 	if ((n->type == OR_type) &&
 	    el && el->e && (NULL == el->e->u.l))
 	{
@@ -1231,7 +1234,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 		return;
 	}
 
-	if ((n->cost == 0) && need_parens) printf("(");
+	if ((icost == 0) && need_parens) printf("(");
 
 	/* print left side of binary expr */
 	print_expression_parens(el->e, TRUE);
@@ -1265,8 +1268,8 @@ static void print_expression_parens(Exp * n, int need_parens)
 			printf ("\nERROR! Unexpected list!\n");
 	}
 
-	for (i=0; i<n->cost; i++) printf("]");
-	if ((n->cost == 0) && need_parens) printf(")");
+	for (i=0; i<icost; i++) printf("]");
+	if ((icost == 0) && need_parens) printf(")");
 }
 
 void print_expression(Exp * n)
@@ -1277,12 +1280,12 @@ void print_expression(Exp * n)
 
 static void rprint_dictionary_data(Dict_node * n)
 {
-		if (n == NULL) return;
-		rprint_dictionary_data(n->left);
-		printf("%s: ", n->string);
-		print_expression(n->exp);
-		printf("\n");
-		rprint_dictionary_data(n->right);
+	if (n == NULL) return;
+	rprint_dictionary_data(n->left);
+	printf("%s: ", n->string);
+	print_expression(n->exp);
+	printf("\n");
+	rprint_dictionary_data(n->right);
 }
 
 /**
