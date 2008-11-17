@@ -231,6 +231,8 @@ typedef struct Linkage_s * Linkage;
 
 link_public_api(Linkage)
      linkage_create(int index, Sentence sent, Parse_Options opts);
+link_public_api(int) 
+     linkage_get_current_sublinkage(Linkage linkage); 
 link_public_api(int)
      linkage_set_current_sublinkage(Linkage linkage, int index);
 link_public_api(void)

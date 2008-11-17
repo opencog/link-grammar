@@ -947,6 +947,10 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	return linkage;
 }
 
+int linkage_get_current_sublinkage(Linkage linkage) { 
+	return linkage->current; 
+} 
+
 int linkage_set_current_sublinkage(Linkage linkage, int index)
 {
 	if ((index < 0) ||

@@ -75,6 +75,7 @@ sentence_link_cost
 sentence_get_nth_word
 sentence_nth_word_has_disjunction
 linkage_create
+linkage_get_current_sublinkage
 linkage_set_current_sublinkage
 linkage_delete
 linkage_get_sentence
