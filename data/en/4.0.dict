@@ -2630,7 +2630,7 @@ within:                        ({JQ+} & J+ & <prep-main-a>)           or (MVp- &
 during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- & B-);
 from:
 ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & <prep-main-a>)
-or (MVp- & B-) or (NIa+ & NIb+ & NIc+);
+or (MVp- & B-) or MVp- or (NIa+ & NIb+ & NIc+);
 at toward towards without upon:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 except: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
