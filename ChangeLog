@@ -4,6 +4,7 @@ Version 4.3.10 includes the following changes:
  * Include MSVC6 build files.
  * Apply patch needed for Ruby bindings.
  * fix: "Where did they come from?", per Viswanath IIIT
+ * fix: "Where did they go to?"
 
 Version 4.3.9 includes the following changes:
  * Issue 13: "John is altogether amazingly quick."

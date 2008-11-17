@@ -2686,7 +2686,7 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 to: ({@E-} & {NT-} & I+ & (TO- or [{Xd- & Xc+} & MVi-] 
 or [[R-]] or (SFsx+ & <S-CLAUSE>) or [Xc+ & {Xd-} & CO+]))
 or I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) 
-or [MVp- & B-] or NIb-;
+or [MVp- & B-] or [MVp-] or NIb-;
 so_as_to: I+ & {Xd- & Xc+} & MVi-; 
 
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
