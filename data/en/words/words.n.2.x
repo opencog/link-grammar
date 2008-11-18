@@ -8,4 +8,5 @@ gunmen.n kin.n larvae.n lire.n lobstermen.n media.p men.n mice.n
 millenia.n papaya.p 
 pence.n people.p perch.p personae.n personnel.n phenomena.n 
 police.p policemen.n policewomen.n rebellion.n salesmen.n salmon.p 
-sheep.p spokesmen.n spokeswomen.n teeth.n women.n yen.p zucchini.p
+sheep.p shrubbery.p smelt.p spokesmen.n spokeswomen.n teeth.n 
+waterfowl.p women.n yen.p zloty.p złoty.p zuchini.p zucchini.p
