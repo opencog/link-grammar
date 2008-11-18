@@ -1426,7 +1426,7 @@ punches.n punctures.n pundits.n punishments.n punks.n puns.n
 punsters.n punts.n pupils.n puppeteers.n puppets.n puppies.n pups.n 
 purchasers.n purchases.n purees.n purgatories.n purges.n 
 purifications.n purifiers.n purists.n puritans.n purposes.n purrs.n 
-purses.n pursuers.n pursuits.n purveyors.n purviews.n pushcarts.n 
+purses.n pursefuls.n pursuers.n pursuits.n purveyors.n purviews.n pushcarts.n 
 pushers.n pushes.n pushovers.n pussies.n pussycats.n putsches.n 
 putts.n puzzles.n pygmies.n pylons.n pyramids.n pyres.n pythons.n 
 quacks.n quadrangles.n quadrants.n quadrilaterals.n quadrupeds.n 
