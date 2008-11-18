@@ -1050,7 +1050,7 @@ Give me a piece of apple.
 A piece of asteriod broke off.
 Add one spoonful of avocado.
 I ate a bit of biscuit.
-she exposed a bit of bikini to us.
+She exposed a bit of bikini to us.
 A piece of cactus went sailing through the air.
 Add a cup of finely shredded carrot.
 A length of chain was wrapped around the tree.
@@ -1065,7 +1065,7 @@ A length of cutlass gleamed in the sunlight.
 I had a bite of donut before going out.
 He had a bit of egg on his face.
 It was as frail as eggshell.
-The sea was green as emerald.
+The ice was green as emerald.
 He ruled by fiat.
 There was a bit of gaudiness to the show.
 He had a bit of gumshoe in his cleverness.
@@ -1139,8 +1139,15 @@ We took a through flight.
 It's a done deed.
 
 % Some idiomatic expressions involving "doing"
+% Somewhat inconsistent, though.
 I am doing fine.
 I am doing poorly.
+He is doing ok.
+He is doing okay.
+I am doing much better, thank you.
+It is going terribly.
+It is going well.
+I'm feeling awful.
 
 % Expressions with direct and indirect objects
 I asked him a question.
@@ -1192,6 +1199,7 @@ It fell when the clock chimed.
 % Inverted subject-object
 The treasure lay below the ground.
 Below the ground lay the treasure.
+In Xanadu did Kubla Kahn a stately pleasure dome decree.
 
 % More failures: "He turned left." parses, but not correctly.
 % "He turned around", "he jumped around", "he jumped up" use "K"
@@ -1303,7 +1311,7 @@ What did they do when they got off the car?
 Did they go get a sandwich? 
 Did they eat in the dark?                       
 What did they do with the waxed-paper bundles?
-what does it all come to?
+What does it all come to?
 
 
 % broken lexical chunk recognition:
