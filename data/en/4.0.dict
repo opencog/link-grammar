@@ -283,6 +283,11 @@ percent.u:
 (<noun-main-x> or B*x+)) or
 U-)) or (ND- & (OD- or AN+ or YS+));
 
+% This set of disjuncts should probably be split up and refined.
+% "shame.n", "crux.n" are here because they need the Ss*t connector
+% to pick up "that" in "The crux of it is that we must act first."
+% However, report.n and sign.n and remark.n, etc. do not seem to 
+% need this connector ... 
 argument.n report.n sign.n impression.n conclusion.n complaint.n
 allegation.n announcement.n position.n restriction.n threat.n notion.n
 remark.n assertion.n proclamation.n reassurance.n saying.n
@@ -290,7 +295,7 @@ accusation.n possibility.n idea.n problem.n claim.n result.n
 statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
 message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n inkling.n supposition.n
-finding.n amount.n answer.n:
+finding.n amount.n answer.n crux.n shame.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & 
 {[[@M+]]}} & {@MXs+} 
 & (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
