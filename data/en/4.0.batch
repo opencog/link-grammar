@@ -1221,6 +1221,20 @@ Here's Johhny!
 There goes the neighborhood!
 But for the grace of God, there go I.
 
+% Buggy parsing of "all but", "nothing but"
+Nothing but ocean lay before.
+We heard nothing but silence.
+Nothing but scorched earth remained.
+All was lost but one table.
+All was lost, save for one chair.
+All but one tree remained untouched.
+But for want of a nail, the shoe was lost.
+All but one tree was lost.
+Everything but one tree remained.
+We hoped for the best, but were disappointed.
+There was nothing but pain.
+
+
 % Buggy sentences that need fixing:
 His works disclose a mastery of composition.
 

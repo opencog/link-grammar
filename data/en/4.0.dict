@@ -486,7 +486,6 @@ nothing no_one nobody:
 everything everyone anyone everybody anybody anything: 
 {EN-} & {EL+} & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} &
 <noun-main-s>) or YS+);
-nothing_but: Vd- & I+;
 else: EL-;
 
 others: {Dmc-} & <noun-sub-p> & <noun-main-p>;
@@ -2633,7 +2632,7 @@ from:
 or (MVp- & B-) or MVp- or (NIa+ & NIb+ & NIc+);
 at toward towards without upon:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
-except: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
+except but.ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
 ((MVp+ or TO+) & <prep-main-a>); 
 against beyond beside: 
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
@@ -2982,7 +2981,7 @@ or (Xd- & Xc+ & E+)));
 once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or 
 (Xd- & Xc+ & E+))) or E+ or EB-;
 or: NO+;
-but: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
+but.cnj: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 and: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
@@ -3310,7 +3309,13 @@ than_intended than_supposed than_reported than_ever than_usual: MVt-;
 more_than no_more_than fewer_than less_than as_many_as an_estimated 
 an_additional up_to as_much_as no_fewer_than no_less_than: EN+;
 at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
+
+% This is not quite right, since there may be other words in between 
+% "all ... but": "All was lost but for one tree."
+% "Everything but one tree remained."
+% nothing_but all_but: EN+ or E+;
 all_but: EN+ or E+;
+nothing_but: Vd- & I+;
 
 % superlative adjectives
 % angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a 
