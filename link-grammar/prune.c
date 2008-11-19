@@ -137,8 +137,6 @@ int prune_match(int dist, Connector *a, Connector *b)
 	int x, y;
 
 	if (a->label != b->label) return FALSE;
-	x = a->priority;
-	y = b->priority;
 
 	s = a->string;
 	t = b->string;
@@ -155,8 +153,11 @@ int prune_match(int dist, Connector *a, Connector *b)
 		   s, t, x, y, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
+	x = a->priority;
+	y = b->priority;
 
-	if ((x==THIN_priority) && (y==THIN_priority)) {
+	if ((x == THIN_priority) && (y == THIN_priority))
+	{
 #if defined(PLURALIZATION)
 /*
 		if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&  (*t=='p')) {
@@ -183,36 +184,54 @@ int prune_match(int dist, Connector *a, Connector *b)
    The third line above ensures that the connector is either "S" or "SI".
 */
 #endif
-		while ((*s!='\0') && (*t!='\0')) {
+		while ((*s != '\0') && (*t != '\0'))
+		{
 			if ((*s == '*') || (*t == '*') ||
-				((*s == *t) && (*s != '^'))) {
+				((*s == *t) && (*s != '^')))
+			{
 			  /* this last case here is rather obscure.  It prevents
 				 '^' from matching '^'.....Is this necessary?
 					 ......yes, I think it is.   */
 				s++;
 				t++;
-			} else return FALSE;
+			}
+			else
+				return FALSE;
 		}
 		return TRUE;
-	} else if ((x==UP_priority) && (y==DOWN_priority)) {
-		while ((*s!='\0') && (*t!='\0')) {
-			if ((*s == *t) || (*s == '*') || (*t == '^')) {
+	}
+	else if ((x==UP_priority) && (y==DOWN_priority))
+	{
+		while ((*s!='\0') && (*t!='\0'))
+		{
+			if ((*s == *t) || (*s == '*') || (*t == '^'))
+			{
 				/* that '^' should match on the DOWN_priority
 				   node is subtle, but correct */
 				s++;
 				t++;
-			} else return FALSE;
+			}
+			else
+				return FALSE;
 		}
 		return TRUE;
-	} else if ((y==UP_priority) && (x==DOWN_priority)) {
-		while ((*s!='\0') && (*t!='\0')) {
-			if ((*s == *t) || (*t == '*') || (*s == '^')) {
+	}
+	else if ((y==UP_priority) && (x==DOWN_priority))
+	{
+		while ((*s!='\0') && (*t!='\0'))
+		{
+			if ((*s == *t) || (*t == '*') || (*s == '^'))
+			{
 				s++;
 				t++;
-			} else return FALSE;
+			}
+			else
+				return FALSE;
 		}
 		return TRUE;
-	} else return FALSE;
+	}
+	else
+		return FALSE;
 }
 
 /**
@@ -397,9 +416,6 @@ void prune(Sentence sent)
 
 	/* XXX why is this here ?? */
 	count_set_effective_distance(sent);
-
-/* You know, I don't think this makes much sense.  This is probably much  */
-/* too big.  There are many fewer connectors than disjuncts. */
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	while(1)
