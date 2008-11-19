@@ -983,13 +983,27 @@ static Exp* purge_Exp(Exp *e)
 
 /**
  * Returns TRUE if c can match anything in the set S.
- * Because of the horrible kludge, prune match is assymetric, and
- * direction is '-' if this is an l->r pass, and '+' if an r->l pass.
  */
 static int matches_S(connector_table *ct, Connector * c, int dir)
 {
-	if (dir == '-') return matches_minus (ct, c);
-	return matches_plus(ct, c);
+	Connector * e;
+	int h = hash_S(ct, c);
+
+	if (dir == '-')
+	{
+		for (e = ct->table[h]; e != NULL; e = e->next)
+		{
+			if (prune_match(0, e, c)) return TRUE;
+		}
+	}
+	else
+	{
+		for (e = ct->table[h]; e != NULL; e = e->next)
+		{
+			if (prune_match(0, c, e)) return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 /**
