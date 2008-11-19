@@ -236,6 +236,12 @@ static void connector_table_delete(connector_table *ct)
 	free(ct);
 }
 
+static void zero_connector_table(connector_table *ct)
+{
+	memset(ct->table, 0, sizeof(char*) * ct->s_table_size);
+}
+
+
 /**
  * This hash function only looks at the leading upper case letters of
  * the connector string, and the label fields.  This ensures that if two
@@ -379,7 +385,7 @@ void prune(Sentence sent)
 	ct = connector_table_new (nd);
 
 /* You know, I don't think this makes much sense.  This is probably much  */
-/* too big.  There are many fewer connectors than disjuncts.			  */
+/* too big.  There are many fewer connectors than disjuncts. */
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	count_set_effective_distance(sent);
@@ -451,13 +457,16 @@ void prune(Sentence sent)
 #else /* TRADITIONAL_PRUNE */
 
 /** 
- * This function puts a copy of c into the connector table
- * if one like it isn't already there */
+ * This function puts a copy of connector c into the connector table
+ * if one like it isn't already there
+ */
 static void insert_CS(connector_table *ct, Connector * c)
 {
 	int h;
 	Connector * e;
+
 	h = hash_S(ct, c);
+
 	for (e = ct->table[h]; e != NULL; e = e->tableNext)
 	{
 		if ((strcmp(c->string, e->string) == 0) && 
@@ -469,31 +478,28 @@ static void insert_CS(connector_table *ct, Connector * c)
 	ct->table[h] = c;
 }
 
-static void zero_CS(connector_table *ct)
-{
-	 memset(ct->table,0,sizeof(char*) * ct->s_table_size);
-}
-
 void prune(Sentence sent)
 {
 	Disjunct *d;
 	Connector *e;
 	int w;
-	connector_table *ct;
+	int N_deleted;
+	connector_table cts, *ct;
+#define CTABSZ 1024
+	Connector *tab[CTABSZ];
 
-	int N_deleted = 1;  /* a lie to make it always do at least 2 passes */
+	cts.s_table_size = CTABSZ;
+	cts.table = tab;
+	ct = &cts;
 
-	int nd = next_power_of_two_up(count_disjuncts_in_sentence(sent));
-	if (1024 < nd) nd = 1024;
-	ct = connector_table_new (nd);
-
+	/* XXX why is this here ?? */
 	count_set_effective_distance(sent);
 
+	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	while(1)
 	{
 		/* Left-to-right pass */
-		/* Clear hash table */
-		zero_CS(ct);
+		zero_connector_table(ct);
 
 		/* For every word */
 		for (w = 0; w < sent->length; w++)
@@ -541,8 +547,7 @@ void prune(Sentence sent)
 		if (N_deleted == 0) break;
 
 		/* Right-to-left pass */
-		/* Clear hash table */
-		zero_CS(ct);
+		zero_connector_table(ct);
 		N_deleted = 0;
 		for (w = sent->length-1; w >= 0; w--)
 		{
@@ -568,6 +573,13 @@ void prune(Sentence sent)
 				for (e = d->left; e != NULL; e = e->next) insert_CS(ct, e);
 			}
 		}
+
+		if (verbosity > 2)
+		{
+			printf("r->l pass removed %d\n", N_deleted);
+			print_disjunct_counts(sent);
+		}
+
 		/* We made no change on this pass */
 		if (N_deleted == 0) break;
 		N_deleted = 0;
