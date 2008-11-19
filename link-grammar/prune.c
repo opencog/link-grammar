@@ -200,7 +200,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 		}
 		return TRUE;
 	}
-	else if ((x==UP_priority) && (y==DOWN_priority))
+	else if ((x == UP_priority) && (y == DOWN_priority))
 	{
 		while ((*s!='\0') && (*t!='\0'))
 		{
@@ -216,7 +216,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 		}
 		return TRUE;
 	}
-	else if ((y==UP_priority) && (x==DOWN_priority))
+	else if ((y == UP_priority) && (x == DOWN_priority))
 	{
 		while ((*s!='\0') && (*t!='\0'))
 		{
@@ -356,12 +356,16 @@ static void clean_up(Sentence sent, int w)
 
 	d->next = sent->word[w].d;
 
-	while(d->next != NULL) {
-		if ((d->next->left == NULL) && (d->next->right == NULL)) {
+	while(d->next != NULL)
+	{
+		if ((d->next->left == NULL) && (d->next->right == NULL))
+		{
 			d1 = d->next;
 			d->next = d1->next;
 			xfree((char *)d1, sizeof(Disjunct));
-		} else {
+		}
+		else
+		{
 			d = d->next;
 		}
 	}
@@ -372,7 +376,8 @@ static void clean_up(Sentence sent, int w)
 static int count_disjuncts(Disjunct * d)
 {
 	int count = 0;
-	for (; d!=NULL; d=d->next) {
+	for (; d != NULL; d = d->next)
+	{
 		count++;
 	}
 	return count;
