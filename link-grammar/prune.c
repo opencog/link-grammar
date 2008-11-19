@@ -281,7 +281,6 @@ static void insert_S(connector_table *ct, Connector * c)
 
 static connector_table * connector_table_new(size_t sz)
 {
-	int i;
 	connector_table *ct;
 
 	ct = (connector_table *) malloc (sizeof(connector_table));
@@ -339,7 +338,7 @@ static void clean_up(Sentence sent, int w)
 	sent->word[w].d = head_disjunct.next;
 }
 
-/** returns the number of disjuncts in the list pointed to by d */
+/** Returns the number of disjuncts in the list pointed to by d */
 static int count_disjuncts(Disjunct * d)
 {
 	int count = 0;
@@ -349,9 +348,9 @@ static int count_disjuncts(Disjunct * d)
 	return count;
 }
 
+/** Returns the total number of disjuncts in the sentence */
 static int count_disjuncts_in_sentence(Sentence sent)
 {
-/* returns the total number of disjuncts in the sentence */
 	int w, count;
 	count = 0;
 	for (w=0; w<sent->length; w++) {
@@ -370,7 +369,9 @@ void prune(Sentence sent)
 
 	connector_table *ct;
 
-	ct = connector_table_new (next_power_of_two_up(count_disjuncts_in_sentence(sent)));
+	int nd = next_power_of_two_up(count_disjuncts_in_sentence(sent));
+	/* if (1024 < nd) nd = 1024; Hmm, this makes it slower */
+	ct = connector_table_new (nd);
 
 /* You know, I don't think this makes much sense.  This is probably much  */
 /* too big.  There are many fewer connectors than disjuncts.			  */
@@ -487,10 +488,11 @@ void prune(Sentence sent) {
 	connector_table *ct;
 
     int N_deleted = 1;  /* a lie to make it always do at least 2 passes */
-    count_set_effective_distance(sent);
 
-	ct = connector_table_new (next_power_of_two_up(count_disjuncts_in_sentence(sent)));
-printf ("duuuude its %d\n", next_power_of_two_up(count_disjuncts_in_sentence(sent)));
+	int nd = next_power_of_two_up(count_disjuncts_in_sentence(sent));
+	if (1024 < nd) nd = 1024;
+
+    count_set_effective_distance(sent);
 
     while(1) {
 	    /* left-to-right pass */
