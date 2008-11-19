@@ -192,7 +192,7 @@ void exfree_connectors(Connector *e)
 	Connector * n;
 	for(;e != NULL; e = n) {
 		n = e->next;
-		exfree((char *) e->string, sizeof(char)*(strlen(e->string)+1));
+		exfree((void *) e->string, sizeof(char)*(strlen(e->string)+1));
 		exfree(e, sizeof(Connector));
 	}
 }
@@ -237,7 +237,7 @@ void exfree_link(Link * l)
 {
 	exfree_connectors(l->rc);
 	exfree_connectors(l->lc);
-	exfree((char *)l->name, sizeof(char)*(strlen(l->name)+1));
+	exfree((void *)l->name, sizeof(char)*(strlen(l->name)+1));
 	exfree(l, sizeof(Link));
 }
 

@@ -985,7 +985,7 @@ void linkage_delete(Linkage linkage)
 
 	for (i=0; i<linkage->num_words; ++i)
 	{
-		exfree((char *) linkage->word[i], strlen(linkage->word[i])+1);
+		exfree((void *) linkage->word[i], strlen(linkage->word[i])+1);
 	}
 	exfree(linkage->word, sizeof(char *)*linkage->num_words);
 
@@ -1005,7 +1005,7 @@ void linkage_delete(Linkage linkage)
 			post_process_free_data(&s->pp_data);
 		}
 		if (s->violation != NULL) {
-			exfree((char *) s->violation, sizeof(char)*(strlen(s->violation)+1));
+			exfree((void *) s->violation, sizeof(char)*(strlen(s->violation)+1));
 		}
 	}
 	exfree(linkage->sublinkage, sizeof(Sublinkage)*linkage->num_sublinkages);
@@ -1319,7 +1319,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 		}
 		if (subl->violation != NULL)
 		{
-			exfree((char *)subl->violation, sizeof(char)*(strlen(subl->violation)+1));
+			exfree((void *)subl->violation, sizeof(char)*(strlen(subl->violation)+1));
 			subl->violation = NULL;
 		}
 

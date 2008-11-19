@@ -205,8 +205,12 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
  * track of how much space is getting used during a parse. 
  *
  * This code is probably obsolescent, and should probably be dumped.
+ * No one (that I know of) looks at the space usage; its one of the
+ * few areas that needs pthreads -- it would be great to just get
+ * rid of it (and thus get rid of pthreads).
  */
 
+#ifdef TRACK_SPACE_USAGE
 typedef struct
 {
 	size_t max_space_used;
@@ -273,6 +277,11 @@ size_t get_max_space_used(void)
 {
 	return getspace()->max_space_used;
 }
+#else /* TRACK_SPACE_USAGE */
+void init_memusage(void) {}
+size_t get_space_in_use(void) { return 0; }
+size_t get_max_space_used(void) { return 0; }
+#endif /* TRACK_SPACE_USAGE */
 
 /**
  * alloc some memory, and keep track of the space allocated.
@@ -280,6 +289,8 @@ size_t get_max_space_used(void)
 void * xalloc(size_t size)
 {
 	void * p = malloc(size);
+
+#ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->space_in_use += size;
 	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
@@ -289,14 +300,18 @@ void * xalloc(size_t size)
 		abort();
 		exit(1);
 	}
+#endif /* TRACK_SPACE_USAGE */
 	return p;
 }
 
 void * xrealloc(void *p, size_t oldsize, size_t newsize)
 {
+#ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->space_in_use -= oldsize;
+#endif /* TRACK_SPACE_USAGE */
 	p = realloc(p, newsize);
+#ifdef TRACK_SPACE_USAGE
 	if ((p == NULL) && (newsize != 0))
 	{
 		prt_error("Fatal Error: Ran out of space on realloc.\n");
@@ -305,18 +320,22 @@ void * xrealloc(void *p, size_t oldsize, size_t newsize)
 	}
 	s->space_in_use += newsize;
 	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
+#endif /* TRACK_SPACE_USAGE */
 	return p;
 }
 
+#ifdef TRACK_SPACE_USAGE
 void xfree(void * p, size_t size)
 {
 	getspace()->space_in_use -= size;
 	free(p);
 }
+#endif /* TRACK_SPACE_USAGE */
 
 void * exalloc(size_t size)
 {
 	void * p = malloc(size);
+#ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->external_space_in_use += size;
 	if (s->max_external_space_used < s->external_space_in_use)
@@ -328,14 +347,17 @@ void * exalloc(size_t size)
 		abort();
 		exit(1);
 	}
+#endif /* TRACK_SPACE_USAGE */
 	return p;
 }
 
+#ifdef TRACK_SPACE_USAGE
 void exfree(void * p, size_t size)
 {
 	getspace()->external_space_in_use -= size;
 	free(p);
 }
+#endif /* TRACK_SPACE_USAGE */
 
 /* =========================================================== */
 /* File path and dictionary open routines below */

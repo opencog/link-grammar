@@ -175,9 +175,17 @@ void left_print_string(FILE* fp, const char *, const char *);
 void init_memusage(void);
 void * xalloc(size_t);
 void * xrealloc(void *, size_t oldsize, size_t newsize);
-void xfree(void *, size_t);
 void * exalloc(size_t);
+
+#define TRACK_SPACE_USAGE
+#ifdef TRACK_SPACE_USAGE
+void xfree(void *, size_t);
 void exfree(void *, size_t);
+#else /* TRACK_SPACE_USAGE */
+static inline void xfree(void *p, size_t sz) { free(p); }
+static inline void exfree(void *p, size_t sz) { free(p); };
+#endif /* TRACK_SPACE_USAGE */
+
 size_t get_space_in_use(void);
 size_t get_max_space_used(void);
 
