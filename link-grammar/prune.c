@@ -491,6 +491,7 @@ void prune(Sentence sent) {
 
 	int nd = next_power_of_two_up(count_disjuncts_in_sentence(sent));
 	if (1024 < nd) nd = 1024;
+	ct = connector_table_new (nd);
 
     count_set_effective_distance(sent);
 
