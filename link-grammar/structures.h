@@ -206,6 +206,13 @@ struct Connector_struct
     char multi;   /* TRUE if this is a multi-connector */
     Connector * next;
     const char * string;
+
+#define TRADITIONAL_PRUNE 1
+#ifndef TRADITIONAL_PRUNE
+    /* Used only during table lookup */
+    Connector * tableNext;
+    Connector * tablePrior;
+#endif /* TRADITIONAL_PRUNE */
 };
 
 struct Disjunct_struct
