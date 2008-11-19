@@ -475,25 +475,26 @@ static void zero_CS(connector_table *ct)
  * assymetric, and direction is '-' if this is an l->r pass, 
  * and '+' if an r->l pass.
  */
-static int matches_CS(connector_table *ct, Connector * c, int dir)
+static int matches_minus(connector_table *ct, Connector * c)
 {
-	int h;
 	Connector * e;
+	int h = hash_S(ct, c);
 
-	h = hash_S(ct, c);
-	if (dir=='-')
+	for (e = ct->table[h]; e != NULL; e = e->tableNext)
 	{
-		for (e = ct->table[h]; e != NULL; e = e->tableNext)
-		{
-			if (prune_match(0, e, c)) return TRUE;
-		}
+		if (prune_match(0, e, c)) return TRUE;
 	}
-	else
+	return FALSE;
+}
+
+static int matches_plus(connector_table *ct, Connector * c)
+{
+	Connector * e;
+	int h = hash_S(ct, c);
+
+	for (e = ct->table[h]; e != NULL; e = e->tableNext)
 	{
-		for (e = ct->table[h]; e != NULL; e = e->tableNext)
-		{
-			if (prune_match(0, c, e)) return TRUE;
-		}
+		if (prune_match(0, c, e)) return TRUE;
 	}
 	return FALSE;
 }
@@ -530,7 +531,7 @@ void prune(Sentence sent)
 				{
 					/* We know this disjunct is dead since no match
 					 * can be found on a required clause. */
-					if (!matches_CS(ct, e, '-'))
+					if (!matches_minus(ct, e))
 					{
 						N_deleted ++;
 						free_connectors(d->left);
@@ -568,8 +569,9 @@ void prune(Sentence sent)
 			{
 				for (e = d->right; e != NULL; e = e->next)
 				{
-					/* We know this disjunct is dead since it can't match right*/
-					if (!matches_CS(ct, e,'+'))
+					/* We know this disjunct is dead since
+					 *  it can't match to the right*/
+					if (!matches_plus(ct, e))
 					{
 						N_deleted ++;
 						free_connectors(d->left);
