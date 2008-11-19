@@ -143,7 +143,8 @@ int prune_match(int dist, Connector *a, Connector *b)
 	s = a->string;
 	t = b->string;
 
-	while(isupper((int)*s) || isupper((int)*t)) /* connector names are not yet UTF8-capable */
+	/* isupper -- connector names are not yet UTF8-capable */
+	while (isupper((int)*s) || isupper((int)*t))
 	{
 		if (*s != *t) return FALSE;
 		s++;
@@ -222,7 +223,7 @@ static void free_S(connector_table *ct)
 	int i;
 	for (i = 0; i < ct->s_table_size; i++)
 	{
-		if (ct->table[i] == NULL) continue; /* a prehaps stupid optimization */
+		if (ct->table[i] == NULL) continue;
 		free_connectors(ct->table[i]);
 		ct->table[i] = NULL;
 	}
@@ -293,23 +294,27 @@ static connector_table * connector_table_new(size_t sz)
 
 /**
  * Returns TRUE if c can match anything in the set S.
- * Because of the horrible kludge, prune match is assymetric, and
- * direction is '-' if this is an l->r pass, and '+' if an r->l pass.
  */
-static int matches_S(connector_table *ct, Connector * c, int dir)
+static int matches_minus(connector_table *ct, Connector * c)
 {
-	int h;
 	Connector * e;
+	int h = hash_S(ct, c);
 
-	h = hash_S(ct, c);
-	if (dir=='-') {
-		for (e = ct->table[h]; e != NULL; e = e->next) {
-			if (prune_match(0, e, c)) return TRUE;
-		}
-	} else {
-		for (e = ct->table[h]; e != NULL; e = e->next) {
-			if (prune_match(0, c, e)) return TRUE;
-		}
+	for (e = ct->table[h]; e != NULL; e = e->tableNext)
+	{
+		if (prune_match(0, e, c)) return TRUE;
+	}
+	return FALSE;
+}
+
+static int matches_plus(connector_table *ct, Connector * c)
+{
+	Connector * e;
+	int h = hash_S(ct, c);
+
+	for (e = ct->table[h]; e != NULL; e = e->tableNext)
+	{
+		if (prune_match(0, c, e)) return TRUE;
 	}
 	return FALSE;
 }
@@ -385,7 +390,7 @@ void prune(Sentence sent)
 		for (w = 0; w < sent->length; w++) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				for (e = d->left; e != NULL; e = e->next) {
-					if (!matches_S(ct, e, '-')) break;
+					if (!matches_minus(ct, e)) break;
 				}
 				if (e != NULL) {
 					/* we know this disjunct is dead */
@@ -415,7 +420,7 @@ void prune(Sentence sent)
 		for (w = sent->length-1; w >= 0; w--) {
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				for (e = d->right; e != NULL; e = e->next) {
-					if (!matches_S(ct, e,'+')) break;
+					if (!matches_plus(ct, e)) break;
 				}
 				if (e != NULL) {
 					/* we know this disjunct is dead */
@@ -467,36 +472,6 @@ static void insert_CS(connector_table *ct, Connector * c)
 static void zero_CS(connector_table *ct)
 {
 	 memset(ct->table,0,sizeof(char*) * ct->s_table_size);
-}
-
-/**
- * Returns TRUE if c can match anything in the set S.
- * Because of the horrible kludge, prune match is 
- * assymetric, and direction is '-' if this is an l->r pass, 
- * and '+' if an r->l pass.
- */
-static int matches_minus(connector_table *ct, Connector * c)
-{
-	Connector * e;
-	int h = hash_S(ct, c);
-
-	for (e = ct->table[h]; e != NULL; e = e->tableNext)
-	{
-		if (prune_match(0, e, c)) return TRUE;
-	}
-	return FALSE;
-}
-
-static int matches_plus(connector_table *ct, Connector * c)
-{
-	Connector * e;
-	int h = hash_S(ct, c);
-
-	for (e = ct->table[h]; e != NULL; e = e->tableNext)
-	{
-		if (prune_match(0, c, e)) return TRUE;
-	}
-	return FALSE;
 }
 
 void prune(Sentence sent)
@@ -554,6 +529,12 @@ void prune(Sentence sent)
 			{
 				for (e = d->right; e != NULL; e = e->next) insert_CS(ct, e);
 			}
+		}
+
+		if (2 < verbosity)
+		{
+			printf("l->r pass removed %d\n", N_deleted);
+			print_disjunct_counts(sent);
 		}
 
 		/* We did nothing (and this is not the 1st pass) */
@@ -1078,6 +1059,17 @@ static Exp* purge_Exp(Exp *e)
 }
 
 /**
+ * Returns TRUE if c can match anything in the set S.
+ * Because of the horrible kludge, prune match is assymetric, and
+ * direction is '-' if this is an l->r pass, and '+' if an r->l pass.
+ */
+static int matches_S(connector_table *ct, Connector * c, int dir)
+{
+	if (dir == '-') return matches_minus (ct, c);
+	return matches_plus(ct, c);
+}
+
+/**
  * Mark as dead all of the dir-pointing connectors
  * in e that are not matched by anything in the current set.
  * Returns the number of connectors so marked.
@@ -1094,7 +1086,7 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 	if (e->type == CONNECTOR_type) {
 		if (e->dir == dir) {
 			dummy.string = e->u.string;
-			if (!matches_S(ct, &dummy,dir)) {
+			if (!matches_S(ct, &dummy, dir)) {
 				e->u.string = NULL;
 				count++;
 			}
