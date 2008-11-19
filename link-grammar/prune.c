@@ -494,11 +494,11 @@ printf ("duuuude its %d\n", next_power_of_two_up(count_disjuncts_in_sentence(sen
 
     while(1) {
 	    /* left-to-right pass */
-        zero_CS(ct); // clear hash table
-	    for (w = 0; w < sent->length; w++) { // for every word
-	        for (d = sent->word[w].d; d != NULL; d = d->next) { // for every disjunct of word
-		        for (e = d->left; e != NULL; e = e->next) { // for every left clause of this disjunct
-		            if (!matches_CS(ct, e, '-')) // we know this disjunct is dead since no match can be found on a required clause
+        zero_CS(ct); /* clear hash table */
+	    for (w = 0; w < sent->length; w++) { /* for every word */
+	        for (d = sent->word[w].d; d != NULL; d = d->next) { /* for every disjunct of word */
+		        for (e = d->left; e != NULL; e = e->next) { /* for every left clause of this disjunct */
+		            if (!matches_CS(ct, e, '-')) /* we know this disjunct is dead since no match can be found on a required clause */
                     {
 		                N_deleted ++;
 		                free_connectors(d->left);
@@ -508,17 +508,17 @@ printf ("duuuude its %d\n", next_power_of_two_up(count_disjuncts_in_sentence(sen
                     }
 		        }
 	        }
-            // we have purged a bunch of disjuncts for this word, now clean up word and insert its disjuncts in table for next guy to match
-	        clean_up(sent, w); // remove dead disjuncts
-	        for (d = sent->word[w].d; d != NULL; d = d->next) { // now store remaining disjuncts in hash table
+            /* we have purged a bunch of disjuncts for this word, now clean up word and insert its disjuncts in table for next guy to match */
+	        clean_up(sent, w); /* remove dead disjuncts */
+	        for (d = sent->word[w].d; d != NULL; d = d->next) { /* now store remaining disjuncts in hash table */
 		        for (e = d->right; e != NULL; e = e->next) insert_CS(ct, e);
 	        }
 	    }
 
-	    if (N_deleted == 0) break; // we DID nothing (and this is not the 1st pass)
+	    if (N_deleted == 0) break; /* we DID nothing (and this is not the 1st pass) */
 
 	    /* right-to-left pass */
-	    zero_CS(ct); // clear hash table
+	    zero_CS(ct); /* clear hash table */
 	    N_deleted = 0;
 	    for (w = sent->length-1; w >= 0; w--) {
 	        for (d = sent->word[w].d; d != NULL; d = d->next) {
@@ -538,7 +538,7 @@ printf ("duuuude its %d\n", next_power_of_two_up(count_disjuncts_in_sentence(sen
 		        for (e = d->left; e != NULL; e = e->next) insert_CS(ct, e);
 	        }
 	    }
-	    if (N_deleted == 0) break; // we made no change on this pass
+	    if (N_deleted == 0) break; /* we made no change on this pass */
 	    N_deleted = 0;
     }
 }
