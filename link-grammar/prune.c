@@ -359,108 +359,11 @@ static int count_disjuncts(Disjunct * d)
 	return count;
 }
 
-/** Returns the total number of disjuncts in the sentence */
-static int count_disjuncts_in_sentence(Sentence sent)
-{
-	int w, count;
-	count = 0;
-	for (w=0; w<sent->length; w++) {
-		count += count_disjuncts(sent->word[w].d);
-	}
-	return count;
-}
-
-#ifdef TRADITIONAL_PRUNE
-void prune(Sentence sent)
-{
-	int N_deleted;
-	Disjunct *d;
-	Connector *e;
-	int w;
-
-	connector_table *ct;
-
-	int nd = next_power_of_two_up(count_disjuncts_in_sentence(sent));
-	/* if (1024 < nd) nd = 1024; Hmm, this makes it slower */
-	ct = connector_table_new (nd);
-
-/* You know, I don't think this makes much sense.  This is probably much  */
-/* too big.  There are many fewer connectors than disjuncts. */
-
-	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
-	count_set_effective_distance(sent);
-
-	for (;;) {
-		/* left-to-right pass */
-
-		for (w = 0; w < sent->length; w++) {
-			for (d = sent->word[w].d; d != NULL; d = d->next) {
-				for (e = d->left; e != NULL; e = e->next) {
-					if (!matches_minus(ct, e)) break;
-				}
-				if (e != NULL) {
-					/* we know this disjunct is dead */
-					N_deleted ++;
-					free_connectors(d->left);
-					free_connectors(d->right);
-					d->left = d->right = NULL;
-				}
-			}
-			clean_up(sent, w);
-			for (d = sent->word[w].d; d != NULL; d = d->next) {
-				for (e = d->right; e != NULL; e = e->next) {
-					insert_S(ct, e);
-				}
-			}
-		}
-
-		if (verbosity > 2) {
-			printf("l->r pass removed %d\n",N_deleted);
-			print_disjunct_counts(sent);
-		}
-		free_S(ct);
-		if (N_deleted == 0) break;
-
-		/* right-to-left pass */
-		N_deleted = 0;
-		for (w = sent->length-1; w >= 0; w--) {
-			for (d = sent->word[w].d; d != NULL; d = d->next) {
-				for (e = d->right; e != NULL; e = e->next) {
-					if (!matches_plus(ct, e)) break;
-				}
-				if (e != NULL) {
-					/* we know this disjunct is dead */
-					N_deleted ++;
-					free_connectors(d->left);
-					free_connectors(d->right);
-					d->left = d->right = NULL;
-				}
-			}
-			clean_up(sent, w);
-			for (d = sent->word[w].d; d != NULL; d = d->next) {
-				for (e = d->left; e != NULL; e = e->next) {
-					insert_S(ct, e);
-				}
-			}
-		}
-		if (verbosity > 2) {
-			printf("r->l pass removed %d\n",N_deleted);
-			print_disjunct_counts(sent);
-		}
-		free_S(ct);
-		if (N_deleted == 0) break;
-		N_deleted = 0;
-	}
-	connector_table_delete(ct);
-}
-
-#else /* TRADITIONAL_PRUNE */
-
 /** 
- * This function puts a copy of connector c into the connector table
- * if one like it isn't already there
+ * This function puts connector c into the connector table
+ * if one like it isn't already there.
  */
-static void insert_CS(connector_table *ct, Connector * c)
+static void insert_connector(connector_table *ct, Connector * c)
 {
 	int h;
 	Connector * e;
@@ -494,6 +397,9 @@ void prune(Sentence sent)
 
 	/* XXX why is this here ?? */
 	count_set_effective_distance(sent);
+
+/* You know, I don't think this makes much sense.  This is probably much  */
+/* too big.  There are many fewer connectors than disjuncts. */
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	while(1)
@@ -533,7 +439,8 @@ void prune(Sentence sent)
 			/* Now store remaining disjuncts in hash table */
 			for (d = sent->word[w].d; d != NULL; d = d->next)
 			{
-				for (e = d->right; e != NULL; e = e->next) insert_CS(ct, e);
+				for (e = d->right; e != NULL; e = e->next)
+					insert_connector(ct, e);
 			}
 		}
 
@@ -570,7 +477,8 @@ void prune(Sentence sent)
 			clean_up(sent, w);
 			for (d = sent->word[w].d; d != NULL; d = d->next)
 			{
-				for (e = d->left; e != NULL; e = e->next) insert_CS(ct, e);
+				for (e = d->left; e != NULL; e = e->next)
+					insert_connector(ct, e);
 			}
 		}
 
@@ -585,7 +493,6 @@ void prune(Sentence sent)
 		N_deleted = 0;
 	}
 }
-#endif /* TRADITIONAL_PRUNE */
 
 /*
    The second algorithm eliminates disjuncts that are dominated by
@@ -609,80 +516,84 @@ static int string_hash(disjunct_dup_table *dt, const char * s, int i)
   been implemented below.  There are three problems with it:
 
   (1) It is almost never the case that any disjuncts are eliminated.
-	  (The code below has works correctly with fat links, but because
-	  all of the fat connectors on a fat disjunct have the same matching
-	  string, the only time a disjuct will die is if it is the same
-	  as another one.  This is captured by the simplistic version below.
+      (The code below has works correctly with fat links, but because
+      all of the fat connectors on a fat disjunct have the same matching
+      string, the only time a disjuct will die is if it is the same
+      as another one.  This is captured by the simplistic version below.
 
   (2) connector_matches_alam may not be exactly correct.  I don't
-	  think it does the fat link matches properly.   (See the comment
-	  in and.c for more information about matching fat links.)  This is
-	  irrelevant because of (1).
-	
+      think it does the fat link matches properly.   (See the comment
+      in and.c for more information about matching fat links.)  This is
+      irrelevant because of (1).
+   
   (3) The linkage that is eliminated by this, might just be the one that
-	  passes post-processing, as the following example shows.
-	  This is pretty silly, and should probably be changed.
+      passes post-processing, as the following example shows.
+      This is pretty silly, and should probably be changed.
 
 > telling John how our program works would be stupid
 Accepted (2 linkages, 1 with no P.P. violations)
   Linkage 1, cost vector = (0, 0, 7)
 
-	+------------------G-----------------+		
-	+-----R-----+----CL----+			 |		
-	+---O---+   |   +---D--+---S---+	 +--I-+-AI-+
-	|	   |   |   |	  |	   |	 |	|	|
+   +------------------G-----------------+      
+   +-----R-----+----CL----+             |      
+   +---O---+   |   +---D--+---S---+     +--I-+-AI-+
+   |       |   |   |      |       |     |    |    |
 telling.g John how our program.n works would be stupid
 
-			   /////		  CLg	 <---CLg--->  CL		telling.g
- (g)		   telling.g	  G	   <---G----->  G		 would
- (g) (d)	   telling.g	  R	   <---R----->  R		 how
- (g) (d)	   telling.g	  O	   <---O----->  O		 John
- (g) (d)	   how			CLe	 <---CLe--->  CL		program.n
- (g) (d) (e)   our			D	   <---Ds---->  Ds		program.n
- (g) (d) (e)   program.n	  Ss	  <---Ss---->  Ss		works
- (g)		   would		  I	   <---Ix---->  Ix		be
- (g)		   be			 AI	  <---AIi--->  AIi	   stupid
+               /////         CLg    <---CLg--->  CL      telling.g
+ (g)           telling.g     G      <---G----->  G       would
+ (g) (d)       telling.g     R      <---R----->  R       how
+ (g) (d)       telling.g     O      <---O----->  O       John
+ (g) (d)       how           CLe    <---CLe--->  CL      program.n
+ (g) (d) (e)   our           D      <---Ds---->  Ds      program.n
+ (g) (d) (e)   program.n     Ss     <---Ss---->  Ss      works
+ (g)           would         I      <---Ix---->  Ix      be
+ (g)           be            AI     <---AIi--->  AIi     stupid
 
 (press return for another)
 >
   Linkage 2 (bad), cost vector = (0, 0, 7)
 
-	+------------------G-----------------+		
-	+-----R-----+----CL----+			 |		
-	+---O---+   |   +---D--+---S---+	 +--I-+-AI-+
-	|	   |   |   |	  |	   |	 |	|	|
+   +------------------G-----------------+      
+   +-----R-----+----CL----+             |      
+   +---O---+   |   +---D--+---S---+     +--I-+-AI-+
+   |       |   |   |      |       |     |    |    |
 telling.g John how our program.n works would be stupid
 
-			   /////		  CLg	 <---CLg--->  CL		telling.g
- (g)		   telling.g	  G	   <---G----->  G		 would
- (g) (d)	   telling.g	  R	   <---R----->  R		 how
- (g) (d)	   telling.g	  O	   <---O----->  O		 John
- (g) (d)	   how			CLe	 <---CLe--->  CL		program.n
- (g) (d) (e)   our			D	   <---Ds---->  Ds		program.n
- (g) (d) (e)   program.n	  Ss	  <---Ss---->  Ss		works
- (g)		   would		  I	   <---Ix---->  Ix		be
- (g)		   be			 AI	  <---AI---->  AI		stupid
+               /////         CLg    <---CLg--->  CL      telling.g
+ (g)           telling.g     G      <---G----->  G       would
+ (g) (d)       telling.g     R      <---R----->  R       how
+ (g) (d)       telling.g     O      <---O----->  O       John
+ (g) (d)       how           CLe    <---CLe--->  CL      program.n
+ (g) (d) (e)   our           D      <---Ds---->  Ds      program.n
+ (g) (d) (e)   program.n     Ss     <---Ss---->  Ss      works
+ (g)           would         I      <---Ix---->  Ix      be
+ (g)           be            AI     <---AI---->  AI      stupid
 
 P.P. violations:
-		Special subject rule violated
+      Special subject rule violated
 */
 
-int connector_matches_alam(Connector * a, Connector * b) {
-/* This returns true if the connector a matches everything that b
-   matches, and possibly more.  (alam=at least as much)
-
-   TRUE for equal connectors.
-   remains TRUE if multi-match added to the first.
-   remains TRUE if subsrcripts deleted from the first.
-
-*/
+/**
+ * This returns true if the connector a matches everything that b
+ *  matches, and possibly more.  (alam=at least as much)
+ *
+ * TRUE for equal connectors.
+ * remains TRUE if multi-match added to the first.
+ * remains TRUE if subsrcripts deleted from the first.
+ */
+int connector_matches_alam(Connector * a, Connector * b)
+{
 	char * s, * t, *u;
 	if (((!a->multi) && b->multi) ||
 		(a->label != b->label) ||
 		(a->priority != b->priority))  return FALSE;
 	s = a->string;
 	t = b->string;
-	while(isupper(*s) || isupper(*t)) {
+
+	/* isupper -- connectors cannot be UTF8 at this time */
+	while(isupper(*s) || isupper(*t))
+	{
 		if (*s == *t) {
 			s++;
 			t++;

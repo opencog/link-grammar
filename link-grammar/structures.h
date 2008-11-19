@@ -207,12 +207,8 @@ struct Connector_struct
     Connector * next;
     const char * string;
 
-#define TRADITIONAL_PRUNE 1
-#ifndef TRADITIONAL_PRUNE
-    /* Used only during table lookup */
+    /* Hash table next pointer, used only during pruning. */
     Connector * tableNext;
-    Connector * tablePrior;
-#endif /* TRADITIONAL_PRUNE */
 };
 
 struct Disjunct_struct
