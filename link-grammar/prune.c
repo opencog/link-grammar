@@ -214,7 +214,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 	} else return FALSE;
 }
 
-/** 
+/**
  * This function removes all connectors from the set S
  */
 static void free_S(connector_table *ct)
@@ -254,8 +254,8 @@ static int hash_S(connector_table *ct, Connector * c)
 	return (i & (ct->s_table_size-1));
 }
 
-/** 
- * This function puts a copy of c into S if one like it isn't already there 
+/**
+ * This function puts a copy of c into S if one like it isn't already there
  */
 static void insert_S(connector_table *ct, Connector * c)
 {
@@ -291,7 +291,7 @@ static connector_table * connector_table_new(size_t sz)
 	return ct;
 }
 
-/** 
+/**
  * Returns TRUE if c can match anything in the set S.
  * Because of the horrible kludge, prune match is assymetric, and
  * direction is '-' if this is an l->r pass, and '+' if an r->l pass.
@@ -445,105 +445,150 @@ void prune(Sentence sent)
 
 #else /* TRADITIONAL_PRUNE */
 
-static void insert_CS(connector_table *ct, Connector * c) {
-/* this function puts a copy of c into ctable if one like it isn't already there */
-    int h;
-    Connector * e;
-    h = hash_S(ct, c);
-    for (e = ct->table[h]; e != NULL; e = e->tableNext) {
-	    if ((strcmp(c->string, e->string) == 0) && (c->label == e->label) && (c->priority == e->priority))  return;
-    }
-    c->tableNext = ct->table[h];
-    ct->table[h] = c;
+/** 
+ * This function puts a copy of c into the connector table
+ * if one like it isn't already there */
+static void insert_CS(connector_table *ct, Connector * c)
+{
+	int h;
+	Connector * e;
+	h = hash_S(ct, c);
+	for (e = ct->table[h]; e != NULL; e = e->tableNext)
+	{
+		if ((strcmp(c->string, e->string) == 0) && 
+		    (c->label == e->label) && 
+		    (c->priority == e->priority))
+			return;
+	}
+	c->tableNext = ct->table[h];
+	ct->table[h] = c;
 }
 
-static void zero_CS(connector_table *ct) {
-     memset(ct->table,0,sizeof(char*) * ct->s_table_size);
+static void zero_CS(connector_table *ct)
+{
+	 memset(ct->table,0,sizeof(char*) * ct->s_table_size);
 }
 
-static int matches_CS(connector_table *ct, Connector * c, int dir) {
-/* returns TRUE if c can match anything in the set S */
-/* because of the horrible kludge, prune match is assymetric, and   */
-/* direction is '-' if this is an l->r pass, and '+' if an r->l pass.   */
+/**
+ * Returns TRUE if c can match anything in the set S.
+ * Because of the horrible kludge, prune match is 
+ * assymetric, and direction is '-' if this is an l->r pass, 
+ * and '+' if an r->l pass.
+ */
+static int matches_CS(connector_table *ct, Connector * c, int dir)
+{
+	int h;
+	Connector * e;
 
-    int h;
-    Connector * e;
-    h = hash_S(ct, c);
-    if (dir=='-') {
-	    for (e = ct->table[h]; e != NULL; e = e->tableNext) {
-	        if (prune_match(0, e, c)) return TRUE;
-	    }
-    } else {
-	    for (e = ct->table[h]; e != NULL; e = e->tableNext) {
-	        if (prune_match(0, c, e)) return TRUE;
-	    }
-    }
-    return FALSE;
+	h = hash_S(ct, c);
+	if (dir=='-')
+	{
+		for (e = ct->table[h]; e != NULL; e = e->tableNext)
+		{
+			if (prune_match(0, e, c)) return TRUE;
+		}
+	}
+	else
+	{
+		for (e = ct->table[h]; e != NULL; e = e->tableNext)
+		{
+			if (prune_match(0, c, e)) return TRUE;
+		}
+	}
+	return FALSE;
 }
 
-void prune(Sentence sent) {
-    Disjunct *d;
-    Connector *e;
-    int w;
+void prune(Sentence sent)
+{
+	Disjunct *d;
+	Connector *e;
+	int w;
 	connector_table *ct;
 
-    int N_deleted = 1;  /* a lie to make it always do at least 2 passes */
+	int N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
 	int nd = next_power_of_two_up(count_disjuncts_in_sentence(sent));
 	if (1024 < nd) nd = 1024;
 	ct = connector_table_new (nd);
 
-    count_set_effective_distance(sent);
+	count_set_effective_distance(sent);
 
-    while(1) {
-	    /* left-to-right pass */
-        zero_CS(ct); /* clear hash table */
-	    for (w = 0; w < sent->length; w++) { /* for every word */
-	        for (d = sent->word[w].d; d != NULL; d = d->next) { /* for every disjunct of word */
-		        for (e = d->left; e != NULL; e = e->next) { /* for every left clause of this disjunct */
-		            if (!matches_CS(ct, e, '-')) /* we know this disjunct is dead since no match can be found on a required clause */
-                    {
-		                N_deleted ++;
-		                free_connectors(d->left);
-		                free_connectors(d->right);
-		                d->left = d->right = NULL;
-                        break; 
-                    }
-		        }
-	        }
-            /* we have purged a bunch of disjuncts for this word, now clean up word and insert its disjuncts in table for next guy to match */
-	        clean_up(sent, w); /* remove dead disjuncts */
-	        for (d = sent->word[w].d; d != NULL; d = d->next) { /* now store remaining disjuncts in hash table */
-		        for (e = d->right; e != NULL; e = e->next) insert_CS(ct, e);
-	        }
-	    }
+	while(1)
+	{
+		/* Left-to-right pass */
+		/* Clear hash table */
+		zero_CS(ct);
 
-	    if (N_deleted == 0) break; /* we DID nothing (and this is not the 1st pass) */
+		/* For every word */
+		for (w = 0; w < sent->length; w++)
+		{
+			/* For every disjunct of word */
+			for (d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				/* For every left clause of this disjunct */
+				for (e = d->left; e != NULL; e = e->next)
+				{
+					/* We know this disjunct is dead since no match
+					 * can be found on a required clause. */
+					if (!matches_CS(ct, e, '-'))
+					{
+						N_deleted ++;
+						free_connectors(d->left);
+						free_connectors(d->right);
+						d->left = d->right = NULL;
+						break;
+					}
+				}
+			}
 
-	    /* right-to-left pass */
-	    zero_CS(ct); /* clear hash table */
-	    N_deleted = 0;
-	    for (w = sent->length-1; w >= 0; w--) {
-	        for (d = sent->word[w].d; d != NULL; d = d->next) {
-		        for (e = d->right; e != NULL; e = e->next) {
-		            if (!matches_CS(ct, e,'+'))  /* we know this disjunct is dead since cant match right*/
-                    {
-		                N_deleted ++;
-		                free_connectors(d->left);
-		                free_connectors(d->right);
-		                d->left = d->right = NULL;
-                        break;
-                    }
-		        }
-            }
-	        clean_up(sent, w);
-	        for (d = sent->word[w].d; d != NULL; d = d->next) {
-		        for (e = d->left; e != NULL; e = e->next) insert_CS(ct, e);
-	        }
-	    }
-	    if (N_deleted == 0) break; /* we made no change on this pass */
-	    N_deleted = 0;
-    }
+			/* We have purged a bunch of disjuncts for this word,
+			 * now clean up word and insert its disjuncts in table
+			 * for next guy to match */
+
+			/* Remove dead disjuncts */
+			clean_up(sent, w);
+
+			/* Now store remaining disjuncts in hash table */
+			for (d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (e = d->right; e != NULL; e = e->next) insert_CS(ct, e);
+			}
+		}
+
+		/* We did nothing (and this is not the 1st pass) */
+		if (N_deleted == 0) break;
+
+		/* Right-to-left pass */
+		/* Clear hash table */
+		zero_CS(ct);
+		N_deleted = 0;
+		for (w = sent->length-1; w >= 0; w--)
+		{
+			for (d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (e = d->right; e != NULL; e = e->next)
+				{
+					/* We know this disjunct is dead since it can't match right*/
+					if (!matches_CS(ct, e,'+'))
+					{
+						N_deleted ++;
+						free_connectors(d->left);
+						free_connectors(d->right);
+						d->left = d->right = NULL;
+						break;
+					}
+				}
+			}
+			clean_up(sent, w);
+			for (d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				for (e = d->left; e != NULL; e = e->next) insert_CS(ct, e);
+			}
+		}
+		/* We made no change on this pass */
+		if (N_deleted == 0) break;
+		N_deleted = 0;
+	}
 }
 #endif /* TRADITIONAL_PRUNE */
 
@@ -555,7 +600,7 @@ void prune(Sentence sent) {
 /**
  * hash function that takes a string and a seed value i
  */
-static int string_hash(disjunct_dup_table *dt, const char * s, int i) 
+static int string_hash(disjunct_dup_table *dt, const char * s, int i)
 {
 	for(;*s != '\0';s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
 	return (i & (dt->dup_table_size-1));
@@ -670,7 +715,7 @@ static inline int pconnector_hash(disjunct_dup_table *dt, Connector * c, int i)
 }
 
 /**
- * This is a hash function for disjuncts 
+ * This is a hash function for disjuncts
  */
 static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 {
@@ -690,7 +735,7 @@ static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 
 /**
  * Returns TRUE if disjunct d1 can match anything that d2 can
- * if this happens, it constitutes a proof that there is absolutely 
+ * if this happens, it constitutes a proof that there is absolutely
  * no use for d2.
  */
 int disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
@@ -791,7 +836,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d) 
+static int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 {
 	int i;
 	Connector *e;
@@ -1060,7 +1105,7 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 	return count;
 }
 
-/** 
+/**
  * Put into the set S all of the dir-pointing connectors still in e.
  */
 static void insert_connectors(connector_table *ct, Exp * e, int dir)
@@ -1224,7 +1269,7 @@ void expression_prune(Sentence sent)
    deletable, this is equivalent to RUTHLESS.   --DS, 7/97
 */
 
-/** 
+/**
  * returns the number of connectors in the left lists of the disjuncts.
  */
 static int left_connector_count(Disjunct * d)
@@ -1281,7 +1326,7 @@ static void power_table_delete(power_table *pt)
 	free(pt);
 }
 
-/** 
+/**
  * This hash function only looks at the leading upper case letters of
  * the connector string, and the label fields.  This ensures that if two
  * strings match (formally), then they must hash to the same place.
@@ -1327,7 +1372,7 @@ static int set_dist_fields(Connector * c, int w, int delta)
 	return i;
 }
 
-/** 
+/**
  * Allocates and builds the initial power hash tables
  */
 static power_table * power_table_new(Sentence sent)
@@ -1568,7 +1613,7 @@ static int left_connector_list_update(prune_context *pc, Connector *c, int word_
  * If it does find a way to match it, it updates the c->word fields
  * correctly.
  */
-static int right_connector_list_update(prune_context *pc, Sentence sent, Connector *c, 
+static int right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
                                        int word_c, int w, int shallow)
 {
 	int n;
@@ -1605,7 +1650,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 
 	pc = (prune_context *) malloc (sizeof(prune_context));
 	pc->power_cost = 0;
-	pc->power_prune_mode = mode; 
+	pc->power_prune_mode = mode;
 	pc->null_links = (opts->min_null_count > 0);
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
 	pc->deletable = sent->deletable;
