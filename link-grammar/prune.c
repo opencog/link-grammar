@@ -255,33 +255,6 @@ static inline void zero_connector_table(connector_table *ct)
 	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
 }
 
-/**
- * Returns TRUE if c can match anything in the set S.
- */
-static int matches_minus(connector_table *ct, Connector * c)
-{
-	Connector * e;
-	int h = hash_S(c);
-
-	for (e = ct[h]; e != NULL; e = e->tableNext)
-	{
-		if (prune_match(0, e, c)) return TRUE;
-	}
-	return FALSE;
-}
-
-static int matches_plus(connector_table *ct, Connector * c)
-{
-	Connector * e;
-	int h = hash_S(c);
-
-	for (e = ct[h]; e != NULL; e = e->tableNext)
-	{
-		if (prune_match(0, c, e)) return TRUE;
-	}
-	return FALSE;
-}
-
 /** Returns the number of disjuncts in the list pointed to by d */
 static int count_disjuncts(Disjunct * d)
 {
@@ -937,8 +910,25 @@ static Exp* purge_Exp(Exp *e)
  */
 static inline int matches_S(connector_table *ct, Connector * c, int dir)
 {
-	if (dir == '-') return matches_minus(ct, c);
-	return matches_plus(ct, c);
+	Connector * e;
+	int h = hash_S(c);
+
+	if (dir == '-')
+	{
+		for (e = ct[h]; e != NULL; e = e->tableNext)
+		{
+			if (prune_match(0, e, c)) return TRUE;
+		}
+		return FALSE;
+	}
+	else
+	{
+		for (e = ct[h]; e != NULL; e = e->tableNext)
+		{
+			if (prune_match(0, c, e)) return TRUE;
+		}
+		return FALSE;
+	}
 }
 
 /**
