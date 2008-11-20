@@ -127,15 +127,17 @@ struct prune_context_s
 static inline int hash_S(Connector * c)
 {
 	const char *s;
-	int i;
+	unsigned int i;
 
 	if (-1 != c->hash) return c->hash;
 
-	i = c->label;
+	/* djb2 hash */
+	i = 5381;
+	i = ((i << 5) + i) + c->label;
 	s = c->string;
 	while(isupper((int)*s)) /* connector tables cannot contain UTF8, yet */
 	{
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		i = ((i << 5) + i) + *s;
 		s++;
 	}
 	c->hash = (i & (CONTABSZ-1));
