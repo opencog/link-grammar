@@ -821,25 +821,27 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 
 
 /* ================================================================= */
-/* Here is expression pruning.  This is done even before the expressions
-   are turned into lists of disjuncts.
-
-   This uses many of the same data structures and functions that are used
-   by prune.
-*/
-
-/* The purge operations remove all irrelevant stuff from the expression,	*/
-/* and free the purged stuff.  A connector is deemed irrelevant if its	  */
-/* string pointer has been set to NULL.  The passes through the sentence	*/
-/* have the job of doing this.											  */
-
-/* If an OR or AND type expression node has one child, we can replace it by */
-/* its child.  This, of course, is not really necessary					 */
+/**
+ * Here is expression pruning.  This is done even before the expressions
+ * are turned into lists of disjuncts.
+ *
+ * This uses many of the same data structures and functions that are used
+ * by prune.
+ *
+ * The purge operations remove all irrelevant stuff from the expression,
+ * and free the purged stuff.  A connector is deemed irrelevant if its
+ * string pointer has been set to NULL.  The passes through the sentence
+ * have the job of doing this.
+ *
+ * If an OR or AND type expression node has one child, we can replace it
+ * by its child.  This, of course, is not really necessary, except for
+ * performance(?)
+ */
 
 static Exp* purge_Exp(Exp *);
 
 /**
- * get rid of the elements with null expressions
+ * Get rid of the elements with null expressions
  */
 static E_list * or_purge_E_list(E_list * l)
 {
