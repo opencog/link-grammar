@@ -282,34 +282,6 @@ static int matches_plus(connector_table *ct, Connector * c)
 	return FALSE;
 }
 
-/**
- * This removes the disjuncts that are empty from the list corresponding
- * to word w of the sentence.
- */
-static void clean_up(Sentence sent, int w)
-{
-	Disjunct head_disjunct, *d, *d1;
-
-	d = &head_disjunct;
-
-	d->next = sent->word[w].d;
-
-	while(d->next != NULL)
-	{
-		if ((d->next->left == NULL) && (d->next->right == NULL))
-		{
-			d1 = d->next;
-			d->next = d1->next;
-			xfree((char *)d1, sizeof(Disjunct));
-		}
-		else
-		{
-			d = d->next;
-		}
-	}
-	sent->word[w].d = head_disjunct.next;
-}
-
 /** Returns the number of disjuncts in the list pointed to by d */
 static int count_disjuncts(Disjunct * d)
 {
@@ -418,29 +390,48 @@ void prune(Sentence sent)
 		/* Right-to-left pass */
 		zero_connector_table(ct);
 		N_deleted = 0;
+
+		/* For every word */
 		for (w = sent->length-1; w >= 0; w--)
 		{
-			for (d = sent->word[w].d; d != NULL; d = d->next)
+			d = &fake_head;
+			d->next = sent->word[w].d;
+
+			while ((d1 = d->next))
 			{
-				for (e = d->right; e != NULL; e = e->next)
+				e = d1->right;
+
+				while (e)
 				{
-					/* We know this disjunct is dead since
-					 *  it can't match to the right*/
-					if (!matches_plus(ct, e))
+					int h = hash_S(e);
+					for (f = ct[h]; f != NULL; f = f->tableNext)
 					{
-						N_deleted ++;
-						free_connectors(d->left);
-						free_connectors(d->right);
-						d->left = d->right = NULL;
-						break;
+						if (prune_match(0, e, f)) break;
 					}
+					if (!f) break; /* If f null, not a single match was found */
+					e = e->next;
 				}
-			}
-			clean_up(sent, w);
-			for (d = sent->word[w].d; d != NULL; d = d->next)
-			{
-				for (e = d->left; e != NULL; e = e->next)
-					insert_connector(ct, e);
+
+				/* We know this disjunct is dead since it can't match
+				 * to the right*/
+				if(e)
+				{
+					N_deleted ++;
+					free_connectors(d1->left);
+					free_connectors(d1->right);
+					d->next = d1->next;
+					xfree(d1, sizeof(Disjunct));
+				}
+				else
+				{
+					/* Store surviving disjunct in hash table */
+					for (e = d1->left; e != NULL; e = e->next)
+					{
+						insert_connector(ct, e);
+					}
+					d = d1; /* move on to next disjunct*/
+				}
+				sent->word[w].d = fake_head.next;
 			}
 		}
 
