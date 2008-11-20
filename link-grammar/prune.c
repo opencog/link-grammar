@@ -250,47 +250,9 @@ int prune_match(int dist, Connector *a, Connector *b)
 		return FALSE;
 }
 
-/**
- * This function removes all connectors from the set S
- */
-static void free_S(connector_table *ct)
-{
-	int i;
-	for (i = 0; i < CONTABSZ; i++)
-	{
-		if (ct[i] == NULL) continue;
-		free_connectors(ct[i]);
-		ct[i] = NULL;
-	}
-}
-
 static inline void zero_connector_table(connector_table *ct)
 {
 	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
-}
-
-/**
- * This function puts a copy of c into S if one like it isn't already there
- */
-static void insert_S(connector_table *ct, Connector * c)
-{
-	int h;
-	Connector * e;
-
-	h = hash_S(c);
-
-	for (e = ct[h]; e != NULL; e = e->next)
-	{
-		if ((strcmp(c->string, e->string) == 0) &&
-			(c->label == e->label) && (c->priority == e->priority))
-		{
-			return;
-		}
-	}
-	e = connector_new();
-	*e = *c;
-	e->next = ct[h];
-	ct[h] = e;
 }
 
 /**
@@ -957,27 +919,12 @@ static Exp* purge_Exp(Exp *e)
 
 /**
  * Returns TRUE if c can match anything in the set S.
+ * xxxxxxxxx optimize this away
  */
 static int matches_S(connector_table *ct, Connector * c, int dir)
 {
-	Connector * e;
-	int h = hash_S(c);
-
-	if (dir == '-')
-	{
-		for (e = ct[h]; e != NULL; e = e->next)
-		{
-			if (prune_match(0, e, c)) return TRUE;
-		}
-	}
-	else
-	{
-		for (e = ct[h]; e != NULL; e = e->next)
-		{
-			if (prune_match(0, c, e)) return TRUE;
-		}
-	}
-	return FALSE;
+	if (dir == '-') return matches_minus(ct, c);
+	return matches_plus(ct, c);
 }
 
 /**
@@ -994,16 +941,22 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 	dummy.label = NORMAL_LABEL;
 	dummy.priority = THIN_priority;
 	count = 0;
-	if (e->type == CONNECTOR_type) {
-		if (e->dir == dir) {
+	if (e->type == CONNECTOR_type)
+	{
+		if (e->dir == dir)
+		{
 			dummy.string = e->u.string;
-			if (!matches_S(ct, &dummy, dir)) {
+			if (!matches_S(ct, &dummy, dir))
+			{
 				e->u.string = NULL;
 				count++;
 			}
 		}
-	} else {
-		for (l=e->u.l; l!=NULL; l=l->next) {
+	}
+	else
+	{
+		for (l = e->u.l; l != NULL; l = l->next)
+		{
 			count += mark_dead_connectors(ct, l->e, dir);
 		}
 	}
@@ -1015,19 +968,23 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
  */
 static void insert_connectors(connector_table *ct, Exp * e, int dir)
 {
-	Connector dummy;
 	E_list *l;
-	init_connector(&dummy);
-	dummy.label = NORMAL_LABEL;
-	dummy.priority = THIN_priority;
 
-	if (e->type == CONNECTOR_type) {
-		if (e->dir == dir) {
-			dummy.string = e->u.string;
-			insert_S(ct, &dummy);
+	if (e->type == CONNECTOR_type)
+	{
+		if (e->dir == dir)
+		{
+			Connector *dummy = connector_new(); // XXX mem leak
+			dummy->label = NORMAL_LABEL;
+			dummy->priority = THIN_priority;
+			dummy->string = e->u.string;
+			insert_connector(ct, dummy);
 		}
-	} else {
-		for (l=e->u.l; l!=NULL; l=l->next) {
+	}
+	else
+	{
+		for (l=e->u.l; l!=NULL; l=l->next)
+		{
 			insert_connectors(ct, l->e, dir);
 		}
 	}
@@ -1065,57 +1022,72 @@ void expression_prune(Sentence sent)
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
-	for (;;) {
-		/* left-to-right pass */
-		for (w = 0; w < sent->length; w++) {
-			for (x = sent->word[w].x; x != NULL; x = x->next) {
-/*	 printf("before marking: "); print_expression(x->exp); printf("\n"); */
+	while(1)
+	{
+		/* Left-to-right pass */
+		/* For every word */
+		for (w = 0; w < sent->length; w++)
+		{
+			/* For every expression in word */
+			for (x = sent->word[w].x; x != NULL; x = x->next)
+			{
+/* printf("before marking: "); print_expression(x->exp); printf("\n"); */
 				N_deleted += mark_dead_connectors(ct, x->exp, '-');
-/*	 printf("after marking marking: "); print_expression(x->exp); printf("\n"); */
+/* printf("after marking marking: "); print_expression(x->exp); printf("\n"); */
 			}
-			for (x = sent->word[w].x; x != NULL; x = x->next) {
-/*	 printf("before purging: "); print_expression(x->exp); printf("\n"); */
+			for (x = sent->word[w].x; x != NULL; x = x->next)
+			{
+/* printf("before purging: "); print_expression(x->exp); printf("\n"); */
 				x->exp = purge_Exp(x->exp);
-/*	 printf("after purging: "); print_expression(x->exp); printf("\n"); */
+/* printf("after purging: "); print_expression(x->exp); printf("\n"); */
 			}
-			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
-			for (x = sent->word[w].x; x != NULL; x = x->next) {
+
+			/* gets rid of X_nodes with NULL exp */
+			clean_up_expressions(sent, w);
+			for (x = sent->word[w].x; x != NULL; x = x->next)
+			{
 				insert_connectors(ct, x->exp,'+');
 			}
 		}
 
-		if (verbosity > 2) {
-			printf("l->r pass removed %d\n",N_deleted);
+		if (verbosity > 2)
+		{
+			printf("l->r pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
 		}
 
-		free_S(ct);
+		zero_connector_table(ct);
 		if (N_deleted == 0) break;
 
-		/* right-to-left pass */
+		/* Right-to-left pass */
 		N_deleted = 0;
-		for (w = sent->length-1; w >= 0; w--) {
-			for (x = sent->word[w].x; x != NULL; x = x->next) {
+		for (w = sent->length-1; w >= 0; w--)
+		{
+			for (x = sent->word[w].x; x != NULL; x = x->next)
+			{
 /*	 printf("before marking: "); print_expression(x->exp); printf("\n"); */
 				N_deleted += mark_dead_connectors(ct, x->exp, '+');
 /*	 printf("after marking: "); print_expression(x->exp); printf("\n"); */
 			}
-			for (x = sent->word[w].x; x != NULL; x = x->next) {
+			for (x = sent->word[w].x; x != NULL; x = x->next)
+			{
 /*	 printf("before perging: "); print_expression(x->exp); printf("\n"); */
 				x->exp = purge_Exp(x->exp);
 /*	 printf("after perging: "); print_expression(x->exp); printf("\n"); */
 			}
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
-			for (x = sent->word[w].x; x != NULL; x = x->next) {
+			for (x = sent->word[w].x; x != NULL; x = x->next)
+			{
 				insert_connectors(ct, x->exp, '-');
 			}
 		}
 
-		if (verbosity > 2) {
-			printf("r->l pass removed %d\n",N_deleted);
+		if (verbosity > 2)
+		{
+			printf("r->l pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
 		}
-		free_S(ct);
+		zero_connector_table(ct);
 		if (N_deleted == 0) break;
 		N_deleted = 0;
 	}
