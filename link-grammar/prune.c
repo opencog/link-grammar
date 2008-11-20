@@ -156,14 +156,21 @@ int prune_match(int dist, Connector *a, Connector *b)
 	const char *s, *t;
 	int x, y;
 
-	/* Initialize hash, if it has not been initialized. */
+	if (a->label != b->label) return FALSE;
+
 	hash_S(a);
 	hash_S(b);
 	if (a->hash != b->hash) return FALSE;
-	if (a->label != b->label) return FALSE;
 
-	s = a->prune_string;
-	t = b->prune_string;
+	s = a->string;
+	t = b->string;
+
+	while(s < a->prune_string || t < b->prune_string)
+	{
+		if (*s != *t) return FALSE;
+		s++;
+		t++;
+	}
 
 	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  a->ll=%d b->ll=%d  dist=%d\n",
 		   s, t, x, y, a->length_limit, b->length_limit, dist); */

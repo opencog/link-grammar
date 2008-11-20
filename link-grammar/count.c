@@ -62,11 +62,6 @@ int match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 
 	if (a->label != b->label) return FALSE;
 
-	ctxt = sent->count_ctxt;
-
-	x = a->priority;
-	y = b->priority;
-
 	s = a->string;
 	t = b->string;
 
@@ -77,7 +72,14 @@ int match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		t++;
 	}
 
-	if (aw==0 && bw==0) {  /* probably not necessary, as long as effective_dist[0][0]=0 and is defined */
+	ctxt = sent->count_ctxt;
+
+	x = a->priority;
+	y = b->priority;
+
+	/* Probably not necessary, as long as 
+	 * effective_dist[0][0]=0 and is defined */
+	if (aw == 0 && bw == 0) {
 		dist = 0;
 	} else {
 		assert(aw < bw, "match() did not receive params in the natural order.");
@@ -87,7 +89,8 @@ int match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
-	if ((x==THIN_priority) && (y==THIN_priority)) {
+	if ((x == THIN_priority) && (y == THIN_priority))
+	{
 		/*
 		   Remember that "*" matches anything, and "^" matches nothing
 		   (except "*").  Otherwise two characters match if and only if
@@ -121,15 +124,23 @@ int match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 			} else return FALSE;
 		}
 		return TRUE;
-	} else if ((y==UP_priority) && (x==DOWN_priority)) {
-		while ((*s!='\0') && (*t!='\0')) {
-			if ((*s == *t) || (*t == '*') || (*s == '^')) {
+	}
+	else if ((y == UP_priority) && (x == DOWN_priority))
+	{
+		while ((*s!='\0') && (*t!='\0'))
+		{
+			if ((*s == *t) || (*t == '*') || (*s == '^'))
+			{
 				s++;
 				t++;
-			} else return FALSE;
+			}
+			else
+				return FALSE;
 		}
 		return TRUE;
-	} else return FALSE;
+	}
+	else
+		return FALSE;
 }
 
 typedef struct Table_connector_s Table_connector;
