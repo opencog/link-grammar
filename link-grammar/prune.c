@@ -965,8 +965,11 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 
 /**
  * Put into the set S all of the dir-pointing connectors still in e.
+ * Return a list of allocated dummy connectors; these will need to be
+ * freed.
  */
-static void insert_connectors(connector_table *ct, Exp * e, int dir)
+static Connector * insert_connectors(connector_table *ct, Exp * e,
+                                     Connector *alloc_list, int dir)
 {
 	E_list *l;
 
@@ -979,15 +982,18 @@ static void insert_connectors(connector_table *ct, Exp * e, int dir)
 			dummy->priority = THIN_priority;
 			dummy->string = e->u.string;
 			insert_connector(ct, dummy);
+			dummy->next = alloc_list;
+			alloc_list = dummy;
 		}
 	}
 	else
 	{
 		for (l=e->u.l; l!=NULL; l=l->next)
 		{
-			insert_connectors(ct, l->e, dir);
+			alloc_list = insert_connectors(ct, l->e, alloc_list, dir);
 		}
 	}
+	return alloc_list;
 }
 
 /**
@@ -1017,6 +1023,7 @@ void expression_prune(Sentence sent)
 	X_node * x;
 	int w;
 	Connector *ct[CONTABSZ];
+	Connector *dummy_list = NULL;
 
 	zero_connector_table(ct);
 
@@ -1046,7 +1053,7 @@ void expression_prune(Sentence sent)
 			clean_up_expressions(sent, w);
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				insert_connectors(ct, x->exp,'+');
+				dummy_list = insert_connectors(ct, x->exp, dummy_list, '+');
 			}
 		}
 
@@ -1056,7 +1063,11 @@ void expression_prune(Sentence sent)
 			print_expression_sizes(sent);
 		}
 
+		/* Free the allocated dummy connectors */
+		free_connectors(dummy_list);
+		dummy_list = NULL;
 		zero_connector_table(ct);
+
 		if (N_deleted == 0) break;
 
 		/* Right-to-left pass */
@@ -1078,7 +1089,7 @@ void expression_prune(Sentence sent)
 			clean_up_expressions(sent, w);  /* gets rid of X_nodes with NULL exp */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-				insert_connectors(ct, x->exp, '-');
+				dummy_list = insert_connectors(ct, x->exp, dummy_list, '-');
 			}
 		}
 
@@ -1087,6 +1098,10 @@ void expression_prune(Sentence sent)
 			printf("r->l pass removed %d\n", N_deleted);
 			print_expression_sizes(sent);
 		}
+
+		/* Free the allocated dummy connectors */
+		free_connectors(dummy_list);
+		dummy_list = NULL;
 		zero_connector_table(ct);
 		if (N_deleted == 0) break;
 		N_deleted = 0;
