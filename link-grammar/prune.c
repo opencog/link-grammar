@@ -845,7 +845,8 @@ static E_list * or_purge_E_list(E_list * l)
 {
 	E_list * el;
 	if (l == NULL) return NULL;
-	if ((l->e = purge_Exp(l->e)) == NULL) {
+	if ((l->e = purge_Exp(l->e)) == NULL)
+	{
 		el = or_purge_E_list(l->next);
 		xfree((char *)l, sizeof(E_list));
 		return el;
@@ -861,12 +862,14 @@ static E_list * or_purge_E_list(E_list * l)
 static int and_purge_E_list(E_list * l)
 {
 	if (l == NULL) return 1;
-	if ((l->e = purge_Exp(l->e)) == NULL) {
+	if ((l->e = purge_Exp(l->e)) == NULL)
+	{
 		free_E_list(l->next);
 		xfree((char *)l, sizeof(E_list));
 		return 0;
 	}
-	if (and_purge_E_list(l->next) == 0) {
+	if (and_purge_E_list(l->next) == 0)
+	{
 		free_Exp(l->e);
 		xfree((char *)l, sizeof(E_list));
 		return 0;
@@ -880,22 +883,31 @@ static int and_purge_E_list(E_list * l)
  */
 static Exp* purge_Exp(Exp *e)
 {
-	if (e->type == CONNECTOR_type) {
-		if (e->u.string == NULL) {
+	if (e->type == CONNECTOR_type)
+	{
+		if (e->u.string == NULL)
+		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
-		} else {
+		}
+		else
+		{
 			return e;
 		}
 	}
-	if (e->type == AND_type) {
-		if (and_purge_E_list(e->u.l) == 0) {
+	if (e->type == AND_type)
+	{
+		if (and_purge_E_list(e->u.l) == 0)
+		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
-	} else {
+	}
+	else
+	{
 		e->u.l = or_purge_E_list(e->u.l);
-		if (e->u.l == NULL) {
+		if (e->u.l == NULL)
+		{
 			xfree((char *)e, sizeof(Exp));
 			return NULL;
 		}
@@ -907,7 +919,8 @@ static Exp* purge_Exp(Exp *e)
    The code is excised for these reasons.
 */
 /*
-	if ((e->u.l != NULL) && (e->u.l->next == NULL)) {
+	if ((e->u.l != NULL) && (e->u.l->next == NULL))
+	{
 		ne = e->u.l->e;
 		xfree((char *) e->u.l, sizeof(E_list));
 		xfree((char *) e, sizeof(Exp));
@@ -919,9 +932,8 @@ static Exp* purge_Exp(Exp *e)
 
 /**
  * Returns TRUE if c can match anything in the set S.
- * xxxxxxxxx optimize this away
  */
-static int matches_S(connector_table *ct, Connector * c, int dir)
+static inline int matches_S(connector_table *ct, Connector * c, int dir)
 {
 	if (dir == '-') return matches_minus(ct, c);
 	return matches_plus(ct, c);
@@ -934,17 +946,16 @@ static int matches_S(connector_table *ct, Connector * c, int dir)
  */
 static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 {
-	Connector dummy;
 	int count;
-	E_list *l;
-	init_connector(&dummy);
-	dummy.label = NORMAL_LABEL;
-	dummy.priority = THIN_priority;
 	count = 0;
 	if (e->type == CONNECTOR_type)
 	{
 		if (e->dir == dir)
 		{
+			Connector dummy;
+			init_connector(&dummy);
+			dummy.label = NORMAL_LABEL;
+			dummy.priority = THIN_priority;
 			dummy.string = e->u.string;
 			if (!matches_S(ct, &dummy, dir))
 			{
@@ -955,6 +966,7 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 	}
 	else
 	{
+		E_list *l;
 		for (l = e->u.l; l != NULL; l = l->next)
 		{
 			count += mark_dead_connectors(ct, l->e, dir);
@@ -971,8 +983,6 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 static Connector * insert_connectors(connector_table *ct, Exp * e,
                                      Connector *alloc_list, int dir)
 {
-	E_list *l;
-
 	if (e->type == CONNECTOR_type)
 	{
 		if (e->dir == dir)
@@ -988,6 +998,7 @@ static Connector * insert_connectors(connector_table *ct, Exp * e,
 	}
 	else
 	{
+		E_list *l;
 		for (l=e->u.l; l!=NULL; l=l->next)
 		{
 			alloc_list = insert_connectors(ct, l->e, alloc_list, dir);
@@ -1005,12 +1016,16 @@ static void clean_up_expressions(Sentence sent, int w)
 	X_node head_node, *d, *d1;
 	d = &head_node;
 	d->next = sent->word[w].x;
-	while(d->next != NULL) {
-		if (d->next->exp == NULL) {
+	while (d->next != NULL)
+	{
+		if (d->next->exp == NULL)
+		{
 			d1 = d->next;
 			d->next = d1->next;
 			xfree((char *)d1, sizeof(X_node));
-		} else {
+		}
+		else
+		{
 			d = d->next;
 		}
 	}
