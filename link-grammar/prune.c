@@ -124,7 +124,7 @@ struct prune_context_s
  * the connector string, and the label fields.  This ensures that if two
  * strings match (formally), then they must hash to the same place.
  */
-static int hash_S(Connector * c)
+static inline int hash_S(Connector * c)
 {
 	const char *s;
 	int i;
@@ -156,9 +156,9 @@ int prune_match(int dist, Connector *a, Connector *b)
 	const char *s, *t;
 	int x, y;
 
-	/* XXX hack alert */
-	if (-1 == a->hash) hash_S(a);
-	if (-1 == b->hash) hash_S(b);
+	/* Initialize hash, if it has not been initialized. */
+	hash_S(a);
+	hash_S(b);
 	if (a->hash != b->hash) return FALSE;
 	if (a->label != b->label) return FALSE;
 
