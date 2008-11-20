@@ -13,12 +13,8 @@
 
 #include <link-grammar/api.h>
 
-typedef struct connector_table_s connector_table;
-struct connector_table_s
-{
-	int s_table_size;
-	Connector ** table;
-};
+#define CONTABSZ 8192
+typedef Connector * connector_table;
 
 typedef struct disjunct_dup_table_s disjunct_dup_table;
 struct disjunct_dup_table_s
@@ -124,6 +120,30 @@ struct prune_context_s
 */
 
 /**
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ */
+static int hash_S(Connector * c)
+{
+	const char *s;
+	int i;
+
+	if (-1 != c->hash) return c->hash;
+
+	i = c->label;
+	s = c->string;
+	while(isupper((int)*s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		s++;
+	}
+	c->hash = (i & (CONTABSZ-1));
+	c->prune_string = s;
+	return c->hash;
+}
+
+/**
  * This is almost identical to match().  Its reason for existance
  * is the rather subtle fact that with "and" can transform a "Ss"
  * connector into "Sp".  This means that in order for pruning to
@@ -136,18 +156,14 @@ int prune_match(int dist, Connector *a, Connector *b)
 	const char *s, *t;
 	int x, y;
 
+	/* XXX hack alert */
+	if (-1 == a->hash) hash_S(a);
+	if (-1 == b->hash) hash_S(b);
+	if (a->hash != b->hash) return FALSE;
 	if (a->label != b->label) return FALSE;
 
-	s = a->string;
-	t = b->string;
-
-	/* isupper -- connector names are not yet UTF8-capable */
-	while (isupper((int)*s) || isupper((int)*t))
-	{
-		if (*s != *t) return FALSE;
-		s++;
-		t++;
-	}
+	s = a->prune_string;
+	t = b->prune_string;
 
 	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  a->ll=%d b->ll=%d  dist=%d\n",
 		   s, t, x, y, a->length_limit, b->length_limit, dist); */
@@ -240,44 +256,17 @@ int prune_match(int dist, Connector *a, Connector *b)
 static void free_S(connector_table *ct)
 {
 	int i;
-	for (i = 0; i < ct->s_table_size; i++)
+	for (i = 0; i < CONTABSZ; i++)
 	{
-		if (ct->table[i] == NULL) continue;
-		free_connectors(ct->table[i]);
-		ct->table[i] = NULL;
+		if (ct[i] == NULL) continue;
+		free_connectors(ct[i]);
+		ct[i] = NULL;
 	}
 }
 
-static void connector_table_delete(connector_table *ct)
+static inline void zero_connector_table(connector_table *ct)
 {
-	free_S(ct);
-	xfree((char *)ct->table, ct->s_table_size * sizeof (Connector *));
-	free(ct);
-}
-
-static void zero_connector_table(connector_table *ct)
-{
-	memset(ct->table, 0, sizeof(char*) * ct->s_table_size);
-}
-
-
-/**
- * This hash function only looks at the leading upper case letters of
- * the connector string, and the label fields.  This ensures that if two
- * strings match (formally), then they must hash to the same place.
- */
-static int hash_S(connector_table *ct, Connector * c)
-{
-	const char *s;
-	int i;
-	i = c->label;
-	s = c->string;
-	while(isupper((int)*s)) /* connector tables cannot contain UTF8, yet */
-	{
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s++;
-	}
-	return (i & (ct->s_table_size-1));
+	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
 }
 
 /**
@@ -288,9 +277,9 @@ static void insert_S(connector_table *ct, Connector * c)
 	int h;
 	Connector * e;
 
-	h = hash_S(ct, c);
+	h = hash_S(c);
 
-	for (e = ct->table[h]; e != NULL; e = e->next)
+	for (e = ct[h]; e != NULL; e = e->next)
 	{
 		if ((strcmp(c->string, e->string) == 0) &&
 			(c->label == e->label) && (c->priority == e->priority))
@@ -300,21 +289,8 @@ static void insert_S(connector_table *ct, Connector * c)
 	}
 	e = connector_new();
 	*e = *c;
-	e->next = ct->table[h];
-	ct->table[h] = e;
-}
-
-
-static connector_table * connector_table_new(size_t sz)
-{
-	connector_table *ct;
-
-	ct = (connector_table *) malloc (sizeof(connector_table));
-	ct->s_table_size = sz;
-
-	ct->table = (Connector **) xalloc(sz * sizeof (Connector *));
-	memset(ct->table, 0, sz * sizeof(Connector *));
-	return ct;
+	e->next = ct[h];
+	ct[h] = e;
 }
 
 /**
@@ -323,9 +299,9 @@ static connector_table * connector_table_new(size_t sz)
 static int matches_minus(connector_table *ct, Connector * c)
 {
 	Connector * e;
-	int h = hash_S(ct, c);
+	int h = hash_S(c);
 
-	for (e = ct->table[h]; e != NULL; e = e->tableNext)
+	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
 		if (prune_match(0, e, c)) return TRUE;
 	}
@@ -335,9 +311,9 @@ static int matches_minus(connector_table *ct, Connector * c)
 static int matches_plus(connector_table *ct, Connector * c)
 {
 	Connector * e;
-	int h = hash_S(ct, c);
+	int h = hash_S(c);
 
-	for (e = ct->table[h]; e != NULL; e = e->tableNext)
+	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
 		if (prune_match(0, c, e)) return TRUE;
 	}
@@ -392,17 +368,17 @@ static void insert_connector(connector_table *ct, Connector * c)
 	int h;
 	Connector * e;
 
-	h = hash_S(ct, c);
+	h = hash_S(c);
 
-	for (e = ct->table[h]; e != NULL; e = e->tableNext)
+	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
 		if ((strcmp(c->string, e->string) == 0) && 
 		    (c->label == e->label) && 
 		    (c->priority == e->priority))
 			return;
 	}
-	c->tableNext = ct->table[h];
-	ct->table[h] = c;
+	c->tableNext = ct[h];
+	ct[h] = c;
 }
 
 void prune(Sentence sent)
@@ -411,13 +387,7 @@ void prune(Sentence sent)
 	Connector *e;
 	int w;
 	int N_deleted;
-	connector_table cts, *ct;
-#define CTABSZ 1024
-	Connector *tab[CTABSZ];
-
-	cts.s_table_size = CTABSZ;
-	cts.table = tab;
-	ct = &cts;
+	Connector *ct[CONTABSZ];
 
 	/* XXX why is this here ?? */
 	count_set_effective_distance(sent);
@@ -896,23 +866,6 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
    by prune.
 */
 
-/**
- * Computes and returns the number of connectors in all of the expressions
- * of the sentence.
- */
-static int size_of_sentence_expressions(Sentence sent)
-{
-	X_node * x;
-	int w, size;
-	size = 0;
-	for (w=0; w<sent->length; w++) {
-		for (x=sent->word[w].x; x!=NULL; x = x->next) {
-			size += size_of_expression(x->exp);
-		}
-	}
-	return size;
-}
-
 /* The purge operations remove all irrelevant stuff from the expression,	*/
 /* and free the purged stuff.  A connector is deemed irrelevant if its	  */
 /* string pointer has been set to NULL.  The passes through the sentence	*/
@@ -1008,18 +961,18 @@ static Exp* purge_Exp(Exp *e)
 static int matches_S(connector_table *ct, Connector * c, int dir)
 {
 	Connector * e;
-	int h = hash_S(ct, c);
+	int h = hash_S(c);
 
 	if (dir == '-')
 	{
-		for (e = ct->table[h]; e != NULL; e = e->next)
+		for (e = ct[h]; e != NULL; e = e->next)
 		{
 			if (prune_match(0, e, c)) return TRUE;
 		}
 	}
 	else
 	{
-		for (e = ct->table[h]; e != NULL; e = e->next)
+		for (e = ct[h]; e != NULL; e = e->next)
 		{
 			if (prune_match(0, c, e)) return TRUE;
 		}
@@ -1106,9 +1059,9 @@ void expression_prune(Sentence sent)
 	int N_deleted;
 	X_node * x;
 	int w;
-	connector_table *ct;
+	Connector *ct[CONTABSZ];
 
-	ct = connector_table_new(next_power_of_two_up(size_of_sentence_expressions(sent)));
+	zero_connector_table(ct);
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
@@ -1166,7 +1119,6 @@ void expression_prune(Sentence sent)
 		if (N_deleted == 0) break;
 		N_deleted = 0;
 	}
-	connector_table_delete(ct);
 }
 
 

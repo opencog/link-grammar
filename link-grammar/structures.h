@@ -192,6 +192,7 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 struct Connector_struct
 {
     short label;
+    short hash;
     unsigned char word;
                    /* The nearest word to my left (or right) that
                       this could connect to.  Computed by power pruning */
@@ -209,6 +210,7 @@ struct Connector_struct
 
     /* Hash table next pointer, used only during pruning. */
     Connector * tableNext;
+    const char * prune_string;
 };
 
 struct Disjunct_struct

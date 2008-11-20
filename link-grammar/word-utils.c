@@ -76,14 +76,17 @@ Connector * connector_new(void)
 	c->length_limit = UNLIMITED_LEN;
 	c->string = "";
 	c->label = 0;
+	c->hash = -1;
 	c->priority = THIN_priority;
 	c->multi = FALSE;
 	c->next = NULL;
+	c->tableNext = NULL;
 	return c;
 }
 
 Connector * init_connector(Connector *c)
 {
+	c->hash = -1;
 	c->length_limit = UNLIMITED_LEN;
 	return c;
 }
