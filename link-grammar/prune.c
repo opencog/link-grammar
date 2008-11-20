@@ -345,11 +345,11 @@ static void insert_connector(connector_table *ct, Connector * c)
 
 void prune(Sentence sent)
 {
-	Disjunct *d;
-	Connector *e;
+	Connector *e, *f;
 	int w;
 	int N_deleted;
 	Connector *ct[CONTABSZ];
+	Disjunct fake_head, *d, *d1;
 
 	/* XXX why is this here ?? */
 	count_set_effective_distance(sent);
@@ -363,38 +363,47 @@ void prune(Sentence sent)
 		/* For every word */
 		for (w = 0; w < sent->length; w++)
 		{
+			d = &fake_head;
+			d->next = sent->word[w].d;
+
 			/* For every disjunct of word */
-			for (d = sent->word[w].d; d != NULL; d = d->next)
+			while ((d1 = d->next))
 			{
+				e = d1->left;
+
 				/* For every left clause of this disjunct */
-				for (e = d->left; e != NULL; e = e->next)
+				while (e)
 				{
-					/* We know this disjunct is dead since no match
-					 * can be found on a required clause. */
-					if (!matches_minus(ct, e))
+					int h = hash_S(e);
+					for (f = ct[h]; f != NULL; f = f->tableNext)
 					{
-						N_deleted ++;
-						free_connectors(d->left);
-						free_connectors(d->right);
-						d->left = d->right = NULL;
-						break;
+						if (prune_match(0, f, e)) break;
 					}
+					if (!f) break; /* If f null, not a single match was found */
+					e = e->next;
+				}
+
+				/* We know this disjunct is dead since no match
+				 * can be found on a required clause. */
+				if (e)
+				{
+					N_deleted ++;
+					free_connectors(d1->left);
+					free_connectors(d1->right);
+					d->next = d1->next;
+					xfree(d1, sizeof(Disjunct));
+				}
+				else
+				{
+			 		/* Store surviving disjunct in hash table */
+					for (e = d1->right; e != NULL; e = e->next)
+					{
+						insert_connector(ct, e);
+					}
+					d = d1; /* move on to next disjunct*/
 				}
 			}
-
-			/* We have purged a bunch of disjuncts for this word,
-			 * now clean up word and insert its disjuncts in table
-			 * for next guy to match */
-
-			/* Remove dead disjuncts */
-			clean_up(sent, w);
-
-			/* Now store remaining disjuncts in hash table */
-			for (d = sent->word[w].d; d != NULL; d = d->next)
-			{
-				for (e = d->right; e != NULL; e = e->next)
-					insert_connector(ct, e);
-			}
+			sent->word[w].d = fake_head.next;
 		}
 
 		if (2 < verbosity)
