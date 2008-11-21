@@ -213,6 +213,16 @@ struct Connector_struct
     const char * prune_string;
 };
 
+static inline void connector_set_string(Connector *c, const char *s)
+{
+	c->string = s;
+	c->hash = -1;
+}
+static inline const char * connector_get_string(Connector *c)
+{
+	return c->string;
+}
+
 struct Disjunct_struct
 {
     Disjunct *next;

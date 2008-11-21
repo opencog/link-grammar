@@ -819,7 +819,8 @@ static void compute_link_names(Sentence sent)
 	for (i = 0; i < pi->N_links; i++)
 	{
 		pi->link_array[i].name = intersect_strings(sent,
-		   pi->link_array[i].lc->string, pi->link_array[i].rc->string);
+			connector_get_string(pi->link_array[i].lc),
+			connector_get_string(pi->link_array[i].rc));
 	}
 }
 
@@ -848,8 +849,9 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 		}
 		else
 		{
-			s = intersect_strings(sent, sublinkage->link[i]->lc->string,
-								  sublinkage->link[i]->rc->string);
+			s = intersect_strings(sent,
+				connector_get_string(sublinkage->link[i]->lc),
+				connector_get_string(sublinkage->link[i]->rc));
 
 			if (strictly_smaller_name(s, pi->link_array[i].name))
 				replace_link_name(sublinkage->link[i], pi->link_array[i].name);

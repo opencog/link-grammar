@@ -543,7 +543,7 @@ static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d
 	c1 = d1->left;
 	c2 = d2->left;
 	while (c1!=NULL) {
-		c->string = intersect_strings(sent, c1->string, c2->string);
+		connector_set_string (c, intersect_strings(sent, c1->string, c2->string));
 		c->multi = (c1->multi) && (c2->multi);
 		c = c->next; c1 = c1->next; c2 = c2->next;
 	}
@@ -551,7 +551,7 @@ static Disjunct * intersect_disjuncts(Sentence sent, Disjunct * d1, Disjunct * d
 	c1 = d1->right;
 	c2 = d2->right;
 	while (c1!=NULL) {
-		c->string = intersect_strings(sent, c1->string, c2->string);
+		connector_set_string (c, intersect_strings(sent, c1->string, c2->string));
 		c->multi = (c1->multi) && (c2->multi);
 		c = c->next; c1 = c1->next; c2 = c2->next;
 	}
@@ -846,7 +846,7 @@ static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) 
 	assert(d1 != NULL, "A disjunct I inserted was not there. (2)");
 
 	c->label = lp->label;
-	c->string = d1->string;
+	connector_set_string(c, d1->string);
 	c->priority = UP_priority;
 	c->multi = FALSE;
 }
@@ -1028,7 +1028,8 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
 				c1 = connector_new();
 				c2 = connector_new();
 				c1->priority = c2->priority = DOWN_priority;
-				c1->string = c2->string = d->string;
+				connector_set_string(c1, d->string);
+				connector_set_string(c2, d->string);
 				c1->label = c2->label = lab;
 
 				d1->string = s;
@@ -1061,24 +1062,30 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
 	   The SI connectors must also be modified to accommodate "are John
 	   and Dave here", but kill "is John and Dave here"
 	*/
-	if (strcmp(s,"and")==0) {
-		for (d1 = d_list; d1!=NULL; d1=d1->next) {
-			for (c1=d1->right; c1!=NULL; c1=c1->next) {
+	if (strcmp(s, "and") == 0)
+	{
+		for (d1 = d_list; d1 != NULL; d1 = d1->next)
+		{
+			for (c1 = d1->right; c1 != NULL; c1 = c1->next)
+			{
 				if ((c1->string[0] == 'S') &&
-					((c1->string[1]=='^') ||
-					 (c1->string[1]=='s') ||
-					 (c1->string[1]=='p') ||
-					 (c1->string[1]=='\0'))) {
-					c1->string = "Sp";
+					((c1->string[1] == '^') ||
+					 (c1->string[1] == 's') ||
+					 (c1->string[1] == 'p') ||
+					 (c1->string[1] == '\0')))
+				{
+					connector_set_string(c1, "Sp");
 				}
 			}
-			for (c1=d1->left; c1!=NULL; c1=c1->next) {
-				if ((c1->string[0] == 'S') && (c1->string[1]=='I') &&
-					((c1->string[2]=='^') ||
-					 (c1->string[2]=='s') ||
-					 (c1->string[2]=='p') ||
-					 (c1->string[2]=='\0'))) {
-					c1->string = "SIp";
+			for (c1 = d1->left; c1 != NULL; c1 = c1->next)
+			{
+				if ((c1->string[0] == 'S') && (c1->string[1] == 'I') &&
+					((c1->string[2] == '^') ||
+					 (c1->string[2] == 's') ||
+					 (c1->string[2] == 'p') ||
+					 (c1->string[2] == '\0')))
+				{
+					connector_set_string(c1, "SIp");
 				}
 			}
 		}
@@ -1100,18 +1107,18 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
    The more generous code for "nor" has been used instead
 */
 /*
-	else if (strcmp(s,"or")==0) {
+	else if (strcmp(s, "or") == 0) {
 		for (d1 = d_list; d1!=NULL; d1=d1->next) {
 			for (c1=d1->right; c1!=NULL; c1=c1->next) {
 				if (c1->string[0] == 'S') {
 					if (c1->string[1]=='^') {
 						if (c1->string[2]=='a') {
-							c1->string = "Ss";
+							connector_set_string(c1, "Ss");
 						} else {
-							c1->string = "Sp";
+							connector_set_string(c1, "Sp");
 						}
 					} else if ((c1->string[1]=='p') && (c1->string[2]=='a')){
-						c1->string = "Sp";
+						connector_set_string(c1, "Sp");
 					}
 				}
 			}
@@ -1119,12 +1126,12 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
 				if ((c1->string[0] == 'S') && (c1->string[1] == 'I')) {
 					if (c1->string[2]=='^') {
 						if (c1->string[3]=='a') {
-							c1->string = "Ss";
+							connector_set_string(c1, "Ss");
 						} else {
-							c1->string = "Sp";
+							connector_set_string(c1, "Sp");
 						}
 					} else if ((c1->string[2]=='p') && (c1->string[3]=='a')){
-						c1->string = "Sp";
+						connector_set_string(c1, "Sp");
 					}
 				}
 			}
@@ -1144,7 +1151,7 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
 					((c1->string[1]=='^') ||
 					 (c1->string[1]=='s') ||
 					 (c1->string[1]=='p'))) {
-					c1->string = "S";
+					connector_set_string(c1, "S");
 				}
 			}
 			for (c1=d1->left; c1!=NULL; c1=c1->next) {
@@ -1152,7 +1159,7 @@ Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
 					((c1->string[2]=='^') ||
 					 (c1->string[2]=='s') ||
 					 (c1->string[2]=='p'))) {
-					c1->string = "SI";
+					connector_set_string(c1, "SI");
 				}
 			}
 		}
@@ -1384,16 +1391,21 @@ static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label)
 {
 	Disjunct * d;
 	Connector * cx, *cy;
-	for (d=sent->and_data.label_table[label]; d!=NULL; d=d->next) {
-		for (cx=d->left, cy=dis->left; cx!=NULL; cx=cx->next,cy=cy->next) {
+	for (d=sent->and_data.label_table[label]; d!=NULL; d=d->next)
+	{
+		for (cx=d->left, cy=dis->left; cx!=NULL; cx=cx->next,cy=cy->next)
+		{
 /*			if ((cx->string != cy->string) || */
-			if ((strcmp(cx->string, cy->string) != 0) ||
+			if ((strcmp(connector_get_string(cx),
+			            connector_get_string(cy)) != 0) ||
 				(cx->multi != cy->multi)) break;/* have to check multi? */
 		}
 		if (cx!=NULL) continue;
-		for (cx=d->right, cy=dis->right; cx!=NULL; cx=cx->next,cy=cy->next) {
+		for (cx=d->right, cy=dis->right; cx!=NULL; cx=cx->next,cy=cy->next)
+		{
 /*			if ((cx->string != cy->string) || */
-			if ((strcmp(cx->string, cy->string) != 0) ||
+			if ((strcmp(connector_get_string(cx),
+			            connector_get_string(cy)) != 0) ||
 				(cx->multi != cy->multi)) break;
 		}
 		if (cx==NULL) break;
@@ -1452,7 +1464,8 @@ int is_canonical_linkage(Sentence sent)
 		for (dis=sent->and_data.label_table[d_label]; dis!=NULL; dis=dis->next)
 		{
 			/* now, reject a disjunct if it's not strictly below the old */
-			if(!strictly_smaller(dis->string, d_c->string)) continue;
+			if(!strictly_smaller(dis->string, 
+			                     connector_get_string(d_c))) continue;
 
 			/* Now, it has to match the image connectors */
 			for (in = pi->image_array[w]; in != NULL; in = in->next)
@@ -1468,12 +1481,14 @@ int is_canonical_linkage(Sentence sent)
 					   to dis  */
 					if (upcon->label == d_label)
 					{
-						dummy_connector.string = dis->string;
+						connector_set_string(&dummy_connector, dis->string);
 					} else {
-						dummy_connector.string =
-						  find_subdisjunct(sent, dis, upcon->label)->string;
+						connector_set_string(&dummy_connector,
+						  find_subdisjunct(sent, dis, upcon->label)->string);
 					}
-					if (!x_match(sent, &dummy_connector, in->c)) break;  /* I hope using x_match here is right */
+
+					/* I hope using x_match here is right */
+					if (!x_match(sent, &dummy_connector, in->c)) break;  
 				} else if (place > 0) {
 					for (c=dis->right; place > 1; place--) {
 						c = c->next;
@@ -1585,7 +1600,7 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 
 			for (dis=sent->and_data.label_table[mycon->label];
 				 dis != NULL; dis=dis->next) {
-				if (dis->string == mycon->string) break;
+				if (dis->string == connector_get_string(mycon)) break;
 			}
 			assert(dis!=NULL, "Should have found this connector string");
 			/* the disjunct in the table has just been found */
