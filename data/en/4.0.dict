@@ -2637,7 +2637,7 @@ from:
 or (MVp- & B-) or MVp- or (NIa+ & NIb+ & NIc+);
 at toward towards without upon:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
-except but.ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
+except but.misc-ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
 ((MVp+ or TO+) & <prep-main-a>); 
 against beyond beside: 
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
@@ -2938,11 +2938,11 @@ whenever wherever however.c: {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or
 ({Xd- & Xc+} & MVs-)));
 no_matter: QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
 
-that.c: (Cet+ &  
+that.misc-c: (Cet+ &  
 ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]])) or (TS- & (SI*j+ or SFI**j+) & I*j+);
-that.d: [{AL-} & D*u+];
-that.r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
-that.p: {[[M+]]} & <noun-main-h>;
+that.misc-d: [{AL-} & D*u+];
+that.misc-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
+that.misc-p: {[[M+]]} & <noun-main-h>;
 
 because: (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or 
 ({Xd- & Xc+} & MVs-))) or 
@@ -2986,7 +2986,7 @@ or (Xd- & Xc+ & E+)));
 once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or 
 (Xd- & Xc+ & E+))) or E+ or EB-;
 or: NO+;
-but.cnj: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
+but.misc-cnj: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 and: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
