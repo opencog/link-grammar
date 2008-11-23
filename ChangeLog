@@ -10,6 +10,7 @@ Version 4.3.10 includes the following changes:
  * fix: ladle.v "molten hot" "piping hot"
  * fix: "It's a shame that...", "The crux of the plan is that..."
  * Performance improvements (about 11%) to prunce.c from Bruce Wilcox
+ * fix: "He eats with me nightly."
 
 Version 4.3.9 includes the following changes:
  * Issue 13: "John is altogether amazingly quick."
