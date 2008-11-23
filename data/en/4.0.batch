@@ -1246,6 +1246,17 @@ He barks at me nightly.
 He sits near me nightly.
 He sits near me occasionally.
 
+% Buggy classification of words.n.3 vs. words.n.4:
+There was an abundance of poverty.
+There was a continuity of action.
+There was a certain crudity to hs actions.
+It showed a certain abundance. 
+He had a certain panache.
+He sank into a delirium.
+It was a detriment to further action.
+He demonstrated a certain ignorance.
+
+
 % Buggy use of disjuncts: and so is linked with Wq
 Rama ate the apple, and so did Mohan.
 

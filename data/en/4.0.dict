@@ -215,13 +215,13 @@ or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
 
 /en/words/words.n.3:  % nouns that are mass only
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
-(<noun-main-m> or (Rw+ & Bsm+))) 
-or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
+(<noun-main-m> or (Rw+ & Bsm+))) or
+(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
 /en/words/words.n.4:  % nouns that can be mass or countable
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
-(<noun-main-m> or (Rw+ & Bsm+))) or 
+(<noun-main-m> or (Rw+ & Bsm+))) or
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
 
