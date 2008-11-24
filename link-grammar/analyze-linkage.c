@@ -343,21 +343,29 @@ static void height_dfs(analyze_context_t *actx, int w, int height)
 	}
 }
 
-#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
-/* Assume this is OSX */
-/* Apple Mac, as a security precaution, uses a non-executable stack, 
- * with a broken trampoline, and seg-faults on automatic functions.
- * The alternative is to declare a static global, which, of course,
- * is not thread-safe.
+/**
+ * Simple insertion sort; should be plenty fast enough, since sentences
+ * are almost always shorter than 30 words or so. In fact, this is
+ * almost surely faster than qsort for such small arrays.
  */
-static analyze_context_t *global_actx;
-static int comp_height(const void *va, const void *vb)
+static void insort (analyze_context_t *actx, int nwords)
 {
-	const int *a = va;
-	const int *b = vb;
-	return global_actx->dfs_height[*b] - global_actx->dfs_height[*a];
-};
-#endif /* __APPLE__ */
+	int i, j;
+	for (i=1; i<nwords; i++)
+	{
+		int heig = actx->dfs_height[i];
+		int perm = actx->height_perm[i];
+		j = i;
+		while (j>0 && (heig > actx->dfs_height[j-1]))
+		{
+			actx->dfs_height[j] = actx->dfs_height[j-1];
+			actx->height_perm[j] = actx->height_perm[j-1];
+			j--;
+		}
+		actx->dfs_height[j] = heig;
+		actx->height_perm[j] = perm;
+	}
+}
 
 static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 {
@@ -366,35 +374,19 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	CON_list * child, * xchild;
 	List_o_links * lol, * xlol;
 
-#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
-#ifdef USE_PTHREADS
-#error pthreads not supported on OSX until the use of this global is fixed!
-#else
-	global_actx = actx;
-#endif /* USE_PTHREADS */
-#else
-	/* Declare the compare function here, since it needs access to the
-	 * stack varaiable actx, which would otherwise need to be delcared
-	 * global (and thus not thread-safe).
-	 */
-	auto int comp_height(const void *, const void *);
-	int comp_height(const void *va, const void *vb)
-	{
-		const int *a = va;
-		const int *b = vb;
-		return actx->dfs_height[*b] - actx->dfs_height[*a];
-	};
-#endif /* __APPLE__ */
-
 	/* The algorithm used here to build the DIS_CON tree depends on
 	 * the search percolating down from the "top" of the tree.  The
 	 * original version of this started its search at the wall.  This
-	 * was fine because doing a DFS from the wall explore the tree in
+	 * was fine because doing a DFS from the wall explores the tree in
 	 * the right order.
 	 *
 	 * However, in order to handle null links correctly, a more careful
 	 * ordering process must be used to explore the tree.  We use
-	 * dfs_height[] for this.
+	 * dfs_height[] for this, and sort in height order.
+	 *
+	 * XXX Is the sort order correct here? This is not obvious; I think
+	 * we want highest to lowest ...  XXX is the height being calculated
+	 * correctly? Looks weird to me ... XXX
 	 */
 
 	for (w=0; w < pi->N_words; w++) actx->dfs_height[w] = 0;
@@ -402,8 +394,8 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 
 	for (w=0; w < pi->N_words; w++) actx->height_perm[w] = w;
 
-	qsort(actx->height_perm, pi->N_words,
-		sizeof(actx->height_perm[0]), comp_height);
+	/* Sort the heights, keeping only the permuted order. */
+	insort (actx, pi->N_words);
 
 	for (w=0; w<pi->N_words; w++) actx->dfs_root_word[w] = -1;
 
