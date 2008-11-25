@@ -27,13 +27,6 @@
 
 #include "error.h"
 
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-#ifndef TRUE
-#define TRUE 1
-#endif
 
 #ifdef __CYGWIN__
 #define _WIN32 1
@@ -75,11 +68,42 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 /* bzero is missing in Windows */
 #define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
 
+#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+
 /* Windows doesn't have a thread-safe rand (???) */
 /* XXX FIXME -- this breaks thread safety on windows */
 #define rand_r(seedp) rand()
 
 #endif /* _WIN32 */
+
+#if defined(__sun__)
+int strncasecmp(const char *s1, const char *s2, size_t n);
+/* This does not appear to be in string.h header file in sunos
+   (Or in linux when I compile with -ansi) */
+#endif
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#define assert(ex,string) {                                       \
+    if (!(ex)) {                                                  \
+        prt_error("Assertion failed: %s\n", string);              \
+        exit(1);                                                  \
+    }                                                             \
+}
+
+#if !defined(MIN)
+#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
+#endif
+#if !defined(MAX)
+#define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
+#endif
+
 
 static inline int wctomb_check(char *s, wchar_t wc)
 {

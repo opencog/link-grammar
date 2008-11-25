@@ -17,16 +17,6 @@
 #include "api-types.h"
 #include "utilities.h"  /* Needed for inline defn in Windows */
 
-#if defined(_WIN32)
-#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
-#endif
-
-#if defined(__sun__)
-int strncasecmp(const char *s1, const char *s2, size_t n);
-/* This does not appear to be in string.h header file in sunos
-   (Or in linux when I compile with -ansi) */
-#endif
-
 /*
  Global variable descriptions
   -- Most of these global variables have been eliminated.
@@ -85,22 +75,9 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 
  is_conjunction[]
     An array of chars, one for each word.  TRUE if the word is a conjunction
-    ("and", "or", "nor", or "but" at the moment).  False otherwise. */
+    ("and", "or", "nor", or "but" at the moment).  False otherwise. 
+*/
 
-#ifndef TRUE
-#define TRUE  1
-#endif
-#ifndef FALSE
-#define FALSE 0
-#endif
-#define OBS
-
-#define assert(ex,string) {                                       \
-    if (!(ex)) {                                                  \
-        printf("Assertion failed: %s\n", string);                 \
-        exit(1);                                                  \
-    }                                                             \
-}
 
 #define NEGATIVECOST -1000000
 /* This is a hack that allows one to discard disjuncts containing
@@ -111,13 +88,6 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 
 #define NOCUTOFF 1000
 /* no connector will have cost this high */
-
-#if !defined(MIN)
-#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
-#endif
-#if !defined(MAX)
-#define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
-#endif
 
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
