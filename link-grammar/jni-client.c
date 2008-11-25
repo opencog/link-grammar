@@ -294,7 +294,7 @@ static void finish(per_thread_data *ptd)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *env, jclass cls)
 {
-	const char *s = "link-grammar-" LINK_VERSION_STRING;
+	const char *s = linkgrammar_get_version();
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;
 }

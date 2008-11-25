@@ -11,6 +11,7 @@ Version 4.3.10 includes the following changes:
  * fix: "It's a shame that...", "The crux of the plan is that..."
  * Performance improvements (about 11%) to prunce.c from Bruce Wilcox
  * fix: "He eats with me nightly."
+ * Add new public api function: linkgrammar_get_version()
 
 Version 4.3.9 includes the following changes:
  * Issue 13: "John is altogether amazingly quick."

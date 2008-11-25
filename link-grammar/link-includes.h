@@ -23,6 +23,9 @@ LINK_BEGIN_DECLS
 *
 ***********************************************************************/
 
+link_public_api(const char *)
+	linkgrammar_get_version(void);
+
 /**********************************************************************
 *
 * Functions to manipulate Dictionaries

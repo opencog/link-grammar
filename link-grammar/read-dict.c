@@ -16,6 +16,12 @@
 #include <link-grammar/api.h>
 #include "error.h"
 
+const char * linkgrammar_get_version(void)
+{
+	const char *s = "link-grammar-" LINK_VERSION_STRING;
+	return s;
+}
+
 /*
   The dictionary format:
 
