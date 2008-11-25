@@ -62,6 +62,8 @@
 #define towupper  toupper
 #endif
 
+#define nl_langinfo(X) ""
+
 /* strtok_r is missing in Windows */
 char * strtok_r (char *s, const char *delim, char **saveptr);
 
@@ -109,11 +111,7 @@ static inline int wctomb_check(char *s, wchar_t wc)
 {
 	int nr = wctomb(s, wc);
 	if (nr < 0) {
-#ifndef _WIN32
 		prt_error("Fatal Error: unknwon character set %s\n", nl_langinfo(CODESET));
-#else
-		prt_error("Fatal Error: unknown character set\n");
-#endif
 		exit(1);
 	}
 	return nr;

@@ -17,6 +17,7 @@
 #include <limits.h>
 #include <link-grammar/api.h>
 #include "error.h"
+#include "utilities.h"
 
 #define MAX_STRIP 10
 
@@ -546,10 +547,8 @@ int separate_sentence(char * s, Sentence sent)
 	return (sent->length > dict->left_wall_defined + dict->right_wall_defined);
 
 failure:
-#ifndef _WIN32
 	prt_error("Unable to process UTF8 input string in current locale %s\n",
 		nl_langinfo(CODESET));
-#endif
 	return FALSE;
 }
 
