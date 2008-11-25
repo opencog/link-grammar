@@ -15,6 +15,7 @@
 #define _STRUCTURES_H_
 
 #include "api-types.h"
+#include "utilities.h"  /* Needed for inline defn in Windows */
 
 #if defined(_WIN32)
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
