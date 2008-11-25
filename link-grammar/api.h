@@ -14,6 +14,12 @@
 #ifndef LINK_GRAMMAR_API_H
 #define LINK_GRAMMAR_API_H
 
+/* This file is somewhat misnamed, as everything here defines the
+ * link-private, internal-use-only "api", which is subject to change
+ * from revision to revision. No external code should link to this
+ * stuff.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
