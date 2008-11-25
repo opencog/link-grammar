@@ -42,6 +42,7 @@
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
+#define strcasecmp _stricmp
 #endif
 
 /* CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
