@@ -14,6 +14,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <link-grammar/api.h>
+#include "error.h"
 #include "constituents.h"
 
 #define MAXCONSTITUENTS 8192

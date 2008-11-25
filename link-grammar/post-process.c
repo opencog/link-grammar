@@ -16,6 +16,7 @@
 #include <stdarg.h>
 #include <memory.h>
 #include <link-grammar/api.h>
+#include "error.h"
 
 #define PP_MAX_DOMAINS 128
 

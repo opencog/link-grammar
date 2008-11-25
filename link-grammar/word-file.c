@@ -14,6 +14,7 @@
 #include <wchar.h>
 #include <wctype.h>
 #include <link-grammar/api.h>
+#include "error.h"
 
 /**
  * Reads in one word from the file, allocates space for it,

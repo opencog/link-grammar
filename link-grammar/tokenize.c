@@ -16,6 +16,7 @@
 #endif
 #include <limits.h>
 #include <link-grammar/api.h>
+#include "error.h"
 
 #define MAX_STRIP 10
 

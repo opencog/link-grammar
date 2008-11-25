@@ -20,6 +20,7 @@
 ***********************************************************************/
 
 #include <link-grammar/api.h>
+#include "error.h"
 #include "utilities.h"
 
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */

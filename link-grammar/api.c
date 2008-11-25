@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/api.h>
+#include "error.h"
 #include "preparation.h"
 #ifdef USE_SAT_SOLVER
 #include "sat-solver/sat-encoder.h"

@@ -13,6 +13,8 @@
 
 /* XXX the original flex source for this file is missing !! */
 
+#include "error.h"
+
 /* I edited this file to eliminate compiler warnings.  I've documented here
    all the changes.  The .fl file from which this is derived is in
    pp_lexer-flex-file.  Here are all the warnings I got:
@@ -68,14 +70,6 @@ int yywrap(void);  /* --DS */
 
 #include <stdio.h>
 
-#if 0
-     /* for some reason I needed to include these with linux
-	and sun4_55 when using gcc -ansi.  Not necessary
-	without the -ansi.
-      */
-char *strdup(const char *s);
-int fileno( FILE *stream); 
-#endif
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
 #ifdef c_plusplus

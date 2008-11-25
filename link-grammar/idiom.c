@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/api.h>
+#include "error.h"
 
 /** 
  * Returns TRUE if the string contains an underbar character.
