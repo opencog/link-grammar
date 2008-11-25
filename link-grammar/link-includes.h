@@ -23,9 +23,6 @@ LINK_BEGIN_DECLS
 *
 ***********************************************************************/
 
-link_public_api(void)
-     lperror_clear(void);  /* -- deprecated/obsolete */
-
 /**********************************************************************
 *
 * Functions to manipulate Dictionaries
@@ -316,9 +313,6 @@ link_public_api(void)
 link_public_api(void)
      linkage_post_process(Linkage, PostProcessor *);
 
-link_public_api(void)
-     issue_special_command(char * line, Parse_Options opts, Dictionary dict);
-
 /**********************************************************************
 *
 * Constituent node
@@ -342,7 +336,20 @@ link_public_api(int)
 link_public_api(int)
      linkage_constituent_node_get_end(const CNode *n);
 
-/* from error.c -- these are both obsolete. */
+/**********************************************************************
+*
+* Obsolete functions -- do not use these in new code!
+*
+***********************************************************************/
+
+/* This is not intended for general use; its specific to the internals
+ * of the command-line client. */
+link_public_api(void)
+     issue_special_command(char * line, Parse_Options opts, Dictionary dict);
+
+/* These are obsolete, and do nothing. */
+link_public_api(void)
+     lperror_clear(void);
 extern link_public_api(int)
      lperrno;
 extern link_public_api(char)
