@@ -35,13 +35,27 @@
 #ifdef _WIN32
 #include <windows.h>
 
-/* CYGWIN/MINGW, compilers don't support the "inline" keyword. */
-/* Nor does Microsoft Visual C ... so eliminate across the board. */
+#ifdef _MSC_VER
+/* The Microsoft Visual C compiler doesn't support the "inline" keyword. */
 #define inline
 
-#ifdef _MSC_VER
+/* Non-standard string functions */
 #define snprintf _snprintf
 #define strcasecmp _stricmp
+#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+
+/* Strangely, though, no langinfo Windows */
+#define nl_langinfo(X) ""
+
+/* strtok_r is missing in Windows */
+char * strtok_r (char *s, const char *delim, char **saveptr);
+
+/* bzero is missing in Windows */
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+
+/* Windows doesn't have a thread-safe rand (???) */
+/* XXX FIXME -- this breaks thread safety on windows */
+#define rand_r(seedp) rand()
 #endif
 
 /* CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
@@ -61,21 +75,6 @@
 #define towlower  tolower
 #define towupper  toupper
 #endif
-
-/* Strangely, though, no langinfo Windows */
-#define nl_langinfo(X) ""
-
-/* strtok_r is missing in Windows */
-char * strtok_r (char *s, const char *delim, char **saveptr);
-
-/* bzero is missing in Windows */
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
-
-#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
-
-/* Windows doesn't have a thread-safe rand (???) */
-/* XXX FIXME -- this breaks thread safety on windows */
-#define rand_r(seedp) rand()
 
 #endif /* _WIN32 */
 
