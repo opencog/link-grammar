@@ -35,10 +35,9 @@
 #ifdef _WIN32
 #include <windows.h>
 
-#ifndef _MSC_VER
-   /* CYGWIN/MINGW compilers don't support the "inline" keyword. */
+/* CYGWIN/MINGW, compilers don't support the "inline" keyword. */
+/* Nor does Microsoft Visual C ... so eliminate across the board. */
 #define inline
-#endif
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
