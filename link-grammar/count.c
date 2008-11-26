@@ -446,8 +446,9 @@ static s64 count(Sentence sent, int lw, int rw,
 
 /** 
  * Returns the number of ways the sentence can be parsed with the
- * specified cost Assumes that the hash table has already been
- * initialized, and is freed later.
+ * specified cost. Assumes that the hash table has already been
+ * initialized, and is freed later. The "cost" here is the number
+ * of words that are allowed to have no links to them.
  */
 s64 parse(Sentence sent, int cost, Parse_Options opts)
 {
