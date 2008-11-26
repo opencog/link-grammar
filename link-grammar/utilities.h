@@ -45,7 +45,7 @@
 #endif
 
 /* CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
- * However, MS Visual C appearnetly does ... 
+ * However, MS Visual C appearently does ... 
  */
 #ifdef __CYGWIN__
 #define mbtowc(w,s,n)  ({*((char *)(w)) = *(s); 1;})
@@ -62,6 +62,7 @@
 #define towupper  toupper
 #endif
 
+/* Strangely, though, no langinfo Windows */
 #define nl_langinfo(X) ""
 
 /* strtok_r is missing in Windows */
