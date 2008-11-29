@@ -256,6 +256,7 @@ msvc6/Makefile
 msvc6/link-grammar-dll/Makefile
 msvc6/link-grammar-exe/Makefile
 msvc6/link-grammar-java-dll/Makefile
+msvc9/Makefile
 ])
 
 dnl ====================================================================
