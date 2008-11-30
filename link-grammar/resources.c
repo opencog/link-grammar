@@ -49,21 +49,6 @@ static double current_usage_time(void)
 #endif
 }
 
-void print_time(Parse_Options opts, const char * s)
-{
-	resources_print_time(opts->verbosity, opts->resources, s);
-}
-
-void print_total_time(Parse_Options opts)
-{
-	resources_print_total_time(opts->verbosity, opts->resources);
-}
-
-void print_total_space(Parse_Options opts)
-{
-	resources_print_total_space(opts->verbosity, opts->resources);
-}
-
 Resources resources_create(void)
 {
 	Resources r;
@@ -95,7 +80,7 @@ void resources_reset(Resources r)
 	r->memory_exhausted = FALSE;
 }
 
-void resources_reset_time(Resources r)
+static void resources_reset_time(Resources r)
 {
 	r->when_last_called = r->time_when_parse_started = current_usage_time();
 }
@@ -130,7 +115,7 @@ int resources_memory_exhausted(Resources r)
 }
 
 /** print out the cpu ticks since this was last called */
-void resources_print_time(int verbosity, Resources r, const char * s)
+static void resources_print_time(int verbosity, Resources r, const char * s)
 {
 	double new_t;
 	new_t = current_usage_time();
@@ -143,7 +128,7 @@ void resources_print_time(int verbosity, Resources r, const char * s)
 }
 
 /** print out the cpu ticks since this was last called */
-void resources_print_total_time(int verbosity, Resources r)
+static void resources_print_total_time(int verbosity, Resources r)
 {
 	double new_t;
 	new_t = current_usage_time();
@@ -158,7 +143,7 @@ void resources_print_total_time(int verbosity, Resources r)
 	r->time_when_parse_started = new_t;
 }
 
-void resources_print_total_space(int verbosity, Resources r)
+static void resources_print_total_space(int verbosity, Resources r)
 {
 	if (verbosity > 1) {
 		printf("++++");
@@ -168,5 +153,20 @@ void resources_print_total_space(int verbosity, Resources r)
 			(long unsigned int) get_space_in_use(), 
 			(long unsigned int) get_max_space_used());
 	}
+}
+
+void print_time(Parse_Options opts, const char * s)
+{
+	resources_print_time(opts->verbosity, opts->resources, s);
+}
+
+void parse_options_print_total_time(Parse_Options opts)
+{
+	resources_print_total_time(opts->verbosity, opts->resources);
+}
+
+void print_total_space(Parse_Options opts)
+{
+	resources_print_total_space(opts->verbosity, opts->resources);
 }
 

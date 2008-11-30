@@ -351,12 +351,33 @@ link_public_api(int)
 
 /**********************************************************************
 *
+* Internal functions -- do not use these in new code!
+* These are not intended for general public use, but are required to 
+* work around certain Micorsoft Windows linking oddities.
+*
+***********************************************************************/
+
+link_public_api(void)
+     parse_options_print_total_time(Parse_Options opts);
+
+#if     __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
+#define GNUC_PRINTF( format_idx, arg_idx )    \
+  __attribute__((__format__ (__printf__, format_idx, arg_idx)))
+#else
+#define GNUC_PRINTF( format_idx, arg_idx )
+#endif
+
+link_public_api(void)
+     prt_error(const char *fmt, ...) GNUC_PRINTF(1,2);
+
+/**********************************************************************
+*
 * Obsolete functions -- do not use these in new code!
 *
 ***********************************************************************/
 
 /* This is not intended for general use; its specific to the internals
- * of the command-line client. */
+ * of the command-line client.  It was exported by accident. */
 link_public_api(void)
      issue_special_command(char * line, Parse_Options opts, Dictionary dict);
 

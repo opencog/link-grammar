@@ -49,7 +49,6 @@ parse_options_set_batch_mode
 parse_options_get_batch_mode
 parse_options_set_panic_mode
 parse_options_get_panic_mode
-print_total_time
 parse_options_set_display_on
 parse_options_get_display_on
 parse_options_set_display_postscript
@@ -117,7 +116,6 @@ linkage_get_violation_name
 post_process_open
 post_process_close
 linkage_post_process
-issue_special_command
 linkage_constituent_tree
 linkage_free_constituent_tree
 linkage_constituent_node_get_label
@@ -125,10 +123,12 @@ linkage_constituent_node_get_child
 linkage_constituent_node_get_next
 linkage_constituent_node_get_start
 linkage_constituent_node_get_end
+issue_special_command
 lperrno
 lperrmsg
 lperror_clear
 prt_error
+print_total_time
 match
 extract_thin_linkage
 xfree

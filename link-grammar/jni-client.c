@@ -225,7 +225,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 			parse_options_resources_exhausted(opts) &&
 			parse_options_get_panic_mode(opts))
 	{
-		print_total_time(opts);
+		parse_options_print_total_time(opts);
 		if (jverbosity > 0) prt_error("Warning: Entering \"panic\" mode...\n");
 		parse_options_reset_resources(ptd->panic_parse_opts);
 		parse_options_set_verbosity(ptd->panic_parse_opts, jverbosity);
