@@ -51,6 +51,10 @@ link_public_api(void)
 link_public_api(char *)
      dictionary_get_data_dir(void);
 
+link_public_api(int)
+     dictionary_is_past_tense_form(Dictionary dict, const char * str);
+link_public_api(int)
+     dictionary_is_entity(Dictionary dict, const char * str);
 
 /**********************************************************************
 *

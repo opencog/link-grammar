@@ -628,7 +628,7 @@ Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstrin
 
 	per_thread_data *ptd = get_ptd(env, cls);
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (is_past_tense_form(cStr,ptd->dict) == 1)
+	if (dictionary_is_past_tense_form(ptd->dict, cStr) == 1)
 		rv = TRUE;
 	(*env)->ReleaseStringUTFChars(env,str,cStr);
 	return rv;
@@ -646,7 +646,7 @@ Java_org_linkgrammar_LinkGrammar_isEntity(JNIEnv *env, jclass cls, jstring str)
 
 	per_thread_data *ptd = get_ptd(env, cls);
 	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (is_entity(cStr,ptd->dict) == 1)
+	if (dictionary_is_entity(ptd->dict, cStr) == 1)
 		rv = TRUE;
 	(*env)->ReleaseStringUTFChars(env,str,cStr);
 	return rv;

@@ -56,7 +56,5 @@ int match_in_connector_set(Sentence, Connector_set *conset, Connector * c, int d
 Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
 int word_has_connector(Dict_node *, const char *, int);
 int word_contains(const char * word, const char * macro, Dictionary dict);
-int is_past_tense_form(const char * str, Dictionary dict);
-int is_entity(const char * str, Dictionary dict);
 
 #endif /* _LINK_GRAMMAR_WORD_UTILS_H_ */
