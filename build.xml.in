@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="build" name="link-grammar">
+<project basedir="." default="build" name="linkgrammar">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.5"/>
@@ -7,7 +7,7 @@
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
-            <fileset dir="link-grammar/java" excludes="**/*.java"/>
+            <fileset dir="linkgrammar/java" excludes="**/*.java"/>
         </copy>
     </target>
     <target name="clean">
@@ -19,9 +19,9 @@
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
-            <src path="link-grammar/java"/>
+            <src path="linkgrammar/java"/>
         </javac>
-        <jar basedir="bin" destfile="link-grammar-@VERSION@.jar">
+        <jar basedir="bin" destfile="linkgrammar-@VERSION@.jar">
             <manifest>
                 <attribute name="Implementation-Title" value="Link Grammar Parser Java Bindings"/>
                 <attribute name="Implementation-URL" value="http://www.abisource.com/projects/link-grammar/"/>

@@ -1,4 +1,4 @@
-Version 4.3.10 includes the following changes:
+Version 4.4.0 includes the following changes:
  * fix: recognize curly-single-quote ’ where straight quote can be used.
  * recognize and explicitly ignore emoticon types.
  * Include MSVC6 build files.
@@ -13,6 +13,7 @@ Version 4.3.10 includes the following changes:
  * fix: "He eats with me nightly."
  * Add new public api function: linkgrammar_get_version()
  * MSVC9 build files from Borislav Iordanov
+ * Java network-efficient client-server classes from Borislav Iordanov
 
 Version 4.3.9 includes the following changes:
  * Issue 13: "John is altogether amazingly quick."
