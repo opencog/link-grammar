@@ -322,7 +322,7 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
 	// Java passes null pointers as the string "null"
 	if (nativePath && strcmp(nativePath, "null")) 
 	{
-		set_data_dir(nativePath);
+		dictionary_set_data_dir(nativePath);
 	}
 	(*env)->ReleaseStringUTFChars(env,path, nativePath);
 }

@@ -476,13 +476,13 @@ path_get_dirname (const char *file_name)
  */
 static char * custom_data_dir = NULL;
 
-void set_data_dir(const char * path)
+void dictionary_set_data_dir(const char * path)
 {
 	if (custom_data_dir) free (custom_data_dir);
 	custom_data_dir = safe_strdup(path);
 }
 
-static char * get_datadir(void)
+char * dictionary_get_data_dir(void)
 {
 #ifdef _WIN32
 	HINSTANCE hInstance;
@@ -505,7 +505,7 @@ static char * get_datadir(void)
 
 		if(GetModuleFileName(hInstance,dll_path,MAX_PATH)) {
 #ifdef _DEBUG
-			prt_error("Ifno: GetModuleFileName=%s\n", (dll_path?dll_path:"NULL"));
+			prt_error("Info: GetModuleFileName=%s\n", (dll_path?dll_path:"NULL"));
 #endif
 			data_dir = path_get_dirname(dll_path);
 		}
@@ -565,7 +565,7 @@ FILE *dictopen(const char *filename, const char *how)
 	}
 
 	{
-		char * data_dir = get_datadir();
+		char * data_dir = dictionary_get_data_dir();
 #ifdef _DEBUG
 		prt_error("Info: data_dir=%s\n", (data_dir?data_dir:"NULL"));
 #endif
