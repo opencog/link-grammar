@@ -127,7 +127,7 @@ liblink_grammar_java_la_SOURCES =   \
 
 EXTRA_DIST=                               \
 	prefix.h                               \
-	java/org/link-grammar/LinkGrammar.java \
+	java/org/linkgrammar/LinkGrammar.java  \
 	link-grammar.def                       \
 	link-grammar-java.def
 
