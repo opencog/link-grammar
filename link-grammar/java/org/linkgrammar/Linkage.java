@@ -1,0 +1,102 @@
+package org.linkgrammar;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * 
+ * <p>
+ * A <code>Linkage</code> represents one of possibly many parses returned by Link Grammar. Each 
+ * <code>Linkage</code> is defined by a list of <code>Link</code>s between the tokens in a sentence.
+ * A <code>Linkage</code> also has some metadata associated with it, e.g. for various cost measures. 
+ * </p>
+ *
+ * @author Borislav Iordanov
+ *
+ */
+public class Linkage implements Iterable<Link>
+{
+	private List<Link> links = new ArrayList<Link>();
+	private String [] words;
+	private int linkedWordCount;
+	private int andCost;
+	private int disjunctCost;
+	private int linkCost;
+	private int numViolations;
+	
+	public List<Link> getLinks()
+	{
+		return links;
+	}
+	
+	public Iterator<Link> iterator()
+	{
+		return links.iterator();
+	}
+	
+	public String wordAt(int i)
+	{
+		return words[i];
+	}
+ 
+	public String[] getWords()
+	{
+		return words;
+	}
+
+	public void setWords(String[] words)
+	{
+		this.words = words;
+	}
+
+	public int getAndCost()
+	{
+		return andCost;
+	}
+
+	public void setAndCost(int andCost)
+	{
+		this.andCost = andCost;
+	}
+
+	public int getDisjunctCost()
+	{
+		return disjunctCost;
+	}
+
+	public void setDisjunctCost(int disjunctCost)
+	{
+		this.disjunctCost = disjunctCost;
+	}
+
+	public int getLinkCost()
+	{
+		return linkCost;
+	}
+
+	public void setLinkCost(int linkCost)
+	{
+		this.linkCost = linkCost;
+	}
+
+	public int getNumViolations()
+	{
+		return numViolations;
+	}
+
+	public void setNumViolations(int numViolations)
+	{
+		this.numViolations = numViolations;
+	}
+
+	public int getLinkedWordCount()
+	{
+		return linkedWordCount;
+	}
+
+	public void setLinkedWordCount(int linkedWordCount)
+	{
+		this.linkedWordCount = linkedWordCount;
+	}	
+}

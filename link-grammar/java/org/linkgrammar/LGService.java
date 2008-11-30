@@ -1,0 +1,394 @@
+package org.linkgrammar;
+
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.text.CharacterIterator;
+import java.text.SimpleDateFormat;
+import java.text.StringCharacterIterator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 
+ * <p>
+ * A simple server implementation for running Link Grammar as a standalone server. The server
+ * accepts parsing requests and returns the result as a JSON formatted string (see 
+ * this <a href="http://www.json.org">JSON</a> website for more information). There is no
+ * session maintained between client and server, it's a simple, stateless, single round-trip,
+ * request-response protocol.
+ * </p>
+ * 
+ * <p>
+ * Requests consist of a bag of parameters separated by the null '\0' character. Each request must
+ * be terminated with the newline '\n' character. Each parameter
+ * has the form <em>name:value\0</em> where <em>name</em> and <em>value</em> can contain any 
+ * character except '\0' and '\n'. The following parameters are recognized:
+ * 
+ * <ul>
+ * <li><b>maxCost</b> - ??</li>
+ * <li><b>maxLinkages</b> - maximum number of parses to return in the result. Note that
+ * this does not affect the parser behavior which computes all parses anyway.</li>
+ * <li><b>maxParseSeconds</b> - ??</li>
+ * <li><b>text</b> - The text to parse. Note that it must be stripped from newlines.</li>   
+ * </ul>
+ * 
+ * </p>
+ * 
+ * <p>
+ * The server maintains incoming requests in an unbounded queue and handles them in thread pool
+ * whose size can be specified at the command line. A thread pool of size > 1 will only work
+ * if the Link Grammar version used is thread-safe. 
+ * </p>
+ * 
+ * <p>
+ * Execute this class as a main program to view a list of options.   
+ * </p>
+ *
+ * @author Borislav Iordanov
+ *
+ */
+public class LGService
+{
+	private static boolean verbose = false;
+	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	
+	private static void trace(String s) 
+	{
+		if (verbose)
+			System.out.println("LG " + dateFormatter.format(new java.util.Date()) + " " + s); 
+	}
+	
+	private static int getInt(String name, Map<String, String> msg, int def)
+	{
+		String x = msg.get(name);
+		return x == null ? def : Integer.parseInt(x);		
+	}
+
+	public static void configure(LGConfig config)
+	{
+		if (config.getMaxCost() > -1)
+			LinkGrammar.setMaxCost(config.getMaxCost());
+		if (config.getMaxParseSeconds() > -1)
+			LinkGrammar.setMaxParseSeconds(config.getMaxParseSeconds());
+		if (config.getDictionaryLocation() != null)
+			LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
+	}
+	
+	public static ParseResult getAsParseResult(LGConfig config)
+	{
+		ParseResult parseResult = new ParseResult();		
+		parseResult.numSkippedWords = LinkGrammar.getNumSkippedWords();
+		parseResult.words = new String[LinkGrammar.getNumWords()];
+		parseResult.entityFlags = new boolean[LinkGrammar.getNumWords()];
+		parseResult.pastTenseFlags = new boolean[LinkGrammar.getNumWords()];
+		for (int i = 0; i < parseResult.words.length; i++)
+		{
+			String word = parseResult.words[i] = LinkGrammar.getWord(i);
+			parseResult.entityFlags[i] = LinkGrammar.isEntity(word);
+			parseResult.pastTenseFlags[i] = LinkGrammar.isPastTenseForm(word);
+		}
+		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());
+		for (int li = 0; li < maxLinkages; li++)
+		{
+			LinkGrammar.makeLinkage(li);
+			Linkage linkage = new Linkage();
+			linkage.setAndCost(LinkGrammar.getLinkageAndCost());
+			linkage.setDisjunctCost(LinkGrammar.getLinkageDisjunctCost());
+			linkage.setLinkCost(LinkGrammar.getLinkageLinkCost());
+			linkage.setLinkedWordCount(LinkGrammar.getNumWords());
+			linkage.setNumViolations(LinkGrammar.getLinkageNumViolations());
+			String [] words = new String[LinkGrammar.getNumWords()];
+			for (int i = 0; i < words.length; i++)
+				words[i] = LinkGrammar.getLinkageWord(i);
+			linkage.setWords(words);
+			int numLinks = LinkGrammar.getNumLinks();
+			for (int i = 0; i < numLinks; i++)
+			{
+				Link link = new Link();
+				link.setLabel(LinkGrammar.getLinkLabel(i));
+				link.setLeft(LinkGrammar.getLinkLWord(i));
+				link.setRight(LinkGrammar.getLinkRWord(i));
+				link.setLeftLabel(LinkGrammar.getLinkLLabel(i));
+				link.setRightLabel(LinkGrammar.getLinkRLabel(i));
+				linkage.getLinks().add(link);
+			}
+			parseResult.linkages.add(linkage);
+		}
+		return parseResult;		
+	}
+	
+	static char[] hex = "0123456789ABCDEF".toCharArray();
+	
+	private static String jsonString(String s)
+	{
+		StringBuffer b = new StringBuffer();
+		b.append("\"");
+        CharacterIterator it = new StringCharacterIterator(s);
+        for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
+        {
+            if (c == '"') b.append("\\\"");
+            else if (c == '\\') b.append("\\\\");
+            else if (c == '/') b.append("\\/");
+            else if (c == '\b') b.append("\\b");
+            else if (c == '\f') b.append("\\f");
+            else if (c == '\n') b.append("\\n");
+            else if (c == '\r') b.append("\\r");
+            else if (c == '\t') b.append("\\t");
+            else if (Character.isISOControl(c)) 
+            {
+                int n = c;
+                for (int i = 0; i < 4; ++i) {
+                    int digit = (n & 0xf000) >> 12;
+                	b.append(hex[digit]);
+                    n <<= 4;
+                }
+            } 
+            else 
+            {
+            	b.append(c);
+            }
+        }
+        b.append("\"");
+        return b.toString();
+	}
+	public static String getAsJSONFormat(LGConfig config)
+	{
+		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes
+		int numWords = LinkGrammar.getNumWords();
+		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());		
+		StringBuffer buf = new StringBuffer();		
+		buf.append("{\"tokens\":["); 
+		for (int i = 0; i < numWords; i++)
+		{
+			buf.append(jsonString(LinkGrammar.getWord(i)));
+			if (i + 1 < numWords)
+				buf.append(",");
+		}
+		buf.append("],\"numSkippedWords\":" + LinkGrammar.getNumSkippedWords());
+		buf.append(",\"entity\":[");
+		boolean first = true;
+		for (int i = 0; i < numWords; i++)
+			if (LinkGrammar.isEntity(LinkGrammar.getWord(i)))
+			{
+				if (!first)
+					buf.append(",");
+				first = false;
+				buf.append(Integer.toString(i));
+			}
+		buf.append("],\"pastTense\":[");
+		first = true;
+		for (int i = 0; i < numWords; i++)
+			if (LinkGrammar.isPastTenseForm(LinkGrammar.getWord(i).toLowerCase()))
+			{
+				if (!first)
+					buf.append(",");
+				first = false;
+				buf.append(Integer.toString(i));
+			}
+		buf.append("],\"linkages\":[");
+		for (int li = 0; li < maxLinkages; li++)
+		{
+			LinkGrammar.makeLinkage(li);
+			buf.append("{\"words\":["); 
+			for (int i = 0; i < numWords; i++)
+			{
+				buf.append(jsonString(LinkGrammar.getLinkageWord(i)));
+				if (i + 1 < numWords)
+					buf.append(",");
+			}
+			buf.append("], \"andCost\":");
+			buf.append(Integer.toString(LinkGrammar.getLinkageAndCost()));
+			buf.append(", \"disjunctCost\":");
+			buf.append(Integer.toString(LinkGrammar.getLinkageDisjunctCost()));
+			buf.append(", \"linkageCost\":");
+			buf.append(Integer.toString(LinkGrammar.getLinkageLinkCost()));
+			buf.append(", \"numViolations\":");
+			buf.append(Integer.toString(LinkGrammar.getLinkageNumViolations()));
+			buf.append(", \"links\":[");
+			int numLinks = LinkGrammar.getNumLinks();
+			for (int i = 0; i < numLinks; i++)
+			{
+				buf.append("{\"label\":" + jsonString(LinkGrammar.getLinkLabel(i)) + ",");
+				buf.append("\"left\":" + LinkGrammar.getLinkLWord(i) + ",");
+				buf.append("\"right\":" + LinkGrammar.getLinkRWord(i) + ",");
+				buf.append("\"leftLabel\":" + jsonString(LinkGrammar.getLinkLLabel(i)) + ",");
+				buf.append("\"rightLabel\":" + jsonString(LinkGrammar.getLinkRLabel(i)) + "}");
+				if (i + 1 < numLinks)
+					buf.append(",");
+			}			
+			buf.append("]");
+			buf.append("}");			
+		}
+		buf.append("]"); // close linkage array
+		buf.append("}");
+		return buf.toString();
+	}
+	
+	public static byte [] getAsBinary(LGConfig config)
+	{
+		int size = 0;
+		byte [] buf = new byte[1024];
+		// TODO ..... grow buf as needed
+		byte [] result = new byte[size];
+		System.arraycopy(buf, 0, result, 0, size);
+		return result;
+	}
+	
+	private static Map<String, String> readMsg(Reader in) throws java.io.IOException
+	{
+		int length = 0;
+		char [] buf = new char[1024];
+		for (int count = in.read(buf, length, buf.length - length); 
+			 count > -1; 
+			 count = in.read(buf, length, buf.length - length))
+		{
+			length += count;
+			if (length == buf.length)
+			{
+				char [] nbuf = new char[buf.length + 512];
+				System.arraycopy(buf, 0, nbuf, 0, buf.length);
+				buf = nbuf;
+			}
+			if (buf[length-1] == '\n')
+				break;
+		}
+		Map<String, String> result = new HashMap<String, String>();
+
+		int start = -1;
+		int column = -1;
+		for (int offset = 0; offset < length - 1; offset++)
+		{
+			char c = buf[offset];
+			if (start == -1)
+				start = offset;
+			else if (c == ':')
+				column = offset;
+			else if (c == '\0')
+			{
+				if (start == -1 || column == -1)
+					throw new RuntimeException("Malformat message:" + new String(buf, 0, length));
+				String name = new String(buf, start, column - start);
+				String value = new String(buf, column + 1, offset - column - 1);
+				result.put(name, value);
+				start = column = -1;
+			}
+		}
+		if (start != -1 || column != -1)
+			throw new RuntimeException("Malformat message:" + new String(buf, 0, length));		
+		return result;		
+	}
+	
+	private static void handleClient(Socket clientSocket)
+	{
+		Reader in = null;
+		PrintWriter out = null;
+		try
+		{
+			trace("Connection accepted from : " + clientSocket.getInetAddress());			
+			in = new InputStreamReader(clientSocket.getInputStream());
+			Map<String, String> msg = readMsg(in); 
+			if (verbose)
+				trace("Received msg '" + msg + "' from " + clientSocket.getInetAddress());
+			String json = "{}";			
+			LGConfig config = new LGConfig();
+			config.setMaxCost(getInt("maxCost", msg, config.getMaxCost()));
+			config.setMaxLinkages(getInt("maxLinkages", msg, config.getMaxLinkages()));
+			config.setMaxParseSeconds(getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
+			configure(config);
+			String text = msg.get("text");
+			if (text != null)
+				LinkGrammar.parse(text);
+			if (LinkGrammar.getNumLinkages() > 0)
+				json = getAsJSONFormat(config);
+			out = new PrintWriter(clientSocket.getOutputStream(), true);
+			out.print(json);
+			out.print('\n');
+			trace("Response written to " + clientSocket.getInetAddress() + ", closing client connection...");
+		}
+		catch (Throwable t)
+		{
+			t.printStackTrace(System.err);
+		}
+		finally
+		{
+			if (out != null) try { out.close(); } catch (Throwable t) { }
+			if (in != null) try { in.close(); } catch (Throwable t) { }
+			if (clientSocket != null) try { clientSocket.close(); } catch (Throwable t) { }
+		}
+	}
+	
+	public static void main(String [] argv)
+	{
+		int threads = 1;
+		int port = 0;
+		String dictionaryPath = null;
+		try
+		{
+			int argIdx = 0;
+			if (argv[argIdx].equals("-verbose")) { verbose = true; argIdx++; }			
+			if (argv[argIdx].equals("-threads")) { threads = Integer.parseInt(argv[++argIdx]); argIdx++; }
+			port = Integer.parseInt(argv[argIdx++]);
+			if (argv.length > argIdx)
+				dictionaryPath = argv[argIdx];
+		}
+		catch (Throwable ex)
+		{
+			if (argv.length > 0)
+				ex.printStackTrace(System.err);
+			System.out.println("Syntax: java org.linkgrammar.LGService [-verbose] [-threads n] port [dictionaryPath]");
+			System.out.println("\t where 'port' is the TCP port the service should listen to and");
+			System.out.println("\t -verbose forces tracing of every message received and");
+			System.out.println("\t -threads specifies the number of concurrent threads/clients allowed (default 1) and ");
+			System.out.println("\t 'dictionaryPath' full path to the Link Grammar dictionaries (optional).");
+			System.exit(-1);
+		}	
+
+		if (dictionaryPath != null)
+		{
+			File f = new File(dictionaryPath);
+			if (!f.exists()) 
+			{ System.err.println("Dictionary path " + dictionaryPath + " not found."); System.exit(-1); }
+			else if (!f.isDirectory()) 
+			{ System.err.println("Dictionary path " + dictionaryPath + " not a directory."); System.exit(-1); }
+		}
+		
+		System.out.println("Starting Link Grammar Server at port " + port +
+				", with " + threads + " available processing threads and " + 
+				((dictionaryPath == null) ? " with default dictionary location." : 
+					"with dictionary location '" + dictionaryPath + "'."));
+		ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threads, 
+				  											   threads,
+				  											   Long.MAX_VALUE, 
+				  											   TimeUnit.SECONDS,
+				  											   new LinkedBlockingQueue<Runnable>());
+		try
+		{
+			if (dictionaryPath != null)
+				LinkGrammar.setDictionariesPath(dictionaryPath);
+			LinkGrammar.init();
+			ServerSocket serverSocket = new ServerSocket(port);
+			while (true)
+			{
+				trace("Waiting for client connections...");
+				final Socket clientSocket = serverSocket.accept();				
+				threadPool.submit(new Runnable() { public void run() { handleClient(clientSocket); } });
+			}
+		}
+		catch (Throwable t)
+		{
+			t.printStackTrace(System.err);
+			System.exit(-1);
+		}
+		finally
+		{
+			LinkGrammar.close();
+		}
+	}
+}
