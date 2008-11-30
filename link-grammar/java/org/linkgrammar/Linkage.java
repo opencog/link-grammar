@@ -28,6 +28,7 @@ public class Linkage implements Iterable<Link>
 {
 	private List<Link> links = new ArrayList<Link>();
 	private String [] words;
+	private String constituentString;
 	private int linkedWordCount;
 	private int andCost;
 	private int disjunctCost;
@@ -107,5 +108,15 @@ public class Linkage implements Iterable<Link>
 	public void setLinkedWordCount(int linkedWordCount)
 	{
 		this.linkedWordCount = linkedWordCount;
+	}
+
+	public String getConstituentString()
+	{
+		return constituentString;
+	}
+
+	public void setConstituentString(String constituentString)
+	{
+		this.constituentString = constituentString;
 	}	
 }

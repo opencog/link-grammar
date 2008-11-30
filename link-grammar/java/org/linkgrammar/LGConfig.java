@@ -27,6 +27,7 @@ public class LGConfig
 	private int maxCost = -1;
 	private boolean allowSkippedWords = true;
 	private String dictionaryLocation = null;
+	private boolean storeConstituentString = false;
 	
 	public int getMaxLinkages()
 	{
@@ -67,5 +68,13 @@ public class LGConfig
 	public void setDictionaryLocation(String dictionaryLocation)
 	{
 		this.dictionaryLocation = dictionaryLocation;
+	}
+	public boolean isStoreConstituentString()
+	{
+		return storeConstituentString;
+	}
+	public void setStoreConstituentString(boolean storeConstituentString)
+	{
+		this.storeConstituentString = storeConstituentString;
 	}	
 }

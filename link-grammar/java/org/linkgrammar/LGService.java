@@ -42,6 +42,8 @@ import java.util.concurrent.TimeUnit;
  * 
  * <ul>
  * <li><b>maxCost</b> - ??</li>
+ * <li><b>storeConstituentString</b> - whether to return the constituent string for
+ * each Linkage as part of the result.</li> 
  * <li><b>maxLinkages</b> - maximum number of parses to return in the result. Note that
  * this does not affect the parser behavior which computes all parses anyway.</li>
  * <li><b>maxParseSeconds</b> - ??</li>
@@ -72,6 +74,12 @@ public class LGService
 	{
 		if (verbose)
 			System.out.println("LG " + dateFormatter.format(new java.util.Date()) + " " + s); 
+	}
+
+	private static boolean getBool(String name, Map<String, String> msg, boolean def)
+	{
+		String x = msg.get(name);
+		return x == null ? def : Boolean.valueOf(x);		
 	}
 	
 	private static int getInt(String name, Map<String, String> msg, int def)
@@ -128,6 +136,8 @@ public class LGService
 				link.setRightLabel(LinkGrammar.getLinkRLabel(i));
 				linkage.getLinks().add(link);
 			}
+			if (config.isStoreConstituentString())
+				linkage.setConstituentString(LinkGrammar.getConstituentString());
 			parseResult.linkages.add(linkage);
 		}
 		return parseResult;		
@@ -220,6 +230,11 @@ public class LGService
 			buf.append(Integer.toString(LinkGrammar.getLinkageLinkCost()));
 			buf.append(", \"numViolations\":");
 			buf.append(Integer.toString(LinkGrammar.getLinkageNumViolations()));
+			if (config.isStoreConstituentString())
+			{
+				buf.append(", \"constituentString\":");
+				buf.append(jsonString(LinkGrammar.getConstituentString()));				
+			}			
 			buf.append(", \"links\":[");
 			int numLinks = LinkGrammar.getNumLinks();
 			for (int i = 0; i < numLinks; i++)
@@ -307,6 +322,7 @@ public class LGService
 				trace("Received msg '" + msg + "' from " + clientSocket.getInetAddress());
 			String json = "{}";			
 			LGConfig config = new LGConfig();
+			config.setStoreConstituentString(getBool("storeConstituentString", msg, config.isStoreConstituentString()));
 			config.setMaxCost(getInt("maxCost", msg, config.getMaxCost()));
 			config.setMaxLinkages(getInt("maxLinkages", msg, config.getMaxLinkages()));
 			config.setMaxParseSeconds(getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
