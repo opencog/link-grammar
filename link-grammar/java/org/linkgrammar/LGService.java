@@ -88,6 +88,11 @@ public class LGService
 		return x == null ? def : Integer.parseInt(x);		
 	}
 
+	/**
+	 * <p>
+	 * Apply configuration parameters to the parser. 
+	 * </p>
+	 */
 	public static void configure(LGConfig config)
 	{
 		if (config.getMaxCost() > -1)
@@ -97,9 +102,20 @@ public class LGService
 		if (config.getDictionaryLocation() != null)
 			LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
 	}
-	
+
+	/**
+	 * <p>
+	 * Assuming <code>LinkGrammar.parse</code> has already been called, construct
+	 * a full <code>ParseResult</code> given the passed in configuration. For example,
+	 * no more that <code>config.getMaxLinkages</code> are returned, etc.
+	 * </p>
+	 * 
+	 * @param config
+	 * @return
+	 */
 	public static ParseResult getAsParseResult(LGConfig config)
 	{
+		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes		
 		ParseResult parseResult = new ParseResult();		
 		parseResult.numSkippedWords = LinkGrammar.getNumSkippedWords();
 		parseResult.words = new String[LinkGrammar.getNumWords()];
@@ -177,6 +193,13 @@ public class LGService
         b.append("\"");
         return b.toString();
 	}
+	
+	/**
+	 * <p>
+	 * Format the current parsing result as a JSON string. This method assume that
+	 * <code>LinkGrammar.parse</code> has been called before. 
+	 * </p> 
+	 */
 	public static String getAsJSONFormat(LGConfig config)
 	{
 		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes
@@ -255,6 +278,14 @@ public class LGService
 		return buf.toString();
 	}
 	
+	/**
+	 * <p>
+	 * A stub method for now for implementing a compact binary format for parse results.
+	 * </p>
+	 * 
+	 * @param config
+	 * @return
+	 */
 	public static byte [] getAsBinary(LGConfig config)
 	{
 		int size = 0;
@@ -346,6 +377,21 @@ public class LGService
 			if (out != null) try { out.close(); } catch (Throwable t) { }
 			if (in != null) try { in.close(); } catch (Throwable t) { }
 			if (clientSocket != null) try { clientSocket.close(); } catch (Throwable t) { }
+		}
+	}
+	
+	public static ParseResult parse(LGConfig config, String text)
+	{
+		try
+		{	
+			configure(config);
+			LinkGrammar.init();
+			LinkGrammar.parse(text);
+			return getAsParseResult(config);
+		}
+		finally
+		{
+			LinkGrammar.close();
 		}
 	}
 	
