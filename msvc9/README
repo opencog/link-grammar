@@ -4,7 +4,11 @@ Express Edition of that product.
 
 
 - to compile LinkGrammar, open the solution file LinkGrammar.sln and build 
-the LinkGrammar project.
+the LinkGrammar project. You might get compile errors about a missing 
+link-features.h include file. If so, please go ahead and rename the file
+'link-grammar/link-features.h.in' to link-features.h. This is normally done
+by a Unix configure script, but needs to be manually done when compiling with
+Visual C++.
 - to compile the Java bindings, you need to add Java include directories to
 the LinkGrammarJava project first. This is in project properties->C/C++->General->
 Additional Include Directories. You need both JAVA_HOME/include and JAVA_HOME/include/win32
