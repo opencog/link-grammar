@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="link-grammar.lib"
+				AdditionalDependencies="$(OutDir)\link-grammar.lib"
 				OutputFile="$(OutDir)\link-grammar-jar.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
