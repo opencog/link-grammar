@@ -51,10 +51,17 @@ static per_thread_data * global_ptd = NULL;
 static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 {
 #ifdef USE_PTHREADS
-	return pthread_getspecific(java_key);
+	per_thread_data *ptd = pthread_getspecific(java_key);
 #else
-	return global_ptd;
+	per_thread_data *ptd = global_ptd;
 #endif
+	if (!ptd) Java_org_linkgrammar_LinkGrammar_init(env, cls);
+#ifdef USE_PTHREADS
+	ptd = pthread_getspecific(java_key);
+#else
+	ptd = global_ptd;
+#endif
+	return ptd;
 }
 
 static void setup_panic_parse_options(Parse_Options opts)
@@ -338,9 +345,12 @@ Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 #ifdef USE_PTHREADS
 	per_thread_data *ptd;
 	pthread_once(&java_key_once, java_key_alloc);
+	ptd = pthread_getspecific(java_key);
+	if (ptd) return;
 	ptd = init(env, cls);
 	pthread_setspecific(java_key, ptd);
 #else
+	if (global_ptd) return;
 	global_ptd = init(env, cls);
 #endif
 }
