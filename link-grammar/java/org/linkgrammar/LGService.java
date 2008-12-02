@@ -25,42 +25,37 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * A simple server implementation for running Link Grammar as a
+ * standalone server. The server accepts parsing requests and returns
+ * the result as a JSON formatted string (see this 
+ * <a href="http://www.json.org">JSON</a> website for more information).
+ * There is no session maintained between client and server, it's a
+ * simple, stateless, single round-trip, request-response protocol.
  * 
- * <p>
- * A simple server implementation for running Link Grammar as a standalone server. The server
- * accepts parsing requests and returns the result as a JSON formatted string (see 
- * this <a href="http://www.json.org">JSON</a> website for more information). There is no
- * session maintained between client and server, it's a simple, stateless, single round-trip,
- * request-response protocol.
- * </p>
- * 
- * <p>
- * Requests consist of a bag of parameters separated by the null '\0' character. Each request must
- * be terminated with the newline '\n' character. Each parameter
- * has the form <em>name:value\0</em> where <em>name</em> and <em>value</em> can contain any 
- * character except '\0' and '\n'. The following parameters are recognized:
+ * Requests consist of a bag of parameters separated by the null '\0'
+ * character. Each request must be terminated with the newline '\n' 
+ * character. Each parameter has the form <em>name:value\0</em> where
+ * <em>name</em> and <em>value</em> can contain any character except
+ * '\0' and '\n'. The following parameters are recognized:
  * 
  * <ul>
  * <li><b>maxCost</b> - ??</li>
- * <li><b>storeConstituentString</b> - whether to return the constituent string for
- * each Linkage as part of the result.</li> 
- * <li><b>maxLinkages</b> - maximum number of parses to return in the result. Note that
- * this does not affect the parser behavior which computes all parses anyway.</li>
+ * <li><b>storeConstituentString</b> - whether to return the constituent
+ *      string for each Linkage as part of the result.</li> 
+ * <li><b>maxLinkages</b> - maximum number of parses to return in the
+ *      result. Note that this does not affect the parser behavior which
+ *      computes all parses anyway.</li>
  * <li><b>maxParseSeconds</b> - ??</li>
- * <li><b>text</b> - The text to parse. Note that it must be stripped from newlines.</li>   
+ * <li><b>text</b> - The text to parse. Note that it must be stripped
+ *      from newlines.</li>   
  * </ul>
  * 
- * </p>
+ * The server maintains incoming requests in an unbounded queue and
+ * handles them in thread pool whose size can be specified at the
+ * command line. A thread pool of size > 1 will only work if the Link
+ * Grammar version used is thread-safe. 
  * 
- * <p>
- * The server maintains incoming requests in an unbounded queue and handles them in thread pool
- * whose size can be specified at the command line. A thread pool of size > 1 will only work
- * if the Link Grammar version used is thread-safe. 
- * </p>
- * 
- * <p>
  * Execute this class as a main program to view a list of options.   
- * </p>
  *
  * @author Borislav Iordanov
  *
@@ -89,9 +84,7 @@ public class LGService
 	}
 
 	/**
-	 * <p>
 	 * Apply configuration parameters to the parser. 
-	 * </p>
 	 */
 	public static void configure(LGConfig config)
 	{
@@ -104,11 +97,10 @@ public class LGService
 	}
 
 	/**
-	 * <p>
-	 * Assuming <code>LinkGrammar.parse</code> has already been called, construct
-	 * a full <code>ParseResult</code> given the passed in configuration. For example,
-	 * no more that <code>config.getMaxLinkages</code> are returned, etc.
-	 * </p>
+	 * Assuming <code>LinkGrammar.parse</code> has already been called,
+	 * construct a full <code>ParseResult</code> given the passed in
+	 * configuration. For example, no more that 
+	 * <code>config.getMaxLinkages</code> are returned, etc.
 	 * 
 	 * @param config
 	 * @return
@@ -195,10 +187,8 @@ public class LGService
 	}
 	
 	/**
-	 * <p>
-	 * Format the current parsing result as a JSON string. This method assume that
-	 * <code>LinkGrammar.parse</code> has been called before. 
-	 * </p> 
+	 * Format the current parsing result as a JSON string. This method
+	 * assume that <code>LinkGrammar.parse</code> has been called before. 
 	 */
 	public static String getAsJSONFormat(LGConfig config)
 	{
@@ -279,9 +269,8 @@ public class LGService
 	}
 	
 	/**
-	 * <p>
-	 * A stub method for now for implementing a compact binary format for parse results.
-	 * </p>
+	 * A stub method for now for implementing a compact binary format
+	 * for parse results.
 	 * 
 	 * @param config
 	 * @return

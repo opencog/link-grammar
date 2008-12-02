@@ -10,15 +10,12 @@
 package org.linkgrammar;
 
 /**
- * 
- * <p>
- * A plain Java bean to hold configuration of the Link Grammar parser. Some configuration
- * parameters are not really passed onto the parser, but applied only when constructing
- * a <code>ParseResult</code>. Those are <code>maxLinkages</code> and <code>allowSkippedWords</code>. 
- * </p>
+ * A plain Java bean to hold configuration of the Link Grammar parser.
+ * Some configuration parameters are not really passed onto the parser,
+ * but applied only when constructing a <code>ParseResult</code>. Those
+ * are <code>maxLinkages</code> and <code>allowSkippedWords</code>. 
  *
  * @author Borislav Iordanov
- *
  */
 public class LGConfig
 {
