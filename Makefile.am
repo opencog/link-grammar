@@ -5,12 +5,12 @@ pkgconfig_DATA = link-grammar.pc
 
 # Build and install the jar file in $(PREFIX)/share/java ...
 # XXX FIXME configure should look to see if it can find ant
-link-grammar-@VERSION@.jar:
+linkgrammar-@VERSION@.jar:
 	ant
 
 if HAVE_JAVA
 javadir=$(datadir)/java
-java_DATA = link-grammar-@VERSION@.jar
+java_DATA = linkgrammar-@VERSION@.jar
 endif 
 
 
