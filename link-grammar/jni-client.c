@@ -77,7 +77,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_verbosity(opts,0);
 }
 
-static void test(void)
+static inline void test(void)
 {
 #ifdef DEBUG
 	printf("%d\n",word_contains("said",PAST_TENSE_FORM_MARKER,dict));
@@ -288,6 +288,13 @@ static void finish(per_thread_data *ptd)
 
 	parse_options_delete(ptd->panic_parse_opts);
 	ptd->panic_parse_opts = NULL;
+
+#ifdef USE_PTHREADS
+	pthread_setspecific(java_key, NULL);
+#else
+	global_ptd = NULL;
+#endif
+	free(ptd);
 }
 
 /* =========================================================================== */
