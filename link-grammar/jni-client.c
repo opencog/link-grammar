@@ -137,6 +137,42 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	return ptd;
 }
 
+static void finish(per_thread_data *ptd)
+{
+	if (ptd->sent)
+		sentence_delete(ptd->sent);
+	ptd->sent = NULL;
+
+#if DO_PHRASE_TREE
+	if (tree)
+		linkage_free_constituent_tree(tree);
+	tree = NULL;
+#endif
+
+	if (ptd->linkage)
+		linkage_delete(ptd->linkage);
+	ptd->linkage = NULL;
+
+	dictionary_delete(ptd->dict);
+	ptd->dict = NULL;
+
+	parse_options_delete(ptd->opts);
+	ptd->opts = NULL;
+
+	parse_options_delete(ptd->panic_parse_opts);
+	ptd->panic_parse_opts = NULL;
+
+#ifdef USE_PTHREADS
+	pthread_setspecific(java_key, NULL);
+#else
+	global_ptd = NULL;
+#endif
+	free(ptd);
+}
+
+/* ================================================================= */
+/* Misc utilities */
+
 #ifdef DEBUG_DO_PHRASE_TREE
 static void r_printTree(CNode* cn, int level)
 {
@@ -264,40 +300,7 @@ static void makeLinkage(per_thread_data *ptd)
 	}
 }
 
-static void finish(per_thread_data *ptd)
-{
-	if (ptd->sent)
-		sentence_delete(ptd->sent);
-	ptd->sent = NULL;
-
-#if DO_PHRASE_TREE
-	if (tree)
-		linkage_free_constituent_tree(tree);
-	tree = NULL;
-#endif
-
-	if (ptd->linkage)
-		linkage_delete(ptd->linkage);
-	ptd->linkage = NULL;
-
-	dictionary_delete(ptd->dict);
-	ptd->dict = NULL;
-
-	parse_options_delete(ptd->opts);
-	ptd->opts = NULL;
-
-	parse_options_delete(ptd->panic_parse_opts);
-	ptd->panic_parse_opts = NULL;
-
-#ifdef USE_PTHREADS
-	pthread_setspecific(java_key, NULL);
-#else
-	global_ptd = NULL;
-#endif
-	free(ptd);
-}
-
-/* =========================================================================== */
+/* ================================================================ */
 /* Java JNI wrappers */
 
 /*
