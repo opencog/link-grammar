@@ -1,4 +1,7 @@
-Version 4.4.0 includes the following changes:
+Version 4.4.1 (?? month 200?) includes the following changes:
+ *
+
+Version 4.4.0 (7 December 2008) includes the following changes:
  * fix: recognize curly-single-quote ’ where straight quote can be used.
  * recognize and explicitly ignore emoticon types.
  * Include MSVC6 build files.
@@ -15,7 +18,7 @@ Version 4.4.0 includes the following changes:
  * MSVC9 build files from Borislav Iordanov
  * Java network-efficient client-server classes from Borislav Iordanov
 
-Version 4.3.9 includes the following changes:
+Version 4.3.9 (8 October 2008) includes the following changes:
  * Issue 13: "John is altogether amazingly quick."
  * Nonstandard spelling "unequivocably"
  * Dictionary fixes for 'marginally', etc. "That one is marginally better"
@@ -36,18 +39,18 @@ Version 4.3.9 includes the following changes:
  * fix: "San Gabriel" "Block Island" "Great Southern Bank" "de la Rente"
  * fix: "I biked Johnson Creek."
 
-Version 4.3.8 includes the following changes:
+Version 4.3.8 (14 August 2008) includes the following changes:
  * Build fixes for Windows (missing bzero and thread-safe rand)
  * Fix several mem leaks, one in the Java jni code.
  * Fix crash of java6 jvm, due to blown stack limits.
 
-Version 4.3.7 includes the following changes:
+Version 4.3.7 (8 August 2008) includes the following changes:
  * Expanded list of given names to include those from 2005 US Census
  * Export a new java jni function, to get the inflected word.
  * Add a TO+ connector so that "I tend to agree" parses correctly.
  * Makefile fixes for OS/X Leopard.
 
-Version 4.3.6 includes the following changes:
+Version 4.3.6 (21 July 2008) includes the following changes:
  * Fixes for Windows MS Visual-C builds.
  * Fix parsing of "He walked the dog.", "He sailed the boat."
  * Add support for right-apostrophe (’) which is a non-ASCII UTF8 char.
@@ -67,7 +70,7 @@ Version 4.3.6 includes the following changes:
  * Remove all globals, library is now thread-safe.
  * Fix crash when sentence has square bracket, and doing constituents.
 
-Version 4.3.5 includes the following changes:
+Version 4.3.5 (29 April 2008) includes the following changes:
  * Added ant build file to create the link-grammar jar file.
  * Fix regression in command-line client of multiple-parse display.
  * Use MB_LEN_MAX, not MB_CUR_MAX for UTF8 support.
@@ -89,7 +92,7 @@ Version 4.3.5 includes the following changes:
  * Small man page updates.
  * Export and cost, link cost via public API.
 
-Version 4.3.4 includes the following changes:
+Version 4.3.4 (16 March 2008) includes the following changes:
  * Fix regression of handling of capitalization at the start of sentences.
  * Fix dictionary search path so that it respects command-line input.
  * Fix rare but nasty crash when parsing long sentences in panic mode.
@@ -98,7 +101,7 @@ Version 4.3.4 includes the following changes:
  * Make parser capable of handling UTF8 strings and dictionaries.
  * Ongoing minor expansion of the Lithuanian (lt) dictionary.
 
-Version 4.3.3 includes the following changes:
+Version 4.3.3 (27 February 2008) includes the following changes:
  * Missing java is a warning, not an error.
  * man page for grammar-parse.
  * Removed cruft from the dictionary open routines.
@@ -108,15 +111,15 @@ Version 4.3.3 includes the following changes:
  * Minor English dictionary additions.
  * Prototype Lithuanian (lt) dictionary.
 
-Version 4.3.2 includes the following changes:
+Version 4.3.2 (2 February 2008) includes the following changes:
  * Compile fixes for WIN32
  * Dictionary fixes for given names. (Fixes a serious problem with 4.3.1)
 
-Version 4.3.1 includes the following changes:
+Version 4.3.1 (31 Jaunary 2008) includes the following changes:
  * A merger of significant parts of the "medical terms" dictionary
    from Peter Szolovits.  This includes thousands of additional words.
 
-Version 4.3.0 includes the following changes:
+Version 4.3.0 (30 January 2008) includes the following changes:
  * New link types (Ct, Cta, Rn, Rw) for comparatives, so as to link
    relative clauses: "John is bigger than Dave is", "John wants more
    cookies than Dave wants". The Rw link is used to link question words
@@ -133,5 +136,5 @@ Version 4.3.0 includes the following changes:
  * Fixes of numerous compile-time warnings.
  * Simple Java (JNI) bindings.
 
-Version 4.2.5 includes the following changes:
+Version 4.2.5 (11 November 2007) includes the following changes:
  * Security fix for a buffer overflow. CVE-2007-5395
