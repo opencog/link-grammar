@@ -64,7 +64,57 @@ public class LGService
 {
 	private static boolean verbose = false;
 	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+	//
+	// Link Grammar requires each concurrent thread to initialize separately. This entails
+	// that each thread has a separate copy of the dictionaries which in unfortunate design,
+	// but nevertheless we want to avoid initializing before every parse activity so we
+	// maintain a thread local flag and initialize on demand only. 
+	//
+	// The main problem is to detect when a thread completes its work and therefore 
+	// LinkGrammar.close should be called to free allocated memory. We leave that to the 
+	// use of this class.
+	//
+	private static ThreadLocal<Boolean> initialized = new ThreadLocal<Boolean>()
+	{ protected Boolean initialValue() { return Boolean.FALSE; } };
 	
+	/**
+	 * <p>Return <code>true</code> if LinkGrammar is initialized for the current thread
+	 * and <code>false</code> otherwise.
+	 */
+	public static boolean isInitialized()
+	{
+		return initialized.get();
+	}
+	
+	/**
+	 * <p>
+	 * Initialize LinkGrammar for the current is this is not already done. Note that
+	 * this method is called by all other methods in this class that invoke LinkGrammar
+	 * so there's no really need to call it yourself. It is safe to call the method repeatedly.
+	 * </p>
+	 */
+	public static void init()
+	{
+		if (!initialized.get())
+		{
+			LinkGrammar.init();
+			initialized.set(Boolean.TRUE);
+		}
+	}
+
+	/**
+	 * <p>
+	 * Cleanup allocated memory for use of LinkGrammar in the current thread. 
+	 * </p>
+	 */
+	public static void close()
+	{
+		LinkGrammar.close();
+		initialized.set(Boolean.FALSE);
+	}
+
+
 	private static void trace(String s) 
 	{
 		if (verbose)
@@ -84,10 +134,13 @@ public class LGService
 	}
 
 	/**
+	 * <p>
 	 * Apply configuration parameters to the parser. 
+	 * </p>
 	 */
 	public static void configure(LGConfig config)
 	{
+		init();
 		if (config.getMaxCost() > -1)
 			LinkGrammar.setMaxCost(config.getMaxCost());
 		if (config.getMaxParseSeconds() > -1)
@@ -331,6 +384,7 @@ public class LGService
 	
 	private static void handleClient(Socket clientSocket)
 	{
+		init();
 		Reader in = null;
 		PrintWriter out = null;
 		try
@@ -369,19 +423,28 @@ public class LGService
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Parse a piece of text with the given configuration and return the <code>ParseResult</code>.
+	 * </p>
+	 * 
+	 * @param config The configuration to be used. If this is the first time the <code>parse</code>
+	 * method is called within the current thread, the dictionary location (if not <code>null</code>)
+	 * of this parameter will be used to initialize the parser. Otherwise the dictionary location is
+	 * ignored.
+	 * @param text The text to parse, normally a single sentence.
+	 * @return The <code>ParseResult</code>. Note that <code>null</code> is never returned. If parsing
+	 * failed, there will be 0 linkages in the result.
+	 */
 	public static ParseResult parse(LGConfig config, String text)
 	{
-		try
-		{	
-			configure(config);
-			LinkGrammar.init();
-			LinkGrammar.parse(text);
-			return getAsParseResult(config);
-		}
-		finally
-		{
-			LinkGrammar.close();
-		}
+		if (!isInitialized() && 
+			config.getDictionaryLocation() != null && 
+			config.getDictionaryLocation().trim().length() > 0)
+			LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
+		configure(config);
+		LinkGrammar.parse(text);
+		return getAsParseResult(config);
 	}
 	
 	public static void main(String [] argv)
@@ -432,7 +495,6 @@ public class LGService
 		{
 			if (dictionaryPath != null)
 				LinkGrammar.setDictionariesPath(dictionaryPath);
-			LinkGrammar.init();
 			ServerSocket serverSocket = new ServerSocket(port);
 			while (true)
 			{
@@ -446,9 +508,6 @@ public class LGService
 			t.printStackTrace(System.err);
 			System.exit(-1);
 		}
-		finally
-		{
-			LinkGrammar.close();
-		}
 	}
 }
+
