@@ -338,13 +338,23 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	dn_list = start_dn_list;
 
-	while (dn_list != NULL) {
-		xdn = dn_list->right;
-		dn_list->left = dn_list->right = NULL;
-		dn_list->string = build_idiom_word_name(dict, dn_list->string);
-		dict->root = insert_dict(dict, dict->root, dn_list);
+	while (dn_list != NULL)
+	{
+		dn = dn_list;
+		dn_list = dn_list->right;
+
+		dn->left = dn->right = NULL;
+		dn->string = build_idiom_word_name(dict, dn->string);
+		if (NULL == dict->root) 
+		{
+			dict->root = dn;
+		}
+		else
+		{
+			insert_dict(dict, dict->root, dn);
+		}
 		dict->num_entries++;
-		dn_list = xdn;
+
 	}
 	/* xfree((char *)s, s_length+1); strings are handled by string_set */
 }

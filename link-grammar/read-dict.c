@@ -378,7 +378,7 @@ int dict_order(char *s, char *t)
 */
 
 /* terse version */
-static int dict_order(const char *s, const char *t)
+static inline int dict_order(const char *s, const char *t)
 {
 	while (*s != '\0' && *s == *t) {s++; t++;}
 	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
@@ -396,7 +396,7 @@ static int dict_order(const char *s, const char *t)
  * by "\0", and take the difference.  This behavior matches that
  * of the function dict_order().
  */
-static int dict_order_wild(const char * s, const char * t)
+static inline int dict_order_wild(const char * s, const char * t)
 {
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
 	if ((*s == '*') || (*t == '*')) return 0;
@@ -986,6 +986,32 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 #endif
 
 /* ======================================================================== */
+/* Tree balancing utilities */
+
+static int tree_balance(Dict_node *n)
+{
+	if (NULL == n) return 0;
+	if ((NULL == n->left) && (NULL == n->right)) return 0;
+	return tree_balance(n->left) - tree_balance(n->right);
+}
+
+static Dict_node *rotate_left(Dict_node *root)
+{
+	Dict_node *pivot = root->right;
+	root->right = pivot->left;
+	pivot->left = root;
+	return pivot;
+}
+
+static Dict_node *rotate_right(Dict_node *root)
+{
+	Dict_node *pivot = root->left;
+	root->left = pivot->right;
+	pivot->right = root;
+	return pivot;
+}
+
+/* ======================================================================== */
 /**
  * Insert the new node into the dictionary below node n.
  * Give error message if the new element's string is already there.
@@ -996,29 +1022,35 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
  * performance of rdictionary_lookup() by (at least!) a factor of two 
  * if a tree balancing step was run after the dictionary creation! XXX
  */
-Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
+void insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
 	int comp;
-
-	if (n == NULL) return newnode;
 
 	comp = dict_order(newnode->string, n->string);
 	if (comp < 0)
 	{
-		n->left = insert_dict(dict, n->left, newnode);
+		if (NULL == n->left)
+		{
+			n->left = newnode;
+			return;
+		} 
+		insert_dict(dict, n->left, newnode);
 	}
 	else if (comp > 0)
 	{
-		n->right = insert_dict(dict, n->right, newnode);
+		if (NULL == n->right)
+		{
+			n->right = newnode;
+			return;
+		}
+		insert_dict(dict, n->right, newnode);
 	}
 	else
 	{
 		char t[256];
 		snprintf(t, 256, "The word \"%s\" has been multiply defined\n", newnode->string);
 		dict_error(dict, t);
-		return NULL;
 	}
-	return n;
 }
 
 /**
@@ -1078,7 +1110,14 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else
 	{
-		dict->root = insert_dict(dict, dict->root, dn);
+		if (NULL == dict->root)
+		{
+			dict->root = dn;
+		}
+		else
+		{
+			insert_dict(dict, dict->root, dn);
+		}
 		dict->num_entries++;
 	}
 
@@ -1319,6 +1358,8 @@ void print_dictionary_data(Dictionary dict)
 {
 	rprint_dictionary_data(dict->root);
 }
+
+
 
 int read_dictionary(Dictionary dict)
 {

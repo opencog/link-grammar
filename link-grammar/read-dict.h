@@ -24,6 +24,6 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
 Dict_node * abridged_lookup_list(Dictionary dict, const char *);
 void free_lookup_list(Dict_node *);
 
-Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
+void insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 void        free_dictionary(Dictionary dict);
 Exp *       Exp_create(Dictionary dict);
