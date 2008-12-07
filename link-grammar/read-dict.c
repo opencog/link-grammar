@@ -988,11 +988,24 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 /* ======================================================================== */
 /* Tree balancing utilities */
 
+/* Return tree height. XXX this is not trail-recursive! */
+static int tree_depth (Dict_node *n)
+{
+	int l, r;
+	if (NULL == n) return 0;
+	if (NULL == n->left) return 1+tree_depth(n->right);
+	if (NULL == n->right) return 1+tree_depth(n->left);
+	l = tree_depth(n->left);
+	r = tree_depth(n->right);
+	if (l < r) return r+1;
+	return l+1;
+}
+
 static int tree_balance(Dict_node *n)
 {
-	if (NULL == n) return 0;
-	if ((NULL == n->left) && (NULL == n->right)) return 0;
-	return tree_balance(n->left) - tree_balance(n->right);
+	int l = tree_depth(n->left);
+	int r = tree_depth(n->right);
+	return r-l;
 }
 
 static Dict_node *rotate_left(Dict_node *root)
@@ -1011,6 +1024,35 @@ static Dict_node *rotate_right(Dict_node *root)
 	return pivot;
 }
 
+/**
+ * Rebalance the dictionary tree.
+ * This recomputes the tree depth wayy too often, but so what.. this
+ * only wastes cpu time during the initial dictinary read.
+ */
+static Dict_node *rebalance(Dict_node *root)
+{
+	int bal = tree_balance(root);
+	if (2 == bal)
+	{
+		bal = tree_balance(root->right);
+		if (-1 == bal)
+		{
+			root->right = rotate_right (root->right);
+		}
+		return rotate_left(root);
+	}
+	else if (-2 == bal)
+	{
+		bal = tree_balance(root->left);
+		if (1 == bal)
+		{
+			root->left = rotate_left (root->left);
+		}
+		return rotate_right(root);
+	}
+	return root;
+}
+
 /* ======================================================================== */
 /**
  * Insert the new node into the dictionary below node n.
@@ -1022,9 +1064,11 @@ static Dict_node *rotate_right(Dict_node *root)
  * performance of rdictionary_lookup() by (at least!) a factor of two 
  * if a tree balancing step was run after the dictionary creation! XXX
  */
-void insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
+Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
 	int comp;
+
+	if (NULL == n) return newnode;
 
 	comp = dict_order(newnode->string, n->string);
 	if (comp < 0)
@@ -1032,24 +1076,29 @@ void insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 		if (NULL == n->left)
 		{
 			n->left = newnode;
-			return;
+			return n;
 		} 
-		insert_dict(dict, n->left, newnode);
+		n->left = insert_dict(dict, n->left, newnode);
+		return n;
+		// return rebalance(n);
 	}
 	else if (comp > 0)
 	{
 		if (NULL == n->right)
 		{
 			n->right = newnode;
-			return;
+			return n;
 		}
-		insert_dict(dict, n->right, newnode);
+		n->right = insert_dict(dict, n->right, newnode);
+		return n;
+		// return rebalance(n);
 	}
 	else
 	{
 		char t[256];
 		snprintf(t, 256, "The word \"%s\" has been multiply defined\n", newnode->string);
 		dict_error(dict, t);
+		return NULL;
 	}
 }
 
@@ -1110,14 +1159,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else
 	{
-		if (NULL == dict->root)
-		{
-			dict->root = dn;
-		}
-		else
-		{
-			insert_dict(dict, dict->root, dn);
-		}
+		dict->root = insert_dict(dict, dict->root, dn);
 		dict->num_entries++;
 	}
 
