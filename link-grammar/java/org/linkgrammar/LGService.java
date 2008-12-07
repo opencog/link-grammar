@@ -71,6 +71,13 @@ public class LGService
 	// but nevertheless we want to avoid initializing before every parse activity so we
 	// maintain a thread local flag and initialize on demand only. 
 	//
+	// XXX Except that this is not true (or is only partly true ... )
+	// The C library itself does not have this restriction; one
+	// dictionary can be shared by many threads. However, the java
+	// bindings do have this restriction; the java bindings were 
+	// never designed to be run multi-threaded, and so this would
+	// need to be fixed.
+	//
 	// The main problem is to detect when a thread completes its work and therefore 
 	// LinkGrammar.close should be called to free allocated memory. We leave that to the 
 	// use of this class.
