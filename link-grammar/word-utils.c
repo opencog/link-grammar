@@ -528,7 +528,8 @@ static int exp_contains(Exp * super, Exp * sub)
 	return 0;
 }
 
-static int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dict)
+static int dn_word_contains(Dictionary dict,
+                            Dict_node * w_dn, const char * macro)
 {
 	Exp * m_exp;
 	Dict_node *m_dn;
@@ -555,16 +556,18 @@ static int dn_word_contains(Dict_node * w_dn, const char * macro, Dictionary dic
 }
 
 /**
- * word_contains: return true if the word may involve application of a rule.
+ * word_contains: return true if the word may involve application of
+ * a rule.
  *
- * @return: true if word's expression contains macro's expression, false otherwise.
+ * @return: true if word's expression contains macro's expression,
+ * false otherwise.
  */
-int word_contains(const char * word, const char * macro, Dictionary dict)
+static int word_contains(Dictionary dict, const char * word, const char * macro)
 {
 	Dict_node *w_dn;
 	int ret;
 	w_dn = dictionary_lookup_list(dict, word);
-	ret = dn_word_contains(w_dn, macro, dict);
+	ret = dn_word_contains(dict, w_dn, macro);
 	free_lookup_list(w_dn);
 	return ret;
 }
@@ -574,7 +577,7 @@ int word_contains(const char * word, const char * macro, Dictionary dict)
 
 int dictionary_is_past_tense_form(Dictionary dict, const char * str)
 {
-	if (word_contains(str, PAST_TENSE_FORM_MARKER, dict) == 1)
+	if (word_contains(dict, str, PAST_TENSE_FORM_MARKER) == 1)
 		return 1;
 	return 0;
 }
@@ -587,7 +590,7 @@ int dictionary_is_past_tense_form(Dictionary dict, const char * str)
  */
 int dictionary_is_entity(Dictionary dict, const char * str)
 {
-	if (word_contains(str, ENTITY_MARKER, dict) == 1)
+	if (word_contains(dict, str, ENTITY_MARKER) == 1)
 		return 1;
 	return 0;
 }
