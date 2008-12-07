@@ -21,6 +21,7 @@ int  boolean_dictionary_lookup(Dictionary dict, const char *);
 int  delete_dictionary_words(Dictionary dict, const char *);
 
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
+Dict_node * abridged_lookup_list(Dictionary dict, const char *);
 void free_lookup_list(Dict_node *);
 
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);

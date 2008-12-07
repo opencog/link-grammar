@@ -547,11 +547,11 @@ static int dn_word_contains(Dictionary dict,
 	 printf("\nMACR:\n");
 	 print_expression(m_exp); */
 
-	for (;w_dn != NULL; w_dn = w_dn->right) {
-		if (exp_contains(w_dn->exp, m_exp)==1)
+	for (;w_dn != NULL; w_dn = w_dn->right)
+	{
+		if (1 == exp_contains(w_dn->exp, m_exp))
 			return 1;
 	}
-
 	return 0;
 }
 
@@ -566,7 +566,7 @@ static int word_contains(Dictionary dict, const char * word, const char * macro)
 {
 	Dict_node *w_dn;
 	int ret;
-	w_dn = dictionary_lookup_list(dict, word);
+	w_dn = abridged_lookup_list(dict, word);
 	ret = dn_word_contains(dict, w_dn, macro);
 	free_lookup_list(w_dn);
 	return ret;

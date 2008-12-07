@@ -542,6 +542,9 @@ static Dict_node * rdictionary_lookup(Dict_node *llist,
  * dictionary_lookup_list() - return lookup list of words in the dictionary
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
+ * Matches include word that appear in idioms.  Use
+ * abridged_lookup_list() to obtain matches, excluding idioms.
+ *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
@@ -554,7 +557,19 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
    return llist;
 }
 
-static Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
+/**
+ * abridged_lookup_list() - return lookup list of words in the dictionary
+ *
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ * Excludes any idioms that contain the word; use
+ * dictionary_lookup_list() to obtain the complete list.
+ *
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * The returned list must be freed with free_lookup_list().
+ */
+Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node *llist;
    llist = rdictionary_lookup(NULL, dict->root, s, FALSE);
