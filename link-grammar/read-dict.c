@@ -988,8 +988,27 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 /* ======================================================================== */
 /* Tree balancing utilities, used to implement an AVL tree.
  * Unfortunately, AVL tree insertion is very slowww, unusably
- * slow for creating the dictionary.
+ * slow for creating the dictionary. The code is thus ifdef'ed out
+ * but is left here for debugging and other sundry purposes.
  */
+
+static Dict_node *rotate_right(Dict_node *root)
+{
+	Dict_node *pivot = root->left;
+	root->left = pivot->right;
+	pivot->right = root;
+	return pivot;
+}
+
+#ifdef USE_AVL_TREE_FOR_INSERTION
+
+static Dict_node *rotate_left(Dict_node *root)
+{
+	Dict_node *pivot = root->right;
+	root->right = pivot->left;
+	pivot->left = root;
+	return pivot;
+}
 
 /* Return tree height. XXX this is not trail-recursive! */
 static int tree_depth (Dict_node *n)
@@ -1009,22 +1028,6 @@ static int tree_balance(Dict_node *n)
 	int l = tree_depth(n->left);
 	int r = tree_depth(n->right);
 	return r-l;
-}
-
-static Dict_node *rotate_left(Dict_node *root)
-{
-	Dict_node *pivot = root->right;
-	root->right = pivot->left;
-	pivot->left = root;
-	return pivot;
-}
-
-static Dict_node *rotate_right(Dict_node *root)
-{
-	Dict_node *pivot = root->left;
-	root->left = pivot->right;
-	pivot->right = root;
-	return pivot;
 }
 
 /**
@@ -1056,12 +1059,15 @@ static Dict_node *rebalance(Dict_node *root)
 	return root;
 }
 
+#endif /* USE_AVL_TREE_FOR_INSERTION */
+
 /* ======================================================================== */
 /* Implementation of the DSW algo for rebalancing a binary tree.
  * The point is -- after building the dictionary tree, we rebalance it 
  * once at the end. This is a **LOT LOT** quicker than maintaing an 
  * AVL tree along the way (less than quarter-of-a-second vs. about
- * a minute or more!)
+ * a minute or more!) FWIW, the DSW tree is even more balanced than
+ * the AVL tree is (its less deep, more full).
  *
  * The DSW algo, with C++ code, is described in 
  *
@@ -1148,9 +1154,8 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
  * Assumes that the "n" field of new is already set, and the left
  * and right fields of it are NULL.
  *
- * XXX The resulting tree is rather highly unbalanced. It would improve
- * performance of rdictionary_lookup() by (at least!) a factor of two 
- * if a tree balancing step was run after the dictionary creation! XXX
+ * The resulting tree is highly unbalanced. It needs to be rebalanced
+ * before used.
  */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
@@ -1168,7 +1173,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 		} 
 		n->left = insert_dict(dict, n->left, newnode);
 		return n;
-		// return rebalance(n);
+		/* return rebalance(n); Uncomment to get an AVL tree */
 	}
 	else if (comp > 0)
 	{
@@ -1179,7 +1184,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 		}
 		n->right = insert_dict(dict, n->right, newnode);
 		return n;
-		// return rebalance(n);
+		/* return rebalance(n); Uncomment to get an AVL tree */
 	}
 	else
 	{
@@ -1197,10 +1202,15 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
  * It inserts the list into the dictionary.
  * It does the middle one first, then the left half, then the right.
  *
- * XXX -- I think this insert middle, then left, then right, is a lame
- * attempt to hack around the fact that the binary tree is rather
- * badly unbalanced. Really, the correct thing to do would have been
- * to just-plain balance the tree. See the other XXX above.
+ * Note: I think this insert middle, then left, then right, has
+ * its origins as a lame attempt to hack around the fact that the 
+ * resulting binary tree is rather badly unbalanced. This has been 
+ * fixed by using the DSW rebalancing algo. Now, that would seem
+ * to render this crazy bisected-insertion algo obsoloete, but ..
+ * oddly enough, it seems to make the DSW balancing go really fast!
+ * Faster than a simple insertion. Go figure. I think this has
+ * something to do with the fact that the dicationaries are in
+ * alphabetical order! This subdivision helps randomize a bit.
  */
 static void insert_list(Dictionary dict, Dict_node * p, int l)
 {
