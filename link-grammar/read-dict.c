@@ -986,7 +986,10 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 #endif
 
 /* ======================================================================== */
-/* Tree balancing utilities */
+/* Tree balancing utilities, used to implement an AVL tree.
+ * Unfortunately, AVL tree insertion is very slowww, unusably
+ * slow for creating the dictionary.
+ */
 
 /* Return tree height. XXX this is not trail-recursive! */
 static int tree_depth (Dict_node *n)
@@ -1051,6 +1054,91 @@ static Dict_node *rebalance(Dict_node *root)
 		return rotate_right(root);
 	}
 	return root;
+}
+
+/* ======================================================================== */
+/* Implementation of the DSW algo for rebalancing a binary tree.
+ * The point is -- after building the dictionary tree, we rebalance it 
+ * once at the end. This is a **LOT LOT** quicker than maintaing an 
+ * AVL tree along the way (less than quarter-of-a-second vs. about
+ * a minute or more!)
+ *
+ * The DSW algo, with C++ code, is described in 
+ *
+ * Timothy J. Rolfe, "One-Time Binary Search Tree Balancing:
+ * The Day/Stout/Warren (DSW) Algorithm", inroads, Vol. 34, No. 4
+ * (December 2002), pp. 85-88
+ * http://penguin.ewu.edu/~trolfe/DSWpaper/
+ */
+
+static Dict_node * dsw_tree_to_vine (Dict_node *root)
+{
+	Dict_node *vine_tail, *vine_head, *rest;
+	Dict_node vh;
+
+	vine_head = &vh;
+	vine_head->left = NULL;
+	vine_head->right = root;
+	vine_tail = vine_head;
+	rest = root;
+
+	while (NULL != rest)
+	{
+		/* If no left, we are done, do the right */
+		if (NULL == rest->left)
+		{
+			vine_tail = rest;
+			rest = rest->right;
+		}
+	 	/* eliminate the left subtree */
+		else
+		{
+			rest = rotate_right(rest);
+			vine_tail->right = rest;
+		}
+	}
+
+	return vh.right;
+}
+
+static void dsw_compression (Dict_node *root, unsigned int count)
+{
+	unsigned int j;
+	for (j = 0; j < count; j++)
+	{
+		/* Compound left rotation */
+		Dict_node * pivot = root->right;
+		root->right = pivot->right;
+		root = pivot->right;
+		pivot->right = root->left;
+		root->left = pivot;
+	}
+}
+
+/* Return size of the full portion of the tree
+ * Gets the next pow(2,k)-1
+ */
+static inline unsigned int full_tree_size (unsigned int size)
+{
+	unsigned int pk = 1;
+	while (pk <= size) pk = 2*pk + 1;
+	return pk/2;
+}
+
+static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
+{
+	Dict_node vine_head;
+	unsigned int full_count = full_tree_size(size +1);
+
+	vine_head.left = NULL;
+	vine_head.right = root;
+
+	dsw_compression(&vine_head, size - full_count);
+	for (size = full_count ; size > 1 ; size /= 2)
+	{
+		dsw_compression(&vine_head, size / 2);
+	}
+	return vine_head.right;
 }
 
 /* ======================================================================== */
@@ -1401,8 +1489,6 @@ void print_dictionary_data(Dictionary dict)
 	rprint_dictionary_data(dict->root);
 }
 
-
-
 int read_dictionary(Dictionary dict)
 {
 	if (!link_advance(dict))
@@ -1416,6 +1502,8 @@ int read_dictionary(Dictionary dict)
 			return 0;
 		}
 	}
+	dict->root = dsw_tree_to_vine(dict->root);
+	dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	return 1;
 }
 
