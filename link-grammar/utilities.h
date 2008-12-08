@@ -41,6 +41,7 @@
 
 /* Non-standard string functions */
 #define snprintf _snprintf
+#define vsnprintf _vsnprintf
 #define strcasecmp _stricmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
