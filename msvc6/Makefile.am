@@ -1,7 +1,7 @@
 SUBDIRS=	\
-	link-grammar-dll	\
-	link-grammar-exe	\
-	link-grammar-java-dll
+	link_grammar_dll	\
+	link_grammar_exe	\
+	link_grammar_java_dll
 
 EXTRA_DIST=	\
-	Link-Grammar-All.dsw
+	Link_Grammar_All.dsw

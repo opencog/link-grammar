@@ -254,9 +254,9 @@ man/Makefile
 autopackage/default.apspec
 link-grammar.xcode/Makefile
 msvc6/Makefile
-msvc6/link-grammar-dll/Makefile
-msvc6/link-grammar-exe/Makefile
-msvc6/link-grammar-java-dll/Makefile
+msvc6/link_grammar_dll/Makefile
+msvc6/link_grammar_exe/Makefile
+msvc6/link_grammar_java_dll/Makefile
 msvc9/Makefile
 ])
 
