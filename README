@@ -296,10 +296,6 @@ ADDRESSES
 
 TODO -- Working Notes:
    Some working notes.
-   read-dict.c: after running insert_dict() to create dictionary tree,
-      the tree is highly unbalanced, and should be rebalanced before use.
-      This would provide a minor performance improvement.
-
    Quotations: Currently, tokenize.c ignores all ASCII double-quotes 
       (grep for "quote_found" in the source). However, it does not do this
       for the various "curly" UTF8 quotes, such as ‘these’ and “these”.
