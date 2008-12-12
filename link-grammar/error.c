@@ -56,6 +56,24 @@ void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
 	va_end(args);
 }
 
+void prt_error(const char *fmt, ...)
+{
+	severity sev;
+	err_ctxt ec;
+
+	sev = Error;
+	if (0 == strncmp(fmt, "Fatal", 5)) sev = Fatal;
+	if (0 == strncmp(fmt, "Error:", 6)) sev = Error;
+	if (0 == strncmp(fmt, "Warn", 4)) sev = Warn;
+	if (0 == strncmp(fmt, "Info:", 5)) sev = Info;
+
+	ec.sent = NULL;
+	va_list args;
+	va_start(args, fmt);
+	verr_msg(&ec, sev, fmt, args);
+	va_end(args);
+}
+
 /* ============================================================ */
 /* These are deprecated, obsolete, and unused, but are still here 
  * because these are exported in the public API. Do not use these.
@@ -71,54 +89,3 @@ void lperror_clear(void)
 }
 
 /* ============================================================ */
-/* The sentence currently being parsed: needed for reporting parser
- * errors.  Deprecated, do not use in new code.
- */
-#ifdef USE_PTHREADS
-static pthread_key_t failing_sentence_key;
-static pthread_once_t sentence_key_once = PTHREAD_ONCE_INIT;
-
-static void sentence_key_alloc(void)
-{
-	pthread_key_create(&failing_sentence_key, NULL);
-}
-
-#else
-static Sentence failing_sentence = NULL;
-#endif
-
-void error_report_set_sentence(const Sentence s)
-{
-#ifdef USE_PTHREADS
-	pthread_once(&sentence_key_once, sentence_key_alloc);
-	pthread_setspecific(failing_sentence_key, s);
-#else
-	failing_sentence = s;
-#endif
-}
-
-void prt_error(const char *fmt, ...)
-{
-	severity sev;
-	err_ctxt ec;
-	Sentence sentence;
-
-#ifdef USE_PTHREADS
-	pthread_once(&sentence_key_once, sentence_key_alloc);
-	sentence = pthread_getspecific(failing_sentence_key);
-#else
-	sentence = failing_sentence;
-#endif
-
-	sev = Error;
-	if (0 == strncmp(fmt, "Fatal", 5)) sev = Fatal;
-	if (0 == strncmp(fmt, "Error:", 6)) sev = Error;
-	if (0 == strncmp(fmt, "Warn", 4)) sev = Warn;
-	if (0 == strncmp(fmt, "Info:", 5)) sev = Info;
-
-	ec.sent = sentence;
-	va_list args;
-	va_start(args, fmt);
-	verr_msg(&ec, sev, fmt, args);
-	va_end(args);
-}

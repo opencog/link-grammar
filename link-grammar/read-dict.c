@@ -122,14 +122,18 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	}
 	if (s2)
 	{
-		prt_error("Error parsing dictionary %s.\n"
+		err_ctxt ec;
+		ec.sent = NULL;
+		err_msg(&ec, Error, "Error parsing dictionary %s.\n"
 		          "%s %s\n\t line %d, tokens = %s\n",
 		        dict->name,
 		        s, s2, dict->line_number, tokens);
 	}
 	else
 	{
-		prt_error("Error parsing dictionary %s.\n"
+		err_ctxt ec;
+		ec.sent = NULL;
+		err_msg(&ec, Error, "Error parsing dictionary %s.\n"
 		          "%s\n\t line %d, tokens = %s\n",
 		        dict->name,
 		        s, dict->line_number, tokens);
@@ -144,9 +148,11 @@ static void dict_error(Dictionary dict, const char * s)
 
 static void warning(Dictionary dict, const char * s)
 {
-	prt_error("Warning: %s\n"
-	          "\tline %d, current token = \"%s\"\n",
-	          s, dict->line_number, dict->token);
+	err_ctxt ec;
+	ec.sent = NULL;
+	err_msg(&ec, Warn, "Warning: %s\n"
+	        "\tline %d, current token = \"%s\"\n",
+	        s, dict->line_number, dict->token);
 }
 
 /**
@@ -1236,7 +1242,9 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	}
 	else if (is_idiom_word(dn->string))
 	{
-		prt_error("Warning: Word \"%s\" found near line %d.\n"
+		err_ctxt ec;
+		ec.sent = NULL;
+		err_msg(&ec, Warn, "Warning: Word \"%s\" found near line %d.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.\n",
 		        dn->string, dict->line_number);
@@ -1245,7 +1253,9 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	else if ((dn_head = abridged_lookup_list(dict, dn->string)) != NULL)
 	{
 		Dict_node *dnx;
-		prt_error("Warning: The word \"%s\" "
+		err_ctxt ec;
+		ec.sent = NULL;
+		err_msg(&ec, Warn, "Warning: The word \"%s\" "
 		          "found near line %d of %s matches the following words:\n",
 	             dn->string, dict->line_number, dict->name);
 		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
@@ -1291,7 +1301,9 @@ static int read_entry(Dictionary dict)
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)
 			{
-				prt_error("Error opening word file %s\n", dict->token);
+				err_ctxt ec;
+				ec.sent = NULL;
+				err_msg(&ec, Error, "Error opening word file %s\n", dict->token);
 				return 0;
 			}
 		}

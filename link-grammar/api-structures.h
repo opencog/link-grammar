@@ -88,7 +88,6 @@ struct Parse_Options_s
 	int display_constituents;     /* if true, output treebank-style constituent structure */
 	int display_bad;              /* if true, bad linkages are displayed */
 	int display_links;            /* if true, a list o' links is printed out */
-	err_ctxt ec;
 };
 
 typedef struct

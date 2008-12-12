@@ -31,7 +31,5 @@ typedef enum
 
 void err_msg(err_ctxt *, severity, const char *fmt, ...) GNUC_PRINTF(3,4);
 
-void error_report_set_sentence(const Sentence s);
-
 #endif
 
