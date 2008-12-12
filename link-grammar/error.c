@@ -30,6 +30,52 @@
 #define DLLEXPORT
 #endif
 
+/* ============================================================ */
+
+struct err_ctxt_s
+{
+	Sentence sent;
+};
+
+err_ctxt * error_context_new(const Sentence s)
+{
+	err_ctxt *ec;
+	ec = (err_ctxt *) malloc(sizeof(err_ctxt));
+	ec->sent = s;
+	return ec;
+}
+
+void error_context_delete(err_ctxt *ec)
+{
+	ec->sent = NULL;
+	free(ec);
+}
+
+static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
+{
+	vfprintf(stderr, fmt, args);
+
+	if ((Info != sev) && ec->sent != NULL)
+	{
+		int i;
+		fprintf(stderr, "\tFailing sentence was:\n\t");
+		for (i=0; i<ec->sent->length; i++)
+		{
+			fprintf(stderr, "%s ", ec->sent->word[i].string);
+		}
+		fprintf(stderr, "\n");
+	}
+}
+
+void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	verr_msg(ec, sev, fmt, args);
+	va_end(args);
+}
+
+/* ============================================================ */
 /* These are deprecated, obsolete, and unused, but are still here 
  * because these are exported in the public API. Do not use these.
  */
@@ -43,8 +89,9 @@ void lperror_clear(void)
 	lperrno = 0;
 }
 
+/* ============================================================ */
 /* The sentence currently being parsed: needed for reporting parser
- * errors.  This needs to be made thread-safe at some point.
+ * errors.  Deprecated, do not use in new code.
  */
 #ifdef USE_PTHREADS
 static pthread_key_t failing_sentence_key;
@@ -71,13 +118,9 @@ void error_report_set_sentence(const Sentence s)
 
 void prt_error(const char *fmt, ...)
 {
+	severity sev;
+	err_ctxt *ec;
 	Sentence sentence;
-	int is_info;
-
-	va_list args;
-	va_start(args, fmt);
-	vfprintf(stderr, fmt, args);
-	va_end(args);
 
 #ifdef USE_PTHREADS
 	pthread_once(&sentence_key_once, sentence_key_alloc);
@@ -85,15 +128,17 @@ void prt_error(const char *fmt, ...)
 #else
 	sentence = failing_sentence;
 #endif
-	is_info = (0 == strncmp(fmt, "Info:", 5));
-	if (!is_info && sentence != NULL)
-	{
-		int i;
-		fprintf(stderr, "\tFailing sentence was:\n\t");
-		for (i=0; i<sentence->length; i++)
-		{
-			fprintf(stderr, "%s ", sentence->word[i].string);
-		}
-		fprintf(stderr, "\n");
-	}
+
+	sev = Error;
+	if (0 == strncmp(fmt, "Fatal", 5)) sev = Fatal;
+	if (0 == strncmp(fmt, "Error:", 6)) sev = Error;
+	if (0 == strncmp(fmt, "Warn", 4)) sev = Warn;
+	if (0 == strncmp(fmt, "Info:", 5)) sev = Info;
+
+	ec = error_context_new(sentence);
+	va_list args;
+	va_start(args, fmt);
+	verr_msg(ec, sev, fmt, args);
+	va_end(args);
+	error_context_delete(ec);
 }

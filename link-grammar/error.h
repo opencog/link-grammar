@@ -14,6 +14,24 @@
 #define _LINK_GRAMMAR_ERROR_H_
 
 #include "link-includes.h"
+
+typedef struct err_ctxt_s err_ctxt;
+
+typedef enum 
+{
+	Fatal = 1,
+	Error,
+	Warn,
+	Info,
+	Debug
+} severity;
+
+err_ctxt * error_context_new(const Sentence s);
+void error_context_delete(err_ctxt *);
+void err_msg(err_ctxt *, severity, const char *fmt, ...) GNUC_PRINTF(3,4);
+
+
 void error_report_set_sentence(const Sentence s);
+
 #endif
 
