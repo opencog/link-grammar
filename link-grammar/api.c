@@ -84,6 +84,7 @@ Parse_Options parse_options_create(void)
 	po->display_constituents = 0;
 	po->display_bad = FALSE;
 	po->display_links = FALSE;
+	po->ec.sent = NULL;
 
 	return po;
 }
@@ -103,7 +104,7 @@ void parse_options_set_cost_model_type(Parse_Options opts, int cm)
 		opts->cost_model.compare_fn = &VDAL_compare_parse;
 		break;
 	default:
-		prt_error("Error: Illegal cost model: %d\n", cm);
+		err_msg(&opts->ec, Error, "Error: Illegal cost model: %d\n", cm);
 	}
 }
 
@@ -262,7 +263,8 @@ int parse_options_get_display_postscript(Parse_Options opts) {
 void parse_options_set_display_constituents(Parse_Options opts, int dummy)
 {
 	if ((dummy < 0) || (dummy > 3)) {
-	   prt_error("Possible values for constituents: \n"
+		err_msg(&opts->ec, Info, 
+	             "Possible values for constituents: \n"
 	             "   0 (no display)\n"
 	             "   1 (treebank style, multi-line indented)\n"
 	             "   2 (flat tree, square brackets)\n"

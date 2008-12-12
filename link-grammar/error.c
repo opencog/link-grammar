@@ -32,25 +32,6 @@
 
 /* ============================================================ */
 
-struct err_ctxt_s
-{
-	Sentence sent;
-};
-
-err_ctxt * error_context_new(const Sentence s)
-{
-	err_ctxt *ec;
-	ec = (err_ctxt *) malloc(sizeof(err_ctxt));
-	ec->sent = s;
-	return ec;
-}
-
-void error_context_delete(err_ctxt *ec)
-{
-	ec->sent = NULL;
-	free(ec);
-}
-
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 {
 	vfprintf(stderr, fmt, args);
@@ -119,7 +100,7 @@ void error_report_set_sentence(const Sentence s)
 void prt_error(const char *fmt, ...)
 {
 	severity sev;
-	err_ctxt *ec;
+	err_ctxt ec;
 	Sentence sentence;
 
 #ifdef USE_PTHREADS
@@ -135,10 +116,9 @@ void prt_error(const char *fmt, ...)
 	if (0 == strncmp(fmt, "Warn", 4)) sev = Warn;
 	if (0 == strncmp(fmt, "Info:", 5)) sev = Info;
 
-	ec = error_context_new(sentence);
+	ec.sent = sentence;
 	va_list args;
 	va_start(args, fmt);
-	verr_msg(ec, sev, fmt, args);
+	verr_msg(&ec, sev, fmt, args);
 	va_end(args);
-	error_context_delete(ec);
 }
