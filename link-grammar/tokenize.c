@@ -140,14 +140,22 @@ static int is_ly_word(const char * s)
 static int issue_sentence_word(Sentence sent, const char * s)
 {
 	if (*s == '\0') return TRUE;
-	if (strlen(s) > MAX_WORD) {
-		prt_error("Error separating sentence. The word \"%s\" is too long.\n"
-				"A word can have a maximum of %d characters.\n", s, MAX_WORD);
+	if (strlen(s) > MAX_WORD)
+	{
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Error, 
+		   "Error separating sentence. The word \"%s\" is too long.\n"
+		   "A word can have a maximum of %d characters.\n", s, MAX_WORD);
 		return FALSE;
 	}
 
-	if (sent->length == MAX_SENTENCE) {
-		prt_error("Error separating sentence. The sentence has too many words.\n");
+	if (sent->length == MAX_SENTENCE)
+	{
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Error, 
+		   "Error separating sentence. The sentence has too many words.\n");
 		return FALSE;
 	}
 
@@ -232,7 +240,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 	nbl = wctomb_check(low, c);
 	if (nbh != nbl)
 	{
-		prt_error("Warning: can't downcase multi-byte string!\n");
+		prt_error("Warning: can't downcase multi-byte string: %s\n", word);
 		return FALSE;
 	}
 
@@ -562,7 +570,9 @@ static int special_string(Sentence sent, int i, const char * s)
 		}
 		return TRUE;
 	} else {
-		prt_error("Error: Could not build sentence expressions.\n"
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Error, "Error: Could not build sentence expressions.\n"
 		          "To process this sentence your dictionary "
  		          "needs the word \"%s\".\n", s);
 		return FALSE;
@@ -614,9 +624,12 @@ static int guessed_string(Sentence sent, int i, const char * s, const char * typ
 		  return TRUE;
 
 	} else {
-		prt_error("Could not build sentence expressions.\n"
-		          "To process this sentence your dictionary "
-		          "needs the word \"%s\".\n", type);
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Error, 
+		        "Error: Could not build sentence expressions.\n"
+		        "To process this sentence your dictionary "
+		        "needs the word \"%s\".\n", type);
 		return FALSE;
 	}
 }
@@ -818,7 +831,8 @@ int sentence_in_dictionary(Sentence sent)
 		    !(is_ed_word(s)   && dict->ed_word_defined)  &&
 		    !(is_ly_word(s)   && dict->ly_word_defined))
 		{
-			if (ok_so_far) {
+			if (ok_so_far)
+			{
 				safe_strcpy(temp, "The following words are not in the dictionary:", sizeof(temp));
 				ok_so_far = FALSE;
 			}
@@ -827,8 +841,11 @@ int sentence_in_dictionary(Sentence sent)
 			safe_strcat(temp, "\"", sizeof(temp));
 		}
 	}
-	if (!ok_so_far) {
-		prt_error("Error: Sentence not in dictionary\n%s\n", temp);
+	if (!ok_so_far)
+	{
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Error, "Error: Sentence not in dictionary\n%s\n", temp);
 	}
 	return ok_so_far;
 }

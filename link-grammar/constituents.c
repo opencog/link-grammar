@@ -284,7 +284,9 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					c++;
 					if (MAXCONSTITUENTS <= c)
 					{
-						prt_error("Error: Too many constituents (a).\n");
+						err_ctxt ec;
+						ec.sent = linkage->sent;
+						err_msg(&ec, Error, "Error: Too many constituents (a).\n");
 						c--;
 					}
 					done = 1;
@@ -443,7 +445,9 @@ static int find_next_element(con_context_t *ctxt,
 			 * could guess what they were or what they looked like, judging
 			 * only from the names?
 			 */
-			prt_error("Error: Constituent overflowed andlist!\n");
+			err_ctxt ec;
+			ec.sent = linkage->sent;
+			err_msg(&ec, Error, "Error: Constituent overflowed andlist!\n");
 			return (num_lists-1);
 		}
 	}
@@ -465,7 +469,12 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		if(ctxt->constituent[c1].right < ctxt->constituent[c1].left)
 		{
 			if(verbosity >= 2)
-				prt_error("Warning: Constituent %d has negative length. Deleting it.\n", c1);
+			{
+				err_ctxt ec;
+				ec.sent = linkage->sent;
+				err_msg(&ec, Warn, 
+					"Warning: Constituent %d has negative length. Deleting it.\n", c1);
+			}
 			ctxt->constituent[c1].valid = 0;
 		}
 		ctxt->constituent[c1].canon = c1;
@@ -943,7 +952,9 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 				{
 					if (verbosity >= 2)
 					{
-						prt_error("Warning: the constituents aren't nested! "
+						err_ctxt ec;
+						ec.sent = linkage->sent;
+						err_msg(&ec, Warn, "Warning: the constituents aren't nested! "
 						          "Adjusting them. (%d, %d)\n", c, c2);
 					}
 					ctxt->constituent[c].left = ctxt->constituent[c2].left;
@@ -1012,7 +1023,7 @@ static int add_constituent(con_context_t *ctxt, int c, Linkage linkage, Domain d
 	return c;
 }
 
-static const char * cons_of_domain(char domain_type)
+static const char * cons_of_domain(Linkage linkage, char domain_type)
 {
 	switch (domain_type) {
 	case 'a':
@@ -1054,8 +1065,12 @@ static const char * cons_of_domain(char domain_type)
 	case 'z':
 		return "VP";
 	default:
-		prt_error("Error: Illegal domain: %c\n", domain_type);
-		return "";
+		{
+			err_ctxt ec;
+			ec.sent = linkage->sent;
+			err_msg(&ec, Error, "Error: Illegal domain: %c\n", domain_type);
+			return "";
+		}
 	}
 }
 
@@ -1121,7 +1136,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 		c--;
 		c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost,
-						cons_of_domain(domain.type));
+						cons_of_domain(linkage, domain.type));
 
 		if (domain.type == 'z')
 		{
@@ -1210,11 +1225,15 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 		if (ctxt->constituent[c].domain_type == '\0')
 		{
-			prt_error("Error: no domain type assigned to constituent\n");
+			err_ctxt ec;
+			ec.sent = linkage->sent;
+			err_msg(&ec, Error, "Error: no domain type assigned to constituent\n");
 		}
 		if (ctxt->constituent[c].start_link == NULL)
 		{
-			prt_error("Error: no type assigned to constituent\n");
+			err_ctxt ec;
+			ec.sent = linkage->sent;
+			err_msg(&ec, Error, "Error: no type assigned to constituent\n");
 		}
 	}
 
@@ -1318,8 +1337,11 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 					{
 						if (verbosity >= 2)
 						{
-							prt_error("Warning: the constituents aren't nested! "
-							          "Adjusting them. (%d, %d)\n", c, c2);
+							err_ctxt ec;
+							ec.sent = linkage->sent;
+							err_msg(&ec, Warn, 
+							      "Warning: the constituents aren't nested! "
+							      "Adjusting them. (%d, %d)\n", c, c2);
 					  }
 					  ctxt->constituent[c].left = ctxt->constituent[c2].left;
 					}
@@ -1362,7 +1384,9 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	if (MAXCONSTITUENTS <= numcon_total + numcon_subl)
 	{
-		prt_error("Error: Too many constituents (a2).\n");
+		err_ctxt ec;
+		ec.sent = linkage->sent;
+		err_msg(&ec, Error, "Error: Too many constituents (a2).\n");
 		numcon_total = MAXCONSTITUENTS - numcon_subl;
 	}
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
@@ -1526,7 +1550,9 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 		numcon_total = numcon_total + numcon_subl;
 		if (MAXCONSTITUENTS <= numcon_total)
 		{
-			prt_error("Error: Too many constituents (c).\n");
+			err_ctxt ec;
+			ec.sent = linkage->sent;
+			err_msg(&ec, Error, "Error: Too many constituents (c).\n");
 			numcon_total = MAXCONSTITUENTS-1;
 			break;
 		}
@@ -1534,13 +1560,17 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
 	if (MAXCONSTITUENTS <= numcon_total)
 	{
-		prt_error("Error: Too many constituents (d).\n");
+		err_ctxt ec;
+		ec.sent = linkage->sent;
+		err_msg(&ec, Error, "Error: Too many constituents (d).\n");
 		numcon_total = MAXCONSTITUENTS-1;
 	}
 	numcon_total = last_minute_fixes(ctxt, linkage, numcon_total);
 	if (MAXCONSTITUENTS <= numcon_total)
 	{
-		prt_error("Error: Too many constituents (e).\n");
+		err_ctxt ec;
+		ec.sent = linkage->sent;
+		err_msg(&ec, Error, "Error: Too many constituents (e).\n");
 		numcon_total = MAXCONSTITUENTS-1;
 	}
 	q = exprint_constituent_structure(ctxt, linkage, numcon_total);
