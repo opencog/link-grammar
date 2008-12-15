@@ -168,7 +168,8 @@ public class LGService
 	public static ParseResult getAsParseResult(LGConfig config)
 	{
 		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes		
-		ParseResult parseResult = new ParseResult();		
+		ParseResult parseResult = new ParseResult();
+		parseResult.setParserVersion(LinkGrammar.getVersion());
 		parseResult.numSkippedWords = LinkGrammar.getNumSkippedWords();
 		parseResult.words = new String[LinkGrammar.getNumWords()];
 		parseResult.entityFlags = new boolean[LinkGrammar.getNumWords()];
@@ -323,7 +324,7 @@ public class LGService
 			buf.append("]");
 			buf.append("}");			
 		}
-		buf.append("]"); // close linkage array
+		buf.append("],\"version\":\"" + LinkGrammar.getVersion() + "\"");
 		buf.append("}");
 		return buf.toString();
 	}
@@ -402,17 +403,22 @@ public class LGService
 			if (verbose)
 				trace("Received msg '" + msg + "' from " + clientSocket.getInetAddress());
 			String json = "{}";			
-			LGConfig config = new LGConfig();
-			config.setStoreConstituentString(getBool("storeConstituentString", msg, config.isStoreConstituentString()));
-			config.setMaxCost(getInt("maxCost", msg, config.getMaxCost()));
-			config.setMaxLinkages(getInt("maxLinkages", msg, config.getMaxLinkages()));
-			config.setMaxParseSeconds(getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
-			configure(config);
-			String text = msg.get("text");
-			if (text != null)
-				LinkGrammar.parse(text);
-			if (LinkGrammar.getNumLinkages() > 0)
-				json = getAsJSONFormat(config);
+			if ("version".equals(msg.get("get"))) // special case msg 'get:version'
+				json = "{\"version\":\"" + LinkGrammar.getVersion() + "\"}";
+			else
+			{
+				LGConfig config = new LGConfig();
+				config.setStoreConstituentString(getBool("storeConstituentString", msg, config.isStoreConstituentString()));
+				config.setMaxCost(getInt("maxCost", msg, config.getMaxCost()));
+				config.setMaxLinkages(getInt("maxLinkages", msg, config.getMaxLinkages()));
+				config.setMaxParseSeconds(getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
+				configure(config);
+				String text = msg.get("text");
+				if (text != null)
+					LinkGrammar.parse(text);
+				if (LinkGrammar.getNumLinkages() > 0)
+					json = getAsJSONFormat(config);
+			}
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			out.print(json);
 			out.print('\n');

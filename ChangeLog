@@ -1,6 +1,7 @@
 Version 4.4.1 (?? month 200?) includes the following changes:
  * Balance the dictionary tree; this speeds word-lookup slightly.
- * New MSVC6 build files from Evgenii Philippov
+ * New MSVC6 build files from Evgenii Philippov.
+ * Fix java server classes to pass along the link-grammar version number.
 
 Version 4.4.0 (7 December 2008) includes the following changes:
  * fix: recognize curly-single-quote ’ where straight quote can be used.

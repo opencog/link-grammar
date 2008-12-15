@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class ParseResult implements Iterable<Linkage>
 {
+	String parserVersion;
 	String text;
 	String [] words;
 	boolean [] entityFlags;
@@ -107,5 +108,15 @@ public class ParseResult implements Iterable<Linkage>
 	public void setNumSkippedWords(int numSkippedWords)
 	{
 		this.numSkippedWords = numSkippedWords;
-	}		
+	}
+
+	public String getParserVersion()
+	{
+		return parserVersion;
+	}
+
+	public void setParserVersion(String parserVersion)
+	{
+		this.parserVersion = parserVersion;
+	}	
 }
