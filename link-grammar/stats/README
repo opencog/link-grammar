@@ -1,0 +1,11 @@
+
+                Parse Ranking and Word Sense Statistics
+                ---------------------------------------
+
+This directory contains code that will compute a parse ranking, as well
+as a word-sense probability (based on WordNet 3.0) by looking up
+frequency statistics from an SQL database. The SQLite databse engine
+is by default because it is "administration-free" for the user, and
+because its license is compatbile with the current link-grammar license.
+
+
