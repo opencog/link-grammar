@@ -1199,8 +1199,8 @@ go.v: <verb-pl,i> & <vc-go>;
 goes.v: <verb-s> & <vc-go>;
 went.v: <verb-sp> & <vc-go>; 
 gone.v: <verb-pp> & <vc-go>;
-% The keys are gone.
-gone.a: <verb-pv-b>;
+% The keys are gone.  The popcorn is all gone.
+gone.a: {@E-} & Pa-;
 going.v: ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or ({@E-} & A+) or
 <verb-ge-d>;
 
