@@ -1199,6 +1199,8 @@ go.v: <verb-pl,i> & <vc-go>;
 goes.v: <verb-s> & <vc-go>;
 went.v: <verb-sp> & <vc-go>; 
 gone.v: <verb-pp> & <vc-go>;
+% The keys are gone.
+gone.a: <verb-pv-b>;
 going.v: ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or ({@E-} & A+) or
 <verb-ge-d>;
 
@@ -3036,7 +3038,7 @@ n't n’t: N- or EB-;
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
 <adj-stuff>:   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
               ((AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]]);
-done.c through.c: <adj-stuff>;
+done.c gone.c through.c: <adj-stuff>;
 
 responsible.a accountable.a:
  {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma- 
