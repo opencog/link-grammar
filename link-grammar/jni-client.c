@@ -227,12 +227,12 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	maxlen = parse_options_get_max_sentence_length(ptd->opts);
 	if (maxlen < sentence_length(ptd->sent))
 	{
-		sentence_delete(ptd->sent);
-		ptd->sent = NULL;
 		if (jverbosity > 0) {
 			prt_error("Error: Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 				sentence_length(ptd->sent), maxlen);
 		}
+		sentence_delete(ptd->sent);
+		ptd->sent = NULL;
 		return;
 	}
 
