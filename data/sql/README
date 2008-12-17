@@ -1,0 +1,30 @@
+
+
+                Parse Ranking and Word Sense Statistics
+                ---------------------------------------
+
+This directory contains SQL tables that are used in computing a parse
+ranking, as well as a word-sense probability (based on WordNet 3.0) by
+looking up frequency statistics from an SQL database. The database used
+is the SQLite database; it has been choosen because it is "administration
+-free" for the user, and because its license is compatbile with the
+current link-grammar license.
+
+
+The disjuncts.db database contains a single table:
+
+CREATE TABLE Disjuncts (
+   inflected_word TEXT NOT NULL,
+   disjunct TEXT NOT NULL,
+   log_cond_probability FLOAT
+);
+
+The log_cond_probability field contains the value of -log_2 p(d|w)
+where p(d|w) is the conditional probability of seeing the disjunct d
+given that the (inflected) word w was already seen.
+
+
+Notes:
+------
+To populate this table:
+pg_dump -D -O -t disjuncts lexat
