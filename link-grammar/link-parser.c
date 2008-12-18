@@ -165,11 +165,13 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 
 	if (!linkage) return;  /* Can happen in timeout mode */
 
-	if (parse_options_get_display_union(opts)) {
+	if (parse_options_get_display_union(opts))
+	{
 		linkage_compute_union(linkage);
 		first_sublinkage = linkage_get_num_sublinkages(linkage)-1;
 	}
-	else {
+	else
+	{
 		first_sublinkage = 0;
 	}
 
@@ -177,17 +179,20 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 	for (j=first_sublinkage; j<nlink; ++j)
 	{
 		linkage_set_current_sublinkage(linkage, j);
-		if (parse_options_get_display_on(opts)) {
+		if (parse_options_get_display_on(opts))
+		{
 			string = linkage_print_diagram(linkage);
 			fprintf(stdout, "%s", string);
 			linkage_free_diagram(string);
 		}
-		if (parse_options_get_display_links(opts)) {
+		if (parse_options_get_display_links(opts))
+		{
 			string = linkage_print_links_and_domains(linkage);
 			fprintf(stdout, "%s", string);
 			linkage_free_links_and_domains(string);
 		}
-		if (parse_options_get_display_postscript(opts)) {
+		if (parse_options_get_display_postscript(opts))
+		{
 			string = linkage_print_postscript(linkage, FALSE);
 			fprintf(stdout, "%s\n", string);
 			linkage_free_postscript(string);
@@ -196,10 +201,13 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 	if ((mode = parse_options_get_display_constituents(opts)))
 	{
 		string = linkage_print_constituent_tree(linkage, mode);
-		if (string != NULL) {
+		if (string != NULL)
+		{
 			fprintf(stdout, "%s\n", string);
 			linkage_free_constituent_tree_str(string);
-		} else {
+		}
+		else
+		{
 			fprintf(stderr, "Can't generate constituents.\n");
 			fprintf(stderr, "Constituent processing has been turned off.\n");
 		}
@@ -208,9 +216,11 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 
 static void print_parse_statistics(Sentence sent, Parse_Options opts)
 {
-	if (sentence_num_linkages_found(sent) > 0) {
+	if (sentence_num_linkages_found(sent) > 0)
+	{
 		if (sentence_num_linkages_found(sent) >
-			parse_options_get_linkage_limit(opts)) {
+			parse_options_get_linkage_limit(opts))
+		{
 			fprintf(stdout, "Found %d linkage%s (%d of %d random " \
 					"linkages had no P.P. violations)",
 					sentence_num_linkages_found(sent),
@@ -218,13 +228,15 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
 					sentence_num_valid_linkages(sent),
 					sentence_num_linkages_post_processed(sent));
 		}
-		else {
+		else
+		{
 			fprintf(stdout, "Found %d linkage%s (%d had no P.P. violations)",
 					sentence_num_linkages_post_processed(sent),
 					sentence_num_linkages_found(sent) == 1 ? "" : "s",
 					sentence_num_valid_linkages(sent));
 		}
-		if (sentence_null_count(sent) > 0) {
+		if (sentence_null_count(sent) > 0)
+		{
 			fprintf(stdout, " at null count %d", sentence_null_count(sent));
 		}
 		fprintf(stdout, "\n");
@@ -239,10 +251,12 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 	Linkage linkage;
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
-	if (!parse_options_get_display_bad(opts)) {
+	if (!parse_options_get_display_bad(opts))
+	{
 		num_to_query = MIN(sentence_num_valid_linkages(sent), DISPLAY_MAX);
 	}
-	else {
+	else
+	{
 		num_to_query = MIN(sentence_num_linkages_post_processed(sent),
 		                   DISPLAY_MAX);
 	}
@@ -250,13 +264,15 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 	for (i=0, num_displayed=0; i<num_to_query; i++)
 	{
 		if ((sentence_num_violations(sent, i) > 0) &&
-			(!parse_options_get_display_bad(opts))) {
+			(!parse_options_get_display_bad(opts)))
+		{
 			continue;
 		}
 
 		linkage = linkage_create(i, sent, opts);
 
-		if (verbosity > 0) {
+		if (verbosity > 0)
+		{
 			if ((sentence_num_valid_linkages(sent) == 1) &&
 				(!parse_options_get_display_bad(opts)))
 			{
