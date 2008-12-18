@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <sqlite3.h>
 #include "corpus.h"
+#include "../api-structures.h"
 
 Corpus * lg_corpus_new(void)
 {
@@ -43,8 +44,16 @@ void lg_corpus_delete(Corpus *c)
 	free(c);
 }
 
-double lg_corpus_score(Corpus *corp, Linkage_info *li)
+double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 {
+	int i;
+	Parse_info pi = sent->parse_info;
+
+	for (i=0; i<pi->N_links; i++)
+	{
+		printf("duuude %d is %s\n", i, pi->link_array[i].name);
+
+	}
 #if 0
 extract_links
 extract_thin_linkage
@@ -54,8 +63,7 @@ linkage_get_num_links
 linkage_get_link_lword
 
 linkage->sublinkage[linkage->current].link[index];
-
-printf ("hello world\n");
 #endif
+
 }
 

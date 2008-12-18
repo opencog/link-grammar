@@ -28,6 +28,7 @@
 #define _API_STRUCTURESH_
 
 #include "api-types.h"
+#include "structures.h" /* for definition of Link */
 #include "error.h"
 
 typedef enum

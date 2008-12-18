@@ -13,6 +13,7 @@
 
 #include <sqlite3.h>
 #include "../api-types.h"
+#include "../link-includes.h"
 
 struct corpus_s
 {
@@ -25,7 +26,7 @@ typedef struct corpus_s Corpus;
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
-double lg_corpus_score(Corpus *, Linkage_info *);
+double lg_corpus_score(Corpus *, Sentence, Linkage_info *);
 
 #endif /* USE_CORPUS */
 

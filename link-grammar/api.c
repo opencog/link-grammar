@@ -825,7 +825,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	for (in=0; in < N_linkages_post_processed; in++)
 	{
 		Linkage_info *li = &link_info[in];
-		lg_corpus_score(corp, li);
+		lg_corpus_score(corp, sent, li);
 	}
 	lg_corpus_delete(corp);
 #endif
