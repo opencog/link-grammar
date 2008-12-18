@@ -789,13 +789,15 @@ internal_process(Postprocessor *pp,Sublinkage *sublinkage,char **msg)
 }
 
 
+/**
+ * Call this (a) after having called post_process_scan_linkage() on all
+ * generated linkages, but (b) before calling post_process() on any
+ * particular linkage. Here we mark all rules which we know (from having
+ * accumulated a set of link names appearing in *any* linkage) won't
+ * ever be needed.
+ */
 static void prune_irrelevant_rules(Postprocessor *pp)
 {
-	/* call this (a) after having called post_process_scan_linkage() on all
-		 generated linkages, but (b) before calling post_process() on any
-		 particular linkage. Here we mark all rules which we know (from having
-		 accumulated a set of link names appearing in *any* linkage) won't
-		 ever be needed. */
 	 pp_rule *rule;
 	 int coIDX, cnIDX, rcoIDX=0, rcnIDX=0;
 
@@ -803,36 +805,37 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 	if (pp_linkset_population(pp->set_of_links_of_sentence)==0) return;
 
 	for (coIDX=0;;coIDX++)
-		 {
-			 rule = &(pp->knowledge->contains_one_rules[coIDX]);
-			 if (rule->msg==NULL) break;
-			 if (pp_linkset_match_bw(pp->set_of_links_of_sentence, rule->selector))
-		 {
-			 /* mark rule as being relevant to this sentence */
-			 pp->relevant_contains_one_rules[rcoIDX++] = coIDX;
-			 pp_linkset_add(pp->set_of_links_in_an_active_rule, rule->selector);
-		 }
-		 }
-	 pp->relevant_contains_one_rules[rcoIDX] = -1;	/* end sentinel */
+	{
+		rule = &(pp->knowledge->contains_one_rules[coIDX]);
+		if (rule->msg==NULL) break;
+		if (pp_linkset_match_bw(pp->set_of_links_of_sentence, rule->selector))
+		{
+			/* mark rule as being relevant to this sentence */
+			pp->relevant_contains_one_rules[rcoIDX++] = coIDX;
+			pp_linkset_add(pp->set_of_links_in_an_active_rule, rule->selector);
+		}
+	}
+	pp->relevant_contains_one_rules[rcoIDX] = -1;	/* end sentinel */
 	
-	 for (cnIDX=0;;cnIDX++)
-		 {
-			 rule = &(pp->knowledge->contains_none_rules[cnIDX]);
-			 if (rule->msg==NULL) break;
-			 if (pp_linkset_match_bw(pp->set_of_links_of_sentence, rule->selector))
-		 {
-			 pp->relevant_contains_none_rules[rcnIDX++] = cnIDX;
-			 pp_linkset_add(pp->set_of_links_in_an_active_rule, rule->selector);
-		 }
-	 }
-	 pp->relevant_contains_none_rules[rcnIDX] = -1;
+	for (cnIDX=0;;cnIDX++)
+	{
+		rule = &(pp->knowledge->contains_none_rules[cnIDX]);
+		if (rule->msg==NULL) break;
+		if (pp_linkset_match_bw(pp->set_of_links_of_sentence, rule->selector))
+		{
+			pp->relevant_contains_none_rules[rcnIDX++] = cnIDX;
+			pp_linkset_add(pp->set_of_links_in_an_active_rule, rule->selector);
+		}
+	}
+	pp->relevant_contains_none_rules[rcnIDX] = -1;
 
-	 if (verbosity>1) {
-		 printf("Saw %i unique link names in all linkages.\n",
+	if (verbosity > 1)
+	{
+		printf("Saw %i unique link names in all linkages.\n",
 				pp_linkset_population(pp->set_of_links_of_sentence));
-		 printf("Using %i 'contains one' rules and %i 'contains none' rules\n",
-				rcoIDX, rcnIDX);
-	 }
+		printf("Using %i 'contains one' rules and %i 'contains none' rules\n",
+			   rcoIDX, rcnIDX);
+	}
 }
 
 
@@ -899,22 +902,24 @@ void post_process_close_sentence(Postprocessor *pp)
 	free_pp_node(pp);
 }
 
+/**
+ * During a first pass (prior to actual post-processing of the linkages
+ * of a sentence), call this once for every generated linkage. Here we
+ * simply maintain a set of "seen" link names for rule pruning later on
+ */
 void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 									 Sentence sent, Sublinkage *sublinkage)
 {
-	/* During a first pass (prior to actual post-processing of the linkages
-		 of a sentence), call this once for every generated linkage. Here we
-		 simply maintain a set of "seen" link names for rule pruning later on */
 	char *p;
 	int i;
-	if (pp==NULL) return;
+	if (pp == NULL) return;
 	if (sent->length < opts->twopass_length) return;
 	for (i=0; i<sublinkage->num_links; i++)
-		{
-			if (sublinkage->link[i]->l == -1) continue;
-			p=string_set_add(sublinkage->link[i]->name,pp->sentence_link_name_set);
-			pp_linkset_add(pp->set_of_links_of_sentence, p);
-		}
+	{
+		if (sublinkage->link[i]->l == -1) continue;
+		p = string_set_add(sublinkage->link[i]->name, pp->sentence_link_name_set);
+		pp_linkset_add(pp->set_of_links_of_sentence, p);
+	}
 }
 
 /**
