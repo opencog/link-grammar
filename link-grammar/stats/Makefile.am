@@ -3,6 +3,15 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(SQLITE3_CFLAGS)
 
+if HAVE_SQLITE
+lib_LTLIBRARIES = liblink-corpus.la
+endif
+
+liblink_corpus_la_LDFLAGS = -no-undefined
+
+liblink_corpus_la_SOURCES =    \
+	corpus.c
+
 
 EXTRA_DIST=                               \
 	README
