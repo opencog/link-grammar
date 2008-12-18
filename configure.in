@@ -254,9 +254,9 @@ build.xml
 link-grammar.pc
 link-grammar.spec
 link-grammar/Makefile
+link-grammar/corpus/Makefile
 link-grammar/minisat/Makefile
 link-grammar/sat-solver/Makefile
-link-grammar/stats/Makefile
 link-grammar/link-features.h
 data/Makefile
 data/en/Makefile
