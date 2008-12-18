@@ -1035,9 +1035,6 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	Parse_info pi = sent->parse_info;
 	analyze_context_t *actx = sent->analyze_ctxt;
 
-	build_digraph(actx, pi);
-	memset(&li, 0, sizeof(li));
-
 	sublinkage = x_create_sublinkage(pi);
 	postprocessor = sent->dict->postprocessor;
 
@@ -1051,9 +1048,10 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	{
 		post_process_scan_linkage(postprocessor, opts, sent, sublinkage);
 		free_sublinkage(sublinkage);
-		free_digraph(actx, pi);
 		return li;
 	}
+
+	build_digraph(actx, pi);
 
 	/* The code below can be used to generate the "islands" array.
 	 * For this to work, however, you have to call "build_digraph"
@@ -1061,6 +1059,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	 */
 	pp = post_process(postprocessor, opts, sent, sublinkage, TRUE);
 
+	memset(&li, 0, sizeof(li));
 	li.N_violations = 0;
 	li.and_cost = 0;
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
