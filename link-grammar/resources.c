@@ -80,10 +80,12 @@ void resources_reset(Resources r)
 	r->memory_exhausted = FALSE;
 }
 
+#if 0
 static void resources_reset_time(Resources r)
 {
 	r->when_last_called = r->time_when_parse_started = current_usage_time();
 }
+#endif
 
 void resources_reset_space(Resources r)
 {
