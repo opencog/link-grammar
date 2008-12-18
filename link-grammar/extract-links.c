@@ -449,20 +449,23 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 
 void free_parse_set(Sentence sent)
 {
+	if (NULL == sent->parse_info) return;
+
 	/* This uses the x_table to free the whole parse set (the set itself
-	   cannot be used cause it's a dag).  called from the outside world */
-	if (sent->parse_info != NULL) {
-		free_x_table(sent->parse_info);
-		sent->parse_info->parse_set = NULL;
-		xfree((void *) sent->parse_info, sizeof(struct Parse_info_struct));
-		sent->parse_info = NULL;
-	}
+	 * cannot be used cause it's a dag).  called from the outside world 
+	 */
+	free_x_table(sent->parse_info);
+	sent->parse_info->parse_set = NULL;
+	xfree((void *) sent->parse_info, sizeof(struct Parse_info_struct));
+	sent->parse_info = NULL;
 }
 
-static void initialize_links(Parse_info pi) {
+static void initialize_links(Parse_info pi)
+{
 	int i;
 	pi->N_links = 0;
-	for (i=0; i<pi->N_words; ++i) {
+	for (i=0; i<pi->N_words; ++i)
+	{
 		pi->chosen_disjuncts[i] = NULL;
 	}
 }
@@ -487,7 +490,8 @@ static void issue_links_for_choice(Parse_info pi, Parse_choice *pc)
 	}
 }
 
-static void build_current_linkage_recursive(Parse_info pi, Parse_set *set) {
+static void build_current_linkage_recursive(Parse_info pi, Parse_set *set)
+{
 	if (set == NULL) return;
 	if (set->current == NULL) return;
 
@@ -496,10 +500,12 @@ static void build_current_linkage_recursive(Parse_info pi, Parse_set *set) {
 	build_current_linkage_recursive(pi, set->current->set[1]);
 }
 
-void build_current_linkage(Parse_info pi) {
-	/* This function takes the "current" point in the given set and
-	   generates the linkage that it represents.
-	 */
+/**
+ * This function takes the "current" point in the given set and
+ * generates the linkage that it represents.
+ */
+void build_current_linkage(Parse_info pi)
+{
 	initialize_links(pi);
 	build_current_linkage_recursive(pi, pi->parse_set);
 }
