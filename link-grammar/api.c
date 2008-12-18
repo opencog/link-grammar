@@ -1265,6 +1265,11 @@ int linkage_link_cost(Linkage linkage)
 	return linkage->info.link_cost;
 }
 
+double linkage_corpus_cost(Linkage linkage)
+{
+	return linkage->info.corpus_cost;
+}
+
 int linkage_get_link_num_domains(Linkage linkage, int index)
 {
 	PP_info pp_info;

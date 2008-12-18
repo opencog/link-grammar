@@ -301,6 +301,8 @@ link_public_api(int)
      linkage_and_cost(Linkage linkage);
 link_public_api(int)
      linkage_link_cost(Linkage linkage);
+link_public_api(double)
+     linkage_corpus_cost(Linkage linkage);
 link_public_api(int)
      linkage_is_canonical(Linkage linkage);
 link_public_api(int)

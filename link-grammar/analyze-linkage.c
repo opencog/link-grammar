@@ -910,6 +910,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 #endif
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
+	li.corpus_cost = -1.0f;
 	li.and_cost = 0;
 	li.andlist = NULL;
 
@@ -922,7 +923,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		return li;
 	}
 
-	if (analyze_pass==PP_SECOND_PASS)
+	if (analyze_pass == PP_SECOND_PASS)
 	{
 	  li.andlist = build_andlist(actx, sent);
 	  li.and_cost = li.andlist->cost;
@@ -1046,7 +1047,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	  copy_full_link(&(sublinkage->link[i]), &(pi->link_array[i]));
 	}
 
-	if (analyze_pass==PP_FIRST_PASS)
+	if (analyze_pass == PP_FIRST_PASS)
 	{
 		post_process_scan_linkage(postprocessor, opts, sent, sublinkage);
 		free_sublinkage(sublinkage);
@@ -1057,7 +1058,6 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	/* The code below can be used to generate the "islands" array.
 	 * For this to work, however, you have to call "build_digraph"
 	 * first (as in analyze_fat_linkage). and then "free_digraph".
-	 * For some reason this causes a space leak. XXX !! FIXME!?
 	 */
 	pp = post_process(postprocessor, opts, sent, sublinkage, TRUE);
 
@@ -1073,6 +1073,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 #endif
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
+	li.corpus_cost = -1.0f;
 	li.andlist = NULL;
 
 	if (pp == NULL)

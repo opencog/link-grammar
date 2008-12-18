@@ -282,11 +282,24 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 				fprintf(stdout, "inconsistent domains, ");
 			}
 
-			fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d AND=%d LEN=%d)\n",
-			       linkage_unused_word_cost(linkage),
-			       linkage_disjunct_cost(linkage),
-			       linkage_and_cost(linkage),
-			       linkage_link_cost(linkage));
+			double corpus_cost = linkage_corpus_cost(linkage);
+			if (corpus_cost < 0.0f)
+			{
+				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d AND=%d LEN=%d)\n",
+				       linkage_unused_word_cost(linkage),
+				       linkage_disjunct_cost(linkage),
+				       linkage_and_cost(linkage),
+				       linkage_link_cost(linkage));
+			}
+			else
+			{
+				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%d AND=%d LEN=%d)\n",
+				       corpus_cost,
+				       linkage_unused_word_cost(linkage),
+				       linkage_disjunct_cost(linkage),
+				       linkage_and_cost(linkage),
+				       linkage_link_cost(linkage));
+			}
 		}
 
 		process_linkage(linkage, opts);
