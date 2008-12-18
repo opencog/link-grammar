@@ -1269,7 +1269,7 @@ paranoiacs.n parapets.n paraplegics.n parasites.n parasols.n
 paratroopers.n parcels.n parchments.n pardons.n parents.n pariahs.n 
 parishes.n parishioners.n parkas.n parks.n parlances.n parleys.n 
 parliamentarians.n parliaments.n parlors.n parlours.n parodies.n 
-parodists.n paroxysms.n parricides.n parrots.n pars.n parsers.n 
+parodists.n paroxysms.n parricides.n parrots.n pars.n parses.n parsers.n 
 parsnips.n parsonages.n parsons.n participants.n participles.n 
 particles.n particulars.n parties.n partings.n partisans.n 
 partitions.n partners.n partnerships.n partridges.n parts.n parvenus.n 
