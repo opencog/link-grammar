@@ -3,6 +3,10 @@ if WITH_SAT_SOLVER
 SUBDIRS=minisat sat-solver
 endif
 
+if USE_CORPUS
+SUBDIRS=corpus
+endif
+
 if OS_WIN32
 
 install-libtool-import-lib:

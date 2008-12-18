@@ -45,6 +45,17 @@ void lg_corpus_delete(Corpus *c)
 
 double lg_corpus_score(Corpus *corp, Linkage_info *li)
 {
+#if 0
+extract_links
+extract_thin_linkage
+linkage_post_process
+linkage_get_num_links
+
+linkage_get_link_lword
+
+linkage->sublinkage[linkage->current].link[index];
+
 printf ("hello world\n");
+#endif
 }
 

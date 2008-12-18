@@ -32,7 +32,7 @@ printf ("duuude dct is %s\n", DICTIONARY_DIR);
 		exit(1);
 	}
 
-	qry = "SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = 'suffer.v' AND disjunct = 'Ss- Os+ MVp+ ';";
+	qry = "SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = 'suffers.v' AND disjunct = 'Ss- Os+ MVp+ ';";
 
 	rc = sqlite3_exec(db, qry, callback, 0, &errmsg);
 	if (rc != SQLITE_OK)
