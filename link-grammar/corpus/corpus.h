@@ -9,8 +9,10 @@
 #ifndef _LINKGRAMMAR_CORPUS_H
 #define _LINKGRAMMAR_CORPUS_H
 
+#ifdef USE_CORPUS
+
 #include <sqlite3.h>
-#include "../link-includes.h"
+#include "../api-types.h"
 
 struct corpus_s
 {
@@ -23,6 +25,8 @@ typedef struct corpus_s Corpus;
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
-double lg_corpus_score(Corpus *, Linkage *);
+double lg_corpus_score(Corpus *, Linkage_info *);
+
+#endif /* USE_CORPUS */
 
 #endif /* _LINKGRAMMAR_CORPUS_H */

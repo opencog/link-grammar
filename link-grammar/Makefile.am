@@ -44,6 +44,11 @@ liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsa
 liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
+if USE_CORPUS
+liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
+liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
+endif
+
 if WITH_BINRELOC
 liblink_grammar_la_LIBADD  += -lpthread
 liblink_grammar_java_la_LIBADD  += -lpthread

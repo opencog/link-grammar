@@ -64,8 +64,9 @@ AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
 dnl ====================================================================
 
-AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
+AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DUSE_CORPUS=1 -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
 AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
+AM_CONDITIONAL(USE_CORPUS, test x${SQLiteFound} = xyes)
 
 if test "x${SQLiteFound}" = "xyes"; then
   PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)

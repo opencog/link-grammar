@@ -17,6 +17,7 @@
 #ifdef USE_SAT_SOLVER
 #include "sat-solver/sat-encoder.h"
 #endif
+#include "corpus/corpus.h"
 
 /***************************************************************
 *
@@ -685,6 +686,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	double denom;
 	Linkage_info *link_info;
 	int canonical;
+#ifdef USE_CORPUS
+	Corpus * corp;
+#endif
 
 	free_post_processing(sent);
 
@@ -808,6 +812,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		link_info[N_linkages_post_processed].index = indices[in];
 		N_linkages_post_processed++;
 	}
+
+#ifdef USE_CORPUS
+	corp = lg_corpus_new();
+	for (in=0; in < N_linkages_post_processed; in++)
+	{
+		Linkage_info *li = &link_info[in];
+		lg_corpus_score(corp, li);
+	}
+	lg_corpus_delete(corp);
+#endif
 
 	print_time(opts, "Postprocessed all linkages");
 	qsort((void *)link_info, N_linkages_post_processed, sizeof(Linkage_info),

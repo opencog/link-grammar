@@ -3,7 +3,7 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(SQLITE3_CFLAGS)
 
-if HAVE_SQLITE
+if USE_CORPUS
 lib_LTLIBRARIES = liblink-corpus.la
 endif
 

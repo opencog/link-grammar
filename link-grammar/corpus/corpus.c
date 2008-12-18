@@ -43,7 +43,7 @@ void lg_corpus_delete(Corpus *c)
 	free(c);
 }
 
-double lg_corpus_score(Corpus *corp, Linkage *linakge)
+double lg_corpus_score(Corpus *corp, Linkage_info *li)
 {
 printf ("hello world\n");
 }
