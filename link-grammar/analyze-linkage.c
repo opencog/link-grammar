@@ -801,7 +801,9 @@ static int strictly_smaller_name(const char * s, const char * t)
 
 /**
  * The name of the link is set to be the GCD of the names of
- * its two endpoints.
+ * its two endpoints. Must be called after each extract_links(),
+ * etc. since that call issues a brand-new set of links into 
+ * parse_info.
  */
 static void compute_link_names(Sentence sent)
 {

@@ -490,6 +490,7 @@ static void issue_links_for_choice(Parse_info pi, Parse_choice *pc)
 	}
 }
 
+#ifdef NOT_USED_ANYWHERE
 static void build_current_linkage_recursive(Parse_info pi, Parse_set *set)
 {
 	if (set == NULL) return;
@@ -509,6 +510,7 @@ void build_current_linkage(Parse_info pi)
 	initialize_links(pi);
 	build_current_linkage_recursive(pi, pi->parse_set);
 }
+#endif /* NOT_USED_ANYWHERE */
 
 /**
  * Advance the "current" linkage to the next one
