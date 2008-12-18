@@ -453,7 +453,8 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 {
 	int len, i, j, d;
 	const char *w, *s0;
-	char *u, *u0;
+	char u0[MAX_WORD]; /* Links are *always* less than 10 chars long */
+	char *u;
 	if (strcmp(s,t)==0) return s;  /* would work without this */
 	i = strlen(s);
 	j = strlen(t);
@@ -465,7 +466,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 	}
 	/* s is now the longer (at least not the shorter) string */
 	/* and len is its length */
-	u0 = u = (char *) xalloc(len+1);
+	u = u0;
 	d = 0;
 	s0 = s;
 	while (*t != '\0') {
@@ -479,12 +480,10 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 		s++; t++; u++;
 	}
 	if (d==0) {
-		xfree(u0, len+1);
 		return s0;
 	} else {
 		strcpy(u, s);   /* get the remainder of s */
 		u = string_set_add(u0, sent->string_set);
-		xfree(u0, len+1);
 		return u;
 	}
 }
