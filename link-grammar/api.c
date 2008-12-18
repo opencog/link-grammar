@@ -683,7 +683,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	int N_linkages_found, N_linkages_alloced;
 	int N_linkages_post_processed, N_valid_linkages;
 	int overflowed, only_canonical_allowed;
-	double denom;
 	Linkage_info *link_info;
 	int canonical;
 #ifdef USE_CORPUS
@@ -695,10 +694,11 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	overflowed = build_parse_set(sent, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
-	if (overflowed) {
+	if (overflowed)
+	{
 		/* We know that sent->num_linkages_found is bogus, possibly negative */
 		sent->num_linkages_found = opts->linkage_limit;
-		if (opts->verbosity > 1)
+		if (1 < opts->verbosity)
 		{
 			err_ctxt ec;
 			ec.sent = sent;
@@ -709,7 +709,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 	N_linkages_found = sent->num_linkages_found;
 
-	if (sent->num_linkages_found == 0) {
+	if (sent->num_linkages_found == 0)
+	{
 		sent->num_linkages_alloced = 0;
 		sent->num_linkages_post_processed = 0;
 		sent->num_valid_linkages = 0;
@@ -728,10 +729,13 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 				  N_linkages_alloced, N_linkages_found);
 		}
 	}
-	else N_linkages_alloced = N_linkages_found;
+	else
+	{
+		N_linkages_alloced = N_linkages_found;
+	}
 
 	link_info = (Linkage_info *) xalloc(N_linkages_alloced * sizeof(Linkage_info));
-	N_linkages_post_processed = N_valid_linkages = 0;
+	N_valid_linkages = 0;
 
 	/* Generate an array of linkage indices to examine */
 	indices = (int *) xalloc(N_linkages_alloced * sizeof(int));
@@ -747,14 +751,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		sent->rand_state = N_linkages_found + sent->length;
 		for (in=0; in<N_linkages_alloced; in++)
 		{
-			denom = (double) N_linkages_alloced;
-			block_bottom = (int) (((double)in*(double) N_linkages_found)/denom);
-			block_top = (int) (((double)(in+1)*(double)N_linkages_found)/denom);
-			indices[in] = block_bottom + (rand_r(&sent->rand_state) % (block_top-block_bottom));
+			double frac = (double) N_linkages_found;
+			frac /= (double) N_linkages_alloced;
+			block_bottom = (int) (((double) in) * frac);
+			block_top = (int) (((double) (in+1)) * frac);
+			indices[in] = block_bottom + 
+				(rand_r(&sent->rand_state) % (block_top-block_bottom));
 		}
 	}
 
-	only_canonical_allowed = (!(overflowed || (N_linkages_found > 2*opts->linkage_limit)));
+	only_canonical_allowed = !(overflowed || (N_linkages_found > 2*opts->linkage_limit));
 	/* When we're processing only a small subset of the linkages,
 	 * don't worry about restricting the set we consider to be
 	 * canonical ones.  In the extreme case where we are only
@@ -787,6 +793,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 
 	/* second pass: actually perform post-processing */
+	N_linkages_post_processed = 0;
 	for (in=0; (in < N_linkages_alloced) &&
 			   (!resources_exhausted(opts->resources)); in++)
 	{
