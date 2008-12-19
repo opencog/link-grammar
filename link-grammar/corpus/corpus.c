@@ -46,6 +46,7 @@ void lg_corpus_delete(Corpus *c)
 
 double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 {
+#if 0
 	int i;
 	Parse_info pi = sent->parse_info;
 
@@ -54,7 +55,6 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 		printf("duuude %d is %s\n", i, pi->link_array[i].name);
 
 	}
-#if 0
 extract_links
 extract_thin_linkage
 linkage_post_process

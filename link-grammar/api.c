@@ -792,41 +792,43 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 	}
 
+#ifdef USE_CORPUS
+	corp = lg_corpus_new();
+#endif
+
 	/* second pass: actually perform post-processing */
 	N_linkages_post_processed = 0;
 	for (in=0; (in < N_linkages_alloced) &&
 			   (!resources_exhausted(opts->resources)); in++)
 	{
+		Linkage_info *lifo = &link_info[N_linkages_post_processed];
 		extract_links(indices[in], sent->null_count, sent->parse_info);
 		if (set_has_fat_down(sent))
 		{
 			canonical = is_canonical_linkage(sent);
 			if (only_canonical_allowed && !canonical) continue;
-			link_info[N_linkages_post_processed] =
-				analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
-			link_info[N_linkages_post_processed].fat = TRUE;
-			link_info[N_linkages_post_processed].canonical = canonical;
+			*lifo = analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
+			lifo->fat = TRUE;
+			lifo->canonical = canonical;
 		}
 		else
 		{
-			link_info[N_linkages_post_processed] =
-				analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
-			link_info[N_linkages_post_processed].fat = FALSE;
-			link_info[N_linkages_post_processed].canonical = TRUE;
+			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
+			lifo->fat = FALSE;
+			lifo->canonical = TRUE;
 		}
-		if (link_info[N_linkages_post_processed].N_violations==0)
+		if (0 == lifo->N_violations)
+		{
 			N_valid_linkages++;
-		link_info[N_linkages_post_processed].index = indices[in];
+		}
+		lifo->index = indices[in];
+#ifdef USE_CORPUS
+		lg_corpus_score(corp, sent, lifo);
+#endif
 		N_linkages_post_processed++;
 	}
 
 #ifdef USE_CORPUS
-	corp = lg_corpus_new();
-	for (in=0; in < N_linkages_post_processed; in++)
-	{
-		Linkage_info *li = &link_info[in];
-		lg_corpus_score(corp, sent, li);
-	}
 	lg_corpus_delete(corp);
 #endif
 
