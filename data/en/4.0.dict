@@ -2045,14 +2045,14 @@ assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g:
 (K+ & ({[[@MV+]]} & O*n+)) or ([[@MV+ & O*n+]])) & {@MV+};
 
 give.v send.v buy.v bring.v draw.v lend.v issue.v hand.v pour.v sing.v
-wire.v: 
+telegraph.v wire.v: 
 <verb-pl,i> & <vc-give>;
 
 gives.v sends.v buys.v brings.v draws.v lends.v
-issues.v hands.v pours.v sings.v wires.v: <verb-s> & <vc-give>;
+issues.v hands.v pours.v sings.v telegraphs.v wires.v: <verb-s> & <vc-give>;
 
 sent.v bought.v brought.v drew.v lent.v handed.v poured.v sang.v sung.v
-wired.v:
+telegraphed.v wired.v:
 (<verb-sp,pp> & <vc-give>)
 or (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) 
 or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
@@ -2063,10 +2063,10 @@ gave.v: <verb-sp> & <vc-give>;
 given.v: (<verb-pp> & <vc-give>) or (<verb-pv-b> & {O+ or B- or K+
 or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 giving.g sending.g buying.g bringing.g drawing.g
-lending.g issuing.g handing.g pouring.g singing.g wiring.g: 
+lending.g issuing.g handing.g pouring.g singing.g telegraphing.g wiring.g: 
 (<vc-give> & <verb-ge>) or <verb-ge-d>;
 giving.v sending.v buying.v bringing.v drawing.v lending.v issuing.v
-handing.v pouring.v singing.v wiring.v: <verb-pg> & <vc-give>;
+handing.v pouring.v singing.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
 
 <vc-pass>: {(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
 (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+};
