@@ -929,9 +929,9 @@ or <verb-ge-d>;
 <verb-s> & <vc-tr,intr>;
 /en/words/words.v.2.3:  
 (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-shrank.v sang.v withdrew.v sank.v forgave.v:
+shrank.v withdrew.v sank.v forgave.v:
 <verb-sp> & <vc-tr,intr>;
-shrunk.v sung.v withdrawn.v sunk.v forgiven.v:
+shrunk.v withdrawn.v sunk.v forgiven.v:
 (<verb-pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 bid.v hurt.v thrust.v broadcast.v:
 ((<verb-pl,i> or <verb-sp,pp>) & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+)
@@ -961,7 +961,7 @@ or <verb-ge-d>;
 or ({K+} & <verb-po>);
 split.v spread.v beat.v fit.v shut.v cast.v: ((<verb-pl,i> or <verb-sp,pp>) & 
 <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
-ate.v broke.v flew.v drove.v woke.v ran.v rode.v rang.v hid.v froze.v drew.v sprang.v: 
+ate.v broke.v flew.v drove.v woke.v ran.v rode.v rang.v hid.v froze.v sprang.v: 
 <verb-sp> & <vc-fill>;
 eaten.v broken.v flown.v driven.v woken.v beaten.v ridden.v rung.v hidden.v stricken.v
 frozen.v drawn.v sprung.v: (<verb-pp> & <vc-fill>) or 
@@ -2039,12 +2039,21 @@ owing.g delivering.g according.g awarding.g terming.g granting.g begrudging.g
 assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g: 
 (<vc-owe> & <verb-ge>) or <verb-ge-d>;
 
+% Giving -- 'he sang me a song.' 'He poured me a glass.' etc.
+% bug maybe 'poured' is more like 'wrote' ? investigate ... 
 <vc-give>: ((B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & [O*n+]) or K+}) or 
 (K+ & ({[[@MV+]]} & O*n+)) or ([[@MV+ & O*n+]])) & {@MV+};
-give.v send.v buy.v bring.v lend.v issue.v hand.v: <verb-pl,i> & <vc-give>;
-gives.v sends.v buys.v brings.v lends.v
-issues.v hands.v: <verb-s> & <vc-give>;
-sent.v bought.v brought.v lent.v handed.v: (<verb-sp,pp> & <vc-give>)
+
+give.v send.v buy.v bring.v draw.v lend.v issue.v hand.v pour.v sing.v
+wire.v: 
+<verb-pl,i> & <vc-give>;
+
+gives.v sends.v buys.v brings.v draws.v lends.v
+issues.v hands.v pours.v sings.v wires.v: <verb-s> & <vc-give>;
+
+sent.v bought.v brought.v drew.v lent.v handed.v poured.v sang.v sung.v
+wired.v:
+(<verb-sp,pp> & <vc-give>)
 or (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) 
 or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 issued.v: (<verb-sp,pp> & <vc-give>)
@@ -2053,10 +2062,11 @@ or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>) or ({@E-} & A+);
 gave.v: <verb-sp> & <vc-give>;
 given.v: (<verb-pp> & <vc-give>) or (<verb-pv-b> & {O+ or B- or K+
 or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
-giving.g sending.g buying.g bringing.g 
-lending.g issuing.g handing.g: (<vc-give> & <verb-ge>) or <verb-ge-d>;
-giving.v sending.v buying.v bringing.v lending.v issuing.v
-handing.v: <verb-pg> & <vc-give>;
+giving.g sending.g buying.g bringing.g drawing.g
+lending.g issuing.g handing.g pouring.g singing.g wiring.g: 
+(<vc-give> & <verb-ge>) or <verb-ge-d>;
+giving.v sending.v buying.v bringing.v drawing.v lending.v issuing.v
+handing.v pouring.v singing.v wiring.v: <verb-pg> & <vc-give>;
 
 <vc-pass>: {(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
 (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+};

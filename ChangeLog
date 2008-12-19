@@ -1,5 +1,6 @@
 Version 4.4.2 (xx xxxember 200x) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'
+ * Fix: 'He poured me a glass', 'He wired me the money', etc.
 
 Version 4.4.1 (15 December 2008) includes the following changes:
  * Balance the dictionary tree; this speeds word-lookup slightly.
