@@ -1094,23 +1094,16 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 {
 	int i;
-	Sublinkage *sublinkage;
 	Parse_info pi = sent->parse_info;
-
-	sublinkage = x_create_sublinkage(pi);
-	compute_link_names(sent);
-	for (i=0; i<pi->N_links; i++) {
-		copy_full_link(&sublinkage->link[i],&(pi->link_array[i]));
-	}
 
 	linkage->num_sublinkages = 1;
 	linkage->sublinkage = ex_create_sublinkage(pi);
 
-	for (i=0; i<pi->N_links; ++i) {
-		linkage->sublinkage->link[i] = excopy_link(sublinkage->link[i]);
+	compute_link_names(sent);
+	for (i=0; i<pi->N_links; ++i)
+	{
+		linkage->sublinkage->link[i] = excopy_link(&(pi->link_array[i]));
 	}
-
-	free_sublinkage(sublinkage);
 }
 
 #ifdef DBG
@@ -1191,7 +1184,6 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 
 	analyze_context_t *actx = sent->analyze_ctxt;
 
-	sublinkage = x_create_sublinkage(pi);
 	build_digraph(actx, pi);
 	actx->structure_violation = FALSE;
 	d_root = build_DIS_CON_tree(actx, pi);
@@ -1199,21 +1191,15 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	if (actx->structure_violation)
 	{
 		compute_link_names(sent);
-		for (i=0; i<pi->N_links; i++)
-		{
-			copy_full_link(&sublinkage->link[i],&(pi->link_array[i]));
-		}
-
 		linkage->num_sublinkages=1;
 		linkage->sublinkage = ex_create_sublinkage(pi);
 
 		/* This will have fat links! */
 		for (i=0; i<pi->N_links; ++i)
 		{
-			linkage->sublinkage->link[i] = excopy_link(sublinkage->link[i]);
+			linkage->sublinkage->link[i] = excopy_link(&(pi->link_array[i]));
 		}
 
-		free_sublinkage(sublinkage);
 		free_digraph(actx, pi);
 		free_DIS_tree(d_root);
 		return;
@@ -1238,6 +1224,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	/* now fill out the sublinkage arrays */
 	compute_link_names(sent);
 
+	sublinkage = x_create_sublinkage(pi);
 	num_sublinkages = 0;
 	for (;;)
 	{
