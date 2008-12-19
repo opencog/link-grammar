@@ -453,7 +453,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 {
 	int len, i, j, d;
 	const char *w, *s0;
-	char u0[MAX_WORD]; /* Links are *always* less than 10 chars long */
+	char u0[MAX_TOKEN_LENGTH]; /* Links are *always* less than 10 chars long */
 	char *u;
 	if (strcmp(s,t)==0) return s;  /* would work without this */
 	i = strlen(s);
