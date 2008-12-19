@@ -460,6 +460,7 @@ it: J- or Ox- or ((Ss+ or SFsi+) & <CLAUSE>) or SIs- or
 SFIsi- or OXi- or Vp-;
 they: {[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-);
 we: (Sp+ & <CLAUSE>) or SIp-;
+% XXX why is "I" marked plural ?? a cheap hack to make I've work?
 I.p: ((Sp*i+ or SX+) & <CLAUSE>) or SIp*i- or SXI-;
 
 it_all them_all us_all you_all: Ox- or J-;
@@ -480,7 +481,7 @@ it_all them_all us_all you_all: Ox- or J-;
 %we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
 %I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
 
-’d 'd: Sp- & (PP+ or I+);
+’d 'd: S- & (PP+ or I+);
 ’ll 'll: S- & I+;
 
 something someone somebody:
