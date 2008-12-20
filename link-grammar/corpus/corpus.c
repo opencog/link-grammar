@@ -73,10 +73,11 @@ static int prob_cb(void *user_data, int argc, char **argv, char **colname)
 	return 0;
 }
 
-double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
+double lg_corpus_score(Corpus *corp, Sentence sent)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	char querystr[MAX_TOKEN_LENGTH*25];
+	size_t copied, left;
 	int i, w;
 	int nwords = sent->length;
 	Parse_info pi = sent->parse_info;
@@ -87,9 +88,14 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 	char *errmsg;
 	double tot_score = 0.0;
 
+	if (NULL == corp->dbconn) return 0.0;
+
 	djcount = (int *) malloc (sizeof(int) * (nwords + 2*nwords*nlinks));
 	djlist = djcount + nwords;
 	djloco = djlist + nwords*nlinks;
+
+	/* Decrement nwords, so as to ignore the RIGHT-WALL */
+	nwords --;
 
 	for (w=0; w<nwords; w++)
 	{
@@ -102,6 +108,10 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 		int lword = pi->link_array[i].l;
 		int rword = pi->link_array[i].r;
 		int slot = djcount[lword];
+
+		/* Skip over RW link to the right wall */
+		if (nwords <= rword) continue;
+
 		djlist[lword*nlinks + slot] = i;
       djloco[lword*nlinks + slot] = rword;
 		djcount[lword] ++;
@@ -140,27 +150,34 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 			}
 		}
 
-/* XXXX use strncat for saety ... */
 		/* Create the disjunct string */
-		djstr[0] = 0;
+		left = sizeof(djstr);
+		copied = 0;
 		for (i=0; i<slot; i++)
 		{
 			int dj = djlist[w*nlinks + i];
-			strcat(djstr, pi->link_array[dj].name);
+			copied += strlcpy(djstr+copied, pi->link_array[dj].name, left);
+			left = sizeof(djstr) - copied;
 			if (djloco[w*nlinks + i] < w)
-				strcat(djstr, "-");
+				copied += strlcpy(djstr+copied, "-", left--);
 			else
-				strcat(djstr, "+");
-			strcat(djstr, " ");
+				copied += strlcpy(djstr+copied, "+", left--);
+			copied += strlcpy(djstr+copied, " ", left--);
 		}
 
 		/* Look up the disjunct in the database */
-		strcpy(querystr, 
-			"SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = '");
-		strcat(querystr, sent->word[w].d->string);
-		strcat(querystr, "' AND disjunct = '");
-		strcat(querystr, djstr);
-		strcat(querystr, "';");
+		left = sizeof(querystr);
+		copied = strlcpy(querystr,
+			"SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = '",
+			left);
+		left = sizeof(querystr) - copied;
+		copied += strlcpy(querystr + copied, sent->word[w].d->string, left);
+		left = sizeof(querystr) - copied;
+		copied += strlcpy(querystr + copied, "' AND disjunct = '", left);
+		left = sizeof(querystr) - copied;
+		copied += strlcpy(querystr + copied, djstr, left);
+		left = sizeof(querystr) - copied;
+		strlcpy(querystr + copied, "';", left);
 
 		score.found = 0;
 		rc = sqlite3_exec(corp->dbconn, querystr, prob_cb, &score, &errmsg);
@@ -170,7 +187,7 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 			sqlite3_free(errmsg);
 		}
 
-		/* total up the score */
+		/* Total up the score */
 		if (score.found)
 		{
 			printf ("Word=%s dj=%s score=%f\n",
@@ -184,6 +201,10 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 			tot_score += LOW_SCORE;
 		}
 	}
+
+	free (djcount);
+
+	tot_score /= nwords;
 	return tot_score;
 }
 

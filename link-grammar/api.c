@@ -823,7 +823,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 		lifo->index = indices[in];
 #ifdef USE_CORPUS
-		lg_corpus_score(corp, sent, lifo);
+		lifo->corpus_cost = lg_corpus_score(corp, sent);
 #endif
 		N_linkages_post_processed++;
 	}

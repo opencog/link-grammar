@@ -26,7 +26,7 @@ typedef struct corpus_s Corpus;
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
-double lg_corpus_score(Corpus *, Sentence, Linkage_info *);
+double lg_corpus_score(Corpus *, Sentence);
 
 #endif /* USE_CORPUS */
 
