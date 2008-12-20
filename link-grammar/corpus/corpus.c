@@ -83,6 +83,7 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 	Parse_info pi = sent->parse_info;
 	int nlinks = pi->N_links;
 	int *djlist, *djloco, *djcount;
+	const char *infword;
 	DJscore score;
 	int rc;
 	char *errmsg;
@@ -128,8 +129,9 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 #endif
 	}
 
-	/* Sort the table of disjuncts, left to right */
-	for (w=0; w<nwords; w++)
+	/* Process each word in the sentence (skipping LEFT-WALL, which is
+	 * word 0. */
+	for (w=1; w<nwords; w++)
 	{
 		/* Sort the disjuncts for this word. -- bubble sort */
 		int slot = djcount[w];
@@ -165,13 +167,18 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 			copied += strlcpy(djstr+copied, " ", left--);
 		}
 
+		if (sent->word[w].d)
+			infword = sent->word[w].d->string;
+		else
+			infword = sent->word[w].string;
+
 		/* Look up the disjunct in the database */
 		left = sizeof(querystr);
 		copied = strlcpy(querystr,
 			"SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = '",
 			left);
 		left = sizeof(querystr) - copied;
-		copied += strlcpy(querystr + copied, sent->word[w].d->string, left);
+		copied += strlcpy(querystr + copied, infword, left);
 		left = sizeof(querystr) - copied;
 		copied += strlcpy(querystr + copied, "' AND disjunct = '", left);
 		left = sizeof(querystr) - copied;
@@ -190,14 +197,13 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 		/* Total up the score */
 		if (score.found)
 		{
-			printf ("Word=%s dj=%s score=%f\n",
-				sent->word[w].d->string, djstr, score.score);
+			printf ("Word=%s dj=%s score=%f\n", infword, djstr, score.score);
 			tot_score += score.score;
 		}
 		else
 		{
 			printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
-				sent->word[w].d->string, djstr, LOW_SCORE);
+				infword, djstr, LOW_SCORE);
 			tot_score += LOW_SCORE;
 		}
 	}
