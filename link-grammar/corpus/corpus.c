@@ -14,6 +14,12 @@
 #include "../api-structures.h"
 #include "../utilities.h"
 
+typedef struct 
+{
+	double score;
+	int found;
+} DJscore;
+
 Corpus * lg_corpus_new(void)
 {
 	char * dbname;
@@ -45,15 +51,25 @@ void lg_corpus_delete(Corpus *c)
 	free(c);
 }
 
+/* ========================================================= */
+
+/* LOW_SCORE is what is assumed if a disjunct-word pair is not found
+ * in the dictionary. It is meant to be -log_2(prob(d|w)) where
+ * prob(d|w) is the conditional probability of seeing the disjunct d
+ * given the word w. A value of 17 is about equal to 1 in 100,000.
+ */
+#define LOW_SCORE 17.0
+
 static int prob_cb(void *user_data, int argc, char **argv, char **colname)
 {
-	int i;
-printf ("hello from probcb argc=%d\n", argc);
-	for (i=0; i<argc; i++)
+	DJscore *score = (DJscore *) user_data;
+
+	if (1 < argc)
 	{
-		printf("%s = %s\n", colname[i], argv[i] ? argv[i] : "NULL");
+		prt_error("Error: sql table entry not unique\n");
 	}
-	printf("\n");
+	score->found = 1;
+	score->score = atof(argv[0]);
 	return 0;
 }
 
@@ -66,8 +82,10 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 	Parse_info pi = sent->parse_info;
 	int nlinks = pi->N_links;
 	int *djlist, *djloco, *djcount;
+	DJscore score;
 	int rc;
 	char *errmsg;
+	double tot_score = 0.0;
 
 	djcount = (int *) malloc (sizeof(int) * (nwords + 2*nwords*nlinks));
 	djlist = djcount + nwords;
@@ -92,6 +110,12 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 		djlist[rword*nlinks + slot] = i;
       djloco[rword*nlinks + slot] = lword;
 		djcount[rword] ++;
+
+#ifdef DEBUG
+		printf("Link: %d is %s--%s--%s\n", i, 
+			sent->word[lword].string, pi->link_array[i].name,
+			sent->word[rword].string);
+#endif
 	}
 
 	/* Sort the table of disjuncts, left to right */
@@ -129,7 +153,6 @@ double lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *li)
 				strcat(djstr, "+");
 			strcat(djstr, " ");
 		}
-printf ("dduuude wd=%s<<< dj=%s==\n", sent->word[w].d->string, djstr);
 
 		/* Look up the disjunct in the database */
 		strcpy(querystr, 
@@ -139,40 +162,28 @@ printf ("dduuude wd=%s<<< dj=%s==\n", sent->word[w].d->string, djstr);
 		strcat(querystr, djstr);
 		strcat(querystr, "';");
 
-		rc = sqlite3_exec(corp->dbconn, querystr, prob_cb, 0, &errmsg);
+		score.found = 0;
+		rc = sqlite3_exec(corp->dbconn, querystr, prob_cb, &score, &errmsg);
 		if (rc != SQLITE_OK)
 		{
 			prt_error("Error: SQLite: %s\n", errmsg);
 			sqlite3_free(errmsg);
 		}
+
+		/* total up the score */
+		if (score.found)
+		{
+			printf ("Word=%s dj=%s score=%f\n",
+				sent->word[w].d->string, djstr, score.score);
+			tot_score += score.score;
+		}
+		else
+		{
+			printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
+				sent->word[w].d->string, djstr, LOW_SCORE);
+			tot_score += LOW_SCORE;
+		}
 	}
-	return 0.0f;
-
-#if 0
-	int i;
-
-	for (i=0; i<sent->length; i++)
-	{
-		printf("%s ", sent->word[i].d->string);
-	}
-	printf ("\n");
-
-	for (i=0; i<nlinks; i++)
-	{
-		int lword = pi->link_array[i].l;
-		int rword = pi->link_array[i].r;
-		printf("duuude %d is %s-%s-%s\n", i, 
-sent->word[l].string,
-pi->link_array[i].name,
-sent->word[r].string);
-
-	}
-linkage_get_num_links
-
-linkage_get_link_lword
-
-linkage->sublinkage[linkage->current].link[index];
-#endif
-
+	return tot_score;
 }
 
