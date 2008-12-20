@@ -73,10 +73,57 @@ static int prob_cb(void *user_data, int argc, char **argv, char **colname)
 	return 0;
 }
 
+/* ========================================================= */
+
+static double get_disjunct_score(Corpus *corp,
+                                 const char * inflected_word,
+                                 const char * disjunct)
+{
+	char querystr[MAX_TOKEN_LENGTH*25];
+	size_t copied, left;
+	DJscore score;
+	int rc;
+	char *errmsg;
+
+	/* Look up the disjunct in the database */
+	left = sizeof(querystr);
+	copied = strlcpy(querystr,
+		"SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = '",
+		left);
+	left = sizeof(querystr) - copied;
+	copied += strlcpy(querystr + copied, inflected_word, left);
+	left = sizeof(querystr) - copied;
+	copied += strlcpy(querystr + copied, "' AND disjunct = '", left);
+	left = sizeof(querystr) - copied;
+	copied += strlcpy(querystr + copied, disjunct, left);
+	left = sizeof(querystr) - copied;
+	strlcpy(querystr + copied, "';", left);
+
+	score.found = 0;
+	rc = sqlite3_exec(corp->dbconn, querystr, prob_cb, &score, &errmsg);
+	if (rc != SQLITE_OK)
+	{
+		prt_error("Error: SQLite: %s\n", errmsg);
+		sqlite3_free(errmsg);
+	}
+
+	/* Total up the score */
+	if (score.found)
+	{
+		printf ("Word=%s dj=%s score=%f\n", inflected_word, disjunct, score.score);
+		return score.score;
+	}
+
+	printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
+		inflected_word, disjunct, LOW_SCORE);
+	return LOW_SCORE;
+}
+
+/* ========================================================= */
+
 double lg_corpus_score(Corpus *corp, Sentence sent)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
-	char querystr[MAX_TOKEN_LENGTH*25];
 	size_t copied, left;
 	int i, w;
 	int nwords = sent->length;
@@ -84,9 +131,6 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 	int nlinks = pi->N_links;
 	int *djlist, *djloco, *djcount;
 	const char *infword;
-	DJscore score;
-	int rc;
-	char *errmsg;
 	double tot_score = 0.0;
 
 	if (NULL == corp->dbconn) return 0.0;
@@ -167,45 +211,13 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 			copied += strlcpy(djstr+copied, " ", left--);
 		}
 
+		/* If the word is not inflected, then sent->word[w].d is NULL */
 		if (sent->word[w].d)
 			infword = sent->word[w].d->string;
 		else
 			infword = sent->word[w].string;
 
-		/* Look up the disjunct in the database */
-		left = sizeof(querystr);
-		copied = strlcpy(querystr,
-			"SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = '",
-			left);
-		left = sizeof(querystr) - copied;
-		copied += strlcpy(querystr + copied, infword, left);
-		left = sizeof(querystr) - copied;
-		copied += strlcpy(querystr + copied, "' AND disjunct = '", left);
-		left = sizeof(querystr) - copied;
-		copied += strlcpy(querystr + copied, djstr, left);
-		left = sizeof(querystr) - copied;
-		strlcpy(querystr + copied, "';", left);
-
-		score.found = 0;
-		rc = sqlite3_exec(corp->dbconn, querystr, prob_cb, &score, &errmsg);
-		if (rc != SQLITE_OK)
-		{
-			prt_error("Error: SQLite: %s\n", errmsg);
-			sqlite3_free(errmsg);
-		}
-
-		/* Total up the score */
-		if (score.found)
-		{
-			printf ("Word=%s dj=%s score=%f\n", infword, djstr, score.score);
-			tot_score += score.score;
-		}
-		else
-		{
-			printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
-				infword, djstr, LOW_SCORE);
-			tot_score += LOW_SCORE;
-		}
+		tot_score += get_disjunct_score(corp, infword, djstr);
 	}
 
 	free (djcount);
