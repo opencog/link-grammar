@@ -14,18 +14,13 @@
 #include "../api-structures.h"
 #include "../utilities.h"
 
-typedef struct 
-{
-	double score;
-	int found;
-} DJscore;
-
 Corpus * lg_corpus_new(void)
 {
 	char * dbname;
 	int rc;
 
 	Corpus *c = (Corpus *) malloc(sizeof(Corpus));
+	c->rank_query = NULL;
 	c->errmsg = NULL;
 
 	dbname = "/home/linas/src/novamente/src/link-grammar/trunk/data/sql/disjuncts.db";
@@ -33,16 +28,36 @@ Corpus * lg_corpus_new(void)
 	rc = sqlite3_open(dbname, &c->dbconn);
 	if (rc)
 	{
-		prt_error("Warning: Can't open database: %s\n", sqlite3_errmsg(c->dbconn));
+		prt_error("Warning: Can't open database: %s\n",
+			sqlite3_errmsg(c->dbconn));
 		sqlite3_close(c->dbconn);
 		c->dbconn = NULL;
+		return c;
 	}
+
+	/* Now prepare the statements we plan to use */
+	rc = sqlite3_prepare_v2(c->dbconn, 	
+		"SELECT log_cond_probability FROM Disjuncts "
+		"WHERE inflected_word = ? AND disjunct = ?;",
+		-1, &c->rank_query, NULL);
+	if (rc != SQLITE_OK)
+	{
+		prt_error("Error: Can't prepare the ranking statment: %s\n",
+			sqlite3_errmsg(c->dbconn));
+	}
+
 
 	return c;
 }
 
 void lg_corpus_delete(Corpus *c)
 {
+	if (c->rank_query)
+	{
+		sqlite3_finalize(c->rank_query);
+		c->rank_query = NULL;
+	}
+
 	if (c->dbconn)
 	{
 		sqlite3_close(c->dbconn);
@@ -60,63 +75,46 @@ void lg_corpus_delete(Corpus *c)
  */
 #define LOW_SCORE 17.0
 
-static int prob_cb(void *user_data, int argc, char **argv, char **colname)
-{
-	DJscore *score = (DJscore *) user_data;
-
-	if (1 < argc)
-	{
-		prt_error("Error: sql table entry not unique\n");
-	}
-	score->found = 1;
-	score->score = atof(argv[0]);
-	return 0;
-}
-
-/* ========================================================= */
-
 static double get_disjunct_score(Corpus *corp,
                                  const char * inflected_word,
                                  const char * disjunct)
 {
-	char querystr[MAX_TOKEN_LENGTH*25];
-	size_t copied, left;
-	DJscore score;
+	double val;
 	int rc;
-	char *errmsg;
 
 	/* Look up the disjunct in the database */
-	left = sizeof(querystr);
-	copied = strlcpy(querystr,
-		"SELECT log_cond_probability FROM Disjuncts WHERE inflected_word = '",
-		left);
-	left = sizeof(querystr) - copied;
-	copied += strlcpy(querystr + copied, inflected_word, left);
-	left = sizeof(querystr) - copied;
-	copied += strlcpy(querystr + copied, "' AND disjunct = '", left);
-	left = sizeof(querystr) - copied;
-	copied += strlcpy(querystr + copied, disjunct, left);
-	left = sizeof(querystr) - copied;
-	strlcpy(querystr + copied, "';", left);
-
-	score.found = 0;
-	rc = sqlite3_exec(corp->dbconn, querystr, prob_cb, &score, &errmsg);
+	rc = sqlite3_bind_text(corp->rank_query, 1,
+		inflected_word, -1, SQLITE_STATIC);
 	if (rc != SQLITE_OK)
 	{
-		prt_error("Error: SQLite: %s\n", errmsg);
-		sqlite3_free(errmsg);
+		prt_error("Error: SQLite can't bind word: rc=%d \n", rc);
+		return LOW_SCORE;
 	}
 
-	/* Total up the score */
-	if (score.found)
+	rc = sqlite3_bind_text(corp->rank_query, 2,
+		disjunct, -1, SQLITE_STATIC);
+	if (rc != SQLITE_OK)
 	{
-		printf ("Word=%s dj=%s score=%f\n", inflected_word, disjunct, score.score);
-		return score.score;
+		prt_error("Error: SQLite can't bind disjunct: rc=%d \n", rc);
+		return LOW_SCORE;
 	}
 
-	printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
-		inflected_word, disjunct, LOW_SCORE);
-	return LOW_SCORE;
+	rc = sqlite3_step(corp->rank_query);
+	if (rc != SQLITE_ROW)
+	{
+		printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
+			inflected_word, disjunct, LOW_SCORE);
+		return LOW_SCORE;
+	}
+
+	val = sqlite3_column_double(corp->rank_query, 0);
+	printf ("Word=%s dj=%s score=%f\n", inflected_word, disjunct, val);
+
+	/* Failure to do both a reset *and* a clear will cause subsequent
+	 * binds tp fail. */
+	sqlite3_reset(corp->rank_query);
+	sqlite3_clear_bindings(corp->rank_query);
+	return val;
 }
 
 /* ========================================================= */
@@ -222,6 +220,7 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 
 	free (djcount);
 
+	--nwords;
 	tot_score /= nwords;
 	return tot_score;
 }
