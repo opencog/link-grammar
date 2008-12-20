@@ -129,7 +129,7 @@ lperrno
 lperrmsg
 lperror_clear
 prt_error
-print_total_time
+parse_options_print_total_time
 match
 extract_thin_linkage
 xfree
