@@ -10,21 +10,66 @@ is the SQLite database; it has been choosen because it is "administration
 -free" for the user, and because its license is compatbile with the
 current link-grammar license.
 
-
-The disjuncts.db database contains a single table:
+Disjuncts Table
+---------------
+The disjuncts.db database contains two tables. The first records the 
+probability that a given disjunct will be used for some given word.
+This probability was measured by parsing a large quantity of text, 
+and simply counting disjunct frequencies.  This probability can be 
+used to rank parses, or to discriminate between alternate parses 
+for a sentence.
 
 CREATE TABLE Disjuncts (
    inflected_word TEXT NOT NULL,
    disjunct TEXT NOT NULL,
    log_cond_probability FLOAT
 );
+CREATE INDEX ifwdj ON Disjuncts (inflected_word, disjunct);
 
 The log_cond_probability field contains the value of -log_2 p(d|w)
 where p(d|w) is the conditional probability of seeing the disjunct d
 given that the (inflected) word w was already seen.
 
 
+Word Senses Table
+-----------------
+The DisjunctSenses table associates word senses to (word,disjunct)
+pairs.  The core idea behind this table is that certain word senses
+are used only in certain ways in sentence constructions, and that 
+the Link Grammar disjuncts are fine-grained enough to detect such 
+differences, if they exist. The key idea is "if they exist" -- in
+most cases, grammar is insufficient to discriminate between word
+senses in a sentence -- but in some cases, it is.  The goal here 
+is to try to provide this info, as well as possible.
+
+CREATE TABLE DisjunctSenses (
+   word_sense TEXT NOT NULL,
+   inflected_word TEXT NOT NULL,
+   disjunct TEXT NOT NULL,
+   log_cond_probability FLOAT
+);
+CREATE INDEX siwdj ON DisjunctSenses (inflected_word, disjunct);
+
+The log_cond_probability field records -log_2 p(s|w,d) where s==sense,
+w==word, d==disjunct, so that p(s|w,d) is the probability of seeing the
+sense s, given the word w and the disjunct d.  This probability was 
+obtained by parsing a large quantity of text, and then applying the 
+Radu Mihalcea word-sense disambiguation algorithm to it.
+
+
+
 Notes:
 ------
-To populate this table:
+To populate the disjunct table:
 pg_dump -D -O -t disjuncts lexat
+
+
+To populate the disjnuct-senses table:
+Recompute the conditional probs by:
+opencog/nlp/wsd-post/dj-probs.pl
+
+Then remove the count column, and the bogus entries:
+
+select word_sense, inflected_word, disjunct, log_cond_probability into djsxxxtmp from DisjunctSenses where log_cond_probability > 0;
+
+pg_dump -D -O -t djsxxxtmp lexat
