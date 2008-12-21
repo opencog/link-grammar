@@ -191,6 +191,11 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 			fprintf(stdout, "%s", string);
 			linkage_free_links_and_domains(string);
 		}
+		if (parse_options_get_display_senses(opts))
+		{
+			// XXX TBD.
+			fprintf(stdout, "Not implemented yet\n");
+		}
 		if (parse_options_get_display_postscript(opts))
 		{
 			string = linkage_print_postscript(linkage, FALSE);

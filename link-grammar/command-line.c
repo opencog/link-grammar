@@ -38,6 +38,7 @@ static struct
 	int display_links;
 	int display_walls;
 	int display_union;
+	int display_senses;
 } local;
 
 typedef struct
@@ -65,6 +66,7 @@ static Switch default_switches[] =
    {"null-block", 0, "Size of blocks with null cost 1", &local.null_block},
    {"panic",      1, "Use of \"panic mode\"",           &local.panic_mode},
    {"postscript", 1, "Generate postscript output",      &local.display_postscript},
+   {"senses",     1, "Showing of word senses",          &local.display_senses},
    {"short",      0, "Max length of short links",       &local.short_length},
    {"timeout",    0, "Abort parsing after this long",   &local.timeout},
    {"union",      1, "Showing of 'union' linkage",      &local.display_union},
@@ -333,6 +335,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.max_sentence_length = parse_options_get_max_sentence_length(opts);
 	local.display_bad = parse_options_get_display_bad(opts);
 	local.display_links = parse_options_get_display_links(opts);
+	local.display_senses = parse_options_get_display_senses(opts);
 	local.display_walls = parse_options_get_display_walls(opts);
 	local.display_union = parse_options_get_display_union(opts);
 }
@@ -359,6 +362,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_max_sentence_length(opts, local.max_sentence_length);
 	parse_options_set_display_bad(opts, local.display_bad);
 	parse_options_set_display_links(opts, local.display_links);
+	parse_options_set_display_senses(opts, local.display_senses);
 	parse_options_set_display_walls(opts, local.display_walls);
 	parse_options_set_display_union(opts, local.display_union);
 }

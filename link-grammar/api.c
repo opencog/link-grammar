@@ -95,6 +95,7 @@ Parse_Options parse_options_create(void)
 	po->display_constituents = 0;
 	po->display_bad = FALSE;
 	po->display_links = FALSE;
+	po->display_senses = FALSE;
 
 	return po;
 }
@@ -316,6 +317,14 @@ void parse_options_set_display_links(Parse_Options opts, int dummy) {
 
 int parse_options_get_display_links(Parse_Options opts) {
 	return opts->display_links;
+}
+
+void parse_options_set_display_senses(Parse_Options opts, int dummy) {
+	opts->display_senses = dummy;
+}
+
+int parse_options_get_display_senses(Parse_Options opts) {
+	return opts->display_senses;
 }
 
 void parse_options_set_display_walls(Parse_Options opts, int dummy) {
