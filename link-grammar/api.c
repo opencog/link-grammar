@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <math.h>
 #include <link-grammar/api.h>
 #include "error.h"
 #include "preparation.h"
@@ -45,6 +46,15 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	}
 }
 
+static int CORP_compare_parse(Linkage_info * p1, Linkage_info * p2)
+{
+	double diff = p1->corpus_cost - p2->corpus_cost;
+	if (fabs(diff) < 1.0e-5) 
+		return VDAL_compare_parse(p1, p2);
+	if (diff < 0.0f) return -1;
+	return 1;
+}
+
 /**
  * Create and initialize a Parse_Options object
  */
@@ -64,7 +74,7 @@ Parse_Options parse_options_create(void)
 	po->null_block = 1;
 	po->islands_ok = FALSE;
 	po->cost_model.compare_fn = &VDAL_compare_parse;
-	po->cost_model.type	   = VDAL;
+	po->cost_model.type = VDAL;
 	po->short_length = 6;
 	po->all_short = FALSE;
 	po->twopass_length = 30;
@@ -103,9 +113,18 @@ void parse_options_set_cost_model_type(Parse_Options opts, int cm)
 		opts->cost_model.type = VDAL;
 		opts->cost_model.compare_fn = &VDAL_compare_parse;
 		break;
+	case CORP:
+		opts->cost_model.type = CORP;
+		opts->cost_model.compare_fn = &CORP_compare_parse;
+		break;
 	default:
 		prt_error("Error: Illegal cost model: %d\n", cm);
 	}
+}
+
+int  parse_options_get_cost_model_type(Parse_Options opts)
+{
+	return opts->cost_model.type;
 }
 
 void parse_options_set_verbosity(Parse_Options opts, int dummy)

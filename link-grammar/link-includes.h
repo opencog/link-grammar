@@ -115,6 +115,8 @@ link_public_api(int)
 link_public_api(void)
      parse_options_set_cost_model_type(Parse_Options opts, int cm);
 link_public_api(int)
+     parse_options_get_cost_model_type(Parse_Options opts);
+link_public_api(int)
      parse_options_timer_expired(Parse_Options opts);
 link_public_api(int)
      parse_options_memory_exhausted(Parse_Options opts);
