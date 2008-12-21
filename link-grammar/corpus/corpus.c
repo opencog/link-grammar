@@ -21,6 +21,7 @@ Corpus * lg_corpus_new(void)
 
 	Corpus *c = (Corpus *) malloc(sizeof(Corpus));
 	c->rank_query = NULL;
+	c->sense_query = NULL;
 	c->errmsg = NULL;
 
 	dbname = "/home/linas/src/novamente/src/link-grammar/trunk/data/sql/disjuncts.db";
@@ -117,13 +118,19 @@ static double get_disjunct_score(Corpus *corp,
 	rc = sqlite3_step(corp->rank_query);
 	if (rc != SQLITE_ROW)
 	{
+		val = LOW_SCORE;
+#ifdef DEBUG
 		printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
-			inflected_word, disjunct, LOW_SCORE);
-		return LOW_SCORE;
+			inflected_word, disjunct, val);
+#endif
 	}
-
-	val = sqlite3_column_double(corp->rank_query, 0);
-	printf ("Word=%s dj=%s score=%f\n", inflected_word, disjunct, val);
+	else
+	{
+		val = sqlite3_column_double(corp->rank_query, 0);
+#ifdef DEBUG
+		printf ("Word=%s dj=%s score=%f\n", inflected_word, disjunct, val);
+#endif
+	}
 
 	/* Failure to do both a reset *and* a clear will cause subsequent
 	 * binds tp fail. */
@@ -147,7 +154,7 @@ static void get_disjunct_sense(Corpus *corp,
 		inflected_word, -1, SQLITE_STATIC);
 	if (rc != SQLITE_OK)
 	{
-		prt_error("Error: SQLite sense can't bind word: rc=%d \n", rc);
+		prt_error("Error: SQLite can't bind word in sense query: rc=%d \n", rc);
 		return;
 	}
 
@@ -155,22 +162,23 @@ static void get_disjunct_sense(Corpus *corp,
 		disjunct, -1, SQLITE_STATIC);
 	if (rc != SQLITE_OK)
 	{
-		prt_error("Error: SQLite sense can't bind disjunct: rc=%d \n", rc);
+		prt_error("Error: SQLite can't bind disjunct in sense query: rc=%d \n", rc);
 		return;
 	}
 
 	rc = sqlite3_step(corp->sense_query);
 	if (rc != SQLITE_ROW)
 	{
-		printf ("Word=%s dj=%s not found in sense dict\n",
-			inflected_word, disjunct);
-		return;
+		// printf ("Word=%s dj=%s not found in sense dict\n",
+		//	inflected_word, disjunct);
 	}
-
-	sense = sqlite3_column_text(corp->sense_query, 0);
-	log_prob = sqlite3_column_double(corp->sense_query, 1);
-	printf ("Word=%s dj=%s sense=%s score=%f\n", 
-		inflected_word, disjunct, sense, log_prob);
+	else
+	{
+		sense = sqlite3_column_text(corp->sense_query, 0);
+		log_prob = sqlite3_column_double(corp->sense_query, 1);
+		printf ("Word=%s dj=%s sense=%s score=%f\n", 
+			inflected_word, disjunct, sense, log_prob);
+	}
 
 	/* Failure to do both a reset *and* a clear will cause subsequent
 	 * binds tp fail. */
