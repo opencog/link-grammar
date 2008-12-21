@@ -49,27 +49,27 @@ typedef struct
 
 static Switch default_switches[] =
 {
-	{"verbosity",	0, "Level of detail in output",		&local.verbosity},
-	{"timeout",	  0, "Abort parsing after this long",	&local.timeout},
-	{"memory",	   0, "Max memory allowed",			   &local.memory},
-	{"limit",		0, "The maximum linkages processed",   &local.linkage_limit},
-	{"null-block",   0, "Size of blocks with null cost 1",  &local.null_block},
-	{"islands-ok",   1, "Use of null-linked islands",	   &local.islands_ok},
-	{"short",		0, "Max length of short links",		&local.short_length},
-	{"batch",		1, "Batch mode",					   &local.batch_mode},
-	{"panic",		1, "Use of \"panic mode\"",			&local.panic_mode},
-	{"null",		 1, "Null links",					   &local.allow_null},
-	{"width",		0, "The width of the display",		 &local.screen_width},
-	{"echo",		 1, "Echoing of input sentence",		&local.echo_on},
-	{"graphics",	 1, "Graphical display of linkage",	 &local.display_on},
-	{"postscript",   1, "Generate postscript output",	   &local.display_postscript},
-	{"constituents", 0, "Generate constituent output",	  &local.display_constituents},
-	{"max-length",   0, "Maximum sentence length",		  &local.max_sentence_length},
-	{"bad",		  1, "Display of bad linkages",		  &local.display_bad},
-	{"links",		1, "Showing of complete link data",	&local.display_links},
-	{"walls",		1, "Showing of wall words",			&local.display_walls},
-	{"union",		1, "Showing of 'union' linkage",	   &local.display_union},
-	{NULL,		   1,  NULL,							  NULL}
+   {"bad",        1, "Display of bad linkages",         &local.display_bad},
+   {"batch",      1, "Batch mode",                      &local.batch_mode},
+   {"constituents", 0, "Generate constituent output",   &local.display_constituents},
+   {"echo",       1, "Echoing of input sentence",       &local.echo_on},
+   {"graphics",   1, "Graphical display of linkage",    &local.display_on},
+   {"islands-ok", 1, "Use of null-linked islands",      &local.islands_ok},
+   {"limit",      0, "The maximum linkages processed",  &local.linkage_limit},
+   {"links",      1, "Showing of complete link data",   &local.display_links},
+   {"max-length", 0, "Maximum sentence length",         &local.max_sentence_length},
+   {"memory",     0, "Max memory allowed",              &local.memory},
+   {"null",       1, "Null links",                      &local.allow_null},
+   {"null-block", 0, "Size of blocks with null cost 1", &local.null_block},
+   {"panic",      1, "Use of \"panic mode\"",           &local.panic_mode},
+   {"postscript", 1, "Generate postscript output",      &local.display_postscript},
+   {"short",      0, "Max length of short links",       &local.short_length},
+   {"timeout",    0, "Abort parsing after this long",   &local.timeout},
+   {"union",      1, "Showing of 'union' linkage",      &local.display_union},
+   {"verbosity",  0, "Level of detail in output",       &local.verbosity},
+   {"walls",      1, "Showing of wall words",           &local.display_walls},
+   {"width",      0, "The width of the display",        &local.screen_width},
+   {NULL,         1,  NULL,                             NULL}
 };
 
 struct {const char * s; const char * str;} user_command[] =
