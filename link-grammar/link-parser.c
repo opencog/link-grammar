@@ -193,8 +193,9 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 		}
 		if (parse_options_get_display_senses(opts))
 		{
-			// XXX TBD.
-			fprintf(stdout, "Not implemented yet\n");
+			string = linkage_print_senses(linkage);
+			fprintf(stdout, "%s", string);
+			linkage_free_senses(string);
 		}
 		if (parse_options_get_display_postscript(opts))
 		{
@@ -254,6 +255,7 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 	int c;
 	int i, num_displayed, num_to_query;
 	Linkage linkage;
+	double corpus_cost;
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
 	if (!parse_options_get_display_bad(opts))
@@ -303,7 +305,7 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 				fprintf(stdout, "inconsistent domains, ");
 			}
 
-			double corpus_cost = linkage_corpus_cost(linkage);
+			corpus_cost = linkage_corpus_cost(linkage);
 			if (corpus_cost < 0.0f)
 			{
 				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d AND=%d LEN=%d)\n",

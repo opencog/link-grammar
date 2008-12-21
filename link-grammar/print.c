@@ -133,6 +133,20 @@ char * linkage_print_links_and_domains(Linkage linkage)
 	return links_string; 
 }
 
+char * linkage_print_senses(Linkage linkage)
+{
+	String * s = string_new();
+	char * sense_string;
+#ifdef USE_CORPUS
+	append_string(s, "Corpus statstics not fully implemented\n");
+#else
+	append_string(s, "Corpus statstics is not enabled in this version\n");
+#endif
+	sense_string = string_copy(s);
+	string_delete(s);
+	return sense_string;
+}
+
 /**
  */
 static char * build_linkage_postscript_string(Linkage linkage, ps_ctxt_t *pctx)
@@ -551,12 +565,17 @@ char * linkage_print_diagram(Linkage linkage)
 
 void linkage_free_diagram(char * s)
 {
-		exfree(s, strlen(s)+1);
+	exfree(s, strlen(s)+1);
 }
 
 void linkage_free_links_and_domains(char * s)
 {
-		exfree(s, strlen(s)+1);
+	exfree(s, strlen(s)+1);
+}
+
+void linkage_free_senses(char * s)
+{
+	exfree(s, strlen(s)+1);
 }
 
 char * linkage_print_postscript(Linkage linkage, int mode)

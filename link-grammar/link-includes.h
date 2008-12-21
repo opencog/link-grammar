@@ -286,6 +286,10 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_links_and_domains(char *str);
 link_public_api(char *)
+     linkage_print_senses(Linkage linkage);
+link_public_api(void)
+     linkage_free_senses(char *str);
+link_public_api(char *)
      linkage_print_constituent_tree(Linkage linkage, int mode);
 link_public_api(void)
      linkage_free_constituent_tree_str(char *str);
