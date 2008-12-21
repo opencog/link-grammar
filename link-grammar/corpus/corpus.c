@@ -46,6 +46,15 @@ Corpus * lg_corpus_new(void)
 			sqlite3_errmsg(c->dbconn));
 	}
 
+	rc = sqlite3_prepare_v2(c->dbconn, 	
+		"SELECT word_sense, log_cond_probability FROM DisjunctSenses "
+		"WHERE inflected_word = ? AND disjunct = ?;",
+		-1, &c->sense_query, NULL);
+	if (rc != SQLITE_OK)
+	{
+		prt_error("Error: Can't prepare the sense statment: %s\n",
+			sqlite3_errmsg(c->dbconn));
+	}
 
 	return c;
 }
@@ -56,6 +65,12 @@ void lg_corpus_delete(Corpus *c)
 	{
 		sqlite3_finalize(c->rank_query);
 		c->rank_query = NULL;
+	}
+
+	if (c->sense_query)
+	{
+		sqlite3_finalize(c->sense_query);
+		c->sense_query = NULL;
 	}
 
 	if (c->dbconn)
@@ -115,6 +130,52 @@ static double get_disjunct_score(Corpus *corp,
 	sqlite3_reset(corp->rank_query);
 	sqlite3_clear_bindings(corp->rank_query);
 	return val;
+}
+
+/* ========================================================= */
+
+static void get_disjunct_sense(Corpus *corp,
+                                 const char * inflected_word,
+                                 const char * disjunct)
+{
+	double log_prob;
+	const unsigned char *sense;
+	int rc;
+
+	/* Look up the disjunct in the database */
+	rc = sqlite3_bind_text(corp->sense_query, 1,
+		inflected_word, -1, SQLITE_STATIC);
+	if (rc != SQLITE_OK)
+	{
+		prt_error("Error: SQLite sense can't bind word: rc=%d \n", rc);
+		return;
+	}
+
+	rc = sqlite3_bind_text(corp->sense_query, 2,
+		disjunct, -1, SQLITE_STATIC);
+	if (rc != SQLITE_OK)
+	{
+		prt_error("Error: SQLite sense can't bind disjunct: rc=%d \n", rc);
+		return;
+	}
+
+	rc = sqlite3_step(corp->sense_query);
+	if (rc != SQLITE_ROW)
+	{
+		printf ("Word=%s dj=%s not found in sense dict\n",
+			inflected_word, disjunct);
+		return;
+	}
+
+	sense = sqlite3_column_text(corp->sense_query, 0);
+	log_prob = sqlite3_column_double(corp->sense_query, 1);
+	printf ("Word=%s dj=%s sense=%s score=%f\n", 
+		inflected_word, disjunct, sense, log_prob);
+
+	/* Failure to do both a reset *and* a clear will cause subsequent
+	 * binds tp fail. */
+	sqlite3_reset(corp->sense_query);
+	sqlite3_clear_bindings(corp->sense_query);
 }
 
 /* ========================================================= */
@@ -216,6 +277,7 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 			infword = sent->word[w].string;
 
 		tot_score += get_disjunct_score(corp, infword, djstr);
+get_disjunct_sense(corp, infword, djstr);
 	}
 
 	free (djcount);

@@ -20,6 +20,7 @@ struct corpus_s
 	char * dbname;
 	sqlite3 *dbconn;
 	sqlite3_stmt *rank_query;
+	sqlite3_stmt *sense_query;
 	char *errmsg;
 };
 
