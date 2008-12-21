@@ -33,8 +33,8 @@
 
 typedef enum
 {
-	VDAL=1, /* sort by Violations, Disjunct cost, And cost, Link cost */
-	CORP, /* Sort by Corpus cost */
+	VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
+	CORPUS, /* Sort by Corpus cost */
 }  Cost_Model_type;
 
 struct Cost_Model_s

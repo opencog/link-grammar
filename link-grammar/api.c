@@ -113,9 +113,13 @@ void parse_options_set_cost_model_type(Parse_Options opts, int cm)
 		opts->cost_model.type = VDAL;
 		opts->cost_model.compare_fn = &VDAL_compare_parse;
 		break;
-	case CORP:
-		opts->cost_model.type = CORP;
+	case CORPUS:
+#ifdef USE_CORPUS
+		opts->cost_model.type = CORPUS;
 		opts->cost_model.compare_fn = &CORP_compare_parse;
+#else
+		prt_error("Error: Cost model 'CORPUS' not enabled.\n");
+#endif
 		break;
 	default:
 		prt_error("Error: Illegal cost model: %d\n", cm);

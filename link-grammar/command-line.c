@@ -28,6 +28,7 @@ static struct
 	int panic_mode;
 	int allow_null;
 	int echo_on;
+	int cost_model;
 	int screen_width;
 	int display_on;
 	int display_constituents;
@@ -52,6 +53,7 @@ static Switch default_switches[] =
    {"bad",        1, "Display of bad linkages",         &local.display_bad},
    {"batch",      1, "Batch mode",                      &local.batch_mode},
    {"constituents", 0, "Generate constituent output",   &local.display_constituents},
+   {"cost",       0, "Cost model used for ranking",     &local.cost_model},
    {"echo",       1, "Echoing of input sentence",       &local.echo_on},
    {"graphics",   1, "Graphical display of linkage",    &local.display_on},
    {"islands-ok", 1, "Use of null-linked islands",      &local.islands_ok},
@@ -318,6 +320,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.null_block = parse_options_get_null_block(opts);
 	local.islands_ok = parse_options_get_islands_ok(opts);
 	local.short_length = parse_options_get_short_length(opts);
+	local.cost_model = parse_options_get_cost_model_type(opts);
 	local.echo_on = parse_options_get_echo_on(opts);
 	local.batch_mode = parse_options_get_batch_mode(opts);
 	local.panic_mode = parse_options_get_panic_mode(opts);
@@ -344,6 +347,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_islands_ok(opts, local.islands_ok);
 	parse_options_set_short_length(opts, local.short_length);
 	parse_options_set_echo_on(opts, local.echo_on);
+	parse_options_set_cost_model_type(opts, local.cost_model);
 	parse_options_set_batch_mode(opts, local.batch_mode);
 	parse_options_set_panic_mode(opts, local.panic_mode);
 	parse_options_set_screen_width(opts, local.screen_width);
