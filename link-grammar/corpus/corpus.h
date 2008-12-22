@@ -30,6 +30,8 @@ Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
 void lg_corpus_disjuncts(Corpus *, Sentence, Linkage_info *);
 void lg_corpus_score(Corpus *, Sentence, Linkage_info *);
+void lg_corpus_senses(Corpus *, const char *, const char *);
+
 
 #endif /* USE_CORPUS */
 

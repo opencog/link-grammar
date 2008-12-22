@@ -140,9 +140,29 @@ char * linkage_print_senses(Linkage linkage)
 	char * sense_string;
 #ifdef USE_CORPUS
 	Corpus * corp;
+	const char * infword;
+	Sentence sent = linkage->sent;
+	int nwords = sent->length;
+	Linkage_info *lifo = &linkage->info;
+	int w;
 
 	corp = lg_corpus_new();
-	// lg_corpus_score(corp, linkage->sent);
+
+	/* Decrement nwords, so as to ignore the RIGHT-WALL */
+	nwords --;
+
+	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
+	 * word 0. */
+	for (w=1; w<nwords; w++)
+	{
+		/* If the word is not inflected, then sent->word[w].d is NULL */
+		if (sent->word[w].d)
+			infword = sent->word[w].d->string;
+		else
+			infword = sent->word[w].string;
+
+		lg_corpus_senses(corp, infword, lifo->disjunct_list_str[w]);
+	}
 	lg_corpus_delete(corp);
 
 	append_string(s, "Corpus statstics not fully implemented\n");

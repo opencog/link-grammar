@@ -141,9 +141,9 @@ static double get_disjunct_score(Corpus *corp,
 
 /* ========================================================= */
 
-static void get_disjunct_sense(Corpus *corp,
-                                 const char * inflected_word,
-                                 const char * disjunct)
+void lg_corpus_senses(Corpus *corp,
+                      const char * inflected_word,
+                      const char * disjunct)
 {
 	double log_prob;
 	const unsigned char *sense;
@@ -292,7 +292,7 @@ void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
 
-	/* Process each word in the sentence (skipping LEFT-WALL, which is
+	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
 	 * word 0. */
 	for (w=1; w<nwords; w++)
 	{
@@ -310,5 +310,3 @@ void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
 	tot_score /= nwords;
 	lifo->corpus_cost = tot_score;
 }
-
-// get_disjunct_sense(corp, infword, djstr);
