@@ -188,7 +188,7 @@ static void get_disjunct_sense(Corpus *corp,
 
 /* ========================================================= */
 
-double lg_corpus_score(Corpus *corp, Sentence sent)
+void lg_corpus_disjuncts(Corpus *corp, Sentence sent, Linkage_info *lifo)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	size_t copied, left;
@@ -197,10 +197,8 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 	Parse_info pi = sent->parse_info;
 	int nlinks = pi->N_links;
 	int *djlist, *djloco, *djcount;
-	const char *infword;
-	double tot_score = 0.0;
 
-	if (NULL == corp->dbconn) return 0.0;
+	if (NULL == corp->dbconn) return;
 
 	djcount = (int *) malloc (sizeof(int) * (nwords + 2*nwords*nlinks));
 	djlist = djcount + nwords;
@@ -278,20 +276,39 @@ double lg_corpus_score(Corpus *corp, Sentence sent)
 			copied += strlcpy(djstr+copied, " ", left--);
 		}
 
+		lifo->disjunct_list_str[w] = strdup(djstr);
+	}
+
+	free (djcount);
+}
+
+void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
+{
+	const char * infword;
+	double tot_score = 0.0f;
+	int nwords = sent->length;
+	int w;
+
+	/* Decrement nwords, so as to ignore the RIGHT-WALL */
+	nwords --;
+
+	/* Process each word in the sentence (skipping LEFT-WALL, which is
+	 * word 0. */
+	for (w=1; w<nwords; w++)
+	{
 		/* If the word is not inflected, then sent->word[w].d is NULL */
 		if (sent->word[w].d)
 			infword = sent->word[w].d->string;
 		else
 			infword = sent->word[w].string;
 
-		tot_score += get_disjunct_score(corp, infword, djstr);
-get_disjunct_sense(corp, infword, djstr);
+		tot_score += get_disjunct_score(corp, infword, lifo->disjunct_list_str[w]);
 	}
 
-	free (djcount);
-
+	/* Decrement nwords, so as to ignore the LEFT-WALL */
 	--nwords;
 	tot_score /= nwords;
-	return tot_score;
+	lifo->corpus_cost = tot_score;
 }
 
+// get_disjunct_sense(corp, infword, djstr);

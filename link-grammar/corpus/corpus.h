@@ -28,7 +28,8 @@ typedef struct corpus_s Corpus;
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
-double lg_corpus_score(Corpus *, Sentence);
+void lg_corpus_disjuncts(Corpus *, Sentence, Linkage_info *);
+void lg_corpus_score(Corpus *, Sentence, Linkage_info *);
 
 #endif /* USE_CORPUS */
 

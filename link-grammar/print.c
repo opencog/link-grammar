@@ -142,7 +142,7 @@ char * linkage_print_senses(Linkage linkage)
 	Corpus * corp;
 
 	corp = lg_corpus_new();
-	lg_corpus_score(corp, linkage->sent);
+	// lg_corpus_score(corp, linkage->sent);
 	lg_corpus_delete(corp);
 
 	append_string(s, "Corpus statstics not fully implemented\n");
