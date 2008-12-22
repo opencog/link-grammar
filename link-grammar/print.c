@@ -14,6 +14,7 @@
 
 #include <stdarg.h>
 #include <link-grammar/api.h>
+#include "corpus/corpus.h"
 
 const char * trailer(int mode);
 const char * header(int mode);
@@ -138,6 +139,12 @@ char * linkage_print_senses(Linkage linkage)
 	String * s = string_new();
 	char * sense_string;
 #ifdef USE_CORPUS
+	Corpus * corp;
+
+	corp = lg_corpus_new();
+	lg_corpus_score(corp, linkage->sent);
+	lg_corpus_delete(corp);
+
 	append_string(s, "Corpus statstics not fully implemented\n");
 #else
 	append_string(s, "Corpus statstics is not enabled in this version\n");

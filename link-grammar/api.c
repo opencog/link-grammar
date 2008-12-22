@@ -530,67 +530,47 @@ int dictionary_get_max_cost(Dictionary dict)
 	return dict->max_cost;
 }
 
-
 /***************************************************************
 *
-* Routines for creating and destroying processing Sentences
+* Routines for postprocessing
 *
 ****************************************************************/
 
-Sentence sentence_create(char *input_string, Dictionary dict)
+static Linkage_info * linkage_info_new(int num_to_alloc)
 {
-	Sentence sent;
-	int i;
-
-	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
-	bzero(sent, sizeof(struct Sentence_s));
-	sent->dict = dict;
-	sent->length = 0;
-	sent->num_linkages_found = 0;
-	sent->num_linkages_alloced = 0;
-	sent->num_linkages_post_processed = 0;
-	sent->num_valid_linkages = 0;
-	sent->link_info = NULL;
-	sent->deletable = NULL;
-	sent->effective_dist = NULL;
-	sent->num_valid_linkages = 0;
-	sent->null_count = 0;
-	sent->parse_info = NULL;
-	sent->string_set = string_set_create();
-
-	if (!separate_sentence(input_string, sent))
+	int i,j;
+	Linkage_info *link_info;
+	link_info = (Linkage_info *) xalloc(num_to_alloc * sizeof(Linkage_info));
+#ifdef USE_CORPUS
+	for (i=0; i<num_to_alloc; i++)
 	{
-		string_set_delete(sent->string_set);
-		xfree(sent, sizeof(struct Sentence_s));
-		return NULL;
-	}
-
-	sent->q_pruned_rules = FALSE; /* for post processing */
-	sent->is_conjunction = (char *) xalloc(sizeof(char)*sent->length);
-	set_is_conjunction(sent);
-	initialize_conjunction_tables(sent);
-
-	for (i=0; i<sent->length; i++)
-	{
-		/* in case we free these before they set to anything else */
-		sent->word[i].x = NULL;
-		sent->word[i].d = NULL;
-	}
-
-	if (!(dict->unknown_word_defined && dict->use_unknown_word))
-	{
-		if (!sentence_in_dictionary(sent)) {
-			sentence_delete(sent);
-			return NULL;
+		Linkage_info *lifo = &link_info[i];
+		for (j=0; j<MAX_SENTENCE; j++)
+		{
+			lifo->disjunct_list_str[j] = NULL;
 		}
 	}
+#endif
+	return link_info;
+}
 
-	if (!build_sentence_expressions(sent)) {
-		sentence_delete(sent);
-		return NULL;
+static void linkage_info_delete(Linkage_info *link_info, int sz)
+{
+#ifdef USE_CORPUS
+	int i,j;
+
+	for (i=0; i<sz; i++)
+	{
+		Linkage_info *lifo = &link_info[i];
+		for (j=0; j<MAX_SENTENCE; j++)
+		{
+			if (lifo->disjunct_list_str[j])
+				free(lifo->disjunct_list_str[j]);
+			lifo->disjunct_list_str[j] = NULL;
+		}
 	}
-
-	return sent;
+#endif
+	xfree(link_info, sz);
 }
 
 static void free_andlists(Sentence sent)
@@ -616,97 +596,10 @@ static void free_post_processing(Sentence sent)
 	if (sent->link_info != NULL) {
 		/* postprocessing must have been done */
 		free_andlists(sent);
-		xfree((char *) sent->link_info, sent->num_linkages_alloced*sizeof(Linkage_info));
+		linkage_info_delete(sent->link_info, sent->num_linkages_alloced);
 		sent->link_info = NULL;
 	}
 }
-
-void sentence_delete(Sentence sent)
-{
-	if (!sent) return;
-	/* free_andlists(sent); */
-	free_sentence_disjuncts(sent);
-	free_sentence_expressions(sent);
-	string_set_delete(sent->string_set);
-	free_parse_set(sent);
-	free_post_processing(sent);
-	post_process_close_sentence(sent->dict->postprocessor);
-	free_deletable(sent);
-	free_effective_dist(sent);
-	free_count(sent);
-	free_analyze(sent);
-	xfree(sent->is_conjunction, sizeof(char)*sent->length);
-	xfree((char *) sent, sizeof(struct Sentence_s));
-}
-
-int sentence_length(Sentence sent)
-{
-	if (!sent) return 0;
-	return sent->length;
-}
-
-char * sentence_get_word(Sentence sent, int index)
-{
-	if (!sent) return NULL;
-	return sent->word[index].string;
-}
-
-int sentence_null_count(Sentence sent) {
-	if (!sent) return 0;
-	return sent->null_count;
-}
-
-int sentence_num_linkages_found(Sentence sent) {
-	if (!sent) return 0;
-	return sent->num_linkages_found;
-}
-
-int sentence_num_valid_linkages(Sentence sent) {
-	if (!sent) return 0;
-	return sent->num_valid_linkages;
-}
-
-int sentence_num_linkages_post_processed(Sentence sent) {
-	if (!sent) return 0;
-	return sent->num_linkages_post_processed;
-}
-
-int sentence_num_violations(Sentence sent, int i) {
-	if (!sent) return 0;
-	return sent->link_info[i].N_violations;
-}
-
-int sentence_and_cost(Sentence sent, int i) {
-	if (!sent) return 0;
-	return sent->link_info[i].and_cost;
-}
-
-int sentence_disjunct_cost(Sentence sent, int i) {
-	if (!sent) return 0;
-	return sent->link_info[i].disjunct_cost;
-}
-
-int sentence_link_cost(Sentence sent, int i) {
-	if (!sent) return 0;
-	return sent->link_info[i].link_cost;
-}
-
-char * sentence_get_nth_word(Sentence sent, int i) {
-	if (!sent) return NULL;
-	return sent->word[i].string;
-}
-
-int sentence_nth_word_has_disjunction(Sentence sent, int i) {
-	if (!sent) return 0;
-	return (sent->parse_info->chosen_disjuncts[i] != NULL);
-}
-
-/***************************************************************
-*
-* Routines for postprocessing
-*
-****************************************************************/
-
 
 static void post_process_linkages(Sentence sent, Parse_Options opts)
 {
@@ -766,7 +659,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		N_linkages_alloced = N_linkages_found;
 	}
 
-	link_info = (Linkage_info *) xalloc(N_linkages_alloced * sizeof(Linkage_info));
+	link_info = linkage_info_new(N_linkages_alloced);
 	N_valid_linkages = 0;
 
 	/* Generate an array of linkage indices to examine */
@@ -909,6 +802,148 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	xfree(indices, N_linkages_alloced * sizeof(int));
 	/*if(N_valid_linkages == 0) free_andlists(sent); */
+}
+
+/***************************************************************
+*
+* Routines for creating and destroying processing Sentences
+*
+****************************************************************/
+
+Sentence sentence_create(char *input_string, Dictionary dict)
+{
+	Sentence sent;
+	int i;
+
+	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
+	bzero(sent, sizeof(struct Sentence_s));
+	sent->dict = dict;
+	sent->length = 0;
+	sent->num_linkages_found = 0;
+	sent->num_linkages_alloced = 0;
+	sent->num_linkages_post_processed = 0;
+	sent->num_valid_linkages = 0;
+	sent->link_info = NULL;
+	sent->deletable = NULL;
+	sent->effective_dist = NULL;
+	sent->num_valid_linkages = 0;
+	sent->null_count = 0;
+	sent->parse_info = NULL;
+	sent->string_set = string_set_create();
+
+	if (!separate_sentence(input_string, sent))
+	{
+		string_set_delete(sent->string_set);
+		xfree(sent, sizeof(struct Sentence_s));
+		return NULL;
+	}
+
+	sent->q_pruned_rules = FALSE; /* for post processing */
+	sent->is_conjunction = (char *) xalloc(sizeof(char)*sent->length);
+	set_is_conjunction(sent);
+	initialize_conjunction_tables(sent);
+
+	for (i=0; i<sent->length; i++)
+	{
+		/* in case we free these before they set to anything else */
+		sent->word[i].x = NULL;
+		sent->word[i].d = NULL;
+	}
+
+	if (!(dict->unknown_word_defined && dict->use_unknown_word))
+	{
+		if (!sentence_in_dictionary(sent)) {
+			sentence_delete(sent);
+			return NULL;
+		}
+	}
+
+	if (!build_sentence_expressions(sent)) {
+		sentence_delete(sent);
+		return NULL;
+	}
+
+	return sent;
+}
+
+void sentence_delete(Sentence sent)
+{
+	if (!sent) return;
+	/* free_andlists(sent); */
+	free_sentence_disjuncts(sent);
+	free_sentence_expressions(sent);
+	string_set_delete(sent->string_set);
+	free_parse_set(sent);
+	free_post_processing(sent);
+	post_process_close_sentence(sent->dict->postprocessor);
+	free_deletable(sent);
+	free_effective_dist(sent);
+	free_count(sent);
+	free_analyze(sent);
+	xfree(sent->is_conjunction, sizeof(char)*sent->length);
+	xfree((char *) sent, sizeof(struct Sentence_s));
+}
+
+int sentence_length(Sentence sent)
+{
+	if (!sent) return 0;
+	return sent->length;
+}
+
+char * sentence_get_word(Sentence sent, int index)
+{
+	if (!sent) return NULL;
+	return sent->word[index].string;
+}
+
+int sentence_null_count(Sentence sent) {
+	if (!sent) return 0;
+	return sent->null_count;
+}
+
+int sentence_num_linkages_found(Sentence sent) {
+	if (!sent) return 0;
+	return sent->num_linkages_found;
+}
+
+int sentence_num_valid_linkages(Sentence sent) {
+	if (!sent) return 0;
+	return sent->num_valid_linkages;
+}
+
+int sentence_num_linkages_post_processed(Sentence sent) {
+	if (!sent) return 0;
+	return sent->num_linkages_post_processed;
+}
+
+int sentence_num_violations(Sentence sent, int i) {
+	if (!sent) return 0;
+	return sent->link_info[i].N_violations;
+}
+
+int sentence_and_cost(Sentence sent, int i) {
+	if (!sent) return 0;
+	return sent->link_info[i].and_cost;
+}
+
+int sentence_disjunct_cost(Sentence sent, int i) {
+	if (!sent) return 0;
+	return sent->link_info[i].disjunct_cost;
+}
+
+int sentence_link_cost(Sentence sent, int i) {
+	if (!sent) return 0;
+	return sent->link_info[i].link_cost;
+}
+
+char * sentence_get_nth_word(Sentence sent, int i) {
+	if (!sent) return NULL;
+	return sent->word[i].string;
+}
+
+int sentence_nth_word_has_disjunction(Sentence sent, int i) {
+	if (!sent) return 0;
+	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
 int sentence_parse(Sentence sent, Parse_Options opts)
