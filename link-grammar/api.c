@@ -1027,7 +1027,7 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	linkage->unionized = FALSE;
 	linkage->sent = sent;
 	linkage->opts = opts;
-	linkage->info = sent->link_info[k];
+	linkage->info = &sent->link_info[k];
 	linkage->dis_con_tree = NULL;
 
 	extract_links(sent->link_info[k].index, sent->null_count, sent->parse_info);
@@ -1338,27 +1338,27 @@ const char * linkage_get_word(Linkage linkage, int w)
 
 int linkage_unused_word_cost(Linkage linkage)
 {
-	return linkage->info.unused_word_cost;
+	return linkage->info->unused_word_cost;
 }
 
 int linkage_disjunct_cost(Linkage linkage)
 {
-	return linkage->info.disjunct_cost;
+	return linkage->info->disjunct_cost;
 }
 
 int linkage_and_cost(Linkage linkage)
 {
-	return linkage->info.and_cost;
+	return linkage->info->and_cost;
 }
 
 int linkage_link_cost(Linkage linkage)
 {
-	return linkage->info.link_cost;
+	return linkage->info->link_cost;
 }
 
 double linkage_corpus_cost(Linkage linkage)
 {
-	return linkage->info.corpus_cost;
+	return linkage->info->corpus_cost;
 }
 
 int linkage_get_link_num_domains(Linkage linkage, int index)
@@ -1384,17 +1384,17 @@ const char * linkage_get_violation_name(Linkage linkage)
 
 int linkage_is_canonical(Linkage linkage)
 {
-	return linkage->info.canonical;
+	return linkage->info->canonical;
 }
 
 int linkage_is_improper(Linkage linkage)
 {
-	return linkage->info.improper_fat_linkage;
+	return linkage->info->improper_fat_linkage;
 }
 
 int linkage_has_inconsistent_domains(Linkage linkage)
 {
-	return linkage->info.inconsistent_domains;
+	return linkage->info->inconsistent_domains;
 }
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
@@ -1431,7 +1431,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 			subl->violation = NULL;
 		}
 
-		if (linkage->info.improper_fat_linkage)
+		if (linkage->info->improper_fat_linkage)
 		{
 			pp = NULL;
 		}

@@ -304,7 +304,7 @@ struct Linkage_s
 {
 	int             num_words;  /* number of (tokenized) words */
 	const char *  * word;       /* array of word spellings */
-	Linkage_info    info;       /* index and cost information */
+	Linkage_info*   info;       /* index and cost information */
 	int             num_sublinkages; /* One for thin linkages, bigger for fat */
 	int             current;    /* Allows user to select particular sublinkage */
 	Sublinkage *    sublinkage; /* A parse with conjunctions will have several */
