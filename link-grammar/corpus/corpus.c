@@ -14,6 +14,25 @@
 #include "../api-structures.h"
 #include "../utilities.h"
 
+/* compatibility routines
+ * --  a version of strlcpy, since its not generally available
+ */
+size_t lg_strlcpy(char * dest, const char *src, size_t size)
+{
+	size_t i=0;
+	while ((i<size) || (src[i] != 0x0))
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	if (i<size) size = i;
+	else size--;
+	dest[size] = 0x0;
+	return size; 
+}
+
+/* ========================================================= */
+
 Corpus * lg_corpus_new(void)
 {
 	char * dbname;
@@ -267,13 +286,13 @@ void lg_corpus_disjuncts(Corpus *corp, Sentence sent, Linkage_info *lifo)
 		for (i=0; i<slot; i++)
 		{
 			int dj = djlist[w*nlinks + i];
-			copied += strlcpy(djstr+copied, pi->link_array[dj].name, left);
+			copied += lg_strlcpy(djstr+copied, pi->link_array[dj].name, left);
 			left = sizeof(djstr) - copied;
 			if (djloco[w*nlinks + i] < w)
-				copied += strlcpy(djstr+copied, "-", left--);
+				copied += lg_strlcpy(djstr+copied, "-", left--);
 			else
-				copied += strlcpy(djstr+copied, "+", left--);
-			copied += strlcpy(djstr+copied, " ", left--);
+				copied += lg_strlcpy(djstr+copied, "+", left--);
+			copied += lg_strlcpy(djstr+copied, " ", left--);
 		}
 
 		lifo->disjunct_list_str[w] = strdup(djstr);
