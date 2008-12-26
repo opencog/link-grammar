@@ -3,7 +3,7 @@ if WITH_SAT_SOLVER
 SUBDIRS=minisat sat-solver
 endif
 
-if USE_CORPUS
+if WITH_CORPUS
 SUBDIRS=corpus
 endif
 
@@ -48,7 +48,7 @@ liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsa
 liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
-if USE_CORPUS
+if WITH_CORPUS
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
 liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
 endif

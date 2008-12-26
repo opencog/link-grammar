@@ -46,6 +46,7 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	}
 }
 
+#ifdef USE_CORPUS
 static int CORP_compare_parse(Linkage_info * p1, Linkage_info * p2)
 {
 	double diff = p1->corpus_cost - p2->corpus_cost;
@@ -54,6 +55,7 @@ static int CORP_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	if (diff < 0.0f) return -1;
 	return 1;
 }
+#endif
 
 /**
  * Create and initialize a Parse_Options object
@@ -538,7 +540,9 @@ int dictionary_get_max_cost(Dictionary dict)
 
 static Linkage_info * linkage_info_new(int num_to_alloc)
 {
+#ifdef USE_CORPUS
 	int i,j;
+#endif
 	Linkage_info *link_info;
 	link_info = (Linkage_info *) xalloc(num_to_alloc * sizeof(Linkage_info));
 #ifdef USE_CORPUS

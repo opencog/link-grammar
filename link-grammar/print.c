@@ -143,7 +143,7 @@ char * linkage_print_senses(Linkage linkage)
 	const char * infword;
 	Sentence sent = linkage->sent;
 	int nwords = sent->length;
-	Linkage_info *lifo = &linkage->info;
+	Linkage_info *lifo = linkage->info;
 	int w;
 
 	corp = lg_corpus_new();
@@ -165,7 +165,7 @@ char * linkage_print_senses(Linkage linkage)
 	}
 	lg_corpus_delete(corp);
 
-	append_string(s, "Corpus statstics not fully implemented\n");
+	append_string(s, " ");
 #else
 	append_string(s, "Corpus statstics is not enabled in this version\n");
 #endif
