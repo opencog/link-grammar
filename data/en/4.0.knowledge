@@ -251,8 +251,9 @@ CONTAINS_ONE_RULES:
 					    , "Bad use of adjective64"    ,
  MX#a  ,  TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya   
 			                    , "Bad use of adjective65"    ,
- Ixd   ,  ZZ                                , "Can't use 'do' with that verb" ,
- Oxn   ,  ZZ                                , "Bad use of pronoun66" ,
+;-- ?? there's no Ixd, Oxn, ZZ connectors at this time!
+; Ixd   ,  ZZ                                , "Can't use 'do' with that verb" ,
+; Oxn   ,  ZZ                                , "Bad use of pronoun66" ,
  MVh   ,  EExk   EAxk   D##k                , "Incorrect use of that67"    
 ; B#m  ,   D##w   H   HA                     , "Bad use of gerund68"   
 ; The Rw link necessitated commenting out 68.  Because we had to make B#m a restricted link(see above)
