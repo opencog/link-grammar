@@ -63,6 +63,9 @@ public class LinkGrammar
     // Get the inflected form of the word.
     public static native String getLinkageWord(int i);
 
+    // Get string representing the disjunct actually used.
+    public static native String getLinkageDisjunct(int i);
+
     public static native int getNumSkippedWords();
 
     // C linkage access functions

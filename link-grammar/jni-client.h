@@ -77,6 +77,9 @@ JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getWord
 JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageWord
 	(JNIEnv *, jclass, jint);
 
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct
+	(JNIEnv *, jclass, jint);
+
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *, jclass);
 

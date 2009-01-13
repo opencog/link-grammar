@@ -435,6 +435,18 @@ Java_org_linkgrammar_LinkGrammar_getLinkageWord(JNIEnv *env, jclass cls, jint i)
 	return j;
 }
 
+JNIEXPORT jstring JNICALL
+Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct(JNIEnv *env, jclass cls, jint i)
+{
+	per_thread_data *ptd = get_ptd(env, cls);
+
+	/* does not need to be freed, points into data structures */
+	/* returns the inflected word. */
+	const char * w = linkage_get_disjunct(ptd->linkage, i);
+	jstring j = (*env)->NewStringUTF(env, w);
+	return j;
+}
+
 /*
  * Class:		 LinkGrammar
  * Method:		numSkippedWords

@@ -14,19 +14,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 
- * <p>
- * A <code>Linkage</code> represents one of possibly many parses returned by Link Grammar. Each 
- * <code>Linkage</code> is defined by a list of <code>Link</code>s between the tokens in a sentence.
- * A <code>Linkage</code> also has some metadata associated with it, e.g. for various cost measures. 
- * </p>
+ * A <code>Linkage</code> represents one of possibly many parses
+ * returned by the Link Grammar parser. Each <code>Linkage</code>
+ * is defined by a list of <code>Link</code>s between the tokens
+ * in a sentence.  A <code>Linkage</code> also has some metadata
+ *  associated with it, e.g. for various cost measures. 
  *
  * @author Borislav Iordanov
- *
  */
 public class Linkage implements Iterable<Link>
 {
 	private List<Link> links = new ArrayList<Link>();
+	private String [] disjuncts;
 	private String [] words;
 	private String constituentString;
 	private int linkedWordCount;
@@ -45,6 +44,21 @@ public class Linkage implements Iterable<Link>
 		return links.iterator();
 	}
 	
+	public String disjunctAt(int i)
+	{
+		return disjuncts[i];
+	}
+ 
+	public String[] getDisjuncts()
+	{
+		return disjuncts;
+	}
+
+	public void setDisjuncts(String[] disjuncts)
+	{
+		this.disjuncts = disjuncts;
+	}
+
 	public String wordAt(int i)
 	{
 		return words[i];

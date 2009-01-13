@@ -11,12 +11,10 @@
 package org.linkgrammar;
 
 /**
- * 
- * <p>
- * Represents a <em>Link Grammar</em> link as part of a parse result. Link objects contain
- * the indices of the word they link to as well as an identifier of the type of link and label
- * for the left and right connectors.   
- * </p>
+ * Represents a <em>Link Grammar</em> link as part of a parse result. 
+ * Link objects contain the indices of the word they link to as well
+ * as an identifier of the type of link and label for the left and
+ * right connectors.   
  *
  * @author Borislav Iordanov
  *

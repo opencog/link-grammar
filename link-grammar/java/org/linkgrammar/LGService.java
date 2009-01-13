@@ -190,10 +190,15 @@ public class LGService
 			linkage.setLinkCost(LinkGrammar.getLinkageLinkCost());
 			linkage.setLinkedWordCount(LinkGrammar.getNumWords());
 			linkage.setNumViolations(LinkGrammar.getLinkageNumViolations());
+			String [] disjuncts = new String[LinkGrammar.getNumWords()];
 			String [] words = new String[LinkGrammar.getNumWords()];
 			for (int i = 0; i < words.length; i++)
+			{
+				disjuncts[i] = LinkGrammar.getLinkageDisjunct(i);
 				words[i] = LinkGrammar.getLinkageWord(i);
+			}
 			linkage.setWords(words);
+			linkage.setDisjuncts(disjuncts);
 			int numLinks = LinkGrammar.getNumLinks();
 			for (int i = 0; i < numLinks; i++)
 			{
@@ -293,6 +298,13 @@ public class LGService
 			for (int i = 0; i < numWords; i++)
 			{
 				buf.append(jsonString(LinkGrammar.getLinkageWord(i)));
+				if (i + 1 < numWords)
+					buf.append(",");
+			}
+			buf.append("], \"disjuncts\":["); 
+			for (int i = 0; i < numWords; i++)
+			{
+				buf.append(jsonString(LinkGrammar.getLinkageDisjunct(i)));
 				if (i + 1 < numWords)
 					buf.append(",");
 			}
