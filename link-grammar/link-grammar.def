@@ -155,3 +155,4 @@ analyze_thin_linkage
 build_effective_dist
 prune_match
 lg_strlcpy
+lg_compute_disjunct_strings

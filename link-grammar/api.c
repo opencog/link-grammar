@@ -753,7 +753,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 		lifo->index = indices[in];
 #ifdef USE_CORPUS
-		lg_compute_disjunct_strings(sent, lifo);
 		lg_corpus_score(corp, sent, lifo);
 #endif
 		N_linkages_post_processed++;

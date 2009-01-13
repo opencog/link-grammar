@@ -225,10 +225,18 @@ void lg_corpus_senses(Corpus *corp,
  */
 void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
 {
-	const char * infword;
+	const char *infword, *djstr;
 	double tot_score = 0.0f;
 	int nwords = sent->length;
 	int w;
+
+	/* No-op if the database is not open */
+	if (NULL == corp->dbconn) return;
+
+	if (NULL == lifo->disjunct_list_str)
+	{
+		lg_compute_disjunct_strings(sent, lifo);
+	}
 
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
@@ -243,7 +251,8 @@ void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
 		else
 			infword = sent->word[w].string;
 
-		tot_score += get_disjunct_score(corp, infword, lifo->disjunct_list_str[w]);
+		djstr = lifo->disjunct_list_str[w];
+		tot_score += get_disjunct_score(corp, infword, djstr);
 	}
 
 	/* Decrement nwords, so as to ignore the LEFT-WALL */
