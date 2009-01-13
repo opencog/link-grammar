@@ -13,6 +13,7 @@
 
 #include <math.h>
 #include <link-grammar/api.h>
+#include "disjuncts.h"
 #include "error.h"
 #include "preparation.h"
 #ifdef USE_SAT_SOLVER
@@ -752,7 +753,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 		lifo->index = indices[in];
 #ifdef USE_CORPUS
-		lg_corpus_disjuncts(corp, sent, lifo);
+		lg_compute_disjunct_strings(sent, lifo);
 		lg_corpus_score(corp, sent, lifo);
 #endif
 		N_linkages_post_processed++;
@@ -1333,6 +1334,15 @@ const char ** linkage_get_words(Linkage linkage)
 Sentence linkage_get_sentence(Linkage linkage)
 {
 	return linkage->sent;
+}
+
+const char * linkage_get_disjunct(Linkage linkage, int w)
+{
+	if (NULL == linkage->info->disjunct_list_str)
+	{
+		lg_compute_disjunct_strings(linkage->sent, linkage->info);
+	}
+	return linkage->info->disjunct_list_str[w];
 }
 
 const char * linkage_get_word(Linkage linkage, int w)

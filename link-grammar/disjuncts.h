@@ -10,4 +10,4 @@
 /*                                                                       */
 /*************************************************************************/
 
-void lg_compute_disjunct_string(Sentence, Linkage_info *);
+void lg_compute_disjunct_strings(Sentence, Linkage_info *);

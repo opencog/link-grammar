@@ -280,6 +280,8 @@ link_public_api(char **)
 link_public_api(const char **)
      linkage_get_words(Linkage linkage);
 link_public_api(const char *)
+     linkage_get_disjunct(Linkage linkage, int w);
+link_public_api(const char *)
      linkage_get_word(Linkage linkage, int w);
 link_public_api(char *)
      linkage_print_links_and_domains(Linkage linkage);

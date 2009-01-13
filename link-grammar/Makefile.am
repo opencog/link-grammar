@@ -71,6 +71,7 @@ liblink_grammar_la_SOURCES =        \
 	command-line.c                   \
 	constituents.c                   \
 	count.c                          \
+	disjuncts.c                      \
 	error.c                          \
 	extract-links.c                  \
 	fast-match.c                     \

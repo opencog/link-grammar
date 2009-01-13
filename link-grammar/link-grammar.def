@@ -98,6 +98,7 @@ linkage_get_link_rlabel
 linkage_get_link_num_domains
 linkage_get_link_domain_names
 linkage_get_words
+linkage_get_disjunct
 linkage_get_word
 linkage_print_links_and_domains
 linkage_free_links_and_domains

@@ -25,19 +25,16 @@
 /* ========================================================= */
 
 /**
- * lg_compute_disjunct_string -- Given sentence, compute disjuncts.
+ * lg_compute_disjunct_strings -- Given sentence, compute disjuncts.
  *
  * This routine will compute the string representation of the disjunct
  * used for each word in parsing the given sentence. A string
  * representation of the disjunct is needed for most of the corpus
  * statistics functions: this string, together with the "inflected"
  * word, is used as a key to index the statistics information in the
- * database.
- *
- * This routine will return immediately, without computing disjuncts,
- * if the corpus system is not initialized.
+ * database. 
  */
-void lg_compute_disjunct_string(Sentence sent, Linkage_info *lifo)
+void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	size_t copied, left;
