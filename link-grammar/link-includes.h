@@ -275,7 +275,7 @@ link_public_api(const char *)
      linkage_get_link_rlabel(Linkage linkage, int index);
 link_public_api(int)
      linkage_get_link_num_domains(Linkage linkage, int index);
-link_public_api(char **)
+link_public_api(const char **)
      linkage_get_link_domain_names(Linkage linkage, int index);
 link_public_api(const char **)
      linkage_get_words(Linkage linkage);

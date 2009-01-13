@@ -1377,18 +1377,18 @@ double linkage_corpus_cost(Linkage linkage)
 
 int linkage_get_link_num_domains(Linkage linkage, int index)
 {
-	PP_info pp_info;
+	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
-	pp_info = linkage->sublinkage[linkage->current].pp_info[index];
-	return pp_info.num_domains;
+	pp_info = &linkage->sublinkage[linkage->current].pp_info[index];
+	return pp_info->num_domains;
 }
 
-char ** linkage_get_link_domain_names(Linkage linkage, int index)
+const char ** linkage_get_link_domain_names(Linkage linkage, int index)
 {
-	PP_info pp_info;
+	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
-	pp_info = linkage->sublinkage[linkage->current].pp_info[index];
-	return pp_info.domain_name;
+	pp_info = &linkage->sublinkage[linkage->current].pp_info[index];
+	return pp_info->domain_name;
 }
 
 const char * linkage_get_violation_name(Linkage linkage)

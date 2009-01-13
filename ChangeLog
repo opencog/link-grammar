@@ -1,8 +1,9 @@
-Version 4.4.2 (xx xxxember 200x) includes the following changes:
+Version 4.4.2 (xx xxxuary 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'
  * Fix: 'He poured me a glass', 'He wired me the money', etc.
  * Initial rough-in of corpus statistics based parse ranking.
  * Initial rough-in of corpus-guided word-sense identification.
+ * Fix for googlecode bugs 38, 39 (minor API irregulaties)
 
 Version 4.4.1 (15 December 2008) includes the following changes:
  * Balance the dictionary tree; this speeds word-lookup slightly.
