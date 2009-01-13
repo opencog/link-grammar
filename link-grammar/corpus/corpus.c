@@ -33,6 +33,9 @@ size_t lg_strlcpy(char * dest, const char *src, size_t size)
 
 /* ========================================================= */
 
+/**
+ * Initialize the corpus statistics subsystem.
+ */
 Corpus * lg_corpus_new(void)
 {
 	char * dbname;
@@ -76,9 +79,13 @@ Corpus * lg_corpus_new(void)
 			sqlite3_errmsg(c->dbconn));
 	}
 
+	prt_error("Info: Statistics database opened\n");
 	return c;
 }
 
+/**
+ * lg_corpus_delete -- shut down the corpus statistics subsystem.
+ */ 
 void lg_corpus_delete(Corpus *c)
 {
 	if (c->rank_query)
@@ -110,6 +117,16 @@ void lg_corpus_delete(Corpus *c)
  */
 #define LOW_SCORE 17.0
 
+/**
+ * get_disjunct_score -- get log probability of observing disjunt.
+ *
+ * Given an "inflected" word and a disjunct, thris routine returns the
+ * -log_2 conditional probability prob(d|w) of seeing the disjunct 'd'
+ * given that the word 'w' was observed.  Here, "inflected word" means
+ * the link-grammar dictionary entry, complete with its trailing period
+ * and tag -- e.g. run.v or running.g -- everything after the dot is the
+ * "inflection".
+ */
 static double get_disjunct_score(Corpus *corp,
                                  const char * inflected_word,
                                  const char * disjunct)
@@ -160,6 +177,9 @@ static double get_disjunct_score(Corpus *corp,
 
 /* ========================================================= */
 
+/**
+ * lg_corpus_senses -- Given word and disjunct, look up senses.
+ */
 void lg_corpus_senses(Corpus *corp,
                       const char * inflected_word,
                       const char * disjunct)
@@ -207,6 +227,19 @@ void lg_corpus_senses(Corpus *corp,
 
 /* ========================================================= */
 
+/**
+ * lg_corpus_disjuncts -- Given sentence, compute disjuncts.
+ *
+ * This routine will compute the string representation of the disjunct
+ * used for each word in parsing the given sentence. A string
+ * representation of the disjunct is needed for most of the corpus
+ * statistics functions: this string, together with the "inflected"
+ * word, is used as a key to index the statistics information in the
+ * database.
+ *
+ * This routine will return immediately, without computing disjuncts,
+ * if the corpus system is not initialized.
+ */
 void lg_corpus_disjuncts(Corpus *corp, Sentence sent, Linkage_info *lifo)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
@@ -301,6 +334,19 @@ void lg_corpus_disjuncts(Corpus *corp, Sentence sent, Linkage_info *lifo)
 	free (djcount);
 }
 
+/**
+ * lg_corpus_score -- compute parse-ranking score for sentence.
+ *
+ * Given a parsed sentence, this routine will compute a parse ranking
+ * score, based on the probabilites of observing the indicated set of
+ * disjuncts in the statistics database.
+ *
+ * The score is stored in the Linkage_info->corpus_cost struct member.
+ *
+ * The score is currently computed as the average -log_2 conditional
+ * probability p(d|w) of observing disjunct 'd', given word 'w'.
+ * Lower scores are better -- they indicate more likely parses.
+ */
 void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
 {
 	const char * infword;
