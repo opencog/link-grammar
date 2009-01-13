@@ -153,3 +153,4 @@ extract_fat_linkage
 analyze_thin_linkage
 build_effective_dist
 prune_match
+lg_strlcpy

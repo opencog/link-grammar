@@ -66,6 +66,22 @@ void safe_strcpy(char *u, const char * v, size_t usize)
 	u[usize-1] = '\0';
 }
 
+/** 
+ * A version of strlcpy, for those systems that don't have it.
+ */
+size_t lg_strlcpy(char * dest, const char *src, size_t size)
+{
+	size_t i=0;
+	while ((i<size) && (src[i] != 0x0))
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	if (i < size) { dest[i] = 0x0; size = i; }
+	else if (0 < size) { size --; dest[size] = 0x0;}
+	return size; 
+}
+
 /**
  * Catenates as much of v onto u as it can assuming u is of size usize
  * guaranteed to terminate u with a '\0'.  Assumes u and v are null

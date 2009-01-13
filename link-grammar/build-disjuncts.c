@@ -324,7 +324,7 @@ static void print_disjunct_list(Disjunct * c)
 		printf("\n");
 	}
 }
-#endif /* UNUSED_FUNCTION */
+#endif /* DEBUG */
 
 /**
  * Build a new list of connectors starting from the Tconnectors

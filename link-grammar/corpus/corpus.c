@@ -14,22 +14,6 @@
 #include "../api-structures.h"
 #include "../utilities.h"
 
-/* compatibility routines
- * --  a version of strlcpy, since its not generally available
- */
-size_t lg_strlcpy(char * dest, const char *src, size_t size)
-{
-	size_t i=0;
-	while ((i<size) && (src[i] != 0x0))
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	if (i < size) { dest[i] = 0x0; size = i; }
-	else if (0 < size) { size --; dest[size] = 0x0;}
-	return size; 
-}
-
 /* ========================================================= */
 
 /**
