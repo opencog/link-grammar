@@ -121,7 +121,7 @@ void parse_options_set_cost_model_type(Parse_Options opts, int cm)
 		opts->cost_model.type = CORPUS;
 		opts->cost_model.compare_fn = &CORP_compare_parse;
 #else
-		prt_error("Error: Cost model 'CORPUS' not enabled.\n");
+		prt_error("Error: Source code compiled with cost model 'CORPUS' disabled.\n");
 #endif
 		break;
 	default:
