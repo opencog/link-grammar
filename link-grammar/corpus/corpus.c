@@ -20,14 +20,13 @@
 size_t lg_strlcpy(char * dest, const char *src, size_t size)
 {
 	size_t i=0;
-	while ((i<size) || (src[i] != 0x0))
+	while ((i<size) && (src[i] != 0x0))
 	{
 		dest[i] = src[i];
 		i++;
 	}
-	if (i<size) size = i;
-	else size--;
-	dest[size] = 0x0;
+	if (i < size) { dest[i] = 0x0; size = i; }
+	else if (0 < size) { size --; dest[size] = 0x0;}
 	return size; 
 }
 
