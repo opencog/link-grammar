@@ -162,6 +162,14 @@ static double get_disjunct_score(Corpus *corp,
 
 /**
  * lg_corpus_senses -- Given word and disjunct, look up senses.
+ *
+ * Given a particular disjunct for a word, look up its most
+ * likely sense assignments from the database. 
+ *
+ * XXX this function might be removed in the future; it is 
+ * conceptually cleaner to implement in a library sitting above
+ * link-grammar. It does not currently provide any info that 
+ * can be used to steer the link-grammar parsing process.
  */
 void lg_corpus_senses(Corpus *corp,
                       const char * inflected_word,
