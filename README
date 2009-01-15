@@ -1,7 +1,7 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
-                       Version 4.3.10
+                       Version 4.4.2
 
 This directory contains a *patched* version of the final original
 release of the Link Grammar Parser.  It has been patched to fix a
@@ -350,9 +350,6 @@ TODO -- Working Notes:
      If, instead, we allowed the dictionary to contain different
      rules for "tend.meaning1" and "tend.meaning2", the rules would
      simplify (at the cost of inflating the size of the dictionary).
-
-     (Mechaninical work item: extend dictionary suffixes to allow
-     multi-letter suffixes.
 
   "holes" in collocations:
      The link-grammar does not support circumpositions (or even more 
