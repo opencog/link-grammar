@@ -9,7 +9,8 @@ endif
 
 liblink_corpus_la_LDFLAGS = -no-undefined
 
-liblink_corpus_la_SOURCES =    \
+liblink_corpus_la_SOURCES = \
+	corpus.h                 \
 	corpus.c
 
 

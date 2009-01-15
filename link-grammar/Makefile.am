@@ -102,6 +102,7 @@ liblink_grammar_la_SOURCES =        \
 	command-line.h                   \
 	constituents.h                   \
 	count.h                          \
+	disjuncts.h                      \
 	error.h                          \
 	externs.h                        \
 	extract-links.h                  \
