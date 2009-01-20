@@ -1492,6 +1492,9 @@ What is a motor; how does it work?
 Who invented sliced bread, and when did they do it?
 Who invented sliced bread; when did they do it?
 
+% non-planar graph: "saw" and "yesterday" should link, but don't.
+*John saw a dog yesterday which was a Yorkshire terrier.
+
 % Automatic possesive guessing broken when entity is also a verb:
 % "to marry" is a verb, this breaks identification of "Marry" as entity:
 Flumblqwerty's shoes are red.
