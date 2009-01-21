@@ -214,6 +214,12 @@ dnl Might be useful to look at env variables $JDK_HOME and $JAVA_HOME for these.
 dnl
 
 JNI_GUESS=" \
+   -I $JAVA_HOME/include \
+   -I $JAVA_HOME/include/linux \
+   -I $JAVA_HOME/Headers \
+   -I $JDK_HOME/include \
+   -I $JDK_HOME/include/linux \
+   -I $JDK_HOME/Headers \
    -I/usr/include/classpath/ \
    -I/opt/jdk1.5/include/ \
    -I/opt/jdk1.5/include/linux \
