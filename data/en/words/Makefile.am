@@ -8,7 +8,6 @@ WORDS=			\
 	entities.us-states.sing \
 	words.adj.1	\
 	words.adj.2	\
-	words-medical.adj.2	\
 	words.adj.3	\
 	words-medical.adj.3	\
 	words.adv.1	\
