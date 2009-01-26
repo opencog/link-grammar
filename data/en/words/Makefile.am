@@ -9,7 +9,6 @@ WORDS=			\
 	words.adj.1	\
 	words.adj.2	\
 	words.adj.3	\
-	words-medical.adj.3	\
 	words.adv.1	\
 	words-medical.adv.1	\
 	words.adv.2	\
