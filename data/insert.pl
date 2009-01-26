@@ -39,23 +39,26 @@ my $word = shift @words;
 open (DICT, $dict_file);
 while (<DICT>)
 {
-	my $linelen = length $_;
 	chop;
 	my @entries = split;
 
 	# Loop over the entries
+	my $linelen = 0;
 	foreach (@entries)
 	{
 		my $wd = $_;
-		if (($_ gt $word) && ($word ne ""))
+		$linelen += length $_;
+		while (($_ gt $word) && ($word ne ""))
 		{
 			print "$word ";
+			$linelen += length $word;
 			$word = shift @words;
 
 			# Insert a newline if the resulting line is too long.
-			if ($linelen + length($_) > 76)
+			if ($linelen > 62)
 			{
 				print "\n";
+				$linelen = 0;
 			}
 		}
 		print "$_ ";
