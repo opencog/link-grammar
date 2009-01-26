@@ -1,5 +1,6 @@
 Version 4.4.3 (?? 2009)
  * Look at JAVA_HOME to guess location of jni.h
+ * Add dictionary maintenance utility script.
 
 Version 4.4.2 (15 January 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'
