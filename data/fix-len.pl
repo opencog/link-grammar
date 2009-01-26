@@ -21,11 +21,11 @@ while (<>)
 	foreach (@entries)
 	{
 		my $wd = $_;
-		$linelen += length $_;
+		$linelen += 1 + length $_;
 		print "$_ ";
 
 		# Insert a newline if the resulting line is too long.
-		if ($linelen > 72)
+		if ($linelen > 60)
 		{
 			print "\n";
 			$linelen = 0;
@@ -33,4 +33,5 @@ while (<>)
 	}
 }
 
+print "\n";
 
