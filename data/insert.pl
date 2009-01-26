@@ -6,6 +6,12 @@
 # will insert the words into the file, in alphabetical order,
 # with a minimum of disruption of the file itself.
 #
+# It is assumed that the word-list holds one word per line,
+# and that the word-list is already in alphabetical order.
+#
+# Example usage:
+# ./insert.pl wordlist_file en/words/words.adj.1
+#
 # Copyright (C) 2009 Linas Vepstas <linasvepstas@gmail.com>
 #
 
@@ -19,13 +25,42 @@ my $wordlist_file = @ARGV[0];
 my $dict_file = @ARGV[1];
 
 open(WORDS, $wordlist_file);
-@words = <WORDS>;
+my @words = ();
+while (<WORDS>)
+{
+	# Get rid of newline at end of word.
+	chop;
+	push @words, $_;
+}
 close(WORDS);
 
-open (DICT);
+my $word = shift @words;
+
+open (DICT, $dict_file);
 while (<DICT>)
 {
+	my $linelen = length $_;
+	chop;
+	my @entries = split;
 
+	# Loop over the entries
+	foreach (@entries)
+	{
+		my $wd = $_;
+		if (($_ gt $word) && ($word ne ""))
+		{
+			print "$word ";
+			$word = shift @words;
+
+			# Insert a newline if the resulting line is too long.
+			if ($linelen + length($_) > 76)
+			{
+				print "\n";
+			}
+		}
+		print "$_ ";
+	}
+	print "\n";
 }
 close (DICT);
 
