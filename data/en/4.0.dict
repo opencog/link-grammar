@@ -3288,7 +3288,6 @@ significantly substantially: {EE- or EF+} &
 (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
-/en/words/words-medical.adj.2: <comp-adj>;
 
 easier.a: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) 
 & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}))) or 
@@ -3342,7 +3341,6 @@ nothing_but: Vd- & I+;
 ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
 /en/words/words.adj.3: <superlatives>;
-/en/words/words-medical.adj.3: <superlatives>;
 
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
 same.a own.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
