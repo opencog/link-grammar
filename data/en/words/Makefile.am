@@ -1,4 +1,5 @@
 WORDS=			\
+	currency \
 	entities.given-bisex.sing \
 	entities.given-female.sing \
 	entities.given-male.sing \

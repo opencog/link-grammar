@@ -2917,16 +2917,19 @@ mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
 km².u mi².u in².u ft².u m².u cm².u mm².u μm².u yds².u micron².u sq.u
 mi.u in.u ft.u yds.u mph.u MPH.u mpg.u MPG.u rpm.u RPM.u
 min.u hr.u dy.u wk.u wks.u mo.u mos.u yr.u yrs.u
+pica.u point.u pt.u
 d.u dioptre.u
-pound.u inch.u foot.u 
+pound.u inch.u foot.u tbsp.u
 century.u millenium.u year.u month.u week.u day.u hour.u minute.u
 km.u m.u cm.u mm.u um.u μm.u nm.u 
-liter.u l.u ml.u mol.u cc.u molar.u mole.u
+liter.u l.u ml.u cc.u Lt.u LT.u
+mol.u molar.u mole.u
 Ampere.u amp.u ampere.u pA.u nA.u μA.u ma.u mA.u A.u kA.u KA.u
 Volt.u volt.u pV.u nV.u μV.u mv.u mV.u V.u kV.u KV.u
 kilogram.u gram.u milligram.u microgram.u nanogram.u
 ng.u μg.u mg.u g.u kg.u
-Watt.u watt.u kW.u KW.u MW.u GW.u kVA.u
+Watt.u watt.u kW.u KW.u MW.u GW.u PW.u kVA.u
+Newton.u N.u kN.u MN.u mN.u
 Pascal.u Pa.u kPa.u
 Second.u second.u s.u aS.u fS.u pS.u nS.u uS.u μS.u mS.u S.u kS.u
 millisecond.u microsecond.u nanosecond.u picosecond.u 
@@ -2935,7 +2938,15 @@ Bel.u bel.u dB.u decibel.u decibels.u dBm.u
 Hz.u kHz.u KHz.u MHz.u 
 eV.u keV.u KeV.u MeV.u GeV.u
 hp.u HP.u BHP.u 
-γ.u ε.u θ.u λ/4.u :
+ton.u tonne.u T.u kT.u MT.u
+byte.u Byte.u kB.u MB.u GB.u TB.u PB.u
+年.u 月.u 日.u
+°.u γ.u ε.u θ.u λ/4.u :
+((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-)) or Us-
+or (ND- & <noun-main-s> & {Mp+});
+
+% money, same as units, above.
+/en/words/currency:
 ((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-)) or Us-
 or (ND- & <noun-main-s> & {Mp+});
 
@@ -3626,7 +3637,8 @@ or Xe-));
 
 "%": (ND- & {DD-} & <noun-sub-x> & (<noun-main-x>)) or (ND- & (OD- or AN+));
 
-"$" US$ C$ "€": NIax+ & (AN+ or NIay- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
+% See also /en/words/currency for curency names that follow a number.
+"$" USD US$ C$ "€" "£" "₤" "§" "¢" "호점" "¥" "©" "#": NIax+ & (AN+ or NIay- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
 (OD- or ({DD-} & {[[@M+]]} & (<noun-main-p> or [[(Ss+ & <CLAUSE>) or 
 SIs-]])))));
 
