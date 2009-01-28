@@ -2915,6 +2915,7 @@ mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
 
 % Abbreviations of scientific units that follow numbers
 km².u mi².u in².u ft².u m².u cm².u mm².u μm².u yds².u micron².u sq.u
+km³.u mi³.u in³.u ft³.u m³.u cm³.u mm³.u μm³.u yds³.u micron³.u
 mi.u in.u ft.u yds.u mph.u MPH.u mpg.u MPG.u rpm.u RPM.u
 min.u hr.u dy.u wk.u wks.u mo.u mos.u yr.u yrs.u
 pica.u point.u pt.u

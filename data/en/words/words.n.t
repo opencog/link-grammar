@@ -10,9 +10,10 @@ counsellor.t counselor.t dean.t defendant.t defender.t delegate.t
 deputy.t diplomat.t director.t economist.t editor.t emissary.t 
 emperor.t empress.t engineer.t executive.t executor.t father.t foreman.t 
 founder.t governor.t head.t headmaster.t headmistress.t inspector.t 
-intern.t lawyer.t leader.t librarian.t lobbyist.t manager.t mayor.t 
+intern.t lawyer.t leader.t librarian.t lobbyist.t manager.t  marquise.t mayor.t 
 minister.t mother.t officer.t owner.t partner.t pastor.t postmaster.t premier.t 
-president.t professor.t prosecutor.t secretary.t senator.t sheriff.t sister.t
+president.t professor.t prosecutor.t Saint.t Sainte.t 
+secretary.t Seigneur.t Senator.t senator.t sheriff.t sister.t
 solicitor.t speaker.t spokesman.t spokesperson.t spokeswoman.t 
 sponsor.t superintendent.t treasurer.t undersecretary.t underwriter.t 
 warden.t best_man maid_of_honor proprietor.t
