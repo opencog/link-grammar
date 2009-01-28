@@ -273,6 +273,7 @@ link-grammar/minisat/Makefile
 link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
 data/Makefile
+data/de/Makefile
 data/en/Makefile
 data/en/words/Makefile
 data/lt/Makefile

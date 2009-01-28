@@ -1176,8 +1176,8 @@ go.w: (Wi- or S-) & I+;
 
 <vc-go>: {K+ or [[Pa+]] or [[Pg+]]} & {@MV+}; 
 go.v: <verb-pl,i> & <vc-go>;
-goes.v: <verb-s> & <vc-go>;
-went.v: <verb-sp> & <vc-go>; 
+goes.v: <verb-s> & (<vc-go> or [O+]);
+went.v: <verb-sp> & (<vc-go> or [O+]); 
 gone.v: <verb-pp> & <vc-go>;
 % The keys are gone.  The popcorn is all gone.
 gone.a: {@E-} & Pa-;
@@ -2922,8 +2922,8 @@ pound.u inch.u foot.u
 century.u millenium.u year.u month.u week.u day.u hour.u minute.u
 km.u m.u cm.u mm.u um.u μm.u nm.u 
 liter.u l.u ml.u mol.u cc.u molar.u mole.u
-Ampere.u amp.u ampere.u pA.u nA.u μA.u ma.u mA.u A.u kA.u 
-Volt.u volt.u pV.u nV.u μV.u mv.u mV.u V.u kV.u
+Ampere.u amp.u ampere.u pA.u nA.u μA.u ma.u mA.u A.u kA.u KA.u
+Volt.u volt.u pV.u nV.u μV.u mv.u mV.u V.u kV.u KV.u
 kilogram.u gram.u milligram.u microgram.u nanogram.u
 ng.u μg.u mg.u g.u kg.u
 Watt.u watt.u kW.u KW.u MW.u GW.u kVA.u
@@ -2936,8 +2936,8 @@ Hz.u kHz.u KHz.u MHz.u
 eV.u keV.u KeV.u MeV.u GeV.u
 hp.u HP.u BHP.u 
 γ.u ε.u θ.u λ/4.u :
-((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
-% ND- & <noun-main-s>;
+((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-)) or Us-
+or (ND- & <noun-main-s> & {Mp+});
 
 %QUESTION WORDS & CONJUNCTIONS
 
