@@ -1,4 +1,4 @@
-Democrat.t Republican.t abbot.t accompanist.t accountant.t 
+Democrat.t Republican.t Abbé.t abbé.t abbot.t accompanist.t accountant.t 
 administrator.t admiral.t adviser.t advisor.t agent.t aide.t 
 ambassador.t analyst.t arbitrator.t archbishop.t archdeacon.t 
 architect.t archivist.t assessor.t assistant.t associate.t attorney.t 

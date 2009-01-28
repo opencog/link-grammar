@@ -35,7 +35,7 @@ Dinheiro.c dinheiro.c
 Dirham.c درهم.c dirham.c
 Dobra.c dobra.c
 Đồng.c đồng.c
-Drachma.c Δραχμή.c
+Drachma.c Δραχμή.c drachma.c
 Dram.c Դրամ.c dram.c
 ekwele.c
 Ekwele.c Ekuele.c ekuele.c
@@ -124,6 +124,7 @@ Peseta.c peseta.c
 Peso.c peso.c
 peso_moneda_nacional
 nuevo_peso
+Pence.c pence.c
 Phoenix.c phoenix.c
 Piastra.c piastra.c
 Piastre.c piastre.c
