@@ -25,13 +25,11 @@ WORDS=			\
 	words.v.10.3	\
 	words.v.10.4	\
 	words.v.1.1	\
-	words-medical.v.1.1 \
 	words.v.1.2	\
 	words.v.1.3	\
 	words.v.1.4	\
 	words.v.1.p	\
 	words.v.2.1	\
-	words-medical.v.2.1 \
 	words.v.2.2	\
 	words.v.2.3	\
 	words.v.2.4	\
