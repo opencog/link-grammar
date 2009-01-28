@@ -392,22 +392,6 @@ questions.n issues.n:
 (<noun-main2-p> or (Sp*q+ & <CLAUSE>) or SIp*q- or (Rw+ & Bpm+)))
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or AN+;
 
-week.n moment.n hour.n minute.n year.n instant.n period.n month.n 
-second.n decade.n century.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} &
-{WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
-(<noun-main-s> or (Rw+ & Bsm+))) or 
- Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
-day.n night.n:
-({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} &
-{WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
-(<noun-main-m> or (Rw+ & Bsm+))) or 
- Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
-days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
-nights.n seconds.n decades.n centuries.n:
-({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {WN+ or TH+ or Ce+ or 
-(R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+))) 
-or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 reason.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {TH+ or Ce+ or TOn+ or 
 WY+ or (R+ & Bs+)} & {@MXs+} & 
@@ -2881,6 +2865,25 @@ the_year: TY+ & <noun-main-s>;
 every_time: {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or 
 (Xd- & Xc+ & MVx-)));
 
+week.n moment.n hour.n minute.n year.n instant.n period.n month.n 
+second.n decade.n century.n:
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} &
+{WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
+(<noun-main-s> or (Rw+ & Bsm+))) or 
+ Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+
+day.n night.n:
+({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} &
+{WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
+(<noun-main-m> or (Rw+ & Bsm+))) or 
+ Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
+
+days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
+nights.n seconds.n decades.n centuries.n:
+({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {WN+ or TH+ or Ce+ or 
+(R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+))) 
+or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
+
 % AU is abbreviation for "astronomical units"
 blocks.u feet.u miles.u yards.u inches.u 
 meters.u millimeters.u centimeters.u micrometers.u kilometers.u 
@@ -2906,8 +2909,26 @@ dollar.i cent.i: ((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or O
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: MVp- or A+;
 
-°C.u °F.u degrees_Fahrenheit degrees_Centigrade: ND- & <noun-main-s>;
-km².u mi².u in².u ft².u m².u cm².u mm².u yds².u micron².u: ND- & <noun-main-s>;
+% Abbreviations of scientific units that follow numbers
+°C.u °F.u degrees_Fahrenheit degrees_Centigrade
+km².u mi².u in².u ft².u m².u cm².u mm².u μm².u yds².u micron².u sq.u
+mi.u in.u ft.u yds.u mph.u mpg.u rpm.u 
+min.u hr.u dy.u wk.u wks.u mo.u mos.u yr.u yrs.u
+d.u dioptre.u
+km.u m.u cm.u mm.u um.u μm.u nm.u 
+liter.u l.u ml.u mol.u cc.u molar.u mole.u
+Ampere.u pA.u nA.u μA.u ma.u mA.u A.u kA.u 
+Volt.u pV.u nV.u μV.u mv.u mV.u V.u kV.u
+gram.u ng.u μg.u mg.u g.u kg.u
+Watt.u kW.u KW.u MW.u GW.u kVA.u
+Pascal.u Pa.u kPa.u
+Second.u s.u aS.u fS.u pS.u nS.u uS.u μS.u mS.u S.u kS.u
+millisecond.u microsecond.u nanosecond.u picosecond.u femtosecond.u attosecond.u
+Bel.u bel.u dB.u decibel.u decibels.u dBm.u
+Hz.u kHz.u KHz.u MHz.u 
+eV.u keV.u KeV.u MeV.u GeV.u
+hp.u HP.u BHP.u 
+γ.u ε.u θ.u λ/4.u : ND- & <noun-main-s>;
 
 %QUESTION WORDS & CONJUNCTIONS
 
@@ -3567,7 +3588,7 @@ etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
 so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
 <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or M- or MV-;
 
-er errr um umm uh uhh oh ohh ooo yeah woo_hoo
+er errr um.j umm uh uhh oh ohh ooo yeah woo_hoo
 gee gosh wow ah ahh eh ehh hmm hmmm hoo zowie
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
 emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
