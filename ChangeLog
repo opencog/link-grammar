@@ -3,6 +3,7 @@ Version 4.4.3 (?? 2009)
  * Add dictionary maintenance utility script.
  * Add prototype German dictionary.
  * Fix sentences containing measurements, lengths, speeds. etc.
+ * Add 315 new adjectives
 
 Version 4.4.2 (15 January 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'
