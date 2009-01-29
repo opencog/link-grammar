@@ -180,11 +180,12 @@ dateID60: <date-id>;
 I.n: [[{Xi+} & {G-} & G+]];
 
 Ms.x Mrs.x Mr.x Rev.x Dr.x Prof.x Gov.x Sen.x Rep.x Gen.x Brig.x Col.x
-Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x Adm.x Corp.x St.x Mt.x Ft.x:
+Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x Adm.x Corp.x St.x Mt.x Ft.x Cie.x:
 (Xi+ or [[()]]) & G+;
 
 St.y Ave.y Av.y Pl.y Ct.y Dr.y Gr.y Rd.y Blvd.y Pkwy.y Hwy.y Assn.y
-Corp.y Co.y Esq.y Inc.y Pty.y Ltd.y LTD.y Bldg.y and_Co GmBH: G- & {Xi+} & {[MG+]} &
+Corp.y Co.y Esq.y Inc.y Pty.y Ltd.y LTD.y Bldg.y and_Co GmBH.y: 
+G- & {Xi+} & {[MG+]} &
 (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or
 <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
 
@@ -3636,6 +3637,8 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59
 "…" ":" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
 
+% The percent sign following a number
+% Also -- see above, for handling of 12ft. 12in. not just 12%
 "%": (ND- & {DD-} & <noun-sub-x> & (<noun-main-x>)) or (ND- & (OD- or AN+));
 
 % See also /en/words/currency for curency names that follow a number.
