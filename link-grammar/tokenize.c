@@ -21,6 +21,8 @@
 
 #define MAX_STRIP 10
 
+/* These are no longer in use, but are read from the 4.0.affix file */
+/* I've left these here, as an axample of what to expect. */
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
 
@@ -201,7 +203,7 @@ static int issue_sentence_word(Sentence sent, const char * s)
 		   If it's there, the process terminates.
 
 		   If it's not there and it ends in one of the right strippable
-		   strings (see "right_strip") then remove the strippable string
+		   strings (see "strip_right") then remove the strippable string
 		   and make it into a separate word.
 
 		   If there is no strippable string, then the process terminates.
