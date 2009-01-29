@@ -260,7 +260,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
  * w points to a string, wend points to the char one after the end.  The
  * "word" w contains no blanks.  This function splits up the word if
  * necessary, and calls "issue_sentence_word()" on each of the resulting
- * parts.  The process is described above.  returns TRUE of OK, FALSE if
+ * parts.  The process is described above.  Returns TRUE if OK, FALSE if
  * too many punctuation marks 
  */
 static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found)
@@ -280,7 +280,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	char newword[MAX_WORD+1];
 
 	/* Load affixes from the affix table.  */
-	if (sent->dict->affix_table!=NULL)
+	if (sent->dict->affix_table != NULL)
 	{
 		Dictionary dict = sent->dict->affix_table;
 		r_strippable = dict->r_strippable;
@@ -296,15 +296,19 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 		suffix = dict->suffix;
 	}
 
-	for (;;) {
-		for (i=0; i<l_strippable; i++) {
-			if (strncmp(w, strip_left[i], strlen(strip_left[i])) == 0) {
+	for (;;)
+	{
+		for (i=0; i<l_strippable; i++)
+		{
+			/* This is UTF8-safe, I beleive ... */
+			if (strncmp(w, strip_left[i], strlen(strip_left[i])) == 0)
+			{
 				if (!issue_sentence_word(sent, strip_left[i])) return FALSE;
 				w += strlen(strip_left[i]);
 				break;
 			}
 		}
-		if (i==l_strippable) break;
+		if (i == l_strippable) break;
 	}
 
 	/* Now w points to the string starting just to the right of
@@ -332,7 +336,8 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
 			/* the remaining w is too short for a possible match */
 			if ((wend-w) < len) continue;
-			if (strncmp(wend-len, strip_right[i], len) == 0) {
+			if (strncmp(wend-len, strip_right[i], len) == 0)
+			{
 				r_stripped[n_r_stripped] = i;
 				wend -= len;
 				break;
@@ -347,7 +352,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	s_stripped = -1;
 	strncpy(word, w, MIN(wend-w, MAX_WORD));
 	word[MIN(wend-w, MAX_WORD)] = '\0';
-	word_is_in_dict=0;
+	word_is_in_dict = 0;
 
 	if (boolean_dictionary_lookup(sent->dict, word))
 		word_is_in_dict = 1;
@@ -356,83 +361,98 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
 		word_is_in_dict = 1;
 
-	if(word_is_in_dict==0)
+	if (0 == word_is_in_dict)
 	{
-	  j=0;
-	  for (i=0; i < s_strippable+1; i++) {
-		s_ok = 0;
-		/* Go through once for each suffix; then go through one 
-		 * final time for the no-suffix case */
-		if(i < s_strippable) {
-		  len = strlen(suffix[i]);
-
-		  /* the remaining w is too short for a possible match */
-		  if ((wend-w) < len) continue;
-
-		  if (strncmp(wend-len, suffix[i], len) == 0) s_ok=1;
-				  }
-		else len=0;
-
-		if(s_ok==1 || i==s_strippable)
+		j=0;
+		for (i=0; i < s_strippable+1; i++)
 		{
-			strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
-			newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
+			s_ok = 0;
+			/* Go through once for each suffix; then go through one 
+			 * final time for the no-suffix case */
+			if (i < s_strippable)
+			{
+				len = strlen(suffix[i]);
 
-			/* Check if the remainder is in the dictionary;
-			 * for the no-suffix case, it won't be */
-			if (boolean_dictionary_lookup(sent->dict, newword)) {
-				if(verbosity>1) if(i< s_strippable) printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
-				s_stripped = i;
-				wend -= len;
-				strncpy(word, w, MIN(wend-w, MAX_WORD));
-				word[MIN(wend-w, MAX_WORD)] = '\0';
-				break;
+				/* the remaining w is too short for a possible match */
+				if ((wend-w) < len) continue;
+				if (strncmp(wend-len, suffix[i], len) == 0) s_ok=1;
 			}
+			else
+				len = 0;
 
-			/* If the remainder isn't in the dictionary, 
-			 * try stripping off prefixes */
-		  else {
-			for (j=0; j<p_strippable; j++) {
-			  if (strncmp(w, prefix[j], strlen(prefix[j])) == 0) {
-				strncpy(newword, w+strlen(prefix[j]), MIN((wend-len)-(w+strlen(prefix[j])), MAX_WORD));
-				newword[MIN((wend-len)-(w+strlen(prefix[j])), MAX_WORD)]='\0';
-				if(boolean_dictionary_lookup(sent->dict, newword)) {
-				  if(verbosity>1) if(i < s_strippable) printf("Splitting word into three: %s-%s-%s\n", prefix[j], newword, suffix[i]);
-				  if (!issue_sentence_word(sent, prefix[j])) return FALSE;
-				  if(i < s_strippable) s_stripped = i;
-				  wend -= len;
-				  w += strlen(prefix[j]);
-				  strncpy(word, w, MIN(wend-w, MAX_WORD));
-				  word[MIN(wend-w, MAX_WORD)] = '\0';
-				  break;
+			if (s_ok || i == s_strippable)
+			{
+				strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
+				newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
+
+				/* Check if the remainder is in the dictionary;
+				 * for the no-suffix case, it won't be */
+				if (boolean_dictionary_lookup(sent->dict, newword))
+				{
+					if ((verbosity>1) && (i < s_strippable))
+						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
+					s_stripped = i;
+					wend -= len;
+					strncpy(word, w, MIN(wend-w, MAX_WORD));
+					word[MIN(wend-w, MAX_WORD)] = '\0';
+					break;
 				}
-			  }
-			}
-		  }
-		  if(j!=p_strippable) break;
-		}
-	  }
-	}
 
+				/* If the remainder isn't in the dictionary, 
+				 * try stripping off prefixes */
+				else
+				{
+					for (j=0; j<p_strippable; j++)
+					{
+						if (strncmp(w, prefix[j], strlen(prefix[j])) == 0)
+						{
+							int sz = MIN((wend-len)-(w+strlen(prefix[j])), MAX_WORD);
+							strncpy(newword, w+strlen(prefix[j]), sz);
+							newword[sz] = '\0';
+							if (boolean_dictionary_lookup(sent->dict, newword))
+							{
+								if ((verbosity>1) && (i < s_strippable))
+									printf("Splitting word into three: %s-%s-%s\n",
+										prefix[j], newword, suffix[i]);
+								if (!issue_sentence_word(sent, prefix[j])) return FALSE;
+								if (i < s_strippable) s_stripped = i;
+								wend -= len;
+								w += strlen(prefix[j]);
+								sz = MIN(wend-w, MAX_WORD);
+								strncpy(word, w, sz);
+								word[sz] = '\0';
+								break;
+							}
+						}
+					}
+				}
+				if (j != p_strippable) break;
+			}
+		}
+	}
+	
 	/* word is now what remains after all the stripping has been done */
 
-	/*
-	if (n_stripped == MAX_STRIP) {
+#if 0
+	if (n_stripped == MAX_STRIP)
+	{
 		prt_error("Error separating sentence.\n"
 		          "\"%s\" is followed by too many punctuation marks.\n", word);
 		return FALSE;
-	} */
+	}
+#endif
 
 	if (quote_found == TRUE) sent->post_quote[sent->length]=1;
 
 	if (!issue_sentence_word(sent, word)) return FALSE;
 
-	if(s_stripped != -1) {
+	if(s_stripped != -1)
+	{
 	  if (!issue_sentence_word(sent, suffix[s_stripped])) return FALSE;
 	}
 
-	for (i=n_r_stripped-1; i>=0; i--) {
-
+	for (i = n_r_stripped-1; i>=0; i--)
+	{
 		/* Revert fix r22566, which had a commit message:
 		 * "Fix Bug 9756, crash when grammar checking Word document."
 		 * This fix added the line:
