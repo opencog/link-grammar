@@ -369,6 +369,99 @@ void parse_options_reset_resources(Parse_Options opts) {
 *
 ****************************************************************/
 
+static void affix_list_create(Dictionary dict)
+{
+	int i, j, k, l, m;
+	int r_strippable=0, l_strippable=0, u_strippable=0;
+	int s_strippable=0, p_strippable=0;
+	Dict_node * dn, * dn2, * start_dn;
+
+	const char * rpunc_con = "RPUNC";
+	const char * lpunc_con = "LPUNC";
+	const char * units_con = "UNITS";
+
+	/* Hmm SUF and PRE do not seem to be used at this time ... */
+	const char * suf_con = "SUF";
+	const char * pre_con = "PRE";
+
+	dict->strip_left = NULL;
+	dict->strip_right = NULL;
+	dict->strip_units = NULL;
+	dict->prefix = NULL;
+	dict->suffix = NULL;
+
+	/* Load affixes from the affix table. 
+	 */
+	start_dn = list_whole_dictionary(dict->root, NULL);
+	for (dn = start_dn; dn != NULL; dn = dn->right)
+	{
+		if (word_has_connector(dn, rpunc_con, 0)) r_strippable++;
+		if (word_has_connector(dn, lpunc_con, 0)) l_strippable++;
+		if (word_has_connector(dn, units_con, 0)) u_strippable++;
+		if (word_has_connector(dn, suf_con, 0)) s_strippable++;
+		if (word_has_connector(dn, pre_con, 0)) p_strippable++;
+	}
+	dict->strip_right = (const char **) xalloc(r_strippable * sizeof(char *));
+	dict->strip_left = (const char **) xalloc(l_strippable * sizeof(char *));
+	dict->strip_units = (const char **) xalloc(u_strippable * sizeof(char *));
+	dict->suffix = (const char **) xalloc(s_strippable * sizeof(char *));
+	dict->prefix = (const char **) xalloc(p_strippable * sizeof(char *));
+
+	dict->r_strippable = r_strippable;
+	dict->l_strippable = l_strippable;
+	dict->u_strippable = u_strippable;
+	dict->p_strippable = p_strippable;
+	dict->s_strippable = s_strippable;
+
+	i = 0;
+	j = 0;
+	k = 0;
+	l = 0;
+	m = 0;
+	dn = start_dn;
+	while (dn != NULL)
+	{
+		if (word_has_connector(dn, rpunc_con, 0))
+		{
+			dict->strip_right[i] = dn->string;
+			i++;
+		}
+		if (word_has_connector(dn, lpunc_con, 0))
+		{
+			dict->strip_left[j] = dn->string;
+			j++;
+		}
+		if (word_has_connector(dn, units_con, 0))
+		{
+			dict->strip_units[m] = dn->string;
+			m++;
+		}
+		if (word_has_connector(dn, suf_con, 0))
+		{
+			dict->suffix[k] = dn->string;
+			k++;
+		}
+		if (word_has_connector(dn, pre_con, 0))
+		{
+			dict->prefix[l] = dn->string;
+			l++;
+		}
+		dn2 = dn->right;
+		dn->right = NULL;
+		xfree(dn, sizeof(Dict_node));
+		dn = dn2;
+	}
+}
+
+static void affix_list_delete(Dictionary dict)
+{
+	xfree(dict->strip_right, dict->r_strippable * sizeof(char *));
+	xfree(dict->strip_left, dict->l_strippable * sizeof(char *));
+	xfree(dict->strip_units, dict->u_strippable * sizeof(char *));
+	xfree(dict->suffix, dict->s_strippable * sizeof(char *));
+	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
+}
+
 /**
  * The following function is dictionary_create with an extra
  * paramater called "path". If this is non-null, then the path
@@ -415,11 +508,14 @@ dictionary_create(char * dict_name, char * pp_name,
 	fclose(dict->fp);
 
 	dict->affix_table = NULL;
-	if (affix_name != NULL) {
+	if (affix_name != NULL)
+	{
 		dict->affix_table = dictionary_create(affix_name, NULL, NULL, NULL);
-		if (dict->affix_table == NULL) {
+		if (dict->affix_table == NULL)
+		{
 			goto failure;
 		}
+		affix_list_create(dict->affix_table);
 	}
 
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
@@ -513,6 +609,7 @@ int dictionary_delete(Dictionary dict)
 	}
 
 	if (dict->affix_table != NULL) {
+		affix_list_delete(dict->affix_table);
 		dictionary_delete(dict->affix_table);
 	}
 

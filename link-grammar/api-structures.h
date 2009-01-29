@@ -122,9 +122,22 @@ struct Dictionary_s
 
 	int             left_wall_defined;
 	int             right_wall_defined;
+
+	/* Affixes are used during the tokenization stage. */
+	Dictionary      affix_table;
+	int r_strippable; /* right */
+	int l_strippable; /* left */
+	int u_strippable; /* units on left */
+	int s_strippable; /* generic suffix */
+	int p_strippable; /* generic prefix */
+	const char ** strip_left;
+	const char ** strip_right;
+	const char ** strip_units;
+	const char ** prefix;
+	const char ** suffix;
+
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
-	Dictionary      affix_table;
 	int             andable_defined;
 	Connector_set * andable_connector_set;  /* NULL=everything is andable */
 	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */

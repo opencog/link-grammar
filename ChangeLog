@@ -5,6 +5,7 @@ Version 4.4.3 (?? 2009)
  * Fix sentences containing measurements, lengths, speeds. etc.
  * Add 1400 new adjectives
  * Add 250 international currencies
+ * Performance optimization in sentence tokenization.
 
 Version 4.4.2 (15 January 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'

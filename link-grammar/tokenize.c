@@ -265,67 +265,35 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
  */
 static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found)
 {
-	int i, j, k, l, len;
-	int r_strippable=0, l_strippable=0;
+	int i, j, len;
+	int r_strippable=0, l_strippable=0, u_strippable=0;
 	int s_strippable=0, p_strippable=0;
 	int  n_r_stripped, s_stripped;
 	int word_is_in_dict, s_ok;
 	int r_stripped[MAX_STRIP];  /* these were stripped from the right */
 	const char ** strip_left=NULL;
 	const char ** strip_right=NULL;
+	const char ** strip_units=NULL;
 	const char ** prefix=NULL;
 	const char ** suffix=NULL;
 	char word[MAX_WORD+1];
 	char newword[MAX_WORD+1];
-	Dict_node * dn, * dn2, * start_dn;
-	const char * rpunc_con = "RPUNC";
-	const char * lpunc_con = "LPUNC";
-	const char * suf_con = "SUF";
-	const char * pre_con = "PRE";
 
+	/* Load affixes from the affix table.  */
 	if (sent->dict->affix_table!=NULL)
 	{
-		start_dn = list_whole_dictionary(sent->dict->affix_table->root, NULL);
-		for (dn = start_dn; dn != NULL; dn = dn->right)
-		{
-			if (word_has_connector(dn, rpunc_con, 0)) r_strippable++;
-			if (word_has_connector(dn, lpunc_con, 0)) l_strippable++;
-			if (word_has_connector(dn, suf_con, 0)) s_strippable++;
-			if (word_has_connector(dn, pre_con, 0)) p_strippable++;
-	  	}
-		strip_right = (const char **) xalloc(r_strippable * sizeof(char *));
-		strip_left = (const char **) xalloc(l_strippable * sizeof(char *));
-		suffix = (const char **) xalloc(s_strippable * sizeof(char *));
-		prefix = (const char **) xalloc(p_strippable * sizeof(char *));
+		Dictionary dict = sent->dict->affix_table;
+		r_strippable = dict->r_strippable;
+		l_strippable = dict->l_strippable;
+		u_strippable = dict->u_strippable;
+		p_strippable = dict->p_strippable;
+		s_strippable = dict->s_strippable;
 
-		i=0;
-		j=0;
-		k=0;
-		l=0;
-		dn = start_dn;
-		while (dn != NULL)
-		{
-			if(word_has_connector(dn, rpunc_con, 0)) {
-				strip_right[i] = dn->string;
-				i++;
-			}
-			if(word_has_connector(dn, lpunc_con, 0)) {
-				strip_left[j] = dn->string;
-				j++;
-			}
-			if(word_has_connector(dn, suf_con, 0)) {
-				suffix[k] = dn->string;
-				k++;
-			}
-			if(word_has_connector(dn, pre_con, 0)) {
-				prefix[l] = dn->string;
-				l++;
-			}
-			dn2 = dn->right;
-			dn->right = NULL;
-			xfree(dn, sizeof(Dict_node));
-			dn = dn2;
-		}
+		strip_left = dict->strip_left;
+		strip_right = dict->strip_right;
+		strip_units = dict->strip_units;
+		prefix = dict->prefix;
+		suffix = dict->suffix;
 	}
 
 	for (;;) {
@@ -483,12 +451,6 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 		if (!issue_sentence_word(sent, strip_right[r_stripped[i]])) return FALSE;
 	}
 
-	if(sent->dict->affix_table!=NULL) {
-	  xfree(strip_right, r_strippable * sizeof(char *));
-	  xfree(strip_left, l_strippable * sizeof(char *));
-	  xfree(suffix, s_strippable * sizeof(char *));
-	  xfree(prefix, p_strippable * sizeof(char *));
-	}
 	return TRUE;
 }
 
