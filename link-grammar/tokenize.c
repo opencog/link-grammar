@@ -270,14 +270,16 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	int s_strippable=0, p_strippable=0;
 	int  n_r_stripped, s_stripped;
 	int word_is_in_dict, s_ok;
-	int r_stripped[MAX_STRIP];  /* these were stripped from the right */
-	const char ** strip_left=NULL;
-	const char ** strip_right=NULL;
-	const char ** strip_units=NULL;
-	const char ** prefix=NULL;
-	const char ** suffix=NULL;
+
+	const char ** strip_left = NULL;
+	const char ** strip_right = NULL;
+	const char ** strip_units = NULL;
+	const char ** prefix = NULL;
+	const char ** suffix = NULL;
 	char word[MAX_WORD+1];
 	char newword[MAX_WORD+1];
+
+	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
 
 	/* Load affixes from the affix table.  */
 	if (sent->dict->affix_table != NULL)
@@ -338,7 +340,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 			if ((wend-w) < len) continue;
 			if (strncmp(wend-len, strip_right[i], len) == 0)
 			{
-				r_stripped[n_r_stripped] = i;
+				r_stripped[n_r_stripped] = strip_right[i];
 				wend -= len;
 				break;
 			}
@@ -453,22 +455,8 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
 	for (i = n_r_stripped-1; i>=0; i--)
 	{
-		/* Revert fix r22566, which had a commit message:
-		 * "Fix Bug 9756, crash when grammar checking Word document."
-		 * This fix added the line:
-		 *    if (r_stripped[i] > strlen(*strip_right)) continue;
-		 * However, the addition of this line will break
-		 * the parsing of "Doogie's mother bit her."
-		 *
-		 * The fix is incorrect, because a NULL has been inserted into strip_right,
-		 * making it very short (length 2). Meanwhile, the offset to the 's 
-		 * is 9 chars (greater than 2!)  The string at strip_right[r_stripped[i]]
-		 * is pointing at the 's.
-		 *
-		 * Thus, I'm reverting this fix for now; whatever the problem is,
-		 * it needs to be handled in some other way.
-		 */
-		if (!issue_sentence_word(sent, strip_right[r_stripped[i]])) return FALSE;
+		/* Revert fix r22566, which was insane */
+		if (!issue_sentence_word(sent, r_stripped[i])) return FALSE;
 	}
 
 	return TRUE;
