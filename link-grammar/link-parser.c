@@ -423,7 +423,9 @@ static void setup_panic_parse_options(Parse_Options opts)
 static void print_usage(char *str) {
 	fprintf(stderr,
 			"Usage: %s [language]\n"
-			"		  [-ppoff] [-coff] [-aoff] [-batch] [-<special \"!\" command>]\n", str);
+			"		  [-ppoff] [-coff] [-aoff] [-batch]\n"
+			"		  [-<special \"!\" command>]\n"
+			"		  [--version]\n", str);
 	exit(-1);
 }
 
@@ -453,7 +455,10 @@ int main(int argc, char * argv[])
 
 	for (; i<argc; i++) {
 		if (argv[i][0] == '-') {
-			if (strcmp("-ppoff", argv[i])==0) {
+			if (strcmp("--version", argv[i])==0) {
+				printf("Version: %s\n", linkgrammar_get_version());
+				exit(0);
+			} else if (strcmp("-ppoff", argv[i])==0) {
 				pp_on = FALSE;
 			} else if (strcmp("-coff", argv[i])==0) {
 				cons_on = FALSE;
