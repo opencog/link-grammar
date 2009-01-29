@@ -1477,6 +1477,11 @@ That will cost 2400 yen.
 We bought 200ft. of lumber.
 We bought 200sq.ft. of plywood.
 
+% Note that the handling of prepositions is incorrect with
+% regard to measurements: the linkage should be to lumber,
+% not feet.  That is, "12 feet of" is a modifier.
+We bought 12 feet of lumber.
+
 % broken lexical chunk recognition:
 % ... not only, ... but also ...
 The deal includes not only junk, but also crap.
