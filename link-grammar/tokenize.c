@@ -271,6 +271,10 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	int  n_r_stripped, s_stripped;
 	int word_is_in_dict, s_ok;
 
+	int found_number = 0;
+	int n_r_stripped_save;
+	char * wend_save;
+
 	const char ** strip_left = NULL;
 	const char ** strip_right = NULL;
 	const char ** strip_units = NULL;
@@ -323,8 +327,9 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	 */
 	for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) 
 	{
-		strncpy(word, w, MIN(wend-w, MAX_WORD));
-		word[MIN(wend-w, MAX_WORD)] = '\0';
+		size_t sz = MIN(wend-w, MAX_WORD);
+		strncpy(word, w, sz);
+		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
 		if (boolean_dictionary_lookup(sent->dict, word) || is_initials_word(word)) break;
@@ -346,6 +351,51 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 			}
 		}
 		if (i == r_strippable) break;
+	}
+
+	/* Same as above, but with a twist: the only thing that can
+	 * preceed a units suffix is a number. This is so that we can
+	 * split up things like "12ft" (twelve feet) but not split up
+	 * things like "Delft blue". Multiple passes allow for
+	 * constructions such as 12sq.ft.
+	 */
+	n_r_stripped_save = n_r_stripped;
+	wend_save = wend;
+	for (; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+	{
+		size_t sz = MIN(wend-w, MAX_WORD);
+		strncpy(word, w, sz);
+		word[sz] = '\0';
+		if (wend == w) break;  /* it will work without this */
+
+		/* Number */
+		if (is_number(word))
+		{
+			found_number = 1;
+			break;
+		}
+
+		for (i=0; i < u_strippable; i++)
+		{
+			len = strlen(strip_units[i]);
+
+			/* the remaining w is too short for a possible match */
+			if ((wend-w) < len) continue;
+			if (strncmp(wend-len, strip_units[i], len) == 0)
+			{
+				r_stripped[n_r_stripped] = strip_units[i];
+				wend -= len;
+				break;
+			}
+		}
+		if (i == u_strippable) break;
+	}
+
+	/* The root *must* be a number! */
+	if (0 == found_number)
+	{
+		wend = wend_save;
+		n_r_stripped = n_r_stripped_save;
 	}
 
 	/* Now we strip off suffixes...w points to the remaining word, 
@@ -435,14 +485,12 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	
 	/* word is now what remains after all the stripping has been done */
 
-#if 0
-	if (n_stripped == MAX_STRIP)
+	if (n_r_stripped == MAX_STRIP)
 	{
 		prt_error("Error separating sentence.\n"
 		          "\"%s\" is followed by too many punctuation marks.\n", word);
 		return FALSE;
 	}
-#endif
 
 	if (quote_found == TRUE) sent->post_quote[sent->length]=1;
 
@@ -455,7 +503,6 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
 	for (i = n_r_stripped-1; i>=0; i--)
 	{
-		/* Revert fix r22566, which was insane */
 		if (!issue_sentence_word(sent, r_stripped[i])) return FALSE;
 	}
 
