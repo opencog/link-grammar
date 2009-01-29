@@ -7,6 +7,8 @@ WORDS=			\
 	entities.national.sing \
 	entities.organizations.sing \
 	entities.us-states.sing \
+	units.1 \
+	units.2 \
 	words.adj.1	\
 	words.adj.2	\
 	words.adj.3	\

@@ -5,5 +5,8 @@
 
 "(" "$" US$ USD C$ "£" "₤" "§" "¥" "€" "†" "††" "#" "``" "“" "‘" : LPUNC+;
 
+/en/words/units.1: UNITS+;
+/en/words/units.2: UNITS+;
+
 
 
