@@ -3623,7 +3623,9 @@ or Xe-));
 "%": (ND- & {DD-} & <noun-sub-x> & (<noun-main-x>)) or (ND- & (OD- or AN+));
 
 % See also /en/words/currency for curency names that follow a number.
-"$" USD US$ C$ "€" "£" "₤" "§" "¢" "호점" "¥" "©" "#" "†": NIax+ & (AN+ or NIay- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
+"$" USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c 
+"€" "£" "₤" "§" "¢" "호점" "¥" "©" "#" "†": 
+NIax+ & (AN+ or NIay- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
 (OD- or ({DD-} & {[[@M+]]} & (<noun-main-p> or [[(Ss+ & <CLAUSE>) or 
 SIs-]])))));
 
