@@ -1451,10 +1451,11 @@ It is a 12 m² apartment.
 The rent is $150 per m² per month.
 The cost is $150 per meter.
 The cost is $150 per yard.
+The differential rate is 5 volts per MeV.
 He queued up another 45 rpm record.
-India is building a 450 MW nuclear plant.
-The temperature rose by 12 °C.
-It is 12 °C outside.
+India is building a 450MW nuclear plant.
+The temperature rose by 12°C.
+It is 12°C outside.
 My El Camino gets about 12 MPG.
 My El Camino gets about 12 mpg.
 We bought a 12 pound pumpkin for Halloween.
@@ -1462,8 +1463,8 @@ We bought a 12 dollar pumpkin for Halloween.
 He got himself a 50 dollar haircut.
 That car goes 90 MPH.
 Give him 5 cc's of morphine, stat.
-The crystal is growing at a rate of 2 microns per millisecond.
-The slew rate is 12 mV per microsecond.
+The crystal is growing at a rate of 2mm per millisecond.
+The slew rate is 12mV per microsecond.
 He raced off at 90 miles an hour.
 The aircraft was moving 90 miles per hour.
 It goes 90 miles an hour.
@@ -1476,6 +1477,8 @@ That will cost ¥2400.
 That will cost 2400 yen.
 We bought 200ft. of lumber.
 We bought 200sq.ft. of plywood.
+It is 12ft. long.
+The voltage fell almost 50mV.
 
 % Note that the handling of prepositions is incorrect with
 % regard to measurements: the linkage should be to lumber,
