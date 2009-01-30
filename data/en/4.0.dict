@@ -2885,14 +2885,15 @@ nights.n seconds.n decades.n centuries.n:
 (R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+))) 
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
-<units-plural>: 
+% This need to be re-examined ... 
+<units-funky-plural>: 
 (ND- or [()] or [[EN-]]) & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
 
 % AU is abbreviation for "astronomical units"
 blocks.i feet.i miles.i yards.i inches.i 
 meters.i millimeters.i centimeters.i micrometers.i kilometers.i 
 microns.i Angstroms.i wavelengths.i
-AU.i au.i astronomical_units light-years.i: <units-plural>;
+AU.i au.i astronomical_units light-years.i: <units-funky-plural>;
 
 block.i foot.i mile.i yard.i inch.i 
 meter.i millimeter.i centimeter.i micrometer.i kilometer.i 
@@ -2918,16 +2919,16 @@ mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
 
 <units-suffix>:
 ((ND- or NS- or NIe-) & AN+) or 
-((ND- or NS- or NIe-) & (Opt- or Jp-) & Mp+) or 
-(NS- & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
+((ND- or NS- or NIe-) & (Op- or Jp-) & {Mp+}) or 
+((ND- or NS-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
 
 % Abbreviations of scientific units that follow numbers
 % km².u mi².u in².u ft².u m².u cm².u 
-/en/words/units.1: <units-suffix> or <units-plural>;
+/en/words/units.1: <units-suffix>;
 
 % Units abbreviations that can be followed by a period:
 % ft. tbsp. yds.
-/en/words/units.2: {Xi+} & (<units-suffix> or <units-plural>);
+/en/words/units.2: {Xi+} & <units-suffix>;
 
 % money, same as units, above.
 /en/words/currency: <units-suffix>;
