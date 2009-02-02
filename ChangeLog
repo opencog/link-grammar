@@ -3,9 +3,10 @@ Version 4.4.3 (?? 2009)
  * Add dictionary maintenance utility script.
  * Add prototype German dictionary.
  * Fix sentences containing measurements, lengths, speeds. etc.
- * Add 1400 new adjectives
- * Add 250 international currencies
+ * Add 1400 new adjectives.
+ * Add 250 international currencies.
  * Performance optimization in sentence tokenization.
+ * Add 1100 male, female given names (from Bruce Wilcox)
 
 Version 4.4.2 (15 January 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'
