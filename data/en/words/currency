@@ -17,6 +17,7 @@ Bolívar.c bolívar.c
 Boliviano.c boliviano.c
 Budju.c budju.c
 Cedi.c cedi.c
+cent.c
 Chervonets.c chervonets.c
 Colón.c colón.c
 Conventionsthaler.c conventionsthaler.c
@@ -125,6 +126,8 @@ Peso.c peso.c
 peso_moneda_nacional
 nuevo_peso
 Pence.c pence.c
+penny.c
+Pfennig.c pfennig.c
 Phoenix.c phoenix.c
 Piastra.c piastra.c
 Piastre.c piastre.c

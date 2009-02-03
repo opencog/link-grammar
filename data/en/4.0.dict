@@ -2938,6 +2938,11 @@ mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
 ((NIm- or NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or 
 ((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
 
+/en/words/currency.p: 
+((NIn- or NIe-) & AN+) or 
+((NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or 
+((NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
+
 
 %QUESTION WORDS & CONJUNCTIONS
 
