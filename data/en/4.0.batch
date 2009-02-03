@@ -1485,7 +1485,11 @@ That will cost zillions of lira.
 % Note that the handling of prepositions is incorrect with
 % regard to measurements: the linkage should be to lumber,
 % not feet.  That is, "12 feet of" is a modifier.
+% Similarly, "hundreds of" should be a modifier to "hours"
 We bought 12 feet of lumber.
+That will take hundreds of hours of effort.
+That will take hours of effort.
+That will take hundreds of yards of cement.
 
 % broken lexical chunk recognition:
 % ... not only, ... but also ...

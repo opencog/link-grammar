@@ -637,7 +637,8 @@ hundred thousand half-thousand million half-million quarter-million
 billion half-billion quarter-billion trillion half-trillion 
 quarter-trillion dozen half-dozen 
 bajillion bazillion gadzillion gagillion gajillion gazillion godzillion
-jillion jizillion kabillion kajillion katrillion killion umptillion:
+jillion jizillion kabillion kajillion katrillion killion umptillion
+zillion:
 NN- & (NNy+ or NIa- or
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
@@ -645,10 +646,17 @@ half_a_dozen half_a_million: NIa- or
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))));
 
-hundreds thousands millions billions trillions dozens:
+hundreds thousands millions billions trillions dozens
+bajillions bazillions gadzillions gagillions gajillions gazillions
+godzillions jillions jizillions kabillions kajillions katrillions
+killions umptillions zillions:
 ({DD- or Dmc-} & <noun-sub-p> & <noun-main-p>);
 tens: {DD-} & OF+ & <noun-main-p>;
-hundreds_of thousands_of millions_of billions_of trillions_of dozens_of:
+dozens_of tens_of hundreds_of thousands_of millions_of billions_of 
+trillions_of bajillions_of bazillions_of gadzillions_of gagillions_of 
+gajillions_of gazillions_of godzillions_of jillions_of jizillions_of
+kabillions_of kajillions_of katrillions_of killions_of umptillions_of
+zillions_of:
 ND+ or NIn+;
 
 1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8: 
