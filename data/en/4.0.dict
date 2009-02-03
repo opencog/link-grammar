@@ -2850,7 +2850,7 @@ or (DTi- & (JT- or YS+ or [[<noun-main-s>]]));
 
 weeks.i days.i hours.i minutes.i seconds.i months.i years.i decades.i
 centuries.i semesters.i terms.i nights.i:
-((ND- or [[EN-]] or [()]) & (Yt+ or OT-)) or (ND- & Ye-) or (TQ- & BT+);
+((ND- or [[EN-]] or [()]) & (Yt+ or (OT- & {Mp+}))) or (ND- & Ye-) or (TQ- & BT+);
 week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
 (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-))) or
@@ -2897,7 +2897,8 @@ or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
 % This need to be re-examined ... 
 <units-funky-plural>: 
-(ND- or [()] or [[EN-]]) & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
+(ND- or [()] or [[EN-]]) & 
+(Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
 
 % AU is abbreviation for "astronomical units"
 blocks.i feet.i miles.i yards.i inches.i 
