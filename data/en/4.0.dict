@@ -596,6 +596,7 @@ NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))))
 or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]];
 
+% Days of month
 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 
 29 30 31:
 NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
@@ -615,22 +616,20 @@ fiscal.i: TY+ & <noun-main-s>;
 
 or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
-/en/words/words.y:  % year numbers
-NN+ or NIa- or AN+ or 
-((Xd- & TY- & Xc+) or TY-) 
-or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
-([[Dmcn+]] or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
+% year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
+/en/words/words.y: <date-id>;
 
 1900s 1910s 1920s 1930s 1940s 1950s 1960s 1970s 1980s 1990s
 1900's 1910's 1920's 1930's 1940's 1950's 1960's 1970's 1980's 1990's
 1900’s 1910’s 1920’s 1930’s 1940’s 1950’s 1960’s 1970’s 1980’s 1990’s
 twenties thirties, forties fifties sixties seventies eighties nineties
 '20s '30s '40s '50s '60s '70s '80s '90s
-‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s: {TA-} & DG- & <noun-main-x>;
+‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s: 
+{TA-} & DG- & (IN- or [[<noun-main-x>]]);
 
 % teens could be above or teenagers (words.n.2)
-teens: ({TA-} & DG- & <noun-main-x>) or <generic-plural-id>;
+teens: ({TA-} & DG- & (IN- or <noun-main-x>)) or <generic-plural-id>;
 
 hundred thousand half-thousand million half-million quarter-million 
 billion half-billion quarter-billion trillion half-trillion 
