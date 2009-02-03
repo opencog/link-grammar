@@ -901,6 +901,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	actx->structure_violation = FALSE;
 	d_root = build_DIS_CON_tree(actx, pi); /* may set structure_violation to TRUE */
 
+	memset(&li, 0, sizeof(li));
 	li.N_violations = 0;
 	li.improper_fat_linkage = actx->structure_violation;
 	li.inconsistent_domains = FALSE;

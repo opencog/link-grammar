@@ -241,7 +241,7 @@ void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
 	/* No-op if the database is not open */
 	if (NULL == corp->dbconn) return;
 
-	if (NULL == lifo->disjunct_list_str)
+	if (NULL == lifo->disjunct_list_str[1])
 	{
 		lg_compute_disjunct_strings(sent, lifo);
 	}

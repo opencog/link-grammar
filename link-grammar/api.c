@@ -648,21 +648,9 @@ int dictionary_get_max_cost(Dictionary dict)
 
 static Linkage_info * linkage_info_new(int num_to_alloc)
 {
-#ifdef USE_CORPUS
-	int i,j;
-#endif
 	Linkage_info *link_info;
 	link_info = (Linkage_info *) xalloc(num_to_alloc * sizeof(Linkage_info));
-#ifdef USE_CORPUS
-	for (i=0; i<num_to_alloc; i++)
-	{
-		Linkage_info *lifo = &link_info[i];
-		for (j=0; j<MAX_SENTENCE; j++)
-		{
-			lifo->disjunct_list_str[j] = NULL;
-		}
-	}
-#endif
+	memset(link_info, 0, num_to_alloc * sizeof(Linkage_info));
 	return link_info;
 }
 
@@ -1444,7 +1432,7 @@ Sentence linkage_get_sentence(Linkage linkage)
 
 const char * linkage_get_disjunct(Linkage linkage, int w)
 {
-	if (NULL == linkage->info->disjunct_list_str)
+	if (NULL == linkage->info->disjunct_list_str[w])
 	{
 		lg_compute_disjunct_strings(linkage->sent, linkage->info);
 	}
