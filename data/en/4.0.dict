@@ -494,8 +494,8 @@ these: <noun-main-p> or ({AL-} & (Dmc+ or DD+));
 both: Dmc+ or E+ or ({M+ or (ALx+ & Jp+)} & <noun-main-p>);
 half: {EN-} & (NJ+ or ((({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+))
 & <noun-main-x>));
-many: (H- & (Dmc+ or ND+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 
-({EE-} & ND+) or ({DD-} & {EAx-} & Dmc+) or ((({EAx-} & {DD-}) or H-) & 
+many: (H- & (Dmc+ or ND+ or NIn+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 
+({EE-} & (ND+ or NIn+)) or ({DD-} & {EAx-} & Dmc+) or ((({EAx-} & {DD-}) or H-) & 
 <noun-sub-p> & (<noun-main-p> or (Rw+ & Bpm+)));
 all: ({EN-} & (E+ or Dm+ or NIc+ or 
 ({@M+ or (ALx+ & Jp+) or (R+ & B+) or EL+} & 
@@ -510,7 +510,7 @@ ones: {@A- & {[[@AN-]]}} & {Dmc-} &
 (YP+ or (<noun-sub-p> & <noun-main-p>));
 any: ({EN-} & (D+ or DD+ or 
 (<noun-sub-x> & <noun-main-x>))) or EC+;
-a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+;
+a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
 such_a such_an: Ds*k+;
 
@@ -518,8 +518,8 @@ a_lot: (<noun-sub-p> & <noun-main-p>) or EC+ or MVa-;
 few: {EA- or EF+ or ({EA-} & DD-)} & 
  (Dmc+ or (<noun-sub-p> & <noun-main-p>));
 a_couple: <noun-sub-p> & <noun-main-p>;
-a_couple_of: NN+ or ND+;
-a_few: NN+ or ND+ or ({EN-} & (Dmc+ or ND+ or 
+a_couple_of: NN+ or ND+ or NIn+;
+a_few: NN+ or ND+ or NIn+ or ({EN-} & (Dmc+ or ND+ or NIn+ or
 (<noun-sub-p> & <noun-main-p>)));
 some: D+ or EN+ or MF+ or (<noun-sub-x> & <noun-main-x>);
 little.i: ({EE-} & (MVa- or Ca+ or Qe+)) or ({EEx- or H-} & (Dmu+ or 
@@ -588,27 +588,29 @@ ninety ninety-one ninety-two ninety-three ninety-four
 ninety-five ninety-six ninety-seven ninety-eight ninety-nine 
 several: 
 NN+ or NW+ or NIa- or
-({EN- or NIc-} & (ND+ or ({{@L+} & DD-} & 
+({EN- or NIc-} & (ND+ or NIn+ or ({{@L+} & DD-} & 
 (Dmc+ or (<noun-sub-p> & <noun-main-p>)))));
 
 NUMBERS: % the generic "number" category
-NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
+NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))))
 or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]];
 
 % Days of month
+% Note, however, this over-rides generic numbers in this range
+% and so is a superset of the generic numbers disjuncts
 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 
 29 30 31:
-NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
+NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> 
  & <noun-main-p>))))) or TM- or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]];
 
-1: NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} 
+1: NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or NIm+ or OD- or ({{@L+} & DD-} 
 & (D**n+ or (<noun-sub-x> & <noun-main-x>))))) or TM-
 or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]] or NSn+;
 
 0: NN+ or NIa- or [[NF+]] or
-({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
+({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or [[Ds+]] or (<noun-sub-p> & <noun-main-p>))))) 
 or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]] or NSn+;
 
@@ -637,24 +639,25 @@ quarter-trillion dozen half-dozen
 bajillion bazillion gadzillion gagillion gajillion gazillion godzillion
 jillion jizillion kabillion kajillion katrillion killion umptillion:
 NN- & (NNy+ or NIa- or
-({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
+({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 half_a_dozen half_a_million: NIa- or
-({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
+({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))));
 
 hundreds thousands millions billions trillions dozens:
 ({DD- or Dmc-} & <noun-sub-p> & <noun-main-p>);
 tens: {DD-} & OF+ & <noun-main-p>;
-hundreds_of thousands_of millions_of billions_of trillions_of dozens_of: ND+;
+hundreds_of thousands_of millions_of billions_of trillions_of dozens_of:
+ND+ or NIn+;
 
 1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8: 
 ({NNx-} & NNy+) or NIa- or NF+ or NIe+ 
-or ({NNx-} & {EN- or NIc-} & (ND+ or OD- or ({DD-} & 
+or ({NNx-} & {EN- or NIc-} & (ND+ or NIn+ or OD- or ({DD-} & 
 ([[Ds+]] or Dmcn+ or (<noun-sub-x> & <noun-main-x>)))));
 
 and_a_half: (NW- or NSn-) & 
-(NNy+ or NIa- or ({EN- or NIc-} & (ND+ or ({DD-} & 
+(NNy+ or NIa- or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} & 
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
 third fourth fifth sixth seventh eighth ninth tenth eleventh
@@ -2904,11 +2907,11 @@ point.i percentage_point:
 (NS- or NIe-) & {NJ-} & (Yd+ or OD-);
 points.u percentage_points: ND- & (Yd+ or MVp-);
 
-dollars.i cents.i:  ND- & (EC+ or Yd+ or OD-);
+dollars.i cents.i:  NIn- & (EC+ or Yd+ or OD-);
 1_dollar one_dollar a_dollar 1_cent 
 one_cent a_cent: {NJ-} & (EC+ or Yd+ or OD-);
 share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
-dollar.i cent.i: ((ND- or NS- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
+dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: MVp- or A+;
 
@@ -2929,8 +2932,12 @@ mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
 % ft. tbsp. yds.
 /en/words/units.2: {Xi+} & <units-suffix>;
 
-% money, same as units, above.
-/en/words/currency: <units-suffix>;
+% money, similar to units, above.
+/en/words/currency: 
+((NIm- or NIn- or NIe-) & AN+) or 
+((NIm- or NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or 
+((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
+
 
 %QUESTION WORDS & CONJUNCTIONS
 
@@ -3726,7 +3733,7 @@ ANDABLE-CONNECTORS:   % these are the connectors that can be combined by
       
 A+ & A- & AF- & AN+ & B+ & B- & BI- & C+ & C- & CC+ & CO+ & CO- & D+ &
 D- & DD- & DT- & E+ & E- & EA- & G+ & GN+ & GN- & I+ & I- & IN- & J+ &
-J- & JT- & K- & L- & M+ & M- & MV- & MV+ & MX- & ND+ & O+ & O- & ON- &
+J- & JT- & K- & L- & M+ & M- & MV- & MV+ & MX- & ND+ & NIn+ & O+ & O- & ON- &
 QI+ & QI- & P- & PP- & Q- & R+ & RS- & S+ & S- & SI- & TA- & TD+ & TD-
 & TH+ & TH- & TI- & TM- & TO- & TS- & U- & Wd- & Wi- & Wq- & Ws- & Xc+
 & Xd- & YP+ & YS+ & Z-;
