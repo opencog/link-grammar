@@ -1133,7 +1133,7 @@ static void dsw_compression (Dict_node *root, unsigned int count)
 static inline unsigned int full_tree_size (unsigned int size)
 {
 	unsigned int pk = 1;
-	while (pk <= size) pk = 2*pk + 1;
+	while (pk < size) pk = 2*pk + 1;
 	return pk/2;
 }
 
