@@ -369,6 +369,16 @@ void parse_options_reset_resources(Parse_Options opts) {
 *
 ****************************************************************/
 
+/* Units will typically have a ".u" at the end. Get
+ * rid of it, as otherwise stipping is messed up. */
+static inline char * deinflect(const char * str)
+{
+	char * s = strdup(str);
+	char * p = strchr(s, '.');
+	if (p && p != s) *p = 0x0;
+	return s;
+}
+
 static void affix_list_create(Dictionary dict)
 {
 	int i, j, k, l, m;
@@ -419,26 +429,22 @@ static void affix_list_create(Dictionary dict)
 	l = 0;
 	m = 0;
 	dn = start_dn;
+
 	while (dn != NULL)
 	{
 		if (word_has_connector(dn, rpunc_con, 0))
 		{
-			dict->strip_right[i] = dn->string;
+			dict->strip_right[i] = deinflect(dn->string);
 			i++;
 		}
 		if (word_has_connector(dn, lpunc_con, 0))
 		{
-			dict->strip_left[j] = dn->string;
+			dict->strip_left[j] = deinflect(dn->string);
 			j++;
 		}
 		if (word_has_connector(dn, units_con, 0))
 		{
-			/* Units will typically have a ".u" at the end. Get
-			 * rid of it, as otherwise stipping is messed up. */
-			char * s = strdup(dn->string);
-			char * p = strchr(s, '.');
-			if (p) *p = 0x0;
-			dict->strip_units[m] = s;
+			dict->strip_units[m] = deinflect(dn->string);
 			m++;
 		}
 		if (word_has_connector(dn, suf_con, 0))
@@ -461,6 +467,14 @@ static void affix_list_create(Dictionary dict)
 static void affix_list_delete(Dictionary dict)
 {
 	int i;
+	for (i=0; i<dict->l_strippable; i++)
+	{
+		free((char *)dict->strip_left[i]);
+	}
+	for (i=0; i<dict->r_strippable; i++)
+	{
+		free((char *)dict->strip_right[i]);
+	}
 	for (i=0; i<dict->u_strippable; i++)
 	{
 		free((char *)dict->strip_units[i]);
