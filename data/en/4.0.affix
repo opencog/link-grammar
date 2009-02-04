@@ -1,10 +1,19 @@
+% 
+% Affixes get stripped off the left and right side of words 
+% i.e. spaces are inserted between the affix and the word itself.
+%
+% Some of the funky UTF-8 parenthsis are used in Asian texts.
+% In order to allow single straight quote ' and double straight quote ''
+% to be sttripped off rom both the left and the right, they are
+% distinguished by the suffix .x and .y (as as Mr.x Mrs.x or Jr.y Sr.y)
+% 
 
-")" "』" "''" "’’" '.y "’" 
+")" "}" "]" ">" "】" "』" "’’" "’" ''.y '.y
 "%" "," "." ":" ";" "?" "!" "…" "”" "–" "‐" 
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m
 "¢": RPUNC+; 
 
-"(" "『" "``" "“" "‘" '.x
+"(" "{" "[" "<" "【" "『" "``" "“" "‘" ''.x '.x
 "$" US$ USD C$ "£" "₤" "§" "¥" "€" "†" "††" "#": LPUNC+;
 
 /en/words/units.1: UNITS+;
