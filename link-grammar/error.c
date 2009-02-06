@@ -60,6 +60,7 @@ void prt_error(const char *fmt, ...)
 {
 	severity sev;
 	err_ctxt ec;
+	va_list args;
 
 	sev = Error;
 	if (0 == strncmp(fmt, "Fatal", 5)) sev = Fatal;
@@ -68,7 +69,6 @@ void prt_error(const char *fmt, ...)
 	if (0 == strncmp(fmt, "Info:", 5)) sev = Info;
 
 	ec.sent = NULL;
-	va_list args;
 	va_start(args, fmt);
 	verr_msg(&ec, sev, fmt, args);
 	va_end(args);

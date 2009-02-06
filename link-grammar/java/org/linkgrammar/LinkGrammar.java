@@ -25,6 +25,7 @@ public class LinkGrammar
         // is prefixed with "lib" and suffixed with ".so"
         // -- e.g. "liblink-grammar-java.so"
         // Windows looks for "link-grammar-java.dll"
+        // MacOS looks for "liblink-grammar-java.dylib"
         //
         // On a Windows system, we also need to load the prequisite
         // libraries first. (Linux loaders do this automatically).
