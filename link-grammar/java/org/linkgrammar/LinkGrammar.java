@@ -35,6 +35,7 @@ public class LinkGrammar
         {
             System.loadLibrary("link-grammar");
         }
+        // if (osname.indexOf("Mac OS X") > -1) {}
         System.loadLibrary("link-grammar-java");
     }
 
