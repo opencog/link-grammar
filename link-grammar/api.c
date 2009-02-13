@@ -1180,13 +1180,8 @@ int linkage_set_current_sublinkage(Linkage linkage, int index)
 
 static void exfree_pp_info(PP_info *ppi)
 {
-	int i;
-	for (i=0; i<ppi->num_domains; ++i)
-	{
-		exfree(ppi->domain_name[i], strlen(ppi->domain_name[i])+1);
-	}
 	if (ppi->num_domains > 0)
-		exfree(ppi->domain_name, sizeof(char *)*ppi->num_domains);
+		exfree(ppi->domain_name, sizeof(const char *)*ppi->num_domains);
 	ppi->domain_name = NULL;
 	ppi->num_domains = 0;
 }
@@ -1247,17 +1242,18 @@ static int link_already_appears(Linkage linkage, Link *link, int a)
 	return FALSE;
 }
 
-static PP_info excopy_pp_info(PP_info ppi) {
-	 static PP_info newppi;
-	 int i;
+static PP_info excopy_pp_info(PP_info ppi)
+{
+	static PP_info newppi;
+	int i;
 
-	 newppi.num_domains = ppi.num_domains;
-	 newppi.domain_name = (char **) exalloc(sizeof(char *)*ppi.num_domains);
-	 for (i=0; i<newppi.num_domains; ++i) {
-		 newppi.domain_name[i] = (char *) exalloc(sizeof(char)*(strlen(ppi.domain_name[i])+1));
-		 strcpy(newppi.domain_name[i], ppi.domain_name[i]);
-	 }
-	 return newppi;
+	newppi.num_domains = ppi.num_domains;
+	newppi.domain_name = (const char **) exalloc(sizeof(const char *)*ppi.num_domains);
+	for (i=0; i<newppi.num_domains; ++i)
+	{
+		newppi.domain_name[i] = ppi.domain_name[i];
+	}
+	return newppi;
 }
 
 
@@ -1581,13 +1577,15 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 				subl->pp_info[j].num_domains = k;
 				if (k > 0)
 				{
-					subl->pp_info[j].domain_name = (char **) exalloc(sizeof(char *)*k);
+					subl->pp_info[j].domain_name = (const char **) exalloc(sizeof(const char *)*k);
 				}
 				k = 0;
 				for (d = pp->d_type_array[j]; d != NULL; d = d->next)
 				{
-					subl->pp_info[j].domain_name[k] = (char *) exalloc(sizeof(char)*2);
-					sprintf(subl->pp_info[j].domain_name[k], "%c", d->type);
+					char buff[5];
+					sprintf(buff, "%c", d->type);
+					subl->pp_info[j].domain_name[k] = string_set_add (buff, sent->string_set);
+
 					k++;
 				}
 			}
