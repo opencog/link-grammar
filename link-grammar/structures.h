@@ -20,7 +20,7 @@
 /*
  Global variable descriptions
   -- Most of these global variables have been eliminated.
-     I've lefe this comment here for historical purposes --DS 4/98
+     I've left this comment here for historical purposes --DS 4/98
 
  N_words:
     The number of words in the current sentence.  Computed by
