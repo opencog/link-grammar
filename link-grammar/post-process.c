@@ -271,7 +271,7 @@ static int apply_rules(Postprocessor *pp,
 							 int (applyfn) (Postprocessor *,Sublinkage *,pp_rule *),
 							 Sublinkage *sublinkage,
 							 pp_rule *rule_array,	
-							 char **msg)
+							 const char **msg)
 {
 	int i;
 	for (i=0; (*msg=rule_array[i].msg)!=NULL; i++)
@@ -285,7 +285,7 @@ apply_relevant_rules(Postprocessor *pp,
 						 Sublinkage *sublinkage,
 						 pp_rule *rule_array,	
 						 int *relevant_rules,
-						 char **msg)
+						 const char **msg)
 {
 	int i, idx;
 
@@ -748,7 +748,7 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 }
 
 static int
-internal_process(Postprocessor *pp,Sublinkage *sublinkage,char **msg)
+internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 {
 	int i;
 	/* quick test: try applying just the relevant global rules */
@@ -934,7 +934,7 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 							Sentence sent, Sublinkage *sublinkage, int cleanup)
 {
-	char *msg;
+	const char *msg;
 
 	if (pp==NULL) return NULL;
 

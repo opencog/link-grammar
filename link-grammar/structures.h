@@ -294,7 +294,7 @@ typedef struct PP_node_struct PP_node;
 struct PP_node_struct
 {
     D_type_list *d_type_array[MAX_LINKS];
-    char *violation;
+    const char *violation;
 };
 
 /* Davy added these */
