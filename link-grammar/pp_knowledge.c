@@ -27,9 +27,9 @@
 
 /****************** non-exported functions ***************************/
 
-static void check_domain_is_legal(char *p)
+static void check_domain_is_legal(const char *p)
 {
-  if (strlen(p) > 1)
+  if (0x0 != p[1])
   {
     prt_error("Fatal Error: post_process(): Domain (%s) must be a single character", p);
     exit(1);
@@ -51,12 +51,14 @@ static void initialize_set_of_links_starting_bounded_domain(pp_knowledge *k)
     }
 }
 
+/**
+ * Read table of [link, domain type].
+ * This tells us what domain type each link belongs to.
+ * This lookup table *must* be defined in the knowledge file.
+ */
 static void read_starting_link_table(pp_knowledge *k)
 {
-  /* read table of [link, domain type].
-     This tells us what domain type each link belongs to.
-     This lookup table *must* be defined in the knowledge file. */
-  char *p;
+  const char *p;
   const char label[] = "STARTING_LINK_TYPE_TABLE";
   int i, n_tokens;
   if (!pp_lexer_set_label(k->lt, label))
@@ -163,7 +165,7 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
 {
   int n_commas, n_tokens, r, i;
   pp_linkset *lsHandle;
-  char **tokens;
+  const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_form_a_cycle_rules = 0;
       if (verbosity>0)
@@ -205,7 +207,7 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
 
 static void read_bounded_rules(pp_knowledge *k, const char *label)
 {
-  char **tokens;
+  const char **tokens;
   int n_commas, n_tokens, r;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
@@ -248,7 +250,7 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
      'contains_none_rules' into their respective arrays */
   int n_commas, n_tokens, i, r;
   const char *p;
-  char **tokens;
+  const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
       if (verbosity>0) printf("PP warning: Not using any %s rules\n", label);

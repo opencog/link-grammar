@@ -22,7 +22,7 @@
 
 /***************** utility routines (not exported) ***********************/
 
-static int string_in_list(const char * s, char * a[])
+static int string_in_list(const char * s, const char * a[])
 {
 	/* returns FALSE if the string s does not match anything in
 		 the array.	The array elements are post-processing symbols */
