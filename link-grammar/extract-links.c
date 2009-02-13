@@ -510,7 +510,6 @@ void build_current_linkage(Parse_info pi)
 	initialize_links(pi);
 	build_current_linkage_recursive(pi, pi->parse_set);
 }
-#endif /* NOT_USED_ANYWHERE */
 
 /**
  * Advance the "current" linkage to the next one
@@ -535,7 +534,6 @@ static int advance_linkage(Parse_info pi, Parse_set * set)
 	return 0;
 }
 
-#ifdef UNUSED_FUNCTION
 static void advance_parse_set(Parse_info pi)
 {
 	 advance_linkage(pi, pi->parse_set);
