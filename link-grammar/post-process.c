@@ -147,6 +147,7 @@ void post_process_free_data(PP_data * ppd)
 	ppd->links_to_ignore = NULL;
 }
 
+#ifdef THIS_FUNCTION_IS_NOT_CURRENTLY_USED
 static void connectivity_dfs(Postprocessor *pp, Sublinkage *sublinkage,
                              int w, pp_linkset *ls)
 {
@@ -159,6 +160,7 @@ static void connectivity_dfs(Postprocessor *pp, Sublinkage *sublinkage,
 			connectivity_dfs(pp, sublinkage, lol->word, ls);
 	}
 }
+#endif /* THIS_FUNCTION_IS_NOT_CURRENTLY_USED */
 
 static void mark_reachable_words(Postprocessor *pp, int w)
 {
@@ -910,7 +912,7 @@ void post_process_close_sentence(Postprocessor *pp)
 void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 									 Sentence sent, Sublinkage *sublinkage)
 {
-	char *p;
+	const char *p;
 	int i;
 	if (pp == NULL) return;
 	if (sent->length < opts->twopass_length) return;
