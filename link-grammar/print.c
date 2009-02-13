@@ -103,7 +103,7 @@ char * linkage_print_links_and_domains(Linkage linkage)
 	int N_links = linkage_get_num_links(linkage);
 	String * s = string_new();
 	char * links_string;
-	char ** dname;
+	const char ** dname;
 
 	longest = 0;
 	for (link=0; link<N_links; link++) {
