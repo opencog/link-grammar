@@ -22,7 +22,7 @@ struct Tconnector_struct
 	char multi;   /* TRUE if this is a multi-connector */
 	char dir;	 /* '-' for left and '+' for right */
 	Tconnector * next;
-	char * string;
+	const char * string;
 };
 
 typedef struct clause_struct Clause;
