@@ -108,27 +108,26 @@ static int max_postfix_found(Dict_node * d)
  * appropriate number.  x is the minimum number that distinguishes
  * this word from others in the dictionary.
  */
-static char * build_idiom_word_name(Dictionary dict, const char * s)
+static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
-	char * new_s, * x, *id;
-	int count, sz;
+	char buff[2*MAX_WORD];
+	char *x;
+	int count;
 
 	Dict_node *dn = dictionary_lookup_list(dict, s);
 	count = max_postfix_found(dn)+1;
 	free_lookup_list(dn);
 
-	sz = strlen(s)+10;
-	new_s = x = (char *) xalloc(sz); /* fails if > 10**10 idioms */
-	while((*s != '\0') && (*s != '.')) {
+	x = buff;
+	while((*s != '\0') && (*s != '.'))
+	{
 		*x = *s;
 		x++;
 		s++;
 	}
-	sprintf(x,".I%d",count);
+	sprintf(x, ".I%d",count);
 
-	id = string_set_add(new_s, dict->string_set);
-	xfree(new_s, sz);
-	return id;
+	return string_set_add(buff, dict->string_set);
 }
 
 /**
@@ -197,27 +196,26 @@ static void increment_current_name(void)
  * allocate string space for it.
  * @return a pointer to connector name.
  */
-static char * generate_id_connector(Dictionary dict)
+static const char * generate_id_connector(Dictionary dict)
 {
-	unsigned int i, sz;
-	char * t, * s, *id;
+	char buff[2*MAX_WORD];
+	unsigned int i;
+	char * t;
 
 	for (i=0; current_name[i] == 'A'; i++)
 	  ;
 	/* i is now the number of characters of current_name to skip */
-	sz = CN_size - i + 2 + 1 + 1;
-	s = t = (char *) xalloc(sz);
+	t = buff;
 
 	/* All idiom connector names start with the two letters "ID" */
 	*t++ = 'I';
 	*t++ = 'D';
-	for (; i < CN_size; i++ ) {
+	for (; i < CN_size; i++ )
+	{
 		*t++ = current_name[i] ;
 	}
 	*t++ = '\0';
-	id = string_set_add(s, dict->string_set);
-	xfree(s, sz);
-	return id;
+	return string_set_add(buff, dict->string_set);
 }
 
 /**

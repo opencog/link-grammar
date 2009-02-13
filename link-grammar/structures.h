@@ -249,7 +249,7 @@ struct Exp_struct
     char multi; /* TRUE if a multi-connector (for connector)  */
     union {
         E_list * l;       /* only needed for non-terminals */
-        char * string;    /* only needed if it's a connector */
+        const char * string;    /* only needed if it's a connector */
     } u;
     float cost;   /* The cost of using this expression.
                      Only used for non-terminals */
