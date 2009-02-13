@@ -34,20 +34,6 @@ struct clause_struct
 	Tconnector * c;
 };
 
-/**
- * This builds a new copy of the connector list pointed to by c.
- * Strings, as usual, are not copied.
- */
-static Tconnector * copy_Tconnectors(Tconnector * c)
-{
-	Tconnector *c1;
-	if (c == NULL) return NULL;
-	c1 = (Tconnector *) xalloc(sizeof(Tconnector));
-	*c1 = *c;
-	c1->next = copy_Tconnectors(c->next);
-	return c1;
-}
-
 static void free_Tconnectors(Tconnector *e)
 {
 	Tconnector * n;
@@ -71,10 +57,26 @@ static void free_clause_list(Clause *c)
 }
 
 #ifdef UNUSED_FUNCTION
-static Clause * copy_clause(Clause * d) {
-/* This builds a new copy of the clause pointed to by d (except for the
-   next field which is set to NULL).  Strings, as usual, are not copied.
-*/
+/**
+ * This builds a new copy of the connector list pointed to by c.
+ * Strings, as usual, are not copied.
+ */
+static Tconnector * copy_Tconnectors(Tconnector * c)
+{
+	Tconnector *c1;
+	if (c == NULL) return NULL;
+	c1 = (Tconnector *) xalloc(sizeof(Tconnector));
+	*c1 = *c;
+	c1->next = copy_Tconnectors(c->next);
+	return c1;
+}
+
+/**
+ * This builds a new copy of the clause pointed to by d (except for the
+ * next field which is set to NULL).  Strings, as usual, are not copied.
+ */
+static Clause * copy_clause(Clause * d)
+{
 	Clause * d1;
 	if (d == NULL) return NULL;
 	d1 = (Clause *) xalloc(sizeof(Clause));
@@ -154,6 +156,7 @@ static Tconnector * build_terminal(Exp * e)
 	return c;
 }
 
+#ifdef UNUSED_FUNCTION
 static int maxcost_of_expression(Exp *e)
 {
 	E_list * e_list;
@@ -170,7 +173,6 @@ static int maxcost_of_expression(Exp *e)
 	return (m + e->cost);
 }
 
-#ifdef UNUSED_FUNCTION
 /**
  * This returns the maximum maxcost of any disjunct in the sentence
  * Assumes the sentence expressions have been constructed
