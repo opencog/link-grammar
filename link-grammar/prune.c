@@ -259,7 +259,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 		return FALSE;
 }
 
-static inline void zero_connector_table(connector_table *ct)
+static void zero_connector_table(connector_table *ct)
 {
 	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
 }
@@ -1901,7 +1901,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 {
 	pp_knowledge * knowledge;
 	pp_rule rule;
-	char * selector;
+	const char * selector;
 	pp_linkset * link_set;
 	int i, w, dir;
 	Disjunct *d;
