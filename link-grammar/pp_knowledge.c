@@ -273,7 +273,7 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       (*rules)[r].link_set = pp_linkset_open(n_tokens);
       (*rules)[r].link_set_size = n_tokens;
-      (*rules)[r].link_array = (char **) xalloc((1+n_tokens)*sizeof(char*));
+      (*rules)[r].link_array = (const char **) xalloc((1+n_tokens)*sizeof(const char*));
       for (i=0; i<n_tokens; i++)
       {
         p = string_set_add(tokens[i], k->string_set);
