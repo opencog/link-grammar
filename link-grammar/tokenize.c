@@ -416,7 +416,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 	if (0 == word_is_in_dict)
 	{
 		j=0;
-		for (i=0; i < s_strippable+1; i++)
+		for (i=0; i <= s_strippable; i++)
 		{
 			s_ok = 0;
 			/* Go through once for each suffix; then go through one 
@@ -529,7 +529,7 @@ int separate_sentence(char * s, Sentence sent)
 
 #ifndef __CYGWIN__
 	/* Reset the multibyte shift state to the initial state */
-	mbtowc(NULL, NULL, 4);
+	(void) mbtowc(NULL, NULL, 4);
 #endif
 
 	is_first = TRUE;
@@ -598,51 +598,53 @@ static int special_string(Sentence sent, int i, const char * s)
 	}
 }
 
-static int guessed_string(Sentence sent, int i, const char * s, const char * type) {
+static int guessed_string(Sentence sent, int i, const char * s, const char * type)
+{
 	X_node * e;
-	char *t, *u;
+	char *t;
 	char str[MAX_WORD+1];
-	if (boolean_dictionary_lookup(sent->dict, type)) {
-	  sent->word[i].x = build_word_expressions(sent, type);
-	  e = sent->word[i].x;
-		  if(is_s_word(s)) {
-
-			for (; e != NULL; e = e->next) {
-			  t = strchr(e->string, '.');
-			  if (t != NULL) {
-				sprintf(str, "%.50s[!].%.5s", s, t+1);
-			  } else {
-				sprintf(str, "%.50s[!]", s);
-			  }
-			  t = (char *) xalloc(strlen(str)+1);
-			  strcpy(t,str);
-			  u = string_set_add(t, sent->string_set);
-			  xfree(t, strlen(str)+1);
-			  e->string = u;
+	if (boolean_dictionary_lookup(sent->dict, type))
+	{
+		sent->word[i].x = build_word_expressions(sent, type);
+		e = sent->word[i].x;
+		if(is_s_word(s))
+		{
+			for (; e != NULL; e = e->next)
+			{
+				t = strchr(e->string, '.');
+				if (t != NULL)
+				{
+					sprintf(str, "%.50s[!].%.5s", s, t+1);
+			  	}
+				else
+				{
+					sprintf(str, "%.50s[!]", s);
+				}
+				e->string = string_set_add(str, sent->string_set);
 			}
-		  }
-
-		  else {
-			if(is_ed_word(s)) {
-			  sprintf(str, "%.50s[!].v", s);
+		}
+		else
+		{
+			if(is_ed_word(s))
+			{
+				sprintf(str, "%.50s[!].v", s);
 			}
-			else if(is_ing_word(s)) {
-			  sprintf(str, "%.50s[!].g", s);
+			else if(is_ing_word(s))
+			{
+				sprintf(str, "%.50s[!].g", s);
 			}
-			else if(is_ly_word(s)) {
-			  sprintf(str, "%.50s[!].e", s);
+			else if(is_ly_word(s))
+			{
+				sprintf(str, "%.50s[!].e", s);
 			}
 			else sprintf(str, "%.50s[!]", s);
 
-			t = (char *) xalloc(strlen(str)+1);
-			strcpy(t,str);
-			u = string_set_add(t, sent->string_set);
-			xfree(t, strlen(str)+1);
-			e->string = u;
-		  }
-		  return TRUE;
-
-	} else {
+			e->string = string_set_add(str, sent->string_set);
+		}
+		return TRUE;
+	}
+	else
+	{
 		err_ctxt ec;
 		ec.sent = sent;
 		err_msg(&ec, Error, 
@@ -653,13 +655,16 @@ static int guessed_string(Sentence sent, int i, const char * s, const char * typ
 	}
 }
 
-static void handle_unknown_word(Sentence sent, int i, char * s) {
-  /* puts into word[i].x the expression for the unknown word */
-  /* the parameter s is the word that was not in the dictionary */
-  /* it massages the names to have the corresponding subscripts */
-  /* to those of the unknown words */
-  /* so "grok" becomes "grok[?].v"  */
-	char *t,*u;
+/**
+ * Puts into word[i].x the expression for the unknown word 
+ * the parameter s is the word that was not in the dictionary 
+ * it massages the names to have the corresponding subscripts 
+ * to those of the unknown words
+ * so "grok" becomes "grok[?].v" 
+ */
+static void handle_unknown_word(Sentence sent, int i, char * s)
+{
+	char *t;
 	X_node *d;
 	char str[MAX_WORD+1];
 
@@ -667,18 +672,18 @@ static void handle_unknown_word(Sentence sent, int i, char * s) {
 	if (sent->word[i].x == NULL)
 		assert(FALSE, "UNKNOWN_WORD should have been there");
 
-	for (d = sent->word[i].x; d != NULL; d = d->next) {
+	for (d = sent->word[i].x; d != NULL; d = d->next)
+	{
 		t = strchr(d->string, '.');
-		if (t != NULL) {
+		if (t != NULL)
+		{
 			sprintf(str, "%.50s[?].%.5s", s, t+1);
-		} else {
+		}
+		else
+		{
 			sprintf(str, "%.50s[?]", s);
 		}
-		t = (char *) xalloc(strlen(str)+1);
-		strcpy(t,str);
-		u = string_set_add(t, sent->string_set);
-		xfree(t, strlen(str)+1);
-		d->string = u;
+		d->string = string_set_add(str, sent->string_set);
 	}
 }
 
@@ -702,7 +707,8 @@ static void handle_unknown_word(Sentence sent, int i, char * s) {
 int build_sentence_expressions(Sentence sent)
 {
 	int i, first_word;  /* the index of the first word after the wall */
-	char *s, *u, temp_word[MAX_WORD+1];
+	char *s, temp_word[MAX_WORD+1];
+	const char * u;
 	X_node * e;
 	Dictionary dict = sent->dict;
 
