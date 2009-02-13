@@ -483,8 +483,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 		return s0;
 	} else {
 		strcpy(u, s);   /* get the remainder of s */
-		u = string_set_add(u0, sent->string_set);
-		return u;
+		return string_set_add(u0, sent->string_set);
 	}
 }
 
@@ -728,12 +727,13 @@ static char * stick_in_one_connector(char *s, Connector *c, int len)
  */
 static void compute_matchers_for_a_label(Sentence sent, int k)
 {
-	int * lengths;
-	int N_connectors, i, j, tot_len;
+	char buff[2*MAX_WORD];
+	int lengths[MAX_LINKS];
+	int N_connectors, i, j;
 	Connector * c;
 	Disjunct * d;
 	const char *cs;
-	char *s, *os;
+	char *s;
 
 	d = sent->and_data.label_table[k];
 
@@ -741,7 +741,6 @@ static void compute_matchers_for_a_label(Sentence sent, int k)
 	for (c=d->left; c != NULL; c = c->next) N_connectors ++;
 	for (c=d->right; c != NULL; c = c->next) N_connectors ++;
 
-	lengths = (int *) xalloc(N_connectors*sizeof(int));
 	for (i=0; i<N_connectors; i++) lengths[i] = 0;
 	while(d != NULL) {
 		i = 0;
@@ -761,12 +760,10 @@ static void compute_matchers_for_a_label(Sentence sent, int k)
 		d = d->next;
 	}
 
-	tot_len = 0;
-	for (i=0; i<N_connectors; i++) tot_len += lengths[i]+1;
-					 /* +1 is for the multi-match character */
-	for (d = sent->and_data.label_table[k]; d!= NULL; d = d->next) {
+	for (d = sent->and_data.label_table[k]; d!= NULL; d = d->next)
+	{
 		i=0;
-		os = s = (char *) xalloc(tot_len+1);
+		s = buff;
 		for (c=d->left; c != NULL; c = c->next) {
 			s = stick_in_one_connector(s, c, lengths[i]);
 			i++;
@@ -775,11 +772,8 @@ static void compute_matchers_for_a_label(Sentence sent, int k)
 			s = stick_in_one_connector(s, c, lengths[i]);
 			i++;
 		}
-		s = string_set_add(os, sent->string_set);
-		xfree(os, tot_len+1);
-		d->string = s;
+		d->string = string_set_add(buff, sent->string_set);
 	}
-	xfree((char *)lengths, N_connectors*sizeof(int));
 }
 
 /**
