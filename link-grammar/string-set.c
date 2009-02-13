@@ -124,7 +124,7 @@ static void grow_table(String_set *ss)
 	xfree((char *) old.table, old.size * sizeof(char *));
 }
 
-char * string_set_add(const char * source_string, String_set * ss)
+const char * string_set_add(const char * source_string, String_set * ss)
 {
 	char * str;
 	int len, p;
@@ -148,7 +148,7 @@ char * string_set_add(const char * source_string, String_set * ss)
 	return str;
 }
 
-char * string_set_lookup(const char * source_string, String_set * ss)
+const char * string_set_lookup(const char * source_string, String_set * ss)
 {
 	int p;
 	
