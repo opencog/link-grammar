@@ -416,7 +416,7 @@ typedef struct pp_linkset_s
 typedef struct pp_label_node_s
 {
     /* linked list of strings associated with a label in the table */
-    char *str;
+    const char *str;
     struct pp_label_node_s *next;
 } pp_label_node;                 /* next=NULL: end of list */
 
@@ -424,11 +424,11 @@ typedef struct pp_label_node_s
 typedef struct PPLexTable_s
 {
     String_set *string_set;
-    char *labels[PP_LEXER_MAX_LABELS];    /* array of labels (NULL-terminated) */
-    pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /* str. for each label */
-    pp_label_node *last_node_of_label[PP_LEXER_MAX_LABELS];      /* efficiency */
-    pp_label_node *current_node_of_active_label;/*state: current node of label */
-    int idx_of_active_label;                      /* read state: current label */
+    const char *labels[PP_LEXER_MAX_LABELS];             /* array of labels  */
+    pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /*str. for each label*/
+    pp_label_node *last_node_of_label[PP_LEXER_MAX_LABELS];    /* efficiency */
+    pp_label_node *current_node_of_active_label;/* state: curr node of label */
+    int idx_of_active_label;                    /* read state: current label */
 } PPLexTable;
 
 /* from pp_knowledge.c */

@@ -355,6 +355,7 @@ static void yyunput YY_PROTO(( int c, char *buf_ptr ));
 static void yy_flex_strncpy YY_PROTO(( char *, const char *, int ));
 #endif
 
+#ifdef THIS_FUNCTION_IS_NO_LONGER_USED
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
 static int yyinput YY_PROTO(( void ));
@@ -362,6 +363,7 @@ static int yyinput YY_PROTO(( void ));
 static int input YY_PROTO(( void ));
 #endif
 #endif
+#endif /* THIS_FUNCTION_IS_NO_LONGER_USED */
 
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
@@ -512,7 +514,7 @@ char *yytext;
 static void check_string(const char *str);
 static void setup(PPLexTable *lt);
 static void set_label(PPLexTable *lt, const char *label);
-static void add_string_to_label(PPLexTable *lt, char *str);
+static void add_string_to_label(PPLexTable *lt, const char *str);
 static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
 /* static void show_bindings(PPLexTable *lt); --DS */
 static int  get_index_of_label(PPLexTable *lt, const char *label);
@@ -1160,6 +1162,7 @@ register char *yy_bp;
 	}
 #endif  /* --DS */
 
+#ifdef THIS_FUNCTION_IS_NOT_USED_ANYMORE
 #ifdef __cplusplus
 static int yyinput(void)
 #else
@@ -1231,6 +1234,7 @@ static int input(void)
 
 	return c;
 	}
+#endif /* THIS_FUNCTION_IS_NOT_USED_ANYMORE */
 
 
 #ifdef YY_USE_PROTOS
@@ -1703,10 +1707,10 @@ int pp_lexer_count_tokens_of_label(PPLexTable *lt)
 }
 
 
-char *pp_lexer_get_next_token_of_label(PPLexTable *lt) 
+const char *pp_lexer_get_next_token_of_label(PPLexTable *lt) 
 {
   /* retrieves next token of set label, or NULL if list exhausted */
-  static char *p;
+  static const char *p;
   if (lt->current_node_of_active_label==NULL) return NULL;
   p = lt->current_node_of_active_label->str;
   lt->current_node_of_active_label=lt->current_node_of_active_label->next;
@@ -1727,29 +1731,29 @@ int pp_lexer_count_commas_of_label(PPLexTable *lt)
   return n;
 }
 
-char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt,int *n_tokens)
+const char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt, int *n_tokens)
 { 
   /* all tokens until next comma, null-terminated */
   int n;
   pp_label_node *p;
-  static char **tokens=0;  
+  static const char **tokens = NULL;  
   static int extents=0;
 
   p=lt->current_node_of_active_label;	   
   for (n=0; p!=NULL && strcmp(p->str,","); n++, p=p->next);
   if (n>extents) {
-     extents=n;
-     free(tokens);
-     tokens = (char **) malloc (extents * sizeof(char*));
+     extents = n;
+     free (tokens);
+     tokens = (const char **) malloc (extents * sizeof(const char*));
   }   
 
-  p=lt->current_node_of_active_label;	   
+  p = lt->current_node_of_active_label;	   
   for (n=0; p!=NULL && strcmp(p->str,","); n++, p=p->next)
        tokens[n] = string_set_add(p->str, lt->string_set);
   
   /* advance "current node of label" state */
   lt->current_node_of_active_label = p;
-  if (p!=NULL) lt->current_node_of_active_label=p->next;
+  if (p!=NULL) lt->current_node_of_active_label = p->next;
   
   *n_tokens = n;
   return tokens;
@@ -1813,7 +1817,7 @@ static void set_label(PPLexTable *lt, const char *label)
 }
 
 
-static void add_string_to_label(PPLexTable *lt, char *str) 
+static void add_string_to_label(PPLexTable *lt, const char *str) 
 {
   /* add the single string str to the set of strings associated with label */
   pp_label_node *new_node;
