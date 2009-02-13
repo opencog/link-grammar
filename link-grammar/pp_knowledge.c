@@ -247,7 +247,8 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
   /* Reading the 'contains_one_rules' and reading the
      'contains_none_rules' into their respective arrays */
   int n_commas, n_tokens, i, r;
-  char *p, **tokens;
+  const char *p;
+  char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
       if (verbosity>0) printf("PP warning: Not using any %s rules\n", label);
@@ -274,11 +275,11 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
       (*rules)[r].link_set_size = n_tokens;
       (*rules)[r].link_array = (char **) xalloc((1+n_tokens)*sizeof(char*));
       for (i=0; i<n_tokens; i++)
-	{
-	  p=string_set_add(tokens[i], k->string_set);
-	  pp_linkset_add((*rules)[r].link_set, p);
-	  (*rules)[r].link_array[i]=p;
-	}
+      {
+        p = string_set_add(tokens[i], k->string_set);
+        pp_linkset_add((*rules)[r].link_set, p);
+        (*rules)[r].link_array[i] = p;
+      }
       (*rules)[r].link_array[i]=0; /* NULL-terminator */
 
       /* read error message */

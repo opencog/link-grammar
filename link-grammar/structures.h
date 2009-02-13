@@ -434,7 +434,7 @@ typedef struct PPLexTable_s
 /* from pp_knowledge.c */
 typedef struct StartingLinkAndDomain_s
 {
-    char* starting_link;
+    const char *starting_link;
     int   domain;       /* domain which the link belongs to (-1: terminator)*/
 } StartingLinkAndDomain;
 
@@ -442,18 +442,18 @@ typedef struct pp_rule_s
 {
     /* Holds a single post-processing rule. Since rules come in many
        flavors, not all fields of the following are always relevant  */
-    char *selector;       /* name of link to which rule applies      */
+    const char *selector; /* name of link to which rule applies      */
     int   domain;         /* type of domain to which rule applies    */
     pp_linkset *link_set; /* handle to set of links relevant to rule */
     int   link_set_size;  /* size of this set                        */
     char  **link_array;   /* array containing the spelled-out names  */
-    char  *msg;           /* explanation (NULL=end sentinel in array)*/
+    const char  *msg;     /* explanation (NULL=end sentinel in array)*/
 } pp_rule;
 
 struct pp_knowledge_s
 {
     PPLexTable *lt; /* Internal rep'n of sets of strings from knowledge file */
-    char *path;     /* Name of file we loaded from */
+    const char *path; /* Name of file we loaded from */
 
     /* handles to sets of links specified in knowledge file. These constitute
        auxiliary data, necessary to implement the rules, below. See comments
