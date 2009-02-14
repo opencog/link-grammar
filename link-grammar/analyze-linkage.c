@@ -139,6 +139,7 @@ static void free_sublinkage(Sublinkage *s)
 
 static void replace_link_name(Link *l, const char *s)
 {
+	/* XXX can get some perf improvement by avoiding strlen! */
 	char * t;
 	exfree((char *) l->name, sizeof(char)*(strlen(l->name)+1));
 	t = (char *) exalloc(sizeof(char)*(strlen(s)+1));
@@ -923,6 +924,10 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		free_sublinkage(sublinkage);
 		free_digraph(actx, pi);
 		free_DIS_tree(d_root);
+		for (i = 0; i < pi->N_links; i++)
+		{
+			pi->link_array[i].name = "";
+		}
 		return li;
 	}
 
