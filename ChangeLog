@@ -6,8 +6,9 @@ Version 4.4.3 (?? 2009)
  * Add 1400 new adjectives, many of scientific origin.
  * Add 250 international currencies.
  * Performance optimization in sentence tokenization.
- * Add 1100 male, female given names (from Bruce Wilcox)
- * Cleanup parsing of "in-" date expressions, e.g. "in the 1940's"
+ * Add 1100 male, female given names (from Bruce Wilcox).
+ * Cleanup parsing of "in-" date expressions, e.g. "in the 1940's".
+ * Cleanup of assorted compiler warnings.
 
 Version 4.4.2 (15 January 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'
