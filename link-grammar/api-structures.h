@@ -276,7 +276,7 @@ struct PP_data_s
 struct PP_info_s
 {
 	int       num_domains;
-	char **   domain_name;
+	const char **   domain_name;
 };
 
 struct Postprocessor_s
