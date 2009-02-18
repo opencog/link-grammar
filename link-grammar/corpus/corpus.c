@@ -62,7 +62,7 @@ Corpus * lg_corpus_new(void)
 			sqlite3_errmsg(c->dbconn));
 	}
 
-	prt_error("Info: Statistics database opened\n");
+	prt_error("Info: linkgrammar corpus statistics database opened\n");
 	return c;
 }
 
