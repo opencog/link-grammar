@@ -11,6 +11,9 @@ linkgrammar-@VERSION@.jar:
 if HAVE_JAVA
 javadir=$(datadir)/java
 java_DATA = linkgrammar-@VERSION@.jar
+
+install-data-hook: 
+	ln -sf $(datadir)/java/$(java_DATA) $(datadir)/java/linkgrammar.jar
 endif 
 
 
