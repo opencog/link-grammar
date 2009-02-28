@@ -14,7 +14,8 @@
 ¢ ™: RPUNC+; 
 
 "(" "{" "[" "<" « 〈 〔 《 【 『 "``" „ “ ‘ ''.x '.x
-"$" US$ USD C$ £ ₤ § ¥ € † †† © "#": LPUNC+;
+"$" US$ USD C$ £ ₤ € ₳ ฿ ₵ ₡ ₢ ₫ ₣ ₴ ₭ ℳ  ₥  ₦ ₧ ₰ ₨  ₪ ৳ ₮ ₩ ¥ 호점
+† †† ‡ § ¶ © № "#": LPUNC+;
 
 /en/words/units.1: UNITS+;
 /en/words/units.2: UNITS+;
