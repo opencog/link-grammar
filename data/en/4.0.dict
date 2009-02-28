@@ -659,7 +659,7 @@ kabillions_of kajillions_of katrillions_of killions_of umptillions_of
 zillions_of:
 ND+ or NIn+;
 
-1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8 ½ ⅔ ¼ ¾: 
+1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8 ½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞:
 ({NNx-} & NNy+) or NIa- or NF+ or NIe+ 
 or ({NNx-} & {EN- or NIc-} & (ND+ or NIn+ or OD- or ({DD-} & 
 ([[Ds+]] or Dmcn+ or (<noun-sub-x> & <noun-main-x>)))));
@@ -3449,8 +3449,8 @@ wholly fully critically greatly grossly duly unduly: EA+ or
 ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
 seemingly utterly: EA+ or Em+;
 barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
-partly largely mostly chiefly simply
-purely solely: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
+partly.e largely.e mostly.e chiefly.e simply.e1
+purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
 /en/words/words.adv.3: % adverbs like "biochemically"
  EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} &
@@ -3508,17 +3508,20 @@ otherwise formerly lately:
 ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EB-;
 also: ({Xd- & Xc+} & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
 
-gradually sadly broadly clearly
-annually characteristically comparatively
-confidentially currently fundamentally hypothetically
-ironically justifiably momentarily mercifully
-nominally ominously periodically precisely realistically
-simultaneously subsequently superficially thankfully
-unofficially effectively traditionally briefly eventually ultimately
-mysteriously naturally oddly plainly truthfully appropriately:
+gradually.e sadly.e broadly.e clearly.e
+annually.e characteristically.e comparatively.e
+confidentially.e currently.e fundamentally.e hypothetically.e
+ironically.e justifiably.e momentarily.e mercifully.e
+nominally.e ominously.e periodically.e precisely.e realistically.e
+simultaneously.e subsequently.e superficially.e thankfully.e
+unofficially.e effectively.e traditionally.e briefly.e
+eventually.e ultimately.e
+mysteriously.e naturally.e oddly.e plainly.e truthfully.e
+appropriately.e simply.e2:
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+ or [[EA+]]);
-occasionally often specifically generally originally: 
+
+occasionally.e often.e specifically.e generally.e originally.e: 
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
 
