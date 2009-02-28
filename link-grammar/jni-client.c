@@ -417,8 +417,12 @@ Java_org_linkgrammar_LinkGrammar_getWord(JNIEnv *env, jclass cls, jint i)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
 
-	/* does not need to be freed, points into sentence */
-	char* w = sentence_get_word(ptd->sent, i);
+	/* Does not need to be freed, points into sentence */
+	char * w = sentence_get_word(ptd->sent, i);
+
+	/* FWIW, j will be null if w is utf8-encoded Japanese or Chinese.
+	 * I guess my JVM is not capable of handling Chinese/Japanese ??
+	 */
 	jstring j = (*env)->NewStringUTF(env, w);
 	return j;
 }
@@ -428,8 +432,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkageWord(JNIEnv *env, jclass cls, jint i)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
 
-	/* does not need to be freed, points into data structures */
-	/* returns the inflected word. */
+	/* Does not need to be freed, points into data structures */
+	/* Returns the inflected word. */
 	const char * w = linkage_get_word(ptd->linkage, i);
 	jstring j = (*env)->NewStringUTF(env, w);
 	return j;
