@@ -156,10 +156,10 @@ struct Dictionary_s
 	 */
 	FILE *          fp;
 	char            token[MAX_TOKEN_LENGTH];
-	int             is_special;
-	int             already_got_it;
+	int             is_special;        /* boolean */
+	wint_t          already_got_it;
 	int             line_number;
-	int             recursive_error;
+	int             recursive_error;   /* boolean */
 };
 
 struct Label_node_s

@@ -529,7 +529,7 @@ int separate_sentence(char * s, Sentence sent)
 
 #ifndef __CYGWIN__
 	/* Reset the multibyte shift state to the initial state */
-	(void) mbtowc(NULL, NULL, 4);
+	i = mbtowc(NULL, NULL, 4);
 #endif
 
 	is_first = TRUE;

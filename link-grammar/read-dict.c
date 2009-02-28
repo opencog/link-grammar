@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <limits.h>
+#include <string.h>
 #include <wchar.h>
 #include <wctype.h>
 #include <link-grammar/api.h>
@@ -174,9 +176,22 @@ static wint_t get_character(Dictionary dict, int quote_mode)
 
 
 /*
- * This set of 10 characters are the ones defining the syntax of the dictionary.
+ * This set of 10 characters are the ones defining the syntax of the
+ * dictionary.
  */
 #define SPECIAL "(){};[]&|:"
+
+/**
+ * Return true if the input wide-character is one of the special
+ * characters used to define the syntax of the dictionary.
+ */
+static int is_special(wint_t wc)
+{
+	char buff[MB_LEN_MAX];
+	int nr = wctomb(buff, wc);
+	if (1 != nr) return FALSE;
+	return (NULL != strchr(SPECIAL, buff[0]));
+}
 
 /**
  * This reads the next token from the input into token.
@@ -192,11 +207,11 @@ static int link_advance(Dictionary dict)
 
 	if (dict->already_got_it != '\0')
 	{
-		dict->is_special = (strchr(SPECIAL, dict->already_got_it) != NULL);
-		if (dict->already_got_it == EOF) {
+		dict->is_special = is_special(dict->already_got_it);
+		if (dict->already_got_it == WEOF) {
 			dict->token[0] = '\0';
 		} else {
-			dict->token[0] = dict->already_got_it;
+			dict->token[0] = dict->already_got_it; /* specials are one byte */
 			dict->token[1] = '\0';
 		}
 		dict->already_got_it = '\0';
@@ -239,9 +254,11 @@ static int link_advance(Dictionary dict)
 			}
 			i += nr;
 		} else {
-			if (strchr(SPECIAL, c) != NULL) {
-				if (i == 0) {
-					dict->token[0] = c;
+			if (is_special(c))
+			{
+				if (i == 0)
+				{
+					dict->token[0] = c;  /* special toks are one char always */
 					dict->token[1] = '\0';
 					dict->is_special = TRUE;
 					return 1;
