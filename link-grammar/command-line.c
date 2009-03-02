@@ -79,7 +79,8 @@ static Switch default_switches[] =
 struct {const char * s; const char * str;} user_command[] =
 {
 	{"variables",	"List user-settable variables and their functions"},
-	{"help",		 "List the commands and what they do"},
+	{"help",	      "List the commands and what they do"},
+	{"file",       "Read input from the specified filename"},
 	{NULL,		   NULL}
 };
 
@@ -195,7 +196,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		}
 	}
 
-	if (strcmp(s, "variables")==0)
+	if (strcmp(s, "variables") == 0)
 	{
         printf(" Variable     Controls                                      Value\n");
         printf(" --------     --------                                      -----\n");
@@ -215,7 +216,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		return;
 	}
 
-	if (strcmp(s, "help")==0)
+	if (strcmp(s, "help") == 0)
 	{
 		printf("Special commands always begin with \"!\".  Command and variable names\n");
 		printf("can be abbreviated.  Here is a list of the commands:\n\n");

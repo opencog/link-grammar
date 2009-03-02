@@ -33,6 +33,7 @@
  *
  ****************************************************************************/
 
+#include <errno.h>
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,6 +77,14 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 #ifdef HAVE_EDITLINE
 	static char * pline = NULL;
 	const char * prompt = "linkparser> ";
+
+	if (in != stdin)
+	{
+		static char input_string[MAX_INPUT];
+		input_pending = FALSE;
+		if (fgets(input_string, MAX_INPUT, in)) return input_string;
+		return NULL;
+	}
 
 	if (input_pending && pline != NULL)
 	{
@@ -381,12 +390,13 @@ static int special_command(char *input_string, Dictionary dict)
 	if (input_string[0] == '\n') return TRUE;
 	if (input_string[0] == COMMENT_CHAR) return TRUE;
 	if (input_string[0] == '!') {
-		if (strncmp(input_string, "!panic_", 7)==0) {
+		if (strncmp(input_string, "!panic_", 7) == 0)
+		{
 			issue_special_command(input_string+7, panic_parse_opts, dict);
+			return TRUE;
 		}
-		else {
-			issue_special_command(input_string+1, opts, dict);
-		}
+
+		issue_special_command(input_string+1, opts, dict);
 		return TRUE;
 	}
 	return FALSE;
@@ -431,6 +441,7 @@ static void print_usage(char *str) {
 
 int main(int argc, char * argv[])
 {
+	FILE            *input_fh = stdin;
 	Dictionary      dict;
 	Sentence        sent;
 	const char     *language="en";  /* default to english, and not locale */
@@ -521,10 +532,37 @@ int main(int argc, char * argv[])
 	verbosity = parse_options_get_verbosity(opts);
 
 	/* Main input loop */
-	while (NULL != (input_string = fget_input_string(stdin, stdout, opts)))
+	while (1)
 	{
+		input_string = fget_input_string(input_fh, stdout, opts);
+
+		if (NULL == input_string)
+		{
+			if (input_fh == stdin) break;
+			fclose (input_fh);
+			input_fh = stdin;
+			continue;
+		}
+
 		if ((strcmp(input_string, "quit\n")==0) ||
 			(strcmp(input_string, "exit\n")==0)) break;
+
+		/* We have to handle the !file command inline; its too hairy
+		 * otherwise ... */
+		if (strncmp(input_string, "!file", 5) == 0)
+		{
+			char * filename = &input_string[6];
+			input_fh = fopen(filename, "r");
+			if (NULL == input_fh)
+			{
+				int perr = errno;
+				fprintf(stderr, "Error: %s (%d) %s\n",
+				        filename, perr, strerror(perr));
+				input_fh = stdin;
+				continue;
+			}
+			continue;
+		}
 
 		if (special_command(input_string, dict)) continue;
 		if (parse_options_get_echo_on(opts)) {
