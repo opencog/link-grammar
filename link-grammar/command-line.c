@@ -68,7 +68,7 @@ static Switch default_switches[] =
    {"postscript", 1, "Generate postscript output",      &local.display_postscript},
    {"senses",     1, "Showing of word senses",          &local.display_senses},
    {"short",      0, "Max length of short links",       &local.short_length},
-   {"timeout",    0, "Abort parsing after this long",   &local.timeout},
+   {"timeout",    0, "Abort parsing after this many seconds",   &local.timeout},
    {"union",      1, "Showing of 'union' linkage",      &local.display_union},
    {"verbosity",  0, "Level of detail in output",       &local.verbosity},
    {"walls",      1, "Showing of wall words",           &local.display_walls},
