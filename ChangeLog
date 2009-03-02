@@ -10,6 +10,7 @@ Version 4.4.3 (?? 2009)
  * Cleanup parsing of "in-" date expressions, e.g. "in the 1940's".
  * Cleanup of assorted compiler warnings.
  * Fix handling of special utf8 characters in dictionary.
+ * Fix hang when parsing certain utf8 input strings.
 
 Version 4.4.2 (15 January 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'

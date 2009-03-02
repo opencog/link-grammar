@@ -50,12 +50,13 @@ static int is_initials_word(const char * word)
  */
 static int is_number(const char * s)
 {
+	int nb = 1;
 	wchar_t c;
 	if (!is_utf8_digit(s)) return FALSE;
 
-	while (*s != 0)
+	while ((*s != 0) && (0 < nb))
 	{
-		int nb = mbtowc(&c, s, 4);
+		nb = mbtowc(&c, s, 4);
 		if (iswdigit(c)) { s += nb; }
 
 		/* U+00A0 no break space */
@@ -83,6 +84,7 @@ static int ishyphenated(const char * s)
 	while (*s != '\0')
 	{
 		int nb = mbtowc(&c, s, 4);
+		if (0 > nb) break;
 
 		if (!iswalpha(c) && !iswdigit(c) && (*s!='.') && (*s!=',')
 			&& (*s!='-')) return FALSE;
