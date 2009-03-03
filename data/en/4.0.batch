@@ -1564,6 +1564,10 @@ Who invented sliced bread; when did they do it?
 Flumblqwerty's shoes are red.
 Marry's shoes are red.
 
+% Sentence containing UTF8 chars that can lead to i/o or 
+% word-boundary problems
+Bitter gourdはにがうりだそうであってるのかはちょっと不安ですが翻訳ソフトでやくしてみました。
+
 % Overly long sentences leading to overflow
 I think one of the chief differences between the main Filipino language, which is Tagalog, and English, when I hear Tagalog speakers speaking English, is that they tend to place the stress on the wrong syllable of a word or they stress the wrong word in the sentence or in the question.
 
