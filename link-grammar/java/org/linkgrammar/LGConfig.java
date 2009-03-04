@@ -24,7 +24,7 @@ public class LGConfig
 	private int maxCost = -1;
 	private boolean allowSkippedWords = true;
 	private String dictionaryLocation = null;
-	private boolean storeConstituentString = false;
+	private boolean storeConstituentString = true;
 	
 	public int getMaxLinkages()
 	{
