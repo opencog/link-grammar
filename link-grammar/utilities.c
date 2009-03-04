@@ -163,7 +163,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	int i, nbl, nbh;
 	char low[MB_LEN_MAX];
 
-	nbh = mbtowc (&c, from, 4);
+	nbh = mbtowc (&c, from, MB_CUR_MAX);
 	c = towlower(c);
 	nbl = wctomb_check(low, c);
 
@@ -194,7 +194,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	int i, nbl, nbh;
 	char low[MB_LEN_MAX];
 
-	nbh = mbtowc (&c, from, 4);
+	nbh = mbtowc (&c, from, MB_CUR_MAX);
 	c = towupper(c);
 	nbl = wctomb_check(low, c);
 

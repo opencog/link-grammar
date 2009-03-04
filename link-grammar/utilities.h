@@ -122,7 +122,7 @@ static inline int wctomb_check(char *s, wchar_t wc)
 static inline int is_utf8_upper(const char *s)
 {
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, 4);
+	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
 	if (iswupper(c)) return nbytes;
 	return 0;
 }
@@ -130,7 +130,7 @@ static inline int is_utf8_upper(const char *s)
 static inline int is_utf8_alpha(const char *s)
 {
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, 4);
+	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
 	if (iswalpha(c)) return nbytes;
 	return 0;
 }
@@ -138,7 +138,7 @@ static inline int is_utf8_alpha(const char *s)
 static inline int is_utf8_digit(const char *s)
 {
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, 4);
+	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
 	if (iswdigit(c)) return nbytes;
 	return 0;
 }
@@ -146,7 +146,7 @@ static inline int is_utf8_digit(const char *s)
 static inline int is_utf8_space(const char *s)
 {
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, 4);
+	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
 	if (iswspace(c)) return nbytes;
 	return 0;
 }
@@ -172,15 +172,15 @@ static inline int utf8_upper_match(const char * s, const char * t)
 	wchar_t ws, wt;
 	int ns, nt;
 
-	ns = mbtowc(&ws, s, 4);
-	nt = mbtowc(&wt, t, 4);
+	ns = mbtowc(&ws, s, MB_CUR_MAX);
+	nt = mbtowc(&wt, t, MB_CUR_MAX);
 	while (iswupper(ws) || iswupper(wt))
 	{
 		if (ws != wt) return FALSE;
 		s += ns;
 		t += nt;
-		ns = mbtowc(&ws, s, 4);
-		nt = mbtowc(&wt, t, 4);
+		ns = mbtowc(&ws, s, MB_CUR_MAX);
+		nt = mbtowc(&wt, t, MB_CUR_MAX);
 	}
 	return TRUE;
 }

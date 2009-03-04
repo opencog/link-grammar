@@ -56,7 +56,7 @@ static int is_number(const char * s)
 
 	while ((*s != 0) && (0 < nb))
 	{
-		nb = mbtowc(&c, s, 4);
+		nb = mbtowc(&c, s, MB_CUR_MAX);
 		if (iswdigit(c)) { s += nb; }
 
 		/* U+00A0 no break space */
@@ -83,7 +83,7 @@ static int ishyphenated(const char * s)
 
 	while (*s != '\0')
 	{
-		int nb = mbtowc(&c, s, 4);
+		int nb = mbtowc(&c, s, MB_CUR_MAX);
 		if (0 > nb) break;
 
 		if (!iswalpha(c) && !iswdigit(c) && (*s!='.') && (*s!=',')
@@ -239,7 +239,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 
 	if (!is_utf8_upper(word)) return FALSE;
 
-	nbh = mbtowc (&c, word, 4);
+	nbh = mbtowc (&c, word, MB_CUR_MAX);
 	c = towlower(c);
 	nbl = wctomb_check(low, c);
 	if (nbh != nbl)
@@ -531,14 +531,14 @@ int separate_sentence(char * s, Sentence sent)
 
 #ifndef __CYGWIN__
 	/* Reset the multibyte shift state to the initial state */
-	i = mbtowc(NULL, NULL, 4);
+	i = mbtowc(NULL, NULL, MB_CUR_MAX);
 #endif
 
 	is_first = TRUE;
 	for(;;) 
 	{
 		wchar_t c;
-		int nb = mbtowc(&c, s, 4);
+		int nb = mbtowc(&c, s, MB_CUR_MAX);
 		quote_found = FALSE;
 
 		if (0 > nb) goto failure;
@@ -548,19 +548,19 @@ int separate_sentence(char * s, Sentence sent)
 		{
 			s += nb;
 			if (*s == '\"') quote_found = TRUE;
-			nb = mbtowc(&c, s, 4);
+			nb = mbtowc(&c, s, MB_CUR_MAX);
 			if (0 > nb) goto failure;
 		}
 
 		if (*s == '\0') break;
 
 		t = s;
-		nb = mbtowc(&c, t, 6);
+		nb = mbtowc(&c, t, MB_CUR_MAX);
 		if (0 > nb) goto failure;
 		while (!iswspace(c) && (c != '\"') && (c != 0) && (nb != 0))
 		{
 			t += nb;
-			nb = mbtowc(&c, t, 4);
+			nb = mbtowc(&c, t, MB_CUR_MAX);
 			if (0 > nb) goto failure;
 		}
 
