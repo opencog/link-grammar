@@ -17,6 +17,6 @@ liblink_corpus_la_SOURCES = \
 EXTRA_DIST=                               \
 	README
 
-bin_PROGRAMS=sniff
+noinst_PROGRAMS=sniff
 sniff_SOURCES = sniff.c
 sniff_LDADD = ${SQLITE3_LIBS}
