@@ -337,7 +337,7 @@ static void free_rules(pp_knowledge *k)
 
 /********************* exported functions ***************************/
 
-pp_knowledge *pp_knowledge_open(char *path)
+pp_knowledge *pp_knowledge_open(const char *path)
 {
   /* read knowledge from disk into pp_knowledge */
   FILE *f=dictopen(path, "r");

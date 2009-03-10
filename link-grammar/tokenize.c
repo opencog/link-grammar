@@ -517,9 +517,9 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
  * the sent->word[] array.  Returns TRUE if all is well, FALSE otherwise.
  * Quote marks are treated just like blanks.
  */
-int separate_sentence(char * s, Sentence sent)
+int separate_sentence(const char * s, Sentence sent)
 {
-	char *t;
+	const char *t;
 	int i, is_first, quote_found;
 	Dictionary dict = sent->dict;
 

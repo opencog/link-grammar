@@ -495,8 +495,8 @@ static void affix_list_delete(Dictionary dict)
  * function.
  */
 Dictionary
-dictionary_create(char * dict_name, char * pp_name,
-                  char * cons_name, char * affix_name)
+dictionary_create(const char * dict_name, const char * pp_name,
+                  const char * cons_name, const char * affix_name)
 {
 	Dictionary dict;
 	Dict_node *dict_node;
@@ -924,7 +924,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 *
 ****************************************************************/
 
-Sentence sentence_create(char *input_string, Dictionary dict)
+Sentence sentence_create(const char *input_string, Dictionary dict)
 {
 	Sentence sent;
 	int i;
@@ -1004,7 +1004,7 @@ int sentence_length(Sentence sent)
 	return sent->length;
 }
 
-char * sentence_get_word(Sentence sent, int index)
+const char * sentence_get_word(Sentence sent, int index)
 {
 	if (!sent) return NULL;
 	return sent->word[index].string;
@@ -1050,12 +1050,14 @@ int sentence_link_cost(Sentence sent, int i) {
 	return sent->link_info[i].link_cost;
 }
 
-char * sentence_get_nth_word(Sentence sent, int i) {
+const char * sentence_get_nth_word(Sentence sent, int i)
+{
 	if (!sent) return NULL;
 	return sent->word[i].string;
 }
 
-int sentence_nth_word_has_disjunction(Sentence sent, int i) {
+int sentence_nth_word_has_disjunction(Sentence sent, int i)
+{
 	if (!sent) return 0;
 	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }

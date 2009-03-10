@@ -1805,7 +1805,7 @@ void linkage_free_constituent_tree_str(char * s)
 	exfree(s, strlen(s)+1);
 }
 
-char * linkage_constituent_node_get_label(const CNode *n)
+const char * linkage_constituent_node_get_label(const CNode *n)
 {
 	return n->label;
 }

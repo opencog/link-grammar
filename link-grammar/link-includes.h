@@ -35,7 +35,10 @@ link_public_api(const char *)
 typedef struct Dictionary_s * Dictionary;
 
 link_public_api(Dictionary)
-     dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name);
+     dictionary_create(const char * dict_name,
+                       const char * pp_name,
+                       const char * cons_name,
+                       const char * affix_name);
 link_public_api(Dictionary)
      dictionary_create_lang(const char * lang);
 link_public_api(Dictionary)
@@ -202,14 +205,14 @@ link_public_api(int)
 typedef struct Sentence_s * Sentence;
 
 link_public_api(Sentence)
-     sentence_create(char *input_string, Dictionary dict);
+     sentence_create(const char *input_string, Dictionary dict);
 link_public_api(void)
      sentence_delete(Sentence sent);
 link_public_api(int)
      sentence_parse(Sentence sent, Parse_Options opts);
 link_public_api(int)
      sentence_length(Sentence sent);
-link_public_api(char *)
+link_public_api(const char *)
      sentence_get_word(Sentence sent, int wordnum);
 link_public_api(int)
      sentence_null_count(Sentence sent);
@@ -228,7 +231,7 @@ link_public_api(int)
 link_public_api(int)
      sentence_link_cost(Sentence sent, int i);
 
-link_public_api(char *)
+link_public_api(const char *)
      sentence_get_nth_word(Sentence sent, int i);
 link_public_api(int)
      sentence_nth_word_has_disjunction(Sentence sent, int i);
@@ -334,7 +337,7 @@ link_public_api(const char *)
 typedef struct Postprocessor_s PostProcessor;
 
 link_public_api(PostProcessor *)
-     post_process_open(char *path);
+     post_process_open(const char *path);
 link_public_api(void)
      post_process_close(PostProcessor *);
 link_public_api(void)
@@ -352,7 +355,7 @@ link_public_api(CNode *)
      linkage_constituent_tree(Linkage linkage);
 link_public_api(void)
      linkage_free_constituent_tree(CNode * n);
-link_public_api(char *)
+link_public_api(const char *)
      linkage_constituent_node_get_label(const CNode *n);
 link_public_api(CNode *)
      linkage_constituent_node_get_child(const CNode *n);

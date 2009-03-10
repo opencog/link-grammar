@@ -847,7 +847,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
  * read rules from path and initialize the appropriate fields in
  * a postprocessor structure, a pointer to which is returned.
  */
-Postprocessor * post_process_open(char *path)
+Postprocessor * post_process_open(const char *path)
 {
 	Postprocessor *pp;
 	if (path==NULL) return NULL;

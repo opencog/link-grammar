@@ -11,6 +11,7 @@ Version 4.4.3 (?? 2009)
  * Cleanup of assorted compiler warnings.
  * Fix handling of special utf8 characters in dictionary.
  * Fix hang when parsing certain utf8 input strings.
+ * Make sure that most strings in the API are declared const char *
 
 Version 4.4.2 (15 January 2009) includes the following changes:
  * Fix: 'The keys are gone', 'It is a gone desire'
