@@ -38,6 +38,7 @@ static struct
 	int display_links;
 	int display_walls;
 	int display_union;
+	int display_disjuncts;
 	int display_senses;
 } local;
 
@@ -55,6 +56,7 @@ static Switch default_switches[] =
    {"batch",      1, "Batch mode",                      &local.batch_mode},
    {"constituents", 0, "Generate constituent output",   &local.display_constituents},
    {"cost",       0, "Cost model used for ranking",     &local.cost_model},
+   {"disjuncts",  1, "Showing of disjunct used",        &local.display_disjuncts},
    {"echo",       1, "Echoing of input sentence",       &local.echo_on},
    {"graphics",   1, "Graphical display of linkage",    &local.display_on},
    {"islands-ok", 1, "Use of null-linked islands",      &local.islands_ok},
@@ -335,6 +337,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.display_constituents = parse_options_get_display_constituents(opts);
 	local.max_sentence_length = parse_options_get_max_sentence_length(opts);
 	local.display_bad = parse_options_get_display_bad(opts);
+	local.display_disjuncts = parse_options_get_display_disjuncts(opts);
 	local.display_links = parse_options_get_display_links(opts);
 	local.display_senses = parse_options_get_display_senses(opts);
 	local.display_walls = parse_options_get_display_walls(opts);
@@ -362,6 +365,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_display_constituents(opts, local.display_constituents);
 	parse_options_set_max_sentence_length(opts, local.max_sentence_length);
 	parse_options_set_display_bad(opts, local.display_bad);
+	parse_options_set_display_disjuncts(opts, local.display_disjuncts);
 	parse_options_set_display_links(opts, local.display_links);
 	parse_options_set_display_senses(opts, local.display_senses);
 	parse_options_set_display_walls(opts, local.display_walls);

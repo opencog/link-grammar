@@ -206,6 +206,12 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 			fprintf(stdout, "%s", string);
 			linkage_free_senses(string);
 		}
+		if (parse_options_get_display_disjuncts(opts))
+		{
+			string = linkage_print_disjuncts(linkage);
+			fprintf(stdout, "%s", string);
+			linkage_free_disjuncts(string);
+		}
 		if (parse_options_get_display_postscript(opts))
 		{
 			string = linkage_print_postscript(linkage, FALSE);

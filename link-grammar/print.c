@@ -174,6 +174,37 @@ char * linkage_print_senses(Linkage linkage)
 	return sense_string;
 }
 
+char * linkage_print_disjuncts(Linkage linkage)
+{
+	const char * infword;
+	const char * dj;
+	char * djs;
+	int w;
+	String * s = string_new();
+	Sentence sent = linkage->sent;
+	int nwords = sent->length;
+
+	/* Decrement nwords, so as to ignore the RIGHT-WALL */
+	nwords --;
+
+	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
+	 * word 0. */
+	for (w=1; w<nwords; w++)
+	{
+		/* If the word is not inflected, then sent->word[w].d is NULL */
+		if (sent->word[w].d)
+			infword = sent->word[w].d->string;
+		else
+			infword = sent->word[w].string;
+
+		dj = linkage_get_disjunct(linkage, w);
+		append_string(s, "%15s    %s\n", infword, dj);
+	}
+	djs = string_copy(s);
+	string_delete(s);
+	return djs;
+}
+
 /**
  */
 static char * build_linkage_postscript_string(Linkage linkage, ps_ctxt_t *pctx)
@@ -591,6 +622,11 @@ char * linkage_print_diagram(Linkage linkage)
 }
 
 void linkage_free_diagram(char * s)
+{
+	exfree(s, strlen(s)+1);
+}
+
+void linkage_free_disjuncts(char * s)
 {
 	exfree(s, strlen(s)+1);
 }

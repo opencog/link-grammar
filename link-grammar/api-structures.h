@@ -89,6 +89,7 @@ struct Parse_Options_s
 	int display_postscript;       /* if true, output postscript linkage */
 	int display_constituents;     /* if true, output treebank-style constituent structure */
 	int display_bad;              /* if true, bad linkages are displayed */
+	int display_disjuncts;        /* if true, print disjuncts that were used */
 	int display_links;            /* if true, a list o' links is printed out */
 	int display_senses;           /* if true, sense candidates are printed out */
 };

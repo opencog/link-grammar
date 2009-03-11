@@ -97,6 +97,7 @@ Parse_Options parse_options_create(void)
 	po->display_postscript = FALSE;
 	po->display_constituents = 0;
 	po->display_bad = FALSE;
+	po->display_disjuncts = FALSE;
 	po->display_links = FALSE;
 	po->display_senses = FALSE;
 
@@ -312,6 +313,14 @@ void parse_options_set_display_bad(Parse_Options opts, int dummy) {
 
 int parse_options_get_display_bad(Parse_Options opts) {
 	return opts->display_bad;
+}
+
+void parse_options_set_display_disjuncts(Parse_Options opts, int dummy) {
+	opts->display_disjuncts = dummy;
+}
+
+int parse_options_get_display_disjuncts(Parse_Options opts) {
+	return opts->display_disjuncts;
 }
 
 void parse_options_set_display_links(Parse_Options opts, int dummy) {

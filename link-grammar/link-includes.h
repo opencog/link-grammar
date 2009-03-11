@@ -180,6 +180,10 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_display_bad(Parse_Options opts);
 link_public_api(void)
+     parse_options_set_display_disjuncts(Parse_Options opts, int val);
+link_public_api(int)
+     parse_options_get_display_disjuncts(Parse_Options opts);
+link_public_api(void)
      parse_options_set_display_links(Parse_Options opts, int val);
 link_public_api(int)
      parse_options_get_display_links(Parse_Options opts);
@@ -284,6 +288,10 @@ link_public_api(const char *)
      linkage_get_disjunct(Linkage linkage, int w);
 link_public_api(const char *)
      linkage_get_word(Linkage linkage, int w);
+link_public_api(char *)
+     linkage_print_disjuncts(Linkage linkage);
+link_public_api(void)
+     linkage_free_disjuncts(char *str);
 link_public_api(char *)
      linkage_print_links_and_domains(Linkage linkage);
 link_public_api(void)
