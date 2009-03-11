@@ -1010,6 +1010,12 @@ const char * sentence_get_word(Sentence sent, int index)
 	return sent->word[index].string;
 }
 
+const char * sentence_get_nth_word(Sentence sent, int index)
+{
+	if (!sent) return NULL;
+	return sent->word[index].string;
+}
+
 int sentence_null_count(Sentence sent) {
 	if (!sent) return 0;
 	return sent->null_count;
@@ -1048,12 +1054,6 @@ int sentence_disjunct_cost(Sentence sent, int i) {
 int sentence_link_cost(Sentence sent, int i) {
 	if (!sent) return 0;
 	return sent->link_info[i].link_cost;
-}
-
-const char * sentence_get_nth_word(Sentence sent, int i)
-{
-	if (!sent) return NULL;
-	return sent->word[i].string;
 }
 
 int sentence_nth_word_has_disjunction(Sentence sent, int i)

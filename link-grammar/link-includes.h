@@ -231,8 +231,6 @@ link_public_api(int)
 link_public_api(int)
      sentence_link_cost(Sentence sent, int i);
 
-link_public_api(const char *)
-     sentence_get_nth_word(Sentence sent, int i);
 link_public_api(int)
      sentence_nth_word_has_disjunction(Sentence sent, int i);
 
@@ -393,6 +391,10 @@ link_public_api(void)
 * Obsolete functions -- do not use these in new code!
 *
 ***********************************************************************/
+
+/* Identical to sentence_get_word() */
+link_public_api(const char *)
+     sentence_get_nth_word(Sentence sent, int i);
 
 /* This is not intended for general use; its specific to the internals
  * of the command-line client.  It was exported by accident. */
