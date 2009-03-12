@@ -1,7 +1,7 @@
 
                Link Grammar Parser - Patched Version
                -------------------------------------
-                       Version 4.4.2
+                       Version 4.4.4
 
 This directory contains a *patched* version of the final original
 release of the Link Grammar Parser.  It has been patched to fix a
@@ -95,6 +95,15 @@ CREATING the system:
    systems, as well as on many Microsoft Windows systems, under
    various different Windows development environments.
 
+BUILDING on MacOS:
+
+    MacOS users will probably need to obtain missing packages from 
+    MacPorts in order to successfully build on MacOS. See 
+    http://www.macports.org/ for details.
+
+    See also:
+    http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
+
 BUILDING on Windows:
 
     The easiest way to have link-grammar working on MS Windows, especially
@@ -137,7 +146,8 @@ BUILDING on Windows:
     be used by Java programs.
 
     Alternately, Windows users who have access to the "Microsoft Visual C"
-    product may wish to use the project files in the msvc6 directory.
+    product may wish to use the project files in the msvc6 directory, or
+    alternately, those in the msvc9 directory.
 
 RUNNING the program:
 

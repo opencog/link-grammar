@@ -67,6 +67,9 @@ dnl ====================================================================
 AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
 AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 
+# Somehow, sqlite3 and pkgconfig do not play nice on MacOS. Not clear why
+# pkgconfig says it can't find sqlite3, even though 3.4.0 is installed.
+# The solution is to install MacPorts http://www.macports.org/
 if test "x${SQLiteFound}" = "xyes"; then
   PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
   AC_SUBST(SQLITE3_LIBS)
