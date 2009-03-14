@@ -1222,7 +1222,7 @@ octagons.n octaves.n octets.n octogenarians.n octopuses.n oculists.n
 oddities.n oddments.n odds.n odes.n odours.n odysseys.n offences.n 
 offenders.n offenses.n offensives.n offerings.n offertories.n 
 officers.n offices.n officials.n offprints.n offshoots.n offspring.p 
-ogres.n ohms.n oilcans.n oilfields.n ointments.n oligarchies.n 
+ogres.n ohms.n oilcans.n oilfields.n ointments.n olds.n oligarchies.n 
 olives.n omegas.n omelets.n omelettes.n omens.n omissions.n 
 omnibuses.n onions.n onlookers.n onrushes.n onsets.n onslaughts.n 
 opals.n openers.n openings.n operas.n operations.n operatives.n 
