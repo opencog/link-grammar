@@ -64,20 +64,6 @@ AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
 dnl ====================================================================
 
-AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
-AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
-
-# Somehow, sqlite3 and pkgconfig do not play nice on MacOS. Not clear why
-# pkgconfig says it can't find sqlite3, even though 3.4.0 is installed.
-# The solution is to install MacPorts http://www.macports.org/
-if test "x${SQLiteFound}" = "xyes"; then
-  PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
-  AC_SUBST(SQLITE3_LIBS)
-  AC_SUBST(SQLITE3_CFLAGS)
-fi
-
-dnl ====================================================================
-
 AC_ARG_ENABLE( debug,
   [  --enable-debug               compile with debugging flags set],
        CFLAGS="${CFLAGS} -g"
@@ -112,6 +98,25 @@ AC_ARG_ENABLE( corpus-stats,
        buildcorpus=yes)
 
 AM_CONDITIONAL(WITH_CORPUS, test x${buildcorpus} = xyes)
+
+dnl ====================================================================
+
+# If not asking for the statistics backend, then don't even
+# check for SQLite.
+if test x${buildcorpus} = xyes; then
+	AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
+	AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
+
+	# Somehow, sqlite3 and pkgconfig do not play nice on MacOS. Not clear why
+	# pkgconfig says it can't find sqlite3, even though 3.4.0 is installed.
+	# The solution is to install MacPorts http://www.macports.org/
+	if test "x${SQLiteFound}" = "xyes"; then
+  	# PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
+  	PKG_CHECK_MODULES(SQLITE3, sqlite3)
+  	AC_SUBST(SQLITE3_LIBS)
+  	AC_SUBST(SQLITE3_CFLAGS)
+	fi
+fi
 
 dnl ====================================================================
 

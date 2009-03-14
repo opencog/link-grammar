@@ -1,5 +1,5 @@
 Version 4.4.4 (??? 2009) includes the following changes:
- * None yet.
+ * Hack around missing SQLite3 pkgconfig on MacOS
 
 Version 4.4.3 (11 March 2009) includes the following changes:
  * Look at JAVA_HOME to guess location of jni.h
