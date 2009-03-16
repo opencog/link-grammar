@@ -111,11 +111,13 @@ if test x${buildcorpus} = xyes; then
 	# pkgconfig says it can't find sqlite3, even though 3.4.0 is installed.
 	# The solution is to install MacPorts http://www.macports.org/
 	if test "x${SQLiteFound}" = "xyes"; then
-  	# PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
-  	PKG_CHECK_MODULES(SQLITE3, sqlite3)
-  	AC_SUBST(SQLITE3_LIBS)
-  	AC_SUBST(SQLITE3_CFLAGS)
+  		# PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
+  		PKG_CHECK_MODULES(SQLITE3, sqlite3)
+  		AC_SUBST(SQLITE3_LIBS)
+  		AC_SUBST(SQLITE3_CFLAGS)
 	fi
+else
+	AM_CONDITIONAL(HAVE_SQLITE, false)
 fi
 
 dnl ====================================================================
