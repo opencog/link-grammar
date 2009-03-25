@@ -265,7 +265,9 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
  * parts.  The process is described above.  Returns TRUE if OK, FALSE if
  * too many punctuation marks 
  */
-static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, int quote_found)
+static int separate_word(Sentence sent, 
+                         const char *w, const char *wend,
+                         int is_first_word, int quote_found)
 {
 	int i, j, len;
 	int r_strippable=0, l_strippable=0, u_strippable=0;
@@ -275,7 +277,7 @@ static int separate_word(Sentence sent, char *w, char *wend, int is_first_word, 
 
 	int found_number = 0;
 	int n_r_stripped_save;
-	char * wend_save;
+	const char * wend_save;
 
 	const char ** strip_left = NULL;
 	const char ** strip_right = NULL;

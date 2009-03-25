@@ -121,7 +121,6 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	ptd->opts = parse_options_create();
 	parse_options_set_disjunct_cost(ptd->opts, 3);
 	parse_options_set_max_sentence_length(ptd->opts, 170);
-	parse_options_set_panic_mode(ptd->opts, TRUE);
 	parse_options_set_max_parse_time(ptd->opts, 30);
 	parse_options_set_linkage_limit(ptd->opts, 1000);
 	parse_options_set_short_length(ptd->opts, 10);
@@ -245,7 +244,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	ptd->num_linkages = sentence_parse(ptd->sent, ptd->opts);
 
 	/* Now parse with null links */
-	if ((ptd->num_linkages == 0) && (!parse_options_get_batch_mode(ptd->opts)))
+	if (0 == ptd->num_linkages)
 	{
 		if (jverbosity > 0) prt_error("Warning: No complete linkages found.\n");
 		if (parse_options_get_allow_null(opts))
@@ -260,13 +259,13 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	{
 		if (jverbosity > 0) prt_error("Warning: Timer is expired!\n");
 	}
-	if (parse_options_memory_exhausted(opts)) {
+	if (parse_options_memory_exhausted(opts))
+	{
 		if (jverbosity > 0) prt_error("Warning: Memory is exhausted!\n");
 	}
 
 	if ((ptd->num_linkages == 0) &&
-			parse_options_resources_exhausted(opts) &&
-			parse_options_get_panic_mode(opts))
+	    parse_options_resources_exhausted(opts))
 	{
 		parse_options_print_total_time(opts);
 		if (jverbosity > 0) prt_error("Warning: Entering \"panic\" mode...\n");
@@ -418,7 +417,7 @@ Java_org_linkgrammar_LinkGrammar_getWord(JNIEnv *env, jclass cls, jint i)
 	per_thread_data *ptd = get_ptd(env, cls);
 
 	/* Does not need to be freed, points into sentence */
-	char * w = sentence_get_word(ptd->sent, i);
+	const char * w = sentence_get_word(ptd->sent, i);
 
 	/* FWIW, j will be null if w is utf8-encoded Japanese or Chinese.
 	 * I guess my JVM is not capable of handling Chinese/Japanese ??
