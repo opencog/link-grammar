@@ -290,7 +290,7 @@ U-)) or (ND- & (OD- or AN+ or YS+));
 % However, report.n and sign.n and remark.n, etc. do not seem to 
 % need this connector ... 
 argument.n report.n sign.n impression.n conclusion.n complaint.n
-allegation.n announcement.n position.n restriction.n threat.n notion.n
+allegation.n announcement.n position.n restriction.n notion.n
 remark.n assertion.n proclamation.n reassurance.n saying.n
 accusation.n possibility.n idea.n problem.n claim.n result.n
 statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
@@ -304,7 +304,7 @@ or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n 
 disclosure.n fear.n acknowledgment.n acknowledgement.n principle.n
-concern.n philosophy.n risk.n understanding.n conviction.n theory.n
+concern.n philosophy.n risk.n threat.n understanding.n conviction.n theory.n
 assurance.n speculation.n awareness.n news.n opinion.n belief.n
 contention.n thought.n myth.n discovery.n rumor.n probability.n fact.n
 explanation.n feeling.n comment.n expectation.n perception.n sense.n
