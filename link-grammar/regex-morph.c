@@ -14,6 +14,7 @@
 #include <regex.h>
 #include "link-includes.h"
 
+#if 0
 /**
  * Support for the regular-expression based token matching system
  * using standard POSIX regex. 
@@ -41,7 +42,7 @@ int compile_regexs(Dictionary dict)
 			re->re = pcre_compile(re->pattern, 0, &error, &erroroffset, NULL);
 			if(re->re == NULL)
 			{
-				lperror(DICTPARSE, ": Failed to compile regex '%s' (%s) at %d: %s\n",
+				prt_err("Error: Failed to compile regex '%s' (%s) at %d: %s\n",
 								re->pattern, re->name, erroroffset, error);
 				return 0;
 			}
@@ -94,4 +95,6 @@ char *match_regex(Dictionary dict, char *s)
 	}
 	return NULL; /* no matches. */
 }
+
+#endif
 

@@ -3752,11 +3752,12 @@ S-WORDS.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> &
 LY-WORDS: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
 {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MG extension rules from BioLG-1.1.12
 % Words guessed based on morphology.
-% These occur primarily in biomedial and chemistry texts.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% These occur primarily in biomedical and chemistry texts.
+% These are processed via regular-expression matching, in 4.0.regex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 MC-NOUN-WORDS: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
  ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 

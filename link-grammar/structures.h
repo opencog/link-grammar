@@ -282,6 +282,20 @@ struct Dict_node_struct
     Dict_node *left, *right;
 };
 
+/* The regexs are stored as a linked list of the following nodes. */
+struct Regex_node_s
+{
+    char *name;      /* The identifying name of the regex */
+    char *pattern;   /* The regular expression pattern */
+    void *re;        /* The compiled regex. void * to avoid
+                      * having re library details invading the
+                      * rest of the LG system; regex-morph.c
+                      * takes care of all matching.
+                      */
+    Regex_node *next;
+};
+
+
 /* The following three structs comprise what is returned by post_process(). */
 typedef struct D_type_list_struct D_type_list;
 struct D_type_list_struct

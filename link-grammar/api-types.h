@@ -39,6 +39,7 @@ typedef struct Parse_info_struct *Parse_info;
 typedef struct Postprocessor_s Postprocessor;
 typedef struct PP_data_s PP_data;
 typedef struct PP_info_s PP_info;
+typedef struct Regex_node_s Regex_node;
 typedef struct Resources_s * Resources;
 typedef struct Sublinkage_s Sublinkage;
 
