@@ -3749,7 +3749,7 @@ S-WORDS.v: <verb-s> & <vc-tr,intr>;
 S-WORDS.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
 
-LY-WORDS: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
+LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
 {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

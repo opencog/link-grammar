@@ -624,7 +624,8 @@ static void tag_regex_string(Sentence sent, int i, const char * s)
 	{
 		e->string = sent->word[i].string;
 		t = strchr(e->string, '.');
-		if (t != NULL)
+		if (NULL == t) t = strchr(s, '.');
+		if (NULL != t)
 		{
 			snprintf(str, MAX_WORD, "%.50s[~].%.5s", e->string, t+1);
 		}
@@ -672,10 +673,12 @@ static int guessed_string(Sentence sent, int i, const char * s, const char * typ
 			{
 				sprintf(str, "%.50s[!].g", s);
 			}
+#if DONT_USE_REGEX_GUESSING
 			else if(is_ly_word(s))
 			{
 				sprintf(str, "%.50s[!].e", s);
 			}
+#endif /* DONT_USE_REGEX_GUESSING */
 			else sprintf(str, "%.50s[!]", s);
 
 			e->string = string_set_add(str, sent->string_set);
@@ -809,10 +812,12 @@ int build_sentence_expressions(Sentence sent)
 		{
 			if (!guessed_string(sent, i, s, ED_WORD)) return FALSE;
 		}
+#if DONT_USE_REGEX_GUESSING
 		else if (is_ly_word(s) && dict->ly_word_defined)
 		{
 			if (!guessed_string(sent, i, s, LY_WORD)) return FALSE;
 		}
+#endif /* DONT_USE_REGEX_GUESSING */
 		else if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
 			handle_unknown_word(sent, i, s);

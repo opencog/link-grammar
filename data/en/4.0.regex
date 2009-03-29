@@ -62,7 +62,7 @@
 % ED-WORDS:         /..ed$/
 
 % Advebs ending -ly.
-% LY-WORDS:         /..ly$/
+LY-WORDS.e:         /..ly$/
 
 % Extension by LIPN 11/10/2005
 %nouns

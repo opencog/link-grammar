@@ -103,17 +103,6 @@
 #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 
-/*
-OBS #define COMMA_WORD       ("COMMA")
-OBS #define COLON_WORD       ("COLON")
-OBS #define SEMICOLON_WORD   ("SEMI-COLON")
-OBS #define PERCENT_WORD     ("PERCENT-SIGN")
-OBS #define DOLLAR_WORD      ("DOLLAR-SIGN")
-OBS #define LP_WORD          ("LEFT-PAREN")
-OBS #define RP_WORD          ("RIGHT-PAREN")
-OBS #define AMPERSAND_WORD   ("AMPERSAND")
-*/
-
 #define PROPER_WORD      ("CAPITALIZED-WORDS")
 #define PL_PROPER_WORD      ("PL-CAPITALIZED-WORDS")
 #define HYPHENATED_WORD  ("HYPHENATED-WORDS")
@@ -121,7 +110,10 @@ OBS #define AMPERSAND_WORD   ("AMPERSAND")
 #define ING_WORD         ("ING-WORDS")
 #define S_WORD           ("S-WORDS")
 #define ED_WORD          ("ED-WORDS")
+// #if DONT_USE_REGEX_GUESSING
+/* English-language-specific morphology guessing */
 #define LY_WORD          ("LY-WORDS")
+// #endif /* DONT_USE_REGEX_GUESSING */
 #define UNKNOWN_WORD     ("UNKNOWN-WORD")
 
 #define MAX_PATH_NAME 200     /* file names (including paths)
