@@ -42,12 +42,11 @@ NUMBERS: /^[0-9:.,-]+$/
 %NUMBER-AND-UNIT: /^[0-9.,-]+(s|min|hour|h|hr|day|week|wk|month|year|yr|kDa|kilodalton|base|kilobase|%base-pair|kD|kd|bp|nt|kb|mm|mg|cm|nm|g|Hz|ms|kg|ml|mL|km|microm|\%)$/
 
 
-% XXXXX stub out plurals till everythings fully debugged
 % Plural proper nouns.
-% PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
+PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
 
 % Other proper nouns.
-% CAPITALIZED-WORDS:     /^[[:upper:]]/
+CAPITALIZED-WORDS:     /^[[:upper:]]/
 
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /..ation$/
@@ -64,7 +63,7 @@ ED-WORDS:         /..ed$/
 LY-WORDS:         /..ly$/
 
 % Extension by LIPN 11/10/2005
-%nouns
+% nouns -- typically seen in (bio-)chemistry texts
 MC-NOUN-WORDS: /..ase$/
 MC-NOUN-WORDS: /..ine?$/
 MC-NOUN-WORDS: /..yl$/
@@ -76,7 +75,7 @@ MC-NOUN-WORDS: /..ity$/
 
 C-NOUN-WORDS: /..o[rn]$/
 
-%adjectives
+% adjectives
 ADJ-WORDS: /..ous$/
 ADJ-WORDS: /..ar$/
 ADJ-WORDS: /..ic$/

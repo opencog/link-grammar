@@ -576,10 +576,11 @@ dictionary_five(const char * dict_name, const char * pp_name,
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = TRUE;
+
+#if DONT_USE_REGEX_GUESSING
 	dict->capitalized_word_defined = boolean_dictionary_lookup(dict, PROPER_WORD);
 	dict->pl_capitalized_word_defined = boolean_dictionary_lookup(dict, PL_PROPER_WORD);
 
-#if DONT_USE_REGEX_GUESSING
 	dict->hyphenated_word_defined = boolean_dictionary_lookup(dict, HYPHENATED_WORD);
 	dict->number_word_defined = boolean_dictionary_lookup(dict, NUMBER_WORD);
 

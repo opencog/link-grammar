@@ -111,7 +111,6 @@ static int is_ing_word(const char * s)
 	if (strncmp("ing", s-3, 3)==0) return TRUE;
 	return FALSE;
 }
-#endif /* DONT_USE_REGEX_GUESSING */
 
 static int is_s_word(const char * s)
 {
@@ -123,7 +122,6 @@ static int is_s_word(const char * s)
 	return TRUE;
 }
 
-#if DONT_USE_REGEX_GUESSING
 static int is_ed_word(const char * s)
 {
 	int i=0;
@@ -590,6 +588,7 @@ failure:
 	return FALSE;
 }
 
+#if DONT_USE_REGEX_GUESSING
 static int special_string(Sentence sent, int i, const char * s)
 {
 	X_node * e;
@@ -612,6 +611,7 @@ static int special_string(Sentence sent, int i, const char * s)
 		return FALSE;
 	}
 }
+#endif /* DONT_USE_REGEX_GUESSING */
 
 /**
  * Build the word expressions, and add a tag to the word to indicate
@@ -631,7 +631,7 @@ static void tag_regex_string(Sentence sent, int i, const char * type)
 		e->string = sent->word[i].string;
 		if (NULL != t)
 		{
-			snprintf(str, MAX_WORD, "%.50s[~].%.5s", e->string, t+1);
+			snprintf(str, MAX_WORD, "%.50s[!].%.5s", e->string, t+1);
 		}
 		else
 		{
@@ -779,6 +779,7 @@ int build_sentence_expressions(Sentence sent)
 		{
 			sent->word[i].x = build_word_expressions(sent, s);
 		}
+#if DONT_USE_REGEX_GUESSING
 		else if (is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) 
 		{
 			if (!special_string(sent, i, PL_PROPER_WORD)) return FALSE;
@@ -787,6 +788,7 @@ int build_sentence_expressions(Sentence sent)
 		{
 			if (!special_string(sent, i, PROPER_WORD)) return FALSE;
 		}
+#endif /* DONT_USE_REGEX_GUESSING */
 		else if ((NULL != (regex_name = match_regex(sent->dict, s))) &&
 		         boolean_dictionary_lookup(sent->dict, regex_name))
 		{
@@ -905,10 +907,13 @@ int sentence_in_dictionary(Sentence sent)
 	for (w=0; w<sent->length; w++)
 	{
 		s = sent->word[w].string;
-		if (!boolean_dictionary_lookup(dict, s) &&
-		    !(is_utf8_upper(s)   && dict->capitalized_word_defined) &&
-		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined))
+		/* xx we should also check if the regex rules know this word */
+		/* However, this code is only used if the 'unknown word' is 
+		 * turned off ... we punt for now, since its always on. */
+		if (!boolean_dictionary_lookup(dict, s))
 #if DONT_USE_REGEX_GUESSING
+		    !(is_utf8_upper(s)   && dict->capitalized_word_defined) &&
+		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) &&
 		    !(ishyphenated(s) && dict->hyphenated_word_defined)  &&
 		    !(is_number(s)	&& dict->number_word_defined) &&
 		    !(is_ing_word(s)  && dict->ing_word_defined)  &&

@@ -109,9 +109,10 @@ struct Dictionary_s
 
 	int             use_unknown_word;
 	int             unknown_word_defined;
+
+#if DONT_USE_REGEX_GUESSING
 	int             capitalized_word_defined;
 	int             pl_capitalized_word_defined;
-#if DONT_USE_REGEX_GUESSING
 	int             hyphenated_word_defined;
 	int             number_word_defined;
 
