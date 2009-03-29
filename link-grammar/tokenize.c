@@ -70,6 +70,7 @@ static int is_number(const char * s)
 	return TRUE;
 }
 
+#if DONT_USE_REGEX_GUESSING
 /**
  * Returns TRUE iff it's an appropriately formed hyphenated word.
  * This means all letters, numbers, or hyphens, not beginning and
@@ -96,7 +97,6 @@ static int ishyphenated(const char * s)
 	return ((*(s-1)!='-') && (hyp>0));
 }
 
-#if DONT_USE_REGEX_GUESSING
 /** 
  * The following four routines implement a cheap-hack morphology 
  * guessing of unkown words for English.
@@ -635,8 +635,7 @@ static void tag_regex_string(Sentence sent, int i, const char * type)
 		}
 		else
 		{
-			/* Take the first character of s to denote the "type" */
-			snprintf(str, MAX_WORD, "%.50s[~].%c", e->string, (int)type[0]);
+			snprintf(str, MAX_WORD, "%.50s", e->string);
 		}
 		e->string = string_set_add(str, sent->string_set);
 	}
@@ -793,6 +792,7 @@ int build_sentence_expressions(Sentence sent)
 		{
 			tag_regex_string(sent, i, regex_name);
 		}
+#if DONT_USE_REGEX_GUESSING
 		else if (is_number(s) && dict->number_word_defined)
 		{
 			/* we know it's a plural number, or 1 */
@@ -804,7 +804,6 @@ int build_sentence_expressions(Sentence sent)
 			/* singular hyphenated */
 			if (!special_string(sent, i, HYPHENATED_WORD)) return FALSE;
 		} 
-#if DONT_USE_REGEX_GUESSING
 		/* XXX
 		 * The following does some morphology-guessing for words that
 		 * that are not in the dictionary. This has been replaced by a
@@ -908,10 +907,10 @@ int sentence_in_dictionary(Sentence sent)
 		s = sent->word[w].string;
 		if (!boolean_dictionary_lookup(dict, s) &&
 		    !(is_utf8_upper(s)   && dict->capitalized_word_defined) &&
-		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) &&
-		    !(ishyphenated(s) && dict->hyphenated_word_defined)  &&
-		    !(is_number(s)	&& dict->number_word_defined)) 
+		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined))
 #if DONT_USE_REGEX_GUESSING
+		    !(ishyphenated(s) && dict->hyphenated_word_defined)  &&
+		    !(is_number(s)	&& dict->number_word_defined) &&
 		    !(is_ing_word(s)  && dict->ing_word_defined)  &&
 		    !(is_s_word(s)	&& dict->s_word_defined)  &&
 		    !(is_ed_word(s)   && dict->ed_word_defined)  &&

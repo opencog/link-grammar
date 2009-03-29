@@ -111,10 +111,10 @@ struct Dictionary_s
 	int             unknown_word_defined;
 	int             capitalized_word_defined;
 	int             pl_capitalized_word_defined;
+#if DONT_USE_REGEX_GUESSING
 	int             hyphenated_word_defined;
 	int             number_word_defined;
 
-#if DONT_USE_REGEX_GUESSING
 	/* English language morphology bits
 	 * replaced by regex-based morpho guesser
 	 * Dead code, remove at liesure.

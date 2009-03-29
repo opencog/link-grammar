@@ -14,8 +14,9 @@
 % and only the first match will be used.
 
 % Numbers.
-% Stubbed out unttil tokenize.c is properly fixed up.
-% NUMBERS: /^[0-9:.,-]+$/
+% Uhh, we need to add utf8 U+00A0 "no-break space"
+% The ":" is included here so we allow "10:30" to be a number
+NUMBERS: /^[0-9:.,-]+$/
 % NUMBERS: /^[0-9.-]+\([0-9.-]+\)$/  % PubMed ASCII for exponent, e.g. "10(3)"
 % NUMBERS: /^[0-9.,-]*\+\/-[0-9,.-]+$/ % with "+/-", e.g. "9+/-6.5"
 
@@ -51,16 +52,16 @@
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /..ation$/
 
-ING-WORDS.g:        /..ing$/
+ING-WORDS:        /..ing$/
 
 % plurals or verb-s.
 S-WORDS:          /[^iuoys]s$/
 
 % Verbs ending -ed.
-ED-WORDS.v:         /..ed$/
+ED-WORDS:         /..ed$/
 
 % Advebs ending -ly.
-LY-WORDS.e:         /..ly$/
+LY-WORDS:         /..ly$/
 
 % Extension by LIPN 11/10/2005
 %nouns
