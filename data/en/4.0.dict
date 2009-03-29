@@ -3732,17 +3732,20 @@ rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 foo: F+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Morphology guessing for unknown words.
+% Given a particular kind of ending to a word, try to guess
+% its part-of-speech.
 
-% ING-WORDS: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
+% ING-WORDS.g: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
 % or ({@E-} & A+) or <verb-ge>;
 
-ING-WORDS: [((<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
+ING-WORDS.g: [((<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
 or ({@E- or EA-}  & A+) or <verb-ge>)]  or 
 (((( {@AN-} & {@A- & {[[@AN-]]}}) ) & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or  AN+ or {AN-});
 
-ED-WORDS: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
+ED-WORDS.v: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
 
 S-WORDS.v: <verb-s> & <vc-tr,intr>;
 

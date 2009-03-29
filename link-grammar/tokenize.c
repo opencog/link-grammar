@@ -614,17 +614,16 @@ static int special_string(Sentence sent, int i, const char * s)
  * Also, add a subscript to the resulting word to indicate the
  * rule origin.
  */
-static void tag_regex_string(Sentence sent, int i, const char * s)
+static void tag_regex_string(Sentence sent, int i, const char * type)
 {
 	char str[MAX_WORD+1];
 	char * t;
 	X_node * e;
-	sent->word[i].x = build_word_expressions(sent, s);
+	sent->word[i].x = build_word_expressions(sent, type);
 	for (e = sent->word[i].x; e != NULL; e = e->next)
 	{
-		e->string = sent->word[i].string;
 		t = strchr(e->string, '.');
-		if (NULL == t) t = strchr(s, '.');
+		e->string = sent->word[i].string;
 		if (NULL != t)
 		{
 			snprintf(str, MAX_WORD, "%.50s[~].%.5s", e->string, t+1);
@@ -632,12 +631,18 @@ static void tag_regex_string(Sentence sent, int i, const char * s)
 		else
 		{
 			/* Take the first character of s to denote the "type" */
-			snprintf(str, MAX_WORD, "%.50s[~].%c", e->string, (int)s[0]);
+			snprintf(str, MAX_WORD, "%.50s[~].%c", e->string, (int)type[0]);
 		}
 		e->string = string_set_add(str, sent->string_set);
 	}
 }
 
+#if DONT_USE_REGEX_GUESSING
+/**
+ * Performes morphology-based word guessing.
+ * Obsolete with the new regex infratructure ... remove this code at
+ * liesure.
+ */
 static int guessed_string(Sentence sent, int i, const char * s, const char * type)
 {
 	X_node * e;
@@ -673,14 +678,13 @@ static int guessed_string(Sentence sent, int i, const char * s, const char * typ
 			{
 				sprintf(str, "%.50s[!].g", s);
 			}
-#if DONT_USE_REGEX_GUESSING
 			else if(is_ly_word(s))
 			{
 				sprintf(str, "%.50s[!].e", s);
 			}
-#endif /* DONT_USE_REGEX_GUESSING */
-			else sprintf(str, "%.50s[!]", s);
+			else
 
+			sprintf(str, "%.50s[!]", s);
 			e->string = string_set_add(str, sent->string_set);
 		}
 		return TRUE;
@@ -696,6 +700,7 @@ static int guessed_string(Sentence sent, int i, const char * s, const char * typ
 		return FALSE;
 	}
 }
+#endif /* DONT_USE_REGEX_GUESSING */
 
 /**
  * Puts into word[i].x the expression for the unknown word 
@@ -800,6 +805,7 @@ int build_sentence_expressions(Sentence sent)
 		 * a generic morphology-guesser for langauges that aren't english.
 		 * XXX
 		 */
+#if DONT_USE_REGEX_GUESSING
 		else if (is_ing_word(s) && dict->ing_word_defined) 
 		{
 			if (!guessed_string(sent, i, s, ING_WORD)) return FALSE;
@@ -812,7 +818,6 @@ int build_sentence_expressions(Sentence sent)
 		{
 			if (!guessed_string(sent, i, s, ED_WORD)) return FALSE;
 		}
-#if DONT_USE_REGEX_GUESSING
 		else if (is_ly_word(s) && dict->ly_word_defined)
 		{
 			if (!guessed_string(sent, i, s, LY_WORD)) return FALSE;

@@ -51,15 +51,13 @@
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /..ation$/
 
-% XXXXX stub out ING and S words till everythings fully debugged
-% Words ending -ing.
-% ING-WORDS:        /..ing$/
+ING-WORDS.g:        /..ing$/
 
 % plurals or verb-s.
-% S-WORDS:          /[^iuoys]s$/
+S-WORDS:          /[^iuoys]s$/
 
 % Verbs ending -ed.
-% ED-WORDS:         /..ed$/
+ED-WORDS.v:         /..ed$/
 
 % Advebs ending -ly.
 LY-WORDS.e:         /..ly$/
