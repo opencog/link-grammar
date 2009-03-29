@@ -107,13 +107,16 @@
 #define PL_PROPER_WORD      ("PL-CAPITALIZED-WORDS")
 #define HYPHENATED_WORD  ("HYPHENATED-WORDS")
 #define NUMBER_WORD      ("NUMBERS")
+
+#if DONT_USE_REGEX_GUESSING
+/* English-language-specific morphology guessing */
+/* Obsolete, replaced by regex-based morphology handler */
 #define ING_WORD         ("ING-WORDS")
 #define S_WORD           ("S-WORDS")
 #define ED_WORD          ("ED-WORDS")
-// #if DONT_USE_REGEX_GUESSING
-/* English-language-specific morphology guessing */
 #define LY_WORD          ("LY-WORDS")
-// #endif /* DONT_USE_REGEX_GUESSING */
+#endif /* DONT_USE_REGEX_GUESSING */
+
 #define UNKNOWN_WORD     ("UNKNOWN-WORD")
 
 #define MAX_PATH_NAME 200     /* file names (including paths)

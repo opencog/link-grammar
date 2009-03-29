@@ -1543,6 +1543,13 @@ The deal includes not only junk, but also crap.
 % lists:
 He has three jobs: counting, measuring and listing.
 
+% Split "if .. only" idiomatic expressions
+If there was only more left!
+If there were only more!
+If only there was more left!
+If only there were more!
+If only there was more!
+
 % If... then ... lexical constructs are broken.
 % Registers: Typical language used in instruction manuals, directives.
 If paid weekly, bring the last six pay stubs.

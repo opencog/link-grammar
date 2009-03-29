@@ -96,10 +96,12 @@ static int ishyphenated(const char * s)
 	return ((*(s-1)!='-') && (hyp>0));
 }
 
+#if DONT_USE_REGEX_GUESSING
 /** 
- * The following four routines implement a cheap-hack morphology for
- * English.
- * XXX this is wrong for non-english
+ * The following four routines implement a cheap-hack morphology 
+ * guessing of unkown words for English.
+ * XXX Now obsolete, replaced by regex-based guessing.
+ * Remove dead code at liesure.
  */
 static int is_ing_word(const char * s)
 {
@@ -109,6 +111,7 @@ static int is_ing_word(const char * s)
 	if (strncmp("ing", s-3, 3)==0) return TRUE;
 	return FALSE;
 }
+#endif /* DONT_USE_REGEX_GUESSING */
 
 static int is_s_word(const char * s)
 {
@@ -120,6 +123,7 @@ static int is_s_word(const char * s)
 	return TRUE;
 }
 
+#if DONT_USE_REGEX_GUESSING
 static int is_ed_word(const char * s)
 {
 	int i=0;
@@ -137,6 +141,7 @@ static int is_ly_word(const char * s)
 	if (strncmp("ly", s-2, 2)==0) return TRUE;
 	return FALSE;
 }
+#endif /* DONT_USE_REGEX_GUESSING */
 
 /** 
  * The string s is the next word of the sentence. 
@@ -799,13 +804,13 @@ int build_sentence_expressions(Sentence sent)
 			/* singular hyphenated */
 			if (!special_string(sent, i, HYPHENATED_WORD)) return FALSE;
 		} 
+#if DONT_USE_REGEX_GUESSING
 		/* XXX
 		 * The following does some morphology-guessing for words that
-		 * that are not in the dictionary. This should be replaced by
-		 * a generic morphology-guesser for langauges that aren't english.
-		 * XXX
+		 * that are not in the dictionary. This has been replaced by a
+		 * regex-based morphlogy guesser. Remove this obsolete code at
+		 * liesure.
 		 */
-#if DONT_USE_REGEX_GUESSING
 		else if (is_ing_word(s) && dict->ing_word_defined) 
 		{
 			if (!guessed_string(sent, i, s, ING_WORD)) return FALSE;
@@ -905,11 +910,13 @@ int sentence_in_dictionary(Sentence sent)
 		    !(is_utf8_upper(s)   && dict->capitalized_word_defined) &&
 		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) &&
 		    !(ishyphenated(s) && dict->hyphenated_word_defined)  &&
-		    !(is_number(s)	&& dict->number_word_defined) &&
+		    !(is_number(s)	&& dict->number_word_defined)) 
+#if DONT_USE_REGEX_GUESSING
 		    !(is_ing_word(s)  && dict->ing_word_defined)  &&
 		    !(is_s_word(s)	&& dict->s_word_defined)  &&
 		    !(is_ed_word(s)   && dict->ed_word_defined)  &&
 		    !(is_ly_word(s)   && dict->ly_word_defined))
+#endif /* DONT_USE_REGEX_GUESSING */
 		{
 			if (ok_so_far)
 			{

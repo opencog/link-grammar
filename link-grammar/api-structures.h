@@ -114,13 +114,16 @@ struct Dictionary_s
 	int             hyphenated_word_defined;
 	int             number_word_defined;
 
+#if DONT_USE_REGEX_GUESSING
 	/* English language morphology bits
-	 * XXX should be replaced by language-indep morphology.
+	 * replaced by regex-based morpho guesser
+	 * Dead code, remove at liesure.
 	 */
 	int             ing_word_defined;
 	int             s_word_defined;
 	int             ed_word_defined;
 	int             ly_word_defined;
+#endif /* DONT_USE_REGEX_GUESSING */
 
 	int             left_wall_defined;
 	int             right_wall_defined;

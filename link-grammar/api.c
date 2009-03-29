@@ -580,10 +580,14 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	dict->pl_capitalized_word_defined = boolean_dictionary_lookup(dict, PL_PROPER_WORD);
 	dict->hyphenated_word_defined = boolean_dictionary_lookup(dict, HYPHENATED_WORD);
 	dict->number_word_defined = boolean_dictionary_lookup(dict, NUMBER_WORD);
+
+#if DONT_USE_REGEX_GUESSING
 	dict->ing_word_defined = boolean_dictionary_lookup(dict, ING_WORD);
 	dict->s_word_defined = boolean_dictionary_lookup(dict, S_WORD);
 	dict->ed_word_defined = boolean_dictionary_lookup(dict, ED_WORD);
 	dict->ly_word_defined = boolean_dictionary_lookup(dict, LY_WORD);
+#endif /* DONT_USE_REGEX_GUESSING */
+
 	dict->max_cost = 1000;
 
 	if ((dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD)) != NULL) {
