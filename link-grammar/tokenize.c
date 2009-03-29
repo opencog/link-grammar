@@ -744,16 +744,15 @@ static void handle_unknown_word(Sentence sent, int i, char * s)
  *
  * Algorithm:
  * Apply the following step to all words w:
- * if w is in the dictionary, use it.
- * else if w is upper case use PROPER_WORD disjuncts for w.
- * else if it's hyphenated, use HYPHENATED_WORD
- * else if it's a number, use NUMBER_WORD.
+ * If w is in the dictionary, use it.
+ * Else if w is identified by regex matching, use the
+ * appropriately matched disjunct collection.
  *
  * Now, we correct the first word, w.
- * if w is upper case, let w' be the lower case version of w.
- * if both w and w' are in the dict, concatenate these disjncts.
- * else if w' is in dict, use disjuncts of w'
- * else leave the disjuncts alone
+ * If w is upper case, let w' be the lower case version of w.
+ * If both w and w' are in the dict, concatenate these disjncts.
+ * Else if w' is in dict, use disjuncts of w',
+ * else leave the disjuncts alone.
  */
 int build_sentence_expressions(Sentence sent)
 {
@@ -770,8 +769,8 @@ int build_sentence_expressions(Sentence sent)
 		first_word = 0;
 	}
 
-	/* the following loop treats all words the same
-	   (nothing special for 1st word) */
+	/* The following loop treats all words the same
+	 * (nothing special for 1st word) */
 	for (i=0; i<sent->length; i++)
 	{
 		s = sent->word[i].string;
