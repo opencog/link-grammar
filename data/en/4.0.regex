@@ -40,13 +40,15 @@
 % dictionary-recognized units; this is quite a mess currently.
 %NUMBER-AND-UNIT: /^[0-9.,-]+(s|min|hour|h|hr|day|week|wk|month|year|yr|kDa|kilodalton|base|kilobase|%base-pair|kD|kd|bp|nt|kb|mm|mg|cm|nm|g|Hz|ms|kg|ml|mL|km|microm|\%)$/
 
+
+% XXXXX stub out plurals till everythings fully debugged
 % Plural proper nouns.
-PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
+% PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
 
 % Other proper nouns.
-CAPITALIZED-WORDS:     /^[[:upper:]]/
+% CAPITALIZED-WORDS:     /^[[:upper:]]/
 
-% Nouns ending -ation
+% Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /..ation$/
 
 % XXXXX stub out ING and S words till everythings fully debugged
