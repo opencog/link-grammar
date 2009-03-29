@@ -1156,7 +1156,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	{
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
-		total = parse(sent, sent->null_count, opts);
+		total = do_parse(sent, sent->null_count, opts);
 
 		/* Give up if the parse count is overflowing */
 		if (PARSE_NUM_OVERFLOW < total) break;
