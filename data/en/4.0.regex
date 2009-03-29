@@ -14,9 +14,10 @@
 % and only the first match will be used.
 
 % Numbers.
-NUMBERS: /^[0-9:.,-]+$/
-%NUMBERS: /^[0-9.-]+\([0-9.-]+\)$/  % PubMed ASCII for exponent, e.g. "10(3)"
-%NUMBERS: /^[0-9.,-]*\+\/-[0-9,.-]+$/ % with "+/-", e.g. "9+/-6.5"
+% Stubbed out unttil tokenize.c is properly fixed up.
+% NUMBERS: /^[0-9:.,-]+$/
+% NUMBERS: /^[0-9.-]+\([0-9.-]+\)$/  % PubMed ASCII for exponent, e.g. "10(3)"
+% NUMBERS: /^[0-9.,-]*\+\/-[0-9,.-]+$/ % with "+/-", e.g. "9+/-6.5"
 
 % Some "safe" derived units. Simple units are in dictionary.
 % The idea here is for the regex to match something that is almost
@@ -48,17 +49,18 @@ CAPITALIZED-WORDS:     /^[[:upper:]]/
 % Nouns ending -ation
 %ATION-WORDS:      /..ation$/
 
+% XXXXX stub out ING and S words till everythings fully debugged
 % Words ending -ing.
-ING-WORDS:        /..ing$/
+% ING-WORDS:        /..ing$/
 
 % plurals or verb-s.
-S-WORDS:          /[^iuoys]s$/
+% S-WORDS:          /[^iuoys]s$/
 
 % Verbs ending -ed.
-ED-WORDS:         /..ed$/
+% ED-WORDS:         /..ed$/
 
 % Advebs ending -ly.
-LY-WORDS:         /..ly$/
+% LY-WORDS:         /..ly$/
 
 % Extension by LIPN 11/10/2005
 %nouns

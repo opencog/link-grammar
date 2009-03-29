@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2009 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -17,6 +18,7 @@
 #include <limits.h>
 #include <link-grammar/api.h>
 #include "error.h"
+#include "regex-morph.h"
 #include "utilities.h"
 
 #define MAX_STRIP 10
@@ -586,19 +588,52 @@ failure:
 static int special_string(Sentence sent, int i, const char * s)
 {
 	X_node * e;
-	if (boolean_dictionary_lookup(sent->dict, s)) {
+	if (boolean_dictionary_lookup(sent->dict, s))
+	{
 		sent->word[i].x = build_word_expressions(sent, s);
-		for (e = sent->word[i].x; e != NULL; e = e->next) {
+		for (e = sent->word[i].x; e != NULL; e = e->next)
+		{
 			e->string = sent->word[i].string;
 		}
 		return TRUE;
-	} else {
+	}
+	else
+	{
 		err_ctxt ec;
 		ec.sent = sent;
 		err_msg(&ec, Error, "Error: Could not build sentence expressions.\n"
 		          "To process this sentence your dictionary "
  		          "needs the word \"%s\".\n", s);
 		return FALSE;
+	}
+}
+
+/**
+ * Build the word expressions, and add a tag to the word to indicate
+ * that it was guess by means of regular-expression matching.
+ * Also, add a subscript to the resulting word to indicate the
+ * rule origin.
+ */
+static void tag_regex_string(Sentence sent, int i, const char * s)
+{
+	char str[MAX_WORD+1];
+	char * t;
+	X_node * e;
+	sent->word[i].x = build_word_expressions(sent, s);
+	for (e = sent->word[i].x; e != NULL; e = e->next)
+	{
+		e->string = sent->word[i].string;
+		t = strchr(e->string, '.');
+		if (t != NULL)
+		{
+			snprintf(str, MAX_WORD, "%.50s[~].%.5s", e->string, t+1);
+		}
+		else
+		{
+			/* Take the first character of s to denote the "type" */
+			snprintf(str, MAX_WORD, "%.50s[~].%c", e->string, (int)s[0]);
+		}
+		e->string = string_set_add(str, sent->string_set);
 	}
 }
 
@@ -713,6 +748,7 @@ int build_sentence_expressions(Sentence sent)
 	int i, first_word;  /* the index of the first word after the wall */
 	char *s, temp_word[MAX_WORD+1];
 	const char * u;
+	const char * regex_name;
 	X_node * e;
 	Dictionary dict = sent->dict;
 
@@ -738,6 +774,11 @@ int build_sentence_expressions(Sentence sent)
 		else if (is_utf8_upper(s) && dict->capitalized_word_defined)
 		{
 			if (!special_string(sent, i, PROPER_WORD)) return FALSE;
+		}
+		else if ((NULL != (regex_name = match_regex(sent->dict, s))) &&
+		         boolean_dictionary_lookup(sent->dict, regex_name))
+		{
+			tag_regex_string(sent, i, regex_name);
 		}
 		else if (is_number(s) && dict->number_word_defined)
 		{

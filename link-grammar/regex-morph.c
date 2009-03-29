@@ -72,7 +72,7 @@ int compile_regexs(Dictionary dict)
  * On match, returns the name of the first matching regex.
  * If no match is found, returns NULL.
  */
-char *match_regex(Dictionary dict, char *s)
+const char *match_regex(Dictionary dict, char *s)
 {
 	int rc;
 
@@ -91,11 +91,11 @@ char *match_regex(Dictionary dict, char *s)
 		 *                    0, ovector, PCRE_OVEC_SIZE); */
 
 		rc = regexec(re->re, s, 0, NULL, 0);
-		if (rc > 0)
+		if (0 == rc)
 		{
 			return re->name; /* match found. just return--no multiple matches. */
 		}
-		else if (rc != 0)
+		else if (rc != REG_NOMATCH)
 		{
 			/* We have an error. TODO: more appropriate error handling.*/
 			fprintf(stderr,"Regex matching error %d occurred!\n", rc);
