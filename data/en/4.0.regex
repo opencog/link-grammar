@@ -1,0 +1,104 @@
+ %***************************************************************************%
+ %                                                                           %
+ %       Copyright (C) 2005  Sampo Pyysalo                                   %
+ %  See file "LICENSE" for information about commercial use of this system   %
+ %                                                                           %
+ %***************************************************************************%
+
+% This file contains regular expressions that are used to match
+% tokens not found in the dictionary. Each regex is given a name which
+% determines the disjuncts assigned when the regex matches; this name
+% must be defined in the dictionary along with the appropriate disjuncts.
+% Note that the order of the regular expressions matters: matches will
+% be attempted in the order in which the regexs appear in this file,
+% and only the first match will be used.
+
+% Numbers.
+NUMBERS: /^[0-9:.,-]+$/
+%NUMBERS: /^[0-9.-]+\([0-9.-]+\)$/  % PubMed ASCII for exponent, e.g. "10(3)"
+%NUMBERS: /^[0-9.,-]*\+\/-[0-9,.-]+$/ % with "+/-", e.g. "9+/-6.5"
+
+% Some "safe" derived units. Simple units are in dictionary.
+% The idea here is for the regex to match something that is almost
+% certainly part of a derived unit, and allow the rest to be
+% anything; this way we can capture difficult derived units such
+% as "mg/kg/day" and even oddities such as "micrograms/mouse/day"
+% without listing them explicitly.
+% TODO: add more. 
+% Some (real) misses from these: 
+% micrograms.kg-1.h-1 microM-1 J/cm2 %/day mN/m cm/yr
+
+%UNITS: /^([npmk]|nano|pico|milli|micro|kilo)?(g|grams?)\//   % grams/anything
+%UNITS: /^([fnmp]|femto|nano|micro|pico|mu)?mol(es)?\//       % mol/anything
+%UNITS: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|kg|mol|min|day|h)$/  % common endings
+% common endings, except in the style "mg.kg-1" instead of "mg/kg".
+%UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|kg|mol|min|day|h)(-1|\(-1\))$/
+
+% combinations of numbers and units, e.g. "50-kDa", "1-2h"
+% TODO: Clean up and check that these are up-to-date wrt the 
+% dictionary-recognized units; this is quite a mess currently.
+%NUMBER-AND-UNIT: /^[0-9.,-]+(s|min|hour|h|hr|day|week|wk|month|year|yr|kDa|kilodalton|base|kilobase|%base-pair|kD|kd|bp|nt|kb|mm|mg|cm|nm|g|Hz|ms|kg|ml|mL|km|microm|\%)$/
+
+% Plural proper nouns.
+PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
+
+% Other proper nouns.
+CAPITALIZED-WORDS:     /^[[:upper:]]/
+
+% Nouns ending -ation
+%ATION-WORDS:      /..ation$/
+
+% Words ending -ing.
+ING-WORDS:        /..ing$/
+
+% plurals or verb-s.
+S-WORDS:          /[^iuoys]s$/
+
+% Verbs ending -ed.
+ED-WORDS:         /..ed$/
+
+% Advebs ending -ly.
+LY-WORDS:         /..ly$/
+
+% Extension by LIPN 11/10/2005
+%nouns
+MC-NOUN-WORDS: /..ase$/
+MC-NOUN-WORDS: /..ine?$/
+MC-NOUN-WORDS: /..yl$/
+MC-NOUN-WORDS: /..ion$/
+MC-NOUN-WORDS: /..ose$/
+MC-NOUN-WORDS: /..ol$/
+MC-NOUN-WORDS: /..ide$/
+MC-NOUN-WORDS: /..ity$/
+
+C-NOUN-WORDS: /..o[rn]$/
+
+%adjectives
+ADJ-WORDS: /..ous$/
+ADJ-WORDS: /..ar$/
+ADJ-WORDS: /..ic$/
+ADJ-WORDS: /..al$/
+ADJ-WORDS: /..ive$/
+ADJ-WORDS: /..ble$/
+
+FOLD-WORDS: /..fold$/
+
+% latin (postposed) adjectives
+LATIN-ADJ-WORDS: /..ae$/
+LATIN-ADJ-WORDS: /..us$/ % must appear after -ous in this file
+% latin (postposed) adjectives  or latin plural noun
+LATIN-ADJ-P-NOUN-WORDS: /..is?$/
+LATIN-ADJ-S-NOUN-WORDS: /..um$/
+
+
+% Hyphenated words. In the original LG morpho-guessing system that
+% predated the regex-based system, hyphenated words were detected
+% before ING-WORDS, S-WORDS etc., causing e.g. "cross-linked" to be
+% treated as a HYPHENATED-WORD (a generic adjective/noun), and
+% never a verb. To return to this ordering, move this regex just
+% after the CAPITALIZED-WORDS regex.
+HYPHENATED-WORDS: /^[[:alpha:][:digit:],.][[:alpha:][:digit:],.-]*-[[:alpha:][:digit:],.-]*[[:alpha:][:digit:],.]$/
+
+% proteins often end "ase", so we'll assume those things are names.
+% removed, too many false positives.
+% NAME: /ase$/

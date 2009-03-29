@@ -1,11 +1,12 @@
 SUBDIRS=words
 
-DICTS=					\
-	4.0.affix			\
-	4.0.batch			\
-	4.0.constituent-knowledge	\
-	4.0.dict			\
-	4.0.knowledge			\
+DICTS=					         \
+	4.0.affix                  \
+	4.0.batch                  \
+	4.0.constituent-knowledge  \
+	4.0.dict                   \
+	4.0.knowledge              \
+	4.0.regex                  \
 	tiny.dict
 
 dictdir=$(pkgdatadir)/en

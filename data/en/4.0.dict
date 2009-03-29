@@ -3731,8 +3731,52 @@ rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 
 foo: F+;
 
-ING-WORDS: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
-or ({@E-} & A+) or <verb-ge>;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MG extension rules from BioLG-1.1.12
+% These occur primarily in biomedial and chemistry texts.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+MC-NOUN-WORDS: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
+ ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+(<noun-main-m> or Bsm+)) or 
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+
+C-NOUN-WORDS: % guessed nouns that are countable (-on, -or)
+ ({@AN-} & {@A- & {[[@AN-]]}} & 
+((Ds- & <noun-sub-s> & (<noun-main-s> or Bsm+))
+or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+
+ADJ-WORDS: % guessed adjectives (-ous, -ar, -ic)
+ {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
+& {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+
+FOLD-WORDS: % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
+({EN-} & (MVp- or EC+ or A+)) or Em+;
+
+LATIN-ADJ-WORDS: % latin (postposed) adjectives considered as singular nouns in the current version
+ ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+(<noun-main-m> or Bsm+)) or 
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+
+LATIN-ADJ-P-NOUN-WORDS: % latin (postposed) adjectives or latin plural noun always considered as nouns in the current version
+ ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+(<noun-main-p> or Bpm+))
+or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or AN+; 
+
+LATIN-ADJ-S-NOUN-WORDS: % latin (postposed) adjectives or latin singular noun always considered as nouns in the current version  
+ ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+(<noun-main-m> or Bsm+)) or 
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ING-WORDS: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
+% or ({@E-} & A+) or <verb-ge>;
+
+ING-WORDS: [((<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
+or ({@E- or EA-}  & A+) or <verb-ge>)]  or 
+(((( {@AN-} & {@A- & {[[@AN-]]}}) ) & (({D*u-} & <noun-sub-s> & 
+(<noun-main-m> or Bsm+)) or 
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or  AN+ or {AN-});
 
 ED-WORDS: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
 
