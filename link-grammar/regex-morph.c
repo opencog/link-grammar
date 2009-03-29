@@ -23,14 +23,12 @@
  * using standard POSIX regex.
  */
 
-/* Size of output vector for pcre_match. Must be a multiple of 3. */
-#define OVEC_SIZE 30
-
-/* Compiles all the regexs in the Dictionary. Returns 1 one success,
- * 0 on failure.
+/* Compiles all the regexs in the Dictionary. Returns 0 on success,
+ * else an error code.
  */
 int compile_regexs(Dictionary dict)
 {
+	regex_t *preg;
 	int rc;
 
 	Regex_node *re = dict->regex_root;
@@ -42,7 +40,9 @@ int compile_regexs(Dictionary dict)
 			/* Compile with default options (0) and default character
 			 * tables (NULL). */
 			/* re->re = pcre_compile(re->pattern, 0, &error, &erroroffset, NULL); */
-			rc = regcomp(re->re, re->pattern, REG_EXTENDED);
+			preg = (regex_t *) malloc (sizeof(regex_t));
+			re->re = preg;
+			rc = regcomp(preg, re->pattern, REG_EXTENDED);
 			if (rc)
 			{
 				/*
@@ -75,7 +75,6 @@ int compile_regexs(Dictionary dict)
 char *match_regex(Dictionary dict, char *s)
 {
 	int rc;
-	int ovector[OVEC_SIZE];
 
 	Regex_node *re = dict->regex_root;
 	while (re != NULL)
@@ -91,7 +90,7 @@ char *match_regex(Dictionary dict, char *s)
 		/* int rc = pcre_exec(re->re, NULL, s, strlen(s), 0,
 		 *                    0, ovector, PCRE_OVEC_SIZE); */
 
-		rc = 0;
+		rc = regexec(re->re, s, 0, NULL, 0);
 		if (rc > 0)
 		{
 			return re->name; /* match found. just return--no multiple matches. */
@@ -106,3 +105,17 @@ char *match_regex(Dictionary dict, char *s)
 	return NULL; /* no matches. */
 }
 
+/**
+ * Delete associated storage
+ */
+void free_regexs(Dictionary dict)
+{
+	Regex_node *re = dict->regex_root;
+	while (re != NULL)
+	{
+		Regex_node *next = re->next;
+		regfree(re->re);
+		free(re);
+		re = next;
+	}
+}

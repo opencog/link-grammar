@@ -40,7 +40,7 @@
 #define MAX_REGEX_NAME_LENGTH 50
 #define MAX_REGEX_LENGTH      255
 
-int read_regex_file(Dictionary dict, char *file_name)
+int read_regex_file(Dictionary dict, const char *file_name)
 {
 	Regex_node **tail = &dict->regex_root; /* Last Regex_node * in list */
 	Regex_node *new_re;

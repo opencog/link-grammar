@@ -557,19 +557,17 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	}
 
 	dict->regex_root = NULL;
-#if 0
 	if (regex_name != NULL)
 	{
 		int rc;
-		dict->regex_root = dictionary_five(regex_name, NULL, NULL, NULL, NULL);
+		read_regex_file(dict, regex_name);
 		if (dict->regex_root == NULL)
 		{
 			goto failure;
 		}
-		rc = compile_regexs(dict->regex_root);
+		rc = compile_regexs(dict);
 		if (rc) goto failure;
 	}
-#endif
 
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
@@ -686,6 +684,7 @@ int dictionary_delete(Dictionary dict)
 	post_process_close(dict->postprocessor);
 	post_process_close(dict->constituent_pp);
 	string_set_delete(dict->string_set);
+	free_regexs(dict);
 	free_dictionary(dict);
 	xfree(dict, sizeof(struct Dictionary_s));
 

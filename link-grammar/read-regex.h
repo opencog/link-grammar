@@ -9,4 +9,4 @@
 /*                                                                       */
 /*************************************************************************/
 
-int read_regex_file(Dictionary dict, char *file_name);
+int read_regex_file(Dictionary dict, const char *file_name);
