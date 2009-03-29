@@ -13,3 +13,5 @@
 void * spellcheck_create(const char * lang);
 void spellcheck_destroy(void *);
 int spellcheck_test(void *, const char * word);
+int spellcheck_suggest(void * chk, char ***sug, const char * word);
+

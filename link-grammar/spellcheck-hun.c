@@ -22,12 +22,10 @@ void * spellcheck_create(const char * lang)
 {
 	Hunhandle *h = NULL;
 	/* XXX We desperately need something better than this! */
-printf ("duuude opened lnag %s\n", lang);
 	if (0 == strcmp(lang, "en"))
 	{
 		h = Hunspell_create("/usr/share/myspell/dicts/en-US.aff",
 		                    "/usr/share/myspell/dicts/en-US.dic");
-printf ("duuude opened %p\n", h);
 	}
 
 	return h;
@@ -49,7 +47,19 @@ int spellcheck_test(void * chk, const char * word)
 		prt_error("Error: no spell-check handle specified!\n");
 		return 0;
 	}
+
 	return Hunspell_spell(chk, word);
+}
+
+int spellcheck_suggest(void * chk, char ***sug, const char * word)
+{
+	if (NULL == chk)
+	{
+		prt_error("Error: no spell-check handle specified!\n");
+		return 0;
+	}
+
+	return Hunspell_suggest(chk, sug, word);
 }
 
 #else

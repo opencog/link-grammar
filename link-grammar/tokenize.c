@@ -831,11 +831,56 @@ int build_sentence_expressions(Sentence sent)
 			if (!guessed_string(sent, i, s, LY_WORD)) return FALSE;
 		}
 #endif /* DONT_USE_REGEX_GUESSING */
+
 		else if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-int sp = spellcheck_test(dict->spell_checker, s);
-printf("duuude unknown w=%s sp=%d\n", s, sp);
+#if 1
 			handle_unknown_word(sent, i, s);
+#else
+			int spelling_ok = spellcheck_test(dict->spell_checker, s);
+			/* If the spell-checker knows this word, and we don't ... 
+			 * Hmm. Accept it as such. */
+			if (spelling_ok)
+			{
+				handle_unknown_word(sent, i, s);
+			}
+			else
+			{
+				X_node *head = NULL;
+				int i, n;
+				char **alternates = NULL;
+				/* Else, ask the spell-checker for alternate spellings
+				 * and see if these are in the dict. */
+				n = spellcheck_suggest(dict->spell_checker, &alternates, s);
+				for (i=0; i<n; i++)
+				{
+printf("duude %d %s\n", i, alternates[i]);
+					if (boolean_dictionary_lookup(sent->dict, alternates[i]))
+					{
+						X_node *x = build_word_expressions(sent, alternates[i]);
+						head = catenate_X_nodes(x, head);
+printf ("duude found %s\n", alternates[i]);
+					}
+				}
+
+				if (alternates) free(alternates);
+				if (NULL == head)
+				{
+					handle_unknown_word(sent, i, s);
+				}
+				else
+				{
+int i=0;
+X_node *x=head;
+while(x) {i++; 
+printf("duuude d=%s\n", x->string);
+x = x->next; }
+printf ("duuude counted=%d\n", i); 
+					sent->word[i].x = head;
+strcpy(sent->word[i].string,"nest");
+				}
+			}
+#endif
 		}
 		else 
 		{
