@@ -3,6 +3,8 @@ SUBDIRS=link-grammar data man link-grammar.xcode msvc6 msvc9
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = link-grammar.pc
 
+ACLOCAL_AMFLAGS = -I m4
+
 # Build and install the jar file in $(PREFIX)/share/java ...
 # XXX FIXME configure should look to see if it can find ant
 linkgrammar-@VERSION@.jar:

@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=4
 dnl     3) Increment when interfaces not changed at all,
 dnl               only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=3
+LINK_MICRO_VERSION=4
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -27,6 +27,8 @@ AC_SUBST(LINK_MICRO_VERSION)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AM_MAINTAINER_MODE
 
+AC_CONFIG_MACRO_DIR([m4])
+
 dnl Checks for programs.
 AC_ISC_POSIX
 AC_PROG_CC
@@ -39,6 +41,7 @@ AC_STDC_HEADERS
 AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
 AM_BINRELOC
+PKG_PROG_PKG_CONFIG
 
 AC_C_CONST
 
@@ -107,17 +110,26 @@ if test x${buildcorpus} = xyes; then
 	AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
 	AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 
-	# Somehow, sqlite3 and pkgconfig do not play nice on MacOS. Not clear why
-	# pkgconfig says it can't find sqlite3, even though 3.4.0 is installed.
-	# The solution is to install MacPorts http://www.macports.org/
+	# If there are sqlite3 and pkgconfig on MacOS, then 
+	# recommend that user install MacPorts http://www.macports.org/
 	if test "x${SQLiteFound}" = "xyes"; then
-  		# PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
-  		PKG_CHECK_MODULES(SQLITE3, sqlite3)
-  		AC_SUBST(SQLITE3_LIBS)
-  		AC_SUBST(SQLITE3_CFLAGS)
+  		PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
+		AC_SUBST(SQLITE3_LIBS)
+		AC_SUBST(SQLITE3_CFLAGS)
 	fi
 else
 	AM_CONDITIONAL(HAVE_SQLITE, false)
+fi
+
+dnl ====================================================================
+
+AC_CHECK_HEADER([hunspell/hunspell.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_HUNSPELL=1" HunSpellFound=yes], HunSpellFound=no)
+AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
+
+if test "x${HunSpellFound}" = "xyes"; then
+ 	PKG_CHECK_MODULES([HUNSPELL], [hunspell])
+ 	AC_SUBST(HUNSPELL_LIBS)
+ 	AC_SUBST(HUNSPELL_CFLAGS)
 fi
 
 dnl ====================================================================
@@ -304,7 +316,8 @@ $PACKAGE-$VERSION
 	prefix:                         ${prefix}
 	compiler:                       ${CC} ${CPPFLAGS} ${CFLAGS}
 	autopackage:                    ${br_cv_binreloc}
-	java interfaces:                ${JNIfound}
-	SAT solver:                     ${buildSAT}
-	Statistics database:            ${buildcorpus}
+	Java interfaces:                ${JNIfound}
+	HunSpell spell checker:         ${HunSpellFound}
+	Boolean SAT solver:             ${buildSAT}
+	Corpus statistics database:     ${buildcorpus}
 "
