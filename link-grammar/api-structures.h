@@ -157,8 +157,10 @@ struct Dictionary_s
 	 */
 	Exp *           exp_list;
 
-	/* Private data elements that come in play only while distionary
-	 * is being read. 
+	void *          spell_checker; /* spell checker handle */
+
+	/* Private data elements that come in play only while the
+	 * dictionary is being read, and are not otherwise used.
 	 */
 	FILE *          fp;
 	char            token[MAX_TOKEN_LENGTH];

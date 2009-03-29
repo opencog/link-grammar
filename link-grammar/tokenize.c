@@ -16,6 +16,11 @@
 #include <langinfo.h>
 #endif
 #include <limits.h>
+
+#if HAVE_HUNSPELL
+#include <hunspell.h>
+#endif
+
 #include <link-grammar/api.h>
 #include "error.h"
 #include "regex-morph.h"
@@ -29,7 +34,8 @@
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
 
 /**
- * This is rather esoteric and not terribly important.
+ * Is the word entirely composed of single-letter abreviations
+ * (followed by a period)?
  * It returns TRUE if the word matches the pattern /[A-Z]\.]+/
  */
 static int is_initials_word(const char * word)

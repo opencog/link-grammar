@@ -22,6 +22,7 @@
 #include "sat-solver/sat-encoder.h"
 #endif
 #include "corpus/corpus.h"
+#include "spellcheck-hun.h"
 
 /***************************************************************
 *
@@ -519,6 +520,7 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
+	dict->max_cost = 1000;
 	dict->string_set = string_set_create();
 	dict->name = string_set_add(dict_name, dict->string_set);
 	dict->num_entries = 0;
@@ -530,6 +532,7 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
 	dict->recursive_error = FALSE;
+	dict->spell_checker = spellcheck_create();
 
 	dict->fp = dictopen(dict->name, "r");
 	if (dict->fp == NULL)
@@ -589,8 +592,6 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	dict->ed_word_defined = boolean_dictionary_lookup(dict, ED_WORD);
 	dict->ly_word_defined = boolean_dictionary_lookup(dict, LY_WORD);
 #endif /* DONT_USE_REGEX_GUESSING */
-
-	dict->max_cost = 1000;
 
 	if ((dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD)) != NULL) {
 		dict->andable_connector_set = connector_set_create(dict_node->exp);
@@ -683,6 +684,7 @@ int dictionary_delete(Dictionary dict)
 		affix_list_delete(dict->affix_table);
 		dictionary_delete(dict->affix_table);
 	}
+	spellcheck_destroy(dict->spell_checker);
 
 	connector_set_delete(dict->andable_connector_set);
 	connector_set_delete(dict->unlimited_connector_set);

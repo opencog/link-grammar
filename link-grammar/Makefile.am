@@ -94,6 +94,7 @@ liblink_grammar_la_SOURCES =        \
 	read-regex.c                     \
 	regex-morph.c                    \
 	resources.c                      \
+	spellcheck-hun.c                 \
 	string-set.c                     \
 	tokenize.c                       \
 	utilities.c                      \
@@ -129,6 +130,7 @@ liblink_grammar_la_SOURCES =        \
 	read-regex.h                     \
 	regex-morph.h                    \
 	resources.h                      \
+	spellcheck-hun.h                 \
 	string-set.h                     \
 	structures.h                     \
 	tokenize.h                       \
