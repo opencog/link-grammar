@@ -9,7 +9,11 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <string.h>
 #include "link-includes.h"
+#include "api-structures.h"
+#include "structures.h"
+#include "read-regex.h"
 
 /*
   Function for reading regular expression name:pattern combinations
@@ -45,90 +49,112 @@ int read_regex_file(Dictionary dict, char *file_name)
 	int c,prev,i,line=1;
 	FILE *fp;
 	
-	/* use dictopen to apply same path search as for the dictionary. */
-	fp = dictopen(regex_path_name, regex_file_name, "r");
-	if(fp == NULL) {
-		lperror(NODICT, regex_file_name);
-		return 0;
+	fp = dictopen(file_name, "r");
+	if (fp == NULL)
+	{
+		prt_error("Error: cannot open regex file %s\n", file_name);
+		return 1;
 	}
 
 	/* read in regexs. loop broken on EOF. */
-	for(;;) {
+	while (1)
+	{
 		/* skip whitespace and comments. */
-		do {
-			do { 
-				c=fgetc(fp);
-				if(c == '\n') { line++; }
-			} while(isspace(c));
-			if(c == '%') {
-				while((c != EOF) && (c != '\n')) { c=fgetc(fp); }
+		do
+		{
+			do
+			{ 
+				c = fgetc(fp);
+				if (c == '\n') { line++; }
+			}
+			while(isspace(c));
+
+			if (c == '%')
+			{
+				while ((c != EOF) && (c != '\n')) { c = fgetc(fp); }
 				line++;
 			}
-		} while(isspace(c));
+		}
+		while(isspace(c));
 
-		if(c == EOF) { break; } /* done. */
+		if (c == EOF) { break; } /* done. */
 
 		/* read in the name of the regex. */
 		i = 0;
-		do {
-			if(i > MAX_REGEX_NAME_LENGTH-1) {
-				lperror(DICTPARSE, ". Regex name too long on line %d", line);
+		do
+		{
+			if (i > MAX_REGEX_NAME_LENGTH-1)
+			{
+				prt_error("Error: Regex name too long on line %d", line);
 				return 0;
 			}
 			name[i++] = c;
-			c=getc(fp);
-		} while((!isspace(c)) && (c != ':') && (c != EOF));
+			c = fgetc(fp);
+		}
+		while ((!isspace(c)) && (c != ':') && (c != EOF));
 		name[i] = '\0';
 		
-		/* skip possible whitespace after name, expect colon. */
-		while(isspace(c)) { 
-			if(c == '\n') { line++; }
-			c=getc(fp); 
+		/* Skip possible whitespace after name, expect colon. */
+		while (isspace(c))
+		{ 
+			if (c == '\n') { line++; }
+			c = fgetc(fp); 
 		}
-		if(c != ':') {
-			lperror(DICTPARSE, ". Regex	missing colon on line %d", line);
-			return 0;
-		}
-
-		/* skip whitespace after colon, expect slash. */
-		do {
-			if(c == '\n') { line++; }
-			c=getc(fp); 
-		} while(isspace(c));
-		if(c != '/') {
-			lperror(DICTPARSE, ". Regex	missing slash on line %d\n", line);
-			return 0;			
+		if (c != ':')
+		{
+			prt_error("Error: Regex missing colon on line %d", line);
+			goto failure;
 		}
 
-		/* read in the regex. */
+		/* Skip whitespace after colon, expect slash. */
+		do
+		{
+			if (c == '\n') { line++; }
+			c = fgetc(fp); 
+		}
+		while (isspace(c));
+		if (c != '/') {
+			prt_error("Error: Regex missing leading slash on line %d\n", line);
+			goto failure;
+		}
+
+		/* Read in the regex. */
 		prev = 0;
 		i = 0;
-		do {
-			if(i > MAX_REGEX_LENGTH-1) {
-				lperror(DICTPARSE, ". Regex too long on line %d", line);
-				return 0;
+		do
+		{
+			if (i > MAX_REGEX_LENGTH-1)
+			{
+				prt_error("Error: Regex too long on line %d", line);
+				goto failure;
 			}
-			prev=c;
-			c=getc(fp);
+			prev = c;
+			c = fgetc(fp);
 			regex[i++] = c;
-		} while((c != '/' || prev == '\\') && (c != EOF));
+		}
+		while ((c != '/' || prev == '\\') && (c != EOF));
 		regex[i-1] = '\0';
 
-		/* expect termination by a slash. */
-		if(c != '/') {
-			lperror(DICTPARSE, ". Regex	missing slash on line %d", line);
-			return 0;			
+		/* Expect termination by a slash. */
+		if (c != '/')
+		{
+			prt_error("Error: Regex missing trailing slash on line %d", line);
+			goto failure;
 		}
 
 		/* Create new Regex_node and add to dict list. */
-		new_re = (Regex_node *)malloc(sizeof(Regex_node));
-		new_re->name		= strdup(name);
+		new_re = (Regex_node *) malloc(sizeof(Regex_node));
+		new_re->name    = strdup(name);
 		new_re->pattern = strdup(regex);
-		new_re->re			= NULL;
-		new_re->next		= NULL;
+		new_re->re      = NULL;
+		new_re->next    = NULL;
 		*tail = new_re;
 		tail	= &new_re->next;
 	}
+
+	fclose(fp);
+	return 0;
+failure:
 	fclose(fp);
 	return 1;
 }

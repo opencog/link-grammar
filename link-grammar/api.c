@@ -16,6 +16,8 @@
 #include "disjuncts.h"
 #include "error.h"
 #include "preparation.h"
+#include "read-regex.h"
+#include "regex-morph.h"
 #ifdef USE_SAT_SOLVER
 #include "sat-solver/sat-encoder.h"
 #endif
@@ -503,9 +505,10 @@ static void affix_list_delete(Dictionary dict)
  * because an affix_file is opened by a recursive call to this
  * function.
  */
-Dictionary
-dictionary_create(const char * dict_name, const char * pp_name,
-                  const char * cons_name, const char * affix_name)
+static Dictionary
+dictionary_five(const char * dict_name, const char * pp_name,
+                const char * cons_name, const char * affix_name,
+                const char * regex_name)
 {
 	Dictionary dict;
 	Dict_node *dict_node;
@@ -529,12 +532,14 @@ dictionary_create(const char * dict_name, const char * pp_name,
 	dict->recursive_error = FALSE;
 
 	dict->fp = dictopen(dict->name, "r");
-	if (dict->fp == NULL) {
+	if (dict->fp == NULL)
+	{
 		prt_error("Error: Could not open dictionary %s\n", dict_name);
 		goto failure;
 	}
 
-	if (!read_dictionary(dict)) {
+	if (!read_dictionary(dict))
+	{
 		fclose(dict->fp);
 		goto failure;
 	}
@@ -543,13 +548,28 @@ dictionary_create(const char * dict_name, const char * pp_name,
 	dict->affix_table = NULL;
 	if (affix_name != NULL)
 	{
-		dict->affix_table = dictionary_create(affix_name, NULL, NULL, NULL);
+		dict->affix_table = dictionary_five(affix_name, NULL, NULL, NULL, NULL);
 		if (dict->affix_table == NULL)
 		{
 			goto failure;
 		}
 		affix_list_create(dict->affix_table);
 	}
+
+	dict->regex_root = NULL;
+#if 0
+	if (regex_name != NULL)
+	{
+		int rc;
+		dict->regex_root = dictionary_five(regex_name, NULL, NULL, NULL, NULL);
+		if (dict->regex_root == NULL)
+		{
+			goto failure;
+		}
+		rc = compile_regexs(dict->regex_root);
+		if (rc) goto failure;
+	}
+#endif
 
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
@@ -590,28 +610,42 @@ failure:
 	return NULL;
 }
 
+Dictionary
+dictionary_create(const char * dict_name, const char * pp_name,
+                  const char * cons_name, const char * affix_name)
+{
+	return dictionary_five(dict_name, pp_name, cons_name, affix_name, NULL);
+}
+
 Dictionary dictionary_create_lang(const char * lang)
 {
 	Dictionary dictionary;
 
-	if(lang && *lang) {
+	if(lang && *lang)
+	{
 		char * dict_name;
 		char * pp_name;
 		char * cons_name;
 		char * affix_name;
+		char * regex_name;
 	
 		dict_name = join_path(lang, "4.0.dict");
 		pp_name = join_path(lang, "4.0.knowledge");
 		cons_name = join_path(lang, "4.0.constituent-knowledge");
 		affix_name = join_path(lang, "4.0.affix");
+		regex_name = join_path(lang, "4.0.regex");
 	
-		dictionary = dictionary_create(dict_name, pp_name, cons_name, affix_name);
+		dictionary = dictionary_five(dict_name, pp_name, cons_name,
+		                             affix_name, regex_name);
 	
+		free(regex_name);
 		free(affix_name);
 		free(cons_name);
 		free(pp_name);
 		free(dict_name);
-	} else {
+	}
+	else
+	{
 		dictionary = NULL;
 	}
 

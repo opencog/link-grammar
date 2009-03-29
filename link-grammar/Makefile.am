@@ -86,6 +86,7 @@ liblink_grammar_la_SOURCES =        \
 	print-util.c                     \
 	prune.c                          \
 	read-dict.c                      \
+	read-regex.c                     \
 	regex-morph.c                    \
 	resources.c                      \
 	string-set.c                     \
@@ -120,6 +121,8 @@ liblink_grammar_la_SOURCES =        \
 	print-util.h                     \
 	prune.h                          \
 	read-dict.h                      \
+	read-regex.h                     \
+	regex-morph.h                    \
 	resources.h                      \
 	string-set.h                     \
 	structures.h                     \
