@@ -21,7 +21,7 @@ endif
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS)
+INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 
@@ -40,6 +40,11 @@ endif
 
 liblink_grammar_la_LIBADD  = 
 liblink_grammar_java_la_LIBADD  = liblink-grammar.la
+
+if HAVE_HUNSPELL
+liblink_grammar_la_LIBADD  +=  ${HUNSPELL_LIBS}
+liblink_grammar_java_la_LIBADD  += ${HUNSPELL_LIBS}
+endif
 
 if WITH_SAT_SOLVER
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
