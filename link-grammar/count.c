@@ -28,7 +28,7 @@ struct count_context_s
 
 int x_match(Sentence sent, Connector *a, Connector *b)
 {
-	return match(sent, a, b, 0, 0);
+	return do_match(sent, a, b, 0, 0);
 }
 
 void count_set_effective_distance(Sentence sent)
@@ -54,7 +54,7 @@ void count_unset_effective_distance(Sentence sent)
  * is different depending on which of the two priority cases is being
  * considered.  See the comments below. 
  */
-int match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
+int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
 	int x, y, dist;
@@ -377,8 +377,8 @@ static s64 do_count(Sentence sent, int lw, int rw,
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-				Lmatch = (le != NULL) && (d->left != NULL) && match(sent, le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) && match(sent, d->right, re, w, rw);
+				Lmatch = (le != NULL) && (d->left != NULL) && do_match(sent, le, d->left, lw, w);
+				Rmatch = (d->right != NULL) && (re != NULL) && do_match(sent, d->right, re, w, rw);
 
 				rightcount = leftcount = 0;
 				if (Lmatch) {

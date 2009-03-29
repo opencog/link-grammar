@@ -1406,7 +1406,7 @@ static int possible_connection(prune_context *pc,
 				return FALSE;
 			}
 		}
-		return match(pc->sent, lc, rc, lword, rword);
+		return do_match(pc->sent, lc, rc, lword, rword);
 	} else {
 		if (lword == rword-1) {
 			if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;

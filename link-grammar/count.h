@@ -12,7 +12,7 @@
 /*************************************************************************/
 
 s64  table_lookup(Sentence, int, int, Connector *, Connector *, int);
-int  match(Sentence, Connector *a, Connector *b, int wa, int wb);
+int  do_match(Sentence, Connector *a, Connector *b, int wa, int wb);
 int  x_match(Sentence, Connector *a, Connector *b);
 void init_table(Sentence sent);
 void free_table(Sentence sent);
