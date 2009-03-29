@@ -2928,6 +2928,11 @@ tenfold a_hundredfold a_thousandfold: MVp- or A+;
 °C.u °F.u degrees_Fahrenheit degrees_Centigrade
 mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
 
+% For units, maybe should use 
+% <units-alt>: 
+% ((ND- or (NS- & {NJ-} & {EN-})) or [()] or [[EN-]]) & (Yd+ or EC+ or
+% [[MVp-]] or Ya+ or OD-);
+
 <units-suffix>:
 ((ND- or NS- or NIe-) & AN+) or 
 ((ND- or NS- or NIe-) & (Op- or Jp-) & {Mp+}) or 
@@ -3039,7 +3044,7 @@ once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or
 (Xd- & Xc+ & E+))) or E+ or EB-;
 or: NO+;
 but.misc-cnj: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
-and: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
+and and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
 neither: Ds+ or E+ or ({OF+} & <noun-main-x>);
@@ -3930,9 +3935,6 @@ proof-reading.v proof_reading
 O.K.'ing.v OK'ing.v
 O.K.’ing.v OK’ing.v:
  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
-
-and/or:
- [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
 
 overate.v over-ate.v forewent.v oversewed.v forswore.v 
  foreswore.v forwent.v:
