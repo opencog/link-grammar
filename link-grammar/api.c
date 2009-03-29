@@ -507,10 +507,11 @@ static void affix_list_delete(Dictionary dict)
  * function.
  */
 static Dictionary
-dictionary_five(const char * dict_name, const char * pp_name,
-                const char * cons_name, const char * affix_name,
-                const char * regex_name)
+dictionary_six(const char * lang, const char * dict_name,
+                const char * pp_name, const char * cons_name,
+                const char * affix_name, const char * regex_name)
 {
+	const char * t;
 	Dictionary dict;
 	Dict_node *dict_node;
 
@@ -520,9 +521,14 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
-	dict->max_cost = 1000;
 	dict->string_set = string_set_create();
+	
+	dict->lang = lang;
+	t = strrchr (lang, '/');
+	if (t) dict->lang = string_set_add(t+1, dict->string_set);
 	dict->name = string_set_add(dict_name, dict->string_set);
+
+	dict->max_cost = 1000;
 	dict->num_entries = 0;
 	dict->is_special = FALSE;
 	dict->already_got_it = '\0';
@@ -532,7 +538,7 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
 	dict->recursive_error = FALSE;
-	dict->spell_checker = spellcheck_create();
+	dict->spell_checker = spellcheck_create(dict->lang);
 
 	dict->fp = dictopen(dict->name, "r");
 	if (dict->fp == NULL)
@@ -551,7 +557,7 @@ dictionary_five(const char * dict_name, const char * pp_name,
 	dict->affix_table = NULL;
 	if (affix_name != NULL)
 	{
-		dict->affix_table = dictionary_five(affix_name, NULL, NULL, NULL, NULL);
+		dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 		if (dict->affix_table == NULL)
 		{
 			goto failure;
@@ -619,7 +625,7 @@ Dictionary
 dictionary_create(const char * dict_name, const char * pp_name,
                   const char * cons_name, const char * affix_name)
 {
-	return dictionary_five(dict_name, pp_name, cons_name, affix_name, NULL);
+	return dictionary_six("en", dict_name, pp_name, cons_name, affix_name, NULL);
 }
 
 Dictionary dictionary_create_lang(const char * lang)
@@ -640,7 +646,7 @@ Dictionary dictionary_create_lang(const char * lang)
 		affix_name = join_path(lang, "4.0.affix");
 		regex_name = join_path(lang, "4.0.regex");
 	
-		dictionary = dictionary_five(dict_name, pp_name, cons_name,
+		dictionary = dictionary_six(lang, dict_name, pp_name, cons_name,
 		                             affix_name, regex_name);
 	
 		free(regex_name);

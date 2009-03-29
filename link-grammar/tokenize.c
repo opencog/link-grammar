@@ -17,13 +17,10 @@
 #endif
 #include <limits.h>
 
-#if HAVE_HUNSPELL
-#include <hunspell.h>
-#endif
-
 #include <link-grammar/api.h>
 #include "error.h"
 #include "regex-morph.h"
+#include "spellcheck-hun.h"
 #include "utilities.h"
 
 #define MAX_STRIP 10
@@ -836,6 +833,8 @@ int build_sentence_expressions(Sentence sent)
 #endif /* DONT_USE_REGEX_GUESSING */
 		else if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
+int sp = spellcheck_test(dict->spell_checker, s);
+printf("duuude unknown w=%s sp=%d\n", s, sp);
 			handle_unknown_word(sent, i, s);
 		}
 		else 

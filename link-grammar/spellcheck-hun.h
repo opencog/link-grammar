@@ -10,5 +10,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-void * spellcheck_create(void);
+void * spellcheck_create(const char * lang);
 void spellcheck_destroy(void *);
+int spellcheck_test(void *, const char * word);

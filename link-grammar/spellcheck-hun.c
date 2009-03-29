@@ -14,12 +14,21 @@
 
 #include <hunspell.h>
 #include <stdio.h>
+#include <string.h>
+#include "link-includes.h"
+#include "spellcheck-hun.h"
 
-void * spellcheck_create(void)
+void * spellcheck_create(const char * lang)
 {
-	Hunhandle *h;
-	h = Hunspell_create("/usr/share/myspell/dicts/en-US.aff",
-	                    "/usr/share/myspell/dicts/en-US.dic");
+	Hunhandle *h = NULL;
+	/* XXX We desperately need something better than this! */
+printf ("duuude opened lnag %s\n", lang);
+	if (0 == strcmp(lang, "en"))
+	{
+		h = Hunspell_create("/usr/share/myspell/dicts/en-US.aff",
+		                    "/usr/share/myspell/dicts/en-US.dic");
+printf ("duuude opened %p\n", h);
+	}
 
 	return h;
 }
@@ -30,12 +39,22 @@ void spellcheck_destroy(void * chk)
 	Hunspell_destroy(h);
 }
 
-#else
-void * spellcheck_create(void)
+/**
+ * Return boolean: 1 if spelling looks good, else zero
+ */
+int spellcheck_test(void * chk, const char * word)
 {
-	return NULL;
+	if (NULL == chk)
+	{
+		prt_error("Error: no spell-check handle specified!\n");
+		return 0;
+	}
+	return Hunspell_spell(chk, word);
 }
 
+#else
+void * spellcheck_create(void) { return NULL; }
 void spellcheck_destroy(void * chk) {}
+int spellcheck_test(void * chk, const char * word) { return 0; }
 
 #endif /* #ifdef HAVE_HUNSPELL */

@@ -106,6 +106,7 @@ struct Dictionary_s
 	Dict_node *     root;
 	Regex_node *    regex_root;
 	const char *    name;
+	const char *    lang;
 
 	int             use_unknown_word;
 	int             unknown_word_defined;
