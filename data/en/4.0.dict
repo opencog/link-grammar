@@ -3731,8 +3731,30 @@ rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 
 foo: F+;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ING-WORDS: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
+% or ({@E-} & A+) or <verb-ge>;
+
+ING-WORDS: [((<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
+or ({@E- or EA-}  & A+) or <verb-ge>)]  or 
+(((( {@AN-} & {@A- & {[[@AN-]]}}) ) & (({D*u-} & <noun-sub-s> & 
+(<noun-main-m> or Bsm+)) or 
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or  AN+ or {AN-});
+
+ED-WORDS: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
+
+S-WORDS.v: <verb-s> & <vc-tr,intr>;
+
+S-WORDS.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+(<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
+
+LY-WORDS: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
+{Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MG extension rules from BioLG-1.1.12
+% Words guessed based on morphology.
 % These occur primarily in biomedial and chemistry texts.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 MC-NOUN-WORDS: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
@@ -3769,25 +3791,6 @@ LATIN-ADJ-S-NOUN-WORDS: % latin (postposed) adjectives or latin singular noun al
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% ING-WORDS: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
-% or ({@E-} & A+) or <verb-ge>;
-
-ING-WORDS: [((<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
-or ({@E- or EA-}  & A+) or <verb-ge>)]  or 
-(((( {@AN-} & {@A- & {[[@AN-]]}}) ) & (({D*u-} & <noun-sub-s> & 
-(<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or  AN+ or {AN-});
-
-ED-WORDS: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
-
-S-WORDS.v: <verb-s> & <vc-tr,intr>;
-
-S-WORDS.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
-
-LY-WORDS: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
-{Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
-
 UNKNOWN-WORD.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+))
 or (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or U-));
@@ -3818,6 +3821,7 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
       S+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+ & RW+ & Xp+ & Xx+ & CP+
       & SFsx+;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
 % "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual 
 % Symposium, xx-yy.
