@@ -747,15 +747,23 @@ static void handle_unknown_word(Sentence sent, int i, char * s)
  */
 static void guess_misspelled_word(Sentence sent, int i, char * s)
 {
+	int spelling_ok;
 	char str[MAX_WORD+1];
 	Dictionary dict = sent->dict;
 	X_node *d, *head = NULL;
 	int j, n;
 	char **alternates = NULL;
 
+	/* Spell-guessing is disabled if no spell-checker is speficified */
+	if (NULL == dict->spell_checker)
+	{
+		handle_unknown_word(sent, i, s);
+		return;
+	}
+
 	/* If the spell-checker knows about this word, and we don't ... 
 	 * Dang. We should fix it  someday. Accept it as such. */
-	int spelling_ok = spellcheck_test(dict->spell_checker, s);
+	spelling_ok = spellcheck_test(dict->spell_checker, s);
 	if (spelling_ok)
 	{
 		handle_unknown_word(sent, i, s);
@@ -776,6 +784,8 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
 	sent->word[i].x = head;
 	if (alternates) free(alternates);
 
+	/* Add a [~] to the output to signify that its the result of
+	 * guessing. */
 	for (d = sent->word[i].x; d != NULL; d = d->next)
 	{
 		const char * t = strchr(d->string, '.');

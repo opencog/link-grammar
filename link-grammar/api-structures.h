@@ -71,10 +71,12 @@ struct Parse_Options_s
 	int twopass_length;    /* min length for two-pass post processing */
 	int max_sentence_length;
 	int short_length;      /* Links that are limited in length can be
-			    no longer than this.  Default = 6 */
+	                        * no longer than this.  Default = 6 */
 	int all_short;         /* If true, there can be no connectors that are exempt */
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
 	Resources resources;   /* For deciding when to "abort" the parsing */
+
+	/* Flags governing the command-line client; not used by parser */
 	int display_short;
 	int display_word_subscripts;  /* as in "dog.n" as opposed to "dog" */
 	int display_link_subscripts;  /* as in "Ss" as opposed to "S" */
@@ -111,16 +113,18 @@ struct Dictionary_s
 	int             use_unknown_word;
 	int             unknown_word_defined;
 
-#if DONT_USE_REGEX_GUESSING
-	int             capitalized_word_defined;
-	int             pl_capitalized_word_defined;
-	int             hyphenated_word_defined;
-	int             number_word_defined;
+	/* If not null, then use spelling guesser for unknown words */
+	void *          spell_checker; /* spell checker handle */
 
+#if DONT_USE_REGEX_GUESSING
 	/* English language morphology bits
 	 * replaced by regex-based morpho guesser
 	 * Dead code, remove at liesure.
 	 */
+	int             capitalized_word_defined;
+	int             pl_capitalized_word_defined;
+	int             hyphenated_word_defined;
+	int             number_word_defined;
 	int             ing_word_defined;
 	int             s_word_defined;
 	int             ed_word_defined;
@@ -157,8 +161,6 @@ struct Dictionary_s
 	 * in reading this dictionary.  Needed for freeing the dictionary
 	 */
 	Exp *           exp_list;
-
-	void *          spell_checker; /* spell checker handle */
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.

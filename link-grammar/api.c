@@ -538,6 +538,8 @@ dictionary_six(const char * lang, const char * dict_name,
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
 	dict->recursive_error = FALSE;
+
+	/* To disable spell-checking, just set the cheker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
 
 	dict->fp = dictopen(dict->name, "r");
