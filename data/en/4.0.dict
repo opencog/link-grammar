@@ -2924,10 +2924,6 @@ dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: MVp- or A+;
 
-% Abbreviations that form noun-like things.
-°C.u °F.u degrees_Fahrenheit degrees_Centigrade
-mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
-
 % For units, maybe should use 
 % <units-alt>: 
 % ((ND- or (NS- & {NJ-} & {EN-})) or [()] or [[EN-]]) & (Yd+ or EC+ or
@@ -2945,6 +2941,9 @@ mph.i MPH.i mpg.i MPG.i cc.i ml.i : ND- & <noun-main-s>;
 % Units abbreviations that can be followed by a period:
 % ft. tbsp. yds.
 /en/words/units.2: {Xi+} & <units-suffix>;
+
+% Abbreviations that form noun-like things.
+/en/words/units.3: ND- & <noun-main-s>;
 
 % money, similar to units, above.
 /en/words/currency: 

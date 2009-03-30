@@ -10,6 +10,7 @@ WORDS=			\
 	entities.us-states.sing \
 	units.1 \
 	units.2 \
+	units.3 \
 	words.adj.1	\
 	words.adj.2	\
 	words.adj.3	\
