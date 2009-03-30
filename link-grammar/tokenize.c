@@ -834,7 +834,7 @@ int build_sentence_expressions(Sentence sent)
 
 		else if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-#if 1
+#if 0
 			handle_unknown_word(sent, i, s);
 #else
 			int spelling_ok = spellcheck_test(dict->spell_checker, s);
@@ -847,19 +847,17 @@ int build_sentence_expressions(Sentence sent)
 			else
 			{
 				X_node *head = NULL;
-				int i, n;
+				int j, n;
 				char **alternates = NULL;
 				/* Else, ask the spell-checker for alternate spellings
 				 * and see if these are in the dict. */
 				n = spellcheck_suggest(dict->spell_checker, &alternates, s);
-				for (i=0; i<n; i++)
+				for (j=0; j<n; j++)
 				{
-printf("duude %d %s\n", i, alternates[i]);
-					if (boolean_dictionary_lookup(sent->dict, alternates[i]))
+					if (boolean_dictionary_lookup(sent->dict, alternates[j]))
 					{
-						X_node *x = build_word_expressions(sent, alternates[i]);
+						X_node *x = build_word_expressions(sent, alternates[j]);
 						head = catenate_X_nodes(x, head);
-printf ("duude found %s\n", alternates[i]);
 					}
 				}
 
@@ -870,14 +868,7 @@ printf ("duude found %s\n", alternates[i]);
 				}
 				else
 				{
-int i=0;
-X_node *x=head;
-while(x) {i++; 
-printf("duuude d=%s\n", x->string);
-x = x->next; }
-printf ("duuude counted=%d\n", i); 
 					sent->word[i].x = head;
-strcpy(sent->word[i].string,"nest");
 				}
 			}
 #endif
