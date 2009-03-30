@@ -185,10 +185,10 @@ static wint_t get_character(Dictionary dict, int quote_mode)
  * Return true if the input wide-character is one of the special
  * characters used to define the syntax of the dictionary.
  */
-static int is_special(wint_t wc)
+static int is_special(wint_t wc, mbstate_t *ps)
 {
 	char buff[MB_LEN_MAX];
-	int nr = wctomb(buff, wc);
+	int nr = wcrtomb(buff, wc, ps);
 	if (1 != nr) return FALSE;
 	return (NULL != strchr(SPECIAL, buff[0]));
 }
@@ -207,7 +207,7 @@ static int link_advance(Dictionary dict)
 
 	if (dict->already_got_it != '\0')
 	{
-		dict->is_special = is_special(dict->already_got_it);
+		dict->is_special = is_special(dict->already_got_it, &dict->mbss);
 		if (dict->already_got_it == WEOF) {
 			dict->token[0] = '\0';
 		} else {
@@ -241,7 +241,7 @@ static int link_advance(Dictionary dict)
 			}
 
 			/* Although we read wide chars, we store UTF8 internally, always. */
-			nr = wctomb(&dict->token[i], c);
+			nr = wcrtomb(&dict->token[i], c, &dict->mbss);
 			if (nr < 0) {
 #ifndef _WIN32
 				dict_error2(dict, "Unable to read UTF8 string in current locale",
@@ -254,7 +254,7 @@ static int link_advance(Dictionary dict)
 			}
 			i += nr;
 		} else {
-			if (is_special(c))
+			if (is_special(c, &dict->mbss))
 			{
 				if (i == 0)
 				{
@@ -284,7 +284,7 @@ static int link_advance(Dictionary dict)
 				quote_mode = TRUE;
 			} else {
 				/* store UTF8 internally, always. */
-				nr = wctomb_check(&dict->token[i], c);
+				nr = wctomb_check(&dict->token[i], c, &dict->mbss);
 				if (nr < 0) {
 #ifndef _WIN32
 					dict_error2(dict, "Unable to read UTF8 string in current locale",
@@ -1303,6 +1303,9 @@ static int read_entry(Dictionary dict)
 	int i;
 
 	Dict_node *dn_new, *dnx, *dn = NULL;
+
+	/* Reset multi-byte shift state every line. */
+	i = wcrtomb(NULL, L'\0', &dict->mbss);
 
 	while (!is_equal(dict, ':'))
 	{

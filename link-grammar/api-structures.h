@@ -27,6 +27,7 @@
 #ifndef _API_STRUCTURESH_
 #define _API_STRUCTURESH_
 
+#include <wchar.h>
 #include "api-types.h"
 #include "structures.h" /* for definition of Link */
 #include "error.h"
@@ -171,6 +172,7 @@ struct Dictionary_s
 	wint_t          already_got_it;
 	int             line_number;
 	int             recursive_error;   /* boolean */
+	mbstate_t       mbss; /* multi-byte shift state */
 };
 
 struct Label_node_s

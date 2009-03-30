@@ -69,6 +69,7 @@ int yywrap(void);  /* --DS */
 #define YY_FLEX_MINOR_VERSION 5
 
 #include <stdio.h>
+#include <wchar.h>
 
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
@@ -367,7 +368,7 @@ static int input YY_PROTO(( void ));
 
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
-static int yy_get_next_buffer YY_PROTO(( void ));
+static int yy_get_next_buffer YY_PROTO(( mbstate_t * ));
 static void yy_fatal_error YY_PROTO(( const char msg[] ));
 
 /* Done after the current pattern has been matched and before the
@@ -581,14 +582,14 @@ YY_MALLOC_DECL
  * is returned in "result".
  */
 #ifndef YY_INPUT
-#define YY_INPUT(buf,result,max_size) \
+#define YY_INPUT(buf,result,max_size,pmbss) \
 	if ( yy_current_buffer->yy_is_interactive ) \
 		{ \
 		wint_t c = '*'; \
 		int n; \
 		for ( n = 0; n < max_size && \
 			     (c = fgetwc( yyin )) != WEOF && c != '\n'; ) \
-			n += wctomb(&buf[n], c); \
+			n += wcrtomb(&buf[n], c, pmbss); \
 		if ( c == '\n' ) \
 			buf[n++] = '\n'; \
 		if ( c == WEOF && ferror( yyin ) ) \
@@ -646,9 +647,13 @@ YY_MALLOC_DECL
 YY_DECL;
 YY_DECL
 {
-	register yy_state_type yy_current_state;
-	register char *yy_cp, *yy_bp;
-	register int yy_act;
+	yy_state_type yy_current_state;
+	char *yy_cp, *yy_bp;
+	int yy_act;
+
+	/* Hack to set multi-byte shift state */
+	mbstate_t mbss;
+	yy_act = wcrtomb(NULL, L'\0', &mbss);
 
 	/* #line 56 "pp_lexer.fl" --DS */
 
@@ -860,7 +865,7 @@ ECHO;
 				}
 			}
 
-		else switch ( yy_get_next_buffer() )
+		else switch ( yy_get_next_buffer(&mbss) )
 			{
 			case EOB_ACT_END_OF_FILE:
 				{
@@ -930,11 +935,11 @@ ECHO;
  *	EOB_ACT_END_OF_FILE - end of file
  */
 
-static int yy_get_next_buffer(void)
+static int yy_get_next_buffer(mbstate_t *pmbss)
 {
-	register char *dest = yy_current_buffer->yy_ch_buf;
-	register char *source = yytext_ptr;
-	register int number_to_move, i;
+	char *dest = yy_current_buffer->yy_ch_buf;
+	char *source = yytext_ptr;
+	int number_to_move, i;
 	int ret_val;
 
 	if ( yy_c_buf_p > &yy_current_buffer->yy_ch_buf[yy_n_chars + 1] )
@@ -1026,7 +1031,7 @@ static int yy_get_next_buffer(void)
 
 		/* Read in more data. */
 		YY_INPUT( (&yy_current_buffer->yy_ch_buf[number_to_move]),
-			yy_n_chars, num_to_read );
+			yy_n_chars, num_to_read, pmbss );
 		}
 
 	if ( yy_n_chars == 0 )

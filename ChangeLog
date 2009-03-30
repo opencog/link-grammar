@@ -5,6 +5,7 @@ Version 4.4.4 (??? 2009) includes the following changes:
  * Add regular-expression-based word guessing, from BioLG project.
    This provides support for many scientific/biomedical terms.
  * Add spell-guessing for unknown words. 
+ * Fix UTF8 support to be correctly thread-safe.
 
 Version 4.4.3 (11 March 2009) includes the following changes:
  * Look at JAVA_HOME to guess location of jni.h

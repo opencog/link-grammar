@@ -65,7 +65,7 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
  */
 #ifdef __CYGWIN__
 #define mbtowc(w,s,n)  ({*((char *)(w)) = *(s); 1;})
-#define wctomb(s,w)    ({*((char *)(s)) = ((char)(w)); 1;})
+#define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
 #define iswupper  isupper
 #define iswalpha  isalpha
 #define iswdigit  isdigit
@@ -109,9 +109,9 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #endif
 
 
-static inline int wctomb_check(char *s, wchar_t wc)
+static inline int wctomb_check(char *s, wchar_t wc, mbstate_t *ps)
 {
-	int nr = wctomb(s, wc);
+	int nr = wcrtomb(s, wc, ps);
 	if (nr < 0) {
 		prt_error("Fatal Error: unknwon character set %s\n", nl_langinfo(CODESET));
 		exit(1);

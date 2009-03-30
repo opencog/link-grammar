@@ -162,10 +162,12 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	wchar_t c;
 	int i, nbl, nbh;
 	char low[MB_LEN_MAX];
+	mbstate_t mbss;
 
 	nbh = mbtowc (&c, from, MB_CUR_MAX);
 	c = towlower(c);
-	nbl = wctomb_check(low, c);
+	nbl = wcrtomb(NULL, L'\0', &mbss);
+	nbl = wctomb_check(low, c, &mbss);
 
 	/* Check for error on an in-place copy */
 	if ((nbh < nbl) && (to == from))
@@ -193,10 +195,12 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	wchar_t c;
 	int i, nbl, nbh;
 	char low[MB_LEN_MAX];
+	mbstate_t mbss;
 
 	nbh = mbtowc (&c, from, MB_CUR_MAX);
 	c = towupper(c);
-	nbl = wctomb_check(low, c);
+	nbl = wcrtomb(NULL, L'\0', &mbss);
+	nbl = wctomb_check(low, c, &mbss);
 
 	/* Check for error on an in-place copy */
 	if ((nbh < nbl) && (to == from))

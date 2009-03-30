@@ -244,12 +244,14 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 	char save[MB_LEN_MAX];
 	wchar_t c;
 	int nbl, nbh;
+	mbstate_t mbss;
 
 	if (!is_utf8_upper(word)) return FALSE;
 
 	nbh = mbtowc (&c, word, MB_CUR_MAX);
 	c = towlower(c);
-	nbl = wctomb_check(low, c);
+	nbl = wcrtomb(NULL, L'\0', &mbss);
+	nbl = wctomb_check(low, c, &mbss);
 	if (nbh != nbl)
 	{
 		prt_error("Warning: can't downcase multi-byte string: %s\n", word);
