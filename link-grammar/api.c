@@ -1136,11 +1136,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	init_analyze(sent);
 	init_count(sent);
 
+	/* Expressions were previously set up during the tokenize stage. */
 	expression_prune(sent);
 	print_time(opts, "Finished expression pruning");
 #ifdef USE_SAT_SOLVER
 	sat_parse(sent, opts);
 #else
+
+	/* build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 
 	init_fast_matcher(sent);

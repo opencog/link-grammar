@@ -283,7 +283,7 @@ static s64 pseudocount(Sentence sent,
 }
 
 static s64 do_count(Sentence sent, int lw, int rw,
-                 Connector *le, Connector *re, int cost)
+                    Connector *le, Connector *re, int cost)
 {
 	Disjunct * d;
 	s64 total, pseudototal;
@@ -308,41 +308,55 @@ static s64 do_count(Sentence sent, int lw, int rw,
 		return t->count;
 	}
 
-	if (rw == 1+lw) {
+	if (rw == 1+lw)
+	{
 		/* lw and rw are neighboring words */
-		/* you can't have a linkage here with cost > 0 */
-		if ((le == NULL) && (re == NULL) && (cost == 0)) {
+		/* You can't have a linkage here with cost > 0 */
+		if ((le == NULL) && (re == NULL) && (cost == 0))
+		{
 			t->count = 1;
-		} else {
+		}
+		else
+		{
 			t->count = 0;
 		}
 		return t->count;
 	}
 
-	if ((le == NULL) && (re == NULL)) {
-		if (!ctxt->islands_ok && (lw != -1)) {
-		  /* if we don't allow islands (a set of words linked together but
-			 separate from the rest of the sentence) then  the cost of skipping
-			 n words is just n */
-			if (cost == ((rw-lw-1) + ctxt->null_block-1)/ctxt->null_block) {
-				/* if null_block=4 then the cost of
-				   1,2,3,4 nulls is 1, 5,6,7,8 is 2 etc. */
+	if ((le == NULL) && (re == NULL))
+	{
+		if (!ctxt->islands_ok && (lw != -1))
+		{
+			/* If we don't allow islands (a set of words linked together
+			 * but separate from the rest of the sentence) then the cost
+			 * of skipping n words is just n */
+			if (cost == ((rw-lw-1) + ctxt->null_block-1)/ctxt->null_block)
+			{
+				/* If null_block=4 then the cost of
+				   1,2,3,4 nulls is 1; and 5,6,7,8 is 2 etc. */
 				t->count = 1;
-			} else {
+			}
+			else
+			{
 				t->count = 0;
 			}
 			return t->count;
 		}
-		if (cost == 0) {
-			/* there is no zero-cost solution in this case */
-			/* slight efficiency hack to separate this cost=0 case out */
-			/* but not necessary for correctness */
+		if (cost == 0)
+		{
+			/* There is no zero-cost solution in this case. There is
+			 * a slight efficiency hack to separate this cost=0 case
+			 * out, but not necessary for correctness */
 			t->count = 0;
-		} else {
+		}
+		else
+		{
 			total = 0;
 			w = lw+1;
-			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next) {
-				if (d->left == NULL) {
+			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next)
+			{
+				if (d->left == NULL)
+				{
 					total += do_count(sent, w, rw, d->right, NULL, cost-1);
 				}
 			}
@@ -352,43 +366,56 @@ static s64 do_count(Sentence sent, int lw, int rw,
 		return t->count;
 	}
 
-	if (le == NULL) {
+	if (le == NULL)
+	{
 		start_word = lw+1;
-	} else {
+	}
+	else
+	{
 		start_word = le->word;
 	}
 
-	if (re == NULL) {
+	if (re == NULL)
+	{
 		end_word = rw-1;
-	} else {
+	}
+	else
+	{
 		end_word = re->word;
 	}
 
 	total = 0;
 
-	for (w=start_word; w < end_word+1; w++) {
+	for (w = start_word; w < end_word+1; w++)
+	{
 		m1 = m = form_match_list(sent, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next) {
+		for (; m!=NULL; m=m->next)
+		{
 			d = m->d;
-			for (lcost = 0; lcost <= cost; lcost++) {
+			for (lcost = 0; lcost <= cost; lcost++)
+			{
 				rcost = cost-lcost;
 				/* Now lcost and rcost are the costs we're assigning
 				 * to those parts respectively */
 
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
-				Lmatch = (le != NULL) && (d->left != NULL) && do_match(sent, le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) && do_match(sent, d->right, re, w, rw);
+				Lmatch = (le != NULL) && (d->left != NULL) && 
+				         do_match(sent, le, d->left, lw, w);
+				Rmatch = (d->right != NULL) && (re != NULL) && 
+				         do_match(sent, d->right, re, w, rw);
 
 				rightcount = leftcount = 0;
-				if (Lmatch) {
+				if (Lmatch)
+				{
 					leftcount = pseudocount(sent, lw, w, le->next, d->left->next, lcost);
 					if (le->multi) leftcount += pseudocount(sent, lw, w, le, d->left->next, lcost);
 					if (d->left->multi) leftcount += pseudocount(sent, lw, w, le->next, d->left, lcost);
 					if (le->multi && d->left->multi) leftcount += pseudocount(sent, lw, w, le, d->left, lcost);
 				}
 
-				if (Rmatch) {
+				if (Rmatch)
+				{
 					rightcount = pseudocount(sent, w, rw, d->right->next, re->next, rcost);
 					if (d->right->multi) rightcount += pseudocount(sent, w,rw,d->right,re->next, rcost);
 					if (re->multi) rightcount += pseudocount(sent, w, rw, d->right->next, re, rcost);

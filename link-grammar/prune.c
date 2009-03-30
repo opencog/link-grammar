@@ -1056,7 +1056,7 @@ void expression_prune(Sentence sent)
 			{
 /* printf("before marking: "); print_expression(x->exp); printf("\n"); */
 				N_deleted += mark_dead_connectors(ct, x->exp, '-');
-/* printf("after marking marking: "); print_expression(x->exp); printf("\n"); */
+/* printf(" after marking: "); print_expression(x->exp); printf("\n"); */
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
