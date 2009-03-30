@@ -731,13 +731,73 @@ static void handle_unknown_word(Sentence sent, int i, char * s)
 		t = strchr(d->string, '.');
 		if (t != NULL)
 		{
-			sprintf(str, "%.50s[?].%.5s", s, t+1);
+			snprintf(str, MAX_WORD, "%.50s[?].%.5s", s, t+1);
 		}
 		else
 		{
-			sprintf(str, "%.50s[?]", s);
+			snprintf(str, MAX_WORD, "%.50s[?]", s);
 		}
 		d->string = string_set_add(str, sent->string_set);
+	}
+}
+
+/**
+ * If a word appears to be mis-spelled, then add alternate
+ * spellings. Maybe one of those will do ... 
+ */
+static void guess_misspelled_word(Sentence sent, int i, char * s)
+{
+	char str[MAX_WORD+1];
+	Dictionary dict = sent->dict;
+	X_node *d, *head = NULL;
+	int j, n;
+	char **alternates = NULL;
+
+	/* If the spell-checker knows about this word, and we don't ... 
+	 * Dang. We should fix it  someday. Accept it as such. */
+	int spelling_ok = spellcheck_test(dict->spell_checker, s);
+	if (spelling_ok)
+	{
+		handle_unknown_word(sent, i, s);
+		return;
+	}
+
+	/* Else, ask the spell-checker for alternate spellings
+	 * and see if these are in the dict. */
+	n = spellcheck_suggest(dict->spell_checker, &alternates, s);
+	for (j=0; j<n; j++)
+	{
+		if (boolean_dictionary_lookup(sent->dict, alternates[j]))
+		{
+			X_node *x = build_word_expressions(sent, alternates[j]);
+			head = catenate_X_nodes(x, head);
+		}
+	}
+	sent->word[i].x = head;
+	if (alternates) free(alternates);
+
+	for (d = sent->word[i].x; d != NULL; d = d->next)
+	{
+		const char * t = strchr(d->string, '.');
+		if (t != NULL)
+		{
+			size_t off = t - d->string;
+			strncpy(str, d->string, off);
+			str[off] = 0;
+			strcat(str, "[~]");
+			strcat(str, t);
+		}
+		else
+		{
+			snprintf(str, MAX_WORD, "%.50s[~]", s);
+		}
+		d->string = string_set_add(str, sent->string_set);
+	}
+
+	/* If nothing found at all... */
+	if (NULL == head)
+	{
+		handle_unknown_word(sent, i, s);
 	}
 }
 
@@ -834,44 +894,7 @@ int build_sentence_expressions(Sentence sent)
 
 		else if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-#if 0
-			handle_unknown_word(sent, i, s);
-#else
-			int spelling_ok = spellcheck_test(dict->spell_checker, s);
-			/* If the spell-checker knows this word, and we don't ... 
-			 * Hmm. Accept it as such. */
-			if (spelling_ok)
-			{
-				handle_unknown_word(sent, i, s);
-			}
-			else
-			{
-				X_node *head = NULL;
-				int j, n;
-				char **alternates = NULL;
-				/* Else, ask the spell-checker for alternate spellings
-				 * and see if these are in the dict. */
-				n = spellcheck_suggest(dict->spell_checker, &alternates, s);
-				for (j=0; j<n; j++)
-				{
-					if (boolean_dictionary_lookup(sent->dict, alternates[j]))
-					{
-						X_node *x = build_word_expressions(sent, alternates[j]);
-						head = catenate_X_nodes(x, head);
-					}
-				}
-
-				if (alternates) free(alternates);
-				if (NULL == head)
-				{
-					handle_unknown_word(sent, i, s);
-				}
-				else
-				{
-					sent->word[i].x = head;
-				}
-			}
-#endif
+			guess_misspelled_word(sent, i, s);
 		}
 		else 
 		{
