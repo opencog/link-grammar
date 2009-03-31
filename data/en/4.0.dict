@@ -2309,15 +2309,29 @@ or ({@E-} & A+);
 electing.g appointing.g: (<vc-elect> & <verb-ge>) or <verb-ge-d>;
 electing.v appointing.v: <verb-pg> & <vc-elect>;
 
+% vc-name is a ditransitive extension of vc-trans (with an extra TI+)
 <vc-name>: ((O+ & {{[[@MV+]]} & (O*n+ or TI+)}) or (B- & {O+ or TI+}) or 
 ([[@MV+ & O*n+]])) & {@MV+};
-name.v: <verb-pl,i> & <vc-name>;
-names.v: <verb-s> & <vc-elect>;
-named.v: (<verb-sp,pp> & <vc-name>) or (<verb-pv-b> & ({B- or
+name.v designate.v label.v: <verb-pl,i> & <vc-name>;
+names.v designates.v labels.v: <verb-s> & <vc-elect>;
+named.v designated.v labelled.v labeled.v: 
+(<verb-sp,pp> & <vc-name>) or (<verb-pv-b> & ({B- or
 (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or 
-({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>);
-naming.g: (<vc-name> & <verb-ge>) or <verb-ge-d>;
-naming.v: <verb-pg> & <vc-name>;
+({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
+({@E-} & A+);
+naming.g designating.g labelling.g labeling.g: (<vc-name> & <verb-ge>) or <verb-ge-d>;
+naming.v designating.v labelling.v labeling.v: <verb-pg> & <vc-name>;
+
+% optionally ditransitive, modeled on "name.v"
+tag.v: <verb-pl,i> & (<vc-name> or <vc-intrans>);
+tags.v: <verb-s> & (<vc-name> or <vc-intrans>);
+tagged: (<verb-sp,pp> & (<vc-name> or <vc-intrans>)) or ((<verb-pv-b> & ({B- or
+(O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or <verb-pv>) or 
+({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
+({@E-} & ({CH-} & CH+));
+tagging.g: ((<vc-name> or <vc-intrans>) & <verb-ge>) or ({@E-} & ({CH-} & CH+)) or
+<verb-ge-d>;
+tagging.v: <verb-pg> & (<vc-name> or <vc-intrans>);
 
 <vc-program>: {((O+ or B-) & {@MV+} & {TOo+}) or @MV+ or ([[@MV+ & O*n+ & {@MV+}]])};
 program.v oblige.v: <verb-pl,i> & <vc-program>;
