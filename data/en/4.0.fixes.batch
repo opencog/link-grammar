@@ -555,6 +555,16 @@ It will take several foot-pounds of strain before it cracks.
 That will require 10 square yards of paint.
 That engine generates hundreds of foot-pounds of torque.
 
+% post-fixed number handling with NM link
+It started on day one.
+The experiments ended on day 22.
+
+% Numerical ranges
+It takes 2 to 3 times the effort.
+It takes 2 - 3 times the effort.
+It takes 2 -- 3 times the effort.
+It takes 2 --- 3 times the effort.
+
 % broken lexical chunk recognition:
 % ... not only, ... but also ...
 The deal includes not only junk, but also crap.

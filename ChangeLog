@@ -6,6 +6,8 @@ Version 4.4.4 (??? 2009) includes the following changes:
    This provides support for many scientific/biomedical terms.
  * Add spell-guessing for unknown words. 
  * Fix UTF8 support to be correctly thread-safe.
+ * BioLG: fix post-numbering: 'it started on day one'
+ * BioLG: add number ranges: 'it takes 2 to 3 times the effort'
 
 Version 4.4.3 (11 March 2009) includes the following changes:
  * Look at JAVA_HOME to guess location of jni.h

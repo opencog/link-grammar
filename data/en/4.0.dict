@@ -73,12 +73,12 @@
 % These are the words that can occur at the start of the sentence, and be
 % capitalized ...
 CAPITALIZED-WORDS NAME <entity-singular>:
-({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+{NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
 
 % Plural of words that can appear at the start of a sentence.
 PL-CAPITALIZED-WORDS: 
-{G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
+{NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+); 
 
 % capitalized words ending in s
@@ -150,9 +150,10 @@ entityID60: <marker-entity> or <entity-id>;
 
 
 % Same pattern used for words.n.2.s
-<generic-plural-id>:  ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+<generic-plural-id>:  
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or (Rw+ & Bpm+)))
-or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
+or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
 genericID10 genericID11 genericID12 genericID13 genericID14 genericID15 genericID16 genericID17 genericID18 genericID19
@@ -163,7 +164,9 @@ genericID50 genericID51 genericID52 genericID53 genericID54 genericID55 genericI
 genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
 
 %from words.y year numbers
-<date-id>: NN+ or NIa- or AN+ or 
+<date-id>:
+NM- or ({EN-} & (NIfn+ or NItn-)) or 
+NN+ or AN+ or 
 ((Xd- & TY- & Xc+) or TY-) 
 or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
 ([[Dmcn+]] or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
@@ -193,37 +196,41 @@ Jr.y Sr.y: {Xi+} & {Xd- & Xc+} & G- & {[MG+]} & (({DG- or
 [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or
 (YS+ or YP+))) or AN+ or G+);
 
-HYPHENATED-WORDS: ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or 
-(Pa- & {@MV+}))) or [[AN+]]
-or [[({@AN-} & {@A-} & (({D-} & <noun-sub-x> & (<noun-main-x> or (Rw+ & B*m+))) or
+HYPHENATED-WORDS.a:
+({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
+
+HYPHENATED-WORDS.n: 
+{NM+} & [[({@AN-} & {@A-} & (({D-} & <noun-sub-x> & (<noun-main-x> or (Rw+ & B*m+))) or
  U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
-/en/words/words.n.1: (({@AN-} & {@A- & {[[@AN-]]}} & 
+% activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
+/en/words/words.n.1: 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & 
 ((Ds- & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+)))
 or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+);
-% activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 
 % plural nouns ending in "s"
-/en/words/words.n.2.s: <generic-plural-id>;
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
+/en/words/words.n.2.s: <generic-plural-id>;
+PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 /en/words/words.n.2.x:  % plural nouns not ending in "s"
- ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or (Rw+ & Bpm+)))
-or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
+or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
 /en/words/words.n.3:  % nouns that are mass only
-({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
 (<noun-main-m> or (Rw+ & Bsm+))) or
-(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
+(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+);
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
 /en/words/words.n.4:  % nouns that can be mass or countable
-({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or (Rw+ & Bsm+))) or
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
 
 % US state names and abbreviations
@@ -268,7 +275,7 @@ majority.n minority.n number.n bunch.n batch.n bulk.n handful.n group.n:
 (<noun-main-x> or B*x+))
 or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
-flight.i age.i: {@AN-} & NIa+ & <noun-main-s>;
+flight.i age.i: {@AN-} & NM+ & <noun-main-s>;
 
 kind_of: ({{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
 (<noun-main-s> or (Rw+ & Bsm+))) or Us-)) or EA+ or EE+;
@@ -504,7 +511,7 @@ all_that: EA+ or EE+ or (<noun-sub-s>
  & <noun-main-s>);
 all_this: <noun-sub-s> & <noun-main-s>;
 all_those all_these: <noun-sub-p> & <noun-main-p>;
-one: NN+ or ({EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
+one: NM- or NN+ or ({EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
 (YS+ or (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))))))) or NSn+ or DTi+;
 ones: {@A- & {[[@AN-]]}} & {Dmc-} & 
 (YP+ or (<noun-sub-p> & <noun-main-p>));
@@ -567,6 +574,31 @@ enough: ({OF+} & <noun-main-s>) or Dm+ or EF- or MVa-;
 not_enough: ({OF+} & <noun-main-s>) or Dm+;
 
 % NUMERICAL EXPRESSIONS
+% Numeric ranges, e.g. "15 to 20". The "to" (or hyphen) acts as a
+% number in a range, and the requirements should match NUMBER.
+% The NIf connectors (second subscript position is "n" for number
+% and "u" for unit) allow "15 to 20", "15 to 20 kDa" and 
+% "15 kDa to 20 kDa", but not "15 kDa to 20".
+% Allowing EC+ for "two to threefold more abundant". This allows also the
+% nonsense "two to three more abundant", but this is likely harmless.
+-.ru --.ru ---.ru to.ru: 
+((NIfn- & NItn+) & {NIb-} & (NM- or EC+ or
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
+({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
+((NIfu- & NItu+) & {NIb-} & 
+(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+)) or
+((NIfp- & NItp+) & {NIb-} & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
+or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
+
+and.ru:
+((NIfn- & NItn+) & NId- & (NM- or 
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
+({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
+((NIfu- & NItu+) & NId- & 
+(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+));
+
+% For number, cost is added to the <noun-main-*> roles to prioritize
+% postmodifier and numeric determiner roles.
 
 two three four five six seven eight nine ten eleven twelve thirteen
 fourteen fifteen sixteen seventeen eighteen nineteen 
@@ -587,32 +619,46 @@ eighty-five eighty-six eighty-seven eighty-eight eighty-nine
 ninety ninety-one ninety-two ninety-three ninety-four 
 ninety-five ninety-six ninety-seven ninety-eight ninety-nine 
 several: 
-NN+ or NW+ or NIa- or
-({EN- or NIc-} & (ND+ or NIn+ or ({{@L+} & DD-} & 
-(Dmc+ or (<noun-sub-p> & <noun-main-p>)))));
+NM- or ({EN-} & (NIfn+ or NItn-)) or 
+(NN+ or NW+ or ({EN- or NIc-} & (ND+ or NIn+ or
+({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))));
 
-NUMBERS: % the generic "number" category
-NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))))
-or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]];
+% the generic "number" category
+NUMBERS: 
+NM- or ({EN-} & (NIfn+ or NItn-)) or 
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))));
+
+% allowing postposed roman numerals only for now.
+ROMAN-NUMERAL-WORDS.rn: NM-;
+
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
 % and so is a superset of the generic numbers disjuncts
+% The following should match NUMBERS with the addition of "or TM-".
 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 
 29 30 31:
-NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
-(Dmcn+ or (<noun-sub-p> 
- & <noun-main-p>))))) or TM- or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]];
+NM- or ({EN-} & (NIfn+ or NItn-)) or
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))
+or TM-);
 
-1: NN+ or NIa- or [[NF+]] or ({EN- or NIc-} & (ND+ or NIm+ or OD- or ({{@L+} & DD-} 
-& (D**n+ or (<noun-sub-x> & <noun-main-x>))))) or TM-
-or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]] or NSn+;
 
-0: NN+ or NIa- or [[NF+]] or
-({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
-(Dmcn+ or [[Ds+]] or (<noun-sub-p> & <noun-main-p>))))) 
-or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]] or NSn+;
+1: 
+NM- or ({EN-} & (NIfn+ or NItn-)) or 
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIm+ or OD- or 
+({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>]))))) 
+or TM- or NSn+);
+%%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
+
+0:
+NM- or ({EN-} & (NIfn+ or NItn-)) or 
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
+or NSn+);
+%%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
+
 
 fiscal.i: TY+ & <noun-main-s>;
 
@@ -621,6 +667,10 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
 /en/words/words.y: <date-id>;
+
+% TODO: no numers or related expressions below this point take the new NM
+% connector, although e.g. "point 1/2" would appear reasonable. Go through
+% these and add NM- analogously to other numbers as applicable.
 
 1900s 1910s 1920s 1930s 1940s 1950s 1960s 1970s 1980s 1990s
 1900's 1910's 1920's 1930's 1940's 1950's 1960's 1970's 1980's 1990's
@@ -639,10 +689,10 @@ quarter-trillion dozen half-dozen
 bajillion bazillion gadzillion gagillion gajillion gazillion godzillion
 jillion jizillion kabillion kajillion katrillion killion umptillion
 zillion:
-NN- & (NNy+ or NIa- or
+NN- & (NNy+ or 
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
-half_a_dozen half_a_million: NIa- or
+half_a_dozen half_a_million:
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))));
 
@@ -660,12 +710,12 @@ zillions_of:
 ND+ or NIn+;
 
 1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8 ½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞:
-({NNx-} & NNy+) or NIa- or NF+ or NIe+ 
+({NNx-} & NNy+) or NF+ or NIe+ 
 or ({NNx-} & {EN- or NIc-} & (ND+ or NIn+ or OD- or ({DD-} & 
 ([[Ds+]] or Dmcn+ or (<noun-sub-x> & <noun-main-x>)))));
 
 and_a_half: (NW- or NSn-) & 
-(NNy+ or NIa- or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} & 
+(NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} & 
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
 third fourth fifth sixth seventh eighth ninth tenth eleventh
@@ -2637,7 +2687,7 @@ within:                        ({JQ+} & J+ & <prep-main-a>)           or (MVp- &
 during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- & B-);
 from:
 ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & <prep-main-a>)
-or (MVp- & B-) or MVp- or (NIa+ & NIb+ & NIc+);
+or (MVp- & B-) or MVp- or (NIb+ & NIc+);
 at toward towards without upon:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 except but.misc-ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
@@ -2645,7 +2695,7 @@ except but.misc-ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or
 against beyond beside: 
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 between:
-({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or (NIa+ & NId+ & NIc+);
+({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or (NId+ & NIc+);
 with: ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
 or (J+ & {EBm+} & ([P+] or [[O*n+]]) & ([({Xc+ & {Xd-}} & CO+)] or 
 MVp- or (Xd- & Xc+ & (MX*x- or MVx-)))) 
@@ -2690,7 +2740,7 @@ or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or [[({Xc+ & {Xd-}} & CO+)]]))
 or ((OF- or Mp-) & B-) or (MG- & JG+) or (NF- & NJ+) or (Mp- & TI+); 
 of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
-to: ({@E-} & {NT-} & I+ & (TO- or [{Xd- & Xc+} & MVi-] 
+to.r: ({@E-} & {NT-} & I+ & (TO- or [{Xd- & Xc+} & MVi-] 
 or [[R-]] or (SFsx+ & <S-CLAUSE>) or [Xc+ & {Xd-} & CO+]))
 or I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) 
 or [MVp- & B-] or [MVp-] or NIb-;
@@ -2878,22 +2928,22 @@ every_time: {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or
 
 week.n moment.n hour.n minute.n year.n instant.n period.n month.n 
 second.n decade.n century.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} &
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} &
 {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
 (<noun-main-s> or (Rw+ & Bsm+))) or 
- Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+ Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+);
 
 day.n night.n:
-({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} &
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} &
 {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
 (<noun-main-m> or (Rw+ & Bsm+))) or 
- Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
+ Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+);
 
 days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
 nights.n seconds.n decades.n centuries.n:
-({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {WN+ or TH+ or Ce+ or 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {WN+ or TH+ or Ce+ or 
 (R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+))) 
-or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
+or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]]);
 
 % This need to be re-examined ... 
 <units-funky-plural>: 
@@ -2930,6 +2980,7 @@ tenfold a_hundredfold a_thousandfold: MVp- or A+;
 % [[MVp-]] or Ya+ or OD-);
 
 <units-suffix>:
+((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or 
 ((ND- or NS- or NIe-) & AN+) or 
 ((ND- or NS- or NIe-) & (Op- or Jp-) & {Mp+}) or 
 ((ND- or NS-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
@@ -3043,13 +3094,13 @@ once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or
 (Xd- & Xc+ & E+))) or E+ or EB-;
 or: NO+;
 but.misc-cnj: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
-and and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
+and.r and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)] or NId-;
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
 neither: Ds+ or E+ or ({OF+} & <noun-main-x>);
 nor: ((Xd- & CC-) or Wd-) & Qd+;
-for.c: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
-yet.c: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
+for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
+yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or 
 ({Xd- & Xc+} & E+);
 when: ((WN- or BIh-) & Cs+) or ((PF+ or TOn+ or Cs+) & (BIq- or 
@@ -3108,7 +3159,7 @@ or (Ya- & (Pa- or Ma- or <adj-op>));
 old.a: ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or 
 AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>)) 
 or (Ytm- & (Pa- or Ma- or <adj-op>));
-aged.i: NIa+ & (Pa- or Max- or <adj-op>);
+aged.i: NM+ & (Pa- or Max- or <adj-op>);
 
 easy.a hard.a simple.a difficult.a fun.a expensive.a: {EA- or EF+}
 & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+} &
@@ -3659,7 +3710,7 @@ or Xe-));
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c 
 £ ₤ € ₳ ฿ ¢ ₵ ₡ ₢ ₫ ₣ ₴ ₭ ℳ  ₥  ₦ ₧ ₰ ₨  ₪ ৳ ₮ ₩ ¥ 호점
 † †† ‡ § ¶ © № "#":
-NIax+ & (AN+ or NIay- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
+NMx+ & (AN+ or NMy- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
 (OD- or ({DD-} & {[[@M+]]} & (<noun-main-p> or [[(Ss+ & <CLAUSE>) or 
 SIs-]])))));
 
@@ -3725,7 +3776,7 @@ rbracketID50 rbracketID51 rbracketID52 rbracketID53 rbracketID54
 rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59 
 ")" "]": {@Xca-} & Xc-;
 
-– -- -: [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
+– --.r -.r: [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
 ({@Xca-} & (({EBx+} & Xd+) or Xc-));
 
 foo: F+;
@@ -3748,8 +3799,8 @@ ED-WORDS.v: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
 
 S-WORDS.v: <verb-s> & <vc-tr,intr>;
 
-S-WORDS.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
+S-WORDS.n: {NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+(<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
 
 LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
 {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
@@ -3762,14 +3813,14 @@ LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 MC-NOUN-WORDS.n: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
- ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 
 C-NOUN-WORDS.n: % guessed nouns that are countable (-on, -or)
- ({@AN-} & {@A- & {[[@AN-]]}} & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & 
 ((Ds- & <noun-sub-s> & (<noun-main-s> or Bsm+))
-or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 
 ADJ-WORDS.a: % guessed adjectives (-ous, -ar, -ic)
  {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
@@ -3782,28 +3833,28 @@ FOLD-WORDS:
 % latin (postposed) adjectives considered as singular nouns 
 % in the current version
 LATIN-ADJ-WORDS.a:
-({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 
 % latin (postposed) adjectives or latin plural noun always considered
 % as nouns in the current version
 LATIN-ADJ-P-NOUN-WORDS:
-({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or Bpm+))
-or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or AN+; 
+or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or AN+); 
 
 % latin (postposed) adjectives or latin singular noun always
 % considered as nouns in the current version  
 LATIN-ADJ-S-NOUN-WORDS:
-({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
-UNKNOWN-WORD.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+UNKNOWN-WORD.n: {NM+} & ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+))
 or (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or U-));
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or Wi-) & {B- or O+}
@@ -3821,7 +3872,7 @@ ANDABLE-CONNECTORS:   % these are the connectors that can be combined by
       
 A+ & A- & AF- & AN+ & B+ & B- & BI- & C+ & C- & CC+ & CO+ & CO- & D+ &
 D- & DD- & DT- & E+ & E- & EA- & G+ & GN+ & GN- & I+ & I- & IN- & J+ &
-J- & JT- & K- & L- & M+ & M- & MV- & MV+ & MX- & ND+ & NIn+ & O+ & O- & ON- &
+J- & JT- & K- & L- & M+ & M- & MV- & MV+ & MX- & ND+ & NM+ & NIn+ & O+ & O- & ON- &
 QI+ & QI- & P- & PP- & Q- & R+ & RS- & S+ & S- & SI- & TA- & TD+ & TD-
 & TH+ & TH- & TI- & TM- & TO- & TS- & U- & Wd- & Wi- & Wq- & Ws- & Xc+
 & Xd- & YP+ & YS+ & Z-;
