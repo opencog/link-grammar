@@ -236,6 +236,7 @@ or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 /en/words/words.n.4: <noun-mass-count>;
 /en/words/words.n.4.biolg: <noun-mass-count>;
+GREEK-LETTER-AND-NUMBER pH.u x.n: <noun-mass-count>;
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
@@ -636,6 +637,9 @@ NM- or ({EN-} & (NIfn+ or NItn-)) or
 % allowing postposed roman numerals only for now.
 ROMAN-NUMERAL-WORDS.rn: NM-;
 
+% nouns that look like roman numerals. Limited requirements to avoid
+% excessive ambiguity.
+ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
@@ -3061,6 +3065,7 @@ tenfold a_hundredfold a_thousandfold: MVp- or A+;
 % Abbreviations of scientific units that follow numbers
 % km².u mi².u in².u ft².u m².u cm².u 
 /en/words/units.1: <units-suffix>;
+UNITS: <units-suffix>;
 
 % Units abbreviations that can be followed by a period:
 % ft. tbsp. yds.
@@ -3080,6 +3085,15 @@ tenfold a_hundredfold a_thousandfold: MVp- or A+;
 ((NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or 
 ((NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
 
+% number-and-unit combinations, such as "50-kDa". The linking requirements
+% should largely follow those for units except not allowing a numeric
+% determiner.
+% TODO: the <noun-main-x> linking requirements are likely rarely used, and
+% it might be beneficial to cost them. If this is done, make the same
+% modification for unit ranges also.
+NUMBER-AND-UNIT:
+((({D*u-} or {Dmc-}) & <noun-sub-x> &
+(<noun-main-x> or Bsm+)) or (({D*u-} or {Dmc-}) & Us- & {Mp+})) or A+;
 
 %QUESTION WORDS & CONJUNCTIONS
 

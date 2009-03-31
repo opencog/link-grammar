@@ -1,6 +1,6 @@
  %***************************************************************************%
  %                                                                           %
- %       Copyright (C) 2005  Sampo Pyysalo                                   %
+ %  Copyright (C) 2005, 2006 Sampo Pyysalo, Sophie Aubin                     %
  %  See file "LICENSE" for information about commercial use of this system   %
  %                                                                           %
  %***************************************************************************%
@@ -14,11 +14,26 @@
 % and only the first match will be used.
 
 % Numbers.
-% Uhh, we need to add utf8 U+00A0 "no-break space"
+% XXX, we need to add utf8 U+00A0 "no-break space"
 % The ":" is included here so we allow "10:30" to be a number
-NUMBERS: /^[0-9:.,-]+$/
-% NUMBERS: /^[0-9.-]+\([0-9.-]+\)$/  % PubMed ASCII for exponent, e.g. "10(3)"
-% NUMBERS: /^[0-9.,-]*\+\/-[0-9,.-]+$/ % with "+/-", e.g. "9+/-6.5"
+% This one matches the original LG rule.
+% NUMBERS: /^[0-9][0-9:.,]+$/
+% This allows more, e.g. "-5" and "5-10" and "9+/-6.5"
+NUMBERS: /^[0-9:.,-]*[0-9]([0-9:.,-]|\+\/-[0-9:.,-])*$/
+% "10(3)" exponent (used in PubMed)
+NUMBERS: /^[0-9:.,-]*[0-9][0-9:.,-]*\([0-9:.,-]*[0-9][0-9:.,-]*\)$/
+
+% Roman numerals
+% The first expr has the potential(?) problem that it matches an empty
+% string, this should be fixed.
+ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
+% ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD){1}(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
+% ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL){1}(IX|V?I{0,3}|IV)$/
+% ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV){1}$/
+
+% Greek letters with numbers
+GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
+PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/
 
 % Some "safe" derived units. Simple units are in dictionary.
 % The idea here is for the regex to match something that is almost
@@ -29,18 +44,38 @@ NUMBERS: /^[0-9:.,-]+$/
 % TODO: add more. 
 % Some (real) misses from these: 
 % micrograms.kg-1.h-1 microM-1 J/cm2 %/day mN/m cm/yr
+% m/s days/week ml/s degrees/sec cm/sec cm/s mm/s N/mm (is that a unit?)
+% cuts/minute clicks/s beats/minute x/week W/kg/W %/patient-year
+% microIU/ml degrees/s counts/mm2 cells/mm3 tumors/mouse
+% mm/sec ml/hr mJ/cm(2) m2/g amol/mm2 animals/group
+% h-1 min-1 day-1 cm-1 mg-1 kg-1 mg.m-2.min-1 ms.cm-1 g-1
+% sec-1 ms-1 ml.min.-1kg-1 ml.hr-1
+% also, both kilometer and kilometers seem to be absent(!)
+% remember "mm"!
 
-%UNITS: /^([npmk]|nano|pico|milli|micro|kilo)?(g|grams?)\//   % grams/anything
-%UNITS: /^([fnmp]|femto|nano|micro|pico|mu)?mol(es)?\//       % mol/anything
-%UNITS: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|kg|mol|min|day|h)$/  % common endings
+UNITS: /^([npmk]|nano|pico|milli|micro|kilo)?(g|grams?)\//   % grams/anything
+UNITS: /^([fnmp]|femto|nano|micro|pico|mu)?mol(es)?\//       % mol/anything
+UNITS: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|kg|mol|min|day|h)$/  % common endings
 % common endings, except in the style "mg.kg-1" instead of "mg/kg".
-%UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|kg|mol|min|day|h)(-1|\(-1\))$/
+UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|kg|mol|min|day|h)(-1|\(-1\))$/
 
 % combinations of numbers and units, e.g. "50-kDa", "1-2h"
 % TODO: Clean up and check that these are up-to-date wrt the 
 % dictionary-recognized units; this is quite a mess currently.
-%NUMBER-AND-UNIT: /^[0-9.,-]+(s|min|hour|h|hr|day|week|wk|month|year|yr|kDa|kilodalton|base|kilobase|%base-pair|kD|kd|bp|nt|kb|mm|mg|cm|nm|g|Hz|ms|kg|ml|mL|km|microm|\%)$/
+% TODO: Extend the "number" part of the regex to allow anything
+% that the NUMBER regex matches.
+% One problem here is a failure to split up the expression ... 
+% e.g. "2hr" becomes 2 - ND - hr with the ND link. But 2-hr is treated
+% as a single word ('I is a 2-hr wait')
+NUMBER-AND-UNIT: /^[0-9.,-]+(msec|s|min|hour|h|hr|day|week|wk|month|year|yr|kDa|kilodalton|base|kilobase|base-pair|kD|kd|kDa|bp|nt|kb|mm|mg|cm|nm|g|Hz|ms|kg|ml|mL|km|microm|\%)$/
 
+% fold-words. Matches NUMBER-fold, where NUMBER can be either numeric
+% or a spelled-out number, and the hyphen is optional. Note that for
+% spelled-out numbers, anything is allowed between the "initial" number
+% and "fold" to catch e.g. "two-to-three fold" ("fourteen" etc. are absent
+% as the prefix "four" is sufficient to match).
+FOLD-WORDS: /^[0-9.,:-]*[0-9]([0-9.,:-]|\([0-9.,:-]*[0-9][0-9.,:-]*\)|\+\/-)*-?fold$/
+FOLD-WORDS: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fifteen|twenty|thirty|fifty|hundred|thousand|million).*fold$/
 
 % Plural proper nouns.
 PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
@@ -97,9 +132,6 @@ ADJ-WORDS: /..ic$/
 ADJ-WORDS: /..al$/
 ADJ-WORDS: /..ive$/
 ADJ-WORDS: /..ble$/
-
-% 10-fold, 4.5-fold, five-fold
-FOLD-WORDS: /..fold$/
 
 % latin (postposed) adjectives
 % influenzae, tarentolae

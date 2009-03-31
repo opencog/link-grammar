@@ -12,6 +12,8 @@ Version 4.5.0 (??? 2009) includes the following changes:
  * BioLG: initiate, attach, localize etc are optionally transitive.
  * BioLG: allow fork, branch, splice, export, etc to take particles.
  * BioLG: extended use of greek letters in biomedical text.
+ * BioLG: support parsing of Roman numerals.
+ * BioLG: support greek-letter-number combinations.
 
 Version 4.4.3 (11 March 2009) includes the following changes:
  * Look at JAVA_HOME to guess location of jni.h
