@@ -3703,24 +3703,39 @@ independently:
 
 shortly: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or Qe+ or Ca+);
-immediately stat.e: ({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}} & CO+);
+immediately stat.e: ({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}} & CO+) or EB-;
 soon: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or EB- or Qe+ or Ca+)) or ({EA- or EF+} & (Pa- or AF+));
 
-certainly possibly probably:	
-{EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-);
+certainly possibly probably importantly remarkably interestingly:	
+{EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or 
+({Xc+ & {Xd-}} & EB-));
 
 /en/words/words.adv.2: % ordinary clausal adverbs
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
 % absurdly actually additionally admittedly allegedly alternatively 
+
+% These are taken from words.adv.2 and allowed EB- when separated by
+% commas.
+however.e consequently.e moreover.e potentially.e conversely.e
+finally.e actually.e:
+E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or  ({Xc+ & {Xd-}} & EBm-);
+
+% TODO: "similarly" and "differently" get very different linking requirements.
+% see if these should be made the same.
+similarly.e:
+({MVp+} & {Xd- & Xc+} & (E+ or MVa-)) or ({MVp+} & {Xc+ & {Xd-}} & CO+) or 
+ ({Xc+ & {Xd-}} & EBm-);
+
 
 not_suprisingly:
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
 though.e: (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+);
 still.e presumably undoubtedly evidently apparently usually typically perhaps:
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
-in_fact of_course in_effect for_example for_instance: 
-E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
+in_fact of_course in_effect for_example for_instance e.g. i.e. : 
+E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or 
+(EB- & {Xc+}) or ({Xd-} & CC- & Wd+);
 
 %ADVERBS USABLE POST_VERBALLY OR AS OPENERS
 someday sometime thereafter anyhow anyway overall.e
@@ -3751,9 +3766,10 @@ seldom rarely.e: {EE-} & (E+ or EB-);
 just.e: E+ or EB- or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+;
 
 maybe: CO+;
-meantime.e furthermore secondly thirdly
+meantime.e secondly thirdly
 in_brief in_short in_sum in_essence: 
 ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+); 
+furthermore: ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+) or EB-;
 mainly primarily: 
 E+ or ({Xc+ & {Xd-}} & CO+) or EB- or (MVl- & (MVa+ or MVp+ or MVs+));
 
@@ -3769,7 +3785,10 @@ too: {ECa-} & (EA+ or EE+ or ({Xd- & Xc+} & MVa-) or (Xd- & Xc+ & E+));
 so: (EAxk+ & {HA+}) or EExk+ or 
 ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+)) 
 or (Wq- & (PF+ or CQ+));
-sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-); 
+% original
+% sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-); 
+% modified
+sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} &MVa-) or E+); 
 so_that: Cs+ & {Xd- & Xc+} & MVs-;
 
 please.w: Wi- & I+;
@@ -4007,9 +4026,6 @@ disincline.v:
 % ??? should "although" (listed above) be listed here instead?
 in_as_much_as whilst whereas whereof wherein:
  Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
-
-e.g. i.e.:
- E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
 
 endeavor.v:
  <verb-pl,i> & <vc-consent>;
