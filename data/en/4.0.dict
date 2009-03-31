@@ -738,6 +738,21 @@ TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
 last.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
+%EQUATIONS ETC.
+
+% "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
+=.v <.v >.v *.v "/".v +.v -.v x.v: 
+(S- or EQ-) & O+ & 
+(EQ+ or (Xd- & (Xc+ or [[[()]]]) & MX-));
+
+% "adverb" use, e.g. "< 10" for "less than 10"
+=.e <.e >.e +.e -.e x.e: EN+;
+
+% TODO: un-parenthesized cases, e.g.
+% - preparations of 5 x 10(8) cfu/ml are made
+% - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
+% also remember "-->"
+
 %VERBS
 
 % These are the verb-form expressions for ordinary verbs.
@@ -1164,6 +1179,7 @@ exclaiming.v conjecturing.v alleging.v surmising.v opining.v insinuating.v
 supposing.v: 
 (<vc-assert> & <verb-pg,ge>) or <verb-ge-d>;
 
+%%%% XXX should be merged into vc-reply
 <vc-muse>: {@MV+} & {TH+};
 theorize.v attest.v fantasize.v muse.v speculate.v concur.v:
  <verb-pl,i> & <vc-muse>;
@@ -1491,6 +1507,8 @@ envisioning.v recounting.v signifying.v clarifying.v disclosing.v
 recollecting.v adducing.v positing.v reiterating.v inferring.v presupposing.v:
 <verb-pg> & <vc-dispute>;
 
+undisputed.v: (<verb-s-pv> & {THi+});
+
 <vc-repeat>: ({@MV+} & TH+) or ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+});
 repeat.v reflect.v provide.v counter.v signal.v: <verb-pl,i> & <vc-repeat>;
 repeats.v reflects.v provides.v counters.v signals.v: <verb-s> & <vc-repeat>;
@@ -1598,22 +1616,37 @@ figuring.v: <verb-pg> & <vc-figure>;
 <vc-predict>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
 ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs-));
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
-recall.v reveal.v state.v observe.v indicate.v: <verb-pl,i> & <vc-predict>;
+recall.v reveal.v state.v observe.v indicate.v
+analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
+hypothesize.v hypothesise.v document.v envisage.v: 
+<verb-pl,i> & <vc-predict>;
 predicts.v realizes.v discovers.v determines.v announces.v says.v 
-mentions.v admits.v recalls.v reveals.v states.v observes.v indicates.v:
+mentions.v admits.v recalls.v reveals.v states.v observes.v indicates.v
+analyses.v analyzes.v assesses.v establishes.v evaluates.v examines.v 
+questions.v tests.v hypothesizes.v hypothesises.v envisages.v documents.v:
 <verb-s> & <vc-predict>;
 predicted.v realized.v discovered.v determined.v announced.v mentioned.v
-admitted.v recalled.v revealed.v stated.v observed.v indicated.v:
+admitted.v recalled.v revealed.v stated.v observed.v indicated.v
+analysed.v analyzed.v assessed.v established.v evaluated.v examined.v 
+questioned.v tested.v
+hypothesized.v hypothesised.v well-established.v documented.v envisaged.v:
 (<verb-sp,pp> & <vc-predict>) or (<verb-s-pv> & {THi+}) or ({@E-} & A+)
 or <verb-po>;
 said.v: (<verb-sp,pp> & <vc-predict>) or ({@E-} & (Pvf- or [[Mv-]]) 
 & {@MV+} & {THi+}) or [[{@E-} & A+]] or [[<verb-po>]];
 predicting.g realizing.g discovering.g determining.g
 announcing.g saying.g mentioning.g admitting.g recalling.g revealing.g
-stating.g observing.g indicating.g: (<vc-predict> & <verb-ge>) or <verb-ge-d>;
+stating.g observing.g indicating.g
+analysing.g analyzing.g assessing.g establishing.g evaluating.g examining.g
+questioning.g testing.g hypothesizing.g hypothesising.g documenting.g envisaging.g:
+(<vc-predict> & <verb-ge>) or <verb-ge-d>;
 predicting.v realizing.v discovering.v determining.v
 announcing.v saying.v mentioning.v admitting.v recalling.v revealing.v
-stating.v observing.v indicating.v: <verb-pg> & <vc-predict>;
+stating.v observing.v indicating.v
+analysing.v analyzing.v assessing.v establishing.v evaluating.v examining.v
+questioning.v testing.v
+hypothesizing.v hypothesising.v documenting.v envisaging.v:
+<verb-pg> & <vc-predict>;
 
 <vc-guess>: ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) 
 or ({@MV+} & (TH+ or QI+ or Ce+ or RSe+ or Zs-));
