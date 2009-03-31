@@ -213,6 +213,7 @@ or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+);
 % plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
 /en/words/words.n.2.s: <generic-plural-id>;
+/en/words/words.n.2.s.biolg: <generic-plural-id>;
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 /en/words/words.n.2.x:  % plural nouns not ending in "s"
@@ -227,11 +228,14 @@ or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+);
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
-/en/words/words.n.4:  % nouns that can be mass or countable
+% nouns that can be mass or countable
+% allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
+<noun-mass-count>:  
 {NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or (Rw+ & Bsm+))) or
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
-% allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
+/en/words/words.n.4: <noun-mass-count>;
+/en/words/words.n.4.biolg: <noun-mass-count>;
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.

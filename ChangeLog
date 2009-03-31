@@ -1,4 +1,4 @@
-Version 4.4.4 (??? 2009) includes the following changes:
+Version 4.5.0 (??? 2009) includes the following changes:
  * Hack around missing SQLite3 pkgconfig on MacOS
  * Fix adverbs: 'The motor ran hot', 'the door swung wide open', etc.
  * Fix: 'at risk of breakdown', 'under threat of fire'
@@ -9,7 +9,9 @@ Version 4.4.4 (??? 2009) includes the following changes:
  * BioLG: fix post-numbering: 'it started on day one'
  * BioLG: add number ranges: 'it takes 2 to 3 times the effort'
  * BioLG: assorted adverb fixes, typical of scientific prose.
- * BioLG: initiate, attach, localize etc are not transitive.
+ * BioLG: initiate, attach, localize etc are optionally transitive.
+ * BioLG: allow fork, branch, splice, export, etc to take particles.
+ * BioLG: extended use of greek letters in biomedical text.
 
 Version 4.4.3 (11 March 2009) includes the following changes:
  * Look at JAVA_HOME to guess location of jni.h
