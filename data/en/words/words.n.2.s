@@ -1207,7 +1207,7 @@ norms.n northeasters.n northerners.n northwesters.n nosebleeds.n
 nosedives.n nosegays.n noserings.n noses.n nostrils.n nostrums.n 
 notables.n notaries.n notations.n notches.n notebooks.n notes.n 
 notices.n nougats.n nouns.n novelettes.n novelists.n novels.n 
-novelties.n novices.n nozzles.n nuances.n nubs.n nudes.n nudges.n 
+novelties.n novices.n nozzles.n nuances.n nubs.n nucleotides.n nudes.n nudges.n 
 nudists.n nuggets.n nuisances.n numberplates.n numbers.n numerals.n 
 numerators.n numskulls.n nuncios.n nunneries.n nuns.n nursemaids.n 
 nurseries.n nurses.n nurturers.n nuthouses.n nutmegs.n nutritionists.n 
