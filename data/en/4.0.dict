@@ -1709,21 +1709,21 @@ studying.v: <verb-pg> & <vc-study>;
 
 <vc-discuss>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & Pg+);
 discuss.v oppose.v enjoy.v advocate.v contemplate.v entail.v necessitate.v
-justify.v risk.v avoid.v involve.v anticipate.v favor.v: 
+justify.v risk.v avoid.v involve.v favor.v: 
 <verb-pl,i> & <vc-discuss>;
 discusses.v opposes.v enjoys.v advocates.v contemplates.v entails.v necessitates.v
-justifies.v risks.v avoids.v involves.v anticipates.v favors.v: 
+justifies.v risks.v avoids.v involves.v favors.v: 
 <verb-s> & <vc-discuss>;
 discussed.v opposed.v enjoyed.v advocated.v contemplated.v entailed.v
-necessitated.v justified.v risked.v avoided.v involved.v anticipated.v favored.v: 
+necessitated.v justified.v risked.v avoided.v involved.v favored.v: 
 (<verb-sp,pp> & <vc-discuss>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 discussing.g opposing.g enjoying.g advocating.g contemplating.g
 entailing.g necessitating.g justifying.g risking.g avoiding.g
-anticipating.g favoring.g involving.g: 
+favoring.g involving.g: 
 (<vc-discuss> & <verb-ge>) or <verb-ge-d>;
 discussing.v opposing.v enjoying.v advocating.v contemplating.v
 entailing.v necessitating.v justifying.v risking.v avoiding.v involving.v
-anticipating.v favoring.v: 
+favoring.v: 
 <verb-pg> & <vc-discuss>;
 
 <vc-finish>: ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & Pg+);
@@ -2518,12 +2518,12 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 
 <vc-suggest>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & 
 (Pg+ or TH+ or Ce+ or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
-suggest.v recommend.v: <verb-pl,i> & <vc-suggest>;
-suggests.v recommends.v: <verb-s> & <vc-suggest>;
+suggest.v anticipate.v recommend.v: <verb-pl,i> & <vc-suggest>;
+suggests.v anticipates.v recommends.v: <verb-s> & <vc-suggest>;
 suggested.v recommended.v: (<verb-sp,pp> & <vc-suggest>) or 
 (<verb-s-pv> & {THi+ or TSi+}) or ({@E-} & A+) or <verb-po>;
-suggesting.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>; 
-suggesting.v recommending.v: <verb-pg> & <vc-suggest>;
+suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>; 
+suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 
 <vc-deny>: (((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+}) or [[@MV+ & O*n+]]) 
 & {@MV+}) or ({@MV+} & (Pg+ or TH+ or Ce+ or RSe+));
