@@ -64,6 +64,14 @@ LY-WORDS:         /..ly$/
 
 % Extension by LIPN 11/10/2005
 % nouns -- typically seen in (bio-)chemistry texts
+% synthetase, kinase
+% 5-(hydroxymethyl)-2’-deoxyuridine
+% hydroxyethyl, hydroxymethyl
+% septation, reguion
+% isomaltotetraose, isomaltotriose
+% glycosylphosphatidylinositol
+% iodide, oligodeoxynucleotide
+% chronicity, hypochromicity
 MC-NOUN-WORDS: /..ase$/
 MC-NOUN-WORDS: /..ine?$/
 MC-NOUN-WORDS: /..yl$/
@@ -73,9 +81,16 @@ MC-NOUN-WORDS: /..ol$/
 MC-NOUN-WORDS: /..ide$/
 MC-NOUN-WORDS: /..ity$/
 
+% replicon, intron
 C-NOUN-WORDS: /..o[rn]$/
 
 % adjectives
+% exogenous, heterologous
+% intermolecular, intramolecular
+% glycolytic, ribonucleic, uronic
+% ribosomal, ribsosomal
+% nonpermissive, thermosensitive
+% inducible, metastable
 ADJ-WORDS: /..ous$/
 ADJ-WORDS: /..ar$/
 ADJ-WORDS: /..ic$/
@@ -83,12 +98,18 @@ ADJ-WORDS: /..al$/
 ADJ-WORDS: /..ive$/
 ADJ-WORDS: /..ble$/
 
+% 10-fold, 4.5-fold, five-fold
 FOLD-WORDS: /..fold$/
 
 % latin (postposed) adjectives
+% influenzae, tarentolae
+% pentosaceus, luteus, carnosus
 LATIN-ADJ-WORDS: /..ae$/
 LATIN-ADJ-WORDS: /..us$/ % must appear after -ous in this file
+
 % latin (postposed) adjectives  or latin plural noun
+% brevis, israelensis
+% japonicum, tabacum, xylinum
 LATIN-ADJ-P-NOUN-WORDS: /..is?$/
 LATIN-ADJ-S-NOUN-WORDS: /..um$/
 
