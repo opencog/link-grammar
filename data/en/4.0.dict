@@ -2450,7 +2450,7 @@ makes.v: <verb-s> & <vc-make>;
 made.v: (<verb-sp,pp> & <vc-make>) or (<verb-s-pv-b> & 
 (({@MV+} & Pa+) or ({K+} & {@MV+}))) or ({({@MV+} & Pa+) or K+} & 
 <verb-po>);
-made_of made_up_of: (<verb-pv-b> & (B- or O+) & {@MV+}) or (O+ & <verb-po>);
+built_of built_up_of composed_of constructed_of formed_of made_of made_up_of: (<verb-pv-b> & (B- or O+) & {@MV+}) or (O+ & <verb-po>);
 making.g: (<vc-make> & <verb-ge>) or <verb-ge-d>;
 making.v: <verb-pg> & <vc-make>;
 
@@ -2863,7 +2863,21 @@ in_phase neck_and_neck under_contract: <common-prep>;
 
 /en/words/words-medical.prep.1: <common-prep>;
 
-indoors outdoors upstream downstream underwater.r:
+% 5' 3' are DNA ends
+upstream downstream 5' 3':
+({CH-} & CH+) or
+NIfp+ or NItp- or
+({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} & 
+(({Xc+ & Xd-} & Ma-) or (Wq- & PF+) or MVp-
+or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-)))); 
+
+%upstream downstream 3' 5': 
+%A+ or 
+%((EZ- or Y-) & (MVp+ or OF+) & (MV- or MV+)) or 
+%(EI- or EZ- or Y- & Ma- & (MVp+ or OF+)) or 
+%(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
+
+indoors outdoors underwater.r:
 MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-); 
 everywhere anywhere: {EL+} & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or 
 ({Xd- & Xc+} & MVs-))) or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
@@ -3025,6 +3039,7 @@ dollars.i cents.i:  NIn- & (EC+ or Yd+ or OD-);
 one_cent a_cent: {NJ-} & (EC+ or Yd+ or OD-);
 share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
 dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
+
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: MVp- or A+;
 
@@ -3156,7 +3171,7 @@ nor: ((Xd- & CC-) or Wd-) & Qd+;
 for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or 
-({Xd- & Xc+} & E+);
+({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
 when: ((WN- or BIh-) & Cs+) or ((PF+ or TOn+ or Cs+) & (BIq- or 
 QI- or (SFsx+ & <S-CLAUSE>))) or (Wq- & (Q+ or PF+)) or 
 ((Cs+ or Mp+ or Mgp+ or Mv+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) 
@@ -3407,7 +3422,26 @@ as.p: ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
 (AZ- & Pa+) or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 as_possible: MVz-;
 as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
-as_realized as_proposed as_intended as_supposed: MVz- or 
+as_realized as_proposed as_intended as_supposed
+as_hypothesized as_hypothesised as_discussed as_established
+as_compared as_determined as_measured as_assessed as_demonstrated
+as_evidenced as_indicated as_revealed as_judged as_detected as_opposed
+as_observed as_defined as_reflected as_evaluated as_suggested
+as_monitored as_described as_confirmed as_assayed as_estimated
+as_analyzed as_identified as_deduced as_documented as_related
+as_studied as_inferred as_exemplified as_used as_expressed
+as_visualized as_tested as_manifested as_illustrated as_applied
+as_mediated as_characterized as_affected as_examined as_ascertained
+as_quantified as_influenced as_represented as_marked as_induced
+as_concluded as_calculated as_verified as_required as_recognized
+as_probed as_presented as_obtained as_needed as_indexed as_derived
+as_based as_analysed as_supported as_restricted as_recorded
+as_recommended as_quantitated as_produced as_postulated as_noted
+as_caused as_summarized as_prepared as_outlined as_occurred
+as_modified as_localized as_involved as_implied as_gauged as_exhibited
+as_encountered as_displayed as_contained as_catalyzed as_advocated
+as_achieved:
+MVz- or 
 (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-));
 
 % MODIFIED 'THAN' so that it links to the clause following it
@@ -3425,8 +3459,8 @@ much:
 (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-));
 slightly somewhat: EC+ or EA+ or MVa- or Em+;
 far.c infinitely: EC+;
-significantly substantially: {EE- or EF+} & 
-(EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & CO+));
+significantly substantially: ({EE- or EF+} & 
+(EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & CO+))) or ({EE-} & EB-);
 
 % comparative adjectives
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a 
@@ -3472,7 +3506,7 @@ than_expected than_imagined than_proposed than_suspected than_realized
 than_intended than_supposed than_reported than_ever than_usual: MVt-;
 	
 more_than no_more_than fewer_than less_than as_many_as an_estimated 
-an_additional up_to as_much_as no_fewer_than no_less_than: EN+;
+an_additional up_to as_much_as no_fewer_than no_less_than greater_than: EN+;
 at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
 
 % This is not quite right, since there may be other words in between 
@@ -3544,17 +3578,25 @@ amazingly strangely incredibly:
 ({EE-} & EA+) or EE+ or ({Xd- & Xc+} & Em+) or ({Xc+ & {Xd-}} & CO+) or EBm- or 
 (Xd- & Xc+ & MVa-);
 rather: EA+ or EE+ or Vw- or ({Xc+ & {Xd-}} & CO+);
-particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
-notably: EB- or EA+ or EE+;
+particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+)) or
+({Xc+ & {Xd-}} & CO+);
+notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
 almost nearly: EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-;
 just_about: Em+ or EN+ or EZ+ or EA+;
-entirely reasonably absolutely altogether highly equally fairly totally
+entirely reasonably absolutely highly fairly totally
 completely terribly:
 EA+ or EE+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+)); 
+
+% allowing as opener also
+altogether equally:
+EA+ or EE+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+)) or
+({Xc+ & {Xd-}} & CO+);
+
 really: EA+ or EE+ or Em+ or EBm-;
 surprisingly: EA+ or EE+ or ({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & E+) or
 (Xd- & Xc+ & MVa-); 
-especially: EA+ or EE+ or EB- or Em+ or (MVl- & (MVp+ or MVa+ or MVs+));
+especially: EA+ or EE+ or EB- or Em+ or (MVl- & (MVp+ or MVa+ or MVs+)) or
+ ({Xc+ & {Xd-}} & CO+);
 virtually: EA+ or EE+ or EN+ or EZ+ or Em+;
 wholly fully critically greatly grossly duly unduly: EA+ or
 ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
@@ -3598,18 +3640,19 @@ finely specially literally heavily alternately severely dearly
 voluntarily dramatically flatly purposely jointly narrowly 
 universally thickly widely: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or 
 Qe+ or Ca+ or [[EA+]]);
-respectively: ({Xd- & Xc+} & MVa-) or ({Xd- & Xc+} & E+);
+respectively: ({Xd- & Xc+} & MVa-) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
 long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or OT- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;                
 exactly: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EZ+;              
 well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+])) or 
 [{EA- or EF+} & (Pa- or AF+)] or Yd+;
-roughly approximately: ({EE- or EF+} & (EN+ or EZ+ or ({Xd- & Xc+} & MVa-)
+roughly approximately: EA+ or ({EE- or EF+} & (EN+ or EZ+ or ({Xd- & Xc+} & MVa-)
  or E+));
-together: ({Xd- & Xc+} & MVa-) or E+ or K- or [Mp-];
+together: ({Xd- & Xc+} & MVa-) or E+ or K- or [Mp-] or ({Xc+ & {Xd-}} & CO+);
 definitely: {EE-} & (E+ or EB- or (Xd- & Xc+ & MVa-));
 by_far: EB- or E+ or MVa-;
+hereby thereby reputedly: E+ or ({Xd- & Xc+} & EB-) or ({Xc+ & {Xd-}} & CO+);
 
 %ADVERBS USABLE POST-VERBALLY, PRE-VERBALLY, OR AS OPENERS
 initially already somehow again
@@ -3648,6 +3691,15 @@ occasionally.e often.e specifically.e generally.e originally.e:
 
 /en/words/words.adv.1: <ordinary-adv>;
 /en/words/words-medical.adv.1: <ordinary-adv>;
+
+differently:
+{EE- or EF+} & (({MVp+} & {Xd- & Xc+} & MVa-) or Em+ or 
+({MVp+} & {Xc+ & {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
+
+independently:
+{EE- or EF+} & (({(MVp+ or OF+)} & {Xd- & Xc+} & MVa-) or Em+ or 
+({(MVp+ or OF+)} & {Xc+ & {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
+
 
 shortly: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or Qe+ or Ca+);
@@ -3688,7 +3740,7 @@ left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or
 short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
 
 %ADVERBS USABLE ONLY PRE-VERBALLY (OR PRE-/OPENER)
-hereby thereby newly reputedly: E+;                
+newly: E+;                
 rightly: {EE-} & E+;
 necessarily no_longer: E+ or EBm-; 
 ever: E+ or EBm- or EC+ or MVa-;
