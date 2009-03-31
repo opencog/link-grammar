@@ -2101,8 +2101,8 @@ dub.v entitle.v fine.v:
 owes.v delivers.v accords.v awards.v terms.v grants.v begrudges.v assigns.v renames.v
 repays.v dubs.v entitles.v fines.v: 
  <verb-s> & <vc-owe>;
-owed.v delivered.v accorded.v awarded.v termed.v
-granted.v begrudged.v assigned.v renamed.v repaid.v dubbed.v entitled.v fined.v: 
+owed.v delivered.v accorded.v awarded.v 
+granted.v begrudged.v assigned.v repaid.v fined.v: 
 (<verb-sp,pp> & <vc-owe>) or (<verb-pv-b> &
 {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or 
 ({O+ or [[@MV+ & O*n+]]} & <verb-po>);
@@ -2112,6 +2112,13 @@ begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v:
 owing.g delivering.g according.g awarding.g terming.g granting.g begrudging.g
 assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g: 
 (<vc-owe> & <verb-ge>) or <verb-ge-d>;
+
+% extended linking requirements based on the above
+termed.v  dubbed.v entitled.v  renamed.v:
+(<verb-sp,pp> & <vc-owe>) or (<verb-pv-b> &
+{O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or 
+({O+ or [[@MV+ & O*n+]]} & <verb-po>) or
+({@E-} & A+);
 
 % Giving -- 'he sang me a song.' 'He poured me a glass.' etc.
 % bug maybe 'poured' is more like 'wrote' ? investigate ... 
