@@ -1073,7 +1073,7 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 <verb-pl,i> & <vc-kick>;
 /en/words/words.v.8.2:
 <verb-s> & <vc-kick>;
-bit.v threw.v stole.v drank.v shook.v wore.v blew.v tore.v: 
+bit.v threw.v stole.v drank.v wore.v blew.v tore.v: 
 <verb-sp> & <vc-kick>;
 bitten.v thrown.v stolen.v shaken.v worn.v blown.v torn.v:
 (<verb-pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
