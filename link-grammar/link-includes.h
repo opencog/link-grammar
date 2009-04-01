@@ -100,6 +100,10 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_islands_ok(Parse_Options opts);
 link_public_api(void)
+     parse_options_set_spell_guess(Parse_Options opts, int spell_guess);
+link_public_api(int)
+     parse_options_get_spell_guess(Parse_Options opts);
+link_public_api(void)
      parse_options_set_short_length(Parse_Options opts, int short_length);
 link_public_api(int)
      parse_options_get_short_length(Parse_Options opts);

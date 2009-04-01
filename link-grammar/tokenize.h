@@ -11,5 +11,5 @@
 /*                                                                       */
 /*************************************************************************/
 int separate_sentence(const char * s, Sentence sent);
-int build_sentence_expressions(Sentence sent);
+int build_sentence_expressions(Sentence sent, Parse_Options opts);
 int sentence_in_dictionary(Sentence sent);

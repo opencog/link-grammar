@@ -829,7 +829,7 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
  * Else if w' is in dict, use disjuncts of w',
  * else leave the disjuncts alone.
  */
-int build_sentence_expressions(Sentence sent)
+int build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	int i, first_word;  /* the index of the first word after the wall */
 	char *s, temp_word[MAX_WORD+1];
@@ -906,7 +906,14 @@ int build_sentence_expressions(Sentence sent)
 
 		else if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			guess_misspelled_word(sent, i, s);
+			if (opts->use_spell_guess)
+			{
+				guess_misspelled_word(sent, i, s);
+			}
+			else
+			{
+				handle_unknown_word(sent, i, s);
+			}
 		}
 		else 
 		{

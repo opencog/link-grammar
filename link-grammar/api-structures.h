@@ -65,17 +65,18 @@ struct Parse_Options_s
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
 	int null_block;        /* consecutive blocks of this many words are
-			    considered as one null link  (default=1) */
+	                          considered as one null link  (default=1) */
 	int islands_ok;        /* If TRUE, then linkages with islands
-			    (separate component of the link graph)
-			    will be generated (default=FALSE) */
+	                          (separate component of the link graph)
+	                          will be generated (default=FALSE) */
 	int twopass_length;    /* min length for two-pass post processing */
 	int max_sentence_length;
 	int short_length;      /* Links that are limited in length can be
 	                        * no longer than this.  Default = 6 */
 	int all_short;         /* If true, there can be no connectors that are exempt */
+	int use_spell_guess;   /* Perform spell-guessing of unknown words. */ 
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
-	Resources resources;   /* For deciding when to "abort" the parsing */
+	Resources resources;   /* For deciding when to abort the parsing */
 
 	/* Flags governing the command-line client; not used by parser */
 	int display_short;

@@ -79,6 +79,7 @@ Parse_Options parse_options_create(void)
 	po->max_null_count = 0;
 	po->null_block = 1;
 	po->islands_ok = FALSE;
+	po->use_spell_guess = TRUE;
 	po->cost_model.compare_fn = &VDAL_compare_parse;
 	po->cost_model.type = VDAL;
 	po->short_length = 6;
@@ -192,6 +193,14 @@ void parse_options_set_islands_ok(Parse_Options opts, int dummy) {
 
 int parse_options_get_islands_ok(Parse_Options opts) {
 	return opts->islands_ok;
+}
+
+void parse_options_set_spell_guess(Parse_Options opts, int dummy) {
+	opts->use_spell_guess = dummy;
+}
+
+int parse_options_get_spell_guess(Parse_Options opts) {
+	return opts->use_spell_guess;
 }
 
 void parse_options_set_short_length(Parse_Options opts, int short_length) {
@@ -1124,7 +1133,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	/* Tokenize, look up each word in the dictionary, collect up all
 	 * plausible disjunct expressions for each word. */
-	if (!build_sentence_expressions(sent)) {
+	if (!build_sentence_expressions(sent, opts)) {
 		sent->num_valid_linkages = 0;
 		return 0;
 	}
