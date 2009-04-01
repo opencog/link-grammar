@@ -1030,11 +1030,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 		}
 	}
 
-	if (!build_sentence_expressions(sent)) {
-		sentence_delete(sent);
-		return NULL;
-	}
-
 	return sent;
 }
 
@@ -1127,6 +1122,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	verbosity = opts->verbosity;
 
+	/* Tokenize, look up each word in the dictionary, collect up all
+	 * plausible disjunct expressions for each word. */
+	if (!build_sentence_expressions(sent)) {
+		sent->num_valid_linkages = 0;
+		return 0;
+	}
+
+	/* Initialize/free any leftover garbage */
 	free_sentence_disjuncts(sent);
 	resources_reset_space(opts->resources);
 
@@ -1145,7 +1148,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	sat_parse(sent, opts);
 #else
 
-	/* build lists of disjuncts */
+	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 
 	init_fast_matcher(sent);
