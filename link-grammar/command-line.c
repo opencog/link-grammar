@@ -23,6 +23,7 @@ static struct
 	int linkage_limit;
 	int null_block;
 	int islands_ok;
+	int spell_guess;
 	int short_length;
 	int batch_mode;
 	int panic_mode;
@@ -70,6 +71,7 @@ static Switch default_switches[] =
    {"postscript", 1, "Generate postscript output",      &local.display_postscript},
    {"senses",     1, "Showing of word senses",          &local.display_senses},
    {"short",      0, "Max length of short links",       &local.short_length},
+   {"spell",      1, "Spell-guesser for unkown words",  &local.spell_guess},
    {"timeout",    0, "Abort parsing after this many seconds",   &local.timeout},
    {"union",      1, "Showing of 'union' linkage",      &local.display_union},
    {"verbosity",  0, "Level of detail in output",       &local.verbosity},
@@ -324,6 +326,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.linkage_limit = parse_options_get_linkage_limit(opts);
 	local.null_block = parse_options_get_null_block(opts);
 	local.islands_ok = parse_options_get_islands_ok(opts);
+	local.spell_guess = parse_options_get_spell_guess(opts);
 	local.short_length = parse_options_get_short_length(opts);
 	local.cost_model = parse_options_get_cost_model_type(opts);
 	local.echo_on = parse_options_get_echo_on(opts);
@@ -352,6 +355,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_linkage_limit(opts, local.linkage_limit);
 	parse_options_set_null_block(opts, local.null_block);
 	parse_options_set_islands_ok(opts, local.islands_ok);
+	parse_options_set_spell_guess(opts, local.spell_guess);
 	parse_options_set_short_length(opts, local.short_length);
 	parse_options_set_echo_on(opts, local.echo_on);
 	parse_options_set_cost_model_type(opts, local.cost_model);

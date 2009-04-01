@@ -644,9 +644,10 @@ Who invented sliced bread; when did they do it?
 *John saw a dog yesterday which was a Yorkshire terrier.
 
 % Automatic possesive guessing broken when entity is also a verb:
-% "to marry" is a verb, this breaks identification of "Marry" as entity:
+% "to run" is a verb, this breaks identification of "Run" as entity:
 Flumblqwerty's shoes are red.
-Marry's shoes are red.
+Run's shoes are red.
+Ran's shoes are red.
 
 % Sentence containing UTF8 chars that can lead to i/o or 
 % word-boundary problems
