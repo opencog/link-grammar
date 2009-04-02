@@ -87,6 +87,10 @@ PL-CAPITALIZED-WORDS:
 ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
 
+<given-names>:
+({G-} & {[MG+]} & (({DG- or [[GN-]]} & 
+(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
+
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
 <entity-entire>:
@@ -117,12 +121,13 @@ locationID40 locationID41 locationID42 locationID43 locationID44 locationID45 lo
 locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 locationID56 locationID57 locationID58 locationID59
 locationID60: <marker-entity> or <entity-entire>;
 
-% words that are also proper names
+% Words that are also given names
+% Cannot take A or D links.
 % Art Bell Bill Bob Buck Bud  
 /en/words/entities.given-female.sing
 /en/words/entities.given-male.sing
 /en/words/entities.given-bisex.sing:
-<marker-entity> or <entity-singular>;
+<marker-entity> or <given-names>;
 
 /en/words/entities.organizations.sing:
 <marker-entity> or <entity-singular>;
