@@ -19,7 +19,7 @@
 ; ----------------------------------------------------------------------------
 
 
-; the following links start a domain. Each must be given a name in the
+; The following links start a domain. Each must be given a name in the
 ; table below (STARTING_LINK_TYPE_TABLE)
   
 DOMAIN_STARTER_LINKS: 
@@ -30,7 +30,7 @@ DOMAIN_STARTER_LINKS:
 
 
 ; ----------------------------------------------------------------------
-; the following links start a urfl domain.  They are also included in the 
+; The following links start a urfl domain.  They are also included in the 
 ; domain, as opposed to regular starter links (above), which are not. A
 ; urfl domain includes links accessible from the root word, tracing to
 ; the right (as well as everything accessible from the left end of the 
@@ -41,7 +41,7 @@ URFL_DOMAIN_STARTER_LINKS:  TOo   I#j  Pa##j   CP
 
 
 ; ----------------------------------------------------------------------
-; the following start a urfl_only domain. These include _only_ links :
+; The following start a urfl_only domain. These include _only_ links :
 ; reachable from the root word, tracing to the right. They aren't
 ; included in the domain
 
@@ -50,7 +50,7 @@ URFL_ONLY_DOMAIN_STARTER_LINKS:  SFsx   Ss#g   COp
 
 
 ; ----------------------------------------------------------------------
-; links which start a domain and are also part of the domain. This must be 
+; Links which start a domain and are also part of the domain. This must be 
 ; a sublist of the domain_starter_list 
 
 DOMAIN_CONTAINS_LINKS: 
@@ -60,7 +60,7 @@ DOMAIN_CONTAINS_LINKS:
 
 
 ; ----------------------------------------------------------------------
-; these links are not put in the word/link graph. They also cannot be the 
+; These links are not put in the word/link graph. They also cannot be the 
 ; starter links for a domain. (These links may also only be used in cycles.)
 
 IGNORE_THESE_LINKS: Xca
@@ -68,24 +68,27 @@ IGNORE_THESE_LINKS: Xca
 
 
 ; ----------------------------------------------------------------------
-; these links may only be used in cycles.
+; These links may only be used in cycles.
 
 MUST_FORM_A_CYCLE_LINKS:  R#*   TOt   EXx   HA    SFsic   Jr  JQ  Xca
 
 
 ; ----------------------------------------------------------------------
-; these links are not traced further if they point back before the root word 
+; These links are not traced further if they point back before the root word.
+; The creation of Rw necessitated making B#m a restricted link, to
+; prevent the (e) domain, started by Ce, from extending around through
+; the Rw link.
 
 RESTRICTED_LINKS: 
    B#*  D##w   B#w   B#d   AFh  MVt   Xx   HL   SFsic  AFd   Bc   CX  EAh  
    H   HA   PFc   B#j   Wd   PF   Z  B#m
-;The creation of Rw, necessitated making B#m a restricted link to prevent the (e) domain, started by Ce, from extending around through the Rw link.
+
 
 
 ; ----------------------------------------------------------------------
 ; ---------------------- LINK TYPE TABLE-------------------------------
 ; ----------------------------------------------------------------------
-; the following table associates a domain type with each possible
+; The following table associates a domain type with each possible
 ; starting link. It contains pairs: the first of each pair is a link
 ; type, and the second is the domain to which that link type belongs.
 
@@ -145,11 +148,11 @@ STARTING_LINK_TYPE_TABLE:
 ; ----------------------------------------------------------------------
 ; ----------------- RULES ----------------------------------------------
 ; ----------------------------------------------------------------------
-; explanation of syntax: as usual, each stanza begins with a label 
+; Explanation of syntax: as usual, each stanza begins with a label 
 ; terminated by a colon. The interpretation of the rule depends on 
 ; the label, as specified in each stanza.
 
-; the following rule asserts that the linkage must *still* be connected 
+; The following rule asserts that the linkage must *still* be connected 
 ; when the specified set(s) of links are removed from the linkage.
 
 FORM_A_CYCLE_RULES:
@@ -251,12 +254,14 @@ CONTAINS_ONE_RULES:
 					    , "Bad use of adjective64"    ,
  MX#a  ,  TO   TOf   TH   MVp   TOt   QI   OF  MVt   MVz   MVh   Ytm   Ya   
 			                    , "Bad use of adjective65"    ,
-;-- ?? there's no Ixd, Oxn, ZZ connectors at this time!
+;-- ?? there's no Ixd, Oxn or ZZ connectors at this time!
 ; Ixd   ,  ZZ                                , "Can't use 'do' with that verb" ,
 ; Oxn   ,  ZZ                                , "Bad use of pronoun66" ,
  MVh   ,  EExk   EAxk   D##k                , "Incorrect use of that67"    
+
+; The Rw link necessitated commenting out 68, because we had to make B#m 
+; a restricted link(see above)
 ; B#m  ,   D##w   H   HA                     , "Bad use of gerund68"   
-; The Rw link necessitated commenting out 68.  Because we had to make B#m a restricted link(see above)
 
 CONTAINS_NONE_RULES:
  S     ,  Spxi                  	    , "Bad n-v agreement69" ,
@@ -273,7 +278,8 @@ CONTAINS_NONE_RULES:
  Mr    ,  B#*				    , "Bad use of 'whose'77"
 
 
-; the following rule asserts that all specified domains must have the
+; ----------------------------------------------------------------------
+; The following rule asserts that all specified domains must have the
 ; property that all of the words that touch a link in the domain are
 ; not to the left of the root word of the domain. These rules are
 ; different from the above in that the first field is a *domain name*,
