@@ -85,7 +85,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		{
 			if (i > MAX_REGEX_NAME_LENGTH-1)
 			{
-				prt_error("Error: Regex name too long on line %d", line);
+				prt_error("Error: Regex name too long on line %d\n", line);
 				return 0;
 			}
 			name[i++] = c;
@@ -102,7 +102,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		}
 		if (c != ':')
 		{
-			prt_error("Error: Regex missing colon on line %d", line);
+			prt_error("Error: Regex missing colon on line %d\n", line);
 			goto failure;
 		}
 
@@ -125,7 +125,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		{
 			if (i > MAX_REGEX_LENGTH-1)
 			{
-				prt_error("Error: Regex too long on line %d", line);
+				prt_error("Error: Regex too long on line %d\n", line);
 				goto failure;
 			}
 			prev = c;
@@ -138,7 +138,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 		/* Expect termination by a slash. */
 		if (c != '/')
 		{
-			prt_error("Error: Regex missing trailing slash on line %d", line);
+			prt_error("Error: Regex missing trailing slash on line %d\n", line);
 			goto failure;
 		}
 
