@@ -355,6 +355,7 @@ TODO -- Working Notes:
       where type-L means either a right-going or left-going link.
 
      See http://goertzel.org/ProwlGrammar.pdf for details.
+     See also: http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
 
   "to be fishing": Link grammar offers four parses of "I was fishing for
      evidence", two of which are given low scores, and two are given
@@ -404,10 +405,21 @@ TODO -- Working Notes:
     "... from [xxx] on to [yyy]"
 
     More complicated collocations with holes include 
-    "First.. next...", and "if ... then ..."
+    "First.. next..."
     "If ... then ..."
+
+    'Then' is optional, for example:
+    "If it is raining, stay inside!"
+
     "if ... only ..." "If there were only more like you!"
     "... not only, ... but also ..."
+
+    "Either ... or ..."
+    "Both ... and  ..."  "Both June and Tom are coming"
+    "ought ... if ..." "That ought to be the case, if John is not lying"
+
+    "Someone ... who ..."
+    "Someone is outside who wants to see you"
 
     The above are not currently supported. An example that is supported
     is the "non-referential it", e.g.
@@ -417,3 +429,6 @@ TODO -- Working Notes:
     The above is supported by means of special disjuncts for 'it' and 
     'that', which must occur in the same post-processing domain.
 
+    See also:
+    http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm#relative-clause
+    http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm#extraposition

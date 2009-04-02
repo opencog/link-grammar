@@ -1,5 +1,5 @@
 !verbosity=1
-%!echo
+!echo
 !limit=1000
 !batch
 !short=20
