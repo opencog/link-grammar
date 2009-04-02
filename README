@@ -326,24 +326,16 @@ TODO -- Working Notes:
       -- Should provide a query that returns compile-time consts,
          e.g. the max number of characters in a word, or max words
          in a sentence
-      -- Should remove compile-time constants.
+      -- Should remove compile-time constants, e.g. max words, max
+         length etc.
       -- Split out parse-options, so that the command-line client
          options are not in the parse-options struct.
-
-   Spell checker:
-      Add API to call into a spell-checker, if the parse of a sentence
-      fails. 
 
    Quotations: Currently, tokenize.c ignores all ASCII double-quotes 
       (grep for "quote_found" in the source). However, it does not do this
       for the various "curly" UTF8 quotes, such as ‘these’ and “these”.
       This results is some ugly parsing for sentences containing such 
       quotes. (Note that these are in 4.0.affix).
-
-   tokenize.c: build_sentence_expressions() contains some
-      English-language-specific morphology guessing.  This should be
-      refactored out, as it doesn't really apply to non-English
-      languages.
 
    no-links-cross: Link Grammar uses a constraint that all linakges must
       be planar graphs. While this is mostly correct, it would probably
@@ -390,9 +382,12 @@ TODO -- Working Notes:
      simplify (at the cost of inflating the size of the dictionary).
 
   "holes" in collocations:
-     The link-grammar does not support circumpositions (or even more 
-     complicated multi-word structures), when such structures have 
-     "holes" in the middle. For example, the adposition:
+     The link-grammar provides a mechanism to support circumpositions
+     (or even more complicated multi-word structures) by means of the
+     post-processing rules. However, post-processing rules for many
+     common forms have not yet been written. The general problem is
+     of supporting structures that have "holes" in the middle. For
+     example, the adposition:
 
         ... from [xxx] on.
 
@@ -414,4 +409,11 @@ TODO -- Working Notes:
     "if ... only ..." "If there were only more like you!"
     "... not only, ... but also ..."
 
+    The above are not currently supported. An example that is supported
+    is the "non-referential it", e.g.
+    "It ... that ..."
+    "It seemed likely that John would go"
+
+    The above is supported by means of special disjuncts for 'it' and 
+    'that', which must occur in the same post-processing domain.
 
