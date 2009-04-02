@@ -1033,7 +1033,7 @@ split.v spread.v beat.v fit.v shut.v cast.v: ((<verb-pl,i> or <verb-sp,pp>) &
 ate.v broke.v flew.v drove.v woke.v ran.v rode.v rang.v hid.v froze.v sprang.v: 
 <verb-sp> & <vc-fill>;
 eaten.v broken.v flown.v driven.v woken.v beaten.v ridden.v rung.v hidden.v stricken.v
-frozen.v drawn.v sprung.v: (<verb-pp> & <vc-fill>) or 
+frozen.v sprung.v: (<verb-pp> & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
@@ -2133,19 +2133,19 @@ termed.v  dubbed.v entitled.v  renamed.v:
 ({O+ or [[@MV+ & O*n+]]} & <verb-po>) or
 ({@E-} & A+);
 
-% Giving -- 'he sang me a song.' 'He poured me a glass.' etc.
-% bug maybe 'poured' is more like 'wrote' ? investigate ... 
+% 'Give' requires both direct *and* indirect object: X gave Y a Z.
+% 'sent', 'poured': optional indirect object.
 <vc-give>: ((B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & [O*n+]) or K+}) or 
 (K+ & ({[[@MV+]]} & O*n+)) or ([[@MV+ & O*n+]])) & {@MV+};
 
-give.v send.v buy.v bring.v draw.v lend.v issue.v hand.v pour.v sing.v
+give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v 
 telegraph.v wire.v: 
 <verb-pl,i> & <vc-give>;
 
-gives.v sends.v buys.v brings.v draws.v lends.v
-issues.v hands.v pours.v sings.v telegraphs.v wires.v: <verb-s> & <vc-give>;
+gives.v sends.v buys.v brings.v lends.v
+issues.v hands.v pours.v telegraphs.v wires.v: <verb-s> & <vc-give>;
 
-sent.v bought.v brought.v drew.v lent.v handed.v poured.v sang.v sung.v
+sent.v bought.v brought.v lent.v handed.v poured.v
 telegraphed.v wired.v:
 (<verb-sp,pp> & <vc-give>)
 or (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) 
@@ -2156,11 +2156,11 @@ or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>) or ({@E-} & A+);
 gave.v: <verb-sp> & <vc-give>;
 given.v: (<verb-pp> & <vc-give>) or (<verb-pv-b> & {O+ or B- or K+
 or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
-giving.g sending.g buying.g bringing.g drawing.g
-lending.g issuing.g handing.g pouring.g singing.g telegraphing.g wiring.g: 
+giving.g sending.g buying.g bringing.g 
+lending.g issuing.g handing.g pouring.g telegraphing.g wiring.g: 
 (<vc-give> & <verb-ge>) or <verb-ge-d>;
-giving.v sending.v buying.v bringing.v drawing.v lending.v issuing.v
-handing.v pouring.v singing.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
+giving.v sending.v buying.v bringing.v lending.v issuing.v
+handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
 
 <vc-pass>: {(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
 (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+};
@@ -2183,22 +2183,36 @@ or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or Pa+ or
 calling.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
 calling.v: <verb-pg> & <vc-call>;
 
+% Writing -- direct and indirect object are optional:
+% 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
+% 'he wrote me that S' but '*he drew me that S'
 <vc-write>: ({(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
 (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+})
 or ({@MV+} & (TH+ or Ce+));
-write.v charge.v: <verb-pl,i> & <vc-write>;
-writes.v reads.v charges.v: <verb-s> & <vc-write>;
-wrote.v: <verb-sp> & <vc-write>;
+write.v charge.v draw.v: <verb-pl,i> & <vc-write>;
+writes.v reads.v charges.v draws.v: <verb-s> & <vc-write>;
+wrote.v drew.v: <verb-sp> & <vc-write>;
 read.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-write>) or (<verb-pv-b> &
 {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or 
 [[@MV+ & O*n+]]} & <verb-po>);
 charged.v: (<verb-sp,pp> & <vc-write>) or (<verb-pv-b> & {O+ or B- or K+
 or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
-written.v: (<verb-pp> & <vc-write>) or (<verb-pv-b> & {O+ or B- or K+
+written.v drawn.v: (<verb-pp> & <vc-write>) or (<verb-pv-b> & {O+ or B- or K+
 or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>)
 or ({@E-} & A+);
-writing.g reading.g charging.g: (<vc-write> & <verb-ge>) or <verb-ge-d>;
-writing.v reading.v charging.v: <verb-pg> & <vc-write>;
+writing.g reading.g charging.g drawing.g: (<vc-write> & <verb-ge>) or <verb-ge-d>;
+writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
+
+% Singing: if there's an indirect object, then a direct object is
+% mandatory: '*she sang me' 
+<vc-sing>: ({(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
+(K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+});
+sing.v: <verb-pl,i> & <vc-sing>;
+sings.v: <verb-s> & <vc-sing>;
+sang.v: <verb-sp> & <vc-sing>;
+sung.v: (<verb-pp> or <verb-sp>) & <vc-sing> ;
+singing.g: (<vc-sing> & <verb-ge>) or <verb-ge-d>;
+singing.v: <verb-pg> & <vc-sing>;
 
 <vc-allow>: (((O+ & {[[@MV+]]} & O*n+) or ([[@MV+]] & O*n+)) & {@MV+}) or 
 ((O+ or B-) & {@MV+} & {B- or TOo+});
