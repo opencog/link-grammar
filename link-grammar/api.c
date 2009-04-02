@@ -580,11 +580,8 @@ dictionary_six(const char * lang, const char * dict_name,
 	if (regex_name != NULL)
 	{
 		int rc;
-		read_regex_file(dict, regex_name);
-		if (dict->regex_root == NULL)
-		{
-			goto failure;
-		}
+		rc = read_regex_file(dict, regex_name);
+		if (rc) goto failure;
 		rc = compile_regexs(dict);
 		if (rc) goto failure;
 	}
@@ -668,6 +665,7 @@ Dictionary dictionary_create_lang(const char * lang)
 	}
 	else
 	{
+		prt_error("Error: No language specified!\n");
 		dictionary = NULL;
 	}
 
