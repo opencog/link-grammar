@@ -20,9 +20,11 @@ WORDS=			\
 	words.adv.3	\
 	words.n.1	\
 	words.n.2.s	\
+	words.n.2.s.biolg \
 	words.n.2.x	\
 	words.n.3	\
 	words.n.4	\
+	words.n.4.biolg \
 	words.n.t	\
 	words-medical.prep.1	\
 	words.v.10.1	\
