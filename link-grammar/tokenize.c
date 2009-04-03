@@ -514,7 +514,8 @@ static int separate_word(Sentence sent,
 	 * the word in two, if possible.
 	 */
 	issued = FALSE;
-	if (FALSE == boolean_dictionary_lookup(sent->dict, word))
+	if (sent->dict->spell_checker &&
+	    (FALSE == boolean_dictionary_lookup(sent->dict, word)))
 	{
 		char **alternates = NULL;
 		char *sp = NULL;
