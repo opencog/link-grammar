@@ -284,6 +284,7 @@ static int separate_word(Sentence sent,
 	int s_strippable=0, p_strippable=0;
 	int  n_r_stripped, s_stripped;
 	int word_is_in_dict, s_ok;
+	int issued = FALSE;
 
 	int found_number = 0;
 	int n_r_stripped_save;
@@ -499,7 +500,7 @@ static int separate_word(Sentence sent,
 	
 	/* word is now what remains after all the stripping has been done */
 
-	if (n_r_stripped == MAX_STRIP)
+	if (n_r_stripped >= MAX_STRIP)
 	{
 		prt_error("Error separating sentence.\n"
 		          "\"%s\" is followed by too many punctuation marks.\n", word);
@@ -508,9 +509,48 @@ static int separate_word(Sentence sent,
 
 	if (quote_found == TRUE) sent->post_quote[sent->length]=1;
 
-	if (!issue_sentence_word(sent, word)) return FALSE;
+	/* If the word is still not being found, then it might be 
+	 * a run-on of two words. Ask the spell-checker to split
+	 * the word in two, if possible.
+	 */
+	issued = FALSE;
+	if (FALSE == boolean_dictionary_lookup(sent->dict, word))
+	{
+		char **alternates = NULL;
+		char *sp = NULL;
+		char *wp;
+		int j, n;
+		n = spellcheck_suggest(sent->dict->spell_checker, &alternates, word);
+		for (j=0; j<n; j++)
+		{
+			/* Uhh, XXX this is not utf8 safe! */
+			sp = strchr(alternates[j], ' ');
+			if (sp) break;
+		}
 
-	if(s_stripped != -1)
+		if (sp) issued = TRUE;
+
+		wp = alternates[j];
+		while (sp)
+		{
+			*sp = 0x0;
+			issue_sentence_word(sent, wp);
+			wp = sp+1;
+			sp = strchr(wp, ' ');
+			if (NULL == sp)
+			{
+				issue_sentence_word(sent, wp);
+			}
+		}
+		if (alternates) free(alternates);
+	}
+
+	if (FALSE == issued)
+	{
+		if (!issue_sentence_word(sent, word)) return FALSE;
+	}
+
+	if (s_stripped != -1)
 	{
 	  if (!issue_sentence_word(sent, suffix[s_stripped])) return FALSE;
 	}
