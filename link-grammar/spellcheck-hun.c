@@ -10,13 +10,14 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <stdio.h>
+#include "link-includes.h"
+#include "spellcheck-hun.h"
+
 #ifdef HAVE_HUNSPELL
 
 #include <hunspell.h>
-#include <stdio.h>
 #include <string.h>
-#include "link-includes.h"
-#include "spellcheck-hun.h"
 
 void * spellcheck_create(const char * lang)
 {
@@ -63,8 +64,9 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 }
 
 #else
-void * spellcheck_create(void) { return NULL; }
+void * spellcheck_create(const char * lang) { return NULL; }
 void spellcheck_destroy(void * chk) {}
 int spellcheck_test(void * chk, const char * word) { return 0; }
+int spellcheck_suggest(void * chk, char ***sug, const char * word) { return 0; }
 
 #endif /* #ifdef HAVE_HUNSPELL */
