@@ -109,6 +109,7 @@ The policeman waved me on.
 She waved me goodbye.
 She waved me good bye.
 
+% Assorted prepositional difficulties.
 A bucket of chum sat near the tackle box.
 It was a sad bit of commentary to read.
 His works disclose a mastery of composition.
@@ -579,6 +580,10 @@ It takes 2 to 3 times the effort.
 It takes 2 - 3 times the effort.
 It takes 2 -- 3 times the effort.
 It takes 2 --- 3 times the effort.
+
+% Spell checker now does a good job of splitting words.
+Marywent shoppingat thestore.
+Mary wentshopping atthe store.
 
 % broken lexical chunk recognition:
 % ... not only, ... but also ...
