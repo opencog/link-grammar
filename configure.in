@@ -316,6 +316,8 @@ $PACKAGE-$VERSION
 	prefix:                         ${prefix}
 	compiler:                       ${CC} ${CPPFLAGS} ${CFLAGS}
 	autopackage:                    ${br_cv_binreloc}
+	Posix threads:                  ${do_pth}
+	Editline command-line history:  ${edlin}
 	Java interfaces:                ${JNIfound}
 	HunSpell spell checker:         ${HunSpellFound}
 	Boolean SAT solver:             ${buildSAT}
