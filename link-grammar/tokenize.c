@@ -419,16 +419,16 @@ static int separate_word(Sentence sent,
 	s_stripped = -1;
 	strncpy(word, w, MIN(wend-w, MAX_WORD));
 	word[MIN(wend-w, MAX_WORD)] = '\0';
-	word_is_in_dict = 0;
+	word_is_in_dict = FALSE;
 
 	if (boolean_dictionary_lookup(sent->dict, word))
-		word_is_in_dict = 1;
+		word_is_in_dict = TRUE;
 	else if (is_initials_word(word))
-		word_is_in_dict = 1;
+		word_is_in_dict = TRUE;
 	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
-		word_is_in_dict = 1;
+		word_is_in_dict = TRUE;
 
-	if (0 == word_is_in_dict)
+	if (FALSE == word_is_in_dict)
 	{
 		j=0;
 		for (i=0; i <= s_strippable; i++)
@@ -462,6 +462,7 @@ static int separate_word(Sentence sent,
 					wend -= len;
 					strncpy(word, w, MIN(wend-w, MAX_WORD));
 					word[MIN(wend-w, MAX_WORD)] = '\0';
+					word_is_in_dict = TRUE;
 					break;
 				}
 
@@ -488,6 +489,7 @@ static int separate_word(Sentence sent,
 								sz = MIN(wend-w, MAX_WORD);
 								strncpy(word, w, sz);
 								word[sz] = '\0';
+								word_is_in_dict = TRUE;
 								break;
 							}
 						}
@@ -514,8 +516,7 @@ static int separate_word(Sentence sent,
 	 * the word in two, if possible.
 	 */
 	issued = FALSE;
-	if (sent->dict->spell_checker &&
-	    (FALSE == boolean_dictionary_lookup(sent->dict, word)))
+	if ((FALSE == word_is_in_dict) && sent->dict->spell_checker)
 	{
 		char **alternates = NULL;
 		char *sp = NULL;
