@@ -39,6 +39,7 @@ struct sense_s
 
 static void * db_file_open(const char * dbname, void * user_data)
 {
+	Corpus *c = (Corpus *) user_data;
 	int rc;
 	sqlite3 *dbconn;
 	rc = sqlite3_open(dbname, &dbconn);
@@ -48,6 +49,7 @@ static void * db_file_open(const char * dbname, void * user_data)
 		return NULL;
 	}
 
+	c->dbname = strdup(dbname);
 	return dbconn;
 }
 
@@ -63,10 +65,11 @@ Corpus * lg_corpus_new(void)
 	c->rank_query = NULL;
 	c->sense_query = NULL;
 	c->errmsg = NULL;
+	c->dbname = NULL;
 
 	/* dbname = "/link-grammar/data/en/sql/disjuncts.db"; */
 
-	c->dbconn = object_open("sql/disjuncts.db", db_file_open, NULL);
+	c->dbconn = object_open("sql/disjuncts.db", db_file_open, c);
 	if (NULL == c->dbconn)
 	{
 		prt_error("Warning: Can't open database: %s\n",
@@ -95,7 +98,7 @@ Corpus * lg_corpus_new(void)
 			sqlite3_errmsg(c->dbconn));
 	}
 
-	prt_error("Info: linkgrammar corpus statistics database opened\n");
+	prt_error("Info: Corpus statistics database found at %s\n", c->dbname);
 	return c;
 }
 
@@ -122,6 +125,12 @@ void lg_corpus_delete(Corpus *c)
 	{
 		sqlite3_close(c->dbconn);
 		c->dbconn = NULL;
+	}
+
+	if (c->dbname)
+	{
+		free(c->dbname);
+		c->dbname = NULL;
 	}
 	free(c);
 }
