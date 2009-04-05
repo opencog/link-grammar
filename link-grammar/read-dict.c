@@ -1013,6 +1013,8 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
  * Unfortunately, AVL tree insertion is very slowww, unusably
  * slow for creating the dictionary. The code is thus ifdef'ed out
  * but is left here for debugging and other sundry purposes.
+ * A better way to rebalance the tree is the DSW algo, implemented
+ * further below.
  */
 
 static Dict_node *rotate_right(Dict_node *root)
@@ -1033,7 +1035,7 @@ static Dict_node *rotate_left(Dict_node *root)
 	return pivot;
 }
 
-/* Return tree height. XXX this is not trail-recursive! */
+/* Return tree height. XXX this is not tail-recursive! */
 static int tree_depth (Dict_node *n)
 {
 	int l, r;
