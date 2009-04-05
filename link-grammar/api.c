@@ -586,15 +586,18 @@ dictionary_six(const char * lang, const char * dict_name,
 		if (rc) goto failure;
 	}
 
+#if USE_CORPUS
+	dict->corpus = NULL;
+	if (affix_name != NULL) /* Don't do this for the second time */
+	{
+		dict->corpus = lg_corpus_new();
+	}
+#endif
+
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
 	dict->postprocessor	  = post_process_open(pp_name);
 	dict->constituent_pp	 = post_process_open(cons_name);
-
-
-#if USE_CORPUS
-	dict->corpus = lg_corpus_new();
-#endif
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = TRUE;
