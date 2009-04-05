@@ -88,9 +88,12 @@ Corpus * lg_corpus_new(void)
 			sqlite3_errmsg(c->dbconn));
 	}
 
+	/* Results are returned in sorted order .. would it be faster
+	 * to sort locally? Don't know ... */
 	rc = sqlite3_prepare_v2(c->dbconn, 	
 		"SELECT word_sense, log_cond_probability FROM DisjunctSenses "
-		"WHERE inflected_word = ? AND disjunct = ?;",
+		"WHERE inflected_word = ? AND disjunct = ? "
+		"ORDER BY log_cond_probability DESC;",
 		-1, &c->sense_query, NULL);
 	if (rc != SQLITE_OK)
 	{
@@ -349,7 +352,8 @@ Sense * lg_corpus_linkage_senses(Linkage linkage)
 
 	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
 	 * word 0. */
-	for (w=1; w<nwords; w++)
+	// for (w=1; w<nwords; w++)
+	for (w=nwords-1; 0<w; w--)
 	{
 		/* If the word is not inflected, then sent->word[w].d is NULL */
 		if (sent->word[w].d)
