@@ -151,12 +151,12 @@ char * linkage_print_senses(Linkage linkage)
 		const char * dj = lg_sense_get_disjunct(sns);
 		const char * sense = lg_sense_get_sense(sns);
 		double score = lg_sense_get_score(sns);
-printf("ola %d %s dj=%s sense=%s score=%f\n", idx, wd, dj, sense, score);
+		append_string(s, "%d %s dj=%s sense=%s score=%f\n",
+		              idx, wd, dj, sense, score);
 		sns = lg_sense_next(sns);
 	}
 	lg_sense_delete(head);
 
-	append_string(s, " ");
 #else
 	append_string(s, "Corpus statstics is not enabled in this version\n");
 #endif

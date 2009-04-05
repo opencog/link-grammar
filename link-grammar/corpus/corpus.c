@@ -254,11 +254,6 @@ void lg_corpus_score(Sentence sent, Linkage_info *lifo)
  *
  * Given a particular disjunct for a word, look up its most
  * likely sense assignments from the database. 
- *
- * XXX this function might be removed in the future; it is 
- * conceptually cleaner to implement in a library sitting above
- * link-grammar. It does not currently provide any info that 
- * can be used to steer the link-grammar parsing process.
  */
 
 static Sense * lg_corpus_senses(Corpus *corp,
@@ -318,6 +313,16 @@ static Sense * lg_corpus_senses(Corpus *corp,
 
 /* ========================================================= */
 
+/**
+ * lg_corpus_linkage_senses -- Given a linkage, look up senses.
+ *
+ * Given a particular linakge, look up the most likely sense
+ * assignments from the database. 
+ *
+ * This function is not used to guide the parsing process; it is
+ * only an informational look-up.
+ */
+
 Sense * lg_corpus_linkage_senses(Linkage linkage)
 {
 	const char * infword;
@@ -363,6 +368,7 @@ Sense * lg_corpus_linkage_senses(Linkage linkage)
 }
 
 /* ========================================================= */
+/* Return bits and pieces of the sense assignments */
 
 Sense * lg_sense_next(Sense *sns)
 {
