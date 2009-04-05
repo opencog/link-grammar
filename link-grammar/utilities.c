@@ -536,7 +536,7 @@ char * dictionary_get_data_dir(void)
 }
 
 /**
- * dictopen() - open a dictionary
+ * object_open() -- dictopen() - open a dictionary
  *
  * This function is used to open a dictionary file or a word file,
  * or any associated data file (like a post process knowledge file).
@@ -551,9 +551,9 @@ char * dictionary_get_data_dir(void)
  * sequence of directories is specified in a dictpath string, in
  * which each directory is followed by a ":".
  */
-static void * object_open(const char *filename, 
-                          void * (*opencb)(const char *, void *),
-                          void * user_data)
+void * object_open(const char *filename, 
+                   void * (*opencb)(const char *, void *),
+                   void * user_data)
 {
 	char completename[MAX_PATH_NAME+1];
 	char fulldictpath[MAX_PATH_NAME+1];

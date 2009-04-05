@@ -218,7 +218,10 @@ size_t get_max_space_used(void);
 char * get_default_locale(void);
 char * join_path(const char * prefix, const char * suffix);
 
-FILE *dictopen(const char *filename, const char *how);
+FILE * dictopen(const char *filename, const char *how);
+void * object_open(const char *filename,
+                   void * (*opencb)(const char *, void *),
+                   void * user_data);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1
