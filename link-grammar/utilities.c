@@ -551,7 +551,9 @@ char * dictionary_get_data_dir(void)
  * sequence of directories is specified in a dictpath string, in
  * which each directory is followed by a ":".
  */
-FILE *dictopen(const char *filename, const char *how)
+static void * object_open(const char *filename, 
+                          void * (*opencb)(const char *, void *),
+                          void * user_data)
 {
 	char completename[MAX_PATH_NAME+1];
 	char fulldictpath[MAX_PATH_NAME+1];
@@ -559,7 +561,7 @@ FILE *dictopen(const char *filename, const char *how)
 	static int first_time_ever = 1;
 	char *pos, *oldpos;
 	int filenamelen, len;
-	FILE *fp;
+	void *fp;
 
 	/* Record the first path ever used, so that we can recycle it */
 	if (first_time_ever)
@@ -580,7 +582,7 @@ FILE *dictopen(const char *filename, const char *how)
 	if ((filename[0] == '/') || ((filename[1] == ':') && (filename[2] == '\\'))) 
    {
 		/* fopen returns NULL if the file does not exist. */
-		fp = fopen(filename, how);
+		fp = opencb(filename, user_data);
 		if (fp) return fp;
 	}
 
@@ -628,12 +630,24 @@ FILE *dictopen(const char *filename, const char *how)
 #ifdef _DEBUG
 		prt_error("Info: dictopen() trying %s\n", completename);
 #endif
-		if ((fp = fopen(completename, how)) != NULL) {
+		if ((fp = opencb(completename, user_data)) != NULL) {
 			return fp;
 		}
 		oldpos = pos+1;
 	}
 	return NULL;
+}
+
+static void * dict_file_open(const char * fullname, void * user_data)
+{
+	const char * how = user_data;
+	return fopen(fullname, how);
+}
+
+FILE *dictopen(const char *filename, const char *how)
+{
+	void * ud = (void *) how;
+	return object_open(filename, dict_file_open, ud);
 }
 
 /* ======================================================== */
