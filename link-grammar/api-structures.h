@@ -30,6 +30,7 @@
 #include <wchar.h>
 #include "api-types.h"
 #include "structures.h" /* for definition of Link */
+#include "corpus/corpus.h"
 #include "error.h"
 
 typedef enum
@@ -117,11 +118,14 @@ struct Dictionary_s
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker; /* spell checker handle */
+#if USE_CORPUS
+	Corpus *        corpus; /* Statistics database */
+#endif
 
 #if DONT_USE_REGEX_GUESSING
 	/* English language morphology bits
 	 * replaced by regex-based morpho guesser
-	 * Dead code, remove at liesure.
+	 * Dead code, remove at leisure.
 	 */
 	int             capitalized_word_defined;
 	int             pl_capitalized_word_defined;

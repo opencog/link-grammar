@@ -591,6 +591,11 @@ dictionary_six(const char * lang, const char * dict_name,
 	dict->postprocessor	  = post_process_open(pp_name);
 	dict->constituent_pp	 = post_process_open(cons_name);
 
+
+#if USE_CORPUS
+	dict->corpus = lg_corpus_new();
+#endif
+
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = TRUE;
 
@@ -695,6 +700,10 @@ int dictionary_delete(Dictionary dict)
 		prt_error("Info: Freeing dictionary %s\n", dict->name);
 	}
 
+#if USE_CORPUS
+	lg_corpus_delete(dict->corpus);
+#endif
+
 	if (dict->affix_table != NULL) {
 		affix_list_delete(dict->affix_table);
 		dictionary_delete(dict->affix_table);
@@ -790,7 +799,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	Linkage_info *link_info;
 	int canonical;
 #ifdef USE_CORPUS
-	Corpus * corp;
+	Corpus * corp = sent->dict->corpus;
 #endif
 
 	free_post_processing(sent);
@@ -896,10 +905,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 	}
 
-#ifdef USE_CORPUS
-	corp = lg_corpus_new();
-#endif
-
 	/* second pass: actually perform post-processing */
 	N_linkages_post_processed = 0;
 	for (in=0; (in < N_linkages_alloced) &&
@@ -931,10 +936,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 #endif
 		N_linkages_post_processed++;
 	}
-
-#ifdef USE_CORPUS
-	lg_corpus_delete(corp);
-#endif
 
 	print_time(opts, "Postprocessed all linkages");
 	qsort((void *)link_info, N_linkages_post_processed, sizeof(Linkage_info),

@@ -4,6 +4,8 @@
  * Data for corpus statistics, used to provide a parse ranking
  * to drive the SAT solver, as well as parse ranking with the
  * ordinary solver. 
+ *
+ * Copyright (c) 2008, 2009 Linas Vepstas <linasvepstas@gmail.com>
  */
 
 #ifndef _LINKGRAMMAR_CORPUS_H

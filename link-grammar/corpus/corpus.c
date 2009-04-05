@@ -4,6 +4,8 @@
  * Data for corpus statistics, used to provide a parse ranking
  * to drive the SAT solver, as well as parse ranking with the
  * ordinary solver. 
+ *
+ * Copyright (c) 2008, 2009 Linas Vepstas <linasvepstas@gmail.com>
  */
 
 #include <stdio.h>
@@ -83,6 +85,8 @@ Corpus * lg_corpus_new(void)
  */ 
 void lg_corpus_delete(Corpus *c)
 {
+	if (NULL == c) return;
+
 	if (c->rank_query)
 	{
 		sqlite3_finalize(c->rank_query);
