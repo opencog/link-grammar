@@ -798,9 +798,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	int overflowed, only_canonical_allowed;
 	Linkage_info *link_info;
 	int canonical;
-#ifdef USE_CORPUS
-	Corpus * corp = sent->dict->corpus;
-#endif
 
 	free_post_processing(sent);
 
@@ -931,9 +928,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_valid_linkages++;
 		}
 		lifo->index = indices[in];
-#ifdef USE_CORPUS
-		lg_corpus_score(corp, sent, lifo);
-#endif
+		lg_corpus_score(sent, lifo);
 		N_linkages_post_processed++;
 	}
 

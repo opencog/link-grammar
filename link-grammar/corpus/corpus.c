@@ -16,6 +16,25 @@
 #include "../api-structures.h"
 #include "../utilities.h"
 
+struct corpus_s
+{
+	char * dbname;
+	sqlite3 *dbconn;
+	sqlite3_stmt *rank_query;
+	sqlite3_stmt *sense_query;
+	char *errmsg;
+};
+
+struct sense_s
+{
+	int word;
+	const char * inflected_word;
+	const char * disjunct;
+	char * sense;
+	double score;
+	Sense *next;
+};
+
 /* ========================================================= */
 
 static void * db_file_open(const char * dbname, void * user_data)
@@ -177,64 +196,6 @@ static double get_disjunct_score(Corpus *corp,
 /* ========================================================= */
 
 /**
- * lg_corpus_senses -- Given word and disjunct, look up senses.
- *
- * Given a particular disjunct for a word, look up its most
- * likely sense assignments from the database. 
- *
- * XXX this function might be removed in the future; it is 
- * conceptually cleaner to implement in a library sitting above
- * link-grammar. It does not currently provide any info that 
- * can be used to steer the link-grammar parsing process.
- */
-void lg_corpus_senses(Corpus *corp,
-                      const char * inflected_word,
-                      const char * disjunct)
-{
-	double log_prob;
-	const unsigned char *sense;
-	int rc;
-
-	/* Look up the disjunct in the database */
-	rc = sqlite3_bind_text(corp->sense_query, 1,
-		inflected_word, -1, SQLITE_STATIC);
-	if (rc != SQLITE_OK)
-	{
-		prt_error("Error: SQLite can't bind word in sense query: rc=%d \n", rc);
-		return;
-	}
-
-	rc = sqlite3_bind_text(corp->sense_query, 2,
-		disjunct, -1, SQLITE_STATIC);
-	if (rc != SQLITE_OK)
-	{
-		prt_error("Error: SQLite can't bind disjunct in sense query: rc=%d \n", rc);
-		return;
-	}
-
-	rc = sqlite3_step(corp->sense_query);
-	if (rc != SQLITE_ROW)
-	{
-		// printf ("Word=%s dj=%s not found in sense dict\n",
-		//	inflected_word, disjunct);
-	}
-	else
-	{
-		sense = sqlite3_column_text(corp->sense_query, 0);
-		log_prob = sqlite3_column_double(corp->sense_query, 1);
-		printf ("Word=%s dj=%s sense=%s score=%f\n", 
-			inflected_word, disjunct, sense, log_prob);
-	}
-
-	/* Failure to do both a reset *and* a clear will cause subsequent
-	 * binds tp fail. */
-	sqlite3_reset(corp->sense_query);
-	sqlite3_clear_bindings(corp->sense_query);
-}
-
-/* ========================================================= */
-
-/**
  * lg_corpus_score -- compute parse-ranking score for sentence.
  *
  * Given a parsed sentence, this routine will compute a parse ranking
@@ -247,10 +208,11 @@ void lg_corpus_senses(Corpus *corp,
  * probability p(d|w) of observing disjunct 'd', given word 'w'.
  * Lower scores are better -- they indicate more likely parses.
  */
-void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
+void lg_corpus_score(Sentence sent, Linkage_info *lifo)
 {
 	const char *infword, *djstr;
 	double tot_score = 0.0f;
+	Corpus *corp = sent->dict->corpus;
 	int nwords = sent->length;
 	int w;
 
@@ -284,3 +246,165 @@ void lg_corpus_score(Corpus *corp, Sentence sent, Linkage_info *lifo)
 	tot_score /= nwords;
 	lifo->corpus_cost = tot_score;
 }
+
+/* ========================================================= */
+
+/**
+ * lg_corpus_senses -- Given word and disjunct, look up senses.
+ *
+ * Given a particular disjunct for a word, look up its most
+ * likely sense assignments from the database. 
+ *
+ * XXX this function might be removed in the future; it is 
+ * conceptually cleaner to implement in a library sitting above
+ * link-grammar. It does not currently provide any info that 
+ * can be used to steer the link-grammar parsing process.
+ */
+
+static Sense * lg_corpus_senses(Corpus *corp,
+                                const char * inflected_word,
+                                const char * disjunct)
+{
+	double log_prob;
+	const unsigned char *sense;
+	Sense *sns, *head = NULL;
+	int rc;
+
+	/* Look up the disjunct in the database */
+	rc = sqlite3_bind_text(corp->sense_query, 1,
+		inflected_word, -1, SQLITE_STATIC);
+	if (rc != SQLITE_OK)
+	{
+		prt_error("Error: SQLite can't bind word in sense query: rc=%d \n", rc);
+		return NULL;
+	}
+
+	rc = sqlite3_bind_text(corp->sense_query, 2,
+		disjunct, -1, SQLITE_STATIC);
+	if (rc != SQLITE_OK)
+	{
+		prt_error("Error: SQLite can't bind disjunct in sense query: rc=%d \n", rc);
+		return NULL;
+	}
+
+	rc = sqlite3_step(corp->sense_query);
+	while (SQLITE_ROW == rc)
+	{
+		sense = sqlite3_column_text(corp->sense_query, 0);
+		log_prob = sqlite3_column_double(corp->sense_query, 1);
+		// printf ("Word=%s dj=%s sense=%s score=%f\n", 
+		// 	inflected_word, disjunct, sense, log_prob);
+
+		sns = (Sense *) malloc(sizeof(Sense));
+		sns->next = head;
+		head = sns;
+
+		sns->inflected_word = inflected_word;
+		sns->disjunct = disjunct;
+		sns->sense = strdup(sense);
+		sns->score = log_prob;
+
+		/* Get the next row, if any */
+		rc = sqlite3_step(corp->sense_query);
+	}
+
+	/* Failure to do both a reset *and* a clear will cause subsequent
+	 * binds tp fail. */
+	sqlite3_reset(corp->sense_query);
+	sqlite3_clear_bindings(corp->sense_query);
+
+	return head;
+}
+
+/* ========================================================= */
+
+Sense * lg_corpus_linkage_senses(Linkage linkage)
+{
+	const char * infword;
+	Sentence sent = linkage->sent;
+	Dictionary dict = sent->dict; 
+	Corpus *corp = dict->corpus;
+	int nwords = sent->length;
+	Linkage_info *lifo = linkage->info;
+	int w;
+	Sense *head = NULL;
+	Sense *sns, *first, *last;
+
+	/* Decrement nwords, so as to ignore the RIGHT-WALL */
+	nwords --;
+
+	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
+	 * word 0. */
+	for (w=1; w<nwords; w++)
+	{
+		/* If the word is not inflected, then sent->word[w].d is NULL */
+		if (sent->word[w].d)
+			infword = sent->word[w].d->string;
+		else
+			infword = sent->word[w].string;
+
+		first = lg_corpus_senses(corp, infword, lifo->disjunct_list_str[w]);
+		if (first)
+		{
+			last = first;
+			while (last->next)
+			{
+				last->word = w;
+				last = last->next;
+			}
+			last->word = w;
+
+			last->next = head;
+			head = first;
+		}
+	}
+
+	return head;
+}
+
+/* ========================================================= */
+
+Sense * lg_sense_next(Sense *sns)
+{
+	return sns->next;
+}
+
+int lg_sense_get_index(Sense *sns)
+{
+	return sns->word;
+}
+
+const char * lg_sense_get_subscripted_word(Sense *sns)
+{
+	return sns->inflected_word;
+}
+
+const char * lg_sense_get_disjunct(Sense *sns)
+{
+	return sns->disjunct;
+}
+
+const char * lg_sense_get_sense(Sense *sns)
+{
+	return sns->sense;
+}
+
+double lg_sense_get_score(Sense *sns)
+{
+	return sns->score;
+}
+
+void lg_sense_delete(Sense *sns)
+{
+	while (sns)
+	{
+		Sense * nxt = sns->next;
+		free(sns->sense);
+		free(sns);
+		sns = nxt;
+	}
+}
+
+/* ======================= END OF FILE ===================== */
+
+

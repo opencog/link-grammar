@@ -138,30 +138,23 @@ char * linkage_print_senses(Linkage linkage)
 {
 	String * s = string_new();
 	char * sense_string;
-#ifdef USE_CORPUS
-	const char * infword;
-	Sentence sent = linkage->sent;
-	Dictionary dict = sent->dict; 
-	Corpus *corp = dict->corpus;
-	int nwords = sent->length;
-	Linkage_info *lifo = linkage->info;
-	int w;
+#if USE_CORPUS
+	Sense *sns, *head;
 
-	/* Decrement nwords, so as to ignore the RIGHT-WALL */
-	nwords --;
+	head = lg_corpus_linkage_senses(linkage);
 
-	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
-	 * word 0. */
-	for (w=1; w<nwords; w++)
+	sns = head;
+	while (sns)
 	{
-		/* If the word is not inflected, then sent->word[w].d is NULL */
-		if (sent->word[w].d)
-			infword = sent->word[w].d->string;
-		else
-			infword = sent->word[w].string;
-
-		lg_corpus_senses(corp, infword, lifo->disjunct_list_str[w]);
+		int idx = lg_sense_get_index(sns);
+		const char * wd = lg_sense_get_subscripted_word(sns);
+		const char * dj = lg_sense_get_disjunct(sns);
+		const char * sense = lg_sense_get_sense(sns);
+		double score = lg_sense_get_score(sns);
+printf("ola %d %s dj=%s sense=%s score=%f\n", idx, wd, dj, sense, score);
+		sns = lg_sense_next(sns);
 	}
+	lg_sense_delete(head);
 
 	append_string(s, " ");
 #else

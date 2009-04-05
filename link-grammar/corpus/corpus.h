@@ -13,28 +13,29 @@
 
 #ifdef USE_CORPUS
 
-#include <sqlite3.h>
 #include "../api-types.h"
 #include "../link-includes.h"
 
-struct corpus_s
-{
-	char * dbname;
-	sqlite3 *dbconn;
-	sqlite3_stmt *rank_query;
-	sqlite3_stmt *sense_query;
-	char *errmsg;
-};
-
 typedef struct corpus_s Corpus;
+typedef struct sense_s Sense;
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
-void lg_corpus_disjuncts(Corpus *, Sentence, Linkage_info *);
-void lg_corpus_score(Corpus *, Sentence, Linkage_info *);
-void lg_corpus_senses(Corpus *, const char *, const char *);
 
+void lg_corpus_score(Sentence, Linkage_info *);
+Sense * lg_corpus_linkage_senses(Linkage);
 
+Sense *lg_sense_next(Sense *);
+int lg_sense_get_index(Sense *);
+const char * lg_sense_get_subscripted_word(Sense *);
+const char * lg_sense_get_disjunct(Sense *);
+const char * lg_sense_get_sense(Sense *);
+double lg_sense_get_score(Sense *);
+void lg_sense_delete(Sense *);
+
+#else /* USE_CORPUS */
+
+static inline void lg_corpus_score(Sentence s, Linkage_info *li) {}
 #endif /* USE_CORPUS */
 
 #endif /* _LINKGRAMMAR_CORPUS_H */
