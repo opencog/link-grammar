@@ -16,12 +16,26 @@
 
 /* ========================================================= */
 
+static void * db_file_open(const char * dbname, void * user_data)
+{
+	int rc;
+	sqlite3 *dbconn;
+	rc = sqlite3_open(dbname, &dbconn);
+	if (rc)
+	{
+		sqlite3_close(dbconn);
+		return NULL;
+	}
+
+	return dbconn;
+}
+
+
 /**
  * Initialize the corpus statistics subsystem.
  */
 Corpus * lg_corpus_new(void)
 {
-	char * dbname;
 	int rc;
 
 	Corpus *c = (Corpus *) malloc(sizeof(Corpus));
@@ -29,15 +43,13 @@ Corpus * lg_corpus_new(void)
 	c->sense_query = NULL;
 	c->errmsg = NULL;
 
-	dbname = "/home/linas/src/novamente/src/link-grammar/trunk/data/sql/disjuncts.db";
+	/* dbname = "/link-grammar/data/en/sql/disjuncts.db"; */
 
-	rc = sqlite3_open(dbname, &c->dbconn);
-	if (rc)
+	c->dbconn = object_open("sql/disjuncts.db", db_file_open, NULL);
+	if (NULL == c->dbconn)
 	{
 		prt_error("Warning: Can't open database: %s\n",
 			sqlite3_errmsg(c->dbconn));
-		sqlite3_close(c->dbconn);
-		c->dbconn = NULL;
 		return c;
 	}
 
