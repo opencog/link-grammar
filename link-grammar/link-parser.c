@@ -531,7 +531,10 @@ int main(int argc, char * argv[])
 		         (argv[i][0] == '-') && (strcmp("-coff", argv[i])!=0) &&
 		         (argv[i][0] == '-') && (strcmp("-aoff", argv[i])!=0))
 		{
-			issue_special_command(argv[i]+1, opts, dict);
+			if (argv[i][1] == '!')
+				issue_special_command(argv[i]+2, opts, dict);
+			else
+				issue_special_command(argv[i]+1, opts, dict);
 		}
 	}
 
