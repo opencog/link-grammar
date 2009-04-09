@@ -87,8 +87,10 @@ PL-CAPITALIZED-WORDS:
 ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
 
+% "Tom" is a given name, but can also be a proper name, so e.g.
+% "The late Mr. Tom will be missed." which needs A-, D- links
 <given-names>:
-({G-} & {[MG+]} & (({DG- or [[GN-]]} & 
+({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
 
 % Whole, entire entities, cannot participate in G links
