@@ -79,6 +79,7 @@ AC_ARG_ENABLE( profile,
        CFLAGS="${CFLAGS} -pg"
        LDFLAGS="${LDFLAGS} -pg")
 
+do_pth=no
 AC_ARG_ENABLE( pthreads,
   [  --enable-pthreads          compile with pthread support],
        CPPFLAGS="${CPPFLAGS} -DUSE_PTHREADS=1"
