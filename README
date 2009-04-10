@@ -1,52 +1,58 @@
 
-               Link Grammar Parser - Patched Version
-               -------------------------------------
-                       Version 4.4.4
+                       Link Grammar Parser 
+                       -------------------
+                          Version 4.5.0
 
-This directory contains a *patched* version of the final original
-release of the Link Grammar Parser.  It has been patched to fix a
-few bugs, add a few enhancements, and, in general, make the Link
-Grammar Parser easier to use. This version includes Java bindings.
+The Link Grammar Parser implements the Sleator/Temperley/Lafferty
+theory of natural language parsing. This version of the parser is
+an extended, expanded version of the last official CMU release, and
+includes many enhancments and fixes created by many different
+developers.  This latest version incorporates a substantial part (but
+not all) of the BioLG project.
 
-It is released under the BSD license (which is GPL compatible),
+This code is released under the BSD license (which is GPL compatible),
 making it freely available for private and commercial use, with
 few restrictions.  The terms of the license are given in the
 LICENSE file included with this software, and also available at
 http://www.link.cs.cmu.edu/link/license.html.
 
 Please see the web page http://www.abisource.com/projects/link-grammar/
-for more information.  The original website, including documentation,
-is located at http://www.link.cs.cmu.edu/link
+for more information.  This version is a continuation of the original
+parser posted at http://www.link.cs.cmu.edu/link
 
 CONTENTS of this directory:
-
+---------------------------
    LICENSE                  The license describing terms of use
 
    link-grammar/*.c         The program.  (Written in ANSI-C)
+   link-grammar/corpus/*.c  Optional corpus statistics database.
+   link-grammar/java/*      Optional Java language bindings.
+   link-grammar/minisat/*   Optional SAT Solver. (Written in C++)
+   link-grammar/sat-solver  Optional SAT Solver. (Written in C++)
 
+   data/en/*                English language dictionaries.
    data/en/4.0.dict         The file containing the dictionary definitions.
-
    data/en/4.0.knowledge    The post-processing knowledge file.
-
    data/en/4.0.constituents The constituent knowledge file.
-
    data/en/4.0.affix        The affix file.
-
+   data/en/4.0.regex        Regex-based morphology guesser.
    data/en/tiny.dict        A small sample dictionary.
-
    data/en/words/*          A directory full of word lists.
-
-   data/en/4.0.batch        This is a batch file of sentences (both grammatical
+   data/en/4.0*.batch       These files contain sentences (both grammatical
                             and ungrammatical ones) that are handled correctly
-                            by this release of the system.  Feed this into the
-                            parser with "./link-parser < 4.0.batch"
+                            by this release of the system.  These can be
+                            run through the parser with the command 
+                            "./link-parser < 4.0.*.batch"
 
+   COPYING                  The license for this code and data
+   ChangeLog                A compendium of recent changes.
    configure                The GNU configuration script
+   autogen.sh               Developer's configure maintenance tool
+   msvc6, msvc9             Microsoft Visual-C project files
 
-   msvc6                    Microsoft Visual-C project files
 
 UNPACKING and signature verification:
-
+-------------------------------------
    The system is distributed using the normal tar.gz format; it can be
    extracted using the "tar -zxf link-grammar.tar.gz" command at the
    command line.
@@ -67,8 +73,9 @@ UNPACKING and signature verification:
    cryptographic security, but they can detect simple corruption. To
    verify the checksums, issue "md5sum -c MD5SUM" at the command line.
 
-CREATING the system:
 
+CREATING the system:
+--------------------
    To compile the link-grammar shared library and demonstration program,
    at the command line, type:
 
@@ -95,8 +102,9 @@ CREATING the system:
    systems, as well as on many Microsoft Windows systems, under
    various different Windows development environments.
 
-BUILDING on MacOS:
 
+BUILDING on MacOS:
+------------------
     MacOS users will probably need to obtain missing packages from 
     MacPorts in order to successfully build on MacOS. See 
     http://www.macports.org/ for details.
@@ -104,8 +112,9 @@ BUILDING on MacOS:
     See also:
     http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
 
-BUILDING on Windows:
 
+BUILDING on Windows:
+--------------------
     The easiest way to have link-grammar working on MS Windows, especially
     if you want the Java bindings, is to use MinGW/MSYS, a minimalist
     GNU environment for Windows that includes gcc, bash, automake, and many
@@ -150,7 +159,7 @@ BUILDING on Windows:
     alternately, those in the msvc9 directory.
 
 RUNNING the program:
-
+--------------------
    To run the program issue the Unix command:
 
        ./link-parser
@@ -179,14 +188,69 @@ RUNNING the program:
    batch file does report some errors; there are a collection of
    failing parses located at the end. Work is ongoing to fix these.
 
-USING the parser in your own applications:
+   The 4.0.fixes.batch file contains sentences that have been fixed 
+   since the original 4.1 release of link-grammar. The 4.0.biolg.batch
+   contains biology/medical-text sentences from the BioLG project.
 
+
+USING the parser in your own applications:
+------------------------------------------
    There is a API (application program interface) to the parser.  This
    makes it easy to incorporate it into your own applications.  The API
    documented on the web site.
 
-USING pkg-config:
 
+SAT solver:
+-----------
+   The current parser uses an algorithm that runs in O(N^3) time, for
+   a sentence containing N words. This algorithm is more or less a 
+   chart parser, a variant of the Earley parser.
+
+   The SAT sovler aims to replace the chart parser with an algorithm
+   based on Boolean Satistfiability Theory; specifically using the 
+   MiniSAT solver. The SAT solver has a bit more overhead for shorter
+   sentences, but is significantly faster for long sentences.  To work
+   properly, it needs to be attached to a parse ranking system.  This
+   work is incomplete, although the prototype works.
+
+   The SAT solver is enabled by specifying
+
+      ./configure --enable-sat-solver
+
+   prior to compiling.
+
+Corpus Statistics:
+------------------
+   The parser now contains some experimental code for using corpus
+   statistics to provide a parse ranking, and to assign WordNet word 
+   senses to word, based on thier grammatical usage.  An overview of 
+   the idea is given on the OpenCog blog, here:
+
+   http://brainwave.opencog.org/2009/01/12/determining-word-senses-from-grammatical-usage/
+
+   It is planned that the Corpus statisics database will be used to
+   guide the SAT solver.  Dictionaries are available upon request. 
+   To enable the corpus statistcs, specify
+
+      ./configure --enable-sat-solver
+
+   prior to compiling.
+
+
+Spell Checking:
+---------------
+   The parser will now run a spell-checker at an early stage, if it
+   encounters a word that it does not know, and cannot guess, based on
+   morphology.  The spell-checker used is hunspell; support for it is
+   automatically compiled in if the hunspell development environment 
+   is found.
+
+   Spell checking may be disabled in the link-parser client with the 
+   !spell flag.  Enter !help for more details.
+
+
+USING pkg-config:
+-----------------
    To make compiling and linking easier, the current release uses
    the pkg-config system. To determine the location of the link-grammar
    header files, say `pkg-config --cflags link-grammar`  To obtain
@@ -200,7 +264,7 @@ USING pkg-config:
          cc -g -o $@ $^ `pkg-config --libs link-grammar`
 
 JAVA bindings:
-
+--------------
    This release includes Java bindings.  Thier use is optional. 
 
    The bindings will be built automatically if jni.h can be found.
@@ -217,8 +281,9 @@ JAVA bindings:
    Please note that the use of /opt is non-standard, and most system
    tools will fail to find packages installed there.
 
-MULTI-THREADED USE:
 
+MULTI-THREADED USE:
+-------------------
    The link-grammar library should be thread-safe as of version 4.3.6,
    although this has not yet been tested very well, and may possibly be
    buggy.  To enable the thread-safe version of the library, run
@@ -263,7 +328,7 @@ MULTI-THREADED USE:
 
 
 COMMERCIAL use:
-
+---------------
    The original authors would be pleased to discuss alternate
    licensing terms and/or additional research work, with those
    wanting to use this system under a paid contract.
@@ -272,7 +337,7 @@ COMMERCIAL use:
    link grammar publications.
 
 ADDRESSES
-
+---------
    If you have any questions, or find any bugs, please feel free
    to send a note to the mailing list:
 
@@ -303,6 +368,7 @@ ADDRESSES
 
 
 TODO -- Working Notes:
+----------------------
    Some working notes.
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
