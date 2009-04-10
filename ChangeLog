@@ -1,4 +1,4 @@
-Version 4.5.0 (??? 2009) includes the following changes:
+Version 4.5.0 (10 April 2009) includes the following changes:
  * Hack around missing SQLite3 pkgconfig on MacOS
  * Fix adverbs: 'The motor ran hot', 'the door swung wide open', etc.
  * Fix: 'at risk of breakdown', 'under threat of fire'
