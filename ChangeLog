@@ -1,5 +1,5 @@
 
-Version 4.5.1 (xxx? 2009) includes the following changes:
+Version 4.5.1 (13 April 2009) includes the following changes:
  * Fix Assertion failed: negative constituent length!
  * Fix build break for Mac OSX.
 
