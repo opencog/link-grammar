@@ -1,6 +1,7 @@
 
 Version 4.5.1 (xxx? 2009) includes the following changes:
  * Fix Assertion failed: negative constituent length!
+ * Fix build break for Mac OSX.
 
 Version 4.5.0 (10 April 2009) includes the following changes:
  * Hack around missing SQLite3 pkgconfig on MacOS
