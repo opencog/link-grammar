@@ -87,6 +87,11 @@ AC_ARG_ENABLE( pthreads,
 
 AM_CONDITIONAL(WITH_PTHREADS, test x${do_pth} = xyes)
 
+do_java=yes
+AC_ARG_ENABLE( java-bindings,
+  [  --disable-java-bindings    disable build of java bindings],
+       do_java="no")
+
 buildSAT=no
 AC_ARG_ENABLE( sat-solver,
   [  --enable-sat-solver        use the boolean SAT solver],
@@ -235,53 +240,58 @@ dnl =====================================================================
 dnl Try to guess location of the jni.h file.
 dnl Might be useful to look at env variables $JDK_HOME and $JAVA_HOME for these.
 dnl
+JNIfound=no
 
-JNI_GUESS=" \
-   -I $JAVA_HOME/include \
-   -I $JAVA_HOME/include/linux \
-   -I $JAVA_HOME/Headers \
-   -I $JDK_HOME/include \
-   -I $JDK_HOME/include/linux \
-   -I $JDK_HOME/Headers \
-   -I/usr/include/classpath/ \
-   -I/opt/jdk1.5/include/ \
-   -I/opt/jdk1.5/include/linux \
-   -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include \
-   -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/linux \
-   -I/usr/lib/jvm/java-6-sun/include/ \
-   -I/usr/lib/jvm/java-6-sun/include/linux \
-   -I/c/java/jdk1.6.0/include/ \
-   -I/c/java/jdk1.6.0/include/win32/ \
-   -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
-   -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ "
+if test "x$do_java" == "xyes"; then
+   JNI_GUESS=" \
+      -I $JAVA_HOME/include \
+      -I $JAVA_HOME/include/linux \
+      -I $JAVA_HOME/Headers \
+      -I $JDK_HOME/include \
+      -I $JDK_HOME/include/linux \
+      -I $JDK_HOME/Headers \
+      -I/usr/include/classpath/ \
+      -I/opt/jdk1.5/include/ \
+      -I/opt/jdk1.5/include/linux \
+      -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include \
+      -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/linux \
+      -I/usr/lib/jvm/java-6-sun/include/ \
+      -I/usr/lib/jvm/java-6-sun/include/linux \
+      -I/c/java/jdk1.6.0/include/ \
+      -I/c/java/jdk1.6.0/include/win32/ \
+      -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
+      -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ "
 
-AC_MSG_CHECKING(for jni.h)
-AC_TRY_CPP( [#include <jni.h>], 
-       [AC_MSG_RESULT([yes, will build java libs])
-        JNIfound=yes], 
-       [ 
-       SAVE_CPPFLAGS=${CPPFLAGS}
-       CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
-       AC_MSG_WARN([Can't find jni.h header in standard locations, trying again with ${CPPFLAGS}]) 
-       AC_TRY_CPP( [#include <jni.h>], 
-               [AC_MSG_RESULT([yes, will build java libs])
-               JNIfound=yes], 
-               [ AC_MSG_WARN([cannot find jni.h header, needed for Java bindings support.]) 
-                CPPFLAGS=${SAVE_CPPFLAGS}
-                JNIfound=no])
-       ])
-AC_SUBST(CPPFLAGS)
+   AC_MSG_CHECKING(for jni.h)
+   AC_TRY_CPP( [#include <jni.h>], 
+          [AC_MSG_RESULT([yes, will build java libs])
+           JNIfound=yes], 
+          [ 
+          SAVE_CPPFLAGS=${CPPFLAGS}
+          CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
+          AC_MSG_WARN([Can't find jni.h header in standard locations, trying again with ${CPPFLAGS}]) 
+          AC_TRY_CPP( [#include <jni.h>], 
+                  [AC_MSG_RESULT([yes, will build java libs])
+                  JNIfound=yes], 
+                  [ AC_MSG_WARN([cannot find jni.h header, needed for Java bindings support.]) 
+                   CPPFLAGS=${SAVE_CPPFLAGS}
+                   JNIfound=no])
+          ])
+   AC_SUBST(CPPFLAGS)
 
-# Hmm .. there seems to be a missing pkgconfig for ordinary java ... 
-# There's libgcj-4.2.pc  and libgcj8.pc but nothing for ordinary java??
-# PKG_CHECK_MODULES(LIBJDK, libjdk-1.5 >= $LIBJDK_REQUIRED)
-# AC_SUBST(LIBJDK_CFLAGS)
-# AC_SUBST(LIBJDK_LIBS)
+   # Hmm .. there seems to be a missing pkgconfig for ordinary java ... 
+   # There's libgcj-4.2.pc  and libgcj8.pc but nothing for ordinary java??
+   # PKG_CHECK_MODULES(LIBJDK, libjdk-1.5 >= $LIBJDK_REQUIRED)
+   # AC_SUBST(LIBJDK_CFLAGS)
+   # AC_SUBST(LIBJDK_LIBS)
 
-# For now, we assume that if the jni files are there, then the javac
-# ant, and jar compilers/builders are install as well. This is used
-# to build the jar file and install it.
-AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
+   # For now, we assume that if the jni files are there, then the javac
+   # ant, and jar compilers/builders are install as well. This is used
+   # to build the jar file and install it.
+   AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
+else
+   AM_CONDITIONAL(HAVE_JAVA, false)
+fi
 
 dnl ===================================================================
 
