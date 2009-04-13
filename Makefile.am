@@ -7,10 +7,10 @@ ACLOCAL_AMFLAGS = -I m4
 
 # Build and install the jar file in $(PREFIX)/share/java ...
 # XXX FIXME configure should look to see if it can find ant
+if HAVE_JAVA
 linkgrammar-@VERSION@.jar:
 	ant
 
-if HAVE_JAVA
 javadir=$(datadir)/java
 java_DATA = linkgrammar-@VERSION@.jar
 
