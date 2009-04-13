@@ -71,7 +71,6 @@ typedef struct
 	int templist[MAX_ELTS];
 	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
-	int r_limit;
 } con_context_t;
 
 /* ================================================================ */
@@ -1006,11 +1005,13 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 static int add_constituent(con_context_t *ctxt, int c, Linkage linkage, Domain domain,
                            int l, int r, const char * name)
 {
+	int nwords = linkage->num_words-2;
 	c++;
 
 	/* Avoid running off end, to walls. */
 	if (l < 1) l=1;
-	if (r > ctxt->r_limit) r = ctxt->r_limit;
+	if (r > nwords) r = nwords;
+	if (l > nwords) l = nwords;
 	assert(l <= r, "negative constituent length!" );
 
 	ctxt->constituent[c].left = l;
@@ -1083,8 +1084,6 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	Sublinkage * subl;
 	const char * name;
 	Domain domain;
-
-	ctxt->r_limit = linkage->num_words-2; /**PV**/
 
 	subl = &linkage->sublinkage[s];
 
