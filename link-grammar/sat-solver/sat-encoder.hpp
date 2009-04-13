@@ -45,11 +45,11 @@ protected:
   virtual void determine_satisfaction(int w, char* name) = 0;
 
   // Generates satisfaction condition for the connector (wi, pi)
-  virtual void generate_satisfaction_for_connector(int wi, int pi, char* Ci, 
+  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
 						   char dir, bool multi, int cost, char* var) = 0;
 
   // Definition of link_cw((wi, pi), wj) variables when wj is an ordinary word
-  void generate_link_cw_ordinary_definition(int wi, int pi, char* Ci, char dir, int cost, int wj);
+  void generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci, char dir, int cost, int wj);
 
   // Generates order constraints for the elements of a conjunction.
   void generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, int& dfs_position);
@@ -291,7 +291,7 @@ public:
 
   virtual void handle_null_expression(int w);
   virtual void determine_satisfaction(int w, char* name);
-  virtual void generate_satisfaction_for_connector(int wi, int pi, char* Ci, 
+  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
 						   char dir, bool multi, int cost, char* var);
 
 
@@ -315,7 +315,7 @@ private:
   virtual void handle_null_expression(int w);
   virtual void determine_satisfaction(int w, char* name);
 
-  virtual void generate_satisfaction_for_connector(int wi, int pi, char* Ci, 
+  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
 						   char dir, bool multi, int cost, char* var);
 
   virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr);

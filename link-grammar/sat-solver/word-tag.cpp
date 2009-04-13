@@ -10,7 +10,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
 
-    char* name = exp->u.string;
+    const char* name = exp->u.string;
 
     Connector* connector = (Connector*)xalloc(sizeof(Connector));
     init_connector(connector);

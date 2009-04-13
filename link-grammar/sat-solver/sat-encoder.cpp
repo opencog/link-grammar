@@ -481,7 +481,7 @@ void SATEncoder::free_alternatives(Exp* exp) {
 }
 
 
-void SATEncoder::generate_link_cw_ordinary_definition(int wi, int pi, char* Ci, char dir, int cost, int wj) {
+void SATEncoder::generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci, char dir, int cost, int wj) {
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
 
   char str[MAX_VARIABLE_NAME];
@@ -1180,7 +1180,7 @@ void SATEncoder::pp_prune() {
 
   for (int i=0; i<knowledge->n_contains_one_rules; i++) {
     pp_rule rule;
-    char * selector;
+    const char * selector;
     pp_linkset * link_set;
 
     rule = knowledge->contains_one_rules[i]; 
@@ -1360,7 +1360,7 @@ void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* nam
   generate_literal(Lit(_variables->string(name))); 
 }
 
-void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(int wi, int pi, char* Ci, 
+void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
 									     char dir, bool multi, int cost, char* var) {
   Lit lhs = Lit(_variables->string_cost(var, cost));
 
@@ -1589,7 +1589,7 @@ void SATEncoderConjunctiveSentences::determine_satisfaction(int w, char* name) {
 }
 
 
-void SATEncoderConjunctiveSentences::generate_satisfaction_for_connector(int wi, int pi, char* Ci, 
+void SATEncoderConjunctiveSentences::generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
 									 char dir, bool multi, int cost, char* var) {
   Lit lhs = Lit(_variables->string_cost(var, cost));
 

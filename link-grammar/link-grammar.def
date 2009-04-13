@@ -162,3 +162,4 @@ prune_match
 lg_strlcpy
 lg_compute_disjunct_strings
 object_open
+do_match

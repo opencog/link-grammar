@@ -129,7 +129,7 @@ public:
 	throw std::string("Unknown connector direction: ") + dir;
       } 
     } else {
-      return ::match(_sent, &cntr1, &cntr2, w1, w2);
+      return ::do_match(_sent, &cntr1, &cntr2, w1, w2);
     }
   }
 

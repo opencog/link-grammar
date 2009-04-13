@@ -16,10 +16,12 @@ link_private void       init_andable_hash_table(Dictionary dict);
 link_private void       free_andable_hash_table(Dictionary dict);
 link_private void       initialize_conjunction_tables(Sentence sent);
 link_private int        is_canonical_linkage(Sentence sent);
-link_private int        set_has_fat_down(Sentence sent);
 link_private Disjunct * build_AND_disjunct_list(Sentence sent, char *);
 link_private Disjunct * build_COMMA_disjunct_list(Sentence sent);
 link_private Disjunct * explode_disjunct_list(Sentence sent, Disjunct *);
 link_private void       build_conjunction_tables(Sentence);
-link_private const char * intersect_strings(Sentence sent, const char * s, const char * t);
 link_private void       compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage);
+
+/* Following need to be visible to sat solver, can't be private */
+int        set_has_fat_down(Sentence sent);
+const char * intersect_strings(Sentence sent, const char * s, const char * t);
