@@ -457,6 +457,7 @@ int main(int argc, char * argv[])
 	int             num_linkages, i;
 	char            *input_string;
 	Label           label = NO_LABEL;
+	const char      *codeset;
 
 	i = 1;
 	if ((argc > 1) && (argv[1][0] != '-')) {
@@ -469,6 +470,15 @@ int main(int argc, char * argv[])
 	 * perhaps we should someday get it from the dictionary ??
 	 */
 	setlocale(LC_ALL, "");
+
+	/* Check to make sure the current locale is UTF8; if its not,
+	 * then force-set this to the english utf8 locale 
+	 */
+	codeset = nl_langinfo(CODESET);
+	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
+	{
+		setlocale(LC_CTYPE, "en_US.UTF-8");
+	}
 
 	for (; i<argc; i++) {
 		if (argv[i][0] == '-') {
