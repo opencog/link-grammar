@@ -33,7 +33,7 @@ static void set_centers(Linkage linkage, int center[], int print_word_0, int N_w
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
 		 */
-		len = mbsrtowcs(NULL, linkage->word[i], 0, &mbss);
+		len = mbsrtowcs(NULL, &linkage->word[i], 0, &mbss);
 		center[i] = tot + (len/2);
 		tot += len+1;
 	}
