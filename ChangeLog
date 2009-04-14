@@ -1,6 +1,7 @@
 
-Version 4.5.2 (?? April 2009) includes the following changes:
+Version 4.5.2 (14 April 2009) includes the following changes:
  * Use re-entrant version of mbtowc in all code.
+ * Fix run-time breakage on Mac OSX and FreeBSD.
 
 Version 4.5.1 (13 April 2009) includes the following changes:
  * Fix Assertion failed: negative constituent length!
