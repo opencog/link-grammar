@@ -50,18 +50,21 @@ static int is_initials_word(const char * word)
 }
 
 /**
+ * Returns true if the word can be interpreted as a number.
  * The ":" is included here so we allow "10:30" to be a number.
  * We also allow U+00A0 "no-break space"
  */
 static int is_number(const char * s)
 {
+	mbstate_t mbs;
 	int nb = 1;
 	wchar_t c;
 	if (!is_utf8_digit(s)) return FALSE;
 
+	memset(&mbs, 0, sizeof(mbs));
 	while ((*s != 0) && (0 < nb))
 	{
-		nb = mbtowc(&c, s, MB_CUR_MAX);
+		nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 		if (iswdigit(c)) { s += nb; }
 
 		/* U+00A0 no break space */
@@ -71,6 +74,25 @@ static int is_number(const char * s)
 		else return FALSE;
 	}
 	return TRUE;
+}
+
+/**
+ * Returns true if the word contains digits. 
+ */
+static int contains_digits(const char * s)
+{
+	mbstate_t mbs;
+	int nb = 1;
+	wchar_t c;
+
+	memset(&mbs, 0, sizeof(mbs));
+	while ((*s != 0) && (0 < nb))
+	{
+		nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+		if (iswdigit(c)) return TRUE;
+		s += nb;
+	}
+	return FALSE;
 }
 
 #if DONT_USE_REGEX_GUESSING
@@ -368,49 +390,56 @@ static int separate_word(Sentence sent,
 		if (i == r_strippable) break;
 	}
 
-	/* Same as above, but with a twist: the only thing that can
-	 * preceed a units suffix is a number. This is so that we can
-	 * split up things like "12ft" (twelve feet) but not split up
-	 * things like "Delft blue". Multiple passes allow for
-	 * constructions such as 12sq.ft.
+	/* Is there a number in the word? If so, then search for
+	 * trailing units suffixes.
 	 */
-	n_r_stripped_save = n_r_stripped;
-	wend_save = wend;
-	for (; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+	if (contains_digits(word))
 	{
-		size_t sz = MIN(wend-w, MAX_WORD);
-		strncpy(word, w, sz);
-		word[sz] = '\0';
-		if (wend == w) break;  /* it will work without this */
-
-		/* Number */
-		if (is_number(word))
+		/* Same as above, but with a twist: the only thing that can
+		 * preceed a units suffix is a number. This is so that we can
+		 * split up things like "12ft" (twelve feet) but not split up
+		 * things like "Delft blue". Multiple passes allow for
+		 * constructions such as 12sq.ft.
+		 */
+		n_r_stripped_save = n_r_stripped;
+		wend_save = wend;
+		for (; n_r_stripped < MAX_STRIP; n_r_stripped++) 
 		{
-			found_number = 1;
-			break;
-		}
+			size_t sz = MIN(wend-w, MAX_WORD);
+			strncpy(word, w, sz);
+			word[sz] = '\0';
+			if (wend == w) break;  /* it will work without this */
 
-		for (i=0; i < u_strippable; i++)
-		{
-			len = strlen(strip_units[i]);
-
-			/* the remaining w is too short for a possible match */
-			if ((wend-w) < len) continue;
-			if (strncmp(wend-len, strip_units[i], len) == 0)
+			/* Number */
+			if (is_number(word))
 			{
-				r_stripped[n_r_stripped] = strip_units[i];
-				wend -= len;
+				found_number = 1;
 				break;
 			}
-		}
-		if (i == u_strippable) break;
-	}
 
-	/* The root *must* be a number! */
-	if (0 == found_number)
-	{
-		wend = wend_save;
-		n_r_stripped = n_r_stripped_save;
+			for (i=0; i < u_strippable; i++)
+			{
+				len = strlen(strip_units[i]);
+printf("duuude look at %s %d %s\n", word, i, strip_units[i]);
+
+				/* the remaining w is too short for a possible match */
+				if ((wend-w) < len) continue;
+				if (strncmp(wend-len, strip_units[i], len) == 0)
+				{
+					r_stripped[n_r_stripped] = strip_units[i];
+					wend -= len;
+					break;
+				}
+			}
+			if (i == u_strippable) break;
+		}
+
+		/* The root *must* be a number! */
+		if (0 == found_number)
+		{
+			wend = wend_save;
+			n_r_stripped = n_r_stripped_save;
+		}
 	}
 
 	/* Now we strip off suffixes...w points to the remaining word, 
@@ -428,6 +457,7 @@ static int separate_word(Sentence sent,
 	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
 		word_is_in_dict = TRUE;
 
+printf("duuude word=%s in dict=%d\n", word, word_is_in_dict);
 	if (FALSE == word_is_in_dict)
 	{
 		j=0;
@@ -452,12 +482,14 @@ static int separate_word(Sentence sent,
 				strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
 				newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
 
+printf("duuude testing word %s\n", newword);
 				/* Check if the remainder is in the dictionary;
 				 * for the no-suffix case, it won't be */
 				if (boolean_dictionary_lookup(sent->dict, newword))
 				{
 					if ((verbosity>1) && (i < s_strippable))
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
+printf("duuude Splitting word into two: %s-%s\n", newword, suffix[i]);
 					s_stripped = i;
 					wend -= len;
 					strncpy(word, w, MIN(wend-w, MAX_WORD));
@@ -499,7 +531,7 @@ static int separate_word(Sentence sent,
 			}
 		}
 	}
-	
+
 	/* word is now what remains after all the stripping has been done */
 
 	if (n_r_stripped >= MAX_STRIP)
@@ -525,6 +557,7 @@ static int separate_word(Sentence sent,
 		n = spellcheck_suggest(sent->dict->spell_checker, &alternates, word);
 		for (j=0; j<n; j++)
 		{
+printf("duuude maybe two words: %s\n", alternates[j]);
 			/* Uhh, XXX this is not utf8 safe! */
 			sp = strchr(alternates[j], ' ');
 			if (sp) break;
@@ -546,6 +579,7 @@ static int separate_word(Sentence sent,
 		}
 		if (alternates) free(alternates);
 	}
+printf ("duuude enfine wordy=%s\n", word);
 
 	if (FALSE == issued)
 	{

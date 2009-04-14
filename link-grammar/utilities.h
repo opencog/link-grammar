@@ -113,7 +113,7 @@ static inline int wctomb_check(char *s, wchar_t wc, mbstate_t *ps)
 {
 	int nr = wcrtomb(s, wc, ps);
 	if (nr < 0) {
-		prt_error("Fatal Error: unknwon character set %s\n", nl_langinfo(CODESET));
+		prt_error("Fatal Error: unknown character set %s\n", nl_langinfo(CODESET));
 		exit(1);
 	}
 	return nr;
