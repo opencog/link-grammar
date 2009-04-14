@@ -1,4 +1,7 @@
 
+Version 4.5.2 (?? April 2009) includes the following changes:
+ * Use re-entrant version of mbtowc in all code.
+
 Version 4.5.1 (13 April 2009) includes the following changes:
  * Fix Assertion failed: negative constituent length!
  * Fix build break for Mac OSX.

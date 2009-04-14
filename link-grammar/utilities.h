@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifndef __CYGWIN__
 #include <wchar.h>
@@ -64,7 +65,7 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
  * However, MS Visual C appearently does ... 
  */
 #ifdef __CYGWIN__
-#define mbtowc(w,s,n)  ({*((char *)(w)) = *(s); 1;})
+#define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
 #define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
 #define iswupper  isupper
 #define iswalpha  isalpha
@@ -121,32 +122,48 @@ static inline int wctomb_check(char *s, wchar_t wc, mbstate_t *ps)
 
 static inline int is_utf8_upper(const char *s)
 {
+	mbstate_t mbs;
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
+	int nbytes;
+
+	memset(&mbs, 0, sizeof(mbs));
+	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (iswupper(c)) return nbytes;
 	return 0;
 }
 
 static inline int is_utf8_alpha(const char *s)
 {
+	mbstate_t mbs;
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
+	int nbytes;
+
+	memset(&mbs, 0, sizeof(mbs));
+	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (iswalpha(c)) return nbytes;
 	return 0;
 }
 
 static inline int is_utf8_digit(const char *s)
 {
+	mbstate_t mbs;
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
+	int nbytes;
+
+	memset(&mbs, 0, sizeof(mbs));
+	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (iswdigit(c)) return nbytes;
 	return 0;
 }
 
 static inline int is_utf8_space(const char *s)
 {
+	mbstate_t mbs;
 	wchar_t c;
-	int nbytes = mbtowc(&c, s, MB_CUR_MAX);
+	int nbytes;
+
+	memset(&mbs, 0, sizeof(mbs));
+	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (iswspace(c)) return nbytes;
 	return 0;
 }
@@ -169,18 +186,22 @@ static inline const char * skip_utf8_upper(const char * s)
  */
 static inline int utf8_upper_match(const char * s, const char * t)
 {
+	mbstate_t mbs, mbt;
 	wchar_t ws, wt;
 	int ns, nt;
 
-	ns = mbtowc(&ws, s, MB_CUR_MAX);
-	nt = mbtowc(&wt, t, MB_CUR_MAX);
+	memset(&mbs, 0, sizeof(mbs));
+	memset(&mbt, 0, sizeof(mbt));
+
+	ns = mbrtowc(&ws, s, MB_CUR_MAX, &mbs);
+	nt = mbrtowc(&wt, t, MB_CUR_MAX, &mbt);
 	while (iswupper(ws) || iswupper(wt))
 	{
 		if (ws != wt) return FALSE;
 		s += ns;
 		t += nt;
-		ns = mbtowc(&ws, s, MB_CUR_MAX);
-		nt = mbtowc(&wt, t, MB_CUR_MAX);
+		ns = mbrtowc(&ws, s, MB_CUR_MAX, &mbs);
+		nt = mbrtowc(&wt, t, MB_CUR_MAX, &mbt);
 	}
 	return TRUE;
 }

@@ -1307,7 +1307,7 @@ static int read_entry(Dictionary dict)
 	Dict_node *dn_new, *dnx, *dn = NULL;
 
 	/* Reset multi-byte shift state every line. */
-	i = wcrtomb(NULL, L'\0', &dict->mbss);
+	memset(&dict->mbss, 0, sizeof(dict->mbss));
 
 	while (!is_equal(dict, ':'))
 	{

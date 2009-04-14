@@ -21,7 +21,10 @@ const char * header(int mode);
 
 static void set_centers(Linkage linkage, int center[], int print_word_0, int N_words_to_print)
 {
+	mbstate_t mbss;
 	int i, len, tot;
+	memset(&mbss, 0, sizeof(mbss));
+
 	tot = 0;
 	if (print_word_0) i=0; else i=1;
 	for (; i < N_words_to_print; i++)
@@ -30,7 +33,7 @@ static void set_centers(Linkage linkage, int center[], int print_word_0, int N_w
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
 		 */
-		len = mbstowcs(NULL, linkage->word[i], 0);
+		len = mbsrtowcs(NULL, linkage->word[i], 0, &mbss);
 		center[i] = tot + (len/2);
 		tot += len+1;
 	}

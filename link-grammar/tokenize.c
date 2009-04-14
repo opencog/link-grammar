@@ -117,15 +117,17 @@ static int contains_digits(const char * s)
  */
 static int ishyphenated(const char * s)
 {
+	mbstate_t mbs;
 	wchar_t c;
 	int hyp, nonalpha;
 	hyp = nonalpha = 0;
 
 	if (*s == '-') return FALSE;
 
+	memset(&mbs, 0, sizeof(mbs));
 	while (*s != '\0')
 	{
-		int nb = mbtowc(&c, s, MB_CUR_MAX);
+		int nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 		if (0 > nb) break;
 
 		if (!iswalpha(c) && !iswdigit(c) && (*s!='.') && (*s!=',')
@@ -280,13 +282,15 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 	char save[MB_LEN_MAX];
 	wchar_t c;
 	int nbl, nbh;
-	mbstate_t mbss;
+	mbstate_t mbs, mbss;
 
 	if (!is_utf8_upper(word)) return FALSE;
 
-	nbh = mbtowc (&c, word, MB_CUR_MAX);
+	memset(&mbs, 0, sizeof(mbs));
+	memset(&mbss, 0, sizeof(mbss));
+
+	nbh = mbrtowc (&c, word, MB_CUR_MAX, &mbs);
 	c = towlower(c);
-	nbl = wcrtomb(NULL, L'\0', &mbss);
 	nbl = wctomb_check(low, c, &mbss);
 	if (nbh != nbl)
 	{
@@ -646,6 +650,7 @@ int separate_sentence(const char * s, Sentence sent)
 	const char *t;
 	int i, is_first, quote_found;
 	Dictionary dict = sent->dict;
+	mbstate_t mbs;
 
 	for(i=0; i<MAX_SENTENCE; i++) sent->post_quote[i] = 0;
 	sent->length = 0;
@@ -653,16 +658,14 @@ int separate_sentence(const char * s, Sentence sent)
 	if (dict->left_wall_defined)
 		if (!issue_sentence_word(sent, LEFT_WALL_WORD)) return FALSE;
 
-#ifndef __CYGWIN__
 	/* Reset the multibyte shift state to the initial state */
-	i = mbtowc(NULL, NULL, MB_CUR_MAX);
-#endif
+	memset(&mbs, 0, sizeof(mbs));
 
 	is_first = TRUE;
 	for(;;) 
 	{
 		wchar_t c;
-		int nb = mbtowc(&c, s, MB_CUR_MAX);
+		int nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 		quote_found = FALSE;
 
 		if (0 > nb) goto failure;
@@ -672,19 +675,19 @@ int separate_sentence(const char * s, Sentence sent)
 		{
 			s += nb;
 			if (*s == '\"') quote_found = TRUE;
-			nb = mbtowc(&c, s, MB_CUR_MAX);
+			nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 			if (0 > nb) goto failure;
 		}
 
 		if (*s == '\0') break;
 
 		t = s;
-		nb = mbtowc(&c, t, MB_CUR_MAX);
+		nb = mbrtowc(&c, t, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
 		while (!iswspace(c) && (c != '\"') && (c != 0) && (nb != 0))
 		{
 			t += nb;
-			nb = mbtowc(&c, t, MB_CUR_MAX);
+			nb = mbrtowc(&c, t, MB_CUR_MAX, &mbs);
 			if (0 > nb) goto failure;
 		}
 

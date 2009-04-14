@@ -651,9 +651,9 @@ YY_DECL
 	char *yy_cp, *yy_bp;
 	int yy_act;
 
-	/* Hack to set multi-byte shift state */
+	/* Reset multi-byte shift state */
 	mbstate_t mbss;
-	yy_act = wcrtomb(NULL, L'\0', &mbss);
+	memset(&mbss, 0, sizeof(mbss));
 
 	/* #line 56 "pp_lexer.fl" --DS */
 
