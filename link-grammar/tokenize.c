@@ -50,6 +50,20 @@ static int is_initials_word(const char * word)
 }
 
 /**
+ * Return TRUE if word is a proper name.
+ * XXX This is a cheap hack that works only in english, and is 
+ * broken for German!  We need to replace this with something
+ * language-specific. 
+ *
+ * Basically, if word starts with upper-case latter, we assume
+ * its a proper name, and that's that.
+ */
+static int is_proper_name(const char * word)
+{
+	return is_utf8_upper(word);
+}
+
+/**
  * Returns true if the word can be interpreted as a number.
  * The ":" is included here so we allow "10:30" to be a number.
  * We also allow U+00A0 "no-break space"
@@ -329,7 +343,9 @@ static int separate_word(Sentence sent,
 	word[MIN(wend-w, MAX_WORD)] = '\0';
 	word_is_in_dict = FALSE;
 
-	if (boolean_dictionary_lookup(sent->dict, word))
+	if (is_proper_name(word))
+		word_is_in_dict = TRUE;
+	else if (boolean_dictionary_lookup(sent->dict, word))
 		word_is_in_dict = TRUE;
 	else if (is_initials_word(word))
 		word_is_in_dict = TRUE;
@@ -341,7 +357,6 @@ static int separate_word(Sentence sent,
 		issue_sentence_word(sent, word);
 		return TRUE;
 	}
-printf("duuuuude no luck, will strip %s\n", word);
 
 	/* Set up affix tables.  */
 	if (sent->dict->affix_table != NULL)
@@ -442,7 +457,6 @@ printf("duuuuude no luck, will strip %s\n", word);
 			for (i=0; i < u_strippable; i++)
 			{
 				len = strlen(strip_units[i]);
-printf("duuude look at %s %d %s\n", word, i, strip_units[i]);
 
 				/* the remaining w is too short for a possible match */
 				if ((wend-w) < len) continue;
@@ -472,14 +486,18 @@ printf("duuude look at %s %d %s\n", word, i, strip_units[i]);
 	word[MIN(wend-w, MAX_WORD)] = '\0';
 	word_is_in_dict = FALSE;
 
-	if (boolean_dictionary_lookup(sent->dict, word))
+	/* If the first letter is upper-case, then assume its
+	 * a proper name, and so we are done.
+	 */
+	if (is_proper_name(word))
+		word_is_in_dict = TRUE;
+	else if (boolean_dictionary_lookup(sent->dict, word))
 		word_is_in_dict = TRUE;
 	else if (is_initials_word(word))
 		word_is_in_dict = TRUE;
 	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
 		word_is_in_dict = TRUE;
 
-printf("duuude word=%s in dict=%d\n", word, word_is_in_dict);
 	if (FALSE == word_is_in_dict)
 	{
 		j=0;
@@ -492,7 +510,7 @@ printf("duuude word=%s in dict=%d\n", word, word_is_in_dict);
 			{
 				len = strlen(suffix[i]);
 
-				/* the remaining w is too short for a possible match */
+				/* The remaining w is too short for a possible match */
 				if ((wend-w) < len) continue;
 				if (strncmp(wend-len, suffix[i], len) == 0) s_ok=1;
 			}
@@ -504,14 +522,12 @@ printf("duuude word=%s in dict=%d\n", word, word_is_in_dict);
 				strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
 				newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
 
-printf("duuude testing word %s\n", newword);
 				/* Check if the remainder is in the dictionary;
 				 * for the no-suffix case, it won't be */
 				if (boolean_dictionary_lookup(sent->dict, newword))
 				{
 					if ((verbosity>1) && (i < s_strippable))
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
-printf("duuude Splitting word into two: %s-%s\n", newword, suffix[i]);
 					s_stripped = i;
 					wend -= len;
 					strncpy(word, w, MIN(wend-w, MAX_WORD));
@@ -579,7 +595,6 @@ printf("duuude Splitting word into two: %s-%s\n", newword, suffix[i]);
 		n = spellcheck_suggest(sent->dict->spell_checker, &alternates, word);
 		for (j=0; j<n; j++)
 		{
-printf("duuude maybe two words: %s\n", alternates[j]);
 			/* Uhh, XXX this is not utf8 safe! */
 			sp = strchr(alternates[j], ' ');
 			if (sp) break;
@@ -601,7 +616,6 @@ printf("duuude maybe two words: %s\n", alternates[j]);
 		}
 		if (alternates) free(alternates);
 	}
-printf ("duuude enfine wordy=%s\n", word);
 
 	if (FALSE == issued)
 	{
