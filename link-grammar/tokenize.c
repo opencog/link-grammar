@@ -322,7 +322,28 @@ static int separate_word(Sentence sent,
 
 	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
 
-	/* Load affixes from the affix table.  */
+	/* First, see if we can already recognize the word as-is. If
+	 * so, then we are done. Else we'll try stripping prefixes, suffixes.
+	 */
+	strncpy(word, w, MIN(wend-w, MAX_WORD));
+	word[MIN(wend-w, MAX_WORD)] = '\0';
+	word_is_in_dict = FALSE;
+
+	if (boolean_dictionary_lookup(sent->dict, word))
+		word_is_in_dict = TRUE;
+	else if (is_initials_word(word))
+		word_is_in_dict = TRUE;
+	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
+		word_is_in_dict = TRUE;
+
+	if (word_is_in_dict)
+	{
+		issue_sentence_word(sent, word);
+		return TRUE;
+	}
+printf("duuuuude no luck, will strip %s\n", word);
+
+	/* Set up affix tables.  */
 	if (sent->dict->affix_table != NULL)
 	{
 		Dictionary dict = sent->dict->affix_table;
@@ -339,6 +360,7 @@ static int separate_word(Sentence sent,
 		suffix = dict->suffix;
 	}
 
+	/* Strip off punctuation, etc. on teh left-hand side. */
 	for (;;)
 	{
 		for (i=0; i<l_strippable; i++)
