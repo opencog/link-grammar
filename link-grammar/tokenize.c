@@ -51,7 +51,7 @@ static int is_initials_word(const char * word)
 
 /**
  * Return TRUE if word is a proper name.
- * XXX This is a cheap hack that works only in english, and is 
+ * XXX This is a cheap hack that works only in English, and is 
  * broken for German!  We need to replace this with something
  * language-specific. 
  *
@@ -347,9 +347,7 @@ static int separate_word(Sentence sent,
 	word[MIN(wend-w, MAX_WORD)] = '\0';
 	word_is_in_dict = FALSE;
 
-	if (is_proper_name(word))
-		word_is_in_dict = TRUE;
-	else if (boolean_dictionary_lookup(sent->dict, word))
+	if (boolean_dictionary_lookup(sent->dict, word))
 		word_is_in_dict = TRUE;
 	else if (is_initials_word(word))
 		word_is_in_dict = TRUE;
@@ -379,7 +377,7 @@ static int separate_word(Sentence sent,
 		suffix = dict->suffix;
 	}
 
-	/* Strip off punctuation, etc. on teh left-hand side. */
+	/* Strip off punctuation, etc. on the left-hand side. */
 	for (;;)
 	{
 		for (i=0; i<l_strippable; i++)
@@ -410,7 +408,8 @@ static int separate_word(Sentence sent,
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
-		if (boolean_dictionary_lookup(sent->dict, word) || is_initials_word(word)) break;
+		if (boolean_dictionary_lookup(sent->dict, word) ||
+		    is_initials_word(word)) break;
 
 		/* This could happen if it's a word after a colon, also! */
 		if (is_first_word && downcase_is_in_dict (sent->dict, word)) break;
@@ -490,12 +489,7 @@ static int separate_word(Sentence sent,
 	word[MIN(wend-w, MAX_WORD)] = '\0';
 	word_is_in_dict = FALSE;
 
-	/* If the first letter is upper-case, then assume its
-	 * a proper name, and so we are done.
-	 */
-	if (is_proper_name(word))
-		word_is_in_dict = TRUE;
-	else if (boolean_dictionary_lookup(sent->dict, word))
+	if (boolean_dictionary_lookup(sent->dict, word))
 		word_is_in_dict = TRUE;
 	else if (is_initials_word(word))
 		word_is_in_dict = TRUE;
@@ -587,10 +581,13 @@ static int separate_word(Sentence sent,
 
 	/* If the word is still not being found, then it might be 
 	 * a run-on of two words. Ask the spell-checker to split
-	 * the word in two, if possible.
+	 * the word in two, if possible. Do this only if the word
+	 * is not a proper name. 
 	 */
 	issued = FALSE;
-	if ((FALSE == word_is_in_dict) && sent->dict->spell_checker)
+	if ((FALSE == word_is_in_dict) && 
+       sent->dict->spell_checker &&
+       (FALSE == is_proper_name(word)))
 	{
 		char **alternates = NULL;
 		char *sp = NULL;
