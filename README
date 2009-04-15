@@ -1,7 +1,7 @@
 
                        Link Grammar Parser 
                        -------------------
-                          Version 4.5.2
+                          Version 4.5.3
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
