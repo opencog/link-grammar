@@ -99,18 +99,25 @@ CREATING the system:
    can be automatically detected.
 
    The system has been tested and works well on 32 and 64-bit Linux
-   systems, as well as on many Microsoft Windows systems, under
-   various different Windows development environments.
+   systems, FreeBSD, MacOSX, as well as on many Microsoft Windows 
+   systems, under various different Windows development environments.
+   Specific OS-dependent notes follow.
 
 
 BUILDING on MacOS:
 ------------------
-    MacOS users will probably need to obtain missing packages from 
-    MacPorts in order to successfully build on MacOS. See 
+    Apple MacOSX users will probably need to obtain missing packages
+    from MacPorts in order to successfully build on MacOS. See 
     http://www.macports.org/ for details.
 
     See also:
     http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
+
+    Users who intend to use the java bindings with java6 will need to 
+    make sure to compile link-grammar to produce a 64-bit binary, as
+    this is not automatic on OSX. Do this during configure:
+ 
+       ./configure CFLAGS="-arch x86_64"
 
 
 BUILDING on Windows:
