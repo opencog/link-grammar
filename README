@@ -90,6 +90,13 @@ CREATING the system:
    the header files in /usr/local/include/link-grammar
    and the dictionaries into /usr/local/share/link-grammar.
 
+   By default, the Makefiles attempt to build the Java bindings.
+   The use of the Java bindings is *OPTIONAL*; you do not need these if
+   you do not plan to use link-grammar with Java.  You can skip building
+   the Java bindings by disabling as follows:
+
+      ./configure --disable-java-bindings
+
    The /usr/local install target can be over-ridden using the
    standard GNU configure --prefix option, so for example:
 
@@ -287,6 +294,11 @@ JAVA bindings:
 
    Please note that the use of /opt is non-standard, and most system
    tools will fail to find packages installed there.
+
+	The building of the Java bindings can be disabled by configuring as
+   below:
+
+      ./configure --disable-java-bindings
 
 
 MULTI-THREADED USE:
