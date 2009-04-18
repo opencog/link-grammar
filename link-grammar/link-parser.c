@@ -410,15 +410,16 @@ static int special_command(char *input_string, Dictionary dict)
 
 static Label strip_off_label(char * input_string)
 {
-	int c;
+	Label c;
 
-	c = input_string[0];
+	c = (Label) input_string[0];
 	switch(c) {
 	case UNGRAMMATICAL:
 	case PARSE_WITH_DISJUNCT_COST_GT_0:
 		input_string[0] = ' ';
 		return c;
 		break;
+	case NO_LABEL:
 	default:
 		return NO_LABEL;
 	}
