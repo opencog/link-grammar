@@ -47,7 +47,7 @@ void string_delete(String *s)
 
 char * string_copy(String *s)
 {
-	char * p = exalloc(s->eos + 1);
+	char * p = (char *) exalloc(s->eos + 1);
 	strcpy(p, s->p);
 	return p;
 }
@@ -68,7 +68,7 @@ void append_string(String * string, const char *fmt, ...)
 	if (string->allocated <= string->eos + templen)
 	{
 		new_size = 2 * string->allocated + templen + 1;
-		p = exalloc(sizeof(char)*new_size);
+		p = (char *) exalloc(sizeof(char)*new_size);
 		strcpy(p, string->p);
 		strcpy(p + string->eos, temp_string);
 

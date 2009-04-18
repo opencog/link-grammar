@@ -648,7 +648,7 @@ char * linkage_print_postscript(Linkage linkage, int mode)
 	ps = build_linkage_postscript_string(linkage, &ctx);
 	size = strlen(header(mode)) + strlen(ps) + strlen(trailer(mode)) + 1;
 	
-	qs = exalloc(sizeof(char)*size);
+	qs = (char *) exalloc(sizeof(char)*size);
 	sprintf(qs, "%s%s%s", header(mode), ps, trailer(mode));
 	exfree(ps, strlen(ps)+1);
 	 

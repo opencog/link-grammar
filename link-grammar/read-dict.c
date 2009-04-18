@@ -603,9 +603,9 @@ Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 int boolean_dictionary_lookup(Dictionary dict, const char *s)
 {
 	Dict_node *llist = dictionary_lookup_list(dict, s);
-	int bool = (llist != NULL);
+	int boool = (llist != NULL);
 	free_lookup_list(llist);
-	return bool;
+	return boool;
 }
 
 /* ======================================================================== */

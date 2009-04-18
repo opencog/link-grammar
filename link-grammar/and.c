@@ -1599,12 +1599,12 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 			/* the disjunct in the table has just been found */
 
 			if (end < 0) {
-			  for (con = dis->right; place > 0; place--, con=con->next);
+			  for (con = dis->right; place > 0; place--, con=con->next) {}
 				/* sublinkage->link[link]->lc = con; OLD CODE */
 			  exfree_connectors(sublinkage->link[link]->lc);
 			  sublinkage->link[link]->lc = excopy_connectors(con);
 			} else {
-				for (con = dis->left; place > 0; place--, con=con->next);
+				for (con = dis->left; place > 0; place--, con=con->next) {}
 				/* sublinkage->link[link]->rc = con; OLD CODE */
 				exfree_connectors(sublinkage->link[link]->rc);
 				sublinkage->link[link]->rc = excopy_connectors(con);

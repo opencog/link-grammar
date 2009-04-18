@@ -388,7 +388,7 @@ char * join_path(const char * prefix, const char * suffix)
 	int path_len;
 
 	path_len = strlen(prefix) + 1 /* len(DIR_SEPARATOR) */ + strlen(suffix);
-	path = malloc(path_len + 1);
+	path = (char *) malloc(path_len + 1);
 
 	strcpy(path, prefix);
 	path[strlen(path)+1] = '\0';
@@ -640,14 +640,14 @@ void * object_open(const char *filename,
 
 static void * dict_file_open(const char * fullname, void * user_data)
 {
-	const char * how = user_data;
-	return fopen(fullname, how);
+	const char * how = (const char *) user_data;
+	return (void *) fopen(fullname, how);
 }
 
 FILE *dictopen(const char *filename, const char *how)
 {
 	void * ud = (void *) how;
-	return object_open(filename, dict_file_open, ud);
+	return (FILE *) object_open(filename, dict_file_open, ud);
 }
 
 /* ======================================================== */

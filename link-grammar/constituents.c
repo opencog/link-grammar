@@ -1606,7 +1606,7 @@ static CType token_type (char *token)
 static CNode * make_CNode(char *q)
 {
 	CNode * cn;
-	cn = exalloc(sizeof(CNode));
+	cn = (CNode *) exalloc(sizeof(CNode));
 	cn->label = (char *) exalloc(sizeof(char)*(strlen(q)+1));
 	strcpy(cn->label, q);
 	cn->child = cn->next = (CNode *) NULL;

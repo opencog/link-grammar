@@ -147,7 +147,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	dn = NULL;
 
 	sz = strlen(string)+1;
-	p = s = xalloc(sz);
+	p = s = (char *) xalloc(sz);
 	strcpy(s, string);
 
 	while (*s != '\0') {

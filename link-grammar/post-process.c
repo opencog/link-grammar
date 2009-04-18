@@ -317,7 +317,7 @@ apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 			 dtl != NULL &&
 				 !post_process_match(rule->selector,
 								 sublinkage->link[dtl->link]->name);
-			 dtl = dtl->next);
+			 dtl = dtl->next) {}
 			if (dtl != NULL)
 		{
 			/* selector link of rule appears in this domain */
@@ -350,7 +350,7 @@ apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 			 dtl != NULL &&
 				 !post_process_match(rule->selector,
 								 sublinkage->link[dtl->link]->name);
-			 dtl = dtl->next);
+			 dtl = dtl->next) {}
 			if (dtl != NULL)
 		{
 			/* selector link of rule appears in this domain */

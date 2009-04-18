@@ -1707,7 +1707,7 @@ int pp_lexer_count_tokens_of_label(PPLexTable *lt)
 	 prt_error("Fatal Error: pp_lexer: current label is invalid");
     exit(1);
   }
-  for (n=0, p=lt->nodes_of_label[lt->idx_of_active_label]; p;p=p->next, n++);
+  for (n=0, p=lt->nodes_of_label[lt->idx_of_active_label]; p;p=p->next, n++){}
   return n;
 }
 
@@ -1745,7 +1745,7 @@ const char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt, int *n_t
   static int extents=0;
 
   p=lt->current_node_of_active_label;	   
-  for (n=0; p!=NULL && strcmp(p->str,","); n++, p=p->next);
+  for (n=0; p!=NULL && strcmp(p->str,","); n++, p=p->next) {}
   if (n>extents) {
      extents = n;
      free (tokens);
@@ -1802,7 +1802,7 @@ static void set_label(PPLexTable *lt, const char *label)
   *c = 0;
 
   /* have we seen this label already? If so, abort */
-  for (i=0;lt->labels[i]!=NULL && strcmp(lt->labels[i],label_sans_colon);i++);
+  for (i=0;lt->labels[i]!=NULL && strcmp(lt->labels[i],label_sans_colon);i++) {}
   if (lt->labels[i]!=NULL) 
   {
     prt_error("Fatal Error: pp_lexer: label %s multiply defined!", label_sans_colon);

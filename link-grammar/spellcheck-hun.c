@@ -34,7 +34,7 @@ void * spellcheck_create(const char * lang)
 
 void spellcheck_destroy(void * chk)
 {
-	Hunhandle *h = chk;
+	Hunhandle *h = (Hunhandle *) chk;
 	Hunspell_destroy(h);
 }
 
@@ -49,7 +49,7 @@ int spellcheck_test(void * chk, const char * word)
 		return 0;
 	}
 
-	return Hunspell_spell(chk, word);
+	return Hunspell_spell((Hunhandle *)chk, word);
 }
 
 int spellcheck_suggest(void * chk, char ***sug, const char * word)
@@ -60,7 +60,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		return 0;
 	}
 
-	return Hunspell_suggest(chk, sug, word);
+	return Hunspell_suggest((Hunhandle *)chk, sug, word);
 }
 
 #else

@@ -90,7 +90,7 @@ const char *match_regex(Dictionary dict, char *s)
 		/* int rc = pcre_exec(re->re, NULL, s, strlen(s), 0,
 		 *                    0, ovector, PCRE_OVEC_SIZE); */
 
-		rc = regexec(re->re, s, 0, NULL, 0);
+		rc = regexec((regex_t*) re->re, s, 0, NULL, 0);
 		if (0 == rc)
 		{
 			return re->name; /* match found. just return--no multiple matches. */
@@ -114,7 +114,7 @@ void free_regexs(Dictionary dict)
 	while (re != NULL)
 	{
 		Regex_node *next = re->next;
-		regfree(re->re);
+		regfree((regex_t *)re->re);
 		free(re);
 		re = next;
 	}

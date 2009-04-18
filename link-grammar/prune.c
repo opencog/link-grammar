@@ -1866,9 +1866,9 @@ static int rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 			/* now we want to see if we can satisfy this criterion link */
 			/* with a collection of the links in the cms table */
 
-			for (s = name; isupper((int)*s); s++);
+			for (s = name; isupper((int)*s); s++) {}
 			for (;*s != '\0'; s++) if (*s != '*') *s = '#';
-			for (s = name, t = p->str; isupper((int) *s); s++, t++);
+			for (s = name, t = p->str; isupper((int) *s); s++, t++) {}
 
 			/* s and t remain in lockstep */
 			bad = 0;
