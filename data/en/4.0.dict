@@ -2455,7 +2455,7 @@ lets.v: <verb-s> & <vc-let>;
 letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
-let's let’s: Wi- & I+;
+let's let’s: (Wi- & {N+} & I+) or (Wi- & N+);
 
 <vc-watch>: ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or ([[@MV+ & O*n+ & {@MV+}]])
 or {@MV+};
