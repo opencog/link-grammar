@@ -897,7 +897,7 @@ hadn't hadn’t: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@
 <vc-be>: ({@EBm+} & (((O*t+ or [B**t-] or K+ or BI+ or OF+ or PF- or 
 (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+) or [[()]]) & {@MV+})
 or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or 
-({N+} & (AF- or Pg*b+ or Pv+));
+({N+} & (AF- or Pg*b+ or Pv+ or I*v+));
 is.v: ((<verb-x-s>) or 
 ((Rw- or Q- or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
