@@ -1,5 +1,7 @@
 Version 4.5.4 (??? 2009) includes the following changes:
- * Fix: "A bed is something you sleep in."
+ * Fix: "sleep in":  "A bed is something you sleep in."
+ * Fix: "drinking": "Let's go drinking."
+ * Fix go+bare infinitive: "Let's go shop", "Let's go swim"
 
 Version 4.5.3 (14 April 2009) includes the following changes:
  * Haste makes waste! Revert a recent 'fix'.
