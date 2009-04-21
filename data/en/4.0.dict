@@ -1021,10 +1021,11 @@ fallen.v: (<verb-pp> & <vc-rise>) or ({@E-} & A+);
 rising.v falling.v: (<vc-rise> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
 
+% words.v.6: Optionally transitive verbs that can take particles 
+% like "up" and "out" -- see also words.v.8
+% average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
 <vc-fill>: ((K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+}) or
 [[@MV+ & O*n+]]) & {@MV+};
-% optionally transitive verbs that can take particles like "up" and "out"
-% average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
 /en/words/words.v.6.1: <verb-pl,i> & <vc-fill>; 
 /en/words/words.v.6.2: <verb-s> & <vc-fill>;
 /en/words/words.v.6.3:
@@ -1080,10 +1081,11 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 /en/words/words-medical.v.4.5: 
 (<vc-trans> & <verb-ge>) or <verb-ge-d>;
 
+% words.v.8: Transitive verbs that can take particles like "up" and "out"
+% auction.v bandy.v bar.v batten.v bite.v block.v blot.v blow.v blurt.v 
+% See also words.v.6 for optionally transitive verbs.
 <vc-kick>: ((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+}) or 
 [[@MV+ & O*n+]]) & {@MV+};
-% transitive verbs that can take particles like "up" and "out"
-% auction.v bandy.v bar.v batten.v bite.v block.v blot.v blow.v blurt.v 
 /en/words/words.v.8.1: 
 <verb-pl,i> & <vc-kick>;
 /en/words/words.v.8.2:
@@ -1264,7 +1266,7 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % Imperative go: "go play ball", "go take a walk", "go swimming"
 % Same pattern as "please.w" -- "please play ball" etc.
 % "You and Rover go play with the ball." requires an S- link.
-go.w: (Wi- or S-) & I+;
+go.w: {E-} & (Wi- or S-) & I+;
 
 <vc-go>: {K+ or [[Pa+]] or [[Pg+]]} & {@MV+}; 
 go.v: <verb-pl,i> & <vc-go>;
