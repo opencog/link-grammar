@@ -2211,12 +2211,12 @@ writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
 % mandatory: '*she sang me' 
 <vc-sing>: ({(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
 (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+});
-sing.v: <verb-pl,i> & <vc-sing>;
-sings.v: <verb-s> & <vc-sing>;
-sang.v: <verb-sp> & <vc-sing>;
+sing.v dance.v: <verb-pl,i> & <vc-sing>;
+sings.v dances.v: <verb-s> & <vc-sing>;
+sang.v danced.v: <verb-sp> & <vc-sing>;
 sung.v: (<verb-pp> or <verb-sp>) & <vc-sing> ;
-singing.g: (<vc-sing> & <verb-ge>) or <verb-ge-d>;
-singing.v: <verb-pg> & <vc-sing>;
+singing.g dancing.g: (<vc-sing> & <verb-ge>) or <verb-ge-d>;
+singing.v dancing.v: <verb-pg> & <vc-sing>;
 
 <vc-allow>: (((O+ & {[[@MV+]]} & O*n+) or ([[@MV+]] & O*n+)) & {@MV+}) or 
 ((O+ or B-) & {@MV+} & {B- or TOo+});
@@ -3174,7 +3174,7 @@ as_if as_though: ((Cs+ or Mgp+ or Mv+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or
 ({Xd- & Xc+} & MVs-) or 
 (Xd- & Xc+ & E+))) or ((BIh- or LI-) & Cs+);
 as_soon_as: Cs+ & {Xc+ & {Xd-}} & CO*s+;
-until: ((Mgp+ or J+ or JT+ or UN+) & (({Xc+ & {Xd-}} & CO+) or 
+until 'til ’til ‘til `til til: ((Mgp+ or J+ or JT+ or UN+) & (({Xc+ & {Xd-}} & CO+) or 
 ({Xd- & Xc+} & MVp-) or [Mp-])) or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
 
 since: ((Mgp+ or J+ or JT+ or UN+) & (({Xc+ & {Xd-}} & CO+) or 
