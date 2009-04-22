@@ -86,6 +86,9 @@ There were three cacti in front of us.
 Add a cup of finely shredded carrot.
 A length of chain was wrapped around the tree.
 
+They are like family to us.
+He is like family to us.
+
 % Some ditranstive verbs of various complexity
 He poured me a glass of champagne.
 *He poured me.
@@ -349,6 +352,12 @@ All he ever does is listen to the radio.
 All he ever does is sit in front of the computer.
 All he will ever do is complain.
 All he will ever do is go drinking.
+One of the things you do when you sleep is dream.
+One of the things you do when you sleep is to dream.
+Something you might do while attending school is learn.
+*Something you might do while attending school is to learn.
+Something you need to do before you watch TV is turn on the TV.
+One of the things you do when you stop your bicycle is apply the brake
 
 % Copulas with noun target:
 All he wants is luck.
@@ -707,9 +716,22 @@ It's a good bet he did it.
 It's a good bet that he did it.
 He's not the least bit interested.
 Let me tell you this: it stank.
+Water and oil don't mix.
+
+% die-idioms
+Stay pretty, die young.
+I don't want to die young.
+You will die young if you keep smoking.
+You will die unhappy if you marry her.
+Grant me this wish and I will die happy.
 
 He didn't say.
 She wouldn't tell anyone.
+Stopping your bicycle requires using your brakes.
+
+Canvas is for painting on.
+Use a piece of paper to write upon.
+A piece of paper can be used to write upon.
 
 % Broken parse: object should be "way out", and not a K to "took".
 *John took the easy way out.

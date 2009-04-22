@@ -4,7 +4,8 @@ Version 4.5.4 (??? 2009) includes the following changes:
  * Fix go+bare infinitive: "Let's go shop", "Let's go swim"
  * Fix: "Let's go for a swim." "Let's go for a smoke".
  * Fix: "Let's not" "Let's not go" "Let's not cry"
- * Fix: is <infinitive>:  "All he ever does is complain."
+ * Fix: ... is <bare-infinitive>:  "All he ever does is complain."
+ * Fix: "You will die young/happy/unhappy"
 
 Version 4.5.3 (14 April 2009) includes the following changes:
  * Haste makes waste! Revert a recent 'fix'.
