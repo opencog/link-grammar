@@ -9,8 +9,12 @@
 % Example sentences showing BUG FIXES since link-grammar 4.1b
 % as well as demonstating bugs that reamin to be fixed.
 %
+% Missing words.
+He picked up the game die.
 People use espresso to make other coffee drinks.
 Espresso is a coffee drink.
+
+% Misc stuff
 Play fetch with Elena.
 I know which book he read.
 I know what book he read.
