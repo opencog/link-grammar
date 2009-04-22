@@ -6,6 +6,7 @@ Version 4.5.4 (??? 2009) includes the following changes:
  * Fix: "Let's not" "Let's not go" "Let's not cry"
  * Fix: ... is <bare-infinitive>:  "All he ever does is complain."
  * Fix: "You will die young/happy/unhappy"
+ * Fix: "You should exercise to stay fit."
 
 Version 4.5.3 (14 April 2009) includes the following changes:
  * Haste makes waste! Revert a recent 'fix'.
