@@ -60,13 +60,24 @@ Radu Mihalcea word-sense disambiguation algorithm to it.
 
 Notes:
 ------
-To populate the disjunct table:
-pg_dump -D -O -t disjuncts lexat
+Review the contents of opencog/nlp/wsd-post/README. That README explains
+the data processing pipleine in detail. In breif:
+
+Compute the marginal and conditional probabilities for the Disjuncts
+table by running the 
+     opencog/nlp/wsd-post/compute-mi.scm script.
+
+Merge sysnsets by running 
+     opencog/nlp/wsd-post/synset-renorm.pl
+
+Recompute the DisjunstSenses conditional probs by:
+     opencog/nlp/wsd-post/dj-probs.pl
+
+To populate the disjunct table: first, dump the disjuncts:
+     pg_dump -D -O -t disjuncts lexat
 
 
 To populate the disjnuct-senses table:
-Recompute the conditional probs by:
-opencog/nlp/wsd-post/dj-probs.pl
 
 Then remove the count column, and the bogus entries:
 
