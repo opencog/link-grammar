@@ -1022,7 +1022,7 @@ static int split_sentence(Sentence sent, Parse_Options opts)
 	int i;
 	Dictionary dict = sent->dict;
 
-	if (!separate_sentence(sent->orig_sentence, sent))
+	if (!separate_sentence(sent, opts))
 	{
 		return -1;
 	}

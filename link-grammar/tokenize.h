@@ -10,6 +10,6 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-int separate_sentence(const char * s, Sentence sent);
-int build_sentence_expressions(Sentence sent, Parse_Options opts);
-int sentence_in_dictionary(Sentence sent);
+int separate_sentence(Sentence, Parse_Options);
+int build_sentence_expressions(Sentence, Parse_Options);
+int sentence_in_dictionary(Sentence);

@@ -76,11 +76,11 @@ Recompute the DisjunstSenses conditional probs by:
 To populate the disjunct table: first, dump the disjuncts:
      pg_dump -D -O -t disjuncts lexat
 
+To populate the DisjunctSenses table:
 
-To populate the disjnuct-senses table:
-
-Then remove the count column, and the bogus entries:
-
-select word_sense, inflected_word, disjunct, log_cond_probability into djsxxxtmp from DisjunctSenses where log_cond_probability > 0;
+Then remove the count column, and the bogus entries, via
+select; run the cleanup scripts. 
 
 pg_dump -D -O -t djsxxxtmp lexat
+
+============

@@ -315,7 +315,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
  * parts.  The process is described above.  Returns TRUE if OK, FALSE if
  * too many punctuation marks 
  */
-static int separate_word(Sentence sent, 
+static int separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
                          int is_first_word, int quote_found)
 {
@@ -582,12 +582,13 @@ static int separate_word(Sentence sent,
 	/* If the word is still not being found, then it might be 
 	 * a run-on of two words. Ask the spell-checker to split
 	 * the word in two, if possible. Do this only if the word
-	 * is not a proper name. 
+	 * is not a proper name, and if spell-checking is enabled.
 	 */
 	issued = FALSE;
 	if ((FALSE == word_is_in_dict) && 
-       sent->dict->spell_checker &&
-       (FALSE == is_proper_name(word)))
+	    TRUE == opts->use_spell_guess &&
+	    sent->dict->spell_checker &&
+	    (FALSE == is_proper_name(word)))
 	{
 		char **alternates = NULL;
 		char *sp = NULL;
@@ -642,12 +643,13 @@ static int separate_word(Sentence sent,
  * the sent->word[] array.  Returns TRUE if all is well, FALSE otherwise.
  * Quote marks are treated just like blanks.
  */
-int separate_sentence(const char * s, Sentence sent)
+int separate_sentence(Sentence sent, Parse_Options opts)
 {
 	const char *t;
 	int i, is_first, quote_found;
 	Dictionary dict = sent->dict;
 	mbstate_t mbs;
+	const char * s = sent->orig_sentence;
 
 	for(i=0; i<MAX_SENTENCE; i++) sent->post_quote[i] = 0;
 	sent->length = 0;
@@ -688,7 +690,7 @@ int separate_sentence(const char * s, Sentence sent)
 			if (0 > nb) goto failure;
 		}
 
-		if (!separate_word(sent, s, t, is_first, quote_found)) return FALSE;
+		if (!separate_word(sent, opts, s, t, is_first, quote_found)) return FALSE;
 		is_first = FALSE;
 		s = t;
 		if (*s == '\0') break;

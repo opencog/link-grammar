@@ -7,7 +7,7 @@
 !constituents=1
 
 % Example sentences showing BUG FIXES since link-grammar 4.1b
-% as well as demonstating bugs that reamin to be fixed.
+% as well as demonstating bugs that remain to be fixed.
 %
 % Missing words.
 He picked up the game die.
@@ -215,7 +215,7 @@ It demonstrated a certain aloofness.
 It demonstrated a certain adroitness.
 It demonstrated a certain aggressiveness.
 *It demonstrated a certain acetylene.
-*It demonstrated a certain alumunim.
+*It demonstrated a certain aluminum.
 The acetylene exploded.
 *The adroitness exploded.
 
@@ -571,8 +571,6 @@ He is a seven year old.
 The seven year olds ran rampant.
 The seven year olds ran wild.
 
-John, aged 80, is ill.
-
 % Adverbs that typically follow a verb.
 The horses run free now.
 The horses run hard.
@@ -728,6 +726,7 @@ Thief empties pockets of all they hold.
 
 % Registers -- Medical speech
 7 month old female presents with chest congestion.
+John, aged 80, is ill.
 
 % Idiomatic phrases
 It's a good bet he did it.
