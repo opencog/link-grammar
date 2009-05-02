@@ -991,7 +991,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 Sentence sentence_create(const char *input_string, Dictionary dict)
 {
 	Sentence sent;
-	int i;
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
 	bzero(sent, sizeof(struct Sentence_s));
@@ -1009,11 +1008,23 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->parse_info = NULL;
 	sent->string_set = string_set_create();
 
-	if (!separate_sentence(input_string, sent))
+	sent->q_pruned_rules = FALSE;
+	sent->is_conjunction = NULL;
+
+	/* Make a copy of the input */
+	sent->orig_sentence = string_set_add (input_string, sent->string_set);
+
+	return sent;
+}
+
+static int split_sentence(Sentence sent, Parse_Options opts)
+{
+	int i;
+	Dictionary dict = sent->dict;
+
+	if (!separate_sentence(sent->orig_sentence, sent))
 	{
-		string_set_delete(sent->string_set);
-		xfree(sent, sizeof(struct Sentence_s));
-		return NULL;
+		return -1;
 	}
 
 	sent->q_pruned_rules = FALSE; /* for post processing */
@@ -1031,12 +1042,11 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	if (!(dict->unknown_word_defined && dict->use_unknown_word))
 	{
 		if (!sentence_in_dictionary(sent)) {
-			sentence_delete(sent);
-			return NULL;
+			return -1;
 		}
 	}
 
-	return sent;
+	return 0;
 }
 
 void sentence_delete(Sentence sent)
@@ -1123,10 +1133,14 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
 
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
+	int rc;
 	int nl;
 	s64 total;
 
 	verbosity = opts->verbosity;
+
+	rc = split_sentence(sent, opts);
+	if (rc) return 0;
 
 	/* Tokenize, look up each word in the dictionary, collect up all
 	 * plausible disjunct expressions for each word. */

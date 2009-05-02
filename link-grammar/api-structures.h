@@ -224,6 +224,7 @@ struct Parse_info_struct
 struct Sentence_s
 {
 	Dictionary  dict;           /* words are defined from this dictionary */
+	const char *orig_sentence;  /* Copy of original sentence */
 	int    length;              /* number of words */
 	Word   word[MAX_SENTENCE];  /* array of words after tokenization */
 	char * is_conjunction;      /* TRUE if conjunction, as defined by dictionary */
