@@ -75,6 +75,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_all_short_connectors(opts, 1);
 	parse_options_set_linkage_limit(opts, 100);
 	parse_options_set_verbosity(opts,0);
+	parse_options_set_spell_guess(opts, FALSE);
 }
 
 static inline void test(void)
@@ -125,6 +126,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_linkage_limit(ptd->opts, 1000);
 	parse_options_set_short_length(ptd->opts, 10);
 	parse_options_set_verbosity(ptd->opts,0);
+	parse_options_set_spell_guess(ptd->opts, FALSE);
 
 	/* Default to the english language; will need to fix 
 	 * this if/when more languages are supported.
