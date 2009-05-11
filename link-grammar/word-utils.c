@@ -305,6 +305,8 @@ void set_is_conjunction(Sentence sent)
 int sentence_contains_conjunction(Sentence sent)
 {
 	int w;
+	if (NULL == sent->is_conjunction) return FALSE;
+
 	for (w=0; w<sent->length; w++) {
 		if (sent->is_conjunction[w]) return TRUE;
 	}

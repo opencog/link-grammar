@@ -1063,7 +1063,7 @@ void sentence_delete(Sentence sent)
 	free_effective_dist(sent);
 	free_count(sent);
 	free_analyze(sent);
-	xfree(sent->is_conjunction, sizeof(char)*sent->length);
+	if (sent->is_conjunction) xfree(sent->is_conjunction, sizeof(char)*sent->length);
 	xfree((char *) sent, sizeof(struct Sentence_s));
 }
 
