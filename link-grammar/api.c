@@ -1140,7 +1140,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	verbosity = opts->verbosity;
 
 	rc = split_sentence(sent, opts);
-	if (rc) return 0;
+	if (rc) return -1;
 
 	/* Tokenize, look up each word in the dictionary, collect up all
 	 * plausible disjunct expressions for each word. */

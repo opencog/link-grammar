@@ -614,6 +614,7 @@ int main(int argc, char * argv[])
 		parse_options_reset_resources(opts);
 
 		num_linkages = sentence_parse(sent, opts);
+		if (num_linkages < 0) continue;
 
 		/* Now parse with null links */
 		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts))) {
