@@ -1,3 +1,6 @@
+Version 4.5.5 (10 May 2009) includes the following changes:
+ * Bugfix: crash for zero-length sentences.
+
 Version 4.5.4 (9 May 2009) includes the following changes:
  * Fix: "sleep in":  "A bed is something you sleep in."
  * Fix: "drinking": "Let's go drinking."
