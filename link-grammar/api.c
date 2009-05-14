@@ -1330,7 +1330,7 @@ static int link_already_appears(Linkage linkage, Link *link, int a)
 
 static PP_info excopy_pp_info(PP_info ppi)
 {
-	static PP_info newppi;
+	PP_info newppi;
 	int i;
 
 	newppi.num_domains = ppi.num_domains;
