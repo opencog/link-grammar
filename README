@@ -1,7 +1,7 @@
 
                        Link Grammar Parser 
                        -------------------
-                          Version 4.5.3
+                          Version 4.5.6
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -62,7 +62,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.3.10.tar.gz.asc
+   gpg --verify link-grammar-4.5.6.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -172,15 +172,16 @@ BUILDING on Windows:
     product may wish to use the project files in the msvc6 directory, or
     alternately, those in the msvc9 directory.
 
+
 RUNNING the program:
 --------------------
    To run the program issue the Unix command:
 
        ./link-parser
 
-   This starts the program.  Help is available there with "!help".  A
-   number of user-settable variables control what happens.  "!var" shows
-   these variables and their current values.
+   This starts the program.  The program has many user-settable variables
+   and options. These can be displayed by entering !var at the link-parser
+   promt.  Entering !help will display some additional commands.
 
    The dictionaries contain some utf-8 punctuation. These may generate
    errors for users in a non-utf-8 locale, such as the "C" locale.
@@ -190,6 +191,9 @@ RUNNING the program:
 
    at the shell prompt.
 
+
+TESTING the program:
+--------------------
    The program can run in batch mode for testing the system on a large
    number of sentences.  The following command runs the parser on
    a file called 4.0.batch
@@ -199,11 +203,11 @@ RUNNING the program:
    The line "!batch" near the top of 4.0.batch turns on batch mode.  In
    this mode sentences labeled with an initial "*" should be rejected
    and those not starting with a "*" should be accepted.  The current
-   batch file does report some errors; there are a collection of
-   failing parses located at the end. Work is ongoing to fix these.
+   batch file does report some errors, as do the files "4.0.biolg.batch"
+   and "4.0.fixes.batch".  Work is ongoing to fix these.
 
-   The 4.0.fixes.batch file contains sentences that have been fixed 
-   since the original 4.1 release of link-grammar. The 4.0.biolg.batch
+   The "4.0.fixes.batch" file contains sentences that have been fixed 
+   since the original 4.1 release of link-grammar. The "4.0.biolg.batch"
    contains biology/medical-text sentences from the BioLG project.
 
 
