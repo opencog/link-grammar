@@ -15,6 +15,16 @@
 
 /* This file contains the exhaustive search algorithm. */
 
+typedef struct Table_connector_s Table_connector;
+struct Table_connector_s
+{
+	short            lw, rw;
+	Connector        *le, *re;
+	short            cost;
+	s64              count;
+	Table_connector  *next;
+};
+
 struct count_context_s
 {
 	char ** deletable;
@@ -23,6 +33,8 @@ struct count_context_s
 	int     null_block;
 	int     islands_ok;
 	int     null_links;
+	int     table_size;
+	Table_connector ** table;
 	Resources current_resources;
 };
 
@@ -143,40 +155,42 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		return FALSE;
 }
 
-typedef struct Table_connector_s Table_connector;
-struct Table_connector_s
+void init_table(Sentence sent)
 {
-	short            lw, rw;
-	Connector        *le, *re;
-	short            cost;
-	s64              count;
-	Table_connector  *next;
-};
-
-static int table_size;
-static Table_connector ** table;
-
-void init_table(Sentence sent) {
-	/* A piecewise exponential function determines the size of the hash table.	  */
-	/* Probably should make use of the actual number of disjuncts, rather than just */
-	/* the number of words														  */
+	/* A piecewise exponential function determines the size of the
+	 * hash table. Probably should make use of the actual number of
+	 * disjuncts, rather than just the number of words.
+	 */
 	int i;
-	if (sent->length >= 10) {
-		table_size = (1<<16);
-		/*  } else if (sent->length >= 10) {
-			table_size = (1 << (((6*(sent->length-10))/30) + 10)); */
-	} else if (sent->length >= 4) {
-		table_size = (1 << (((6*(sent->length-4))/6) + 4));
-	} else {
-		table_size = (1 << 4);
+	count_context_t *ctxt = sent->count_ctxt;
+
+	if (sent->length >= 10)
+	{
+		ctxt->table_size = (1<<16);
+#if 0
+		} else if (sent->length >= 10) {
+			table_size = (1 << (((6*(sent->length-10))/30) + 10)); 
+#endif
+	} 
+	else if (sent->length >= 4)
+	{
+		ctxt->table_size = (1 << (((6*(sent->length-4))/6) + 4));
 	}
-	table = (Table_connector**) xalloc(table_size * sizeof(Table_connector*));
-	for (i=0; i<table_size; i++) {
-		table[i] = NULL;
+	else
+	{
+		ctxt->table_size = (1 << 4);
+	}
+	ctxt->table = (Table_connector**) 
+		xalloc(ctxt->table_size * sizeof(Table_connector*));
+	for (i=0; i < ctxt->table_size; i++)
+	{
+		ctxt->table[i] = NULL;
 	}
 }
 
-static int hash(int lw, int rw, Connector *le, Connector *re, int cost) {
+static int hash(int table_size,
+                int lw, int rw, Connector *le, Connector *re, int cost)
+{
 	int i;
 	i = 0;
 
@@ -192,20 +206,26 @@ void free_table(Sentence sent)
 {
 	int i;
 	Table_connector *t, *x;
+	count_context_t *ctxt = sent->count_ctxt;
 
-	for (i=0; i<table_size; i++) {
-		for(t = table[i]; t!= NULL; t=x) {
+	for (i=0; i<ctxt->table_size; i++)
+	{
+		for(t = ctxt->table[i]; t!= NULL; t=x)
+		{
 			x = t->next;
 			xfree((void *) t, sizeof(Table_connector));
 		}
 	}
-	xfree((void *) table, table_size * sizeof(Table_connector*));
+	xfree(ctxt->table, ctxt->table_size * sizeof(Table_connector*));
+	ctxt->table = NULL;
+	ctxt->table_size = 0;
 }
 
 /** 
  * Stores the value in the table.  Assumes it's not already there.
  */
-static Table_connector * table_store(int lw, int rw,
+static Table_connector * table_store(count_context_t *ctxt,
+                                     int lw, int rw,
                                      Connector *le, Connector *re,
                                      int cost, s64 count)
 {
@@ -215,10 +235,10 @@ static Table_connector * table_store(int lw, int rw,
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
 	n->count = count;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
-	h = hash(lw, rw, le, re, cost);
-	t = table[h];
+	h = hash(ctxt->table_size,lw, rw, le, re, cost);
+	t = ctxt->table[h];
 	n->next = t;
-	table[h] = n;
+	ctxt->table[h] = n;
 	return n;
 }
 
@@ -230,7 +250,7 @@ find_table_pointer(count_context_t *ctxt,
                    int cost)
 {
 	Table_connector *t;
-	t = table[hash(lw, rw, le, re, cost)];
+	t = ctxt->table[hash(ctxt->table_size,lw, rw, le, re, cost)];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw) && (t->le == le) && (t->re == re)
 			&& (t->cost == cost))  return t;
@@ -242,7 +262,7 @@ find_table_pointer(count_context_t *ctxt,
 	if ((ctxt->current_resources != NULL) && 
 	     resources_exhausted(ctxt->current_resources))
 	{
-		return table_store(lw, rw, le, re, cost, 0);
+		return table_store(ctxt, lw, rw, le, re, cost, 0);
 	}
 	else return NULL;
 }
@@ -298,12 +318,12 @@ static s64 do_count(Sentence sent, int lw, int rw,
 
 	if (cost < 0) return 0;  /* will we ever call it with cost<0 ? */
 
-	t = find_table_pointer(sent->count_ctxt, lw, rw, le, re, cost);
+	t = find_table_pointer(ctxt, lw, rw, le, re, cost);
 
 	if (t == NULL) {
 		/* Create the table entry with a tentative cost of 0. 
 	    * This cost must be updated before we return. */
-		t = table_store(lw, rw, le, re, cost, 0);
+		t = table_store(ctxt, lw, rw, le, re, cost, 0);
 	} else {
 		return t->count;
 	}
@@ -563,7 +583,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 	if (i >= 0) return i;
 
 	if ((le == NULL) && (re == NULL) && ctxt->deletable[lw][rw]) {
-		table_store(lw, rw, le, re, 0, 1);
+		table_store(ctxt, lw, rw, le, re, 0, 1);
 		return 1;
 	}
 
@@ -609,7 +629,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 		put_match_list(sent, m1);
 		if (found != 0) break;
 	}
-	table_store(lw, rw, le, re, 0, found);
+	table_store(ctxt, lw, rw, le, re, 0, found);
 	return found;
 }
 
