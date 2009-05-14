@@ -32,7 +32,7 @@
    the code.
 
      Got rid of #line directives.
-     Added the prototype of yywrpa() right below this comment.
+     Added the prototype of yywrap() right below this comment.
      Commented out code and prototype declarations for the unused functions
  */
 
