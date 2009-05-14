@@ -226,15 +226,15 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		printf("can be abbreviated.  Here is a list of the commands:\n\n");
 		for (i=0; user_command[i].s != NULL; i++) {
 			printf(" !");
-            left_print_string(stdout, user_command[i].s, "                  ");
+            left_print_string(stdout, user_command[i].s, "               ");
             left_print_string(stdout, user_command[i].str, "                                                    ");
 			printf("\n");
 		}
-		printf(" !!<string>		 Print all the dictionary words matching <string>.\n");
-		printf("					Also print the number of disjuncts of each.\n");
+		printf(" !!<string>      Print all the dictionary words matching <string>.\n");
+		printf("                 Also print the number of disjuncts of each.\n");
 		printf("\n");
-		printf(" !<var>			 Toggle the specified boolean variable.\n");
-		printf(" !<var>=<val>	   Assign that value to that variable.\n");
+		printf(" !<var>          Toggle the specified boolean variable.\n");
+		printf(" !<var>=<val>    Assign that value to that variable.\n");
 		return;
 	}
 
