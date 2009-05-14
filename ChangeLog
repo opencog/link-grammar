@@ -1,5 +1,6 @@
 Version 4.5.6 (??? 2009)
  * Bugfix: fix non-thread-safe usage.
+ * Changes to enable MinGW/Windows to compile.
 
 Version 4.5.5 (10 May 2009) includes the following changes:
  * Bugfix: crash for zero-length sentences.

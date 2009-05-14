@@ -41,13 +41,17 @@
 /* The Microsoft Visual C compiler doesn't support the "inline" keyword. */
 #define inline
 
-/* Non-standard string functions */
+/* MS Visual C uses non-standard string function names */
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #define strcasecmp _stricmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
-/* Strangely, though, no langinfo Windows */
+#endif /* _MSC_VER */
+
+/* Appearntly, MinGW is also missing a variety of standard fuctions */
+#ifdef _MSC_VER || __MINGW32__
+/* No langinfo Windows */
 #define nl_langinfo(X) ""
 
 /* strtok_r is missing in Windows */
@@ -57,9 +61,10 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 #define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
 
 /* Windows doesn't have a thread-safe rand (???) */
+/* Surely not, there must be something */
 /* XXX FIXME -- this breaks thread safety on windows */
 #define rand_r(seedp) rand()
-#endif
+#endif /* _MSC_VER || __MINGW32__ */
 
 /* CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
  * However, MS Visual C appearently does ... 
@@ -77,7 +82,7 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 #define WEOF      EOF
 #define towlower  tolower
 #define towupper  toupper
-#endif
+#endif /* __CYGWIN__ */
 
 #endif /* _WIN32 */
 
