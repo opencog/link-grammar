@@ -420,6 +420,15 @@ TODO -- Working Notes:
       -- Split out parse-options, so that the command-line client
          options are not in the parse-options struct.
 
+   Hand-refining verb patterns:
+      A good reference for refining verb usage patterns is:
+      COBUILD GRAMMAR PATTERNS 1: VERBS
+      from THE COBUILD SERIES /from/ THE BANK OF ENGLISH
+      HARPER COLLINS
+      online at https://arts-ccr-002.bham.ac.uk/ccr/patgram/
+      http://www.corpus.bham.ac.uk/publications/index.shtml
+
+
    Quotations: Currently, tokenize.c ignores all ASCII double-quotes 
       (grep for "quote_found" in the source). However, it does not do this
       for the various "curly" UTF8 quotes, such as ‘these’ and “these”.
