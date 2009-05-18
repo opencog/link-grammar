@@ -50,7 +50,7 @@
 #endif /* _MSC_VER */
 
 /* Appearntly, MinGW is also missing a variety of standard fuctions */
-#ifdef _MSC_VER || __MINGW32__
+#if defined(_MSC_VER) || defined(__MINGW32__)
 /* No langinfo Windows */
 #define nl_langinfo(X) ""
 
