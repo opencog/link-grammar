@@ -340,7 +340,7 @@ chimes.n chimneypots.n chimneys.n chimneysweepers.n chimneysweeps.n
 chimpanzees.n chimps.n chinchillas.n chinks.n chins.n chipmunks.n 
 chips.n chiropodists.n chiropractors.n chirps.n chirrups.n chisels.n 
 chits.n chives.n chocolates.n chocs.n choices.n choirboys.n choirs.n 
-chokers.n chokes.n choppers.n chops.n chorales.n chords.n 
+chokers.n chokes.n choppers.n chops.n chopsticks.n chorales.n chords.n 
 choreographers.n chores.n choristers.n chortles.n choruses.n chows.n 
 christenings.n chromosomes.n chroniclers.n chronicles.n chronologies.n 
 chronometers.n chrysalises.n chrysanthemums.n chuckles.n chucks.n 
@@ -758,7 +758,7 @@ fratricides.n frauds.n frays.n frazzles.n freaks.n freckles.n
 freebooters.n freedoms.n freeholders.n freeholds.n freeways.n 
 freezers.n freezes.n freighters.n frequencies.n frescos.n frets.n 
 friars.n fricassees.n fricatives.n fridges.n friends.n friendships.n 
-friers.n friezes.n frigates.n frights.n frills.n fringes.n frissons.n 
+fries.n friers.n friezes.n frigates.n frights.n frills.n fringes.n frissons.n 
 fritters.n frivolities.n frocks.n frogs.n frolics.n frontages.n 
 frontiers.n frontispieces.n fronts.n frosts.n frowns.n fruitcakes.n 
 fruits.n frustrations.n fryers.n fuchsias.n fuckers.n fuels.n 
