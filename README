@@ -135,6 +135,11 @@ BUILDING on Windows:
     other utilities.  Download and install MinGW, MSYS and MSYS-DTK from
     http://mingw.org .
 
+    Link-grammar now requires a working version of posix-standard regex
+    libraries. Since these are not provided by Microsoft, a copy must be
+    obtained elsewhere. One possibility is from the gnuwin32 system:
+    http://gnuwin32.sourceforge.net/packages/regex.htm 
+
     Then build and install link-grammar with
 
        ./configure
@@ -171,7 +176,6 @@ BUILDING on Windows:
     Alternately, Windows users who have access to the "Microsoft Visual C"
     product may wish to use the project files in the msvc6 directory, or
     alternately, those in the msvc9 directory.
-
 
 RUNNING the program:
 --------------------
