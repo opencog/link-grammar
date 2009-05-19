@@ -160,6 +160,15 @@ AC_CHECK_HEADER([editline/readline.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_EDITLINE=1"
 AM_CONDITIONAL(HAVE_EDITLINE, test x${edlin} = xyes)
 
 dnl ====================================================================
+
+AC_CHECK_HEADER([regex.h],,[AC_MSG_ERROR([No regex.h header found])])
+
+AC_CHECK_FUNCS(regexec,,[AC_CHECK_LIB(regex,regexec,
+               [REGEX_LIBS=-lregex],
+               [AC_MSG_ERROR([No regex library found])])])
+AC_SUBST(REGEX_LIBS)
+
+dnl ====================================================================
 dnl check compiler flags
 
 AC_DEFUN([LINK_CC_TRY_FLAG], [

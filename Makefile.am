@@ -11,11 +11,17 @@ if HAVE_JAVA
 linkgrammar-@VERSION@.jar:
 	ant
 
-javadir=$(DESTDIR)/$(datadir)/java
+javadir=$(datadir)/java
 java_DATA = linkgrammar-@VERSION@.jar
 
+if OS_WIN32
+LN_S = cp
+else
+LN_S = ln -sf
+endif
+
 install-data-hook: 
-	ln -sf $(javadir)/$(java_DATA) $(javadir)/linkgrammar.jar
+	(cd ${DESTDIR}${javadir} && $(LN_S) $(java_DATA) linkgrammar.jar)
 endif 
 
 

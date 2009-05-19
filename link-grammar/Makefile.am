@@ -38,8 +38,8 @@ liblink_grammar_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
 liblink_grammar_java_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
 endif
 
-liblink_grammar_la_LIBADD  = 
-liblink_grammar_java_la_LIBADD  = liblink-grammar.la
+liblink_grammar_la_LIBADD  =  ${REGEX_LIBS}
+liblink_grammar_java_la_LIBADD  = liblink-grammar.la  ${REGEX_LIBS}
 
 if HAVE_HUNSPELL
 liblink_grammar_la_LIBADD  +=  ${HUNSPELL_LIBS}
