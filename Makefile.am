@@ -17,11 +17,11 @@ java_DATA = linkgrammar-@VERSION@.jar
 if OS_WIN32
 LN_S = cp
 else
-LN_S = ln -sf
+LN_SF = ln -sf
 endif
 
 install-data-hook: 
-	(cd ${DESTDIR}${javadir} && $(LN_S) $(java_DATA) linkgrammar.jar)
+	(cd ${DESTDIR}${javadir} && ${LN_SF} ${java_DATA} linkgrammar.jar)
 endif 
 
 
