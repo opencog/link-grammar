@@ -139,6 +139,7 @@ BUILDING on Windows:
     libraries. Since these are not provided by Microsoft, a copy must be
     obtained elsewhere. One possibility is from the gnuwin32 system:
     http://gnuwin32.sourceforge.net/packages/regex.htm 
+    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
     Then build and install link-grammar with
 
