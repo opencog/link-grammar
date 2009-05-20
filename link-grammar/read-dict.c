@@ -1318,7 +1318,9 @@ static int read_entry(Dictionary dict)
 		}
 
 		/* if it's a word-file name */
-		if (dict->token[0] == '/')
+		/* However, be careful to reject "/.v" which is the division symbol
+		 * used in equations (.v means verb-like) */
+		if ((dict->token[0] == '/') && (dict->token[1] != '.'))
 		{
 			dn = read_word_file(dict, dn, dict->token);
 			if (dn == NULL)

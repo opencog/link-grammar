@@ -756,7 +756,7 @@ DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 %EQUATIONS ETC.
 
 % "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
-=.v <.v >.v *.v "/".v +.v -.v x.v: 
+=.v <.v >.v *.v "/.v" +.v -.v x.v: 
 (S- or EQ-) & O+ & 
 (EQ+ or (Xd- & (Xc+ or [[[()]]]) & MX-));
 
