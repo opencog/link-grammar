@@ -23,6 +23,7 @@ struct corpus_s
 	sqlite3_stmt *rank_query;
 	sqlite3_stmt *sense_query;
 	char *errmsg;
+	int rc;
 };
 
 struct sense_s
@@ -42,8 +43,8 @@ static void * db_file_open(const char * dbname, void * user_data)
 	Corpus *c = (Corpus *) user_data;
 	int rc;
 	sqlite3 *dbconn;
-	rc = sqlite3_open(dbname, &dbconn);
-	if (rc)
+	c->rc = sqlite3_open_v2(dbname, &dbconn, SQLITE_OPEN_READONLY, NULL);
+	if (c->rc)
 	{
 		sqlite3_close(dbconn);
 		return NULL;
@@ -72,8 +73,19 @@ Corpus * lg_corpus_new(void)
 	c->dbconn = object_open("sql/disjuncts.db", db_file_open, c);
 	if (NULL == c->dbconn)
 	{
-		prt_error("Warning: Can't open database: %s\n",
-			sqlite3_errmsg(c->dbconn));
+		/* Very weird .. but if the database is not found, then sqlite
+		 * reports an "out of memory" error! So hide this misleading
+		 * error message.
+		 */
+		if (SQLITE_CANTOPEN == c->rc)
+		{
+			prt_error("Warning: Can't open database: File not found\n");
+		}
+		else
+		{ 
+			prt_error("Warning: Can't open database: %s\n",
+				sqlite3_errmsg(c->dbconn));
+		}
 		return c;
 	}
 
