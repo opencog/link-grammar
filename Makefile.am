@@ -21,7 +21,7 @@ LN_SF = ln -sf
 endif
 
 install-data-hook: 
-	(cd ${DESTDIR}${javadir} && ${LN_SF} ${java_DATA} linkgrammar.jar)
+	${LN_SF} ${javadir}/${java_DATA} ${DESTDIR}/${javadir}/linkgrammar.jar
 endif 
 
 
