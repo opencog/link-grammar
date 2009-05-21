@@ -1530,7 +1530,7 @@ Sentence linkage_get_sentence(Linkage linkage)
 
 const char * linkage_get_disjunct(Linkage linkage, int w)
 {
-	if (NULL == linkage->info->disjunct_list_str[w])
+	if (NULL == linkage->info->disjunct_list_str)
 	{
 		lg_compute_disjunct_strings(linkage->sent, linkage->info);
 	}
