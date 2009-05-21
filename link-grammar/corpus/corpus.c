@@ -428,6 +428,8 @@ void lg_sense_delete(Linkage_info *lifo)
 	size_t nwords = lifo->nwords;
 	size_t w;
 
+	if (NULL == lifo->sense_list) return;
+
 	for (w=0; w<nwords; w++)
 	{
 		Sense *sns = lifo->sense_list[w];
@@ -439,6 +441,8 @@ void lg_sense_delete(Linkage_info *lifo)
 			sns = nxt;
 		}
 	}
+	free (lifo->sense_list);
+	lifo->sense_list = NULL;
 }
 
 /* ======================= END OF FILE ===================== */
