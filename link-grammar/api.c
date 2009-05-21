@@ -747,21 +747,22 @@ static Linkage_info * linkage_info_new(int num_to_alloc)
 
 static void linkage_info_delete(Linkage_info *link_info, int sz)
 {
-#ifdef USE_CORPUS
 	int i,j;
 
 	for (i=0; i<sz; i++)
 	{
 		Linkage_info *lifo = &link_info[i];
-		for (j=0; j<MAX_SENTENCE; j++)
+		int nwords = lifo->nwords;
+		for (j=0; j<nwords; j++)
 		{
 			if (lifo->disjunct_list_str[j])
 				free(lifo->disjunct_list_str[j]);
-			lifo->disjunct_list_str[j] = NULL;
 		}
+		free(lifo->disjunct_list_str);
+#ifdef USE_CORPUS
 		lg_sense_delete(lifo);
-	}
 #endif
+	}
 	xfree(link_info, sz);
 }
 

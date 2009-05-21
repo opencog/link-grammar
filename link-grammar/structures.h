@@ -335,9 +335,9 @@ struct Linkage_info_struct
     double corpus_cost;
     Andlist * andlist;
     int island[MAX_SENTENCE];
-#ifdef USE_CORPUS
     size_t nwords;
-    char *disjunct_list_str[MAX_SENTENCE];
+    char **disjunct_list_str;
+#ifdef USE_CORPUS
     Sense **sense_list;
 #endif
 };
