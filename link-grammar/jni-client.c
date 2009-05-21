@@ -453,7 +453,6 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct(JNIEnv *env, jclass cls, jin
 	return j;
 }
 
-#if 0
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env, 
                     jclass cls, jint i, jint j)
@@ -463,6 +462,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 	Linkage_info *lifo = lkg->info;
 	Sense *sns;
 	const char * w = NULL;
+	jstring js;
 
 	sns = lg_get_word_sense(lifo, i);
 	while ((0 < j) && sns)
@@ -474,23 +474,31 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 	/* does not need to be freed, points into data structures */
 	if (sns) w = lg_sense_get_sense(sns);
 
-	jstring j = (*env)->NewStringUTF(env, w);
-	return j;
+	js = (*env)->NewStringUTF(env, w);
+	return js;
 }
 
-JNIEXPORT jstring JNICALL
+JNIEXPORT jdouble JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env, 
                     jclass cls, jint i, jint j)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
+	Linkage lkg = ptd->linkage;
+	Linkage_info *lifo = lkg->info;
+	Sense *sns;
+	double score = 0.0;
 
-	/* does not need to be freed, points into data structures */
-	/* returns the inflected word. */
-	const char * w = linkage_get_disjunct(ptd->linkage, i);
-	jstring j = (*env)->NewStringUTF(env, w);
-	return j;
+	sns = lg_get_word_sense(lifo, i);
+	while ((0 < j) && sns)
+	{
+		sns = lg_sense_next(sns);
+		j--;
+	}
+	
+	if (sns) score = lg_sense_get_score(sns);
+
+	return score;
 }
-#endif
 
 /*
  * Class:		 LinkGrammar

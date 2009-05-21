@@ -80,6 +80,12 @@ JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageWord
 JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct
 	(JNIEnv *, jclass, jint);
 
+JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageSense
+   (JNIEnv *, jclass, jint, jint);
+
+JNIEXPORT jdouble JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore
+   (JNIEnv *, jclass, jint, jint);
+
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *, jclass);
 

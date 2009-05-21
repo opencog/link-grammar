@@ -29,6 +29,8 @@ public class LinkGrammar
         //
         // On a Windows system, we also need to load the prequisite
         // libraries first. (Linux loaders do this automatically).
+        // Actually, I guess Windows does this too, unless the user
+        // failed to add the working directory to %PATH
         //
         String osname = System.getProperty("os.name");
         if (osname.indexOf("win") > -1 || osname.indexOf("Win") > -1)
@@ -98,6 +100,10 @@ public class LinkGrammar
     public static native String getConstituentString();
 
     public static native String getLinkString();
+
+    public static native String getLinkageSense();
+
+    public static native double getLinkageSenseSenseScore();
 
     // OTHER UTILITY C FUNCTIONS
     public static native boolean isPastTenseForm(String word);
