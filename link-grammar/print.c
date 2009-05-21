@@ -142,10 +142,11 @@ char * linkage_print_senses(Linkage linkage)
 	String * s = string_new();
 	char * sense_string;
 #if USE_CORPUS
-	Sense *sns, *head;
+	Sense *sns, *head = NULL;
 
-	head = lg_corpus_linkage_senses(linkage);
+	lg_corpus_linkage_senses(linkage);
 
+	// XXX broken, for now
 	sns = head;
 	while (sns)
 	{
@@ -158,7 +159,6 @@ char * linkage_print_senses(Linkage linkage)
 		              idx, wd, dj, sense, score);
 		sns = lg_sense_next(sns);
 	}
-	lg_sense_delete(head);
 
 #else
 	append_string(s, "Corpus statstics is not enabled in this version\n");

@@ -170,9 +170,12 @@ BUILDING on Windows:
        .libs/jni-client.o /usr/local/bin/link-grammar.dll \
        -o /usr/local/bin/link-grammar-java.dll
 
-    This will create link-grammar.dll and link-grammar-java.dll in the directory
-    c:\msys\1.0\local\bin . These files, together with link-grammar-*.jar, will
-    be used by Java programs.
+    This will create link-grammar.dll and link-grammar-java.dll in the
+    directory c:\msys\1.0\local\bin . These files, together with 
+    link-grammar-*.jar, will be used by Java programs.
+
+    Make sure that this directory is in the %PATH setting, as otherwise, 
+    the DLL's will not be found.
 
     Alternately, Windows users who have access to the "Microsoft Visual C"
     product may wish to use the project files in the msvc6 directory, or

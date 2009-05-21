@@ -347,7 +347,7 @@ static Sense * lg_corpus_senses(Corpus *corp,
  * only an informational look-up.
  */
 
-Sense * lg_corpus_linkage_senses(Linkage linkage)
+void lg_corpus_linkage_senses(Linkage linkage)
 {
 	const char * infword;
 	Sentence sent = linkage->sent;
@@ -356,16 +356,19 @@ Sense * lg_corpus_linkage_senses(Linkage linkage)
 	int nwords = sent->length;
 	Linkage_info *lifo = linkage->info;
 	int w;
-	Sense *head = NULL;
-	Sense *sns, *first, *last;
+
+	if (lifo->sense_list) return;
+
+	lifo->nwords = nwords;
+	lifo->sense_list = (Sense **) malloc (nwords * sizeof (Sense *));
+	bzero (lifo->sense_list, nwords * sizeof (Sense *));
 
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
 
 	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
 	 * word 0. */
-	// for (w=1; w<nwords; w++)
-	for (w=nwords-1; 0<w; w--)
+	for (w=1; w<nwords; w++)
 	{
 		/* If the word is not inflected, then sent->word[w].d is NULL */
 		if (sent->word[w].d)
@@ -373,23 +376,9 @@ Sense * lg_corpus_linkage_senses(Linkage linkage)
 		else
 			infword = sent->word[w].string;
 
-		first = lg_corpus_senses(corp, infword, lifo->disjunct_list_str[w]);
-		if (first)
-		{
-			last = first;
-			while (last->next)
-			{
-				last->word = w;
-				last = last->next;
-			}
-			last->word = w;
-
-			last->next = head;
-			head = first;
-		}
+		lifo->sense_list[w] = lg_corpus_senses(corp, infword, 
+		                        lifo->disjunct_list_str[w]);
 	}
-
-	return head;
 }
 
 /* ========================================================= */
@@ -425,14 +414,21 @@ double lg_sense_get_score(Sense *sns)
 	return sns->score;
 }
 
-void lg_sense_delete(Sense *sns)
+void lg_sense_delete(Linkage_info *lifo)
 {
-	while (sns)
+	size_t nwords = lifo->nwords;
+	size_t w;
+
+	for (w=0; w<nwords; w++)
 	{
-		Sense * nxt = sns->next;
-		free(sns->sense);
-		free(sns);
-		sns = nxt;
+		Sense *sns = lifo->sense_list[w];
+		while (sns)
+		{
+			Sense * nxt = sns->next;
+			free(sns->sense);
+			free(sns);
+			sns = nxt;
+		}
 	}
 }
 

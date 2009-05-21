@@ -16,14 +16,11 @@
 #include "../api-types.h"
 #include "../link-includes.h"
 
-typedef struct corpus_s Corpus;
-typedef struct sense_s Sense;
-
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
 
 void lg_corpus_score(Sentence, Linkage_info *);
-Sense * lg_corpus_linkage_senses(Linkage);
+void lg_corpus_linkage_senses(Linkage);
 
 Sense *lg_sense_next(Sense *);
 int lg_sense_get_index(Sense *);
@@ -31,7 +28,7 @@ const char * lg_sense_get_subscripted_word(Sense *);
 const char * lg_sense_get_disjunct(Sense *);
 const char * lg_sense_get_sense(Sense *);
 double lg_sense_get_score(Sense *);
-void lg_sense_delete(Sense *);
+void lg_sense_delete(Linkage_info *);
 
 #else /* USE_CORPUS */
 

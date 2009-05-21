@@ -759,6 +759,7 @@ static void linkage_info_delete(Linkage_info *link_info, int sz)
 				free(lifo->disjunct_list_str[j]);
 			lifo->disjunct_list_str[j] = NULL;
 		}
+		lg_sense_delete(lifo);
 	}
 #endif
 	xfree(link_info, sz);

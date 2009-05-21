@@ -452,6 +452,34 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct(JNIEnv *env, jclass cls, jin
 	return j;
 }
 
+#if 0
+JNIEXPORT jstring JNICALL
+Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env, 
+                    jclass cls, jint i, jint j)
+{
+	per_thread_data *ptd = get_ptd(env, cls);
+
+	/* does not need to be freed, points into data structures */
+	/* returns the inflected word. */
+	const char * w = linkage_get_disjunct(ptd->linkage, i);
+	jstring j = (*env)->NewStringUTF(env, w);
+	return j;
+}
+
+JNIEXPORT jstring JNICALL
+Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env, 
+                    jclass cls, jint i, jint j)
+{
+	per_thread_data *ptd = get_ptd(env, cls);
+
+	/* does not need to be freed, points into data structures */
+	/* returns the inflected word. */
+	const char * w = linkage_get_disjunct(ptd->linkage, i);
+	jstring j = (*env)->NewStringUTF(env, w);
+	return j;
+}
+#endif
+
 /*
  * Class:		 LinkGrammar
  * Method:		numSkippedWords
