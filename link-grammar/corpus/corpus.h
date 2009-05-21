@@ -22,7 +22,8 @@ void lg_corpus_delete(Corpus *);
 void lg_corpus_score(Sentence, Linkage_info *);
 void lg_corpus_linkage_senses(Linkage);
 
-Sense *lg_sense_next(Sense *);
+Sense * lg_get_word_sense(Linkage_info *, int word);
+Sense * lg_sense_next(Sense *);
 int lg_sense_get_index(Sense *);
 const char * lg_sense_get_subscripted_word(Sense *);
 const char * lg_sense_get_disjunct(Sense *);

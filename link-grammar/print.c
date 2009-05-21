@@ -142,22 +142,27 @@ char * linkage_print_senses(Linkage linkage)
 	String * s = string_new();
 	char * sense_string;
 #if USE_CORPUS
-	Sense *sns, *head = NULL;
+	Linkage_info *lifo = linkage->info;
+	Sense *sns;
+	size_t w, nwords;
 
 	lg_corpus_linkage_senses(linkage);
 
-	// XXX broken, for now
-	sns = head;
-	while (sns)
+	nwords = lifo->nwords;
+	for (w=0; w<nwords; w++)
 	{
-		int idx = lg_sense_get_index(sns);
-		const char * wd = lg_sense_get_subscripted_word(sns);
-		const char * dj = lg_sense_get_disjunct(sns);
-		const char * sense = lg_sense_get_sense(sns);
-		double score = lg_sense_get_score(sns);
-		append_string(s, "%d %s dj=%s sense=%s score=%f\n",
-		              idx, wd, dj, sense, score);
-		sns = lg_sense_next(sns);
+		sns = lg_get_word_sense(lifo, w);
+		while (sns)
+		{
+			int idx = lg_sense_get_index(sns);
+			const char * wd = lg_sense_get_subscripted_word(sns);
+			const char * dj = lg_sense_get_disjunct(sns);
+			const char * sense = lg_sense_get_sense(sns);
+			double score = lg_sense_get_score(sns);
+			append_string(s, "%d %s dj=%s sense=%s score=%f\n",
+			              idx, wd, dj, sense, score);
+			sns = lg_sense_next(sns);
+		}
 	}
 
 #else

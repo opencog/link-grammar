@@ -180,7 +180,7 @@ static void r_printTree(CNode* cn, int level)
 	int i;
 	CNode* c;
 
-	if (cn==NULL) return;
+	if (cn == NULL) return;
 
 	/* print label */
 	if (cn->label != NULL) {
@@ -423,6 +423,7 @@ Java_org_linkgrammar_LinkGrammar_getWord(JNIEnv *env, jclass cls, jint i)
 
 	/* FWIW, j will be null if w is utf8-encoded Japanese or Chinese.
 	 * I guess my JVM is not capable of handling Chinese/Japanese ??
+	 * Maybe some special java thing needs to be installed?
 	 */
 	jstring j = (*env)->NewStringUTF(env, w);
 	return j;
@@ -458,10 +459,21 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
                     jclass cls, jint i, jint j)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
+	Linkage lkg = ptd->linkage;
+	Linkage_info *lifo = lkg->info;
+	Sense *sns;
+	const char * w = NULL;
 
+	sns = lg_get_word_sense(lifo, i);
+	while ((0 < j) && sns)
+	{
+		sns = lg_sense_next(sns);
+		j--;
+	}
+	
 	/* does not need to be freed, points into data structures */
-	/* returns the inflected word. */
-	const char * w = linkage_get_disjunct(ptd->linkage, i);
+	if (sns) w = lg_sense_get_sense(sns);
+
 	jstring j = (*env)->NewStringUTF(env, w);
 	return j;
 }

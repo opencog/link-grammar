@@ -105,7 +105,7 @@ Corpus * lg_corpus_new(void)
 	rc = sqlite3_prepare_v2(c->dbconn, 	
 		"SELECT word_sense, log_cond_probability FROM DisjunctSenses "
 		"WHERE inflected_word = ? AND disjunct = ? "
-		"ORDER BY log_cond_probability DESC;",
+		"ORDER BY log_cond_probability ASC;",
 		-1, &c->sense_query, NULL);
 	if (rc != SQLITE_OK)
 	{
@@ -282,7 +282,8 @@ void lg_corpus_score(Sentence sent, Linkage_info *lifo)
 
 static Sense * lg_corpus_senses(Corpus *corp,
                                 const char * inflected_word,
-                                const char * disjunct)
+                                const char * disjunct,
+                                int wrd)
 {
 	double log_prob;
 	const unsigned char *sense;
@@ -322,6 +323,7 @@ static Sense * lg_corpus_senses(Corpus *corp,
 		sns->disjunct = disjunct;
 		sns->sense = strdup(sense);
 		sns->score = log_prob;
+		sns->word = wrd;
 
 		/* Get the next row, if any */
 		rc = sqlite3_step(corp->sense_query);
@@ -377,12 +379,19 @@ void lg_corpus_linkage_senses(Linkage linkage)
 			infword = sent->word[w].string;
 
 		lifo->sense_list[w] = lg_corpus_senses(corp, infword, 
-		                        lifo->disjunct_list_str[w]);
+		                        lifo->disjunct_list_str[w], w);
 	}
 }
 
 /* ========================================================= */
 /* Return bits and pieces of the sense assignments */
+
+Sense * lg_get_word_sense(Linkage_info *lifo, int word)
+{
+	if (!lifo->sense_list) return NULL;
+	if (lifo->nwords <= word) return NULL;
+	return lifo->sense_list[word];
+}
 
 Sense * lg_sense_next(Sense *sns)
 {
