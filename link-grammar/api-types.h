@@ -60,10 +60,8 @@ typedef struct X_table_connector_struct X_table_connector;
 
 typedef struct pp_knowledge_s pp_knowledge;
 
-#ifdef USE_CORPUS
 typedef struct corpus_s Corpus;
 typedef struct sense_s Sense;
-#endif
 
 #endif
 

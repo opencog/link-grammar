@@ -34,6 +34,10 @@ void lg_sense_delete(Linkage_info *);
 #else /* USE_CORPUS */
 
 static inline void lg_corpus_score(Sentence s, Linkage_info *li) {}
+static inline Sense * lg_get_word_sense(Linkage_info *lif, int word) { return NULL; }
+static inline Sense * lg_sense_next(Sense *s ) {return NULL; }
+static inline const char * lg_sense_get_sense(Sense *s) { return NULL; }
+static inline double lg_sense_get_score(Sense *s) { return 0.0; }
 #endif /* USE_CORPUS */
 
 #endif /* _LINKGRAMMAR_CORPUS_H */
