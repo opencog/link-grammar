@@ -243,10 +243,7 @@ void lg_corpus_score(Sentence sent, Linkage_info *lifo)
 	/* No-op if the database is not open */
 	if (NULL == corp->dbconn) return;
 
-	if (NULL == lifo->disjunct_list_str[1])
-	{
-		lg_compute_disjunct_strings(sent, lifo);
-	}
+	lg_compute_disjunct_strings(sent, lifo);
 
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
@@ -360,6 +357,9 @@ void lg_corpus_linkage_senses(Linkage linkage)
 	int w;
 
 	if (lifo->sense_list) return;
+
+	/* Set up the disjunct strings first */
+	lg_compute_disjunct_strings(sent, lifo);
 
 	lifo->nwords = nwords;
 	lifo->sense_list = (Sense **) malloc (nwords * sizeof (Sense *));
