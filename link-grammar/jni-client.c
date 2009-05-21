@@ -466,6 +466,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 	const char * w = NULL;
 	jstring js;
 
+	lg_corpus_linkage_senses(lkg);
 	sns = lg_get_word_sense(lifo, i);
 	while ((0 < j) && sns)
 	{
@@ -476,7 +477,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 	/* does not need to be freed, points into data structures */
 	if (sns) w = lg_sense_get_sense(sns);
 
-	js = (*env)->NewStringUTF(env, w);
+	if (w) js = (*env)->NewStringUTF(env, w);
+	else js = NULL;
 	return js;
 }
 
