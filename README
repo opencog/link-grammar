@@ -6,7 +6,7 @@
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
 an extended, expanded version of the last official CMU release, and
-includes many enhancments and fixes created by many different
+includes many enhancements and fixes created by many different
 developers.  This latest version incorporates a substantial part (but
 not all) of the BioLG project.
 
@@ -85,10 +85,12 @@ CREATING the system:
    To install, change user to "root" and say
 
         make install
+        ldconfig
 
-   This will install the lib-link-grammar.so library into /usr/local/lib
-   the header files in /usr/local/include/link-grammar
-   and the dictionaries into /usr/local/share/link-grammar.
+   This will install the lib-link-grammar.so library into /usr/local/lib,
+   the header files in /usr/local/include/link-grammar, and the
+   dictionaries into /usr/local/share/link-grammar.  Running 'ldconfig'
+   will rebuild the shared library cache.
 
    By default, the Makefiles attempt to build the Java bindings.
    The use of the Java bindings is *OPTIONAL*; you do not need these if
@@ -104,6 +106,10 @@ CREATING the system:
 
    By using pkg-config (see below), non-standard install locations
    can be automatically detected.
+
+   Additional config options are printed by
+
+      ./configure --help
 
    The system has been tested and works well on 32 and 64-bit Linux
    systems, FreeBSD, MacOSX, as well as on many Microsoft Windows 
@@ -135,7 +141,7 @@ BUILDING on Windows:
     other utilities.  Download and install MinGW, MSYS and MSYS-DTK from
     http://mingw.org .
 
-    Link-grammar now requires a working version of posix-standard regex
+    Link-grammar now requires a working version of POSIX-standard regex
     libraries. Since these are not provided by Microsoft, a copy must be
     obtained elsewhere. One possibility is from the gnuwin32 system:
     http://gnuwin32.sourceforge.net/packages/regex.htm 
@@ -181,6 +187,7 @@ BUILDING on Windows:
     product may wish to use the project files in the msvc6 directory, or
     alternately, those in the msvc9 directory.
 
+
 RUNNING the program:
 --------------------
    To run the program issue the Unix command:
@@ -189,7 +196,7 @@ RUNNING the program:
 
    This starts the program.  The program has many user-settable variables
    and options. These can be displayed by entering !var at the link-parser
-   promt.  Entering !help will display some additional commands.
+   prompt.  Entering !help will display some additional commands.
 
    The dictionaries contain some utf-8 punctuation. These may generate
    errors for users in a non-utf-8 locale, such as the "C" locale.
@@ -232,8 +239,8 @@ SAT solver:
    a sentence containing N words. This algorithm is more or less a 
    chart parser, a variant of the Earley parser.
 
-   The SAT sovler aims to replace the chart parser with an algorithm
-   based on Boolean Satistfiability Theory; specifically using the 
+   The SAT solver aims to replace the chart parser with an algorithm
+   based on Boolean Satisfiability Theory; specifically using the 
    MiniSAT solver. The SAT solver has a bit more overhead for shorter
    sentences, but is significantly faster for long sentences.  To work
    properly, it needs to be attached to a parse ranking system.  This
@@ -245,18 +252,19 @@ SAT solver:
 
    prior to compiling.
 
+
 Corpus Statistics:
 ------------------
    The parser now contains some experimental code for using corpus
    statistics to provide a parse ranking, and to assign WordNet word 
-   senses to word, based on thier grammatical usage.  An overview of 
+   senses to word, based on their grammatical usage.  An overview of 
    the idea is given on the OpenCog blog, here:
 
    http://brainwave.opencog.org/2009/01/12/determining-word-senses-from-grammatical-usage/
 
-   It is planned that the Corpus statisics database will be used to
+   It is planned that the Corpus statistics database will be used to
    guide the SAT solver.  Dictionaries are available upon request. 
-   To enable the corpus statistcs, specify
+   To enable the corpus statistics, specify
 
       ./configure --enable-sat-solver
 
@@ -291,7 +299,7 @@ USING pkg-config:
 
 JAVA bindings:
 --------------
-   This release includes Java bindings.  Thier use is optional. 
+   This release includes Java bindings.  Their use is optional. 
 
    The bindings will be built automatically if jni.h can be found.
    Some common java JVM distributions (most notably, the ones from Sun)
@@ -405,13 +413,13 @@ TODO -- Working Notes:
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,
     the parse of the last half of a long, run-on sentence should not be
-    sensitive to the parse of the begining of the sentence.
+    sensitive to the parse of the beginning of the sentence.
 
     Doing so would help with combinatorial explosion. So, for example,
     if the first half of a sentence has 4 plausible parses, and the
     last half has 4 more, then link-grammar reports 16 parses total.
     It would be much, much more useful to instead be given the
-    factored results: i.e. the for plausbile parses for the
+    factored results: i.e. the for plausible parses for the
     first half, and the four plausible parses for the last half.
     The lower combinatoric stress would ease the burden on
     downstream users of link-grammar.
@@ -443,7 +451,7 @@ TODO -- Working Notes:
       This results is some ugly parsing for sentences containing such 
       quotes. (Note that these are in 4.0.affix).
 
-   no-links-cross: Link Grammar uses a constraint that all linakges must
+   no-links-cross: Link Grammar uses a constraint that all linkages must
       be planar graphs. While this is mostly correct, it would probably
       be more correct to use "landmark transitivity" as articulated by
       Hudson in the Word Grammar theory.  This might allow the elimination
@@ -482,7 +490,7 @@ TODO -- Working Notes:
      different meanings for the verb "tend", and the grammatical
      constructions allowed for one meaning are not the same as those
      allowed for the other. Yet, the link rules for "tend.v" have
-     to accomodate both senses, thus making the rules rather complex.
+     to accommodate both senses, thus making the rules rather complex.
      Worse, it potentially allows for non-sense constructions.
      If, instead, we allowed the dictionary to contain different
      rules for "tend.meaning1" and "tend.meaning2", the rules would
