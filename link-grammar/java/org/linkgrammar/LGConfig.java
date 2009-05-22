@@ -25,53 +25,62 @@ public class LGConfig
 	private boolean allowSkippedWords = true;
 	private String dictionaryLocation = null;
 	private boolean storeConstituentString = true;
+	private boolean storeSense = false;
 	
 	public int getMaxLinkages()
 	{
 		return maxLinkages;
 	}
-	public void setMaxLinkages(int maxLinkages)
+	public void setMaxLinkages(int m)
 	{
-		this.maxLinkages = maxLinkages;
+		maxLinkages = m;
 	}
 	public int getMaxParseSeconds()
 	{
 		return maxParseSeconds;
 	}
-	public void setMaxParseSeconds(int maxParseSeconds)
+	public void setMaxParseSeconds(int m)
 	{
-		this.maxParseSeconds = maxParseSeconds;
+		maxParseSeconds = m;
 	}
 	public int getMaxCost()
 	{
 		return maxCost;
 	}
-	public void setMaxCost(int maxCost)
+	public void setMaxCost(int m)
 	{
-		this.maxCost = maxCost;
+		maxCost = m;
 	}
 	public boolean isAllowSkippedWords()
 	{
 		return allowSkippedWords;
 	}
-	public void setAllowSkippedWords(boolean allowSkippedWords)
+	public void setAllowSkippedWords(boolean a)
 	{
-		this.allowSkippedWords = allowSkippedWords;
+		allowSkippedWords = a;
 	}
 	public String getDictionaryLocation()
 	{
 		return dictionaryLocation;
 	}
-	public void setDictionaryLocation(String dictionaryLocation)
+	public void setDictionaryLocation(String d)
 	{
-		this.dictionaryLocation = dictionaryLocation;
+		dictionaryLocation = d;
 	}
 	public boolean isStoreConstituentString()
 	{
 		return storeConstituentString;
 	}
-	public void setStoreConstituentString(boolean storeConstituentString)
+	public void setStoreConstituentString(boolean s)
 	{
-		this.storeConstituentString = storeConstituentString;
+		storeConstituentString = s;
+	}	
+	public boolean isStoreSense()
+	{
+		return storeSense;
+	}
+	public void setStoreSense(boolean s)
+	{
+		storeSense = s;
 	}	
 }
