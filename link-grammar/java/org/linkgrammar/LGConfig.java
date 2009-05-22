@@ -24,8 +24,11 @@ public class LGConfig
 	private int maxCost = -1;
 	private boolean allowSkippedWords = true;
 	private String dictionaryLocation = null;
-	private boolean storeConstituentString = true;
-	private boolean storeSense = false;
+
+	// mis-named; if flag is set, then a load is done, 
+	// not a store.
+	private boolean storeConstituentString = true; 
+	private boolean loadSense = false;
 	
 	public int getMaxLinkages()
 	{
@@ -67,6 +70,9 @@ public class LGConfig
 	{
 		dictionaryLocation = d;
 	}
+
+	// mis-named; if flag is set, then a load is done, 
+	// not a store.
 	public boolean isStoreConstituentString()
 	{
 		return storeConstituentString;
@@ -75,12 +81,13 @@ public class LGConfig
 	{
 		storeConstituentString = s;
 	}	
-	public boolean isStoreSense()
+
+	public boolean isLoadSense()
 	{
-		return storeSense;
+		return loadSense;
 	}
-	public void setStoreSense(boolean s)
+	public void setLoadSense(boolean s)
 	{
-		storeSense = s;
+		loadSense = s;
 	}	
 }
