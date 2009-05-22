@@ -3,7 +3,8 @@ Version 4.5.6 (??? 2009)
  * Changes to enable MinGW/Windows to compile.
  * Update of MSVC6 build files
  * Fix: pizza, fries, chopsticks.
- * Export word-sense database to Java.
+ * Export word-sense database to Java apps.
+ * Fix: "Was the man drunk or crazy or both?"
 
 Version 4.5.5 (10 May 2009) includes the following changes:
  * Bugfix: crash for zero-length sentences.

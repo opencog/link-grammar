@@ -510,7 +510,8 @@ those: ({AL-} & (Dmc+ or DD+)) or
 this.p: <noun-main-h>;
 this.d: ({AL-} & D*u+) or DTn+;
 these: <noun-main-p> or ({AL-} & (Dmc+ or DD+));
-both: Dmc+ or E+ or ({M+ or (ALx+ & Jp+)} & <noun-main-p>);
+both.d: Dmc+ or E+ or ({M+ or (ALx+ & Jp+)} & <noun-main-p>);
+both.a: Paf-;
 half: {EN-} & (NJ+ or ((({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+))
 & <noun-main-x>));
 many: (H- & (Dmc+ or ND+ or NIn+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 

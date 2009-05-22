@@ -787,6 +787,9 @@ Flumblqwerty's shoes are red.
 Run's shoes are red.
 Ran's shoes are red.
 
+% ... or both -- drunk wants Pa link, both wants Opt link
+Was the man drunk or crazy or both?
+
 % Sentence containing UTF8 chars that can lead to i/o or 
 % word-boundary problems
 *Bitter gourdはにがうりだそうであってるのかはちょっと不安ですが翻訳ソフトでやくしてみました。
