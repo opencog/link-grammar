@@ -14,6 +14,7 @@
 #endif
 
 #include "api.h"
+#include "corpus/corpus.h"
 #include "error.h"
 #include "jni-client.h"
 #include "utilities.h"
