@@ -781,6 +781,11 @@ Who invented sliced bread; when did they do it?
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 *John saw a dog yesterday which was a Yorkshire terrier.
 
+% sentence parses, but incorrectly -- "of" links to "bill", should link
+% to 12th.
+*Senator Johnson introduced a bill on the 12th of July
+*Senator Johnson introduced a bill of July
+
 % Automatic possesive guessing broken when entity is also a verb:
 % "to run" is a verb, this breaks identification of "Run" as entity:
 Flumblqwerty's shoes are red.

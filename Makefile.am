@@ -15,7 +15,7 @@ javadir=$(datadir)/java
 java_DATA = linkgrammar-@VERSION@.jar
 
 if OS_WIN32
-LN_S = cp
+LN_SF = cp
 else
 LN_SF = ln -sf
 endif
