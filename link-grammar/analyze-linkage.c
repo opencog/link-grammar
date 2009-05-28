@@ -1056,6 +1056,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	{
 		post_process_scan_linkage(postprocessor, opts, sent, sublinkage);
 		free_sublinkage(sublinkage);
+		memset(&li, 0, sizeof(li));
 		return li;
 	}
 
