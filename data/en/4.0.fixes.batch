@@ -724,6 +724,19 @@ While we're on the topic, was it good?
 Kenny sure is a bastard.
 I gave her a check for deposit.
 
+% Commands.  
+Walk tall.
+Think quick.
+Think quickly.
+Act fast.
+Act smart.
+Act dumb.
+Act now.
+Shout it out.
+Shout loud.
+Stand up straight.
+
+
 % Registers -- Newspaper headline declarations
 % Missing definite articles (with definite articles, these would parse)
 % Perhaps a modal parse: if the ordinary parse failed, try another

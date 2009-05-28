@@ -2,6 +2,7 @@ Version 4.5.7 (xxx??? 2009)
  * Fix 'make install' for windows (abi bug 12049)
  * Fix multi-threaded bug when TRACK_SPACE_USAGE is defined.
  * Add './configure --enable-mudflap' just for fun...
+ * Fix: "Walk tall", "Think quick"
 
 Version 4.5.6 (24 May 2009)
  * Bugfix: fix non-thread-safe usage.
