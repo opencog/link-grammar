@@ -206,6 +206,15 @@ RUNNING the program:
 
    at the shell prompt.
 
+   By default, the parser will use dictionaries at the installed location
+   (typically in /usr/local/share). Other locations can be specified on
+   the command line; for example:
+
+      link-parser ../path/to-my/modified/data/en
+
+   When accessing dictionaries in non-standard locations, the standard
+   filenames are still assumed (i.e. 4.0.dict, 4.0.affix, etc.)
+
 
 TESTING the program:
 --------------------
