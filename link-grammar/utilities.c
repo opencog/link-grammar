@@ -243,24 +243,33 @@ typedef struct
 static pthread_key_t space_key;
 static pthread_once_t space_key_once = PTHREAD_ONCE_INIT;
 
+static void fini_memusage(void)
+{
+	space_t *s = (space_t *) pthread_getspecific(space_key);
+	if (s)
+	{
+		free(s);
+		pthread_setspecific(space_key, NULL);
+	}
+	pthread_key_delete(space_key);
+	space_key = 0;
+}
+
 static void space_key_alloc(void)
 {
-	pthread_key_create(&space_key, free);
+	int rc = pthread_key_create(&space_key, free);
+	if (0 == rc)
+		atexit(fini_memusage);
 }
 #else
 static space_t space;
 #endif
 
-void init_memusage(void)
+static space_t * do_init_memusage(void)
 {
 	space_t *s;
 
-	static int mem_inited = FALSE;
-	if (mem_inited) return;
-	mem_inited = TRUE;
-
 #ifdef USE_PTHREADS
-	pthread_once(&space_key_once, space_key_alloc);
 	s = (space_t *) malloc(sizeof(space_t));
 	pthread_setspecific(space_key, s);
 #else
@@ -271,12 +280,28 @@ void init_memusage(void)
 	s->space_in_use = 0;
 	s->max_external_space_used = 0;
 	s->external_space_in_use = 0;
+
+	return s;
+}
+
+void init_memusage(void)
+{
+#ifdef USE_PTHREADS
+	pthread_once(&space_key_once, space_key_alloc);
+#else
+	static int mem_inited = FALSE;
+	if (mem_inited) return;
+	mem_inited = TRUE;
+#endif
+	do_init_memusage();
 }
 
 static inline space_t *getspace(void)
 {
 #ifdef USE_PTHREADS
-	return pthread_getspecific(space_key);
+	space_t *s = pthread_getspecific(space_key);
+	if (s) return s;
+	return do_init_memusage();
 #else
 	return &space;
 #endif
