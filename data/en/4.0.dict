@@ -287,6 +287,9 @@ majority.n minority.n number.n bunch.n batch.n bulk.n handful.n group.n:
 (<noun-main-x> or B*x+))
 or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
+% number appreviations: no.x No.x 
+No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
+
 flight.i age.i: {@AN-} & NM+ & <noun-main-s>;
 
 kind_of: ({{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &

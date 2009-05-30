@@ -653,6 +653,8 @@ That will cost zillions of lira.
 The ferrite core is wrapped with 24gauge wire.
 It was 10:30AM in the morning.
 
+Bids must be received by 1 p.m. EDT
+
 % Note that the handling of prepositions is incorrect with
 % regard to measurements: the linkage should be to lumber,
 % not feet.  That is, "12 feet of" is a modifier.
@@ -666,6 +668,9 @@ It will take several foot-pounds of strain before it cracks.
 That will require 10 square yards of paint.
 That engine generates hundreds of foot-pounds of torque.
 
+It cost US$ 14 million.
+It cost $14 million.
+
 % post-fixed number handling with NM link
 It started on day one.
 The experiments ended on day 22.
@@ -675,6 +680,12 @@ It takes 2 to 3 times the effort.
 It takes 2 - 3 times the effort.
 It takes 2 -- 3 times the effort.
 It takes 2 --- 3 times the effort.
+
+% However, dashes can appear in model numbers:
+The plane is a Boeing 747-400
+You want part no 1234-567A.
+You want part no. 1234-567A.
+You want part num. 1234-567A.
 
 % Spell checker now does a good job of splitting words.
 Marywent shoppingat thestore.
@@ -723,6 +734,7 @@ Now that you mention it, what happened?
 While we're on the topic, was it good?
 Kenny sure is a bastard.
 I gave her a check for deposit.
+Just thought you'd like to know.
 
 % Commands.  
 Walk tall.
@@ -794,16 +806,26 @@ Who invented sliced bread; when did they do it?
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 *John saw a dog yesterday which was a Yorkshire terrier.
 
-% sentence parses, but incorrectly -- "of" links to "bill", should link
+% incorrect parses -- INCORRECT PARSES -- 
+% Sentence parses, but incorrectly -- "of" links to "bill", should link
 % to 12th.
-*Senator Johnson introduced a bill on the 12th of July
-*Senator Johnson introduced a bill of July
+*Senator Johnson introduced a bill on the 12th of July.
+*Senator Johnson introduced a bill of July.
 
-% Automatic possesive guessing broken when entity is also a verb:
+% Sentence parses, but incorrectly, without the comma.
+The market fell 156.83, a week after Black Monday.
+
+% Automatic possesive guessing broken when entity is in the dictionary:
 % "to run" is a verb, this breaks identification of "Run" as entity:
+% "hooker" is a noun ... same deal.
+% 123A, the "A" suffix is assumed to be a unit, leading to a bad parse.
 Flumblqwerty's shoes are red.
 Run's shoes are red.
 Ran's shoes are red.
+Asdf's philosophy was to build and sell
+Hooker's philosophy was to build and sell
+You want part no. 123A
+You want part no. 123ABC
 
 % ... or both -- drunk wants Pa link, both wants Opt link
 Was the man drunk or crazy or both?
