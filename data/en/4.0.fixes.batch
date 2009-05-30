@@ -98,6 +98,11 @@ A length of chain was wrapped around the tree.
 They are like family to us.
 He is like family to us.
 
+% come, came
+The dog came running at the master's call.
+The dog comes running when he's called.
+The ball came flying at his head.
+
 % Some ditranstive verbs of various complexity
 He poured me a glass of champagne.
 *He poured me.
@@ -351,9 +356,6 @@ It was a detriment to further action.
 He demonstrated a certain ignorance.
 We were unable to find a common ground.
 
-
-% Buggy use of disjuncts: and so is linked with Wq
-Rama ate the apple, and so did Mohan.
 
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
@@ -687,6 +689,10 @@ You want part no 1234-567A.
 You want part no. 1234-567A.
 You want part num. 1234-567A.
 
+% Years as adjectival modifiers:
+He drove a '52 Chevy.
+The 47 Ford came screamin' down the track.
+
 % Spell checker now does a good job of splitting words.
 Marywent shoppingat thestore.
 Mary wentshopping atthe store.
@@ -790,9 +796,6 @@ Canvas is for painting on.
 Use a piece of paper to write upon.
 A piece of paper can be used to write upon.
 
-% Broken parse: object should be "way out", and not a K to "took".
-*John took the easy way out.
-
 Watch out that you don't hit your head on the low beam.
 
 % Compound queries
@@ -803,10 +806,20 @@ What is a motor; how does it work?
 Who invented sliced bread, and when did they do it?
 Who invented sliced bread; when did they do it?
 
+% disjunction/conjunction problems:
+% should be disjunction of modifiers ... 
+% should be (major Eurobond or foreign bond) offerings
+There were no major Eurobond or foreign bond offerings Friday.
+
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 *John saw a dog yesterday which was a Yorkshire terrier.
 
-% incorrect parses -- INCORRECT PARSES -- 
+% incorrect parses -- INCORRECT PARSES -- bad disjunct usage
+% These sentences typically parse just fine, but generate 
+% incorrect linkages.
+% Object should be "way out", and not a K to "took".
+*John took the easy way out.
+
 % Sentence parses, but incorrectly -- "of" links to "bill", should link
 % to 12th.
 *Senator Johnson introduced a bill on the 12th of July.
@@ -814,6 +827,9 @@ Who invented sliced bread; when did they do it?
 
 % Sentence parses, but incorrectly, without the comma.
 The market fell 156.83, a week after Black Monday.
+
+% "and so" is linked with Wq, should not be.
+Rama ate the apple, and so did Mohan.
 
 % Automatic possesive guessing broken when entity is in the dictionary:
 % "to run" is a verb, this breaks identification of "Run" as entity:
