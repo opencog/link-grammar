@@ -51,6 +51,8 @@ The smelter weights 30 tonnes.
 He wears a mustache on the sitcom.
 She's sharp-witted and funny.
 He resigned that post.
+Exxon discovers gas offshore.
+The line extends 10 miles offshore.
 
 % ready
 Is it ready?
@@ -704,8 +706,15 @@ It takes 2 - 3 times the effort.
 It takes 2 -- 3 times the effort.
 It takes 2 --- 3 times the effort.
 
+% date ranges are simple modifiers, not numerical mods
+It was the 1989-90 crop that failed.
+
 % However, dashes can appear in model numbers:
 The plane is a Boeing 747-400
+The plane is a 747-400
+The 747 jumbo jet came roaring overhead.
+You want part no. 1234-567.
+
 You want part no 1234-567A.
 You want part no. 1234-567A.
 You want part num. 1234-567A.

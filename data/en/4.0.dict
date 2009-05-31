@@ -641,9 +641,10 @@ NM- or ({EN-} & (NIfn+ or NItn-)) or
 ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))));
 
 % the generic "number" category
+% AN+ is needed for date-ranges
 NUMBERS: 
-NM- or ({EN-} & (NIfn+ or NItn-)) or 
-NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+NM- or ({EN-} & (NIfn+ or NItn-)) or NN+ or [[NF+]] or [[AN+]] or
+({EN- or NIc-} & (ND+ or NIn+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))));
 
 % allowing postposed roman numerals only for now.
@@ -2908,7 +2909,7 @@ at_issue on_lease on_trial in_league in_cahoots in_front in_back
 on_break on_camera in_command in_concert by_association in_association
 on_deck on_disk on_file on_foot on_location on_line online.r:
 MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-)); 
-uptown downtown.r underground.r out_of_town: 
+uptown downtown.r offshore.r underground.r out_of_town: 
 MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
 
 <common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);

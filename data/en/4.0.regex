@@ -16,6 +16,7 @@
 % Numbers.
 % XXX, we need to add utf8 U+00A0 "no-break space"
 % The ":" is included here so we allow "10:30" to be a number
+%
 % This one matches the original LG rule.
 % NUMBERS: /^[0-9][0-9:.,]+$/
 % This allows more, e.g. "-5" and "5-10" and "9+/-6.5"
