@@ -110,6 +110,7 @@ A piece of cactus went sailing through the air.
 There were three cacti in front of us.
 Add a cup of finely shredded carrot.
 A length of chain was wrapped around the tree.
+He left town early next morning.
 
 They are like family to us.
 He is like family to us.
@@ -864,6 +865,9 @@ Messrs. Malson and Seelenfreund are directors.
 % to 12th.
 *Senator Johnson introduced a bill on the 12th of July.
 *Senator Johnson introduced a bill of July.
+
+% "one to two" should modify hours.
+It starts one to two hours later.
 
 % Sentence parses, but incorrectly, without the comma.
 The market fell 156.83, a week after Black Monday.
