@@ -1144,6 +1144,9 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	verbosity = opts->verbosity;
 
+	/* Cleanup stuff previously allocated. */
+	free_deletable(sent);
+
 	rc = split_sentence(sent, opts);
 	if (rc) return -1;
 
