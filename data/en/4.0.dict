@@ -131,6 +131,11 @@ locationID60: <marker-entity> or <entity-entire>;
 /en/words/entities.given-bisex.sing:
 <marker-entity> or <given-names>;
 
+% More words that are given names. These are words that have a
+% lower-case analog in the dictionary, but are also used in upper-case
+% form as a part of a title of something.  Failure to include upper-case
+% versions of these words will screw up parsing, by failing to recognize
+% names of identities.
 /en/words/entities.organizations.sing:
 <marker-entity> or <entity-singular>;
 
