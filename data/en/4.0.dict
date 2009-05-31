@@ -3024,7 +3024,19 @@ November December:
 (TM+ & {TY+} & ((Xd- & Xc+ & TW-) or ON- or JT- or 
 [[<noun-main-s> or MVp- or Mp- or AN+]])) or AN+;
 
-a.m. p.m.: ND- & {@MX+} & <noun-main-s>; 
+AM.ti PM.ti a.m. p.m.: ND- & {@MX+} & <noun-main-s> & {TZ+} ; 
+
+% Time-zone names
+A.tz ACDT.tz ACST.tz ADT.tz AEDT.tz AEST.tz AKDT.tz AKST.tz AST.tz 
+AWDT.tz AWST.tz B.tz BST.tz C.tz CDT.tz CEDT.tz CEST.tz CET.tz CST.tz
+CXT.tz D.tz E.tz EDT.tz EEDT.tz EEST.tz EET.tz EST.tz F.tz G.tz 
+GMT.tz H.tz HAA.tz HAC.tz HADT.tz HAE.tz HAP.tz HAR.tz HAST.tz HAT
+HAY.tz HNA.tz HNC.tz HNE.tz HNP.tz HNR.tz HNT.tz HNY.tz I.tz IST.tz 
+K.tz L.tz M.tz MDT.tz MESZ.tz MEZ.tz MSD MSK.tz MST.tz N.tz NDT.tz 
+NFT.tz NST.tz O.tz P.tz PDT.tz PST.tz Q.tz R.tz S.tz T.tz U.tz UTC.tz
+V.tz W.tz WDT.tz WEDT WEST.tz WET.tz WST.tz X.tz Y.tz Z.tz:
+{Xd-} & TZ-;
+
 Jan.x Feb.x Aug.x Sept.x Oct.x Nov.x Dec.x: 
 {Xi+} & TM+ & {TY+} & ((Xd- & Xc+ & TW-) or ON- or JT- or [[<noun-main-s>
 or MVpn- or Mp- or AN+]]);
@@ -4123,7 +4135,7 @@ anally intra-arterially incisionally intravascularly
 subject_to status_post in_conjunction_with sensu 
  in_relation_to neath amidst across_from circa astride 
  previous_to together_with as_regards s/p aka amongst unto 
- apropos_of w W:
+ apropos_of w.i W.i:
  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
 agriculturally histochemically generically behaviorally 
