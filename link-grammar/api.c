@@ -1144,7 +1144,10 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	verbosity = opts->verbosity;
 
-	/* Cleanup stuff previously allocated. */
+	/* Cleanup stuff previously allocated. This is because some free 
+	 * routines depend on sent-length, which might change in different
+	 * parse-opts settings. 
+	 */
 	free_deletable(sent);
 
 	rc = split_sentence(sent, opts);
