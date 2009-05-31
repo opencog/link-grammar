@@ -642,8 +642,8 @@ NM- or ({EN-} & (NIfn+ or NItn-)) or
 % the generic "number" category
 NUMBERS: 
 NM- or ({EN-} & (NIfn+ or NItn-)) or 
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))));
+NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))));
 
 % allowing postposed roman numerals only for now.
 ROMAN-NUMERAL-WORDS.rn: NM-;
@@ -658,10 +658,7 @@ ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 % The following should match NUMBERS with the addition of "or TM-".
 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 
 29 30 31:
-NM- or ({EN-} & (NIfn+ or NItn-)) or
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))
-or TM- or [[G+]]);
+NUMBERS or TM- or [[G+]];
 
 % Years w/o apostrophe: e.g. 47 Ford Fairlane or 57 Chevy
 32 33 34 35 36 37 38 39
@@ -670,11 +667,12 @@ or TM- or [[G+]]);
 60 61 62 63 64 65 66 67 68 69
 70 71 72 73 74 75 76 77 78 79
 80 81 82 83 84 85 86 87 88 89
-90 91 92 93 94 95 96 97 98 99: 
-NM- or ({EN-} & (NIfn+ or NItn-)) or
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))
-or [[G+]]);
+90 91 92 93 94 95 96 97 98 99:
+<date-id> or [[G+]];
+
+% year numbers
+% 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
+/en/words/words.y: <date-id> or [[G+]];
 
 % Years: e.g. '47 Ford Fairlane or '57 Chevy
 '00 '01 '02 '03 '04 '05 '06 '07 '08 '09
@@ -686,7 +684,8 @@ or [[G+]]);
 '60 '61 '62 '63 '64 '65 '66 '67 '68 '69
 '70 '71 '72 '73 '74 '75 '76 '77 '78 '79
 '80 '81 '82 '83 '84 '85 '86 '87 '88 '89
-'90 '91 '92 '93 '94 '95 '96 '97 '98 '99: [[G+]];
+'90 '91 '92 '93 '94 '95 '96 '97 '98 '99: <date-id> or [[G+]];
+
 
 1: 
 NM- or ({EN-} & (NIfn+ or NItn-)) or 
@@ -701,15 +700,6 @@ NM- or ({EN-} & (NIfn+ or NItn-)) or
 ({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
 or NSn+);
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
-
-
-fiscal.i: TY+ & <noun-main-s>;
-
-or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
-
-% year numbers
-% 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
-/en/words/words.y: <date-id>;
 
 % TODO: no numers or related expressions below this point take the new NM
 % connector, although e.g. "point 1/2" would appear reasonable. Go through
@@ -795,6 +785,11 @@ DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 % - preparations of 5 x 10(8) cfu/ml are made
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
 % also remember "-->"
+
+
+fiscal.i: TY+ & <noun-main-s>;
+
+or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 %VERBS
 
