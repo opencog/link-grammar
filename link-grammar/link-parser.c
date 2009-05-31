@@ -435,6 +435,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_short_length(opts, 6);
 	parse_options_set_all_short_connectors(opts, 1);
 	parse_options_set_linkage_limit(opts, 100);
+	parse_options_set_spell_guess(opts, FALSE);
 }
 
 static void print_usage(char *str) {
