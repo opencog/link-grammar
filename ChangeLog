@@ -14,6 +14,7 @@ Version 4.5.7 (xxx??? 2009)
  * Add support for time zones.
  * Fix: verbs acting as adjectival modifiers: "a very politicized deal."
  * Fix: ".. nearly so well", "...almost so well".
+ * Fix financial ranges: "It will cost $10 million to $20 million to build."
 
 Version 4.5.6 (24 May 2009)
  * Bugfix: fix non-thread-safe usage.

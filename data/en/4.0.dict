@@ -3928,7 +3928,8 @@ or Xe-));
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c 
 £ ₤ € ₳ ฿ ¢ ₵ ₡ ₢ ₫ ₣ ₴ ₭ ℳ  ₥  ₦ ₧ ₰ ₨  ₪ ৳ ₮ ₩ ¥ 호점
 † †† ‡ § ¶ © № "#":
-NMx+ & (AN+ or NMy- or [[G+]] or ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
+NMx+ & (AN+ or NMy- or [[G+]] or (NIfu+ or NItu-) or
+({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
 (OD- or ({DD-} & {[[@M+]]} & (<noun-main-p> or [[(Ss+ & <CLAUSE>) or 
 SIs-]])))));
 
