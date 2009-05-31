@@ -189,8 +189,9 @@ dateID60: <date-id>;
 
 I.n: [[{Xi+} & {G-} & G+]];
 
-Ms.x Mrs.x Mr.x Rev.x Dr.x Prof.x Gov.x Sen.x Rep.x Gen.x Brig.x Col.x
-Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x Adm.x Corp.x St.x Mt.x Ft.x Cie.x:
+Ms.x Mrs.x Mr.x Messrs.x Rev.x Dr.x Prof.x Gov.x Sen.x Rep.x 
+Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x Adm.x Corp.x 
+St.x Mt.x Ft.x Cie.x:
 (Xi+ or [[()]]) & G+;
 
 St.y Ave.y Av.y Pl.y Ct.y Dr.y Gr.y Rd.y Blvd.y Pkwy.y Hwy.y Assn.y
