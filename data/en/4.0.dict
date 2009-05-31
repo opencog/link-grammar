@@ -1313,17 +1313,17 @@ stays.v sits.v stands.v: <verb-s> & <vc-stay>;
 stayed.v sat.v stood.v: <verb-sp,pp> & <vc-stay>;
 staying.v sitting.v standing.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-act>: {@MV+} & {LI+ or Pa+ or AF-};
-act.v sound.v: <verb-pl,i> & <vc-act>;
-acts.v sounds.v: <verb-s> & <vc-act>;
-acted.v sounded.v: <verb-sp,pp> & <vc-act>;
-acting.v sounding.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
+<vc-sound>: {@MV+} & {LI+ or Pa+ or AF-};
+sound.v: <verb-pl,i> & <vc-sound>;
+sounds.v: <verb-s> & <vc-sound>;
+sounded.v: <verb-sp,pp> & <vc-sound>;
+sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-look>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & {@MV+})};
-look.v: <verb-pl,i> & <vc-look>;
-looks.v: <verb-s> & <vc-look>;
-looked.v: <verb-sp,pp> & <vc-look>;
-looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
+look.v act.v: <verb-pl,i> & <vc-look>;
+looks.v acts.v: <verb-s> & <vc-look>;
+looked.v acted.v: <verb-sp,pp> & <vc-look>;
+looking.v acting.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-repent>: {{@MV+ or ({Xc+} & @EB+)} & OF+};
 repent.v disapprove.v: <verb-pl,i> & <vc-repent>;
