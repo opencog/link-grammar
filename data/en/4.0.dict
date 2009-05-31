@@ -3874,9 +3874,10 @@ even.e: E+ or EC+ or EB- or ((MVp+ or MVa+ or MVs+)
 not_even: Rnx+ & <CLAUSE-E>;
 
 too: {ECa-} & (EA+ or EE+ or ({Xd- & Xc+} & MVa-) or (Xd- & Xc+ & E+));
-so: (EAxk+ & {HA+}) or EExk+ or 
+so: (EAxk+ & {HA+}) or ({EZ-} & EExk+) or 
 ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+)) 
 or (Wq- & (PF+ or CQ+));
+
 % original
 % sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-); 
 % modified
