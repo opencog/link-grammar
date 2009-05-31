@@ -80,6 +80,7 @@ I work for the Great Southern and Western Railroad.
 Central Texas is hot.
 North Sea crude was up.
 Korea First Advertising Co. stock is up.
+Quantum shares were up in trading.
 
 % Some given names can be proper names
 The late Mr. Tom will be sorely missed.
@@ -114,6 +115,9 @@ He left town early next morning.
 
 They are like family to us.
 He is like family to us.
+
+% verbs acting as adjectival modifiers:
+This has become a very politicized deal.
 
 % come, came
 The dog came running at the master's call.
@@ -898,6 +902,15 @@ You want part no. 123ABC
 
 % ... or both -- drunk wants Pa link, both wants Opt link
 Was the man drunk or crazy or both?
+
+% Broken comparatives:
+He is nothing less than inspired!
+He is less than bright!
+He is more than capable!
+He is more than qualified!
+They report much less robust earnings than they did for the third quarter.
+They report much less robust earnings than they did earlier.
+
 
 % Sentence containing UTF8 chars that can lead to i/o or 
 % word-boundary problems
