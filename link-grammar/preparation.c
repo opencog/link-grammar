@@ -53,7 +53,7 @@ void build_deletable(Sentence sent, int has_conjunction)
 
 	for (i = -1; i<sent->length; i++)
 	{
-		sent->deletable[i] = (char *) xalloc(sent->length+1);
+		sent->deletable[i] = (char *) xalloc((sent->length+1) * sizeof(char));
 		/* the +1 is to allow us to have the info for the last word
 		   read the comment above */
 		for (j=0; j<= sent->length; j++)

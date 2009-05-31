@@ -1013,6 +1013,9 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->q_pruned_rules = FALSE;
 	sent->is_conjunction = NULL;
 
+	sent->dptr = NULL;
+	sent->deletable = NULL;
+
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
 
