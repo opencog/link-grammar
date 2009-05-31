@@ -3622,7 +3622,7 @@ a_bit a_little_bit: ({EE-} & EA+) or EC+ or EE+ or ({Xd- & Xc+} & MVa-);
 
 % 
 pretty.e extremely very_very very_very_very exceptionally
-notoriously unbelievably incurably extraordinarily
+unbelievably incurably extraordinarily
 jolly.e mighty.e damn.e exceedingly overly downright plumb
 vitally abundantly chronically frightfully genuinely
 humanly patently
@@ -3632,6 +3632,8 @@ indescribably intolerably laughably predominantly
 unalterably undisputedly unpardonably
 unreasonably unusually hugely infernally:
 ({EE-} & EA+) or EE+;
+
+notoriously.e: ({EE-} & EA+) or EE+ or Em+;
 
 % Adverbs whose main use is adjectiveal, but can be used with 
 % adverbs such as "faster", "dumber", etc. 
@@ -3703,7 +3705,6 @@ wild.e rampant.e shut.e tight.e
 open.e loud.e hot.e cold.e free.e: 
 {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Ca+);
 hard.e wrong.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+);
-poorly.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [[EA+]]);
 early.e late.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or TA+ or Qe+ or Ca+);
 yet.e: ({Xd- & Xc+} & MVa-) or EBm-;
 
