@@ -63,6 +63,38 @@ static int is_proper_name(const char * word)
 	return is_utf8_upper(word);
 }
 
+/* Create a string containing anything that can be construed to
+ * be a quotation mark. This works, because link-grammar is more
+ * or less ignorant of quotes at this time.
+ */
+static const wchar_t *list_of_quotes(void) 
+{
+#define QUSZ 50
+	static wchar_t wqs[QUSZ];
+	mbstate_t mbs;
+	const char * qs = "\"\'«»《》【】『』‘’`„“";
+
+	const char *pqs = qs;
+
+	memset(&mbs, 0, sizeof(mbs));
+
+	mbsrtowcs(wqs, &pqs, QUSZ, &mbs);
+
+	return wqs;
+}
+
+/**
+ * Return TRUE if the character is a quotation character.
+ */
+static int is_quote(wchar_t wc)
+{
+	static const wchar_t *quotes = NULL;
+	if (NULL == quotes) quotes = list_of_quotes();
+
+	if (NULL !=  wcschr(quotes, wc)) return TRUE;
+	return FALSE;
+}
+
 /**
  * Returns true if the word can be interpreted as a number.
  * The ":" is included here so we allow "10:30" to be a number.
@@ -577,7 +609,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		return FALSE;
 	}
 
-	if (quote_found == TRUE) sent->post_quote[sent->length]=1;
+	if (quote_found == TRUE) sent->post_quote[sent->length] = 1;
 
 	/* If the word is still not being found, then it might be 
 	 * a run-on of two words. Ask the spell-checker to split
@@ -663,19 +695,28 @@ int separate_sentence(Sentence sent, Parse_Options opts)
 	is_first = TRUE;
 	for(;;) 
 	{
+		int isq;
 		wchar_t c;
 		int nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 		quote_found = FALSE;
 
 		if (0 > nb) goto failure;
 
-		/* skip all whitespace */
-		while (iswspace(c) || (c == '\"'))
+		/* Skip all whitespace. Also, ignore *all* quotation marks.
+		 * XXX This is sort-of a hack, but that is because LG does
+		 * not have any intelligent support for quoted character
+		 * strings at this time.
+		 */
+		isq = is_quote (c);
+		if (isq) quote_found = TRUE;
+		while (iswspace(c) || isq)
 		{
 			s += nb;
-			if (*s == '\"') quote_found = TRUE;
 			nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+			if (0 == nb) break;
 			if (0 > nb) goto failure;
+			isq = is_quote (c);
+			if (isq) quote_found = TRUE;
 		}
 
 		if (*s == '\0') break;
@@ -683,7 +724,7 @@ int separate_sentence(Sentence sent, Parse_Options opts)
 		t = s;
 		nb = mbrtowc(&c, t, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
-		while (!iswspace(c) && (c != '\"') && (c != 0) && (nb != 0))
+		while (!iswspace(c) && !is_quote(c) && (c != 0) && (nb != 0))
 		{
 			t += nb;
 			nb = mbrtowc(&c, t, MB_CUR_MAX, &mbs);
