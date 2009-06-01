@@ -69,14 +69,14 @@
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
 % Just pure singular entities, no mass nouns 
-% Note that "CAPITALIZED-WORDS" has special meaning within the link parser.
-% These are the words that can occur at the start of the sentence, and be
-% capitalized ...
+% The CAPITALIZED-WORDS rule is triggered by regex matching, and 
+% applies to all capitalized words that are not otherwise found in
+% the dictionary.
 CAPITALIZED-WORDS NAME <entity-singular>:
 {NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
 
-% Plural of words that can appear at the start of a sentence.
+% Capitalized wrds that seem to be plural (by ending with an s, etc)
 PL-CAPITALIZED-WORDS: 
 {NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+); 
@@ -131,11 +131,11 @@ locationID60: <marker-entity> or <entity-entire>;
 /en/words/entities.given-bisex.sing:
 <marker-entity> or <given-names>;
 
-% More words that are given names. These are words that have a
-% lower-case analog in the dictionary, but are also used in upper-case
-% form as a part of a title of something.  Failure to include upper-case
-% versions of these words will screw up parsing, by failing to recognize
-% names of identities.
+% Special handling for certain given names. These are words that have a
+% lower-case analog in the dictionary, and are also used in upper-case
+% form in an "idiomatic name" e.g. Vatican_City.  Without the below,
+% this use of "City" would prevent it from being recognized in other
+% (non-idiomatic) proper name constructions, e.g. New York City.
 /en/words/entities.organizations.sing:
 <marker-entity> or <entity-singular>;
 

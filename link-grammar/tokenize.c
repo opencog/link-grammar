@@ -940,14 +940,14 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
  * Now, we correct the first word, w.
  * If w is upper case, let w' be the lower case version of w.
  * If both w and w' are in the dict, concatenate these disjncts.
- * Else if w' is in dict, use disjuncts of w',
- * else leave the disjuncts alone.
+ * Else if just w' is in dict, use disjuncts of w', together with
+ * the CAPITALIZED-WORDS rule.
+ * Else leave the disjuncts alone.
  */
 int build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	int i, first_word;  /* the index of the first word after the wall */
 	char *s, temp_word[MAX_WORD+1];
-	const char * u;
 	const char * regex_name;
 	X_node * e;
 	Dictionary dict = sent->dict;
@@ -1042,6 +1042,8 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 	 * or if it follows a colon or a quotation mark--a word that's 
 	 * capitalized has to be looked up as an uncapitalized word
 	 * (as well as a capitalized word).
+	 * XXX This rule is English-language-oriented, and should be
+	 * abstracted.
 	 */
 	for (i=0; i<sent->length; i++)
 	{
@@ -1050,34 +1052,22 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 		       sent->post_quote[i] == 1)) continue;
 		s = sent->word[i].string;
 
+		/* If the lower-case version of this word is in the dictionary, 
+		 * then add the disjuncts for the lower-case version. The upper
+		 * case version disjuncts had previously come from matching the 
+		 * CAPITALIZED-WORDS regex.
+		 */
 		if (is_utf8_upper(s))
 		{
+			const char * lc;
 			downcase_utf8_str(temp_word, s, MAX_WORD);
-			u = string_set_add(temp_word, sent->string_set);
+			lc = string_set_add(temp_word, sent->string_set);
 
-			/* If the lower-case version is in the dictionary... */
-			if (boolean_dictionary_lookup(sent->dict, u))
+			if (boolean_dictionary_lookup(sent->dict, lc))
 			{
-				/* Then check if the upper-case version is there. 
-				 * If it is, the disjuncts for the upper-case version 
-				 * have been put there already. So add on the disjuncts
-				 * for the lower-case version. */
-				if (boolean_dictionary_lookup(sent->dict, s))
-				{
-					e = build_word_expressions(sent, u);
-					sent->word[i].x =
-						catenate_X_nodes(sent->word[i].x, e);
-				} 
-				else
-				{
-					/* If the upper-case version isn't there,
-					 * replace the u.c. disjuncts with l.c. ones.
-					 */
-					safe_strcpy(s,u, MAX_WORD);
-					e = build_word_expressions(sent, s);
-					free_X_nodes(sent->word[i].x);
-					sent->word[i].x = e;
-				}
+				e = build_word_expressions(sent, lc);
+				sent->word[i].x =
+					catenate_X_nodes(sent->word[i].x, e);
 			}
 		}
 	}
