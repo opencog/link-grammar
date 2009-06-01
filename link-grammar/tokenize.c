@@ -72,7 +72,9 @@ static const wchar_t *list_of_quotes(void)
 #define QUSZ 50
 	static wchar_t wqs[QUSZ];
 	mbstate_t mbs;
-	const char * qs = "\"\'«»《》【】『』‘’`„“";
+	/* Single-quotes are used for abbreviations, don't mess with them */
+	/* const char * qs = "\"\'«»《》【】『』‘’`„“"; */
+	const char * qs = "\"«»《》【】『』`„“";
 
 	const char *pqs = qs;
 
