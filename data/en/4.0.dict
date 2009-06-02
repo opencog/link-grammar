@@ -890,11 +890,13 @@ or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
 or ({N+} & I*d+));
 
 do.v: ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
-or ((SIp+ or SFIp+) & (((Rw- or Q- or [()]) & I*d+) or CQ-)) or 
+or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-)) or 
 ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 
-does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & (((Rw- or Q- or [()]) & I*d+) or CQ-));
-did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & (((Rw- or Q- or [()]) & I*d+) or CQ-));
+does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & 
+(((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & 
+(((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-po>;
 
 % adjectival modifier: "I am done working", "I am through being mad"
@@ -905,21 +907,25 @@ doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: Vd-;
 
 don't don’t: 
-(((Rw- or Q- or [()]) & (SIp+ or SFIp+) & I*d+) or 
+(((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or 
 ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
 
-doesn't doesn’t: (((Rw- or Q- or [()]) & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
+doesn't doesn’t: (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
 (I*d+ or [[()]]);
 
-didn't didn’t: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
+didn't didn’t: <marker-past> or 
+((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
 (RS- & B-)))) & (I*d+ or [[()]]));
 
 <vc-have>: ({@MV+} & TO+) or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]})
 or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+}) or ({N+} & PP+);
-have.v: ((SIp+ or SFIp+) & (((Rw- or Q- or [()]) & PP+) or CQ-)) or (<verb-x-pl,i> &
+have.v: ((SIp+ or SFIp+) & 
+(((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-pl,i> &
  <vc-have>);
-has.v: ((SIs+ or SFIs+) & (((Rw- or Q- or [()]) & PP+) or CQ-)) or (<verb-x-s> & <vc-have>);
-had.v: ((SI+ or SFI+) & (((Rw- or Q- or [()]) & PP+) or CQ-)) or (<verb-x-sp> & <vc-have>)
+has.v: ((SIs+ or SFIs+) & 
+(((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-s> & <vc-have>);
+had.v: ((SI+ or SFI+) & 
+(((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-sp> & <vc-have>)
 or (<verb-x-pp> & (TO+ or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or 
 (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or 
 [[(SI*j+ or SFI**j+) & PP+ & 
@@ -927,11 +933,14 @@ or (<verb-x-pp> & (TO+ or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
-hasn't hasn’t: (((Rw- or Q- or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
+hasn't hasn’t: 
+(((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-haven't haven’t: (((Rw- or Q- or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or 
+haven't haven’t: 
+(((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or 
 (RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-hadn't hadn’t: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@E-} & 
+hadn't hadn’t: <marker-past> or 
+((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} & 
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]));
 
@@ -940,22 +949,25 @@ hadn't hadn’t: <marker-past> or ((((Rw- or Q- or [()]) & (SI+ or SFI+)) or ({@
 or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or 
 ({N+} & (AF- or Pg*b+ or Pv+ or I*v+));
 is.v: ((<verb-x-s>) or 
-((Rw- or Q- or [()]) & (SIs+ or SFIs+))) & <vc-be>;
+((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
 's.v ’s.v: [[<verb-x-s> & 
 (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ 
 or (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+})
 or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or Pg+ or Pv+ or PP+)]];
-was.v: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
+was.v: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
+((Rw- or ({Ic-} & Q-) or [()]) &
 (SFIs+ or SIs+ or SXI+))) & <vc-be>);
 % MIKE ROSS added [[Ss-]] option to are.v: for "What are the aliases of Jim?"
-are.v: (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) or ((Rw- or Q- or [()]) & 
+are.v: (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) or 
+((Rw- or ({Ic-} & Q-) or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>;
 were.v: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or 
-(RS- & Bp-))) or ((Rw- or Q- or [()]) & 
+(RS- & Bp-))) or 
+((Rw- or ({Ic-} & Q-) or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>) or [[(SI*j+ or SFI**j+) & <vc-be> &
 ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]]);
-am.v: (({@E-} & SX-) or ((Rw- or Q- or [()]) & SXI+)) & <vc-be>;
+am.v: (({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>;
 be.v: {@E-} & (Ix- or Wi-) & <vc-be>;
 been.v: {@E-} & PPf- & <vc-be>;
 being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
@@ -963,32 +975,33 @@ or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or
 <verb-ge-d>;
 
 isn't isn’t: (<verb-x-s> or 
-((Rw- or Q- or [()]) & (SIs+ or SFIs+))) & <vc-be>;
-wasn't wasn’t: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or ((Rw- or Q- or [()]) &
+((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
+wasn't wasn’t: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- &
+Bs-))) or ((Rw- or ({Ic-} & Q-) or [()]) &
 (SI*+ or SXI+ or SFIs+))) & <vc-be>);
 aren't aren’t: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
-((Rw- or Q- or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
+((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
 weren't weren’t: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
-((Rw- or Q- or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
+((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
 
 will.v can.v may.v must.v could.v might.v shall.v: 
-((SI+ or SFI+) & (((Rw- or Q- or [()]) & I+) or CQ-)) or
+((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
 ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+})
 or [[()]]));
-should.v: ((SI+ or SFI+) & (((Rw- or Q- or [()]) & I+) or CQ-)) or
+should.v: ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
 ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+})
 or [[()]])) or [[(SI*j+ or SFI**j+) & I+ & 
 ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
-would.v: ((SI+ or SFI+) & (((Rw- or Q- or [()]) & {Vw+} & I+) or CQ-)) or
+would.v: ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & {Vw+} & I+) or CQ-)) or
 ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) 
 or [[()]]));
-ought.v: (((Rw- or Q- or [()]) & (SI+ or SFI+)) or
+ought.v: (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
 ({@E-} & (S- or SF- or (RS- & B-)))) & (TO+ or (N+ & I+));
 won't can't mustn't couldn't shouldn't cannot needn't 
 won’t can’t mustn’t couldn’t shouldn’t needn’t: 
-((Rw- or Q- or [()]) & (SI+ or SFI+) & I+) or
+((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
 ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
-wouldn't wouldn’t: ((Rw- or Q- or [()]) & (SI+ or SFI+) & {RT+} & I+) or
+wouldn't wouldn’t: ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
 ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) 
 or [[()]]));
 
@@ -3747,7 +3760,7 @@ respectively: ({Xd- & Xc+} & MVa-) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
 long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or OT- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;                
-exactly: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EZ+;              
+exactly.e: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EZ+;              
 well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+])) or 
 [{EA- or EF+} & (Pa- or AF+)] or Yd+;
 roughly approximately: EA+ or ({EE- or EF+} & (EN+ or EZ+ or ({Xd- & Xc+} & MVa-)
@@ -3865,7 +3878,7 @@ yes.misc-inf yeah.misc-inf yep.misc-inf yup.misc-inf
 ok.misc-inf okay.misc-inf OK.misc-inf fine.misc-inf sure.misc-inf
 whatever.misc-inf anyhow.misc-inf 
 anyway.misc-inf afterwards.misc-inf afterward.misc-inf 
-instead.misc-inf 
+instead.misc-inf exactly.misc-inf
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn over_and_over later_on for_now
@@ -4235,7 +4248,7 @@ longest-term.a:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
- ({Q-} & (SI+ or SFI+) & I+) or ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+ ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
 
 longer-term.a:
  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
