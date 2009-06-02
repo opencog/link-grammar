@@ -124,7 +124,7 @@ locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 lo
 locationID60: <marker-entity> or <entity-entire>;
 
 <directive-opener>:
-{[[Wi-]]} & {{Xd-} & Xc+} & Ic+;
+{[[Wi-]]} & {{Xd-} & Xc+} & (Ic+ or COa+);
 
 % Words that are also given names
 % Cannot take A or D links.
@@ -968,7 +968,7 @@ were.v: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or
 (SIpx+ or SFIp+))) & <vc-be>) or [[(SI*j+ or SFI**j+) & <vc-be> &
 ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]]);
 am.v: (({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>;
-be.v: {@E-} & (Ix- or Wi-) & <vc-be>;
+be.v: {@E-} & (Ix- or ({Ic-} & Wi-)) & <vc-be>;
 been.v: {@E-} & PPf- & <vc-be>;
 being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
 or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or 
@@ -1327,6 +1327,7 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % Imperative go: "go play ball", "go take a walk", "go swimming"
 % Similar pattern to "please.r" -- "please play ball" etc.
 % "You and Rover go play with the ball." requires an S- link.
+% ??? changes to go.v have obsoleted this ??
 go.w: {E-} & (Wi- or S-) & I+;
 
 <vc-go>: {K+ or [[Pa+]] or [[Pg+]] or I*g+} & {@MV+}; 
@@ -2517,7 +2518,7 @@ lets.v: <verb-s> & <vc-let>;
 letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
-let's let’s: (Wi- & {N+} & I+) or (Wi- & N+);
+let's let’s: ({Ic-} & Wi- & {N+} & I+) or ({Ic-} & Wi- & N+);
 
 <vc-watch>: ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or ([[@MV+ & O*n+ & {@MV+}]])
 or {@MV+};
@@ -3944,7 +3945,7 @@ please.e:
 Qe+ or Ca+ or [[EA+]]);
 
 % polite command verb
-please.w thank_you: Wi- & {{Xc+} & Vv+};
+please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+};
 
 
 % MISCELLANEOUS WORDS AND PUNCTUATION
@@ -3970,7 +3971,7 @@ emoticonID50 emoticonID51 emoticonID52 emoticonID53 emoticonID54
 emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
  Ma-)  & {@MV+}) or AA+ or <adj-op>)) or
-({[[Wi-]]} & {{Xd-} & Xc+} & Ic+);
+({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+);
 
 ".": ((Xp- or ({@Xca-} & Xc-)) & RW+) or Xi-;
 
@@ -4139,7 +4140,7 @@ LATIN-ADJ-S-NOUN-WORDS:
 UNKNOWN-WORD.n: {NM+} & ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+))
 or (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or U-));
-UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or Wi-) & {B- or O+}
+UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};
 UNKNOWN-WORD.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
  Ma-)  & {@MV+}) or AA+ or <adj-op>);
