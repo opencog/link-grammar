@@ -72,6 +72,14 @@ The play was dreadfully written
 There are rumours of a tightening of credit
 There are rumours of a collapse of  credit
 
+What exactly do you want?
+What, exactly, do you want?
+What precisely do you want?
+
+It reduced chances that profits could equal thier earlier performance
+The motor ran flat out
+It happened during the 1988 first half
+
 % so
 He did not perform nearly so well.
 The price didn't drop nearly so fast.  
@@ -741,6 +749,9 @@ It cost $14 million.
 It started on day one.
 The experiments ended on day 22.
 
+I fear the number 13.
+The number 12 is a lucky number.
+
 % Numerical ranges
 It takes 2 to 3 times the effort.
 It takes 2 - 3 times the effort.
@@ -800,6 +811,8 @@ Check the valve, replace if cracked.
 
 % Then is optional:
 If it is raining, stay inside!
+If you bought after the crash, you won.
+If you sold before the peak, you got lucky
 
 % Someone... who...
 Someone is outside who wants to see you.
@@ -817,7 +830,10 @@ Now that you mention it, what happened?
 While we're on the topic, was it good?
 Kenny sure is a bastard.
 I gave her a check for deposit.
+
+% elided "that" (phantom that)
 Just thought you'd like to know.
+It was previously thought they were wrong.
 
 % misc idioms
 Not everything looks grim.
@@ -978,6 +994,7 @@ Who invented sliced bread; when did they do it?
 % should be (major Eurobond or foreign bond) offerings
 There were no major Eurobond or foreign bond offerings Friday.
 Messrs. Malson and Seelenfreund are directors.
+The effects were less severe and less prolonged
 
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 *John saw a dog yesterday which was a Yorkshire terrier.
@@ -1020,10 +1037,15 @@ Was the man drunk or crazy or both?
 % Broken comparatives:
 He is nothing less than inspired!
 He is less than bright!
+That is a less than optimal plan
 He is more than capable!
 He is more than qualified!
-They report much less robust earnings than they did for the third quarter.
+they report less earnings than before
+they report less robust earnings than before
+they report less robust earnings than previously
+they report less robust earnings than they did previously
 They report much less robust earnings than they did earlier.
+They report much less robust earnings than they did for the third quarter.
 
 
 % Sentence containing UTF8 chars that can lead to i/o or 
