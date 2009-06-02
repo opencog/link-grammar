@@ -589,7 +589,7 @@ one_more:
 Ds+ or (<noun-sub-s> & <noun-main-s>);
 
 not_many: Dmc+ or (<noun-sub-p> & (Sp+ & <CLAUSE>));
-not_all: Dm+ or (((ALx+ & Jp+) or <noun-sub-x>)
+not_all not_everything: Dm+ or (((ALx+ & Jp+) or <noun-sub-x>)
 & (S+ & <CLAUSE>));
 not_one: Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
 

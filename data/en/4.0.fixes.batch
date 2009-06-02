@@ -31,6 +31,8 @@ John is bigger than Dave is.
 John wants more cookies than Dave wants.
 It was covered with bites.
 Alice took a bite out of it.
+
+% particles w/ various verbs
 He walked the dog.
 He walked up to the counter.
 He sailed the boat into the pier.
@@ -41,14 +43,20 @@ He zeroed the counter.
 He zeroed out the counter.
 Elvis was all shook up.
 Elvis was all shaken up.
+
+% gone
 The position we talked about is gone.
 The keys are gone.
 The popcorn is all gone.
 The good times are done and gone.
 It's now a gone desire.
+
+% tend
 I tended to believe that shepherds tend sheep.
 I often tended, for years at a time, to believe that shepherds quietly tend sheep.
-The smelter weights 30 tonnes.
+
+% misc nouns, verbs
+The smelter weighs 30 tonnes.
 He wears a mustache on the sitcom.
 She's sharp-witted and funny.
 He resigned that post.
@@ -809,6 +817,10 @@ While we're on the topic, was it good?
 Kenny sure is a bastard.
 I gave her a check for deposit.
 Just thought you'd like to know.
+
+% misc idioms
+Not everything looks grim.
+Not all is lost.
 
 % Commands.  
 Walk tall.
