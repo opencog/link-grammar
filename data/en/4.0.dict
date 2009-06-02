@@ -580,7 +580,8 @@ each: Ds+ or (<noun-sub-s> & <noun-main-s>) or DTn+
 or E+ or MVa-;
 
 no.misc-d: ({EN-} & D+) or EC+;
-no.misc-open yes.misc-open: {Xc+ & {Xd-}} & CO+;
+no.misc-open yes.misc-open: {{Xd-} & Xc+} & CO+;
+no.misc-x yes.misc-x: {[[Wi-]]} & {{Xd-} & Xc+} & Ic+;
 
 a_little: Dmu+ or (<noun-sub-s> & <noun-main-s>)
 or EA+ or EC+ or EE+ or MVa-;
@@ -809,7 +810,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % It is used to flag past-tense forms in the dictionary
 
 <marker-past>: XXXPAST+;
-<verb-pl,i>: {@E-} & (Sp- or (RS- & Bp-) or I- or Wi-);
+<verb-pl,i>: {@E-} & (Sp- or (RS- & Bp-) or (I- & {@E-} & {Wi-}) or Wi-);
 <verb-pl>: {@E-} & (Sp- or (RS- & Bp-));
 <verb-s>: {@E-} & (Ss- or (RS- & Bs-));
 <verb-i>: {@E-} & I-;
@@ -1305,7 +1306,7 @@ wondered.v inquired.v: <verb-sp,pp> & <vc-wonder>;
 wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 
 % Imperative go: "go play ball", "go take a walk", "go swimming"
-% Same pattern as "please.w" -- "please play ball" etc.
+% Similar pattern to "please.r" -- "please play ball" etc.
 % "You and Rover go play with the ball." requires an S- link.
 go.w: {E-} & (Wi- or S-) & I+;
 
@@ -3888,7 +3889,11 @@ or (Wq- & (PF+ or CQ+));
 sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} &MVa-) or E+); 
 so_that: Cs+ & {Xd- & Xc+} & MVs-;
 
-please.w: Wi- & I+;
+% adverb, emphasizes
+please.e: Em+;
+
+% polite command verb
+please.w: Wi-;
 
 
 % MISCELLANEOUS WORDS AND PUNCTUATION
