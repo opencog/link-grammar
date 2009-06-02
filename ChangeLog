@@ -18,6 +18,7 @@ Version 4.5.7 (xxx??? 2009)
  * Expand handling of capitalized words that appear in entity names.
  * Expand the list of characters that are recognized as quotes.
  * Support usage of yes, no as sentence openers.
+ * Better support for directives, commands.
 
 Version 4.5.6 (24 May 2009)
  * Bugfix: fix non-thread-safe usage.

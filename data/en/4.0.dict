@@ -580,8 +580,6 @@ each: Ds+ or (<noun-sub-s> & <noun-main-s>) or DTn+
 or E+ or MVa-;
 
 no.misc-d: ({EN-} & D+) or EC+;
-no.misc-open yes.misc-open: {{Xd-} & Xc+} & CO+;
-no.misc-x yes.misc-x: {[[Wi-]]} & {{Xd-} & Xc+} & Ic+;
 
 a_little: Dmu+ or (<noun-sub-s> & <noun-main-s>)
 or EA+ or EC+ or EE+ or MVa-;
@@ -3201,7 +3199,7 @@ or (JQ- & D+) or (U+ & Jr- & (RS+ or Cr+));
 whoever: {EL+} & (((Ss*d+ or Bsd+ or [[CX+]]) & 
 (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
 or [[(O- or J-) & CX+]]);
-whatever: ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) &
+whatever.c: ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) &
 (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
 or [[(O- or J-) & CX+]]))
 or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
@@ -3711,7 +3709,7 @@ in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
 %ADVERBS WHOSE ONLY (MAIN) USE IS POST_VERBAL
 far.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Ca+ or Qe+ or Yd+);
-okay.e barefoot.e willy-nilly quarterly.e madly.e outright.e
+barefoot.e willy-nilly quarterly.e madly.e outright.e
 properly.e staccato.e legato.e all_the_way all_the_time
 anymore.e aloud.e upwards.e downwards.e upward.e downward.e
 inward.e outward.e inwards.e outwards.e anytime.e live.e 
@@ -3834,17 +3832,39 @@ in_fact of_course in_effect for_example for_instance e.g. i.e. :
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or 
 (EB- & {Xc+}) or ({Xd-} & CC- & Wd+);
 
-%ADVERBS USABLE POST_VERBALLY OR AS OPENERS
-someday sometime thereafter anyhow anyway overall.e
-afterwards afterward lengthwise worldwide.e nationwide.e statewide.e
-world-wide.e
-nation-wide.e state-wide.e industrywide.e instead prima_facie before_long
+% ADVERBS USABLE POST_VERBALLY OR AS OPENERS
+% Note that similar interjective openers will be given COp+ links
+% by the UNKNOWN-WORD.a rule -- "Umm, I think he did it."
+no.e nope.e nah.e no_way 
+yes.e yeah.e yep.e yup.e
+ok.e okay.e OK.e fine.e sure.e whatever.e 
+someday.e sometime.e thereafter.e anyhow.e anyway.e overall.e
+afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e 
+statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e 
+instead.e prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn over_and_over later_on for_now
 day_by_day day_after_day step_by_step one_by_one for_sure for_certain
 even_so more_often_than_not all_of_a_sudden:
 ({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+);
+
+% Openers to directives, commands (Ic+ connection to infinitives)
+% However, "No, don't do that" illustrates that perhaps Ic+ is the wrong
+% kind of link to use here ...
+no.misc-inf nope.misc-inf nah.misc-inf no_way 
+yes.misc-inf yeah.misc-inf yep.misc-inf yup.misc-inf 
+ok.misc-inf okay.misc-inf OK.misc-inf fine.misc-inf sure.misc-inf
+whatever.misc-inf anyhow.misc-inf 
+anyway.misc-inf afterwards.misc-inf afterward.misc-inf 
+instead.misc-inf 
+by_hand by_car by_plane by_boat by_bus by_train by_phone
+by_telephone in_person at_long_last on_cue
+on_arrival by_request in_total in_turn over_and_over later_on for_now
+day_by_day day_after_day step_by_step one_by_one for_sure for_certain
+even_so more_often_than_not all_of_a_sudden: 
+{[[Wi-]]} & {{Xd-} & Xc+} & Ic+;
+
 high.e deep.e low.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or 
 ({Xc+ & {Xd-}} & CO+) or Ca+ or Qe+);
 left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or 
@@ -3889,11 +3909,15 @@ or (Wq- & (PF+ or CQ+));
 sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} &MVa-) or E+); 
 so_that: Cs+ & {Xd- & Xc+} & MVs-;
 
-% adverb, emphasizes
-please.e: Em+;
+% much like an ordinary adverb, except even more commas allowed
+% please.e: <ordinary-adv>;
+please.e:
+{EE- or EF+} & (({Xd- & Xc+} & MVa-) or 
+({Xc+ & {Xd-}} & (Em+ or CO+)) or 
+Qe+ or Ca+ or [[EA+]]);
 
 % polite command verb
-please.w: Wi-;
+please.w thank_you: Wi- & {{Xc+} & Vv+};
 
 
 % MISCELLANEOUS WORDS AND PUNCTUATION
@@ -3902,7 +3926,8 @@ etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
 so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
 <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or M- or MV-;
 
-er errr um.j umm uh uhh oh ohh ooo yeah woo_hoo
+% Assorted interjections, treat at unknown adjectives.
+er err.j errr um.j umm uh uhh oh ohh ooo woo_hoo
 gee gosh wow ah ahh eh ehh hmm hmmm hoo zowie
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
 emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
@@ -3915,8 +3940,10 @@ emoticonID35 emoticonID36 emoticonID37 emoticonID38 emoticonID39
 emoticonID40 emoticonID41 emoticonID42 emoticonID43 emoticonID44
 emoticonID45 emoticonID46 emoticonID47 emoticonID48 emoticonID49
 emoticonID50 emoticonID51 emoticonID52 emoticonID53 emoticonID54
-emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59
-: NO+;
+emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
+({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
+ Ma-)  & {@MV+}) or AA+ or <adj-op>)) or
+({[[Wi-]]} & {{Xd-} & Xc+} & Ic+);
 
 ".": ((Xp- or ({@Xca-} & Xc-)) & RW+) or Xi-;
 
