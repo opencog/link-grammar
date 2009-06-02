@@ -578,7 +578,10 @@ another: Ds+ or NIc+ or (<noun-sub-s> & <noun-main-s>) or YS+;
 one_another: (<noun-sub-s> & <noun-main-s>) or YS+;
 each: Ds+ or (<noun-sub-s> & <noun-main-s>) or DTn+
 or E+ or MVa-;
-no.d: ({EN-} & D+) or EC+;
+
+no.misc-d: ({EN-} & D+) or EC+;
+no.misc-open yes.misc-open: {Xc+ & {Xd-}} & CO+;
+
 a_little: Dmu+ or (<noun-sub-s> & <noun-main-s>)
 or EA+ or EC+ or EE+ or MVa-;
 a_great_deal: EC+ or MVa- or (<noun-sub-s> & <noun-main-s>);
@@ -2780,7 +2783,7 @@ says.i votes.i: <verb-s> & <vc-vote>;
 said.i voted.i: <verb-sp,pp> & <vc-vote>;
 saying.i voting.i: 
 (<vc-vote> & <verb-pg,ge>);
-yes no.i: Vv-;
+yes.misc-vote no.misc-vote: Vv-;
 
 double.v triple.v quadruple.v quintuple.v:
 {EN-} & <verb-pl,i> & <vc-fill>;

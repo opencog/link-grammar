@@ -17,6 +17,7 @@ Version 4.5.7 (xxx??? 2009)
  * Fix financial ranges: "It will cost $10 million to $20 million to build."
  * Expand handling of capitalized words that appear in entity names.
  * Expand the list of characters that are recognized as quotes.
+ * Support usage of yes, no as sentence openers.
 
 Version 4.5.6 (24 May 2009)
  * Bugfix: fix non-thread-safe usage.
