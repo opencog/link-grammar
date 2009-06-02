@@ -3763,8 +3763,10 @@ partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;
 exactly.e: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EZ+;              
 well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+])) or 
 [{EA- or EF+} & (Pa- or AF+)] or Yd+;
-roughly approximately: EA+ or ({EE- or EF+} & (EN+ or EZ+ or ({Xd- & Xc+} & MVa-)
- or E+));
+roughly approximately: EA+ or 
+({EE- or EF+} & (EN+ or EZ+ or ({Xd- & Xc+} & MVa-) or E+)) or
+({Xc+ & {Xd-}} & CO+);
+
 together: ({Xd- & Xc+} & MVa-) or E+ or K- or [Mp-] or ({Xc+ & {Xd-}} & CO+);
 definitely: {EE-} & (E+ or EB- or (Xd- & Xc+ & MVa-));
 by_far: EB- or E+ or MVa-;
