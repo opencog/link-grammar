@@ -61,6 +61,12 @@
 
 <noun-main2-x>:  J- or O- or ({[B*j+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 <noun-main2-s>:  Js- or Os- or ({[Bsj+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+
+% Xd- or [[()]] allows parsing of "I have no idea what that is."
+% without requiring comma after "idea"
+<noun-main2-s-no-punc>:  Js- or Os- or 
+({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+
 <noun-main2-p>:  Jp- or Op- or ({[Bpj+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 <noun-main2-m>:  Jp- or Os- or ({[Bsj+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
@@ -3205,7 +3211,7 @@ or ({EL+} & (S**w+ or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
 
 what: ({EL+} & (D**w+ or Ss*w+ or (R+ & (Bsw+ or BW+))) & (Wq- or Ws- or QI*d-
 or BIqd-)) or ((Ss*d+ or (R+ & (Bsd+ or BW+))) &
-(<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t-)) or (D+ & JQ-);
+(<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-)) or (D+ & JQ-);
 
 which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or 
 ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))

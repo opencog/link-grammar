@@ -32,6 +32,10 @@ John wants more cookies than Dave wants.
 It was covered with bites.
 Alice took a bite out of it.
 
+% phantom commas
+I have no idea, what that is.
+I have no idea what that is.
+
 % particles w/ various verbs
 He walked the dog.
 He walked up to the counter.
@@ -907,7 +911,6 @@ John, this is it!
 % Broken idiomatic expressions ... 
 Heard that before?
 Just a coincidence?
-I have no idea what that is.
 They do just that
 He did just what you asked
 
