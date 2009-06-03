@@ -3046,7 +3046,7 @@ yesterday: {TD+} & (<prep-main-t> or JT- or [[E+]]
  or YS+ or [[<noun-main-s>]]);
 tomorrow: {TD+} & (<prep-main-t> or JT- or YS+ or [[<noun-main-s>]]);
 Monday Tuesday Wednesday Thursday Friday Saturday Sunday.i:
-((DTn- or DTie- or [()]) & {TD+ or TW+} & 
+((DTn- or DTie- or [()]) & {G-} & {TD+ or TW+} & 
 (YS+ or <prep-main-t> or JT- or ON- or [[<noun-main-s>]])) or [[AN+]];
 
 morning.i afternoon.i night.i evening.i: TD-;

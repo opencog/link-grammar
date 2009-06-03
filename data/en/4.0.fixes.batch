@@ -1016,8 +1016,10 @@ The effects were less severe and less prolonged
 % "one to two" should modify hours.
 It starts one to two hours later.
 
-% Sentence parses, but incorrectly, without the comma.
-The market fell 156.83, a week after Black Monday.
+% Named days of week.
+The market fell 156.83, or 8%, a week after Black Monday.
+We'll party all night on Fat Tuesday.
+We'll come for dinner on Ash Wednesday.
 
 % "and so" is linked with Wq, should not be.
 Rama ate the apple, and so did Mohan.
