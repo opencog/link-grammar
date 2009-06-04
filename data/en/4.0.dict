@@ -1354,10 +1354,10 @@ going.v: ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or ({@E-} & A+)
 <verb-ge-d>;
 
 <vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+})};
-stay.v sit.v stand.v: <verb-pl,i> & <vc-stay>;
-stays.v sits.v stands.v: <verb-s> & <vc-stay>;
-stayed.v sat.v stood.v: <verb-sp,pp> & <vc-stay>;
-staying.v sitting.v standing.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
+stay.v: <verb-pl,i> & <vc-stay>;
+stays.v: <verb-s> & <vc-stay>;
+stayed.v: <verb-sp,pp> & <vc-stay>;
+staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-sound>: {@MV+} & {LI+ or Pa+ or AF-};
 sound.v: <verb-pl,i> & <vc-sound>;
