@@ -1213,17 +1213,24 @@ happens.v: <verb-s> & <vc-happen>;
 happened.v: <verb-sp,pp> & <vc-happen>;
 happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-wish>: {@MV+} & {TH+ or Ce+ or RSe+ or TO+};
-wish.v hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-wish>;
-wishes.v hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
-<verb-s> & <vc-wish>;
-wished.v pretended.v prayed.v vowed.v: <verb-sp,pp> & <vc-wish>;
-hoped.v voted.v: (<verb-sp,pp> & <vc-wish>) or (<verb-s-pv> & THi+);
-agreed.v: (<verb-sp,pp> & <vc-wish>) or (<verb-pv> & TH+);
-swore.v: <verb-sp> & <vc-wish>;
-sworn.v: (<verb-pp> & <vc-wish>) or ({@E-} & A+);
-wishing.v hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v: 
-(<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
+<vc-wish>: ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or 
+(O+ & {[[@MV+]]} & O*n+);
+wish.v: <verb-pl,i> & <vc-wish>;
+wished.v: <verb-sp,pp> & <vc-wish>;
+wishes.v: <verb-s> & <vc-wish>;
+wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
+
+<vc-hope>: {@MV+} & {TH+ or Ce+ or RSe+ or TO+};
+hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-hope>;
+hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
+<verb-s> & <vc-hope>;
+pretended.v prayed.v vowed.v: <verb-sp,pp> & <vc-hope>;
+hoped.v voted.v: (<verb-sp,pp> & <vc-hope>) or (<verb-s-pv> & THi+);
+agreed.v: (<verb-sp,pp> & <vc-hope>) or (<verb-pv> & TH+);
+swore.v: <verb-sp> & <vc-hope>;
+sworn.v: (<verb-pp> & <vc-hope>) or ({@E-} & A+);
+hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v: 
+(<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-appear>: {@MV+} & {Pa+ or TOf+ or THi+ or AF- or [[Pv+]]};
 appear.v: <verb-x-pl,i> & <vc-appear>;
