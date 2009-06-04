@@ -3758,6 +3758,10 @@ hard.e wrong.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+);
 early.e late.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or TA+ or Qe+ or Ca+);
 yet.e: ({Xd- & Xc+} & MVa-) or EBm-;
 
+% Adjectives that appear post-verbally e.g. "she wiped the table dry"
+% These are more or less adverbs ... 
+dry.e flat.e blind.e: {EE- or EF+ } & MVa-;
+
 %ADVERBS USABLE POST-VERBALLY OR PRE-VERBALLY
 finely specially literally heavily alternately severely dearly
 voluntarily dramatically flatly purposely jointly narrowly 
