@@ -3891,14 +3891,13 @@ even_so more_often_than_not all_of_a_sudden:
 ({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+);
 
 % Openers to directives, commands (Ic+ connection to infinitives)
-% However, "No, don't do that" illustrates that perhaps Ic+ is the wrong
-% kind of link to use here ...
-no.misc-inf nope.misc-inf nah.misc-inf no_way 
-yes.misc-inf yeah.misc-inf yep.misc-inf yup.misc-inf 
-ok.misc-inf okay.misc-inf OK.misc-inf fine.misc-inf sure.misc-inf
-whatever.misc-inf anyhow.misc-inf 
-anyway.misc-inf afterwards.misc-inf afterward.misc-inf 
-instead.misc-inf exactly.misc-inf
+% These are semantically important interjections ... 
+no.misc-interj nope.misc-interj nah.misc-interj no_way 
+yes.misc-interj yeah.misc-interj yep.misc-interj yup.misc-interj 
+ok.misc-interj okay.misc-interj OK.misc-interj fine.misc-interj 
+sure.misc-interj whatever.misc-interj anyhow.misc-interj 
+anyway.misc-interj afterwards.misc-interj afterward.misc-interj 
+instead.misc-interj exactly.misc-interj
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn over_and_over later_on for_now
