@@ -1,4 +1,4 @@
-Version 4.5.7 (xxx??? 2009)
+Version 4.5.7 (4 June 2009)
  * Fix 'make install' for windows (abi bug 12049)
  * Fix multi-threaded bug when TRACK_SPACE_USAGE is defined.
  * Add './configure --enable-mudflap' just for fun...
@@ -11,7 +11,7 @@ Version 4.5.7 (xxx??? 2009)
  * Fix act up, act out: "He is acting out." "The motor is acting up."
  * Fix notoriously, poorly: "The store was poorly stocked".
  * Fix: "strong" can be adverb
- * Add support for time zones.
+ * Add support for recognizing basic time zones during parsing.
  * Fix: verbs acting as adjectival modifiers: "a very politicized deal."
  * Fix: ".. nearly so well", "...almost so well".
  * Fix financial ranges: "It will cost $10 million to $20 million to build."
