@@ -30,6 +30,21 @@
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
 
+#define COMMON_ENTITY_MARKER   "<marker-common-entity>"
+
+/**
+ * is_common_entity - Return true if word is a common noun or adjective
+ * Common nouns and adjectives are typically used in corporate entity
+ * names -- e.g. "Sun State Bank" -- "sun", "state" and "bank" are all 
+ * common nouns.
+ */
+static int is_common_entity(Dictionary dict, const char * str)
+{
+	if (word_contains(dict, str, COMMON_ENTITY_MARKER) == 1)
+		return 1;
+	return 0;
+}
+
 /**
  * Is the word entirely composed of single-letter abreviations
  * (followed by a period)?
@@ -1099,6 +1114,18 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 		 * then add the disjuncts for the lower-case version. The upper
 		 * case version disjuncts had previously come from matching the 
 		 * CAPITALIZED-WORDS regex.
+		 *
+		 * Err .. add the lower-case version only if the lower-case word
+		 * is a common noun or adjective; otherwise, *replace* the
+		 * upper-case word with the lower-case one.  This allows common
+		 * nouns and adjectives to be used for entity names: e.g.
+		 * "Great Southern Union declares bankruptcy", allowing Great
+		 * to be capitalized, while preventing an upper-case "She" being
+		 * used as a proper name in "She declared bankruptcy".
+		 *
+		 * This is actually a great example of a combo of an algorithm
+		 * together with a list of words used to determine grammatical
+		 * function.
 		 */
 		if (is_utf8_upper(s))
 		{
@@ -1108,9 +1135,19 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 
 			if (boolean_dictionary_lookup(sent->dict, lc))
 			{
-				e = build_word_expressions(sent, lc);
-				sent->word[i].x =
-					catenate_X_nodes(sent->word[i].x, e);
+				if (is_common_entity(sent->dict,lc))
+				{
+					e = build_word_expressions(sent, lc);
+					sent->word[i].x =
+						catenate_X_nodes(sent->word[i].x, e);
+				}
+				else
+				{
+					safe_strcpy(s, lc, MAX_WORD);
+					e = build_word_expressions(sent, s);
+					free_X_nodes(sent->word[i].x);
+					sent->word[i].x = e;
+				}
 			}
 		}
 	}

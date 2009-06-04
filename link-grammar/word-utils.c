@@ -564,7 +564,7 @@ static int dn_word_contains(Dictionary dict,
  * @return: true if word's expression contains macro's expression,
  * false otherwise.
  */
-static int word_contains(Dictionary dict, const char * word, const char * macro)
+int word_contains(Dictionary dict, const char * word, const char * macro)
 {
 	Dict_node *w_dn;
 	int ret;
@@ -576,6 +576,7 @@ static int word_contains(Dictionary dict, const char * word, const char * macro)
 
 #define PAST_TENSE_FORM_MARKER "<marker-past>"
 #define ENTITY_MARKER          "<marker-entity>"
+#define COMMON_ENTITY_MARKER   "<marker-common-entity>"
 
 int dictionary_is_past_tense_form(Dictionary dict, const char * str)
 {
@@ -593,6 +594,18 @@ int dictionary_is_past_tense_form(Dictionary dict, const char * str)
 int dictionary_is_entity(Dictionary dict, const char * str)
 {
 	if (word_contains(dict, str, ENTITY_MARKER) == 1)
+		return 1;
+	return 0;
+}
+
+/**
+ * dictionary_is_common_entity - Return true if word is a common
+ * noun or adjective, typically appearing in corporate entity names.
+ * e.g. "Sun State Bank" -- sun, state and bank are all common nouns.
+ */
+int dictionary_is_common_entity(Dictionary dict, const char * str)
+{
+	if (word_contains(dict, str, COMMON_ENTITY_MARKER) == 1)
 		return 1;
 	return 0;
 }

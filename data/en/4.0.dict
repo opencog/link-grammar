@@ -40,7 +40,12 @@
 
 % NOUNS
 
+% The marker-entity is used to identify identity names.
+% The marker-common-entity is used to identify all common nouns 
+% and adjectives that might appear in entity names:
+% e.g. "Great Southern Federal Bank and Railroad" or "Aluminum Bahrain"
 <marker-entity>: XXXENTITY+;
+<marker-common-entity>: XXXGIVEN+;
 
 <CLAUSE>: {({@COd-} & C-) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
 
@@ -229,26 +234,29 @@ HYPHENATED-WORDS.n:
 
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 /en/words/words.n.1: 
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & 
+<marker-common-entity> or 
+({NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & 
 ((Ds- & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+)))
-or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+);
+or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+));
 
 % plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
-/en/words/words.n.2.s: <generic-plural-id>;
+/en/words/words.n.2.s: <marker-common-entity> or <generic-plural-id>;
 /en/words/words.n.2.s.biolg: <generic-plural-id>;
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 /en/words/words.n.2.x:  % plural nouns not ending in "s"
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+<marker-common-entity> or 
+({NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or (Rw+ & Bpm+)))
-or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
+or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]));
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
 /en/words/words.n.3:  % nouns that are mass only
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
+<marker-common-entity> or 
+({NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
 (<noun-main-m> or (Rw+ & Bsm+))) or
-(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+);
+(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+));
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
 % nouns that can be mass or countable
@@ -3334,8 +3342,10 @@ n't n’t: N- or EB-;
 ({@E-} & {@MV+} & ([[{Xd-} & Xc+ & COp+]] or (Xd- & Xc+ & MX*a-))); 
 
 /en/words/words.adj.1:  % ordinary adjectives
-   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
- & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+<marker-common-entity> or 
+({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
+((Pa- or AF+ or Ma-) & {@MV+}) or 
+AA+ or [[DD- & <noun-main-p>]] or <adj-op>));
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a 
 
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
@@ -3372,44 +3382,61 @@ legal.a illegal.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
 {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
 or ({TOt+ & B+} & <adj-op>));
-good.a bad.a unusual.a great.a useful.a a_bitch nice.a
-strange.a wonderful.a terrible.a possible.a impossible.a annoying.a 
-fair.a unfair.a tough.a:
+
+<adj-good>:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+}
 & {((TOt+ & B+) or THi+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
 or ({TOt+ & B+} & <adj-op>));
+
+good.a bad.a unusual.a useful.a a_bitch nice.a
+strange.a wonderful.a terrible.a possible.a impossible.a annoying.a 
+fair.a unfair.a tough.a: <adj-good>;
+
+great.a: <marker-common-entity> or <adj-good>;
+
 important.a essential.a crucial.a necessary.a imperative.a vital.a: 
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) &  
+<marker-common-entity> or 
+({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) &  
 (({@MV+} & {(THi+ or TOi+ or TSi+) & {LE+}}) or (TOt+ & B+))) or AA+ or
-[[DD- & <noun-main-p>]] or ({TOt+ & B+} & <adj-op>));
+[[DD- & <noun-main-p>]] or ({TOt+ & B+} & <adj-op>)));
+
 common.a practical.a original.a normal.a helpful.a striking.a
 confusing.a frustrating.a disturbing.a
 logical.a illogical.a elegant.a efficient.a awful.a just.a unjust.a
 absurd.a natural.a alarming.a acceptable.a unacceptable.a deplorable.a
 detestable.a scary.a shocking.a:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+}
-& {(THi+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+<marker-common-entity> or
+({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
+{@MV+} & {(THi+ or TOi+) & {LE+}}) or AA+ or 
+[[DD- & <noun-main-p>]] or <adj-op>));
+
 surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a 
 rare.a embarrassing.a: 
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
 {@MV+} & {(THi+ or Ci+ or TOi+) & {LE+}}) or AA+ or 
 [[DD- & <noun-main-p>]] or <adj-op>);
+
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
 {@MV+} & {(TO+ or TOi+ or THi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
  or ({TO+} & <adj-op>));
-wise.a unwise.a smart.a intelligent.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) 
+
+wise.a unwise.a smart.a intelligent.a: 
+{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) 
 or ((Paf- or AF+ or 
 Ma-) & {@MV+} & {(TO+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
 or ({TO+} & <adj-op>));
+
 unlikely.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) 
 & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
 or ({TO+} & <adj-op>));
+
 likely.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) 
 & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
 or ({TO+} & <adj-op>) or [E+]);
+
 apparent.a false.a official.a strict.a significant.a funny.a notable.a untrue.a tragic.a
 plain.a urgent.a a_drag a_bummer definite.a evident.a impressive.a incredible.a
 inevitable.a mysterious.a pathetic.a probable.a admirable.a commendable.a conceivable.a
@@ -3420,6 +3447,7 @@ lamentable.a regrettable.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or
 ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or AA+ or 
 [[DD- & <noun-main-p>]] or <adj-op>);
+
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a: {EA- or EF+} & 
 (({[[@Ec-]]} & {Xc+} & A+) or
 ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or QIi+) & {LE+}}) or 
@@ -3515,10 +3543,11 @@ outstanding.a available.a:
 due.i effective.i: (TY+ or JT+) & <prep-main-b>;
 
 north.a south.a east.a west.a northeast.a northwest.a southeast.a southwest.a: 
+<marker-common-entity> or
 A+ or ({Yd-} & {OF+} & (Pp- or MVp- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)))) 
 or [[DD- & <noun-main-p>]];
 northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a 
-southwestern.a: A+ or G+;
+southwestern.a: <marker-common-entity> or A+ or G+;
 
 %COMPARATIVES AND SUPERLATIVES
 
