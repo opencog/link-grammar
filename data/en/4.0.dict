@@ -2656,7 +2656,7 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 (Pg+ or TH+ or Ce+ or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 suggest.v anticipate.v recommend.v: <verb-pl,i> & <vc-suggest>;
 suggests.v anticipates.v recommends.v: <verb-s> & <vc-suggest>;
-suggested.v recommended.v: (<verb-sp,pp> & <vc-suggest>) or 
+suggested.v anticipated.v recommended.v: (<verb-sp,pp> & <vc-suggest>) or 
 (<verb-s-pv> & {THi+ or TSi+}) or ({@E-} & A+) or <verb-po>;
 suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>; 
 suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
@@ -3661,7 +3661,8 @@ different.a: {ECa- or EA- or EF+} &
  & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
 
 than_expected than_imagined than_proposed than_suspected than_realized 
-than_intended than_supposed than_reported than_ever than_usual: MVt-;
+than_intended than_supposed than_reported than_ever than_usual
+than_suggested: MVt-;
 	
 more_than no_more_than fewer_than less_than as_many_as an_estimated 
 an_additional up_to as_much_as no_fewer_than no_less_than greater_than: EN+;

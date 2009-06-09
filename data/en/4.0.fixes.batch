@@ -36,6 +36,10 @@ Alice took a bite out of it.
 I have no idea, what that is.
 I have no idea what that is.
 
+% Phantom-and:
+% the comma implies an "and", which is not actually voiced:
+His shout had been involuntary, something anybody might have done.
+
 % particles w/ various verbs
 He walked the dog.
 He walked up to the counter.
@@ -1041,6 +1045,10 @@ A piece of paper can be used to write upon.
 
 Watch out that you don't hit your head on the low beam.
 
+% clauses embedded parenthetically
+All he gave was his first name.
+Pete (all he gave was his first name) was still waiting.
+
 % Compound queries
 % Typically, the two subphrases parse correctly, but, 
 % put together, they do not.
@@ -1106,6 +1114,12 @@ they report less robust earnings than previously
 they report less robust earnings than they did previously
 They report much less robust earnings than they did earlier.
 They report much less robust earnings than they did for the third quarter.
+The defenses have proved more formidable than was anticipated.
+The defenses have proven more formidable than was expected.
+The defenses were designed more formidably than was suggested.
+The defenses were designed more formidably than was expected.
+The earnings were lowered more strongly than was suggested.
+The rates were lowered more than suggested.
 
 
 % Sentence containing UTF8 chars that can lead to i/o or 
