@@ -71,6 +71,12 @@ He resigned that post.
 Exxon discovers gas offshore.
 The line extends 10 miles offshore.
 
+% saw w/ particle
+He tried to saw the wood.
+He tried to saw up the wood.
+We were sawing wood when it happened.
+We were sawing up the wood when it happened.
+
 It has been unbelievably poorly managed.
 It has been notoriously managed.
 It has been notoriously badly managed.
@@ -830,6 +836,9 @@ You want part num. 1234-567A.
 He drove a souped-up '57 Chevy.
 He drove a souped-up 1957 Chevy.
 The 47 Ford came screamin' down the track.
+
+% problem with "of" in entity names.
+The National Voter Registration Act of 1993 makes it easy
 
 % Spell checker now does a good job of splitting words.
 Marywent shoppingat thestore.
