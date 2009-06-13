@@ -4023,9 +4023,11 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 
 "!" "?": ((Xp- or ({@Xca-} & Xc-)) & RW+) or ({@Xca-} & Xq+);
 
-",": ({@Xca- or [[[@Xc-]]]} & (({EBx+} & Xd+) or Xc-));
+<semicol>: {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
+";": <semicol>;
 
-";": {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
+% sometimes comma is used as if it were a semicolon
+",": ({@Xca- or [[[@Xc-]]]} & (({EBx+} & Xd+) or Xc-)) or [[<semicol>]];
 
 "…" ":" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
