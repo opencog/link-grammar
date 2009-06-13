@@ -193,7 +193,7 @@ bings.n bins.n biochemicals.n biographers.n biographies.n biologists.n
 bioscopes.n bipeds.n biplanes.n birches.n birdcages.n birds.n 
 birdwatchers.n biros.n birthdays.n birthmarks.n birthplaces.n 
 birthrates.n birthrights.n births.n biscuits.n bisexuals.n 
-bishoprics.n bishops.n bison.p bistros.n bites.n bits.n bivouacs.n 
+bishoprics.n bishops.n bison.p bistros.n bites.n bits.n bitches.n bivouacs.n 
 blabbermouths.n blackamoors.n blackberries.n blackbirds.n 
 blackboards.n blackcurrants.n blackguards.n blackheads.n blacklists.n 
 blackmailers.n blackouts.n blacks.n blacksmiths.n bladders.n blades.n 
