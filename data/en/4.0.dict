@@ -612,7 +612,10 @@ not_all not_everything: Dm+ or (((ALx+ & Jp+) or <noun-sub-x>)
 & (S+ & <CLAUSE>));
 not_one: Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
 
-enough: ({OF+} & <noun-main-s>) or Dm+ or EF- or MVa-;
+enough.n: ({OF+} & <noun-main-s>);
+enough.r: EF- or MVa-;
+enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
+enough.misc-interj: Wi- & {Pg+};
 not_enough: ({OF+} & <noun-main-s>) or Dm+;
 
 % NUMERICAL EXPRESSIONS

@@ -2,6 +2,7 @@ Version 4.5.8 (xxx 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
  * Fix: 'saw the wood'
  * Fix: sometimes commas are used as if they were semicolons.
+ * Fix: 'We have quite enough work already, than you!'
 
 Version 4.5.7 (4 June 2009)
  * Fix 'make install' for windows (abi bug 12049)
