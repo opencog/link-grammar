@@ -1294,18 +1294,18 @@ theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v:
 (<vc-muse> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-reply>: ({@MV+} & {TH+ or Ce+});
-reply.v shout.v whisper.v argue.v sigh.v mutter.v 
+reply.v whisper.v argue.v sigh.v mutter.v 
 testify.v comment.v respond.v hint.v reason.v brag.v:
 <verb-pl,i> & <vc-reply>;
-replies.v shouts.v whispers.v argues.v sighs.v 
+replies.v whispers.v argues.v sighs.v 
 mutters.v testifies.v comments.v responds.v hints.v reasons.v 
 brags.v:
 <verb-s> & <vc-reply>;
-replied.v shouted.v whispered.v argued.v sighed.v 
+replied.v whispered.v argued.v sighed.v 
 muttered.v testified.v commented.v responded.v hinted.v reasoned.v 
 bragged.v:
 <verb-sp,pp> & <vc-reply>;
-replying.v shouting.v whispering.v arguing.v sighing.v
+replying.v whispering.v arguing.v sighing.v
 muttering.v testifying.v commenting.v responding.v hinting.v 
 reasoning.v bragging.v:
 (<vc-reply> & <verb-pg,ge>) or <verb-ge-d>;
