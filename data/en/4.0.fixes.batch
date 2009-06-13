@@ -77,6 +77,13 @@ He tried to saw up the wood.
 We were sawing wood when it happened.
 We were sawing up the wood when it happened.
 
+% misc transitive w/ particle
+I stared him down.
+We shouted him down
+We shouted him down off the stage.
+He pushed him down.
+
+% assorted adverbial modifiers
 It has been unbelievably poorly managed.
 It has been notoriously managed.
 It has been notoriously badly managed.
@@ -524,6 +531,9 @@ All he wants is a big cigar.
 All he ever wants is to get lucky.
 All he ever touched turned to gold.
 
+% as ....
+It is no longer portrayed as having the power to protect against sin.
+
 % Problems with "go":
 Let's go shop.
 Let's go shopping.
@@ -706,6 +716,18 @@ Did they go get a sandwich?
 Did they eat in the dark?                       
 What did they do with the waxed-paper bundles?
 What does it all come to?
+
+% Hmm. Things following a comma, but in a different register ...
+% I think the clause needs to be its own domain.
+He stepped forward, gun raised.
+He stepped forward, hand out.
+He looked up, heart racing.
+He glanced away, hands trembling.
+The monkey reached, stick extended, for the banana.
+
+% Even when it does parse, the MV link looks wrong to me ...
+% the clause needs to be its own funky domain, I think.
+He glanced away, looking pale.
 
 % old as noun
 The seven year old kicked me in the shins.
