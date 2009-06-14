@@ -1109,7 +1109,8 @@ or <verb-ge-d>;
 or ({K+} & <verb-po>);
 split.v spread.v beat.v fit.v shut.v cast.v: ((<verb-pl,i> or <verb-sp,pp>) & 
 <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
-ate.v broke.v flew.v drove.v woke.v ran.v rode.v rang.v hid.v froze.v sprang.v: 
+ate.v broke.v flew.v drove.v woke.v ran.v rode.v stalked.v 
+rang.v hid.v froze.v sprang.v: 
 <verb-sp> & <vc-fill>;
 eaten.v broken.v flown.v driven.v woken.v beaten.v ridden.v rung.v hidden.v stricken.v
 frozen.v sprung.v: (<verb-pp> & <vc-fill>) or 
@@ -2279,8 +2280,10 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
 % 'he wrote me that S' but '*he drew me that S'
-<vc-write>: ({(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
-(K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+})
+<vc-write>: ({(B- & {O+ or K+}) or 
+(O+ & {({[[@MV+]]} & O*n+) or K+}) or 
+(K+ & {{[[@MV+]]} & O*n+}) or 
+([[@MV+ & O*n+]])} & {@MV+})
 or ({@MV+} & (TH+ or Ce+));
 write.v charge.v draw.v: <verb-pl,i> & <vc-write>;
 writes.v reads.v charges.v draws.v: <verb-s> & <vc-write>;
