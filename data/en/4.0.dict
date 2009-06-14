@@ -2906,8 +2906,9 @@ about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or
 
 through.r: 
 ({JQ+} & J+ & (<prep-main-a> or FM-)) or (MVp- & B-);
-off across along: 
-({JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
+<prep-across>: ({JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
+across along: <prep-across>; 
+off: <prep-across> or (MVp+ & {Xc+ & {Xd-}} & COp+);
 past.p: 
 ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
 around:
