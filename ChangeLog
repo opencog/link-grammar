@@ -6,6 +6,7 @@ Version 4.5.8 (xxx 2009)
  * Fix: allow 'and' as conjunction in entity names.
  * Fix: 'I stared him down', 'They shouted him down', 'booed off'
  * Fix: 'sound him out', 'look him over'
+ * Fix: 'Somewhere in the distance'
 
 Version 4.5.7 (4 June 2009)
  * Fix 'make install' for windows (abi bug 12049)

@@ -3022,8 +3022,10 @@ indoors outdoors underwater.r:
 MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-); 
 everywhere anywhere: {EL+} & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or 
 ({Xd- & Xc+} & MVs-))) or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
-somewhere someplace: {EL+} & (MVp- or Pp- or FM- or [({Xc+ & {Xd-}} & CO+)] 
-or (Xc+ & Xd- & MVx-)) & Mp+;
+somewhere someplace: ({EL+} & (MVp- or Pp- or FM- or 
+[({Xc+ & {Xd-}} & CO+)] or (Xc+ & Xd- & MVx-)) & Mp+) or
+({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+) or
+[[{EL+} & {Xc+ & {Xd-}} & CO+]];
 nowhere: {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)); 
 
 as_usual to_date on_average
