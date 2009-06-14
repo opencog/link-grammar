@@ -4027,7 +4027,7 @@ etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
 so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
 <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or M- or MV-;
 
-% Assorted interjections, treat at unknown adjectives.
+% Assorted interjections, treat like unknown adjectives.
 er err.j errr um.j umm uh uhh oh ohh ooo woo_hoo
 gee gosh wow ah ahh eh ehh hmm hmmm hoo zowie
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
