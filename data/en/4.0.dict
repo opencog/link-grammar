@@ -1376,6 +1376,7 @@ sounds.v: <verb-s> & <vc-sound>;
 sounded.v: <verb-sp,pp> & <vc-sound>;
 sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 
+% She looked him over.
 <vc-look>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & {@MV+})};
 look.v act.v: <verb-pl,i> & <vc-look>;
 looks.v acts.v: <verb-s> & <vc-look>;
@@ -2263,15 +2264,17 @@ passing.g paying.g selling.g dealing.g:
 (<vc-pass> & <verb-ge>) or <verb-ge-d>;
 passing.v paying.v selling.v dealing.v: <verb-pg> & <vc-pass>;
 
-<vc-call>: {(B- & {O+ or Pa+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or 
-Pa+ or K+}) or (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+};
-call.v: <verb-pl,i> & <vc-call>;
-calls.v: <verb-s> & <vc-call>;
-called.v: (<verb-sp,pp> & <vc-call>) or (<verb-pv-b> & {O+ or B- or K+ or Pa+
-or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or Pa+ or 
-[[@MV+ & O*n+]]} & <verb-po>);
-calling.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
-calling.v: <verb-pg> & <vc-call>;
+<vc-call>: {(B- & {O+ or Pa+ or K+}) or 
+(O+ & {({[[@MV+]]} & O*n+) or Pa+ or K+}) or 
+(K+ & {{[[@MV+]]} & O*n+}) or 
+([[@MV+ & O*n+]])} & {@MV+};
+call.v shout.v: <verb-pl,i> & <vc-call>;
+calls.v shouts.v: <verb-s> & <vc-call>;
+called.v shouted.v: (<verb-sp,pp> & <vc-call>) or 
+(<verb-pv-b> & {O+ or B- or K+ or Pa+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+({O+ or K+ or Pa+ or [[@MV+ & O*n+]]} & <verb-po>);
+calling.g shouting.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
+calling.v shouting.v: <verb-pg> & <vc-call>;
 
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
@@ -2295,14 +2298,23 @@ writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
 
 % Singing: if there's an indirect object, then a direct object is
 % mandatory: '*she sang me' 
-<vc-sing>: ({(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
-(K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+});
-sing.v dance.v: <verb-pl,i> & <vc-sing>;
-sings.v dances.v: <verb-s> & <vc-sing>;
-sang.v danced.v: <verb-sp> & <vc-sing>;
+<vc-sing>: ({(B- & {O+ or K+}) or 
+(O+ & {({[[@MV+]]} & O*n+) or K+}) or 
+(K+ & {{[[@MV+]]} & O*n+}) or 
+([[@MV+ & O*n+]])} & {@MV+});
+sing.v dance.v cry.v: <verb-pl,i> & <vc-sing>;
+sings.v dances.v cries.v: <verb-s> & <vc-sing>;
+sang.v danced.v cried.v : <verb-sp> & <vc-sing>;
 sung.v: (<verb-pp> or <verb-sp>) & <vc-sing> ;
-singing.g dancing.g: (<vc-sing> & <verb-ge>) or <verb-ge-d>;
-singing.v dancing.v: <verb-pg> & <vc-sing>;
+singing.g dancing.g crying.g: (<vc-sing> & <verb-ge>) or <verb-ge-d>;
+singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
+
+% <vc-shout>: <vc-sing>;
+% shout.v: <verb-pl,i> & <vc-shout>;
+% shouts.v: <verb-s> & <vc-shout>;
+% shouted.v: <verb-sp> & <vc-shout>;
+% shouting.g: (<vc-shout> & <verb-ge>) or <verb-ge-d>;
+% shouting.v: <verb-pg> & <vc-shout>;
 
 <vc-allow>: (((O+ & {[[@MV+]]} & O*n+) or ([[@MV+]] & O*n+)) & {@MV+}) or 
 ((O+ or B-) & {@MV+} & {B- or TOo+});
