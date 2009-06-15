@@ -281,6 +281,9 @@ She beckoned to him.
 She beckoned him over.
 She was beckoning in that dress.
 
+He pulled himself upright.
+It flexed once or twice in her hand.
+
 The economy weakened as prices spiraled up.
 Shares slid $2.66 in Big Board trading.
 Issues tumbled 4.2% last week.
@@ -762,16 +765,21 @@ What did they do with the waxed-paper bundles?
 What does it all come to?
 
 % Hmm. Things following a comma, but in a different register ...
-% I think the clause needs to be its own domain.
+% I think the clause needs to be its own domain ??
+% Missing/implied subject 
 He stepped forward, gun raised.
 He stepped forward, hand out.
+He stepped forward, his hand out.
 He looked up, heart racing.
 He glanced away, hands trembling.
 The monkey reached, stick extended, for the banana.
+He stepped forward, smile broadening.
+He stepped forward, his white teeth glittering.
 
 % Even when it does parse, the MV link looks wrong to me ...
 % the clause needs to be its own funky domain, I think.
 He glanced away, looking pale.
+He stepped forward, putting his hand out.
 
 % old as noun
 The seven year old kicked me in the shins.
