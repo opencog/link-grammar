@@ -1324,7 +1324,10 @@ dreamt dreamed complained.v: <verb-sp,pp> & <vc-dream>;
 dreaming.g complaining.g: (<vc-dream> & <verb-ge>) or <verb-ge-d>;
 dreaming.v complaining.v: <verb-pg> & <vc-dream>;
 
-<vc-think>: {@MV+} & {Ce+ or TH+ or RSe+ or Z- or (OF+ & {@MV+}) or BW-};
+% The O+ is to handle "do you think so, too?", however, a special
+% target for objects like "so" or "it" would be better...
+<vc-think>: ({@MV+} & {Ce+ or TH+ or RSe+ or Z- or (OF+ & {@MV+}) or BW-})
+or [[O+ & {@MV+}]];
 think.v: <verb-pl,i> & <vc-think>;
 thinks.v: <verb-s> & <vc-think>;
 thought.v: (<verb-sp,pp> & <vc-think>) or (<verb-s-pv> & {THi+ or Z-});
