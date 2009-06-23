@@ -135,7 +135,7 @@ locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 lo
 locationID60: <marker-entity> or <entity-entire>;
 
 <directive-opener>:
-{[[Wi-]]} & {{Xd-} & Xc+} & (Ic+ or COa+);
+{[[Wi-]]} & ((Xc+ & Ic+) or ({{Xd-} & Xc+} & COa+));
 
 % Words that are also given names
 % Cannot take A or D links.
@@ -148,7 +148,7 @@ locationID60: <marker-entity> or <entity-entire>;
 % just push this aside for now.
 % /en/words/entities.given-bisex.sing:
 /en/words/entities.given-female.sing
-/en/words/entities.given-male.sing
+/en/words/entities.given-male.sing:
 <marker-entity> or <given-names> or <directive-opener>;
 
 % Special handling for certain given names. These are words that have a

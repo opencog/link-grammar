@@ -16,16 +16,10 @@ People use espresso to make other coffee drinks.
 Espresso is a coffee drink.
 
 % Misc stuff
-Play fetch with Elena.
 I know which book he read.
 I know what book he read.
 Mommy loves me.
 Mother likes her.
-Go fetch the ball.
-Go play.
-You and Rover go play fetch.
-Fetch the ball.
-Teach me fetch.
 I am pooped.
 John is bigger than Dave is.
 John wants more cookies than Dave wants.
@@ -1050,7 +1044,9 @@ Mary, would you do this for me?
 Mary, won't you do it?
 Mary, mightn't you be right?
 John, do you think so, too?
-John, do you beielive it, too?
+John, do you think it, too?
+John, do you believe it, too?
+John, do you believe so, too?
 John, dones't that strike you a odd?
 John, have you thought about it?
 John, is it true?
@@ -1085,7 +1081,18 @@ It must be done exactly like so.
 How could it be so?
 
 
-% Commands.  
+% Requests, directives and commands.  
+Go play.
+Go play ball!
+You and Rover go play fetch.
+Fetch the ball.
+Go fetch the ball.
+Play fetch with Elena.
+Teach me fetch.
+Teach me.
+Teach me how.
+Teach me how to do it.
+
 Walk tall.
 Think quick.
 Think quickly.
@@ -1097,7 +1104,6 @@ Shout it out.
 Shout loud.
 Stand up straight.
 
-Go play ball!
 
 % Registers -- Newspaper headline declarations
 % Missing definite articles (with definite articles, these would parse)
