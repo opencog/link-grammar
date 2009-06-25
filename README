@@ -272,12 +272,22 @@ Corpus Statistics:
    http://brainwave.opencog.org/2009/01/12/determining-word-senses-from-grammatical-usage/
 
    It is planned that the Corpus statistics database will be used to
-   guide the SAT solver.  Dictionaries are available upon request. 
+   guide the SAT solver.  
+
    To enable the corpus statistics, specify
 
       ./configure --enable-sat-solver
 
-   prior to compiling.
+   prior to compiling.  The database itself can be downloaded from 
+
+      http://gnucash.org/linas/nlp/data/linkgrammar-wsd/
+
+   The data is contained in an sqlite3 database file, 
+
+      disjuncts.20090430.db.bz2 
+
+   Unzip this file (using bunzip2) and place it in the same directory
+   with the other data files.
 
 
 Spell Checking:
