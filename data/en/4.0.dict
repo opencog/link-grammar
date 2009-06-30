@@ -84,7 +84,7 @@
 % applies to all capitalized words that are not otherwise found in
 % the dictionary.
 CAPITALIZED-WORDS NAME <entity-singular>:
-{NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+{NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
 
 % Capitalized wrds that seem to be plural (by ending with an s, etc)
