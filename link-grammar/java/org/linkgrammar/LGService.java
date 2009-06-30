@@ -217,10 +217,27 @@ public class LGService
 		return parseResult;		
 	}
 	
+    /**
+     * Construct a JSON formatted result for a parse which yielded 0 linkages. 
+     */
+    public static String getEmptyJSONResult(LGConfig config)
+    {
+        StringBuffer buf = new StringBuffer();      
+        buf.append("{\"tokens\":[],"); 
+        buf.append("\"numSkippedWords\":0,");
+        buf.append("\"entity\":[],");
+        buf.append("\"pastTense\":[],");
+        buf.append("\"linkages\":[],");
+        buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\"}");
+        return buf.toString();
+    }
+	
 	static char[] hex = "0123456789ABCDEF".toCharArray();
 	
 	private static String jsonString(String s)
 	{
+	    if (s == null)
+	        return null;
 		StringBuffer b = new StringBuffer();
 		b.append("\"");
         CharacterIterator it = new StringCharacterIterator(s);
@@ -303,7 +320,7 @@ public class LGService
 			}
 			buf.append("], \"disjuncts\":["); 
 			for (int i = 0; i < numWords; i++)
-			{
+			{			    
 				buf.append(jsonString(LinkGrammar.getLinkageDisjunct(i)));
 				if (i + 1 < numWords)
 					buf.append(",");
@@ -334,7 +351,9 @@ public class LGService
 					buf.append(",");
 			}			
 			buf.append("]");
-			buf.append("}");			
+			buf.append("}");	
+			if (li < maxLinkages - 1)
+			    buf.append(",");
 		}
 		buf.append("],\"version\":\"" + LinkGrammar.getVersion() + "\"");
 		buf.append("}");
@@ -385,7 +404,7 @@ public class LGService
 			char c = buf[offset];
 			if (start == -1)
 				start = offset;
-			else if (c == ':')
+			else if (c == ':' && column == -1)
 				column = offset;
 			else if (c == '\0')
 			{
@@ -425,15 +444,24 @@ public class LGService
 				config.setMaxLinkages(getInt("maxLinkages", msg, config.getMaxLinkages()));
 				config.setMaxParseSeconds(getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
 				configure(config);
-				String text = msg.get("text");
-				if (text != null)
-					LinkGrammar.parse(text);
-				if (LinkGrammar.getNumLinkages() > 0)
-					json = getAsJSONFormat(config);
-			}
-			out = new PrintWriter(clientSocket.getOutputStream(), true);
-			out.print(json);
-			out.print('\n');
+                String text = msg.get("text");
+                if (text != null && text.trim().length() > 0)
+                {
+                    LinkGrammar.parse(text);
+                    if (LinkGrammar.getNumLinkages() > 0)
+                        json = getAsJSONFormat(config);
+                    else
+                        json = getEmptyJSONResult(config);
+                }
+                else
+                    json = getEmptyJSONResult(config);
+            }
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.print(json.length() + 1);
+            out.print('\n');
+            out.print(json);
+            out.print('\n');
+            out.flush();				
 			trace("Response written to " + clientSocket.getInetAddress() + ", closing client connection...");
 		}
 		catch (Throwable t)
