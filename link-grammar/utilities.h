@@ -13,6 +13,10 @@
 #ifndef _LINK_GRAMMAR_UTILITIES_H_
 #define _LINK_GRAMMAR_UTILITIES_H_
 
+#ifdef __CYGWIN__
+#define _WIN32 1
+#endif /* __CYGWIN__ */
+
 #ifndef _WIN32
 #include <langinfo.h>
 #endif
@@ -29,10 +33,6 @@
 
 #include "error.h"
 
-
-#ifdef __CYGWIN__
-#define _WIN32 1
-#endif /* __CYGWIN__ */
 
 #ifdef _WIN32
 #include <windows.h>
