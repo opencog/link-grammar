@@ -2478,8 +2478,8 @@ tags.v: <verb-s> & (<vc-name> or <vc-intrans>);
 tagged: (<verb-sp,pp> & (<vc-name> or <vc-intrans>)) or ((<verb-pv-b> & ({B- or
 (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or <verb-pv>) or 
 ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
-({@E-} & ({CH-} & CH+));
-tagging.g: ((<vc-name> or <vc-intrans>) & <verb-ge>) or ({@E-} & ({CH-} & CH+)) or
+({@E-} & A+);
+tagging.g: ((<vc-name> or <vc-intrans>) & <verb-ge>) or ({@E-} & A+) or
 <verb-ge-d>;
 tagging.v: <verb-pg> & (<vc-name> or <vc-intrans>);
 
@@ -3017,8 +3017,7 @@ in_phase neck_and_neck under_contract: <common-prep>;
 
 % 5' 3' are DNA ends
 upstream downstream 5' 3':
-({CH-} & CH+) or
-NIfp+ or NItp- or
+A+ or NIfp+ or NItp- or
 ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} & 
 (({Xc+ & Xd-} & Ma-) or (Wq- & PF+) or MVp-
 or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-)))); 
