@@ -11,6 +11,7 @@ Version 4.5.8 (xxx 2009)
  * Fix: 'I think so, too'
  * Fixes for compilation under Cygwin.
  * From Boris Iordanov: fixes to JSON java code.
+ * From Boris Iordanov: new java remote client code.
 
 Version 4.5.7 (4 June 2009)
  * Fix 'make install' for windows (abi bug 12049)
