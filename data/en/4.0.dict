@@ -1144,7 +1144,7 @@ run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or
 
 /en/words/words.v.4.3:  
 (<verb-sp,pp> & <vc-trans>) or <verb-pv> or 
-(({@E-} or {@EA-}) & A+) or <verb-po>;
+(({@E-} or {@EA-} or {@AN-}) & A+) or <verb-po>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
 % The candle guttered. It plummeted to the bottom. Prices plummeted!
