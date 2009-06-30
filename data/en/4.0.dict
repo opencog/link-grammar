@@ -241,9 +241,9 @@ HYPHENATED-WORDS.n:
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 /en/words/words.n.1: 
 <marker-common-entity> or 
-({NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & 
-((Ds- & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+)))
-or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+));
+({NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or (Ds- & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
+(YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
 % plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
@@ -253,24 +253,25 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 /en/words/words.n.2.x:  % plural nouns not ending in "s"
 <marker-common-entity> or 
-({NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or (Rw+ & Bpm+)))
-or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]));
+({NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
+([[AN+]] or ({Dmc-} & <noun-sub-p> & (<noun-main-p> or (Rw+ & Bpm+))) or
+(YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
 /en/words/words.n.3:  % nouns that are mass only
 <marker-common-entity> or 
-({NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
-(<noun-main-m> or (Rw+ & Bsm+))) or
-(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-)) or AN+));
+({NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ({Dmu-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
 % nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
 <noun-mass-count>:  
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
-(<noun-main-m> or (Rw+ & Bsm+))) or
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
+{NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ({D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
+
 /en/words/words.n.4: <noun-mass-count>;
 /en/words/words.n.4.biolg: <noun-mass-count>;
 GREEK-LETTER-AND-NUMBER pH.u x.n: <noun-mass-count>;
@@ -4224,9 +4225,10 @@ LATIN-ADJ-S-NOUN-WORDS:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
-UNKNOWN-WORD.n: {NM+} & ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
-(<noun-main-m> or Bsm+))
-or (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or U-));
+UNKNOWN-WORD.n: 
+{NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ({D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or U-);
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};
 UNKNOWN-WORD.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or

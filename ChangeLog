@@ -1,4 +1,4 @@
-Version 4.5.8 (xxx 2009)
+Version 4.5.8 (30 June 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
  * Fix: 'saw the wood'
  * Fix: sometimes commas are used as if they were semicolons.
@@ -12,6 +12,7 @@ Version 4.5.8 (xxx 2009)
  * Fixes for compilation under Cygwin.
  * From Boris Iordanov: fixes to JSON java code.
  * From Boris Iordanov: new java remote client code.
+ * Fix: Biological texts commonly have adj-noun-adj-noun chains
 
 Version 4.5.7 (4 June 2009)
  * Fix 'make install' for windows (abi bug 12049)
