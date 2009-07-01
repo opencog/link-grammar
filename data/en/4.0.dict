@@ -79,15 +79,19 @@
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
+<directive-opener>:
+{[[Wi-]]} & ((Xc+ & Ic+) or ({{Xd-} & Xc+} & COa+));
+
 % Just pure singular entities, no mass nouns 
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and 
 % applies to all capitalized words that are not otherwise found in
 % the dictionary.
 CAPITALIZED-WORDS NAME <entity-singular>:
-{NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+));
+({NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
+(({@MX+} & (JG- or <noun-main-s>)) or YS+)) or AN+ or G+))) or 
+<directive-opener>;
 
-% Capitalized wrds that seem to be plural (by ending with an s, etc)
+% Capitalized words that seem to be plural (by ending with an s, etc)
 PL-CAPITALIZED-WORDS: 
 {NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
 (({@MX+} & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+); 
@@ -133,9 +137,6 @@ locationID30 locationID31 locationID32 locationID33 locationID34 locationID35 lo
 locationID40 locationID41 locationID42 locationID43 locationID44 locationID45 locationID46 locationID47 locationID48 locationID49
 locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 locationID56 locationID57 locationID58 locationID59
 locationID60: <marker-entity> or <entity-entire>;
-
-<directive-opener>:
-{[[Wi-]]} & ((Xc+ & Ic+) or ({{Xd-} & Xc+} & COa+));
 
 % Words that are also given names
 % Cannot take A or D links.
