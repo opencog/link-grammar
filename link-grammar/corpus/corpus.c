@@ -69,8 +69,8 @@ Corpus * lg_corpus_new(void)
 	c->dbname = NULL;
 
 	/* dbname = "/link-grammar/data/en/sql/disjuncts.db"; */
-
-	c->dbconn = object_open("sql/disjuncts.db", db_file_open, c);
+#define DBNAME "sql/disjuncts.db"
+	c->dbconn = object_open(DBNAME, db_file_open, c);
 	if (NULL == c->dbconn)
 	{
 		/* Very weird .. but if the database is not found, then sqlite
@@ -79,11 +79,13 @@ Corpus * lg_corpus_new(void)
 		 */
 		if (SQLITE_CANTOPEN == c->rc)
 		{
-			prt_error("Warning: Can't open database: File not found\n");
+			prt_error("Warning: Can't open database: File not found\n"
+			          "\tWas looking for: " DBNAME);
 		}
 		else
 		{ 
-			prt_error("Warning: Can't open database: %s\n",
+			prt_error("Warning: Can't open database: %s\n"
+			          "\tWas looking for: " DBNAME,
 				sqlite3_errmsg(c->dbconn));
 		}
 		return c;
