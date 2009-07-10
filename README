@@ -1,7 +1,7 @@
 
                        Link Grammar Parser 
                        -------------------
-                          Version 4.5.7
+                          Version 4.5.8
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -276,7 +276,7 @@ Corpus Statistics:
 
    To enable the corpus statistics, specify
 
-      ./configure --enable-sat-solver
+      ./configure --enable-corpus-stats
 
    prior to compiling.  The database itself can be downloaded from 
 
