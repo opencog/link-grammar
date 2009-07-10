@@ -34,6 +34,7 @@
 
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 {
+	fprintf(stderr, "link-grammar: ");
 	vfprintf(stderr, fmt, args);
 
 	if ((Info != sev) && ec->sent != NULL)
