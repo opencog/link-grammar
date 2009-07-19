@@ -139,13 +139,16 @@ BUILDING on Windows:
     if you want the Java bindings, is to use MinGW/MSYS, a minimalist
     GNU environment for Windows that includes gcc, bash, automake, and many
     other utilities.  Download and install MinGW, MSYS and MSYS-DTK from
-    http://mingw.org .
+    http://mingw.org.
 
     Link-grammar now requires a working version of POSIX-standard regex
     libraries. Since these are not provided by Microsoft, a copy must be
     obtained elsewhere. One possibility is from the gnuwin32 system:
     http://gnuwin32.sourceforge.net/packages/regex.htm 
     http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
+
+    I you are having trouble building the Java bindings, see thei
+    instructions farther down.
 
     Then build and install link-grammar with
 
@@ -324,8 +327,10 @@ JAVA bindings:
    Some common java JVM distributions (most notably, the ones from Sun)
    place this file in unusual locations, where it cannot be
    automatically found.  To remedy this, make sure that JAVA_HOME is
-   set. If jni.h still cannot be found, specify the location with the
-   CPPFLAGS variable: so, for example,
+   set. The configure script looks for jni.h in $JAVA_HOME/Headers
+   and in $JAVA_HOME/include; it also examines corresponding locations
+   for $JDK_HOME.  If jni.h still cannot be found, specify the location
+   with the CPPFLAGS variable: so, for example,
 
       export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
    or
