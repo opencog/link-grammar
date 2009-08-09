@@ -1,0 +1,12 @@
+
+Dictionary Data
+---------------
+Research notes.
+
+There are currently 63 data files in the 'words' directory.
+Of these, 8 are not distinct (*biolg*, *medical*) and so there
+are effectively just 55 "clusters" here.
+
+There are 1754 semicolons in 4.0.dict and 1772 colons.  This implies
+that there are approx 1650 to 1700 word clusters in 4.0.dict
+
