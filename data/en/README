@@ -9,4 +9,54 @@ are effectively just 55 "clusters" here.
 
 There are 1754 semicolons in 4.0.dict and 1772 colons.  This implies
 that there are approx 1650 to 1700 word clusters in 4.0.dict
+since many of the semi-colons appear in lines that merely define 
+new classes.
+
+A better count of the contents of 4.0.dict yeilds 1430 distinct clusters.
+
+There seem to be 86863 word forms in the dicts
+
+Example cluster from Siva's dataset:
+
+cluster469
+   bets.n -- ../blah/words.n.2.s
+   doubts.n -- ../blah/blah-29
+   excuses.n -- ../blah/blah-34
+   foes.n -- ../blah/words.n.2.s
+   warnings.n -- ../blah/blah-29
+
+Actual disjunct usage:
+
+select inflected_word, disjunct, count, log_cond_probability from disjuncts where inflected_word='bets.n' order by log_cond_probability;
+
+ bets.n         | Jp- Dmc-                      |   5.38320328295231 |     2.68897695164809
+ bets.n         | Op-                           |   6.59906960930676 |     2.79728207561233
+ bets.n         | Op- Dmc-                      |   4.49985344521703 |     2.94756384236018
+ bets.n         | Jp- A- MXp+ MXp+              |   2.94644784927368 |      3.5584651263364
+ bets.n         | Jp- A-                        |    2.8032719194889 |     3.63033016407109
+ bets.n         | Op- Mv+                       |   2.38083738088607 |     3.86597277463304
+
+ doubts.n       | Op-                           |    14.7235374869777 |     2.53482148983126
+ doubts.n       | Op- Dmc-                      |    12.8798744678498 |     2.75360123030737
+ doubts.n       | Jp- A-                        |    3.70244218036532 |     4.39933529761974
+ doubts.n       | Op- A-                        |    4.28538444498555 |     4.52871084843059
+ doubts.n       | Opt-                          |    2.90120184421541 |     4.75116183218627
+ doubts.n       | Jp- Dmc-                      |    2.40070396848023 |     5.02435498790713
+
+
+ excuses.n      | Op- Dmc-                 |   5.50880998373031 |     2.32890577902052
+ excuses.n      | Op-                      |   5.03419046103953 |     2.45888667993668
+ excuses.n      | Jp- Dmc-                 |   4.23024629056454 |     2.70990481825512
+ excuses.n      | Op- TOn+                 |   1.90192013978957 |     3.86318980988967
+ excuses.n      | Op- AN- TOn+             |   1.79344245046377 |      3.9479150280805
+ excuses.n      | Opn-                     |   1.65557911992073 |     4.06331052106999
+
+ foes.n         | Op- Dmc-                    |    7.72758442535996 |     3.08401721340472
+ foes.n         | Jp-                         |    5.78156289178878 |     3.50257518460873
+ foes.n         | Jp- Dmc-                    |    8.53048111009413 |     3.55652688759394
+ foes.n         | Op-                         |    4.24155412614344 |     3.94944175213513
+
+ warnings.n     | Op-                                 |    13.1191083714365 |     2.73150374115749
+ warnings.n     | Op- Dmc-                            |    12.4493113420905 |     2.80710747394272
+ warnings.n     | Jp- Dmc-                            |    8.38247973471882 |     3.37772441764546
 
