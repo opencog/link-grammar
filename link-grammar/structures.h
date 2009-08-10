@@ -331,7 +331,8 @@ struct Linkage_info_struct
     char improper_fat_linkage;
     char inconsistent_domains;
     short N_violations;
-    short null_cost, unused_word_cost, disjunct_cost, and_cost, link_cost;
+    short null_cost, unused_word_cost, and_cost, link_cost;
+    float disjunct_cost;
     double corpus_cost;
     Andlist * andlist;
     int island[MAX_SENTENCE];

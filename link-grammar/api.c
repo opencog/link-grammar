@@ -1548,7 +1548,9 @@ const char * linkage_get_disjunct_str(Linkage linkage, int w)
 
 float linkage_get_disjunct_cost(Linkage linkage, int w)
 {
-	// STUB!
+	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	if (dj) return dj->cost;
+printf("duuuude wtf w=%d\n", w);
 	return 0.0;
 }
 
@@ -1564,7 +1566,7 @@ int linkage_unused_word_cost(Linkage linkage)
 
 int linkage_disjunct_cost(Linkage linkage)
 {
-	return linkage->info->disjunct_cost;
+	return (int) floorf(linkage->info->disjunct_cost);
 }
 
 int linkage_and_cost(Linkage linkage)

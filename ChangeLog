@@ -2,6 +2,7 @@ Version 4.5.9 (??? 2009)
  * Modify error messages to indicate that they are from link-grammar.
  * Add missing Java files that were forgotten last time around.
  * Add greeting to command-line client startup.
+ * Print disjunct cost also, when requesting disjunct printing.
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.

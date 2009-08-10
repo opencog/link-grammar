@@ -754,10 +754,11 @@ static int unused_word_cost(Parse_info pi)
  * Computes the cost of the current parse of the current sentence
  * due to the cost of the chosen disjuncts.
  */
-static int disjunct_cost(Parse_info pi)
+static float disjunct_cost(Parse_info pi)
 {
-	int lcost, i;
-	lcost =  0;
+	int i;
+	float lcost;
+	lcost =  0.0;
 	for (i = 0; i < pi->N_words; i++)
 	{
 		if (pi->chosen_disjuncts[i] != NULL)
@@ -908,7 +909,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	li.inconsistent_domains = FALSE;
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
 #ifdef USE_SAT_SOLVER
-	li.disjunct_cost = 0;
+	li.disjunct_cost = 0.0;
 #else
 	li.disjunct_cost = disjunct_cost(pi);
 #endif
@@ -1075,7 +1076,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	li.improper_fat_linkage = FALSE;
 	li.inconsistent_domains = FALSE;
 #ifdef USE_SAT_SOLVER
-	li.disjunct_cost = 0;
+	li.disjunct_cost = 0.0;
 #else
 	li.disjunct_cost = disjunct_cost(pi);
 #endif
