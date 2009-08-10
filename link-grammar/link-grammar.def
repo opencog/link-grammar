@@ -104,6 +104,7 @@ linkage_get_link_domain_names
 linkage_get_words
 linkage_get_disjunct_str
 linkage_get_disjunct_cost
+linkage_get_disjunct_corpus_score
 linkage_get_word
 linkage_print_disjuncts
 linkage_free_disjuncts

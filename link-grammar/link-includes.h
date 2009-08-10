@@ -290,8 +290,10 @@ link_public_api(const char **)
      linkage_get_words(Linkage linkage);
 link_public_api(const char *)
      linkage_get_disjunct_str(Linkage linkage, int w);
-link_public_api(float)
+link_public_api(double)
      linkage_get_disjunct_cost(Linkage linkage, int w);
+link_public_api(double)
+     linkage_get_disjunct_corpus_score(Linkage linkage, int w);
 link_public_api(const char *)
      linkage_get_word(Linkage linkage, int w);
 link_public_api(char *)

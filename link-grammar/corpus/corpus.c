@@ -270,6 +270,31 @@ void lg_corpus_score(Sentence sent, Linkage_info *lifo)
 	lifo->corpus_cost = tot_score;
 }
 
+double lg_corpus_disjunct_score(Linkage linkage, int w)
+{
+	double score;
+	const char *infword, *djstr;
+	Sentence sent = linkage->sent;
+	Linkage_info *lifo = linkage->info;
+	Corpus *corp = sent->dict->corpus;
+
+	/* No-op if the database is not open */
+	if (NULL == corp->dbconn) return 999.0;
+
+	lg_compute_disjunct_strings(sent, lifo);
+
+	/* If the word is not inflected, then sent->word[w].d is NULL */
+	if (sent->word[w].d)
+		infword = sent->word[w].d->string;
+	else
+		infword = sent->word[w].string;
+
+	djstr = lifo->disjunct_list_str[w];
+	score = get_disjunct_score(corp, infword, djstr);
+
+	return score;
+}
+
 /* ========================================================= */
 
 /**

@@ -1539,19 +1539,37 @@ Sentence linkage_get_sentence(Linkage linkage)
 
 const char * linkage_get_disjunct_str(Linkage linkage, int w)
 {
+	Disjunct *dj;
+
 	if (NULL == linkage->info->disjunct_list_str)
 	{
 		lg_compute_disjunct_strings(linkage->sent, linkage->info);
 	}
+
+	/* dj will be null if the words wasn't used in the parse. */
+	dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	if (NULL == dj) return "";
+
 	return linkage->info->disjunct_list_str[w];
 }
 
-float linkage_get_disjunct_cost(Linkage linkage, int w)
+double linkage_get_disjunct_cost(Linkage linkage, int w)
 {
 	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
+
+	/* dj may be null, if the word didn't participate in the parse. */
 	if (dj) return dj->cost;
-printf("duuuude wtf w=%d\n", w);
 	return 0.0;
+}
+
+double linkage_get_disjunct_corpus_score(Linkage linkage, int w)
+{
+	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
+
+	/* dj may be null, if the word didn't participate in the parse. */
+	if (NULL == dj) return 99.999;
+
+	return lg_corpus_disjunct_score(linkage, w); 
 }
 
 const char * linkage_get_word(Linkage linkage, int w)

@@ -20,6 +20,7 @@ Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);
 
 void lg_corpus_score(Sentence, Linkage_info *);
+double lg_corpus_disjunct_score(Linkage linkage, int w);
 void lg_corpus_linkage_senses(Linkage);
 
 Sense * lg_get_word_sense(Linkage_info *, int word);
@@ -39,6 +40,7 @@ static inline Sense * lg_get_word_sense(Linkage_info *lif, int word) { return NU
 static inline Sense * lg_sense_next(Sense *s ) {return NULL; }
 static inline const char * lg_sense_get_sense(Sense *s) { return NULL; }
 static inline double lg_sense_get_score(Sense *s) { return 0.0; }
+double lg_corpus_disjunct_score(Linkage linkage, int w) { return 998.0; }
 #endif /* USE_CORPUS */
 
 #endif /* _LINKGRAMMAR_CORPUS_H */

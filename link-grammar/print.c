@@ -175,7 +175,7 @@ char * linkage_print_senses(Linkage linkage)
 
 char * linkage_print_disjuncts(Linkage linkage)
 {
-	float cost;
+	double cost, score;
 	const char * infword;
 	const char * dj;
 	char * djs;
@@ -199,7 +199,13 @@ char * linkage_print_disjuncts(Linkage linkage)
 
 		dj = linkage_get_disjunct_str(linkage, w);
 		cost = linkage_get_disjunct_cost(linkage, w);
+
+#if USE_CORPUS
+		score = linkage_get_disjunct_corpus_score(linkage, w);
+		append_string(s, "%21s    %5.1f %6.3f %s\n", infword, cost, score, dj);
+#else
 		append_string(s, "%21s    %5.1f  %s\n", infword, cost, dj);
+#endif
 	}
 	djs = string_copy(s);
 	string_delete(s);
