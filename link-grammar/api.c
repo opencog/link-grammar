@@ -1537,13 +1537,19 @@ Sentence linkage_get_sentence(Linkage linkage)
 	return linkage->sent;
 }
 
-const char * linkage_get_disjunct(Linkage linkage, int w)
+const char * linkage_get_disjunct_str(Linkage linkage, int w)
 {
 	if (NULL == linkage->info->disjunct_list_str)
 	{
 		lg_compute_disjunct_strings(linkage->sent, linkage->info);
 	}
 	return linkage->info->disjunct_list_str[w];
+}
+
+float linkage_get_disjunct_cost(Linkage linkage, int w)
+{
+	// STUB!
+	return 0.0;
 }
 
 const char * linkage_get_word(Linkage linkage, int w)

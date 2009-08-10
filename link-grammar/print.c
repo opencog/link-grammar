@@ -196,7 +196,7 @@ char * linkage_print_disjuncts(Linkage linkage)
 		else
 			infword = sent->word[w].string;
 
-		dj = linkage_get_disjunct(linkage, w);
+		dj = linkage_get_disjunct_str(linkage, w);
 		append_string(s, "%21s    %s\n", infword, dj);
 	}
 	djs = string_copy(s);

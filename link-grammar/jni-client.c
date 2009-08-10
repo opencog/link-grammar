@@ -450,7 +450,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct(JNIEnv *env, jclass cls, jin
 
 	/* does not need to be freed, points into data structures */
 	/* returns the inflected word. */
-	const char * w = linkage_get_disjunct(ptd->linkage, i);
+	const char * w = linkage_get_disjunct_str(ptd->linkage, i);
 	if (NULL == w) j = NULL;
 	else j = (*env)->NewStringUTF(env, w);
 	return j;
