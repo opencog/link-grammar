@@ -552,6 +552,9 @@ int main(int argc, char * argv[])
 
 	verbosity = parse_options_get_verbosity(opts);
 
+	prt_error("Info: Version %s. Enter \"!help\" for help.\n",
+		linkgrammar_get_version());
+
 	/* Main input loop */
 	while (1)
 	{
