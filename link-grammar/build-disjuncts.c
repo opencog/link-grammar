@@ -383,8 +383,11 @@ static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff)
 {
 	Clause *c ;
 	Disjunct * dis;
+	/* print_expression(x->exp);  printf("\n"); */
 	c = build_clause(x->exp, cost_cutoff);
+	/* print_clause_list(c); */
 	dis = build_disjunct(c, x->string, cost_cutoff);
+	/* print_disjunct_list(dis); */
 	free_clause_list(c);
 	return dis;
 }
@@ -397,16 +400,10 @@ static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff)
  */
 Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 {
-	Clause *c ;
-	Disjunct * dis;
-	/*	 print_expression(dn->exp);   */
-	/*	 printf("\n");				*/
-	c = build_clause(dn->exp, NOCUTOFF);
-	/* print_clause_list(c); */
-	dis = build_disjunct(c, dn->string, NOCUTOFF);
-	/* print_disjunct_list(dis); */
-	free_clause_list(c);
-	return dis;
+	X_node x;
+	x.exp = dn->exp;
+	x.string = dn->string;
+	return build_disjuncts_for_X_node(&x, NOCUTOFF);
 }
 
 /**
