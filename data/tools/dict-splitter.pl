@@ -4,10 +4,20 @@
 #
 # Split dictionary into distinct files.
 #
+# Usage: cat 4.0.dict | ./dict-splitter.pl
+#
+# Each word cluster will be written to a distinct file.
+#
 
 $fileno = 0;
 $doprt = 1;
 $didprt = 0;
+
+$file_prefix = "../blah/blah-";
+
+$filename = "> " . $file_prefix . $fileno;
+open FOUT, $filename;
+
 while(<>)
 {
 	chop;
@@ -23,7 +33,7 @@ while(<>)
 		    ($wds =~ /^\//))
 		{} else
 		{
-			print "$wds\n";
+			print FOUT "$wds\n";
 			$didprt = 1;
 		}
 
@@ -34,7 +44,10 @@ while(<>)
 			if ($didprt)
 			{
 				$fileno ++;
-				print "--------------------- $fileno\n";
+				
+				# print "--------------------- $fileno\n";
+				$filename = "> " . $file_prefix . $fileno;
+				open FOUT, $filename;
 			}
 			$didprt = 0;
 		}
@@ -45,7 +58,7 @@ while(<>)
 	{
 		if (/^\s*$/) { next; }   # if all whitespace, skip
 		if (/^\//) { next; }
-		print "$_\n";
+		print FOUT "$_\n";
 		$didprt = 1;
 		next;
 	}
@@ -57,7 +70,9 @@ while(<>)
 		if ($didprt)
 		{
 			$fileno ++;
-			print "--------------------- $fileno\n";
+			# print "--------------------- $fileno\n";
+			$filename = "> " . $file_prefix . $fileno;
+			open FOUT, $filename;
 		}
 		$didprt = 0;
 	}
