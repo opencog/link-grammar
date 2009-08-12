@@ -69,3 +69,11 @@ free_disjuncts(d1)
 
 instead, use build_sentence_disjuncts() which use build_disjuncts_for_X_node()
 
+
+make float pt:
+in build-disjuncts.c
+todo -- build_disjuncts_for_X_node == done
+build_clause == done
+build_disjunct == done
+build_sentence_disjuncts -- preparation.c
+

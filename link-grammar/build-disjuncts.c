@@ -13,6 +13,7 @@
 
 /* stuff for transforming a dictionary entry into a disjunct list */
 
+#include <math.h>
 #include <link-grammar/api.h>
 
 /* Temporary connectors used while converting expressions into disjunct lists */
@@ -29,8 +30,8 @@ typedef struct clause_struct Clause;
 struct clause_struct
 {
 	Clause * next;
-	int cost;
-	int maxcost;
+	float cost;
+	float maxcost;
 	Tconnector * c;
 };
 
@@ -157,7 +158,7 @@ static Tconnector * build_terminal(Exp * e)
 }
 
 #ifdef UNUSED_FUNCTION
-static int maxcost_of_expression(Exp *e)
+static xxxfloat-int maxcost_of_expression(Exp *e)
 {
 	E_list * e_list;
 	int m, m1;
@@ -177,7 +178,7 @@ static int maxcost_of_expression(Exp *e)
  * This returns the maximum maxcost of any disjunct in the sentence
  * Assumes the sentence expressions have been constructed
  */
-static int maxcost_of_sentence(Sentence sent)
+static xxx-float-int maxcost_of_sentence(Sentence sent)
 {
 	X_node * x;
 	int w, m, m1;
@@ -199,7 +200,7 @@ static int maxcost_of_sentence(Sentence sent)
 /**
  * Build the clause for the expression e.  Does not change e
  */
-static Clause * build_clause(Exp *e, int cost_cutoff)
+static Clause * build_clause(Exp *e)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
 	E_list * e_list;
@@ -210,11 +211,11 @@ static Clause * build_clause(Exp *e, int cost_cutoff)
 		c1 = (Clause *) xalloc(sizeof (Clause));
 		c1->c = NULL;
 		c1->next = NULL;
-		c1->cost = 0;
-		c1->maxcost = 0 ;
+		c1->cost = 0.0f;
+		c1->maxcost = 0.0f ;
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
 		{
-			c2 = build_clause(e_list->e, cost_cutoff);
+			c2 = build_clause(e_list->e);
 			c_head = NULL;
 			for (c3 = c1; c3 != NULL; c3 = c3->next)
 			{
@@ -222,7 +223,7 @@ static Clause * build_clause(Exp *e, int cost_cutoff)
 				{
 					c = (Clause *) xalloc(sizeof (Clause));
 					c->cost = c3->cost + c4->cost;
-					c->maxcost = MAX(c3->maxcost,c4->maxcost);
+					c->maxcost = fmaxf(c3->maxcost,c4->maxcost);
 					c->c = catenate(c3->c, c4->c);
 					c->next = c_head;
 					c_head = c;
@@ -240,7 +241,7 @@ static Clause * build_clause(Exp *e, int cost_cutoff)
 		c = NULL;
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
 		{
-			c1 = build_clause(e_list->e, cost_cutoff);
+			c1 = build_clause(e_list->e);
 			while(c1 != NULL) {
 				c3 = c1->next;
 				c1->next = c;
@@ -253,8 +254,8 @@ static Clause * build_clause(Exp *e, int cost_cutoff)
 	{
 		c = (Clause *) xalloc(sizeof(Clause));
 		c->c = build_terminal(e);
-		c->cost = 0;
-		c->maxcost = 0;
+		c->cost = 0.0f;
+		c->maxcost = 0.0f;
 		c->next = NULL;
 	}
 	else
@@ -309,7 +310,7 @@ static void print_clause_list(Clause * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("  Clause: ");
-		printf("(%2d, %2d) ", c->cost, c->maxcost);
+		printf("(%4.2f, %4.2f) ", c->cost, c->maxcost);
 		print_Tconnector_list(c->c);
 		printf("\n");
 	}
@@ -319,7 +320,7 @@ static void print_disjunct_list(Disjunct * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("%10s: ", c->string);
-		printf("(%d) ", c->cost);
+		printf("(%f) ", c->cost);
 		print_connector_list(c->left);
 		printf(" <--> ");
 		print_connector_list(c->right);
@@ -359,7 +360,7 @@ static Connector * extract_connectors(Tconnector *e, int c)
  * string is the print name of word that generated this disjunct.
  */
 static Disjunct *
-build_disjunct(Clause * cl, const char * string, int cost_cutoff)
+build_disjunct(Clause * cl, const char * string, float cost_cutoff)
 {
 	Disjunct *dis, *ndis;
 	dis = NULL;
@@ -379,12 +380,12 @@ build_disjunct(Clause * cl, const char * string, int cost_cutoff)
 	return dis;
 }
 
-static Disjunct * build_disjuncts_for_X_node(X_node * x, int cost_cutoff)
+static Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff)
 {
 	Clause *c ;
 	Disjunct * dis;
 	/* print_expression(x->exp);  printf("\n"); */
-	c = build_clause(x->exp, cost_cutoff);
+	c = build_clause(x->exp);
 	/* print_clause_list(c); */
 	dis = build_disjunct(c, x->string, cost_cutoff);
 	/* print_disjunct_list(dis); */
@@ -403,7 +404,7 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 	X_node x;
 	x.exp = dn->exp;
 	x.string = dn->string;
-	return build_disjuncts_for_X_node(&x, NOCUTOFF);
+	return build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
 }
 
 /**
@@ -439,7 +440,7 @@ X_node * build_word_expressions(Sentence sent, const char * s)
  * Turn sentence expressions into disjuncts.
  * Sentence expressions must have been built, before calling this routine.
  */
-void build_sentence_disjuncts(Sentence sent, int cost_cutoff)
+void build_sentence_disjuncts(Sentence sent, float cost_cutoff)
 {
 	Disjunct * d;
 	X_node * x;

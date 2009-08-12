@@ -57,6 +57,19 @@ obtained by parsing a large quantity of text, and then applying the
 Radu Mihalcea word-sense disambiguation algorithm to it.
 
 
+Cluster Table
+-------------
+(In development)
+When LG is unable to parse a sentence, one possible strategy is to 
+increase the number of disjuncts that words can participate in, and 
+hoping that the broadend collection of disjuncts will allow the parse
+to proceed.  To obtain the broadened coverage, one can look up the 
+word to see if it participates in a cluster of syntactically similar
+words, and then use a union of all of the disjuncts of words in the 
+cluster. If this allows the parse to proceed, then the system will
+have "automatically" discovered a usable parse that is not otherwise
+covered by the existing dictionaries.
+
 
 Notes:
 ------

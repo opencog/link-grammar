@@ -86,8 +86,8 @@
    this number multiplied times the number of costly connectors on any
    disjunct must fit into an integer. */
 
-#define NOCUTOFF 1000
-/* no connector will have cost this high */
+/* Upper bound on the cost of any connector. */
+#define MAX_CONNECTOR_COST 1000.0f
 
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
