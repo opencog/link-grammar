@@ -67,6 +67,9 @@ AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
 dnl ====================================================================
 
+dnl std=c99 gets the proper float-pt math decls working, e.g. fmaxf
+CFLAGS="${CFLAGS} -std=c99"
+
 AC_ARG_ENABLE( debug,
   [  --enable-debug               compile with debugging flags set],
        CFLAGS="${CFLAGS} -g"
