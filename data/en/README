@@ -71,9 +71,14 @@ instead, use build_sentence_disjuncts() which use build_disjuncts_for_X_node()
 
 
 make float pt:
-in build-disjuncts.c
+in build-disjuncts.c == done 
 todo -- build_disjuncts_for_X_node == done
 build_clause == done
 build_disjunct == done
 build_sentence_disjuncts -- preparation.c
 
+but preparation.c ... 
+
+prepare_to_parse from api.c
+sentence_parse
+and retry from link-parser with more null counts.

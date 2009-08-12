@@ -67,8 +67,12 @@ AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
 dnl ====================================================================
 
-dnl std=c99 gets the proper float-pt math decls working, e.g. fmaxf
-CFLAGS="${CFLAGS} -std=c99"
+# The std=c99 flag provides the proper float-pt math decls working, 
+# e.g. fmaxf However, it also undefined _BSD_SOURCE, etc which is
+# needed to get fileno, strdup, etc. and so it needs to be manually 
+# enabled again.
+
+CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_POSIX_C_SOURCE"
 
 AC_ARG_ENABLE( debug,
   [  --enable-debug               compile with debugging flags set],
