@@ -60,3 +60,12 @@ select inflected_word, disjunct, count, log_cond_probability from disjuncts wher
  warnings.n     | Op- Dmc-                            |    12.4493113420905 |     2.80710747394272
  warnings.n     | Jp- Dmc-                            |    8.38247973471882 |     3.37772441764546
 
+
+
+To get the full-length list -- 
+
+Disjunct *d1 = build_disjuncts_for_dict_node(dn); -- but is obsolete ... 
+free_disjuncts(d1)
+
+instead, use build_sentence_disjuncts() which use build_disjuncts_for_X_node()
+
