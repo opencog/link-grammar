@@ -266,6 +266,16 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
+% Nouns that are also adjectives (e.g. red.n) and so we don't want to
+% allow these to take AN+ links.  We need these as nouns, so as to 
+% parse 'she prefers red'.
+auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n 
+tawny.n ultramarine.n yellow.n:
+<marker-common-entity> or 
+({@AN-} & {@A- & {[[@AN-]]}} & 
+(({Dmu-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
+
 % nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
 <noun-mass-count>:  
