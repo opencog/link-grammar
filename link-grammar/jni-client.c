@@ -67,7 +67,7 @@ static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
-	parse_options_set_disjunct_cost(opts, 3);
+	parse_options_set_disjunct_costf(opts, 3.0f);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
 	parse_options_set_max_parse_time(opts, 60);
@@ -121,7 +121,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	setup_panic_parse_options(ptd->panic_parse_opts);
 
 	ptd->opts = parse_options_create();
-	parse_options_set_disjunct_cost(ptd->opts, 3);
+	parse_options_set_disjunct_costf(ptd->opts, 3.0f);
 	parse_options_set_max_sentence_length(ptd->opts, 170);
 	parse_options_set_max_parse_time(ptd->opts, 30);
 	parse_options_set_linkage_limit(ptd->opts, 1000);
@@ -239,7 +239,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	}
 
 	/* First parse with cost 0 or 1 and no null links */
-	parse_options_set_disjunct_cost(opts, 2);
+	parse_options_set_disjunct_costf(opts, 2.0f);
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
 	parse_options_reset_resources(opts);

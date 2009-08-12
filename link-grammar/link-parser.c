@@ -427,7 +427,7 @@ static Label strip_off_label(char * input_string)
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
-	parse_options_set_disjunct_cost(opts, 3);
+	parse_options_set_disjunct_costf(opts, 3.0f);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
 	parse_options_set_max_parse_time(opts, 60);
@@ -612,7 +612,7 @@ int main(int argc, char * argv[])
 		}
 
 		/* First parse with cost 0 or 1 and no null links */
-		parse_options_set_disjunct_cost(opts, 2);
+		parse_options_set_disjunct_costf(opts, 2.0f);
 		parse_options_set_min_null_count(opts, 0);
 		parse_options_set_max_null_count(opts, 0);
 		parse_options_reset_resources(opts);

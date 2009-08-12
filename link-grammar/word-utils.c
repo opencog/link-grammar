@@ -14,6 +14,8 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
+#include <math.h>
+
 #include <link-grammar/api.h>
 #include "word-utils.h"
 #include <stdio.h>
@@ -477,7 +479,7 @@ static int exp_compare(Exp * e1, Exp * e2)
 	  return 0; /* they are not equal */
 	if (e1->type != e2->type)
 		return 0;
-	if (e1->cost != e2->cost)
+	if (fabs (e1->cost - e2->cost) < 0.001)
 		return 0;
 	if (e1->type == CONNECTOR_type) {
 		if (e1->dir != e2->dir)

@@ -62,7 +62,7 @@ struct Parse_Options_s
 {
 	int verbosity;         /* Level of detail to give about the computation 0 */
 	int linkage_limit;     /* The maximum number of linkages processed 10000 */
-	int disjunct_cost;     /* Max disjunct cost to allow */
+	float disjunct_cost;   /* Max disjunct cost to allow */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
 	int null_block;        /* consecutive blocks of this many words are
