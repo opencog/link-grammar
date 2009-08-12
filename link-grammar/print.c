@@ -191,11 +191,10 @@ char * linkage_print_disjuncts(Linkage linkage)
 	 * word 0. */
 	for (w=1; w<nwords; w++)
 	{
-		/* If the word is not inflected, then sent->word[w].d is NULL */
-		if (sent->word[w].d)
-			infword = sent->word[w].d->string;
-		else
-			infword = sent->word[w].string;
+		Disjunct *disj = linkage->sent->parse_info->chosen_disjuncts[w];
+		if (NULL == disj) continue;
+
+		infword = disj->string;
 
 		dj = linkage_get_disjunct_str(linkage, w);
 		cost = linkage_get_disjunct_cost(linkage, w);
