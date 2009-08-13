@@ -20,91 +20,8 @@
 #include "word-utils.h"
 #include <stdio.h>
 
-/**
- * This hash function that takes a connector and a seed value i.
- * It only looks at the leading upper case letters of
- * the string, and the label.  This ensures that if two connectors
- * match, then they must hash to the same place.
- */
-int connector_hash(Connector * c, int i)
-{
-	int nb;
-	const char * s;
-	s = c->string;
-
-	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
-	nb = is_utf8_upper(s);
-	while(nb)
-	{
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s += nb;
-		nb = is_utf8_upper(s);
-	}
-	return i;
-}
-
-/**
- * free_connectors() -- free the list of connectors pointed to by e
- * (does not free any strings)
- */
-void free_connectors(Connector *e)
-{
-	Connector * n;
-	for (; e != NULL; e = n)
-	{
-		n = e->next;
-		xfree((char *)e, sizeof(Connector));
-	}
-}
-
-/**
- * free_disjuncts() -- free the list of disjuncts pointed to by c
- * (does not free any strings)
- */
-void free_disjuncts(Disjunct *c)
-{
-	Disjunct *c1;
-	for (;c != NULL; c = c1) {
-		c1 = c->next;
-		free_connectors(c->left);
-		free_connectors(c->right);
-		xfree((char *)c, sizeof(Disjunct));
-	}
-}
-
-Connector * connector_new(void)
-{
-	Connector *c = (Connector *) xalloc(sizeof(Connector));
-	c->length_limit = UNLIMITED_LEN;
-	c->string = "";
-	c->label = 0;
-	c->hash = -1;
-	c->priority = THIN_priority;
-	c->multi = FALSE;
-	c->next = NULL;
-	c->tableNext = NULL;
-	return c;
-}
-
-Connector * init_connector(Connector *c)
-{
-	c->hash = -1;
-	c->length_limit = UNLIMITED_LEN;
-	return c;
-}
-
-/** 
- * frees the list of X_nodes pointed to by x, and all of the expressions
- */
-void free_X_nodes(X_node * x)
-{
-	X_node * y;
-	for (; x!= NULL; x = y) {
-		y = x->next;
-		free_Exp(x->exp);
-		xfree((char *)x, sizeof(X_node));
-	}
-}
+/* ======================================================== */
+/* Exp utilities ... */
 
 void free_E_list(E_list *);
 void free_Exp(Exp * e)
@@ -162,6 +79,108 @@ static E_list * copy_E_list(E_list * l)
 	return nl;
 }
 
+/* ======================================================== */
+/* X_node utilities ... */
+/** 
+ * frees the list of X_nodes pointed to by x, and all of the expressions
+ */
+void free_X_nodes(X_node * x)
+{
+	X_node * y;
+	for (; x!= NULL; x = y) {
+		y = x->next;
+		free_Exp(x->exp);
+		xfree((char *)x, sizeof(X_node));
+	}
+}
+
+/**
+ * Destructively catenates the two disjunct lists d1 followed by d2.
+ * Doesn't change the contents of the disjuncts.
+ * Traverses the first list, but not the second.
+ */
+X_node * catenate_X_nodes(X_node *d1, X_node *d2)
+{
+	X_node * dis = d1;
+
+	if (d1 == NULL) return d2;
+	if (d2 == NULL) return d1;
+	while (dis->next != NULL) dis = dis->next;
+	dis->next = d2;
+	return d1;
+}
+
+/* ======================================================== */
+/* Connector utilities ... */
+
+/**
+ * This hash function that takes a connector and a seed value i.
+ * It only looks at the leading upper case letters of
+ * the string, and the label.  This ensures that if two connectors
+ * match, then they must hash to the same place.
+ */
+int connector_hash(Connector * c, int i)
+{
+	int nb;
+	const char * s;
+	s = c->string;
+
+	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
+	nb = is_utf8_upper(s);
+	while(nb)
+	{
+		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		s += nb;
+		nb = is_utf8_upper(s);
+	}
+	return i;
+}
+
+/**
+ * free_connectors() -- free the list of connectors pointed to by e
+ * (does not free any strings)
+ */
+void free_connectors(Connector *e)
+{
+	Connector * n;
+	for (; e != NULL; e = n)
+	{
+		n = e->next;
+		xfree((char *)e, sizeof(Connector));
+	}
+}
+
+void exfree_connectors(Connector *e)
+{
+	Connector * n;
+	for(;e != NULL; e = n) {
+		n = e->next;
+		exfree((void *) e->string, sizeof(char)*(strlen(e->string)+1));
+		exfree(e, sizeof(Connector));
+	}
+}
+
+Connector * connector_new(void)
+{
+	Connector *c = (Connector *) xalloc(sizeof(Connector));
+	c->length_limit = UNLIMITED_LEN;
+	c->string = "";
+	c->label = 0;
+	c->hash = -1;
+	c->priority = THIN_priority;
+	c->multi = FALSE;
+	c->next = NULL;
+	c->tableNext = NULL;
+	return c;
+}
+
+Connector * init_connector(Connector *c)
+{
+	c->hash = -1;
+	c->length_limit = UNLIMITED_LEN;
+	return c;
+}
+
 /**
  * This builds a new copy of the connector list pointed to by c.
  * Strings, as usual, are not copied.
@@ -174,6 +193,41 @@ Connector * copy_connectors(Connector * c)
 	*c1 = *c;
 	c1->next = copy_connectors(c->next);
 	return c1;
+}
+
+Connector * excopy_connectors(Connector * c)
+{
+	char * s;
+	Connector *c1;
+
+	if (c == NULL) return NULL;
+
+	c1 = connector_new();
+	*c1 = *c;
+	s = (char *) exalloc(sizeof(char)*(strlen(c->string)+1));
+	strcpy(s, c->string);
+	c1->string = s;
+	c1->next = excopy_connectors(c->next);
+
+	return c1;
+}
+
+/* ======================================================== */
+/* Disjunct utilities ... */
+
+/**
+ * free_disjuncts() -- free the list of disjuncts pointed to by c
+ * (does not free any strings)
+ */
+void free_disjuncts(Disjunct *c)
+{
+	Disjunct *c1;
+	for (;c != NULL; c = c1) {
+		c1 = c->next;
+		free_connectors(c->left);
+		free_connectors(c->right);
+		xfree((char *)c, sizeof(Disjunct));
+	}
 }
 
 /**
@@ -193,32 +247,25 @@ Disjunct * copy_disjunct(Disjunct * d)
 	return d1;
 }
 
-void exfree_connectors(Connector *e)
+/**
+ * Destructively catenates the two disjunct lists d1 followed by d2.
+ * Doesn't change the contents of the disjuncts.
+ * Traverses the first list, but not the second.
+ */
+Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
 {
-	Connector * n;
-	for(;e != NULL; e = n) {
-		n = e->next;
-		exfree((void *) e->string, sizeof(char)*(strlen(e->string)+1));
-		exfree(e, sizeof(Connector));
-	}
+	Disjunct * dis = d1;
+
+	if (d1 == NULL) return d2;
+	if (d2 == NULL) return d1;
+	while (dis->next != NULL) dis = dis->next;
+	dis->next = d2;
+	return d1;
 }
 
-Connector * excopy_connectors(Connector * c)
-{
-	char * s;
-	Connector *c1;
 
-	if (c == NULL) return NULL;
-
-	c1 = connector_new();
-	*c1 = *c;
-	s = (char *) exalloc(sizeof(char)*(strlen(c->string)+1));
-	strcpy(s, c->string);
-	c1->string = s;
-	c1->next = excopy_connectors(c->next);
-
-	return c1;
-}
+/* ======================================================== */
+/* Link stuff */
 
 Link * excopy_link(Link * l)
 {
@@ -247,38 +294,10 @@ void exfree_link(Link * l)
 	exfree(l, sizeof(Link));
 }
 
-
-/**
- * Destructively catenates the two disjunct lists d1 followed by d2.
- * Doesn't change the contents of the disjuncts.
- * Traverses the first list, but not the second.
+/* ======================================================== */
+/* Sentence utilities ... XXX these contain an English-language
+ * conjunction hack -- this needs to be fixed!
  */
-Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
-{
-	Disjunct * dis = d1;
-
-	if (d1 == NULL) return d2;
-	if (d2 == NULL) return d1;
-	while (dis->next != NULL) dis = dis->next;
-	dis->next = d2;
-	return d1;
-}
-
-/**
- * Destructively catenates the two disjunct lists d1 followed by d2.
- * Doesn't change the contents of the disjuncts.
- * Traverses the first list, but not the second.
- */
-X_node * catenate_X_nodes(X_node *d1, X_node *d2)
-{
-	X_node * dis = d1;
-
-	if (d1 == NULL) return d2;
-	if (d2 == NULL) return d1;
-	while (dis->next != NULL) dis = dis->next;
-	dis->next = d2;
-	return d1;
-}
 
 /** Returns TRUE if one of the words in the sentence is s */
 int sentence_contains(Sentence sent, const char * s)
@@ -290,14 +309,20 @@ int sentence_contains(Sentence sent, const char * s)
 	return FALSE;
 }
 
+/* XXX Extreme hack alert -- English-language words are used
+ * completely naked in the C source code!!! FIXME !!!!
+ */
 void set_is_conjunction(Sentence sent)
 {
 	int w;
 	char * s;
 	for (w=0; w<sent->length; w++) {
 		s = sent->word[w].string;
-		sent->is_conjunction[w] = ((strcmp(s, "and")==0) || (strcmp(s, "or" )==0) ||
-		                           (strcmp(s, "but")==0) || (strcmp(s, "nor")==0));
+		sent->is_conjunction[w] = 
+			(strcmp(s, "and")==0) ||
+			(strcmp(s, "or" )==0) ||
+			(strcmp(s, "but")==0) ||
+			(strcmp(s, "nor")==0);
 	}
 }
 
@@ -327,6 +352,7 @@ int conj_in_range(Sentence sent, int lw, int rw)
 	return FALSE;
 }
 
+/* ======================================================== */
 /**
  * This hash function only looks at the leading upper case letters of
  * the string, and the direction, '+' or '-'.
@@ -597,18 +623,6 @@ int dictionary_is_past_tense_form(Dictionary dict, const char * str)
 int dictionary_is_entity(Dictionary dict, const char * str)
 {
 	if (word_contains(dict, str, ENTITY_MARKER) == 1)
-		return 1;
-	return 0;
-}
-
-/**
- * dictionary_is_common_entity - Return true if word is a common
- * noun or adjective, typically appearing in corporate entity names.
- * e.g. "Sun State Bank" -- sun, state and bank are all common nouns.
- */
-int dictionary_is_common_entity(Dictionary dict, const char * str)
-{
-	if (word_contains(dict, str, COMMON_ENTITY_MARKER) == 1)
 		return 1;
 	return 0;
 }
