@@ -14,7 +14,7 @@
 #ifndef _LINK_GRAMMAR_WORD_UTILS_H_
 #define _LINK_GRAMMAR_WORD_UTILS_H_
 
-#include <link-grammar/api.h>
+#include <link-grammar/api-types.h>
 
 /* Exp utilities ... */
 void free_Exp(Exp *);
@@ -29,6 +29,7 @@ Exp * copy_Exp(Exp *);
 X_node *    catenate_X_nodes(X_node *, X_node *);
 void free_X_nodes(X_node *);
 
+
 /* Connector utilities ... */
 Connector * connector_new(void);
 Connector * init_connector(Connector *c);
@@ -38,14 +39,17 @@ void exfree_connectors(Connector *);
 Connector * copy_connectors(Connector *);
 Connector * excopy_connectors(Connector * c);
 
+
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
 Disjunct *  copy_disjunct(Disjunct * );
 Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);
 
+
 /* Link utilities ... */
 Link *      excopy_link(Link *);
 void        exfree_link(Link *);
+
 
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);
@@ -53,12 +57,9 @@ void connector_set_delete(Connector_set * conset);
 int match_in_connector_set(Sentence, Connector_set *conset, Connector * c, int d);
 int word_has_connector(Dict_node *, const char *, int);
 
+
 /* Dictionary utilities ... */
 int word_contains(Dictionary dict, const char * word, const char * macro);
 Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
-
-
-/* utility routines moved from parse.c */
-void set_is_conjunction(Sentence sent);
 
 #endif /* _LINK_GRAMMAR_WORD_UTILS_H_ */

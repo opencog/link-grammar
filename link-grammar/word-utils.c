@@ -584,26 +584,4 @@ int dictionary_is_entity(Dictionary dict, const char * str)
 	return 0;
 }
 
-/* ======================================================== */
-/* Conjunction utilities ... XXX these contain an English-language
- * conjunction hack -- this needs to be fixed!
- */
-
-/* XXX Extreme hack alert -- English-language words are used
- * completely naked in the C source code!!! FIXME !!!!
- */
-void set_is_conjunction(Sentence sent)
-{
-	int w;
-	char * s;
-	for (w=0; w<sent->length; w++) {
-		s = sent->word[w].string;
-		sent->is_conjunction[w] = 
-			(strcmp(s, "and")==0) ||
-			(strcmp(s, "or" )==0) ||
-			(strcmp(s, "but")==0) ||
-			(strcmp(s, "nor")==0);
-	}
-}
-
 /* ========================= END OF FILE ============================== */

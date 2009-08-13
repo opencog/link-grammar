@@ -19,8 +19,13 @@
 
 #include "build-disjuncts.h"
 #include "error.h"
+#include "externs.h"
+#include "read-dict.h"
 #include "regex-morph.h"
 #include "spellcheck-hun.h"
+#include "string-set.h"
+#include "structures.h"
+#include "tokenize.h"
 #include "utilities.h"
 #include "word-utils.h"
 

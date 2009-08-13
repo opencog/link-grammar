@@ -1028,6 +1028,23 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	return sent;
 }
 
+/* XXX Extreme hack alert -- English-language words are used
+ * completely naked in the C source code!!! FIXME !!!!
+ */
+static void set_is_conjunction(Sentence sent)
+{
+	int w;
+	char * s;
+	for (w=0; w<sent->length; w++) {
+		s = sent->word[w].string;
+		sent->is_conjunction[w] = 
+			(strcmp(s, "and")==0) ||
+			(strcmp(s, "or" )==0) ||
+			(strcmp(s, "but")==0) ||
+			(strcmp(s, "nor")==0);
+	}
+}
+
 static int split_sentence(Sentence sent, Parse_Options opts)
 {
 	int i;
