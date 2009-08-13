@@ -414,12 +414,12 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
  * If there, it builds the list of expressions for the word, and returns
  * a pointer to it.
  */
-X_node * build_word_expressions(Sentence sent, const char * s)
+X_node * build_word_expressions(Dictionary dict, const char * s)
 {
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
 
-	dn_head = dictionary_lookup_list(sent->dict, s);
+	dn_head = dictionary_lookup_list(dict, s);
 	dn = dn_head;
 
 	x = NULL;

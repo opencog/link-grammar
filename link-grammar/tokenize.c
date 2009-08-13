@@ -17,11 +17,12 @@
 #endif
 #include <limits.h>
 
-#include <link-grammar/api.h>
+#include "build-disjuncts.h"
 #include "error.h"
 #include "regex-morph.h"
 #include "spellcheck-hun.h"
 #include "utilities.h"
+#include "word-utils.h"
 
 #define MAX_STRIP 10
 
@@ -771,7 +772,7 @@ static int special_string(Sentence sent, int i, const char * s)
 	X_node * e;
 	if (boolean_dictionary_lookup(sent->dict, s))
 	{
-		sent->word[i].x = build_word_expressions(sent, s);
+		sent->word[i].x = build_word_expressions(sent->dict, s);
 		for (e = sent->word[i].x; e != NULL; e = e->next)
 		{
 			e->string = sent->word[i].string;
@@ -801,7 +802,7 @@ static void tag_regex_string(Sentence sent, int i, const char * type)
 	char str[MAX_WORD+1];
 	char * t;
 	X_node * e;
-	sent->word[i].x = build_word_expressions(sent, type);
+	sent->word[i].x = build_word_expressions(sent->dict, type);
 	for (e = sent->word[i].x; e != NULL; e = e->next)
 	{
 		t = strchr(e->string, '.');
@@ -831,7 +832,7 @@ static int guessed_string(Sentence sent, int i, const char * s, const char * typ
 	char str[MAX_WORD+1];
 	if (boolean_dictionary_lookup(sent->dict, type))
 	{
-		sent->word[i].x = build_word_expressions(sent, type);
+		sent->word[i].x = build_word_expressions(sent->dict, type);
 		e = sent->word[i].x;
 		if(is_s_word(s))
 		{
@@ -896,7 +897,7 @@ static void handle_unknown_word(Sentence sent, int i, char * s)
 	X_node *d;
 	char str[MAX_WORD+1];
 
-	sent->word[i].x = build_word_expressions(sent, UNKNOWN_WORD);
+	sent->word[i].x = build_word_expressions(sent->dict, UNKNOWN_WORD);
 	if (sent->word[i].x == NULL)
 		assert(FALSE, "UNKNOWN_WORD should have been there");
 
@@ -951,7 +952,7 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
 	{
 		if (boolean_dictionary_lookup(sent->dict, alternates[j]))
 		{
-			X_node *x = build_word_expressions(sent, alternates[j]);
+			X_node *x = build_word_expressions(sent->dict, alternates[j]);
 			head = catenate_X_nodes(x, head);
 		}
 	}
@@ -1023,7 +1024,7 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 		s = sent->word[i].string;
 		if (boolean_dictionary_lookup(sent->dict, s))
 		{
-			sent->word[i].x = build_word_expressions(sent, s);
+			sent->word[i].x = build_word_expressions(sent->dict, s);
 		}
 #if DONT_USE_REGEX_GUESSING
 		else if (is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) 
@@ -1137,14 +1138,14 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 			{
 				if (is_common_entity(sent->dict,lc))
 				{
-					e = build_word_expressions(sent, lc);
+					e = build_word_expressions(sent->dict, lc);
 					sent->word[i].x =
 						catenate_X_nodes(sent->word[i].x, e);
 				}
 				else
 				{
 					safe_strcpy(s, lc, MAX_WORD);
-					e = build_word_expressions(sent, s);
+					e = build_word_expressions(sent->dict, s);
 					free_X_nodes(sent->word[i].x);
 					sent->word[i].x = e;
 				}
