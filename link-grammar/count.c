@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/api.h>
+#include "disjunct-utils.h"
 
 /* This file contains the exhaustive search algorithm. */
 

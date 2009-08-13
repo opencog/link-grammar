@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/api.h>
+#include "disjunct-utils.h"
 
 #define CONTABSZ 8192
 typedef Connector * connector_table;
@@ -444,6 +445,7 @@ static int string_hash(disjunct_dup_table *dt, const char * s, int i)
 }
 
 #if FALSE
+/* ============================================================x */
 
 /*
   Consider the idea of deleting a disjunct if it is dominated (in terms of
@@ -579,7 +581,7 @@ static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
  * if this happens, it constitutes a proof that there is absolutely
  * no use for d2.
  */
-int disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
+static int disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
 {
 	Connector *e1, *e2;
 	if (d1->cost > d2->cost) return FALSE;
@@ -669,6 +671,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 	return d;
 }
 
+/* ============================================================x */
 #endif
 
 /**

@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/api.h>
+#include "disjunct-utils.h"
 
 void free_deletable(Sentence sent)
 {

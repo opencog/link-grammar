@@ -33,6 +33,11 @@
  * statistics functions: this string, together with the "inflected"
  * word, is used as a key to index the statistics information in the
  * database. 
+ *
+ * XXX This implementation works, but I don't think its the simplest
+ * one. I think that a better implementation would have used
+ * sent->parse_info->chosen_disjuncts[w] to get the one that was used,
+ * and then print_disjuncts() to print it.
  */
 void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 {

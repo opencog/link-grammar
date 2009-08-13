@@ -15,10 +15,11 @@
  */
 
 #include <math.h>
+#include <stdio.h>
 
 #include <link-grammar/api.h>
+#include "disjunct-utils.h"
 #include "word-utils.h"
-#include <stdio.h>
 
 /* ======================================================== */
 /* Exp utilities ... */
@@ -283,58 +284,6 @@ Connector * excopy_connectors(Connector * c)
 
 	return c1;
 }
-
-/* ======================================================== */
-/* Disjunct utilities ... */
-
-/**
- * free_disjuncts() -- free the list of disjuncts pointed to by c
- * (does not free any strings)
- */
-void free_disjuncts(Disjunct *c)
-{
-	Disjunct *c1;
-	for (;c != NULL; c = c1) {
-		c1 = c->next;
-		free_connectors(c->left);
-		free_connectors(c->right);
-		xfree((char *)c, sizeof(Disjunct));
-	}
-}
-
-/**
- * This builds a new copy of the disjunct pointed to by d (except for the
- * next field which is set to NULL).  Strings, as usual,
- * are not copied.
- */
-Disjunct * copy_disjunct(Disjunct * d)
-{
-	Disjunct * d1;
-	if (d == NULL) return NULL;
-	d1 = (Disjunct *) xalloc(sizeof(Disjunct));
-	*d1 = *d;
-	d1->next = NULL;
-	d1->left = copy_connectors(d->left);
-	d1->right = copy_connectors(d->right);
-	return d1;
-}
-
-/**
- * Destructively catenates the two disjunct lists d1 followed by d2.
- * Doesn't change the contents of the disjuncts.
- * Traverses the first list, but not the second.
- */
-Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
-{
-	Disjunct * dis = d1;
-
-	if (d1 == NULL) return d2;
-	if (d2 == NULL) return d1;
-	while (dis->next != NULL) dis = dis->next;
-	dis->next = d2;
-	return d1;
-}
-
 
 /* ======================================================== */
 /* Link utilities ... */

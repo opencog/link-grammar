@@ -233,8 +233,6 @@ struct Word_struct
  * (AND, OR or TERMINAL).  If it is not a terminal it has a list
  * (an E_list) of children.
  */
-typedef struct E_list_struct E_list;
-
 struct Exp_struct
 {
     Exp * next; /* Used only for mem management,for freeing */

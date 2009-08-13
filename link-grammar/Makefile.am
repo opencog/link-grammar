@@ -76,6 +76,7 @@ liblink_grammar_la_SOURCES =        \
 	command-line.c                   \
 	constituents.c                   \
 	count.c                          \
+	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
 	expand.c                         \
@@ -111,6 +112,7 @@ liblink_grammar_la_SOURCES =        \
 	command-line.h                   \
 	constituents.h                   \
 	count.h                          \
+	disjunct-utils.h                 \
 	disjuncts.h                      \
 	error.h                          \
 	expand.h                         \

@@ -99,12 +99,12 @@ struct Parse_Options_s
 	int display_senses;           /* if true, sense candidates are printed out */
 };
 
-typedef struct
+struct Connector_set_s
 {
 	Connector ** hash_table;
 	int          table_size;
 	int          is_defined;  /* if 0 then there is no such set */
-} Connector_set;
+};
 
 struct Dictionary_s
 {

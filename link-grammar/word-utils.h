@@ -40,12 +40,6 @@ Connector * copy_connectors(Connector *);
 Connector * excopy_connectors(Connector * c);
 
 
-/* Disjunct utilities ... */
-void free_disjuncts(Disjunct *);
-Disjunct *  copy_disjunct(Disjunct * );
-Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);
-
-
 /* Link utilities ... */
 Link *      excopy_link(Link *);
 void        exfree_link(Link *);

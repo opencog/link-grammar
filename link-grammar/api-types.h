@@ -48,8 +48,10 @@ typedef struct analyze_context_s analyze_context_t;
 typedef struct count_context_s count_context_t;
 typedef struct match_context_s match_context_t;
 
-typedef struct Exp_struct Exp;
+typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;
+typedef struct Exp_struct Exp;
+typedef struct E_list_struct E_list;
 typedef struct Link_s Link;
 typedef struct List_o_links_struct List_o_links;
 typedef struct Parse_set_struct Parse_set;
@@ -57,6 +59,7 @@ typedef struct String_set_s String_set;
 typedef struct Word_struct Word;
 typedef struct Word_file_struct Word_file;
 typedef struct X_table_connector_struct X_table_connector;
+
 
 typedef struct pp_knowledge_s pp_knowledge;
 
