@@ -4,14 +4,23 @@
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
-/* license set forth in the LICENSE file included with this software,    */
+/* license set forth in the LICENSE file included with this software,    */ 
 /* and also available at http://www.link.cs.cmu.edu/link/license.html    */
 /* This license allows free redistribution and use in source and binary  */
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-void       prune(Sentence sent);
-int        power_prune(Sentence sent, int mode, Parse_Options opts);
-void       pp_and_power_prune(Sentence sent, int mode, Parse_Options opts);
-int        prune_match(int dist, Connector * left, Connector * right);
-void       expression_prune(Sentence sent);
+
+#ifndef _LINK_GRAMMAR_DISJUNCT_UTILS_H_
+#define _LINK_GRAMMAR_DISJUNCT_UTILS_H_
+
+#include <link-grammar/api-types.h>
+
+/* Disjunct utilities ... */
+void free_disjuncts(Disjunct *);
+Disjunct *  copy_disjunct(Disjunct * );
+Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);
+Disjunct * eliminate_duplicate_disjuncts(Disjunct * );
+
+
+#endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */

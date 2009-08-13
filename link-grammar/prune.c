@@ -265,17 +265,6 @@ static void zero_connector_table(connector_table *ct)
 	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
 }
 
-/** Returns the number of disjuncts in the list pointed to by d */
-static int count_disjuncts(Disjunct * d)
-{
-	int count = 0;
-	for (; d != NULL; d = d->next)
-	{
-		count++;
-	}
-	return count;
-}
-
 /** 
  * This function puts connector c into the connector table
  * if one like it isn't already there.
@@ -435,15 +424,6 @@ void prune(Sentence sent)
    another.  It works by hashing them all, and checking for domination.
 */
 
-/**
- * hash function that takes a string and a seed value i
- */
-static int string_hash(disjunct_dup_table *dt, const char * s, int i)
-{
-	for(;*s != '\0';s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-	return (i & (dt->dup_table_size-1));
-}
-
 #if FALSE
 /* ============================================================x */
 
@@ -510,6 +490,15 @@ telling.g John how our program.n works would be stupid
 P.P. violations:
       Special subject rule violated
 */
+
+/**
+ * hash function that takes a string and a seed value i
+ */
+static int string_hash(disjunct_dup_table *dt, const char * s, int i)
+{
+	for(;*s != '\0';s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+	return (i & (dt->dup_table_size-1));
+}
 
 /**
  * This returns true if the connector a matches everything that b
@@ -673,137 +662,6 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 
 /* ============================================================x */
 #endif
-
-/**
- * This is a hash function for disjuncts
- *
- * This is the old version that doesn't check for domination, just
- * equality.
- */
-static int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
-{
-	int i;
-	Connector *e;
-	i = 0;
-	for (e = d->left ; e != NULL; e = e->next) {
-		i = string_hash(dt, e->string, i);
-	}
-	for (e = d->right ; e != NULL; e = e->next) {
-		i = string_hash(dt, e->string, i);
-	}
-	return string_hash(dt, d->string, i);
-}
-
-/**
- * The connectors must be exactly equal.  A similar function
- * is connectors_equal_AND(), but that ignores priorities,
- * this does not.
- */
-static int connectors_equal_prune(Connector *c1, Connector *c2)
-{
-	return (c1->label == c2->label) &&
-		   (c1->multi == c2->multi) &&
-		   (c1->priority == c2->priority) &&
-		   (strcmp(c1->string, c2->string) == 0);
-}
-
-/** returns TRUE if the disjuncts are exactly the same */
-static int disjuncts_equal(Disjunct * d1, Disjunct * d2)
-{
-	Connector *e1, *e2;
-	e1 = d1->left;
-	e2 = d2->left;
-	while((e1!=NULL) && (e2!=NULL)) {
-		if (!connectors_equal_prune(e1,e2)) break;
-		e1 = e1->next;
-		e2 = e2->next;
-	}
-	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
-	e1 = d1->right;
-	e2 = d2->right;
-	while((e1!=NULL) && (e2!=NULL)) {
-		if (!connectors_equal_prune(e1,e2)) break;
-		e1 = e1->next;
-		e2 = e2->next;
-	}
-	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
-	return (strcmp(d1->string, d2->string) == 0);
-}
-
-static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
-{
-	size_t i;
-	disjunct_dup_table *dt;
-	dt = (disjunct_dup_table *) malloc(sizeof(disjunct_dup_table));
-
-	dt->dup_table_size = sz;
-	dt->dup_table = (Disjunct **) xalloc(sz * sizeof(Disjunct *));
-
-	for (i=0; i<sz; i++) dt->dup_table[i] = NULL;
-
-	return dt;
-}
-
-static void disjunct_dup_table_delete(disjunct_dup_table *dt)
-{
-	xfree((char *) dt->dup_table, dt->dup_table_size * sizeof(Disjunct *));
-	free(dt);
-}
-
-/**
- * Takes the list of disjuncts pointed to by d, eliminates all
- * duplicates, and returns a pointer to a new list.
- * It frees the disjuncts that are eliminated.
- */
-Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
-{
-	int i, h, count;
-	Disjunct *dn, *dx;
-	disjunct_dup_table *dt;
-
-	count = 0;
-	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(d)));
-
-	while (d!=NULL)
-	{
-		dn = d->next;
-		h = old_hash_disjunct(dt, d);
-
-		for (dx = dt->dup_table[h]; dx!=NULL; dx=dx->next)
-		{
-			if (disjuncts_equal(dx, d)) break;
-		}
-		if (dx == NULL)
-		{
-			d->next = dt->dup_table[h];
-			dt->dup_table[h] = d;
-		}
-		else
-		{
-			d->next = NULL;  /* to prevent it from freeing the whole list */
-			if (d->cost < dx->cost) dx->cost = d->cost;
-			free_disjuncts(d);
-			count++;
-		}
-		d = dn;
-	}
-
-	/* d is already null */
-	for (i=0; i<dt->dup_table_size; i++)
-	{
-		for (dn = dt->dup_table[i]; dn != NULL; dn = dx) {
-			dx = dn->next;
-			dn->next = d;
-			d = dn;
-		}
-	}
-
-	if ((verbosity > 2) && (count != 0)) printf("killed %d duplicates\n", count);
-
-	disjunct_dup_table_delete(dt);
-	return d;
-}
-
 
 /* ================================================================= */
 /**
