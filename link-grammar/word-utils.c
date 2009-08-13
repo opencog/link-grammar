@@ -79,6 +79,78 @@ static E_list * copy_E_list(E_list * l)
 	return nl;
 }
 
+/**
+ * Compare two expressions, return 1 for equal, 0 for unequal
+ */
+static int exp_compare(Exp * e1, Exp * e2)
+{
+	E_list *el1, *el2;
+
+	if ((e1 == NULL) && (e2 == NULL))
+	  return 1; /* they are equal */
+	if ((e1 == NULL) || (e2 == NULL))
+	  return 0; /* they are not equal */
+	if (e1->type != e2->type)
+		return 0;
+	if (fabs (e1->cost - e2->cost) < 0.001)
+		return 0;
+	if (e1->type == CONNECTOR_type)
+	{
+		if (e1->dir != e2->dir)
+			return 0;
+		/* printf("%s %s\n",e1->u.string,e2->u.string); */
+		if (strcmp(e1->u.string,e2->u.string)!=0)
+			return 0;
+	}
+	else
+	{
+		el1 = e1->u.l;
+		el2 = e2->u.l;
+		/* while at least 1 is non-null */
+		for (;(el1!=NULL)||(el2!=NULL);) {
+		  /*fail if 1 is null */
+			if ((el1==NULL)||(el2==NULL))
+				return 0;
+			/* fail if they are not compared */
+			if (exp_compare(el1->e, el2->e) == 0)
+				return 0;
+			if (el1!=NULL)
+				el1 = el1->next;
+			if (el2!=NULL)
+				el2 = el2->next;
+		}
+	}
+	return 1; /* if never returned 0, return 1 */
+}
+
+/**
+ * Sub-expression matcher -- return 1 if sub is non-NULL and 
+ * contained in super, 0 otherwise.
+ */
+static int exp_contains(Exp * super, Exp * sub)
+{
+	E_list * el;
+
+	/* printf("\nSUP:");
+	   if (super!=NULL)
+	   print_expression(super); */
+
+	if (sub==NULL || super==NULL)
+		return 0;
+	if (exp_compare(sub,super)==1)
+		return 1;
+	if (super->type==CONNECTOR_type)
+	  return 0; /* super is a leaf */
+
+	/* proceed through supers children and return 1 if sub
+	   is contained in any of them */
+	for(el = super->u.l; el!=NULL; el=el->next) {
+		if (exp_contains(el->e, sub)==1)
+			return 1;
+	}
+	return 0;
+}
+
 /* ======================================================== */
 /* X_node utilities ... */
 /** 
@@ -265,7 +337,7 @@ Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
 
 
 /* ======================================================== */
-/* Link stuff */
+/* Link utilities ... */
 
 Link * excopy_link(Link * l)
 {
@@ -295,64 +367,7 @@ void exfree_link(Link * l)
 }
 
 /* ======================================================== */
-/* Sentence utilities ... XXX these contain an English-language
- * conjunction hack -- this needs to be fixed!
- */
-
-/** Returns TRUE if one of the words in the sentence is s */
-int sentence_contains(Sentence sent, const char * s)
-{
-	int w;
-	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, s) == 0) return TRUE;
-	}
-	return FALSE;
-}
-
-/* XXX Extreme hack alert -- English-language words are used
- * completely naked in the C source code!!! FIXME !!!!
- */
-void set_is_conjunction(Sentence sent)
-{
-	int w;
-	char * s;
-	for (w=0; w<sent->length; w++) {
-		s = sent->word[w].string;
-		sent->is_conjunction[w] = 
-			(strcmp(s, "and")==0) ||
-			(strcmp(s, "or" )==0) ||
-			(strcmp(s, "but")==0) ||
-			(strcmp(s, "nor")==0);
-	}
-}
-
-/**
- * Return true if the sentence contains a conjunction.  Assumes
- * is_conjunction[] has been initialized.
- */
-int sentence_contains_conjunction(Sentence sent)
-{
-	int w;
-	if (NULL == sent->is_conjunction) return FALSE;
-
-	for (w=0; w<sent->length; w++) {
-		if (sent->is_conjunction[w]) return TRUE;
-	}
-	return FALSE;
-}
-
-/**
- *  Returns true if the range lw...rw inclusive contains a conjunction 
- */
-int conj_in_range(Sentence sent, int lw, int rw)
-{
-	for (;lw < rw+1; lw++) {
-		if (sent->is_conjunction[lw]) return TRUE;
-	}
-	return FALSE;
-}
-
-/* ======================================================== */
+/* Connector-set utilities ... */
 /**
  * This hash function only looks at the leading upper case letters of
  * the string, and the direction, '+' or '-'.
@@ -427,16 +442,8 @@ int match_in_connector_set(Sentence sent, Connector_set *conset, Connector * c, 
 	return FALSE;
 }
 
-Dict_node * list_whole_dictionary(Dict_node *root, Dict_node *dn)
-{
-	Dict_node *c, *d;
-	if (root == NULL) return dn;
-	c = (Dict_node *) xalloc(sizeof(Dict_node));
-	*c = *root;
-	d = list_whole_dictionary(root->left, dn);
-	c->right = list_whole_dictionary(root->right, d);
-	return c;
-}
+/* ======================================================== */
+/* More connector utilities ... */
 
 /**
  * This is like the basic "match" function in count.c - the basic
@@ -493,71 +500,8 @@ int word_has_connector(Dict_node * dn, const char * cs, int direction)
 	return 0;
 }
 
-/* ============================================================================= */
-
-/* 1 for equal, 0 for unequal */
-static int exp_compare(Exp * e1, Exp * e2)
-{
-	E_list *el1, *el2;
-
-	if ((e1 == NULL) && (e2 == NULL))
-	  return 1; /* they are equal */
-	if ((e1 == NULL) || (e2 == NULL))
-	  return 0; /* they are not equal */
-	if (e1->type != e2->type)
-		return 0;
-	if (fabs (e1->cost - e2->cost) < 0.001)
-		return 0;
-	if (e1->type == CONNECTOR_type) {
-		if (e1->dir != e2->dir)
-			return 0;
-		/* printf("%s %s\n",e1->u.string,e2->u.string); */
-		if (strcmp(e1->u.string,e2->u.string)!=0)
-			return 0;
-	} else {
-		el1 = e1->u.l;
-		el2 = e2->u.l;
-		/* while at least 1 is non-null */
-		for (;(el1!=NULL)||(el2!=NULL);) {
-		  /*fail if 1 is null */
-			if ((el1==NULL)||(el2==NULL))
-				return 0;
-			/* fail if they are not compared */
-			if (exp_compare(el1->e, el2->e) == 0)
-				return 0;
-			if (el1!=NULL)
-				el1 = el1->next;
-			if (el2!=NULL)
-				el2 = el2->next;
-		}
-	}
-	return 1; /* if never returned 0, return 1 */
-}
-
-/* 1 if sub is non-NULL and contained in super, 0 otherwise */
-static int exp_contains(Exp * super, Exp * sub)
-{
-	E_list * el;
-
-	/* printf("\nSUP:");
-	   if (super!=NULL)
-	   print_expression(super); */
-
-	if (sub==NULL || super==NULL)
-		return 0;
-	if (exp_compare(sub,super)==1)
-		return 1;
-	if (super->type==CONNECTOR_type)
-	  return 0; /* super is a leaf */
-
-	/* proceed through supers children and return 1 if sub
-	   is contained in any of them */
-	for(el = super->u.l; el!=NULL; el=el->next) {
-		if (exp_contains(el->e, sub)==1)
-			return 1;
-	}
-	return 0;
-}
+/* ======================================================== */
+/* Dictionary utilities ... */
 
 static int dn_word_contains(Dictionary dict,
                             Dict_node * w_dn, const char * macro)
@@ -603,10 +547,22 @@ int word_contains(Dictionary dict, const char * word, const char * macro)
 	return ret;
 }
 
+Dict_node * list_whole_dictionary(Dict_node *root, Dict_node *dn)
+{
+	Dict_node *c, *d;
+	if (root == NULL) return dn;
+	c = (Dict_node *) xalloc(sizeof(Dict_node));
+	*c = *root;
+	d = list_whole_dictionary(root->left, dn);
+	c->right = list_whole_dictionary(root->right, d);
+	return c;
+}
+
 #define PAST_TENSE_FORM_MARKER "<marker-past>"
 #define ENTITY_MARKER          "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
 
+/* This is exported to public API (for Java) */
 int dictionary_is_past_tense_form(Dictionary dict, const char * str)
 {
 	if (word_contains(dict, str, PAST_TENSE_FORM_MARKER) == 1)
@@ -620,11 +576,70 @@ int dictionary_is_past_tense_form(Dictionary dict, const char * str)
  * names of people), street addresses, phone numbers,
  * etc.
  */
+/* This is exported to public API (for Java) */
 int dictionary_is_entity(Dictionary dict, const char * str)
 {
 	if (word_contains(dict, str, ENTITY_MARKER) == 1)
 		return 1;
 	return 0;
+}
+
+/* ======================================================== */
+/* Conjunction utilities ... XXX these contain an English-language
+ * conjunction hack -- this needs to be fixed!
+ */
+
+/** Returns TRUE if one of the words in the sentence is s */
+int sentence_contains(Sentence sent, const char * s)
+{
+	int w;
+	for (w=0; w<sent->length; w++) {
+		if (strcmp(sent->word[w].string, s) == 0) return TRUE;
+	}
+	return FALSE;
+}
+
+/* XXX Extreme hack alert -- English-language words are used
+ * completely naked in the C source code!!! FIXME !!!!
+ */
+void set_is_conjunction(Sentence sent)
+{
+	int w;
+	char * s;
+	for (w=0; w<sent->length; w++) {
+		s = sent->word[w].string;
+		sent->is_conjunction[w] = 
+			(strcmp(s, "and")==0) ||
+			(strcmp(s, "or" )==0) ||
+			(strcmp(s, "but")==0) ||
+			(strcmp(s, "nor")==0);
+	}
+}
+
+/**
+ * Return true if the sentence contains a conjunction.  Assumes
+ * is_conjunction[] has been initialized.
+ */
+int sentence_contains_conjunction(Sentence sent)
+{
+	int w;
+	if (NULL == sent->is_conjunction) return FALSE;
+
+	for (w=0; w<sent->length; w++) {
+		if (sent->is_conjunction[w]) return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ *  Returns true if the range lw...rw inclusive contains a conjunction 
+ */
+int conj_in_range(Sentence sent, int lw, int rw)
+{
+	for (;lw < rw+1; lw++) {
+		if (sent->is_conjunction[lw]) return TRUE;
+	}
+	return FALSE;
 }
 
 /* ========================= END OF FILE ============================== */

@@ -16,28 +16,47 @@
 
 #include <link-grammar/api.h>
 
-int connector_hash(Connector * c, int i);
-
-void free_disjuncts(Disjunct *);
-void free_X_nodes(X_node *);
-void free_connectors(Connector *);
+/* Exp utilities ... */
 void free_Exp(Exp *);
 void free_E_list(E_list *);
 int  size_of_expression(Exp *);
+Exp * copy_Exp(Exp *);
+/* int exp_compare(Exp * e1, Exp * e2); */
+/* int exp_contains(Exp * super, Exp * sub); */
 
-/* routines for copying basic objects */
-Disjunct *  copy_disjunct(Disjunct * );
-void        exfree_connectors(Connector *);
-Link *      excopy_link(Link *);
-void        exfree_link(Link *);
-Connector * copy_connectors(Connector *);
-Connector * excopy_connectors(Connector * c);
-Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);
+
+/* X_node utilities ... */
 X_node *    catenate_X_nodes(X_node *, X_node *);
-Exp *       copy_Exp(Exp *);
+void free_X_nodes(X_node *);
 
+/* Connector utilities ... */
 Connector * connector_new(void);
 Connector * init_connector(Connector *c);
+int connector_hash(Connector * c, int i);
+void free_connectors(Connector *);
+void exfree_connectors(Connector *);
+Connector * copy_connectors(Connector *);
+Connector * excopy_connectors(Connector * c);
+
+/* Disjunct utilities ... */
+void free_disjuncts(Disjunct *);
+Disjunct *  copy_disjunct(Disjunct * );
+Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);
+
+/* Link utilities ... */
+Link *      excopy_link(Link *);
+void        exfree_link(Link *);
+
+/* Connector-set utilities ... */
+Connector_set * connector_set_create(Exp *e);
+void connector_set_delete(Connector_set * conset);
+int match_in_connector_set(Sentence, Connector_set *conset, Connector * c, int d);
+int word_has_connector(Dict_node *, const char *, int);
+
+/* Dictionary utilities ... */
+int word_contains(Dictionary dict, const char * word, const char * macro);
+Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
+
 
 void init_x_table(Sentence sent);
 
@@ -48,13 +67,6 @@ int sentence_contains_conjunction(Sentence sent);
 int conj_in_range(Sentence sent, int lw, int rw);
 int max_link_length(Connector * c);
 
-/* Connector_set routines */
-Connector_set * connector_set_create(Exp *e);
-void connector_set_delete(Connector_set * conset);
-int match_in_connector_set(Sentence, Connector_set *conset, Connector * c, int d);
 
-Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
-int word_has_connector(Dict_node *, const char *, int);
-int word_contains(Dictionary dict, const char * word, const char * macro);
 
 #endif /* _LINK_GRAMMAR_WORD_UTILS_H_ */
