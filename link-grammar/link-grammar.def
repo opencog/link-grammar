@@ -165,5 +165,6 @@ build_effective_dist
 prune_match
 lg_strlcpy
 lg_compute_disjunct_strings
+lg_expand_disjunct_list
 object_open
 do_match

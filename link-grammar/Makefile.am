@@ -78,6 +78,7 @@ liblink_grammar_la_SOURCES =        \
 	count.c                          \
 	disjuncts.c                      \
 	error.c                          \
+	expand.c                         \
 	extract-links.c                  \
 	fast-match.c                     \
 	idiom.c                          \
@@ -112,6 +113,7 @@ liblink_grammar_la_SOURCES =        \
 	count.h                          \
 	disjuncts.h                      \
 	error.h                          \
+	expand.h                         \
 	externs.h                        \
 	extract-links.h                  \
 	fast-match.h                     \

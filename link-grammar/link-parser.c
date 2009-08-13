@@ -53,6 +53,7 @@
 #include <link-grammar/error.h>
 
 #include "command-line.h"
+#include "expand.h"
 
 #define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
@@ -621,13 +622,24 @@ int main(int argc, char * argv[])
 		if (num_linkages < 0) continue;
 
 		/* Now parse with null links */
-		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts))) {
+		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
+		{
 			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
+
+// quickie hack for now ... 
+if (verbosity > 0) fprintf(stdout, "Expanding disjunct set.\n");
+parse_options_set_disjunct_costf(opts, 2.9f);
+lg_expand_disjunct_list(sent);
+num_linkages = sentence_parse(sent, opts);
+if (num_linkages == 0)
+{
+
 			if (parse_options_get_allow_null(opts)) {
 				parse_options_set_min_null_count(opts, 1);
 				parse_options_set_max_null_count(opts, sentence_length(sent));
 				num_linkages = sentence_parse(sent, opts);
 			}
+}
 		}
 
 		if (parse_options_timer_expired(opts)) {
