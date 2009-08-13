@@ -282,20 +282,6 @@ static Clause * build_clause(Exp *e)
 #ifdef DEBUG
 /* Misc printing functions, useful for debugging */
 
-static void print_connector_list(Connector * e)
-{
-	for (;e != NULL; e=e->next)
-	{
-		printf("%s",e->string);
-		if (e->label != NORMAL_LABEL) {
-			printf("%3d", e->label);
-		} else {
-			printf("   ");
-		}
-		if (e->next != NULL) printf(" ");
-	}
-}
-
 static void print_Tconnector_list(Tconnector * e)
 {
 	for (;e != NULL; e=e->next) {
@@ -313,6 +299,20 @@ static void print_clause_list(Clause * c)
 		printf("(%4.2f, %4.2f) ", c->cost, c->maxcost);
 		print_Tconnector_list(c->c);
 		printf("\n");
+	}
+}
+
+static void print_connector_list(Connector * e)
+{
+	for (;e != NULL; e=e->next)
+	{
+		printf("%s",e->string);
+		if (e->label != NORMAL_LABEL) {
+			printf("%3d", e->label);
+		} else {
+			printf("   ");
+		}
+		if (e->next != NULL) printf(" ");
 	}
 }
 
@@ -401,10 +401,13 @@ static Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff)
  */
 Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 {
+	Disjunct *dj;
 	X_node x;
 	x.exp = dn->exp;
 	x.string = dn->string;
-	return build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+	dj = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+	/* print_disjunct_list(dj); */
+	return dj;
 }
 
 #ifdef DEBUG
