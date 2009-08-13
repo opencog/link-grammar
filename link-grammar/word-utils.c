@@ -136,7 +136,9 @@ int size_of_expression(Exp * e)
 	return size;
 }
 
-/* Build a copy of the given expression (don't copy strings, of course) */
+/** 
+ * Build a copy of the given expression (don't copy strings, of course)
+ */
 static E_list * copy_E_list(E_list * l);
 Exp * copy_Exp(Exp * e)
 {
@@ -155,7 +157,6 @@ static E_list * copy_E_list(E_list * l)
 	E_list * nl;
 	if (l == NULL) return NULL;
 	nl = (E_list *) xalloc(sizeof(E_list));
-	*nl = *l;	/* not necessary -- both fields will be built below */
 	nl->next = copy_E_list(l->next);
 	nl->e = copy_Exp(l->e);
 	return nl;

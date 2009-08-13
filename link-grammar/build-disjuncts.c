@@ -407,6 +407,49 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 	return build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
 }
 
+#ifdef DEBUG
+
+/* Semi-functional, semi-broken print routine.
+ * Prints, but its not very pretty.
+ */
+static void print_Exp(Exp *e)
+{
+	int i, icost;
+	E_list *l;
+
+	if (e == NULL) return;
+	icost = e->cost;
+	for (i=0; i<icost; i++) printf ("[");
+	if (e->type == CONNECTOR_type)
+	{
+		if (e->multi) printf("@");
+		printf("%s%c", e->u.string, e->dir);
+	}
+	else if (e->type == AND_type)
+	{
+		printf ("(");
+		l = e->u.l;
+		while(l)
+		{
+			print_Exp(l->e);
+			l = l->next;
+		}
+		printf (") & ");
+	}
+	else
+	{
+		l = e->u.l;
+		while(l)
+		{
+			print_Exp(l->e);
+			if (l->next) printf (" or ");
+			l = l->next;
+		}
+	}
+	for (i=0; i<icost; i++) printf ("]");
+}
+#endif /* DEBUG */
+
 /**
  * build_word_expressions() -- build list of expressions for a word
  *

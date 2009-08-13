@@ -237,13 +237,13 @@ typedef struct E_list_struct E_list;
 
 struct Exp_struct
 {
-    Exp * next;
-    char type;            /* one of three types, see above */
+    Exp * next; /* Used only for mem management,for freeing */
+    char type;  /* One of three types, see above */
     char dir;   /* '-' means to the left, '+' means to right (for connector) */
     char multi; /* TRUE if a multi-connector (for connector)  */
     union {
-        E_list * l;       /* only needed for non-terminals */
-        const char * string;    /* only needed if it's a connector */
+        E_list * l;           /* only needed for non-terminals */
+        const char * string;  /* only needed if it's a connector */
     } u;
     float cost;   /* The cost of using this expression.
                      Only used for non-terminals */
