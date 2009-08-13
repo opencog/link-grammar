@@ -17,13 +17,14 @@
 
 #include "api-structures.h"
 #include "expand.h"
+#include "disjunct-utils.h"
 #include "word-utils.h"
 
 /* ========================================================= */
 
 static Disjunct * build_expansion_disjuncts(X_node *x)
 {
-	// printf("Expanding ... \n");
+	// printf("Expanding ... %s \n", x->string);
 	return NULL;
 }
 

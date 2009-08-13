@@ -10,6 +10,9 @@ is the SQLite database; it has been choosen because it is "administration
 -free" for the user, and because its license is compatbile with the
 current link-grammar license.
 
+The data tables needed to operate this stuff can be downloaded from the
+web. See the main README file for download details.
+
 Disjuncts Table
 ---------------
 The disjuncts.db database contains two tables. The first records the 
@@ -70,11 +73,29 @@ cluster. If this allows the parse to proceed, then the system will
 have "automatically" discovered a usable parse that is not otherwise
 covered by the existing dictionaries.
 
+CREATE TABLE ClusterMembers (
+	cluster_name TEXT NOT NULL,
+	inflected_word TEXT NOT NULL
+);
+CREATE INDEX iiw ON ClusterMembers (inflected_word);
+
+CREATE TABLE ClusterDisjuncts (
+	cluster_name TEXT NOT NULL,
+	disjunct TEXT NOT NULL,
+	cost FLOAT
+);
+CREATE INDEX icn ON ClusterDisjuncts (cluster_name);
+
+To create these tables:
+1) Perform clustering, a la Siva Reddy scripts.
+2) run data/tools/cluster-pop.pl
 
 Notes:
 ------
-Review the contents of opencog/nlp/wsd-post/README. That README explains
-the data processing pipleine in detail. In breif:
+Go to http://opencog.org/ and download the source code. Then review the 
+contents of opencog/nlp/wsd-post/README. That README explains the data 
+processing pipleine used to create the word-senses table, and the
+disjunct-frequency table. To summarize, in breif:
 
 Compute the marginal and conditional probabilities for the Disjuncts
 table by running the 

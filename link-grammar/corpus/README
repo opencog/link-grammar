@@ -8,4 +8,7 @@ frequency statistics from an SQL database. The SQLite database engine
 is by default because it is "administration-free" for the user, and
 because its license is compatbile with the current link-grammar license.
 
+This directory also contains code for "broadening" word linakges.
+
+See data/sql/README for more info.
 
