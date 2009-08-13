@@ -254,12 +254,15 @@ void lg_corpus_score(Sentence sent, Linkage_info *lifo)
 	 * word 0. */
 	for (w=1; w<nwords; w++)
 	{
-		/* If the word is not inflected, then sent->word[w].d is NULL */
-		if (sent->word[w].d)
-			infword = sent->word[w].d->string;
-		else
-			infword = sent->word[w].string;
+		Disjunct *disj = sent->parse_info->chosen_disjuncts[w];
 
+		/* disj is NULL if word did not participate in parse */
+		if (NULL == disj)
+		{
+			tot_score += LOW_SCORE;
+			continue;
+		}
+		infword = disj->string;
 		djstr = lifo->disjunct_list_str[w];
 		tot_score += get_disjunct_score(corp, infword, djstr);
 	}
@@ -277,18 +280,18 @@ double lg_corpus_disjunct_score(Linkage linkage, int w)
 	Sentence sent = linkage->sent;
 	Linkage_info *lifo = linkage->info;
 	Corpus *corp = sent->dict->corpus;
+	Disjunct *disj;
 
 	/* No-op if the database is not open */
-	if (NULL == corp->dbconn) return 999.0;
+	if (NULL == corp->dbconn) return LOW_SCORE;
+
+	/* disj is NULL if word did not participate in parse */
+	disj = sent->parse_info->chosen_disjuncts[w];
+	if (NULL == disj) return LOW_SCORE;
 
 	lg_compute_disjunct_strings(sent, lifo);
 
-	/* If the word is not inflected, then sent->word[w].d is NULL */
-	if (sent->word[w].d)
-		infword = sent->word[w].d->string;
-	else
-		infword = sent->word[w].string;
-
+	infword = disj->string;
 	djstr = lifo->disjunct_list_str[w];
 	score = get_disjunct_score(corp, infword, djstr);
 
@@ -399,11 +402,14 @@ void lg_corpus_linkage_senses(Linkage linkage)
 	 * word 0. */
 	for (w=1; w<nwords; w++)
 	{
-		/* If the word is not inflected, then sent->word[w].d is NULL */
-		if (sent->word[w].d)
-			infword = sent->word[w].d->string;
-		else
-			infword = sent->word[w].string;
+		Disjunct *disj = sent->parse_info->chosen_disjuncts[w];
+
+		/* disj is NULL if word did not participate in parse */
+		if (NULL == disj)
+		{
+			continue;
+		}
+		infword = disj->string;
 
 		lifo->sense_list[w] = lg_corpus_senses(corp, infword, 
 		                        lifo->disjunct_list_str[w], w);
