@@ -589,16 +589,6 @@ int dictionary_is_entity(Dictionary dict, const char * str)
  * conjunction hack -- this needs to be fixed!
  */
 
-/** Returns TRUE if one of the words in the sentence is s */
-int sentence_contains(Sentence sent, const char * s)
-{
-	int w;
-	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, s) == 0) return TRUE;
-	}
-	return FALSE;
-}
-
 /* XXX Extreme hack alert -- English-language words are used
  * completely naked in the C source code!!! FIXME !!!!
  */
@@ -614,32 +604,6 @@ void set_is_conjunction(Sentence sent)
 			(strcmp(s, "but")==0) ||
 			(strcmp(s, "nor")==0);
 	}
-}
-
-/**
- * Return true if the sentence contains a conjunction.  Assumes
- * is_conjunction[] has been initialized.
- */
-int sentence_contains_conjunction(Sentence sent)
-{
-	int w;
-	if (NULL == sent->is_conjunction) return FALSE;
-
-	for (w=0; w<sent->length; w++) {
-		if (sent->is_conjunction[w]) return TRUE;
-	}
-	return FALSE;
-}
-
-/**
- *  Returns true if the range lw...rw inclusive contains a conjunction 
- */
-int conj_in_range(Sentence sent, int lw, int rw)
-{
-	for (;lw < rw+1; lw++) {
-		if (sent->is_conjunction[lw]) return TRUE;
-	}
-	return FALSE;
 }
 
 /* ========================= END OF FILE ============================== */

@@ -195,10 +195,25 @@ static void construct_comma(Sentence sent)
 	}
 }
 
-/* The functions below put the special connectors on certain auxilliary
+
+/** Returns TRUE if one of the words in the sentence is s */
+static int sentence_contains(Sentence sent, const char * s)
+{
+	int w;
+	for (w=0; w<sent->length; w++) {
+		if (strcmp(sent->word[w].string, s) == 0) return TRUE;
+	}
+	return FALSE;
+}
+
+/**
+ * The functions below put the special connectors on certain auxilliary
    words to be used with conjunctions.  Examples: either, neither,
    both...and..., not only...but...
+XXX FIXME: This routine uses "sentenc_contains" to test for explicit 
+English words, and clearly this fails for other langauges!! XXX FIXME!
 */
+
 static void construct_either(Sentence sent)
 {
 	int w;

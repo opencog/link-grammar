@@ -29,6 +29,17 @@ void free_deletable(Sentence sent)
 }
 
 /**
+ *  Returns true if the range lw...rw inclusive contains a conjunction 
+ */
+static int conj_in_range(Sentence sent, int lw, int rw)
+{
+	for (;lw < rw+1; lw++) {
+		if (sent->is_conjunction[lw]) return TRUE;
+	}
+	return FALSE;
+}
+
+/**
  * Initialize the array deletable[i][j] to indicate if the words
  * i+1...j-1 could be non existant in one of the multiple linkages.  This
  * array is used in conjunction_prune and power_prune.  Regions of length
@@ -260,6 +271,22 @@ void free_sentence_expressions(Sentence sent)
   for (i=0; i<sent->length; i++) {
 	free_X_nodes(sent->word[i].x);
   }
+}
+
+
+/**
+ * Return true if the sentence contains a conjunction.  Assumes
+ * is_conjunction[] has been initialized.
+ */
+static int sentence_contains_conjunction(Sentence sent)
+{
+	int w;
+	if (NULL == sent->is_conjunction) return FALSE;
+
+	for (w=0; w<sent->length; w++) {
+		if (sent->is_conjunction[w]) return TRUE;
+	}
+	return FALSE;
 }
 
 void free_sentence_disjuncts(Sentence sent)

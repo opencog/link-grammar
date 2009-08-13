@@ -433,6 +433,13 @@ ADDRESSES
 TODO -- Working Notes:
 ----------------------
    Some working notes.
+
+  Conjunction cleanup: parser has some special-case code for dealing
+    with conjunctions. Unfortunately, some of this code has hard-wired
+    English words in them. These are in construct_either() and in 
+    set_is_conjunction().  Grep for XXX FIXME. These need to be
+    refactored.
+
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,

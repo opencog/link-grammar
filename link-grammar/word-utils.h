@@ -58,15 +58,7 @@ int word_contains(Dictionary dict, const char * word, const char * macro);
 Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
 
 
-void init_x_table(Sentence sent);
-
 /* utility routines moved from parse.c */
-int sentence_contains(Sentence sent, const char * s);
 void set_is_conjunction(Sentence sent);
-int sentence_contains_conjunction(Sentence sent);
-int conj_in_range(Sentence sent, int lw, int rw);
-int max_link_length(Connector * c);
-
-
 
 #endif /* _LINK_GRAMMAR_WORD_UTILS_H_ */
