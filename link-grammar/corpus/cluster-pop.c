@@ -10,6 +10,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sqlite3.h>
 
 
@@ -24,10 +25,30 @@ int main (int argc, char * argv[])
 	{
 		fprintf(stderr, "Error: cannot open the database\n");
 		sqlite3_close(dbconn);
+		exit(1);
 	}
-#if 0
 
-#endif
+	sqlite3_stmt *cluname_query;
+	rc = sqlite3_prepare_v2(dbconn,
+		"SELECT DISTINCT cluster_name FROM ClusterMembers;",
+		-1, &cluname_query, NULL);
+
+	if (rc != SQLITE_OK)
+	{
+		fprintf(stderr, "Error: cannot prepare first stmt\n");
+		sqlite3_close(dbconn);
+		exit(1);
+	}
+
+	while(1)
+	{
+		rc = sqlite3_step(cluname_query);
+		if (rc != SQLITE_ROW) break;
+
+		const char * cluname = sqlite3_column_text(cluname_query,0);
+
+printf("got on %s\n", cluname);
+	}
 
 	sqlite3_close(dbconn);
 	return 0;

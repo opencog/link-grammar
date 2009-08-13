@@ -91,7 +91,7 @@ To create these tables:
 2) create sqlite3 database "clusters.db"
 3) crete above tables and indexes
 4) run data/tools/cluster-pop.pl to populate the first table.
-5) run ...
+5) run link-grammar/corpus/cluster-pop to populate the second table.
 
 Notes:
 ------
