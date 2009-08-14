@@ -19,12 +19,16 @@
 #include "expand.h"
 #include "disjunct-utils.h"
 #include "word-utils.h"
+#include "corpus/cluster.h"
 
 /* ========================================================= */
 
-static Disjunct * build_expansion_disjuncts(X_node *x)
+static Disjunct * build_expansion_disjuncts(Cluster *clu, X_node *x)
 {
 	printf("Expanding ... %s \n", x->string);
+	
+	lg_cluster_get_disjuncts(clu, x->string);
+
 	return NULL;
 }
 
@@ -34,16 +38,19 @@ void lg_expand_disjunct_list(Sentence sent)
 {
 	int w;
 
+	Cluster *clu = lg_cluster_new();
+
 	for (w = 0; w < sent->length; w++)
 	{
 		X_node * x;
 		Disjunct * d = sent->word[w].d;
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
-			Disjunct *dx = build_expansion_disjuncts(x);
+			Disjunct *dx = build_expansion_disjuncts(clu, x);
 			d = catenate_disjuncts(dx, d);
 		}
 		sent->word[w].d = d;
 	}
+	lg_cluster_delete(clu);
 }
 

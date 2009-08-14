@@ -13,6 +13,7 @@
 #include <string.h>
 #include <sqlite3.h>
 #include "cluster.h"
+#include "../utilities.h"
 
 struct cluster_s
 {
@@ -46,11 +47,11 @@ static void * db_file_open(const char * dbname, void * user_data)
 /**
  * Initialize the cluster statistics subsystem.
  */
-Corpus * lg_cluster_new(void)
+Cluster * lg_cluster_new(void)
 {
 	int rc;
 
-	Corpus *c = (Corpus *) malloc(sizeof(Corpus));
+	Cluster *c = (Cluster *) malloc(sizeof(Cluster));
 	c->clu_query = NULL;
 	c->dj_query = NULL;
 	c->errmsg = NULL;
@@ -107,7 +108,7 @@ Corpus * lg_cluster_new(void)
 /**
  * lg_cluster_delete -- shut down the cluster statistics subsystem.
  */ 
-void lg_cluster_delete(Corpus *c)
+void lg_cluster_delete(Cluster *c)
 {
 	if (NULL == c) return;
 
@@ -138,6 +139,38 @@ void lg_cluster_delete(Corpus *c)
 }
 
 /* ========================================================= */
+
+Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
+{
+	Disjunct *djl = NULL;
+	int rc;
+
+	/* Look for a cluster containing this word */
+	rc = sqlite3_bind_text(c->clu_query, 1, wrd, -1, SQLITE_STATIC);
+	rc = sqlite3_step(c->clu_query);
+	if (rc != SQLITE_ROW) goto noclust;
+
+	/* Get the cluster name, and look for the disjuncts */
+	const char * cluname = sqlite3_column_text(c->clu_query,0);
+	rc = sqlite3_bind_text(c->dj_query, 1, cluname, -1, SQLITE_STATIC);
+
+	while(1)
+	{
+		rc = sqlite3_step(c->dj_query);
+		if (rc != SQLITE_ROW) break;
+		const char * djs = sqlite3_column_text(c->dj_query,0);
+		double cost = sqlite3_column_double(c->dj_query,1);
+
+printf ("duuude found %s %s at cost=%f\n", wrd, djs, cost);
+	}
+	sqlite3_reset(c->dj_query);
+	sqlite3_clear_bindings(c->dj_query);
+
+noclust:
+	sqlite3_reset(c->clu_query);
+	sqlite3_clear_bindings(c->clu_query);
+	return djl;
+}
 
 
 /* ======================= END OF FILE ===================== */

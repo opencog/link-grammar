@@ -65,6 +65,7 @@ typedef struct pp_knowledge_s pp_knowledge;
 
 typedef struct corpus_s Corpus;
 typedef struct sense_s Sense;
+typedef struct cluster_s Cluster;
 
 #endif
 
