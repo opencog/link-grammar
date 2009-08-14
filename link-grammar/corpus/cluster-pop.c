@@ -48,11 +48,12 @@ int main (int argc, char * argv[])
 
 	if (rc != SQLITE_OK)
 	{
-		fprintf(stderr, "Error: cannot prepare first stmt\n");
+		fprintf(stderr, "Error: cannot prepare cluster-name stmt\n");
 		sqlite3_close(dbconn);
 		exit(1);
 	}
 
+	/* ---- */
 	sqlite3_stmt *cluword_query;
 	rc = sqlite3_prepare_v2(dbconn,
 		"SELECT inflected_word FROM ClusterMembers WHERE cluster_name = ?;",
@@ -60,7 +61,20 @@ int main (int argc, char * argv[])
 
 	if (rc != SQLITE_OK)
 	{
-		fprintf(stderr, "Error: cannot prepare first stmt\n");
+		fprintf(stderr, "Error: cannot prepare cluword select stmt\n");
+		sqlite3_close(dbconn);
+		exit(1);
+	}
+
+	/* ---- */
+	sqlite3_stmt *cludelete;
+	rc = sqlite3_prepare_v2(dbconn,
+		"DELETE FROM ClusterMembers WHERE cluster_name = ?;",
+		-1, &cludelete, NULL);
+
+	if (rc != SQLITE_OK)
+	{
+		fprintf(stderr, "Error: cannot prepare cluster delete stmt\n");
 		sqlite3_close(dbconn);
 		exit(1);
 	}
@@ -147,7 +161,7 @@ int main (int argc, char * argv[])
 			while(d)
 			{
 				char * sdj = print_one_disjunct(d);
-				printf("duude %s  -- %s\n", cluname, sdj);
+				// printf("duude %s  -- %s\n", cluname, sdj);
 				free(sdj);
 				d = d->next;
 			}
@@ -158,6 +172,13 @@ int main (int argc, char * argv[])
 		else
 		{
 			printf("\tDeleting pointless cluster %s\n", cluname);
+			rc = sqlite3_step(cludelete);
+			if (rc != SQLITE_DONE)
+			{
+				printf("Error: unexpected return value %d on delete!\n", rc);
+				exit(1);
+			}
+			sqlite3_reset(cludelete);
 		}
 
 		free_disjuncts(dj_union);
