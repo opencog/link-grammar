@@ -227,4 +227,39 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 	return d;
 }
 
+/* ============================================================= */
+
+/* Return the stringified disjunct.
+ * Be sure to free the string upon return.
+ */
+
+static char * prt_con(Connector *c, char * p, char dir)
+{
+	size_t n;
+
+	if (NULL == c) return p;
+	p = prt_con (c->next, p, dir);
+
+	if (c->multi)
+	{
+		n = sprintf(p, "@%s%c ", c->string, dir);
+	}
+	else
+	{
+		n = sprintf(p, "%s%c ", c->string, dir);
+	}
+	return p+n;
+}
+
+char * print_one_disjunct(Disjunct *dj)
+{
+	char buff[MAX_LINE];
+	char * p = buff;
+
+	p = prt_con(dj->left, p, '-');
+	p = prt_con(dj->right, p, '+');
+	
+	return strdup(buff);
+}
+
 /* ========================= END OF FILE ============================== */

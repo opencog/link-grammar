@@ -173,3 +173,4 @@ free_disjuncts
 eliminate_duplicate_disjuncts
 catenate_disjuncts
 count_disjuncts
+print_one_disjunct

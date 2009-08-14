@@ -22,5 +22,6 @@ int count_disjuncts(Disjunct *);
 Disjunct * copy_disjunct(Disjunct * );
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct * );
+char * print_one_disjunct(Disjunct *);
 
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */

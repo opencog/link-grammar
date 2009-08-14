@@ -142,6 +142,16 @@ int main (int argc, char * argv[])
 		if (do_keep)
 		{
 			printf("\tWill record %s of %d disjuncts\n", cluname, cnt);
+
+			Disjunct *d = dj_union;
+			while(d)
+			{
+				char * sdj = print_one_disjunct(d);
+				printf("duude %s  -- %s\n", cluname, sdj);
+				free(sdj);
+				d = d->next;
+			}
+
 			rec_cnt ++;
 			dj_cnt += cnt;
 		}
