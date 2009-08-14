@@ -19,6 +19,7 @@
 #include "../disjunct-utils.h"
 #include "../link-includes.h"
 #include "../read-dict.h"
+#include "../structures.h"
 
 int main (int argc, char * argv[])
 {
@@ -74,6 +75,10 @@ int main (int argc, char * argv[])
 	}
 
 	/* Loop over all cluster names */
+	int clu_cnt = 0;
+	int rec_cnt = 0;
+	int dj_cnt = 0;
+	int wrd_cnt = 0;
 	while(1)
 	{
 		rc = sqlite3_step(cluname_query);
@@ -82,6 +87,7 @@ int main (int argc, char * argv[])
 		const char * cluname = sqlite3_column_text(cluname_query,0);
 
 		Disjunct *dj_union = NULL;
+		int initial_cnt = -1;
 
 		printf("Info: Processing cluster %s\n", cluname);
 		rc = sqlite3_bind_text(cluword_query, 1, cluname, -1, SQLITE_STATIC);
@@ -90,17 +96,38 @@ int main (int argc, char * argv[])
 			rc = sqlite3_step(cluword_query);
 			if (rc != SQLITE_ROW) break;
 			const char * cluword = sqlite3_column_text(cluword_query,0);
-			printf("\tprocessing word %s\n", cluword);
 
 			Dict_node *dn = dictionary_lookup_list(dict, cluword);
 			if (NULL == dn) continue;
 
 			Disjunct *dj = build_disjuncts_for_dict_node(dn);
+			Disjunct *d = dj;
+			int cnt = 0;
+			while(d)
+			{
+				d->string = cluword;
+				d = d->next;
+				cnt ++;
+			}
+			if (initial_cnt < 0) initial_cnt = cnt;
 			dj_union = catenate_disjuncts(dj_union, dj);
 			dj_union = eliminate_duplicate_disjuncts(dj_union);
 
-			int cnt = count_disjuncts(dj_union);
-			printf ("--- union now has %d disjuncts\n", cnt);
+			printf("\tprocessing word %s; union now has %d disjuncts\n",
+				cluword, cnt);
+			wrd_cnt ++;
+		}
+
+		clu_cnt ++;
+
+		// There's a gain to be had only if the number of disjuncts
+		// increased ...
+		int cnt = count_disjuncts(dj_union);
+		if (initial_cnt < cnt)
+		{
+			printf("\tWill record %s\n", cluname);
+			rec_cnt ++;
+			dj_cnt += cnt;
 		}
 
 		free_disjuncts(dj_union);
@@ -113,6 +140,8 @@ int main (int argc, char * argv[])
 	sqlite3_close(dbconn);
 
 	dictionary_delete(dict);
+
+	printf("Examined %d clusters, recorded %d\n", clu_cnt, rec_cnt);
 
 	return 0;
 }
