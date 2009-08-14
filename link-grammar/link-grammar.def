@@ -169,3 +169,6 @@ object_open
 do_match
 dictionary_lookup_list
 build_disjuncts_for_dict_node
+free_disjuncts
+eliminate_duplicate_disjuncts
+catenate_disjuncts

@@ -9,11 +9,13 @@
  * Copyright (c) 2009 Linas Vepstas <linasvepstas@gmail.com>
  */
 
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sqlite3.h>
 
 #include "../build-disjuncts.h"
+#include "../externs.h"
 #include "../disjunct-utils.h"
 #include "../link-includes.h"
 #include "../read-dict.h"
@@ -23,6 +25,8 @@ int main (int argc, char * argv[])
 	sqlite3 *dbconn;
 
 	const char * dbname = "../../data/sql/clusters.db";
+
+	setlocale(LC_CTYPE, "en_US.UTF-8");
 
 	/* Open the database for update */
 	int rc = sqlite3_open_v2(dbname, &dbconn, SQLITE_OPEN_READWRITE, NULL);
@@ -79,19 +83,25 @@ int main (int argc, char * argv[])
 
 		Disjunct *dj_union = NULL;
 
-printf("got on %s\n", cluname);
+		printf("Info: Processing cluster %s\n", cluname);
 		rc = sqlite3_bind_text(cluword_query, 1, cluname, -1, SQLITE_STATIC);
 		while(1)
 		{
 			rc = sqlite3_step(cluword_query);
 			if (rc != SQLITE_ROW) break;
 			const char * cluword = sqlite3_column_text(cluword_query,0);
-printf("\tgot wrd %s\n", cluword);
+			printf("\tprocessing word %s\n", cluword);
 
 			Dict_node *dn = dictionary_lookup_list(dict, cluword);
+			if (NULL == dn) continue;
 
 			Disjunct *dj = build_disjuncts_for_dict_node(dn);
+			dj_union = catenate_disjuncts(dj_union, dj);
+			dj_union = eliminate_duplicate_disjuncts(dj_union);
+
 		}
+
+		free_disjuncts(dj_union);
 		sqlite3_reset(cluword_query);
 		sqlite3_clear_bindings(cluword_query);
 	}

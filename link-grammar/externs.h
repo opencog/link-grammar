@@ -10,12 +10,13 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-/* from utilities.c */
-extern int verbosity;                 /* the verbosity level for error messages */
 
-#define RTSIZE 256
+/* verbosity global is held in utilities.c */
+extern int verbosity;          /* the verbosity level for error messages */
+
 /* size of random table for computing the
    hash functions.  must be a power of 2 */
+#define RTSIZE 256
 
 extern unsigned int randtable[RTSIZE];   /* random table for hashing */
 
