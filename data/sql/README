@@ -88,10 +88,14 @@ CREATE INDEX icn ON ClusterDisjuncts (cluster_name);
 
 To create these tables:
 1) Perform clustering, a la Siva Reddy scripts.
-2) create sqlite3 database "clusters.db"
-3) crete above tables and indexes
-4) run data/tools/cluster-pop.pl to populate the first table.
-5) run link-grammar/corpus/cluster-pop to populate the second table.
+2) Create sqlite3 database "clusters.db" in the data/sql directory
+3) Create above tables and indexes
+4) Run data/tools/cluster-pop.pl to populate the first table.
+5) Run link-grammar/corpus/cluster-pop to populate the second table.
+
+A recent version has this table at 172MBytes.
+
+To use these tables:
 
 Notes:
 ------

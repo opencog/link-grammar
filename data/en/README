@@ -107,6 +107,12 @@ real	3m42.396s
 user	3m35.157s
 
 recorded 628
+recorded 622
+
+Examined 1165 clusters, recorded 622
+Examined 12952 words, and 2239866 disjuncts
+Average 11.117597 words/cluster; average 3601.070740 dj's/recored-cluster
+Got 74 mismatch warnings
 
 
 

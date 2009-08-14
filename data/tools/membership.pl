@@ -21,6 +21,11 @@ while(<>)
 		$cnt = 0;
 		next;
 	}
+
+	# XXXXXXXXXXXXXXXXXXXXXXXx Note: the grep here is buggy,
+	# since it will return postive hits for e.g. parcel.n 
+	# vs. "parceling" rather than the intended grep where the period is
+	# escaped.  So use with caution!
 	if (/^	(.*)$/)
 	{
 		$wrd = $1;
