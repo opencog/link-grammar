@@ -479,5 +479,3 @@ void lg_sense_delete(Linkage_info *lifo)
 }
 
 /* ======================= END OF FILE ===================== */
-
-

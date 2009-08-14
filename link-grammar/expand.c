@@ -24,7 +24,7 @@
 
 static Disjunct * build_expansion_disjuncts(X_node *x)
 {
-	// printf("Expanding ... %s \n", x->string);
+	printf("Expanding ... %s \n", x->string);
 	return NULL;
 }
 

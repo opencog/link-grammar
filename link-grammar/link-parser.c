@@ -626,7 +626,7 @@ int main(int argc, char * argv[])
 		{
 			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
 
-// quickie hack for now ... 
+// XXX quickie hack for now ... 
 if (verbosity > 0) fprintf(stdout, "Expanding disjunct set.\n");
 parse_options_set_disjunct_costf(opts, 2.9f);
 lg_expand_disjunct_list(sent);
