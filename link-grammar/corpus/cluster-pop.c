@@ -79,6 +79,20 @@ int main (int argc, char * argv[])
 		exit(1);
 	}
 
+	/* ---- */
+	sqlite3_stmt *djinsert;
+	rc = sqlite3_prepare_v2(dbconn,
+		"INSERT INTO ClusterDisjuncts (cluster_name, disjunct, cost) "
+		"VALUES (?,?,?);",
+		-1, &djinsert, NULL);
+
+	if (rc != SQLITE_OK)
+	{
+		fprintf(stderr, "Error: cannot prepare dj insert stmt\n");
+		sqlite3_close(dbconn);
+		exit(1);
+	}
+
 	/* ------------------------------------------------- */
 	/* Open the dictionary */
 	Dictionary dict = dictionary_create_default_lang();
@@ -94,6 +108,7 @@ int main (int argc, char * argv[])
 	int dj_cnt = 0;
 	int wrd_cnt = 0;
 	int warn_cnt = 0;
+	int del_cnt = 0;
 	while(1)
 	{
 		rc = sqlite3_step(cluname_query);
@@ -152,9 +167,9 @@ int main (int argc, char * argv[])
 
 		clu_cnt ++;
 
-		int cnt = count_disjuncts(dj_union);
 		if (do_keep)
 		{
+			int cnt = count_disjuncts(dj_union);
 			printf("\tWill record %s of %d disjuncts\n", cluname, cnt);
 
 			Disjunct *d = dj_union;
@@ -162,6 +177,20 @@ int main (int argc, char * argv[])
 			{
 				char * sdj = print_one_disjunct(d);
 				// printf("duude %s  -- %s\n", cluname, sdj);
+				
+				double cost = d->cost;
+				rc = sqlite3_bind_text(djinsert, 1, cluname, -1, SQLITE_STATIC);
+				rc = sqlite3_bind_text(djinsert, 2, sdj, -1, SQLITE_STATIC);
+				rc = sqlite3_bind_double(djinsert, 3, cost);
+
+				rc = sqlite3_step(djinsert);
+				if (rc != SQLITE_DONE)
+				{
+					printf("Error: unexpected return value %d on insert!\n", rc);
+					exit(1);
+				}
+				sqlite3_reset(djinsert);
+				sqlite3_clear_bindings(djinsert);
 				free(sdj);
 				d = d->next;
 			}
@@ -172,6 +201,7 @@ int main (int argc, char * argv[])
 		else
 		{
 			printf("\tDeleting pointless cluster %s\n", cluname);
+			rc = sqlite3_bind_text(cludelete, 1, cluname, -1, SQLITE_STATIC);
 			rc = sqlite3_step(cludelete);
 			if (rc != SQLITE_DONE)
 			{
@@ -179,6 +209,8 @@ int main (int argc, char * argv[])
 				exit(1);
 			}
 			sqlite3_reset(cludelete);
+			sqlite3_clear_bindings(cludelete);
+			del_cnt ++;
 		}
 
 		free_disjuncts(dj_union);
@@ -200,6 +232,7 @@ int main (int argc, char * argv[])
 		avg_wrd, avg_dj);
 
 	printf("Got %d mismatch warnings\n", warn_cnt);
+	printf("Deleted %d pointless clusters\n", del_cnt);
 
 	return 0;
 }
