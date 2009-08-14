@@ -99,6 +99,8 @@ int main (int argc, char * argv[])
 			dj_union = catenate_disjuncts(dj_union, dj);
 			dj_union = eliminate_duplicate_disjuncts(dj_union);
 
+			int cnt = count_disjuncts(dj_union);
+			printf ("--- union now has %d disjuncts\n", cnt);
 		}
 
 		free_disjuncts(dj_union);

@@ -69,7 +69,7 @@ Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
 }
 
 /** Returns the number of disjuncts in the list pointed to by d */
-static int count_disjuncts(Disjunct * d)
+int count_disjuncts(Disjunct * d)
 {
 	int count = 0;
 	for (; d != NULL; d = d->next)
@@ -187,7 +187,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 	count = 0;
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(d)));
 
-	while (d!=NULL)
+	while (d != NULL)
 	{
 		dn = d->next;
 		h = old_hash_disjunct(dt, d);

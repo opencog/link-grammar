@@ -172,3 +172,4 @@ build_disjuncts_for_dict_node
 free_disjuncts
 eliminate_duplicate_disjuncts
 catenate_disjuncts
+count_disjuncts
