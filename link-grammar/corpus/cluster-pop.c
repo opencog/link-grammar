@@ -79,6 +79,7 @@ int main (int argc, char * argv[])
 	int rec_cnt = 0;
 	int dj_cnt = 0;
 	int wrd_cnt = 0;
+	int warn_cnt = 0;
 	while(1)
 	{
 		rc = sqlite3_step(cluname_query);
@@ -87,7 +88,7 @@ int main (int argc, char * argv[])
 		const char * cluname = sqlite3_column_text(cluname_query,0);
 
 		Disjunct *dj_union = NULL;
-		int initial_cnt = -1;
+		int do_keep = 0;
 
 		printf("Info: Processing cluster %s\n", cluname);
 		rc = sqlite3_bind_text(cluword_query, 1, cluname, -1, SQLITE_STATIC);
@@ -101,6 +102,21 @@ int main (int argc, char * argv[])
 			if (NULL == dn) continue;
 
 			Disjunct *dj = build_disjuncts_for_dict_node(dn);
+			if (strcmp(dj->string, cluword))
+			{
+				if (strncmp(dj->string, cluword, strlen(cluword)))
+				{
+					printf ("Error: asked for %s got %s\n", cluword, dj->string);
+					// exit(1);
+				}
+				else
+				{
+					printf ("Warning: asked for %s got %s\n", cluword, dj->string);
+				}
+				warn_cnt++;
+				free_disjuncts(dj);
+				continue;
+			}
 			Disjunct *d = dj;
 			int cnt = 0;
 			while(d)
@@ -109,25 +125,29 @@ int main (int argc, char * argv[])
 				d = d->next;
 				cnt ++;
 			}
-			if (initial_cnt < 0) initial_cnt = cnt;
 			dj_union = catenate_disjuncts(dj_union, dj);
 			dj_union = eliminate_duplicate_disjuncts(dj_union);
 
-			printf("\tprocessing word %s; union now has %d disjuncts\n",
+			int ucnt = count_disjuncts(dj_union);
+			if (cnt != ucnt) do_keep = 1;
+
+			printf("\tprocessing word %s with %d disjuncts\n",
 				cluword, cnt);
 			wrd_cnt ++;
 		}
 
 		clu_cnt ++;
 
-		// There's a gain to be had only if the number of disjuncts
-		// increased ...
 		int cnt = count_disjuncts(dj_union);
-		if (initial_cnt < cnt)
+		if (do_keep)
 		{
-			printf("\tWill record %s\n", cluname);
+			printf("\tWill record %s of %d disjuncts\n", cluname, cnt);
 			rec_cnt ++;
 			dj_cnt += cnt;
+		}
+		else
+		{
+			printf("\tDeleting pointless cluster %s\n", cluname);
 		}
 
 		free_disjuncts(dj_union);
@@ -142,6 +162,13 @@ int main (int argc, char * argv[])
 	dictionary_delete(dict);
 
 	printf("Examined %d clusters, recorded %d\n", clu_cnt, rec_cnt);
+	printf("Examined %d words, and %d disjuncts\n", wrd_cnt, dj_cnt);
+	float avg_wrd = ((float) wrd_cnt) / clu_cnt;
+	float avg_dj = ((float) dj_cnt) / rec_cnt;
+	printf("Average %f words/cluster; average %f dj's/recored-cluster\n", 
+		avg_wrd, avg_dj);
+
+	printf("Got %d mismatch warnings\n", warn_cnt);
 
 	return 0;
 }

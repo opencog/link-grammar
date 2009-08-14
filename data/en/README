@@ -61,6 +61,55 @@ select inflected_word, disjunct, count, log_cond_probability from disjuncts wher
  warnings.n     | Jp- Dmc-                            |    8.38247973471882 |     3.37772441764546
 
 
+Here's another curious one:
+cluster992
+   banker.n
+   fisherman.n
+   illustrator.n
+   lyricist.n
+   mechanic.n
+   periodical.n
+   psychiatrist.n
+   sculptor.n
+
+all from words.n.1 -- thus does not broaden coverage ... but are very
+nearly all a profession!
+ mechanic.n     | Js- Ds-                              |    13.7642659600825 |     2.88500665850946
+ mechanic.n     | Os- Ds- AN-                          |    7.06177791953084 |     3.84783097573959
+ mechanic.n     | AN+                                  |    6.95599334826693 |     3.86960587427955
+ mechanic.n     | Js- Ds- AN-                          |    6.24886311846786 |     4.02426868916609
+ mechanic.n     | Ost- Ds- R+ Bs+                      |    5.70536887645721 |     4.15554226141072
+
+ fisherman.n    | Ost- Ds-                           |    6.96868003904821 |     3.15873229404902
+ fisherman.n    | Js- Ds-                            |    6.63831343245697 |     3.22880096148911
+ fisherman.n    | Ost- Ds- A-                        |    5.21447241306305 |     3.57709641838825
+ fisherman.n    | AN+                                |    5.15915525704624 |     3.59248284744609
+
+ illustrator.n  | Js- Ds-                     |    23.8048364557326 |     2.60514384269322
+ illustrator.n  | Ost- Ds-                    |    16.1435659294952 |     3.55061043888198
+ illustrator.n  | Ost- Ds- A-                 |    12.5473636660028 |      3.5717400794719
+ illustrator.n  | Ost- Ds- R+ Bs+             |    6.37835476174951 |     4.43506613246927
+ illustrator.n  | Ost- Ds- AN-                |    6.57567423582078 |     4.43628494235792
+ illustrator.n  | AN+                         |    5.92789142578842 |     4.54073145072105
+
+ periodical.n   | AN+                            |    13.523933645105 |     2.25884735662492
+ periodical.n   | Ost- Ds- R+ Bs+                |   4.69391736388206 |     3.78549785079099
+ periodical.n   | Os- Ds-                        |   3.54950597882271 |     4.18867205040734
+ periodical.n   | Os- Ds- Mv+                    |    4.4908520579338 |     4.32151671611172
+ periodical.n   | Js- Ds-                        |   3.46312434598804 |     4.51594109897193
+
+
+Examined 1165 clusters, recorded 626
+Examined 13026 words, and 2218422 disjuncts
+Average 11.181116 words/cluster; average 3543.805112 dj's/recored-cluster
+
+real	3m42.396s
+user	3m35.157s
+
+recorded 628
+
+
+
 
 To get the full-length list -- 
 
