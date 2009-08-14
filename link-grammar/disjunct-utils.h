@@ -18,9 +18,8 @@
 
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
-Disjunct *  copy_disjunct(Disjunct * );
-Disjunct *  catenate_disjuncts(Disjunct *, Disjunct *);
+Disjunct * copy_disjunct(Disjunct * );
+Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct * );
-
 
 #endif /* _LINK_GRAMMAR_DISJUNCT_UTILS_H_ */

@@ -167,3 +167,5 @@ lg_compute_disjunct_strings
 lg_expand_disjunct_list
 object_open
 do_match
+dictionary_lookup_list
+build_disjuncts_for_dict_node

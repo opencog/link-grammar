@@ -13,6 +13,10 @@
 #include <stdlib.h>
 #include <sqlite3.h>
 
+#include "../build-disjuncts.h"
+#include "../disjunct-utils.h"
+#include "../link-includes.h"
+#include "../read-dict.h"
 
 int main (int argc, char * argv[])
 {
@@ -28,6 +32,9 @@ int main (int argc, char * argv[])
 		sqlite3_close(dbconn);
 		exit(1);
 	}
+
+	/* ------------------------------------------------- */
+	/* Prepare assorted queries */
 
 	sqlite3_stmt *cluname_query;
 	rc = sqlite3_prepare_v2(dbconn,
@@ -53,6 +60,15 @@ int main (int argc, char * argv[])
 		exit(1);
 	}
 
+	/* ------------------------------------------------- */
+	/* Open the dictionary */
+	Dictionary dict = dictionary_create_default_lang();
+	if (NULL == dict)
+	{
+		fprintf(stderr, "Error: couldn't read the dict\n");
+		exit(1);
+	}
+
 	/* Loop over all cluster names */
 	while(1)
 	{
@@ -60,6 +76,8 @@ int main (int argc, char * argv[])
 		if (rc != SQLITE_ROW) break;
 
 		const char * cluname = sqlite3_column_text(cluname_query,0);
+
+		Disjunct *dj_union = NULL;
 
 printf("got on %s\n", cluname);
 		rc = sqlite3_bind_text(cluword_query, 1, cluname, -1, SQLITE_STATIC);
@@ -69,6 +87,10 @@ printf("got on %s\n", cluname);
 			if (rc != SQLITE_ROW) break;
 			const char * cluword = sqlite3_column_text(cluword_query,0);
 printf("\tgot wrd %s\n", cluword);
+
+			Dict_node *dn = dictionary_lookup_list(dict, cluword);
+
+			Disjunct *dj = build_disjuncts_for_dict_node(dn);
 		}
 		sqlite3_reset(cluword_query);
 		sqlite3_clear_bindings(cluword_query);
@@ -77,5 +99,8 @@ printf("\tgot wrd %s\n", cluword);
 	sqlite3_clear_bindings(cluname_query);
 
 	sqlite3_close(dbconn);
+
+	dictionary_delete(dict);
+
 	return 0;
 }

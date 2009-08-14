@@ -1235,7 +1235,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
  * to render this crazy bisected-insertion algo obsoloete, but ..
  * oddly enough, it seems to make the DSW balancing go really fast!
  * Faster than a simple insertion. Go figure. I think this has
- * something to do with the fact that the dicationaries are in
+ * something to do with the fact that the dictionaries are in
  * alphabetical order! This subdivision helps randomize a bit.
  */
 static void insert_list(Dictionary dict, Dict_node * p, int l)

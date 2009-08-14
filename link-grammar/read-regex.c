@@ -86,7 +86,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 			if (i > MAX_REGEX_NAME_LENGTH-1)
 			{
 				prt_error("Error: Regex name too long on line %d\n", line);
-				return 0;
+				goto failure;
 			}
 			name[i++] = c;
 			c = fgetc(fp);

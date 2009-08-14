@@ -23,6 +23,7 @@ noinst_PROGRAMS=cluster-pop sniff
 
 cluster_pop_SOURCES = cluster-pop.c
 cluster_pop_LDADD = ${SQLITE3_LIBS}
+cluster_pop_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
 
 sniff_SOURCES = sniff.c
 sniff_LDADD = ${SQLITE3_LIBS}
