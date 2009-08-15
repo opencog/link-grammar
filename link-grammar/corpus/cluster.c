@@ -140,6 +140,18 @@ void lg_cluster_delete(Cluster *c)
 
 /* ========================================================= */
 
+static Exp * make_exp(const char *djstr, double cost)
+{
+#if 0
+	Exp *e = xxx
+	e->type = OR_type;
+	e->dir = xxx + or -
+	e->multi = 1 or 0
+	
+#endif
+	return NULL;
+}
+
 Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 {
 	Disjunct *djl = NULL;
@@ -162,6 +174,8 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 		double cost = sqlite3_column_double(c->dj_query,1);
 
 printf ("duuude found %s %s at cost=%f\n", wrd, djs, cost);
+		/* Start building expressions */
+		make_exp(djs, cost);
 	}
 	sqlite3_reset(c->dj_query);
 	sqlite3_clear_bindings(c->dj_query);

@@ -25,11 +25,10 @@
 
 static Disjunct * build_expansion_disjuncts(Cluster *clu, X_node *x)
 {
+	Disjunct *dj;
 	printf("Expanding ... %s \n", x->string);
-	
-	lg_cluster_get_disjuncts(clu, x->string);
-
-	return NULL;
+	dj = lg_cluster_get_disjuncts(clu, x->string);
+	return dj;
 }
 
 /**
