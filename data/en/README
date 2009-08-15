@@ -114,6 +114,8 @@ Examined 12952 words, and 2239866 disjuncts
 Average 11.117597 words/cluster; average 3601.070740 dj's/recored-cluster
 Got 74 mismatch warnings
 
+fixes w/o: 226           w/: 225
+bilog w/o: 38  w/: 38
 
 
 

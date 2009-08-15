@@ -636,6 +636,7 @@ int main(int argc, char * argv[])
 			{
 				num_linkages = sentence_parse(sent, opts);
 			}
+			if (0 < num_linkages) printf("Got One !!!!!!!!!!!!!!!!!\n");
 		}
 
 		/* Now parse with null links */
