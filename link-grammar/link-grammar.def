@@ -174,3 +174,4 @@ eliminate_duplicate_disjuncts
 catenate_disjuncts
 count_disjuncts
 print_one_disjunct
+build_disjuncts_for_X_node

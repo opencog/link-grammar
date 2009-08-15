@@ -15,6 +15,7 @@
 #include "cluster.h"
 #include "../structures.h"
 #include "../utilities.h"
+#include "../build-disjuncts.h"
 
 struct cluster_s
 {
@@ -153,7 +154,7 @@ static Exp * make_exp(const char *djstr, double cost)
 	if (NULL == sp || 0x0 == sp[1])
 	{
 		e->type = CONNECTOR_type;
-		if ('@' == djstr[0]) e->multi = 1;
+		if ('@' == djstr[0]) { e->multi = 1; djstr++; }
 		size_t len = strlen(djstr) - 1;
 		if (sp) len--;
 		e->u.string = strndup(djstr, len);
@@ -187,6 +188,52 @@ static Exp * make_exp(const char *djstr, double cost)
 	return e;
 }
 
+static Exp * or_exp(Exp *p1, Exp *p2)
+{
+	if (NULL == p2) return p1;
+
+	Exp *e = (Exp *) malloc(sizeof(Exp));
+	e->multi = 0;
+	e->dir = ' ';
+	e->cost = 0.0;
+	e->type = OR_type;
+
+	E_list *l;
+	E_list *lhead = NULL;
+
+	l = (E_list *) malloc(sizeof(E_list));
+	l->next = lhead;
+	l->e = p2;
+	lhead = l;
+	
+	l = (E_list *) malloc(sizeof(E_list));
+	l->next = lhead;
+	l->e = p1;
+	lhead = l;
+
+	e->u.l = lhead;
+	return e;
+}
+
+static void free_exp(Exp *e)
+{
+	if (CONNECTOR_type != e->type)
+	{
+		E_list *l = e->u.l;
+		while(l)
+		{
+			free_exp(l->e);
+			E_list *ln = l->next;
+			free(l);
+			l = ln;
+		}
+		return;
+	}
+
+	free((char *) e->u.string);
+	free(e);
+}
+
 Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 {
 	Disjunct *djl = NULL;
@@ -201,6 +248,8 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 	const char * cluname = sqlite3_column_text(c->clu_query,0);
 	rc = sqlite3_bind_text(c->dj_query, 1, cluname, -1, SQLITE_STATIC);
 
+	/* Create a gian exprssion holding all of the cluster disjuncts */
+	Exp *exps = NULL;
 	while(1)
 	{
 		rc = sqlite3_step(c->dj_query);
@@ -208,10 +257,21 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 		const char * djs = sqlite3_column_text(c->dj_query,0);
 		double cost = sqlite3_column_double(c->dj_query,1);
 
-printf ("duuude found %s %s at cost=%f\n", wrd, djs, cost);
-		/* Start building expressions */
+		/* All expanded disjuncts are costly! */
+		cost += 2.5;
+
+		/* Building expressions */
 		Exp *e = make_exp(djs, cost);
+		exps = or_exp(e, exps);
 	}
+
+printf ("building djs now\n");
+	X_node x;
+	x.exp = exps;
+	x.string = wrd;
+	djl = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+
+	free_exp(exps);
 	sqlite3_reset(c->dj_query);
 	sqlite3_clear_bindings(c->dj_query);
 

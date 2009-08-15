@@ -381,7 +381,7 @@ build_disjunct(Clause * cl, const char * string, float cost_cutoff)
 	return dis;
 }
 
-static Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff)
+Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff)
 {
 	Clause *c ;
 	Disjunct * dis;

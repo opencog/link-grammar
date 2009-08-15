@@ -17,3 +17,5 @@
 void build_sentence_disjuncts(Sentence sent, float cost_cutoff);
 X_node *   build_word_expressions(Dictionary dict, const char *);
 Disjunct * build_disjuncts_for_dict_node(Dict_node *);
+Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff);
+
