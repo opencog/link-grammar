@@ -13,9 +13,10 @@
 #include <string.h>
 #include <sqlite3.h>
 #include "cluster.h"
+#include "../build-disjuncts.h"
+#include "../disjunct-utils.h"
 #include "../structures.h"
 #include "../utilities.h"
-#include "../build-disjuncts.h"
 
 struct cluster_s
 {
@@ -188,6 +189,7 @@ static Exp * make_exp(const char *djstr, double cost)
 	return e;
 }
 
+#if NOT_NEEDED
 static Exp * or_exp(Exp *p1, Exp *p2)
 {
 	if (NULL == p2) return p1;
@@ -214,6 +216,7 @@ static Exp * or_exp(Exp *p1, Exp *p2)
 	e->u.l = lhead;
 	return e;
 }
+#endif
 
 static void free_exp(Exp *e)
 {
@@ -248,8 +251,6 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 	const char * cluname = sqlite3_column_text(c->clu_query,0);
 	rc = sqlite3_bind_text(c->dj_query, 1, cluname, -1, SQLITE_STATIC);
 
-	/* Create a gian exprssion holding all of the cluster disjuncts */
-	Exp *exps = NULL;
 	while(1)
 	{
 		rc = sqlite3_step(c->dj_query);
@@ -262,16 +263,14 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 
 		/* Building expressions */
 		Exp *e = make_exp(djs, cost);
-		exps = or_exp(e, exps);
+		X_node x;
+		x.exp = e;
+		x.string = wrd;
+		Disjunct *dj = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+		djl = catenate_disjuncts(dj, djl);
+		free_exp(e);
 	}
 
-printf ("building djs now\n");
-	X_node x;
-	x.exp = exps;
-	x.string = wrd;
-	djl = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
-
-	free_exp(exps);
 	sqlite3_reset(c->dj_query);
 	sqlite3_clear_bindings(c->dj_query);
 
