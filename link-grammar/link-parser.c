@@ -590,11 +590,13 @@ int main(int argc, char * argv[])
 		}
 
 		if (special_command(input_string, dict)) continue;
-		if (parse_options_get_echo_on(opts)) {
+		if (parse_options_get_echo_on(opts))
+		{
 			printf("%s", input_string);
 		}
 
-		if (parse_options_get_batch_mode(opts)) {
+		if (parse_options_get_batch_mode(opts))
+		{
 			label = strip_off_label(input_string);
 		}
 
@@ -602,8 +604,10 @@ int main(int argc, char * argv[])
 
 		if (sent == NULL) continue;
 
-		if (sentence_length(sent) > parse_options_get_max_sentence_length(opts)) {
-			if (verbosity > 0) {
+		if (sentence_length(sent) > parse_options_get_max_sentence_length(opts))
+		{
+			if (verbosity > 0)
+			{
 				fprintf(stdout,
 				       "Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 					sentence_length(sent), parse_options_get_max_sentence_length(opts));
@@ -627,22 +631,31 @@ int main(int argc, char * argv[])
 			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
 
 // XXX quickie hack for now ... 
-if (verbosity > 0) fprintf(stdout, "Expanding disjunct set.\n");
-parse_options_set_disjunct_costf(opts, 2.9f);
-lg_expand_disjunct_list(sent);
-num_linkages = sentence_parse(sent, opts);
-if (num_linkages == 0)
-{
-
-			if (parse_options_get_allow_null(opts)) {
-				parse_options_set_min_null_count(opts, 1);
-				parse_options_set_max_null_count(opts, sentence_length(sent));
-				num_linkages = sentence_parse(sent, opts);
+// add an option to turn this on and off ... 
+			if (1)
+			{
+				if (verbosity > 0) fprintf(stdout, "Expanding disjunct set.\n");
+				parse_options_set_disjunct_costf(opts, 2.9f);
+				int expanded = lg_expand_disjunct_list(sent);
+printf("duude expanded = %d\n", expanded);
+				if (expanded)
+				{
+					num_linkages = sentence_parse(sent, opts);
+				}
 			}
-}
+			if (num_linkages == 0)
+			{
+				if (parse_options_get_allow_null(opts))
+				{
+					parse_options_set_min_null_count(opts, 1);
+					parse_options_set_max_null_count(opts, sentence_length(sent));
+					num_linkages = sentence_parse(sent, opts);
+				}
+			}
 		}
 
-		if (parse_options_timer_expired(opts)) {
+		if (parse_options_timer_expired(opts))
+		{
 			if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
 		}
 		if (parse_options_memory_exhausted(opts)) {
@@ -651,7 +664,8 @@ if (num_linkages == 0)
 
 		if ((num_linkages == 0) &&
 			parse_options_resources_exhausted(opts) &&
-			parse_options_get_panic_mode(opts)) {
+			parse_options_get_panic_mode(opts))
+		{
 			/* print_total_time(opts); */
 			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
 			parse_options_reset_resources(panic_parse_opts);
@@ -664,10 +678,12 @@ if (num_linkages == 0)
 
 		/* print_total_time(opts); */
 
-		if (parse_options_get_batch_mode(opts)) {
+		if (parse_options_get_batch_mode(opts))
+		{
 			batch_process_some_linkages(label, sent, opts);
 		}
-		else {
+		else
+		{
 			int c = process_some_linkages(sent, opts);
 			if (c == EOF) break;
 		}
@@ -675,7 +691,8 @@ if (num_linkages == 0)
 		sentence_delete(sent);
 	}
 
-	if (parse_options_get_batch_mode(opts)) {
+	if (parse_options_get_batch_mode(opts))
+	{
 		/* print_time(opts, "Total"); */
 		fprintf(stderr,
 				"%d error%s.\n", batch_errors, (batch_errors==1) ? "" : "s");

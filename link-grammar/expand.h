@@ -10,4 +10,4 @@
 /*                                                                       */
 /*************************************************************************/
 
-void lg_expand_disjunct_list(Sentence sent);
+int lg_expand_disjunct_list(Sentence sent);

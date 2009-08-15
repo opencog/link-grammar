@@ -28,18 +28,21 @@ static Disjunct * build_expansion_disjuncts(Cluster *clu, X_node *x)
 	Disjunct *dj;
 	printf("Expanding ... %s \n", x->string);
 	dj = lg_cluster_get_disjuncts(clu, x->string);
-printf("expanded %p\n", dj);
 	return dj;
 }
 
 /**
+ * Increase the number of disjuncts associated to each word in the
+ * sentence by working with word-clusters. Return true if the number
+ * of disjuncts were expanded, else return false.
  */
-void lg_expand_disjunct_list(Sentence sent)
+int lg_expand_disjunct_list(Sentence sent)
 {
 	int w;
 
 	Cluster *clu = lg_cluster_new();
 
+	int expanded = FALSE;
 	for (w = 0; w < sent->length; w++)
 	{
 		X_node * x;
@@ -47,10 +50,18 @@ void lg_expand_disjunct_list(Sentence sent)
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
 			Disjunct *dx = build_expansion_disjuncts(clu, x);
-			d = catenate_disjuncts(dx, d);
+			if (dx)
+			{
+				int cnt = count_disjuncts(d);
+				d = catenate_disjuncts(dx, d);
+				d = eliminate_duplicate_disjuncts(d);
+				if (cnt < count_disjuncts(d)) expanded = TRUE;
+			}
 		}
 		sent->word[w].d = d;
 	}
 	lg_cluster_delete(clu);
+
+	return expanded;
 }
 
