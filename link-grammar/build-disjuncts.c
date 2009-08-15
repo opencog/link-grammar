@@ -394,6 +394,32 @@ static Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff)
 	return dis;
 }
 
+#if DEBUG
+/* There is a much better print_expression elsewhere 
+ * This one is for low-level debug. */
+void prt_exp(Exp *e, int i)
+{
+	if (e == NULL) return;
+
+	for(int j =0; j<i; j++) printf(" ");
+	printf ("type=%d dir=%c multi=%d cost=%f\n", e->type, e->dir, e->multi, e->cost);
+	if (e->type != CONNECTOR_type)
+	{
+		E_list *l = e->u.l;
+		while(l)
+		{
+			prt_exp(l->e, i+2);
+			l = l->next;
+		}
+	}
+	else
+	{
+		for(int j =0; j<i; j++) printf(" ");
+		printf("con=%s\n", e->u.string);
+	}
+}
+#endif
+
 /**
  * Build a list of disjuncts.
  *

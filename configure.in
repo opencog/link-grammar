@@ -72,7 +72,7 @@ dnl ====================================================================
 # needed to get fileno, strdup, etc. and so it needs to be manually 
 # enabled again.
 
-CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_POSIX_C_SOURCE"
+CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_POSIX_C_SOURCE -D_GNU_SOURCE"
 
 AC_ARG_ENABLE( debug,
   [  --enable-debug               compile with debugging flags set],

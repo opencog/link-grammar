@@ -13,6 +13,7 @@
 #include <string.h>
 #include <sqlite3.h>
 #include "cluster.h"
+#include "../structures.h"
 #include "../utilities.h"
 
 struct cluster_s
@@ -142,14 +143,48 @@ void lg_cluster_delete(Cluster *c)
 
 static Exp * make_exp(const char *djstr, double cost)
 {
-#if 0
-	Exp *e = xxx
-	e->type = OR_type;
-	e->dir = xxx + or -
-	e->multi = 1 or 0
+	Exp *e = (Exp *) malloc(sizeof(Exp));
+	e->multi = 0;
+	e->dir = ' ';
+	e->cost = cost;
+
+	/* If its just a single connector, then do just that */
+	char *sp = strchr (djstr, ' '); 
+	if (NULL == sp || 0x0 == sp[1])
+	{
+		e->type = CONNECTOR_type;
+		if ('@' == djstr[0]) e->multi = 1;
+		size_t len = strlen(djstr) - 1;
+		if (sp) len--;
+		e->u.string = strndup(djstr, len);
+		e->dir = djstr[len];
+		return e;
+	}
+
+	/* If there are multiple connectors, and them together */
+	size_t len = sp - djstr;
+	char * tmp = strndup(djstr, len);
+	Exp *p1 = make_exp(tmp, 0.0);
+	free (tmp);
+	Exp *p2 = make_exp(sp+1, 0.0);
+
+	E_list *l;
+	E_list *lhead = NULL;
+
+	l = (E_list *) malloc(sizeof(E_list));
+	l->next = lhead;
+	l->e = p2;
+	lhead = l;
 	
-#endif
-	return NULL;
+	l = (E_list *) malloc(sizeof(E_list));
+	l->next = lhead;
+	l->e = p1;
+	lhead = l;
+
+	e->type = AND_type;
+	e->u.l = lhead;
+	
+	return e;
 }
 
 Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
@@ -175,7 +210,7 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 
 printf ("duuude found %s %s at cost=%f\n", wrd, djs, cost);
 		/* Start building expressions */
-		make_exp(djs, cost);
+		Exp *e = make_exp(djs, cost);
 	}
 	sqlite3_reset(c->dj_query);
 	sqlite3_clear_bindings(c->dj_query);

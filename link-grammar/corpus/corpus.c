@@ -14,6 +14,7 @@
 #include <sqlite3.h>
 #include "corpus.h"
 #include "../api-structures.h"
+#include "../disjuncts.h"
 #include "../utilities.h"
 
 struct corpus_s
