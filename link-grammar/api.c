@@ -93,6 +93,7 @@ Parse_Options parse_options_create(void)
 	po->display_walls = FALSE;
 	po->display_union = FALSE;
 	po->allow_null = TRUE;
+	po->use_cluster_disjuncts = FALSE;
 	po->echo_on = FALSE;
 	po->batch_mode = FALSE;
 	po->panic_mode = FALSE;
@@ -279,6 +280,14 @@ void parse_options_set_allow_null(Parse_Options opts, int dummy) {
 
 int parse_options_get_allow_null(Parse_Options opts) {
 	return opts->allow_null;
+}
+
+void parse_options_set_use_cluster_disjuncts(Parse_Options opts, int dummy) {
+	opts->use_cluster_disjuncts = dummy;
+}
+
+int parse_options_get_use_cluster_disjuncts(Parse_Options opts) {
+	return opts->use_cluster_disjuncts;
 }
 
 void parse_options_set_screen_width(Parse_Options opts, int dummy) {

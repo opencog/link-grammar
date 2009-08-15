@@ -142,6 +142,10 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_allow_null(Parse_Options opts);
 link_public_api(void)
+     parse_options_set_use_cluster_disjuncts(Parse_Options opts, int val);
+link_public_api(int)
+     parse_options_get_use_cluster_disjuncts(Parse_Options opts);
+link_public_api(void)
      parse_options_set_display_walls(Parse_Options opts, int val);
 link_public_api(int)
      parse_options_get_display_walls(Parse_Options opts);

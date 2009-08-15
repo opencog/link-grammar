@@ -86,6 +86,7 @@ struct Parse_Options_s
 	int display_walls;
 	int display_union;            /* print squashed version of linkage with conjunction? */
 	int allow_null;               /* true if we allow null links in parsing */
+	int use_cluster_disjuncts;    /* if true, atttempt using a borader list of disjuncts */
 	int echo_on;                  /* true if we should echo the input sentence */
 	int batch_mode;               /* if true, process sentences non-interactively */
 	int panic_mode;               /* if true, parse in "panic mode" after all else fails */

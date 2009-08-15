@@ -625,32 +625,30 @@ int main(int argc, char * argv[])
 		num_linkages = sentence_parse(sent, opts);
 		if (num_linkages < 0) continue;
 
+		/* Try using a larger list of disjuncts */
+		if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
+		{
+			int expanded;
+			if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
+			parse_options_set_disjunct_costf(opts, 2.9f);
+			expanded = lg_expand_disjunct_list(sent);
+			if (expanded)
+			{
+				num_linkages = sentence_parse(sent, opts);
+			}
+		}
+
 		/* Now parse with null links */
 		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
 		{
 			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
 
-// XXX quickie hack for now ... 
-// add an option to turn this on and off ... 
-			if (1)
+			if (parse_options_get_allow_null(opts))
 			{
-				if (verbosity > 0) fprintf(stdout, "Expanding disjunct set.\n");
-				parse_options_set_disjunct_costf(opts, 2.9f);
-				int expanded = lg_expand_disjunct_list(sent);
-printf("duude expanded = %d\n", expanded);
-				if (expanded)
-				{
-					num_linkages = sentence_parse(sent, opts);
-				}
-			}
-			if (num_linkages == 0)
-			{
-				if (parse_options_get_allow_null(opts))
-				{
-					parse_options_set_min_null_count(opts, 1);
-					parse_options_set_max_null_count(opts, sentence_length(sent));
-					num_linkages = sentence_parse(sent, opts);
-				}
+				/* XXX should use expanded disjunct list here too */
+				parse_options_set_min_null_count(opts, 1);
+				parse_options_set_max_null_count(opts, sentence_length(sent));
+				num_linkages = sentence_parse(sent, opts);
 			}
 		}
 
