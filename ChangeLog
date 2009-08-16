@@ -4,6 +4,7 @@ Version 4.5.9 (??? 2009)
  * Add greeting to command-line client startup.
  * Print disjunct cost also, when requesting disjunct printing.
  * Add missing color names as mass nouns.
+ * Reclassify musical instruments so the "He plays piano" parses.
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.

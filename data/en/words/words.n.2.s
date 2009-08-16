@@ -60,7 +60,7 @@ affirmations.n affirmatives.n affixes.n afflictions.n affluents.n
 affronts.n aftereffects.n afternoons.n afterthoughts.n agencies.n 
 agendas.n agents.n ages.n agglomerations.n aggrandizements.n 
 aggravations.n aggregates.n aggregations.n aggressions.n aggressors.n 
-agitations.n agitators.n agnostics.n agonies.n agoras.n agreements.n 
+agidigbos.n agitations.n agitators.n agnostics.n agonies.n agoras.n agreements.n 
 agronomists.n aides.n aids.n ailments.n aims.n airbeds.n airbrakes.n 
 aircrafts.n aircrews.n airfields.n airflows.n airings.n airliners.n 
 airlines.n airplanes.n airports.n airs.n airships.n airstrips.n 
@@ -70,7 +70,7 @@ algorithms.n aliases.n alibis.n aliens.n alignments.n alkalis.n
 allegories.n allegrettos.n allegros.n allergens.n allergies.n 
 alleviations.n alleys.n alleyways.n alliances.n allies.n alligators.n 
 allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
-almanacs.n almonds.n alphabets.n alphas.n alsatians.n altars.n 
+almanacs.n almonds.n alphabets.n alphas.n alphorns.n alsatians.n altars.n 
 alterations.n altercations.n alternates.n alternations.n 
 alternatives.n altimeters.n altitudes.n altos.n altruists.n 
 alveolars.n amalgamations.n amalgams.n amateurs.n ambassadors.n 
@@ -107,11 +107,12 @@ arabesques.n arachnids.n arbiters.n arbitragers.n arbitrations.n
 arbitrators.n arbours.n arcades.n archaeologists.n archaisms.n 
 archangels.n archbishoprics.n archbishops.n archdeaconries.n 
 archdeacons.n archdioceses.n archdukes.n archers.n arches.n 
-archetypes.n archipelagos.n architects.n archivists.n archways.n 
+archetypes.n archipelagos.n architects.n archivists.n archlutes.n 
+archways.n 
 arcs.n areas.n arenas.n ares.n arias.n aristocracies.n aristocrats.n 
 arithmeticians.n arks.n armadas.n armadillos.n armaments.n armatures.n 
 armbands.n armchairs.n armfuls.n armies.n armistices.n armlets.n 
-armouries.n armpits.n arms.n aromas.n arpeggios.n arraignments.n 
+armouries.n armpits.n arms.n aromas.n arpeggiones.n arpeggios.n arraignments.n 
 arrangements.n arrays.n arrears.n arresters.n arrests.n arrivals.n 
 arrowheads.n arrows.n arseholes.n arsenals.n arses.n artefacts.n 
 arteries.n artichokes.n articles.n articulations.n artifacts.n 
@@ -149,7 +150,8 @@ balconies.n bales.n balks.n ballades.n ballads.n ballbearings.n
 ballcocks.n ballerinas.n ballets.n balloonists.n balloons.n ballots.n 
 ballpens.n ballpoints.n ballrooms.n balls.n balustrades.n bambinos.n 
 banalities.n bananas.n bandages.n bandannas.n bandits.n bandleaders.n 
-bandmasters.n bands.n bandstands.n bandwagons.n bangers.n bangles.n 
+bandmasters.n bandoneóns.n bands.n bandstands.n banduras.n 
+bandwagons.n bangers.n bangles.n 
 bangs.n banisters.n banjos.n bankers.n banknotes.n bankrolls.n 
 bankruptcies.n banks.n banners.n bannisters.n banquets.n bans.n 
 banshees.n baptisms.n barbarians.n barbarisms.n barbarities.n 
@@ -159,13 +161,13 @@ baritones.n barkers.n barmaids.n barnacles.n barns.n barnstormers.n
 barnyards.n barometers.n baronages.n baronesses.n baronetcies.n 
 baronets.n baronies.n barons.n barracks.n barracudas.n barrages.n 
 barrels.n barricades.n barriers.n barristers.n barrows.n bars.n 
-bartenders.n bas-reliefs.n baseballs.n baseboards.n basements.n 
+bartenders.n barytons.n bas-reliefs.n baseballs.n baseboards.n basements.n 
 bases.n bashes.n basilicas.n basilisks.n basins.n basketballs.n 
-baskets.n basses.n bassinets.n bassoons.n bastards.n bastions.n 
+baskets.n basses.n bassinets.n bassoons.n bassos.n bastards.n bastions.n 
 batches.n bathers.n bathrobes.n bathrooms.n baths.n bathtubs.n 
 batons.n bats.n battalions.n battens.n batteries.n batters.n 
 battledores.n battlefields.n battlegrounds.n battles.n battleships.n 
-baubles.n bayonets.n bayous.n bays.n bazaars.n bazookas.n 
+baubles.n bawus.n bayans.n bayonets.n bayous.n bays.n bazaars.n bazookas.n 
 beachcombers.n beaches.n beachheads.n beacons.n beadles.n beads.n 
 beagles.n beakers.n beaks.n beams.n beanfeasts.n beanos.n beans.n 
 beanstalks.n beards.n bearers.n bearings.n bears.n bearskins.n 
@@ -214,7 +216,7 @@ boas.n boasters.n boasts.n boaters.n boathouses.n
 boats.n boatswains.n bobbies.n 
 bobsleds.n bobsleighs.n bobtails.n bodegas.n bodices.n bodies.n 
 bodyguards.n bogeys.n bogies.n bogs.n bohemians.n boilers.n boils.n 
-boleros.n bollocks.n bolsters.n bolts.n bombardiers.n bombers.n 
+boleros.n bollocks.n bolsters.n bolts.n bombardes.n bombardiers.n bombers.n 
 bombings.n bombs.n bombshells.n bonanzas.n bonbons.n bondholders.n 
 bonds.n boners.n bones.n boneshakers.n bonfires.n bongos.n bonnets.n 
 bonuses.n boobies.n boobs.n boogies.n bookcases.n bookclubs.n 
@@ -222,12 +224,13 @@ bookies.n bookkeepers.n booklets.n bookmakers.n bookmarkers.n
 bookmarks.n bookmobiles.n books.n booksellers.n bookshops.n 
 bookstalls.n bookworms.n boomerangs.n boomers.n booms.n boons.n 
 boors.n boos.n boosters.n boosts.n booths.n bootlaces.n bootleggers.n 
-boots.n boozers.n borderlands.n borderlines.n borders.n bores.n 
+boots.n boozers.n borderlands.n borderlines.n borders.n bordonuas.n 
+bores.n 
 boroughs.n borrowers.n borrowings.n borzois.n bosoms.n bosses.n 
 bosuns.n botanists.n bottlenecks.n bottles.n bottoms.n boudoirs.n 
 boughs.n boulders.n boulevards.n bounces.n boundaries.n bounders.n 
 bounds.n bounties.n bouquets.n bourbons.n bourgeoisies.n bournes.n 
-bourses.n boutiques.n bouts.n bowels.n bowers.n bowlers.n bowls.n 
+bourses.n boutiques.n bouts.n bouzoukis.n bowels.n bowers.n bowlers.n bowls.n 
 bows.n boxers.n boxes.n boxfuls.n boycotts.n boyfriends.n boys.n 
 bracelets.n braces.n brackets.n braggarts.n braids.n brains.n 
 brainstorms.n brainwaves.n brakes.n brambles.n branches.n brandies.n 
@@ -254,7 +257,7 @@ budgies.n buds.n buffaloes.n buffers.n buffets.n buffoons.n buffs.n
 bugaboos.n bugbears.n buggers.n buggies.n buglers.n bugles.n bugs.n 
 builders.n buildings.n bulbs.n bulges.n bulldogs.n bulldozers.n 
 bulletins.n bullets.n bullfighters.n bullfights.n bullfinches.n 
-bullfrogs.n bullies.n bullocks.n bullrings.n bulls.n bulwarks.n 
+bullfrogs.n bullies.n bullocks.n bullrings.n bullroarers.n bulls.n bulwarks.n 
 bumblebees.n bumpers.n bumpkins.n bumps.n bums.n bunches.n bundles.n 
 bungalows.n bunglers.n bungs.n bunions.n bunkers.n bunks.n bunnies.n 
 buns.n buoys.n burdens.n bureaucracies.n bureaucrats.n bureaus.n 
@@ -298,7 +301,7 @@ cartilages.n cartloads.n cartographers.n cartons.n cartoonists.n
 cartoons.n cartridges.n carts.n cartwheels.n carvers.n cascades.n 
 casebooks.n casements.n cases.n cashews.n cashiers.n casinos.n 
 caskets.n casseroles.n cassettes.n castaways.n castes.n castings.n 
-castles.n castors.n castrations.n casts.n casualties.n cataclysms.n 
+castles.n castors.n castrations.n castratos.n casts.n casualties.n cataclysms.n 
 catalogs.n catalogues.n catalysts.n catamarans.n catapults.n 
 cataracts.n catastrophes.n catcalls.n catchers.n catches.n 
 catchments.n catchwords.n catechisms.n categories.n caterers.n 
@@ -306,18 +309,19 @@ caterpillars.n catfish.p cathedrals.n cathodes.n catkins.n cats.n
 catsups.n catwalks.n caucuses.n cauldrons.n cauliflowers.n causes.n 
 causeways.n cautions.n cavalcades.n cavaliers.n cavalries.n caveats.n 
 caverns.n caves.n cavities.n ceasefires.n cedars.n cedillas.n 
-ceilings.n celebrants.n celebrations.n celebrities.n cellars.n 
+ceilings.n celebrants.n celebrations.n celebrities.n celestas.n 
+cellars.n 
 cellists.n cellos.n cells.n cemeteries.n censors.n censorships.n 
 censures.n censuses.n centaurs.n centenarians.n centenaries.n 
 centennials.n centerpieces.n centers.n centiliters.n centilitres.n 
 centimes.n centimeters.n centimetres.n 
-centipedes.n centiseconds.n centiwatts.n
+centipedes.n centiseconds.n centiwatts.n 
 centrepieces.n centres.n centrexes.n centrifuges.n 
 cents.n centurions.n cereals.n ceremonials.n ceremonies.n 
 certainties.n certificates.n certifications.n cervixes.n cesspits.n 
 cesspools.n chaffinches.n chains.n chairs.n chaises.n chalets.n 
 chalices.n chalkpits.n chalks.n challengers.n challenges.n 
-chamberlains.n chambermaids.n chamberpots.n chambers.n chameleons.n 
+chalumeaus.n chamberlains.n chambermaids.n chamberpots.n chambers.n chameleons.n 
 chamoises.n champagnes.n champions.n championships.n champs.n 
 chancelleries.n chancellors.n chancels.n chanceries.n chandeliers.n 
 chandlers.n changelings.n changeovers.n changes.n channels.n chants.n 
@@ -333,29 +337,30 @@ cheesecakes.n cheesecloths.n cheetahs.n chefs.n chemicals.n chemises.n
 chemists.n chequebooks.n cheques.n cherries.n cherubs.n chessboards.n 
 chesterfields.n chestnuts.n chests.n chews.n chickens.n chickpeas.n 
 chicks.n chiefs.n chieftains.n childhoods.n 
-chile_poblanos chile_rellenos chile_verdes
-chiles.n chiles_poblanos chiles_rellenos chiles_verdes
+chile_poblanos chile_rellenos chile_verdes 
+chiles.n chiles_poblanos chiles_rellenos chiles_verdes 
 chills.n chimeras.n 
 chimes.n chimneypots.n chimneys.n chimneysweepers.n chimneysweeps.n 
 chimpanzees.n chimps.n chinchillas.n chinks.n chins.n chipmunks.n 
 chips.n chiropodists.n chiropractors.n chirps.n chirrups.n chisels.n 
-chits.n chives.n chocolates.n chocs.n choices.n choirboys.n choirs.n 
+chitarras.n chits.n chives.n chocolates.n chocs.n choices.n choirboys.n choirs.n 
 chokers.n chokes.n choppers.n chops.n chopsticks.n chorales.n chords.n 
 choreographers.n chores.n choristers.n chortles.n choruses.n chows.n 
 christenings.n chromosomes.n chroniclers.n chronicles.n chronologies.n 
 chronometers.n chrysalises.n chrysanthemums.n chuckles.n chucks.n 
 chugs.n chumps.n chums.n chunks.n churches.n churchgoers.n 
 churchwardens.n churchyards.n churns.n chutes.n cicadas.n ciders.n 
-cigarettes.n cigars.n cinctures.n cinders.n cinemas.n ciphers.n 
+cigarettes.n cigars.n cimbaloms.n cinctures.n cinders.n cinemas.n ciphers.n 
 circles.n circuits.n circulars.n circulations.n circumferences.n 
 circumflexes.n circumlocutions.n circumstances.n circuses.n cissies.n 
 cisterns.n citadels.n citations.n cities.n citizens.n citrons.n 
-civilians.n civilities.n civilizations.n claimants.n clairvoyants.n 
+citterns.n civilians.n civilities.n civilizations.n claimants.n clairvoyants.n 
 clambakes.n clamours.n clamps.n clams.n clangs.n clanks.n clans.n 
 clapboards.n clapperboards.n clappers.n claps.n clarets.n 
 clarinetists.n clarinets.n clarinettists.n clarions.n clashes.n 
 clasps.n classes.n classicists.n classics.n classifications.n 
-classmates.n classrooms.n clauses.n clavichords.n clavicles.n claws.n 
+classmates.n classrooms.n clauses.n clavichords.n clavicles.n clavinets.n 
+claws.n 
 cleaners.n cleansers.n cleanups.n clearances.n clearings.n cleats.n 
 cleavages.n cleavers.n clefs.n clefts.n clerestories.n clergies.n 
 clerics.n clerks.n cliches.n clicks.n clienteles.n clients.n cliffs.n 
@@ -401,7 +406,7 @@ compounds.n compressors.n compromises.n comptrollers.n computations.n
 computers.n comrades.n comradeships.n concatenations.n concavities.n 
 conceits.n concentrates.n concentrations.n conceptions.n concertinas.n 
 concertos.n concerts.n concessionaires.n concessions.n conches.n 
-concierges.n conclaves.n concoctions.n concordances.n concordats.n 
+conchs.n concierges.n conclaves.n concoctions.n concordances.n concordats.n 
 concords.n concourses.n concubines.n concurrences.n concussions.n 
 condemnations.n condensations.n condiments.n conditioners.n 
 condolences.n condominiums.n condors.n conductivities.n conductors.n 
@@ -411,7 +416,7 @@ confederations.n conferences.n confessionals.n confessions.n
 confessors.n confidantes.n confidants.n configurations.n 
 confirmations.n conflagrations.n conflicts.n confluences.n 
 conformations.n conformists.n confreres.n confrontations.n 
-confutations.n conglomerates.n conglomerations.n congratulations.n 
+confutations.n congas.n conglomerates.n conglomerations.n congratulations.n 
 congregations.n congresses.n conifers.n conjectures.n conjugations.n 
 conjunctions.n conjunctives.n conjurers.n conjurors.n conkers.n 
 conks.n connections.n connectives.n connectors.n connexions.n 
@@ -429,7 +434,7 @@ consummations.n consumptives.n contacts.n contagions.n containers.n
 contaminants.n contemporaries.n contenders.n contents.n contestants.n 
 contests.n contexts.n continents.n contingencies.n contingents.n 
 continuations.n contortionists.n contortions.n contours.n 
-contrabasses.n contraceptives.n contractions.n contractors.n 
+contrabasses.n contrabassoons.n contraceptives.n contractions.n contractors.n 
 contracts.n contradictions.n contraltos.n contraptions.n contraries.n 
 contrasts.n contraventions.n contretemps.p contributions.n 
 contributors.n contrivances.n controllers.n controls.n controversies.n 
@@ -444,7 +449,7 @@ copartnerships.n copes.n copies.n coppersmiths.n cops.n copses.n
 copulas.n copycats.n copyists.n copywriters.n coquettes.n corals.n 
 cordials.n cordons.n cords.n coreligionists.n cores.n corgis.n 
 corkers.n corks.n corkscrews.n cormorants.n corncobs.n corneas.n 
-corners.n cornerstones.n cornets.n cornflakes.n cornflowers.n 
+corners.n cornerstones.n cornets.n cornetts.n cornflakes.n cornflowers.n 
 cornices.n cornucopias.n corollaries.n corollas.n coronaries.n 
 coronas.n coronations.n coroners.n coronets.n corporals.n corporates.n 
 corporations.n corps.p corpses.n corpuscles.n corrals.n corrections.n 
@@ -476,19 +481,20 @@ crescendos.n crescents.n crests.n cretins.n crevasses.n crevices.n
 crews.n cribs.n cricketers.n crickets.n cricks.n criers.n cries.n 
 crimes.n criminals.n crimsons.n crinkles.n crinolines.n cripples.n 
 crises.n crisps.n criterions.n criticisms.n critics.n critiques.n 
-croaks.n crocks.n crocodiles.n crocuses.n croissants.n crones.n 
+croaks.n crocks.n crocodiles.n crocuses.n croissants.n cromornes.n 
+crones.n 
 cronies.n crooks.n crooners.n croppers.n crops.n crossbars.n 
 crossbeams.n crossbows.n crossbreeds.n crosschecks.n crosscurrents.n 
 crosscuts.n crosses.n crossings.n crosswalks.n crosswords.n crotches.n 
 crotchets.n crouches.n crowbars.n crowds.n crowns.n crows.n 
 crucibles.n crucifixes.n crucifixions.n crudes.n cruelties.n 
-cruisers.n cruises.n crumbs.n crumpets.n crunches.n cruppers.n 
+cruisers.n cruises.n crumbs.n crumhorns.n crumpets.n crunches.n cruppers.n 
 crusaders.n crusades.n crushes.n crustaceans.n crusts.n crutches.n 
-cruxes.n crybabies.n cryptograms.n crypts.n crystallizations.n 
-crystals.n cubbyholes.n cubes.n cubicles.n cubists.n cubs.n cuckolds.n 
+cruxes.n crwths.n crybabies.n cryptograms.n crypts.n crystallizations.n 
+crystallophones.n crystals.n cuatros.n cubbyholes.n cubes.n cubicles.n cubists.n cubs.n cuckolds.n 
 cuckoos.n cucumbers.n cuddles.n cudgels.n cues.n cuffs.n cullenders.n 
 culminations.n culprits.n cults.n cultures.n cummerbunds.n cunts.n 
-cupboards.n cupfuls.n cupolas.n cups.n curates.n curators.n curbs.n 
+cupboards.n cupfuls.n cupolas.n cuprophones.n cups.n curates.n curators.n curbs.n 
 curds.n cure-alls.n cures.n curfews.n curios.n curiosities.n curlers.n 
 curls.n curmudgeons.n currants.n currencies.n currents.n curriculums.n 
 curries.n curs.n curses.n curtailments.n curtains.n curtseys.n 
@@ -496,7 +502,7 @@ curtsies.n curves.n cushions.n cuspidors.n cusps.n cusses.n custards.n
 custodians.n customers.n customs.n cutbacks.n cuticles.n cutlasses.n 
 cutlets.n cuts.n cutters.n cuttings.n cuttlefishes.n cycles.n 
 cyclists.n cyclones.n cyclopaedias.n cyclostyles.n cyclotrons.n 
-cygnets.n cylinders.n cymbals.n cynics.n cyphers.n cypresses.n cysts.n 
+cygnets.n cylinders.n cymbals.n cymbalums.n cynics.n cyphers.n cypresses.n cysts.n 
 czarinas.n czars.n dabblers.n dabs.n dachas.n dachshunds.n dactyls.n 
 daddies.n dads.n daemons.n daffodils.n daggers.n dagos.n 
 daguerreotypes.n dahlias.n dailies.n dainties.n dairies.n dairymaids.n 
@@ -509,8 +515,8 @@ deaconesses.n deacons.n deadlines.n deadlocks.n dealers.n dealings.n
 deals.n deaneries.n deans.n dearths.n deathbeds.n deathblows.n 
 deaths.n deathtraps.n debacles.n debaters.n debates.n debauchees.n 
 debaucheries.n debentures.n debits.n debtors.n debts.n debutantes.n 
-debuts.n decanters.n deceits.n deceptions.n decibels.n deciliters.n
-decilitres.n decimeters.n decimetres.n deciseconds.n deciwatts.n
+debuts.n decanters.n deceits.n deceptions.n decibels.n deciliters.n 
+decilitres.n decimeters.n decimetres.n deciseconds.n deciwatts.n 
 deckers.n 
 decks.n declarations.n declensions.n declines.n declivities.n 
 decoders.n decorations.n decorators.n decoys.n decreases.n decrees.n 
@@ -541,13 +547,14 @@ detectives.n detectors.n detentions.n detergents.n deteriorations.n
 determinants.n determinations.n determiners.n deterrents.n 
 dethronements.n detonations.n detonators.n detours.n detractors.n 
 deuces.n devaluations.n developers.n developments.n deviants.n 
-deviations.n devices.n devils.n devotees.n devotions.n dhows.n 
+deviations.n devices.n devils.n devotees.n devotions.n dholaks.n 
+dhows.n 
 diabetics.n diacritics.n diagnoses.n diagonals.n diagrams.n 
 dialecticians.n dialectics.n dialects.n dialogues.n dials.n 
 diameters.n diamonds.n diapers.n diaphragms.n diaries.n diarists.n 
 diatribes.n dichotomies.n dickeys.n dickybirds.n dictates.n 
 dictations.n dictators.n dictatorships.n dictionaries.n dictums.n 
-diesels.n dieticians.n diets.n differences.n differentials.n 
+didgeridoos.n diesels.n dieticians.n diets.n differences.n differentials.n 
 differentiations.n difficulties.n diffractions.n digestions.n 
 digests.n diggers.n digits.n dignitaries.n digressions.n digs.n 
 dikes.n dilemmas.n dilettantes.n dilutions.n dimensions.n dimes.n 
@@ -578,7 +585,7 @@ distractions.n distributions.n distributors.n districts.n
 disturbances.n ditches.n ditties.n divans.n divergences.n divers.n 
 diversions.n dives.n divestitures.n dividends.n divinations.n 
 diviners.n divines.n divinities.n divisions.n divisors.n divorcees.n 
-dockets.n docks.n dockyards.n doctorates.n doctors.n doctrinaires.n 
+djembes.n dockets.n docks.n dockyards.n doctorates.n doctors.n doctrinaires.n 
 doctrines.n documents.n dodderers.n dodgers.n dodges.n dodos.n doers.n 
 doges.n dogfish.p doggies.n doghouses.n dogmas.n dogs.n dogsbodies.n 
 dogwoods.n doilies.n dollars.n dollhouses.n 
@@ -590,7 +597,7 @@ doorcases.n doorframes.n doorhandles.n doorkeepers.n doorknobs.n
 doorknockers.n doormats.n doornails.n doorposts.n doors.n doorsteps.n 
 doorstoppers.n doorways.n dopes.n dories.n dormers.n dormitories.n 
 dosages.n doses.n dossiers.n dots.n doubles.n doublets.n doubloons.n 
-douches.n doughnuts.n dovecotes.n doves.n dovetails.n dowagers.n 
+douches.n doughnuts.n doulophones.n dovecotes.n doves.n dovetails.n dowagers.n 
 dowels.n dowers.n downbeats.n downgrades.n downpours.n downturns.n 
 dowries.n doyens.n doylies.n dozes.n drachmas.n draftees.n draftings.n 
 drafts.n dragnets.n dragonflies.n dragons.n dragoons.n drags.n 
@@ -605,11 +612,12 @@ drudges.n druggists.n drugs.n drugstores.n druids.n drummers.n drums.n
 drumsticks.n drunkards.n drunks.n dryers.n ducats.n duchesses.n 
 duchies.n duckies.n duckings.n ducklings.n ducks.n ducts.n dudes.n 
 duds.n duelists.n duellists.n duels.n duets.n duffers.n dugouts.n 
-dukedoms.n dukes.n dulcimers.n dullards.n dumbbells.n dumbwaiters.n 
+dukedoms.n dukes.n dulcians.n dulcimers.n dullards.n dulzainas.n 
+dumbbells.n dumbwaiters.n 
 dumdums.n dummies.n dumplings.n dumps.n dunces.n dunderheads.n dunes.n 
 dungeons.n dunghills.n dupes.n duplicates.n duplications.n 
 duplicators.n durations.n dustbins.n dustcarts.n dusters.n dustpans.n 
-duties.n duvets.n dwarfs.n dwellers.n dwellings.n dyers.n dyes.n 
+dutars.n duties.n duvets.n dwarfs.n dwellers.n dwellings.n dyers.n dyes.n 
 dykes.n dynamics.n dynamos.n dynasties.n dyspeptics.n eagles.n 
 earaches.n eardrops.n eardrums.n earfuls.n earldoms.n earls.n 
 earmarks.n earnings.n earphones.n earpieces.n earrings.n ears.n 
@@ -633,7 +641,7 @@ emblems.n embodiments.n embraces.n embryos.n emendations.n emeralds.n
 emergencies.n emigrants.n emigres.n eminences.n emirates.n emirs.n 
 emissaries.n emissions.n emotions.n emperors.n empires.n empiricists.n 
 employees.n employers.n emporiums.n empresses.n emulsions.n emus.n 
-enactments.n encampments.n enchantments.n enchantresses.n enchiladas.n
+enactments.n encampments.n enchantments.n enchantresses.n enchiladas.n 
 enchiladas_rancheros enchiladas_verdes enclaves.n 
 enclosures.n encomiums.n encounters.n encouragements.n encroachments.n 
 encumbrances.n encyclicals.n encyclopædias.n encyclopaedias.n encyclopedias.n 
@@ -684,7 +692,8 @@ eyeballs.n eyebrows.n eyefuls.n eyeglasses.n eyelashes.n eyelets.n
 eyelids.n eyepieces.n eyes.n eyesores.n eyewitnesses.n fables.n 
 fabrications.n fabrics.n facades.n faces.n facets.n facials.n 
 facilitators.n facilities.n facsimiles.n factions.n factories.n 
-factors.n factotums.n faculties.n fads.n faeries.n faggots.n fags.n 
+factors.n factotums.n faculties.n fads.n faeries.n faggots.n faglongs.n 
+fags.n 
 failings.n fairgrounds.n fairies.n fairs.n fairways.n fairylands.n 
 fairytales.n faiths.n fajitas.n fakes.n fakirs.n falcons.n falsehoods.n 
 falsettos.n falsifications.n falsities.n familiarities.n families.n 
@@ -697,9 +706,9 @@ fatalities.n fates.n fatheads.n fatherlands.n fathers.n fathoms.n
 fatigues.n fats.n faucets.n faults.n fauns.n favors.n favourites.n 
 favours.n fawns.n faxes.n feasts.n featherbeds.n feathers.n 
 featherweights.n feats.n features.n federalists.n federations.n 
-feeders.n feelers.n fees.n feints.n felicities.n fellows.n 
+feeders.n feelers.n fees.n fegerengs.n feints.n felicities.n fellows.n 
 fellowships.n felonies.n felons.n females.n feminists.n 
-femtoliters.n femtolitres.n femtometers.n femtometres.n femtoseconds.n femtowatts.n
+femtoliters.n femtolitres.n femtometers.n femtometres.n femtoseconds.n femtowatts.n 
 femurs.n 
 fencers.n fences.n fenders.n fens.n ferments.n ferns.n ferrets.n 
 ferries.n ferryboats.n fertilizers.n festivals.n festivities.n fetes.n 
@@ -718,7 +727,8 @@ fireplaces.n fires.n firesides.n fireworks.n firmaments.n firms.n
 firs.n firstborns.n firsts.n fish.p fishbones.n fishcakes.n 
 fisheries.n fishers.n fishes.n fishmongers.n fissures.n fists.n 
 fistulas.n fits.n fitters.n fittings.n fivers.n fixations.n 
-fixatives.n fixers.n fixes.n fixtures.n fjords.n flagpoles.n flags.n 
+fixatives.n fixers.n fixes.n fixtures.n fjords.n flageolets.n 
+flagpoles.n flags.n 
 flagships.n flagstaffs.n flairs.n flakes.n flames.n flamethrowers.n 
 flamingos.n flanges.n flanks.n flannels.n flans.n flapjacks.n 
 flappers.n flaps.n flares.n flashbacks.n flashbulbs.n flashes.n 
@@ -731,12 +741,12 @@ flippers.n flips.n flirtations.n flirts.n floatations.n floats.n
 flocks.n floodgates.n floods.n floorboards.n floors.n floozies.n 
 flops.n florins.n florists.n flotations.n flotillas.n flounders.n 
 flourishes.n flowerbeds.n flowerpots.n flowers.n flows.n 
-fluctuations.n flues.n fluidities.n fluids.n flukes.n flunkeys.n 
+fluctuations.n flues.n flugelhorns.n fluidities.n fluids.n flukes.n flunkeys.n 
 flunkies.n fluorescences.n fluorides.n flurries.n flushes.n flutes.n 
 flutists.n flutters.n fluxes.n flycatchers.n flyers.n flyovers.n 
 flytraps.n flyweights.n flywheels.n foals.n foams.n focuses.n foes.n 
 fogeys.n foghorns.n fogs.n foibles.n foils.n folders.n folds.n 
-folios.n folks.n folksongs.n folktales.n follies.n followers.n 
+folgerphones.n folios.n folks.n folksongs.n folktales.n follies.n followers.n 
 followings.n fonts.n foods.n foodstuffs.n fools.n footballers.n 
 footballs.n footboards.n footbridges.n footers.n footfalls.n 
 footfaults.n footholds.n footmarks.n footnotes.n footpaths.n 
@@ -747,7 +757,7 @@ foregrounds.n foreheads.n foreigners.n forelegs.n forelocks.n
 foremasts.n forenames.n forerunners.n foreskins.n foresters.n 
 forests.n foretastes.n forewords.n forfeits.n forgeries.n forgers.n 
 forges.n formalisms.n formalities.n formations.n formats.n forms.n 
-formulas.n formulations.n fortes.n fortifications.n fortnights.n 
+formulas.n formulations.n fortepianos.n fortes.n fortifications.n fortnights.n 
 fortresses.n forts.n fortunes.n forums.n forwards.n fossilizations.n 
 fossils.n fouls.n foundations.n founders.n foundlings.n foundries.n 
 fountains.n founts.n foursomes.n fowlers.n fowls.n foxes.n foxgloves.n 
@@ -762,7 +772,7 @@ fries.n friers.n friezes.n frigates.n frights.n frills.n fringes.n frissons.n
 fritters.n frivolities.n frocks.n frogs.n frolics.n frontages.n 
 frontiers.n frontispieces.n fronts.n frosts.n frowns.n fruitcakes.n 
 fruits.n frustrations.n fryers.n fuchsias.n fuckers.n fuels.n 
-fugitives.n fugues.n fuhrers.n fulcrums.n fullbacks.n fullers.n 
+fugitives.n fuglungs.n fugues.n fuhrers.n fulcrums.n fullbacks.n fullers.n 
 fumbles.n fumes.n functionalists.n functionaries.n functions.n 
 fundamentalists.n fundamentals.n funds.n funerals.n fungicides.n 
 funguses.n funks.n funnels.n furies.n furlongs.n furloughs.n 
@@ -783,18 +793,19 @@ gateaus.n gatecrashers.n gatehouses.n gateposts.n gates.n gateways.n
 gatherers.n gatherings.n gaudies.n gauges.n gauntlets.n gavels.n 
 gavottes.n gays.n gazelles.n gazes.n gazetteers.n gazettes.n 
 gearboxes.n gears.n gearshifts.n geckos.n geezers.n geishas.n 
-geldings.n gels.n gems.n gendarmeries.n gendarmes.n genders.n 
+geldings.n gels.n gems.n gemshorns.n gendarmeries.n gendarmes.n genders.n 
 genealogies.n genealogists.n generalissimos.n generalities.n 
 generalizations.n generals.n generations.n generators.n genes.n 
 geneticists.n genies.n geniuses.n genres.n gentiles.n gents.n 
 geographers.n geologists.n geraniums.n geriatricians.n germicides.n 
 germs.n gerunds.n gesticulations.n gestures.n getaways.n geysers.n 
 gherkins.n ghettos.n ghosts.n ghouls.n giantesses.n giants.n gibbets.n 
-gibbons.n gibes.n gifts.n gigabytes.n gigawatts.n
+gibbons.n gibes.n gifts.n gigabytes.n gigawatts.n 
 giggles.n gigolos.n gigs.n gilders.n gills.n 
 gimmicks.n gins.n gipsies.n giraffes.n girders.n girdles.n 
 girlfriends.n girls.n gists.n giveaways.n gizzards.n glaciers.n 
-glades.n gladiators.n glances.n glands.n glares.n glasses.n 
+glades.n gladiators.n glances.n glands.n glares.n glasschords.n 
+glasses.n 
 glassfuls.n glasshouses.n glassworks.p glazes.n gleams.n glees.n 
 glens.n gliders.n glides.n glimmers.n glimpses.n glints.n glissades.n 
 glitches.n globes.n globetrotters.n globules.n glockenspiels.n 
@@ -828,7 +839,7 @@ guarantors.n guardians.n guardianships.n guardrails.n guardrooms.n
 guards.n guerillas.n guerrillas.n guesses.n guesthouses.n guestrooms.n 
 guests.n guffaws.n guidebooks.n guidelines.n guides.n guilders.n 
 guildhalls.n guilds.n guillotines.n guineas.n guises.n guitarists.n 
-guitars.n gulches.n gulfs.n gullets.n gullies.n gulls.n gulps.n gums.n 
+guitarróns.n guitars.n guitjos.n gulches.n gulfs.n gullets.n gullies.n gulls.n gulps.n gums.n 
 gumshoes.n gunboats.n gunners.n gunrunners.n guns.n gunshots.n 
 gunsmiths.n gurus.n gushers.n gusts.n guts.n gutters.n guttersnipes.n 
 gutturals.n guvnors.n guys.n guzzlers.n gymnasiums.n gymnasts.n gyms.n 
@@ -849,7 +860,8 @@ handshakes.n handstands.n hangars.n hangers.n hangings.n hangnails.n
 hangovers.n hankerings.n hankies.n hansoms.n happenings.n harbingers.n 
 harbors.n harbours.n hardbacks.n hardcovers.n hardliners.n hardships.n 
 harelips.n harems.n hares.n harlequins.n harlots.n harmonicas.n 
-harmonics.n harmonies.n harmoniums.n harmonizations.n harnesses.n 
+harmonicos.n harmonics.n harmonies.n harmoniums.n 
+harmonizations.n harnesses.n 
 harpers.n harpists.n harpoons.n harps.n harpsichordists.n 
 harpsichords.n harrows.n harts.n harvesters.n harvests.n hassles.n 
 hatbands.n hatches.n hatchets.n hatchways.n hatfuls.n hatpins.n 
@@ -861,7 +873,7 @@ headmistresses.n headquarters.p headrests.n heads.n headsets.n
 headwinds.n healers.n heaps.n hearers.n hearings.n hearses.n 
 heartaches.n heartbeats.n hearthrugs.n hearths.n hearts.n heaters.n 
 heathens.n heathers.n heaths.n heatwaves.n heavens.n heaves.n 
-heavyweights.n hecklers.n hectares.n hedgehogs.n hedgerows.n hedges.n 
+heavyweights.n heckelphones.n hecklers.n hectares.n hedgehogs.n hedgerows.n hedges.n 
 hedonists.n heels.n heifers.n heights.n heiresses.n heirlooms.n 
 heirs.n heists.n helicopters.n heliographs.n heliotropes.n heliports.n 
 hellcats.n hells.n helmets.n helms.n helpers.n helpings.n helpmates.n 
@@ -879,7 +891,7 @@ hinds.n hinges.n hinterlands.n hints.n hippies.n hippodromes.n
 hippopotamuses.n hippos.n hips.n hisses.n histograms.n historians.n 
 histories.n hitches.n hitchhikers.n hits.n hitters.n hives.n 
 hoarders.n hoards.n hoaxes.n hobbies.n hobbyhorses.n hobgoblins.n 
-hobnails.n hobos.n hodgepodges.n hoes.n hogs.n holders.n holdings.n 
+hobnails.n hobos.n hocchikus.n hodgepodges.n hoes.n hogs.n holders.n holdings.n 
 holdups.n holes.n holidays.n hollows.n hollyhocks.n holocausts.n 
 holographs.n holsters.n homecomings.n homelands.n homeopaths.n 
 homeowners.n homes.n homesteads.n hometowns.n homicides.n homilies.n 
@@ -892,7 +904,7 @@ horrors.n horseflies.n horseraces.n horseradishes.n horses.n
 horseshoes.n horsewhips.n horticulturists.n hosepipes.n hoses.n 
 hosiers.n hospices.n hospitalizations.n hospitals.n hostages.n 
 hostelries.n hostels.n hostesses.n hostilities.n hosts.n hotbeds.n 
-hotdogs.n
+hotdogs.n 
 hoteliers.n hotels.n hotheads.n hothouses.n hotplates.n hounds.n 
 hourglasses.n houseboats.n housebreakers.n housedogs.n houseflies.n 
 housefuls.n householders.n households.n housekeepers.n housemaids.n 
@@ -902,9 +914,10 @@ huckleberries.n hucksters.n huddles.n hues.n huffs.n hugs.n hulas.n
 hulks.n hullabaloos.n hulls.n humanists.n humanitarians.n humans.n 
 humdingers.n humiliations.n hummingbirds.n hummocks.n humorists.n 
 humourists.n humours.n humpbacks.n humps.n hums.n hunchbacks.n hunks.n 
-hunters.n hunts.n hurdles.n hurls.n hurricanes.n husbands.n hushes.n 
+hunters.n hunts.n hurdles.n hurdy_gurdys hurls.n hurricanes.n husbands.n hushes.n 
 huskies.n husks.n hussars.n hussies.n hustlers.n huts.n hyacinths.n 
-hyaenas.n hybrids.n hydrants.n hydras.n hydrocarbons.n hydrofoils.n 
+hyaenas.n hybrids.n hydrants.n hydras.n hydraulophones.n 
+hydrocarbons.n hydrofoils.n 
 hydroplanes.n hyenas.n hymens.n hymnals.n hymns.n hyperbolas.n 
 hyperboles.n hypermarkets.n hyphens.n hypnotists.n hypochondriacs.n 
 hypocrites.n hypodermics.n hypotenuses.n iambs.n ibises.n icebergs.n 
@@ -993,25 +1006,27 @@ judgments.n judiciaries.n jugfuls.n juggernauts.n jugglers.n jugs.n
 juices.n jukeboxes.n juleps.n jumbles.n jumpers.n jumps.n junctions.n 
 junctures.n jungles.n juniors.n junipers.n junkets.n junkies.n 
 juntas.n juries.n jurists.n jurors.n justices.n justifications.n 
-juveniles.n kaleidoscopes.n kangaroos.n karats.n kayaks.n kebabs.n 
+juveniles.n kaleidoscopes.n kalimbas.n kangaroos.n karats.n katzenklaviers.n 
+kayaks.n kazoos.n kebabs.n 
 keels.n keepers.n keepsakes.n kegs.n kennels.n kerbs.n kerbstones.n 
 kerchiefs.n kernels.n kettledrums.n kettles.n keyboards.n keyholes.n 
-keynotes.n keyrings.n keys.n keystones.n keywords.n khans.n 
+keynotes.n keyrings.n keys.n keystones.n keytars.n keywords.n khalams.n 
+khans.n 
 kickbacks.n kickoffs.n kicks.n kiddies.n kidnappers.n kidnappings.n 
 kidneys.n kids.n killers.n killings.n killjoys.n kilns.n 
 kilobytes.n kilograms.n kiloliters.n kilolitres.n kilometres.n 
 kilos.n kiloseconds.n kilowatts.n kilts.n kimonos.n 
 kindergartens.n kinds.n kingdoms.n kingfishers.n kingpins.n kings.n 
-kinks.n kiosks.n kippers.n kirks.n kissers.n kisses.n kitchenettes.n 
+kinks.n kiosks.n kippers.n kirks.n kisanjis.n kissers.n kisses.n kitchenettes.n 
 kitchens.n kites.n kits.n kittens.n kitties.n kiwis.n kleenexes.n 
 kleptomaniacs.n knacks.n knapsacks.n knaves.n kneecaps.n knees.n 
 knighthoods.n knights.n knives.n knobs.n knockers.n knockouts.n 
 knocks.n knolls.n knots.n knuckles.n koalas.n kolas.n kopecks.n 
-labels.n laboratories.n labourers.n labours.n labs.n laburnums.n 
+koras.n kotos.n kouxians.n labels.n laboratories.n labourers.n labours.n labs.n laburnums.n 
 labyrinths.n lacerations.n laces.n lackeys.n lacquers.n lacunas.n 
 ladders.n laddies.n ladies.n ladles.n lads.n ladybirds.n lagers.n 
 laggards.n lagoons.n lags.n lairds.n lairs.n laities.n lakes.n lambs.n 
-lambskins.n lamentations.n laments.n lamplighters.n lampoons.n 
+lambskins.n lamellaphones.n lamentations.n laments.n lamplighters.n lampoons.n 
 lampposts.n lampreys.n lamps.n lampshades.n lancers.n lances.n 
 lancets.n landaus.n landfalls.n landholders.n landings.n landladies.n 
 landlords.n landlubbers.n landmarks.n landmines.n landowners.n lands.n 
@@ -1046,7 +1061,7 @@ limps.n linchpins.n lindens.n lineages.n liners.n lines.n lineups.n
 lingerers.n lingoes.n linguists.n linings.n linkages.n links.n 
 linkups.n linotypes.n lionesses.n lions.n lips.n lipsticks.n 
 liqueurs.n liquidations.n liquidators.n liquidizers.n liquids.n 
-liras.n lisps.n listeners.n listings.n lists.n litanies.n literals.n 
+liras.n lirones.n lisps.n listeners.n listings.n lists.n litanies.n literals.n 
 lithographs.n litigants.n litigators.n litres.n litterbins.n litters.n 
 liturgies.n livelihoods.n liveries.n livers.n lives.n livings.n 
 lizards.n llamas.n loads.n loafers.n loans.n loaves.n lobbies.n 
@@ -1064,7 +1079,7 @@ loyalists.n loyalties.n lozenges.n lubricants.n lugs.n lullabies.n
 lulls.n lumberjacks.n lumberyards.n luminaries.n lumps.n lunatics.n 
 luncheons.n lunches.n lunges.n lungs.n lupins.n lurches.n lures.n 
 lushes.n lutenists.n lutes.n luxuries.n lycees.n lyceums.n lychgates.n 
-lymphocytes.n lynchpins.n lynxes.n lyres.n lyricists.n lyrics.n 
+lymphocytes.n lynchpins.n lynxes.n lyras.n lyres.n lyricists.n lyrics.n 
 macaroons.n macaws.n machetes.n machinations.n machines.n machinists.n 
 mackerel.p mackintoshes.n macrocosms.n macs.n madams.n madhouses.n 
 madrigals.n maelstroms.n maestros.n magazines.n maggots.n magicians.n 
@@ -1077,15 +1092,16 @@ maladies.n malaises.n malapropisms.n malcontents.n maledictions.n
 malefactors.n males.n malformations.n malfunctions.n malignancies.n 
 malingerers.n mallards.n mallets.n malls.n mamas.n mambas.n mammals.n 
 mammas.n mammoths.n manacles.n managements.n managers.n mandarins.n 
-mandatories.n mandolins.n mandrakes.n manes.n maneuvers.n mangers.n 
+mandatories.n mando-basses.n mandocellos.n mandolas.n mandolins.n mandrakes.n manes.n maneuvers.n mangers.n 
 mangos.n mangroves.n manholes.n maniacs.n manias.n manicures.n 
 manicurists.n manifestations.n manifestos.n manifests.n manifolds.n 
 manikins.n manipulations.n mannequins.n mannerisms.n manners.n 
 manoeuvrers.n manoeuvres.n manors.n mansards.n manservants.n 
 mansions.n mantelpieces.n mantels.n mantises.n mantles.n manuals.n 
-manufacturers.n manuscripts.n maples.n maps.n maraschinos.n 
+manufacturers.n manuscripts.n maples.n maps.n maracass.n 
+maraschinos.n 
 marathons.n marauders.n marbles.n marchers.n marches.n mares.n 
-margins.n marigolds.n marimbas.n marinas.n mariners.n marines.n 
+margins.n marigolds.n marimbaphones.n marimbas.n marinas.n mariners.n marines.n 
 marionettes.n markdowns.n markers.n marketplaces.n markets.n 
 markings.n marks.n maroons.n marquees.n marquesses.n marquises.n 
 marriages.n marrowbones.n marshals.n marshes.n marshmallows.n 
@@ -1099,26 +1115,27 @@ mathematicians.n matinees.n matriarchies.n matriarchs.n matricides.n
 matrixes.n matrons.n mats.n matters.n mattresses.n mausoleums.n 
 mavericks.n mavises.n maws.n maxims.n maximums.n maydays.n mayflies.n 
 mayoralties.n mayoresses.n mayors.n maypoles.n mazes.n mazurkas.n 
-meadows.n meads.n meals.n mealtimes.n meanies.n meanings.n means.n 
+mbiras.n meadows.n meads.n meals.n mealtimes.n meanies.n meanings.n means.n 
 measurements.n measures.n meatballs.n meats.n mechanics.n mechanisms.n 
 mechanizations.n medalists.n medallions.n medallists.n medals.n 
 meddlers.n medians.n mediators.n medications.n medicines.n medics.n 
 mediocrities.n meditations.n mediums.n medleys.n meetings.n meets.n 
 megabytes.n megalomaniacs.n megaphones.n megatons.n megawatts.n 
-melanges.n melees.n melodies.n 
+melanges.n melees.n mellophones.n mellotrons.n melodeons.n 
+melodicas.n melodies.n 
 melodramas.n melons.n meltdowns.n members.n membranes.n mementos.n 
 memoirs.n memorandums.n memorials.n memories.n memos.n menaces.n 
 menageries.n menages.n mendicants.n mends.n menials.n menopauses.n 
 mentalities.n mentions.n mentors.n menus.n mercenaries.n merchants.n 
 mergers.n meridians.n meringues.n meritocracies.n merits.n mermaids.n 
 merry-go-rounds.n merrymakers.n meshes.n messengers.n messes.n 
-metallurgists.n metals.n metalworkers.n metalworks.n metaphors.n 
+metallophones.n metallurgists.n metals.n metalworkers.n metalworks.n metaphors.n 
 metatarsals.n meteorites.n meteorologists.n meteors.n meters.n 
 methodologies.n methods.n methyls.n metiers.n metres.n metronomes.n 
-metropolises.n mews.n mews.p mezzanines.n miaous.n miaows.n miasmas.n 
+metropolises.n mews.n mews.p mezzanines.n mezzo-sopranos.n miaous.n miaows.n miasmas.n 
 microbes.n microcosms.n microfiches.n microfilms.n 
-microliters.n microlitres.n micrometers.n micrometres.n
-microns.n microphones.n microscopes.n microseconds.n microwatts.n
+microliters.n microlitres.n micrometers.n micrometres.n 
+microns.n microphones.n microscopes.n microseconds.n microwatts.n 
 microwaves.n middies.n middles.n 
 middleweights.n midges.n midgets.n midlands.n midriffs.n miens.n 
 migraines.n migrants.n migrations.n mikados.n mikes.n mileages.n 
@@ -1127,7 +1144,7 @@ militias.n milkmaids.n milkshakes.n milksops.n millenarians.n
 milleniums.n millepedes.n millers.n milligrams.n 
 milliliters.n millilitres.n millimeters.n millimetres.n 
 milliners.n millionaires.n millionairesss.n millipedes.n 
-milliseconds.n milliwatts.n
+milliseconds.n milliwatts.n 
 millponds.n 
 mills.n millstones.n millwheels.n milometers.n milords.n mimeographs.n 
 mimes.n mimics.n mimosas.n minarets.n mincers.n minds.n minefields.n 
@@ -1158,7 +1175,7 @@ monopolies.n monorails.n monosyllables.n monotones.n monsoons.n
 monsters.n monstrosities.n montages.n monthlies.n monuments.n moods.n 
 moonbeams.n moons.n moors.n moos.n moose.p mopeds.n mops.n moralists.n 
 morals.n morasses.n moratoriums.n morgues.n morns.n morons.n 
-morphemes.n morrows.n morsels.n mortals.n mortarboards.n mortars.n 
+morphemes.n morrows.n morsels.n morsings.n mortals.n mortarboards.n mortars.n 
 mortgages.n morticians.n mortuaries.n mosaics.n mosques.n mosquitoes.n 
 motels.n mothballs.n motherlands.n mothers.n moths.n motifs.n 
 motions.n motivations.n motives.n motorbikes.n motorboats.n 
@@ -1171,15 +1188,16 @@ mudslingers.n muffins.n mufflers.n muffs.n muggers.n muggings.n mugs.n
 mugwumps.n mulattos.n mulberries.n mulches.n mules.n mullahs.n 
 multimillionaires.n multinationals.n multiples.n multiplexers.n 
 multitudes.n mummies.n municipalities.n munitions.n murals.n 
-murderers.n murders.n murmurs.n muscles.n muses.n museums.n 
+murderers.n murders.n murmurs.n muscles.n muses.n musetes.n 
+museums.n 
 mushrooms.n musicals.n musicians.n musketeers.n muskets.n muskrats.n 
 mussels.n mustachios.n mustangs.n musters.n mutations.n mutes.n 
 mutilations.n mutineers.n mutinies.n mutterers.n mutts.n muzzles.n 
 mynahs.n mynas.n myriads.n mysteries.n mystics.n mystiques.n 
 mythologies.n mythologists.n nachos.n 
-nadirs.n nailfiles.n nails.n nameplates.n 
+nadaswarams.n nadirs.n nailfiles.n nails.n nameplates.n 
 names.n namesakes.n nannies.n 
-nanoliters.n nanolitres.n nanometers.n nanometres.n nanoseconds.n nanowatts.n
+nanoliters.n nanolitres.n nanometers.n nanometres.n nanoseconds.n nanowatts.n 
 napes.n napkins.n nappies.n naps.n 
 narcotics.n narrations.n narratives.n narrators.n nasals.n 
 nationalists.n nationalities.n nationalizations.n nationals.n 
@@ -1195,11 +1213,12 @@ neurologists.n neurotics.n neutralizations.n neutrons.n newcomers.n
 newlyweds.n newsagents.n newsboys.n newscasters.n newscasts.n 
 newsdealers.n newsflashes.n newsletters.n newsmongers.n newspapers.n 
 newsreels.n newsrooms.n newssheets.n newsstands.n newsvendors.n 
-newts.n nexuses.n nibbles.n niceties.n niches.n nickels.n nicknacks.n 
+newts.n nexuses.n neys.n nibbles.n niceties.n niches.n nickels.n nicknacks.n 
 nicknames.n nicks.n nieces.n nightcaps.n nightclubs.n nightdresses.n 
 nightgowns.n nighties.n nightingales.n nightmares.n nightshirts.n 
 nihilists.n nincompoops.n ninnies.n nipples.n nips.n nitrates.n nits.n 
-nitwits.n nobles.n nocturnes.n nodes.n nods.n noggins.n noises.n 
+nitwits.n nobles.n nocturnes.n nodes.n nods.n noggins.n nohkans.n 
+noises.n 
 nomads.n nomenclatures.n nominations.n nominees.n nonces.n 
 noncombatants.n nonconformists.n nondescripts.n nonentities.n 
 nonevents.n nonsmokers.n nonstarters.n noodles.n nooks.n nooses.n 
@@ -1218,7 +1237,7 @@ oboists.n obscenities.n observances.n observations.n observatories.n
 observers.n obsessions.n obstacles.n obstetricians.n obstructionists.n 
 obstructions.n obverses.n ocarinas.n occasions.n occupancies.n 
 occupants.n occupations.n occupiers.n occurrences.n oceans.n 
-octagons.n octaves.n octets.n octogenarians.n octopuses.n oculists.n 
+octagons.n octapads.n octaves.n octavins.n octets.n octogenarians.n octopuses.n oculists.n 
 oddities.n oddments.n odds.n odes.n odours.n odysseys.n offences.n 
 offenders.n offenses.n offensives.n offerings.n offertories.n 
 officers.n offices.n officials.n offprints.n offshoots.n offspring.p 
@@ -1226,7 +1245,7 @@ ogres.n ohms.n oilcans.n oilfields.n ointments.n olds.n oligarchies.n
 olives.n omegas.n omelets.n omelettes.n omens.n omissions.n 
 omnibuses.n onions.n onlookers.n onrushes.n onsets.n onslaughts.n 
 opals.n openers.n openings.n operas.n operations.n operatives.n 
-operators.n operettas.n opiates.n opossums.n opponents.n 
+operators.n operettas.n ophicleides.n opiates.n opossums.n opponents.n 
 opportunists.n opposites.n oppressors.n opticians.n optimists.n 
 optimums.n oracles.n orals.n oranges.n orations.n oratories.n 
 oratorios.n orators.n orbits.n orbs.n orchards.n orchestras.n 
@@ -1252,11 +1271,11 @@ pacemakers.n paces.n pacesetters.n pachyderms.n pacifists.n packages.n
 packets.n packhorses.n packs.n pacts.n paddles.n paddocks.n padlocks.n 
 padres.n pads.n paeans.n pagans.n pageants.n pages.n pagodas.n 
 pailfuls.n pails.n painkillers.n pains.n paintboxes.n paintbrushes.n 
-painters.n paintings.n paints.n pairs.n pajamas.n palaces.n 
+painters.n paintings.n paints.n pairs.n paixiaos.n pajamas.n palaces.n 
 palaeontologists.n palates.n palatinates.n palefaces.n 
-paleontologists.n pales.n palettes.n palindromes.n pallbearers.n 
+palendags.n paleontologists.n pales.n palettes.n palindromes.n pallbearers.n 
 palliatives.n palls.n palms.n palpitations.n pals.n pamphleteers.n 
-pamphlets.n panaceas.n panamas.n pancakes.n pancreases.n pandas.n 
+pamphlets.n pan_pipes panaceas.n panamas.n pancakes.n pancreases.n pandas.n 
 pandemics.n panegyrics.n panelists.n panels.n panes.n pangs.n 
 panhandles.n panoplies.n panoramas.n pans.n pansies.n pantheists.n 
 pantheons.n panthers.n pantographs.n pantomimes.n pantries.n pants.n 
@@ -1317,10 +1336,10 @@ photocopiers.n photocopies.n photoflashes.n photographers.n
 photographs.n photometers.n photons.n photos.n photostats.n phrases.n 
 phrenologists.n physicians.n physicists.n physiognomies.n 
 physiologists.n physiotherapists.n physiques.n pianists.n 
-pianofortes.n pianolas.n pianos.n piazzas.n pica.p picadors.n 
+pianofortes.n pianolas.n pianos.n piazzas.n pibgorns.n pica.p picadors.n 
 piccolos.n pick-ups.n pickaxes.n pickerel.p pickers.n pickets.n 
 pickles.n pickpockets.n picks.n pickups.n picnickers.n picnics.n 
-picoliters.n picolitres.n picometers.n picometres.n picoseconds.n picowatts.n
+picoliters.n picolitres.n picometers.n picometres.n picoseconds.n picowatts.n 
 pictorials.n pictures.n pidgins.n pieces.n piers.n pies.n pieties.n 
 pigeons.n piggies.n piggybacks.n piglets.n pigments.n pigmies.n pigs.n 
 pigsties.n pigtails.n pike.p pikestaffs.n piles.n pilgrimages.n 
@@ -1334,8 +1353,8 @@ pistachios.n pistils.n pistols.n pistons.n pitchers.n pitches.n
 pitchforks.n pitfalls.n pitheads.n pities.n pits.n pittances.n 
 pituitaries.n pivots.n pixies.n pizzas.n placards.n placebos.n 
 placements.n placeseekers.n plagiarists.n plagues.n plaice.p plains.n 
-plaintiffs.n planes.n planetariums.n planets.n planks.n planners.n
-plantains.n plantations.n planters.n plants.n plaques.n plasters.n
+plaintiffs.n planes.n planetariums.n planets.n planks.n planners.n 
+plantains.n plantations.n planters.n plants.n plaques.n plasters.n 
 plastics.n plateaus.n platefuls.n plates.n platforms.n platitudes.n 
 platoons.n platters.n platypuses.n plaudits.n playbills.n playboys.n 
 players.n playgoers.n playgrounds.n playhouses.n playmates.n 
@@ -1416,11 +1435,11 @@ protestations.n protesters.n protests.n protocols.n protons.n
 prototypes.n protractors.n protrusions.n protuberances.n proverbs.n 
 providers.n provinces.n provincialisms.n provocations.n provosts.n 
 prowlers.n prowls.n prows.n proxies.n prudes.n prunes.n psalmists.n 
-psalms.n psalteries.n psalters.n pseudonyms.n pseuds.n psyches.n 
+psalms.n psalteries.n psalters.n psalterys.n pseudonyms.n pseuds.n psyches.n 
 psychiatrists.n psychics.n psychoanalysts.n psychologists.n 
 psychopaths.n psychotics.n pterodactyls.n publications.n publicists.n 
 publishers.n pubs.n pucks.n puddings.n puddles.n pueblos.n puffins.n 
-puffs.n pulleys.n pullovers.n pulpits.n pulps.n pulsars.n pulsations.n 
+puffs.n pulalus.n pulleys.n pullovers.n pulpits.n pulps.n pulsars.n pulsations.n 
 pulses.n pumas.n pumpkins.n pumps.n punchballs.n punchbowls.n 
 punches.n punctures.n pundits.n punishments.n punks.n puns.n 
 punsters.n punts.n pupils.n puppeteers.n puppets.n puppies.n pups.n 
@@ -1434,11 +1453,12 @@ quadruplets.n quads.n quagmires.n quails.n quakes.n qualifications.n
 qualifiers.n qualities.n qualms.n quandaries.n quantities.n 
 quarantines.n quarks.n quarrels.n quarries.n quarterbacks.n 
 quarterfinals.n quarterlies.n quarters.n quartets.n quarts.n quasars.n 
-quatercentenaries.n quatrains.n quavers.n quays.n queens.n queers.n 
-queries.n quesadillas.n
+quatercentenaries.n quatrains.n quatros.n quavers.n quays.n queens.n queers.n 
+queries.n quesadillas.n 
 questioners.n questionnaires.n quests.n queues.n quibbles.n 
 quiches.n quickies.n quicksteps.n quid.p quietists.n quills.n quilts.n 
-quincentenaries.n quinces.n quintessences.n quintets.n quintuplets.n 
+quincentenaries.n quinces.n quintessences.n quintets.n quinticlaves.n 
+quintuplets.n 
 quips.n quirks.n quitters.n quivers.n quizes.n quizmasters.n quorums.n 
 quotas.n quotations.n quotes.n quotients.n rabbis.n rabbits.n 
 rabbles.n raccoons.n racecourses.n racehorses.n racers.n races.n 
@@ -1447,13 +1467,14 @@ racquets.n radials.n radiations.n radiators.n radicals.n radicles.n
 radiograms.n radioisotopes.n radiologists.n radios.n radishes.n 
 raffles.n rafters.n rafts.n ragamuffins.n rags.n ragtags.n raiders.n 
 raids.n railcars.n railheads.n railings.n railroads.n rails.n 
-railways.n rainbows.n raincoats.n raindrops.n rainfalls.n raises.n 
+railways.n rainbows.n raincoats.n raindrops.n rainfalls.n rainsticks.n 
+raises.n 
 raisins.n rakes.n rallies.n ramblers.n rambles.n ramifications.n 
 rampages.n ramparts.n ramps.n ramrods.n rams.n ranchers.n ranches.n 
 rangefinders.n rangers.n ranges.n ranks.n ransoms.n rapes.n rapids.n 
 rapiers.n rapists.n rapports.n rapprochements.n raps.n rapscallions.n 
 raptures.n rarebits.n rarities.n rascals.n rashers.n rashes.n 
-raspberries.n rasps.n ratepayers.n rates.n ratifications.n ratings.n 
+raspberries.n rasps.n ratchets.n ratepayers.n rates.n ratifications.n ratings.n 
 rationales.n rationalists.n rationalizations.n rations.n ratios.n 
 rats.n rattles.n rattlesnakes.n ravens.n raves.n ravines.n rays.n 
 razorbacks.n razorblades.n razors.n re-elections.n reaches.n 
@@ -1461,7 +1482,7 @@ reactionaries.n reactions.n reactors.n readers.n readerships.n
 readings.n readjustments.n reagents.n realignments.n realists.n 
 realities.n realms.n realties.n realtors.n reams.n reapers.n 
 reappearances.n reappraisals.n rearguards.n rears.n reassessments.n 
-rebates.n rebellions.n rebels.n rebirths.n rebounds.n rebuffs.n 
+rebates.n rebecs.n rebellions.n rebels.n rebirths.n rebounds.n rebuffs.n 
 rebukes.n rebuttals.n recalls.n recapitulations.n recaps.n receipts.n 
 receivables.n receivers.n receiverships.n receptacles.n 
 receptionists.n receptions.n recesses.n recessionals.n recessions.n 
@@ -1542,14 +1563,14 @@ ruckuss.n rudders.n rudiments.n ruffians.n ruffles.n ruffs.n rugs.n
 ruins.n rulers.n rulings.n rumbas.n rumbles.n rumours.n rumps.n 
 run-ups.n runaways.n rundowns.n runes.n rungs.n runners.n runoffs.n 
 runs.n runts.n runways.n rupees.n ruptures.n ruses.n rushes.n rusks.n 
-rustics.n rustlers.n ruts.n sabbaticals.n sables.n saboteurs.n 
+rustics.n rustlers.n ruts.n ryutekis.n sabbaticals.n sables.n saboteurs.n 
 sabres.n sachets.n sackbuts.n sacks.n sacraments.n sacrifices.n sacs.n 
 saddlebags.n saddles.n sadists.n safaris.n safecrackers.n safeguards.n 
 safes.n sagas.n sages.n sags.n sahibs.n sailors.n sails.n saints.n 
 sakes.n salaams.n salads.n salamanders.n salaries.n salerooms.n 
 sales.n salines.n sallies.n salons.n saloons.n salts.n saltworks.p 
 salutations.n salutes.n salvers.n salves.n salvos.n sambas.n 
-samovars.n sampans.n samplers.n samples.n sanatoriums.n sanctions.n 
+samovars.n sampans.n samplers.n samples.n samponias.n sanatoriums.n sanctions.n 
 sanctities.n sanctuaries.n sanctums.n sandals.n sandbags.n sandbanks.n 
 sandglasses.n sandpipers.n sandpits.n sands.n sandstorms.n 
 sandwiches.n saplings.n sappers.n sapphires.n saps.n sarabands.n 
@@ -1557,8 +1578,9 @@ sardines.n saris.n sarongs.n sashes.n satchels.n satellites.n
 satires.n satirists.n satisfactions.n satraps.n satyrs.n saucepans.n 
 saucers.n sauces.n saunas.n sausages.n savages.n savannahs.n 
 savannas.n savants.n savers.n savings.p saviours.n savoys.n 
-sawhorses.n sawmills.n saws.n sawyers.n saxes.n saxophones.n 
-saxophonists.n scabbards.n scabs.n scaffolds.n scalawags.n scales.n 
+sawhorses.n sawmills.n saws.n sawyers.n saxes.n saxhorns.n 
+saxonettes.n saxophones.n saxophonists.n scabbards.n scabs.n 
+scaffolds.n scalawags.n scales.n 
 scallops.n scallywags.n scalpels.n scalps.n scamps.n scams.n 
 scandalmongers.n scandals.n scanners.n scapegoats.n scapulas.n 
 scarcities.n scarecrows.n scaremongers.n scares.n scarfs.n scarlets.n 
@@ -1603,15 +1625,16 @@ serviettes.n servings.n sessions.n setbacks.n sets.n settees.n
 setters.n settings.n settlements.n settlers.n sewers.n sexagenarians.n 
 sexes.n sexists.n sextants.n sextets.n sextons.n shackles.n shacks.n 
 shades.n shadings.n shadows.n shafts.n shahs.n shakedowns.n 
-shakeouts.n shakers.n shampoos.n shamrocks.n shandies.n shanks.n 
+shakeouts.n shakers.n shakuhachis.n shampoos.n shamrocks.n shandies.n shanks.n 
 shanties.n shantytowns.n shapes.n shards.n sharecroppers.n 
 shareholders.n shareholdings.n shares.n sharks.n sharpeners.n 
 sharpers.n sharps.n sharpshooters.n shavers.n shaves.n shawls.n 
 sheathings.n sheaths.n sheds.n sheepdogs.n sheepskins.n sheets.n 
-sheikdoms.n sheikhdoms.n sheikhs.n sheiks.n shellfish.p shells.n 
-shelters.n shepherds.n sherbets.n sheriffs.n sherries.n shibboleths.n 
+shehnais.n sheikdoms.n sheikhdoms.n sheikhs.n sheiks.n shekeres.n 
+shellfish.p shells.n 
+shelters.n shengs.n shepherds.n sherbets.n sheriffs.n sherries.n shibboleths.n 
 shields.n shifts.n shillings.n shimmers.n shinbones.n shindigs.n 
-shingles.n shinguards.n shins.n shipbuilders.n shiploads.n shipmates.n 
+shingles.n shinguards.n shinobues.n shins.n shipbuilders.n shiploads.n shipmates.n 
 shipments.n shipowners.n shippers.n ships.n shipwrecks.n shipwrights.n 
 shipyards.n shires.n shirkers.n shirts.n shirtwaists.n shivers.n 
 shoals.n shockers.n shocks.n shoehorns.n shoelaces.n shoemakers.n 
@@ -1629,7 +1652,7 @@ sidelights.n sidelines.n sides.n sideshows.n sidesteps.n sidetracks.n
 sidewalks.n sidings.n sieges.n sierras.n siestas.n sieves.n sifters.n 
 sighs.n sightings.n sights.n sightseers.n signals.n signatories.n 
 signatures.n signers.n signoras.n signorinas.n signors.n signposts.n 
-silencers.n silences.n silhouettes.n silks.n silkworms.n sills.n 
+sikus.n silencers.n silences.n silhouettes.n silks.n silkworms.n sills.n 
 silos.n silversmiths.n similarities.n similes.n similitudes.n 
 simpletons.n simplifications.n simulations.n simulators.n sinecures.n 
 sines.n sinews.n singers.n singles.n singletons.n singsongs.n 
@@ -1653,7 +1676,7 @@ smackers.n smacks.n smallholders.n smallholdings.n smashes.n
 smatterings.n smears.n smells.n smelts.n smiles.n smirks.n smithies.n 
 smiths.n smocks.n smokers.n smokestacks.n smorgasbords.n smudges.n 
 smugglers.n snacks.n snags.n snails.n snakes.n snapdragons.n snaps.n 
-snapshots.n snarls.n snatchers.n snatches.n sneaks.n sneers.n 
+snapshots.n snares.n snarls.n snatchers.n snatches.n sneaks.n sneers.n 
 sneezes.n snickers.n sniffs.n sniggers.n snipers.n snippets.n snips.n 
 snobs.n snoopers.n snoozes.n snorers.n snores.n snorkels.n snorts.n 
 snouts.n snowballs.n snowdrifts.n snowdrops.n snowfalls.n snowflakes.n 
@@ -1669,7 +1692,8 @@ sophisms.n
 sophists.n sophomores.n sopranos.n sops.n sorbets.n sorcerers.n 
 sorceresses.n sores.n sororities.n sorrels.n sorrows.n sorters.n 
 sorties.n sorts.n soubriquets.n souffles.n souls.n sounds.n 
-soundtracks.n soupcons.n soups.n sources.n southeasters.n 
+soundtracks.n soupcons.n soups.n sources.n sousaphones.n 
+southeasters.n 
 southerners.n southpaws.n southwesters.n souvenirs.n sovereigns.n 
 soviets.n sowers.n sows.n soybeans.n spacecraft.p spaces.n 
 spaceships.n spacesuits.n spadefuls.n spades.n spaniels.n spankings.n 
@@ -1708,7 +1732,8 @@ stares.n starfish.p stargazers.n starlets.n starlings.n stars.n
 starters.n starts.n startups.n states.n stationers.n stationmasters.n 
 stations.n statisticians.n statistics.n statues.n statuettes.n 
 statutes.n staves.n stays.n steaks.n steamboats.n steamers.n 
-steamrollers.n steamships.n steeds.n steelmakers.n steelworks.p 
+steamrollers.n steamships.n steeds.n steelmakers.n steelpans.n 
+steelworks.p 
 steelyards.n steeplechasers.n steeplechases.n steeplejacks.n 
 steeples.n steers.n stems.n stenches.n stencils.n stenographers.n 
 stepbrothers.n stepdaughters.n stepfathers.n stepladders.n 
@@ -1771,8 +1796,8 @@ swings.n swipes.n swirls.n switchboards.n switches.n swivels.n
 swoons.n swoops.n swordfish.p swords.n sycamores.n sycophants.n 
 syllables.n syllabuses.n syllogisms.n symbolisms.n symbolizations.n 
 symbols.n sympathies.n sympathizers.n symphonies.n symposiums.n 
-symptoms.n synagogues.n syncopations.n syndicates.n syndromes.n 
-synods.n synonyms.n syphons.n syringes.n syrups.n systems.n tabbies.n 
+symptoms.n synagogues.n synclaviers.n syncopations.n syndicates.n syndromes.n 
+synods.n synonyms.n synthesizers.n syphons.n syringes.n syrups.n systems.n tabbies.n 
 tabernacles.n tablecloths.n tablemats.n tables.n tablespoonfuls.n 
 tablespoons.n tablets.n tabloids.n taboos.n tabs.n tabulations.n 
 tacitos.n tackles.n tacks.n tacos.n 
@@ -1780,11 +1805,11 @@ tacticians.n tactics.n tadpoles.n taffies.n tags.n
 tailgates.n tailors.n tailpieces.n tails.n tailspins.n take-offs.n 
 takeoffs.n takeovers.n takers.n talents.n tales.n talismans.n 
 talkers.n talkies.n talks.n tallboys.n tallies.n talons.n tamales.n 
-tamarinds.n tambourines.n tangents.n tangerines.n tangles.n tangos.n 
+tamarinds.n tamborils.n tambourines.n tamburitzas.n tangents.n tangerines.n tangles.n tangos.n 
 tangs.n tankards.n tankers.n tanks.n tanneries.n tanners.n tans.n 
 tantrums.n tapers.n tapes.n tapestries.n tapeworms.n taprooms.n 
 taproots.n taps.n tarantellas.n tarantulas.n targets.n tariffs.n 
-tarpaulins.n tars.n tartans.n tarts.n taskmasters.n tasks.n tassels.n 
+tarogatos.n tarpaulins.n tars.n tartans.n tarts.n taskmasters.n tasks.n tassels.n 
 tasters.n tastes.n tatters.n tattlers.n tattoos.n taunts.n 
 tautologies.n taverns.n taxes.n taxicabs.n taxidermists.n taximeters.n 
 taxis.n taxonomies.n taxpayers.n teacakes.n teachers.n teachings.n 
@@ -1798,7 +1823,7 @@ teleprompters.n telescopes.n televisions.n telexes.n tellers.n
 tellies.n telltales.n temperaments.n temperatures.n tempers.n 
 tempests.n templates.n temples.n tempos.n temps.n temptresses.n 
 tenancies.n tenants.n tendencies.n tenderfoots.n tenders.n tendons.n 
-tendrils.n tenements.n tenets.n tenners.n tenors.n tenses.n tensions.n 
+tendrils.n tenements.n tenets.n tenners.n tenoroons.n tenors.n tenses.n tensions.n 
 tentacles.n tents.n tenures.n tepees.n tercentenaries.n 
 tercentennials.n terabytes.n terminals.n terminations.n terminologies.n 
 terminuses.n termites.n terms.n terns.n terraces.n terriers.n 
@@ -1807,7 +1832,7 @@ testimonials.n testimonies.n tests.n tethers.n textbooks.n textiles.n
 texts.n textures.n thalamuses.n thanks.n thaws.n theaters.n 
 theatregoers.n theatres.n thefts.n theists.n themes.n theocracies.n 
 theologians.n theologies.n theorems.n theoreticians.n theorists.n 
-therapists.n thermals.n thermometers.n thermoses.n thermostats.n 
+therapists.n theremins.n thermals.n thermometers.n thermoses.n thermostats.n 
 thesauruses.n thickets.n thicknesses.n thieves.n thighbones.n thighs.n 
 thimblefuls.n thimbles.n thingmabobs.n thingmajigs.n things.n 
 thingumabobs.n thingumajigs.n thingummies.n thinkers.n thistles.n 
@@ -1821,20 +1846,21 @@ thunderstorms.n thwarts.n thyroids.n tiaras.n tickets.n ticks.n tics.n
 tidbits.n tides.n tiers.n ties.n tiffs.n tigers.n tightropes.n 
 tildes.n tiles.n tillers.n tills.n tilts.n timbers.n timbres.n 
 timekeepers.n timepieces.n timers.n timetables.n timings.n 
-timpanists.n tinderboxes.n tinges.n tingles.n tinkers.n tins.n tints.n 
+timpanis.n timpanists.n tinderboxes.n tinges.n tingles.n tinkers.n tins.n tints.n 
 tipplers.n tips.n tirades.n tires.n tissues.n titans.n titbits.n 
 tithes.n titles.n tits.n tizzies.n toads.n toadstools.n toasters.n 
 toastmasters.n toastracks.n toasts.n tobacconists.n toboggans.n 
 toccatas.n toddlers.n toeholds.n toenails.n toes.n toffees.n togas.n 
 toggles.n toilets.n tokens.n tolerances.n tollbooths.n tollgates.n 
 tollhouses.n tolls.n tomahawks.n tomatoes.n tomboys.n tombs.n 
-tombstones.n tomcats.n tomes.n tomtoms.n tones.n tongues.n tonics.n 
+tombstones.n tomcats.n tomes.n toms.n tom-toms.n tomtoms.n tones.n tonettes.n 
+tongues.n tonics.n 
 tonnages.n tonnes.n tons.n tonsils.n tonsures.n tools.n toothaches.n 
 toothbrushes.n toothpicks.n toots.n topcoats.n topics.n topmasts.n 
 toppers.n toppings.n tops.n topsails.n torches.n toreadors.n 
 tormentors.n torments.n tornadoes.n torpedoes.n torpors.n torques.n 
 torrents.n torsos.n tortillas.n tortoises.n torturers.n tortures.n 
-tosses.n tostadas.n
+tosses.n tostadas.n 
 totals.n totems.n tots.n toucans.n touchdowns.n touches.n 
 touchstones.n toughies.n toughs.n toupees.n tourists.n tournaments.n 
 tourneys.n tourniquets.n tours.n towels.n towers.n towns.n townships.n 
@@ -1864,13 +1890,13 @@ trifles.n triggers.n trills.n trilogies.n trimmers.n trimmings.n
 trims.n trinities.n trinkets.n trios.n triplets.n tripods.n trippers.n 
 trips.n triptychs.n triumphs.n triumvirates.n trivets.n trivialities.n 
 trochees.n troglodytes.n troikas.n trolleys.n trolls.n trombones.n 
-trombonists.n troopers.n troops.n tropes.n trophies.n tropics.n 
+trombonists.n tromboons.n trompetas.n troopers.n troops.n tropes.n trophies.n tropics.n 
 trots.n trotters.n troubadours.n troublemakers.n troubles.n 
 troubleshooters.n troughs.n troupers.n troupes.n trousers.n trout.p 
 troves.n trowels.n truancies.n truants.n truces.n truckers.n trucks.n 
 trueloves.n truffles.n trumpeters.n trumpets.n trumps.n truncheons.n 
-trunks.n trustees.n trusts.n truths.n trysts.n tsetses.n tubas.n 
-tubers.n tubes.n tubfuls.n tubs.n tuckers.n tucks.n tufts.n tugboats.n 
+trunks.n trustees.n trusts.n truths.n trychels.n trysts.n tsetses.n tubas.n 
+tubaxes.n tubers.n tubes.n tubfuls.n tubs.n tuckers.n tucks.n tufts.n tugboats.n 
 tugs.n tulips.n tumblers.n tumbles.n tumbleweeds.n tummies.n tumors.n 
 tumours.n tumults.n tuna.p tuners.n tunes.n tunics.n tunnels.n 
 turbans.n turbines.n turbojets.n turboprops.n turbot.p turbulences.n 
@@ -1913,14 +1939,16 @@ venues.n verandahs.n verandas.n verbs.n verdicts.n verges.n
 verifications.n verities.n vermilions.n vermouths.n vernaculars.n 
 verses.n versions.n vertebrates.n verticals.n vesicles.n vessels.n 
 vestibules.n vestiges.n vestments.n vestries.n vests.n veterans.n 
-vetoes.n vetos.n vets.n viaducts.n vials.n vibraphones.n vibrations.n 
+vetoes.n vetos.n vets.n viaducts.n vials.n vibraphones.n vibraslaps.n 
+vibrations.n 
 vibrators.n vibratos.n vicarages.n vicars.n viceroys.n vices.n 
 vicinities.n vicissitudes.n victims.n victories.n victors.n victuals.n 
-videocameras.n videocassettes.n videos.n videotapes.n viewers.n 
+videocameras.n videocassettes.n videos.n videotapes.n vielles.n 
+viewers.n 
 viewfinders.n viewpoints.n vigilantes.n vigils.n vignettes.n 
-villagers.n villages.n villains.n villas.n vindications.n vinegars.n 
+vihuelas.n villagers.n villages.n villains.n villas.n vindications.n vinegars.n 
 vines.n vineyards.n vintages.n violas.n violations.n violets.n 
-violinists.n violins.n viols.n vipers.n virginals.n virgins.n 
+violinists.n violins.n violoncellos.n violottas.n viols.n vipers.n virginals.n virgins.n 
 virtues.n virtuosos.n viruses.n visages.n visas.n viscountcies.n 
 viscountesses.n viscounts.n visionaries.n visions.n visitations.n 
 visitors.n visits.n visors.n vistas.n vitamins.n vixens.n viziers.n 
@@ -1973,10 +2001,10 @@ wormholes.n worms.n worries.n worshippers.n wounds.n wrappers.n
 wraps.n wreaths.n wreckers.n wrecks.n wrenches.n wrens.n wrestlers.n 
 wretches.n wrights.n wringers.n wrinkles.n wristbands.n wrists.n 
 wristwatches.n writers.n writings.n writs.n wrongdoers.n wrongs.n 
-xylophones.n yachts.n yaks.n yams.n yanks.n yardarms.n yards.n 
+xalams.n xylophones.n xylorimbas.n yachts.n yaks.n yams.n yanks.n yardarms.n yards.n 
 yardsticks.n yarns.n yawns.n yearbooks.n yearlings.n yearnings.n 
 yeas.n yells.n yeomanries.n yetis.n yews.n yields.n yobs.n yodellers.n 
 yodels.n yoghourts.n yoghurts.n yogis.n yogurts.n yokels.n yokes.n 
 yolks.n youngsters.n youths.n yuppies.n zealots.n zebras.n zeniths.n 
 zephyrs.n zeppelins.n zeros.n zippers.n zips.n zithers.n zlotys.n 
-zodiacs.n zombies.n zones.n zoologists.n zoos.n zuchinis.n
+zodiacs.n zombies.n zones.n zoologists.n zoos.n zuchinis.n 
