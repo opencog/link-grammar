@@ -32,6 +32,7 @@ EXTRA_DIST =            \
 	link-grammar.spec    \
 	AUTHORS              \
 	ChangeLog            \
+	FindLinkGrammar.cmake\
 	LICENSE              \
 	MAINTAINERS          \
 	README               \
