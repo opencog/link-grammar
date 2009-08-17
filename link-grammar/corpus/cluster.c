@@ -259,7 +259,9 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 		double cost = sqlite3_column_double(c->dj_query,1);
 
 		/* All expanded disjuncts are costly! */
-		cost += 2.5;
+		// cost += 0.5;
+		cost -= 6.0;
+		if (cost < 0.0) cost = 0.0;
 
 		/* Building expressions */
 		Exp *e = make_exp(djs, cost);

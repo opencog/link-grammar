@@ -1957,7 +1957,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 (((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+ or Vt+}) or [[@MV+ & O*n+]]) 
 & {@MV+}) or 
 ({O+} & (OT+ or BT-) & {@MV+} & {(TOt+ & B+) or TOi+}) or 
-(OXii+ & Vtg+ & {@MV+} & TH+);
+(OXii+ & Vtg+ & {@MV+} & TH+) or @MV+;
 take.v: <verb-s-pl,i> & <vc-take>;
 takes.v: <verb-s-s> & <vc-take>;
 took.v: <verb-s-sp> & <vc-take>;
