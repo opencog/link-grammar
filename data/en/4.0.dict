@@ -1374,8 +1374,8 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % Imperative go: "go play ball", "go take a walk", "go swimming"
 % Similar pattern to "please.r" -- "please play ball" etc.
 % "You and Rover go play with the ball." requires an S- link.
-% ??? changes to go.v have obsoleted this ??
-go.w: {E-} & (Wi- or S-) & I+;
+% Hmm ... changes to go.v seem to have obsoleted the need for this ...
+% go.w: {E-} & (Wi- or S-) & I+;
 
 <vc-go>: {K+ or [[Pa+]] or [[Pg+]] or I*g+} & {@MV+}; 
 go.v: <verb-pl,i> & <vc-go>;
