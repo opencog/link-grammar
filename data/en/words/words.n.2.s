@@ -1624,7 +1624,7 @@ sermons.n serpents.n servants.n servers.n serves.n services.n
 serviettes.n servings.n sessions.n setbacks.n sets.n settees.n 
 setters.n settings.n settlements.n settlers.n sewers.n sexagenarians.n 
 sexes.n sexists.n sextants.n sextets.n sextons.n shackles.n shacks.n 
-shades.n shadings.n shadows.n shafts.n shahs.n shakedowns.n 
+shades.n shadings.n shadows.n shafts.n shahs.n shakes.n shakedowns.n 
 shakeouts.n shakers.n shakuhachis.n shampoos.n shamrocks.n shandies.n shanks.n 
 shanties.n shantytowns.n shapes.n shards.n sharecroppers.n 
 shareholders.n shareholdings.n shares.n sharks.n sharpeners.n 
