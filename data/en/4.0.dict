@@ -1075,8 +1075,8 @@ arisen.v: {@E-} & PP- & {@MV+};
 /en/words/words.v.5.3:
 <verb-sp,pp> & <vc-walk>;
 
-swam.v lay.w: <verb-sp> & <vc-walk>; 
-swum.v lain.v: <verb-pp> & <vc-walk>;
+lay.w: <verb-sp> & <vc-walk>; 
+lain.v: <verb-pp> & <vc-walk>;
 /en/words/words.v.5.4: (<vc-walk> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
 
@@ -1126,20 +1126,24 @@ or <verb-ge-d>;
 /en/words/words.v.6.3:
 (<verb-sp,pp> & <vc-fill>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
+
 split.v spread.v beat.v fit.v shut.v cast.v: ((<verb-pl,i> or <verb-sp,pp>) & 
 <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
-ate.v broke.v flew.v drove.v woke.v ran.v rode.v stalked.v 
-rang.v hid.v froze.v sprang.v: 
+
+ate.v broke.v drove.v flew.v froze.v hid.v ran.v rang.v rode.v sprang.v 
+stalked.v woke.v: 
 <verb-sp> & <vc-fill>;
-eaten.v broken.v flown.v driven.v woken.v beaten.v ridden.v rung.v hidden.v stricken.v
-frozen.v sprung.v: (<verb-pp> & <vc-fill>) or 
+
+beaten.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
+sprung.v stricken.v swum.v woken.v: (<verb-pp> & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+
 run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
-/en/words/words.v.6.4:
-<verb-pg> & <vc-fill>;
-/en/words/words.v.6.5:
-(<vc-fill> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
+
+/en/words/words.v.6.4: <verb-pg> & <vc-fill>;
+/en/words/words.v.6.5: (<vc-fill> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
+
 
 <vc-trans>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
 % common transitive verbs
@@ -1188,9 +1192,9 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 <verb-pl,i> & <vc-kick>;
 /en/words/words.v.8.2:
 <verb-s> & <vc-kick>;
-bit.v threw.v stole.v drank.v wore.v blew.v tore.v: 
+bit.v blew.v drank.v stole.v threw.v tore.v wore.v: 
 <verb-sp> & <vc-kick>;
-bitten.v thrown.v stolen.v shaken.v worn.v blown.v torn.v:
+bitten.v blown.v stolen.v shaken.v thrown.v torn.v worn.v:
 (<verb-pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
 /en/words/words.v.8.3:
