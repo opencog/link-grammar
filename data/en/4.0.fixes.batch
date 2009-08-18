@@ -119,6 +119,8 @@ Enough rough-housing!
 Enough!
 
 % Proper names (entitites) in the form of noun modifiers
+% The problem is that some of these appear in entity names
+% and thus must be explicitly listed in the dictionary. 
 My name is Gilles de la Tourette.
 I live in New York City.
 I work for the First National Bank.
@@ -133,6 +135,7 @@ Central Texas is hot.
 North Sea crude was up.
 Korea First Advertising Co. stock is up.
 Quantum shares were up in trading.
+The Orange Democratic Movement called for a new election.
 
 % Some given names can be proper names
 The late Mr. Tom will be sorely missed.
