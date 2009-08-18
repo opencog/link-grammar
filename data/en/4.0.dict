@@ -980,17 +980,21 @@ hadn't hadn’t: <marker-past> or
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]));
 
-<vc-be>: ({@EBm+} & (((O*t+ or [B**t-] or K+ or BI+ or OF+ or PF- or 
+% Give [K+] a cost so as to prefer Pp+ in general
+<vc-be>: ({@EBm+} & (((O*t+ or [B**t-] or [K+] or BI+ or OF+ or PF- or 
 (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+) or [[()]]) & {@MV+})
 or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or 
-({N+} & (AF- or Pg*b+ or Pv+ or I*v+));
+({N+} & (AF- or Pv+ or I*v+)) or
+(({N+} or {Pp+}) & Pg*b+);
+
 is.v: ((<verb-x-s>) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
 's.v ’s.v: [[<verb-x-s> & 
-(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ 
+(({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ 
 or (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+})
-or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or Pg+ or Pv+ or PP+)]];
+or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)]];
+
 was.v: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) &
 (SFIs+ or SIs+ or SXI+))) & <vc-be>);
@@ -2944,8 +2948,8 @@ around:
 ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
 or [EN+];
 out up down.r:
-({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or K- 
-or (MVp- & B-);
+({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
+K- or Pp- or (MVp- & B-);
 by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
  (MVp- & B-);
 in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) 
