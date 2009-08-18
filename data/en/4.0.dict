@@ -940,7 +940,7 @@ done.a finished.a through.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+});
 
 doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
-better.i fine.i ok.i okay.i OK.i poorly.i well.i: Vd-;
+better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 don't don’t: 
 (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or 
@@ -2906,8 +2906,10 @@ during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- &
 from:
 ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & <prep-main-a>)
 or (MVp- & B-) or MVp- or (NIb+ & NIc+);
+
 at toward towards without upon:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
+
 except but.misc-ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
 ((MVp+ or TO+) & <prep-main-a>); 
 against beyond beside: 

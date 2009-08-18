@@ -7,7 +7,8 @@ Version 4.5.9 (??? 2009)
  * Reclassify musical instruments so the "He plays piano" parses.
  * Add experimental word-clustering system.
  * Add CMake build file
- * Fix: "It takes longer than that".
+ * Fix: "It takes longer than that."
+ * Fix: "He has done very well."
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
