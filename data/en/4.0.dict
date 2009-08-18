@@ -239,6 +239,7 @@ HYPHENATED-WORDS.n:
  U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
+% Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 /en/words/words.n.1: 
 <marker-common-entity> or 
@@ -246,7 +247,7 @@ HYPHENATED-WORDS.n:
 (AN+ or (Ds- & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
 (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
-% plural nouns ending in "s"
+% Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
 /en/words/words.n.2.s: <marker-common-entity> or <generic-plural-id>;
 /en/words/words.n.2.s.biolg: <generic-plural-id>;
