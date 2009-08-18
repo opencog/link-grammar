@@ -11,6 +11,7 @@ Version 4.5.9 (??? 2009)
  * Fix: "He has done very well."
  * Fix: surfing, swimming, skin-diving, snorkeling, canoeing
  * Fix: "He's out running."
+ * Fix: "suddenly" is a "manner adverb", not a clausal adverb.
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
