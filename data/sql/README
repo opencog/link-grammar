@@ -62,7 +62,6 @@ Radu Mihalcea word-sense disambiguation algorithm to it.
 
 Cluster Table
 -------------
-(In development)
 When LG is unable to parse a sentence, one possible strategy is to 
 increase the number of disjuncts that words can participate in, and 
 hoping that the broadend collection of disjuncts will allow the parse
@@ -96,6 +95,23 @@ To create these tables:
 A recent version has this table at 172MBytes.
 
 To use these tables:
+1) Copy them into this directory
+2) Enable the parser to the above-desribed algo, by saing !cluster at
+   the parser prompt.
+
+Report: At this time, the results of using the above algo are 
+underwhelming. This is somewhat surprising, as the above aglo is the
+"defacto" algo used manually, when debugging the dictionary: one tries
+"similar words" until one finds a working parse, and then modifies the
+dictionary appropriately. The reason for the poor experience so far may
+be that the clusters are too small, and not sufficiently encompassing.
+
+Note also that many failed parses are not due to the mis-categorization
+of a word that's already in the dictionary, but rather, because the 
+dictionary fails to account for some particular linguistic phenomenon.
+Thus, even in the best case, the above algo will fail to fix all parse
+failures.
+
 
 Notes:
 ------
