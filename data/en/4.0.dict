@@ -3101,6 +3101,10 @@ or Mp-);
 per: Us+ & Mp-;
 such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
 
+% Consider "Here's the ball." this parses with SI to ball, and links
+% PF to "here".  We'd like to use [Wd- &PF+] for this, but the 
+% post-processing rules prohibit SI with Wd ... so.. ?? should we
+% loosen the post-processing, or should we invent a new Wa for this case?
 here: J- or <prep-main-b> or [Wq- & PF+];
 
 there: J- or <prep-main-b> or 

@@ -616,6 +616,12 @@ We were unable to find a common ground.
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.
+%
+% Consider "Here's the ball." This parses with SI to ball, and links
+% PF to "here".  We'd like to use [Wd- &PF+] for this, but the
+% post-processing rules prohibit SI with Wd ... so.. ?? should we
+% loosen the post-processing, or should we invent a new Wa for this case?
+% Or should we not use SI for these assertions?
 Here is the ball.
 Here's the ball.
 There is the ball!
