@@ -991,10 +991,11 @@ or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or
 is.v: ((<verb-x-s>) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
-'s.v ’s.v: [[<verb-x-s> & 
-(({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ 
-or (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+})
-or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)]];
+'s.v ’s.v: [[(<verb-x-s> & 
+(({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ or 
+(Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+}) or
+(Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)) or
+(SIs+ & PF-)]];
 
 was.v: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) &

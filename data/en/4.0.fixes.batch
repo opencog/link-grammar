@@ -408,8 +408,11 @@ He breaded the chicken in a mixture of flour and breadcrumbs.
 I had an off day.
 Kim eats pizza with chopsticks.
 
-% double-prep type constructions
+% double-prepostion type constructions
+% adverbs w/ reversed preposition locations
 People glanced fearfully around at the impassive troops.
+He looked around fearfully.
+He looked fearfully around.
 
 % Somewhere is broken ...
 Off in the distance, a dog barked.
@@ -617,7 +620,7 @@ Here is the ball.
 Here's the ball.
 There is the ball!
 Where's the ball?
-Here's Johhny!
+Here's Johnny!
 There goes the neighborhood!
 But for the grace of God, there go I.
 
@@ -801,6 +804,9 @@ We shook him awake.
 He jerked awake at the sound.
 The sound left him awake.
 We left him asleep in the tent.
+We left him sleeping in the tent.
+
+% Similar to the above, but with preps
 We stood it upright.
 We stood it up.
 He picked up the fallen lamp and stood it up.
