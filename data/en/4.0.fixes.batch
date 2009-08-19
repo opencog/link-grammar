@@ -216,11 +216,25 @@ He conceded pushing the button was a mistake.
 We concluded trusting him was a mistake.
 We concluded that trusting him was a mistake.
 
-
 % come, came
 The dog came running at the master's call.
 The dog comes running when he's called.
 The ball came flying at his head.
+
+% Some of these need to take the Z- link, when
+% the "I" is optional.  But others take the Cs+ link.
+% Said, guessed do the right thing here...
+As guessed, he was lying.
+As I guessed, he was lying.
+As I reckon, it won't happen here.
+As I sensed, it was all a lie.
+As I said, it was all a lie.
+As I verified, the switch was off.
+As I trust, it's all over now?
+It's all over, I trust?
+Sure enough, there it was, as I had sensed.
+Sure enough, there it was, as I had guessed.
+There it was, just as I had said.
 
 % Some ditranstive verbs of various complexity
 He poured me a glass of champagne.
