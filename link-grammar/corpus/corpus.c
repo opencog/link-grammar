@@ -208,6 +208,7 @@ static double get_disjunct_score(Corpus *corp,
 	else
 	{
 		val = sqlite3_column_double(corp->rank_query, 0);
+		if (LOW_SCORE < val) val = LOW_SCORE;
 #ifdef DEBUG
 		printf ("Word=%s dj=%s score=%f\n", inflected_word, disjunct, val);
 #endif
