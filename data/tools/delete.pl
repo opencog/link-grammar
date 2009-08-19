@@ -43,19 +43,28 @@ while (<DICT>)
 	my @entries = split;
 
 	# Loop over the entries
+	$gotone = 0;
 	foreach (@entries)
 	{
-		my $wd = $_;
-		if (($_ ne $word) && ($word ne ""))
+		my $entry = $_;
+		while (($entry gt $word) && ($word ne ""))
 		{
-			print "$_ ";
+			$word = shift @words;
+		}
+		if (($entry ne $word) && ($word ne ""))
+		{
+			print "$entry ";
+			$gotone = 1;
 		}
 		else
 		{
 			$word = shift @words;
 		}
 	}
-	print "\n";
+	if ($gotone)
+	{
+		print "\n";
+	}
 }
 close (DICT);
 
