@@ -1627,8 +1627,9 @@ started.v stopped.v tried.v: (<verb-sp,pp> & <vc-start>) or (<verb-pv-b>
 starting.g stopping.g trying.g: (<vc-start> & <verb-ge>) or <verb-ge-d>;
 starting.v stopping.v trying.v: <verb-pg> & <vc-start>;
 
-<vc-dispute>: ({@MV+} & (TH+ or Zs-)) or ((O+ or B- or [[@MV+ & O*n+]]) 
-& {@MV+});
+% The Pg+ doesn't really apply to all of these ... 
+<vc-dispute>: ({@MV+} & (TH+ or Zs-)) or 
+((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & Pg+);
 recognize.v dispute.v accept.v calculate.v
 record.v deduce.v envision.v recount.v signify.v clarify.v disclose.v 
 recollect.v adduce.v posit.v reiterate.v infer.v presuppose.v: 
@@ -1668,8 +1669,10 @@ repeating.g reflecting.g countering.g signaling.g signalling.g:
 providing.g: (<vc-repeat> & <verb-ge>) or <verb-ge-d>
 or ((TH+ or Ce+) & (({{Xd-} & Xc+} & CO+) or ({Xd- & Xc+} & MVs-)));
 
-<vc-sense>: ({@MV+} & (Ce+ or TH+ or RSe+)) or ((O+ or B- or [[@MV+ & O*n+]])
- & {@MV+});
+% <vc-sense> is almost exactly the same as <vc-declare>, but doesn't 
+% have the Z- link.
+<vc-sense>: ({@MV+} & (Ce+ or TH+ or RSe+)) or 
+((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & Pg+);
 sense.v doubt.v reaffirm.v reckon.v regret.v proclaim.v ascertain.v discern.v 
 stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v boast.v:
  <verb-pl,i> & <vc-sense>;
@@ -1693,8 +1696,8 @@ affirming.v certifying.v trusting.v postulating.v ensuring.v
 implying.v verifying.v boasting.v:
  <verb-pg> & <vc-sense>;
 
-<vc-declare>: ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or ((O+ or B- or
-[[@MV+ & O*n+]]) & {@MV+});
+<vc-declare>: ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or 
+((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & Pg+);
 declare.v imagine.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v: 
 <verb-pl,i> & <vc-declare>;

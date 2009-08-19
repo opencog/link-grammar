@@ -82,7 +82,7 @@ The store was poorly stocked
 The play was dreadfully written
 
 There are rumours of a tightening of credit
-There are rumours of a collapse of  credit
+There are rumours of a collapse of credit
 
 What exactly do you want?
 What, exactly, do you want?
@@ -195,6 +195,27 @@ Blue is the new black.
 
 % verbs acting as adjectival modifiers:
 This has become a very politicized deal.
+
+% Pg+ links between verbs and gerunds 
+He imagined hitting the ball.
+She imagined photographing the couple.
+He feared hitting the wall.
+I emphasize hitting your targets in my lectures.
+He confirmed missing his targets
+He regretted firing the man.
+I regret really smashing it.
+He disputed punching the man.
+I recollect raising the bar for that team.
+I envision building a very tall building.
+He tried stopping the man.
+I enjoy running the show.
+
+% Here a Ce+ link is used to attach to the subject
+% i.e. the gerund, acting as a noun. e.g pushing, trusting  
+He conceded pushing the button was a mistake.
+We concluded trusting him was a mistake.
+We concluded that trusting him was a mistake.
+
 
 % come, came
 The dog came running at the master's call.
