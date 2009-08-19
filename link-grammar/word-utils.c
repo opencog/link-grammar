@@ -93,7 +93,7 @@ static int exp_compare(Exp * e1, Exp * e2)
 	  return 0; /* they are not equal */
 	if (e1->type != e2->type)
 		return 0;
-	if (fabs (e1->cost - e2->cost) < 0.001)
+	if (fabs (e1->cost - e2->cost) > 0.001)
 		return 0;
 	if (e1->type == CONNECTOR_type)
 	{
@@ -132,9 +132,11 @@ static int exp_contains(Exp * super, Exp * sub)
 {
 	E_list * el;
 
-	/* printf("\nSUP:");
-	   if (super!=NULL)
-	   print_expression(super); */
+#ifdef DEBUG
+	printf("SUP: ");
+	if (super) print_expression(super); 
+	printf("\n");
+#endif
 
 	if (sub==NULL || super==NULL)
 		return 0;
@@ -466,10 +468,13 @@ static int dn_word_contains(Dictionary dict,
 	m_exp = m_dn->exp;
 	free_lookup_list(m_dn);
 
-	/* printf("\n\nWORD:");
-	 print_expression(w_dn->exp);
-	 printf("\nMACR:\n");
-	 print_expression(m_exp); */
+#ifdef DEBUG
+	printf("\nWORD: ");
+	print_expression(w_dn->exp);
+	printf("\nMACR: ");
+	print_expression(m_exp); 
+	printf("\n");
+#endif
 
 	for (;w_dn != NULL; w_dn = w_dn->right)
 	{
