@@ -143,11 +143,8 @@ locationID60: <marker-entity> or <entity-entire>;
 % Art Bell Bill Bob Buck Bud  
 %
 % The bisex dict includes names that can be given to both 
-% men and women; however, unless the matching names are removed
-% from the male and female lists, this results in a doubling in the
-% number of valid parses, which is ... dumb and annoying. So we'll
-% just push this aside for now.
-% /en/words/entities.given-bisex.sing:
+% men and women.
+/en/words/entities.given-bisex.sing
 /en/words/entities.given-female.sing
 /en/words/entities.given-male.sing:
 <marker-entity> or <given-names> or <directive-opener>;
