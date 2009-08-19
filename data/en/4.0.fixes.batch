@@ -159,6 +159,7 @@ It was piping hot.
 It was devilishly hot.
 
 % mass nouns that were incorrectly classified as count nouns.
+% Nouns that can be used in an indefinite manner.
 I will give you a piece of armament.
 I will give you a piece of bagel.
 I will give you a bit of courtesy.
@@ -176,7 +177,12 @@ Add a cup of finely shredded carrot.
 A length of chain was wrapped around the tree.
 He left town early next morning.
 
+% More nouns that can be indefinite .. magazine, crisis, 
+% musical instruments.
 He wrote for Playboy magazine.
+I know how to play guitar.
+The violence has thrown the country into crisis.
+The violence has created a crisis.
 
 They are like family to us.
 He is like family to us.
