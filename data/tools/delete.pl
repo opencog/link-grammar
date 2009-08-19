@@ -51,7 +51,7 @@ while (<DICT>)
 		{
 			$word = shift @words;
 		}
-		if (($entry ne $word) && ($word ne ""))
+		if ($entry ne $word)
 		{
 			print "$entry ";
 			$gotone = 1;
