@@ -578,7 +578,7 @@ all_those all_these: <noun-sub-p> & <noun-main-p>;
 
 one: NA+ or NM- or NN+ or ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
 (YS+ or (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))))))) or NIm+ or NSn+ or
-(NA- & ND+) or DTi+;
+(NA- & ND+) or DTi+ or (NA- & Xd- & TY- & Xc+);
 
 ones: {@A- & {[[@AN-]]}} & {Dmc-} & 
 (YP+ or (<noun-sub-p> & <noun-main-p>));
@@ -701,7 +701,8 @@ NA+ or
 NM- or ({EN-} & (NIfn+ or NItn-)) or NN+ or NW+ or 
 ({EN- or NIc- or NA-} & (ND+ or NIn+ or 
 ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
-(NA- & {<noun-sub-p> & <noun-main-p>});
+(NA- & {<noun-sub-p> & <noun-main-p>}) or
+(NA- & Xd- & TY- & Xc+);
 
 oh.zero: (NA- & NA+);
 zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
@@ -727,6 +728,17 @@ ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 
 29 30 31:
 NUMBERS or TM- or [[G+]];
+
+2nd.ti 3rd.ti 4th.ti 5th.ti 6th.ti 7th.ti 8th.ti 9th.ti
+10th.ti 11th.ti 12th.ti 13th.ti 14th.ti 15th.ti 16th.ti 17th.ti 18th.ti 19th.ti
+20th.ti 21st.ti 22nd.ti 23rd.ti 24th.ti 25th.ti 26th.ti 27th.ti 28th.ti 29th.ti
+30th.ti 31st.ti
+first.ti second.ti third.ti fourth.ti fifth.ti sixth.ti seventh.ti eighth.ti
+ninth.ti tenth.ti eleventh.ti twelfth.ti thirteenth.ti fourteenth.ti fifteenth.ti 
+sixteenth.ti seventeenth.ti eighteenth.ti nineteenth.ti twentieth.ti 
+twenty-first.ti twenty-second.ti twenty-third.ti twenty-fourth.ti twenty-fifth.ti
+twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
+thirty-first.ti : TM-;
 
 % Years w/o apostrophe: e.g. 47 Ford Fairlane or 57 Chevy
 32 33 34 35 36 37 38 39
@@ -819,9 +831,9 @@ and_a_half: (NW- or NSn-) &
 (NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} & 
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
-third fourth fifth sixth seventh eighth ninth tenth eleventh
-twelfth thirteenth fourteenth fifteenth sixteenth seventeenth eighteenth
-nineteenth:
+third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a eleventh.a 
+twelfth.a thirteenth.a fourteenth.a fifteenth.a sixteenth.a seventeenth.a eighteenth.a
+nineteenth.a:
 L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 (NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
 (DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+;

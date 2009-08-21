@@ -994,8 +994,13 @@ Bids must be received by 1 p.m. EDT
 Bids must be received by 1 PM, CST
 
 % Poorly parsed date expressions.
+I saw him on January 21, 1990
+I saw him on January 21st, 1990
 It happened on October 17th, 1781.
 It happened on October seventeenth, seventeen eighty-one.
+It happened on October seventeenth, seventeen oh-one.
+It happened on October seventeenth, seventeen oh one.
+It was produced by 21st Century Fox
 
 It is a two cent needle
 That's a one dollar cigar

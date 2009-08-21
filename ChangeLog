@@ -16,6 +16,7 @@ Version 4.5.9 (??? 2009)
  * Fix: assorted numerical-range bugs.
  * Fix: prep modifiers with distances: "It is a few miles out"
  * Fix: Spelled-out dates: "It started in nineteen twelve"
+ * Fix: Misc date, time expression parsing e.g "zero hour is here"
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
