@@ -3209,8 +3209,8 @@ or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]]);
 
 % This need to be re-examined ... 
 <units-funky-plural>: 
-(ND- or [()] or [[EN-]]) & 
-(Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
+((ND- or [()] or [[EN-]]) & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-)) or
+((ND- or Ya+) & (NIfu+ or NItu-));
 
 % AU is abbreviation for "astronomical units"
 blocks.i feet.i miles.i yards.i inches.i 
