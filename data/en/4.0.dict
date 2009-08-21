@@ -669,6 +669,9 @@ and.ru:
 (NIfu- & {NIr-} & NItu+ & 
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
 
+% Used in numerical sums: "It's a hundred and two in the shade."
+and.sum: NA- & NA+;
+
 % For number, cost is added to the <noun-main-*> roles to prioritize
 % postmodifier and numeric determiner roles.
 
