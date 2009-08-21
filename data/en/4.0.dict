@@ -694,6 +694,8 @@ NM- or ({EN-} & (NIfn+ or NItn-)) or NN+ or NW+ or
 ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
 (NA+ & {<noun-sub-p> & <noun-main-p>});
 
+zero.n oh.zero: NA- & NA+;
+
 % the generic "number" category
 % AN+ is needed for date-ranges
 NUMBERS: 
@@ -4083,7 +4085,7 @@ so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
 <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or M- or MV-;
 
 % Assorted interjections, treat like unknown adjectives.
-er err.j errr um.j umm uh uhh oh ohh ooo woo_hoo
+er err.j errr um.j umm uh uhh oh.j ohh ooo woo_hoo
 gee gosh wow ah ahh eh ehh hmm hmmm hoo zowie
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
 emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
