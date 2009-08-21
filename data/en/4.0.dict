@@ -648,8 +648,8 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
 (NIfu- & {NIr-} & NItu+ & 
-(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+)) or
-((NIfp- & NItp+) & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
+(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+)) or
+(NIfp- & {NIr-} & NItp+ & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
 or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
 
 and.ru:
@@ -657,7 +657,7 @@ and.ru:
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
 (NIfu- & {NIr-} & NItu+ & 
-(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+));
+(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
 
 % For number, cost is added to the <noun-main-*> roles to prioritize
 % postmodifier and numeric determiner roles.
@@ -3207,10 +3207,11 @@ nights.n seconds.n decades.n centuries.n:
 (R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+))) 
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]]);
 
-% This need to be re-examined ... 
+% XXX A major problem here is that the dict entries for miles.n, feet.n 
+% create a mass of parses that are wrong & interfere with the below.
 <units-funky-plural>: 
-((ND- or [()] or [[EN-]]) & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-)) or
-((ND- or Ya+) & (NIfu+ or NItu-));
+((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-)) or
+(ND- & (NIfu+ or NItu-));
 
 % AU is abbreviation for "astronomical units"
 blocks.i feet.i miles.i yards.i inches.i 

@@ -87,7 +87,10 @@ It was 3 miles under.
 It was 3 miles east.
 It was about 3 miles out.
 It is a few miles over.
+% XXX These parse, but there's an explosion of parses generated.
+% Basically, miles.n is fucking things up.
 It is between 5 miles and 15 miles long.
+It is between 5 miles and 15 miles distant.
 
 There are rumours of a tightening of credit
 There are rumours of a collapse of credit
