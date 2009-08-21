@@ -644,12 +644,12 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 % Allowing EC+ for "two to threefold more abundant". This allows also the
 % nonsense "two to three more abundant", but this is likely harmless.
 -.ru --.ru ---.ru to.ru: 
-(NIfn- & {NIr-} & NItn+ & {NIb-} & (NM- or EC+ or
+(NIfn- & {NIr-} & NItn+ & (NM- or EC+ or
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-(NIfu- & {NIr-} & NItu+ & {NIb-} & 
+(NIfu- & {NIr-} & NItu+ & 
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+)) or
-((NIfp- & NItp+) & {NIb-} & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
+((NIfp- & NItp+) & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
 or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
 
 and.ru:
@@ -2974,7 +2974,7 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 to.r: ({@E-} & {NT-} & I+ & (TO- or [{Xd- & Xc+} & MVi-] 
 or [[R-]] or (SFsx+ & <S-CLAUSE>) or [Xc+ & {Xd-} & CO+]))
 or I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) 
-or [MVp- & B-] or [MVp-] or NIb-;
+or [MVp- & B-] or [MVp-];
 so_as_to: I+ & {Xd- & Xc+} & MVi-; 
 
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
