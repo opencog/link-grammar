@@ -3159,7 +3159,7 @@ November December:
 (TM+ & {TY+} & ((Xd- & Xc+ & TW-) or ON- or JT- or 
 [[<noun-main-s> or MVp- or Mp- or AN+]])) or AN+;
 
-AM.ti PM.ti a.m. p.m.: ND- & {@MX+} & <noun-main-s> & {TZ+} ; 
+AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock: ND- & {@MX+} & <noun-main-s> & {TZ+} ; 
 
 % Time-zone names
 A.tz ACDT.tz ACST.tz ADT.tz AEDT.tz AEST.tz AKDT.tz AKST.tz AST.tz 

@@ -1062,7 +1062,7 @@ It is between 5 feet and 20 feet long.
 A DNA segment of 15 kDa to 20 kDa was obtained.
 It is two to threefold more abundant.
 
-% Broken date and number expressions:
+% Year date, time and number expressions:
 The war of eighteen twelve was notable.
 It was all over by nineteen nineteen.
 The first model came out in nineteen oh five.
@@ -1079,9 +1079,12 @@ The movie was over by 9:18 PM.
 The movie was over by 9:18 pm.
 The movie was over by 9:18PM.
 The movie was over by twelve o'clock.
+The movie was over by twelve o'clock in the afternoon.
 The movie was over by midnight.
 We are moving out at twelve hundred hours.
 We are moving out at twelve hundred thirty hours.
+We are moving out at zero hundred hours.
+Zero hour is approaching.
 It's a fifty five gallon drum.
 It's a fifty-five gallon drum.
 It's a fifty one gallon drum.
@@ -1092,6 +1095,7 @@ We bought two hundred and three of them.
 We bought two hundred 'n three of them.
 Two hundred twelve now roam wild.
 It's a hundred and two in the shade.
+What's two 'n two?
 
 % Fix/spell-check "its"
 Its broken.
