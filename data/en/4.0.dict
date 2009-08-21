@@ -323,10 +323,17 @@ Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 {@AN-} & {@A- & {[[@AN-]]}} & {@M+} & (BIt- or (Xd- & (Xc+ or [[[()]]]) & MX-) or TI-);
 % auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t 
 
-majority.n minority.n number.n bunch.n batch.n bulk.n handful.n group.n:
- ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & <noun-sub-x> &
-(<noun-main-x> or B*x+))
-or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+% Almost identical to below.
+majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
+({@AN-} & {@A- & {[[@AN-]]}} & (
+(Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+
+% Almost identical to above.
+number.n: 
+({@AN-} & {@A- & {[[@AN-]]}} & (
+(Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
