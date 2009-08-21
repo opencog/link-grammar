@@ -931,7 +931,7 @@ How open will he be with the truth?
 How tight is that connection?
 How loose is that connection?
 
-% measurement units
+% Measurement units
 There is a nineteen minute gap in the tapes.
 There is a 12 year gap in the records.
 There is a 10 millenium gap in the geological records.
@@ -1015,6 +1015,28 @@ It has a 10 to 20 foot range.
 The account has a $1000 to $2000 limit.
 It will cost $10 million to $20 million to build.
 It will cost $10 million or $20 million to build.
+
+% But this one is broken -- 
+I have between 5 and 20 dogs.
+There are from 5 to 20 of them.
+
+% Broken date and number expressions:
+The war of eighteen twelve was notable.
+It was all over by nineteen nineteen.
+The first model came out in nineteen oh five.
+The house was remodelled in two thousand three.
+The house was remodelled in two thousand and three.
+It's a fifty five gallon drum.
+It's a fifty-five gallon drum.
+We just got a hundred of them.
+We bought two hundred three of them.
+We bought two hundred and three of them.
+Two hundred twelve now roam wild.
+It's a hundred and two in the shade.
+
+% Fix/spell-check "its"
+Its broken.
+It's broken.
 
 % date ranges are simple modifiers, not numerical mods
 It was the 1989-90 crop that failed.

@@ -13,6 +13,7 @@ Version 4.5.9 (??? 2009)
  * Fix: "He's out running."
  * Fix: "suddenly" is a "manner adverb", not a clausal adverb.
  * Fix: Use Pg links to gerunds: "He feared hitting the wall."
+ * Fix: assorted numerical-range bugs.
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.

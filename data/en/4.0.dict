@@ -644,19 +644,19 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 % Allowing EC+ for "two to threefold more abundant". This allows also the
 % nonsense "two to three more abundant", but this is likely harmless.
 -.ru --.ru ---.ru to.ru: 
-((NIfn- & NItn+) & {NIb-} & (NM- or EC+ or
+(NIfn- & {NIr-} & NItn+ & {NIb-} & (NM- or EC+ or
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-((NIfu- & NItu+) & {NIb-} & 
+(NIfu- & {NIr-} & NItu+ & {NIb-} & 
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+)) or
 ((NIfp- & NItp+) & {NIb-} & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
 or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
 
 and.ru:
-((NIfn- & NItn+) & NId- & (NM- or 
+(NIfn- & {NIr-} & NItn+ & NId- & (NM- or 
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-((NIfu- & NItu+) & NId- & 
+(NIfu- & {NIr-} & NItu+ & NId- & 
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+));
 
 % For number, cost is added to the <noun-main-*> roles to prioritize
@@ -2915,7 +2915,7 @@ within:                        ({JQ+} & J+ & <prep-main-a>)           or (MVp- &
 during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- & B-);
 from:
 ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & <prep-main-a>)
-or (MVp- & B-) or MVp- or (NIb+ & NIc+);
+or (MVp- & B-) or MVp- or NIr+;
 
 at toward towards without upon:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
@@ -2925,7 +2925,7 @@ except but.misc-ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or
 against beyond beside: 
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 between:
-({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or (NId+ & NIc+);
+({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
 with: ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
 or (J+ & {EBm+} & ([P+] or [[O*n+]]) & ([({Xc+ & {Xd-}} & CO+)] or 
 MVp- or (Xd- & Xc+ & (MX*x- or MVx-)))) 
