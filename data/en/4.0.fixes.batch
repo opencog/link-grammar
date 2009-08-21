@@ -81,17 +81,6 @@ It has been notoriously badly managed.
 The store was poorly stocked.
 The play was dreadfully written.
 
-% Adverbial modifiers with distances.
-It is 5 miles distant.
-It was 3 miles under.
-It was 3 miles east.
-It was about 3 miles out.
-It is a few miles over.
-% XXX These parse, but there's an explosion of parses generated.
-% Basically, miles.n is fucking things up.
-It is between 5 miles and 15 miles long.
-It is between 5 miles and 15 miles distant.
-
 There are rumours of a tightening of credit
 There are rumours of a collapse of credit
 
@@ -993,10 +982,14 @@ It was 10:30AM in the morning.
 Bids must be received by 1 p.m. EDT
 Bids must be received by 1 PM, CST
 
+% XXX FIXME:
 % Note that the handling of prepositions is incorrect with
 % regard to measurements: the linkage should be to lumber,
 % not feet.  That is, "12 feet of" is a modifier.
 % Similarly, "hundreds of" should be a modifier to "hours"
+% Note also: parse confusion between "feet.n" and "feet.i"
+% and so "feet.n" should be removed/trimmed back from dict.
+We bought hours of time.
 We bought 12 feet of lumber.
 That will take hundreds of hours of effort.
 That will take hours of effort.
@@ -1008,6 +1001,18 @@ That engine generates hundreds of foot-pounds of torque.
 
 It cost US$ 14 million.
 It cost $14 million.
+
+% Prepositional modifiers with distances.
+It is 5 miles distant.
+It was 3 miles under.
+It was 3 miles east.
+It was about 3 miles out.
+It is a few miles over.
+
+% XXX These parse, but there's an explosion of parses generated.
+% Basically, miles.n is fucking things up -- we ned to trim it down.
+It is between 5 miles and 15 miles long.
+It is between 5 miles and 15 miles distant.
 
 % post-fixed number handling with NM link
 It started on day one.
