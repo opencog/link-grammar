@@ -3429,12 +3429,16 @@ long.a: ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
 Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>)) 
 or ((Ya- or Yt-) & (Pa- or Ma-)) or (H- & (BT+ or Yt+));
 
-wide.a tall.a deep.a:  ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or 
+% Hmm does distant really belong here?
+wide.a tall.a deep.a distant.a:  
+({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or 
 AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>)) 
 or (Ya- & (Pa- or Ma- or <adj-op>));
+
 old.a: ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or 
 AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>)) 
 or (Ytm- & (Pa- or Ma- or <adj-op>));
+
 aged.i: NM+ & (Pa- or Max- or <adj-op>);
 
 easy.a hard.a simple.a difficult.a fun.a expensive.a: {EA- or EF+}
