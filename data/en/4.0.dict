@@ -3449,7 +3449,7 @@ old.a: ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or
 AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>)) 
 or (Ytm- & (Pa- or Ma- or <adj-op>));
 
-aged.i: NM+ & (Pa- or Max- or <adj-op>);
+aged.i: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) );
 
 easy.a hard.a simple.a difficult.a fun.a expensive.a: {EA- or EF+}
 & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+} &
