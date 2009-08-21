@@ -831,14 +831,19 @@ and_a_half: (NW- or NSn-) &
 (NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} & 
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
+% This uses the L link for superlatives, but leads to strange parses:
+% "We celebrated their nineteenth anniversary" parses differently
+% than "twentieth anniversary". XXX this should be fixed, I suppose ... 
 third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a eleventh.a 
 twelfth.a thirteenth.a fourteenth.a fifteenth.a sixteenth.a seventeenth.a eighteenth.a
 nineteenth.a:
 L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 (NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
 (DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+;
+
 second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+;
+
 quarter.i:
 NS- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 thirds.m fourths.m quarters.m fifths.m sixths.m sevenths.m eighths.m 
