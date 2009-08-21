@@ -576,7 +576,7 @@ all_that: EA+ or EE+ or (<noun-sub-s>
 all_this: <noun-sub-s> & <noun-main-s>;
 all_those all_these: <noun-sub-p> & <noun-main-p>;
 one: NM- or NN+ or ({EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
-(YS+ or (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))))))) or NSn+ or DTi+;
+(YS+ or (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))))))) or NIm+ or NSn+ or DTi+;
 ones: {@A- & {[[@AN-]]}} & {Dmc-} & 
 (YP+ or (<noun-sub-p> & <noun-main-p>));
 any: ({EN-} & (D+ or DD+ or 
