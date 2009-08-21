@@ -703,7 +703,8 @@ NM- or ({EN-} & (NIfn+ or NItn-)) or NN+ or NW+ or
 ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
 (NA- & {<noun-sub-p> & <noun-main-p>});
 
-zero.n oh.zero: NA- & NA+;
+oh.zero: (NA- & NA+);
+zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
 
 % the generic "number" category
 % AN+ is needed for date-ranges
