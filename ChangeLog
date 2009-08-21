@@ -15,6 +15,7 @@ Version 4.5.9 (??? 2009)
  * Fix: Use Pg links to gerunds: "He feared hitting the wall."
  * Fix: assorted numerical-range bugs.
  * Fix: prep modifiers with distances: "It is a few miles out"
+ * Fix: Spelled-out dates: "It started in nineteen twelve"
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
