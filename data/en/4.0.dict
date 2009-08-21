@@ -653,10 +653,10 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
 
 and.ru:
-(NIfn- & {NIr-} & NItn+ & NId- & (NM- or 
+(NIfn- & {NIr-} & NItn+ & (NM- or 
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-(NIfu- & {NIr-} & NItu+ & NId- & 
+(NIfu- & {NIr-} & NItu+ & 
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+));
 
 % For number, cost is added to the <noun-main-*> roles to prioritize
