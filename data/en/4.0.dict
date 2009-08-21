@@ -2909,7 +2909,7 @@ or (Wj- & Qd+) or [Wq- & PF+];
 <prep-main-e>: [Mp-] or Pp- or MVa- or [({Xc+ & {Xd-}} & CO+)] or 
 (Xd- & Xc+ & (MX*x- or MVx-));
 
-under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or (MVp- & B-);
+under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or (MVp- & B-) or (Yd- & Pp-);
 below above behind.p: ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or (MVp- & B-);
 within:                        ({JQ+} & J+ & <prep-main-a>)           or (MVp- & B-);
 during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- & B-);
@@ -2951,7 +2951,7 @@ around:
 or [EN+];
 out up down.r:
 ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
-K- or Pp- or (MVp- & B-);
+K- or ({Yd-} & Pp-) or (MVp- & B-);
 by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
  (MVp- & B-);
 in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) 
@@ -2960,7 +2960,7 @@ or K- or (MVp- & B-) or (MG- & JG+);
 on: ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or K- or 
 (MVp- & B-);
 over: ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) 
-or K- or EN+ or (MVp- & B-);
+or K- or EN+ or (MVp- & B-) or (Yd- & Pp-);
 just_over just_under well_over: EN+;
 like.p: ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
 or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or (MVp- & B-);
