@@ -832,15 +832,17 @@ and_a_half: (NW- or NSn-) &
 % This uses the L link for superlatives, but leads to strange parses:
 % "We celebrated their nineteenth anniversary" parses differently
 % than "twentieth anniversary". XXX this should be fixed, I suppose ... 
+% Worse than that: added a hacky A+ to these, and also first, second,
+% to handle "fifteenth century Italy".  Sigh. This is all very hacky.
 third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a eleventh.a 
 twelfth.a thirteenth.a fourteenth.a fifteenth.a sixteenth.a seventeenth.a eighteenth.a
 nineteenth.a:
 L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 (NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
-(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+;
+(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+;
 
 second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
-(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+;
+(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
 
 quarter.i:
 NS- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
@@ -852,7 +854,7 @@ first.a:
 L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or
 TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
 last.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
-DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
+DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 
 %EQUATIONS ETC.
 

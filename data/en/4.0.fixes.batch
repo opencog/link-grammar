@@ -118,7 +118,7 @@ That is enough rough-housing.
 Enough rough-housing!
 Enough!
 
-% Proper names (entitites) in the form of noun modifiers
+% Proper names (entities) in the form of noun modifiers
 % The problem is that some of these appear in entity names
 % and thus must be explicitly listed in the dictionary. 
 My name is Gilles de la Tourette.
@@ -143,9 +143,11 @@ He is the man from Syndicated Features
 He represents the Undersea Exploration Company
 He represents the Equatorial Antarctic Bank
 
-
 % Some given names can be proper names
 The late Mr. Tom will be sorely missed.
+
+% Proper name modifiers
+It dates back to fifteenth century France.
 
 % Biological texts commonly have adj-noun-adj-noun chains
 We extracted human umbilical vein endothelial cells.
