@@ -241,7 +241,7 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.1: 
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
+(AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
 (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
 % Common plural nouns ending in "s"
