@@ -881,7 +881,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % It is used to flag past-tense forms in the dictionary
 
 <marker-past>: XXXPAST+;
-<verb-pl,i>: {@E-} & (Sp- or (RS- & Bp-) or (I- & {@E-} & {Wi-}) or Wi-);
+<verb-pl,i>: {@E-} & (Sp- or (RS- & Bp-) or (I- & {@E-} & {Wi-}) or ({CO-} & Wi-));
 <verb-pl>: {@E-} & (Sp- or (RS- & Bp-));
 <verb-s>: {@E-} & (Ss- or (RS- & Bs-));
 <verb-i>: {@E-} & I-;
