@@ -2197,9 +2197,11 @@ requiring.v: <verb-pg> & <vc-require>;
 ((O+ or B-) & {@MV+} & {TOo+}) or ([[@MV+ & O*n+]]);
 command.v order.v urge.v: <verb-pl,i> & <vc-command>;
 commands.v orders.v urges.v: <verb-s> & <vc-command>;
-commanded.v ordered.v urged.v: 
-(<verb-sp,pp> & <vc-command>) or (<verb-pv> & {TO+ or TH+ or TS+}) 
+<vc-commanded>: (<verb-sp,pp> & <vc-command>) or (<verb-pv> & {TO+ or TH+ or TS+}) 
 or ({@MV+} & {TH+ or TO+ or TS+} & <verb-po>);
+commanded.v urged.v: <vc-commanded>; 
+% An "ordered list"
+ordered.v: <vc-commanded> or ({@E-} & A+);
 commanding.g ordering.g urging.g: (<vc-command> & <verb-ge>) or <verb-ge-d>;
 commanding.v ordering.v urging.v: <verb-pg> & <vc-command>;
 
