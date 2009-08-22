@@ -3417,7 +3417,7 @@ for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
 thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or 
-({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
+({Xd- & Xc+} & (E+ or EB-)) or (Xd- & Xc+ & MVa-);
 
 when: ((WN- or BIh-) & Cs+) or ((PF+ or TOn+ or Cs+) & (BIq- or 
 QI- or (SFsx+ & <S-CLAUSE>))) or (Wq- & (Q+ or PF+)) or 
