@@ -36,6 +36,7 @@
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
 
+#define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
 
 /**
@@ -47,6 +48,13 @@
 static int is_common_entity(Dictionary dict, const char * str)
 {
 	if (word_contains(dict, str, COMMON_ENTITY_MARKER) == 1)
+		return 1;
+	return 0;
+}
+
+static int is_entity(Dictionary dict, const char * str)
+{
+	if (word_contains(dict, str, ENTITY_MARKER) == 1)
 		return 1;
 	return 0;
 }
@@ -1129,6 +1137,12 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 		 * to be capitalized, while preventing an upper-case "She" being
 		 * used as a proper name in "She declared bankruptcy".
 		 *
+		 * Arghh. This is still messed up. The capitalized-regex runs
+		 * too early, I think. We need to *add* Sue.f (female name Sue)
+		 * even though sue.v (the verb "to sue") is in the dict. So 
+		 * test for capitalized entity names. Glurg. Too much complexity
+		 * here, it seems to me.
+		 *
 		 * This is actually a great example of a combo of an algorithm
 		 * together with a list of words used to determine grammatical
 		 * function.
@@ -1141,7 +1155,8 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 
 			if (boolean_dictionary_lookup(sent->dict, lc))
 			{
-				if (is_common_entity(sent->dict,lc))
+				if (is_entity(sent->dict,s) ||
+				    is_common_entity(sent->dict,lc))
 				{
 					e = build_word_expressions(sent->dict, lc);
 					sent->word[i].x =
