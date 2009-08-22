@@ -54,15 +54,15 @@
 <CLAUSE-E>: {({@COd-} & C-) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
 <noun-main-x>: (S+ & <CLAUSE>) or SI- or J- or O- or ({[B*j+]} & Xd- 
-& (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 <noun-main-s>: (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or ({[Bsj+]} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 <noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+]} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 <noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or ({[Bsj+]} & Xd- 
-& (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 <noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+]} 
-& Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 <noun-main2-x>:  J- or O- or ({[B*j+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 <noun-main2-s>:  Js- or Os- or ({[Bsj+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
@@ -181,9 +181,9 @@ entityID60: <marker-entity> or <entity-id>;
 
 % Same pattern used for words.n.2.s
 <generic-plural-id>:  
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or (Rw+ & Bpm+)))
-or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
+or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
 genericID10 genericID11 genericID12 genericID13 genericID14 genericID15 genericID16 genericID17 genericID18 genericID19
@@ -232,7 +232,7 @@ HYPHENATED-WORDS.a:
 ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
 
 HYPHENATED-WORDS.n: 
-{NM+} & [[({@AN-} & {@A-} & (({D-} & <noun-sub-x> & (<noun-main-x> or (Rw+ & B*m+))) or
+[[({@AN-} & {@A-} & (({NM+ or D-} & <noun-sub-x> & (<noun-main-x> or (Rw+ & B*m+))) or
  U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
@@ -240,8 +240,8 @@ HYPHENATED-WORDS.n:
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 /en/words/words.n.1: 
 <marker-common-entity> or 
-({NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or (Ds- & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
+({@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
 (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
 % Common plural nouns ending in "s"
@@ -252,15 +252,15 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 /en/words/words.n.2.x:  % plural nouns not ending in "s"
 <marker-common-entity> or 
-({NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
-([[AN+]] or ({Dmc-} & <noun-sub-p> & (<noun-main-p> or (Rw+ & Bpm+))) or
+({@AN-} & {@A- & {[[@AN-]]}} & 
+([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or (Rw+ & Bpm+))) or
 (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
 /en/words/words.n.3:  % nouns that are mass only
 <marker-common-entity> or 
-({NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({Dmu-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+({@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
@@ -278,8 +278,8 @@ tawny.n ultramarine.n yellow.n:
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
 % piano.n flute.n belong here, because of "He plays piano"
 <noun-mass-count>:  
-{NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+{@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
 
 /en/words/words.n.4: <noun-mass-count>;
@@ -337,8 +337,6 @@ Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
-
-flight.i age.i: {@AN-} & NM+ & <noun-main-s>;
 
 kind_of: ({{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
 (<noun-main-s> or (Rw+ & Bsm+))) or Us-)) or EA+ or EE+;
@@ -4243,8 +4241,8 @@ ED-WORDS.v: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
 
 S-WORDS.v: <verb-s> & <vc-tr,intr>;
 
-S-WORDS.n: {NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]]);
+S-WORDS.n: ({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or Dmc-} & <noun-sub-p> & 
+(<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
 
 LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
 {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
@@ -4257,14 +4255,14 @@ LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 MC-NOUN-WORDS.n: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 
 C-NOUN-WORDS.n: % guessed nouns that are countable (-on, -or)
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & 
-((Ds- & <noun-sub-s> & (<noun-main-s> or Bsm+))
-or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+);
+({@AN-} & {@A- & {[[@AN-]]}} & 
+(((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or Bsm+))
+or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 
 ADJ-WORDS.a: % guessed adjectives (-ous, -ar, -ic)
  {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
@@ -4277,30 +4275,30 @@ FOLD-WORDS:
 % latin (postposed) adjectives considered as singular nouns 
 % in the current version
 LATIN-ADJ-WORDS.a:
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 
 % latin (postposed) adjectives or latin plural noun always considered
 % as nouns in the current version
 LATIN-ADJ-P-NOUN-WORDS:
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & <noun-sub-p> & 
+({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or Dmc-} & <noun-sub-p> & 
 (<noun-main-p> or Bpm+))
-or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or AN+); 
+or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
 
 % latin (postposed) adjectives or latin singular noun always
 % considered as nouns in the current version  
 LATIN-ADJ-S-NOUN-WORDS:
-{NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
+({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or D*u-} & <noun-sub-s> & 
 (<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+);
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
 UNKNOWN-WORD.n: 
-{NM+} & {@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
+{@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or U-);
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};

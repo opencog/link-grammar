@@ -1050,6 +1050,16 @@ The number 12 is a lucky number.
 
 I fear the dirty dozen.
 
+% Post-fixed numbers can act as (singular) determiners
+The exon is spliced  with the intron.
+Exon 30 is spliced with the intron.
+* Exon is spliced  with the intron.
+Exon 30 is spliced with intron 40.
+Oven two is not heating evenly.
+Assembly line 7 had a work stoppage this morning
+Flight 442 was delayed.
+John, age 40, is a douchebag.
+
 % Numerical ranges
 It takes 2 to 3 times the effort.
 It takes 2 - 3 times the effort.
