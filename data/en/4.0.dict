@@ -3300,6 +3300,10 @@ UNITS: <units-suffix>;
 % Abbreviations that form noun-like things.
 /en/words/units.3: ND- & <noun-main-s>;
 
+% Time unit abbreviateions:
+/en/words/units.4: <units-suffix> or
+((ND- or NS-) & {NJ-} & OT-);
+
 % money, similar to units, above.
 /en/words/currency: 
 ((NIm- or NIn- or NIe-) & AN+) or 
