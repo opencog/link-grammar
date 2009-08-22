@@ -1828,7 +1828,7 @@ tendrils.n tenements.n tenets.n tenners.n tenoroons.n tenors.n tenses.n tensions
 tentacles.n tents.n tenures.n tepees.n tercentenaries.n 
 tercentennials.n terabytes.n terminals.n terminations.n terminologies.n 
 terminuses.n termites.n terms.n terns.n terraces.n terriers.n 
-territories.n terrorists.n terrors.n testaments.n testicles.n 
+territories.n terrorists.n terrors.n testaments.n testers.n testicles.n 
 testimonials.n testimonies.n tests.n tethers.n textbooks.n textiles.n 
 texts.n textures.n thalamuses.n thanks.n thaws.n theaters.n 
 theatregoers.n theatres.n thefts.n theists.n themes.n theocracies.n 
