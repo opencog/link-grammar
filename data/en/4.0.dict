@@ -3284,7 +3284,8 @@ tenfold a_hundredfold a_thousandfold: MVp- or A+ or NItn-;
 <units-suffix>:
 ((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or 
 ((ND- or NS- or NIe-) & AN+) or 
-((ND- or NS- or NIe-) & (Op- or Jp-) & {Mp+}) or 
+((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or 
+((ND- or NS- or NIe-) & (({DD-} & Op-) or Jp-) & {Mp+}) or 
 ((ND- or NS-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
 
 % Abbreviations of scientific units that follow numbers
