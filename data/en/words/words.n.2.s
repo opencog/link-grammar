@@ -417,7 +417,8 @@ confessors.n confidantes.n confidants.n configurations.n
 confirmations.n conflagrations.n conflicts.n confluences.n 
 conformations.n conformists.n confreres.n confrontations.n 
 confutations.n congas.n conglomerates.n conglomerations.n congratulations.n 
-congregations.n congresses.n conifers.n conjectures.n conjugations.n 
+congregations.n congresses.n conifers.n conjectures.n 
+conjugates.n conjugations.n 
 conjunctions.n conjunctives.n conjurers.n conjurors.n conkers.n 
 conks.n connections.n connectives.n connectors.n connexions.n 
 connoisseurs.n connotations.n conquerors.n conquests.n conquistadors.n 
