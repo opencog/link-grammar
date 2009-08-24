@@ -196,7 +196,7 @@ genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
 
 %from words.y year numbers
 <date-id>:
-NM- or ({EN-} & (NIfn+ or NItn-)) or 
+NMd- or ({EN-} & (NIfn+ or NItn-)) or 
 NN+ or AN+ or 
 ((Xd- & TY- & Xc+) or TY-) 
 or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
@@ -575,7 +575,7 @@ all_that: EA+ or EE+ or (<noun-sub-s>
 all_this: <noun-sub-s> & <noun-main-s>;
 all_those all_these: <noun-sub-p> & <noun-main-p>;
 
-one: NA+ or NM- or NN+ or ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
+one: NA+ or NMw- or NN+ or ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
 (YS+ or (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))))))) or NIm+ or NSn+ or
 (NA- & ND+) or DTi+ or (NA- & Xd- & TY- & Xc+);
 
@@ -697,7 +697,7 @@ o-one o-two o-three o-four o-five o-six o-seven o-eight o-nine
 zero-one zero-two zero-three zero-four zero-five zero-six zero-seven zero-eight zero-nine
 several: 
 NA+ or 
-NM- or ({EN-} & (NIfn+ or NItn-)) or NN+ or NW+ or 
+NMw- or ({EN-} & (NIfn+ or NItn-)) or NN+ or NW+ or 
 ({EN- or NIc- or NA-} & (ND+ or NIn+ or 
 ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
 (NA- & {<noun-sub-p> & <noun-main-p>}) or
@@ -709,16 +709,21 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
 % the generic "number" category
 % AN+ is needed for date-ranges
 NUMBERS: 
-NM- or ({EN-} & (NIfn+ or NItn-)) or NN+ or [[NF+]] or [[AN+]] or
+NMn- or ({EN-} & (NIfn+ or NItn-)) or NN+ or [[NF+]] or [[AN+]] or
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))));
 
-% allowing postposed roman numerals only for now.
-ROMAN-NUMERAL-WORDS.rn: NM-;
+% Allowing postposed roman numerals only for now.
+% e.g "Pope Pious XII"
+ROMAN-NUMERAL-WORDS.rn: NMr-;
 
 % nouns that look like roman numerals. Limited requirements to avoid
 % excessive ambiguity.
 ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
+
+% Allow post-posed letter moifiers: e.g. "Vitamin A"
+A.id B.id C.id D.id E.id F.id G.id H.id I.id J.id K.id L.id M.id N.id 
+O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id: NMa-;
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
@@ -767,14 +772,14 @@ thirty-first.ti : TM-;
 
 
 1: 
-NM- or ({EN-} & (NIfn+ or NItn-)) or 
+NMn- or ({EN-} & (NIfn+ or NItn-)) or 
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIm+ or OD- or 
 ({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>]))))) 
 or TM- or NSn+);
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
 0:
-NM- or ({EN-} & (NIfn+ or NItn-)) or 
+NMn- or ({EN-} & (NIfn+ or NItn-)) or 
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
 or NSn+);
@@ -801,7 +806,7 @@ quarter-trillion dozen half-dozen
 bajillion bazillion gadzillion gagillion gajillion gazillion godzillion
 jillion jizillion kabillion kajillion katrillion killion umptillion
 zillion:
-NN- & (NNy+ or NM- or NA+ or
+NN- & (NNy+ or NMw- or NA+ or
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 half_a_dozen half_a_million:
@@ -872,7 +877,6 @@ DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
 % also remember "-->"
 
-% A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 % a b c d e f g h i j k l m n o p q r s t u v w x y z:
 % : EQ+ or EQ-;
 
