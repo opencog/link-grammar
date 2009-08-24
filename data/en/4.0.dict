@@ -871,6 +871,9 @@ DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
 % also remember "-->"
 
+% A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+% a b c d e f g h i j k l m n o p q r s t u v w x y z:
+% : EQ+ or EQ-;
 
 fiscal.i: TY+ & <noun-main-s>;
 
@@ -3276,7 +3279,8 @@ share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
 dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
 
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
-tenfold a_hundredfold a_thousandfold: MVp- or A+ or NItn-;
+tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
+(Xd- & (Xc+ or [[[()]]]) & MX-) or NIfn+ or NItn-);
 
 % For units, maybe should use 
 % <units-alt>: 
