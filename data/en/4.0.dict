@@ -3296,7 +3296,7 @@ block.i foot.i mile.i yard.i inch.i
 meter.i millimeter.i centimeter.i micrometer.i kilometer.i 
 micron.i Angstrom.i wavelength.i
 astronomical_unit light-year.i:
-NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-);
+(NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-)) or Us-;
 a_long_way: Yd+;
 point.i percentage_point:
 (NS- or NIe-) & {NJ-} & (Yd+ or OD-);
@@ -4196,7 +4196,7 @@ or Xe-));
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c 
 £ ₤ € ₳ ฿ ¢ ₵ ₡ ₢ ₫ ₣ ₴ ₭ ℳ  ₥  ₦ ₧ ₰ ₨  ₪ ৳ ₮ ₩ ¥ 호점
 † †† ‡ § ¶ © № "#":
-NMx+ & (AN+ or NMy- or [[G+]] or (NIfu+ or NItu-) or
+NM*x+ & (AN+ or NM*y- or [[G+]] or (NIfu+ or NItu-) or
 ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
 (OD- or ({DD-} & {[[@M+]]} & (<noun-main-p> or [[(Ss+ & <CLAUSE>) or 
 SIs-]])))));

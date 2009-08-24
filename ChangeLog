@@ -21,6 +21,8 @@ Version 4.5.9 (??? 2009)
  * Fix: Post-fixed numbers can act as determiners
  * Fix: "We bought the last 50 ft. of cable."
  * Fix: opening directives to imperatives: "Finally, move it back"
+ * Fix: Improved simple equation parsing support.
+ * Fix: Add misc fixes from BioLG that were previously overlooked.
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
