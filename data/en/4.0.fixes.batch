@@ -1159,6 +1159,8 @@ The 47 Ford came screamin' down the track.
 
 % Simple equation parsing:
 Phosphorylation was observed (P = 0.06).
+Phosphorylation was observed (probability = 0.06).
+The sun is distant (L = 1 AU).
 
 % problem with "of" in entity names.
 The National Voter Registration Act of 1993 makes it easy

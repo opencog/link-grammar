@@ -9,9 +9,10 @@ WORDS=			\
 	entities.organizations.sing \
 	entities.us-states.sing \
 	units.1 \
-	units.2 \
+	units.1.dot \
 	units.3 \
 	units.4 \
+	units.4.dot \
 	words.adj.1	\
 	words.adj.2	\
 	words.adj.3	\
