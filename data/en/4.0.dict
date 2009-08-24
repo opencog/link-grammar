@@ -651,7 +651,7 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 % "15 kDa to 20 kDa", but not "15 kDa to 20".
 % Allowing EC+ for "two to threefold more abundant". This allows also the
 % nonsense "two to three more abundant", but this is likely harmless.
--.ru --.ru ---.ru to.ru: 
+-.ru --.ru ---.ru to.ru ->.ru -->.ru: 
 (NIfn- & {NIr-} & NItn+ & (NM- or EC+ or
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
@@ -3279,7 +3279,7 @@ share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
 dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
 
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
-tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
+tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+ or
 (Xd- & (Xc+ or [[[()]]]) & MX-) or NIfn+ or NItn-);
 
 % For units, maybe should use 
@@ -3304,7 +3304,7 @@ UNITS: <units-suffix>;
 % ft. tbsp. yds.
 /en/words/units.2: {Xi+} & <units-suffix>;
 
-% Abbreviations that form noun-like things.
+% Abbreviations that form noun-like things "degrees_Fahrenheit" etc.
 /en/words/units.3: ND- & <noun-main-s>;
 
 % Time unit abbreviateions:
