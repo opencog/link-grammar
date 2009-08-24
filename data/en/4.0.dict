@@ -711,7 +711,8 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
 NUMBERS: 
 NMn- or ({EN-} & (NIfn+ or NItn-)) or NN+ or [[NF+]] or [[AN+]] or
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))));
+({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
+EQ+ or EQ-;
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"
@@ -866,8 +867,8 @@ DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 
 % "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
 =.v <.v >.v *.v "/.v" +.v -.v x.v: 
-(S- or EQ-) & O+ & 
-(EQ+ or (Xd- & (Xc+ or [[[()]]]) & MX-));
+([S-] or EQ-) &  ([O+] or EQ+) & 
+(Xd- & (Xc+ or [[[()]]]) & (MX- or MVa-));
 
 % "adverb" use, e.g. "< 10" for "less than 10"
 =.e <.e >.e +.e -.e x.e: EN+;
@@ -877,8 +878,11 @@ DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
 % also remember "-->"
 
-% a b c d e f g h i j k l m n o p q r s t u v w x y z:
-% : EQ+ or EQ-;
+A.eq B.eq C.eq D.eq E.eq F.eq G.eq H.eq I.eq J.eq K.eq L.eq M.eq
+N.eq O.eq P.eq Q.eq R.eq S.eq T.eq U.eq V.eq W.eq X.eq Y.eq Z.eq
+a.eq b.eq c.eq d.eq e.eq f.eq g.eq h.eq i.eq j.eq k.eq l.eq m.eq 
+n.eq o.eq p.eq q.eq r.eq s.eq t.eq u.eq v.eq w.eq x.eq y.eq z.eq:
+EQ+ or EQ-;
 
 fiscal.i: TY+ & <noun-main-s>;
 
@@ -3156,7 +3160,7 @@ there: J- or <prep-main-b> or
 ((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt-;
 
 de de_la du des del von: {G-} & G+;
-y: G- & G+;
+y.and: G- & G+;
 
 % TIME AND PLACE EXPRESSIONS 
 
