@@ -959,6 +959,7 @@ It is a 12 m² apartment.
 The rent is $150 per m² per month.
 The cost is $150 per meter.
 The cost is $150 per yard.
+The rate is 10nm per msec.
 The differential rate is 5 volts per MeV.
 He queued up another 45 rpm record.
 India is building a 450MW nuclear plant.
@@ -1022,10 +1023,13 @@ That's a $1 cigar
 The IMF estimated growth at five and two-tenths percent.
 
 % XXX FIXME:
-% Note that the handling of prepositions is incorrect with
-% regard to measurements: the linkage should be to lumber,
-% not feet.  That is, "12 feet of" is a modifier.
-% Similarly, "hundreds of" should be a modifier to "hours"
+% Note that the handling of prepositions is incorrect with regard to
+% measurements: the linkage should be to lumber, not feet.  That is, 
+% "12 feet of" is a modifier. Similarly, "hundreds of" should be a 
+% modifier to "hours". But this can also be ambiguous: consider:
+% "The rate is 10 nm per one msec of time" -- here "of time" is 
+% indeed the modifier. Hmmm ... 
+%
 % Note also: parse confusion between "feet.n" and "feet.i"
 % and so "feet.n" should be removed/trimmed back from dict.
 We bought hours of time.
@@ -1037,6 +1041,7 @@ It will take several inches of movement to clear the rigger.
 It will take several foot-pounds of strain before it cracks.
 That will require 10 square yards of paint.
 That engine generates hundreds of foot-pounds of torque.
+The rate is 10 nm per one msec of time.
 
 It cost US$ 14 million.
 It cost $14 million.
