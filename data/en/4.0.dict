@@ -89,7 +89,7 @@
 % ({[[@MX+]]} & AN+) comes from postposed modifiers: "Codon 311 (Cys --> Ser) polymorphism"
 CAPITALIZED-WORDS NAME <entity-singular>:
 ({NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or YS+)) or ({[[@MX+]]} & AN+) or G+))) or 
+(({@M+} & {@MX+} & (JG- or <noun-main-s>)) or YS+)) or ({[[@MX+]]} & AN+) or G+))) or 
 <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
