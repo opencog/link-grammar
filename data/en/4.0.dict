@@ -280,7 +280,7 @@ tawny.n ultramarine.n yellow.n:
 % piano.n flute.n belong here, because of "He plays piano"
 <noun-mass-count>:  
 {@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(({NM+} & AN+) or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
 
 /en/words/words.n.4: <noun-mass-count>;

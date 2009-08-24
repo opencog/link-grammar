@@ -1071,6 +1071,12 @@ Assembly line 7 had a work stoppage this morning
 Flight 442 was delayed.
 John, age 40, is a douchebag.
 
+% Can have numerical modifier *and* a determiner simultaneously: 
+The sigma factor sigma 35 is homologous.
+
+% Nested modifiers too:
+The sequence is omega 1 beta 2 alpha.
+
 % Numerical ranges
 It takes 2 to 3 times the effort.
 It takes 2 - 3 times the effort.
