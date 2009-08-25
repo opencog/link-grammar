@@ -3844,6 +3844,9 @@ nothing_but: Vd- & I+;
 ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
 /en/words/words.adj.3: <superlatives>;
+favorite.a favourite.a: <superlatives> or 
+({Xc+} & {[[@Ec-]]} & [[Lf-]]) or 
+([[Ds-]] & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
 same.a own.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  

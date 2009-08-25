@@ -9,20 +9,21 @@ Version 4.5.9 (??? 2009)
  * Add CMake build file
  * Fix: "It takes longer than that."
  * Fix: "He has done very well."
- * Fix: a dozen optionally transitive verbs.
+ * Fix: a dozen optionally transitive verbs (swim, kill, etc.)
  * Fix: "He's out running."
  * Fix: "suddenly" is a "manner adverb", not a clausal adverb.
  * Fix: Use Pg links to gerunds: "He feared hitting the wall."
  * Fix: assorted numerical-range bugs.
  * Fix: prep modifiers with distances: "It is a few miles out"
  * Fix: Spelled-out dates: "It started in nineteen twelve"
- * Fix: Misc date, time expression parsing e.g "zero hour is here"
+ * Fix: Misc date, time expression parsing e.g "Zero hour is here."
  * Fix: Misc words, "ordered list", "screened out"
- * Fix: Post-fixed numbers can act as determiners
+ * Fix: Post-fixed numbers can act as determiners.
  * Fix: "We bought the last 50 ft. of cable."
- * Fix: opening directives to imperatives: "Finally, move it back"
+ * Fix: opening directives to imperatives: "Finally, move it back."
  * Fix: Improved simple equation parsing support.
  * Fix: Add misc fixes from BioLG that were previously overlooked.
+ * Fix: "favorite" can take determiner "a" ("a favorite place")
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
