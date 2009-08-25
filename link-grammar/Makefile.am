@@ -68,6 +68,10 @@ liblink_grammar_la_LIBADD  += -lpthread
 liblink_grammar_java_la_LIBADD  += -lpthread
 endif
 
+# Math libraries are needed for floorf, etc.
+liblink_grammar_la_LIBADD  += -lm
+liblink_grammar_java_la_LIBADD  += -lm
+
 liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
 	and.c                            \
