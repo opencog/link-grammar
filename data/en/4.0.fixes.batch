@@ -34,7 +34,7 @@ I have no idea what that is.
 % the comma implies an "and", which is not actually voiced:
 His shout had been involuntary, something anybody might have done.
 
-% particles w/ various verbs
+% particles w/ various optionally transitive verbs
 He walked the dog.
 He walked up to the counter.
 He sailed the boat into the pier.
@@ -43,6 +43,7 @@ He clicked the mouse.
 *He clicked up the mouse.
 He zeroed the counter.
 He zeroed out the counter.
+He marched his prisoners through town.
 Elvis was all shook up.
 Elvis was all shaken up.
 
