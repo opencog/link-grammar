@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <math.h>
+#include <string.h>
 #include <link-grammar/api.h>
 #include "disjuncts.h"
 #include "error.h"
