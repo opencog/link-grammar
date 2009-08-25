@@ -656,6 +656,12 @@ Let's do it some other place.
 That's what happens most other times. 
 I see that happen most places I go.
 
+% Buggy opening clauses
+Some days, the trains run on time.
+Some of the time, I really  hate it.
+The rest of the time, we goof off.
+Part of the year, we goof off. 
+
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
 % "there is the ball" is much better, but the SFst seems wrong to me.
