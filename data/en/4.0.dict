@@ -570,7 +570,7 @@ half: {EN-} & (NJ+ or ((({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+))
 many: (H- & (Dmc+ or ND+ or NIn+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 
 ({EE-} & (ND+ or NIn+)) or ({DD-} & {EAx-} & Dmc+) or ((({EAx-} & {DD-}) or H-) & 
 <noun-sub-p> & (<noun-main-p> or (Rw+ & Bpm+)));
-all: ({EN-} & (E+ or Dm+ or NIc+ or 
+all.a: ({EN-} & (E+ or Dm+ or NIc+ or 
 ({@M+ or (ALx+ & Jp+) or (R+ & B+) or EL+} & 
 (<noun-main2-x> or (S**t+ & <CLAUSE>) or SI**t-)))) or DTa+;
 all_that: EA+ or EE+ or (<noun-sub-s>
@@ -590,26 +590,31 @@ a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
 such_a such_an: Ds*k+;
 
-a_lot: (<noun-sub-p> & <noun-main-p>) or EC+ or MVa-;
+
+% "all of the time". These are all temporal modifiers: use MVw ("when")
+<adv-of>: MVw- & OF+;
+
+a_lot: (<noun-sub-p> & <noun-main-p>) or EC+ or MVa- or <adv-of>;
 few: {EA- or EF+ or ({EA-} & DD-)} & 
  (Dmc+ or (<noun-sub-p> & <noun-main-p>));
 a_couple: <noun-sub-p> & <noun-main-p>;
 a_couple_of: NN+ or ND+ or NIn+;
 a_few: NN+ or ND+ or NIn+ or ({EN-} & (Dmc+ or ND+ or NIn+ or
 (<noun-sub-p> & <noun-main-p>)));
-some: D+ or EN+ or MF+ or (<noun-sub-x> & <noun-main-x>);
+some: D+ or EN+ or MF+ or (<noun-sub-x> & <noun-main-x>) or <adv-of>;
 little.i: ({EE-} & (MVa- or Ca+ or Qe+)) or ({EEx- or H-} & (Dmu+ or 
 (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+)))))
-or (AM- & (Dmuy+ or MVy- or Oy- or Jy-));
+or (AM- & (Dmuy+ or MVy- or Oy- or Jy-)) or ({Ds-} & <adv-of>);
 most: Dm+ or [EE+] or EA+ or MF+ or
-(<noun-sub-x> & <noun-main-x>);
-part.i: OF+ & <noun-main-s>;
+(<noun-sub-x> & <noun-main-x>) or <adv-of>;
+part.i: (OF+ & <noun-main-s>) or ({Ds-} & <adv-of>);
+all.e: <adv-of>;
 
 the_most: MVa- or EE+ or Dm+ or (<noun-sub-x> & <noun-main-x>);
 least: EA+; 
-none: <noun-sub-x> & (<noun-main-x>);
-rest.i: (DG-) & <noun-sub-p> & <noun-main-p>;
-plenty: {@M+} & <noun-main-x>;
+none: (<noun-sub-x> & <noun-main-x>) or <adv-of>;
+rest.i: ((DG-) & <noun-sub-p> & <noun-main-p>) or (DD- & <adv-of>);
+plenty: ({@M+} & <noun-main-x>) or <adv-of>;
 other: Dmu+ or ({ND-} & {DD-} & Dmc+) or 
 (DD- & (Ds+ or DD+ or <noun-main-s>));
 one_other every_other: <noun-main-s> or Ds+; 
@@ -3881,7 +3886,8 @@ or [[E+]]);
 
 %ADVERBS WHOSE MAIN USE IS ADJECTIVAL
 far_from: {EE-} & EA+;
-a_bit a_little_bit: ({EE-} & EA+) or EC+ or EE+ or ({Xd- & Xc+} & MVa-);
+a_bit a_little_bit: ({EE-} & EA+) or EC+ or EE+ or 
+({Xd- & Xc+} & MVa-) or <adv-of>;
 
 % 
 pretty.e extremely very_very very_very_very exceptionally

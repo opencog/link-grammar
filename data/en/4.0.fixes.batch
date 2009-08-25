@@ -618,6 +618,32 @@ It was a detriment to further action.
 He demonstrated a certain ignorance.
 We were unable to find a common ground.
 
+% Time-related verb modifier
+He does that sometimes.
+He does that some of the time.
+He does that all the time.
+He does that all of the time.
+He does that a lot of the time.
+He does it all of the time.
+He does it all of the day.    
+He does it a little of the time.
+He does it a little bit of the time.
+That happens none of the time.
+That's what happens plenty of the time.
+That's what happens the rest of the time.
+That happens the rest of the time.
+That's what goes on the rest of the time.
+Long hair hides his eyes all of the time.
+Sunglasses hide his eyes all the time.
+Sunglasses hide her eyes a lot of the time.
+Sunglasses hide her eyes a bit of the time.
+A hat covers his head some of the time.
+A crown of snow covers the mountain most of the year
+A crown of snow covers the mountain a part of the year
+The trains run on time part of the day
+He is a part of the problem.
+Part of the problem is his attitude.
+
 
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
@@ -1204,6 +1230,8 @@ first is this item.
 second is this item.
 next is this item.
 last is this item.
+
+He finished the season in first.
 
 % problem with "of" in entity names.
 The National Voter Registration Act of 1993 makes it easy
