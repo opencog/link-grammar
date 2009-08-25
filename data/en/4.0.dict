@@ -3060,6 +3060,9 @@ on: ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or K- or
 over: ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) 
 or K- or EN+ or (MVp- & B-) or (Yd- & Pp-);
 just_over just_under well_over: EN+;
+
+% XXX original LG recommends using the LI link, however the 
+% <prep-main-b> sort of clobbers this. Should this be "fixed"?
 like.p: ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
 or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or (MVp- & B-);
 unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or 
