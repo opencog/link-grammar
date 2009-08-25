@@ -9,7 +9,7 @@ Version 4.5.9 (??? 2009)
  * Add CMake build file
  * Fix: "It takes longer than that."
  * Fix: "He has done very well."
- * Fix: a half-dozen optionally transitive verbs.
+ * Fix: a dozen optionally transitive verbs.
  * Fix: "He's out running."
  * Fix: "suddenly" is a "manner adverb", not a clausal adverb.
  * Fix: Use Pg links to gerunds: "He feared hitting the wall."
