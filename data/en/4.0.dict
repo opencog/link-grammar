@@ -866,6 +866,17 @@ TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
 last.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 
+% "Next on our list..." are ordinals.
+% XXX this should be a more complete list ... FIXME ... 
+% Note also another list of ordinals below, used for time expressions.
+first.o next.o last.o second.o third.o fourth.o fifth.o sixth.o
+seventh.o eighth.o ninth.o tenth.o eleventh.o twelfth.o thirteenth.o 
+fourteenth.o fifteenth.o sixteenth.o seventeenth.o eighteenth.o 
+nineteenth.o twentieth.o twenty-first.o twenty-second.o twenty-third.o 
+twenty-fourth.o twenty-fifth.o twenty-sixth.o twenty-seventh.o 
+twenty-eighth.o twenty-ninth.o thirtieth.o thirty-first.o:
+(Wd- & {M+} & Ss*o+);
+
 % EQUATIONS ETC.
 % The below is just barely enough to parse just very simple equation
 % and expressions, nothing complex -- no general math or anything like

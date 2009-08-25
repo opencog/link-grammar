@@ -1194,6 +1194,17 @@ Phosphorylation was observed (probability = 0.06).
 The sun is distant (L = 1 AU).
 Bacteria with low G + C DNA content contain genes.
 
+% Ordinals
+first on our list is this item.
+second on our list is this item.
+third on our list is this item.
+next on our list is this item.
+last on our list is this item.
+first is this item.
+second is this item.
+next is this item.
+last is this item.
+
 % problem with "of" in entity names.
 The National Voter Registration Act of 1993 makes it easy
 
