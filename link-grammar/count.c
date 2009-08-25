@@ -832,7 +832,7 @@ void init_count(Sentence sent)
 {
 	if (NULL == sent->count_ctxt)
 		sent->count_ctxt = (count_context_t *) malloc (sizeof(count_context_t));
-	bzero(sent->count_ctxt, sizeof(count_context_t));
+	memset(sent->count_ctxt, 0, sizeof(count_context_t));
 }
 
 void free_count(Sentence sent)

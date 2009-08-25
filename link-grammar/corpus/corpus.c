@@ -394,8 +394,8 @@ void lg_corpus_linkage_senses(Linkage linkage)
 	lg_compute_disjunct_strings(sent, lifo);
 
 	lifo->nwords = nwords;
-	lifo->sense_list = (Sense **) malloc (nwords * sizeof (Sense *));
-	bzero (lifo->sense_list, nwords * sizeof (Sense *));
+	lifo->sense_list = (Sense **) malloc(nwords * sizeof (Sense *));
+	memset(lifo->sense_list, 0, nwords * sizeof (Sense *));
 
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;

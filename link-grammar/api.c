@@ -1010,7 +1010,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	Sentence sent;
 
 	sent = (Sentence) xalloc(sizeof(struct Sentence_s));
-	bzero(sent, sizeof(struct Sentence_s));
+	memset(sent, 0, sizeof(struct Sentence_s));
 	sent->dict = dict;
 	sent->length = 0;
 	sent->num_linkages_found = 0;

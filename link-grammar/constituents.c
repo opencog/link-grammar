@@ -1588,7 +1588,7 @@ static char * print_flat_constituents(Linkage linkage)
 	 */
 	char * p;
 	con_context_t *ctxt = (con_context_t *) malloc (sizeof(con_context_t));
-	bzero(ctxt, sizeof(con_context_t));
+	memset(ctxt, 0, sizeof(con_context_t));
 	p = do_print_flat_constituents(ctxt, linkage);
 	free(ctxt);
 	return p;

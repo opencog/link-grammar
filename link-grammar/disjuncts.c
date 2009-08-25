@@ -52,7 +52,7 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 	if (lifo->disjunct_list_str) return;
 	lifo->nwords = nwords;
 	lifo->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
-	bzero(lifo->disjunct_list_str, nwords * sizeof(char *));
+	memset(lifo->disjunct_list_str, 0, nwords * sizeof(char *));
 
 	djcount = (int *) malloc (sizeof(int) * (nwords + 2*nwords*nlinks));
 	djlist = djcount + nwords;
