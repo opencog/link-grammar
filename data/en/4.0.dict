@@ -477,11 +477,11 @@ way.n:
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 place.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
-(R+ & Bs+)} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+)))
+(R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-s> or (Rw+ & Bsm+)))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 time.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {TOn+ or WN+ or TH+ or 
-Ce+ or (R+ & Bs+)} & {@MXs+} & (<noun-main-m> or (Rw+ & Bsm+)))
+Ce+ or (R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-m> or (Rw+ & Bsm+)))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 ways.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or 
@@ -489,11 +489,11 @@ ways.n:
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 places.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or 
-(R+ & Bp+)} & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+)))
+(R+ & Bp+)} & {@MXp+} & ([[MVa-]] or <noun-main-p> or (Rw+ & Bpm+)))
  or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 times.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {TOn+ or WN+ or TH+ or 
-Ce+ or (R+ & Bp+)} & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+)))
+Ce+ or (R+ & Bp+)} & {@MXp+} & ([[MVa-]] or <noun-main-p> or (Rw+ & Bpm+)))
  or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
 
