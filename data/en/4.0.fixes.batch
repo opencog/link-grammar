@@ -240,6 +240,12 @@ Sure enough, there it was, as I had sensed.
 Sure enough, there it was, as I had guessed.
 There it was, just as I had said.
 
+% Buggy opening clauses
+Some days, the trains run on time.
+Some of the time, I really  hate it.
+The rest of the time, we goof off.
+Part of the year, we goof off. 
+
 % Some ditranstive verbs of various complexity
 He poured me a glass of champagne.
 *He poured me.
@@ -328,7 +334,7 @@ We will booze it up until dawn!
 We clowned the night away.
 We dozed 'til noon.
 
-% sit, stand
+% sit, stand must take Pa+ link ... 
 The house now sits vacant
 The house now stands vacant
 The house now sits empty
@@ -336,6 +342,9 @@ The dog sat very still
 The dog sat up.
 The dog stood still.
 The dog looked tired.
+
+Stay a little while.
+Stay a while.
 
 % act out, act up
 He is going to act out until he gets what he wants.
@@ -655,12 +664,6 @@ Let's do it some other way.
 Let's do it some other place.      
 That's what happens most other times. 
 I see that happen most places I go.
-
-% Buggy opening clauses
-Some days, the trains run on time.
-Some of the time, I really  hate it.
-The rest of the time, we goof off.
-Part of the year, we goof off. 
 
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.

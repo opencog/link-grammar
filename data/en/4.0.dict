@@ -1489,6 +1489,13 @@ stays.v: <verb-s> & <vc-stay>;
 stayed.v: <verb-sp,pp> & <vc-stay>;
 staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 
+<vc-stand>: {({@MV+} & Pa+) or ({O+ or B-} & {K+} & {@MV+})};
+stand.v sit.v: <verb-pl,i> & <vc-stand>;
+stands.v sits.v: <verb-s> & <vc-stand>;
+stood.v sat.v: (<verb-sp,pp> & <vc-stand>);
+standing.v sitting.v: <verb-pg> & <vc-stand>;
+standing.g sitting.g: (<vc-stand> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
+
 <vc-sound>: ({@MV+} & {LI+ or Pa+ or AF-}) or {O+ & K+ & {@MV+}};
 sound.v: <verb-pl,i> & <vc-sound>;
 sounds.v: <verb-s> & <vc-sound>;
@@ -3263,7 +3270,7 @@ year_and_a_half: NSa- & {EN-} & (Yt+ or OT-);
 moment.u: (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-))) or 
 ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) 
 or MVp- or (Xd- & Xc+ & MVx-))) or Yt+)); 
-a_while: J- or Yt+ or OT-;
+a_while: J- or Yt+ or OT- or MVa-;
 now.i then.i: JT- or FM-;
 now_on then_on: FM-;
 from_now: Yt- & <prep-main-t>;
@@ -3886,7 +3893,7 @@ or [[E+]]);
 
 %ADVERBS WHOSE MAIN USE IS ADJECTIVAL
 far_from: {EE-} & EA+;
-a_bit a_little_bit: ({EE-} & EA+) or EC+ or EE+ or 
+a_bit a_little_bit a_little_while: ({EE-} & EA+) or EC+ or EE+ or 
 ({Xd- & Xc+} & MVa-) or <adv-of>;
 
 % 

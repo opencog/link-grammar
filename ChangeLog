@@ -27,6 +27,7 @@ Version 4.5.9 (??? 2009)
  * Fix: assorted clausal complements: "The emperor ordered it done."
  * Fix: ordinals: "First on our list is ..."
  * Fix: verb modifier "some of the time", "most places"
+ * Fix: Sit, stand take modifiers: "he stood still"
 
 
 Version 4.5.8 (2 July 2009)
