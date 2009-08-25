@@ -1004,7 +1004,7 @@ does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) &
 (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & 
 (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
-done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-po>;
+done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-po> or S-;
 
 % adjectival modifier: "I am done working", "I am through being mad"
 done.a finished.a through.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+});
@@ -2228,8 +2228,8 @@ required.v: (<verb-sp,pp> & <vc-require>) or
 requiring.g: (<vc-require> & <verb-ge>) or <verb-ge-d>;
 requiring.v: <verb-pg> & <vc-require>;
 
-<vc-command>: ({@MV+} & (TH+ or Zs- or TS+)) or
-((O+ or B-) & {@MV+} & {TOo+}) or ([[@MV+ & O*n+]]);
+<vc-command>: ({@MV+} & (TH+ or Zs- or TS+ or Ce+)) or
+((O+ or B-) & {@MV+} & {TOo+}) or ([[@MV+ & {O*n+}]]);
 command.v order.v urge.v: <verb-pl,i> & <vc-command>;
 commands.v orders.v urges.v: <verb-s> & <vc-command>;
 <vc-commanded>: (<verb-sp,pp> & <vc-command>) or (<verb-pv> & {TO+ or TH+ or TS+}) 
@@ -2693,7 +2693,7 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
 <vc-make>: ((B- or O+ or OX+) & {({@MV+} & {I*j+ or Pa**j+ or B-}) or 
 ((K+ or AF-) & {@MV+})}) or ((((O+ or K+) & {[[@MV+]]} & O*n+) or K+ or Vm+ or
-([[{K+} & @MV+ & O*n+]])) & {@MV+});
+([[{K+} & @MV+ & O*n+]])) & {@MV+}) or [[()]];
 make.v: <verb-pl,i> & <vc-make>;
 makes.v: <verb-s> & <vc-make>;
 made.v: (<verb-sp,pp> & <vc-make>) or (<verb-s-pv-b> & 

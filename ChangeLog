@@ -24,6 +24,8 @@ Version 4.5.9 (??? 2009)
  * Fix: Improved simple equation parsing support.
  * Fix: Add misc fixes from BioLG that were previously overlooked.
  * Fix: "favorite" can take determiner "a" ("a favorite place")
+ * Fix: assorted clausal complements: "The emperor ordered it done."
+
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
