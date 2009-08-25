@@ -390,6 +390,29 @@ MULTI-THREADED USE:
                      is not currently thread-safe.
 
 
+BioLG merger:
+-------------
+Much of the BioLG project changes have been merged into this version.
+The current version of link-grammar has superior parse coverage to BioLG
+on all texts, including biomedical texts.  The original BioLG test suite
+can be found in data/en/4.0.biolg.batch.
+
+The following changes in BioLG have NOT been merged:
+-- Part of speach hinting. The BioLG code can accept part-of-speech
+   hints for unknown words.  
+-- XML I/O. The BioLG code can output parsed text in a certain 
+   idiosyncratic XML format. 
+-- "term support". Link-grammar does support "entity placeholders",
+   which provides an equivalant function.
+-- The link type CH. This was a large, intrusive, incompatible change 
+   to the dictionary, and it is not strictly required -- there is a
+   better, alternative way of handling adj-noun-adj-noun chains commonly
+   seen in biomedical text, and this has been implemented.
+
+All other BioLG changes, and in particular, extensive dictionary fixes,
+as well as regex morphology handling, have been incorporated.
+
+
 COMMERCIAL use:
 ---------------
    The original authors would be pleased to discuss alternate

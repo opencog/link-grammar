@@ -1,4 +1,5 @@
-Version 4.5.9 (??? 2009)
+
+Version 4.5.9 (25 August 2009)
  * Modify error messages to indicate that they are from link-grammar.
  * Add missing Java files that were forgotten last time around.
  * Add greeting to command-line client startup.
@@ -28,7 +29,6 @@ Version 4.5.9 (??? 2009)
  * Fix: ordinals: "First on our list is ..."
  * Fix: verb modifier "some of the time", "most places"
  * Fix: Sit, stand take modifiers: "he stood still"
-
 
 Version 4.5.8 (2 July 2009)
  * Fix: 'than anticipated', 'than was anticipated', etc.
