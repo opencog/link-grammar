@@ -3450,8 +3450,12 @@ or (Xd- & Xc+ & E+)));
 once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or 
 (Xd- & Xc+ & E+))) or E+ or EB-;
 or: NO+;
-but.misc-cnj: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
-and.r and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
+
+% Should these be treated as clause-openers (taking CO link)?
+but.misc-opnr and.misc-opnr: 
+[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)];
+and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
+
 and.misc-conj: G- & G+;
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
