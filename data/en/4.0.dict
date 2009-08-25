@@ -1141,19 +1141,19 @@ or [[()]]));
 arisen.v: {@E-} & PP- & {@MV+};
 % accruing.v aching.v acquiescing.v ad-libbing.v adhering.v adjoining.v 
 
-<vc-walk>: {K+} & {@MV+}; 
+<vc-bulge>: {K+} & {@MV+}; 
 % intransitive verbs that can take particles like "up" and "out"
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
 /en/words/words.v.5.1: 
-<verb-pl,i> & <vc-walk>;
+<verb-pl,i> & <vc-bulge>;
 /en/words/words.v.5.2:
-<verb-s> & <vc-walk>;
+<verb-s> & <vc-bulge>;
 /en/words/words.v.5.3:
-<verb-sp,pp> & <vc-walk>;
+<verb-sp,pp> & <vc-bulge>;
 
-lay.w: <verb-sp> & <vc-walk>; 
-lain.v: <verb-pp> & <vc-walk>;
-/en/words/words.v.5.4: (<vc-walk> & <verb-pg,ge>) or ({@E-} & A+)
+lay.w: <verb-sp> & <vc-bulge>; 
+lain.v: <verb-pp> & <vc-bulge>;
+/en/words/words.v.5.4: (<vc-bulge> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
 
 <vc-come>:  {K+ or [[Pg+]]} & {@MV+};
@@ -4433,7 +4433,7 @@ questionably neonatally axially ante_meridiem
  EA+ or EE+;
 
 drowse.v riffle.v caw.v ruck.v agonize.v:
- <verb-pl,i> & <vc-walk>;
+ <verb-pl,i> & <vc-bulge>;
 
 oftenest correctliest soonest disquietingliest:
  EA+;
