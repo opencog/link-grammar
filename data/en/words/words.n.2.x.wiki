@@ -2,6 +2,7 @@
 frontmen.n
 manga.n
 quanta.n
+radii.n
 statesmen.n
 subgenera.n
 tambon.n
