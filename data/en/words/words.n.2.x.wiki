@@ -1,2 +1,8 @@
 ﻿basemen.n
 frontmen.n
+manga.n
+quanta.n
+statesmen.n
+subgenera.n
+tambon.n
+trivia.n
