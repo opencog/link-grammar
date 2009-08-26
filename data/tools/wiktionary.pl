@@ -32,29 +32,32 @@ while (<>)
 	{
 		print "NOUN- $word\n";
 	}
-	elsif ($output =~ /\<TEXTAREA.*\{\{en-verb\}\}.*\<\/TEXTAREA\>/s)
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-verb.*\<\/TEXTAREA\>/s)
 	{
 		print "VERB- $word\n";
 	}
-	elsif ($output =~ /\<TEXTAREA.*\{\{en-adj\}\}.*\<\/TEXTAREA\>/s)
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-adj.*\<\/TEXTAREA\>/s)
 	{
 		print "ADJ- $word\n";
 	}
-	elsif ($output =~ /\<TEXTAREA.*\{\{en-adv\}\}.*\<\/TEXTAREA\>/s)
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-adv.*\<\/TEXTAREA\>/s)
 	{
 		print "ADV- $word\n";
+	}
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-noun\|(\w+)\}\}.*\<\/TEXTAREA\>/s)
+	{
+		$plu = $1;
+		print "PLURAL- $plu\n";
+	}
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-noun.*\<\/TEXTAREA\>/s)
+	{
+		print "NOUN- $word\n";
 	}
 	else
 	{
 		print "XXX- $word\n";
 	}
 	`sleep 1`;
-
-#	if ($output =~ /\{\{en-noun\|(\w+)\}\}/)
-#	{
-#		$plu = $1;
-#		print "its  plural >>$plu<<\n";
-#	}
 }
 
 
