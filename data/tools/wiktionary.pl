@@ -7,6 +7,8 @@
 # Linas vepstas August 2009
 #
 
+$|=1;
+
 $urlbase = "http://en.wiktionary.org/wiki/";
 # http://www.thefreedictionary.com
 
@@ -15,20 +17,32 @@ $urltail = "&action=edit";
 
 $word = "lycée";
 $word = "school";
-$url = $urlbase. $word . $urltail;
 
-$output = `w3mir -drr -s \"$url\"`;
+while (<>)
+{
+	chop;
+	$word = $_;
 
-# $output =~ /\{\{ni\n";en-noun\|(\w+)\}\}/;
-if ($output =~ /\{\{en-noun\}\}/)
-{
-	print "Yes its a noun\n";
+	$url = $urlbase. $word . $urltail;
+
+	$output = `w3mir -drr -s \"$url\"`;
+
+	# $output =~ /\{\{ni\n";en-noun\|(\w+)\}\}/;
+	if ($output =~ /\<TEXTAREA.*\{\{en-noun\}\}.*\<\/TEXTAREA\>/s)
+	{
+		print "$word\n";
+	}
+	else
+	{
+		print "XXX- $word\n";
+	}
+	`sleep 1`;
+
+#	if ($output =~ /\{\{en-noun\|(\w+)\}\}/)
+#	{
+#		$plu = $1;
+#		print "its  plural >>$plu<<\n";
+#	}
 }
-if ($output =~ /\{\{en-noun\|(\w+)\}\}/)
-{
-	$plu = $1;
-	print "its  plural >>$plu<<\n";
-}
-print "finit\n";
 
 
