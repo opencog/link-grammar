@@ -3208,7 +3208,11 @@ here: J- or <prep-main-b> or [Wq- & PF+];
 there: J- or <prep-main-b> or 
 ((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt-;
 
-de de_la du des del von: {G-} & G+;
+% Patronymics and misc french/spanish/german connectives
+à auf aus aux avec comte comtes 
+dans de de_la del della delle der des du duc
+la las le les los mit nach noch nos och os ou på por
+sans sur te tres über un une vom von zum zur zu: {G-} & G+;
 y.and: G- & G+;
 
 % TIME AND PLACE EXPRESSIONS 
