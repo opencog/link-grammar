@@ -3958,9 +3958,13 @@ barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
 partly.e largely.e mostly.e chiefly.e simply.e1
 purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
-/en/words/words.adv.3: % adverbs like "biochemically"
- EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} &
- CO+);
+% Adverbs like "biochemically". These tend to answer the question "how?" 
+% with a noun-form (as opposed to being verb-derived) A lot of these are
+% of the "-ically" form
+/en/words/words.adv.3:
+EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or 
+({{Xd-} & Xc+} & CO+);
+
 in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 % academically administratively aesthetically
 
@@ -4082,7 +4086,7 @@ E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
 % These are taken from words.adv.2 and allowed EB- when separated by
 % commas.
 however.e consequently.e moreover.e potentially.e conversely.e
-finally.e actually.e:
+finally.e actually.e thusly.e:
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or  ({Xc+ & {Xd-}} & EBm-);
 
 % TODO: "similarly" and "differently" get very different linking requirements.
