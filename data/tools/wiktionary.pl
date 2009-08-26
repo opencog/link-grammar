@@ -32,18 +32,6 @@ while (<>)
 	{
 		print "NOUN- $word\n";
 	}
-	elsif ($output =~ /\<TEXTAREA.*\{\{en-verb.*\<\/TEXTAREA\>/s)
-	{
-		print "VERB- $word\n";
-	}
-	elsif ($output =~ /\<TEXTAREA.*\{\{en-adj.*\<\/TEXTAREA\>/s)
-	{
-		print "ADJ- $word\n";
-	}
-	elsif ($output =~ /\<TEXTAREA.*\{\{en-adv.*\<\/TEXTAREA\>/s)
-	{
-		print "ADV- $word\n";
-	}
 	elsif ($output =~ /\<TEXTAREA.*\{\{en-noun\|(\w+)\}\}.*\<\/TEXTAREA\>/s)
 	{
 		$plu = $1;
@@ -52,6 +40,19 @@ while (<>)
 	elsif ($output =~ /\<TEXTAREA.*\{\{en-noun.*\<\/TEXTAREA\>/s)
 	{
 		print "NOUN- $word\n";
+	}
+
+	if ($output =~ /\<TEXTAREA.*\{\{en-verb.*\<\/TEXTAREA\>/s)
+	{
+		print "VERB- $word\n";
+	}
+	if ($output =~ /\<TEXTAREA.*\{\{en-adj.*\<\/TEXTAREA\>/s)
+	{
+		print "ADJ- $word\n";
+	}
+	if ($output =~ /\<TEXTAREA.*\{\{en-adv.*\<\/TEXTAREA\>/s)
+	{
+		print "ADV- $word\n";
 	}
 	else
 	{
