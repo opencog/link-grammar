@@ -18,7 +18,9 @@ battlecruisers.n
 beamlines.n
 bestsellers.n
 bibles.n
+biodiversities.n
 bios.n
+biosyntheses.n
 bitmaps.n
 blogs.n
 bookends.n
