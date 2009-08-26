@@ -37,9 +37,13 @@ while (<>)
 		$plu = $1;
 		print "PLURAL- $plu\n";
 	}
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-noun\|\-\}\}.*\<\/TEXTAREA\>/s)
+	{
+		print "MASS- $word\n";
+	}
 	elsif ($output =~ /\<TEXTAREA.*\{\{en-noun.*\<\/TEXTAREA\>/s)
 	{
-		print "NOUN- $word\n";
+		print "NOUN-XXX- $word\n";
 	}
 
 	if ($output =~ /\<TEXTAREA.*\{\{en-verb.*\<\/TEXTAREA\>/s)
@@ -47,6 +51,10 @@ while (<>)
 		print "VERB- $word\n";
 	}
 	if ($output =~ /\<TEXTAREA.*\{\{en-adj.*\<\/TEXTAREA\>/s)
+	{
+		print "ADJ- $word\n";
+	}
+	if ($output =~ /\<TEXTAREA.*adjective\}\}.*\<\/TEXTAREA\>/s)
 	{
 		print "ADJ- $word\n";
 	}
