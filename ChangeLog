@@ -1,7 +1,8 @@
 Version 4.5.11 (25 August 2009)
  * Avoid used of bzero (MacOSX problem)
  * Reclassify a number of "medical" prepostions as adverbs.
- * Add approx 100 adverbs, a dozen adjectives.
+ * Add approx 100 adverbs.
+ * Add approx 250 adjectives.
 
 Version 4.5.10 (25 August 2009)
  * Be sure to link with -lm
