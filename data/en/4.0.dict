@@ -239,7 +239,8 @@ HYPHENATED-WORDS.n:
 
 % Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
-/en/words/words.n.1: 
+/en/words/words.n.1 
+/en/words/words.n.1.wiki : 
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
 (AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
@@ -285,7 +286,7 @@ tawny.n ultramarine.n yellow.n:
 
 /en/words/words.n.4: <noun-mass-count>;
 /en/words/words.n.4.biolg: <noun-mass-count>;
-GREEK-LETTER-AND-NUMBER pH.u x.n: <noun-mass-count>;
+GREEK-LETTER-AND-NUMBER x.n: <noun-mass-count>;
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
@@ -3209,10 +3210,11 @@ there: J- or <prep-main-b> or
 ((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt-;
 
 % Patronymics and misc french/spanish/german connectives
-à auf aus aux avec comte comtes 
+% Many of these are already in the adjectives list
+à auf aus aux comte comtes 
 dans de de_la del della delle der des du duc
-la las le les los mit nach noch nos och os ou på por
-sans sur te tres über un une vom von zum zur zu: {G-} & G+;
+la las le.c los nach noch och os ou på por
+sans te über un une vom von zum zur zu: {G-} & G+;
 y.and: G- & G+;
 
 % TIME AND PLACE EXPRESSIONS 
