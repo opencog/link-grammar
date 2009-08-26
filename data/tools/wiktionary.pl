@@ -30,7 +30,19 @@ while (<>)
 	# $output =~ /\{\{ni\n";en-noun\|(\w+)\}\}/;
 	if ($output =~ /\<TEXTAREA.*\{\{en-noun\}\}.*\<\/TEXTAREA\>/s)
 	{
-		print "$word\n";
+		print "NOUN- $word\n";
+	}
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-verb\}\}.*\<\/TEXTAREA\>/s)
+	{
+		print "VERB- $word\n";
+	}
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-adj\}\}.*\<\/TEXTAREA\>/s)
+	{
+		print "ADJ- $word\n";
+	}
+	elsif ($output =~ /\<TEXTAREA.*\{\{en-adv\}\}.*\<\/TEXTAREA\>/s)
+	{
+		print "ADV- $word\n";
 	}
 	else
 	{
