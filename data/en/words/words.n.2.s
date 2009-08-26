@@ -189,7 +189,8 @@ bevels.n beverages.n bevies.n biases.n bibliographers.n
 bibliographies.n bibliophiles.n bibs.n bicentenaries.n bicentennials.n 
 biceps.p bicycles.n bidders.n bidets.n bids.n biennials.n biffs.n 
 bifurcations.n bigamists.n bigots.n bigwigs.n bikes.n bikinis.n 
-bilabials.n bilinguals.n billboards.n billets.n billfolds.n billings.n 
+bilabials.n bilinguals.n billboards.n billets.n billfolds.n billies 
+billings.n 
 billionaires.n billionths.n billows.n binderies.n binders.n binds.n 
 bings.n bins.n biochemicals.n biographers.n biographies.n biologists.n 
 bioscopes.n bipeds.n biplanes.n birches.n birdcages.n birds.n 
@@ -509,7 +510,7 @@ czarinas.n czars.n dabblers.n dabs.n dachas.n dachshunds.n dactyls.n
 daddies.n dads.n daemons.n daffodils.n daggers.n dagos.n 
 daguerreotypes.n dahlias.n dailies.n dainties.n dairies.n dairymaids.n 
 daises.n daisies.n dales.n dalmatians.n damages.n dames.n dams.n 
-damsels.n dancers.n dances.n dandelions.n dandies.n daredevils.n 
+damselflies damsels.n dancers.n dances.n dandelions.n dandies.n daredevils.n 
 dares.n darkrooms.n darlings.n darns.n darts.n dashboards.n dashes.n 
 datelines.n dates.n daughters.n dauphins.n davenports.n dawdlers.n 
 dawns.n daybooks.n dayboys.n daydreams.n daygirls.n daytimes.n 
@@ -566,7 +567,7 @@ dioxides.n diphthongs.n diplomas.n diplomatists.n diplomats.n
 dippers.n dips.n dipsticks.n diptychs.n directions.n directives.n 
 directorates.n directories.n directors.n directorships.n dirges.n 
 dirigibles.n dirndls.n disabilities.n disadvantages.n disagreements.n 
-disappearances.n disappointments.n disasters.n disbursements.n 
+disappearances.n disappointments.n disassembblies disasters.n disbursements.n 
 discards.n discharges.n disciples.n disciplinarians.n disciplines.n 
 disclaimers.n discomforts.n discontinuities.n discords.n discos.n 
 discotheques.n discounts.n discouragements.n discourses.n 
@@ -805,7 +806,7 @@ gherkins.n ghettos.n ghosts.n ghouls.n giantesses.n giants.n gibbets.n
 gibbons.n gibes.n gifts.n gigabytes.n gigawatts.n 
 giggles.n gigolos.n gigs.n gilders.n gills.n 
 gimmicks.n gins.n gipsies.n giraffes.n girders.n girdles.n 
-girlfriends.n girls.n gists.n giveaways.n gizzards.n glaciers.n 
+girlfriends.n girlies girls.n gists.n giveaways.n gizzards.n glaciers.n 
 glades.n gladiators.n glances.n glands.n glares.n glasschords.n 
 glasses.n 
 glassfuls.n glasshouses.n glassworks.p glazes.n gleams.n glees.n 
@@ -888,7 +889,7 @@ hexameters.n heydays.n hiatuses.n hiccoughs.n hiccups.n hickories.n
 hicks.n hideaways.n hides.n hidings.n hierarchies.n hieroglyphs.n 
 highballs.n highfliers.n highflyers.n highlands.n highlights.n 
 highnesses.n highroads.n highs.n highways.n hijackers.n hijacks.n 
-hikers.n hikes.n hillocks.n hills.n hillsides.n hilts.n hindrances.n 
+hikers.n hikes.n hillbillies hillocks.n hills.n hillsides.n hilts.n hindrances.n 
 hinds.n hinges.n hinterlands.n hints.n hippies.n hippodromes.n 
 hippopotamuses.n hippos.n hips.n hisses.n histograms.n historians.n 
 histories.n hitches.n hitchhikers.n hits.n hitters.n hives.n 
@@ -1010,7 +1011,7 @@ junctures.n jungles.n juniors.n junipers.n junkets.n junkies.n
 juntas.n juries.n jurists.n jurors.n justices.n justifications.n 
 juveniles.n kaleidoscopes.n kalimbas.n kangaroos.n karats.n katzenklaviers.n 
 kayaks.n kazoos.n kebabs.n 
-keels.n keepers.n keepsakes.n kegs.n kennels.n kerbs.n kerbstones.n 
+keels.n keepers.n keepsakes.n kegs.n kellies kennels.n kerbs.n kerbstones.n 
 kerchiefs.n kernels.n kettledrums.n kettles.n keyboards.n keyholes.n 
 keynotes.n keyrings.n keys.n keystones.n keytars.n keywords.n khalams.n 
 khans.n 
@@ -1765,7 +1766,7 @@ stubs.n stuccos.n students.n studies.n studios.n studs.n stuffs.n
 stumbles.n stumps.n stunners.n stunts.n stupors.n sturgeons.n 
 stutterers.n stutters.n styles.n stylists.n stylizations.n styluses.n 
 subalterns.n subcommittees.n subcontinents.n subcontractors.n 
-subcontracts.n subdivisions.n subeditors.n subgroups.n subheadings.n 
+subcontracts.n subdivisions.n subeditors.n subfamilies subgroups.n subheadings.n 
 subjects.n subjugations.n subleases.n sublimates.n sublimations.n 
 submarines.n submissions.n subordinates.n subpoenas.n subs.n 
 subscribers.n subscriptions.n subscripts.n subsections.n subsets.n 
@@ -1779,7 +1780,7 @@ summerhouses.n summers.n summits.n summonses.n sums.n sunbeams.n
 sunblinds.n sunbonnets.n sunburns.n sundaes.n sundials.n sunfish.p 
 sunflowers.n sunglasses.n sunhats.n sunlamps.n sunrises.n sunroofs.n 
 suns.n sunsets.n sunshades.n sunspots.n suntans.n supercomputers.n 
-superconductors.n superficialities.n superfluities.n superintendents.n 
+superconductors.n superfamilies superficialities.n superfluities.n superintendents.n 
 superiors.n superlatives.n supermarkets.n supernumeraries.n 
 superpowers.n supers.n superstars.n superstitions.n superstructures.n 
 supervisors.n suppers.n supplements.n supplicants.n supplications.n 
