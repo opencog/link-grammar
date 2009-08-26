@@ -2,7 +2,7 @@
 #
 # wiktionary.pl
 #
-# Verify parts of speach on wiktionary.
+# Verify parts of speech on wiktionary.
 #
 # Linas vepstas August 2009
 #
@@ -14,11 +14,21 @@ $urlbase = "http://en.wiktionary.org/w/index.php?title=";
 $urltail = "&action=edit";
 
 $word = "lycée";
+$word = "school";
 $url = $urlbase. $word . $urltail;
 
-print "its $url\n";
-
 $output = `w3mir -drr -s \"$url\"`;
-print "its $output\n";
+
+# $output =~ /\{\{ni\n";en-noun\|(\w+)\}\}/;
+if ($output =~ /\{\{en-noun\}\}/)
+{
+	print "Yes its a noun\n";
+}
+if ($output =~ /\{\{en-noun\|(\w+)\}\}/)
+{
+	$plu = $1;
+	print "its  plural >>$plu<<\n";
+}
+print "finit\n";
 
 
