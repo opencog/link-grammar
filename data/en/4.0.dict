@@ -4050,6 +4050,12 @@ occasionally.e often.e specifically.e generally.e originally.e:
 /en/words/words.adv.1: <ordinary-adv>;
 /en/words/words-medical.adv.1: <ordinary-adv>;
 
+% words.adv.4 contains "prepositional" adverbs, e.g. lingually 
+% meidally subdermally ... Right now we treat these as ordinary
+% adverbs, and add the Pp- link .. but is this link actually used
+% anywhere?
+/en/words/words.adv.4: <ordinary-adv> or Pp-;
+
 differently:
 {EE- or EF+} & (({MVp+} & {Xd- & Xc+} & MVa-) or Em+ or 
 ({MVp+} & {Xc+ & {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);

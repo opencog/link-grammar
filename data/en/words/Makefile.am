@@ -20,6 +20,7 @@ WORDS=			\
 	words-medical.adv.1	\
 	words.adv.2	\
 	words.adv.3	\
+	words.adv.4	\
 	words.n.1	\
 	words.n.2.s	\
 	words.n.2.s.biolg \
