@@ -270,7 +270,8 @@ busts.n busybodies.n butchers.n butlers.n buttercups.n butterflies.n
 butteries.n buttocks.n buttonholes.n buttonhooks.n buttons.n 
 buttresses.n butts.n buyers.n buyouts.n buzzards.n buzzers.n buzzes.n 
 by-products.n byes.n bygones.n bylaws.n bypasses.n byproducts.n 
-byroads.n bystanders.n bytes.n byways.n bywords.n cabals.n cabarets.n 
+byroads.n bystanders.n bytes.n byways.n bywords.n 
+C-bands.n cabals.n cabarets.n 
 cabbages.n cabbies.n cabers.n cabinets.n cabins.n cablegrams.n 
 cables.n caboodles.n cabooses.n cabs.n cabstands.n caches.n cackles.n 
 cacophonies.n cactuses.n cadavers.n caddies.n cadences.n cadenzas.n 
