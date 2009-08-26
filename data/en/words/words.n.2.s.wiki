@@ -1,4 +1,4 @@
-actuators.n
+﻿actuators.n
 agonists.n
 airdates.n
 airlifts.n
@@ -69,6 +69,7 @@ dielectrics.n
 diodes.n
 dipoles.n
 disambiguations.n
+discographies.n
 dissociatives.n
 disulfides.n
 docodonts.n
@@ -102,6 +103,7 @@ fenestras.n
 fibers.n
 fibrosiss.n
 filmmakers.n
+filmographies.n
 firefighters.n
 flatbeds.n
 frontlines.n
