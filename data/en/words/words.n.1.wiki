@@ -92,7 +92,10 @@ dopamine.n
 dropkick.n
 duo.n
 dysplasia.n
+ed.n
+el.n
 electrophoresis.n
+em.n
 emulsifier.n
 endgame.n
 enrollment.n
