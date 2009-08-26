@@ -25,6 +25,7 @@ WORDS=			\
 	words.n.1.wiki	\
 	words.n.2.s	\
 	words.n.2.s.biolg \
+	words.n.2.s.wiki	\
 	words.n.2.x	\
 	words.n.3	\
 	words.n.4	\
