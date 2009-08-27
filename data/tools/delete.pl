@@ -17,7 +17,7 @@
 
 if ($#ARGV < 1)
 {
-	die "Usage: insert.pl wordlist-file dict-file\n";
+	die "Usage: delete.pl wordlist-file dict-file\n";
 }
 
 # Get the word-list, and the dictionary, from the command line
@@ -53,7 +53,8 @@ while (<DICT>)
 		}
 		if ($entry ne $word)
 		{
-			print "$entry ";
+			# print "$entry ";
+			print "$entry";
 			$gotone = 1;
 		}
 		else
