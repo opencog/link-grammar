@@ -1287,6 +1287,7 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 /en/words/words-medical.v.4.5: 
 (<vc-trans> & <verb-ge>) or <verb-ge-d>;
 
+% -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
 % auction.v bandy.v bar.v batten.v bite.v block.v blot.v blow.v blurt.v 
 % See also words.v.6 for optionally transitive verbs.
@@ -1296,11 +1297,18 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 <verb-pl,i> & <vc-kick>;
 /en/words/words.v.8.2:
 <verb-s> & <vc-kick>;
-bit.v blew.v drank.v stole.v threw.v tore.v wore.v: 
-<verb-sp> & <vc-kick>;
-bitten.v blown.v stolen.v shaken.v thrown.v torn.v worn.v:
+
+bit.v blew.v drank.v stole.v threw.v tore.v wore.v
+overate.v over-ate.v forewent.v oversewed.v forswore.v
+foreswore.v forwent.v:
+ <verb-sp> & <vc-kick>;
+
+bitten.v blown.v stolen.v shaken.v thrown.v torn.v worn.v
+forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
+ foresworn.v overeaten.v:
 (<verb-pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
+
 /en/words/words.v.8.3:
 (<verb-sp,pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
@@ -1310,6 +1318,7 @@ cut.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-kick>) or
 /en/words/words.v.8.5:
 (<vc-kick> & <verb-ge>) or <verb-ge-d>;
 
+% --------------------------------------------------------------
 <vc-raise>: (((O+ or B-) & {OD+}) or [[@MV+ & O*n+]]) & {@MV+};
 raise.v lower.v: <verb-pl,i> & <vc-raise>;
 raises.v lowers.v: <verb-s> & <vc-raise>;
@@ -4554,10 +4563,6 @@ befallen.v interwoven.v overborne.v outgone.v outgrown.v
 epidurally.e:
  {EE- or EF+} & (({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+) or Ca+ or Qe+);
 
-forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
- foresworn.v overeaten.v:
- (<verb-pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>);
-
 lest:
  (Cs+ or Mgp+ or Mv+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
 
@@ -4580,17 +4585,10 @@ albeit:
 whichever:
  ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) & (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or [[(O- or J-) & CX+]])) or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
-skittle.v:
- <verb-pl,i> & <vc-kick>;
-
 proof-reading.v proof_reading 
 O.K.'ing.v OK'ing.v
 O.K.’ing.v OK’ing.v:
  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
-
-overate.v over-ate.v forewent.v oversewed.v forswore.v 
- foreswore.v forwent.v:
- <verb-sp> & <vc-kick>;
 
 whomever:
  (R- & Cr+) or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*r-))) or (Jr- & (RS+ or Cr+)) or Jw-;
