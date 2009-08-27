@@ -1166,6 +1166,7 @@ fundheld strove.v: <verb-sp,pp> & <vc-intrans>;
 arisen.v: {@E-} & PP- & {@MV+};
 % accruing.v aching.v acquiescing.v ad-libbing.v adhering.v adjoining.v 
 
+% --------------------------------------------------------------
 <vc-bulge>: {K+} & {@MV+}; 
 % intransitive verbs that can take particles like "up" and "out"
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
@@ -1175,11 +1176,13 @@ arisen.v: {@E-} & PP- & {@MV+};
 <verb-s> & <vc-bulge>;
 /en/words/words.v.5.3:
 <verb-sp,pp> & <vc-bulge>;
+slunk.v: <verb-sp,pp> & <vc-bulge>;
 
 lay.w: <verb-sp> & <vc-bulge>; 
 lain.v: <verb-pp> & <vc-bulge>;
 /en/words/words.v.5.4: (<vc-bulge> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
+% --------------------------------------------------------------
 
 
 <vc-come>:  {K+ or [[Pg+]]} & {@MV+};
@@ -4569,19 +4572,6 @@ whomever:
 
 thyself oneself one's one’s:
  J- or O- or E+ or MVa-;
-
-% XXX these words are *identical* to the words.v.4.4 class, and should
-% be moved there!!! Should also check that equive stems are in the 
-% other words.v.4.* files
-ensheathing.v roughcasting.v chemosensitizing.v 
- over-feeding.v over-hanging.v overstaging.v 
- curetting.v overhanging.v poleaxing.v whizzing.v 
- re-equilibrating.v oversewing.v 
- lassooing.v over-eating.v breast-feeding.v 
- pre-setting.v psyching.v taring.v 
- KO'ing.v KO’ing.v pole-axing.v rough-casting.v premiering.v 
- under-feeding.v presetting.v:
- <verb-pg> & <vc-trans>;
 
 % Handy test
 % grrr: (A- & B- & C+ & D+) or [(E- & @F+ & @G+ & H+)] or [[(I- & J- & @K- & @L+)]];
