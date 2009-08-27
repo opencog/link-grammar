@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <strings.h>
 #include <wchar.h>
 #include <wctype.h>
 #include <link-grammar/api.h>
