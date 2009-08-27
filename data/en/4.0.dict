@@ -2544,23 +2544,25 @@ forced.v: (<verb-sp,pp> & <vc-force>) or (<verb-pv-b> & ((K+ & {@MV+}) or
 forcing.g: (<vc-force> & <verb-ge>) or <verb-ge-d>;
 forcing.v: <verb-pg> & <vc-force>;
 
+% -----------------------------------------
+
 <vc-design>: ((O+ or B-) & {@MV+} & {TOo+}) or ([[@MV+ & O*n+ & {@MV+}]]);
 design.v permit.v authorize.v use.v cause.v enable.v
-pressure.v train.v sentence.v prompt.v spur.v
+pressure.v train.v sentence.v prompt.v spur.v disincline.v
 invite.v reelect.v encourage.v draft.v hire.v entice.v inspire.v aid.v
 forbid.v employ.v educate.v tempt.v condemn.v commission.v counsel.v induce.v instruct.v
 license.v incite.v nominate.v destine.v provoke.v challenge.v exhort.v
 implore.v motivate.v impel.v: 
 <verb-pl,i> & <vc-design>;
 designs.v permits.v pressures.v trains.v sentences.v causes.v enables.v
-authorizes.v uses.v prompts.v spurs.v 
+authorizes.v uses.v prompts.v spurs.v disinclines.v
 invites.v reelects.v encourages.v drafts.v hires.v entices.v inspires.v aids.v
 forbids.v employs.v educates.v tempts.v condemns.v commissions.v counsels.v induces.v
 instructs.v licenses.v incites.v nominates.v destines.v provokes.v
 challenges.v exhorts.v implores.v motivates.v impels.v: 
 <verb-s> & <vc-design>;
 designed.v permitted.v pressured.v trained.v sentenced.v caused.v enabled.v
-authorized.v prompted.v spurred.v invited.v
+authorized.v prompted.v spurred.v invited.v disinclined.v
 reelected.v encouraged.v drafted.v hired.v enticed.v inspired.v aided.v employed.v
 educated.v tempted.v condemned.v commissioned.v counseled.v induced.v instructed.v
 licensed.v incited.v nominated.v destined.v provoked.v challenged.v exhorted.v
@@ -2572,7 +2574,7 @@ forbidden.v: (<verb-pp> & <vc-design>) or (<verb-pv> & {TO+}) or ({@E-} & A+)
 or ({{@MV+} & TO+} & <verb-po>);
 designing.g permitting.g pressuring.g causing.g enabling.g
 training.g sentencing.g authorizing.g prompting.g 
-spurring.g inviting.g 
+spurring.g inviting.g disinclining.g
 reelecting.g encouraging.g drafting.g hiring.g
 enticing.g inspiring.g aiding.g employing.g educating.g tempting.g
 condemning.g commissioning.g counseling.g inducing.g instructing.g 
@@ -2580,7 +2582,7 @@ licensing.g inciting.g nominating.g destining.g provoking.g challenging.g
 exhorting.g imploring.g motivating.g impelling.g:
 (<vc-design> & <verb-ge>) or <verb-ge-d>;
 designing.v permitting.v pressuring.v causing.v enabling.v
-training.v sentencing.v authorizing.v using.v prompting.v 
+training.v sentencing.v authorizing.v using.v prompting.v disinclining.v
 spurring.v inviting.v reelecting.v encouraging.v drafting.v hiring.v
 enticing.v inspiring.v aiding.v employing.v educating.v tempting.v
 condemning.v commissioning.v counseling.v inducing.v instructing.v 
@@ -2590,6 +2592,8 @@ exhorting.v imploring.v motivating.v impelling.v:
 used.v: (<verb-sp,pp> & <vc-design>) or (<verb-pv> & {TOo+}) or (<verb-sp> & 
 TO+) or ({@MV+} & {TOo+} & <verb-po>) or ({@E-} & A+);
 using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
+
+% --------------------------------------------------
 
 <vc-elect>: ((O+ or B-) & (({@MV+} & {TOo+}) or ({[[@MV+]]} & (O*n+ or TI+))))
  or ([[@MV+ & O*n+ & {@MV+}]]);
@@ -4452,9 +4456,6 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
 % Copyright (c) 2003, Peter Szolovits and MIT.
-
-disincline.v:
- <verb-pl,i> & <vc-design>;
 
 % whereas: 
 % (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
