@@ -4023,8 +4023,7 @@ purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 % with a noun-form (as opposed to being verb-derived) A lot of these are
 % of the "-ically" form
 /en/words/words.adv.3:
-EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or 
-({{Xd-} & Xc+} & CO+);
+EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} & CO+);
 
 in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 % academically administratively aesthetically
@@ -4511,13 +4510,6 @@ subject_to status_post in_conjunction_with sensu
  apropos_of w.i W.i:
  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
-agriculturally histochemically generically behaviorally 
- putatively ethnoculturally syllabically societally 
- archeologically actuarially gynaecologically 
- aetiopathogenetically assumedly biotically atypically 
- cognitively prognostically synoptically pathogenetically 
- esthetically heretofore:
- EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} & CO+);
 
 questionably neonatally axially ante_meridiem 
  revolutionally nonspecifically cardiovascularly 
