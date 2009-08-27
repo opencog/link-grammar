@@ -2633,10 +2633,10 @@ tagging.v: <verb-pg> & (<vc-name> or <vc-intrans>);
 <vc-program>: {((O+ or B-) & {@MV+} & {TOo+}) or @MV+ or ([[@MV+ & O*n+ & {@MV+}]])};
 program.v oblige.v: <verb-pl,i> & <vc-program>;
 programs.v obliges.v: <verb-s> & <vc-program>;
-programmed obliged.v: (<verb-sp,pp> & <vc-program>) or (<verb-pv> & {TO+}) or 
+programed.v programmed obliged.v: (<verb-sp,pp> & <vc-program>) or (<verb-pv> & {TO+}) or 
 ({@E-} & A+) or ({{@MV+} & TO+} & <verb-po>);
-programming.g obliging.g: (<vc-program> & <verb-ge>) or <verb-ge-d>;
-programming.v obliging.v: <verb-pg> & <vc-program>;
+programing.g programming.g obliging.g: (<vc-program> & <verb-ge>) or <verb-ge-d>;
+programing.v programming.v obliging.v: <verb-pg> & <vc-program>;
 
 <vc-convince>: ((O+ or B-) & {@MV+} & {TOo+ or TH+ or Ce+}) or 
 ([[@MV+ & O*n+ & {@MV+}]]);
