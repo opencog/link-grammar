@@ -1339,14 +1339,15 @@ tending.v: <verb-pg> & <vc-tr,intr> & ({@MV+} & {TO+});
 % INTRANSITIVE COMPLEX VERBS (those that do not take O+)
 
 <vc-consent>: {@MV+} & {TO+};
-consent.v hesitate.v proceed.v aspire.v purport.v: <verb-pl,i> & 
-<vc-consent>;
-consents.v hesitates.v proceeds.v aspires.v purports.v: <verb-s> & 
-<vc-consent>;
-consented.v hesitated.v proceeded.v aspired.v purported.v: <verb-sp,pp> &
-<vc-consent>;
-consenting.v hesitating.v proceeding.v aspiring.v purporting.v:
+consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
+ <verb-pl,i> & <vc-consent>;
+consents.v endeavors.v hesitates.v proceeds.v aspires.v purports.v:
+<verb-s> & <vc-consent>;
+consented.v endeavored.v hesitated.v proceeded.v aspired.v purported.v:
+<verb-sp,pp> & <vc-consent>;
+consenting.v endeavoring.v hesitating.v proceeding.v aspiring.v purporting.v:
 (<vc-consent> & <verb-pg,ge>) or <verb-ge-d>;
+
 
 <vc-deign>: {@MV+} & TO+;
 endeavour.v condescend.v deign.v: <verb-pl,i> & <vc-deign>;
@@ -4461,9 +4462,6 @@ disincline.v:
 % ??? should "although" (listed above) be listed here instead?
 in_as_much_as whilst whereas whereof wherein:
  Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
-
-endeavor.v:
- <verb-pl,i> & <vc-consent>;
 
 benumbed.a bespattered.a non_compos_mentis dead_on_arrival 
  bedimmed.a null_and_void bedewed.a au_fait 
