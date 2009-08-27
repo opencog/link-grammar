@@ -1194,7 +1194,7 @@ came.v: <verb-sp> & <vc-come>;
 <verb-s> & <vc-tr,intr>;
 /en/words/words.v.2.3:  
 (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-shrank.v withdrew.v sank.v forgave.v hove.v:
+shrank.v withdrew.v sank.v forgave.v hove.v spoilt:
 <verb-sp> & <vc-tr,intr>;
 shrunk.v withdrawn.v sunk.v forgiven.v:
 (<verb-pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
