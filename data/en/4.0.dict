@@ -1323,12 +1323,12 @@ cut.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-kick>) or
 
 % --------------------------------------------------------------
 <vc-raise>: (((O+ or B-) & {OD+}) or [[@MV+ & O*n+]]) & {@MV+};
-raise.v lower.v: <verb-pl,i> & <vc-raise>;
-raises.v lowers.v: <verb-s> & <vc-raise>;
-raised.v lowered.v: (<verb-sp,pp> & <vc-raise>) or <verb-pv> or ({@E-} & A+)
+raise.v lower.v up.v: <verb-pl,i> & <vc-raise>;
+raises.v lowers.v ups.v: <verb-s> & <vc-raise>;
+raised.v lowered.v upped.v: (<verb-sp,pp> & <vc-raise>) or <verb-pv> or ({@E-} & A+)
  or <verb-po>;
-raising.v lowering.v: <verb-pg> & <vc-raise>;
-raising.g lowering.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
+raising.v lowering.v upping.v: <verb-pg> & <vc-raise>;
+raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 
 % much like words.v.2.1, except can have "TO" link.
 % tending.g remains in words.v.2.5
@@ -2546,7 +2546,7 @@ compelling.g: (<vc-compel> & <verb-ge>) or <verb-ge-d>;
 or ([[{K+} & @MV+ & O*n+]])) & {@MV+};
 force.v: <verb-pl,i> & <vc-force>;
 forces.v: <verb-s> & <vc-force>;
-forced.v: (<verb-sp,pp> & <vc-force>) or (<verb-pv-b> & ((K+ & {@MV+}) or 
+forced.v willed: (<verb-sp,pp> & <vc-force>) or (<verb-pv-b> & ((K+ & {@MV+}) or 
 ({@MV+} & TO+))) or ((K+ or ({@MV+} & TO+)) & <verb-po>) or ({@E-} & A+);
 forcing.g: (<vc-force> & <verb-ge>) or <verb-ge-d>;
 forcing.v: <verb-pg> & <vc-force>;
@@ -3080,7 +3080,7 @@ past.p:
 around:
 ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
 or [EN+];
-out up down.r:
+out up.r down.r:
 ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
 K- or ({Yd-} & Pp-) or (MVp- & B-);
 by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
