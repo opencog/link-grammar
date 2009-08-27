@@ -1177,6 +1177,7 @@ lain.v: <verb-pp> & <vc-bulge>;
 /en/words/words.v.5.4: (<vc-bulge> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
 
+
 <vc-come>:  {K+ or [[Pg+]]} & {@MV+};
 come.v: (<verb-pl,i> or <verb-pp>) & <vc-come>;
 comes.v: <verb-s> & <vc-come>;
@@ -4484,9 +4485,6 @@ questionably neonatally axially ante_meridiem
  neurally thereto morbidly neuroectodermally 
  therapeutically lastingly immunophenotypically:
  EA+ or EE+;
-
-drowse.v riffle.v caw.v ruck.v agonize.v:
- <verb-pl,i> & <vc-bulge>;
 
 oftenest correctliest soonest disquietingliest:
  EA+;
