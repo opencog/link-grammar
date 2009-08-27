@@ -1242,6 +1242,9 @@ run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or
 /en/words/words.v.6.4: <verb-pg> & <vc-fill>;
 /en/words/words.v.6.5: (<vc-fill> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
+frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
+ <verb-pl,i> & <vc-fill>;
+
 
 <vc-trans>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
 % common transitive verbs
@@ -4557,10 +4560,6 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 
 lest:
  (Cs+ or Mgp+ or Mv+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
-
-disbelieve.v frizz.v frizzle.v prink.v slough.v scuff.v 
- tog.v swot.v:
- <verb-pl,i> & <vc-fill>;
 
 whyever:
  ({EL+} & ((Wq- & Q+) or (QI- & (Cs+ or TOn+)) or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-)))) or [[{@CO-} & Wc- & Wi+]];
