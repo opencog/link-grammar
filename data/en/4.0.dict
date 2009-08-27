@@ -4557,9 +4557,6 @@ articulo_mortis intra_vitam in_articulo_mortis in_extremis
  <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
 
 
-epidurally.e:
- {EE- or EF+} & (({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+) or Ca+ or Qe+);
-
 lest:
  (Cs+ or Mgp+ or Mv+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
 
@@ -4571,10 +4568,6 @@ well-known.a:
 
 poetical.a:
  {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
-
-contrarily namely neurologically coincidentally reversibly 
- viz:
- E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
 
 albeit:
  (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
