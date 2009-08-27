@@ -1197,11 +1197,11 @@ came.v: <verb-sp> & <vc-come>;
 <verb-s> & <vc-tr,intr>;
 /en/words/words.v.2.3:  
 (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-shrank.v withdrew.v sank.v forgave.v hove.v spoilt:
+shrank.v withdrew.v sank.v forgave.v hove.v spoilt.v unbent.v overfed.v:
 <verb-sp> & <vc-tr,intr>;
 shrunk.v withdrawn.v sunk.v forgiven.v:
 (<verb-pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-bid.v hurt.v thrust.v broadcast.v outbid.v:
+bid.v hurt.v thrust.v broadcast.v outbid.v sublet:
 ((<verb-pl,i> or <verb-sp,pp>) & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+)
 or <verb-po>;
 /en/words/words.v.2.4:  
