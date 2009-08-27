@@ -1183,6 +1183,7 @@ come.v: (<verb-pl,i> or <verb-pp>) & <vc-come>;
 comes.v: <verb-s> & <vc-come>;
 came.v: <verb-sp> & <vc-come>; 
 
+% --------------------------------------------------------------
 <vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
 % optionally transitive verbs
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v 
@@ -1197,13 +1198,15 @@ shrank.v withdrew.v sank.v forgave.v hove.v:
 <verb-sp> & <vc-tr,intr>;
 shrunk.v withdrawn.v sunk.v forgiven.v:
 (<verb-pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-bid.v hurt.v thrust.v broadcast.v:
+bid.v hurt.v thrust.v broadcast.v outbid.v:
 ((<verb-pl,i> or <verb-sp,pp>) & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+)
 or <verb-po>;
 /en/words/words.v.2.4:  
 <verb-pg> & <vc-tr,intr>;
 /en/words/words.v.2.5:  
 (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
+
+% --------------------------------------------------------------
 
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v: <verb-pl,i> & <vc-rise>;
