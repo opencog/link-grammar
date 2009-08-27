@@ -1,6 +1,9 @@
  %***************************************************************************%
  %                                                                           %
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %       Copyright (c) 2003, Peter Szolovits and MIT.                        %
+ %       Copyright (c) 2008, 2009 Linas Vepstas                              %
+ %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
  %***************************************************************************%
@@ -4242,7 +4245,7 @@ so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
 
 % Assorted interjections, treat like unknown adjectives.
 er err.j errr um.j umm uh uhh oh.j ohh ooo woo_hoo
-gee gosh wow ah ahh eh ehh hmm hmmm hoo zowie
+gee gosh wow.j ah ahh eh ehh hmm hmmm hoo zowie
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
 emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
 emoticonID10 emoticonID11 emoticonID12 emoticonID13 emoticonID14
@@ -4462,7 +4465,6 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 % Symposium, xx-yy.
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
-% Copyright (c) 2003, Peter Szolovits and MIT.
 
 % whereas: 
 % (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
