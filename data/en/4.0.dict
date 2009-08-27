@@ -2108,9 +2108,13 @@ puts.v: <verb-s> & <vc-put>;
 putting.v: <verb-pg> & <vc-put>;
 putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
 
+% "He costed out the plan"
 <vc-cost>: (((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+})) & {@MV+} & {TOi+})
 or ([[@MV+ & O*n+]]);
 cost.v: (<verb-s-pl,i> or <verb-s-sp,pp>) & <vc-cost>;
+costed.v: (<verb-sp,pp> & <vc-cost>) or
+(<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or 
+({K+ or Pa+ or Pg+} & <verb-po>);
 costs.v: <verb-s-s> & <vc-cost>;
 costing.v: <verb-s-pg> & <vc-cost>;
 costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
