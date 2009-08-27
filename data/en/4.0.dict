@@ -4601,14 +4601,17 @@ whomever:
 thyself oneself one's one’s:
  J- or O- or E+ or MVa-;
 
+% XXX these words are *identical* to the words.v.4.4 class, and should
+% be moved there!!! Should also check that equive stems are in the 
+% other words.v.4.* files
 ensheathing.v roughcasting.v chemosensitizing.v 
- over-feeding.v stabilising.v over-hanging.v overstaging.v 
+ over-feeding.v over-hanging.v overstaging.v 
  curetting.v overhanging.v poleaxing.v whizzing.v 
  re-equilibrating.v crossmatching.v oversewing.v 
  lassooing.v over-eating.v breast-feeding.v 
  chemosensitising.v pre-setting.v psyching.v taring.v 
  KO'ing.v KO’ing.v pole-axing.v rough-casting.v premiering.v 
- under-feeding.v presetting.v tinging.v underfeeding.v:
+ under-feeding.v presetting.v:
  <verb-pg> & <vc-trans>;
 
 % Handy test
