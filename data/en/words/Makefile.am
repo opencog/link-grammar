@@ -54,6 +54,7 @@ WORDS=			\
 	words.v.4.3	\
 	words-medical.v.4.3 \
 	words.v.4.4	\
+	words-medical.v.4.4 \
 	words.v.4.5	\
 	words-medical.v.4.5 \
 	words.v.5.1	\

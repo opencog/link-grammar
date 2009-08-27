@@ -1272,7 +1272,10 @@ hit.v misread.v shed.v rid.v overcome.v offset.v overrun.v upset.v undercut.v:
 or <verb-po>;
 forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v: 
 (<verb-pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+
 /en/words/words.v.4.4:  
+<verb-pg> & <vc-trans>;
+/en/words/words-medical.v.4.4:  
 <verb-pg> & <vc-trans>;
 
 /en/words/words.v.4.5: 
