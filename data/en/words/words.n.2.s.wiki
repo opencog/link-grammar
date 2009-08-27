@@ -8,6 +8,7 @@ animators.n
 annals.n
 antennas.n
 antidepressants.n
+architectures.n
 arrangers.n
 automakers.n
 backpacks.n
