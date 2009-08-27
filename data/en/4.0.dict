@@ -1236,12 +1236,31 @@ split.v spread.v beat.v fit.v shut.v cast.v: ((<verb-pl,i> or <verb-sp,pp>) &
 <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
 ate.v broke.v drove.v flew.v froze.v hid.v ran.v rang.v rode.v sprang.v 
-stalked.v woke.v: 
-<verb-sp> & <vc-fill>;
+stalked.v woke.v test-drove.v forbore.v oversaw.v throve.v shrove.v 
+ countersank.v outgrew.v strode.v offsetted.v overthrew.v 
+ partook.v begot.v overdid.v smote.v stank.v quick-froze.v 
+ backbit.v awoke.v redid.v chidded.v reran.v rived.v 
+ befell.v outrode.v betrode.v outdid.v ridded.v 
+ deep-froze.v forbad.v deep-freezed.v retook.v interwove.v 
+ bespoke.v underwent.v slew.v overdrew.v overcame.v 
+ outwore.v foreknew.v wove.v trod.v outwent.v:
+ <verb-sp> & <vc-fill>;
 
 beaten.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
-sprung.v stricken.v swum.v woken.v: (<verb-pp> & <vc-fill>) or 
-(<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+sprung.v stricken.v swum.v woken.v
+befallen.v interwoven.v overborne.v outgone.v outgrown.v 
+ test-driven.v outdone.v shrunken.v countersunk.v 
+ bespoken.v underlain.v partaken.v redone.v overdone.v 
+ outridden.v deep-frozen.v bestrid.v undergone.v 
+ outbidden.v shorn.v outworn.v bestridden.v stunk.v borne.v 
+ slain.v woven.v riven.v backbitten.v overlain.v bestrewn.v 
+ forborne.v quick-frozen.v browbeaten.v aquitted.v 
+ overseen.v smitten.v overdrawn.v striven.v thriven.v 
+ shriven.v backslidden.v retaken.v trodden.v chidden.v 
+ begotten.v sown.v sewn.v sawn.v hewn.v cloven.v 
+ foreknown.v overthrown.v strewn.v awoken.v bidden.v 
+ stridden.v:
+ (<verb-pp> & <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
 run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
@@ -4519,16 +4538,6 @@ propension.n:
 avow.q:
  [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
-test-drove.v forbore.v oversaw.v strove.v throve.v shrove.v 
- countersank.v outgrew.v strode.v offsetted.v overthrew.v 
- partook.v begot.v overdid.v smote.v stank.v quick-froze.v 
- backbit.v awoke.v redid.v chidded.v reran.v rived.v 
- befell.v outrode.v betrode.v outdid.v ridded.v 
- deep-froze.v forbad.v deep-freezed.v retook.v interwove.v 
- bespoke.v underwent.v slew.v overdrew.v overcame.v 
- outwore.v foreknew.v wove.v trod.v outwent.v:
- <verb-sp> & <vc-fill>;
-
 longest-term.a:
  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
 
@@ -4555,19 +4564,6 @@ articulo_mortis intra_vitam in_articulo_mortis in_extremis
  post_cibum post_coitum:
  <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
 
-befallen.v interwoven.v overborne.v outgone.v outgrown.v 
- test-driven.v outdone.v shrunken.v countersunk.v 
- bespoken.v underlain.v partaken.v redone.v overdone.v 
- outridden.v deep-frozen.v bestrid.v undergone.v 
- outbidden.v shorn.v outworn.v bestridden.v stunk.v borne.v 
- slain.v woven.v riven.v backbitten.v overlain.v bestrewn.v 
- forborne.v quick-frozen.v browbeaten.v aquitted.v 
- overseen.v smitten.v overdrawn.v striven.v thriven.v 
- shriven.v backslidden.v retaken.v trodden.v chidden.v 
- begotten.v sown.v sewn.v sawn.v hewn.v cloven.v 
- foreknown.v overthrown.v strewn.v awoken.v bidden.v 
- stridden.v:
- (<verb-pp> & <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
 epidurally.e:
  {EE- or EF+} & (({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+) or Ca+ or Qe+);
