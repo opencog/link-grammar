@@ -2425,7 +2425,7 @@ handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
 (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+};
 pass.v pay.v sell.v deal.v: <verb-pl,i> & <vc-pass>;
 passes.v pays.v sells.v deals.v: <verb-s> & <vc-pass>;
-passed.v paid.v sold.v dealt.v: 
+passed.v paid.v payed.v sold.v dealt.v: 
 (<verb-sp,pp> & <vc-pass>) or (<verb-pv-b> & {O+ or B- or K+
 or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 passing.g paying.g selling.g dealing.g: 
