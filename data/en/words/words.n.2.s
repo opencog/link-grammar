@@ -1146,7 +1146,7 @@ mileometers.n miles.n milestones.n milieus.n militants.n militarists.n
 militias.n milkmaids.n milkshakes.n milksops.n millenarians.n 
 milleniums.n millepedes.n millers.n milligrams.n 
 milliliters.n millilitres.n millimeters.n millimetres.n 
-milliners.n millionaires.n millionairesss.n millipedes.n 
+milliners.n millionaires.n millionairesses.n millipedes.n 
 milliseconds.n milliwatts.n 
 millponds.n 
 mills.n millstones.n millwheels.n milometers.n milords.n mimeographs.n 
