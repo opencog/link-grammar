@@ -3531,7 +3531,6 @@ if_so: ({Xc+ & {Xd-}} & CO+);
 if_only: ((MVp+ or MVa+ or MVs+) & ({Xd- & Xc+} & MVp-))
 or (Wd+ & Wc-);
 no_wonder: Wd+ & Wc-;
-although: (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
 while: ((Cs+ or Mgp+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) 
 or (Xd- & Xc+ & E+)));
 once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or 
@@ -4485,12 +4484,9 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
 
-% whereas: 
-% (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
-
-% ??? should "although" (listed above) be listed here instead?
-in_as_much_as whilst whereas whereof wherein:
- Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
+although in_as_much_as whilst whereas whereof wherein:
+ (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))) or
+ ({Xd-} & CC- & Wd+);
 
 benumbed.a bespattered.a non_compos_mentis dead_on_arrival 
  bedimmed.a null_and_void bedewed.a au_fait 
@@ -4539,6 +4535,7 @@ O.K.'d.v OK'd.v O.K.’d.v OK’d.v:
 whence whither:
  {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)));
 
+% Strange -- the JT- is a time-expression link .. .is that right here ??
 articulo_mortis intra_vitam in_articulo_mortis in_extremis 
  post_cibum post_coitum:
  <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
