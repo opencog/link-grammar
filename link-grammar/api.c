@@ -19,9 +19,7 @@
 #include "preparation.h"
 #include "read-regex.h"
 #include "regex-morph.h"
-#ifdef USE_SAT_SOLVER
 #include "sat-solver/sat-encoder.h"
-#endif
 #include "corpus/corpus.h"
 #include "spellcheck-hun.h"
 
@@ -1185,11 +1183,45 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
 	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
+static void chart_parse(Sentence sent, Parse_Options opts)
+{
+	int nl;
+
+	/* Build lists of disjuncts */
+	prepare_to_parse(sent, opts);
+
+	init_fast_matcher(sent);
+	init_table(sent);
+
+	/* A parse set may have been already been built for this sentence,
+	 * if it was previously parsed.  If so we free it up before
+	 * building another.  */
+	free_parse_set(sent);
+	init_x_table(sent);
+
+	for (nl = opts->min_null_count; nl<=opts->max_null_count ; ++nl)
+	{
+		s64 total;
+		if (resources_exhausted(opts->resources)) break;
+		sent->null_count = nl;
+		total = do_parse(sent, sent->null_count, opts);
+
+		/* Give up if the parse count is overflowing */
+		if (PARSE_NUM_OVERFLOW < total) break;
+
+		sent->num_linkages_found = (int) total;
+		print_time(opts, "Counted parses");
+		post_process_linkages(sent, opts);
+		if (sent->num_valid_linkages > 0) break;
+	}
+
+	free_table(sent);
+	free_fast_matcher(sent);
+}
+
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;
-	int nl;
-	s64 total;
 
 	verbosity = opts->verbosity;
 
@@ -1218,40 +1250,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	/* Expressions were previously set up during the tokenize stage. */
 	expression_prune(sent);
 	print_time(opts, "Finished expression pruning");
-#ifdef USE_SAT_SOLVER
-	sat_parse(sent, opts);
-#else
-
-	/* Build lists of disjuncts */
-	prepare_to_parse(sent, opts);
-
-	init_fast_matcher(sent);
-	init_table(sent);
-
-	/* A parse set may have been already been built for this sentence,
-	 * if it was previously parsed.  If so we free it up before
-	 * building another.  */
-	free_parse_set(sent);
-	init_x_table(sent);
-
-	for (nl = opts->min_null_count; nl<=opts->max_null_count ; ++nl)
+	if (opts->use_sat_solver)
 	{
-		if (resources_exhausted(opts->resources)) break;
-		sent->null_count = nl;
-		total = do_parse(sent, sent->null_count, opts);
-
-		/* Give up if the parse count is overflowing */
-		if (PARSE_NUM_OVERFLOW < total) break;
-
-		sent->num_linkages_found = (int) total;
-		print_time(opts, "Counted parses");
-		post_process_linkages(sent, opts);
-		if (sent->num_valid_linkages > 0) break;
+		sat_parse(sent, opts);
 	}
-
-	free_table(sent);
-	free_fast_matcher(sent);
-#endif /* USE_SAT_SOLVER */
+	else
+	{
+		chart_parse(sent, opts);
+	}
 	print_time(opts, "Finished parse");
 
 	return sent->num_valid_linkages;

@@ -908,11 +908,14 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	li.improper_fat_linkage = actx->structure_violation;
 	li.inconsistent_domains = FALSE;
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
-#ifdef USE_SAT_SOLVER
-	li.disjunct_cost = 0.0;
-#else
-	li.disjunct_cost = disjunct_cost(pi);
-#endif
+	if (opts->use_sat_solver)
+	{
+		li.disjunct_cost = 0.0;
+	}
+	else
+	{
+		li.disjunct_cost = disjunct_cost(pi);
+	}
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
 	li.corpus_cost = -1.0f;
@@ -969,9 +972,10 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 			}
 		}
 
-#ifndef USE_SAT_SOLVER
-		compute_pp_link_array_connectors(sent, sublinkage);
-#endif
+		if (0 == opts->use_sat_solver)
+		{
+			compute_pp_link_array_connectors(sent, sublinkage);
+		}
 		compute_pp_link_names(sent, sublinkage);
 
 		/* 'analyze_pass' logic added ALB 1/97 */
@@ -1075,11 +1079,14 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
 	li.improper_fat_linkage = FALSE;
 	li.inconsistent_domains = FALSE;
-#ifdef USE_SAT_SOLVER
-	li.disjunct_cost = 0.0;
-#else
-	li.disjunct_cost = disjunct_cost(pi);
-#endif
+	if (opts->use_sat_solver)
+	{
+		li.disjunct_cost = 0.0;
+	}
+	else
+	{
+		li.disjunct_cost = disjunct_cost(pi);
+	}
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
 	li.corpus_cost = -1.0f;
@@ -1259,10 +1266,11 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 			}
 		}
 
-#ifndef USE_SAT_SOLVER
-		compute_pp_link_array_connectors(sent, sublinkage);
-		compute_pp_link_names(sent, sublinkage);
-#endif
+		if (0 == opts->use_sat_solver)
+		{
+			compute_pp_link_array_connectors(sent, sublinkage);
+			compute_pp_link_names(sent, sublinkage);
+		}
 
 		/* Don't copy the fat links into the linkage */
 		N_thin_links = 0;
