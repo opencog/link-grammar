@@ -2,12 +2,13 @@ Version 4.6.0 (29 August 2009)
  * Avoid used of bzero, add missing include directives (MacOSX problem)
  * Reclassify a number of "medical" prepostions as adverbs.
  * Add approx 100 adverbs & 300 adjectives.
- * Add approx 250 verbs
- * Add approx 300 nouns
- * Add misc units 
+ * Add approx 250 verbs.
+ * Add approx 300 nouns.
+ * Add misc units.
  * Add misc European connector words/patronymics.
  * Reclassify 100's of transitive verbs as optionally-transitive.
  * Add distinct tokenization step ("sentence_split") to public API.
+   This last change forces the minor-version-number bump.
 
 Version 4.5.10 (25 August 2009)
  * Be sure to link with -lm
