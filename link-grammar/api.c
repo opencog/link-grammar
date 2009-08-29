@@ -79,6 +79,7 @@ Parse_Options parse_options_create(void)
 	po->null_block = 1;
 	po->islands_ok = FALSE;
 	po->use_spell_guess = TRUE;
+	po->use_sat_solver = FALSE;
 	po->cost_model.compare_fn = &VDAL_compare_parse;
 	po->cost_model.type = VDAL;
 	po->short_length = 6;
@@ -149,6 +150,13 @@ void parse_options_set_verbosity(Parse_Options opts, int dummy)
 
 int parse_options_get_verbosity(Parse_Options opts) {
 	return opts->verbosity;
+}
+
+void parse_options_set_use_sat_parser(Parse_Options opts, int dummy) {
+	opts->use_sat_solver = dummy;
+}
+int parse_options_get_use_sat_parser(Parse_Options opts) {
+	return opts->use_sat_solver;
 }
 
 void parse_options_set_linkage_limit(Parse_Options opts, int dummy) {
