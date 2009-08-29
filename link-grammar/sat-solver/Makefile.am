@@ -18,6 +18,7 @@ libsat_solver_la_SOURCES = \
 	guiding.hpp       \
 	sat-encoder.cpp   \
 	sat-encoder.hpp   \
+	sat-encoder.h     \
 	trie.hpp          \
 	util.cpp          \
 	util.hpp          \
