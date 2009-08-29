@@ -79,7 +79,7 @@ static Switch default_switches[] =
    {"timeout",    0, "Abort parsing after this many seconds",   &local.timeout},
    {"union",      1, "Showing of 'union' linkage",      &local.display_union},
 #ifdef USE_SAT_SOLVER
-   {"use-sat",    1, "Use Boolean SAT-based parse",     &local.use_sat_solver},
+   {"use-sat",    1, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
    {"verbosity",  0, "Level of detail in output",       &local.verbosity},
    {"walls",      1, "Showing of wall words",           &local.display_walls},
