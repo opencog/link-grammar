@@ -139,3 +139,35 @@ but preparation.c ...
 prepare_to_parse from api.c
 sentence_parse
 and retry from link-parser with more null counts.
+
+======================
+Historical trends:
+
+enwiki/A: grep  -- version 4.3.5
+num_skipped_words= * | wc  773352
+num_skipped_words="0" 388819  or 50.3%
+num_skipped_words="1" 148214  or 19.2%
+num_skipped_words="2"  83234  or 10.8%
+num_skipped_words="3"  43957  or  5.7%
+num_skipped_words="4"  28998  or  3.8%
+num_skipped_words="5"  19677  or  2.5%
+
+enwiki/E: grep  --- version 4.3.5 or so
+num_skipped_words= * | wc 980218
+num_skipped_words="0" 479076 or 48.9%
+num_skipped_words="1" 190183 or 19.4%
+num_skipped_words="2" 107265 or 10.9%
+num_skipped_words="3"  56875 or  5.8%
+num_skipped_words="4"  39240 or  4.0%
+num_skipped_words="5"  27431 or  2.8%
+
+enwiki/J: grep  --- version -4.5.7 or so
+num_skipped_words= * | wc 1744284
+num_skipped_words="0" 914187 or 52.4%
+num_skipped_words="1" 332653 or 19.1%
+num_skipped_words="2" 176185 or 10.1%
+num_skipped_words="3"  87241 or  5.0%
+num_skipped_words="4"  57509 or  3.3%
+num_skipped_words="5"  38483 or  2.2%
+
+

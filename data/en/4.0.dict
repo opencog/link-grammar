@@ -293,7 +293,7 @@ tawny.n ultramarine.n yellow.n:
 
 /en/words/words.n.4: <noun-mass-count>;
 /en/words/words.n.4.biolg: <noun-mass-count>;
-GREEK-LETTER-AND-NUMBER x.n: <noun-mass-count>;
+GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.

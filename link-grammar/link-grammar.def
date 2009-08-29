@@ -76,6 +76,7 @@ parse_options_set_echo_on
 parse_options_get_echo_on
 sentence_create
 sentence_delete
+sentence_split
 sentence_parse
 sentence_length
 sentence_get_word

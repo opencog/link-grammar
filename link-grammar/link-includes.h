@@ -225,6 +225,8 @@ link_public_api(Sentence)
 link_public_api(void)
      sentence_delete(Sentence sent);
 link_public_api(int)
+     sentence_split(Sentence sent, Parse_Options opts);
+link_public_api(int)
      sentence_parse(Sentence sent, Parse_Options opts);
 link_public_api(int)
      sentence_length(Sentence sent);

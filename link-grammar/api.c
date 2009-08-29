@@ -1055,11 +1055,18 @@ static void set_is_conjunction(Sentence sent)
 	}
 }
 
-static int split_sentence(Sentence sent, Parse_Options opts)
+int sentence_split(Sentence sent, Parse_Options opts)
 {
 	int i;
 	Dictionary dict = sent->dict;
 
+	/* Cleanup stuff previously allocated. This is because some free 
+	 * routines depend on sent-length, which might change in different
+	 * parse-opts settings. 
+	 */
+	free_deletable(sent);
+
+	/* Tokenize */
 	if (!separate_sentence(sent, opts))
 	{
 		return -1;
@@ -1080,8 +1087,17 @@ static int split_sentence(Sentence sent, Parse_Options opts)
 	if (!(dict->unknown_word_defined && dict->use_unknown_word))
 	{
 		if (!sentence_in_dictionary(sent)) {
-			return -1;
+			return -2;
 		}
+	}
+
+	/* Look up each word in the dictionary, collect up all
+	 * plausible disjunct expressions for each word.
+	 */
+	if (!build_sentence_expressions(sent, opts))
+	{
+		sent->num_valid_linkages = 0;
+		return -3;
 	}
 
 	return 0;
@@ -1177,20 +1193,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	verbosity = opts->verbosity;
 
-	/* Cleanup stuff previously allocated. This is because some free 
-	 * routines depend on sent-length, which might change in different
-	 * parse-opts settings. 
+	/* If the sentence has not yet been split, do so now.
+	 * This is for backwards compatibility, for existing programs
+	 * that do not explicitly call the splitter.
 	 */
-	free_deletable(sent);
-
-	rc = split_sentence(sent, opts);
-	if (rc) return -1;
-
-	/* Tokenize, look up each word in the dictionary, collect up all
-	 * plausible disjunct expressions for each word. */
-	if (!build_sentence_expressions(sent, opts)) {
-		sent->num_valid_linkages = 0;
-		return 0;
+	if (0 == sent->length)
+	{
+		rc = sentence_split(sent, opts);
+		if (rc) return -1;
 	}
 
 	/* Initialize/free any leftover garbage */
