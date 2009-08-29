@@ -279,7 +279,7 @@ void free_sentence_expressions(Sentence sent)
  * Return true if the sentence contains a conjunction.  Assumes
  * is_conjunction[] has been initialized.
  */
-static int sentence_contains_conjunction(Sentence sent)
+int sentence_contains_conjunction(Sentence sent)
 {
 	int w;
 	if (NULL == sent->is_conjunction) return FALSE;
