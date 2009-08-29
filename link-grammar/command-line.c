@@ -30,6 +30,7 @@ static struct
 	int panic_mode;
 	int allow_null;
 	int use_cluster_disjuncts;
+	int use_sat_solver;
 	int echo_on;
 	int cost_model;
 	int screen_width;
@@ -57,6 +58,7 @@ static Switch default_switches[] =
 {
    {"bad",        1, "Display of bad linkages",         &local.display_bad},
    {"batch",      1, "Batch mode",                      &local.batch_mode},
+   {"cluster",    1, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
    {"constituents", 0, "Generate constituent output",   &local.display_constituents},
    {"cost",       0, "Cost model used for ranking",     &local.cost_model},
    {"disjuncts",  1, "Showing of disjunct used",        &local.display_disjuncts},
@@ -68,7 +70,6 @@ static Switch default_switches[] =
    {"max-length", 0, "Maximum sentence length",         &local.max_sentence_length},
    {"memory",     0, "Max memory allowed",              &local.memory},
    {"null",       1, "Null links",                      &local.allow_null},
-   {"cluster",    1, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
    {"null-block", 0, "Size of blocks with null cost 1", &local.null_block},
    {"panic",      1, "Use of \"panic mode\"",           &local.panic_mode},
    {"postscript", 1, "Generate postscript output",      &local.display_postscript},
@@ -77,6 +78,9 @@ static Switch default_switches[] =
    {"spell",      1, "Spell-guesser for unkown words",  &local.spell_guess},
    {"timeout",    0, "Abort parsing after this many seconds",   &local.timeout},
    {"union",      1, "Showing of 'union' linkage",      &local.display_union},
+#ifdef USE_SAT_SOLVER
+   {"use-sat",    1, "Use Boolean SAT-based parse",     &local.use_sat_solver},
+#endif /* USE_SAT_SOLVER */
    {"verbosity",  0, "Level of detail in output",       &local.verbosity},
    {"walls",      1, "Showing of wall words",           &local.display_walls},
    {"width",      0, "The width of the display",        &local.screen_width},
@@ -338,6 +342,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.screen_width = parse_options_get_screen_width(opts);
 	local.allow_null = parse_options_get_allow_null(opts);
 	local.use_cluster_disjuncts = parse_options_get_use_cluster_disjuncts(opts);
+	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.screen_width = parse_options_get_screen_width(opts);
 	local.display_on = parse_options_get_display_on(opts);
 	local.display_postscript = parse_options_get_display_postscript(opts);
@@ -368,6 +373,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_allow_null(opts, local.allow_null);
 	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
+	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_display_on(opts, local.display_on);
 	parse_options_set_display_postscript(opts, local.display_postscript);
