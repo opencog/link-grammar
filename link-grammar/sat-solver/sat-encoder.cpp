@@ -1302,7 +1302,8 @@ void SATEncoder::solve() {
   int num_connected_linkages = 0;
   
   lbool status;
-  while ((status = _solver->solve()) != l_False) {
+  while ((status = _solver->solve()) != l_False)
+  {
     _solver->printStats();
     cout << "Linkage: ." << ++num_linkages << "." << endl;
 
@@ -1335,9 +1336,9 @@ void SATEncoder::solve() {
     // exit(1);
     // TODO: delete linkage
   }
-  cout << num_linkages << ". linkages found. " 
-       << "(." << num_connected_linkages << ". connected, "
-       << "." << num_valid_linkages << ". valid after post-processing)" << endl;
+  cout << num_linkages << " linkages found. " 
+       << "(" << num_connected_linkages << " connected, "
+       << "" << num_valid_linkages << " valid after post-processing)" << endl;
 
   _solver->printStats();
 }
@@ -2781,7 +2782,8 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi) {
 /****************************************************************************
  *              Main entry point into the SAT parser                        *
  ****************************************************************************/
-extern "C" int sat_parse(Sentence sent, Parse_Options  opts) {
+extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
+{
   // Prepare for parsing - extracted for "preparation.c"
   build_deletable(sent, 0);
   build_effective_dist(sent, 0);
@@ -2802,6 +2804,5 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts) {
   encoder->solve();
   delete encoder;
 
-  exit(1);
-  return 1;
+  return 0;
 }
