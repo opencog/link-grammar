@@ -7,11 +7,11 @@ dnl     4a) Increment when removing or changing interfaces.
 LINK_MAJOR_VERSION=4
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=5
+LINK_MINOR_VERSION=6
 dnl     3) Increment when interfaces not changed at all,
 dnl               only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=11
+LINK_MICRO_VERSION=0
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
