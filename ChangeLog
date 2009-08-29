@@ -1,4 +1,4 @@
-Version 4.5.11 (29 August 2009)
+Version 4.6.0 (29 August 2009)
  * Avoid used of bzero, add missing include directives (MacOSX problem)
  * Reclassify a number of "medical" prepostions as adverbs.
  * Add approx 100 adverbs & 300 adjectives.
