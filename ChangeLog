@@ -1,6 +1,9 @@
+Version 4.6.1 (?? 2009)
+ * Stop printing annoying warning when !vars are used.
+
 Version 4.6.0 (29 August 2009)
  * Avoid used of bzero, add missing include directives (MacOSX problem)
- * Reclassify a number of "medical" prepostions as adverbs.
+ * Reclassify a number of "medical" prepositions as adverbs.
  * Add approx 100 adverbs & 300 adjectives.
  * Add approx 250 verbs.
  * Add approx 300 nouns.

@@ -373,7 +373,9 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_allow_null(opts, local.allow_null);
 	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
+#ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
+#endif
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_display_on(opts, local.display_on);
 	parse_options_set_display_postscript(opts, local.display_postscript);

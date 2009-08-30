@@ -157,7 +157,7 @@ void parse_options_set_use_sat_parser(Parse_Options opts, int dummy) {
 	opts->use_sat_solver = dummy;
 #else
 	prt_error("Error: cannot enable the Boolean SAT parser; this "
-	          " library was built without SAT solver support.");
+	          " library was built without SAT solver support.\n");
 #endif
 }
 int parse_options_get_use_sat_parser(Parse_Options opts) {
