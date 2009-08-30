@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <stdio.h>
+#include <string.h>
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "structures.h"

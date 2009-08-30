@@ -13,6 +13,7 @@
 
 /* XXX the original flex source for this file is missing !! */
 
+#include <string.h>
 #include "error.h"
 
 /* I edited this file to eliminate compiler warnings.  I've documented here
