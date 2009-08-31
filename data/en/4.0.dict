@@ -1185,7 +1185,7 @@ or <verb-ge-d>;
 % --------------------------------------------------------------
 
 
-<vc-come>:  {K+ or [[Pg+]]} & {@MV+};
+<vc-come>:  {(K+ & {Pa+}) or [[Pg+]]} & {@MV+};
 come.v: (<verb-pl,i> or <verb-pp>) & <vc-come>;
 comes.v: <verb-s> & <vc-come>;
 came.v: <verb-sp> & <vc-come>; 
@@ -3817,13 +3817,16 @@ farther: ({ECa-} & {K+} & (MVb- or Qe+ or Ca+)) or A+;
 further.r: ({ECa-} & {K+} & (MVb- or Qe+ or Ca+)) or A+ or E+
 or ({Xd-} & Xc+ & CO+);
 
+% links to adverbs on left..
 as.y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
 
+% uses comparative links
 as.z: (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or Cc+))
 or (MVzo- & Ct+ & Bc+ & {U+}) 
 or (MVzp- & (CX+ or CQ+))
 or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
+% prepositional, mostly
 as.p: ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) & 
 (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-))) or 
 (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-))) or
