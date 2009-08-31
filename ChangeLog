@@ -1,6 +1,8 @@
-Version 4.6.1 (?? 2009)
+
+Version 4.6.1 (31 August 2009)
  * Stop printing annoying warning when !vars are used.
- * Fix missing units.2 problem
+ * Fix missing dict file units.2 problem
+ * Fix compilation bug on FreeBSD.
 
 Version 4.6.0 (29 August 2009)
  * Avoid used of bzero, add missing include directives (MacOSX problem)

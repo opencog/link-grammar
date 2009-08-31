@@ -1,7 +1,7 @@
 
                        Link Grammar Parser 
                        -------------------
-                          Version 4.6.0
+                          Version 4.6.1
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -62,7 +62,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.6.0.tar.gz.asc
+   gpg --verify link-grammar-4.6.1.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -256,7 +256,8 @@ SAT solver:
    MiniSAT solver. The SAT solver has a bit more overhead for shorter
    sentences, but is significantly faster for long sentences.  To work
    properly, it needs to be attached to a parse ranking system.  This
-   work is incomplete, although the prototype works.
+   work is incomplete, although the prototype works.  it is not yet
+   well-integrated with the system, and needs cleanup.
 
    The SAT solver is enabled by specifying
 

@@ -16,6 +16,7 @@ libsat_solver_la_SOURCES = \
 	fast-sprintf.cpp  \
 	fast-sprintf.hpp  \
 	guiding.hpp       \
+	matrix-ut.hpp     \
 	sat-encoder.cpp   \
 	sat-encoder.hpp   \
 	sat-encoder.h     \
