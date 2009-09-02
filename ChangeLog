@@ -1,5 +1,6 @@
 Versin 4.6.2 (?? 2009)
  * Fix: "come across as authoritiative".
+ * Improve java location guessing in FreeBSD
 
 Version 4.6.1 (31 August 2009)
  * Stop printing annoying warning when !vars are used.
