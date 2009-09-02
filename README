@@ -474,7 +474,7 @@ TODO -- Working Notes:
     if the first half of a sentence has 4 plausible parses, and the
     last half has 4 more, then link-grammar reports 16 parses total.
     It would be much, much more useful to instead be given the
-    factored results: i.e. the for plausible parses for the
+    factored results: i.e. the four plausible parses for the
     first half, and the four plausible parses for the last half.
     The lower combinatoric stress would ease the burden on
     downstream users of link-grammar.

@@ -267,7 +267,7 @@ dnl Might be useful to look at env variables $JDK_HOME and $JAVA_HOME for these.
 dnl
 JNIfound=no
 
-if test "x$do_java" == "xyes"; then
+if test "x$do_java" = "xyes"; then
    JNI_GUESS=" \
       -I $JAVA_HOME/include \
       -I $JAVA_HOME/include/linux \
