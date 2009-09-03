@@ -263,7 +263,7 @@ static int issue_sentence_word(Sentence sent, const char * s)
 		return FALSE;
 	}
 
-	if (sent->length == MAX_SENTENCE)
+	if (sent->length >= MAX_SENTENCE)
 	{
 		err_ctxt ec;
 		ec.sent = sent;
@@ -376,7 +376,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
  * "word" w contains no blanks.  This function splits up the word if
  * necessary, and calls "issue_sentence_word()" on each of the resulting
  * parts.  The process is described above.  Returns TRUE if OK, FALSE if
- * too many punctuation marks 
+ * too many punctuation marks or other separation error.
  */
 static int separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
@@ -419,8 +419,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 	if (word_is_in_dict)
 	{
-		issue_sentence_word(sent, word);
-		return TRUE;
+		return issue_sentence_word(sent, word);
 	}
 
 	/* Set up affix tables.  */
@@ -671,12 +670,12 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		while (sp)
 		{
 			*sp = 0x0;
-			issue_sentence_word(sent, wp);
+			if (!issue_sentence_word(sent, wp)) return FALSE;
 			wp = sp+1;
 			sp = strchr(wp, ' ');
 			if (NULL == sp)
 			{
-				issue_sentence_word(sent, wp);
+				if (!issue_sentence_word(sent, wp)) return FALSE;
 			}
 		}
 		if (alternates) free(alternates);

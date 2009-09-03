@@ -1359,7 +1359,7 @@ static int left_connector_list_update(prune_context *pc, Connector *c, int word_
 
 	/* n is now the rightmost word we need to check */
 	foundmatch = FALSE;
-	for (; (n >= 0) && ((w-n) <= MAX_SENTENCE); n--) {
+	for (; (n >= 0) && ((w-n) < MAX_SENTENCE); n--) {
 		pc->power_cost++;
 		if (right_table_search(pc, n, c, shallow, word_c)) {
 			foundmatch = TRUE;
@@ -1393,7 +1393,7 @@ static int right_connector_list_update(prune_context *pc, Sentence sent, Connect
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = FALSE;
-	for (; (n < sent->length) && ((n-w) <= MAX_SENTENCE); n++) {
+	for (; (n < sent->length) && ((n-w) < MAX_SENTENCE); n++) {
 		pc->power_cost++;
 		if (left_table_search(pc, n, c, shallow, word_c)) {
 			foundmatch = TRUE;
