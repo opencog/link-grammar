@@ -1248,6 +1248,14 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		if (rc) return -1;
 	}
 
+	/* Check for bad sentence length */
+	if (MAX_SENTENCE <= sent->length)
+	{
+		prt_error("Error: sentence too long, contains more than %d words\n", 
+			MAX_SENTENCE);
+		return -2;
+	}
+
 	/* Initialize/free any leftover garbage */
 	free_sentence_disjuncts(sent);
 	resources_reset_space(opts->resources);

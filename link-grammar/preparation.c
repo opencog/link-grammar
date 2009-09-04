@@ -58,7 +58,6 @@ void build_deletable(Sentence sent, int has_conjunction)
 	int i,j,k;
 
 	free_deletable(sent);
-	assert(sent->length < MAX_SENTENCE, "sent->length too big");
 
 	sent->dptr = (char **) xalloc((sent->length + 1) * sizeof(char *));
 	sent->deletable = sent->dptr + 1;  /* we need to be able to access the [-1] position in this array */
