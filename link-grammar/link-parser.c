@@ -481,8 +481,9 @@ int main(int argc, char * argv[])
 	codeset = nl_langinfo(CODESET);
 	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
 	{
-		fprintf("%s: Warning: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
-		        argv[0], codeset);
+		fprintf(stderr, 
+		    "%s: Warning: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
+		     argv[0], codeset);
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
 
