@@ -653,7 +653,7 @@ void * object_open(const char *filename,
 		*(completename+(pos-oldpos)) = DIR_SEPARATOR;
 		strcpy(completename+(pos-oldpos)+1,filename);
 #ifdef _DEBUG
-		prt_error("Info: dictopen() trying %s\n", completename);
+		prt_error("Info: object_open() trying %s\n", completename);
 #endif
 		if ((fp = opencb(completename, user_data)) != NULL) {
 			return fp;
@@ -663,16 +663,51 @@ void * object_open(const char *filename,
 	return NULL;
 }
 
+/* XXX static global variable used during dictionary open */
+static char *path_found = NULL;
+
 static void * dict_file_open(const char * fullname, void * user_data)
 {
 	const char * how = (const char *) user_data;
-	return (void *) fopen(fullname, how);
+	FILE * fh =  fopen(fullname, how);
+	if (fh && NULL == path_found)
+	{
+		path_found = strdup (fullname);
+		prt_error("Info: Dictionary found at %s\n", fullname);
+	}
+	return (void *) fh;
 }
 
 FILE *dictopen(const char *filename, const char *how)
 {
+	FILE * fh = NULL;
 	void * ud = (void *) how;
-	return (FILE *) object_open(filename, dict_file_open, ud);
+
+	/* If not the first time through, look for the other dictionaries
+	 * in the *same* directory in which the first one was found.
+	 * (The first one is typcailly "en/4.0.dict")
+	 * The global "path_found" records where the first dict was found.
+	 * The goal here is to avoid fractured install insanity.
+	 */
+	if (path_found)
+	{
+		size_t sz = strlen (path_found) + strlen(filename) + 1;
+		char * fullname = (char *) malloc (sz);
+		strcpy(fullname, path_found);
+		strcat(fullname, filename);
+		fh = (FILE *) object_open(fullname, dict_file_open, ud);
+		free(fullname);
+	}
+	else 
+	{
+		fh = (FILE *) object_open(filename, dict_file_open, ud);
+		if (path_found)
+		{
+			char * root = strstr(path_found, filename);
+			*root = 0;
+		}
+	}
+	return fh;
 }
 
 /* ======================================================== */
