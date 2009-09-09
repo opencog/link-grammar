@@ -551,7 +551,7 @@ TODO -- Working Notes:
      rules for "tend.meaning1" and "tend.meaning2", the rules would
      simplify (at the cost of inflating the size of the dictionary).
 
-  "holes" in collocations:
+  "holes" in collocations (aka "set phrases" of "phrasemes"):
      The link-grammar provides a mechanism to support circumpositions
      (or even more complicated multi-word structures) by means of the
      post-processing rules. However, post-processing rules for many
@@ -601,3 +601,34 @@ TODO -- Working Notes:
     See also:
     http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm#relative-clause
     http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm#extraposition
+
+    More idiomatic than the above examples:
+    "...the chip on X's shoulder"
+    "to do X a favour"
+    "to give X a look"
+
+    The above are all examples of "set phrases" or "phrasemes", and are
+    most commonly discussed in the context of MTT or Meaning-Text Theory
+    of Igor Mel'cuk et al (search for "MTT Lexical Function" for more
+    info). Mel'cuk treats set phrases as lexemes, and, for parsing, this
+    is not directly relevent. However, insofar as phrasemes have a high
+    mutual information content, they can dominate the syntactic
+    structure of a sentence.
+
+    MTT suggests that perhaps the correct way to understand the contents
+    of the post-processing rules is as an implementation of 'lexical
+    functions' projected onto syntax.  That is, the post-processing
+    rules allow only certain syntactical constructions, and these are 
+    the kinds of constructions one typically sees in certain kinds 
+    of lexical functions.
+
+    Alternately, link-grammar suffers from a combinatoric explosion
+    of possible parses of a given sentence. It would seem that lexical
+    functions could be used to rule out many of these parses.  On the
+    other hand, the results are likely to be similar to that of
+    statistical pare ranking (which presumably captures such
+    quasi-idiomatic collocations at least weakly).
+    
+    Ref. I. Mel'cuk: "Collocations and Lexical Functions", in ''Phraseology:
+    theory, analysis, and applications'' Ed. Anthony Paul Cowie (1998)
+    Oxford University Press pp. 23-54.
