@@ -338,6 +338,17 @@ static int issue_sentence_word(Sentence sent, const char * s)
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
+static int boolean_reg_dict_lookup(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	if (boolean_dictionary_lookup(dict, word)) return TRUE;
+
+	regex_name = match_regex(dict, word);
+	if (NULL == regex_name) return FALSE;
+
+	return boolean_dictionary_lookup(dict, regex_name);
+}
+
 static int downcase_is_in_dict(Dictionary dict, char * word)
 {
 	int i, rc;
@@ -365,7 +376,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
 	for (i=0; i<nbl; i++) { save[i] = word[i]; word[i] = low[i]; }
 
 	/* Look it up, then restore old value */
-	rc = boolean_dictionary_lookup(dict, word);
+	rc = boolean_reg_dict_lookup(dict, word);
 	for (i=0; i<nbh; i++) { word[i] = save[i]; }
 
 	return rc; 
@@ -410,7 +421,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	word[MIN(wend-w, MAX_WORD)] = '\0';
 	word_is_in_dict = FALSE;
 
-	if (boolean_dictionary_lookup(sent->dict, word))
+	if (boolean_reg_dict_lookup(sent->dict, word))
 		word_is_in_dict = TRUE;
 	else if (is_initials_word(word))
 		word_is_in_dict = TRUE;
@@ -470,7 +481,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
-		if (boolean_dictionary_lookup(sent->dict, word) ||
+		if (boolean_reg_dict_lookup(sent->dict, word) ||
 		    is_initials_word(word)) break;
 
 		/* This could happen if it's a word after a colon, also! */
@@ -551,7 +562,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	word[MIN(wend-w, MAX_WORD)] = '\0';
 	word_is_in_dict = FALSE;
 
-	if (boolean_dictionary_lookup(sent->dict, word))
+	if (boolean_reg_dict_lookup(sent->dict, word))
 		word_is_in_dict = TRUE;
 	else if (is_initials_word(word))
 		word_is_in_dict = TRUE;
@@ -584,7 +595,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 				/* Check if the remainder is in the dictionary;
 				 * for the no-suffix case, it won't be */
-				if (boolean_dictionary_lookup(sent->dict, newword))
+				if (boolean_reg_dict_lookup(sent->dict, newword))
 				{
 					if ((verbosity>1) && (i < s_strippable))
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
@@ -607,7 +618,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 							int sz = MIN((wend-len)-(w+strlen(prefix[j])), MAX_WORD);
 							strncpy(newword, w+strlen(prefix[j]), sz);
 							newword[sz] = '\0';
-							if (boolean_dictionary_lookup(sent->dict, newword))
+							if (boolean_reg_dict_lookup(sent->dict, newword))
 							{
 								if ((verbosity>1) && (i < s_strippable))
 									printf("Splitting word into three: %s-%s-%s\n",
@@ -631,12 +642,16 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	}
 
 	/* word is now what remains after all the stripping has been done */
+	issued = FALSE;
 
+	/* If n_r_stripped exceed max, the "word" is most likely a long
+	 * sequence of periods.  Just accept it as an unknown "word", 
+	 * and move on.
+	 */
 	if (n_r_stripped >= MAX_STRIP)
 	{
-		prt_error("Error separating sentence.\n"
-		          "\"%s\" is followed by too many punctuation marks.\n", word);
-		return FALSE;
+		n_r_stripped = 0;
+		word_is_in_dict = TRUE;
 	}
 
 	if (quote_found == TRUE) sent->post_quote[sent->length] = 1;
@@ -646,7 +661,6 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	 * the word in two, if possible. Do this only if the word
 	 * is not a proper name, and if spell-checking is enabled.
 	 */
-	issued = FALSE;
 	if ((FALSE == word_is_in_dict) && 
 	    TRUE == opts->use_spell_guess &&
 	    sent->dict->spell_checker &&
@@ -805,7 +819,7 @@ static int special_string(Sentence sent, int i, const char * s)
 
 /**
  * Build the word expressions, and add a tag to the word to indicate
- * that it was guess by means of regular-expression matching.
+ * that it was guessed by means of regular-expression matching.
  * Also, add a subscript to the resulting word to indicate the
  * rule origin.
  */
@@ -962,7 +976,7 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
 	n = spellcheck_suggest(dict->spell_checker, &alternates, s);
 	for (j=0; j<n; j++)
 	{
-		if (boolean_dictionary_lookup(sent->dict, alternates[j]))
+		if (boolean_reg_dict_lookup(sent->dict, alternates[j]))
 		{
 			X_node *x = build_word_expressions(sent->dict, alternates[j]);
 			head = catenate_X_nodes(x, head);
@@ -1152,7 +1166,7 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 			downcase_utf8_str(temp_word, s, MAX_WORD);
 			lc = string_set_add(temp_word, sent->string_set);
 
-			if (boolean_dictionary_lookup(sent->dict, lc))
+			if (boolean_reg_dict_lookup(sent->dict, lc))
 			{
 				if (is_entity(sent->dict,s) ||
 				    is_common_entity(sent->dict,lc))
@@ -1181,6 +1195,8 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
  * up an appropriate error message in case some are not there.
  * It has no side effect on the sentence.  Returns TRUE if all
  * went well.
+ *
+ * This code is called only is the 'unkown-words' flag is set.
  */
 int sentence_in_dictionary(Sentence sent)
 {
@@ -1193,10 +1209,7 @@ int sentence_in_dictionary(Sentence sent)
 	for (w=0; w<sent->length; w++)
 	{
 		s = sent->word[w].string;
-		/* xx we should also check if the regex rules know this word */
-		/* However, this code is only used if the 'unknown word' is 
-		 * turned off ... we punt for now, since its always on. */
-		if (!boolean_dictionary_lookup(dict, s))
+		if (!boolean_reg_dict_lookup(dict, s))
 #if DONT_USE_REGEX_GUESSING
 		    !(is_utf8_upper(s)   && dict->capitalized_word_defined) &&
 		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) &&

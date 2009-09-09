@@ -1539,6 +1539,9 @@ There were no major Eurobond or foreign bond offerings Friday.
 Messrs. Malson and Seelenfreund are directors.
 The effects were less severe and less prolonged
 
+% 'but' works as a fat link, leaving 'rather' out to dry ...
+He didn't do it, but rather went home.
+
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 *John saw a dog yesterday which was a Yorkshire terrier.
 

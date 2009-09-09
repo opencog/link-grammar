@@ -2,6 +2,7 @@ Versin 4.6.2 (?? 2009)
  * Fix: "come across as authoritiative".
  * Improve java location guessing in FreeBSD
  * Fix for assert triggered by long sentences.
+ * Fix: long sequence of periods treeated as unknown word.
 
 Version 4.6.1 (31 August 2009)
  * Stop printing annoying warning when !vars are used.
