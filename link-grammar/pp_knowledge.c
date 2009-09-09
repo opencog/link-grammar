@@ -340,7 +340,7 @@ static void free_rules(pp_knowledge *k)
 pp_knowledge *pp_knowledge_open(const char *path)
 {
   /* read knowledge from disk into pp_knowledge */
-  FILE *f=dictopen(path, "r");
+  FILE *f = dictopen(path, "r");
   pp_knowledge *k = (pp_knowledge *) xalloc (sizeof(pp_knowledge));
   if (!f)
   {

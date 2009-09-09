@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2008, 2009 Linas Vepstas                                */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
