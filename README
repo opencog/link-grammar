@@ -218,6 +218,20 @@ RUNNING the program:
    When accessing dictionaries in non-standard locations, the standard
    filenames are still assumed (i.e. 4.0.dict, 4.0.affix, etc.)
 
+   If you see errors similar to this: 
+
+       Warning: The word "encyclop" found near line 252 of en/4.0.dict 
+       matches the following words:
+       encyclop
+       This word will be ignored.
+
+   then your UTF-8 locales are either not installed or not configured.
+   The shell command `locale -a` should list en_US.utf8 as a locale.
+   If not, then you need to `dpkg-reconfigure locales` and/or run 
+   `update-locale` or possibly `apt-get install locales`, or
+   combinations or variants of these, depending on your operating 
+   system.
+
 
 TESTING the program:
 --------------------
