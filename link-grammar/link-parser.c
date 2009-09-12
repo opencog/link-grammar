@@ -42,11 +42,12 @@
 #include <wchar.h>
 
 /* Used for terminal resizing */
+#ifndef _MSC_VER
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+#endif
 
 #ifdef HAVE_EDITLINE
 #include <editline/readline.h>
@@ -459,10 +460,11 @@ static void print_usage(char *str) {
 /**
  * On Unix, this checks for the current window size, 
  * and sets the output screen width accordingly. 
- * Not sure how windows does this.
+ * Not sure how MS Windows does this.
  */
 static void check_winsize(Parse_Options popts)
 {
+#ifndef _MSC_VER
 	struct winsize ws;
 	int fd = open("/dev/tty",O_RDWR);
 
@@ -484,6 +486,7 @@ static void check_winsize(Parse_Options popts)
 	{
 		parse_options_set_screen_width(popts, ws.ws_col - 1);
 	}
+#endif /* _MSC_VER */
 }
 
 int main(int argc, char * argv[])
