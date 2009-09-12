@@ -41,6 +41,13 @@
 #include <string.h>
 #include <wchar.h>
 
+/* Used for terminal resizing */
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+
 #ifdef HAVE_EDITLINE
 #include <editline/readline.h>
 #endif 
@@ -449,6 +456,36 @@ static void print_usage(char *str) {
 	exit(-1);
 }
 
+/**
+ * On Unix, this checks for the current window size, 
+ * and sets the output screen width accordingly. 
+ * Not sure how windows does this.
+ */
+static void check_winsize(Parse_Options popts)
+{
+	struct winsize ws;
+	int fd = open("/dev/tty",O_RDWR);
+
+	if (0 != ioctl(fd,TIOCGWINSZ, &ws))
+	{
+		perror("ioctl(/dev/tty,TIOCGWINSZ)");
+		close (fd);
+		return;
+	}
+	close (fd);
+
+	/* printf("rows %i\n", ws.ws_row); */
+	/* printf("cols %i\n", ws.ws_col); */
+
+	/* Set the screen width only if the returned value seems
+	 * rational: its positive and not insanely tiny.
+	 */
+	if ((10 < ws.ws_col) && (16123 > ws.ws_col))
+	{
+		parse_options_set_screen_width(popts, ws.ws_col - 1);
+	}
+}
+
 int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
@@ -462,6 +499,16 @@ int main(int argc, char * argv[])
 	char            *input_string;
 	Label           label = NO_LABEL;
 	const char      *codeset;
+
+#if LATER
+	/* Try to catch the SIGNWINCH ... except this is not working. */
+	struct sigaction winch_act;
+	winch_act.sa_handler = winch_handler;
+	winch_act.sa_sigaction = NULL;
+	sigemptyset (&winch_act.sa_mask);
+	winch_act.sa_flags = 0;
+	sigaction (SIGWINCH, &winch_act, NULL);
+#endif
 
 	i = 1;
 	if ((argc > 1) && (argv[1][0] != '-')) {
@@ -556,6 +603,7 @@ int main(int argc, char * argv[])
 	}
 
 	verbosity = parse_options_get_verbosity(opts);
+	check_winsize(opts);
 
 	prt_error("Info: Version %s. Enter \"!help\" for help.\n",
 		linkgrammar_get_version());
@@ -564,6 +612,7 @@ int main(int argc, char * argv[])
 	while (1)
 	{
 		input_string = fget_input_string(input_fh, stdout, opts);
+		check_winsize(opts);
 
 		if (NULL == input_string)
 		{

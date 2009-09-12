@@ -5,6 +5,7 @@ Versin 4.6.2 (?? 2009)
  * Fix: long sequence of periods treated as unknown word.
  * Add informational print showing dictionary location on startup.
  * Remove duplicated {@MV+} in tend.v
+ * Automatically resize the display size to fit the current window size.
 
 Version 4.6.1 (31 August 2009)
  * Stop printing annoying warning when !vars are used.
