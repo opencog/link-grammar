@@ -6,6 +6,7 @@ Versin 4.6.2 (?? 2009)
  * Add informational print showing dictionary location on startup.
  * Remove duplicated {@MV+} in tend.v
  * Automatically resize the display size to fit the current window size.
+ * Fix handling of punctuation at the end of a capitalized word.
 
 Version 4.6.1 (31 August 2009)
  * Stop printing annoying warning when !vars are used.

@@ -82,7 +82,10 @@ FOLD-WORDS: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|th
 PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
 
 % Other proper nouns.
-CAPITALIZED-WORDS:     /^[[:upper:]]/
+% We demand that these end with an alphanumeric, i.e. explicitly
+% reject punctuation. We don't want this regex to "swallow" any trailing
+% commas, or periods/question-marks at the end of sentences.
+CAPITALIZED-WORDS:     /^[[:upper:]].*\w$/
 
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /..ation$/
