@@ -194,13 +194,21 @@ That bitch did it!
 Arkansas  has become a favorite place for older people to retire.
 Global Trotter, a favorite, seems unlikely to place.
 
-% color names can be nouns as well as adjectives:
+% Color names can be nouns as well as adjectives:
 She prefers red.
 Blue is the new black.
 
-% verbs acting as adjectival modifiers:
+% Verbs acting as adjectival modifiers:
+% Everything in v.2.3, v.4.3, v.6.3 and v.8.3, and special cases:
 This has become a very politicized deal.
 You need to provide an ordered list.
+The given reference is incorrect.
+The provided reference is incorrect.
+The allied army is on the move.
+The adjusted balance is incorrect.
+The poured concrete slowly hardened.
+The wired connection has gone bad.
+The telegraphed orders never arrived.
 
 % Pg+ links between verbs and gerunds 
 He imagined hitting the ball.

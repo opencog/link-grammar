@@ -2430,17 +2430,23 @@ telegraph.v wire.v:
 gives.v sends.v buys.v brings.v lends.v
 issues.v hands.v pours.v telegraphs.v wires.v: <verb-s> & <vc-give>;
 
-sent.v bought.v brought.v lent.v handed.v poured.v
-telegraphed.v wired.v:
-(<verb-sp,pp> & <vc-give>)
-or (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) 
-or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
-issued.v: (<verb-sp,pp> & <vc-give>)
-or (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) 
-or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>) or ({@E-} & A+);
+sent.v bought.v brought.v lent.v handed.v:
+(<verb-sp,pp> & <vc-give>) or
+(<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+
+issued.v poured.v telegraphed.v wired.v:
+(<verb-sp,pp> & <vc-give>) or
+({@E-} & A+) or
+(<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+
 gave.v: <verb-sp> & <vc-give>;
-given.v: (<verb-pp> & <vc-give>) or (<verb-pv-b> & {O+ or B- or K+
-or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+given.v: (<verb-pp> & <vc-give>) or 
+({@E-} & A+) or
+(<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+
 giving.g sending.g buying.g bringing.g 
 lending.g issuing.g handing.g pouring.g telegraphing.g wiring.g: 
 (<vc-give> & <verb-ge>) or <verb-ge-d>;
