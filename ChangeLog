@@ -7,6 +7,7 @@ Versin 4.6.2 (?? 2009)
  * Remove duplicated {@MV+} in tend.v
  * Automatically resize the display size to fit the current window size.
  * Fix handling of punctuation at the end of a capitalized word.
+ * Fix misc verbs acting as adjectival modifiers: e.g. "given", "allied"
 
 Version 4.6.1 (31 August 2009)
  * Stop printing annoying warning when !vars are used.
