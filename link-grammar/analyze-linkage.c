@@ -839,6 +839,14 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 	for (i = 0; i < pi->N_links; i++)
 	{
 		if (sublinkage->link[i]->l == -1) continue;
+		/* NULL's here are quite unexpected -- I think there's a bug
+		 * elsewhere in the code. But for now, punt.  Here's a sentence
+		 * that triggers a NULL -- "His convalescence was relatively brief
+		 * and he was able to return and fight at The Wilderness,
+		 * Spotsylvania and Cold Harbor."
+		 */
+		if (NULL == sublinkage->link[i]->lc) continue;
+		if (NULL == sublinkage->link[i]->rc) continue;
 		if (!x_match(sent, sublinkage->link[i]->lc, sublinkage->link[i]->rc))
 		{
 			replace_link_name(sublinkage->link[i], pi->link_array[i].name);
@@ -975,8 +983,8 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		if (0 == opts->use_sat_solver)
 		{
 			compute_pp_link_array_connectors(sent, sublinkage);
+			compute_pp_link_names(sent, sublinkage);
 		}
-		compute_pp_link_names(sent, sublinkage);
 
 		/* 'analyze_pass' logic added ALB 1/97 */
 		if (analyze_pass==PP_FIRST_PASS) {
