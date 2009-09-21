@@ -1924,7 +1924,7 @@ undertakers.n undertakings.n undertones.n undertows.n
 undervaluations.n underworlds.n underwriters.n undesirables.n 
 undoings.n unicorns.n uniforms.n unionists.n unions.n units.n 
 universes.n universities.n untouchables.n untruths.n upbraidings.n 
-upgrades.n upheavals.n upholsterers.n uplands.n uppercuts.n uppers.n 
+updates.n upgrades.n upheavals.n upholsterers.n uplands.n uppercuts.n uppers.n 
 uprights.n uprisings.n uproars.n upsets.n upshots.n upstarts.n 
 upsurges.n uptakes.n upturns.n urchins.n urinals.n urns.n usages.n 
 users.n uses.n ushers.n usurpations.n usurpers.n utensils.n uteruses.n 
