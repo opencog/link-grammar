@@ -92,8 +92,12 @@ CAPITALIZED-WORDS:     /^[[:upper:]].*\w$/
 
 ING-WORDS:        /..ing$/
 
-% plurals or verb-s.
-S-WORDS:          /[^iuoys]s$/
+% Plurals or verb-s. Make sure that apostrophe-s is split out correctly.
+% e.g. "The subject's name is John Doe."  should be
+%     +--Ds--+---YS--+--Ds-+
+%     |      |       |     |
+%    the subject.n 's.p name.n 
+S-WORDS:          /[^iuoys']s$/
 
 % Verbs ending -ed.
 ED-WORDS:         /..ed$/
