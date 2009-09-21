@@ -10,6 +10,7 @@ Versin 4.6.2 (?? 2009)
  * Fix misc verbs acting as adjectival modifiers: e.g. "given", "allied"
  * Fix bug in BioLG code regarding the handling of possesives.
  * Fix a (rare) crash in sentences with many conjunctions. 
+ * Fix a crash involving long sequences of UTF8 chars.
 
 Version 4.6.1 (31 August 2009)
  * Stop printing annoying warning when !vars are used.

@@ -393,6 +393,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
                          int is_first_word, int quote_found)
 {
+	size_t sz;
 	int i, j, len;
 	int r_strippable=0, l_strippable=0, u_strippable=0;
 	int s_strippable=0, p_strippable=0;
@@ -417,8 +418,9 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	/* First, see if we can already recognize the word as-is. If
 	 * so, then we are done. Else we'll try stripping prefixes, suffixes.
 	 */
-	strncpy(word, w, MIN(wend-w, MAX_WORD));
-	word[MIN(wend-w, MAX_WORD)] = '\0';
+	sz = MIN(wend-w, MAX_WORD);
+	strncpy(word, w, sz);
+	word[sz] = '\0';
 	word_is_in_dict = FALSE;
 
 	if (boolean_reg_dict_lookup(sent->dict, word))
@@ -456,15 +458,22 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		for (i=0; i<l_strippable; i++)
 		{
 			/* This is UTF8-safe, I beleive ... */
-			if (strncmp(w, strip_left[i], strlen(strip_left[i])) == 0)
+			sz = strlen(strip_left[i]);
+			if (strncmp(w, strip_left[i], sz) == 0)
 			{
 				if (!issue_sentence_word(sent, strip_left[i])) return FALSE;
-				w += strlen(strip_left[i]);
+				w += sz;
 				break;
 			}
 		}
 		if (i == l_strippable) break;
 	}
+
+	/* Its possible that the token consisted entirely of
+	 * left-punctuation, in which case, it has all been issued.
+	 * So -- we're done, return.
+	 */
+	if (w >= wend) return TRUE;
 
 	/* Now w points to the string starting just to the right of
 	 * any left-stripped characters.
@@ -476,7 +485,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	 */
 	for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) 
 	{
-		size_t sz = MIN(wend-w, MAX_WORD);
+		sz = MIN(wend-w, MAX_WORD);
 		strncpy(word, w, sz);
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
