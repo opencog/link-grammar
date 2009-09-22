@@ -180,7 +180,7 @@ endif
 link_parser_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
 
 if HAVE_EDITLINE
-link_parser_LDADD += -ledit
+link_parser_LDADD += -ledit -lcurses
 endif
 
 install-data-local: install-libtool-import-lib
