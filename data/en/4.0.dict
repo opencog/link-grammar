@@ -4199,7 +4199,8 @@ statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
 instead.e prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
-on_arrival by_request in_total in_turn over_and_over later_on for_now
+on_arrival by_request in_total in_turn over_and_over 
+time_and_again later_on for_now
 day_by_day day_after_day step_by_step one_by_one for_sure for_certain
 even_so more_often_than_not all_of_a_sudden:
 ({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+);

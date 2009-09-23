@@ -211,7 +211,7 @@ static int sentence_contains(Sentence sent, const char * s)
  * The functions below put the special connectors on certain auxilliary
    words to be used with conjunctions.  Examples: either, neither,
    both...and..., not only...but...
-XXX FIXME: This routine uses "sentenc_contains" to test for explicit 
+XXX FIXME: This routine uses "sentence_contains" to test for explicit 
 English words, and clearly this fails for other langauges!! XXX FIXME!
 */
 
