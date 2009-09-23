@@ -937,6 +937,9 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 %VERBS
 
+<MX-PHRASE>: Xd- & (Xc+ or [[[()]]]) & (MX*p- or MVg-);
+<OPENER>: {Xd-} & Xc+ & COp+;
+
 % These are the verb-form expressions for ordinary verbs.
 % <marker-past> is a marker which should never be used in a link.  
 % It is used to flag past-tense forms in the dictionary
@@ -952,22 +955,25 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & (Pv- or Mv-);
-<verb-ge>: {@E-} & ((Xd- & (Xc+ or [[[()]]]) & (MX*p- or MVg-)) or 
-({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) 
-or [DP- & J-] or [[Wq- & PF+]] or ({Xd-} & Xc+ & COp+));
+<verb-ge>: {@E-} & (<MX-PHRASE> or 
+ <OPENER> or
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or
+ [DP- & J-] or [[Wq- & PF+]]);
 
 <verb-ge-d>: ({@AN-} & {@A- & {[[@AN-]]}} & (Dmu- or [[()]]) & 
 (OF+ or [[()]]) 
 & <noun-sub-s> & {@MXs+} & ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) 
 or [[AN+]];
 
-<verb-pg,ge>: {@E-} & (({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- 
-or [[[()]]])) or 
-Mg- or Pg- or (Xd- & (Xc+ or [[[()]]]) & (MX*p- or MVg-)) 
-or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
+<verb-pg,ge>: {@E-} & (
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or 
+ Mg- or Pg- or 
+ <MX-PHRASE> or <OPENER> or
+ [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
-<verb-po>: {@E-} & {@MV+} & ((Xd- & (Xc+ or [[[()]]]) & (MX*p- or MVg-))
- or [[Wq- & PF+ & {@MV+} & {CC+}]] or ({Xd-} & Xc+ & COp+)); 
+<verb-po>: {@E-} & {@MV+} & (
+ <MX-PHRASE> or <OPENER> or
+ [[Wq- & PF+ & {@MV+} & {CC+}]]);
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -990,9 +996,10 @@ or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
 <verb-x-sp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-)));
 <verb-x-pp>: {@E-} & PPf-;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
-<verb-x-pg,ge>: {@E-} & (Pgf- or Mg- or ({[DP-]} & ((Ss*g+ & <CLAUSE>) 
-or SIs*g- or [[[()]]])) or (Xd- & (Xc+ or [[[()]]]) & (MX*p- or MVg-)) 
-or [DP- & J-] or [[Wq- & PF+ & {@MV+}]] or ({Xd-} & Xc+ & COp+));
+<verb-x-pg,ge>: {@E-} & (Pgf- or Mg- or 
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or 
+ <MX-PHRASE> or <OPENER> or
+ [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
 
 % AUXILIARY VERBS
@@ -3137,18 +3144,15 @@ or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or [[({Xc+ & {Xd-}} & CO+)]]))
 or ((OF- or Mp-) & B-) or (MG- & JG+) or (NF- & NJ+) or (Mp- & TI+); 
 of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
-% MX*p- must have punctuation, just like <verb-po>
-% MX link: The blah, to be blahed, will be blah.
+% MX-PHRASE: The blah, to be blahed, will be blah.
 to.r: ({@E-} & {NT-} & I+ & 
-(TO- or [{Xd- & Xc+} & MVi-] or (Xd- & (Xc+ or [[[()]]]) & MX*p-)
-or [[R-]] or (SFsx+ & <S-CLAUSE>) or [Xc+ & {Xd-} & CO+]))
-or I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) 
-or [MVp- & B-] or [MVp-];
-so_as_to: I+ & {Xd- & Xc+} & MVi-; 
+ (TO- or [{Xd- & Xc+} & MVi-] or 
+ <MX-PHRASE> or [<OPENER>] or
+ [[R-]] or (SFsx+ & <S-CLAUSE>) )) or
+ I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or
+ [MVp- & B-] or [MVp-];
 
-% For use in a naked "to be" used in MX link:
-%to.rr: [{@E-} & Ix+];
-%to.rrr: {@E-} & I+ & [{Xd- & Xc+} & MX-];
+so_as_to: I+ & {Xd- & Xc+} & MVi-; 
 
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
@@ -3599,7 +3603,7 @@ n't n’t: N- or EB-;
 %ADJECTIVES
 
 <adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
-({@E-} & {@MV+} & ([[{Xd-} & Xc+ & COp+]] or (Xd- & Xc+ & MX*a-))); 
+({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-))); 
 
 /en/words/words.adj.1:  % ordinary adjectives
 <marker-common-entity> or 
