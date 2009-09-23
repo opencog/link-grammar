@@ -1804,8 +1804,8 @@ repeat.v reflect.v provide.v counter.v signal.v: <verb-pl,i> & <vc-repeat>;
 repeats.v reflects.v provides.v counters.v signals.v: <verb-s> & <vc-repeat>;
 repeated.v reflected.v countered.v signaled.v signalled.v: 
 (<verb-sp,pp> & <vc-repeat>) or <verb-pv> or <verb-po> or ({@E-} & A+);
-provided.v: (<verb-sp,pp> & <vc-repeat>) or <verb-pv> or <verb-po> or ({@E-} &
- A+) or
+provided.v: (<verb-sp,pp> & <vc-repeat>) or <verb-pv> or <verb-po> or 
+({@E-} & A+) or
 ((TH+ or Ce+) & (({{Xd-} & Xc+} & CO+) or ({Xd- & Xc+} & MVs-)));
 repeating.v reflecting.v providing.v countering.v signaling.v signalling.v: 
 <verb-pg> & <vc-repeat>;
@@ -3137,11 +3137,18 @@ or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or [[({Xc+ & {Xd-}} & CO+)]]))
 or ((OF- or Mp-) & B-) or (MG- & JG+) or (NF- & NJ+) or (Mp- & TI+); 
 of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
-to.r: ({@E-} & {NT-} & I+ & (TO- or [{Xd- & Xc+} & MVi-] 
+% MX*p- must have punctuation, just like <verb-po>
+% MX link: The blah, to be blahed, will be blah.
+to.r: ({@E-} & {NT-} & I+ & 
+(TO- or [{Xd- & Xc+} & MVi-] or (Xd- & (Xc+ or [[[()]]]) & MX*p-)
 or [[R-]] or (SFsx+ & <S-CLAUSE>) or [Xc+ & {Xd-} & CO+]))
 or I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) 
 or [MVp- & B-] or [MVp-];
 so_as_to: I+ & {Xd- & Xc+} & MVi-; 
+
+% For use in a naked "to be" used in MX link:
+%to.rr: [{@E-} & Ix+];
+%to.rrr: {@E-} & I+ & [{Xd- & Xc+} & MX-];
 
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
@@ -4300,7 +4307,12 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 ";": <semicol>;
 
 % sometimes comma is used as if it were a semicolon
-",": ({@Xca- or [[[@Xc-]]]} & (({EBx+} & Xd+) or Xc-)) or [[<semicol>]];
+% Allow post-comma adverbial modifiers, but discourage these
+% because the modifier my be long to a following phrase. 
+% e.g. "The blah, soon to be blah, will be blah." should not
+% get an EBx link to "soon".
+% XXX the correct solution to this is to add a new domain rule ! XXX
+",": ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or [[<semicol>]];
 
 "…" ":" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
