@@ -72,7 +72,7 @@ int compile_regexs(Dictionary dict)
  * On match, returns the name of the first matching regex.
  * If no match is found, returns NULL.
  */
-const char *match_regex(Dictionary dict, char *s)
+const char *match_regex(Dictionary dict, const char *s)
 {
 	int rc;
 

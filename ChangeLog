@@ -2,6 +2,7 @@ Version 4.6.3 (??? 2009)
  * Fix compilation bug on FreeBSD.
  * Fix: allow MX link to post-nominal ", to be ..., " 
  * Fix: add idiom "time and again"
+ * Fix: another BioLG regression in handling of possesives.
 
 Version 4.6.2 (21 September 2009)
  * Fix: "come across as authoritiative".

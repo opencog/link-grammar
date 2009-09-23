@@ -79,13 +79,16 @@ FOLD-WORDS: /^[0-9.,:-]*[0-9]([0-9.,:-]|\([0-9.,:-]*[0-9][0-9.,:-]*\)|\+\/-)*-?f
 FOLD-WORDS: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fifteen|twenty|thirty|fifty|hundred|thousand|million).*fold$/
 
 % Plural proper nouns.
-PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys]s$/
+% Make sure that apostrophe-s is split out correctly.
+PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys']s$/
 
 % Other proper nouns.
 % We demand that these end with an alphanumeric, i.e. explicitly
 % reject punctuation. We don't want this regex to "swallow" any trailing
 % commas, or periods/question-marks at the end of sentences.
-CAPITALIZED-WORDS:     /^[[:upper:]].*\w$/
+% In addition, this must not swallow words ending in 's 'll etc.
+% (... any affix, for that matter ...)
+CAPITALIZED-WORDS:     /^[[:upper:]].*[^'’][^'’]\w$/
 
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /..ation$/
