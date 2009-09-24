@@ -48,15 +48,18 @@
 static int is_common_entity(Dictionary dict, const char * str)
 {
 	if (word_contains(dict, str, COMMON_ENTITY_MARKER) == 1)
-		return 1;
-	return 0;
+		return TRUE;
+	return FALSE;
 }
 
 static int is_entity(Dictionary dict, const char * str)
 {
+	const char * regex_name;
 	if (word_contains(dict, str, ENTITY_MARKER) == 1)
-		return 1;
-	return 0;
+		return TRUE;
+	regex_name = match_regex(dict, str);
+	if (NULL == regex_name) return FALSE;
+	return word_contains(dict, regex_name, ENTITY_MARKER);
 }
 
 /**

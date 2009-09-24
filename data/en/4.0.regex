@@ -80,7 +80,7 @@ FOLD-WORDS: /^(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|th
 
 % Plural proper nouns.
 % Make sure that apostrophe-s is split out correctly.
-PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys']s$/
+PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys'’]s$/
 
 % Other proper nouns.
 % We demand that these end with an alphanumeric, i.e. explicitly
@@ -100,7 +100,7 @@ ING-WORDS:        /..ing$/
 %     +--Ds--+---YS--+--Ds-+
 %     |      |       |     |
 %    the subject.n 's.p name.n 
-S-WORDS:          /[^iuoys']s$/
+S-WORDS:          /[^iuoys'’]s$/
 
 % Verbs ending -ed.
 ED-WORDS:         /..ed$/

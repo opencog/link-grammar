@@ -93,12 +93,13 @@
 CAPITALIZED-WORDS NAME <entity-singular>:
 ({NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
 ((<noun-sub-s> & (JG- or <noun-main-s>)) or YS+)) or ({[[@MX+]]} & AN+) or G+))) or 
-<directive-opener>;
+<directive-opener> or <marker-entity>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 PL-CAPITALIZED-WORDS: 
-{NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
-((<noun-sub-x> & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+); 
+({NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
+((<noun-sub-x> & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)) or
+<directive-opener> or <marker-entity>;
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??

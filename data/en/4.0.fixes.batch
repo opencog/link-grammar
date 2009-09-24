@@ -1596,6 +1596,9 @@ John's remark was awkward.
 John's sudden outburst was awkward.
 Lady's dress was awkward.
 
+% Some plural capitalized words are singular entities. Treat them well.
+Johns gave it to me.
+Hotchkiss gave it to me.
 
 % Sue (female given name) vs. "to sue" (verb).
 Sue answered the door.
