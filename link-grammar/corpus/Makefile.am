@@ -1,3 +1,7 @@
+#
+# Makefile.am
+# Master automake file for building the corpus-statistics tools
+#
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
