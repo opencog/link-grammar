@@ -3845,7 +3845,7 @@ or (MVzp- & (CX+ or CQ+))
 or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
 % prepositional, mostly
-as.p: ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) & 
+as.e: ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) & 
 (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-))) or 
 (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-))) or
 ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-))) or 
