@@ -1,3 +1,7 @@
+# 
+# Automake file for building both liblink-grammar.so and 
+# the command line application link-parser.
+#
 
 if WITH_SAT_SOLVER
 SUBDIRS=minisat sat-solver
@@ -168,6 +172,9 @@ EXTRA_DIST=                               \
 	link-grammar.def                       \
 	link-grammar-java.def
 
+
+# -----------------------------------------------------------
+# Directives to build the link-parser command-line application
 bin_PROGRAMS=link-parser
 link_parser_SOURCES = link-parser.c
 link_parser_LDADD = 
