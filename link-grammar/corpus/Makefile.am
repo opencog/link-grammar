@@ -7,7 +7,9 @@ if WITH_CORPUS
 lib_LTLIBRARIES = liblink-corpus.la
 endif
 
-liblink_corpus_la_LDFLAGS = -no-undefined
+# Undefined symbols are allowed, as otherwise there is a circular
+# dependenincy on liblink-grammar.
+# liblink_corpus_la_LDFLAGS = -no-undefined
 
 liblink_corpus_la_LIBADD = ${SQLITE3_LIBS}
 
@@ -21,7 +23,16 @@ liblink_corpus_la_SOURCES = \
 EXTRA_DIST=                               \
 	README
 
-noinst_PROGRAMS=cluster-pop sniff
+# Don't build the tools by default; only the maintainer (me) needs
+# to run this tool.
+#
+# Specifying the binaries here leads to circular Make dependencies 
+# which I am too lazy to fix.  To build the tool, you need to uncomment 
+# the below, then run a two-step build process:
+#    autogen.sh ; make
+#    autogen.sh --enable-corpus-stats ; make
+#
+# noinst_PROGRAMS=cluster-pop sniff
 
 cluster_pop_SOURCES = cluster-pop.c
 cluster_pop_LDADD = ${SQLITE3_LIBS}

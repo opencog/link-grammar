@@ -1,7 +1,7 @@
 /*
  * cluster.c
  *
- * Data for related-word clusters. Meant to expand disjunct covereage
+ * Data for related-word clusters. Meant to expand disjunct coverage
  * for the case where a parse cannot be completed without ommitting
  * a word.
  *
