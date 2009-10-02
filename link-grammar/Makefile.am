@@ -190,6 +190,7 @@ if HAVE_EDITLINE
 link_parser_LDADD += -ledit -lcurses
 endif
 
+# -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
 
 uninstall-local: uninstall-libtool-import-lib

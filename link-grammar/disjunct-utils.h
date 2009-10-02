@@ -14,7 +14,7 @@
 #ifndef _LINK_GRAMMAR_DISJUNCT_UTILS_H_
 #define _LINK_GRAMMAR_DISJUNCT_UTILS_H_
 
-#include <link-grammar/api-types.h>
+#include "api-types.h"
 
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
