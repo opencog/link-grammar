@@ -398,16 +398,16 @@ static s64 do_count(Sentence sent, int lw, int rw,
 
 	if (re == NULL)
 	{
-		end_word = rw-1;
+		end_word = rw;
 	}
 	else
 	{
-		end_word = re->word;
+		end_word = re->word +1;
 	}
 
 	total = 0;
 
-	for (w = start_word; w < end_word+1; w++)
+	for (w = start_word; w < end_word; w++)
 	{
 		m1 = m = form_match_list(sent, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next)
@@ -594,16 +594,18 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 		start_word = le->word;
 	}
 	if (re == NULL) {
-		end_word = rw-1;
+		end_word = rw;
 	} else {
-		end_word = re->word;
+		end_word = re->word + 1;
 	}
 
 	found = 0;
 
-	for (w=start_word; w < end_word+1; w++) {
+	for (w=start_word; w < end_word; w++)
+	{
 		m1 = m = form_match_list(sent, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next) {
+		for (; m!=NULL; m=m->next)
+		{
 			d = m->d;
 			/* mark_cost++;*/
 			/* in the following expressions we use the fact that 0=FALSE. Could eliminate
@@ -675,14 +677,16 @@ static void mark_region(Sentence sent,
 		start_word = le->word;
 	}
 	if (re == NULL) {
-		end_word = rw-1;
+		end_word = rw;
 	} else {
-		end_word = re->word;
+		end_word = re->word + 1;
 	}
 
-	for (w=start_word; w < end_word+1; w++) {
+	for (w=start_word; w < end_word; w++)
+	{
 		m1 = m = form_match_list(sent, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next) {
+		for (; m!=NULL; m=m->next)
+		{
 			d = m->d;
 			/* mark_cost++;*/
 			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(ctxt, le, d->left, lw, w)) &&
@@ -700,7 +704,8 @@ static void mark_region(Sentence sent,
 			   to mark_region.  It didn't seem a high priority, so I didn't optimize this.
 			   */
 
-			if (left_valid && region_valid(sent, w, rw, d->right, re)) {
+			if (left_valid && region_valid(sent, w, rw, d->right, re))
+			{
 				d->marked = TRUE;
 				mark_region(sent, w, rw, d->right, re);
 				mark_region(sent, lw, w, le->next, d->left->next);
@@ -709,7 +714,8 @@ static void mark_region(Sentence sent,
 				if (le->multi && d->left->multi) mark_region(sent, lw, w, le, d->left);
 			}
 
-			if (right_valid && region_valid(sent, lw, w, le, d->left)) {
+			if (right_valid && region_valid(sent, lw, w, le, d->left))
+			{
 				d->marked = TRUE;
 				mark_region(sent, lw, w, le, d->left);
 				mark_region(sent, w, rw, d->right->next,re->next);
@@ -718,7 +724,8 @@ static void mark_region(Sentence sent,
 				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
 			}
 
-			if (left_valid && right_valid) {
+			if (left_valid && right_valid)
+			{
 				d->marked = TRUE;
 				mark_region(sent, lw, w, le->next, d->left->next);
 				if (le->multi) mark_region(sent, lw, w, le, d->left->next);

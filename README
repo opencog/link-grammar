@@ -1,7 +1,7 @@
 
                        Link Grammar Parser 
                        -------------------
-                          Version 4.6.2
+                          Version 4.6.3
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -62,7 +62,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.6.2.tar.gz.asc
+   gpg --verify link-grammar-4.6.3.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
