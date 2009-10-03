@@ -220,6 +220,9 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
+ *
+ * This code is similar to code in count.c 
+ * (grep for end_word in these files).
  */
 static Parse_set * parse_set(Sentence sent,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
@@ -301,14 +304,16 @@ static Parse_set * parse_set(Sentence sent,
 	}
 
 	if (re == NULL) {
-		end_word = rw-1;
+		end_word = rw;
 	} else {
-		end_word = re->word;
+		end_word = re->word + 1;
 	}
 
-	for (w=start_word; w < end_word+1; w++) {
+	for (w=start_word; w < end_word; w++)
+	{
 		m1 = m = form_match_list(sent, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next) {
+		for (; m!=NULL; m=m->next)
+		{
 			d = m->d;
 			for (lcost = 0; lcost <= cost; lcost++) {
 				rcost = cost-lcost;
