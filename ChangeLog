@@ -4,6 +4,7 @@ Version 4.6.3 (??? 2009)
  * Fix: add idiom "time and again"
  * Fix: another BioLG regression in handling of possesives.
  * Fix: Capitalized words ending in s at start of sentence.
+ * Use corpus-statistics-based ranking by default, if available.
 
 Version 4.6.2 (21 September 2009)
  * Fix: "come across as authoritiative".

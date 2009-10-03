@@ -81,8 +81,17 @@ Parse_Options parse_options_create(void)
 	po->islands_ok = FALSE;
 	po->use_spell_guess = TRUE;
 	po->use_sat_solver = FALSE;
+
+	/* Use the corpus cost model, if available.
+	 * It really does a better job at parse ranking.
+	 */
+#ifdef USE_CORPUS
+	po->cost_model.compare_fn = &CORP_compare_parse;
+	po->cost_model.type = CORPUS;
+#else /* USE_CORPUS */
 	po->cost_model.compare_fn = &VDAL_compare_parse;
 	po->cost_model.type = VDAL;
+#endif /* USE_CORPUS */
 	po->short_length = 6;
 	po->all_short = FALSE;
 	po->twopass_length = 30;
