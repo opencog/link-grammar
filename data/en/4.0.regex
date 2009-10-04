@@ -16,17 +16,20 @@
 % Numbers.
 % XXX, we need to add utf8 U+00A0 "no-break space"
 % The ":" is included here so we allow "10:30" to be a number
-%
-% This one matches the original LG rule.
-% NUMBERS: /^[0-9][0-9:.,]+$/
+% 
+% Allows at most two colons
+NUMBERS: /^[0-9]:?[0-9]*:?[0-9]*$/
+% Allows any number of commas or periods
+NUMBERS: /^[0-9,.]*[0-9]$/
 % This allows more, e.g. "-5" and "5-10" and "9+/-6.5"
-NUMBERS: /^[0-9:.,-]*[0-9]([0-9:.,-]|\+\/-[0-9:.,-])*$/
+NUMBERS: /^[0-9.,-]*[0-9](\+\/-[0-9.,-]*[0-9])?$/
 % "10(3)" exponent (used in PubMed)
-NUMBERS: /^[0-9:.,-]*[0-9][0-9:.,-]*\([0-9:.,-]*[0-9][0-9:.,-]*\)$/
+NUMBERS: /^[0-9.,-]*[0-9][0-9.,-]*\([0-9:.,-]*[0-9][0-9.,-]*\)$/
 
 % Roman numerals
 % The first expr has the potential(?) problem that it matches an empty
-% string, this should be fixed.
+% string. Thus, the next three rules specify that at least one section
+% is non-empty.
 ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD){1}(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL){1}(IX|V?I{0,3}|IV)$/
