@@ -298,14 +298,64 @@ Corpus Statistics:
 
    prior to compiling.  The database itself can be downloaded from 
 
+      http://www.abisource.com/downloads/link-grammar/sense-dictionary/
+   or   
       http://gnucash.org/linas/nlp/data/linkgrammar-wsd/
 
    The data is contained in an sqlite3 database file, 
 
       disjuncts.20090430.db.bz2 
 
-   Unzip this file (using bunzip2) and place it in the same directory
-   with the other data files.
+   Unzip this file (using bunzip2) rename it to "disjuncts.db", and 
+   place it in the subdirectory "sql", in the same directory that
+   contains the "en" directory. For default unix installations, this
+   would be "/usr/local/share/link-grammar/sql", which would be next
+   to "/usr/local/share/link-grammar/en".
+
+   After this is installed, parse ranking scores should be printed
+   automatically, as floating-point numbers: for example:
+
+      Unique linkage, cost vector = (CORP=4.4257 UNUSED=0 DIS=1 AND=0 LEN=5)
+
+   Lower numbers are better.  The scores can be interpreted as -log_2
+   of a certain probability, so the lower the number, the higher the
+   probability.
+
+   The display of disjunct scores can be enabled with the !disjuncts 
+   flag, and senses with the !senses flag, at the link-parser prompt.
+   Entering !var and !help will show all flags.  Multiple parses are 
+   sorted and displayed in order from lowest to highest cost; the sort
+   of can be set by saying !cost=1 for the traditional sort, and 
+   !cost=2 for corpus-based cost.  Output similar to the below should
+   be printed:
+   
+      linkparser> !disjunct
+      Showing of disjunct used turned on.
+      linkparser> !cost=2
+      cost set to 2
+      linkparser> !sense
+      Showing of word senses turned on.
+      linkparser> this is a test
+      Found 1 linkage (1 had no P.P. violations)
+	      Unique linkage, cost vector = (CORP=4.4257 UNUSED=0 DIS=1 AND=0 LEN=5)
+
+               +--Ost--+
+         +-Ss*b+  +-Ds-+
+         |     |  |    |
+      this.p is.v a test.n 
+
+      2 is.v dj=Ss*b- Ost+  sense=be%2:42:02:: score=2.351568
+      2 is.v dj=Ss*b- Ost+  sense=be%2:42:05:: score=2.143989
+      2 is.v dj=Ss*b- Ost+  sense=be%2:42:03:: score=1.699292
+      4 test.n dj=Ost- Ds-  sense=test%1:04:00:: score=0.000000
+                     this.p      0.0  0.695 Wd- Ss*b+ 
+                       is.v      0.0  7.355 Ss*b- Ost+ 
+                          a      0.0  0.502 Ds+ 
+                     test.n      1.0  9.151 Ost- Ds- 
+
+
+  Note tht the sense labels are not terribly accurate; the verb "to be"
+  is particularly hard to tag correctly.
 
 
 Spell Checking:
