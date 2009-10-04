@@ -308,9 +308,14 @@ Corpus Statistics:
 
    Unzip this file (using bunzip2) rename it to "disjuncts.db", and 
    place it in the subdirectory "sql", in the same directory that
-   contains the "en" directory. For default unix installations, this
-   would be "/usr/local/share/link-grammar/sql", which would be next
-   to "/usr/local/share/link-grammar/en".
+   contains the "en" directory. For default unix installations, the
+   final location would be 
+
+       /usr/local/share/link-grammar/sql/disjuncts.db 
+
+   where, by comparison, the usual dictionary would be at
+
+      /usr/local/share/link-grammar/en/4.0.dict
 
    After this is installed, parse ranking scores should be printed
    automatically, as floating-point numbers: for example:
@@ -354,7 +359,7 @@ Corpus Statistics:
                      test.n      1.0  9.151 Ost- Ds- 
 
 
-  Note tht the sense labels are not terribly accurate; the verb "to be"
+  Note that the sense labels are not terribly accurate; the verb "to be"
   is particularly hard to tag correctly.
 
 
