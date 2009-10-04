@@ -1,10 +1,11 @@
-Version 4.6.3 (??? 2009)
+Version 4.6.3 (4 October 2009)
  * Fix compilation bug on FreeBSD.
  * Fix: allow MX link to post-nominal ", to be ..., " 
  * Fix: add idiom "time and again"
  * Fix: another BioLG regression in handling of possesives.
  * Fix: Capitalized words ending in s at start of sentence.
  * Use corpus-statistics-based ranking by default, if available.
+ * Fix difficulties in build of corpus statistics module.
 
 Version 4.6.2 (21 September 2009)
  * Fix: "come across as authoritiative".
