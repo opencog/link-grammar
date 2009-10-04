@@ -83,7 +83,7 @@
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
 <directive-opener>:
-{[[Wi-]]} & ((Xc+ & Ic+) or ({{Xd-} & Xc+} & COa+));
+{[[Wi-]]} & ((Xc+ & Ic+) or (({Xd-} & (Xc+ or [[()]])) & COa+));
 
 % Just pure singular entities, no mass nouns 
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and 
