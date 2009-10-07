@@ -3357,7 +3357,7 @@ moment.u: (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-))) or
 or MVp- or (Xd- & Xc+ & MVx-))) or Yt+)); 
 a_while: J- or Yt+ or OT- or MVa-;
 now.i then.i: JT- or FM-;
-now_on then_on: FM-;
+now_on then_on there_on: FM-;
 from_now: Yt- & <prep-main-t>;
 a_long_time some_time a_few_moments moments.u: Yt+ or OT-;
 ago: Yt- & (<prep-main-e> or Ca+ or Qe+ or JT-);
