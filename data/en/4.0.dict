@@ -3282,8 +3282,8 @@ such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
 % loosen the post-processing, or should we invent a new Wa for this case?
 here: J- or <prep-main-b> or [Wq- & PF+];
 
-there: J- or <prep-main-b> or 
-((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt-;
+there.r: J- or <prep-main-b> or 
+((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt- or Wi-;
 
 % Patronymics and misc french/spanish/german connectives
 % Many of these are already in the adjectives list
@@ -4207,13 +4207,19 @@ even_so more_often_than_not all_of_a_sudden:
 ({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+);
 
 % Openers to directives, commands (Ic+ connection to infinitives)
-% These are semantically important interjections ... 
+% or single-word interjections. These are semantically important,
+% so they've got to parse!
 no.misc-interj nope.misc-interj nah.misc-interj no_way 
 yes.misc-interj yeah.misc-interj yep.misc-interj yup.misc-interj 
 ok.misc-interj okay.misc-interj OK.misc-interj fine.misc-interj 
-sure.misc-interj whatever.misc-interj anyhow.misc-interj 
+exactly.misc-interj sure.misc-interj whatever.misc-interj
+hah.misc-interj hey.misc-interj:
+Wi- or <directive-opener>;
+
+% Openers to directives, commands (Ic+ connection to infinitives)
+anyhow.misc-interj 
 anyway.misc-interj afterwards.misc-interj afterward.misc-interj 
-instead.misc-interj exactly.misc-interj
+instead.misc-interj 
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn over_and_over later_on for_now

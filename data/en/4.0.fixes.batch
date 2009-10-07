@@ -1382,7 +1382,7 @@ Surely, that can't be right.
 No, that can't be right.
 Yes, that is right.
 
-% openers, linking to infinitive, or post-verbal
+% openers, interjections, linking to infinitive, or post-verbal
 Yes, please do it again.
 Yes, please, do it again.
 Yes, please, I'll have one.
@@ -1413,6 +1413,14 @@ No, please don't do that.
 Okay, stop that.
 Stop, please don't do that.
 Sir, please don't do that.
+
+% Single-word exclamations!
+Yes!
+No!
+Sure.
+Whatever.
+OK.
+Okay.
 
 % Given names can be openers to directives or questions.
 Ma'am, please don't do that.
@@ -1448,6 +1456,11 @@ John, this is it!
 First, unbutton the button.
 Next, pour wine on your shirt.
 Finally, button the button.
+
+% Broken interjections ...
+Enough already!
+Enough of that!
+Yeah, right.
 
 
 % Broken idiomatic expressions ... 
