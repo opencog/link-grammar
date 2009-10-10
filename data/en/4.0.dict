@@ -1117,7 +1117,7 @@ were.v: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or
 (SIpx+ or SFIp+))) & <vc-be>) or [[(SI*j+ or SFI**j+) & <vc-be> &
 ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]]);
 am.v: (({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>;
-be.v: {@E-} & (Ix- or ({Ic-} & Wi-)) & <vc-be>;
+be.v: {@E-} & (Ix- or ({Ic-} & Wi-) or [Spx-]) & <vc-be>;
 been.v: {@E-} & PPf- & <vc-be>;
 being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
 or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or 
