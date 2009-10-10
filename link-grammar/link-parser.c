@@ -278,19 +278,22 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
 static int process_some_linkages(Sentence sent, Parse_Options opts)
 {
 	int c;
-	int i, num_displayed, num_to_query;
+	int i, num_to_query, num_to_display, num_displayed;
 	Linkage linkage;
 	double corpus_cost;
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
+	num_to_query = MIN(sentence_num_linkages_post_processed(sent),
+	                   DISPLAY_MAX);
 	if (!parse_options_get_display_bad(opts))
 	{
-		num_to_query = MIN(sentence_num_valid_linkages(sent), DISPLAY_MAX);
+		num_to_display = MIN(sentence_num_valid_linkages(sent),
+		                     DISPLAY_MAX);
 	}
 	else
 	{
-		num_to_query = MIN(sentence_num_linkages_post_processed(sent),
-		                   DISPLAY_MAX);
+		num_to_display = MIN(sentence_num_linkages_post_processed(sent),
+		                     DISPLAY_MAX);
 	}
 
 	for (i=0, num_displayed=0; i<num_to_query; i++)
@@ -313,20 +316,23 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 			else if ((parse_options_get_display_bad(opts)) &&
 			         (sentence_num_violations(sent, i) > 0))
 			{
-				fprintf(stdout, "	Linkage %d (bad), ", i+1);
+				fprintf(stdout, "	Linkage %d (bad), ", num_displayed+1);
 			}
 			else
 			{
-				fprintf(stdout, "	Linkage %d, ", i+1);
+				fprintf(stdout, "	Linkage %d, ", num_displayed+1);
 			}
 
-			if (!linkage_is_canonical(linkage)) {
+			if (!linkage_is_canonical(linkage))
+			{
 				fprintf(stdout, "non-canonical, ");
 			}
-			if (linkage_is_improper(linkage)) {
+			if (linkage_is_improper(linkage))
+			{
 				fprintf(stdout, "improper fat linkage, ");
 			}
-			if (linkage_has_inconsistent_domains(linkage)) {
+			if (linkage_has_inconsistent_domains(linkage))
+			{
 				fprintf(stdout, "inconsistent domains, ");
 			}
 
@@ -353,12 +359,18 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 		process_linkage(linkage, opts);
 		linkage_delete(linkage);
 
-		if (++num_displayed < num_to_query) {
-			if (verbosity > 0) {
+		if (++num_displayed < num_to_display)
+		{
+			if (verbosity > 0)
+			{
 				fprintf(stdout, "Press RETURN for the next linkage.\n");
 			}
 			c = fget_input_char(stdin, stdout, opts);
 			if (c != '\n') return c;
+		}
+		else
+		{
+			break;
 		}
 	}
 	return 'x';
