@@ -1570,7 +1570,8 @@ sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-act>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & {@MV+})};
 act.v: <verb-pl,i> & <vc-act>;
 acts.v: <verb-s> & <vc-act>;
-acted.v: <verb-sp,pp> & <vc-act>;
+% "be acted upon quikly"
+acted.v: (<verb-sp,pp> & <vc-act>) or (<verb-pv-b> & {K+} & {@MV+});
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 
 % She looked him over.
