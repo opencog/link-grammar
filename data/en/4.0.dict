@@ -2662,8 +2662,7 @@ names.v designates.v labels.v: <verb-s> & <vc-elect>;
 named.v designated.v labelled.v labeled.v: 
 (<verb-sp,pp> & <vc-name>) or (<verb-pv-b> & ({B- or
 (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or 
-({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
-({@E-} & A+);
+({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>);
 naming.g designating.g labelling.g labeling.g: (<vc-name> & <verb-ge>) or <verb-ge-d>;
 naming.v designating.v labelling.v labeling.v: <verb-pg> & <vc-name>;
 
