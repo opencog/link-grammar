@@ -4278,8 +4278,8 @@ or (Wq- & (PF+ or CQ+)) or O- or Js-;
 % original
 % sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-); 
 % modified
-sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} &MVa-) or E+); 
-so_that: Cs+ & {Xd- & Xc+} & MVs-;
+sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} & MVa-) or E+); 
+so_that such_that: Cs+ & {Xd- & Xc+} & MVs-;
 
 % much like an ordinary adverb, except even more commas allowed
 % please.e: <ordinary-adv>;
