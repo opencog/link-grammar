@@ -1107,8 +1107,7 @@ is.v: ((<verb-x-s>) or
 was.v: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) &
 (SFIs+ or SIs+ or SXI+))) & <vc-be>);
-% MIKE ROSS added [[Ss-]] option to are.v: for "What are the aliases of Jim?"
-are.v: (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) or 
+are.v: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>;
 were.v: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or 
@@ -3490,7 +3489,8 @@ who: (R- & (({MVp+ or MVx+} & RS+) or Cr+))
 or ({EL+} & (S**w+ or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
 ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+)) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
 
-what: ({EL+} & (D**w+ or Ss*w+ or (R+ & (Bsw+ or BW+))) & (Wq- or Ws- or QI*d-
+% "what are the answers?" takes Sp+
+what: ({EL+} & (D**w+ or Ss*w+ or Sp*w+ or (R+ & (Bsw+ or BW+))) & (Wq- or Ws- or QI*d-
 or BIqd-)) or ((Ss*d+ or (R+ & (Bsd+ or BW+))) &
 (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-)) or (D+ & JQ-);
 
