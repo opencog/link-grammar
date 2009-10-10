@@ -3094,7 +3094,7 @@ from:
 ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & <prep-main-a>)
 or (MVp- & B-) or MVp- or NIr+;
 
-at toward towards without upon:
+at toward towards without:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
 except but.misc-ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
@@ -3134,7 +3134,7 @@ by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
 in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) 
 or K- or (MVp- & B-) or (MG- & JG+);
 
-on: ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or K- or 
+on upon: ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or K- or 
 (MVp- & B-);
 over: ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) 
 or K- or EN+ or (MVp- & B-) or (Yd- & Pp-);
