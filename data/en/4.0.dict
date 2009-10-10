@@ -40,6 +40,11 @@
  % For nouns and others, replaced "B#m+" with "(Rw+ & B#m+)" (for any #)
  % For who,what,which,whom, replaced "B#" with "(R+ & B#+)" (for any #)
  %
+ % TODO:
+ % To-do: many verb simple past-tense forms include ({@E-} & A+) to
+ % make them adjective-like. Strictly speaking, these should probably
+ % copied into words.adj.1 and treated like common adjectives, right?
+
 
 % NOUNS
 
