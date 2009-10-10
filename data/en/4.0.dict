@@ -1194,7 +1194,8 @@ or <verb-ge-d>;
 
 
 <vc-come>:  {(K+ & {Pa+}) or [[Pg+]]} & {@MV+};
-come.v: (<verb-pl,i> or <verb-pp>) & <vc-come>;
+come.v: ((<verb-pl,i> or <verb-pp>) & <vc-come>) or
+   ({@E-} & Ix- & O*t+);
 comes.v: <verb-s> & <vc-come>;
 came.v: <verb-sp> & <vc-come>; 
 
