@@ -82,10 +82,11 @@ Parse_Options parse_options_create(void)
 	po->use_spell_guess = TRUE;
 	po->use_sat_solver = FALSE;
 
+#ifdef XXX_USE_CORPUS
 	/* Use the corpus cost model, if available.
 	 * It really does a better job at parse ranking.
+	 * Err .. sometimes ... 
 	 */
-#ifdef USE_CORPUS
 	po->cost_model.compare_fn = &CORP_compare_parse;
 	po->cost_model.type = CORPUS;
 #else /* USE_CORPUS */
