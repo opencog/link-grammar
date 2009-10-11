@@ -1,4 +1,4 @@
-Version 4.6.4 (??? 2009)
+Version 4.6.4 (11 October 2009)
  * Restore nouns starting w/letters x-z, elided in version 4.5.9 ff.
  * Add support for single-word interjections/exclamations!
  * Fix: sometimes command line client fails to show all valid linkages.
