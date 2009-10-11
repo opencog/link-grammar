@@ -5,6 +5,7 @@ Version 4.6.4 (??? 2009)
  * Misc fixes: such_that, upon, acted.v
  * Fix: impersonal "be" linking to passive participle.
  * Fix: handling of capitalized first words.
+ * Fix: duplication of certain parses involving transitive verbs.
 
 Version 4.6.3 (4 October 2009)
  * Fix compilation bug on FreeBSD.

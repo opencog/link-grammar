@@ -962,7 +962,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % It is used to flag past-tense forms in the dictionary
 
 <marker-past>: XXXPAST+;
-<verb-pl,i>: {@E-} & (Sp- or (RS- & Bp-) or (I- & {@E-} & {Wi-}) or ({CO-} & Wi-));
+<verb-ico>: {@E-} & ((I- & {@E-} & {Wi-}) or ({CO-} & Wi-));
+<verb-pl,i>: ({@E-} & (Sp- or (RS- & Bp-))) or <verb-ico>;
 <verb-pl>: {@E-} & (Sp- or (RS- & Bp-));
 <verb-s>: {@E-} & (Ss- or (RS- & Bs-));
 <verb-i>: {@E-} & I-;
@@ -976,6 +977,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
  <OPENER> or
  ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or
  [DP- & J-] or [[Wq- & PF+]]);
+
+<verb-sp,pp,ico>: <verb-sp,pp> or <verb-ico> or <marker-past>;
 
 <verb-ge-d>: ({@AN-} & {@A- & {[[@AN-]]}} & (Dmu- or [[()]]) & 
 (OF+ or [[()]]) 
@@ -1233,7 +1236,7 @@ shrank.v withdrew.v sank.v forgave.v hove.v spoilt.v unbent.v overfed.v:
 shrunk.v withdrawn.v sunk.v forgiven.v:
 (<verb-pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 bid.v hurt.v thrust.v broadcast.v outbid.v sublet:
-((<verb-pl,i> or <verb-sp,pp>) & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+)
+(<verb-sp,pp,ico> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+)
 or <verb-po>;
 /en/words/words.v.2.4:  
 <verb-pg> & <vc-tr,intr>;
@@ -1262,8 +1265,9 @@ or <verb-ge-d>;
 (<verb-sp,pp> & <vc-fill>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
 
-split.v spread.v beat.v fit.v shut.v cast.v: ((<verb-pl,i> or <verb-sp,pp>) & 
-<vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+split.v spread.v beat.v fit.v shut.v cast.v: 
+(<verb-sp,pp,ico> & <vc-fill>) or 
+(<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
 ate.v broke.v drove.v flew.v froze.v hid.v ran.v rang.v rode.v sprang.v 
 stalked.v woke.v test-drove.v forbore.v oversaw.v throve.v shrove.v 
@@ -1328,7 +1332,7 @@ frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
 forsook.v overrode.v overtook.v rewrote.v undid.v overran.v mistook.v underwrote.v: 
 <verb-sp> & <vc-trans>;
 hit.v misread.v shed.v rid.v overcome.v offset.v overrun.v upset.v undercut.v: 
-((<verb-pl,i> or <verb-sp,pp>) & <vc-trans>) or <verb-pv> or ({@E-} & A+)
+(<verb-sp,pp,ico> & <vc-trans>) or <verb-pv> or ({@E-} & A+)
 or <verb-po>;
 forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v: 
 (<verb-pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
@@ -1368,7 +1372,7 @@ or ({K+} & <verb-po>);
 /en/words/words.v.8.3:
 (<verb-sp,pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
-cut.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-kick>) or
+cut.v: (<verb-sp,pp,ico> & <vc-kick>) or
 (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 /en/words/words.v.8.5:
@@ -2156,7 +2160,7 @@ for_granted: Vtg-;
 
 <vc-put>: ((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & 
 (K+ or Pp+ or WR-)) or (Vp+ & (Zs- or MVa+))) & {@MV+};
-put.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-put>) or (<verb-pv-b> & 
+put.v: (<verb-sp,pp,ico> & <vc-put>) or (<verb-pv-b> & 
 (K+ or Pp+ or WR-) & {@MV+}) or ((K+ or Pp+) & <verb-po>);
 puts.v: <verb-s> & <vc-put>;
 putting.v: <verb-pg> & <vc-put>;
@@ -2222,7 +2226,7 @@ track.i: Vk- & {OF+};
 
 <vc-set>: ((K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+ or Vs+}) 
 or [[@MV+ & O*n+]]) & {@MV+};
-set.v: ((<verb-pl,i> or <verb-sp,pp>) & 
+set.v: (<verb-sp,pp,ico> & 
 <vc-set>) or (<verb-pv> & {K+ or Vs+} & {@MV+}) or 
 ({@E-} & A+) or ({K+ or Vs+} & <verb-po>);
 sets.v: <verb-s> & <vc-set>;
@@ -2515,7 +2519,7 @@ or ({@MV+} & (TH+ or Ce+));
 write.v charge.v draw.v: <verb-pl,i> & <vc-write>;
 writes.v reads.v charges.v draws.v: <verb-s> & <vc-write>;
 wrote.v drew.v: <verb-sp> & <vc-write>;
-read.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-write>) or (<verb-pv-b> &
+read.v: (<verb-sp,pp,ico> & <vc-write>) or (<verb-pv-b> &
 {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or 
 [[@MV+ & O*n+]]} & <verb-po>);
 charged.v: (<verb-sp,pp> & <vc-write>) or (<verb-pv-b> & {O+ or B- or K+
@@ -2783,7 +2787,7 @@ assuring.v: <verb-pg> & <vc-assure>;
 
 <vc-let>: ((B- or O+) & {@MV+} & {I+ or ((K+ or Pp+) & {@MV+})}) 
 or ([[@MV+ & O*n+ & {@MV+}]]);
-let.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-let>) or (<verb-pv-b> 
+let.v: (<verb-sp,pp,ico> & <vc-let>) or (<verb-pv-b> 
 & ((K+ or Pp+) & {@MV+})) or ((K+ or Pp+) & <verb-po>);
 lets.v: <verb-s> & <vc-let>;
 letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
@@ -2853,7 +2857,7 @@ clearing.v: <verb-pg> & <vc-clear>;
 
 <vc-bet>: ({(O+ & {O*n+}) or (B- & {O+})} & {@MV+} & {TH+ or Ce+ or RSe+})
 or ([[@MV+ & O*n+ & {@MV+}]]);
-bet.v: ((<verb-pl,i> or <verb-sp,pp>) & <vc-bet>) or (<verb-pv> & {O+ or B-} &
+bet.v: (<verb-sp,pp,ico> & <vc-bet>) or (<verb-pv> & {O+ or B-} &
 {@MV+} & {TH+ or Ce+ or RSe+ or @MV+}); 
 bets.v: <verb-s> & <vc-bet>;
 betted.v: (<verb-sp,pp> & <vc-bet>) or (<verb-pv-b> & {O+ or B-} & {@MV+}
@@ -2956,9 +2960,9 @@ showed_up pleaded_guilty pleaded_innocent made_way caught_up caught_on
 filed_suit picked_up jumped_ship:  
 <verb-sp,pp> & <vc-intrans>;
 
-plead_guilty plead_innocent: (<verb-pl,i> or <verb-sp,pp>) & <vc-intrans>;
+plead_guilty plead_innocent: <verb-sp,pp,ico> & <vc-intrans>;
 
-let_go: ((<verb-pl,i> or <verb-sp,pp>) & <vc-intrans>) or <verb-pv>;
+let_go: (<verb-sp,pp,ico> & <vc-intrans>) or <verb-pv>;
 
 did_so took_place took_office did_battle gave_way took_part took_off
 broke_free took_over saw_fit took_note came_true came_clean came_of_age: 
@@ -2981,7 +2985,7 @@ seeing_fit letting_go taking_note coming_true coming_clean coming_of_age:
 allow_for bring_about get_rid_of let_go_of take_note_of: <verb-pl,i> & <vc-trans>; 
 puts_up_with allows_for brings_about gets_rid_of lets_go_of
 takes_note_of: <verb-s> & <vc-trans>;
-put_up_with let_go_of: (<verb-pl,i> or <verb-sp,pp>) & <vc-trans>;
+put_up_with let_go_of: <verb-sp,pp,ico> & <vc-trans>;
 allowed_for brought_about got_rid_of took_note_of: <verb-sp,pp> & <vc-trans>;
 gotten_rid_of taken_note_of: <verb-pp> & <vc-trans>;  
 putting_up_with allowing_for bringing_about getting_rid_of letting_go_of
