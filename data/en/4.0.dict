@@ -637,16 +637,20 @@ some: D+ or EN+ or MF+ or (<noun-sub-x> & <noun-main-x>) or <adv-of>;
 little.i: ({EE-} & (MVa- or Ca+ or Qe+)) or ({EEx- or H-} & (Dmu+ or 
 (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+)))))
 or (AM- & (Dmuy+ or MVy- or Oy- or Jy-)) or ({Ds-} & <adv-of>);
+%
+% "he likes you most" has no determiner, just uses MVa-.
 most: Dm+ or [EE+] or EA+ or MF+ or
-(<noun-sub-x> & <noun-main-x>) or <adv-of>;
+(<noun-sub-x> & <noun-main-x>) or <adv-of> or [MVa-];
 part.i: (OF+ & <noun-main-s>) or ({Ds-} & <adv-of>);
 all.e: <adv-of>;
 
 the_most: MVa- or EE+ or Dm+ or (<noun-sub-x> & <noun-main-x>);
-least: EA+; 
+
+% "he likes you least" has no determiner, just uses MVa-.
+least: EA+ or [MVa-]; 
 none: (<noun-sub-x> & <noun-main-x>) or <adv-of>;
 rest.i: ((DG-) & <noun-sub-p> & <noun-main-p>) or (DD- & <adv-of>);
-plenty: ({@M+} & <noun-main-x>) or <adv-of>;
+plenty: ({@M+} & <noun-main-x>) or <adv-of> or [MVa-];
 other: Dmu+ or ({ND-} & {DD-} & Dmc+) or 
 (DD- & (Ds+ or DD+ or <noun-main-s>));
 one_other every_other: <noun-main-s> or Ds+; 
@@ -4004,9 +4008,11 @@ hardest.a easiest.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
 worst.a longest.a fastest.a furthest.a farthest.a: 
 ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
 ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
-best.a: (({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
+
+% "he likes you best" has no determiner, just uses MVa-.
+best.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
 ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-))
-or [[E+]]);
+or [[E+]] or [MVa-];
 
 %ADVERBS
 

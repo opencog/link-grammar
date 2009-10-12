@@ -1,3 +1,6 @@
+Version 4.6.5 (??? 2009)
+ * Fix: Superlatives without preceeding determiners ("... likes you best")
+
 Version 4.6.4 (11 October 2009)
  * Restore nouns starting w/letters x-z, elided in version 4.5.9 ff.
  * Add support for single-word interjections/exclamations!
