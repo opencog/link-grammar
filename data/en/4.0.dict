@@ -233,10 +233,17 @@ dateID60: <date-id>;
 %  ??? wtf?  Is this like "roman numeral" ?? See I.p for "me" 
 I.n: [[{Xi+} & {G-} & G+]];
 
+% Explicitly include the period at the end of the abbreviation.
+Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Gov..x Sen..x Rep..x 
+Gen..x Brig..x Col..x Capt..x Lieut..x Lt..x Sgt..x Pvt..x Cmdr..x
+Adm..x Corp..x St..x Mt..x Ft..x Cie..x HMS..x:
+G+;
+
+% Period is missing in the abbreviation! Accept, but with a cost.
 Ms.x Mrs.x Mr.x Messrs.x Rev.x Dr.x Prof.x Gov.x Sen.x Rep.x 
-Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x Adm.x Corp.x 
-St.x Mt.x Ft.x Cie.x HMS.x:
-(Xi+ or [[()]]) & G+;
+Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x
+Adm.x Corp.x St.x Mt.x Ft.x Cie.x HMS.x:
+[[G+]];
 
 St.y Ave.y Av.y Pl.y Ct.y Dr.y Gr.y Rd.y Blvd.y Pkwy.y Hwy.y 
 AG.y Assn.y
