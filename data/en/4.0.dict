@@ -44,6 +44,12 @@
  % To-do: many verb simple past-tense forms include ({@E-} & A+) to
  % make them adjective-like. Strictly speaking, these should probably
  % copied into words.adj.1 and treated like common adjectives, right?
+ %
+ % Many nouns in words.n.4 are treated as "mass or count". The side
+ % effect is that mass nouns are inconsistently treated as sometimes
+ % singular, sometimes plural. e.g. words.n.3 gets <noun-sub-s> &
+ % <noun-main-m>. This is a kind-of ugly tangle, it should really 
+ % be sorted out so that links are properly marks as s, p or m.
 
 
 % NOUNS
