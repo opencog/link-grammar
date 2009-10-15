@@ -79,8 +79,10 @@
 <noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+]} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
-% noun-main-m -- mass
-<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Om- or ({[Bsj+]} & Xd- 
+% noun-main-m -- mass (u == uncountable)
+% TODO: alter this to use Su+, SIu- someday. likewise Buj+  
+% Doing this requires adding Su- links to many entries
+<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or ({[Bsj+]} & Xd- 
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 <noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+]} 
@@ -291,6 +293,7 @@ HYPHENATED-WORDS.n:
 % Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 /en/words/words.n.1 
+/en/words/words.n.1.vowel 
 /en/words/words.n.1.wiki : 
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
