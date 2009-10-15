@@ -22,6 +22,7 @@ WORDS=			\
 	words.adv.3	\
 	words.adv.4	\
 	words.n.1	\
+	words.n.1.vowel \
 	words.n.1.wiki	\
 	words.n.2.s	\
 	words.n.2.s.biolg \
@@ -29,8 +30,6 @@ WORDS=			\
 	words.n.2.x	\
 	words.n.2.x.wiki	\
 	words.n.3	\
-	words.n.4	\
-	words.n.4.biolg \
 	words.n.t	\
 	words-medical.prep.1	\
 	words.v.10.1	\
