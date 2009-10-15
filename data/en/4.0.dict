@@ -200,11 +200,21 @@ entityID40 entityID41 entityID42 entityID43 entityID44 entityID45 entityID46 ent
 entityID50 entityID51 entityID52 entityID53 entityID54 entityID55 entityID56 entityID57 entityID58 entityID59
 entityID60: <marker-entity> or <entity-id>;
 
-% Same as pattern used in words.n.4 -- mass nouns or countable nouns
-<generic-singular-id>: ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & <noun-sub-s> & 
-(<noun-main-m> or (Rw+ & Bsm+))) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+% words.n.4: nouns that can be mass or countable
+% allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
+% piano.n flute.n belong here, because of "He plays piano"
+% This class has now been eliminated: nouns are either singular, plural
+% or mass. If they can be more than one, then they are listed separately
+% in each class e.g. words.n.1 and/or words.n.2 and/or words.n.3, etc.
+<noun-mass-count>:  
+{@AN-} & {@A- & {[[@AN-]]}} & 
+(({NM+} & AN+) or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
 
+GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
+
+% Same as pattern used in words.n.4 -- mass nouns or countable nouns
+<generic-singular-id>: <noun-mass-count>;
 
 % Same pattern used for words.n.2.s
 <generic-plural-id>:  
@@ -312,17 +322,6 @@ tawny.n ultramarine.n yellow.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & 
 (({Dmu-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
-
-% nouns that can be mass or countable
-% allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
-% piano.n flute.n belong here, because of "He plays piano"
-<noun-mass-count>:  
-{@AN-} & {@A- & {[[@AN-]]}} & 
-(({NM+} & AN+) or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
-
-% /en/words/words.n.4: <noun-mass-count>;
-GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
