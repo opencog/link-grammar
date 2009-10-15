@@ -67,14 +67,22 @@
 
 <CLAUSE-E>: {({@COd-} & C-) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
+% noun-main-x -- singular or plural or mass.
 <noun-main-x>: (S+ & <CLAUSE>) or SI- or J- or O- or ({[B*j+]} & Xd- 
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+
+% noun-main-s -- singular
 <noun-main-s>: (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or ({[Bsj+]} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+
+% noun-main-p -- plural
 <noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+]} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
-<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or ({[Bsj+]} & Xd- 
+
+% noun-main-m -- mass
+<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Om- or ({[Bsj+]} & Xd- 
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+
 <noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+]} 
  & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
