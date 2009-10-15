@@ -1,12 +1,63 @@
-aircraft.p 
-bacteria.p beano.p bellmen.n buffalo.p businessmen.n cacti.p chairmen.n 
-chairwomen.n children.n chum.p clergymen.n congressmen.n criteria.n data.p 
-deer.p dice.p dressing.p emphases.n enzyme.p feet.n firemen.n fishermen.n flora.n 
+
+aircraft.p
+bacteria.p
+beano.p
+bellmen.n
+buffalo.p
+businessmen.n
+cacti.p
+chairmen.n
+chairwomen.n
+children.n
+chum.p
+clergymen.n
+congressmen.n
+criteria.n
+data.p
+deer.p
+dice.p
+dressing.p
+emphases.n
+enzyme.p
+feet.n
+firemen.n
+fishermen.n
+flora.n
 flounder.p
-foremen.n freshmen.n fungi.n gentlemen.n gentry.p grandchildren.n 
-gunmen.n hyphae.n kin.n larvae.n lobstermen.n media.p men.n mice.n 
-millenia.n papaya.p 
-people.p perch.p personae.n personnel.n phenomena.n 
-police.p policemen.n policewomen.n rebellion.n salesmen.n salmon.p 
-sheep.p shrubbery.p smelt.p spokesmen.n spokeswomen.n teeth.n 
-waterfowl.p women.n zuchini.p zucchini.p
+foremen.n
+freshmen.n
+fungi.n
+gentlemen.n
+gentry.p
+grandchildren.n
+gunmen.n
+hyphae.n
+kin.n
+larvae.n
+lobstermen.n
+media.p
+men.n
+mice.n
+millenia.n
+papaya.p
+people.p
+perch.p
+personae.n
+personnel.n
+phenomena.n
+policemen.n
+police.p
+policewomen.n
+rebellion.n
+salesmen.n
+salmon.p
+sheep.p
+shrubbery.p
+smelt.p
+spokesmen.n
+spokeswomen.n
+teeth.n
+waterfowl.p
+women.n
+zucchini.p
+zuchini.p
