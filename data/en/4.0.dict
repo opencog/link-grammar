@@ -290,15 +290,22 @@ HYPHENATED-WORDS.n:
  U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
-% Common nouns
+% words.n.1: Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
-/en/words/words.n.1 
-/en/words/words.n.1.vowel 
-/en/words/words.n.1.wiki : 
+
+% Dsc- links to words that start with a consonant.
+/en/words/words.n.1 :
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
-(YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
+(AN+ or ((NM+ or ([{NM+}] & Dsc-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
+(YS+ & Dsc-) or (GN+ & (DD- or [()])) or Us-));
+
+% Dsv- links to words that start with a vowel.
+/en/words/words.n.1.vowel :
+<marker-common-entity> or 
+({@AN-} & {@A- & {[[@AN-]]}} & 
+(AN+ or ((NM+ or ([{NM+}] & Dsv-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
+(YS+ & Dsv-) or (GN+ & (DD- or [()])) or Us-));
 
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
@@ -633,7 +640,11 @@ ones: {@A- & {[[@AN-]]}} & {Dmc-} &
 (YP+ or (<noun-sub-p> & <noun-main-p>));
 any: ({EN-} & (D+ or DD+ or 
 (<noun-sub-x> & <noun-main-x>))) or EC+;
-a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+ or NIm+;
+
+% Dsc+ links only to words starting with consonant
+% Dsv+ links only to nouns starting with vowel
+a: ({(AA- & HA-) or ALa- or [[Lf+]]} & Dsc+) or NN+ or NSa+ or NIm+;
+an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Dsv+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
 such_a such_an: Ds*k+;
 
