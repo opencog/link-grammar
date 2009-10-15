@@ -50,10 +50,6 @@
  % singular, sometimes plural. e.g. words.n.3 gets <noun-sub-s> &
  % <noun-main-m>. This is a kind-of ugly tangle, it should really 
  % be sorted out so that links are properly marks as s, p or m.
- %
- % The nouns in words.n.1 have now been sorted into those that begin
- % with a vowel, or not. But there are still other nouns that have not
- % been sorted yet ... 
 
 % NOUNS
 
@@ -300,20 +296,12 @@ HYPHENATED-WORDS.n:
 % position 1 can be s, m for singular, mass
 % position 2 can be c for count, u for uncountable
 % position 3 can be k,m,y for comparatives, w for questions.
-% position 4 can be c,v for consonant, vowel
-% Ds**c- links to words that start with a consonant.
-/en/words/words.n.1 :
+/en/words/words.n.1 
+/en/words/words.n.1.wiki : 
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ((NM+ or ({[NM+]} & Ds**c-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
-(YS+ & Ds**c-) or (GN+ & (DD- or [()])) or Us-));
-
-% Ds**v- links to words that start with a vowel.
-/en/words/words.n.1.vowel :
-<marker-common-entity> or 
-({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ((NM+ or ({[NM+]} & Ds**v-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
-(YS+ & Ds**v-) or (GN+ & (DD- or [()])) or Us-));
+(AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
+(YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
@@ -389,23 +377,22 @@ Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 % Almost identical to below.
 majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (
-(Ds**c- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
+(Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 % Almost identical to above.
 number.n: 
 ({@AN-} & {@A- & {[[@AN-]]}} & (
-(Ds**c- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
+(Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
 
-kind_of: ({{@AN-} & @A-} & U+ & ((Ds**c- & <noun-sub-s> &
+kind_of: ({{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
 (<noun-main-s> or (Rw+ & Bsm+))) or Us-)) or EA+ or EE+;
-
 type_of sort_of breed_of:
- {{@AN-} & @A-} & U+ & ((Ds**c- & <noun-sub-s> &
+ {{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
 (<noun-main-s> or (Rw+ & Bsm+))) or Us-);
 kinds_of types_of sorts_of breeds_of:
  {{@AN-} & @A-} & U+ & (({Dmc-} & <noun-sub-p> & 
@@ -421,27 +408,18 @@ U-)) or (ND- & (OD- or AN+ or YS+));
 % to pick up "that" in "The crux of it is that we must act first."
 % However, report.n and sign.n and remark.n, etc. do not seem to 
 % need this connector ... 
-report.n sign.n conclusion.n complaint.n
-position.n restriction.n notion.n
-remark.n proclamation.n reassurance.n saying.n
-possibility.n problem.n claim.n result.n
-statement.n hunch.n concept.n hypothesis.n 
-message.n premonition.n prerequisite.n truism.n fallacy.n
-proposition.n prospect.n presupposition.n supposition.n
-finding.n crux.n shame.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {(TH+ or (R+ & Bs+)) & 
+argument.n report.n sign.n impression.n conclusion.n complaint.n
+allegation.n announcement.n position.n restriction.n notion.n
+remark.n assertion.n proclamation.n reassurance.n saying.n
+accusation.n possibility.n idea.n problem.n claim.n result.n
+statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
+message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
+proposition.n prospect.n presupposition.n inkling.n supposition.n
+finding.n amount.n answer.n crux.n shame.n:
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & 
 {[[@M+]]}} & {@MXs+} 
 & (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
-or Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
-
-% same as above, but start with vowel
-argument.n impression.n allegation.n announcement.n assertion.n 
-accusation.n idea.n assumption.n implication.n indication.n
-inkling.n amount.n answer.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**v- & {@M+} & {(TH+ or (R+ & Bs+)) & 
-{[[@M+]]}} & {@MXs+} 
-& (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
-or Us- or (YS+ & Ds**v-) or (GN+ & (DD- or [()])))) or AN+;
+or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n 
 disclosure.n fear.n acknowledgment.n acknowledgement.n principle.n
@@ -495,20 +473,13 @@ stipulations.n:
 (<noun-main2-p> or (Sp*t+ & <CLAUSE>) or SIp*t- or (Rw+ & Bpm+)))
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
-decision.n proposal.n plan.n plot.n pledge.n 
-mission.n right.n desire.n mandate.n promise.n campaign.n
-vow.n permit.n proclivity.n propensity.n move.n
+excuse.n decision.n proposal.n attempt.n plan.n plot.n pledge.n urge.n
+mission.n right.n desire.n mandate.n promise.n option.n campaign.n
+offer.n vow.n permit.n impetus.n proclivity.n propensity.n move.n
 vote.n bill.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {(TOn+ or (R+ & Bs+)) &
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) &
 {[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or
- Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
-
-% Same as above, but with vowels:
-excuse.n attempt.n urge.n option.n offer.n impetus.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**v- & {@M+} & {(TOn+ or (R+ & Bs+)) &
-{[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or
- Us- or (YS+ & Ds**v-) or (GN+ & (DD- or [()])))) or AN+;
-
+ Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
 determination.n capacity.n unwillingness.n need.n will.n eagerness.n
@@ -530,19 +501,11 @@ chance.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TOn+ or TH+ or (R+ & Bs+)) 
 & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or 
  Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
-
-question.n: 
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
+question.n issue.n: 
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
 {@MXs+} &
 (<noun-main2-s> or (Ss*q+ & <CLAUSE>) or SIs*q- or (Rw+ & Bsm+)))
-or Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
-
-issue.n: 
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**v- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
-{@MXs+} &
-(<noun-main2-s> or (Ss*q+ & <CLAUSE>) or SIs*q- or (Rw+ & Bsm+)))
-or Us- or (YS+ & Ds**v-) or (GN+ & (DD- or [()])))) or AN+;
-
+or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 questions.n issues.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {R+ & Bp+ & {[[@M+]]}} & 
 {@MXp+} &
@@ -559,11 +522,11 @@ reasons.n:
  WY+ or (R+ & Bp+)} & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+)))
  or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 way.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {TOn+ or TH+ or Ce+ or 
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
 (R+ & Bs+)} & {@MXs+} & (MVa- or <noun-main-s> or (Rw+ & Bsm+)))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 place.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {TOn+ or TH+ or Ce+ or 
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
 (R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-s> or (Rw+ & Bsm+)))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 time.n:
@@ -673,16 +636,9 @@ ones: {@A- & {[[@AN-]]}} & {Dmc-} &
 (YP+ or (<noun-sub-p> & <noun-main-p>));
 any: ({EN-} & (D+ or DD+ or 
 (<noun-sub-x> & <noun-main-x>))) or EC+;
-
-% Ds**c+ links only to words starting with consonant
-% Ds**v+ links only to nouns starting with vowel
-a: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**c+) or NN+ or NSa+ or NIm+;
-
-% "there's'n outside chance"
-'n.det an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**v+) or NN+ or NSa+ or NIm+;
+a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
-such_a: Ds*kc+;
-such_an: Ds*kv+;
+such_a such_an: Ds*k+;
 
 
 % "all of the time". These are all temporal modifiers: use MVw ("when")
@@ -720,9 +676,7 @@ one_other every_other: <noun-main-s> or Ds+;
 any_other no_other: <noun-main-s> or D+;
 all_other: Dm+;
 most_other: Dmc+;
-quite_a: Ds**c+;
-quite_an: Ds**v+;
-one_such not_every: Ds+;
+quite_a quite_an one_such not_every: Ds+;
 some_other no_such: D+;
 every.d: {EN-} & (Ds+ or DTn+ or [[NIc+]]); 
 
@@ -3927,8 +3881,7 @@ more: ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+)) or
 ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+)) or 
 ({ECn- or ECx- or ND-} & (Om- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-))))) or
 (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
-more_of_a: Ds*mc+;
-more_of_an: Ds*mv+;
+more_of_a more_of_an: Ds*m+;
 less: ({ECn-} & (Dmum+ or Om- or Jm- or (Ss+ & <CLAUSE>) or Bsm+)) 
 or ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-])) or 
 (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
