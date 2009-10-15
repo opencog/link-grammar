@@ -296,7 +296,7 @@ HYPHENATED-WORDS.n:
 % D link: determiners: D1234
 % position 1 can be s, m for singular, mass
 % position 2 can be c for count, u for uncountable
-% position 3 can be k for ?? 
+% position 3 can be k,m for ??  (comparatives)
 % position 4 can be c,v for consonant, vowel
 % Ds**c- links to words that start with a consonant.
 /en/words/words.n.1 :
@@ -3896,7 +3896,8 @@ more: ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+)) or
 ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+)) or 
 ({ECn- or ECx- or ND-} & (Om- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-))))) or
 (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
-more_of_a more_of_an: Ds*m+;
+more_of_a: Ds*mc+;
+more_of_an: Ds*mv+;
 less: ({ECn-} & (Dmum+ or Om- or Jm- or (Ss+ & <CLAUSE>) or Bsm+)) 
 or ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-])) or 
 (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));

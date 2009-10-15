@@ -184,21 +184,26 @@ I know how to play guitar.
 The violence has thrown the country into crisis.
 The violence has created a crisis.
 
-% Test cases for noun classes:
+% 'family' as a mass noun
+They are like family to us.
+He is like family to us.
+
+% Test cases for noun countable/uncountable nouns:
 I have much furniture.
 *I have many furniture.
 
-% Test cases for a/an usage:
+% Test cases for a/an usage with vowels/consonants:
 *I ate a apple.
 I ate an apple.
+I ate a banana.
+*I ate an banana.
 *He has quite a imagination.
 He has quite an imagination.
 *He has such a imagination.
 He has such an imagination.
+*That is more of an challenge.
+That is more of a challenge.
 
-
-They are like family to us.
-He is like family to us.
 
 That bitch did it!
 
