@@ -23,7 +23,6 @@ WORDS=			\
 	words.adv.4	\
 	words.n.1	\
 	words.n.1.vowel \
-	words.n.1.wiki	\
 	words.n.2.s	\
 	words.n.2.s.biolg \
 	words.n.2.s.wiki	\

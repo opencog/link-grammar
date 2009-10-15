@@ -58,6 +58,7 @@ accusative.n
 accuser.n
 ace.n
 acetate.n
+acetylcholine.n
 ache.n
 achievement.n
 acid.s
@@ -82,6 +83,7 @@ actor.n
 actress.n
 actuality.s
 actuary.n
+actuator.n
 adage.n
 adagio.n
 adaptation.s
@@ -177,6 +179,7 @@ agidigbo.s
 agitation.s
 agitator.n
 agnostic.n
+agonist.n
 agony.s
 agora.n
 agreement.s
@@ -189,15 +192,18 @@ airbed.n
 airbrake.n
 aircraft.s
 aircrew.n
+airdate.n
 airfield.n
 airflow.n
 airing.n
+airlift.n
 airline.n
 airliner.n
 airplane.n
 airport.n
 air.s
 airship.n
+airspeed.n
 airstrip.n
 airway.n
 aisle.n
@@ -266,6 +272,7 @@ amendment.s
 amenity.n
 American.s
 amethyst.s
+amino.n
 amnesty.n
 amoeba.n
 amortization.s
@@ -315,11 +322,13 @@ anglicism.n
 Angolan.s
 angora.s
 animal.n
+animator.n
 anime.s
 animosity.s
 anise.n
 ankle.n
 anklet.n
+annal.n
 annex.n
 anniversary.n
 annotation.s
@@ -338,6 +347,7 @@ antecedent.n
 antechamber.n
 antelope.n
 ante.n
+antenna.n
 anteroom.n
 anthem.n
 anthology.n
@@ -347,6 +357,7 @@ antibiotic.n
 antibody.n
 anticlimax.n
 antic.n
+antidepressant.n
 antidote.n
 Antiguan.s
 antipathy.s
@@ -470,6 +481,7 @@ arpeggio.n
 arpeggione.s
 arraignment.n
 arrangement.s
+arranger.n
 array.n
 arrester.n
 arrest.s
@@ -536,6 +548,7 @@ astronaut.n
 astronomer.n
 asylum.s
 asymptote.n
+ataxia.n
 atheist.n
 athlete.n
 atlas.n
@@ -561,6 +574,7 @@ aubergine.n
 auctioneer.n
 auction.s
 audience.n
+audio.n
 audition.s
 audit.n
 auditorium.n
@@ -586,6 +600,7 @@ autobiography.s
 autocracy.s
 autocrat.n
 autograph.n
+automaker.n
 automatic.n
 automat.n
 automaton.n
@@ -655,6 +670,7 @@ edifice.n
 edition.n
 editorial.n
 editor.n
+ed.n
 education.s
 educator.n
 eel.n
@@ -706,6 +722,7 @@ elixir.s
 elk.n
 ellipse.n
 elm.s
+el.n
 elocutionist.n
 elongation.s
 email.s
@@ -732,6 +749,7 @@ emirate.n
 emir.n
 emissary.n
 emission.s
+em.n
 emotion.s
 emperor.n
 emphasis.s
@@ -741,6 +759,7 @@ employee.n
 employer.n
 emporium.n
 empress.n
+emulsifier.n
 emulsion.s
 emu.n
 enactment.s
@@ -763,6 +782,7 @@ encyclopædia.n
 encyclopedia.n
 endeavour.n
 endemic.n
+endgame.n
 ending.n
 endive.s
 end.n
@@ -782,6 +802,7 @@ enlistment.s
 enormity.s
 enquirer.n
 enquiry.s
+enrollment.n
 ensemble.n
 ensign.n
 enslavement.s
@@ -822,6 +843,7 @@ epiglottis.n
 epigram.n
 epileptic.n
 epilogue.n
+epiphyte.n
 episcopalian.n
 episode.n
 epistle.n
@@ -859,6 +881,7 @@ escapist.n
 escapologist.n
 escort.n
 escritoire.n
+escudo.n
 escutcheon.n
 esophagus.n
 esplanade.n
@@ -868,6 +891,7 @@ essay.n
 essence.s
 establishment.s
 estate.s
+ester.n
 esthete.n
 esthetic.n
 estimate.n
@@ -877,6 +901,7 @@ estuary.n
 eta.s
 etching.n
 eternity.s
+ethanol.n
 Ethiopian.s
 ethnographer.n
 ethnologist.n
@@ -889,6 +914,7 @@ eulogy.n
 eunuch.n
 euphemism.n
 euphonium.s
+euro.n
 European.s
 evacuation.s
 evacuee.n
@@ -946,6 +972,7 @@ existentialist.n
 exit.n
 exodus.n
 exoneration.s
+exorcism.n
 expanse.n
 expansion.s
 expatriate.n
@@ -1121,6 +1148,7 @@ index.n
 Indian.s
 indicator.n
 indictment.s
+indie.n
 indignity.n
 indiscretion.s
 individualist.n
@@ -1128,6 +1156,7 @@ individuality.s
 individual.n
 Indonesian.s
 inducement.s
+inductee.n
 induction.s
 indulgence.s
 industrialist.n
@@ -1145,6 +1174,7 @@ inferior.n
 inferno.n
 infestation.s
 infidel.n
+infill.n
 infinitive.n
 infinitude.n
 infirmary.n
@@ -1265,6 +1295,7 @@ intermission.n
 intermixture.n
 internationale.n
 internationalist.n
+international.n
 interne.n
 intern.n
 interpolation.s
@@ -1292,6 +1323,7 @@ intoxicant.n
 intricacy.s
 intrigue.s
 introduction.s
+intro.n
 introvert.n
 intruder.n
 intrusion.s
@@ -1403,6 +1435,7 @@ office.n
 officer.n
 official.n
 offing.n
+offload.n
 offprint.n
 offshoot.n
 offspring.s
@@ -1425,6 +1458,7 @@ omen.n
 omicron.s
 omission.s
 omnibus.n
+omnivore.n
 onion.s
 onlooker.n
 onrush.n
@@ -1530,6 +1564,7 @@ outrigger.n
 outset.n
 outside.n
 outsider.n
+outtake.n
 oval.n
 ovary.n
 ovation.n
@@ -1538,6 +1573,7 @@ overall.n
 overcoat.s
 overdose.n
 overdraft.n
+overdub.n
 overexposure.s
 overflow.n
 overgrowth.s
