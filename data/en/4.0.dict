@@ -321,7 +321,7 @@ tawny.n ultramarine.n yellow.n:
 (({NM+} & AN+) or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
 
-/en/words/words.n.4: <noun-mass-count>;
+% /en/words/words.n.4: <noun-mass-count>;
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
 % US state names and abbreviations
