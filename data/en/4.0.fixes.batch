@@ -195,6 +195,10 @@ I have much furniture.
 % Test cases for a/an usage with vowels/consonants:
 *I ate a apple.
 I ate an apple.
+
+I ate a little apple.
+*I ate an little apple.
+
 I ate a banana.
 *I ate an banana.
 *He has quite a imagination.
@@ -215,6 +219,14 @@ it's a kind of test
 it's a sort of test
 there's an argument brewing
 *there's a argument brewing
+he gave me an excuse
+*he gave me a excuse
+That is an issue
+*That is a issue
+*There is an way
+There is a way
+*There is an place
+There is a place
 
 
 

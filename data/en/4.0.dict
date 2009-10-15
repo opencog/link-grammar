@@ -299,7 +299,7 @@ HYPHENATED-WORDS.n:
 % D link: determiners: D1234
 % position 1 can be s, m for singular, mass
 % position 2 can be c for count, u for uncountable
-% position 3 can be k,m for ??  (comparatives)
+% position 3 can be k,m,y for comparatives, w for questions.
 % position 4 can be c,v for consonant, vowel
 % Ds**c- links to words that start with a consonant.
 /en/words/words.n.1 :
@@ -495,13 +495,20 @@ stipulations.n:
 (<noun-main2-p> or (Sp*t+ & <CLAUSE>) or SIp*t- or (Rw+ & Bpm+)))
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
-excuse.n decision.n proposal.n attempt.n plan.n plot.n pledge.n urge.n
-mission.n right.n desire.n mandate.n promise.n option.n campaign.n
-offer.n vow.n permit.n impetus.n proclivity.n propensity.n move.n
+decision.n proposal.n plan.n plot.n pledge.n 
+mission.n right.n desire.n mandate.n promise.n campaign.n
+vow.n permit.n proclivity.n propensity.n move.n
 vote.n bill.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) &
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {(TOn+ or (R+ & Bs+)) &
 {[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or
- Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+ Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
+
+% Same as above, but with vowels:
+excuse.n attempt.n urge.n option.n offer.n impetus.n:
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**v- & {@M+} & {(TOn+ or (R+ & Bs+)) &
+{[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or
+ Us- or (YS+ & Ds**v-) or (GN+ & (DD- or [()])))) or AN+;
+
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
 determination.n capacity.n unwillingness.n need.n will.n eagerness.n
@@ -523,11 +530,19 @@ chance.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TOn+ or TH+ or (R+ & Bs+)) 
 & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or 
  Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
-question.n issue.n: 
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
+
+question.n: 
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
 {@MXs+} &
 (<noun-main2-s> or (Ss*q+ & <CLAUSE>) or SIs*q- or (Rw+ & Bsm+)))
-or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+or Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
+
+issue.n: 
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**v- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
+{@MXs+} &
+(<noun-main2-s> or (Ss*q+ & <CLAUSE>) or SIs*q- or (Rw+ & Bsm+)))
+or Us- or (YS+ & Ds**v-) or (GN+ & (DD- or [()])))) or AN+;
+
 questions.n issues.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {R+ & Bp+ & {[[@M+]]}} & 
 {@MXp+} &
@@ -544,11 +559,11 @@ reasons.n:
  WY+ or (R+ & Bp+)} & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+)))
  or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 way.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {TOn+ or TH+ or Ce+ or 
 (R+ & Bs+)} & {@MXs+} & (MVa- or <noun-main-s> or (Rw+ & Bsm+)))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 place.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {TOn+ or TH+ or Ce+ or 
 (R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-s> or (Rw+ & Bsm+)))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 time.n:
