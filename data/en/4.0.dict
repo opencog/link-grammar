@@ -389,22 +389,23 @@ Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 % Almost identical to below.
 majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (
-(Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+(Ds**c- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
 
 % Almost identical to above.
 number.n: 
 ({@AN-} & {@A- & {[[@AN-]]}} & (
-(Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+(Ds**c- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
 
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
 
-kind_of: ({{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
+kind_of: ({{@AN-} & @A-} & U+ & ((Ds**c- & <noun-sub-s> &
 (<noun-main-s> or (Rw+ & Bsm+))) or Us-)) or EA+ or EE+;
+
 type_of sort_of breed_of:
- {{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
+ {{@AN-} & @A-} & U+ & ((Ds**c- & <noun-sub-s> &
 (<noun-main-s> or (Rw+ & Bsm+))) or Us-);
 kinds_of types_of sorts_of breeds_of:
  {{@AN-} & @A-} & U+ & (({Dmc-} & <noun-sub-p> & 
@@ -420,18 +421,27 @@ U-)) or (ND- & (OD- or AN+ or YS+));
 % to pick up "that" in "The crux of it is that we must act first."
 % However, report.n and sign.n and remark.n, etc. do not seem to 
 % need this connector ... 
-argument.n report.n sign.n impression.n conclusion.n complaint.n
-allegation.n announcement.n position.n restriction.n notion.n
-remark.n assertion.n proclamation.n reassurance.n saying.n
-accusation.n possibility.n idea.n problem.n claim.n result.n
-statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
-message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
-proposition.n prospect.n presupposition.n inkling.n supposition.n
-finding.n amount.n answer.n crux.n shame.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & 
+report.n sign.n conclusion.n complaint.n
+position.n restriction.n notion.n
+remark.n proclamation.n reassurance.n saying.n
+possibility.n problem.n claim.n result.n
+statement.n hunch.n concept.n hypothesis.n 
+message.n premonition.n prerequisite.n truism.n fallacy.n
+proposition.n prospect.n presupposition.n supposition.n
+finding.n crux.n shame.n:
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**c- & {@M+} & {(TH+ or (R+ & Bs+)) & 
 {[[@M+]]}} & {@MXs+} 
 & (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
-or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+or Us- or (YS+ & Ds**c-) or (GN+ & (DD- or [()])))) or AN+;
+
+% same as above, but start with vowel
+argument.n impression.n allegation.n announcement.n assertion.n 
+accusation.n idea.n assumption.n implication.n indication.n
+inkling.n amount.n answer.n:
+({@AN-} & {@A- & {[[@AN-]]}} & ((Ds**v- & {@M+} & {(TH+ or (R+ & Bs+)) & 
+{[[@M+]]}} & {@MXs+} 
+& (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
+or Us- or (YS+ & Ds**v-) or (GN+ & (DD- or [()])))) or AN+;
 
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n 
 disclosure.n fear.n acknowledgment.n acknowledgement.n principle.n
