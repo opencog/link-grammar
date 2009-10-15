@@ -649,7 +649,7 @@ any: ({EN-} & (D+ or DD+ or
 % Ds**c+ links only to words starting with consonant
 % Ds**v+ links only to nouns starting with vowel
 a: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**c+) or NN+ or NSa+ or NIm+;
-an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**v+) or NN+ or NSa+ or NIm+;
+'n an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**v+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
 such_a: Ds*kc+;
 such_an: Ds*kv+;
