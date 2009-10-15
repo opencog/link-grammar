@@ -1,4 +1,4 @@
-aircraft.p anaesthetic.p anesthetic.p 
+aircraft.p 
 bacteria.p beano.p bellmen.n buffalo.p businessmen.n cacti.p chairmen.n 
 chairwomen.n children.n chum.p clergymen.n congressmen.n criteria.n data.p 
 deer.p dice.p dressing.p emphases.n enzyme.p feet.n firemen.n fishermen.n flora.n 
