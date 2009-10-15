@@ -649,7 +649,9 @@ any: ({EN-} & (D+ or DD+ or
 % Ds**c+ links only to words starting with consonant
 % Ds**v+ links only to nouns starting with vowel
 a: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**c+) or NN+ or NSa+ or NIm+;
-'n an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**v+) or NN+ or NSa+ or NIm+;
+
+% "there's'n outside chance"
+'n.det an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**v+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
 such_a: Ds*kc+;
 such_an: Ds*kv+;
@@ -748,6 +750,7 @@ and.ru:
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
 
 % Used in numerical sums: "It's a hundred and two in the shade."
+% It's a hundred 'n two in the shade."
 and.sum 'n.sum: NA- & NA+;
 
 % For number, cost is added to the <noun-main-*> roles to prioritize
