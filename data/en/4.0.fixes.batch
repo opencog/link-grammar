@@ -188,6 +188,14 @@ The violence has created a crisis.
 I have much furniture.
 *I have many furniture.
 
+% Test cases for a/an usage:
+*I ate a apple.
+I ate an apple.
+*He has quite a imagination.
+He has quite an imagination.
+*He has such a imagination.
+He has such an imagination.
+
 
 They are like family to us.
 He is like family to us.

@@ -293,6 +293,11 @@ HYPHENATED-WORDS.n:
 % words.n.1: Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 
+% D link: determiners: D1234
+% position 1 can be s, m for singular, mass
+% position 2 can be c for count, u for uncountable
+% position 3 can be k for ?? 
+% position 4 can be c,v for consonant, vowel
 % Ds**c- links to words that start with a consonant.
 /en/words/words.n.1 :
 <marker-common-entity> or 
@@ -646,7 +651,8 @@ any: ({EN-} & (D+ or DD+ or
 a: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**c+) or NN+ or NSa+ or NIm+;
 an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds**v+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
-such_a such_an: Ds*k+;
+such_a: Ds*kc+;
+such_an: Ds*kv+;
 
 
 % "all of the time". These are all temporal modifiers: use MVw ("when")
@@ -684,7 +690,9 @@ one_other every_other: <noun-main-s> or Ds+;
 any_other no_other: <noun-main-s> or D+;
 all_other: Dm+;
 most_other: Dmc+;
-quite_a quite_an one_such not_every: Ds+;
+quite_a: Ds**c+;
+quite_an: Ds**v+;
+one_such not_every: Ds+;
 some_other no_such: D+;
 every.d: {EN-} & (Ds+ or DTn+ or [[NIc+]]); 
 
