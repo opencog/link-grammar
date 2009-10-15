@@ -512,10 +512,11 @@ s64 do_parse(Sentence sent, int cost, Parse_Options opts)
 
 	total = do_count(sent, -1, sent->length, NULL, NULL, cost+1);
 	if (verbosity > 1) {
-		printf("Total count with %d null links:   %lld\n", cost, total);
+		prt_error("Info: Total count with %d null links:   %lld\n", cost, total);
 	}
 	if ((verbosity > 0) && (PARSE_NUM_OVERFLOW < total)) {
-		printf("WARNING: Overflow in count! cnt=%lld\n", total);
+		prt_error("WARNING: Combinatorial explosion occurred with cnt=%lld; "
+			"this is an unsolved technical problem\n", total);
 	}
 
 	ctxt->local_sent = NULL;
