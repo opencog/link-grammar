@@ -50,7 +50,10 @@
  % singular, sometimes plural. e.g. words.n.3 gets <noun-sub-s> &
  % <noun-main-m>. This is a kind-of ugly tangle, it should really 
  % be sorted out so that links are properly marks as s, p or m.
-
+ %
+ % The nouns in words.n.1 have now been sorted into those that begin
+ % with a vowel, or not. But there are still other nouns that have not
+ % been sorted yet ... 
 
 % NOUNS
 
@@ -508,7 +511,7 @@ votes.n bills.n incentives.n:
  Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 chance.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TOn+ or TH+ or (R+ & Bs+)) 
-& {[[@M+]]}} & {@MXs+} & (<noun-main-m> or (Rw+ & Bsm+))) or 
+& {[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or 
  Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 question.n issue.n: 
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
