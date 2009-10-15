@@ -1183,12 +1183,22 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 				if (is_entity(sent->dict,s) ||
 				    is_common_entity(sent->dict,lc))
 				{
+					if (1 < verbosity)
+					{
+						printf ("Info: First word: %s entity=%d common=%d\n", 
+							s, is_entity(sent->dict,s), 
+							is_common_entity(sent->dict,lc));
+					}
 					e = build_word_expressions(sent->dict, lc);
 					sent->word[i].x =
 						catenate_X_nodes(sent->word[i].x, e);
 				}
 				else
 				{
+					if (1 < verbosity)
+					{
+						printf("Info: First word: %s downcase only\n", lc);
+					}
 					safe_strcpy(s, lc, MAX_WORD);
 					e = build_word_expressions(sent->dict, s);
 					free_X_nodes(sent->word[i].x);
