@@ -525,7 +525,11 @@ ADDRESSES
 
 TODO -- Working Notes:
 ----------------------
-   Some working notes.
+  Some working notes.
+
+  A/An determiners before consonants/vowels:  fix this. Just adding
+    linkages in a naive way is not enough, because there's no restriction
+    on neighboring words: "I ate an apple." vs. "I ate a green apple".
 
   Conjunction cleanup: parser has some special-case code for dealing
     with conjunctions. Unfortunately, some of this code has hard-wired
