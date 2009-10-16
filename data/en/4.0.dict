@@ -3957,15 +3957,15 @@ significantly substantially: ({EE- or EF+} &
 
 /en/words/words.adj.2: <comp-adj>;
 
-easier.a: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) 
+easier.a-c: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) 
 & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}))) or 
 (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ &
  ER+)));
-harder.a: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-)  
+harder.a-c: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-)  
 & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
  MVb-)) or (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & 
 (ER- or (Wd- & Xc+ & ER+)));
-higher.a deeper.a lower.a faster.a:
+higher.a-c deeper.a-c lower.a-c faster.a-c:
 ({ECa-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+) 
 or MVb- or Qe+ or Ca+)) or
 (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
@@ -3973,14 +3973,14 @@ sooner.a:
 ({ECa- or Yt-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+) 
 or MVb- or Qe+ or Ca+)) or
 (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
-longer.a: ({ECa- or Yt-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or 
+longer.a-c: ({ECa- or Yt-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or 
 ({[[@Ec-]]} & {Xc+} & Am+) or MVb- or Qe+ or Ca+ or OT- or FL-)) or
 (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
-smarter.a nicer.a worse.a:
+smarter.a-c nicer.a-c worse.a-c:
 ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & 
 {@MV+} & {(TOi+ or THi+) & {LE+}}))) or
 (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
-better.a: 
+better.a-c: 
 ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) 
 & {@MV+} & {(TOi+ or THi+) & {LE+}}) or MVb- or E+ or Qe+ or Ca+)) or
 (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
