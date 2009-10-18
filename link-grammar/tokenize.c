@@ -157,79 +157,6 @@ static int contains_digits(const char * s)
 	return FALSE;
 }
 
-#if DONT_USE_REGEX_GUESSING
-/**
- * Returns TRUE iff it's an appropriately formed hyphenated word.
- * This means all letters, numbers, or hyphens, not beginning and
- * ending with a hyphen.
- */
-static int ishyphenated(const char * s)
-{
-	mbstate_t mbs;
-	wchar_t c;
-	int hyp, nonalpha;
-	hyp = nonalpha = 0;
-
-	if (*s == '-') return FALSE;
-
-	memset(&mbs, 0, sizeof(mbs));
-	while (*s != '\0')
-	{
-		int nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
-		if (0 > nb) break;
-
-		if (!iswalpha(c) && !iswdigit(c) && (*s!='.') && (*s!=',')
-			&& (*s!='-')) return FALSE;
-		if (*s == '-') hyp++;
-		s += nb;
-	}
-	return ((*(s-1)!='-') && (hyp>0));
-}
-
-/** 
- * The following four routines implement a cheap-hack morphology 
- * guessing of unkown words for English.
- * XXX Now obsolete, replaced by regex-based guessing.
- * Remove dead code at liesure.
- */
-static int is_ing_word(const char * s)
-{
-	int i=0;
-	for (; *s != '\0'; s++) i++;
-	if (i<5) return FALSE;
-	if (strncmp("ing", s-3, 3)==0) return TRUE;
-	return FALSE;
-}
-
-static int is_s_word(const char * s)
-{
-	for (; *s != '\0'; s++);
-	s--;
-	if(*s != 's') return FALSE;
-	s--;
-	if(*s == 'i' || *s == 'u' || *s == 'o' || *s == 'y' || *s == 's') return FALSE;
-	return TRUE;
-}
-
-static int is_ed_word(const char * s)
-{
-	int i=0;
-	for (; *s != '\0'; s++) i++;
-	if (i<4) return FALSE;
-	if (strncmp("ed", s-2, 2)==0) return TRUE;
-	return FALSE;
-}
-
-static int is_ly_word(const char * s)
-{
-	int i=0;
-	for (; *s != '\0'; s++) i++;
-	if (i<4) return FALSE;
-	if (strncmp("ly", s-2, 2)==0) return TRUE;
-	return FALSE;
-}
-#endif /* DONT_USE_REGEX_GUESSING */
-
 /** 
  * The string s is the next word of the sentence. 
  * Do not issue the empty string.  
@@ -781,31 +708,6 @@ failure:
 	return FALSE;
 }
 
-#if DONT_USE_REGEX_GUESSING
-static int special_string(Sentence sent, int i, const char * s)
-{
-	X_node * e;
-	if (boolean_dictionary_lookup(sent->dict, s))
-	{
-		sent->word[i].x = build_word_expressions(sent->dict, s);
-		for (e = sent->word[i].x; e != NULL; e = e->next)
-		{
-			e->string = sent->word[i].string;
-		}
-		return TRUE;
-	}
-	else
-	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Error, "Error: Could not build sentence expressions.\n"
-		          "To process this sentence your dictionary "
- 		          "needs the word \"%s\".\n", s);
-		return FALSE;
-	}
-}
-#endif /* DONT_USE_REGEX_GUESSING */
-
 /**
  * Build the word expressions, and add a tag to the word to indicate
  * that it was guessed by means of regular-expression matching.
@@ -833,71 +735,6 @@ static void tag_regex_string(Sentence sent, int i, const char * type)
 		e->string = string_set_add(str, sent->string_set);
 	}
 }
-
-#if DONT_USE_REGEX_GUESSING
-/**
- * Performes morphology-based word guessing.
- * Obsolete with the new regex infratructure ... remove this code at
- * liesure.
- */
-static int guessed_string(Sentence sent, int i, const char * s, const char * type)
-{
-	X_node * e;
-	char *t;
-	char str[MAX_WORD+1];
-	if (boolean_dictionary_lookup(sent->dict, type))
-	{
-		sent->word[i].x = build_word_expressions(sent->dict, type);
-		e = sent->word[i].x;
-		if(is_s_word(s))
-		{
-			for (; e != NULL; e = e->next)
-			{
-				t = strchr(e->string, '.');
-				if (t != NULL)
-				{
-					sprintf(str, "%.50s[!].%.5s", s, t+1);
-			  	}
-				else
-				{
-					sprintf(str, "%.50s[!]", s);
-				}
-				e->string = string_set_add(str, sent->string_set);
-			}
-		}
-		else
-		{
-			if(is_ed_word(s))
-			{
-				sprintf(str, "%.50s[!].v", s);
-			}
-			else if(is_ing_word(s))
-			{
-				sprintf(str, "%.50s[!].g", s);
-			}
-			else if(is_ly_word(s))
-			{
-				sprintf(str, "%.50s[!].e", s);
-			}
-			else
-
-			sprintf(str, "%.50s[!]", s);
-			e->string = string_set_add(str, sent->string_set);
-		}
-		return TRUE;
-	}
-	else
-	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Error, 
-		        "Error: Could not build sentence expressions.\n"
-		        "To process this sentence your dictionary "
-		        "needs the word \"%s\".\n", type);
-		return FALSE;
-	}
-}
-#endif /* DONT_USE_REGEX_GUESSING */
 
 /**
  * Puts into word[i].x the expression for the unknown word 
@@ -1041,57 +878,11 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 		{
 			sent->word[i].x = build_word_expressions(sent->dict, s);
 		}
-#if DONT_USE_REGEX_GUESSING
-		else if (is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) 
-		{
-			if (!special_string(sent, i, PL_PROPER_WORD)) return FALSE;
-		}
-		else if (is_utf8_upper(s) && dict->capitalized_word_defined)
-		{
-			if (!special_string(sent, i, PROPER_WORD)) return FALSE;
-		}
-#endif /* DONT_USE_REGEX_GUESSING */
 		else if ((NULL != (regex_name = match_regex(sent->dict, s))) &&
 		         boolean_dictionary_lookup(sent->dict, regex_name))
 		{
 			tag_regex_string(sent, i, regex_name);
 		}
-#if DONT_USE_REGEX_GUESSING
-		else if (is_number(s) && dict->number_word_defined)
-		{
-			/* we know it's a plural number, or 1 */
-			/* if the string is 1, we'll only be here if 1's not in the dictionary */
-			if (!special_string(sent, i, NUMBER_WORD)) return FALSE;
-		}
-		else if (ishyphenated(s) && dict->hyphenated_word_defined)
-		{
-			/* singular hyphenated */
-			if (!special_string(sent, i, HYPHENATED_WORD)) return FALSE;
-		} 
-		/* XXX
-		 * The following does some morphology-guessing for words that
-		 * that are not in the dictionary. This has been replaced by a
-		 * regex-based morphlogy guesser. Remove this obsolete code at
-		 * liesure.
-		 */
-		else if (is_ing_word(s) && dict->ing_word_defined) 
-		{
-			if (!guessed_string(sent, i, s, ING_WORD)) return FALSE;
-		}
-		else if (is_s_word(s) && dict->s_word_defined)
-		{
-			if (!guessed_string(sent, i, s, S_WORD)) return FALSE;
-		}
-		else if (is_ed_word(s) && dict->ed_word_defined)
-		{
-			if (!guessed_string(sent, i, s, ED_WORD)) return FALSE;
-		}
-		else if (is_ly_word(s) && dict->ly_word_defined)
-		{
-			if (!guessed_string(sent, i, s, LY_WORD)) return FALSE;
-		}
-#endif /* DONT_USE_REGEX_GUESSING */
-
 		else if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
 			if (opts->use_spell_guess)
@@ -1209,16 +1000,6 @@ int sentence_in_dictionary(Sentence sent)
 	{
 		s = sent->word[w].string;
 		if (!boolean_reg_dict_lookup(dict, s))
-#if DONT_USE_REGEX_GUESSING
-		    !(is_utf8_upper(s)   && dict->capitalized_word_defined) &&
-		    !(is_utf8_upper(s) && is_s_word(s) && dict->pl_capitalized_word_defined) &&
-		    !(ishyphenated(s) && dict->hyphenated_word_defined)  &&
-		    !(is_number(s)	&& dict->number_word_defined) &&
-		    !(is_ing_word(s)  && dict->ing_word_defined)  &&
-		    !(is_s_word(s)	&& dict->s_word_defined)  &&
-		    !(is_ed_word(s)   && dict->ed_word_defined)  &&
-		    !(is_ly_word(s)   && dict->ly_word_defined))
-#endif /* DONT_USE_REGEX_GUESSING */
 		{
 			if (ok_so_far)
 			{
