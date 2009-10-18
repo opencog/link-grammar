@@ -314,8 +314,7 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.1.wiki : 
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or
-((Rw+ or [[()]]) & Bsm+))) or
+(AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
 (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
 % Common plural nouns ending in "s"
@@ -331,13 +330,13 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 /en/words/words.n.2.x.wiki :
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or ((Rw+ or [[()]])  & Bpm+))) or
+([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
 (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
 <mass-noun>: <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-u> or ((Rw+ or [[()]]) & Bsm+))) or
+(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 
 % nouns that are mass only
