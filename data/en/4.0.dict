@@ -3548,9 +3548,10 @@ UNITS: <units-suffix>;
 % TODO: the <noun-main-x> linking requirements are likely rarely used, and
 % it might be beneficial to cost them. If this is done, make the same
 % modification for unit ranges also.
-NUMBER-AND-UNIT:
-((({D*u-} or {Dmc-}) & <noun-sub-x> &
-(<noun-main-x> or Bsm+)) or (({D*u-} or {Dmc-}) & Us- & {Mp+})) or A+;
+% NUMBER-AND-UNIT:
+% ((({D*u-} or {Dmc-}) & <noun-sub-x> &
+% (<noun-main-x> or Bsm+)) or (({D*u-} or {Dmc-}) & Us- & {Mp+})) or A+;
+% Above screw up the usual units processing.
 
 %QUESTION WORDS & CONJUNCTIONS
 

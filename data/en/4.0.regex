@@ -73,7 +73,10 @@ UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|kg|mol|min|day|h)(-1|\(-1\))$/
 % One problem here is a failure to split up the expression ... 
 % e.g. "2hr" becomes 2 - ND - hr with the ND link. But 2-hr is treated
 % as a single word ('I is a 2-hr wait')
-NUMBER-AND-UNIT: /^[0-9.,-]+(msec|s|min|hour|h|hr|day|week|wk|month|year|yr|kDa|kilodalton|base|kilobase|base-pair|kD|kd|kDa|bp|nt|kb|mm|mg|cm|nm|g|Hz|ms|kg|ml|mL|km|microm|\%)$/
+% NUMBER-AND-UNIT: /^[0-9.,-]+(msec|s|min|hour|h|hr|day|week|wk|month|year|yr|kDa|kilodalton|base|kilobase|base-pair|kD|kd|kDa|bp|nt|kb|mm|mg|cm|nm|g|Hz|ms|kg|ml|mL|km|microm|\%)$/
+% Comment out above, it screws up handling of unit suffixes, for
+% example: "Zangbert stock fell 30% to $2.50 yesterday."
+
 
 % fold-words. Matches NUMBER-fold, where NUMBER can be either numeric
 % or a spelled-out number, and the hyphen is optional. Note that for
