@@ -136,7 +136,7 @@
 % capitalized form, e.g. "Sue.f" female given name as opposed to "sue.v"
 % verb in the sentence "Sue went to the store."
 %
-CAPITALIZED-WORDS NAME <entity-singular>:
+CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
 ({NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
 ((<noun-sub-s> & (JG- or <noun-main-s>)) or YS+)) or ({[[@MX+]]} & AN+) or G+))) or 
 <directive-opener>;
