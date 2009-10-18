@@ -808,8 +808,11 @@ ROMAN-NUMERAL-WORDS.rn: NMr-;
 ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
 % Allow post-posed letter moifiers: e.g. "Vitamin A"
-A.id B.id C.id D.id E.id F.id G.id H.id I.id J.id K.id L.id M.id N.id 
+A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id 
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id: NMa-;
+
+% Avoid having I.id interfere with pronoun I.
+I.id: [[NMa-]];
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
