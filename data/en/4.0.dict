@@ -50,6 +50,8 @@
  % singular, sometimes plural. e.g. words.n.3 gets <noun-sub-s> &
  % <noun-main-m>. This is a kind-of ugly tangle, it should really 
  % be sorted out so that links are properly marks as s, p or m.
+ % This is mostly fixed, except that some uses of <noun-main-m>
+ % remain, below.
 
 % NOUNS
 
@@ -78,11 +80,20 @@
 <noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+]} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
-% noun-main-m -- mass (u == uncountable)
+% noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+  
 % Doing this requires adding Su- links to many entries
-<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or ({[Bsj+]} & Xd- 
+<noun-main-u>: (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or ({[Bsj+]} & Xd- 
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+
+% noun-main-m -- m == mass
+% TODO: get rid of this someday.
+% To get rid of this, any noun that uses this needs to be split into
+% two: the countable form, which will used <noun-main-s> and the
+% uncountable form, which will use <noun-main-u>
+<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or ({[Bsj+]} & Xd-
+ & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+
 
 <noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+]} 
  & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
@@ -323,7 +334,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 /en/words/words.n.3:  % nouns that are mass only
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-u> or (Rw+ & Bsm+))) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
 
@@ -636,6 +647,8 @@ ones: {@A- & {[[@AN-]]}} & {Dmc-} &
 (YP+ or (<noun-sub-p> & <noun-main-p>));
 any: ({EN-} & (D+ or DD+ or 
 (<noun-sub-x> & <noun-main-x>))) or EC+;
+
+% XXX why doesn't this clash with a.eq ??
 a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+ or NIm+;
 such: (ND- & Dmc+) or Dm*k+;
 such_a such_an: Ds*k+;
