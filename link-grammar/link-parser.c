@@ -707,6 +707,15 @@ int main(int argc, char * argv[])
 			if (0 < num_linkages) printf("Got One !!!!!!!!!!!!!!!!!\n");
 		}
 
+		/* If asked to show bad linkages, then show them. */
+		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
+		{
+			if (parse_options_get_display_bad(opts))
+			{
+				num_linkages = sentence_num_linkages_found(sent);
+			}
+		}
+
 		/* Now parse with null links */
 		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
 		{
