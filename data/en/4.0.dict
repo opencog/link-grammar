@@ -113,6 +113,10 @@
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
+<rel-clause-x>: Rw+ & B*m+;
+<rel-clause-s>: Rw+ & Bsm+;
+<rel-clause-p>: Rw+ & Bpm+;
+
 <directive-opener>:
 {[[Wi-]]} & ((Xc+ & Ic+) or (({Xd-} & (Xc+ or [[()]])) & COa+));
 
@@ -228,7 +232,7 @@ entityID60: <marker-entity> or <entity-id>;
 % in each class e.g. words.n.1 and/or words.n.2 and/or words.n.3, etc.
 <noun-mass-count>:  
 {@AN-} & {@A- & {[[@AN-]]}} & 
-(({NM+} & AN+) or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(({NM+} & AN+) or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
@@ -239,7 +243,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 % Same pattern used for words.n.2.s
 <generic-plural-id>:  
 ({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or (Rw+ & Bpm+)))
+(<noun-main-p> or <rel-clause-p>))
 or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
@@ -285,7 +289,7 @@ St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y
 Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y 
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Esq.y Esq..y Inc.y Inc..y PLC.y 
-Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co and_Co GmBH.y: 
+Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y: 
 G- & {Xi+} & {[MG+]} &
 (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or
 <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
@@ -294,11 +298,8 @@ Jr.y Jr..y Sr.y Sr..y: {Xi+} & {Xd- & Xc+} & G- & {[MG+]} & (({DG- or
 [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or
 (YS+ or YP+))) or AN+ or G+);
 
-HYPHENATED-WORDS.a:
-({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
-
 HYPHENATED-WORDS.n: 
-[[({@AN-} & {@A-} & (({NM+ or D-} & <noun-sub-x> & (<noun-main-x> or (Rw+ & B*m+))) or
+[[({@AN-} & {@A-} & (({NM+ or D-} & <noun-sub-x> & (<noun-main-x> or <rel-clause-x>)) or
  U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
@@ -313,7 +314,8 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.1.wiki : 
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))) or
+(AN+ or ((NM+ or ([{NM+}] & Ds-)) & <noun-sub-s> & (<noun-main-s> or
+((Rw+ or [[()]]) & Bsm+))) or
 (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
 % Common plural nouns ending in "s"
@@ -329,13 +331,13 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 /en/words/words.n.2.x.wiki :
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or (Rw+ & Bpm+))) or
+([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or ((Rw+ or [[()]])  & Bpm+))) or
 (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
 <mass-noun>: <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-u> or (Rw+ & Bsm+))) or
+(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-u> or ((Rw+ or [[()]]) & Bsm+))) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 
 % nouns that are mass only
@@ -352,7 +354,7 @@ auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n
 tawny.n ultramarine.n yellow.n:
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(({Dmu-} & <noun-sub-s> & (<noun-main-m> or (Rw+ & Bsm+))) or
+(({Dmu-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 
 % US state names and abbreviations
@@ -377,7 +379,7 @@ pop.m papa.m poppy.m pops.m sis.f sister.f uncle.m:
 alter_ego au_pair mise_en_scene faux_pas non_sequitur fait_accompli
 modus_vivendi head_of_state tour_de_force:
  ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & <noun-sub-s> & 
-(<noun-main-s> or (Rw+ & Bsm+)))
+(<noun-main-s> or <rel-clause-s>))
 or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 kung_fu joie_de_vivre op_art noblesse_oblige lese_majesty a_must
@@ -385,7 +387,7 @@ time_of_day time_of_year force_majeure top_dollar year_end skim_milk
 breach_of_contract sleight_of_hand power_of_attorney word_of_mouth
 carte_blanche: 
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
-(<noun-main-m> or (Rw+ & Bsm+))) or
+(<noun-main-m> or <rel-clause-s>)) or
 Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 
 /en/words/words.n.t: % title nouns (president, chairman)
@@ -408,13 +410,13 @@ Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
 
 kind_of: ({{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
-(<noun-main-s> or (Rw+ & Bsm+))) or Us-)) or EA+ or EE+;
+(<noun-main-s> or <rel-clause-s>)) or Us-)) or EA+ or EE+;
 type_of sort_of breed_of:
  {{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
-(<noun-main-s> or (Rw+ & Bsm+))) or Us-);
+(<noun-main-s> or <rel-clause-s>)) or Us-);
 kinds_of types_of sorts_of breeds_of:
  {{@AN-} & @A-} & U+ & (({Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or (Rw+ & Bpm+))) or Up-);
+(<noun-main-p> or <rel-clause-p>)) or Up-);
 
 percent.u: 
 ({@AN-} & {@A- & {[[@AN-]]}} & ((ND- & {DD-} & <noun-sub-x> & 
@@ -436,7 +438,7 @@ proposition.n prospect.n presupposition.n inkling.n supposition.n
 finding.n amount.n answer.n crux.n shame.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & 
 {[[@M+]]}} & {@MXs+} 
-& (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
+& (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>))
 or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n 
@@ -449,13 +451,13 @@ realization.n view.n insistence.n consensus.n notification.n rule.n
 danger.n warning.n suggestion.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) 
 & {[[@M+]]}} & {@MXs+} & 
-(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
+(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>))
  or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;  
 
 evidence.n reasoning.n likelihood:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) 
 & {[[@M+]]}} & {@MXs+} & 
-(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+))) 
+(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>)) 
  or Up- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;  
 
 ideas.n opinions.n statements.n beliefs.n facts.n arguments.n
@@ -476,19 +478,19 @@ findings.n amounts.n rules.n dangers.n warnings.n indications.n
 answers.n suggestions.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & 
 {[[@M+]]}} & {@MXp+} &
-(<noun-main2-p> or (Sp*t+ & <CLAUSE>) or SIp*t- or (Rw+ & Bpm+)))
+(<noun-main2-p> or (Sp*t+ & <CLAUSE>) or SIp*t- or <rel-clause-p>))
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
 request.n requirement.n condition.n recommendation.n provision.n stipulation.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TH+ or TS+ or (R+ & Bs+)) 
 & {[[@M+]]}} & {@MXs+} & 
-(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
+(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>))
  or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;  
 requests.n requirements.n conditions.n recommendations.n provisions.n
 stipulations.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {(TH+ or TS+ or (R+ & Bp+)) & 
 {[[@M+]]}} & {@MXp+} &
-(<noun-main2-p> or (Sp*t+ & <CLAUSE>) or SIp*t- or (Rw+ & Bpm+)))
+(<noun-main2-p> or (Sp*t+ & <CLAUSE>) or SIp*t- or <rel-clause-p>))
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
 excuse.n decision.n proposal.n attempt.n plan.n plot.n pledge.n urge.n
@@ -496,7 +498,7 @@ mission.n right.n desire.n mandate.n promise.n option.n campaign.n
 offer.n vow.n permit.n impetus.n proclivity.n propensity.n move.n
 vote.n bill.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) &
-{[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or
+{[[@M+]]}} & {@MXs+} & (<noun-main-s> or <rel-clause-s>)) or
  Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
@@ -504,7 +506,7 @@ determination.n capacity.n unwillingness.n need.n will.n eagerness.n
 opportunity.n commitment.n ambition.n ability.n order.n obligation.n
 incentive.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) &
-{[[@M+]]}} & {@MXs+} & (<noun-main-m> or (Rw+ & Bsm+))) or
+{[[@M+]]}} & {@MXs+} & (<noun-main-m> or <rel-clause-s>)) or
  Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 excuses.n decisions.n proposals.n failures.n efforts.n attempts.n refusals.n pledges.n
 urges.n missions.n rights.n desires.n needs.n ambitions.n capacities.n mandates.n
@@ -513,55 +515,55 @@ responsibilities.n chances.n campaigns.n offers.n pressures.n obligations orders
 temptations.n vows.n permits.n impetuses.n proclivities.n propensities.n moves.n
 votes.n bills.n incentives.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {(TOn+ or (R+ & Bp+)) &
- {[[@M+]]}} & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+))) or
+ {[[@M+]]}} & {@MXp+} & (<noun-main-p> or <rel-clause-p>)) or
  Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 chance.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TOn+ or TH+ or (R+ & Bs+)) 
-& {[[@M+]]}} & {@MXs+} & (<noun-main-s> or (Rw+ & Bsm+))) or 
+& {[[@M+]]}} & {@MXs+} & (<noun-main-s> or <rel-clause-s>)) or 
  Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 question.n issue.n: 
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & 
 {@MXs+} &
-(<noun-main2-s> or (Ss*q+ & <CLAUSE>) or SIs*q- or (Rw+ & Bsm+)))
+(<noun-main2-s> or (Ss*q+ & <CLAUSE>) or SIs*q- or <rel-clause-s>))
 or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 questions.n issues.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {R+ & Bp+ & {[[@M+]]}} & 
 {@MXp+} &
-(<noun-main2-p> or (Sp*q+ & <CLAUSE>) or SIp*q- or (Rw+ & Bpm+)))
+(<noun-main2-p> or (Sp*q+ & <CLAUSE>) or SIp*q- or <rel-clause-p>))
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or AN+;
 
 reason.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {TH+ or Ce+ or TOn+ or 
 WY+ or (R+ & Bs+)} & {@MXs+} & 
-(<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or (Rw+ & Bsm+)))
+(<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 reasons.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {TH+ or Ce+ or TOn+ or
- WY+ or (R+ & Bp+)} & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+)))
+ WY+ or (R+ & Bp+)} & {@MXp+} & (<noun-main-p> or <rel-clause-p>))
  or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 way.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
-(R+ & Bs+)} & {@MXs+} & (MVa- or <noun-main-s> or (Rw+ & Bsm+)))
+(R+ & Bs+)} & {@MXs+} & (MVa- or <noun-main-s> or <rel-clause-s>))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 place.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
-(R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-s> or (Rw+ & Bsm+)))
+(R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-s> or <rel-clause-s>))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 time.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {TOn+ or WN+ or TH+ or 
-Ce+ or (R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-m> or (Rw+ & Bsm+)))
+Ce+ or (R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-m> or <rel-clause-s>))
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 ways.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or 
-(R+ & Bp+)} & {@MXp+} & (MVa- or <noun-main-p> or (Rw+ & Bpm+)))
+(R+ & Bp+)} & {@MXp+} & (MVa- or <noun-main-p> or <rel-clause-p>))
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 places.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or 
-(R+ & Bp+)} & {@MXp+} & ([[MVa-]] or <noun-main-p> or (Rw+ & Bpm+)))
+(R+ & Bp+)} & {@MXp+} & ([[MVa-]] or <noun-main-p> or <rel-clause-p>))
  or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 times.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {TOn+ or WN+ or TH+ or 
-Ce+ or (R+ & Bp+)} & {@MXp+} & ([[MVa-]] or <noun-main-p> or (Rw+ & Bpm+)))
+Ce+ or (R+ & Bp+)} & {@MXp+} & ([[MVa-]] or <noun-main-p> or <rel-clause-p>))
  or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
 
 
@@ -637,7 +639,7 @@ half: {EN-} & (NJ+ or ((({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+))
 & <noun-main-x>));
 many: (H- & (Dmc+ or ND+ or NIn+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 
 ({EE-} & (ND+ or NIn+)) or ({DD-} & {EAx-} & Dmc+) or ((({EAx-} & {DD-}) or H-) & 
-<noun-sub-p> & (<noun-main-p> or (Rw+ & Bpm+)));
+<noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
 all.a: ({EN-} & (E+ or Dm+ or NIc+ or 
 ({@M+ or (ALx+ & Jp+) or (R+ & B+) or EL+} & 
 (<noun-main2-x> or (S**t+ & <CLAUSE>) or SI**t-)))) or DTa+;
@@ -647,7 +649,7 @@ all_this: <noun-sub-s> & <noun-main-s>;
 all_those all_these: <noun-sub-p> & <noun-main-p>;
 
 one: NA+ or NMw- or NN+ or ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
-(YS+ or (<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+))))))) or NIm+ or NSn+ or
+(YS+ or (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)))))) or NIm+ or NSn+ or
 (NA- & ND+) or DTi+ or (NA- & Xd- & TY- & Xc+);
 
 ones: {@A- & {[[@AN-]]}} & {Dmc-} & 
@@ -673,7 +675,7 @@ a_few: NN+ or ND+ or NIn+ or ({EN-} & (Dmc+ or ND+ or NIn+ or
 (<noun-sub-p> & <noun-main-p>)));
 some: D+ or EN+ or MF+ or (<noun-sub-x> & <noun-main-x>) or <adv-of>;
 little.i: ({EE-} & (MVa- or Ca+ or Qe+)) or ({EEx- or H-} & (Dmu+ or 
-(<noun-sub-s> & (<noun-main-s> or (Rw+ & Bsm+)))))
+(<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))))
 or (AM- & (Dmuy+ or MVy- or Oy- or Jy-)) or ({Ds-} & <adv-of>);
 %
 % "he likes you most" has no determiner, just uses MVa-.
@@ -3450,19 +3452,19 @@ week.n moment.n hour.n minute.n year.n instant.n period.n month.n
 second.n decade.n century.n:
 {NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} &
 {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
-(<noun-main-s> or (Rw+ & Bsm+))) or 
+(<noun-main-s> or <rel-clause-s>)) or 
  Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+);
 
 day.n night.n:
 {NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} &
 {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
-(<noun-main-m> or (Rw+ & Bsm+))) or 
+(<noun-main-m> or <rel-clause-s>)) or 
  Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+);
 
 days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
 nights.n seconds.n decades.n centuries.n:
 {NM+} & (({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {WN+ or TH+ or Ce+ or 
-(R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or (Rw+ & Bpm+))) 
+(R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or <rel-clause-p>)) 
 or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]]);
 
 % XXX A major problem here is that the dict entries for miles.n, feet.n 
@@ -3688,6 +3690,9 @@ n't n’t: N- or EB-;
 ((Pa- or AF+ or Ma-) & {@MV+}) or 
 AA+ or [[DD- & <noun-main-p>]] or <adj-op>));
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a 
+
+HYPHENATED-WORDS.a:
+({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
 
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
 <adj-stuff>:   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
