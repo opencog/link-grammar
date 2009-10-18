@@ -78,11 +78,25 @@ MUST_FORM_A_CYCLE_LINKS:  R#*   TOt   EXx   HA    SFsic   Jr  JQ  Xca
 ; The creation of Rw necessitated making B#m a restricted link, to
 ; prevent the (e) domain, started by Ce, from extending around through
 ; the Rw link.
+; Reverted.
+; This breaks parsing of 
+;    How fast a program does he think it is
+;    I wonder how fast a program he thinks it is
+;    I wonder how much money you earned
+;    I wonder how many people you saw
+;    I wonder how big a department it is
+;    I wonder how much oil they spilled
+;    This is the man whose dog I bought
+;    I wonder which dog he said you chased
+;    How efficient a program is it
+; Meanwhile, I can't find the Ce problem mentioned ... this needs more
+; documentation!
 
 RESTRICTED_LINKS: 
    B#*  D##w   B#w   B#d   AFh  MVt   Xx   HL   SFsic  AFd   Bc   CX  EAh  
-   H   HA   PFc   B#j   Wd   PF   Z  B#m
+   H   HA   PFc   B#j   Wd   PF   Z
 
+;   H   HA   PFc   B#j   Wd   PF   Z  B#m
 
 
 ; ----------------------------------------------------------------------
@@ -259,11 +273,12 @@ CONTAINS_ONE_RULES:
 ; are prohibited from ever occuring. 4.0.batch covers this.
  Ixd   ,  ZZZ                               , "Can't use 'do' with that verb" ,
  Oxn   ,  ZZZ                               , "Bad use of pronoun66" ,
- MVh   ,  EExk   EAxk   D##k                , "Incorrect use of that67"    
+ MVh   ,  EExk   EAxk   D##k                , "Incorrect use of that67" ,
 
 ; The Rw link necessitated commenting out 68, because we had to make B#m 
-; a restricted link(see above)
-; B#m  ,   D##w   H   HA                     , "Bad use of gerund68"   
+; a restricted link(see above) xxx reverted .. this is needed ...
+;
+B#m  ,   D##w   H   HA                     , "Bad use of gerund68"   
 
 CONTAINS_NONE_RULES:
  S     ,  Spxi                  	    , "Bad n-v agreement69" ,

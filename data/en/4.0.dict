@@ -113,9 +113,9 @@
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
-<rel-clause-x>: Rw+ & B*m+;
-<rel-clause-s>: Rw+ & Bsm+;
-<rel-clause-p>: Rw+ & Bpm+;
+<rel-clause-x>: {Rw+} & B*m+;
+<rel-clause-s>: {Rw+} & Bsm+;
+<rel-clause-p>: {Rw+} & Bpm+;
 
 <directive-opener>:
 {[[Wi-]]} & ((Xc+ & Ic+) or (({Xd-} & (Xc+ or [[()]])) & COa+));
