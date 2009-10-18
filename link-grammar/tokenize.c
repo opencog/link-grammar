@@ -62,24 +62,6 @@ static int is_entity(Dictionary dict, const char * str)
 	return word_contains(dict, regex_name, ENTITY_MARKER);
 }
 
-/**
- * Is the word entirely composed of single-letter abreviations
- * (followed by a period)?
- * It returns TRUE if the word matches the pattern /[A-Z]\.]+/
- */
-static int is_initials_word(const char * word)
-{
-	int i=0;
-	while (word[i])
-	{
-		int nb = is_utf8_upper(&word[i]);
-		if (!nb) return FALSE;
-		i += nb;
-		if (word[i] != '.') return FALSE;
-		i++;
-	}
-	return TRUE;
-}
 
 /**
  * Return TRUE if word is a proper name.
@@ -428,8 +410,6 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 	if (boolean_reg_dict_lookup(sent->dict, word))
 		word_is_in_dict = TRUE;
-	else if (is_initials_word(word))
-		word_is_in_dict = TRUE;
 	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
 		word_is_in_dict = TRUE;
 
@@ -493,8 +473,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
-		if (boolean_reg_dict_lookup(sent->dict, word) ||
-		    is_initials_word(word)) break;
+		if (boolean_reg_dict_lookup(sent->dict, word)) break;
 
 		/* This could happen if it's a word after a colon, also! */
 		if (is_first_word && downcase_is_in_dict (sent->dict, word)) break;
@@ -575,8 +554,6 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	word_is_in_dict = FALSE;
 
 	if (boolean_reg_dict_lookup(sent->dict, word))
-		word_is_in_dict = TRUE;
-	else if (is_initials_word(word))
 		word_is_in_dict = TRUE;
 	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
 		word_is_in_dict = TRUE;
