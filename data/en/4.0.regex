@@ -101,23 +101,31 @@ PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys'’]s$/
 % (... any affix, for that matter ...)
 CAPITALIZED-WORDS:     /^[[:upper:]].*[^'’][^'’]\w$/
 
-% Nouns ending -ation  stubbed out in BioLG, stub out here ... 
-%ATION-WORDS:      /..ation$/
-
-ING-WORDS:        /..ing$/
+% SUFFIX GUESSING
+% For all suffix-guessing patterns, we insist that the pattern start
+% with an alphanumeric. This is needed to guarentee that the
+% prefix-stripping code works correctly, as otherwise, the regex will
+% gobble the prefix. So for example: "We left (carrying the dog) and
+% Fred followed."  Since "(carrying" is not in the dict, we need to be
+% sure to not match the leading paren so that it will get tripped.
+%
+ING-WORDS:        /^\w.+ing$/
 
 % Plurals or verb-s. Make sure that apostrophe-s is split out correctly.
 % e.g. "The subject's name is John Doe."  should be
 %     +--Ds--+---YS--+--Ds-+
 %     |      |       |     |
 %    the subject.n 's.p name.n 
-S-WORDS:          /[^iuoys'’]s$/
+S-WORDS:          /^\w.+[^iuoys'’]s$/
 
 % Verbs ending -ed.
-ED-WORDS:         /..ed$/
+ED-WORDS:         /^\w.+ed$/
 
 % Advebs ending -ly.
-LY-WORDS:         /..ly$/
+LY-WORDS:         /^\w.+ly$/
+
+% Nouns ending -ation  stubbed out in BioLG, stub out here ... 
+%ATION-WORDS:      /^\w.+ation$/
 
 % Extension by LIPN 11/10/2005
 % nouns -- typically seen in (bio-)chemistry texts
@@ -129,17 +137,17 @@ LY-WORDS:         /..ly$/
 % glycosylphosphatidylinositol
 % iodide, oligodeoxynucleotide
 % chronicity, hypochromicity
-MC-NOUN-WORDS: /..ase$/
-MC-NOUN-WORDS: /..ine?$/
-MC-NOUN-WORDS: /..yl$/
-MC-NOUN-WORDS: /..ion$/
-MC-NOUN-WORDS: /..ose$/
-MC-NOUN-WORDS: /..ol$/
-MC-NOUN-WORDS: /..ide$/
-MC-NOUN-WORDS: /..ity$/
+MC-NOUN-WORDS: /^\w.+ase$/
+MC-NOUN-WORDS: /^\w.+ine?$/
+MC-NOUN-WORDS: /^\w.+yl$/
+MC-NOUN-WORDS: /^\w.+ion$/
+MC-NOUN-WORDS: /^\w.+ose$/
+MC-NOUN-WORDS: /^\w.+ol$/
+MC-NOUN-WORDS: /^\w.+ide$/
+MC-NOUN-WORDS: /^\w.+ity$/
 
 % replicon, intron
-C-NOUN-WORDS: /..o[rn]$/
+C-NOUN-WORDS: /^\w.+o[rn]$/
 
 % adjectives
 % exogenous, heterologous
@@ -148,24 +156,24 @@ C-NOUN-WORDS: /..o[rn]$/
 % ribosomal, ribsosomal
 % nonpermissive, thermosensitive
 % inducible, metastable
-ADJ-WORDS: /..ous$/
-ADJ-WORDS: /..ar$/
-ADJ-WORDS: /..ic$/
-ADJ-WORDS: /..al$/
-ADJ-WORDS: /..ive$/
-ADJ-WORDS: /..ble$/
+ADJ-WORDS: /^\w.+ous$/
+ADJ-WORDS: /^\w.+ar$/
+ADJ-WORDS: /^\w.+ic$/
+ADJ-WORDS: /^\w.+al$/
+ADJ-WORDS: /^\w.+ive$/
+ADJ-WORDS: /^\w.+ble$/
 
 % latin (postposed) adjectives
 % influenzae, tarentolae
 % pentosaceus, luteus, carnosus
-LATIN-ADJ-WORDS: /..ae$/
-LATIN-ADJ-WORDS: /..us$/ % must appear after -ous in this file
+LATIN-ADJ-WORDS: /^\w.+ae$/
+LATIN-ADJ-WORDS: /^\w.+us$/ % must appear after -ous in this file
 
 % latin (postposed) adjectives  or latin plural noun
 % brevis, israelensis
 % japonicum, tabacum, xylinum
-LATIN-ADJ-P-NOUN-WORDS: /..is?$/
-LATIN-ADJ-S-NOUN-WORDS: /..um$/
+LATIN-ADJ-P-NOUN-WORDS: /^\w.+is?$/
+LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 
 
 % Hyphenated words. In the original LG morpho-guessing system that
