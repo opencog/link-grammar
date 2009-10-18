@@ -331,12 +331,17 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
-/en/words/words.n.3:  % nouns that are mass only
-<marker-common-entity> or 
+<mass-noun>: <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
 (AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-u> or (Rw+ & Bsm+))) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
+
+% nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
+/en/words/words.n.3: <mass-noun>;
+
+% Want to cost this so that it doesn't interfere with given name "Tom".
+tom.n-u: [<mass-noun>];
 
 % Nouns that are also adjectives (e.g. red.n) and so we don't want to
 % allow these to take AN+ links.  We need these as nouns, so as to 
