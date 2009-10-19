@@ -130,21 +130,26 @@
 % We do NOT tag these with <marker-entity>, a this messes up first-word
 % processing in tokenize.c.  So for example, we do *not* want "There"
 % in "There they are" tagged as an entity, just because its capitalized.
-% We really do want ot force the lower-case usage, because the lower case
+% We really do want to force the lower-case usage, because the lower case
 % is in the dict, and its the right word to use. (The only entities that
 % should be tagged as such are those that are in the dicts, in thier
 % capitalized form, e.g. "Sue.f" female given name as opposed to "sue.v"
-% verb in the sentence "Sue went to the store."
+% verb in the sentence "Sue went to the store.")
+%
+% To help discourage capitalized use when the lower-case is in the dict,
+% we give a slight cost to [<noun-sub-s> & (JG- or <noun-main-s>)] to
+% discourage use as a common noun, so that the lower-case version can 
+% play this role.
 %
 CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
 ({NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
-((<noun-sub-s> & (JG- or <noun-main-s>)) or YS+)) or ({[[@MX+]]} & AN+) or G+))) or 
+([<noun-sub-s> & (JG- or <noun-main-s>)] or YS+)) or ({[[@MX+]]} & AN+) or G+))) or 
 <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 PL-CAPITALIZED-WORDS: 
 ({NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
-((<noun-sub-x> & (JG- or <noun-main-x>)) or YS+ or YP+)) or AN+ or G+)) or
+([<noun-sub-x> & (JG- or <noun-main-x>)] or YS+ or YP+)) or AN+ or G+)) or
 <directive-opener>;
 
 % capitalized words ending in s
