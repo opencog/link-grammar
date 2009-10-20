@@ -5,6 +5,7 @@ Version 4.6.5 (??? 2009)
  * Provide tags identifying relative, superlative adjectives.
  * Remove BioLG NUMBER-AND-UNIT handling, its been superceeded. 
  * Fix handling of parenthetical phrases/clauses.
+ * Fix: handling of capitalized first words ending in letter "s".
 
 Version 4.6.4 (11 October 2009)
  * Restore nouns starting w/letters x-z, elided in version 4.5.9 ff.

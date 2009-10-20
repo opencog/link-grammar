@@ -147,6 +147,8 @@ CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
 <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
+% -- But not all words that end with an 's' are plural: 
+% e.g. Cornwallis
 PL-CAPITALIZED-WORDS: 
 ({NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
 ([<noun-sub-x> & (JG- or <noun-main-x>)] or YS+ or YP+)) or AN+ or G+)) or

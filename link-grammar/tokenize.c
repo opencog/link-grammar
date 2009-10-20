@@ -946,7 +946,13 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 			downcase_utf8_str(temp_word, s, MAX_WORD);
 			lc = string_set_add(temp_word, sent->string_set);
 
-			if (boolean_reg_dict_lookup(sent->dict, lc))
+			/* The lower-case dict lookup might trigger regex 
+			 * matches in the dictionary. We want to avoid these.
+			 * e.g. "Cornwallis" triggers both PL-CAPITALIZED_WORDS
+			 * and S-WORDS. Since its not an entity, the regex 
+			 * matches will erroneously discard the upper-case version.
+			 */
+			if (boolean_dictionary_lookup(sent->dict, lc))
 			{
 				if (is_entity(sent->dict,s) ||
 				    is_common_entity(sent->dict,lc))
