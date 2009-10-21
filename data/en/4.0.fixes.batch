@@ -753,9 +753,18 @@ Let's do it some other place.
 That's what happens most other times. 
 I see that happen most places I go.
 
+% Filler-it and the SF link:
+It is reasoned that the vast concentration of the business information market in EMEA resides within Europe. 
+It is whispered that the vast concentration of the business information market in EMEA resides within Europe.
+it is reasoned that this statement is true.
+it is hoped that this statement is true.
+It was hinted that our actions were inappropriate.
+
+
+
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.
-% "there is the ball" is much better, but the SFst seems wrong to me.
+% "there is the ball" is much better, but the SFst seems questionable...
 %
 % Consider "Here's the ball." This parses with SI to ball, and links
 % PF to "here".  We'd like to use [Wd- &PF+] for this, but the

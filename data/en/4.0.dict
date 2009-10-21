@@ -1495,8 +1495,9 @@ wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
 hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-hope>;
 hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
 <verb-s> & <vc-hope>;
-pretended.v prayed.v vowed.v: <verb-sp,pp> & <vc-hope>;
-hoped.v voted.v: (<verb-sp,pp> & <vc-hope>) or (<verb-s-pv> & THi+);
+pretended.v prayed.v: <verb-sp,pp> & <vc-hope>;
+% The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
+hoped.v voted.v vowed.v: (<verb-sp,pp> & <vc-hope>) or (<verb-s-pv> & THi+);
 agreed.v: (<verb-sp,pp> & <vc-hope>) or (<verb-pv> & TH+);
 swore.v: <verb-sp> & <vc-hope>;
 sworn.v: (<verb-pp> & <vc-hope>) or ({@E-} & A+);
@@ -1561,10 +1562,13 @@ replies.v whispers.v argues.v sighs.v
 mutters.v testifies.v comments.v responds.v hints.v reasons.v 
 brags.v:
 <verb-s> & <vc-reply>;
-replied.v whispered.v argued.v sighed.v 
-muttered.v testified.v commented.v responded.v hinted.v reasoned.v 
-bragged.v:
+replied.v sighed.v commented.v responded.v bragged.v:
 <verb-sp,pp> & <vc-reply>;
+
+% The (<verb-s-pv> & THi+) allows "it is reasoned that ..." to parse.
+argued.v hinted.v muttered.v reasoned.v testified.v whispered.v:
+(<verb-sp,pp> & <vc-reply>) or (<verb-s-pv> & THi+);
+
 replying.v whispering.v arguing.v sighing.v
 muttering.v testifying.v commenting.v responding.v hinting.v 
 reasoning.v bragging.v:
