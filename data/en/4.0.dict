@@ -4004,11 +4004,11 @@ harder.a-c: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-)
 & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
  MVb-)) or (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & 
 (ER- or (Wd- & Xc+ & ER+)));
-higher.a-c deeper.a-c lower.a-c faster.a-c:
+higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c:
 ({ECa-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+) 
 or MVb- or Qe+ or Ca+)) or
 (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
-sooner.a:
+sooner.a-c:
 ({ECa- or Yt-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+) 
 or MVb- or Qe+ or Ca+)) or
 (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
