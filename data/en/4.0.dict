@@ -2097,24 +2097,33 @@ or <verb-po>;
 studying.g: (<vc-study> & <verb-ge>) or <verb-ge-d>;
 studying.v: <verb-pg> & <vc-study>;
 
-<vc-discuss>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & Pg+);
-discuss.v oppose.v enjoy.v advocate.v contemplate.v entail.v necessitate.v
+% QI+ link: "I will discuss which vitamins I take"
+<vc-discuss>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & (Pg+ or QI+));
+discuss.v: <verb-pl,i> & <vc-discuss>;
+discusses.v: <verb-s> & <vc-discuss>;
+discussed.v: (<verb-sp,pp> & <vc-discuss>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+discussing.g: (<vc-discuss> & <verb-ge>) or <verb-ge-d>;
+discussing.v:
+<verb-pg> & <vc-discuss>;
+
+<vc-oppose>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & Pg+);
+oppose.v enjoy.v advocate.v contemplate.v entail.v necessitate.v
 justify.v risk.v avoid.v involve.v favor.v: 
-<verb-pl,i> & <vc-discuss>;
-discusses.v opposes.v enjoys.v advocates.v contemplates.v entails.v necessitates.v
+<verb-pl,i> & <vc-oppose>;
+opposes.v enjoys.v advocates.v contemplates.v entails.v necessitates.v
 justifies.v risks.v avoids.v involves.v favors.v: 
-<verb-s> & <vc-discuss>;
-discussed.v opposed.v enjoyed.v advocated.v contemplated.v entailed.v
+<verb-s> & <vc-oppose>;
+opposed.v enjoyed.v advocated.v contemplated.v entailed.v
 necessitated.v justified.v risked.v avoided.v involved.v favored.v: 
-(<verb-sp,pp> & <vc-discuss>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-discussing.g opposing.g enjoying.g advocating.g contemplating.g
+(<verb-sp,pp> & <vc-oppose>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+opposing.g enjoying.g advocating.g contemplating.g
 entailing.g necessitating.g justifying.g risking.g avoiding.g
 favoring.g involving.g: 
-(<vc-discuss> & <verb-ge>) or <verb-ge-d>;
-discussing.v opposing.v enjoying.v advocating.v contemplating.v
+(<vc-oppose> & <verb-ge>) or <verb-ge-d>;
+opposing.v enjoying.v advocating.v contemplating.v
 entailing.v necessitating.v justifying.v risking.v avoiding.v involving.v
 favoring.v: 
-<verb-pg> & <vc-discuss>;
+<verb-pg> & <vc-oppose>;
 
 <vc-finish>: ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & Pg+);
 finish.v practice.v resist.v: <verb-pl,i> & <vc-finish>;
