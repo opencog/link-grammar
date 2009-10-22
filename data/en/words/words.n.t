@@ -14,7 +14,7 @@ founder.t general.t governor.t head.t headmaster.t headmistress.t inspector.t
 intern.t justice.t 
 lawyer.t leader.t librarian.t lobbyist.t manager.t  marquise.t mayor.t 
 minister.t mother.t officer.t owner.t partner.t pastor.t postmaster.t premier.t 
-president.t prim_minister 
+president.t prime_minister 
 professor.t prosecutor.t representative.t Saint.t Sainte.t 
 secretary.t Seigneur.t Senator.t senator.t shah.t 
 sheriff.t sister.t
