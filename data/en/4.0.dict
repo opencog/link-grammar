@@ -2005,8 +2005,9 @@ or ({K+} & <verb-po>);
 figuring.g: (<vc-figure> & <verb-ge>) or <verb-ge-d>;
 figuring.v: <verb-pg> & <vc-figure>;
 
+% (QI+ & {MV+}): "I did not say why until recently"
 <vc-predict>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
-({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs-));
+({@MV+} & ((QI+ & {MV+}) or Ce+ or TH+ or RSe+ or Zs-));
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
 recall.v reveal.v state.v observe.v indicate.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
@@ -2055,8 +2056,9 @@ demonstrating.g: (<vc-guess> & <verb-ge>) or <verb-ge-d>;
 guessing.v estimating.v understanding.v noticing.v explaining.v
 demonstrating.v: <verb-pg> & <vc-guess>;
 
-<vc-know>: ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) 
-or ({@MV+} & ((OF+ & {@MV+}) or QI+ or Ce+ or TH+ or RSe+ or Zs-));
+% (QI+ & {MV+}): "I did not know why until recently"
+<vc-know>: ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
+({@MV+} & (((OF+ or QI+)& {@MV+}) or Ce+ or TH+ or RSe+ or Zs-));
 know.v: <verb-pl,i> & <vc-know>;
 knows.v: <verb-s> & <vc-know>;
 knew.v: <verb-sp> & <vc-know>;
@@ -2798,9 +2800,10 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % K+ is for "tell him off"
 % bare MVp+ for "Today, we will tell about ..."
 % OF+ for "They have told of the soldiers' fear"
+% (QI+ & {MV+}): "I did not tell why until recently"
 <vc-tell>: (((O+ & {O*n+ or K+}) or B-) & {@MV+} & 
 {TH+ or Ce+ or RSe+ or Zs- or TOo+ or QI+ or BW-}) or 
-OF+ or ([[@MV+ & {O*n+} & {@MV+}]]);
+OF+ or (QI+ & {MV+}) or ([[@MV+ & {O*n+} & {@MV+}]]);
 
 tell.v: <verb-pl,i> & <vc-tell>;
 tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-);
@@ -2812,7 +2815,8 @@ told.v: (<verb-sp,pp> & <vc-tell>) or
 telling.g: (<vc-tell> & <verb-ge>) or <verb-ge-d>;
 telling.v: <verb-pg> & <vc-tell>;
 
-<vc-ask>: ({(O+ & {O*n+}) or B-} & {@MV+} & {TS+ or TOo+ or QI+ or BW-}) or 
+% (QI+ & {MV+}): "I did not ask why until recently"
+<vc-ask>: ({(O+ & {O*n+}) or B-} & {@MV+} & {TS+ or TOo+ or (QI+ & {MV+}) or BW-}) or 
 ([[@MV+ & O*n+ & {@MV+}]]);
 ask.v: <verb-pl,i> & <vc-ask>;
 asks.v: <verb-s> & <vc-ask>;
@@ -3088,7 +3092,8 @@ turns_out: <verb-s-s> & <vc-turn-out>;
 turned_out: <verb-s-sp,pp> & <vc-turn-out>;
 turning_out: <verb-s-pg> & <vc-turn-out>;
 
-<vc-find-out>: {[@MV+]} & (TH+ or QI+ or Ce+);
+% (QI+ & {MV+}): "I did not figure out why until recently"
+<vc-find-out>: {[@MV+]} & (TH+ or (QI+ & {MV+}) or Ce+);
 find_out figure_out: <verb-pl,i> & <vc-find-out>;
 finds_out figures_out: <verb-s> & <vc-find-out>;
 found_out figured_out: (<verb-sp,pp> & <vc-find-out>) or <verb-pv> or 
