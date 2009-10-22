@@ -71,6 +71,9 @@ It has been notoriously badly managed.
 The store was poorly stocked.
 The play was dreadfully written.
 
+% Adverbial modifiers with EBm-
+There is absolutely no reason to believe American companies cannot compete overseas.
+
 There are rumours of a tightening of credit
 There are rumours of a collapse of credit
 
@@ -560,6 +563,12 @@ It smells like someone is smoking pot.
 We brought back a kilo of boo from Mexico.
 He took a gram of snort to the party.
 
+% "The thing that VP is that CLAUSE"
+The only thing that has prevented a collapse in the dollar so far is that it is the currency reserve of the world.
+The thing that has prevented a collapse is that it is the currency reserve.
+The thing that is funny is that it is wrong.
+
+
 % shame commonly used as a count noun.
 He felt a deep shame.
 The shame of it is that it was a good idea.
@@ -759,8 +768,6 @@ It is whispered that the vast concentration of the business information market i
 it is reasoned that this statement is true.
 it is hoped that this statement is true.
 It was hinted that our actions were inappropriate.
-
-
 
 % buggy coppula and copula contractions
 % "here is the ball" generates Wq and PF and SIs which is just wrong.

@@ -4118,9 +4118,12 @@ particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+)) or
 notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
 almost nearly: EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-;
 just_about: Em+ or EN+ or EZ+ or EA+;
-entirely reasonably absolutely highly fairly totally
-completely terribly:
-EA+ or EE+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+)); 
+entirely reasonably highly fairly totally completely terribly:
+EA+ or EE+ or 
+({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
+absolutely:
+EA+ or EE+ or EBm- or
+({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
 
 % allowing as opener also
 altogether equally:
