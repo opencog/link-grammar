@@ -3581,12 +3581,14 @@ UNITS: <units-suffix>;
 
 %QUESTION WORDS & CONJUNCTIONS
 
-%who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) 
-%or ({EL+} & (S**w+ or B*w+) & (Ws- or Wq- or QI*d- or BIqd-)) or
+%who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
+%({EL+} & (S**w+ or B*w+) & (Ws- or Wq- or QI*d- or BIqd-)) or
 %({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
 
-who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) 
-or ({EL+} & (S**w+ or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
+% QI- & (): "I do not know who"
+who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
+[QI-] or
+({EL+} & (S**w+ or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
 ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+)) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
 
 % "what are the answers?" takes Sp+
@@ -3594,7 +3596,9 @@ what: ({EL+} & (D**w+ or Ss*w+ or Sp*w+ or (R+ & (Bsw+ or BW+))) & (Wq- or Ws- o
 or BIqd-)) or ((Ss*d+ or (R+ & (Bsd+ or BW+))) &
 (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-)) or (D+ & JQ-);
 
+% QI- & (): "I do not know which"
 which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or 
+[QI-] or
 ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
  or Jw- or (JQ- & D+) or ({MVp+ or MVx+} & (S**w+ or B*w+) & 
 ((Xc+ or [[[()]]]) & Xd- & MX*r-));
@@ -3681,25 +3685,36 @@ yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or 
 ({Xd- & Xc+} & (E+ or EB-)) or (Xd- & Xc+ & MVa-);
 
-when: ((WN- or BIh-) & Cs+) or ((PF+ or TOn+ or Cs+) & (BIq- or 
-QI- or (SFsx+ & <S-CLAUSE>))) or (Wq- & (Q+ or PF+)) or 
+% QI- & (): "I do not know when"
+when: ((WN- or BIh-) & Cs+) or 
+((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or 
+[QI-] or
+(Wq- & (Q+ or PF+)) or 
 ((Cs+ or Mp+ or Mgp+ or Mv+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) 
 or (Xd- & Xc+ & E+)));
-why: ({EL+} & ((Wq- & Q+) or (QI- & (Cs+ or TOn+)) or (Cs+ & 
+
+% QI- & (): "I do not know why"
+why: ({EL+} & ((Wq- & Q+) or (QI- & (Cs+ or TOn+ or [()])) or (Cs+ & 
 ((SFsx+ & <S-CLAUSE>) or WY- or BIq-)))) or [[{@CO-} & Wc- & Wi+]];
 why_not: [[{@CO-} & Wc- & Wi+]]; 
+
+% QI- & (): "I do not know where"
 where: {EL+} & ((Wq- & ((Rw+ & WR+) or Q+ or ({Rw+} & PF+))) or 
+[QI-] or
 ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
  or ((Cs+ or PF+ or WR+) & <prep-main-b>));
+
 whether: (((QI- or BIq-) & (Cs+ or TOn+)) or (Cs+ & SFsx+ & <S-CLAUSE>))
 or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
 whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or 
 (Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
  
+% QI- & (): "I do not know how"
 how: 
 ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) & 
 (BIqd- or QI*d- or Wq- or Ws-)) or
 (Wq- & (Q+ or AF+)) or 
+[QI-] or
 ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 not: EB- or ({@E-} & N-) or NT+ or [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+)
