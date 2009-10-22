@@ -148,9 +148,11 @@ CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural: 
-% e.g. Cornwallis
+% e.g. Cornwallis ... and some of these can take a singular determiner:
+% "a Starbucks"
 PL-CAPITALIZED-WORDS: 
-({NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {Dmc-}]]} & 
+({NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or 
+[[{@A-} & ({Dmc-} or {Ds-})]] } & 
 ([<noun-sub-x> & (JG- or <noun-main-x>)] or YS+ or YP+)) or AN+ or G+)) or
 <directive-opener>;
 
