@@ -322,6 +322,9 @@ Sure enough, there it was, as I had sensed.
 Sure enough, there it was, as I had guessed.
 There it was, just as I had said.
 
+% zero-subject/phantom-subject in sentence opener
+As mentioned before, we are creating a business service.
+
 % Buggy opening clauses
 Some days, the trains run on time.
 Some of the time, I really  hate it.
@@ -563,10 +566,15 @@ It smells like someone is smoking pot.
 We brought back a kilo of boo from Mexico.
 He took a gram of snort to the party.
 
+% Problems with "that"
+% VP that CLAUSE:
+The response was that there are several barriers that have to come down.
+
 % "The thing that VP is that CLAUSE"
 The only thing that has prevented a collapse in the dollar so far is that it is the currency reserve of the world.
 The thing that has prevented a collapse is that it is the currency reserve.
 The thing that is funny is that it is wrong.
+
 
 
 % shame commonly used as a count noun.
@@ -928,6 +936,10 @@ We've chosen to adopt
 We will adopt
 We will adopt again.
 We will adopt a child from Uruguay.
+
+% feed taking particle
+Horeses feed on hay.
+People eat but animals feed.
 
 % More particles
 Your grammar should be worked on.
