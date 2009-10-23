@@ -1627,8 +1627,8 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 go.v: <verb-pl,i> & <vc-go>;
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
-goes.v: <verb-x-s> & (<vc-go> or [O*t+]);
-went.v: <verb-x-sp> & (<vc-go> or [O*t+]); 
+goes.v: <verb-x-s> & (<vc-go> or [O*t+ & {@MV+}]);
+went.v: <verb-x-sp> & (<vc-go> or [O*t+ & {@MV+}]); 
 gone.v: <verb-pp> & <vc-go>;
 % The keys are gone.  The popcorn is all gone.
 gone.a: {@E-} & Pa-;
