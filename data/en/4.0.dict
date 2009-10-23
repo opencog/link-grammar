@@ -3397,7 +3397,7 @@ such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
 % Now, (Wq- & PF+) is allowed by post-processing, but it would be nice
 % to reserve Wq- for true questions.  Maybe we should invent a new Wa
 % for assertions, and modify post-processing to allow it.
-here: J- or <prep-main-b> or [Wq- & PF+];
+here: J- or <prep-main-b> or [Wq- & PF+] or (SFst+ & <CLAUSE>);
 
 there.r: J- or <prep-main-b> or 
 ((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt- or Wi-;
