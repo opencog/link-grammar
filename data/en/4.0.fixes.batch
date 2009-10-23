@@ -778,21 +778,35 @@ it is hoped that this statement is true.
 It was hinted that our actions were inappropriate.
 
 % buggy coppula and copula contractions
-% "here is the ball" generates Wq and PF and SIs which is just wrong.
-% "there is the ball" is much better, but the SFst seems questionable...
+% "here is the ball" generates Wq and PF and SIs ...
+% "there is the ball" generates SFst ....
 %
 % Consider "Here's the ball." This parses with SI to ball, and links
-% PF to "here".  We'd like to use [Wd- &PF+] for this, but the
-% post-processing rules prohibit SI with Wd ... so.. ?? should we
-% loosen the post-processing, or should we invent a new Wa for this case?
-% Or should we not use SI for these assertions?
+% PF to "here".  We'd like to use [Wd- & PF+] for this, but the
+% post-processing rules prohibit SI with Wd ... so.. we can't use that.
+% Now, (Wq- & PF+) is allowed by post-processing, but it would be nice
+% to reserve Wq- for true questions.  Maybe we should invent a new Wa
+% for assertions, and modify post-processing to allow it.
+%
+% Another issue: Most of these use PF+, except 'there', which uses SF+ 
+% ... sooo.. which is better for these cases? ...  PF+ of SF+ ?
+%
+% Or maybe we should not use SI for these assertions?
+%
 Here is the ball.
 Here's the ball.
 There is the ball!
 Where's the ball?
 Here's Johnny!
+
+Nearby is another temple that honors his wife.
+Close by is another temple.
+
 There goes the neighborhood!
+There goes the cutest guy ever!
+There goes one of the strongest competitors this sport has seen,
 But for the grace of God, there go I.
+
 
 % copulas with verb target:
 All he ever does is bark.

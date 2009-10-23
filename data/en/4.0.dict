@@ -3373,7 +3373,10 @@ home.i: K-;
 back.k: ({Yd-} & K-) or (MVp+ & (MVp- or FM-));
 forth aside.p: K- or MVa-;
 
-nearby: A+ or MVp- or Pp- or FM-;
+% PF+: "nearby is another temple"
+nearby: A+ or MVp- or Pp- or FM- or (Wq- & PF+);
+close_by: Wq- & PF+;
+
 next_to in_back_of in_front_of close_to on_top_of outside_of
 inside_of atop:
 J+ & (<prep-main-b> or FM- or [Wq- & PF+]); 
@@ -3386,10 +3389,12 @@ or Mp-);
 per: Us+ & Mp-;
 such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
 
-% Consider "Here's the ball." this parses with SI to ball, and links
-% PF to "here".  We'd like to use [Wd- &PF+] for this, but the 
-% post-processing rules prohibit SI with Wd ... so.. ?? should we
-% loosen the post-processing, or should we invent a new Wa for this case?
+% Consider "Here's the ball." This parses with SI to ball, and links
+% PF to "here".  We'd like to use [Wd- & PF+] for this, but the
+% post-processing rules prohibit SI with Wd ... so.. we can't use that.
+% Now, (Wq- & PF+) is allowed by post-processing, but it would be nice
+% to reserve Wq- for true questions.  Maybe we should invent a new Wa
+% for assertions, and modify post-processing to allow it.
 here: J- or <prep-main-b> or [Wq- & PF+];
 
 there.r: J- or <prep-main-b> or 
