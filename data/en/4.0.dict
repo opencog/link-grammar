@@ -890,10 +890,12 @@ or NSn+);
 1900s 1910s 1920s 1930s 1940s 1950s 1960s 1970s 1980s 1990s
 1900's 1910's 1920's 1930's 1940's 1950's 1960's 1970's 1980's 1990's
 1900’s 1910’s 1920’s 1930’s 1940’s 1950’s 1960’s 1970’s 1980’s 1990’s
-twenties thirties, forties fifties sixties seventies eighties nineties
 '20s '30s '40s '50s '60s '70s '80s '90s
 ‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s: 
 {TA-} & DG- & (IN- or [[<noun-main-x>]]);
+
+twenties thirties, forties fifties sixties seventies eighties nineties:
+{NA-} & {TA-} & DG- & (IN- or [[<noun-main-x>]]);
 
 % teens could be above or teenagers (words.n.2)
 teens: ({TA-} & DG- & (IN- or <noun-main-x>)) or <generic-plural-id>;
