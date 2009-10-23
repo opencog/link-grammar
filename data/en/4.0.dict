@@ -3375,9 +3375,10 @@ home.i: K-;
 back.k: ({Yd-} & K-) or (MVp+ & (MVp- or FM-));
 forth aside.p: K- or MVa-;
 
-% PF+: "nearby is another temple"
-nearby: A+ or MVp- or Pp- or FM- or (Wq- & PF+);
-close_by: Wq- & PF+;
+% SF*p+: "nearby is another temple" (using p for 'prep')
+% SFpp+: "nearby are more ruins"
+nearby: A+ or MVp- or Pp- or FM- or (SF*p+ & <CLAUSE>);
+close_by: (SF*p+ & <CLAUSE>);
 
 next_to in_back_of in_front_of close_to on_top_of outside_of
 inside_of atop:
@@ -3391,13 +3392,11 @@ or Mp-);
 per: Us+ & Mp-;
 such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
 
-% Consider "Here's the ball." This parses with SI to ball, and links
-% PF to "here".  We'd like to use [Wd- & PF+] for this, but the
-% post-processing rules prohibit SI with Wd ... so.. we can't use that.
-% Now, (Wq- & PF+) is allowed by post-processing, but it would be nice
-% to reserve Wq- for true questions.  Maybe we should invent a new Wa
-% for assertions, and modify post-processing to allow it.
-here: J- or <prep-main-b> or [Wq- & PF+] or (SFst+ & <CLAUSE>);
+% Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
+% or the more questionable [Wq- & PF+].  Note that (Wd- & PF+) is barred
+% by the post-processing rules.  Maybe PF is reasonable.. but SFst seems
+% better at the moment.
+here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
 
 there.r: J- or <prep-main-b> or 
 ((SFst+ or SFp+) & <CLAUSE>) or SFIst- or SFIp- or OXt- or Wi-;
