@@ -81,9 +81,12 @@ static Parse_choice * make_choice(Parse_set *lset, int llw, int lrw, Connector *
  */
 static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 {
-	if (s->first == NULL) {
+	if (s->first == NULL)
+	{
 		s->first = pc;
-	} else {
+	}
+	else 
+	{
 		s->current->next = pc;
 	}
 	s->current = pc;
@@ -221,7 +224,7 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
  *
- * This code is similar to code in count.c 
+ * This code is similar to code in count.c
  * (grep for end_word in these files).
  */
 static Parse_set * parse_set(Sentence sent,
@@ -255,50 +258,47 @@ static Parse_set * parse_set(Sentence sent,
 
 	xt = x_table_pointer(lw, rw, le, re, cost, pi);
 
-	if (xt == NULL) {
-		xt = x_table_store(lw, rw, le, re, cost, empty_set(), pi);
-		/* start it out with the empty set of options */
-		/* this entry must be updated before we return */
-	} else {
-		return xt->set;  /* we've already computed it */
-	}
+	if (xt != NULL) return xt->set;  /* we've already computed it */
+
+	/* Start it out with the empty set of options. */
+	/* This entry must be updated before we return. */
+	xt = x_table_store(lw, rw, le, re, cost, empty_set(), pi);
 
 	xt->set->count = count;  /* the count we already computed */
 	/* this count is non-zero */
 
-	if (rw == 1+lw) return xt->set;
-	if ((le == NULL) && (re == NULL)) {
-		if (!islands_ok && (lw != -1)) {
-			return xt->set;
-		}
-		if (cost == 0) {
-			return xt->set;
-		} else {
-			w = lw + 1;
-			for (dis = sent->word[w].d; dis != NULL; dis = dis->next)
+	if (rw == 1 + lw) return xt->set;
+
+	if ((le == NULL) && (re == NULL))
+	{
+		if (!islands_ok && (lw != -1)) return xt->set;
+
+		if (cost == 0) return xt->set;
+
+		w = lw + 1;
+		for (dis = sent->word[w].d; dis != NULL; dis = dis->next)
+		{
+			if (dis->left == NULL)
 			{
-				if (dis->left == NULL)
-				{
-					rs[0] = parse_set(sent, dis, NULL, w, rw, dis->right,
-					                  NULL, cost-1, islands_ok, pi);
-					if (rs[0] == NULL) continue;
-					a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
-										   rs[0], w, rw, NULL, NULL,
-										   NULL, NULL, NULL);
-					put_choice_in_set(xt->set, a_choice);
-				}
-			}
-			rs[0] = parse_set(sent, NULL, NULL, w, rw, NULL, NULL,
-			                  cost-1, islands_ok, pi);
-			if (rs[0] != NULL)
-			{
+				rs[0] = parse_set(sent, dis, NULL, w, rw, dis->right,
+				                  NULL, cost-1, islands_ok, pi);
+				if (rs[0] == NULL) continue;
 				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
 									   rs[0], w, rw, NULL, NULL,
 									   NULL, NULL, NULL);
 				put_choice_in_set(xt->set, a_choice);
 			}
-			return xt->set;
 		}
+		rs[0] = parse_set(sent, NULL, NULL, w, rw, NULL, NULL,
+		                  cost-1, islands_ok, pi);
+		if (rs[0] != NULL)
+		{
+			a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
+								   rs[0], w, rw, NULL, NULL,
+								   NULL, NULL, NULL);
+			put_choice_in_set(xt->set, a_choice);
+		}
+		return xt->set;
 	}
 
 	if (le == NULL)
@@ -328,7 +328,7 @@ static Parse_set * parse_set(Sentence sent,
 			for (lcost = 0; lcost <= cost; lcost++)
 			{
 				rcost = cost-lcost;
-				/* now lcost and rcost are the costs we're assigning to 
+				/* now lcost and rcost are the costs we're assigning to
 				 * those parts respectively */
 
 				/* Now, we determine if (based on table only) we can see that
@@ -376,10 +376,10 @@ static Parse_set * parse_set(Sentence sent,
 						for (i=0; i<4; i++)
 						{
 							if (ls[i] == NULL) continue;
-							/* this ordering is probably not consistent with 
+							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
 							a_choice = make_choice(ls[i], lw, w, le, d->left,
-							         rset, w, rw, NULL /* d->right */, 
+							         rset, w, rw, NULL /* d->right */,
 							         re,  /* the NULL indicates no link*/
 							         ld, d, rd);
 							put_choice_in_set(xt->set, a_choice);
@@ -397,7 +397,7 @@ static Parse_set * parse_set(Sentence sent,
 						for (i=0; i<4; i++)
 						{
 							if (rs[i] == NULL) continue;
-							/* this ordering is probably not consistent with 
+							/* this ordering is probably not consistent with
 							 * that needed to use list_links */
 							a_choice = make_choice(lset, lw, w, NULL /* le */,
 							          d->left,  /* NULL indicates no link */
@@ -485,7 +485,7 @@ void free_parse_set(Sentence sent)
 	if (NULL == sent->parse_info) return;
 
 	/* This uses the x_table to free the whole parse set (the set itself
-	 * cannot be used cause it's a dag).  called from the outside world 
+	 * cannot be used cause it's a dag).  called from the outside world
 	 */
 	free_x_table(sent->parse_info);
 	sent->parse_info->parse_set = NULL;
