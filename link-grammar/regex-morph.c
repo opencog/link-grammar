@@ -114,8 +114,10 @@ void free_regexs(Dictionary dict)
 	while (re != NULL)
 	{
 		Regex_node *next = re->next;
-		/* regfree((regex_t *)re->re); */
+		regfree((regex_t *)re->re);
 		free(re->re);
+		free(re->name);
+		free(re->pattern);
 		free(re);
 		re = next;
 	}
