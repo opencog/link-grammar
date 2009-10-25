@@ -1663,7 +1663,7 @@ acts.v: <verb-s> & <vc-act>;
 acted.v: (<verb-sp,pp> & <vc-act>) or (<verb-pv-b> & {K+} & {@MV+});
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 
-% She looked him over.
+% O+ & K+: She looked him over.
 <vc-look>: {({@MV+} & (LI+ or Pa+)) or 
 ({K+ or AF-} & {@MV+}) or
 ((O+ & K+) & {@MV+})};
