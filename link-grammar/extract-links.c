@@ -120,6 +120,7 @@ void init_x_table(Sentence sent)
 
 	pi = sent->parse_info = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
 	pi->N_words = sent->length;
+	pi->parse_set = NULL;
 
 	if (pi->N_words >= 10) {
 		x_table_size = (1<<14);
@@ -132,13 +133,14 @@ void init_x_table(Sentence sent)
 	/*printf("Allocating x_table of size %d\n", x_table_size);*/
 	pi->x_table_size = x_table_size;
 	pi->x_table = (X_table_connector**) xalloc(x_table_size * sizeof(X_table_connector*));
-	for (i=0; i<x_table_size; i++) {
+	for (i=0; i<x_table_size; i++)
+	{
 		pi->x_table[i] = NULL;
 	}
 }
 
 /**
- * This is the function that should be used to free tha set structure. Since
+ * This is the function that should be used to free the set structure. Since
  * it's a dag, a recursive free function won't work.  Every time we create
  * a set element, we put it in the hash table, so this is OK.
  */
@@ -147,13 +149,16 @@ static void free_x_table(Parse_info pi)
 	int i;
 	X_table_connector *t, *x;
 
-	if (pi->x_table == NULL) {
+	if (pi->x_table == NULL)
+	{
 		/*fprintf(stderr, "Warning: Tried to free a NULL x_table\n");*/
 		return;
 	}
 
-	for (i=0; i<pi->x_table_size; i++) {
-		for(t = pi->x_table[i]; t!= NULL; t=x) {
+	for (i=0; i<pi->x_table_size; i++)
+	{
+		for(t = pi->x_table[i]; t!= NULL; t=x)
+		{
 			x = t->next;
 			free_set(t->set);
 			xfree((void *) t, sizeof(X_table_connector));
@@ -425,26 +430,28 @@ static int verify_set_node(Parse_set *set)
 	s64 n;
 	if (set == NULL || set->first == NULL) return FALSE;
 	n = 0;
-	for (pc = set->first; pc != NULL; pc = pc->next) {
+	for (pc = set->first; pc != NULL; pc = pc->next)
+	{
 		n  += pc->set[0]->count * pc->set[1]->count;
-		if (PARSE_NUM_OVERFLOW < n) return 1;
+		if (PARSE_NUM_OVERFLOW < n) return TRUE;
 	}
-	return 0;
+	return FALSE;
 }
 
-static int verify_set(Parse_info pi) {
-	X_table_connector *t;
+static int verify_set(Parse_info pi)
+{
 	int i;
-	int overflowed;
 
-	overflowed=FALSE;
 	assert(pi->x_table != NULL, "called verify_set when x_table==NULL");
-	for (i=0; i<pi->x_table_size; i++) {
-		for(t = pi->x_table[i]; t!= NULL; t=t->next) {
-			overflowed = (overflowed || verify_set_node(t->set));
+	for (i=0; i<pi->x_table_size; i++)
+	{
+		X_table_connector *t;
+		for(t = pi->x_table[i]; t != NULL; t = t->next)
+		{
+			if (verify_set_node(t->set)) return TRUE;
 		}
 	}
-	return overflowed;
+	return FALSE;
 }
 
 /**
@@ -485,7 +492,7 @@ void free_parse_set(Sentence sent)
 	if (NULL == sent->parse_info) return;
 
 	/* This uses the x_table to free the whole parse set (the set itself
-	 * cannot be used cause it's a dag).  called from the outside world
+	 * cannot be used cause it's a dag).  Called from the outside world.
 	 */
 	free_x_table(sent->parse_info);
 	sent->parse_info->parse_set = NULL;
