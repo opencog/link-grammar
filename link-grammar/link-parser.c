@@ -765,7 +765,11 @@ int main(int argc, char * argv[])
 		}
 
 		sentence_delete(sent);
+		sent = NULL;
 	}
+
+	/* Free stuff, so that mem-leak detectors don't commplain. */
+	sentence_delete(sent);
 
 	if (parse_options_get_batch_mode(opts))
 	{
