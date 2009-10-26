@@ -1337,15 +1337,16 @@ split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
 (<verb-sp,pp,ico> & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
-ate.v broke.v drove.v flew.v froze.v hid.v ran.v rang.v rode.v sprang.v 
-stalked.v woke.v test-drove.v forbore.v oversaw.v throve.v shrove.v 
- countersank.v outgrew.v strode.v offsetted.v overthrew.v 
- partook.v begot.v overdid.v smote.v stank.v quick-froze.v 
- backbit.v awoke.v redid.v chidded.v reran.v rived.v 
- befell.v outrode.v betrode.v outdid.v ridded.v 
- deep-froze.v forbad.v deep-freezed.v retook.v interwove.v 
- bespoke.v underwent.v slew.v overdrew.v overcame.v 
- outwore.v foreknew.v wove.v trod.v outwent.v:
+ate.v-d broke.v-d drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d 
+rang.v-d rode.v-d sprang.v-d 
+stalked.v-d woke.v-d test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d 
+ countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d 
+ partook.v-d begot.v-d overdid.v-d smote.v-d stank.v-d quick-froze.v-d 
+ backbit.v-d awoke.v-d redid.v-d chidded.v-d reran.v-d rived.v-d 
+ befell.v-d outrode.v-d betrode.v-d outdid.v-d ridded.v-d 
+ deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d 
+ bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d 
+ outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
  <verb-sp> & <vc-fill>;
 
 beaten.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
@@ -1397,9 +1398,11 @@ frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
 (<verb-sp,pp> & <vc-trans>) or <verb-pv> or 
 (({@E-} or {@EA-}) & A+) or <verb-po>;
 
-forsook.v overrode.v overtook.v rewrote.v undid.v overran.v mistook.v underwrote.v: 
+forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d 
+overran.v-d mistook.v-d underwrote.v-d: 
 <verb-sp> & <vc-trans>;
-hit.v misread.v shed.v rid.v overcome.v offset.v overrun.v upset.v undercut.v: 
+hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d offset.v-d 
+overrun.v-d upset.v-d undercut.v-d: 
 (<verb-sp,pp,ico> & <vc-trans>) or <verb-pv> or ({@E-} & A+)
 or <verb-po>;
 forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v: 
@@ -1426,9 +1429,9 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 /en/words/words.v.8.2:
 <verb-s> & <vc-kick>;
 
-bit.v blew.v drank.v stole.v threw.v tore.v wore.v
-overate.v over-ate.v forewent.v oversewed.v forswore.v
-foreswore.v forwent.v:
+bit.v-d blew.v-d drank.v-d stole.v-d threw.v-d tore.v-d wore.v-d
+overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
+foreswore.v-d forwent.v-d:
  <verb-sp> & <vc-kick>;
 
 bitten.v blown.v stolen.v shaken.v thrown.v torn.v worn.v
@@ -1450,8 +1453,8 @@ cut.v: (<verb-sp,pp,ico> & <vc-kick>) or
 <vc-raise>: (((O+ or B-) & {OD+}) or [[@MV+ & O*n+]]) & {@MV+};
 raise.v lower.v up.v: <verb-pl,i> & <vc-raise>;
 raises.v lowers.v ups.v: <verb-s> & <vc-raise>;
-raised.v lowered.v upped.v: (<verb-sp,pp> & <vc-raise>) or <verb-pv> or ({@E-} & A+)
- or <verb-po>;
+raised.v-d lowered.v-d upped.v-d: 
+(<verb-sp,pp> & <vc-raise>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 raising.v lowering.v upping.v: <verb-pg> & <vc-raise>;
 raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 
@@ -1460,7 +1463,7 @@ raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 % I tended for years to believe that shepherds tend sheep.
 tend.v: <verb-pl,i> & <vc-tr,intr> & {TO+};
 tends.v: <verb-s> & <vc-tr,intr> & {TO+};
-tended.v:  (<verb-sp,pp> & <vc-tr,intr> & {TO+}) or 
+tended.v-d:  (<verb-sp,pp> & <vc-tr,intr> & {TO+}) or 
 <verb-pv> or ({@E-} & A+) or <verb-po>;
 tending.v: <verb-pg> & <vc-tr,intr> & {TO+};
 
@@ -1471,7 +1474,8 @@ consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
  <verb-pl,i> & <vc-consent>;
 consents.v endeavors.v hesitates.v proceeds.v aspires.v purports.v:
 <verb-s> & <vc-consent>;
-consented.v endeavored.v hesitated.v proceeded.v aspired.v purported.v:
+consented.v-d endeavored.v-d hesitated.v-d proceeded.v-d 
+aspired.v-d purported.v-d:
 <verb-sp,pp> & <vc-consent>;
 consenting.v endeavoring.v hesitating.v proceeding.v aspiring.v purporting.v:
 (<vc-consent> & <verb-pg,ge>) or <verb-ge-d>;
@@ -1480,20 +1484,20 @@ consenting.v endeavoring.v hesitating.v proceeding.v aspiring.v purporting.v:
 <vc-deign>: {@MV+} & TO+;
 endeavour.v condescend.v deign.v: <verb-pl,i> & <vc-deign>;
 endeavours.v condescends.v deigns.v: <verb-s> & <vc-deign>;
-endeavoured.v condescended.v deigned.v: <verb-sp,pp> & <vc-deign>;
+endeavoured.v-d condescended.v-d deigned.v-d: <verb-sp,pp> & <vc-deign>;
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or 
 <verb-ge-d>;
 
 <vc-happen>: {@MV+} & {TO+ or THi+};
 happen.v: <verb-pl,i> & <vc-happen>;
 happens.v: <verb-s> & <vc-happen>;
-happened.v: <verb-sp,pp> & <vc-happen>;
+happened.v-d: <verb-sp,pp> & <vc-happen>;
 happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-wish>: ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or 
 (O+ & {[[@MV+]]} & O*n+);
 wish.v: <verb-pl,i> & <vc-wish>;
-wished.v: <verb-sp,pp> & <vc-wish>;
+wished.v-d: <verb-sp,pp> & <vc-wish>;
 wishes.v: <verb-s> & <vc-wish>;
 wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
 
@@ -1501,11 +1505,11 @@ wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
 hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-hope>;
 hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
 <verb-s> & <vc-hope>;
-pretended.v prayed.v: <verb-sp,pp> & <vc-hope>;
+pretended.v-d prayed.v-d: <verb-sp,pp> & <vc-hope>;
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
-hoped.v voted.v vowed.v: (<verb-sp,pp> & <vc-hope>) or (<verb-s-pv> & THi+);
-agreed.v: (<verb-sp,pp> & <vc-hope>) or (<verb-pv> & TH+);
-swore.v: <verb-sp> & <vc-hope>;
+hoped.v-d voted.v-d vowed.v-d: (<verb-sp,pp> & <vc-hope>) or (<verb-s-pv> & THi+);
+agreed.v-d: (<verb-sp,pp> & <vc-hope>) or (<verb-pv> & TH+);
+swore.v-d: <verb-sp> & <vc-hope>;
 sworn.v: (<verb-pp> & <vc-hope>) or ({@E-} & A+);
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v: 
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
@@ -1525,7 +1529,7 @@ seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 <vc-care>: {@MV+} & {TO+ or QI+};
 care.v: <verb-pl,i> & <vc-care>;
 cares.v: <verb-s> & <vc-care>;
-cared.v: <verb-sp,pp> & <vc-care>;
+cared.v-d: <verb-sp,pp> & <vc-care>;
 caring.v: (<vc-care> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or Ce+));
@@ -1536,12 +1540,12 @@ asserts.v contends.v remarks.v retorts.v intimates.v exclaims.v
 conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v: 
 <verb-s> & <vc-assert>;
 retorted.v intimated.v exclaimed.v conjectured.v
-surmised.v opined.v insinuated.v: <verb-sp,pp> & <vc-assert>;
-asserted.v contended.v remarked.v: (<verb-sp,pp> & <vc-assert>) or
+surmised.v-d opined.v-d insinuated.v-d: <verb-sp,pp> & <vc-assert>;
+asserted.v-d contended.v-d remarked.v-d: (<verb-sp,pp> & <vc-assert>) or
 (<verb-pv> & THi+);
-alleged.v: (<verb-sp,pp> & <vc-assert>) or (<verb-pv> & THi+) 
+alleged.v-d: (<verb-sp,pp> & <vc-assert>) or (<verb-pv> & THi+) 
 or ({@E-} & A+);
-supposed.v: (<verb-sp,pp> & <vc-assert>) or (<verb-s-pv> & 
+supposed.v-d: (<verb-sp,pp> & <vc-assert>) or (<verb-s-pv> & 
 {TOf+ or THi+ or Z-}) or ({@E-} & A+);
 asserting.v contending.v remarking.v retorting.v intimating.v
 exclaiming.v conjecturing.v alleging.v surmising.v opining.v insinuating.v
@@ -1554,9 +1558,9 @@ theorize.v attest.v fantasize.v muse.v speculate.v concur.v:
  <verb-pl,i> & <vc-muse>;
 theorizes.v attests.v fantasizes.v muses.v speculates.v concurs.v:
  <verb-s> & <vc-muse>;
-attested.v fantasized.v mused.v speculated.v concurred.v: 
+attested.v-d fantasized.v-d mused.v-d speculated.v-d concurred.v-d: 
 <verb-sp,pp> & <vc-muse>;
-theorized.v:  (<verb-sp,pp> & <vc-muse>) or (<verb-pv> & THi+);
+theorized.v-d:  (<verb-sp,pp> & <vc-muse>) or (<verb-pv> & THi+);
 theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v: 
 (<vc-muse> & <verb-pg,ge>) or <verb-ge-d>;
 
@@ -1568,11 +1572,11 @@ replies.v whispers.v argues.v sighs.v
 mutters.v testifies.v comments.v responds.v hints.v reasons.v 
 brags.v:
 <verb-s> & <vc-reply>;
-replied.v sighed.v commented.v responded.v bragged.v:
+replied.v-d sighed.v-d commented.v-d responded.v-d bragged.v-d:
 <verb-sp,pp> & <vc-reply>;
 
 % The (<verb-s-pv> & THi+) allows "it is reasoned that ..." to parse.
-argued.v hinted.v muttered.v reasoned.v testified.v whispered.v:
+argued.v-d hinted.v-d muttered.v-d reasoned.v-d testified.v-d whispered.v-d:
 (<verb-sp,pp> & <vc-reply>) or (<verb-s-pv> & THi+);
 
 replying.v whispering.v arguing.v sighing.v
@@ -1583,7 +1587,7 @@ reasoning.v bragging.v:
 <vc-dream>: {@MV+} & {Ce+ or TH+ or RSe+ or (OF+ & {@MV+}) or BW-};
 dream.v complain.v: <verb-pl,i> & <vc-dream>;
 dreams.v complains.v: <verb-s> & <vc-dream>;
-dreamt dreamed complained.v: <verb-sp,pp> & <vc-dream>;
+dreamt.v-d dreamed.v-d complained.v-d: <verb-sp,pp> & <vc-dream>;
 dreaming.g complaining.g: (<vc-dream> & <verb-ge>) or <verb-ge-d>;
 dreaming.v complaining.v: <verb-pg> & <vc-dream>;
 
@@ -1593,32 +1597,32 @@ dreaming.v complaining.v: <verb-pg> & <vc-dream>;
 or [[O+ & {@MV+}]];
 think.v: <verb-pl,i> & <vc-think>;
 thinks.v: <verb-s> & <vc-think>;
-thought.v: (<verb-sp,pp> & <vc-think>) or (<verb-s-pv> & {THi+ or Z-});
+thought.v-d: (<verb-sp,pp> & <vc-think>) or (<verb-s-pv> & {THi+ or Z-});
 thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
 
 <vc-matter>: {@MV+} & {THi+ or QIi+};
 matter.v: <verb-s-pl,i> & <vc-matter>;
 matters.v: <verb-s-s> & <vc-matter>;
-mattered.v: <verb-sp,pp> & <vc-matter>;
+mattered.v-d: <verb-sp,pp> & <vc-matter>;
 mattering.v: (<vc-matter> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-suffice>: {@MV+} & {THi+};
 suffice.v: <verb-pl,i> & <vc-suffice>;
 suffices.v: <verb-s> & <vc-suffice>;
-sufficed.v: <verb-sp,pp> & <vc-suffice>;
+sufficed.v-d: <verb-sp,pp> & <vc-suffice>;
 sufficing.v: (<vc-suffice> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-insist>: ({@MV+} & {TH+ or Zs- or TS+ or Ce+}) or (SI*j+ & I*j+);
 insist.v: <verb-pl,i> & <vc-insist>;
 insists.v: <verb-s> & <vc-insist>;
-insisted.v: <verb-sp,pp> & <vc-insist>;
+insisted.v-d: <verb-sp,pp> & <vc-insist>;
 insisting.v: (<vc-insist> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-wonder>: {@MV+} & {QI+};
 wonder.v inquire.v: <verb-pl,i> & <vc-wonder>;
 wonders.v inquires.v: <verb-s> & <vc-wonder>;
-wondered.v inquired.v: <verb-sp,pp> & <vc-wonder>;
+wondered.v-d inquired.v-d: <verb-sp,pp> & <vc-wonder>;
 wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 
 % Imperative go: "go play ball", "go take a walk", "go swimming"
@@ -1642,27 +1646,27 @@ going.v: ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or ({@E-} & A+)
 <vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+})};
 stay.v: <verb-pl,i> & <vc-stay>;
 stays.v: <verb-s> & <vc-stay>;
-stayed.v: <verb-sp,pp> & <vc-stay>;
+stayed.v-d: <verb-sp,pp> & <vc-stay>;
 staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-stand>: {({@MV+} & Pa+) or ({O+ or B-} & {K+} & {@MV+})};
 stand.v sit.v: <verb-pl,i> & <vc-stand>;
 stands.v sits.v: <verb-s> & <vc-stand>;
-stood.v sat.v: (<verb-sp,pp> & <vc-stand>);
+stood.v-d sat.v-d: (<verb-sp,pp> & <vc-stand>);
 standing.v sitting.v: <verb-pg> & <vc-stand>;
 standing.g sitting.g: (<vc-stand> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
 <vc-sound>: ({@MV+} & {LI+ or Pa+ or AF-}) or {O+ & K+ & {@MV+}};
 sound.v: <verb-pl,i> & <vc-sound>;
 sounds.v: <verb-s> & <vc-sound>;
-sounded.v: <verb-sp,pp> & <vc-sound>;
+sounded.v-d: <verb-sp,pp> & <vc-sound>;
 sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-act>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & {@MV+})};
 act.v: <verb-pl,i> & <vc-act>;
 acts.v: <verb-s> & <vc-act>;
 % "be acted upon quikly"
-acted.v: (<verb-sp,pp> & <vc-act>) or (<verb-pv-b> & {K+} & {@MV+});
+acted.v-d: (<verb-sp,pp> & <vc-act>) or (<verb-pv-b> & {K+} & {@MV+});
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: She looked him over.
@@ -1671,13 +1675,13 @@ acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 ((O+ & K+) & {@MV+})};
 look.v: <verb-pl,i> & <vc-look>;
 looks.v: <verb-s> & <vc-look>;
-looked.v: <verb-sp,pp> & <vc-look>;
+looked.v-d: <verb-sp,pp> & <vc-look>;
 looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-repent>: {{@MV+ or ({Xc+} & @EB+)} & OF+};
 repent.v disapprove.v: <verb-pl,i> & <vc-repent>;
 repents.v disapproves.v: <verb-s> & <vc-repent>;
-repented.v disapproved.v: <verb-sp,pp> & <vc-repent>;
+repented.v-d disapproved.v-d: <verb-sp,pp> & <vc-repent>;
 repenting.v disapproving.v: (<vc-repent> & <verb-pg,ge>) or <verb-ge-d>;
 
 talk.v: <verb-pl,i> & <vc-repent> & <vc-fill>;
