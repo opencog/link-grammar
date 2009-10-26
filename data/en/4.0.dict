@@ -1025,8 +1025,14 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <OPENER>: {Xd-} & Xc+ & COp+;
 
 % These are the verb-form expressions for ordinary verbs.
+%
 % <marker-past> is a marker which should never be used in a link.  
-% It is used to flag past-tense forms in the dictionary
+% It is used to flag past-tense forms in the dictionary.  It's only use 
+% is to supply an answer to the "isPastTense" call in the Java API.
+% which is needed by relex-version 1.2.0 and earlier.  Newer versions
+% use the v-d, w-d, and q-d tags to identify past-tense verbs, and so
+% the Java API is no longer needed. It should be marked obsolete/deprecated
+% as soon as possible, and removed by late-2010/early-2011
 
 <marker-past>: XXXPAST+;
 <verb-ico>: {@E-} & ((I- & {@E-} & {Wi-}) or ({CO-} & Wi-));
@@ -1120,7 +1126,7 @@ or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-)) or
 
 does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & 
 (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
-did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & 
+did.v-d: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & 
 (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-po> or S-;
 
@@ -1138,7 +1144,7 @@ don't don’t:
 doesn't doesn’t: (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
 (I*d+ or [[()]]);
 
-didn't didn’t: <marker-past> or 
+didn't.v-d didn’t.v-d: <marker-past> or 
 ((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
 (RS- & B-)))) & (I*d+ or [[()]]));
 
@@ -1149,7 +1155,7 @@ have.v: ((SIp+ or SFIp+) &
  <vc-have>);
 has.v: ((SIs+ or SFIs+) & 
 (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-s> & <vc-have>);
-had.v: ((SI+ or SFI+) & 
+had.v-d: ((SI+ or SFI+) & 
 (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-sp> & <vc-have>)
 or (<verb-x-pp> & (TO+ or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or 
 (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or 
@@ -1164,7 +1170,7 @@ hasn't hasn’t:
 haven't haven’t: 
 (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or 
 (RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-hadn't hadn’t: <marker-past> or 
+hadn't.v-d hadn’t.v-d: <marker-past> or 
 ((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} & 
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]));
@@ -1185,13 +1191,13 @@ is.v: ((<verb-x-s>) or
 (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)) or
 (SIs+ & PF-)]];
 
-was.v: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
+was.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) &
 (SFIs+ or SIs+ or SXI+))) & <vc-be>);
 are.v: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>;
-were.v: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or 
+were.v-d: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or 
 (RS- & Bp-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>) or [[(SI*j+ or SFI**j+) & <vc-be> &
@@ -1208,12 +1214,12 @@ or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or
 
 isn't isn’t: (<verb-x-s> or 
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
-wasn't wasn’t: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- &
+wasn't.v-d wasn’t.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- &
 Bs-))) or ((Rw- or ({Ic-} & Q-) or [()]) &
 (SI*+ or SXI+ or SFIs+))) & <vc-be>);
 aren't aren’t: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
-weren't weren’t: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+weren't.v-d weren’t.v-d: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
 
 will.v can.v may.v must.v could.v might.v shall.v: 
@@ -1517,13 +1523,13 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 <vc-appear>: {@MV+} & {Pa+ or TOf+ or THi+ or AF- or [[Pv+]]};
 appear.v: <verb-x-pl,i> & <vc-appear>;
 appears.v: <verb-x-s> & <vc-appear>;
-appeared.v: <verb-x-sp,pp> & <vc-appear>;
+appeared.v-d: <verb-x-sp,pp> & <vc-appear>;
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-seem>: {@MV+} & (Pa+ or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: <verb-x-pl,i> & <vc-seem>;
 seems.v: <verb-x-s> & <vc-seem>;
-seemed.v: <verb-x-sp,pp> & <vc-seem>;
+seemed.v-d: <verb-x-sp,pp> & <vc-seem>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-care>: {@MV+} & {TO+ or QI+};
@@ -1636,7 +1642,7 @@ go.v: <verb-pl,i> & <vc-go>;
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
 goes.v: <verb-x-s> & (<vc-go> or [O*t+ & {@MV+}]);
-went.v: <verb-x-sp> & (<vc-go> or [O*t+ & {@MV+}]); 
+went.v-d: <verb-x-sp> & (<vc-go> or [O*t+ & {@MV+}]); 
 gone.v: <verb-pp> & <vc-go>;
 % The keys are gone.  The popcorn is all gone.
 gone.a: {@E-} & Pa-;
@@ -2170,7 +2176,7 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: ((<verb-s-pl,i> or <verb-s-pp>) & <vc-become>) or <verb-pv>;
 becomes.v: <verb-s-s> & <vc-become>;
-became.v: <verb-s-sp> & <vc-become>;
+became.v-d: <verb-s-sp> & <vc-become>;
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
 becoming.v: <verb-pg> & <vc-become>;
 
@@ -2241,7 +2247,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 (OXii+ & Vtg+ & {@MV+} & TH+) or @MV+;
 take.v: <verb-s-pl,i> & <vc-take>;
 takes.v: <verb-s-s> & <vc-take>;
-took.v: <verb-s-sp> & <vc-take>;
+took.v-d: <verb-s-sp> & <vc-take>;
 taken.v: (<verb-s-pp> & <vc-take>) or (<verb-pv-b> & 
 {K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>) or (Pvf- & Vtg+ & THi+);
 taking.v: <verb-s-pg> & <vc-take>;
@@ -2261,7 +2267,7 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
 % "He costed out the plan"
 <vc-cost>: (((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+})) & {@MV+} & {TOi+})
 or ([[@MV+ & O*n+]]);
-cost.v: (<verb-s-pl,i> or <verb-s-sp,pp>) & <vc-cost>;
+cost.v-d: (<verb-s-pl,i> or <verb-s-sp,pp>) & <vc-cost>;
 costed.v-d: (<verb-sp,pp> & <vc-cost>) or
 (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or 
 ({K+ or Pa+ or Pg+} & <verb-po>);
@@ -2973,7 +2979,7 @@ betting.v: <verb-pg> & <vc-bet>;
 ([[@MV+ & O*n+ & {@MV+}]]);
 bother.v: <verb-s-pl,i> & <vc-bother>;
 bothers.v: <verb-s-s> & <vc-bother>;
-bothered.v: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-po>;
+bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-po>;
 bothering.v: <verb-s-pg> & <vc-bother>;
 bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
 
@@ -2986,7 +2992,7 @@ disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
 <verb-s-s> & <vc-surprise>;
 surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
  depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v 
-annoyed.v: 
+annoyed.v-d: 
 (<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-po>;
 surprising.v alarming.v amazing.v amusing.v astonishing.v astounding.v
  exciting.v depressing.v disgusting.v distressing.v dismaying.v 
@@ -3002,7 +3008,7 @@ embarrassing.g annoying.g:
 & (TOo+ or [[Pa+]])) or ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or Pa+));
 prove.v: <verb-x-pl,i> & <vc-prove>;
 proves.v: <verb-x-s> & <vc-prove>;
-proved.v: (<verb-x-sp,pp> & <vc-prove>) or (<verb-s-pv> & {THi+ or TOf+}) or 
+proved.v-d: (<verb-x-sp,pp> & <vc-prove>) or (<verb-s-pv> & {THi+ or TOf+}) or 
 ({@E-} & A+) or ({{@MV+} & Pa+} & <verb-po>);
 proven.v: (<verb-x-pp> & <vc-prove>) or (<verb-s-pv> & {THi+ or TOf+ or Pa+}) 
 or ({@E-} & A+) or ({{@MV+} & Pa+} & <verb-po>);
@@ -3153,31 +3159,32 @@ or [(Xc+ or Xe+) & Ce+]);
 /en/words/words.v.10.3: 
 <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)
 or [[Pvf- & <vc-it-paraph>]]));
-read.q: <marker-past> or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
-wrote.q: <marker-past> or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+read.q-d: <marker-past> or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+wrote.q-d: <marker-past> or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
 written.q: {@E-} & PP- & <vc-paraph>;
 /en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
 
-seem.w appear.w: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
-seems.w appears.w: [[{@E-} & SFs- & <vc-it-paraph>]];
-seemed.w-d appeared.w-d: <marker-past> or ({@E-} & (SF- or PPf-) & <vc-it-paraph>);
-seeming.w appearing.w: [[{@E-} & Pgf- & <vc-it-paraph>]];
+seem.q appear.q: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
+seems.q appears.q: [[{@E-} & SFs- & <vc-it-paraph>]];
+seemed.q-d appeared.q-d: <marker-past> or ({@E-} & (SF- or PPf-) & <vc-it-paraph>);
+seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q: {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
 says.q: {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
-said.q: <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+said.q-d: <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
 saying.q: {@E-} & Pg- & <vc-paraph>;
 
-tell.w: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
-tells.w: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
-told.w-d: <marker-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
-telling.w: [[{@E-} & Pg- & O+ & <vc-paraph>]];
+tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
+tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
+told.q-d: <marker-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
+telling.q: [[{@E-} & Pg- & O+ & <vc-paraph>]];
 
-ask.w: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
-asks.w: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
-asked.w-d: <marker-past> or ({@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>);
-asking.w: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
+ask.q: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
+asks.q: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
+asked.q-d: <marker-past> or ({@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>);
+asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 
+% idiomatic "voted yes/no" expressions using the V link.
 <vc-vote>: Vv+ & {@MV+};
 say.w vote.w: <verb-pl,i> & <vc-vote>;
 says.w votes.w: <verb-s> & <vc-vote>;
