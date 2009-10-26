@@ -2909,7 +2909,7 @@ watching.v: <verb-pg> & <vc-watch>;
 <vc-appreciate>: ((B- or O+) & {@MV+} & {Pg+}) or ([[@MV+ & O*n+ & {@MV+}]]);
 appreciate.v spend.v: <verb-pl,i> & <vc-appreciate>;
 appreciates.v spends.v: <verb-s> & <vc-appreciate>;
-appreciated.v spent.v: (<verb-sp,pp> & <vc-appreciate>) or (<verb-pv> & {Pg+})
+appreciated.v-d spent.v-d: (<verb-sp,pp> & <vc-appreciate>) or (<verb-pv> & {Pg+})
 or ({{@MV+} & Pg+} & <verb-po>);
 appreciating.g spending.g: (<vc-appreciate> & <verb-ge>) or <verb-ge-d>;
 appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
@@ -2919,7 +2919,7 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 ([[{K+} & @MV+ & O*n+]])) & {@MV+}) or [[()]];
 make.v: <verb-pl,i> & <vc-make>;
 makes.v: <verb-s> & <vc-make>;
-made.v: (<verb-sp,pp> & <vc-make>) or (<verb-s-pv-b> & 
+made.v-d: (<verb-sp,pp> & <vc-make>) or (<verb-s-pv-b> & 
 (({@MV+} & Pa+) or ({K+} & {@MV+}))) or ({({@MV+} & Pa+) or K+} & 
 <verb-po>);
 built_of built_up_of composed_of constructed_of formed_of made_of made_up_of: (<verb-pv-b> & (B- or O+) & {@MV+}) or (O+ & <verb-po>);
@@ -2930,7 +2930,7 @@ making.v: <verb-pg> & <vc-make>;
  & {@MV+};
 render.v deem.v: <verb-pl,i> & <vc-render>;
 renders.v deems.v: <verb-s> & <vc-render>;
-rendered.v deemed.v: (<verb-sp,pp> & <vc-render>) or (<verb-pv> & {Pa+ or AF-})
+rendered.v-d deemed.v-d: (<verb-sp,pp> & <vc-render>) or (<verb-pv> & {Pa+ or AF-})
 or ({{@MV+} & Pa+} & <verb-po>);
 rendering.g deeming.g: (<vc-render> & <verb-ge>) or <verb-ge-d>;
 rendering.v deeming.v: <verb-pg> & <vc-render>;
@@ -2941,7 +2941,7 @@ convict.v: <verb-pl,i> & <vc-deprive>;
 deprives.v accuses.v acquits.v purges.v disabuses.v
 exonerates.v absolves.v robs.v convicts.v: <verb-s> & <vc-deprive>;
 deprived.v accused.v acquitted.v purged.v disabused.v exonerated.v absolved.v robbed.v
-convicted.v: (<verb-sp,pp> & <vc-deprive>) or (<verb-pv> & {OF+} & {@MV+}) 
+convicted.v-d: (<verb-sp,pp> & <vc-deprive>) or (<verb-pv> & {OF+} & {@MV+}) 
 or ({@E-} & A+) or ({{@MV+} & OF+} & <verb-po>);
 depriving.g accusing.g acquitting.g purging.g disabusing.g exonerating.g
 absolving.g robbing.g convicting.g: 
@@ -2953,17 +2953,17 @@ exonerating.v absolving.v robbing.v convicting.v: <verb-pg> & <vc-deprive>;
 ({K+} & O*n+) or K+ or ([[{K+} & @MV+ & O*n+]])) & {@MV+};
 clear.v: <verb-pl,i> & <vc-clear>;
 clears.v: <verb-s> & <vc-clear>;
-cleared.v: (<verb-sp,pp> & <vc-clear>) or (<verb-pv-b> & {({@MV+} & OF+)
+cleared.v-d: (<verb-sp,pp> & <vc-clear>) or (<verb-pv-b> & {({@MV+} & OF+)
  or K+} & {@MV+}) or ({K+ or ({@MV+} & OF+)} & <verb-po>);
 clearing.g: (<vc-clear> & <verb-ge>) or <verb-ge-d>;
 clearing.v: <verb-pg> & <vc-clear>;
 
 <vc-bet>: ({(O+ & {O*n+}) or (B- & {O+})} & {@MV+} & {TH+ or Ce+ or RSe+})
 or ([[@MV+ & O*n+ & {@MV+}]]);
-bet.v: (<verb-sp,pp,ico> & <vc-bet>) or (<verb-pv> & {O+ or B-} &
+bet.v-d: (<verb-sp,pp,ico> & <vc-bet>) or (<verb-pv> & {O+ or B-} &
 {@MV+} & {TH+ or Ce+ or RSe+ or @MV+}); 
 bets.v: <verb-s> & <vc-bet>;
-betted.v: (<verb-sp,pp> & <vc-bet>) or (<verb-pv-b> & {O+ or B-} & {@MV+}
+betted.v-d: (<verb-sp,pp> & <vc-bet>) or (<verb-pv-b> & {O+ or B-} & {@MV+}
 & {TH+ or Ce+ or RSe+ or @MV+}) or ({O- or [[@MV+ & O*n+]] or TH+ or Ce+}
 & <verb-po>); 
 betting.g: (<vc-bet> & <verb-ge>) or <verb-ge-d>;
@@ -3013,7 +3013,8 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 (Pg+ or TH+ or Ce+ or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 suggest.v anticipate.v recommend.v: <verb-pl,i> & <vc-suggest>;
 suggests.v anticipates.v recommends.v: <verb-s> & <vc-suggest>;
-suggested.v anticipated.v recommended.v: (<verb-sp,pp> & <vc-suggest>) or 
+suggested.v-d anticipated.v-d recommended.v-d: 
+(<verb-sp,pp> & <vc-suggest>) or 
 (<verb-s-pv> & {THi+ or TSi+ or Z-}) or ({@E-} & A+) or <verb-po>;
 suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>; 
 suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
@@ -3022,7 +3023,7 @@ suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 & {@MV+}) or ({@MV+} & (Pg+ or TH+ or Ce+ or RSe+));
 deny.v: <verb-pl,i> & <vc-deny>;
 denies.v: <verb-s> & <vc-deny>;
-denied.v: (<verb-sp,pp> & <vc-deny>) or (<verb-pv-b> & {O+ or B- or 
+denied.v-d: (<verb-sp,pp> & <vc-deny>) or (<verb-pv-b> & {O+ or B- or 
 [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or ([[@MV+ & O*n+]])} & <verb-po>);
 denying.g: (<vc-deny> & <verb-ge>) or <verb-ge-d>;
 denying.v: <verb-pg> & <vc-deny>;
@@ -3031,7 +3032,7 @@ denying.v: <verb-pg> & <vc-deny>;
 or ([[@MV+ & O*n+ & {@MV+}]]);
 describe.v: <verb-pl,i> & <vc-describe>;
 describes.v: <verb-s> & <vc-describe>;
-described.v: (<verb-sp,pp> & <vc-describe>) or (<verb-pv> & {AZ+ or Z-}) or 
+described.v-d: (<verb-sp,pp> & <vc-describe>) or (<verb-pv> & {AZ+ or Z-}) or 
 ({@E-} & A+) or ({@MV+} & {AZ+} & <verb-po>);
 describing.g: (<vc-describe> & <verb-ge>) or <verb-ge-d>;
 describing.v: <verb-pg> & <vc-describe>;
@@ -3039,7 +3040,7 @@ describing.v: <verb-pg> & <vc-describe>;
 <vc-portray>: ((O+ or B-) & {@MV+} & {AZ+}) or ([[@MV+ & O*n+ & {@MV+}]]);
 portray.v depict.v regard.v view.v characterize.v: <verb-pl,i> & <vc-portray>;
 portrays.v depicts.v regards.v views.v characterizes.v: <verb-s> & <vc-portray>;
-portrayed.v depicted.v regarded.v viewed.v characterized.v: 
+portrayed.v-d depicted.v-d regarded.v-d viewed.v-d characterized.v-d: 
 (<verb-sp,pp> & <vc-portray>) 
 or (<verb-pv> & {AZ+}) or ({@E-} & A+) or ({@MV+} & {AZ+} & <verb-po>);
 portraying.g depicting.g regarding.g viewing.g characterizing.g: 
@@ -3180,7 +3181,7 @@ asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 <vc-vote>: Vv+ & {@MV+};
 say.i vote.i: <verb-pl,i> & <vc-vote>;
 says.i votes.i: <verb-s> & <vc-vote>;
-said.i voted.i: <verb-sp,pp> & <vc-vote>;
+said.i-d voted.i-d: <verb-sp,pp> & <vc-vote>;
 saying.i voting.i: 
 (<vc-vote> & <verb-pg,ge>);
 yes.misc-vote no.misc-vote: Vv-;
@@ -3189,7 +3190,7 @@ double.v triple.v quadruple.v quintuple.v:
 {EN-} & <verb-pl,i> & <vc-fill>;
 doubles.v triples.v quadruples.v quintuples.v:
 {EN-} & <verb-s> & <vc-fill>;
-doubled.v tripled.v quadrupled.v quintupled.v:
+doubled.v-d tripled.v-d quadrupled.v-d quintupled.v-d:
 {EN-} & ((<verb-sp,pp> & <vc-fill>) or <verb-pv> or ({@E-} & A+) or <verb-po>);
 doubling.v tripling.v quadrupling.v quintupling.v:
 {EN-} & (<verb-pg> & <vc-fill>);
@@ -4584,7 +4585,7 @@ or ({@E- or EA-}  & A+) or <verb-ge>)]  or
 (<noun-main-m> or Bsm+)) or 
 (YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or  AN+ or {AN-});
 
-ED-WORDS.v: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
+ED-WORDS.v-d: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
 
 S-WORDS.v: <verb-s> & <vc-tr,intr>;
 
@@ -4726,7 +4727,7 @@ prognostic.a:
 attestation.n:
  ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
-O.K.'d.v OK'd.v O.K.’d.v OK’d.v:
+O.K.'d.v-d  OK'd.v-d  O.K.’d.v-d  OK’d.v-d:
  <verb-sp,pp> & <vc-intrans>;
 
 whence whither:
