@@ -40,7 +40,12 @@ public class ParseResult implements Iterable<Linkage>
 		return words[i];
 	}
 	
-	public boolean isPastTenseForm(int i)
+	/**
+	 * past-tense verbs have a usbscript of .v-d, .w-d or .q-d
+	 * look at the subscript instead, to see if a verb is past-tense.
+	 * @deprecated
+	 */
+	@Deprecated public boolean isPastTenseForm(int i)
 	{
 		return pastTenseFlags[i];
 	}
