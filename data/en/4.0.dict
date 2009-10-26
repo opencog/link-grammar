@@ -3158,31 +3158,31 @@ wrote.q: <marker-past> or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-in
 written.q: {@E-} & PP- & <vc-paraph>;
 /en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
 
-seem.i appear.i: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
-seems.i appears.i: [[{@E-} & SFs- & <vc-it-paraph>]];
-seemed.i appeared.i: <marker-past> or ({@E-} & (SF- or PPf-) & <vc-it-paraph>);
-seeming.i appearing.i: [[{@E-} & Pgf- & <vc-it-paraph>]];
+seem.w appear.w: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
+seems.w appears.w: [[{@E-} & SFs- & <vc-it-paraph>]];
+seemed.w-d appeared.w-d: <marker-past> or ({@E-} & (SF- or PPf-) & <vc-it-paraph>);
+seeming.w appearing.w: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q: {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
 says.q: {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 said.q: <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
 saying.q: {@E-} & Pg- & <vc-paraph>;
 
-tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
-tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
-told.q: <marker-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
-telling.q: [[{@E-} & Pg- & O+ & <vc-paraph>]];
+tell.w: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
+tells.w: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
+told.w-d: <marker-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
+telling.w: [[{@E-} & Pg- & O+ & <vc-paraph>]];
 
-ask.q: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
-asks.q: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
-asked.q: <marker-past> or ({@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>);
-asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
+ask.w: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
+asks.w: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
+asked.w-d: <marker-past> or ({@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>);
+asking.w: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 
 <vc-vote>: Vv+ & {@MV+};
-say.i vote.i: <verb-pl,i> & <vc-vote>;
-says.i votes.i: <verb-s> & <vc-vote>;
-said.i-d voted.i-d: <verb-sp,pp> & <vc-vote>;
-saying.i voting.i: 
+say.w vote.w: <verb-pl,i> & <vc-vote>;
+says.w votes.w: <verb-s> & <vc-vote>;
+said.w-d voted.w-d: <verb-sp,pp> & <vc-vote>;
+saying.w voting.w: 
 (<vc-vote> & <verb-pg,ge>);
 yes.misc-vote no.misc-vote: Vv-;
 
