@@ -1254,7 +1254,7 @@ or [[()]]));
 
 /en/words/words.v.1.3:  
 <verb-sp,pp> & <vc-intrans>;
-fundheld strove.v: <verb-sp,pp> & <vc-intrans>;
+fundheld.v-d strove.v-d: <verb-sp,pp> & <vc-intrans>;
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v 
 
 /en/words/words.v.1.4:  
@@ -1272,9 +1272,9 @@ arisen.v: {@E-} & PP- & {@MV+};
 <verb-s> & <vc-bulge>;
 /en/words/words.v.5.3:
 <verb-sp,pp> & <vc-bulge>;
-slunk.v: <verb-sp,pp> & <vc-bulge>;
+slunk.v-d: <verb-sp,pp> & <vc-bulge>;
 
-lay.w: <verb-sp> & <vc-bulge>; 
+lay.v-d: <verb-sp> & <vc-bulge>; 
 lain.v: <verb-pp> & <vc-bulge>;
 /en/words/words.v.5.4: (<vc-bulge> & <verb-pg,ge>) or ({@E-} & A+)
 or <verb-ge-d>;
@@ -1285,7 +1285,7 @@ or <verb-ge-d>;
 come.v: ((<verb-pl,i> or <verb-pp>) & <vc-come>) or
    ({@E-} & Ix- & O*t+);
 comes.v: <verb-s> & <vc-come>;
-came.v: <verb-sp> & <vc-come>; 
+came.v-d: <verb-sp> & <vc-come>; 
 
 % --------------------------------------------------------------
 <vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
@@ -1298,11 +1298,12 @@ came.v: <verb-sp> & <vc-come>;
 <verb-s> & <vc-tr,intr>;
 /en/words/words.v.2.3:  
 (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-shrank.v withdrew.v sank.v forgave.v hove.v spoilt.v unbent.v overfed.v:
+shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d 
+spoilt.v-d unbent.v-d overfed.v-d:
 <verb-sp> & <vc-tr,intr>;
 shrunk.v withdrawn.v sunk.v forgiven.v:
 (<verb-pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-bid.v hurt.v thrust.v broadcast.v outbid.v sublet:
+bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
 (<verb-sp,pp,ico> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+)
 or <verb-po>;
 /en/words/words.v.2.4:  
@@ -1315,7 +1316,7 @@ or <verb-po>;
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v: <verb-pl,i> & <vc-rise>;
 rises.v falls.v: <verb-s> & <vc-rise>;
-rose.v fell.v: <verb-sp> & <vc-rise>;
+rose.v-d fell.v-d: <verb-sp> & <vc-rise>;
 risen.v: <verb-pp> & <vc-rise>;
 fallen.v: (<verb-pp> & <vc-rise>) or ({@E-} & A+);
 rising.v falling.v: (<vc-rise> & <verb-pg,ge>) or ({@E-} & A+)
@@ -1332,7 +1333,7 @@ or <verb-ge-d>;
 (<verb-sp,pp> & <vc-fill>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
 or ({K+} & <verb-po>);
 
-split.v spread.v beat.v fit.v shut.v cast.v: 
+split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d: 
 (<verb-sp,pp,ico> & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
