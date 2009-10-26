@@ -16,9 +16,10 @@ import java.util.List;
 /**
  * 
  * <p>
- * Represents the result of parsing a piece of text. The result consists of some global
- * meta information about the whole parse and a list of <code>Linkage</code>s returned
- * by the parser. The original parsed text is available as the <code>text</code> attribute
+ * Represents the result of parsing a piece of text. The result
+ * consists of some global meta information about the whole parse
+ * and a list of <code>Linkage</code>s returned by the parser. The
+ * original parsed text is available as the <code>text</code> attribute
  * and a tokenized version as the <code>String[] words</code> attribute.  
  * </p>
  *
@@ -95,11 +96,23 @@ public class ParseResult implements Iterable<Linkage>
 		this.entityFlags = entityFlags;
 	}
 
+	/**
+	 * past-tense verbs have a usbscript of .v-d, .w-d or .q-d
+	 * look at the subscript instead, to see if a verb is past-tense.
+	 * @deprecated
+	 */
+	@Deprecated
 	public boolean[] getPastTenseFlags()
 	{
 		return pastTenseFlags;
 	}
 
+	/**
+	 * past-tense verbs have a usbscript of .v-d, .w-d or .q-d
+	 * look at the subscript instead, to see if a verb is past-tense.
+	 * @deprecated
+	 */
+	@Deprecated
 	public void setPastTenseFlags(boolean[] pastTenseFlags)
 	{
 		this.pastTenseFlags = pastTenseFlags;
