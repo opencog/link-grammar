@@ -213,6 +213,8 @@ JNIEXPORT jstring JNICALL Java_org_linkgrammar_LinkGrammar_getLinkString
  * Class:     LinkGrammar
  * Method:    isPastTenseForm
  * Signature: (Ljava/lang/String;)Z
+ * @deprecated -- past-tense verbs are tagged with .v-d or .w-d or .q-d
+ * subscripts. use those instead to figure out if a verb is past tense.
  */
 JNIEXPORT jboolean JNICALL Java_org_linkgrammar_LinkGrammar_isPastTenseForm
 	(JNIEnv *, jclass, jstring);
