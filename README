@@ -527,6 +527,12 @@ TODO -- Working Notes:
 ----------------------
   Some working notes.
 
+  Bad grammar: When a sentence fails to parse, look for:
+    * confused words: its/it's, there/their, to/too, your/you're ...
+    * missing apostrophes in possessives: "the peoples desires"
+    * determiner agreement errors: "a books"
+    * aux verb agreement errors: "to be hooks up"
+
   A/An determiners before consonants/vowels:  fix this. Just adding
     linkages in a naive way is not enough, because there's no restriction
     on neighboring words: "I ate an apple." vs. "I ate a green apple".
