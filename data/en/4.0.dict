@@ -69,21 +69,21 @@
 <CLAUSE-E>: {({@COd-} & C-) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
 % noun-main-x -- singular or plural or mass.
-<noun-main-x>: (S+ & <CLAUSE>) or SI- or J- or O- or ({[B*j+]} & Xd- 
+<noun-main-x>: (S+ & <CLAUSE>) or SI- or J- or O- or ({[B*j+] or CJ-} & Xd- 
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 % noun-main-s -- singular
-<noun-main-s>: (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or ({[Bsj+]} & Xd-
+<noun-main-s>: (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or ({[Bsj+] or CJ-} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 % noun-main-p -- plural
-<noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+]} & Xd-
+<noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+] or CJ-} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+  
 % Doing this requires adding Su- links to many entries
-<noun-main-u>: (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or ({[Bsj+]} & Xd- 
+<noun-main-u>: (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or ({[Bsj+] or CJ-} & Xd- 
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 % noun-main-m -- m == mass
@@ -91,11 +91,11 @@
 % To get rid of this, any noun that uses this needs to be split into
 % two: the countable form, which will used <noun-main-s> and the
 % uncountable form, which will use <noun-main-u>
-<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or ({[Bsj+]} & Xd-
+<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or ({[Bsj+] or CJ-} & Xd-
  & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 
-<noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+]} 
+<noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+] or CJ-} 
  & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
 
 <noun-main2-x>:  J- or O- or ({[B*j+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
@@ -3702,10 +3702,13 @@ while: ((Cs+ or Mgp+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)
 or (Xd- & Xc+ & E+)));
 once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or 
 (Xd- & Xc+ & E+))) or E+ or EB-;
-or: NO+;
+
+% Conjunctions
+% "all large burial places, or tombs, became known as mausoleums."
+or.j: CJ+;
 
 % Should these be treated as clause-openers (taking CO link)?
-but.misc-opnr and.misc-opnr: 
+but.j-opnr and.j-opnr: 
 [(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)];
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
