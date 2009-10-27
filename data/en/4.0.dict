@@ -3656,11 +3656,11 @@ whenever wherever however.c: {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or
 ({Xd- & Xc+} & MVs-)));
 no_matter: QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
 
-that.misc-c: (Cet+ &  
+that.j-c: (Cet+ &  
 ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]])) or (TS- & (SI*j+ or SFI**j+) & I*j+);
-that.misc-d: [{AL-} & D*u+];
-that.misc-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
-that.misc-p: {[[M+]]} & <noun-main-h>;
+that.j-d: [{AL-} & D*u+];
+that.j-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
+that.j-p: {[[M+]]} & <noun-main-h>;
 
 because: (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or 
 ({Xd- & Xc+} & MVs-))) or 
@@ -4463,11 +4463,11 @@ so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
 <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or M- or MV-;
 
 % Assorted interjections, treat like unknown adjectives.
-er err.j errr um.j umm uh uhh oh.j ohh ooo woo_hoo
-gee gosh wow.j ah ahh eh ehh hmm hmmm hoo zowie
-goody.j jeepers Jee-sus hubba Kee-reist oops amen huh
-howdy dammit whammo shucks.j heck anyways honey.j golly man.j
-baby.j hush.j sonuvabitch aw aww awww oh_great oh_wow
+er err.ij errr um.ij umm uh uhh oh.ij ohh ooo woo_hoo
+gee gosh wow.ij ah ahh eh ehh hmm hmmm hoo zowie
+goody.ij jeepers Jee-sus hubba Kee-reist oops amen huh
+howdy dammit whammo shucks.ij heck anyways honey.ij golly man.ij
+baby.ij hush.ij sonuvabitch aw aww awww oh_great oh_wow
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
 emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
 emoticonID10 emoticonID11 emoticonID12 emoticonID13 emoticonID14
