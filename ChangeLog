@@ -9,6 +9,7 @@ Version 4.6.5 (??? 2009)
  * Fix: support "filler-it" SF link for "It was reasoned that..."
  * Fix: certian WH-word constructions: "I did not know why until recently"
  * Fix: go: "there goes the greatest guy ever"
+ * Minor fixes for conjunctions used as clause openers.
 
 Version 4.6.4 (11 October 2009)
  * Restore nouns starting w/letters x-z, elided in version 4.5.9 ff.
