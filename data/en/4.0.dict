@@ -734,7 +734,7 @@ not_one: Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
 enough.n: ({OF+} & <noun-main-s>);
 enough.r: EF- or MVa-;
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
-enough.misc-interj: Wi- & {Pg+};
+enough.ij: Wi- & {Pg+};
 not_enough: ({OF+} & <noun-main-s>) or Dm+;
 
 % NUMERICAL EXPRESSIONS
@@ -4382,17 +4382,13 @@ even_so more_often_than_not all_of_a_sudden:
 % Openers to directives, commands (Ic+ connection to infinitives)
 % or single-word interjections. These are semantically important,
 % so they've got to parse!
-no.misc-interj nope.misc-interj nah.misc-interj no_way 
-yes.misc-interj yeah.misc-interj yep.misc-interj yup.misc-interj 
-ok.misc-interj okay.misc-interj OK.misc-interj fine.misc-interj 
-exactly.misc-interj sure.misc-interj whatever.misc-interj
-hah.misc-interj hey.misc-interj:
+no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij 
+ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
+hah.ij hey.ij:
 Wi- or <directive-opener>;
 
 % Openers to directives, commands (Ic+ connection to infinitives)
-anyhow.misc-interj 
-anyway.misc-interj afterwards.misc-interj afterward.misc-interj 
-instead.misc-interj 
+anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij 
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn over_and_over later_on for_now
