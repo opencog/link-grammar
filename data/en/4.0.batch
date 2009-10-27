@@ -29,6 +29,9 @@ He is the kind of person who would do that
 An income tax increase may be necessary
 *A tax on income increase may be necessary
 Last week I saw a great movie
+
+% currently finds a parse with roman numeral I
+% i.e. "Last Dog the First saw a great movie" 
 *Last dog I saw a great movie
 The party that night was a big success
 *The party that dog was a big success

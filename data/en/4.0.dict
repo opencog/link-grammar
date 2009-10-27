@@ -745,7 +745,7 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 % "15 kDa to 20 kDa", but not "15 kDa to 20".
 % Allowing EC+ for "two to threefold more abundant". This allows also the
 % nonsense "two to three more abundant", but this is likely harmless.
--.ru --.ru ---.ru to.ru ->.ru -->.ru: 
+-.j-ru --.j-ru ---.j-ru to.j-ru ->.j-ru -->.j-ru: 
 (NIfn- & {NIr-} & NItn+ & (NM- or EC+ or
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
@@ -754,16 +754,16 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 (NIfp- & {NIr-} & NItp+ & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
 or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
 
-and.ru:
+and.j-ru:
 (NIfn- & {NIr-} & NItn+ & (NM- or 
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
 (NIfu- & {NIr-} & NItu+ & 
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
 
-% Used in numerical sums: "It's a hundred and two in the shade."
+% and.j-sum is used in numerical sums: "It's a hundred and two in the shade."
 % It's a hundred 'n two in the shade."
-and.sum 'n.sum: NA- & NA+;
+and.j-sum 'n.j-sum: NA- & NA+;
 
 % For number, cost is added to the <noun-main-*> roles to prioritize
 % postmodifier and numeric determiner roles.
@@ -3709,7 +3709,9 @@ but.misc-opnr and.misc-opnr:
 [(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)];
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
-and.misc-conj: G- & G+;
+% and used as a conjunction in proper names:
+% The Great Southern and Western Railroad 
+and.j-g: G- & G+;
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
 neither: Ds+ or E+ or ({OF+} & <noun-main-x>);
