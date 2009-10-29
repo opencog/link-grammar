@@ -3708,7 +3708,10 @@ once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or
 or.j: CJ+;
 
 % Should these be treated as clause-openers (taking CO link)?
-but.ij and.ij or.ij not.ij but_not and_not: 
+% e.g. "Also on this list is the Colossus of Rhodes."
+% Currently, they take Wc- as they are "coordinating conjuctions"
+% that are tied to previous sentences (i.e. to the left-wall).
+but.ij and.ij or.ij not.ij also.ij but_not and_not: 
 [(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)];
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
@@ -4282,7 +4285,7 @@ twice: ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm- or
 hence: (Yt- & ({Xd- & Xc+} & MVa-)) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;
 otherwise formerly lately: 
 ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EB-;
-also: ({Xd- & Xc+} & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
+also.e: ({Xd- & Xc+} & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
 
 gradually.e sadly.e broadly.e clearly.e
 annually.e characteristically.e comparatively.e
