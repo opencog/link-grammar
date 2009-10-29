@@ -4418,7 +4418,8 @@ ever: E+ or EBm- or EC+ or MVa-;
 never.e always: {EN-} & (E+ or EB-);
 seldom rarely.e: {EE-} & (E+ or EB-);
 
-just.e: E+ or EB- or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+;
+% MVa-: "He did just what you asked."
+just.e: E+ or EB- or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+ or MVa-;
 
 maybe: CO+;
 meantime.e secondly thirdly
