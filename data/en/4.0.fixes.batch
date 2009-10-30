@@ -928,8 +928,13 @@ He looked about.
 He turned about.
 
 % Particles w/ various optionally transitive verbs
+% XXX Many of these are wrong, esp the "up to" "down to"
+% these should be properly marked as prepositional, since
+% up/down/in/out really are action-direction modifiers.
+% constructions
 He walked the dog.
 He walked up to the counter.
+He walked out of the house.
 He sailed the boat into the pier.
 He sailed up to the bar.
 He clicked the mouse.
