@@ -556,6 +556,7 @@ or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 place.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or 
 (R+ & Bs+)} & {@MXs+} & ([[MVa-]] or <noun-main-s> or <rel-clause-s>))
+or <noun-main-m> 
 or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 time.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {TOn+ or WN+ or TH+ or 
@@ -944,10 +945,10 @@ thirds.m fourths.m quarters.m fifths.m sixths.m sevenths.m eighths.m
 ninths.m tenths.m:
 NW- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 
-first.a: L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or
+first.a: L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or A+ or [Jp-] or
 TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
-last.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
+last.a dead_last: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or [Jp-] or
 DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 
 second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
@@ -957,12 +958,12 @@ second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 % "We celebrated their eleventh anniversary" parses differently
 % than "tenth anniversary". XXX this should be fixed, I suppose ... 
 
-% Worse than that: added a hacky A+ to these, and also first, second,
-% to handle "fifteenth century Italy".  Sigh. This is all very hacky.
+% A+: "fifteenth century Italy"
+% Jp-: "Mike finished in first place, and John in third."
 third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a :
 L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 (NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
-(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+;
+(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+ or Jp-;
 
 % NS-: "I gave him a third of the loot."
 eleventh.a twelfth.a thirteenth.a fourteenth.a fifteenth.a 
@@ -1001,7 +1002,7 @@ ninety-fourth.a ninety-fifth.a ninety-sixth.a
 ninety-seventh.a ninety-eighth.a ninety-ninth.a:
 Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 (NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
-(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+;
+(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+ or Jp-;
 
 % Miscellaneous adjectival usage 
 1º.a 2º.a 3º.a 4º.a 5º.a 6º.a 7º.a 8º.a 9º.a
