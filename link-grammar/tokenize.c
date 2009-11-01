@@ -572,6 +572,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 	if (quote_found == TRUE) sent->post_quote[sent->length] = 1;
 
+#ifdef HAVE_HUNSPELL
 	/* If the word is still not being found, then it might be 
 	 * a run-on of two words. Ask the spell-checker to split
 	 * the word in two, if possible. Do this only if the word
@@ -610,6 +611,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		}
 		if (alternates) free(alternates);
 	}
+#endif /* HAVE_HUNSPELL */
 
 	if (FALSE == issued)
 	{

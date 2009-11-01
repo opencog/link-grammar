@@ -76,7 +76,9 @@ static Switch default_switches[] =
    {"postscript", 1, "Generate postscript output",      &local.display_postscript},
    {"senses",     1, "Showing of word senses",          &local.display_senses},
    {"short",      0, "Max length of short links",       &local.short_length},
+#ifdef HAVE_HUNSPELL
    {"spell",      1, "Spell-guesser for unkown words",  &local.spell_guess},
+#endif /* HAVE_HUNSPELL */
    {"timeout",    0, "Abort parsing after this many seconds",   &local.timeout},
    {"union",      1, "Showing of 'union' linkage",      &local.display_union},
 #ifdef USE_SAT_SOLVER

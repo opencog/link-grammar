@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=6
 dnl     3) Increment when interfaces not changed at all,
 dnl               only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=4
+LINK_MICRO_VERSION=5
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -187,7 +187,7 @@ if test x"$do_hunspell" = xyes; then
 	CPPFLAGS=$save_cpp_flags
 	if test "x${HunSpellFound}" = "xyes"; then 
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
-		# AC_DEFINE(HAVE_HUNSPELL, 1, [Define for compilation])
+		AC_DEFINE(HAVE_HUNSPELL, 1, [Define for compilation])
 		AC_SUBST(HUNSPELL_LIBS)
 		AC_SUBST(HUNSPELL_CFLAGS)
 	fi

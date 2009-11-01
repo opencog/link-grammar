@@ -20,7 +20,7 @@
 #define HUNSPELL_DICT_DIR (char *)0
 #endif /* HUNSPELL_DICT_DIR */
 
-static char *hunspell_dict_dirs[] = {
+static const char *hunspell_dict_dirs[] = {
 	"/usr/share/myspell/dicts",
 	"/usr/share/hunspell/dicts",
 	"/usr/local/share/myspell/dicts",
@@ -28,36 +28,38 @@ static char *hunspell_dict_dirs[] = {
 	HUNSPELL_DICT_DIR	
 };
 
-static char *spellcheck_lang_mapping[] = {
+static const char *spellcheck_lang_mapping[] = {
 	"en" /* link-grammar language */, "en-US" /* hunspell filename */,
 	"en" /* link-grammar language */, "en_US" /* hunspell filename */
 };
 
-static char hunspell_aff_file[256];
-static char hunspell_dic_file[256];
+#define FPATHLEN 256
+static char hunspell_aff_file[FPATHLEN];
+static char hunspell_dic_file[FPATHLEN];
 
 #include <hunspell.h>
 #include <string.h>
 
 void * spellcheck_create(const char * lang)
 {
-	int i = 0, j = 0;
+	size_t i = 0, j = 0;
 	Hunhandle *h = NULL;
 
-	memset(hunspell_aff_file, 0, 256);
-	memset(hunspell_dic_file, 0, 256);
-	for (i = 0; i < sizeof(spellcheck_lang_mapping); i += 2) {
-		if (0 != strcmp(lang, spellcheck_lang_mapping[i])) {
-			continue;
-		}
+	memset(hunspell_aff_file, 0, FPATHLEN);
+	memset(hunspell_dic_file, 0, FPATHLEN);
+	for (i = 0; i < sizeof(spellcheck_lang_mapping); i += 2)
+	{
+		if (0 != strcmp(lang, spellcheck_lang_mapping[i])) continue;
+
 		/* check in each hunspell_dict_dir if the files exist */
-		for (j = 0; j < sizeof(hunspell_dict_dirs); ++j) {
+		for (j = 0; j < sizeof(hunspell_dict_dirs); ++j)
+		{
 			/* if the directory name is NULL then ignore */
-			if (hunspell_dict_dirs[j] == NULL)
-				continue;
-			snprintf(hunspell_aff_file, 256, "%s/%s.aff", hunspell_dict_dirs[j],
+			if (hunspell_dict_dirs[j] == NULL) continue;
+
+			snprintf(hunspell_aff_file, FPATHLEN, "%s/%s.aff", hunspell_dict_dirs[j],
 					spellcheck_lang_mapping[i+1]);
-			snprintf(hunspell_dic_file, 256, "%s/%s.dic", hunspell_dict_dirs[j],
+			snprintf(hunspell_dic_file, FPATHLEN, "%s/%s.dic", hunspell_dict_dirs[j],
 					spellcheck_lang_mapping[i+1]);
 			h = Hunspell_create(hunspell_aff_file, hunspell_dic_file);
 			/* if hunspell handle was created break from loop */
@@ -65,8 +67,7 @@ void * spellcheck_create(const char * lang)
 				break;
 		}
 		/* if hunspell handle was created break from loop */
-		if (h != NULL)
-			break;
+		if (h != NULL) break;
 	}
 	return h;
 }
