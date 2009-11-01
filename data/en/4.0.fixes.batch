@@ -1423,7 +1423,7 @@ Phosphorylation was observed (probability = 0.06).
 The sun is distant (L = 1 AU).
 Bacteria with low G + C DNA content contain genes.
 
-% Ordinals
+% Ordinals as clause openers
 first on our list is this item.
 second on our list is this item.
 third on our list is this item.
@@ -1434,7 +1434,30 @@ second is this item.
 next is this item.
 last is this item.
 
+% Other misc ordinal usage, including dates. 
+Today is the third of December.
+Today is the 3rd of December.
+Today is the 31st of October.
+Today is the thirty-first of October.
+He is the third to speak up.
+Of them all, he ranked third.
+Of them all, he ranked 3rd.  
+He left on the 20th.
+He left on the twentieth.
+It's a late 19th century artifact.
+It's a late nineteenth century artifact.
+I gave him a third of the loot.
+He gets a twentieth part of the proceeds.
+He flew with the 101st airborne division.
+
 He finished the season in first.
+He finished the season in first place.
+He finished the season in 3rd place.
+He finished the season in third place.
+He finished the season in last.
+He finished the season last.
+He finished the season dead last.
+
 
 % problem with "of" in entity names.
 The National Voter Registration Act of 1993 makes it easy

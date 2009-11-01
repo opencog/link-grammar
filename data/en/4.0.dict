@@ -831,7 +831,9 @@ I.id: [[NMa-]];
 29 30 31:
 NUMBERS or TM- or [[G+]];
 
-2nd.ti 3rd.ti 4th.ti 5th.ti 6th.ti 7th.ti 8th.ti 9th.ti
+% Ordinals - day-of-month expressions.
+% Used only in espressions such as "December 2nd"
+1st.ti 2nd.ti 3rd.ti 4th.ti 5th.ti 6th.ti 7th.ti 8th.ti 9th.ti
 10th.ti 11th.ti 12th.ti 13th.ti 14th.ti 15th.ti 16th.ti 17th.ti 18th.ti 19th.ti
 20th.ti 21st.ti 22nd.ti 23rd.ti 24th.ti 25th.ti 26th.ti 27th.ti 28th.ti 29th.ti
 30th.ti 31st.ti
@@ -936,42 +938,156 @@ and_a_half: (NW- or NSn-) &
 (NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} & 
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
-% This uses the L link for superlatives, but leads to strange parses:
-% "We celebrated their nineteenth anniversary" parses differently
-% than "twentieth anniversary". XXX this should be fixed, I suppose ... 
-% Worse than that: added a hacky A+ to these, and also first, second,
-% to handle "fifteenth century Italy".  Sigh. This is all very hacky.
-third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a eleventh.a 
-twelfth.a thirteenth.a fourteenth.a fifteenth.a sixteenth.a seventeenth.a eighteenth.a
-nineteenth.a:
-L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
-(NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
-(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+;
-
-second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
-(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
-
 quarter.i:
 NS- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 thirds.m fourths.m quarters.m fifths.m sixths.m sevenths.m eighths.m 
 ninths.m tenths.m:
 NW- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 
-first.a: 
-L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or
+first.a: L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or
 TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
+
 last.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
 DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
+
+second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
+(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
+
+% This uses the L link for superlatives, but leads to strange parses:
+% "We celebrated their eleventh anniversary" parses differently
+% than "tenth anniversary". XXX this should be fixed, I suppose ... 
+
+% Worse than that: added a hacky A+ to these, and also first, second,
+% to handle "fifteenth century Italy".  Sigh. This is all very hacky.
+third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a :
+L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
+(NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
+(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+;
+
+% NS-: "I gave him a third of the loot."
+eleventh.a twelfth.a thirteenth.a fourteenth.a fifteenth.a 
+sixteenth.a seventeenth.a eighteenth.a nineteenth.a
+twentieth.a
+twenty-first.a twenty-second.a twenty-third.a 
+twenty-fourth.a twenty-fifth.a twenty-sixth.a 
+twenty-seventh.a twenty-eighth.a twenty-ninth.a 
+thirtieth.a
+thirty-first.a thirty-second.a thirty-third.a 
+thirty-fourth.a thirty-fifth.a thirty-sixth.a 
+thirty-seventh.a thirty-eighth.a thirty-ninth.a 
+fourtieth.a
+fourty-first.a fourty-second.a fourty-third.a 
+fourty-fourth.a fourty-fifth.a fourty-sixth.a 
+fourty-seventh.a fourty-eighth.a fourty-ninth.a 
+fiftieth.a
+fifty-first.a fifty-second.a fifty-third.a 
+fifty-fourth.a fifty-fifth.a fifty-sixth.a 
+fifty-seventh.a fifty-eighth.a fifty-ninth.a 
+sixtieth.a
+sixty-first.a sixty-second.a sixty-third.a 
+sixty-fourth.a sixty-fifth.a sixty-sixth.a 
+sixty-seventh.a sixty-eighth.a sixty-ninth.a 
+seventieth.a
+seventy-first.a seventy-second.a seventy-third.a 
+seventy-fourth.a seventy-fifth.a seventy-sixth.a 
+seventy-seventh.a seventy-eighth.a seventy-ninth.a 
+eightieth.a
+eighty-first.a eighty-second.a eighty-third.a 
+eighty-fourth.a eighty-fifth.a eighty-sixth.a 
+eighty-seventh.a eighty-eighth.a eighty-ninth.a 
+ninetieth.a
+ninety-first.a ninety-second.a ninety-third.a 
+ninety-fourth.a ninety-fifth.a ninety-sixth.a 
+ninety-seventh.a ninety-eighth.a ninety-ninth.a:
+Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
+(NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
+(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+;
+
+% Miscellaneous adjectival usage 
+1º.a 2º.a 3º.a 4º.a 5º.a 6º.a 7º.a 8º.a 9º.a
+1st.a 2nd.a 3rd.a 4th.a 5th.a 6th.a 7th.a 8th.a 9th.a
+10th.a 11th.a 12th.a 13th.a 14th.a 15th.a 16th.a 17th.a 18th.a 19th.a
+20th.a 21st.a 22nd.a 23rd.a 24th.a 25th.a 26th.a 27th.a 28th.a 29th.a
+30th.a 31st.a 32nd.a 33rd.a 34th.a 35th.a 36th.a 37th.a 38th.a 39th.a
+40th.a 41st.a 42nd.a 43rd.a 44th.a 45th.a 46th.a 47th.a 48th.a 49th.a
+50th.a 51st.a 52nd.a 53rd.a 54th.a 55th.a 56th.a 57th.a 58th.a 59th.a
+60th.a 61st.a 62nd.a 63rd.a 64th.a 65th.a 66th.a 67th.a 68th.a 69th.a
+70th.a 71st.a 72nd.a 73rd.a 74th.a 75th.a 76th.a 77th.a 78th.a 79th.a
+80th.a 81st.a 82nd.a 83rd.a 84th.a 85th.a 86th.a 87th.a 88th.a 89th.a
+90th.a 91st.a 92nd.a 93rd.a 94th.a 95th.a 96th.a 97th.a 98th.a 99th.a
+100th.a 101st.a 102nd.a 103rd.a 104th.a 105th.a 106th.a 107th.a 108th.a 109th.a
+110th.a 111th.a 112th.a 113th.a 114th.a 115th.a 116th.a 117th.a 118th.a 119th.a
+120th.a 121st.a 122dn.a 123rd.a 124th.a 125th.a 126th.a 127th.a 128th.a 129th.a
+130th.a 131st.a 132nd.a 133rd.a 134th.a 135th.a 136th.a 137th.a 138th.a 139th.a
+140th.a 141st.a 142nd.a 143rd.a 144th.a 145th.a 146th.a 147th.a 148th.a 149th.a
+150th.a 151st.a 152nd.a 153rd.a 154th.a 155th.a 156th.a 157th.a 158th.a 159th.a
+160th.a 161st.a 162nd.a 163rd.a 164th.a 165th.a 166th.a 167th.a 168th.a 169th.a
+170th.a 171st.a 172nd.a 173rd.a 174th.a 175th.a 176th.a 177th.a 178th.a 179th.a
+180th.a 181st.a 182nd.a 183rd.a 184th.a 185th.a 186th.a 187th.a 188th.a 189th.a
+190th.a 191st.a 192nd.a 193rd.a 194th.a 195th.a 196th.a 197th.a 198th.a 199th.a
+200th.a 201st.a 202nd.a 203rd.a 204th.a:
+Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
+(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
 
 % "Next on our list..." are ordinals.
 % XXX this should be a more complete list ... FIXME ... 
 % Note also another list of ordinals below, used for time expressions.
-first.o next.o last.o second.o third.o fourth.o fifth.o sixth.o
-seventh.o eighth.o ninth.o tenth.o eleventh.o twelfth.o thirteenth.o 
-fourteenth.o fifteenth.o sixteenth.o seventeenth.o eighteenth.o 
-nineteenth.o twentieth.o twenty-first.o twenty-second.o twenty-third.o 
-twenty-fourth.o twenty-fifth.o twenty-sixth.o twenty-seventh.o 
-twenty-eighth.o twenty-ninth.o thirtieth.o thirty-first.o:
+first.ord next.ord last.ord second.ord third.ord fourth.ord fifth.ord 
+sixth.ord seventh.ord eighth.ord ninth.ord tenth.ord eleventh.ord 
+twelfth.ord thirteenth.ord fourteenth.ord fifteenth.ord sixteenth.ord 
+seventeenth.ord eighteenth.ord nineteenth.ord 
+twentieth.ord 
+twenty-first.ord twenty-second.ord twenty-third.ord 
+twenty-fourth.ord twenty-fifth.ord twenty-sixth.ord 
+twenty-seventh.ord twenty-eighth.ord twenty-ninth.ord 
+thirtieth.ord
+thirty-first.ord thirty-second.ord thirty-third.ord 
+thirty-fourth.ord thirty-fifth.ord thirty-sixth.ord 
+thirty-seventh.ord thirty-eighth.ord thirty-ninth.ord 
+fourtieth.ord
+fourty-first.ord fourty-second.ord fourty-third.ord 
+fourty-fourth.ord fourty-fifth.ord fourty-sixth.ord 
+fourty-seventh.ord fourty-eighth.ord fourty-ninth.ord 
+fiftieth.ord
+fifty-first.ord fifty-second.ord fifty-third.ord 
+fifty-fourth.ord fifty-fifth.ord fifty-sixth.ord 
+fifty-seventh.ord fifty-eighth.ord fifty-ninth.ord 
+sixtieth.ord
+sixty-first.ord sixty-second.ord sixty-third.ord 
+sixty-fourth.ord sixty-fifth.ord sixty-sixth.ord 
+sixty-seventh.ord sixty-eighth.ord sixty-ninth.ord 
+seventieth.ord
+seventy-first.ord seventy-second.ord seventy-third.ord 
+seventy-fourth.ord seventy-fifth.ord seventy-sixth.ord 
+seventy-seventh.ord seventy-eighth.ord seventy-ninth.ord 
+eightieth.ord
+eighty-first.ord eighty-second.ord eighty-third.ord 
+eighty-fourth.ord eighty-fifth.ord eighty-sixth.ord 
+eighty-seventh.ord eighty-eighth.ord eighty-ninth.ord 
+ninetieth.ord
+ninety-first.ord ninety-second.ord ninety-third.ord 
+ninety-fourth.ord ninety-fifth.ord ninety-sixth.ord 
+ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
+1st.ord 2nd.ord 3rd.ord 4th.ord 5th.ord
+6th.ord 7th.ord 8th.ord 9th.ord
+11st.ord 12nd.ord 13rd.ord 14th.ord 15th.ord
+16th.ord 17th.ord 18th.ord 19th.ord
+21st.ord 22nd.ord 23rd.ord 24th.ord 25th.ord
+26th.ord 27th.ord 28th.ord 29th.ord
+31st.ord 32nd.ord 33rd.ord 34th.ord 35th.ord
+36th.ord 37th.ord 38th.ord 39th.ord
+41st.ord 42nd.ord 43rd.ord 44th.ord 45th.ord
+46th.ord 47th.ord 48th.ord 49th.ord
+51st.ord 52nd.ord 53rd.ord 54th.ord 55th.ord
+56th.ord 57th.ord 58th.ord 59th.ord
+61st.ord 62nd.ord 63rd.ord 64th.ord 65th.ord
+66th.ord 67th.ord 68th.ord 69th.ord
+71st.ord 72nd.ord 73rd.ord 74th.ord 75th.ord
+76th.ord 77th.ord 78th.ord 79th.ord
+81st.ord 82nd.ord 83rd.ord 84th.ord 85th.ord
+86th.ord 87th.ord 88th.ord 89th.ord
+91st.ord 92nd.ord 93rd.ord 94th.ord 95th.ord
+96th.ord 97th.ord 98th.ord 99th.ord :
 (Wd- & {M+} & Ss*o+);
 
 % EQUATIONS ETC.
