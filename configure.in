@@ -68,13 +68,16 @@ AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 dnl ====================================================================
 
 # The std=c99 flag provides the proper float-pt math decls working, 
-# e.g. fmaxf However, it also undefined _BSD_SOURCE, etc which is
+# e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
 # needed to get fileno, strdup, etc. and so it needs to be manually 
 # enabled again.
 
 # Setting -D_POSIX_SOURCE messes up compilation on FreeBSD by 
 # hiding strdup, etc. again.
 # CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_POSIX_C_SOURCE -D_GNU_SOURCE"
+
+# Final solution: enable std=c99, explitictly turn on BSD and SVID and
+# GNU, but do NOT turn on POSIX.
 #
 CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
 
@@ -124,15 +127,17 @@ AC_ARG_ENABLE( corpus-stats,
 
 AM_CONDITIONAL(WITH_CORPUS, test x${buildcorpus} = xyes)
 
-enable_hunspell=yes
+do_hunspell=yes
 AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
 	    [Build without HunSpell support (default is with Hunspell)])],
-	    enable_hunspell=no)
-AM_CONDITIONAL(HAVE_HUNSPELL, test x${enable_hunspell} = xno)
+	    do_hunspell=no)
+
+AM_CONDITIONAL(WITH_HUNSPELL, test x${do_hunspell} = xyes)
 
 AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
 	[Use DIR to find HunSpell files (default=/usr/share/myspell/dicts])],
 	[], with_hunspell_dictdir=)
+
 dnl ====================================================================
 
 # If not asking for the statistics backend, then don't even
@@ -153,20 +158,24 @@ else
 fi
 
 dnl Set Default Spell Checker settings
+
 dnl ====================================================================
-if test "$enable_hunspell" = no && test -n "$with_hunspell_dictdir"; then
-	enable_hunspell=yes
+
+if test "$do_hunspell" = no && test -n "$with_hunspell_dictdir"; then
+	do_hunspell=yes
 fi
+
 dnl the default is set here
 HunSpellDictDirDefault=/usr/share/myspell/dicts
 HunSpellFound=no
 HunSpellDictDir=
-if test "$enable_hunspell" = yes; then
+if test x"$do_hunspell" = xyes; then
 	if test -n "$with_hunspell_dictdir"; then
 		HunSpellDictDir=$with_hunspell_dictdir
 	else
 		HunSpellDictDir=$HunSpellDictDirDefault
 	fi
+
 	if ! test -d "$HunSpellDictDir" ; then
 		echo "WARN HunSpell Dictionaries do not exist at \"$HunSpellDictDir\""
 	fi
@@ -178,12 +187,13 @@ if test "$enable_hunspell" = yes; then
 	CPPFLAGS=$save_cpp_flags
 	if test "x${HunSpellFound}" = "xyes"; then 
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
-		AC_DEFINE(HAVE_HUNSPELL, 1, [Define for compilation])
+		# AC_DEFINE(HAVE_HUNSPELL, 1, [Define for compilation])
 		AC_SUBST(HUNSPELL_LIBS)
 		AC_SUBST(HUNSPELL_CFLAGS)
 	fi
 fi
 
+AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
 
 dnl ====================================================================
 
