@@ -124,6 +124,15 @@ AC_ARG_ENABLE( corpus-stats,
 
 AM_CONDITIONAL(WITH_CORPUS, test x${buildcorpus} = xyes)
 
+enable_hunspell=yes
+AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
+	    [Build without HunSpell support (default is with Hunspell)])],
+	    enable_hunspell=no)
+AM_CONDITIONAL(HAVE_HUNSPELL, test x${enable_hunspell} = xno)
+
+AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
+	[Use DIR to find HunSpell files (default=/usr/share/myspell/dicts])],
+	[], with_hunspell_dictdir=)
 dnl ====================================================================
 
 # If not asking for the statistics backend, then don't even
@@ -143,16 +152,38 @@ else
 	AM_CONDITIONAL(HAVE_SQLITE, false)
 fi
 
+dnl Set Default Spell Checker settings
 dnl ====================================================================
-
-AC_CHECK_HEADER([hunspell/hunspell.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_HUNSPELL=1" HunSpellFound=yes], HunSpellFound=no)
-AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
-
-if test "x${HunSpellFound}" = "xyes"; then
- 	PKG_CHECK_MODULES([HUNSPELL], [hunspell])
- 	AC_SUBST(HUNSPELL_LIBS)
- 	AC_SUBST(HUNSPELL_CFLAGS)
+if test "$enable_hunspell" = no && test -n "$with_hunspell_dictdir"; then
+	enable_hunspell=yes
 fi
+dnl the default is set here
+HunSpellDictDirDefault=/usr/share/myspell/dicts
+HunSpellFound=no
+HunSpellDictDir=
+if test "$enable_hunspell" = yes; then
+	if test -n "$with_hunspell_dictdir"; then
+		HunSpellDictDir=$with_hunspell_dictdir
+	else
+		HunSpellDictDir=$HunSpellDictDirDefault
+	fi
+	if ! test -d "$HunSpellDictDir" ; then
+		echo "WARN HunSpell Dictionaries do not exist at \"$HunSpellDictDir\""
+	fi
+
+	PKG_CHECK_MODULES([HUNSPELL], [hunspell], [HunSpellFound=yes], [HunSpellFound=no])
+	save_cpp_flags=${CPPFLAGS}
+	CPPFLAGS="${CPPFLAGS} ${HUNSPELL_CFLAGS}"
+	AC_CHECK_HEADER([hunspell.h], [HunSpellFound=yes], HunSpellFound=no)
+	CPPFLAGS=$save_cpp_flags
+	if test "x${HunSpellFound}" = "xyes"; then 
+		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
+		AC_DEFINE(HAVE_HUNSPELL, 1, [Define for compilation])
+		AC_SUBST(HUNSPELL_LIBS)
+		AC_SUBST(HUNSPELL_CFLAGS)
+	fi
+fi
+
 
 dnl ====================================================================
 
@@ -363,6 +394,7 @@ $PACKAGE-$VERSION
 	Editline command-line history:  ${edlin}
 	Java interfaces:                ${JNIfound}
 	HunSpell spell checker:         ${HunSpellFound}
+	HunSpell dictionary location:   ${HunSpellDictDir}
 	Boolean SAT solver:             ${buildSAT}
 	Corpus statistics database:     ${buildcorpus}
 "

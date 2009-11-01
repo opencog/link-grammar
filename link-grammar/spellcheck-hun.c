@@ -16,19 +16,58 @@
 
 #ifdef HAVE_HUNSPELL
 
+#ifndef HUNSPELL_DICT_DIR
+#define HUNSPELL_DICT_DIR (char *)0
+#endif /* HUNSPELL_DICT_DIR */
+
+static char *hunspell_dict_dirs[] = {
+	"/usr/share/myspell/dicts",
+	"/usr/share/hunspell/dicts",
+	"/usr/local/share/myspell/dicts",
+	"/usr/local/share/hunspell/dicts",
+	HUNSPELL_DICT_DIR	
+};
+
+static char *spellcheck_lang_mapping[] = {
+	"en" /* link-grammar language */, "en-US" /* hunspell filename */,
+	"en" /* link-grammar language */, "en_US" /* hunspell filename */
+};
+
+static char hunspell_aff_file[256];
+static char hunspell_dic_file[256];
+
 #include <hunspell.h>
 #include <string.h>
 
 void * spellcheck_create(const char * lang)
 {
+	int i = 0, j = 0;
 	Hunhandle *h = NULL;
-	/* XXX We desperately need something better than this! */
-	if (0 == strcmp(lang, "en"))
-	{
-		h = Hunspell_create("/usr/share/myspell/dicts/en-US.aff",
-		                    "/usr/share/myspell/dicts/en-US.dic");
-	}
 
+	memset(hunspell_aff_file, 0, 256);
+	memset(hunspell_dic_file, 0, 256);
+	for (i = 0; i < sizeof(spellcheck_lang_mapping); i += 2) {
+		if (0 != strcmp(lang, spellcheck_lang_mapping[i])) {
+			continue;
+		}
+		/* check in each hunspell_dict_dir if the files exist */
+		for (j = 0; j < sizeof(hunspell_dict_dirs); ++j) {
+			/* if the directory name is NULL then ignore */
+			if (hunspell_dict_dirs[j] == NULL)
+				continue;
+			snprintf(hunspell_aff_file, 256, "%s/%s.aff", hunspell_dict_dirs[j],
+					spellcheck_lang_mapping[i+1]);
+			snprintf(hunspell_dic_file, 256, "%s/%s.dic", hunspell_dict_dirs[j],
+					spellcheck_lang_mapping[i+1]);
+			h = Hunspell_create(hunspell_aff_file, hunspell_dic_file);
+			/* if hunspell handle was created break from loop */
+			if (h != NULL)
+				break;
+		}
+		/* if hunspell handle was created break from loop */
+		if (h != NULL)
+			break;
+	}
 	return h;
 }
 
