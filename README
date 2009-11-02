@@ -1,7 +1,7 @@
 
                        Link Grammar Parser 
                        -------------------
-                          Version 4.6.4
+                          Version 4.6.5
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -365,14 +365,14 @@ Corpus Statistics:
 
 Spell Checking:
 ---------------
-   The parser will now run a spell-checker at an early stage, if it
+   The parser will run a spell-checker at an early stage, if it 
    encounters a word that it does not know, and cannot guess, based on
-   morphology.  The spell-checker used is hunspell; support for it is
-   automatically compiled in if the hunspell development environment 
-   is found.
+   morphology.  The configure script looks for the aspell or hunspell
+   spell-checkers; if the aspell devel environment is found, then 
+   aspell is used, else hunspell is used.
 
-   Spell checking may be disabled in the link-parser client with the 
-   !spell flag.  Enter !help for more details.
+   Spell checking may be disabled at runtime, in the link-parser client
+   with the !spell flag.  Enter !help for more details.
 
 
 USING pkg-config:
