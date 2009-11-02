@@ -572,7 +572,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 	if (quote_found == TRUE) sent->post_quote[sent->length] = 1;
 
-#ifdef HAVE_HUNSPELL
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	/* If the word is still not being found, then it might be 
 	 * a run-on of two words. Ask the spell-checker to split
 	 * the word in two, if possible. Do this only if the word
@@ -609,7 +609,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 				if (!issue_sentence_word(sent, wp)) return FALSE;
 			}
 		}
-		if (alternates) free(alternates);
+		if (alternates) spellcheck_free_suggest(alternates, n);
 	}
 #endif /* HAVE_HUNSPELL */
 
@@ -811,7 +811,7 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
 		}
 	}
 	sent->word[i].x = head;
-	if (alternates) free(alternates);
+	if (alternates) spellcheck_free_suggest(alternates, n);
 
 	/* Add a [~] to the output to signify that its the result of
 	 * guessing. */

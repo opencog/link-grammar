@@ -50,6 +50,11 @@ liblink_grammar_la_LIBADD  +=  ${HUNSPELL_LIBS}
 liblink_grammar_java_la_LIBADD  += ${HUNSPELL_LIBS}
 endif
 
+if HAVE_ASPELL
+liblink_grammar_la_LIBADD  +=  ${ASPELL_LIBS}
+liblink_grammar_java_la_LIBADD  += ${ASPELL_LIBS}
+endif
+
 if WITH_SAT_SOLVER
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la

@@ -12,6 +12,7 @@ Version 4.6.5 (??? 2009)
  * Fix: opening coordinating conjunctions: "And you can also ..."
  * Configurable Hunspell spell-checker dictionary location.
  * Fix: Misc ordinal usage.
+ * Add suppoprt for aspell spell-checker.
 
 Version 4.6.4 (11 October 2009)
  * Restore nouns starting w/letters x-z, elided in version 4.5.9 ff.
