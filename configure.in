@@ -168,11 +168,9 @@ dnl Set Default Spell Checker settings
 
 dnl ====================================================================
 
-if test "$do_hunspell" = no && test -n "$with_hunspell_dictdir"; then
-	do_hunspell=yes
-fi
-
+ASpellFound=no
 if test "$enable_aspell" = yes ; then
+	save_do_hunspell=${do_hunspell}
 	do_hunspell=no
 	PKG_CHECK_MODULES([ASPELL], [aspell], [ASpellFound=yes], [ASpellFound=no])
 	save_cpp_flags=${CPPFLAGS}
@@ -187,10 +185,11 @@ if test "$enable_aspell" = yes ; then
 		HunSpellFound=no
 		HunSpellDictDir=
 	else
-		do_hunspell=yes
+		do_hunspell=${save_do_hunspell}
 	fi
-	AM_CONDITIONAL(HAVE_ASPELL, test x${ASpellFound} = xyes)
 fi
+
+AM_CONDITIONAL(HAVE_ASPELL, test x${ASpellFound} = xyes)
 
 dnl the default is set here
 if test x"$do_hunspell" = xyes; then
@@ -430,9 +429,9 @@ $PACKAGE-$VERSION
 	Posix threads:                  ${do_pth}
 	Editline command-line history:  ${edlin}
 	Java interfaces:                ${JNIfound}
+	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
-	ASpell spell checker:		${ASpellFound}
 	Boolean SAT solver:             ${buildSAT}
 	Corpus statistics database:     ${buildcorpus}
 "
