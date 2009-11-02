@@ -10,7 +10,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#if (defined HAVE_HUNSPELL) || (defined HAVE_SPELL)
+#if (defined HAVE_HUNSPELL) || (defined HAVE_ASPELL)
 
 void * spellcheck_create(const char * lang);
 void spellcheck_destroy(void *);
