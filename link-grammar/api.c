@@ -22,7 +22,7 @@
 #include "regex-morph.h"
 #include "sat-solver/sat-encoder.h"
 #include "corpus/corpus.h"
-#include "spellcheck-hun.h"
+#include "spellcheck.h"
 
 /***************************************************************
 *
