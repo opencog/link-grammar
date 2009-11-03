@@ -189,32 +189,34 @@ fi
 
 AM_CONDITIONAL(HAVE_ASPELL, test x${ASpellFound} = xyes)
 
+HunSpellDictDir=
 HunSpellFound=no
 if test x"$do_hunspell" = xyes; then
-	HunSpellDictDirDefault=/usr/share/myspell/dicts
 	HunSpellFound=no
-	HunSpellDictDir=
-	if test -n "$with_hunspell_dictdir"; then
-		HunSpellDictDir=$with_hunspell_dictdir
-	else
-		HunSpellDictDir=$HunSpellDictDirDefault
-	fi
 
-	if ! test -d "$HunSpellDictDir" ; then
-		echo "WARN HunSpell Dictionaries do not exist at \"$HunSpellDictDir\""
-	fi
-
+	# First, look for the libraries.
 	PKG_CHECK_MODULES([HUNSPELL], [hunspell], [HunSpellFound=yes], [HunSpellFound=no])
 	save_cpp_flags=${CPPFLAGS}
 	CPPFLAGS="${CPPFLAGS} ${HUNSPELL_CFLAGS}"
 	AC_CHECK_HEADER([hunspell.h], [HunSpellFound=yes], HunSpellFound=no)
 	CPPFLAGS=$save_cpp_flags
 	if test "x${HunSpellFound}" = "xyes"; then 
-		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
 		AC_DEFINE(HAVE_HUNSPELL, 1, [Define for compilation])
 		AC_SUBST(HUNSPELL_LIBS)
 		AC_SUBST(HUNSPELL_CFLAGS)
+
+		# Now, look for the dictionaries.
+		HunSpellDictDir=/usr/share/myspell/dicts
+		if test -n "$with_hunspell_dictdir"; then
+			HunSpellDictDir=$with_hunspell_dictdir
+		fi
+
+		if ! test -d "$HunSpellDictDir" ; then
+			echo "WARN HunSpell Dictionaries do not exist at \"$HunSpellDictDir\""
+		fi
+		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
 	fi
+
 fi
 
 AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
