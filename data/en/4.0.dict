@@ -646,7 +646,9 @@ both.d: Dmc+ or E+ or ({M+ or (ALx+ & Jp+)} & <noun-main-p>);
 both.a: Paf-;
 half: {EN-} & (NJ+ or ((({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+))
 & <noun-main-x>));
-many: (H- & (Dmc+ or ND+ or NIn+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 
+
+% "How many years" -- prefer TQ+ over Dmc+ 
+many: (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 
 ({EE-} & (ND+ or NIn+)) or ({DD-} & {EAx-} & Dmc+) or ((({EAx-} & {DD-}) or H-) & 
 <noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
 all.a: ({EN-} & (E+ or Dm+ or NIc+ or 
