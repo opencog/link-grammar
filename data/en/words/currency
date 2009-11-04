@@ -35,6 +35,7 @@ Dinero.c dinero.c
 Dinheiro.c dinheiro.c
 Dirham.c درهم.c dirham.c
 Dobra.c dobra.c
+Dollar.c dollar.c
 Đồng.c đồng.c
 Drachma.c Δραχμή.c drachma.c
 Dram.c Դրամ.c dram.c
@@ -58,6 +59,7 @@ Grosz.c grosz.c
 Guaraní.c guaraní.c
 Guilder.c guilder.c
 Gulden.c gulden.c
+Halfpenny.c halfpenny.c
 Hryvnia.c Гривня.c hryvnia.c
 Hwan.c 圜.c 환.c hwan.c
 Inca.c inca.c

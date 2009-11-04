@@ -4,9 +4,11 @@ Argentinos.c argentinos.c
 Australs.c australs.c
 Bolívars.c bolívars.c
 cents.c
+Dollars.c dollars.c
 Euros.c euros.c
 Francs.c francs.c
 Franks.c franks.c
+Halfpennies.c halfpennies.c
 Kronenthalers.c kronenthalers.c
 Leks.c leks.c
 Marks.c marks.c

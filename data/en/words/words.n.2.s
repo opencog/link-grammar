@@ -319,7 +319,7 @@ centennials.n centerpieces.n centers.n centiliters.n centilitres.n
 centimes.n centimeters.n centimetres.n 
 centipedes.n centiseconds.n centiwatts.n 
 centrepieces.n centres.n centrexes.n centrifuges.n 
-cents.n centurions.n cereals.n ceremonials.n ceremonies.n 
+centurions.n cereals.n ceremonials.n ceremonies.n 
 certainties.n certificates.n certifications.n cervixes.n cesspits.n 
 cesspools.n chaffinches.n chains.n chairs.n chaises.n chalets.n 
 chalices.n chalkpits.n chalks.n challengers.n challenges.n 
@@ -591,7 +591,7 @@ diviners.n divines.n divinities.n divisions.n divisors.n divorcees.n
 djembes.n dockets.n docks.n dockyards.n doctorates.n doctors.n doctrinaires.n 
 doctrines.n documents.n dodderers.n dodgers.n dodges.n dodos.n doers.n 
 doges.n dogfish.p doggies.n doghouses.n dogmas.n dogs.n dogsbodies.n 
-dogwoods.n doilies.n dollars.n dollhouses.n 
+dogwoods.n doilies.n dollhouses.n 
 dollies.n dollops.n dolls.n dolmens.n 
 dolphins.n dolts.n domains.n domes.n domiciles.n dominions.n dominos.n 
 donations.n donkeys.n donors.n dons.n donuts.n 
@@ -766,7 +766,7 @@ fossils.n fouls.n foundations.n founders.n foundlings.n foundries.n
 fountains.n founts.n foursomes.n fowlers.n fowls.n foxes.n foxgloves.n 
 foxholes.n foxhounds.n foxhunts.n foxtrots.n foyers.n fractions.n 
 fractures.n fragmentations.n fragments.n fragrances.n frames.n 
-frameworks.n franchises.n francs.n frankfurters.n fraternities.n 
+frameworks.n franchises.n frankfurters.n fraternities.n 
 fratricides.n frauds.n frays.n frazzles.n freaks.n freckles.n 
 freebooters.n freedoms.n freeholders.n freeholds.n freeways.n 
 freezers.n freezes.n freighters.n frequencies.n frescos.n frets.n 
@@ -852,7 +852,7 @@ hacksaws.n haddock.p haemophiliacs.n haemorrhages.n haggises.n hags.n
 hails.n hailstones.n hairbrushes.n haircuts.n hairdos.n hairdressers.n 
 hairlines.n hairnets.n hairpieces.n hairpins.n hairs.n hairstyles.n 
 hairstylists.n halberdiers.n halberds.n half-breeds.n half-hours.n 
-halfbacks.n halfpennies.n halfwits.n halibut.p halliards.n hallmarks.n 
+halfbacks.n halfwits.n halibut.p halliards.n hallmarks.n 
 halls.n hallucinations.n hallways.n halos.n halters.n halts.n 
 halyards.n hamburgers.n hamlets.n hammers.n hammocks.n hampers.n 
 hams.n hamsters.n hamstrings.n handbags.n handbills.n handbooks.n 
@@ -1316,7 +1316,7 @@ pedometers.n peeks.n peelers.n peepholes.n peeps.n peepshows.n
 peerages.n peeresses.n peers.n pees.n pegs.n pekinese.p pelicans.n 
 pellets.n pelts.n pelvises.n penalties.n penchants.n pencils.n 
 pendants.n pendulums.n penguins.n peninsulas.n penises.n 
-penitentiaries.n pennants.n pennies.n pens.n pensioners.n pensions.n 
+penitentiaries.n pennants.n pens.n pensioners.n pensions.n 
 pentagons.n penthouses.n penumbras.n peonies.n peons.n peoples.n 
 peppercorns.n peppermints.n peppers.n perambulators.n percentages.n 
 perches.n percolators.n percussionists.n percussions.n perennials.n 
@@ -1327,7 +1327,7 @@ perorations.n peroxides.n perpendiculars.n perpetrators.n
 perpetuations.n perquisites.n persecutions.n persecutors.n 
 personages.n personalities.n personas.n personifications.n persons.n 
 perspectives.n persuasions.n perturbations.n perusals.n perversions.n 
-perversities.n perverts.n pesos.n pessimists.n pesticides.n 
+perversities.n perverts.n pessimists.n pesticides.n 
 pestilences.n pestles.n pests.n petabytes.n petals.n petards.n petitioners.n 
 petitions.n pets.n petticoats.n petunias.n pews.n pfennigs.n 
 phalanxes.n phalluses.n phantasies.n phantasmagorias.n phantasms.n 
@@ -1566,7 +1566,7 @@ rubbernecks.n rubbers.n rubies.n rubrics.n rubs.n rucksacks.n
 ruckuss.n rudders.n rudiments.n ruffians.n ruffles.n ruffs.n rugs.n 
 ruins.n rulers.n rulings.n rumbas.n rumbles.n rumours.n rumps.n 
 run-ups.n runaways.n rundowns.n runes.n rungs.n runners.n runoffs.n 
-runs.n runts.n runways.n rupees.n ruptures.n ruses.n rushes.n rusks.n 
+runs.n runts.n runways.n ruptures.n ruses.n rushes.n rusks.n 
 rustics.n rustlers.n ruts.n ryutekis.n sabbaticals.n sables.n saboteurs.n 
 sabres.n sachets.n sackbuts.n sacks.n sacraments.n sacrifices.n sacs.n 
 saddlebags.n saddles.n sadists.n safaris.n safecrackers.n safeguards.n 
@@ -1637,7 +1637,7 @@ sheathings.n sheaths.n sheds.n sheepdogs.n sheepskins.n sheets.n
 shehnais.n sheikdoms.n sheikhdoms.n sheikhs.n sheiks.n shekeres.n 
 shellfish.p shells.n 
 shelters.n shengs.n shepherds.n sherbets.n sheriffs.n sherries.n shibboleths.n 
-shields.n shifts.n shillings.n shimmers.n shinbones.n shindigs.n 
+shields.n shifts.n shimmers.n shinbones.n shindigs.n 
 shingles.n shinguards.n shinobues.n shins.n shipbuilders.n shiploads.n shipmates.n 
 shipments.n shipowners.n shippers.n ships.n shipwrecks.n shipwrights.n 
 shipyards.n shires.n shirkers.n shirts.n shirtwaists.n shivers.n 
@@ -2010,5 +2010,5 @@ yardsticks.n yarns.n yawns.n yearbooks.n yearlings.n yearnings.n
 yeas.n yells.n yeomanries.n yetis.n yews.n yields.n yobs.n yodellers.n 
 yodels.n yoghourts.n yoghurts.n yogis.n yogurts.n yokels.n yokes.n 
 yolks.n youngsters.n youths.n yuppies.n zealots.n zebras.n zeniths.n 
-zephyrs.n zeppelins.n zeros.n zippers.n zips.n zithers.n zlotys.n 
+zephyrs.n zeppelins.n zeros.n zippers.n zips.n zithers.n 
 zodiacs.n zombies.n zones.n zoologists.n zoos.n zuchinis.n 

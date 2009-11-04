@@ -91,7 +91,6 @@ epiphytes.n
 escudos.n
 esters.n
 ethanols.n
-euros.n
 exorcisms.n
 facelifts.n
 factsheets.n
