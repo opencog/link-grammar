@@ -147,22 +147,20 @@ BUILDING on Windows:
     http://gnuwin32.sourceforge.net/packages/regex.htm 
     http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
-    I you are having trouble building the Java bindings, see thei
-    instructions farther down.
-
     Then build and install link-grammar with
 
        ./configure
        make
        make install
 
-    If you used the standard installation paths, the directory /usr/ is mapped
-    to C:\msys\1.0, so after 'make install', the libraries and executable
-    will be found at C:\msys\1.0\local\bin and the dictionary files at
-    C:\msys\1.0\local\share\link-grammar.
+    If you used the standard installation paths, the directory /usr/ is
+    mapped to C:\msys\1.0, so after 'make install', the libraries and
+    executable will be found at C:\msys\1.0\local\bin and the dictionary
+    files at C:\msys\1.0\local\share\link-grammar.
 
-    In order to use the Java bindings you'll need to build two extra DLLs, running
-    from the link-grammar base directory the following commands:
+    In order to use the Java bindings you'll need to build two extra 
+    DLLs, by running the following commands from the link-grammar base
+    directory:
 
        cd link-grammar
 
@@ -491,6 +489,7 @@ COMMERCIAL use:
 
    Academic products or papers should reference the various
    link grammar publications.
+
 
 ADDRESSES
 ---------
