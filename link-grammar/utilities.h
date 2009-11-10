@@ -70,6 +70,7 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
  * However, MS Visual C appearently does ... 
  */
 #ifdef __CYGWIN__
+#define mbstate_t char
 #define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
 #define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
 #define iswupper  isupper
