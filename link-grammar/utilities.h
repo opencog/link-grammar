@@ -27,6 +27,14 @@
 #include <string.h>
 
 #ifndef __CYGWIN__
+/* I was told that cygwin does not have these files. */ 
+#include <wchar.h>
+#include <wctype.h>
+#endif
+
+#if defined(__CYGWIN__) && defined(__MINGW32__)
+/* Some users have CygWin and MinGW installed! 
+ * In this case, use the MinGW versions of UTF-8 support. */
 #include <wchar.h>
 #include <wctype.h>
 #endif
@@ -50,6 +58,7 @@
 #endif /* _MSC_VER */
 
 /* Appearntly, MinGW is also missing a variety of standard fuctions */
+/* MINGW is also known as MSYS */
 #if defined(_MSC_VER) || defined(__MINGW32__)
 /* No langinfo Windows */
 #define nl_langinfo(X) ""
@@ -66,10 +75,13 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 #define rand_r(seedp) rand()
 #endif /* _MSC_VER || __MINGW32__ */
 
-/* CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
- * However, MS Visual C appearently does ... 
+/*
+ * CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
+ * However, MS Visual C appearently does, as does MinGW.  Since
+ * some users have both cygwin and MinGW installed, crap out the 
+ * UTF8 code only when MinGW is missing.
  */
-#ifdef __CYGWIN__
+#if defined (__CYGWIN__) && !defined(__MINGW32__)
 #define mbstate_t char
 #define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
 #define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
@@ -83,7 +95,7 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 #define WEOF      EOF
 #define towlower  tolower
 #define towupper  toupper
-#endif /* __CYGWIN__ */
+#endif /* __CYGWIN__ and not __MINGW32__ */
 
 #endif /* _WIN32 */
 
