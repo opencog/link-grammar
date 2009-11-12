@@ -1,6 +1,6 @@
 Version 4.6.6 (xxx 2009)
  * Fix: minor fixes to handling of units.
- * Fix: Misc MSWindows compilation issues.
+ * Fix: MSWindows+Cygwin/MingGW compilation issues.
 
 Version 4.6.5 (3 November 2009)
  * Fix: Superlatives without preceding determiners ("... likes you best")
