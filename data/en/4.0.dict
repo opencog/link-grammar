@@ -3514,7 +3514,8 @@ or ({[[@Ec-]]} & {Xc+} & A+))) or (Yt- & (Ca+ or Qe+));
 away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
 aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
 apart: {Yd-} & K-; 
-home.i: K-;
+% wtf ?? what is home.i for ?? 
+home.i: [[K-]];
 back.k: ({Yd-} & K-) or (MVp+ & (MVp- or FM-));
 forth aside.p: K- or MVa-;
 
