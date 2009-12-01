@@ -2078,8 +2078,10 @@ affirming.v certifying.v trusting.v postulating.v ensuring.v
 implying.v verifying.v boasting.v:
  <verb-pg> & <vc-sense>;
 
-<vc-declare>: ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or 
-((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & Pg+);
+<vc-declare>: 
+((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or 
+({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or 
+({@MV+} & Pg+);
 declare.v imagine.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v: 
 <verb-pl,i> & <vc-declare>;
@@ -2108,8 +2110,9 @@ emphasizing.v maintaining.v acknowledging.v
 noting.v confirming.v stressing.v 
 assuming.v: <verb-pg> & <vc-declare>;
 
-<vc-believe>: ({@MV+} & (Ce+ or TH+ or RSe+)) or ({O+ or B- or 
-[[@MV+ & O*n+]]} & {@MV+});
+<vc-believe>: 
+({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
+({@MV+} & (Ce+ or TH+ or RSe+));
 believe.v answer.v worry.v protest.v: <verb-pl,i> & <vc-believe>;
 believes.v answers.v worries.v protests.v: <verb-s> & <vc-believe>;
 believed.v-d answered.v-d worried.v-d protested.v-d: 
@@ -2143,8 +2146,10 @@ figuring.g: (<vc-figure> & <verb-ge>) or <verb-ge-d>;
 figuring.v: <verb-pg> & <vc-figure>;
 
 % (QI+ & {MV+}): "I did not say why until recently"
-<vc-predict>: ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
-({@MV+} & ((QI+ & {MV+}) or Ce+ or TH+ or RSe+ or Zs-));
+<vc-predict>: 
+((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
+({@MV+} & (Ce+ or TH+ or RSe+ or Zs-)) or
+({@MV+} & (QI+ & {MV+}));
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
 recall.v reveal.v state.v observe.v indicate.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
