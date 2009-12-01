@@ -1627,7 +1627,10 @@ wished.v-d: <verb-sp,pp> & <vc-wish>;
 wishes.v: <verb-s> & <vc-wish>;
 wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-hope>: {@MV+} & {TH+ or Ce+ or RSe+ or TO+};
+% The O+ target is to handle "I hope so", but really, we should have
+% a special-case for this (i.e. a new minor letter).
+% See also <vc-think> for the same problem.
+<vc-hope>: {@MV+} & {TH+ or Ce+ or RSe+ or TO+} or [[O+ & {@MV+}]];
 hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-hope>;
 hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
 <verb-s> & <vc-hope>;
@@ -1719,6 +1722,7 @@ dreaming.v complaining.v: <verb-pg> & <vc-dream>;
 
 % The O+ is to handle "do you think so, too?", however, a special
 % target for objects like "so" or "it" would be better...
+% "hope.v" has the same problem.
 <vc-think>: ({@MV+} & {Ce+ or TH+ or RSe+ or Z- or (OF+ & {@MV+}) or BW-})
 or [[O+ & {@MV+}]];
 think.v: <verb-pl,i> & <vc-think>;

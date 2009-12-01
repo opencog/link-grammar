@@ -333,6 +333,8 @@ There it was, just as I had said.
 % zero-subject/phantom-subject in sentence opener
 As mentioned before, we are creating a business service.
 
+
+
 % Buggy opening clauses
 Some days, the trains run on time.
 Some of the time, I really  hate it.
@@ -931,6 +933,22 @@ He jumped left.
 
 He looked about.
 He turned about.
+
+% Set phrases involving "so" -- this is an exhaustive list !
+% There are no other verbs that take "so" -- should there be 
+% a special link for this ???
+I assume so
+I believe so
+I fear so
+I hope so
+I imagine so
+I presume so
+I say so.
+I suspect so.
+I think so
+
+% Third-persom -- idiomatic
+It  seems so.
 
 % Particles w/ various optionally transitive verbs
 % XXX Many of these are wrong, esp the "up to" "down to"
@@ -1532,6 +1550,10 @@ She will think it to be an act of kindness.
 She will think it true.
 She will think it common.
 
+% Phantom verbs -- the second doesn't parse, although it
+% implicitly should have a verb sitting there.
+an examination conducted when it happened revealed chicanery.
+an examination when it happened revealed chicanery
 
 
 % misc idioms
