@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "link-includes.h"
 #include "spellcheck.h"
 

@@ -505,7 +505,7 @@ int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
 	Dictionary      dict;
-	Sentence        sent;
+	Sentence        sent = NULL;
 	const char     *language="en";  /* default to english, and not locale */
 	int             pp_on=TRUE;
 	int             af_on=TRUE;
