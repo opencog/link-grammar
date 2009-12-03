@@ -535,6 +535,9 @@ TODO -- Working Notes:
   A/An determiners before consonants/vowels:  fix this. Just adding
     linkages in a naive way is not enough, because there's no restriction
     on neighboring words: "I ate an apple." vs. "I ate a green apple".
+    Should this be done in post-processing? or in pre-processing?
+    (maybe easier to post-process, but more biologically natural as
+    a pre-process step.)
 
   Conjunction cleanup: parser has some special-case code for dealing
     with conjunctions. Unfortunately, some of this code has hard-wired
@@ -628,6 +631,21 @@ TODO -- Working Notes:
      If, instead, we allowed the dictionary to contain different
      rules for "tend.meaning1" and "tend.meaning2", the rules would
      simplify (at the cost of inflating the size of the dictionary).
+
+     Another example: "I fear so" -- the word "so" is only allowed
+     with some, but not all, lexical senses of "fear". So e.g.
+     "I fear so" is in the same semantic class as "I think so" or
+     "I hope so", although other meanings of these verbs are 
+     otherwise quite different.
+
+     [Sin2004] "New evidence, new priorities, new attitudes" in J.
+     Sinclair, (ed) (2004) How to use corpora in language teaching, 
+     Amsterdam: John Benjamins
+
+     See also: Pattern Grammar: A Corpus-Driven Approach to the Lexical
+     Grammar of English Susan Hunston and Gill Francis (University of
+     Birmingham) Amsterdam: John Benjamins (Studies in corpus linguistics,
+     edited by Elena Tognini-Bonelli, volume 4), 2000
 
   "holes" in collocations (aka "set phrases" of "phrasemes"):
      The link-grammar provides a mechanism to support circumpositions
