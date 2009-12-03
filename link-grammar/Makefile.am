@@ -190,7 +190,7 @@ link_parser_LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 link_parser_LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
-link_parser_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
+link_parser_LDADD += liblink-grammar.la
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
