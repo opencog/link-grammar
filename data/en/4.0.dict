@@ -1630,7 +1630,7 @@ wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
 % See also <vc-think> for the same problem.
-<vc-hope>: {@MV+} & {TH+ or Ce+ or RSe+ or TO+} or [[O+ & {@MV+}]];
+<vc-hope>: ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or [[O+ & {@MV+}]];
 hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-hope>;
 hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
 <verb-s> & <vc-hope>;
