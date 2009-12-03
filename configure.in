@@ -140,14 +140,14 @@ AM_CONDITIONAL(WITH_CORPUS, test x${buildcorpus} = xyes)
 
 dnl ASpell Support is handled here
 do_aspell=yes
-AC_ARG_ENABLE([aspell], [AS_HELP_STRING([  --disable-aspell],
+AC_ARG_ENABLE([aspell], [AS_HELP_STRING([--disable-aspell],
 	[Build without ASpell support (default is enabled)])],
 	do_aspell=no)
 AM_CONDITIONAL(WITH_ASPELL, test x${do_aspell} = xyes)
 
 dnl Hunspell Support is handled here
 do_hunspell=yes
-AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([  --disable-hunspell],
+AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
 	    [Build without HunSpell support (default is enabled)])],
 	    do_hunspell=no)
 
@@ -250,7 +250,7 @@ GLIB_LC_MESSAGES
 
 dnl ====================================================================
 
-AC_CHECK_HEADER([editline/readline.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_EDITLINE=1" edlin=yes], edlin=no)
+PKG_CHECK_MODULES([LIBEDIT], [libedit], [edlin=yes], [edlin=no])
 AM_CONDITIONAL(HAVE_EDITLINE, test x${edlin} = xyes)
 
 dnl ====================================================================

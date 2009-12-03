@@ -183,7 +183,7 @@ EXTRA_DIST=                               \
 # Directives to build the link-parser command-line application
 bin_PROGRAMS=link-parser
 link_parser_SOURCES = link-parser.c
-link_parser_LDADD = 
+link_parser_LDADD = $(LIBEDIT_LIBS)
 
 if WITH_SAT_SOLVER
 link_parser_LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
@@ -191,10 +191,6 @@ link_parser_LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
 link_parser_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
-
-if HAVE_EDITLINE
-link_parser_LDADD += -ledit -lcurses
-endif
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
