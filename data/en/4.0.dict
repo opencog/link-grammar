@@ -1247,7 +1247,11 @@ does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) &
 (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 did.v-d: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & 
 (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
-done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-po> or S-;
+%
+% XXX why not <vc-do> here ?
+% verb-pv-b: "I want it done." "I want the job done"
+done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or 
+<verb-po> or <verb-pv-b> or S-;
 
 % adjectival modifier: "I am done working", "I am through being mad"
 done.a finished.a through.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+});
@@ -2285,16 +2289,17 @@ favoring.v:
 finish.v practice.v resist.v: <verb-pl,i> & <vc-finish>;
 finishes.v practices.v resists.v quits.v: <verb-s> & <vc-finish>;
 
-% no <verb-pv> for "finished", since its not passive, is adjectival.
-finished.v-d: (<verb-sp,pp> & <vc-finish>) or ({@E-} & A+) or <verb-po>;
-
-practiced.v-d resisted.v-d quitted.v-d: 
+% <verb-pv>: "I want it finished"
+finished.v-d practiced.v-d resisted.v-d quitted.v-d: 
 (<verb-sp,pp> & <vc-finish>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 quit.v-d: ((<verb-sp,pp> or <verb-pl,i>) & <vc-finish>) or <verb-pv> or 
 ({@E-} & A+) or <verb-po>;
 finishing.g practicing.g resisting.g
 quitting.g: (<vc-finish> & <verb-ge>) or <verb-ge-d>;
 finishing.v practicing.v resisting.v quitting.v: <verb-pg> & <vc-finish>;
+
+% Pv-: "I want it over with"
+over_with: <verb-pv-b>;
 
 % <vc-trans> with particle
 <vc-turn>: ((O+ or (K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+}) or
@@ -2538,7 +2543,9 @@ refused.v-d: (<verb-sp,pp> & <vc-refuse>) or (<verb-pv-b> & {O+ or B- or
 refusing.g: (<vc-refuse> & <verb-ge>) or <verb-ge-d>;
 refusing.v: <verb-pg> & <vc-refuse>;
 
-<vc-want>: ({@MV+} & TO+) or ((O+ or OX+ or B-) & {@MV+} & {TOo+ or Pv+}) or
+% Pa+: "I want it green", "I want it very shiny."
+<vc-want>: ({@MV+} & TO+) or 
+((O+ or OX+ or B-) & {@MV+} & {TOo+ or Pv+ or Pa+}) or
 ([[@MV+ & O*n+]]) or [[CX- & {@MV+}]];
 want.v need.v: <verb-pl,i> & <vc-want>;
 need.i: {@E-} & (S- or (RS- & B-)) & (N+ & I+);
