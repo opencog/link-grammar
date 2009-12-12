@@ -2,6 +2,7 @@ Version 4.6.6 (xxx 2009)
  * Fix: minor fixes to handling of units.
  * Fix: MSWindows+Cygwin/MingGW compilation issues.
  * Fix: Use pkgconfig for editline (from Vincent Untz)
+ * Fix: "I want it back."
 
 Version 4.6.5 (3 November 2009)
  * Fix: Superlatives without preceding determiners ("... likes you best")
