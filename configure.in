@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=6
 dnl     3) Increment when interfaces not changed at all,
 dnl               only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=5
+LINK_MICRO_VERSION=6
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -251,7 +251,13 @@ GLIB_LC_MESSAGES
 dnl ====================================================================
 
 PKG_CHECK_MODULES([LIBEDIT], [libedit], [edlin=yes], [edlin=no])
-AM_CONDITIONAL(HAVE_EDITLINE, test x${edlin} = xyes)
+if test  "x${edlin}" = "xyes"; then
+	AM_CONDITIONAL(HAVE_EDITLINE, true)
+	AC_DEFINE(HAVE_EDITLINE, 1, [Define for compilation])
+else
+	AM_CONDITIONAL(HAVE_EDITLINE, false)
+fi
+
 
 dnl ====================================================================
 
