@@ -283,13 +283,15 @@ dateID60: <date-id>;
 I.n: [[{Xi+} & {G-} & G+]];
 
 % Explicitly include the period at the end of the abbreviation.
-Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Gov..x Sen..x Rep..x 
+Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Atty..x 
+Gov..x Sen..x Rep..x 
 Gen..x Brig..x Col..x Capt..x Lieut..x Lt..x Maj..x Sgt..x Pvt..x Cmdr..x
 Adm..x Corp..x St..x Mt..x Ft..x Cie..x HMS..x:
 G+;
 
 % Period is missing in the abbreviation! Accept, but with a cost.
-Ms.x Mrs.x Mr.x Messrs.x Rev.x Sir.x Dr.x Prof.x Gov.x Sen.x Rep.x 
+Ms.x Mrs.x Mr.x Messrs.x Rev.x Sir.x Dr.x Prof.x Atty.x 
+Gov.x Sen.x Rep.x 
 Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Maj.x Sgt.x Pvt.x Cmdr.x
 Adm.x Corp.x St.x Mt.x Ft.x Cie.x HMS.x:
 [[G+]];
@@ -303,9 +305,24 @@ G- & {Xi+} & {[MG+]} &
 (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
 
-% The {Xd-} allows a comma preceeding the title:
+
 % e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D. 
-Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y Ph.D.y Ph.D..y: 
+% Gack. See absurdely large collection at:
+% http://en.wikipedia.org/wiki/List_of_post-nominal_letters
+Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y 
+AB.y A.B..y AIA.y A.I.A..y
+BA.y B.A..y BFA.y B.F.A..y BS.y B.S..y BSc.y B.Sc..y
+CEng.y CEng..y CFA.y CPA.y CPL.y CSV.y 
+DD.y D.D..y DDS.y D.D.S..y DO.y D.O..y D.Phil..y D.P.T..y 
+Eng.D..y
+JD.y J.D..y  KBE.y K.B.E..y LLD.y LL.D..y
+MA.y M.A..y MBA.y M.B.A..y MD.y M.D.y MFA.y M.F.A..y 
+MS.y M.S..y MSc.y M.Sc..y
+OFM.y 
+PE.y P.E..y Pharm.D..y 
+PhD.y Ph.D.y Ph.D..y 
+RA.y R.A..y RIBA.y R.I.B.A..y RN.y R.N..y
+USMC.y USN.y: 
 {Xi+} & {Xd- & {Xc+}} & G- & {[MG+]} & 
 (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
 (({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
