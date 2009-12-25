@@ -365,6 +365,9 @@ if test "x$do_java" = "xyes"; then
       -I/usr/lib/jvm/java-6-sun/include/ \
       -I/usr/lib/jvm/java-6-sun/include/freebsd \
       -I/usr/lib/jvm/java-6-sun/include/linux \
+      -I/usr/lib/j2sdk1.6-ibm/include \
+      -I/usr/lib/j2sdk1.6-ibm/include/freebsd \
+      -I/usr/lib/j2sdk1.6-ibm/include/linux \
       -I/opt/jdk1.5/include/ \
       -I/opt/jdk1.5/include/freebsd \
       -I/opt/jdk1.5/include/linux \

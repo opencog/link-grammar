@@ -284,28 +284,31 @@ I.n: [[{Xi+} & {G-} & G+]];
 
 % Explicitly include the period at the end of the abbreviation.
 Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Gov..x Sen..x Rep..x 
-Gen..x Brig..x Col..x Capt..x Lieut..x Lt..x Sgt..x Pvt..x Cmdr..x
+Gen..x Brig..x Col..x Capt..x Lieut..x Lt..x Maj..x Sgt..x Pvt..x Cmdr..x
 Adm..x Corp..x St..x Mt..x Ft..x Cie..x HMS..x:
 G+;
 
 % Period is missing in the abbreviation! Accept, but with a cost.
-Ms.x Mrs.x Mr.x Messrs.x Rev.x Dr.x Prof.x Gov.x Sen.x Rep.x 
-Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Sgt.x Pvt.x Cmdr.x
+Ms.x Mrs.x Mr.x Messrs.x Rev.x Sir.x Dr.x Prof.x Gov.x Sen.x Rep.x 
+Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Maj.x Sgt.x Pvt.x Cmdr.x
 Adm.x Corp.x St.x Mt.x Ft.x Cie.x HMS.x:
 [[G+]];
 
 St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y 
 Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y 
 AG.y Assn.y Assn..y
-Corp.y Corp..y Co.y Co..y Esq.y Esq..y Inc.y Inc..y PLC.y 
+Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y 
 Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y: 
 G- & {Xi+} & {[MG+]} &
-(({DG- or [[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or
-<noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
+(({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
 
-Jr.y Jr..y Sr.y Sr..y: {Xi+} & {Xd- & Xc+} & G- & {[MG+]} & (({DG- or
-[[GN-]] or [[{@A-} & {D-}]]} & (({@MX+} & (JG- or <noun-main-s>)) or
-(YS+ or YP+))) or AN+ or G+);
+% The {Xd-} allows a comma preceeding the title:
+% e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D. 
+Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y Ph.D.y Ph.D..y: 
+{Xi+} & {Xd- & {Xc+}} & G- & {[MG+]} & 
+(({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
 
 HYPHENATED-WORDS.n: 
 [[({@AN-} & {@A-} & (({NM+ or D-} & <noun-sub-x> & (<noun-main-x> or <rel-clause-x>)) or
