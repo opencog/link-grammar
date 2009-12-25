@@ -1,4 +1,5 @@
 linkgrammar_get_version
+linkgrammar_get_dict_version
 dictionary_create
 dictionary_create_lang
 dictionary_create_default_lang

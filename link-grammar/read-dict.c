@@ -25,6 +25,37 @@ const char * linkgrammar_get_version(void)
 	return s;
 }
 
+const char * linkgrammar_get_dict_version(Dictionary dict)
+{
+	static char * ver = NULL;
+	char * p;
+	Dict_node *dn;
+	Exp *e;
+
+	if (ver) return ver;
+
+	/* The newer dictionaries should contain a macro of the form:
+	 * <dictionary-version-number>: V4v6v6+;
+	 * which would indicate dictionary verison 4.6.6
+	 * Older dictionaries contain no version info.
+    */
+	dn = dictionary_lookup_list(dict, "<dictionary-version-number>");
+	if (NULL == dn) return "[unknown]";
+
+	e = dn->exp;
+	ver = strdup(&e->u.string[1]);
+	p = strchr(ver, 'v');
+	while (p)
+	{
+		*p = '.';
+		p = strchr(p+1, 'v');
+	}
+
+	free_lookup_list(dn);
+   return ver;
+}
+
+
 /*
   The dictionary format:
 
@@ -1513,6 +1544,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 void print_expression(Exp * n)
 {
 	print_expression_parens(n, FALSE);
+	printf("\n");
 }
 #endif /* INFIX_NOTATION */
 

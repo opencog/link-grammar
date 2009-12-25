@@ -620,7 +620,9 @@ int main(int argc, char * argv[])
 	verbosity = parse_options_get_verbosity(opts);
 	check_winsize(opts);
 
-	prt_error("Info: Version %s. Enter \"!help\" for help.\n",
+	prt_error("Info: Dictionary version %s.\n",
+		linkgrammar_get_dict_version(dict));
+	prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
 		linkgrammar_get_version());
 
 	/* Main input loop */

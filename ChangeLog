@@ -1,9 +1,10 @@
 Version 4.6.6 (xxx 2010)
- * Fix: minor fixes to handling of units.
+ * Minor fixes to handling of units.
  * Fix: MSWindows+Cygwin/MingGW compilation issues.
- * Fix: Use pkgconfig for editline (from Vincent Untz)
+ * Use pkgconfig for editline (from Vincent Untz)
  * Fix: "I want it back."
- * Fix: additional titular prefixes, suffixes: Maj. Ph.D. 
+ * Additional titular prefixes, suffixes: Maj. Ph.D. 
+ * Add code to detect dictionary version number.
 
 Version 4.6.5 (3 November 2009)
  * Fix: Superlatives without preceding determiners ("... likes you best")

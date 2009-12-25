@@ -23,16 +23,19 @@ LINK_BEGIN_DECLS
 *
 ***********************************************************************/
 
+typedef struct Dictionary_s * Dictionary;
+
 link_public_api(const char *)
 	linkgrammar_get_version(void);
+
+link_public_api(const char *)
+	linkgrammar_get_dict_version(Dictionary);
 
 /**********************************************************************
 *
 * Functions to manipulate Dictionaries
 *
 ***********************************************************************/
-
-typedef struct Dictionary_s * Dictionary;
 
 link_public_api(Dictionary)
      dictionary_create(const char * dict_name,
