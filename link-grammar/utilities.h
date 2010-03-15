@@ -53,6 +53,7 @@
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 #define strcasecmp _stricmp
+#define strdup _strdup
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
 #endif /* _MSC_VER */
