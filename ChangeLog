@@ -6,9 +6,7 @@ Version 4.6.6 (xxx 2010)
  * Additional titular prefixes, suffixes: Maj. Ph.D. 
  * Add code to detect dictionary version number.
  * Fix: MS VC missing strdup() function.
-
-XXXXXX todo -- the autotit files from JRow -- see
-www.autoit.me/_LinkGrammar_au3.zip
+ * Add AutoIt3 bindings from JRowe
 
 Version 4.6.5 (3 November 2009)
  * Fix: Superlatives without preceding determiners ("... likes you best")

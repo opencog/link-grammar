@@ -167,6 +167,10 @@ liblink_grammar_java_la_SOURCES =   \
 
 EXTRA_DIST=                               \
 	prefix.h                               \
+	autoit/_LGTest.au3                     \
+	autoit/_LinkGrammar.au3                \
+	autoit/README                          \
+	java/org/linkgrammar/README            \
 	java/org/linkgrammar/JSONReader.java   \
 	java/org/linkgrammar/LGConfig.java     \
 	java/org/linkgrammar/LGRemoteClient.java  \
