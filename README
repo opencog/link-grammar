@@ -563,6 +563,17 @@ TODO -- Working Notes:
     (This somewhat resembles the application of construction grammar
     ideas to the link-grammar dictionary).
 
+   Registers:
+      Consider the sentence "Thieves rob bank" -- a typical newspaper
+      headline. LG currently fails to parse this, because the determiner
+      is missing ("bank" is a count noun, not a mass noun, and thus
+      requires a determiner. By contrast, "thieves rob water" parses
+      just fine.) A fix for this would be to replace mandatory
+      determiner links by (D- or {[[]] & headline-flag}) which allows
+      the D link to be ommitted if the headline-flag bit is set.
+      Here, "headline-flag" could be a new link-type, but one that is
+      not subject to planarity constraints.
+
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
          e.g. the max number of characters in a word, or max words
