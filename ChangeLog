@@ -37,15 +37,15 @@ Version 4.6.3 (4 October 2009)
  * Fix compilation bug on FreeBSD.
  * Fix: allow MX link to post-nominal ", to be ..., " 
  * Fix: add idiom "time and again"
- * Fix: another BioLG regression in handling of possesives.
+ * Fix: another BioLG regression in handling of possessives.
  * Fix: handling of period at end of number at end of sentence.
  * Fix: Capitalized words ending in s at start of sentence.
  * Use corpus-statistics-based ranking by default, if available.
  * Fix difficulties in build of corpus statistics module.
 
 Version 4.6.2 (21 September 2009)
- * Fix: "come across as authoritiative".
- * Improve java location guessing in FreeBSD
+ * Fix: "come across as authoritative".
+ * Improve Java location guessing in FreeBSD
  * Fix for assert triggered by long sentences.
  * Fix: long sequence of periods treated as unknown word.
  * Add informational print showing dictionary location on startup.
@@ -53,7 +53,7 @@ Version 4.6.2 (21 September 2009)
  * Automatically resize the display size to fit the current window size.
  * Fix handling of punctuation at the end of a capitalized word.
  * Fix misc verbs acting as adjectival modifiers: e.g. "given", "allied"
- * Fix bug in BioLG code regarding the handling of possesives.
+ * Fix bug in BioLG code regarding the handling of possessives.
  * Fix a (rare) crash in sentences with many conjunctions. 
  * Fix a crash involving long sequences of UTF8 punctuation marks.
 
@@ -198,9 +198,9 @@ Version 4.5.0 (10 April 2009) includes the following changes:
  * BioLG: assorted adverb fixes, typical of scientific prose.
  * BioLG: initiate, attach, localize etc are optionally transitive.
  * BioLG: allow fork, branch, splice, export, etc to take particles.
- * BioLG: extended use of greek letters in biomedical text.
+ * BioLG: extended use of Greek letters in biomedical text.
  * BioLG: support parsing of Roman numerals.
- * BioLG: support greek-letter-number combinations.
+ * BioLG: support Greek-letter-number combinations.
  * Fix: 'she was singing', etc.
  * Enable WordNet word-sense identification based on syntactical usage.
 
