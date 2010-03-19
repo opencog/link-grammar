@@ -319,6 +319,15 @@ Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *env, jclass cls)
 	return j;
 }
 
+JNIEXPORT jstring JNICALL
+Java_org_linkgrammar_LinkGrammar_getDictVersion(JNIEnv *env, jclass cls)
+{
+	per_thread_data *ptd = get_ptd(env, cls);;
+	const char *s = linkgrammar_get_dict_version(ptd->dict);
+	jstring j = (*env)->NewStringUTF(env, s);
+	return j;
+}
+
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setMaxParseSeconds(JNIEnv *env, jclass cls, jint maxParseSeconds)
 {

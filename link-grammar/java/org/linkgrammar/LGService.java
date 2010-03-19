@@ -170,6 +170,7 @@ public class LGService
 		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes		
 		ParseResult parseResult = new ParseResult();
 		parseResult.setParserVersion(LinkGrammar.getVersion());
+		parseResult.setDictVersion(LinkGrammar.getDictVersion());
 		parseResult.numSkippedWords = LinkGrammar.getNumSkippedWords();
 		parseResult.words = new String[LinkGrammar.getNumWords()];
 		parseResult.entityFlags = new boolean[LinkGrammar.getNumWords()];
@@ -228,7 +229,8 @@ public class LGService
         buf.append("\"entity\":[],");
         buf.append("\"pastTense\":[],");
         buf.append("\"linkages\":[],");
-        buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\"}");
+        buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\",");
+        buf.append("\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"}");
         return buf.toString();
     }
 	
@@ -356,6 +358,7 @@ public class LGService
 			    buf.append(",");
 		}
 		buf.append("],\"version\":\"" + LinkGrammar.getVersion() + "\"");
+		buf.append(",\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"");
 		buf.append("}");
 		return buf.toString();
 	}

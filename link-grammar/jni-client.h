@@ -89,6 +89,9 @@ JNIEXPORT jdouble JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *, jclass);
 
+JNIEXPORT jstring JNICALL
+Java_org_linkgrammar_LinkGrammar_getDictVersion(JNIEnv *, jclass);
+
 /*
  * Class:     LinkGrammar
  * Method:    numSkippedWords

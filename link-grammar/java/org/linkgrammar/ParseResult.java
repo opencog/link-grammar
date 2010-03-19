@@ -29,6 +29,7 @@ import java.util.List;
 public class ParseResult implements Iterable<Linkage>
 {
 	String parserVersion;
+	String dictVersion;
 	String text;
 	String [] words;
 	boolean [] entityFlags;
@@ -136,5 +137,15 @@ public class ParseResult implements Iterable<Linkage>
 	public void setParserVersion(String parserVersion)
 	{
 		this.parserVersion = parserVersion;
+	}	
+
+	public String getDictVersion()
+	{
+		return dictVersion;
+	}
+
+	public void setDictVersion(String dictVersion)
+	{
+		this.dictVersion = dictVersion;
 	}	
 }
