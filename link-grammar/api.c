@@ -1627,7 +1627,7 @@ const char * linkage_get_disjunct_str(Linkage linkage, int w)
 		lg_compute_disjunct_strings(linkage->sent, linkage->info);
 	}
 
-	/* dj will be null if the words wasn't used in the parse. */
+	/* dj will be null if the word wasn't used in the parse. */
 	dj = linkage->sent->parse_info->chosen_disjuncts[w];
 	if (NULL == dj) return "";
 
