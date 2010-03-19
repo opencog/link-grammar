@@ -1,4 +1,4 @@
-Version 4.6.6 (xxx 2010)
+Version 4.6.6 (19 March 2010)
  * Minor fixes to handling of units.
  * Fix: MSWindows+Cygwin/MingGW compilation issues.
  * Use pkgconfig for editline (from Vincent Untz)
