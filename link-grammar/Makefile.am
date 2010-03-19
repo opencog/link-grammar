@@ -170,7 +170,7 @@ EXTRA_DIST=                               \
 	autoit/_LGTest.au3                     \
 	autoit/_LinkGrammar.au3                \
 	autoit/README                          \
-	java/org/linkgrammar/README            \
+	java/README                            \
 	java/org/linkgrammar/JSONReader.java   \
 	java/org/linkgrammar/LGConfig.java     \
 	java/org/linkgrammar/LGRemoteClient.java  \
