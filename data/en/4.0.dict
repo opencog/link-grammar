@@ -3888,6 +3888,10 @@ and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 % and used as a conjunction in proper names:
 % The Great Southern and Western Railroad 
 and.j-g: G- & G+;
+
+% The black and white cat sleeps
+and.j-a: AJ- & AJ+ & A+;
+
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
 neither: Ds+ or E+ or ({OF+} & <noun-main-x>);
@@ -3945,7 +3949,7 @@ n't n’t: N- or EB-;
 <marker-common-entity> or 
 ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
 ((Pa- or AF+ or Ma-) & {@MV+}) or 
-AA+ or [[DD- & <noun-main-p>]] or <adj-op>));
+AA+ or [[DD- & <noun-main-p>]] or <adj-op> or AJ- or AJ+));
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a 
 
 HYPHENATED-WORDS.a:
