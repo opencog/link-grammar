@@ -142,14 +142,15 @@ dnl ASpell Support is handled here
 do_aspell=yes
 AC_ARG_ENABLE([aspell], [AS_HELP_STRING([--disable-aspell],
 	[Build without ASpell support (default is enabled)])],
-	do_aspell=no)
+	[do_aspell="${enableval}"])
+
 AM_CONDITIONAL(WITH_ASPELL, test x${do_aspell} = xyes)
 
 dnl Hunspell Support is handled here
 do_hunspell=yes
 AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
-	    [Build without HunSpell support (default is enabled)])],
-	    do_hunspell=no)
+	[Build without HunSpell support (default is enabled)])],
+	[do_hunspell="${enableval}"])
 
 AM_CONDITIONAL(WITH_HUNSPELL, test x${do_hunspell} = xyes)
 
