@@ -476,7 +476,8 @@ static void print_usage(char *str) {
  */
 static void check_winsize(Parse_Options popts)
 {
-#ifndef _MSC_VER
+/* Neither windows nor MSYS have the ioctl support needed for this. */
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
 	struct winsize ws;
 	int fd = open("/dev/tty",O_RDWR);
 
@@ -498,6 +499,8 @@ static void check_winsize(Parse_Options popts)
 	{
 		parse_options_set_screen_width(popts, ws.ws_col - 1);
 	}
+#else
+	parse_options_set_screen_width(popts, 79);
 #endif /* _MSC_VER */
 }
 

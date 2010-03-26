@@ -1,6 +1,7 @@
 Version 4.6.7 (XXX 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
  * Fix: conjoined modifier phrases: "the black and white cat sleeps."
+ * Fix: MSWindows+MingGW compilation issue.
 
 Version 4.6.6 (19 March 2010)
  * Minor fixes to handling of units.
