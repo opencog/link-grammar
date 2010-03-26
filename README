@@ -133,27 +133,41 @@ BUILDING on MacOS:
        ./configure CFLAGS="-arch x86_64"
 
 
+BUILDING on Windows
+-------------------
+    There are three different ways in which link-grammr can be compiled
+    on Windows. One way is to use Cygwin, which provides a Linux 
+    compatibility layer for Windows. Unfortunately, the Cygwin system
+    is not compatible with Java for Windows.  Another way is use the
+    MSVC system. A third way is to use the MinGW system, which uses the
+    Gnu toolset to compile windows programs.
+
+
 BUILDING on Windows (Cygwin)
 ----------------------------
-    The easiest way to have link-grammar working on MS Windows,
-    is to use Cygwin, a Linux-like environment for Windows making it
-    possible to port software running on POSIX systems to Windows.  
-    Download and install Cygwin from http://www.cygwin.com/
+    The easiest way to have link-grammar working on MS Windows is to
+    use Cygwin, a Linux-like environment for Windows making it possible
+    to port software running on POSIX systems to Windows.  Download and
+    install Cygwin from http://www.cygwin.com/
+
+    Unfortunately, the Cygwin system is not compatible with Java, so if
+    you need the Java bindings, you must use MSVC or MinGW, below.
 
 
 BUILDING on Windows (MSVC)
 --------------------------
-    Micrsoft VisualC project files can be found in the msvc6 and msvc9
-    directories.  These files are not actively maintained, and may be
-    out of date. Please submit fixes/patches, if needed, to the mailing
-    list.
+    Microsoft Visual C project files can be found in the msvc6 and msvc9
+    directories.  Few programmers seem to choose this option, and as a 
+    result, these files are not actively maintained, and may be out of
+    date. Please submit fixes/patches, if needed, to the mailing list.
 
 
 BUILDING on Windows (MinGW)
 ---------------------------
-    Another way to build link-grammar is to use the MinGW/MSYS, a minimalist
-    GNU environment for Windows that includes gcc, bash, automake, and many
-    other utilities.  Download and install MinGW, MSYS and MSYS-DTK from
+    Another way to build link-grammar is to use the MinGW/MSYS, which 
+    uses the Gnu toolset to compile Windows programs for Windows. This
+    is probably the easiest way to obtain workable Java bindings for 
+    Windows.  Download and install MinGW, MSYS and MSYS-DTK from
     http://mingw.org.
 
     Link-grammar now requires a working version of POSIX-standard regex
@@ -180,11 +194,17 @@ BUILDING on Windows (MinGW)
        cd link-grammar
 
        gcc -g -shared -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at \
-       .libs/analyze-linkage.o .libs/and.o .libs/api.o .libs/build-disjuncts.o .libs/command-line.o \
-       .libs/constituents.o .libs/count.o .libs/error.o .libs/extract-links.o .libs/fast-match.o \
-       .libs/idiom.o .libs/massage.o .libs/post-process.o .libs/pp_knowledge.o .libs/pp_lexer.o \
-       .libs/pp_linkset.o .libs/prefix.o .libs/preparation.o .libs/print-util.o .libs/print.o \
-       .libs/prune.o .libs/read-dict.o .libs/resources.o .libs/string-set.o .libs/tokenize.o \
+       .libs/analyze-linkage.o .libs/and.o .libs/api.o \
+       .libs/build-disjuncts.o .libs/constituents.o \
+       .libs/count.o .libs/disjuncts.o .libs/disjunct-utils.o \
+       .libs/error.o .libs/expand.o .libs/extract-links.o \
+       .libs/fast-match.o .libs/idiom.o .libs/massage.o \
+       .libs/post-process.o .libs/pp_knowledge.o .libs/pp_lexer.o \
+       .libs/pp_linkset.o .libs/prefix.o .libs/preparation.o \
+       .libs/print-util.o .libs/print.o .libs/prune.o \
+       .libs/read-dict.o .libs/read-regex.o .libs/regex-morph.o \
+       .libs/resources.o .libs/spellcheck-aspell.o \
+       .libs/spellcheck-hun.o .libs/string-set.o .libs/tokenize.o \
        .libs/utilities.o .libs/word-file.o .libs/word-utils.o \
        -o /usr/local/bin/link-grammar.dll
 
@@ -198,10 +218,6 @@ BUILDING on Windows (MinGW)
 
     Make sure that this directory is in the %PATH setting, as otherwise, 
     the DLL's will not be found.
-
-    Alternately, Windows users who have access to the "Microsoft Visual C"
-    product may wish to use the project files in the msvc6 directory, or
-    alternately, those in the msvc9 directory.
 
 
 RUNNING the program:
