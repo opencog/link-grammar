@@ -272,25 +272,56 @@ USING the parser in your own applications:
    documented on the web site.
 
 
-SAT solver:
------------
-   The current parser uses an algorithm that runs in O(N^3) time, for
-   a sentence containing N words. This algorithm is more or less a 
-   chart parser, a variant of the Earley parser.
+USING pkg-config:
+-----------------
+   To make compiling and linking easier, the current release uses
+   the pkg-config system. To determine the location of the link-grammar
+   header files, say `pkg-config --cflags link-grammar`  To obtain
+   the location of the libraries, say `pkg-config --libs link-grammar`
+   Thus, for example, a typical makefile might include the targets:
 
-   The SAT solver aims to replace the chart parser with an algorithm
-   based on Boolean Satisfiability Theory; specifically using the 
-   MiniSAT solver. The SAT solver has a bit more overhead for shorter
-   sentences, but is significantly faster for long sentences.  To work
-   properly, it needs to be attached to a parse ranking system.  This
-   work is incomplete, although the prototype works.  it is not yet
-   well-integrated with the system, and needs cleanup.
+      .c.o:
+         cc -O2 -g -Wall -c $< `pkg-config --cflags link-grammar`
 
-   The SAT solver is enabled by specifying
+      $(EXE): $(OBJS)
+         cc -g -o $@ $^ `pkg-config --libs link-grammar`
 
-      ./configure --enable-sat-solver
+JAVA bindings:
+--------------
+   This release includes Java bindings.  Their use is optional. 
 
-   prior to compiling.
+   The bindings will be built automatically if jni.h can be found.
+   Some common java JVM distributions (most notably, the ones from Sun)
+   place this file in unusual locations, where it cannot be
+   automatically found.  To remedy this, make sure that JAVA_HOME is
+   set. The configure script looks for jni.h in $JAVA_HOME/Headers
+   and in $JAVA_HOME/include; it also examines corresponding locations
+   for $JDK_HOME.  If jni.h still cannot be found, specify the location
+   with the CPPFLAGS variable: so, for example,
+
+      export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
+   or
+      export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
+
+   Please note that the use of /opt is non-standard, and most system
+   tools will fail to find packages installed there.
+
+	The building of the Java bindings can be disabled by configuring as
+   below:
+
+      ./configure --disable-java-bindings
+
+
+Spell Checking:
+---------------
+   The parser will run a spell-checker at an early stage, if it 
+   encounters a word that it does not know, and cannot guess, based on
+   morphology.  The configure script looks for the aspell or hunspell
+   spell-checkers; if the aspell devel environment is found, then 
+   aspell is used, else hunspell is used.
+
+   Spell checking may be disabled at runtime, in the link-parser client
+   with the !spell flag.  Enter !help for more details.
 
 
 Corpus Statistics:
@@ -376,58 +407,6 @@ Corpus Statistics:
   is particularly hard to tag correctly.
 
 
-Spell Checking:
----------------
-   The parser will run a spell-checker at an early stage, if it 
-   encounters a word that it does not know, and cannot guess, based on
-   morphology.  The configure script looks for the aspell or hunspell
-   spell-checkers; if the aspell devel environment is found, then 
-   aspell is used, else hunspell is used.
-
-   Spell checking may be disabled at runtime, in the link-parser client
-   with the !spell flag.  Enter !help for more details.
-
-
-USING pkg-config:
------------------
-   To make compiling and linking easier, the current release uses
-   the pkg-config system. To determine the location of the link-grammar
-   header files, say `pkg-config --cflags link-grammar`  To obtain
-   the location of the libraries, say `pkg-config --libs link-grammar`
-   Thus, for example, a typical makefile might include the targets:
-
-      .c.o:
-         cc -O2 -g -Wall -c $< `pkg-config --cflags link-grammar`
-
-      $(EXE): $(OBJS)
-         cc -g -o $@ $^ `pkg-config --libs link-grammar`
-
-JAVA bindings:
---------------
-   This release includes Java bindings.  Their use is optional. 
-
-   The bindings will be built automatically if jni.h can be found.
-   Some common java JVM distributions (most notably, the ones from Sun)
-   place this file in unusual locations, where it cannot be
-   automatically found.  To remedy this, make sure that JAVA_HOME is
-   set. The configure script looks for jni.h in $JAVA_HOME/Headers
-   and in $JAVA_HOME/include; it also examines corresponding locations
-   for $JDK_HOME.  If jni.h still cannot be found, specify the location
-   with the CPPFLAGS variable: so, for example,
-
-      export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
-   or
-      export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
-
-   Please note that the use of /opt is non-standard, and most system
-   tools will fail to find packages installed there.
-
-	The building of the Java bindings can be disabled by configuring as
-   below:
-
-      ./configure --disable-java-bindings
-
-
 MULTI-THREADED USE:
 -------------------
    The link-grammar library should be thread-safe as of version 4.3.6,
@@ -481,7 +460,7 @@ on all texts, including biomedical texts.  The original BioLG test suite
 can be found in data/en/4.0.biolg.batch.
 
 The following changes in BioLG have NOT been merged:
--- Part of speach hinting. The BioLG code can accept part-of-speech
+-- Part of speech hinting. The BioLG code can accept part-of-speech
    hints for unknown words.  
 -- XML I/O. The BioLG code can output parsed text in a certain 
    idiosyncratic XML format. 
@@ -494,6 +473,27 @@ The following changes in BioLG have NOT been merged:
 
 All other BioLG changes, and in particular, extensive dictionary fixes,
 as well as regex morphology handling, have been incorporated.
+
+
+SAT solver:
+-----------
+   The current parser uses an algorithm that runs in O(N^3) time, for
+   a sentence containing N words. This algorithm is more or less a 
+   chart parser, a variant of the Earley parser.
+
+   The SAT solver aims to replace the chart parser with an algorithm
+   based on Boolean Satisfiability Theory; specifically using the 
+   MiniSAT solver. The SAT solver has a bit more overhead for shorter
+   sentences, but is significantly faster for long sentences.  To work
+   properly, it needs to be attached to a parse ranking system.  This
+   work is incomplete, although the prototype works.  it is not yet
+   well-integrated with the system, and needs cleanup.
+
+   The SAT solver is enabled by specifying
+
+      ./configure --enable-sat-solver
+
+   prior to compiling.
 
 
 COMMERCIAL use:
