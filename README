@@ -133,10 +133,25 @@ BUILDING on MacOS:
        ./configure CFLAGS="-arch x86_64"
 
 
-BUILDING on Windows:
---------------------
-    The easiest way to have link-grammar working on MS Windows, especially
-    if you want the Java bindings, is to use MinGW/MSYS, a minimalist
+BUILDING on Windows (Cygwin)
+----------------------------
+    The easiest way to have link-grammar working on MS Windows,
+    is to use Cygwin, a Linux-like environment for Windows making it
+    possible to port software running on POSIX systems to Windows.  
+    Download and install Cygwin from http://www.cygwin.com/
+
+
+BUILDING on Windows (MSVC)
+--------------------------
+    Micrsoft VisualC project files can be found in the msvc6 and msvc9
+    directories.  These files are not actively maintained, and may be
+    out of date. Please submit fixes/patches, if needed, to the mailing
+    list.
+
+
+BUILDING on Windows (MinGW)
+---------------------------
+    Another way to build link-grammar is to use the MinGW/MSYS, a minimalist
     GNU environment for Windows that includes gcc, bash, automake, and many
     other utilities.  Download and install MinGW, MSYS and MSYS-DTK from
     http://mingw.org.
