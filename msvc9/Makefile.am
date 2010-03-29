@@ -1,7 +1,7 @@
 
 EXTRA_DIST=	\
+	LinkGrammarExe.vcproj \
 	LinkGrammarJava.vcproj \
-	LinkGrammar.suo \
 	LinkGrammar.sln \
 	LinkGrammar.vcproj \
 	README

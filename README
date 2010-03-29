@@ -142,6 +142,12 @@ BUILDING on Windows
     MSVC system. A third way is to use the MinGW system, which uses the
     Gnu toolset to compile windows programs.
 
+    Link-grammar now requires a working version of POSIX-standard regex
+    libraries. Since these are not provided by Microsoft, a copy must be
+    obtained elsewhere. One possibility is from the gnuwin32 system:
+    http://gnuwin32.sourceforge.net/packages/regex.htm 
+    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
+
 
 BUILDING on Windows (Cygwin)
 ----------------------------
@@ -156,10 +162,16 @@ BUILDING on Windows (Cygwin)
 
 BUILDING on Windows (MSVC)
 --------------------------
-    Microsoft Visual C project files can be found in the msvc6 and msvc9
-    directories.  Few programmers seem to choose this option, and as a 
-    result, these files are not actively maintained, and may be out of
-    date. Please submit fixes/patches, if needed, to the mailing list.
+    Microsoft Visual C/C++ project files can be found in the msvc6 and
+    msvc9 directories.  Few programmers seem to choose this option, and
+    as a result, these files are not actively maintained, and may be
+    out of date. Please submit fixes/patches, if needed, to the mailing
+    list.
+
+    Please note that the regex package, which includes libraries and
+    header files, must be seperately downloaded and installed, as
+    described above.  The MSVC project files *MUST* be modified to 
+    indicate the correct location of the regex libraries.
 
 
 BUILDING on Windows (MinGW)
@@ -169,12 +181,6 @@ BUILDING on Windows (MinGW)
     is probably the easiest way to obtain workable Java bindings for 
     Windows.  Download and install MinGW, MSYS and MSYS-DTK from
     http://mingw.org.
-
-    Link-grammar now requires a working version of POSIX-standard regex
-    libraries. Since these are not provided by Microsoft, a copy must be
-    obtained elsewhere. One possibility is from the gnuwin32 system:
-    http://gnuwin32.sourceforge.net/packages/regex.htm 
-    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
     Then build and install link-grammar with
 
