@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include "link-includes.h"
 #include "spellcheck.h"
+#include "utilities.h"  /* For Win32 compatibility */
 
 #ifdef HAVE_HUNSPELL
 

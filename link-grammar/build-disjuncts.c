@@ -16,6 +16,7 @@
 #include <math.h>
 #include <link-grammar/api.h>
 #include "disjunct-utils.h"
+#include "utilities.h" /* For Win32 compatibility features */
 
 /* Temporary connectors used while converting expressions into disjunct lists */
 typedef struct Tconnector_struct Tconnector;
