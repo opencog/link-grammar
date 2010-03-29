@@ -47,7 +47,7 @@
 
 #ifdef _MSC_VER
 /* The Microsoft Visual C compiler doesn't support the "inline" keyword. */
-#define inline
+#define inline ""
 
 /* MS Visual C uses non-standard string function names */
 #define snprintf _snprintf
@@ -56,12 +56,18 @@
 #define strdup _strdup
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 
+/* MS Visual C does not support some C99 standard floating-point functions */
+#define fmaxf(a,b) ((a) > (b) ? (a) : (b))
+
 #endif /* _MSC_VER */
 
-/* Appearntly, MinGW is also missing a variety of standard fuctions */
-/* MINGW is also known as MSYS */
+/* Appearently, MinGW is also missing a variety of standard fuctions.
+ * Not surprising, since MinGW is intended for compiling Windows
+ * programs on Windows.
+ * MINGW is also known as MSYS */
 #if defined(_MSC_VER) || defined(__MINGW32__)
-/* No langinfo Windows */
+
+/* No langinfo in Windows or MinGW */
 #define nl_langinfo(X) ""
 
 /* strtok_r is missing in Windows */
