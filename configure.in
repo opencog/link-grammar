@@ -77,12 +77,14 @@ dnl ====================================================================
 #
 if test x${native_win32} = xyes; then
 	# Vikas says that -std=gnu99 is needed on cygwin/mingw
-	# Also -- sets MINGW explicitly, ass well as assorted paths.
+	CFLAGS="${CFLAGS} -std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
+	# Also -- Vikas sets MINGW explicitly, as well as assorted paths.
 	# I'm unclear as to why these are not being set automatically,
 	# by mingw itself .. but what the hey ... this can't hurt, right?
-	CFLAGS="${CFLAGS} -std=gnu99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
-	CFLAGS="${CFLAGS} -I/usr/include/mingw -D__MINGW32__"
-	LDFLAGS="${LDFLAGS} -L/usr/lib/mingw -lmingwex -lcrtdll -lmsvcrt -lc -Wl,--allow-multiple-definition"
+	# Oh yes it can hurt, do not set these at all.
+	# Setting these screws up the remainder of the configure script.
+	# CFLAGS="${CFLAGS} -I/usr/include/mingw -D__MINGW32__"
+	# LDFLAGS="${LDFLAGS} -L/usr/lib/mingw -lmingwex -lcrtdll -lmsvcrt -lc -Wl,--allow-multiple-definition"
 else
 	# Else standard Linux/*BSD environment.
 	CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
