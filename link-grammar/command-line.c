@@ -12,10 +12,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <strings.h>
 #include <wchar.h>
 #include <wctype.h>
 #include <link-grammar/api.h>
+#include "utilities.h"  // For MSWindows portability
 
 static struct
 {
