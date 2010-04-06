@@ -49,6 +49,9 @@
 /* The Microsoft Visual C compiler doesn't support the "inline" keyword. */
 #define inline ""
 
+/* MS Visual C does not have any function normally found in strings.h */
+/* In particular, be careful to avoid including strings.h */
+
 /* MS Visual C uses non-standard string function names */
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
