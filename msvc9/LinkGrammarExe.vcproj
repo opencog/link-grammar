@@ -119,6 +119,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				AdditionalIncludeDirectories="D:\lib\regex\include;../."
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
@@ -138,7 +139,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="regex.lib"
+				OutputFile="$(OutDir)\link-grammar.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="D:\lib\regex\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
