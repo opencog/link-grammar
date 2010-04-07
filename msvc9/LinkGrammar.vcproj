@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".;c:\java6\include\win32;c:\java6\include"
+				AdditionalIncludeDirectories="D:\lib\regex\include;..\."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LGSVN_EXPORTS;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -135,8 +135,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="regex.lib"
 				OutputFile="$(OutDir)\link-grammar.dll"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="D:\lib\regex\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
