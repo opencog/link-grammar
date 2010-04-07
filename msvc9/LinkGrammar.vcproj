@@ -201,10 +201,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\link-grammar\command-line.h"
-				>
-			</File>
-			<File
 				RelativePath="..\link-grammar\constituents.h"
 				>
 			</File>
@@ -338,10 +334,6 @@
 			</File>
 			<File
 				RelativePath="..\link-grammar\build-disjuncts.c"
-				>
-			</File>
-			<File
-				RelativePath="..\link-grammar\command-line.c"
 				>
 			</File>
 			<File
