@@ -47,7 +47,7 @@
 
 #ifdef _MSC_VER
 /* The Microsoft Visual C compiler doesn't support the "inline" keyword. */
-#define inline ""
+#define inline
 
 /* MS Visual C does not have any function normally found in strings.h */
 /* In particular, be careful to avoid including strings.h */
