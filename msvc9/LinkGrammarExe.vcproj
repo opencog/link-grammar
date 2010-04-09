@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="D:\lib\regex\include;../."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="$(GNUREGEX)\include;../."
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_MSC_VER"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -66,7 +66,7 @@
 				AdditionalDependencies="regex.lib"
 				OutputFile="$(OutDir)\link-grammar.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="D:\lib\regex\lib"
+				AdditionalLibraryDirectories="$(GNUREGEX)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -119,13 +119,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="D:\lib\regex\include;../."
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="$(GNUREGEX)\include;../."
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_MSC_VER"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -140,9 +141,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="regex.lib"
-				OutputFile="$(OutDir)\link-grammar.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="D:\lib\regex\lib"
+				AdditionalLibraryDirectories="$(GNUREGEX)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\.;C:\java6\include\win32;C:\java6\include"
+				AdditionalIncludeDirectories="..\.;$(JAVA_HOME)\include\win32;$(JAVA_HOME)\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LINKGRAMMARJAVA_EXPORTS;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -113,7 +113,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="c:\java6\include\win32;c:\java6\include;."
+				AdditionalIncludeDirectories="..\.;$(JAVA_HOME)\include\win32;$(JAVA_HOME)\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LINKGRAMMARJAVA_EXPORTS;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
