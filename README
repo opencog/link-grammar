@@ -148,6 +148,11 @@ BUILDING on Windows
     http://gnuwin32.sourceforge.net/packages/regex.htm 
     http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
+    These different build methods are NOT regularly tested, and some 
+    linkgrammar versions may have build issues.  If you experience
+    these, please submit patches that fix the problem to the mailing
+    list.
+
 
 BUILDING on Windows (Cygwin)
 ----------------------------
@@ -163,10 +168,7 @@ BUILDING on Windows (Cygwin)
 BUILDING on Windows (MSVC)
 --------------------------
     Microsoft Visual C/C++ project files can be found in the msvc6 and
-    msvc9 directories.  Few programmers seem to choose this option, and
-    as a result, these files are not actively maintained, and may be
-    out of date. Please submit fixes/patches, if needed, to the mailing
-    list.
+    msvc9 directories. 
 
     Please note that the regex package, which includes libraries and
     header files, must be seperately downloaded and installed, as
@@ -328,7 +330,7 @@ JAVA bindings:
    Please note that the use of /opt is non-standard, and most system
    tools will fail to find packages installed there.
 
-	The building of the Java bindings can be disabled by configuring as
+   The building of the Java bindings can be disabled by configuring as
    below:
 
       ./configure --disable-java-bindings
@@ -408,7 +410,7 @@ Corpus Statistics:
       Showing of word senses turned on.
       linkparser> this is a test
       Found 1 linkage (1 had no P.P. violations)
-	      Unique linkage, cost vector = (CORP=4.4257 UNUSED=0 DIS=1 AND=0 LEN=5)
+      Unique linkage, cost vector = (CORP=4.4257 UNUSED=0 DIS=1 AND=0 LEN=5)
 
                +--Ost--+
          +-Ss*b+  +-Ds-+
@@ -425,8 +427,8 @@ Corpus Statistics:
                      test.n      1.0  9.151 Ost- Ds- 
 
 
-  Note that the sense labels are not terribly accurate; the verb "to be"
-  is particularly hard to tag correctly.
+   Note that the sense labels are not terribly accurate; the verb "to be"
+   is particularly hard to tag correctly.
 
 
 MULTI-THREADED USE:
