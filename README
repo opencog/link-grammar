@@ -165,17 +165,6 @@ BUILDING on Windows (Cygwin)
    you need the Java bindings, you must use MSVC or MinGW, below.
 
 
-BUILDING on Windows (MSVC)
---------------------------
-   Microsoft Visual C/C++ project files can be found in the msvc6 and
-   msvc9 directories.
-
-   Please note that the regex package, which includes libraries and
-   header files, must be seperately downloaded and installed, as
-   described above.  The MSVC project files *MUST* be modified to
-   indicate the correct location of the regex libraries.
-
-
 BUILDING on Windows (MinGW)
 ---------------------------
    Another way to build link-grammar is to use the MinGW/MSYS, which
@@ -226,6 +215,58 @@ BUILDING on Windows (MinGW)
 
    Make sure that this directory is in the %PATH setting, as otherwise,
    the DLL's will not be found.
+
+
+BUILDING on Windows (MSVC)
+--------------------------
+   Microsoft Visual C/C++ project files can be found in the msvc6 and
+   msvc9 directories.
+
+   Please note that the regex package, which includes libraries and
+   header files, must be seperately downloaded and installed, as
+   described above.  The MSVC project files *MUST* be modified to
+   indicate the correct location of the regex libraries.
+
+   The build files make use of two environment variables, GNUREGEX and
+   JAVA_HOME.
+   -- GNUREGEX must be pointing to an unzipped gnuwin32-regex
+      distribution.
+   -- JAVA_HOME must be pointing to a locally installed JDK.
+
+   Those two can be set either as system environment variables (Windows
+   users are supposed to know how to do this :) or as MSVC9 user macros.
+   But just in case you don't, here's how:
+
+   1) Start > Control Panel > System (remember in Vista or 7 you need
+      to switch to "Classic View" or "Large icons" respectively to see
+      the System icon).
+   2) "Advanced system settings" (or "Advanced" tab under XP)
+   3) On all versions you will see a button with the caption 
+      "Environment Variables", press it.... (ALL REMAINING STEPS
+      CORRELATE ON XP, VISTA, AND 7)
+   4) You now see two lists of environment variables... the top one
+      says "User variables for <yourusernamehere>" and is localized to
+      your user account, the other says "System variables" and applies
+      to ALL user accounts on that computer.
+   5) Press the "New ..." button corresponding to whether or not you
+      want the variables to be valid on ALL accounts or just your own
+      (either way the following steps remain the same)
+   6) In the "Variable name:" box, enter "GNUREGEX".
+   7) In the "Variable value" box, enter the path to your installation
+      of GNUREGEX (on my system this is "C:\Program Files (x86)\GnuWin32"
+      as I am on Windows 7 Ultimate x64) then press "OK"
+   8) Press the same "New ..." button and this time in the "Variable
+      name" box enter "JAVA_HOME", and in the "Variable value" box
+      enter the path to your Java SDK root folder. (IMPORTANT NOTE: On
+      some systems this variable may already be defined automatically
+      by the JAVA SDK installation! You should check the variables
+      lists before creating a new one to avoid any conflict).
+   9) Press "OK" and close all Windows opened during the above steps.
+
+   If you were running MSVC++ or your chosen development environment
+   whilst performing the above steps, you should restart it! Once
+   restarted you should be able to build the latest version of the
+   code.
 
 
 RUNNING the program:
