@@ -61,6 +61,7 @@ void * spellcheck_create(const char * lang)
 		/* check in each hunspell_dict_dir if the files exist */
 		for (j = 0; j < sizeof(hunspell_dict_dirs); ++j)
 		{
+			FILE *fh;
 			/* if the directory name is NULL then ignore */
 			if (hunspell_dict_dirs[j] == NULL) continue;
 
@@ -68,6 +69,18 @@ void * spellcheck_create(const char * lang)
 					spellcheck_lang_mapping[i+1]);
 			snprintf(hunspell_dic_file, FPATHLEN, "%s/%s.dic", hunspell_dict_dirs[j],
 					spellcheck_lang_mapping[i+1]);
+
+			/* Some versions of Hunspell_create() will succeed even if
+			 * there are no dictionary files. So test for permissions.
+			 */
+			fh = fopen(hunspell_aff_file, "r");
+			if (fh) fclose (fh);
+			else continue;
+
+			fh = fopen(hunspell_dic_file, "r");
+			if (fh) fclose (fh);
+			else continue;
+
 			h = Hunspell_create(hunspell_aff_file, hunspell_dic_file);
 			/* if hunspell handle was created break from loop */
 			if (h != NULL)
