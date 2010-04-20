@@ -59,7 +59,7 @@ void * spellcheck_create(const char * lang)
 		if (0 != strcmp(lang, spellcheck_lang_mapping[i])) continue;
 
 		/* check in each hunspell_dict_dir if the files exist */
-		for (j = 0; j < sizeof(hunspell_dict_dirs); ++j)
+		for (j = 0; j < sizeof(hunspell_dict_dirs)/sizeof(char *); ++j)
 		{
 			FILE *fh;
 			/* if the directory name is NULL then ignore */
