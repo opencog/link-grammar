@@ -28,6 +28,10 @@ static const char *hunspell_dict_dirs[] = {
 	"/usr/share/hunspell/dicts",
 	"/usr/local/share/myspell/dicts",
 	"/usr/local/share/hunspell/dicts",
+	"/usr/share/myspell",
+	"/usr/share/hunspell",
+	"/usr/local/share/myspell",
+	"/usr/local/share/hunspell",
 	HUNSPELL_DICT_DIR	
 };
 
