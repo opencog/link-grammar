@@ -7,7 +7,9 @@
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
  %***************************************************************************%
-<dictionary-version-number>: V4v6v6+;
+
+% Dictionary version number is 4.6.7 (formatted as V4v6v7+)
+<dictionary-version-number>: V4v6v7+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  % 
