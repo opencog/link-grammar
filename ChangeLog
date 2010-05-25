@@ -1,6 +1,7 @@
 Version 4.6.8 (XXX 2010)
  * Fix: hunspell configuration on Fedora (bugtracker issue 47)
  * Fix: 'turn' with adjective: "She turned him green" from wingedtachikoma
+ * Fix: comma-conjoined modifiers: "It tastes bitter, not sweet."
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)

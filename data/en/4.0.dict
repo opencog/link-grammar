@@ -3897,7 +3897,9 @@ and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 and.j-g: G- & G+;
 
 % The black and white cat sleeps
-and.j-a: AJ- & AJ+ & A+;
+% She ran hot and cold.
+% See also comma-conjunction for similar structures
+and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
@@ -4675,13 +4677,17 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 <semicol>: {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
 ";": <semicol>;
 
+% comma, as a conjunction -- "They taste bitter, not sweet"
+<comma-conjunction>: (AJ- & EB+ & AJ+) & (Pa- or MVa-);
+
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
 % because the modifier my be long to a following phrase. 
 % e.g. "The blah, soon to be blah, will be blah." should not
 % get an EBx link to "soon".
 % XXX the correct solution to this is to add a new domain rule ! XXX
-",": ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or [[<semicol>]];
+",": ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or
+  [[<semicol>]] or <comma-conjunction>;
 
 "…" ":" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
