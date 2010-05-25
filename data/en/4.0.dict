@@ -2325,8 +2325,13 @@ finishing.v practicing.v resisting.v quitting.v: <verb-pg> & <vc-finish>;
 over_with: <verb-pv-b>;
 
 % <vc-trans> with particle
-<vc-turn>: ((O+ or (K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+}) or
- [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & (Pa+ or AF-));
+% and also Pa**j for "The witch turned him green"
+<vc-turn>: ((O+ or 
+  (K+ & {[[@MV+]]} & O*n+) or 
+  ({O+ or B-} & {K+}) or
+  ((O+ or B-) & Pa**j+) or 
+  [[@MV+ & O*n+]]) & {@MV+}) or 
+({@MV+} & (Pa+ or AF-));
 turn.v: <verb-pl,i> & <vc-turn>;
 turns.v: <verb-s> & <vc-turn>;
 turned.v-d: (<verb-sp,pp> & <vc-turn>) or (<verb-pv-b> & {K+} & {@MV+})
