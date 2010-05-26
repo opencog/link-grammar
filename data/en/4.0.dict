@@ -3896,10 +3896,16 @@ and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 % The Great Southern and Western Railroad 
 and.j-g: G- & G+;
 
+% Conjoined adjectival modifiers.
 % The black and white cat sleeps
 % She ran hot and cold.
-% See also comma-conjunction for similar structures
+% See also comma-conjunction for similar structures.
 and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
+
+% Conjoined question words.
+% When and where is the party?
+% How and why did you do that?
+and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
 
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
@@ -3915,18 +3921,22 @@ thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or
 when: ((WN- or BIh-) & Cs+) or 
 ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or 
 [QI-] or
+QJ- or QJ+ or
 (Wq- & (Q+ or PF+)) or 
 ((Cs+ or Mp+ or Mgp+ or Mv+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) 
 or (Xd- & Xc+ & E+)));
 
 % QI- & (): "I do not know why"
 why: ({EL+} & ((Wq- & Q+) or (QI- & (Cs+ or TOn+ or [()])) or (Cs+ & 
-((SFsx+ & <S-CLAUSE>) or WY- or BIq-)))) or [[{@CO-} & Wc- & Wi+]];
+((SFsx+ & <S-CLAUSE>) or WY- or BIq-)))) or 
+QJ- or QJ+ or
+[[{@CO-} & Wc- & Wi+]];
 why_not: [[{@CO-} & Wc- & Wi+]]; 
 
 % QI- & (): "I do not know where"
 where: {EL+} & ((Wq- & ((Rw+ & WR+) or Q+ or ({Rw+} & PF+))) or 
 [QI-] or
+QJ- or QJ+ or
 ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
  or ((Cs+ or PF+ or WR+) & <prep-main-b>));
 
@@ -3941,6 +3951,7 @@ how:
 (BIqd- or QI*d- or Wq- or Ws-)) or
 (Wq- & (Q+ or AF+)) or 
 [QI-] or
+QJ- or QJ+ or
 ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 not.e: EB- or ({@E-} & N-) or NT+ or [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+)

@@ -1879,7 +1879,12 @@ The music was soft and mellow.
 She ran hot and cold.
 The black and white cat sleeps.
 
+% Conjoined question words
+When and where is the party?
+How and why did you do that?
+
 % non-planar graph: "saw" and "yesterday" should link, but don't.
+% "dog" and "which" do link (and that is correct).
 *John saw a dog yesterday which was a Yorkshire terrier.
 
 % incorrect parses -- INCORRECT PARSES -- bad disjunct usage
