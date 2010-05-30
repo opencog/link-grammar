@@ -1895,22 +1895,29 @@ How and why did you do that?
 
 % Sentence parses, but incorrectly -- "of" links to "bill", should link
 % to 12th.
+% Put a star in front of this -- the sentence is good, the parses are bad.
 *Senator Johnson introduced a bill on the 12th of July.
 *Senator Johnson introduced a bill of July.
 
 % "one to two" should modify hours.
 It starts one to two hours later.
 
+% None of the generated parses are correct; all are garbage.
+% Put a star in front of this -- the sentence is good, the parses are bad.
+*Bill went over the river and right through the woods.
+
 % Rules should select "shouting.g" gerund, not "shouting.v" (participle)
+% Now fixed.
 The teacher's shouting startled the student.
 
 % "and so" is linked with Wq, should not be.
 Rama ate the apple, and so did Mohan.
 
 % Automatic possesive guessing broken when entity is in the dictionary:
-% "to run" is a verb, this breaks identification of "Run" as entity:
-% "hooker" is a noun ... same deal.
-% 123A, the "A" suffix is assumed to be a unit, leading to a bad parse.
+% "to run" is a verb, this breaks identification of "Ran" as entity;
+% fix by adding Ran explicitly as name to dictionary.
+% "hooker" is a noun ... but now works.
+% These are all working now.
 Flumblqwerty's shoes are red.
 Run's shoes are red.
 Ran's shoes are red.
@@ -1921,6 +1928,7 @@ John's sudden outburst was awkward.
 Lady's dress was awkward.
 
 % Some plural capitalized words are singular entities. Treat them well.
+% e.g. last name Johns, or Hotchkiss are not actually plurals ... 
 Johns gave it to me.
 Hotchkiss gave it to me.
 
@@ -1930,6 +1938,7 @@ Sue answered the door.
 % Tom as a mass noun interferes with far-more-likely common-name "Tom".
 Could we add some tom-tom to that track?
 
+% 123A, the "A" suffix is assumed to be a unit, leading to a bad parse.
 You want part no. 123A
 You want part no. 123ABC
 
