@@ -99,7 +99,7 @@ PL-CAPITALIZED-WORDS:  /^[[:upper:]].*[^iuoys'’]s$/
 % commas, or periods/question-marks at the end of sentences.
 % In addition, this must not swallow words ending in 's 'll etc.
 % (... any affix, for that matter ...)
-CAPITALIZED-WORDS:     /^[[:upper:]].*[^'’][^'’]\w$/
+CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*$/
 
 % SUFFIX GUESSING
 % For all suffix-guessing patterns, we insist that the pattern start
