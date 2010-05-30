@@ -3,6 +3,7 @@ Version 4.6.8 (XXX 2010)
  * Fix: 'turn' with adjective: "She turned him green" from wingedtachikoma
  * Fix: comma-conjoined modifiers: "It tastes bitter, not sweet."
  * Fix: conjoined question words: "When and where is the party?"
+ * Fix: recognize short, capitalized words (Los, La, etc.).
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
