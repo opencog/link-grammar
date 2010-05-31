@@ -380,12 +380,13 @@ tom.n-u: [<mass-noun>];
 
 % Nouns that are also adjectives (e.g. red.n) and so we don't want to
 % allow these to take AN+ links.  We need these as nouns, so as to 
-% parse 'she prefers red'.
+% parse 'she prefers red'. However, assign a cost, so that 'her shoes
+% are red' gets red.a perfered over red.n.
 auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n 
 tawny.n ultramarine.n yellow.n:
 <marker-common-entity> or 
 ({@AN-} & {@A- & {[[@AN-]]}} & 
-(({Dmu-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
+(({Dmu-} & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>])) or
 (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 
 % US state names and abbreviations
