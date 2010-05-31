@@ -5,6 +5,7 @@ Version 4.6.8 (XXX 2010)
  * Fix: conjoined question words: "When and where is the party?"
  * Fix: recognize short, capitalized words (Los, La, etc.).
  * Treat colon as synonym for is: "The answer: yes."
+ * Fix: begin with prepositions: "It all began in Chicago."
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)

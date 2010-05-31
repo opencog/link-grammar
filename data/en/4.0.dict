@@ -2022,8 +2022,9 @@ loved.v-d disliked.v-d hated.v-d: (<verb-sp,pp> & <vc-love>) or <verb-pv> or <ve
 loving.g disliking.g hating.g: (<vc-love> & <verb-ge>) or <verb-ge-d>;
 loving.v disliking.v hating.v: <verb-pg> & <vc-love>;
 
+% "It begins here"
 <vc-begin>: {<vc-trans>} or
- ({@MV+} & (TO+ or Pg+));
+ ({@MV+} & ({TO+} or Pg+));
 begin.v continue.v cease.v: <verb-pl,i> & <vc-begin>;
 begins.v continues.v ceases.v: <verb-s> & <vc-begin>;
 ceased.v-d: (<verb-sp,pp> & <vc-begin>) or <verb-pv> or <verb-po>;
