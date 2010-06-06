@@ -3911,6 +3911,7 @@ and.j-g: G- & G+;
 % Conjoined adjectival modifiers.
 % The black and white cat sleeps
 % She ran hot and cold.
+% The EB+ link handles not, yet after the and.
 % See also comma-conjunction for similar structures.
 and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 
@@ -3975,18 +3976,24 @@ n't n’t: N- or EB-;
 
 %ADJECTIVES
 
-<adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
-({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-))); 
+% adjectives connecting to conjoining "and" or comma.
+<adj-and>: AJ- or AJ+;
 
-/en/words/words.adj.1:  % ordinary adjectives
-<marker-common-entity> or 
-({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
-((Pa- or AF+ or Ma-) & {@MV+}) or 
-AA+ or [[DD- & <noun-main-p>]] or <adj-op> or AJ- or AJ+));
+% Common disjuncts shred by virtuall all adjectives.
+<adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
+  <adj-and> or
+  ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-))); 
+
+% Ordinary adjectives
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a 
+/en/words/words.adj.1:
+  <marker-common-entity> or 
+  ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
+  ((Pa- or AF+ or Ma-) & {@MV+}) or 
+  AA+ or [[DD- & <noun-main-p>]] or <adj-op>));
 
 HYPHENATED-WORDS.a:
-({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
+  ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
 
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
 <adj-stuff>:   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 

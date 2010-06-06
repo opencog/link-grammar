@@ -1933,6 +1933,7 @@ It tastes bitter, yet sweet.
 The music was soft and mellow.
 She ran hot and cold.
 The black and white cat sleeps.
+It was a long and narrow valley.
 
 % Conjoined question words
 When and where is the party?
@@ -1945,8 +1946,6 @@ How and why did you do that?
 % incorrect parses -- INCORRECT PARSES -- bad disjunct usage
 % These sentences typically parse just fine, but generate 
 % incorrect linkages.
-% Object should be "way out", and not a K to "took".
-*John took the easy way out.
 
 % Sentence parses, but incorrectly -- "of" links to "bill", should link
 % to 12th.
