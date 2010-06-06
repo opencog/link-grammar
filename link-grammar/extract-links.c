@@ -144,7 +144,7 @@ Parse_info parse_info_new(int nwords)
 	/*printf("Allocating x_table of size %d\n", x_table_size);*/
 	pi->x_table_size = x_table_size;
 	pi->x_table = (X_table_connector**) xalloc(x_table_size * sizeof(X_table_connector*));
-	memset(pi->x_table, 0, x_table_size);
+	memset(pi->x_table, 0, x_table_size * sizeof(X_table_connector*));
 
 	return pi;
 }
