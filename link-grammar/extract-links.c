@@ -107,38 +107,35 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
 }
 
 /**
- * Initialize the _x_table hash table.
+ * Allocate the parse info struct
  *
  * A piecewise exponential function determines the size of the hash
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
  */
-void init_x_table(Sentence sent)
+static Parse_info parse_info_new(int nwords)
 {
-	int x_table_size, len;
+	int x_table_size;
 	Parse_info pi;
 
-	assert(sent->parse_info == NULL, "Parse_info is not NULL");
-
-	pi = sent->parse_info = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
-	pi->N_words = sent->length;
+	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
+	pi->N_words = nwords;
 	pi->parse_set = NULL;
 
-	len = sent->length;
-	pi->chosen_disjuncts = (Disjunct **) xalloc(len * sizeof(Disjunct *));
-	memset(pi->chosen_disjuncts, 0, len * sizeof(Disjunct *));
+	pi->chosen_disjuncts = (Disjunct **) xalloc(nwords * sizeof(Disjunct *));
+	memset(pi->chosen_disjuncts, 0, nwords * sizeof(Disjunct *));
 
-	pi->image_array = (Image_node **) xalloc(len * sizeof(Image_node *));
-	memset(pi->image_array, 0, len * sizeof(Image_node *));
+	pi->image_array = (Image_node **) xalloc(nwords * sizeof(Image_node *));
+	memset(pi->image_array, 0, nwords * sizeof(Image_node *));
 
-	pi->has_fat_down = (char *) xalloc(len * sizeof(Boolean));
-	memset(pi->has_fat_down, 0, len * sizeof(Boolean));
+	pi->has_fat_down = (char *) xalloc(nwords * sizeof(Boolean));
+	memset(pi->has_fat_down, 0, nwords * sizeof(Boolean));
 
 	/* Alloc the x_table */
-	if (pi->N_words >= 10) {
+	if (nwords >= 10) {
 		x_table_size = (1<<14);
-	} else if (pi->N_words >= 4) {
-		x_table_size = (1 << (pi->N_words));
+	} else if (nwords >= 4) {
+		x_table_size = (1 << nwords);
 	} else {
 		x_table_size = (1 << 4);
 	}
@@ -147,6 +144,17 @@ void init_x_table(Sentence sent)
 	pi->x_table_size = x_table_size;
 	pi->x_table = (X_table_connector**) xalloc(x_table_size * sizeof(X_table_connector*));
 	memset(pi->x_table, 0, x_table_size);
+
+	return pi;
+}
+
+/**
+ * Initialize the _x_table hash table.
+ */
+void init_x_table(Sentence sent)
+{
+	assert(sent->parse_info == NULL, "Parse_info is not NULL");
+	sent->parse_info = parse_info_new(sent->length);
 }
 
 /**
@@ -154,12 +162,10 @@ void init_x_table(Sentence sent)
  * it's a dag, a recursive free function won't work.  Every time we create
  * a set element, we put it in the hash table, so this is OK.
  */
-static void free_x_table(Parse_info pi)
+static void free_parse_info(Parse_info pi)
 {
 	int i, len;
 	X_table_connector *t, *x;
-
-	pi->parse_set = NULL;
 
 	len = pi->N_words;
 	xfree(pi->chosen_disjuncts, len * sizeof(Disjunct *));
@@ -175,6 +181,8 @@ static void free_x_table(Parse_info pi)
 			xfree((void *) t, sizeof(X_table_connector));
 		}
 	}
+	pi->parse_set = NULL;
+
 	/*printf("Freeing x_table of size %d\n", x_table_size);*/
 	xfree((void *) pi->x_table, pi->x_table_size * sizeof(X_table_connector*));
 	pi->x_table_size = 0;
@@ -503,11 +511,7 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 void free_parse_set(Sentence sent)
 {
 	if (NULL == sent->parse_info) return;
-
-	/* This uses the x_table to free the whole parse set (the set itself
-	 * cannot be used cause it's a dag).  Called from the outside world.
-	 */
-	free_x_table(sent->parse_info);
+	free_parse_info(sent->parse_info);
 	sent->parse_info = NULL;
 }
 
