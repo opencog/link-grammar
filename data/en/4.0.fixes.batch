@@ -1193,6 +1193,23 @@ Did they go get a sandwich?
 Did they eat in the dark?                       
 What did they do with the waxed-paper bundles?
 
+% Sentences ending in "to", null infinitive
+% i.e. "I want to infinitive" but the verb is missing/implied.
+% Fixed by forcing "to" to be at end of sentence
+I want to, also.
+Because I want to.
+But I want to.
+I wanted to, but I didn't.
+I want.
+Yes, I'd like to.
+Yes, I'd love to.
+No, I wouldn't.
+Thank you, I'd love to.
+I'd like to, I want to.
+*I like to pliers.
+*I like to purple.
+*I like to many.
+
 % Clausal complements, fairly idiomatic in form ...
 The emperor ordered it made
 The emperor suggested it sold
