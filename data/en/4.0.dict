@@ -3464,13 +3464,13 @@ or ((OF- or Mp-) & B-) or (MG- & JG+) or (NF- & NJ+) or (Mp- & TI+);
 of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
 % MX-PHRASE: The blah, to be blahed, will be blah.
-% TO- & (RW+ or Xc+): "I'd like to, I want to." (null infinitive)
+% TO- & Xc+: "I'd like to, I want to." (null infinitive)
 to.r: ({@E-} & {NT-} & I+ & 
    (TO- or [{Xd- & Xc+} & MVi-] or 
      <MX-PHRASE> or [<OPENER>] or
      [[R-]] or (SFsx+ & <S-CLAUSE>) 
    )
- ) or (TO- & (RW+ or Xc+)) or
+ ) or (TO- & Xc+) or
  I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or
  [MVp- & B-];
 
