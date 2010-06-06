@@ -246,6 +246,7 @@ struct Sentence_s
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
 	int    num_valid_linkages;  /* number with no pp violations */
+	int    num_thin_linkages;   /* valid linkages which are not fat */
 	int    null_links;          /* null links allowed */
 	int    null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */

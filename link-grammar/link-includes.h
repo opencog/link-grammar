@@ -248,6 +248,8 @@ link_public_api(int)
 link_public_api(int)
      sentence_num_linkages_post_processed(Sentence sent);
 link_public_api(int)
+     sentence_num_thin_linkages(Sentence sent);
+link_public_api(int)
      sentence_num_violations(Sentence sent, int i);
 link_public_api(int)
      sentence_and_cost(Sentence sent, int i);

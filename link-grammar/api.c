@@ -841,6 +841,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	int in, block_bottom, block_top;
 	int N_linkages_found, N_linkages_alloced;
 	int N_linkages_post_processed, N_valid_linkages;
+	int N_thin_linkages;
 	int overflowed, only_canonical_allowed;
 	Linkage_info *link_info;
 	int canonical;
@@ -870,6 +871,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		sent->num_linkages_alloced = 0;
 		sent->num_linkages_post_processed = 0;
 		sent->num_valid_linkages = 0;
+		sent->num_thin_linkages = 0;
 		sent->link_info = NULL;
 		return;
 	}
@@ -1015,10 +1017,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 
 	print_time(opts, "Sorted all linkages");
+	N_thin_linkages = 0;
+	for (in=0; in < N_valid_linkages; in++)
+	{
+		if (FALSE == link_info[in].fat) N_thin_linkages++;
+	}
 
 	sent->num_linkages_alloced = N_linkages_alloced;
 	sent->num_linkages_post_processed = N_linkages_post_processed;
 	sent->num_valid_linkages = N_valid_linkages;
+	sent->num_thin_linkages = N_thin_linkages;
 	sent->link_info = link_info;
 
 	xfree(indices, N_linkages_alloced * sizeof(int));
@@ -1167,6 +1175,11 @@ const char * sentence_get_nth_word(Sentence sent, int index)
 int sentence_null_count(Sentence sent) {
 	if (!sent) return 0;
 	return sent->null_count;
+}
+
+int sentence_num_thin_linkages(Sentence sent) {
+	if (!sent) return 0;
+	return sent->num_thin_linkages;
 }
 
 int sentence_num_linkages_found(Sentence sent) {
