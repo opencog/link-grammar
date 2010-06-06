@@ -348,7 +348,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 			print_disjunct_counts(sent);
 		}
 		*/
-		/*print_time(opts, "Finished gentle power pruning"); */
+		/* already reported -- print_time(opts, "Finished gentle power pruning"); */
 		conjunction_prune(sent, opts);
 		if (verbosity > 2) {
 			printf("\nAfter conjunction pruning:\n");

@@ -123,7 +123,8 @@ static void resources_print_time(int verbosity, Resources r, const char * s)
 	new_t = current_usage_time();
 	if (verbosity > 1) {
 		printf("++++");
-		left_print_string(stdout, s, "										   ");
+		left_print_string(stdout, s,
+			"                                     ");
 		printf("%7.2f seconds\n", new_t - r->when_last_called);
 	}
 	r->when_last_called = new_t;
