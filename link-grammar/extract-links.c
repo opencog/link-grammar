@@ -107,6 +107,8 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
 }
 
 /**
+ * Initialize the _x_table hash table.
+ *
  * A piecewise exponential function determines the size of the hash
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
@@ -123,8 +125,14 @@ void init_x_table(Sentence sent)
 	pi->parse_set = NULL;
 
 	len = sent->length;
-	pi->chosen_disjuncts = (Disjunct **) xalloc(sizeof(Disjunct *));
-	memset(pi->chosen_disjuncts, 0, sizeof(Disjunct *));
+	pi->chosen_disjuncts = (Disjunct **) xalloc(len * sizeof(Disjunct *));
+	memset(pi->chosen_disjuncts, 0, len * sizeof(Disjunct *));
+
+	pi->image_array = (Image_node **) xalloc(len * sizeof(Image_node *));
+	memset(pi->image_array, 0, len * sizeof(Image_node *));
+
+	pi->has_fat_down = (char *) xalloc(len * sizeof(Boolean));
+	memset(pi->has_fat_down, 0, len * sizeof(Boolean));
 
 	/* Alloc the x_table */
 	if (pi->N_words >= 10) {
@@ -148,10 +156,13 @@ void init_x_table(Sentence sent)
  */
 static void free_x_table(Parse_info pi)
 {
-	int i;
+	int i, len;
 	X_table_connector *t, *x;
 
-	xfree(pi->chosen_disjuncts, pi->N_words);
+	len = pi->N_words;
+	xfree(pi->chosen_disjuncts, len * sizeof(Disjunct *));
+	xfree(pi->image_array, len * sizeof(Image_node*));
+	xfree(pi->has_fat_down, len * sizeof(Boolean));
 
 	for (i=0; i<pi->x_table_size; i++)
 	{

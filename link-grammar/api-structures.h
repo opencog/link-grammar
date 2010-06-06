@@ -202,6 +202,9 @@ struct And_data_s
 	int STAT_calls_to_equality_test;
 };
 
+/* Declare booleans to be char, to save space. */
+typedef char Boolean;
+
 struct Parse_info_struct
 {
 	int            x_table_size;
@@ -214,10 +217,11 @@ struct Parse_info_struct
 
 	/* Points to the image structure for each word.
 	 * NULL if not a fat word. */
-	Image_node * image_array[MAX_SENTENCE];
+	Image_node ** image_array;
 
-	/* TRUE if this word has a fat down link. FALSE otherise */
-	char has_fat_down[MAX_SENTENCE];
+	/* Array of boolean flags, one per word. Set to TRUE if this 
+	 * word has a fat down link. FALSE otherise */
+	Boolean *has_fat_down;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
