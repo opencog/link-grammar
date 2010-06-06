@@ -786,7 +786,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	/* We begin by unmarking all disjuncts.  This would not be necessary if
 	   whenever we created a disjunct we cleared its marked field.
 	   I didn't want to search the program for all such places, so
-	   I did this way.
+	   I did this way. XXX FIXME, someday ... 
 	   */
 	for (w=0; w<sent->length; w++) {
 		for (d=sent->word[w].d; d != NULL; d=d->next) {

@@ -952,6 +952,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	/* second pass: actually perform post-processing */
 	N_linkages_post_processed = 0;
+	N_thin_linkages = 0;
 	for (in=0; (in < N_linkages_alloced) &&
 			   (!resources_exhausted(opts->resources)); in++)
 	{
@@ -974,6 +975,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		if (0 == lifo->N_violations)
 		{
 			N_valid_linkages++;
+			if (FALSE == lifo->fat) N_thin_linkages++;
 		}
 		lifo->index = indices[in];
 		lg_corpus_score(sent, lifo);
@@ -1017,11 +1019,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 
 	print_time(opts, "Sorted all linkages");
-	N_thin_linkages = 0;
-	for (in=0; in < N_valid_linkages; in++)
-	{
-		if (FALSE == link_info[in].fat) N_thin_linkages++;
-	}
 
 	sent->num_linkages_alloced = N_linkages_alloced;
 	sent->num_linkages_post_processed = N_linkages_post_processed;
