@@ -115,7 +115,7 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
  */
 void init_x_table(Sentence sent)
 {
-	int i, x_table_size, len;
+	int x_table_size, len;
 	Parse_info pi;
 
 	assert(sent->parse_info == NULL, "Parse_info is not NULL");
@@ -159,6 +159,8 @@ static void free_x_table(Parse_info pi)
 	int i, len;
 	X_table_connector *t, *x;
 
+	pi->parse_set = NULL;
+
 	len = pi->N_words;
 	xfree(pi->chosen_disjuncts, len * sizeof(Disjunct *));
 	xfree(pi->image_array, len * sizeof(Image_node*));
@@ -177,6 +179,8 @@ static void free_x_table(Parse_info pi)
 	xfree((void *) pi->x_table, pi->x_table_size * sizeof(X_table_connector*));
 	pi->x_table_size = 0;
 	pi->x_table = NULL;
+
+	xfree((void *) pi, sizeof(struct Parse_info_struct));
 }
 
 /**
@@ -504,8 +508,6 @@ void free_parse_set(Sentence sent)
 	 * cannot be used cause it's a dag).  Called from the outside world.
 	 */
 	free_x_table(sent->parse_info);
-	sent->parse_info->parse_set = NULL;
-	xfree((void *) sent->parse_info, sizeof(struct Parse_info_struct));
 	sent->parse_info = NULL;
 }
 
