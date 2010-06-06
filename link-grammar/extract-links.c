@@ -119,7 +119,7 @@ Parse_info parse_info_new(int nwords)
 	int x_table_size;
 	Parse_info pi;
 
-	pi = (Parse_info) xalloc(sizeof(Parse_info));
+	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
 	pi->N_words = nwords;
 	pi->parse_set = NULL;
 
