@@ -3939,11 +3939,11 @@ QJ- or QJ+ or
 why_not: [[{@CO-} & Wc- & Wi+]]; 
 
 % QI- & (): "I do not know where"
-where: {EL+} & ((Wq- & ((Rw+ & WR+) or Q+ or ({Rw+} & PF+))) or 
-[QI-] or
-QJ- or QJ+ or
-((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
- or ((Cs+ or PF+ or WR+) & <prep-main-b>));
+where: {EL+} & (
+ (Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+)) or 
+ [QI-] or QJ- or QJ+ or
+ ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or
+ ((Cs+ or PF+ or WR+) & <prep-main-b>));
 
 whether: (((QI- or BIq-) & (Cs+ or TOn+)) or (Cs+ & SFsx+ & <S-CLAUSE>))
 or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];

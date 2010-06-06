@@ -1145,6 +1145,7 @@ You just scrolled past it.
 What have you gotten into?
 What have you gotten yourself into?
 
+% Questions that want "from", "to" as prep.
 Where did the car come from?
 Where do the words come from?
 Who have bought your flat from?
@@ -1161,8 +1162,27 @@ Where is she coming from?
 Where am I coming from?
 Where does she come from?
 
+% These need R+ & Bsw+ in "where" to parse
+Where did they go to?
+Where have they gone to?
+*They have gone to.
+So, where did they come to?
+Where does it go to?
+What does it come to?
+What does it go to?
+
+*I want to thought about this.
+So, what does it all come to?
+So, what does it all come to, now?
+So, what does it all come to, brother?
+*Does it all come to?
+*Does it come from?
+Does it come from France?
+
 Where did that book go to?
 Where did that book get to?
+
+% Zappa/Grand Wazoo
 Where did they come from?
 Where did they go to?
 What has become of them now?
@@ -1172,7 +1192,6 @@ What did they do when they got off the car?
 Did they go get a sandwich? 
 Did they eat in the dark?                       
 What did they do with the waxed-paper bundles?
-What does it all come to?
 
 % Clausal complements, fairly idiomatic in form ...
 The emperor ordered it made
