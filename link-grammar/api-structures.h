@@ -202,9 +202,6 @@ struct And_data_s
 	int STAT_calls_to_equality_test;
 };
 
-/* Declare booleans to be char, to save space. */
-typedef char Boolean;
-
 struct Parse_info_struct
 {
 	int            x_table_size;

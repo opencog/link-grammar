@@ -324,10 +324,10 @@ struct Andlist_struct
 struct Linkage_info_struct
 {
     int index;
-    char fat;
-    char canonical;
-    char improper_fat_linkage;
-    char inconsistent_domains;
+    Boolean fat;
+    Boolean canonical;
+    Boolean improper_fat_linkage;
+    Boolean inconsistent_domains;
     short N_violations;
     short null_cost, unused_word_cost, and_cost, link_cost;
     float disjunct_cost;

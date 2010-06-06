@@ -44,6 +44,7 @@ typedef struct Resources_s * Resources;
 typedef struct Sublinkage_s Sublinkage;
 
 /* Some private typedefs */
+typedef char Boolean;
 typedef struct analyze_context_s analyze_context_t;
 typedef struct count_context_s count_context_t;
 typedef struct match_context_s match_context_t;
