@@ -3469,7 +3469,7 @@ to.r: ({@E-} & {NT-} & I+ &
  <MX-PHRASE> or [<OPENER>] or
  [[R-]] or (SFsx+ & <S-CLAUSE>) )) or
  I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or
- [MVp- & B-] or [MVp-];
+ [MVp- & B-];
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-; 
 
