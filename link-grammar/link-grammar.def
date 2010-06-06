@@ -114,6 +114,7 @@ linkage_get_disjunct_str
 linkage_get_disjunct_cost
 linkage_get_disjunct_corpus_score
 linkage_get_word
+linkage_is_fat
 linkage_print_disjuncts
 linkage_free_disjuncts
 linkage_print_links_and_domains

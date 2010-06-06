@@ -39,6 +39,9 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	else if (p1->unused_word_cost != p2->unused_word_cost) {
 		return (p1->unused_word_cost - p2->unused_word_cost);
 	}
+	else if (p1->fat != p2->fat) {
+		return (p1->fat - p2->fat);
+	}
 	else if (p1->disjunct_cost != p2->disjunct_cost) {
 		return (p1->disjunct_cost - p2->disjunct_cost);
 	}
@@ -1666,6 +1669,11 @@ int linkage_unused_word_cost(Linkage linkage)
 int linkage_disjunct_cost(Linkage linkage)
 {
 	return (int) floorf(linkage->info->disjunct_cost);
+}
+
+int linkage_is_fat(Linkage linkage)
+{
+	return linkage->info->fat;
 }
 
 int linkage_and_cost(Linkage linkage)

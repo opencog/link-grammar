@@ -339,18 +339,20 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 			corpus_cost = linkage_corpus_cost(linkage);
 			if (corpus_cost < 0.0f)
 			{
-				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d AND=%d LEN=%d)\n",
+				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d FAT=%d AND=%d LEN=%d)\n",
 				       linkage_unused_word_cost(linkage),
 				       linkage_disjunct_cost(linkage),
+				       linkage_is_fat(linkage),
 				       linkage_and_cost(linkage),
 				       linkage_link_cost(linkage));
 			}
 			else
 			{
-				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%d AND=%d LEN=%d)\n",
+				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%d FAT=%d AND=%d LEN=%d)\n",
 				       corpus_cost,
 				       linkage_unused_word_cost(linkage),
 				       linkage_disjunct_cost(linkage),
+				       linkage_is_fat(linkage),
 				       linkage_and_cost(linkage),
 				       linkage_link_cost(linkage));
 			}

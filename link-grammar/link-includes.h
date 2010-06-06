@@ -340,6 +340,8 @@ link_public_api(void)
 link_public_api(int)
      linkage_compute_union(Linkage linkage);
 link_public_api(int)
+     linkage_is_fat(Linkage linkage);
+link_public_api(int)
      linkage_unused_word_cost(Linkage linkage);
 link_public_api(int)
      linkage_disjunct_cost(Linkage linkage);
