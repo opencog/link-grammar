@@ -1064,10 +1064,14 @@ It was he that did it.
 John likes joking around.
 He's right, isn't he?
 Who am I?
-Because I said so.
 I don't think so.
 I, uhh, don't think you're right.
 Gosh darn it!
+
+% Rnx+ on because, only.
+Because I want to talk.
+Because I said so.
+Only I say so.
 
 This sentence parses badly.
 The bad parse was due to the improper parsing of the sentence.

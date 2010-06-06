@@ -8,6 +8,7 @@ Version 4.6.8 (XXX 2010)
  * Fix: begin with prepositions: "It all began in Chicago."
  * Fix: "What does it come to?" and related.
  * Fix: null infinitive: "I'd like to, I want to."
+ * Fix: "Because I said so."
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)

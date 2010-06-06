@@ -3847,9 +3847,12 @@ that.j-d: [{AL-} & D*u+];
 that.j-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
 that.j-p: {[[M+]]} & <noun-main-h>;
 
-because: (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or 
-({Xd- & Xc+} & MVs-))) or 
-(OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-)));
+% (Rnx+ & <CLAUSE-E>): "Because I said so"
+because: 
+ (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-))) or 
+ (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-))) or
+ (Rnx+ & <CLAUSE-E>);
+
 now_that just_as if_only in_case whereby whereupon insofar_as inasmuch_as 
 ere on_the_grounds_that on_grounds_that in_that in_the_event_that in_the_event:
 Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
@@ -3896,6 +3899,7 @@ or.j: CJ+;
 % e.g. "Also on this list is the Colossus of Rhodes."
 % Currently, they take Wc- as they are "coordinating conjuctions"
 % that are tied to previous sentences (i.e. to the left-wall).
+% Another possibility: (Rnx+ & <CLAUSE-E>) "Because I say so"
 but.ij and.ij or.ij not.ij also.ij but_not and_not: 
 [(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)];
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
