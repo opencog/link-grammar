@@ -1940,6 +1940,12 @@ When and where is the party?
 How and why did you do that?
 
 % conjoined nouns
+% count nouns
+The dog and cat ran.
+The dog and the cat ran.
+The dog, cat and mouse ran.
+
+% Mass nouns
 Cost and reliability were questioned.
 The cost and reliability were questioned.
 The mounting cost and reliability were questioned.

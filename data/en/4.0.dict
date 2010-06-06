@@ -350,10 +350,13 @@ HYPHENATED-WORDS.n:
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 /en/words/words.n.1 
 /en/words/words.n.1.wiki : 
-<marker-common-entity> or 
-({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ((NM+ or ({[NM+]} & Ds-)) & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
-(YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
+  <marker-common-entity> or 
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (AN+ or 
+    ((NM+ or ({[NM+]} & Ds-)) & <noun-sub-s> & 
+      (<noun-main-s> or <rel-clause-s> or <noun-and>)) or
+    SJ- or
+    (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
@@ -364,15 +367,18 @@ HYPHENATED-WORDS.n:
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % plural nouns not ending in "s"
+% aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 /en/words/words.n.2.x
 /en/words/words.n.2.x.wiki :
   <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
-  ([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
-  (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
-% aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
+    ([[AN+]] or 
+      ({NM+ or Dmc-} & <noun-sub-p> & 
+      (<noun-main-p> or <rel-clause-p> or <noun-and>)) or
+    (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 
-<mass-noun>: <marker-common-entity> or 
+<mass-noun>:
+  <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
       ({NM+ or Dmu-} & <noun-sub-s> & 
@@ -3928,7 +3934,7 @@ and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 % How and why did you do that?
 and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
 
-% Conjoined nouns.
+% Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned"
 and.j-n: (SJ- & SJ+) & Wd- & Spx+;
 

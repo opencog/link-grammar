@@ -13,6 +13,9 @@ Version 4.6.8 (XXX 2010)
  * SJ link for conjoined nouns/noun phrases.
  * Sort linkages according to whether fat linakge was used.
 
+TODO -- document SJ link
+--SJ for commas
+
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
  * Fix: conjoined modifier phrases: "the black and white cat sleeps."
