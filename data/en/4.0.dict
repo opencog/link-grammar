@@ -283,6 +283,7 @@ dateID50 dateID51 dateID52 dateID53 dateID54 dateID55 dateID56 dateID57 dateID58
 dateID60: <date-id>;
 
 %  ??? wtf?  Is this like "roman numeral" ?? See I.p for "me" 
+% XXX this is wrong or inappropriate .. 
 I.n: [[{Xi+} & {G-} & G+]];
 
 % Explicitly include the period at the end of the abbreviation.
@@ -335,13 +336,18 @@ HYPHENATED-WORDS.n:
  U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
-% words.n.1: Common nouns
-% activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
-
+% NOUNS --------------------------------------------------------
+% Nouns typically take determiners (a, the). The minor flags are:
 % D link: determiners: D1234
 % position 1 can be s, m for singular, mass
 % position 2 can be c for count, u for uncountable
 % position 3 can be k,m,y for comparatives, w for questions.
+
+% conjoined nouns or noun-phrases.
+<noun-and>: SJ+ or SJ-;
+
+% words.n.1: Common nouns
+% activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
 /en/words/words.n.1 
 /en/words/words.n.1.wiki : 
 <marker-common-entity> or 
@@ -360,16 +366,18 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % plural nouns not ending in "s"
 /en/words/words.n.2.x
 /en/words/words.n.2.x.wiki :
-<marker-common-entity> or 
-({@AN-} & {@A- & {[[@AN-]]}} & 
-([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
-(YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
+  <marker-common-entity> or 
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+  ([[AN+]] or ({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+  (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 
 <mass-noun>: <marker-common-entity> or 
-({@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({NM+ or Dmu-} & <noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
-(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (AN+ or 
+      ({NM+ or Dmu-} & <noun-sub-s> & 
+      (<noun-main-u> or <rel-clause-s> or <noun-and>)) or
+  (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
@@ -3919,6 +3927,10 @@ and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 % When and where is the party?
 % How and why did you do that?
 and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
+
+% Conjoined nouns.
+% "The cost and reliability were questioned"
+and.j-n: (SJ- & SJ+) & Wd- & Spx+;
 
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);

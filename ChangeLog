@@ -10,6 +10,7 @@ Version 4.6.8 (XXX 2010)
  * Fix: null infinitive: "I'd like to, I want to."
  * Fix: "Because I said so."
  * Fix: "sure" as preverbal adverb: "It sure is." 
+ * SJ link for conjoined nouns/noun phrases.
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)

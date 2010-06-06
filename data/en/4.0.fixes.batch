@@ -1939,6 +1939,14 @@ It was a long and narrow valley.
 When and where is the party?
 How and why did you do that?
 
+% conjoined nouns
+Cost and reliability were questioned.
+The cost and reliability were questioned.
+The mounting cost and reliability were questioned.
+The mounting cost and faltering reliability were questioned.
+The cost and lack of reliability were questioned
+The mounting debt and dearth of solutions have fueled the continuing crisis
+
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 % "dog" and "which" do link (and that is correct).
 *John saw a dog yesterday which was a Yorkshire terrier.
