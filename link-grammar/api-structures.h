@@ -208,7 +208,7 @@ struct Parse_info_struct
 	X_table_connector ** x_table;
 	Parse_set *    parse_set;
 	int            N_words;
-	Disjunct *     chosen_disjuncts[MAX_SENTENCE];
+	Disjunct **    chosen_disjuncts;
 	int            N_links;
 	Link          link_array[MAX_LINKS];
 

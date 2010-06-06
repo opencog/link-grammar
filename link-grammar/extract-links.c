@@ -113,7 +113,7 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
  */
 void init_x_table(Sentence sent)
 {
-	int i, x_table_size;
+	int i, x_table_size, len;
 	Parse_info pi;
 
 	assert(sent->parse_info == NULL, "Parse_info is not NULL");
@@ -122,6 +122,11 @@ void init_x_table(Sentence sent)
 	pi->N_words = sent->length;
 	pi->parse_set = NULL;
 
+	len = sent->length;
+	pi->chosen_disjuncts = (Disjunct **) xalloc(sizeof(Disjunct *));
+	memset(pi->chosen_disjuncts, 0, sizeof(Disjunct *));
+
+	/* Alloc the x_table */
 	if (pi->N_words >= 10) {
 		x_table_size = (1<<14);
 	} else if (pi->N_words >= 4) {
@@ -133,10 +138,7 @@ void init_x_table(Sentence sent)
 	/*printf("Allocating x_table of size %d\n", x_table_size);*/
 	pi->x_table_size = x_table_size;
 	pi->x_table = (X_table_connector**) xalloc(x_table_size * sizeof(X_table_connector*));
-	for (i=0; i<x_table_size; i++)
-	{
-		pi->x_table[i] = NULL;
-	}
+	memset(pi->x_table, 0, x_table_size);
 }
 
 /**
@@ -149,11 +151,7 @@ static void free_x_table(Parse_info pi)
 	int i;
 	X_table_connector *t, *x;
 
-	if (pi->x_table == NULL)
-	{
-		/*fprintf(stderr, "Warning: Tried to free a NULL x_table\n");*/
-		return;
-	}
+	xfree(pi->chosen_disjuncts, pi->N_words);
 
 	for (i=0; i<pi->x_table_size; i++)
 	{
