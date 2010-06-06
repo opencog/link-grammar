@@ -353,8 +353,9 @@ HYPHENATED-WORDS.n:
   <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
-    ((NM+ or ({[NM+]} & Ds-)) & <noun-sub-s> & 
-      (<noun-main-s> or <rel-clause-s> or <noun-and>)) or
+    ((NM+ or ({[NM+]} & Ds-)) & 
+      ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
+      <noun-and>)) or
     SJ- or
     (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
 
@@ -373,16 +374,18 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     ([[AN+]] or 
-      ({NM+ or Dmc-} & <noun-sub-p> & 
-      (<noun-main-p> or <rel-clause-p> or <noun-and>)) or
+      ({NM+ or Dmc-} & 
+       ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+        <noun-and> )) or
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 
 <mass-noun>:
   <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
-      ({NM+ or Dmu-} & <noun-sub-s> & 
-      (<noun-main-u> or <rel-clause-s> or <noun-and>)) or
+      ({NM+ or Dmu-} & 
+      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
+       <noun-and>)) or
   (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
 
 % nouns that are mass only
