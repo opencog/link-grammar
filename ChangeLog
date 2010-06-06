@@ -9,6 +9,7 @@ Version 4.6.8 (XXX 2010)
  * Fix: "What does it come to?" and related.
  * Fix: null infinitive: "I'd like to, I want to."
  * Fix: "Because I said so."
+ * Fix: "sure" as preverbal adverb: "It sure is." 
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
