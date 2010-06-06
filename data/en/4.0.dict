@@ -3936,7 +3936,7 @@ and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned"
-and.j-n: (SJ- & SJ+) & Wd- & Spx+;
+and.j-n: (SJ- & SJ+) & ((Wd- & Spx+) or Op- or SJ+);
 
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
