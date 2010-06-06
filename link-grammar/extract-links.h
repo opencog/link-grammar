@@ -10,8 +10,7 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+Parse_info parse_info_new(int nwords);
+void free_parse_info(Parse_info);
 int   build_parse_set(Sentence sent, int cost, Parse_Options opts);
-void  free_parse_set(Sentence sent);
 void  extract_links(int index, int cost, Parse_info pi);
-void init_x_table(Sentence sent);
-

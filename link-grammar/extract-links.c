@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2010 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -113,12 +114,12 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
  */
-static Parse_info parse_info_new(int nwords)
+Parse_info parse_info_new(int nwords)
 {
 	int x_table_size;
 	Parse_info pi;
 
-	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
+	pi = (Parse_info) xalloc(sizeof(Parse_info));
 	pi->N_words = nwords;
 	pi->parse_set = NULL;
 
@@ -149,20 +150,11 @@ static Parse_info parse_info_new(int nwords)
 }
 
 /**
- * Initialize the _x_table hash table.
- */
-void init_x_table(Sentence sent)
-{
-	assert(sent->parse_info == NULL, "Parse_info is not NULL");
-	sent->parse_info = parse_info_new(sent->length);
-}
-
-/**
  * This is the function that should be used to free the set structure. Since
  * it's a dag, a recursive free function won't work.  Every time we create
  * a set element, we put it in the hash table, so this is OK.
  */
-static void free_parse_info(Parse_info pi)
+void free_parse_info(Parse_info pi)
 {
 	int i, len;
 	X_table_connector *t, *x;
@@ -506,13 +498,6 @@ int build_parse_set(Sentence sent, int cost, Parse_Options opts)
 	sent->parse_info->parse_set = whole_set;
 
 	return verify_set(sent->parse_info);
-}
-
-void free_parse_set(Sentence sent)
-{
-	if (NULL == sent->parse_info) return;
-	free_parse_info(sent->parse_info);
-	sent->parse_info = NULL;
 }
 
 static void initialize_links(Parse_info pi)
