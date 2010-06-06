@@ -229,20 +229,21 @@ struct Sentence_s
 	const char *orig_sentence;  /* Copy of original sentence */
 	int    length;              /* number of words */
 	Word   word[MAX_SENTENCE];  /* array of words after tokenization */
-	char * is_conjunction;      /* TRUE if conjunction, as defined by dictionary */
+	char * is_conjunction;      /* Array of flags, one per word; set to
+	                               TRUE if conjunction, as defined by dictionary */
 	char** deletable;           /* deletable regions in a sentence with conjunction */
 	char** dptr;                /* private pointer for mem management only */
 	char** effective_dist;
 	int    num_linkages_found;  /* total number before postprocessing.  This
-				   is returned by the count() function */
+	                               is returned by the count() function */
 	int    num_linkages_alloced;/* total number of linkages allocated.
-				   the number post-processed might be fewer
-				   because some are non-canonical */
+	                               the number post-processed might be fewer
+	                               because some are non-canonical */
 	int    num_linkages_post_processed;
 	                            /* The number of linkages that are actually
-				   put into the array that was alloced.
-				   this is not the same as num alloced
-				   because some may be non-canonical. */
+	                               put into the array that was alloced.
+	                               This is not the same as num alloced
+	                               because some may be non-canonical. */
 	int    num_valid_linkages;  /* number with no pp violations */
 	int    null_links;          /* null links allowed */
 	int    null_count;          /* number of null links in linkages */
