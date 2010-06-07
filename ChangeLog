@@ -1,4 +1,4 @@
-Version 4.6.8 (XXX 2010)
+Version 4.7.0 (XXX 2010)
  * Fix: hunspell configuration on Fedora (bugtracker issue 47)
  * Fix: 'turn' with adjective: "She turned him green" from wingedtachikoma
  * Fix: comma-conjoined modifiers: "It tastes bitter, not sweet."
@@ -11,10 +11,13 @@ Version 4.6.8 (XXX 2010)
  * Fix: "Because I said so."
  * Fix: "sure" as preverbal adverb: "It sure is." 
  * SJ link for conjoined nouns/noun phrases.
- * Sort linkages according to whether fat linakge was used.
+ * Sort linkages according to whether fat linkage was used.
+ * Add flag to disable use of fat linkage during parsing.
 
 TODO -- document SJ link
---SJ for commas
+--SJ connectors for commas, or, etc.
+-- conjunctions for verbs
+-- fat links flag in java api ... 
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)

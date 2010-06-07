@@ -328,15 +328,24 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	sent->null_links = (opts->min_null_count > 0);
 
-	has_conjunction = sentence_contains_conjunction(sent);
+	if (opts->use_fat_links)
+	{
+		has_conjunction = sentence_contains_conjunction(sent);
+	}
+	else
+	{
+		has_conjunction = FALSE;
+	}
+
+	/* Why do we do these here instead of in
+	 * first_prepare_to_parse() only?  The
+	 * reason is that the deletable region
+	 * depends on if null links are in use.
+	 * With null_links everything is deletable.
+	 */
 	set_connector_length_limits(sent, opts);
 	build_deletable(sent, has_conjunction);
 	build_effective_dist(sent, has_conjunction);
-	/* Why do we do these here instead of in
-	   first_prepare_to_parse() only?  The
-	   reason is that the deletable region
-	   depends on if null links are in use.
-	   With null_links everything is deletable */
 
 	if (!has_conjunction) {
 		pp_and_power_prune(sent, RUTHLESS, opts);

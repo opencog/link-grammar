@@ -72,6 +72,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
 	parse_options_set_max_parse_time(opts, 60);
+	parse_options_set_use_fat_links(opts, 0);
 	parse_options_set_islands_ok(opts, 1);
 	parse_options_set_short_length(opts, 6);
 	parse_options_set_all_short_connectors(opts, 1);
@@ -322,7 +323,7 @@ Java_org_linkgrammar_LinkGrammar_getVersion(JNIEnv *env, jclass cls)
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getDictVersion(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = get_ptd(env, cls);;
+	per_thread_data *ptd = get_ptd(env, cls);
 	const char *s = linkgrammar_get_dict_version(ptd->dict);
 	jstring j = (*env)->NewStringUTF(env, s);
 	return j;

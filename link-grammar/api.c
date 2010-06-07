@@ -78,6 +78,7 @@ Parse_Options parse_options_create(void)
 	po->verbosity	 = 1;
 	po->linkage_limit = 100;
 	po->disjunct_cost = MAX_DISJUNCT_COST;
+	po->use_fat_links = TRUE;
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->null_block = 1;
@@ -176,6 +177,13 @@ void parse_options_set_use_sat_parser(Parse_Options opts, int dummy) {
 }
 int parse_options_get_use_sat_parser(Parse_Options opts) {
 	return opts->use_sat_solver;
+}
+
+void parse_options_set_use_fat_links(Parse_Options opts, int dummy) {
+	opts->use_fat_links = dummy;
+}
+int parse_options_get_use_fat_links(Parse_Options opts) {
+	return opts->use_fat_links;
 }
 
 void parse_options_set_linkage_limit(Parse_Options opts, int dummy) {

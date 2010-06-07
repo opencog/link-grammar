@@ -31,6 +31,7 @@ static struct
 	int panic_mode;
 	int allow_null;
 	int use_cluster_disjuncts;
+	int use_fat_links;
 	int use_sat_solver;
 	int echo_on;
 	int cost_model;
@@ -81,6 +82,7 @@ static Switch default_switches[] =
 #endif /* HAVE_HUNSPELL */
    {"timeout",    0, "Abort parsing after this many seconds",   &local.timeout},
    {"union",      1, "Showing of 'union' linkage",      &local.display_union},
+   {"use-fat",    1, "Use fat links when parsing",      &local.use_fat_links},
 #ifdef USE_SAT_SOLVER
    {"use-sat",    1, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
@@ -345,6 +347,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.screen_width = parse_options_get_screen_width(opts);
 	local.allow_null = parse_options_get_allow_null(opts);
 	local.use_cluster_disjuncts = parse_options_get_use_cluster_disjuncts(opts);
+	local.use_fat_links = parse_options_get_use_fat_links(opts);
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.screen_width = parse_options_get_screen_width(opts);
 	local.display_on = parse_options_get_display_on(opts);
@@ -376,6 +379,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_allow_null(opts, local.allow_null);
 	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
+	parse_options_set_use_fat_links(opts, local.use_fat_links);
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif
