@@ -278,9 +278,10 @@ cables.n caboodles.n cabooses.n cabs.n cabstands.n caches.n cackles.n
 cacophonies.n cactuses.n cadavers.n caddies.n cadences.n cadenzas.n 
 cadets.n cadres.n cads.n caesuras.n cafes.n cafeterias.n caftans.n 
 cages.n cairns.n cakes.n calamities.n calculations.n calculators.n 
-caldrons.n calendars.n calibrations.n calibres.n califs.n caliphates.n 
+caldrons.n calendars.n calfs.n 
+calibrations.n calibres.n califs.n caliphates.n 
 caliphs.n callers.n callings.n calliopes.n calls.n calories.n 
-calumnies.n calypsos.n camels.n cameos.n cameras.n campaigners.n 
+calumnies.n calves.n calypsos.n camels.n cameos.n cameras.n campaigners.n 
 campers.n camps.n campuses.n canals.n canapes.n canards.n canaries.n 
 cancans.n cancellations.n cancers.n candidacies.n candidates.n 
 candies.n candles.n candlesticks.n canes.n canisters.n canneries.n 
