@@ -3931,6 +3931,7 @@ and.j-g: G- & G+;
 % The EB+ link handles not, yet after the and.
 % See also comma-conjunction for similar structures.
 and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
+or.j-a: (AJ- & AJ+) & (Pa- or MVa-);
 
 % Conjoined question words.
 % When and where is the party?
