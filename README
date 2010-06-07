@@ -519,25 +519,40 @@ MULTI-THREADED USE:
 
 BioLG merger:
 -------------
-Much of the BioLG project changes have been merged into this version.
-The current version of link-grammar has superior parse coverage to BioLG
-on all texts, including biomedical texts.  The original BioLG test suite
-can be found in data/en/4.0.biolg.batch.
+   Much of the BioLG project changes have been merged into this version.
+   The current version of link-grammar has superior parse coverage to BioLG
+   on all texts, including biomedical texts.  The original BioLG test suite
+   can be found in data/en/4.0.biolg.batch.
 
-The following changes in BioLG have NOT been merged:
--- Part of speech hinting. The BioLG code can accept part-of-speech
-   hints for unknown words.
--- XML I/O. The BioLG code can output parsed text in a certain
-   idiosyncratic XML format.
--- "term support". Link-grammar does support "entity placeholders",
-   which provides an equivalant function.
--- The link type CH. This was a large, intrusive, incompatible change
-   to the dictionary, and it is not strictly required -- there is a
-   better, alternative way of handling adj-noun-adj-noun chains commonly
-   seen in biomedical text, and this has been implemented.
+   The following changes in BioLG have NOT been merged:
+   -- Part of speech hinting. The BioLG code can accept part-of-speech
+      hints for unknown words.
+   -- XML I/O. The BioLG code can output parsed text in a certain
+      idiosyncratic XML format.
+   -- "term support". Link-grammar does support "entity placeholders",
+      which provides an equivalant function.
+   -- The link type CH. This was a large, intrusive, incompatible change
+      to the dictionary, and it is not strictly required -- there is a
+      better, alternative way of handling adj-noun-adj-noun chains commonly
+      seen in biomedical text, and this has been implemented.
 
-All other BioLG changes, and in particular, extensive dictionary fixes,
-as well as regex morphology handling, have been incorporated.
+   All other BioLG changes, and in particular, extensive dictionary fixes,
+   as well as regex morphology handling, have been incorporated.
+
+
+Performance issues:
+-------------------
+   The current parser experiences significant performance problems for
+   long sentences that contain many conjunctions (and, or, but, etc.)
+   This is primarily due to a combinatorial explosion of linkage
+   possibilities for the conjunctions; the culprit is the indiscriminate
+   processing done by the "fat linkage" algorithm. Work is underway to
+   replace the "fat linkage" mechanism by a set of more tightly-focused
+   linkage rules for conjunctions; this work is far from complete.  
+
+   The use of fat linkages is turned on by default; it can be disabled
+   by specifying the !use-fat flag at the command-line, or by calling
+   parse_options_use_fat_links(FALSE) from programs.
 
 
 SAT solver:
@@ -622,8 +637,8 @@ TODO -- Working Notes:
   Conjunction cleanup: parser has some special-case code for dealing
     with conjunctions. Unfortunately, some of this code has hard-wired
     English words in them. These are in construct_either() and in
-    set_is_conjunction().  Grep for XXX FIXME. These need to be
-    refactored.
+    set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
+    These need to be refactored.
 
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
@@ -642,6 +657,11 @@ TODO -- Working Notes:
 
     (This somewhat resembles the application of construction grammar
     ideas to the link-grammar dictionary).
+
+    XXX Well, not clear how much above will help -- the primary problem
+    currently is the combinatorial explosion coming from fat links.
+    If the fat links could be pruned down to something more reasonable,
+    performance could improve a *lot*.
 
    Registers:
       Consider the sentence "Thieves rob bank" -- a typical newspaper
