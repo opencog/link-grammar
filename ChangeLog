@@ -10,6 +10,7 @@ Version 4.7.0 (XXX 2010)
  * Fix: null infinitive: "I'd like to, I want to."
  * Fix: "Because I said so."
  * Fix: "sure" as preverbal adverb: "It sure is." 
+ * Fix: Gerunds with determiners: "a running of the bulls"
  * SJ link for conjoined nouns/noun phrases.
  * Sort linkages according to whether fat linkage was used.
  * Add flag to disable use of fat linkage during parsing.

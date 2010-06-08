@@ -1213,10 +1213,14 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 <verb-sp,pp,ico>: <verb-sp,pp> or <verb-ico> or <marker-past>;
 
-<verb-ge-d>: ({@AN-} & {@A- & {[[@AN-]]}} & (Dmu- or [[()]]) & 
-(OF+ or [[()]]) 
-& <noun-sub-s> & {@MXs+} & ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) 
-or [[AN+]];
+% ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
+<verb-ge-d>: 
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (Dmu- or [[()]]) & 
+    (({[[Ds-]]} & OF+) or [[()]]) &
+    <noun-sub-s> & {@MXs+} & 
+    ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
+  [[AN+]];
 
 <verb-pg,ge>: {@E-} & (
  ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or 
