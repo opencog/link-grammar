@@ -3950,9 +3950,9 @@ or.j-a: (AJ- & AJ+) & (Pa- or MVa-);
 and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
 
 % Conjoined nouns/noun phrases.
-% "The cost and reliability were questioned"
-% "He wrote for piano and flute."
-and.j-n: (SJ- & SJ+) & ((Wd- & Spx+) or Op- or Ju- or SJ+);
+% "The cost and reliability were questioned" (Spx+)
+% "He wrote for piano and flute."  (Ju-)
+and.j-n: (SJ- & SJ+) & ((Wd- & Spx+) or Op- or Ju- or SJ+ or AN+);
 
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);

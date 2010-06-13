@@ -58,6 +58,8 @@ The line extends 10 miles offshore.
 Give it a shake.
 Take the two shakes over to table five.
 
+There was wind and rain.
+
 % "saw" w/ particle
 He tried to saw the wood.
 He tried to saw up the wood.
@@ -1967,6 +1969,9 @@ He wrote for piano and flute.
 % conjoined proper names
 John and Mike left the party.
 actress Whoopi Goldberg and singer Michael Jackson attended the ceremony.
+
+% conjoined verbs
+Oscar Peterson played piano and wrote music.
 
 % ------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
