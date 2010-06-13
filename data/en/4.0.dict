@@ -148,9 +148,11 @@
 % play this role.
 %
 CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
-({NM+} & ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
-([<noun-sub-s> & (JG- or <noun-main-s>)] or YS+)) or ({[[@MX+]]} & AN+) or G+))) or 
-<directive-opener>;
+  ({NM+} & ({G-} & {[MG+]} & 
+    (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
+      ([<noun-sub-s> & (JG- or <noun-main-s>)] or <noun-and> or YS+)) or 
+         ({[[@MX+]]} & AN+) or G+))) or 
+  <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural: 

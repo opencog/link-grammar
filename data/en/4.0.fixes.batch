@@ -1968,7 +1968,7 @@ He wrote for piano and flute.
 John and Mike left the party.
 actress Whoopi Goldberg and singer Michael Jackson attended the ceremony.
 
-
+% ------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 % "dog" and "which" do link (and that is correct).
 *John saw a dog yesterday which was a Yorkshire terrier.
