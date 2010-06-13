@@ -116,6 +116,9 @@
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
+% conjoined nouns or noun-phrases.
+<noun-and>: SJ+ or SJ-;
+
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
 <rel-clause-p>: {Rw+} & Bpm+;
@@ -168,8 +171,11 @@ PL-CAPITALIZED-WORDS:
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
 <given-names>:
-({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
+  {G-} & {[MG+]} & 
+    (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+      (({@MX+} & (JG- or <noun-main-s> or <noun-and>)) or 
+        YS+ or YP+)) or 
+    AN+ or G+);
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
@@ -342,9 +348,6 @@ HYPHENATED-WORDS.n:
 % position 1 can be s, m for singular, mass
 % position 2 can be c for count, u for uncountable
 % position 3 can be k,m,y for comparatives, w for questions.
-
-% conjoined nouns or noun-phrases.
-<noun-and>: SJ+ or SJ-;
 
 % words.n.1: Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
@@ -3927,7 +3930,7 @@ and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
 % and used as a conjunction in proper names:
 % The Great Southern and Western Railroad 
-and.j-g: G- & G+;
+and.j-g: [[G- & G+]];
 
 % Conjoined adjectival modifiers.
 % The black and white cat sleeps

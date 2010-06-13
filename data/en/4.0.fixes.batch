@@ -1955,13 +1955,18 @@ We took my dog and cat to the vet
 We took my heifer and John's cow to the fair
 We took my heifer and goat and John's cow to the fair
 
-% Mass nouns
+% conjoined mass nouns
 Cost and reliability were questioned.
 The cost and reliability were questioned.
 The mounting cost and reliability were questioned.
 The mounting cost and faltering reliability were questioned.
 The cost and lack of reliability were questioned
 The mounting debt and dearth of solutions have fueled the continuing crisis
+
+% conjoined proper names
+John and Mike left the party.
+actress Whoopi Goldberg and singer Michael Jackson attended the ceremony.
+
 
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 % "dog" and "which" do link (and that is correct).
