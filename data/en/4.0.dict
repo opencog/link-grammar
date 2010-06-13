@@ -723,7 +723,9 @@ such_a such_an: Ds*k+;
 % "all of the time". These are all temporal modifiers: use MVw ("when")
 <adv-of>: MVw- & OF+;
 
-a_lot: (<noun-sub-p> & <noun-main-p>) or EC+ or MVa- or <adv-of>;
+a_lot: (<noun-sub-p> & (<noun-main-p> or <noun-and>)) or 
+  EC+ or MVa- or <adv-of>;
+
 few: {EA- or EF+ or ({EA-} & DD-)} & 
  (Dmc+ or (<noun-sub-p> & <noun-main-p>));
 a_couple: <noun-sub-p> & <noun-main-p>;
