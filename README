@@ -640,6 +640,22 @@ TODO -- Working Notes:
     set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
     These need to be refactored.
 
+  Repulsive parses: Sometimes, the existance of one parse should suggest
+    that another parse must surely be wrong: if one parse is possible,
+    then the other parses must surely be unlikely. For example: the 
+    conjunction and.j-g allows the "The Great Southern and Western 
+    Railroad" to be parsed as the single name of an entity. However, 
+    it also provides a pattern match for "John and Mike" as a single
+    entity, which is almost certainly wrong. But "John and Mike" has
+    an alternative parse, as a conventional-and -- a list of two people, 
+    and so the existance of this alternaive (and correct) parse suggests
+    that perhaps the entity-and is really very much the wrong parse.
+    That is, the mere possibility of certain parses should strongly 
+    disfavour other possible parses. (Exception: Ben & Jerry's ice
+    cream; however, in this case, we could recognize Ben & Jerry as the
+    name of a proper brand; but this is outside of the "normal"
+    dictionary (?) (but maybe should be in the dictionary!))
+
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,
