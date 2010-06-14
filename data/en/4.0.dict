@@ -64,9 +64,11 @@
 % this allows for the parsing of newspaper headlines and clipped
 % technical speech (e.g. medical, engineering, where dterminers are
 % dropped).  The costly-null is used during panic parsing.
+% Currently, both have the same cost: using the ordinary null allows
+% too many sentences to be parsed incorrectly.
 
 <null>: [[[()]]];
-<costly-null>: [[[[()]]]];
+<costly-null>: [[[()]]];
 
 % NOUNS
 

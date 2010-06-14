@@ -701,6 +701,26 @@ int main(int argc, char * argv[])
 		num_linkages = sentence_parse(sent, opts);
 		if (num_linkages < 0) continue;
 
+#if 0
+		/* Try again, this time ommitting the requirement for
+		 * definite articles, etc. This should allow for the parsing
+		 * of newspaper headlines and other clipped speech.
+		 *
+		 * XXX Unfortunately, this also allows for the parsing of
+		 * allsorts of ungrammatical sentences which should not 
+		 * parse, and leads to bad parses of many other unparsable
+		 * but otherwise grammatical sentences.  Thus, this trick
+		 * pretty much fails; we leave it here to document the 
+		 * experiment.
+		 */
+		if (num_linkages == 0)
+		{
+			parse_options_set_disjunct_costf(opts, 3.5f);
+			num_linkages = sentence_parse(sent, opts);
+			if (num_linkages < 0) continue;
+		}
+#endif
+
 		/* Try using a larger list of disjuncts */
 		if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
 		{

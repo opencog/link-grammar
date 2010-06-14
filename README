@@ -685,10 +685,16 @@ TODO -- Working Notes:
       is missing ("bank" is a count noun, not a mass noun, and thus
       requires a determiner. By contrast, "thieves rob water" parses
       just fine.) A fix for this would be to replace mandatory
-      determiner links by (D- or {[[]] & headline-flag}) which allows
+      determiner links by (D- or {[[()]] & headline-flag}) which allows
       the D link to be ommitted if the headline-flag bit is set.
       Here, "headline-flag" could be a new link-type, but one that is
       not subject to planarity constraints.
+
+      Note that this is easier said than done: if one simply adds a
+      high-cost null link, and no headline-flag, then all sorts of 
+      ungrammatical sentences parse, with strange parses; while some
+      grammatical sentences, which should parse, but currently don't, 
+      become parseable, but with crazy results.
 
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
