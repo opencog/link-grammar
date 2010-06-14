@@ -56,6 +56,18 @@
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
 
+% Null links. These are used to drop the requirement for certain words
+% to appear during parsing. Basically, if a parse fails at a given cost,
+% it is retried at a higher cost (by raising the disjunct_cost).
+% Currently, two different nulls are defined: a regular null, and a 
+% costly null.  The regular null is used to make determiners optional;
+% this allows for the parsing of newspaper headlines and clipped
+% technical speech (e.g. medical, engineering, where dterminers are
+% dropped).  The costly-null is used during panic parsing.
+
+<null>: [[[()]]];
+<costly-null>: [[[[()]]]];
+
 % NOUNS
 
 % The marker-entity is used to identify identity names.
@@ -73,21 +85,21 @@
 
 % noun-main-x -- singular or plural or mass.
 <noun-main-x>: (S+ & <CLAUSE>) or SI- or J- or O- or ({[B*j+] or CJ-} & Xd- 
- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
 % noun-main-s -- singular
 <noun-main-s>: (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or ({[Bsj+] or CJ-} & Xd-
- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
 % noun-main-p -- plural
 <noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+] or CJ-} & Xd-
- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+  
 % Doing this requires adding Su- links to many entries
 <noun-main-u>: (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or ({[Bsj+] or CJ-} & Xd- 
- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
 % noun-main-m -- m == mass
 % TODO: get rid of this someday.
@@ -95,22 +107,22 @@
 % two: the countable form, which will used <noun-main-s> and the
 % uncountable form, which will use <noun-main-u>
 <noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or ({[Bsj+] or CJ-} & Xd-
- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
 
 <noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+] or CJ-} 
- & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+ & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
-<noun-main2-x>:  J- or O- or ({[B*j+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
-<noun-main2-s>:  Js- or Os- or ({[Bsj+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+<noun-main2-x>:  J- or O- or ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main2-s>:  Js- or Os- or ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
 % Xd- or [[()]] allows parsing of "I have no idea what that is."
 % without requiring comma after "idea"
 <noun-main2-s-no-punc>:  Js- or Os- or 
-({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
-<noun-main2-p>:  Jp- or Op- or ({[Bpj+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
-<noun-main2-m>:  Jp- or Os- or ({[Bsj+]} & Xd- & (Xc+ or [[[()]]]) & MX-) or [[[()]]];
+<noun-main2-p>:  Jp- or Op- or ({[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main2-m>:  Jp- or Os- or ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
 
 <noun-sub-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
@@ -358,7 +370,7 @@ HYPHENATED-WORDS.n:
   <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
-    ((NM+ or ({[NM+]} & Ds-)) & 
+    ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
       ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
       <noun-and>)) or
     SJ- or
@@ -445,7 +457,7 @@ carte_blanche:
 Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 
 /en/words/words.n.t: % title nouns (president, chairman)
-{@AN-} & {@A- & {[[@AN-]]}} & {@M+} & (BIt- or (Xd- & (Xc+ or [[[()]]]) & MX-) or TI-);
+{@AN-} & {@A- & {[[@AN-]]}} & {@M+} & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or TI-);
 % auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t 
 
 % Almost identical to below.
@@ -1152,13 +1164,13 @@ ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
 =.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
 equiv.v sim.v simeq.v approx.v ~.v: 
 ([S-] or EQ*r-) &  ([O+] or EQ*r+) & 
-(Xd- & (Xc+ or [[[()]]]) & (MX- or MVa-));
+(Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
 
 % Binary operators:
 % these occur in "simple" expressions
 *.v "/.v" +.v -.v x.v: 
 ([S-] or EQ-) &  ([O+] or EQ+) & 
-(Xd- & (Xc+ or [[[()]]]) & (MX- or MVa-));
+(Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
 
 % Binary operators, strict:
 % Here EQt attaches only to terms, which may be numbers or letters.
@@ -1188,7 +1200,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 %VERBS
 
-<MX-PHRASE>: Xd- & (Xc+ or [[[()]]]) & (MX*p- or MVg-);
+<MX-PHRASE>: Xd- & (Xc+ or <costly-null>) & (MX*p- or MVg-);
 <OPENER>: {Xd-} & Xc+ & COp+;
 
 % These are the verb-form expressions for ordinary verbs.
@@ -1215,7 +1227,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-pv-b>: {@E-} & (Pv- or Mv-);
 <verb-ge>: {@E-} & (<MX-PHRASE> or 
  <OPENER> or
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
  [DP- & J-] or [[Wq- & PF+]]);
 
 <verb-sp,pp,ico>: <verb-sp,pp> or <verb-ico> or <marker-past>;
@@ -1230,7 +1242,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
   [[AN+]];
 
 <verb-pg,ge>: {@E-} & (
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or 
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or 
  Mg- or Pg- or 
  <MX-PHRASE> or <OPENER> or
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
@@ -1261,7 +1273,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-x-pp>: {@E-} & PPf-;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>: {@E-} & (Pgf- or Mg- or 
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or [[[()]]])) or 
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or 
  <MX-PHRASE> or <OPENER> or
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
@@ -3354,12 +3366,12 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % done_for accounted_for adhered_to arrived_at barked_at belched_at catered_to
 
 <vc-paraph>: 
-{@MV+} & (((Xd- or Xq-) & (Xc+ or [[[()]]]) & (COq+ or (CP- & {CC+}) or Eq+)) 
+{@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CP- & {CC+}) or Eq+)) 
 or [(Xc+ or Xe+) & Ce+]);
 <vc-paraph-inv>:
-{@MV+} & (((Xd- or Xq-) & (Xc+ or [[[()]]]) & (COq+ or (CPx- & {CC+}) or Eq+)) 
+{@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CPx- & {CC+}) or Eq+)) 
 or [(Xc+ or Xe+) & Ce+]);
-<vc-it-paraph>: {@MV+} & (Xd- or Xq-) & (Xc+ or [[[()]]]) & (COqi+ or 
+<vc-it-paraph>: {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>) & (COqi+ or 
 (CPi- & {CC+}) or Eqi+);
 
 % paraphrasing verbs like "say", "reply"
@@ -3776,7 +3788,7 @@ dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or
 
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+ or
-(Xd- & (Xc+ or [[[()]]]) & MX-) or NIfn+ or NItn-);
+(Xd- & (Xc+ or <costly-null>) & MX-) or NIfn+ or NItn-);
 
 % Add cost to Op-, try to use any other linkage before making
 % a unit be a plain-old object.
@@ -3831,13 +3843,13 @@ UNITS: <units-suffix>;
 
 %who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
 %({EL+} & (S**w+ or B*w+) & (Ws- or Wq- or QI*d- or BIqd-)) or
-%({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
+%({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or <costly-null>) & MX*r-)); 
 
 % QI- & (): "I do not know who"
 who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
 [QI-] or
 ({EL+} & (S**w+ or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
-({MVp+ or MVx+} & (S**w+ or (R+ & B*w+)) & (Xd- & (Xc+ or [[[()]]]) & MX*r-)); 
+({MVp+ or MVx+} & (S**w+ or (R+ & B*w+)) & (Xd- & (Xc+ or <costly-null>) & MX*r-)); 
 
 % "what are the answers?" takes Sp+
 what: ({EL+} & (D**w+ or Ss*w+ or Sp*w+ or (R+ & (Bsw+ or BW+))) & (Wq- or Ws- or QI*d-
@@ -3849,12 +3861,12 @@ which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or
 [QI-] or
 ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
  or Jw- or (JQ- & D+) or ({MVp+ or MVx+} & (S**w+ or B*w+) & 
-((Xc+ or [[[()]]]) & Xd- & MX*r-));
+((Xc+ or <costly-null>) & Xd- & MX*r-));
 
-whom: (R- & Cr+) or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*r-)))
+whom: (R- & Cr+) or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
  or (Jr- & (RS+ or Cr+)) or Jw-;
 
-whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*d-))) 
+whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*d-))) 
 or (JQ- & D+) or (U+ & Jr- & (RS+ or Cr+));
 
 whoever: {EL+} & (((Ss*d+ or Bsd+ or [[CX+]]) & 
@@ -5032,7 +5044,7 @@ O.K.’ing.v OK’ing.v:
  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 whomever:
- (R- & Cr+) or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or [[[()]]]) & Xd- & MX*r-))) or (Jr- & (RS+ or Cr+)) or Jw-;
+ (R- & Cr+) or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-))) or (Jr- & (RS+ or Cr+)) or Jw-;
 
 thyself oneself one's one’s:
  J- or O- or E+ or MVa-;
