@@ -16,6 +16,7 @@ Version 4.7.0 (XXX 2010)
  * Add flag to disable use of fat linkage during parsing.
  * Add male/female gender tags to misc nouns.
  * Fix: misc optionally transitive verbs: mix, paint, boot
+ * Fix: word order: "look about fearfully", "look fearfully about", around
 
 TODO -- document SJ link
 --SJ connectors for commas, or, etc.

@@ -559,12 +559,6 @@ He breaded the chicken in a mixture of flour and breadcrumbs.
 I had an off day.
 Kim eats pizza with chopsticks.
 
-% double-prepostion type constructions
-% adverbs w/ reversed preposition locations
-People glanced fearfully around at the impassive troops.
-He looked around fearfully.
-He looked fearfully around.
-
 % Somewhere is broken ...
 Off in the distance, a dog barked.
 Far in the distance, a dog barked.
@@ -979,21 +973,34 @@ The treasure lay below the ground.
 Below the ground lay the treasure.
 In Xanadu did Kubla Kahn a stately pleasure dome decree.
 
-% More failures: "He turned left." parses, but not correctly.
+% Confusion between K- and MVa- links -- 
+% "He turned left." uses the MVa- link.
 % "He turned around", "he jumped around", "he jumped up" use "K"
-% as a particle link, and that seems wrong (??)
+% as a particle link.
 % "He dodged sideways." uses MVp
 He turned left.
 He angled left.
+He angled sharply left.
 He angled around.
 He dodged left.
 He jumped left.
 
-% about can be particle (K- link)
+% about can be particle (K- link), except that "about quickly"
+% and "quickly about" are both allowed, and K- only allows the first,
+% and not the second.
 He looked about.
 He turned about.
 The sailboat swung about, coming to a new bearing.
 He jumped about.
+
+% double-prepostion type constructions
+% adverbs w/ reversed preposition locations
+% Using MVa- seems like the only solution...
+People glanced fearfully around at the impassive troops.
+He looked around fearfully.
+He looked fearfully around.
+He looked about fearfully.
+He looked fearfully about.
 
 % Set phrases involving "so" -- this is an exhaustive list !
 % There are no other verbs that take "so" -- should there be 

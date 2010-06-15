@@ -3430,7 +3430,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 
 %PREPOSITIONS
 
-<prep-main-a>: [Mp-] or MVp- or [({Xc+ & {Xd-}} & CO+)] or Pp- or
+<prep-main-a>: [Mp-] or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or
 (Xd- & Xc+ & (MX*x- or MVx-)) or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-)))
 or (Wj- & Qd+) or [Wq- & PF+];
 <prep-main-b>: [Mp-] or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or 
@@ -3468,7 +3468,7 @@ for.p: ({JQ+} & (J+ or Mgp+ or TI+) &
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or (MVp- & B-);
 about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or 
-  (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-)) or K-;
+  (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-)) or MVa-;
 
 through.r: 
 ({JQ+} & J+ & (<prep-main-a> or FM-)) or (MVp- & B-);
@@ -3479,7 +3479,7 @@ past.p:
 ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
 around:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
-  or [EN+];
+  or [EN+] or MVa-;
 out up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
   K- or ({Yd-} & Pp-) or (MVp- & B-);
