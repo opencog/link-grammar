@@ -18,7 +18,7 @@ Version 4.7.0 (XXX 2010)
  * Fix: misc optionally transitive verbs: mix, paint, boot
  * Fix: word order: "look about fearfully", "look fearfully about", around
 
-TODO -- document SJ link
+TODO --
 --SJ connectors for commas, or, etc.
 -- conjunctions for verbs
 -- fat links flag in java api ... 
