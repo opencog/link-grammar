@@ -3468,7 +3468,7 @@ for.p: ({JQ+} & (J+ or Mgp+ or TI+) &
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or (MVp- & B-);
 about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or 
-(MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-));
+  (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-)) or K-;
 
 through.r: 
 ({JQ+} & J+ & (<prep-main-a> or FM-)) or (MVp- & B-);
@@ -3481,8 +3481,8 @@ around:
 ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
 or [EN+];
 out up.r down.r:
-({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
-K- or ({Yd-} & Pp-) or (MVp- & B-);
+  ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
+  K- or ({Yd-} & Pp-) or (MVp- & B-);
 by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
  (MVp- & B-);
 in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) 
