@@ -15,6 +15,7 @@ Version 4.7.0 (XXX 2010)
  * Sort linkages according to whether fat linkage was used.
  * Add flag to disable use of fat linkage during parsing.
  * Add male/female gender tags to misc nouns.
+ * Fix: misc optionally transitive verbs: mix, paint, boot
 
 TODO -- document SJ link
 --SJ connectors for commas, or, etc.
