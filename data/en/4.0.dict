@@ -3478,8 +3478,8 @@ off: <prep-across> or (MVp+ & {Xc+ & {Xd-}} & COp+);
 past.p: 
 ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
 around:
-({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
-or [EN+];
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
+  or [EN+];
 out up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
   K- or ({Yd-} & Pp-) or (MVp- & B-);
