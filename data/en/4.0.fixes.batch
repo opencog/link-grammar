@@ -358,6 +358,11 @@ He upped the bid.
 We are planning to up the bid.
 Ante up!
 
+% Optionally transitive verbs that were mis-classified.
+Water and oil don't mix.
+The computer doesn't boot.
+The computer doesn't boot up.
+
 % Some ditransitive verbs of various complexity
 He poured me a glass of champagne.
 *He poured me.
@@ -1883,7 +1888,6 @@ It's a good bet he did it.
 It's a good bet that he did it.
 He's not the least bit interested.
 Let me tell you this: it stank.
-Water and oil don't mix.
 Halloween is a great time of year.
 Christmas is a great time of year.
 Summer is a great time of year.
