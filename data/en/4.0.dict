@@ -2524,11 +2524,20 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 <vc-get>: ((O+ or B-) & (({K+} & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+))))
 or (((K+ & {[[@MV+]]} & O*n+) or K+ or (B- & O+) or (O+ & {[[@MV+]]} & O*n+))
  & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+ or Pp+ or TO+));
-get.v: <verb-pl,i> & <vc-get>;
-gets.v: <verb-s> & <vc-get>;
-got.v-d: <verb-sp,pp> & <vc-get>;
-gotten.v: (<verb-pp> & <vc-get>) or (<verb-pv-b> & {K+ or Pp+} & {@MV+})
-or ({K+ or Pp+} & <verb-po>);
+get.v: 
+  (<verb-pl,i> & <vc-get>) or
+  (<verb-and-pl-> & <vc-get>) or (<vc-get> & <verb-and-pl+>);
+gets.v:
+  (<verb-s> & <vc-get>) or
+  (<verb-and-s-> & <vc-get>) or (<vc-get> & <verb-and-s+>);
+got.v-d:
+  (<verb-sp,pp> & <vc-get>) or
+  (<verb-and-sp-> & <vc-get>) or (<vc-get> & <verb-and-sp+>);
+% TODO gotten, getting with verb-and
+gotten.v:
+  (<verb-pp> & <vc-get>) or 
+  (<verb-pv-b> & {K+ or Pp+} & {@MV+}) or 
+  ({K+ or Pp+} & <verb-po>);
 getting.v: <verb-pg> & <vc-get>;
 getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
