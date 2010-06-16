@@ -1993,6 +1993,14 @@ actress Whoopi Goldberg and singer Michael Jackson attended the ceremony.
 % conjoined verbs
 Oscar Peterson played piano and wrote music.
 
+% Conjoind verb test cases -- artificial sentences illustrating various forms.
+Oscar banged drums and tinkled piano
+Oscar really banged drums and righteously tinkled piano
+They banged drums and tinkled piano
+Oscar bangs drums and tinkls piano
+Oscar bangs drums and tinkled piano
+They bang drums and tinkled piano
+
 % ------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 % "dog" and "which" do link (and that is correct).
