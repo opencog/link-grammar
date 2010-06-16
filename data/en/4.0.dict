@@ -5075,8 +5075,12 @@ O.K.'ing.v OK'ing.v
 O.K.’ing.v OK’ing.v:
  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
+% "I'll hire whomever I can find": Os-
 whomever:
- (R- & Cr+) or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-))) or (Jr- & (RS+ or Cr+)) or Jw-;
+  (R- & Cr+) or 
+  (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-))) or
+  (Os- & Bsd+) or
+  (Jr- & (RS+ or Cr+)) or Jw-;
 
 thyself oneself one's one’s:
  J- or O- or E+ or MVa-;

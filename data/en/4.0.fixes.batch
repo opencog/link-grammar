@@ -10,10 +10,13 @@
 % Example sentences showing BUG FIXES since link-grammar 4.1b
 % as well as demonstating bugs that remain to be fixed.
 %
-% Missing words.
+% Missing nouns.
 He picked up the game die.
 People use espresso to make other coffee drinks.
 Espresso is a coffee drink.
+
+% Pronoun fixes
+I'll hire whomever I can find.
 
 % Misc stuff
 I know which book he read.
