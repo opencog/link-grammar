@@ -3982,6 +3982,8 @@ and.j-g: [[G- & G+]];
 and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 or.j-a: (AJ- & AJ+) & (Pa- or MVa-);
 
+but.j-m and.j-m: (MJ- & MJ+) & (Ma-);
+
 % Conjoined question words.
 % When and where is the party?
 % How and why did you do that?
@@ -4239,9 +4241,16 @@ afraid.a ashamed.a unafraid.a unashamed.a: {EA- or EF+} & (((Pa- or AF+ or Ma-) 
 apprehensive.a secure.a optimistic.a pessimistic.a annoyed.a confused.a offended.a
 insulted.a concerned.a depressed.a doubtful.a 
 grateful.a mad.a mistaken.a hopeful.a unhappy.a: 
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) 
-& {@MV+} & {TH+ & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or ({TH+} & 
-<adj-op>));
+  {EA- or EF+} & 
+    (({[[@Ec-]]} & {Xc+} & A+) or 
+      ((Pa- or AF+ or Ma- or MJ-) & {@MV+} & {TH+ & {LE+}}) or 
+      ({@MV+} & {TH+ & {LE+}} & MJ+) or 
+      AA+ or 
+      [[DD- & <noun-main-p>]] or
+      ({TH+} & <adj-op>));
+
+% XXX TODO --- Use MJ whereever Ma- appears, just as above!
+
 aware.a unaware.a:
 {EA- or EF+} & (((Pa- or AF+ or Ma-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) &
 {LE+}}) or ({TH+ or OF+} & <adj-op>) or [[DD- & <noun-main-p>]]);
