@@ -3982,7 +3982,8 @@ and.j-g: [[G- & G+]];
 and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 or.j-a: (AJ- & AJ+) & (Pa- or MVa-);
 
-but.j-m and.j-m: (MJ- & MJ+) & (Ma-);
+% conjoined post-nominal modifiers
+but.j-m and.j-m: (MJ- & MJ+) & (Ma- or (Xd- & Xc+ & MX*a-));
 
 % Conjoined question words.
 % When and where is the party?
