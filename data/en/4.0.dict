@@ -367,17 +367,22 @@ HYPHENATED-WORDS.n:
 
 % words.n.1: Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
-% The naked SJ- allows article to be skipped in and constructions.
-/en/words/words.n.1 
-/en/words/words.n.1.wiki : 
-  <marker-common-entity> or 
-  ({@AN-} & {@A- & {[[@AN-]]}} & 
+% The naked SJ- allows article to be skipped in conjunction (and,or)
+% constructions ("the hammer and sickle")
+<common-noun>: 
+  {@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
     ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
       ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
       <noun-and>)) or
     SJ- or
-    (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-));
+    (YS+ & Ds-) or 
+    (GN+ & (DD- or [()])) or 
+    Us-);
+
+/en/words/words.n.1 
+/en/words/words.n.1.wiki : 
+  <marker-common-entity> or <common-noun>;
 
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
@@ -3804,6 +3809,12 @@ meter.i millimeter.i centimeter.i micrometer.i kilometer.i
 micron.i Angstrom.i wavelength.i
 astronomical_unit light-year.i:
 (NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-)) or Us-;
+
+% make sure that mile.i always has precedence over mile.n
+% XXX TODO: probably same for the other .i's above...
+mile.n:
+  <marker-common-entity> or [<common-noun>];
+
 a_long_way: Yd+;
 point.i percentage_point:
 (NS- or NIe-) & {NJ-} & (Yd+ or OD-);
