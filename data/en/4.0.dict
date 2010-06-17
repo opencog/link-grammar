@@ -3994,8 +3994,9 @@ and.j-g: [[G- & G+]];
 % She ran hot and cold.
 % The EB+ link handles not, yet after the and.
 % See also comma-conjunction for similar structures.
-and.j-a: (AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
-or.j-a: (AJ- & AJ+) & (Pa- or MVa-);
+% The {Xd-} allows "blah blah, and blah"
+and.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
+or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa-);
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: (MJ- & MJ+) & (Ma- or (Xd- & Xc+ & MX*a-));
