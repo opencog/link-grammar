@@ -274,11 +274,18 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 % Same as pattern used in words.n.4 -- mass nouns or countable nouns
 <generic-singular-id>: <noun-mass-count>;
 
-% Same pattern used for words.n.2.s
+% Pattern used for words.n.2.s
+% Similar to <common-noun>, but with different determiners for number
+% agreement.
 <generic-plural-id>:  
-({@AN-} & {@A- & {[[@AN-]]}} & (({NM+ or Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or <rel-clause-p>))
-or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
+  [[AN+]] or
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+    ({NM+ or Dmc-} & <noun-and>) or
+    SJ- or
+    (YP+ & {Dmc-}) or 
+    (GN+ & (DD- or [()])) or 
+    Up-));
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
 genericID10 genericID11 genericID12 genericID13 genericID14 genericID15 genericID16 genericID17 genericID18 genericID19
@@ -388,7 +395,7 @@ HYPHENATED-WORDS.n:
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
 /en/words/words.n.2.s
 /en/words/words.n.2.s.wiki : 
-<marker-common-entity> or <generic-plural-id>;
+  <marker-common-entity> or <generic-plural-id>;
 /en/words/words.n.2.s.biolg: <generic-plural-id>;
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
