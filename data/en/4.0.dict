@@ -4101,10 +4101,15 @@ Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>))
 or ((Ya- or Yt-) & (Pa- or Ma-)) or (H- & (BT+ or Yt+));
 
 % Hmm does distant really belong here?
+% "The river is a mile wide here": Ya- & Pa- & MVp+
 wide.a tall.a deep.a distant.a:  
-({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or 
-AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>)) 
-or (Ya- & (Pa- or Ma- or <adj-op>));
+  ({EA- or EF+} & 
+    (({[[@Ec-]]} & {Xc+} & A+) or 
+    ((Pa- or AF+ or Ma-) & {@MV+}) or 
+    AA+ or 
+    [[DD- & <noun-main-p>]] or 
+    <adj-op>)) 
+  or (Ya- & (Pa- or Ma- or <adj-op>) & {@MV+});
 
 old.a: ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or 
 AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>)) 
