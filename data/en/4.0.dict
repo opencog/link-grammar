@@ -4074,12 +4074,10 @@ n't n’t: N- or EB-;
 
 %ADJECTIVES
 
-% adjectives connecting to conjoining "and" or comma.
-<adj-and>: AJ- or AJ+;
-
 % Common disjuncts shred by virtuall all adjectives.
 <adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
-  <adj-and> or
+  (AJ- & {@MV+}) or
+  ({@MV+} & AJ+) or
   ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-))); 
 
 % Ordinary adjectives
