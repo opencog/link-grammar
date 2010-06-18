@@ -131,7 +131,7 @@
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
 % conjoined nouns or noun-phrases.
-<noun-and>: SJ+ or SJ-;
+<noun-and>: SJa+ or SJa-;
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -282,7 +282,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
     ({NM+ or Dmc-} & <noun-and>) or
-    SJ- or
+    SJa- or
     (YP+ & {Dmc-}) or 
     (GN+ & (DD- or [()])) or 
     Up-));
@@ -374,7 +374,7 @@ HYPHENATED-WORDS.n:
 
 % words.n.1: Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
-% The naked SJ- allows article to be skipped in conjunction (and,or)
+% The naked SJa- allows article to be skipped in conjunction (and,or)
 % constructions ("the hammer and sickle")
 <common-noun>: 
   {@AN-} & {@A- & {[[@AN-]]}} & 
@@ -382,7 +382,7 @@ HYPHENATED-WORDS.n:
     ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
       ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
       <noun-and>)) or
-    SJ- or
+    SJa- or
     (YS+ & Ds-) or 
     (GN+ & (DD- or [()])) or 
     Us-);
@@ -3938,7 +3938,7 @@ or (JQ- & D+) or (U+ & Jr- & (RS+ or Cr+));
 
 whoever: {EL+} & 
   (((Ss*d+ or Bsd+ or [[CX+]]) & 
-    (<noun-main-s> or SJ- or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or
+    (<noun-main-s> or SJa- or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or
     [[(O- or J-) & CX+]]);
 whatever.c: ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) &
 (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
@@ -4037,7 +4037,7 @@ and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
 % "The cost and reliability were questioned" (Spx+)
 % "He wrote for piano and flute."  (Ju-)
 % "Where is the sickle and hammer?" (SIs-)
-<noun-conjunction>: (SJ- & SJ+) & ((Wd- & Spx+) or Op- or SI- or Ju- or SJ+ or AN+);
+<noun-conjunction>: (SJa- & SJa+) & ((Wd- & Spx+) or Op- or SI- or Ju- or SJa+ or AN+);
 and.j-n: <noun-conjunction>;
 
 % Conjoined verbs/verb phrases
@@ -4872,7 +4872,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   [[<semicol>]] or 
   <comma-adj-conjunction> or
   <verb-conjunction> or
-  (SJ- & SJ+ & SJ+);
+  (SJa- & SJa+ & SJa+);
 
 "…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
