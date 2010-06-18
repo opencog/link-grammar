@@ -191,7 +191,7 @@ PL-CAPITALIZED-WORDS:
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
       (({@MX+} & (JG- or <noun-main-s> or <noun-and>)) or 
         YS+ or YP+)) or 
-    AN+ or G+);
+    AN+ or G+ or (Dn- & SJn+));
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
@@ -4014,6 +4014,8 @@ and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
 % and used as a conjunction in proper names:
 % The Great Southern and Western Railroad 
+% Hmm, Maybe should use MG- & JG+ here, to be consistent with "of", "for":
+% "The Society of Engineers", "The League for Abstinence"
 and.j-g: [[G- & G+]];
 
 % Conjoined adjectival modifiers.
@@ -4049,10 +4051,13 @@ and.j-n: <noun-conjunction>;
 
 and.j-v: <verb-conjunction>;
 
-either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
+nor.j-n: SJn- & SJ+ & (Wd- & Spx+);
+neither.j-n: Dn+;
+
+either.r: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
-neither: Ds+ or E+ or ({OF+} & <noun-main-x>);
-nor: ((Xd- & CC-) or Wd-) & Qd+;
+neither.r: Ds+ or E+ or ({OF+} & <noun-main-x>);
+nor.r: ((Xd- & CC-) or Wd-) & Qd+;
 for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
