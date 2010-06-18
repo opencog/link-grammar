@@ -4056,7 +4056,7 @@ and.j-n or.j-n: <noun-conjunction>;
 
 and.j-v: <verb-conjunction>;
 
-nor.j-n: SJn- & SJ+ & (Wd- & S*x+);
+nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SJn+);
 neither.j-n: Dn+;
 
 either.r: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
