@@ -4864,12 +4864,15 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % e.g. "The blah, soon to be blah, will be blah." should not
 % get an EBx link to "soon".
 % XXX the correct solution to this is to add a new domain rule ! XXX
+%
+% Comma con conjoin nouns only if used in a list of 3 or more items:
+% "This, that and the other thing"
 ",": 
   ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or
   [[<semicol>]] or 
   <comma-adj-conjunction> or
   <verb-conjunction> or
-  <noun-conjunction>;
+  (SJ- & SJ+ & SJ+);
 
 "…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
