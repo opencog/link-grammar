@@ -1520,12 +1520,19 @@ came.v-d: <verb-sp> & <vc-come>;
 % optionally transitive verbs
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v 
 /en/words/words.v.2.1:
-<verb-pl,i> & <vc-tr,intr>;
-
+  (<verb-pl,i> & <vc-tr,intr>) or
+  (<verb-and-pl-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-pl+>);
 /en/words/words.v.2.2:  
-<verb-s> & <vc-tr,intr>;
+  (<verb-s> & <vc-tr,intr>) or
+  (<verb-and-s-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-s+>);
 /en/words/words.v.2.3:  
-(<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+  (<verb-sp,pp> & <vc-tr,intr>) or 
+  <verb-pv> or 
+  ({@E-} & A+) or 
+  <verb-po> or
+  (<verb-and-sp-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-sp+>);
+
+% XXX TODO VJ links for below
 shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d 
 spoilt.v-d unbent.v-d overfed.v-d:
 <verb-sp> & <vc-tr,intr>;
@@ -4036,8 +4043,8 @@ and.j-n: (SJ- & SJ+) & ((Wd- & Spx+) or Op- or SI- or Ju- or SJ+ or AN+);
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
 and.j-v: 
-  ((VJs- & VJs+) & Ss-) or
-  ((VJp- & VJp+) & Sp-);
+  ((VJs- & VJs+) & (Ss- or VJs+)) or
+  ((VJp- & VJp+) & (Sp- or VJp+));
 
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
