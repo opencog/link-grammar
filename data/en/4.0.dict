@@ -1419,7 +1419,11 @@ were.v-d: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or
 ((Rw- or ({Ic-} & Q-) or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>) or [[(SI*j+ or SFI**j+) & <vc-be> &
 ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]]);
-am.v: (({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>;
+
+% XXX the verb-and construction is probably too broad.
+am.v:
+  ((({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>) or
+  (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
 
 % S*x- used for passive participles: "this action be taken".
 be.v: {@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-be>;
@@ -1440,9 +1444,10 @@ weren't.v-d weren’t.v-d: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & B
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
 
 will.v can.v may.v must.v could.v might.v shall.v: 
-((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
-({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+})
-or [[()]]));
+  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
+  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
+  (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
+
 should.v: ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
 ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+})
 or [[()]])) or [[(SI*j+ or SFI**j+) & I+ & 
