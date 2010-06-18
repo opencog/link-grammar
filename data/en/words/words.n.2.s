@@ -516,7 +516,7 @@ dares.n darkrooms.n darlings.n darns.n darts.n dashboards.n dashes.n
 datelines.n dates.n daughters.n dauphins.n davenports.n dawdlers.n 
 dawns.n daybooks.n dayboys.n daydreams.n daygirls.n daytimes.n 
 deaconesses.n deacons.n deadlines.n deadlocks.n dealers.n dealings.n 
-deals.n deaneries.n deans.n dearths.n deathbeds.n deathblows.n 
+deals.n deaneries.n deans.n deathbeds.n deathblows.n 
 deaths.n deathtraps.n debacles.n debaters.n debates.n debauchees.n 
 debaucheries.n debentures.n debits.n debtors.n debts.n debutantes.n 
 debuts.n decanters.n deceits.n deceptions.n decibels.n deciliters.n 
