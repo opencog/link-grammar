@@ -34,6 +34,8 @@ hyphae.p
 kin.p
 larvae.p
 lobstermen.p
+mailmen.p
+milkmen.p
 media.p
 men.p
 mice.p
