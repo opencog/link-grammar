@@ -4020,7 +4020,7 @@ and.j-g: [[G- & G+]];
 % The black and white cat sleeps
 % She ran hot and cold.
 % The EB+ link handles not, yet after the and.
-% See also comma-conjunction for similar structures.
+% See also <comma-adj-conjunction> for similar structures.
 % The {Xd-} allows "blah blah, and blah"
 and.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa-);
@@ -4042,9 +4042,11 @@ and.j-n: (SJ- & SJ+) & ((Wd- & Spx+) or Op- or SI- or Ju- or SJ+ or AN+);
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
-and.j-v: 
-  ((VJs- & VJs+) & (Ss- or VJs+)) or
-  ((VJp- & VJp+) & (Sp- or VJp+));
+<verb-conjunction>:
+  ((VJs- & VJs+) & (Ss- or ({Xd-} & VJs-))) or
+  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-)));
+
+and.j-v: <verb-conjunction>;
 
 either: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
@@ -4853,7 +4855,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 ";": <semicol>;
 
 % comma, as a conjunction -- "They taste bitter, not sweet"
-<comma-conjunction>: (AJ- & EB+ & AJ+) & (Pa- or MVa-);
+<comma-adj-conjunction>: (AJ- & EB+ & AJ+) & (Pa- or MVa-);
 
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
@@ -4861,8 +4863,11 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % e.g. "The blah, soon to be blah, will be blah." should not
 % get an EBx link to "soon".
 % XXX the correct solution to this is to add a new domain rule ! XXX
-",": ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or
-  [[<semicol>]] or <comma-conjunction>;
+",": 
+  ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or
+  [[<semicol>]] or 
+  <comma-adj-conjunction> or
+  <verb-conjunction>;
 
 "…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
