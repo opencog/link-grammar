@@ -411,14 +411,18 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
         <noun-and> )) or
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 
+% (Dn- & SJn+): "Neither rain nor snow"
 <mass-noun>:
   <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
-      ({NM+ or Dmu-} & 
+    ({NM+ or Dmu-} & 
       ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
-       <noun-and>)) or
-  (YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
+      <noun-and> or
+      (Dn- & SJn+))) or
+    (YS+ & {Dmu-}) or 
+    (GN+ & (DD- or [()])) or 
+    Up-));
 
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n 
@@ -4052,7 +4056,7 @@ and.j-n or.j-n: <noun-conjunction>;
 
 and.j-v: <verb-conjunction>;
 
-nor.j-n: SJn- & SJ+ & (Wd- & Spx+);
+nor.j-n: SJn- & SJ+ & (Wd- & S*x+);
 neither.j-n: Dn+;
 
 either.r: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
