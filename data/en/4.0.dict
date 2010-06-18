@@ -1896,7 +1896,8 @@ going.v:
   ({@E-} & A+) or
   <verb-ge-d>;
 
-<vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+})};
+% transitive: "stay the prisoner's execution"
+<vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+}) or (O+ & {@MV+})};
 stay.v: <verb-pl,i> & <vc-stay>;
 stays.v: <verb-s> & <vc-stay>;
 stayed.v-d: <verb-sp,pp> & <vc-stay>;
@@ -4040,7 +4041,7 @@ and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
 % "He wrote for piano and flute."  (Ju-)
 % "Where is the sickle and hammer?" (SIs-)
 <noun-conjunction>: (SJa- & SJa+) & ((Wd- & Spx+) or Op- or SI- or Ju- or SJa+ or AN+);
-and.j-n: <noun-conjunction>;
+and.j-n or.j-n: <noun-conjunction>;
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."

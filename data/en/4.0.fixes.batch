@@ -369,6 +369,13 @@ Canvas is for painting on.
 Use a piece of paper to write upon.
 A piece of paper can be used to write upon.
 
+% stay is optionally transitive
+The judge stayed the prisoner's execution
+Michael stayed his anger
+I stayed the week with my parents
+We stayed the duration of the game.
+Mere rain will not stay the mailman.
+
 % Some ditransitive verbs of various complexity
 He poured me a glass of champagne.
 *He poured me.
@@ -2013,6 +2020,7 @@ Neither Mary Kate nor Louise Anne are coming to the party
 *either Mary nor Louise are coming to the party
 Neither Mary, Joe nor Louise are coming to the party
 *either Mary, Joe nor Louise are coming to the party
+Either Mary or Louise will come.
 
 Neither snow nor rain nor heat nor gloom of night stays these couriers from the swift completion of their appointed rounds
 
