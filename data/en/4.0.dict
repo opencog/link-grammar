@@ -1296,6 +1296,14 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
  <MX-PHRASE> or <OPENER> or
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
+% conjoined verbs. 
+% s == singluar, pl == plural, sp == singular or plural 
+<verb-and-s->: {@E-} & VJs-;
+<verb-and-s+>: {@E-} & VJs+;
+<verb-and-pl->: {@E-} & VJp-;
+<verb-and-pl+>: {@E-} & VJp+;
+<verb-and-sp->: {@E-} & VJ-;
+<verb-and-sp+>: {@E-} & VJ+;
 
 % AUXILIARY VERBS
 
@@ -1540,13 +1548,6 @@ or <verb-ge-d>;
 % words.v.6: Optionally transitive verbs that can take particles 
 % like "up" and "out" -- see also words.v.8
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
-<verb-and-s->: {@E-} & VJs-;
-<verb-and-s+>: {@E-} & VJs+;
-<verb-and-pl->: {@E-} & VJp-;
-<verb-and-pl+>: {@E-} & VJp+;
-<verb-and-sp->: {@E-} & VJ-;
-<verb-and-sp+>: {@E-} & VJ+;
-
 <vc-fill>:
 ((K+ & {[[@MV+]]} & O*n+) or
 ({O+ or B-} & {K+}) or [[@MV+ & O*n+]]) & {@MV+};
@@ -1868,13 +1869,20 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 go.v: <verb-pl,i> & <vc-go>;
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
-goes.v: <verb-x-s> & (<vc-go> or [O*t+ & {@MV+}]);
-went.v-d: <verb-x-sp> & (<vc-go> or [O*t+ & {@MV+}]); 
+goes.v: 
+  (<verb-x-s> & (<vc-go> or [O*t+ & {@MV+}])) or
+  (<verb-and-s-> & <vc-go>) or (<vc-go> & <verb-and-s+>);
+went.v-d:
+  (<verb-x-sp> & (<vc-go> or [O*t+ & {@MV+}])) or
+  (<verb-and-sp-> & <vc-go>) or (<vc-go> & <verb-and-sp+>);
+% XXX TODO maybe need VJ for gone, going etc. ???
 gone.v: <verb-pp> & <vc-go>;
 % The keys are gone.  The popcorn is all gone.
 gone.a: {@E-} & Pa-;
-going.v: ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or ({@E-} & A+) or
-<verb-ge-d>;
+going.v: 
+  ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or 
+  ({@E-} & A+) or
+  <verb-ge-d>;
 
 <vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+})};
 stay.v: <verb-pl,i> & <vc-stay>;
