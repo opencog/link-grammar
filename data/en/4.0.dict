@@ -1566,9 +1566,12 @@ or <verb-ge-d>;
 % words.v.6: Optionally transitive verbs that can take particles 
 % like "up" and "out" -- see also words.v.8
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
+% The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
+% "she walked out of the room two minutes"
 <vc-fill>:
-((K+ & {[[@MV+]]} & O*n+) or
-({O+ or B-} & {K+}) or [[@MV+ & O*n+]]) & {@MV+};
+  ((K+ & {[[@MV+]]} & O*n+) or
+  ({O+ or B-} & {K+}) or 
+  [[@MV+ & O*n+]]) & {@MV+};
 /en/words/words.v.6.1: 
   (<verb-pl,i> & <vc-fill>) or 
   (<verb-and-pl-> & <vc-fill>) or (<vc-fill> & <verb-and-pl+>);
@@ -3496,9 +3499,17 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 
 %PREPOSITIONS
 
-<prep-main-a>: [Mp-] or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or
-(Xd- & Xc+ & (MX*x- or MVx-)) or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-)))
-or (Wj- & Qd+) or [Wq- & PF+];
+% conjoin preps: "prep and prep": "the coverage on TV and on the radio..."
+<conjoin-preps>: MJlp- or MJrp+;
+
+<prep-main-a>: 
+  <conjoin-preps> or
+  [Mp-] or Pp- or MVp- or 
+  [({Xc+ & {Xd-}} & CO+)] or
+  (Xd- & Xc+ & (MX*x- or MVx-)) or 
+  (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or
+  (Wj- & Qd+) or 
+  [Wq- & PF+];
 <prep-main-b>: [Mp-] or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or 
 (Xd- & Xc+ & (MX*x- or MVx-));
 <prep-main-t>: [Mpn-] or Pp- or MVpn- or [({Xc+ & {Xd-}} & CO*n+)] or 
@@ -3559,8 +3570,11 @@ by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
 in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) 
 or K- or (MVp- & B-) or (MG- & JG+);
 
-on upon: ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or K- or 
-(MVp- & B-);
+on upon: 
+  ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or 
+  K- or 
+  (MVp- & B-);
+
 over: ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) 
 or K- or EN+ or (MVp- & B-) or (Yd- & Pp-);
 just_over just_under well_over: EN+;
@@ -4047,7 +4061,9 @@ and.j-a but.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa-);
 
 % conjoined post-nominal modifiers
-but.j-m and.j-m: (MJ- & MJ+) & (Ma- or (Xd- & Xc+ & MX*a-));
+but.j-m and.j-m: 
+  ((MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
+  ((MJrp- & MJlp+) & Mp-);
 
 % Conjoined question words.
 % When and where is the party?
@@ -4352,8 +4368,8 @@ insulted.a concerned.a depressed.a doubtful.a
 grateful.a mad.a mistaken.a hopeful.a unhappy.a: 
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
-      ((Pa- or AF+ or Ma- or MJ-) & {@MV+} & {TH+ & {LE+}}) or 
-      ({@MV+} & {TH+ & {LE+}} & MJ+) or 
+      ((Pa- or AF+ or Ma- or MJla-) & {@MV+} & {TH+ & {LE+}}) or 
+      ({@MV+} & {TH+ & {LE+}} & MJra+) or 
       AA+ or 
       [[DD- & <noun-main-p>]] or
       ({TH+} & <adj-op>));
