@@ -4061,7 +4061,9 @@ nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SJn+);
 neither.j-n: Dn+;
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
-but.j-n: (Xd- & SJl- & EBx+ & SJr+ & Xc+) & (Wd- & Ssx+);
+but.j-n: 
+  ((Xd- & SJl- & EBx+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
+  ((SJl- & EBy- & SJr+) & Ou-);
 
 either.r: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
@@ -4111,8 +4113,17 @@ how:
 QJ- or QJ+ or
 ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
-not.e: EB- or ({@E-} & N-) or NT+ or [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+)
-or (Mg- & Mgn+) or (Mv- & Mvn+) or (Mp- & Mp+) or (Ma- & Ma*n+)]];
+% EBy+ link is for "verbed not X but Y" 
+not.e: 
+  EB- or 
+  ({@E-} & N-) or 
+  NT+ or 
+  EBy+ or
+  [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+) or 
+    (Mg- & Mgn+) or 
+    (Mv- & Mvn+) or 
+    (Mp- & Mp+) or 
+    (Ma- & Ma*n+)]];
 
 % We include this, though it's not one of the strippable strings
 n't n’t: N- or EB-;
