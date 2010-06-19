@@ -4028,7 +4028,7 @@ and.j-g: [[G- & G+]];
 % The EB+ link handles not, yet after the and.
 % See also <comma-adj-conjunction> for similar structures.
 % The {Xd-} allows "blah blah, and blah"
-and.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
+and.j-a but.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
 or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa-);
 
 % conjoined post-nominal modifiers
