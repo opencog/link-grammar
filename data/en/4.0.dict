@@ -3538,7 +3538,8 @@ between:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
 
 with: 
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJlv- or RJlj- or RJrj+)) or 
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJlv-)) or 
+  (Jw+ & (RJlj- or RJrj+)) or 
   (MVp- & B-) or
   (J+ & {EBm+} & ([P+] or [[O*n+]]) & 
     ([({Xc+ & {Xd-}} & CO+)] or 
