@@ -3510,6 +3510,8 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or
   (Wj- & Qd+) or 
   [Wq- & PF+];
+
+% XXX TODO: prep-main-b should also probably get <conjoin-preps>
 <prep-main-b>: [Mp-] or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or 
 (Xd- & Xc+ & (MX*x- or MVx-));
 <prep-main-t>: [Mpn-] or Pp- or MVpn- or [({Xc+ & {Xd-}} & CO*n+)] or 
@@ -3536,7 +3538,7 @@ between:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
 
 with: 
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJ*v-)) or 
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJlv- or RJlj- or RJrj+)) or 
   (MVp- & B-) or
   (J+ & {EBm+} & ([P+] or [[O*n+]]) & 
     ([({Xc+ & {Xd-}} & CO+)] or 
@@ -3544,9 +3546,15 @@ with:
     (Xd- & Xc+ & (MX*x- or MVx-))));
 
 among:
-({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or (MVp- & B-);
-for.p: ({JQ+} & (J+ or Mgp+ or TI+) & 
-<prep-main-a>) or (MVp- & B-) or (MG- & JG+) or (MVp- & FL+);
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or 
+  (MVp- & B-);
+
+for.p: 
+  ({JQ+} & (J+ or Mgp+ or TI+) & <prep-main-a>) or 
+  (J+ & (RJlj- or RJrj+)) or 
+  (MVp- & B-) or 
+  (MG- & JG+) or 
+  (MVp- & FL+);
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or (MVp- & B-);
 about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or 
@@ -4074,9 +4082,11 @@ and.j-q: (QJ- & QJ+) & ((Wq- & (Q+ or PF+)) or QI-);
 % RJ*v: adverbs
 % RJ*t: that "He said that ... and that ..."
 % RJ*c: subordinate clauses: "Although he said ... and he did ..., ..."
+% RJ*j: prep-object-relative (Mj): "the man for whom and with whom ..."
 and.j-r: ((RJrv- & RJlv+) & MVr-) or
          ((RJrt- & RJlt+) & TH-) or
-         ((RJrc- & RJlc+) & Cs-);
+         ((RJrc- & RJlc+) & Cs-) or
+         ((RJrj- & RJlj+) & Mj- & Cs+);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)

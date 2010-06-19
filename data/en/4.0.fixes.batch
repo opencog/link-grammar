@@ -1985,9 +1985,12 @@ The river is wide here, and deep, too.
 When and where is the party?
 How and why did you do that?
 
-% conjoined post-nominal modifiers
+% conjoined post-nominal modifiers: MJ*a (in place of Ma)
 Many Democrats unhappy about the economy but doubtful that Clinton can be elected probably won't vote at all
 Many Democrats, unhappy about the economy but doubtful that Clinton can be elected, probably won't vote at all  
+
+% conjoined post-nominal prep-phrase modifiers: MJ*p (in place of Mp)
+The coverage on TV and on the radio has been terrible
 
 % conjoined adverbs: RJ*v link
 She handled it quickly and gracefully 
@@ -1998,6 +2001,9 @@ I told him that I hated him and that I never wanted to see him again
 
 % conjoined dependent clauses: RJ*c link
 Although he likes me and he respects me, he says he needs some privacy
+
+% conjoined prep-object-relative clauses: RJ*j link (instead of Mj- & Cs+)
+That is the man for whom and with whom Joe works
 
 % conjoined nouns
 % count nouns
