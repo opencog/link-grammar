@@ -4061,8 +4061,10 @@ nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SJn+);
 neither.j-n: Dn+;
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
+% Not John, but Mary led the way.
 but.j-n: 
   ((Xd- & SJl- & EBx+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
+  ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
   ((SJl- & EBy- & SJr+) & Ou-);
 
 either.r: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
