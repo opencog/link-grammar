@@ -3522,7 +3522,7 @@ between:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
 
 with: 
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJ-)) or 
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJ*v-)) or 
   (MVp- & B-) or
   (J+ & {EBm+} & ([P+] or [[O*n+]]) & 
     ([({Xc+ & {Xd-}} & CO+)] or 
@@ -3958,8 +3958,9 @@ whenever wherever however.c: {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or
 ({Xd- & Xc+} & MVs-)));
 no_matter: QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
 
-that.j-c: (Cet+ &  
-([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]])) or (TS- & (SI*j+ or SFI**j+) & I*j+);
+that.j-c: 
+  (Cet+ &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or 
+  (TS- & (SI*j+ or SFI**j+) & I*j+);
 that.j-d: [{AL-} & D*u+];
 that.j-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
 that.j-p: {[[M+]]} & <noun-main-h>;
@@ -4045,7 +4046,10 @@ but.j-m and.j-m: (MJ- & MJ+) & (Ma- or (Xd- & Xc+ & MX*a-));
 and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
 
 % conjoined adverbs/prepositional phrases
-and.j-r: (RJ- & RJ+) & MVr-;
+% RJ*v: adverbs
+% RJ*t: that
+and.j-r: ((RJ*v- & RJ*v+) & MVr-) or
+         ((RJ*t- & RJ*t+) & TH-);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)
@@ -4700,7 +4704,7 @@ occasionally.e often.e specifically.e generally.e originally.e:
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
 
-<adverb-and>: RJ+ or RJ-;
+<adverb-and>: RJ*v+ or RJ*v-;
 
 % ordinary manner adverbs
 % abjectly ably abnormally abortively abruptly absent-mindedly absently 
