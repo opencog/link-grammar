@@ -79,11 +79,14 @@
 <marker-entity>: XXXENTITY+;
 <marker-common-entity>: XXXGIVEN+;
 
-<CLAUSE>: {({@COd-} & C-) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
+% The RJ links connect to "and"; the l,r prevent cross-linking
+<clause-conjoin>: RJlc- or RJrc+;
 
-<S-CLAUSE>: {({@COd-} & C-) or ({@CO-} & (Wd- & {CC+}))}; 
+<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
 
-<CLAUSE-E>: {({@COd-} & C-) or ({@CO-} & (Wd- or {CC+})) or Re-};
+<S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+}))}; 
+
+<CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
 % noun-main-x -- singular or plural or mass.
 <noun-main-x>: (S+ & <CLAUSE>) or SI- or J- or O- or ({[B*j+] or CJ-} & Xd- 
@@ -4053,9 +4056,11 @@ and.j-q: (QJ- & QJ+) & ((Wq- & (Q+ or PF+)) or QI-);
 
 % conjoined adverbs/prepositional phrases
 % RJ*v: adverbs
-% RJ*t: that
-and.j-r: ((RJ*v- & RJ*v+) & MVr-) or
-         ((RJ*t- & RJ*t+) & TH-);
+% RJ*t: that "He said that ... and that ..."
+% RJ*c: subordinate clauses: "Although he said ... and he did ..., ..."
+and.j-r: ((RJrv- & RJlv+) & MVr-) or
+         ((RJrt- & RJlt+) & TH-) or
+         ((RJrc- & RJlc+) & Cs-);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)
