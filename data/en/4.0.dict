@@ -3520,10 +3520,15 @@ against beyond beside:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 between:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
-with: ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
-or (J+ & {EBm+} & ([P+] or [[O*n+]]) & ([({Xc+ & {Xd-}} & CO+)] or 
-MVp- or (Xd- & Xc+ & (MX*x- or MVx-)))) 
-or (MVp- & B-);
+
+with: 
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJ-)) or 
+  (MVp- & B-) or
+  (J+ & {EBm+} & ([P+] or [[O*n+]]) & 
+    ([({Xc+ & {Xd-}} & CO+)] or 
+    MVp- or 
+    (Xd- & Xc+ & (MX*x- or MVx-))));
+
 among:
 ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or (MVp- & B-);
 for.p: ({JQ+} & (J+ or Mgp+ or TI+) & 
@@ -4038,6 +4043,9 @@ but.j-m and.j-m: (MJ- & MJ+) & (Ma- or (Xd- & Xc+ & MX*a-));
 % When and where is the party?
 % How and why did you do that?
 and.j-q: (QJ- & QJ+) & Wq- & (Q+ or PF+);
+
+% conjoined adverbs/prepositional phrases
+and.j-r: (RJ- & RJ+) & MVr-;
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)
@@ -4692,11 +4700,19 @@ occasionally.e often.e specifically.e generally.e originally.e:
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
 
+<adverb-and>: RJ+ or RJ-;
+
 % ordinary manner adverbs
 % abjectly ably abnormally abortively abruptly absent-mindedly absently 
 <ordinary-adv>:
-{EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & {Xd-}} & CO+) or Qe+
- or Ca+ or [[EA+]]);
+  {EE- or EF+} &
+    (({Xd- & Xc+} & MVa-) or
+    Em+ or
+    ({Xc+ & {Xd-}} & CO+) or
+    Qe+ or
+    Ca+ or
+    <adverb-and> or
+    [[EA+]]);
 
 /en/words/words.adv.1: <ordinary-adv>;
 /en/words/words-medical.adv.1: <ordinary-adv>;
