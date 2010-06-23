@@ -1402,6 +1402,12 @@ The leftmost 50 ft. of the cable are bad.
 The protein (50 kDa) is examined.
 The protein (20 to 50 kDa) is examined
 The protein (1 kDa) is examined
+A miner's inch is defined as 1/60 ft³/s.
+A miner's inch is defined as 1/60 ft³ / s.
+A miner's inch is defined as 1 / 60 ft³/s.
+A miner's inch is defined as 1 / 60 ft³ / s.
+A miner's inch is defined as 472 mL/s.
+A miner's inch is defined as 472 mL / s.
 
 % Lack of space between numbers and letters causes problems
 It was 10:30AM in the morning.
@@ -1566,7 +1572,7 @@ He drove a souped-up '57 Chevy.
 He drove a souped-up 1957 Chevy.
 The 47 Ford came screamin' down the track.
 
-% Simple equation parsing:
+% Simple mathematical equation parsing:
 Phosphorylation was observed (P = 0.06).
 Phosphorylation was observed (probability = 0.06).
 The sun is distant (L = 1 AU).

@@ -77,7 +77,7 @@ static int verbosity = 0;
 typedef enum
 {
 	UNGRAMMATICAL='*',
-	PARSE_WITH_DISJUNCT_COST_GT_0=':',
+	PARSE_WITH_DISJUNCT_COST_GT_0=':',  /* Not used anywhere, currently ... */
 	NO_LABEL=' '
 } Label;
 
@@ -406,6 +406,9 @@ static void batch_process_some_linkages(Label label,
 	Linkage linkage;
 
 	if (there_was_an_error(label, sent, opts)) {
+		/* Note: sentence_num_linkages_found returns total linkages
+		 * not valid linkages. So the printed linkage might be bad... 
+		 */
 		if (sentence_num_linkages_found(sent) > 0) {
 			linkage = linkage_create(0, sent, opts);
 			process_linkage(linkage, opts);

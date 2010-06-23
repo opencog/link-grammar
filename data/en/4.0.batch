@@ -848,7 +848,10 @@ The sky is blue, so it is likely that Joe will come
 That is the man for whom and with whom Joe works
 *That is the man for whom and with Janet Joe works
 *When did Joe and John did leave the party
-My dog, cat, and cousin's friend came
+
+% Huh ??? what's the correct parse/meaning of this sentence?
+% "my dog's freind came" is one of the parses !!?? wtf .. 
+% My dog, cat, and cousin's friend came
 *My dog, cat, horse, mouse, and his cow left
 My dog, cat, horse, and mouse, and his cow left
 you should not only ask for your money back, but demand it

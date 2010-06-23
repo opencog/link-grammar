@@ -17,6 +17,7 @@ Version 4.7.0 (XXX 2010)
  * Add male/female gender tags to misc nouns.
  * Fix: misc optionally transitive verbs: mix, paint, boot
  * Fix: word order: "look about fearfully", "look fearfully about", around
+ * Fix: recognize simple fractions
 
 TODO --
 -- document VJ, MJ, RJ links

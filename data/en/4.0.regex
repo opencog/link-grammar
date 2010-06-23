@@ -19,12 +19,14 @@
 % One thing to be careful about here is to not match the period at the
 % end of a sentence; for example: "It happened in 1942."
 % 
-% Allows at most two colons
-NUMBERS: /^[0-9]:?[0-9]*:?[0-9]*$/
+% Allows at most two colons in hour-muinute-second HMS expressions
+HMS-TIME: /^[0-9]:?[0-9]*:?[0-9]*$/
 % Allows any number of commas or periods
 NUMBERS: /^[0-9,.]*[0-9]$/
-% This allows more, e.g. "-5" and "5-10" and "9+/-6.5"
+% This parses signed numbers and ranges, e.g. "-5" and "5-10" and "9+/-6.5"
 NUMBERS: /^[0-9.,-]*[0-9](\+\/-[0-9.,-]*[0-9])?$/
+% Parses simple fractions
+FRACTION: /^[0-9]+\/[0-9]+$/
 % "10(3)" exponent (used in PubMed)
 NUMBERS: /^[0-9.,-]*[0-9][0-9.,-]*\([0-9:.,-]*[0-9][0-9.,-]*\)$/
 

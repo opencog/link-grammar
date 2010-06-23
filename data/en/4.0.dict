@@ -890,11 +890,21 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
 
 % the generic "number" category
 % AN+ is needed for date-ranges
-NUMBERS: 
-NMn- or ({EN-} & (NIfn+ or NItn-)) or NN+ or [[NF+]] or [[AN+]] or
-({EN- or NIc-} & (ND+ or NIn+ or OD- or 
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
-EQt+ or EQt-;
+% XXX todo -- HMS-TIME consists of HH:MM:SS type expressions
+% and should probably have a narrower set of parse patterns.
+% Ditto for fractions ... 
+% Not clear why we use Dmcn+ here, instead of allowing nouns to take ND-
+% as effectively Dmcn and ND are the "same thing" more or less.
+NUMBERS HMS-TIME FRACTION: 
+  NMn- or 
+  ({EN-} & (NIfn+ or NItn-)) or 
+  NN+ or 
+  [[NF+]] or 
+  [[AN+]] or
+  ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+    ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
+  EQt+ or 
+  EQt-;
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"
@@ -933,6 +943,7 @@ twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
 thirty-first.ti : TM-;
 
 % Years w/o apostrophe: e.g. 47 Ford Fairlane or 57 Chevy
+01 02 03 040 05 06 07 08 09: <date-id> or [[G+]];
 32 33 34 35 36 37 38 39
 40 41 42 43 44 45 46 47 48 49
 50 51 52 53 54 55 56 57 58 59
@@ -940,7 +951,7 @@ thirty-first.ti : TM-;
 70 71 72 73 74 75 76 77 78 79
 80 81 82 83 84 85 86 87 88 89
 90 91 92 93 94 95 96 97 98 99:
-<date-id> or [[G+]];
+NUMBERS or <date-id> or [[G+]];
 
 % year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
@@ -960,17 +971,20 @@ thirty-first.ti : TM-;
 
 
 1: 
-NMn- or ({EN-} & (NIfn+ or NItn-)) or 
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIm+ or OD- or 
-({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>]))))) 
-or TM- or NSn+);
+  NMn- or ({EN-} & (NIfn+ or NItn-)) or 
+  NN+ or [[NF+]] or 
+  ({EN- or NIc-} & (ND+ or NIm+ or OD- or 
+  ({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>]))))) or
+  TM- or NSn+ or
+  EQt+ or EQt-;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
 0:
-NMn- or ({EN-} & (NIfn+ or NItn-)) or 
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
-({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
-or NSn+);
+  NMn- or ({EN-} & (NIfn+ or NItn-)) or 
+  NN+ or [[NF+]] or 
+  ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+  ({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
+  or NSn+;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
 % TODO: no numers or related expressions below this point take the new NM
@@ -1196,6 +1210,11 @@ equiv.v sim.v simeq.v approx.v ~.v:
 *.v "/.v" +.v -.v x.v: 
 ([S-] or EQ-) &  ([O+] or EQ+) & 
 (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+
+% Allows parsing of "dollars per day" or "mL/sec" but is somewhat
+% inconsistent with the equation persing otherwise described below.
+% XXX overall, eqn parsing could be strengthened.
+per "/.per": Us+ & Mp-;
 
 % Binary operators, strict:
 % Here EQt attaches only to terms, which may be numbers or letters.
@@ -3737,7 +3756,6 @@ J+ & (<prep-main-b> or [Wq- & PF+]);
 near.p: {EE- or EF+} & J+ & (<prep-main-b> or FM- or [Wq- & PF+]);
 all_over all_around: {J+} & (Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-
 or Mp-);
-per: Us+ & Mp-;
 such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
 
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
@@ -5121,9 +5139,12 @@ LATIN-ADJ-S-NOUN-WORDS:
 
 % Guessing of unknown words, if none of the above rules applied.
 UNKNOWN-WORD.n: 
-{@AN-} & {@A- & {[[@AN-]]}} & 
-(AN+ or ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or U-);
+  {@AN-} & {@A- & {[[@AN-]]}} & 
+    (AN+ or 
+    ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
+    (YS+ & {D*u-}) or 
+    (GN+ & (DD- or [()])) or 
+    U-);
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};
 UNKNOWN-WORD.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
