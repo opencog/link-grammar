@@ -3821,13 +3821,17 @@ NFT.tz NST.tz O.tz P.tz PDT.tz PST.tz Q.tz R.tz S.tz T.tz U.tz UTC.tz
 V.tz W.tz WDT.tz WEDT WEST.tz WET.tz WST.tz X.tz Y.tz Z.tz:
 {Xd-} & TZ-;
 
-Jan.x Feb.x Aug.x Sept.x Oct.x Nov.x Dec.x: 
-{Xi+} & TM+ & {TY+} & ((Xd- & Xc+ & TW-) or ON- or JT- or [[<noun-main-s>
-or MVpn- or Mp- or AN+]]);
+% Abbreviated month names.
+Jan.x Feb.x Mar.x Apr.x May.x Jun.x Jul.x Aug.x Sep.x Sept.x Oct.x Nov.x Dec.x: 
+ {Xi+} & TM+ & {TY+} & 
+   ((Xd- & Xc+ & TW-) or 
+   ON- or 
+   JT- or 
+   [[<noun-main-s> or MVpn- or Mp- or AN+]]);
 
 fall.i spring.i winter.i summer.i: 
-((DTn- or DTi-) & <prep-main-t>)
-or (DTi- & (JT- or YS+ or [[<noun-main-s>]]));
+  ((DTn- or DTi-) & <prep-main-t>) or
+  (DTi- & (JT- or YS+ or [[<noun-main-s>]]));
 
 weeks.i days.i hours.i minutes.i seconds.i months.i years.i decades.i
 centuries.i semesters.i terms.i nights.i:
