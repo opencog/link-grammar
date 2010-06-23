@@ -890,12 +890,11 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
 
 % the generic "number" category
 % AN+ is needed for date-ranges
-% XXX todo -- HMS-TIME consists of HH:MM:SS type expressions
-% and should probably have a narrower set of parse patterns.
+% FRACTIONS are simple fractions
 % Ditto for fractions ... 
 % Not clear why we use Dmcn+ here, instead of allowing nouns to take ND-
 % as effectively Dmcn and ND are the "same thing" more or less.
-NUMBERS HMS-TIME FRACTION: 
+NUMBERS FRACTION: 
   NMn- or 
   ({EN-} & (NIfn+ or NItn-)) or 
   NN+ or 
@@ -905,6 +904,11 @@ NUMBERS HMS-TIME FRACTION:
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
   EQt+ or 
   EQt-;
+
+% HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
+% and should probably have a narrower set of parse patterns than numbers in
+% general.  e.g. should not have EQ links XXX todo -- fix this.
+HMS-TIME: NUMBERS & {TZ+};
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"

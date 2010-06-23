@@ -1411,8 +1411,11 @@ A miner's inch is defined as 472 mL / s.
 
 % Lack of space between numbers and letters causes problems
 It was 10:30AM in the morning.
+It was 10AM in the morning.
+*It was 10:555:88 in the morning.
 Bids must be received by 1 p.m. EDT
 Bids must be received by 1 PM, CST
+Bids must be received by 1PM, CST
 
 % Poorly parsed date expressions.
 I saw him on January 21, 1990
