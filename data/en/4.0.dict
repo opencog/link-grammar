@@ -2925,22 +2925,35 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
 % 'he wrote me that S' but '*he drew me that S'
-<vc-write>: ({(B- & {O+ or K+}) or 
-(O+ & {({[[@MV+]]} & O*n+) or K+}) or 
-(K+ & {{[[@MV+]]} & O*n+}) or 
-([[@MV+ & O*n+]])} & {@MV+})
-or ({@MV+} & (TH+ or Ce+));
-write.v charge.v draw.v: <verb-pl,i> & <vc-write>;
-writes.v reads.v charges.v draws.v: <verb-s> & <vc-write>;
-wrote.v-d drew.v-d: <verb-sp> & <vc-write>;
-read.v-d: (<verb-sp,pp,ico> & <vc-write>) or (<verb-pv-b> &
-{O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or 
-[[@MV+ & O*n+]]} & <verb-po>);
-charged.v-d: (<verb-sp,pp> & <vc-write>) or (<verb-pv-b> & {O+ or B- or K+
-or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
-written.v drawn.v: (<verb-pp> & <vc-write>) or (<verb-pv-b> & {O+ or B- or K+
-or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>)
-or ({@E-} & A+);
+<vc-write>: 
+  ({(B- & {O+ or K+}) or 
+    (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
+    (K+ & {{[[@MV+]]} & O*n+}) or 
+    ([[@MV+ & O*n+]])} & {@MV+}) or
+  ({@MV+} & (TH+ or Ce+));
+write.v charge.v draw.v: 
+  (<verb-pl,i> & <vc-write>) or
+  (<verb-and-pl-> & <vc-write>) or (<vc-write> & <verb-and-pl+>);
+writes.v reads.v charges.v draws.v: 
+  (<verb-s> & <vc-write>) or
+  (<verb-and-s-> & <vc-write>) or (<vc-write> & <verb-and-s+>);
+wrote.v-d drew.v-d: 
+  (<verb-sp> & <vc-write>) or
+  (<verb-and-sp-> & <vc-write>) or (<vc-write> & <verb-and-sp+>);
+% XXX todo: probably need verb-and for the below.
+read.v-d: 
+  (<verb-sp,pp,ico> & <vc-write>) or 
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+charged.v-d: 
+  (<verb-sp,pp> & <vc-write>) or 
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+written.v drawn.v: 
+  (<verb-pp> & <vc-write>) or 
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>) or 
+  ({@E-} & A+);
 writing.g reading.g charging.g drawing.g: (<vc-write> & <verb-ge>) or <verb-ge-d>;
 writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
 
