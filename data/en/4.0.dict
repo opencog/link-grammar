@@ -4119,7 +4119,13 @@ and.j-r: ((RJrv- & RJlv+) & MVr-) or
 % "The cost and reliability were questioned" (Spx+)
 % "He wrote for piano and flute."  (Ju-)
 % "Where is the sickle and hammer?" (SIs-)
-<noun-conjunction>: (SJl- & SJr+) & ((Wd- & Spx+) or Op- or SI- or Ju- or SJl+ or AN+);
+% Op- has a cost, so that "they verbed X and verbed Y" gets the VJ link 
+% at zero cost, and the SJ link at higher cost (since a "verbed Y" can be
+% understood as a modified noun).  Acutally, should probably have some
+% post-processing rule to disallow this XXX to do fix above.  Example of 
+% bad SJ usage: "He bangs drums and played piano" i.e "he bangs a played piano"
+
+<noun-conjunction>: (SJl- & SJr+) & ((Wd- & Spx+) or [Op-] or SI- or Ju- or SJl+ or AN+);
 and.j-n or.j-n: <noun-conjunction>;
 
 % Conjoined verbs/verb phrases
