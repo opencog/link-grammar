@@ -2090,6 +2090,9 @@ I am going to the store and will get a gallon of milk
 I went to the store and returned the eggs
 I went to the store, got a gallon of milk, and returned the eggs
 
+% Collocations with holes: XJ links
+you should not only ask for your money back, but demand it
+
 % ------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 % "dog" and "which" do link (and that is correct).

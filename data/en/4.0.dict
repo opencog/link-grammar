@@ -4162,6 +4162,13 @@ but.j-n:
   ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
   ((SJl- & EBy- & SJr+) & Ou-);
 
+% XJ: collacations with holes
+% XJ*i: with infinitives
+% ... not only X, but Y
+% "you should not only ask for your money back, but demand it"
+not_only: I- & I+ & XJ*i+;
+but.j-r: {Xd-} & XJ*i- & I+;
+
 either.r: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
 & MVa-);
 neither.r: Ds+ or E+ or ({OF+} & <noun-main-x>);
