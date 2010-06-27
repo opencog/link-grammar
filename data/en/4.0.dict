@@ -1508,15 +1508,23 @@ will.v can.v may.v must.v could.v might.v shall.v:
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
-should.v: ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
-({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+})
-or [[()]])) or [[(SI*j+ or SFI**j+) & I+ & 
-((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
-would.v: ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & {Vw+} & I+) or CQ-)) or
-({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) 
-or [[()]]));
-ought.v: (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
-({@E-} & (S- or SF- or (RS- & B-)))) & (TO+ or (N+ & I+));
+should.v: 
+  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
+  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or 
+  (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
+  [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+
+would.v: 
+  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & {Vw+} & I+) or CQ-)) or
+  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
+  (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
+
+ought.v: 
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or 
+    ({@E-} & (S- or SF- or (RS- & B-))) or
+    <verb-and-sp->) & 
+  (TO+ or (N+ & I+));
+
 won't can't mustn't couldn't shouldn't cannot needn't 
 won’t can’t mustn’t couldn’t shouldn’t needn’t: 
 ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
