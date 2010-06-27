@@ -684,11 +684,13 @@ we: (Sp+ & <CLAUSE>) or SIp-;
 % We use <marker-entity> here to prevent lower-case magnling by
 % the tokenizer.
 % SJrp-: allows only "...and I", disallows "I and ..."
+% Dn- & SJn+: "Neither I not ..."
 I.p: 
   <marker-entity> or 
   ((Sp*i+ or SX+) & <CLAUSE>) or 
   SIp*i- or 
   SJrp- or
+  (Dn- & SJn+) or
   SXI-;
 
 it_all them_all us_all you_all: Ox- or J-;
