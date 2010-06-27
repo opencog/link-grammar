@@ -136,7 +136,12 @@
 % conjoined nouns or noun-phrases.
 % The l and r prevent two nouns from hooking up directly, they
 % must hook up to a conjunction (and, or) in the middle.
-<noun-and>: SJl+ or SJr-;
+% SJl == conect to left
+% SJr == connect to right
+% SJ*s == singular
+% SJ*p == plural/mass
+<noun-and-s>: SJls+ or SJrs-;
+<noun-and-p>: SJlp+ or SJrp-;
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -169,7 +174,7 @@
 CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} & 
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
-      ([<noun-sub-s> & (JG- or <noun-main-s>)] or <noun-and> or YS+)) or 
+      ([<noun-sub-s> & (JG- or <noun-main-s>)] or <noun-and-s> or YS+)) or 
          ({[[@MX+]]} & AN+) or G+))) or 
   <directive-opener>;
 
@@ -194,7 +199,7 @@ PL-CAPITALIZED-WORDS:
 <given-names>:
   {G-} & {[MG+]} & 
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-      (({@MX+} & (JG- or <noun-main-s> or <noun-and>)) or 
+      (({@MX+} & (JG- or <noun-main-s> or <noun-and-s>)) or 
         YS+ or YP+)) or 
     AN+ or G+ or (Dn- & SJn+));
 
@@ -286,8 +291,8 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
   [[AN+]] or
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
-    ({NM+ or Dmc-} & <noun-and>) or
-    SJr- or
+    ({NM+ or Dmc-} & <noun-and-p>) or
+    SJrp- or
     (YP+ & {Dmc-}) or 
     (GN+ & (DD- or [()])) or 
     Up-));
@@ -385,8 +390,8 @@ HYPHENATED-WORDS.n:
   {@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
     ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
-      (<noun-sub-s> & (<noun-main-s> or <rel-clause-s> or <noun-and>))) or
-    SJr- or
+      (<noun-sub-s> & (<noun-main-s> or <rel-clause-s> or <noun-and-s>))) or
+    SJrs- or
     (YS+ & Ds-) or 
     (GN+ & (DD- or [()])) or 
     Us-);
@@ -411,7 +416,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     ([[AN+]] or 
     ({NM+ or Dmc-} & 
-      (<noun-sub-p> & (<noun-main-p> or <rel-clause-p> or <noun-and>))) or
+      (<noun-sub-p> & (<noun-main-p> or <rel-clause-p> or <noun-and-s>))) or
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 
 % (Dn- & SJn+): "Neither rain nor snow"
@@ -420,7 +425,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
     ({NM+ or Dmu-} & 
-      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s> or <noun-and>)) or
+      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s> or <noun-and-p>)) or
       (Dn- & SJn+))) or
     (YS+ & {Dmu-}) or 
     (GN+ & (DD- or [()])) or 
@@ -760,7 +765,7 @@ such_a such_an: Ds*k+;
 % "all of the time". These are all temporal modifiers: use MVw ("when")
 <adv-of>: MVw- & OF+;
 
-a_lot: (<noun-sub-p> & (<noun-main-p> or <noun-and>)) or 
+a_lot: (<noun-sub-p> & (<noun-main-p> or <noun-and-p>)) or 
   EC+ or MVa- or <adv-of>;
 
 few: {EA- or EF+ or ({EA-} & DD-)} & 
@@ -4137,9 +4142,16 @@ and.j-r: ((RJrv- & RJlv+) & MVr-) or
 % understood as a modified noun).  Acutally, should probably have some
 % post-processing rule to disallow this XXX to do fix above.  Example of 
 % bad SJ usage: "He bangs drums and played piano" i.e "he bangs a played piano"
-
-<noun-conjunction>: (SJl- & SJr+) & ((Wd- & Spx+) or [Op-] or SI- or Ju- or SJl+ or AN+);
-and.j-n or.j-n: <noun-conjunction>;
+%
+% <noun-conjunction>: ({Xd-} & SJl- & SJr+) & etc.
+% would allow "X , and Y" constructions, but these have tricky rules... 
+%
+<noun-conj-dep-s>: (SJls- & SJrs+);
+<noun-conj-dep-sp>: (SJlp- & SJr+) or (SJl- & SJrp+);
+<noun-conj-head>: ((Wd- & Spx+) or SI- or Ju- or SJl+ or AN+);
+and.j-n or.j-n:
+  (<noun-conj-dep-s> & (<noun-conj-head> or [Os-])) or
+  (<noun-conj-dep-sp> & (<noun-conj-head> or [Op-]));
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
@@ -4246,7 +4258,7 @@ n't n’t: N- or EB-;
 
 % Ordinary adjectives
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a 
-% "the rich and powerful": [[{DD-} & <noun-and>]] 
+% "the rich and powerful": [[{DD-} & <noun-and-p>]] 
 /en/words/words.adj.1:
   <marker-common-entity> or 
   ({EA- or EF+} & 
@@ -4254,7 +4266,7 @@ n't n’t: N- or EB-;
     ((Pa- or AF+ or Ma-) & {@MV+}) or 
     AA+ or 
     [[DD- & <noun-main-p>]] or 
-    [[{DD-} & <noun-and>]] or 
+    [[{DD-} & <noun-and-p>]] or 
     <adj-op>));
 
 HYPHENATED-WORDS.a:
