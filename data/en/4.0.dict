@@ -690,7 +690,7 @@ I.p:
   <marker-entity> or 
   ((Sp*i+ or SX+) & <CLAUSE>) or 
   SIp*i- or 
-  SJrp- or
+  SJr- or
   (Ds- & SJl+) or
   (Dn- & SJn+) or
   SXI-;
@@ -4158,15 +4158,17 @@ and.j-r: ((RJrv- & RJlv+) & MVr-) or
 % <noun-conjunction>: ({Xd-} & SJl- & SJr+) & etc.
 % would allow "X , and Y" constructions, but these have tricky rules... 
 %
+% noun-conj-dep-s & SI-: Are a dog and a cat here?
+%
 <noun-conj-dep-s>: (SJls- & SJrs+);
 <noun-conj-dep-sp>: (SJlp- & SJr+) or (SJl- & SJrp+);
 <noun-conj-head>: Ju- or SJl+ or AN+;
 and.j-n:
-  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SIs- or [Os-])) or
+  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
   (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
 
 or.j-n:
-  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SIs- or [Os-])) or
+  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
   (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [O-]));
 
 % Conjoined verbs/verb phrases
