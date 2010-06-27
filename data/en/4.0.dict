@@ -1416,14 +1416,22 @@ or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+}) or ({N+} & PP+);
 have.v: ((SIp+ or SFIp+) & 
 (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-pl,i> &
  <vc-have>);
-has.v: ((SIs+ or SFIs+) & 
-(((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-s> & <vc-have>);
-had.v-d: ((SI+ or SFI+) & 
-(((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-sp> & <vc-have>)
-or (<verb-x-pp> & (TO+ or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or 
-(([[@MV+ & O*n+]] or CX-) & {@MV+}))) or 
-[[(SI*j+ or SFI**j+) & PP+ & 
-((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+
+has.v: 
+  ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
+  (<verb-x-s> & <vc-have>) or
+  (<verb-and-s-> & <vc-have>) or (<vc-have> & <verb-and-s+>);
+
+had.v-d: 
+  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
+  (<verb-x-sp> & <vc-have>) or 
+  (<verb-and-sp-> & <vc-have>) or (<vc-have> & <verb-and-sp+>) or
+  (<verb-x-pp> & 
+    (TO+ or 
+    ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or 
+    (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or 
+  [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
