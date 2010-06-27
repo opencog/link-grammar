@@ -2918,7 +2918,8 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 
 give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v 
 telegraph.v wire.v: 
-  (<verb-pl,i> & <vc-give>);
+  (<verb-pl,i> & <vc-give>) or
+  (<verb-and-pl-> & <vc-give>) or (<vc-give> & <verb-and-pl+>);
 
 gives.v sends.v buys.v brings.v lends.v
 issues.v hands.v pours.v telegraphs.v wires.v: 
@@ -4211,10 +4212,10 @@ or.j-n:
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
-% Pg- or Mg-: just like <verb-pg>
 <verb-conjunction>:
   ((VJs- & VJs+) & (Ss- or ({Xd-} & VJs-))) or
-  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-)));
+  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-))) or
+  ((VJ- & VJ+) & (I-));
 
 and.j-v: <verb-conjunction>;
 
