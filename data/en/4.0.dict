@@ -3851,7 +3851,7 @@ y.and: G- & G+;
 
 % TIME AND PLACE EXPRESSIONS 
 
-this_time that_time these_days: <prep-main-t> or [[E+]];
+this_time this_one_time this_once that_time these_days: <prep-main-t> or [[E+]];
 last_time next_time: 
 <prep-main-t> or JT- or YS+ or [[<noun-main-s>]];
 
