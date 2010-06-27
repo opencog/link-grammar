@@ -323,7 +323,7 @@ dateID60: <date-id>;
 
 %  ??? wtf?  Is this like "roman numeral" ?? See I.p for "me" 
 % XXX this is wrong or inappropriate .. 
-I.n: [[{Xi+} & {G-} & G+]];
+% I.n: [[{Xi+} & {G-} & G+]];
 
 % Explicitly include the period at the end of the abbreviation.
 Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Atty..x 
@@ -663,7 +663,8 @@ Ce+ or (R+ & Bp+)} & {@MXp+} & ([[MVa-]] or <noun-main-p> or <rel-clause-p>))
 
 %PRONOUNS
 
-she he: ({[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs-));
+she he: 
+  {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+);
 me him them us: J- or Ox-;
 myself yourself himself herself itself themselves
 ourselves yourselves: J- or O- or E+ or MVa-;
@@ -679,10 +680,16 @@ SFIsi- or OXi- or Vp-;
 they: {[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-);
 we: (Sp+ & <CLAUSE>) or SIp-;
 
-% XXX why is "I" marked plural ?? a cheap hack to make I've work?
-% We need <marker-entity> here to pevent lower-case magnling by
+% XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make I've work?
+% We use <marker-entity> here to prevent lower-case magnling by
 % the tokenizer.
-I.p: <marker-entity> or ((Sp*i+ or SX+) & <CLAUSE>) or SIp*i- or SXI-;
+% SJrp-: allows only "...and I", disallows "I and ..."
+I.p: 
+  <marker-entity> or 
+  ((Sp*i+ or SX+) & <CLAUSE>) or 
+  SIp*i- or 
+  SJrp- or
+  SXI-;
 
 it_all them_all us_all you_all: Ox- or J-;
 

@@ -6,6 +6,7 @@
 !short=20
 !constituents=1
 !spell=0
+% !use-fat=0
 
 % Example sentences showing BUG FIXES since link-grammar 4.1b
 % as well as demonstating bugs that remain to be fixed.
@@ -2047,6 +2048,9 @@ He wrote for piano and flute.
 % conjoined proper names
 John and Mike left the party.
 actress Whoopi Goldberg and singer Michael Jackson attended the ceremony.
+John and I are friends.
+*I and John are friends.
+He and I are friends.
 
 % conjoined negations
 Neither Mary nor Louise are coming to the party
