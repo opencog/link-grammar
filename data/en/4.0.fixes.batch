@@ -6,7 +6,7 @@
 !short=20
 !constituents=1
 !spell=0
-% !use-fat=0
+!use-fat=0
 
 % Example sentences showing BUG FIXES since link-grammar 4.1b
 % as well as demonstating bugs that remain to be fixed.
