@@ -136,7 +136,7 @@
 % conjoined nouns or noun-phrases.
 % The l and r prevent two nouns from hooking up directly, they
 % must hook up to a conjunction (and, or) in the middle.
-% SJl == conect to left
+% SJl == connect to left
 % SJr == connect to right
 % SJ*s == singular
 % SJ*p == plural/mass
@@ -5066,8 +5066,10 @@ please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+};
 % MISCELLANEOUS WORDS AND PUNCTUATION
 
 etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
-so_on the_like: (<noun-sub-x> & <noun-main-x>) or ((<verb-i> or
-<verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or M- or MV-;
+so_on the_like vice_versa v.v.: 
+  (<noun-sub-x> & <noun-main-x>) or 
+  ((<verb-i> or <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or 
+  M- or MV-;
 
 % Assorted interjections, treat like unknown adjectives.
 er err.ij errr um.ij umm uh uhh oh.ij ohh ooo woo_hoo
