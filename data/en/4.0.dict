@@ -1739,6 +1739,8 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
 % auction.v bandy.v bar.v batten.v bite.v block.v blot.v blurt.v 
 % See also words.v.6 for optionally transitive verbs.
+% XXX TODO: should be reviewed, as some of them are optionally transitive
+%
 <vc-kick>: ((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+}) or 
 [[@MV+ & O*n+]]) & {@MV+};
 /en/words/words.v.8.1: 
@@ -4132,8 +4134,18 @@ or (Wd+ & Wc-);
 no_wonder: Wd+ & Wc-;
 while: ((Cs+ or Mgp+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) 
 or (Xd- & Xc+ & E+)));
-once: ({Cs+ or Mp+} & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or 
-(Xd- & Xc+ & E+))) or E+ or EB-;
+
+<adverb-join>: RJrv+ or RJlv-;
+
+% once as adverb
+once.e: 
+  ({Cs+ or Mp+} & 
+    (({Xc+ & {Xd-}} & CO*s+) or 
+    ({Xd- & Xc+} & MVs-) or 
+    (Xd- & Xc+ & E+))) or 
+  <adverb-join> or
+  E+ or 
+  EB-;
 
 % Conjunctions
 % "all large burial places, or tombs, became known as mausoleums."
@@ -4178,10 +4190,11 @@ and.j-q: (QJ- & QJ+) & ((Wq- & (Q+ or PF+)) or QI-);
 % RJ*t: that "He said that ... and that ..."
 % RJ*c: subordinate clauses: "Although he said ... and he did ..., ..."
 % RJ*j: prep-object-relative (Mj): "the man for whom and with whom ..."
-and.j-r: ((RJrv- & RJlv+) & MVr-) or
-         ((RJrt- & RJlt+) & TH-) or
-         ((RJrc- & RJlc+) & Cs-) or
-         ((RJrj- & RJlj+) & Mj- & Cs+);
+and.j-r or.j-r: 
+  ((RJrv- & RJlv+) & MVr-) or
+  ((RJrt- & RJlt+) & TH-) or
+  ((RJrc- & RJlc+) & Cs-) or
+  ((RJrj- & RJlj+) & Mj- & Cs+);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)
@@ -4843,8 +4856,15 @@ initially already somehow again
 once_again nowadays sometimes nevertheless nonetheless at_first
 at_best at_present of_late indeed:
 ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;           
-twice: ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm- or 
-({EN-} & EZ+);           
+
+twice.e: 
+  ({Xd- & Xc+} & MVa-) or 
+  E+ or 
+  ({Xc+ & {Xd-}} & CO+) or 
+  EBm- or 
+  <adverb-join> or
+  ({EN-} & EZ+);           
+
 hence: (Yt- & ({Xd- & Xc+} & MVa-)) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;
 otherwise formerly lately: 
 ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EB-;
@@ -4867,8 +4887,6 @@ occasionally.e often.e specifically.e generally.e originally.e:
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
 
-<adverb-and>: RJ*v+ or RJ*v-;
-
 % ordinary manner adverbs
 % abjectly ably abnormally abortively abruptly absent-mindedly absently 
 <ordinary-adv>:
@@ -4878,7 +4896,7 @@ occasionally.e often.e specifically.e generally.e originally.e:
     ({Xc+ & {Xd-}} & CO+) or
     Qe+ or
     Ca+ or
-    <adverb-and> or
+    <adverb-join> or
     [[EA+]]);
 
 /en/words/words.adv.1: <ordinary-adv>;
