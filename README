@@ -656,6 +656,10 @@ TODO -- Working Notes:
     name of a proper brand; but this is outside of the "normal"
     dictionary (?) (but maybe should be in the dictionary!))
 
+    More examples: "high water" can have A joining high.a and AN joining
+    high.n; these two should either be collapsed into one, or one should
+    be eliminated.
+  
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,

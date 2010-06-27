@@ -18,6 +18,7 @@ Version 4.7.0 (XXX 2010)
  * Fix: misc optionally transitive verbs: mix, paint, boot
  * Fix: word order: "look about fearfully", "look fearfully about", around
  * Fix: recognize simple fractions
+ * Fix: "is" with uncountable nouns: "there is blood on your hands"
 
 TODO --
 -- document VJ, MJ, RJ links
