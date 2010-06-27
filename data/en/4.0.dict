@@ -1344,15 +1344,12 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 % conjoined verbs. 
 % s == singluar, pl == plural, sp == singular or plural 
-% g == gerund
 <verb-and-s->: {@E-} & VJs-;
 <verb-and-s+>: {@E-} & VJs+;
 <verb-and-pl->: {@E-} & VJp-;
 <verb-and-pl+>: {@E-} & VJp+;
 <verb-and-sp->: {@E-} & VJ-;
 <verb-and-sp+>: {@E-} & VJ+;
-<verb-and-g->: {@E-} & VJg-;
-<verb-and-g+>: {@E-} & VJg+;
 
 % AUXILIARY VERBS
 
@@ -1459,8 +1456,13 @@ or (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or
 % Colon can be used as a synonym for "is"
 % "The answer to your question: yes"
 % "The capital of Germany: Berlin"
-is.v ":.v": ((<verb-x-s>) or 
-((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
+":.v": 
+  <verb-x-s> & <vc-be>;
+
+is.v: 
+  (<verb-x-s> & <vc-be>) or 
+  (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
 
 's.v ’s.v: [[(<verb-x-s> & 
 (({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ or 
@@ -1683,8 +1685,7 @@ run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
 /en/words/words.v.6.4:
-  (<verb-pg> & <vc-fill>) or
-  (<verb-and-g-> & <vc-fill>) or (<vc-fill> & <verb-and-g+>);
+  <verb-pg> & <vc-fill>;
 /en/words/words.v.6.5: (<vc-fill> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
@@ -4213,8 +4214,7 @@ or.j-n:
 % Pg- or Mg-: just like <verb-pg>
 <verb-conjunction>:
   ((VJs- & VJs+) & (Ss- or ({Xd-} & VJs-))) or
-  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-))) or
-  ((VJg- & VJg+) & (Pg- or Mg-));
+  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-)));
 
 and.j-v: <verb-conjunction>;
 
