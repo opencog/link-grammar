@@ -1737,7 +1737,7 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 
 % -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
-% auction.v bandy.v bar.v batten.v bite.v block.v blot.v blow.v blurt.v 
+% auction.v bandy.v bar.v batten.v bite.v block.v blot.v blurt.v 
 % See also words.v.6 for optionally transitive verbs.
 <vc-kick>: ((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+}) or 
 [[@MV+ & O*n+]]) & {@MV+};
