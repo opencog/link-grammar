@@ -1476,11 +1476,13 @@ was.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or
 are.v: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & 
 (SIpx+ or SFIp+))) & <vc-be>;
-were.v-d: <marker-past> or (((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or 
-(RS- & Bp-))) or 
-((Rw- or ({Ic-} & Q-) or [()]) & 
-(SIpx+ or SFIp+))) & <vc-be>) or [[(SI*j+ or SFI**j+) & <vc-be> &
-((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]]);
+
+were.v-d: 
+  <marker-past> or 
+  ((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) or 
+    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>) or 
+  (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>) or
+  [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 % XXX the verb-and construction is probably too broad.
 am.v:
@@ -1823,13 +1825,19 @@ wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
 % See also <vc-think> for the same problem.
+% XXX todo -- some of these take verb-and
 <vc-hope>: ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or [[O+ & {@MV+}]];
 hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-hope>;
 hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
 <verb-s> & <vc-hope>;
 pretended.v-d prayed.v-d: <verb-sp,pp> & <vc-hope>;
+
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
-hoped.v-d voted.v-d vowed.v-d: (<verb-sp,pp> & <vc-hope>) or (<verb-s-pv> & THi+);
+hoped.v-d voted.v-d vowed.v-d: 
+  (<verb-sp,pp> & <vc-hope>) or 
+  (<verb-and-sp-> & <vc-hope>) or (<vc-hope> & <verb-and-sp+>) or
+  (<verb-s-pv> & THi+);
+
 agreed.v-d: (<verb-sp,pp> & <vc-hope>) or (<verb-pv> & TH+);
 swore.v-d: <verb-sp> & <vc-hope>;
 sworn.v: (<verb-pp> & <vc-hope>) or ({@E-} & A+);
@@ -4231,6 +4239,13 @@ or.j-n:
   ((VJ- & VJ+) & (I-));
 
 and.j-v: <verb-conjunction>;
+
+% Similar to and, but allows optional comma before "but"
+% "blah blah, but blah"
+but.j-v:
+  ((({Xd-} & VJs-) & VJs+) & (Ss- or ({Xd-} & VJs-))) or
+  ((({Xd-} & VJp-) & VJp+) & (Sp- or ({Xd-} & VJp-))) or
+  ((VJ- & VJ+) & (I-));
 
 % The SJn, Dn links are propagated through the linkage, guarenteeing that
 % neither will be used together with nor.
