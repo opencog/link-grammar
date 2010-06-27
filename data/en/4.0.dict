@@ -390,7 +390,8 @@ HYPHENATED-WORDS.n:
   {@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
     ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
-      (<noun-sub-s> & (<noun-main-s> or <rel-clause-s> or <noun-and-s>))) or
+      ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s> or <noun-and-s>)) or
+      (Dn- & SJn+))) or
     SJrs- or
     (YS+ & Ds-) or 
     (GN+ & (DD- or [()])) or 
@@ -4164,7 +4165,7 @@ and.j-v: <verb-conjunction>;
 
 % The SJn, Dn links are propagated through the linkage, guarenteeing that
 % neither will be used together with nor.
-nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SJn+);
+nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or O- or SJn+);
 neither.j-n: Dn+;
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
