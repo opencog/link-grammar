@@ -4180,7 +4180,7 @@ and.j-v: <verb-conjunction>;
 
 % The SJn, Dn links are propagated through the linkage, guarenteeing that
 % neither will be used together with nor.
-nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or Os- or SJn+);
+nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or SJn+);
 neither.j-n: Dn+;
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
