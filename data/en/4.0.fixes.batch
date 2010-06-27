@@ -2052,6 +2052,13 @@ John and I are friends.
 *I and John are friends.
 He and I are friends.
 
+% differences in number agreement for and, or:
+Are a dog and a cat here?
+Is John or I invited?
+*Is John and I invited?
+Are John and I invited?
+*John and I is invited
+
 % conjoined negations
 Neither Mary nor Louise are coming to the party
 Neither Mary Kate nor Louise Anne are coming to the party
