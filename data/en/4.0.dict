@@ -1576,10 +1576,10 @@ came.v-d: <verb-sp> & <vc-come>;
   (<verb-and-s-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-s+>);
 /en/words/words.v.2.3:  
   (<verb-sp,pp> & <vc-tr,intr>) or 
+  (<verb-and-sp-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-sp+>) or
   <verb-pv> or 
   ({@E-} & A+) or 
-  <verb-po> or
-  (<verb-and-sp-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-sp+>);
+  <verb-po>;
 
 % XXX TODO VJ links for below
 shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d 
@@ -1623,9 +1623,9 @@ or <verb-ge-d>;
   (<verb-and-s-> & <vc-fill>) or (<vc-fill> & <verb-and-s+>);
 /en/words/words.v.6.3:
   (<verb-sp,pp> & <vc-fill>) or 
+  (<verb-and-sp-> & <vc-fill>) or (<vc-fill> & <verb-and-sp+>) or
   (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or
-  ({K+} & <verb-po>) or
-  (<verb-and-sp-> & <vc-fill>) or (<vc-fill> & <verb-and-sp+>);
+  ({K+} & <verb-po>);
 
 split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d: 
 (<verb-sp,pp,ico> & <vc-fill>) or 
@@ -1634,14 +1634,15 @@ split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
 ate.v-d broke.v-d drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d 
 rang.v-d rode.v-d sprang.v-d 
 stalked.v-d woke.v-d test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d 
- countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d 
- partook.v-d begot.v-d overdid.v-d smote.v-d stank.v-d quick-froze.v-d 
- backbit.v-d awoke.v-d redid.v-d chidded.v-d reran.v-d rived.v-d 
- befell.v-d outrode.v-d betrode.v-d outdid.v-d ridded.v-d 
- deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d 
- bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d 
- outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
- <verb-sp> & <vc-fill>;
+countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d 
+partook.v-d begot.v-d overdid.v-d smote.v-d stank.v-d quick-froze.v-d 
+backbit.v-d awoke.v-d redid.v-d chidded.v-d reran.v-d rived.v-d 
+befell.v-d outrode.v-d betrode.v-d outdid.v-d ridded.v-d 
+deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d 
+bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d 
+outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
+  (<verb-sp> & <vc-fill>) or
+  (<verb-and-sp-> & <vc-fill>) or (<vc-fill> & <verb-and-sp+>);
 
 beaten.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
 sprung.v stricken.v swum.v woken.v
@@ -2895,27 +2896,34 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 
 give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v 
 telegraph.v wire.v: 
-<verb-pl,i> & <vc-give>;
+  (<verb-pl,i> & <vc-give>);
 
 gives.v sends.v buys.v brings.v lends.v
-issues.v hands.v pours.v telegraphs.v wires.v: <verb-s> & <vc-give>;
+issues.v hands.v pours.v telegraphs.v wires.v: 
+  (<verb-s> & <vc-give>) or
+  (<verb-and-s-> & <vc-give>) or (<vc-give> & <verb-and-s+>);
 
 sent.v-d bought.v-d brought.v-d lent.v-d handed.v-d:
-(<verb-sp,pp> & <vc-give>) or
-(<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  (<verb-sp,pp> & <vc-give>) or
+  (<verb-and-sp-> & <vc-give>) or (<vc-give> & <verb-and-sp+>) or
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
 issued.v-d poured.v-d telegraphed.v-d wired.v-d:
-(<verb-sp,pp> & <vc-give>) or
-({@E-} & A+) or
-(<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  (<verb-sp,pp> & <vc-give>) or
+  (<verb-and-sp-> & <vc-give>) or (<vc-give> & <verb-and-sp+>) or
+  ({@E-} & A+) or
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
-gave.v-d: <verb-sp> & <vc-give>;
-given.v: (<verb-pp> & <vc-give>) or 
-({@E-} & A+) or
-(<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
-({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+gave.v-d: 
+  (<verb-sp> & <vc-give>) or
+  (<verb-and-sp-> & <vc-give>) or (<vc-give> & <verb-and-sp+>);
+given.v: 
+  (<verb-pp> & <vc-give>) or 
+  ({@E-} & A+) or
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
 giving.g sending.g buying.g bringing.g 
 lending.g issuing.g handing.g pouring.g telegraphing.g wiring.g: 
