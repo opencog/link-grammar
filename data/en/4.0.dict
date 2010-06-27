@@ -684,12 +684,14 @@ we: (Sp+ & <CLAUSE>) or SIp-;
 % We use <marker-entity> here to prevent lower-case magnling by
 % the tokenizer.
 % SJrp-: allows only "...and I", disallows "I and ..."
+% Ds- & SJl+: "Either I or ..."
 % Dn- & SJn+: "Neither I not ..."
 I.p: 
   <marker-entity> or 
   ((Sp*i+ or SX+) & <CLAUSE>) or 
   SIp*i- or 
   SJrp- or
+  (Ds- & SJl+) or
   (Dn- & SJn+) or
   SXI-;
 
@@ -4158,10 +4160,14 @@ and.j-r: ((RJrv- & RJlv+) & MVr-) or
 %
 <noun-conj-dep-s>: (SJls- & SJrs+);
 <noun-conj-dep-sp>: (SJlp- & SJr+) or (SJl- & SJrp+);
-<noun-conj-head>: ((Wd- & Spx+) or SI- or Ju- or SJl+ or AN+);
-and.j-n or.j-n:
-  (<noun-conj-dep-s> & (<noun-conj-head> or [Os-])) or
-  (<noun-conj-dep-sp> & (<noun-conj-head> or [Op-]));
+<noun-conj-head>: SI- or Ju- or SJl+ or AN+;
+and.j-n:
+  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or [Os-])) or
+  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or [Op-]));
+
+or.j-n:
+  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or [Os-])) or
+  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or [O-]));
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
