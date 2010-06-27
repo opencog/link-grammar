@@ -1344,12 +1344,15 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 % conjoined verbs. 
 % s == singluar, pl == plural, sp == singular or plural 
+% g == gerund
 <verb-and-s->: {@E-} & VJs-;
 <verb-and-s+>: {@E-} & VJs+;
 <verb-and-pl->: {@E-} & VJp-;
 <verb-and-pl+>: {@E-} & VJp+;
 <verb-and-sp->: {@E-} & VJ-;
 <verb-and-sp+>: {@E-} & VJ+;
+<verb-and-g->: {@E-} & VJg-;
+<verb-and-g+>: {@E-} & VJg+;
 
 % AUXILIARY VERBS
 
@@ -1671,7 +1674,9 @@ befallen.v interwoven.v overborne.v outgone.v outgrown.v
 run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
-/en/words/words.v.6.4: <verb-pg> & <vc-fill>;
+/en/words/words.v.6.4:
+  (<verb-pg> & <vc-fill>) or
+  (<verb-and-g-> & <vc-fill>) or (<vc-fill> & <verb-and-g+>);
 /en/words/words.v.6.5: (<vc-fill> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
@@ -4197,9 +4202,11 @@ or.j-n:
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
+% Pg- or Mg-: just like <verb-pg>
 <verb-conjunction>:
   ((VJs- & VJs+) & (Ss- or ({Xd-} & VJs-))) or
-  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-)));
+  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-))) or
+  ((VJg- & VJg+) & (Pg- or Mg-));
 
 and.j-v: <verb-conjunction>;
 
