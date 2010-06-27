@@ -4160,14 +4160,14 @@ and.j-r: ((RJrv- & RJlv+) & MVr-) or
 %
 <noun-conj-dep-s>: (SJls- & SJrs+);
 <noun-conj-dep-sp>: (SJlp- & SJr+) or (SJl- & SJrp+);
-<noun-conj-head>: SI- or Ju- or SJl+ or AN+;
+<noun-conj-head>: Ju- or SJl+ or AN+;
 and.j-n:
-  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or [Os-])) or
-  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or [Op-]));
+  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SIs- or [Os-])) or
+  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
 
 or.j-n:
-  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or [Os-])) or
-  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or [O-]));
+  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SIs- or [Os-])) or
+  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [O-]));
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
