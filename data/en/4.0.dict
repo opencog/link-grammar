@@ -1451,8 +1451,20 @@ hadn't.v-d hadn’t.v-d: <marker-past> or
 (PP+ or ([[O+]] & {@MV+}) or [[()]]));
 
 % Give [K+] a cost so as to prefer Pp+ in general
-<vc-be>: 
-  ({@EBm+} & (((O*t+ or [B**t-] or [K+] or BI+ or OF+ or PF- or 
+%<vc-be>: 
+%  ({@EBm+} & (((O*t+ or [B**t-] or [K+] or BI+ or OF+ or PF- or 
+%      (Osi+ & R+ & Bs+) or 
+%      (Opi+ & R+ & Bp+) or 
+%      [[()]]) & {@MV+}) or
+%    (Pp+ & {THi+ or @MV+}) or 
+%    THb+ or 
+%    TO+ or 
+%    Pa+)) or 
+%  ({N+} & (AF- or Pv+ or I*v+)) or
+%  (({N+} or {Pp+}) & Pg*b+);
+
+<vc-be-no-obj>:
+  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or 
       (Osi+ & R+ & Bs+) or 
       (Opi+ & R+ & Bp+) or 
       [[()]]) & {@MV+}) or
@@ -1462,6 +1474,18 @@ hadn't.v-d hadn’t.v-d: <marker-past> or
     Pa+)) or 
   ({N+} & (AF- or Pv+ or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+);
+
+<vc-be-obj>:
+  {@EBm+} & O*t+ & {@MV+};
+
+<vc-be-obj-sp>:
+  {@EBm+} & (Ost+ or Opt+) & {@MV+};
+
+<vc-be-obj-u>:
+  {@EBm+} & Out+ & {@MV+};
+
+<vc-be>: <vc-be-no-obj> or <vc-be-obj>;
+
 
 % Colon can be used as a synonym for "is"
 % "The answer to your question: yes"
@@ -1481,9 +1505,14 @@ is.v:
 (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)) or
 (SIs+ & PF-)]];
 
+% are.v: 
+%  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+%    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
+
 are.v: 
-  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
-    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
+  ({@E-} & RS- & Bp- & <vc-be>) or
+  ({@E-} & (Spx- or SFp-) & <vc-be>) or
+  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 was.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) &
