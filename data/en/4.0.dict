@@ -5170,10 +5170,10 @@ or Xe-));
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c 
 £ ₤ € ₳ ฿ ¢ ₵ ₡ ₢ ₫ ₣ ₴ ₭ ℳ  ₥  ₦ ₧ ₰ ₨  ₪ ৳ ₮ ₩ ¥ 호점
 † †† ‡ § ¶ © № "#":
-NM*x+ & (AN+ or NM*y- or [[G+]] or (NIfu+ or NItu-) or
-({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
-(OD- or ({DD-} & {[[@M+]]} & (<noun-main-p> or [[(Ss+ & <CLAUSE>) or 
-SIs-]])))));
+  NM*x+ & (AN+ or NM*y- or [[G+]] or (NIfu+ or NItu-) or
+    ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
+      (OD- or ({DD-} & {[[@M+]]} & 
+        (<noun-main-p> or <noun-and-p> or [[(Ss+ & <CLAUSE>) or SIs-]])))));
 
 "&": G- & {Xd- & G-} & G+;
 
