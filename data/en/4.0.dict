@@ -3001,11 +3001,18 @@ handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
 
 <vc-pass>: {(B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
 (K+ & {{[[@MV+]]} & O*n+}) or ([[@MV+ & O*n+]])} & {@MV+};
-pass.v pay.v sell.v deal.v: <verb-pl,i> & <vc-pass>;
+
+pass.v pay.v sell.v deal.v: 
+  (<verb-pl,i> & <vc-pass>) or
+  (<verb-and-pl-> & <vc-pass>) or (<vc-pass> & <verb-and-pl+>);
+
 passes.v pays.v sells.v deals.v: <verb-s> & <vc-pass>;
 passed.v-d paid.v-d payed.v-d sold.v-d dealt.v-d: 
-(<verb-sp,pp> & <vc-pass>) or (<verb-pv-b> & {O+ or B- or K+
-or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  (<verb-sp,pp> & <vc-pass>) or 
+  (<verb-and-sp-> & <vc-pass>) or (<vc-pass> & <verb-and-sp+>) or
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+
 passing.g paying.g selling.g dealing.g: 
 (<vc-pass> & <verb-ge>) or <verb-ge-d>;
 passing.v paying.v selling.v dealing.v: <verb-pg> & <vc-pass>;
@@ -3737,14 +3744,19 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
 % MX-PHRASE: The blah, to be blahed, will be blah.
 % TO- & Xc+: "I'd like to, I want to." (null infinitive)
-to.r: ({@E-} & {NT-} & I+ & 
-   (TO- or [{Xd- & Xc+} & MVi-] or 
-     <MX-PHRASE> or [<OPENER>] or
-     [[R-]] or (SFsx+ & <S-CLAUSE>) 
-   )
- ) or (TO- & Xc+) or
- I*a+ or ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or
- [MVp- & B-];
+to.r: 
+  ({@E-} & {NT-} & I+ & 
+    (TO- or 
+    [{Xd- & Xc+} & MVi-] or 
+    <MX-PHRASE> or 
+    [<OPENER>] or
+    [[R-]] or 
+    (SFsx+ & <S-CLAUSE>))) or 
+  (TO- & Xc+) or
+  I*a+ or 
+  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or
+  VJ+ or
+  [MVp- & B-];
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-; 
 
