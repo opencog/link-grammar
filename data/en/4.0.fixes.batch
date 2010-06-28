@@ -2173,7 +2173,7 @@ you should not only ask for your money back, but demand it
 
 % Sentence parses, but incorrectly -- "of" links to "bill", should link
 % to 12th.
-% Put a star in front of this -- the sentence is good, the parses are bad.
+% Put a star in front of this -- the sentence is good, but the parses are bad.
 *Senator Johnson introduced a bill on the 12th of July.
 *Senator Johnson introduced a bill of July.
 
@@ -2183,6 +2183,14 @@ It starts one to two hours later.
 % None of the generated parses are correct; all are garbage.
 % Put a star in front of this -- the sentence is good, the parses are bad.
 *Bill went over the river and right through the woods.
+
+% More crazy parses due to bad conjunction handling
+Whenever he comes, she goes, and v.v.
+The market fell 156.83, or 8%, a week after Black Monday.
+
+% Hmm conjunctions .. these are  tricky to get right ... 
+Mike finished in first place, and John in third.
+Mike finished in first place, and John in last.
 
 % Rules should select "shouting.g" gerund, not "shouting.v" (participle)
 % Now fixed.

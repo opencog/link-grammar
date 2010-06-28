@@ -739,7 +739,7 @@ this.p: <noun-main-h>;
 this.d: ({AL-} & D*u+) or DTn+;
 these: <noun-main-p> or ({AL-} & (Dmc+ or DD+));
 both.d: Dmc+ or E+ or ({M+ or (ALx+ & Jp+)} & <noun-main-p>);
-both.a: Paf-;
+both.a: Paf- or AJ-;
 
 % half: prefer NJ+ over noun-main-x, because half is almost surely
 % modifying something, instead of being a direct object, subject, etc.
@@ -4222,7 +4222,7 @@ and.j-g: [[G- & G+]];
 % See also <comma-adj-conjunction> for similar structures.
 % The {Xd-} allows "blah blah, and blah"
 and.j-a but.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
-or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa-);
+or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa- or AJ-);
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
@@ -4477,9 +4477,12 @@ rare.a embarrassing.a:
 [[DD- & <noun-main-p>]] or <adj-op>);
 
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
-{@MV+} & {(TO+ or TOi+ or THi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
- or ({TO+} & <adj-op>));
+  {EA- or EF+} & 
+    (({[[@Ec-]]} & {Xc+} & A+) or 
+    ((Paf- or AF+ or Ma-) & {@MV+} & {(TO+ or TOi+ or THi+) & {LE+}}) or 
+    AA+ or 
+    [[DD- & <noun-main-p>]] or 
+    ({TO+} & <adj-op>));
 
 wise.a unwise.a smart.a intelligent.a: 
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) 
