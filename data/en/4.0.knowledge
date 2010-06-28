@@ -212,14 +212,11 @@ CONTAINS_ONE_RULES:
  MVti  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'29"     ,
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
  O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
- SFst  ,  O*t    Ost    Omt    Bs#t    B*#t    Bc#t    
-					    , "Bad use of 'there'32"           ,
- SFIst ,  O*t    Ost    Omt    Bs#t    B*#t    Bc#t    
-					    , "Bad use of 'there'33"           ,
- SFp   ,  Opt    Omt    O*t    Bp#t    B*#t    Bc#t    
-					    , "Bad use of 'there'34"           ,
- SFIp  ,  Opt    Omt    O*t    Bp#t    B*#t    Bc#t    
-					    , "Bad use of 'there'35"           ,
+ SFst  ,  O*t    Ost    Omt    Bs#t    B*#t    Bc#t    , "Bad use of 'there'32"           ,
+ SFIst ,  O*t    Ost    Omt    Bs#t    B*#t    Bc#t    , "Bad use of 'there'33"           ,
+ SFp   ,  Opt    Omt    O*t    Bp#t    B*#t    Bc#t    , "Bad use of 'there'34"           ,
+ SFu   ,  Out    Omt    O*t    Bp#t    B*#t    Bc#t    , "Bad use of 'there'34a"           ,
+ SFIp  ,  Opt    Omt    O*t    Bp#t    B*#t    Bc#t    , "Bad use of 'there'35"           ,
  OXt   ,  O#t    B##t                     ,   "Bad use of 'there'36"           ,
  SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi   
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'37"           ,
