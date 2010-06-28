@@ -1771,10 +1771,17 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 or ({K+} & <verb-po>);
 
 /en/words/words.v.8.3:
-(<verb-sp,pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
-or ({K+} & <verb-po>);
-cut.v: (<verb-sp,pp,ico> & <vc-kick>) or
-(<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+  (<verb-sp,pp> & <vc-kick>) or 
+  (<verb-and-sp-> & <vc-kick>) or (<vc-kick> & <verb-and-sp+>) or
+  (<verb-pv-b> & {K+} & {@MV+}) or 
+  ({@E-} & A+) or 
+  ({K+} & <verb-po>);
+
+cut.v: 
+  (<verb-sp,pp,ico> & <vc-kick>) or
+  (<verb-and-sp-> & <vc-kick>) or (<vc-kick> & <verb-and-sp+>) or
+  (<verb-pv-b> & {K+} & {@MV+}) or 
+  ({@E-} & A+) or ({K+} & <verb-po>);
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 /en/words/words.v.8.5:
 (<vc-kick> & <verb-ge>) or <verb-ge-d>;
@@ -2004,14 +2011,18 @@ staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-stand>: {({@MV+} & Pa+) or ({O+ or B-} & {K+} & {@MV+})};
 stand.v sit.v: <verb-pl,i> & <vc-stand>;
 stands.v sits.v: <verb-s> & <vc-stand>;
-stood.v-d sat.v-d: (<verb-sp,pp> & <vc-stand>);
+stood.v-d sat.v-d: 
+  (<verb-sp,pp> & <vc-stand>) or
+  (<verb-and-sp-> & <vc-stand>) or (<vc-stand> & <verb-and-sp+>);
 standing.v sitting.v: <verb-pg> & <vc-stand>;
 standing.g sitting.g: (<vc-stand> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
 <vc-sound>: ({@MV+} & {LI+ or Pa+ or AF-}) or {O+ & K+ & {@MV+}};
 sound.v: <verb-pl,i> & <vc-sound>;
 sounds.v: <verb-s> & <vc-sound>;
-sounded.v-d: <verb-sp,pp> & <vc-sound>;
+sounded.v-d: 
+  (<verb-sp,pp> & <vc-sound>) or
+  (<verb-and-sp-> & <vc-sound>) or (<vc-sound> & <verb-and-sp+>);
 sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-act>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & {@MV+})};
