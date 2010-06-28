@@ -1729,8 +1729,11 @@ and.v-fill:
 <verb-s> & <vc-trans>;
 
 /en/words/words.v.4.3:  
-(<verb-sp,pp> & <vc-trans>) or <verb-pv> or 
-(({@E-} or {@EA-} or {@AN-}) & A+) or <verb-po>;
+  (<verb-sp,pp> & <vc-trans>) or 
+  (<verb-and-sp-> & <vc-trans>) or (<vc-trans> & <verb-and-sp+>) or
+  <verb-pv> or 
+  (({@E-} or {@EA-} or {@AN-}) & A+) or 
+  <verb-po>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
 % The candle guttered. It plummeted to the bottom. Prices plummeted!
