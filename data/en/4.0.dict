@@ -1485,6 +1485,7 @@ hadn't.v-d hadn’t.v-d: <marker-past> or
   {@EBm+} & Out+ & {@MV+};
 
 <vc-be>: <vc-be-no-obj> or <vc-be-obj>;
+<vc-be-sp>: <vc-be-no-obj> or <vc-be-obj-sp>;
 
 
 % Colon can be used as a synonym for "is"
@@ -1494,6 +1495,8 @@ hadn't.v-d hadn’t.v-d: <marker-past> or
   <verb-x-s> & <vc-be>;
 
 % verb-x-s,u: "there is blood on his hands"
+% Unfortunately, this allows "There is chasing dogs", which pairs SFu to Op
+% and has to be removed via post-processing.
 is.v: 
   (<verb-x-s,u> & <vc-be>) or 
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
@@ -1509,10 +1512,10 @@ is.v:
 %  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 %    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
 
+% Don't allow are.v with uncountable noun objects.
 are.v: 
-  ({@E-} & RS- & Bp- & <vc-be>) or
-  ({@E-} & (Spx- or SFp-) & <vc-be>) or
-  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
+ ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or 
+ ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
 was.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) &
