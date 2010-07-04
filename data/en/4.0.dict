@@ -737,8 +737,10 @@ mine.p yours theirs hers ours: <noun-main-x>;
 % DETERMINERS
 
 the: (({AL-} & {@L+} & (D+ or DD+)) or DG+ or (TR- & U+));
-those: ({AL-} & (Dmc+ or DD+)) or 
-(<noun-sub-p> & <noun-main-p>);
+those: 
+  ({AL-} & (Dmc+ or DD+)) or 
+  (<noun-sub-p> & (<noun-main-p> or RJrr+ or RJlr-));
+
 this.p: <noun-main-h>;
 this.d: ({AL-} & D*u+) or DTn+;
 these: <noun-main-p> or ({AL-} & (Dmc+ or DD+));
@@ -4288,11 +4290,13 @@ and.j-q: (QJ- & QJ+) & ((Wq- & (Q+ or PF+)) or QI-);
 % RJ*t: that "He said that ... and that ..."
 % RJ*c: subordinate clauses: "Although he said ... and he did ..., ..."
 % RJ*j: prep-object-relative (Mj): "the man for whom and with whom ..."
+% RJ*r: "those" relative clauses: "...: those who do and those who don't"
 and.j-r or.j-r: 
   ((RJrv- & RJlv+) & MVr-) or
   ((RJrt- & RJlt+) & TH-) or
   ((RJrc- & RJlc+) & Cs-) or
-  ((RJrj- & RJlj+) & Mj- & Cs+);
+  ((RJrj- & RJlj+) & Mj- & Cs+) or
+  (({Xd-} & RJrr- & RJlr+) & J-);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)
