@@ -4339,6 +4339,10 @@ or.j-n:
   (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
   (<noun-conj-dep-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
 
+% "it starts one to two hours later"
+to.j-n:
+  <noun-conj-dep-p> & <noun-conj-head>;
+
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
