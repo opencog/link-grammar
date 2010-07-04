@@ -769,14 +769,14 @@ one:
   NA+ or 
   NMw- or 
   NN+ or 
+  ({EN-} & NIfn+) or
   ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
     (YS+ or (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)))))) or 
   NIm+ or 
   NSn+ or
   (NA- & ND+) or 
   DTi+ or 
-  (NA- & Xd- & TY- & Xc+) or
-  (<noun-sub-s> & <noun-and-s>);
+  (NA- & Xd- & TY- & Xc+);
 
 ones: {@A- & {[[@AN-]]}} & {Dmc-} & 
 (YP+ or (<noun-sub-p> & <noun-main-p>));
@@ -865,7 +865,7 @@ not_enough: ({OF+} & <noun-main-s>) or Dm+;
 % "15 kDa to 20 kDa", but not "15 kDa to 20".
 % Allowing EC+ for "two to threefold more abundant". This allows also the
 % nonsense "two to three more abundant", but this is likely harmless.
--.j-ru --.j-ru ---.j-ru to.j-ru ->.j-ru -->.j-ru: 
+-.j-ru --.j-ru ---.j-ru or.j-ru to.j-ru ->.j-ru -->.j-ru: 
 (NIfn- & {NIr-} & NItn+ & (NM- or EC+ or
 (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
@@ -918,8 +918,7 @@ several:
   ({EN- or NIc- or NA-} & (ND+ or NIn+ or 
     ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
   (NA- & {<noun-sub-p> & <noun-main-p>}) or
-  (NA- & Xd- & TY- & Xc+) or
-  (<noun-sub-p> & <noun-and-p>);
+  (NA- & Xd- & TY- & Xc+);
 
 oh.zero: (NA- & NA+);
 zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
@@ -4338,10 +4337,6 @@ and.j-n:
 or.j-n:
   (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
   (<noun-conj-dep-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
-
-% "it starts one to two hours later"
-to.j-n:
-  <noun-conj-dep-p> & <noun-conj-head>;
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
