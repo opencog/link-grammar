@@ -1649,38 +1649,6 @@ The National Voter Registration Act of 1993 makes it easy
 Marywent shoppingat thestore.
 Mary wentshopping atthe store.
 
-% broken lexical chunk recognition:
-% ... not only, ... but also ...
-The deal includes not only junk, but also crap.
-
-% lists:
-He has three jobs: counting, measuring and listing.
-
-% Split "if .. only" idiomatic expressions
-If there was only more left!
-If there were only more!
-If there were only more like you!
-If only there was more left!
-If only there were more!
-If only there was more!
-
-% If... then ... lexical constructs are broken.
-% Registers: Typical language used in instruction manuals, directives.
-If paid weekly, bring the last six pay stubs.
-If paid weekly, then bring six stubs.
-If it is broken, then remove it.
-If broken, then remove.
-Check the lid; if cracked, then replace.
-Check the valve, replace if cracked.
-
-% Then is optional:
-If it is raining, stay inside!
-If you bought after the crash, you won.
-If you sold before the peak, you got lucky
-
-% Someone... who...
-Someone is outside who wants to see you.
-
 % quotations can be used for grouping modifiers into an almost-idiom
 We ate so-called 'brain food' for lunch.
 
@@ -1971,16 +1939,13 @@ Watch out that you don't hit your head on the low beam.
 All he gave was his first name.
 Pete (all he gave was his first name) was still waiting.
 
-% Compound queries
-% Typically, the two subphrases parse correctly, but, 
-% put together, they do not.
-What is a motor, and how does it work?
-What is a motor; how does it work?
-Who invented sliced bread, and when did they do it?
-Who invented sliced bread; when did they do it?
-
-% disjunction/conjunction problems:
-% should be disjunction of modifiers ... 
+% --------------------------------------------------------------------
+% Disjunction/conjunction problems
+% What follows is a large section of conjunction test cases: adjectives,
+% nouns, verbs and adverbs conjoined with "and", "or", "but", commas, etc.
+% This spills over to more complex constructions.
+%
+% should be disjunction of modifiers ... (disjoined modifiers)
 % should be (major Eurobond or foreign bond) offerings
 There were no major Eurobond or foreign bond offerings Friday.
 Messrs. Malson and Seelenfreund are directors.
@@ -2159,10 +2124,51 @@ He ought to break off a piece and give it to me
 We hoped for the best, but were disappointed.
 We hoped for the best and were disappointed.
 
+% lists:
+He has three jobs: counting, measuring and listing.
+There are 10 kinds of people: those who understand binary, and those who don't.
+
 % Collocations with holes: XJ links
 you should not only ask for your money back, but demand it
 
-% ------------------------------------------------------------
+% broken lexical chunk recognition:
+% ... not only, ... but also ...
+The deal includes not only junk, but also crap.
+
+% Split "if .. only" idiomatic expressions
+If there was only more left!
+If there were only more!
+If there were only more like you!
+If only there was more left!
+If only there were more!
+If only there was more!
+
+% If... then ... lexical constructs are broken.
+% Registers: Typical language used in instruction manuals, directives.
+If paid weekly, bring the last six pay stubs.
+If paid weekly, then bring six stubs.
+If it is broken, then remove it.
+If broken, then remove.
+Check the lid; if cracked, then replace.
+Check the valve, replace if cracked.
+
+% Then is optional:
+If it is raining, stay inside!
+If you bought after the crash, you won.
+If you sold before the peak, you got lucky
+
+% Someone... who...
+Someone is outside who wants to see you.
+
+% Compound queries
+% Typically, the two subphrases parse correctly, but, 
+% put together, they do not.
+What is a motor, and how does it work?
+What is a motor; how does it work?
+Who invented sliced bread, and when did they do it?
+Who invented sliced bread; when did they do it?
+
+% --------------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 % "dog" and "which" do link (and that is correct).
 *John saw a dog yesterday which was a Yorkshire terrier.

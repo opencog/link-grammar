@@ -191,7 +191,8 @@ biceps.p bicycles.n bidders.n bidets.n bids.n biennials.n biffs.n
 bifurcations.n bigamists.n bigots.n bigwigs.n bikes.n bikinis.n 
 bilabials.n bilinguals.n billboards.n billets.n billfolds.n billies 
 billings.n 
-billionaires.n billionths.n billows.n binderies.n binders.n binds.n 
+billionaires.n billionths.n billows.n binaries.n 
+binderies.n binders.n binds.n 
 bings.n bins.n biochemicals.n biographers.n biographies.n biologists.n 
 bioscopes.n bipeds.n biplanes.n birches.n birdcages.n birds.n 
 birdwatchers.n biros.n birthdays.n birthmarks.n birthplaces.n 
