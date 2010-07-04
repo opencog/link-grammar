@@ -24,7 +24,6 @@ TODO --
 -- document VJ, MJ, RJ links
 --SJ connectors for commas, or, etc.
 -- conjunctions for verbs
--- fat links flag in java api ... 
 VJ: verbs
 MJ: preps
 RJ*v adverbs
@@ -32,6 +31,8 @@ RJ*t that
 RJ*c subordinate cl
 RJ*j prep-object-relative
 XJ*i: conjoined infinitives
+relation to CC: These are the snippers and those are the cutters
+NIf, NIt for numbers.
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
