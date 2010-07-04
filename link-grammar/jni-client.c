@@ -72,12 +72,12 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
 	parse_options_set_max_parse_time(opts, 60);
-	parse_options_set_use_fat_links(opts, 0);
-	parse_options_set_islands_ok(opts, 1);
+	parse_options_set_use_fat_links(opts, FALSE);
+	parse_options_set_islands_ok(opts, TRUE);
 	parse_options_set_short_length(opts, 6);
-	parse_options_set_all_short_connectors(opts, 1);
+	parse_options_set_all_short_connectors(opts, TRUE);
 	parse_options_set_linkage_limit(opts, 100);
-	parse_options_set_verbosity(opts,0);
+	parse_options_set_verbosity(opts, 0);
 	parse_options_set_spell_guess(opts, FALSE);
 }
 
@@ -240,15 +240,23 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 		return;
 	}
 
-	/* First parse with cost 0 or 1 and no null links */
+	/* First parse with cost 0 or 1 and no null links or fat links */
 	parse_options_set_disjunct_costf(opts, 2.0f);
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
+	parse_options_set_use_fat_links(opts, FALSE);
 	parse_options_reset_resources(opts);
 
 	ptd->num_linkages = sentence_parse(ptd->sent, ptd->opts);
 
-	/* Now parse with null links */
+	/* If failed, try with fat links ... */
+	if ((0 == ptd->num_linkages) && sentence_contains_conjunction(ptd->sent))
+	{
+		parse_options_set_use_fat_links(opts, TRUE);
+		ptd->num_linkages = sentence_parse(ptd->sent, ptd->opts);
+	}
+
+	/* If still failed, try again with null links */
 	if (0 == ptd->num_linkages)
 	{
 		if (jverbosity > 0) prt_error("Warning: No complete linkages found.\n");
@@ -343,7 +351,7 @@ Java_org_linkgrammar_LinkGrammar_setMaxCost(JNIEnv *env, jclass cls, jint maxCos
 	parse_options_set_disjunct_cost(ptd->opts, maxCost);
 }
 
-JNIEXPORT void JNICALL 
+JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
                                               jclass cls, jstring path)
 {

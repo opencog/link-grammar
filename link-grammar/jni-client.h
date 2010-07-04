@@ -33,7 +33,6 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setMaxCost
 JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setDictionariesPath
   (JNIEnv *, jclass, jstring);
 
-
 /*
  * Class:     LinkGrammar
  * Method:    init

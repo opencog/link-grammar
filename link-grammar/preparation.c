@@ -277,6 +277,12 @@ void free_sentence_expressions(Sentence sent)
 /**
  * Return true if the sentence contains a conjunction.  Assumes
  * is_conjunction[] has been initialized.
+ *
+ * This routine has been added to the public API as of version 4.7.0,
+ * as it is required to determine whether a fat linkage might restult
+ * during parsing. This is needed to optimize the optioanl use of fat
+ * links. The goal is to eventually deprecate fat linkages entirely;
+ * this routine is needed in the transition phase.
  */
 int sentence_contains_conjunction(Sentence sent)
 {
