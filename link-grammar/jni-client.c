@@ -33,7 +33,7 @@ typedef struct
 } per_thread_data;
 
 /* XXX FIXME
- * The per_thread_data struct should ideally be somehow 
+ * The per_thread_data struct should ideally be somehow
  * fetched from JNIEnv, or as an opaque pointer in the class.
  * Not clear how to do this .. perhaps use NewDirectByteBuffer()
  * and the java.nio.ByteBuffer class ?
@@ -98,7 +98,6 @@ static void throwException(JNIEnv *env, const char* message)
 	jclass exceptionClazz;
 	if ((*env)->ExceptionOccurred(env) != NULL) return;
 
-	
 	msg = (char *) malloc(50+strlen(message));
 	strcpy(msg, "link-parser:\n");
 	strcat(msg, message);
@@ -131,7 +130,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_verbosity(ptd->opts,0);
 	parse_options_set_spell_guess(ptd->opts, FALSE);
 
-	/* Default to the english language; will need to fix 
+	/* Default to the english language; will need to fix
 	 * this if/when more languages are supported.
 	 */
 	ptd->dict = dictionary_create_lang("en");
@@ -316,8 +315,8 @@ static void makeLinkage(per_thread_data *ptd)
 /* Java JNI wrappers */
 
 /*
- * Class:		 LinkGrammar
- * Method:		getVersion
+ * Class:      LinkGrammar
+ * Method:     getVersion
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
@@ -358,7 +357,7 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
 	const char *nativePath = (*env)->GetStringUTFChars(env,path, 0);
 
 	// Java passes null pointers as the string "null"
-	if (nativePath && strcmp(nativePath, "null")) 
+	if (nativePath && strcmp(nativePath, "null"))
 	{
 		dictionary_set_data_dir(nativePath);
 	}
@@ -366,8 +365,8 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		init
+ * Class:      LinkGrammar
+ * Method:     init
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
@@ -387,8 +386,8 @@ Java_org_linkgrammar_LinkGrammar_init(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		parse
+ * Class:      LinkGrammar
+ * Method:     parse
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL
@@ -405,8 +404,8 @@ Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		close
+ * Class:      LinkGrammar
+ * Method:     close
  * Signature: ()V
  */
 JNIEXPORT void JNICALL
@@ -417,8 +416,8 @@ Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		numWords
+ * Class:      LinkGrammar
+ * Method:     numWords
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -429,8 +428,8 @@ Java_org_linkgrammar_LinkGrammar_getNumWords(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		getWord
+ * Class:      LinkGrammar
+ * Method:     getWord
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
@@ -476,7 +475,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunct(JNIEnv *env, jclass cls, jin
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env, 
+Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
                     jclass cls, jint i, jint j)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
@@ -493,7 +492,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 		sns = lg_sense_next(sns);
 		j--;
 	}
-	
+
 	/* does not need to be freed, points into data structures */
 	if (sns) w = lg_sense_get_sense(sns);
 
@@ -503,7 +502,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSense(JNIEnv *env,
 }
 
 JNIEXPORT jdouble JNICALL
-Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env, 
+Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env,
                     jclass cls, jint i, jint j)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
@@ -518,15 +517,15 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env,
 		sns = lg_sense_next(sns);
 		j--;
 	}
-	
+
 	if (sns) score = lg_sense_get_score(sns);
 
 	return score;
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		numSkippedWords
+ * Class:      LinkGrammar
+ * Method:     numSkippedWords
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -537,8 +536,8 @@ Java_org_linkgrammar_LinkGrammar_getNumSkippedWords(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		numLinkages
+ * Class:      LinkGrammar
+ * Method:     numLinkages
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -549,8 +548,8 @@ Java_org_linkgrammar_LinkGrammar_getNumLinkages(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		makeLinkage
+ * Class:      LinkGrammar
+ * Method:     makeLinkage
  * Signature: (I)I
  */
 JNIEXPORT void JNICALL
@@ -562,8 +561,8 @@ Java_org_linkgrammar_LinkGrammar_makeLinkage(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		linkageNumViolations
+ * Class:      LinkGrammar
+ * Method:     linkageNumViolations
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -574,8 +573,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		linkageAndCost
+ * Class:      LinkGrammar
+ * Method:     linkageAndCost
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -586,8 +585,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkageAndCost(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		linkageDisjunctCost
+ * Class:      LinkGrammar
+ * Method:     linkageDisjunctCost
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -598,8 +597,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		linkageLinkCost
+ * Class:      LinkGrammar
+ * Method:     linkageLinkCost
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -610,8 +609,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkageLinkCost(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		getNumLinks
+ * Class:      LinkGrammar
+ * Method:     getNumLinks
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL
@@ -622,8 +621,8 @@ Java_org_linkgrammar_LinkGrammar_getNumLinks(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		getLinkLWord
+ * Class:      LinkGrammar
+ * Method:     getLinkLWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
@@ -634,8 +633,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkLWord(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		getLinkRWord
+ * Class:      LinkGrammar
+ * Method:     getLinkRWord
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
@@ -646,8 +645,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkRWord(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		getLinkLLabel
+ * Class:      LinkGrammar
+ * Method:     getLinkLLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
@@ -661,8 +660,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkLLabel(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		getLinkRLabel
+ * Class:      LinkGrammar
+ * Method:     getLinkRLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
@@ -676,8 +675,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkRLabel(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		getLinkLabel
+ * Class:      LinkGrammar
+ * Method:     getLinkLabel
  * Signature: (I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
@@ -691,8 +690,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkLabel(JNIEnv *env, jclass cls, jint i)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		constituentString
+ * Class:      LinkGrammar
+ * Method:     constituentString
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
@@ -711,8 +710,8 @@ Java_org_linkgrammar_LinkGrammar_getConstituentString(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkGrammar
- * Method:		linkString
+ * Class:      LinkGrammar
+ * Method:     linkString
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL
@@ -726,8 +725,8 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 }
 
 /*
- * Class:		 LinkParser
- * Method:		isPastTenseForm
+ * Class:      LinkParser
+ * Method:     isPastTenseForm
  * Signature: (Ljava/lang/String;)Z
  *
  * @deprecated -- past-tense verbs are tagged with .v-d or .w-d or .q-d
@@ -747,8 +746,8 @@ Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstrin
 }
 
 /*
- * Class:		 LinkParser
- * Method:		isEntity
+ * Class:      LinkParser
+ * Method:     isEntity
  * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL
