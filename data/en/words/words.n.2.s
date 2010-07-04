@@ -1367,7 +1367,7 @@ players.n playgoers.n playgrounds.n playhouses.n playmates.n
 playoffs.n playpens.n playrooms.n plays.n playschools.n playthings.n 
 playwrights.n plazas.n pleas.n pleasantries.n pleasures.n pleats.n 
 plebeians.n plebiscites.n plectrums.n plenipotentiaries.n plenums.n 
-plethoras.n plexus.p plights.n plodders.n plops.n plotters.n 
+plethoras.n plexus.p pliers.n plights.n plodders.n plops.n plotters.n 
 ploughboys.n ploughs.n ploughshares.n plows.n ploys.n plucks.n 
 plugholes.n plugs.n plumbers.n plumbs.n plumes.n plumps.n plums.n 
 plunderers.n plungers.n plunges.n pluperfects.n pluralists.n 
