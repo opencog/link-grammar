@@ -765,9 +765,18 @@ all_that: EA+ or EE+ or (<noun-sub-s>
 all_this: <noun-sub-s> & <noun-main-s>;
 all_those all_these: <noun-sub-p> & <noun-main-p>;
 
-one: NA+ or NMw- or NN+ or ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
-(YS+ or (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)))))) or NIm+ or NSn+ or
-(NA- & ND+) or DTi+ or (NA- & Xd- & TY- & Xc+);
+one: 
+  NA+ or 
+  NMw- or 
+  NN+ or 
+  ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
+    (YS+ or (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)))))) or 
+  NIm+ or 
+  NSn+ or
+  (NA- & ND+) or 
+  DTi+ or 
+  (NA- & Xd- & TY- & Xc+) or
+  (<noun-sub-s> & <noun-and-s>);
 
 ones: {@A- & {[[@AN-]]}} & {Dmc-} & 
 (YP+ or (<noun-sub-p> & <noun-main-p>));
@@ -901,12 +910,16 @@ oh-one oh-two oh-three oh-four oh-five oh-six oh-seven oh-eight oh-nine
 o-one o-two o-three o-four o-five o-six o-seven o-eight o-nine
 zero-one zero-two zero-three zero-four zero-five zero-six zero-seven zero-eight zero-nine
 several: 
-NA+ or 
-NMw- or ({EN-} & (NIfn+ or NItn-)) or NN+ or NW+ or 
-({EN- or NIc- or NA-} & (ND+ or NIn+ or 
-({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
-(NA- & {<noun-sub-p> & <noun-main-p>}) or
-(NA- & Xd- & TY- & Xc+);
+  NA+ or 
+  NMw- or 
+  ({EN-} & (NIfn+ or NItn-)) or 
+  NN+ or 
+  NW+ or 
+  ({EN- or NIc- or NA-} & (ND+ or NIn+ or 
+    ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
+  (NA- & {<noun-sub-p> & <noun-main-p>}) or
+  (NA- & Xd- & TY- & Xc+) or
+  (<noun-sub-p> & <noun-and-p>);
 
 oh.zero: (NA- & NA+);
 zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
@@ -4314,17 +4327,17 @@ and.j-r or.j-r:
 % noun-conj-dep-s & SI-: Are a dog and a cat here?
 %
 <noun-conj-dep-s>: (SJls- & SJrs+);
-<noun-conj-dep-sp>: (SJlp- & SJr+) or (SJl- & SJrp+);
+<noun-conj-dep-p>: (SJlp- & SJr+) or (SJls- & SJrp+);
 <noun-conj-dep-u>: (SJlu- & SJr+) or (SJl- & SJru+);
 <noun-conj-head>: Ju- or SJl+ or AN+;
 and.j-n:
   (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Os-])) or
-  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-])) or
+  (<noun-conj-dep-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-])) or
   (<noun-conj-dep-u> & (<noun-conj-head> or (Wd- & Sux+) or SIu- or [Ou-]));
 
 or.j-n:
   (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
-  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [O-]));
+  (<noun-conj-dep-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
