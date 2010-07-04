@@ -1683,7 +1683,8 @@ smatterings.n smears.n smells.n smelts.n smiles.n smirks.n smithies.n
 smiths.n smocks.n smokers.n smokestacks.n smorgasbords.n smudges.n 
 smugglers.n snacks.n snags.n snails.n snakes.n snapdragons.n snaps.n 
 snapshots.n snares.n snarls.n snatchers.n snatches.n sneaks.n sneers.n 
-sneezes.n snickers.n sniffs.n sniggers.n snipers.n snippets.n snips.n 
+sneezes.n snickers.n sniffs.n sniggers.n snipers.n snippers.n 
+snippets.n snips.n 
 snobs.n snoopers.n snoozes.n snorers.n snores.n snorkels.n snorts.n 
 snouts.n snowballs.n snowdrifts.n snowdrops.n snowfalls.n snowflakes.n 
 snowploughs.n snowstorms.n snubs.n snuffboxes.n snugs.n soapboxes.n 
