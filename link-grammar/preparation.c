@@ -303,7 +303,7 @@ void free_sentence_disjuncts(Sentence sent)
 
 /**
  * Assumes that the sentence expression lists have been generated.
- * This does all the necessary pruning and building of and structures.
+ * This does all the necessary pruning and building of fat-link structures.
  */
 void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
@@ -337,11 +337,9 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		has_conjunction = FALSE;
 	}
 
-	/* Why do we do these here instead of in
-	 * first_prepare_to_parse() only?  The
-	 * reason is that the deletable region
-	 * depends on if null links are in use.
-	 * With null_links everything is deletable.
+	/* The deletable region depends on whether null links are in use;
+	 * with null_links everything is deletable. Thus, this processing
+	 * cannot be done earlier than here.
 	 */
 	set_connector_length_limits(sent, opts);
 	build_deletable(sent, has_conjunction);
