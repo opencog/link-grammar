@@ -142,6 +142,8 @@
 % SJ*p == plural/mass
 <noun-and-s>: SJls+ or SJrs-;
 <noun-and-p>: SJlp+ or SJrp-;
+<noun-and-u>: SJlu+ or SJru-;
+<noun-and-p,u>: <noun-and-p> or <noun-and-u>;
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -421,12 +423,14 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 
 % (Dn- & SJn+): "Neither rain nor snow"
+% XXX should probably eliminate <noun-and-p,u> and replace by <noun-and-u>
+% but this requires other spread-out changes
 <mass-noun>:
   <marker-common-entity> or 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
     ({NM+ or Dmu-} & 
-      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s> or <noun-and-p>)) or
+      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s> or <noun-and-p,u>)) or
       (Dn- & SJn+))) or
     (YS+ & {Dmu-}) or 
     (GN+ & (DD- or [()])) or 
@@ -1517,14 +1521,17 @@ are.v:
  ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or 
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
-was.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-))) or 
-((Rw- or ({Ic-} & Q-) or [()]) &
-(SFIs+ or SIs+ or SXI+))) & <vc-be>);
+was.v-d:
+  <marker-past> or 
+  (<verb-x-s,u> & <vc-be>) or
+  (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
+  ({@E-} & SX- & <vc-be>) or
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
 
 were.v-d: 
   <marker-past> or 
-  ((({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) or 
-    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>) or 
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>) or 
+  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>) or 
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
@@ -4306,10 +4313,12 @@ and.j-r or.j-r:
 %
 <noun-conj-dep-s>: (SJls- & SJrs+);
 <noun-conj-dep-sp>: (SJlp- & SJr+) or (SJl- & SJrp+);
+<noun-conj-dep-u>: (SJlu- & SJr+) or (SJl- & SJru+);
 <noun-conj-head>: Ju- or SJl+ or AN+;
 and.j-n:
   (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Os-])) or
-  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
+  (<noun-conj-dep-sp> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-])) or
+  (<noun-conj-dep-u> & (<noun-conj-head> or (Wd- & Sux+) or SIu- or [Ou-]));
 
 or.j-n:
   (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
