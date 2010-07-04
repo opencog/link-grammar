@@ -1307,7 +1307,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
     (Dmu- or [[()]]) & 
     (({[[Ds-]]} & OF+) or [[()]]) &
     <noun-sub-s> & {@MXs+} & 
-    ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
+    ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or VJg- or VJg+)) or
   [[AN+]];
 
 <verb-pg,ge>: {@E-} & (
@@ -1790,13 +1790,11 @@ or <verb-po>;
 forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v: 
 (<verb-pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 
-/en/words/words.v.4.4:  
-<verb-pg> & <vc-trans>;
+/en/words/words.v.4.4
 /en/words/words-medical.v.4.4:  
 <verb-pg> & <vc-trans>;
 
-/en/words/words.v.4.5: 
-(<vc-trans> & <verb-ge>) or <verb-ge-d>;
+/en/words/words.v.4.5
 /en/words/words-medical.v.4.5: 
 (<vc-trans> & <verb-ge>) or <verb-ge-d>;
 
@@ -4331,7 +4329,8 @@ or.j-n:
   ((VJs- & VJs+) & (Ss- or ({Xd-} & VJs-))) or
   ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-))) or
   ((VJs- & VJs+) & (I-)) or
-  ((VJp- & VJp+) & (I-));
+  ((VJp- & VJp+) & (I-)) or
+  ((VJg- & VJg+) & (J-));
 
 and.j-v: <verb-conjunction>;
 
