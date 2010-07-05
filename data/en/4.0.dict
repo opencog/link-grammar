@@ -1695,7 +1695,11 @@ or <verb-po>;
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v: <verb-pl,i> & <vc-rise>;
 rises.v falls.v: <verb-s> & <vc-rise>;
-rose.v-d fell.v-d: <verb-sp> & <vc-rise>;
+
+rose.v-d fell.v-d: 
+  (<verb-sp> & <vc-rise>) or
+  (<verb-and-sp-> & <vc-rise>) or (<vc-rise> & <verb-and-sp+>);
+
 risen.v: <verb-pp> & <vc-rise>;
 fallen.v: (<verb-pp> & <vc-rise>) or ({@E-} & A+);
 rising.v falling.v: (<vc-rise> & <verb-pg,ge>) or ({@E-} & A+)
