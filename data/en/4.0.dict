@@ -1169,8 +1169,14 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 180th.a 181st.a 182nd.a 183rd.a 184th.a 185th.a 186th.a 187th.a 188th.a 189th.a
 190th.a 191st.a 192nd.a 193rd.a 194th.a 195th.a 196th.a 197th.a 198th.a 199th.a
 200th.a 201st.a 202nd.a 203rd.a 204th.a:
-Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
-(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
+  Pa- or 
+  MVa- or 
+  ({Xc+ & {Xd-}} & CO+) or
+  (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or 
+  NR+ or 
+  A+ or
+  AJ+ or
+  AJ-;
 
 % "Next on our list..." are ordinals.
 % XXX this should be a more complete list ... FIXME ... 
