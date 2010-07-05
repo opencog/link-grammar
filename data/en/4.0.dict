@@ -4291,8 +4291,8 @@ or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa- or AJ-);
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
-  ((MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
-  ((MJrp- & MJlp+) & Mp-);
+  (({Xd-} & MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
+  (({Xd-} & MJrp- & MJlp+) & Mp-);
 
 % Conjoined question words.
 % When and where is the party?
