@@ -3785,21 +3785,28 @@ across along: <prep-across>;
 off: <prep-across> or (MVp+ & {Xc+ & {Xd-}} & COp+);
 past.p: 
 ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
+
 around:
+  <alter-preps> or 
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
   or [EN+] or MVa-;
+
 out up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
   K- or ({Yd-} & Pp-) or (MVp- & B-);
 
 by: 
+  <alter-preps> or 
   ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or 
   K- or
-  (MVp- & B-) or
-  <conjoin-preps>;
+  (MVp- & B-);
 
-in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) 
-or K- or (MVp- & B-) or (MG- & JG+);
+in: 
+  <alter-preps> or 
+  ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) or 
+  K- or 
+  (MVp- & B-) or 
+  (MG- & JG+);
 
 on upon: 
   <alter-preps> or 
@@ -3958,10 +3965,13 @@ close_by: (SF*p+ & <CLAUSE>);
 
 next_to in_back_of in_front_of close_to on_top_of outside_of
 inside_of atop:
-J+ & (<prep-main-b> or FM- or [Wq- & PF+]); 
+  <alter-preps> or
+  (J+ & (<prep-main-b> or FM- or [Wq- & PF+]));
+
 ahead_of by_way_of akin_to betwixt vis-a-vis in_lieu_of on_account_of
 in_place_of in_search_of:
-J+ & (<prep-main-b> or [Wq- & PF+]);
+  <alter-preps> or
+  (J+ & (<prep-main-b> or [Wq- & PF+]));
 
 near.p: 
   {EE- or EF+} & 
@@ -4324,7 +4334,8 @@ or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa- or AJ-);
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
   (({Xd-} & MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
-  (({Xd-} & MJrp- & MJlp+) & (Mp- or MVp- or (Xc+ & CO+)));
+  (({Xd-} & MJrp- & MJlp+) & (Mp- or MVp- or (Xc+ & CO+))) or
+  ({Xd-} & MJrj- & MJlj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-);
 
 or.j-m:
   ({Xd-} & MJrj- & MJlj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-);
