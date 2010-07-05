@@ -836,12 +836,16 @@ TODO -- Working Notes:
     http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm#extraposition
 
     "...from X and from Y"
+    "By X, and by Y, ..."
     Here, X and Y might be rather long phrases, containing other
     prepositions. In this case, the usual link-grammar linkage rules
     will typically conjoin "and from Y" to some preposition in X,
     instead of the correct link to "from X". Although adding a cost to
     keep the lengths of X and Y approximately equal can help, it would
     be even better to recognize the "...from ... and from..." pattern.
+
+    One possible way to implement this would be to give preference to
+    and-links that have the same word on either end.
 
     More idiomatic than the above examples:
     "...the chip on X's shoulder"

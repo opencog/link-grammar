@@ -20,6 +20,7 @@ Version 4.7.0 (XXX 2010)
  * Fix: recognize simple fractions
  * Fix: "is" with uncountable nouns: "there is blood on your hands"
  * Fix: Roman numeral suffixes e.g. "Henry VIII"
+ * Fix: regression in dates followed by punctuation. "In the 1950s, ..."
 
 TODO --
 -- document VJ, MJ, RJ links

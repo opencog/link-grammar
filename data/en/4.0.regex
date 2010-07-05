@@ -20,6 +20,10 @@
 % Allows at most two digits between colons
 HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?(AM|PM|am|pm)?$/
 
+% e.g. 1950's leading number can be higher, for science fiction.
+% Must be four digits, or possible three. Must end in s, 's ’s
+DECADE-TIME: /^([1-4][0-9][0-9]|[1-9][0-9])0(s|'s|’s)$/
+
 % Allows any number of commas or periods
 % Be careful not match the period at the end of a sentence; 
 % for example: "It happened in 1942."
