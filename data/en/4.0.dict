@@ -4344,8 +4344,8 @@ or.j-n:
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
 <verb-conjunction>:
-  ((VJs- & VJs+) & (Ss- or ({Xd-} & VJs-))) or
-  ((VJp- & VJp+) & (Sp- or ({Xd-} & VJp-))) or
+  (({Xd-} & VJs- & VJs+) & (Ss- or ({Xd-} & VJs-))) or
+  (({Xd-} & VJp- & VJp+) & (Sp- or ({Xd-} & VJp-))) or
   ((VJs- & VJs+) & (I-)) or
   ((VJp- & VJp+) & (I-)) or
   ((VJg- & VJg+) & (J-));
