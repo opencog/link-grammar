@@ -1329,7 +1329,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
     (Dmu- or [[()]]) & 
     (({[[Ds-]]} & OF+) or [[()]]) &
     <noun-sub-s> & {@MXs+} & 
-    ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or VJg- or VJg+)) or
+    ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or VJg- or VJg+ or <noun-and-u>)) or
   [[AN+]];
 
 <verb-pg,ge>: {@E-} & (
@@ -3776,8 +3776,13 @@ around:
 out up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
   K- or ({Yd-} & Pp-) or (MVp- & B-);
-by: ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or K- or
- (MVp- & B-);
+
+by: 
+  ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or 
+  K- or
+  (MVp- & B-) or
+  <conjoin-preps>;
+
 in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) 
 or K- or (MVp- & B-) or (MG- & JG+);
 
@@ -4298,7 +4303,7 @@ or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa- or AJ-);
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
   (({Xd-} & MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
-  (({Xd-} & MJrp- & MJlp+) & (Mp- or MVp-));
+  (({Xd-} & MJrp- & MJlp+) & (Mp- or MVp- or (Xc+ & CO+)));
 
 % Conjoined question words.
 % When and where is the party?
