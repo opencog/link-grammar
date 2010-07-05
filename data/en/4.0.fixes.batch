@@ -1635,8 +1635,11 @@ He flew with the 101st airborne division.
 By the 1550s, he was very prosperous.
 By the 650’s, he was very prosperous.
 By the 1950's, he was very prosperous.
-By the '50s, he was very prosperous.
 *By the 01950's, he was very prosperous.
+
+% This fails due to a bug in tokenize.c where the leading
+% quote is stripped, but "50s," cannot be found in the dict.
+By the '50s, he was very prosperous.
 
 Mike finished in first place, and John in third.
 Mike finished in first place, and John in last.

@@ -363,6 +363,15 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	}
 
 	/* Strip off punctuation, etc. on the left-hand side. */
+	/* XXX FIXME: this fails in certain cases: e.g.
+	 * "By the '50s, he was very prosperous."
+	 * where the leading quote is striped, and then "50s," cannot be
+	 * found in the dict. Next, the comma is removed, and "50s" is still
+	 * not in the dict ... the trick was that the comma should be 
+	 * right-stripped first, then the possible quotes. 
+	 * More generally, link-grammar does not support multiple possible
+	 * tokenizations.
+	 */
 	for (;;)
 	{
 		for (i=0; i<l_strippable; i++)
@@ -384,8 +393,6 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	 * So -- we're done, return.
 	 */
 	if (w >= wend) return TRUE;
-
-	word_is_in_dict = FALSE;
 
 	/* Now w points to the string starting just to the right of
 	 * any left-stripped characters.
