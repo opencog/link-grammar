@@ -835,6 +835,14 @@ TODO -- Working Notes:
     http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm#relative-clause
     http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm#extraposition
 
+    "...from X and from Y"
+    Here, X and Y might be rather long phrases, containing other
+    prepositions. In this case, the usual link-grammar linkage rules
+    will typically conjoin "and from Y" to some preposition in X,
+    instead of the correct link to "from X". Although adding a cost to
+    keep the lengths of X and Y approximately equal can help, it would
+    be even better to recognize the "...from ... and from..." pattern.
+
     More idiomatic than the above examples:
     "...the chip on X's shoulder"
     "to do X a favour"

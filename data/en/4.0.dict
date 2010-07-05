@@ -4292,7 +4292,7 @@ or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa- or AJ-);
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
   (({Xd-} & MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
-  (({Xd-} & MJrp- & MJlp+) & Mp-);
+  (({Xd-} & MJrp- & MJlp+) & (Mp- or MVp-));
 
 % Conjoined question words.
 % When and where is the party?
