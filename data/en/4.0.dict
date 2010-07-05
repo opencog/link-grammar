@@ -201,9 +201,11 @@ PL-CAPITALIZED-WORDS:
 <given-names>:
   {G-} & {[MG+]} & 
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-      (({@MX+} & (JG- or <noun-main-s> or <noun-and-s>)) or 
+      (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or 
         YS+ or YP+)) or 
-    AN+ or G+ or (Dn- & SJn+));
+    AN+ or 
+    G+ or 
+    (Dn- & SJn+));
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.

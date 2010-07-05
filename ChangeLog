@@ -19,6 +19,7 @@ Version 4.7.0 (XXX 2010)
  * Fix: word order: "look about fearfully", "look fearfully about", around
  * Fix: recognize simple fractions
  * Fix: "is" with uncountable nouns: "there is blood on your hands"
+ * Fix: Roman numeral suffixes e.g. "Henry VIII"
 
 TODO --
 -- document VJ, MJ, RJ links
