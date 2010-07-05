@@ -710,7 +710,7 @@ int main(int argc, char * argv[])
 		 * of newspaper headlines and other clipped speech.
 		 *
 		 * XXX Unfortunately, this also allows for the parsing of
-		 * allsorts of ungrammatical sentences which should not 
+		 * all sorts of ungrammatical sentences which should not 
 		 * parse, and leads to bad parses of many other unparsable
 		 * but otherwise grammatical sentences.  Thus, this trick
 		 * pretty much fails; we leave it here to document the 
@@ -774,6 +774,7 @@ int main(int argc, char * argv[])
 			parse_options_get_panic_mode(opts))
 		{
 			/* print_total_time(opts); */
+			batch_errors++;
 			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
 			parse_options_reset_resources(panic_parse_opts);
 			parse_options_set_verbosity(panic_parse_opts, verbosity);

@@ -385,6 +385,8 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	 */
 	if (w >= wend) return TRUE;
 
+	word_is_in_dict = FALSE;
+
 	/* Now w points to the string starting just to the right of
 	 * any left-stripped characters.
 	 * stripped[] is an array of numbers, indicating the index
@@ -400,10 +402,18 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
-		if (boolean_reg_dict_lookup(sent->dict, word)) break;
+		if (boolean_reg_dict_lookup(sent->dict, word))
+		{
+			word_is_in_dict = TRUE;
+			break;
+		}
 
 		/* This could happen if it's a word after a colon, also! */
-		if (is_first_word && downcase_is_in_dict (sent->dict, word)) break;
+		if (is_first_word && downcase_is_in_dict (sent->dict, word))
+		{
+			word_is_in_dict = TRUE;
+			break;
+		}
 
 		for (i=0; i < r_strippable; i++)
 		{
@@ -424,7 +434,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	/* Is there a number in the word? If so, then search for
 	 * trailing units suffixes.
 	 */
-	if (contains_digits(word))
+	if ((FALSE == word_is_in_dict) && contains_digits(word))
 	{
 		/* Same as above, but with a twist: the only thing that can
 		 * preceed a units suffix is a number. This is so that we can
@@ -478,12 +488,15 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	s_stripped = -1;
 	strncpy(word, w, MIN(wend-w, MAX_WORD));
 	word[MIN(wend-w, MAX_WORD)] = '\0';
-	word_is_in_dict = FALSE;
 
-	if (boolean_reg_dict_lookup(sent->dict, word))
-		word_is_in_dict = TRUE;
-	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
-		word_is_in_dict = TRUE;
+	/* Umm, double-check, if need be ... !?? */
+	if (FALSE == word_is_in_dict)
+	{
+		if (boolean_reg_dict_lookup(sent->dict, word))
+			word_is_in_dict = TRUE;
+		else if (is_first_word && downcase_is_in_dict (sent->dict,word))
+			word_is_in_dict = TRUE;
+	}
 
 	if (FALSE == word_is_in_dict)
 	{
