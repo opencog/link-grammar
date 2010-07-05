@@ -3707,22 +3707,34 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % conjoin preps: "prep and prep": "the coverage on TV and on the radio..."
 <conjoin-preps>: MJlp- or MJrp+;
 
-<prep-main-a>: 
+% alter-preps: "it is somwhere in or near the house"
+% The "or" must take a prep object.
+% XXX TODO: most preps below need this.
+<alter-preps>: MJlj- or MJrj+;
+
+<prep-main-b>: 
   <conjoin-preps> or
   [Mp-] or Pp- or MVp- or 
-  [({Xc+ & {Xd-}} & CO+)] or
-  (Xd- & Xc+ & (MX*x- or MVx-)) or 
+  [({Xc+ & {Xd-}} & CO+)] or 
+  (Xd- & Xc+ & (MX*x- or MVx-));
+
+<prep-main-a>: 
+  <prep-main-b> or
   (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or
   (Wj- & Qd+) or 
   [Wq- & PF+];
 
-% XXX TODO: prep-main-b should also probably get <conjoin-preps>
-<prep-main-b>: [Mp-] or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or 
-(Xd- & Xc+ & (MX*x- or MVx-));
-<prep-main-t>: [Mpn-] or Pp- or MVpn- or [({Xc+ & {Xd-}} & CO*n+)] or 
-(Xd- & Xc+ & (MX- or MVx-));
-<prep-main-e>: [Mp-] or Pp- or MVa- or [({Xc+ & {Xd-}} & CO+)] or 
-(Xd- & Xc+ & (MX*x- or MVx-));
+<prep-main-t>: 
+  <conjoin-preps> or
+  [Mpn-] or Pp- or MVpn- or 
+  [({Xc+ & {Xd-}} & CO*n+)] or 
+  (Xd- & Xc+ & (MX- or MVx-));
+
+<prep-main-e>: 
+  <conjoin-preps> or
+  [Mp-] or Pp- or MVa- or 
+  [({Xc+ & {Xd-}} & CO+)] or 
+  (Xd- & Xc+ & (MX*x- or MVx-));
 
 under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or (MVp- & B-) or (Yd- & Pp-);
 below above behind.p: ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or (MVp- & B-);
@@ -3790,6 +3802,7 @@ in: ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-))
 or K- or (MVp- & B-) or (MG- & JG+);
 
 on upon: 
+  <alter-preps> or 
   ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or 
   K- or 
   (MVp- & B-);
@@ -3949,7 +3962,12 @@ J+ & (<prep-main-b> or FM- or [Wq- & PF+]);
 ahead_of by_way_of akin_to betwixt vis-a-vis in_lieu_of on_account_of
 in_place_of in_search_of:
 J+ & (<prep-main-b> or [Wq- & PF+]);
-near.p: {EE- or EF+} & J+ & (<prep-main-b> or FM- or [Wq- & PF+]);
+
+near.p: 
+  {EE- or EF+} & 
+    (<alter-preps> or
+    (J+ & (<prep-main-b> or FM- or [Wq- & PF+])));
+
 all_over all_around: {J+} & (Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-
 or Mp-);
 such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
@@ -4307,6 +4325,9 @@ or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa- or AJ-);
 but.j-m and.j-m: 
   (({Xd-} & MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
   (({Xd-} & MJrp- & MJlp+) & (Mp- or MVp- or (Xc+ & CO+)));
+
+or.j-m:
+  ({Xd-} & MJrj- & MJlj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-);
 
 % Conjoined question words.
 % When and where is the party?
