@@ -4348,7 +4348,7 @@ and.j-g: [[G- & G+]];
 % The EB+ link handles not, yet after the and.
 % See also <comma-adj-conjunction> for similar structures.
 % The {Xd-} allows "blah blah, and blah"
-and.j-a but.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa-);
+and.j-a but.j-a yet.j-a: ({Xd-} & AJ- & {EB+} & AJ+) & (A+ or Pa- or MVa- or AJ-);
 or.j-a: ({Xd-} & AJ- & AJ+) & (Pa- or MVa- or AJ-);
 
 % conjoined post-nominal modifiers
@@ -5282,7 +5282,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 ";": <semicol>;
 
 % comma, as a conjunction -- "They taste bitter, not sweet"
-<comma-adj-conjunction>: (AJ- & EB+ & AJ+) & (Pa- or MVa-);
+<comma-adj-conjunction>: (AJ- & EBx+ & AJ+) & (Pa- or MVa-);
 
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
