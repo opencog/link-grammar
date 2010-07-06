@@ -149,8 +149,11 @@
 <rel-clause-s>: {Rw+} & Bsm+;
 <rel-clause-p>: {Rw+} & Bpm+;
 
+% The use of Coa here needs to be carefully rexamined; it is used much too freely.
 <directive-opener>:
-{[[Wi-]]} & ((Xc+ & Ic+) or (({Xd-} & (Xc+ or [[()]])) & COa+));
+  {[[Wi-]]} & 
+    ((Xc+ & Ic+) or 
+    ({Xd-} & (Xc+ or [[()]]) & [[COa+]]));
 
 % Just pure singular entities, no mass nouns 
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and 
@@ -173,11 +176,14 @@
 % discourage use as a common noun, so that the lower-case version can 
 % play this role.
 %
+% MX+ & <noun-main-s>: country names: "...went to Paris, France"
+%
 CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} & 
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
       ([<noun-sub-s> & (JG- or <noun-main-s>)] or <noun-and-s> or YS+)) or 
          ({[[@MX+]]} & AN+) or G+))) or 
+  (MXs+ & (<noun-main-s> or <noun-and-s>)) or
   <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
@@ -4401,9 +4407,9 @@ and.j-r or.j-r:
 %
 % noun-conj-dep-s & SI-: Are a dog and a cat here?
 %
-<noun-conj-dep-s>: (SJls- & SJrs+);
-<noun-conj-dep-p>: (SJlp- & SJr+) or (SJls- & SJrp+);
-<noun-conj-dep-u>: (SJlu- & SJr+) or (SJl- & SJru+);
+<noun-conj-dep-s>: ({Xd-} & SJls- & SJrs+);
+<noun-conj-dep-p>: ({Xd-} & SJlp- & SJr+) or ({Xd-} & SJls- & SJrp+);
+<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+) or ({Xd-} & SJl- & SJru+);
 <noun-conj-head>: Ju- or SJl+ or AN+;
 and.j-n:
   (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Os-])) or
@@ -5302,14 +5308,17 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % get an EBx link to "soon".
 % XXX the correct solution to this is to add a new domain rule ! XXX
 %
-% Comma con conjoin nouns only if used in a list of 3 or more items:
+% Comma can conjoin nouns only if used in a list of 3 or more items:
 % "This, that and the other thing"
+% However, this is given a cost, so that geographic names are prefered:
+% "He went to Gaeta, Italy, and to Paris, France."
+%
 ",": 
   ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or
-  [[<semicol>]] or 
+  [[<semicol>]] or
   <comma-adj-conjunction> or
   <verb-conjunction> or
-  (SJl- & SJr+ & SJl+) or
+  [[SJl- & SJr+ & SJl+]] or
   (SJn- & SJr+ & SJn+);
 
 "…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
