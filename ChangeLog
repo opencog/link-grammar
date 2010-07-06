@@ -23,6 +23,9 @@ Version 4.7.0 (XXX 2010)
  * Fix: regression in dates followed by punctuation. "In the 1950s, ..."
 
 TODO --
+Fat links now off by default!! 
+AJ: use of EB link for not, yet, etc. "bitter not sweet"
+EBx
 -- document VJ, MJ, RJ links
 --SJ connectors for commas, or, etc.
 -- conjunctions for verbs

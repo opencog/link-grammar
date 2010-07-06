@@ -78,7 +78,7 @@ Parse_Options parse_options_create(void)
 	po->verbosity	 = 1;
 	po->linkage_limit = 100;
 	po->disjunct_cost = MAX_DISJUNCT_COST;
-	po->use_fat_links = TRUE;
+	po->use_fat_links = FALSE;
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->null_block = 1;
