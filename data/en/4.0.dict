@@ -2212,18 +2212,25 @@ fought.v-d: (<verb-sp,pp> & <vc-fight>) or (<verb-pv-b> & {K+} & {@MV+}) or
 fighting.g: (<vc-fight> & <verb-ge>) or <verb-ge-d>;
 fighting.v: <verb-pg> & <vc-fight>;
 
-<vc-threaten>: <vc-trans> or
-({@MV+} & (TO+ or TH+ or Zs- or Ce+));
-threaten.v mean.v arrange.v resolve.v pledge.v:
-<verb-pl,i> & <vc-threaten>;
-threatens.v means.v arranges.v resolves.v pledges.v:
-<verb-s> & <vc-threaten>;
-threatened.v-d meant.v-d arranged.v-d resolved.v-d pledged.v-d:
-(<verb-sp,pp> & <vc-threaten>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-meaning.g arranging.g resolving.g threatening.g pledging.g: 
-(<vc-threaten> & <verb-ge>) or <verb-ge-d>;
-meaning.v arranging.v resolving.v threatening.v pledging.v:
-<verb-pg> & <vc-threaten>;
+<vc-threaten>: 
+  <vc-trans> or
+  ({@MV+} & (TO+ or TH+ or Zs- or Ce+));
+
+threaten.v mean.v arrange.v pledge.v:
+  <verb-pl,i> & <vc-threaten>;
+threatens.v means.v arranges.v pledges.v:
+  <verb-s> & <vc-threaten>;
+
+threatened.v-d meant.v-d arranged.v-d pledged.v-d:
+  (<verb-sp,pp> & <vc-threaten>) or 
+  (<verb-and-sp-> & <vc-threaten>) or (<vc-threaten> & <verb-and-sp+>) or
+  <verb-pv> or 
+  ({@E-} & A+) or <verb-po>;
+
+meaning.g arranging.g threatening.g pledging.g: 
+  (<vc-threaten> & <verb-ge>) or <verb-ge-d>;
+meaning.v arranging.v threatening.v pledging.v:
+  <verb-pg> & <vc-threaten>;
 
 <vc-plan>: <vc-trans> or
 ({@MV+} & {TO+ or TH+ or Zs- or Ce+});
@@ -2234,18 +2241,25 @@ planned.v-d confessed.v-d: (<verb-sp,pp> & <vc-plan>) or <verb-pv> or
 planning.g confessing.g: (<vc-plan> & <verb-ge>) or <verb-ge-d>;
 planning.v confessing.v: <verb-pg> & <vc-plan>;
 
-<vc-decide>: <vc-trans> or
-({@MV+} & {QI+ or TO+ or Ce+ or TH+ or RSe+ or Zs-});
-decide.v: <verb-pl,i> & <vc-decide>;
-decides.v: <verb-s> & <vc-decide>;
-decided.v-d: (<verb-sp,pp> & <vc-decide>) or (<verb-s-pv> & {THi+}) 
-or <verb-po>;
-deciding.v: <verb-pg> & <vc-decide>;
-deciding.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
+<vc-decide>: 
+  <vc-trans> or
+  ({@MV+} & {QI+ or TH+ or TO+ or Ce+ or RSe+ or Zs-});
 
-<vc-forget>: {<vc-trans>} or
-({@MV+} & (TH+ or TO+ or Ce+ or RSe+ or Zs- or QI+
-or Pg+));					
+decide.v resolve.v: <verb-pl,i> & <vc-decide>;
+decides.v resolves.v: <verb-s> & <vc-decide>;
+
+decided.v-d resolved.v-d: 
+  (<verb-sp,pp> & <vc-decide>) or 
+  (<verb-s-pv> & {THi+}) or 
+  <verb-po>;
+
+deciding.v resolving.v: <verb-pg> & <vc-decide>;
+deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
+
+<vc-forget>: 
+  {<vc-trans>} or
+  ({@MV+} & (QI+ or TH+ or TO+ or Ce+ or RSe+ or Zs- or Pg+));					
+
 remember.v forget.v: <verb-pl,i> & <vc-forget>;
 remembers.v forgets.v: <verb-s> & <vc-forget>;
 remembered.v-d: (<verb-sp,pp> & <vc-forget>) or <verb-pv> or <verb-po>;
