@@ -1323,13 +1323,19 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-sp,pp,ico>: <verb-sp,pp> or <verb-ico> or <marker-past>;
 
 % ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
+% AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
+% <noun-and-u>: allows use of gerunds as nouns.
+% VJg: ??? this is commented out, where would this occur?
 <verb-ge-d>: 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (Dmu- or [[()]]) & 
     (({[[Ds-]]} & OF+) or [[()]]) &
     <noun-sub-s> & {@MXs+} & 
-    ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or VJg- or VJg+ or <noun-and-u>)) or
+    ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or AJl- or AJr+ or <noun-and-u>)) or
   [[AN+]];
+
+% See above comments ... XXX wtf ??
+%   ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or VJg- or VJg+ or <noun-and-u>)) or
 
 <verb-pg,ge>: {@E-} & (
  ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or 
