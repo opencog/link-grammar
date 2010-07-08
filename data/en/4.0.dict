@@ -2813,9 +2813,11 @@ getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 ({(K+ & {[[@MV+]]} & O*n+) or ([[@MV+ & O*n+]])} & {@MV+});
 leave.v: <verb-pl,i> & <vc-leave>;
 leaves.v: <verb-s> & <vc-leave>;
-left.v-d: (<verb-sp,pp> & <vc-leave>) or (<verb-pv-b> & 
-(({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or 
-({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-po>);
+left.v-d: 
+  (<verb-sp,pp> & <vc-leave>) or 
+  (<verb-and-sp-> & <vc-leave>) or (<vc-leave> & <verb-and-sp+>) or
+  (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or 
+  ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-po>);
 leaving.v: <verb-pg> & <vc-leave>;
 leaving.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
