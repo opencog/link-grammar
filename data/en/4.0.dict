@@ -3798,8 +3798,11 @@ or (MVp- & B-) or MVp- or NIr+;
 at toward towards without:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
-except but.misc-ex: ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or 
-((MVp+ or TO+) & <prep-main-a>); 
+except but.misc-ex: 
+  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or 
+  (MVp- & B-) or 
+  ((MVp+ or TO+) & <prep-main-a>); 
+
 against beyond beside: 
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 between:
@@ -4452,7 +4455,7 @@ or.j-n:
   ((VJp- & VJp+) & (I-)) or
   ((VJg- & VJg+) & (J-));
 
-and.j-v: <verb-conjunction>;
+and.j-v or.j-v: <verb-conjunction>;
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
