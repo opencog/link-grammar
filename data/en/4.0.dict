@@ -140,9 +140,15 @@
 % SJr == connect to right
 % SJ*s == singular
 % SJ*p == plural/mass
-<noun-and-s>: SJls+ or SJrs-;
-<noun-and-p>: SJlp+ or SJrp-;
-<noun-and-u>: SJlu+ or SJru-;
+%
+% M+: "gloom of night and heat will not stop me"
+% The "of night" can connect to the left noun, but rarely to the right noun
+% because it should then connect to the "and", not the right noun.
+% but then: "neither heat nor gloom of night shall stop me"
+% Looks like only a proper semantic decision can determine the correct parse here ... 
+<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
+<noun-and-p>: ({@M+} & SJlp+) or ({[@M+]} & SJrp-);
+<noun-and-u>: ({@M+} & SJlu+) or ({[@M+]} & SJru-);
 <noun-and-p,u>: <noun-and-p> or <noun-and-u>;
 
 <rel-clause-x>: {Rw+} & B*m+;
@@ -181,8 +187,10 @@
 CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} & 
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
-      ([<noun-sub-s> & (JG- or <noun-main-s>)] or <noun-and-s> or YS+)) or 
-         ({[[@MX+]]} & AN+) or G+))) or 
+      ([<noun-sub-s> & (JG- or <noun-main-s>)] or 
+       <noun-and-s> or 
+       YS+)) or 
+    ({[[@MX+]]} & AN+) or G+))) or 
   (MXs+ & (<noun-main-s> or <noun-and-s>)) or
   <directive-opener>;
 
@@ -400,7 +408,8 @@ HYPHENATED-WORDS.n:
   {@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
     ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
-      ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s> or <noun-and-s>)) or
+      ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or 
+      <noun-and-s> or
       (Dn- & SJn+))) or
     SJrs- or
     (YS+ & Ds-) or 
@@ -427,7 +436,8 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     ([[AN+]] or 
     ({NM+ or Dmc-} & 
-      (<noun-sub-p> & (<noun-main-p> or <rel-clause-p> or <noun-and-s>))) or
+      ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+		<noun-and-s>)) or
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 
 % (Dn- & SJn+): "Neither rain nor snow"
@@ -438,7 +448,8 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (AN+ or 
     ({NM+ or Dmu-} & 
-      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s> or <noun-and-p,u>)) or
+      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
+      <noun-and-p,u> or
       (Dn- & SJn+))) or
     (YS+ & {Dmu-}) or 
     (GN+ & (DD- or [()])) or 
@@ -800,7 +811,8 @@ such_a such_an: Ds*k+;
 % "all of the time". These are all temporal modifiers: use MVw ("when")
 <adv-of>: MVw- & OF+;
 
-a_lot: (<noun-sub-p> & (<noun-main-p> or <noun-and-p>)) or 
+a_lot: (<noun-sub-p> & <noun-main-p>) or 
+  <noun-and-p> or 
   EC+ or MVa- or <adv-of>;
 
 few: {EA- or EF+ or ({EA-} & DD-)} & 
@@ -1336,12 +1348,11 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (Dmu- or [[()]]) & 
     (({[[Ds-]]} & OF+) or [[()]]) &
-    <noun-sub-s> & {@MXs+} & 
-    ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or AJl- or AJr+ or <noun-and-u>)) or
+    ((<noun-sub-s> & {@MXs+} & 
+      ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
+     AJl- or AJr+ or
+     <noun-and-u>)) or
   [[AN+]];
-
-% See above comments ... XXX wtf ??
-%   ((Ss+ & <CLAUSE>) or SIs- or Os- or J- or VJg- or VJg+ or <noun-and-u>)) or
 
 <verb-pg,ge>: {@E-} & (
  ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or 
@@ -4413,18 +4424,21 @@ and.j-r or.j-r:
 %
 % noun-conj-dep-s & SI-: Are a dog and a cat here?
 %
+% XXX There should be a noun-sub-u but this requires a lot of work ... 
 <noun-conj-dep-s>: ({Xd-} & SJls- & SJrs+);
 <noun-conj-dep-p>: ({Xd-} & SJlp- & SJr+) or ({Xd-} & SJls- & SJrp+);
-<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+) or ({Xd-} & SJl- & SJru+);
+<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+) or 
+                   ({Xd-} & SJlp- & SJru+) or
+                   ({Xd-} & SJls- & SJru+);
 <noun-conj-head>: Ju- or SJl+ or AN+;
 and.j-n:
-  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Os-])) or
-  (<noun-conj-dep-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-])) or
-  (<noun-conj-dep-u> & (<noun-conj-head> or (Wd- & Sux+) or SIu- or [Ou-]));
+  (<noun-conj-dep-s> & <noun-sub-s> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Os-])) or
+  (<noun-conj-dep-p> & <noun-sub-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-])) or
+  (<noun-conj-dep-u> & <noun-sub-x> & (<noun-conj-head> or (Wd- & Sux+) or SIu- or [Ou-]));
 
 or.j-n:
-  (<noun-conj-dep-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
-  (<noun-conj-dep-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
+  (<noun-conj-dep-s> & <noun-sub-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
+  (<noun-conj-dep-p> & <noun-sub-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."

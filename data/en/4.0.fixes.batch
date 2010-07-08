@@ -2059,6 +2059,9 @@ there are two dogs and a cat here.
 *there is two dogs and a cat here.
 % ??there (is/are) a dog and two cats here.
 
+the dog and cat run
+*the dog and cat runs
+
 % conjoined mass nouns
 Cost and reliability were questioned.
 The cost and reliability were questioned.
@@ -2089,6 +2092,9 @@ Is John or I invited?
 *Is John and I invited?
 Are John and I invited?
 *John and I is invited
+
+% relative clauses with conjoined nouns
+The dog and the cat I saw were black
 
 % conjoined negations
 Neither Mary nor Louise are coming to the party
