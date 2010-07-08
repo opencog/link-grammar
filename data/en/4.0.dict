@@ -1343,7 +1343,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
 % AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
 % <noun-and-u>: allows use of gerunds as nouns.
-% VJg: ??? this is commented out, where would this occur?
+% VJ*g: ??? this is commented out, where would this occur?
 <verb-ge-d>: 
   ({@AN-} & {@A- & {[[@AN-]]}} & 
     (Dmu- or [[()]]) & 
@@ -1394,14 +1394,14 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % conjoined verbs. 
 % s == singluar, pl == plural, sp == singular or plural 
 % g == gerund
-<verb-and-s->: {@E-} & VJs-;
-<verb-and-s+>: {@E-} & VJs+;
-<verb-and-pl->: {@E-} & VJp-;
-<verb-and-pl+>: {@E-} & VJp+;
-<verb-and-sp->: {@E-} & VJ-;
-<verb-and-sp+>: {@E-} & VJ+;
-<verb-and-pg->: {@E-} & VJg-;
-<verb-and-pg+>: {@E-} & VJg+;
+<verb-and-s->: {@E-} & VJls-;
+<verb-and-s+>: {@E-} & VJrs+;
+<verb-and-pl->: {@E-} & VJlp-;
+<verb-and-pl+>: {@E-} & VJrp+;
+<verb-and-sp->: {@E-} & VJl-;
+<verb-and-sp+>: {@E-} & VJr+;
+<verb-and-pg->: {@E-} & VJlg-;
+<verb-and-pg+>: {@E-} & VJrg+;
 
 % AUXILIARY VERBS
 
@@ -1805,7 +1805,7 @@ frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
 
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
 and.v-fill:
-  ((VJg- & VJg+) & (Pg- or Mg- or ({Xd-} & VJg-))) & <vc-fill>;
+  ((VJrg- & VJlg+) & (Pg- or Mg- or ({Xd-} & VJlg-))) & <vc-fill>;
 
 % ------------------------------------------------------------
 % common transitive verbs
@@ -4449,20 +4449,20 @@ or.j-n:
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
 <verb-conjunction>:
-  (({Xd-} & VJs- & VJs+) & (({@MV+} & Ss-) or ({Xd-} & VJs-))) or
-  (({Xd-} & VJp- & VJp+) & (({@MV+} & Sp-) or ({Xd-} & VJp-))) or
-  ((VJs- & VJs+) & (I-)) or
-  ((VJp- & VJp+) & (I-)) or
-  ((VJg- & VJg+) & (J-));
+  (({Xd-} & VJrs- & VJls+) & (({@MV+} & Ss-) or ({Xd-} & VJls-))) or
+  (({Xd-} & VJrp- & VJlp+) & (({@MV+} & Sp-) or ({Xd-} & VJlp-))) or
+  ((VJrs- & VJls+) & (I-)) or
+  ((VJrp- & VJlp+) & (I-)) or
+  ((VJrg- & VJlg+) & (J-));
 
 and.j-v or.j-v: <verb-conjunction>;
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
 but.j-v:
-  ((({Xd-} & VJs-) & VJs+) & (Ss- or ({Xd-} & VJs-))) or
-  ((({Xd-} & VJp-) & VJp+) & (Sp- or ({Xd-} & VJp-))) or
-  ((VJ- & VJ+) & (I-));
+  ((({Xd-} & VJrs-) & VJls+) & (Ss- or ({Xd-} & VJls-))) or
+  ((({Xd-} & VJrp-) & VJlp+) & (Sp- or ({Xd-} & VJlp-))) or
+  ((VJr- & VJl+) & (I-));
 
 % The SJn, Dn links are propagated through the linkage, guarenteeing that
 % neither will be used together with nor.
