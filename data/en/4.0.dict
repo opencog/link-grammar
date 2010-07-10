@@ -1836,7 +1836,8 @@ deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d
 bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d 
 outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   (<verb-sp> & <vc-fill>) or
-  (<verb-and-sp-> & <vc-fill>) or (<vc-fill> & <verb-and-sp+>);
+  (<verb-and-sp-i-> & <vc-fill>) or (<vc-fill> & <verb-and-sp-i+>) or
+  <verb-and-sp-t-> or <verb-and-sp-t+>;
 
 beaten.v blown.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
 sprung.v stricken.v swum.v woken.v
@@ -3534,14 +3535,18 @@ letting.v: <verb-pg> & <vc-let>;
 
 let's let’s: ({Ic-} & Wi- & {N+} & I+) or ({Ic-} & Wi- & N+);
 
-<vc-watch>: ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or ([[@MV+ & O*n+ & {@MV+}]])
-or {@MV+};
+<vc-watch>: 
+  ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or 
+  ([[@MV+ & O*n+ & {@MV+}]]) or 
+  {@MV+};
+
 watch.v: <verb-pl,i> & <vc-watch>;
 watches.v: <verb-s> & <vc-watch>;
 
 watched.v-d: 
   (<verb-sp,pp> & <vc-watch>) or 
-  (<verb-and-sp-> & <vc-watch>) or (<vc-watch> & <verb-and-sp+>) or
+  (<verb-and-sp-i-> & <vc-watch>) or (<vc-watch> & <verb-and-sp-i+>) or
+  <verb-and-sp-t-> or <verb-and-sp-t+> or
   <verb-pv> or 
   <verb-po>;
 
