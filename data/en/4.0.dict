@@ -2737,9 +2737,16 @@ justify.v risk.v avoid.v involve.v favor.v:
 opposes.v enjoys.v advocates.v contemplates.v entails.v necessitates.v
 justifies.v risks.v avoids.v involves.v favors.v: 
 <verb-s> & <vc-oppose>;
+
 opposed.v-d enjoyed.v-d advocated.v-d contemplated.v-d entailed.v-d
 necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d: 
-(<verb-sp,pp> & <vc-oppose>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+  (<verb-sp,pp> & <vc-oppose>) or 
+  (<verb-and-sp-i-> & <vc-oppose>) or (<vc-oppose> & <verb-and-sp-i+>) or
+  <verb-and-sp-t> or
+  <verb-pv> or 
+  ({@E-} & A+) or 
+  <verb-po>;
+
 opposing.g enjoying.g advocating.g contemplating.g
 entailing.g necessitating.g justifying.g risking.g avoiding.g
 favoring.g involving.g: 
@@ -4605,11 +4612,12 @@ but.j-n:
 <verb-conjunction>:
   (({Xd-} & VJrsi- & VJlsi+) & (({@MV+} & Ss-) or ({Xd-} & VJlsi-))) or
   (({Xd-} & VJrpi- & VJlpi+) & (({@MV+} & Sp-) or ({Xd-} & VJlpi-))) or
-  (({Xd-} & VJrst- & VJlst+) & ({@MV+} & Ss- & O+)) or
-  (({Xd-} & VJrpt- & VJlpt+) & ({@MV+} & Sp- & O+)) or
+  (({Xd-} & VJrst- & VJlst+) & ({@MV+} & Ss- & (O+ or B-))) or
+  (({Xd-} & VJrpt- & VJlpt+) & ({@MV+} & Sp- & (O+ or B-))) or
   ((VJrs- & VJls+) & (I-)) or
   ((VJrp- & VJlp+) & (I-)) or
   ((VJrg- & VJlg+) & (J-));
+
 
 and.j-v or.j-v: <verb-conjunction>;
 
