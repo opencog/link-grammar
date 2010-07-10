@@ -1456,12 +1456,14 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-and-pl+>: {@E-} & VJrp+;
 <verb-and-sp->: {@E-} & VJl-;
 <verb-and-sp+>: {@E-} & VJr+;
-<verb-and-sp-i->: {@E-} & VJl*i-;
+<verb-and-sp-i->: ({@E-} & VJl*i-) or (VJn*i+ & Dn-);
 <verb-and-sp-i+>: {@E-} & VJr*i+;
 <verb-and-sp-t->: {@E-} & VJl*t-;
 <verb-and-sp-t+>: {@E-} & VJr*t+;
 <verb-and-pg->: {@E-} & VJlg-;
 <verb-and-pg+>: {@E-} & VJrg+;
+
+<verb-and-sp-t>: <verb-and-sp-t-> or <verb-and-sp-t+> or (VJn*t+ & Dn-);
 
 % AUXILIARY VERBS
 
@@ -1838,8 +1840,7 @@ bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d
 outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   (<verb-sp> & <vc-fill>) or
   (<verb-and-sp-i-> & <vc-fill>) or (<vc-fill> & <verb-and-sp-i+>) or
-  <verb-and-sp-t-> or <verb-and-sp-t+> or
-  (<vc-fill> & VJn*i+ & Dn-);
+  <verb-and-sp-t>;
 
 beaten.v blown.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
 sprung.v stricken.v swum.v woken.v
@@ -1892,8 +1893,8 @@ and.v-fill:
 
 /en/words/words.v.4.3:  
   (<verb-sp,pp> & <vc-trans>) or 
-  (<verb-and-sp-> & <vc-trans>) or (<vc-trans> & <verb-and-sp+>) or
-  <verb-and-sp-t-> or <verb-and-sp-t+> or
+  (<verb-and-sp-i-> & <vc-trans>) or (<vc-trans> & <verb-and-sp-i+>) or
+  <verb-and-sp-t> or
   <verb-pv> or 
   (({@E-} or {@EA-} or {@AN-}) & A+) or 
   <verb-po>;
@@ -1943,8 +1944,7 @@ overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
 foreswore.v-d forwent.v-d:
   (<verb-sp> & <vc-kick>) or
   (<verb-and-sp-i-> & <vc-kick>) or (<vc-kick> & <verb-and-sp-i+>) or
-  <verb-and-sp-t-> or <verb-and-sp-t+> or
-  (<vc-kick> & VJn*i+ & Dn-);
+  <verb-and-sp-t>; 
 
 bitten.v stolen.v shaken.v thrown.v torn.v worn.v
 forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
@@ -3108,13 +3108,20 @@ or ({@MV+} & {TH+ or Ce+ or TO+ or OF+} & <verb-po>);
 warning.g advising.g: (<vc-warn> & <verb-ge>) or <verb-ge-d>;
 warning.v advising.v: <verb-pg> & <vc-warn>;
 
-<vc-hear>: ((B- or O+) &
-{@MV+} & {I*j+ or Pg+}) or ({@MV+} & {TH+ or Zs- or Ce+ or
-(OF+ & {@MV+})}) or ([[@MV+ & O*n+]]);
+<vc-hear>: 
+  ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or 
+  ({@MV+} & {TH+ or Zs- or Ce+ or (OF+ & {@MV+})}) or 
+  ([[@MV+ & O*n+]]);
+
 hear.v: <verb-pl,i> & <vc-hear>;
 hears.v: <verb-s> & <vc-hear>;
-heard.v-d: (<verb-sp,pp> & <vc-hear>) or (<verb-pv> & {Pg+}) or ({@MV+} & 
-{Pg+} & <verb-po>);
+heard.v-d: 
+  (<verb-sp,pp> & <vc-hear>) or 
+  (<verb-and-sp-i-> & <vc-hear>) or (<vc-hear> & <verb-and-sp-i+>) or
+  <verb-and-sp-t> or
+  (<verb-pv> & {Pg+}) or 
+  ({@MV+} & {Pg+} & <verb-po>);
+
 hearing.g: (<vc-hear> & <verb-ge>) or <verb-ge-d>;
 hearing.v: <verb-pg> & <vc-hear>;
 
@@ -3125,7 +3132,8 @@ see.v: <verb-pl,i> & <vc-see>;
 sees.v: <verb-s> & <vc-see>;
 saw.v-d:
   (<verb-sp> & <vc-see>) or
-  (<verb-and-sp-> & <vc-see>) or (<vc-see> & <verb-and-sp+>);
+  (<verb-and-sp-i-> & <vc-see>) or (<vc-see> & <verb-and-sp-i+>) or
+  <verb-and-sp-t>;
 
 seen.v: (<verb-pp> & <vc-see>) or (<verb-pv> & {Pg+ or AZ+}) or
 ({@MV+} & {Pg+ or AZ+} & <verb-po>);
@@ -3554,7 +3562,7 @@ watches.v: <verb-s> & <vc-watch>;
 watched.v-d: 
   (<verb-sp,pp> & <vc-watch>) or 
   (<verb-and-sp-i-> & <vc-watch>) or (<vc-watch> & <verb-and-sp-i+>) or
-  <verb-and-sp-t-> or <verb-and-sp-t+> or
+  <verb-and-sp-t> or
   <verb-pv> or 
   <verb-po>;
 
@@ -4599,7 +4607,7 @@ but.j-v:
   ((({Xd-} & VJrp-) & VJlp+) & (Sp- or ({Xd-} & VJlp-))) or
   ((VJr- & VJl+) & (I-));
 
-% XJ: collacations with holes
+% XJ: collocations with holes
 % XJ*i: with infinitives
 % ... not only X, but Y
 % "you should not only ask for your money back, but demand it"
