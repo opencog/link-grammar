@@ -1392,7 +1392,10 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
 % conjoined verbs. 
-% VJl == left, VJr == right
+% VJl == left
+% VJr == right
+% VJd == ditransitive
+%
 % VJ*s == singular subject
 % VJ*p == plural subject
 % VJ*g == gerund  -- !!???
@@ -1655,8 +1658,12 @@ or [[()]]));
 % common intransitive verbs
 <vc-intrans>: {@MV+};
 
-% XXX Hmmm. There is a fair number of verbs in here that are transitive
-% in various rare usages: "I ambled the horse", "I hydroplaned the car", etc.
+% XXX Hmmm. There is a fair number of verbs in here that are "weakly"
+% transitive, i.e. are transitive in various rare usages: 
+% "I ambled the horse", "I hydroplaned the car", etc.  Per theory of
+% functional grammar and related, transitivity should be taken as 
+% variable, so e.g. we could assign a high cost to the transitive use
+% of some of these verbs ... 
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
 /en/words/words.v.1.1:  
@@ -3088,7 +3095,7 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.
 % 'sent', 'poured': optional indirect object.
-<vc-give>: ((B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & [O*n+]) or K+}) or 
+<vc-give>: ((B- & {O+ or K+}) or (O+ & {({[[@MV+]]} & [O*n+] & {VJd+}) or K+}) or 
 (K+ & ({[[@MV+]]} & O*n+)) or ([[@MV+ & O*n+]])) & {@MV+};
 
 give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v 
@@ -4481,6 +4488,13 @@ or.j-n:
   ((VJrg- & VJlg+) & (J-));
 
 and.j-v or.j-v: <verb-conjunction>;
+
+% ditransitive conjunction: "I gave Bob a doll and Mary a gun"
+<ditransitive-conjunction>:
+  VJd- & O+ & O*n+;
+
+and.j-o or.j-o: <ditransitive-conjunction>;
+
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
