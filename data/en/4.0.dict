@@ -1397,10 +1397,12 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % VJ*p == plural subject
 % VJ*g == gerund  -- !!???
 %
-% The following control whether the conjunction can be transitive or not.
+% The following control whether the conjunction can take an object.
+% The conjunction should take an object if both verbs are transitive,
+% e.g. "I saw and greeted Sue", which should parse as 
+% "I (saw and greeted) Sue".
 % VJ**i == intranstive 
-% VJ**t == transitive (direct object)
-% VJ**d == doubly transtive (indirect object)
+% VJ**t == transitive
 %
 % s == singluar, pl == plural, sp == singular or plural 
 % g == gerund
