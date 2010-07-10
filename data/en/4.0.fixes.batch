@@ -2099,6 +2099,9 @@ The dog and the cat I saw were black
 % conjoined nouns in clauses
 I think John and Dave ran.
 
+% conjoined post-nominal modifiers
+Sue, a teacher and scholar, is here.
+
 % conjoined negations
 Neither Mary nor Louise are coming to the party
 Neither Mary Kate nor Louise Anne are coming to the party
@@ -2204,7 +2207,6 @@ He was sent abroad and resided on the continent, chiefly in France, for more tha
 This is not the man we know and love.
 *This is not the man we know and love him
 This is not the man we knew and loved.
-
 
 % conjoined ditransitive objects
 I gave Bob a doll and Mary a gun.
