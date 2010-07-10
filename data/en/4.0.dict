@@ -1435,6 +1435,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % VJl == left
 % VJr == right
 % VJd == ditransitive
+% VJn == neither-nor
 %
 % VJ*s == singular subject
 % VJ*p == plural subject
@@ -1837,7 +1838,8 @@ bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d
 outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   (<verb-sp> & <vc-fill>) or
   (<verb-and-sp-i-> & <vc-fill>) or (<vc-fill> & <verb-and-sp-i+>) or
-  <verb-and-sp-t-> or <verb-and-sp-t+>;
+  <verb-and-sp-t-> or <verb-and-sp-t+> or
+  (<vc-fill> & VJn*i+ & En-);
 
 beaten.v blown.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
 sprung.v stricken.v swum.v woken.v
@@ -4544,6 +4546,19 @@ or.j-n:
   (<noun-conj-dep-p> & <noun-sub-p> & 
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or <post-nominal-p>));
 
+% The SJn, Dn links are propagated through the linkage, guarenteeing that
+% neither will be used together with nor.
+nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or SJn+);
+neither.j-n: Dn+;
+
+% Force use of commas: "Mary, but not Louise, is coming to the party"
+% Not John, but Mary led the way.
+but.j-n: 
+  ((Xd- & SJl- & EBx+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
+  ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
+  ((SJl- & EBy- & SJr+) & Ou-);
+
+% --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
@@ -4564,6 +4579,11 @@ and.j-v or.j-v: <verb-conjunction>;
 
 and.j-o or.j-o: <ditransitive-conjunction>;
 
+nor.j-v: 
+  (VJn*i- & VJl*i+ & ({@MV+} & S-)) or
+  (VJn*t- & VJl*t+ & ({@MV+} & S- & O+));
+
+neither.j-v: En+;
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
@@ -4571,18 +4591,6 @@ but.j-v:
   ((({Xd-} & VJrs-) & VJls+) & (Ss- or ({Xd-} & VJls-))) or
   ((({Xd-} & VJrp-) & VJlp+) & (Sp- or ({Xd-} & VJlp-))) or
   ((VJr- & VJl+) & (I-));
-
-% The SJn, Dn links are propagated through the linkage, guarenteeing that
-% neither will be used together with nor.
-nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or SJn+);
-neither.j-n: Dn+;
-
-% Force use of commas: "Mary, but not Louise, is coming to the party"
-% Not John, but Mary led the way.
-but.j-n: 
-  ((Xd- & SJl- & EBx+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
-  ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
-  ((SJl- & EBy- & SJr+) & Ou-);
 
 % XJ: collacations with holes
 % XJ*i: with infinitives
