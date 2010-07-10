@@ -2061,6 +2061,7 @@ there are two dogs and a cat here.
 
 the dog and cat run
 *the dog and cat runs
+*The either dog or cat ran
 
 % conjoined mass nouns
 Cost and reliability were questioned.
@@ -2092,6 +2093,15 @@ Is John or I invited?
 *Is John and I invited?
 Are John and I invited?
 *John and I is invited
+
+% conjoined nouns as objects
+I heard a car and a train.
+I heard a car or a train.
+I heard a car but not a train
+*I heard a car but a train
+I heard a car nor a train
+I heard neither car nor train
+I heard neither a car nor a train
 
 % relative clauses with conjoined nouns
 The dog and the cat I saw were black

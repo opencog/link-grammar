@@ -4549,7 +4549,7 @@ and.j-r or.j-r:
 
 <noun-conj-head>: Ju- or SJl+ or AN+;
 
-and.j-n:
+and.j-n but_not:
   (<noun-conj-dep-s> & <noun-sub-s> & 
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Os-] or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & 
