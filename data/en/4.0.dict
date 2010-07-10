@@ -1392,6 +1392,16 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
 % conjoined verbs. 
+% VJl == left, VJr == right
+% VJ*s == singular subject
+% VJ*p == plural subject
+% VJ*g == gerund  -- !!???
+%
+% The following control whether the conjunction can be transitive or not.
+% VJ**i == intranstive 
+% VJ**t == transitive (direct object)
+% VJ**d == doubly transtive (indirect object)
+%
 % s == singluar, pl == plural, sp == singular or plural 
 % g == gerund
 <verb-and-s->: {@E-} & VJls-;
@@ -1400,6 +1410,10 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-and-pl+>: {@E-} & VJrp+;
 <verb-and-sp->: {@E-} & VJl-;
 <verb-and-sp+>: {@E-} & VJr+;
+<verb-and-sp-i->: {@E-} & VJl*i-;
+<verb-and-sp-i+>: {@E-} & VJr*i+;
+<verb-and-sp-t->: {@E-} & VJl*t-;
+<verb-and-sp-t+>: {@E-} & VJr*t+;
 <verb-and-pg->: {@E-} & VJlg-;
 <verb-and-pg+>: {@E-} & VJrg+;
 
@@ -1639,6 +1653,9 @@ or [[()]]));
 % common intransitive verbs
 <vc-intrans>: {@MV+};
 
+% XXX Hmmm. There is a fair number of verbs in here that are transitive
+% in various rare usages: "I ambled the horse", "I hydroplaned the car", etc.
+%
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
 /en/words/words.v.1.1:  
   <verb-pl,i> & <vc-intrans>;
@@ -1650,7 +1667,7 @@ or [[()]]));
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v 
 /en/words/words.v.1.3:  
   (<verb-sp,pp> & <vc-intrans>) or
-  (<verb-and-sp-> & <vc-intrans>) or (<vc-intrans> & <verb-and-sp+>);
+  (<verb-and-sp-i-> & <vc-intrans>) or (<vc-intrans> & <verb-and-sp-i+>);
 
 fundheld.v-d strove.v-d:
   <verb-sp,pp> & <vc-intrans>;
@@ -1824,6 +1841,7 @@ and.v-fill:
 /en/words/words.v.4.3:  
   (<verb-sp,pp> & <vc-trans>) or 
   (<verb-and-sp-> & <vc-trans>) or (<vc-trans> & <verb-and-sp+>) or
+  <verb-and-sp-t-> or <verb-and-sp-t+> or
   <verb-pv> or 
   (({@E-} or {@EA-} or {@AN-}) & A+) or 
   <verb-po>;
@@ -3030,7 +3048,10 @@ hearing.v: <verb-pg> & <vc-hear>;
 or Ce+}) or ([[@MV+ & O*n+]]);
 see.v: <verb-pl,i> & <vc-see>;
 sees.v: <verb-s> & <vc-see>;
-saw.v-d: <verb-sp> & <vc-see>;
+saw.v-d:
+  (<verb-sp> & <vc-see>) or
+  (<verb-and-sp-> & <vc-see>) or (<vc-see> & <verb-and-sp+>);
+
 seen.v: (<verb-pp> & <vc-see>) or (<verb-pv> & {Pg+ or AZ+}) or
 ({@MV+} & {Pg+ or AZ+} & <verb-po>);
 seeing.g: (<vc-see> & <verb-ge>) or <verb-ge-d>;
@@ -4449,8 +4470,10 @@ or.j-n:
 % "Oscar Peterson played piano and wrote music."
 % Pass through singular/plural agreement.
 <verb-conjunction>:
-  (({Xd-} & VJrs- & VJls+) & (({@MV+} & Ss-) or ({Xd-} & VJls-))) or
-  (({Xd-} & VJrp- & VJlp+) & (({@MV+} & Sp-) or ({Xd-} & VJlp-))) or
+  (({Xd-} & VJrsi- & VJlsi+) & (({@MV+} & Ss-) or ({Xd-} & VJlsi-))) or
+  (({Xd-} & VJrpi- & VJlpi+) & (({@MV+} & Sp-) or ({Xd-} & VJlpi-))) or
+  (({Xd-} & VJrst- & VJlst+) & ({@MV+} & Ss- & O+)) or
+  (({Xd-} & VJrpt- & VJlpt+) & ({@MV+} & Sp- & O+)) or
   ((VJrs- & VJls+) & (I-)) or
   ((VJrp- & VJlp+) & (I-)) or
   ((VJrg- & VJlg+) & (J-));
