@@ -2363,11 +2363,22 @@ born.v: (<verb-pp> & <vc-bear>) or <verb-pv> or <verb-po>;
 bearing.g: (<vc-bear> & <verb-ge>) or <verb-ge-d>;
 bearing.v: <verb-pg> & <vc-bear>;
 
-<vc-love>: <vc-trans> or
-({@MV+} & (TO+ or Pg+));
-love.v dislike.v hate.v: <verb-pl,i> & <vc-love>;
+<vc-love>: 
+  <vc-trans> or
+  ({@MV+} & (TO+ or Pg+));
+
+love.v dislike.v hate.v:
+  (<verb-pl,i> & <vc-love>) or
+  (<verb-and-pl-> & <vc-love>) or (<vc-love> & <verb-and-pl+>);
+
 loves.v dislikes.v hates.v: <verb-s> & <vc-love>;
-loved.v-d disliked.v-d hated.v-d: (<verb-sp,pp> & <vc-love>) or <verb-pv> or <verb-po>;
+
+loved.v-d disliked.v-d hated.v-d:
+  (<verb-sp,pp> & <vc-love>) or 
+  (<verb-and-sp-> & <vc-love>) or (<vc-love> & <verb-and-sp+>) or
+  <verb-pv> or 
+  <verb-po>;
+
 loving.g disliking.g hating.g: (<vc-love> & <verb-ge>) or <verb-ge-d>;
 loving.v disliking.v hating.v: <verb-pg> & <vc-love>;
 
@@ -2593,9 +2604,15 @@ demonstrating.v: <verb-pg> & <vc-guess>;
 % (QI+ & {MV+}): "I did not know why until recently"
 <vc-know>: {<vc-trans>} or
 ({@MV+} & (((OF+ or QI+)& {@MV+}) or Ce+ or TH+ or RSe+ or Zs-));
-know.v: <verb-pl,i> & <vc-know>;
+know.v: 
+  (<verb-pl,i> & <vc-know>) or
+  (<verb-and-pl-> & <vc-know>) or (<vc-know> & <verb-and-pl+>);
+
 knows.v: <verb-s> & <vc-know>;
-knew.v-d: <verb-sp> & <vc-know>;
+knew.v-d:
+  (<verb-sp> & <vc-know>) or
+  (<verb-and-sp-> & <vc-know>) or (<vc-know> & <verb-and-sp+>);
+
 known.v: (<verb-pp> & <vc-know>) or (<verb-s-pv> & {THi+ or TOf+ or QIi+})
 or <verb-po> or ({@E-} & A+);
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
