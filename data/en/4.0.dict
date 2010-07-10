@@ -1456,14 +1456,17 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-and-pl+>: {@E-} & VJrp+;
 <verb-and-sp->: {@E-} & VJl-;
 <verb-and-sp+>: {@E-} & VJr+;
-<verb-and-sp-i->: ({@E-} & VJl*i-) or (VJn*i+ & Dn-);
-<verb-and-sp-i+>: {@E-} & VJr*i+;
+<verb-and-sp-i->: {@E-} & VJl*i-;
+<verb-and-sp-i+>: ({@E-} & VJr*i+) or (VJn*i+ & Dn-) or (VJb*i+ & Db-);
 <verb-and-sp-t->: {@E-} & VJl*t-;
 <verb-and-sp-t+>: {@E-} & VJr*t+;
 <verb-and-pg->: {@E-} & VJlg-;
 <verb-and-pg+>: {@E-} & VJrg+;
 
-<verb-and-sp-t>: <verb-and-sp-t-> or <verb-and-sp-t+> or (VJn*t+ & Dn-);
+<verb-and-sp-t>: 
+  <verb-and-sp-t-> or 
+  <verb-and-sp-t+> or 
+  (VJn*t+ & Dn-);
 
 % AUXILIARY VERBS
 
@@ -4564,7 +4567,7 @@ or.j-n:
 % neither will be used together with nor.
 nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or SJn+);
 
-% The Dn- link is used for both nouns, as above, and on niether..nor for verbs
+% The Dn- link is used for both nouns, as above, and on neither..nor for verbs
 % e.g. "We neither ate nor drank"
 neither.j: Dn+;
 
@@ -4596,6 +4599,7 @@ and.j-v or.j-v: <verb-conjunction>;
 
 and.j-o or.j-o: <ditransitive-conjunction>;
 
+% The VJn- gaurentees that nor.j-v is used with neither.j-v
 nor.j-v: 
   (VJn*i- & VJl*i+ & ({@MV+} & S-)) or
   (VJn*t- & VJl*t+ & ({@MV+} & S- & O+));
@@ -4606,6 +4610,13 @@ but.j-v:
   ((({Xd-} & VJrs-) & VJls+) & (Ss- or ({Xd-} & VJls-))) or
   ((({Xd-} & VJrp-) & VJlp+) & (Sp- or ({Xd-} & VJlp-))) or
   ((VJr- & VJl+) & (I-));
+
+% The VJb- gaurentees that bit.j-b is used with not_only 
+% "We not only X'ed but also Y'ed".
+% This is the same pattern as the neither..nor... pattern above.
+but.j-b: 
+  (VJb*i- & VJl*i+ & ({@MV+} & S-));
+not_only: Db+;
 
 % XJ: collocations with holes
 % XJ*i: with infinitives
