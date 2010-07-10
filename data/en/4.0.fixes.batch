@@ -2297,6 +2297,25 @@ The brothers would have resisted but that they lacked courage
 It never rains but it pours.
 They had no sooner arrived but they turned around and left.
 
+% Misc conjunction constructions that are still broken in the current parser:
+He is flighty and given to fanciful thoughts
+He is thoughtful, and not given to many words
+William Petre is described as smooth and obliging in manner, yet reserved and resolved, and not given to many words.
+He rose rapidly in the royal service and, in 1543, was knighted
+He was twice summoned before the Privy Council, first for a violent assault on Sir John Conway, then, ten years later, for fraud.
+From his youth he must have been a capable, pushing, insinuating man.
+
+Grant me this wish and I will die happy.
+What did you tell her and what did she say
+*I saw John but Fred
+He talked to Steve and, apparently, Fred
+*He talked to, apparently, Fred
+I cannot discern any reason, other than some sort of historical blindness, for why the "fat link" mechanism was created.
+John; my advisor, Steve; and several other people are coming
+No one but she saw the prowler.
+Mike finished in first place, and John in third.
+Mike finished in first place, and John in last
+
 % --------------------------------------------------------------------
 % non-planar graph: "saw" and "yesterday" should link, but don't.
 % "dog" and "which" do link (and that is correct).
