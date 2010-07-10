@@ -88,46 +88,83 @@
 
 <CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
+% Post-nominal qualifiers, complete with commas, etc.
+<post-nominal-x>:
+  ({[B*j+] or CJ-} & Xd- & (Xc+ or <costly-null>) & MX-);
+
+<post-nominal-s>:
+  ({[Bsj+] or CJ-} & Xd- & (Xc+ or <costly-null>) & MX-);
+
+<post-nominal-p>:
+  ({[Bpj+] or CJ-} & Xd- & (Xc+ or <costly-null>) & MX-);
+
 % noun-main-x -- singular or plural or mass.
-<noun-main-x>: (S+ & <CLAUSE>) or SI- or J- or O- or ({[B*j+] or CJ-} & Xd- 
- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main-x>: 
+  (S+ & <CLAUSE>) or SI- or J- or O- or 
+  <post-nominal-x> or
+  <costly-null>;
 
 % noun-main-s -- singular
-<noun-main-s>: (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or ({[Bsj+] or CJ-} & Xd-
- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main-s>: 
+  (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or 
+  <post-nominal-s> or
+  <costly-null>;
 
 % noun-main-p -- plural
-<noun-main-p>: (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or ({[Bpj+] or CJ-} & Xd-
- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main-p>: 
+  (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or 
+  <post-nominal-p> or
+  <costly-null>;
 
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+  
 % Doing this requires adding Su- links to many entries
-<noun-main-u>: (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or ({[Bsj+] or CJ-} & Xd- 
- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main-u>: 
+  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or 
+  <post-nominal-s> or
+  <costly-null>;
 
 % noun-main-m -- m == mass
 % TODO: get rid of this someday.
 % To get rid of this, any noun that uses this needs to be split into
 % two: the countable form, which will used <noun-main-s> and the
 % uncountable form, which will use <noun-main-u>
-<noun-main-m>: (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or ({[Bsj+] or CJ-} & Xd-
- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main-m>: 
+  (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or 
+  <post-nominal-s> or
+  <costly-null>;
 
+<noun-main-h>: 
+  (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or 
+  <post-nominal-x> or
+  <costly-null>;
 
-<noun-main-h>: (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or ({[B*j+] or CJ-} 
- & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main2-x>:
+  J- or O- or 
+  <post-nominal-x> or
+  <costly-null>;
 
-<noun-main2-x>:  J- or O- or ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
-<noun-main2-s>:  Js- or Os- or ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main2-s>:
+  Js- or Os- or 
+  <post-nominal-s> or
+  <costly-null>;
 
 % Xd- or [[()]] allows parsing of "I have no idea what that is."
 % without requiring comma after "idea"
-<noun-main2-s-no-punc>:  Js- or Os- or 
-({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main2-s-no-punc>:  
+  Js- or Os- or 
+  ({[Bsj+] or CJ-} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-) or 
+  <costly-null>;
 
-<noun-main2-p>:  Jp- or Op- or ({[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
-<noun-main2-m>:  Jp- or Os- or ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-) or <costly-null>;
+<noun-main2-p>:
+  Jp- or Op- or 
+  <post-nominal-p> or
+  <costly-null>;
+
+<noun-main2-m>:
+  Jp- or Os- or 
+  <post-nominal-s> or
+  <costly-null>;
 
 <noun-sub-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
