@@ -1761,9 +1761,15 @@ comes.v: <verb-s> & <vc-come>;
 came.v-d: <verb-sp> & <vc-come>; 
 
 % --------------------------------------------------------------
-<vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
 % optionally transitive verbs
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v 
+<vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
+
+% XXX FIXME: The <vc-tr,intr> & <verb-and-s+> should not have the B-
+% in there (from vc-tr-intr), since it allows bad parses for phrases like:
+% "This is a problem Moscow created and avoided"
+% (with the B- linking to "avoided" instead of "and".)
+
 /en/words/words.v.2.1:
   (<verb-pl,i> & <vc-tr,intr>) or
   (<verb-and-pl-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-pl+>);
@@ -4608,12 +4614,14 @@ but.j-n:
 % --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
-% Pass through singular/plural agreement.
+% Pass through singular/plural agreement of subject.
+% The weirdo (B- & {B+}) allows the following to parse:
+% "This is a problem Moscow created and failed to solve."
 <verb-conjunction>:
   (({Xd-} & VJrsi- & VJlsi+) & (({@MV+} & Ss-) or ({Xd-} & VJlsi-))) or
   (({Xd-} & VJrpi- & VJlpi+) & (({@MV+} & Sp-) or ({Xd-} & VJlpi-))) or
-  (({Xd-} & VJrst- & VJlst+) & ({@MV+} & Ss- & (O+ or B-))) or
-  (({Xd-} & VJrpt- & VJlpt+) & ({@MV+} & Sp- & (O+ or B-))) or
+  (({Xd-} & VJrst- & VJlst+) & ({@MV+} & Ss- & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJrpt- & VJlpt+) & ({@MV+} & Sp- & (O+ or (B- & {B+})))) or
   ((VJrs- & VJls+) & (I-)) or
   ((VJrp- & VJlp+) & (I-)) or
   ((VJrg- & VJlg+) & (J-));
