@@ -2294,9 +2294,21 @@ seeking.v: <verb-pg> & <vc-seek>;
 <vc-decline>: {<vc-trans>} or ({@MV+} & TO+);
 decline.v fail.v hasten.v volunteer.v aim.v: <verb-pl,i> & <vc-decline>;
 declines.v fails.v hastens.v volunteers.v aims.v: <verb-s> & <vc-decline>;
-declined.v-d hastened.v-d volunteered.v-d aimed.v-d: (<verb-sp,pp> & <vc-decline>) or 
-<verb-pv> or <verb-po>;
-failed.v-d: (<verb-sp,pp> & <vc-decline>) or <verb-pv> or ({@E-} & A+);
+
+declined.v-d hastened.v-d volunteered.v-d aimed.v-d: 
+  (<verb-sp,pp> & <vc-decline>) or 
+  (<verb-and-sp-i-> & <vc-decline>) or (<vc-decline> & <verb-and-sp-i+>) or
+  <verb-and-sp-t> or
+  <verb-pv> or 
+  <verb-po>;
+
+failed.v-d: 
+  (<verb-sp,pp> & <vc-decline>) or 
+  (<verb-and-sp-i-> & <vc-decline>) or (<vc-decline> & <verb-and-sp-i+>) or
+  <verb-and-sp-t> or
+  <verb-pv> or 
+  ({@E-} & A+);
+
 declining.g failing.g hastening.g volunteering.g: 
 (<vc-decline> & <verb-ge>) or <verb-ge-d>
 or ({@E-} & A+);
@@ -2454,8 +2466,14 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 or [[@MV+ & O*n+]]) & {@MV+}) or ({@MV+} & (TO+ or Pg+));
 start.v stop.v try.v: <verb-pl,i> & <vc-start>;
 starts.v stops.v tries.v: <verb-s> & <vc-start>;
-started.v-d stopped.v-d tried.v-d: (<verb-sp,pp> & <vc-start>) or (<verb-pv-b> 
-& {K+} & {@MV+}) or ({K+} & <verb-po>);
+
+started.v-d stopped.v-d tried.v-d: 
+  (<verb-sp,pp> & <vc-start>) or 
+  (<verb-and-sp-i-> & <vc-start>) or (<vc-start> & <verb-and-sp-i+>) or
+  <verb-and-sp-t> or
+  (<verb-pv-b> & {K+} & {@MV+}) or 
+  ({K+} & <verb-po>);
+
 starting.g stopping.g trying.g: (<vc-start> & <verb-ge>) or <verb-ge-d>;
 starting.v stopping.v trying.v: <verb-pg> & <vc-start>;
 
@@ -3869,9 +3887,9 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % conjoin preps: "prep and prep": "the coverage on TV and on the radio..."
 <conjoin-preps>: MJlp- or MJrp+;
 
-% alter-preps: "it is somwhere in or near the house"
+% alter-preps: "it is somewhere in or near the house"
 % The "or" must take a prep object.
-% XXX TODO: most preps below need this.
+% XXX TODO: most preps below need this rule.
 <alter-preps>: MJlj- or MJrj+;
 
 <prep-main-b>: 
@@ -3909,6 +3927,8 @@ or (MVp- & B-) or MVp- or NIr+;
 at toward towards without:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
+%
+% XXX fixme: MVp- & J+ is wrong: "*I saw John except Fred"
 except but.misc-ex: 
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or 
   (MVp- & B-) or 
