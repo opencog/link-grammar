@@ -1839,7 +1839,7 @@ outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   (<verb-sp> & <vc-fill>) or
   (<verb-and-sp-i-> & <vc-fill>) or (<vc-fill> & <verb-and-sp-i+>) or
   <verb-and-sp-t-> or <verb-and-sp-t+> or
-  (<vc-fill> & VJn*i+ & En-);
+  (<vc-fill> & VJn*i+ & Dn-);
 
 beaten.v blown.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
 sprung.v stricken.v swum.v woken.v
@@ -1928,8 +1928,11 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 % See also words.v.6 for optionally transitive verbs.
 % XXX TODO: should be reviewed, as some of them are optionally transitive
 %
-<vc-kick>: ((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+}) or 
-[[@MV+ & O*n+]]) & {@MV+};
+<vc-kick>: 
+  ((K+ & {[[@MV+]]} & O*n+) or 
+  ((O+ or B-) & {K+}) or 
+  [[@MV+ & O*n+]]) & {@MV+};
+
 /en/words/words.v.8.1: 
 <verb-pl,i> & <vc-kick>;
 /en/words/words.v.8.2:
@@ -1938,7 +1941,10 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 bit.v-d drank.v-d stole.v-d threw.v-d tore.v-d wore.v-d
 overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
 foreswore.v-d forwent.v-d:
- <verb-sp> & <vc-kick>;
+  (<verb-sp> & <vc-kick>) or
+  (<verb-and-sp-i-> & <vc-kick>) or (<vc-kick> & <verb-and-sp-i+>) or
+  <verb-and-sp-t-> or <verb-and-sp-t+> or
+  (<vc-kick> & VJn*i+ & Dn-);
 
 bitten.v stolen.v shaken.v thrown.v torn.v worn.v
 forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
@@ -4549,7 +4555,10 @@ or.j-n:
 % The SJn, Dn links are propagated through the linkage, guarenteeing that
 % neither will be used together with nor.
 nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or SJn+);
-neither.j-n: Dn+;
+
+% The Dn- link is used for both nouns, as above, and on niether..nor for verbs
+% e.g. "We neither ate nor drank"
+neither.j: Dn+;
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
@@ -4582,8 +4591,6 @@ and.j-o or.j-o: <ditransitive-conjunction>;
 nor.j-v: 
   (VJn*i- & VJl*i+ & ({@MV+} & S-)) or
   (VJn*t- & VJl*t+ & ({@MV+} & S- & O+));
-
-neither.j-v: En+;
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"

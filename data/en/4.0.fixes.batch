@@ -2211,6 +2211,17 @@ This is not the man we knew and loved.
 % conjoined ditransitive objects
 I gave Bob a doll and Mary a gun.
 
+% neither-nor constructions with verbs:
+we          ate popcorn or  watched movies
+we either   ate popcorn or  watched movies
+we neither  ate popcorn nor watched movies 
+*we either  ate popcorn nor watched movies 
+*we both    ate popcorn nor watched movies 
+*we         ate popcorn nor watched movies
+we both     ate popcorn and watched movies
+
+We neither ate nor drank for three days
+
 % lists:
 % List of gerunds:
 He has three jobs: counting, measuring and listing.
