@@ -4467,13 +4467,13 @@ and.j-r or.j-r:
                    ({Xd-} & SJls- & SJru+);
 <noun-conj-head>: Ju- or SJl+ or AN+;
 and.j-n:
-  (<noun-conj-dep-s> & <noun-sub-s> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Os-])) or
-  (<noun-conj-dep-p> & <noun-sub-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-])) or
-  (<noun-conj-dep-u> & <noun-sub-x> & (<noun-conj-head> or (Wd- & Sux+) or SIu- or [Ou-]));
+  (<noun-conj-dep-s> & <noun-sub-s> & (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Os-])) or
+  (<noun-conj-dep-p> & <noun-sub-p> & (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-])) or
+  (<noun-conj-dep-u> & <noun-sub-x> & (<noun-conj-head> or (Sux+ & <CLAUSE>) or SIu- or [Ou-]));
 
 or.j-n:
-  (<noun-conj-dep-s> & <noun-sub-s> & (<noun-conj-head> or (Wd- & S*x+) or SI- or [Os-])) or
-  (<noun-conj-dep-p> & <noun-sub-p> & (<noun-conj-head> or (Wd- & Spx+) or SIp- or [Op-]));
+  (<noun-conj-dep-s> & <noun-sub-s> & (<noun-conj-head> or (S*x+ & <CLAUSE>) or SI- or [Os-])) or
+  (<noun-conj-dep-p> & <noun-sub-p> & (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-]));
 
 % Conjoined verbs/verb phrases
 % "Oscar Peterson played piano and wrote music."
