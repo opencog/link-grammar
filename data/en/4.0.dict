@@ -1097,20 +1097,53 @@ a_lot: (<noun-sub-p> & <noun-main-p>) or
   EC+ or MVa- or <adv-of>;
 
 few: {EA- or EF+ or ({EA-} & DD-)} & 
- (Dmc+ or (<noun-sub-p> & <noun-main-p>));
-a_couple: <noun-sub-p> & <noun-main-p>;
+ (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
+a_couple: (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
 a_couple_of: NN+ or ND+ or NIn+;
-a_few: NN+ or ND+ or NIn+ or ({EN-} & (Dmc+ or ND+ or NIn+ or
-(<noun-sub-p> & <noun-main-p>)));
-some: D+ or EN+ or MF+ or (<noun-sub-x> & <noun-main-x>) or <adv-of>;
-little.i: ({EE-} & (MVa- or Ca+ or Qe+)) or ({EEx- or H-} & (Dmu+ or 
-(<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))))
-or (AM- & (Dmuy+ or MVy- or Oy- or Jy-)) or ({Ds-} & <adv-of>);
-%
+
+a_few:
+  NN+ or
+  ND+ or
+  NIn+ or
+  ({EN-} & 
+    (Dmc+ or
+    ND+ or
+    NIn+ or
+    (<noun-sub-p> & <noun-main-p>)));
+
+some:
+  D+ or
+  EN+ or
+  MF+ or
+  (<noun-sub-x> & <noun-main-x>) or
+  <noun-and-x> or
+  <adv-of>;
+
+little.i:
+  ({EE-} & (MVa- or Ca+ or Qe+)) or 
+  ({EEx- or H-} &
+    (Dmu+ or 
+    (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
+    <noun-and-s>)) or
+  (AM- & (Dmuy+ or MVy- or Oy- or Jy-)) or
+ ({Ds-} & <adv-of>);
+
 % "he likes you most" has no determiner, just uses MVa-.
-most: Dm+ or [EE+] or EA+ or MF+ or
-(<noun-sub-x> & <noun-main-x>) or <adv-of> or [{DD-} & MVa- & {Mp+}];
-part.i: (OF+ & <noun-main-s>) or ({Ds-} & <adv-of>);
+most:
+  Dm+ or
+  [EE+] or
+  EA+ or
+  MF+ or
+  (<noun-sub-x> & <noun-main-x>) or
+  <noun-and-x> or
+  <adv-of> or
+  [{DD-} & MVa- & {Mp+}];
+
+part.i:
+  (OF+ & <noun-main-s>) or
+  <noun-and-s> or
+  ({Ds-} & <adv-of>);
+
 all.e: <adv-of>;
 
 the_most: MVa- or EE+ or Dm+ or (<noun-sub-x> & <noun-main-x>);
@@ -1118,45 +1151,52 @@ the_most: MVa- or EE+ or Dm+ or (<noun-sub-x> & <noun-main-x>);
 % "he likes you least of all" has no determiner, just uses MVa-.
 least.a: EA+;
 least.e: {DD-} & MVa- & {Mp+}; 
-none: (<noun-sub-x> & <noun-main-x>) or <adv-of>;
-rest.i: ((DG-) & <noun-sub-p> & <noun-main-p>) or (DD- & <adv-of>);
-plenty: ({@M+} & <noun-main-x>) or <adv-of> or [MVa-];
-other: Dmu+ or ({ND-} & {DD-} & Dmc+) or 
-(DD- & (Ds+ or DD+ or <noun-main-s>));
-one_other every_other: <noun-main-s> or Ds+; 
-any_other no_other: <noun-main-s> or D+;
+none: (<noun-sub-x> & <noun-main-x>) or <noun-and-x> or <adv-of>;
+
+% rest.i: DG ??? huh? what's the example ??
+rest.i: (DG- & <noun-sub-p> & <noun-main-p>) or (DD- & <adv-of>);
+
+plenty: ({@M+} & (<noun-main-x> or <noun-and-x>)) or <adv-of> or [MVa-];
+
+other:
+  Dmu+ or 
+  ({ND-} & {DD-} & Dmc+) or 
+  (DD- & (Ds+ or DD+ or <noun-main-s> or <noun-and-s>));
+
+one_other every_other: <noun-main-s> or <noun-and-s> or Ds+; 
+any_other no_other: <noun-main-s> or <noun-and-s> or D+;
 all_other: Dm+;
 most_other: Dmc+;
 quite_a quite_an one_such not_every: Ds+;
 some_other no_such: D+;
 every.d: {EN-} & (Ds+ or DTn+ or [[NIc+]]); 
 
-another: Ds+ or NIc+ or (<noun-sub-s> & <noun-main-s>) or YS+;
-one_another: (<noun-sub-s> & <noun-main-s>) or YS+;
-each: Ds+ or (<noun-sub-s> & <noun-main-s>) or DTn+
+another: Ds+ or NIc+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or YS+;
+one_another: (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or YS+;
+each: Ds+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or DTn+
 or E+ or MVa-;
 
 no.misc-d: ({EN-} & D+) or EC+;
 
-a_little: Dmu+ or (<noun-sub-s> & <noun-main-s>)
-or EA+ or EC+ or EE+ or MVa-;
-a_great_deal: EC+ or MVa- or (<noun-sub-s> & <noun-main-s>);
+a_little: Dmu+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or
+  EA+ or EC+ or EE+ or MVa-;
+a_great_deal: EC+ or MVa- or (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
 many_more a_few_more a_couple_more plenty_more a_lot_more:
-Dmcc+ or (<noun-sub-p> & <noun-main-p>);
-some_more: MVa- or Dm+ or (<noun-sub-x> & <noun-main-x>);
+Dmcc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
+some_more: MVa- or Dm+ or (<noun-sub-x> & <noun-main-x>) or <noun-and-x>;
 one_more:
-Ds+ or (<noun-sub-s> & <noun-main-s>);
+  Ds+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
 
 not_many: Dmc+ or (<noun-sub-p> & (Sp+ & <CLAUSE>));
 not_all not_everything: Dm+ or (((ALx+ & Jp+) or <noun-sub-x>)
 & (S+ & <CLAUSE>));
 not_one: Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
 
-enough.n: ({OF+} & <noun-main-s>);
+enough.n: ({OF+} & <noun-main-s>) or <noun-and-s>;
 enough.r: EF- or MVa-;
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
 enough.ij: Wi- & {Pg+};
-not_enough: ({OF+} & <noun-main-s>) or Dm+;
+not_enough: ({OF+} & <noun-main-s>) or <noun-and-s> or Dm+;
 
 % NUMERICAL EXPRESSIONS
 % Numeric ranges, e.g. "15 to 20". The "to" (or hyphen) acts as a
@@ -4760,7 +4800,7 @@ or.j: CJ+;
 % that are tied to previous sentences (i.e. to the left-wall).
 % Another possibility: (Rnx+ & <CLAUSE-E>) "Because I say so"
 but.ij and.ij or.ij not.ij also.ij but_not and_not: 
-[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)];
+[[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)]];
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
 % and used as a conjunction in proper names:
