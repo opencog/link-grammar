@@ -186,11 +186,13 @@
 % because it should then connect to the "and", not the right noun.
 % but then: "neither heat nor gloom of night shall stop me"
 % Looks like only a proper semantic decision can determine the correct parse here ... 
-<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
-<noun-and-p>: ({@M+} & SJlp+) or ({[@M+]} & SJrp-);
-<noun-and-u>: ({@M+} & SJlu+) or ({[@M+]} & SJru-);
-<noun-and-p,u>: <noun-and-p> or <noun-and-u>;
-<noun-and-x>: ({@M+} & SJl+) or ({[@M+]} & SJr-);
+<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-) or (Dn- & SJn+); 
+<noun-and-p>: ({@M+} & SJlp+) or ({[@M+]} & SJrp-) or (Dn- & SJn+);
+<noun-and-u>: ({@M+} & SJlu+) or ({[@M+]} & SJru-) or (Dn- & SJn+);
+<noun-and-x>: ({@M+} & SJl+) or ({[@M+]} & SJr-) or (Dn- & SJn+);
+<noun-and-p,u>:
+  ({@M+} & SJlp+) or ({[@M+]} & SJrp-) or 
+  ({@M+} & SJlu+) or ({[@M+]} & SJru-) or (Dn- & SJn+);
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -259,8 +261,7 @@ PL-CAPITALIZED-WORDS:
       (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or 
         YS+ or YP+)) or 
     AN+ or 
-    G+ or 
-    (Dn- & SJn+));
+    G+);
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
@@ -470,8 +471,7 @@ HYPHENATED-WORDS.n:
     (AN+ or 
     ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
       ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or 
-      <noun-and-s> or
-      (Dn- & SJn+))) or
+      <noun-and-s>)) or
     SJrs- or
     (YS+ & Ds-) or 
     (GN+ & (DD- or [()])) or 
@@ -501,7 +501,6 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 		<noun-and-s>)) or
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
 
-% (Dn- & SJn+): "Neither rain nor snow"
 % XXX should probably eliminate <noun-and-p,u> and replace by <noun-and-u>
 % but this requires other spread-out changes
 <mass-noun>:
@@ -510,8 +509,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
     (AN+ or 
     ({NM+ or Dmu-} & 
       ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
-      <noun-and-p,u> or
-      (Dn- & SJn+))) or
+      <noun-and-p,u>)) or
     (YS+ & {Dmu-}) or 
     (GN+ & (DD- or [()])) or 
     Up-));
