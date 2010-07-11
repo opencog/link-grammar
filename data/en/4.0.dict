@@ -581,9 +581,11 @@ carte_blanche:
     (GN+ & (DD- or [()])))) or
   AN+;
 
-/en/words/words.n.t: % title nouns (president, chairman)
-<noun-modifiers> & {@M+} & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or TI-);
+% title nouns (president, chairman)
 % auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t 
+/en/words/words.n.t:
+  <noun-modifiers> &
+    {@M+} & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or TI-);
 
 % Almost identical to below.
 majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
@@ -930,8 +932,11 @@ times.n:
 %PRONOUNS
 
 she he: 
-  {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+);
-me him them us: J- or Ox-;
+  {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+ or (Dn- & SJn+));
+
+% The E- is for "It's either us or them" ... not ideal, but OK
+me him them us: J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
+
 myself yourself himself herself itself themselves
 ourselves yourselves: J- or O- or E+ or MVa-;
 each_other: J- or O- or YS+;
@@ -940,11 +945,11 @@ her.p: J- or Ox-;
 its my your their our: ({AL-} & {@L+} & (D+ or DD+)) or DP+;
 his: DP+ or ({AL-} & {@L+} & (D+ or DD+)) or
 [<noun-main-x>];
-you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+;
+you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 it: J- or Ox- or ((Ss+ or SFsi+) & <CLAUSE>) or SIs- or 
-SFIsi- or OXi- or Vp-;
-they: {[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-);
-we: (Sp+ & <CLAUSE>) or SIp-;
+SFIsi- or OXi- or Vp- or SJls+ or SJrs- or (Dn- & SJn+);
+they: ({[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-)) or SJlp+ or SJrp- or (Dn- & SJn+);
+we: (Sp+ & <CLAUSE>) or SIp- or SJlp+ or SJrp- or (Dn- & SJn+);
 
 % XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make I've work?
 % We use <marker-entity> here to prevent lower-case magnling by
@@ -983,20 +988,20 @@ it_all them_all us_all you_all: Ox- or J-;
 ’ll 'll: S- & I+;
 
 something someone somebody:
-{EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or YS+);
+{EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
 nothing no_one nobody:
 {EN-} & {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} &
-<noun-main-s>) or YS+);
+<noun-main-s>) or <noun-and-s> or YS+);
 everything everyone anyone everybody anybody anything: 
 {EN-} & {EL+} & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} &
-<noun-main-s>) or YS+);
+<noun-main-s>) or <noun-and-s> or YS+);
 else: EL-;
 
 others: 
   {Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
 
 mine.p yours theirs hers ours: 
-  <noun-main-x> or SJl+ or SJr-;
+  <noun-main-x> or SJl+ or SJr- or (Dn- & SJn+);
 
 
 % DETERMINERS
@@ -1007,7 +1012,7 @@ those:
   (<noun-sub-p> & (<noun-main-p> or RJrr+ or RJlr-)) or
   <noun-and-p>;
 
-this.p: <noun-main-h>;
+this.p: <noun-main-h> or <noun-and-s>;
 this.d: ({AL-} & D*u+) or DTn+;
 these: <noun-main-p> or <noun-and-p> or ({AL-} & (Dmc+ or DD+));
 
@@ -1026,16 +1031,28 @@ half: {EN-} &
     [(({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+)) & <noun-main-x>]);
 
 % "How many years" -- prefer TQ+ over Dmc+ 
-many: (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+)) or (AM- & (Dmcy+ or Oy- or Jy-)) or 
-({EE-} & (ND+ or NIn+)) or ({DD-} & {EAx-} & Dmc+) or ((({EAx-} & {DD-}) or H-) & 
-<noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
-all.a: ({EN-} & (E+ or Dm+ or NIc+ or 
-({@M+ or (ALx+ & Jp+) or (R+ & B+) or EL+} & 
-(<noun-main2-x> or (S**t+ & <CLAUSE>) or SI**t-)))) or DTa+;
-all_that: EA+ or EE+ or (<noun-sub-s>
- & <noun-main-s>);
-all_this: <noun-sub-s> & <noun-main-s>;
-all_those all_these: <noun-sub-p> & <noun-main-p>;
+many:
+  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+)) or
+  (AM- & (Dmcy+ or Oy- or Jy-)) or 
+  ({EE-} & (ND+ or NIn+)) or
+  ({DD-} & {EAx-} & Dmc+) or
+  ((({EAx-} & {DD-}) or H-) & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
+
+all.a: 
+  ({EN-} & 
+    (E+ or 
+    Dm+ or 
+    NIc+ or 
+    ({@M+ or (ALx+ & Jp+) or (R+ & B+) or EL+} & 
+      (<noun-main2-x> or
+      (S**t+ & <CLAUSE>) or
+      SI**t-)) or
+    <noun-and-x>)) or
+  DTa+;
+
+all_that: EA+ or EE+ or (<noun-sub-s> & <noun-main-s>);
+all_this: (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
+all_those all_these: (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
 
 one: 
   NA+ or 
@@ -4894,8 +4911,7 @@ not_only: Db+;
 not_only: I- & I+ & XJ*i+;
 but.j-r: {Xd-} & XJ*i- & I+;
 
-either.r: (Ds+ or E+ or ({OF+} & <noun-main-x>)) or ({Xd+ & Xc-} 
-& MVa-);
+either.r: Ds+ or E+ or ({OF+} & <noun-main-x>) or ({Xd+ & Xc-} & MVa-);
 neither.r: Ds+ or E+ or ({OF+} & <noun-main-x>);
 nor.r: ((Xd- & CC-) or Wd-) & Qd+;
 for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
@@ -4963,7 +4979,7 @@ n't n’t: N- or EB-;
 
 %ADJECTIVES
 
-% Common disjuncts shred by virtuall all adjectives.
+% Common disjuncts shared by virtually all adjectives.
 <adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
   (AJl- & {@MV+}) or
   ({@MV+} & AJr+) or
