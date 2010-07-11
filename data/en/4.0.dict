@@ -244,10 +244,15 @@ CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
 % e.g. Cornwallis ... and some of these can take a singular determiner:
 % "a Starbucks"
 PL-CAPITALIZED-WORDS: 
-({NM+} & {G-} & {[MG+]} & (({DG- or [[GN-]] or 
-[[{@A-} & ({Dmc-} or {Ds-})]] } & 
-([<noun-sub-x> & (JG- or <noun-main-x>)] or YS+ or YP+)) or AN+ or G+)) or
-<directive-opener>;
+  ({NM+} & {G-} & {[MG+]} &
+    (({DG- or [[GN-]] or [[{@A-} & ({Dmc-} or {Ds-})]] } &
+      ([<noun-sub-x> & (JG- or <noun-main-x>)] or
+      <noun-and-x> or
+      YS+ or
+      YP+)) or
+    AN+ or
+    G+)) or
+  <directive-opener>;
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
@@ -4976,6 +4981,8 @@ not_only: Db+;
 not_only: I- & I+ & XJ*i+;
 but.j-r: {Xd-} & XJ*i- & I+;
 
+% XXX to-do: should have special linkage for either... or ....
+% instead of dependeingg on the E+ link. See neither..nor... for examples.
 either.r: Ds+ or E+ or ({OF+} & <noun-main-x>) or ({Xd+ & Xc-} & MVa-);
 neither.r: Ds+ or E+ or ({OF+} & <noun-main-x>);
 nor.r: ((Xd- & CC-) or Wd-) & Qd+;
@@ -5782,6 +5789,7 @@ please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+};
 etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
 so_on the_like vice_versa v.v.: 
   (<noun-sub-x> & <noun-main-x>) or 
+  <noun-and-x> or
   ((<verb-i> or <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or 
   M- or MV-;
 
@@ -5843,7 +5851,7 @@ or Xe-));
 
 % The percent sign following a number
 % Also -- see above, for handling of 12ft. 12in. not just 12%
-"%": (ND- & {DD-} & <noun-sub-x> & (<noun-main-x>)) or (ND- & (OD- or AN+));
+"%": (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
 
 % See also /en/words/currency for curency names that follow a number.
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c 
@@ -5929,18 +5937,32 @@ foo: F+;
 % ING-WORDS.g: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
 % or ({@E-} & A+) or <verb-ge>;
 
-ING-WORDS.g: [((<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
-or ({@E- or EA-}  & A+) or <verb-ge>)]  or 
-(((( <noun-modifiers>) ) & (({D*u-} & <noun-sub-s> & 
-(<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or  AN+ or {AN-});
+ING-WORDS.g: 
+  [(<verb-pg> & <vc-tr,intr>)] or
+  [(<vc-tr,intr> & <verb-ge>)] or 
+  [({@E- or EA-}  & A+)] or 
+  [<verb-ge>] or 
+  ((<noun-modifiers> & 
+    (({D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+    <noun-and-p,u> or
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])) or
+    Us-)) or
+  AN+ or
+  {AN-});
 
 ED-WORDS.v-d: (<verb-sp,pp> & <vc-tr,intr>) or <verb-pv> or ({@E-} & A+);
 
 S-WORDS.v: <verb-s> & <vc-tr,intr>;
 
-S-WORDS.n: (<noun-modifiers> & (({NM+ or Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or Bpm+)) or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or [[AN+]];
+S-WORDS.n:
+  (<noun-modifiers> & 
+    (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
+    ({NM+ or Dmc-} & <noun-and-p>) or
+    (YP+ & {Dmc-}) or
+    (GN+ & (DD- or [()])) or
+    Up-)) or
+  [[AN+]];
 
 LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
 {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
@@ -5953,14 +5975,22 @@ LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 MC-NOUN-WORDS.n: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
-(<noun-modifiers> & (({NM+ or D*u-} & <noun-sub-s> & 
-(<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+  (<noun-modifiers> & 
+    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+    ({NM+ or D*u-} & <noun-and-p,u>) or
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])) or
+    Us-)) or
+  AN+;
 
 C-NOUN-WORDS.n: % guessed nouns that are countable (-on, -or)
-(<noun-modifiers> & 
-(((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or Bsm+))
-or (YS+ & Ds-) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+  (<noun-modifiers> & 
+    (((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or Bsm+)) or
+    ({NM+ or Ds-} & <noun-and-s>) or
+    (YS+ & Ds-) or
+    (GN+ & (DD- or [()])) or
+    Us-)) or
+  AN+;
 
 ADJ-WORDS.a: % guessed adjectives (-ous, -ar, -ic)
  {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
@@ -5970,26 +6000,38 @@ ADJ-WORDS.a: % guessed adjectives (-ous, -ar, -ic)
 FOLD-WORDS:
 ({EN-} & (MVp- or EC+ or A+)) or Em+;
 
-% latin (postposed) adjectives considered as singular nouns 
+% latin (postposed) adjectives considered as mass nouns 
 % in the current version
 LATIN-ADJ-WORDS.a:
-(<noun-modifiers> & (({NM+ or D*u-} & <noun-sub-s> & 
-(<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+  (<noun-modifiers> &
+    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+    ({NM+ or D*u-} & <noun-main-p,u>) or
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])) or
+    Us-)) or
+  AN+;
 
 % latin (postposed) adjectives or latin plural noun always considered
 % as nouns in the current version
 LATIN-ADJ-P-NOUN-WORDS:
-(<noun-modifiers> & (({NM+ or Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or Bpm+))
-or (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-)) or AN+;
+  (<noun-modifiers> & 
+    (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
+    ({NM+ or Dmc-} & <noun-and-p>) or
+    (YS+ & {Dmc-}) or
+    (GN+ & (DD- or [()])) or
+    Up-)) or
+  AN+;
 
 % latin (postposed) adjectives or latin singular noun always
 % considered as nouns in the current version  
 LATIN-ADJ-S-NOUN-WORDS:
-(<noun-modifiers> & (({NM+ or D*u-} & <noun-sub-s> & 
-(<noun-main-m> or Bsm+)) or 
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-)) or AN+;
+  (<noun-modifiers> & 
+    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+    ({NM+ or D*u-} & <noun-and-p,u>) or
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])) or
+    Us-)) or
+  AN+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -5998,9 +6040,11 @@ UNKNOWN-WORD.n:
   <noun-modifiers> & 
     (AN+ or 
     ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
+    ({NM+ or D*u-} & <noun-and-p,u>) or
     (YS+ & {D*u-}) or 
     (GN+ & (DD- or [()])) or 
     U-);
+
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};
 UNKNOWN-WORD.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
@@ -6011,6 +6055,7 @@ LEFT-WALL: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+) &
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
 
+% XXX ANDABLE-CONNECTORS is now deprecated
 ANDABLE-CONNECTORS:   % these are the connectors that can be combined by
                       % conjunctions. They are listed alphabetically.
       
