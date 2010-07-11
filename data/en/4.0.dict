@@ -190,7 +190,7 @@
 <noun-and-p>: ({@M+} & SJlp+) or ({[@M+]} & SJrp-);
 <noun-and-u>: ({@M+} & SJlu+) or ({[@M+]} & SJru-);
 <noun-and-p,u>: <noun-and-p> or <noun-and-u>;
-<noun-and-x>: <noun-and-p,u> or <noun-and-s>;
+<noun-and-x>: ({@M+} & SJl+) or ({[@M+]} & SJr-);
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -436,13 +436,22 @@ PE.y P.E..y Pharm.D..y
 PhD.y Ph.D.y Ph.D..y 
 RA.y R.A..y RIBA.y R.I.B.A..y RN.y R.N..y
 USMC.y USN.y: 
-{Xi+} & {Xd- & {Xc+}} & G- & {[MG+]} & 
-(({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
+  {Xi+} & {Xd- & {Xc+}} & G- & {[MG+]} & 
+    (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+      (({@MX+} & (JG- or <noun-main-s>)) or 
+      <noun-and-s> or
+      YS+ or 
+      YP+)) or 
+    AN+ or 
+    G+);
 
 HYPHENATED-WORDS.n: 
-[[({@AN-} & {@A-} & (({NM+ or D-} & <noun-sub-x> & (<noun-main-x> or <rel-clause-x>)) or
- U-)) or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
+  [[({@AN-} & {@A-} & 
+    (({NM+ or D-} & 
+      ((<noun-sub-x> & (<noun-main-x> or <rel-clause-x>)) or
+      <noun-and-x>)) or
+     U-)) or 
+  ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 % the generic category for strings containing a hyphen
 
 % NOUNS --------------------------------------------------------
@@ -518,20 +527,26 @@ tom.n-u: [<mass-noun>];
 % allow these to take AN+ links.  We need these as nouns, so as to 
 % parse 'she prefers red'. However, assign a cost, so that 'her shoes
 % are red' gets red.a perfered over red.n.
+%
+% Doesn't seem to need a noun-and-x to make this work ... 
 auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n 
 tawny.n ultramarine.n yellow.n:
-<marker-common-entity> or 
-({@AN-} & {@A- & {[[@AN-]]}} & 
-(({Dmu-} & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>])) or
-(YS+ & {Dmu-}) or (GN+ & (DD- or [()])) or Up-));
+  <marker-common-entity> or 
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (({Dmu-} & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>])) or
+    (YS+ & {Dmu-}) or 
+    (GN+ & (DD- or [()])) or 
+    Up-));
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
 /en/words/entities.us-states.sing:
-<marker-entity> or
-({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({MG+} & {@MX+} & (JG- or <noun-main-s>)) or G+ or 
-({[[MG+]]} & (AN+ or YS+ or YP+)))) or (Xc+ & Xd- & G- & AN+);
+  <marker-entity> or
+  ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+    (({MG+} & {@MX+} & (JG- or <noun-main-s> or <noun-and-s>)) or
+    G+ or 
+    ({[[MG+]]} & (AN+ or YS+ or YP+)))) or 
+  (Xc+ & Xd- & G- & AN+);
 
 % SINGULAR ENTITIES FOR ENTITY EXTRACTION 
 % This must appear after other categories so it doesnt interfere with those.
@@ -542,21 +557,29 @@ tawny.n ultramarine.n yellow.n:
 aunt.f auntie.f brother.m dad.m daddy.m father.m grandmother.f granny.f 
 granddad.m grandfather.m grandpa.f grandpop.m mom.f mommy.f mother.f 
 pop.m papa.m poppy.m pops.m sis.f sister.f uncle.m:
-<entity-singular>;
+  <entity-singular>;
 
 alter_ego au_pair mise_en_scene faux_pas non_sequitur fait_accompli
 modus_vivendi head_of_state tour_de_force:
- ({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & <noun-sub-s> & 
-(<noun-main-s> or <rel-clause-s>))
-or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or 
+    ({Ds-} & <noun-and-s>) or
+    Us- or 
+    (YS+ & Ds-) or 
+    (GN+ & (DD- or [()])))) or 
+  AN+;
 
 kung_fu joie_de_vivre op_art noblesse_oblige lese_majesty a_must
 time_of_day time_of_year force_majeure top_dollar year_end skim_milk
 breach_of_contract sleight_of_hand power_of_attorney word_of_mouth
 carte_blanche: 
-({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & <noun-sub-s> & 
-(<noun-main-m> or <rel-clause-s>)) or
-Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (({Dmu-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
+    ({Dmu-} & <noun-and-u>) or
+    Um- or 
+    (YS+ & {Dmu-}) or 
+    (GN+ & (DD- or [()])))) or
+  AN+;
 
 /en/words/words.n.t: % title nouns (president, chairman)
 {@AN-} & {@A- & {[[@AN-]]}} & {@M+} & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or TI-);
@@ -564,32 +587,53 @@ Um- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;
 
 % Almost identical to below.
 majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
-({@AN-} & {@A- & {[[@AN-]]}} & (
-(Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+  ({@AN-} & {@A- & {[[@AN-]]}} &
+    ((Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+    ({Ds-} & <noun-and-x>) or
+    Us- or 
+    (YS+ & Ds-) or 
+    (GN+ & (DD- or [()])))) or
+  AN+;
 
 % Almost identical to above.
 number.n: 
-({@AN-} & {@A- & {[[@AN-]]}} & (
-(Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+  ({@AN-} & {@A- & {[[@AN-]]}} &
+    ((Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+    ({Ds-} & {NM+} & <noun-and-x>) or
+    Us- or 
+    (YS+ & Ds-) or 
+    (GN+ & (DD- or [()])))) or
+  AN+;
 
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
 
-kind_of: ({{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
-(<noun-main-s> or <rel-clause-s>)) or Us-)) or EA+ or EE+;
+kind_of: 
+  ({{@AN-} & @A-} & U+ & 
+    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or 
+    ({Ds-} & <noun-and-s>) or
+    Us-)) or
+  EA+ or
+  EE+;
+
 type_of sort_of breed_of:
- {{@AN-} & @A-} & U+ & ((Ds- & <noun-sub-s> &
-(<noun-main-s> or <rel-clause-s>)) or Us-);
+  {{@AN-} & @A-} & U+ & 
+    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
+    ({Ds-} & <noun-and-s>) or
+    Us-);
+
 kinds_of types_of sorts_of breeds_of:
- {{@AN-} & @A-} & U+ & (({Dmc-} & <noun-sub-p> & 
-(<noun-main-p> or <rel-clause-p>)) or Up-);
+  {{@AN-} & @A-} & U+ & 
+    (({Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+    ({Dmc-} & <noun-and-p>) or
+    Up-);
 
 percent.u: 
-({@AN-} & {@A- & {[[@AN-]]}} & ((ND- & {DD-} & <noun-sub-x> & 
-(<noun-main-x> or B*x+)) or
-U-)) or (ND- & (OD- or AN+ or YS+));
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    ((ND- & {DD-} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
+    (ND- & {DD-} & <noun-and-x>) or
+    U-)) or
+  (ND- & (OD- or AN+ or YS+));
 
 % This set of disjuncts should probably be split up and refined.
 % "shame.n", "crux.n" are here because they need the Ss*t connector
@@ -604,10 +648,17 @@ statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
 message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n inkling.n supposition.n
 finding.n amount.n answer.n crux.n shame.n:
-({@AN-} & {@A- & {[[@AN-]]}} & ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & 
-{[[@M+]]}} & {@MXs+} 
-& (<noun-main2-s> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>))
-or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & 
+      (<noun-main2-s> or 
+      (Ss*t+ & <CLAUSE>) or 
+      SIs*t- or 
+      <rel-clause-s>)) or 
+    ({Ds-} & <noun-and-s>) or
+    Us- or 
+    (YS+ & Ds-) or 
+    (GN+ & (DD- or [()])))) or
+  AN+;
 
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n 
 disclosure.n fear.n acknowledgment.n acknowledgement.n principle.n
@@ -617,16 +668,30 @@ contention.n thought.n myth.n discovery.n rumor.n probability.n fact.n
 explanation.n feeling.n comment.n expectation.n perception.n sense.n
 realization.n view.n insistence.n consensus.n notification.n rule.n
 danger.n warning.n suggestion.n:
-({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) 
-& {[[@M+]]}} & {@MXs+} & 
-(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>))
- or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;  
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & 
+      (<noun-main2-m> or 
+      (Ss*t+ & <CLAUSE>) or 
+      SIs*t- or 
+      <rel-clause-s>)) or 
+    ({D*u-} & <noun-and-u>) or
+    Us- or 
+    (YS+ & {D*u-}) or 
+    (GN+ & (DD- or [()])))) or
+  AN+;  
 
 evidence.n reasoning.n likelihood:
-({@AN-} & {@A- & {[[@AN-]]}} & (({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) 
-& {[[@M+]]}} & {@MXs+} & 
-(<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or <rel-clause-s>)) 
- or Up- or (YS+ & {Dmu-}) or (GN+ & (DD- or [()])))) or AN+;  
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & 
+      (<noun-main2-m> or
+      (Ss*t+ & <CLAUSE>) or 
+      SIs*t- or 
+      <rel-clause-s>)) or 
+    ({Dmu-} & <noun-and-u>) or
+    Up- or 
+    (YS+ & {Dmu-}) or
+    (GN+ & (DD- or [()])))) or
+  AN+;
 
 ideas.n opinions.n statements.n beliefs.n facts.n arguments.n
 principles.n theories.n philosophies.n signs.n impressions.n
@@ -644,10 +709,17 @@ provisos.n truisms.n fallacies.n assurances.n speculations.n
 propositions.n prospects.n presuppositions.n inklings.n suppositions.n
 findings.n amounts.n rules.n dangers.n warnings.n indications.n
 answers.n suggestions.n:
-({@AN-} & {@A- & {[[@AN-]]}} & (({Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & 
-{[[@M+]]}} & {@MXp+} &
-(<noun-main2-p> or (Sp*t+ & <CLAUSE>) or SIp*t- or <rel-clause-p>))
-or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]];
+  ({@AN-} & {@A- & {[[@AN-]]}} & 
+    (({Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+      (<noun-main2-p> or 
+      (Sp*t+ & <CLAUSE>) or 
+      SIp*t- or 
+      <rel-clause-p>)) or
+    ({Dmc-} & <noun-and-p>) or
+    Up- or
+    (YP+ & {Dmc-}) or
+    (GN+ & (DD- or [()])))) or
+  [[AN+]];
 
 request.n requirement.n condition.n recommendation.n provision.n stipulation.n:
 ({@AN-} & {@A- & {[[@AN-]]}} & (({D*u-} & {@M+} & {(TH+ or TS+ or (R+ & Bs+)) 
