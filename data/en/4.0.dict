@@ -190,6 +190,7 @@
 <noun-and-p>: ({@M+} & SJlp+) or ({[@M+]} & SJrp-);
 <noun-and-u>: ({@M+} & SJlu+) or ({[@M+]} & SJru-);
 <noun-and-p,u>: <noun-and-p> or <noun-and-u>;
+<noun-and-x>: <noun-and-p,u> or <noun-and-s>;
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -264,8 +265,9 @@ PL-CAPITALIZED-WORDS:
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
 <entity-entire>:
-(({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & <noun-main-s>) or YS+)) or AN+);
+  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+    (({@MX+} & <noun-main-s>) or <noun-and-s> or YS+)) or 
+  AN+;
 
 personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
 personID10 personID11 personID12 personID13 personID14 personID15 personID16 personID17 personID18 personID19
@@ -300,7 +302,7 @@ locationID60: <marker-entity> or <entity-entire>;
 /en/words/entities.given-bisex.sing
 /en/words/entities.given-female.sing
 /en/words/entities.given-male.sing:
-<marker-entity> or <given-names> or <directive-opener>;
+  <marker-entity> or <given-names> or <directive-opener>;
 
 % Special handling for certain given names. These are words that have a
 % lower-case analog in the dictionary, and are also used in upper-case
@@ -308,15 +310,16 @@ locationID60: <marker-entity> or <entity-entire>;
 % this use of "City" would prevent it from being recognized in other
 % (non-idiomatic) proper name constructions, e.g. New York City.
 /en/words/entities.organizations.sing:
-<marker-entity> or <entity-singular>;
+  <marker-entity> or <entity-singular>;
 
 /en/words/entities.locations.sing: 
-<marker-entity> or <entity-singular>;
+  <marker-entity> or <entity-singular>;
 
 %
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
-<entity-id>: (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & <noun-main-x>) or YS+ or YP+)) or AN+); 
+<entity-id>: 
+  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+)) or AN+; 
 
 entityID0 entityID1 entityID2 entityID3 entityID4 entityID5 entityID6 entityID7 entityID8 entityID9
 entityID10 entityID11 entityID12 entityID13 entityID14 entityID15 entityID16 entityID17 entityID18 entityID19
@@ -333,9 +336,13 @@ entityID60: <marker-entity> or <entity-id>;
 % or mass. If they can be more than one, then they are listed separately
 % in each class e.g. words.n.1 and/or words.n.2 and/or words.n.3, etc.
 <noun-mass-count>:  
-{@AN-} & {@A- & {[[@AN-]]}} & 
-(({NM+} & AN+) or ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
-(YS+ & {D*u-}) or (GN+ & (DD- or [()])) or Us-);
+  {@AN-} & {@A- & {[[@AN-]]}} & 
+    (({NM+} & AN+) or 
+    ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
+    <noun-and-u> or
+    (YS+ & {D*u-}) or 
+    (GN+ & (DD- or [()])) or 
+    Us-);
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
@@ -402,9 +409,14 @@ Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y 
 Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y: 
-G- & {Xi+} & {[MG+]} &
-(({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+);
+  G- & {Xi+} & {[MG+]} &
+    (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+      (({@MX+} & (JG- or <noun-main-s>)) or 
+      <noun-and-s> or
+      YS+ or 
+      YP+)) or 
+    AN+ or
+    G+);
 
 
 % e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D. 
@@ -789,8 +801,11 @@ everything everyone anyone everybody anybody anything:
 <noun-main-s>) or YS+);
 else: EL-;
 
-others: {Dmc-} & <noun-sub-p> & <noun-main-p>;
-mine.p yours theirs hers ours: <noun-main-x>;
+others: 
+  {Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
+
+mine.p yours theirs hers ours: 
+  <noun-main-x> or SJl+ or SJr-;
 
 
 % DETERMINERS
@@ -798,12 +813,19 @@ mine.p yours theirs hers ours: <noun-main-x>;
 the: (({AL-} & {@L+} & (D+ or DD+)) or DG+ or (TR- & U+));
 those: 
   ({AL-} & (Dmc+ or DD+)) or 
-  (<noun-sub-p> & (<noun-main-p> or RJrr+ or RJlr-));
+  (<noun-sub-p> & (<noun-main-p> or RJrr+ or RJlr-)) or
+  <noun-and-p>;
 
 this.p: <noun-main-h>;
 this.d: ({AL-} & D*u+) or DTn+;
-these: <noun-main-p> or ({AL-} & (Dmc+ or DD+));
-both.d: Dmc+ or E+ or ({M+ or (ALx+ & Jp+)} & <noun-main-p>);
+these: <noun-main-p> or <noun-and-p> or ({AL-} & (Dmc+ or DD+));
+
+both.d:
+  Dmc+ or 
+  E+ or 
+  ({M+ or (ALx+ & Jp+)} & <noun-main-p>) or
+  <noun-and-p>;
+
 both.a: Paf- or AJl-;
 
 % half: prefer NJ+ over noun-main-x, because half is almost surely
@@ -830,17 +852,28 @@ one:
   NN+ or 
   ({EN-} & NIfn+) or
   ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
-    (YS+ or (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)))))) or 
+    (YS+ or 
+    (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
+    <noun-and-s>)))) or 
   NIm+ or 
   NSn+ or
   (NA- & ND+) or 
   DTi+ or 
   (NA- & Xd- & TY- & Xc+);
 
-ones: {@A- & {[[@AN-]]}} & {Dmc-} & 
-(YP+ or (<noun-sub-p> & <noun-main-p>));
-any: ({EN-} & (D+ or DD+ or 
-(<noun-sub-x> & <noun-main-x>))) or EC+;
+ones: 
+  {@A- & {[[@AN-]]}} & {Dmc-} & 
+    (YP+ or 
+    (<noun-sub-p> & <noun-main-p>) or
+    <noun-and-p>);
+
+any: 
+  ({EN-} & 
+    (D+ or 
+    DD+ or 
+    (<noun-sub-x> & <noun-main-x>) or
+    <noun-and-x>)) or 
+  EC+;
 
 % XXX why doesn't this clash with a.eq ??
 a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+ or NIm+;
@@ -1204,6 +1237,8 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 (DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+ or Jp-;
 
 % Miscellaneous adjectival usage 
+% prefer G+ over A+ in general, as these ae typically parts of names.
+% XXX TODO: turn this into a regex
 1º.a 2º.a 3º.a 4º.a 5º.a 6º.a 7º.a 8º.a 9º.a
 1st.a 2nd.a 3rd.a 4th.a 5th.a 6th.a 7th.a 8th.a 9th.a
 10th.a 11th.a 12th.a 13th.a 14th.a 15th.a 16th.a 17th.a 18th.a 19th.a
@@ -1231,7 +1266,8 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
   ({Xc+ & {Xd-}} & CO+) or
   (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or 
   NR+ or 
-  A+ or
+  G+ or
+  [A+] or
   AJr+ or
   AJl-;
 
@@ -3174,11 +3210,15 @@ seen.v: (<verb-pp> & <vc-see>) or (<verb-pv> & {Pg+ or AZ+}) or
 seeing.g: (<vc-see> & <verb-ge>) or <verb-ge-d>;
 seeing.v: <verb-pg> & <vc-see>;
 
-<vc-owe>: ((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+}) or 
-([[@MV+ & O*n+]])) & {@MV+};
+<vc-owe>: 
+  ((O+ & {{[[@MV+]]} & O*n+}) or 
+  (B- & {O+}) or 
+  ([[@MV+ & O*n+]])) & {@MV+};
+
 owe.v deliver.v accord.v award.v term.v grant.v begrudge.v assign.v rename.v repay.v
 dub.v entitle.v fine.v: 
-<verb-pl,i> & <vc-owe>;
+  <verb-pl,i> & <vc-owe>;
+
 owes.v delivers.v accords.v awards.v terms.v grants.v begrudges.v assigns.v renames.v
 repays.v dubs.v entitles.v fines.v: 
  <verb-s> & <vc-owe>;
@@ -4501,6 +4541,7 @@ once.e:
   E+ or 
   EB-;
 
+% --------------------------------------------------------------------------
 % Conjunctions
 % "all large burial places, or tombs, became known as mausoleums."
 or.j: CJ+;
@@ -4574,11 +4615,12 @@ and.j-r or.j-r:
 % noun-conj-dep-s & SI-: Are a dog and a cat here?
 %
 % XXX There should be a noun-sub-u but this requires a lot of work ... 
-<noun-conj-dep-s>: ({Xd-} & SJls- & SJrs+);
-<noun-conj-dep-p>: ({Xd-} & SJlp- & SJr+) or ({Xd-} & SJls- & SJrp+);
-<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+) or 
-                   ({Xd-} & SJlp- & SJru+) or
-                   ({Xd-} & SJls- & SJru+);
+<noun-conj-dep-s>: ({Xd-} & SJls- & SJrs+ & {[[Xc+]]});
+<noun-conj-dep-p>: ({Xd-} & SJlp- & SJr+  & {[[Xc+]]}) or 
+                   ({Xd-} & SJls- & SJrp+ & {[[Xc+]]});
+<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+  & {[[Xc+]]}) or 
+                   ({Xd-} & SJlp- & SJru+ & {[[Xc+]]}) or
+                   ({Xd-} & SJls- & SJru+ & {[[Xc+]]});
 
 <noun-conj-head>: Ju- or SJl+ or AN+;
 

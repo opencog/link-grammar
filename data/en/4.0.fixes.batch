@@ -2103,6 +2103,20 @@ I heard a car nor a train
 I heard neither car nor train
 I heard neither a car nor a train
 
+% conjoined pronouns, misc nouns, other oddities
+this one and the others got broken
+hers and ours were mashed.
+yours and mine were damaged.
+let me know about this one and any others
+these ones and those over there got mashed
+these and those over there got mashed
+these both and those over there got mashed
+% XXX "these both got mashed" parses, but not correctly.
+*these both got mashed
+both of those, and this one, got mashed
+You'll find it at the corner of Gee Ave. and First St.
+You'll find it at the corner of Gee Ave. and 1st St.
+
 % relative clauses with conjoined nouns
 The dog and the cat I saw were black
 
