@@ -4515,10 +4515,19 @@ Monday Tuesday Wednesday Thursday Friday Saturday Sunday.i:
 morning.i afternoon.i night.i evening.i: TD-;
 January.i February March April.i May.i June.i July August.i September.i October
 November December: 
-((DTn- or DTie- or ({TA-} & {TY+})) & (JT- or IN- or [[<noun-main-s>]] or YS+))
- or ((DTn- or DTie-) & <prep-main-t>) or
-(TM+ & {TY+} & ((Xd- & Xc+ & TW-) or ON- or JT- or 
-[[<noun-main-s> or MVp- or Mp- or AN+]])) or AN+;
+  ((DTn- or DTie- or ({TA-} & {TY+})) &
+    (JT- or
+    IN- or
+    [[<noun-main-s>]] or
+    [<noun-and-s>] or
+    YS+)) or
+  ((DTn- or DTie-) & <prep-main-t>) or
+  (TM+ & {TY+} & 
+    ((Xd- & Xc+ & TW-) or
+    ON- or
+    JT- or 
+    [[<noun-main-s> or MVp- or Mp- or AN+]])) or
+  AN+;
 
 AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock: ND- & {@MX+} & <noun-main-s> & {TZ+} ; 
 
@@ -4575,22 +4584,38 @@ every_time: {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or
 
 week.n moment.n hour.n minute.n year.n instant.n period.n month.n 
 second.n decade.n century.n:
-{NM+} & ((<noun-modifiers> & ((Ds- & {@M+} &
-{WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
-(<noun-main-s> or <rel-clause-s>)) or 
- Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+);
+  {NM+} & ((<noun-modifiers> &
+    ((Ds- & {@M+} & {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
+      (<noun-main-s> or
+      <rel-clause-s> or
+      <noun-and-s>)) or 
+    Us- or
+    (YS+ & Ds-) or
+    (GN+ & (DD- or [()])))) or
+  AN+);
 
 day.n night.n:
-{NM+} & ((<noun-modifiers> & (({D*u-} & {@M+} &
-{WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
-(<noun-main-m> or <rel-clause-s>)) or 
- Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+);
+  {NM+} & ((<noun-modifiers> &
+    (({D*u-} & {@M+} & {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
+      (<noun-main-m> or
+      <rel-clause-s> or
+      <noun-and-x>)) or 
+    Us- or
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])))) or
+  AN+);
 
 days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
 nights.n seconds.n decades.n centuries.n:
-{NM+} & ((<noun-modifiers> & (({Dmc-} & {@M+} & {WN+ or TH+ or Ce+ or 
-(R+ & Bp+)}  & {@MXp+} & (<noun-main-p> or <rel-clause-p>)) 
-or Up- or (YP+ & {Dmc-}) or (GN+ & (DD- or [()])))) or [[AN+]]);
+  {NM+} & ((<noun-modifiers> &
+    (({Dmc-} & {@M+} & {WN+ or TH+ or Ce+ or (R+ & Bp+)}  & {@MXp+} &
+      (<noun-main-p> or
+      <rel-clause-p> or
+      <noun-and-p>)) or
+    Up- or
+    (YP+ & {Dmc-}) or
+    (GN+ & (DD- or [()])))) or
+  [[AN+]]);
 
 % XXX A major problem here is that the dict entries for miles.n, feet.n 
 % create a mass of parses that are wrong & interfere with the below.
@@ -4733,7 +4758,7 @@ that.j-c:
   (TS- & (SI*j+ or SFI**j+) & I*j+);
 that.j-d: [{AL-} & D*u+];
 that.j-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
-that.j-p: {[[M+]]} & <noun-main-h>;
+that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 
 % (Rnx+ & <CLAUSE-E>): "Because I said so"
 because: 
