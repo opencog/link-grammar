@@ -1522,10 +1522,12 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
   G+ or
   [A+] or
   AJr+ or
-  AJl-;
+  ({Ds-} & AJl-) or
+  (Dn- & AJn+);
 
 % "Next on our list..." are ordinals.
 % XXX this should be a more complete list ... FIXME ... 
+% XXX should be converted to regex...
 % Note also another list of ordinals below, used for time expressions.
 first.ord next.ord last.ord second.ord third.ord fourth.ord fifth.ord 
 sixth.ord seventh.ord eighth.ord ninth.ord tenth.ord eleventh.ord 
@@ -4848,11 +4850,11 @@ and.j-g: [[G- & G+]];
 % MVa is given a cost, so that Pa is used, if possible.
 % (In general, we want to never use MVa if Pa is possible... )
 and.j-a but.j-a yet.j-a: ({Xd-} & AJr- & {EB+} & AJl+) & (A+ or Pa- or [MVa-] or AJl-);
-or.j-a: ({Xd-} & AJr- & AJl+) & (Pa- or [MVa-] or AJl-);
+or.j-a: ({Xd-} & AJr- & AJl+) & (A+ or Pa- or [MVa-] or AJl-);
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
 % "neither" will be used together with "nor".
-nor.j-a: AJn- & AJ+ & (Pa- or [MVa-]);
+nor.j-a: AJn- & AJ+ & (A+ or Pa- or [MVa-]);
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
@@ -5378,9 +5380,10 @@ significantly substantially: ({EE- or EF+} &
 % comparative adjectives
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a 
 <comp-adj>:
-({ECa-} & (((Pam- or Mam- or AFm+) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+)))
- or 
-(DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  ({ECa-} & 
+    (((Pam- or Mam- or AFm+) & {@MV+}) or 
+    ({[[@Ec-]]} & {Xc+} & Am+))) or 
+  (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
 
@@ -5433,8 +5436,8 @@ nothing_but: Vd- & I+;
 % superlative adjectives
 % angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a 
 <superlatives>: 
-({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
-({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
+  ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
 /en/words/words.adj.3: <superlatives>;
 favorite.a favourite.a: <superlatives> or 
