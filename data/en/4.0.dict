@@ -4906,7 +4906,9 @@ and.j-r or.j-r:
                    ({Xd-} & SJlp- & SJru+ & {[[Xc+]]}) or
                    ({Xd-} & SJls- & SJru+ & {[[Xc+]]});
 
-<noun-conj-head>: Ju- or SJl+ or AN+;
+% Give AN+ a cost, because in general, we don't want to conjoind nouns,
+% and then use the resulting phrase to modify another noun ...
+<noun-conj-head>: Ju- or SJl+ or [[AN+]];
 
 and.j-n but_not:
   (<noun-conj-dep-s> & <noun-sub-s> & 
@@ -5833,7 +5835,9 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 
 % comma, as a conjunction -- "They taste bitter, not sweet"
 % Give MVa a cost, so that Pa is used preferentially, if possible.
-<comma-adj-conjunction>: (AJr- & EBx+ & AJl+) & (Pa- or [MVa-]);
+<comma-adj-conjunction>: 
+  ((AJr- & EBx+ & AJl+) & (Pa- or [[MVa-]])) or
+  (AJr- & AJl+ & AJr+);
 
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
