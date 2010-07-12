@@ -4850,6 +4850,10 @@ and.j-g: [[G- & G+]];
 and.j-a but.j-a yet.j-a: ({Xd-} & AJr- & {EB+} & AJl+) & (A+ or Pa- or [MVa-] or AJl-);
 or.j-a: ({Xd-} & AJr- & AJl+) & (Pa- or [MVa-] or AJl-);
 
+% The SJn, Dn links are propagated through the linkage, guaranteeing that
+% "neither" will be used together with "nor".
+nor.j-a: AJn- & AJ+ & (Pa- or [MVa-]);
+
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
   (({Xd-} & MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
@@ -4916,7 +4920,7 @@ or.j-n:
   (<noun-conj-dep-p> & <noun-sub-p> & 
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or <post-nominal-p>));
 
-% The SJn, Dn links are propagated through the linkage, guarenteeing that
+% The SJn, Dn links are propagated through the linkage, guaranteeing that
 % "neither" will be used together with "nor".
 nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or SJn+);
 
@@ -5052,9 +5056,11 @@ n't n’t: N- or EB-;
 %ADJECTIVES
 
 % Common disjuncts shared by virtually all adjectives.
+% Dn- & AJn+: for neither...nor constructions.
 <adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
   (AJl- & {@MV+}) or
   ({@MV+} & AJr+) or
+  (Dn- & AJn+) or
   ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-))); 
 
 % Ordinary adjectives
@@ -6005,7 +6011,7 @@ FOLD-WORDS:
 LATIN-ADJ-WORDS.a:
   (<noun-modifiers> &
     (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
-    ({NM+ or D*u-} & <noun-main-p,u>) or
+    ({NM+ or D*u-} & <noun-and-p,u>) or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])) or
     Us-)) or
