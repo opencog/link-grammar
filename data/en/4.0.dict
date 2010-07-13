@@ -80,7 +80,7 @@
 <marker-common-entity>: XXXGIVEN+;
 
 % The RJ links connect to "and"; the l,r prevent cross-linking
-<clause-conjoin>: RJlc- or RJrc+;
+<clause-conjoin>: RJrc- or RJlc+;
 
 <CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
 
@@ -1014,7 +1014,7 @@ mine.p yours theirs hers ours:
 the: (({AL-} & {@L+} & (D+ or DD+)) or DG+ or (TR- & U+));
 those: 
   ({AL-} & (Dmc+ or DD+)) or 
-  (<noun-sub-p> & (<noun-main-p> or RJrr+ or RJlr-)) or
+  (<noun-sub-p> & (<noun-main-p> or RJlr+ or RJrr-)) or
   <noun-and-p>;
 
 this.p: <noun-main-h> or <noun-and-s>;
@@ -4248,8 +4248,8 @@ between:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
 
 with: 
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJlv-)) or 
-  (Jw+ & (RJlj- or RJrj+)) or 
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-)) or 
+  (Jw+ & (RJrj- or RJlj+)) or 
   (MVp- & B-) or
   (J+ & {EBm+} & ([P+] or [[O*n+]]) & 
     ([({Xc+ & {Xd-}} & CO+)] or 
@@ -4262,7 +4262,7 @@ among:
 
 for.p: 
   ({JQ+} & (J+ or Mgp+ or TI+) & <prep-main-a>) or 
-  (J+ & (RJlj- or RJrj+)) or 
+  (J+ & (RJrj- or RJlj+)) or 
   (MVp- & B-) or 
   (MG- & JG+) or 
   (MVp- & FL+);
@@ -4809,7 +4809,7 @@ no_wonder: Wd+ & Wc-;
 while: ((Cs+ or Mgp+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) 
 or (Xd- & Xc+ & E+)));
 
-<adverb-join>: RJrv+ or RJlv-;
+<adverb-join>: RJlv+ or RJrv-;
 
 % once as adverb
 once.e: 
@@ -4877,11 +4877,11 @@ and.j-q: (QJ- & QJ+) & ((Wq- & (Q+ or PF+)) or QI-);
 % RJ*j: prep-object-relative (Mj): "the man for whom and with whom ..."
 % RJ*r: "those" relative clauses: "...: those who do and those who don't"
 and.j-r or.j-r: 
-  ((RJrv- & RJlv+) & MVr-) or
-  ((RJrt- & RJlt+) & TH-) or
-  ((RJrc- & RJlc+) & Cs-) or
-  ((RJrj- & RJlj+) & Mj- & Cs+) or
-  (({Xd-} & RJrr- & RJlr+) & J-);
+  ((RJlv- & RJrv+) & MVr-) or
+  ((RJlt- & RJrt+) & TH-) or
+  ((RJlc- & RJrc+) & Cs-) or
+  ((RJlj- & RJrj+) & Mj- & Cs+) or
+  (({Xd-} & RJlr- & RJrr+) & J-);
 
 % Conjoined nouns/noun phrases.
 % "The cost and reliability were questioned" (Spx+)
