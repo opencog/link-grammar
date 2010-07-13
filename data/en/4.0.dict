@@ -1723,8 +1723,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
 % conjoined verbs. 
-% VJl == left
-% VJr == right
+% VJr == left
+% VJl == right
 % VJd == ditransitive
 % VJn == neither-nor
 %
@@ -1741,18 +1741,18 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 %
 % s == singluar, pl == plural, sp == singular or plural 
 % g == gerund
-<verb-and-s->: {@E-} & VJls-;
-<verb-and-s+>: {@E-} & VJrs+;
-<verb-and-pl->: {@E-} & VJlp-;
-<verb-and-pl+>: {@E-} & VJrp+;
-<verb-and-sp->: {@E-} & VJl-;
-<verb-and-sp+>: {@E-} & VJr+;
-<verb-and-sp-i->: {@E-} & VJl*i-;
-<verb-and-sp-i+>: ({@E-} & VJr*i+) or (VJn*i+ & Dn-) or (VJb*i+ & Db-);
-<verb-and-sp-t->: {@E-} & VJl*t-;
-<verb-and-sp-t+>: {@E-} & VJr*t+;
-<verb-and-pg->: {@E-} & VJlg-;
-<verb-and-pg+>: {@E-} & VJrg+;
+<verb-and-s->: {@E-} & VJrs-;
+<verb-and-s+>: {@E-} & VJls+;
+<verb-and-pl->: {@E-} & VJrp-;
+<verb-and-pl+>: {@E-} & VJlp+;
+<verb-and-sp->: {@E-} & VJr-;
+<verb-and-sp+>: {@E-} & VJl+;
+<verb-and-sp-i->: {@E-} & VJr*i-;
+<verb-and-sp-i+>: ({@E-} & VJl*i+) or (VJn*i+ & Dn-) or (VJb*i+ & Db-);
+<verb-and-sp-t->: {@E-} & VJr*t-;
+<verb-and-sp-t+>: {@E-} & VJl*t+;
+<verb-and-pg->: {@E-} & VJrg-;
+<verb-and-pg+>: {@E-} & VJlg+;
 
 <verb-and-sp-t>: 
   <verb-and-sp-t-> or 
@@ -2175,7 +2175,7 @@ frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
 
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
 and.v-fill:
-  ((VJrg- & VJlg+) & (Pg- or Mg- or ({Xd-} & VJlg-))) & <vc-fill>;
+  ((VJlg- & VJrg+) & (Pg- or Mg- or ({Xd-} & VJrg-))) & <vc-fill>;
 
 % ------------------------------------------------------------
 % common transitive verbs
@@ -4946,13 +4946,13 @@ but.j-n:
 % The weirdo (B- & {B+}) allows the following to parse:
 % "This is a problem Moscow created and failed to solve."
 <verb-conjunction>:
-  (({Xd-} & VJrsi- & VJlsi+) & (({@MV+} & Ss-) or ({Xd-} & VJlsi-))) or
-  (({Xd-} & VJrpi- & VJlpi+) & (({@MV+} & Sp-) or ({Xd-} & VJlpi-))) or
-  (({Xd-} & VJrst- & VJlst+) & ({@MV+} & Ss- & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJrpt- & VJlpt+) & ({@MV+} & Sp- & (O+ or (B- & {B+})))) or
-  ((VJrs- & VJls+) & (I-)) or
-  ((VJrp- & VJlp+) & (I-)) or
-  ((VJrg- & VJlg+) & (J-));
+  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss-) or ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp-) or ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlst- & VJrst+) & ({@MV+} & Ss- & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlpt- & VJrpt+) & ({@MV+} & Sp- & (O+ or (B- & {B+})))) or
+  ((VJls- & VJrs+) & (I-)) or
+  ((VJlp- & VJrp+) & (I-)) or
+  ((VJlg- & VJrg+) & (J-));
 
 
 and.j-v or.j-v: <verb-conjunction>;
@@ -4965,21 +4965,21 @@ and.j-o or.j-o: <ditransitive-conjunction>;
 
 % The VJn- gaurentees that nor.j-v is used with neither.j-v
 nor.j-v: 
-  (VJn*i- & VJl*i+ & ({@MV+} & S-)) or
-  (VJn*t- & VJl*t+ & ({@MV+} & S- & O+));
+  (VJn*i- & VJr*i+ & ({@MV+} & S-)) or
+  (VJn*t- & VJr*t+ & ({@MV+} & S- & O+));
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
 but.j-v:
-  ((({Xd-} & VJrs-) & VJls+) & (Ss- or ({Xd-} & VJls-))) or
-  ((({Xd-} & VJrp-) & VJlp+) & (Sp- or ({Xd-} & VJlp-))) or
-  ((VJr- & VJl+) & (I-));
+  ((({Xd-} & VJls-) & VJrs+) & (Ss- or ({Xd-} & VJrs-))) or
+  ((({Xd-} & VJlp-) & VJrp+) & (Sp- or ({Xd-} & VJrp-))) or
+  ((VJl- & VJr+) & (I-));
 
 % The VJb- gaurentees that bit.j-b is used with not_only 
 % "We not only X'ed but also Y'ed".
 % This is the same pattern as the neither..nor... pattern above.
 but.j-b: 
-  (VJb*i- & VJl*i+ & ({@MV+} & S-));
+  (VJb*i- & VJr*i+ & ({@MV+} & S-));
 not_only: Db+;
 
 % XJ: collocations with holes
