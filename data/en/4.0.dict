@@ -4193,12 +4193,12 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 %PREPOSITIONS
 
 % conjoin preps: "prep and prep": "the coverage on TV and on the radio..."
-<conjoin-preps>: MJlp- or MJrp+;
+<conjoin-preps>: MJrp- or MJlp+;
 
 % alter-preps: "it is somewhere in or near the house"
 % The "or" must take a prep object.
 % XXX TODO: most preps below need this rule.
-<alter-preps>: MJlj- or MJrj+;
+<alter-preps>: MJrj- or MJlj+;
 
 <prep-main-b>: 
   <conjoin-preps> or
@@ -4858,12 +4858,12 @@ nor.j-a: AJn- & AJ+ & (A+ or Pa- or [MVa-]);
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
-  (({Xd-} & MJra- & MJla+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
-  (({Xd-} & MJrp- & MJlp+) & (Mp- or MVp- or (Xc+ & CO+))) or
-  (({Xd-} & MJrj- & MJlj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
+  (({Xd-} & MJla- & MJra+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
+  (({Xd-} & MJlp- & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
+  (({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
 
 or.j-m:
-  ({Xd-} & MJrj- & MJlj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-);
+  ({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-);
 
 % Conjoined question words.
 % When and where is the party?
@@ -5257,8 +5257,8 @@ insulted.a concerned.a depressed.a doubtful.a
 grateful.a mad.a mistaken.a hopeful.a unhappy.a: 
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
-      ((Pa- or AF+ or Ma- or MJla-) & {@MV+} & {TH+ & {LE+}}) or 
-      ({@MV+} & {TH+ & {LE+}} & MJra+) or 
+      ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TH+ & {LE+}}) or 
+      ({@MV+} & {TH+ & {LE+}} & MJla+) or 
       AA+ or 
       [[DD- & <noun-main-p>]] or
       ({TH+} & <adj-op>));
