@@ -1028,7 +1028,7 @@ both.d:
   ({M+ or (ALx+ & Jp+)} & <noun-main-p>) or
   <noun-and-p>;
 
-both.a: Paf- or AJr-;
+both.a: Paf- or AJra-;
 
 % half: prefer NJ+ over noun-main-x, because half is almost surely
 % modifying something, instead of being a direct object, subject, etc.
@@ -1522,8 +1522,8 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
   NR+ or 
   G+ or
   [A+] or
-  AJl+ or
-  ({Ds-} & AJr-) or
+  AJla+ or
+  ({Ds-} & AJra-) or
   (Dn- & AJn+);
 
 % "Next on our list..." are ordinals.
@@ -1682,7 +1682,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
     (({[[Ds-]]} & OF+) or [[()]]) &
     ((<noun-sub-s> & {@MXs+} & 
       ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
-     AJr- or AJl+ or
+     AJra- or AJla+ or
      <noun-and-u>)) or
   [[AN+]];
 
@@ -1802,8 +1802,8 @@ done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or
 % adjectival modifier: "I am done working", "I am through being mad"
 done.a finished.a through.a: 
   ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or
-  (AJr- & {@MV+}) or
-  ({@MV+} & AJl+);
+  (AJra- & {@MV+}) or
+  ({@MV+} & AJla+);
 
 doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
@@ -2477,8 +2477,8 @@ gone.v: <verb-pp> & <vc-go>;
 % The keys are gone.  The popcorn is all gone.
 gone.a: 
   ({@E-} & Pa-) or
-  (AJr- & {@MV+}) or
-  ({@MV+} & AJl+);
+  (AJra- & {@MV+}) or
+  ({@MV+} & AJla+);
   
 going.v: 
   ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or 
@@ -4856,8 +4856,8 @@ and.j-g: [[G- & G+]];
 % The {Xd-} allows "blah blah, and blah"
 % MVa is given a cost, so that Pa is used, if possible.
 % (In general, we want to never use MVa if Pa is possible... )
-and.j-a but.j-a yet.j-a: ({Xd-} & AJl- & {EB+} & AJr+) & (A+ or Pa- or [MVa-] or AJr-);
-or.j-a: ({Xd-} & AJl- & AJr+) & (A+ or Pa- or [MVa-] or AJr-);
+and.j-a but.j-a yet.j-a: ({Xd-} & AJla- & {EB+} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
+or.j-a: ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
 % "neither" will be used together with "nor".
@@ -5069,8 +5069,8 @@ n't n’t: N- or EB-;
 % Common disjuncts shared by virtually all adjectives.
 % Dn- & AJn+: for neither...nor constructions.
 <adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
-  (AJr- & {@MV+}) or
-  ({@MV+} & AJl+) or
+  (AJra- & {@MV+}) or
+  ({@MV+} & AJla+) or
   (Dn- & AJn+) or
   ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-))); 
 
@@ -5843,8 +5843,8 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % comma, as a conjunction -- "They taste bitter, not sweet"
 % Give MVa a cost, so that Pa is used preferentially, if possible.
 <comma-adj-conjunction>: 
-  ((AJl- & EBx+ & AJr+) & (Pa- or [[MVa-]])) or
-  (AJl- & AJr+ & AJl+);
+  ((AJla- & EBx+ & AJra+) & (Pa- or [[MVa-]])) or
+  (AJla- & AJra+ & AJla+);
 
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
