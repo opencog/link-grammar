@@ -954,8 +954,17 @@ his: DP+ or ({AL-} & {@L+} & (D+ or DD+)) or
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 it: J- or Ox- or ((Ss+ or SFsi+) & <CLAUSE>) or SIs- or 
 SFIsi- or OXi- or Vp- or SJls+ or SJrs- or (Dn- & SJn+);
-they: ({[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-)) or SJlp+ or SJrp- or (Dn- & SJn+);
-we: (Sp+ & <CLAUSE>) or SIp- or SJlp+ or SJrp- or (Dn- & SJn+);
+
+% O*c: "we will go faster than they"
+they: 
+  ({[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-)) or
+  Ox- or
+  SJlp+ or SJrp- or (Dn- & SJn+);
+
+we:
+  (Sp+ & <CLAUSE>) or
+  Ox- or
+  SIp- or SJlp+ or SJrp- or (Dn- & SJn+);
 
 % XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make I've work?
 % We use <marker-entity> here to prevent lower-case magnling by
