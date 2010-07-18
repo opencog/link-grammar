@@ -4856,12 +4856,19 @@ and.j-g: [[G- & G+]];
 % The {Xd-} allows "blah blah, and blah"
 % MVa is given a cost, so that Pa is used, if possible.
 % (In general, we want to never use MVa if Pa is possible... )
+%
+% AJ*a: ordinary adjectives
+% AJ*c: comparative adjectives
+% AJ*s: superlative adjectives
+%
 and.j-a but.j-a yet.j-a: ({Xd-} & AJla- & {EB+} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 or.j-a: ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
 % "neither" will be used together with "nor".
 nor.j-a: AJn- & AJ+ & (A+ or Pa- or [MVa-]);
+
+and.j-c: AJlc- & AJrc+ & (Pam- or Mam- or AFm+) & {@MV+};
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
@@ -5392,7 +5399,8 @@ significantly substantially: ({EE- or EF+} &
   ({ECa-} & 
     (((Pam- or Mam- or AFm+) & {@MV+}) or 
     ({[[@Ec-]]} & {Xc+} & Am+))) or 
-  (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
 
 /en/words/words.adj.2: <comp-adj>;
 
