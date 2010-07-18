@@ -181,7 +181,8 @@
 % SJl == connect to left
 % SJr == connect to right
 % SJ*s == singular
-% SJ*p == plural/mass
+% SJ*p == plural
+% SJ*u == mass
 %
 % M+: "gloom of night and heat will not stop me"
 % The "of night" can connect to the left noun, but rarely to the right noun
@@ -3614,7 +3615,12 @@ writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
 ([[@MV+ & O*n+]])} & {@MV+});
 sing.v dance.v cry.v: <verb-pl,i> & <vc-sing>;
 sings.v dances.v cries.v: <verb-s> & <vc-sing>;
-sang.v-d danced.v-d cried.v-d : <verb-sp> & <vc-sing>;
+
+sang.v-d danced.v-d cried.v-d : 
+  (<verb-sp> & <vc-sing>) or
+  (<verb-and-sp-i-> & <vc-sing>) or (<vc-sing> & <verb-and-sp-i+>) or
+  <verb-and-sp-t>;
+
 sung.v-d: <verb-sp,pp> & <vc-sing> ;
 singing.g dancing.g crying.g: (<vc-sing> & <verb-ge>) or <verb-ge-d>;
 singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
