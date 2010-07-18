@@ -5418,18 +5418,33 @@ easier.a-c:
   (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+))) or
   AJrc- or AJlc+;
 
-harder.a-c: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-)  
-& {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
- MVb-)) or (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & 
-(ER- or (Wd- & Xc+ & ER+)));
+harder.a-c: 
+  ({ECa-} & 
+    (({[[@Ec-]]} & {Xc+} & Am+) or
+    ((Pafm- or AFm+ or Mam-)  & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
+    MVb-)) or
+  (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
+
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c:
-({ECa-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+) 
-or MVb- or Qe+ or Ca+)) or
-(DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  ({ECa-} & 
+    (((Pam- or AFm+ or Mam-) & {@MV+}) or 
+    ({[[@Ec-]]} & {Xc+} & Am+) or
+    MVb- or
+    Qe+ or
+    Ca+)) or
+  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
+
 sooner.a-c:
-({ECa- or Yt-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+) 
-or MVb- or Qe+ or Ca+)) or
-(DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  ({ECa- or Yt-} & 
+    (((Pam- or AFm+ or Mam-) & {@MV+}) or
+    ({[[@Ec-]]} & {Xc+} & Am+) or
+    MVb- or
+    Qe+ or
+    Ca+)) or
+  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
 
 longer.a-c: 
   ({ECa- or Yt-} &
@@ -5444,16 +5459,31 @@ longer.a-c:
   AJrc- or AJlc+;
 
 smarter.a-c nicer.a-c worse.a-c:
-({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & 
-{@MV+} & {(TOi+ or THi+) & {LE+}}))) or
-(DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
+  ({ECa-} & 
+    (({[[@Ec-]]} & {Xc+} & Am+) or
+    ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or
+  (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
+
 better.a-c: 
-({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) 
-& {@MV+} & {(TOi+ or THi+) & {LE+}}) or MVb- or E+ or Qe+ or Ca+)) or
-(DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
-different.a: {ECa- or EA- or EF+} & 
-(({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-)
- & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+  ({ECa-} & 
+    (({[[@Ec-]]} & {Xc+} & Am+) or
+    ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
+    MVb- or
+    E+ or
+    Qe+ or
+    Ca+)) or
+  (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
+
+different.a: 
+  ({ECa- or EA- or EF+} & 
+    (({[[@Ec-]]} & {Xc+} & Am+) or
+    ((Pafm- or AFm+ or Mam-) & {@MV+}) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    <adj-op>)) or
+  AJrc- or AJlc+;
 
 than_expected than_imagined than_proposed than_suspected than_realized 
 than_intended than_supposed than_reported than_ever than_usual
