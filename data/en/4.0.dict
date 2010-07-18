@@ -4868,7 +4868,14 @@ or.j-a: ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 % "neither" will be used together with "nor".
 nor.j-a: AJn- & AJ+ & (A+ or Pa- or [MVa-]);
 
-and.j-c: AJlc- & AJrc+ & (Pam- or Mam- or AFm+) & {@MV+};
+% compartives:
+% he is bigger, and badder, than the pope.
+% If one comma is there, then the other must be also.
+and.j-c or.j-c but.j-c yet.j-c:
+  ((AJlc- & AJrc+) or
+  (Xd- & AJlc- & AJrc+ & Xc+)) & 
+    (((Pam- or Mam- or AFm+) & {@MV+}) or
+    Am+);
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
@@ -5404,10 +5411,13 @@ significantly substantially: ({EE- or EF+} &
 
 /en/words/words.adj.2: <comp-adj>;
 
-easier.a-c: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) 
-& {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}))) or 
-(DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ &
- ER+)));
+easier.a-c: 
+  ({ECa-} & 
+    (({[[@Ec-]]} & {Xc+} & Am+) or 
+    ((Pafm- or AFm+ or Mam-) & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}))) or 
+  (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
+
 harder.a-c: ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-)  
 & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
  MVb-)) or (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & 
@@ -5420,9 +5430,19 @@ sooner.a-c:
 ({ECa- or Yt-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or ({[[@Ec-]]} & {Xc+} & Am+) 
 or MVb- or Qe+ or Ca+)) or
 (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
-longer.a-c: ({ECa- or Yt-} & (((Pam- or AFm+ or Mam-) & {@MV+}) or 
-({[[@Ec-]]} & {Xc+} & Am+) or MVb- or Qe+ or Ca+ or OT- or FL-)) or
-(DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+
+longer.a-c: 
+  ({ECa- or Yt-} &
+    (((Pam- or AFm+ or Mam-) & {@MV+}) or 
+    ({[[@Ec-]]} & {Xc+} & Am+) or
+    MVb- or
+    Qe+ or
+    Ca+ or
+    OT- or
+    FL-)) or
+  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
+  AJrc- or AJlc+;
+
 smarter.a-c nicer.a-c worse.a-c:
 ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & 
 {@MV+} & {(TOi+ or THi+) & {LE+}}))) or
