@@ -39,6 +39,12 @@ XJ*i: conjoined infinitives
 relation to CC: These are the snippers and those are the cutters
 NIf, NIt for numbers.
 
+review: CJ
+rethink: XJ
+
+VJ: can take objects iff both verbs attached can take (direct) objects)
+(I saw and greeted Sue)
+
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
  * Fix: conjoined modifier phrases: "the black and white cat sleeps."
