@@ -4453,13 +4453,22 @@ EB- or [[Mp-]];
 then.r: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
 {Xd-}} & CO+) or EB- or (S+ & Xd- & Xc+ & MVs-) or [[Mp-]];
 
-later earlier: ({ECa- or Yt-} & (E+ or Mp- or Pp- or MVb- 
-or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (MX*x- or MVx-))
-or ({[[@Ec-]]} & {Xc+} & A+))) or (Yt- & (Ca+ or Qe+));
+later earlier: 
+  ({ECa- or Yt-} & 
+    (E+ or
+    Mp- or
+    Pp- or
+    MVb- or
+    [({Xc+ & {Xd-}} & CO+)] or
+    (Xd- & Xc+ & (MX*x- or MVx-)) or
+    ({[[@Ec-]]} & {Xc+} & A+) or
+    AJrc- or AJlc+)) or
+  (Yt- & (Ca+ or Qe+));
 
 away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
 aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
 apart: {Yd-} & K-; 
+
 % wtf ?? what is home.i for ?? 
 home.i: [[K-]];
 
@@ -4884,6 +4893,7 @@ and.j-c or.j-c but.j-c yet.j-c:
   ((AJlc- & AJrc+) or
   (Xd- & AJlc- & AJrc+ & Xc+)) & 
     (((Pam- or Mam- or AFm+) & {@MV+}) or
+    ({[ECa-]} & MVb-) or
     Am+);
 
 % conjoined post-nominal modifiers
@@ -5451,10 +5461,12 @@ or ((MVti- or LEi-) & AFdi+ & {Pa+})
 or (((LE- & {AFd+}) or (LEi- & {AFdi+})) & (THc+ or TOic+ or TOfc+ or (TOtc+ & B+)))
 or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
 
+% cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
 much:
-({EE-} & (MVa- or ECa+ or Ca+ or Qe+)) or ({EEx- or H-} & (ECn+ or Dmu+ or 
-(<noun-sub-s> & (<noun-main-s> or Bsm+)))) or 
-(AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-));
+  ({EE-} & ([[MVa-]] or ECa+ or Ca+ or Qe+)) or
+  ({EEx- or H-} & (ECn+ or Dmu+ or (<noun-sub-s> & (<noun-main-s> or Bsm+)))) or
+  (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-));
+
 slightly somewhat: EC+ or EA+ or MVa- or Em+;
 far.c infinitely: EC+;
 significantly substantially: ({EE- or EF+} & 
@@ -5465,26 +5477,26 @@ significantly substantially: ({EE- or EF+} &
 <comp-adj>:
   ({ECa-} & 
     (((Pam- or Mam- or AFm+) & {@MV+}) or 
-    ({[[@Ec-]]} & {Xc+} & Am+))) or 
-  (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    ({[[@Ec-]]} & {Xc+} & Am+) or
+    AJrc- or AJlc+)) or 
+  (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
 
 easier.a-c: 
   ({ECa-} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or 
-    ((Pafm- or AFm+ or Mam-) & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}))) or 
-  (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    ((Pafm- or AFm+ or Mam-) & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
+    AJrc- or AJlc+)) or 
+  (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 harder.a-c: 
   ({ECa-} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or
     ((Pafm- or AFm+ or Mam-)  & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
-    MVb-)) or
-  (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    MVb- or
+    AJrc- or AJlc+)) or
+  (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c:
   ({ECa-} & 
@@ -5492,9 +5504,9 @@ higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c:
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
-    Ca+)) or
-  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    Ca+ or
+    AJrc- or AJlc+)) or
+  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 sooner.a-c:
   ({ECa- or Yt-} & 
@@ -5502,9 +5514,9 @@ sooner.a-c:
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
-    Ca+)) or
-  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    Ca+ or
+    AJrc- or AJlc+)) or
+  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 longer.a-c: 
   ({ECa- or Yt-} &
@@ -5514,16 +5526,16 @@ longer.a-c:
     Qe+ or
     Ca+ or
     OT- or
-    FL-)) or
-  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    FL- or
+    AJrc- or AJlc+)) or
+  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or
-  (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
+    AJrc- or AJlc+)) or
+  (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 better.a-c: 
   ({ECa-} & 
@@ -5532,9 +5544,9 @@ better.a-c:
     MVb- or
     E+ or
     Qe+ or
-    Ca+)) or
-  (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+))) or
-  AJrc- or AJlc+;
+    Ca+ or
+    AJrc- or AJlc+)) or
+  (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 different.a: 
   ({ECa- or EA- or EF+} & 
@@ -5542,8 +5554,7 @@ different.a:
     ((Pafm- or AFm+ or Mam-) & {@MV+}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
-    <adj-op>)) or
-  AJrc- or AJlc+;
+    <adj-op>));
 
 than_expected than_imagined than_proposed than_suspected than_realized 
 than_intended than_supposed than_reported than_ever than_usual
@@ -5690,8 +5701,11 @@ in_pencil in_pen to_scale for_trial all_right full_time part_time by_proxy:
   {Xd- & Xc+} & MVa-; 
 
 % Adjectives that appear post-verbally e.g. "she wiped the table dry"
+% "we will arrive exhausted"
 % These are more or less adverbs ... 
-dry.e flat.e blind.e tired.e refreshed.e fresh.e: {EE- or EF+ } & MVa-;
+dry.e flat.e blind.e tired.e refreshed.e fresh.e exhausted.e rejuvenated.e:
+  {EE- or EF+ } &
+    (MVa- or AJr- or AJl+);
 
 wild.e rampant.e shut.e tight.e
 open.e loud.e hot.e cold.e free.e: 

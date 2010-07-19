@@ -614,6 +614,18 @@ She knocked me blind off my feet
 He robbed me blind.
 I liked her well enough
 
+% tired, fresh, refreshed in a post-verbal use
+We will arrive sooner than they
+We will arrive more tired than they.
+We will arrive a lot more tired than they.
+We will arrive a great deal more tired than they.
+We will arrive a little more tired than they.
+We will arrive less refreshed than they.
+We will arrive less happy than they.
+We will arrive less fresh than they.
+We will arrive tired.
+We will arrive exhausted.
+
 % clean.e as a bona-fide adverb
 She clean forgot to take it back
 
@@ -2020,7 +2032,7 @@ According to our records, he is in neither the 105th nor the 106th battalion
 According to our records, he is neither in the 105th or the 106th battalion
 According to our records, he is neither in the 105th nor in the 106th battalion
 
-% conjoined compariatives
+% conjoined comparatives
 he is bigger and badder than the pope.
 he is bigger, and badder, than the pope.
 he is much bigger and badder than the pope.
@@ -2035,6 +2047,11 @@ We will arrive sooner than you
 We will arrive sooner than they
 They will arrive sooner than we.
 
+We will arrive sooner, yet more tired, than they.
+We will arrive sooner, yet more tired, than John.
+We will arrive much later and more tired
+we will arrive refreshed and rejuvenated
+she wiped the table clean and dry
 
 % -------------------------------------------------------------------------
 % Conjoined question words
