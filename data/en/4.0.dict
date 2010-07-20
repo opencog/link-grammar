@@ -5581,6 +5581,7 @@ at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
 all_but: EN+ or E+;
 nothing_but: Vd- & I+;
 
+% --------------------------------------------------------------------------
 % superlative adjectives
 % angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a 
 <superlatives>: 
@@ -5603,18 +5604,26 @@ next.a: ({Xc+ & {Xd-}} & CO+) or MVp- or DTi+ or NR+ or
 or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+}); 
 following.a remaining.a top.i: L-;
-hardest.a easiest.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
-({NR- or ND-} & DD- & <noun-sub-x> & {TOt+ & B+} & <noun-main-x>);
+
+hardest.a easiest.a: 
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
+  ({NR- or ND-} & DD- & <noun-sub-x> & {TOt+ & B+} & <noun-main-x>) or
+  AJrs- or AJls+;
+
 worst.a longest.a fastest.a furthest.a farthest.a: 
-({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
-({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
+  ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-)) or
+  AJrs- or AJls+;
 
 % "he likes you best of all" has no determiner, just uses MVa-.
-best.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
-({NR- or ND-} & DD- & 
-((<noun-sub-x> & {TOn+} & <noun-main-x>) or (MVa- & {Mp+})))
-or [[E+]] or [MVa- & {Mp+}];
+best.a: 
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
+  ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or (MVa- & {Mp+}))) or
+  [[E+]] or
+  [MVa- & {Mp+}] or
+  AJrs- or AJls+;
 
+% ===========================================================================
 %ADVERBS
 
 %ADVERBS WHOSE MAIN USE IS ADJECTIVAL
