@@ -1021,7 +1021,13 @@ mine.p yours theirs hers ours:
 
 % DETERMINERS
 
-the: (({AL-} & {@L+} & (D+ or DD+)) or DG+ or (TR- & U+));
+% (L+ & (AJld+ or AJrd-)): "the biggest and the baddest ..."
+the:
+  ({AL-} & {@L+} & (D+ or DD+)) or
+  DG+ or
+  (TR- & U+) or
+  (L+ & (AJld+ or AJrd-));
+
 those: 
   ({AL-} & (Dmc+ or DD+)) or 
   (<noun-sub-p> & (<noun-main-p> or RJlr+ or RJrr-)) or
@@ -4896,7 +4902,9 @@ and.j-c or.j-c but.j-c yet.j-c:
     ({[ECa-]} & MVb-) or
     Am+);
 
-and.j-s: AJls- & AJrs+ & La-;
+and.j-s:
+  (AJls- & AJrs+ & La-) or
+  (AJld- & AJrd+ & (D+ or DD+));
 
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
