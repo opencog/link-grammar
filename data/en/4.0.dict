@@ -4896,6 +4896,8 @@ and.j-c or.j-c but.j-c yet.j-c:
     ({[ECa-]} & MVb-) or
     Am+);
 
+and.j-s: AJls- & AJrs+ & La-;
+
 % conjoined post-nominal modifiers
 but.j-m and.j-m: 
   (({Xd-} & MJla- & MJra+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
@@ -5575,9 +5577,11 @@ nothing_but: Vd- & I+;
 % angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a 
 <superlatives>: 
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
-  ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
+  ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or
+  AJrs- or AJls+;
 
 /en/words/words.adj.3: <superlatives>;
+
 favorite.a favourite.a: <superlatives> or 
 ({Xc+} & {[[@Ec-]]} & [[Lf-]]) or 
 ([[Ds-]] & <noun-sub-x> & {TOn+} & <noun-main-x>);
