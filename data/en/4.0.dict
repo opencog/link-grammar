@@ -5401,10 +5401,11 @@ or [[DD- & <noun-main-p>]];
 northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a 
 southwestern.a: <marker-common-entity> or A+ or G+;
 
+% -------------------------------------------------------------------------
 %COMPARATIVES AND SUPERLATIVES
 
 more: 
-  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+)) or
+  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+ or AJrc- or AJlc+)) or
   ({OF+} & (({ECn-} & 
     (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+)) or 
     ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+)) or 
@@ -5412,14 +5413,25 @@ more:
   (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 more_of_a more_of_an: Ds*m+;
-less: ({ECn-} & (Dmum+ or Om- or Jm- or (Ss+ & <CLAUSE>) or Bsm+)) 
-or ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-])) or 
-(DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
-fewer: ({ECn-} & (Dmcm+ or Om- or Jm- or (Sp+ & <CLAUSE>))) 
-or (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
-farther: ({ECa-} & {K+} & (MVb- or Qe+ or Ca+)) or A+;
-further.r: ({ECa-} & {K+} & (MVb- or Qe+ or Ca+)) or A+ or E+
-or ({Xd-} & Xc+ & CO+);
+
+less:
+  ({ECn-} & (Dmum+ or Om- or Jm- or (Ss+ & <CLAUSE>) or Bsm+)) or
+  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or AJrc- or AJlc+)) or 
+  (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
+
+fewer:
+  ({ECn-} & (Dmcm+ or Om- or Jm- or (Sp+ & <CLAUSE>) or AJrc- or AJlc+)) or
+  (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
+
+farther:
+  ({ECa-} & {K+} & (MVb- or Qe+ or Ca+ or AJrc- or AJlc+)) or
+  A+;
+
+further.r: 
+  ({ECa-} & {K+} & (MVb- or Qe+ or Ca+ or AJrc- or AJlc+)) or
+  A+ or
+  E+ or
+  ({Xd-} & Xc+ & CO+);
 
 % links to adverbs on left..
 % Hmm, probably want to give EAy a cost, to avoid its use in
@@ -5646,7 +5658,7 @@ unreasonably unusually hugely infernally:
 
 notoriously.e: ({EE-} & EA+) or EE+ or Em+;
 
-% Adverbs whose main use is adjectiveal, but can be used with 
+% Adverbs whose main use is adjectival, but can be used with 
 % adverbs such as "faster", "dumber", etc. 
 % "That one is marginally better". (thus EBm+)
 % "It's an inherently better method" thus E+ link
@@ -5695,6 +5707,8 @@ purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % "It sure is great"
 sure.ee: Em+;
+
+more_and_more less_and_less more_or_less: Em+;
 
 % Adverbs like "biochemically". These tend to answer the question "how?" 
 % with a noun-form (as opposed to being verb-derived) A lot of these are
