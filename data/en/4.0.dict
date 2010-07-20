@@ -5414,10 +5414,10 @@ or ({Xd-} & Xc+ & CO+);
 % links to adverbs on left..
 % Hmm, probably want to give EAy a cost, to avoid its use in
 % "William is described as smooth, yet thoughtful"
-as.y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
+as.e-y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
 
 % uses comparative links
-as.z: (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or Cc+))
+as.e-c: (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or Cc+))
 or (MVzo- & Ct+ & Bc+ & {U+}) 
 or (MVzp- & (CX+ or CQ+))
 or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
@@ -5702,10 +5702,11 @@ in_pencil in_pen to_scale for_trial all_right full_time part_time by_proxy:
 
 % Adjectives that appear post-verbally e.g. "she wiped the table dry"
 % "we will arrive exhausted"
+% comparative link *must* have EE- to "more", "less"
 % These are more or less adverbs ... 
 dry.e flat.e blind.e tired.e refreshed.e fresh.e exhausted.e rejuvenated.e:
-  {EE- or EF+ } &
-    (MVa- or AJr- or AJl+);
+  ({EE- or EF+ } & (MVa- or AJra- or AJla+)) or
+  (EE- & (AJrc- or AJlc+));
 
 wild.e rampant.e shut.e tight.e
 open.e loud.e hot.e cold.e free.e: 
