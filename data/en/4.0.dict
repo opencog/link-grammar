@@ -5326,6 +5326,8 @@ clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
 clear.i: {EA- or EF+} & Vm- & TH+;
 sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or TO+ or (OF+ & {@MV+}));
 
+% XXX TODO --- Use MJ whereever Ma- appears, just as above!
+
 tactful.a conventional.a advisable.a prudent.a sensible.a tactless.a polite.a
 impolite.a arrogant.a conceited.a obnoxious.a valuable.a reasonable.a
 unreasonable.a traditional.a unnecessary.a tempting.a usual.a
@@ -5341,6 +5343,7 @@ hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
     ((Paf- or AF+ or Ma-) & {@MV+} & {TOi+ & {LE+}}) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 unknown.a questionable.a: 
@@ -5349,6 +5352,7 @@ unknown.a questionable.a:
     ((Paf- or AF+ or Ma-) & {@MV+} & {QIi+}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 certain.a: 
@@ -5357,6 +5361,7 @@ certain.a:
     ((Paf- or AF+ or Ma-) & {@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     ({Ce+ or TO+ or TH+ or QI+ or OF+} & <adj-op>));
 
 sure.a unsure.a uncertain.a careful.a:
@@ -5365,6 +5370,7 @@ sure.a unsure.a uncertain.a careful.a:
     ((Pa- or AF+ or Ma-) & {@MV+} & {(Ce+ or TO+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     ({Ce+ or TO+ or TH+ or QI+ or OF+} & <adj-op>));
 
 % common adjectives, taking "to", "that" e.g. "was incorrect that"
@@ -5377,6 +5383,7 @@ disgusted.a distressed.a dismayed.a irritated.a embarrassed.a alarmed.a:
     ((Pa- or AF+ or Ma-) & {@MV+} & {(TO+ or TH+) & {LE+}}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     ({TO+ or TH+} & <adj-op>));
 
 glad.a fortunate.a unfortunate.a lucky.a unlucky.a happy.a sad.a surprised.a
@@ -5386,6 +5393,7 @@ delighted.a overjoyed.a:
     ((Pa- or AF+ or Ma-) & {@MV+} & {(Ce+ or TO+ or TH+) & {LE+}}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     ({Ce+ or TO+ or TH+} & <adj-op>));
 
 % common adjectives, taking "to", "of", "that" e.g. "proud that"
@@ -5395,6 +5403,7 @@ proud.a scared.a:
     ((Pa- or AF+ or Ma-) & {@MV+} & {(TO+ or TH+ or (OF+ & {@MV+})) & {LE+}}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     ({TO+ or TH+ or OF+} & <adj-op>));
 
 % common adjectives, taking "of" e.g. "tired of", "sick of" etc.
@@ -5406,44 +5415,59 @@ appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a:
     ((Pa- or AF+ or Ma-) & {@MV+} & {OF+ & {@MV+}}) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     ({OF+ & {@MV+}} & <adj-op>));
 
-fond.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
-((Pa- or AF+ or Ma-) & OF+ & {@MV+}) or (OF+ & <adj-op>));
-afraid.a ashamed.a unafraid.a unashamed.a: {EA- or EF+} & (((Pa- or AF+ or Ma-) & 
-{@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}}) or 
-({OF+ or Ce+ or TH+ or TO+} & <adj-op>));
+fond.a:
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or 
+    ((Pa- or AF+ or Ma-) & OF+ & {@MV+}) or
+    (OF+ & <adj-op>));
+
+afraid.a ashamed.a unafraid.a unashamed.a:
+  {EA- or EF+} &
+    (((Pa- or AF+ or Ma-) & {@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}}) or 
+    ({OF+ or Ce+ or TH+ or TO+} & <adj-op>));
 
 apprehensive.a secure.a optimistic.a pessimistic.a annoyed.a confused.a offended.a
 insulted.a concerned.a depressed.a doubtful.a 
 grateful.a mad.a mistaken.a hopeful.a unhappy.a: 
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
-      ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TH+ & {LE+}}) or 
-      ({@MV+} & {TH+ & {LE+}} & MJla+) or 
-      AA+ or 
-      [[DD- & <noun-main-p>]] or
-      ({TH+} & <adj-op>));
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TH+ & {LE+}}) or 
+    ({@MV+} & {TH+ & {LE+}} & MJla+) or 
+    AA+ or 
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TH+} & <adj-op>));
 
 aware.a unaware.a:
   {EA- or EF+} &
     (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
-    ({TH+ or OF+} & <adj-op>) or
-    [[DD- & <noun-main-p>]]);
-
-% XXX TODO --- Use MJ whereever Ma- appears, just as above!
+    [[DD- & <noun-main-p>]]) or
+    [[{DD-} & <noun-and-p>]] or
+    ({TH+ or OF+} & <adj-op>);
 
 true.a conscious.a confident.a skeptical.a jealous.a suspicious.a envious.a desirous.a
 convinced.a unconvinced.a:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) 
-& {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or AA+ or 
-[[DD- & <noun-main-p>]] or ({TH+ or OF+} & <adj-op>));
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Pa- or AF+ or Ma-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    AA+ or 
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TH+ or OF+} & <adj-op>));
+
 eager.a reluctant.a able.a unable.a impatient.a eligible.a brave.a anxious.a apt.a desperate
 keen.a prepared.a willing.a hesitant.a:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) & 
-{@MV+} & {TO+ & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or 
-({TO+} & <adj-op>));
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Pa- or AF+ or Ma-) & {@MV+} & {TO+ & {LE+}}) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or 
+    [[{DD-} & <noun-and-p>]] or
+    ({TO+} & <adj-op>));
 
 former.a: A+ or G+ or (DG- & <noun-main-x>);
 latter.a: DG- & <noun-main-x>;
@@ -5463,6 +5487,7 @@ outstanding.a available.a:
     ((Pa- or AF+ or Max-) & {@MV+}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 due.i effective.i: (TY+ or JT+) & <prep-main-b>;
