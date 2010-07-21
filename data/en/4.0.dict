@@ -4907,12 +4907,8 @@ and.j-s:
   (AJld- & AJrd+ & (D+ or DD+));
 
 % conjoined post-nominal modifiers
-but.j-m and.j-m: 
+but.j-m and.j-m or.j-m: 
   (({Xd-} & MJla- & MJra+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
-  (({Xd-} & MJlp- & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
-  (({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
-
-or.j-m:
   (({Xd-} & MJlp- & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
   (({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
 
@@ -5123,13 +5119,14 @@ n't n’t: N- or EB-;
 % "the rich and powerful": [[{DD-} & <noun-and-p>]] 
 
 <ordinary-adj>:
-  ({EA- or EF+} & 
+  {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Pa- or AF+ or Ma-) & {@MV+}) or 
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+}) or 
+    ({@MV+} & MJla+) or
     AA+ or 
     [[DD- & <noun-main-p>]] or 
     [[{DD-} & <noun-and-p>]] or 
-    <adj-op>));
+    <adj-op>);
 
 /en/words/words.adj.1:
   <marker-common-entity> or 
@@ -5351,6 +5348,7 @@ fond.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or
 afraid.a ashamed.a unafraid.a unashamed.a: {EA- or EF+} & (((Pa- or AF+ or Ma-) & 
 {@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}}) or 
 ({OF+ or Ce+ or TH+ or TO+} & <adj-op>));
+
 apprehensive.a secure.a optimistic.a pessimistic.a annoyed.a confused.a offended.a
 insulted.a concerned.a depressed.a doubtful.a 
 grateful.a mad.a mistaken.a hopeful.a unhappy.a: 
@@ -5362,11 +5360,15 @@ grateful.a mad.a mistaken.a hopeful.a unhappy.a:
       [[DD- & <noun-main-p>]] or
       ({TH+} & <adj-op>));
 
+aware.a unaware.a:
+  {EA- or EF+} &
+    (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
+    ({TH+ or OF+} & <adj-op>) or
+    [[DD- & <noun-main-p>]]);
+
 % XXX TODO --- Use MJ whereever Ma- appears, just as above!
 
-aware.a unaware.a:
-{EA- or EF+} & (((Pa- or AF+ or Ma-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) &
-{LE+}}) or ({TH+ or OF+} & <adj-op>) or [[DD- & <noun-main-p>]]);
 true.a conscious.a confident.a skeptical.a jealous.a suspicious.a envious.a desirous.a
 convinced.a unconvinced.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) 
@@ -5391,8 +5393,13 @@ rife.a fraught.a lacking.a:
 alone.a: ((Ma- or Pa-) & {@MV+}) or <adj-op> or MVp- or E+;
 
 outstanding.a available.a:
-   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Max-)
- & {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+  {EA- or EF+} & 
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Pa- or AF+ or Max-) & {@MV+}) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    <adj-op>);
+
 due.i effective.i: (TY+ or JT+) & <prep-main-b>;
 
 north.a south.a east.a west.a northeast.a northwest.a southeast.a southwest.a: 
