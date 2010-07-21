@@ -1319,6 +1319,13 @@ The drill, soon to be provided, will be use to take soil samples.
 The stock, to be purchased on the open market, will be added to assets.
 The parts, being obtained as we speak, will arrive this afternoon.
 
+% zero-copula (missing "to be") post-nominal MX broken-ness:
+The event, being historically insignificant, will soon be forgotten
+The event, historically insignificant, will soon be forgotten
+The event, historically important , will be long commemorated
+the argument, fundamentally flawed, was soon destroyed
+the argument, being fundamentally flawed, was soon destroyed
+
 % Impersonal, passive "be" linking to passive participle.
 It is normal that such directives be worked upon.
 It is normal that such directives are worked upon.

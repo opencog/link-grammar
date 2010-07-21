@@ -5287,9 +5287,15 @@ unlikely.a:
     ({TO+} & <adj-op>));
 
 likely.a:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) 
-& {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
-or ({TO+} & <adj-op>) or [E+]);
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or
+    ({@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TO+} & <adj-op>) or
+    [E+]);
 
 apparent.a false.a official.a strict.a significant.a funny.a notable.a untrue.a tragic.a
 plain.a urgent.a a_drag a_bummer definite.a evident.a impressive.a incredible.a
@@ -5300,17 +5306,21 @@ inconceivable.a unbelievable.a astonishing.a disgraceful.a debatable.a arguable.
 lamentable.a regrettable.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or
+    ({@MV+} & {(THi+ or Ci+) & {LE+}} & MJla+) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or QIi+) & {LE+}}) or 
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or QIi+) & {LE+}}) or 
+    ({@MV+} & {(THi+ or QIi+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 clear.i: {EA- or EF+} & Vm- & TH+;
