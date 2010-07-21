@@ -5234,7 +5234,8 @@ common.a practical.a original.a normal.a helpful.a striking.a
 confusing.a frustrating.a disturbing.a
 logical.a illogical.a elegant.a efficient.a awful.a just.a unjust.a
 absurd.a natural.a alarming.a acceptable.a unacceptable.a deplorable.a
-detestable.a scary.a shocking.a:
+detestable.a scary.a shocking.a
+poetical.a:
   <marker-common-entity> or
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
@@ -5303,7 +5304,8 @@ inevitable.a mysterious.a pathetic.a probable.a admirable.a commendable.a concei
 insignificant.a miraculous.a self-evident.a undeniable.a plausible.a understandable.a
 demonstrable.a hilarious.a improbable.a inexcusable.a outrageous.a paradoxical.a shameful.a
 inconceivable.a unbelievable.a astonishing.a disgraceful.a debatable.a arguable.a
-lamentable.a regrettable.a:
+lamentable.a regrettable.a
+well-known.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or
@@ -5409,7 +5411,8 @@ proud.a scared.a:
 % common adjectives, taking "of" e.g. "tired of", "sick of" etc.
 tired.a pooped.a full.a sick.a critical.a guilty.a typical.a
 capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
-appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a:
+appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
+prognostic.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
     ((Pa- or AF+ or Ma-) & {@MV+} & {OF+ & {@MV+}}) or
@@ -5478,8 +5481,14 @@ a_priori a_posteriori: A+ or MVa- or ({Xc+ & {Xd-}} & CO+);
 asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a afloat.a afoot.a
 aghast.a aglow.a agog.a ajar.a amiss.a askew.a astir.a awash.a awry.a de_rigeur
 rife.a fraught.a lacking.a: 
-((Ma- or Pa-) & {@MV+}) or <adj-op>;
-alone.a: ((Ma- or Pa-) & {@MV+}) or <adj-op> or MVp- or E+;
+  ((Ma- or Pa-) & {@MV+}) or
+  <adj-op>;
+
+alone.a:
+  ((Ma- or Pa-) & {@MV+}) or
+  <adj-op> or
+  MVp- or
+  E+;
 
 outstanding.a available.a:
   {EA- or EF+} & 
@@ -6097,9 +6106,8 @@ emoticonID40 emoticonID41 emoticonID42 emoticonID43 emoticonID44
 emoticonID45 emoticonID46 emoticonID47 emoticonID48 emoticonID49
 emoticonID50 emoticonID51 emoticonID52 emoticonID53 emoticonID54
 emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
-({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
- Ma-)  & {@MV+}) or AA+ or <adj-op>)) or
-({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+);
+  <ordinary-adj> or
+  ({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+);
 
 ".": ((Xp- or ({@Xca-} & Xc-)) & RW+) or Xi-;
 
@@ -6281,8 +6289,7 @@ C-NOUN-WORDS.n: % guessed nouns that are countable (-on, -or)
   AN+;
 
 ADJ-WORDS.a: % guessed adjectives (-ous, -ar, -ic)
- {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-)
-& {@MV+}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
+  <ordinary-adj>;
 
 % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
 FOLD-WORDS:
@@ -6335,8 +6342,7 @@ UNKNOWN-WORD.n:
 
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};
-UNKNOWN-WORD.a: {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or
- Ma-)  & {@MV+}) or AA+ or <adj-op>);
+UNKNOWN-WORD.a: <ordinary-adj>;
 
 LEFT-WALL: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+) & 
 {CP+} & {Xx+} & {RW+ or Xp+};
@@ -6407,9 +6413,6 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 longer-term.a:
  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
-prognostic.a:
- {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) & {@MV+} & {OF+ & {@MV+}}) or AA+ or [[DD- & <noun-main-p>]] or ({OF+ & {@MV+}} & <adj-op>));
-
 attestation.n:
  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
@@ -6430,12 +6433,6 @@ lest:
 
 whyever:
  ({EL+} & ((Wq- & Q+) or (QI- & (Cs+ or TOn+)) or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-)))) or [[{@CO-} & Wc- & Wi+]];
-
-well-known.a:
- {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
-
-poetical.a:
- {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+} & {(THi+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]] or <adj-op>);
 
 albeit:
  (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
