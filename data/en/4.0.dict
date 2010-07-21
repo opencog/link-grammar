@@ -4913,7 +4913,8 @@ but.j-m and.j-m:
   (({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
 
 or.j-m:
-  ({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-);
+  (({Xd-} & MJlp- & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
+  (({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
 
 % Conjoined question words.
 % When and where is the party?
