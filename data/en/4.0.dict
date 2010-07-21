@@ -4907,8 +4907,9 @@ and.j-s:
   (AJld- & AJrd+ & (D+ or DD+));
 
 % conjoined post-nominal modifiers
+% [Ma-]: it  is more grammatically correct to have commas ... 
 but.j-m and.j-m or.j-m: 
-  (({Xd-} & MJla- & MJra+) & (Ma- or (Xd- & Xc+ & MX*a-))) or
+  (({Xd-} & MJla- & MJra+) & ([Ma-] or (Xd- & Xc+ & MX*a-))) or
   (({Xd-} & MJlp- & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
   (({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
 
@@ -5151,20 +5152,22 @@ responsible.a accountable.a:
 
 long.a:
   <ordinary-adj> or
-  ((Ya- or Yt-) & (Pa- or Ma-)) or
+  ((Ya- or Yt-) & (Pa- or Ma- or MJra- or MJla+)) or
   (H- & (BT+ or Yt+));
 
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
 wide.a tall.a deep.a distant.a:  
   <ordinary-adj> or
-  (Ya- & (Pa- or Ma- or <adj-op>) & {@MV+});
+  (Ya- & (Pa- or Ma- or MJra- or <adj-op>) & {@MV+}) or
+  (Ya- & {@MV+} & MJla+);
 
 old.a:
   <ordinary-adj> or
-  (Ytm- & (Pa- or Ma- or <adj-op>));
+  (Ytm- & (Pa- or Ma- or <adj-op> or MJra- or MJla+));
 
-aged.i: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) );
+% ??? adj-op already has MX*a- in it, why do we need a bar MX- here ?
+aged.i: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) or MJra- or MJla+);
 
 easy.a hard.a simple.a difficult.a fun.a expensive.a:
   {EA- or EF+} &
@@ -5176,20 +5179,36 @@ easy.a hard.a simple.a difficult.a fun.a expensive.a:
     [[{DD-} & <noun-and-p>]] or
     ({TOt+ & B+} & <adj-op>));
 
-ready.a: {EA- or EF+}
-& (({[[@Ec-]]} & {Xc+} & A+) or ((Pa- or AF+ or Ma-) & {@MV+} & 
-{((TOt+ & B+) or TO+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
-or ({TO+ or (TOt+ & B+)} & <adj-op>));
+ready.a:
+  {EA- or EF+} & 
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((TOt+ & B+) or TO+) & {LE+}}) or
+    ({@MV+} & {((TOt+ & B+) or TO+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TO+ or (TOt+ & B+)} & <adj-op>));
+
 silly.a nasty.a pleasant.a unpleasant.a dangerous.a cruel.a standard.a safe.a
 legal.a illegal.a:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
-{@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
-or ({TOt+ & B+} & <adj-op>));
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
+    ({@MV+} & {((TOt+ & B+) or TOi+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TOt+ & B+} & <adj-op>));
 
 <adj-good>:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & {@MV+}
-& {((TOt+ & B+) or THi+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
-or ({TOt+ & B+} & <adj-op>));
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOt+ & B+) or THi+ or TOi+) & {LE+}}) or
+    ({@MV+} & {((TOt+ & B+) or THi+ or TOi+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TOt+ & B+} & <adj-op>));
 
 good.a bad.a unusual.a useful.a a_bitch nice.a
 strange.a wonderful.a terrible.a possible.a impossible.a annoying.a 
@@ -5198,10 +5217,15 @@ fair.a unfair.a tough.a: <adj-good>;
 great.a: <marker-common-entity> or <adj-good>;
 
 important.a essential.a crucial.a necessary.a imperative.a vital.a: 
-<marker-common-entity> or 
-({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) &  
-(({@MV+} & {(THi+ or TOi+ or TSi+) & {LE+}}) or (TOt+ & B+))) or AA+ or
-[[DD- & <noun-main-p>]] or ({TOt+ & B+} & <adj-op>)));
+  <marker-common-entity> or 
+  ({EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or TOi+ or TSi+) & {LE+}}) or (TOt+ & B+))) or
+    ((({@MV+} & {(THi+ or TOi+ or TSi+) & {LE+}}) or (TOt+ & B+)) & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TOt+ & B+} & <adj-op>)));
 
 common.a practical.a original.a normal.a helpful.a striking.a
 confusing.a frustrating.a disturbing.a
