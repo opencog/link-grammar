@@ -2144,7 +2144,7 @@ split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
 (<verb-sp,pp,ico> & <vc-fill>) or 
 (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
-ate.v-d blew.v-d broke.v-d drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d 
+ate.v-d bit.v-d blew.v-d broke.v-d drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d 
 rang.v-d rode.v-d sprang.v-d 
 stalked.v-d woke.v-d test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d 
 countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d 
@@ -2158,7 +2158,7 @@ outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   (<verb-and-sp-i-> & <vc-fill>) or (<vc-fill> & <verb-and-sp-i+>) or
   <verb-and-sp-t>;
 
-beaten.v blown.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
+beaten.v bitten.v blown.v broken.v driven.v eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
 sprung.v stricken.v swum.v woken.v
 befallen.v interwoven.v overborne.v outgone.v outgrown.v 
  test-driven.v outdone.v shrunken.v countersunk.v 
@@ -2255,14 +2255,14 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 /en/words/words.v.8.2:
 <verb-s> & <vc-kick>;
 
-bit.v-d drank.v-d stole.v-d threw.v-d tore.v-d wore.v-d
+drank.v-d stole.v-d threw.v-d tore.v-d wore.v-d
 overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
 foreswore.v-d forwent.v-d:
   (<verb-sp> & <vc-kick>) or
   (<verb-and-sp-i-> & <vc-kick>) or (<vc-kick> & <verb-and-sp-i+>) or
   <verb-and-sp-t>; 
 
-bitten.v stolen.v shaken.v thrown.v torn.v worn.v
+stolen.v shaken.v thrown.v torn.v worn.v
 forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
  foresworn.v overeaten.v:
 (<verb-pp> & <vc-kick>) or (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+)
@@ -5169,6 +5169,9 @@ old.a:
 % ??? adj-op already has MX*a- in it, why do we need a bar MX- here ?
 aged.i: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) or MJra- or MJla+);
 
+% The following all have a very regular pattern, with just one variable
+% part, the TO TH type section.  This regularity should be exploted so
+% simplify the expressions ... 
 easy.a hard.a simple.a difficult.a fun.a expensive.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
@@ -5232,35 +5235,56 @@ confusing.a frustrating.a disturbing.a
 logical.a illogical.a elegant.a efficient.a awful.a just.a unjust.a
 absurd.a natural.a alarming.a acceptable.a unacceptable.a deplorable.a
 detestable.a scary.a shocking.a:
-<marker-common-entity> or
-({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
-{@MV+} & {(THi+ or TOi+) & {LE+}}) or AA+ or 
-[[DD- & <noun-main-p>]] or <adj-op>));
+  <marker-common-entity> or
+  ({EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or TOi+) & {LE+}}) or
+    ({@MV+} & {(THi+ or TOi+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    <adj-op>));
 
 surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a 
 rare.a embarrassing.a: 
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) & 
-{@MV+} & {(THi+ or Ci+ or TOi+) & {LE+}}) or AA+ or 
-[[DD- & <noun-main-p>]] or <adj-op>);
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or Ci+ or TOi+) & {LE+}}) or
+    ({@MV+} & {(THi+ or Ci+ or TOi+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    <adj-op>);
 
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Paf- or AF+ or Ma-) & {@MV+} & {(TO+ or TOi+ or THi+) & {LE+}}) or 
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TOi+ or THi+) & {LE+}}) or 
+    ({@MV+} & {(TO+ or TOi+ or THi+) & {LE+}} & MJla+) or
     AA+ or 
     [[DD- & <noun-main-p>]] or 
+    [[{DD-} & <noun-and-p>]] or
     ({TO+} & <adj-op>));
 
 wise.a unwise.a smart.a intelligent.a: 
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) 
-or ((Paf- or AF+ or 
-Ma-) & {@MV+} & {(TO+ or TOi+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
-or ({TO+} & <adj-op>));
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TOi+) & {LE+}}) or
+    ({@MV+} & {(TO+ or TOi+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TO+} & <adj-op>));
 
 unlikely.a:
-{EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) 
-& {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or AA+ or [[DD- & <noun-main-p>]]
-or ({TO+} & <adj-op>));
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or
+    ({@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
+    ({TO+} & <adj-op>));
 
 likely.a:
 {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or ((Paf- or AF+ or Ma-) 

@@ -374,12 +374,13 @@ He really cleaned up!
 I watched the bomb blow up.
 We pushed the button, then it blew up
 
-% stay is optionally transitive
+% stay, bite is optionally transitive
 The judge stayed the prisoner's execution
 Michael stayed his anger
 I stayed the week with my parents
 We stayed the duration of the game.
 Mere rain will not stay the mailman.
+That dog will bite!
 
 % resolve can be intranstive
 He resolved on a course of action
@@ -2083,7 +2084,7 @@ it is the hardest and worst problem on the list
 When and where is the party?
 How and why did you do that?
 
-% conjoined post-nominal modifiers: MJ*a (in place of Ma)
+% conjoined post-nominal modifiers: MJ*a (in place of Ma and MX*a)
 Many Democrats unhappy about the economy but doubtful that Clinton can be elected probably won't vote at all
 Many Democrats, unhappy about the economy but doubtful that Clinton can be elected, probably won't vote at all  
 Many people, unaware of the deception and unfamiliar with the details, won't care.
@@ -2098,7 +2099,8 @@ The toy, expensive and fragile, broke immediately
 The river, ten meters wide and a meter deep, runs swiftly here.
 The river, ten meters wide and a meter deep here, runs swiftly.
 The river, dangerous to navigate but important for commerce, has many shoals.
-
+The dog, unlikely to bite but still threatening, scared the interloper away.
+The dog, unlikely to bite but hard to ignore, scared the interloper away.
 
 % conjoined post-nominal prep-phrase modifiers: MJ*p (in place of Mp)
 The coverage on TV and on the radio has been terrible
