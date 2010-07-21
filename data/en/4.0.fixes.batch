@@ -2103,6 +2103,9 @@ The director, responsible and accountable for engineering, resigned.
 *The director, responsible and accountable, resigned.
 The car, prone to breakdown and expensive to maintain, was a white elephant.
 The toy, expensive and fragile, broke immediately
+
+% Note: although the first parse for the below is good, the other parses
+% are nonsense, -- this should be fixed ... XXX
 The river, ten meters wide and a meter deep, runs swiftly here.
 The river, ten meters wide and a meter deep here, runs swiftly.
 The river, dangerous to navigate but important for commerce, has many shoals.

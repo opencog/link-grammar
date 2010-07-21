@@ -4427,10 +4427,16 @@ in_phase neck_and_neck under_contract: <common-prep>;
 
 % 5' 3' are DNA ends
 upstream downstream 5' 3':
-A+ or NIfp+ or NItp- or
-({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} & 
-(({Xc+ & Xd-} & Ma-) or (Wq- & PF+) or MVp-
-or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-)))); 
+  A+ or
+  NIfp+ or NItp- or
+  ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} & 
+    (({Xc+ & Xd-} & (Ma- or MJra-)) or
+    MJra+ or
+    (Wq- & PF+) or
+    MVp- or
+    Pp- or
+    FM- or
+    (Xc+ & Xd- & (MVx- or MX-)))); 
 
 %upstream downstream 3' 5': 
 %A+ or 
@@ -5137,8 +5143,15 @@ HYPHENATED-WORDS.a:
   ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
 
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
-<adj-stuff>:   {EA- or EF+} & (({[[@Ec-]]} & {Xc+} & A+) or 
-              ((AF+ or Ma-) & {@MV+}) or AA+ or [[DD- & <noun-main-p>]]);
+<adj-stuff>:
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or 
+    ((AF+ or Ma- or MJra-) & {@MV+}) or
+    ({@MV+} & MJla+) or
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]]);
+
 done.c gone.c through.c: <adj-stuff>;
 
 responsible.a accountable.a:
@@ -5148,6 +5161,7 @@ responsible.a accountable.a:
     ({@MV+} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 long.a:
@@ -5328,8 +5342,6 @@ clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
 clear.i: {EA- or EF+} & Vm- & TH+;
 sure.i certain.i: {EA- or EF+} & Vm- & (TH+ or TO+ or (OF+ & {@MV+}));
 
-% XXX TODO --- Use MJ whereever Ma- appears, just as above!
-
 tactful.a conventional.a advisable.a prudent.a sensible.a tactless.a polite.a
 impolite.a arrogant.a conceited.a obnoxious.a valuable.a reasonable.a
 unreasonable.a traditional.a unnecessary.a tempting.a usual.a
@@ -5342,7 +5354,8 @@ preferable.a senseless.a trivial.a wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma-) & {@MV+} & {TOi+ & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {TOi+ & {LE+}}) or
+    ({@MV+} & {TOi+ & {LE+}} & MJla+) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5351,7 +5364,8 @@ hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
 unknown.a questionable.a: 
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma-) & {@MV+} & {QIi+}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {QIi+}) or
+    ({@MV+} & {QIi+} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5360,7 +5374,8 @@ unknown.a questionable.a:
 certain.a: 
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Paf- or AF+ or Ma-) & {@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    ({@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5369,7 +5384,8 @@ certain.a:
 sure.a unsure.a uncertain.a careful.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma-) & {@MV+} & {(Ce+ or TO+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or TO+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    ({@MV+} & {(Ce+ or TO+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5382,7 +5398,8 @@ amused.a amazed.a astonished.a astounded.a pleased.a
 disgusted.a distressed.a dismayed.a irritated.a embarrassed.a alarmed.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma-) & {@MV+} & {(TO+ or TH+) & {LE+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TH+) & {LE+}}) or
+    ({@MV+} & {(TO+ or TH+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5392,7 +5409,8 @@ glad.a fortunate.a unfortunate.a lucky.a unlucky.a happy.a sad.a surprised.a
 delighted.a overjoyed.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma-) & {@MV+} & {(Ce+ or TO+ or TH+) & {LE+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or TO+ or TH+) & {LE+}}) or
+    ({@MV+} & {(Ce+ or TO+ or TH+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5402,7 +5420,8 @@ delighted.a overjoyed.a:
 proud.a scared.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma-) & {@MV+} & {(TO+ or TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    ({@MV+} & {(TO+ or TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5415,7 +5434,8 @@ appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
 prognostic.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Pa- or AF+ or Ma-) & {@MV+} & {OF+ & {@MV+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {OF+ & {@MV+}}) or
+    ({@MV+} & {OF+ & {@MV+}} & MJla+) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5424,12 +5444,14 @@ prognostic.a:
 fond.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Pa- or AF+ or Ma-) & OF+ & {@MV+}) or
+    ((Pa- or AF+ or Ma- or MJra-) & OF+ & {@MV+}) or
+    (OF+ & {@MV+} & MJla+) or
     (OF+ & <adj-op>));
 
 afraid.a ashamed.a unafraid.a unashamed.a:
   {EA- or EF+} &
-    (((Pa- or AF+ or Ma-) & {@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}}) or 
+    (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}}) or 
+    ({@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}} & MJla+) or
     ({OF+ or Ce+ or TH+ or TO+} & <adj-op>));
 
 apprehensive.a secure.a optimistic.a pessimistic.a annoyed.a confused.a offended.a
@@ -5448,15 +5470,17 @@ aware.a unaware.a:
   {EA- or EF+} &
     (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
-    [[DD- & <noun-main-p>]]) or
+    AA+ or 
+    [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({TH+ or OF+} & <adj-op>);
+    ({TH+ or OF+} & <adj-op>));
 
 true.a conscious.a confident.a skeptical.a jealous.a suspicious.a envious.a desirous.a
 convinced.a unconvinced.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or 
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -5466,7 +5490,8 @@ eager.a reluctant.a able.a unable.a impatient.a eligible.a brave.a anxious.a apt
 keen.a prepared.a willing.a hesitant.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma-) & {@MV+} & {TO+ & {LE+}}) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TO+ & {LE+}}) or
+    ({@MV+} & {TO+ & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or 
     [[{DD-} & <noun-and-p>]] or
@@ -5478,14 +5503,17 @@ overall.a onetime.a outboard.a pinstripe.a goddam.a de_facto de_jure erstwhile.a
 foster.a outright.a online.a: A+;
 pro_forma ad_hoc bona_fide: A+ or Pa-;
 a_priori a_posteriori: A+ or MVa- or ({Xc+ & {Xd-}} & CO+);
+
 asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a afloat.a afoot.a
 aghast.a aglow.a agog.a ajar.a amiss.a askew.a astir.a awash.a awry.a de_rigeur
 rife.a fraught.a lacking.a: 
-  ((Ma- or Pa-) & {@MV+}) or
+  ((Ma- or Pa- or MJra-) & {@MV+}) or
+  ({@MV+} & MJla+) or
   <adj-op>;
 
 alone.a:
-  ((Ma- or Pa-) & {@MV+}) or
+  ((Ma- or Pa- or MJra-) & {@MV+}) or
+  ({@MV+} & MJla+) or
   <adj-op> or
   MVp- or
   E+;
@@ -5493,7 +5521,8 @@ alone.a:
 outstanding.a available.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Max-) & {@MV+}) or
+    ((Pa- or AF+ or Max- or MJra-) & {@MV+}) or
+    ({@MV+} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -6383,7 +6412,9 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
  dead_of_other_causes right_sacrotransverse above_board 
  K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a 
  haywire.a:
- ((Ma- or Pa-) & {@MV+}) or <adj-op>;
+  ((Ma- or Pa- or MJra-) & {@MV+}) or
+  ({@MV+} & MJla+) or
+   <adj-op>;
 
 subject_to status_post in_conjunction_with sensu 
  in_relation_to neath amidst across_from circa astride 
