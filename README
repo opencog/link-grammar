@@ -640,6 +640,14 @@ TODO -- Working Notes:
     set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
     These need to be refactored.
 
+  Poor linkage choices:
+    Compare "she will be happier than before" to "she will be more happy
+    than before." Current parser makes "happy" the head word, and "more"
+    a modifier w/EA link.  I beleive the correct solution would be to
+    make "more" the head (link it as a comparative), and make "happy"
+    the dependent.  This would harmonize rules for comparatives... and
+    would eliminate/simplify rules for less,more.
+
   Repulsive parses: Sometimes, the existance of one parse should suggest
     that another parse must surely be wrong: if one parse is possible,
     then the other parses must surely be unlikely. For example: the 
@@ -877,3 +885,5 @@ TODO -- Working Notes:
     Ref. I. Mel'cuk: "Collocations and Lexical Functions", in ''Phraseology:
     theory, analysis, and applications'' Ed. Anthony Paul Cowie (1998)
     Oxford University Press pp. 23-54.
+
+   
