@@ -230,7 +230,7 @@ CONTAINS_ONE_RULES:
  BIh   ,  Ss#b    SIs#b  SFsi  SFIsi        , "Bad use of predicate41"      ,
  BIq   ,  S##q    SI##q  SFsi  Ss#b    SFIsi SIs#b 
                                             , "Bad use of predicate42"      ,
- MVt   ,  Dm#m   EAm   EEm   MVm  Pam   Pafm   AFm   EB#m   MVb
+ MVt   ,  Dm#m   EAm   EEm   MVm  Pam   Pafm   AFm   EB#m   MVb AJrc
           Om   Mam  Am  Jm  Ds*m   MX#m     , "Bad comparative43"    ,
  MVz   ,  D##y    EAy    EEy    MVy    EB#y , "Bad comparative44"    ,
  MV#a  ,  Pam    Pafm    EAm   Ds*m   EAy   AFm   Mam   Am  

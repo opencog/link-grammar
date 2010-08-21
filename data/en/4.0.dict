@@ -4886,12 +4886,14 @@ and.j-g: [[G- & G+]];
 % The {Xd-} allows "blah blah, and blah"
 % MVa is given a cost, so that Pa is used, if possible.
 % (In general, we want to never use MVa if Pa is possible... )
+% AJla- & AJr*+ allows "he is clever and funnier than Mike."
 %
 % AJ*a: ordinary adjectives
 % AJ*c: comparative adjectives
 % AJ*s: superlative adjectives
 %
-and.j-a but.j-a yet.j-a: ({Xd-} & AJla- & {EB+} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
+and.j-a but.j-a yet.j-a:
+  ({Xd-} & AJla- & {EB+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-);
 or.j-a: ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
@@ -5634,9 +5636,9 @@ significantly substantially: ({EE- or EF+} &
 % angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a 
 <comp-adj>:
   ({ECa-} & 
-    (((Pam- or Mam- or AFm+) & {@MV+}) or 
+    (((Pam- or Mam- or AFm+ or AJrc-) & {@MV+}) or 
     ({[[@Ec-]]} & {Xc+} & Am+) or
-    AJrc- or AJlc+)) or 
+    AJlc+)) or 
   (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
@@ -5644,72 +5646,72 @@ significantly substantially: ({EE- or EF+} &
 easier.a-c: 
   ({ECa-} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or 
-    ((Pafm- or AFm+ or Mam-) & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
-    AJrc- or AJlc+)) or 
+    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
+    AJlc+)) or 
   (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 harder.a-c: 
   ({ECa-} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam-)  & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
+    ((Pafm- or AFm+ or Mam- or AJrc-)  & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
     MVb- or
-    AJrc- or AJlc+)) or
+    AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c:
   ({ECa-} & 
-    (((Pam- or AFm+ or Mam-) & {@MV+}) or 
+    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or 
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
     Ca+ or
-    AJrc- or AJlc+)) or
+    AJlc+)) or
   (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 sooner.a-c:
   ({ECa- or Yt-} & 
-    (((Pam- or AFm+ or Mam-) & {@MV+}) or
+    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
     Ca+ or
-    AJrc- or AJlc+)) or
+    AJlc+)) or
   (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 longer.a-c: 
   ({ECa- or Yt-} &
-    (((Pam- or AFm+ or Mam-) & {@MV+}) or 
+    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or 
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
     Ca+ or
     OT- or
     FL- or
-    AJrc- or AJlc+)) or
+    AJlc+)) or
   (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
-    AJrc- or AJlc+)) or
+    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
+    AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 better.a-c: 
   ({ECa-} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
+    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
     MVb- or
     E+ or
     Qe+ or
     Ca+ or
-    AJrc- or AJlc+)) or
+    AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 different.a: 
   ({ECa- or EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam-) & {@MV+}) or
+    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     <adj-op>));
