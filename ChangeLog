@@ -23,6 +23,7 @@ Version 4.7.0 (XXX 2010)
  * Fix: regression in dates followed by punctuation. "In the 1950s, ..."
  * Fix: verbs drank, drunk are optionally transitive.
  * Fix: regression: "all the X", X can be plural or mass.
+ * Fix: verbs paint, color may be ditranstive: "paint the car bright green"
 
 TODO --
 Fat links now off by default!! 

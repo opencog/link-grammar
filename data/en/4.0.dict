@@ -533,13 +533,14 @@ tom.n-u: [<mass-noun>];
 % allow these to take AN+ links.  We need these as nouns, so as to 
 % parse 'she prefers red'. However, assign a cost, so that 'her shoes
 % are red' gets red.a perfered over red.n.
+% [[Ds-]] to allow: "The house was painted a fading yellow"
 %
 % Doesn't seem to need a noun-and-x to make this work ... 
 auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n 
 tawny.n ultramarine.n yellow.n:
   <marker-common-entity> or 
   (<noun-modifiers> & 
-    (({Dmu-} & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>])) or
+    ((({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>])) or
     (YS+ & {Dmu-}) or 
     (GN+ & (DD- or [()])) or 
     Up-));
@@ -2050,12 +2051,14 @@ arisen.v: {@E-} & PP- & {@MV+};
 
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
 /en/words/words.v.5.1: 
-<verb-pl,i> & <vc-bulge>;
+  <verb-pl,i> & <vc-bulge>;
 /en/words/words.v.5.2:
-<verb-s> & <vc-bulge>;
+  <verb-s> & <vc-bulge>;
 /en/words/words.v.5.3:
-<verb-sp,pp> & <vc-bulge>;
-slunk.v-d: <verb-sp,pp> & <vc-bulge>;
+  (<verb-sp,pp> & <vc-bulge>) or
+  ({@E-} & A+);
+slunk.v-d:
+  <verb-sp,pp> & <vc-bulge>;
 
 lay.v-d: <verb-sp> & <vc-bulge>; 
 lain.v: <verb-pp> & <vc-bulge>;
@@ -3685,8 +3688,9 @@ colored.v-d coloured.v-d painted.v-d:
   (<verb-sp,pp> & <vc-color>) or
   (<verb-and-sp-i-> & <vc-color>) or (<vc-color> & <verb-and-sp-i+>) or
   <verb-and-sp-t> or
-  (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or
-  ({K+} & <verb-po>);
+  (<verb-pv-b> & {O+ or K+} & {@MV+}) or
+  ({K+} & <verb-po>) or
+  ({@E-} & A+);
 coloring.v colouring.v painting.v:
   (<verb-pg> & <vc-color>) or
   <verb-and-pg-> or <verb-and-pg+>;
