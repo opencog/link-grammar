@@ -3713,7 +3713,8 @@ coloring.g colouring.g painting.g:
 % 'he wrote me that S' but '*he drew me that S'
 <vc-write>: 
   ({(B- & {O+ or K+}) or 
-    (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
+    (O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or 
+    (O+ & K+) or 
     (K+ & {{[[@MV+]]} & O*n+}) or 
     ([[@MV+ & O*n+]])} & {@MV+}) or
   ({@MV+} & (TH+ or Ce+));
@@ -3750,7 +3751,8 @@ writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
 % but then: 'she sang soprano'
 <vc-sing>:
   ({(B- & {O+ or K+}) or 
-    (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
+    (O+ & {{[[@MV+]]} & O*n+} & {VJd+}) or 
+    (O+ & K+) or 
     (K+ & {{[[@MV+]]} & O*n+}) or 
     ([[@MV+ & O*n+]])} & {@MV+});
 sing.v dance.v cry.v: <verb-pl,i> & <vc-sing>;
@@ -3774,7 +3776,7 @@ singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
 
 % ditransitive
 <vc-allow>:
-  (((O+ & {[[@MV+]]} & O*n+) or
+  (((O+ & {[[@MV+]]} & O*n+ & {VJd+}) or
     ([[@MV+]] & O*n+)) & {@MV+}) or 
   ((O+ or B-) & {@MV+} & {B- or TOo+});
 
@@ -3789,7 +3791,8 @@ allowing.v: <verb-pg> & <vc-allow>;
 % ditransitive
 <vc-promise>:
   ({O+ or B-} & {@MV+} & {B- or TO+ or Ce+ or TH+ or RSe+ or Zs-}) or 
-  (((O+ & {[[@MV+]]} & O*n+) or ([[@MV+ & O*n+]])) & {@MV+});
+  (((O+ & {[[@MV+]]} & O*n+ & {VJd+}) or 
+    ([[@MV+ & O*n+]])) & {@MV+});
 
 promise.v: <verb-pl,i> & <vc-promise>;
 promises.v: <verb-s> & <vc-promise>;
@@ -3803,7 +3806,9 @@ promising.v: <verb-pg> & <vc-promise>;
 % ditransitive
 <vc-show>:
   ({O+ or B-} & ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or B-))) or
-  (((O+ & {K+ or ({[[@MV+]]} & O*n+)}) or
+  ((
+    (O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or
+    (O+ & K+) or
     (K+ & (B- or ({[[@MV+]]} & O*n+))) or
     ([[@MV+ & O*n+]]) or
     [[()]]) & {@MV+});
@@ -3821,7 +3826,10 @@ showing.v: <verb-pg> & <vc-show>;
 % ditransitive
 <vc-teach>:
   ((O+ or B-) & ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or B- or TOo+))) or
-  ({((O+ or B-) & ({[[@MV+]]} & O*n+)) or ([[@MV+ & O*n+]])} & {@MV+});
+  ({
+    (O+ & {[[@MV+]]} & O*n+ & {VJd+}) or
+    (B- & {[[@MV+]]} & O*n+) or
+    ([[@MV+ & O*n+]])} & {@MV+});
 
 teach.v: <verb-pl,i> & <vc-teach>;
 teaches.v: <verb-s> & <vc-teach>;
@@ -3928,7 +3936,9 @@ electing.v appointing.v: <verb-pg> & <vc-elect>;
 
 % vc-name is a ditransitive extension of vc-trans (with an extra TI+)
 <vc-name>:
-  ((O+ & {{[[@MV+]]} & (O*n+ or TI+)}) or
+  (
+    (O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or
+    (O+ & {[[@MV+]]} & TI+) or
     (B- & {O+ or TI+}) or 
     ([[@MV+ & O*n+]])) & {@MV+};
 
@@ -4111,7 +4121,9 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
   ((B- or O+ or OX+) & 
     {({@MV+} & {I*j+ or Pa**j+ or B-}) or
     ((K+ or AF-) & {@MV+})}) or
-  ((((O+ or K+) & {[[@MV+]]} & O*n+) or
+  ((
+    (O+ & {[[@MV+]]} & O*n+ & {VJd+}) or
+    (K+ & {[[@MV+]]} & O*n+) or
     K+ or
     Vm+ or
     ([[{K+} & @MV+ & O*n+]])) & {@MV+}) or
@@ -4246,7 +4258,7 @@ suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 
 % ditransitive
 <vc-deny>:
-  (((O+ & {{[[@MV+]]} & O*n+}) or
+  (((O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or
     (B- & {O+}) or
     [[@MV+ & O*n+]]) & {@MV+}) or
   ({@MV+} & (Pg+ or TH+ or Ce+ or RSe+));
