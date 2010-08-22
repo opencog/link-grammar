@@ -392,6 +392,11 @@ we drank up
 we drank up all the milk
 Drink up!
 
+% null-of -- "of" is sometimes elided; use the ALx link.
+he has drunk all of the ale.
+he has drunk all the ale.
+he has eaten all the chocolate.
+
 % Some ditransitive verbs of various complexity
 He poured me a glass of champagne.
 *He poured me.

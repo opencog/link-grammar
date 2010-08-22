@@ -1064,7 +1064,7 @@ all.a:
     (E+ or 
     Dm+ or 
     NIc+ or 
-    ({@M+ or (ALx+ & Jp+) or (R+ & B+) or EL+} & 
+    ({@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+} & 
       (<noun-main2-x> or
       (S**t+ & <CLAUSE>) or
       SI**t-)) or

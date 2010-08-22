@@ -21,12 +21,14 @@ Version 4.7.0 (XXX 2010)
  * Fix: "is" with uncountable nouns: "there is blood on your hands"
  * Fix: Roman numeral suffixes e.g. "Henry VIII"
  * Fix: regression in dates followed by punctuation. "In the 1950s, ..."
+ * Fix: verbs drank, drunk are optionally transitive.
+ * Fix: regression: "all the X", X can be plural or mass.
 
 TODO --
 Fat links now off by default!! 
 AJ: use of EB link for not, yet, etc. "bitter not sweet"
 EBx
--- document VJ, MJ, RJ links
+-- document VJ, MJ links
 --SJ connectors for commas, or, etc.
 -- conjunctions for verbs
 VJ: verbs
