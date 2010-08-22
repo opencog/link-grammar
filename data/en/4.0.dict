@@ -3369,6 +3369,7 @@ offering.g: (<vc-offer> & <verb-ge>) or <verb-ge-d>;
 offering.v: <verb-pg> & <vc-offer>;
 
 % ditransitive
+% unlike vc-offer, "to" is optional.
 <vc-refuse>:
   (((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+})) & {@MV+}) or 
   ({@MV+} & {TO+}) or
@@ -3732,7 +3733,8 @@ singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
 
 % ditransitive
 <vc-allow>:
-  (((O+ & {[[@MV+]]} & O*n+) or ([[@MV+]] & O*n+)) & {@MV+}) or 
+  (((O+ & {[[@MV+]]} & O*n+) or
+    ([[@MV+]] & O*n+)) & {@MV+}) or 
   ((O+ or B-) & {@MV+} & {B- or TOo+});
 
 allow.v: <verb-pl,i> & <vc-allow>;
@@ -3869,9 +3871,9 @@ using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
 % --------------------------------------------------
 
-% ditransitive
 <vc-elect>:
-  ((O+ or B-) & (({@MV+} & {TOo+}) or ({[[@MV+]]} & (O*n+ or TI+)))) or
+  ((O+ or B-) & (({@MV+} & {TOo+}) or
+    ({[[@MV+]]} & (O*n+ or TI+)))) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 elect.v appoint.v: <verb-pl,i> & <vc-elect>;
@@ -4206,7 +4208,9 @@ suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 
 % ditransitive
 <vc-deny>:
-  (((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+}) or [[@MV+ & O*n+]]) & {@MV+}) or
+  (((O+ & {{[[@MV+]]} & O*n+}) or
+    (B- & {O+}) or
+    [[@MV+ & O*n+]]) & {@MV+}) or
   ({@MV+} & (Pg+ or TH+ or Ce+ or RSe+));
 
 deny.v: <verb-pl,i> & <vc-deny>;
