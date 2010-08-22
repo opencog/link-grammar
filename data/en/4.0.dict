@@ -3226,7 +3226,8 @@ costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
 
 % ditransitive
 <vc-find>:
-  ((K+ or O+) & {[[@MV+]]} & O*n+) or
+  (O+ & {[[@MV+]]} & O*n+ & {VJd+} & {@MV+}) or
+  (K+ & {[[@MV+]]} & O*n+) or
   (B- & O+) or
   ((O+ or B-) & (({@MV+} & (Pa+ or AF- or Pg+)) or ({K+} & {@MV+}))) or
   ([[@MV+ & O*n+]]) or
@@ -3243,7 +3244,11 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 % ditranstive
 <vc-get>:
   ((O+ or B-) & (({K+} & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+)))) or
-  (((K+ & {[[@MV+]]} & O*n+) or K+ or (B- & O+) or (O+ & {[[@MV+]]} & O*n+)) & {@MV+}) or
+  (((O+ & {[[@MV+]]} & O*n+ & {VJd+}) or
+    (K+ & {[[@MV+]]} & O*n+) or
+    K+ or
+    (B- & O+)
+  ) & {@MV+}) or
   ({@MV+} & (Pa+ or AF- or Pv+ or Pp+ or TO+));
 get.v: 
   (<verb-pl,i> & <vc-get>) or
@@ -3363,7 +3368,8 @@ liking.v: <verb-pg> & <vc-like>;
 
 % ditranstive
 <vc-offer>:
-  (((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+})) & {@MV+}) or 
+  (((O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or
+    (B- & {O+})) & {@MV+}) or 
   ({@MV+} & TO+) or
   ([[@MV+ & O*n+]]);
 
@@ -3377,7 +3383,8 @@ offering.v: <verb-pg> & <vc-offer>;
 % ditransitive
 % unlike vc-offer, "to" is optional.
 <vc-refuse>:
-  (((O+ & {{[[@MV+]]} & O*n+}) or (B- & {O+})) & {@MV+}) or 
+  (((O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or
+    (B- & {O+})) & {@MV+}) or 
   ({@MV+} & {TO+}) or
   ([[@MV+ & O*n+]]);
 
@@ -3558,7 +3565,7 @@ seeing.v: <verb-pg> & <vc-see>;
 
 % ditranstive verbs -- taking direct and indirect objects
 <vc-owe>: 
-  ((O+ & {{[[@MV+]]} & O*n+}) or 
+  ((O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or 
   (B- & {O+}) or 
   ([[@MV+ & O*n+]])) & {@MV+};
 
@@ -3593,7 +3600,8 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % 'sent', 'poured': optional indirect object.
 <vc-give>:
   ((B- & {O+ or K+}) or
-    (O+ & {({[[@MV+]]} & [O*n+] & {VJd+}) or K+}) or 
+    (O+ & {{[[@MV+]]} & [O*n+] & {VJd+}}) or 
+    (O+ & K+) or 
     (K+ & ({[[@MV+]]} & O*n+)) or
     ([[@MV+ & O*n+]])) & {@MV+};
 
@@ -3638,7 +3646,8 @@ handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
 % ditransitive
 <vc-pass>:
   {(B- & {O+ or K+}) or
-    (O+ & {({[[@MV+]]} & O*n+) or K+}) or 
+    (O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or 
+    (O+ & K+) or 
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+};
 
@@ -3660,7 +3669,8 @@ passing.v paying.v selling.v dealing.v: <verb-pg> & <vc-pass>;
 % ditransitive
 <vc-call>:
   {(B- & {O+ or Pa+ or K+}) or 
-    (O+ & {({[[@MV+]]} & O*n+) or Pa+ or K+}) or 
+    (O+ & {{[[@MV+]]} & O*n+ & {VJd+}}) or 
+    (O+ & (Pa+ or K+)) or 
     (K+ & {{[[@MV+]]} & O*n+}) or 
     ([[@MV+ & O*n+]])} & {@MV+};
 
@@ -3676,7 +3686,7 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
 % ditransitive: "Please paint it lime green" 
 <vc-color>:
   <vc-fill> or
-  (O+ & {[[@MV+]]} & O*n+);
+  (O+ & {[[@MV+]]} & O*n+ & {VJd+});
 
 color.v colour.v paint.v:
   (<verb-pl,i> & <vc-color>) or
