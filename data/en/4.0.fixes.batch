@@ -507,12 +507,13 @@ The treatment turned him bald in an instant.
 Who did you turn envious today?
 The witch turned him green.
 
-% paint, color, with predicative adjective color names:
-% argh. but modifiers mean that the color names are nouns ...  
+% paint, color, with color names; constructions like 
+% "pale yellow" mean that the color names are nouns (O*n) and
+% not predicative adjectives (Pa**j)
 Just paint it white
 Just paint it all white
 Just color it black
-Just paint it pale yellow
+Please paint it pale yellow
 
 % act out, act up
 He is going to act out until he gets what he wants.

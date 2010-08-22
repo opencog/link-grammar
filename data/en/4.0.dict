@@ -981,7 +981,10 @@ I.p:
   (Dn- & SJn+) or
   SXI-;
 
-it_all them_all us_all you_all: Ox- or J-;
+them_all us_all you_all: Ox- or J-;
+% it_all gets a cost when used as direct object (Ox) to avoid 
+% inappropriate parse "Please paint it all white"
+it_all: [[Ox-]] or J-;
 
 %we're they're I'm you're: 
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
@@ -3666,6 +3669,30 @@ called.v-d shouted.v-d: (<verb-sp,pp> & <vc-call>) or
 calling.g shouting.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
 calling.v shouting.v: <verb-pg> & <vc-call>;
 
+% Minimal ditransitive extenstion of words.v.6
+% ditransitive: "Please paint it lime green" 
+<vc-color>:
+  <vc-fill> or
+  (O+ & {[[@MV+]]} & O*n+);
+
+color.v colour.v paint.v:
+  (<verb-pl,i> & <vc-color>) or
+  (<verb-and-pl-> & <vc-color>) or (<vc-color> & <verb-and-pl+>);
+colors.v colours.v paints.v:
+  (<verb-s> & <vc-color>) or
+  (<verb-and-s-> & <vc-color>) or (<vc-color> & <verb-and-s+>);
+colored.v-d coloured.v-d painted.v-d:
+  (<verb-sp,pp> & <vc-color>) or
+  (<verb-and-sp-i-> & <vc-color>) or (<vc-color> & <verb-and-sp-i+>) or
+  <verb-and-sp-t> or
+  (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or
+  ({K+} & <verb-po>);
+coloring.v colouring.v painting.v:
+  (<verb-pg> & <vc-color>) or
+  <verb-and-pg-> or <verb-and-pg+>;
+coloring.g colouring.g painting.g:
+  (<vc-color> & <verb-ge>) or <verb-ge-d>;
+
 % ditransitive
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
@@ -4064,10 +4091,7 @@ or ({{@MV+} & Pg+} & <verb-po>);
 appreciating.g spending.g: (<vc-appreciate> & <verb-ge>) or <verb-ge-d>;
 appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
-% Pa**j is used for predicative adjectives: "Just paint it white" 
-% although really, its narrower than this: color/paint go only with
-% color names, and not adjectives in general. What's more, the 
-% color names are really nouns
+% Pa**j is used for predicative adjectives
 % ditransitive
 <vc-make>: 
   ((B- or O+ or OX+) & 
@@ -4078,9 +4102,9 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
     Vm+ or
     ([[{K+} & @MV+ & O*n+]])) & {@MV+}) or
   [[()]];
-make.v color.v colour.v paint.v: <verb-pl,i> & <vc-make>;
-makes.v colors.v colours.v paints.v: <verb-s> & <vc-make>;
-made.v-d colored.v-d coloured.v-d painted.v-d:
+make.v: <verb-pl,i> & <vc-make>;
+makes.v: <verb-s> & <vc-make>;
+made.v-d:
   (<verb-sp,pp> & <vc-make>) or
   (<verb-s-pv-b> & (({@MV+} & Pa+) or ({K+} & {@MV+}))) or
   ({({@MV+} & Pa+) or K+} & <verb-po>);
@@ -4089,8 +4113,8 @@ built_of built_up_of composed_of constructed_of formed_of made_of
 made_up_of:
   (<verb-pv-b> & (B- or O+) & {@MV+}) or (O+ & <verb-po>);
 
-making.g coloring.g colouring.g painting.g: (<vc-make> & <verb-ge>) or <verb-ge-d>;
-making.v coloring.v colouring.v painting.v: <verb-pg> & <vc-make>;
+making.g: (<vc-make> & <verb-ge>) or <verb-ge-d>;
+making.v: <verb-pg> & <vc-make>;
 
 <vc-render>:
   (((B- or O+) & {({@MV+} & Pa+) or AF-}) or
