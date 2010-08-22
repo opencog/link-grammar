@@ -793,12 +793,13 @@ TODO -- Working Notes:
      edited by Elena Tognini-Bonelli, volume 4), 2000
 
   "holes" in collocations (aka "set phrases" of "phrasemes"):
-     The link-grammar provides a mechanism to support circumpositions
-     (or even more complicated multi-word structures) by means of the
-     post-processing rules. However, post-processing rules for many
-     common forms have not yet been written. The general problem is
-     of supporting structures that have "holes" in the middle. For
-     example, the adposition:
+     The link-grammar provides several mechanisms to support
+     circumpositions or even more complicated multi-word structures.
+     One mechanism is by ordinary links; see the V, XJ and RJ links.
+     The other mechanism is by means of post-processing rules.
+     However, rules for many common forms have not yet been written.
+     The general problem is of supporting structures that have "holes"
+     in the middle. For example, the adposition:
 
         ... from [xxx] on.
 
