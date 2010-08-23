@@ -3,6 +3,8 @@ dnl Macro version of the 4.0.dict file. This is file is used to simplify
 dnl the maintenance of the verb definitions; it defines a handful of
 dnl macros to deal with the case of conjoined verbs. Pre-process this
 dnl file with the m4 macro pre-processor to create 4.0.dict
+dnl That is, at the command line, run: 
+dnl     m4 4.0.dict.m4 > 4.0.dict
 dnl
 dnl the comment delimiter for link-grammar data files is %
 changecom(`%')
@@ -1978,6 +1980,12 @@ or [[()]]));
 % the verb form: 1=plural-infinitive, 2=singular, 3=past("ed"), 
 % 4=progressive("-ing"), 5=gerund("-ing".)
 
+% plural-infinitive macro; the cost on $1 encourages any MV links to
+% attach to the "and.j-v" instead of to the individual verb.
+define(`VERB_PLI',`'
+  (<verb-pl,i> & $1) or
+  (<verb-and-pl-> & ([$1] or ())) or ($1 & <verb-and-pl+>);)
+
 % common intransitive verbs
 <vc-intrans>: {@MV+};
 
@@ -2091,12 +2099,9 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
   (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 % --------------------------------------------------------------
-define(`VERK',`'
-  (<verb-pl,i> & $1) or
-  (<verb-and-pl-> & ([$1] or ())) or ($1 & <verb-and-pl+>);)
 
 <vc-rise>: {K+ or OD+} & {@MV+};
-rise.v fall.v:VERK(<vc-rise>)
+rise.v fall.v:VERB_PLI(<vc-rise>)
 rises.v falls.v:
   (<verb-s> & <vc-rise>) or
   (<verb-and-s-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-s+>);

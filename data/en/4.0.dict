@@ -1971,6 +1971,10 @@ or [[()]]));
 % the verb form: 1=plural-infinitive, 2=singular, 3=past("ed"), 
 % 4=progressive("-ing"), 5=gerund("-ing".)
 
+% plural-infinitive macro; the cost on $1 encourages any MV links to
+% attach to the "and.j-v" instead of to the individual verb.
+
+
 % common intransitive verbs
 <vc-intrans>: {@MV+};
 
@@ -2084,7 +2088,6 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
   (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 % --------------------------------------------------------------
-
 
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v:
