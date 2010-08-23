@@ -3101,8 +3101,12 @@ finishes.v practices.v resists.v quits.v: <verb-s> & <vc-finish>;
 % <verb-pv>: "I want it finished"
 finished.v-d practiced.v-d resisted.v-d quitted.v-d: 
 (<verb-sp,pp> & <vc-finish>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-quit.v-d: ((<verb-sp,pp> or <verb-pl,i>) & <vc-finish>) or <verb-pv> or 
-({@E-} & A+) or <verb-po>;
+quit.v-d: 
+  (VERB_PLI(<vc-finish>)) or
+  (<verb-sp,pp> & <vc-finish>) or
+  <verb-pv> or 
+  ({@E-} & A+) or
+  <verb-po>;
 finishing.g practicing.g resisting.g
 quitting.g: (<vc-finish> & <verb-ge>) or <verb-ge-d>;
 finishing.v practicing.v resisting.v quitting.v: <verb-pg> & <vc-finish>;
@@ -4337,7 +4341,9 @@ done_so taken_place shown_up taken_office done_battle given_way
 taken_part taken_off broken_free taken_over seen_fit taken_note: 
 <verb-pp> & <vc-intrans>;
 
-come_true come_clean come_of_age: (<verb-pl,i> or <verb-pp>) & <vc-intrans>;
+come_true come_clean come_of_age:
+  (VERB_PLI(<vc-intrans>)) or
+  (<verb-pp> & <vc-intrans>);
 
 doing_so taking_place showing_up pleading_guilty pleading_innocent
 taking_office
