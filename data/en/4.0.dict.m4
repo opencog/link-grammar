@@ -2045,9 +2045,8 @@ lain.v: <verb-pp> & <vc-bulge>;
 
 % irregular -- coming is in words.v.5.4 ... 
 <vc-come>:  {(K+ & {Pa+}) or [[Pg+]]} & {@MV+};
-come.v:
-  ((<verb-pl,i> or <verb-pp>) & <vc-come>) or
-  (<verb-and-pl-> & <vc-come>) or (<vc-come> & <verb-and-pl+>) or
+come.v: VERB_PLI(<vc-come>) or
+  (<verb-pp> & <vc-come>) or
   ({@E-} & Ix- & O*t+);
 comes.v:
   (<verb-s> & <vc-come>) or
@@ -2061,9 +2060,7 @@ came.v-d:
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v 
 <vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
 
-/en/words/words.v.2.1:
-  (<verb-pl,i> & <vc-tr,intr>) or
-  (<verb-and-pl-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-pl+>);
+/en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
 /en/words/words.v.2.2:  
   (<verb-s> & <vc-tr,intr>) or
   (<verb-and-s-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-s+>);
@@ -2123,9 +2120,7 @@ rising.v falling.v:
   ((K+ & {[[@MV+]]} & O*n+) or
   ({O+ or B-} & {K+}) or 
   [[@MV+ & O*n+]]) & {@MV+};
-/en/words/words.v.6.1: 
-  (<verb-pl,i> & <vc-fill>) or 
-  (<verb-and-pl-> & <vc-fill>) or (<vc-fill> & <verb-and-pl+>);
+/en/words/words.v.6.1: VERB_PLI(<vc-fill>);
 /en/words/words.v.6.2:
   (<verb-s> & <vc-fill>) or
   (<verb-and-s-> & <vc-fill>) or (<vc-fill> & <verb-and-s+>);
@@ -2136,8 +2131,8 @@ rising.v falling.v:
   ({K+} & <verb-po>);
 
 split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d: 
-(<verb-sp,pp,ico> & <vc-fill>) or 
-(<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+  (<verb-sp,pp,ico> & <vc-fill>) or 
+  (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d 
 drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d 
@@ -2171,8 +2166,10 @@ befallen.v interwoven.v overborne.v outgone.v outgrown.v
  stridden.v:
  (<verb-pp> & <vc-fill>) or (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
 
-run.v: ((<verb-pl,i> or <verb-pp>) & <vc-fill>) or 
-(<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
+run.v: VERB_PLI(<vc-fill>) or
+  (<verb-pp> & <vc-fill>) or 
+  (<verb-pv> & {K+}) or
+  ({@E-} & A+) or ({K+} & <verb-po>);
 
 /en/words/words.v.6.4:
   (<verb-pg> & <vc-fill>) or
