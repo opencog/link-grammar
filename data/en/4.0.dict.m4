@@ -1984,7 +1984,7 @@ or [[()]]));
 % attach to the "and.j-v" instead of to the individual verb.
 define(`VERB_PLI',`'
   (<verb-pl,i> & $1) or
-  (<verb-and-pl-> & ([$1] or ())) or ($1 & <verb-and-pl+>);)
+  (<verb-and-pl-> & ([$1] or ())) or ($1 & <verb-and-pl+>))
 
 % common intransitive verbs
 <vc-intrans>: {@MV+};
@@ -1997,9 +1997,7 @@ define(`VERB_PLI',`'
 % of some of these verbs ... 
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
-/en/words/words.v.1.1:  
-  (<verb-pl,i> & <vc-intrans>) or
-  (<verb-and-pl-> & <vc-intrans>) or (<vc-intrans> & <verb-and-pl+>);
+/en/words/words.v.1.1: VERB_PLI(<vc-intrans>);
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v 
 /en/words/words.v.1.2:  
@@ -2026,9 +2024,7 @@ arisen.v: {@E-} & PP- & {@MV+};
 <vc-bulge>: {K+} & {@MV+}; 
 
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
-/en/words/words.v.5.1: 
-  (<verb-pl,i> & <vc-bulge>) or
-  (<verb-and-pl-> & <vc-bulge>) or (<vc-bulge> & <verb-and-pl+>);
+/en/words/words.v.5.1: VERB_PLI(<vc-bulge>);
 /en/words/words.v.5.2:
   (<verb-s> & <vc-bulge>) or
   (<verb-and-s-> & <vc-bulge>) or (<vc-bulge> & <verb-and-s+>);
@@ -2101,7 +2097,7 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
 % --------------------------------------------------------------
 
 <vc-rise>: {K+ or OD+} & {@MV+};
-rise.v fall.v:VERB_PLI(<vc-rise>)
+rise.v fall.v:VERB_PLI(<vc-rise>);
 rises.v falls.v:
   (<verb-s> & <vc-rise>) or
   (<verb-and-s-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-s+>);

@@ -1986,9 +1986,9 @@ or [[()]]));
 % of some of these verbs ... 
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
-/en/words/words.v.1.1:  
+/en/words/words.v.1.1: 
   (<verb-pl,i> & <vc-intrans>) or
-  (<verb-and-pl-> & <vc-intrans>) or (<vc-intrans> & <verb-and-pl+>);
+  (<verb-and-pl-> & ([<vc-intrans>] or ())) or (<vc-intrans> & <verb-and-pl+>);
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v 
 /en/words/words.v.1.2:  
@@ -2017,7 +2017,7 @@ arisen.v: {@E-} & PP- & {@MV+};
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
 /en/words/words.v.5.1: 
   (<verb-pl,i> & <vc-bulge>) or
-  (<verb-and-pl-> & <vc-bulge>) or (<vc-bulge> & <verb-and-pl+>);
+  (<verb-and-pl-> & ([<vc-bulge>] or ())) or (<vc-bulge> & <verb-and-pl+>);
 /en/words/words.v.5.2:
   (<verb-s> & <vc-bulge>) or
   (<verb-and-s-> & <vc-bulge>) or (<vc-bulge> & <verb-and-s+>);
