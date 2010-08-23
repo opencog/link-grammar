@@ -40,8 +40,8 @@
  % Rw is used similarly to Ct, Cta, and Rn to link question words to the relative clauses
  % that follow them.  
  % For auxillary verbs, replaced "{Q-}" with "(Rw- or Q-}".  
- % For nouns and others, replaced "B#m+" with "(Rw+ & B#m+)" (for any #)
- % For who,what,which,whom, replaced "B#" with "(R+ & B#+)" (for any #)
+ % For nouns and others, replaced "B*m+" with "(Rw+ & B*m+)" (for any *)
+ % For who,what,which,whom, replaced "B*" with "(R+ & B*+)" (for any *)
  %
  % TODO:
  % To-do: many verb simple past-tense forms include ({@E-} & A+) to
@@ -1701,6 +1701,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % conjoined verbs. 
 % VJr == left
 % VJl == right
+% VJb == but
 % VJd == ditransitive
 % VJn == neither-nor
 %
@@ -2083,20 +2084,26 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
 
 % --------------------------------------------------------------
 
-% XXX TODO VJ links for below
 <vc-rise>: {K+ or OD+} & {@MV+};
-rise.v fall.v: <verb-pl,i> & <vc-rise>;
-rises.v falls.v: <verb-s> & <vc-rise>;
+rise.v fall.v:
+  (<verb-pl,i> & <vc-rise>) or
+  (<verb-and-pl-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-pl+>);
+rises.v falls.v:
+  (<verb-s> & <vc-rise>) or
+  (<verb-and-s-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-s+>);
 
 rose.v-d fell.v-d: 
   (<verb-sp> & <vc-rise>) or
-  (<verb-and-sp-> & <vc-rise>) or (<vc-rise> & <verb-and-sp+>);
+  (<verb-and-sp-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-sp+>);
 
 risen.v: <verb-pp> & <vc-rise>;
 fallen.v: (<verb-pp> & <vc-rise>) or ({@E-} & A+);
-rising.v falling.v: (<vc-rise> & <verb-pg,ge>) or ({@E-} & A+)
-or <verb-ge-d>;
+rising.v falling.v:
+  (<vc-rise> & <verb-pg,ge>) or
+  ({@E-} & A+) or
+  <verb-ge-d>;
 
+% XXX TODO VJ links for below
 % words.v.6: Optionally transitive verbs that can take particles 
 % like "up" and "out" -- see also words.v.8
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
