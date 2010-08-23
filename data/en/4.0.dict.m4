@@ -2739,9 +2739,7 @@ bearing.v: <verb-pg> & <vc-bear>;
   <vc-trans> or
   ({@MV+} & (TO+ or Pg+));
 
-love.v dislike.v hate.v:
-  (<verb-pl,i> & <vc-love>) or
-  (<verb-and-pl-> & <vc-love>) or (<vc-love> & <verb-and-pl+>);
+love.v dislike.v hate.v: VERB_PLI(<vc-love>);
 
 loves.v dislikes.v hates.v: <verb-s> & <vc-love>;
 
@@ -2758,9 +2756,7 @@ loving.v disliking.v hating.v: <verb-pg> & <vc-love>;
 <vc-begin>:
   {<vc-trans>} or
   ({@MV+} & ({TO+} or Pg+));
-begin.v continue.v cease.v:
-  (<verb-pl,i> & <vc-begin>) or
-  (<verb-and-pl-> & <vc-begin>) or (<vc-begin> & <verb-and-pl+>);
+begin.v continue.v cease.v: VERB_PLI(<vc-begin>);
 begins.v continues.v ceases.v:
   (<verb-s> & <vc-begin>) or
   (<verb-and-s-> & <vc-begin>) or (<vc-begin> & <verb-and-s+>);
@@ -2792,9 +2788,7 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
     [[@MV+ & O*n+]]) & {@MV+}) or
   ({@MV+} & (TO+ or Pg+));
 
-start.v stop.v try.v:
-  (<verb-pl,i> & <vc-start>) or
-  (<verb-and-pl-> & <vc-start>) or (<vc-start> & <verb-and-pl+>);
+start.v stop.v try.v: VERB_PLI(<vc-start>);
 starts.v stops.v tries.v:
   (<verb-s> & <vc-start>) or
   (<verb-and-s-> & <vc-start>) or (<vc-start> & <verb-and-s+>);
@@ -3006,9 +3000,7 @@ demonstrating.v: <verb-pg> & <vc-guess>;
 % (QI+ & {MV+}): "I did not know why until recently"
 <vc-know>: {<vc-trans>} or
 ({@MV+} & (((OF+ or QI+)& {@MV+}) or Ce+ or TH+ or RSe+ or Zs-));
-know.v: 
-  (<verb-pl,i> & <vc-know>) or
-  (<verb-and-pl-> & <vc-know>) or (<vc-know> & <verb-and-pl+>);
+know.v: VERB_PLI(<vc-know>);
 
 knows.v: <verb-s> & <vc-know>;
 knew.v-d:
@@ -3268,9 +3260,7 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
     (B- & O+)
   ) & {@MV+}) or
   ({@MV+} & (Pa+ or AF- or Pv+ or Pp+ or TO+));
-get.v: 
-  (<verb-pl,i> & <vc-get>) or
-  (<verb-and-pl-> & <vc-get>) or (<vc-get> & <verb-and-pl+>);
+get.v: VERB_PLI(<vc-get>);
 gets.v:
   (<verb-s> & <vc-get>) or
   (<verb-and-s-> & <vc-get>) or (<vc-get> & <verb-and-s+>);
@@ -3624,9 +3614,7 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
     ([[@MV+ & O*n+]])) & {@MV+};
 
 give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v 
-telegraph.v wire.v: 
-  (<verb-pl,i> & <vc-give>) or
-  (<verb-and-pl-> & <vc-give>) or (<vc-give> & <verb-and-pl+>);
+telegraph.v wire.v: VERB_PLI(<vc-give>);
 
 gives.v sends.v buys.v brings.v lends.v
 issues.v hands.v pours.v telegraphs.v wires.v: 
@@ -3669,9 +3657,7 @@ handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+};
 
-pass.v pay.v sell.v deal.v: 
-  (<verb-pl,i> & <vc-pass>) or
-  (<verb-and-pl-> & <vc-pass>) or (<vc-pass> & <verb-and-pl+>);
+pass.v pay.v sell.v deal.v: VERB_PLI(<vc-pass>);
 
 passes.v pays.v sells.v deals.v: <verb-s> & <vc-pass>;
 passed.v-d paid.v-d payed.v-d sold.v-d dealt.v-d: 
@@ -3706,9 +3692,7 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
   <vc-fill> or
   <vc-ditrans>;
 
-color.v colour.v paint.v:
-  (<verb-pl,i> & <vc-color>) or
-  (<verb-and-pl-> & <vc-color>) or (<vc-color> & <verb-and-pl+>);
+color.v colour.v paint.v: VERB_PLI(<vc-color>);
 colors.v colours.v paints.v:
   (<verb-s> & <vc-color>) or
   (<verb-and-s-> & <vc-color>) or (<vc-color> & <verb-and-s+>);
@@ -3737,9 +3721,7 @@ coloring.g colouring.g painting.g:
     ([[@MV+ & O*n+]])} & {@MV+}) or
   ({@MV+} & (TH+ or Ce+));
 
-write.v charge.v draw.v: 
-  (<verb-pl,i> & <vc-write>) or
-  (<verb-and-pl-> & <vc-write>) or (<vc-write> & <verb-and-pl+>);
+write.v charge.v draw.v: VERB_PLI(<vc-write>);
 writes.v reads.v charges.v draws.v: 
   (<verb-s> & <vc-write>) or
   (<verb-and-s-> & <vc-write>) or (<vc-write> & <verb-and-s+>);
@@ -3849,9 +3831,7 @@ showing.v: <verb-pg> & <vc-show>;
     ([[@MV+ & O*n+]])} & {@MV+});
 
 % XXX TODO: add conjunct ot the rest
-teach.v:
- (<verb-pl,i> & <vc-teach>) or
- (<verb-and-pl-> & <vc-teach>) or (<vc-teach> & <verb-and-pl+>);
+teach.v: VERB_PLI(<vc-teach>);
 teaches.v: <verb-s> & <vc-teach>;
 taught.v-d: (<verb-sp,pp> & <vc-teach>) or (<verb-pv-b> & 
 (({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
