@@ -1986,6 +1986,12 @@ define(`VERB_PLI',`'
   (<verb-pl,i> & $1) or
   (<verb-and-pl-> & ([$1] or ())) or ($1 & <verb-and-pl+>))
 
+% abbreviations for ditransitive and optionally ditranstive verbs
+% ditranstive verbs take a direct and indirect object
+% e.g. "I gave her a rose"
+<vc-ditrans>: (O+ & {[[@MV+]]} & O*n+ & {VJd+});
+<vc-opt-ditrans>: (O+ & {{[[@MV+]]} & O*n+ & {VJd+}});
+
 % common intransitive verbs
 <vc-intrans>: {@MV+};
 
@@ -2110,7 +2116,6 @@ rising.v falling.v:
   ({@E-} & A+) or
   <verb-ge-d>;
 
-% XXX TODO VJ links for below
 % words.v.6: Optionally transitive verbs that can take particles 
 % like "up" and "out" -- see also words.v.8
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
@@ -2130,6 +2135,7 @@ rising.v falling.v:
   (<verb-pv-b> & {K+} & {@MV+}) or ({@E-} & A+) or
   ({K+} & <verb-po>);
 
+% XXX TODO VJ links for below
 split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d: 
   (<verb-sp,pp,ico> & <vc-fill>) or 
   (<verb-pv> & {K+}) or ({@E-} & A+) or ({K+} & <verb-po>);
@@ -2181,9 +2187,10 @@ run.v: VERB_PLI(<vc-fill>) or
   ({@E-} & A+);
 
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
- <verb-pl,i> & <vc-fill>;
+  VERB_PLI(<vc-fill>);
 
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
+% XXX TODO review this ... 
 and.v-fill:
   ((VJlg- & VJrg+) & (Pg- or Mg- or ({Xd-} & VJrg-))) & <vc-fill>;
 
@@ -2191,10 +2198,8 @@ and.v-fill:
 % common transitive verbs
 % abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v 
 <vc-trans>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
-/en/words/words.v.4.1:  
-<verb-pl,i> & <vc-trans>;
-/en/words/words-medical.v.4.1:  
-<verb-pl,i> & <vc-trans>;
+/en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
+/en/words/words-medical.v.4.1: VERB_PLI(<vc-trans>);
 
 /en/words/words.v.4.2:  
 <verb-s> & <vc-trans>;
@@ -2244,8 +2249,7 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
   ((O+ or B-) & {K+}) or 
   [[@MV+ & O*n+]]) & {@MV+};
 
-/en/words/words.v.8.1: 
-<verb-pl,i> & <vc-kick>;
+/en/words/words.v.8.1: VERB_PLI(<vc-kick>);
 /en/words/words.v.8.2:
 <verb-s> & <vc-kick>;
 
@@ -2269,6 +2273,7 @@ or ({K+} & <verb-po>);
   ({@E-} & A+) or 
   ({K+} & <verb-po>);
 
+% XXX TODO review for macro usage
 cut.v: 
   (<verb-sp,pp,ico> & <vc-kick>) or
   (<verb-and-sp-> & <vc-kick>) or (<vc-kick> & <verb-and-sp+>) or
@@ -2280,7 +2285,7 @@ cut.v:
 
 % --------------------------------------------------------------
 <vc-raise>: (((O+ or B-) & {OD+}) or [[@MV+ & O*n+]]) & {@MV+};
-raise.v lower.v up.v: <verb-pl,i> & <vc-raise>;
+raise.v lower.v up.v: VERB_PLI(<vc-raise>);
 raises.v lowers.v ups.v: <verb-s> & <vc-raise>;
 raised.v-d lowered.v-d upped.v-d: 
 (<verb-sp,pp> & <vc-raise>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
@@ -2300,7 +2305,7 @@ tending.v: <verb-pg> & <vc-tr,intr> & {TO+};
 
 <vc-consent>: {@MV+} & {TO+};
 consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
- <verb-pl,i> & <vc-consent>;
+  VERB_PLI(<vc-consent>);
 consents.v endeavors.v hesitates.v proceeds.v aspires.v purports.v:
 <verb-s> & <vc-consent>;
 consented.v-d endeavored.v-d hesitated.v-d proceeded.v-d 
@@ -2311,21 +2316,23 @@ consenting.v endeavoring.v hesitating.v proceeding.v aspiring.v purporting.v:
 
 
 <vc-deign>: {@MV+} & TO+;
-endeavour.v condescend.v deign.v: <verb-pl,i> & <vc-deign>;
+endeavour.v condescend.v deign.v: VERB_PLI(<vc-deign>);
 endeavours.v condescends.v deigns.v: <verb-s> & <vc-deign>;
 endeavoured.v-d condescended.v-d deigned.v-d: <verb-sp,pp> & <vc-deign>;
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or 
 <verb-ge-d>;
 
 <vc-happen>: {@MV+} & {TO+ or THi+};
-happen.v: <verb-pl,i> & <vc-happen>;
+happen.v: VERB_PLI(<vc-happen>);
 happens.v: <verb-s> & <vc-happen>;
 happened.v-d: <verb-sp,pp> & <vc-happen>;
 happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-wish>: ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or 
-(O+ & {[[@MV+]]} & O*n+);
-wish.v: <verb-pl,i> & <vc-wish>;
+% ditransitve
+<vc-wish>:
+  ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or 
+  <vc-ditrans>;
+wish.v: VERB_PLI(<vc-wish>);
 wished.v-d: <verb-sp,pp> & <vc-wish>;
 wishes.v: <verb-s> & <vc-wish>;
 wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
@@ -2333,9 +2340,8 @@ wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
 % See also <vc-think> for the same problem.
-% XXX todo -- some of these take verb-and
 <vc-hope>: ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or [[O+ & {@MV+}]];
-hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: <verb-pl,i> & <vc-hope>;
+hope.v agree.v pretend.v swear.v pray.v vow.v vote.v: VERB_PLI(<vc-hope>);
 hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: 
 <verb-s> & <vc-hope>;
 pretended.v-d prayed.v-d: <verb-sp,pp> & <vc-hope>;
@@ -2365,7 +2371,7 @@ seemed.v-d: <verb-x-sp,pp> & <vc-seem>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-care>: {@MV+} & {TO+ or QI+};
-care.v: <verb-pl,i> & <vc-care>;
+care.v: VERB_PLI(<vc-care>);
 cares.v: <verb-s> & <vc-care>;
 cared.v-d: <verb-sp,pp> & <vc-care>;
 caring.v: (<vc-care> & <verb-pg,ge>) or <verb-ge-d>;
@@ -2373,7 +2379,7 @@ caring.v: (<vc-care> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or Ce+));
 assert.v contend.v remark.v retort.v intimate.v exclaim.v 
 conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v: 
-<verb-pl,i> & <vc-assert>; 
+VERB_PLI(<vc-assert>); 
 asserts.v contends.v remarks.v retorts.v intimates.v exclaims.v
 conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v: 
 <verb-s> & <vc-assert>;
@@ -2393,7 +2399,7 @@ supposing.v:
 %%%% XXX should be merged into vc-reply
 <vc-muse>: {@MV+} & {TH+};
 theorize.v attest.v fantasize.v muse.v speculate.v concur.v:
- <verb-pl,i> & <vc-muse>;
+ VERB_PLI(<vc-muse>);
 theorizes.v attests.v fantasizes.v muses.v speculates.v concurs.v:
  <verb-s> & <vc-muse>;
 attested.v-d fantasized.v-d mused.v-d speculated.v-d concurred.v-d: 
@@ -2405,7 +2411,7 @@ theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v:
 <vc-reply>: ({@MV+} & {TH+ or Ce+});
 reply.v whisper.v argue.v sigh.v mutter.v 
 testify.v comment.v respond.v hint.v reason.v brag.v:
-<verb-pl,i> & <vc-reply>;
+VERB_PLI(<vc-reply>);
 replies.v whispers.v argues.v sighs.v 
 mutters.v testifies.v comments.v responds.v hints.v reasons.v 
 brags.v:
@@ -3212,12 +3218,6 @@ put.v-d: (<verb-sp,pp,ico> & <vc-put>) or (<verb-pv-b> &
 puts.v: <verb-s> & <vc-put>;
 putting.v: <verb-pg> & <vc-put>;
 putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
-
-% abbreviations for ditransitive and optionally ditranstive verbs
-% ditranstive verbs take a direct and indirect object
-% e.g. "I gave her a rose"
-<vc-ditrans>: (O+ & {[[@MV+]]} & O*n+ & {VJd+});
-<vc-opt-ditrans>: (O+ & {{[[@MV+]]} & O*n+ & {VJd+}});
 
 % K+ & O*n+: "He costed out the plan"
 <vc-cost>:
