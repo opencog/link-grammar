@@ -24,6 +24,13 @@ HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?(AM|PM|am|pm)?$/
 % Must be four digits, or possible three. Must end in s, 's ’s
 DECADE-TIME: /^([1-4][0-9][0-9]|[1-9][0-9])0(s|'s|’s)$/
 
+% Day-of-month names; this regex will match before the one below.
+DAY-ORDINALS: /^(1st|2nd|3rd|[4-9]th|1[0-9]th|2(0th|1st|2nd|3rd|[4-9]th)|30th|31st)$/
+
+% Ordinal numbers; everything except 1st through 13th
+% is handled by regex.
+ORDINALS: /^[1-9][0-9]*(0th|1st|2nd|3rd|[4-9]th)$/
+
 % Allows any number of commas or periods
 % Be careful not match the period at the end of a sentence; 
 % for example: "It happened in 1942."
