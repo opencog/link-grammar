@@ -16,4 +16,4 @@ DICTS=					         \
 dictdir=$(pkgdatadir)/en
 dict_DATA = $(DICTS)
 
-EXTRA_DIST = $(DICTS)
+EXTRA_DIST = $(DICTS) 4.0.dict.m4
