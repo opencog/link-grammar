@@ -1983,13 +1983,21 @@ or [[()]]));
 % plural-infinitive macro; the cost on $1 encourages any MV links to
 % attach to the "and.j-v" instead of to the individual verb.
 define(`VERB_PLI',`'
-  (<verb-pl,i> & ($1)) or
-  (<verb-and-pl-> & ([($1)] or ())) or (($1) & <verb-and-pl+>))
+  ((<verb-pl,i> & ($1)) or
+  (<verb-and-pl-> & ([($1)] or ())) or
+  (($1) & <verb-and-pl+>)))
 
-% singular macro (present tense)
+% singular present tense macro; same comments as above...
 define(`VERB_S',`'
-  (<verb-s> & ($1)) or
-  (<verb-and-s-> & ([($1)] or ())) or (($1) & <verb-and-s+>))
+  ((<verb-s> & ($1)) or
+  (<verb-and-s-> & ([($1)] or ())) or
+  (($1) & <verb-and-s+>)))
+
+% past tense macro, intransitive variation
+define(`VERB_SPPP_I',`'
+  ((<verb-sp,pp> & ($1)) or
+  (<verb-and-sp-i-> & (([$1]) or ())) or
+  (($1) & <verb-and-sp-i+>)))
 
 % abbreviations for ditransitive and optionally ditranstive verbs
 % ditranstive verbs take a direct and indirect object
@@ -2014,9 +2022,7 @@ define(`VERB_S',`'
 /en/words/words.v.1.2: VERB_S(<vc-intrans>);
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v 
-/en/words/words.v.1.3:  
-  (<verb-sp,pp> & <vc-intrans>) or
-  (<verb-and-sp-i-> & <vc-intrans>) or (<vc-intrans> & <verb-and-sp-i+>);
+/en/words/words.v.1.3: VERB_SPPP_I(<vc-intrans>);
 
 fundheld.v-d strove.v-d:
   <verb-sp,pp> & <vc-intrans>;
@@ -2035,9 +2041,8 @@ arisen.v: {@E-} & PP- & {@MV+};
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
 /en/words/words.v.5.1: VERB_PLI(<vc-bulge>);
 /en/words/words.v.5.2: VERB_S(<vc-bulge>);
-/en/words/words.v.5.3:
-  (<verb-sp,pp> & <vc-bulge>) or
-  (<verb-and-sp-> & <vc-bulge>) or (<vc-bulge> & <verb-and-sp+>) or
+/en/words/words.v.5.3: 
+  VERB_SPPP_I(<vc-bulge>) or
   ({@E-} & A+);
 slunk.v-d:
   <verb-sp,pp> & <vc-bulge>;
@@ -2056,9 +2061,7 @@ come.v: VERB_PLI(<vc-come>) or
   (<verb-pp> & <vc-come>) or
   ({@E-} & Ix- & O*t+);
 comes.v: VERB_S(<vc-come>);
-came.v-d:
-  (<verb-sp> & <vc-come>) or
-  (<verb-and-sp-> & <vc-come>) or (<vc-come> & <verb-and-sp+>);
+came.v-d: VERB_SPPP_I(<vc-come>);
 
 % --------------------------------------------------------------
 % optionally transitive verbs
@@ -2099,9 +2102,7 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v:VERB_PLI(<vc-rise>);
 rises.v falls.v: VERB_S(<vc-rise>);
-rose.v-d fell.v-d: 
-  (<verb-sp> & <vc-rise>) or
-  (<verb-and-sp-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-sp+>);
+rose.v-d fell.v-d: VERB_SPPP_I(<vc-rise>);
 
 risen.v: <verb-pp> & <vc-rise>;
 fallen.v: (<verb-pp> & <vc-rise>) or ({@E-} & A+);
@@ -4446,9 +4447,9 @@ saying.w voting.w:
 yes.misc-vote no.misc-vote: Vv-;
 
 double.v triple.v quadruple.v quintuple.v:
-  {EN-} & (VERB_PLI(<vc-fill>));
+  {EN-} & VERB_PLI(<vc-fill>);
 doubles.v triples.v quadruples.v quintuples.v:
-  {EN-} & (VERB_S(<vc-fill>));
+  {EN-} & VERB_S(<vc-fill>);
 doubled.v-d tripled.v-d quadrupled.v-d quintupled.v-d:
   {EN-} & ((<verb-sp,pp> & <vc-fill>) or <verb-pv> or ({@E-} & A+) or <verb-po>);
 doubling.v tripling.v quadrupling.v quintupling.v:
