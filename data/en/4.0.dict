@@ -4215,7 +4215,7 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % 'sent', 'poured': optional indirect object.
 <vc-give>:
   ((B- & {O+ or K+}) or
-    [<vc-ditrans>] or 
+    [<vc-opt-ditrans>] or 
     (O+ & K+) or 
     (K+ & ({[[@MV+]]} & O*n+)) or
     ([[@MV+ & O*n+]])) & {@MV+};
