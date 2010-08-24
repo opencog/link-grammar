@@ -1983,8 +1983,13 @@ or [[()]]));
 % plural-infinitive macro; the cost on $1 encourages any MV links to
 % attach to the "and.j-v" instead of to the individual verb.
 define(`VERB_PLI',`'
-  (<verb-pl,i> & $1) or
-  (<verb-and-pl-> & ([$1] or ())) or ($1 & <verb-and-pl+>))
+  (<verb-pl,i> & ($1)) or
+  (<verb-and-pl-> & ([($1)] or ())) or (($1) & <verb-and-pl+>))
+
+% singular macro (present tense)
+define(`VERB_S',`'
+  (<verb-s> & ($1)) or
+  (<verb-and-s-> & ([($1)] or ())) or (($1) & <verb-and-s+>))
 
 % abbreviations for ditransitive and optionally ditranstive verbs
 % ditranstive verbs take a direct and indirect object
@@ -2006,9 +2011,7 @@ define(`VERB_PLI',`'
 /en/words/words.v.1.1: VERB_PLI(<vc-intrans>);
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v 
-/en/words/words.v.1.2:  
-  (<verb-s> & <vc-intrans>) or
-  (<verb-and-s-> & <vc-intrans>) or (<vc-intrans> & <verb-and-s+>);
+/en/words/words.v.1.2: VERB_S(<vc-intrans>);
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v 
 /en/words/words.v.1.3:  
@@ -2031,9 +2034,7 @@ arisen.v: {@E-} & PP- & {@MV+};
 
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
 /en/words/words.v.5.1: VERB_PLI(<vc-bulge>);
-/en/words/words.v.5.2:
-  (<verb-s> & <vc-bulge>) or
-  (<verb-and-s-> & <vc-bulge>) or (<vc-bulge> & <verb-and-s+>);
+/en/words/words.v.5.2: VERB_S(<vc-bulge>);
 /en/words/words.v.5.3:
   (<verb-sp,pp> & <vc-bulge>) or
   (<verb-and-sp-> & <vc-bulge>) or (<vc-bulge> & <verb-and-sp+>) or
@@ -2054,9 +2055,7 @@ lain.v: <verb-pp> & <vc-bulge>;
 come.v: VERB_PLI(<vc-come>) or
   (<verb-pp> & <vc-come>) or
   ({@E-} & Ix- & O*t+);
-comes.v:
-  (<verb-s> & <vc-come>) or
-  (<verb-and-s-> & <vc-come>) or (<vc-come> & <verb-and-s+>);
+comes.v: VERB_S(<vc-come>);
 came.v-d:
   (<verb-sp> & <vc-come>) or
   (<verb-and-sp-> & <vc-come>) or (<vc-come> & <verb-and-sp+>);
@@ -2067,9 +2066,7 @@ came.v-d:
 <vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
 
 /en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
-/en/words/words.v.2.2:  
-  (<verb-s> & <vc-tr,intr>) or
-  (<verb-and-s-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-s+>);
+/en/words/words.v.2.2: VERB_S(`<vc-tr,intr>');
 /en/words/words.v.2.3:  
   (<verb-sp,pp> & <vc-tr,intr>) or 
   (<verb-and-sp-> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-and-sp+>) or
@@ -2101,10 +2098,7 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
 
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v:VERB_PLI(<vc-rise>);
-rises.v falls.v:
-  (<verb-s> & <vc-rise>) or
-  (<verb-and-s-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-s+>);
-
+rises.v falls.v: VERB_S(<vc-rise>);
 rose.v-d fell.v-d: 
   (<verb-sp> & <vc-rise>) or
   (<verb-and-sp-> & ([<vc-rise>] or ())) or (<vc-rise> & <verb-and-sp+>);
@@ -2126,9 +2120,7 @@ rising.v falling.v:
   ({O+ or B-} & {K+}) or 
   [[@MV+ & O*n+]]) & {@MV+};
 /en/words/words.v.6.1: VERB_PLI(<vc-fill>);
-/en/words/words.v.6.2:
-  (<verb-s> & <vc-fill>) or
-  (<verb-and-s-> & <vc-fill>) or (<vc-fill> & <verb-and-s+>);
+/en/words/words.v.6.2: VERB_S(<vc-fill>);
 /en/words/words.v.6.3:
   (<verb-sp,pp> & <vc-fill>) or 
   (<verb-and-sp-> & <vc-fill>) or (<vc-fill> & <verb-and-sp+>) or
@@ -2201,10 +2193,8 @@ and.v-fill:
 /en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
 /en/words/words-medical.v.4.1: VERB_PLI(<vc-trans>);
 
-/en/words/words.v.4.2:  
-<verb-s> & <vc-trans>;
-/en/words/words-medical.v.4.2:  
-<verb-s> & <vc-trans>;
+/en/words/words.v.4.2: VERB_S(<vc-trans>);
+/en/words/words-medical.v.4.2: VERB_S(<vc-trans>);
 
 /en/words/words.v.4.3:  
   (<verb-sp,pp> & <vc-trans>) or 
@@ -2250,8 +2240,7 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
   [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
-/en/words/words.v.8.2:
-<verb-s> & <vc-kick>;
+/en/words/words.v.8.2: VERB_S(<vc-kick>);
 
 stole.v-d threw.v-d tore.v-d wore.v-d
 overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
@@ -2771,9 +2760,7 @@ loving.v disliking.v hating.v: <verb-pg> & <vc-love>;
   {<vc-trans>} or
   ({@MV+} & ({TO+} or Pg+));
 begin.v continue.v cease.v: VERB_PLI(<vc-begin>);
-begins.v continues.v ceases.v:
-  (<verb-s> & <vc-begin>) or
-  (<verb-and-s-> & <vc-begin>) or (<vc-begin> & <verb-and-s+>);
+begins.v continues.v ceases.v: VERB_S(<vc-begin>);
 ceased.v-d:
   (<verb-sp,pp> & <vc-begin>) or
   (<verb-and-sp-> & <vc-begin>) or (<vc-begin> & <verb-and-sp+>) or
@@ -2803,10 +2790,7 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
   ({@MV+} & (TO+ or Pg+));
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
-starts.v stops.v tries.v:
-  (<verb-s> & <vc-start>) or
-  (<verb-and-s-> & <vc-start>) or (<vc-start> & <verb-and-s+>);
-
+starts.v stops.v tries.v: VERB_S(<vc-start>);
 started.v-d stopped.v-d tried.v-d: 
   (<verb-sp,pp> & <vc-start>) or 
   (<verb-and-sp-i-> & <vc-start>) or (<vc-start> & <verb-and-sp-i+>) or
@@ -3273,9 +3257,7 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
   ) & {@MV+}) or
   ({@MV+} & (Pa+ or AF- or Pv+ or Pp+ or TO+));
 get.v: VERB_PLI(<vc-get>);
-gets.v:
-  (<verb-s> & <vc-get>) or
-  (<verb-and-s-> & <vc-get>) or (<vc-get> & <verb-and-s+>);
+gets.v: VERB_S(<vc-get>);
 got.v-d:
   (<verb-sp,pp> & <vc-get>) or
   (<verb-and-sp-> & <vc-get>) or (<vc-get> & <verb-and-sp+>);
@@ -3629,9 +3611,7 @@ give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v
 telegraph.v wire.v: VERB_PLI(<vc-give>);
 
 gives.v sends.v buys.v brings.v lends.v
-issues.v hands.v pours.v telegraphs.v wires.v: 
-  (<verb-s> & <vc-give>) or
-  (<verb-and-s-> & <vc-give>) or (<vc-give> & <verb-and-s+>);
+issues.v hands.v pours.v telegraphs.v wires.v: VERB_S(<vc-give>);
 
 sent.v-d bought.v-d brought.v-d lent.v-d handed.v-d:
   (<verb-sp,pp> & <vc-give>) or
@@ -3705,9 +3685,7 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
   <vc-ditrans>;
 
 color.v colour.v paint.v: VERB_PLI(<vc-color>);
-colors.v colours.v paints.v:
-  (<verb-s> & <vc-color>) or
-  (<verb-and-s-> & <vc-color>) or (<vc-color> & <verb-and-s+>);
+colors.v colours.v paints.v: VERB_S(<vc-color>);
 colored.v-d coloured.v-d painted.v-d:
   (<verb-sp,pp> & <vc-color>) or
   (<verb-and-sp-i-> & <vc-color>) or (<vc-color> & <verb-and-sp-i+>) or
@@ -3734,9 +3712,7 @@ coloring.g colouring.g painting.g:
   ({@MV+} & (TH+ or Ce+));
 
 write.v charge.v draw.v: VERB_PLI(<vc-write>);
-writes.v reads.v charges.v draws.v: 
-  (<verb-s> & <vc-write>) or
-  (<verb-and-s-> & <vc-write>) or (<vc-write> & <verb-and-s+>);
+writes.v reads.v charges.v draws.v: VERB_S(<vc-write>);
 wrote.v-d drew.v-d: 
   (<verb-sp> & <vc-write>) or
   (<verb-and-sp-> & <vc-write>) or (<vc-write> & <verb-and-sp+>);
