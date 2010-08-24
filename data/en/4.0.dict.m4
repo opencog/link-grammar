@@ -2004,6 +2004,7 @@ define(`VERB_SPPP_I',`'
 % e.g. "I gave her a rose"
 <vc-ditrans>: (O+ & {[[@MV+]]} & O*n+ & {VJd+});
 <vc-opt-ditrans>: (O+ & {{[[@MV+]]} & O*n+ & {VJd+}});
+<vc-opt-ditrans-costly>: (O+ & {{[[@MV+]]} & [O*n+] & {VJd+}});
 
 % common intransitive verbs
 <vc-intrans>: {@MV+};
@@ -3606,7 +3607,7 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % 'sent', 'poured': optional indirect object.
 <vc-give>:
   ((B- & {O+ or K+}) or
-    [<vc-opt-ditrans>] or 
+    <vc-opt-ditrans-costly> or 
     (O+ & K+) or 
     (K+ & ({[[@MV+]]} & O*n+)) or
     ([[@MV+ & O*n+]])) & {@MV+};
