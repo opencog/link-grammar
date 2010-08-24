@@ -1815,6 +1815,7 @@ has.v:
   (<verb-x-s> & <vc-have>) or
   (<verb-and-s-> & <vc-have>) or (<vc-have> & <verb-and-s+>);
 
+% XXX probably should be verb-and-sp-i- etc !?
 had.v-d: 
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
   (<verb-x-sp> & <vc-have>) or 
@@ -1913,6 +1914,7 @@ was.v-d:
   ({@E-} & SX- & <vc-be>) or
   (((Rw- or ({Ic-} & Q-) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
 
+% XXX probably should be verb-and-sp-i- etc !?
 were.v-d: 
   <marker-past> or 
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>) or 
@@ -1943,6 +1945,7 @@ aren't aren’t: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
 weren't.v-d weren’t.v-d: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
 
+% XXX probably should be verb-and-sp-i- etc !?
 will.v can.v may.v must.v could.v might.v shall.v: 
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
@@ -2498,7 +2501,7 @@ goes.v:
   (<verb-and-s-> & <vc-go>) or (<vc-go> & <verb-and-s+>);
 went.v-d:
   (<verb-x-sp> & (<vc-go> or [[O*t+ & {@MV+}]])) or
-  (<verb-and-sp-> & <vc-go>) or (<vc-go> & <verb-and-sp+>);
+  (<verb-and-sp-i-> & <vc-go>) or (<vc-go> & <verb-and-sp-i+>);
 % XXX TODO maybe need VJ for gone, going etc. ???
 gone.v: <verb-pp> & <vc-go>;
 % The keys are gone.  The popcorn is all gone.
