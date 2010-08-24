@@ -1646,8 +1646,6 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
  ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
  [DP- & J-] or [[Wq- & PF+]]);
 
-<verb-sp,pp,ico>: <verb-sp,pp> or <verb-ico> or <marker-past>;
-
 % ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
 % AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
 % <noun-and-u>: allows use of gerunds as nouns.
@@ -2124,7 +2122,12 @@ shrunk.v withdrawn.v sunk.v forgiven.v:
   ({@E-} & A+) or
   <verb-po>;
 bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
-  (<verb-sp,pp,ico> & <vc-tr,intr>) or
+  
+  ((<verb-sp,pp> & (<vc-tr,intr>)) or
+  (<verb-and-sp-i-> & (([<vc-tr,intr>]) or ())) or
+  ((<vc-tr,intr>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-tr,intr>) or
   <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
@@ -2185,7 +2188,12 @@ rising.v falling.v:
 
 % XXX TODO VJ links for below
 split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d: 
-  (<verb-sp,pp,ico> & <vc-fill>) or 
+  
+  ((<verb-sp,pp> & (<vc-fill>)) or
+  (<verb-and-sp-i-> & (([<vc-fill>]) or ())) or
+  ((<vc-fill>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-fill>) or 
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or
   ({K+} & <verb-po>);
@@ -2307,8 +2315,15 @@ overran.v-d mistook.v-d underwrote.v-d:
   <verb-and-sp-t>;
 hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d offset.v-d 
 overrun.v-d upset.v-d undercut.v-d: 
-(<verb-sp,pp,ico> & <vc-trans>) or <verb-pv> or ({@E-} & A+)
-or <verb-po>;
+  
+  ((<verb-sp,pp> & (<vc-trans>)) or
+  (<verb-and-sp-i-> & (([<vc-trans>]) or ())) or
+  ((<vc-trans>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-trans>) or
+  <verb-pv> or
+  ({@E-} & A+) or
+  <verb-po>;
 forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v: 
 (<verb-pp> & <vc-trans>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
 
@@ -2365,15 +2380,19 @@ or ({K+} & <verb-po>);
   ({@E-} & A+) or 
   ({K+} & <verb-po>);
 
-% XXX TODO review for macro usage
 cut.v: 
-  (<verb-sp,pp,ico> & <vc-kick>) or
-  (<verb-and-sp-> & <vc-kick>) or (<vc-kick> & <verb-and-sp+>) or
+  
+  ((<verb-sp,pp> & (<vc-kick>)) or
+  (<verb-and-sp-i-> & (([<vc-kick>]) or ())) or
+  ((<vc-kick>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or 
   ({@E-} & A+) or ({K+} & <verb-po>);
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 /en/words/words.v.8.5:
-(<vc-kick> & <verb-ge>) or <verb-ge-d>;
+  (<vc-kick> & <verb-ge>) or
+   <verb-ge-d>;
 
 % --------------------------------------------------------------
 <vc-raise>: (((O+ or B-) & {OD+}) or [[@MV+ & O*n+]]) & {@MV+};
@@ -3810,8 +3829,15 @@ for_granted: Vtg-;
   (Vp+ & (Zs- or MVa+))) & {@MV+};
 
 % XXX TODO verb conversion -- 
-put.v-d: (<verb-sp,pp,ico> & <vc-put>) or (<verb-pv-b> & 
-(K+ or Pp+ or WR-) & {@MV+}) or ((K+ or Pp+) & <verb-po>);
+put.v-d:
+  
+  ((<verb-sp,pp> & (<vc-put>)) or
+  (<verb-and-sp-i-> & (([<vc-put>]) or ())) or
+  ((<vc-put>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-put>) or
+  (<verb-pv-b> & (K+ or Pp+ or WR-) & {@MV+}) or
+  ((K+ or Pp+) & <verb-po>);
 puts.v: 
   ((<verb-s> & (<vc-put>)) or
   (<verb-and-s-> & ([(<vc-put>)] or ())) or
@@ -3937,9 +3963,16 @@ track.i: Vk- & {OF+};
   ((K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+ or Vs+}) or
   [[@MV+ & O*n+]]) & {@MV+};
 
-set.v-d: (<verb-sp,pp,ico> & 
-<vc-set>) or (<verb-pv> & {K+ or Vs+} & {@MV+}) or 
-({@E-} & A+) or ({K+ or Vs+} & <verb-po>);
+set.v-d:
+  
+  ((<verb-sp,pp> & (<vc-set>)) or
+  (<verb-and-sp-i-> & (([<vc-set>]) or ())) or
+  ((<vc-set>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-set>) or
+  (<verb-pv> & {K+ or Vs+} & {@MV+}) or 
+  ({@E-} & A+) or
+  ({K+ or Vs+} & <verb-po>);
 sets.v: 
   ((<verb-s> & (<vc-set>)) or
   (<verb-and-s-> & ([(<vc-set>)] or ())) or
@@ -4532,13 +4565,21 @@ wrote.v-d drew.v-d:
   ((<vc-write>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>;
 
-% XXX todo: probably need verb-and for the below.
 read.v-d: 
-  (<verb-sp,pp,ico> & <vc-write>) or 
+  
+  ((<verb-sp,pp> & (<vc-write>)) or
+  (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
+  ((<vc-write>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or 
+  (<verb-ico> & <vc-write>) or 
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 charged.v-d: 
-  (<verb-sp,pp> & <vc-write>) or 
+  
+  ((<verb-sp,pp> & (<vc-write>)) or
+  (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
+  ((<vc-write>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or 
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 written.v drawn.v: 
@@ -4674,10 +4715,12 @@ teaches.v:
   ((<verb-s> & (<vc-teach>)) or
   (<verb-and-s-> & ([(<vc-teach>)] or ())) or
   ((<vc-teach>) & <verb-and-s+>));
-taught.v-d: (<verb-sp,pp> & <vc-teach>) or (<verb-pv-b> & 
-(({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
-({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or TO+)))) or 
-({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-po>);
+taught.v-d:
+  (<verb-sp,pp> & <vc-teach>) or
+  (<verb-pv-b> & 
+    (({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
+    ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or TO+)))) or 
+  ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-po>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
@@ -4710,8 +4753,12 @@ forces.v:
   ((<verb-s> & (<vc-force>)) or
   (<verb-and-s-> & ([(<vc-force>)] or ())) or
   ((<vc-force>) & <verb-and-s+>));
-forced.v-d willed.v-d: (<verb-sp,pp> & <vc-force>) or (<verb-pv-b> & ((K+ & {@MV+}) or 
-({@MV+} & TO+))) or ((K+ or ({@MV+} & TO+)) & <verb-po>) or ({@E-} & A+);
+forced.v-d willed.v-d:
+  (<verb-sp,pp> & <vc-force>) or
+  (<verb-pv-b> & ((K+ & {@MV+}) or 
+  ({@MV+} & TO+))) or
+  ((K+ or ({@MV+} & TO+)) & <verb-po>) or
+  ({@E-} & A+);
 forcing.g: (<vc-force> & <verb-ge>) or <verb-ge-d>;
 forcing.v: <verb-pg> & <vc-force>;
 
@@ -5015,9 +5062,13 @@ assuring.v: <verb-pg> & <vc-assure>;
   ((B- or O+) & {@MV+} & {I+ or ((K+ or Pp+) & {@MV+})}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
-% XXX TODO verb conversion -- 
 let.v-d:
-  (<verb-sp,pp,ico> & <vc-let>) or
+  
+  ((<verb-sp,pp> & (<vc-let>)) or
+  (<verb-and-sp-i-> & (([<vc-let>]) or ())) or
+  ((<vc-let>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-let>) or
   (<verb-pv-b> & ((K+ or Pp+) & {@MV+})) or
   ((K+ or Pp+) & <verb-po>);
 lets.v: 
@@ -5169,15 +5220,22 @@ clearing.v: <verb-pg> & <vc-clear>;
   ({(O+ & {O*n+}) or (B- & {O+})} & {@MV+} & {TH+ or Ce+ or RSe+}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
-bet.v-d: (<verb-sp,pp,ico> & <vc-bet>) or (<verb-pv> & {O+ or B-} &
-{@MV+} & {TH+ or Ce+ or RSe+ or @MV+}); 
+bet.v-d:
+  
+  ((<verb-sp,pp> & (<vc-bet>)) or
+  (<verb-and-sp-i-> & (([<vc-bet>]) or ())) or
+  ((<vc-bet>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-bet>) or
+  (<verb-pv> & {O+ or B-} & {@MV+} & {TH+ or Ce+ or RSe+ or @MV+}); 
 bets.v: 
   ((<verb-s> & (<vc-bet>)) or
   (<verb-and-s-> & ([(<vc-bet>)] or ())) or
   ((<vc-bet>) & <verb-and-s+>));
-betted.v-d: (<verb-sp,pp> & <vc-bet>) or (<verb-pv-b> & {O+ or B-} & {@MV+}
-& {TH+ or Ce+ or RSe+ or @MV+}) or ({O- or [[@MV+ & O*n+]] or TH+ or Ce+}
-& <verb-po>); 
+betted.v-d:
+  (<verb-sp,pp> & <vc-bet>) or
+  (<verb-pv-b> & {O+ or B-} & {@MV+} & {TH+ or Ce+ or RSe+ or @MV+}) or
+  ({O- or [[@MV+ & O*n+]] or TH+ or Ce+} & <verb-po>); 
 betting.g: (<vc-bet> & <verb-ge>) or <verb-ge-d>;
 betting.v: <verb-pg> & <vc-bet>;
 
@@ -5330,9 +5388,20 @@ showed_up pleaded_guilty pleaded_innocent made_way caught_up caught_on
 filed_suit picked_up jumped_ship:  
   <verb-sp,pp> & <vc-intrans>;
 
-plead_guilty plead_innocent: <verb-sp,pp,ico> & <vc-intrans>;
+plead_guilty plead_innocent:
+  
+  ((<verb-sp,pp> & (<vc-intrans>)) or
+  (<verb-and-sp-i-> & (([<vc-intrans>]) or ())) or
+  ((<vc-intrans>) & <verb-and-sp-i+>)) or
+  (<verb-ico> & <vc-intrans>);
 
-let_go: (<verb-sp,pp,ico> & <vc-intrans>) or <verb-pv>;
+let_go:
+  
+  ((<verb-sp,pp> & (<vc-intrans>)) or
+  (<verb-and-sp-i-> & (([<vc-intrans>]) or ())) or
+  ((<vc-intrans>) & <verb-and-sp-i+>)) or
+  (<verb-ico> & <vc-intrans>) or
+  <verb-pv>;
 
 did_so took_place took_office did_battle gave_way took_part took_off
 broke_free took_over saw_fit took_note came_true came_clean came_of_age: 
@@ -5371,7 +5440,13 @@ takes_note_of:
   ((<verb-s> & (<vc-trans>)) or
   (<verb-and-s-> & ([(<vc-trans>)] or ())) or
   ((<vc-trans>) & <verb-and-s+>));
-put_up_with let_go_of: <verb-sp,pp,ico> & <vc-trans>;
+put_up_with let_go_of:
+  
+  ((<verb-sp,pp> & (<vc-trans>)) or
+  (<verb-and-sp-i-> & (([<vc-trans>]) or ())) or
+  ((<vc-trans>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-ico> & <vc-trans>);
 allowed_for brought_about got_rid_of took_note_of: <verb-sp,pp> & <vc-trans>;
 gotten_rid_of taken_note_of: <verb-pp> & <vc-trans>;  
 putting_up_with allowing_for bringing_about getting_rid_of letting_go_of
