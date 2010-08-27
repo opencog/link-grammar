@@ -1738,6 +1738,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-and-sp-t+>: {@E-} & VJl*t+;
 <verb-and-pg->: {@E-} & VJrg-;
 <verb-and-pg+>: {@E-} & VJlg+;
+<verb-and-had->: {@E-} & VJrh-;
+<verb-and-had+>: {@E-} & VJlh+;
 
 <verb-and-sp-t>: 
   <verb-and-sp-t-> or 
@@ -2123,8 +2125,16 @@ rise.v fall.v:VERB_PLI(<vc-rise>);
 rises.v falls.v: VERB_S(<vc-rise>);
 rose.v-d fell.v-d: VERB_SPPP_I(<vc-rise>);
 
-risen.v: <verb-pp> & <vc-rise>;
-fallen.v: (<verb-pp> & <vc-rise>) or ({@E-} & A+);
+risen.v:
+  (<verb-pp> & <vc-rise>) or
+  (<verb-and-had-> & (([<vc-rise>]) or ())) or
+  ((<vc-rise>) & <verb-and-had+>);
+
+fallen.v: 
+  (<verb-pp> & <vc-rise>) or
+  (<verb-and-had-> & (([<vc-rise>]) or ())) or
+  ((<vc-rise>) & <verb-and-had+>) or
+  ({@E-} & A+);
 rising.v falling.v:
   (<vc-rise> & <verb-pg,ge>) or
   ({@E-} & A+) or
@@ -5338,6 +5348,7 @@ but.j-n:
   (({Xd-} & VJlpt- & VJrpt+) & ({@MV+} & Sp- & (O+ or (B- & {B+})))) or
   ((VJls- & VJrs+) & (I- & {@MV+})) or
   ((VJlp- & VJrp+) & (I- & {@MV+})) or
+  ((VJlh- & VJrh+) & (PP- & {@MV+})) or
   ((VJlg- & VJrg+) & (J-));
 
 and.j-v or.j-v: <verb-conjunction>;
