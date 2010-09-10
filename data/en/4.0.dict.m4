@@ -1793,8 +1793,6 @@ define(`VERB_PP',`'
   (($1) & <verb-and-had+>)))
 
 % the filler-it  variation of the above rules.
-% XXX this is not correct, since it fails to give a correct parse
-% for "do not surprise or alarm him". 
 define(`VERB_S_PLI',`'
   ((<verb-s-pl,i> & ($1)) or
   (<verb-and-sp-i-> & ([($1)] or ())) or
@@ -5377,12 +5375,10 @@ but.j-n:
 % The weirdo (B- & {B+}) allows the following to parse:
 % "This is a problem Moscow created and failed to solve."
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss-) or ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp-) or ({Xd-} & VJrpi-))) or
-  (({Xd-} & VJlst- & VJrst+) & ({@MV+} & Ss- & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) & ({@MV+} & Sp- & (O+ or (B- & {B+})))) or
-  ((VJls- & VJrs+) & (I- & {@MV+})) or
-  ((VJlp- & VJrp+) & (I- & {@MV+})) or
+  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss-) or (I- & {@MV+}) or ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp-) or (I- & {@MV+}) or ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss-) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp-) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
   (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+})) or
   ((VJlg- & VJrg+) & (J-));
 
