@@ -1792,6 +1792,18 @@ define(`VERB_PP',`'
   (<verb-and-had-> & (([$1]) or ())) or
   (($1) & <verb-and-had+>)))
 
+% the filler-it  variation of the above rules.
+% XXX this is not correct, since it fails to give a correct parse
+% for "do not surprise or alarm him". 
+define(`VERB_S_PLI',`'
+  ((<verb-s-pl,i> & ($1)) or
+  (<verb-and-sp-i-> & ([($1)] or ())) or
+  (($1) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t>)
+
+% XXX TODO need to provide macro-ized versions for <verb-s-s>, <verb-s-sp>
+% <verb-s-sp,pp> and the <verb-x-???> variants as well. 
+
 % AUXILIARY VERBS
 
 %<vc-do>: (((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+}) 
@@ -2438,7 +2450,6 @@ exclaiming.v conjecturing.v alleging.v surmising.v opining.v insinuating.v
 supposing.v: 
   (<vc-assert> & <verb-pg,ge>) or <verb-ge-d>;
 
-%%%% XXX should be merged into vc-reply
 <vc-muse>: {@MV+} & {TH+};
 theorize.v attest.v fantasize.v muse.v speculate.v concur.v:
   VERB_PLI(<vc-muse>);
@@ -2492,7 +2503,7 @@ thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
 
 <vc-matter>: {@MV+} & {THi+ or QIi+};
-matter.v: <verb-s-pl,i> & <vc-matter>;
+matter.v: VERB_S_PLI(<vc-matter>);
 matters.v: <verb-s-s> & <vc-matter>;
 mattered.v-d: VERB_SPPP_I(<vc-matter>);
 mattering.v: (<vc-matter> & <verb-pg,ge>) or <verb-ge-d>;
@@ -3194,7 +3205,7 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 % <vc-trans> plus TI
 <vc-become>: ((O+ or B- or TI+ or [[@MV+ & (O*n+ or TI+)]] or [[Pv+]]) 
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
-become.v: ((<verb-s-pl,i> or <verb-s-pp>) & <vc-become>) or <verb-pv>;
+become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: <verb-s-s> & <vc-become>;
 became.v-d: <verb-s-sp> & <vc-become>;
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
@@ -3277,7 +3288,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
   ({O+} & (OT+ or BT-) & {@MV+} & {(TOt+ & B+) or TOi+}) or 
   (OXii+ & Vtg+ & {@MV+} & TH+) or
   @MV+;
-take.v: <verb-s-pl,i> & <vc-take>;
+take.v: VERB_S_PLI(<vc-take>);
 takes.v: <verb-s-s> & <vc-take>;
 took.v-d: <verb-s-sp> & <vc-take>;
 taken.v: (<verb-s-pp> & <vc-take>) or (<verb-pv-b> & 
@@ -3309,10 +3320,10 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
     (B- & {O+})) & {@MV+} & {TOi+}) or 
   ([[@MV+ & O*n+]]);
 
-cost.v-d: (<verb-s-pl,i> or <verb-s-sp,pp>) & <vc-cost>;
+cost.v-d: VERB_S_PLI(<vc-cost>) or (<verb-s-sp,pp> & <vc-cost>);
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
-(<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or 
-({K+ or Pa+ or Pg+} & <verb-po>);
+  (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or 
+  ({K+ or Pa+ or Pg+} & <verb-po>);
 costs.v: <verb-s-s> & <vc-cost>;
 costing.v: <verb-s-pg> & <vc-cost>;
 costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
@@ -4291,13 +4302,12 @@ betted.v-d:
 betting.g: (<vc-bet> & <verb-ge>) or <verb-ge-d>;
 betting.v: <verb-pg> & <vc-bet>;
 
-% XXX TODO verb conversion TODO
 <vc-bother>:
   ({@MV+} & TO+) or
   ((O+ or B-) & {@MV+} & {THi+}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
-bother.v: <verb-s-pl,i> & <vc-bother>;
+bother.v: VERB_S_PLI(<vc-bother>);
 bothers.v: <verb-s-s> & <vc-bother>;
 bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-po>;
 bothering.v: <verb-s-pg> & <vc-bother>;
@@ -4309,22 +4319,22 @@ bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
 
 surprise.v alarm.v amaze.v amuse.v astonish.v astound.v excite.v depress.v
 disgust.v distress.v dismay.v irritate.v embarrass.v annoy.v: 
-<verb-s-pl,i> & <vc-surprise>;
+  VERB_S_PLI(<vc-surprise>);
 surprises.v alarms.v amazes.v amuses.v astonishes.v astounds.v excites.v depresses.v
 disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v: 
-<verb-s-s> & <vc-surprise>;
+  <verb-s-s> & <vc-surprise>;
 surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
- depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v 
+depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v 
 annoyed.v-d: 
-(<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-po>;
+  (<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-po>;
 surprising.v alarming.v amazing.v amusing.v astonishing.v astounding.v
- exciting.v depressing.v disgusting.v distressing.v dismaying.v 
+exciting.v depressing.v disgusting.v distressing.v dismaying.v 
 embarrassing.v annoying.v: 
-<verb-s-pg> & <vc-surprise>;
+  <verb-s-pg> & <vc-surprise>;
 surprising.g alarming.g amazing.g amusing.g astonishing.g astounding.g 
 exciting.g depressing.g disgusting.g distressing.g dismaying.g 
 embarrassing.g annoying.g: 
-(<vc-surprise> & <verb-ge>) or <verb-ge-d>;
+  (<vc-surprise> & <verb-ge>) or <verb-ge-d>;
 
 <vc-prove>: 
   ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
@@ -4333,10 +4343,16 @@ embarrassing.g annoying.g:
 
 prove.v: <verb-x-pl,i> & <vc-prove>;
 proves.v: <verb-x-s> & <vc-prove>;
-proved.v-d: (<verb-x-sp,pp> & <vc-prove>) or (<verb-s-pv> & {THi+ or TOf+}) or 
-({@E-} & A+) or ({{@MV+} & Pa+} & <verb-po>);
-proven.v: (<verb-x-pp> & <vc-prove>) or (<verb-s-pv> & {THi+ or TOf+ or Pa+}) 
-or ({@E-} & A+) or ({{@MV+} & Pa+} & <verb-po>);
+proved.v-d:
+  (<verb-x-sp,pp> & <vc-prove>) or
+  (<verb-s-pv> & {THi+ or TOf+}) or 
+  ({@E-} & A+) or
+  ({{@MV+} & Pa+} & <verb-po>);
+proven.v:
+  (<verb-x-pp> & <vc-prove>) or
+  (<verb-s-pv> & {THi+ or TOf+ or Pa+}) or
+  ({@E-} & A+) or
+  ({{@MV+} & Pa+} & <verb-po>);
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
 proving.v: <verb-x-pg> &  <vc-prove>;
 
@@ -4473,7 +4489,7 @@ taking_it making_out pointing_out giving_notice serving_notice:
   (<vc-take-it> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-turn-out>: {[@MV+]} & THi+;
-turn_out: <verb-s-pl,i> & <vc-turn-out>;
+turn_out: VERB_S_PLI(<vc-turn-out>);
 turns_out: <verb-s-s> & <vc-turn-out>;
 turned_out: <verb-s-sp,pp> & <vc-turn-out>;
 turning_out: <verb-s-pg> & <vc-turn-out>;
@@ -4490,7 +4506,7 @@ finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
 <verb-ge-d>; 
 
 <vc-keep-on>: {Pg+ or @MV+};
-keep_on give_up go_around: <verb-s-pl,i> & <vc-keep-on>;
+keep_on give_up go_around: VERB_S_PLI(<vc-keep-on>);
 keeps_on gives_up goes_around: <verb-s-s> & <vc-keep-on>;
 kept_on: <verb-s-sp,pp> & <vc-keep-on>;
 gave_up went_around: <verb-s-sp> & <vc-keep-on>;
@@ -4499,7 +4515,7 @@ keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 
 % XXX TODO need to provide and-able links for these.
 <vc-end-up>: Pg+ or Pa+ or ({AF-} & {@MV+});
-end_up: <verb-s-pl,i> & <vc-end-up>;
+end_up: VERB_S_PLI(<vc-end-up>);
 ends_up: <verb-s-s> & <vc-end-up>;
 ended_up: <verb-s-sp,pp> & <vc-end-up>;
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
