@@ -5410,7 +5410,7 @@ but.j-v:
   ((({Xd-} & VJlp-) & VJrp+) & (Sp- or ({Xd-} & VJrp-))) or
   ((VJl- & VJr+) & (I-));
 
-% The VJb- gaurentees that bit.j-b is used with not_only 
+% The VJb- guarentees that bit.j-b is used with not_only 
 % "We not only X'ed but also Y'ed".
 % This is the same pattern as the neither..nor... pattern above.
 but.j-b: 
