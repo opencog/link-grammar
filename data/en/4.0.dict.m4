@@ -2164,7 +2164,6 @@ rising.v falling.v:
   ({@E-} & A+) or
   ({K+} & <verb-po>);
 
-% XXX TODO VJ links for below
 split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d: 
   VERB_SPPP_T(<vc-fill>) or
   (<verb-ico> & <vc-fill>) or 
@@ -2292,7 +2291,6 @@ stole.v-d threw.v-d tore.v-d wore.v-d
 overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
 foreswore.v-d forwent.v-d: VERB_SPPP_T(<vc-kick>);
 
-% XXX TODO verb and-ify
 stolen.v shaken.v thrown.v torn.v worn.v
 forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
  foresworn.v overeaten.v:
@@ -2534,7 +2532,7 @@ goes.v:
 went.v-d:
   (<verb-x-sp> & (<vc-go> or [[O*t+ & {@MV+}]])) or
   (<verb-and-sp-i-> & <vc-go>) or (<vc-go> & <verb-and-sp-i+>);
-% XXX TODO maybe need VJ for gone, going etc. ???
+% XXX TODO maybe need VJ and-able links for gone, going etc. ???
 gone.v: VERB_PP(<vc-go>);
 % The keys are gone.  The popcorn is all gone.
 gone.a: 
@@ -3295,7 +3293,6 @@ for_granted: Vtg-;
   ((O+ or B-) & (K+ or Pp+ or WR-)) or 
   (Vp+ & (Zs- or MVa+))) & {@MV+};
 
-% XXX TODO verb conversion -- 
 put.v-d:
   VERB_SPPP_T(<vc-put>) or
   (<verb-ico> & <vc-put>) or
@@ -3312,7 +3309,6 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
     (B- & {O+})) & {@MV+} & {TOi+}) or 
   ([[@MV+ & O*n+]]);
 
-% XXX TODO verb conversion -- 
 cost.v-d: (<verb-s-pl,i> or <verb-s-sp,pp>) & <vc-cost>;
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
 (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or 
@@ -3351,7 +3347,6 @@ get.v: VERB_PLI(<vc-get>);
 gets.v: VERB_S(<vc-get>);
 got.v-d: VERB_SPPP_T(<vc-get>);
 
-% XXX TODO getting with verb-and
 gotten.v:
   VERB_PP(<vc-get>) or 
   (<verb-pv-b> & {K+ or Pp+} & {@MV+}) or 
@@ -3899,7 +3894,6 @@ showing.v: <verb-pg> & <vc-show>;
     (B- & {[[@MV+]]} & O*n+) or
     ([[@MV+ & O*n+]])} & {@MV+});
 
-% XXX TODO: add conjunct ot the rest
 teach.v: VERB_PLI(<vc-teach>);
 teaches.v: VERB_S(<vc-teach>);
 taught.v-d:
@@ -4281,7 +4275,6 @@ cleared.v-d:
 clearing.g: (<vc-clear> & <verb-ge>) or <verb-ge-d>;
 clearing.v: <verb-pg> & <vc-clear>;
 
-% XXX TODO Need verb-and conversions ...
 <vc-bet>:
   ({(O+ & {O*n+}) or (B- & {O+})} & {@MV+} & {TH+ or Ce+ or RSe+}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
@@ -4298,7 +4291,7 @@ betted.v-d:
 betting.g: (<vc-bet> & <verb-ge>) or <verb-ge-d>;
 betting.v: <verb-pg> & <vc-bet>;
 
-% XXX verb cnversion TODO
+% XXX TODO verb conversion TODO
 <vc-bother>:
   ({@MV+} & TO+) or
   ((O+ or B-) & {@MV+} & {THi+}) or
@@ -4504,7 +4497,7 @@ gave_up went_around: <verb-s-sp> & <vc-keep-on>;
 given_up gone_around: <verb-s-pp> & <vc-keep-on>;
 keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 
-% XXX TODO verb conversion
+% XXX TODO need to provide and-able links for these.
 <vc-end-up>: Pg+ or Pa+ or ({AF-} & {@MV+});
 end_up: <verb-s-pl,i> & <vc-end-up>;
 ends_up: <verb-s-s> & <vc-end-up>;
@@ -6751,7 +6744,7 @@ LEFT-WALL: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+) &
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
 
-% XXX ANDABLE-CONNECTORS is now deprecated
+% XXX ANDABLE-CONNECTORS is now deprecated, needs to be removed for version 5.0
 ANDABLE-CONNECTORS:   % these are the connectors that can be combined by
                       % conjunctions. They are listed alphabetically.
       
