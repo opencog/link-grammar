@@ -1795,10 +1795,12 @@ do.v: ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
 or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-)) or 
 ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 
-does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & 
-(((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
-did.v-d: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & 
-(((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+does.v: 
+  (<verb-x-s> & <vc-do>) or
+  ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+did.v-d:
+  (<verb-x-sp> & <vc-do>) or
+  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % verb-pv-b: "I want it done." "I want the job done"
@@ -1823,21 +1825,27 @@ doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 don't don’t: 
-(((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or 
-({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or 
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
 
-doesn't doesn’t: (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
-(I*d+ or [[()]]);
+doesn't doesn’t: 
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+) & I*d+) or
+  <verb-x-s>) & (I*d+ or [[()]]);
 
-didn't.v-d didn’t.v-d: <marker-past> or 
-((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
-(RS- & B-)))) & (I*d+ or [[()]]));
+didn't.v-d didn’t.v-d:
+  <marker-past> or 
+  ((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
+    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]));
 
-<vc-have>: ({@MV+} & TO+) or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]})
-or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+}) or ({N+} & PP+);
-have.v: ((SIp+ or SFIp+) & 
-(((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or (<verb-x-pl,i> &
- <vc-have>);
+<vc-have>:
+  ({@MV+} & TO+) or
+  ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or
+  (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+}) or
+  ({N+} & PP+);
+
+have.v:
+  ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or
+  (<verb-x-pl,i> & <vc-have>);
 
 has.v: 
   ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
