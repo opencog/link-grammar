@@ -26,19 +26,6 @@ Version 4.7.0 (XXX 2010)
  * Fix: regression: "all the X", X can be plural or mass.
  * Fix: verbs paint, color may be ditranstive: "paint the car bright green"
 
-TODO --
---SJ connectors for commas, or, etc.
-RJ*v adverbs
-RJ*t that
-RJ*c subordinate cl
-RJ*j prep-object-relative
-XJ*i: conjoined infinitives
-relation to CC: These are the snippers and those are the cutters
-NIf, NIt for numbers.
-
-review: CJ
-rethink: XJ
-
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
  * Fix: conjoined modifier phrases: "the black and white cat sleeps."
