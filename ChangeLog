@@ -13,7 +13,8 @@ Version 4.7.0 (XXX 2010)
  * Fix: Gerunds with determiners: "a running of the bulls"
  * SJ link for conjoined nouns/noun phrases.
  * Sort linkages according to whether fat linkage was used.
- * Add flag to disable use of fat linkage during parsing.
+ * Add flag to enable use of fat linkage during parsing.
+   (Fat links now disabled by default).
  * Add male/female gender tags to misc nouns.
  * Fix: misc optionally transitive verbs: mix, paint, boot
  * Fix: word order: "look about fearfully", "look fearfully about", around
@@ -26,14 +27,7 @@ Version 4.7.0 (XXX 2010)
  * Fix: verbs paint, color may be ditranstive: "paint the car bright green"
 
 TODO --
-Fat links now off by default!! 
-AJ: use of EB link for not, yet, etc. "bitter not sweet"
-EBx
--- document VJ, MJ links
 --SJ connectors for commas, or, etc.
--- conjunctions for verbs
-VJ: verbs
-MJ: preps
 RJ*v adverbs
 RJ*t that
 RJ*c subordinate cl
@@ -44,9 +38,6 @@ NIf, NIt for numbers.
 
 review: CJ
 rethink: XJ
-
-VJ: can take objects iff both verbs attached can take (direct) objects)
-(I saw and greeted Sue)
 
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
