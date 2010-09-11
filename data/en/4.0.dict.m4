@@ -100,16 +100,16 @@ changecom(`%')
 
 % Post-nominal qualifiers, complete with commas, etc.
 <post-nominal-x>:
-  ({[B*j+] or CJ-} & Xd- & (Xc+ or <costly-null>) & MX-);
+  ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
 <post-nominal-s>:
-  ({[Bsj+] or CJ-} & Xd- & (Xc+ or <costly-null>) & MX-);
+  ({[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
 <post-nominal-p>:
-  ({[Bpj+] or CJ-} & Xd- & (Xc+ or <costly-null>) & MX-);
+  ({[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
 <post-nominal-u>:
-  ({[Buj+] or CJ-} & Xd- & (Xc+ or <costly-null>) & MX-);
+  ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
 % noun-main-x -- singular or plural or mass.
 <noun-main-x>: 
@@ -166,7 +166,7 @@ changecom(`%')
 % without requiring comma after "idea"
 <noun-main2-s-no-punc>:  
   Js- or Os- or 
-  ({[Bsj+] or CJ-} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-) or 
+  ({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-) or 
   <costly-null>;
 
 <noun-main2-p>:
@@ -1715,8 +1715,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 %
 % VJ*s == singular subject
 % VJ*p == plural subject
-% VJ*g == gerund  -- !!???
-% VJ*h == past participle (PP- link)
+% VJ*g == conjoined gerunds "He was running and jumping"
+% VJ*h == past participle (PP- link) "He had run and jumped"
 %
 % The following control whether the conjunction can take an object.
 % The conjunction should take an object if both verbs are transitive,
@@ -5241,8 +5241,6 @@ once.e:
 
 % --------------------------------------------------------------------------
 % Conjunctions
-% "all large burial places, or tombs, became known as mausoleums."
-or.j: CJ+;
 
 % Should these be treated as clause-openers (taking CO link)?
 % e.g. "Also on this list is the Colossus of Rhodes."
