@@ -6676,14 +6676,18 @@ from_now: Yt- & <prep-main-t>;
 a_long_time some_time a_few_moments moments.u: Yt+ or OT-;
 ago: Yt- & (<prep-main-e> or Ca+ or Qe+ or JT-);
 every.i: {EN-} & Ye+ & <prep-main-t>;
-times.i: (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+
-or Ca+ or Qe+)) or (((({ND-} & DG-) & {Cs+}) or (ND- & Ys+)) & 
-(({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
-time.i: {TT- or NR-} & DG- & {Cs+} & (({Xc+ & {Xd-}} & CO+) or MVp-
-or (Xd- & Xc+ & MVx-)); 
+times.i x.i:
+  (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+ or Ca+ or Qe+)) or
+  (((({ND-} & DG-) & {Cs+}) or (ND- & Ys+)) & 
+    (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
+
+time.i:
+  {TT- or NR-} & DG- & {Cs+} &
+    (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)); 
+
 the_year: TY+ & <noun-main-s>;
-every_time: {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or 
-(Xd- & Xc+ & MVx-)));
+every_time:
+  {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
 
 week.n moment.n hour.n minute.n year.n instant.n period.n month.n 
 second.n decade.n century.n:
