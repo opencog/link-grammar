@@ -361,11 +361,14 @@ JNIfound=no
 if test "x$do_java" = "xyes"; then
    JNI_GUESS=" \
       -I $JAVA_HOME/include \
+      -I $JAVA_HOME/include/freebsd \
       -I $JAVA_HOME/include/linux \
+      -I $JAVA_HOME/include/win32 \
       -I $JAVA_HOME/Headers \
       -I $JDK_HOME/include \
       -I $JDK_HOME/include/freebsd \
       -I $JDK_HOME/include/linux \
+      -I $JDK_HOME/include/win32 \
       -I $JDK_HOME/Headers \
       -I/usr/include/classpath/ \
       -I/usr/local/jdk1.6.0/include/\
