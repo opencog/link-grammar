@@ -42,7 +42,7 @@
 #include <wchar.h>
 
 /* Used for terminal resizing */
-#ifndef _MSC_VER
+#ifndef _WIN32
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
@@ -483,17 +483,19 @@ static void print_usage(char *str) {
 static void check_winsize(Parse_Options popts)
 {
 /* Neither windows nor MSYS have the ioctl support needed for this. */
-#if !defined(_MSC_VER) && !defined(__MINGW32__)
+#ifdef _WIN32
+	parse_options_set_screen_width(popts, 79);
+#else 
 	struct winsize ws;
-	int fd = open("/dev/tty",O_RDWR);
+	int fd = open("/dev/tty", O_RDWR);
 
-	if (0 != ioctl(fd,TIOCGWINSZ, &ws))
+	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
 	{
-		perror("ioctl(/dev/tty,TIOCGWINSZ)");
-		close (fd);
+		perror("ioctl(/dev/tty, TIOCGWINSZ)");
+		close(fd);
 		return;
 	}
-	close (fd);
+	close(fd);
 
 	/* printf("rows %i\n", ws.ws_row); */
 	/* printf("cols %i\n", ws.ws_col); */
@@ -505,9 +507,7 @@ static void check_winsize(Parse_Options popts)
 	{
 		parse_options_set_screen_width(popts, ws.ws_col - 1);
 	}
-#else
-	parse_options_set_screen_width(popts, 79);
-#endif /* _MSC_VER */
+#endif /* _WIN32 */
 }
 
 int main(int argc, char * argv[])
