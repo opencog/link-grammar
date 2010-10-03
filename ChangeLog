@@ -1,6 +1,7 @@
 Version 4.7.1 (XXX 2010):
- * Fix: x as synonym for "times".
+ * Fix: dictionary: Add "x" as synonym for "times".
  * Fix: compilation failure due to lack of termios support on Windows.
+ * Fix: if not set, then force-set locale to UTF-8 in the java library.
 
 Version 4.7.0 (12 September 2010):
  * Fix: hunspell configuration on Fedora (bugtracker issue 47)

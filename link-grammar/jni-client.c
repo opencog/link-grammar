@@ -108,12 +108,25 @@ static void throwException(JNIEnv *env, const char* message)
 
 static per_thread_data * init(JNIEnv *env, jclass cls)
 {
+	const char *codeset;
 	per_thread_data *ptd;
 
 	/* Get the locale from the environment...
 	 * perhaps we should someday get it from the dictionary ??
 	 */
 	setlocale(LC_ALL, "");
+
+	/* Everything breaks if the locale is not UTF-8; check for this,
+	 * and force  the issue !
+	 */
+	codeset = nl_langinfo(CODESET);
+	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
+	{
+		fprintf(stderr,
+			"Warning: Link-grammar JNI: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
+			codeset);
+		setlocale(LC_CTYPE, "en_US.UTF-8");
+	}
 
 	ptd = (per_thread_data *) malloc(sizeof(per_thread_data));
 	memset(ptd, 0, sizeof(per_thread_data));
