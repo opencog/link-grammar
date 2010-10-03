@@ -99,11 +99,11 @@ static void throwException(JNIEnv *env, const char* message)
 	if ((*env)->ExceptionOccurred(env) != NULL) return;
 
 	msg = (char *) malloc(50+strlen(message));
-	strcpy(msg, "link-parser:\n");
+	strcpy(msg, "link-grammar:\n");
 	strcat(msg, message);
 	exceptionClazz = (*env)->FindClass(env, "java/lang/RuntimeException");
 	if ((*env)->ThrowNew(env, exceptionClazz, msg) != 0)
-		(*env)->FatalError(env, "Cannot throw");
+		(*env)->FatalError(env, "Fatal: link-grammar JNI: Cannot throw");
 }
 
 static per_thread_data * init(JNIEnv *env, jclass cls)
@@ -146,7 +146,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	 * this if/when more languages are supported.
 	 */
 	ptd->dict = dictionary_create_lang("en");
-	if (!ptd->dict) throwException(env, "Error: unable to open dictionary");
+	if (!ptd->dict) throwException(env, "Error: link-grammar JNI: unable to open dictionary");
 	else test();
 
 	return ptd;
@@ -243,7 +243,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	if (maxlen < sentence_length(ptd->sent))
 	{
 		if (jverbosity > 0) {
-			prt_error("Error: Sentence length (%d words) exceeds maximum allowable (%d words)\n",
+			prt_error("Error: link-grammar JNI: Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 				sentence_length(ptd->sent), maxlen);
 		}
 		sentence_delete(ptd->sent);
@@ -297,7 +297,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 		parse_options_set_verbosity(ptd->panic_parse_opts, jverbosity);
 		ptd->num_linkages = sentence_parse(ptd->sent, ptd->panic_parse_opts);
 		if (parse_options_timer_expired(ptd->panic_parse_opts)) {
-			if (jverbosity > 0) prt_error("Error: Timer is expired!\n");
+			if (jverbosity > 0) prt_error("Error: link-grammar JNI: Timer is expired!\n");
 		}
 	}
 }
