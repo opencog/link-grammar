@@ -99,7 +99,7 @@ static void throwException(JNIEnv *env, const char* message)
 	if ((*env)->ExceptionOccurred(env) != NULL) return;
 
 	msg = (char *) malloc(50+strlen(message));
-	strcpy(msg, "link-grammar:\n");
+	strcpy(msg, "link-grammar JNI:\n");
 	strcat(msg, message);
 	exceptionClazz = (*env)->FindClass(env, "java/lang/RuntimeException");
 	if ((*env)->ThrowNew(env, exceptionClazz, msg) != 0)
@@ -146,7 +146,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	 * this if/when more languages are supported.
 	 */
 	ptd->dict = dictionary_create_lang("en");
-	if (!ptd->dict) throwException(env, "Error: link-grammar JNI: unable to open dictionary");
+	if (!ptd->dict) throwException(env, "Error: unable to open dictionary");
 	else test();
 
 	return ptd;
