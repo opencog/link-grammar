@@ -108,7 +108,7 @@ static void throwException(JNIEnv *env, const char* message)
 
 static per_thread_data * init(JNIEnv *env, jclass cls)
 {
-	const char *codeset;
+	const char *codeset, *dict_version;
 	per_thread_data *ptd;
 
 	/* Get the locale from the environment...
@@ -122,7 +122,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	codeset = nl_langinfo(CODESET);
 	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
 	{
-		prt_error("Warning: link-grammar JNI: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
+		prt_error("Warning: JNI: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
 			codeset);
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
@@ -148,6 +148,9 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	ptd->dict = dictionary_create_lang("en");
 	if (!ptd->dict) throwException(env, "Error: unable to open dictionary");
 	else test();
+
+	dict_version = linkgrammar_get_dict_version(ptd->dict);
+	prt_error("Info: JNI: dictionary version %s\n", dict_version);
 
 	return ptd;
 }
@@ -243,7 +246,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	if (maxlen < sentence_length(ptd->sent))
 	{
 		if (jverbosity > 0) {
-			prt_error("Error: link-grammar JNI: Sentence length (%d words) exceeds maximum allowable (%d words)\n",
+			prt_error("Error: JNI: Sentence length (%d words) exceeds maximum allowable (%d words)\n",
 				sentence_length(ptd->sent), maxlen);
 		}
 		sentence_delete(ptd->sent);
@@ -270,7 +273,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	/* If still failed, try again with null links */
 	if (0 == ptd->num_linkages)
 	{
-		if (jverbosity > 0) prt_error("Warning: link-grammar JNI: No complete linkages found.\n");
+		if (jverbosity > 0) prt_error("Warning: JNI: No complete linkages found.\n");
 		if (parse_options_get_allow_null(opts))
 		{
 			parse_options_set_min_null_count(opts, 1);
@@ -281,23 +284,23 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 
 	if (parse_options_timer_expired(opts))
 	{
-		if (jverbosity > 0) prt_error("Warning: link-grammar JNI: Timer is expired!\n");
+		if (jverbosity > 0) prt_error("Warning: JNI: Timer is expired!\n");
 	}
 	if (parse_options_memory_exhausted(opts))
 	{
-		if (jverbosity > 0) prt_error("Warning: link-grammar JNI: Memory is exhausted!\n");
+		if (jverbosity > 0) prt_error("Warning: JNI: Memory is exhausted!\n");
 	}
 
 	if ((ptd->num_linkages == 0) &&
 	    parse_options_resources_exhausted(opts))
 	{
 		parse_options_print_total_time(opts);
-		if (jverbosity > 0) prt_error("Warning: link-grammar JNI: Entering \"panic\" mode...\n");
+		if (jverbosity > 0) prt_error("Warning: JNI: Entering \"panic\" mode...\n");
 		parse_options_reset_resources(ptd->panic_parse_opts);
 		parse_options_set_verbosity(ptd->panic_parse_opts, jverbosity);
 		ptd->num_linkages = sentence_parse(ptd->sent, ptd->panic_parse_opts);
 		if (parse_options_timer_expired(ptd->panic_parse_opts)) {
-			if (jverbosity > 0) prt_error("Error: link-grammar JNI: Timer is expired!\n");
+			if (jverbosity > 0) prt_error("Error: JNI: Timer is expired!\n");
 		}
 	}
 }
