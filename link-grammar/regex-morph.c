@@ -11,8 +11,8 @@
 /*************************************************************************/
 
 /* On MS Windows, regex.h fails to pull in size_t, so work around this by
- * including <sys/types.h> before <regex.h> */
-#include <sys/types.h>
+ * including <stddef.h> before <regex.h> (<sys/types.h> is not enough) */
+#include <stddef.h>
 #include <regex.h>
 #include "api-structures.h"
 #include "link-includes.h"
