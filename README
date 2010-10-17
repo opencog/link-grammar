@@ -686,10 +686,12 @@ TODO -- Working Notes:
     (This somewhat resembles the application of construction grammar
     ideas to the link-grammar dictionary).
 
-    XXX Well, not clear how much above will help -- the primary problem
-    currently is the combinatorial explosion coming from fat links.
-    If the fat links could be pruned down to something more reasonable,
-    performance could improve a *lot*.
+     Caution: watch out for garden-path sentences:
+     The horse raced past the barn fell.
+     The old man the boat.
+     The cotton clothing is made of grows in Mississippi.
+     The current parser parses these perfectly; a viterbi parsr could
+     trip on these.
 
    Registers:
       Consider the sentence "Thieves rob bank" -- a typical newspaper
