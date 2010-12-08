@@ -2948,19 +2948,35 @@ affirming.v certifying.v trusting.v postulating.v ensuring.v
 implying.v verifying.v boasting.v:
   <verb-pg> & <vc-sense>;
 
-% <vc-declare> is same as <vc-sense> except it has a Z- link
+% Pv+ link: "John imagines himself lost in the woods."
+% Pg+ link: "John imagines himself singing from a mountaintop"
+% AZ+ link: "John imagined Mary as innocent as a lamb"
+% similar to vc-see
+<vc-imagine>: <vc-trans> or
+  ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or 
+  ((B- or O+) & {@MV+} & {Pg+ or AZ+ or Pv+}) or
+  ({@MV+} & Pg+);
+imagine.v: VERB_PLI(<vc-imagine>);
+imagines.v:  VERB_S(<vc-imagine>);
+imagined.v:
+  VERB_SPPP_T(<vc-imagine>) or
+  (<verb-s-pv> & {THi+}) or
+  ({@E-} & A+) or
+  <verb-po>;
+imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
+imagining.v: <verb-pg> & <vc-imagine>;
+
 <vc-declare>: <vc-trans> or
   ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or 
   ({@MV+} & Pg+);
-declare.v imagine.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
+declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v: 
   VERB_PLI(<vc-declare>);
-declares.v imagines.v fears.v concludes.v 
-suspects.v concedes.v presumes.v foresees.v
+declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
 confirms.v stresses.v assumes.v: 
   VERB_S(<vc-declare>);
-declared.v imagined.v feared.v concluded.v suspected.v conceded.v presumed.v
+declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v 
 confirmed.v-d stressed.v-d assumed.v-d: 
   VERB_SPPP_T(<vc-declare>) or
@@ -2973,17 +2989,14 @@ foreseen.v:
   (<verb-s-pv> & {@MV+ or THi+}) or 
   ({@E-} & A+) or
   <verb-po>;
-declaring.g imagining.g fearing.g 
-concluding.g suspecting.g conceding.g
-presuming.g foreseeing.g emphasizing.g maintaining.g acknowledging.g noting.g
-confirming.g stressing.g
-assuming.g: (<vc-declare> & <verb-ge>) or <verb-ge-d>;
-declaring.v imagining.v fearing.v
-concluding.v suspecting.v conceding.v
-presuming.v foreseeing.v
-emphasizing.v maintaining.v acknowledging.v
-noting.v confirming.v stressing.v 
-assuming.v: <verb-pg> & <vc-declare>;
+declaring.g fearing.g concluding.g suspecting.g conceding.g
+presuming.g foreseeing.g emphasizing.g maintaining.g acknowledging.g
+noting.g confirming.g stressing.g assuming.g:
+  (<vc-declare> & <verb-ge>) or <verb-ge-d>;
+declaring.v fearing.v concluding.v suspecting.v conceding.v
+presuming.v foreseeing.v emphasizing.v maintaining.v acknowledging.v
+noting.v confirming.v stressing.v assuming.v:
+  <verb-pg> & <vc-declare>;
 
 <vc-believe>: {<vc-trans>} or
   ({@MV+} & (Ce+ or TH+ or RSe+));
