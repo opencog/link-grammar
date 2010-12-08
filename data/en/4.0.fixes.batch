@@ -541,6 +541,9 @@ You are making me crazy.
 The thugs beat him senseless.
 The cold froze the mud solid.
 
+% Like the above, but can only be used with "dead"
+He was slain dead by the arrows.
+
 % paint, color, with color names; constructions like 
 % "pale yellow" mean that the color names are nouns (O*n) and
 % not predicative adjectives (Pa**j)

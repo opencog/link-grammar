@@ -2302,17 +2302,17 @@ beaten.v bitten.v blown.v broken.v driven.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
 sprung.v stricken.v swum.v woken.v
 befallen.v interwoven.v overborne.v outgone.v outgrown.v 
- test-driven.v outdone.v shrunken.v countersunk.v 
- bespoken.v underlain.v partaken.v redone.v overdone.v 
- outridden.v deep-frozen.v bestrid.v undergone.v 
- outbidden.v shorn.v outworn.v bestridden.v stunk.v borne.v 
- slain.v woven.v riven.v backbitten.v overlain.v bestrewn.v 
- forborne.v quick-frozen.v browbeaten.v aquitted.v 
- overseen.v smitten.v overdrawn.v striven.v thriven.v 
- shriven.v backslidden.v retaken.v trodden.v chidden.v 
- begotten.v sown.v sewn.v sawn.v hewn.v cloven.v 
- foreknown.v overthrown.v strewn.v awoken.v bidden.v 
- stridden.v:
+test-driven.v outdone.v shrunken.v countersunk.v 
+bespoken.v underlain.v partaken.v redone.v overdone.v 
+outridden.v deep-frozen.v bestrid.v undergone.v 
+outbidden.v shorn.v outworn.v bestridden.v stunk.v borne.v 
+slain.v woven.v riven.v backbitten.v overlain.v bestrewn.v 
+forborne.v quick-frozen.v browbeaten.v aquitted.v 
+overseen.v smitten.v overdrawn.v striven.v thriven.v 
+shriven.v backslidden.v retaken.v trodden.v chidden.v 
+begotten.v sown.v sewn.v sawn.v hewn.v cloven.v 
+foreknown.v overthrown.v strewn.v awoken.v bidden.v 
+stridden.v slain_dead:
   
   ((<verb-pp> & (<vc-fill>)) or
   (<verb-and-had-> & (([<vc-fill>]) or ())) or
