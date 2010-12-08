@@ -5,6 +5,7 @@ Version 4.7.1 (XXX 2010):
  * Fix: Explicitly include <stddef.h> for Windows builds.
  * Fix: "John imagines himself lost".
  * Fix: predicative adjectives w/misc verbs: "You are driving me crazy"
+ * Fix: "judge innocent", etc. 
 
 Version 4.7.0 (12 September 2010):
  * Fix: hunspell configuration on Fedora (bugtracker issue 47)

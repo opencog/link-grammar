@@ -2180,6 +2180,34 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
 
 % --------------------------------------------------------------
 
+% vc-judge: a lot like vc-delcare, except optionally transitive.
+<vc-judge>: <vc-tr,intr> or
+  ((B- or O+) & ({@MV+} & Pa**j+));
+
+judge.v: 
+  ((<verb-pl,i> & (<vc-judge>)) or
+  (<verb-and-pl-> & ([(<vc-judge>)] or ())) or
+  ((<vc-judge>) & <verb-and-pl+>));
+judges.v: 
+  ((<verb-s> & (<vc-judge>)) or
+  (<verb-and-s-> & ([(<vc-judge>)] or ())) or
+  ((<vc-judge>) & <verb-and-s+>));
+judged.v-d:  
+  
+  ((<verb-sp,pp> & (<vc-judge>)) or
+  (<verb-and-sp-i-> & (([<vc-judge>]) or ())) or
+  ((<vc-judge>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t> or
+  (<verb-pv> & {{@MV+} & Pa+}) or 
+  ({@E-} & A+) or 
+  <verb-po>;
+judging.v:  
+  <verb-pg> & <vc-judge>;
+judging.g:  
+  (<vc-judge> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
+
+% --------------------------------------------------------------
+
 <vc-rise>: {K+ or OD+} & {@MV+};
 rise.v fall.v:
   ((<verb-pl,i> & (<vc-rise>)) or
