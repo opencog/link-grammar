@@ -2170,9 +2170,14 @@ rising.v falling.v:
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
 % The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
 % "she walked out of the room two minutes"
+%
+% Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
+% XXX However, very few of these verbs actually take the Pa**j link ...
+% and so should be reclaased.
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+) or
   ({O+ or B-} & {K+}) or 
+  ((B- or O+) & ({@MV+} & Pa**j+)) or
   [[@MV+ & O*n+]]) & {@MV+};
 /en/words/words.v.6.1: VERB_PLI(<vc-fill>);
 /en/words/words.v.6.2: VERB_S(<vc-fill>);
@@ -2918,11 +2923,8 @@ providing.g:
   <verb-ge-d> or
   ((TH+ or Ce+) & (({{Xd-} & Xc+} & CO+) or ({Xd- & Xc+} & MVs-)));
 
-% <vc-sense> is almost exactly the same as <vc-declare>, but doesn't 
-% have the Z- link.
 <vc-sense>: <vc-trans> or
-  ({@MV+} & (Ce+ or TH+ or RSe+)) or 
-  ({@MV+} & Pg+);
+  ({@MV+} & (Ce+ or TH+ or RSe+ or Pg+));
 sense.v doubt.v reaffirm.v reckon.v regret.v proclaim.v ascertain.v discern.v 
 stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v boast.v:
   VERB_PLI(<vc-sense>);
@@ -2966,9 +2968,10 @@ imagined.v:
 imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
 imagining.v: <verb-pg> & <vc-imagine>;
 
+% Pa**j link: The doctor declared him insane. 
 <vc-declare>: <vc-trans> or
-  ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or 
-  ({@MV+} & Pg+);
+  ({@MV+} & (Ce+ or TH+ or RSe+ or Pg+ or Z-)) or
+  ((B- or O+) & ({@MV+} & Pa**j+));
 declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v: 
   VERB_PLI(<vc-declare>);
