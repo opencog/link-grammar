@@ -2983,7 +2983,7 @@ declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v 
 confirmed.v-d stressed.v-d assumed.v-d: 
   VERB_SPPP_T(<vc-declare>) or
-  (<verb-s-pv> & {THi+}) or
+  (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) }) or
   ({@E-} & A+) or
   <verb-po>;
 foresaw.v-d: VERB_SP_T(<vc-declare>);
@@ -5828,10 +5828,10 @@ proud.a scared.a:
     ({TO+ or TH+ or OF+} & <adj-op>));
 
 % common adjectives, taking "of" e.g. "tired of", "sick of" etc.
-tired.a pooped.a full.a sick.a critical.a guilty.a typical.a
+tired.a pooped.a full.a sick.a critical.a guilty.a innocent.a typical.a
 capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
 appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
-prognostic.a:
+prognostic.a dead.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {OF+ & {@MV+}}) or

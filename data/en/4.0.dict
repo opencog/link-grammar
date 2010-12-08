@@ -3642,7 +3642,7 @@ confirmed.v-d stressed.v-d assumed.v-d:
   (<verb-and-sp-i-> & (([<vc-declare>]) or ())) or
   ((<vc-declare>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or
-  (<verb-s-pv> & {THi+}) or
+  (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) }) or
   ({@E-} & A+) or
   <verb-po>;
 foresaw.v-d: 
@@ -7516,10 +7516,10 @@ proud.a scared.a:
     ({TO+ or TH+ or OF+} & <adj-op>));
 
 % common adjectives, taking "of" e.g. "tired of", "sick of" etc.
-tired.a pooped.a full.a sick.a critical.a guilty.a typical.a
+tired.a pooped.a full.a sick.a critical.a guilty.a innocent.a typical.a
 capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
 appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
-prognostic.a:
+prognostic.a dead.a:
   {EA- or EF+} & 
     (({[[@Ec-]]} & {Xc+} & A+) or 
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {OF+ & {@MV+}}) or
