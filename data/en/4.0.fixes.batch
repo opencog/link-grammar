@@ -2686,6 +2686,45 @@ The rates were lowered more than suggested.
 The bolt was tightened more than was recommended.
 The bolt was tightened more than recommended.
 
+% --------------------------------------------------------------------
+% setences that parse, but not correctly:
+You are as sweet as sugar.
+The situation is not so bad as you suggest.
+I slipped on the ice as I ran home.
+He was so foolish as to lie.
+Ridiculous as it seems, the tale is true.
+the hotel is quite comfortable as such establishments go
+I don't know as I can answer your question.
+
+% --------------------------------------------------------------------
+% assorted unclassified breakages, wating for a fix:
+He is flighty and given to fanciful thoughts
+He is thoughtful, and not given to many words
+No one but she saw the prowler.
+The brothers would have resisted but that they lacked courage
+It never rains but it pours.
+They had no sooner arrived but they turned around and left.
+The deal includes not only junk, but also crap.
+I cannot discern any reason, other than some sort of historical blindness, for why the "fat link" mechanism was created.
+He talked to Steve and, apparently, Fred
+What did you tell her and what did she say
+Grant me this wish and I will die happy.
+It will be harder, and take much longer, than before
+Although society has excluded the patients in the ward for their unique qualities, they feel 'safer' trying to fit in because they receive approval from nurses and the representatives of society.
+He realizes that he and McMurphy can challenge Big Nurse, but cannot change the beliefs of popular society as a whole.
+Chief describes and analyzes the character of the families in a village, remarking that they all act completely the same.
+They feel a "normal" person conforms to, and becomes imperceptible in, society.
+The inability for the rejected to laugh signifies their paranoia at being noticed.
+
+% failing punctuation usage:
+He rose rapidly in the royal service and, in 1543, was knighted
+He was twice summoned before the Privy Council, first for a violent assault on Sir John Conway, then, ten years later, for fraud.
+From his youth he must have been a capable, pushing, insinuating man.
+John; my advisor, Steve; and several other people are coming
+
+
+
+% --------------------------------------------------------------------
 % Sentence containing UTF8 chars that can lead to i/o or 
 % word-boundary problems
 *Bitter gourdはにがうりだそうであってるのかはちょっと不安ですが翻訳ソフトでやくしてみました。
