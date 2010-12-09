@@ -1989,7 +1989,8 @@ weren't.v-d weren’t.v-d: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & B
 will.v can.v may.v must.v could.v might.v shall.v: 
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
-  (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
+  (<verb-and-sp-> & {N+} & {@E-} & I+) or
+  ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
 should.v: 
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
@@ -2011,12 +2012,15 @@ ought.v:
 won't can't mustn't couldn't shouldn't cannot needn't 
 won’t can’t mustn’t couldn’t shouldn’t needn’t: 
   ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]])) or
+  (<verb-and-sp-> & {@E-} & I+) or
+  ({@E-} & I+ & <verb-and-sp+>);
 
 wouldn't wouldn’t:
   ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or 
-  [[()]]));
+  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or [[()]])) or
+  (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
+  ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
 
 % ===================================================================
 % COMMON VERB CATEGORIES (The last number of the file name indicates
