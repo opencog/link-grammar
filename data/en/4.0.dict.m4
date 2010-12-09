@@ -179,9 +179,12 @@ changecom(`%')
   <post-nominal-s> or
   <costly-null>;
 
-<noun-sub-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
-<noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
-<noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
+% TO+: "The inability to laugh signifies trouble"
+% @M+: "The disability of John means he is slow"
+% XXX wait .. TO+ should only be for mass nouns ?? 
+<noun-sub-x>: {@M+} & {TO+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
+<noun-sub-s>: {@M+} & {TO+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
+<noun-sub-p>: {@M+} & {TO+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
 <noun-modifiers>: {@AN-} & {@A- & {[[@AN-]]}};
 

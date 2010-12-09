@@ -1376,6 +1376,12 @@ He stepped forward, his white teeth glittering.
 He glanced away, looking pale.
 He stepped forward, putting his hand out.
 
+% Post-nominal modifiers with TO+ link:
+The inability to laugh signifies trouble
+The inability to laugh signifies mental illness
+The disability of John means he is slow
+The inability for the rejected to laugh signifies their paranoia at being noticed.
+
 % Post-nominal modifiers, MX- link to "to be"
 The drill, to be provided, will be use to take soil samples.
 The drill, soon to be provided, will be use to take soil samples.
@@ -2712,7 +2718,6 @@ I don't know as I can answer your question.
 % assorted unclassified breakages, wating for a fix:
 Although society has excluded the patients in the ward for their unique qualities, they feel 'safer' trying to fit in because they receive approval from nurses and the representatives of society.
 They feel a "normal" person conforms to, and becomes imperceptible in, society.
-The inability for the rejected to laugh signifies their paranoia at being noticed.
 
 % --------------------------------------------------------------------
 % Sentence containing UTF8 chars that can lead to i/o or 

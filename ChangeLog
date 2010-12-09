@@ -8,6 +8,7 @@ Version 4.7.1 (XXX 2010):
  * Fix: "judge innocent", etc. 
  * Fix: many, many conjoined present tense verbs.
  * Fix: conjoined verbs with negations.
+ * Fix: "to" as post-nominal modifier: "the inability to laugh"
 
 Version 4.7.0 (12 September 2010):
  * Fix: hunspell configuration on Fedora (bugtracker issue 47)
