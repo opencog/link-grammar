@@ -1765,8 +1765,8 @@ define(`VERB_S_I',`'
 define(`VERB_S_T',`'
   ((<verb-s> & ($1)) or
   (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>)
+  (($1) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>))
 
 % past tense macro, intransitive variation
 define(`VERB_SPPP_I',`'
@@ -2047,11 +2047,13 @@ ought.v:
 
 won't can't mustn't couldn't shouldn't cannot needn't 
 won’t can’t mustn’t couldn’t shouldn’t needn’t: 
-((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
-({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
-wouldn't wouldn’t: ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
-({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) 
-or [[()]]));
+  ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
+  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+
+wouldn't wouldn’t:
+  ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
+  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or 
+  [[()]]));
 
 % ===================================================================
 % COMMON VERB CATEGORIES (The last number of the file name indicates

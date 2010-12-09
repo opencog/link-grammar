@@ -2010,11 +2010,13 @@ ought.v:
 
 won't can't mustn't couldn't shouldn't cannot needn't 
 won’t can’t mustn’t couldn’t shouldn’t needn’t: 
-((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
-({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
-wouldn't wouldn’t: ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
-({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) 
-or [[()]]));
+  ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
+  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+
+wouldn't wouldn’t:
+  ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
+  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or 
+  [[()]]));
 
 % ===================================================================
 % COMMON VERB CATEGORIES (The last number of the file name indicates
@@ -2138,8 +2140,8 @@ came.v-d:
 /en/words/words.v.2.2: 
   ((<verb-s> & (<vc-tr,intr>)) or
   (<verb-and-sp-i-> & (([<vc-tr,intr>]) or ())) or
-  ((<vc-tr,intr>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-tr,intr>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 /en/words/words.v.2.3:  
   
   ((<verb-sp,pp> & (<vc-tr,intr>)) or
@@ -2195,8 +2197,8 @@ judge.v:
 judges.v: 
   ((<verb-s> & (<vc-judge>)) or
   (<verb-and-sp-i-> & (([<vc-judge>]) or ())) or
-  ((<vc-judge>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-judge>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 judged.v-d:  
   
   ((<verb-sp,pp> & (<vc-judge>)) or
@@ -2264,8 +2266,8 @@ rising.v falling.v:
 /en/words/words.v.6.2: 
   ((<verb-s> & (<vc-fill>)) or
   (<verb-and-sp-i-> & (([<vc-fill>]) or ())) or
-  ((<vc-fill>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-fill>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 /en/words/words.v.6.3:
   
   ((<verb-sp,pp> & (<vc-fill>)) or
@@ -2374,13 +2376,13 @@ and.v-fill:
 /en/words/words.v.4.2: 
   ((<verb-s> & (<vc-trans>)) or
   (<verb-and-sp-i-> & (([<vc-trans>]) or ())) or
-  ((<vc-trans>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-trans>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 /en/words/words-medical.v.4.2: 
   ((<verb-s> & (<vc-trans>)) or
   (<verb-and-sp-i-> & (([<vc-trans>]) or ())) or
-  ((<vc-trans>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-trans>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 /en/words/words.v.4.3:  
   
@@ -2456,8 +2458,8 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 /en/words/words.v.8.2: 
   ((<verb-s> & (<vc-kick>)) or
   (<verb-and-sp-i-> & (([<vc-kick>]) or ())) or
-  ((<vc-kick>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-kick>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 stole.v-d threw.v-d tore.v-d wore.v-d
 overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
@@ -2511,8 +2513,8 @@ raise.v lower.v up.v:
 raises.v lowers.v ups.v: 
   ((<verb-s> & (<vc-raise>)) or
   (<verb-and-sp-i-> & (([<vc-raise>]) or ())) or
-  ((<vc-raise>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-raise>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 raised.v-d lowered.v-d upped.v-d: 
   
   ((<verb-sp,pp> & (<vc-raise>)) or
@@ -2536,8 +2538,8 @@ tend.v:
 tends.v: 
   ((<verb-s> & (<vc-tend>)) or
   (<verb-and-sp-i-> & (([<vc-tend>]) or ())) or
-  ((<vc-tend>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-tend>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 tended.v-d:
   
   ((<verb-sp,pp> & (<vc-tend>)) or
@@ -2703,8 +2705,8 @@ conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v:
   
   ((<verb-s> & (<vc-assert>)) or
   (<verb-and-sp-i-> & (([<vc-assert>]) or ())) or
-  ((<vc-assert>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-assert>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 retorted.v intimated.v exclaimed.v conjectured.v
 surmised.v-d opined.v-d insinuated.v-d: 
   ((<verb-sp,pp> & (<vc-assert>)) or
@@ -2775,8 +2777,8 @@ brags.v:
   
   ((<verb-s> & (<vc-reply>)) or
   (<verb-and-sp-i-> & (([<vc-reply>]) or ())) or
-  ((<vc-reply>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-reply>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 replied.v-d sighed.v-d commented.v-d responded.v-d bragged.v-d:
   
   ((<verb-sp,pp> & (<vc-reply>)) or
@@ -2826,8 +2828,8 @@ think.v:
 thinks.v: 
   ((<verb-s> & (<vc-think>)) or
   (<verb-and-sp-i-> & (([<vc-think>]) or ())) or
-  ((<vc-think>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-think>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 thought.v-d: 
   ((<verb-sp,pp> & (<vc-think>)) or
   (<verb-and-sp-i-> & (([<vc-think>]) or ())) or
@@ -2939,8 +2941,8 @@ stay.v:
 stays.v: 
   ((<verb-s> & (<vc-stay>)) or
   (<verb-and-sp-i-> & (([<vc-stay>]) or ())) or
-  ((<vc-stay>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-stay>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 stayed.v-d: 
   ((<verb-sp,pp> & (<vc-stay>)) or
   (<verb-and-sp-i-> & (([<vc-stay>]) or ())) or
@@ -2956,8 +2958,8 @@ stand.v sit.v:
 stands.v sits.v: 
   ((<verb-s> & (<vc-stand>)) or
   (<verb-and-sp-i-> & (([<vc-stand>]) or ())) or
-  ((<vc-stand>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-stand>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 stood.v-d sat.v-d: 
   ((<verb-sp,pp> & (<vc-stand>)) or
   (<verb-and-sp-i-> & (([<vc-stand>]) or ())) or
@@ -2974,8 +2976,8 @@ sound.v:
 sounds.v: 
   ((<verb-s> & (<vc-sound>)) or
   (<verb-and-sp-i-> & (([<vc-sound>]) or ())) or
-  ((<vc-sound>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-sound>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 sounded.v-d: 
   ((<verb-sp,pp> & (<vc-sound>)) or
   (<verb-and-sp-i-> & (([<vc-sound>]) or ())) or
@@ -3010,8 +3012,8 @@ look.v:
 looks.v: 
   ((<verb-s> & (<vc-look>)) or
   (<verb-and-sp-i-> & (([<vc-look>]) or ())) or
-  ((<vc-look>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-look>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 looked.v-d: 
   ((<verb-sp,pp> & (<vc-look>)) or
   (<verb-and-sp-i-> & (([<vc-look>]) or ())) or
@@ -3042,8 +3044,8 @@ talk.v:
 talks.v: 
   ((<verb-s> & (<vc-talk>)) or
   (<verb-and-sp-i-> & (([<vc-talk>]) or ())) or
-  ((<vc-talk>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-talk>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 talked.v-d: 
   ((<verb-sp,pp> & (<vc-talk>)) or
   (<verb-and-sp-i-> & (([<vc-talk>]) or ())) or
@@ -3111,8 +3113,8 @@ neglects.v affords.v commits.v professes.v desires.v:
   
   ((<verb-s> & (<vc-attempt>)) or
   (<verb-and-sp-i-> & (([<vc-attempt>]) or ())) or
-  ((<vc-attempt>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-attempt>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 attempted.v deserved.v managed.v plotted.v preferred.v neglected.v afforded.v committed.v
 professed.v-d desired.v-d:
   
@@ -3153,8 +3155,8 @@ seek.v:
 seeks.v: 
   ((<verb-s> & (<vc-seek>)) or
   (<verb-and-sp-i-> & (([<vc-seek>]) or ())) or
-  ((<vc-seek>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-seek>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 sought.v-d: 
   ((<verb-sp,pp> & (<vc-seek>)) or
   (<verb-and-sp-i-> & (([<vc-seek>]) or ())) or
@@ -3171,8 +3173,8 @@ decline.v fail.v hasten.v volunteer.v aim.v:
 declines.v fails.v hastens.v volunteers.v aims.v: 
   ((<verb-s> & (<vc-decline>)) or
   (<verb-and-sp-i-> & (([<vc-decline>]) or ())) or
-  ((<vc-decline>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-decline>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 declined.v-d hastened.v-d volunteered.v-d aimed.v-d: 
   
@@ -3212,8 +3214,8 @@ fight.v:
 fights.v: 
   ((<verb-s> & (<vc-fight>)) or
   (<verb-and-sp-i-> & (([<vc-fight>]) or ())) or
-  ((<vc-fight>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-fight>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 fought.v-d: 
   ((<verb-sp,pp> & (<vc-fight>)) or
   (<verb-and-sp-i-> & (([<vc-fight>]) or ())) or
@@ -3236,8 +3238,8 @@ threatens.v means.v arranges.v pledges.v:
   
   ((<verb-s> & (<vc-threaten>)) or
   (<verb-and-sp-i-> & (([<vc-threaten>]) or ())) or
-  ((<vc-threaten>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-threaten>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 threatened.v-d meant.v-d arranged.v-d pledged.v-d:
   
@@ -3264,8 +3266,8 @@ plan.v confess.v:
 plans.v confesses.v: 
   ((<verb-s> & (<vc-plan>)) or
   (<verb-and-sp-i-> & (([<vc-plan>]) or ())) or
-  ((<vc-plan>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-plan>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 planned.v-d confessed.v-d:
   
   ((<verb-sp,pp> & (<vc-plan>)) or
@@ -3289,8 +3291,8 @@ decide.v resolve.v:
 decides.v resolves.v: 
   ((<verb-s> & (<vc-decide>)) or
   (<verb-and-sp-i-> & (([<vc-decide>]) or ())) or
-  ((<vc-decide>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-decide>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 decided.v-d resolved.v-d: 
   
@@ -3315,8 +3317,8 @@ remember.v forget.v:
 remembers.v forgets.v: 
   ((<verb-s> & (<vc-forget>)) or
   (<verb-and-sp-i-> & (([<vc-forget>]) or ())) or
-  ((<vc-forget>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-forget>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 remembered.v-d: 
   ((<verb-sp,pp> & (<vc-forget>)) or
   (<verb-and-sp-i-> & (([<vc-forget>]) or ())) or
@@ -3348,8 +3350,8 @@ learn.v:
 learns.v: 
   ((<verb-s> & (<vc-learn>)) or
   (<verb-and-sp-i-> & (([<vc-learn>]) or ())) or
-  ((<vc-learn>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-learn>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 learned.v-d: 
   ((<verb-sp,pp> & (<vc-learn>)) or
   (<verb-and-sp-i-> & (([<vc-learn>]) or ())) or
@@ -3367,8 +3369,8 @@ propose.v:
 proposes.v: 
   ((<verb-s> & (<vc-propose>)) or
   (<verb-and-sp-i-> & (([<vc-propose>]) or ())) or
-  ((<vc-propose>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-propose>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 proposed.v-d: 
   ((<verb-sp,pp> & (<vc-propose>)) or
   (<verb-and-sp-i-> & (([<vc-propose>]) or ())) or
@@ -3387,8 +3389,8 @@ demand.v:
 demands.v: 
   ((<verb-s> & (<vc-demand>)) or
   (<verb-and-sp-i-> & (([<vc-demand>]) or ())) or
-  ((<vc-demand>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-demand>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 demanded.v-d: 
   ((<verb-sp,pp> & (<vc-demand>)) or
   (<verb-and-sp-i-> & (([<vc-demand>]) or ())) or
@@ -3407,8 +3409,8 @@ beg.v plead.v:
 begs.v pleads.v: 
   ((<verb-s> & (<vc-beg>)) or
   (<verb-and-sp-i-> & (([<vc-beg>]) or ())) or
-  ((<vc-beg>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-beg>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 begged.v-d pleaded.v-d: 
   ((<verb-sp,pp> & (<vc-beg>)) or
   (<verb-and-sp-i-> & (([<vc-beg>]) or ())) or
@@ -3425,8 +3427,8 @@ bear.v:
 bears.v: 
   ((<verb-s> & (<vc-bear>)) or
   (<verb-and-sp-i-> & (([<vc-bear>]) or ())) or
-  ((<vc-bear>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-bear>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 bore.v-d: 
   ((<verb-sp,pp> & (<vc-bear>)) or
   (<verb-and-sp-i-> & (([<vc-bear>]) or ())) or
@@ -3450,8 +3452,8 @@ love.v dislike.v hate.v:
 loves.v dislikes.v hates.v: 
   ((<verb-s> & (<vc-love>)) or
   (<verb-and-sp-i-> & (([<vc-love>]) or ())) or
-  ((<vc-love>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-love>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 loved.v-d disliked.v-d hated.v-d:
   
@@ -3476,8 +3478,8 @@ begin.v continue.v cease.v:
 begins.v continues.v ceases.v: 
   ((<verb-s> & (<vc-begin>)) or
   (<verb-and-sp-i-> & (([<vc-begin>]) or ())) or
-  ((<vc-begin>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-begin>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 ceased.v-d:
   
   ((<verb-sp,pp> & (<vc-begin>)) or
@@ -3524,8 +3526,8 @@ start.v stop.v try.v:
 starts.v stops.v tries.v: 
   ((<verb-s> & (<vc-start>)) or
   (<verb-and-sp-i-> & (([<vc-start>]) or ())) or
-  ((<vc-start>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-start>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 started.v-d stopped.v-d tried.v-d: 
   
   ((<verb-sp,pp> & (<vc-start>)) or
@@ -3555,8 +3557,8 @@ adduces.v posits.v reiterates.v infers.v presupposes.v:
   
   ((<verb-s> & (<vc-dispute>)) or
   (<verb-and-sp-i-> & (([<vc-dispute>]) or ())) or
-  ((<vc-dispute>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-dispute>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 recognized.v-d disputed.v-d accepted.v-d calculated.v-d
 recorded.v-d deduced.v-d envisioned.v-d
 recounted.v-d signified.v-d clarified.v-d disclosed.v-d
@@ -3587,8 +3589,8 @@ repeat.v reflect.v provide.v counter.v signal.v:
 repeats.v reflects.v provides.v counters.v signals.v: 
   ((<verb-s> & (<vc-repeat>)) or
   (<verb-and-sp-i-> & (([<vc-repeat>]) or ())) or
-  ((<vc-repeat>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-repeat>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 repeated.v-d reflected.v-d countered.v-d signaled.v-d signalled.v-d: 
   
   ((<verb-sp,pp> & (<vc-repeat>)) or
@@ -3631,8 +3633,8 @@ postulates.v ensures.v implies.v verifies.v boasts.v:
   
   ((<verb-s> & (<vc-sense>)) or
   (<verb-and-sp-i-> & (([<vc-sense>]) or ())) or
-  ((<vc-sense>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-sense>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 doubted.v-d reaffirmed.v-d sensed.v-d reckoned.v-d regretted.v-d stipulated.v-d
 proclaimed.v-d ascertained.v-d discerned.v-d affirmed.v-d certified.v-d 
 trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
@@ -3670,8 +3672,8 @@ imagine.v:
 imagines.v:  
   ((<verb-s> & (<vc-imagine>)) or
   (<verb-and-sp-i-> & (([<vc-imagine>]) or ())) or
-  ((<vc-imagine>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-imagine>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 imagined.v:
   
   ((<verb-sp,pp> & (<vc-imagine>)) or
@@ -3700,8 +3702,8 @@ confirms.v stresses.v assumes.v:
   
   ((<verb-s> & (<vc-declare>)) or
   (<verb-and-sp-i-> & (([<vc-declare>]) or ())) or
-  ((<vc-declare>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-declare>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 declared.v feared.v concluded.v suspected.v conceded.v presumed.v
 emphasized.v maintained.v acknowledged.v noted.v 
 confirmed.v-d stressed.v-d assumed.v-d: 
@@ -3744,8 +3746,8 @@ believe.v answer.v worry.v protest.v:
 believes.v answers.v worries.v protests.v: 
   ((<verb-s> & (<vc-believe>)) or
   (<verb-and-sp-i-> & (([<vc-believe>]) or ())) or
-  ((<vc-believe>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-believe>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 believed.v-d answered.v-d worried.v-d protested.v-d: 
   
   ((<verb-sp,pp> & (<vc-believe>)) or
@@ -3769,8 +3771,8 @@ rule.v add.v:
 rules.v adds.v: 
   ((<verb-s> & (<vc-rule>)) or
   (<verb-and-sp-i-> & (([<vc-rule>]) or ())) or
-  ((<vc-rule>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-rule>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 ruled.v-d added.v-d: 
   
   ((<verb-sp,pp> & (<vc-rule>)) or
@@ -3795,8 +3797,8 @@ figure.v:
 figures.v: 
   ((<verb-s> & (<vc-figure>)) or
   (<verb-and-sp-i-> & (([<vc-figure>]) or ())) or
-  ((<vc-figure>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-figure>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 figured.v-d:
   
   ((<verb-sp,pp> & (<vc-figure>)) or
@@ -3827,8 +3829,8 @@ questions.v tests.v hypothesizes.v hypothesises.v envisages.v documents.v:
   
   ((<verb-s> & (<vc-predict>)) or
   (<verb-and-sp-i-> & (([<vc-predict>]) or ())) or
-  ((<vc-predict>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-predict>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 predicted.v realized.v discovered.v determined.v announced.v mentioned.v
 admitted.v recalled.v revealed.v stated.v observed.v indicated.v
 analysed.v analyzed.v assessed.v established.v evaluated.v examined.v 
@@ -3877,8 +3879,8 @@ guesses.v estimates.v understands.v notices.v explains.v demonstrates.v:
   
   ((<verb-s> & (<vc-guess>)) or
   (<verb-and-sp-i-> & (([<vc-guess>]) or ())) or
-  ((<vc-guess>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-guess>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 guessed.v-d understood.v-d noticed.v-d explained.v-d demonstrated.v-d: 
   
   ((<verb-sp,pp> & (<vc-guess>)) or
@@ -3910,8 +3912,8 @@ know.v:
 knows.v: 
   ((<verb-s> & (<vc-know>)) or
   (<verb-and-sp-i-> & (([<vc-know>]) or ())) or
-  ((<vc-know>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-know>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 knew.v-d: 
   ((<verb-sp> & (<vc-know>)) or
   (<verb-and-sp-i-> & (([<vc-know>]) or ())) or
@@ -3938,8 +3940,8 @@ request.v:
 requests.v: 
   ((<verb-s> & (<vc-request>)) or
   (<verb-and-sp-i-> & (([<vc-request>]) or ())) or
-  ((<vc-request>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-request>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 requested.v-d:
   
   ((<verb-sp,pp> & (<vc-request>)) or
@@ -3961,8 +3963,8 @@ feel.v:
 feels.v: 
   ((<verb-s> & (<vc-feel>)) or
   (<verb-and-sp-i-> & (([<vc-feel>]) or ())) or
-  ((<vc-feel>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-feel>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 felt.v-d: 
   ((<verb-sp,pp> & (<vc-feel>)) or
   (<verb-and-sp-i-> & (([<vc-feel>]) or ())) or
@@ -3980,8 +3982,8 @@ mind.v:
 minds.v: 
   ((<verb-s> & (<vc-mind>)) or
   (<verb-and-sp-i-> & (([<vc-mind>]) or ())) or
-  ((<vc-mind>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-mind>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 minded.v-d: 
   ((<verb-sp,pp> & (<vc-mind>)) or
   (<verb-and-sp-i-> & (([<vc-mind>]) or ())) or
@@ -3998,8 +4000,8 @@ study.v:
 studies.v: 
   ((<verb-s> & (<vc-study>)) or
   (<verb-and-sp-i-> & (([<vc-study>]) or ())) or
-  ((<vc-study>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-study>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 studied.v-d:
   
   ((<verb-sp,pp> & (<vc-study>)) or
@@ -4020,8 +4022,8 @@ discuss.v:
 discusses.v: 
   ((<verb-s> & (<vc-discuss>)) or
   (<verb-and-sp-i-> & (([<vc-discuss>]) or ())) or
-  ((<vc-discuss>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-discuss>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 discussed.v-d: 
   ((<verb-sp,pp> & (<vc-discuss>)) or
   (<verb-and-sp-i-> & (([<vc-discuss>]) or ())) or
@@ -4043,8 +4045,8 @@ justifies.v risks.v avoids.v involves.v favors.v:
   
   ((<verb-s> & (<vc-oppose>)) or
   (<verb-and-sp-i-> & (([<vc-oppose>]) or ())) or
-  ((<vc-oppose>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-oppose>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 opposed.v-d enjoyed.v-d advocated.v-d contemplated.v-d entailed.v-d
 necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d: 
@@ -4074,8 +4076,8 @@ finish.v practice.v resist.v:
 finishes.v practices.v resists.v quits.v: 
   ((<verb-s> & (<vc-finish>)) or
   (<verb-and-sp-i-> & (([<vc-finish>]) or ())) or
-  ((<vc-finish>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-finish>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 % <verb-pv>: "I want it finished"
 finished.v-d practiced.v-d resisted.v-d quitted.v-d: 
@@ -4119,8 +4121,8 @@ turn.v:
 turns.v: 
   ((<verb-s> & (<vc-turn>)) or
   (<verb-and-sp-i-> & (([<vc-turn>]) or ())) or
-  ((<vc-turn>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-turn>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 turned.v-d: 
   ((<verb-sp,pp> & (<vc-turn>)) or
   (<verb-and-sp-i-> & (([<vc-turn>]) or ())) or
@@ -4153,8 +4155,8 @@ remain.v:
 remains.v: 
   ((<verb-s> & (<vc-remain>)) or
   (<verb-and-sp-i-> & (([<vc-remain>]) or ())) or
-  ((<vc-remain>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-remain>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 remained.v-d: 
   ((<verb-sp,pp> & (<vc-remain>)) or
   (<verb-and-sp-i-> & (([<vc-remain>]) or ())) or
@@ -4173,8 +4175,8 @@ grow.v:
 grows.v: 
   ((<verb-s> & (<vc-grow>)) or
   (<verb-and-sp-i-> & (([<vc-grow>]) or ())) or
-  ((<vc-grow>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-grow>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 grew.v-d: 
   ((<verb-sp> & (<vc-grow>)) or
   (<verb-and-sp-i-> & (([<vc-grow>]) or ())) or
@@ -4200,8 +4202,8 @@ approve.v:
 approves.v: 
   ((<verb-s> & (<vc-approve>)) or
   (<verb-and-sp-i-> & (([<vc-approve>]) or ())) or
-  ((<vc-approve>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-approve>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 approved.v-d: 
   ((<verb-sp,pp> & (<vc-approve>)) or
   (<verb-and-sp-i-> & (([<vc-approve>]) or ())) or
@@ -4220,8 +4222,8 @@ dispose.v conceive.v:
 disposes.v conceives.v: 
   ((<verb-s> & (<vc-dispose>)) or
   (<verb-and-sp-i-> & (([<vc-dispose>]) or ())) or
-  ((<vc-dispose>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-dispose>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 disposed.v-d conceived.v-d: 
   ((<verb-sp,pp> & (<vc-dispose>)) or
   (<verb-and-sp-i-> & (([<vc-dispose>]) or ())) or
@@ -4241,8 +4243,8 @@ speak.v:
 speaks.v: 
   ((<verb-s> & (<vc-speak>)) or
   (<verb-and-sp-i-> & (([<vc-speak>]) or ())) or
-  ((<vc-speak>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-speak>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 spoke.v-d: 
   ((<verb-sp> & (<vc-speak>)) or
   (<verb-and-sp-i-> & (([<vc-speak>]) or ())) or
@@ -4268,8 +4270,8 @@ taste.v:
 tastes.v: 
   ((<verb-s> & (<vc-taste>)) or
   (<verb-and-sp-i-> & (([<vc-taste>]) or ())) or
-  ((<vc-taste>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-taste>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 tasted.v-d: 
   ((<verb-sp,pp> & (<vc-taste>)) or
   (<verb-and-sp-i-> & (([<vc-taste>]) or ())) or
@@ -4287,8 +4289,8 @@ reek.v smell.v:
 reeks.v smells.v: 
   ((<verb-s> & (<vc-smell>)) or
   (<verb-and-sp-i-> & (([<vc-smell>]) or ())) or
-  ((<vc-smell>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-smell>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 reeked.v-d smelled.v-d: 
   ((<verb-sp,pp> & (<vc-smell>)) or
   (<verb-and-sp-i-> & (([<vc-smell>]) or ())) or
@@ -4335,8 +4337,8 @@ put.v-d:
 puts.v: 
   ((<verb-s> & (<vc-put>)) or
   (<verb-and-sp-i-> & (([<vc-put>]) or ())) or
-  ((<vc-put>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-put>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 putting.v: <verb-pg> & <vc-put>;
 putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
 
@@ -4379,8 +4381,8 @@ find.v:
 finds.v: 
   ((<verb-s> & (<vc-find>)) or
   (<verb-and-sp-i-> & (([<vc-find>]) or ())) or
-  ((<vc-find>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-find>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 found.v-d: 
   ((<verb-sp,pp> & (<vc-find>)) or
   (<verb-and-sp-i-> & (([<vc-find>]) or ())) or
@@ -4407,8 +4409,8 @@ get.v:
 gets.v: 
   ((<verb-s> & (<vc-get>)) or
   (<verb-and-sp-i-> & (([<vc-get>]) or ())) or
-  ((<vc-get>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-get>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 got.v-d: 
   ((<verb-sp,pp> & (<vc-get>)) or
   (<verb-and-sp-i-> & (([<vc-get>]) or ())) or
@@ -4436,8 +4438,8 @@ leave.v:
 leaves.v: 
   ((<verb-s> & (<vc-leave>)) or
   (<verb-and-sp-i-> & (([<vc-leave>]) or ())) or
-  ((<vc-leave>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-leave>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 left.v-d: 
   
   ((<verb-sp,pp> & (<vc-leave>)) or
@@ -4460,8 +4462,8 @@ keep.v:
 keeps.v: 
   ((<verb-s> & (<vc-keep>)) or
   (<verb-and-sp-i-> & (([<vc-keep>]) or ())) or
-  ((<vc-keep>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-keep>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 kept.v-d: 
   ((<verb-sp,pp> & (<vc-keep>)) or
   (<verb-and-sp-i-> & (([<vc-keep>]) or ())) or
@@ -4492,8 +4494,8 @@ set.v-d:
 sets.v: 
   ((<verb-s> & (<vc-set>)) or
   (<verb-and-sp-i-> & (([<vc-set>]) or ())) or
-  ((<vc-set>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-set>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 setting.v: <verb-pg> & <vc-set>;
 setting.g: (<vc-set> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
@@ -4509,8 +4511,8 @@ hold.v:
 holds.v: 
   ((<verb-s> & (<vc-hold>)) or
   (<verb-and-sp-i-> & (([<vc-hold>]) or ())) or
-  ((<vc-hold>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-hold>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 held.v-d: 
   ((<verb-sp,pp> & (<vc-hold>)) or
   (<verb-and-sp-i-> & (([<vc-hold>]) or ())) or
@@ -4534,8 +4536,8 @@ expect.v claim.v:
 expects.v claims.v: 
   ((<verb-s> & (<vc-expect>)) or
   (<verb-and-sp-i-> & (([<vc-expect>]) or ())) or
-  ((<vc-expect>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-expect>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 expected.v-d claimed.v-d: 
   ((<verb-sp,pp> & (<vc-expect>)) or
   (<verb-and-sp-i-> & (([<vc-expect>]) or ())) or
@@ -4555,8 +4557,8 @@ intend.v:
 intends.v: 
   ((<verb-s> & (<vc-intend>)) or
   (<verb-and-sp-i-> & (([<vc-intend>]) or ())) or
-  ((<vc-intend>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-intend>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 intended.v-d: 
   ((<verb-sp,pp> & (<vc-intend>)) or
   (<verb-and-sp-i-> & (([<vc-intend>]) or ())) or
@@ -4578,8 +4580,8 @@ dare.v:
 dares.v: 
   ((<verb-s> & (<vc-dare>)) or
   (<verb-and-sp-i-> & (([<vc-dare>]) or ())) or
-  ((<vc-dare>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-dare>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 dared.v-d: 
   ((<verb-sp,pp> & (<vc-dare>)) or
   (<verb-and-sp-i-> & (([<vc-dare>]) or ())) or
@@ -4601,8 +4603,8 @@ like.v:
 likes.v: 
   ((<verb-s> & (<vc-like>)) or
   (<verb-and-sp-i-> & (([<vc-like>]) or ())) or
-  ((<vc-like>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-like>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 liked.v-d: 
   ((<verb-sp,pp> & (<vc-like>)) or
   (<verb-and-sp-i-> & (([<vc-like>]) or ())) or
@@ -4625,8 +4627,8 @@ offer.v:
 offers.v: 
   ((<verb-s> & (<vc-offer>)) or
   (<verb-and-sp-i-> & (([<vc-offer>]) or ())) or
-  ((<vc-offer>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-offer>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 offered.v-d: 
   ((<verb-sp,pp> & (<vc-offer>)) or
   (<verb-and-sp-i-> & (([<vc-offer>]) or ())) or
@@ -4651,8 +4653,8 @@ refuse.v:
 refuses.v: 
   ((<verb-s> & (<vc-refuse>)) or
   (<verb-and-sp-i-> & (([<vc-refuse>]) or ())) or
-  ((<vc-refuse>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-refuse>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 refused.v-d: 
   ((<verb-sp,pp> & (<vc-refuse>)) or
   (<verb-and-sp-i-> & (([<vc-refuse>]) or ())) or
@@ -4677,8 +4679,8 @@ need.i: {@E-} & (S- or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: 
   ((<verb-s> & (<vc-want>)) or
   (<verb-and-sp-i-> & (([<vc-want>]) or ())) or
-  ((<vc-want>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-want>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 wanted.v-d needed.v-d: 
   ((<verb-sp,pp> & (<vc-want>)) or
   (<verb-and-sp-i-> & (([<vc-want>]) or ())) or
@@ -4700,8 +4702,8 @@ choose.v:
 chooses.v: 
   ((<verb-s> & (<vc-choose>)) or
   (<verb-and-sp-i-> & (([<vc-choose>]) or ())) or
-  ((<vc-choose>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-choose>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 chose.v-d: 
   ((<verb-sp> & (<vc-choose>)) or
   (<verb-and-sp-i-> & (([<vc-choose>]) or ())) or
@@ -4731,8 +4733,8 @@ prepare.v press.v:
 prepares.v presses.v: 
   ((<verb-s> & (<vc-prepare>)) or
   (<verb-and-sp-i-> & (([<vc-prepare>]) or ())) or
-  ((<vc-prepare>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-prepare>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 prepared.v-d pressed.v-d: 
   ((<verb-sp,pp> & (<vc-prepare>)) or
   (<verb-and-sp-i-> & (([<vc-prepare>]) or ())) or
@@ -4755,8 +4757,8 @@ require.v:
 requires.v: 
   ((<verb-s> & (<vc-require>)) or
   (<verb-and-sp-i-> & (([<vc-require>]) or ())) or
-  ((<vc-require>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-require>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 required.v-d: 
   ((<verb-sp,pp> & (<vc-require>)) or
   (<verb-and-sp-i-> & (([<vc-require>]) or ())) or
@@ -4778,8 +4780,8 @@ command.v order.v urge.v:
 commands.v orders.v urges.v: 
   ((<verb-s> & (<vc-command>)) or
   (<verb-and-sp-i-> & (([<vc-command>]) or ())) or
-  ((<vc-command>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-command>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 <vc-commanded>: 
   ((<verb-sp,pp> & (<vc-command>)) or
   (<verb-and-sp-i-> & (([<vc-command>]) or ())) or
@@ -4804,8 +4806,8 @@ consider.v:
 considers.v: 
   ((<verb-s> & (<vc-consider>)) or
   (<verb-and-sp-i-> & (([<vc-consider>]) or ())) or
-  ((<vc-consider>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-consider>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 considered.v-d: 
   ((<verb-sp,pp> & (<vc-consider>)) or
   (<verb-and-sp-i-> & (([<vc-consider>]) or ())) or
@@ -4829,8 +4831,8 @@ perceive.v:
 perceives.v: 
   ((<verb-s> & (<vc-perceive>)) or
   (<verb-and-sp-i-> & (([<vc-perceive>]) or ())) or
-  ((<vc-perceive>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-perceive>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 perceived.v-d: 
   ((<verb-sp,pp> & (<vc-perceive>)) or
   (<verb-and-sp-i-> & (([<vc-perceive>]) or ())) or
@@ -4852,8 +4854,8 @@ report.v:
 reports.v: 
   ((<verb-s> & (<vc-report>)) or
   (<verb-and-sp-i-> & (([<vc-report>]) or ())) or
-  ((<vc-report>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-report>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 reported.v-d: 
   ((<verb-sp,pp> & (<vc-report>)) or
   (<verb-and-sp-i-> & (([<vc-report>]) or ())) or
@@ -4875,8 +4877,8 @@ caution.v:
 cautions.v: 
   ((<verb-s> & (<vc-caution>)) or
   (<verb-and-sp-i-> & (([<vc-caution>]) or ())) or
-  ((<vc-caution>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-caution>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 cautioned.v-d: 
   ((<verb-sp,pp> & (<vc-caution>)) or
   (<verb-and-sp-i-> & (([<vc-caution>]) or ())) or
@@ -4899,8 +4901,8 @@ warn.v advise.v:
 warns.v advises.v: 
   ((<verb-s> & (<vc-warn>)) or
   (<verb-and-sp-i-> & (([<vc-warn>]) or ())) or
-  ((<vc-warn>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-warn>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 warned.v-d advised.v-d: 
   
   ((<verb-sp,pp> & (<vc-warn>)) or
@@ -4924,8 +4926,8 @@ hear.v:
 hears.v: 
   ((<verb-s> & (<vc-hear>)) or
   (<verb-and-sp-i-> & (([<vc-hear>]) or ())) or
-  ((<vc-hear>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-hear>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 heard.v-d: 
   
   ((<verb-sp,pp> & (<vc-hear>)) or
@@ -4950,8 +4952,8 @@ see.v:
 sees.v: 
   ((<verb-s> & (<vc-see>)) or
   (<verb-and-sp-i-> & (([<vc-see>]) or ())) or
-  ((<vc-see>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-see>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 saw.v-d: 
   ((<verb-sp> & (<vc-see>)) or
   (<verb-and-sp-i-> & (([<vc-see>]) or ())) or
@@ -4986,8 +4988,8 @@ repays.v dubs.v entitles.v fines.v:
   
   ((<verb-s> & (<vc-owe>)) or
   (<verb-and-sp-i-> & (([<vc-owe>]) or ())) or
-  ((<vc-owe>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-owe>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 owed.v delivered.v accorded.v awarded.v 
 granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d: 
   
@@ -5035,8 +5037,8 @@ gives.v sends.v buys.v brings.v lends.v
 issues.v hands.v pours.v telegraphs.v wires.v: 
   ((<verb-s> & (<vc-give>)) or
   (<verb-and-sp-i-> & (([<vc-give>]) or ())) or
-  ((<vc-give>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-give>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 sent.v-d bought.v-d brought.v-d lent.v-d handed.v-d:
   
@@ -5093,8 +5095,8 @@ pass.v pay.v sell.v deal.v:
 passes.v pays.v sells.v deals.v: 
   ((<verb-s> & (<vc-pass>)) or
   (<verb-and-sp-i-> & (([<vc-pass>]) or ())) or
-  ((<vc-pass>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-pass>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 passed.v-d paid.v-d payed.v-d sold.v-d dealt.v-d: 
   
   ((<verb-sp,pp> & (<vc-pass>)) or
@@ -5123,8 +5125,8 @@ call.v shout.v:
 calls.v shouts.v: 
   ((<verb-s> & (<vc-call>)) or
   (<verb-and-sp-i-> & (([<vc-call>]) or ())) or
-  ((<vc-call>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-call>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 called.v-d shouted.v-d: 
   ((<verb-sp,pp> & (<vc-call>)) or
   (<verb-and-sp-i-> & (([<vc-call>]) or ())) or
@@ -5148,8 +5150,8 @@ color.v colour.v paint.v:
 colors.v colours.v paints.v: 
   ((<verb-s> & (<vc-color>)) or
   (<verb-and-sp-i-> & (([<vc-color>]) or ())) or
-  ((<vc-color>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-color>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 colored.v-d coloured.v-d painted.v-d:
   
   ((<verb-sp,pp> & (<vc-color>)) or
@@ -5184,8 +5186,8 @@ write.v charge.v draw.v:
 writes.v reads.v charges.v draws.v: 
   ((<verb-s> & (<vc-write>)) or
   (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
-  ((<vc-write>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-write>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 wrote.v-d drew.v-d: 
   ((<verb-sp> & (<vc-write>)) or
   (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
@@ -5237,8 +5239,8 @@ sing.v dance.v cry.v:
 sings.v dances.v cries.v: 
   ((<verb-s> & (<vc-sing>)) or
   (<verb-and-sp-i-> & (([<vc-sing>]) or ())) or
-  ((<vc-sing>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-sing>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 sang.v-d danced.v-d cried.v-d: 
   ((<verb-sp> & (<vc-sing>)) or
   (<verb-and-sp-i-> & (([<vc-sing>]) or ())) or
@@ -5272,8 +5274,8 @@ allow.v:
 allows.v: 
   ((<verb-s> & (<vc-allow>)) or
   (<verb-and-sp-i-> & (([<vc-allow>]) or ())) or
-  ((<vc-allow>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-allow>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 allowed.v-d: 
   ((<verb-sp,pp> & (<vc-allow>)) or
   (<verb-and-sp-i-> & (([<vc-allow>]) or ())) or
@@ -5297,8 +5299,8 @@ promise.v:
 promises.v: 
   ((<verb-s> & (<vc-promise>)) or
   (<verb-and-sp-i-> & (([<vc-promise>]) or ())) or
-  ((<vc-promise>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-promise>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 promised.v-d: 
   ((<verb-sp,pp> & (<vc-promise>)) or
   (<verb-and-sp-i-> & (([<vc-promise>]) or ())) or
@@ -5327,8 +5329,8 @@ show.v:
 shows.v: 
   ((<verb-s> & (<vc-show>)) or
   (<verb-and-sp-i-> & (([<vc-show>]) or ())) or
-  ((<vc-show>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-show>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 showed.v-d: 
   ((<verb-sp> & (<vc-show>)) or
   (<verb-and-sp-i-> & (([<vc-show>]) or ())) or
@@ -5360,8 +5362,8 @@ teach.v:
 teaches.v: 
   ((<verb-s> & (<vc-teach>)) or
   (<verb-and-sp-i-> & (([<vc-teach>]) or ())) or
-  ((<vc-teach>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-teach>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 taught.v-d:
   
   ((<verb-sp,pp> & (<vc-teach>)) or
@@ -5385,8 +5387,8 @@ compel.v:
 compels.v: 
   ((<verb-s> & (<vc-compel>)) or
   (<verb-and-sp-i-> & (([<vc-compel>]) or ())) or
-  ((<vc-compel>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-compel>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 compelled.v-d: 
   ((<verb-sp,pp> & (<vc-compel>)) or
   (<verb-and-sp-i-> & (([<vc-compel>]) or ())) or
@@ -5408,8 +5410,8 @@ force.v:
 forces.v: 
   ((<verb-s> & (<vc-force>)) or
   (<verb-and-sp-i-> & (([<vc-force>]) or ())) or
-  ((<vc-force>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-force>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 forced.v-d willed.v-d:
   
   ((<verb-sp,pp> & (<vc-force>)) or
@@ -5448,8 +5450,8 @@ challenges.v exhorts.v implores.v motivates.v impels.v:
 
   ((<verb-s> & (<vc-design>)) or
   (<verb-and-sp-i-> & (([<vc-design>]) or ())) or
-  ((<vc-design>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-design>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 designed.v-d permitted.v-d pressured.v-d trained.v-d 
 sentenced.v-d caused.v-d enabled.v-d
 authorized.v-d prompted.v-d spurred.v-d invited.v-d disinclined.v-d
@@ -5524,8 +5526,8 @@ elect.v appoint.v:
 elects.v appoints.v: 
   ((<verb-s> & (<vc-elect>)) or
   (<verb-and-sp-i-> & (([<vc-elect>]) or ())) or
-  ((<vc-elect>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-elect>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 elected.v-d appointed.v-d: 
   ((<verb-sp,pp> & (<vc-elect>)) or
   (<verb-and-sp-i-> & (([<vc-elect>]) or ())) or
@@ -5551,8 +5553,8 @@ name.v designate.v label.v:
 names.v designates.v labels.v: 
   ((<verb-s> & (<vc-elect>)) or
   (<verb-and-sp-i-> & (([<vc-elect>]) or ())) or
-  ((<vc-elect>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-elect>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 named.v-d designated.v-d labelled.v-d labeled.v-d: 
   
   ((<verb-sp,pp> & (<vc-name>)) or
@@ -5574,8 +5576,8 @@ tag.v:
 tags.v: 
   ((<verb-s> & (<vc-tag>)) or
   (<verb-and-sp-i-> & (([<vc-tag>]) or ())) or
-  ((<vc-tag>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-tag>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 tagged.v-d:
   
   ((<verb-sp,pp> & (<vc-tag>)) or
@@ -5603,8 +5605,8 @@ program.v oblige.v:
 programs.v obliges.v: 
   ((<verb-s> & (<vc-program>)) or
   (<verb-and-sp-i-> & (([<vc-program>]) or ())) or
-  ((<vc-program>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-program>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 programed.v-d programmed.v-d obliged.v-d:
   
   ((<verb-sp,pp> & (<vc-program>)) or
@@ -5627,8 +5629,8 @@ convince.v persuade.v:
 convinces.v persuades.v: 
   ((<verb-s> & (<vc-convince>)) or
   (<verb-and-sp-i-> & (([<vc-convince>]) or ())) or
-  ((<vc-convince>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-convince>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 convinced.v-d persuaded.v-d:
   
   ((<verb-sp,pp> & (<vc-convince>)) or
@@ -5659,8 +5661,8 @@ tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-);
 tells.v: 
   ((<verb-s> & (<vc-tell>)) or
   (<verb-and-sp-i-> & (([<vc-tell>]) or ())) or
-  ((<vc-tell>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-tell>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 told.v-d: 
   ((<verb-sp,pp> & (<vc-tell>)) or
   (<verb-and-sp-i-> & (([<vc-tell>]) or ())) or
@@ -5684,8 +5686,8 @@ ask.v:
 asks.v: 
   ((<verb-s> & (<vc-ask>)) or
   (<verb-and-sp-i-> & (([<vc-ask>]) or ())) or
-  ((<vc-ask>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-ask>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 asked.v-d: 
   ((<verb-sp,pp> & (<vc-ask>)) or
   (<verb-and-sp-i-> & (([<vc-ask>]) or ())) or
@@ -5708,8 +5710,8 @@ help.v:
 helps.v: 
   ((<verb-s> & (<vc-help>)) or
   (<verb-and-sp-i-> & (([<vc-help>]) or ())) or
-  ((<vc-help>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-help>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 helped.v-d: 
   ((<verb-sp,pp> & (<vc-help>)) or
   (<verb-and-sp-i-> & (([<vc-help>]) or ())) or
@@ -5730,8 +5732,8 @@ remind.v:
 reminds.v: 
   ((<verb-s> & (<vc-remind>)) or
   (<verb-and-sp-i-> & (([<vc-remind>]) or ())) or
-  ((<vc-remind>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-remind>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 reminded.v-d: 
   ((<verb-sp,pp> & (<vc-remind>)) or
   (<verb-and-sp-i-> & (([<vc-remind>]) or ())) or
@@ -5755,8 +5757,8 @@ informs.v reassures.v alerts.v guarantees.v notifies.v forewarns.v:
 
   ((<verb-s> & (<vc-inform>)) or
   (<verb-and-sp-i-> & (([<vc-inform>]) or ())) or
-  ((<vc-inform>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-inform>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 informed.v-d reassured.v-d alerted.v-d guaranteed.v-d 
 notified.v-d forewarned.v-d: 
 
@@ -5783,8 +5785,8 @@ assure.v:
 assures.v: 
   ((<verb-s> & (<vc-assure>)) or
   (<verb-and-sp-i-> & (([<vc-assure>]) or ())) or
-  ((<vc-assure>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-assure>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 assured.v-d: 
   ((<verb-sp,pp> & (<vc-assure>)) or
   (<verb-and-sp-i-> & (([<vc-assure>]) or ())) or
@@ -5811,8 +5813,8 @@ let.v-d:
 lets.v: 
   ((<verb-s> & (<vc-let>)) or
   (<verb-and-sp-i-> & (([<vc-let>]) or ())) or
-  ((<vc-let>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-let>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
@@ -5830,8 +5832,8 @@ watch.v:
 watches.v: 
   ((<verb-s> & (<vc-watch>)) or
   (<verb-and-sp-i-> & (([<vc-watch>]) or ())) or
-  ((<vc-watch>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-watch>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 watched.v-d: 
   
   ((<verb-sp,pp> & (<vc-watch>)) or
@@ -5855,8 +5857,8 @@ appreciate.v spend.v:
 appreciates.v spends.v: 
   ((<verb-s> & (<vc-appreciate>)) or
   (<verb-and-sp-i-> & (([<vc-appreciate>]) or ())) or
-  ((<vc-appreciate>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-appreciate>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 appreciated.v-d spent.v-d:
   
   ((<verb-sp,pp> & (<vc-appreciate>)) or
@@ -5887,8 +5889,8 @@ make.v:
 makes.v: 
   ((<verb-s> & (<vc-make>)) or
   (<verb-and-sp-i-> & (([<vc-make>]) or ())) or
-  ((<vc-make>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-make>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 made.v-d:
   
   ((<verb-sp,pp> & (<vc-make>)) or
@@ -5916,8 +5918,8 @@ render.v deem.v:
 renders.v deems.v: 
   ((<verb-s> & (<vc-render>)) or
   (<verb-and-sp-i-> & (([<vc-render>]) or ())) or
-  ((<vc-render>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-render>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 rendered.v-d deemed.v-d: 
   ((<verb-sp,pp> & (<vc-render>)) or
   (<verb-and-sp-i-> & (([<vc-render>]) or ())) or
@@ -5940,8 +5942,8 @@ deprives.v accuses.v acquits.v purges.v disabuses.v
 exonerates.v absolves.v robs.v convicts.v: 
   ((<verb-s> & (<vc-deprive>)) or
   (<verb-and-sp-i-> & (([<vc-deprive>]) or ())) or
-  ((<vc-deprive>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-deprive>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 deprived.v accused.v acquitted.v purged.v disabused.v exonerated.v absolved.v robbed.v
 convicted.v-d:
   
@@ -5971,8 +5973,8 @@ clear.v:
 clears.v: 
   ((<verb-s> & (<vc-clear>)) or
   (<verb-and-sp-i-> & (([<vc-clear>]) or ())) or
-  ((<vc-clear>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-clear>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 cleared.v-d:
   
   ((<verb-sp,pp> & (<vc-clear>)) or
@@ -5999,8 +6001,8 @@ bet.v-d:
 bets.v: 
   ((<verb-s> & (<vc-bet>)) or
   (<verb-and-sp-i-> & (([<vc-bet>]) or ())) or
-  ((<vc-bet>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-bet>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 betted.v-d:
   
   ((<verb-sp,pp> & (<vc-bet>)) or
@@ -6085,8 +6087,8 @@ suggest.v anticipate.v recommend.v:
 suggests.v anticipates.v recommends.v: 
   ((<verb-s> & (<vc-suggest>)) or
   (<verb-and-sp-i-> & (([<vc-suggest>]) or ())) or
-  ((<vc-suggest>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-suggest>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 suggested.v-d anticipated.v-d recommended.v-d: 
   
   ((<verb-sp,pp> & (<vc-suggest>)) or
@@ -6113,8 +6115,8 @@ deny.v:
 denies.v: 
   ((<verb-s> & (<vc-deny>)) or
   (<verb-and-sp-i-> & (([<vc-deny>]) or ())) or
-  ((<vc-deny>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-deny>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 denied.v-d:
   
   ((<verb-sp,pp> & (<vc-deny>)) or
@@ -6138,8 +6140,8 @@ describe.v:
 describes.v: 
   ((<verb-s> & (<vc-describe>)) or
   (<verb-and-sp-i-> & (([<vc-describe>]) or ())) or
-  ((<vc-describe>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-describe>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 described.v-d:
   
   ((<verb-sp,pp> & (<vc-describe>)) or
@@ -6163,8 +6165,8 @@ portray.v depict.v regard.v view.v characterize.v:
 portrays.v depicts.v regards.v views.v characterizes.v: 
   ((<verb-s> & (<vc-portray>)) or
   (<verb-and-sp-i-> & (([<vc-portray>]) or ())) or
-  ((<vc-portray>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-portray>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 portrayed.v-d depicted.v-d regarded.v-d viewed.v-d characterized.v-d: 
   
   ((<verb-sp,pp> & (<vc-portray>)) or
@@ -6197,8 +6199,8 @@ comes_of_age:
   
   ((<verb-s> & (<vc-intrans>)) or
   (<verb-and-sp-i-> & (([<vc-intrans>]) or ())) or
-  ((<vc-intrans>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-intrans>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 showed_up pleaded_guilty pleaded_innocent made_way caught_up caught_on
 filed_suit picked_up jumped_ship:  
@@ -6264,8 +6266,8 @@ takes_note_of:
   
   ((<verb-s> & (<vc-trans>)) or
   (<verb-and-sp-i-> & (([<vc-trans>]) or ())) or
-  ((<vc-trans>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-trans>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 put_up_with let_go_of:
   
   ((<verb-sp,pp> & (<vc-trans>)) or
@@ -6437,8 +6439,8 @@ doubles.v triples.v quadruples.v quintuples.v:
   {EN-} & 
   ((<verb-s> & (<vc-fill>)) or
   (<verb-and-sp-i-> & (([<vc-fill>]) or ())) or
-  ((<vc-fill>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-fill>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 doubled.v-d tripled.v-d quadrupled.v-d quintupled.v-d:
   {EN-} & (
   ((<verb-sp,pp> & (<vc-fill>)) or
@@ -8531,8 +8533,8 @@ ED-WORDS.v-d:
 S-WORDS.v: 
   ((<verb-s> & (<vc-tr,intr>)) or
   (<verb-and-sp-i-> & (([<vc-tr,intr>]) or ())) or
-  ((<vc-tr,intr>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t>;
+  ((<vc-tr,intr>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
 
 S-WORDS.n:
   (<noun-modifiers> & 
