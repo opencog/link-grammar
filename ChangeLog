@@ -1,3 +1,6 @@
+Version 4.7.2 (XXX 2011)
+ * Fix: crash on certain sentences, when fat-link parsing enabled
+
 Version 4.7.1 (11 December 2010):
  * Fix: dictionary: Add "x" as synonym for "times".
  * Fix: compilation failure due to lack of termios support on Windows.

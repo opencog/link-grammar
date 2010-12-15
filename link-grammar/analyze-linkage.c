@@ -707,7 +707,7 @@ static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
 			}
 		}
 	}
-	old_andlist->cost = cost;
+	if (old_andlist) old_andlist->cost = cost;
 	return old_andlist;
 }
 
