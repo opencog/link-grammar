@@ -946,7 +946,8 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	if (analyze_pass == PP_SECOND_PASS)
 	{
 	  li.andlist = build_andlist(actx, sent);
-	  li.and_cost = li.andlist->cost;
+	  li.and_cost = 0;
+	  if (li.andlist) li.and_cost = li.andlist->cost;
 	}
 	else li.and_cost = 0;
 
