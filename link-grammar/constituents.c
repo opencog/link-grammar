@@ -424,8 +424,27 @@ static int find_next_element(con_context_t *ctxt,
 		ctxt->templist[num_elements] = c;
 		addedone = 1;
 		num_lists = find_next_element(ctxt, linkage, c, numcon_total,
-									  num_elements+1, num_lists);
+		                              num_elements+1, num_lists);
+
+		/* Test for overlow of the and-list.
+		 * With the current parser, the following will cause an
+		 * overflow:
+		 *
+		 * I have not seen the grysbok, or the suni, or the dibitag, or
+		 * the lechwi, or the aoul, or the gerenuk, or the blaauwbok,
+		 * or the chevrotain, or lots of others, but who in the world
+		 * could guess what they were or what they looked like, judging
+		 * only from the names?
+		 */
+		if (MAX_ANDS <= num_lists)
+		{
+			err_ctxt ec;
+			ec.sent = linkage->sent;
+			err_msg(&ec, Error, "Error: Constituent overflowed andlist!\n");
+			return MAX_ANDS;
+		}
 	}
+
 	if (addedone == 0 && num_elements > 1)
 	{
 		for (a=0; a<num_elements; a++) {
@@ -433,22 +452,6 @@ static int find_next_element(con_context_t *ctxt,
 			ctxt->andlist[num_lists].num = num_elements;
 		}
 		num_lists++;
-		if (MAX_ANDS <= num_lists)
-		{
-			/* With the current parser, the following will cause an
-			 * overflow:
-			 *
-			 * I have not seen the grysbok, or the suni, or the dibitag, or
-			 * the lechwi, or the aoul, or the gerenuk, or the blaauwbok,
-			 * or the chevrotain, or lots of others, but who in the world
-			 * could guess what they were or what they looked like, judging
-			 * only from the names?
-			 */
-			err_ctxt ec;
-			ec.sent = linkage->sent;
-			err_msg(&ec, Error, "Error: Constituent overflowed andlist!\n");
-			return (num_lists-1);
-		}
 	}
 	return num_lists;
 }
@@ -458,7 +461,6 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	int c1, c2=0, c3, ok, a, n, a2, n2, match, listmatch, a3;
 	int num_lists, num_elements;
 	int leftend, rightend;
-
 
 	for (c1=0; c1<numcon_total; c1++)
 	{
@@ -564,9 +566,12 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		if (ctxt->constituent[c1].valid == 0) continue;
 		num_elements = 1;
 		ctxt->templist[0] = c1;
-		num_lists =
-			find_next_element(ctxt, linkage, c1, numcon_total,
-							  num_elements, num_lists);
+		num_lists = find_next_element(ctxt, linkage, c1, numcon_total,
+			                           num_elements, num_lists);
+
+		/* If we're overflowing, then punt */
+		if (MAX_ANDS <= num_lists)
+			break;
 	}
 
 	if (verbosity >= 2)
