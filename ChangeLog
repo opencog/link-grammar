@@ -1,7 +1,7 @@
-Version 4.7.2 (XXX 2011)
+Version 4.7.2 (6 January 2011)
  * Fix: crash on certain sentences, when fat-link parsing enabled
  * Fix: 3 corrupted nouns in words.n.1
- * Fix: minimize impact of constituent processing and-list overflow 
+ * Fix: minimize cpu spin if constituent processing and-list overflows.
 
 Version 4.7.1 (11 December 2010):
  * Fix: dictionary: Add "x" as synonym for "times".
