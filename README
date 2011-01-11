@@ -332,9 +332,9 @@ TESTING the program:
 
 USING the parser in your own applications:
 ------------------------------------------
-   There is a API (application program interface) to the parser.  This
+   There is an API (application program interface) to the parser.  This
    makes it easy to incorporate it into your own applications.  The API
-   documented on the web site.
+   is documented on the web site.
 
 
 USING pkg-config:
