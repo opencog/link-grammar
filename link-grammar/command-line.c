@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2008, 2009 Linas Vepstas                                */
+/* Copyright (c) 2008, 2009, 2011 Linas Vepstas                          */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -35,7 +35,7 @@ static struct
 	int use_sat_solver;
 	int echo_on;
 	int cost_model;
-	double max_cost;
+	float max_cost;
 	int screen_width;
 	int display_on;
 	int display_constituents;
@@ -58,10 +58,10 @@ typedef enum
 
 typedef struct
 {
-	const char * string;
+	const char *string;
 	ParamType param_type;
-	const char * description;
-	int  * p;
+	const char *description;
+	void *ptr;
 } Switch;
 
 static Switch default_switches[] =
@@ -72,12 +72,12 @@ static Switch default_switches[] =
    {"constituents", Int,  "Generate constituent output",   &local.display_constituents},
    {"cost",       Int,  "Cost model used for ranking",     &local.cost_model},
    {"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
-   {"disjuncts",  Bool, "Showing of disjunct used",        &local.display_disjuncts},
+   {"disjuncts",  Bool, "Display of disjunct used",        &local.display_disjuncts},
    {"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
    {"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
    {"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
    {"limit",      Int,  "The maximum linkages processed",  &local.linkage_limit},
-   {"links",      Bool, "Showing of complete link data",   &local.display_links},
+   {"links",      Bool, "Display of complete link data",   &local.display_links},
    {"max-length", Int,  "Maximum sentence length",         &local.max_sentence_length},
    {"memory",     Int,  "Max memory allowed",              &local.memory},
    {"null",       Bool, "Allow null links",                &local.allow_null},
@@ -87,9 +87,9 @@ static Switch default_switches[] =
    {"senses",     Bool, "Display of word senses",          &local.display_senses},
    {"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-   {"spell",      Bool, "Spell-guesser for unknown words",  &local.spell_guess},
+   {"spell",      Bool, "Use spell-guesser for unknown words",  &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
-   {"timeout",    Int,  "Abort parsing after this many seconds",   &local.timeout},
+   {"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
    {"union",      Bool, "Display of 'union' linkage",      &local.display_union},
    {"use-fat",    Bool, "Use fat links when parsing",      &local.use_fat_links},
 #ifdef USE_SAT_SOLVER
@@ -164,6 +164,16 @@ static int is_numerical_rhs(char *s)
 	return TRUE;
 }
 
+static inline int ival(Switch s)
+{
+	return *((int *) s.ptr);
+}
+
+static inline void setival(Switch s, int val)
+{
+	*((int *) s.ptr) = val;
+}
+
 static void x_issue_special_command(char * line, Parse_Options opts, Dictionary dict)
 {
 	char *s, myline[1000], *x, *y;
@@ -209,8 +219,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		/* flip boolean value */
 		if (j >= 0)
 		{
-			*as[j].p = !(*as[j].p);
-			printf("%s turned %s.\n", as[j].description, (*as[j].p)? "on" : "off");
+			setival(as[j], !ival(as[j]));
+			printf("%s turned %s.\n", as[j].description, ival(as[i])? "on" : "off");
 			return;
 		}
 		else
@@ -226,7 +236,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	{
         printf(" Variable     Controls                                      Value\n");
         printf(" --------     --------                                      -----\n");
-		for (i=0; as[i].string != NULL; i++) {
+		for (i = 0; as[i].string != NULL; i++)
+		{
 			printf(" ");
             left_print_string(stdout, as[i].string, "             ");
             left_print_string(stdout, as[i].description,
@@ -234,15 +245,15 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 			if (Float == as[i].param_type)
 			{
 				/* Float point print! */
-				printf("%5.2f", *as[i].p);
+				printf("%5.2f", (double) (*((float *)as[i].ptr)));
 			}
 			else
 			{
-				printf("%5d", *as[i].p);
+				printf("%5d", ival(as[i]));
 			}
 			if (Bool == as[i].param_type)
 			{
-				if (*as[i].p) printf(" (On)"); else printf(" (Off)");
+				if (ival(as[i])) printf(" (On)"); else printf(" (Off)");
 			}
 			printf("\n");
 		}
@@ -324,7 +335,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 			return;
 		}
 
-		*(as[j].p) = val;
+		setival(as[j], val);
 		printf("%s set to %d\n", as[j].string, val);
 		return;
 	}
