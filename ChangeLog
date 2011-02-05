@@ -1,5 +1,6 @@
 Version 4.7.3 (xxx 2011)
  * Fix: "level" as indefinite noun: "... at knee level".
+ * Allow max disjunct cost as a controllable parser parameter.
 
 Version 4.7.2 (6 January 2011)
  * Fix: crash on certain sentences, when fat-link parsing enabled

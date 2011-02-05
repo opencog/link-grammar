@@ -35,6 +35,7 @@ static struct
 	int use_sat_solver;
 	int echo_on;
 	int cost_model;
+	double max_cost;
 	int screen_width;
 	int display_on;
 	int display_constituents;
@@ -48,48 +49,56 @@ static struct
 	int display_senses;
 } local;
 
+typedef enum
+{
+	Int,
+	Bool,
+	Float,
+} ParamType;
+
 typedef struct
 {
 	const char * string;
-	int	isboolean;
+	ParamType param_type;
 	const char * description;
 	int  * p;
 } Switch;
 
 static Switch default_switches[] =
 {
-   {"bad",        1, "Display of bad linkages",         &local.display_bad},
-   {"batch",      1, "Batch mode",                      &local.batch_mode},
-   {"cluster",    1, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
-   {"constituents", 0, "Generate constituent output",   &local.display_constituents},
-   {"cost",       0, "Cost model used for ranking",     &local.cost_model},
-   {"disjuncts",  1, "Showing of disjunct used",        &local.display_disjuncts},
-   {"echo",       1, "Echoing of input sentence",       &local.echo_on},
-   {"graphics",   1, "Graphical display of linkage",    &local.display_on},
-   {"islands-ok", 1, "Use of null-linked islands",      &local.islands_ok},
-   {"limit",      0, "The maximum linkages processed",  &local.linkage_limit},
-   {"links",      1, "Showing of complete link data",   &local.display_links},
-   {"max-length", 0, "Maximum sentence length",         &local.max_sentence_length},
-   {"memory",     0, "Max memory allowed",              &local.memory},
-   {"null",       1, "Null links",                      &local.allow_null},
-   {"null-block", 0, "Size of blocks with null cost 1", &local.null_block},
-   {"panic",      1, "Use of \"panic mode\"",           &local.panic_mode},
-   {"postscript", 1, "Generate postscript output",      &local.display_postscript},
-   {"senses",     1, "Showing of word senses",          &local.display_senses},
-   {"short",      0, "Max length of short links",       &local.short_length},
+   {"bad",        Bool, "Display of bad linkages",         &local.display_bad},
+   {"batch",      Bool, "Batch mode",                      &local.batch_mode},
+   {"cluster",    Bool, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
+   {"constituents", Int,  "Generate constituent output",   &local.display_constituents},
+   {"cost",       Int,  "Cost model used for ranking",     &local.cost_model},
+   {"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
+   {"disjuncts",  Bool, "Showing of disjunct used",        &local.display_disjuncts},
+   {"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
+   {"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
+   {"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
+   {"limit",      Int,  "The maximum linkages processed",  &local.linkage_limit},
+   {"links",      Bool, "Showing of complete link data",   &local.display_links},
+   {"max-length", Int,  "Maximum sentence length",         &local.max_sentence_length},
+   {"memory",     Int,  "Max memory allowed",              &local.memory},
+   {"null",       Bool, "Allow null links",                &local.allow_null},
+   {"null-block", Int,  "Size of blocks with null count 1", &local.null_block},
+   {"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
+   {"postscript", Bool, "Generate postscript output",      &local.display_postscript},
+   {"senses",     Bool, "Display of word senses",          &local.display_senses},
+   {"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-   {"spell",      1, "Spell-guesser for unknown words",  &local.spell_guess},
+   {"spell",      Bool, "Spell-guesser for unknown words",  &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
-   {"timeout",    0, "Abort parsing after this many seconds",   &local.timeout},
-   {"union",      1, "Showing of 'union' linkage",      &local.display_union},
-   {"use-fat",    1, "Use fat links when parsing",      &local.use_fat_links},
+   {"timeout",    Int,  "Abort parsing after this many seconds",   &local.timeout},
+   {"union",      Bool, "Display of 'union' linkage",      &local.display_union},
+   {"use-fat",    Bool, "Use fat links when parsing",      &local.use_fat_links},
 #ifdef USE_SAT_SOLVER
-   {"use-sat",    1, "Use Boolean SAT-based parser",    &local.use_sat_solver},
+   {"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
-   {"verbosity",  0, "Level of detail in output",       &local.verbosity},
-   {"walls",      1, "Showing of wall words",           &local.display_walls},
-   {"width",      0, "The width of the display",        &local.screen_width},
-   {NULL,         1,  NULL,                             NULL}
+   {"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
+   {"walls",      Bool, "Display wall words",              &local.display_walls},
+   {"width",      Int,  "The width of the display",        &local.screen_width},
+   {NULL,         Bool,  NULL,                             NULL}
 };
 
 struct {const char * s; const char * str;} user_command[] =
@@ -172,7 +181,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	/* Look for boolean flippers */
 	for (i=0; as[i].string != NULL; i++)
 	{
-		if (as[i].isboolean && strncasecmp(s, as[i].string, strlen(s)) == 0)
+		if ((Bool == as[i].param_type) && 
+		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			count++;
 			j = i;
@@ -219,9 +229,19 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		for (i=0; as[i].string != NULL; i++) {
 			printf(" ");
             left_print_string(stdout, as[i].string, "             ");
-            left_print_string(stdout, as[i].description, "                                              ");
-			printf("%5d", *as[i].p);
-			if (as[i].isboolean) {
+            left_print_string(stdout, as[i].description,
+                   "                                              ");
+			if (Float == as[i].param_type)
+			{
+				/* Float point print! */
+				printf("%5.2f", *as[i].p);
+			}
+			else
+			{
+				printf("%5d", *as[i].p);
+			}
+			if (Bool == as[i].param_type)
+			{
 				if (*as[i].p) printf(" (On)"); else printf(" (Off)");
 			}
 			printf("\n");
@@ -314,7 +334,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	count = 0;
 	for (i=0; as[i].string != NULL; i++)
 	{
-		if (!as[i].isboolean && strncasecmp(s, as[i].string, strlen(s)) == 0)
+		if ((Int == as[i].param_type) && 
+		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			j = i;
 			count++;
@@ -341,6 +362,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.spell_guess = parse_options_get_spell_guess(opts);
 	local.short_length = parse_options_get_short_length(opts);
 	local.cost_model = parse_options_get_cost_model_type(opts);
+	local.max_cost = parse_options_get_disjunct_costf(opts);
 	local.echo_on = parse_options_get_echo_on(opts);
 	local.batch_mode = parse_options_get_batch_mode(opts);
 	local.panic_mode = parse_options_get_panic_mode(opts);
@@ -374,6 +396,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_short_length(opts, local.short_length);
 	parse_options_set_echo_on(opts, local.echo_on);
 	parse_options_set_cost_model_type(opts, local.cost_model);
+	parse_options_set_disjunct_costf(opts, local.max_cost);
 	parse_options_set_batch_mode(opts, local.batch_mode);
 	parse_options_set_panic_mode(opts, local.panic_mode);
 	parse_options_set_screen_width(opts, local.screen_width);
