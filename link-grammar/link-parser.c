@@ -596,6 +596,9 @@ int main(int argc, char * argv[])
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
 	parse_options_set_short_length(opts, 10);
+	parse_options_set_disjunct_costf(opts, 2.0f);
+	parse_options_set_min_null_count(opts, 0);
+	parse_options_set_max_null_count(opts, 0);
 
 	if(language && *language)
 		dict = dictionary_create_lang(language);
@@ -696,7 +699,7 @@ int main(int argc, char * argv[])
 		}
 
 		/* First parse with cost 0 or 1 and no null links */
-		parse_options_set_disjunct_costf(opts, 2.0f);
+		// parse_options_set_disjunct_costf(opts, 2.0f);
 		parse_options_set_min_null_count(opts, 0);
 		parse_options_set_max_null_count(opts, 0);
 		parse_options_reset_resources(opts);
