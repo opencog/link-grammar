@@ -70,7 +70,7 @@ static Switch default_switches[] =
    {"batch",      Bool, "Batch mode",                      &local.batch_mode},
    {"cluster",    Bool, "Use clusters to loosen parsing",  &local.use_cluster_disjuncts},
    {"constituents", Int,  "Generate constituent output",   &local.display_constituents},
-   {"cost",       Int,  "Cost model used for ranking",     &local.cost_model},
+   {"cost-model", Int,  "Cost model used for ranking",     &local.cost_model},
    {"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
    {"disjuncts",  Bool, "Display of disjunct used",        &local.display_disjuncts},
    {"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
@@ -293,8 +293,6 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	  ;
 	if (*x == '=')
 	{
-		int val;
-
 		*x = '\0';
 		y = x+1;
 		x = s;
@@ -323,29 +321,46 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 			return;
 		}
 
-		val = -1;
-		if (is_numerical_rhs(y)) val = atoi(y);
-
-		if ((0 == strcasecmp(y, "true")) || (0 == strcasecmp(y, "t"))) val = 1;
-		if ((0 == strcasecmp(y, "false")) || (0 == strcasecmp(y, "f"))) val = 0;
-
-		if (val < 0)
+		if (as[j].param_type != Float)
 		{
-			printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+			int val = -1;
+			if (is_numerical_rhs(y)) val = atoi(y);
+
+			if ((0 == strcasecmp(y, "true")) || (0 == strcasecmp(y, "t"))) val = 1;
+			if ((0 == strcasecmp(y, "false")) || (0 == strcasecmp(y, "f"))) val = 0;
+
+			if (val < 0)
+			{
+				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				return;
+			}
+
+			setival(as[j], val);
+			printf("%s set to %d\n", as[j].string, val);
 			return;
 		}
+		else
+		{
+			float val = -1.0;
+			val = atof(y);
+			if (val < 0.0f)
+			{
+				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				return;
+			}
 
-		setival(as[j], val);
-		printf("%s set to %d\n", as[j].string, val);
-		return;
+			*((float *) as[j].ptr) = val;
+			printf("%s set to %5.2f\n", as[j].string, val);
+			return;
+		}
 	}
 
 	/* Look for valid commands, but ones that needed an argument */
 	j = -1;
 	count = 0;
-	for (i=0; as[i].string != NULL; i++)
+	for (i = 0; as[i].string != NULL; i++)
 	{
-		if ((Int == as[i].param_type) && 
+		if ((Bool != as[i].param_type) && 
 		    strncasecmp(s, as[i].string, strlen(s)) == 0)
 		{
 			j = i;
