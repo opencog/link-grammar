@@ -39,6 +39,55 @@ struct count_context_s
 	Resources current_resources;
 };
 
+static void free_table(count_context_t *ctxt)
+{
+	int i;
+	Table_connector *t, *x;
+
+	for (i=0; i<ctxt->table_size; i++)
+	{
+		for(t = ctxt->table[i]; t!= NULL; t=x)
+		{
+			x = t->next;
+			xfree((void *) t, sizeof(Table_connector));
+		}
+	}
+	xfree(ctxt->table, ctxt->table_size * sizeof(Table_connector*));
+	ctxt->table = NULL;
+	ctxt->table_size = 0;
+}
+
+static void init_table(Sentence sent)
+{
+	/* A piecewise exponential function determines the size of the
+	 * hash table. Probably should make use of the actual number of
+	 * disjuncts, rather than just the number of words.
+	 */
+	count_context_t *ctxt = sent->count_ctxt;
+
+	if (ctxt->table) free_table(ctxt);
+
+	if (sent->length >= 10)
+	{
+		ctxt->table_size = (1<<16);
+#if 0
+		} else if (sent->length >= 10) {
+			table_size = (1 << (((6*(sent->length-10))/30) + 10)); 
+#endif
+	} 
+	else if (sent->length >= 4)
+	{
+		ctxt->table_size = (1 << (((6*(sent->length-4))/6) + 4));
+	}
+	else
+	{
+		ctxt->table_size = (1 << 4);
+	}
+	ctxt->table = (Table_connector**) 
+		xalloc(ctxt->table_size * sizeof(Table_connector*));
+	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
+}
+
 int x_match(Sentence sent, Connector *a, Connector *b)
 {
 	return do_match(sent, a, b, 0, 0);
@@ -156,39 +205,6 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		return FALSE;
 }
 
-void init_table(Sentence sent)
-{
-	/* A piecewise exponential function determines the size of the
-	 * hash table. Probably should make use of the actual number of
-	 * disjuncts, rather than just the number of words.
-	 */
-	int i;
-	count_context_t *ctxt = sent->count_ctxt;
-
-	if (sent->length >= 10)
-	{
-		ctxt->table_size = (1<<16);
-#if 0
-		} else if (sent->length >= 10) {
-			table_size = (1 << (((6*(sent->length-10))/30) + 10)); 
-#endif
-	} 
-	else if (sent->length >= 4)
-	{
-		ctxt->table_size = (1 << (((6*(sent->length-4))/6) + 4));
-	}
-	else
-	{
-		ctxt->table_size = (1 << 4);
-	}
-	ctxt->table = (Table_connector**) 
-		xalloc(ctxt->table_size * sizeof(Table_connector*));
-	for (i=0; i < ctxt->table_size; i++)
-	{
-		ctxt->table[i] = NULL;
-	}
-}
-
 static int hash(int table_size,
                 int lw, int rw, Connector *le, Connector *re, int cost)
 {
@@ -201,25 +217,6 @@ static int hash(int table_size,
 	i = i + (i<<1) + randtable[(((long) re + i) % (table_size+1)) & (RTSIZE - 1)];
 	i = i + (i<<1) + randtable[(cost+i) & (RTSIZE - 1)];
 	return i & (table_size-1);
-}
-
-void free_table(Sentence sent)
-{
-	int i;
-	Table_connector *t, *x;
-	count_context_t *ctxt = sent->count_ctxt;
-
-	for (i=0; i<ctxt->table_size; i++)
-	{
-		for(t = ctxt->table[i]; t!= NULL; t=x)
-		{
-			x = t->next;
-			xfree((void *) t, sizeof(Table_connector));
-		}
-	}
-	xfree(ctxt->table, ctxt->table_size * sizeof(Table_connector*));
-	ctxt->table = NULL;
-	ctxt->table_size = 0;
 }
 
 /** 
@@ -828,7 +825,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	delete_unmarked_disjuncts(sent);
 
 	free_fast_matcher(sent);
-	free_table(sent);
+	free_table(ctxt);
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
@@ -841,10 +838,15 @@ void init_count(Sentence sent)
 	if (NULL == sent->count_ctxt)
 		sent->count_ctxt = (count_context_t *) malloc (sizeof(count_context_t));
 	memset(sent->count_ctxt, 0, sizeof(count_context_t));
+
+	init_table(sent);
 }
 
 void free_count(Sentence sent)
 {
-	if (sent->count_ctxt != NULL) free(sent->count_ctxt);
+	if (NULL == sent->count_ctxt) return;
+
+	free_table(sent->count_ctxt);
+	free(sent->count_ctxt);
 	sent->count_ctxt = NULL;
 }

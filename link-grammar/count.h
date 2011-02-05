@@ -14,8 +14,6 @@
 s64  table_lookup(Sentence, int, int, Connector *, Connector *, int);
 int  do_match(Sentence, Connector *a, Connector *b, int wa, int wb);
 int  x_match(Sentence, Connector *a, Connector *b);
-void init_table(Sentence sent);
-void free_table(Sentence sent);
 s64  do_parse(Sentence sent, int mincost, Parse_Options opts);
 void conjunction_prune(Sentence sent, Parse_Options opts);
 void count_set_effective_distance(Sentence sent);
