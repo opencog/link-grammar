@@ -12,6 +12,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <limits.h>
 #include <math.h>
 #include <string.h>
 #include <link-grammar/api.h>
@@ -859,18 +860,13 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	overflowed = build_parse_set(sent, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
-	if (overflowed)
+	if (overflowed && (1 < opts->verbosity))
 	{
-		/* We know that sent->num_linkages_found is bogus, possibly negative */
-		sent->num_linkages_found = opts->linkage_limit;
-		if (1 < opts->verbosity)
-		{
-			err_ctxt ec;
-			ec.sent = sent;
-			err_msg(&ec, Warn, "Warning: Count overflow.\n"
-			  "Considering a random subset of %d of an unknown and large number of linkages\n",
-				opts->linkage_limit);
-		}
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Warn, "Warning: Count overflow.\n"
+		  "Considering a random subset of %d of an unknown and large number of linkages\n",
+			opts->linkage_limit);
 	}
 	N_linkages_found = sent->num_linkages_found;
 
@@ -1263,14 +1259,16 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		{
 			if (verbosity > 0)
 			{
-				prt_error("WARNING: Combinatorial explosion occurred with cnt=%lld; "
-					"this is an unsolved technical problem\n", total);
+				prt_error("WARNING: Combinatorial explosion! nulls=%d cnt=%lld\n"
+					"Consider retrying the parse with the max allowed disjunct cost set lower.\n",
+					sent->null_count, total);
 			}
-			break;
+			total = (total>INT_MAX) ? INT_MAX : total;
 		}
 
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
+
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 	}
