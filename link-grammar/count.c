@@ -304,7 +304,7 @@ static s64 pseudocount(Sentence sent,
 }
 
 static s64 do_count(Sentence sent, int lw, int rw,
-                    Connector *le, Connector *re, int cost)
+                    Connector *le, Connector *re, int null_count)
 {
 	Disjunct * d;
 	s64 total, pseudototal;
@@ -317,14 +317,14 @@ static s64 do_count(Sentence sent, int lw, int rw,
 
 	count_context_t *ctxt = sent->count_ctxt;
 
-	if (cost < 0) return 0;  /* will we ever call it with cost<0 ? */
+	if (null_count < 0) return 0;  /* can this ever happen?? */
 
-	t = find_table_pointer(ctxt, lw, rw, le, re, cost);
+	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
 	if (t == NULL) {
-		/* Create the table entry with a tentative cost of 0. 
-	    * This cost must be updated before we return. */
-		t = table_store(ctxt, lw, rw, le, re, cost, 0);
+		/* Create the table entry with a tentative null count of 0. 
+	    * This count must be updated before we return. */
+		t = table_store(ctxt, lw, rw, le, re, null_count, 0);
 	} else {
 		return t->count;
 	}
@@ -332,8 +332,8 @@ static s64 do_count(Sentence sent, int lw, int rw,
 	if (rw == 1+lw)
 	{
 		/* lw and rw are neighboring words */
-		/* You can't have a linkage here with cost > 0 */
-		if ((le == NULL) && (re == NULL) && (cost == 0))
+		/* You can't have a linkage here with null_count > 0 */
+		if ((le == NULL) && (re == NULL) && (null_count == 0))
 		{
 			t->count = 1;
 		}
@@ -349,11 +349,11 @@ static s64 do_count(Sentence sent, int lw, int rw,
 		if (!ctxt->islands_ok && (lw != -1))
 		{
 			/* If we don't allow islands (a set of words linked together
-			 * but separate from the rest of the sentence) then the cost
-			 * of skipping n words is just n */
-			if (cost == ((rw-lw-1) + ctxt->null_block-1)/ctxt->null_block)
+			 * but separate from the rest of the sentence) then the
+			 * null_count of skipping n words is just n */
+			if (null_count == ((rw-lw-1) + ctxt->null_block-1)/ctxt->null_block)
 			{
-				/* If null_block=4 then the cost of
+				/* If null_block=4 then the null_count of
 				   1,2,3,4 nulls is 1; and 5,6,7,8 is 2 etc. */
 				t->count = 1;
 			}
@@ -363,11 +363,11 @@ static s64 do_count(Sentence sent, int lw, int rw,
 			}
 			return t->count;
 		}
-		if (cost == 0)
+		if (null_count == 0)
 		{
-			/* There is no zero-cost solution in this case. There is
-			 * a slight efficiency hack to separate this cost=0 case
-			 * out, but not necessary for correctness */
+			/* There is no solution without nulls in this case. There is
+			 * a slight efficiency hack to separate this null_count==0
+			 * case out, but not necessary for correctness */
 			t->count = 0;
 		}
 		else
@@ -378,10 +378,10 @@ static s64 do_count(Sentence sent, int lw, int rw,
 			{
 				if (d->left == NULL)
 				{
-					total += do_count(sent, w, rw, d->right, NULL, cost-1);
+					total += do_count(sent, w, rw, d->right, NULL, null_count-1);
 				}
 			}
-			total += do_count(sent, w, rw, NULL, NULL, cost-1);
+			total += do_count(sent, w, rw, NULL, NULL, null_count-1);
 			t->count = total;
 		}
 		return t->count;
@@ -413,9 +413,9 @@ static s64 do_count(Sentence sent, int lw, int rw,
 		for (; m!=NULL; m=m->next)
 		{
 			d = m->d;
-			for (lcost = 0; lcost <= cost; lcost++)
+			for (lcost = 0; lcost <= null_count; lcost++)
 			{
-				rcost = cost-lcost;
+				rcost = null_count - lcost;
 				/* Now lcost and rcost are the costs we're assigning
 				 * to those parts respectively */
 
@@ -494,11 +494,11 @@ static s64 do_count(Sentence sent, int lw, int rw,
 
 /** 
  * Returns the number of ways the sentence can be parsed with the
- * specified cost. Assumes that the hash table has already been
- * initialized, and is freed later. The "cost" here is the number
- * of words that are allowed to have no links to them.
+ * specified null count. Assumes that the hash table has already been
+ * initialized, and is freed later. The "null_count" here is the
+ * number of words that are allowed to have no links to them.
  */
-s64 do_parse(Sentence sent, int cost, Parse_Options opts)
+s64 do_parse(Sentence sent, int null_count, Parse_Options opts)
 {
 	s64 total;
 	count_context_t *ctxt = sent->count_ctxt;
@@ -510,9 +510,9 @@ s64 do_parse(Sentence sent, int cost, Parse_Options opts)
 	ctxt->null_block = opts->null_block;
 	ctxt->islands_ok = opts->islands_ok;
 
-	total = do_count(sent, -1, sent->length, NULL, NULL, cost+1);
+	total = do_count(sent, -1, sent->length, NULL, NULL, null_count+1);
 	if (verbosity > 1) {
-		prt_error("Info: Total count with %d null links:   %lld\n", cost, total);
+		prt_error("Info: Total count with %d null links:   %lld\n", null_count, total);
 	}
 	if ((verbosity > 0) && (PARSE_NUM_OVERFLOW < total)) {
 		prt_error("WARNING: Combinatorial explosion occurred with cnt=%lld; "
