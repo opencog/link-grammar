@@ -508,21 +508,13 @@ s64 do_parse(Sentence sent, int null_count, Parse_Options opts)
 	ctxt->islands_ok = opts->islands_ok;
 
 	total = do_count(sent, -1, sent->length, NULL, NULL, null_count+1);
-	if (verbosity > 1) {
-		prt_error("Info: Total count with %d null links:   %lld\n", null_count, total);
-	}
-	if ((verbosity > 0) && (PARSE_NUM_OVERFLOW < total)) {
-		prt_error("WARNING: Combinatorial explosion occurred with cnt=%lld; "
-			"this is an unsolved technical problem\n", total);
-	}
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
 	return total;
 }
 
-/*
-
+/**
    CONJUNCTION PRUNING.
 
    The basic idea is this.  Before creating the fat disjuncts,

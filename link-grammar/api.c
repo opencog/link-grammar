@@ -1252,8 +1252,22 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->null_count = nl;
 		total = do_parse(sent, sent->null_count, opts);
 
+		if (verbosity > 1)
+		{
+			prt_error("Info: Total count with %d null links:   %lld\n",
+				sent->null_count, total);
+		}
+
 		/* Give up if the parse count is overflowing */
-		if (PARSE_NUM_OVERFLOW < total) break;
+		if (PARSE_NUM_OVERFLOW < total)
+		{
+			if (verbosity > 0)
+			{
+				prt_error("WARNING: Combinatorial explosion occurred with cnt=%lld; "
+					"this is an unsolved technical problem\n", total);
+			}
+			break;
+		}
 
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
