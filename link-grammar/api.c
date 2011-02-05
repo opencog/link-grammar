@@ -1232,6 +1232,8 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
 
+	init_count(sent);
+
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 
@@ -1298,7 +1300,6 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 
 	init_analyze(sent);
-	init_count(sent);
 
 	/* Expressions were previously set up during the tokenize stage. */
 	expression_prune(sent);
