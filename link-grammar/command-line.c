@@ -219,8 +219,8 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		/* flip boolean value */
 		if (j >= 0)
 		{
-			setival(as[j], !ival(as[j]));
-			printf("%s turned %s.\n", as[j].description, ival(as[i])? "on" : "off");
+			setival(as[j], (0 == ival(as[j])));
+			printf("%s turned %s.\n", as[j].description, (ival(as[j]))? "on" : "off");
 			return;
 		}
 		else
