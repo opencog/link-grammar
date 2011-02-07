@@ -138,6 +138,19 @@ ED-WORDS:         /^\w.+ed$/
 % Advebs ending -ly.
 LY-WORDS:         /^\w.+ly$/
 
+% Nouns ending in -ism, -asm (chiliasm .. ) Usualy mass nouns
+% Stubbed out for now; I'm not convinced this improves accuracy.
+% ISM-WORDS:        /^\w.+asm$/
+% ISM-WORDS:        /^\w.+ism$/
+
+% Corresponding count noun version of above (chiliast...)
+% AST-WORDS:        /^\w.+ast$/
+% AST-WORDS:        /^\w.+ist$/
+
+% Corresponding adjectival form of above
+ADJ-WORDS: /^\w.+astic$/
+ADJ-WORDS: /^\w.+istic$/
+
 % Nouns ending -ation  stubbed out in BioLG, stub out here ... 
 %ATION-WORDS:      /^\w.+ation$/
 
