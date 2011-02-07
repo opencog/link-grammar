@@ -1,6 +1,6 @@
-Version 4.7.3 (xxx 2011)
+Version 4.7.3 (7 February 2011)
  * Fix: "level" as indefinite noun: "... at knee level".
- * Allow max disjunct cost as a controllable parser parameter.
+ * Enable max disjunct cost as a controllable parser parameter.
  * Don't just give up on combinatorial explosion, show something!
 
 Version 4.7.2 (6 January 2011)
