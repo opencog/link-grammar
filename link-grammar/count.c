@@ -35,6 +35,7 @@ struct count_context_s
 	int     islands_ok;
 	int     null_links;
 	int     table_size;
+	int     log2_table_size;
 	Table_connector ** table;
 	Resources current_resources;
 };
@@ -59,6 +60,7 @@ static void free_table(count_context_t *ctxt)
 
 static void init_table(Sentence sent)
 {
+	int shift;
 	/* A piecewise exponential function determines the size of the
 	 * hash table. Probably should make use of the actual number of
 	 * disjuncts, rather than just the number of words.
@@ -69,20 +71,17 @@ static void init_table(Sentence sent)
 
 	if (sent->length >= 10)
 	{
-		ctxt->table_size = (1<<16);
-#if 0
-		} else if (sent->length >= 10) {
-			table_size = (1 << (((6*(sent->length-10))/30) + 10)); 
-#endif
+		shift = 12 + (sent->length) / 6 ; 
 	} 
-	else if (sent->length >= 4)
-	{
-		ctxt->table_size = (1 << (((6*(sent->length-4))/6) + 4));
-	}
 	else
 	{
-		ctxt->table_size = (1 << 4);
+		shift = 12;
 	}
+
+	/* Clamp at max 4*(1<<25) == 128 MBytes */
+	if (25 < shift) shift = 25;
+	ctxt->table_size = (1 << shift);
+	ctxt->log2_table_size = shift;
 	ctxt->table = (Table_connector**) 
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
@@ -205,17 +204,24 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		return FALSE;
 }
 
-static int hash(int table_size,
+/**
+ * hash function. Based on some tests, this seems to be an almost
+ * "perfect" hash, in that almost all hash buckets have the same size!
+ */
+static int hash(int log2_table_size,
                 int lw, int rw, Connector *le, Connector *re, int cost)
 {
-	int i;
-	i = 0;
+	int table_size = (1 << log2_table_size);
+	unsigned int i = 0;
 
-	i = i + (i<<1) + randtable[(lw + i) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(rw + i) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(((long) le + i) % (table_size+1)) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(((long) re + i) % (table_size+1)) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(cost+i) & (RTSIZE - 1)];
+	i += 1 << cost;
+	i += 1 << (lw % (log2_table_size-1));
+	i += 1 << (rw % (log2_table_size-1));
+	i += ((unsigned int) le) >> 2;
+	i += ((unsigned int) le) >> log2_table_size;
+	i += ((unsigned int) re) >> 2;
+	i += ((unsigned int) re) >> log2_table_size;
+	i += i >> log2_table_size;
 	return i & (table_size-1);
 }
 
@@ -233,7 +239,7 @@ static Table_connector * table_store(count_context_t *ctxt,
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
 	n->count = count;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
-	h = hash(ctxt->table_size,lw, rw, le, re, cost);
+	h = hash(ctxt->log2_table_size,lw, rw, le, re, cost);
 	t = ctxt->table[h];
 	n->next = t;
 	ctxt->table[h] = n;
@@ -248,7 +254,7 @@ find_table_pointer(count_context_t *ctxt,
                    int cost)
 {
 	Table_connector *t;
-	t = ctxt->table[hash(ctxt->table_size,lw, rw, le, re, cost)];
+	t = ctxt->table[hash(ctxt->log2_table_size,lw, rw, le, re, cost)];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw) && (t->le == le) && (t->re == re)
 			&& (t->cost == cost))  return t;

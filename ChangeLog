@@ -1,3 +1,6 @@
+Version 4.7.4 (xxx 2011)
+ * Dramatic speed improvement for long sentences (hash table fix)
+
 Version 4.7.3 (7 February 2011)
  * Fix: "level" as indefinite noun: "... at knee level".
  * Enable max disjunct cost as a controllable parser parameter.
