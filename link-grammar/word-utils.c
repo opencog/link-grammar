@@ -278,15 +278,17 @@ int connector_hash(Connector * c)
 
 	/* djb2 hash */
 	i = 5381;
-	i = ((i << 5) + i) + c->label;
+	i = ((i << 5) + i) + (0xff & c->label);
 	s = c->string;
 	while(isupper((int)*s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
 	}
+	i += i>>14;
 	c->prune_string = s;
-	return c->hash;
+	c->hash = i;
+	return i;
 }
 
 /* ======================================================== */
