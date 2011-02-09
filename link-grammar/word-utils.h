@@ -37,7 +37,7 @@ void free_connectors(Connector *);
 void exfree_connectors(Connector *);
 Connector * copy_connectors(Connector *);
 Connector * excopy_connectors(Connector * c);
-
+int connector_hash(Connector * c);
 
 /* Link utilities ... */
 Link *      excopy_link(Link *);

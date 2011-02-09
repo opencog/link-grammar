@@ -264,6 +264,31 @@ Connector * excopy_connectors(Connector * c)
 	return c1;
 }
 
+/**
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ */
+int connector_hash(Connector * c)
+{
+	const char *s;
+	unsigned int i;
+
+	if (-1 != c->hash) return c->hash;
+
+	/* djb2 hash */
+	i = 5381;
+	i = ((i << 5) + i) + c->label;
+	s = c->string;
+	while(isupper((int)*s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
+	c->prune_string = s;
+	return c->hash;
+}
+
 /* ======================================================== */
 /* Link utilities ... */
 
