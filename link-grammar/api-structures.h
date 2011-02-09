@@ -206,6 +206,7 @@ struct And_data_s
 struct Parse_info_struct
 {
 	int            x_table_size;
+	int            log2_x_table_size;
 	X_table_connector ** x_table;
 	Parse_set *    parse_set;
 	int            N_words;

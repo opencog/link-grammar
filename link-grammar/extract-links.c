@@ -94,19 +94,6 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 	pc->next = NULL;
 }
 
-static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_info pi)
-{
-	int i;
-	i = 0;
-
-	i = i + (i<<1) + randtable[(lw + i) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(rw + i) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(((long) le + i) % (pi->x_table_size+1)) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(((long) re + i) % (pi->x_table_size+1)) & (RTSIZE - 1)];
-	i = i + (i<<1) + randtable[(cost+i) & (RTSIZE - 1)];
-	return i & (pi->x_table_size-1);
-}
-
 /**
  * Allocate the parse info struct
  *
@@ -116,7 +103,7 @@ static int x_hash(int lw, int rw, Connector *le, Connector *re, int cost, Parse_
  */
 Parse_info parse_info_new(int nwords)
 {
-	int x_table_size;
+	int log2_table_size;
 	Parse_info pi;
 
 	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
@@ -134,17 +121,18 @@ Parse_info parse_info_new(int nwords)
 
 	/* Alloc the x_table */
 	if (nwords >= 10) {
-		x_table_size = (1<<14);
+		log2_table_size = 14;
 	} else if (nwords >= 4) {
-		x_table_size = (1 << nwords);
+		log2_table_size = nwords;
 	} else {
-		x_table_size = (1 << 4);
+		log2_table_size = 4;
 	}
+	pi->log2_x_table_size = log2_table_size;
+	pi->x_table_size = (1 << log2_table_size);
 
 	/*printf("Allocating x_table of size %d\n", x_table_size);*/
-	pi->x_table_size = x_table_size;
-	pi->x_table = (X_table_connector**) xalloc(x_table_size * sizeof(X_table_connector*));
-	memset(pi->x_table, 0, x_table_size * sizeof(X_table_connector*));
+	pi->x_table = (X_table_connector**) xalloc(pi->x_table_size * sizeof(X_table_connector*));
+	memset(pi->x_table, 0, pi->x_table_size * sizeof(X_table_connector*));
 
 	return pi;
 }
@@ -190,7 +178,7 @@ static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connec
 									int cost, Parse_info pi)
 {
 	X_table_connector *t;
-	t = pi->x_table[x_hash(lw, rw, le, re, cost, pi)];
+	t = pi->x_table[pair_hash(pi->log2_x_table_size, lw, rw, le, re, cost)];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw) && (t->le == le) && (t->re == re) && (t->cost == cost))  return t;
 	}
@@ -219,7 +207,7 @@ static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connecto
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
 	n->set = set;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
-	h = x_hash(lw, rw, le, re, cost, pi);
+	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, cost);
 	t = pi->x_table[h];
 	n->next = t;
 	pi->x_table[h] = n;
