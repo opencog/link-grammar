@@ -189,29 +189,6 @@ X_node * catenate_X_nodes(X_node *d1, X_node *d2)
 /* Connector utilities ... */
 
 /**
- * This hash function that takes a connector and a seed value i.
- * It only looks at the leading upper case letters of
- * the string, and the label.  This ensures that if two connectors
- * match, then they must hash to the same place.
- */
-int connector_hash(Connector * c, int i)
-{
-	int nb;
-	const char * s;
-	s = c->string;
-
-	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
-	nb = is_utf8_upper(s);
-	while(nb)
-	{
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s += nb;
-		nb = is_utf8_upper(s);
-	}
-	return i;
-}
-
-/**
  * free_connectors() -- free the list of connectors pointed to by e
  * (does not free any strings)
  */

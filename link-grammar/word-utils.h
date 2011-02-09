@@ -33,7 +33,6 @@ void free_X_nodes(X_node *);
 /* Connector utilities ... */
 Connector * connector_new(void);
 Connector * init_connector(Connector *c);
-int connector_hash(Connector * c, int i);
 void free_connectors(Connector *);
 void exfree_connectors(Connector *);
 Connector * copy_connectors(Connector *);

@@ -540,9 +540,33 @@ int connector_matches_alam(Connector * a, Connector * b)
 	return (*s == '\0');
 }
 
+
+/**
+ * This hash function that takes a connector and a seed value i.
+ * It only looks at the leading upper case letters of
+ * the string, and the label.  This ensures that if two connectors
+ * match, then they must hash to the same place.
+ */
+static int conn_hash(Connector * c, int i)
+{
+	int nb;
+	const char * s;
+	s = c->string;
+
+	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
+	nb = is_utf8_upper(s);
+	while(nb)
+	{
+		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		s += nb;
+		nb = is_utf8_upper(s);
+	}
+	return i;
+}
+
 static inline int pconnector_hash(disjunct_dup_table *dt, Connector * c, int i)
 {
-	i = connector_hash(c, i);
+	i = conn_hash(c, i);
 	return (i & (ct->dup_table_size-1));
 }
 
