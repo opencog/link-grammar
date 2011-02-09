@@ -204,27 +204,6 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		return FALSE;
 }
 
-/**
- * hash function. Based on some tests, this seems to be an almost
- * "perfect" hash, in that almost all hash buckets have the same size!
- */
-static int hash(int log2_table_size,
-                int lw, int rw, Connector *le, Connector *re, int cost)
-{
-	int table_size = (1 << log2_table_size);
-	unsigned int i = 0;
-
-	i += 1 << cost;
-	i += 1 << (lw % (log2_table_size-1));
-	i += 1 << (rw % (log2_table_size-1));
-	i += ((unsigned int) le) >> 2;
-	i += ((unsigned int) le) >> log2_table_size;
-	i += ((unsigned int) re) >> 2;
-	i += ((unsigned int) re) >> log2_table_size;
-	i += i >> log2_table_size;
-	return i & (table_size-1);
-}
-
 /** 
  * Stores the value in the table.  Assumes it's not already there.
  */
@@ -239,7 +218,7 @@ static Table_connector * table_store(count_context_t *ctxt,
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
 	n->count = count;
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
-	h = hash(ctxt->log2_table_size,lw, rw, le, re, cost);
+	h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
 	t = ctxt->table[h];
 	n->next = t;
 	ctxt->table[h] = n;
@@ -254,7 +233,8 @@ find_table_pointer(count_context_t *ctxt,
                    int cost)
 {
 	Table_connector *t;
-	t = ctxt->table[hash(ctxt->log2_table_size,lw, rw, le, re, cost)];
+	int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
+	t = ctxt->table[h];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw) && (t->le == le) && (t->re == re)
 			&& (t->cost == cost))  return t;
