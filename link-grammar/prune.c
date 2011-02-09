@@ -1104,27 +1104,6 @@ static void power_table_delete(power_table *pt)
 }
 
 /**
- * This hash function only looks at the leading upper case letters of
- * the connector string, and the label fields.  This ensures that if two
- * strings match (formally), then they must hash to the same place.
- * The answer must be masked to the appropriate table size.
- *
- * This is exactly the same hash function used in fast-match.
- */
-static int power_hash(Connector * c)
-{
-	const char *s;
-	int i;
-	i = randtable[c->label & (RTSIZE-1)];
-	s = c->string;
-	while (isupper((int)*s)) {  /* Connector names are not yet UTF8-capable */
-		i = i + (i<<1) + randtable[((*s) + i) & (RTSIZE-1)];
-		s++;
-	}
-	return i;
-}
-
-/**
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
@@ -1132,7 +1111,7 @@ static void put_into_power_table(int size, C_list ** t, Connector * c, int shal)
 {
 	int h;
 	C_list * m;
-	h = power_hash(c) & (size-1);
+	h = connector_hash(c) & (size-1);
 	m = (C_list *) xalloc (sizeof(C_list));
 	m->next = t[h];
 	t[h] = m;
@@ -1304,7 +1283,7 @@ static int right_table_search(prune_context *pc, int w, Connector *c, int shallo
 
 	pt = pc->pt;
 	size = pt->r_table_size[w];
-	h = power_hash(c) & (size-1);
+	h = connector_hash(c) & (size-1);
 	for (cl = pt->r_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c))
@@ -1327,7 +1306,7 @@ static int left_table_search(prune_context *pc, int w, Connector *c, int shallow
 
 	pt = pc->pt;
 	size = pt->l_table_size[w];
-	h = power_hash(c) & (size-1);
+	h = connector_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
 	  if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
