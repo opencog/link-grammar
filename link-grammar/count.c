@@ -790,7 +790,6 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	}
 
 	init_fast_matcher(sent);
-	init_table(sent);
 	ctxt->local_sent = sent->word;
 	ctxt->null_links = (opts->min_null_count > 0);
 	/*
@@ -823,7 +822,6 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	delete_unmarked_disjuncts(sent);
 
 	free_fast_matcher(sent);
-	free_table(ctxt);
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;

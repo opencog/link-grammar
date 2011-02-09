@@ -1228,12 +1228,11 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
 
-	init_count(sent);
-
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 
 	init_fast_matcher(sent);
+	init_count(sent);
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before

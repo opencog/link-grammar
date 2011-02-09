@@ -146,9 +146,9 @@ int prune_match(int dist, Connector *a, Connector *b)
 
 	if (a->label != b->label) return FALSE;
 
-	hash_S(a);
-	hash_S(b);
-	if (a->hash != b->hash) return FALSE;
+	x = hash_S(a);
+	y = hash_S(b);
+	if (x != y) return FALSE;
 
 	s = a->string;
 	t = b->string;

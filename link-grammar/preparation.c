@@ -350,6 +350,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	set_connector_length_limits(sent, opts);
 	build_deletable(sent, has_conjunction);
 	build_effective_dist(sent, has_conjunction);
+	init_count(sent);
 
 	if (!has_conjunction) {
 		pp_and_power_prune(sent, RUTHLESS, opts);
@@ -397,6 +398,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 		power_prune(sent, RUTHLESS, opts);
 	}
+	free_count(sent);
 
 	/*
 	if (verbosity > 2) {
