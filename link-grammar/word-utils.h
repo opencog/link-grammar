@@ -80,6 +80,9 @@ static inline int connector_hash(Connector * c)
 
 	if (-1 != c->hash) return c->hash;
 
+	/* Both hashes are very nearly equal; at the moment, I seem
+	 * to be finding that sdbm is a hair faster... */
+#if 0
 	/* djb2 hash */
 	i = 5381;
 	i = ((i << 5) + i) + (0xff & c->label);
@@ -90,6 +93,18 @@ static inline int connector_hash(Connector * c)
 		s++;
 	}
 	i += i>>14;
+
+#else
+	/* sdbm hash */
+	i = c->label + (i << 6) + (i << 16) - i;
+	s = c->string;
+	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i = *s + (i << 6) + (i << 16) - i;
+		s++;
+	}
+#endif
+
 	c->prune_string = s;
 	c->hash = i;
 	return i;
