@@ -37,7 +37,6 @@ void free_connectors(Connector *);
 void exfree_connectors(Connector *);
 Connector * copy_connectors(Connector *);
 Connector * excopy_connectors(Connector * c);
-int connector_hash(Connector * c);
 
 /* Link utilities ... */
 Link *      excopy_link(Link *);
@@ -54,6 +53,33 @@ int word_has_connector(Dict_node *, const char *, int);
 /* Dictionary utilities ... */
 int word_contains(Dictionary dict, const char * word, const char * macro);
 Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
+
+/**
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ */
+static inline int connector_hash(Connector * c)
+{
+	const char *s;
+	unsigned int i;
+
+	if (-1 != c->hash) return c->hash;
+
+	/* djb2 hash */
+	i = 5381;
+	i = ((i << 5) + i) + (0xff & c->label);
+	s = c->string;
+	while(isupper((int)*s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
+	i += i>>14;
+	c->prune_string = s;
+	c->hash = i;
+	return i;
+}
 
 /**
  * hash function. Based on some tests, this seems to be an almost
