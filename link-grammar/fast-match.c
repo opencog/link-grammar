@@ -125,25 +125,6 @@ void free_fast_matcher(Sentence sent)
 }
 
 /**
- * This hash function only looks at the leading upper case letters of
- * the connector string, and the label fields.  This ensures that if two
- * strings match (formally), then they must hash to the same place.
- * The answer must be masked to the appropriate table size.
- */
-static int fast_match_hash(Connector * c)
-{
-	const char *s;
-	int i;
-	i = randtable[c->label & (RTSIZE-1)];
-	s = c->string;
-	while(isupper((int)*s)) {
-		i = i + (i<<1) + randtable[((*s) + i) & (RTSIZE-1)];
-		s++;
-	}
-	return i;
-}
-
-/**
  * Adds the match node m to the sorted list of match nodes l.
  * The parameter dir determines the order of the sorting to be used.
  * Makes the list sorted from smallest to largest.
@@ -188,7 +169,7 @@ static void put_into_match_table(int size, Match_node ** t,
 {
 	int h;
 	Match_node * m;
-	h = fast_match_hash(c) & (size-1);
+	h = connector_hash(c) & (size-1);
 	m = (Match_node *) xalloc (sizeof(Match_node));
 	m->next = NULL;
 	m->d = d;
@@ -262,12 +243,12 @@ form_match_list(Sentence sent, int w,
 	match_context_t *ctxt = sent->match_ctxt;
 
 	if (lc != NULL) {
-		ml = ctxt->l_table[w][fast_match_hash(lc) & (ctxt->l_table_size[w]-1)];
+		ml = ctxt->l_table[w][connector_hash(lc) & (ctxt->l_table_size[w]-1)];
 	} else {
 		ml = NULL;
 	}
 	if (rc != NULL) {
-		mr = ctxt->r_table[w][fast_match_hash(rc) & (ctxt->r_table_size[w]-1)];
+		mr = ctxt->r_table[w][connector_hash(rc) & (ctxt->r_table_size[w]-1)];
 	} else {
 		mr = NULL;
 	}
