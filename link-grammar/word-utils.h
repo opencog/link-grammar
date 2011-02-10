@@ -122,6 +122,10 @@ static inline int pair_hash(int log2_table_size,
 	int table_size = (1 << log2_table_size);
 	unsigned int i = 0;
 
+#if 0
+ 	/* hash function. Based on some tests, this seems to be
+	 * an almost "perfect" hash, in that almost all hash buckets
+	 * have the same size! sdbm below seems slightly faster. */
 	i += 1 << cost;
 	i += 1 << (lw % (log2_table_size-1));
 	i += 1 << (rw % (log2_table_size-1));
@@ -130,6 +134,14 @@ static inline int pair_hash(int log2_table_size,
 	i += ((unsigned int) re) >> 2;
 	i += ((unsigned int) re) >> log2_table_size;
 	i += i >> log2_table_size;
+#else
+	/* sdbm-based hash */
+	i = cost;
+	i = lw + (i << 6) + (i << 16) - i;
+	i = rw + (i << 6) + (i << 16) - i;
+	i = ((unsigned int) le) + (i << 6) + (i << 16) - i;
+	i = ((unsigned int) re) + (i << 6) + (i << 16) - i;
+#endif
 
    return i & (table_size-1);
 }
