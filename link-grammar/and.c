@@ -363,7 +363,6 @@ static inline int and_hash_disjunct(Disjunct *d)
 	for (e = d->right ; e != NULL; e = e->next) {
 		i += connector_hash(e);
 	}
-	i += (i>>12);
 	return (i & (HT_SIZE-1));
 }
 
