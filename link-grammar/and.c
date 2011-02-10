@@ -352,52 +352,23 @@ void initialize_conjunction_tables(Sentence sent)
 }
 
 /**
- * This hash function that takes a connector and a seed value i.
- * It only looks at the leading upper case letters of
- * the string, and the label.  This ensures that if two connectors
- * match, then they must hash to the same place.
- */
-static int con_hash(Connector * c, int i)
-{
-	int nb;
-	const char * s;
-	s = c->string;
-
-	i = i + (i<<1) + randtable[(c->label + i) & (RTSIZE-1)];
-	nb = is_utf8_upper(s);
-	while(nb)
-	{
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-		s += nb;
-		nb = is_utf8_upper(s);
-	}
-	return i;
-}
-
-static int and_connector_hash(Connector * c, int i)
-{
-	i = con_hash(c, i);
-	return (i & (HT_SIZE-1));
-}
-
-/**
  * This is a hash function for disjuncts
  */
-static int and_hash_disjunct(Disjunct *d)
+static inline int and_hash_disjunct(Disjunct *d)
 {
 	int i;
 	Connector *e;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i = and_connector_hash(e, i);
+		i += connector_hash(e);
 	}
-	i = i + (i<<1) + randtable[i & (RTSIZE-1)];
+	i += (i<<5);
 	for (e = d->right ; e != NULL; e = e->next) {
-		i = and_connector_hash(e, i);
+		i += connector_hash(e);
 	}
+	i += (i>>12);
 	return (i & (HT_SIZE-1));
 }
-
 
 /**
  * Returns TRUE if the disjunct is appropriate to be made into fat links.
