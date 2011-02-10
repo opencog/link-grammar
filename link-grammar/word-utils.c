@@ -302,8 +302,15 @@ void exfree_link(Link * l)
  */
 static int connector_set_hash(Connector_set *conset, const char * s, int d)
 {
-	int i;
-	for(i=d; isupper((int)*s); s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+	unsigned int i;
+	/* djb2 hash */
+	i = 5381;
+	i = ((i << 5) + i) + d;
+	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
 	return (i & (conset->table_size-1));
 }
 

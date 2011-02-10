@@ -90,32 +90,25 @@ struct disjunct_dup_table_s
 };
 
 /**
- * hash function that takes a string and a seed value i
- */
-static int string_hash(disjunct_dup_table *dt, const char * s, int i)
-{
-	for(;*s != '\0';s++) i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
-	return (i & (dt->dup_table_size-1));
-}
-
-/**
  * This is a hash function for disjuncts
  *
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
+static inline int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 {
 	int i;
 	Connector *e;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
-		i = string_hash(dt, e->string, i);
+		i += string_hash(e->string);
 	}
 	for (e = d->right ; e != NULL; e = e->next) {
-		i = string_hash(dt, e->string, i);
+		i += string_hash(e->string);
 	}
-	return string_hash(dt, d->string, i);
+	i += string_hash(d->string);
+	i += (i>>10);
+	return (i & (dt->dup_table_size-1));
 }
 
 /**

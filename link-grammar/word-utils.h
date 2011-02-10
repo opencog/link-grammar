@@ -54,6 +54,20 @@ int word_has_connector(Dict_node *, const char *, int);
 int word_contains(Dictionary dict, const char * word, const char * macro);
 Dict_node * list_whole_dictionary(Dict_node *, Dict_node *);
 
+static inline int string_hash(const char *s)
+{
+	unsigned int i;
+
+	/* djb2 hash */
+	i = 5381;
+	while (*s)
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
+	return i;
+}
+
 /**
  * This hash function only looks at the leading upper case letters of
  * the connector string, and the label fields.  This ensures that if two
@@ -70,7 +84,7 @@ static inline int connector_hash(Connector * c)
 	i = 5381;
 	i = ((i << 5) + i) + (0xff & c->label);
 	s = c->string;
-	while(isupper((int)*s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -86,7 +100,9 @@ static inline int connector_hash(Connector * c)
  * "perfect" hash, in that almost all hash buckets have the same size!
  */
 static inline int pair_hash(int log2_table_size,
-                int lw, int rw, Connector *le, Connector *re, int cost)
+                            int lw, int rw,
+                            const Connector *le, const Connector *re,
+                            int cost)
 {
 	int table_size = (1 << log2_table_size);
 	unsigned int i = 0;
