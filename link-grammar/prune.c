@@ -1630,10 +1630,10 @@ static void cms_table_delete(multiset_table *mt)
 
 static int cms_hash(const char * s)
 {
-	int i=0;
-	while (isupper((int)*s)) /* connector names are not yet UTF8-capable */
+	unsigned int i = 5381;
+	while (isupper((int) *s)) /* connector names are not yet UTF8-capable */
 	{
-		i = i + (i<<1) + randtable[(*s + i) & (RTSIZE-1)];
+		i = ((i << 5) + i) + *s;
 		s++;
 	}
 	return (i & (CMS_SIZE-1));

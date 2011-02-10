@@ -712,35 +712,6 @@ FILE *dictopen(const char *filename, const char *how)
 }
 
 /* ======================================================== */
-/*
- * A static array of precomputed random values. This is used in a
- * read-only fashion, and thus is thread-safe, despite being a global.
- * Its initialized only once, during startup.
- */
-
-unsigned int randtable[RTSIZE];
-
-/* There is a legitimate question of whether having the hash function	*/
-/* depend on a large array is a good idea.  It might not be fastest on   */
-/* a machine that depends on caching for its efficiency.  On the other   */
-/* hand, Phong Vo's hash (and probably other linear-congruential) is	 */
-/* pretty bad.  So, mine is a "competitive" hash function -- you can't   */
-/* make it perform horribly.											 */
-
-void init_randtable(void)
-{
-	int i;
-	static int rand_table_inited = FALSE;
-	if (rand_table_inited) return;
-	rand_table_inited = TRUE;
-
-	srand(10);
-	for (i=0; i<RTSIZE; i++) {
-		randtable[i] = rand();
-	}
-}
-
-/* ======================================================== */
 /* Locale routines */
 
 #ifdef _WIN32

@@ -76,9 +76,6 @@
 /* strtok_r is missing in Windows */
 char * strtok_r (char *s, const char *delim, char **saveptr);
 
-/* bzero is missing in Windows */
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
-
 /* Windows doesn't have a thread-safe rand (???) */
 /* Surely not, there must be something */
 /* XXX FIXME -- this breaks thread safety on windows */
@@ -242,7 +239,6 @@ void safe_strcpy(char *u, const char * v, size_t usize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
 
-void init_randtable(void);
 void left_print_string(FILE* fp, const char *, const char *);
 
 /* routines for allocating basic objects */

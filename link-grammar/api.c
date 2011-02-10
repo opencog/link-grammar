@@ -575,7 +575,6 @@ dictionary_six(const char * lang, const char * dict_name,
 	Dict_node *dict_node;
 
 	init_memusage();
-	init_randtable();
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
