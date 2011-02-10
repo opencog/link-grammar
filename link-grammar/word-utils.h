@@ -81,11 +81,11 @@ static inline int connector_hash(Connector * c)
 	if (-1 != c->hash) return c->hash;
 
 	/* For most situations, both hashes are very nearly equal;
-	 * sdbm seems to be a hair faster than djb2, hard to say.
+	 * sdbm seems to be about 5% faster than djb2, hard to say.
 	 * In either case, realize that the connector string is
 	 * very very short - usually one or two letters, so we have
 	 * probably only 8 or 10 bits total entropy coming in!  */
-#if 1
+#if 0
 	/* djb2 hash */
 	i = 5381;
 	i = ((i << 5) + i) + (0xff & c->label);
