@@ -80,9 +80,12 @@ static inline int connector_hash(Connector * c)
 
 	if (-1 != c->hash) return c->hash;
 
-	/* Both hashes are very nearly equal; at the moment, I seem
-	 * to be finding that sdbm is a hair faster... */
-#if 0
+	/* For most situations, both hashes are very nearly equal;
+	 * sdbm seems to be a hair faster than djb2, hard to say.
+	 * In either case, realize that the connector string is
+	 * very very short - usually one or two letters, so we have
+	 * probably only 8 or 10 bits total entropy coming in!  */
+#if 1
 	/* djb2 hash */
 	i = 5381;
 	i = ((i << 5) + i) + (0xff & c->label);
@@ -96,7 +99,7 @@ static inline int connector_hash(Connector * c)
 
 #else
 	/* sdbm hash */
-	i = c->label + (i << 6) + (i << 16) - i;
+	i = (0xff & c->label);
 	s = c->string;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
@@ -125,7 +128,7 @@ static inline int pair_hash(int log2_table_size,
 #if 0
  	/* hash function. Based on some tests, this seems to be
 	 * an almost "perfect" hash, in that almost all hash buckets
-	 * have the same size! sdbm below seems slightly faster. */
+	 * have the same size! */
 	i += 1 << cost;
 	i += 1 << (lw % (log2_table_size-1));
 	i += 1 << (rw % (log2_table_size-1));

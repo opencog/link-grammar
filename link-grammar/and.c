@@ -302,10 +302,7 @@ static void grow_LT(Sentence sent)
 
 static void init_HT(Sentence sent)
 {
-	int i;
-	for (i=0; i<HT_SIZE; i++) {
-		sent->and_data.hash_table[i] = NULL;
-	}
+	memset(sent->and_data.hash_table, 0, HT_SIZE*sizeof(Label_node *));
 }
 
 static void free_HT(Sentence sent)
@@ -356,7 +353,7 @@ void initialize_conjunction_tables(Sentence sent)
  */
 static inline int and_hash_disjunct(Disjunct *d)
 {
-	int i;
+	unsigned int i;
 	Connector *e;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
@@ -807,9 +804,10 @@ void print_AND_statistics(Sentence sent)
  * the table data structures.  The label field and the string field
  * are filled in appropriately.  Priority is set to UP_priority.
  */
-static void connector_for_disjunct(Sentence  sent, Disjunct * d, Connector * c) {
+static void connector_for_disjunct(Sentence sent, Disjunct * d, Connector * c)
+{
 	int h;
-	Disjunct * d1=NULL;
+	Disjunct * d1 = NULL;
 	Label_node * lp;
 
 	h = and_hash_disjunct(d);
