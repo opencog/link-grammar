@@ -340,13 +340,13 @@ void * xalloc(size_t size)
 	space_t *s = getspace();
 	s->space_in_use += size;
 	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
+#endif /* TRACK_SPACE_USAGE */
 	if ((p == NULL) && (size != 0))
 	{
 		prt_error("Fatal Error: Ran out of space.\n");
 		abort();
 		exit(1);
 	}
-#endif /* TRACK_SPACE_USAGE */
 	return p;
 }
 
@@ -357,13 +357,13 @@ void * xrealloc(void *p, size_t oldsize, size_t newsize)
 	s->space_in_use -= oldsize;
 #endif /* TRACK_SPACE_USAGE */
 	p = realloc(p, newsize);
-#ifdef TRACK_SPACE_USAGE
 	if ((p == NULL) && (newsize != 0))
 	{
 		prt_error("Fatal Error: Ran out of space on realloc.\n");
 		abort();
 		exit(1);
 	}
+#ifdef TRACK_SPACE_USAGE
 	s->space_in_use += newsize;
 	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
 #endif /* TRACK_SPACE_USAGE */
@@ -386,6 +386,7 @@ void * exalloc(size_t size)
 	s->external_space_in_use += size;
 	if (s->max_external_space_used < s->external_space_in_use)
 		s->max_external_space_used = s->external_space_in_use;
+#endif /* TRACK_SPACE_USAGE */
 
 	if ((p == NULL) && (size != 0))
 	{
@@ -393,7 +394,6 @@ void * exalloc(size_t size)
 		abort();
 		exit(1);
 	}
-#endif /* TRACK_SPACE_USAGE */
 	return p;
 }
 
