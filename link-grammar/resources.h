@@ -10,8 +10,6 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-#define MAX_PARSE_TIME_DEFAULT -1
-#define MAX_MEMORY_DEFAULT (512*1024*1024)
 
 void      print_time(Parse_Options opts, const char * s);
 /* void      print_total_time(Parse_Options opts); */

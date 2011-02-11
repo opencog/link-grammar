@@ -37,6 +37,9 @@ int getrusage(int who, struct rusage *rusage);
 /* Declaration missing from sys/resource.h in sun operating systems (?) */
 #endif /* __sun__ */
 
+#define MAX_PARSE_TIME_UNLIMITED -1
+#define MAX_MEMORY_UNLIMITED ((size_t) -1)
+
 /** returns the current usage time clock in seconds */
 static double current_usage_time(void)
 {
@@ -54,12 +57,12 @@ Resources resources_create(void)
 	Resources r;
 
 	r = (Resources) xalloc(sizeof(struct Resources_s));
-	r->max_parse_time = MAX_PARSE_TIME_DEFAULT;
+	r->max_parse_time = MAX_PARSE_TIME_UNLIMITED;
 	r->when_created = current_usage_time();
 	r->when_last_called = current_usage_time();
 	r->time_when_parse_started = current_usage_time();
 	r->space_when_parse_started = get_space_in_use();
-	r->max_memory = MAX_MEMORY_DEFAULT;
+	r->max_memory = MAX_MEMORY_UNLIMITED;
 	r->cumulative_time = 0;
 	r->memory_exhausted = FALSE;
 	r->timer_expired = FALSE;
@@ -105,14 +108,14 @@ int resources_exhausted(Resources r)
 
 int resources_timer_expired(Resources r)
 {
-	if (r->max_parse_time == MAX_PARSE_TIME_DEFAULT) return 0;
+	if (r->max_parse_time == MAX_PARSE_TIME_UNLIMITED) return 0;
 	else return (r->timer_expired || 
 	     (current_usage_time() - r->time_when_parse_started > r->max_parse_time));
 }
 
 int resources_memory_exhausted(Resources r)
 {
-	if (r->max_memory == MAX_MEMORY_DEFAULT) return 0;
+	if (r->max_memory == MAX_MEMORY_UNLIMITED) return 0;
 	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));
 }
 

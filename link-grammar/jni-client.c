@@ -72,6 +72,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
 	parse_options_set_max_parse_time(opts, 60);
+	parse_options_set_max_memory(opts, 512*1024*1024);
 	parse_options_set_use_fat_links(opts, FALSE);
 	parse_options_set_islands_ok(opts, TRUE);
 	parse_options_set_short_length(opts, 6);
@@ -137,6 +138,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_disjunct_costf(ptd->opts, 3.0f);
 	parse_options_set_max_sentence_length(ptd->opts, 170);
 	parse_options_set_max_parse_time(ptd->opts, 30);
+	parse_options_set_max_memory(ptd->opts, 512*1024*1024);
 	parse_options_set_linkage_limit(ptd->opts, 1000);
 	parse_options_set_short_length(ptd->opts, 10);
 	parse_options_set_verbosity(ptd->opts,0);

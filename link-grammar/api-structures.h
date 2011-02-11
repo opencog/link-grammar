@@ -47,8 +47,8 @@ struct Cost_Model_s
 
 struct Resources_s
 {
-	int    max_parse_time;
-	size_t max_memory;
+	int    max_parse_time;  /* in seconds */
+	size_t max_memory;      /* in bytes */
 	double time_when_parse_started;
 	size_t space_when_parse_started;
 	double when_created;
