@@ -142,8 +142,8 @@ static inline int pair_hash(int log2_table_size,
 	i = cost;
 	i = lw + (i << 6) + (i << 16) - i;
 	i = rw + (i << 6) + (i << 16) - i;
-	i = ((unsigned int) le) + (i << 6) + (i << 16) - i;
-	i = ((unsigned int) re) + (i << 6) + (i << 16) - i;
+	i = ((unsigned long) le) + (i << 6) + (i << 16) - i;
+	i = ((unsigned long) re) + (i << 6) + (i << 16) - i;
 #endif
 
    return i & (table_size-1);
