@@ -2787,9 +2787,11 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   // Prepare for parsing - extracted for "preparation.c"
   build_deletable(sent, 0);
   build_effective_dist(sent, 0);
+  init_count(sent);
   count_set_effective_distance(sent);
 
-  bool conjunction = sentence_contains_conjunction(sent);
+  // bool conjunction = sentence_contains_conjunction(sent);
+  bool conjunction = FALSE;
 
   // Create the encoder, encode the formula and solve it
   SATEncoder* encoder;
