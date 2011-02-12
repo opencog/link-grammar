@@ -770,7 +770,8 @@ int main(int argc, char * argv[])
 		{
 			if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
 		}
-		if (parse_options_memory_exhausted(opts)) {
+		if (parse_options_memory_exhausted(opts))
+		{
 			if (verbosity > 0) fprintf(stdout, "Memory is exhausted!\n");
 		}
 
@@ -800,6 +801,7 @@ int main(int argc, char * argv[])
 			int c = process_some_linkages(sent, opts);
 			if (c == EOF) break;
 		}
+		fflush(stdout);
 
 		sentence_delete(sent);
 		sent = NULL;
