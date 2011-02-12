@@ -663,8 +663,8 @@ int main(int argc, char * argv[])
 			continue;
 		}
 
-		if ((strcmp(input_string, "quit\n")==0) ||
-			(strcmp(input_string, "exit\n")==0)) break;
+		if ((strcmp(input_string, "!quit") == 0) ||
+		    (strcmp(input_string, "!exit") == 0)) break;
 
 		/* We have to handle the !file command inline; its too hairy
 		 * otherwise ... */
