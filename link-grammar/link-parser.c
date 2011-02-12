@@ -695,6 +695,7 @@ int main(int argc, char * argv[])
 					sentence_length(sent), parse_options_get_max_sentence_length(opts));
 			}
 			sentence_delete(sent);
+			sent = NULL;
 			continue;
 		}
 
@@ -705,7 +706,12 @@ int main(int argc, char * argv[])
 		parse_options_reset_resources(opts);
 
 		num_linkages = sentence_parse(sent, opts);
-		if (num_linkages < 0) continue;
+		if (num_linkages < 0)
+		{
+			sentence_delete(sent);
+			sent = NULL;
+			continue;
+		}
 
 #if 0
 		/* Try again, this time ommitting the requirement for
