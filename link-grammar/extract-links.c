@@ -492,10 +492,7 @@ static void initialize_links(Parse_info pi)
 {
 	int i;
 	pi->N_links = 0;
-	for (i=0; i<pi->N_words; ++i)
-	{
-		pi->chosen_disjuncts[i] = NULL;
-	}
+	memset(pi->chosen_disjuncts, 0, pi->N_links * sizeof(Disjunct *));
 }
 
 static void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, Link link)
