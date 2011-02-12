@@ -1225,17 +1225,24 @@ void SATEncoder::pp_prune() {
 }
 
 /* TODO: replace with analyze_xxx_linkage */
-bool SATEncoder::post_process_linkage(Linkage linkage) {
-  Linkage_info li = set_has_fat_down(_sent) ? 
-    analyze_fat_linkage(_sent, _opts, PP_SECOND_PASS) : 
-    analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
-  return li.N_violations == 0;
+bool SATEncoder::post_process_linkage(Linkage linkage)
+{
+  if (parse_options_get_use_fat_links(_opts) &&
+      set_has_fat_down(_sent)) {
+    Linkage_info li = analyze_fat_linkage(_sent, _opts, PP_SECOND_PASS);
+    return li.N_violations == 0;
+  } else {
+    Linkage_info li = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
+    return li.N_violations == 0;
+  }
+  return 1;
 }
 
 /*--------------------------------------------------------------------------*
  *                         D E C O D I N G                                  *
  *--------------------------------------------------------------------------*/
-Linkage SATEncoder::create_linkage() {
+Linkage SATEncoder::create_linkage()
+{
   /* Using exalloc since this is external to the parser itself. */
   Linkage linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
 
@@ -1260,7 +1267,7 @@ Linkage SATEncoder::create_linkage() {
   }
   pi->N_words = _sent->length;
 
-  if (!fat)
+  if (!fat || !parse_options_get_use_fat_links(_opts))
     extract_thin_linkage(_sent, _opts, linkage);
   else
     extract_fat_linkage(_sent, _opts, linkage);
@@ -1563,7 +1570,8 @@ static int is_andable(Sentence sent, Connector* c, char dir) {
 	return match_in_connector_set(sent, sent->dict->andable_connector_set, c, dir);
 }
 
-void SATEncoderConjunctiveSentences::handle_null_expression(int w) {
+void SATEncoderConjunctiveSentences::handle_null_expression(int w)
+{
   // Formula is unsatisfiable, but only if w is not a conjunctive
   // word. Conjunctive words can have empty tags, but then they must
   // have fat-links attached.
@@ -1580,7 +1588,8 @@ void SATEncoderConjunctiveSentences::handle_null_expression(int w) {
 }
 
 void SATEncoderConjunctiveSentences::determine_satisfaction(int w, char* name) {
-  if (!isConnectiveOrComma(w)) {
+  if (!parse_options_get_use_fat_links(_opts) ||
+      !isConnectiveOrComma(w)) {
     // Non-conjunctive words must have their tags satisfied
     generate_literal(Lit(_variables->string(name))); 
   } else {
@@ -1646,7 +1655,8 @@ void SATEncoderConjunctiveSentences::generate_satisfaction_for_connector(int wi,
     }
 
     // Commas cannot be directly connected if they have fat links down
-    if (isComma(_sent, wj)) {
+    if (parse_options_get_use_fat_links(_opts) &&
+        isComma(_sent, wj)) {
       vec<Lit> clause;
       char str[MAX_VARIABLE_NAME];
       sprintf(str,"fl_d_%d", wj);
@@ -2668,7 +2678,8 @@ void SATEncoderConjunctiveSentences::get_satisfied_link_top_cw_connectors(int wo
   }
 }
 
-bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi) {
+bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
+{
   int current_link = 0;
   bool fat = false;
 
@@ -2682,9 +2693,11 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi) {
 
     // Check if words are connected with a fat-link
     bool fl_lr = 0 < var->left_word && var->right_word < _sent->length - 1 && 
+      parse_options_get_use_fat_links(_opts) &&
       isConnectiveOrComma(var->right_word) && 
       _solver->model[_variables->fat_link(var->left_word, var->right_word)] == l_True;
     bool fl_rl =  0 < var->left_word && var->right_word < _sent->length - 1 && 
+      parse_options_get_use_fat_links(_opts) &&
       isConnectiveOrComma(var->left_word) && 
       _solver->model[_variables->fat_link(var->right_word, var->left_word)] == l_True;
     if (fl_lr || fl_rl) {
@@ -2701,7 +2714,6 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi) {
       connector->string = "fat";
       connector->next = NULL;
       pi->link_array[current_link].lc = connector;
-
 
       connector = (Connector*)xalloc(sizeof(Connector));
       init_connector(connector);
@@ -2733,7 +2745,6 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi) {
 	strings_left.push_back(var->connector);
       }
 
-
       // String unification
       std::vector<const char*>::const_iterator li, ri;
       const char* left_string = strings_left[0];
@@ -2745,7 +2756,6 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi) {
       for (ri = strings_right.begin() + 1; ri != strings_right.end(); ri++) {
 	right_string = intersect_strings(_sent, right_string, *ri);
       }
-      
       
       pi->link_array[current_link].l = var->left_word;
       pi->link_array[current_link].r = var->right_word;
