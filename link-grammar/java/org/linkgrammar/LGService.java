@@ -66,21 +66,22 @@ public class LGService
 	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 	//
-	// Link Grammar requires each concurrent thread to initialize separately. This entails
-	// that each thread has a separate copy of the dictionaries which in unfortunate design,
-	// but nevertheless we want to avoid initializing before every parse activity so we
-	// maintain a thread local flag and initialize on demand only. 
+	// The current Java bindings require each concurrent thread to
+	// initialize separately. This means that each thread has a
+	// separate copy of the dictionaries, which in unfortunate design.
+	// Nevertheless, we want to avoid initializing before every parse
+	// activity so we maintain a thread local flag and initialize on
+	// demand only. 
 	//
-	// XXX Except that this is not true (or is only partly true ... )
 	// The C library itself does not have this restriction; one
 	// dictionary can be shared by many threads. However, the java
 	// bindings do have this restriction; the java bindings were 
-	// never designed to be run multi-threaded, and so this would
-	// need to be fixed.
+	// never designed to be run multi-threaded. XXX This needs to be
+	// fixed.
 	//
-	// The main problem is to detect when a thread completes its work and therefore 
-	// LinkGrammar.close should be called to free allocated memory. We leave that to the 
-	// use of this class.
+	// The main problem is to detect when a thread completes its work
+	// and therefore LinkGrammar.close should be called to free
+	// allocated memory. We leave that to the use of this class.
 	//
 	private static ThreadLocal<Boolean> initialized = new ThreadLocal<Boolean>()
 	{ protected Boolean initialValue() { return Boolean.FALSE; } };
