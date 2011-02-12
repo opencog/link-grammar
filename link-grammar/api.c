@@ -1269,6 +1269,10 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 
 		post_process_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
+
+		/* If we are here, then no valid linakges were found.
+		 * If there was a parse overflow, give up now. */
+		if (PARSE_NUM_OVERFLOW < total) break;
 	}
 
 	free_fast_matcher(sent);

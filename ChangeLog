@@ -1,6 +1,7 @@
 Version 4.7.4 (xxx 2011)
- * Dramatic speed improvement for long sentences (hash table fix)
- * Fix: crash on certain sentences, when fat-link parsing enabled
+ * Dramatic speed improvement for long sentences (hash table fix).
+ * Fix: crash on certain sentences, when fat-link parsing enabled.
+ * Fix: fatal error on some combinatorial explosions.
 
 Version 4.7.3 (7 February 2011)
  * Fix: "level" as indefinite noun: "... at knee level".
@@ -8,7 +9,7 @@ Version 4.7.3 (7 February 2011)
  * Don't just give up on combinatorial explosion, show something!
 
 Version 4.7.2 (6 January 2011)
- * Fix: crash on certain sentences, when fat-link parsing enabled
+ * Fix: crash on certain sentences, when fat-link parsing enabled.
  * Fix: 3 corrupted nouns in words.n.1
  * Fix: minimize cpu spin if constituent processing and-list overflows.
 
