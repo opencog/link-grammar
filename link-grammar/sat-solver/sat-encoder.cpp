@@ -1256,7 +1256,8 @@ Linkage SATEncoder::create_linkage()
   linkage->opts = _opts;
   //  linkage->info = sent->link_info[k];  
 
-  Parse_info pi = _sent->parse_info = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
+  if (_sent->parse_info) free_parse_info(_sent->parse_info);
+  Parse_info pi = _sent->parse_info = parse_info_new(_sent->length);
   bool fat = extract_links(pi);
   
   //  compute_chosen_words(sent, linkage);
@@ -1276,8 +1277,8 @@ Linkage SATEncoder::create_linkage()
   return linkage;
 }
 
-
-void display_linkage(Linkage linkage) {
+void display_linkage(Linkage linkage)
+{
   for (int i = 0; i < linkage_get_num_sublinkages(linkage); i++) {
     linkage_set_current_sublinkage(linkage, i);
     char* string = linkage_print_diagram(linkage);
@@ -1286,7 +1287,8 @@ void display_linkage(Linkage linkage) {
   }
 }
 
-void SATEncoder::generate_linkage_prohibiting() {
+void SATEncoder::generate_linkage_prohibiting()
+{
   vec<Lit> clause;
   const std::vector<int>& link_variables = _variables->link_variables();
   for (std::vector<int>::const_iterator i = link_variables.begin(); i != link_variables.end(); i++) {
@@ -1514,7 +1516,8 @@ void SATEncoder::generate_linked_min_max_planarity() {
   }
 }
 
-bool SATEncoderConjunctionFreeSentences::extract_links(Parse_info pi) {
+bool SATEncoderConjunctionFreeSentences::extract_links(Parse_info pi)
+{
   int current_link = 0;
   const std::vector<int>& link_variables = _variables->link_variables();
   std::vector<int>::const_iterator i;
