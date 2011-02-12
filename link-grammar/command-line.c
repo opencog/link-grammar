@@ -174,7 +174,7 @@ static inline void setival(Switch s, int val)
 	*((int *) s.ptr) = val;
 }
 
-static void x_issue_special_command(char * line, Parse_Options opts, Dictionary dict)
+static int x_issue_special_command(char * line, Parse_Options opts, Dictionary dict)
 {
 	char *s, myline[1000], *x, *y;
 	int i, count, j, k;
@@ -212,7 +212,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	if (count > 1)
 	{
 		printf("Ambiguous command.  Type \"!help\" or \"!variables\"\n");
-		return;
+		return -1;
 	}
 	else if (count == 1)
 	{
@@ -221,7 +221,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		{
 			setival(as[j], (0 == ival(as[j])));
 			printf("%s turned %s.\n", as[j].description, (ival(as[j]))? "on" : "off");
-			return;
+			return 0;
 		}
 		else
 		{
@@ -260,7 +260,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		printf("\n");
 		printf("Toggle a boolean variable as in \"!batch\"; ");
 		printf("set a variable as in \"!width=100\".\n");
-		return;
+		return 0;
 	}
 
 	if (strcmp(s, "help") == 0)
@@ -278,14 +278,14 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		printf("\n");
 		printf(" !<var>          Toggle the specified boolean variable.\n");
 		printf(" !<var>=<val>    Assign that value to that variable.\n");
-		return;
+		return 0;
 	}
 
-	if(s[0] == '!')
+	if (s[0] == '!')
 	{
 		dict_display_word_info(dict, s+1);
 		dict_display_word_expr(dict, s+1);
-		return;
+		return 0;
 	}
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
@@ -318,7 +318,7 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 		if (count > 1)
 		{
 			printf("Ambiguous variable.  Type \"!help\" or \"!variables\"\n");
-			return;
+			return -1;
 		}
 
 		if (as[j].param_type != Float)
@@ -332,12 +332,12 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 			if (val < 0)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
-				return;
+				return -1;
 			}
 
 			setival(as[j], val);
 			printf("%s set to %d\n", as[j].string, val);
-			return;
+			return 0;
 		}
 		else
 		{
@@ -346,12 +346,12 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 			if (val < 0.0f)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
-				return;
+				return -1;
 			}
 
 			*((float *) as[j].ptr) = val;
 			printf("%s set to %5.2f\n", as[j].string, val);
-			return;
+			return 0;
 		}
 	}
 
@@ -371,10 +371,11 @@ static void x_issue_special_command(char * line, Parse_Options opts, Dictionary 
 	if (0 < count)
 	{
 		printf("Variable \"%s\" requires a value.  Try \"!help\".\n", as[j].string);
-		return;
+		return -1;
 	}
 
 	printf("I can't interpret \"%s\" as a command.  Try \"!help\".\n", myline);
+	return -1;
 }
 
 static void put_opts_in_local_vars(Parse_Options opts)
@@ -445,11 +446,13 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_display_union(opts, local.display_union);
 }
 
-void issue_special_command(char * line, Parse_Options opts, Dictionary dict)
+int issue_special_command(char * line, Parse_Options opts, Dictionary dict)
 {
+	int rc;
 	put_opts_in_local_vars(opts);
-	x_issue_special_command(line, opts, dict);
+	rc = x_issue_special_command(line, opts, dict);
 	put_local_vars_in_opts(opts);
+	return rc;
 }
 
 

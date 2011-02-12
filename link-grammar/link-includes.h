@@ -18,10 +18,10 @@
 LINK_BEGIN_DECLS
 
 /**********************************************************************
-*
-* System initialization
-*
-***********************************************************************/
+ *
+ * System initialization
+ *
+ ***********************************************************************/
 
 typedef struct Dictionary_s * Dictionary;
 
@@ -32,10 +32,10 @@ link_public_api(const char *)
 	linkgrammar_get_dict_version(Dictionary);
 
 /**********************************************************************
-*
-* Functions to manipulate Dictionaries
-*
-***********************************************************************/
+ *
+ * Functions to manipulate Dictionaries
+ *
+ ***********************************************************************/
 
 link_public_api(Dictionary)
      dictionary_create(const char * dict_name,
@@ -63,10 +63,10 @@ link_public_api(int)
      dictionary_is_entity(Dictionary dict, const char * str);
 
 /**********************************************************************
-*
-* Functions to manipulate Parse Options
-*
-***********************************************************************/
+ *
+ * Functions to manipulate Parse Options
+ *
+ ***********************************************************************/
 
 typedef struct Parse_Options_s * Parse_Options;
 
@@ -169,14 +169,14 @@ link_public_api(void)
 
 
 /**********************************************************************
-*
-* The following Parse_Options functions do not directly affect the
-* operation of the parser, but they can be useful for organizing the
-* search, or displaying the results.  They were included as switches for
-* convenience in implementing the "standard" version of the link parser
-* using the API.
-*
-***********************************************************************/
+ *
+ * The following Parse_Options functions do not directly affect the
+ * operation of the parser, but they can be useful for organizing the
+ * search, or displaying the results.  They were included as switches for
+ * convenience in implementing the "standard" version of the link parser
+ * using the API.
+ *
+ ***********************************************************************/
 
 link_public_api(void)
      parse_options_set_batch_mode(Parse_Options opts, int val);
@@ -224,10 +224,10 @@ link_public_api(int)
      parse_options_get_echo_on(Parse_Options opts);
 
 /**********************************************************************
-*
-* Functions to manipulate Sentences
-*
-***********************************************************************/
+ *
+ * Functions to manipulate Sentences
+ *
+ ***********************************************************************/
 
 typedef struct Sentence_s * Sentence;
 
@@ -266,14 +266,14 @@ link_public_api(int)
      sentence_contains_conjunction(Sentence sent);
 
 /**********************************************************************
-*
-* Functions that create and manipulate Linkages.
-* When a Linkage is requested, the user is given a
-* copy of all of the necessary information, and is responsible
-* for freeing up the storage when he/she is finished, using
-* the routines provided below.
-*
-***********************************************************************/
+ *
+ * Functions that create and manipulate Linkages.
+ * When a Linkage is requested, the user is given a
+ * copy of all of the necessary information, and is responsible
+ * for freeing up the storage when he/she is finished, using
+ * the routines provided below.
+ *
+ ***********************************************************************/
 
 typedef struct Linkage_s * Linkage;
 
@@ -368,10 +368,10 @@ link_public_api(const char *)
 
 
 /**********************************************************************
-*
-* Functions that allow special-purpose post-processing of linkages
-*
-***********************************************************************/
+ *
+ * Functions that allow special-purpose post-processing of linkages
+ *
+ ***********************************************************************/
 
 typedef struct Postprocessor_s PostProcessor;
 
@@ -383,10 +383,10 @@ link_public_api(void)
      linkage_post_process(Linkage, PostProcessor *);
 
 /**********************************************************************
-*
-* Constituent node
-*
-***********************************************************************/
+ *
+ * Constituent node
+ *
+ ***********************************************************************/
 
 typedef struct CNode_s CNode;
 
@@ -406,13 +406,13 @@ link_public_api(int)
      linkage_constituent_node_get_end(const CNode *n);
 
 /**********************************************************************
-*
-* Internal functions -- do not use these in new code!
-* These are not intended for general public use, but are required to 
-* work around certain Micorsoft Windows linking oddities
-* (specifically, to be callable from the JNI bindings library.)
-*
-***********************************************************************/
+ *
+ * Internal functions -- do not use these in new code!
+ * These are not intended for general public use, but are required to 
+ * work around certain Micorsoft Windows linking oddities
+ * (specifically, to be callable from the JNI bindings library.)
+ *
+ ***********************************************************************/
 
 link_public_api(void)
      parse_options_print_total_time(Parse_Options opts);
@@ -427,26 +427,31 @@ link_public_api(void)
 link_public_api(void)
      prt_error(const char *fmt, ...) GNUC_PRINTF(1,2);
 
-/**********************************************************************
-*
-* Obsolete functions -- do not use these in new code!
-*
-***********************************************************************/
+/*******************************************************
+ *
+ * Obsolete functions -- do not use these in new code!
+ * XXX TBD: These will all go away in Version 5.0.
+ *
+ ********************************************************/
 
-/* Identical to sentence_get_word() */
+/* Identical to sentence_get_word()
+ * XXX TBD: make this go away in Version 5.0. */
 link_public_api(const char *)
      sentence_get_nth_word(Sentence sent, int i);
 
-/* Who uses this function, anyway? How did this get exported? */
+/* Who uses this function, anyway? How did this get exported?
+ * XXX TBD: make this go away in Version 5.0. */
 link_public_api(int)
      sentence_nth_word_has_disjunction(Sentence sent, int i);
 
 /* This is not intended for general use; its specific to the internals
- * of the command-line client.  It was exported by accident. */
-link_public_api(void)
+ * of the command-line client.  It was exported by accident.
+ * XXX TBD: make this go away in Version 5.0. */
+link_public_api(int)
      issue_special_command(char * line, Parse_Options opts, Dictionary dict);
 
-/* These are obsolete, and do nothing. */
+/* These are obsolete, and do nothing.
+ * XXX TBD: make these go away in Version 5.0. */
 link_public_api(void)
      lperror_clear(void);
 extern link_public_api(int)

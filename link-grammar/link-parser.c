@@ -445,7 +445,6 @@ static Label strip_off_label(char * input_string)
 	case PARSE_WITH_DISJUNCT_COST_GT_0:
 		input_string[0] = ' ';
 		return c;
-		break;
 	case NO_LABEL:
 	default:
 		return NO_LABEL;
@@ -471,9 +470,10 @@ static void print_usage(char *str) {
 			"Usage: %s [language|dictionary location]\n"
 			"		  [-<special \"!\" command>]\n"
 			"		  [--version]\n", str);
-	// XXX fixme
-	// opts = parse_options_create();
-	// issue_special_command("-!var", opts, NULL);
+
+	fprintf(stderr, "\nSpecial commands are:\n");
+	opts = parse_options_create();
+	issue_special_command("var", opts, NULL);
 	exit(-1);
 }
 
@@ -566,16 +566,10 @@ int main(int argc, char * argv[])
 			}
 			/* TBD remove these in version 5.0 */
 			else if ((strcmp("-ppoff", argv[i])==0) ||
-			           (strcmp("-coff", argv[i])==0) ||
-			           (strcmp("-aoff", argv[i])==0) ||
-			           (strcmp("-batch", argv[i])==0) ||
-			           (strncmp("-!", argv[i],2)==0))
+			         (strcmp("-coff", argv[i])==0) ||
+			         (strcmp("-aoff", argv[i])==0))
 			{
 				fprintf(stderr, "%s: Warning: %s flag ignored\n", argv[0], argv[i]);
-			}
-			else
-			{
-				print_usage(argv[0]);
 			}
 		}
 		else
@@ -633,10 +627,14 @@ int main(int argc, char * argv[])
 		}
 		else if (argv[i][0] == '-')
 		{
+			int rc;
 			if (argv[i][1] == '!')
-				issue_special_command(argv[i]+2, opts, dict);
+				rc = issue_special_command(argv[i]+2, opts, dict);
 			else
-				issue_special_command(argv[i]+1, opts, dict);
+				rc = issue_special_command(argv[i]+1, opts, dict);
+
+			if (rc)
+				print_usage(argv[0]);
 		}
 	}
 
