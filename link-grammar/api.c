@@ -1275,6 +1275,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		if (PARSE_NUM_OVERFLOW < total) break;
 	}
 
+	free_count(sent);
 	free_fast_matcher(sent);
 }
 
