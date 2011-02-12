@@ -468,10 +468,12 @@ static void setup_panic_parse_options(Parse_Options opts)
 
 static void print_usage(char *str) {
 	fprintf(stderr,
-			"Usage: %s [language]\n"
-			"		  [-ppoff] [-coff] [-aoff] [-batch]\n"
+			"Usage: %s [language|dictionary location]\n"
 			"		  [-<special \"!\" command>]\n"
 			"		  [--version]\n", str);
+	// XXX fixme
+	// opts = parse_options_create();
+	// issue_special_command("-!var", opts, NULL);
 	exit(-1);
 }
 
@@ -514,13 +516,8 @@ int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
 	Dictionary      dict;
-	Sentence        sent = NULL;
 	const char     *language="en";  /* default to english, and not locale */
-	int             pp_on=TRUE;
-	int             af_on=TRUE;
-	int             cons_on=TRUE;
 	int             num_linkages, i;
-	char            *input_string;
 	Label           label = NO_LABEL;
 	const char      *codeset;
 
@@ -558,35 +555,45 @@ int main(int argc, char * argv[])
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
 
-	for (; i<argc; i++) {
-		if (argv[i][0] == '-') {
-			if (strcmp("--version", argv[i])==0) {
+	for (; i<argc; i++)
+	{
+		if (argv[i][0] == '-')
+		{
+			if (strcmp("--version", argv[i])==0)
+			{
 				printf("Version: %s\n", linkgrammar_get_version());
 				exit(0);
-			} else if (strcmp("-ppoff", argv[i])==0) {
-				pp_on = FALSE;
-			} else if (strcmp("-coff", argv[i])==0) {
-				cons_on = FALSE;
-			} else if (strcmp("-aoff", argv[i])==0) {
-				af_on = FALSE;
-			} else if (strcmp("-batch", argv[i])==0) {
-			} else if (strncmp("-!", argv[i],2)==0) {
-			} else {
+			}
+			/* TBD remove these in version 5.0 */
+			else if ((strcmp("-ppoff", argv[i])==0) ||
+			           (strcmp("-coff", argv[i])==0) ||
+			           (strcmp("-aoff", argv[i])==0) ||
+			           (strcmp("-batch", argv[i])==0) ||
+			           (strncmp("-!", argv[i],2)==0))
+			{
+				fprintf(stderr, "%s: Warning: %s flag ignored\n", argv[0], argv[i]);
+			}
+			else
+			{
 				print_usage(argv[0]);
 			}
-		} else {
+		}
+		else
+		{
 			print_usage(argv[0]);
 		}
 	}
 
 	opts = parse_options_create();
-	if (opts == NULL) {
+	if (opts == NULL)
+	{
 		fprintf(stderr, "%s: Fatal error: unable to create parse options\n", argv[0]);
 		exit(-1);
 	}
 
 	panic_parse_opts = parse_options_create();
-	if (panic_parse_opts == NULL) {
+	if (panic_parse_opts == NULL)
+	{
 		fprintf(stderr, "%s: Fatal error: unable to create panic parse options\n", argv[0]);
 		exit(-1);
 	}
@@ -600,27 +607,31 @@ int main(int argc, char * argv[])
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
 
-	if(language && *language)
+	if (language && *language)
 		dict = dictionary_create_lang(language);
 	else
 		dict = dictionary_create_default_lang();
 
-	if (dict == NULL) {
+	if (dict == NULL)
+	{
 		fprintf(stderr, "%s: Fatal error: Unable to open  dictionary.\n", argv[0]);
 		exit(-1);
 	}
 
-	/* process the command line like commands */
-	for (i=1; i<argc; i++) {
-		if ((strcmp("-pp", argv[i])==0) ||
-			(strcmp("-c", argv[i])==0) ||
-			(strcmp("-a", argv[i])==0))
+	/* Process the command line like commands */
+	for (i=1; i<argc; i++)
+	{
+		/* TBD remove these in version 5.0 */
+		if ((strcmp("-pp", argv[i]) == 0) ||
+			(strcmp("-c", argv[i]) == 0) ||
+			(strcmp("-a", argv[i]) == 0) ||
+			(strcmp("-ppoff", argv[i]) == 0) ||
+			(strcmp("-coff", argv[i]) == 0) ||
+			(strcmp("-aoff", argv[i]) == 0))
 		{
 			i++;
 		}
-		else if ((argv[i][0] == '-') && (strcmp("-ppoff", argv[i])!=0) &&
-		         (argv[i][0] == '-') && (strcmp("-coff", argv[i])!=0) &&
-		         (argv[i][0] == '-') && (strcmp("-aoff", argv[i])!=0))
+		else if (argv[i][0] == '-')
 		{
 			if (argv[i][1] == '!')
 				issue_special_command(argv[i]+2, opts, dict);
@@ -640,6 +651,9 @@ int main(int argc, char * argv[])
 	/* Main input loop */
 	while (1)
 	{
+		char *input_string;
+		Sentence sent = NULL;
+
 		input_string = fget_input_string(input_fh, stdout, opts);
 		check_winsize(opts);
 
@@ -803,16 +817,18 @@ int main(int argc, char * argv[])
 		else
 		{
 			int c = process_some_linkages(sent, opts);
-			if (c == EOF) break;
+			if (c == EOF)
+			{
+				sentence_delete(sent);
+				sent = NULL;
+				break;
+			}
 		}
 		fflush(stdout);
 
 		sentence_delete(sent);
 		sent = NULL;
 	}
-
-	/* Free stuff, so that mem-leak detectors don't commplain. */
-	sentence_delete(sent);
 
 	if (parse_options_get_batch_mode(opts))
 	{
@@ -821,6 +837,7 @@ int main(int argc, char * argv[])
 				"%d error%s.\n", batch_errors, (batch_errors==1) ? "" : "s");
 	}
 
+	/* Free stuff, so that mem-leak detectors don't commplain. */
 	parse_options_delete(panic_parse_opts);
 	parse_options_delete(opts);
 	dictionary_delete(dict);
