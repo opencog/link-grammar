@@ -21,6 +21,12 @@ public:
     build_word_tags();
   }
 
+  ~SATEncoder()
+  {
+    delete _variables;
+    delete _solver;
+  }
+
   // Create the formula from the sentence
   void encode();
 
