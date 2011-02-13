@@ -843,8 +843,8 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
 	Connector * cl, * cr, *tl, *tr, *wc, work_connector;
 	Disjunct *d1, *wd, work_disjunct, *d_list;
 	if (d==NULL) return NULL;
-	wd = & work_disjunct;
-	wc = init_connector(& work_connector);
+	wd = &work_disjunct;
+	wc = init_connector(&work_connector);
 	d_list = NULL;
 	*wd = *d;
 	tl = d->left;
@@ -950,10 +950,10 @@ Disjunct * build_COMMA_disjunct_list(Sentence sent)
 	Disjunct *d1, *d2, *d, work_disjunct, *wd;
 	Connector work_connector1, work_connector2, *c1, *c2;
 	Connector work_connector3, *c3;
-	c1 = init_connector(& work_connector1);
-	c2 = init_connector(& work_connector2);
-	c3 = init_connector(& work_connector3);
-	wd = & work_disjunct;
+	c1 = init_connector(&work_connector1);
+	c2 = init_connector(&work_connector2);
+	c3 = init_connector(&work_connector3);
+	wd = &work_disjunct;
 
 	d1 = NULL;  /* where we put the list we're building */
 
@@ -1407,8 +1407,8 @@ int is_canonical_linkage(Sentence sent)
 	Image_node * in;
 	Parse_info pi = sent->parse_info;
 
-	dummy_connector.priority = UP_priority;
 	init_connector(&dummy_connector);
+	dummy_connector.priority = UP_priority;
 
 	build_image_array(sent);
 

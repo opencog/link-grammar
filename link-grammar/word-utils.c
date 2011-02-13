@@ -217,7 +217,7 @@ Connector * connector_new(void)
 	Connector *c = (Connector *) xalloc(sizeof(Connector));
 	c->length_limit = UNLIMITED_LEN;
 	c->string = "";
-	c->label = 0;
+	c->label = NORMAL_LABEL;
 	c->hash = -1;
 	c->priority = THIN_priority;
 	c->multi = FALSE;
@@ -323,8 +323,6 @@ static void build_connector_set_from_expression(Connector_set * conset, Exp * e)
 	{
 		c = connector_new();
 		c->string = e->u.string;
-		c->label = NORMAL_LABEL;		/* so we can use match() */
-		c->priority = THIN_priority;
 		c->word = e->dir;       /* just use the word field to give the dir */
 		h = connector_set_hash(conset, c->string, c->word);
 		c->next = conset->hash_table[h];

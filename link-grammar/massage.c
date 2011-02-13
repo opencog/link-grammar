@@ -74,7 +74,6 @@ static Disjunct * glom_comma_connector(Disjunct * d)
 
 		c1 = connector_new();
 		c1->label = COMMA_LABEL;
-		c1->priority = THIN_priority;
 
 		c->next = c1;
 	}
@@ -109,7 +108,6 @@ static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary)
 
 		c1 = connector_new();
 		c1->label = label;
-		c1->priority = THIN_priority;
 		c1->next = c;
 
 		if (d1->left == c) {
@@ -135,7 +133,6 @@ static Disjunct * add_one_connector(int label, int dir, const char *cs, Disjunct
 	c = connector_new();
 	c->string = cs;
 	c->label = label;
-	c->priority = THIN_priority;
 
 	if (dir == '+') {
 		c->next = d->right;
@@ -167,7 +164,6 @@ static Disjunct * special_disjunct(int label, int dir, const char *cs, const cha
 	c = connector_new();
 	c->string = cs;
 	c->label = label;
-	c->priority = THIN_priority;
 
 	if (dir == '+') {
 		d1->left = NULL;

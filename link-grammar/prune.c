@@ -859,8 +859,6 @@ static Connector * insert_connectors(connector_table *ct, Exp * e,
 		if (e->dir == dir)
 		{
 			Connector *dummy = connector_new();
-			dummy->label = NORMAL_LABEL;
-			dummy->priority = THIN_priority;
 			dummy->string = e->u.string;
 			insert_connector(ct, dummy);
 			dummy->next = alloc_list;
