@@ -174,7 +174,7 @@ static inline void setival(Switch s, int val)
 	*((int *) s.ptr) = val;
 }
 
-static int x_issue_special_command(char * line, Parse_Options opts, Dictionary dict)
+static int x_issue_special_command(const char * line, Parse_Options opts, Dictionary dict)
 {
 	char *s, myline[1000], *x, *y;
 	int i, count, j, k;
@@ -312,7 +312,7 @@ static int x_issue_special_command(char * line, Parse_Options opts, Dictionary d
 		if (j<0)
 		{
 			printf("There is no user variable called \"%s\".\n", x);
-			return;
+			return -1;
 		}
 
 		if (count > 1)
@@ -446,7 +446,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_display_union(opts, local.display_union);
 }
 
-int issue_special_command(char * line, Parse_Options opts, Dictionary dict)
+int issue_special_command(const char * line, Parse_Options opts, Dictionary dict)
 {
 	int rc;
 	put_opts_in_local_vars(opts);

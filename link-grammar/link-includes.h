@@ -448,7 +448,7 @@ link_public_api(int)
  * of the command-line client.  It was exported by accident.
  * XXX TBD: make this go away in Version 5.0. */
 link_public_api(int)
-     issue_special_command(char * line, Parse_Options opts, Dictionary dict);
+     issue_special_command(const char * line, Parse_Options opts, Dictionary dict);
 
 /* These are obsolete, and do nothing.
  * XXX TBD: make these go away in Version 5.0. */
