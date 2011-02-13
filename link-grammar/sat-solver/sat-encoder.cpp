@@ -2772,7 +2772,6 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   sent->hook = encoder;
   encoder->encode();
 
-
   // XXX this is wrong, we actually don't know yet ... 
   // If we don't return some large number here, then the
   // Command-line client will fail to print all of the possible
@@ -2793,6 +2792,12 @@ extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
 
 extern "C" void sat_sentence_delete(Sentence sent)
 {
+  SATEncoder* encoder = (SATEncoder*) sent->hook;
+  if (!encoder) return;
+  delete encoder;
+
+  // Don't do this parse-info-free stuff, if there's no encoder.
+  // That's because it will screw up the regular parser.
   if (sent->parse_info) {
     Parse_info pi = sent->parse_info;
     for (int i=0; i< MAX_LINKS; i++) {
@@ -2803,7 +2808,4 @@ extern "C" void sat_sentence_delete(Sentence sent)
     sent->parse_info = NULL;
   }
 
-  SATEncoder* encoder = (SATEncoder*) sent->hook;
-  if (!encoder) return;
-  delete encoder;
 }
