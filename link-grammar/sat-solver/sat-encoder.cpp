@@ -1512,21 +1512,12 @@ bool SATEncoderConjunctionFreeSentences::extract_links(Parse_info pi)
 
     Connector* connector;
 
-    connector = (Connector*)xalloc(sizeof(Connector));
-    init_connector(connector);
-    connector->label = NORMAL_LABEL;
-    connector->priority = THIN_priority;
+    connector = connector_new();
     connector->string = var->left_connector;
-    connector->next = NULL;
     pi->link_array[current_link].lc = connector;
 
-
-    connector = (Connector*)xalloc(sizeof(Connector));
-    init_connector(connector);
-    connector->label = NORMAL_LABEL;
-    connector->priority = THIN_priority;
+    connector = connector_new();
     connector->string = var->right_connector;
-    connector->next = NULL;
     pi->link_array[current_link].rc = connector;
     
     current_link++;
@@ -1590,7 +1581,7 @@ void SATEncoderConjunctiveSentences::generate_satisfaction_for_connector(int wi,
   int low = (dir == '-') ? 0 : wi + 1;
   int hi  = (dir == '-') ? wi : _sent->length;
 
-  // detrmine if opposite of (wi, pi) is andable
+  // determine if opposite of (wi, pi) is andable
   Connector conn;
   init_connector(&conn);
   conn.label = NORMAL_LABEL;
@@ -2687,20 +2678,14 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
 
       Connector* connector;
 
-      connector = (Connector*)xalloc(sizeof(Connector));
-      init_connector(connector);
-      connector->label = NORMAL_LABEL;
+      connector = connector_new();
       connector->priority = fl_lr ? UP_priority : DOWN_priority;
       connector->string = "fat";
-      connector->next = NULL;
       pi->link_array[current_link].lc = connector;
 
-      connector = (Connector*)xalloc(sizeof(Connector));
-      init_connector(connector);
-      connector->label = NORMAL_LABEL;
+      connector = connector_new();
       connector->priority = fl_lr ? DOWN_priority : UP_priority;
       connector->string = "fat";
-      connector->next = NULL;
       pi->link_array[current_link].rc = connector;
       
       current_link++;
@@ -2742,26 +2727,16 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
 
       Connector* connector;
 
-      connector = (Connector*)xalloc(sizeof(Connector));
-      init_connector(connector);
-      connector->label = NORMAL_LABEL;
-      connector->priority = THIN_priority;
+      connector = connector_new();
       connector->string = right_string;
-      connector->next = NULL;
       pi->link_array[current_link].lc = connector;
 
-
-      connector = (Connector*)xalloc(sizeof(Connector));
-      init_connector(connector);
-      connector->label = NORMAL_LABEL;
-      connector->priority = THIN_priority;
+      connector = connector_new();
       connector->string = left_string;
-      connector->next = NULL;
       pi->link_array[current_link].rc = connector;
       
       current_link++;
     }
-
   }
 
   pi->N_links = current_link;
