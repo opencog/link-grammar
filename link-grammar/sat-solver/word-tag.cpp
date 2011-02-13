@@ -12,10 +12,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
 
     const char* name = exp->u.string;
 
-    Connector* connector = (Connector*)xalloc(sizeof(Connector));
-    init_connector(connector);
-    connector->label = NORMAL_LABEL;
-    connector->priority = THIN_priority;
+    Connector* connector = connector_new();
     connector->multi = exp->multi;
     connector->string = name;
     set_connector_length_limit(connector);
