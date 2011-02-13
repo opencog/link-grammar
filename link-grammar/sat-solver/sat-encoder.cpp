@@ -1325,6 +1325,7 @@ Linkage SATEncoder::get_next_linkage()
     generate_disconnectivity_prohibiting(components);
   }
 
+  _solver->printStats();
   return linkage;
 }
 
@@ -2849,10 +2850,12 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   encoder->encode();
 
 
-  // XXX this is wrong, we catually don't know yet ... 
-  // But assume the best ... 
-  sent->num_valid_linkages = 2;
-  sent->num_linkages_post_processed = 2;
+  // XXX this is wrong, we actually don't know yet ... 
+  // If we don't return some large number here, then the
+  // Command-line client will fail to print all of the possible
+  // linkages. Work around this by lying ... 
+  sent->num_valid_linkages = 222;
+  sent->num_linkages_post_processed = 222;
 
   return 0;
 }
