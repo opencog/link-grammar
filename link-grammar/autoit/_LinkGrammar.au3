@@ -328,12 +328,6 @@ Func _LG_SentenceAndCost($hSentence, $iNumber)
 	Return $result[0]
 EndFunc   ;==>_LG_SentenceAndCost
 
-Func _LG_SentenceNthWordHasDisjunction($hSentence, $iNumber)
-	;int sentence_nth_word_has_disjunction(Sentence sent, int i);
-	$result = DllCall($_LG_DLL, "int:cdecl", "sentence_nth_word_has_disjunction", "ptr", $hSentence, "int", $iNumber)
-	Return $result[0]
-EndFunc   ;==>_LG_SentenceNthWordHasDisjunction
-
 Func _LG_LinkageCreate($iIndex, $hSentence, $hOptions)
 	;Linkage  linkage_create(int index, Sentence sent, Parse_Options opts);
 	$result = DllCall($_LG_DLL, "ptr:cdecl", "linkage_create", "int", $iIndex, "ptr", $hSentence, "ptr", $hOptions)
