@@ -4,6 +4,7 @@ extern "C" {
 
 extern "C" int sat_encode(Sentence sent, Parse_Options  opts);
 extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts);
+extern "C" void sat_sentence_delete(Sentence sent);
 
 #include "word-tag.hpp"
 

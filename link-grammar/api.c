@@ -1139,6 +1139,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
+	sat_sentence_delete(sent);
 	/* free_andlists(sent); */
 	free_sentence_disjuncts(sent);
 	free_sentence_expressions(sent);

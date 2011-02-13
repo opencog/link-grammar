@@ -2817,3 +2817,10 @@ extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
 
   return encoder->get_next_linkage();
 }
+
+extern "C" void sat_sentence_delete(Sentence sent)
+{
+  SATEncoder* encoder = (SATEncoder*) sent->hook;
+  if (!encoder) return;
+  delete encoder;
+}
