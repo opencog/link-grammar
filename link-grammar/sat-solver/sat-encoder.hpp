@@ -3,6 +3,7 @@ extern "C" {
 }
 
 extern "C" int sat_encode(Sentence sent, Parse_Options  opts);
+extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts);
 
 #include "word-tag.hpp"
 
@@ -23,7 +24,11 @@ public:
   void encode();
 
   // Solve the formula and print all linkages
+  // XXX deprecated, do not use in new code!
   void solve();
+ 
+  // Solve the formula, returning the next linkage.
+  Linkage get_next_linkage();
  
 protected:
 

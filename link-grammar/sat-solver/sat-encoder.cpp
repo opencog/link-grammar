@@ -1302,7 +1302,34 @@ void SATEncoder::generate_linkage_prohibiting()
   _solver->addConflictingClause(clause);
 }
 
-void SATEncoder::solve() {
+Linkage SATEncoder::get_next_linkage()
+{
+  if (l_False == _solver->solve()) return NULL;
+  Linkage linkage = create_linkage();
+
+  std::vector<int> components;
+  bool connected = connectivity_components(components);
+  if (connected) {
+    // num_connected_linkages++;
+
+    if (post_process_linkage(linkage)) {
+      cout << "Linkage PP OK" << endl;
+      _sent->num_valid_linkages++;
+    } else {
+	   cout << "Linkage PP NOT OK" << endl;
+    }
+
+    generate_linkage_prohibiting();
+  } else {
+    cout << "Linkage DISCONNECTED" << endl;
+    generate_disconnectivity_prohibiting(components);
+  }
+
+  return linkage;
+}
+
+void SATEncoder::solve()
+{
   DEBUG_print("ZLL: ." << _solver->nAssigns());
   //  exit(1);
 
@@ -1342,7 +1369,6 @@ void SATEncoder::solve() {
     cout << "--------" << endl;
 
 
-    // exit(1);
     // TODO: delete linkage
   }
   cout << num_linkages << " linkages found. " 
@@ -2797,17 +2823,21 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
  ****************************************************************************/
 extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 {
+  SATEncoder* encoder = (SATEncoder*) sent->hook;
+  if (encoder) delete encoder;
+
   // Prepare for parsing - extracted for "preparation.c"
   build_deletable(sent, 0);
   build_effective_dist(sent, 0);
   init_count(sent);
   count_set_effective_distance(sent);
 
-  // bool conjunction = sentence_contains_conjunction(sent);
   bool conjunction = FALSE;
+  if (parse_options_get_use_fat_links(opts)) {
+    conjunction = sentence_contains_conjunction(sent);
+  }
 
   // Create the encoder, encode the formula and solve it
-  SATEncoder* encoder;
   if (conjunction) {
     DEBUG_print("Conjunctive sentence\n");
     encoder = new SATEncoderConjunctiveSentences(sent, opts);
@@ -2815,9 +2845,23 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     DEBUG_print("Conjunction free sentence\n");
     encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
   }
+  sent->hook = encoder;
   encoder->encode();
-  encoder->solve();
-  delete encoder;
+
+
+  // XXX this is wrong, we catually don't know yet ... 
+  // But assume the best ... 
+  sent->num_valid_linkages=2;
+  // encoder->solve();
 
   return 0;
+}
+
+extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
+{
+  SATEncoder* encoder = (SATEncoder*) sent->hook;
+printf("duuuude its %p\n", encoder);
+  if (!encoder) return NULL;
+
+  return encoder->get_next_linkage();
 }

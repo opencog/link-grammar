@@ -1340,6 +1340,11 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
 
+	if (opts->use_sat_solver)
+	{
+		return sat_create_linkage(k, sent, opts);
+	}
+
 	if ((k >= sent->num_linkages_post_processed) || (k < 0)) return NULL;
 
 	/* Using exalloc since this is external to the parser itself. */
