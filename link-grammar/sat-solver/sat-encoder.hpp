@@ -21,7 +21,7 @@ public:
     build_word_tags();
   }
 
-  ~SATEncoder()
+  virtual ~SATEncoder()
   {
     delete _variables;
     delete _solver;
