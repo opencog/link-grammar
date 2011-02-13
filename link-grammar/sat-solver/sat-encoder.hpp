@@ -23,10 +23,6 @@ public:
   // Create the formula from the sentence
   void encode();
 
-  // Solve the formula and print all linkages
-  // XXX deprecated, do not use in new code!
-  void solve();
- 
   // Solve the formula, returning the next linkage.
   Linkage get_next_linkage();
  

@@ -1329,56 +1329,6 @@ Linkage SATEncoder::get_next_linkage()
   return linkage;
 }
 
-void SATEncoder::solve()
-{
-  DEBUG_print("ZLL: ." << _solver->nAssigns());
-  //  exit(1);
-
-  int num_linkages = 0;
-  int num_valid_linkages = 0;
-  int num_connected_linkages = 0;
-  
-  lbool status;
-  while ((status = _solver->solve()) != l_False)
-  {
-    _solver->printStats();
-    cout << "Linkage: ." << ++num_linkages << "." << endl;
-
-    Linkage linkage = create_linkage();
-    display_linkage(linkage);
-
-    std::vector<int> components;
-    bool connected = connectivity_components(components);
-    if (connected) {
-      num_connected_linkages++;
-
-      if (post_process_linkage(linkage)) {
-	cout << "Linkage PP OK" << endl;
-	num_valid_linkages++;
-
-	cout << "press RETURN for the next linkage" << endl;
-	cin.get();
-      } else {
-	cout << "Linkage PP NOT OK" << endl;
-      }
-
-      generate_linkage_prohibiting();
-    } else {
-      cout << "Linkage DISCONNECTED" << endl;
-      generate_disconnectivity_prohibiting(components);
-    }
-    cout << "--------" << endl;
-
-
-    // TODO: delete linkage
-  }
-  cout << num_linkages << " linkages found. " 
-       << "(" << num_connected_linkages << " connected, "
-       << "" << num_valid_linkages << " valid after post-processing)" << endl;
-
-  _solver->printStats();
-}
-
 /*******************************************************************************
  *        SAT encoding for sentences that do not contain conjunction.          *
  *******************************************************************************/
