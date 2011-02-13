@@ -307,6 +307,9 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 
 		linkage = linkage_create(i, sent, opts);
 
+		/* Currently, sat solver returns NULL when there ain't no more */
+		if (!linkage) break;
+
 		if (verbosity > 0)
 		{
 			if ((sentence_num_valid_linkages(sent) == 1) &&

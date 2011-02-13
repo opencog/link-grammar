@@ -1245,13 +1245,10 @@ Linkage SATEncoder::create_linkage()
 {
   /* Using exalloc since this is external to the parser itself. */
   Linkage linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
+  memset(linkage, 0, sizeof(struct Linkage_s));
 
   linkage->num_words = _sent->length;
   linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
-  linkage->current = 0;
-  linkage->num_sublinkages=0;
-  linkage->sublinkage = NULL;
-  linkage->unionized = FALSE;
   linkage->sent = _sent;
   linkage->opts = _opts;
   //  linkage->info = sent->link_info[k];  
@@ -2851,8 +2848,8 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 
   // XXX this is wrong, we catually don't know yet ... 
   // But assume the best ... 
-  sent->num_valid_linkages=2;
-  // encoder->solve();
+  sent->num_valid_linkages = 2;
+  sent->num_linkages_post_processed = 2;
 
   return 0;
 }
@@ -2860,7 +2857,6 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
 {
   SATEncoder* encoder = (SATEncoder*) sent->hook;
-printf("duuuude its %p\n", encoder);
   if (!encoder) return NULL;
 
   return encoder->get_next_linkage();
