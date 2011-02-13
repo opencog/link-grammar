@@ -190,3 +190,5 @@ sentence_contains_conjunction
 init_count
 parse_info_new
 free_parse_info
+connector_new
+free_connectors

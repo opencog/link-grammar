@@ -1253,7 +1253,14 @@ Linkage SATEncoder::create_linkage()
   linkage->opts = _opts;
   //  linkage->info = sent->link_info[k];  
 
-  if (_sent->parse_info) free_parse_info(_sent->parse_info);
+  if (_sent->parse_info) {
+    Parse_info pi = _sent->parse_info;
+    for (int i=0; i< MAX_LINKS; i++) {
+      free_connectors(pi->link_array[i].lc);
+      free_connectors(pi->link_array[i].rc);
+    }
+    free_parse_info(_sent->parse_info);
+  }
   Parse_info pi = _sent->parse_info = parse_info_new(_sent->length);
   bool fat = extract_links(pi);
   
