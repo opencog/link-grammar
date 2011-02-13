@@ -1,8 +1,9 @@
-Version 4.7.4 (xxx 2011)
+Version 4.7.4 (13 February 2011)
  * Dramatic speed improvement for long sentences (hash table fix).
  * Fix: crash on certain sentences, when fat-link parsing enabled.
  * Fix: fatal error introduced in last version (combinatorial explosion).
  * Fix: mem leak introduced in last version (combinatorial explosion).
+ * Assorted fixes to the Boolean SAT solver.
 
 Version 4.7.3 (7 February 2011)
  * Fix: "level" as indefinite noun: "... at knee level".
