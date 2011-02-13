@@ -660,7 +660,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 int separate_sentence(Sentence sent, Parse_Options opts)
 {
 	const char *t;
-	int i, is_first, quote_found;
+	int is_first, quote_found;
 	Dictionary dict = sent->dict;
 	mbstate_t mbs;
 	const char * s = sent->orig_sentence;
