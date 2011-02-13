@@ -1260,6 +1260,7 @@ Linkage SATEncoder::create_linkage()
       free_connectors(pi->link_array[i].rc);
     }
     free_parse_info(_sent->parse_info);
+    _sent->parse_info = NULL;
   }
   Parse_info pi = _sent->parse_info = parse_info_new(_sent->length);
   bool fat = extract_links(pi);
@@ -2792,6 +2793,16 @@ extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
 
 extern "C" void sat_sentence_delete(Sentence sent)
 {
+  if (sent->parse_info) {
+    Parse_info pi = sent->parse_info;
+    for (int i=0; i< MAX_LINKS; i++) {
+      free_connectors(pi->link_array[i].lc);
+      free_connectors(pi->link_array[i].rc);
+    }
+    free_parse_info(sent->parse_info);
+    sent->parse_info = NULL;
+  }
+
   SATEncoder* encoder = (SATEncoder*) sent->hook;
   if (!encoder) return;
   delete encoder;
