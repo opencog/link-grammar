@@ -1261,8 +1261,11 @@ Linkage SATEncoder::create_linkage()
   /* TODO: this is just a simplified version of the
      compute_chosen_words. */
   for (int i = 0; i < _sent->length; i++) {
-    linkage->word[i] = _sent->word[i].string;
+    char *s = (char *) exalloc(strlen(_sent->word[i].string)+1);
+    strcpy(s, _sent->word[i].string);
+    linkage->word[i] = s;
   }
+  linkage->num_words = _sent->length;
   pi->N_words = _sent->length;
 
   if (!fat || !parse_options_get_use_fat_links(_opts))
