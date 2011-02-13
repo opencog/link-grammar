@@ -356,6 +356,8 @@ Lit Solver::pickBranchLit(int polarity_mode, double random_var_freq)
       next = order_heap.removeMin();
   }
 
+  if (next == var_Undef) return lit_Undef;
+
   bool sign = false;
 
   
