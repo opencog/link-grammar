@@ -78,8 +78,8 @@ static void init_table(Sentence sent)
 		shift = 12;
 	}
 
-	/* Clamp at max 4*(1<<25) == 128 MBytes */
-	if (25 < shift) shift = 25;
+	/* Clamp at max 4*(1<<24) == 64 MBytes */
+	if (24 < shift) shift = 24;
 	ctxt->table_size = (1 << shift);
 	ctxt->log2_table_size = shift;
 	ctxt->table = (Table_connector**) 
