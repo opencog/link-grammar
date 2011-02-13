@@ -184,7 +184,8 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 
 	if (!linkage) return;  /* Can happen in timeout mode */
 
-	if (parse_options_get_display_union(opts))
+	if (parse_options_get_use_fat_links(opts) &&
+	    parse_options_get_display_union(opts))
 	{
 		linkage_compute_union(linkage);
 		first_sublinkage = linkage_get_num_sublinkages(linkage)-1;
