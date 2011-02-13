@@ -256,13 +256,16 @@ struct Sentence_s
 	String_set *   string_set;  /* used for word names, not connectors */
 	And_data       and_data;    /* used to keep track of fat disjuncts */
 	char  q_pruned_rules;       /* don't prune rules more than once in p.p. */
-	int   post_quote[MAX_SENTENCE];
+	int   post_quote[MAX_SENTENCE]; /* Used only by tokenizer. */
 
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
 	count_context_t * count_ctxt; /* private state info used for counting */
 	match_context_t * match_ctxt; /* private state info used for matching */
 	/* thread-safe random number state */
 	unsigned int rand_state;
+
+	/* Hook for the SAT solver */
+	void *hook;
 };
 
 /*********************************************************
