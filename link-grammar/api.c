@@ -1713,31 +1713,43 @@ const char * linkage_get_word(Linkage linkage, int w)
 
 int linkage_unused_word_cost(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return 0;
 	return linkage->info->unused_word_cost;
 }
 
 int linkage_disjunct_cost(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return 0;
 	return (int) floorf(linkage->info->disjunct_cost);
 }
 
 int linkage_is_fat(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return 0;
 	return linkage->info->fat;
 }
 
 int linkage_and_cost(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return 0;
 	return linkage->info->and_cost;
 }
 
 int linkage_link_cost(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return 0;
 	return linkage->info->link_cost;
 }
 
 double linkage_corpus_cost(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return 0.0;
 	return linkage->info->corpus_cost;
 }
 
@@ -1764,16 +1776,22 @@ const char * linkage_get_violation_name(Linkage linkage)
 
 int linkage_is_canonical(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return TRUE;
 	return linkage->info->canonical;
 }
 
 int linkage_is_improper(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return FALSE;
 	return linkage->info->improper_fat_linkage;
 }
 
 int linkage_has_inconsistent_domains(Linkage linkage)
 {
+	/* The sat solver (currently) fails to fill in info */
+	if (!linkage->info) return FALSE;
 	return linkage->info->inconsistent_domains;
 }
 
