@@ -665,7 +665,7 @@ int separate_sentence(Sentence sent, Parse_Options opts)
 	mbstate_t mbs;
 	const char * s = sent->orig_sentence;
 
-	for(i=0; i<MAX_SENTENCE; i++) sent->post_quote[i] = 0;
+	memset(sent->post_quote, 0, MAX_SENTENCE*sizeof(int));
 	sent->length = 0;
 
 	if (dict->left_wall_defined)
