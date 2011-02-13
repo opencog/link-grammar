@@ -1199,27 +1199,40 @@ int sentence_num_linkages_post_processed(Sentence sent) {
 
 int sentence_num_violations(Sentence sent, int i) {
 	if (!sent) return 0;
+
+	/* The sat solver (currently) fails to fill in link_info */
+	if (!sent->link_info) return 0;
 	return sent->link_info[i].N_violations;
 }
 
 int sentence_and_cost(Sentence sent, int i) {
 	if (!sent) return 0;
+
+	/* The sat solver (currently) fails to fill in link_info */
+	if (!sent->link_info) return 0;
 	return sent->link_info[i].and_cost;
 }
 
 int sentence_disjunct_cost(Sentence sent, int i) {
 	if (!sent) return 0;
+
+	/* The sat solver (currently) fails to fill in link_info */
+	if (!sent->link_info) return 0;
 	return sent->link_info[i].disjunct_cost;
 }
 
 int sentence_link_cost(Sentence sent, int i) {
 	if (!sent) return 0;
+
+	/* The sat solver (currently) fails to fill in link_info */
+	if (!sent->link_info) return 0;
 	return sent->link_info[i].link_cost;
 }
 
 int sentence_nth_word_has_disjunction(Sentence sent, int i)
 {
 	if (!sent) return 0;
+	prt_error("Warning: sentence_nth_word_has_disjunction() is deprecated!\n");
 	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
