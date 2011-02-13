@@ -690,7 +690,7 @@ int main(int argc, char * argv[])
 		if (special_command(input_string, dict)) continue;
 		if (parse_options_get_echo_on(opts))
 		{
-			printf("%s", input_string);
+			printf("%s ", input_string);
 		}
 
 		if (parse_options_get_batch_mode(opts))
