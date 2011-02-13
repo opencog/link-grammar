@@ -1277,16 +1277,6 @@ Linkage SATEncoder::create_linkage()
   return linkage;
 }
 
-void display_linkage(Linkage linkage)
-{
-  for (int i = 0; i < linkage_get_num_sublinkages(linkage); i++) {
-    linkage_set_current_sublinkage(linkage, i);
-    char* string = linkage_print_diagram(linkage);
-    cout << string << endl;
-    free(string);
-  }
-}
-
 void SATEncoder::generate_linkage_prohibiting()
 {
   vec<Lit> clause;
