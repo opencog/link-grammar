@@ -25,6 +25,7 @@ CONTENTS of this directory:
    LICENSE                  The license describing terms of use
 
    link-grammar/*.c         The program.  (Written in ANSI-C)
+   link-grammar/autoit/*    Optional AutoIt language bindings.
    link-grammar/corpus/*.c  Optional corpus statistics database.
    link-grammar/java/*      Optional Java language bindings.
    link-grammar/minisat/*   Optional SAT Solver. (Written in C++)
@@ -147,11 +148,13 @@ BUILDING on Windows
    obtained elsewhere. One possibility is from the gnuwin32 system:
    http://gnuwin32.sourceforge.net/packages/regex.htm
    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
+   See also:
+   http://www.pcre.org/ Perl-Compatible Regular Expressions.
 
    These different build methods are NOT regularly tested, and some
-   linkgrammar versions may have build issues.  If you experience
-   these, please submit patches that fix the problem to the mailing
-   list.
+   linkgrammar versions may have build issues.  If you are an 
+   experienced Windows developer who knows how to make things work
+   in the Microsoft environment, we need your help!
 
 
 BUILDING on Windows (Cygwin)
@@ -512,9 +515,6 @@ MULTI-THREADED USE:
                     This is only used when reading dictionaries,
                     during initialization, and so doesn't need
                     to be thread safe.
-      utilities.h -- Windows doesn't have a thread-safe random-number
-                     generator, which means link-grammar for Windows
-                     is not currently thread-safe.
 
 
 BioLG merger:
@@ -540,19 +540,19 @@ BioLG merger:
    as well as regex morphology handling, have been incorporated.
 
 
-Performance issues:
--------------------
-   The current parser experiences significant performance problems for
-   long sentences that contain many conjunctions (and, or, but, etc.)
-   This is primarily due to a combinatorial explosion of linkage
-   possibilities for the conjunctions; the culprit is the indiscriminate
-   processing done by the "fat linkage" algorithm. Work is underway to
-   replace the "fat linkage" mechanism by a set of more tightly-focused
-   linkage rules for conjunctions; this work is far from complete.  
+Fat Links:
+----------
+   As of version 4.7.0, parsing using "fat links" has been disabled
+   by default, and is now deprecated.  The function is still there,
+   and can be turned on by specifying the !use-fat=1 command, or by
+   calling parse_options_use_fat_links(TRUE) from programs.
 
-   The use of fat linkages is turned on by default; it can be disabled
-   by specifying the !use-fat flag at the command-line, or by calling
-   parse_options_use_fat_links(FALSE) from programs.
+   Older versions of the link-grammar parser used "fat links" to 
+   support conjunctions (and, or, but, ...). However, this lead
+   to a number of complications, including poor performance due to
+   a combinatorial explosion of linkage possibilities, as well as
+   an excessively complex parse algorithm.  As a result, the function
+   is now deprecated, and will be removed in version 5.0.
 
 
 SAT solver:
@@ -596,8 +596,8 @@ ADDRESSES
    Although all messages should go to the mailing list, the current
    maintainers can be contacted at:
 
-     Dom Lachowicz - <domlachowicz@gmail.com>
      Linas Vepstas - <linasvepstas@gmail.com>
+     Dom Lachowicz - <domlachowicz@gmail.com>
 
    The original authors of the Link Grammar parser are:
 
@@ -633,12 +633,6 @@ TODO -- Working Notes:
     Should this be done in post-processing? or in pre-processing?
     (maybe easier to post-process, but more biologically natural as
     a pre-process step.)
-
-  Conjunction cleanup: parser has some special-case code for dealing
-    with conjunctions. Unfortunately, some of this code has hard-wired
-    English words in them. These are in construct_either() and in
-    set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
-    These need to be refactored.
 
   Poor linkage choices:
     Compare "she will be happier than before" to "she will be more happy
@@ -889,4 +883,9 @@ TODO -- Working Notes:
     theory, analysis, and applications'' Ed. Anthony Paul Cowie (1998)
     Oxford University Press pp. 23-54.
 
-   
+  Conjunction cleanup: parser has some special-case code for dealing
+    with conjunctions. Unfortunately, some of this code has hard-wired
+    English words in them. These are in construct_either() and in
+    set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
+    All of this can now be deleted for version 5.0.
+
