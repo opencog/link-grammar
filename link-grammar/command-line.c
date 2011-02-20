@@ -72,7 +72,7 @@ static Switch default_switches[] =
    {"constituents", Int,  "Generate constituent output",   &local.display_constituents},
    {"cost-model", Int,  "Cost model used for ranking",     &local.cost_model},
    {"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
-   {"disjuncts",  Bool, "Display of disjunct used",        &local.display_disjuncts},
+   {"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
    {"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
    {"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
    {"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
