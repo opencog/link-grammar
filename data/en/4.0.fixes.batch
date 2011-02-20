@@ -2613,6 +2613,9 @@ I cannot discern any reason, other than some sort of historical blindness, for w
 John; my advisor, Steve; and several other people are coming
 No one but she saw the prowler.
 
+% conjunction used to provide a definition.
+Logorrhea, or excessive and often incoherent talkativeness or wordiness, is a social disease.
+
 % The two below are valid sentences, but they parse incorrectly just right now
 % so we will put a * in front of them, for now, till the parse is fixed.
 *Mike finished in first place, and John in third.
@@ -2721,6 +2724,9 @@ The earnings were lowered more strongly than was suggested.
 The rates were lowered more than suggested.
 The bolt was tightened more than was recommended.
 The bolt was tightened more than recommended.
+
+% colloquial expressions
+we should not forget the innocent people that was put in jail
 
 % --------------------------------------------------------------------
 % setences that parse, but not correctly:
