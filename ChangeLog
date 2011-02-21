@@ -1,3 +1,6 @@
+Version 4.7.5 (xxx 2011)
+ *
+
 Version 4.7.4 (13 February 2011)
  * Dramatic speed improvement for long sentences (hash table fix).
  * Fix: crash on certain sentences, when fat-link parsing enabled.

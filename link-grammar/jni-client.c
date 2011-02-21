@@ -263,14 +263,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 
 	ptd->num_linkages = sentence_parse(ptd->sent, ptd->opts);
 
-	/* If failed, try with fat links ... */
-	if ((0 == ptd->num_linkages) && sentence_contains_conjunction(ptd->sent))
-	{
-		parse_options_set_use_fat_links(opts, TRUE);
-		ptd->num_linkages = sentence_parse(ptd->sent, ptd->opts);
-	}
-
-	/* If still failed, try again with null links */
+	/* If failed, try again with null links */
 	if (0 == ptd->num_linkages)
 	{
 		if (jverbosity > 0) prt_error("Warning: JNI: No complete linkages found.\n");
