@@ -332,9 +332,9 @@ struct Linkage_info_struct
     short null_cost, unused_word_cost, and_cost, link_cost;
     float disjunct_cost;
     double corpus_cost;
-    Andlist * andlist;
     int island[MAX_SENTENCE];
     size_t nwords;
+    Andlist * andlist;
     char **disjunct_list_str;
 #ifdef USE_CORPUS
     Sense **sense_list;
@@ -344,8 +344,8 @@ struct Linkage_info_struct
 struct List_o_links_struct
 {
     int link;       /* the link number */
-    int word;       /* the word at the other end of this link */
-    int dir;        /* 0: undirected, 1: away from me, -1: toward me */
+    short word;       /* the word at the other end of this link */
+    short dir;        /* 0: undirected, 1: away from me, -1: toward me */
     List_o_links * next;
 };
 
@@ -360,15 +360,15 @@ typedef struct string_node_struct String_node;
 struct string_node_struct
 {
     char * string;
-    int size;
     String_node * next;
+    int size;
 };
 
 typedef struct Parse_choice_struct Parse_choice;
 
 struct Link_s
 {
-	int l, r;
+	short l, r;
 	Connector * lc, * rc;
 	const char * name;              /* spelling of full link name */
 };
@@ -400,8 +400,8 @@ struct X_table_connector_struct
 /* from string-set.c */
 struct String_set_s
 {
-    int size;       /* the current size of the table */
-    int count;      /* number of things currently in the table */
+    unsigned int size;       /* the current size of the table */
+    unsigned int count;      /* number of things currently in the table */
     char ** table;  /* the table itself */
 };
 
@@ -454,9 +454,9 @@ typedef struct pp_rule_s
     /* Holds a single post-processing rule. Since rules come in many
        flavors, not all fields of the following are always relevant  */
     const char *selector; /* name of link to which rule applies      */
-    int   domain;         /* type of domain to which rule applies    */
     pp_linkset *link_set; /* handle to set of links relevant to rule */
     int   link_set_size;  /* size of this set                        */
+    int   domain;         /* type of domain to which rule applies    */
     const char  **link_array; /* array holding the spelled-out names */
     const char  *msg;     /* explanation (NULL=end sentinel in array)*/
 } pp_rule;
@@ -487,9 +487,9 @@ struct pp_knowledge_s
     int n_contains_one_rules, n_contains_none_rules;
     int n_bounded_rules;
 
+    int nStartingLinks;
     pp_linkset *set_of_links_starting_bounded_domain;
     StartingLinkAndDomain *starting_link_lookup_table;
-    int nStartingLinks;
     String_set *string_set;
 };
 
