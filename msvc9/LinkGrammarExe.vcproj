@@ -241,10 +241,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\link-grammar\malloc-dbg.c"
-				>
-			</File>
-			<File
 				RelativePath="..\link-grammar\massage.c"
 				>
 			</File>

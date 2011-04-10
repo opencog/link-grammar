@@ -1,5 +1,6 @@
 Version 4.7.5 (xxx 2011)
  * Remove several duplicate given names.
+ * Remove malloc-dbg.c from the MSVC9 project file.
 
 Version 4.7.4 (13 February 2011)
  * Dramatic speed improvement for long sentences (hash table fix).
