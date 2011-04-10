@@ -58,9 +58,10 @@ Resources resources_create(void)
 
 	r = (Resources) xalloc(sizeof(struct Resources_s));
 	r->max_parse_time = MAX_PARSE_TIME_UNLIMITED;
-	r->when_created = current_usage_time();
-	r->when_last_called = current_usage_time();
-	r->time_when_parse_started = current_usage_time();
+	double now = current_usage_time();
+	r->when_created = now;
+	r->when_last_called = now;
+	r->time_when_parse_started = now;
 	r->space_when_parse_started = get_space_in_use();
 	r->max_memory = MAX_MEMORY_UNLIMITED;
 	r->cumulative_time = 0;
@@ -122,31 +123,31 @@ int resources_memory_exhausted(Resources r)
 /** print out the cpu ticks since this was last called */
 static void resources_print_time(int verbosity, Resources r, const char * s)
 {
-	double new_t;
-	new_t = current_usage_time();
+	double now;
+	now = current_usage_time();
 	if (verbosity > 1) {
 		printf("++++");
 		left_print_string(stdout, s,
 			"                                     ");
-		printf("%7.2f seconds\n", new_t - r->when_last_called);
+		printf("%7.2f seconds\n", now - r->when_last_called);
 	}
-	r->when_last_called = new_t;
+	r->when_last_called = now;
 }
 
 /** print out the cpu ticks since this was last called */
 static void resources_print_total_time(int verbosity, Resources r)
 {
-	double new_t;
-	new_t = current_usage_time();
-	r->cumulative_time += (new_t - r->time_when_parse_started) ;
+	double now;
+	now = current_usage_time();
+	r->cumulative_time += (now - r->time_when_parse_started) ;
 	if (verbosity > 0) {
 		printf("++++");
 		left_print_string(stdout, "Time",
 		                  "                                           ");
 		printf("%7.2f seconds (%.2f total)\n",
-			   new_t - r->time_when_parse_started, r->cumulative_time);
+			   now - r->time_when_parse_started, r->cumulative_time);
 	}
-	r->time_when_parse_started = new_t;
+	r->time_when_parse_started = now;
 }
 
 static void resources_print_total_space(int verbosity, Resources r)
