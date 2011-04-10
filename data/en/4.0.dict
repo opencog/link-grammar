@@ -6554,7 +6554,7 @@ around:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
   or [EN+] or MVa-;
 
-out up.r down.r:
+out.r up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
   K- or ({Yd-} & Pp-) or (MVp- & B-);
 
@@ -6564,7 +6564,7 @@ by:
   K- or
   (MVp- & B-);
 
-in: 
+in.r: 
   <alter-preps> or 
   ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) or 
   K- or 
@@ -6577,8 +6577,13 @@ on upon:
   K- or 
   (MVp- & B-);
 
-over: ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) 
-or K- or EN+ or (MVp- & B-) or (Yd- & Pp-);
+over:
+  ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) or 
+  K- or
+  EN+ or
+  (MVp- & B-) or
+  (Yd- & Pp-);
+
 just_over just_under well_over: EN+;
 
 % XXX original LG recommends using the LI link, however the 
