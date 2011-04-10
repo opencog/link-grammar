@@ -621,6 +621,10 @@ TODO -- Working Notes:
 ----------------------
   Some working notes.
 
+  Easy to fix: provide a more uniform API to the constituent tree.
+  i.e provide word index.   Also .. provide a clear word API,
+  showing word extent, suffix, etc.
+
   Bad grammar: When a sentence fails to parse, look for:
     * confused words: its/it's, there/their, to/too, your/you're ...
     * missing apostrophes in possessives: "the peoples desires"

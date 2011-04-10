@@ -408,6 +408,7 @@ static int check_connector(Dictionary dict, const char * s)
  * dict_order - order two dictionary words in proper sort order.
  * Return zero if the strings match, else return standard 
  * (locale-dependent) UTF8 sort order.
+ * XXX but its not UTF-8 ordered ...! Does this matter ???
  */
 /* verbose version */
 /*
@@ -436,7 +437,7 @@ int dict_order(char *s, char *t)
 static inline int dict_order(const char *s, const char *t)
 {
 	while (*s != '\0' && *s == *t) {s++; t++;}
-	return (((*s == '.')?(1):((*s)<<1))  -  ((*t == '.')?(1):((*t)<<1)));
+	return ((*s == '.')?(1):(*s))  -  ((*t == '.')?(1):(*t));
 }
 
 /**
@@ -450,12 +451,24 @@ static inline int dict_order(const char *s, const char *t)
  * characters.  A "*" matches anything.  Otherwise, replace "."
  * by "\0", and take the difference.  This behavior matches that
  * of the function dict_order().
+ *
+ * Note: wild-cards are not used in the English dictionaries;
+ * however, they are used to handling stemming in other languages.
  */
 static inline int dict_order_wild(const char * s, const char * t)
 {
+	const char *so = s;
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
-	if ((*s == '*') || (*t == '*')) return 0;
-	return (((*s == '.')?('\0'):(*s))  -  ((*t == '.')?('\0'):(*t)));
+
+	if ((*s == '*') || (*t == '*'))
+	{
+		/* Do not allow wild-card as the very first char.
+		 * Basically, allow *.v and *.eq in the Enlgish dict.
+		 */
+		if (s != so) return 0;
+	}
+
+	return (((*s == '.')?(0):(*s)) - ((*t == '.')?(0):(*t)));
 }
 
 /**
@@ -1349,7 +1362,7 @@ static int read_entry(Dictionary dict)
 			return 0;
 		}
 
-		/* if it's a word-file name */
+		/* If it's a word-file name */
 		/* However, be careful to reject "/.v" which is the division symbol
 		 * used in equations (.v means verb-like) */
 		if ((dict->token[0] == '/') && (dict->token[1] != '.'))
