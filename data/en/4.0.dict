@@ -205,7 +205,7 @@
 <rel-clause-s>: {Rw+} & Bsm+;
 <rel-clause-p>: {Rw+} & Bpm+;
 
-% The use of Coa here needs to be carefully rexamined; it is used much too freely.
+% The use of COa here needs to be carefully rexamined; it is used much too freely.
 <directive-opener>:
   {[[Wi-]]} & 
     ((Xc+ & Ic+) or 
@@ -8278,14 +8278,9 @@ ok.e okay.e OK.e fine.e sure.e whatever.e
 someday.e sometime.e thereafter.e anyhow.e anyway.e overall.e
 afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e 
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e 
-instead.e prima_facie before_long
-by_hand by_car by_plane by_boat by_bus by_train by_phone
-by_telephone in_person at_long_last on_cue
-on_arrival by_request in_total in_turn over_and_over 
-time_and_again later_on for_now
-day_by_day day_after_day step_by_step one_by_one for_sure for_certain
-even_so more_often_than_not all_of_a_sudden:
-({Xd- & Xc+} & MVa-) or ({Xc+ & {Xd-}} & CO+);
+instead.e:
+  ({Xc+ & {Xd-}} & CO+) or
+  ({Xc+ & {Xd-}} & CO+);
 
 % Openers to directives, commands (Ic+ connection to infinitives)
 % or single-word interjections. These are semantically important,
@@ -8293,23 +8288,32 @@ even_so more_often_than_not all_of_a_sudden:
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij 
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
 hah.ij hey.ij well.ij:
-Wi- or <directive-opener>;
+  <directive-opener> or
+  Wi-;
 
 % Openers to directives, commands (Ic+ connection to infinitives)
 anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij 
+prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
-on_arrival by_request in_total in_turn over_and_over later_on for_now
+on_arrival by_request in_total in_turn
+time_and_again over_and_over later_on for_now
 day_by_day day_after_day step_by_step one_by_one for_sure for_certain
 even_so more_often_than_not all_of_a_sudden: 
-<directive-opener>;
+  <directive-opener> or 
+  ({Xd- & Xc+} & MVa-);
 
 % sort-of-like given names ... 
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
-<directive-opener>;
+  <directive-opener>;
 
-high.e deep.e low.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or 
-({Xc+ & {Xd-}} & CO+) or Ca+ or Qe+);
+high.e deep.e low.e:
+  {EE- or EF+} & (
+    ({Xd- & Xc+} & MVa-) or 
+    ({Xc+ & {Xd-}} & CO+) or
+    Ca+ or
+    Qe+);
+
 left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or 
 ({Xc+ & {Xd-}} & CO+) or Qe+ or Ca+)) or (Kx- & Ky+) or (Pp- & Pp+); 
 short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
