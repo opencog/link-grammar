@@ -6882,8 +6882,9 @@ subject_to status_post in_conjunction_with sensu
 oftenest correctliest soonest disquietingliest:
  EA+;
 
-proof-reads.v proof_reads gells.v O.K.'s.v OK's.v O.K.’s OK’s:
- VERB_S_I(<vc-intrans>);
+% XXX aren't these opotiuonal transitive ?
+gells.v O.K.'s.v OK's.v O.K.’s OK’s:
+  VERB_S_I(<vc-intrans>);
 
 propension.n:
  (<noun-modifiers> & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
