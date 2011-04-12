@@ -4826,27 +4826,34 @@ instead_of because_of prior_to:
 as_well_as: (J+ or Mgp+) & (MG- or Mp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or
 (Xd- & Xc+ & (MX*x- or MVx-)));
 according_to as_of in_case_of in_response_to unbeknownst_to thanks_to:
-J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
-due_to along_with en_route_to in_connection_with: J+ & <prep-main-b>;
-regardless_of as_to irrespective_of: (J+ or QI+) & 
-(MVp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
+  J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
+
+due_to along_with en_route_to in_connection_with:
+  J+ & <prep-main-b>;
+
+regardless_of as_to irrespective_of:
+  (J+ or QI+) & (MVp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
 
 overhead.r midway in_public in_private en_route 
 a_la_mode a_la_carte side_by_side from_coast_to_coast: <prep-main-b>;
 abroad upstairs.r downstairs.r overseas.r next_door: 
-<prep-main-b> or FM-;
-elsewhere: <prep-main-b> or FM- or [[J-]];
+  <prep-main-b> or FM-;
+
+elsewhere:
+  <prep-main-b> or FM- or [[J-]];
+
 ahead at_hand in_store in_reverse in_place in_town 
 under_way in_office out_of_office out_of_reach
 in_reach within_reach on_guard at_large in_hand on_hand for_free
-on_file in_line on_line in_loco_parentis on_board en_route in_bed 
+in_line in_loco_parentis on_board en_route in_bed 
 out_of_bed on_strike on_top from_afar at_stake in_question
 at_issue on_lease on_trial in_league in_cahoots in_front in_back
 on_break on_camera in_command in_concert by_association in_association
 on_deck on_disk on_file on_foot on_location on_line online.r:
-MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-)); 
+  MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-)); 
+
 uptown downtown.r offshore.r underground.r out_of_town: 
-MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+  MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
 
 <common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
 
@@ -4855,9 +4862,10 @@ half-way two-fold downhill southward underfoot westward eastward
 northward overnight.r on_hold on_track in_situ in_toto off_balance
 in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
-behind_schedule ahead_of_schedule for_good for_keeps in_phase
+behind_schedule ahead_of_schedule for_good for_keeps 
 out_of_step out_of_phase in_tune out_of_tune in_session out_of_session
-in_phase neck_and_neck under_contract: <common-prep>;
+in_phase neck_and_neck under_contract:
+  <common-prep>;
 
 /en/words/words-medical.prep.1: <common-prep>;
 
@@ -5306,6 +5314,8 @@ once.e:
 % Currently, they take Wc- as they are "coordinating conjuctions"
 % that are tied to previous sentences (i.e. to the left-wall).
 % Another possibility: (Rnx+ & <CLAUSE-E>) "Because I say so"
+% XXX should review these, they probably overlap the other conjunction
+% usages below.
 but.ij and.ij or.ij not.ij also.ij but_not and_not: 
 [[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)]];
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
@@ -6303,7 +6313,7 @@ wholesale.e anew.e forever.e awhile.e aback.e afoul.e afresh.e aloft.e
 amok.e amuck.e onstage.e
 apiece.e askance.e astern.e asunder.e inter_alia mutatis_mutandis par_excellence
 upside-down.e ab_initio ad_infinitum ad_lib
-ad_libitum ad_nauseum en_masse aground.e astray.e into_account into_effect
+ad_libitum ad_nauseum aground.e astray.e into_account into_effect
 to_market to_bid from_scratch to_office for_office for_good 
 at_once to_normal to_bed to_town into_office in_advance to_trial by_lot
 in_stride by_credit_card by_ear by_foot in_kind en_masse to_mind in_mind
