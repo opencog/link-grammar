@@ -453,7 +453,10 @@ static inline int dict_order(const char *s, const char *t)
  * of the function dict_order().
  *
  * Note: wild-cards are not used in the English dictionaries;
- * however, they are used to handling stemming in other languages.
+ * nor are they used in the Persian or Arabic dictionaries...
+ * perhaps they are used to handle stemming in some other 
+ * languages ?????? XXX FIXME, these wildcards might just be
+ * old dead code ... 
  */
 static inline int dict_order_wild(const char * s, const char * t)
 {
