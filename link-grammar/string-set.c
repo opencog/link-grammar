@@ -41,28 +41,29 @@
    The implementation uses probed hashing (i.e. not bucket).
  */
 
-static int hash_string(const char *sa, const String_set *ss)
+static unsigned int hash_string(const char *str, const String_set *ss)
 {
-	unsigned char *str = (unsigned char *) sa;
 	unsigned int accum = 0;
-	for (;*str != '\0'; str++) accum = ((256*accum) + (*str)) % (ss->size);
+	for (;*str != '\0'; str++)
+		accum = ((256 * accum) + ((unsigned char) *str)) % (ss->size);
 	return accum;
 }
 
-static int stride_hash_string(const char *sa, const String_set *ss)
+static unsigned int stride_hash_string(const char *str, const String_set *ss)
 {
-	unsigned char *str = (unsigned char *) sa;
-	/* This is the stride used, so we have to make sure that its value is not 0 */
 	unsigned int accum = 0;
-	for (;*str != '\0'; str++) accum = ((17*accum) + (*str)) % (ss->size);
+	for (;*str != '\0'; str++)
+		accum = ((17 * accum) + ((unsigned char) *str)) % (ss->size);
+	/* This is the stride used, so we have to make sure that
+	 * its value is not 0 */
 	if (accum == 0) accum = 1;
 	return accum;
 }
 
 /* return the next prime up from start */
-static int next_prime_up(int start)
+static unsigned int next_prime_up(unsigned int start)
 {
-	int i;
+	unsigned int i;
 	start = start | 1; /* make it odd */
 	for (;;) {
 		for (i=3; (i <= (start/i)); i += 2) {
@@ -79,12 +80,11 @@ static int next_prime_up(int start)
 String_set * string_set_create(void)
 {
 	String_set *ss;
-	int i;
 	ss = (String_set *) xalloc(sizeof(String_set));
 	ss->size = next_prime_up(100);
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
+	memset(ss->table, ss->size, sizeof(char *));
 	ss->count = 0;
-	for (i=0; i<ss->size; i++) ss->table[i] = NULL;
 	return ss;
 }
 
@@ -92,12 +92,13 @@ String_set * string_set_create(void)
  * lookup the given string in the table.  Return a pointer
  * to the place it is, or the place where it should be.
  */
-static int find_place(const char * str, String_set *ss)
+static unsigned int find_place(const char * str, String_set *ss)
 {
-	int h, s, i;
+	unsigned int h, s, i;
 	h = hash_string(str, ss);
 	s = stride_hash_string(str, ss);
-	for (i=h; 1; i = (i + s)%(ss->size)) {
+	for (i=h; 1; i = (i + s)%(ss->size))
+	{
 		if ((ss->table[i] == NULL) || (strcmp(ss->table[i], str) == 0)) return i;
 	}
 }
@@ -105,29 +106,31 @@ static int find_place(const char * str, String_set *ss)
 static void grow_table(String_set *ss)
 {
 	String_set old;
-	int i, p;
+	unsigned int i, p;
 	
 	old = *ss;
 	ss->size = next_prime_up(2 * old.size);  /* at least double the size */
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
+	memset(ss->table, ss->size, sizeof(char *));
 	ss->count = 0;
-	for (i=0; i<ss->size; i++) ss->table[i] = NULL;
-	for (i=0; i<old.size; i++) {
-		if (old.table[i] != NULL) {
+	for (i=0; i<old.size; i++)
+	{
+		if (old.table[i] != NULL)
+		{
 			p = find_place(old.table[i], ss);
 			ss->table[p] = old.table[i];
 			ss->count++;
 		}
 	}
-	/*printf("growing from %d to %d\n", old.size, ss->size);*/
-	fflush(stdout);
+	/* printf("growing from %d to %d\n", old.size, ss->size); */
+	/* fflush(stdout); */
 	xfree((char *) old.table, old.size * sizeof(char *));
 }
 
 const char * string_set_add(const char * source_string, String_set * ss)
 {
 	char * str;
-	int len, p;
+	unsigned int len, p;
 	
 	assert(source_string != NULL, "STRING_SET: Can't insert a null string");
 
@@ -150,7 +153,7 @@ const char * string_set_add(const char * source_string, String_set * ss)
 
 const char * string_set_lookup(const char * source_string, String_set * ss)
 {
-	int p;
+	unsigned int p;
 	
 	p = find_place(source_string, ss);
 	return ss->table[p];
@@ -158,10 +161,11 @@ const char * string_set_lookup(const char * source_string, String_set * ss)
 
 void string_set_delete(String_set *ss)
 {
-	int i;
+	unsigned int i;
 	
 	if (ss == NULL) return;
-	for (i=0; i<ss->size; i++) {
+	for (i=0; i<ss->size; i++)
+	{
 		if (ss->table[i] != NULL) xfree(ss->table[i], strlen(ss->table[i]) + 1);
 	}
 	xfree((char *) ss->table, ss->size * sizeof(char *));
