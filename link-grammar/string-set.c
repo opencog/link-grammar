@@ -83,7 +83,7 @@ String_set * string_set_create(void)
 	ss = (String_set *) xalloc(sizeof(String_set));
 	ss->size = next_prime_up(100);
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
-	memset(ss->table, ss->size, sizeof(char *));
+	memset(ss->table, NULL, ss->size*sizeof(char *));
 	ss->count = 0;
 	return ss;
 }
@@ -111,7 +111,7 @@ static void grow_table(String_set *ss)
 	old = *ss;
 	ss->size = next_prime_up(2 * old.size);  /* at least double the size */
 	ss->table = (char **) xalloc(ss->size * sizeof(char *));
-	memset(ss->table, ss->size, sizeof(char *));
+	memset(ss->table, NULL, ss->size*sizeof(char *));
 	ss->count = 0;
 	for (i=0; i<old.size; i++)
 	{
