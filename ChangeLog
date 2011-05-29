@@ -3,6 +3,7 @@ Version 4.7.5 (xxx 2011)
  * Remove malloc-dbg.c from the MSVC9 project file.
  * Remove several dozen duplicated idioms.
  * New AM_SILENT_RULES for less noisy build!
+ * Clean up misc minor compiler warnings.
 
 Version 4.7.4 (13 February 2011)
  * Dramatic speed improvement for long sentences (hash table fix).

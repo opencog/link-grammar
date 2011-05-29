@@ -17,6 +17,12 @@
 
 LINK_BEGIN_DECLS
 
+#if  __GNUC__ > 2
+#define GNUC_DEPRECATED __attribute__((deprecated))
+#else
+#define GNUC_DEPRECATED
+#endif
+
 /**********************************************************************
  *
  * System initialization
@@ -56,11 +62,6 @@ link_public_api(void)
      dictionary_set_data_dir(const char * path);
 link_public_api(char *)
      dictionary_get_data_dir(void);
-
-link_public_api(int)
-     dictionary_is_past_tense_form(Dictionary dict, const char * str);
-link_public_api(int)
-     dictionary_is_entity(Dictionary dict, const char * str);
 
 /**********************************************************************
  *
@@ -434,15 +435,21 @@ link_public_api(void)
  *
  ********************************************************/
 
+/* Both are deprecated, exported only for backwards-compat w/Java API. */
+link_public_api(int)
+     dictionary_is_past_tense_form(Dictionary dict, const char * str);
+link_public_api(int)
+     dictionary_is_entity(Dictionary dict, const char * str);
+
 /* Identical to sentence_get_word()
  * XXX TBD: make this go away in Version 5.0. */
 link_public_api(const char *)
-     sentence_get_nth_word(Sentence sent, int i);
+     sentence_get_nth_word(Sentence sent, int i) GNUC_DEPRECATED;
 
 /* Who uses this function, anyway? How did this get exported?
  * XXX TBD: make this go away in Version 5.0. */
 link_public_api(int)
-     sentence_nth_word_has_disjunction(Sentence sent, int i);
+     sentence_nth_word_has_disjunction(Sentence sent, int i) GNUC_DEPRECATED;
 
 /* This is not intended for general use; its specific to the internals
  * of the command-line client.  It was exported by accident.
@@ -453,7 +460,7 @@ link_public_api(int)
 /* These are obsolete, and do nothing.
  * XXX TBD: make these go away in Version 5.0. */
 link_public_api(void)
-     lperror_clear(void);
+     lperror_clear(void) GNUC_DEPRECATED;
 extern link_public_api(int)
      lperrno;
 extern link_public_api(char)

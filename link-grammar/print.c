@@ -175,7 +175,10 @@ char * linkage_print_senses(Linkage linkage)
 
 char * linkage_print_disjuncts(Linkage linkage)
 {
-	double cost, score;
+#if USE_CORPUS
+	double score;
+#endif
+	double cost;
 	const char * infword;
 	const char * dj;
 	char * djs;

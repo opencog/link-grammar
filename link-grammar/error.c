@@ -33,6 +33,9 @@
 /* ============================================================ */
 
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
+	GNUC_PRINTF(3,0);
+
+static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 {
 	fprintf(stderr, "link-grammar: ");
 	vfprintf(stderr, fmt, args);

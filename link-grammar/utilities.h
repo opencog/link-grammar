@@ -134,6 +134,12 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
 #endif
 
+/* Optimizations that only gcc undersatands */
+#if __GNUC__ > 2
+#define GNUC_MALLOC __attribute__ ((malloc))
+#else
+#define GNUC_MALLOC
+#endif
 
 static inline int wctomb_check(char *s, wchar_t wc, mbstate_t *ps)
 {
@@ -243,9 +249,9 @@ void left_print_string(FILE* fp, const char *, const char *);
 
 /* routines for allocating basic objects */
 void init_memusage(void);
-void * xalloc(size_t);
-void * xrealloc(void *, size_t oldsize, size_t newsize);
-void * exalloc(size_t);
+void * xalloc(size_t) GNUC_MALLOC;
+void * xrealloc(void *, size_t oldsize, size_t newsize) GNUC_MALLOC;
+void * exalloc(size_t) GNUC_MALLOC;
 
 #define TRACK_SPACE_USAGE
 #ifdef TRACK_SPACE_USAGE
