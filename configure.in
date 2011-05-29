@@ -72,6 +72,7 @@ AC_MSG_RESULT([$native_win32])
 AM_CONDITIONAL(OS_WIN32, test "x$native_win32" = "xyes")
 
 dnl ====================================================================
+CFLAGS="${CFLAGS} -O3" 
 
 # The std=c99 flag provides the proper float-pt math decls working, 
 # e.g. fmaxf  However, it also undefined _BSD_SOURCE, etc which is
