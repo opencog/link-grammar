@@ -290,7 +290,7 @@ AC_DEFUN([LINK_CC_TRY_FLAG], [
   link_save_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS $1"
 
-  AC_COMPILE_IFELSE([ ], [link_cc_flag=yes], [link_cc_flag=no])
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[ ]])], [link_cc_flag=yes], [link_cc_flag=no])
   CFLAGS="$link_save_CFLAGS"
 
   if test "x$link_cc_flag" = "xyes"; then
