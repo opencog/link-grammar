@@ -8760,7 +8760,6 @@ albeit:
 whichever:
  ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) & (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or [[(O- or J-) & CX+]])) or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
-proof-reading.v proof_reading 
 O.K.'ing.v OK'ing.v
 O.K.’ing.v OK’ing.v:
  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
