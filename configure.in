@@ -1,4 +1,4 @@
-AC_INIT(link-grammar/link-parser.c)
+AC_INIT(link-grammar, 4.7.4, link-grammar@googlegroups.com)
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -19,18 +19,25 @@ dnl
 VERSION=$LINK_MAJOR_VERSION.$LINK_MINOR_VERSION.$LINK_MICRO_VERSION
 dnl Version info for libraries = CURRENT:REVISION:AGE
 VERSION_INFO=$MAJOR_VERSION_PLUS_MINOR_VERSION:$LINK_MICRO_VERSION:$LINK_MINOR_VERSION
+
 AC_SUBST(VERSION_INFO)
 AC_SUBST(LINK_MAJOR_VERSION)
 AC_SUBST(LINK_MINOR_VERSION)
 AC_SUBST(LINK_MICRO_VERSION)
 
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+AM_INIT_AUTOMAKE()
 AM_MAINTAINER_MODE
 
 AC_CONFIG_MACRO_DIR([m4])
 
+AC_CONFIG_SRCDIR($PACKAGE)
+
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])], [AC_SUBST([AM_DEFAULT_VERBOSITY],1)])
+
+# OS checks, including Win32
+AC_CANONICAL_HOST
+
 dnl Checks for programs.
-AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
@@ -42,6 +49,9 @@ AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
 AM_BINRELOC
 PKG_PROG_PKG_CONFIG
+
+AC_LANG([C])
+AC_LANG([C++])
 
 AC_C_CONST
 
@@ -339,23 +349,15 @@ AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
 WARN_CFLAGS="$link_cv_warn_cflags"
 LINK_CFLAGS="$LINK_CFLAGS $WARN_CFLAGS"
 
-# 
-# dnl Per email, -fnested-functions is needed on Macintosh OS/X
-# Except that the solitary case where there was an actual nested
-# function was fixed, so this is no longer needed ... right?
-#
-# LINK_CC_TRY_FLAG([-fnested-functions],
-# 		  [LINK_CFLAGS="$LINK_CFLAGS -fnested-functions"])
-
 LINK_CC_TRY_FLAG([-fno-strict-aliasing],
 		  [LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
 
 AC_SUBST(LINK_CFLAGS)
 
-dnl =====================================================================
-dnl Try to guess location of the jni.h file.
-dnl Might be useful to look at env variables $JDK_HOME and $JAVA_HOME for these.
-dnl
+# =====================================================================
+# Try to guess location of the jni.h file.
+# Might be useful to look at env variables $JDK_HOME and $JAVA_HOME for these.
+#
 JNIfound=no
 
 if test "x$do_java" = "xyes"; then
@@ -408,8 +410,8 @@ if test "x$do_java" = "xyes"; then
           ])
    AC_SUBST(CPPFLAGS)
 
-   # Hmm .. there seems to be a missing pkgconfig for ordinary java ... 
-   # There's libgcj-4.2.pc  and libgcj8.pc but nothing for ordinary java??
+   # Hmm .. there seems to be a missing pkgconfig for Sun java ... 
+   # There's libgcj-4.2.pc  and libgcj8.pc but nothing for Sun java??
    # PKG_CHECK_MODULES(LIBJDK, libjdk-1.5 >= $LIBJDK_REQUIRED)
    # AC_SUBST(LIBJDK_CFLAGS)
    # AC_SUBST(LIBJDK_LIBS)
