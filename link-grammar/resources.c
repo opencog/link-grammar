@@ -55,10 +55,11 @@ static double current_usage_time(void)
 Resources resources_create(void)
 {
 	Resources r;
+	double now;
 
 	r = (Resources) xalloc(sizeof(struct Resources_s));
 	r->max_parse_time = MAX_PARSE_TIME_UNLIMITED;
-	double now = current_usage_time();
+	now = current_usage_time();
 	r->when_created = now;
 	r->when_last_called = now;
 	r->time_when_parse_started = now;
