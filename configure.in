@@ -177,7 +177,7 @@ AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
 
 AC_ARG_ENABLE( corpus-stats,
   [  --enable-corpus-stats      use corpus statistics],
-  []
+  [],
   [enable_corpus_stats=no]
 )
 if test "x$enable_corpus_stats" = "xyes"
