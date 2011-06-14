@@ -182,7 +182,8 @@ static double get_disjunct_score(Corpus *corp,
 		inflected_word, -1, SQLITE_STATIC);
 	if (rc != SQLITE_OK)
 	{
-		prt_error("Error: SQLite can't bind word: rc=%d \n", rc);
+		const char *errmsg = sqlite3_errmsg(corp->dbconn);
+		prt_error("Error: SQLite can't bind word: rc=%d %s\n", rc, errmsg);
 		return LOW_SCORE;
 	}
 
@@ -190,7 +191,8 @@ static double get_disjunct_score(Corpus *corp,
 		disjunct, -1, SQLITE_STATIC);
 	if (rc != SQLITE_OK)
 	{
-		prt_error("Error: SQLite can't bind disjunct: rc=%d \n", rc);
+		const char *errmsg = sqlite3_errmsg(corp->dbconn);
+		prt_error("Error: SQLite can't bind disjunct: rc=%d %s\n", rc, errmsg);
 		return LOW_SCORE;
 	}
 
@@ -202,6 +204,11 @@ static double get_disjunct_score(Corpus *corp,
 		printf ("Word=%s dj=%s not found in dict, assume score=%f\n",
 			inflected_word, disjunct, val);
 #endif
+		if (rc < SQLITE_ROW)
+		{
+			const char *errmsg = sqlite3_errmsg(corp->dbconn);
+			prt_error("Error: SQLite can't ifind word: rc=%d %s\n", rc, errmsg);
+		}
 	}
 	else
 	{
@@ -213,7 +220,7 @@ static double get_disjunct_score(Corpus *corp,
 	}
 
 	/* Failure to do both a reset *and* a clear will cause subsequent
-	 * binds tp fail. */
+	 * binds to fail. */
 	sqlite3_reset(corp->rank_query);
 	sqlite3_clear_bindings(corp->rank_query);
 	return val;
