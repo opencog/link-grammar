@@ -139,10 +139,12 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 
 typedef enum
 {
+	CASE_S=1,
 	CASE_REL_CLAUSE=3,
 	CASE_APPOS=4,
 	CASE_OPENER=5,
 	CASE_PPOPEN=6,
+	CASE_SVINV=7,
 	CASE_PART_MOD=8,
 	CASE_PART_OPEN=9,
 
@@ -179,7 +181,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 
 		/* If ctype1 is X or VP, and it's not started by an S, don't generate an NP
 		 (Neither of the two previous checks are necessary now, right?) */
-		if ((x==1 || x==2) &&
+		if ((x==CASE_S || x==2) &&
 			(((post_process_match("S", ctxt->constituent[c1].start_link) == 0) &&
 			  (post_process_match("SX", ctxt->constituent[c1].start_link) == 0) &&
 			  (post_process_match("SF", ctxt->constituent[c1].start_link) == 0)) ||
@@ -204,7 +206,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 			continue;
 
 		/* If ctype1 is NP (paraphrase case), it has to be started by an SI */
-		if ((x==7) && (post_process_match("SI", ctxt->constituent[c1].start_link)==0))
+		if ((x==CASE_SVINV) && (post_process_match("SI", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* If ctype1 is VP (participle modifier case), it has to be
@@ -328,7 +330,7 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 
 	for (c=numcon_total; c<numcon_total + numcon_subl; c++) {
 		if ((post_process_match("MVs", ctxt->constituent[c].start_link) == 1) ||
-			(post_process_match("MVg", ctxt->constituent[c].start_link)==1)) {
+			 (post_process_match("MVg", ctxt->constituent[c].start_link) == 1)) {
 			done=0;
 			for (w2=ctxt->constituent[c].left-1; (done==0) && w2>=0; w2--) {
 				for (c2=numcon_total; c2<numcon_total + numcon_subl; c2++) {
@@ -1279,7 +1281,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	/* Subject-phrase case; every main VP generates an S */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "VP", "S", "NP", 1);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "VP", "S", "NP", CASE_S);
 
 	/* Relative clause case; an SBAR generates a complement NP */
 	numcon_subl =
@@ -1299,7 +1301,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	/* S-V inversion case; an NP generates a complement VP */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "NP", "SINV", "VP", 7);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "NP", "SINV", "VP", CASE_SVINV);
 
 	adjust_subordinate_clauses(ctxt, linkage, numcon_total, numcon_subl);
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
@@ -1736,7 +1738,8 @@ static void print_tree(String * cs, int indent, CNode * n, int o1, int o2)
 	append_string(cs, ")");
 }
 
-static int assign_spans(CNode * n, int start) {
+static int assign_spans(CNode * n, int start)
+{
 	int num_words=0;
 	CNode * m=NULL;
 	if (n==NULL) return 0;
