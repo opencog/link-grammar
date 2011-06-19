@@ -269,10 +269,12 @@ struct Sentence_s
 };
 
 /*********************************************************
-*
-* Post processing
-*
-**********************************************************/
+ *
+ * Post processing
+ * XXX FIXME: most of these structures should not be in the
+ * public API; they're here only because they're tangled into
+ * sublinkages, which will go away when fat-links are removed.
+ **********************************************************/
 
 struct Domain_s
 {
@@ -326,10 +328,10 @@ struct Postprocessor_s
 
 
 /*********************************************************
-*
-* Linkages
-*
-**********************************************************/
+ *
+ * Linkages
+ *
+ **********************************************************/
 
 struct Sublinkage_s
 {
