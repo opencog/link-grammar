@@ -279,20 +279,20 @@ struct Sentence_s
 struct Domain_s
 {
 	const char *   string;
-	int            size;
 	List_o_links * lol;
-	int            start_link;  /* the link that started this domain */
-	int            type;        /* one letter name */
 	DTreeLeaf *    child;
 	Domain *       parent;
+	int            size;
+	int            start_link;  /* the link that started this domain */
+	char           type;        /* one letter name */
 };
 
 
 struct DTreeLeaf_s
 {
 	Domain *    parent;
-	int         link;
 	DTreeLeaf * next;
+	int         link;
 };
 
 struct PP_data_s
