@@ -140,6 +140,7 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 typedef enum
 {
 	CASE_S=1,
+	CASE_UNUSED=2,  /* XXX not used anywhere... */
 	CASE_REL_CLAUSE=3,
 	CASE_APPOS=4,
 	CASE_OPENER=5,
@@ -170,9 +171,11 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 		if ((x==CASE_APPOS) && (post_process_match("MX#*", ctxt->constituent[c1].start_link)==0))
 			continue;
 
+#ifdef REVIVE_DEAD_CODE
 		/* If ctype1 is X, and domain_type is t, it's an infinitive - skip it */
-		if ((x==2) && (ctxt->constituent[c1].domain_type=='t'))
+		if ((x==CASE_UNUSED) && (ctxt->constituent[c1].domain_type=='t'))
 			continue;
+#endif /* REVIVE_DEAD_CODE */
 
 		/* If it's domain-type z, it's a subject-relative clause;
 		   the VP doesn't need an NP */
@@ -181,7 +184,10 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 
 		/* If ctype1 is X or VP, and it's not started by an S, don't generate an NP
 		 (Neither of the two previous checks are necessary now, right?) */
-		if ((x==CASE_S || x==2) &&
+#ifdef REVIVE_DEAD_CODE
+		/* use this ... if ((x==CASE_S || x==CASE_UNUSED) && */
+#endif /* REVIVE_DEAD_CODE */
+		if ((x==CASE_S) &&
 			(((post_process_match("S", ctxt->constituent[c1].start_link) == 0) &&
 			  (post_process_match("SX", ctxt->constituent[c1].start_link) == 0) &&
 			  (post_process_match("SF", ctxt->constituent[c1].start_link) == 0)) ||
