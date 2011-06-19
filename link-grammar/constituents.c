@@ -28,19 +28,20 @@ typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
 
 typedef struct
 {
+	const char * type;
+	const char * start_link;
 	int left;
 	int right;
-	const char * type;
-	char domain_type;
-	const char * start_link;
 	int start_num;
 	int subl;
 	int canon;
 	int valid;
+	char domain_type;
 #ifdef AUX_CODE_IS_DEAD
 	/* The only code that actually sets aux to a non-zero value is code
 	 * followed by code that zets it to zero. -- its dead code, and so 
-	 * aux is never actually used. Comment this code out.
+	 * aux is never actually used. Comment this code out. It was here
+	 * TreeBank I compatibility, and isn't used in TreeBank II.
 	 */
 	int aux;	
 	/* 0: it's an ordinary VP (or other type);
