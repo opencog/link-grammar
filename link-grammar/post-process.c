@@ -16,6 +16,7 @@
 #include <stdarg.h>
 #include <memory.h>
 #include <link-grammar/api.h>
+#include "post-process.h"
 #include "error.h"
 
 #define PP_MAX_DOMAINS 128
@@ -46,7 +47,8 @@ static int find_domain_name(Postprocessor *pp, const char *link)
 		}
 }
 
-static int contained_in(Domain * d1, Domain * d2, Sublinkage *sublinkage)
+static int contained_in(const Domain * d1, const Domain * d2, 
+                        const Sublinkage *sublinkage)
 {
 	/* returns TRUE if domain d1 is contained in domain d2 */
 	char mark[MAX_LINKS];
@@ -59,7 +61,7 @@ static int contained_in(Domain * d1, Domain * d2, Sublinkage *sublinkage)
 	return TRUE;
 }
 
-static int link_in_domain(int link, Domain * d)
+static int link_in_domain(int link, const Domain * d)
 {
 	/* returns the predicate "the given link is in the given domain" */
 	List_o_links * lol;
@@ -212,7 +214,7 @@ void free_d_type(D_type_list * dtl)
 	}
 }
 
-D_type_list * copy_d_type(D_type_list * dtl)
+D_type_list * copy_d_type(const D_type_list * dtl)
 {
 	D_type_list *dtlx, *dtlcurr=NULL, *dtlhead=NULL;
 	for (; dtl!=NULL; dtl=dtl->next)
