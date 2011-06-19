@@ -137,6 +137,13 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
  *                      sublinkage
  *********************************************************/
 
+typedef enum
+{
+	CASE_OPENER=5,
+	CASE_PPOPEN=6,
+
+} case_type;
+
 /**
  * This function looks for constituents of type ctype1. Say it finds
  * one, call it c1. It searches for the next larger constituent of
@@ -146,7 +153,7 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 static int gen_comp(con_context_t *ctxt, Linkage linkage,
                     int numcon_total, int numcon_subl,
 					     const char * ctype1, const char * ctype2,
-                    const char * ctype3, int x)
+                    const char * ctype3, case_type x)
 {
 	int w, w2, w3, c, c1, c2, done;
 	c = numcon_total + numcon_subl;
@@ -185,11 +192,11 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 			continue;
 
 		/* If ctype1 is SBAR (clause opener case), it has to be an f domain */
-		if ((x==5) && (ctxt->constituent[c1].domain_type!='f'))
+		if ((x==CASE_OPENER) && (ctxt->constituent[c1].domain_type!='f'))
 			continue;
 
 		/* If ctype1 is SBAR (pp opener case), it has to be a g domain */
-		if ((x==6) && (ctxt->constituent[c1].domain_type!='g'))
+		if ((x==CASE_PPOPEN) && (ctxt->constituent[c1].domain_type!='g'))
 			continue;
 
 		/* If ctype1 is NP (paraphrase case), it has to be started by an SI */
@@ -231,7 +238,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					   without going outside the current sublinkage.
 					   (Or substituting right and left as necessary.) */
 
-					if ((x==5) || (x==6) || (x==9)) {
+					if ((x==CASE_OPENER) || (x==CASE_PPOPEN) || (x==9)) {
 								/* This is the case where c is to the
 								   RIGHT of c1 */
 						w = ctxt->constituent[c1].right+1;
@@ -1256,11 +1263,11 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	   (This must be done first; the S generated will be needed for
 	   later cases.) */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "SBAR", "S", "S", 5);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "SBAR", "S", "S", CASE_OPENER);
 
 	/* pp opener case */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "PP", "S", "S", 6);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "PP", "S", "S", CASE_PPOPEN);
 
 	/* participle opener case */
 	numcon_subl =
@@ -1535,6 +1542,9 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 	count_words_used(ctxt, linkage);
 
+	/* 1 < num_sublinkages only if a parse used fat links. */
+	/* A lot of the complixity here could go away once we
+	 * eliminate fat links for good ...  */
 	num_subl = linkage->num_sublinkages;
 	if (num_subl > MAXSUBL)
 	{
