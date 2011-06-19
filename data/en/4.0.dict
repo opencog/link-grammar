@@ -2045,13 +2045,16 @@ wouldn't wouldn’t:
 % "I ambled the horse", "I hydroplaned the car", etc.  Per theory of
 % functional grammar and related, transitivity should be taken as 
 % variable, so e.g. we could assign a high cost to the transitive use
-% of some of these verbs ... 
+% of some of these verbs ... Note that most of will never be transitive
+% in the active present tense: one never says "it rains cats and dogs".
+% I'm too lazy to manually sort through this, si, instead, there is a
+% high-cost {[[O+]]} added to some of these.
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
 /en/words/words.v.1.1: 
-  ((<verb-pl,i> & (<vc-intrans>)) or
-  (<verb-and-pl-> & ([(<vc-intrans>)] or ())) or
-  ((<vc-intrans>) & <verb-and-pl+>));
+  ((<verb-pl,i> & (({[[O+]]} & <vc-intrans>))) or
+  (<verb-and-pl-> & ([(({[[O+]]} & <vc-intrans>))] or ())) or
+  ((({[[O+]]} & <vc-intrans>)) & <verb-and-pl+>));
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v 
 /en/words/words.v.1.2: 
@@ -2061,9 +2064,9 @@ wouldn't wouldn’t:
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v 
 /en/words/words.v.1.3: 
-  ((<verb-sp,pp> & (<vc-intrans>)) or
-  (<verb-and-sp-i-> & (([<vc-intrans>]) or ())) or
-  ((<vc-intrans>) & <verb-and-sp-i+>));
+  ((<verb-sp,pp> & (({[[O+]]} & <vc-intrans>))) or
+  (<verb-and-sp-i-> & (([({[[O+]]} & <vc-intrans>)]) or ())) or
+  ((({[[O+]]} & <vc-intrans>)) & <verb-and-sp-i+>));
 
 fundheld.v-d strove.v-d: 
   ((<verb-sp,pp> & (<vc-intrans>)) or
@@ -2072,7 +2075,7 @@ fundheld.v-d strove.v-d:
 
 % accruing.v aching.v acquiescing.v ad-libbing.v adhering.v adjoining.v 
 /en/words/words.v.1.4:  
-  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
+  ({[[O+]]} & <vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 arisen.v: {@E-} & PP- & {@MV+};
 

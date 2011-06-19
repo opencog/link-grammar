@@ -6,6 +6,7 @@ Version 4.7.5 (xxx 2011)
  * Clean up misc minor compiler warnings.
  * Start using -O3 optimization for another 2% perf improvment.
  * Fix configure.in --enable/--disable flags (bug #53)
+ * Some intransitive verbs are actually transitive in rare cases.
 
 Version 4.7.4 (13 February 2011)
  * Dramatic speed improvement for long sentences (hash table fix).

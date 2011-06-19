@@ -475,6 +475,9 @@ static int find_next_element(con_context_t *ctxt,
 	return num_lists;
 }
 
+/* When fat-links are finally removed, almost all of the code
+ * for merge_constituents will evaporate away.
+ */
 static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
 	int c1, c2=0, c3, ok, a, n, a2, n2, match, listmatch, a3;

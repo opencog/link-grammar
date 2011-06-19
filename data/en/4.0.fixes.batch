@@ -405,6 +405,16 @@ he has drunk all of the ale.
 he has drunk all the ale.
 he has eaten all the chocolate.
 
+% Some of the verbs classified as "intranstive" see rare usage as
+% transtivies; these should just have a high cost, that's all.
+He ad-libbed the speech.
+I hydroplaned the car.
+I ambled the horse.
+it rained cats and dogs
+it is raining cats and dogs
+*it rains cats and dogs
+
+
 % Some ditransitive verbs of various complexity
 He poured me a glass of champagne.
 *He poured me.

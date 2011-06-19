@@ -2082,22 +2082,25 @@ wouldn't wouldn’t:
 % "I ambled the horse", "I hydroplaned the car", etc.  Per theory of
 % functional grammar and related, transitivity should be taken as 
 % variable, so e.g. we could assign a high cost to the transitive use
-% of some of these verbs ... 
+% of some of these verbs ... Note that most of will never be transitive
+% in the active present tense: one never says "it rains cats and dogs".
+% I'm too lazy to manually sort through this, si, instead, there is a
+% high-cost {[[O+]]} added to some of these.
 %
 % accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
-/en/words/words.v.1.1: VERB_PLI(<vc-intrans>);
+/en/words/words.v.1.1: VERB_PLI(({[[O+]]} & <vc-intrans>));
 
 % accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v 
 /en/words/words.v.1.2: VERB_S_I(<vc-intrans>);
 
 % accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v 
-/en/words/words.v.1.3: VERB_SPPP_I(<vc-intrans>);
+/en/words/words.v.1.3: VERB_SPPP_I(({[[O+]]} & <vc-intrans>));
 
 fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
 
 % accruing.v aching.v acquiescing.v ad-libbing.v adhering.v adjoining.v 
 /en/words/words.v.1.4:  
-  (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
+  ({[[O+]]} & <vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 arisen.v: {@E-} & PP- & {@MV+};
 
