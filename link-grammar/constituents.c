@@ -139,8 +139,10 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 
 typedef enum
 {
+	CASE_REL_CLAUSE=3,
 	CASE_OPENER=5,
 	CASE_PPOPEN=6,
+	CASE_PART_OPEN=9,
 
 } case_type;
 
@@ -183,7 +185,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 			continue;
 
 		/* If it's an SBAR (relative clause case), it has to be a relative clause */
-		if ((x==3) &&
+		if ((x==CASE_REL_CLAUSE) &&
 			((post_process_match("Rn", ctxt->constituent[c1].start_link) == 0) &&
 			 (post_process_match("R*", ctxt->constituent[c1].start_link) == 0) &&
 			 (post_process_match("MX#r", ctxt->constituent[c1].start_link) == 0) &&
@@ -210,7 +212,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 
 		/* If ctype1 is VP (participle opener case), it has
 		   to be started by a COp */
-		if ((x==9) && (post_process_match("COp", ctxt->constituent[c1].start_link)==0))
+		if ((x==CASE_PART_OPEN) && (post_process_match("COp", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* Now start at the bounds of c1, and work outwards until you
@@ -238,7 +240,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					   without going outside the current sublinkage.
 					   (Or substituting right and left as necessary.) */
 
-					if ((x==CASE_OPENER) || (x==CASE_PPOPEN) || (x==9)) {
+					if ((x==CASE_OPENER) || (x==CASE_PPOPEN) || (x==CASE_PART_OPEN)) {
 								/* This is the case where c is to the
 								   RIGHT of c1 */
 						w = ctxt->constituent[c1].right+1;
@@ -1271,7 +1273,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	/* participle opener case */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "S", "S", "S", 9);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "S", "S", "S", CASE_PART_OPEN);
 
 	/* Subject-phrase case; every main VP generates an S */
 	numcon_subl =
@@ -1279,7 +1281,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	/* Relative clause case; an SBAR generates a complement NP */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "SBAR", "NP", "NP", 3);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "SBAR", "NP", "NP", CASE_REL_CLAUSE);
 
 	/* Participle modifier case */
 	numcon_subl =
