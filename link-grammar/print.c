@@ -19,7 +19,7 @@
 const char * trailer(int mode);
 const char * header(int mode);
 
-static void set_centers(Linkage linkage, int center[], int print_word_0, int N_words_to_print)
+static void set_centers(const Linkage linkage, int center[], int print_word_0, int N_words_to_print)
 {
 	mbstate_t mbss;
 	int i, len, tot;
@@ -39,7 +39,7 @@ static void set_centers(Linkage linkage, int center[], int print_word_0, int N_w
 	}
 }
 
-/* the following are all for generating postscript */
+/* The following are all for generating postscript */
 typedef struct
 {
 	int N_rows; /* N_rows -- the number of rows */
@@ -66,7 +66,7 @@ static void left_append_string(String * string, const char * s, const char * t) 
 	}
 }
 
-static void print_a_link(String * s, Linkage linkage, int link)
+static void print_a_link(String * s, const Linkage linkage, int link)
 {
 	Sentence sent = linkage_get_sentence(linkage);
 	Dictionary dict = sent->dict;
@@ -100,7 +100,7 @@ static void print_a_link(String * s, Linkage linkage, int link)
  * Printing a domain means printing its type.
  * Takes info from pp_link_array and pp and chosen_words.
  */    
-char * linkage_print_links_and_domains(Linkage linkage)
+char * linkage_print_links_and_domains(const Linkage linkage)
 {
 	int link, longest, j;
 	int N_links = linkage_get_num_links(linkage);
@@ -173,7 +173,7 @@ char * linkage_print_senses(Linkage linkage)
 	return sense_string;
 }
 
-char * linkage_print_disjuncts(Linkage linkage)
+char * linkage_print_disjuncts(const Linkage linkage)
 {
 #if USE_CORPUS
 	double score;
@@ -216,7 +216,7 @@ char * linkage_print_disjuncts(Linkage linkage)
 
 /**
  */
-static char * build_linkage_postscript_string(Linkage linkage, ps_ctxt_t *pctx)
+static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *pctx)
 {
 	int link, i,j;
 	int d;
@@ -378,7 +378,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
  * String allocated with exalloc.  
  * Needs to be freed with linkage_free_diagram()
  */
-static char * linkage_print_diagram_ctxt(Linkage linkage, ps_ctxt_t *pctx)
+static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 {
 	int i, j, k, cl, cr, row, top_row, width, flag;
 	const char *s;
@@ -624,7 +624,7 @@ static char * linkage_print_diagram_ctxt(Linkage linkage, ps_ctxt_t *pctx)
 	return gr_string; 
 }
 
-char * linkage_print_diagram(Linkage linkage)
+char * linkage_print_diagram(const Linkage linkage)
 {
 	ps_ctxt_t ctx;
 	return linkage_print_diagram_ctxt(linkage, &ctx);
@@ -675,7 +675,8 @@ void linkage_free_postscript(char * s)
 		exfree(s, strlen(s)+1);
 }
 
-void print_disjunct_counts(Sentence sent) {
+void print_disjunct_counts(Sentence sent)
+{
 	int i;
 	int c;
 	Disjunct *d;
@@ -689,7 +690,8 @@ void print_disjunct_counts(Sentence sent) {
 	printf("\n\n");
 }
 
-void print_expression_sizes(Sentence sent) {
+void print_expression_sizes(Sentence sent)
+{
 	X_node * x;
 	int w, size;
 	for (w=0; w<sent->length; w++) {

@@ -321,11 +321,11 @@ link_public_api(double)
 link_public_api(const char *)
      linkage_get_word(const Linkage linkage, int w);
 link_public_api(char *)
-     linkage_print_disjuncts(Linkage linkage);
+     linkage_print_disjuncts(const Linkage linkage);
 link_public_api(void)
      linkage_free_disjuncts(char *str);
 link_public_api(char *)
-     linkage_print_links_and_domains(Linkage linkage);
+     linkage_print_links_and_domains(const Linkage linkage);
 link_public_api(void)
      linkage_free_links_and_domains(char *str);
 link_public_api(char *)
@@ -341,7 +341,7 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_postscript(char * str);
 link_public_api(char *)
-     linkage_print_diagram(Linkage linkage);
+     linkage_print_diagram(const Linkage linkage);
 link_public_api(void)
      linkage_free_diagram(char * str);
 link_public_api(int)

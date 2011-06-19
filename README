@@ -625,6 +625,7 @@ TODO -- Working Notes:
   i.e provide word index.   Also .. provide a clear word API,
   showing word extent, suffix, etc.
 
+
   Bad grammar: When a sentence fails to parse, look for:
     * confused words: its/it's, there/their, to/too, your/you're ...
     * missing apostrophes in possessives: "the peoples desires"
@@ -893,3 +894,9 @@ TODO -- Working Notes:
     set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
     All of this can now be deleted for version 5.0.
 
+  Version 5.0 TODO list:
+    Version 5.0 will completely eliminate both fat links, and vestiges thereof.
+    In particular, this will get rid of sublinkages, and all uses thereof.
+    -- in api.c, change many linkage_*() funs to linkage_get_*() funs
+    -- get rid of sublinkages.
+    -- Change Sentence, Linkage to not be pointers.
