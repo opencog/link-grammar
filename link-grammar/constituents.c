@@ -16,6 +16,7 @@
 #include <link-grammar/api.h>
 #include "error.h"
 #include "constituents.h"
+#include "post-process.h"
 
 #define MAXCONSTITUENTS 8192
 #define MAXSUBL 16
@@ -1029,7 +1030,8 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 	}
 }
 
-static int add_constituent(con_context_t *ctxt, int c, Linkage linkage, Domain domain,
+static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
+                           const Domain *domain,
                            int l, int r, const char * name)
 {
 	int nwords = linkage->num_words-2;
@@ -1043,15 +1045,15 @@ static int add_constituent(con_context_t *ctxt, int c, Linkage linkage, Domain d
 
 	ctxt->constituent[c].left = l;
 	ctxt->constituent[c].right = r;
-	ctxt->constituent[c].domain_type = domain.type;
+	ctxt->constituent[c].domain_type = domain->type;
 	ctxt->constituent[c].start_link =
-		linkage_get_link_label(linkage, domain.start_link);
-	ctxt->constituent[c].start_num = domain.start_link;
+		linkage_get_link_label(linkage, domain->start_link);
+	ctxt->constituent[c].start_num = domain->start_link;
 	ctxt->constituent[c].type = string_set_add(name, ctxt->phrase_ss);
 	return c;
 }
 
-static const char * cons_of_domain(Linkage linkage, char domain_type)
+static const char * cons_of_domain(const Linkage linkage, char domain_type)
 {
 	switch (domain_type) {
 	case 'a':
@@ -1161,48 +1163,48 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		}
 
 		c--;
-		c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost,
+		c = add_constituent(ctxt, c, linkage, &domain, leftmost, rightmost,
 						cons_of_domain(linkage, domain.type));
 
 		if (domain.type == 'z')
 		{
-			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(ctxt, c, linkage, &domain, leftmost, rightmost, "S");
 		}
 		if (domain.type=='c')
 		{
-			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(ctxt, c, linkage, &domain, leftmost, rightmost, "S");
 		}
 		if ((post_process_match("Ce*", ctxt->constituent[c].start_link)==1) ||
 			(post_process_match("Rn", ctxt->constituent[c].start_link)==1))
 		{
-			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "SBAR");
+			c = add_constituent(ctxt, c, linkage, &domain, leftmost, rightmost, "SBAR");
 		}
 		if ((post_process_match("R*", ctxt->constituent[c].start_link)==1) ||
 			(post_process_match("MX#r", ctxt->constituent[c].start_link)==1))
 		{
 			w = leftmost;
 			if (strcmp(linkage->word[w], ",") == 0) w++;
-			c = add_constituent(ctxt, c, linkage, domain, w, w, "WHNP");
+			c = add_constituent(ctxt, c, linkage, &domain, w, w, "WHNP");
 		}
 		if (post_process_match("Mj", ctxt->constituent[c].start_link) == 1)
 		{
 			w = leftmost;
 			if (strcmp(linkage->word[w], ",") == 0) w++;
-			c = add_constituent(ctxt, c, linkage, domain, w, w+1, "WHPP");
-			c = add_constituent(ctxt, c, linkage, domain, w+1, w+1, "WHNP");
+			c = add_constituent(ctxt, c, linkage, &domain, w, w+1, "WHPP");
+			c = add_constituent(ctxt, c, linkage, &domain, w+1, w+1, "WHNP");
 		}
 		if ((post_process_match("Ss#d", ctxt->constituent[c].start_link)==1) ||
 			(post_process_match("B#d", ctxt->constituent[c].start_link)==1))
 		{
-			c = add_constituent(ctxt, c, linkage, domain, rootleft, rootleft, "WHNP");
-			c = add_constituent(ctxt, c, linkage, domain,
+			c = add_constituent(ctxt, c, linkage, &domain, rootleft, rootleft, "WHNP");
+			c = add_constituent(ctxt, c, linkage, &domain,
 							rootleft, ctxt->constituent[c-1].right, "SBAR");
 		}
 		if (post_process_match("CP", ctxt->constituent[c].start_link)==1)
 		{
 			if (strcmp(linkage->word[leftmost], ",") == 0)
 				ctxt->constituent[c].left++;
-			c = add_constituent(ctxt, c, linkage, domain, 1, linkage->num_words-1, "S");
+			c = add_constituent(ctxt, c, linkage, &domain, 1, linkage->num_words-1, "S");
 		}
 		if ((post_process_match("MVs", ctxt->constituent[c].start_link)==1) ||
 			(domain.type=='f'))
@@ -1212,12 +1214,12 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 				w++;
 			if (strcmp(linkage->word[w], "when") == 0)
 			{
-				c = add_constituent(ctxt, c, linkage, domain, w, w, "WHADVP");
+				c = add_constituent(ctxt, c, linkage, &domain, w, w, "WHADVP");
 			}
 		}
 		if (domain.type=='t')
 		{
-			c = add_constituent(ctxt, c, linkage, domain, leftmost, rightmost, "S");
+			c = add_constituent(ctxt, c, linkage, &domain, leftmost, rightmost, "S");
 		}
 		if ((post_process_match("QI", ctxt->constituent[c].start_link) == 1) ||
 			(post_process_match("Mr", ctxt->constituent[c].start_link) == 1) ||
@@ -1233,7 +1235,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 				name = "WHNP";
 			else
 				assert(0, "Unexpected word type");
-			c = add_constituent(ctxt, c, linkage, domain, w, w, name);
+			c = add_constituent(ctxt, c, linkage, &domain, w, w, name);
 
 			if (ctxt->wordtype[w] == QDTYPE)
 			{
@@ -1245,7 +1247,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 				/* Adjust the right boundary of previous constituent */
 				ctxt->constituent[c].right = w2 - 1;
-				c = add_constituent(ctxt, c, linkage, domain, w2, rightmost, "S");
+				c = add_constituent(ctxt, c, linkage, &domain, w2, rightmost, "S");
 			}
 		}
 
