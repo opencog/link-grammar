@@ -281,45 +281,45 @@ typedef struct Linkage_s * Linkage;
 link_public_api(Linkage)
      linkage_create(int index, Sentence sent, Parse_Options opts);
 link_public_api(int) 
-     linkage_get_current_sublinkage(Linkage linkage); 
+     linkage_get_current_sublinkage(const Linkage linkage); 
 link_public_api(int)
      linkage_set_current_sublinkage(Linkage linkage, int index);
 link_public_api(void)
      linkage_delete(Linkage linkage);
 link_public_api(Sentence)
-     linkage_get_sentence(Linkage linkage);
+     linkage_get_sentence(const Linkage linkage);
 link_public_api(int)
-     linkage_get_num_sublinkages(Linkage linkage);
+     linkage_get_num_sublinkages(const Linkage linkage);
 link_public_api(int)
-     linkage_get_num_words(Linkage linkage);
+     linkage_get_num_words(const Linkage linkage);
 link_public_api(int)
-     linkage_get_num_links(Linkage linkage);
+     linkage_get_num_links(const Linkage linkage);
 link_public_api(int)
-     linkage_get_link_lword(Linkage linkage, int index);
+     linkage_get_link_lword(const Linkage linkage, int index);
 link_public_api(int)
-     linkage_get_link_rword(Linkage linkage, int index);
+     linkage_get_link_rword(const Linkage linkage, int index);
 link_public_api(int)
-     linkage_get_link_length(Linkage linkage, int index);
+     linkage_get_link_length(const Linkage linkage, int index);
 link_public_api(const char *)
-     linkage_get_link_label(Linkage linkage, int index);
+     linkage_get_link_label(const Linkage linkage, int index);
 link_public_api(const char *)
-     linkage_get_link_llabel(Linkage linkage, int index);
+     linkage_get_link_llabel(const Linkage linkage, int index);
 link_public_api(const char *)
-     linkage_get_link_rlabel(Linkage linkage, int index);
+     linkage_get_link_rlabel(const Linkage linkage, int index);
 link_public_api(int)
-     linkage_get_link_num_domains(Linkage linkage, int index);
+     linkage_get_link_num_domains(const Linkage linkage, int index);
 link_public_api(const char **)
-     linkage_get_link_domain_names(Linkage linkage, int index);
+     linkage_get_link_domain_names(const Linkage linkage, int index);
 link_public_api(const char **)
-     linkage_get_words(Linkage linkage);
+     linkage_get_words(const Linkage linkage);
 link_public_api(const char *)
-     linkage_get_disjunct_str(Linkage linkage, int w);
+     linkage_get_disjunct_str(const Linkage linkage, int w);
 link_public_api(double)
-     linkage_get_disjunct_cost(Linkage linkage, int w);
+     linkage_get_disjunct_cost(const Linkage linkage, int w);
 link_public_api(double)
-     linkage_get_disjunct_corpus_score(Linkage linkage, int w);
+     linkage_get_disjunct_corpus_score(const Linkage linkage, int w);
 link_public_api(const char *)
-     linkage_get_word(Linkage linkage, int w);
+     linkage_get_word(const Linkage linkage, int w);
 link_public_api(char *)
      linkage_print_disjuncts(Linkage linkage);
 link_public_api(void)
@@ -347,25 +347,25 @@ link_public_api(void)
 link_public_api(int)
      linkage_compute_union(Linkage linkage);
 link_public_api(int)
-     linkage_is_fat(Linkage linkage);
+     linkage_is_fat(const Linkage linkage);
 link_public_api(int)
-     linkage_unused_word_cost(Linkage linkage);
+     linkage_unused_word_cost(const Linkage linkage);
 link_public_api(int)
-     linkage_disjunct_cost(Linkage linkage);
+     linkage_disjunct_cost(const Linkage linkage);
 link_public_api(int)
-     linkage_and_cost(Linkage linkage);
+     linkage_and_cost(const Linkage linkage);
 link_public_api(int)
-     linkage_link_cost(Linkage linkage);
+     linkage_link_cost(const Linkage linkage);
 link_public_api(double)
-     linkage_corpus_cost(Linkage linkage);
+     linkage_corpus_cost(const Linkage linkage);
 link_public_api(int)
-     linkage_is_canonical(Linkage linkage);
+     linkage_is_canonical(const Linkage linkage);
 link_public_api(int)
-     linkage_is_improper(Linkage linkage);
+     linkage_is_improper(const Linkage linkage);
 link_public_api(int)
-     linkage_has_inconsistent_domains(Linkage linkage);
+     linkage_has_inconsistent_domains(const Linkage linkage);
 link_public_api(const char *)
-     linkage_get_violation_name(Linkage linkage);
+     linkage_get_violation_name(const Linkage linkage);
 
 
 /**********************************************************************

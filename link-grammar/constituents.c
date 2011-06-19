@@ -960,9 +960,9 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		print_constituent(ctxt, linkage, c);
 	}
 
-	/* Check once more to see if constituents are nested (checking BETWEEN sublinkages
-	   this time) */
-
+	/* Check once more to see if constituents are nested (checking 
+	 * BETWEEN sublinkages this time). This code probably goes away
+	 * when fat-links get removed. */
 	while (1)
 	{
 		adjustment_made=0;

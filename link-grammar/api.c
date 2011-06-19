@@ -1395,7 +1395,8 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	return linkage;
 }
 
-int linkage_get_current_sublinkage(Linkage linkage) { 
+int linkage_get_current_sublinkage(const Linkage linkage)
+{ 
 	return linkage->current; 
 } 
 
@@ -1570,22 +1571,23 @@ int linkage_compute_union(Linkage linkage)
 	return 1;
 }
 
-int linkage_get_num_sublinkages(Linkage linkage) {
+int linkage_get_num_sublinkages(const Linkage linkage)
+{
 	return linkage->num_sublinkages;
 }
 
-int linkage_get_num_words(Linkage linkage)
+int linkage_get_num_words(const Linkage linkage)
 {
 	return linkage->num_words;
 }
 
-int linkage_get_num_links(Linkage linkage)
+int linkage_get_num_links(const Linkage linkage)
 {
 	int current = linkage->current;
 	return linkage->sublinkage[current].num_links;
 }
 
-static inline int verify_link_index(Linkage linkage, int index)
+static inline int verify_link_index(const Linkage linkage, int index)
 {
 	if ((index < 0) ||
 		(index >= linkage->sublinkage[linkage->current].num_links))
@@ -1595,7 +1597,7 @@ static inline int verify_link_index(Linkage linkage, int index)
 	return 1;
 }
 
-int linkage_get_link_length(Linkage linkage, int index)
+int linkage_get_link_length(const Linkage linkage, int index)
 {
 	Link *link;
 	int word_has_link[MAX_SENTENCE];
@@ -1622,7 +1624,7 @@ int linkage_get_link_length(Linkage linkage, int index)
 	return length;
 }
 
-int linkage_get_link_lword(Linkage linkage, int index)
+int linkage_get_link_lword(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
@@ -1630,7 +1632,7 @@ int linkage_get_link_lword(Linkage linkage, int index)
 	return link->l;
 }
 
-int linkage_get_link_rword(Linkage linkage, int index)
+int linkage_get_link_rword(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
@@ -1638,7 +1640,7 @@ int linkage_get_link_rword(Linkage linkage, int index)
 	return link->r;
 }
 
-const char * linkage_get_link_label(Linkage linkage, int index)
+const char * linkage_get_link_label(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -1646,7 +1648,7 @@ const char * linkage_get_link_label(Linkage linkage, int index)
 	return link->name;
 }
 
-const char * linkage_get_link_llabel(Linkage linkage, int index)
+const char * linkage_get_link_llabel(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -1654,7 +1656,7 @@ const char * linkage_get_link_llabel(Linkage linkage, int index)
 	return link->lc->string;
 }
 
-const char * linkage_get_link_rlabel(Linkage linkage, int index)
+const char * linkage_get_link_rlabel(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -1662,17 +1664,17 @@ const char * linkage_get_link_rlabel(Linkage linkage, int index)
 	return link->rc->string;
 }
 
-const char ** linkage_get_words(Linkage linkage)
+const char ** linkage_get_words(const Linkage linkage)
 {
 	return linkage->word;
 }
 
-Sentence linkage_get_sentence(Linkage linkage)
+Sentence linkage_get_sentence(const Linkage linkage)
 {
 	return linkage->sent;
 }
 
-const char * linkage_get_disjunct_str(Linkage linkage, int w)
+const char * linkage_get_disjunct_str(const Linkage linkage, int w)
 {
 	Disjunct *dj;
 
@@ -1688,7 +1690,7 @@ const char * linkage_get_disjunct_str(Linkage linkage, int w)
 	return linkage->info->disjunct_list_str[w];
 }
 
-double linkage_get_disjunct_cost(Linkage linkage, int w)
+double linkage_get_disjunct_cost(const Linkage linkage, int w)
 {
 	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
 
@@ -1697,7 +1699,7 @@ double linkage_get_disjunct_cost(Linkage linkage, int w)
 	return 0.0;
 }
 
-double linkage_get_disjunct_corpus_score(Linkage linkage, int w)
+double linkage_get_disjunct_corpus_score(const Linkage linkage, int w)
 {
 	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
 
@@ -1707,26 +1709,26 @@ double linkage_get_disjunct_corpus_score(Linkage linkage, int w)
 	return lg_corpus_disjunct_score(linkage, w); 
 }
 
-const char * linkage_get_word(Linkage linkage, int w)
+const char * linkage_get_word(const Linkage linkage, int w)
 {
 	return linkage->word[w];
 }
 
-int linkage_unused_word_cost(Linkage linkage)
+int linkage_unused_word_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return 0;
 	return linkage->info->unused_word_cost;
 }
 
-int linkage_disjunct_cost(Linkage linkage)
+int linkage_disjunct_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return 0;
 	return (int) floorf(linkage->info->disjunct_cost);
 }
 
-int linkage_is_fat(Linkage linkage)
+int linkage_is_fat(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return 0;
@@ -1740,21 +1742,21 @@ int linkage_and_cost(Linkage linkage)
 	return linkage->info->and_cost;
 }
 
-int linkage_link_cost(Linkage linkage)
+int linkage_link_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return 0;
 	return linkage->info->link_cost;
 }
 
-double linkage_corpus_cost(Linkage linkage)
+double linkage_corpus_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return 0.0;
 	return linkage->info->corpus_cost;
 }
 
-int linkage_get_link_num_domains(Linkage linkage, int index)
+int linkage_get_link_num_domains(const Linkage linkage, int index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
@@ -1762,7 +1764,7 @@ int linkage_get_link_num_domains(Linkage linkage, int index)
 	return pp_info->num_domains;
 }
 
-const char ** linkage_get_link_domain_names(Linkage linkage, int index)
+const char ** linkage_get_link_domain_names(const Linkage linkage, int index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -1770,26 +1772,26 @@ const char ** linkage_get_link_domain_names(Linkage linkage, int index)
 	return pp_info->domain_name;
 }
 
-const char * linkage_get_violation_name(Linkage linkage)
+const char * linkage_get_violation_name(const Linkage linkage)
 {
 	return linkage->sublinkage[linkage->current].violation;
 }
 
-int linkage_is_canonical(Linkage linkage)
+int linkage_is_canonical(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return TRUE;
 	return linkage->info->canonical;
 }
 
-int linkage_is_improper(Linkage linkage)
+int linkage_is_improper(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return FALSE;
 	return linkage->info->improper_fat_linkage;
 }
 
-int linkage_has_inconsistent_domains(Linkage linkage)
+int linkage_has_inconsistent_domains(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return FALSE;
