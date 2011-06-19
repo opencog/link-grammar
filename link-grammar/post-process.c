@@ -21,6 +21,39 @@
 
 #define PP_MAX_DOMAINS 128
 
+/**
+ * post_process_match -- compare two link-types.
+ *
+ * string comparison in postprocessing. The first parameter is a
+ * post-processing symbol. The second one is a connector name from a
+ * link. The upper case parts must match. We imagine that the first
+ * arg is padded with an infinite sequence of "#" and that the 2nd one
+ * is padded with "*". "#" matches anything, but "*" is just like an
+ * ordinary char for matching purposes. 
+ */
+
+int post_process_match(const char *s, const char *t)
+{
+	char c;
+	while(isupper((int)*s) || isupper((int)*t))
+	{
+		if (*s != *t) return FALSE;
+		s++;
+		t++;
+	}
+	while (*s != '\0')
+	{
+		if (*s != '#')
+		{
+			if (*t == '\0') c = '*'; else c = *t;
+			if (*s != c) return FALSE;
+		}
+		s++;
+		if (*t != '\0') t++;
+	}
+	return TRUE;
+}
+
 /***************** utility routines (not exported) ***********************/
 
 static int string_in_list(const char * s, const char * a[])
@@ -33,24 +66,26 @@ static int string_in_list(const char * s, const char * a[])
 	return FALSE;
 }
 
+/** 
+ * Return the name of the domain associated with the provided starting
+ * link. Return -1 if link isn't associated with a domain.
+ */
 static int find_domain_name(Postprocessor *pp, const char *link)
 {
-	/* Return the name of the domain associated with the provided starting
-		 link. Return -1 if link isn't associated with a domain. */
 	int i,domain;
 	StartingLinkAndDomain *sllt = pp->knowledge->starting_link_lookup_table;
 	for (i=0;;i++)
-		{
-			domain = sllt[i].domain;
-			if (domain==-1) return -1;					/* hit the end-of-list sentinel */
-			if (post_process_match(sllt[i].starting_link, link)) return domain;
-		}
+	{
+		domain = sllt[i].domain;
+		if (domain==-1) return -1;					/* hit the end-of-list sentinel */
+		if (post_process_match(sllt[i].starting_link, link)) return domain;
+	}
 }
 
+/** Returns TRUE if domain d1 is contained in domain d2 */
 static int contained_in(const Domain * d1, const Domain * d2, 
                         const Sublinkage *sublinkage)
 {
-	/* returns TRUE if domain d1 is contained in domain d2 */
 	char mark[MAX_LINKS];
 	List_o_links * lol;
 	memset(mark, 0, sublinkage->num_links*(sizeof mark[0]));
@@ -61,9 +96,9 @@ static int contained_in(const Domain * d1, const Domain * d2,
 	return TRUE;
 }
 
+/** Returns the predicate "the given link is in the given domain" */
 static int link_in_domain(int link, const Domain * d)
 {
-	/* returns the predicate "the given link is in the given domain" */
 	List_o_links * lol;
 	for (lol = d->lol; lol != NULL; lol = lol->next)
 		if (lol->link == link) return TRUE;
@@ -75,9 +110,9 @@ static int link_in_domain(int link, const Domain * d)
 #if defined(CHECK_DOMAIN_NESTING)
 /* Although this is no longer used, I'm leaving the code here for future reference --DS 3/98 */
 
+/* Returns TRUE if the domains actually form a properly nested structure */
 static int check_domain_nesting(Postprocessor *pp, int num_links)
 {
-	/* returns TRUE if the domains actually form a properly nested structure */
 	Domain * d1, * d2;
 	int counts[4];
 	char mark[MAX_LINKS];
@@ -173,11 +208,12 @@ static void mark_reachable_words(Postprocessor *pp, int w)
 		mark_reachable_words(pp, lol->word);
 }
 
+/**
+ * Returns true if the linkage is connected, considering words
+ * that have at least one edge....this allows conjunctive sentences
+ * not to be thrown out. */
 static int is_connected(Postprocessor *pp)
 {
-	/* Returns true if the linkage is connected, considering words
-		 that have at least one edge....this allows conjunctive sentences
-		 not to be thrown out. */
 	int i;
 	for (i=0; i<pp->pp_data.length; i++)
 		pp->visited[i] = (pp->pp_data.word_links[i] == NULL);
@@ -305,12 +341,14 @@ apply_relevant_rules(Postprocessor *pp,
 	return 1;
 }
 
+/**
+ * returns TRUE if and only if all groups containing the specified link
+ * contain at least one from the required list.	(as determined by exact
+ * string matching)
+ */
 static int
 apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
-	/* returns TRUE if and only if all groups containing the specified link
-		 contain at least one from the required list.	(as determined by exact
-		 string matching) */
 	DTreeLeaf * dtl;
 	int d, count;
 	for (d=0; d<pp->pp_data.N_domains; d++)
@@ -338,12 +376,14 @@ apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 }
 
 
+/**
+ * Returns TRUE if and only if:
+ * all groups containing the selector link do not contain anything
+ * from the link_array contained in the rule. Uses exact string matching.
+ */
 static int
 apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 {
-	/* returns TRUE if and only if:
-		 all groups containing the selector link do not contain anything
-		 from the link_array contained in the rule. Uses exact string matching. */
 	DTreeLeaf * dtl;
 	int d;
 	for (d=0; d<pp->pp_data.N_domains; d++)
@@ -365,13 +405,14 @@ apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 	return TRUE;
 }
 
+/** 
+ * Returns TRUE if and only if
+ * (1) the sentence doesn't contain the selector link for the rule, or
+ * (2) it does, and it also contains one or more from the rule's link set
+ */
 static int
 apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 {
-	/* returns TRUE if and only if
-		 (1) the sentence doesn't contain the selector link for the rule, or
-		 (2) it does, and it also contains one or more from the rule's link set */
-
 	int i,j,count;
 	for (i=0; i<sublinkage->num_links; i++) {
 		if (sublinkage->link[i]->l == -1) continue;
@@ -477,12 +518,14 @@ apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 
 #endif
 
+/**
+ * Checks to see that all domains with this name have the property that
+ * all of the words that touch a link in the domain are not to the left
+ * of the root word of the domain.
+ */
 static int
-apply_bounded(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
+apply_bounded(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
-	/* Checks to see that all domains with this name have the property that
-		 all of the words that touch a link in the domain are not to the left
-		 of the root word of the domain. */
 	int d, lw, d_type;
 	List_o_links * lol;
 	d_type = rule->domain;
@@ -496,13 +539,14 @@ apply_bounded(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 	return TRUE;
 }
 
-/********************* various non-exported functions ***********************/
-
+/**
+ * fill in the pp->pp_data.word_links array with a list of words
+ * neighboring each word (actually a list of links).	The dir fields
+ * are not set, since this (after fat-link-extraction) is an
+ * undirected graph.
+ */
 static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 {
-	/* fill in the pp->pp_data.word_links array with a list of words neighboring each
-		 word (actually a list of links).	The dir fields are not set, since this
-		 (after fat-link-extraction) is an undirected graph. */
 	int i, link;
 	List_o_links * lol;
 
@@ -715,10 +759,10 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 	for (d=0; d < pp->pp_data.N_domains-1; d++) {
 		for (d1 = d+1; d1 < pp->pp_data.N_domains; d1++) {
 			if (contained_in(&pp->pp_data.domain_array[d],&pp->pp_data.domain_array[d1],sublinkage))
-		{
-			pp->pp_data.domain_array[d].parent = &pp->pp_data.domain_array[d1];
-			break;
-		}
+			{
+				pp->pp_data.domain_array[d].parent = &pp->pp_data.domain_array[d1];
+				break;
+			}
 		}
 		if (d1 == pp->pp_data.N_domains) {
 			/* we know this domain is a root of a new tree */
@@ -738,12 +782,12 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 		if (sublinkage->link[link]->l == -1) continue; /* probably not necessary */
 		for (d=0; d<pp->pp_data.N_domains; d++) {
 			if (link_in_domain(link, &pp->pp_data.domain_array[d])) {
-		dtl = (DTreeLeaf *) xalloc(sizeof(DTreeLeaf));
-		dtl->link = link;
-		dtl->parent = &pp->pp_data.domain_array[d];
-		dtl->next = pp->pp_data.domain_array[d].child;
-		pp->pp_data.domain_array[d].child = dtl;
-		break;
+				dtl = (DTreeLeaf *) xalloc(sizeof(DTreeLeaf));
+				dtl->link = link;
+				dtl->parent = &pp->pp_data.domain_array[d];
+				dtl->next = pp->pp_data.domain_array[d].child;
+				pp->pp_data.domain_array[d].child = dtl;
+				break;
 			}
 		}
 	}
@@ -979,38 +1023,6 @@ PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 		post_process_free_data(&pp->pp_data);
 	}
 	return pp->pp_node;
-}
-
-/*
-	string comparison in postprocessing. The first parameter is a
-	post-processing symbol. The second one is a connector name from a link. The
-	upper case parts must match. We imagine that the first arg is padded with an
-	infinite sequence of "#" and that the 2nd one is padded with "*". "#"
-	matches anything, but "*" is just like an ordinary char for matching
-	purposes. For efficiency sake there are several different versions of these
-	functions
-	*/
-
-int post_process_match(const char *s, const char *t)
-{
-	char c;
-	while(isupper((int)*s) || isupper((int)*t))
-		{
-			if (*s != *t) return FALSE;
-			s++;
-			t++;
-		}
-	while (*s != '\0')
-		{
-			if (*s != '#')
-		{
-			if (*t == '\0') c = '*'; else c = *t;
-			if (*s != c) return FALSE;
-		}
-			s++;
-			if (*t != '\0') t++;
-		}
-	return TRUE;
 }
 
 /* OLD COMMENTS (OUT OF DATE):
