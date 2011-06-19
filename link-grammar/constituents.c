@@ -140,8 +140,10 @@ static void print_constituent(con_context_t *ctxt, Linkage linkage, int c)
 typedef enum
 {
 	CASE_REL_CLAUSE=3,
+	CASE_APPOS=4,
 	CASE_OPENER=5,
 	CASE_PPOPEN=6,
+	CASE_PART_MOD=8,
 	CASE_PART_OPEN=9,
 
 } case_type;
@@ -163,7 +165,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 	for (c1=numcon_total; c1<numcon_total + numcon_subl; c1++)
 	{
 		/* If ctype1 is NP, it has to be an appositive to continue */
-		if ((x==4) && (post_process_match("MX#*", ctxt->constituent[c1].start_link)==0))
+		if ((x==CASE_APPOS) && (post_process_match("MX#*", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* If ctype1 is X, and domain_type is t, it's an infinitive - skip it */
@@ -207,7 +209,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 
 		/* If ctype1 is VP (participle modifier case), it has to be
 		   started by an Mv or Mg */
-		if ((x==8) && (post_process_match("M", ctxt->constituent[c1].start_link)==0))
+		if ((x==CASE_PART_MOD) && (post_process_match("M", ctxt->constituent[c1].start_link)==0))
 			continue;
 
 		/* If ctype1 is VP (participle opener case), it has
@@ -1285,15 +1287,15 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 
 	/* Participle modifier case */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "VP", "NP", "NP", 8);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "VP", "NP", "NP", CASE_PART_MOD);
 
 	/* PP modifying NP */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "PP", "NP", "NP", 8);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "PP", "NP", "NP", CASE_PART_MOD);
 
 	/* Appositive case */
 	numcon_subl =
-		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "NP", "NP", "NP", 4);
+		gen_comp(ctxt, linkage, numcon_total, numcon_subl, "NP", "NP", "NP", CASE_APPOS);
 
 	/* S-V inversion case; an NP generates a complement VP */
 	numcon_subl =
