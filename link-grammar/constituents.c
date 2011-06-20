@@ -30,9 +30,8 @@ typedef struct
 {
 	const char * type;
 	const char * start_link;
-	int left;
-	int right;
-	int start_num;
+	int left;      /* leftmost word */
+	int right;     /* rightmost word */
 	int subl;
 	int canon;
 	int valid;
@@ -43,6 +42,7 @@ typedef struct
 	 * aux is never actually used. Comment this code out. It was here
 	 * TreeBank I compatibility, and isn't used in TreeBank II.
 	 */
+	int start_num; /* starting link */
 	int aux;	
 	/* 0: it's an ordinary VP (or other type);
 	 * 1: it's an AUX, don't print it;
@@ -292,8 +292,10 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					ctxt->constituent[c].domain_type = 'x';
 					ctxt->constituent[c].start_link =
 						string_set_add("XX", ctxt->phrase_ss);
+#ifdef AUX_CODE_IS_DEAD
 					ctxt->constituent[c].start_num =
 						ctxt->constituent[c1].start_num; /* bogus */
+#endif /* AUX_CODE_IS_DEAD */
 					if (verbosity >= 2)
 					{
 						printf("Larger c found: c %d (%s); ",
@@ -738,9 +740,10 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		ctxt->constituent[c1].domain_type = 'x';
 		ctxt->constituent[c1].valid = 1;
 		ctxt->constituent[c1].start_link = ctxt->constituent[c2].start_link;  /* bogus */
-		ctxt->constituent[c1].start_num = ctxt->constituent[c2].start_num;	/* bogus */
 
 #ifdef AUX_CODE_IS_DEAD /* See comments above */
+		ctxt->constituent[c1].start_num = ctxt->constituent[c2].start_num;	/* bogus */
+
 		/* If a constituent within the andlist is an aux (aux==1),
 		 * set aux for the whole-list constituent to 2, also set
 		 * aux for the smaller constituent to 2, meaning they'll both
@@ -819,10 +822,24 @@ static void generate_misc_word_info(con_context_t * ctxt, Linkage linkage)
 	}
 }
 
+static int new_style_conjunctions(con_context_t *ctxt, Linkage linkage, int numcon_total)
+{
+#ifdef DEBUG
+	int c;
+	for (c = 0; c < numcon_total; c++)
+	{
+		constituent_t *ct = &ctxt->constituent[c];
+		printf("ola %d valid=%d %s start=%s lr=%d %d\n", c, 
+      ct->valid, ct->type, ct->start_link, ct->left, ct->right);
+	}
+#endif
+	return numcon_total;
+}
+
 static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_total)
 {
-	int c, c2, global_leftend_found, adjustment_made,
-		global_rightend_found, lastword, newcon_total = 0;
+	int c, c2, global_leftend_found, adjustment_made;
+	int global_rightend_found, lastword, newcon_total = 0;
 	Sentence sent;
 	sent = linkage_get_sentence(linkage);
 
@@ -1049,7 +1066,9 @@ static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
 	ctxt->constituent[c].domain_type = domain->type;
 	ctxt->constituent[c].start_link =
 		linkage_get_link_label(linkage, domain->start_link);
+#ifdef AUX_CODE_IS_DEAD
 	ctxt->constituent[c].start_num = domain->start_link;
+#endif /* AUX_CODE_IS_DEAD */
 	ctxt->constituent[c].type = string_set_add(name, ctxt->phrase_ss);
 	return c;
 }
@@ -1595,6 +1614,14 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 		err_ctxt ec;
 		ec.sent = linkage->sent;
 		err_msg(&ec, Error, "Error: Too many constituents (d).\n");
+		numcon_total = MAXCONSTITUENTS-1;
+	}
+	numcon_total = new_style_conjunctions(ctxt, linkage, numcon_total);
+	if (MAXCONSTITUENTS <= numcon_total)
+	{
+		err_ctxt ec;
+		ec.sent = linkage->sent;
+		err_msg(&ec, Error, "Error: Too many constituents (n).\n");
 		numcon_total = MAXCONSTITUENTS-1;
 	}
 	numcon_total = last_minute_fixes(ctxt, linkage, numcon_total);
