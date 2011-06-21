@@ -6475,7 +6475,6 @@ someday.e sometime.e thereafter.e anyhow.e anyway.e overall.e
 afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e 
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e 
 instead.e:
-  ({Xc+ & {Xd-}} & CO+) or
   ({Xc+ & {Xd-}} & CO+);
 
 % Openers to directives, commands (Ic+ connection to infinitives)
