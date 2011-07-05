@@ -539,6 +539,40 @@ BioLG merger:
    All other BioLG changes, and in particular, extensive dictionary fixes,
    as well as regex morphology handling, have been incorporated.
 
+Medical Terms Merger
+--------------------
+Many, but not all, of the "medical terms" from Peter Szolovits have been 
+merged into version 4.3.1 (January 2008) of link-grammar. The origiginal
+project page was at:
+
+   http://groups.csail.mit.edu/medg/projects/text/lexicon.html
+
+The following "extra" files were either merged directly, renamed, or
+skipped (omitted):
+
+/extra.1: -- merged
+/extra.2: -- skip, too big
+/extra.3: -- skip, too big
+/extra.4: -- /en/words/words-medical.v.4.2:
+/extra.5: -- /en/words/words-medical.v.4.1:
+/extra.6: -- /en/words/words-medical.adj.2: 
+/extra.7: -- /en/words/words-medical.n.p
+/extra.8: -- skip, too big
+/extra.9: -- skip, random names
+/extra.10: -- /en/words/words-medical.adv.1:
+/extra.11: -- /en/words/words-medical.v.4.5:
+/extra.12: -- skip, too big
+/extra.13: -- /en/words/words-medical.v.4.3:
+/extra.14: -- /en/words/words-medical.prep.1
+/extra.15: -- /en/words/words-medical.adj.3:
+/extra.16: -- /en/words/words-medical.v.2.1:
+/extra.17: -- skip, too big
+
+The make use of the "skipped" files, download the original extension,
+gut the contents of "extra.dict" except for the parts refering to the
+skipped files above, and then append to 4.0.dict (as per original
+instructions).
+
 
 Fat Links:
 ----------
