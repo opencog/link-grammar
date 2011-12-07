@@ -13,6 +13,7 @@
 #ifndef _LINKINCLUDESH_
 #define _LINKINCLUDESH_
 
+#include <link-grammar/api-types.h>
 #include <link-grammar/link-features.h>
 
 LINK_BEGIN_DECLS
@@ -128,8 +129,8 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_max_parse_time(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_cost_model_type(Parse_Options opts, int cm);
-link_public_api(int)
+     parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm);
+link_public_api(Cost_Model_type)
      parse_options_get_cost_model_type(Parse_Options opts);
 link_public_api(void)
      parse_options_set_use_fat_links(Parse_Options opts, int use_fat_links);

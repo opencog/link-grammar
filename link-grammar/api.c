@@ -132,7 +132,7 @@ int parse_options_delete(Parse_Options  opts)
 	return 0;
 }
 
-void parse_options_set_cost_model_type(Parse_Options opts, int cm)
+void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm)
 {
 	switch(cm) {
 	case VDAL:
@@ -152,7 +152,7 @@ void parse_options_set_cost_model_type(Parse_Options opts, int cm)
 	}
 }
 
-int  parse_options_get_cost_model_type(Parse_Options opts)
+Cost_Model_type parse_options_get_cost_model_type(Parse_Options opts)
 {
 	return opts->cost_model.type;
 }

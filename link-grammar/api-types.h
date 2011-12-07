@@ -26,6 +26,12 @@
 
 
 /* "public" typedefs */
+typedef enum
+{
+	VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
+	CORPUS, /* Sort by Corpus cost */
+}  Cost_Model_type;
+
 typedef struct And_data_s And_data;
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;

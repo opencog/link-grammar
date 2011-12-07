@@ -33,12 +33,6 @@
 #include "corpus/corpus.h"
 #include "error.h"
 
-typedef enum
-{
-	VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
-	CORPUS, /* Sort by Corpus cost */
-}  Cost_Model_type;
-
 struct Cost_Model_s
 {
 	Cost_Model_type type;
