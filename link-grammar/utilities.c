@@ -586,7 +586,6 @@ void * object_open(const char *filename,
 	static char prevpath[MAX_PATH_NAME+1] = "";
 	static int first_time_ever = 1;
 	char *pos, *oldpos;
-	int filenamelen, len;
 	void *fp;
 
 	/* Record the first path ever used, so that we can recycle it */
@@ -645,14 +644,12 @@ void * object_open(const char *filename,
 	/* Now fulldictpath is our dictpath, where each entry is
 	 * followed by a ":" including the last one */
 
-	filenamelen = strlen(filename);
-	len = strlen(fulldictpath)+ filenamelen + 1 + 1;
 	oldpos = fulldictpath;
 	while ((pos = strchr(oldpos, PATH_SEPARATOR)) != NULL)
 	{
 		strncpy(completename, oldpos, (pos-oldpos));
 		*(completename+(pos-oldpos)) = DIR_SEPARATOR;
-		strcpy(completename+(pos-oldpos)+1,filename);
+		strcpy(completename+(pos-oldpos)+1, filename);
 #ifdef _DEBUG
 		prt_error("Info: object_open() trying %s\n", completename);
 #endif

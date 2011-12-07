@@ -233,12 +233,10 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	Exp * nc, * no, * n1;
 	E_list *ell, *elr;
 	const char * s;
-	int s_length;
 	Dict_node * dn_list, * xdn, * start_dn_list;
 
 	no = dn->exp;
 	s = dn->string;
-	s_length = strlen(s);
 
 	if (!is_idiom_string(s))
 	{

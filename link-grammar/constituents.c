@@ -392,11 +392,10 @@ static int find_next_element(con_context_t *ctxt,
                              int num_elements,
                              int num_lists)
 {
-	int c, a, ok, c2, c3, addedone=0, n;
+	int c, a, ok, c2, c3, addedone=0;
 
 	assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
 
-	n = num_lists;
 	for (c=start+1; c<numcon_total; c++)
 	{
 		constituent_t *cc = &ctxt->constituent[c];
@@ -1061,6 +1060,7 @@ static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
 	if (l > nwords) l = nwords;
 	assert(l <= r, "negative constituent length!" );
 
+	ctxt->constituent[c].type = string_set_add(name, ctxt->phrase_ss);
 	ctxt->constituent[c].left = l;
 	ctxt->constituent[c].right = r;
 	ctxt->constituent[c].domain_type = domain->type;
@@ -1069,7 +1069,6 @@ static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
 #ifdef AUX_CODE_IS_DEAD
 	ctxt->constituent[c].start_num = domain->start_link;
 #endif /* AUX_CODE_IS_DEAD */
-	ctxt->constituent[c].type = string_set_add(name, ctxt->phrase_ss);
 	return c;
 }
 
@@ -1129,7 +1128,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 {
 	int d, c, leftlimit, l, leftmost, rightmost, w, c2, numcon_subl = 0, w2;
 	List_o_links * dlink;
-	int rootright, rootleft, adjustment_made;
+	int rootleft, adjustment_made;
 	Sublinkage * subl;
 	const char * name;
 	Domain domain;
@@ -1139,7 +1138,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	for (d = 0, c = numcon_total; d < subl->pp_data.N_domains; d++, c++)
 	{
 		domain = subl->pp_data.domain_array[d];
-		rootright = linkage_get_link_rword(linkage, domain.start_link);
+		// rootright = linkage_get_link_rword(linkage, domain.start_link);
 		rootleft =  linkage_get_link_lword(linkage, domain.start_link);
 
 		if ((domain.type=='c') ||
@@ -1566,13 +1565,10 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 
 static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
-	int num_words;
-	Sentence sent;
 	Postprocessor * pp;
 	int s, numcon_total, numcon_subl, num_subl;
 	char * q;
 
-	sent = linkage_get_sentence(linkage);
 	ctxt->phrase_ss = string_set_create();
 	pp = linkage->sent->dict->constituent_pp;
 	numcon_total = 0;
@@ -1595,7 +1591,6 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	{
 		linkage_set_current_sublinkage(linkage, s);
 		linkage_post_process(linkage, pp);
-		num_words = linkage_get_num_words(linkage);
 		generate_misc_word_info(ctxt, linkage);
 		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total, s);
 		numcon_total = numcon_total + numcon_subl;

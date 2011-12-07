@@ -167,10 +167,9 @@ static void copy_full_link(Link **dest, Link *src)
  */
 static void build_digraph(analyze_context_t *actx, Parse_info pi)
 {
-	int i, link, N_fat;
+	int i, link;
 	Link *lp;
 	List_o_links * lol;
-	N_fat = 0;
 
 	for (i = 0; i < pi->N_words; i++)
 	{
@@ -652,7 +651,6 @@ static void and_dfs_commas(analyze_context_t *actx, Sentence sent, int w)
 static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
 {
 	int w, i, min, max, j, cost;
-	char * s;
 	Andlist * new_andlist, * old_andlist;
 	Parse_info pi = sent->parse_info;
 
@@ -661,7 +659,6 @@ static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
 
 	for(w = 0; w<pi->N_words; w++)
 	{
-		s = sent->word[w].string;
 		if (sent->is_conjunction[w])
 		{
 			actx->N_and_elements = 0;

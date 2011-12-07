@@ -436,7 +436,7 @@ static int disjunct_types_equal(Disjunct * d1, Disjunct * d2)
  */
 const char * intersect_strings(Sentence sent, const char * s, const char * t)
 {
-	int len, i, j, d;
+	int i, j, d;
 	const char *w, *s0;
 	char u0[MAX_TOKEN_LENGTH]; /* Links are *always* less than 10 chars long */
 	char *u;
@@ -445,12 +445,8 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 	j = strlen(t);
 	if (j > i) {
 		w = s; s = t; t = w;
-		len = j;
-	} else {
-		len = i;
 	}
 	/* s is now the longer (at least not the shorter) string */
-	/* and len is its length */
 	u = u0;
 	d = 0;
 	s0 = s;
