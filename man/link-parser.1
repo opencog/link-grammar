@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH LINK-GRAMMAR 1 "April 18, 2008"
+.TH LINK-GRAMMAR 1 "April 16, 2012"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -19,44 +19,69 @@
 link-parser \- parses natural language sentences
 .SH SYNOPSIS
 .B link-parser
-.RI [language]
-[\-pp pp_knowledge_file] [\-c constituent_knowledge_file]
-[\-a affix_file] [\-ppoff] [\-coff] [\-aoff] [\-batch] [\-<special "!" command>]
+.RB \--help
+.br
+.B link-parser
+.RB \--version
+.br
+.B link-parser
+.R [language|dict\_location] [\-h] [\-<special\ "!"\ command>]
 .SH DESCRIPTION
 .PP
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
 .\" respectively.
-In Selator, D. and Temperly, D. "Parsing English with a Link Grammar"
-(1991), the authors defined a new formal grammatical system called a
+\fBlink-parser\fP is the command-line wrapper to the link-grammar
+natural language parsing library.  This library will parse English
+language sentences, generating linkage trees showing relationships
+between the subject, the verb, and various adjectives, adverbs,
+\fIetc.\fP in the sentence.
+.PP
+.SH EXAMPLE
+.TP
+.B link-parser
+Starts the parser interactive shell.  Enter any sentence to parse:
+.PP
+.RS
+.B linkparser> Reading a man page is informative.
+.PP
+Found 4 linkages (4 had no P.P. violations)
+  Linkage 1, cost vector = (UNUSED=0 DIS=0 FAT=0 AND=0 LEN=12)
+
+    +------------------------Xp-----------------------+
+    |         +---------Ss*g---------+                |
+    |         +-------Os-------+     |                |
+    |         |     +----Ds----+     |                |
+    +----Wd---+     |   +--AN--+     +---Pa---+       |
+    |         |     |   |      |     |        |       |
+.PP
+LEFT\-WALL reading.g a man.n page.n is.v informative.a . 
+.RE
+.SH BACKGROUND
+The \fBlink-arser\fP command-line tool is useful for
+general exploration and use, although it is presumed that, for the
+parsing of large quantities of text, a custom application, making
+use of the link-grammar library, will be written.  Several such
+applications are described on the link-grammar web page; these include
+the Abiword grammar checker, and the RelEx semantic relation extractor.
+.PP
+The theory of link-grammar is explained in many academic papers. 
+In the first of these, Daniel Sleator and Davy Temperly,
+"Parsing English with a Link Grammar" (1991),
+the authors defined a new formal grammatical system called a
 "link grammar". A sequence of words is in the language of a link
 grammar if there is a way to draw "links" between words in such a way
 that the local requirements of each word are satisfied, the links do
-not cross, and the words form a consistent connected graph. The authors encoded
-English grammar into such a system, and wrote \fBlink\-parser\fP to 
-parse English using this grammar.
+not cross, and the words form a consistent connected graph. The authors
+encoded English grammar into such a system, and wrote \fBlink\-parser\fP
+to parse English using this grammar.
 .PP
-This package can be used for linguistic parsing for information
-retrieval or extraction from natural language documents. Abiword also
-uses it as a grammar checker.
-.SH OPTIONS
-.TP
-.B \-pp pp_knowledge_file
-.TP
-.B \-c constituent_knowledge_file
-.TP
-.B \-a affix_file
-.TP
-.B \-ppoff
-.TP
-.B \-coff
-.TP
-.B \-aoff
-.TP
-.B \-batch
-.TP
-.B \-<special "!" command> \"Can special commands be commandline arguments?
-.SH USE
+The engine that performs the parsing is seperate from the dictionaries
+describing a language.  Currently, the most fully developed, complete
+dictionaries are for the English language, although experimental,
+incomplete dictionaries exist for German, Russian and French.
+
+.SH OVERVIEW
 .PP
 link\-parser, when invoked manually, will take control of the
 terminal; link\-parser will then attempt to analyze the grammar of 
@@ -117,6 +142,50 @@ parse as valid:
 .RS
 .B cat thesis.txt | link\-parser /usr/share/link\-grammar/en/4.0.dict \-batch
 .RE
+
+.SH OPTIONS
+.TP
+.B \-\-help
+Print usage and exit.
+.TP
+.B \-\-version
+Print version number and exit.
+
+.SS Special "!" options
+The special "!" options can be specified either on the command-line, on
+startup, or set and toggled within the interactive shell itself.
+.TP
+.BI \-bad
+Enable display of bad linkages
+.TP
+ batch        Batch mode                                        0 (Off)
+ cluster      Use clusters to loosen parsing                    0 (Off)
+ constituents Generate constituent output                       0
+ cost-model   Cost model used for ranking                       1
+ cost-max     Largest cost to be considered                 10000.00
+ disjuncts    Display of disjuncts used                         0 (Off)
+ echo         Echoing of input sentence                         0 (Off)
+ graphics     Graphical display of linkage                      1 (On)
+ islands-ok   Use of null-linked islands                        0 (Off)
+ limit        The maximum linkages processed                  100
+ links        Display of complete link data                     0 (Off)
+ max-length   Maximum sentence length                         170
+ memory       Max memory allowed                               -1
+ null         Allow null links                                  1 (On)
+ null-block   Size of blocks with null count 1                  1
+ panic        Use of "panic mode"                               0 (Off)
+ postscript   Generate postscript output                        0 (Off)
+ senses       Display of word senses                            0 (Off)
+ short        Max length of short links                         6
+ spell        Use spell-guesser for unknown words               1 (On)
+ timeout      Abort parsing after this many seconds            -1
+ union        Display of 'union' linkage                        0 (Off)
+ use-fat      Use fat links when parsing                        0 (Off)
+ verbosity    Level of detail in output                         1
+ walls        Display wall words                                0 (Off)
+ width        The width of the display                         79
+
+
 .SH SEE ALSO
 .br
 Information on the shared\-library API and the link types used in the 

@@ -1,4 +1,6 @@
-Version 4.7.5 (xxx 2011)
+Version 4.7.5 (xxx April 2012)
+XXX update the man page
+XXX update online docs too, per email.
  * Remove several duplicate given names.
  * Remove malloc-dbg.c from the MSVC9 project file.
  * Remove several dozen duplicated idioms.
