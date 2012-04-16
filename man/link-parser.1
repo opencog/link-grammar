@@ -132,6 +132,9 @@ generating output to standard out. So, for example:
 Note that using the \fB\-batch\fP option disables the usual
 ASCII-graphics linkage printing.  This may be re-enabled via a special
 command; special commands may be interspersed with the input.
+.PP
+Alternately, an input file may be specified with the \fB!file\fP
+special command, described below.
 
 .SH OPTIONS
 .TP
@@ -143,95 +146,111 @@ Print version number and exit.
 
 .SS Special "!" options
 The special "!" options can be specified either on the command-line, on
-startup, or set and toggled within the interactive shell itself.
+startup, or set and toggled within the interactive shell itself.  The
+full option name does not need to be used; only enough letters to make
+the option unique must be specified. 
+.PP
+Boolean variables may be toggled simply by giving the \fI!varname\fP,
+for example, \fB!batch\fP.  Setting other variables require using an
+equals sign: \fI!varname=value\fP, for example, \fB!width=100\fP.
+.PP
+The \fB!help\fP command will print general help, and the \fB!var\fP
+command will print all of the current variable settings.  The 
+\fB!file\fP command will read input from a file.  The \fB!file\fP
+command is \fInot\fP a variable; it cannot be set.  It can be used
+repeatedly.
+.PP
+The dictionary entry for any given word may be examined by preceeding
+it with two exclamation marks.
+
 .TP
 .BI \-bad
-Enable display of bad linkages
+Enable display of bad linkages.
 .TP
 .BI \-batch
-Batch mode
+Enable batch mode.
 .TP
 .BI \-cluster
-Use clusters to loosen parsing 
+Use clusters to loosen parsing.
 .TP
 .BI \-constituents
-Generate constituent output
+Generate constituent output.
 .TP
 .BI \-cost-model
-Cost model used for ranking
+Cost model used for ranking.
 .TP
 .BI \-cost-max
-Largest cost to be considered 
+Largest cost to be considered.
 .TP
 .BI \-disjuncts
-Display of disjuncts used
+Display of disjuncts used.
 .TP
 .BI \-echo
-Echoing of input sentence 
+Echo input sentence.
 .TP
 .BI \-graphics
-Graphical display of linkage
+Enable graphical display of linkage.
 .TP
 .BI \-islands-ok
-Use of null-linked islands 
+Use null-linked islands.
 .TP
 .BI \-limit
-The maximum linkages processed 
+Limit the maximum linkages processed.
 .TP
 .BI \-links
-Display of complete link data
+Enable display of complete link data.
 .TP
 .BI \-max-length
-Maximum sentence length
+Set maximum sentence length.
 .TP
 .BI \-memory
-Max memory allowed
+Set maximum memory usage allowed.
 .TP
 .BI \-null
-Allow null links 
+Allow null links.
 .TP
 .BI \-null-block
-Size of blocks with null count 1
+Size of blocks with null count 1.
 .TP
 .BI \-panic
-Use of "panic mode"
+Use "panic mode" if a parse cannot be quickly found.
 .TP
 .BI \-postscript
-Generate postscript output
+Generate postscript output.
 .TP
 .BI \-senses
-Display of word senses 
+Display word senses.
 .TP
 .BI \-short
-Max length of short links 
+Max length of short links.
 .TP
 .BI \-spell
-Use spell-guesser for unknown words 
+Use spell-guesser for unknown words.
 .TP
 .BI \-timeout
-Abort parsing after this many seconds
+Abort parsing after this many seconds.
 .TP
 .BI \-union
-Display of 'union' linkage
+Display of 'union' linkage.
 .TP
 .BI \-use-fat
-Use fat links when parsing 
+Use fat links when parsing (deprecated).
 .TP
 .BI \-verbosity
-Level of detail in output 
+Level of detail in output.
 .TP
 .BI \-walls
-Display wall words 
+Display wall words.
 .TP
 .BI \-width
-The width of the display
+The width of the display.
 
 
 .SH SEE ALSO
 .br
 Information on the shared\-library API and the link types used in the 
 parse is avavailable at the Abiword website at 
-.B http://www.abisource.com/projects/link-grammar/dict/index.html
+.B http://www.abisource.com/projects/link-grammar/
 .br
 Peer\-reviewed papers explaining link\-parser can be found at 
 the original CMU site at
@@ -243,4 +262,5 @@ Davy Temperley <dtemp@theory.esm.rochester.edu>, and John Lafferty
 <lafferty@cs.cmu.edu>
 .PP
 This manual page was written by Ken Bloom <kbloom@gmail.com>,
-for the Debian project (but may be used by others).
+for the Debian project, and updated by Linas Vepstas
+<linasvepstas@gmail.com>.
