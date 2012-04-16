@@ -25,7 +25,7 @@ link-parser \- parses natural language sentences
 .RB \--version
 .br
 .B link-parser
-.R [language|dict\_location] [\-h] [\-<special\ "!"\ command>]
+.R [language|dict\_location] [\-<special\ "!"\ command>]
 .SH DESCRIPTION
 .PP
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
@@ -83,65 +83,55 @@ incomplete dictionaries exist for German, Russian and French.
 
 .SH OVERVIEW
 .PP
-link\-parser, when invoked manually, will take control of the
-terminal; link\-parser will then attempt to analyze the grammar of 
-all input, unless escaped with an exclamation mark, according to the 
-dictionary file provided as an argument. If escaped, the input
-will be treated as a "special command"; "!help" lists all special
-commands available.
+\fBlink\-parser\fP, when invoked manually, starts an interactive shell,
+taking control of the terminal.  Any lines begining with an exclamation
+mark are assumed to be a "special command"; these are described below.
+The command \fB!help\fP will provide more info; the command 
+\fB!var\fP will print all of the special commands.  These are also
+called "variables", as almost all commands have a value associated with
+them: the command typically enable or disable some function, or they
+alter some multi\-valued setting.  
 .PP
-link\-parser depends on a link\-grammar dictionary which contains
-lists of words and associated metadata about their grammatical
-properties in order to analyze sentences. A link\-grammar dictionary
-provided by the authors of link\-grammar is usually included with the 
-link\-grammar package, and can often be found somewhere in the
-/usr/share/link\-grammar/ hierarchy. When this is the case, only the 
-two\-letter language code needs to be specified on the command\-line. 
-Alternatively, a user can provide
-their own dictionary as an argument, in which case the dictionary's 
-directory should be specified. Hence, either of the commands
-.TP
-.B link\-parser en
-.TP
-.B link\-parser /usr/share/link\-grammar/en
-will run link\-parser using the english dictionary included with the 
-parser.
-.PP
-While in a link\-parser session, some example output could be:
-.PP
-.RS
-.B linkparser> Reading a man page is informative.
-.PP
-++++Time                                          0.00 seconds (0.01
-total)
-.PP
-Found 1 linkage (1 had no P.P. violations)
-  Unique linkage, cost vector = (UNUSED=0 DIS=0 AND=0 LEN=12)
+All other input is treated as a single, English-language sentence;
+it is parsed, and the result of the parse is printed.  The variables
+control what is printed:  By default, an ASCII\-graphics linkage is
+printed, although post-script output is also possible.  The printing of
+the constituent tree can also be enabled. Other output controls include
+the printing of disjuncts, word senses, and union linkages.
 
-    +------------------------Xp-----------------------+
-    |         +---------Ss*g---------+                |
-    |         +-------Os-------+     |                |
-    |         |     +----Ds----+     |                |
-    +----Wd---+     |   +--AN--+     +---Pa---+       |
-    |         |     |   |      |     |        |       |
 .PP
-LEFT\-WALL reading.g a man.n page.n is.v informative.a . 
-.RE
+In order to analyze sentences, \fBlink\-parser\fP depends on a 
+link\-grammar dictionary.  This contains lists of words and associated
+metadata about their grammatical properties.  An English language
+dictionary is provided by default.  If other language dictionaries
+are installed in the default search locations, these may be explicitly
+spcified by means of a 2-letter ISO language code: so, for example:
 .PP
-A P.P. violation is a post-processing violation; it is a post\-linkage
-step used to reject invalid parses. The link types shown are specific
-to English; other langauges will have different link types.
+.B
+    link\-parser de
 .PP
-link\-parser can also be used non\-interactively, either through its
-API, or via the \-batch option.  When used with the \-batch option,
-link\-parser passively receives input from standard input, and when
-the stream finishes, it then outputs its analysis. So one could
-construct an ad\-hoc grammar checker by piping text through
-link\-parser with a batch option, and seeing what sentences fail to
-parse as valid:
-.RS
-.B cat thesis.txt | link\-parser /usr/share/link\-grammar/en/4.0.dict \-batch
-.RE
+will start the parser shell with the German dictionary.
+.PP
+Alternately, the dictionary location can be specified explicitly with
+either an absolute or a relative file path; so, for example:
+.PP
+.B
+     link\-parser /usr/share/link\-grammar/en
+.PP
+will run link\-parser using the English dictionary located in the 
+typical install directory.
+.PP
+\fBlink\-parser\fP can also be used non\-interactively, either through
+its API, or via the \fB\-batch\fP option.  When used with the
+\fB\-batch\fP option, link\-parser reads from standard input,
+generating output to standard out. So, for example:
+.PP
+.B
+    cat thesis.txt | link\-parser \-batch
+.PP
+Note that using the \fB\-batch\fP option disables the usual
+ASCII-graphics linkage printing.  This may be re-enabled via a special
+command; special commands may be interspersed with the input.
 
 .SH OPTIONS
 .TP
@@ -158,32 +148,83 @@ startup, or set and toggled within the interactive shell itself.
 .BI \-bad
 Enable display of bad linkages
 .TP
- batch        Batch mode                                        0 (Off)
- cluster      Use clusters to loosen parsing                    0 (Off)
- constituents Generate constituent output                       0
- cost-model   Cost model used for ranking                       1
- cost-max     Largest cost to be considered                 10000.00
- disjuncts    Display of disjuncts used                         0 (Off)
- echo         Echoing of input sentence                         0 (Off)
- graphics     Graphical display of linkage                      1 (On)
- islands-ok   Use of null-linked islands                        0 (Off)
- limit        The maximum linkages processed                  100
- links        Display of complete link data                     0 (Off)
- max-length   Maximum sentence length                         170
- memory       Max memory allowed                               -1
- null         Allow null links                                  1 (On)
- null-block   Size of blocks with null count 1                  1
- panic        Use of "panic mode"                               0 (Off)
- postscript   Generate postscript output                        0 (Off)
- senses       Display of word senses                            0 (Off)
- short        Max length of short links                         6
- spell        Use spell-guesser for unknown words               1 (On)
- timeout      Abort parsing after this many seconds            -1
- union        Display of 'union' linkage                        0 (Off)
- use-fat      Use fat links when parsing                        0 (Off)
- verbosity    Level of detail in output                         1
- walls        Display wall words                                0 (Off)
- width        The width of the display                         79
+.BI \-batch
+Batch mode
+.TP
+.BI \-cluster
+Use clusters to loosen parsing 
+.TP
+.BI \-constituents
+Generate constituent output
+.TP
+.BI \-cost-model
+Cost model used for ranking
+.TP
+.BI \-cost-max
+Largest cost to be considered 
+.TP
+.BI \-disjuncts
+Display of disjuncts used
+.TP
+.BI \-echo
+Echoing of input sentence 
+.TP
+.BI \-graphics
+Graphical display of linkage
+.TP
+.BI \-islands-ok
+Use of null-linked islands 
+.TP
+.BI \-limit
+The maximum linkages processed 
+.TP
+.BI \-links
+Display of complete link data
+.TP
+.BI \-max-length
+Maximum sentence length
+.TP
+.BI \-memory
+Max memory allowed
+.TP
+.BI \-null
+Allow null links 
+.TP
+.BI \-null-block
+Size of blocks with null count 1
+.TP
+.BI \-panic
+Use of "panic mode"
+.TP
+.BI \-postscript
+Generate postscript output
+.TP
+.BI \-senses
+Display of word senses 
+.TP
+.BI \-short
+Max length of short links 
+.TP
+.BI \-spell
+Use spell-guesser for unknown words 
+.TP
+.BI \-timeout
+Abort parsing after this many seconds
+.TP
+.BI \-union
+Display of 'union' linkage
+.TP
+.BI \-use-fat
+Use fat links when parsing 
+.TP
+.BI \-verbosity
+Level of detail in output 
+.TP
+.BI \-walls
+Display wall words 
+.TP
+.BI \-width
+The width of the display
 
 
 .SH SEE ALSO
