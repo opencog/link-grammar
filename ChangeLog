@@ -8,7 +8,7 @@ Version 4.7.5 (16 April 2012)
  * Fix configure.in --enable/--disable flags (bug #53)
  * Some intransitive verbs are actually transitive in rare cases.
  * Use enum not int for the cost-model type.
- * Update the man pag to reflect actual command usage.
+ * Update the man page to reflect actual command usage.
 
 Version 4.7.4 (13 February 2011)
  * Dramatic speed improvement for long sentences (hash table fix).
