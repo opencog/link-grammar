@@ -131,14 +131,28 @@ void free_fast_matcher(Sentence sent)
  */
 static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
 {
+   Match_node *p, *prev;
+
 	if (l == NULL) return m;
+
+	/* Insert m at head of list */
 	if ((m->d->right->word) <= (l->d->right->word)) {
 		m->next = l;
 		return m;
-	} else {
-		l->next = add_to_right_table_list(m, l->next);
-		return l;
 	}
+
+	/* Walk list to insertion point */
+	prev = l;
+	p = prev->next;
+	while (p != NULL && ((m->d->right->word) > (p->d->right->word))) {
+		prev = p;
+		p = p->next;
+	}
+
+	m->next = p;
+	prev->next = m;
+
+	return l;  /* return pointer to original head */
 }
 
 /**
@@ -148,19 +162,33 @@ static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
  */
 static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 {
-	if (l==NULL) return m;
+   Match_node *p, *prev;
+
+	if (l == NULL) return m;
+
+	/* Insert m at head of list */
 	if ((m->d->left->word) >= (l->d->left->word)) {
 		m->next = l;
 		return m;
-	} else {
-		l->next = add_to_left_table_list(m, l->next);
-		return l;
 	}
+
+	/* Walk list to insertion point */
+	prev = l;
+	p = prev->next;
+	while (p != NULL && ((m->d->left->word) < (p->d->left->word))) {
+		prev = p;
+		p = p->next;
+	}
+
+	m->next = p;
+	prev->next = m;
+
+	return l;  /* return pointer to original head */
 }
 
 /**
  * The disjunct d (whose left or right pointer points to c) is put
- *  into the appropriate hash table
+ * into the appropriate hash table
  * dir =  1, we're putting this into a right table.
  * dir = -1, we're putting this into a left table.
  */
