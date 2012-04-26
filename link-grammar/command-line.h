@@ -11,5 +11,5 @@
 /*                                                                       */
 /*************************************************************************/
 
-
+int issue_special_command(const char * line, Parse_Options opts, Dictionary dict);
 

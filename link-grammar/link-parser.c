@@ -59,7 +59,6 @@
 #endif
 
 #include <link-grammar/link-includes.h>
-#include <link-grammar/error.h>
 
 #include "command-line.h"
 #include "expand.h"
@@ -765,6 +764,10 @@ int main(int argc, char * argv[])
 #endif
 
 		/* Try using a larger list of disjuncts */
+		/* XXX fixme: the lg_expand_disjunct_list() routine is not
+		 * currently a part of the public API; it should be made so,
+		 * or this expansion idea should be abandoned... not sure which.
+		 */
 		if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
 		{
 			int expanded;
