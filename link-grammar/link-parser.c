@@ -43,6 +43,7 @@
 
 /* Used for terminal resizing */
 #ifndef _WIN32
+#include <langinfo.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
@@ -58,11 +59,25 @@
 #endif
 
 #include <link-grammar/link-includes.h>
-#include <link-grammar/structures.h>
 #include <link-grammar/error.h>
 
 #include "command-line.h"
 #include "expand.h"
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#if !defined(MIN)
+#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
+#endif
+#if !defined(MAX)
+#define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
+#endif
 
 #define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
@@ -459,7 +474,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 {
 	parse_options_set_disjunct_costf(opts, 3.0f);
 	parse_options_set_min_null_count(opts, 1);
-	parse_options_set_max_null_count(opts, MAX_SENTENCE);
+	parse_options_set_max_null_count(opts, 100);
 	parse_options_set_max_parse_time(opts, 60);
 	parse_options_set_use_fat_links(opts, 0);
 	parse_options_set_islands_ok(opts, 1);
