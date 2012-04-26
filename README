@@ -63,12 +63,13 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.7.4.tar.gz.asc
+   gpg --verify link-grammar-4.7.7.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
-   gpg: Signature made Tue Feb 26 19:41:07 2008 CST using RSA key ID C0389241
-   gpg: Good signature from "Linas Vepstas (current active email; others are inactive) <linasvepstas@gmail.com>"
+   gpg: Signature made Thu 26 Apr 2012 12:45:31 PM CDT using RSA key ID E0C0651C
+   gpg: Good signature from "Linas Vepstas (Hexagon Architecture Patches) <linas@codeaurora.org>"
+   gpg:                 aka "Linas Vepstas (LKML) <linasvepstas@gmail.com>"
 
    Alternately, the md5 checksums can be verified. These do not provide
    cryptographic security, but they can detect simple corruption. To
@@ -152,7 +153,7 @@ BUILDING on Windows
    http://www.pcre.org/ Perl-Compatible Regular Expressions.
 
    These different build methods are NOT regularly tested, and some
-   linkgrammar versions may have build issues.  If you are an 
+   linkgrammar versions may have build issues.  If you are an
    experienced Windows developer who knows how to make things work
    in the Microsoft environment, we need your help!
 
@@ -244,7 +245,7 @@ BUILDING on Windows (MSVC)
       to switch to "Classic View" or "Large icons" respectively to see
       the System icon).
    2) "Advanced system settings" (or "Advanced" tab under XP)
-   3) On all versions you will see a button with the caption 
+   3) On all versions you will see a button with the caption
       "Environment Variables", press it.... (ALL REMAINING STEPS
       CORRELATE ON XP, VISTA, AND 7)
    4) You now see two lists of environment variables... the top one
@@ -353,6 +354,7 @@ USING pkg-config:
 
       $(EXE): $(OBJS)
          cc -g -o $@ $^ `pkg-config --libs link-grammar`
+
 
 JAVA bindings:
 --------------
@@ -500,7 +502,6 @@ MULTI-THREADED USE:
 
    The following exceptions and special notes apply:
 
-      error.c -- uses pthreads to access error message area.
       utilities.c -- has global "verbosity". Uses pthreads for tracking
                      memory usage. The memory usage code is just about
                      obsolete, and could probably be discarded.
@@ -508,13 +509,13 @@ MULTI-THREADED USE:
                      to JNIEnv somehow.
       malloc-dbg.c - not thread safe, not normally used;
                      only for debugging.
-      prefix.c - not thread-safe, but doesn't need to be; used only
-                 during initialization, and only if binreloc turned
-                 on.
-      pp_lexer.c -- autogened code, original lex sources lost.
-                    This is only used when reading dictionaries,
-                    during initialization, and so doesn't need
-                    to be thread safe.
+      prefix.c     - not thread-safe, but doesn't need to be; used only
+                     during initialization, and only if binreloc turned
+                     on.
+      pp_lexer.c  -- autogened code, original lex sources lost.
+                     This is only used when reading dictionaries,
+                     during initialization, and so doesn't need
+                     to be thread safe.
 
 
 BioLG merger:
@@ -539,9 +540,10 @@ BioLG merger:
    All other BioLG changes, and in particular, extensive dictionary fixes,
    as well as regex morphology handling, have been incorporated.
 
+
 Medical Terms Merger
 --------------------
-Many, but not all, of the "medical terms" from Peter Szolovits have been 
+Many, but not all, of the "medical terms" from Peter Szolovits have been
 merged into version 4.3.1 (January 2008) of link-grammar. The origiginal
 project page was at:
 
@@ -555,7 +557,7 @@ skipped (omitted):
 /extra.3: -- skip, too big
 /extra.4: -- /en/words/words-medical.v.4.2:
 /extra.5: -- /en/words/words-medical.v.4.1:
-/extra.6: -- /en/words/words-medical.adj.2: 
+/extra.6: -- /en/words/words-medical.adj.2:
 /extra.7: -- /en/words/words-medical.n.p
 /extra.8: -- skip, too big
 /extra.9: -- skip, random names
@@ -581,7 +583,7 @@ Fat Links:
    and can be turned on by specifying the !use-fat=1 command, or by
    calling parse_options_use_fat_links(TRUE) from programs.
 
-   Older versions of the link-grammar parser used "fat links" to 
+   Older versions of the link-grammar parser used "fat links" to
    support conjunctions (and, or, but, ...). However, this lead
    to a number of complications, including poor performance due to
    a combinatorial explosion of linkage possibilities, as well as
@@ -673,6 +675,7 @@ TODO -- Working Notes:
     (maybe easier to post-process, but more biologically natural as
     a pre-process step.)
 
+
   Poor linkage choices:
     Compare "she will be happier than before" to "she will be more happy
     than before." Current parser makes "happy" the head word, and "more"
@@ -681,17 +684,18 @@ TODO -- Working Notes:
     the dependent.  This would harmonize rules for comparatives... and
     would eliminate/simplify rules for less,more.
 
+
   Repulsive parses: Sometimes, the existance of one parse should suggest
     that another parse must surely be wrong: if one parse is possible,
-    then the other parses must surely be unlikely. For example: the 
-    conjunction and.j-g allows the "The Great Southern and Western 
-    Railroad" to be parsed as the single name of an entity. However, 
+    then the other parses must surely be unlikely. For example: the
+    conjunction and.j-g allows the "The Great Southern and Western
+    Railroad" to be parsed as the single name of an entity. However,
     it also provides a pattern match for "John and Mike" as a single
     entity, which is almost certainly wrong. But "John and Mike" has
-    an alternative parse, as a conventional-and -- a list of two people, 
+    an alternative parse, as a conventional-and -- a list of two people,
     and so the existance of this alternaive (and correct) parse suggests
     that perhaps the entity-and is really very much the wrong parse.
-    That is, the mere possibility of certain parses should strongly 
+    That is, the mere possibility of certain parses should strongly
     disfavour other possible parses. (Exception: Ben & Jerry's ice
     cream; however, in this case, we could recognize Ben & Jerry as the
     name of a proper brand; but this is outside of the "normal"
@@ -700,7 +704,12 @@ TODO -- Working Notes:
     More examples: "high water" can have A joining high.a and AN joining
     high.n; these two should either be collapsed into one, or one should
     be eliminated.
-  
+
+
+  Wordnet hinting:
+    Use wordnet to reduce the number for parses for sentences containing
+    compound verb phrases, such as "give up", "give off", etc.
+
   incremental parsing: to avoid a combinatorial explosion of parses,
     it would be nice to have an incremental parsing, phrase by phrase,
     using a Viterbi-like algorithm to obtain the parse. Thus, for example,
@@ -726,6 +735,7 @@ TODO -- Working Notes:
      The current parser parses these perfectly; a viterbi parsr could
      trip on these.
 
+
    Registers:
       Consider the sentence "Thieves rob bank" -- a typical newspaper
       headline. LG currently fails to parse this, because the determiner
@@ -738,19 +748,11 @@ TODO -- Working Notes:
       not subject to planarity constraints.
 
       Note that this is easier said than done: if one simply adds a
-      high-cost null link, and no headline-flag, then all sorts of 
+      high-cost null link, and no headline-flag, then all sorts of
       ungrammatical sentences parse, with strange parses; while some
-      grammatical sentences, which should parse, but currently don't, 
+      grammatical sentences, which should parse, but currently don't,
       become parseable, but with crazy results.
 
-   Assorted minor cleanup:
-      -- Should provide a query that returns compile-time consts,
-         e.g. the max number of characters in a word, or max words
-         in a sentence
-      -- Should remove compile-time constants, e.g. max words, max
-         length etc.
-      -- Split out parse-options, so that the command-line client
-         options are not in the parse-options struct.
 
    Hand-refining verb patterns:
       A good reference for refining verb usage patterns is:
@@ -766,6 +768,7 @@ TODO -- Working Notes:
       for the various "curly" UTF8 quotes, such as ‘these’ and “these”.
       This results is some ugly parsing for sentences containing such
       quotes. (Note that these are in 4.0.affix).
+
 
    no-links-cross: Link Grammar uses a constraint that all linkages must
       be planar graphs. While this is mostly correct, it would probably
@@ -928,9 +931,20 @@ TODO -- Working Notes:
     set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
     All of this can now be deleted for version 5.0.
 
+
+   Assorted minor cleanup:
+      -- Should provide a query that returns compile-time consts,
+         e.g. the max number of characters in a word, or max words
+         in a sentence
+      -- Should remove compile-time constants, e.g. max words, max
+         length etc.
+      -- Split out parse-options, so that the command-line client
+         options are not in the parse-options struct.
+
   Version 5.0 TODO list:
     Version 5.0 will completely eliminate both fat links, and vestiges thereof.
     In particular, this will get rid of sublinkages, and all uses thereof.
     -- in api.c, change many linkage_*() funs to linkage_get_*() funs
     -- get rid of sublinkages.
-    -- Change Sentence, Linkage to not be pointers.
+    -- Change Sentence, Linkage etc. to not be pointers.
+    -- move command-line.c out of the shared lib.
