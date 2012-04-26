@@ -18,8 +18,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.7.5 (formatted as V4v7v5+)
-<dictionary-version-number>: V4v7v5+;
+% Dictionary version number is 4.7.6 (formatted as V4v7v6+)
+<dictionary-version-number>: V4v7v6+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  % 
