@@ -12,7 +12,7 @@
 /*************************************************************************/
 
 #include <stdarg.h>
-#include <link-grammar/api.h>
+#include "api.h"
 #include "utilities.h"
 
 /* This is a "safe" append function, used here to build up a link diagram

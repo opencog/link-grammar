@@ -11,7 +11,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/api.h>
 #include <time.h>
 
 #if !defined(_WIN32)
@@ -36,6 +35,8 @@
 int getrusage(int who, struct rusage *rusage);
 /* Declaration missing from sys/resource.h in sun operating systems (?) */
 #endif /* __sun__ */
+
+#include "api.h"
 
 #define MAX_PARSE_TIME_UNLIMITED -1
 #define MAX_MEMORY_UNLIMITED ((size_t) -1)

@@ -12,7 +12,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/api.h>
 #include <limits.h>
 #include <locale.h>
 #include <stdlib.h>
@@ -23,7 +22,7 @@
 #include <pthread.h>
 #endif
 
-
+#include "api.h"
 
 #ifdef ENABLE_BINRELOC
 #include "prefix.h"

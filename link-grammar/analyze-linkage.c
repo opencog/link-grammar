@@ -13,7 +13,7 @@
 
 
 #include <stdarg.h>
-#include <link-grammar/api.h>
+#include "api.h"
 
 /**
  * The functions in this file do several things: () take a linkage

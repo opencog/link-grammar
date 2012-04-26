@@ -12,7 +12,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/api.h>
+#include "api.h"
 
 /**
  * The first thing we do is we build a data structure to represent the

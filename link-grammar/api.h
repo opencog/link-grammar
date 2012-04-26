@@ -31,35 +31,35 @@
 #define link_private
 #endif
 
-#include <link-grammar/structures.h>
-#include <link-grammar/link-includes.h>
-#include <link-grammar/api-structures.h>
-#include <link-grammar/externs.h>
+#include "structures.h"
+#include "link-includes.h"
+#include "api-structures.h"
+#include "externs.h"
 
-#include <link-grammar/analyze-linkage.h>
-#include <link-grammar/and.h>
-#include <link-grammar/build-disjuncts.h>
-#include <link-grammar/constituents.h>
-#include <link-grammar/count.h>
-#include <link-grammar/error.h>
-#include <link-grammar/extract-links.h>
-#include <link-grammar/fast-match.h>
-#include <link-grammar/idiom.h>
-#include <link-grammar/massage.h>
-#include <link-grammar/post-process.h>
-#include <link-grammar/pp_knowledge.h>
-#include <link-grammar/pp_lexer.h>
-#include <link-grammar/pp_linkset.h>
-#include <link-grammar/preparation.h>
-#include <link-grammar/print.h>
-#include <link-grammar/print-util.h>
-#include <link-grammar/prune.h>
-#include <link-grammar/read-dict.h>
-#include <link-grammar/resources.h>
-#include <link-grammar/string-set.h>
-#include <link-grammar/tokenize.h>
-#include <link-grammar/utilities.h>
-#include <link-grammar/word-file.h>
-#include <link-grammar/word-utils.h>
+#include "analyze-linkage.h"
+#include "and.h"
+#include "build-disjuncts.h"
+#include "constituents.h"
+#include "count.h"
+#include "error.h"
+#include "extract-links.h"
+#include "fast-match.h"
+#include "idiom.h"
+#include "massage.h"
+#include "post-process.h"
+#include "pp_knowledge.h"
+#include "pp_lexer.h"
+#include "pp_linkset.h"
+#include "preparation.h"
+#include "print.h"
+#include "print-util.h"
+#include "prune.h"
+#include "read-dict.h"
+#include "resources.h"
+#include "string-set.h"
+#include "tokenize.h"
+#include "utilities.h"
+#include "word-file.h"
+#include "word-utils.h"
 
 #endif

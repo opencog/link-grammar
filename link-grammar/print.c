@@ -13,7 +13,7 @@
 
 
 #include <stdarg.h>
-#include <link-grammar/api.h>
+#include "api.h"
 #include "corpus/corpus.h"
 
 const char * trailer(int mode);

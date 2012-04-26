@@ -11,8 +11,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-/* This file is slighly misnamed: none of the below are in the public
- * API, and so nothing in here is actually an api type. :-(
+/* This file is somewhat misnamed, as everything here defines the
+ * link-private, internal-use-only "api", which is subject to change
+ * from revision to revision. No external code should link to this
+ * stuff.
  */
 
 #ifndef _API_TYPES_H_

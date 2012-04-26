@@ -15,7 +15,7 @@
 #include <limits.h>
 #include <math.h>
 #include <string.h>
-#include <link-grammar/api.h>
+#include "api.h"
 #include "disjuncts.h"
 #include "error.h"
 #include "preparation.h"

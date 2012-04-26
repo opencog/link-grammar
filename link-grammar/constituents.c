@@ -13,7 +13,7 @@
 
 #include <stdarg.h>
 #include <string.h>
-#include <link-grammar/api.h>
+#include "api.h"
 #include "error.h"
 #include "constituents.h"
 #include "post-process.h"

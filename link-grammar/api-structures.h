@@ -11,9 +11,15 @@
 /*                                                                       */
 /*************************************************************************/
 
+/* This file is somewhat misnamed, as everything here defines the
+ * link-private, internal-use-only "api", which is subject to change
+ * from revision to revision. No external code should link to this
+ * stuff.
+ */
+
 /*****************************************************************************
 *
-* NOTE: There are five basic "types" in the link parser API.  These are:
+* NOTE: There are five basic "types" used within the link parser.  These are:
 *
 *       Dictionary, Parse_Options, Sentence, Linkage, PostProcessor
 *

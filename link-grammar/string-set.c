@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/api.h>
+#include "api.h"
 
 /**
  * Suppose you have a program that generates strings and keeps pointers to them.

@@ -15,7 +15,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
-#include <link-grammar/api.h>
+#include "api.h"
 #include "disjunct-utils.h"
 #include "error.h"
 

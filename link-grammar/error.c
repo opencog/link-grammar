@@ -16,10 +16,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-#ifdef USE_PTHREADS
-#include <pthread.h>
-#endif
-
 #include "error.h"
 #include "structures.h"
 #include "api-structures.h"

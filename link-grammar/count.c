@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/api.h>
+#include "api.h"
 #include "disjunct-utils.h"
 
 /* This file contains the exhaustive search algorithm. */

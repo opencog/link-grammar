@@ -15,7 +15,7 @@
 
 #include <stdarg.h>
 #include <memory.h>
-#include <link-grammar/api.h>
+#include "api.h"
 #include "post-process.h"
 #include "error.h"
 

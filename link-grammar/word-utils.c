@@ -17,7 +17,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include <link-grammar/api.h>
+#include "api.h"
 #include "disjunct-utils.h"
 #include "word-utils.h"
 

@@ -19,7 +19,7 @@
  pp_lexer.h
 ***********************************************************************/
 
-#include <link-grammar/api.h>
+#include "api.h"
 #include "error.h"
 #include "utilities.h"
 

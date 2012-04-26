@@ -14,7 +14,7 @@
 /* stuff for transforming a dictionary entry into a disjunct list */
 
 #include <math.h>
-#include <link-grammar/api.h>
+#include "api.h"
 #include "disjunct-utils.h"
 #include "utilities.h" /* For Win32 compatibility features */
 
