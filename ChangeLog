@@ -1,5 +1,6 @@
 Version 4.7.6 (XXX 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).
+ * Avoid inclusion of api-types.h in main api header.
 
 Version 4.7.5 (16 April 2012)
  * Remove several duplicate given names.

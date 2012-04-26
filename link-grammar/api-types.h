@@ -11,6 +11,10 @@
 /*                                                                       */
 /*************************************************************************/
 
+/* This file is slighly misnamed: none of the below are in the public
+ * API, and so nothing in here is actually an api type. :-(
+ */
+
 #ifndef _API_TYPES_H_
 #define _API_TYPES_H_
 
@@ -25,13 +29,7 @@
 #define MAX_LINKS (2*MAX_SENTENCE-3) /* maximum number of links allowed */
 
 
-/* "public" typedefs */
-typedef enum
-{
-	VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
-	CORPUS, /* Sort by Corpus cost */
-}  Cost_Model_type;
-
+/* Widely used private typedefs */
 typedef struct And_data_s And_data;
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;
@@ -49,7 +47,7 @@ typedef struct Regex_node_s Regex_node;
 typedef struct Resources_s * Resources;
 typedef struct Sublinkage_s Sublinkage;
 
-/* Some private typedefs */
+/* Some of the more obscure typedefs */
 typedef char Boolean;
 typedef struct analyze_context_s analyze_context_t;
 typedef struct count_context_s count_context_t;

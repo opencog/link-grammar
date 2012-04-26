@@ -13,7 +13,6 @@
 #ifndef _LINKINCLUDESH_
 #define _LINKINCLUDESH_
 
-#include <link-grammar/api-types.h>
 #include <link-grammar/link-features.h>
 
 LINK_BEGIN_DECLS
@@ -69,6 +68,12 @@ link_public_api(char *)
  * Functions to manipulate Parse Options
  *
  ***********************************************************************/
+
+typedef enum
+{
+	VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
+	CORPUS, /* Sort by Corpus cost */
+} Cost_Model_type;
 
 typedef struct Parse_Options_s * Parse_Options;
 
