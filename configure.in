@@ -167,8 +167,8 @@ AC_ARG_ENABLE( sat-solver,
   [],
   [enable_sat_solver=no]
 )
-if "x$enable_sat_solver" = "xyes"
-then
+
+if test "x$enable_sat_solver" = "xyes"; then
        CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
 fi
 
