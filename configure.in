@@ -1,4 +1,4 @@
-AC_INIT(link-grammar, 4.7.6, link-grammar@googlegroups.com)
+AC_INIT([link-grammar],[4.7.6],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -44,9 +44,8 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_STDC_HEADERS
-AC_LIBTOOL_WIN32_DLL
-AM_PROG_LIBTOOL
+AC_HEADER_STDC
+LT_INIT([win32-dll])
 AM_BINRELOC
 PKG_PROG_PKG_CONFIG
 
@@ -284,12 +283,14 @@ AM_CONDITIONAL(HAVE_HUNSPELL, test x${HunSpellFound} = xyes)
 
 dnl ====================================================================
 
+# It's not enough that locale.h is present; link-grammar really
+# wants to have LC_MESSAGES as well, so test for it explicitly.
+
 AC_DEFUN([GLIB_LC_MESSAGES],
   [AC_CHECK_HEADERS([locale.h])
     if test $ac_cv_header_locale_h = yes; then
     AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
-      [AC_TRY_LINK([#include <locale.h>], [return LC_MESSAGES],
-       am_cv_val_LC_MESSAGES=yes, am_cv_val_LC_MESSAGES=no)])
+      [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <locale.h>]], [[return LC_MESSAGES]])],[am_cv_val_LC_MESSAGES=yes],[am_cv_val_LC_MESSAGES=no])])
     if test $am_cv_val_LC_MESSAGES = yes; then
       AC_DEFINE(HAVE_LC_MESSAGES, 1,
         [Define if your <locale.h> file defines LC_MESSAGES.])
@@ -434,14 +435,12 @@ if test "x$enable_java_bindings" = "xyes"; then
       -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ "
 
    AC_MSG_CHECKING(for jni.h)
-   AC_TRY_CPP( [#include <jni.h>], 
-          [AC_MSG_RESULT([yes, will build java libs])
-           JNIfound=yes], 
-          [ 
+   AC_PREPROC_IFELSE([AC_LANG_SOURCE([[#include <jni.h>]])],[AC_MSG_RESULT([yes, will build java libs])
+           JNIfound=yes],[ 
           SAVE_CPPFLAGS=${CPPFLAGS}
           CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
           AC_MSG_WARN([Can't find jni.h header in standard locations, trying again with ${CPPFLAGS}]) 
-          AC_TRY_CPP( [#include <jni.h>], 
+          _au_m4_changequote([,])AC_TRY_CPP( [#include <jni.h>], 
                   [AC_MSG_RESULT([yes, will build java libs])
                   JNIfound=yes], 
                   [ AC_MSG_WARN([cannot find jni.h header, needed for Java bindings support.]) 
@@ -466,7 +465,7 @@ fi
 
 dnl ===================================================================
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 build.xml
 link-grammar.pc
@@ -490,6 +489,7 @@ msvc6/link_grammar_exe/Makefile
 msvc6/link_grammar_java_dll/Makefile
 msvc9/Makefile
 ])
+AC_OUTPUT
 
 dnl ====================================================================
 echo "
