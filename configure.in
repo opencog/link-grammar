@@ -171,6 +171,13 @@ AC_ARG_ENABLE( sat-solver,
 
 if test "x$enable_sat_solver" = "xyes"; then
        CPPFLAGS="${CPPFLAGS} -DUSE_SAT_SOLVER=1"
+
+       # We want to check for C++; the easiest way to do this is to
+       # use c++ to compile stdio.h and bomb if it fails.
+       AC_LANG([C++])
+       AC_CHECK_HEADER([stdio.h],,
+           [AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT solver])])
+       AC_LANG([C])
 fi
 
 
