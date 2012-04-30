@@ -12,7 +12,7 @@ Version 4.7.5 (16 April 2012)
  * Remove several dozen duplicated idioms.
  * New AM_SILENT_RULES for less noisy build!
  * Clean up misc minor compiler warnings.
- * Start using -O3 optimization for another 2% perf improvment.
+ * Start using -O3 optimization for another 2% perf improvement.
  * Fix configure.in --enable/--disable flags (bug #53)
  * Some intransitive verbs are actually transitive in rare cases.
  * Use enum not int for the cost-model type.
@@ -96,7 +96,7 @@ Version 4.6.5 (3 November 2009)
  * Fix: Take more care in distinguishing mass and count nouns.
  * Fix: Old bug w/relative clauses: Rw+ is optional, not mandatory.
  * Provide tags identifying relative, superlative adjectives.
- * Remove BioLG NUMBER-AND-UNIT handling, its been superceeded. 
+ * Remove BioLG NUMBER-AND-UNIT handling, its been superceded. 
  * Fix handling of parenthetical phrases/clauses.
  * Fix: handling of capitalized first words ending in letter "s".
  * Fix: support "filler-it" SF link for "It was reasoned that..."
@@ -401,7 +401,7 @@ Version 4.3.5 (29 April 2008) includes the following changes:
  * Fix crash in constituent output, bug #22 in googlecode bugtacker.
  * Some small steps taken to eventually make library thread-safe.
  * There are three constituent string styles, enable all three.
- * Make the command-line flag errors less cyrptic.
+ * Make the command-line flag errors less cryptic.
  * Add readline (BSD editline) support.
  * Rename "grammar-parse" to the more logical "link-parser".
  * Small man page updates.
