@@ -1,3 +1,6 @@
+Version 4.7.7 (xxx 2012)
+ * Fix configure script to not bomb if g++ is not installed. (regex.h)
+
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).
  * Fix accidental inclusion of internal header file from public header file.

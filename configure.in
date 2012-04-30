@@ -49,8 +49,10 @@ LT_INIT([win32-dll])
 AM_BINRELOC
 PKG_PROG_PKG_CONFIG
 
+# The below says "use the C compiler for all reamining tests".
+# That way, if g++ is not installed, configure won't crap out
+# (with a mystery error about not finding regex.h)
 AC_LANG([C])
-AC_LANG([C++])
 
 AC_C_CONST
 
@@ -440,7 +442,7 @@ if test "x$enable_java_bindings" = "xyes"; then
           SAVE_CPPFLAGS=${CPPFLAGS}
           CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
           AC_MSG_WARN([Can't find jni.h header in standard locations, trying again with ${CPPFLAGS}]) 
-          _au_m4_changequote([,])AC_TRY_CPP( [#include <jni.h>], 
+          AC_TRY_CPP( [#include <jni.h>], 
                   [AC_MSG_RESULT([yes, will build java libs])
                   JNIfound=yes], 
                   [ AC_MSG_WARN([cannot find jni.h header, needed for Java bindings support.]) 
