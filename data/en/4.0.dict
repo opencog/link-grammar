@@ -9,8 +9,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.7.6 (formatted as V4v7v6+)
-<dictionary-version-number>: V4v7v6+;
+% Dictionary version number is 4.7.7 (formatted as V4v7v7+)
+<dictionary-version-number>: V4v7v7+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  % 
@@ -422,7 +422,7 @@ Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y 
 Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y: 
-  G- & {Xi+} & {[MG+]} &
+  ({[X-]} & G-) & {Xi+} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
       (({@MX+} & (JG- or <noun-main-s>)) or 
       <noun-and-s> or
