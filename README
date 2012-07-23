@@ -735,6 +735,20 @@ TODO -- Working Notes:
      The current parser parses these perfectly; a viterbi parsr could
      trip on these.
 
+   Other benefits of a Viterbi decoder:
+   * Less sensitive to sentence boundaries: this would allow longer,
+     run-on sentences to be parsed far more quickly.
+   * Could do better with slang, hip-speak.
+   * Would enable co-reference resultion across sentences (resolve
+     pronouns, etc.)
+   * Would allow richer state to be passed up to higher layers:
+     specifically, alternate parses for fractions of a sentence,
+     alternate refernce resolutions.
+   * Would allow plug-in architecture, so that plugins, employing
+     some alternate, higher-level logic, could disambiguate (e.g.
+     by making use of semantic content).
+   * Eliminate many of the hard-coded array sizes in the code.
+
 
    Registers:
       Consider the sentence "Thieves rob bank" -- a typical newspaper

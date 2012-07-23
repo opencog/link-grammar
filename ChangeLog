@@ -1,7 +1,8 @@
 Version 4.7.7 (xxx 2012)
  * Fix configure to not bomb if c++ is not found. (weird regex.h missing)
- * Fix configure to explicitly require c++ only if set-solver enabled.
+ * Fix configure to explicitly require c++ only if sat-solver enabled.
  * Dictionary: parse comma in "Monsters, Inc."
+ * Update README about Viterbi algo.
 
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).
