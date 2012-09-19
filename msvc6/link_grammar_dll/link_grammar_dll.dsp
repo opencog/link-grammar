@@ -140,10 +140,6 @@ SOURCE="..\..\link-grammar\idiom.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\malloc-dbg.c"
-# End Source File
-# Begin Source File
-
 SOURCE="..\..\link-grammar\massage.c"
 # End Source File
 # Begin Source File

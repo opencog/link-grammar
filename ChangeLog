@@ -3,6 +3,7 @@ Version 4.7.7 (xxx 2012)
  * Fix configure to explicitly require c++ only if sat-solver enabled.
  * Dictionary: parse comma in "Monsters, Inc."
  * Update README about Viterbi algo.
+ * Remove malloc-dbg.c from the MSVC6 project file.
 
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).
