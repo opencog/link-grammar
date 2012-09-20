@@ -124,6 +124,10 @@ SOURCE="..\..\link-grammar\disjuncts.c"
 # End Source File
 # Begin Source File
 
+SOURCE="..\..\link-grammar\disjunct-utils.c"
+# End Source File
+# Begin Source File
+
 SOURCE="..\..\link-grammar\error.c"
 # End Source File
 # Begin Source File
