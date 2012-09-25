@@ -185,6 +185,16 @@ link_public_api(void)
  *
  ***********************************************************************/
 
+typedef enum
+{
+	NO_DISPLAY = 0,        /** Display is disabled */
+	MULTILINE = 1,         /** multi-line, indented display */
+	BRACKET_TREE = 2,      /** single-line, bracketed tree */
+	SINGLE_LINE = 3,       /** single line, round parenthesis */
+   MAX_STYLES = 3         /* this must always be last, largest */
+} ConstituentDisplayStyle;
+
+
 link_public_api(void)
      parse_options_set_batch_mode(Parse_Options opts, int val);
 link_public_api(int)
@@ -202,8 +212,8 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_display_postscript(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_display_constituents(Parse_Options opts, int val);
-link_public_api(int)
+     parse_options_set_display_constituents(Parse_Options opts, ConstituentDisplayStyle val);
+link_public_api(ConstituentDisplayStyle)
      parse_options_get_display_constituents(Parse_Options opts);
 link_public_api(void)
      parse_options_set_display_bad(Parse_Options opts, int val);
@@ -339,7 +349,7 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_senses(char *str);
 link_public_api(char *)
-     linkage_print_constituent_tree(Linkage linkage, int mode);
+     linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 link_public_api(void)
      linkage_free_constituent_tree_str(char *str);
 link_public_api(char *)

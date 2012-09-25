@@ -116,7 +116,7 @@ Parse_Options parse_options_create(void)
 	po->screen_width = 79;
 	po->display_on = TRUE;
 	po->display_postscript = FALSE;
-	po->display_constituents = 0;
+	po->display_constituents = NO_DISPLAY;
 	po->display_bad = FALSE;
 	po->display_disjuncts = FALSE;
 	po->display_links = FALSE;
@@ -351,20 +351,21 @@ int parse_options_get_display_postscript(Parse_Options opts)
 	return opts->display_postscript;
 }
 
-void parse_options_set_display_constituents(Parse_Options opts, int dummy)
+void parse_options_set_display_constituents(Parse_Options opts, ConstituentDisplayStyle dummy)
 {
-	if ((dummy < 0) || (dummy > 3)) {
+	if (dummy > MAX_STYLES)
+	{
 		prt_error("Possible values for constituents: \n"
 	             "   0 (no display)\n"
 	             "   1 (treebank style, multi-line indented)\n"
 	             "   2 (flat tree, square brackets)\n"
 	             "   3 (flat treebank style)\n");
-	   opts->display_constituents = 0;
+	   opts->display_constituents = NO_DISPLAY;
 	}
 	else opts->display_constituents = dummy;
 }
 
-int parse_options_get_display_constituents(Parse_Options opts)
+ConstituentDisplayStyle parse_options_get_display_constituents(Parse_Options opts)
 {
 	return opts->display_constituents;
 }

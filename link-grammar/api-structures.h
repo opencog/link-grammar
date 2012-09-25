@@ -95,7 +95,7 @@ struct Parse_Options_s
 	int screen_width;             /* width of screen for displaying linkages */
 	int display_on;               /* if true, output graphical linkage diagram */
 	int display_postscript;       /* if true, output postscript linkage */
-	int display_constituents;     /* if true, output treebank-style constituent structure */
+	ConstituentDisplayStyle display_constituents;     /* style for displaying constituent structure */
 	int display_bad;              /* if true, bad linkages are displayed */
 	int display_disjuncts;        /* if true, print disjuncts that were used */
 	int display_links;            /* if true, a list o' links is printed out */

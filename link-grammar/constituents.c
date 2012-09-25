@@ -1826,17 +1826,17 @@ void linkage_free_constituent_tree(CNode * n)
  * mode 2: flat, bracketed tree [A like [B this B] A]
  * mode 3: flat, treebank-style tree (A like (B this) )
  */
-char * linkage_print_constituent_tree(Linkage linkage, int mode)
+char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode)
 {
 	String * cs;
 	CNode * root;
 	char * p;
 
-	if ((mode == 0) || (linkage->sent->dict->constituent_pp == NULL))
+	if ((mode == NO_DISPLAY) || (linkage->sent->dict->constituent_pp == NULL))
 	{
 		return NULL;
 	}
-	else if (mode == 1 || mode == 3)
+	else if (mode == MULTILINE || mode == SINGLE_LINE)
 	{
 		cs = string_new();
 		root = linkage_constituent_tree(linkage);
@@ -1847,7 +1847,7 @@ char * linkage_print_constituent_tree(Linkage linkage, int mode)
 		string_delete(cs);
 		return p;
 	}
-	else if (mode == 2)
+	else if (mode == BRACKET_TREE)
 	{
 		return print_flat_constituents(linkage);
 	}
