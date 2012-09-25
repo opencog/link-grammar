@@ -5417,6 +5417,11 @@ and.j-r or.j-r:
 % and then use the resulting phrase to modify another noun ...
 <noun-conj-head>: Ju- or SJl+ or [[AN+]];
 
+% XXX WTF? why does [O-] have a cost that the post-nominal doesn't?
+% Having this cost messes up the following parse:
+% "The Spirit, a liner carrying crew members and passengers, was attacked."
+% I'm guessing the [O-] cost is needed to avoid some other screwup ..?
+%
 and.j-n but_not:
   (<noun-conj-dep-s> & <noun-sub-s> & 
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Os-] or <post-nominal-s>)) or

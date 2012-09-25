@@ -902,7 +902,7 @@ Postprocessor * post_process_open(const char *path)
 	pp->knowledge	= pp_knowledge_open(path);
 	pp->sentence_link_name_set = string_set_create();
 	pp->set_of_links_of_sentence = pp_linkset_open(1024);
-	pp->set_of_links_in_an_active_rule=pp_linkset_open(1024);
+	pp->set_of_links_in_an_active_rule = pp_linkset_open(1024);
 	pp->relevant_contains_one_rules =
 			(int *) xalloc ((pp->knowledge->n_contains_one_rules+1)
 							*(sizeof pp->relevant_contains_one_rules[0]));
