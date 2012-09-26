@@ -34,7 +34,6 @@ struct cluster_s
 static void * db_file_open(const char * dbname, void * user_data)
 {
 	Cluster *c = (Cluster *) user_data;
-	int rc;
 	sqlite3 *dbconn;
 	c->rc = sqlite3_open_v2(dbname, &dbconn, SQLITE_OPEN_READONLY, NULL);
 	if (c->rc)
@@ -150,18 +149,23 @@ void lg_cluster_delete(Cluster *c)
 
 static Exp * make_exp(const char *djstr, double cost)
 {
+	char * tmp;
+	Exp *p1, *p2;
+	E_list *l, *lhead = NULL;
+	size_t len;
+	const char *sp = strchr (djstr, ' '); 
+
 	Exp *e = (Exp *) malloc(sizeof(Exp));
 	e->multi = 0;
 	e->dir = ' ';
 	e->cost = cost;
 
 	/* If its just a single connector, then do just that */
-	const char *sp = strchr (djstr, ' '); 
 	if (NULL == sp || 0x0 == sp[1])
 	{
 		e->type = CONNECTOR_type;
 		if ('@' == djstr[0]) { e->multi = 1; djstr++; }
-		size_t len = strlen(djstr) - 1;
+		len = strlen(djstr) - 1;
 		if (sp) len--;
 		e->u.string = strndup(djstr, len);
 		e->dir = djstr[len];
@@ -169,14 +173,11 @@ static Exp * make_exp(const char *djstr, double cost)
 	}
 
 	/* If there are multiple connectors, and them together */
-	size_t len = sp - djstr;
-	char * tmp = strndup(djstr, len);
-	Exp *p1 = make_exp(tmp, 0.0);
+	len = sp - djstr;
+	tmp = strndup(djstr, len);
+	p1 = make_exp(tmp, 0.0);
 	free (tmp);
-	Exp *p2 = make_exp(sp+1, 0.0);
-
-	E_list *l;
-	E_list *lhead = NULL;
+	p2 = make_exp(sp+1, 0.0);
 
 	l = (E_list *) malloc(sizeof(E_list));
 	l->next = lhead;
@@ -197,6 +198,9 @@ static Exp * make_exp(const char *djstr, double cost)
 #if NOT_NEEDED
 static Exp * or_exp(Exp *p1, Exp *p2)
 {
+	E_list *l;
+	E_list *lhead = NULL;
+
 	if (NULL == p2) return p1;
 
 	Exp *e = (Exp *) malloc(sizeof(Exp));
@@ -204,9 +208,6 @@ static Exp * or_exp(Exp *p1, Exp *p2)
 	e->dir = ' ';
 	e->cost = 0.0;
 	e->type = OR_type;
-
-	E_list *l;
-	E_list *lhead = NULL;
 
 	l = (E_list *) malloc(sizeof(E_list));
 	l->next = lhead;
@@ -230,8 +231,8 @@ static void free_exp(Exp *e)
 		E_list *l = e->u.l;
 		while(l)
 		{
-			free_exp(l->e);
 			E_list *ln = l->next;
+			free_exp(l->e);
 			free(l);
 			l = ln;
 		}
@@ -246,6 +247,7 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 {
 	Disjunct *djl = NULL;
 	int rc;
+	const char * cluname;
 
 	/* Look for a cluster containing this word */
 	rc = sqlite3_bind_text(c->clu_query, 1, wrd, -1, SQLITE_STATIC);
@@ -253,15 +255,20 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 	if (rc != SQLITE_ROW) goto noclust;
 
 	/* Get the cluster name, and look for the disjuncts */
-	const char * cluname = sqlite3_column_text(c->clu_query,0);
+	cluname = sqlite3_column_text(c->clu_query,0);
 	rc = sqlite3_bind_text(c->dj_query, 1, cluname, -1, SQLITE_STATIC);
 
 	while(1)
 	{
+		const char *djs;
+		double cost;
+		Exp *e;
+		Disjunct *dj;
+
 		rc = sqlite3_step(c->dj_query);
 		if (rc != SQLITE_ROW) break;
-		const char * djs = sqlite3_column_text(c->dj_query,0);
-		double cost = sqlite3_column_double(c->dj_query,1);
+		djs = sqlite3_column_text(c->dj_query,0);
+		cost = sqlite3_column_double(c->dj_query,1);
 
 		/* All expanded disjuncts are costly! */
 		// cost += 0.5;
@@ -269,11 +276,11 @@ Disjunct * lg_cluster_get_disjuncts(Cluster *c, const char * wrd)
 		if (cost < 0.0) cost = 0.0;
 
 		/* Building expressions */
-		Exp *e = make_exp(djs, cost);
+		e = make_exp(djs, cost);
 		X_node x;
 		x.exp = e;
 		x.string = wrd;
-		Disjunct *dj = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+		dj = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
 		djl = catenate_disjuncts(dj, djl);
 		free_exp(e);
 	}
