@@ -373,8 +373,9 @@ br_strndup (char *str, size_t size)
 	if (!len) return strdup ("");
 	if (size > len) size = len;
 
-	result = (char *) calloc (sizeof (char), len + 1);
+	result = (char *) malloc ((size+1)*sizeof (char));
 	memcpy (result, str, size);
+	result[size] = 0x0;
 	return result;
 }
 

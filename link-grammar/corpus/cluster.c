@@ -156,7 +156,7 @@ static Exp * make_exp(const char *djstr, double cost)
 	e->cost = cost;
 
 	/* If its just a single connector, then do just that */
-	char *sp = strchr (djstr, ' '); 
+	const char *sp = strchr (djstr, ' '); 
 	if (NULL == sp || 0x0 == sp[1])
 	{
 		e->type = CONNECTOR_type;

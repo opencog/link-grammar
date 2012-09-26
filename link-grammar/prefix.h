@@ -33,7 +33,7 @@ extern "C" {
  * --> expands br_locate to foobar_br_locate
  */
 #undef BR_NAMESPACE
-#define BR_NAMESPACE(funcName) funcName
+#define BR_NAMESPACE(funcName) lg_ ## funcName
 
 
 #ifdef ENABLE_BINRELOC

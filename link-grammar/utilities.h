@@ -73,8 +73,11 @@
 /* No langinfo in Windows or MinGW */
 #define nl_langinfo(X) ""
 
-/* strtok_r is missing in Windows */
+/* strtok_r() is missing in Windows */
 char * strtok_r (char *s, const char *delim, char **saveptr);
+
+/* strndup() is missing in Windows. */
+char * strndup (const char *str, size_t size);
 
 /* Windows doesn't have a thread-safe rand (???) */
 /* Surely not, there must be something */
