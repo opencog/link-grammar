@@ -7136,26 +7136,46 @@ until 'til ’til ‘til `til til:
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
   or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
 
-since: ((Mgp+ or J+ or JT+ or UN+) & (({Xc+ & {Xd-}} & CO+) or 
-({Xd- & Xc+} & MVp-) or [Mp-])) or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
-or [[MVa-]] or [[E+]];
-ever_since: (J+ or Mgp+ or Cs+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} &
- MVs-));
-after: {EI- or Yt-} & (((Mgp+ or J+ or JT+) & (<prep-main-b>
-or UN- or Ca+ or Qe+)) or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} &
- MVs-))));
-before: ({EI- or Yt-} & (({Mgp+ or J+ or JT+} & (<prep-main-b>
-or UN-)) or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} &
- MVs-))))) or (Yt- & (Ca+ or Qe+));
-if: (Cs+ & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
- or ((Cs+ or [Mgp+] or [Mv+]) & (({Xd- & Xc+} & MVs-) or 
-({Xc+ & {Xd-}} & CO*s+))) or (QI- & Cs+);
-if_possible if_necessary: MVp- or (Xd- & Xc+ & (MVx- or E+)) or 
-({Xc+ & {Xd-}} & CO+);
-if_so: ({Xc+ & {Xd-}} & CO+);
+since:
+  ((Mgp+ or J+ or JT+ or UN+)
+    & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
+  or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
+  or [[MVa-]] or [[E+]];
+
+ever_since:
+  (J+ or Mgp+ or Cs+)
+     & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
+
+after:
+  {EI- or Yt-}
+    & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or Ca+ or Qe+))
+      or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))));
+
+before:
+  ({EI- or Yt-}
+    & (({Mgp+ or J+ or JT+} & (<prep-main-b> or UN-))
+      or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
+  or (Yt- & (Ca+ or Qe+));
+
+if only_if:
+  (Cs+ & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
+  or ((Cs+ or [Mgp+] or [Mv+])
+    & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)))
+  or (QI- & Cs+);
+
+if_possible if_necessary:
+  MVp-
+  or (Xd- & Xc+ & (MVx- or E+))
+  or ({Xc+ & {Xd-}} & CO+);
+
+if_so:
+  ({Xc+ & {Xd-}} & CO+);
+
 no_wonder: Wd+ & Wc-;
-while: ((Cs+ or Mgp+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) 
-or (Xd- & Xc+ & E+)));
+
+while:
+  ((Cs+ or Mgp+ or Mp+)
+    & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)));
 
 <adverb-join>: RJlv+ or RJrv-;
 
@@ -7307,7 +7327,7 @@ neither.j: Dn+;
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
 but.j-n: 
-  ((Xd- & SJl- & EBx+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
+  ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
   ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
   ((SJl- & EBy- & SJr+) & Ou-);
 
@@ -7422,16 +7442,25 @@ QJ- or QJ+ or
 ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % EBy+ link is for "verbed not X but Y" 
+% XXX FIXME:
+% EB- is difficult ...
+%   it is not sweet         % not is modifying "is" (and that's OK)
+%   *it tastes not sweet       
+%   it tastes bitter, not sweet   % not is modifying comma    
+%   it tastes bitter and not sweet  % not is modifying "and" (probably OK)
+%
 not.e: 
-  EB- or 
-  ({@E-} & N-) or 
-  NT+ or 
-  EBy+ or
-  [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+) or 
-    (Mg- & Mgn+) or 
-    (Mv- & Mvn+) or 
-    (Mp- & Mp+) or 
-    (Ma- & Ma*n+)]];
+  EBm-
+  or EBb-
+  or (EBx- & EA+)
+  or ({@E-} & N-)
+  or NT+
+  or EBy+
+  or [[((Ma+ or Mg+ or Mv+ or Mp+) & CO+)
+    or (Mg- & Mgn+)
+    or (Mv- & Mvn+)
+    or (Mp- & Mp+)
+    or (Ma- & Ma*n+)]];
 
 % We include this, though it's not one of the strippable strings
 n't n’t: N- or EB-;
@@ -7440,7 +7469,7 @@ n't n’t: N- or EB-;
 
 % Common disjuncts shared by virtually all adjectives.
 % Dn- & AJn+: for neither...nor constructions.
-<adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or 
+<adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or
   (AJra- & {@MV+}) or
   ({@MV+} & AJla+) or
   (Dn- & AJn+) or

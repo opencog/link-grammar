@@ -2528,6 +2528,11 @@ Show me my notes and do not tell anyone.
 Show me my notes but do not tell anyone.
 By the way, show me my notes but do not tell anyone.
 Do not tell anyone or say anything.
+Show me my notes, if they are readable.
+Show me my notes only if they are readable.
+Show me my notes, but only if they are readable.
+Show me my notes but only if they are readable.
+Show me my notes, but not if they are unreadable.
 
 % conjoined ditransitive objects
 I gave Bob a doll and Mary a gun.
