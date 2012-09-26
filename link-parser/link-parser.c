@@ -504,8 +504,8 @@ static void check_winsize(Parse_Options popts)
 {
 /* Neither windows nor MSYS have the ioctl support needed for this. */
 #ifdef _WIN32
-	parse_options_set_screen_width(popts, 79);
-#else 
+	/* unsupported for now */
+#else
 	struct winsize ws;
 	int fd = open("/dev/tty", O_RDWR);
 
@@ -658,6 +658,9 @@ int main(int argc, char * argv[])
 
 	verbosity = parse_options_get_verbosity(opts);
 	check_winsize(opts);
+#ifdef _WIN32
+	parse_options_set_screen_width(popts, 79);
+#endif
 
 	prt_error("Info: Dictionary version %s.\n",
 		linkgrammar_get_dict_version(dict));
