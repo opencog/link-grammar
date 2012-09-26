@@ -6505,7 +6505,7 @@ during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- &
 from:
   ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
   or (MVp- & B-)
-  or MVp- or NIr+;
+  or NIr+;
 
 at toward towards without:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
@@ -7371,11 +7371,17 @@ why_not: [[{@CO-} & Wc- & Wi+]];
 
 % QI- & (): "I do not know where"
 % R+ & Bsw+: "Where does it go to?"
-where: {EL+} & (
- (Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+)) or 
- [QI-] or QJ- or QJ+ or
- ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or
- ((Cs+ or PF+ or WR+) & <prep-main-b>));
+% Cs+ & Bsw+ & QI-: "Can you tell us where those strange ideas came from?"
+where:
+  {EL+}
+    & (
+      (Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+))
+      or [QI-]
+      or QJ-
+      or QJ+
+      or (Cs+ & Bsw+ & QI-)
+      or ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+      or ((Cs+ or PF+ or WR+) & <prep-main-b>));
 
 whether: (((QI- or BIq-) & (Cs+ or TOn+)) or (Cs+ & SFsx+ & <S-CLAUSE>))
 or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
@@ -8735,7 +8741,7 @@ subject_to status_post in_conjunction_with sensu
 oftenest correctliest soonest disquietingliest:
  EA+;
 
-% XXX aren't these opotiuonal transitive ?
+% XXX aren't these optional transitive ?
 gells.v O.K.'s.v OK's.v O.K.’s OK’s:
   
   ((<verb-s> & (<vc-intrans>)) or
