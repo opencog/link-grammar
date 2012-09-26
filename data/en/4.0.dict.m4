@@ -5227,10 +5227,13 @@ UNITS: <units-suffix>;
 %({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or <costly-null>) & MX*r-)); 
 
 % QI- & (): "I do not know who"
-who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
-[QI-] or
-({EL+} & (S**w+ or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-)) or
-({MVp+ or MVx+} & (S**w+ or (R+ & B*w+)) & (Xd- & (Xc+ or <costly-null>) & MX*r-)); 
+% Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
+who:
+  (R- & (({MVp+ or MVx+} & RS+) or Cr+))
+  or [QI-]
+  or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-))
+  or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
+     & (Xd- & (Xc+ or <costly-null>) & MX*r-)); 
 
 % "what are the answers?" takes Sp+
 what: 
