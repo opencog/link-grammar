@@ -12,10 +12,7 @@ INCLUDES = -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL
 bin_PROGRAMS=link-parser
 link_parser_SOURCES = link-parser.c \
                       command-line.c \
-                      prefix.c \
                       command-line.h
-
-EXTRA_DIST=           prefix.h
 
 link_parser_LDADD = $(LIBEDIT_LIBS)
 

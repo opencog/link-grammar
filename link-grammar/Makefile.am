@@ -100,6 +100,7 @@ liblink_grammar_la_SOURCES =        \
 	pp_knowledge.c                   \
 	pp_lexer.c                       \
 	pp_linkset.c                     \
+	prefix.c                         \
 	preparation.c                    \
 	print.c                          \
 	print-util.c                     \
@@ -163,6 +164,7 @@ liblink_grammar_java_la_SOURCES =   \
 	jni-client.c
 
 EXTRA_DIST=                               \
+	prefix.h                               \
 	autoit/_LGTest.au3                     \
 	autoit/_LinkGrammar.au3                \
 	autoit/README                          \
