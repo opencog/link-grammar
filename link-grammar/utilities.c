@@ -566,17 +566,58 @@ char * dictionary_get_data_dir(void)
 #elif defined(_WIN32)
 	/* Dynamically locate library and return containing directory */
 	hInstance = GetModuleHandle("link-grammar.dll");
-	if(hInstance != NULL)
+	if (hInstance != NULL)
 	{
 		char dll_path[MAX_PATH];
 
-		if(GetModuleFileName(hInstance,dll_path,MAX_PATH)) {
+		if (GetModuleFileName(hInstance, dll_path, MAX_PATH))
+		{
 #ifdef _DEBUG
-			prt_error("Info: GetModuleFileName=%s\n", (dll_path?dll_path:"NULL"));
+			prt_error("Info: GetModuleFileName=%s\n", (dll_path ? dll_path : "NULL"));
 #endif
 			data_dir = path_get_dirname(dll_path);
 		}
 	}
+	else
+	{
+		/* BHayes added else block for when link-grammar.dll is not found 11apr11 */
+		/* This requests module handle for the current program */
+		hInstance = GetModuleHandle(NULL);
+		if (hInstance != NULL)
+		{
+			char prog_path16[MAX_PATH];
+			printf("  found ModuleHandle for current program so try to get Filename for current program \n");
+			if (GetModuleFileName(hInstance, prog_path16, MAX_PATH))
+			{
+				char * data_dir16 = NULL;
+				// convert 2-byte to 1-byte encoding of prog_path
+				char prog_path[MAX_PATH/2];
+				int i, k;
+				for (i = 0; i < MAX_PATH; i++)
+				{
+					k = i + i;
+					if (prog_path16[k] == 0 )
+					{
+						prog_path[i] = 0;
+						break; // found the string ending null char
+					}
+					// XXX this cannot possibly be correct for UTF-16 filepaths!! ?? FIXME
+					prog_path[i] = prog_path16[k];
+				}
+#ifdef _DEBUG
+				prt_error("Info: GetModuleFileName=%s\n", (prog_path ? prog_path : "NULL"));
+#endif
+				data_dir16 = path_get_dirname(prog_path);
+				if (data_dir16 != NULL)
+				{
+					printf("   found dir for current prog %s\n", data_dir16);
+				}
+				return data_dir16;  // return path of data directory here instead of below
+			} else {
+				printf("   FAIL GetModuleFileName for current program \n");
+			}
+		}
+   }  /* BHayes - end added else block */
 #endif
 
 	return data_dir;
