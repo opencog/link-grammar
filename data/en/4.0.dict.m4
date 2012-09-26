@@ -4684,9 +4684,11 @@ under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or (MVp- &
 below above behind.p: ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or (MVp- & B-);
 within:                        ({JQ+} & J+ & <prep-main-a>)           or (MVp- & B-);
 during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- & B-);
+
 from:
-({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & <prep-main-a>)
-or (MVp- & B-) or MVp- or NIr+;
+  ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
+  or (MVp- & B-)
+  or MVp- or NIr+;
 
 at toward towards without:
 ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
@@ -4994,14 +4996,22 @@ night.r semester.r term.r season.r session.r:
 (DTi- & (JT- or [[<noun-main-s>]] or YS+)) or (DTa- & <prep-main-t>);
 the_next the_previous the_following this_past: DTn+;
 
-today tonight: <prep-main-t> or JT- or [[E+]]
- or YS+ or [[<noun-main-s>]];
-yesterday: {TD+} & (<prep-main-t> or JT- or [[E+]]
- or YS+ or [[<noun-main-s>]]);
-tomorrow: {TD+} & (<prep-main-t> or JT- or YS+ or [[<noun-main-s>]]);
+% Js- links "show results from today"
+<relative-date>:
+  <prep-main-t> or JT- or Js- or YS+ or [[<noun-main-s>]];
+
+today tonight:
+  <relative-date> or [[E+]];
+
+yesterday:
+  {TD+} & (<relative-date> or [[E+]]);
+
+tomorrow:
+  {TD+} & <relative-date>;
+
 Monday Tuesday Wednesday Thursday Friday Saturday Sunday.i:
-((DTn- or DTie- or [()]) & {G-} & {TD+ or TW+} & 
-(YS+ or <prep-main-t> or JT- or ON- or [[<noun-main-s>]])) or [[AN+]];
+  ((DTn- or DTie- or [()]) & {G-} & {TD+ or TW+} & (<relative-date> or ON-))
+  or [[AN+]];
 
 morning.i afternoon.i night.i evening.i: TD-;
 January.i February March April.i May.i June.i July August.i September.i October
