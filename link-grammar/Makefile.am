@@ -25,7 +25,7 @@ endif
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
+INCLUDES = $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 
@@ -86,7 +86,6 @@ liblink_grammar_la_SOURCES =        \
 	and.c                            \
 	api.c                            \
 	build-disjuncts.c                \
-	command-line.c                   \
 	constituents.c                   \
 	count.c                          \
 	disjunct-utils.c                 \
@@ -123,7 +122,6 @@ liblink_grammar_la_SOURCES =        \
 	analyze-linkage.h                \
 	and.h                            \
 	build-disjuncts.h                \
-	command-line.h                   \
 	constituents.h                   \
 	count.h                          \
 	disjunct-utils.h                 \
@@ -181,20 +179,6 @@ EXTRA_DIST=                               \
 	java/org/linkgrammar/ParseResult.java  \
 	link-grammar.def                       \
 	link-grammar-java.def
-
-
-# -----------------------------------------------------------
-# Directives to build the link-parser command-line application
-bin_PROGRAMS=link-parser
-link_parser_SOURCES = link-parser.c
-link_parser_LDADD = $(LIBEDIT_LIBS)
-
-if WITH_SAT_SOLVER
-link_parser_LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
-link_parser_LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
-endif
-
-link_parser_LDADD += liblink-grammar.la
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib

@@ -484,6 +484,7 @@ link-grammar/corpus/Makefile
 link-grammar/minisat/Makefile
 link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
+link-parser/Makefile
 data/Makefile
 data/de/Makefile
 data/en/Makefile
