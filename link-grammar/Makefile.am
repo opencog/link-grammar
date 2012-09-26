@@ -25,7 +25,7 @@ endif
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-INCLUDES = $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
+INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 

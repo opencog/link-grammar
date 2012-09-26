@@ -6,6 +6,7 @@ Version 4.7.7 (xxx 2012)
  * Remove malloc-dbg.c from the MSVC6 project file.
  * Add missing source files to MSVC6 project file.
  * Use enums for constituent display style.
+ * Move command-line parser to its own directory.
 
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).

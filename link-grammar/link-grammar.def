@@ -192,3 +192,6 @@ parse_info_new
 free_parse_info
 connector_new
 free_connectors
+left_print_string
+dict_display_word_expr
+dict_display_word_info
