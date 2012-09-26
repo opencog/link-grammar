@@ -748,6 +748,12 @@ TODO -- Working Notes:
      some alternate, higher-level logic, could disambiguate (e.g.
      by making use of semantic content).
    * Eliminate many of the hard-coded array sizes in the code.
+ 
+   One may argue that Viterbi is a more natural, biological way of
+   working with sequences.  Some experimental, psychological support
+   for this can be found here:
+   http://www.sciencedaily.com/releases/2012/09/120925143555.htm
+   per Morten Christiansen, Cornell professor of psychology.
 
 
    Registers:
