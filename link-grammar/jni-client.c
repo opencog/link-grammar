@@ -44,7 +44,7 @@ static pthread_once_t java_key_once = PTHREAD_ONCE_INIT;
 
 static void java_key_alloc(void)
 {
-   pthread_key_create(&java_key, free);
+	pthread_key_create(&java_key, free);
 }
 #else
 static per_thread_data * global_ptd = NULL;

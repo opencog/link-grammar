@@ -829,7 +829,7 @@ static int new_style_conjunctions(con_context_t *ctxt, Linkage linkage, int numc
 	{
 		constituent_t *ct = &ctxt->constituent[c];
 		printf("ola %d valid=%d %s start=%s lr=%d %d\n", c, 
-      ct->valid, ct->type, ct->start_link, ct->left, ct->right);
+			ct->valid, ct->type, ct->start_link, ct->left, ct->right);
 	}
 #endif
 	return numcon_total;

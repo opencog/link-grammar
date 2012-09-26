@@ -157,19 +157,18 @@ strtok_r (char *s, const char *delim, char **saveptr)
 char *
 strndup (char *str, size_t size)
 {
-   char *result = (char *) NULL;
-   size_t len;
+	char *result = (char *) NULL;
 
-   if ((char *) NULL == str) return (char *) NULL;
+	if ((char *) NULL == str) return (char *) NULL;
 
-   len = strlen (str);
-   if (!len) return strdup ("");
-   if (size > len) size = len;
+	size_t len = strlen (str);
+	if (!len) return strdup ("");
+	if (size > len) size = len;
 
-   result = (char *) malloc ((size + 1) * sizeof (char));
-   memcpy (result, str, size);
-   result[size] = 0x0;
-   return result;
+	result = (char *) malloc ((size + 1) * sizeof (char));
+	memcpy (result, str, size);
+	result[size] = 0x0;
+	return result;
 }
 
 #endif /* _WIN32 should be !HAVE_STRNDUP */
@@ -627,7 +626,7 @@ void * object_open(const char *filename,
 	 * Windows: starts with C:\  except that the drive letter may differ.
 	 */
 	if ((filename[0] == '/') || ((filename[1] == ':') && (filename[2] == '\\'))) 
-   {
+	{
 		/* fopen returns NULL if the file does not exist. */
 		fp = opencb(filename, user_data);
 		if (fp) return fp;

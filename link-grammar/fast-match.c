@@ -46,7 +46,7 @@ struct match_context_s
 	Match_node ** l_table[MAX_SENTENCE];
 	Match_node ** r_table[MAX_SENTENCE];
 
-   /* I'll pedantically maintain my own list of these cells */
+	/* I'll pedantically maintain my own list of these cells */
 	Match_node * mn_free_list;
 };
 
@@ -131,7 +131,7 @@ void free_fast_matcher(Sentence sent)
  */
 static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
 {
-   Match_node *p, *prev;
+	Match_node *p, *prev;
 
 	if (l == NULL) return m;
 
@@ -162,7 +162,7 @@ static Match_node * add_to_right_table_list(Match_node * m, Match_node * l)
  */
 static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
 {
-   Match_node *p, *prev;
+	Match_node *p, *prev;
 
 	if (l == NULL) return m;
 

@@ -38,7 +38,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	 * <dictionary-version-number>: V4v6v6+;
 	 * which would indicate dictionary verison 4.6.6
 	 * Older dictionaries contain no version info.
-    */
+	 */
 	dn = dictionary_lookup_list(dict, "<dictionary-version-number>");
 	if (NULL == dn) return "[unknown]";
 
@@ -52,7 +52,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	}
 
 	free_lookup_list(dn);
-   return ver;
+	return ver;
 }
 
 
@@ -623,9 +623,9 @@ static Dict_node * rdictionary_lookup(Dict_node *llist,
  */
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 {
-   Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE);
-   llist = prune_lookup_list(llist, s);
-   return llist;
+	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE);
+	llist = prune_lookup_list(llist, s);
+	return llist;
 }
 
 /**
@@ -643,9 +643,9 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node *llist;
-   llist = rdictionary_lookup(NULL, dict->root, s, FALSE);
-   llist = prune_lookup_list(llist, s);
-   return llist;
+	llist = rdictionary_lookup(NULL, dict->root, s, FALSE);
+	llist = prune_lookup_list(llist, s);
+	return llist;
 }
 
 int boolean_dictionary_lookup(Dictionary dict, const char *s)

@@ -77,12 +77,12 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 		if (nwords <= rword) continue;
 
 		djlist[lword*nlinks + slot] = i;
-      djloco[lword*nlinks + slot] = rword;
+		djloco[lword*nlinks + slot] = rword;
 		djcount[lword] ++;
 
 		slot = djcount[rword];
 		djlist[rword*nlinks + slot] = i;
-      djloco[rword*nlinks + slot] = lword;
+		djloco[rword*nlinks + slot] = lword;
 		djcount[rword] ++;
 
 #ifdef DEBUG
