@@ -115,7 +115,6 @@ liblink_grammar_la_SOURCES =        \
 	utilities.c                      \
 	word-file.c                      \
 	word-utils.c                     \
-	prefix.c                         \
 	api.h                            \
 	api-structures.h                 \
 	api-types.h                      \
@@ -164,7 +163,6 @@ liblink_grammar_java_la_SOURCES =   \
 	jni-client.c
 
 EXTRA_DIST=                               \
-	prefix.h                               \
 	autoit/_LGTest.au3                     \
 	autoit/_LinkGrammar.au3                \
 	autoit/README                          \
