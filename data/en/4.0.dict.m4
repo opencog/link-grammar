@@ -1834,12 +1834,17 @@ define(`VERB_S_PLI',`'
 
 %Mike replaced "{Q-}" with "(Rw- or Q- or [()])"
 
-<vc-do>: (((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+}) 
-or ({N+} & I*d+));
+<vc-do>:
+  ((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+}) 
+  or ({N+} & I*d+);
 
-do.v: ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
-or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-)) or 
-({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
+% I used verb-and-sp-i but maybe verb-and-pl is better?
+do.v:
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
+  or (<verb-and-sp-i-> & ([<vc-do>] or ()))
+  or (<vc-do> & <verb-and-sp-i+>)
+  or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-))
+  or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 
 does.v: 
   (<verb-x-s> & <vc-do>) or
@@ -5510,7 +5515,7 @@ nor.j-v:
 but.j-v:
   ((({Xd-} & VJls-) & VJrs+) & (Ss- or ({Xd-} & VJrs-))) or
   ((({Xd-} & VJlp-) & VJrp+) & (Sp- or ({Xd-} & VJrp-))) or
-  ((VJl- & VJr+) & (I-));
+  ((VJl- & VJr+) & (I- or <verb-ico>));
 
 % The VJb- guarentees that bit.j-b is used with not_only 
 % "We not only X'ed but also Y'ed".
