@@ -79,9 +79,11 @@ char * strtok_r (char *s, const char *delim, char **saveptr);
 /* strndup() is missing in Windows. */
 char * strndup (const char *str, size_t size);
 
-/* Windows doesn't have a thread-safe rand (???) */
-/* Surely not, there must be something */
-/* XXX FIXME -- this breaks thread safety on windows */
+/* Windows doesn't have a thread-safe rand (!)
+ * XXX FIXME -- this breaks thread safety on windows!
+ * That means YOU, windows thread-using programmer!
+ * Suck it up!
+ */
 #define rand_r(seedp) rand()
 #endif /* _MSC_VER || __MINGW32__ */
 
