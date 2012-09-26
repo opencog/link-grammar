@@ -7305,7 +7305,9 @@ but.j-n:
   (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss-) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
   (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp-) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
   (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+})) or
-  ((VJlg- & VJrg+) & (J-));
+  ((VJlg- & VJrg+) & (J-)) or
+  ((VJlp- & VJrp+) & <verb-ico>) or
+  ((VJls- & VJrs+) & <verb-ico>);
 
 and.j-v or.j-v: <verb-conjunction>;
 
