@@ -4719,7 +4719,7 @@ among:
   (MVp- & B-);
 
 for.p: 
-  ({JQ+} & (J+ or Mgp+ or TI+) & <prep-main-a>) or 
+  ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-)) or 
   (J+ & (RJrj- or RJlj+)) or 
   (MVp- & B-) or 
   (MG- & JG+) or 
@@ -4990,10 +4990,13 @@ this_time this_one_time this_once that_time these_days: <prep-main-t> or [[E+]];
 last_time next_time: 
 <prep-main-t> or JT- or YS+ or [[<noun-main-s>]];
 
+% Js-: "show results from last week"
 day.r week.r month.r year.r weekend.r morning.r afternoon.r evening.r
 night.r semester.r term.r season.r session.r:
-((DTn- or DTi-) & (<prep-main-t> or [[E+]])) or 
-(DTi- & (JT- or [[<noun-main-s>]] or YS+)) or (DTa- & <prep-main-t>);
+  ((DTn- or DTi-) & (<prep-main-t> or [[E+]]))
+  or (DTi- & (JT- or YS+ or Js- or [[<noun-main-s>]]))
+  or (DTa- & <prep-main-t>);
+
 the_next the_previous the_following this_past: DTn+;
 
 % Js- links "show results from today"
@@ -5013,22 +5016,25 @@ Monday Tuesday Wednesday Thursday Friday Saturday Sunday.i:
   ((DTn- or DTie- or [()]) & {G-} & {TD+ or TW+} & (<relative-date> or ON-))
   or [[AN+]];
 
-morning.i afternoon.i night.i evening.i: TD-;
-January.i February March April.i May.i June.i July August.i September.i October
-November December: 
+morning.i afternoon.i night.i evening.i:
+  TD-;
+
+January.i February March April.i May.i June.i
+July August.i September.i October November December: 
   ((DTn- or DTie- or ({TA-} & {TY+})) &
-    (JT- or
-    IN- or
-    [[<noun-main-s>]] or
-    [<noun-and-s>] or
-    YS+)) or
-  ((DTn- or DTie-) & <prep-main-t>) or
-  (TM+ & {TY+} & 
-    ((Xd- & Xc+ & TW-) or
-    ON- or
-    JT- or 
-    [[<noun-main-s> or MVp- or Mp- or AN+]])) or
-  AN+;
+    (JT-
+    or Jp-
+    or YS+
+    or IN-
+    or [<noun-and-s>]
+    or [[<noun-main-s>]]))
+  or ((DTn- or DTie-) & <prep-main-t>)
+  or (TM+ & {TY+} & 
+    ((Xd- & Xc+ & TW-)
+    or ON-
+    or JT-
+    or [[<noun-main-s> or MVp- or Mp- or AN+]]))
+  or AN+;
 
 AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock: ND- & {@MX+} & <noun-main-s> & {TZ+} ; 
 
@@ -5071,8 +5077,13 @@ a_while: J- or Yt+ or OT- or MVa-;
 now.i then.i: JT- or FM-;
 now_on then_on there_on: FM-;
 from_now: Yt- & <prep-main-t>;
-a_long_time some_time a_few_moments moments.u: Yt+ or OT-;
-ago: Yt- & (<prep-main-e> or Ca+ or Qe+ or JT-);
+
+a_long_time some_time a_few_moments moments.u:
+  Yt+ or OT-;
+
+ago:
+  Yt- & (<prep-main-e> or Ca+ or Qe+ or JT- or Js-);
+
 every.i: {EN-} & Ye+ & <prep-main-t>;
 times.i x.i:
   (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+ or Ca+ or Qe+)) or
