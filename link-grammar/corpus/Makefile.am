@@ -5,7 +5,7 @@
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(SQLITE3_CFLAGS)
+INCLUDES = -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(SQLITE3_CFLAGS)
 
 if WITH_CORPUS
 lib_LTLIBRARIES = liblink-corpus.la

@@ -13,9 +13,10 @@
 #include <string.h>
 #include <sqlite3.h>
 #include "corpus.h"
-#include "../api-structures.h"
-#include "../disjuncts.h"
-#include "../utilities.h"
+
+#include "api-structures.h"
+#include "disjuncts.h"
+#include "utilities.h"
 
 struct corpus_s
 {
@@ -71,7 +72,11 @@ Corpus * lg_corpus_new(void)
 	c->dbname = NULL;
 
 	/* dbname = "/link-grammar/data/en/sql/disjuncts.db"; */
+#ifdef _WIN32
+#define DBNAME "sql\\disjuncts.db"
+#else
 #define DBNAME "sql/disjuncts.db"
+#endif
 	c->dbconn = object_open(DBNAME, db_file_open, c);
 	if (NULL == c->dbconn)
 	{

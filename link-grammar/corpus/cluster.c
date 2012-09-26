@@ -13,10 +13,11 @@
 #include <string.h>
 #include <sqlite3.h>
 #include "cluster.h"
-#include "../build-disjuncts.h"
-#include "../disjunct-utils.h"
-#include "../structures.h"
-#include "../utilities.h"
+
+#include "build-disjuncts.h"
+#include "disjunct-utils.h"
+#include "structures.h"
+#include "utilities.h"
 
 struct cluster_s
 {
@@ -61,7 +62,11 @@ Cluster * lg_cluster_new(void)
 	c->dbname = NULL;
 
 	/* dbname = "/link-grammar/data/en/sql/clusters.db"; */
+#ifdef _WIN32
+#define DBNAME "sql\\clusters.db"
+#else
 #define DBNAME "sql/clusters.db"
+#endif
 	c->dbconn = object_open(DBNAME, db_file_open, c);
 	if (NULL == c->dbconn)
 	{
