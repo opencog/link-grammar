@@ -63,6 +63,7 @@ static int is_entity(Dictionary dict, const char * str)
 }
 
 
+#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 /**
  * Return TRUE if word is a proper name.
  * XXX This is a cheap hack that works only in English, and is 
@@ -76,6 +77,7 @@ static int is_proper_name(const char * word)
 {
 	return is_utf8_upper(word);
 }
+#endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
 /* Create a string containing anything that can be construed to
  * be a quotation mark. This works, because link-grammar is more
