@@ -5291,18 +5291,33 @@ because:
  (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-))) or
  (Rnx+ & <CLAUSE-E>);
 
-now_that just_as if_only in_case whereby whereupon insofar_as inasmuch_as 
-ere on_the_grounds_that on_grounds_that in_that in_the_event_that in_the_event:
-Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
-on_condition: (TH+ or TS+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
-unless though.c even_though: (Cs+ or Mgp+ or Mv+) & (({Xc+ & {Xd-}} & CO*s+) or 
-({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
-as_if as_though: ((Cs+ or Mgp+ or Mv+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or 
-({Xd- & Xc+} & MVs-) or 
-(Xd- & Xc+ & E+))) or ((BIh- or LI-) & Cs+);
-as_soon_as: Cs+ & {Xc+ & {Xd-}} & CO*s+;
-until 'til ’til ‘til ``til til: ((Mgp+ or J+ or JT+ or UN+) & (({Xc+ & {Xd-}} & CO+) or 
-({Xd- & Xc+} & MVp-) or [Mp-])) or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
+now_that just_as if_only in_case whereby whereupon insofar_as
+inasmuch_as ere on_the_grounds_that on_grounds_that in_that
+in_the_event_that in_the_event:
+  Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
+
+if_only:
+  ((MVp+ or MVa+ or MVs+) & ({Xd- & Xc+} & MVp-)) or (Wd+ & Wc-);
+
+on_condition:
+  (TH+ or TS+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
+
+unless though.c even_though:
+  (Cs+ or Mgp+ or Mv+)
+    & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
+
+as_if as_though:
+  ((Cs+ or Mgp+ or Mv+ or Mp+)
+    & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)))
+  or ((BIh- or LI-) & Cs+);
+
+as_soon_as:
+  Cs+ & {Xc+ & {Xd-}} & CO*s+;
+
+until 'til ’til ‘til ``til til:
+  ((Mgp+ or J+ or JT+ or UN+)
+    & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
+  or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
 
 since: ((Mgp+ or J+ or JT+ or UN+) & (({Xc+ & {Xd-}} & CO+) or 
 ({Xd- & Xc+} & MVp-) or [Mp-])) or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
@@ -5321,8 +5336,6 @@ if: (Cs+ & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
 if_possible if_necessary: MVp- or (Xd- & Xc+ & (MVx- or E+)) or 
 ({Xc+ & {Xd-}} & CO+);
 if_so: ({Xc+ & {Xd-}} & CO+);
-if_only: ((MVp+ or MVa+ or MVs+) & ({Xd- & Xc+} & MVp-))
-or (Wd+ & Wc-);
 no_wonder: Wd+ & Wc-;
 while: ((Cs+ or Mgp+ or Mp+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) 
 or (Xd- & Xc+ & E+)));
@@ -6576,8 +6589,17 @@ furthermore: ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+) or EB-;
 mainly primarily: 
 E+ or ({Xc+ & {Xd-}} & CO+) or EB- or (MVl- & (MVa+ or MVp+ or MVs+));
 
-only: La- or E+ or EN+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+))
-     or MVa- or (Rnx+ & <CLAUSE-E>) or (MVp+ & Wq- & Q+);
+% The MV- links seemt to really confuse the issue... kill them.
+only:
+  La-
+  or E+
+  or EN+
+  or EB- 
+%  or (MVl- & (MVp+ or MVa+ or MVs+))
+%  or MVa-
+  or (Rnx+ & <CLAUSE-E>)
+  or (MVp+ & Wq- & Q+);
+
 never.i at_no_time not_once rarely.i since_when: {MVp+} & Wq- & Q+ & {CC+};
 not_since: (J+ or Cs+) & Wq- & Q+ & {CC+};
 even.e: E+ or EC+ or EB- or ((MVp+ or MVa+ or MVs+) 
