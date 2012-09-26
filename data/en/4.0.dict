@@ -7157,11 +7157,16 @@ before:
       or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
   or (Yt- & (Ca+ or Qe+));
 
-if only_if:
+if only_if if_and_only_if iff:
   (Cs+ & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
   or ((Cs+ or [Mgp+] or [Mv+])
     & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)))
   or (QI- & Cs+);
+
+% Perhaps the below is a cop-out, but getting the links just
+% right between commas, buts, nots and onlys is proving to be hard.
+but_only_if but_not_if:
+  Cs+ & (Xd- or [[()]]) & Xc+ & MVs-;
 
 if_possible if_necessary:
   MVp-

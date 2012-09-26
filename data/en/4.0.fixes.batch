@@ -2531,8 +2531,15 @@ Do not tell anyone or say anything.
 Show me my notes, if they are readable.
 Show me my notes only if they are readable.
 Show me my notes, but only if they are readable.
-Show me my notes but only if they are readable.
 Show me my notes, but not if they are unreadable.
+
+% qualified conditional clauses
+Do it only if you are sure.
+Only if they are home, should you do it.
+You should do it only if they are home.
+
+Theorem A is true if and only if Nachbin's theorem is true.
+Theorem A is true iff theorem B is true.
 
 % conjoined ditransitive objects
 I gave Bob a doll and Mary a gun.
