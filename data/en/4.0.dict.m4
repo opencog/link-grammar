@@ -5238,13 +5238,14 @@ who:
 % "what are the answers?" takes Sp+
 what: 
   ({EL+} & 
-    (D**w+ or 
-    Ss*w+ or 
-    Sp*w+ or 
-    (R+ & (Bsw+ or BW+))) & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-)) or 
-  ((Ss*d+ or (R+ & (Bsd+ or BW+))) & 
-    (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-)) or 
-  (D+ & JQ-);
+      (D**w+
+      or Ss*w+
+      or Sp*w+
+      or (R+ & (Bsw+ or BW+)))
+    & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+  or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
+    & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
+  or (D+ & JQ-);
 
 % QI- & (): "I do not know which"
 which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or 
