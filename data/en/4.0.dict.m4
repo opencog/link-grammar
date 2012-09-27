@@ -1815,6 +1815,11 @@ define(`VERB_X_S',`'
   or (<verb-and-s-> & ([($1)] or ()))
   or (($1) & <verb-and-s+>)))
 
+define(`VERB_X_SPPP',`'
+  ((<verb-x-sp,pp> & ($1)) or
+  (<verb-and-sp-i-> & (([$1]) or ())) or
+  (($1) & <verb-and-sp-i+>)))
+
 % I haven't completely verified this one, it may be buggy..
 define(`VERB_X_PLI',`'
   ((<verb-x-pl,i> & ($1))
@@ -1822,7 +1827,7 @@ define(`VERB_X_PLI',`'
   or (($1) & <verb-and-sp-i+>)))
 
 % XXX TODO need to provide macro-ized versions for <verb-s-s>, <verb-s-sp>
-% <verb-s-sp,pp> and the <verb-x-???> variants as well. 
+% and <verb-s-sp,pp> variants as well. 
 
 % AUXILIARY VERBS
 
@@ -1863,8 +1868,9 @@ does.v:
   or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 
 did.v-d:
-  (<verb-x-sp> & <vc-do>) or
-  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+  (<verb-x-sp> & <vc-do>)
+  or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
+  or ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % verb-pv-b: "I want it done." "I want the job done"
@@ -1912,11 +1918,10 @@ has.v:
   VERB_X_S(<vc-have>)
   or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
-% XXX probably should be verb-and-sp-i- etc !?
 had.v-d: 
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
   (<verb-x-sp> & <vc-have>) or 
-  (<verb-and-sp-> & <vc-have>) or (<vc-have> & <verb-and-sp+>) or
+  (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
   (<verb-x-pp> & 
     (TO+ or 
     ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or 
@@ -2480,13 +2485,13 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 <vc-appear>: {@MV+} & {Pa+ or TOf+ or THi+ or AF- or [[Pv+]]};
 appear.v: VERB_X_PLI(<vc-appear>);
 appears.v: VERB_X_S(<vc-appear>);
-appeared.v-d: <verb-x-sp,pp> & <vc-appear>;
+appeared.v-d: VERB_X_SPPP(<vc-appear>);
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-seem>: {@MV+} & (Pa+ or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: VERB_X_PLI(<vc-seem>);
 seems.v: VERB_X_S(<vc-seem>);
-seemed.v-d: <verb-x-sp,pp> & <vc-seem>;
+seemed.v-d: VERB_X_SPPP(<vc-seem>);
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-care>: {@MV+} & {TO+ or QI+};
@@ -2613,7 +2618,7 @@ goes.v:
 went.v-d:
   (<verb-x-sp> & (<vc-go> or [[O*t+ & {@MV+}]])) or
   (<verb-and-sp-i-> & <vc-go>) or (<vc-go> & <verb-and-sp-i+>);
-% XXX TODO maybe need VJ and-able links for gone, going etc. ???
+
 gone.v: VERB_PP(<vc-go>);
 % The keys are gone.  The popcorn is all gone.
 gone.a: 
@@ -2621,6 +2626,7 @@ gone.a:
   (AJra- & {@MV+}) or
   ({@MV+} & AJla+);
   
+% XXX TODO maybe need VJ and-able links for going etc. ???
 going.v: 
   ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or 
   ({@E-} & A+) or
@@ -4425,10 +4431,10 @@ embarrassing.g annoying.g:
 prove.v: VERB_X_PLI(<vc-prove>);
 proves.v: VERB_X_S(<vc-prove>);
 proved.v-d:
-  (<verb-x-sp,pp> & <vc-prove>) or
-  (<verb-s-pv> & {THi+ or TOf+}) or 
-  ({@E-} & A+) or
-  ({{@MV+} & Pa+} & <verb-po>);
+  VERB_X_SPPP(<vc-prove>) 
+  or (<verb-s-pv> & {THi+ or TOf+})
+  or ({@E-} & A+)
+  or ({{@MV+} & Pa+} & <verb-po>);
 proven.v:
   (<verb-x-pp> & <vc-prove>) or
   (<verb-s-pv> & {THi+ or TOf+ or Pa+}) or
