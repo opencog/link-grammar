@@ -1484,6 +1484,7 @@ void linkage_delete(Linkage linkage)
 	exfree(linkage, sizeof(struct Linkage_s));
 }
 
+#ifdef USE_FAT_LINKAGES
 static int links_are_equal(Link *l, Link *m)
 {
 	return ((l->l == m->l) && (l->r == m->r) && (strcmp(l->name, m->name)==0));
@@ -1514,7 +1515,6 @@ static PP_info excopy_pp_info(PP_info ppi)
 	}
 	return newppi;
 }
-
 
 static Sublinkage unionize_linkage(Linkage linkage)
 {
@@ -1559,9 +1559,11 @@ static Sublinkage unionize_linkage(Linkage linkage)
 
 	return u;
 }
+#endif /* USE_FAT_LINKAGES */
 
 int linkage_compute_union(Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	int i, num_subs=linkage->num_sublinkages;
 	Sublinkage * new_sublinkage, *s;
 
@@ -1595,6 +1597,9 @@ int linkage_compute_union(Linkage linkage)
 	linkage->unionized = TRUE;
 	linkage->current = linkage->num_sublinkages-1;
 	return 1;
+#else
+	return 0;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int linkage_get_num_sublinkages(const Linkage linkage)
@@ -1756,16 +1761,24 @@ int linkage_disjunct_cost(const Linkage linkage)
 
 int linkage_is_fat(const Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return 0;
 	return linkage->info->fat;
+#else
+	return FALSE;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int linkage_and_cost(Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return 0;
 	return linkage->info->and_cost;
+#else
+	return 0;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int linkage_link_cost(const Linkage linkage)
@@ -1812,9 +1825,13 @@ int linkage_is_canonical(const Linkage linkage)
 
 int linkage_is_improper(const Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return FALSE;
 	return linkage->info->improper_fat_linkage;
+#else
+	return FALSE;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int linkage_has_inconsistent_domains(const Linkage linkage)
@@ -1858,11 +1875,13 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 			subl->violation = NULL;
 		}
 
+#ifdef USE_FAT_LINKAGES
 		if (linkage->info->improper_fat_linkage)
 		{
 			pp = NULL;
 		}
 		else
+#endif /* USE_FAT_LINKAGES */
 		{
 			pp = post_process(postprocessor, opts, sent, subl, FALSE);
 			/* This can return NULL, for example if there is no

@@ -33,7 +33,10 @@ static struct
 	int panic_mode;
 	int allow_null;
 	int use_cluster_disjuncts;
+#ifdef USE_FAT_LINKAGES
 	int use_fat_links;
+	int display_union;
+#endif /* USE_FAT_LINKAGES */
 	int use_sat_solver;
 	int echo_on;
 	int cost_model;
@@ -46,7 +49,6 @@ static struct
 	int display_bad;
 	int display_links;
 	int display_walls;
-	int display_union;
 	int display_disjuncts;
 	int display_senses;
 } local;
@@ -92,8 +94,10 @@ static Switch default_switches[] =
    {"spell",      Bool, "Use spell-guesser for unknown words",  &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
    {"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
+#ifdef USE_FAT_LINKAGES
    {"union",      Bool, "Display of 'union' linkage",      &local.display_union},
    {"use-fat",    Bool, "Use fat links when parsing",      &local.use_fat_links},
+#endif /* USE_FAT_LINKAGES */
 #ifdef USE_SAT_SOLVER
    {"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
@@ -398,7 +402,10 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.screen_width = parse_options_get_screen_width(opts);
 	local.allow_null = parse_options_get_allow_null(opts);
 	local.use_cluster_disjuncts = parse_options_get_use_cluster_disjuncts(opts);
+#ifdef USE_FAT_LINKAGES
 	local.use_fat_links = parse_options_get_use_fat_links(opts);
+	local.display_union = parse_options_get_display_union(opts);
+#endif /* USE_FAT_LINKAGES */
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.screen_width = parse_options_get_screen_width(opts);
 	local.display_on = parse_options_get_display_on(opts);
@@ -410,7 +417,6 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.display_links = parse_options_get_display_links(opts);
 	local.display_senses = parse_options_get_display_senses(opts);
 	local.display_walls = parse_options_get_display_walls(opts);
-	local.display_union = parse_options_get_display_union(opts);
 }
 
 static void put_local_vars_in_opts(Parse_Options opts)
@@ -431,7 +437,10 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_allow_null(opts, local.allow_null);
 	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
+#ifdef USE_FAT_LINKAGES
 	parse_options_set_use_fat_links(opts, local.use_fat_links);
+	parse_options_set_display_union(opts, local.display_union);
+#endif /* USE_FAT_LINKAGES */
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif
@@ -445,7 +454,6 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_display_links(opts, local.display_links);
 	parse_options_set_display_senses(opts, local.display_senses);
 	parse_options_set_display_walls(opts, local.display_walls);
-	parse_options_set_display_union(opts, local.display_union);
 }
 
 int issue_special_command(const char * line, Parse_Options opts, Dictionary dict)

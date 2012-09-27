@@ -326,7 +326,9 @@ struct Linkage_info_struct
     int index;
     Boolean fat;
     Boolean canonical;
+#ifdef USE_FAT_LINKAGES
     Boolean improper_fat_linkage;
+#endif /* USE_FAT_LINKAGES */
     Boolean inconsistent_domains;
     short N_violations;
     short null_cost, unused_word_cost, and_cost, link_cost;

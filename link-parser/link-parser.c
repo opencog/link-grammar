@@ -198,6 +198,7 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 
 	if (!linkage) return;  /* Can happen in timeout mode */
 
+#ifdef USE_FAT_LINKAGES
 	if (parse_options_get_use_fat_links(opts) &&
 	    parse_options_get_display_union(opts))
 	{
@@ -205,6 +206,7 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 		first_sublinkage = linkage_get_num_sublinkages(linkage)-1;
 	}
 	else
+#endif /* USE_FAT_LINKAGES */
 	{
 		first_sublinkage = 0;
 	}
@@ -345,16 +347,19 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 			{
 				fprintf(stdout, "non-canonical, ");
 			}
+#ifdef USE_FAT_LINKAGES
 			if (linkage_is_improper(linkage))
 			{
 				fprintf(stdout, "improper fat linkage, ");
 			}
+#endif /* USE_FAT_LINKAGES */
 			if (linkage_has_inconsistent_domains(linkage))
 			{
 				fprintf(stdout, "inconsistent domains, ");
 			}
 
 			corpus_cost = linkage_corpus_cost(linkage);
+#ifdef USE_FAT_LINKAGES
 			if (corpus_cost < 0.0f)
 			{
 				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d FAT=%d AND=%d LEN=%d)\n",
@@ -374,6 +379,23 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 				       linkage_and_cost(linkage),
 				       linkage_link_cost(linkage));
 			}
+#else
+			if (corpus_cost < 0.0f)
+			{
+				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d LEN=%d)\n",
+				       linkage_unused_word_cost(linkage),
+				       linkage_disjunct_cost(linkage),
+				       linkage_link_cost(linkage));
+			}
+			else
+			{
+				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%d LEN=%d)\n",
+				       corpus_cost,
+				       linkage_unused_word_cost(linkage),
+				       linkage_disjunct_cost(linkage),
+				       linkage_link_cost(linkage));
+			}
+#endif /* USE_FAT_LINKAGES */
 		}
 
 		process_linkage(linkage, opts);
@@ -475,7 +497,9 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, 100);
 	parse_options_set_max_parse_time(opts, 60);
+#ifdef USE_FAT_LINKAGES
 	parse_options_set_use_fat_links(opts, 0);
+#endif /* USE_FAT_LINKAGES */
 	parse_options_set_islands_ok(opts, 1);
 	parse_options_set_short_length(opts, 6);
 	parse_options_set_all_short_connectors(opts, 1);
