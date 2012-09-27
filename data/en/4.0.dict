@@ -493,6 +493,12 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.1.wiki : 
   <marker-common-entity> or <common-noun>;
 
+% lot.n is a common noun, just like above, except that
+% "a lot" is usually not a thing, but a modifier.  So give this
+% a cost.
+lot.n:
+  [[<marker-common-entity> or <common-noun>]];
+
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
 /en/words/words.n.2.s
@@ -1130,6 +1136,9 @@ a_lot:
   % or [[(<noun-sub-p> & <noun-main-p>)]]
   or [[<noun-and-p>]]
   or EC+ or MVa- or <adv-of>;
+
+number.d:
+  OFd+ & Dmc+ & D-;
 
 few: {EA- or EF+ or ({EA-} & DD-)} & 
  (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
