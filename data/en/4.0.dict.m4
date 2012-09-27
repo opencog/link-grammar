@@ -1697,7 +1697,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % These are the verb-form expressions for special verbs that can take 
 % either filler-"it" or filler-"there" as a subject.
 
-<verb-x-pl,i>: {@E-} & (Sp- or SFp- or  If- or (RS- & Bp-) or Wi-);
+<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
 <verb-x-sp,pp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-) or PPf-));
@@ -1809,6 +1809,12 @@ define(`VERB_S_PLI',`'
   (($1) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>)
 
+% I haven't completely verified this one, it may be buggy..
+define(`VERB_X_PLI',`'
+  ((<verb-x-pl,i> & ($1))
+  or (<verb-and-sp-i-> & ([($1)] or ()))
+  or (($1) & <verb-and-sp-i+>)))
+
 % XXX TODO need to provide macro-ized versions for <verb-s-s>, <verb-s-sp>
 % <verb-s-sp,pp> and the <verb-x-???> variants as well. 
 
@@ -1892,8 +1898,8 @@ didn't.v-d didn’t.v-d:
   ({N+} & PP+);
 
 have.v:
-  ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or
-  (<verb-x-pl,i> & <vc-have>);
+  VERB_X_PLI(<vc-have>)
+  or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
 has.v: 
   ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
@@ -2461,13 +2467,13 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-appear>: {@MV+} & {Pa+ or TOf+ or THi+ or AF- or [[Pv+]]};
-appear.v: <verb-x-pl,i> & <vc-appear>;
+appear.v: VERB_X_PLI(<vc-appear>);
 appears.v: <verb-x-s> & <vc-appear>;
 appeared.v-d: <verb-x-sp,pp> & <vc-appear>;
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-seem>: {@MV+} & (Pa+ or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
-seem.v: <verb-x-pl,i> & <vc-seem>;
+seem.v: VERB_X_PLI(<vc-seem>);
 seems.v: <verb-x-s> & <vc-seem>;
 seemed.v-d: <verb-x-sp,pp> & <vc-seem>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
@@ -4405,7 +4411,7 @@ embarrassing.g annoying.g:
   ((O+ or OX+ or B-) & {@MV+} & (TOo+ or [[Pa+]])) or
   ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or Pa+));
 
-prove.v: <verb-x-pl,i> & <vc-prove>;
+prove.v: VERB_X_PLI(<vc-prove>);
 proves.v: <verb-x-s> & <vc-prove>;
 proved.v-d:
   (<verb-x-sp,pp> & <vc-prove>) or

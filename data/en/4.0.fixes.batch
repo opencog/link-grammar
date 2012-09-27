@@ -2524,6 +2524,10 @@ This is a problem Moscow created and failed to solve.
 % Conjoined imperatives
 Show me my notes from today and send them to my friends.
 By the way, show me my notes from today and send them to my friends.
+Show me my notes and be nice about it.
+Show me my notes and have a great day!
+Fuck off and have a great day, dipshit!
+Fuck off and have a great day, asshole!
 Show me my notes and do not tell anyone.
 Show me my notes but do not tell anyone.
 By the way, show me my notes but do not tell anyone.
@@ -2771,13 +2775,16 @@ we should not forget the innocent people that was put in jail
 
 % --------------------------------------------------------------------
 % setences that parse, but not correctly:
-You are as sweet as sugar.
-The situation is not so bad as you suggest.
-I slipped on the ice as I ran home.
-He was so foolish as to lie.
-Ridiculous as it seems, the tale is true.
-the hotel is quite comfortable as such establishments go
-I don't know as I can answer your question.
+% We are going to put *'s in front of them, until they are fixed...
+*You are as sweet as sugar.
+*The situation is not so bad as you suggest.
+*I slipped on the ice as I ran home.
+*He was so foolish as to lie.
+*Ridiculous as it seems, the tale is true.
+*the hotel is quite comfortable as such establishments go
+*I don't know as I can answer your question.
+*Fuck off and have a great day, twit!
+*Fuck off and have a great day, jerk!
 
 % --------------------------------------------------------------------
 % assorted unclassified breakages, wating for a fix:
