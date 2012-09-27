@@ -26,6 +26,7 @@ flounder.p
 foremen.p
 freshmen.p
 fungi.p
+geese.p
 gentlemen.p
 gentry.p
 grandchildren.p
