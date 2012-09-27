@@ -507,6 +507,7 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.2.s
 /en/words/words.n.2.s.wiki : 
   <marker-common-entity> or <generic-plural-id>;
+
 /en/words/words.n.2.s.biolg: <generic-plural-id>;
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
@@ -1131,10 +1132,13 @@ such_a such_an: Ds*k+;
 % and use OFw to force linkage only to time exprs.
 <adv-of>: MVw- & OFw+;
 
+% For most cases, a_lot is like a determiner:
+% "I have a lot of cookies" wants "cookies" to be he object, not "a lot"
 a_lot:
-  (<noun-sub-p> & <noun-main-p>) or 
-  <noun-and-p> or 
-  EC+ or MVa- or <adv-of>;
+  (OFd+ & Dmc+)
+  % or [[(<noun-sub-p> & <noun-main-p>)]]
+  or [[<noun-and-p>]]
+  or EC+ or MVa- or <adv-of>;
 
 few: {EA- or EF+ or ({EA-} & DD-)} & 
  (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
@@ -4811,9 +4815,21 @@ like.p: ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
 or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or (MVp- & B-);
 unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or 
 (Xd- & Xc+ & (E+ or MVx-)));
-of: ({JQ+} & (J+ or Mgp+ or QI+) & (Mp- or OF- or (Xd- & Xc+ & MX*x-) 
-or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or [[({Xc+ & {Xd-}} & CO+)]]))
-or ((OF- or Mp-) & B-) or (MG- & JG+) or (NF- & NJ+) or (Mp- & TI+); 
+
+% OFd-: "I have a lot of cookies", forces "lot" to be determiner
+% and allows J to dangle... (seems awkward, I know...)
+of: 
+  ({JQ+}
+    & (J+ or Mgp+ or QI+)
+    & (Mp- or OFj- or OFw- or (Xd- & Xc+ & MX*x-) 
+      or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-)))
+      or [[({Xc+ & {Xd-}} & CO+)]]))
+  or OFd-
+  or ((OFj- or Mp-) & B-)
+  or (MG- & JG+)
+  or (NF- & NJ+)
+  or (Mp- & TI+); 
+
 of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
 % MX-PHRASE: The blah, to be blahed, will be blah.
