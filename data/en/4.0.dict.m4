@@ -1809,6 +1809,12 @@ define(`VERB_S_PLI',`'
   (($1) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>)
 
+% This may be too broad ... 
+define(`VERB_X_S',`'
+  ((<verb-x-s> & ($1))
+  or (<verb-and-s-> & ([($1)] or ()))
+  or (($1) & <verb-and-s+>)))
+
 % I haven't completely verified this one, it may be buggy..
 define(`VERB_X_PLI',`'
   ((<verb-x-pl,i> & ($1))
@@ -1853,8 +1859,9 @@ do.v:
   or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 
 does.v: 
-  (<verb-x-s> & <vc-do>) or
-  ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+  VERB_X_S(<vc-do>)
+  or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+
 did.v-d:
   (<verb-x-sp> & <vc-do>) or
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
@@ -1902,9 +1909,8 @@ have.v:
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
 has.v: 
-  ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
-  (<verb-x-s> & <vc-have>) or
-  (<verb-and-s-> & <vc-have>) or (<vc-have> & <verb-and-s+>);
+  VERB_X_S(<vc-have>)
+  or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
 % XXX probably should be verb-and-sp-i- etc !?
 had.v-d: 
@@ -2019,7 +2025,7 @@ am.v:
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
 
 % S*x- used for passive participles: "this action be taken".
-% I used verb-and-sp-i- but maybe this is wrong .. 
+% XXX I used verb-and-sp-i- but maybe this is wrong .. 
 % "Show me my notes and be nice about it."
 be.v:
   ({@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-be>)
@@ -2473,13 +2479,13 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 
 <vc-appear>: {@MV+} & {Pa+ or TOf+ or THi+ or AF- or [[Pv+]]};
 appear.v: VERB_X_PLI(<vc-appear>);
-appears.v: <verb-x-s> & <vc-appear>;
+appears.v: VERB_X_S(<vc-appear>);
 appeared.v-d: <verb-x-sp,pp> & <vc-appear>;
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-seem>: {@MV+} & (Pa+ or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: VERB_X_PLI(<vc-seem>);
-seems.v: <verb-x-s> & <vc-seem>;
+seems.v: VERB_X_S(<vc-seem>);
 seemed.v-d: <verb-x-sp,pp> & <vc-seem>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
@@ -4417,7 +4423,7 @@ embarrassing.g annoying.g:
   ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or Pa+));
 
 prove.v: VERB_X_PLI(<vc-prove>);
-proves.v: <verb-x-s> & <vc-prove>;
+proves.v: VERB_X_S(<vc-prove>);
 proved.v-d:
   (<verb-x-sp,pp> & <vc-prove>) or
   (<verb-s-pv> & {THi+ or TOf+}) or 
