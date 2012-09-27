@@ -10,4 +10,6 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+#ifdef USE_FAT_LINKAGES
 void install_special_conjunctive_connectors(Sentence sent);
+#endif /* USE_FAT_LINKAGES */

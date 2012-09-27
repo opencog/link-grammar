@@ -10,6 +10,7 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+#ifdef USE_FAT_LINKAGES
 link_private void       free_AND_tables(Sentence sent);
 link_private void       print_AND_statistics(Sentence sent);
 link_private void       init_andable_hash_table(Dictionary dict);
@@ -24,4 +25,5 @@ link_private void       compute_pp_link_array_connectors(Sentence sent, Sublinka
 
 /* Following need to be visible to sat solver, can't be private */
 int        set_has_fat_down(Sentence sent);
+#endif /* USE_FAT_LINKAGES */
 const char * intersect_strings(Sentence sent, const char * s, const char * t);

@@ -232,11 +232,13 @@ struct Sentence_s
 	const char *orig_sentence;  /* Copy of original sentence */
 	int    length;              /* number of words */
 	Word   word[MAX_SENTENCE];  /* array of words after tokenization */
+#ifdef USE_FAT_LINKAGES
 	char * is_conjunction;      /* Array of flags, one per word; set to
 	                               TRUE if conjunction, as defined by dictionary */
 	char** deletable;           /* deletable regions in a sentence with conjunction */
 	char** dptr;                /* private pointer for mem management only */
-	char** effective_dist;
+#endif /* USE_FAT_LINKAGES */
+	char** effective_dist;      /* XXX can probably be simplified without FAT */
 	int    num_linkages_found;  /* total number before postprocessing.  This
 	                               is returned by the count() function */
 	int    num_linkages_alloced;/* total number of linkages allocated.
@@ -254,7 +256,9 @@ struct Sentence_s
 	Parse_info     parse_info;  /* set of parses for the sentence */
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 	String_set *   string_set;  /* used for word names, not connectors */
+#ifdef USE_FAT_LINKAGES
 	And_data       and_data;    /* used to keep track of fat disjuncts */
+#endif /* USE_FAT_LINKAGES */
 	char  q_pruned_rules;       /* don't prune rules more than once in p.p. */
 	int   post_quote[MAX_SENTENCE]; /* Used only by tokenizer. */
 

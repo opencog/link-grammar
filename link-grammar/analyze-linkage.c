@@ -137,6 +137,7 @@ static void free_sublinkage(Sublinkage *s)
 	xfree(s, sizeof(Sublinkage));
 }
 
+#ifdef USE_FAT_LINKAGES
 static void replace_link_name(Link *l, const char *s)
 {
 	/* XXX can get some perf improvement by avoiding strlen! */
@@ -146,6 +147,7 @@ static void replace_link_name(Link *l, const char *s)
 	strcpy(t, s);
 	l->name = t;
 }
+#endif /* USE_FAT_LINKAGES */
 
 static void copy_full_link(Link **dest, Link *src)
 {
@@ -329,6 +331,7 @@ static DIS_node * build_DIS_node(analyze_context_t *actx,
 	return dn;
 }
 
+#ifdef USE_FAT_LINKAGES
 static void height_dfs(analyze_context_t *actx, int w, int height)
 {
 	List_o_links * lol;
@@ -430,6 +433,7 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	}
 	return dnroot;
 }
+#endif /* USE_FAT_LINKAGES */
 
 static int advance_CON(CON_node *);
 
@@ -593,6 +597,7 @@ static void free_CON_tree(CON_node * cn)
 	xfree((void *) cn, sizeof(CON_node));
 }
 
+#ifdef USE_FAT_LINKAGES
 /** scope out this and element */
 static void and_dfs_full(analyze_context_t *actx, int w)
 {
@@ -707,6 +712,7 @@ static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
 	if (old_andlist) old_andlist->cost = cost;
 	return old_andlist;
 }
+#endif /* USE_FAT_LINKAGES */
 
 /**
  * This function defines the cost of a link as a function of its length.
@@ -764,6 +770,7 @@ static float disjunct_cost(Parse_info pi)
 	return lcost;
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
  * Returns TRUE if string s represents a strictly smaller match set
  * than does t.  An almost identical function appears in and.c.
@@ -797,6 +804,7 @@ static int strictly_smaller_name(const char * s, const char * t)
 	}
 	return (strictness > 0);
 }
+#endif /* USE_FAT_LINKAGES */
 
 /**
  * The name of the link is set to be the GCD of the names of
@@ -817,6 +825,7 @@ static void compute_link_names(Sentence sent)
 	}
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
  * This fills in the sublinkage->link[].name field.  We assume that
  * link_array[].name have already been filled in.  As above, in the
@@ -861,6 +870,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 		}
 	}
 }
+#endif /* USE_FAT_LINKAGES */
 
 /********************** exported functions *****************************/
 
@@ -883,6 +893,7 @@ void free_analyze(Sentence s)
 	s->analyze_ctxt = NULL;
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
  * This uses link_array.  It enumerates and post-processes
  * all the linkages represented by this one.  We know this contains
@@ -940,6 +951,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		return li;
 	}
 
+#ifdef USE_FAT_LINKAGES
 	if (analyze_pass == PP_SECOND_PASS)
 	{
 	  li.andlist = build_andlist(actx, sent);
@@ -947,6 +959,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	  if (li.andlist) li.and_cost = li.andlist->cost;
 	}
 	else li.and_cost = 0;
+#endif /* USE_FAT_LINKAGES */
 
 	compute_link_names(sent);
 
@@ -1038,6 +1051,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	free_DIS_tree(d_root);
 	return li;
 }
+#endif /* USE_FAT_LINKAGES */
 
 /**
  * This uses link_array.  It post-processes
@@ -1190,6 +1204,7 @@ static void prt_dis_con_tree(Sentence sent, DIS_node *dis)
 static inline void prt_dis_con_tree(Sentence sent, DIS_node *dis) {}
 #endif
 
+#ifdef USE_FAT_LINKAGES
 /**
  * This procedure mimics analyze_fat_linkage in order to
  * extract the sublinkages and copy them to the Linkage
@@ -1311,4 +1326,4 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 
 	prt_dis_con_tree(sent, d_root);
 }
-
+#endif /* USE_FAT_LINKAGES */

@@ -66,7 +66,9 @@ typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
 	int null_links;
+#ifdef USE_FAT_LINKAGES
 	char ** deletable;
+#endif /* USE_FAT_LINKAGES */
 	char ** effective_dist;
 	int power_cost;
 	int power_prune_mode;  /* either GENTLE or RUTHLESS */
@@ -1259,8 +1261,12 @@ static int possible_connection(prune_context *pc,
 			if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
 		} else {
 			if ((!pc->null_links) &&
-				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi) &&
-				!pc->deletable[lword][rword]) {
+				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi)
+#ifdef USE_FAT_LINKAGES
+				&& !pc->deletable[lword][rword]
+#endif /* USE_FAT_LINKAGES */
+				)
+			{
 				return FALSE;
 			}
 		}
@@ -1407,7 +1413,9 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	pc->power_prune_mode = mode;
 	pc->null_links = (opts->min_null_count > 0);
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
+#ifdef USE_FAT_LINKAGES
 	pc->deletable = sent->deletable;
+#endif /* USE_FAT_LINKAGES */
 	pc->effective_dist = sent->effective_dist;
 	pc->sent = sent;
 

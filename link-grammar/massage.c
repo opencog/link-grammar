@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef USE_FAT_LINKAGES
+
 #include "api.h"
 #include "disjunct-utils.h"
 
@@ -327,3 +329,5 @@ void install_special_conjunctive_connectors(Sentence sent)
 	construct_both(sent);        /* special connectors for "both..and.." */
 	construct_comma(sent);       /* special connectors for extra comma */
 }
+
+#endif /* USE_FAT_LINKAGES */

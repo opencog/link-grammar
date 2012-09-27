@@ -28,7 +28,9 @@ struct Table_connector_s
 
 struct count_context_s
 {
+#ifdef USE_FAT_LINKAGES
 	char ** deletable;
+#endif /* USE_FAT_LINKAGES */
 	char ** effective_dist; 
 	Word *  local_sent;
 	int     null_block;
@@ -260,6 +262,7 @@ s64 table_lookup(Sentence sent,
 	if (t == NULL) return -1; else return t->count;
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
  * Stores the value in the table.  Unlike table_store, it assumes 
  * it's already there
@@ -273,6 +276,7 @@ static void table_update(count_context_t *ctxt, int lw, int rw,
 	assert(t != NULL, "This entry is supposed to be in the table.");
 	t->count = count;
 }
+#endif /* USE_FAT_LINKAGES */
 
 /**
  * Returns 0 if and only if this entry is in the hash table 
@@ -289,7 +293,6 @@ static s64 pseudocount(Sentence sent,
 static s64 do_count(Sentence sent, int lw, int rw,
                     Connector *le, Connector *re, int null_count)
 {
-	Disjunct * d;
 	s64 total, pseudototal;
 	int start_word, end_word, w;
 	s64 leftcount, rightcount;
@@ -355,6 +358,7 @@ static s64 do_count(Sentence sent, int lw, int rw,
 		}
 		else
 		{
+			Disjunct * d;
 			total = 0;
 			w = lw+1;
 			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next)
@@ -393,8 +397,9 @@ static s64 do_count(Sentence sent, int lw, int rw,
 	for (w = start_word; w < end_word; w++)
 	{
 		m1 = m = form_match_list(sent, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next)
+		for (; m != NULL; m = m->next)
 		{
+			Disjunct * d;
 			d = m->d;
 			for (lcost = 0; lcost <= null_count; lcost++)
 			{
@@ -468,12 +473,12 @@ static s64 do_count(Sentence sent, int lw, int rw,
 				}
 			}
 		}
-
 		put_match_list(sent, m1);
 	}
 	t->count = total;
 	return total;
 }
+
 
 /** 
  * Returns the number of ways the sentence can be parsed with the
@@ -489,7 +494,9 @@ s64 do_parse(Sentence sent, int null_count, Parse_Options opts)
 	count_set_effective_distance(sent);
 	ctxt->current_resources = opts->resources;
 	ctxt->local_sent = sent->word;
+#ifdef USE_FAT_LINKAGES
 	ctxt->deletable = sent->deletable;
+#endif /* USE_FAT_LINKAGES */
 	ctxt->null_block = opts->null_block;
 	ctxt->islands_ok = opts->islands_ok;
 
@@ -500,6 +507,7 @@ s64 do_parse(Sentence sent, int null_count, Parse_Options opts)
 	return total;
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
    CONJUNCTION PRUNING.
 
@@ -716,6 +724,7 @@ static void mark_region(Sentence sent,
 		put_match_list(sent, m1);
 	}
 }
+#endif /* USE_FAT_LINKAGES */
 
 void delete_unmarked_disjuncts(Sentence sent)
 {
@@ -738,6 +747,7 @@ void delete_unmarked_disjuncts(Sentence sent)
 	}
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
  * We've already built the sentence disjuncts, and we've pruned them
  * and power_pruned(GENTLE) them also.  The sentence contains a
@@ -808,6 +818,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	ctxt->deletable = NULL;
 	count_unset_effective_distance(sent);
 }
+#endif /* USE_FAT_LINKAGES */
 
 void init_count(Sentence sent)
 {

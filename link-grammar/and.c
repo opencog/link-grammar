@@ -12,6 +12,9 @@
 /*************************************************************************/
 
 #include "api.h"
+
+#ifdef USE_FAT_LINKAGES
+
 #include "disjunct-utils.h"
 
 /*
@@ -427,6 +430,7 @@ static int disjunct_types_equal(Disjunct * d1, Disjunct * d2)
 	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
 	return TRUE;
 }
+#endif /* USE_FAT_LINKAGES */
 
 /**
  * This returns a string that is the the GCD of the two given strings.
@@ -468,6 +472,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 	}
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
  * Two connectors are said to be equal if they are of the same type
  * (defined above), they have the same multi field, and they have
@@ -1597,3 +1602,5 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 		}
 	}
 }
+#endif /* USE_FAT_LINKAGES */
+

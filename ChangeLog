@@ -12,6 +12,7 @@ Version 4.7.7 (xxx 2012)
  * Fix: conjoined imperatives.
  * Fix: qualified conditional clauses
  * Fix: conjoined irregular verbs: seem, appear, do, be, prove, have
+ * Disable fat link code via conditional compile.
 
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).

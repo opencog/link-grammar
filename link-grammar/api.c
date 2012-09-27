@@ -851,9 +851,12 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	int N_linkages_found, N_linkages_alloced;
 	int N_linkages_post_processed, N_valid_linkages;
 	int N_thin_linkages;
-	int overflowed, only_canonical_allowed;
+	int overflowed;
 	Linkage_info *link_info;
+#ifdef USE_FAT_LINKAGES
+	int only_canonical_allowed;
 	int canonical;
+#endif /* USE_FAT_LINKAGES */
 
 	free_post_processing(sent);
 
@@ -922,7 +925,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		}
 	}
 
+#ifdef USE_FAT_LINKAGES
 	only_canonical_allowed = !(overflowed || (N_linkages_found > 2*opts->linkage_limit));
+#endif /* USE_FAT_LINKAGES */
 	/* When we're processing only a small subset of the linkages,
 	 * don't worry about restricting the set we consider to be
 	 * canonical ones.  In the extreme case where we are only
@@ -942,12 +947,14 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 				   (!resources_exhausted(opts->resources)); in++)
 		{
 			extract_links(indices[in], sent->null_count, sent->parse_info);
+#ifdef USE_FAT_LINKAGES
 			if (set_has_fat_down(sent))
 			{
 				if (only_canonical_allowed && !is_canonical_linkage(sent)) continue;
 				analyze_fat_linkage(sent, opts, PP_FIRST_PASS);
 			}
 			else
+#endif /* USE_FAT_LINKAGES */
 			{
 				analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
 			}
@@ -962,6 +969,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		Linkage_info *lifo = &link_info[N_linkages_post_processed];
 		extract_links(indices[in], sent->null_count, sent->parse_info);
+#ifdef USE_FAT_LINKAGES
 		if (set_has_fat_down(sent))
 		{
 			canonical = is_canonical_linkage(sent);
@@ -971,6 +979,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			lifo->canonical = canonical;
 		}
 		else
+#endif /* USE_FAT_LINKAGES */
 		{
 			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
 			lifo->fat = FALSE;
@@ -1053,18 +1062,18 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->num_linkages_post_processed = 0;
 	sent->num_valid_linkages = 0;
 	sent->link_info = NULL;
-	sent->deletable = NULL;
-	sent->effective_dist = NULL;
 	sent->num_valid_linkages = 0;
 	sent->null_count = 0;
 	sent->parse_info = NULL;
 	sent->string_set = string_set_create();
 
 	sent->q_pruned_rules = FALSE;
-	sent->is_conjunction = NULL;
-
-	sent->dptr = NULL;
+#ifdef USE_FAT_LINKAGES
 	sent->deletable = NULL;
+	sent->is_conjunction = NULL;
+	sent->dptr = NULL;
+#endif /* USE_FAT_LINKAGES */
+	sent->effective_dist = NULL;
 
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
@@ -1072,6 +1081,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	return sent;
 }
 
+#ifdef USE_FAT_LINKAGES
 /* XXX Extreme hack alert -- English-language words are used
  * completely naked in the C source code!!! FIXME !!!!
  */
@@ -1088,6 +1098,7 @@ static void set_is_conjunction(Sentence sent)
 			(strcmp(s, "nor")==0);
 	}
 }
+#endif /* USE_FAT_LINKAGES */
 
 int sentence_split(Sentence sent, Parse_Options opts)
 {
@@ -1098,7 +1109,9 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	 * routines depend on sent-length, which might change in different
 	 * parse-opts settings. 
 	 */
+#ifdef USE_FAT_LINKAGES
 	free_deletable(sent);
+#endif /* USE_FAT_LINKAGES */
 
 	/* Tokenize */
 	if (!separate_sentence(sent, opts))
@@ -1107,9 +1120,11 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	}
 
 	sent->q_pruned_rules = FALSE; /* for post processing */
+#ifdef USE_FAT_LINKAGES
 	sent->is_conjunction = (char *) xalloc(sizeof(char)*sent->length);
 	set_is_conjunction(sent);
 	initialize_conjunction_tables(sent);
+#endif /* USE_FAT_LINKAGES */
 
 	for (i=0; i<sent->length; i++)
 	{
@@ -1141,18 +1156,24 @@ void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
 	sat_sentence_delete(sent);
-	/* free_andlists(sent); */
+#ifdef USE_FAT_LINKAGES
 	free_sentence_disjuncts(sent);
+#endif /* USE_FAT_LINKAGES */
 	free_sentence_expressions(sent);
 	string_set_delete(sent->string_set);
 	if (sent->parse_info) free_parse_info(sent->parse_info);
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
+#ifdef USE_FAT_LINKAGES
 	free_deletable(sent);
+#endif /* USE_FAT_LINKAGES */
 	free_effective_dist(sent);
+
 	free_count(sent);
 	free_analyze(sent);
+#ifdef USE_FAT_LINKAGES
 	if (sent->is_conjunction) xfree(sent->is_conjunction, sizeof(char)*sent->length);
+#endif /* USE_FAT_LINKAGES */
 	xfree((char *) sent, sizeof(struct Sentence_s));
 }
 
@@ -1319,7 +1340,9 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 
 	/* Initialize/free any leftover garbage */
+#ifdef USE_FAT_LINKAGES
 	free_sentence_disjuncts(sent);
+#endif /* USE_FAT_LINKAGES */
 	resources_reset_space(opts->resources);
 
 	if (resources_exhausted(opts->resources)) {
@@ -1379,11 +1402,13 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	extract_links(sent->link_info[k].index, sent->null_count, sent->parse_info);
 	compute_chosen_words(sent, linkage);
 
+#ifdef USE_FAT_LINKAGES
 	if (set_has_fat_down(sent))
 	{
 		extract_fat_linkage(sent, opts, linkage);
 	}
 	else
+#endif /* USE_FAT_LINKAGES */
 	{
 		extract_thin_linkage(sent, opts, linkage);
 	}

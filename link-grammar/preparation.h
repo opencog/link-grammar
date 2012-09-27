@@ -11,10 +11,11 @@
 /*                                                                       */
 /*************************************************************************/
 void free_sentence_expressions(Sentence sent);
+#ifdef USE_FAT_LINKAGES
 void free_sentence_disjuncts(Sentence sent);
 void free_deletable(Sentence sent);
+#endif /* USE_FAT_LINKAGES */
 void free_effective_dist(Sentence sent);
 void prepare_to_parse(Sentence sent, Parse_Options opts);
-void install_fat_connectors(Sentence sent);
-void build_deletable(Sentence sent, int has_conjunction);
 void build_effective_dist(Sentence sent, int has_conjunction);
+

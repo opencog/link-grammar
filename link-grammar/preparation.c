@@ -14,6 +14,7 @@
 #include "api.h"
 #include "disjunct-utils.h"
 
+#ifdef USE_FAT_LINKAGES
 void free_deletable(Sentence sent)
 {
 	int w;
@@ -40,6 +41,7 @@ static int conj_in_range(Sentence sent, int lw, int rw)
 	return FALSE;
 }
 
+
 /**
  * Initialize the array deletable[i][j] to indicate if the words
  * i+1...j-1 could be non existant in one of the multiple linkages.  This
@@ -53,7 +55,7 @@ static int conj_in_range(Sentence sent, int lw, int rw)
  * words "either", "neither", "both", "not" and "not only" are all
  * deletable.
  */
-void build_deletable(Sentence sent, int has_conjunction)
+static void build_deletable(Sentence sent, int has_conjunction)
 {
 	int i,j,k;
 
@@ -111,6 +113,7 @@ void build_deletable(Sentence sent, int has_conjunction)
 		}
 	}
 }
+#endif /* USE_FAT_LINKAGES */
 
 void free_effective_dist(Sentence sent)
 {
@@ -173,14 +176,21 @@ void build_effective_dist(Sentence sent, int has_conjunction)
 		for (diff = 1; diff < sent->length; diff++) {
 			for (i=0; i+diff <= sent->length; i++) {
 				j = i+diff;
-				if (sent->deletable[i][j]) {  /* note that deletable[x][x+1] is TRUE */
+#ifdef USE_FAT_LINKAGES
+				/* note that deletable[x][x+1] is TRUE */
+				if (sent->deletable[i][j])
+				{
 					sent->effective_dist[i][j] = 1;
-				} else {
-					sent->effective_dist[i][j] = 1 + MIN(sent->effective_dist[i][j-1],sent->effective_dist[i+1][j]);
+				}
+				else
+#endif /* USE_FAT_LINKAGES */
+				{
+					sent->effective_dist[i][j] = 1 + MIN(sent->effective_dist[i][j-1], sent->effective_dist[i+1][j]);
 				}
 			}
 		}
 
+#ifdef USE_FAT_LINKAGES
 		/* now when you link to a conjunction, your effective length is 1 */
 
 		for (i=0; i<sent->length; i++) {
@@ -189,6 +199,7 @@ void build_effective_dist(Sentence sent, int has_conjunction)
 					sent->is_conjunction[j]) sent->effective_dist[i][j] = 1;
 			}
 		}
+#endif /* USE_FAT_LINKAGES */
 	}
 
 	/* sent->effective_dist[i][i] should be 0 */
@@ -207,11 +218,12 @@ void build_effective_dist(Sentence sent, int has_conjunction)
 	*/
 }
 
+#ifdef USE_FAT_LINKAGES
 /**
  * Installs all the special fat disjuncts on all of the words of the
  * sentence
  */
-void install_fat_connectors(Sentence sent)
+static void install_fat_connectors(Sentence sent)
 {
 	int i;
 	for (i=0; i<sent->length; i++) {
@@ -228,6 +240,7 @@ void install_fat_connectors(Sentence sent)
 		}
 	}
 }
+#endif /* USE_FAT_LINKAGES */
 
 static void 
 set_connector_list_length_limit(Sentence sent,
@@ -274,13 +287,14 @@ void free_sentence_expressions(Sentence sent)
 }
 
 
+#ifdef USE_FAT_LINKAGES
 /**
  * Return true if the sentence contains a conjunction.  Assumes
  * is_conjunction[] has been initialized.
  *
  * This routine has been added to the public API as of version 4.7.0,
- * as it is required to determine whether a fat linkage might restult
- * during parsing. This is needed to optimize the optioanl use of fat
+ * as it is required to determine whether a fat linkage might result
+ * during parsing. This is needed to optimize the optional use of fat
  * links. The goal is to eventually deprecate fat linkages entirely;
  * this routine is needed in the transition phase.
  */
@@ -305,6 +319,14 @@ void free_sentence_disjuncts(Sentence sent)
 	}
 	if (sentence_contains_conjunction(sent)) free_AND_tables(sent);
 }
+#else
+
+int sentence_contains_conjunction(Sentence sent)
+{
+	return FALSE;
+}
+
+#endif /* USE_FAT_LINKAGES */
 
 
 /**
@@ -313,7 +335,10 @@ void free_sentence_disjuncts(Sentence sent)
  */
 void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
-	int i, has_conjunction;
+	int i;
+#ifdef USE_FAT_LINKAGES
+	int has_conjunction;
+#endif /* USE_FAT_LINKAGES */
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost);
 	if (verbosity > 2) {
@@ -334,6 +359,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	sent->null_links = (opts->min_null_count > 0);
 
+#ifdef USE_FAT_LINKAGES
 	if (opts->use_fat_links)
 	{
 		has_conjunction = sentence_contains_conjunction(sent);
@@ -342,19 +368,28 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	{
 		has_conjunction = FALSE;
 	}
+#endif /* USE_FAT_LINKAGES */
 
 	/* The deletable region depends on whether null links are in use;
 	 * with null_links everything is deletable. Thus, this processing
 	 * cannot be done earlier than here.
 	 */
 	set_connector_length_limits(sent, opts);
+#ifdef USE_FAT_LINKAGES
 	build_deletable(sent, has_conjunction);
 	build_effective_dist(sent, has_conjunction);
+#else
+	build_effective_dist(sent, FALSE);
+#endif /* USE_FAT_LINKAGES */
 	init_count(sent);
 
-	if (!has_conjunction) {
+#ifdef USE_FAT_LINKAGES
+	if (!has_conjunction)
+	{
 		pp_and_power_prune(sent, RUTHLESS, opts);
-	} else {
+	}
+	else
+	{
 		pp_and_power_prune(sent, GENTLE, opts);
 		/*
 		if (verbosity > 2) {
@@ -398,6 +433,10 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 		power_prune(sent, RUTHLESS, opts);
 	}
+#else
+	pp_and_power_prune(sent, RUTHLESS, opts);
+#endif /* USE_FAT_LINKAGES */
+
 	free_count(sent);
 
 	/*
