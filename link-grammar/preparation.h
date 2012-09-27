@@ -14,8 +14,8 @@ void free_sentence_expressions(Sentence sent);
 #ifdef USE_FAT_LINKAGES
 void free_sentence_disjuncts(Sentence sent);
 void free_deletable(Sentence sent);
-#endif /* USE_FAT_LINKAGES */
 void free_effective_dist(Sentence sent);
-void prepare_to_parse(Sentence sent, Parse_Options opts);
 void build_effective_dist(Sentence sent, int has_conjunction);
+#endif /* USE_FAT_LINKAGES */
+void prepare_to_parse(Sentence sent, Parse_Options opts);
 

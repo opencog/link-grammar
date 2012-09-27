@@ -113,7 +113,6 @@ static void build_deletable(Sentence sent, int has_conjunction)
 		}
 	}
 }
-#endif /* USE_FAT_LINKAGES */
 
 void free_effective_dist(Sentence sent)
 {
@@ -176,21 +175,18 @@ void build_effective_dist(Sentence sent, int has_conjunction)
 		for (diff = 1; diff < sent->length; diff++) {
 			for (i=0; i+diff <= sent->length; i++) {
 				j = i+diff;
-#ifdef USE_FAT_LINKAGES
 				/* note that deletable[x][x+1] is TRUE */
 				if (sent->deletable[i][j])
 				{
 					sent->effective_dist[i][j] = 1;
 				}
 				else
-#endif /* USE_FAT_LINKAGES */
 				{
 					sent->effective_dist[i][j] = 1 + MIN(sent->effective_dist[i][j-1], sent->effective_dist[i+1][j]);
 				}
 			}
 		}
 
-#ifdef USE_FAT_LINKAGES
 		/* now when you link to a conjunction, your effective length is 1 */
 
 		for (i=0; i<sent->length; i++) {
@@ -199,7 +195,6 @@ void build_effective_dist(Sentence sent, int has_conjunction)
 					sent->is_conjunction[j]) sent->effective_dist[i][j] = 1;
 			}
 		}
-#endif /* USE_FAT_LINKAGES */
 	}
 
 	/* sent->effective_dist[i][i] should be 0 */
@@ -218,7 +213,6 @@ void build_effective_dist(Sentence sent, int has_conjunction)
 	*/
 }
 
-#ifdef USE_FAT_LINKAGES
 /**
  * Installs all the special fat disjuncts on all of the words of the
  * sentence
@@ -378,8 +372,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 #ifdef USE_FAT_LINKAGES
 	build_deletable(sent, has_conjunction);
 	build_effective_dist(sent, has_conjunction);
-#else
-	build_effective_dist(sent, FALSE);
 #endif /* USE_FAT_LINKAGES */
 	init_count(sent);
 

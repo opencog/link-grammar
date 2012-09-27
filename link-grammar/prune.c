@@ -68,8 +68,8 @@ struct prune_context_s
 	int null_links;
 #ifdef USE_FAT_LINKAGES
 	char ** deletable;
-#endif /* USE_FAT_LINKAGES */
 	char ** effective_dist;
+#endif /* USE_FAT_LINKAGES */
 	int power_cost;
 	int power_prune_mode;  /* either GENTLE or RUTHLESS */
 	int N_changed;   /* counts the number of changes
@@ -282,8 +282,10 @@ void prune(Sentence sent)
 	Connector *ct[CONTABSZ];
 	Disjunct fake_head, *d, *d1;
 
+#ifdef USE_FAT_LINKAGES
 	/* XXX why is this here ?? */
 	count_set_effective_distance(sent);
+#endif /* USE_FAT_LINKAGES */
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	while(1)
@@ -1270,7 +1272,11 @@ static int possible_connection(prune_context *pc,
 				return FALSE;
 			}
 		}
+#ifdef USE_FAT_LINKAGES
 		return prune_match(pc->effective_dist[lword][rword], lc, rc);
+#else
+		return prune_match(rword - lword, lc, rc);
+#endif /* USE_FAT_LINKAGES */
 	}
 }
 
@@ -1413,13 +1419,13 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	pc->power_prune_mode = mode;
 	pc->null_links = (opts->min_null_count > 0);
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
+
+	pc->sent = sent;
 #ifdef USE_FAT_LINKAGES
 	pc->deletable = sent->deletable;
-#endif /* USE_FAT_LINKAGES */
 	pc->effective_dist = sent->effective_dist;
-	pc->sent = sent;
-
 	count_set_effective_distance(sent);
+#endif /* USE_FAT_LINKAGES */
 
 	pt = power_table_new(sent);
 	pc->pt = pt;

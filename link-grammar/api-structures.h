@@ -237,8 +237,8 @@ struct Sentence_s
 	                               TRUE if conjunction, as defined by dictionary */
 	char** deletable;           /* deletable regions in a sentence with conjunction */
 	char** dptr;                /* private pointer for mem management only */
+	char** effective_dist;
 #endif /* USE_FAT_LINKAGES */
-	char** effective_dist;      /* XXX can probably be simplified without FAT */
 	int    num_linkages_found;  /* total number before postprocessing.  This
 	                               is returned by the count() function */
 	int    num_linkages_alloced;/* total number of linkages allocated.
@@ -337,6 +337,10 @@ struct Postprocessor_s
  *
  **********************************************************/
 
+/* XXX FIXME When fat links are removed, therre will only ever be
+ * just one sublinkage, and so this struct can be merged into 
+ * Linkage_s below, and removed from the API.
+ */
 struct Sublinkage_s
 {
 	int       num_links;          /* Number of links in array */

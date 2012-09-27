@@ -1072,8 +1072,8 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->deletable = NULL;
 	sent->is_conjunction = NULL;
 	sent->dptr = NULL;
-#endif /* USE_FAT_LINKAGES */
 	sent->effective_dist = NULL;
+#endif /* USE_FAT_LINKAGES */
 
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
@@ -1166,8 +1166,8 @@ void sentence_delete(Sentence sent)
 	post_process_close_sentence(sent->dict->postprocessor);
 #ifdef USE_FAT_LINKAGES
 	free_deletable(sent);
-#endif /* USE_FAT_LINKAGES */
 	free_effective_dist(sent);
+#endif /* USE_FAT_LINKAGES */
 
 	free_count(sent);
 	free_analyze(sent);

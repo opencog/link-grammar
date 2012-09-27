@@ -30,8 +30,8 @@ struct count_context_s
 {
 #ifdef USE_FAT_LINKAGES
 	char ** deletable;
-#endif /* USE_FAT_LINKAGES */
 	char ** effective_dist; 
+#endif /* USE_FAT_LINKAGES */
 	Word *  local_sent;
 	int     null_block;
 	int     islands_ok;
@@ -94,6 +94,7 @@ int x_match(Sentence sent, Connector *a, Connector *b)
 	return do_match(sent, a, b, 0, 0);
 }
 
+#ifdef USE_FAT_LINKAGES
 void count_set_effective_distance(Sentence sent)
 {
 	sent->count_ctxt->effective_dist = sent->effective_dist;
@@ -103,6 +104,7 @@ void count_unset_effective_distance(Sentence sent)
 {
 	sent->count_ctxt->effective_dist = NULL;
 }
+#endif /* USE_FAT_LINKAGES */
 
 /*
  * Returns TRUE if s and t match according to the connector matching
@@ -120,8 +122,10 @@ void count_unset_effective_distance(Sentence sent)
 int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
-	int x, y, dist;
-	count_context_t *ctxt;
+	int x, y;
+#ifdef USE_FAT_LINKAGES
+	int dist;
+#endif /* USE_FAT_LINKAGES */
 
 	if (a->label != b->label) return FALSE;
 
@@ -135,22 +139,25 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		t++;
 	}
 
-	ctxt = sent->count_ctxt;
-
 	x = a->priority;
 	y = b->priority;
+
+#ifdef USE_FAT_LINKAGES
 
 	/* Probably not necessary, as long as 
 	 * effective_dist[0][0]=0 and is defined */
 	if (aw == 0 && bw == 0) {
 		dist = 0;
 	} else {
+		count_context_t *ctxt;
+		ctxt = sent->count_ctxt;
 		assert(aw < bw, "match() did not receive params in the natural order.");
 		dist = ctxt->effective_dist[aw][bw];
 	}
 	/*	printf("M: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
 		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
+#endif /* USE_FAT_LINKAGES */
 
 	if ((x == THIN_priority) && (y == THIN_priority))
 	{
@@ -491,10 +498,10 @@ s64 do_parse(Sentence sent, int null_count, Parse_Options opts)
 	s64 total;
 	count_context_t *ctxt = sent->count_ctxt;
 
-	count_set_effective_distance(sent);
 	ctxt->current_resources = opts->resources;
 	ctxt->local_sent = sent->word;
 #ifdef USE_FAT_LINKAGES
+	count_set_effective_distance(sent);
 	ctxt->deletable = sent->deletable;
 #endif /* USE_FAT_LINKAGES */
 	ctxt->null_block = opts->null_block;
