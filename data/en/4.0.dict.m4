@@ -1128,9 +1128,11 @@ such_a such_an: Ds*k+;
 
 
 % "all of the time". These are all temporal modifiers: use MVw ("when")
-<adv-of>: MVw- & OF+;
+% and use OFw to force linkage only to time exprs.
+<adv-of>: MVw- & OFw+;
 
-a_lot: (<noun-sub-p> & <noun-main-p>) or 
+a_lot:
+  (<noun-sub-p> & <noun-main-p>) or 
   <noun-and-p> or 
   EC+ or MVa- or <adv-of>;
 
@@ -1295,7 +1297,7 @@ several:
   NN+ or 
   NW+ or 
   ({EN- or NIc- or NA-} & (ND+ or NIn+ or 
-    ({{@L+} & DD-} & (Dmc+ or (<noun-sub-p> & [<noun-main-p>]))))) or
+    ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
   (NA- & {<noun-sub-p> & <noun-main-p>}) or
   (NA- & Xd- & TY- & Xc+);
 
