@@ -11,7 +11,7 @@ Version 4.7.7 (xxx 2012)
  * Fix: "Show results from today"
  * Fix: conjoined imperatives.
  * Fix: qualified conditional clauses
- * Fix: conjoined irregullar verbs: seem, appear, do, be
+ * Fix: conjoined irregular verbs: seem, appear, do, be, prove, have
 
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).

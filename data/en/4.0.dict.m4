@@ -1827,7 +1827,8 @@ define(`VERB_X_PLI',`'
   or (($1) & <verb-and-sp-i+>)))
 
 % XXX TODO need to provide macro-ized versions for <verb-s-s>, <verb-s-sp>
-% and <verb-s-sp,pp> variants as well. 
+% and <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
+% examples that actually need this.
 
 % AUXILIARY VERBS
 
