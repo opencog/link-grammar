@@ -1982,7 +1982,11 @@ am.v:
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
 
 % S*x- used for passive participles: "this action be taken".
-be.v: {@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-be>;
+% I used verb-and-sp-i- but maybe this is wrong .. 
+be.v:
+  ({@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-be>)
+  or (<verb-and-sp-i-> & ([<vc-be>] or ()))
+  or (<vc-be> & <verb-and-sp-i+>);
 
 been.v: {@E-} & PPf- & <vc-be>;
 being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
