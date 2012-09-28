@@ -12,7 +12,7 @@ changecom(`%')
  %                                                                           %
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
  %       Copyright (c) 2003  Peter Szolovits and MIT.                        %
- %       Copyright (c) 2008, 2009, 2010, 2011  Linas Vepstas                 %
+ %       Copyright (c) 2008-2012  Linas Vepstas                              %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
