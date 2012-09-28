@@ -503,9 +503,11 @@ HYPHENATED-WORDS.n:
   <marker-common-entity> or <common-noun>;
 
 % lot.n is a common noun, just like above, except that
-% "a lot" is usually not a thing, but a modifier.  So give this
-% a cost.
-lot.n:
+% "a lot" is usually not a thing, but a modifier.  So give this a cost.
+% Ditto gaggle.n as opposed to gaggle.d We are using cost to distinguish
+% a valid secondary meaning
+lot.n bevy.n crush.n drift.n flock.n gaggle.n herd.n peck.n rout.n
+throng.n:
   [[<marker-common-entity> or <common-noun>]];
 
 % Common plural nouns ending in "s"
@@ -616,23 +618,36 @@ carte_blanche:
 
 % Almost identical to below.
 majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
-  (<noun-modifiers> &
-    ((Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-    ({Ds-} & <noun-and-x>) or
-    Us- or 
-    (YS+ & Ds-) or 
-    (GN+ & (DD- or [()])))) or
-  AN+;
+  (<noun-modifiers> & (
+    Us-
+    or (YS+ & Ds-)
+    % or (Ds- & <noun-sub-x> & (<noun-main-x> or B*x+))
+    % or ({Ds-} & <noun-and-x>)
+    or (GN+ & (DD- or [()]))))
+  or AN+;
 
 % Almost identical to above.
 number.n: 
-  (<noun-modifiers> &
-    ((Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
-    ({Ds-} & {NM+} & <noun-and-x>) or
-    Us- or 
-    (YS+ & Ds-) or 
-    (GN+ & (DD- or [()])))) or
-  AN+;
+  (<noun-modifiers> & (
+    Us-
+    or (YS+ & Ds-)
+    % or [[Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]]
+    % or ({Ds-} & {NM+} & <noun-and-x>)
+    or (GN+ & (DD- or [()]))))
+  or AN+;
+
+% determiner constructions, with a dangling of: "a number of"
+% "I have a number of cookies"
+% "a pride of lions" "a litter of kittens" all take determiners
+number.d passel.d pile.d peck.d raft.d slew.d stack.d
+majority.d minority.d bunch.d batch.d bulk.d handful.d group.d
+sum.d wad.d pride.d flock.d assembly.d army.d bevy.d cloud.d
+collection.d colony.d company.d convoy.d crowd.d crush.d
+drift.d drove.d flight.d gaggle.d gathering.d herd.d
+host.d legion.d litter.d mass.d multitude.d pack.d
+progeny.d rout.d scores.d skein.d throng.d:
+  OFd+ & Dm+ & D-;
+
 
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
@@ -1145,9 +1160,6 @@ a_lot:
   % or [[(<noun-sub-p> & <noun-main-p>)]]
   or [[<noun-and-p>]]
   or EC+ or MVa- or <adv-of>;
-
-number.d:
-  OFd+ & Dmc+ & D-;
 
 few: {EA- or EF+ or ({EA-} & DD-)} & 
  (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
