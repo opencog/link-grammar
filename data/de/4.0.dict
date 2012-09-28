@@ -1,3 +1,16 @@
+
+ %***************************************************************************%
+ %                                                                           %
+ %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %                                                                           %
+ %  See file "README" for information about commercial use of this system    %
+ %                                                                           %
+ %***************************************************************************%
+
+% Dictionary version number is 4.0.0 (formatted as V4v0v0+)
+<dictionary-version-number>: V4v0v0+;
+
+
 % NOUNS, PRONOUNS
 
 % Masculine singular
@@ -469,6 +482,21 @@ LEFT-WALL: W+ & {Xp+ or RW+};
 RIGHT-WALL: RW- or (Xc- & {@Xc-});
 POSTPROCESS: BOGUS+;
 
+% These need to be implemented. See english for example.
+HMS-TIME:     BZZT+;
+DECADE-TIME:  BZZT+;
+DAY-ORDINALS: BZZT+;
+ORDINALS:     BZZT+;
+NUMBERS:      BZZT+;
+FRACTION:     BZZT+;
+ROMAN-NUMERAL-WORDS:    BZZT+;
+INITIALS:     BZZT+;
+GREEK-LETTER-AND-NUMBER:    BZZT+;
+PL-GREEK-LETTER-AND-NUMBER:    BZZT+;
+UNITS:        BZZT+;
+PL-CAPITALIZED-WORDS:    BZZT+;
+
 % With the following line in the dictionary, the parser will simply skip over (null-link) 
 % unknown words. If you remove it, the parser will output an error for any unknown words.
 UNKNOWN-WORD: NO+;
+
