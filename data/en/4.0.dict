@@ -1180,7 +1180,7 @@ such_a such_an: Ds*k+;
 % For most cases, a_lot is like a determiner:
 % "I have a lot of cookies" wants "cookies" to be he object, not "a lot"
 a_lot:
-  (OFd+ & Dmc+)
+  (OFd+ & Dm+)
   % or [[(<noun-sub-p> & <noun-main-p>)]]
   or [[<noun-and-p>]]
   or EC+ or MVa- or <adv-of>;
