@@ -69,8 +69,9 @@ IGNORE_THESE_LINKS: Xca
 
 ; ----------------------------------------------------------------------
 ; These links may only be used in cycles.
+; Jd and OFd are used with determiner D: "I have a lot of cookies"
 
-MUST_FORM_A_CYCLE_LINKS:  R#*   TOt   EXx   HA    SFsic   Jr  JQ  Xca
+MUST_FORM_A_CYCLE_LINKS:  R#*   TOt   EXx   HA    SFsic  Jd  Jr  JQ  OFd Xca
 
 
 ; ----------------------------------------------------------------------
