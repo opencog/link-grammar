@@ -632,7 +632,7 @@ number.n:
 % "a pride of lions" "a litter of kittens" all take determiners
 % Some of these commonly modify count nouns, other mass nouns.
 number.d majority.d minority.d group.d handful.d
-batch.d bundle.d bunch.d bulk.d chunk.d expanse.d
+bag.d batch.d bundle.d bunch.d bulk.d chunk.d expanse.d
 extent.d gob.d heap.d hunk.d jillion.d load.d magnitude.d
 mass.d measure.d mess.d mint.d passel.d peck.d pile.d 
 raft.d slew.d stack.d supply.d ton.d volume.d
@@ -646,9 +646,15 @@ pride.d progeny.d rout.d score.d skein.d throng.d:
 
 % determiner constructions, with a dangling of: 
 % "I have bags of money"
-bags.d bundles.d mucho.d gobs.d loads.d oodles.d scads.d
-scores.d zillions.d:
-  OFd+ & Dm+;
+% NIn+ needed for omney amounts
+numbers.d mucho.d oodles.d scads.d
+bags.d bunches.d bundles.d chunks.d expanses.d extents.d
+gobs.d heaps.d hunks.d loads.d masses.d piles.d rafts.d
+stacks.d tons.d volumes.d sums.d wads.d
+bevies.d collections.d companies.d convoies.d crowds.d
+droves.d flights.d flocks.d gatherings.d herds.d
+legions.d packs.d scores.d throngs.d:
+  OFd+ & (NIn+ or Dm+);
 
 
 % number appreviations: no.x No.x 
@@ -994,8 +1000,8 @@ you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 it:
    J- or Ox-
    or ((Ss+ or SFsi+) & <CLAUSE>)
-   or SIs- or SFIsi- or OXi- or Vp- or SJls+ or SJrs-
-   or (Dn- & SJn+);
+   or SIs- or SFIsi- or OXi- or Vp-
+   or SJls+ or SJrs- or (Dn- & SJn+);
 
 % O*c: "we will go faster than they"
 they: 
@@ -1472,20 +1478,14 @@ half_a_dozen half_a_million:
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))));
 
-hundreds.a thousands millions billions trillions dozens
+dozens scores.a hundreds.a thousands millions billions trillions
 bajillions bazillions gadzillions gagillions gajillions gazillions
 godzillions jillions jizillions kabillions kajillions katrillions
 killions umptillions zillions.a:
-  ({DD- or Dmc-} & <noun-sub-p> & <noun-main-p>);
+  ({DD- or Dmc-} & <noun-sub-p> & <noun-main-p>)
+  or (OFd+ & (ND+ or NIn+ or Dm+));
 
 tens: {DD-} & OF+ & <noun-main-p>;
-
-dozens_of tens_of hundreds_of thousands_of millions_of billions_of 
-trillions_of bajillions_of bazillions_of gadzillions_of gagillions_of 
-gajillions_of gazillions_of godzillions_of jillions_of jizillions_of
-kabillions_of kajillions_of katrillions_of killions_of umptillions_of
-zillions_of:
-  ND+ or NIn+;
 
 1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8 ½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞:
 ({NNx-} & NNy+) or NF+ or NIe+ 
@@ -7141,9 +7141,10 @@ UNITS: <units-suffix>;
 ((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
 
 /en/words/currency.p: 
-((NIn- or NIe-) & AN+) or 
-((NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or 
-((NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
+  ((NIn- or NIe-) & AN+)
+  or ((NIn- or NIe-) & (Op- or Jp-) & {Mp+})
+  or ((NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
+  or Us-;
 
 % number-and-unit combinations, such as "50-kDa". The linking requirements
 % should largely follow those for units except not allowing a numeric
