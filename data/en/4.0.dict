@@ -507,6 +507,11 @@ throng.n:
 /en/words/words.n.2.s.wiki : 
   <marker-common-entity> or <generic-plural-id>;
 
+% Just like words.n.2.s, but with a cost, so that "numbers of" gets priority
+numbers.n:
+  [<marker-common-entity> or <generic-plural-id>];
+
+
 /en/words/words.n.2.s.biolg: <generic-plural-id>;
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
@@ -612,18 +617,20 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
   (<noun-modifiers> & (
     Us-
     or (YS+ & Ds-)
-    % or (Ds- & <noun-sub-x> & (<noun-main-x> or B*x+))
-    % or ({Ds-} & <noun-and-x>)
+    or [Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    or ({Ds-} & <noun-and-x>)
     or (GN+ & (DD- or [()]))))
   or AN+;
 
 % Almost identical to above.
+% Ds- & {NM+} & <noun-sub-x> &.. "the number 12 is a lucky number"
+% above has cost to give "a number of" priority.
 number.n: 
   (<noun-modifiers> & (
     Us-
     or (YS+ & Ds-)
-    % or [[Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]]
-    % or ({Ds-} & {NM+} & <noun-and-x>)
+    or [Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    or ({Ds-} & {NM+} & <noun-and-x>)
     or (GN+ & (DD- or [()]))))
   or AN+;
 
@@ -634,7 +641,7 @@ number.n:
 % {A-}: "a vast expanse" "a large flock"
 number.d majority.d minority.d group.d handful.d
 bag.d batch.d bundle.d bunch.d bulk.d chunk.d expanse.d
-extent.d gob.d heap.d hunk.d jillion.d load.d magnitude.d
+extent.d gob.d heap.d hunk.d load.d magnitude.d
 mass.d measure.d mess.d mint.d passel.d peck.d pile.d 
 raft.d slew.d stack.d supply.d ton.d volume.d
 sum.d wad.d 
