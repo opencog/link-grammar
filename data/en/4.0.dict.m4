@@ -125,9 +125,10 @@ changecom(`%')
 
 % noun-main-p -- plural
 <noun-main-p>: 
-  (Sp+ & <CLAUSE>) or SIp- or Jp- or Op- or 
-  <post-nominal-p> or
-  <costly-null>;
+  (Sp+ & <CLAUSE>) or SIp- or Jp-
+  or Op-
+  or <post-nominal-p>
+  or <costly-null>;
 
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+  
@@ -377,7 +378,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 <generic-plural-id>:  
   [[AN+]] or
   (<noun-modifiers> & 
-    (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+    (({NM+ or ({Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     SJrp- or
     (YP+ & {Dmc-}) or 
@@ -525,13 +526,14 @@ numbers.n:
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % plural nouns not ending in "s"
+% {Jd-}: allows a "a flock of sheep" to act as determiner.
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 /en/words/words.n.2.x
 /en/words/words.n.2.x.wiki :
   <marker-common-entity> or 
   (<noun-modifiers> & 
     ([[AN+]] or 
-    ({NM+ or Dmc-} & 
+    ({NM+ or ({Jd-} & Dmc-)} & 
       ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
 		<noun-and-s>)) or
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
@@ -542,7 +544,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   <marker-common-entity> or 
   (<noun-modifiers> & 
     (AN+ or 
-    ({NM+ or Dmu-} & 
+    ({NM+ or ({Jd-} & Dmu-)} & 
       ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
       <noun-and-p,u>)) or
     (YS+ & {Dmu-}) or 
@@ -4871,15 +4873,15 @@ or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or (MVp- & B-);
 unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or 
 (Xd- & Xc+ & (E+ or MVx-)));
 
-% OFd-: "I have a lot of cookies", forces "lot" to be determiner
-% and allows J to dangle... (seems awkward, I know...)
+% (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
+% The Jd+ forces a link to the object as well.
 of: 
   ({JQ+}
     & (J+ or Mgp+ or QI+)
     & (Mp- or OFj- or OFw- or (Xd- & Xc+ & MX*x-) 
       or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-)))
       or [[({Xc+ & {Xd-}} & CO+)]]))
-  or OFd-
+  or (OFd- & Jd+)
   or ((OFj- or Mp-) & B-)
   or (MG- & JG+)
   or (NF- & NJ+)
