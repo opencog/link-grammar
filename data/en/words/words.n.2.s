@@ -1318,7 +1318,7 @@ pedometers.n peeks.n peelers.n peepholes.n peeps.n peepshows.n
 peerages.n peeresses.n peers.n pees.n pegs.n pekinese.p pelicans.n 
 pellets.n pelts.n pelvises.n penalties.n penchants.n pencils.n 
 pendants.n pendulums.n penguins.n peninsulas.n penises.n 
-penitentiaries.n pennants.n pens.n pensioners.n pensions.n 
+penitentiaries.n pennants.n pennies.n pens.n pensioners.n pensions.n 
 pentagons.n penthouses.n penumbras.n peonies.n peons.n peoples.n 
 peppercorns.n peppermints.n peppers.n perambulators.n percentages.n 
 perches.n percolators.n percussionists.n percussions.n perennials.n 

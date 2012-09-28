@@ -640,6 +640,7 @@ number.n:
 % "I have a number of cookies"
 % "a pride of lions" "a litter of kittens" all take determiners
 % Some of these commonly modify count nouns, other mass nouns.
+% {A-}: "a vast expanse" "a large flock"
 number.d majority.d minority.d group.d handful.d
 bag.d batch.d bundle.d bunch.d bulk.d chunk.d expanse.d
 extent.d gob.d heap.d hunk.d jillion.d load.d magnitude.d
@@ -651,7 +652,7 @@ company.d convoy.d crowd.d crush.d
 drift.d drove.d flight.d flock.d gaggle.d gathering.d herd.d
 host.d legion.d litter.d multitude.d pack.d
 pride.d progeny.d rout.d score.d skein.d throng.d:
-  OFd+ & Dm+ & D-;
+  OFd+ & Dm+ & {A-} & D-;
 
 % determiner constructions, with a dangling of: 
 % "I have bags of money"
@@ -663,7 +664,7 @@ stacks.d tons.d volumes.d sums.d wads.d
 bevies.d collections.d companies.d convoies.d crowds.d
 droves.d flights.d flocks.d gatherings.d herds.d
 legions.d packs.d scores.d throngs.d:
-  OFd+ & (NIn+ or Dm+);
+  OFd+ & (NIn+ or Dm+) & {A-};
 
 
 % number appreviations: no.x No.x 
@@ -5576,15 +5577,16 @@ and.j-r or.j-r:
 % XXX WTF? why does [O-] have a cost that the post-nominal doesn't?
 % Having this cost messes up the following parse:
 % "The Spirit, a liner carrying crew members and passengers, was attacked."
-% I'm guessing the [O-] cost is needed to avoid some other screwup ..?
-%
+% I'm guessing the costly [O-] is needed to avoid some other screwup ..?
+% {Dm-}: "I have a number of pennies and dimes"
+% "I saw the (dog and pony) show"
 and.j-n but_not:
   (<noun-conj-dep-s> & <noun-sub-s> & 
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Os-] or <post-nominal-s>)) or
+    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [{Ds-} & Os-] or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & 
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or <post-nominal-p>)) or
+    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [{Dmc-} & Op-] or <post-nominal-p>)) or
   (<noun-conj-dep-u> & <noun-sub-x> & 
-    (<noun-conj-head> or (Sux+ & <CLAUSE>) or SIu- or [Ou-] or <post-nominal-u>));
+    (<noun-conj-head> or (Sux+ & <CLAUSE>) or SIu- or [{Dmu-} &  Ou-] or <post-nominal-u>));
 
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & 
