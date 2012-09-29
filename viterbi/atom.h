@@ -50,7 +50,9 @@ class Atom
 {
 	public:
 		Atom(AtomType type) : _type(type) {}
+		AtomType get_type() const { return _type; }
 		TV tv;
+		virtual ~Atom() {}
 	protected:
 		AtomType _type;
 };
@@ -67,6 +69,8 @@ class Node : public Atom
 	public:
 		Node(AtomType t, const std::string& n)
 			: Atom(t), _name(n) {}
+
+		const std::string& get_name() const { return _name; }
 	private:
 		std::string _name;
 };
@@ -83,6 +87,8 @@ class Link : public Atom
 	public:
 		Link(AtomType t, const OutList oset)
 			: Atom(t), _oset(oset) {}
+		const OutList& get_outgoing_set() const { return _oset; }
+
 	private:
 		// Outgoing set
 		OutList _oset;

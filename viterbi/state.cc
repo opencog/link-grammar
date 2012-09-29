@@ -32,11 +32,9 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		stringstream ss;
 		if (exp->multi) ss << "@";
 		ss << exp->u.string << exp->dir;
-cout<<"duude conn type "<<ss.str() <<endl;
 		Node *n = new Node(CONNECTOR, ss.str());
 		return n;
 	}
-
 
 	if ((AND_type == exp->type) || (OR_type == exp->type))
 	{
@@ -48,13 +46,10 @@ cout<<"duude conn type "<<ss.str() <<endl;
 		}
 
 		if (AND_type == exp->type)
-{ cout<<"duude and type"<<endl;
 			return new Link(AND, alist);
-}
+
 		if (OR_type == exp->type)
-{ cout<<"duude or type"<<endl;
 			return new Link(OR, alist);
-}
 	}
 
 	return NULL;
