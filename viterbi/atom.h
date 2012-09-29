@@ -27,11 +27,15 @@ class TV
 // Atom types.  Right now an enum, but maybe should be dynamic!?
 enum AtomType
 {
+	// Node types
 	WORD = 1,
 	META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
 	CONNECTOR,  // e.g. S+ 
+
+	// Link types
 	AND,
 	OR,
+	WORD_DISJ,  // word, followed by a list of disjuncts for that word.
 	LINK,       // two connected connectors, e.g. Dmcn w/o direction info
 	STATE
 };

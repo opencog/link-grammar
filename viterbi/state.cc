@@ -15,6 +15,7 @@
 #include "structures.h"
 
 #include "atom.h"
+#include "parser.h"
 #include "viterbi.h"
 
 using namespace std;
@@ -24,25 +25,54 @@ namespace viterbi {
 
 /* Current parse state */
 
-Link * initialize_state(Dictionary dict)
+Link * Parser::word_disjuncts(const string& word)
 {
-	Node *left_wall = new Node(META, "LEFT-WALL");
-	vector<Atom*> statev;
-	statev.push_back(left_wall);
-	Link *state = new Link(STATE, statev);
+	// First atom at the from of the outgoing set is the word itself.
+	vector<Atom*> dlist;
+	Node *nword = new Node(WORD, word);
+	dlist.push_back(nword);
 
-	return state;
-}
+	// See if we know about this word, or not.
+	Dict_node* dn = dictionary_lookup_list(_dict, word.c_str());
+	if (!dn) return NULL;
 
-void viterbi_parse(const char * sentence, Dictionary dict)
-{
-	// Initial state
-	Link * state = initialize_state(dict);
-cout <<"Hello world!"<<endl;
-
-	Dict_node* dn = dictionary_lookup_list(dict, "LEFT-WALL");
 	Exp* exp = dn->exp;
 	print_expression(exp);
+
+	if (OR_type == exp->type)
+	{
+cout<<"duude or type"<<endl;
+	}
+
+	if (AND_type == exp->type)
+	{
+cout<<"duude and type"<<endl;
+	}
+
+	Link *dj = new Link(WORD_DISJ, dlist);
+	return dj;
+}
+
+void Parser::initialize_state()
+{
+	const char * wall_word = "LEFT-WALL";
+
+	Link *wall_disj = word_disjuncts(wall_word);
+
+	vector<Atom*> statev;
+	statev.push_back(wall_disj);
+
+	_state = new Link(STATE, statev);
+}
+
+void viterbi_parse(Dictionary dict, const char * sentence)
+{
+	Parser pars(dict);
+
+	// Initial state
+	pars.initialize_state();
+cout <<"Hello world!"<<endl;
+
 }
 
 } // namespace viterbi
@@ -50,6 +80,6 @@ cout <<"Hello world!"<<endl;
 
 void viterbi_parse(const char * sentence, Dictionary dict)
 {
-	link_grammar::viterbi::viterbi_parse(sentence, dict);
+	link_grammar::viterbi::viterbi_parse(dict, sentence);
 }
 
