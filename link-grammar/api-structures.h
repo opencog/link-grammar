@@ -62,6 +62,7 @@ struct Parse_Options_s
 {
 	int verbosity;         /* Level of detail to give about the computation 0 */
 	int use_sat_solver;    /* Use the Boolean SAT based parser */
+	int use_viterbi;       /* Use the Viterbi decoder-based parser */
 	int linkage_limit;     /* The maximum number of linkages processed 100 */
 	float disjunct_cost;   /* Max disjunct cost to allow */
 	int use_fat_links;     /* Look for fat linkages */

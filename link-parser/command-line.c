@@ -38,6 +38,7 @@ static struct
 	int display_union;
 #endif /* USE_FAT_LINKAGES */
 	int use_sat_solver;
+	int use_viterbi;
 	int echo_on;
 	int cost_model;
 	float max_cost;
@@ -102,6 +103,10 @@ static Switch default_switches[] =
    {"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
    {"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
+#define USE_VITERBI
+#ifdef USE_VITERBI
+   {"vit",        Bool, "Use Viterbit-based parser",       &local.use_viterbi},
+#endif
    {"walls",      Bool, "Display wall words",              &local.display_walls},
    {"width",      Int,  "The width of the display",        &local.screen_width},
    {NULL,         Bool,  NULL,                             NULL}
@@ -407,6 +412,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.display_union = parse_options_get_display_union(opts);
 #endif /* USE_FAT_LINKAGES */
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
+	local.use_viterbi = parse_options_get_use_viterbi(opts);
 	local.screen_width = parse_options_get_screen_width(opts);
 	local.display_on = parse_options_get_display_on(opts);
 	local.display_postscript = parse_options_get_display_postscript(opts);
@@ -444,6 +450,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif
+	parse_options_set_use_viterbi(opts, local.use_viterbi);
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_display_on(opts, local.display_on);
 	parse_options_set_display_postscript(opts, local.display_postscript);

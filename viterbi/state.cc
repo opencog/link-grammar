@@ -5,8 +5,12 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <iostream>
 #include <string>
 #include <vector>
+
+#include <link-grammar/link-includes.h>
+#include "viterbi.h"
 
 using namespace std;
 
@@ -37,7 +41,7 @@ class Atom
 	public:
 		Atom(AtomType type) : _type(type) {}
 		TV tv;
-	private:
+	protected:
 		AtomType _type;
 };
 
@@ -46,18 +50,45 @@ class Atom
  -- a link (the string holds the link)
  -- a disjunct (the string holds the disjunct)
  -- etc.
+ * Nodes are immuatble; the name can be set but not changed.
  */
 class Node : public Atom
 {
 	public:
-		string name;
+		Node(AtomType t, const string& n)
+			: Atom(t), _name(n) {}
+	private:
+		string _name;
 };
 
+/*
+ * Links hold a bunch of atoms
+ * Links are immutable; the outgoing set cannot be changed.
+ */
 class Link : public Atom
 {
 	public:
-		// Ooutgoing set
-		vector<Atom*> oset;
+		Link(AtomType t, const vector<Atom*> oset)
+			: Atom(t), _oset(oset) {}
+	private:
+		// Outgoing set
+		vector<Atom*> _oset;
 };
 
+Link * initialize_state()
+{
+	Node *left_wall = new Node(LINK, "LEFT-WALL");
+	vector<Atom*> statev;
+	statev.push_back(left_wall);
+	Link *state = new Link(STATE, statev);
+
+	return state;
+}
+
+void viterbi_parse(const char * sentence, Dictionary dict)
+{
+	// Initial state
+	Link * state = initialize_state();
+cout <<"Hello world!"<<endl;
+}
 

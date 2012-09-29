@@ -145,6 +145,10 @@ link_public_api(void)
      parse_options_set_use_sat_parser(Parse_Options opts, int use_sat_solver);
 link_public_api(int)
      parse_options_get_use_sat_parser(Parse_Options opts);
+link_public_api(void)
+     parse_options_set_use_viterbi(Parse_Options opts, int use_viterbi);
+link_public_api(int)
+     parse_options_get_use_viterbi(Parse_Options opts);
 link_public_api(int)
      parse_options_timer_expired(Parse_Options opts);
 link_public_api(int)

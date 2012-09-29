@@ -176,8 +176,17 @@ void parse_options_set_use_sat_parser(Parse_Options opts, int dummy) {
 	          " library was built without SAT solver support.\n");
 #endif
 }
+
 int parse_options_get_use_sat_parser(Parse_Options opts) {
 	return opts->use_sat_solver;
+}
+
+void parse_options_set_use_viterbi(Parse_Options opts, int dummy) {
+	opts->use_viterbi = dummy;
+}
+
+int parse_options_get_use_viterbi(Parse_Options opts) {
+	return opts->use_viterbi;
 }
 
 void parse_options_set_use_fat_links(Parse_Options opts, int dummy) {

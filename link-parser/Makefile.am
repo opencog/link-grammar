@@ -25,4 +25,5 @@ link_parser_LDADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
 link_parser_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
+link_parser_LDADD += $(top_builddir)/viterbi/libvitacog.la
 

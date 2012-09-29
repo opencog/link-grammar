@@ -62,6 +62,7 @@
 
 #include "command-line.h"
 #include "expand.h"
+#include "../viterbi/viterbi.h"
 
 #ifndef FALSE
 #define FALSE 0
@@ -564,7 +565,7 @@ int main(int argc, char * argv[])
 	const char      *codeset;
 
 #if LATER
-	/* Try to catch the SIGNWINCH ... except this is not working. */
+	/* Try to catch the SIGWINCH ... except this is not working. */
 	struct sigaction winch_act;
 	winch_act.sa_handler = winch_handler;
 	winch_act.sa_sigaction = NULL;
@@ -739,142 +740,149 @@ int main(int argc, char * argv[])
 			label = strip_off_label(input_string);
 		}
 
-		sent = sentence_create(input_string, dict);
-
-		if (sent == NULL) continue;
-
-		if (sentence_length(sent) > parse_options_get_max_sentence_length(opts))
+		if (parse_options_get_use_viterbi(opts))
 		{
-			if (verbosity > 0)
-			{
-				fprintf(stdout,
-				       "Sentence length (%d words) exceeds maximum allowable (%d words)\n",
-					sentence_length(sent), parse_options_get_max_sentence_length(opts));
-			}
-			sentence_delete(sent);
-			sent = NULL;
-			continue;
-		}
-
-		/* First parse with cost 0 or 1 and no null links */
-		// parse_options_set_disjunct_costf(opts, 2.0f);
-		parse_options_set_min_null_count(opts, 0);
-		parse_options_set_max_null_count(opts, 0);
-		parse_options_reset_resources(opts);
-
-		num_linkages = sentence_parse(sent, opts);
-		if (num_linkages < 0)
-		{
-			sentence_delete(sent);
-			sent = NULL;
-			continue;
-		}
-
-#if 0
-		/* Try again, this time ommitting the requirement for
-		 * definite articles, etc. This should allow for the parsing
-		 * of newspaper headlines and other clipped speech.
-		 *
-		 * XXX Unfortunately, this also allows for the parsing of
-		 * all sorts of ungrammatical sentences which should not 
-		 * parse, and leads to bad parses of many other unparsable
-		 * but otherwise grammatical sentences.  Thus, this trick
-		 * pretty much fails; we leave it here to document the 
-		 * experiment.
-		 */
-		if (num_linkages == 0)
-		{
-			parse_options_set_disjunct_costf(opts, 3.5f);
-			num_linkages = sentence_parse(sent, opts);
-			if (num_linkages < 0) continue;
-		}
-#endif
-
-		/* Try using a larger list of disjuncts */
-		/* XXX fixme: the lg_expand_disjunct_list() routine is not
-		 * currently a part of the public API; it should be made so,
-		 * or this expansion idea should be abandoned... not sure which.
-		 */
-		if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
-		{
-			int expanded;
-			if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
-			parse_options_set_disjunct_costf(opts, 2.9f);
-			expanded = lg_expand_disjunct_list(sent);
-			if (expanded)
-			{
-				num_linkages = sentence_parse(sent, opts);
-			}
-			if (0 < num_linkages) printf("Got One !!!!!!!!!!!!!!!!!\n");
-		}
-
-		/* If asked to show bad linkages, then show them. */
-		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
-		{
-			if (parse_options_get_display_bad(opts))
-			{
-				num_linkages = sentence_num_linkages_found(sent);
-			}
-		}
-
-		/* Now parse with null links */
-		if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
-		{
-			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
-
-			if (parse_options_get_allow_null(opts))
-			{
-				/* XXX should use expanded disjunct list here too */
-				parse_options_set_min_null_count(opts, 1);
-				parse_options_set_max_null_count(opts, sentence_length(sent));
-				num_linkages = sentence_parse(sent, opts);
-			}
-		}
-
-		if (parse_options_timer_expired(opts))
-		{
-			if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
-		}
-		if (parse_options_memory_exhausted(opts))
-		{
-			if (verbosity > 0) fprintf(stdout, "Memory is exhausted!\n");
-		}
-
-		if ((num_linkages == 0) &&
-			parse_options_resources_exhausted(opts) &&
-			parse_options_get_panic_mode(opts))
-		{
-			/* print_total_time(opts); */
-			batch_errors++;
-			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
-			parse_options_reset_resources(panic_parse_opts);
-			parse_options_set_verbosity(panic_parse_opts, verbosity);
-			num_linkages = sentence_parse(sent, panic_parse_opts);
-			if (parse_options_timer_expired(panic_parse_opts)) {
-				if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
-			}
-		}
-
-		/* print_total_time(opts); */
-
-		if (parse_options_get_batch_mode(opts))
-		{
-			batch_process_some_linkages(label, sent, opts);
+			viterbi_parse(input_string, dict);
 		}
 		else
 		{
-			int c = process_some_linkages(sent, opts);
-			if (c == EOF)
+			sent = sentence_create(input_string, dict);
+
+			if (sent == NULL) continue;
+
+			if (sentence_length(sent) > parse_options_get_max_sentence_length(opts))
+			{
+				if (verbosity > 0)
+				{
+					fprintf(stdout,
+					       "Sentence length (%d words) exceeds maximum allowable (%d words)\n",
+						sentence_length(sent), parse_options_get_max_sentence_length(opts));
+				}
+				sentence_delete(sent);
+				sent = NULL;
+				continue;
+			}
+
+			/* First parse with cost 0 or 1 and no null links */
+			// parse_options_set_disjunct_costf(opts, 2.0f);
+			parse_options_set_min_null_count(opts, 0);
+			parse_options_set_max_null_count(opts, 0);
+			parse_options_reset_resources(opts);
+
+			num_linkages = sentence_parse(sent, opts);
+			if (num_linkages < 0)
 			{
 				sentence_delete(sent);
 				sent = NULL;
-				break;
+				continue;
 			}
-		}
-		fflush(stdout);
 
-		sentence_delete(sent);
-		sent = NULL;
+#if 0
+			/* Try again, this time ommitting the requirement for
+			 * definite articles, etc. This should allow for the parsing
+			 * of newspaper headlines and other clipped speech.
+			 *
+			 * XXX Unfortunately, this also allows for the parsing of
+			 * all sorts of ungrammatical sentences which should not 
+			 * parse, and leads to bad parses of many other unparsable
+			 * but otherwise grammatical sentences.  Thus, this trick
+			 * pretty much fails; we leave it here to document the 
+			 * experiment.
+			 */
+			if (num_linkages == 0)
+			{
+				parse_options_set_disjunct_costf(opts, 3.5f);
+				num_linkages = sentence_parse(sent, opts);
+				if (num_linkages < 0) continue;
+			}
+#endif
+
+			/* Try using a larger list of disjuncts */
+			/* XXX fixme: the lg_expand_disjunct_list() routine is not
+			 * currently a part of the public API; it should be made so,
+			 * or this expansion idea should be abandoned... not sure which.
+			 */
+			if ((num_linkages == 0) && parse_options_get_use_cluster_disjuncts(opts))
+			{
+				int expanded;
+				if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
+				parse_options_set_disjunct_costf(opts, 2.9f);
+				expanded = lg_expand_disjunct_list(sent);
+				if (expanded)
+				{
+					num_linkages = sentence_parse(sent, opts);
+				}
+				if (0 < num_linkages) printf("Got One !!!!!!!!!!!!!!!!!\n");
+			}
+
+			/* If asked to show bad linkages, then show them. */
+			if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
+			{
+				if (parse_options_get_display_bad(opts))
+				{
+					num_linkages = sentence_num_linkages_found(sent);
+				}
+			}
+
+			/* Now parse with null links */
+			if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
+			{
+				if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
+
+				if (parse_options_get_allow_null(opts))
+				{
+					/* XXX should use expanded disjunct list here too */
+					parse_options_set_min_null_count(opts, 1);
+					parse_options_set_max_null_count(opts, sentence_length(sent));
+					num_linkages = sentence_parse(sent, opts);
+				}
+			}
+
+			if (parse_options_timer_expired(opts))
+			{
+				if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
+			}
+			if (parse_options_memory_exhausted(opts))
+			{
+				if (verbosity > 0) fprintf(stdout, "Memory is exhausted!\n");
+			}
+
+			if ((num_linkages == 0) &&
+				parse_options_resources_exhausted(opts) &&
+				parse_options_get_panic_mode(opts))
+			{
+				/* print_total_time(opts); */
+				batch_errors++;
+				if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
+				parse_options_reset_resources(panic_parse_opts);
+				parse_options_set_verbosity(panic_parse_opts, verbosity);
+				num_linkages = sentence_parse(sent, panic_parse_opts);
+				if (parse_options_timer_expired(panic_parse_opts)) {
+					if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
+				}
+			}
+
+			/* print_total_time(opts); */
+
+			if (parse_options_get_batch_mode(opts))
+			{
+				batch_process_some_linkages(label, sent, opts);
+			}
+			else
+			{
+				int c = process_some_linkages(sent, opts);
+				if (c == EOF)
+				{
+					sentence_delete(sent);
+					sent = NULL;
+					break;
+				}
+			}
+			fflush(stdout);
+
+			sentence_delete(sent);
+			sent = NULL;
+		}
 	}
 
 	if (parse_options_get_batch_mode(opts))
