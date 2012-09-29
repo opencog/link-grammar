@@ -18,10 +18,16 @@ using namespace std;
 
 const string type_name(AtomType t)
 {
-	if (WORD == t) return "WORD";
-	if (CONNECTOR == t) return "CONNECTOR";
-	if (OR == t) return "OR";
-	if (AND == t) return "AND";
+	switch(t)
+	{
+		case WORD:      return "WORD";
+		case CONNECTOR: return "CONNECTOR";
+		case OR:        return "OR";
+		case AND:       return "AND";
+		case WORD_DISJ: return "WORD_DISJ";
+		case LINK:      return "LINK";
+		case STATE:     return "STATE";
+	}
 
 	return "";
 }

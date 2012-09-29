@@ -30,7 +30,7 @@ enum AtomType
 {
 	// Node types
 	WORD = 1,
-	META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
+	// META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
 	CONNECTOR,  // e.g. S+ 
 
 	// Link types
