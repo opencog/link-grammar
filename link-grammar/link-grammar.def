@@ -197,3 +197,5 @@ free_connectors
 left_print_string
 dict_display_word_expr
 dict_display_word_info
+print_expression
+dictionary_lookup_list

@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <link-grammar/link-features.h>
+LINK_BEGIN_DECLS
+
 #include "api-types.h"
 
 int  read_dictionary(Dictionary dict);
@@ -29,3 +32,5 @@ void free_lookup_list(Dict_node *);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 void        free_dictionary(Dictionary dict);
 Exp *       Exp_create(Dictionary dict);
+
+LINK_END_DECLS

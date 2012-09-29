@@ -742,7 +742,11 @@ int main(int argc, char * argv[])
 
 		if (parse_options_get_use_viterbi(opts))
 		{
+#define USE_VITERBI
+			/* Compile-time optional, for now, since it don't work yet. */
+#ifdef USE_VITERBI
 			viterbi_parse(input_string, dict);
+#endif
 		}
 		else
 		{
