@@ -5,38 +5,19 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_VITERBI_PARSER_H
-#define _LG_VITERBI_PARSER_H
-
-#include <string>
-
+#include <iostream>
 #include "atom.h"
-#include "api-types.h"
-#include "structures.h"
 
 namespace link_grammar {
 namespace viterbi {
 
-class Parser
+
+std::ostream& operator<<(std::ostream& out, const Atom*)
 {
-	public:
-		Parser(Dictionary dict)
-			: _dict(dict), _state(NULL)
-		{}
-
-		void initialize_state();
-		Link* word_disjuncts(const std::string& word);
-
-	protected:
-		Atom* lg_exp_to_atom(Exp*);
-		Dictionary _dict;
-
-	private:
-		Link *_state;
-};
+	out <<"whazzup";
+	return out;
+}
 
 
 } // namespace viterbi
 } // namespace link-grammar
-
-#endif // _LG_VITERBI_PARSER_H

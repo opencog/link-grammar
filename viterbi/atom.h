@@ -8,6 +8,7 @@
 #ifndef _LG_VITERBI_ATOM_H
 #define _LG_VITERBI_ATOM_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -70,6 +71,9 @@ class Node : public Atom
 		std::string _name;
 };
 
+// Uhhhh ... 
+typedef std::vector<Atom*> OutList;
+
 /*
  * Links hold a bunch of atoms
  * Links are immutable; the outgoing set cannot be changed.
@@ -77,12 +81,14 @@ class Node : public Atom
 class Link : public Atom
 {
 	public:
-		Link(AtomType t, const std::vector<Atom*> oset)
+		Link(AtomType t, const OutList oset)
 			: Atom(t), _oset(oset) {}
 	private:
 		// Outgoing set
-		std::vector<Atom*> _oset;
+		OutList _oset;
 };
+
+std::ostream& operator<<(std::ostream& out, const Atom*);
 
 
 } // namespace viterbi
