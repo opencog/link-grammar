@@ -1,0 +1,13 @@
+
+                           Viterbi decoder
+                           ---------------
+                     Linas Vepstas October 2012
+
+This directory contains code for prototype Viterbi decoder for Link
+Grammar. Actually, its not even a prototype, yet, since its hardly
+begun, and it doesn't work.  The data structures vaguely resemble
+those of the OpenCog AtomSpace; the reason for this is that they provide
+a natural setting for storing Vitebrbi state information; that is, for
+holding the various partly-finished parses, and effecting state
+transformations on them.
+
