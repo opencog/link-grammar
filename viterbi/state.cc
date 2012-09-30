@@ -142,17 +142,58 @@ void Parser::initialize_state()
 	_state = new Link(STATE, statev);
 }
 
+// #define forlink(CHLD,PAR) \
+
+
 /**
  * Add a single word to the parse.
  */
 void Parser::stream_word(const string& word)
 {
-	Link *disj = word_disjuncts(word);
-	if (!disj)
+	Link *djset = word_disjuncts(word);
+	if (!djset)
 	{
 		cout << "Unhandled error; word not in dict: " << word << endl;
 		return;
 	}
+
+	// Try to add each dictionary entry to the parse state.
+	const OutList& oset = djset->get_outgoing_set();
+	for (int i = 0; i < oset.size(); i++)
+	{
+		stream_djword(dynamic_cast<Link*>(oset[i]));
+	}
+}
+
+/** convenience wrapper */
+Link* Parser::get_state_set()
+{
+	Link* state_set = dynamic_cast<Link*>(_state->get_outgoing_set()[0]);
+	assert(state_set, "State set is empty");
+	return state_set;
+}
+
+/**
+ * Add a single dictionary entry to the parse stae, if possible.
+ */
+void Parser::stream_djword(Link* djword)
+{
+	assert(djword, "Unexpected NULL dictionary entry!");
+	assert(WORD_DISJ == djword->get_type(), "Unexpected link type in stream.");
+cout<<"yeahh "<<djword<<endl;
+cout<<"state "<<_state<<endl;
+
+	Link* state_set = get_state_set();
+	const OutList& soset = state_set->get_outgoing_set();
+	for (int i = 0; i < oset.size(); i++)
+	{
+		stream_djword(dynamic_cast<Link*>(oset[i]));
+	}
+}
+
+Link* find_matches(Link* left, Link* right)
+{
+	return NULL;
 }
 
 /**
