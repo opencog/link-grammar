@@ -21,10 +21,12 @@ const string type_name(AtomType t)
 	switch(t)
 	{
 		case WORD:      return "WORD";
+		// case META:      return "META";
 		case CONNECTOR: return "CONNECTOR";
+		case SET:       return "SET";
 		case OR:        return "OR";
 		case AND:       return "AND";
-		case OPTIONAL:  return "OPTIONAL";
+		// case OPTIONAL:  return "OPTIONAL";
 		case WORD_DISJ: return "WORD_DISJ";
 		case LINK:      return "LINK";
 		case STATE:     return "STATE";

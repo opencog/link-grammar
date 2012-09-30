@@ -103,22 +103,28 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 Link * Parser::word_disjuncts(const string& word)
 {
 	// See if we know about this word, or not.
-	Dict_node* dn = dictionary_lookup_list(_dict, word.c_str());
-	if (!dn) return NULL;
+	Dict_node* dn_head = dictionary_lookup_list(_dict, word.c_str());
+	if (!dn_head) return NULL;
 
-	Exp* exp = dn->exp;
+	OutList djset;
+	for (Dict_node*dn = dn_head; dn; dn= dn->right)
+	{
+		Exp* exp = dn->exp;
+cout<<"duude: " << dn->string << ": ";
 print_expression(exp);
 
-	Atom *dj = lg_exp_to_atom(exp);
+		Atom *dj = lg_exp_to_atom(exp);
 
-	// First atom at the from of the outgoing set is the word itself.
-	// Second atom is the first disjuct that must be fulfilled.
-	OutList dlist;
-	Node *nword = new Node(WORD, word);
-	dlist.push_back(nword);
-	dlist.push_back(dj);
+		// First atom at the from of the outgoing set is the word itself.
+		// Second atom is the first disjuct that must be fulfilled.
+		OutList dlist;
+		Node *nword = new Node(WORD, dn->string);
+		dlist.push_back(nword);
+		dlist.push_back(dj);
 
-	return new Link(WORD_DISJ, dlist);
+		djset.push_back(new Link(WORD_DISJ, dlist));
+	}
+	return new Link(SET, djset);
 }
 
 /**

@@ -34,9 +34,10 @@ enum AtomType
 	CONNECTOR,  // e.g. S+ 
 
 	// Link types
-	AND,        // & of all children
-	OR,         // or of all children
-	OPTIONAL,   // one child only, and its optional.
+	SET,        // unordered set of children
+	AND,        // ordered AND of all children (order is important!)
+	OR,         // unordered OR of all children
+	// OPTIONAL,   // one child only, and its optional. XXX not used ATM
 	WORD_DISJ,  // word, followed by a list of disjuncts for that word.
 	LINK,       // two connected connectors, e.g. Dmcn w/o direction info
 	STATE
