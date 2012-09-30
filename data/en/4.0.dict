@@ -7344,7 +7344,7 @@ and.j-g: [[G- & G+]];
 % Conjoined adjectival modifiers.
 % The black and white cat sleeps
 % She ran hot and cold.
-% The EB+ link handles "not", "yet" after the "and" -- "blah and not blah"
+% The {EBb+} link handles "not", "yet" after the "and" -- "blah and not blah"
 % See also <comma-adj-conjunction> for similar structures.
 % The {Xd-} allows "blah blah, and blah"
 % MVa is given a cost, so that Pa is used, if possible.
@@ -7356,8 +7356,10 @@ and.j-g: [[G- & G+]];
 % AJ*s: superlative adjectives
 %
 and.j-a but.j-a yet.j-a:
-  ({Xd-} & AJla- & {EB+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-);
-or.j-a: ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
+  ({Xd-} & AJla- & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-);
+
+or.j-a:
+  ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
 % "neither" will be used together with "nor".
@@ -7379,10 +7381,11 @@ and.j-s:
 
 % conjoined post-nominal modifiers
 % [Ma-]: it  is more grammatically correct to have commas ... 
+% {EBb+}: "blah but not blah", "blah and not blah"
 but.j-m and.j-m or.j-m: 
-  (({Xd-} & MJla- & MJra+) & ([Ma-] or (Xd- & Xc+ & MX*a-))) or
-  (({Xd-} & MJlp- & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
-  (({Xd-} & MJlj- & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
+  (({Xd-} & MJla- & {EBb+} & MJra+) & ([Ma-] or (Xd- & Xc+ & MX*a-))) or
+  (({Xd-} & MJlp- & {EBb+} & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
+  (({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
 
 % Conjoined question words.
 % When and where is the party?

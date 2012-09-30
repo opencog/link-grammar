@@ -2575,6 +2575,8 @@ Show me my notes, if they are readable.
 Show me my notes only if they are readable.
 Show me my notes, but only if they are readable.
 Show me my notes, but not if they are unreadable.
+Show me my notes from today, but not from yesterday.
+Show me my notes from today but not from yesterday.
 
 % qualified conditional clauses
 Do it only if you are sure.
