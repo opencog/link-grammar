@@ -8518,7 +8518,7 @@ instead.e:
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij 
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
 hah.ij hey.ij well.ij:
-  <directive-opener> or
+  <directive-opener>
   or Wi-;
 
 % A single plain hello all by itself.  Costly, because its not normally
