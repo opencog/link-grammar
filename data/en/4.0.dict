@@ -7465,7 +7465,7 @@ neither.j: Dn+;
 but.j-n: 
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
   ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
-  ((SJl- & EBy- & SJr+) & Ou-);
+  (({Xd-} & SJl- & EBy- & SJr+) & Ou-);
 
 % --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
