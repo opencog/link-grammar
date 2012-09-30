@@ -5752,11 +5752,12 @@ QJ- or QJ+ or
 %   it tastes bitter, not sweet   % "not" is modifying comma    
 %   it tastes bitter and not sweet 
 % EB- & EE+: "but not very much"
-%
+% optional {EA+} to make "he is not a good programmer"
+% FIXME: it would be nice to have some + link for this case, also.
 not.e: 
-  (EBm- & (EA+ or EE+))
-  or (EBb- & EA+)
-  or (EBx- & EA+)
+  (EBm- & {EA+ or EE+})
+  or (EBb- & {EA+})
+  or (EBx- & {EA+})
   or ({@E-} & N-)
   or NT+
   or EBy+
