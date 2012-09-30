@@ -185,6 +185,7 @@
 % must hook up to a conjunction (and, or) in the middle.
 % SJl == connect to left
 % SJr == connect to right
+% SJn == Neither ... nor pass-through
 % SJ*s == singular
 % SJ*p == plural
 % SJ*u == mass
@@ -7444,7 +7445,11 @@ and.j-r or.j-r:
 % I'm guessing the costly [O-] is needed to avoid some other screwup ..?
 % {Dm-}: "I have a number of pennies and dimes"
 % "I saw the (dog and pony) show"
-and.j-n but_not:
+%
+% and_not ,_not: "I saw John, not Mary"
+% We treat this her as an idiom, even though it's explicitly hanled for 
+% AJ nd RJ conjunctions.  Its just easier, for now.
+and.j-n but_not and_not ,_not:
   (<noun-conj-dep-s> & <noun-sub-s> & 
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [{Ds-} & Os-] or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & 
@@ -7586,9 +7591,9 @@ QJ- or QJ+ or
 % EBy+ link is for "verbed not X but Y" "I saw not Mary, but John"
 %
 % EB- & EA+: modify both the verb, via EB- and the adjective, via EA+
-%   it is not sweet         % not is modifying "is" (and that's OK)
+%   it is not sweet
 %   *it tastes not sweet       
-%   it tastes bitter, not sweet   % not is modifying comma    
+%   it tastes bitter, not sweet   % "not" is modifying comma    
 %   it tastes bitter and not sweet 
 % EB- & EE+: "but not very much"
 %
@@ -8675,7 +8680,8 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 <semicol>: {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
 ";": <semicol>;
 
-% comma, as a conjunction -- "They taste bitter, not sweet"
+% comma, as a conjunction
+% AJ: "They taste bitter, not sweet"
 % Give MVa a cost, so that Pa is used preferentially, if possible.
 <comma-adj-conjunction>: 
   ((AJla- & EBx+ & AJra+) & (Pa- or [[MVa-]])) or
@@ -8696,14 +8702,17 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % However, this is given a cost, so that geographic names are prefered:
 % "He went to Gaeta, Italy, and to Paris, France."
 %
-",": 
-  ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-)) or
-  [[<semicol>]] or
-  <comma-adj-conjunction> or
-  <comma-adv-conjunction> or
-  <verb-conjunction> or
-  [[SJl- & SJr+ & SJl+]] or
-  (SJn- & SJr+ & SJn+);
+% SJ: "I saw John, not Mary" is handled via idiomatic ,_not construction
+%
+",":
+  ({@Xca- or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
+  or [[<semicol>]]
+  or <comma-adj-conjunction>
+  or <comma-adv-conjunction>
+  or <verb-conjunction>
+  or [[SJl- & SJr+ & SJl+]]
+  or (SJn- & SJr+ & SJn+);
+ 
 
 "…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
 or Xe-));
