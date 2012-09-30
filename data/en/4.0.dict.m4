@@ -1017,9 +1017,10 @@ his: DP+ or ({AL-} & {@L+} & (D+ or DD+)) or
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 
 % ([[Dm-]] & Ox-): "I have a whole slew of it"
+% Ox-: "leave it alone" "make it rain"
 it:
    J-
-   or ([[Dm-]] & Ox-)
+   or ({[[Dm-]]} & Ox-)
    or ((Ss+ or SFsi+) & <CLAUSE>)
    or SIs- or SFIsi- or OXi- or Vp-
    or SJls+ or SJrs- or (Dn- & SJn+);
