@@ -5489,8 +5489,9 @@ once.e:
 % Another possibility: (Rnx+ & <CLAUSE-E>) "Because I say so"
 % XXX should review these, they probably overlap the other conjunction
 % usages below.
-but.ij and.ij or.ij not.ij also.ij but_not and_not: 
-[[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)]];
+but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet: 
+  [[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)]];
+
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
 % and used as a conjunction in proper names:
