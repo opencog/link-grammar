@@ -6675,7 +6675,13 @@ no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
 hah.ij hey.ij well.ij:
   <directive-opener> or
-  Wi-;
+  or Wi-;
+
+% A single plain hello all by itself.  Costly, because its not normally
+% a sentence opener. 
+hello.ij:
+  Wi-
+  or [[<directive-opener>]];
 
 % Openers to directives, commands (Ic+ connection to infinitives)
 anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij 
