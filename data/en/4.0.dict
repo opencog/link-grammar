@@ -6633,15 +6633,18 @@ at toward towards without:
 
 %
 % XXX fixme: MVp- & J+ is wrong: "*I saw John except Fred"
+% {EBm+} & J+: "but not very much"
+% [[EBm+]]: "but not very"
 except but.misc-ex: 
-  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or 
-  (MVp- & B-) or 
-  ((MVp+ or TO+) & <prep-main-a>); 
+  ({JQ+} & (({EBm+} & J+) or [[EBm+]] or Mgp+) & <prep-main-a>)
+  or (MVp- & B-)
+  or ((MVp+ or TO+) & <prep-main-a>); 
 
 against beyond beside: 
-({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
+  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
+
 between:
-({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
+  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
 
 with: 
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-)) or 
@@ -7580,16 +7583,17 @@ how:
 QJ- or QJ+ or
 ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
-% EBy+ link is for "verbed not X but Y" 
-% XXX FIXME:
-% EB- is difficult ...
+% EBy+ link is for "verbed not X but Y" "I saw not Mary, but John"
+%
+% EB- & EA+: modify both the verb, via EB- and the adjective, via EA+
 %   it is not sweet         % not is modifying "is" (and that's OK)
 %   *it tastes not sweet       
 %   it tastes bitter, not sweet   % not is modifying comma    
-%   it tastes bitter and not sweet  % not is modifying "and" (probably OK)
+%   it tastes bitter and not sweet 
+% EB- & EE+: "but not very much"
 %
 not.e: 
-  EBm-
+  (EBm- & (EA+ or EE+))
   or (EBb- & EA+)
   or (EBx- & EA+)
   or ({@E-} & N-)
@@ -8297,7 +8301,15 @@ unacceptably unarguably undeniably unimaginably:
 ({EE-} & EA+) or EE+ or ({EE-} & EBm-) or E+;
 
 wide.e: EE+;
-very.e way.e: ({EE-} & EA+) or EE+ or [[La-]];
+
+% {EE-} & EE+: "not very much"
+% [[EE-]]: "It hurts, but not very"
+very.e way.e:
+  ({EE-} & EA+)
+  or ({EE-} & EE+)
+  or [[EE-]]
+  or [[La-]];
+
 real.e: [[EA+ or EE+]];
 quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
 amazingly strangely incredibly: 
@@ -8597,7 +8609,14 @@ even.e: E+ or EC+ or EB- or ((MVp+ or MVa+ or MVs+)
 & (MVl- or ({Xc+ & {Xd-}} & CO+))) or (Rnx+ & <CLAUSE-E>);
 not_even: Rnx+ & <CLAUSE-E>;
 
-too: {ECa-} & (EA+ or EE+ or ({Xd- & Xc+} & MVa-) or (Xd- & Xc+ & E+));
+% {EE-} & EE+: "but not too much"
+too:
+  {ECa-} & (
+    EA+
+    or ({EE-} & EE+)
+    or ({Xd- & Xc+} & MVa-)
+    or (Xd- & Xc+ & E+));
+
 so: (EAxk+ & {HA+}) or ({EZ-} & EExk+) or 
 ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+)) 
 or (Wq- & (PF+ or CQ+)) or O- or Js-;
