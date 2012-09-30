@@ -751,21 +751,6 @@ int main(int argc, char * argv[])
 		{
 			sent = sentence_create(input_string, dict);
 
-			if (sent == NULL) continue;
-
-			if (sentence_length(sent) > parse_options_get_max_sentence_length(opts))
-			{
-				if (verbosity > 0)
-				{
-					fprintf(stdout,
-					       "Sentence length (%d words) exceeds maximum allowable (%d words)\n",
-						sentence_length(sent), parse_options_get_max_sentence_length(opts));
-				}
-				sentence_delete(sent);
-				sent = NULL;
-				continue;
-			}
-
 			/* First parse with cost 0 or 1 and no null links */
 			// parse_options_set_disjunct_costf(opts, 2.0f);
 			parse_options_set_min_null_count(opts, 0);
