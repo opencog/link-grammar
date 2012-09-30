@@ -40,10 +40,6 @@ cout<<"duude n="<<exp->u.string<<endl;
 		return n;
 	}
 
-for(int i=0; i<cnt; i++) cout <<"  ";
-cout<<"exp=";
-print_expression(exp);
-
 	E_list* el = exp->u.l;
 	if (NULL == el)
 	{
@@ -55,8 +51,13 @@ cout<<"duude n= null ()"<<endl;
 		return n;
 	}
 
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"exp=";
+print_expression(exp);
+
 	/* Handle optional expressions */
-	if (NULL == el->e->u.l)
+	// if (NULL == el->e->u.l)
+	if ((OR_type == exp->type) and (NULL == el->e->u.l))
 	{
 for(int i=0; i<cnt; i++) cout <<"  ";
 cout<<"duude n= opt "<<endl;
@@ -91,17 +92,45 @@ cnt--;
 
 	while (exp->type == el->e->type)
 	{
-cnt++;
 		el = el->e->u.l;
-		Atom* a = lg_exp_to_atom(el->e);
+		Atom* a;
+		if (el->e->u.l == NULL)
+		{
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude loopy oooopt "<<endl;
+			break;
+		}
+		else
+		{
+cnt++;
+			a = lg_exp_to_atom(el->e);
 cnt--;
+		}
 		alist.push_back(a);
 		el = el->next;
 	}
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude final "<<endl;
+	if (el->e->u.l == NULL)
+	{
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude final opt oooopt "<<endl;
 cnt++;
-	a = lg_exp_to_atom(el->e);
-	alist.push_back(a);
+		el = el->next;
+		a = lg_exp_to_atom(el->e);
 cnt--;
+		OutList oset;
+		oset.push_back(a);
+		a = new Link(OPTIONAL, oset);
+		alist.push_back(a);
+	}
+	else
+	{
+cnt++;
+		a = lg_exp_to_atom(el->e);
+		alist.push_back(a);
+cnt--;
+	}
 
 	if (AND_type == exp->type)
 		return new Link(AND, alist);
