@@ -1527,6 +1527,8 @@ static void print_expression_parens(Exp * n, int need_parens)
 	/* get a funny "and optional" when its a named expression thing. */
 	if ((n->type == AND_type) && (el->next == NULL))
 	{
+		for (i=0; i<icost; i++) printf("]");
+		if ((icost == 0) && need_parens) printf(")");
 		return;
 	}
 
