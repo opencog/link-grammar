@@ -28,7 +28,7 @@ class Parser
 		Link* word_disjuncts(const std::string& word);
 
 	protected:
-		Atom* lg_exp_to_atom(Exp*);
+		Atom* lg_exp_to_atom(Exp*, bool more = false);
 		Dictionary _dict;
 
 	private:

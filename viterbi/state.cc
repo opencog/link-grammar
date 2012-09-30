@@ -5,6 +5,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -23,9 +24,10 @@ using namespace std;
 
 namespace link_grammar {
 namespace viterbi {
+int cnt = 0;
 
 /* Current parse state */
-Atom * Parser::lg_exp_to_atom(Exp* exp)
+Atom * Parser::lg_exp_to_atom(Exp* exp, bool more)
 {
 	if (CONNECTOR_type == exp->type)
 	{
@@ -33,26 +35,81 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		if (exp->multi) ss << "@";
 		ss << exp->u.string << exp->dir;
 		Node *n = new Node(CONNECTOR, ss.str());
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude n="<<exp->u.string<<endl;
 		return n;
 	}
 
-	if ((AND_type == exp->type) || (OR_type == exp->type))
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"exp=";
+print_expression(exp);
+
+	E_list* el = exp->u.l;
+	if (NULL == el)
 	{
-		OutList alist;
-		for (E_list* el = exp->u.l; el != NULL; el = el->next)
-		{
-			Atom* a = lg_exp_to_atom(el->e);
-			alist.push_back(a);
-		}
-
-		if (AND_type == exp->type)
-			return new Link(AND, alist);
-
-		if (OR_type == exp->type)
-			return new Link(OR, alist);
+		stringstream ss;
+		ss << "()";
+		Node *n = new Node(CONNECTOR, ss.str());
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude n= null ()"<<endl;
+		return n;
 	}
 
-	return NULL;
+	/* Handle optional expressions */
+	if (NULL == el->e->u.l)
+	{
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude n= opt "<<endl;
+cnt++;
+		el = el->next;
+		Atom* a = lg_exp_to_atom(el->e);
+cnt--;
+		OutList oset;
+		oset.push_back(a);
+		Link* l = new Link(OPTIONAL, oset);
+		return l;
+	}
+
+if (AND_type == exp->type)  {
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude AND "<<endl; }
+else if (OR_type == exp->type){
+for(int i=0; i<cnt; i++) cout <<"  ";
+cout<<"duude OR "<<endl;  }
+else cout<<"duude wtf not either!"<<endl;
+
+	OutList alist;
+
+assert(el != NULL, "unhandled null here");
+	// operators are infixed, i.e. are always binary.
+	// That is, for each type, theres an exper on the left, and on the right.
+cnt++;
+	Atom* a = lg_exp_to_atom(el->e);
+cnt--;
+	alist.push_back(a);
+	el = el->next;
+
+	while (exp->type == el->e->type)
+	{
+cnt++;
+		el = el->e->u.l;
+		Atom* a = lg_exp_to_atom(el->e);
+cnt--;
+		alist.push_back(a);
+		el = el->next;
+	}
+cnt++;
+	a = lg_exp_to_atom(el->e);
+	alist.push_back(a);
+cnt--;
+
+	if (AND_type == exp->type)
+		return new Link(AND, alist);
+
+	if (OR_type == exp->type)
+		return new Link(OR, alist);
+
+	assert(0, "Not reached");
 }
 
 Link * Parser::word_disjuncts(const string& word)
@@ -88,7 +145,9 @@ void Parser::initialize_state()
 
 	_state = new Link(STATE, statev);
 
-	cout <<"duuuude state="<< _state <<endl;
+	//cout <<"duuuude state="<< _state <<endl;
+Atom *a=word_disjuncts("XXX");
+cout<<a<<endl;
 }
 
 void viterbi_parse(Dictionary dict, const char * sentence)
@@ -99,7 +158,7 @@ void viterbi_parse(Dictionary dict, const char * sentence)
 	pars.initialize_state();
 cout <<"Hello world!"<<endl;
 
-	pars.word_disjuncts("sing");
+//	pars.word_disjuncts("sing");
 }
 
 } // namespace viterbi

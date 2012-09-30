@@ -24,12 +24,13 @@ const string type_name(AtomType t)
 		case CONNECTOR: return "CONNECTOR";
 		case OR:        return "OR";
 		case AND:       return "AND";
+		case OPTIONAL:  return "OPTIONAL";
 		case WORD_DISJ: return "WORD_DISJ";
 		case LINK:      return "LINK";
 		case STATE:     return "STATE";
 	}
 
-	return "";
+	return "UNHANDLED_TYPE_NAME";
 }
 
 
