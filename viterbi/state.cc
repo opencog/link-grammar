@@ -25,8 +25,23 @@ using namespace std;
 namespace link_grammar {
 namespace viterbi {
 
-/* Current parse state */
-Atom * Parser::lg_exp_to_atom(Exp* exp, bool more)
+/**
+ * Convert LG dictionary expression to atomic formula.
+ *
+ * The returned expression is in the form of an opencog-style
+ * prefix-notation boolean expression.  Note that it is not in any
+ * particular kind of normal form.  In particular, some AND nodes
+ * may have only one child: these can be removed.
+ *
+ * Note that the order of the connectors is important: while linking,
+ * these must be satisfied in left-to-right (nested!?) order.
+ *
+ * Optional clauses are indicated by OR-ing with null, where "null"
+ * is a CONNECTOR Node with string-value "0".  Optional clauses are
+ * not necessarily in any sort of normal form; the null connector can
+ * appear anywhere.
+ */
+Atom * Parser::lg_exp_to_atom(Exp* exp)
 {
 	if (CONNECTOR_type == exp->type)
 	{
@@ -72,6 +87,13 @@ Atom * Parser::lg_exp_to_atom(Exp* exp, bool more)
 	assert(0, "Not reached");
 }
 
+/**
+ * Return atomic formula connector expression for the given word.
+ *
+ * This looks up the word in the link-grammar dictionary, and converts
+ * the resulting link-grammar connective expression into an atomic
+ * formula.
+ */
 Link * Parser::word_disjuncts(const string& word)
 {
 	// See if we know about this word, or not.
@@ -95,6 +117,9 @@ cout <<"duuuude word disj=\n"<< wdj <<endl;
 	return wdj;
 }
 
+/**
+ * Set up initial viterbi state for the parser
+ */
 void Parser::initialize_state()
 {
 	const char * wall_word = "LEFT-WALL";
@@ -122,6 +147,7 @@ pars.word_disjuncts("sing");
 } // namespace viterbi
 } // namespace link-grammar
 
+// Wrapper to escape out from C++
 void viterbi_parse(const char * sentence, Dictionary dict)
 {
 	link_grammar::viterbi::viterbi_parse(dict, sentence);
