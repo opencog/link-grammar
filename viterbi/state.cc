@@ -93,24 +93,21 @@ cnt--;
 	while (exp->type == el->e->type)
 	{
 		el = el->e->u.l;
-		Atom* a;
 		if (el->e->u.l == NULL)
 		{
 for(int i=0; i<cnt; i++) cout <<"  ";
 cout<<"duude loopy oooopt "<<endl;
 			break;
 		}
-		else
-		{
 cnt++;
-			a = lg_exp_to_atom(el->e);
+		Atom* a = lg_exp_to_atom(el->e);
 cnt--;
-		}
 		alist.push_back(a);
 		el = el->next;
 	}
 for(int i=0; i<cnt; i++) cout <<"  ";
 cout<<"duude final "<<endl;
+
 	if (el->e->u.l == NULL)
 	{
 for(int i=0; i<cnt; i++) cout <<"  ";
@@ -122,15 +119,14 @@ cnt--;
 		OutList oset;
 		oset.push_back(a);
 		a = new Link(OPTIONAL, oset);
-		alist.push_back(a);
 	}
 	else
 	{
 cnt++;
 		a = lg_exp_to_atom(el->e);
-		alist.push_back(a);
 cnt--;
 	}
+	alist.push_back(a);
 
 	if (AND_type == exp->type)
 		return new Link(AND, alist);
