@@ -5743,7 +5743,7 @@ QJ- or QJ+ or
 %
 not.e: 
   EBm-
-  or EBb-
+  or (EBb- & EA+)
   or (EBx- & EA+)
   or ({@E-} & N-)
   or NT+
