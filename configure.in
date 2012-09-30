@@ -106,6 +106,8 @@ dnl ====================================================================
 
 AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 
+dnl ====================================================================
+
 AC_ARG_ENABLE( debug,
   [  --enable-debug               compile with debugging flags set],
   [],
@@ -120,6 +122,8 @@ else
        AC_DEFINE(DEBUG_MEMORY,0)
 fi
 
+dnl ====================================================================
+
 AC_ARG_ENABLE( mudflap,
   [  --enable-mudflap           compile with mudflap checking],
   [],
@@ -130,6 +134,8 @@ then
        CFLAGS="${CFLAGS} -fmudflap"
        LDFLAGS="${LDFLAGS} -fmudflap -lmudflap"
 fi
+
+dnl ====================================================================
 
 AC_ARG_ENABLE( profile,
   [  --enable-profile           compile with profiling set],
@@ -142,6 +148,7 @@ then
        LDFLAGS="${LDFLAGS} -pg"
 fi
 
+dnl ====================================================================
 
 AC_ARG_ENABLE( pthreads,
   [  --enable-pthreads          compile with pthread support],
@@ -156,15 +163,17 @@ fi
 
 AM_CONDITIONAL(WITH_PTHREADS, test x${enable_pthreads} = xyes)
 
+dnl ====================================================================
 
 AC_ARG_ENABLE( java-bindings,
   [  --disable-java-bindings    disable build of java bindings],
        [],
        [enable_java_bindings=yes])
 
+dnl ====================================================================
 
 AC_ARG_ENABLE( sat-solver,
-  [  --enable-sat-solver        use the boolean SAT solver],
+  [  --enable-sat-solver        enable use of the Boolean SAT parser],
   [],
   [enable_sat_solver=no]
 )
@@ -176,12 +185,34 @@ if test "x$enable_sat_solver" = "xyes"; then
        # use c++ to compile stdio.h and bomb if it fails.
        AC_LANG([C++])
        AC_CHECK_HEADER([stdio.h],,
-           [AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT solver])])
+           [AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
        AC_LANG([C])
 fi
 
-
 AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
+
+dnl ====================================================================
+
+AC_ARG_ENABLE( viterbi,
+  [  --enable-viterbi        enable use of the Viterbi parser],
+  [],
+  [enable_viterbi=no]
+)
+
+if test "x$enable_viterbi" = "xyes"; then
+       CPPFLAGS="${CPPFLAGS} -DUSE_VITERBI"
+
+       # We want to check for C++; the easiest way to do this is to
+       # use c++ to compile stdio.h and bomb if it fails.
+       AC_LANG([C++])
+       AC_CHECK_HEADER([stdio.h],,
+           [AC_MSG_ERROR([C++ compiler not found; it is needed for the Viterbi parser])])
+       AC_LANG([C])
+fi
+
+AM_CONDITIONAL(WITH_VITERBI, test x${enable_viterbi} = xyes)
+
+dnl ====================================================================
 
 AC_ARG_ENABLE( corpus-stats,
   [  --enable-corpus-stats      use corpus statistics],
@@ -194,26 +225,6 @@ then
 fi
 
 AM_CONDITIONAL(WITH_CORPUS, test x${enable_corpus_stats} = xyes)
-
-do_aspell=yes
-dnl ASpell Support is handled here
-AC_ARG_ENABLE([aspell], [AS_HELP_STRING([--disable-aspell],
-	[Build without ASpell support (default is enabled)])],
-	[do_aspell="${enableval}"])
-
-AM_CONDITIONAL(WITH_ASPELL, test x${do_aspell} = xyes)
-
-dnl Hunspell Support is handled here
-do_hunspell=yes
-AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
-	[Build without HunSpell support (default is enabled)])],
-	[do_hunspell="${enableval}"])
-
-AM_CONDITIONAL(WITH_HUNSPELL, test x${do_hunspell} = xyes)
-
-AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
-	[Use DIR to find HunSpell files (default=/usr/share/myspell/dicts])],
-	[], with_hunspell_dictdir=)
 
 dnl ====================================================================
 
@@ -235,6 +246,28 @@ else
 fi
 
 dnl Set Default Spell Checker settings
+
+dnl ====================================================================
+
+do_aspell=yes
+dnl ASpell Support is handled here
+AC_ARG_ENABLE([aspell], [AS_HELP_STRING([--disable-aspell],
+	[Build without ASpell support (default is enabled)])],
+	[do_aspell="${enableval}"])
+
+AM_CONDITIONAL(WITH_ASPELL, test x${do_aspell} = xyes)
+
+dnl Hunspell Support is handled here
+do_hunspell=yes
+AC_ARG_ENABLE([hunspell], [AS_HELP_STRING([--disable-hunspell],
+	[Build without HunSpell support (default is enabled)])],
+	[do_hunspell="${enableval}"])
+
+AM_CONDITIONAL(WITH_HUNSPELL, test x${do_hunspell} = xyes)
+
+AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
+	[Use DIR to find HunSpell files (default=/usr/share/myspell/dicts])],
+	[], with_hunspell_dictdir=)
 
 dnl ====================================================================
 
@@ -515,6 +548,7 @@ $PACKAGE-$VERSION
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
-	Boolean SAT solver:             ${enable_sat_solver}
+	Boolean SAT parser:             ${enable_sat_solver}
+	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
 "

@@ -740,15 +740,14 @@ int main(int argc, char * argv[])
 			label = strip_off_label(input_string);
 		}
 
+#ifdef USE_VITERBI
+		/* Compile-time optional, for now, since it don't work yet. */
 		if (parse_options_get_use_viterbi(opts))
 		{
-#define USE_VITERBI
-			/* Compile-time optional, for now, since it don't work yet. */
-#ifdef USE_VITERBI
 			viterbi_parse(input_string, dict);
-#endif
 		}
 		else
+#endif
 		{
 			sent = sentence_create(input_string, dict);
 

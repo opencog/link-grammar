@@ -103,7 +103,6 @@ static Switch default_switches[] =
    {"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
    {"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
-#define USE_VITERBI
 #ifdef USE_VITERBI
    {"vit",        Bool, "Use Viterbit-based parser",       &local.use_viterbi},
 #endif
