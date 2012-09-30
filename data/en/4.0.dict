@@ -7355,7 +7355,7 @@ and.j-g: [[G- & G+]];
 % AJ*c: comparative adjectives
 % AJ*s: superlative adjectives
 %
-and.j-a but.j-a yet.j-a:
+and.j-a but.j-a yet.j-a and_yet:
   ({Xd-} & AJla- & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-);
 
 or.j-a:
