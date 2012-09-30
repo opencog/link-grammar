@@ -25,6 +25,12 @@ using namespace std;
 namespace link_grammar {
 namespace viterbi {
 
+Parser::Parser(Dictionary dict)
+	: _dict(dict), _state(NULL)
+{
+	initialize_state();
+}
+
 /**
  * Convert LG dictionary expression to atomic formula.
  *
@@ -112,9 +118,7 @@ print_expression(exp);
 	dlist.push_back(nword);
 	dlist.push_back(dj);
 
-	Link *wdj = new Link(WORD_DISJ, dlist);
-cout <<"duuuude word disj=\n"<< wdj <<endl;
-	return wdj;
+	return new Link(WORD_DISJ, dlist);
 }
 
 /**
@@ -132,16 +136,35 @@ void Parser::initialize_state()
 	_state = new Link(STATE, statev);
 }
 
+/**
+ * Add a single word to the parse.
+ */
+void Parser::stream_word(const string& word)
+{
+	Link *disj = word_disjuncts(word);
+	if (!disj)
+	{
+		cout << "Unhandled error; word not in dict: " << word << endl;
+		return;
+	}
+}
+
+/**
+ * Add a stream of text to the input.
+ *
+ * No particular assumptiions are made about the input, other than
+ * that its space-separated words (i.e. no HTML markup or other junk)
+ */
+void Parser::streamin(const string& text)
+{
+	stream_word(text);
+}
+
 void viterbi_parse(Dictionary dict, const char * sentence)
 {
 	Parser pars(dict);
 
-	// Initial state
-	pars.initialize_state();
-cout <<"Hello world!"<<endl;
-
-// pars.word_disjuncts("XXX");
-pars.word_disjuncts("sing");
+	pars.streamin(sentence);
 }
 
 } // namespace viterbi

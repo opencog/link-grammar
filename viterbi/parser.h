@@ -20,14 +20,15 @@ namespace viterbi {
 class Parser
 {
 	public:
-		Parser(Dictionary dict)
-			: _dict(dict), _state(NULL)
-		{}
+		Parser(Dictionary dict);
 
-		void initialize_state();
+		void streamin(const std::string&);
+		void stream_word(const std::string&);
+
 		Link* word_disjuncts(const std::string& word);
 
 	protected:
+		void initialize_state();
 		Atom* lg_exp_to_atom(Exp*);
 		Dictionary _dict;
 
