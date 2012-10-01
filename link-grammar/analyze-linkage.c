@@ -781,7 +781,7 @@ static int strictly_smaller_name(const char * s, const char * t)
 {
 	int strictness, ss, tt;
 	strictness = 0;
-	while ((*s!='\0') || (*t!='\0'))
+	while ((*s != '\0') || (*t != '\0'))
 	{
 		if (*s == '\0') {
 			ss = '*';

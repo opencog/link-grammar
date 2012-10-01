@@ -115,7 +115,7 @@ void count_unset_effective_distance(Sentence sent)
  * It works as follows:  The labels must match.  The priorities must be
  * compatible (both THIN_priority, or one UP_priority and one DOWN_priority).
  * The sequence of upper case letters must match exactly.  After these comes
- * a sequence of lower case letters "*"s or "^"s.  The matching algorithm
+ * a sequence of lower case letters or "*"s.  The matching algorithm
  * is different depending on which of the two priority cases is being
  * considered.  See the comments below. 
  */
@@ -167,15 +167,25 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		   they're equal.  ("^" can be used in the dictionary just like
 		   any other connector.)
 		   */
-		while ((*s!='\0') && (*t!='\0')) {
+		while ((*s != '\0') && (*t != '\0'))
+		{
+#ifdef USE_FAT_LINKAGES
 			if ((*s == '*') || (*t == '*') ||
-				((*s == *t) && (*s != '^'))) {
+				((*s == *t) && (*s != '^')))
+#else
+			if ((*s == '*') || (*t == '*') || (*s == *t))
+#endif /* USE_FAT_LINKAGES */
+			{
 				s++;
 				t++;
-			} else return FALSE;
+			}
+			else
+				return FALSE;
 		}
 		return TRUE;
-	} else if ((x==UP_priority) && (y==DOWN_priority)) {
+	}
+	else if ((x == UP_priority) && (y == DOWN_priority))
+	{
 		/*
 		   As you go up (namely from x to y) the set of strings that
 		   match (in the normal THIN sense above) should get no larger.
@@ -187,8 +197,14 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		   length.  This is currently true, but perhaps for safty
 		   this assumption should be removed.
 		   */
-		while ((*s!='\0') && (*t!='\0')) {
-			if ((*s == *t) || (*s == '*') || (*t == '^')) {
+		while ((*s != '\0') && (*t != '\0'))
+		{
+#ifdef USE_FAT_LINKAGES
+			if ((*s == *t) || (*s == '*') || (*t == '^'))
+#else
+			if ((*s == *t) || (*s == '*'))
+#endif /* USE_FAT_LINKAGES */
+			{
 				s++;
 				t++;
 			} else return FALSE;
@@ -197,9 +213,13 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 	}
 	else if ((y == UP_priority) && (x == DOWN_priority))
 	{
-		while ((*s!='\0') && (*t!='\0'))
+		while ((*s != '\0') && (*t != '\0'))
 		{
+#ifdef USE_FAT_LINKAGES
 			if ((*s == *t) || (*t == '*') || (*s == '^'))
+#else
+			if ((*s == *t) || (*t == '*'))
+#endif /* USE_FAT_LINKAGES */
 			{
 				s++;
 				t++;
