@@ -26,8 +26,6 @@ class Parser
 		void stream_word(const std::string&);
 		void stream_word_conset(Link*);
 
-		Link* find_matches(Atom*, Atom*);
-
 		Link* word_consets(const std::string& word);
 
 	protected:
@@ -35,6 +33,7 @@ class Parser
 		Link* get_state_set();
 
 		Atom* lg_exp_to_atom(Exp*);
+		Link* find_matches(Link*, Link*, Atom*);
 		static Link* conn_connect(Node*, Node*);
 		static Link* conn_connect(Atom*, Atom*);
 

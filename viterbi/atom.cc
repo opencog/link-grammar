@@ -21,6 +21,7 @@ const string type_name(AtomType t)
 	switch(t)
 	{
 		case WORD:      return "WORD";
+		case LINK_TYPE: return "LINK_TYPE";
 		// case META:      return "META";
 		case CONNECTOR: return "CONNECTOR";
 		case SET:       return "SET";
