@@ -36,6 +36,8 @@ class Parser
 
 		Atom* lg_exp_to_atom(Exp*);
 		static bool conn_match(const std::string&, const std::string&);
+		// static Link* conn_connect(const std::string&, const std::string&);
+		static std::string conn_merge(const std::string&, const std::string&);
 
 		Dictionary _dict;
 	private:

@@ -202,7 +202,8 @@ cout<<"state "<<_state<<endl;
 }
 
 /**
- * Compare two connector strings, se if they mate.
+ * Compare two connector strings, see if they mate.
+ * Return true if they do, else return false.
  */
 bool Parser::conn_match(const string& ls, const string& rs)
 {
@@ -225,13 +226,46 @@ bool Parser::conn_match(const string& ls, const string& rs)
 	while (0 < len)
 	{
 		if ((isupper(*lp) or isupper(*rp)) and *lp != *rp) return false;
-		else if (('*' != *lp or '*' != *rp) and *lp != *rp) return false;
+		else if (('*' != *lp and '*' != *rp) and *lp != *rp) return false;
 		lp++;
 		rp++;
 		len--;
 	}
 
 	return true;
+}
+
+/**
+ * Merge two connector strings to create the linkage string.
+ * It is assumed that the two connectors mate; no error checking is
+ * done to detect if they don't. 
+ * Example:   W*n+ merged with Wi*dy- gives Windy
+ */
+string Parser::conn_merge(const string& ls, const string& rs)
+{
+	string::const_iterator lp = ls.begin();
+	string::const_iterator rp = rs.begin();
+	size_t len = -1 + max(ls.size(), rs.size());
+	string merger;
+	merger.reserve(len);
+	while (0 < len)
+	{
+		if (lp == ls.end())
+			merger.push_back(*rp);
+		else if (rp == rs.end())
+			merger.push_back(*lp);
+		else if ('*' != *lp and '+' != *lp and '-' != *lp)
+			merger.push_back(*lp);
+		else if ('+' != *rp and '-' != *rp)
+			merger.push_back(*rp);
+		else
+			merger.push_back('*');
+			
+		if (lp != ls.end()) lp++;
+		if (rp != rs.end()) rp++;
+		len--;
+	}
+	return merger;
 }
 
 Link* Parser::find_matches(Atom* left, Atom* right)
@@ -247,6 +281,7 @@ cout<<"dj "<<right<<endl;
 		if (conn_match(lnode->get_name(), rnode->get_name()))
 		{
 cout<<"Yayyyyae  nodes match!"<<endl;
+			conn_merge(lnode->get_name(), rnode->get_name());
 		}
 		return NULL;  // XXX!?!?!
 	}
