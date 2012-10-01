@@ -39,7 +39,7 @@ enum AtomType
 	AND,        // ordered AND of all children (order is important!)
 	OR,         // unordered OR of all children
 	// OPTIONAL,   // one child only, and its optional. XXX not used ATM
-	WORD_DISJ,  // word, followed by a list of disjuncts for that word.
+	WORD_CSET,  // word, followed by a list of disjuncts for that word.
 	LINK,       // two connected connectors, e.g. Dmcn w/o direction info
 	STATE
 };
@@ -92,9 +92,9 @@ class Link : public Atom
 			: Atom(t), _oset(oset) {}
 		size_t get_arity() const { return _oset.size(); }
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
+		const OutList& get_outgoing_set() const { return _oset; }
 
 	protected:
-		const OutList& get_outgoing_set() const { return _oset; }
 	private:
 		// Outgoing set
 		OutList _oset;

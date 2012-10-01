@@ -5,41 +5,31 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_VITERBI_PARSER_H
-#define _LG_VITERBI_PARSER_H
-
-#include <string>
+#ifndef _LG_VITERBI_CONNECT_H
+#define _LG_VITERBI_CONNECT_H
 
 #include "atom.h"
-#include "api-types.h"
-#include "structures.h"
 
 namespace link_grammar {
 namespace viterbi {
 
-class Parser
+class Connect
 {
 	public:
-		Parser(Dictionary dict);
-
-		void streamin(const std::string&);
-		void stream_word(const std::string&);
-		void stream_word_conset(Link*);
-
-		Link* word_consets(const std::string& word);
+		Connect(Link*);
+		Link* try_connect(Link*);
 
 	protected:
-		void initialize_state();
-		Link* get_state_set();
-		Atom* lg_exp_to_atom(Exp*);
+		static Link* conn_connect(Node*, Node*);
+		static Link* conn_connect(Link*, Node*);
 
-		Dictionary _dict;
 	private:
-		Link *_state;
+		Link* _right_cset;
+		Atom* _rcons;
 };
 
 
 } // namespace viterbi
 } // namespace link-grammar
 
-#endif // _LG_VITERBI_PARSER_H
+#endif // _LG_VITERBI_CONNECT_H

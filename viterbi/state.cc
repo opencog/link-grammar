@@ -19,7 +19,7 @@
 #include "structures.h"
 
 #include "atom.h"
-#include "connector-utils.h"
+#include "connect.h"
 #include "parser.h"
 #include "viterbi.h"
 
@@ -125,7 +125,7 @@ print_expression(exp);
 		dlist.push_back(nword);
 		dlist.push_back(dj);
 
-		djset.push_back(new Link(WORD_DISJ, dlist));
+		djset.push_back(new Link(WORD_CSET, dlist));
 	}
 	return new Link(SET, djset);
 }
@@ -135,7 +135,7 @@ print_expression(exp);
  */
 void Parser::initialize_state()
 {
-	const char * wall_word = "xLEFT-WALL";
+	const char * wall_word = "LEFT-WALL";
 
 	Link *wall_disj = word_consets(wall_word);
 
@@ -178,75 +178,40 @@ Link* Parser::get_state_set()
 void Parser::stream_word_conset(Link* wrd_cset)
 {
 	// wrd_cset should be pointing at:
-	// WORD_DISJ :
+	// WORD_CSET :
 	//   WORD : blah.v
 	//   AND :
 	//      CONNECTOR : Wd-  etc...
 
-	assert(wrd_cset, "Unexpected NULL dictionary entry!");
-	assert(WORD_DISJ == wrd_cset->get_type(), "Unexpected link type in stream.");
-	assert(2 == wrd_cset->get_arity(), "Wrong arity for word connector set");
-	Atom* cset = wrd_cset->get_outgoing_atom(1);
-
 cout<<"state "<<_state<<endl;
 	Link* state_set = get_state_set();
+	Connect cnct(wrd_cset);
+
+	int omit = -1;
+	Link* replace = NULL;
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
 		Link* swc = dynamic_cast<Link*>(state_set->get_outgoing_atom(i));
-		Link* lnk = find_matches(swc, wrd_cset, cset);
-		if (lnk)
-		{
-cout<<"got linkage"<<lnk<<endl;
-		}
+		// replace = find_matches(swc, wrd_cset, cset);
+		replace = cnct.try_connect(swc);
+		omit = i;
+		if (replace)
+			break;
 	}
-}
 
-/* Find matches...
- * state_cset is a single word-connectorset in the state
- * word_node is a word, and that's all.
- * right is the connector set for the word.
- */
-Link* Parser::find_matches(Link* state_cset, Link* wrd_cset, Atom* right)
-{
-	assert(state_cset, "State word-connectorset is null");
-	assert(2 == state_cset->get_arity(), "Wrong arity for state word conset");
-	Atom* left = state_cset->get_outgoing_atom(1);
-
-cout<<"state con "<<left<<endl;
-cout<<"word con "<<right<<endl;
-	Node *lnode = dynamic_cast<Node*>(left);
-	Node *rnode = dynamic_cast<Node*>(right);
-	if (lnode and rnode)
+	if (replace)
 	{
-		assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
-		assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
-		if (conn_match(lnode->get_name(), rnode->get_name()))
-		{
-cout<<"Yayyyyae  nodes match!"<<endl;
-			string link_name = conn_merge(lnode->get_name(), rnode->get_name());
-			OutList linkage;
-			linkage.push_back(new Node(LINK_TYPE, link_name));
-			linkage.push_back(state_cset);
-			linkage.push_back(wrd_cset);
-			return new Link(LINK, linkage);
-		}
-
-		// No match, return NULL
-		return NULL;
+cout<<"Got linkage"<< replace <<endl;
+#if 0
+		OutList statev = state_set->get_outgoing_set();
+		statev[omit] = replace;
+		_state = new Link(STATE, statev);
+cout<<"State is now"<<_state<<end;
+#endif
+	
 	}
-	return NULL;
 }
 
-Link* Parser::conn_connect(Node* lnode, Node* rnode)
-{
-	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
-	return NULL;
-}
-
-Link* Parser::conn_connect(Atom* left, Atom* right)
-{
-	return NULL;
-}
 
 /**
  * Add a stream of text to the input.

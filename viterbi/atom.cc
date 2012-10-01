@@ -28,7 +28,7 @@ const string type_name(AtomType t)
 		case OR:        return "OR";
 		case AND:       return "AND";
 		// case OPTIONAL:  return "OPTIONAL";
-		case WORD_DISJ: return "WORD_DISJ";
+		case WORD_CSET: return "WORD_CSET";
 		case LINK:      return "LINK";
 		case STATE:     return "STATE";
 	}

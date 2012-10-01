@@ -8,9 +8,11 @@ lib_LTLIBRARIES = libvitacog.la
 
 libvitacog_la_SOURCES = \
 	atom.cc \
+	connect.cc \
 	connector-utils.cc \
 	state.cc \
 	atom.h \
+	connect.h \
 	connector-utils.h \
 	viterbi.h
 
