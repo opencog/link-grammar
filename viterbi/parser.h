@@ -35,8 +35,9 @@ class Parser
 		Link* get_state_set();
 
 		Atom* lg_exp_to_atom(Exp*);
-		Dictionary _dict;
+		static bool conn_match(const std::string&, const std::string&);
 
+		Dictionary _dict;
 	private:
 		Link *_state;
 };

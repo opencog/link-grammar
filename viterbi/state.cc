@@ -5,7 +5,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <ctype.h>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -132,7 +134,7 @@ print_expression(exp);
  */
 void Parser::initialize_state()
 {
-	const char * wall_word = "LEFT-WALL";
+	const char * wall_word = "xLEFT-WALL";
 
 	Link *wall_disj = word_consets(wall_word);
 
@@ -199,10 +201,55 @@ cout<<"state "<<_state<<endl;
 	}
 }
 
+/**
+ * Compare two connector strings, se if they mate.
+ */
+bool Parser::conn_match(const string& ls, const string& rs)
+{
+	char ldir = *ls.rbegin();
+	char rdir = *rs.rbegin();
+	assert (ldir == '+' or ldir == '-', "Bad word direction");
+	assert (rdir == '+' or rdir == '-', "Bad word direction");
+
+	/* direction signs must couple */
+	if ('+' == ldir and '-' != rdir) return false;
+	if ('-' == ldir and '+' != rdir) return false;
+
+	/* Captial letters must match. Wildcards match anything lower-case.
+	 * This loop, as curretnly written, does some extra, needless compares.
+	 * But connectors are so short, so screw it. 
+	 */
+	string::const_iterator lp = ls.begin();
+	string::const_iterator rp = rs.begin();
+	size_t len = -1 + min(ls.size(), rs.size());
+	while (0 < len)
+	{
+		if ((isupper(*lp) or isupper(*rp)) and *lp != *rp) return false;
+		else if (('*' != *lp or '*' != *rp) and *lp != *rp) return false;
+		lp++;
+		rp++;
+		len--;
+	}
+
+	return true;
+}
+
 Link* Parser::find_matches(Atom* left, Atom* right)
 {
 cout<<"stah "<<left<<endl;
 cout<<"dj "<<right<<endl;
+	Node *lnode = dynamic_cast<Node*>(left);
+	Node *rnode = dynamic_cast<Node*>(right);
+	if (lnode and rnode)
+	{
+		assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
+		assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
+		if (conn_match(lnode->get_name(), rnode->get_name()))
+		{
+cout<<"Yayyyyae  nodes match!"<<endl;
+		}
+		return NULL;  // XXX!?!?!
+	}
 	return NULL;
 }
 
