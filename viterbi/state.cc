@@ -100,7 +100,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
  * the resulting link-grammar connective expression into an atomic
  * formula.
  */
-Link * Parser::word_disjuncts(const string& word)
+Link * Parser::word_consets(const string& word)
 {
 	// See if we know about this word, or not.
 	Dict_node* dn_head = dictionary_lookup_list(_dict, word.c_str());
@@ -134,7 +134,7 @@ void Parser::initialize_state()
 {
 	const char * wall_word = "LEFT-WALL";
 
-	Link *wall_disj = word_disjuncts(wall_word);
+	Link *wall_disj = word_consets(wall_word);
 
 	OutList statev;
 	statev.push_back(wall_disj);
@@ -142,15 +142,12 @@ void Parser::initialize_state()
 	_state = new Link(STATE, statev);
 }
 
-// #define forlink(CHLD,PAR) \
-
-
 /**
  * Add a single word to the parse.
  */
 void Parser::stream_word(const string& word)
 {
-	Link *djset = word_disjuncts(word);
+	Link *djset = word_consets(word);
 	if (!djset)
 	{
 		cout << "Unhandled error; word not in dict: " << word << endl;
@@ -158,17 +155,16 @@ void Parser::stream_word(const string& word)
 	}
 
 	// Try to add each dictionary entry to the parse state.
-	const OutList& oset = djset->get_outgoing_set();
-	for (int i = 0; i < oset.size(); i++)
+	for (int i = 0; i < djset->get_arity(); i++)
 	{
-		stream_djword(dynamic_cast<Link*>(oset[i]));
+		stream_word_conset(dynamic_cast<Link*>(djset->get_outgoing_atom(i)));
 	}
 }
 
 /** convenience wrapper */
 Link* Parser::get_state_set()
 {
-	Link* state_set = dynamic_cast<Link*>(_state->get_outgoing_set()[0]);
+	Link* state_set = dynamic_cast<Link*>(_state->get_outgoing_atom(0));
 	assert(state_set, "State set is empty");
 	return state_set;
 }
@@ -176,23 +172,37 @@ Link* Parser::get_state_set()
 /**
  * Add a single dictionary entry to the parse stae, if possible.
  */
-void Parser::stream_djword(Link* djword)
+void Parser::stream_word_conset(Link* wconset)
 {
-	assert(djword, "Unexpected NULL dictionary entry!");
-	assert(WORD_DISJ == djword->get_type(), "Unexpected link type in stream.");
-cout<<"yeahh "<<djword<<endl;
-cout<<"state "<<_state<<endl;
+	// wconset should be pointg at:
+	// WORD_DISJ :
+	//   WORD : LEFT-WALL
+	//   AND :
+	//      CONNECTOR : Wd+  etc...
 
+	assert(wconset, "Unexpected NULL dictionary entry!");
+	assert(WORD_DISJ == wconset->get_type(), "Unexpected link type in stream.");
+	assert(2 == wconset->get_arity(), "Wrong arity for word connector set");
+
+	Atom* conset = wconset->get_outgoing_atom(1);
+
+cout<<"state "<<_state<<endl;
 	Link* state_set = get_state_set();
-	const OutList& soset = state_set->get_outgoing_set();
-	for (int i = 0; i < oset.size(); i++)
+	for (int i = 0; i < state_set->get_arity(); i++)
 	{
-		stream_djword(dynamic_cast<Link*>(oset[i]));
+		Link* swc = dynamic_cast<Link*>(state_set->get_outgoing_atom(i));
+		assert(swc, "State word-connectorset is null");
+		assert(2 == swc->get_arity(), "Wrong arity for state word conset");
+
+		Atom* scon = swc->get_outgoing_atom(1);
+		find_matches(scon, conset);
 	}
 }
 
-Link* find_matches(Link* left, Link* right)
+Link* Parser::find_matches(Atom* left, Atom* right)
 {
+cout<<"stah "<<left<<endl;
+cout<<"dj "<<right<<endl;
 	return NULL;
 }
 

@@ -54,10 +54,9 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 		out << type_name(l->get_type()) <<" :" << endl;
 
 		ilvl++;
-		const OutList& oset = l->get_outgoing_set();
-		for (int i=0; i<oset.size(); i++)
+		for (int i=0; i < l->get_arity(); i++)
 		{
-			do_prt(out, oset[i], ilvl);
+			do_prt(out, l->get_outgoing_atom(i), ilvl);
 		}
 		return out;
 	}

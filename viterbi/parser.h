@@ -24,11 +24,11 @@ class Parser
 
 		void streamin(const std::string&);
 		void stream_word(const std::string&);
-		void stream_djword(Link*);
+		void stream_word_conset(Link*);
 
-		Link* find_matches(Link*, Link*);
+		Link* find_matches(Atom*, Atom*);
 
-		Link* word_disjuncts(const std::string& word);
+		Link* word_consets(const std::string& word);
 
 	protected:
 		void initialize_state();

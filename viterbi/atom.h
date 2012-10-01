@@ -89,8 +89,11 @@ class Link : public Atom
 	public:
 		Link(AtomType t, const OutList oset)
 			: Atom(t), _oset(oset) {}
-		const OutList& get_outgoing_set() const { return _oset; }
+		size_t get_arity() const { return _oset.size(); }
+		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 
+	protected:
+		const OutList& get_outgoing_set() const { return _oset; }
 	private:
 		// Outgoing set
 		OutList _oset;
