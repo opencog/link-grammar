@@ -661,19 +661,6 @@ dictionary_six(const char * lang, const char * dict_name,
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = TRUE;
 
-#if DONT_USE_REGEX_GUESSING
-	dict->capitalized_word_defined = boolean_dictionary_lookup(dict, PROPER_WORD);
-	dict->pl_capitalized_word_defined = boolean_dictionary_lookup(dict, PL_PROPER_WORD);
-
-	dict->hyphenated_word_defined = boolean_dictionary_lookup(dict, HYPHENATED_WORD);
-	dict->number_word_defined = boolean_dictionary_lookup(dict, NUMBER_WORD);
-
-	dict->ing_word_defined = boolean_dictionary_lookup(dict, ING_WORD);
-	dict->s_word_defined = boolean_dictionary_lookup(dict, S_WORD);
-	dict->ed_word_defined = boolean_dictionary_lookup(dict, ED_WORD);
-	dict->ly_word_defined = boolean_dictionary_lookup(dict, LY_WORD);
-#endif /* DONT_USE_REGEX_GUESSING */
-
 	if ((dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD)) != NULL) {
 		dict->andable_connector_set = connector_set_create(dict_node->exp);
 	} else {
