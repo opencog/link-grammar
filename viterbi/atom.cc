@@ -71,6 +71,12 @@ std::ostream& operator<<(std::ostream& out, const Atom* a)
 	return do_prt(out, a, 0);
 }
 
+std::ostream& operator<<(std::ostream& out, AtomType t)
+{
+	out << type_name(t);
+	return out;
+}
+
 
 } // namespace viterbi
 } // namespace link-grammar

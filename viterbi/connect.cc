@@ -59,18 +59,7 @@ cout<<"word con "<<right<<endl;
 	Node* lnode = dynamic_cast<Node*>(left);
 	Node* rnode = dynamic_cast<Node*>(right);
 	if (lnode and rnode)
-	{
-		assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
-		assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
-		if (conn_match(lnode->get_name(), rnode->get_name()))
-		{
-cout<<"Yayyyyae  nodes match!"<<endl;
-			return conn_connect(left_cset, lnode, rnode);
-		}
-
-		// No match, return NULL
-		return NULL;
-	}
+		return conn_connect(left_cset, lnode, rnode);
 
 	Link* llink = dynamic_cast<Link*>(left);
 	if (llink and rnode)
@@ -86,6 +75,13 @@ cout<<"Yayyyyae  nodes match!"<<endl;
  */
 Link* Connect::conn_connect(Link* left_cset, Node* lnode, Node* rnode)
 {
+	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
+	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
+cout<<"try mathc l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
+	if (!conn_match(lnode->get_name(), rnode->get_name()))
+		return NULL;
+	
+cout<<"Yayyyyae  nodes match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	OutList linkage;
 	linkage.push_back(new Node(LINK_TYPE, link_name));
@@ -94,11 +90,18 @@ Link* Connect::conn_connect(Link* left_cset, Node* lnode, Node* rnode)
 	return new Link(LINK, linkage);
 }
 
-Link* Connect::conn_connect(Link* llink, Node* rnode)
+Link* Connect::conn_connect(Link* left_cset, Link* llink, Node* rnode)
 {
+cout<<"Enter recur l=" << llink->get_type()<<endl;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
-		Node *n = dynamic_cast<Node*>(llink->get_outgoing_atom(i));
+		Atom *a = llink->get_outgoing_atom(i);
+		Node* lnode = dynamic_cast<Node*>(a);
+		if (lnode)
+			return conn_coonnect(left_cset, lnode, rnode);
+
+		Link* clink = dynamic_cast<NLink*>(a);
+		conn_connect(left_cset, clink, rnode);
 	}
 	
 	return NULL;

@@ -21,7 +21,7 @@ class Connect
 
 	protected:
 		Link* conn_connect(Link*, Node*, Node*);
-		Link* conn_connect(Link*, Node*);
+		Link* conn_connect(Link*, Link*, Node*);
 
 	private:
 		Link* _right_cset;
