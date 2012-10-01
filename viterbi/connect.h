@@ -20,8 +20,8 @@ class Connect
 		Link* try_connect(Link*);
 
 	protected:
-		static Link* conn_connect(Node*, Node*);
-		static Link* conn_connect(Link*, Node*);
+		Link* conn_connect(Link*, Node*, Node*);
+		Link* conn_connect(Link*, Node*);
 
 	private:
 		Link* _right_cset;

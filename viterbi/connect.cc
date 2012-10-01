@@ -23,6 +23,10 @@ using namespace std;
 namespace link_grammar {
 namespace viterbi {
 
+/**
+ * constructor: argument is a right-sided connector that this class
+ * will try connecting to.
+ */
 Connect::Connect(Link* right_wconset)
 	: _right_cset(right_wconset)
 {
@@ -39,10 +43,9 @@ Connect::Connect(Link* right_wconset)
    _rcons = _right_cset->get_outgoing_atom(1);
 }
 
-/* Find matches...
- * state_cset is a single word-connectorset in the state
- * word_node is a word, and that's all.
- * right is the connector set for the word.
+/**
+ * Try connecting this connector set, on the left, to what was passed
+ * in ctor.
  */
 Link* Connect::try_connect(Link* left_cset)
 {
@@ -62,12 +65,7 @@ cout<<"word con "<<right<<endl;
 		if (conn_match(lnode->get_name(), rnode->get_name()))
 		{
 cout<<"Yayyyyae  nodes match!"<<endl;
-			string link_name = conn_merge(lnode->get_name(), rnode->get_name());
-			OutList linkage;
-			linkage.push_back(new Node(LINK_TYPE, link_name));
-			linkage.push_back(left_cset);
-			linkage.push_back(_right_cset);
-			return new Link(LINK, linkage);
+			return conn_connect(left_cset, lnode, rnode);
 		}
 
 		// No match, return NULL
@@ -82,10 +80,18 @@ cout<<"Yayyyyae  nodes match!"<<endl;
 	return NULL;
 }
 
-Link* Connect::conn_connect(Node* lnode, Node* rnode)
+/**
+ * Connect left_cset and _right_cset with an LG_LINK
+ * lnode and rnode are the two connecters that actually mate.
+ */
+Link* Connect::conn_connect(Link* left_cset, Node* lnode, Node* rnode)
 {
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
-	return NULL;
+	OutList linkage;
+	linkage.push_back(new Node(LINK_TYPE, link_name));
+	linkage.push_back(left_cset);
+	linkage.push_back(_right_cset);
+	return new Link(LINK, linkage);
 }
 
 Link* Connect::conn_connect(Link* llink, Node* rnode)
