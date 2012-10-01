@@ -212,21 +212,23 @@ bool Parser::conn_match(const string& ls, const string& rs)
 	assert (ldir == '+' or ldir == '-', "Bad word direction");
 	assert (rdir == '+' or rdir == '-', "Bad word direction");
 
-	/* direction signs must couple */
+	// Direction signs must couple.
 	if ('+' == ldir and '-' != rdir) return false;
 	if ('-' == ldir and '+' != rdir) return false;
 
-	/* Captial letters must match. Wildcards match anything lower-case.
-	 * This loop, as curretnly written, does some extra, needless compares.
-	 * But connectors are so short, so screw it. 
-	 */
+	// Captial letters must match. Wildcards match anything lower-case.
 	string::const_iterator lp = ls.begin();
 	string::const_iterator rp = rs.begin();
 	size_t len = -1 + min(ls.size(), rs.size());
 	while (0 < len)
 	{
-		if ((isupper(*lp) or isupper(*rp)) and *lp != *rp) return false;
-		else if (('*' != *lp and '*' != *rp) and *lp != *rp) return false;
+		if (*lp != *rp)
+		{
+			// All upper-case letters must match!
+			if (isupper(*lp) or isupper(*rp)) return false;
+			// Wild-card matches anything.
+			if ('*' != *lp and '*' != *rp) return false;
+		}
 		lp++;
 		rp++;
 		len--;
@@ -270,8 +272,8 @@ string Parser::conn_merge(const string& ls, const string& rs)
 
 Link* Parser::find_matches(Atom* left, Atom* right)
 {
-cout<<"stah "<<left<<endl;
-cout<<"dj "<<right<<endl;
+cout<<"state con "<<left<<endl;
+cout<<"word con "<<right<<endl;
 	Node *lnode = dynamic_cast<Node*>(left);
 	Node *rnode = dynamic_cast<Node*>(right);
 	if (lnode and rnode)
