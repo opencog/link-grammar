@@ -204,6 +204,11 @@ cout<<"state "<<_state<<endl;
 /**
  * Compare two connector strings, see if they mate.
  * Return true if they do, else return false.
+ * All upper-case letters must match exactly.
+ * Lower case letters must match exactly, or must match wildcard '*'.
+ * All strings are implicitly padded with an infinite number of
+ * wild-cards on the right; thus, only need to compare against the
+ * shorter of the * two strings.
  */
 bool Parser::conn_match(const string& ls, const string& rs)
 {
@@ -283,10 +288,21 @@ cout<<"word con "<<right<<endl;
 		if (conn_match(lnode->get_name(), rnode->get_name()))
 		{
 cout<<"Yayyyyae  nodes match!"<<endl;
-			conn_merge(lnode->get_name(), rnode->get_name());
+			conn_connect(lnode, rnode);
 		}
 		return NULL;  // XXX!?!?!
 	}
+	return NULL;
+}
+
+Link* Parser::conn_connect(Node* lnode, Node* rnode)
+{
+	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
+	return NULL;
+}
+
+Link* Parser::conn_connect(Atom* left, Atom* right)
+{
 	return NULL;
 }
 
