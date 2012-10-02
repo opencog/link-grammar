@@ -106,7 +106,7 @@ Link* Connect::conn_connect(Link* left_cset, Atom *latom, Node* rnode)
  * Connect left_cset and _right_cset with an LG_LINK
  * lnode and rnode are the two connecters that actually mate.
  */
-Link* Connect::conn_connect(Node* lnode, Node* rnode)
+Link* Connect::conn_connect(Link* left_set, Node* lnode, Node* rnode)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
@@ -118,11 +118,12 @@ cout<<"Yayyyyae  nodes match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	OutList linkage;
 	linkage.push_back(new Node(LINK_TYPE, link_name));
-	linkage.push_back(lnode);
+	linkage.push_back(left_set);
 	linkage.push_back(rnode);
 	return new Link(LINK, linkage);
 }
 
+#if NOT_NEEDED
 bool Connect::is_optional(Atom *a)
 {
 	AtomType ty = a->get_type();
@@ -159,41 +160,12 @@ bool Connect::is_optional(Atom *a)
 	// All conj were optional.
 	return true;
 }
+#endif
 
 Link* Connect::conn_connect(Link* left_cset, Link* llink, Node* rnode)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
-	// If llink is an AND, then the only way that rnode can
-   // satisfy the connection is if at most one child is not
-	// optional.
-	if (AND == llink->get_type())
-	{
-		size_t required_count = 0;
-		Atom *non_opt = NULL;
-		for (int i = 0; i < llink->get_arity(); i++)
-		{
-			Atom* child = llink->get_outgoing_atom(i);
-			if (!is_optional(child))
-			{
-				non_opt = child;
-				required_count ++;
-			}
-			if (1 < required_count)
-				return NULL;
-		}
 
-		// If we are here, then there is one and only one required child.
-		// In this case, rnode must match it!
-		if (non_opt)
-			return conn_connect(left_cset, non_opt, rnode);
-
-		// If we are here, then all children were optional.
-		// We still want to try connecting to some of them.
-		assert(0, "optional links need to be implemented");
-		return NULL;
-	}
-
-	bool clause_is_optional = false;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
 		Atom *a = llink->get_outgoing_atom(i);
@@ -201,11 +173,14 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 		if (lnode) 
 		{
 			if (lnode->get_name() == OPTIONAL_CLAUSE)
-			{
-				clause_is_optional = true;
 				continue;
-			}
-			return conn_connect(lnode, rnode);
+
+			// Only one needs to be satisfied for OR clause
+			if (OR == llink->get_type())
+				return conn_connect(lnode, rnode);
+
+			// If we are here, then its an AND. 
+			assert(0, "Implement me");
 		}
 
 		Link* clink = dynamic_cast<Link*>(a);

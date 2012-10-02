@@ -21,7 +21,7 @@ class Connect
 
 	protected:
 		Link* conn_connect(Link*, Atom*, Node*);
-		Link* conn_connect(Node*, Node*);
+		Link* conn_connect(Link*, Node*, Node*);
 		Link* conn_connect(Link*, Link*, Node*);
 
 		static bool is_optional(Atom *);
