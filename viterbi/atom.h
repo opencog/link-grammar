@@ -39,7 +39,8 @@ enum AtomType
 	AND,        // ordered AND of all children (order is important!)
 	OR,         // unordered OR of all children
 	// OPTIONAL,   // one child only, and its optional. XXX not used ATM
-	WORD_CSET,  // word, followed by a list of disjuncts for that word.
+	WORD_CSET,  // word, followed by a set of connectors for that word.
+	WORD_DISJ,  // word, followed by a single disjunct for that word.
 	LINK,       // two connected connectors, e.g. Dmcn w/o direction info
 	STATE
 };

@@ -61,9 +61,30 @@ cout<<"word con "<<right<<endl;
 	Node* rnode = dynamic_cast<Node*>(right);
 	if (rnode)
 	{
-		Link* rv = conn_connect(left_cset, left, rnode);
-cout<<"got one it is "<<rv<<endl;
-		return rv;
+		Link* conn = conn_connect(left_cset, left, rnode);
+		if (!conn)
+			return NULL;
+cout<<"got one it is "<<conn<<endl;
+		// Unpack, and insert the words.
+		OutList lwdj;
+		lwdj.push_back(left_cset->get_outgoing_atom(0));
+		lwdj.push_back(conn->get_outgoing_atom(1));
+		Link *lwordj = new Link(WORD_DISJ, lwdj);
+
+		OutList rwdj;
+		rwdj.push_back(_right_cset->get_outgoing_atom(0));
+		rwdj.push_back(conn->get_outgoing_atom(2));
+		Link *rwordj = new Link(WORD_DISJ, rwdj);
+
+		OutList lo;
+		lo.push_bpack(conn->get_outgoing_atom(0));
+		lo.push_back(lwordj);
+		lo.push_back(rwordj);
+		Link *lg_link = new Link (LINK, lo);
+
+cout<<"normalized into "<<lg_link<<endl;
+// XXX this is raw, need to put back the words.
+		return lg_link;
 	}
 	return NULL;
 }
@@ -75,7 +96,7 @@ Link* Connect::conn_connect(Link* left_cset, Atom *latom, Node* rnode)
 {
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
-		return conn_connect(left_cset, lnode, rnode);
+		return conn_connect(lnode, rnode);
 
 	Link* llink = dynamic_cast<Link*>(latom);
 	return conn_connect(left_cset, llink, rnode);
@@ -85,7 +106,7 @@ Link* Connect::conn_connect(Link* left_cset, Atom *latom, Node* rnode)
  * Connect left_cset and _right_cset with an LG_LINK
  * lnode and rnode are the two connecters that actually mate.
  */
-Link* Connect::conn_connect(Link* left_cset, Node* lnode, Node* rnode)
+Link* Connect::conn_connect(Node* lnode, Node* rnode)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
@@ -97,8 +118,8 @@ cout<<"Yayyyyae  nodes match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	OutList linkage;
 	linkage.push_back(new Node(LINK_TYPE, link_name));
-	linkage.push_back(left_cset);
-	linkage.push_back(_right_cset);
+	linkage.push_back(lnode);
+	linkage.push_back(rnode);
 	return new Link(LINK, linkage);
 }
 
@@ -184,7 +205,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 				clause_is_optional = true;
 				continue;
 			}
-			return conn_connect(left_cset, lnode, rnode);
+			return conn_connect(lnode, rnode);
 		}
 
 		Link* clink = dynamic_cast<Link*>(a);
