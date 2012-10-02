@@ -12,11 +12,15 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <ctype.h>
 #include <limits.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 
 #ifdef USE_PTHREADS
 #include <pthread.h>
@@ -66,7 +70,7 @@ void safe_strcpy(char *u, const char * v, size_t usize)
 	u[usize-1] = '\0';
 }
 
-/** 
+/**
  * A version of strlcpy, for those systems that don't have it.
  */
 size_t lg_strlcpy(char * dest, const char *src, size_t size)
@@ -79,7 +83,7 @@ size_t lg_strlcpy(char * dest, const char *src, size_t size)
 	}
 	if (i < size) { dest[i] = 0x0; size = i; }
 	else if (0 < size) { size --; dest[size] = 0x0;}
-	return size; 
+	return size;
 }
 
 /**
@@ -244,7 +248,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 
 /* ============================================================= */
 /* Memory alloc routines below. These routines attempt to keep
- * track of how much space is getting used during a parse. 
+ * track of how much space is getting used during a parse.
  *
  * This code is probably obsolescent, and should probably be dumped.
  * No one (that I know of) looks at the space usage; its one of the
@@ -558,7 +562,7 @@ char * dictionary_get_data_dir(void)
 
 	if (custom_data_dir != NULL) {
 		data_dir = safe_strdup(custom_data_dir);
-		return data_dir; 
+		return data_dir;
 	}
 	
 #ifdef ENABLE_BINRELOC
@@ -639,7 +643,7 @@ char * dictionary_get_data_dir(void)
  * sequence of directories is specified in a dictpath string, in
  * which each directory is followed by a ":".
  */
-void * object_open(const char *filename, 
+void * object_open(const char *filename,
                    void * (*opencb)(const char *, void *),
                    void * user_data)
 {
@@ -666,7 +670,7 @@ void * object_open(const char *filename,
 	 * Unix: starts with leading slash.
 	 * Windows: starts with C:\  except that the drive letter may differ.
 	 */
-	if ((filename[0] == '/') || ((filename[1] == ':') && (filename[2] == '\\'))) 
+	if ((filename[0] == '/') || ((filename[1] == ':') && (filename[2] == '\\')))
 	{
 		/* fopen returns NULL if the file does not exist. */
 		fp = opencb(filename, user_data);
@@ -679,8 +683,8 @@ void * object_open(const char *filename,
 		prt_error("Info: data_dir=%s\n", (data_dir?data_dir:"NULL"));
 #endif
 		if (data_dir) {
-			snprintf(fulldictpath, MAX_PATH_NAME, 
-			         "%s%c%s%c", data_dir, PATH_SEPARATOR, 
+			snprintf(fulldictpath, MAX_PATH_NAME,
+			         "%s%c%s%c", data_dir, PATH_SEPARATOR,
 			                    DEFAULTPATH, PATH_SEPARATOR);
 			free(data_dir);
 		}
@@ -758,7 +762,7 @@ FILE *dictopen(const char *filename, const char *how)
 		fh = (FILE *) object_open(fullname, dict_file_open, ud);
 		free(fullname);
 	}
-	else 
+	else
 	{
 		fh = (FILE *) object_open(filename, dict_file_open, ud);
 		if (path_found)
@@ -769,6 +773,60 @@ FILE *dictopen(const char *filename, const char *how)
 	}
 	return fh;
 }
+
+/* ======================================================== */
+
+/**
+ * Read in the whole stinkin file.
+ * We read it as wide chars, one char at a time, so that any LC_CTYPE
+ * setting are obeyed.  Later, during dictionary grokking, thesse will
+ * be converted to the internal UTF8 format.
+ */
+wint_t *get_file_contents(const char * dict_name)
+{
+	int fd;
+	size_t tot_size;
+	int left;
+	struct stat buf;
+	wint_t * contents, *p;
+
+	FILE *fp = dictopen(dict_name, "r");
+	if (fp == NULL)
+		return NULL;
+
+	/* Get the file size, in bytes. */
+	fd = fileno(fp);
+	fstat(fd, &buf);
+	tot_size = buf.st_size;
+
+	/* This is surely more than we need. But that's OK, better
+	 * too much than too little.  */
+	contents = (wint_t *) malloc(sizeof(wint_t) * (tot_size+1));
+
+	/* Now, read the whole file. */
+	p = contents;
+	left = tot_size + 1;
+	while (1)
+	{
+		fgetws(p, left, fp);
+		if (feof(fp))
+			break;
+		while (*p != 0x0) {p++; left--; }
+		if (left < 0)
+			 break;
+	}
+
+  	fclose(fp);
+
+	if (left < 0)
+	{
+		prt_error("Fatal Error: File size is insane!\n");
+		exit(1);
+	}
+
+	return contents;
+}
+
 
 /* ======================================================== */
 /* Locale routines */

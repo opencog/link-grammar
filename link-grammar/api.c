@@ -24,6 +24,7 @@
 #include "sat-solver/sat-encoder.h"
 #include "corpus/corpus.h"
 #include "spellcheck.h"
+#include "utilities.h"
 
 /***************************************************************
 *
@@ -567,6 +568,7 @@ static void affix_list_delete(Dictionary dict)
 	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
 }
 
+
 /**
  * The following function is dictionary_create with an extra
  * paramater called "path". If this is non-null, then the path
@@ -610,19 +612,24 @@ dictionary_six(const char * lang, const char * dict_name,
 	/* To disable spell-checking, just set the cheker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
 
-	dict->fp = dictopen(dict->name, "r");
-	if (dict->fp == NULL)
+	dict->input = get_file_contents(dict->name);
+	if (NULL == dict->input)
 	{
 		prt_error("Error: Could not open dictionary %s\n", dict_name);
 		goto failure;
 	}
 
+	dict->pin = dict->input;
 	if (!read_dictionary(dict))
 	{
-		fclose(dict->fp);
+		free(dict->input);
+		dict->pin = NULL;
+		dict->input = NULL;
 		goto failure;
 	}
-	fclose(dict->fp);
+	free(dict->input);
+	dict->pin = NULL;
+	dict->input = NULL;
 
 	dict->affix_table = NULL;
 	if (affix_name != NULL)

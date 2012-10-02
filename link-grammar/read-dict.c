@@ -198,9 +198,11 @@ static wint_t get_character(Dictionary dict, int quote_mode)
 {
 	wint_t c;
 
-	c = fgetwc(dict->fp);
-	if ((c == '%') && (!quote_mode)) {
-		while((c != WEOF) && (c != '\n')) c = fgetwc(dict->fp);
+	c = *(dict->pin++);
+
+	if ((c == '%') && (!quote_mode))
+	{
+		while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
 	}
 	if (c == '\n') dict->line_number++;
 	return c;
@@ -1344,7 +1346,9 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 
 /**
  * read_entry() -- read one dictionary entry
- * Starting with the current token parse one dictionary entry.
+ * Starting with the current token, parse one dictionary entry.
+ * A single dictionary entry must have one and only one colon in it,
+ * and is terminated by a semi-colon.
  * Add these words to the dictionary.
  */
 static int read_entry(Dictionary dict)
