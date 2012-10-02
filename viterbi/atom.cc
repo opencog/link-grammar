@@ -62,7 +62,7 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 		return out;
 	}
 
-	assert(0);
+	out << "xxx-null-ptr-xxx";
 	return out;
 }
 

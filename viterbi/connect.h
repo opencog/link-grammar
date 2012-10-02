@@ -23,6 +23,8 @@ class Connect
 		Link* conn_connect(Link*, Node*, Node*);
 		Link* conn_connect(Link*, Link*, Node*);
 
+		static bool is_optional(Atom *);
+
 	private:
 		Link* _right_cset;
 		Atom* _rcons;

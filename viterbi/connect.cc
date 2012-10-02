@@ -23,6 +23,8 @@ using namespace std;
 namespace link_grammar {
 namespace viterbi {
 
+#define OPTIONAL_CLAUSE "0"
+
 /**
  * constructor: argument is a right-sided connector that this class
  * will try connecting to.
@@ -64,7 +66,9 @@ cout<<"word con "<<right<<endl;
 	Link* llink = dynamic_cast<Link*>(left);
 	if (llink and rnode)
 	{
-		conn_connect(llink, rnode);
+		Link *rv = conn_connect(left_cset, llink, rnode);
+cout<<"got one it is "<<rv<<endl;
+		return rv;
 	}
 	return NULL;
 }
@@ -90,18 +94,70 @@ cout<<"Yayyyyae  nodes match!"<<endl;
 	return new Link(LINK, linkage);
 }
 
+bool Connect::is_optional(Atom *a)
+{
+	AtomType ty = a->get_type();
+	if (CONNECTOR == ty)
+	{
+		Node* n = dynamic_cast<Node*>(a);
+		if (n->get_name() == OPTIONAL_CLAUSE)
+			return true;
+		return false;
+	}
+	assert (OR == ty or AND == ty, "Must be boolean junction");
+
+	Link* l = dynamic_cast<Link*>(a);
+	for (int i = 0; i < l->get_arity(); i++)
+	{
+		Atom *a = l->get_outgoing_atom(i);
+		bool c = is_optional(a);
+		if (OR == ty)
+		{
+			// If anything in OR is optional, the  whole clause is optional.
+			if (c) return true;
+		}
+		else
+		{
+			// ty is AND
+			// If anything in AND is isn't optional, then something is required
+			if (!c) return false;
+		}
+	}
+	
+	// All disj were requied.
+	if (OR == ty) return false;
+
+	// All conj were optional.
+	return true;
+}
+
 Link* Connect::conn_connect(Link* left_cset, Link* llink, Node* rnode)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
+	// If llink is an AND, then the only way that rnode can
+   // satisfy the connection is if at most one child is not
+	// optional.
+	if (AND == llink->get_type())
+	{
+	}
+
+	bool clause_is_optional = false;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
 		Atom *a = llink->get_outgoing_atom(i);
 		Node* lnode = dynamic_cast<Node*>(a);
-		if (lnode)
-			return conn_coonnect(left_cset, lnode, rnode);
+		if (lnode) 
+		{
+			if (lnode->get_name() == OPTIONAL_CLAUSE)
+			{
+				clause_is_optional = true;
+				continue;
+			}
+			return conn_connect(left_cset, lnode, rnode);
+		}
 
-		Link* clink = dynamic_cast<NLink*>(a);
-		conn_connect(left_cset, clink, rnode);
+		Link* clink = dynamic_cast<Link*>(a);
+		return conn_connect(left_cset, clink, rnode);
 	}
 	
 	return NULL;
