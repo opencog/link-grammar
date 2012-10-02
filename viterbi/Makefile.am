@@ -1,3 +1,8 @@
+#
+# Makefile.am
+#
+# Master makefile for the viterbi decoder.
+#
 
 # Skip this entire directory, if not configured
 if WITH_VITERBI
@@ -15,5 +20,12 @@ libvitacog_la_SOURCES = \
 	connect.h \
 	connector-utils.h \
 	viterbi.h
+
+# Unit test, to make sure the parser is working correctly.
+noinst_PROGRAMS = vitest
+
+vitest_SOURCES = vitest.cc
+vitest_LDADD = libvitacog.la
+
 
 endif

@@ -20,8 +20,8 @@ class Connect
 		Link* try_connect(Link*);
 
 	protected:
-		Link* conn_connect(Link*, Atom*, Node*);
-		Link* conn_connect(Link*, Node*, Node*);
+		Link* conn_connect_a(Link*, Atom*, Node*);
+		Link* conn_connect(Atom*, Node*, Node*);
 		Link* conn_connect(Link*, Link*, Node*);
 
 		static bool is_optional(Atom *);
