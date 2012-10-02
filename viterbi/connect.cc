@@ -58,19 +58,27 @@ Link* Connect::try_connect(Link* left_cset)
 	Atom *right = _rcons;
 cout<<"state con "<<left<<endl;
 cout<<"word con "<<right<<endl;
-	Node* lnode = dynamic_cast<Node*>(left);
 	Node* rnode = dynamic_cast<Node*>(right);
-	if (lnode and rnode)
-		return conn_connect(left_cset, lnode, rnode);
-
-	Link* llink = dynamic_cast<Link*>(left);
-	if (llink and rnode)
+	if (rnode)
 	{
-		Link *rv = conn_connect(left_cset, llink, rnode);
+		Link* rv = conn_connect(left_cset, left, rnode);
 cout<<"got one it is "<<rv<<endl;
 		return rv;
 	}
 	return NULL;
+}
+
+/**
+ * Dispatch appropriatly, depending on whether left atom is node or link
+ */
+Link* Connect::conn_connect(Link* left_cset, Atom *latom, Node* rnode)
+{
+	Node* lnode = dynamic_cast<Node*>(latom);
+	if (lnode)
+		return conn_connect(left_cset, lnode, rnode);
+
+	Link* llink = dynamic_cast<Link*>(latom);
+	return conn_connect(left_cset, llink, rnode);
 }
 
 /**
@@ -139,6 +147,29 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	// optional.
 	if (AND == llink->get_type())
 	{
+		size_t required_count = 0;
+		Atom *non_opt = NULL;
+		for (int i = 0; i < llink->get_arity(); i++)
+		{
+			Atom* child = llink->get_outgoing_atom(i);
+			if (!is_optional(child))
+			{
+				non_opt = child;
+				required_count ++;
+			}
+			if (1 < required_count)
+				return NULL;
+		}
+
+		// If we are here, then there is one and only one required child.
+		// In this case, rnode must match it!
+		if (non_opt)
+			return conn_connect(left_cset, non_opt, rnode);
+
+		// If we are here, then all children were optional.
+		// We still want to try connecting to some of them.
+		assert(0, "optional links need to be implemented");
+		return NULL;
 	}
 
 	bool clause_is_optional = false;

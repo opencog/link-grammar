@@ -20,6 +20,7 @@ class Connect
 		Link* try_connect(Link*);
 
 	protected:
+		Link* conn_connect(Link*, Atom*, Node*);
 		Link* conn_connect(Link*, Node*, Node*);
 		Link* conn_connect(Link*, Link*, Node*);
 
