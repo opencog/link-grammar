@@ -15,7 +15,7 @@ Version 4.7.7 (xxx 2012)
  * Disable fat link code via conditional compile.
  * Fix: "a lot of", "a gaggle of" now treated as quantifying determiners
  * Update German dictionary so that it actually loads.
- * Fix: assorted "but not" constructions.
+ * Fix: assorted "but not", "not very" constructions.
 
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).

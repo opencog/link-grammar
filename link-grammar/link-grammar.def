@@ -199,3 +199,5 @@ dict_display_word_expr
 dict_display_word_info
 print_expression
 dictionary_lookup_list
+print_dictionary_data
+dictionary_create_from_utf8

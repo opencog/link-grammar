@@ -26,6 +26,8 @@ noinst_PROGRAMS = vitest
 
 vitest_SOURCES = vitest.cc
 vitest_LDADD = libvitacog.la
+vitest_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
+
 
 
 endif
