@@ -91,6 +91,7 @@ liblink_grammar_la_SOURCES =        \
 	build-disjuncts.c                \
 	constituents.c                   \
 	count.c                          \
+	dictionary.c                     \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
