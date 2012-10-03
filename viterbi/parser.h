@@ -27,10 +27,10 @@ class Parser
 		void stream_word_conset(Link*);
 
 		Link* word_consets(const std::string& word);
+		Link* get_state_set();
 
 	protected:
 		void initialize_state();
-		Link* get_state_set();
 		Atom* lg_exp_to_atom(Exp*);
 
 		Dictionary _dict;

@@ -12,17 +12,29 @@
 #include <link-grammar/link-includes.h>
 #include "read-dict.h"
 
+#include "parser.h"
+
 using namespace std;
+using namespace link_grammar::viterbi;
 
 // using link_grammar::viterbi;
 
 main()
 {
-	Dictionary dict = dictionary_create_from_utf8("LEFT-WALL: Wd+;");
+	Dictionary dict = dictionary_create_from_utf8(
+		"LEFT-WALL: Wd+;"
+		"Hello: Wd-;"
+	);
 
 	print_dictionary_data(dict);
 
-	cout << "hellow world"<<endl;
+	Parser parser(dict);
+	parser.streamin("Hello");
+
+	cout << "hello world"<<endl;
+
+	link_grammar::viterbi::Link* state = parser.get_state_set();
+	cout<<"duude final state="<<state<<endl;
 
 	exit (0);
 }
