@@ -172,6 +172,11 @@ Link* Parser::get_state_set()
 	return state_set;
 }
 
+Link* Parser::get_output_set()
+{
+	return new Link(SET, _output);
+}
+
 /**
  * Add a single dictionary entry to the parse stae, if possible.
  */
@@ -202,6 +207,7 @@ cout<<"state "<<_state<<endl;
 	if (replace)
 	{
 cout<<"Got linkage"<< replace <<endl;
+		_output.push_back(replace);
 #if 0
 		OutList statev = state_set->get_outgoing_set();
 		statev[omit] = replace;

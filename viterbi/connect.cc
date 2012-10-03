@@ -46,7 +46,7 @@ Connect::Connect(Link* right_wconset)
 }
 
 /**
- * Try connecting this connector set, on the left, to what was passed
+ * Try connecting this connector set, from the left, to what was passed
  * in ctor.
  */
 Link* Connect::try_connect(Link* left_cset)
@@ -96,7 +96,7 @@ Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
 {
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
-		return conn_connect(left_cset, lnode, rnode);
+		return conn_connect(lnode, lnode, rnode);
 
 	Link* llink = dynamic_cast<Link*>(latom);
 	return conn_connect(left_cset, llink, rnode);

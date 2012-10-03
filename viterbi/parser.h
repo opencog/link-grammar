@@ -28,6 +28,7 @@ class Parser
 
 		Link* word_consets(const std::string& word);
 		Link* get_state_set();
+		Link* get_output_set();
 
 	protected:
 		void initialize_state();
@@ -35,7 +36,8 @@ class Parser
 
 		Dictionary _dict;
 	private:
-		Link *_state;
+		Link* _state;
+		std::vector<Atom*> _output;
 };
 
 

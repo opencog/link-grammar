@@ -17,7 +17,16 @@
 using namespace std;
 using namespace link_grammar::viterbi;
 
-// using link_grammar::viterbi;
+#define Lynk link_grammar::viterbi::Link
+
+#define ANODE(TYPE,NAME) (new Node(TYPE,NAME))
+#define ALINK1(TYPE,A) ({OutList ol; \
+                        ol.push_back(A); \
+                        new Lynk(TYPE, ol); })
+#define ALINK2(TYPE,A,B) ({OutList ol; \
+                        ol.push_back(A); \
+                        ol.push_back(B); \
+                        new Lynk(TYPE, ol); })
 
 main()
 {
@@ -33,8 +42,16 @@ main()
 
 	cout << "hello world"<<endl;
 
-	link_grammar::viterbi::Link* state = parser.get_state_set();
-	cout<<"duude final state="<<state<<endl;
+	Lynk* output = parser.get_output_set();
+	cout<<"duude final state="<<output<<endl;
+
+	Lynk* ans = 
+	ALINK2(WORD_DISJ,
+   	ANODE(WORD, "Hello"),
+   	ANODE(CONNECTOR, "Wd-")
+	);
+
+	cout <<"duude out="<<ans<<endl;
 
 	exit (0);
 }
