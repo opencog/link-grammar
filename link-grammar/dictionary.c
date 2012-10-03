@@ -173,7 +173,7 @@ dictionary_six_str(const char * lang,
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	dict->string_set = string_set_create();
-	
+
 	dict->lang = lang;
 	t = strrchr (lang, '/');
 	if (t) dict->lang = string_set_add(t+1, dict->string_set);
@@ -308,16 +308,16 @@ Dictionary dictionary_create_lang(const char * lang)
 		char * cons_name;
 		char * affix_name;
 		char * regex_name;
-	
+
 		dict_name = join_path(lang, "4.0.dict");
 		pp_name = join_path(lang, "4.0.knowledge");
 		cons_name = join_path(lang, "4.0.constituent-knowledge");
 		affix_name = join_path(lang, "4.0.affix");
 		regex_name = join_path(lang, "4.0.regex");
-	
+
 		dictionary = dictionary_six(lang, dict_name, pp_name, cons_name,
 		                             affix_name, regex_name);
-	
+
 		free(regex_name);
 		free(affix_name);
 		free(cons_name);
@@ -366,9 +366,9 @@ Dictionary dictionary_create_from_utf8(const char * input)
 
 	/* Convert input string to wide chars. This is needed for locale
 	 * compatibility with the dictionary read routines. */
-	len = strlen(input);
+	len = strlen(input) + 1;
 	winput = (wchar_t*) malloc(len * sizeof(wchar_t));
-	
+
 	p = input;
 	wp = winput;
 	while (1)
