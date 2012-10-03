@@ -44,11 +44,6 @@ link_public_api(const char *)
  ***********************************************************************/
 
 link_public_api(Dictionary)
-     dictionary_create(const char * dict_name,
-                       const char * pp_name,
-                       const char * cons_name,
-                       const char * affix_name);
-link_public_api(Dictionary)
      dictionary_create_lang(const char * lang);
 link_public_api(Dictionary)
      dictionary_create_default_lang(void);
@@ -454,6 +449,15 @@ link_public_api(void)
  * XXX TBD: These will all go away in Version 5.0.
  *
  ********************************************************/
+
+/* Fails to include the regex file name, which is needed in any
+ * practical application.  Thus, this call is deprecated.
+ * XXX TBD: this will go away in Version 5.0. */
+link_public_api(Dictionary)
+     dictionary_create(const char * dict_name,
+                       const char * pp_name,
+                       const char * cons_name,
+                       const char * affix_name);
 
 /* Both are deprecated, exported only for backwards-compat w/Java API. */
 link_public_api(int)

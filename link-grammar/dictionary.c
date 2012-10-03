@@ -147,6 +147,10 @@ static void affix_list_delete(Dictionary dict)
 	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
 }
 
+static Dictionary
+dictionary_six(const char * lang, const char * dict_name,
+                const char * pp_name, const char * cons_name,
+                const char * affix_name, const char * regex_name);
 
 /**
  * The following function is dictionary_create with an extra
@@ -157,7 +161,9 @@ static void affix_list_delete(Dictionary dict)
  * function.
  */
 static Dictionary
-dictionary_six(const char * lang, const char * dict_name,
+dictionary_six_str(const char * lang, 
+                const wint_t * input,
+                const char * dict_name,
                 const char * pp_name, const char * cons_name,
                 const char * affix_name, const char * regex_name)
 {
@@ -191,22 +197,15 @@ dictionary_six(const char * lang, const char * dict_name,
 	/* To disable spell-checking, just set the cheker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
 
-	dict->input = get_file_contents(dict->name);
-	if (NULL == dict->input)
-	{
-		prt_error("Error: Could not open dictionary %s\n", dict_name);
-		goto failure;
-	}
-
+	/* Read dictionary from the input string. */
+	dict->input = input;
 	dict->pin = dict->input;
 	if (!read_dictionary(dict))
 	{
-		free(dict->input);
 		dict->pin = NULL;
 		dict->input = NULL;
 		goto failure;
 	}
-	free(dict->input);
 	dict->pin = NULL;
 	dict->input = NULL;
 
@@ -269,6 +268,43 @@ failure:
 	return NULL;
 }
 
+/**
+ * Use filenames of six different files to put together the dictionary.
+ */
+static Dictionary
+dictionary_six(const char * lang, const char * dict_name,
+                const char * pp_name, const char * cons_name,
+                const char * affix_name, const char * regex_name)
+{
+   Dictionary dict;
+
+	wint_t* input = get_file_contents(dict_name);
+	if (NULL == input)
+	{
+		prt_error("Error: Could not open dictionary %s\n", dict_name);
+		goto failure;
+	}
+
+	dict = dictionary_six_str(lang, input, dict_name, pp_name,
+	                          cons_name, affix_name, regex_name);
+	if (NULL == dict)
+	{
+		free(input);
+		goto failure;
+	}
+	free(input);
+	return dict;
+
+failure:
+	string_set_delete(dict->string_set);
+	xfree(dict, sizeof(struct Dictionary_s));
+	return NULL;
+}
+
+/**
+ * Support function for the old, deprecated API.
+ * Do not use this function in new developemnt!
+ */
 Dictionary
 dictionary_create(const char * dict_name, const char * pp_name,
                   const char * cons_name, const char * affix_name)

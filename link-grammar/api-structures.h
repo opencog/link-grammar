@@ -160,8 +160,8 @@ struct Dictionary_s
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.
 	 */
-	wint_t *        input;
-	wint_t *        pin;
+	const wint_t *  input;
+	const wint_t *  pin;
 	char            token[MAX_TOKEN_LENGTH];
 	int             is_special;        /* boolean */
 	wint_t          already_got_it;
