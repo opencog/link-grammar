@@ -194,9 +194,9 @@ static void warning(Dictionary dict, const char * s)
  * If we're in quote mode, it does not consider the % character for
  * comments.
  */
-static wint_t get_character(Dictionary dict, int quote_mode)
+static wchar_t get_character(Dictionary dict, int quote_mode)
 {
-	wint_t c;
+	wchar_t c;
 
 	c = *(dict->pin++);
 
@@ -219,7 +219,7 @@ static wint_t get_character(Dictionary dict, int quote_mode)
  * Return true if the input wide-character is one of the special
  * characters used to define the syntax of the dictionary.
  */
-static int is_special(wint_t wc, mbstate_t *ps)
+static int is_special(wchar_t wc, mbstate_t *ps)
 {
 	char buff[MB_LEN_MAX];
 	int nr = wcrtomb(buff, wc, ps);
@@ -233,7 +233,7 @@ static int is_special(wint_t wc, mbstate_t *ps)
  */
 static int link_advance(Dictionary dict)
 {
-	wint_t c;
+	wchar_t c;
 	int nr, i;
 	int quote_mode;
 
@@ -301,7 +301,7 @@ static int link_advance(Dictionary dict)
 				dict->already_got_it = c;
 				return 1;
 			}
-			if (c == WEOF) {
+			if (c == 0x0) {
 				if (i == 0) {
 					dict->token[0] = '\0';
 					return 1;

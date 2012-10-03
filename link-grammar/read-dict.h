@@ -33,4 +33,6 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 void        free_dictionary(Dictionary dict);
 Exp *       Exp_create(Dictionary dict);
 
+Dictionary dictionary_create_from_utf8(const char * input);
+
 LINK_END_DECLS

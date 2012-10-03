@@ -102,7 +102,7 @@ char * strndup (const char *str, size_t size);
 #define iswdigit  isdigit
 #define iswspace  isspace
 #define wchar_t   char
-#define wint_t    int
+#define wint_t    unsigned int  /* I think ?? not sure */
 #define fgetwc    fgetc
 #define WEOF      EOF
 #define towlower  tolower
@@ -279,7 +279,7 @@ void * object_open(const char *filename,
                    void * (*opencb)(const char *, void *),
                    void * user_data);
 
-wint_t * get_file_contents(const char *filename);
+wchar_t * get_file_contents(const char *filename);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1

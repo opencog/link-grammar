@@ -782,13 +782,13 @@ FILE *dictopen(const char *filename, const char *how)
  * setting are obeyed.  Later, during dictionary grokking, thesse will
  * be converted to the internal UTF8 format.
  */
-wint_t *get_file_contents(const char * dict_name)
+wchar_t *get_file_contents(const char * dict_name)
 {
 	int fd;
 	size_t tot_size;
 	int left;
 	struct stat buf;
-	wint_t * contents, *p;
+	wchar_t * contents, *p;
 
 	FILE *fp = dictopen(dict_name, "r");
 	if (fp == NULL)
@@ -801,17 +801,17 @@ wint_t *get_file_contents(const char * dict_name)
 
 	/* This is surely more than we need. But that's OK, better
 	 * too much than too little.  */
-	contents = (wint_t *) malloc(sizeof(wint_t) * (tot_size+1));
+	contents = (wchar_t *) malloc(sizeof(wchar_t) * (tot_size+1));
 
 	/* Now, read the whole file. */
 	p = contents;
 	left = tot_size + 1;
 	while (1)
 	{
-		fgetws(p, left, fp);
-		if (feof(fp))
+		wchar_t *rv = fgetws(p, left, fp);
+		if (NULL == rv || feof(fp))
 			break;
-		while (*p != 0x0) {p++; left--; }
+		while (*p != 0x0) { p++; left--; }
 		if (left < 0)
 			 break;
 	}

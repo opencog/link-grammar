@@ -61,7 +61,7 @@ static void affix_list_create(Dictionary dict)
 	dict->prefix = NULL;
 	dict->suffix = NULL;
 
-	/* Load affixes from the affix table. 
+	/* Load affixes from the affix table.
 	 */
 	start_dn = list_whole_dictionary(dict->root, NULL);
 	for (dn = start_dn; dn != NULL; dn = dn->right)
@@ -153,16 +153,12 @@ dictionary_six(const char * lang, const char * dict_name,
                 const char * affix_name, const char * regex_name);
 
 /**
- * The following function is dictionary_create with an extra
- * paramater called "path". If this is non-null, then the path
- * used to find the file is taken from that path. Otherwise,
- * the path is taken from the dict_name.  This is only needed
- * because an affix_file is opened by a recursive call to this
- * function.
+ * Read dictionary entries from a wide-character string "input".
+ * All other parts are read from files.
  */
 static Dictionary
-dictionary_six_str(const char * lang, 
-                const wint_t * input,
+dictionary_six_str(const char * lang,
+                const wchar_t * input,
                 const char * dict_name,
                 const char * pp_name, const char * cons_name,
                 const char * affix_name, const char * regex_name)
@@ -278,7 +274,7 @@ dictionary_six(const char * lang, const char * dict_name,
 {
    Dictionary dict;
 
-	wint_t* input = get_file_contents(dict_name);
+	wchar_t* input = get_file_contents(dict_name);
 	if (NULL == input)
 	{
 		prt_error("Error: Could not open dictionary %s\n", dict_name);
@@ -301,22 +297,11 @@ failure:
 	return NULL;
 }
 
-/**
- * Support function for the old, deprecated API.
- * Do not use this function in new developemnt!
- */
-Dictionary
-dictionary_create(const char * dict_name, const char * pp_name,
-                  const char * cons_name, const char * affix_name)
-{
-	return dictionary_six("en", dict_name, pp_name, cons_name, affix_name, NULL);
-}
-
 Dictionary dictionary_create_lang(const char * lang)
 {
 	Dictionary dictionary;
 
-	if(lang && *lang)
+	if (lang && *lang)
 	{
 		char * dict_name;
 		char * pp_name;
@@ -354,13 +339,66 @@ Dictionary dictionary_create_default_lang(void)
 	char * lang;
 
 	lang = get_default_locale();
-	if(lang && *lang) {
+	if (lang && *lang) {
 		dictionary = dictionary_create_lang(lang);
 		free(lang);
 	} else {
 		/* Default to en when locales are broken (e.g. WIN32) */
 		dictionary = dictionary_create_lang("en");
 	}
+
+	return dictionary;
+}
+
+/**
+ * Use "string" as the input dictionary. All of the other parts,
+ * including post-processing, affix table, etc, are NULL.
+ * This routine is itended for unit-testing ONLY.
+ */
+Dictionary dictionary_create_from_utf8(const char * input)
+{
+	Dictionary dictionary = NULL;
+	char * lang;
+	wchar_t *winput, *wp;
+	size_t len;
+	const char *p;
+	int cv;
+
+	/* Convert input string to wide chars. This is needed for locale
+	 * compatibility with the dictionary read routines. */
+	len = strlen(input);
+	winput = (wchar_t*) malloc(len * sizeof(wchar_t));
+	
+	p = input;
+	wp = winput;
+	while (1)
+	{
+		cv = mbtowc(wp, p, 8);
+		if (-1 == cv)
+		{
+			prt_error("Error: Conversion failure!\n");
+		goto failure;
+		}
+		if (0 == cv)
+			break;
+		p += cv;
+		wp++;
+	}
+
+
+	lang = get_default_locale();
+	if (lang && *lang) {
+		dictionary = dictionary_six_str(lang, winput, "string",
+		                                NULL, NULL, NULL, NULL);
+		free(lang);
+	} else {
+		/* Default to en when locales are broken (e.g. WIN32) */
+		dictionary = dictionary_six_str("en", winput, "string",
+		                                NULL, NULL, NULL, NULL);
+	}
+
+failure:
+	free(winput);
 
 	return dictionary;
 }
@@ -397,5 +435,16 @@ int dictionary_delete(Dictionary dict)
 int dictionary_get_max_cost(Dictionary dict)
 {
 	return dict->max_cost;
+}
+
+/**
+ * Support function for the old, deprecated API.
+ * Do not use this function in new developemnt!
+ */
+Dictionary
+dictionary_create(const char * dict_name, const char * pp_name,
+                  const char * cons_name, const char * affix_name)
+{
+	return dictionary_six("en", dict_name, pp_name, cons_name, affix_name, NULL);
 }
 
