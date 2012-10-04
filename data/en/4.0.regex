@@ -165,6 +165,7 @@ ADJ-WORDS: /^\w.+istic$/
 % iodide, oligodeoxynucleotide
 % chronicity, hypochromicity
 MC-NOUN-WORDS: /^\w.+ase$/
+MC-NOUN-WORDS: /^\w.+ene$/
 MC-NOUN-WORDS: /^\w.+ine?$/
 MC-NOUN-WORDS: /^\w.+yl$/
 MC-NOUN-WORDS: /^\w.+ion$/
@@ -211,7 +212,7 @@ LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 % after the CAPITALIZED-WORDS regex.
 HYPHENATED-WORDS: /^[[:alpha:][:digit:],.][[:alpha:][:digit:],.-]*-[[:alpha:][:digit:],.-]*[[:alpha:][:digit:],.]$/
 
-% proteins often end "ase", so we'll assume those things are names.
+% proteins often end with "ase", so we'll assume those things are names.
 % removed, too many false positives.
 % NAME: /ase$/
 

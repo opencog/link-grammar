@@ -6977,14 +6977,14 @@ LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 
 MC-NOUN-WORDS.n: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
   (<noun-modifiers> & 
-    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
-    ({NM+ or D*u-} & <noun-and-p,u>) or
+    (({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+    ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>) or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])) or
     Us-)) or
   AN+;
 
-C-NOUN-WORDS.n: % guessed nouns that are countable (-on, -or)
+C-NOUN-WORDS.n: % guessed nouns that are signular countable (-on, -or)
   (<noun-modifiers> & 
     (((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or Bsm+)) or
     ({NM+ or Ds-} & <noun-and-s>) or
@@ -7039,8 +7039,8 @@ LATIN-ADJ-S-NOUN-WORDS:
 UNKNOWN-WORD.n: 
   <noun-modifiers> & 
     (AN+ or 
-    ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
-    ({NM+ or D*u-} & <noun-and-p,u>) or
+    ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
+    ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>) or
     (YS+ & {D*u-}) or 
     (GN+ & (DD- or [()])) or 
     U-);
