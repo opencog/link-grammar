@@ -489,14 +489,14 @@ HYPHENATED-WORDS.n:
 % constructions ("the hammer and sickle")
 <common-noun>: 
   <noun-modifiers> & 
-    (AN+ or 
-    ((NM+ or ({[NM+]} & (Ds- or <null>))) & 
-      ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or 
-      <noun-and-s>)) or
-    SJrs- or
-    (YS+ & Ds-) or 
-    (GN+ & (DD- or [()])) or 
-    Us-);
+    (AN+  
+    or ((NM+ or ({[NM+]} & (Ds- or <null>))) 
+      & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+        or <noun-and-s>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-);
 
 /en/words/words.n.1 
 /en/words/words.n.1.wiki : 
@@ -610,26 +610,35 @@ carte_blanche:
     {@M+} & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or TI-);
 
 % Almost identical to below.
-majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
-  (<noun-modifiers> & (
-    Us-
-    or (YS+ & Ds-)
-    or [Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)]
-    or ({Ds-} & <noun-and-x>)
-    or (GN+ & (DD- or [()]))))
-  or AN+;
-
-% Almost identical to above.
 % Ds- & {NM+} & <noun-sub-x> &.. "the number 12 is a lucky number"
 % above has cost to give "a number of" priority.
 number.n: 
   (<noun-modifiers> & (
-    Us-
-    or (YS+ & Ds-)
-    or [Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    [Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]
     or ({Ds-} & {NM+} & <noun-and-x>)
-    or (GN+ & (DD- or [()]))))
+  ))
   or AN+;
+
+% Almost identical to above.
+% Differing in strange ways from <common-noun>
+majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
+  (<noun-modifiers> & (
+    [Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    or ({Ds-} & <noun-and-x>)
+  ))
+  or AN+;
+
+% Identical to <common-noun>, except that D- costs extra
+<costly-common-noun>:
+  <noun-modifiers> &
+    (AN+
+    or ((NM+ or [[{[NM+]} & (Ds- or <null>) ]] )
+      & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+        or <noun-and-s>))
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-);
 
 % determiner constructions, with a dangling of: "a number of", "a lot of"
 % "I have a number of cookies"
@@ -640,7 +649,8 @@ number.n:
 % we want to give these a cost, so that they don't get the first choice.
 /en/words/measures.1:
   (OFd+ & Dm+ & {A-} & D-)
-  or [<marker-common-entity> or <common-noun>];
+  or <marker-common-entity>
+  or <costly-common-noun>;
 
 % determiner constructions, with a dangling of: 
 % "I have bags of money"
@@ -649,7 +659,8 @@ number.n:
 % The [<generic-plural-id>] is from words.n.2.s
 /en/words/measures.2:
   (OFd+ & (NIn+ or Dm+) & {A-} & {Dmcn-})
-  or [<marker-common-entity> or <generic-plural-id>];
+  or <marker-common-entity>
+  or [<generic-plural-id>];
 
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 kind_of: 
@@ -1165,18 +1176,21 @@ such_a such_an: Ds*k+;
 % and use OFw to force linkage only to time exprs.
 <adv-of>: MVw- & OFw+;
 
-% For most cases, a_lot is like a determiner:
-% "I have a lot of cookies" wants "cookies" to be he object, not "a lot"
 a_lot:
-  (OFd+ & Dm+)
-  % or [[(<noun-sub-p> & <noun-main-p>)]]
-  or [[<noun-and-p>]]
+  [[<noun-and-p>]]
+%  or [[(<noun-sub-p> & <noun-main-p>)]]
   or EC+ or MVa- or <adv-of>;
 
-few: {EA- or EF+ or ({EA-} & DD-)} & 
- (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
-a_couple: (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
-a_couple_of: NN+ or ND+ or NIn+;
+few:
+  {EA- or EF+ or ({EA-} & DD-)} & 
+  (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
+
+a_couple:
+%  [[<noun-sub-p> & <noun-main-p>]] or
+  <noun-and-p>;
+
+a_couple_of:
+  NN+ or ND+ or NIn+;
 
 a_few:
   NN+ or
