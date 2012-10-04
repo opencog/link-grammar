@@ -69,26 +69,12 @@ cout<<"word cset "<<right<<endl;
 		if (!conn)
 			return NULL;
 cout<<"got one it is "<<conn<<endl;
-		// Unpack, and insert the words.
-		OutList lwdj;
-		lwdj.push_back(left_cset->get_outgoing_atom(0));
-		lwdj.push_back(conn->get_outgoing_atom(1));
-		Link *lwordj = new Link(WORD_DISJ, lwdj);
 
-		OutList rwdj;
-		rwdj.push_back(_right_cset->get_outgoing_atom(0));
-		rwdj.push_back(conn->get_outgoing_atom(2));
-		Link *rwordj = new Link(WORD_DISJ, rwdj);
-
-		OutList lo;
-		lo.push_back(conn->get_outgoing_atom(0));
-		lo.push_back(lwordj);
-		lo.push_back(rwordj);
-		Link *lg_link = new Link (LINK, lo);
-
-cout<<"normalized into "<<lg_link<<endl;
-// XXX this is raw, need to put back the words.
-		return lg_link;
+		// At this point, conn holds an LG link type, and the
+		// two disjuncts that were mated.  Re-assemble these
+		// into a pair of word_disjuncts (i.e. stick the word
+		// back in there, as that is what later stages need).
+		return reassemble(conn, left_cset, _right_cset);
 	}
 
 	// If we are here, there must be several connectors on the
@@ -102,6 +88,34 @@ cout<<"normalized into "<<lg_link<<endl;
 }
 
 // =============================================================
+
+// At this point, conn holds an LG link type, and the
+// two disjuncts that were mated.  Re-assemble these
+// into a pair of word_disjuncts (i.e. stick the word
+// back in there, as that is what later stages need).
+Link* Connect::reassemble(Link* conn, Link* left_cset, Link* right_cset)
+{
+	OutList lwdj;
+	lwdj.push_back(left_cset->get_outgoing_atom(0));
+	lwdj.push_back(conn->get_outgoing_atom(1));
+	Link *lwordj = new Link(WORD_DISJ, lwdj);
+
+	OutList rwdj;
+	rwdj.push_back(right_cset->get_outgoing_atom(0));
+	rwdj.push_back(conn->get_outgoing_atom(2));
+	Link *rwordj = new Link(WORD_DISJ, rwdj);
+
+	OutList lo;
+	lo.push_back(conn->get_outgoing_atom(0));
+	lo.push_back(lwordj);
+	lo.push_back(rwordj);
+	Link *lg_link = new Link (LINK, lo);
+
+cout<<"normalized into "<<lg_link<<endl;
+	return lg_link;
+}
+
+// =============================================================
 /**
  * Dispatch appropriatly, depending on whether left atom is node or link
  */
@@ -111,31 +125,31 @@ Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
 
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
-		return conn_connect(lnode, lnode, rnode);
+		return conn_connect_nn(lnode, lnode, rnode); // XXX really?
 
 	Link* llink = dynamic_cast<Link*>(latom);
-	return conn_connect(left_cset, llink, rnode);
+	return conn_connect_kn(left_cset, llink, rnode);
 }
 
 Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Link* rlink)
 {
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
-		return conn_connect(lnode, lnode, rlink);
+		return conn_connect_nk(left_cset, lnode, rlink);
 
 	Link* llink = dynamic_cast<Link*>(latom);
-	return conn_connect(left_cset, llink, rlink);
+	return conn_connect_kk(left_cset, llink, rlink);
 }
 
-Link* Connect::conn_connect_b(Atom* left_cset, Node* lnode, Atom *ratom)
+Link* Connect::conn_connect_b(Link* left_cset, Node* lnode, Atom *ratom)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 	Node* rnode = dynamic_cast<Node*>(ratom);
 	if (rnode)
-		return conn_connect(left_cset, lnode, rnode);
+		return conn_connect_nn(left_cset, lnode, rnode);
 
 	Link* rlink = dynamic_cast<Link*>(ratom);
-	return conn_connect(left_cset, lnode, rlink);
+	return conn_connect_nk(left_cset, lnode, rlink);
 }
 
 // =============================================================
@@ -143,7 +157,7 @@ Link* Connect::conn_connect_b(Atom* left_cset, Node* lnode, Atom *ratom)
  * Connect left_cset and _right_cset with an LG_LINK
  * lnode and rnode are the two connecters that actually mate.
  */
-Link* Connect::conn_connect(Atom* left_set, Node* lnode, Node* rnode)
+Link* Connect::conn_connect_nn(Atom* left_set, Node* lnode, Node* rnode)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
@@ -163,7 +177,7 @@ cout<<"Yayyyyae connectors match!"<<endl;
  * Connect left_cset and _right_cset with an LG_LINK
  * lnode and rnode are the two connecters that actually mate.
  */
-Link* Connect::conn_connect(Atom* left_set, Node* lnode, Link* rlink)
+Link* Connect::conn_connect_nk(Link* left_cset, Node* lnode, Link* rlink)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
@@ -174,12 +188,10 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
-			Link* result = conn_connect_b(lnode, lnode, a);
-			if (result)
-			{
-cout<<"yahoooooo found one:"<<result<<endl;
-				return result;
-			}
+			Link* conn = conn_connect_b(left_cset, lnode, a);
+			if (!conn)
+				return NULL;
+			return reassemble(conn, left_cset, _right_cset);
 		}
 	}
 
@@ -226,7 +238,7 @@ bool Connect::is_optional(Atom *a)
 }
 #endif
 
-Link* Connect::conn_connect(Atom* left_cset, Link* llink, Node* rnode)
+Link* Connect::conn_connect_kn(Atom* left_cset, Link* llink, Node* rnode)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
 
@@ -241,20 +253,20 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 
 			// Only one needs to be satisfied for OR clause
 			if (OR == llink->get_type())
-				return conn_connect(lnode, lnode, rnode);
+				return conn_connect_nn(lnode, lnode, rnode);
 
 			// If we are here, then its an AND. 
 			assert(0, "Implement me");
 		}
 
 		Link* clink = dynamic_cast<Link*>(a);
-		return conn_connect(left_cset, clink, rnode);
+		return conn_connect_kn(left_cset, clink, rnode);
 	}
 	
 	return NULL;
 }
 
-Link* Connect::conn_connect(Atom* left_cset, Link* llink, Link* rlink)
+Link* Connect::conn_connect_kk(Atom* left_cset, Link* llink, Link* rlink)
 {
 	assert(0, "Implement me");
 	return NULL;

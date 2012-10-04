@@ -20,13 +20,16 @@ class Connect
 		Link* try_connect(Link*);
 
 	protected:
+		Link* reassemble(Link*, Link*, Link*);
+
 		Link* conn_connect_a(Link*, Atom*, Node*);
 		Link* conn_connect_a(Link*, Atom*, Link*);
-		Link* conn_connect_b(Atom*, Node*, Atom*);
-		Link* conn_connect(Atom*, Node*, Node*);
-		Link* conn_connect(Atom*, Link*, Node*);
-		Link* conn_connect(Atom*, Node*, Link*);
-		Link* conn_connect(Atom*, Link*, Link*);
+		Link* conn_connect_b(Link*, Node*, Atom*);
+
+		Link* conn_connect_nn(Atom*, Node*, Node*);
+		Link* conn_connect_kn(Atom*, Link*, Node*);
+		Link* conn_connect_nk(Link*, Node*, Link*);
+		Link* conn_connect_kk(Atom*, Link*, Link*);
 
 		static bool is_optional(Atom *);
 
