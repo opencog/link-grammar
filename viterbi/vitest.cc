@@ -24,6 +24,8 @@ using namespace link_grammar::viterbi;
 #define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
 #define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
 
+// A simple hello test; several different dictionaries
+// should give exactly the same output.
 bool test_hello(const char *id, const char *dict_str)
 {
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
@@ -35,17 +37,19 @@ bool test_hello(const char *id, const char *dict_str)
 
 	Lynk* output = parser.get_output_set();
 
-	Lynk* ans = 
+	// This is the expected output, no matter what the
+	// dictionary may be.
+	Lynk* ans =
 	ALINK1(SET,
 		ALINK3(LINK,
 			ANODE(LINK_TYPE, "Wd"),
 			ALINK2(WORD_DISJ,
-   			ANODE(WORD, "LEFT-WALL"),
-   			ANODE(CONNECTOR, "Wd+")
+				ANODE(WORD, "LEFT-WALL"),
+				ANODE(CONNECTOR, "Wd+")
 			),
 			ALINK2(WORD_DISJ,
-   			ANODE(WORD, "Hello"),
-   			ANODE(CONNECTOR, "Wd-")
+				ANODE(WORD, "Hello"),
+				ANODE(CONNECTOR, "Wd-")
 			)
 		)
 	);
@@ -63,7 +67,7 @@ bool test_hello(const char *id, const char *dict_str)
 
 bool test_simplest()
 {
-	return test_hello ("test_simplest", 
+	return test_hello ("test_simplest",
 		"LEFT-WALL: Wd+;"
 		"Hello: Wd-;"
 	);
@@ -73,6 +77,14 @@ bool test_simple_left_disj()
 {
 	return test_hello ("simple left disj",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"Hello: Wd-;"
+	);
+}
+
+bool test_optional_left_cset()
+{
+	return test_hello ("optional left cset",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {CP+} & {Xx+} & {RW+ or Xp+};"
 		"Hello: Wd-;"
 	);
 }
@@ -92,10 +104,16 @@ main(int argc, char *argv[])
 
 	if (!test_simplest()) num_failures++;
 	if (!test_simple_left_disj()) num_failures++;
+	if (!test_optional_left_cset()) num_failures++;
 	if (!test_simple_right_disj()) num_failures++;
 
-	if (num_failures) exit(1);
+	if (num_failures)
+	{
+		cout << "Total test failures=" << num_failures << endl;
+		exit(1);
+	}
 
+	cout << "All tests pass" << endl;
 	exit (0);
 }
 
