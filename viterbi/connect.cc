@@ -39,7 +39,7 @@ Connect::Connect(Link* right_wconset)
 	//      CONNECTOR : Wd-  etc...
 
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
-	assert(WORD_CSET == _right_cset->get_type(), "Unexpected link type word cset.");
+	assert(WORD_CSET == _right_cset->get_type(), "Expecting right word cset.");
 	assert(2 == _right_cset->get_arity(), "Wrong arity for word connector set");
 
 	_rcons = _right_cset->get_outgoing_atom(1);
@@ -52,6 +52,7 @@ Connect::Connect(Link* right_wconset)
 Link* Connect::try_connect(Link* left_cset)
 {
 	assert(left_cset, "State word-connectorset is null");
+	assert(WORD_CSET == left_cset->get_type(), "Expecting left word cset.");
 	assert(2 == left_cset->get_arity(), "Wrong arity for state word conset");
 	Atom* left_a = left_cset->get_outgoing_atom(1);
 
@@ -62,29 +63,16 @@ cout<<"word cset "<<right<<endl;
 	// If the word connector set is a single solitary node, then
 	// its not a set, its a single connecter.  Try to hook it up
 	// to something on the left.
-	Node* rnode = dynamic_cast<Node*>(right_a);
-	if (rnode)
-	{
-		Link* conn = conn_connect_a(left_cset, left_a, rnode);
-		if (!conn)
-			return NULL;
+	Link* conn = conn_connect_ab(left_cset, left_a, right_a);
+	if (!conn)
+		return NULL;
 cout<<"got one it is "<<conn<<endl;
 
-		// At this point, conn holds an LG link type, and the
-		// two disjuncts that were mated.  Re-assemble these
-		// into a pair of word_disjuncts (i.e. stick the word
-		// back in there, as that is what later stages need).
-		return reassemble(conn, left_cset, _right_cset);
-	}
-
-	// If we are here, there must be several connectors on the
-	// right-hand word.  See if one of the left-going ones attach.
-	Link* rlink = dynamic_cast<Link*>(right_a);
-	assert(rlink, "If its not a node, it had better be a link!");
-
-	Link* conn = conn_connect_a(left_cset, left_a, rlink);
-
-	return NULL;
+	// At this point, conn holds an LG link type, and the
+	// two disjuncts that were mated.  Re-assemble these
+	// into a pair of word_disjuncts (i.e. stick the word
+	// back in there, as that is what later stages need).
+	return reassemble(conn, left_cset, _right_cset);
 }
 
 // =============================================================
@@ -126,6 +114,16 @@ cout<<"normalized into "<<lg_link<<endl;
 /**
  * Dispatch appropriatly, depending on whether left atom is node or link
  */
+Link* Connect::conn_connect_ab(Link* left_cset, Atom *latom, Atom* ratom)
+{
+	Node* rnode = dynamic_cast<Node*>(ratom);
+	if (rnode)
+		return conn_connect_a(left_cset, latom, rnode);
+
+	Link* rlink = dynamic_cast<Link*>(ratom);
+	return conn_connect_a(left_cset, latom, rlink);
+}
+
 Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
 {
 	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
@@ -196,10 +194,10 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
 			Link* conn = conn_connect_b(left_cset, lnode, a);
-			if (!conn)
-				return NULL;
-cout<<"duuuuuuudeski con="<<conn<<endl;
-			return reassemble(conn, left_cset, _right_cset);
+
+			// If the shoe fits, wear it.
+			if (conn)
+				return conn;
 		}
 	}
 

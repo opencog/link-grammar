@@ -22,6 +22,7 @@ class Connect
 	protected:
 		Link* reassemble(Link*, Link*, Link*);
 
+		Link* conn_connect_ab(Link*, Atom*, Atom*);
 		Link* conn_connect_a(Link*, Atom*, Node*);
 		Link* conn_connect_a(Link*, Atom*, Link*);
 		Link* conn_connect_b(Link*, Node*, Atom*);
