@@ -495,14 +495,6 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.1.wiki : 
   <marker-common-entity> or <common-noun>;
 
-% lot.n is a common noun, just like above, except that
-% "a lot" is usually not a thing, but a modifier.  So give this a cost.
-% Ditto gaggle.n as opposed to gaggle.d We are using cost to distinguish
-% a valid secondary meaning
-lot.n bevy.n crush.n drift.n flock.n gaggle.n herd.n peck.n rout.n
-throng.n:
-  [[<marker-common-entity> or <common-noun>]];
-
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
 /en/words/words.n.2.s
@@ -518,7 +510,7 @@ numbers.n:
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % plural nouns not ending in "s"
-% {Jd-}: allows a "a flock of sheep" to act as determiner.
+% {Jd-}: allows a "a flock of birds" to act as determiner.
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
 /en/words/words.n.2.x
 /en/words/words.n.2.x.wiki :
@@ -637,23 +629,15 @@ number.n:
     or (GN+ & (DD- or [()]))))
   or AN+;
 
-% determiner constructions, with a dangling of: "a number of"
+% determiner constructions, with a dangling of: "a number of", "a lot of"
 % "I have a number of cookies"
 % "a pride of lions" "a litter of kittens" all take determiners
 % Some of these commonly modify count nouns, other mass nouns.
 % {A-}: "a vast expanse" "a large flock"
-number.d majority.d minority.d group.d handful.d
-bag.d batch.d bundle.d bunch.d bulk.d chunk.d expanse.d
-extent.d gob.d heap.d hunk.d load.d magnitude.d
-mass.d measure.d mess.d mint.d passel.d peck.d pile.d 
-raft.d slew.d stack.d supply.d ton.d volume.d
-sum.d wad.d 
-assembly.d army.d bevy.d cloud.d collection.d colony.d
-company.d convoy.d crowd.d crush.d
-drift.d drove.d flight.d flock.d gaggle.d gathering.d herd.d
-host.d legion.d litter.d multitude.d pack.d
-pride.d progeny.d rout.d score.d skein.d throng.d:
-  OFd+ & Dm+ & {A-} & D-;
+
+/en/words/measures.1:
+  (OFd+ & Dm+ & {A-} & D-)
+  or [[<marker-common-entity> or <common-noun>]];
 
 % determiner constructions, with a dangling of: 
 % "I have bags of money"

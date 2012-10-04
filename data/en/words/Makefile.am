@@ -8,6 +8,7 @@ WORDS=			\
 	entities.national.sing \
 	entities.organizations.sing \
 	entities.us-states.sing \
+	measures.1 \
 	units.1 \
 	units.1.dot \
 	units.3 \
