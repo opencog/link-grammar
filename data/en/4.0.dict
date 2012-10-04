@@ -647,25 +647,28 @@ number.n:
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
 
+% This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 kind_of: 
-  ({{@AN-} & @A-} & U+ & 
-    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or 
-    ({Ds-} & <noun-and-s>) or
-    Us-)) or
-  EA+ or
-  EE+;
+  [({{@AN-} & @A-} & U+ & 
+    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+    or ({Ds-} & <noun-and-s>)
+    or Us-))]
+  or EA+
+  or EE+;
 
+% This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 type_of sort_of breed_of:
-  {{@AN-} & @A-} & U+ & 
-    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
-    ({Ds-} & <noun-and-s>) or
-    Us-);
+  [{{@AN-} & @A-} & U+ & 
+    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+    or ({Ds-} & <noun-and-s>)
+    or Us-)];
 
+% This gets a cost, so that the {Jd-} link for measures.2 is prefered.
 kinds_of types_of sorts_of breeds_of:
-  {{@AN-} & @A-} & U+ & 
-    (({Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
-    ({Dmc-} & <noun-and-p>) or
-    Up-);
+  [{{@AN-} & @A-} & U+ & 
+    (({Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
+    or ({Dmc-} & <noun-and-p>)
+    or Up-)];
 
 percent.u: 
   (<noun-modifiers> & 
@@ -749,7 +752,7 @@ propositions.n prospects.n presuppositions.n inklings.n suppositions.n
 findings.n amounts.n rules.n dangers.n warnings.n indications.n
 answers.n suggestions.n:
   (<noun-modifiers> & 
-    (({Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or 
       (Sp*t+ & <CLAUSE>) or 
       SIp*t- or 
@@ -773,10 +776,11 @@ request.n requirement.n condition.n recommendation.n provision.n stipulation.n:
     (GN+ & (DD- or [()])))) or
   AN+;  
 
+% {Jd-} : "a number of conditions"
 requests.n requirements.n conditions.n recommendations.n provisions.n
 stipulations.n:
   (<noun-modifiers> & 
-    (({Dmc-} & {@M+} & {(TH+ or TS+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(TH+ or TS+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
       (Sp*t+ & <CLAUSE>) or
       SIp*t- or
@@ -801,21 +805,23 @@ vote.n bill.n:
     (GN+ & (DD- or [()])))) or
   AN+;
 
+% {Jd-}: "a large amount of effort"
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
 determination.n capacity.n unwillingness.n need.n will.n eagerness.n
 opportunity.n commitment.n ambition.n ability.n order.n obligation.n
 incentive.n:
   (<noun-modifiers> &
-    (({D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+    (({{Jd-} & D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main-m> or
       <rel-clause-s>)) or
-    ({D*u-} & <noun-and-u>) or
+    ({{Jd-} & D*u-} & <noun-and-u>) or
     Us- or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
 
+% {Jd-}: "tons of offers"
 excuses.n decisions.n proposals.n failures.n efforts.n attempts.n refusals.n pledges.n
 urges.n missions.n rights.n desires.n needs.n ambitions.n capacities.n mandates.n
 promises.n abilities.n options.n commitments.n intents.n opportunities.n plans.n plots.n
@@ -823,7 +829,7 @@ responsibilities.n chances.n campaigns.n offers.n pressures.n obligations orders
 temptations.n vows.n permits.n impetuses.n proclivities.n propensities.n moves.n
 votes.n bills.n incentives.n:
   (<noun-modifiers> &
-    (({Dmc-} & {@M+} & {(TOn+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(TOn+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main-p> or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
@@ -858,7 +864,7 @@ question.n issue.n:
 
 questions.n issues.n:
   (<noun-modifiers> &
-    (({Dmc-} & {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
       (Sp*q+ & <CLAUSE>) or
       SIp*q- or
@@ -884,7 +890,7 @@ reason.n:
 
 reasons.n:
   (<noun-modifiers> &
-    (({Dmc-} & {@M+} & {TH+ or Ce+ or TOn+ or WY+ or (R+ & Bp+)} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {TH+ or Ce+ or TOn+ or WY+ or (R+ & Bp+)} & {@MXp+} &
       (<noun-main-p> or
        <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
@@ -932,7 +938,7 @@ time.n:
 
 ways.n:
   (<noun-modifiers> & 
-    (({Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} & 
+    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} & 
       (MVa- or
       <noun-main-p> or
       <rel-clause-p>)) or
@@ -944,7 +950,7 @@ ways.n:
 
 places.n:
   (<noun-modifiers> &
-    (({Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
       ([[MVa-]] or
       <noun-main-p> or
       <rel-clause-p>)) or
@@ -956,7 +962,7 @@ places.n:
 
 times.n:
   (<noun-modifiers> &
-    (({Dmc-} & {@M+} & {TOn+ or WN+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or WN+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
       ([[MVa-]] or
       <noun-main-p> or
       <rel-clause-p>)) or

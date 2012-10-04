@@ -1212,7 +1212,6 @@ breathers.n
 breaths.n
 breeches.n
 breeders.n
-breeds.n
 breezes.n
 breves.n
 breviaries.n
@@ -2792,7 +2791,6 @@ deformities.n
 defrosters.n
 degenerates.n
 degradations.n
-degrees.n
 deities.n
 delays.n
 delegates.n
@@ -5542,7 +5540,6 @@ kilowatts.n
 kilts.n
 kimonos.n
 kindergartens.n
-kinds.n
 kingdoms.n
 kingfishers.n
 kingpins.n
@@ -9422,7 +9419,6 @@ sorrels.n
 sorrows.n
 sorters.n
 sorties.n
-sorts.n
 soubriquets.n
 souffles.n
 souls.n
@@ -10670,7 +10666,6 @@ tympanums.n
 typefaces.n
 typescripts.n
 typesetters.n
-types.n
 typewriters.n
 typhoons.n
 typists.n
