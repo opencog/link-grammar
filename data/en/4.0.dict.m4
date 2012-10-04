@@ -247,7 +247,7 @@ changecom(`%')
 %
 CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} & 
-    (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]]} & 
+    (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} & 
       ([<noun-sub-s> & (JG- or <noun-main-s>)] or 
        <noun-and-s> or 
        YS+)) or 
@@ -261,7 +261,7 @@ CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
 % "a Starbucks"
 PL-CAPITALIZED-WORDS: 
   ({NM+} & {G-} & {[MG+]} &
-    (({DG- or [[GN-]] or [[{@A-} & ({Dmc-} or {Ds-})]] } &
+    (({DG- or [[GN-]] or [[{@A-} & ({Dmc-} or {Ds-})]] or ({@A-} & Jd- & Dmc-) } &
       ([<noun-sub-x> & (JG- or <noun-main-x>)] or
       <noun-and-x> or
       YS+ or
@@ -647,13 +647,11 @@ number.n:
 % determiner constructions, with a dangling of: 
 % "I have bags of money"
 % NIn+ needed for money amounts
+% {Dmcn-}: "two kilograms of ..."
 % The [<generic-plural-id>] is from words.n.2.s
 /en/words/measures.2:
-  (OFd+ & (NIn+ or Dm+) & {A-})
+  (OFd+ & (NIn+ or Dm+) & {A-} & {Dmcn-})
   or [<marker-common-entity> or <generic-plural-id>];
-
-
-
 
 % number appreviations: no.x No.x 
 No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
