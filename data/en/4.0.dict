@@ -370,10 +370,11 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 % Pattern used for words.n.2.s
 % Similar to <common-noun>, but with different determiners for number
 % agreement.
+% ({{Dmu-} & Jd-} & Dmc-) : "I gave him a number of the cookies"
 <generic-plural-id>:  
   [[AN+]] or
   (<noun-modifiers> & 
-    (({NM+ or ({Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+    (({NM+ or ({{Dmu-} & Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     SJrp- or
     (YP+ & {Dmc-}) or 
@@ -526,11 +527,13 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % XXX should probably eliminate <noun-and-p,u> and replace by <noun-and-u>
 % but this requires other spread-out changes
+%
+%  ({{Dmu-} & Jd-} & Dmu-):  "Drink a pint of this beer"
 <mass-noun>:
   <marker-common-entity> or 
   (<noun-modifiers> & 
     (AN+ or 
-    ({NM+ or ({Jd-} & Dmu-)} & 
+    ({NM+ or ({{Dmu-} & Jd-} & Dmu-)} & 
       ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
       <noun-and-p,u>)) or
     (YS+ & {Dmu-}) or 
@@ -993,7 +996,15 @@ she he:
   {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+ or (Dn- & SJn+));
 
 % The E- is for "It's either us or them" ... not ideal, but OK
-me him them us: J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
+me him us:
+  J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
+
+% Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
+them:
+  [J-]
+  or ({Jd- & Dmc-} & Ox-)
+  or ({[[E-]]} & SJl+)
+  or SJr-;
 
 myself yourself himself herself itself themselves
 ourselves yourselves: J- or O- or E+ or MVa-;
@@ -1242,12 +1253,17 @@ the_most: MVa- or EE+ or Dm+ or (<noun-sub-x> & <noun-main-x>);
 % "he likes you least of all" has no determiner, just uses MVa-.
 least.a: EA+;
 least.e: {DD-} & MVa- & {Mp+}; 
-none: (<noun-sub-x> & <noun-main-x>) or <noun-and-x> or <adv-of>;
+none:
+  (<noun-sub-x> & <noun-main-x>)
+  or <noun-and-x> or <adv-of>;
 
-% rest.i: DG ??? huh? what's the example ??
-rest.i: (DG- & <noun-sub-p> & <noun-main-p>) or (DD- & <adv-of>);
+rest.i:
+  DD- & <adv-of>;
 
-plenty: ({@M+} & (<noun-main-x> or <noun-and-x>)) or <adv-of> or [MVa-];
+plenty:
+  ({@M+} & (<noun-main-x> or <noun-and-x>))
+  or <adv-of>
+  or [MVa-];
 
 other:
   Dmu+ or 
