@@ -405,19 +405,23 @@ dateID60: <date-id>;
 % XXX this is wrong or inappropriate .. 
 % I.n: [[{Xi+} & {G-} & G+]];
 
+% Number abbreviations: no.x No.x 
+No.x No..x no.x no..x Num.x Num..x num.x num..x:
+  (Xi+ or [[()]]) & AN+;
+
 % Explicitly include the period at the end of the abbreviation.
 Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Atty..x 
 Gov..x Sen..x Rep..x 
 Gen..x Brig..x Col..x Capt..x Lieut..x Lt..x Maj..x Sgt..x Pvt..x Cmdr..x
 Adm..x Corp..x St..x Mt..x Ft..x Cie..x HMS..x:
-G+;
+  G+;
 
 % Period is missing in the abbreviation! Accept, but with a cost.
 Ms.x Mrs.x Mr.x Messrs.x Rev.x Sir.x Dr.x Prof.x Atty.x 
 Gov.x Sen.x Rep.x 
 Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Maj.x Sgt.x Pvt.x Cmdr.x
 Adm.x Corp.x St.x Mt.x Ft.x Cie.x HMS.x:
-[[G+]];
+  [[G+]];
 
 St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y 
 Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y 
@@ -460,6 +464,7 @@ USMC.y USN.y:
     AN+ or 
     G+);
 
+% The generic category for strings containing a hyphen
 HYPHENATED-WORDS.n: 
   [[({@AN-} & {@A-} & 
     (({NM+ or D-} & 
@@ -467,7 +472,6 @@ HYPHENATED-WORDS.n:
       <noun-and-x>)) or
      U-)) or 
   ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
-% the generic category for strings containing a hyphen
 
 % NOUNS --------------------------------------------------------
 % Nouns typically take determiners (a, the). The minor flags are:
@@ -643,9 +647,6 @@ number.n:
 /en/words/measures.2:
   (OFd+ & (NIn+ or Dm+) & {A-} & {Dmcn-})
   or [<marker-common-entity> or <generic-plural-id>];
-
-% number appreviations: no.x No.x 
-No.x no.x Num.x num.x: (Xi+ or [[()]]) & AN+;
 
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 kind_of: 
