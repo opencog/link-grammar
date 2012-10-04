@@ -204,13 +204,16 @@ changecom(`%')
 % because it should then connect to the "and", not the right noun.
 % but then: "neither heat nor gloom of night shall stop me"
 % Looks like only a proper semantic decision can determine the correct parse here ... 
+%
+% Add cost to M+, so that "a number of recommendations and suggestions"
+%   gts priority in modifying the and.j-n
 <noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-) or (Dn- & SJn+); 
-<noun-and-p>: ({@M+} & SJlp+) or ({[@M+]} & SJrp-) or (Dn- & SJn+);
-<noun-and-u>: ({@M+} & SJlu+) or ({[@M+]} & SJru-) or (Dn- & SJn+);
-<noun-and-x>: ({@M+} & SJl+) or ({[@M+]} & SJr-) or (Dn- & SJn+);
+<noun-and-p>: ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or (Dn- & SJn+);
+<noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-) or (Dn- & SJn+);
+<noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-) or (Dn- & SJn+);
 <noun-and-p,u>:
-  ({@M+} & SJlp+) or ({[@M+]} & SJrp-) or 
-  ({@M+} & SJlu+) or ({[@M+]} & SJru-) or (Dn- & SJn+);
+  ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or 
+  ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-) or (Dn- & SJn+);
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -825,7 +828,7 @@ incentive.n:
     (({{Jd-} & D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main-m> or
       <rel-clause-s>)) or
-    ({{Jd-} & D*u-} & <noun-and-u>) or
+    ({D*u-} & <noun-and-u>) or
     Us- or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
@@ -5588,13 +5591,16 @@ and.j-r or.j-r:
 % and_not ,_not: "I saw John, not Mary"
 % We treat this her as an idiom, even though it's explicitly hanled for 
 % AJ nd RJ conjunctions.  Its just easier, for now.
+%
+% {Jd- & Dm-}: "A number of recommendations and suggestions were made"
+%   with "number of" modifying the and.j-n
 and.j-n but_not and_not ,_not:
   (<noun-conj-dep-s> & <noun-sub-s> & 
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [{Ds-} & Os-] or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & 
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [{Dmc-} & Op-] or <post-nominal-p>)) or
+    (<noun-conj-head> or ({Jd- & Dm-} & Spx+ & <CLAUSE>) or SIp- or [{Dmc-} & Op-] or <post-nominal-p>)) or
   (<noun-conj-dep-u> & <noun-sub-x> & 
-    (<noun-conj-head> or (Sux+ & <CLAUSE>) or SIu- or [{Dmu-} &  Ou-] or <post-nominal-u>));
+    (<noun-conj-head> or ({Jd- & Dm-} & Sux+ & <CLAUSE>) or SIu- or [{Dmu-} &  Ou-] or <post-nominal-u>));
 
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & 
