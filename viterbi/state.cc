@@ -192,12 +192,13 @@ cout<<"state "<<_state<<endl;
 	Link* state_set = get_state_set();
 	Connect cnct(wrd_cset);
 
+	// For each current state, see if some connector on the word
+	// can, in some way, attach to it.
 	int omit = -1;
 	Link* replace = NULL;
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
 		Link* swc = dynamic_cast<Link*>(state_set->get_outgoing_atom(i));
-		// replace = find_matches(swc, wrd_cset, cset);
 		replace = cnct.try_connect(swc);
 		omit = i;
 		if (replace)

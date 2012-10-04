@@ -32,17 +32,17 @@ namespace viterbi {
 Connect::Connect(Link* right_wconset)
 	: _right_cset(right_wconset)
 {
-   // right_cset should be pointing at:
-   // WORD_CSET :
-   //   WORD : blah.v
-   //   AND :
-   //      CONNECTOR : Wd-  etc...
+	// right_cset should be pointing at:
+	// WORD_CSET :
+	//   WORD : blah.v
+	//   AND :
+	//      CONNECTOR : Wd-  etc...
 
-   assert(_right_cset, "Unexpected NULL dictionary entry!");
-   assert(WORD_CSET == _right_cset->get_type(), "Unexpected link type word cset.");
-   assert(2 == _right_cset->get_arity(), "Wrong arity for word connector set");
+	assert(_right_cset, "Unexpected NULL dictionary entry!");
+	assert(WORD_CSET == _right_cset->get_type(), "Unexpected link type word cset.");
+	assert(2 == _right_cset->get_arity(), "Wrong arity for word connector set");
 
-   _rcons = _right_cset->get_outgoing_atom(1);
+	_rcons = _right_cset->get_outgoing_atom(1);
 }
 
 /**
@@ -53,15 +53,19 @@ Link* Connect::try_connect(Link* left_cset)
 {
 	assert(left_cset, "State word-connectorset is null");
 	assert(2 == left_cset->get_arity(), "Wrong arity for state word conset");
-	Atom* left = left_cset->get_outgoing_atom(1);
+	Atom* left_a = left_cset->get_outgoing_atom(1);
 
-	Atom *right = _rcons;
-cout<<"state con "<<left<<endl;
-cout<<"word con "<<right<<endl;
-	Node* rnode = dynamic_cast<Node*>(right);
+	Atom *right_a = _rcons;
+cout<<"state cset "<<left<<endl;
+cout<<"word cset "<<right<<endl;
+
+	// If the word connector set is a single solitary node, then
+	// its not a set, its a single connecter.  Try to hook it up
+	// to something on the left.
+	Node* rnode = dynamic_cast<Node*>(right_a);
 	if (rnode)
 	{
-		Link* conn = conn_connect_a(left_cset, left, rnode);
+		Link* conn = conn_connect_a(left_cset, left_a, rnode);
 		if (!conn)
 			return NULL;
 cout<<"got one it is "<<conn<<endl;
@@ -86,14 +90,25 @@ cout<<"normalized into "<<lg_link<<endl;
 // XXX this is raw, need to put back the words.
 		return lg_link;
 	}
+
+	// If we are here, there must be several connectors on the
+	// right-hand word.  See if one of the left-going ones attach.
+	Link* rlink = dynamic_cast<Link*>(right_a);
+	assert(rlink, "If its not a node, it had better be a link!");
+
+	Link* conn = conn_connect_a(left_cset, left_a, rlink);
+
 	return NULL;
 }
 
+// =============================================================
 /**
  * Dispatch appropriatly, depending on whether left atom is node or link
  */
 Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
 {
+	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
+
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
 		return conn_connect(lnode, lnode, rnode);
@@ -102,6 +117,28 @@ Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
 	return conn_connect(left_cset, llink, rnode);
 }
 
+Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Link* rlink)
+{
+	Node* lnode = dynamic_cast<Node*>(latom);
+	if (lnode)
+		return conn_connect(lnode, lnode, rlink);
+
+	Link* llink = dynamic_cast<Link*>(latom);
+	return conn_connect(left_cset, llink, rlink);
+}
+
+Link* Connect::conn_connect_b(Atom* left_cset, Node* lnode, Atom *ratom)
+{
+	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
+	Node* rnode = dynamic_cast<Node*>(ratom);
+	if (rnode)
+		return conn_connect(left_cset, lnode, rnode);
+
+	Link* rlink = dynamic_cast<Link*>(ratom);
+	return conn_connect(left_cset, lnode, rlink);
+}
+
+// =============================================================
 /**
  * Connect left_cset and _right_cset with an LG_LINK
  * lnode and rnode are the two connecters that actually mate.
@@ -109,12 +146,11 @@ Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
 Link* Connect::conn_connect(Atom* left_set, Node* lnode, Node* rnode)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
-	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
-cout<<"try mathc l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
+cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
 	if (!conn_match(lnode->get_name(), rnode->get_name()))
 		return NULL;
 	
-cout<<"Yayyyyae  nodes match!"<<endl;
+cout<<"Yayyyyae connectors match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	OutList linkage;
 	linkage.push_back(new Node(LINK_TYPE, link_name));
@@ -123,6 +159,34 @@ cout<<"Yayyyyae  nodes match!"<<endl;
 	return new Link(LINK, linkage);
 }
 
+/**
+ * Connect left_cset and _right_cset with an LG_LINK
+ * lnode and rnode are the two connecters that actually mate.
+ */
+Link* Connect::conn_connect(Atom* left_set, Node* lnode, Link* rlink)
+{
+	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
+cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
+
+	// If the connector set is a disjunction, then try each of them, in turn.
+	if (OR == rlink->get_type())
+	{
+		for (int i = 0; i < rlink->get_arity(); i++)
+		{
+			Atom* a = rlink->get_outgoing_atom(i);
+			Link* result = conn_connect_b(lnode, lnode, a);
+			if (result)
+			{
+cout<<"yahoooooo found one:"<<result<<endl;
+				return result;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+// =============================================================
 #if NOT_NEEDED
 bool Connect::is_optional(Atom *a)
 {
@@ -162,13 +226,13 @@ bool Connect::is_optional(Atom *a)
 }
 #endif
 
-Link* Connect::conn_connect(Link* left_cset, Link* llink, Node* rnode)
+Link* Connect::conn_connect(Atom* left_cset, Link* llink, Node* rnode)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
 
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
-		Atom *a = llink->get_outgoing_atom(i);
+		Atom* a = llink->get_outgoing_atom(i);
 		Node* lnode = dynamic_cast<Node*>(a);
 		if (lnode) 
 		{
@@ -187,6 +251,12 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 		return conn_connect(left_cset, clink, rnode);
 	}
 	
+	return NULL;
+}
+
+Link* Connect::conn_connect(Atom* left_cset, Link* llink, Link* rlink)
+{
+	assert(0, "Implement me");
 	return NULL;
 }
 
