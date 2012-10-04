@@ -457,7 +457,6 @@ armbands.n
 armchairs.n
 Armenians.n
 armfuls.n
-armies.n
 armistices.n
 armlets.n
 armouries.n
@@ -649,7 +648,6 @@ baffles.n
 bagatelles.n
 bagels.n
 bagpipes.n
-bags.n
 Bahamians.n
 baileys.n
 bailiffs.n
@@ -897,7 +895,6 @@ bets.n
 bettors.n
 bevels.n
 beverages.n
-bevies.n
 Bhutanians.n
 biases.n
 bibliographers.n
@@ -1336,8 +1333,6 @@ bumpers.n
 bumpkins.n
 bumps.n
 bums.n
-bunches.n
-bundles.n
 bungalows.n
 bunglers.n
 bungs.n
@@ -1547,7 +1542,6 @@ caribou.p
 caricatures.n
 caricaturists.n
 carillons.n
-carloads.n
 carmines.n
 carnations.n
 carnivals.n
@@ -1568,7 +1562,6 @@ cartels.n
 carters.n
 carthorses.n
 cartilages.n
-cartloads.n
 cartographers.n
 cartons.n
 cartoonists.n
@@ -1659,8 +1652,6 @@ centenaries.n
 centennials.n
 centerpieces.n
 centers.n
-centiliters.n
-centilitres.n
 centimes.n
 centimeters.n
 centimetres.n
@@ -1841,7 +1832,6 @@ chucks.n
 chugs.n
 chumps.n
 chums.n
-chunks.n
 churches.n
 churchgoers.n
 churchwardens.n
@@ -2033,7 +2023,6 @@ collapses.n
 collarbones.n
 collars.n
 colleagues.n
-collections.n
 collectors.n
 colleges.n
 collieries.n
@@ -2107,7 +2096,6 @@ communities.n
 commutations.n
 commuters.n
 compacts.n
-companies.n
 companions.n
 comparatives.n
 compares.n
@@ -2575,7 +2563,6 @@ crotches.n
 crotchets.n
 crouches.n
 crowbars.n
-crowds.n
 crowns.n
 crows.n
 crucibles.n
@@ -2629,7 +2616,6 @@ cupboards.n
 cupfuls.n
 cupolas.n
 cuprophones.n
-cups.n
 curates.n
 curators.n
 curbs.n
@@ -2767,8 +2753,6 @@ decanters.n
 deceits.n
 deceptions.n
 decibels.n
-deciliters.n
-decilitres.n
 decimeters.n
 decimetres.n
 deciseconds.n
@@ -3248,7 +3232,6 @@ dropouts.n
 droppings.n
 drops.n
 droughts.n
-droves.n
 drudges.n
 druggists.n
 drugs.n
@@ -3645,7 +3628,6 @@ existentialists.n
 exits.n
 exoduses.n
 exonerations.n
-expanses.n
 expansions.n
 expatriates.n
 expectancies.n
@@ -3803,8 +3785,6 @@ felonies.n
 felons.n
 females.n
 feminists.n
-femtoliters.n
-femtolitres.n
 femtometers.n
 femtometres.n
 femtoseconds.n
@@ -3967,7 +3947,6 @@ flickers.n
 flicks.n
 fliers.n
 flies.n
-flights.n
 flings.n
 flints.n
 flippers.n
@@ -3976,7 +3955,6 @@ flirtations.n
 flirts.n
 floatations.n
 floats.n
-flocks.n
 floodgates.n
 floods.n
 floorboards.n
@@ -4234,7 +4212,6 @@ galleons.n
 galleries.n
 galleys.n
 gallicisms.n
-gallons.n
 gallops.n
 galls.n
 gallstones.n
@@ -4292,7 +4269,6 @@ gateposts.n
 gates.n
 gateways.n
 gatherers.n
-gatherings.n
 gaudies.n
 gauges.n
 gauntlets.n
@@ -4421,7 +4397,6 @@ goatskins.n
 goats.n
 goblets.n
 goblins.n
-gobs.n
 goddaughters.n
 goddesses.n
 godfathers.n
@@ -4474,7 +4449,6 @@ grains.n
 grammarians.n
 grammars.n
 gramophones.n
-grams.n
 granaries.n
 granddads.n
 granddaughters.n
@@ -4766,7 +4740,6 @@ headsets.n
 heads.n
 headwinds.n
 healers.n
-heaps.n
 hearers.n
 hearings.n
 hearses.n
@@ -4820,7 +4793,6 @@ heptagons.n
 heralds.n
 herbalists.n
 herbs.n
-herds.n
 heresies.n
 heretics.n
 heritages.n
@@ -5026,7 +4998,6 @@ humps.n
 hums.n
 hunchbacks.n
 Hungarians.n
-hunks.n
 hunters.n
 hunts.n
 hurdles.n
@@ -5564,9 +5535,6 @@ killings.n
 killjoys.n
 kilns.n
 kilobytes.n
-kilograms.n
-kiloliters.n
-kilolitres.n
 kilometres.n
 kiloseconds.n
 kilos.n
@@ -5749,7 +5717,6 @@ leftists.n
 legacies.n
 legends.n
 legionaries.n
-legions.n
 legislators.n
 legislatures.n
 legs.n
@@ -5883,7 +5850,6 @@ lives.n
 livings.n
 lizards.n
 llamas.n
-loads.n
 loafers.n
 loans.n
 loaves.n
@@ -6150,7 +6116,6 @@ masquerades.n
 masques.n
 massacres.n
 massages.n
-masses.n
 masseurs.n
 masseuses.n
 masterminds.n
@@ -6303,8 +6268,6 @@ microbes.n
 microcosms.n
 microfiches.n
 microfilms.n
-microliters.n
-microlitres.n
 micrometers.n
 micrometres.n
 Micronesians.n
@@ -6342,9 +6305,6 @@ millenarians.n
 milleniums.n
 millepedes.n
 millers.n
-milligrams.n
-milliliters.n
-millilitres.n
 millimeters.n
 millimetres.n
 milliners.n
@@ -6642,8 +6602,6 @@ namesakes.n
 names.n
 Namibians.n
 nannies.n
-nanoliters.n
-nanolitres.n
 nanometers.n
 nanometres.n
 nanoseconds.n
@@ -6981,7 +6939,6 @@ osteopaths.n
 ostriches.n
 otters.n
 ottomans.n
-ounces.n
 ousters.n
 outbreaks.n
 outbursts.n
@@ -7051,7 +7008,6 @@ pacifists.n
 packages.n
 packets.n
 packhorses.n
-packs.n
 pacts.n
 paddles.n
 paddocks.n
@@ -7451,8 +7407,6 @@ pick-ups.n
 pickups.n
 picnickers.n
 picnics.n
-picoliters.n
-picolitres.n
 picometers.n
 picometres.n
 picoseconds.n
@@ -7475,7 +7429,6 @@ pigsties.n
 pigtails.n
 pike.p
 pikestaffs.n
-piles.n
 pilgrimages.n
 pilgrims.n
 pillages.n
@@ -7501,7 +7454,6 @@ pinnacles.n
 pinpoints.n
 pinpricks.n
 pins.n
-pints.n
 pioneers.n
 pipedreams.n
 pipefuls.n
@@ -7738,7 +7690,6 @@ potties.n
 pouches.n
 poultices.n
 pounces.n
-pounds.n
 pouts.n
 powders.n
 powerboats.n
@@ -8092,7 +8043,6 @@ quarterfinals.n
 quarterlies.n
 quarters.n
 quartets.n
-quarts.n
 quasars.n
 quatercentenaries.n
 quatrains.n
@@ -8159,7 +8109,6 @@ radios.n
 radishes.n
 raffles.n
 rafters.n
-rafts.n
 ragamuffins.n
 rags.n
 ragtags.n
@@ -8885,7 +8834,6 @@ scoreboards.n
 scorebooks.n
 scorecards.n
 scorers.n
-scores.n
 scorpions.n
 scotches.n
 Scots.n
@@ -9120,7 +9068,6 @@ shinguards.n
 shinobues.n
 shins.n
 shipbuilders.n
-shiploads.n
 shipmates.n
 shipments.n
 shipowners.n
@@ -9653,7 +9600,6 @@ stableboys.n
 stablemates.n
 stables.n
 stabs.n
-stacks.n
 stadiums.n
 staffers.n
 staffs.n
@@ -9939,7 +9885,6 @@ summerhouses.n
 summers.n
 summits.n
 summonses.n
-sums.n
 sunbeams.n
 sunblinds.n
 sunbonnets.n
@@ -10081,8 +10026,6 @@ tabernacles.n
 tablecloths.n
 tablemats.n
 tables.n
-tablespoonfuls.n
-tablespoons.n
 tablets.n
 tabloids.n
 taboos.n
@@ -10181,8 +10124,6 @@ tears.n
 teasers.n
 teases.n
 teashops.n
-teaspoonfuls.n
-teaspoons.n
 teats.n
 technicalities.n
 technicians.n
@@ -10320,7 +10261,6 @@ throats.n
 throbs.n
 throes.n
 thrones.n
-throngs.n
 throttles.n
 throwaways.n
 throwbacks.n
@@ -10420,7 +10360,6 @@ tonics.n
 tonnages.n
 tonnes.n
 tonsils.n
-tons.n
 tonsures.n
 tools.n
 toothaches.n
@@ -10492,7 +10431,6 @@ trails.n
 trainbearers.n
 trainees.n
 trainers.n
-trainloads.n
 trains.n
 traitors.n
 traits.n
@@ -10994,7 +10932,6 @@ volleyballs.n
 volleys.n
 voltages.n
 volts.n
-volumes.n
 voluntaries.n
 volunteers.n
 vortexes.n
@@ -11009,7 +10946,6 @@ vulgarities.n
 vulnerabilities.n
 vultures.n
 vulvas.n
-wads.n
 wafers.n
 waffles.n
 wagers.n

@@ -501,11 +501,6 @@ HYPHENATED-WORDS.n:
 /en/words/words.n.2.s.wiki : 
   <marker-common-entity> or <generic-plural-id>;
 
-% Just like words.n.2.s, but with a cost, so that "numbers of" gets priority
-numbers.n:
-  [<marker-common-entity> or <generic-plural-id>];
-
-
 /en/words/words.n.2.s.biolg: <generic-plural-id>;
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
@@ -634,22 +629,21 @@ number.n:
 % "a pride of lions" "a litter of kittens" all take determiners
 % Some of these commonly modify count nouns, other mass nouns.
 % {A-}: "a vast expanse" "a large flock"
-
+% All of these "measure" nouns can also act as common nouns, but
+% we want to give these a cost, so that they don't get the first choice.
 /en/words/measures.1:
   (OFd+ & Dm+ & {A-} & D-)
-  or [[<marker-common-entity> or <common-noun>]];
+  or [<marker-common-entity> or <common-noun>];
 
 % determiner constructions, with a dangling of: 
 % "I have bags of money"
-% NIn+ needed for omney amounts
-numbers.d mucho.d oodles.d scads.d
-bags.d bunches.d bundles.d chunks.d expanses.d extents.d
-gobs.d heaps.d hunks.d loads.d masses.d piles.d rafts.d
-stacks.d tons.d volumes.d sums.d wads.d
-bevies.d collections.d companies.d convoies.d crowds.d
-droves.d flights.d flocks.d gatherings.d herds.d
-legions.d packs.d scores.d throngs.d:
-  OFd+ & (NIn+ or Dm+) & {A-};
+% NIn+ needed for money amounts
+% The [<generic-plural-id>] is from words.n.2.s
+/en/words/measures.2:
+  (OFd+ & (NIn+ or Dm+) & {A-})
+  or [<marker-common-entity> or <generic-plural-id>];
+
+
 
 
 % number appreviations: no.x No.x 
