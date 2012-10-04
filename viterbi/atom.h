@@ -56,6 +56,7 @@ class Atom
 		Atom(AtomType type) : _type(type) {}
 		AtomType get_type() const { return _type; }
 		TV tv;
+		virtual bool operator==(const Atom*) const;
 		virtual ~Atom() {}
 	protected:
 		AtomType _type;
@@ -75,6 +76,8 @@ class Node : public Atom
 			: Atom(t), _name(n) {}
 
 		const std::string& get_name() const { return _name; }
+
+		virtual bool operator==(const Atom*) const;
 	private:
 		std::string _name;
 };
@@ -89,12 +92,32 @@ typedef std::vector<Atom*> OutList;
 class Link : public Atom
 {
 	public:
+		// The main ctor
 		Link(AtomType t, const OutList oset)
 			: Atom(t), _oset(oset) {}
+		Link(AtomType t, Atom* a)
+			: Atom(t)
+		{
+			_oset.push_back(a);
+		}
+		Link(AtomType t, Atom* a, Atom*b)
+			: Atom(t)
+		{
+			_oset.push_back(a);
+			_oset.push_back(b);
+		}
+		Link(AtomType t, Atom* a, Atom*b, Atom* c)
+			: Atom(t)
+		{
+			_oset.push_back(a);
+			_oset.push_back(b);
+			_oset.push_back(c);
+		}
 		size_t get_arity() const { return _oset.size(); }
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
 
+		virtual bool operator==(const Atom*) const;
 	protected:
 	private:
 		// Outgoing set

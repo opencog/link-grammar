@@ -37,6 +37,36 @@ const string type_name(AtomType t)
 	return "UNHANDLED_TYPE_NAME";
 }
 
+bool Atom::operator==(const Atom* other) const
+{
+cout<<"duude compare "<<other->_type<<" to "<<_type<<endl;
+	if (other == this) return true;
+	if (other->_type == this->_type) return true;
+	return false;
+}
+
+bool Node::operator==(const Atom* other) const
+{
+	if (other == this) return true;
+	if (other->get_type() != this->get_type()) return false;
+	const Node* nother = dynamic_cast<const Node*>(other);
+	if (nother->_name != this->_name)  return false;
+	return true;
+}
+
+bool Link::operator==(const Atom* other) const
+{
+	if (other == this) return true;
+	if (other->get_type() != this->get_type()) return false;
+	const Link* lother = dynamic_cast<const Link*>(other);
+	if (lother->get_arity() != this->get_arity())  return false;
+	for (size_t i=0; i<get_arity(); i++)
+	{
+		if (not (lother->_oset[i]->operator==(this->_oset[i]))) return false;
+	}
+	return true;
+}
+
 
 std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 {
