@@ -104,7 +104,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
  * the resulting link-grammar connective expression into an atomic
  * formula.
  */
-Link * Parser::word_consets(const string& word)
+Set * Parser::word_consets(const string& word)
 {
 	// See if we know about this word, or not.
 	Dict_node* dn_head = dictionary_lookup_list(_dict, word.c_str());
@@ -124,7 +124,7 @@ print_expression(exp);
 		Node *nword = new Node(WORD, dn->string);
 		djset.push_back(new WordCset(nword, dj));
 	}
-	return new Link(SET, djset);
+	return new Set(djset);
 }
 
 /**
@@ -134,7 +134,7 @@ void Parser::initialize_state()
 {
 	const char * wall_word = "LEFT-WALL";
 
-	Link *wall_disj = word_consets(wall_word);
+	Set *wall_disj = word_consets(wall_word);
 
 	OutList statev;
 	statev.push_back(wall_disj);
@@ -147,7 +147,7 @@ void Parser::initialize_state()
  */
 void Parser::stream_word(const string& word)
 {
-	Link *djset = word_consets(word);
+	Set *djset = word_consets(word);
 	if (!djset)
 	{
 		cout << "Unhandled error; word not in dict: " << word << endl;

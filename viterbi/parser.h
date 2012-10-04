@@ -29,7 +29,7 @@ class Parser
 		void stream_word(const std::string&);
 		void stream_word_conset(WordCset*);
 
-		Link* word_consets(const std::string& word);
+		Set* word_consets(const std::string& word);
 		Link* get_state_set();
 		Link* get_output_set();
 

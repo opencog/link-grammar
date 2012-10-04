@@ -93,7 +93,7 @@ class Link : public Atom
 {
 	public:
 		// The main ctor
-		Link(AtomType t, const OutList oset)
+		Link(AtomType t, const OutList& oset)
 			: Atom(t), _oset(oset) {}
 		Link(AtomType t, Atom* a)
 			: Atom(t)

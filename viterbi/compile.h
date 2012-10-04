@@ -61,6 +61,14 @@ class WordCset : public Link
 		}
 };
 
+class Set : public Link
+{
+	public:
+		Set(const OutList& ol)
+      	: Link(SET, ol)
+      {}
+};
+
 
 } // namespace viterbi
 } // namespace link-grammar
