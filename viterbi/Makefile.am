@@ -17,6 +17,7 @@ libvitacog_la_SOURCES = \
 	connector-utils.cc \
 	state.cc \
 	atom.h \
+	compile.h \
 	connect.h \
 	connector-utils.h \
 	viterbi.h

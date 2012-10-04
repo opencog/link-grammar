@@ -29,7 +29,7 @@ namespace viterbi {
  * constructor: argument is a right-sided connector that this class
  * will try connecting to.
  */
-Connect::Connect(Link* right_wconset)
+Connect::Connect(WordCset* right_wconset)
 	: _right_cset(right_wconset)
 {
 	// right_cset should be pointing at:
@@ -49,7 +49,7 @@ Connect::Connect(Link* right_wconset)
  * Try connecting this connector set, from the left, to what was passed
  * in ctor.
  */
-Link* Connect::try_connect(Link* left_cset)
+Link* Connect::try_connect(WordCset* left_cset)
 {
 	assert(left_cset, "State word-connectorset is null");
 	assert(WORD_CSET == left_cset->get_type(), "Expecting left word cset.");
@@ -85,11 +85,8 @@ cout<<"got one it is "<<conn<<endl;
 // The left_cset and right_cset are assumed to be the word-connector
 // sets that matched. These are needed, only to extract the words;
 // the rest is dicarded.
-Link* Connect::reassemble(Link* conn, Link* left_cset, Link* right_cset)
+Link* Connect::reassemble(Link* conn, WordCset* left_cset, WordCset* right_cset)
 {
-	assert(left_cset->get_type() == WORD_CSET,  "Bad word connector set, left");
-	assert(right_cset->get_type() == WORD_CSET, "Bad word connector set, right");
-
 	OutList lwdj;
 	lwdj.push_back(left_cset->get_outgoing_atom(0));  // the word
 	lwdj.push_back(conn->get_outgoing_atom(1));       // the connector
@@ -114,7 +111,7 @@ cout<<"normalized into "<<lg_link<<endl;
 /**
  * Dispatch appropriatly, depending on whether left atom is node or link
  */
-Link* Connect::conn_connect_ab(Link* left_cset, Atom *latom, Atom* ratom)
+Link* Connect::conn_connect_ab(WordCset* left_cset, Atom *latom, Atom* ratom)
 {
 	Node* rnode = dynamic_cast<Node*>(ratom);
 	if (rnode)
@@ -124,7 +121,7 @@ Link* Connect::conn_connect_ab(Link* left_cset, Atom *latom, Atom* ratom)
 	return conn_connect_a(left_cset, latom, rlink);
 }
 
-Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
+Link* Connect::conn_connect_a(WordCset* left_cset, Atom *latom, Node* rnode)
 {
 	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
 
@@ -136,7 +133,7 @@ Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Node* rnode)
 	return conn_connect_kn(left_cset, llink, rnode);
 }
 
-Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Link* rlink)
+Link* Connect::conn_connect_a(WordCset* left_cset, Atom *latom, Link* rlink)
 {
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
@@ -146,7 +143,7 @@ Link* Connect::conn_connect_a(Link* left_cset, Atom *latom, Link* rlink)
 	return conn_connect_kk(left_cset, llink, rlink);
 }
 
-Link* Connect::conn_connect_b(Link* left_cset, Node* lnode, Atom *ratom)
+Link* Connect::conn_connect_b(WordCset* left_cset, Node* lnode, Atom *ratom)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 	Node* rnode = dynamic_cast<Node*>(ratom);
@@ -162,7 +159,7 @@ Link* Connect::conn_connect_b(Link* left_cset, Node* lnode, Atom *ratom)
  * Connect left_cset and _right_cset with an LG_LINK
  * lnode and rnode are the two connecters that actually mate.
  */
-Link* Connect::conn_connect_nn(Link* left_cset, Node* lnode, Node* rnode)
+Link* Connect::conn_connect_nn(WordCset* left_cset, Node* lnode, Node* rnode)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
@@ -182,7 +179,7 @@ cout<<"Yayyyyae connectors match!"<<endl;
  * Connect left_cset and _right_cset with an LG_LINK
  * lnode and rnode are the two connecters that actually mate.
  */
-Link* Connect::conn_connect_nk(Link* left_cset, Node* lnode, Link* rlink)
+Link* Connect::conn_connect_nk(WordCset* left_cset, Node* lnode, Link* rlink)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
@@ -244,7 +241,7 @@ bool Connect::is_optional(Atom *a)
 }
 #endif
 
-Link* Connect::conn_connect_kn(Link* left_cset, Link* llink, Node* rnode)
+Link* Connect::conn_connect_kn(WordCset* left_cset, Link* llink, Node* rnode)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
 
@@ -272,7 +269,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	return NULL;
 }
 
-Link* Connect::conn_connect_kk(Link* left_cset, Link* llink, Link* rlink)
+Link* Connect::conn_connect_kk(WordCset* left_cset, Link* llink, Link* rlink)
 {
 	assert(0, "Implement me");
 	return NULL;

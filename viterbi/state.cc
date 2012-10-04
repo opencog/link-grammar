@@ -19,6 +19,7 @@
 #include "structures.h"
 
 #include "atom.h"
+#include "compile.h"
 #include "connect.h"
 #include "parser.h"
 #include "viterbi.h"
@@ -120,12 +121,8 @@ print_expression(exp);
 
 		// First atom at the from of the outgoing set is the word itself.
 		// Second atom is the first disjuct that must be fulfilled.
-		OutList dlist;
 		Node *nword = new Node(WORD, dn->string);
-		dlist.push_back(nword);
-		dlist.push_back(dj);
-
-		djset.push_back(new Link(WORD_CSET, dlist));
+		djset.push_back(new WordCset(nword, dj));
 	}
 	return new Link(SET, djset);
 }
@@ -160,7 +157,7 @@ void Parser::stream_word(const string& word)
 	// Try to add each dictionary entry to the parse state.
 	for (int i = 0; i < djset->get_arity(); i++)
 	{
-		stream_word_conset(dynamic_cast<Link*>(djset->get_outgoing_atom(i)));
+		stream_word_conset(dynamic_cast<WordCset*>(djset->get_outgoing_atom(i)));
 	}
 }
 
@@ -180,7 +177,7 @@ Link* Parser::get_output_set()
 /**
  * Add a single dictionary entry to the parse stae, if possible.
  */
-void Parser::stream_word_conset(Link* wrd_cset)
+void Parser::stream_word_conset(WordCset* wrd_cset)
 {
 	// wrd_cset should be pointing at:
 	// WORD_CSET :
@@ -198,7 +195,7 @@ cout<<"state "<<_state<<endl;
 	Link* replace = NULL;
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
-		Link* swc = dynamic_cast<Link*>(state_set->get_outgoing_atom(i));
+		WordCset* swc = dynamic_cast<WordCset*>(state_set->get_outgoing_atom(i));
 		replace = cnct.try_connect(swc);
 		omit = i;
 		if (replace)

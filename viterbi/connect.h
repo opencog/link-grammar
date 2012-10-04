@@ -9,6 +9,7 @@
 #define _LG_VITERBI_CONNECT_H
 
 #include "atom.h"
+#include "compile.h"
 
 namespace link_grammar {
 namespace viterbi {
@@ -16,26 +17,26 @@ namespace viterbi {
 class Connect
 {
 	public:
-		Connect(Link*);
-		Link* try_connect(Link*);
+		Connect(WordCset*);
+		Link* try_connect(WordCset*);
 
 	protected:
-		Link* reassemble(Link*, Link*, Link*);
+		Link* reassemble(Link*, WordCset*, WordCset*);
 
-		Link* conn_connect_ab(Link*, Atom*, Atom*);
-		Link* conn_connect_a(Link*, Atom*, Node*);
-		Link* conn_connect_a(Link*, Atom*, Link*);
-		Link* conn_connect_b(Link*, Node*, Atom*);
+		Link* conn_connect_ab(WordCset*, Atom*, Atom*);
+		Link* conn_connect_a(WordCset*, Atom*, Node*);
+		Link* conn_connect_a(WordCset*, Atom*, Link*);
+		Link* conn_connect_b(WordCset*, Node*, Atom*);
 
-		Link* conn_connect_nn(Link*, Node*, Node*);
-		Link* conn_connect_kn(Link*, Link*, Node*);
-		Link* conn_connect_nk(Link*, Node*, Link*);
-		Link* conn_connect_kk(Link*, Link*, Link*);
+		Link* conn_connect_nn(WordCset*, Node*, Node*);
+		Link* conn_connect_kn(WordCset*, Link*, Node*);
+		Link* conn_connect_nk(WordCset*, Node*, Link*);
+		Link* conn_connect_kk(WordCset*, Link*, Link*);
 
 		static bool is_optional(Atom *);
 
 	private:
-		Link* _right_cset;
+		WordCset* _right_cset;
 		Atom* _rcons;
 };
 

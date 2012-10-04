@@ -11,6 +11,9 @@
 #include <string>
 
 #include "atom.h"
+#include "compile.h"
+
+// link-grammar include files, needed for Exp, Dict
 #include "api-types.h"
 #include "structures.h"
 
@@ -24,7 +27,7 @@ class Parser
 
 		void streamin(const std::string&);
 		void stream_word(const std::string&);
-		void stream_word_conset(Link*);
+		void stream_word_conset(WordCset*);
 
 		Link* word_consets(const std::string& word);
 		Link* get_state_set();
