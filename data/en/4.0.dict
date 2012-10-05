@@ -370,11 +370,12 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 % Pattern used for words.n.2.s
 % Similar to <common-noun>, but with different determiners for number
 % agreement.
-% ({{Dmu-} & Jd-} & Dmc-) : "I gave him a number of the cookies"
+% ({{Dmc-} & Jd-} & Dmc-) : "I gave him a number of the cookies"
+% want "Dmc-" on both to avoid "this cookies"
 <generic-plural-id>:
   [[AN+]] or
   (<noun-modifiers> &
-    (({NM+ or ({{Dmu-} & Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
+    (({NM+ or ({{Dmc-} & Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     SJrp- or
     (YP+ & {Dmc-}) or
@@ -1143,16 +1144,18 @@ many:
   ((({EAx-} & {DD-}) or H-) & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
 
 all.a:
-  ({EN-} &
-    (E+ or
-    Dm+ or
-    NIc+ or
-    ({@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+} &
-      (<noun-main2-x> or
-      (S**t+ & <CLAUSE>) or
-      SI**t-)) or
-    <noun-and-x>)) or
-  DTa+;
+  ({EN-} & (
+    E+
+    or Dm+
+    or NIc+
+    or (
+      {@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+}
+      & (
+        [<noun-main2-x>]
+        or (S**t+ & <CLAUSE>)
+        or SI**t-))
+    or <noun-and-x>))
+  or DTa+;
 
 all_that: EA+ or EE+ or (<noun-sub-s> & <noun-main-s>);
 all_this: (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
@@ -1268,12 +1271,18 @@ the_most:
   or [<noun-sub-x> & <noun-main-x>]
   or MVa-;
 
+% "a part.n" should cover most cases.  Perhaps [[OF+ & <noun-main-s>]] should be
+% reomved??  Anyway, its costed to give OFd+ priority. Likewise, should probably
+% retire <adv-of> as well, right?
 part.i:
-  (OF+ & <noun-main-s>)
+  (OFd+ & Dm+)
+  or [[OF+ & <noun-main-s>]]
   or <noun-and-s>
-  or ({Ds-} & <adv-of>);
+  or [[{Ds-} & <adv-of>]];
 
-all.e: <adv-of>;
+all.e:
+  (OFd+ & Dm+)
+  or [[<adv-of>]];
 
 % "he likes you least of all" has no determiner, just uses MVa-.
 least.a: EA+;

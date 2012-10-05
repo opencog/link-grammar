@@ -361,12 +361,17 @@ I ate a couple of the cookies.
 I have a few of them.
 *I have a few of cookies.
 I ate a few of the cookies.
+I ate a few of these cookies.
+*I ate a few of this cookies.
 I ate a few too many.
 I ate a few.
 I ate very few of the cookies.
 I ate pretty few of the cookies.
 
 I ate some of the cookies.
+I ate some of these cookies.
+*I ate some of this cookies.
+I ate some of this cake.
 I ate some of them.
 *I ate some of cookies.
 I ate some.
@@ -392,6 +397,7 @@ I drank a great deal.
 I have most of the cookies.
 *I have most of cookies.
 *I have the most of cookies.
+*I have the most of this cookies.
 I ate most of them
 I have the most of the cookies.
 % XXX the next one parses, but not correctly
@@ -399,14 +405,25 @@ I have the most of all the cookies.
 I have the most of all of the cookies.
 I have the most of all of them
 
-% XXX TODO: many of these are broken. Arghhhh
 I drank part of the beer.
 *I drank part of beer.
 I drank a part of the beer.
+I drank a part of this beer.
 I drank a small part of the beer.
+I ate a part of the cake.
 
+% cookie, unlike cake or beer, is normally a count noun; however, it can be
+% sometimes partitioned.  (viz, its "optionally" a mass noun.) 
+I ate a part of the cookie.
+
+% XXX TODO: many of these are broken. Arghhhh
 I drank all of the beer.
 *I drank all of beer.
+I ate all of the cookies.
+I ate all of these cookies.
+I ate all these cookies.
+I ate all of this cake.
+
 I drank none of the beer.
 *I drank none of beer.
 I drank plenty of beer.
