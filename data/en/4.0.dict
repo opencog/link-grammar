@@ -1136,12 +1136,14 @@ half: {EN-} &
     [(({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+)) & <noun-main-x>]);
 
 % "How many years" -- prefer TQ+ over Dmc+
+% OFd+ & Dmc+: "I drank many of the beers"
 many:
-  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+)) or
-  (AM- & (Dmcy+ or Oy- or Jy-)) or
-  ({EE-} & (ND+ or NIn+)) or
-  ({DD-} & {EAx-} & Dmc+) or
-  ((({EAx-} & {DD-}) or H-) & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
+  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+))
+  or (AM- & (Dmcy+ or Oy- or Jy-))
+  or ({EE-} & (ND+ or NIn+))
+  or ({DD-} & {EAx-} & Dmc+)
+  or (OFd+ & Dmc+)
+  or ((({EAx-} & {DD-}) or H-) & <noun-sub-p> & ([<noun-main-p>] or <rel-clause-p>));
 
 % A naked <noun-main2-x> costs more than one with other links,
 % so that ditransitive verbs don't get spurious links to all.a
@@ -1325,10 +1327,24 @@ quite_a quite_an one_such not_every: Ds+;
 some_other no_such: D+;
 every.d: {EN-} & (Ds+ or DTn+ or [[NIc+]]);
 
-another: Ds+ or NIc+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or YS+;
+another:
+  (OFd+ & Dm+)
+  or Ds+
+  or NIc+
+  or [<noun-sub-s> & <noun-main-s>]
+  or <noun-and-s>
+  or YS+;
+
 one_another: (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or YS+;
-each: Ds+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or DTn+
-or E+ or MVa-;
+
+each:
+  (OFd+ & Dm+)
+  or Ds+
+  or [<noun-sub-s> & <noun-main-s>]
+  or <noun-and-s>
+  or DTn+
+  or E+
+  or MVa-;
 
 no.misc-d: ({EN-} & D+) or EC+;
 
@@ -1345,16 +1361,28 @@ a_great_deal:
   or <noun-and-s>;
 
 many_more a_few_more a_couple_more plenty_more a_lot_more:
-  Dmcc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
+  Dmcc+
+  or (OFd+ & Dm+)
+  or [<noun-sub-p> & <noun-main-p>]
+  or <noun-and-p>;
 
 some_more:
-  MVa- or Dm+ or (<noun-sub-x> & <noun-main-x>) or <noun-and-x>;
+  MVa-
+  or Dm+
+  or (OFd+ & Dmu+)
+  or [<noun-sub-x> & <noun-main-x>]
+  or <noun-and-x>;
 
 one_more:
   Ds+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
 
 not_many:
-  Dmc+ or (<noun-sub-p> & (Sp+ & <CLAUSE>));
+  ({OFd+} & Dmc+)
+  or [<noun-sub-p> & <noun-main-p>];
+
+not_much:
+  ({OFd+} & Dmu+)
+  or [<noun-sub-x> & <noun-main-u>];
 
 not_all not_everything:
   Dm+ or (((ALx+ & Jp+) or <noun-sub-x>) & (S+ & <CLAUSE>));
@@ -1362,7 +1390,9 @@ not_all not_everything:
 not_one:
   Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
 
-enough.n: ({OF+} & <noun-main-s>) or <noun-and-s>;
+enough.n:
+  ({OF+} & <noun-main-s>) or <noun-and-s>;
+
 enough.r: EF- or MVa-;
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
 enough.ij: Wi- & {Pg+};
@@ -8134,12 +8164,12 @@ southwestern.a: <marker-common-entity> or A+ or G+;
 %COMPARATIVES AND SUPERLATIVES
 
 more:
-  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+ or AJrc- or AJlc+)) or
-  ({OF+} & (({ECn-} &
-    (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+)) or
-    ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+)) or
-    ({ECn- or ECx- or ND-} & (Om- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-))))) or
-  (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
+  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+ or AJrc- or AJlc+))
+  or ({OF+} & (
+    ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
+    or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
+    or ({ECn- or ECx- or ND-} & (Om- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
+  or (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 more_of_a more_of_an: Ds*m+;
 
@@ -8213,10 +8243,15 @@ or (((LE- & {AFd+}) or (LEi- & {AFdi+})) & (THc+ or TOic+ or TOfc+ or (TOtc+ & B
 or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
 
 % cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
+% ({OFd+} & Dmu+): "I drank much of the beer"
+% cost on [[<noun-main-s>]] so that the above is prefered to an O- link
 much:
-  ({EE-} & ([[MVa-]] or ECa+ or Ca+ or Qe+)) or
-  ({EEx- or H-} & (ECn+ or Dmu+ or (<noun-sub-s> & (<noun-main-s> or Bsm+)))) or
-  (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-));
+  ({EE-} & ([[MVa-]] or ECa+ or Ca+ or Qe+))
+  or ({EEx- or H-} & (
+    ECn+
+    or ({OFd+} & Dmu+)
+    or (<noun-sub-s> & ([[<noun-main-s>]] or Bsm+))))
+  or (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-));
 
 slightly somewhat: EC+ or EA+ or MVa- or Em+;
 far.c infinitely: EC+;

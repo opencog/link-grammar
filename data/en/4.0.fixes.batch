@@ -358,8 +358,13 @@ I have a couple of them.
 I ate a couple of the cookies.
 
 % XXX TODO: squonky determiners with "of"
-% Note how many of these allow a determiner "the beer", "this beer", while
+%
+% Note how many of these allow a determiner "the beer", "this beer", 
+% "I drank a pint of beer", "I drank a pint of this beer", while
 % others insist on it!  "*I drank the rest of beer", "*I drank all of beer"
+% Yet others forbid it: "*I drank another of the beer", "*I drank a couple
+% of the beer", with the last two treating "beer" as a count noun (bottles)
+% as opposed to a mass noun.
 %
 I have a few of them.
 *I have a few of cookies.
@@ -410,6 +415,9 @@ I have the most of all the cookies.
 I have the most of all of the cookies.
 I have the most of all of them
 
+I drank the most of the beer.
+I drank most of the beer.
+
 I drank part of the beer.
 *I drank part of beer.
 I drank a part of the beer.
@@ -431,7 +439,6 @@ I ate all this cake.
 
 I made all these corrections to the dictionary.
 
-% XXX TODO: many of these are broken. Arghhhh
 I drank none of the beer.
 *I drank none of beer.
 *I drank none of these beer.
@@ -448,9 +455,40 @@ I drank plenty of beer.
 I drank plenty of the beer.
 I made plenty of fixes to the dictionary.
 
-I drank the most of the beer.
-I drank enough of the beer.
+I drank another of the beers.
+*I drank another of the beer.
+I drank each of the beers.
+
+I drank more of the beer
+I drank much more of the beer
+*I drank much more of the beers
+I drank many more of the beers
+*I drank many more of the beer
+I drank a couple more of the beers
+*I drank a couple more of the beer
+I drank plenty more of the beer
+I drank some more of the beer
+
+% More mass vs count
+I drank many of the beers
+*I drank many of the beer
+I drank much of the beer
+*I drank much of the beers
+
 I ate not many of the cookies.
+I drank not many of the beers
+I drank not many
+
+not many of them could be saved
+not many of the cookies were edible
+
+I drank not much of the beer
+I drank not much
+
+not much of what he said was true
+
+% XXX TODO: many of these are broken. Arghhhh
+I drank enough of the beer.
 I ate not all of the cookies.
 I ate not one of the cookies.
 Drink a pint of this beer.
