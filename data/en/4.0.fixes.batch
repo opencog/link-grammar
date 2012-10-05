@@ -416,16 +416,24 @@ I ate a part of the cake.
 % sometimes partitioned.  (viz, its "optionally" a mass noun.) 
 I ate a part of the cookie.
 
-% XXX TODO: many of these are broken. Arghhhh
 I drank all of the beer.
 *I drank all of beer.
 I ate all of the cookies.
 I ate all of these cookies.
 I ate all these cookies.
 I ate all of this cake.
+I ate all this cake.
 
+I made all these corrections to the dictionary.
+
+% XXX TODO: many of these are broken. Arghhhh
 I drank none of the beer.
 *I drank none of beer.
+*I drank none of these beer.
+I drank none of this beer.
+I ate none of the cookies.
+* I ate none of this cookies.
+
 I drank plenty of beer.
 I drank plenty of the beer.
 I drank the rest of the beer.

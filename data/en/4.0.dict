@@ -1143,15 +1143,22 @@ many:
   ({DD-} & {EAx-} & Dmc+) or
   ((({EAx-} & {DD-}) or H-) & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
 
+% A naked <noun-main2-x> costs more than one with other links,
+% so that ditransitive verbs don't get spurious links to all.a
+% XXX can this be tighetend up??
+% <noun-main2-x> costs no mater what, so that Ofd+ is prefered.
 all.a:
   ({EN-} & (
     E+
     or Dm+
     or NIc+
     or (
+      (@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+)
+      & [<noun-main2-x>])
+    or (
       {@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+}
       & (
-        [<noun-main2-x>]
+        [[<noun-main2-x>]]
         or (S**t+ & <CLAUSE>)
         or SI**t-))
     or <noun-and-x>))
@@ -1159,7 +1166,8 @@ all.a:
 
 all_that: EA+ or EE+ or (<noun-sub-s> & <noun-main-s>);
 all_this: (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
-all_those all_these: (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
+
+all_those all_these: [[<noun-sub-p> & <noun-main-p>]] or <noun-and-p>;
 
 one:
   NA+ or
@@ -1287,9 +1295,12 @@ all.e:
 % "he likes you least of all" has no determiner, just uses MVa-.
 least.a: EA+;
 least.e: {DD-} & MVa- & {Mp+};
+
 none:
-  (<noun-sub-x> & <noun-main-x>)
-  or <noun-and-x> or <adv-of>;
+  (OFd+ & Dm+)
+  or [<noun-sub-x> & <noun-main-x>]
+  or <noun-and-x>
+  or [[<adv-of>]];
 
 rest.i:
   DD- & <adv-of>;
