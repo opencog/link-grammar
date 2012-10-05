@@ -2878,7 +2878,8 @@ Mike finished in first place, and John in last.
 The teacher's shouting startled the student.
 
 % "and so" is linked with Wq, should not be.
-Rama ate the apple, and so did Mohan.
+% i.e. this parses, but incorrectly
+*Rama ate the apple, and so did Mohan.
 
 % Automatic possesive guessing broken when entity is in the dictionary:
 % "to run" is a verb, this breaks identification of "Ran" as entity;
@@ -2906,6 +2907,8 @@ Sue answered the door.
 Could we add some tom-tom to that track?
 
 % 123A, the "A" suffix is assumed to be a unit, leading to a bad parse.
+You want part number 123
+You want part no. 123
 You want part no. 123A
 You want part no. 123ABC
 
