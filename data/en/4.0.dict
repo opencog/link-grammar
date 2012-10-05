@@ -1537,7 +1537,7 @@ dozens scores.a hundreds.a thousands millions billions trillions
 bajillions bazillions gadzillions gagillions gajillions gazillions
 godzillions jillions jizillions kabillions kajillions katrillions
 killions umptillions zillions.a:
-  ({DD- or Dmc-} & <noun-sub-p> & <noun-main-p>)
+  [{DD- or Dmc-} & <noun-sub-p> & <noun-main-p>]
   or (OFd+ & (ND+ or NIn+ or Dm+));
 
 tens: {DD-} & OF+ & <noun-main-p>;
