@@ -1201,11 +1201,11 @@ a_lot:
 %  or [[(<noun-sub-p> & <noun-main-p>)]]
   or EC+ or MVa- or <adv-of>;
 
-% OFd+ etc: "I ate a few of the cookies."
+% OFd+ & Dmc+: "I ate a few of the cookies."
 few:
-  (OFd+ & Dm+ & {A-} & D-)
+  (OFd+ & Dmc+ & {A-} & (D- or EA-))
   or ({EA- or EF+ or ({EA-} & DD-)} & 
-     (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>));
+     (Dmc+ or [<noun-sub-p> & <noun-main-p>] or <noun-and-p>));
 
 a_couple:
 %  [[<noun-sub-p> & <noun-main-p>]] or
@@ -1229,14 +1229,15 @@ a_few:
 
 % OFd+ & Dm+: "I ate some of the cookies"; cost to <nou>, <adv-of> so
 % that this comes first.
+% <adv-of>: "I saw him some of the time"
 some:
   D+
+  or (OFd+ & Dm+ & {EC-})
   or EN+
   or MF+
-  or (OFd+ & Dm+)
   or [<noun-sub-x> & <noun-main-x>]
   or <noun-and-x>
-  or [<adv-of>];
+  or [[<adv-of>]];
 
 little.i:
   ({EE-} & (MVa- or Ca+ or Qe+))
@@ -1246,18 +1247,25 @@ little.i:
       or [<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)]
       or <noun-and-s>))
   or (AM- & (Dmuy+ or MVy- or Oy- or Jy-))
-  or [{Ds-} & <adv-of>];
+  or [[{Ds-} & <adv-of>]];
 
 % "he likes you most" has no determiner, just uses MVa-.
+% {OFd+}: "most of them"
 most:
-  Dm+ or
-  [EE+] or
-  EA+ or
-  MF+ or
-  (<noun-sub-x> & <noun-main-x>) or
-  <noun-and-x> or
-  <adv-of> or
-  [{DD-} & MVa- & {Mp+}];
+  ({OFd+} & Dm+)
+  or EA+
+  or MF+
+  or [EE+]
+  or [<noun-sub-x> & <noun-main-x>]
+  or <noun-and-x>
+  or [<adv-of>]
+  or [{DD-} & MVa- & {Mp+}];
+
+the_most:
+  ({OFd+} & Dm+)
+  or EE+
+  or [<noun-sub-x> & <noun-main-x>]
+  or MVa-;
 
 part.i:
   (OF+ & <noun-main-s>) or
@@ -1265,8 +1273,6 @@ part.i:
   ({Ds-} & <adv-of>);
 
 all.e: <adv-of>;
-
-the_most: MVa- or EE+ or Dm+ or (<noun-sub-x> & <noun-main-x>);
 
 % "he likes you least of all" has no determiner, just uses MVa-.
 least.a: EA+;
@@ -6805,7 +6811,8 @@ never.e always: {EN-} & (E+ or EB-);
 seldom rarely.e: {EE-} & (E+ or EB-);
 
 % MVa-: "He did just what you asked."
-just.e: E+ or EB- or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+ or MVa-;
+% EC+: "I ate just some of the cookies"
+just.e: E+ or EC+ or [EB-] or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+ or MVa-;
 
 maybe: CO+;
 meantime.e secondly thirdly

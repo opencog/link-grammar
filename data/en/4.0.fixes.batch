@@ -363,11 +363,15 @@ I have a few of them.
 I ate a few of the cookies.
 I ate a few too many.
 I ate a few.
+I ate very few of the cookies.
+I ate pretty few of the cookies.
 
 I ate some of the cookies.
 I ate some of them.
 *I ate some of cookies.
 I ate some.
+I ate just some of the cookies
+I ate just some
 I see him some of the time.
 *I see him some of time.
 
@@ -385,13 +389,22 @@ I drank a bit of beer.
 I drank a great deal of beer.
 I drank a great deal.
 
-% XXX TODO: many of these are broken. Arghhhh
 I have most of the cookies.
 *I have most of cookies.
+*I have the most of cookies.
 I ate most of them
+I have the most of the cookies.
+% XXX the next one parses, but not correctly
+I have the most of all the cookies.
+I have the most of all of the cookies.
+I have the most of all of them
 
+% XXX TODO: many of these are broken. Arghhhh
 I drank part of the beer.
 *I drank part of beer.
+I drank a part of the beer.
+I drank a small part of the beer.
+
 I drank all of the beer.
 *I drank all of beer.
 I drank none of the beer.
