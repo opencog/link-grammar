@@ -1202,8 +1202,9 @@ a_lot:
   or EC+ or MVa- or <adv-of>;
 
 few:
-  {EA- or EF+ or ({EA-} & DD-)} & 
-  (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
+  (OFd+ & Dm+ & {A-} & D-)
+  or ({EA- or EF+ or ({EA-} & DD-)} & 
+     (Dmc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>));
 
 a_couple:
 %  [[<noun-sub-p> & <noun-main-p>]] or
@@ -1213,15 +1214,17 @@ a_couple:
 a_couple_of:
   NN+ or ND+ or NIn+;
 
+% ECa+: "I had a few too many"
 a_few:
-  NN+ or
-  ND+ or
-  NIn+ or
-  ({EN-} & 
-    (Dmc+ or
-    ND+ or
-    NIn+ or
-    (<noun-sub-p> & <noun-main-p>)));
+  NN+
+  or ND+
+  or NIn+
+  or ECa+
+  or ({EN-} & 
+    (Dmc+
+    or ND+
+    or NIn+
+    or [[<noun-sub-p> & <noun-main-p>]]));
 
 some:
   D+ or
