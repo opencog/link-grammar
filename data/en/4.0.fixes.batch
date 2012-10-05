@@ -358,6 +358,9 @@ I have a couple of them.
 I ate a couple of the cookies.
 
 % XXX TODO: squonky determiners with "of"
+% Note how many of these allow a determiner "the beer", "this beer", while
+% others insist on it!  "*I drank the rest of beer", "*I drank all of beer"
+%
 I have a few of them.
 *I have a few of cookies.
 I ate a few of the cookies.
@@ -374,6 +377,7 @@ I ate some of these cookies.
 I ate some of this cake.
 I ate some of them.
 *I ate some of cookies.
+*I drank some of beer
 I ate some.
 I ate just some of the cookies
 I ate just some
@@ -387,6 +391,7 @@ I ate a little of the cookies.
 % whereas "I ate a little" and it should be Os on "ate", right? 
 I ate little of the fish.
 
+% phantom "bit": "I drank a little (bit) of beer"
 I drank a little of beer.
 I drank a little bit of beer.
 I drank a bit of beer.
@@ -433,12 +438,16 @@ I drank none of the beer.
 I drank none of this beer.
 I ate none of the cookies.
 * I ate none of this cookies.
+I ate none of that.
 
-I drank plenty of beer.
-I drank plenty of the beer.
 I drank the rest of the beer.
 *I drank rest of the beer.
 *I drank the rest of beer.
+
+I drank plenty of beer.
+I drank plenty of the beer.
+I made plenty of fixes to the dictionary.
+
 I drank the most of the beer.
 I drank enough of the beer.
 I ate not many of the cookies.

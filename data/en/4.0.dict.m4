@@ -1311,12 +1311,14 @@ none:
   or <noun-and-x>
   or [[<adv-of>]];
 
+% costly <adv-of> so that OFd+ is prefered.
 rest.i:
-  DD- & <adv-of>;
+  [[DD- & <adv-of>]];
 
 plenty:
-  ({@M+} & (<noun-main-x> or <noun-and-x>))
-  or <adv-of>
+  (OFd+ & Dm+)
+  or ({@M+} & ([<noun-main-x>] or <noun-and-x>))
+  or [[<adv-of>]]
   or [MVa-];
 
 other:
