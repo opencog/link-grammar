@@ -3,7 +3,7 @@ dnl Macro version of the 4.0.dict file. This is file is used to simplify
 dnl the maintenance of the verb definitions; it defines a handful of
 dnl macros to deal with the case of conjoined verbs. Pre-process this
 dnl file with the m4 macro pre-processor to create 4.0.dict
-dnl That is, at the command line, run: 
+dnl That is, at the command line, run:
 dnl     m4 4.0.dict.m4 > 4.0.dict
 dnl
 dnl the comment delimiter for link-grammar data files is %
@@ -22,14 +22,14 @@ changecom(`%')
 <dictionary-version-number>: V4v7v7+;
 
  % _ORGANIZATION OF THE DICTIONARY_
- % 
+ %
  % I. NOUNS
  % II. PRONOUNS
  % III. DETERMINERS
  % IV. NUMERICAL EXPRESSIONS
  % V. VERBS
- %    A. Auxiliaries; B. Common verb types; C. complex intransitive verbs; 
- %    D. complex intransitive verbs; E. complex verbs taking [obj] + 
+ %    A. Auxiliaries; B. Common verb types; C. complex intransitive verbs;
+ %    D. complex intransitive verbs; E. complex verbs taking [obj] +
  %    [complement]; F. idiomatic verbs
  % VI. PREPOSITIONS
  % VII. TIME AND PLACE EXPRESSIONS
@@ -38,9 +38,9 @@ changecom(`%')
  % X. COMPARATIVES AND SUPERLATIVES
  % XI. ADVERBS
  %    A. Mainly adjectival; B. Mainly post-verbal; C. Post-verbal/pre-verbal;
- %    D. Post-verbal/pre-verbal/openers; E. Post-verbal/openers; 
+ %    D. Post-verbal/pre-verbal/openers; E. Post-verbal/openers;
  %    F. Pre-verbal/openers	
- % XII. MISCELLANEOUS WORDS AND PUNCTUATION 
+ % XII. MISCELLANEOUS WORDS AND PUNCTUATION
  %
  % NEW LINKS INVENTED BY MIKE ROSS
  % Ct and Cta are used with comparatives so that 'than' links to the relative clause
@@ -48,8 +48,8 @@ changecom(`%')
  % John wants more cookies than Dave wants.
  %
  % Rw is used similarly to Ct, Cta, and Rn to link question words to the relative clauses
- % that follow them.  
- % For auxillary verbs, replaced "{Q-}" with "(Rw- or Q-}".  
+ % that follow them.
+ % For auxillary verbs, replaced "{Q-}" with "(Rw- or Q-}".
  % For nouns and others, replaced "B*m+" with "(Rw+ & B*m+)" (for any *)
  % For who,what,which,whom, replaced "B*" with "(R+ & B*+)" (for any *)
  %
@@ -61,7 +61,7 @@ changecom(`%')
  % Many nouns in words.n.4 are treated as "mass or count". The side
  % effect is that mass nouns are inconsistently treated as sometimes
  % singular, sometimes plural. e.g. words.n.3 gets <noun-sub-s> &
- % <noun-main-m>. This is a kind-of ugly tangle, it should really 
+ % <noun-main-m>. This is a kind-of ugly tangle, it should really
  % be sorted out so that links are properly marks as s, p or m.
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
@@ -69,7 +69,7 @@ changecom(`%')
 % Null links. These are used to drop the requirement for certain words
 % to appear during parsing. Basically, if a parse fails at a given cost,
 % it is retried at a higher cost (by raising the disjunct_cost).
-% Currently, two different nulls are defined: a regular null, and a 
+% Currently, two different nulls are defined: a regular null, and a
 % costly null.  The regular null is used to make determiners optional;
 % this allows for the parsing of newspaper headlines and clipped
 % technical speech (e.g. medical, engineering, where dterminers are
@@ -83,7 +83,7 @@ changecom(`%')
 % NOUNS
 
 % The marker-entity is used to identify identity names.
-% The marker-common-entity is used to identify all common nouns 
+% The marker-common-entity is used to identify all common nouns
 % and adjectives that might appear in entity names:
 % e.g. "Great Southern Federal Bank and Railroad" or "Aluminum Bahrain"
 <marker-entity>: XXXENTITY+;
@@ -94,7 +94,7 @@ changecom(`%')
 
 <CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
 
-<S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+}))}; 
+<S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+}))};
 
 <CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
@@ -112,29 +112,29 @@ changecom(`%')
   ({[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-);
 
 % noun-main-x -- singular or plural or mass.
-<noun-main-x>: 
-  (S+ & <CLAUSE>) or SI- or J- or O- or 
+<noun-main-x>:
+  (S+ & <CLAUSE>) or SI- or J- or O- or
   <post-nominal-x> or
   <costly-null>;
 
 % noun-main-s -- singular
-<noun-main-s>: 
-  (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or 
+<noun-main-s>:
+  (Ss+ & <CLAUSE>) or SIs- or Js- or Os- or
   <post-nominal-s> or
   <costly-null>;
 
 % noun-main-p -- plural
-<noun-main-p>: 
+<noun-main-p>:
   (Sp+ & <CLAUSE>) or SIp- or Jp-
   or Op-
   or <post-nominal-p>
   or <costly-null>;
 
 % noun-main-u -- u == uncountable
-% TODO: alter this to use Su+, SIu- someday. likewise Buj+  
+% TODO: alter this to use Su+, SIu- someday. likewise Buj+
 % Doing this requires adding Su- links to many entries
-<noun-main-u>: 
-  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or 
+<noun-main-u>:
+  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou- or
   <post-nominal-s> or
   <costly-null>;
 
@@ -143,46 +143,46 @@ changecom(`%')
 % To get rid of this, any noun that uses this needs to be split into
 % two: the countable form, which will used <noun-main-s> and the
 % uncountable form, which will use <noun-main-u>
-<noun-main-m>: 
-  (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or 
+<noun-main-m>:
+  (Ss+ & <CLAUSE>) or SIs- or Jp- or Os- or
   <post-nominal-s> or
   <costly-null>;
 
-<noun-main-h>: 
-  (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or 
+<noun-main-h>:
+  (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or
   <post-nominal-x> or
   <costly-null>;
 
 <noun-main2-x>:
-  J- or O- or 
+  J- or O- or
   <post-nominal-x> or
   <costly-null>;
 
 <noun-main2-s>:
-  Js- or Os- or 
+  Js- or Os- or
   <post-nominal-s> or
   <costly-null>;
 
 % Xd- or [[()]] allows parsing of "I have no idea what that is."
 % without requiring comma after "idea"
-<noun-main2-s-no-punc>:  
-  Js- or Os- or 
-  ({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-) or 
+<noun-main2-s-no-punc>:
+  Js- or Os- or
+  ({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-) or
   <costly-null>;
 
 <noun-main2-p>:
-  Jp- or Op- or 
+  Jp- or Op- or
   <post-nominal-p> or
   <costly-null>;
 
 <noun-main2-m>:
-  Jp- or Os- or 
+  Jp- or Os- or
   <post-nominal-s> or
   <costly-null>;
 
 % TO+: "The inability to laugh signifies trouble"
 % @M+: "The disability of John means he is slow"
-% XXX wait .. TO+ should only be for mass nouns ?? 
+% XXX wait .. TO+ should only be for mass nouns ??
 <noun-sub-x>: {@M+} & {TO+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
 <noun-sub-s>: {@M+} & {TO+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {TO+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
@@ -203,16 +203,16 @@ changecom(`%')
 % The "of night" can connect to the left noun, but rarely to the right noun
 % because it should then connect to the "and", not the right noun.
 % but then: "neither heat nor gloom of night shall stop me"
-% Looks like only a proper semantic decision can determine the correct parse here ... 
+% Looks like only a proper semantic decision can determine the correct parse here ...
 %
 % Add cost to M+, so that "a number of recommendations and suggestions"
 %   gts priority in modifying the and.j-n
-<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-) or (Dn- & SJn+); 
+<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-) or (Dn- & SJn+);
 <noun-and-p>: ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or (Dn- & SJn+);
 <noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-) or (Dn- & SJn+);
 <noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-) or (Dn- & SJn+);
 <noun-and-p,u>:
-  ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or 
+  ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or
   ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-) or (Dn- & SJn+);
 
 <rel-clause-x>: {Rw+} & B*m+;
@@ -221,15 +221,15 @@ changecom(`%')
 
 % The use of COa here needs to be carefully rexamined; it is used much too freely.
 <directive-opener>:
-  {[[Wi-]]} & 
-    ((Xc+ & Ic+) or 
+  {[[Wi-]]} &
+    ((Xc+ & Ic+) or
     ({Xd-} & (Xc+ or [[()]]) & [[COa+]]));
 
-% Just pure singular entities, no mass nouns 
-% The CAPITALIZED-WORDS rule is triggered by regex matching, and 
+% Just pure singular entities, no mass nouns
+% The CAPITALIZED-WORDS rule is triggered by regex matching, and
 % applies to all capitalized words that are not otherwise found in
 % the dictionary.
-% ({[[@MX+]]} & AN+) comes from postposed modifiers: 
+% ({[[@MX+]]} & AN+) comes from postposed modifiers:
 % "Codon 311 (Cys --> Ser) polymorphism"
 %
 % We do NOT tag these with <marker-entity>, a this messes up first-word
@@ -243,26 +243,26 @@ changecom(`%')
 %
 % To help discourage capitalized use when the lower-case is in the dict,
 % we give a slight cost to [<noun-sub-s> & (JG- or <noun-main-s>)] to
-% discourage use as a common noun, so that the lower-case version can 
+% discourage use as a common noun, so that the lower-case version can
 % play this role.
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
 CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
-  ({NM+} & ({G-} & {[MG+]} & 
-    (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} & 
-      ([<noun-sub-s> & (JG- or <noun-main-s>)] or 
-       <noun-and-s> or 
-       YS+)) or 
-    ({[[@MX+]]} & AN+) or G+))) or 
+  ({NM+} & ({G-} & {[MG+]} &
+    (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
+      ([<noun-sub-s> & (JG- or <noun-main-s>)] or
+       <noun-and-s> or
+       YS+)) or
+    ({[[@MX+]]} & AN+) or G+))) or
   (MXs+ & (<noun-main-s> or <noun-and-s>)) or
   <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
-% -- But not all words that end with an 's' are plural: 
+% -- But not all words that end with an 's' are plural:
 % e.g. Cornwallis ... and some of these can take a singular determiner:
 % "a Starbucks"
-PL-CAPITALIZED-WORDS: 
+PL-CAPITALIZED-WORDS:
   ({NM+} & {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & ({Dmc-} or {Ds-})]] or ({@A-} & Jd- & Dmc-) } &
       ([<noun-sub-x> & (JG- or <noun-main-x>)] or
@@ -276,24 +276,24 @@ PL-CAPITALIZED-WORDS:
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
 <proper-names>:
-({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+)); 
+({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+));
 
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
 <given-names>:
-  {G-} & {[MG+]} & 
+  {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-      (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or 
-        YS+ or YP+)) or 
-    AN+ or 
+      (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or
+        YS+ or YP+)) or
+    AN+ or
     G+);
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
 <entity-entire>:
-  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-    (({@MX+} & <noun-main-s>) or <noun-and-s> or YS+)) or 
+  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+    (({@MX+} & <noun-main-s>) or <noun-and-s> or YS+)) or
   AN+;
 
 personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
@@ -322,9 +322,9 @@ locationID60: <marker-entity> or <entity-entire>;
 
 % Words that are also given names
 % Cannot take A or D links.
-% Art Bell Bill Bob Buck Bud  
+% Art Bell Bill Bob Buck Bud
 %
-% The bisex dict includes names that can be given to both 
+% The bisex dict includes names that can be given to both
 % men and women.
 /en/words/entities.given-bisex.sing
 /en/words/entities.given-female.sing
@@ -339,14 +339,14 @@ locationID60: <marker-entity> or <entity-entire>;
 /en/words/entities.organizations.sing:
   <marker-entity> or <entity-singular>;
 
-/en/words/entities.locations.sing: 
+/en/words/entities.locations.sing:
   <marker-entity> or <entity-singular>;
 
 %
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
-<entity-id>: 
-  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+)) or AN+; 
+<entity-id>:
+  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+)) or AN+;
 
 entityID0 entityID1 entityID2 entityID3 entityID4 entityID5 entityID6 entityID7 entityID8 entityID9
 entityID10 entityID11 entityID12 entityID13 entityID14 entityID15 entityID16 entityID17 entityID18 entityID19
@@ -357,18 +357,18 @@ entityID50 entityID51 entityID52 entityID53 entityID54 entityID55 entityID56 ent
 entityID60: <marker-entity> or <entity-id>;
 
 % words.n.4: nouns that can be mass or countable
-% allocation.n allotment.n alloy.n allure.n alteration.n alternation.n 
+% allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
 % piano.n flute.n belong here, because of "He plays piano"
 % This class has now been eliminated: nouns are either singular, plural
 % or mass. If they can be more than one, then they are listed separately
 % in each class e.g. words.n.1 and/or words.n.2 and/or words.n.3, etc.
-<noun-mass-count>:  
-  <noun-modifiers> & 
-    (({NM+} & AN+) or 
+<noun-mass-count>:
+  <noun-modifiers> &
+    (({NM+} & AN+) or
     ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
     <noun-and-u> or
-    (YS+ & {D*u-}) or 
-    (GN+ & (DD- or [()])) or 
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])) or
     Us-);
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
@@ -380,14 +380,14 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 % Similar to <common-noun>, but with different determiners for number
 % agreement.
 % ({{Dmu-} & Jd-} & Dmc-) : "I gave him a number of the cookies"
-<generic-plural-id>:  
+<generic-plural-id>:
   [[AN+]] or
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     (({NM+ or ({{Dmu-} & Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     SJrp- or
-    (YP+ & {Dmc-}) or 
-    (GN+ & (DD- or [()])) or 
+    (YP+ & {Dmc-}) or
+    (GN+ & (DD- or [()])) or
     Up-));
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
@@ -400,10 +400,10 @@ genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
 
 %from words.y year numbers
 <date-id>:
-NMd- or ({EN-} & (NIfn+ or NItn-)) or 
-NN+ or AN+ or 
-((Xd- & TY- & Xc+) or TY-) 
-or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &  
+NMd- or ({EN-} & (NIfn+ or NItn-)) or
+NN+ or AN+ or
+((Xd- & TY- & Xc+) or TY-)
+or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &
 ([[Dmcn+]] or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
 
 dateID0 dateID1 dateID2 dateID3 dateID4 dateID5 dateID6 dateID7 dateID8 dateID9
@@ -414,76 +414,76 @@ dateID40 dateID41 dateID42 dateID43 dateID44 dateID45 dateID46 dateID47 dateID48
 dateID50 dateID51 dateID52 dateID53 dateID54 dateID55 dateID56 dateID57 dateID58 dateID59
 dateID60: <date-id>;
 
-%  ??? wtf?  Is this like "roman numeral" ?? See I.p for "me" 
-% XXX this is wrong or inappropriate .. 
+%  ??? wtf?  Is this like "roman numeral" ?? See I.p for "me"
+% XXX this is wrong or inappropriate ..
 % I.n: [[{Xi+} & {G-} & G+]];
 
-% Number abbreviations: no.x No.x 
+% Number abbreviations: no.x No.x
 No.x No..x no.x no..x Num.x Num..x num.x num..x:
   (Xi+ or [[()]]) & AN+;
 
 % Explicitly include the period at the end of the abbreviation.
-Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Atty..x 
-Gov..x Sen..x Rep..x 
+Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Atty..x
+Gov..x Sen..x Rep..x
 Gen..x Brig..x Col..x Capt..x Lieut..x Lt..x Maj..x Sgt..x Pvt..x Cmdr..x
 Adm..x Corp..x St..x Mt..x Ft..x Cie..x HMS..x:
   G+;
 
 % Period is missing in the abbreviation! Accept, but with a cost.
-Ms.x Mrs.x Mr.x Messrs.x Rev.x Sir.x Dr.x Prof.x Atty.x 
-Gov.x Sen.x Rep.x 
+Ms.x Mrs.x Mr.x Messrs.x Rev.x Sir.x Dr.x Prof.x Atty.x
+Gov.x Sen.x Rep.x
 Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Maj.x Sgt.x Pvt.x Cmdr.x
 Adm.x Corp.x St.x Mt.x Ft.x Cie.x HMS.x:
   [[G+]];
 
-St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y 
-Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y 
+St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y
+Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
-Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y 
-Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y: 
+Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y
+Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
   ({[X-]} & G-) & {Xi+} & {[MG+]} &
-    (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-      (({@MX+} & (JG- or <noun-main-s>)) or 
+    (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+      (({@MX+} & (JG- or <noun-main-s>)) or
       <noun-and-s> or
-      YS+ or 
-      YP+)) or 
+      YS+ or
+      YP+)) or
     AN+ or
     G+);
 
 
-% e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D. 
+% e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D.
 % Gack. See absurdely large collection at:
 % http://en.wikipedia.org/wiki/List_of_post-nominal_letters
-Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y 
+Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y
 AB.y A.B..y AIA.y A.I.A..y
 BA.y B.A..y BFA.y B.F.A..y BS.y B.S..y BSc.y B.Sc..y
-CEng.y CEng..y CFA.y CPA.y CPL.y CSV.y 
-DD.y D.D..y DDS.y D.D.S..y DO.y D.O..y D.Phil..y D.P.T..y 
+CEng.y CEng..y CFA.y CPA.y CPL.y CSV.y
+DD.y D.D..y DDS.y D.D.S..y DO.y D.O..y D.Phil..y D.P.T..y
 Eng.D..y
 JD.y J.D..y  KBE.y K.B.E..y LLD.y LL.D..y
-MA.y M.A..y MBA.y M.B.A..y MD.y M.D.y MFA.y M.F.A..y 
+MA.y M.A..y MBA.y M.B.A..y MD.y M.D.y MFA.y M.F.A..y
 MS.y M.S..y MSc.y M.Sc..y
-OFM.y 
-PE.y P.E..y Pharm.D..y 
-PhD.y Ph.D.y Ph.D..y 
+OFM.y
+PE.y P.E..y Pharm.D..y
+PhD.y Ph.D.y Ph.D..y
 RA.y R.A..y RIBA.y R.I.B.A..y RN.y R.N..y
-USMC.y USN.y: 
-  {Xi+} & {Xd- & {Xc+}} & G- & {[MG+]} & 
-    (({DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
-      (({@MX+} & (JG- or <noun-main-s>)) or 
+USMC.y USN.y:
+  {Xi+} & {Xd- & {Xc+}} & G- & {[MG+]} &
+    (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+      (({@MX+} & (JG- or <noun-main-s>)) or
       <noun-and-s> or
-      YS+ or 
-      YP+)) or 
-    AN+ or 
+      YS+ or
+      YP+)) or
+    AN+ or
     G+);
 
 % The generic category for strings containing a hyphen
-HYPHENATED-WORDS.n: 
-  [[({@AN-} & {@A-} & 
-    (({NM+ or D-} & 
+HYPHENATED-WORDS.n:
+  [[({@AN-} & {@A-} &
+    (({NM+ or D-} &
       ((<noun-sub-x> & (<noun-main-x> or <rel-clause-x>)) or
       <noun-and-x>)) or
-     U-)) or 
+     U-)) or
   ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 
 % NOUNS --------------------------------------------------------
@@ -494,13 +494,13 @@ HYPHENATED-WORDS.n:
 % position 3 can be k,m,y for comparatives, w for questions.
 
 % words.n.1: Common nouns
-% activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n 
+% activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n
 % The naked SJr- allows article to be skipped in conjunction (and,or)
 % constructions ("the hammer and sickle")
-<common-noun>: 
-  <noun-modifiers> & 
-    (AN+  
-    or ((NM+ or ({[NM+]} & (Ds- or <null>))) 
+<common-noun>:
+  <noun-modifiers> &
+    (AN+
+    or ((NM+ or ({[NM+]} & (Ds- or <null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
@@ -508,14 +508,14 @@ HYPHENATED-WORDS.n:
     or (GN+ & (DD- or [()]))
     or Us-);
 
-/en/words/words.n.1 
-/en/words/words.n.1.wiki : 
+/en/words/words.n.1
+/en/words/words.n.1.wiki :
   <marker-common-entity> or <common-noun>;
 
 % Common plural nouns ending in "s"
-% allocations.n allotments.n allowances.n alloys.n allures.n allusions.n 
+% allocations.n allotments.n allowances.n alloys.n allures.n allusions.n
 /en/words/words.n.2.s
-/en/words/words.n.2.s.wiki : 
+/en/words/words.n.2.s.wiki :
   <marker-common-entity> or <generic-plural-id>;
 
 /en/words/words.n.2.s.biolg: <generic-plural-id>;
@@ -523,13 +523,13 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % plural nouns not ending in "s"
 % {Jd-}: allows a "a flock of birds" to act as determiner.
-% aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n 
+% aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n
 /en/words/words.n.2.x
 /en/words/words.n.2.x.wiki :
-  <marker-common-entity> or 
-  (<noun-modifiers> & 
-    ([[AN+]] or 
-    ({NM+ or ({Jd-} & Dmc-)} & 
+  <marker-common-entity> or
+  (<noun-modifiers> &
+    ([[AN+]] or
+    ({NM+ or ({Jd-} & Dmc-)} &
       ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
 		<noun-and-s>)) or
     (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
@@ -539,84 +539,84 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 %
 %  ({{Dmu-} & Jd-} & Dmu-):  "Drink a pint of this beer"
 <mass-noun>:
-  <marker-common-entity> or 
-  (<noun-modifiers> & 
-    (AN+ or 
-    ({NM+ or ({{Dmu-} & Jd-} & Dmu-)} & 
+  <marker-common-entity> or
+  (<noun-modifiers> &
+    (AN+ or
+    ({NM+ or ({{Dmu-} & Jd-} & Dmu-)} &
       ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
       <noun-and-p,u>)) or
-    (YS+ & {Dmu-}) or 
-    (GN+ & (DD- or [()])) or 
+    (YS+ & {Dmu-}) or
+    (GN+ & (DD- or [()])) or
     Up-));
 
 % nouns that are mass only
-% absolutism.n absorption.n abstinence.n abundance.n academia.n 
+% absolutism.n absorption.n abstinence.n abundance.n academia.n
 /en/words/words.n.3: <mass-noun>;
 
 % Want to cost this so that it doesn't interfere with given name "Tom".
 tom.n-u: [<mass-noun>];
 
 % Nouns that are also adjectives (e.g. red.n) and so we don't want to
-% allow these to take AN+ links.  We need these as nouns, so as to 
+% allow these to take AN+ links.  We need these as nouns, so as to
 % parse 'she prefers red'. However, assign a cost, so that 'her shoes
 % are red' gets red.a perfered over red.n.
 % [[Ds-]] to allow: "The house was painted a fading yellow"
 %
-% Doesn't seem to need a noun-and-x to make this work ... 
-auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n 
+% Doesn't seem to need a noun-and-x to make this work ...
+auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n
 tawny.n ultramarine.n yellow.n:
-  <marker-common-entity> or 
-  (<noun-modifiers> & 
+  <marker-common-entity> or
+  (<noun-modifiers> &
     ((({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>])) or
-    (YS+ & {Dmu-}) or 
-    (GN+ & (DD- or [()])) or 
+    (YS+ & {Dmu-}) or
+    (GN+ & (DD- or [()])) or
     Up-));
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
 /en/words/entities.us-states.sing:
   <marker-entity> or
-  ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} & 
+  ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} &
     (({MG+} & {@MX+} & (JG- or <noun-main-s> or <noun-and-s>)) or
-    G+ or 
-    ({[[MG+]]} & (AN+ or YS+ or YP+)))) or 
+    G+ or
+    ({[[MG+]]} & (AN+ or YS+ or YP+)))) or
   (Xc+ & Xd- & G- & AN+);
 
-% SINGULAR ENTITIES FOR ENTITY EXTRACTION 
+% SINGULAR ENTITIES FOR ENTITY EXTRACTION
 % This must appear after other categories so it doesnt interfere with those.
-/en/words/entities.national.sing: 
+/en/words/entities.national.sing:
 <marker-entity> or <entity-singular>;
 
 % Enable parsing of "Mother likes her"
-aunt.f auntie.f brother.m dad.m daddy.m father.m grandmother.f granny.f 
-granddad.m grandfather.m grandpa.f grandpop.m mom.f mommy.f mother.f 
+aunt.f auntie.f brother.m dad.m daddy.m father.m grandmother.f granny.f
+granddad.m grandfather.m grandpa.f grandpop.m mom.f mommy.f mother.f
 pop.m papa.m poppy.m pops.m sis.f sister.f uncle.m:
   <entity-singular>;
 
 alter_ego au_pair mise_en_scene faux_pas non_sequitur fait_accompli
 modus_vivendi head_of_state tour_de_force:
-  (<noun-modifiers> & 
-    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or 
+  (<noun-modifiers> &
+    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
     ({Ds-} & <noun-and-s>) or
-    Us- or 
-    (YS+ & Ds-) or 
-    (GN+ & (DD- or [()])))) or 
+    Us- or
+    (YS+ & Ds-) or
+    (GN+ & (DD- or [()])))) or
   AN+;
 
 kung_fu joie_de_vivre op_art noblesse_oblige lese_majesty a_must
 time_of_day time_of_year force_majeure top_dollar year_end skim_milk
 breach_of_contract sleight_of_hand power_of_attorney word_of_mouth
-carte_blanche: 
-  (<noun-modifiers> & 
+carte_blanche:
+  (<noun-modifiers> &
     (({Dmu-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
     ({Dmu-} & <noun-and-u>) or
-    Um- or 
-    (YS+ & {Dmu-}) or 
+    Um- or
+    (YS+ & {Dmu-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
 
 % title nouns (president, chairman)
-% auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t 
+% auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t
 /en/words/words.n.t:
   <noun-modifiers> &
     {@M+} & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or TI-);
@@ -624,7 +624,7 @@ carte_blanche:
 % Almost identical to below.
 % Ds- & {NM+} & <noun-sub-x> &.. "the number 12 is a lucky number"
 % above has cost to give "a number of" priority.
-number.n: 
+number.n:
   (<noun-modifiers> & (
     [Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]
     or ({Ds-} & {NM+} & <noun-and-x>)
@@ -664,7 +664,7 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
   or <marker-common-entity>
   or <costly-common-noun>;
 
-% determiner constructions, with a dangling of: 
+% determiner constructions, with a dangling of:
 % "I have bags of money"
 % NIn+ needed for money amounts
 % {Dmcn-}: "two kilograms of ..."
@@ -675,8 +675,8 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
   or [<generic-plural-id>];
 
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
-kind_of: 
-  [({{@AN-} & @A-} & U+ & 
+kind_of:
+  [({{@AN-} & @A-} & U+ &
     ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
     or ({Ds-} & <noun-and-s>)
     or Us-))]
@@ -685,20 +685,20 @@ kind_of:
 
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 type_of sort_of breed_of:
-  [{{@AN-} & @A-} & U+ & 
+  [{{@AN-} & @A-} & U+ &
     ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
     or ({Ds-} & <noun-and-s>)
     or Us-)];
 
 % This gets a cost, so that the {Jd-} link for measures.2 is prefered.
 kinds_of types_of sorts_of breeds_of:
-  [{{@AN-} & @A-} & U+ & 
+  [{{@AN-} & @A-} & U+ &
     (({Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
     or ({Dmc-} & <noun-and-p>)
     or Up-)];
 
-percent.u: 
-  (<noun-modifiers> & 
+percent.u:
+  (<noun-modifiers> &
     ((ND- & {DD-} & <noun-sub-x> & (<noun-main-x> or B*x+)) or
     (ND- & {DD-} & <noun-and-x>) or
     U-)) or
@@ -707,8 +707,8 @@ percent.u:
 % This set of disjuncts should probably be split up and refined.
 % "shame.n", "crux.n" are here because they need the Ss*t connector
 % to pick up "that" in "The crux of it is that we must act first."
-% However, report.n and sign.n and remark.n, etc. do not seem to 
-% need this connector ... 
+% However, report.n and sign.n and remark.n, etc. do not seem to
+% need this connector ...
 argument.n report.n sign.n impression.n conclusion.n complaint.n
 allegation.n announcement.n position.n restriction.n notion.n
 remark.n assertion.n proclamation.n reassurance.n saying.n
@@ -717,19 +717,19 @@ statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
 message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n inkling.n supposition.n
 finding.n amount.n answer.n crux.n shame.n:
-  (<noun-modifiers> & 
-    ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & 
-      (<noun-main2-s> or 
-      (Ss*t+ & <CLAUSE>) or 
-      SIs*t- or 
-      <rel-clause-s>)) or 
+  (<noun-modifiers> &
+    ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+      (<noun-main2-s> or
+      (Ss*t+ & <CLAUSE>) or
+      SIs*t- or
+      <rel-clause-s>)) or
     ({Ds-} & <noun-and-s>) or
-    Us- or 
-    (YS+ & Ds-) or 
+    Us- or
+    (YS+ & Ds-) or
     (GN+ & (DD- or [()])))) or
   AN+;
 
-proof.n doubt.n suspicion.n hope.n knowledge.n relief.n 
+proof.n doubt.n suspicion.n hope.n knowledge.n relief.n
 disclosure.n fear.n acknowledgment.n acknowledgement.n principle.n
 concern.n philosophy.n risk.n threat.n understanding.n conviction.n theory.n
 assurance.n speculation.n awareness.n news.n opinion.n belief.n
@@ -737,27 +737,27 @@ contention.n thought.n myth.n discovery.n rumor.n probability.n fact.n
 explanation.n feeling.n comment.n expectation.n perception.n sense.n
 realization.n view.n insistence.n consensus.n notification.n rule.n
 danger.n warning.n suggestion.n:
-  (<noun-modifiers> & 
-    (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & 
-      (<noun-main2-m> or 
-      (Ss*t+ & <CLAUSE>) or 
-      SIs*t- or 
-      <rel-clause-s>)) or 
+  (<noun-modifiers> &
+    (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+      (<noun-main2-m> or
+      (Ss*t+ & <CLAUSE>) or
+      SIs*t- or
+      <rel-clause-s>)) or
     ({D*u-} & <noun-and-u>) or
-    Us- or 
-    (YS+ & {D*u-}) or 
+    Us- or
+    (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
-  AN+;  
+  AN+;
 
 evidence.n reasoning.n likelihood:
-  (<noun-modifiers> & 
-    (({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & 
+  (<noun-modifiers> &
+    (({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-m> or
-      (Ss*t+ & <CLAUSE>) or 
-      SIs*t- or 
-      <rel-clause-s>)) or 
+      (Ss*t+ & <CLAUSE>) or
+      SIs*t- or
+      <rel-clause-s>)) or
     ({Dmu-} & <noun-and-u>) or
-    Up- or 
+    Up- or
     (YS+ & {Dmu-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
@@ -778,11 +778,11 @@ provisos.n truisms.n fallacies.n assurances.n speculations.n
 propositions.n prospects.n presuppositions.n inklings.n suppositions.n
 findings.n amounts.n rules.n dangers.n warnings.n indications.n
 answers.n suggestions.n:
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     (({{Jd-} & Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
-      (<noun-main2-p> or 
-      (Sp*t+ & <CLAUSE>) or 
-      SIp*t- or 
+      (<noun-main2-p> or
+      (Sp*t+ & <CLAUSE>) or
+      SIp*t- or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
     Up- or
@@ -791,8 +791,8 @@ answers.n suggestions.n:
   [[AN+]];
 
 request.n requirement.n condition.n recommendation.n provision.n stipulation.n:
-  (<noun-modifiers> & 
-    (({D*u-} & {@M+} & {(TH+ or TS+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & 
+  (<noun-modifiers> &
+    (({D*u-} & {@M+} & {(TH+ or TS+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-m> or
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
@@ -801,12 +801,12 @@ request.n requirement.n condition.n recommendation.n provision.n stipulation.n:
     Us- or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
-  AN+;  
+  AN+;
 
 % {Jd-} : "a number of conditions"
 requests.n requirements.n conditions.n recommendations.n provisions.n
 stipulations.n:
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     (({{Jd-} & Dmc-} & {@M+} & {(TH+ or TS+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
       (Sp*t+ & <CLAUSE>) or
@@ -822,7 +822,7 @@ excuse.n decision.n proposal.n attempt.n plan.n plot.n pledge.n urge.n
 mission.n right.n desire.n mandate.n promise.n option.n campaign.n
 offer.n vow.n permit.n impetus.n proclivity.n propensity.n move.n
 vote.n bill.n:
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main-s> or
       <rel-clause-s>)) or
@@ -866,7 +866,7 @@ votes.n bills.n incentives.n:
   [[AN+]];
 
 chance.n:
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     (({D*u-} & {@M+} & {(TOn+ or TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main-s> or
       <rel-clause-s>)) or
@@ -876,7 +876,7 @@ chance.n:
     (GN+ & (DD- or [()])))) or
   AN+;
 
-question.n issue.n: 
+question.n issue.n:
   (<noun-modifiers> &
     ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-s> or
@@ -904,7 +904,7 @@ questions.n issues.n:
 
 reason.n:
   (<noun-modifiers> &
-    (({D*u-} & {@M+} & {TH+ or Ce+ or TOn+ or WY+ or (R+ & Bs+)} & {@MXs+} & 
+    (({D*u-} & {@M+} & {TH+ or Ce+ or TOn+ or WY+ or (R+ & Bs+)} & {@MXs+} &
       (<noun-main2-s> or
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
@@ -927,7 +927,7 @@ reasons.n:
   [[AN+]];
 
 way.n:
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bs+)} & {@MXs+} &
       (MVa- or
       <noun-main-s> or
@@ -964,8 +964,8 @@ time.n:
   AN+;
 
 ways.n:
-  (<noun-modifiers> & 
-    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} & 
+  (<noun-modifiers> &
+    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
       (MVa- or
       <noun-main-p> or
       <rel-clause-p>)) or
@@ -1001,7 +1001,7 @@ times.n:
 
 %PRONOUNS
 
-she he: 
+she he:
   {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+ or (Dn- & SJn+));
 
 % The E- is for "It's either us or them" ... not ideal, but OK
@@ -1035,7 +1035,7 @@ it:
    or SJls+ or SJrs- or (Dn- & SJn+);
 
 % O*c: "we will go faster than they"
-they: 
+they:
   ({[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-)) or
   Ox- or
   SJlp+ or SJrp- or (Dn- & SJn+);
@@ -1051,27 +1051,27 @@ we:
 % SJrp-: allows only "...and I", disallows "I and ..."
 % Ds- & SJl+: "Either I or ..."
 % Dn- & SJn+: "Neither I not ..."
-I.p: 
-  <marker-entity> or 
-  ((Sp*i+ or SX+) & <CLAUSE>) or 
-  SIp*i- or 
+I.p:
+  <marker-entity> or
+  ((Sp*i+ or SX+) & <CLAUSE>) or
+  SIp*i- or
   SJr- or
   (Ds- & SJl+) or
   (Dn- & SJn+) or
   SXI-;
 
 them_all us_all you_all: Ox- or J-;
-% it_all gets a cost when used as direct object (Ox) to avoid 
+% it_all gets a cost when used as direct object (Ox) to avoid
 % inappropriate parse "Please paint it all white"
 it_all: [[Ox-]] or J-;
 
-%we're they're I'm you're: 
-%(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
+%we're they're I'm you're:
+%(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
 %({N+} & (Pg+ or Pv+))) & <CLAUSE>;
 
-’m 'm: SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
+’m 'm: SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
 ({N+} & (Pg+ or Pv+)));
-’re 're: Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or 
+’re 're: Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
 ({N+} & (Pg+ or Pv+)));
 
 %I've they've you've we've: PP+ & <CLAUSE>;
@@ -1089,15 +1089,15 @@ something someone somebody:
 nothing no_one nobody:
 {EN-} & {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} &
 <noun-main-s>) or <noun-and-s> or YS+);
-everything everyone anyone everybody anybody anything: 
+everything everyone anyone everybody anybody anything:
 {EN-} & {EL+} & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} &
 <noun-main-s>) or <noun-and-s> or YS+);
 else: EL-;
 
-others: 
+others:
   {Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
 
-mine.p yours theirs hers ours: 
+mine.p yours theirs hers ours:
   <noun-main-x> or SJl+ or SJr- or (Dn- & SJn+);
 
 
@@ -1110,8 +1110,8 @@ the:
   (TR- & U+) or
   (L+ & (AJld+ or AJrd-));
 
-those: 
-  ({AL-} & (Dmc+ or DD+)) or 
+those:
+  ({AL-} & (Dmc+ or DD+)) or
   (<noun-sub-p> & (<noun-main-p> or RJlr+ or RJrr-)) or
   <noun-and-p>;
 
@@ -1120,8 +1120,8 @@ this.d: ({AL-} & D*u+) or DTn+;
 these: <noun-main-p> or <noun-and-p> or ({AL-} & (Dmc+ or DD+));
 
 both.d:
-  Dmc+ or 
-  E+ or 
+  Dmc+ or
+  E+ or
   ({M+ or (ALx+ & Jp+)} & <noun-main-p>) or
   <noun-and-p>;
 
@@ -1129,24 +1129,24 @@ both.a: Paf- or AJra-;
 
 % half: prefer NJ+ over noun-main-x, because half is almost surely
 % modifying something, instead of being a direct object, subject, etc.
-half: {EN-} & 
-  (NJ+ or 
+half: {EN-} &
+  (NJ+ or
     [(({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+)) & <noun-main-x>]);
 
-% "How many years" -- prefer TQ+ over Dmc+ 
+% "How many years" -- prefer TQ+ over Dmc+
 many:
   (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+)) or
-  (AM- & (Dmcy+ or Oy- or Jy-)) or 
+  (AM- & (Dmcy+ or Oy- or Jy-)) or
   ({EE-} & (ND+ or NIn+)) or
   ({DD-} & {EAx-} & Dmc+) or
   ((({EAx-} & {DD-}) or H-) & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>));
 
-all.a: 
-  ({EN-} & 
-    (E+ or 
-    Dm+ or 
-    NIc+ or 
-    ({@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+} & 
+all.a:
+  ({EN-} &
+    (E+ or
+    Dm+ or
+    NIc+ or
+    ({@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+} &
       (<noun-main2-x> or
       (S**t+ & <CLAUSE>) or
       SI**t-)) or
@@ -1157,33 +1157,33 @@ all_that: EA+ or EE+ or (<noun-sub-s> & <noun-main-s>);
 all_this: (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
 all_those all_these: (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
 
-one: 
-  NA+ or 
-  NMw- or 
-  NN+ or 
+one:
+  NA+ or
+  NMw- or
+  NN+ or
   ({EN-} & NIfn+) or
-  ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} & 
-    (YS+ or 
+  ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} &
+    (YS+ or
     (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
-    <noun-and-s>)))) or 
-  NIm+ or 
+    <noun-and-s>)))) or
+  NIm+ or
   NSn+ or
-  (NA- & ND+) or 
-  DTi+ or 
+  (NA- & ND+) or
+  DTi+ or
   (NA- & Xd- & TY- & Xc+);
 
-ones: 
-  {@A- & {[[@AN-]]}} & {Dmc-} & 
-    (YP+ or 
+ones:
+  {@A- & {[[@AN-]]}} & {Dmc-} &
+    (YP+ or
     (<noun-sub-p> & <noun-main-p>) or
     <noun-and-p>);
 
-any: 
-  ({EN-} & 
-    (D+ or 
-    DD+ or 
+any:
+  ({EN-} &
+    (D+ or
+    DD+ or
     (<noun-sub-x> & <noun-main-x>) or
-    <noun-and-x>)) or 
+    <noun-and-x>)) or
   EC+;
 
 % XXX why doesn't this clash with a.eq ??
@@ -1204,7 +1204,7 @@ a_lot:
 % OFd+ & Dmc+: "I ate a few of the cookies."
 few:
   (OFd+ & Dmc+ & {A-} & (D- or EA-))
-  or ({EA- or EF+ or ({EA-} & DD-)} & 
+  or ({EA- or EF+ or ({EA-} & DD-)} &
      (Dmc+ or [<noun-sub-p> & <noun-main-p>] or <noun-and-p>));
 
 a_couple:
@@ -1221,7 +1221,7 @@ a_few:
   or ND+
   or NIn+
   or ECa+
-  or ({EN-} & 
+  or ({EN-} &
     (Dmc+
     or ND+
     or NIn+
@@ -1268,15 +1268,15 @@ the_most:
   or MVa-;
 
 part.i:
-  (OF+ & <noun-main-s>) or
-  <noun-and-s> or
-  ({Ds-} & <adv-of>);
+  (OF+ & <noun-main-s>)
+  or <noun-and-s>
+  or ({Ds-} & <adv-of>);
 
 all.e: <adv-of>;
 
 % "he likes you least of all" has no determiner, just uses MVa-.
 least.a: EA+;
-least.e: {DD-} & MVa- & {Mp+}; 
+least.e: {DD-} & MVa- & {Mp+};
 none:
   (<noun-sub-x> & <noun-main-x>)
   or <noun-and-x> or <adv-of>;
@@ -1290,17 +1290,17 @@ plenty:
   or [MVa-];
 
 other:
-  Dmu+ or 
-  ({ND-} & {DD-} & Dmc+) or 
+  Dmu+ or
+  ({ND-} & {DD-} & Dmc+) or
   (DD- & (Ds+ or DD+ or <noun-main-s> or <noun-and-s>));
 
-one_other every_other: <noun-main-s> or <noun-and-s> or Ds+; 
+one_other every_other: <noun-main-s> or <noun-and-s> or Ds+;
 any_other no_other: <noun-main-s> or <noun-and-s> or D+;
 all_other: Dm+;
 most_other: Dmc+;
 quite_a quite_an one_such not_every: Ds+;
 some_other no_such: D+;
-every.d: {EN-} & (Ds+ or DTn+ or [[NIc+]]); 
+every.d: {EN-} & (Ds+ or DTn+ or [[NIc+]]);
 
 another: Ds+ or NIc+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or YS+;
 one_another: (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or YS+;
@@ -1349,24 +1349,24 @@ not_enough: ({OF+} & <noun-main-s>) or <noun-and-s> or Dm+;
 % Numeric ranges, e.g. "15 to 20". The "to" (or hyphen) acts as a
 % number in a range, and the requirements should match NUMBER.
 % The NIf connectors (second subscript position is "n" for number
-% and "u" for unit) allow "15 to 20", "15 to 20 kDa" and 
+% and "u" for unit) allow "15 to 20", "15 to 20 kDa" and
 % "15 kDa to 20 kDa", but not "15 kDa to 20".
 % Allowing EC+ for "two to threefold more abundant". This allows also the
 % nonsense "two to three more abundant", but this is likely harmless.
--.j-ru --.j-ru ---.j-ru or.j-ru to.j-ru ->.j-ru -->.j-ru: 
+-.j-ru --.j-ru ---.j-ru or.j-ru to.j-ru ->.j-ru -->.j-ru:
 (NIfn- & {NIr-} & NItn+ & (NM- or EC+ or
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-(NIfu- & {NIr-} & NItu+ & 
+(NIfu- & {NIr-} & NItu+ &
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+)) or
 (NIfp- & {NIr-} & NItp+ & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
 or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
 
 and.j-ru:
-(NIfn- & {NIr-} & NItn+ & (NM- or 
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or 
+(NIfn- & {NIr-} & NItn+ & (NM- or
+(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or
 ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-(NIfu- & {NIr-} & NItu+ & 
+(NIfu- & {NIr-} & NItu+ &
 (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
 
 % and.j-sum is used in numerical sums: "It's a hundred and two in the shade."
@@ -1377,33 +1377,33 @@ and.j-sum 'n.j-sum: NA- & NA+;
 % postmodifier and numeric determiner roles.
 
 two three four five six seven eight nine ten eleven twelve thirteen
-fourteen fifteen sixteen seventeen eighteen nineteen 
-twenty twenty-one twenty-two twenty-three twenty-four 
-twenty-five twenty-six twenty-seven twenty-eight twenty-nine 
-thirty thirty-one thirty-two thirty-three thirty-four 
-thirty-five thirty-six thirty-seven thirty-eight thirty-nine 
-forty forty-one forty-two forty-three forty-four 
-forty-five forty-six forty-seven forty-eight forty-nine 
-fifty fifty-one fifty-two fifty-three fifty-four 
-fifty-five fifty-six fifty-seven fifty-eight fifty-nine 
-sixty sixty-one sixty-two sixty-three sixty-four 
-sixty-five sixty-six sixty-seven sixty-eight sixty-nine 
-seventy seventy-one seventy-two seventy-three seventy-four 
-seventy-five seventy-six seventy-seven seventy-eight seventy-nine 
-eighty eighty-one eighty-two eighty-three eighty-four 
-eighty-five eighty-six eighty-seven eighty-eight eighty-nine 
-ninety ninety-one ninety-two ninety-three ninety-four 
-ninety-five ninety-six ninety-seven ninety-eight ninety-nine 
+fourteen fifteen sixteen seventeen eighteen nineteen
+twenty twenty-one twenty-two twenty-three twenty-four
+twenty-five twenty-six twenty-seven twenty-eight twenty-nine
+thirty thirty-one thirty-two thirty-three thirty-four
+thirty-five thirty-six thirty-seven thirty-eight thirty-nine
+forty forty-one forty-two forty-three forty-four
+forty-five forty-six forty-seven forty-eight forty-nine
+fifty fifty-one fifty-two fifty-three fifty-four
+fifty-five fifty-six fifty-seven fifty-eight fifty-nine
+sixty sixty-one sixty-two sixty-three sixty-four
+sixty-five sixty-six sixty-seven sixty-eight sixty-nine
+seventy seventy-one seventy-two seventy-three seventy-four
+seventy-five seventy-six seventy-seven seventy-eight seventy-nine
+eighty eighty-one eighty-two eighty-three eighty-four
+eighty-five eighty-six eighty-seven eighty-eight eighty-nine
+ninety ninety-one ninety-two ninety-three ninety-four
+ninety-five ninety-six ninety-seven ninety-eight ninety-nine
 oh-one oh-two oh-three oh-four oh-five oh-six oh-seven oh-eight oh-nine
 o-one o-two o-three o-four o-five o-six o-seven o-eight o-nine
 zero-one zero-two zero-three zero-four zero-five zero-six zero-seven zero-eight zero-nine
-several: 
-  NA+ or 
-  NMw- or 
-  ({EN-} & (NIfn+ or NItn-)) or 
-  NN+ or 
-  NW+ or 
-  ({EN- or NIc- or NA-} & (ND+ or NIn+ or 
+several:
+  NA+ or
+  NMw- or
+  ({EN-} & (NIfn+ or NItn-)) or
+  NN+ or
+  NW+ or
+  ({EN- or NIc- or NA-} & (ND+ or NIn+ or
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
   (NA- & {<noun-sub-p> & <noun-main-p>}) or
   (NA- & Xd- & TY- & Xc+);
@@ -1414,18 +1414,18 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
 % the generic "number" category
 % AN+ is needed for date-ranges
 % FRACTIONS are simple fractions
-% Ditto for fractions ... 
+% Ditto for fractions ...
 % Not clear why we use Dmcn+ here, instead of allowing nouns to take ND-
 % as effectively Dmcn and ND are the "same thing" more or less.
-NUMBERS FRACTION: 
-  NMn- or 
-  ({EN-} & (NIfn+ or NItn-)) or 
-  NN+ or 
-  [[NF+]] or 
+NUMBERS FRACTION:
+  NMn- or
+  ({EN-} & (NIfn+ or NItn-)) or
+  NN+ or
+  [[NF+]] or
   [[AN+]] or
-  ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+  ({EN- or NIc-} & (ND+ or NIn+ or OD- or
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
-  EQt+ or 
+  EQt+ or
   EQt-;
 
 % HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
@@ -1442,7 +1442,7 @@ ROMAN-NUMERAL-WORDS.rn: NMr-;
 ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
 % Allow post-posed letter moifiers: e.g. "Vitamin A"
-A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id 
+A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id: NMa-;
 
 % Avoid having I.id interfere with pronoun I.
@@ -1452,7 +1452,7 @@ I.id: [[NMa-]];
 % Note, however, this over-rides generic numbers in this range
 % and so is a superset of the generic numbers disjuncts
 % The following should match NUMBERS with the addition of "or TM-".
-2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 
+2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28
 29 30 31:
 NUMBERS or TM- or [[G+]];
 
@@ -1460,8 +1460,8 @@ NUMBERS or TM- or [[G+]];
 % Used only in espressions such as "December 2nd"
 % Must use regex here as well, to avoid conflict with other regexes
 first.ti second.ti third.ti fourth.ti fifth.ti sixth.ti seventh.ti eighth.ti
-ninth.ti tenth.ti eleventh.ti twelfth.ti thirteenth.ti fourteenth.ti fifteenth.ti 
-sixteenth.ti seventeenth.ti eighteenth.ti nineteenth.ti twentieth.ti 
+ninth.ti tenth.ti eleventh.ti twelfth.ti thirteenth.ti fourteenth.ti fifteenth.ti
+sixteenth.ti seventeenth.ti eighteenth.ti nineteenth.ti twentieth.ti
 twenty-first.ti twenty-second.ti twenty-third.ti twenty-fourth.ti twenty-fifth.ti
 twenty-sixth.ti twenty-seventh.ti twenty-eighth.ti twenty-ninth.ti thirtieth.ti
 thirty-first.ti DAY-ORDINALS.ti: TM-;
@@ -1494,19 +1494,19 @@ NUMBERS or <date-id> or [[G+]];
 '90 '91 '92 '93 '94 '95 '96 '97 '98 '99: <date-id> or [[G+]];
 
 
-1: 
-  NMn- or ({EN-} & (NIfn+ or NItn-)) or 
-  NN+ or [[NF+]] or 
-  ({EN- or NIc-} & (ND+ or NIm+ or OD- or 
+1:
+  NMn- or ({EN-} & (NIfn+ or NItn-)) or
+  NN+ or [[NF+]] or
+  ({EN- or NIc-} & (ND+ or NIm+ or OD- or
   ({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>]))))) or
   TM- or NSn+ or
   EQt+ or EQt-;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
 0:
-  NMn- or ({EN-} & (NIfn+ or NItn-)) or 
-  NN+ or [[NF+]] or 
-  ({EN- or NIc-} & (ND+ or NIn+ or OD- or 
+  NMn- or ({EN-} & (NIfn+ or NItn-)) or
+  NN+ or [[NF+]] or
+  ({EN- or NIc-} & (ND+ or NIn+ or OD- or
   ({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
   or NSn+;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
@@ -1518,7 +1518,7 @@ NUMBERS or <date-id> or [[G+]];
 % the DECADE-TIME regex matches 1950s 1950's 1950’s etc.
 DECADE-TIME
 '20s '30s '40s '50s '60s '70s '80s '90s
-‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s: 
+‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s:
 {TA-} & DG- & (IN- or [[<noun-main-x>]]);
 
 twenties thirties, forties fifties sixties seventies eighties nineties
@@ -1528,9 +1528,9 @@ hundreds.cnt:
 % teens could be above or teenagers (words.n.2)
 teens: ({TA-} & DG- & (IN- or <noun-main-x>)) or <generic-plural-id>;
 
-hundred thousand half-thousand million half-million quarter-million 
-billion half-billion quarter-billion trillion half-trillion 
-quarter-trillion dozen half-dozen 
+hundred thousand half-thousand million half-million quarter-million
+billion half-billion quarter-billion trillion half-trillion
+quarter-trillion dozen half-dozen
 bajillion bazillion gadzillion gagillion gajillion gazillion godzillion
 jillion.a jizillion kabillion kajillion katrillion killion umptillion
 zillion.n:
@@ -1545,7 +1545,7 @@ zillion.n:
       or ({{@L+} & DD-} &  (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
 half_a_dozen half_a_million:
-({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &  
+({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))));
 
 dozens scores.a hundreds.a thousands millions billions trillions
@@ -1558,17 +1558,17 @@ killions umptillions zillions.a:
 tens: {DD-} & OF+ & <noun-main-p>;
 
 1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8 ½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞:
-({NNx-} & NNy+) or NF+ or NIe+ 
-or ({NNx-} & {EN- or NIc-} & (ND+ or NIn+ or OD- or ({DD-} & 
+({NNx-} & NNy+) or NF+ or NIe+
+or ({NNx-} & {EN- or NIc-} & (ND+ or NIn+ or OD- or ({DD-} &
 ([[Ds+]] or Dmcn+ or (<noun-sub-x> & <noun-main-x>)))));
 
-and_a_half: (NW- or NSn-) & 
-(NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} & 
+and_a_half: (NW- or NSn-) &
+(NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} &
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>))))));
 
 quarter.i:
 NS- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
-thirds.m fourths.m quarters.m fifths.m sixths.m sevenths.m eighths.m 
+thirds.m fourths.m quarters.m fifths.m sixths.m sevenths.m eighths.m
 ninths.m tenths.m:
 NW- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 
@@ -1578,68 +1578,68 @@ TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
 last.a dead_last: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or [Jp-] or
 DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
 
-second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
+second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
 
 % This uses the L link for superlatives, but leads to strange parses:
 % "We celebrated their eleventh anniversary" parses differently
-% than "tenth anniversary". XXX this should be fixed, I suppose ... 
+% than "tenth anniversary". XXX this should be fixed, I suppose ...
 
 % A+: "fifteenth century Italy"
 % Jp-: "Mike finished in first place, and John in third."
 third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a :
-L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
-(NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
+L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
+(NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or
 (DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+ or Jp-;
 
 % NS-: "I gave him a third of the loot."
-eleventh.a twelfth.a thirteenth.a fourteenth.a fifteenth.a 
+eleventh.a twelfth.a thirteenth.a fourteenth.a fifteenth.a
 sixteenth.a seventeenth.a eighteenth.a nineteenth.a
 twentieth.a
-twenty-first.a twenty-second.a twenty-third.a 
-twenty-fourth.a twenty-fifth.a twenty-sixth.a 
-twenty-seventh.a twenty-eighth.a twenty-ninth.a 
+twenty-first.a twenty-second.a twenty-third.a
+twenty-fourth.a twenty-fifth.a twenty-sixth.a
+twenty-seventh.a twenty-eighth.a twenty-ninth.a
 thirtieth.a
-thirty-first.a thirty-second.a thirty-third.a 
-thirty-fourth.a thirty-fifth.a thirty-sixth.a 
-thirty-seventh.a thirty-eighth.a thirty-ninth.a 
+thirty-first.a thirty-second.a thirty-third.a
+thirty-fourth.a thirty-fifth.a thirty-sixth.a
+thirty-seventh.a thirty-eighth.a thirty-ninth.a
 fourtieth.a
-fourty-first.a fourty-second.a fourty-third.a 
-fourty-fourth.a fourty-fifth.a fourty-sixth.a 
-fourty-seventh.a fourty-eighth.a fourty-ninth.a 
+fourty-first.a fourty-second.a fourty-third.a
+fourty-fourth.a fourty-fifth.a fourty-sixth.a
+fourty-seventh.a fourty-eighth.a fourty-ninth.a
 fiftieth.a
-fifty-first.a fifty-second.a fifty-third.a 
-fifty-fourth.a fifty-fifth.a fifty-sixth.a 
-fifty-seventh.a fifty-eighth.a fifty-ninth.a 
+fifty-first.a fifty-second.a fifty-third.a
+fifty-fourth.a fifty-fifth.a fifty-sixth.a
+fifty-seventh.a fifty-eighth.a fifty-ninth.a
 sixtieth.a
-sixty-first.a sixty-second.a sixty-third.a 
-sixty-fourth.a sixty-fifth.a sixty-sixth.a 
-sixty-seventh.a sixty-eighth.a sixty-ninth.a 
+sixty-first.a sixty-second.a sixty-third.a
+sixty-fourth.a sixty-fifth.a sixty-sixth.a
+sixty-seventh.a sixty-eighth.a sixty-ninth.a
 seventieth.a
-seventy-first.a seventy-second.a seventy-third.a 
-seventy-fourth.a seventy-fifth.a seventy-sixth.a 
-seventy-seventh.a seventy-eighth.a seventy-ninth.a 
+seventy-first.a seventy-second.a seventy-third.a
+seventy-fourth.a seventy-fifth.a seventy-sixth.a
+seventy-seventh.a seventy-eighth.a seventy-ninth.a
 eightieth.a
-eighty-first.a eighty-second.a eighty-third.a 
-eighty-fourth.a eighty-fifth.a eighty-sixth.a 
-eighty-seventh.a eighty-eighth.a eighty-ninth.a 
+eighty-first.a eighty-second.a eighty-third.a
+eighty-fourth.a eighty-fifth.a eighty-sixth.a
+eighty-seventh.a eighty-eighth.a eighty-ninth.a
 ninetieth.a
-ninety-first.a ninety-second.a ninety-third.a 
-ninety-fourth.a ninety-fifth.a ninety-sixth.a 
+ninety-first.a ninety-second.a ninety-third.a
+ninety-fourth.a ninety-fifth.a ninety-sixth.a
 ninety-seventh.a ninety-eighth.a ninety-ninth.a:
-Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or 
-(NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or 
+Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
+(NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or
 (DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+ or Jp-;
 
-% Miscellaneous ordinal numbers, adjectival usage 
+% Miscellaneous ordinal numbers, adjectival usage
 % prefer G+ over A+ in general, as these are typically parts of names.
 1º.a 2º.a 3º.a 4º.a 5º.a 6º.a 7º.a 8º.a 9º.a
 DAY-ORDINALS.a ORDINALS.a:
-  Pa- or 
-  MVa- or 
+  Pa- or
+  MVa- or
   ({Xc+ & {Xd-}} & CO+) or
-  (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or 
-  NR+ or 
+  (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or
+  NR+ or
   G+ or
   [A+] or
   AJla+ or
@@ -1649,41 +1649,41 @@ DAY-ORDINALS.a ORDINALS.a:
 % "Next on our list..." are ordinals.
 % XXX should be converted to regex...
 % Note also another list of ordinals below, used for time expressions.
-first.ord next.ord last.ord second.ord third.ord fourth.ord fifth.ord 
-sixth.ord seventh.ord eighth.ord ninth.ord tenth.ord eleventh.ord 
-twelfth.ord thirteenth.ord fourteenth.ord fifteenth.ord sixteenth.ord 
-seventeenth.ord eighteenth.ord nineteenth.ord 
-twentieth.ord 
-twenty-first.ord twenty-second.ord twenty-third.ord 
-twenty-fourth.ord twenty-fifth.ord twenty-sixth.ord 
-twenty-seventh.ord twenty-eighth.ord twenty-ninth.ord 
+first.ord next.ord last.ord second.ord third.ord fourth.ord fifth.ord
+sixth.ord seventh.ord eighth.ord ninth.ord tenth.ord eleventh.ord
+twelfth.ord thirteenth.ord fourteenth.ord fifteenth.ord sixteenth.ord
+seventeenth.ord eighteenth.ord nineteenth.ord
+twentieth.ord
+twenty-first.ord twenty-second.ord twenty-third.ord
+twenty-fourth.ord twenty-fifth.ord twenty-sixth.ord
+twenty-seventh.ord twenty-eighth.ord twenty-ninth.ord
 thirtieth.ord
-thirty-first.ord thirty-second.ord thirty-third.ord 
-thirty-fourth.ord thirty-fifth.ord thirty-sixth.ord 
-thirty-seventh.ord thirty-eighth.ord thirty-ninth.ord 
+thirty-first.ord thirty-second.ord thirty-third.ord
+thirty-fourth.ord thirty-fifth.ord thirty-sixth.ord
+thirty-seventh.ord thirty-eighth.ord thirty-ninth.ord
 fourtieth.ord
-fourty-first.ord fourty-second.ord fourty-third.ord 
-fourty-fourth.ord fourty-fifth.ord fourty-sixth.ord 
-fourty-seventh.ord fourty-eighth.ord fourty-ninth.ord 
+fourty-first.ord fourty-second.ord fourty-third.ord
+fourty-fourth.ord fourty-fifth.ord fourty-sixth.ord
+fourty-seventh.ord fourty-eighth.ord fourty-ninth.ord
 fiftieth.ord
-fifty-first.ord fifty-second.ord fifty-third.ord 
-fifty-fourth.ord fifty-fifth.ord fifty-sixth.ord 
-fifty-seventh.ord fifty-eighth.ord fifty-ninth.ord 
+fifty-first.ord fifty-second.ord fifty-third.ord
+fifty-fourth.ord fifty-fifth.ord fifty-sixth.ord
+fifty-seventh.ord fifty-eighth.ord fifty-ninth.ord
 sixtieth.ord
-sixty-first.ord sixty-second.ord sixty-third.ord 
-sixty-fourth.ord sixty-fifth.ord sixty-sixth.ord 
-sixty-seventh.ord sixty-eighth.ord sixty-ninth.ord 
+sixty-first.ord sixty-second.ord sixty-third.ord
+sixty-fourth.ord sixty-fifth.ord sixty-sixth.ord
+sixty-seventh.ord sixty-eighth.ord sixty-ninth.ord
 seventieth.ord
-seventy-first.ord seventy-second.ord seventy-third.ord 
-seventy-fourth.ord seventy-fifth.ord seventy-sixth.ord 
-seventy-seventh.ord seventy-eighth.ord seventy-ninth.ord 
+seventy-first.ord seventy-second.ord seventy-third.ord
+seventy-fourth.ord seventy-fifth.ord seventy-sixth.ord
+seventy-seventh.ord seventy-eighth.ord seventy-ninth.ord
 eightieth.ord
-eighty-first.ord eighty-second.ord eighty-third.ord 
-eighty-fourth.ord eighty-fifth.ord eighty-sixth.ord 
-eighty-seventh.ord eighty-eighth.ord eighty-ninth.ord 
+eighty-first.ord eighty-second.ord eighty-third.ord
+eighty-fourth.ord eighty-fifth.ord eighty-sixth.ord
+eighty-seventh.ord eighty-eighth.ord eighty-ninth.ord
 ninetieth.ord
-ninety-first.ord ninety-second.ord ninety-third.ord 
-ninety-fourth.ord ninety-fifth.ord ninety-sixth.ord 
+ninety-first.ord ninety-second.ord ninety-third.ord
+ninety-fourth.ord ninety-fifth.ord ninety-sixth.ord
 ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
 DAY-ORDINALS.ord ORDINALS.ord :
 (Wd- & {M+} & Ss*o+);
@@ -1697,14 +1697,14 @@ DAY-ORDINALS.ord ORDINALS.ord :
 % Relations
 % "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
 =.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
-equiv.v sim.v simeq.v approx.v ~.v: 
-([S-] or EQ*r-) &  ([O+] or EQ*r+) & 
+equiv.v sim.v simeq.v approx.v ~.v:
+([S-] or EQ*r-) &  ([O+] or EQ*r+) &
 (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
 
 % Binary operators:
 % these occur in "simple" expressions
-*.v "/.v" +.v -.v x.v: 
-([S-] or EQ-) &  ([O+] or EQ+) & 
+*.v "/.v" +.v -.v x.v:
+([S-] or EQ-) &  ([O+] or EQ+) &
 (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
 
 % Allows parsing of "dollars per day" or "mL/sec" but is somewhat
@@ -1715,7 +1715,7 @@ per "/.per": Us+ & Mp-;
 % Binary operators, strict:
 % Here EQt attaches only to terms, which may be numbers or letters.
 % By contrast, EQrr can only attach to relations (=, < > etc.)
-+.eq -.eq *.eq "/.eq" x.eqn: 
++.eq -.eq *.eq "/.eq" x.eqn:
 (EQt+ & EQt-) & (EQrr- or EQrr+ or AN+);
 
 ->.eq -->.eq: (S- & O+) & (AN+ or (Xd- & Xc+ & MX-));
@@ -1730,7 +1730,7 @@ per "/.per": Us+ & Mp-;
 
 A.eq B.eq C.eq D.eq E.eq F.eq G.eq H.eq I.eq J.eq K.eq L.eq M.eq
 N.eq O.eq P.eq Q.eq R.eq S.eq T.eq U.eq V.eq W.eq X.eq Y.eq Z.eq
-a.eq b.eq c.eq d.eq e.eq f.eq g.eq h.eq i.eq j.eq k.eq l.eq m.eq 
+a.eq b.eq c.eq d.eq e.eq f.eq g.eq h.eq i.eq j.eq k.eq l.eq m.eq
 n.eq o.eq p.eq q.eq r.eq s.eq t.eq u.eq v.eq w.eq x.eq y.eq z.eq:
 EQt+ or EQt-;
 
@@ -1745,8 +1745,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 % These are the verb-form expressions for ordinary verbs.
 %
-% <marker-past> is a marker which should never be used in a link.  
-% It is used to flag past-tense forms in the dictionary.  It's only use 
+% <marker-past> is a marker which should never be used in a link.
+% It is used to flag past-tense forms in the dictionary.  It's only use
 % is to supply an answer to the "isPastTense" call in the Java API.
 % which is needed by relex-version 1.2.0 and earlier.  Newer versions
 % use the v-d, w-d, and q-d tags to identify past-tense verbs, and so
@@ -1765,7 +1765,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & (Pv- or Mv-);
-<verb-ge>: {@E-} & (<MX-PHRASE> or 
+<verb-ge>: {@E-} & (<MX-PHRASE> or
  <OPENER> or
  ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
  [DP- & J-] or [[Wq- & PF+]]);
@@ -1774,19 +1774,19 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
 % <noun-and-u>: allows use of gerunds as nouns.
 % VJ*g: ??? this is commented out, where would this occur?
-<verb-ge-d>: 
-  (<noun-modifiers> & 
-    (Dmu- or [[()]]) & 
+<verb-ge-d>:
+  (<noun-modifiers> &
+    (Dmu- or [[()]]) &
     (({[[Ds-]]} & OF+) or [[()]]) &
-    ((<noun-sub-s> & {@MXs+} & 
+    ((<noun-sub-s> & {@MXs+} &
       ((Ss+ & <CLAUSE>) or SIs- or Os- or J-)) or
      AJra- or AJla+ or
      <noun-and-u>)) or
   [[AN+]];
 
 <verb-pg,ge>: {@E-} & (
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or 
- Mg- or Pg- or 
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
+ Mg- or Pg- or
  <MX-PHRASE> or <OPENER> or
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
@@ -1806,7 +1806,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-s-pv>: {@E-} & (Pvf- or Mv-) & {@MV+};
 <verb-s-pv-b>: {@E-} & (Pvf- or Mv-);
 
-% These are the verb-form expressions for special verbs that can take 
+% These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
 
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
@@ -1816,12 +1816,12 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-x-sp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-)));
 <verb-x-pp>: {@E-} & PPf-;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
-<verb-x-pg,ge>: {@E-} & (Pgf- or Mg- or 
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or 
+<verb-x-pg,ge>: {@E-} & (Pgf- or Mg- or
+ ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
  <MX-PHRASE> or <OPENER> or
  [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
 
-% conjoined verbs. 
+% conjoined verbs.
 % VJr == left
 % VJl == right
 % VJb == but
@@ -1835,12 +1835,12 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 %
 % The following control whether the conjunction can take an object.
 % The conjunction should take an object if both verbs are transitive,
-% e.g. "I saw and greeted Sue", which should parse as 
+% e.g. "I saw and greeted Sue", which should parse as
 % "I (saw and greeted) Sue".
-% VJ**i == intranstive 
+% VJ**i == intranstive
 % VJ**t == transitive
 %
-% s == singluar, pl == plural, sp == singular or plural 
+% s == singluar, pl == plural, sp == singular or plural
 % g == gerund
 <verb-and-s->: {@E-} & VJrs-;
 <verb-and-s+>: {@E-} & VJls+;
@@ -1857,9 +1857,9 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-and-had->: {@E-} & VJrh-;
 <verb-and-had+>: {@E-} & VJlh+;
 
-<verb-and-sp-t>: 
-  <verb-and-sp-t-> or 
-  <verb-and-sp-t+> or 
+<verb-and-sp-t>:
+  <verb-and-sp-t-> or
+  <verb-and-sp-t+> or
   (VJn*t+ & Dn-);
 
 % Verb macros making use of above connectors.
@@ -1921,7 +1921,7 @@ define(`VERB_S_PLI',`'
   (($1) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>)
 
-% This may be too broad ... 
+% This may be too broad ...
 define(`VERB_X_S',`'
   ((<verb-x-s> & ($1))
   or (<verb-and-s-> & ([($1)] or ()))
@@ -1944,10 +1944,10 @@ define(`VERB_X_PLI',`'
 
 % AUXILIARY VERBS
 
-%<vc-do>: (((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+}) 
+%<vc-do>: (((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
 %or ({N+} & I*d+));
 %do.v: ({@E-} & (Sp- or SFp- or (RS- & Bp-) or Wi-) & <vc-do>)
-%or ((SIp+ or SFIp+) & (({Q-} & I*d+) or CQ-)) or 
+%or ((SIp+ or SFIp+) & (({Q-} & I*d+) or CQ-)) or
 %({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 %does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & (({Q-} & I*d+) or CQ-));
 %did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & (({Q-} & I*d+) or CQ-));
@@ -1957,7 +1957,7 @@ define(`VERB_X_PLI',`'
 %
 %don't: (({Q-} & (SIp+ or SFIp+) & I*d+) or ({@E-} & (Sp- or SFp- or
 %(RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
-%doesn't: (({Q-} & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) & 
+%doesn't: (({Q-} & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) &
 %(I*d+ or [[()]]);
 %didn't: <marker-past> or ((({Q-} & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
 %(RS- & B-)))) & (I*d+ or [[()]]));
@@ -1965,7 +1965,7 @@ define(`VERB_X_PLI',`'
 %Mike replaced "{Q-}" with "(Rw- or Q- or [()])"
 
 <vc-do>:
-  ((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+}) 
+  ((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
   or ({N+} & I*d+);
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
@@ -1976,7 +1976,7 @@ do.v:
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-))
   or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 
-does.v: 
+does.v:
   VERB_X_S(<vc-do>)
   or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 
@@ -1988,14 +1988,14 @@ did.v-d:
 % XXX why not <vc-do> here ?
 % verb-pv-b: "I want it done." "I want the job done"
 <vc-done>: B- or O+ or [[@MV+ & O*n+]] or Vd+;
-done.v: 
+done.v:
   VERB_PP(<vc-done>) or
   <verb-po> or
   <verb-pv-b> or
   S-;
 
 % adjectival modifier: "I am done working", "I am through being mad"
-done.a finished.a through.a: 
+done.a finished.a through.a:
   ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or
   (AJra- & {@MV+}) or
   ({@MV+} & AJla+);
@@ -2004,16 +2004,16 @@ doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
-don't don’t: 
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or 
+don't don’t:
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
 
-doesn't doesn’t: 
+doesn't doesn’t:
   (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+) & I*d+) or
   <verb-x-s>) & (I*d+ or [[()]]);
 
 didn't.v-d didn’t.v-d:
-  <marker-past> or 
+  <marker-past> or
   ((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
     ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]));
 
@@ -2027,56 +2027,56 @@ have.v:
   VERB_X_PLI(<vc-have>)
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
-has.v: 
+has.v:
   VERB_X_S(<vc-have>)
   or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
-had.v-d: 
-  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or 
-  (<verb-x-sp> & <vc-have>) or 
+had.v-d:
+  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or
+  (<verb-x-sp> & <vc-have>) or
   (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
-  (<verb-x-pp> & 
-    (TO+ or 
-    ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or 
-    (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or 
+  (<verb-x-pp> &
+    (TO+ or
+    ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or
+    (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or
   [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
-hasn't hasn’t: 
+hasn't hasn’t:
 (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-haven't haven’t: 
-(((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or 
+haven't haven’t:
+(((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or
 (RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-hadn't.v-d hadn’t.v-d: <marker-past> or 
-((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} & 
+hadn't.v-d hadn’t.v-d: <marker-past> or
+((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} &
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]));
 
 % Give [K+] a cost so as to prefer Pp+ in general
-%<vc-be>: 
-%  ({@EBm+} & (((O*t+ or [B**t-] or [K+] or BI+ or OF+ or PF- or 
-%      (Osi+ & R+ & Bs+) or 
-%      (Opi+ & R+ & Bp+) or 
+%<vc-be>:
+%  ({@EBm+} & (((O*t+ or [B**t-] or [K+] or BI+ or OF+ or PF- or
+%      (Osi+ & R+ & Bs+) or
+%      (Opi+ & R+ & Bp+) or
 %      [[()]]) & {@MV+}) or
-%    (Pp+ & {THi+ or @MV+}) or 
-%    THb+ or 
-%    TO+ or 
-%    Pa+)) or 
+%    (Pp+ & {THi+ or @MV+}) or
+%    THb+ or
+%    TO+ or
+%    Pa+)) or
 %  ({N+} & (AF- or Pv+ or I*v+)) or
 %  (({N+} or {Pp+}) & Pg*b+);
 
 <vc-be-no-obj>:
-  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or 
-      (Osi+ & R+ & Bs+) or 
-      (Opi+ & R+ & Bp+) or 
+  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
+      (Osi+ & R+ & Bs+) or
+      (Opi+ & R+ & Bp+) or
       [[()]]) & {@MV+}) or
-    (Pp+ & {THi+ or @MV+}) or 
-    THb+ or 
-    TO+ or 
-    Pa+)) or 
+    (Pp+ & {THi+ or @MV+}) or
+    THb+ or
+    TO+ or
+    Pa+)) or
   ({N+} & (AF- or Pv+ or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+);
 
@@ -2096,44 +2096,44 @@ hadn't.v-d hadn’t.v-d: <marker-past> or
 % Colon can be used as a synonym for "is"
 % "The answer to your question: yes"
 % "The capital of Germany: Berlin"
-":.v": 
+":.v":
   <verb-x-s> & <vc-be>;
 
 % verb-x-s,u: "there is blood on his hands"
 % Unfortunately, this allows "There is chasing dogs", which pairs SFu to Op
 % and has to be removed via post-processing.
-is.v: 
-  (<verb-x-s,u> & <vc-be>) or 
+is.v:
+  (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
   (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
 
-'s.v ’s.v: [[(<verb-x-s,u> & 
-(({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ or 
+'s.v ’s.v: [[(<verb-x-s,u> &
+(({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ or
 (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+}) or
 (Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)) or
 (SIs+ & PF-)]];
 
-% are.v: 
-%  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+% are.v:
+%  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
 %    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
 
 % Don't allow are.v with uncountable noun objects.
-are.v: 
- ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or 
+are.v:
+ ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
 was.v-d:
-  <marker-past> or 
+  <marker-past> or
   (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
   ({@E-} & SX- & <vc-be>) or
   (((Rw- or ({Ic-} & Q-) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
-were.v-d: 
-  <marker-past> or 
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>) or 
-  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>) or 
+were.v-d:
+  <marker-past> or
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>) or
+  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>) or
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
@@ -2143,7 +2143,7 @@ am.v:
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
 
 % S*x- used for passive participles: "this action be taken".
-% XXX I used verb-and-sp-i- but maybe this is wrong .. 
+% XXX I used verb-and-sp-i- but maybe this is wrong ..
 % "Show me my notes and be nice about it."
 be.v:
   ({@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-be>)
@@ -2152,45 +2152,45 @@ be.v:
 
 been.v: {@E-} & PPf- & <vc-be>;
 being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
-or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or 
+or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or
 <verb-ge-d>;
 
-isn't isn’t: (<verb-x-s> or 
+isn't isn’t: (<verb-x-s> or
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 wasn't.v-d wasn’t.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- &
 Bs-))) or ((Rw- or ({Ic-} & Q-) or [()]) &
 (SI*+ or SXI+ or SFIs+))) & <vc-be>);
-aren't aren’t: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+aren't aren’t: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
-weren't.v-d weren’t.v-d: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or 
+weren't.v-d weren’t.v-d: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
 ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
-will.v can.v may.v must.v could.v might.v shall.v: 
+will.v can.v may.v must.v could.v might.v shall.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & {N+} & {@E-} & I+) or
   ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
-should.v: 
+should.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or 
+  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
-would.v: 
+would.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & {Vw+} & I+) or CQ-)) or
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
-ought.v: 
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or 
+ought.v:
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
     ({@E-} & (S- or SF- or (RS- & B-))) or
-    <verb-and-sp->) & 
+    <verb-and-sp->) &
   (TO+ or (N+ & I+));
 
-won't can't mustn't couldn't shouldn't cannot needn't 
-won’t can’t mustn’t couldn’t shouldn’t needn’t: 
+won't can't mustn't couldn't shouldn't cannot needn't
+won’t can’t mustn’t couldn’t shouldn’t needn’t:
   ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
   ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
@@ -2204,7 +2204,7 @@ wouldn't wouldn’t:
 
 % ===================================================================
 % COMMON VERB CATEGORIES (The last number of the file name indicates
-% the verb form: 1=plural-infinitive, 2=singular, 3=past("ed"), 
+% the verb form: 1=plural-infinitive, 2=singular, 3=past("ed"),
 % 4=progressive("-ing"), 5=gerund("-ing".)
 
 % abbreviations for ditransitive and optionally ditranstive verbs
@@ -2218,28 +2218,28 @@ wouldn't wouldn’t:
 <vc-intrans>: {@MV+};
 
 % XXX Hmmm. There is a fair number of verbs in here that are "weakly"
-% transitive, i.e. are transitive in various rare usages: 
+% transitive, i.e. are transitive in various rare usages:
 % "I ambled the horse", "I hydroplaned the car", etc.  Per theory of
-% functional grammar and related, transitivity should be taken as 
+% functional grammar and related, transitivity should be taken as
 % variable, so e.g. we could assign a high cost to the transitive use
 % of some of these verbs ... Note that most of will never be transitive
 % in the active present tense: one never says "it rains cats and dogs".
 % I'm too lazy to manually sort through this, si, instead, there is a
 % high-cost {[[O+]]} added to some of these.
 %
-% accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v 
+% accrue.v ache.v acquiesce.v ad-lib.v adhere.v adjoin.v alight.v
 /en/words/words.v.1.1: VERB_PLI(({[[O+]]} & <vc-intrans>));
 
-% accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v 
+% accounts.v accrues.v aches.v acquiesces.v ad-libs.v adheres.v
 /en/words/words.v.1.2: VERB_S_I(<vc-intrans>);
 
-% accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v 
+% accounted.v accrued.v ached.v acquiesced.v ad-libbed.v adhered.v
 /en/words/words.v.1.3: VERB_SPPP_I(({[[O+]]} & <vc-intrans>));
 
 fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
 
-% accruing.v aching.v acquiescing.v ad-libbing.v adhering.v adjoining.v 
-/en/words/words.v.1.4:  
+% accruing.v aching.v acquiescing.v ad-libbing.v adhering.v adjoining.v
+/en/words/words.v.1.4:
   ({[[O+]]} & <vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 arisen.v: {@E-} & PP- & {@MV+};
@@ -2247,12 +2247,12 @@ arisen.v: {@E-} & PP- & {@MV+};
 % --------------------------------------------------------------
 % intransitive verbs that can take particles like "up" and "out"
 
-<vc-bulge>: {K+} & {@MV+}; 
+<vc-bulge>: {K+} & {@MV+};
 
-% barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v 
+% barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v
 /en/words/words.v.5.1: VERB_PLI(<vc-bulge>);
 /en/words/words.v.5.2: VERB_S_I(<vc-bulge>);
-/en/words/words.v.5.3: 
+/en/words/words.v.5.3:
   VERB_SPPP_I(<vc-bulge>) or
   ({@E-} & A+);
 slunk.v-d: VERB_SPPP_I(<vc-bulge>);
@@ -2265,7 +2265,7 @@ lain.v: VERB_PP(<vc-bulge>);
   <verb-ge-d>;
 % --------------------------------------------------------------
 
-% irregular -- coming is in words.v.5.4 ... 
+% irregular -- coming is in words.v.5.4 ...
 <vc-come>:  {(K+ & {Pa+}) or [[Pg+]]} & {@MV+};
 come.v: VERB_PLI(<vc-come>) or
   VERB_PP(<vc-come>) or
@@ -2275,18 +2275,18 @@ came.v-d: VERB_SPPP_I(<vc-come>);
 
 % --------------------------------------------------------------
 % optionally transitive verbs
-% abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v 
+% abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v
 <vc-tr,intr>: {O+ or B- or [[@MV+ & O*n+]]} & {@MV+};
 
 /en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
 /en/words/words.v.2.2: VERB_S_T(`<vc-tr,intr>');
-/en/words/words.v.2.3:  
+/en/words/words.v.2.3:
   VERB_SPPP_T(`<vc-tr,intr>') or
-  <verb-pv> or 
-  ({@E-} & A+) or 
+  <verb-pv> or
+  ({@E-} & A+) or
   <verb-po>;
 
-shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d 
+shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d
 spoilt.v-d unbent.v-d overfed.v-d:
   VERB_SPPP_T(`<vc-tr,intr>') or
   ({@E-} & A+);
@@ -2302,9 +2302,9 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
   <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
-/en/words/words.v.2.4:  
+/en/words/words.v.2.4:
   <verb-pg> & <vc-tr,intr>;
-/en/words/words.v.2.5:  
+/en/words/words.v.2.5:
   (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 % --------------------------------------------------------------
@@ -2315,14 +2315,14 @@ bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
 
 judge.v: VERB_PLI(`<vc-judge>');
 judges.v: VERB_S_T(`<vc-judge>');
-judged.v-d:  
+judged.v-d:
   VERB_SPPP_T(`<vc-judge>') or
-  (<verb-pv> & {{@MV+} & Pa+}) or 
-  ({@E-} & A+) or 
+  (<verb-pv> & {{@MV+} & Pa+}) or
+  ({@E-} & A+) or
   <verb-po>;
-judging.v:  
+judging.v:
   <verb-pg> & <vc-judge>;
-judging.g:  
+judging.g:
   (<vc-judge> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 % --------------------------------------------------------------
@@ -2342,9 +2342,9 @@ rising.v falling.v:
   ({@E-} & A+) or
   <verb-ge-d>;
 
-% words.v.6: Optionally transitive verbs that can take particles 
+% words.v.6: Optionally transitive verbs that can take particles
 % like "up" and "out" -- see also words.v.8
-% average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v 
+% average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v
 % The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
 % "she walked out of the room two minutes"
 %
@@ -2354,7 +2354,7 @@ rising.v falling.v:
 % and so should be reclaased.
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+) or
-  ({O+ or B-} & {K+}) or 
+  ({O+ or B-} & {K+}) or
   ((B- or O+) & ({@MV+} & Pa**j+)) or
   [[@MV+ & O*n+]]) & {@MV+};
 /en/words/words.v.6.1: VERB_PLI(<vc-fill>);
@@ -2365,40 +2365,40 @@ rising.v falling.v:
   ({@E-} & A+) or
   ({K+} & <verb-po>);
 
-split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d: 
+split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
   VERB_SPPP_T(<vc-fill>) or
-  (<verb-ico> & <vc-fill>) or 
+  (<verb-ico> & <vc-fill>) or
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or
   ({K+} & <verb-po>);
 
-ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d 
-drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d 
-rang.v-d rode.v-d sprang.v-d 
-stalked.v-d woke.v-d test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d 
-countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d 
-partook.v-d begot.v-d overdid.v-d smote.v-d stank.v-d quick-froze.v-d 
-backbit.v-d awoke.v-d redid.v-d chidded.v-d reran.v-d rived.v-d 
-befell.v-d outrode.v-d betrode.v-d outdid.v-d ridded.v-d 
-deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d 
-bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d 
+ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
+drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d
+rang.v-d rode.v-d sprang.v-d
+stalked.v-d woke.v-d test-drove.v-d forbore.v-d oversaw.v-d throve.v-d shrove.v-d
+countersank.v-d outgrew.v-d strode.v-d offsetted.v-d overthrew.v-d
+partook.v-d begot.v-d overdid.v-d smote.v-d stank.v-d quick-froze.v-d
+backbit.v-d awoke.v-d redid.v-d chidded.v-d reran.v-d rived.v-d
+befell.v-d outrode.v-d betrode.v-d outdid.v-d ridded.v-d
+deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d
+bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d
 outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
   VERB_SPPP_T(<vc-fill>);
 
-beaten.v bitten.v blown.v broken.v driven.v drunk.v 
-eaten.v flown.v frozen.v hidden.v ridden.v rung.v 
+beaten.v bitten.v blown.v broken.v driven.v drunk.v
+eaten.v flown.v frozen.v hidden.v ridden.v rung.v
 sprung.v stricken.v swum.v woken.v
-befallen.v interwoven.v overborne.v outgone.v outgrown.v 
-test-driven.v outdone.v shrunken.v countersunk.v 
-bespoken.v underlain.v partaken.v redone.v overdone.v 
-outridden.v deep-frozen.v bestrid.v undergone.v 
-outbidden.v shorn.v outworn.v bestridden.v stunk.v borne.v 
-slain.v woven.v riven.v backbitten.v overlain.v bestrewn.v 
-forborne.v quick-frozen.v browbeaten.v aquitted.v 
-overseen.v smitten.v overdrawn.v striven.v thriven.v 
-shriven.v backslidden.v retaken.v trodden.v chidden.v 
-begotten.v sown.v sewn.v sawn.v hewn.v cloven.v 
-foreknown.v overthrown.v strewn.v awoken.v bidden.v 
+befallen.v interwoven.v overborne.v outgone.v outgrown.v
+test-driven.v outdone.v shrunken.v countersunk.v
+bespoken.v underlain.v partaken.v redone.v overdone.v
+outridden.v deep-frozen.v bestrid.v undergone.v
+outbidden.v shorn.v outworn.v bestridden.v stunk.v borne.v
+slain.v woven.v riven.v backbitten.v overlain.v bestrewn.v
+forborne.v quick-frozen.v browbeaten.v aquitted.v
+overseen.v smitten.v overdrawn.v striven.v thriven.v
+shriven.v backslidden.v retaken.v trodden.v chidden.v
+begotten.v sown.v sewn.v sawn.v hewn.v cloven.v
+foreknown.v overthrown.v strewn.v awoken.v bidden.v
 stridden.v slain_dead:
   VERB_PP(<vc-fill>) or
   (<verb-pv> & {K+}) or
@@ -2406,7 +2406,7 @@ stridden.v slain_dead:
   ({K+} & <verb-po>);
 
 run.v: VERB_PLI(<vc-fill>) or
-  VERB_PP(<vc-fill>) or 
+  VERB_PP(<vc-fill>) or
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or ({K+} & <verb-po>);
 
@@ -2414,22 +2414,22 @@ run.v: VERB_PLI(<vc-fill>) or
   (<verb-pg> & <vc-fill>) or
   <verb-and-pg-> or <verb-and-pg+>;
 
-/en/words/words.v.6.5: 
-  (<vc-fill> & <verb-ge>) or 
-  <verb-ge-d> or 
+/en/words/words.v.6.5:
+  (<vc-fill> & <verb-ge>) or
+  <verb-ge-d> or
   ({@E-} & A+);
 
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
   VERB_PLI(<vc-fill>);
 
 % just like <verb-pg> & <vc-fill>, except that "and" is the one
-% XXX TODO review this ... 
+% XXX TODO review this ...
 and.v-fill:
   ((VJlg- & VJrg+) & (Pg- or Mg- or ({Xd-} & VJrg-))) & <vc-fill>;
 
 % ------------------------------------------------------------
 % common transitive verbs
-% abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v 
+% abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v
 <vc-trans>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
 /en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
 /en/words/words-medical.v.4.1: VERB_PLI(<vc-trans>);
@@ -2437,10 +2437,10 @@ and.v-fill:
 /en/words/words.v.4.2: VERB_S_T(<vc-trans>);
 /en/words/words-medical.v.4.2: VERB_S_T(<vc-trans>);
 
-/en/words/words.v.4.3:  
+/en/words/words.v.4.3:
   VERB_SPPP_T(<vc-trans>) or
-  <verb-pv> or 
-  (({@E-} or {@EA-} or {@AN-}) & A+) or 
+  <verb-pv> or
+  (({@E-} or {@EA-} or {@AN-}) & A+) or
   <verb-po>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
@@ -2451,38 +2451,38 @@ and.v-fill:
   (({@E-} or {@EA-}) & A+) or
   <verb-po>;
 
-forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d 
+forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d
 overran.v-d mistook.v-d underwrote.v-d: VERB_SP_T(<vc-trans>);
-hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d offset.v-d 
-overrun.v-d upset.v-d undercut.v-d: 
+hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d offset.v-d
+overrun.v-d upset.v-d undercut.v-d:
   VERB_SPPP_T(<vc-trans>) or
   (<verb-ico> & <vc-trans>) or
   <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
-forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v: 
+forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v:
   VERB_PP(<vc-trans>) or
   <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
 
 /en/words/words.v.4.4
-/en/words/words-medical.v.4.4:  
+/en/words/words-medical.v.4.4:
 <verb-pg> & <vc-trans>;
 
 /en/words/words.v.4.5
-/en/words/words-medical.v.4.5: 
+/en/words/words-medical.v.4.5:
 (<vc-trans> & <verb-ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
-% auction.v bandy.v bar.v batten.v bite.v block.v blot.v blurt.v 
+% auction.v bandy.v bar.v batten.v bite.v block.v blot.v blurt.v
 % See also words.v.6 for optionally transitive verbs.
 % XXX TODO: should be reviewed, as some of them are optionally transitive
 %
-<vc-kick>: 
-  ((K+ & {[[@MV+]]} & O*n+) or 
-  ((O+ or B-) & {K+}) or 
+<vc-kick>:
+  ((K+ & {[[@MV+]]} & O*n+) or
+  ((O+ or B-) & {K+}) or
   [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
@@ -2493,7 +2493,7 @@ overate.v-d over-ate.v-d forewent.v-d oversewed.v-d forswore.v-d
 foreswore.v-d forwent.v-d: VERB_SPPP_T(<vc-kick>);
 
 stolen.v shaken.v thrown.v torn.v worn.v
-forgone.v curretted.v forsworn.v oversewn.v over-eaten.v 
+forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
  foresworn.v overeaten.v:
   VERB_PP(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
@@ -2502,14 +2502,14 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 
 /en/words/words.v.8.3:
   VERB_SPPP_T(<vc-kick>) or
-  (<verb-pv-b> & {K+} & {@MV+}) or 
-  ({@E-} & A+) or 
+  (<verb-pv-b> & {K+} & {@MV+}) or
+  ({@E-} & A+) or
   ({K+} & <verb-po>);
 
-cut.v: 
+cut.v:
   VERB_SPPP_T(<vc-kick>) or
   (<verb-ico> & <vc-kick>) or
-  (<verb-pv-b> & {K+} & {@MV+}) or 
+  (<verb-pv-b> & {K+} & {@MV+}) or
   ({@E-} & A+) or ({K+} & <verb-po>);
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 /en/words/words.v.8.5:
@@ -2520,7 +2520,7 @@ cut.v:
 <vc-raise>: (((O+ or B-) & {OD+}) or [[@MV+ & O*n+]]) & {@MV+};
 raise.v lower.v up.v: VERB_PLI(<vc-raise>);
 raises.v lowers.v ups.v: VERB_S_T(<vc-raise>);
-raised.v-d lowered.v-d upped.v-d: 
+raised.v-d lowered.v-d upped.v-d:
   VERB_SPPP_T(<vc-raise>) or
   <verb-pv> or
   ({@E-} & A+) or
@@ -2535,7 +2535,7 @@ raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 tend.v: VERB_PLI(<vc-tend>);
 tends.v: VERB_S_T(<vc-tend>);
 tended.v-d:
-  VERB_SPPP_T(<vc-tend>) or 
+  VERB_SPPP_T(<vc-tend>) or
   <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
@@ -2548,7 +2548,7 @@ consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
   VERB_PLI(<vc-consent>);
 consents.v endeavors.v hesitates.v proceeds.v aspires.v purports.v:
   VERB_S_I(<vc-consent>);
-consented.v-d endeavored.v-d hesitated.v-d proceeded.v-d 
+consented.v-d endeavored.v-d hesitated.v-d proceeded.v-d
 aspired.v-d purported.v-d:
   VERB_SPPP_I(<vc-consent>);
 consenting.v endeavoring.v hesitating.v proceeding.v aspiring.v purporting.v:
@@ -2559,7 +2559,7 @@ consenting.v endeavoring.v hesitating.v proceeding.v aspiring.v purporting.v:
 endeavour.v condescend.v deign.v: VERB_PLI(<vc-deign>);
 endeavours.v condescends.v deigns.v: VERB_S_I(<vc-deign>);
 endeavoured.v-d condescended.v-d deigned.v-d: VERB_SPPP_I(<vc-deign>);
-endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or 
+endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
 <vc-happen>: {@MV+} & {TO+ or THi+};
@@ -2570,7 +2570,7 @@ happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
 % ditransitve
 <vc-wish>:
-  ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or 
+  ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or
   <vc-ditrans>;
 wish.v: VERB_PLI(<vc-wish>);
 wished.v-d: VERB_SPPP_I(<vc-wish>);
@@ -2586,14 +2586,14 @@ hopes.v agrees.v pretends.v swears.v prays.v vows.v votes.v: VERB_S_I(<vc-hope>)
 pretended.v-d prayed.v-d: VERB_SPPP_I(<vc-hope>);
 
 % The (<verb-s-pv> & THi+) allows "it is hoped that ..." to parse.
-hoped.v-d voted.v-d vowed.v-d: 
+hoped.v-d voted.v-d vowed.v-d:
   VERB_SPPP_T(<vc-hope>) or
   (<verb-s-pv> & THi+);
 
 agreed.v-d: VERB_SPPP_T(<vc-hope>) or (<verb-pv> & TH+);
 swore.v-d: VERB_SP_T(<vc-hope>);
 sworn.v: VERB_PP(<vc-hope>) or ({@E-} & A+);
-hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v: 
+hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-appear>: {@MV+} & {Pa+ or TOf+ or THi+ or AF- or [[Pv+]]};
@@ -2615,11 +2615,11 @@ cared.v-d: VERB_SPPP_I(<vc-care>);
 caring.v: (<vc-care> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-assert>: ({@MV+} & (TH+ or RSe+ or Z- or Ce+));
-assert.v contend.v remark.v retort.v intimate.v exclaim.v 
-conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v: 
-  VERB_PLI(<vc-assert>); 
+assert.v contend.v remark.v retort.v intimate.v exclaim.v
+conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v:
+  VERB_PLI(<vc-assert>);
 asserts.v contends.v remarks.v retorts.v intimates.v exclaims.v
-conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v: 
+conjectures.v alleges.v surmises.v opines.v insinuates.v supposes.v:
   VERB_S_T(<vc-assert>);
 retorted.v intimated.v exclaimed.v conjectured.v
 surmised.v-d opined.v-d insinuated.v-d: VERB_SPPP_I(<vc-assert>);
@@ -2636,7 +2636,7 @@ supposed.v-d:
   ({@E-} & A+);
 asserting.v contending.v remarking.v retorting.v intimating.v
 exclaiming.v conjecturing.v alleging.v surmising.v opining.v insinuating.v
-supposing.v: 
+supposing.v:
   (<vc-assert> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-muse>: {@MV+} & {TH+};
@@ -2644,19 +2644,19 @@ theorize.v attest.v fantasize.v muse.v speculate.v concur.v:
   VERB_PLI(<vc-muse>);
 theorizes.v attests.v fantasizes.v muses.v speculates.v concurs.v:
   VERB_S_I(<vc-muse>);
-attested.v-d fantasized.v-d mused.v-d speculated.v-d concurred.v-d: 
+attested.v-d fantasized.v-d mused.v-d speculated.v-d concurred.v-d:
   VERB_SPPP_I(<vc-muse>);
 theorized.v-d:  VERB_SPPP_I(<vc-muse>) or (<verb-pv> & THi+);
-theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v: 
+theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v:
   (<vc-muse> & <verb-pg,ge>) or
   <verb-ge-d>;
 
 <vc-reply>: ({@MV+} & {TH+ or Ce+});
-reply.v whisper.v argue.v sigh.v mutter.v 
+reply.v whisper.v argue.v sigh.v mutter.v
 testify.v comment.v respond.v hint.v reason.v brag.v:
   VERB_PLI(<vc-reply>);
-replies.v whispers.v argues.v sighs.v 
-mutters.v testifies.v comments.v responds.v hints.v reasons.v 
+replies.v whispers.v argues.v sighs.v
+mutters.v testifies.v comments.v responds.v hints.v reasons.v
 brags.v:
   VERB_S_T(<vc-reply>);
 replied.v-d sighed.v-d commented.v-d responded.v-d bragged.v-d:
@@ -2668,7 +2668,7 @@ argued.v-d hinted.v-d muttered.v-d reasoned.v-d testified.v-d whispered.v-d:
   (<verb-s-pv> & THi+);
 
 replying.v whispering.v arguing.v sighing.v
-muttering.v testifying.v commenting.v responding.v hinting.v 
+muttering.v testifying.v commenting.v responding.v hinting.v
 reasoning.v bragging.v:
   (<vc-reply> & <verb-pg,ge>) or
   <verb-ge-d>;
@@ -2721,12 +2721,12 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % Hmm ... changes to go.v seem to have obsoleted the need for this ...
 % go.w: {E-} & (Wi- or S-) & I+;
 
-<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+} & {@MV+}; 
+<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+} & {@MV+};
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
-% However, prefer Pg over O*t when possible... 
-goes.v: 
+% However, prefer Pg over O*t when possible...
+goes.v:
   (<verb-x-s> & (<vc-go> or [[O*t+ & {@MV+}]])) or
   (<verb-and-s-> & <vc-go>) or (<vc-go> & <verb-and-s+>);
 went.v-d:
@@ -2735,14 +2735,14 @@ went.v-d:
 
 gone.v: VERB_PP(<vc-go>);
 % The keys are gone.  The popcorn is all gone.
-gone.a: 
+gone.a:
   ({@E-} & Pa-) or
   (AJra- & {@MV+}) or
   ({@MV+} & AJla+);
-  
+
 % XXX TODO maybe need VJ and-able links for going etc. ???
-going.v: 
-  ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or 
+going.v:
+  ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
   ({@E-} & A+) or
   <verb-ge-d>;
 
@@ -2774,7 +2774,7 @@ acted.v-d: VERB_SPPP_I(<vc-act>) or (<verb-pv-b> & {K+} & {@MV+});
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: She looked him over.
-<vc-look>: {({@MV+} & (LI+ or Pa+)) or 
+<vc-look>: {({@MV+} & (LI+ or Pa+)) or
   ({K+ or AF-} & {@MV+}) or
   ((O+ & K+) & {@MV+})};
 look.v: VERB_PLI(<vc-look>);
@@ -2797,7 +2797,7 @@ talking.v: (<vc-repent> & <verb-pg,ge> & <vc-fill>) or <verb-ge-d>;
 <vc-consist>: {@MV+ or @EB+} & OF+;
 consist.v: VERB_PLI(<vc-consist>);
 consists.v: VERB_S_I(<vc-consist>);
-consisted.v-d: VERB_SPPP_I(<vc-consist>); 
+consisted.v-d: VERB_SPPP_I(<vc-consist>);
 consisting.v: (<vc-consist> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-die>: {K+ or OF+} & {@MV+};
@@ -2830,7 +2830,7 @@ professed.v-d desired.v-d:
   <verb-po>;
 undertook.v-d: VERB_SP_T(<vc-attempt>);
 undertaken.v: VERB_PP(<vc-attempt>) or <verb-pv>;
-attempting.g undertaking.g deserving.g  
+attempting.g undertaking.g deserving.g
 plotting.g preferring.g neglecting.g affording.g committing.g professing.g
 desiring.g:
 (<vc-attempt> & <verb-ge>) or <verb-ge-d>;
@@ -2838,11 +2838,11 @@ managing.g: (<vc-attempt> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 attempting.v undertaking.v deserving.v managing.v
 plotting.v preferring.v neglecting.v affording.v committing.v professing.v
 desiring.v:
-<verb-pg> & <vc-attempt>; 
+<verb-pg> & <vc-attempt>;
 
 % like <vc-trans> but with particle
-<vc-seek>: ({@MV+} & TO+) or 
-((((O+ or B-) & {K+}) or (K+ & {[[@MV+]]} & O*n+) or 
+<vc-seek>: ({@MV+} & TO+) or
+((((O+ or B-) & {K+}) or (K+ & {[[@MV+]]} & O*n+) or
 ([[@MV+ & O*n+]])) & {@MV+});
 seek.v: VERB_PLI(<vc-seek>);
 seeks.v: VERB_S_T(<vc-seek>);
@@ -2854,26 +2854,26 @@ seeking.v: <verb-pg> & <vc-seek>;
 decline.v fail.v hasten.v volunteer.v aim.v: VERB_PLI(<vc-decline>);
 declines.v fails.v hastens.v volunteers.v aims.v: VERB_S_T(<vc-decline>);
 
-declined.v-d hastened.v-d volunteered.v-d aimed.v-d: 
+declined.v-d hastened.v-d volunteered.v-d aimed.v-d:
   VERB_SPPP_T(<vc-decline>) or
-  <verb-pv> or 
+  <verb-pv> or
   <verb-po>;
 
-failed.v-d: 
+failed.v-d:
   VERB_SPPP_T(<vc-decline>) or
-  <verb-pv> or 
+  <verb-pv> or
   ({@E-} & A+);
 
-declining.g failing.g hastening.g volunteering.g: 
+declining.g failing.g hastening.g volunteering.g:
   (<vc-decline> & <verb-ge>) or
   <verb-ge-d> or
   ({@E-} & A+);
-declining.v failing.v hastening.v volunteering.v aiming.v: 
+declining.v failing.v hastening.v volunteering.v aiming.v:
   <verb-pg> & <vc-decline>;
 
 % like <vc-trans> but with particle
 <vc-fight>:
-  ({@MV+} & TO+) or 
+  ({@MV+} & TO+) or
   ({({O+ or B-} & {K+}) or
     (K+ & {[[@MV+]]} & O*n+) or
     [[@MV+ & O*n+]]} & {@MV+});
@@ -2884,7 +2884,7 @@ fought.v-d: VERB_SPPP_T(<vc-fight>) or (<verb-pv-b> & {K+} & {@MV+}) or
 fighting.g: (<vc-fight> & <verb-ge>) or <verb-ge-d>;
 fighting.v: <verb-pg> & <vc-fight>;
 
-<vc-threaten>: 
+<vc-threaten>:
   <vc-trans> or
   ({@MV+} & (TO+ or TH+ or Zs- or Ce+));
 
@@ -2895,11 +2895,11 @@ threatens.v means.v arranges.v pledges.v:
 
 threatened.v-d meant.v-d arranged.v-d pledged.v-d:
   VERB_SPPP_T(<vc-threaten>) or
-  <verb-pv> or 
+  <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
 
-meaning.g arranging.g threatening.g pledging.g: 
+meaning.g arranging.g threatening.g pledging.g:
   (<vc-threaten> & <verb-ge>) or <verb-ge-d>;
 meaning.v arranging.v threatening.v pledging.v:
   <verb-pg> & <vc-threaten>;
@@ -2917,22 +2917,22 @@ planned.v-d confessed.v-d:
 planning.g confessing.g: (<vc-plan> & <verb-ge>) or <verb-ge-d>;
 planning.v confessing.v: <verb-pg> & <vc-plan>;
 
-<vc-decide>: 
+<vc-decide>:
   <vc-trans> or
   ({@MV+} & {QI+ or TH+ or TO+ or Ce+ or RSe+ or Zs-});
 
 decide.v resolve.v: VERB_PLI(<vc-decide>);
 decides.v resolves.v: VERB_S_T(<vc-decide>);
 
-decided.v-d resolved.v-d: 
-  VERB_SPPP_T(<vc-decide>) or 
-  (<verb-s-pv> & {THi+}) or 
+decided.v-d resolved.v-d:
+  VERB_SPPP_T(<vc-decide>) or
+  (<verb-s-pv> & {THi+}) or
   <verb-po>;
 
 deciding.v resolving.v: <verb-pg> & <vc-decide>;
 deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 
-<vc-forget>: 
+<vc-forget>:
   {<vc-trans>} or
   ({@MV+} & (QI+ or TH+ or TO+ or Ce+ or RSe+ or Zs- or Pg+));					
 
@@ -2961,7 +2961,7 @@ learning.v: <verb-pg> & <vc-learn>;
 ({@MV+} & (TO+ or TH+ or Ce+ or RSe+ or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
-proposed.v-d: VERB_SPPP_T(<vc-propose>) or 
+proposed.v-d: VERB_SPPP_T(<vc-propose>) or
 (<verb-s-pv> & {THi+ or TSi+ or Z-}) or ({@E-} & A+) or <verb-po>;
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
@@ -2970,7 +2970,7 @@ proposing.v: <verb-pg> & <vc-propose>;
 ({@MV+} & ((TO+ or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
-demanded.v-d: VERB_SPPP_T(<vc-demand>) or <verb-pv> or 
+demanded.v-d: VERB_SPPP_T(<vc-demand>) or <verb-pv> or
 <verb-po>;
 demanding.v: <verb-pg> & <vc-demand>;
 demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
@@ -2979,13 +2979,13 @@ demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
 ({@MV+} & ((TO+ or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 beg.v plead.v: VERB_PLI(<vc-beg>);
 begs.v pleads.v: VERB_S_T(<vc-beg>);
-begged.v-d pleaded.v-d: VERB_SPPP_T(<vc-beg>) or <verb-pv> or 
+begged.v-d pleaded.v-d: VERB_SPPP_T(<vc-beg>) or <verb-pv> or
 <verb-po>;
 begging.v pleading.v: <verb-pg> & <vc-beg>;
 begging.g pleading.g: (<vc-beg> & <verb-ge>) or <verb-ge-d>;
 
 <vc-bear>: <vc-trans>;
-bear.v: 
+bear.v:
   (<verb-i> & (<vc-bear> or ({@MV+} & (Pg+ or TH+ or TO+)))) or
   (<verb-pl> & <vc-bear>);
 bears.v: VERB_S_T(<vc-bear>);
@@ -2994,7 +2994,7 @@ born.v: VERB_PP(<vc-bear>) or <verb-pv> or <verb-po>;
 bearing.g: (<vc-bear> & <verb-ge>) or <verb-ge-d>;
 bearing.v: <verb-pg> & <vc-bear>;
 
-<vc-love>: 
+<vc-love>:
   <vc-trans> or
   ({@MV+} & (TO+ or Pg+));
 
@@ -3003,7 +3003,7 @@ loves.v dislikes.v hates.v: VERB_S_T(<vc-love>);
 
 loved.v-d disliked.v-d hated.v-d:
   VERB_SPPP_T(<vc-love>) or
-  <verb-pv> or 
+  <verb-pv> or
   <verb-po>;
 
 loving.g disliking.g hating.g: (<vc-love> & <verb-ge>) or <verb-ge-d>;
@@ -3027,7 +3027,7 @@ continued.v-d:
 began.v-d: VERB_SP_T(<vc-begin>);
 
 begun.v: VERB_PP(<vc-begin>) or <verb-pv> or <verb-po>;
-beginning.g ceasing.g: 
+beginning.g ceasing.g:
   (<vc-begin> & <verb-ge>) or <verb-ge-d>;
 continuing.g: (<vc-begin> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
@@ -3041,25 +3041,25 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
 starts.v stops.v tries.v: VERB_S_T(<vc-start>);
-started.v-d stopped.v-d tried.v-d: 
+started.v-d stopped.v-d tried.v-d:
   VERB_SPPP_T(<vc-start>) or
-  (<verb-pv-b> & {K+} & {@MV+}) or 
+  (<verb-pv-b> & {K+} & {@MV+}) or
   ({K+} & <verb-po>);
 
 starting.g stopping.g trying.g: (<vc-start> & <verb-ge>) or <verb-ge-d>;
 starting.v stopping.v trying.v: <verb-pg> & <vc-start>;
 
-% The Pg+ doesn't really apply to all of these ... 
+% The Pg+ doesn't really apply to all of these ...
 <vc-dispute>: <vc-trans> or
-  ({@MV+} & (TH+ or Zs-)) or 
+  ({@MV+} & (TH+ or Zs-)) or
   ({@MV+} & Pg+);
 recognize.v dispute.v accept.v calculate.v
-record.v deduce.v envision.v recount.v signify.v clarify.v disclose.v 
-recollect.v adduce.v posit.v reiterate.v infer.v presuppose.v: 
+record.v deduce.v envision.v recount.v signify.v clarify.v disclose.v
+recollect.v adduce.v posit.v reiterate.v infer.v presuppose.v:
   VERB_PLI(<vc-dispute>);
 recognizes.v disputes.v calculates.v records.v deduces.v
 accepts.v envisions.v recounts.v signifies.v clarifies.v discloses.v recollects.v
-adduces.v posits.v reiterates.v infers.v presupposes.v: 
+adduces.v posits.v reiterates.v infers.v presupposes.v:
   VERB_S_T(<vc-dispute>);
 recognized.v-d disputed.v-d accepted.v-d calculated.v-d
 recorded.v-d deduced.v-d envisioned.v-d
@@ -3067,8 +3067,8 @@ recounted.v-d signified.v-d clarified.v-d disclosed.v-d
 recollected.v-d adduced.v-d posited.v-d
 reiterated.v-d inferred.v-d presupposed.v-d:
  VERB_SPPP_T(<vc-dispute>) or (<verb-s-pv> & {THi+}) or ({@E-} & A+)
-or <verb-po>; 
-recognizing.g disputing.g accepting.g calculating.g deducing.g recording.g 
+or <verb-po>;
+recognizing.g disputing.g accepting.g calculating.g deducing.g recording.g
 envisioning.g recounting.g signifying.g clarifying.g disclosing.g
 recollecting.g adducing.g positing.g reiterating.g inferring.g presupposing.g:
 (<vc-dispute> & <verb-ge>) or <verb-ge-d>;
@@ -3082,7 +3082,7 @@ undisputed.v: (<verb-s-pv> & {THi+});
 <vc-repeat>: {<vc-trans>} or ({@MV+} & TH+);
 repeat.v reflect.v provide.v counter.v signal.v: VERB_PLI(<vc-repeat>);
 repeats.v reflects.v provides.v counters.v signals.v: VERB_S_T(<vc-repeat>);
-repeated.v-d reflected.v-d countered.v-d signaled.v-d signalled.v-d: 
+repeated.v-d reflected.v-d countered.v-d signaled.v-d signalled.v-d:
   VERB_SPPP_T(<vc-repeat>) or
   <verb-pv> or
   <verb-po> or
@@ -3090,12 +3090,12 @@ repeated.v-d reflected.v-d countered.v-d signaled.v-d signalled.v-d:
 provided.v-d:
   VERB_SPPP_T(<vc-repeat>) or
   <verb-pv> or
-  <verb-po> or 
+  <verb-po> or
   ({@E-} & A+) or
   ((TH+ or Ce+) & (({{Xd-} & Xc+} & CO+) or ({Xd- & Xc+} & MVs-)));
-repeating.v reflecting.v providing.v countering.v signaling.v signalling.v: 
+repeating.v reflecting.v providing.v countering.v signaling.v signalling.v:
   <verb-pg> & <vc-repeat>;
-repeating.g reflecting.g countering.g signaling.g signalling.g: 
+repeating.g reflecting.g countering.g signaling.g signalling.g:
   (<vc-repeat> & <verb-ge>) or <verb-ge-d>;
 providing.g:
   (<vc-repeat> & <verb-ge>) or
@@ -3104,28 +3104,28 @@ providing.g:
 
 <vc-sense>: <vc-trans> or
   ({@MV+} & (Ce+ or TH+ or RSe+ or Pg+));
-sense.v doubt.v reaffirm.v reckon.v regret.v proclaim.v ascertain.v discern.v 
+sense.v doubt.v reaffirm.v reckon.v regret.v proclaim.v ascertain.v discern.v
 stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v boast.v:
   VERB_PLI(<vc-sense>);
-senses.v reaffirms.v doubts.v reckons.v regrets.v proclaims.v 
-stipulates.v ascertains.v discerns.v affirms.v certifies.v trusts.v 
-postulates.v ensures.v implies.v verifies.v boasts.v: 
+senses.v reaffirms.v doubts.v reckons.v regrets.v proclaims.v
+stipulates.v ascertains.v discerns.v affirms.v certifies.v trusts.v
+postulates.v ensures.v implies.v verifies.v boasts.v:
   VERB_S_T(<vc-sense>);
 doubted.v-d reaffirmed.v-d sensed.v-d reckoned.v-d regretted.v-d stipulated.v-d
-proclaimed.v-d ascertained.v-d discerned.v-d affirmed.v-d certified.v-d 
+proclaimed.v-d ascertained.v-d discerned.v-d affirmed.v-d certified.v-d
 trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
   VERB_SPPP_T(<vc-sense>) or
   (<verb-s-pv> & {THi+}) or
   ({@E-} & A+) or
   <verb-po>;
 reaffirming.g sensing.g doubting.g stipulating.g
-reckoning.g regretting.g proclaiming.g ascertaining.g 
-discerning.g affirming.g certifying.g trusting.g 
+reckoning.g regretting.g proclaiming.g ascertaining.g
+discerning.g affirming.g certifying.g trusting.g
 postulating.g ensuring.g implying.g verifying.g boasting.g:
  (<vc-sense> & <verb-ge>) or <verb-ge-d>;
 sensing.v doubting.v reckoning.v reaffirming.v stipulating.v
-regretting.v proclaiming.v ascertaining.v discerning.v 
-affirming.v certifying.v trusting.v postulating.v ensuring.v 
+regretting.v proclaiming.v ascertaining.v discerning.v
+affirming.v certifying.v trusting.v postulating.v ensuring.v
 implying.v verifying.v boasting.v:
   <verb-pg> & <vc-sense>;
 
@@ -3134,7 +3134,7 @@ implying.v verifying.v boasting.v:
 % AZ+ link: "John imagined Mary as innocent as a lamb"
 % similar to vc-see
 <vc-imagine>: <vc-trans> or
-  ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or 
+  ({@MV+} & (Ce+ or TH+ or RSe+ or Z-)) or
   ((B- or O+) & {@MV+} & {Pg+ or AZ+ or Pv+}) or
   ({@MV+} & Pg+);
 imagine.v: VERB_PLI(<vc-imagine>);
@@ -3147,20 +3147,20 @@ imagined.v:
 imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
 imagining.v: <verb-pg> & <vc-imagine>;
 
-% Pa**j link: The doctor declared him insane. 
+% Pa**j link: The doctor declared him insane.
 <vc-declare>: <vc-trans> or
   ({@MV+} & (Ce+ or TH+ or RSe+ or Pg+ or Z-)) or
   ((B- or O+) & ({@MV+} & Pa**j+));
 declare.v fear.v conclude.v suspect.v concede.v presume.v foresee.v
-emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v: 
+emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v assume.v:
   VERB_PLI(<vc-declare>);
 declares.v fears.v concludes.v suspects.v concedes.v presumes.v foresees.v
 emphasizes.v maintains.v acknowledges.v notes.v
-confirms.v stresses.v assumes.v: 
+confirms.v stresses.v assumes.v:
   VERB_S_T(<vc-declare>);
 declared.v feared.v concluded.v suspected.v conceded.v presumed.v
-emphasized.v maintained.v acknowledged.v noted.v 
-confirmed.v-d stressed.v-d assumed.v-d: 
+emphasized.v maintained.v acknowledged.v noted.v
+confirmed.v-d stressed.v-d assumed.v-d:
   VERB_SPPP_T(<vc-declare>) or
   (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) }) or
   ({@E-} & A+) or
@@ -3168,7 +3168,7 @@ confirmed.v-d stressed.v-d assumed.v-d:
 foresaw.v-d: VERB_SP_T(<vc-declare>);
 foreseen.v:
   VERB_PP(<vc-declare>) or
-  (<verb-s-pv> & {@MV+ or THi+}) or 
+  (<verb-s-pv> & {@MV+ or THi+}) or
   ({@E-} & A+) or
   <verb-po>;
 declaring.g fearing.g concluding.g suspecting.g conceding.g
@@ -3184,21 +3184,21 @@ noting.v confirming.v stressing.v assuming.v:
   ({@MV+} & (Ce+ or TH+ or RSe+));
 believe.v answer.v worry.v protest.v: VERB_PLI(<vc-believe>);
 believes.v answers.v worries.v protests.v: VERB_S_T(<vc-believe>);
-believed.v-d answered.v-d worried.v-d protested.v-d: 
+believed.v-d answered.v-d worried.v-d protested.v-d:
   VERB_SPPP_T(<vc-believe>) or (<verb-s-pv> & {THi+ or TOf+}) or <verb-po>;
-believing.g answering.g worrying.g protesting.g: 
+believing.g answering.g worrying.g protesting.g:
 (<vc-believe> & <verb-ge>) or <verb-ge-d>;
 believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
 
 % <vc-trans> with particle
 <vc-rule>:
-  ({@MV+} & (Ce+ or TH+ or RSe+)) or 
+  ({@MV+} & (Ce+ or TH+ or RSe+)) or
   ((({O+ or B-} & {K+}) or
      (K+ & {[[@MV+]]} & O*n+) or
      [[@MV+ & O*n+]]) & {@MV+});
 rule.v add.v: VERB_PLI(<vc-rule>);
 rules.v adds.v: VERB_S_T(<vc-rule>);
-ruled.v-d added.v-d: 
+ruled.v-d added.v-d:
   VERB_SPPP_T(<vc-rule>) or
   (<verb-s-pv-b> & {({@MV+} & (THi+ or TOf+)) or ({K+} & {@MV+})}) or
   ({K+} & <verb-po>) or
@@ -3208,8 +3208,8 @@ ruling.v adding.v: <verb-pg> & <vc-rule>;
 
 % <vc-trans> with particle
 <vc-figure>:
-  ({@MV+} & (TH+ or Zs- or Ce+)) or 
-  ((((O+ or B-) & {K+}) or (K+ & {[[@MV+]]} & O*n+)) & {@MV+}) or 
+  ({@MV+} & (TH+ or Zs- or Ce+)) or
+  ((((O+ or B-) & {K+}) or (K+ & {[[@MV+]]} & O*n+)) & {@MV+}) or
   ([[@MV+ & O*n+]]);
 figure.v: VERB_PLI(<vc-figure>);
 figures.v: VERB_S_T(<vc-figure>);
@@ -3227,16 +3227,16 @@ figuring.v: <verb-pg> & <vc-figure>;
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
 recall.v reveal.v state.v observe.v indicate.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
-hypothesize.v hypothesise.v document.v envisage.v: 
+hypothesize.v hypothesise.v document.v envisage.v:
   VERB_PLI(<vc-predict>);
-predicts.v realizes.v discovers.v determines.v announces.v says.v 
+predicts.v realizes.v discovers.v determines.v announces.v says.v
 mentions.v admits.v recalls.v reveals.v states.v observes.v indicates.v
-analyses.v analyzes.v assesses.v establishes.v evaluates.v examines.v 
+analyses.v analyzes.v assesses.v establishes.v evaluates.v examines.v
 questions.v tests.v hypothesizes.v hypothesises.v envisages.v documents.v:
   VERB_S_T(<vc-predict>);
 predicted.v realized.v discovered.v determined.v announced.v mentioned.v
 admitted.v recalled.v revealed.v stated.v observed.v indicated.v
-analysed.v analyzed.v assessed.v established.v evaluated.v examined.v 
+analysed.v analyzed.v assessed.v established.v evaluated.v examined.v
 questioned.v tested.v
 hypothesized.v-d hypothesised.v-d well-established.v-d documented.v-d
 envisaged.v-d:
@@ -3265,18 +3265,18 @@ hypothesizing.v hypothesising.v documenting.v envisaging.v:
 
 <vc-guess>: {<vc-trans>} or
   ({@MV+} & (TH+ or QI+ or Ce+ or RSe+ or Zs-));
-guess.v estimate.v understand.v notice.v explain.v demonstrate.v: 
+guess.v estimate.v understand.v notice.v explain.v demonstrate.v:
   VERB_PLI(<vc-guess>);
 guesses.v estimates.v understands.v notices.v explains.v demonstrates.v:
   VERB_S_T(<vc-guess>);
-guessed.v-d understood.v-d noticed.v-d explained.v-d demonstrated.v-d: 
+guessed.v-d understood.v-d noticed.v-d explained.v-d demonstrated.v-d:
   VERB_SPPP_T(<vc-guess>) or (<verb-s-pv> & {THi+}) or <verb-po>;
 estimated.v-d:
   VERB_SPPP_T(<vc-guess>) or
   (<verb-s-pv> & {THi+}) or
   <verb-po> or
   ({@E-} & A+);
-guessing.g estimating.g understanding.g noticing.g explaining.g 
+guessing.g estimating.g understanding.g noticing.g explaining.g
 demonstrating.g: (<vc-guess> & <verb-ge>) or <verb-ge-d>;
 guessing.v estimating.v understanding.v noticing.v explaining.v
 demonstrating.v: <verb-pg> & <vc-guess>;
@@ -3346,26 +3346,26 @@ discussing.v:
 
 <vc-oppose>: <vc-trans> or ({@MV+} & Pg+);
 oppose.v enjoy.v advocate.v contemplate.v entail.v necessitate.v
-justify.v risk.v avoid.v involve.v favor.v: 
+justify.v risk.v avoid.v involve.v favor.v:
   VERB_PLI(<vc-oppose>);
 opposes.v enjoys.v advocates.v contemplates.v entails.v necessitates.v
-justifies.v risks.v avoids.v involves.v favors.v: 
+justifies.v risks.v avoids.v involves.v favors.v:
   VERB_S_T(<vc-oppose>);
 
 opposed.v-d enjoyed.v-d advocated.v-d contemplated.v-d entailed.v-d
-necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d: 
+necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d:
   VERB_SPPP_T(<vc-oppose>) or
-  <verb-pv> or 
-  ({@E-} & A+) or 
+  <verb-pv> or
+  ({@E-} & A+) or
   <verb-po>;
 
 opposing.g enjoying.g advocating.g contemplating.g
 entailing.g necessitating.g justifying.g risking.g avoiding.g
-favoring.g involving.g: 
+favoring.g involving.g:
   (<vc-oppose> & <verb-ge>) or <verb-ge-d>;
 opposing.v enjoying.v advocating.v contemplating.v
 entailing.v necessitating.v justifying.v risking.v avoiding.v involving.v
-favoring.v: 
+favoring.v:
   <verb-pg> & <vc-oppose>;
 
 <vc-finish>: {<vc-trans>} or ({@MV+} & Pg+);
@@ -3373,12 +3373,12 @@ finish.v practice.v resist.v: VERB_PLI(<vc-finish>);
 finishes.v practices.v resists.v quits.v: VERB_S_T(<vc-finish>);
 
 % <verb-pv>: "I want it finished"
-finished.v-d practiced.v-d resisted.v-d quitted.v-d: 
+finished.v-d practiced.v-d resisted.v-d quitted.v-d:
   VERB_SPPP_T(<vc-finish>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
-quit.v-d: 
+quit.v-d:
   VERB_PLI(<vc-finish>) or
   VERB_SPPP_T(<vc-finish>) or
-  <verb-pv> or 
+  <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
 finishing.g practicing.g resisting.g
@@ -3390,11 +3390,11 @@ over_with: <verb-pv-b>;
 
 % <vc-trans> with particle
 % and also Pa**j for "The witch turned him green"
-<vc-turn>: ((O+ or 
-  (K+ & {[[@MV+]]} & O*n+) or 
+<vc-turn>: ((O+ or
+  (K+ & {[[@MV+]]} & O*n+) or
   ({O+ or B-} & {K+}) or
-  ((O+ or B-) & Pa**j+) or 
-  [[@MV+ & O*n+]]) & {@MV+}) or 
+  ((O+ or B-) & Pa**j+) or
+  [[@MV+ & O*n+]]) & {@MV+}) or
 ({@MV+} & (Pa+ or AF-));
 turn.v: VERB_PLI(<vc-turn>);
 turns.v: VERB_S_T(<vc-turn>);
@@ -3404,7 +3404,7 @@ turning.v: <verb-pg> & <vc-turn>;
 turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 
 % <vc-trans> plus TI
-<vc-become>: ((O+ or B- or TI+ or [[@MV+ & (O*n+ or TI+)]] or [[Pv+]]) 
+<vc-become>: ((O+ or B- or TI+ or [[@MV+ & (O*n+ or TI+)]] or [[Pv+]])
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: <verb-s-s> & <vc-become>;
@@ -3422,7 +3422,7 @@ remaining.g: (<vc-remain> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 remaining.v: <verb-pg> & <vc-remain>;
 
 % <vc-trans> plus particle
-<vc-grow>: ({@MV+} & (AF- or Pa+)) or ((({O+ or B-} & {K+}) or 
+<vc-grow>: ({@MV+} & (AF- or Pa+)) or ((({O+ or B-} & {K+}) or
 (K+ & {[[@MV+]]} & O*n+) or [[@MV+ & O*n+]]) & {@MV+});
 grow.v: VERB_PLI(<vc-grow>);
 grows.v: VERB_S_T(<vc-grow>);
@@ -3448,13 +3448,13 @@ approving.v: <verb-pg> & <vc-approve>;
 <vc-dispose>: (O+ or B- or [[@MV+ & O*n+]] or ({@MV+} & OF+)) & {@MV+};
 dispose.v conceive.v: VERB_PLI(<vc-dispose>);
 disposes.v conceives.v: VERB_S_T(<vc-dispose>);
-disposed.v-d conceived.v-d: VERB_SPPP_T(<vc-dispose>) or <verb-pv> or 
+disposed.v-d conceived.v-d: VERB_SPPP_T(<vc-dispose>) or <verb-pv> or
 ({@E-} & A+) or <verb-po>;
 disposing.g conceiving.g: (<vc-dispose> & <verb-ge>) or <verb-ge-d>;
 disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
 
 % <vc-trans> plus particle
-<vc-speak>: ((K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+}) or 
+<vc-speak>: ((K+ & {[[@MV+]]} & O*n+) or ({O+ or B-} & {K+}) or
 [[@MV+ & O*n+]] or OF+) & {@MV+};
 speak.v: VERB_PLI(<vc-speak>);
 speaks.v: VERB_S_T(<vc-speak>);
@@ -3484,15 +3484,15 @@ reeking.g smelling.g: (<vc-smell> & <verb-ge>) or <verb-ge-d>;
 reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
 % <vc-trans> plus partcle and Vt
-<vc-take>: 
-  (((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & {@MV+}) or 
-  ({O+} & (OT+ or BT-) & {@MV+} & {(TOt+ & B+) or TOi+}) or 
+<vc-take>:
+  (((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & {@MV+}) or
+  ({O+} & (OT+ or BT-) & {@MV+} & {(TOt+ & B+) or TOi+}) or
   (OXii+ & Vtg+ & {@MV+} & TH+) or
   @MV+;
 take.v: VERB_S_PLI(<vc-take>);
 takes.v: <verb-s-s> & <vc-take>;
 took.v-d: <verb-s-sp> & <vc-take>;
-taken.v: (<verb-s-pp> & <vc-take>) or (<verb-pv-b> & 
+taken.v: (<verb-s-pp> & <vc-take>) or (<verb-pv-b> &
 {K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>) or (Pvf- & Vtg+ & THi+);
 taking.v: <verb-s-pg> & <vc-take>;
 taking.g: (<vc-take> & <verb-ge>) or <verb-ge-d>;
@@ -3502,7 +3502,7 @@ for_granted: Vtg-;
 % basically, all these are <vc-trans> plus mess
 <vc-put>:
   ((K+ & {[[@MV+]]} & O*n+) or
-  ((O+ or B-) & (K+ or Pp+ or WR-)) or 
+  ((O+ or B-) & (K+ or Pp+ or WR-)) or
   (Vp+ & (Zs- or MVa+))) & {@MV+};
 
 put.v-d:
@@ -3518,12 +3518,12 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
 <vc-cost>:
   ((<vc-opt-ditrans> or
     (K+ & O*n+) or
-    (B- & {O+})) & {@MV+} & {TOi+}) or 
+    (B- & {O+})) & {@MV+} & {TOi+}) or
   ([[@MV+ & O*n+]]);
 
 cost.v-d: VERB_S_PLI(<vc-cost>) or (<verb-s-sp,pp> & <vc-cost>);
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
-  (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or 
+  (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or
   ({K+ or Pa+ or Pg+} & <verb-po>);
 costs.v: <verb-s-s> & <vc-cost>;
 costing.v: <verb-s-pg> & <vc-cost>;
@@ -3540,8 +3540,8 @@ costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
 
 find.v: VERB_PLI(<vc-find>);
 finds.v: VERB_S_T(<vc-find>);
-found.v-d: VERB_SPPP_T(<vc-find>) or 
-  (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pa+ or Pg+)) or 
+found.v-d: VERB_SPPP_T(<vc-find>) or
+  (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pa+ or Pg+)) or
   ({K+ or Pa+ or Pg+} & <verb-po>);
 finding.v: <verb-pg> & <vc-find>;
 finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
@@ -3560,21 +3560,21 @@ gets.v: VERB_S_T(<vc-get>);
 got.v-d: VERB_SPPP_T(<vc-get>);
 
 gotten.v:
-  VERB_PP(<vc-get>) or 
-  (<verb-pv-b> & {K+ or Pp+} & {@MV+}) or 
+  VERB_PP(<vc-get>) or
+  (<verb-pv-b> & {K+ or Pp+} & {@MV+}) or
   ({K+ or Pp+} & <verb-po>);
 getting.v: <verb-pg> & <vc-get>;
 getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
-<vc-leave>: 
-  ((O+ or B-) & (({K+} & {@MV+}) or ({@MV+} & {Pa+ or AF- or Pv+ or Pg+}))) or 
+<vc-leave>:
+  ((O+ or B-) & (({K+} & {@MV+}) or ({@MV+} & {Pa+ or AF- or Pv+ or Pg+}))) or
   ({(K+ & {[[@MV+]]} & O*n+) or ([[@MV+ & O*n+]])} & {@MV+});
 
 leave.v: VERB_PLI(<vc-leave>);
 leaves.v: VERB_S_T(<vc-leave>);
-left.v-d: 
+left.v-d:
   VERB_SPPP_T(<vc-leave>) or
-  (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or 
+  (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or
   ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-po>);
 leaving.v: <verb-pg> & <vc-leave>;
 leaving.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
@@ -3585,7 +3585,7 @@ leaving.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
 keep.v: VERB_PLI(<vc-keep>);
 keeps.v: VERB_S_T(<vc-keep>);
-kept.v-d: VERB_SPPP_T(<vc-keep>) or 
+kept.v-d: VERB_SPPP_T(<vc-keep>) or
 (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pa+ or Pg+ or Pv+)) or
 ({K+ or ({@MV+} & (Pa+ or Pg+ or Pv+))} & <verb-po>);
 keeping.v: <verb-pg> & <vc-keep>;
@@ -3601,7 +3601,7 @@ track.i: Vk- & {OF+};
 set.v-d:
   VERB_SPPP_T(<vc-set>) or
   (<verb-ico> & <vc-set>) or
-  (<verb-pv> & {K+ or Vs+} & {@MV+}) or 
+  (<verb-pv> & {K+ or Vs+} & {@MV+}) or
   ({@E-} & A+) or
   ({K+ or Vs+} & <verb-po>);
 sets.v: VERB_S_T(<vc-set>);
@@ -3615,7 +3615,7 @@ free.i straight.i loose.i: Vs- & {MV+};
 
 hold.v: VERB_PLI(<vc-hold>);
 holds.v: VERB_S_T(<vc-hold>);
-held.v-d: VERB_SPPP_T(<vc-hold>) or (<verb-pv-b> & {K+ or Vh+} & {@MV+}) or 
+held.v-d: VERB_SPPP_T(<vc-hold>) or (<verb-pv-b> & {K+ or Vh+} & {@MV+}) or
 ({@E-} & A+) or ({K+ or Vh+} & <verb-po>);
 holding.v: <verb-pg> & <vc-hold>;
 holding.g: (<vc-hold> & <verb-ge>) or <verb-ge-d>;
@@ -3647,11 +3647,11 @@ intending.v: <verb-pg> & <vc-intend>;
 <vc-dare>:
   (N+ & I+) or
   ({@MV+} & TO+) or
-  ((O+ or B-) & {@MV+} & TOo+); 
+  ((O+ or B-) & {@MV+} & TOo+);
 
 dare.v: VERB_PLI(<vc-dare>);
 dares.v: VERB_S_T(<vc-dare>);
-dared.v-d: VERB_SPPP_T(<vc-dare>) or (<verb-pv> & TO+) or 
+dared.v-d: VERB_SPPP_T(<vc-dare>) or (<verb-pv> & TO+) or
 ({@MV+} & TO+ & <verb-po>);
 daring.g: (<vc-dare> & <verb-ge>) or <verb-ge-d>;
 daring.v: <verb-pg> & <vc-dare>;
@@ -3670,7 +3670,7 @@ liking.v: <verb-pg> & <vc-like>;
 % ditranstive
 <vc-offer>:
   ((<vc-opt-ditrans> or
-    (B- & {O+})) & {@MV+}) or 
+    (B- & {O+})) & {@MV+}) or
   ({@MV+} & TO+) or
   ([[@MV+ & O*n+]]);
 
@@ -3685,7 +3685,7 @@ offering.v: <verb-pg> & <vc-offer>;
 % unlike vc-offer, "to" is optional.
 <vc-refuse>:
   ((<vc-opt-ditrans> or
-    (B- & {O+})) & {@MV+}) or 
+    (B- & {O+})) & {@MV+}) or
   ({@MV+} & {TO+}) or
   ([[@MV+ & O*n+]]);
 
@@ -3698,7 +3698,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 
 % Pa**j+: predicative adjective -- "I want it green", "I want it very shiny."
 <vc-want>:
-  ({@MV+} & TO+) or 
+  ({@MV+} & TO+) or
   ((O+ or OX+ or B-) & {@MV+} & {TOo+ or Pv+ or Pa**j+}) or
   ([[@MV+ & O*n+]]) or
   [[CX- & {@MV+}]];
@@ -3713,7 +3713,7 @@ wanting.v needing.v: <verb-pg> & <vc-want>;
 
 <vc-choose>:
   ({@MV+} & {TO+}) or
-  ((O+ or B-) & {@MV+} & {TOo+}) or 
+  ((O+ or B-) & {@MV+} & {TOo+}) or
   ([[@MV+ & O*n+]]);
 
 choose.v: VERB_PLI(<vc-choose>);
@@ -3735,7 +3735,7 @@ choosing.v: <verb-pg> & <vc-choose>;
 
 prepare.v press.v: VERB_PLI(<vc-prepare>);
 prepares.v presses.v: VERB_S_T(<vc-prepare>);
-prepared.v-d pressed.v-d: VERB_SPPP_T(<vc-prepare>) or <verb-pv> or 
+prepared.v-d pressed.v-d: VERB_SPPP_T(<vc-prepare>) or <verb-pv> or
 ({@E-} & A+) or <verb-po>;
 preparing.g pressing.g: (<vc-prepare> & <verb-ge>) or <verb-ge-d>;
 preparing.v pressing.v: <verb-pg> & <vc-prepare>;
@@ -3748,7 +3748,7 @@ preparing.v pressing.v: <verb-pg> & <vc-prepare>;
 
 require.v: VERB_PLI(<vc-require>);
 requires.v: VERB_S_T(<vc-require>);
-required.v-d: VERB_SPPP_T(<vc-require>) or 
+required.v-d: VERB_SPPP_T(<vc-require>) or
 (<verb-pv> & {TO+ or TSi+}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
 requiring.g: (<vc-require> & <verb-ge>) or <verb-ge-d>;
 requiring.v: <verb-pg> & <vc-require>;
@@ -3760,9 +3760,9 @@ requiring.v: <verb-pg> & <vc-require>;
 
 command.v order.v urge.v: VERB_PLI(<vc-command>);
 commands.v orders.v urges.v: VERB_S_T(<vc-command>);
-<vc-commanded>: VERB_SPPP_T(<vc-command>) or (<verb-pv> & {TO+ or TH+ or TS+}) 
+<vc-commanded>: VERB_SPPP_T(<vc-command>) or (<verb-pv> & {TO+ or TH+ or TS+})
 or ({@MV+} & {TH+ or TO+ or TS+} & <verb-po>);
-commanded.v-d urged.v-d: <vc-commanded>; 
+commanded.v-d urged.v-d: <vc-commanded>;
 % An "ordered list"
 ordered.v: <vc-commanded> or ({@E-} & A+);
 commanding.g ordering.g urging.g: (<vc-command> & <verb-ge>) or <verb-ge-d>;
@@ -3775,7 +3775,7 @@ commanding.v ordering.v urging.v: <verb-pg> & <vc-command>;
   (((O+ & (B- or ({[[@MV+]]} & O*n+))) or ([[@MV+ & O*n+]])) & {@MV+});
 consider.v: VERB_PLI(<vc-consider>);
 considers.v: VERB_S_T(<vc-consider>);
-considered.v-d: VERB_SPPP_T(<vc-consider>) or (<verb-s-pv-b> & 
+considered.v-d: VERB_SPPP_T(<vc-consider>) or (<verb-s-pv-b> &
 (({@MV+} & (TOf+ or Pa+)) or ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+})))
 or ((({@MV+} & (TOf+ or Pa+)) or ({O+ or [[@MV+ & O*n+]]}))
 & <verb-po>);
@@ -3789,19 +3789,19 @@ considering.v: <verb-pg> & <vc-consider>;
 
 perceive.v: VERB_PLI(<vc-perceive>);
 perceives.v: VERB_S_T(<vc-perceive>);
-perceived.v-d: VERB_SPPP_T(<vc-perceive>) or (<verb-pv> & {TO+}) or 
+perceived.v-d: VERB_SPPP_T(<vc-perceive>) or (<verb-pv> & {TO+}) or
 ({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
 perceiving.g: (<vc-perceive> & <verb-ge>) or <verb-ge-d>;
 perceiving.v: <verb-pg> & <vc-perceive>;
 
 <vc-report>:
-  ({@MV+} & {TH+ or Z- or Ce+}) or 
+  ({@MV+} & {TH+ or Z- or Ce+}) or
   ((O+ or B-) & {@MV+} & {TOo+}) or
   ([[@MV+ & O*n+]]);
 
 report.v: VERB_PLI(<vc-report>);
 reports.v: VERB_S_T(<vc-report>);
-reported.v-d: VERB_SPPP_T(<vc-report>) or (<verb-s-pv> & {TOf+ or Z-}) or 
+reported.v-d: VERB_SPPP_T(<vc-report>) or (<verb-s-pv> & {TOf+ or Z-}) or
 ({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
 reporting.g: (<vc-report> & <verb-ge>) or <verb-ge-d>;
 reporting.v: <verb-pg> & <vc-report>;
@@ -3814,35 +3814,35 @@ reporting.v: <verb-pg> & <vc-report>;
 caution.v: VERB_PLI(<vc-caution>);
 cautions.v: VERB_S_T(<vc-caution>);
 cautioned.v-d: VERB_SPPP_T(<vc-caution>) or (<verb-pv> &
-((O+ or B-) & {@MV+} & 
+((O+ or B-) & {@MV+} &
 {TH+ or Ce+ or Zs- or TO+})) or ({@MV+} & {TH+ or Ce+ or TO+} & <verb-po>);
 cautioning.g: (<vc-caution> & <verb-ge>) or <verb-ge-d>;
 cautioning.v: <verb-pg> & <vc-caution>;
 
 <vc-warn>:
-  ((O+ or B-) & {@MV+} & {TH+ or Ce+ or TOo+ or (OF+ & {@MV+})}) or 
+  ((O+ or B-) & {@MV+} & {TH+ or Ce+ or TOo+ or (OF+ & {@MV+})}) or
   ({@MV+} & {TH+ or Zs- or (OF+ & {@MV+})}) or
   ([[@MV+ & O*n+]]);
 
 warn.v advise.v: VERB_PLI(<vc-warn>);
 warns.v advises.v: VERB_S_T(<vc-warn>);
-warned.v-d advised.v-d: 
+warned.v-d advised.v-d:
   VERB_SPPP_T(<vc-warn>) or
   (<verb-pv> & {TH+ or Ce+ or Zs- or TO+ or (OF+ & {@MV+})}) or
   ({@MV+} & {TH+ or Ce+ or TO+ or OF+} & <verb-po>);
 warning.g advising.g: (<vc-warn> & <verb-ge>) or <verb-ge-d>;
 warning.v advising.v: <verb-pg> & <vc-warn>;
 
-<vc-hear>: 
-  ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or 
-  ({@MV+} & {TH+ or Zs- or Ce+ or (OF+ & {@MV+})}) or 
+<vc-hear>:
+  ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or
+  ({@MV+} & {TH+ or Zs- or Ce+ or (OF+ & {@MV+})}) or
   ([[@MV+ & O*n+]]);
 
 hear.v: VERB_PLI(<vc-hear>);
 hears.v: VERB_S_T(<vc-hear>);
-heard.v-d: 
+heard.v-d:
   VERB_SPPP_T(<vc-hear>) or
-  (<verb-pv> & {Pg+}) or 
+  (<verb-pv> & {Pg+}) or
   ({@MV+} & {Pg+} & <verb-po>);
 
 hearing.g: (<vc-hear> & <verb-ge>) or <verb-ge-d>;
@@ -3865,34 +3865,34 @@ seeing.g: (<vc-see> & <verb-ge>) or <verb-ge-d>;
 seeing.v: <verb-pg> & <vc-see>;
 
 % ditranstive verbs -- taking direct and indirect objects
-<vc-owe>: 
-  (<vc-opt-ditrans> or 
-  (B- & {O+}) or 
+<vc-owe>:
+  (<vc-opt-ditrans> or
+  (B- & {O+}) or
   ([[@MV+ & O*n+]])) & {@MV+};
 
 owe.v deliver.v accord.v award.v term.v grant.v begrudge.v assign.v rename.v repay.v
-dub.v entitle.v fine.v: 
+dub.v entitle.v fine.v:
   VERB_PLI(<vc-owe>);
 
 owes.v delivers.v accords.v awards.v terms.v grants.v begrudges.v assigns.v renames.v
-repays.v dubs.v entitles.v fines.v: 
+repays.v dubs.v entitles.v fines.v:
   VERB_S_T(<vc-owe>);
-owed.v delivered.v accorded.v awarded.v 
-granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d: 
+owed.v delivered.v accorded.v awarded.v
+granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d:
   VERB_SPPP_T(<vc-owe>) or
-  (<verb-pv-b> & {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or 
+  (<verb-pv-b> & {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or [[@MV+ & O*n+]]} & <verb-po>);
 owing.v delivering.v according.v awarding.v terming.v granting.v
-begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v: 
+begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v:
 <verb-pg> & <vc-owe>;
 owing.g delivering.g according.g awarding.g terming.g granting.g begrudging.g
-assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g: 
+assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g:
 (<vc-owe> & <verb-ge>) or <verb-ge-d>;
 
 % extended linking requirements based on the above
 termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
   VERB_SPPP_T(<vc-owe>) or
-  (<verb-pv-b> & {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or 
+  (<verb-pv-b> & {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or [[@MV+ & O*n+]]} & <verb-po>) or
   ({@E-} & A+);
 
@@ -3901,12 +3901,12 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % 'sent', 'poured': optional indirect object.
 <vc-give>:
   ((B- & {O+ or K+}) or
-    <vc-opt-ditrans-costly> or 
-    (O+ & K+) or 
+    <vc-opt-ditrans-costly> or
+    (O+ & K+) or
     (K+ & ({[[@MV+]]} & O*n+)) or
     ([[@MV+ & O*n+]])) & {@MV+};
 
-give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v 
+give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v
 telegraph.v wire.v: VERB_PLI(<vc-give>);
 
 gives.v sends.v buys.v brings.v lends.v
@@ -3924,14 +3924,14 @@ issued.v-d poured.v-d telegraphed.v-d wired.v-d:
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
 gave.v-d: VERB_SP_T(<vc-give>);
-given.v: 
-  VERB_PP(<vc-give>) or 
+given.v:
+  VERB_PP(<vc-give>) or
   ({@E-} & A+) or
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
-giving.g sending.g buying.g bringing.g 
-lending.g issuing.g handing.g pouring.g telegraphing.g wiring.g: 
+giving.g sending.g buying.g bringing.g
+lending.g issuing.g handing.g pouring.g telegraphing.g wiring.g:
 (<vc-give> & <verb-ge>) or <verb-ge-d>;
 giving.v sending.v buying.v bringing.v lending.v issuing.v
 handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
@@ -3939,41 +3939,41 @@ handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
 % ditransitive
 <vc-pass>:
   {(B- & {O+ or K+}) or
-    <vc-opt-ditrans> or 
-    (O+ & K+) or 
+    <vc-opt-ditrans> or
+    (O+ & K+) or
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+};
 
 pass.v pay.v sell.v deal.v: VERB_PLI(<vc-pass>);
 
 passes.v pays.v sells.v deals.v: VERB_S_T(<vc-pass>);
-passed.v-d paid.v-d payed.v-d sold.v-d dealt.v-d: 
+passed.v-d paid.v-d payed.v-d sold.v-d dealt.v-d:
   VERB_SPPP_T(<vc-pass>) or
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
-passing.g paying.g selling.g dealing.g: 
+passing.g paying.g selling.g dealing.g:
   (<vc-pass> & <verb-ge>) or <verb-ge-d>;
 passing.v paying.v selling.v dealing.v: <verb-pg> & <vc-pass>;
 
 % ditransitive
 <vc-call>:
-  {(B- & {O+ or Pa+ or K+}) or 
-    <vc-opt-ditrans> or 
-    (O+ & (Pa+ or K+)) or 
-    (K+ & {{[[@MV+]]} & O*n+}) or 
+  {(B- & {O+ or Pa+ or K+}) or
+    <vc-opt-ditrans> or
+    (O+ & (Pa+ or K+)) or
+    (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+};
 
 call.v shout.v: VERB_PLI(<vc-call>);
 calls.v shouts.v: VERB_S_T(<vc-call>);
-called.v-d shouted.v-d: VERB_SPPP_T(<vc-call>) or 
-(<verb-pv-b> & {O+ or B- or K+ or Pa+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+called.v-d shouted.v-d: VERB_SPPP_T(<vc-call>) or
+(<verb-pv-b> & {O+ or B- or K+ or Pa+ or [[@MV+ & O*n+]]} & {@MV+}) or
 ({O+ or K+ or Pa+ or [[@MV+ & O*n+]]} & <verb-po>);
 calling.g shouting.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
 calling.v shouting.v: <verb-pg> & <vc-call>;
 
 % Minimal ditransitive extenstion of words.v.6
-% ditransitive: "Please paint it lime green" 
+% ditransitive: "Please paint it lime green"
 <vc-color>:
   <vc-fill> or
   <vc-ditrans>;
@@ -3995,11 +3995,11 @@ coloring.g colouring.g painting.g:
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
 % 'he wrote me that S' but '*he drew me that S'
-<vc-write>: 
-  ({(B- & {O+ or K+}) or 
-    <vc-opt-ditrans> or 
-    (O+ & K+) or 
-    (K+ & {{[[@MV+]]} & O*n+}) or 
+<vc-write>:
+  ({(B- & {O+ or K+}) or
+    <vc-opt-ditrans> or
+    (O+ & K+) or
+    (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+}) or
   ({@MV+} & (TH+ or Ce+));
 
@@ -4007,36 +4007,36 @@ write.v charge.v draw.v: VERB_PLI(<vc-write>);
 writes.v reads.v charges.v draws.v: VERB_S_T(<vc-write>);
 wrote.v-d drew.v-d: VERB_SP_T(<vc-write>);
 
-read.v-d: 
-  VERB_SPPP_T(<vc-write>) or 
-  (<verb-ico> & <vc-write>) or 
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+read.v-d:
+  VERB_SPPP_T(<vc-write>) or
+  (<verb-ico> & <vc-write>) or
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
-charged.v-d: 
-  VERB_SPPP_T(<vc-write>) or 
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
+charged.v-d:
+  VERB_SPPP_T(<vc-write>) or
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
-written.v drawn.v: 
-  VERB_PP(<vc-write>) or 
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or 
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>) or 
+written.v drawn.v:
+  VERB_PP(<vc-write>) or
+  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>) or
   ({@E-} & A+);
 writing.g reading.g charging.g drawing.g: (<vc-write> & <verb-ge>) or <verb-ge-d>;
 writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
 
 % ditransitive
 % Singing: if there's an indirect object, then a direct object is
-% mandatory: '*she sang me' 
+% mandatory: '*she sang me'
 % but then: 'she sang soprano'
 <vc-sing>:
-  ({(B- & {O+ or K+}) or 
+  ({(B- & {O+ or K+}) or
     <vc-opt-ditrans> or
-    (O+ & K+) or 
-    (K+ & {{[[@MV+]]} & O*n+}) or 
+    (O+ & K+) or
+    (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+});
 sing.v dance.v cry.v: VERB_PLI(<vc-sing>);
 sings.v dances.v cries.v: VERB_S_T(<vc-sing>);
-sang.v-d danced.v-d cried.v-d: VERB_SP_T(<vc-sing>); 
+sang.v-d danced.v-d cried.v-d: VERB_SP_T(<vc-sing>);
 sung.v-d: VERB_SPPP_T(<vc-sing>);
 singing.g dancing.g crying.g: (<vc-sing> & <verb-ge>) or <verb-ge-d>;
 singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
@@ -4051,12 +4051,12 @@ singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
 % ditransitive
 <vc-allow>:
   ((<vc-ditrans> or
-    ([[@MV+]] & O*n+)) & {@MV+}) or 
+    ([[@MV+]] & O*n+)) & {@MV+}) or
   ((O+ or B-) & {@MV+} & {B- or TOo+});
 
 allow.v: VERB_PLI(<vc-allow>);
 allows.v: VERB_S_T(<vc-allow>);
-allowed.v-d: VERB_SPPP_T(<vc-allow>) or 
+allowed.v-d: VERB_SPPP_T(<vc-allow>) or
 (<verb-pv-b> & (({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & TO+)))
 or ({O+ or [[@MV+ & O*n+]] or ({@MV+} & TO+)} & <verb-po>);
 allowing.g: (<vc-allow> & <verb-ge>) or <verb-ge-d>;
@@ -4064,14 +4064,14 @@ allowing.v: <verb-pg> & <vc-allow>;
 
 % ditransitive
 <vc-promise>:
-  ({O+ or B-} & {@MV+} & {B- or TO+ or Ce+ or TH+ or RSe+ or Zs-}) or 
-  ((<vc-ditrans> or 
+  ({O+ or B-} & {@MV+} & {B- or TO+ or Ce+ or TH+ or RSe+ or Zs-}) or
+  ((<vc-ditrans> or
     ([[@MV+ & O*n+]])) & {@MV+});
 
 promise.v: VERB_PLI(<vc-promise>);
 promises.v: VERB_S_T(<vc-promise>);
-promised.v-d: VERB_SPPP_T(<vc-promise>) or (<verb-pv-b> & 
-(({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or 
+promised.v-d: VERB_SPPP_T(<vc-promise>) or (<verb-pv-b> &
+(({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
 ({@MV+} & (TO+ or Ce+ or TH+ or RSe+ or Zs-)))) or ({@E-} & A+) or
 ({O+ or [[@MV+ & O*n+]] or ({{@MV+} & (TO+ or Ce+ or TH+)})} & <verb-po>);
 promising.g: (<vc-promise> & <verb-ge>) or <verb-ge-d>;
@@ -4090,11 +4090,11 @@ promising.v: <verb-pg> & <vc-promise>;
 show.v: VERB_PLI(<vc-show>);
 shows.v: VERB_S_T(<vc-show>);
 showed.v-d: VERB_SP_T(<vc-show>);
-shown.v: 
+shown.v:
   VERB_PP(<vc-show>) or
-  (<verb-s-pv-b> & 
+  (<verb-s-pv-b> &
     (({O+ or K+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
-    ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs-)))) or 
+    ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs-)))) or
   ({O+ or K+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-po>);
 showing.g: (<vc-show> & <verb-ge>) or <verb-ge-d>;
 showing.v: <verb-pg> & <vc-show>;
@@ -4110,9 +4110,9 @@ teach.v: VERB_PLI(<vc-teach>);
 teaches.v: VERB_S_T(<vc-teach>);
 taught.v-d:
   VERB_SPPP_T(<vc-teach>) or
-  (<verb-pv-b> & 
+  (<verb-pv-b> &
     (({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
-    ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or TO+)))) or 
+    ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or TO+)))) or
   ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-po>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
@@ -4136,7 +4136,7 @@ force.v: VERB_PLI(<vc-force>);
 forces.v: VERB_S_T(<vc-force>);
 forced.v-d willed.v-d:
   VERB_SPPP_T(<vc-force>) or
-  (<verb-pv-b> & ((K+ & {@MV+}) or 
+  (<verb-pv-b> & ((K+ & {@MV+}) or
   ({@MV+} & TO+))) or
   ((K+ or ({@MV+} & TO+)) & <verb-po>) or
   ({@E-} & A+);
@@ -4154,16 +4154,16 @@ pressure.v train.v sentence.v prompt.v spur.v disincline.v
 invite.v reelect.v encourage.v draft.v hire.v entice.v inspire.v aid.v
 forbid.v employ.v educate.v tempt.v condemn.v commission.v counsel.v induce.v instruct.v
 license.v incite.v nominate.v destine.v provoke.v challenge.v exhort.v
-implore.v motivate.v impel.v: 
+implore.v motivate.v impel.v:
 VERB_PLI(<vc-design>);
 designs.v permits.v pressures.v trains.v sentences.v causes.v enables.v
 authorizes.v uses.v prompts.v spurs.v disinclines.v
 invites.v reelects.v encourages.v drafts.v hires.v entices.v inspires.v aids.v
 forbids.v employs.v educates.v tempts.v condemns.v commissions.v counsels.v induces.v
 instructs.v licenses.v incites.v nominates.v destines.v provokes.v
-challenges.v exhorts.v implores.v motivates.v impels.v: 
+challenges.v exhorts.v implores.v motivates.v impels.v:
 VERB_S_T(<vc-design>);
-designed.v-d permitted.v-d pressured.v-d trained.v-d 
+designed.v-d permitted.v-d pressured.v-d trained.v-d
 sentenced.v-d caused.v-d enabled.v-d
 authorized.v-d prompted.v-d spurred.v-d invited.v-d disinclined.v-d
 reelected.v-d encouraged.v-d drafted.v-d hired.v-d
@@ -4184,11 +4184,11 @@ forbidden.v:
   ({@E-} & A+) or
   ({{@MV+} & TO+} & <verb-po>);
 designing.g permitting.g pressuring.g causing.g enabling.g
-training.g sentencing.g authorizing.g prompting.g 
+training.g sentencing.g authorizing.g prompting.g
 spurring.g inviting.g disinclining.g
 reelecting.g encouraging.g drafting.g hiring.g
 enticing.g inspiring.g aiding.g employing.g educating.g tempting.g
-condemning.g commissioning.g counseling.g inducing.g instructing.g 
+condemning.g commissioning.g counseling.g inducing.g instructing.g
 licensing.g inciting.g nominating.g destining.g provoking.g challenging.g
 exhorting.g imploring.g motivating.g impelling.g:
 (<vc-design> & <verb-ge>) or <verb-ge-d>;
@@ -4196,7 +4196,7 @@ designing.v permitting.v pressuring.v causing.v enabling.v
 training.v sentencing.v authorizing.v using.v prompting.v disinclining.v
 spurring.v inviting.v reelecting.v encouraging.v drafting.v hiring.v
 enticing.v inspiring.v aiding.v employing.v educating.v tempting.v
-condemning.v commissioning.v counseling.v inducing.v instructing.v 
+condemning.v commissioning.v counseling.v inducing.v instructing.v
 licensing.v inciting.v nominating.v destining.v provoking.v challenging.v
 exhorting.v imploring.v motivating.v impelling.v:
 <verb-pg> & <vc-design>;
@@ -4218,7 +4218,7 @@ using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 elect.v appoint.v: VERB_PLI(<vc-elect>);
 elects.v appoints.v: VERB_S_T(<vc-elect>);
 elected.v-d appointed.v-d: VERB_SPPP_T(<vc-elect>) or (<verb-pv-b> & (({B- or
-(O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])} & {@MV+}) or ({@MV+} & TO+))) 
+(O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])} & {@MV+}) or ({@MV+} & TO+)))
 or (({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} or ({@MV+} & TO+)) & <verb-po>)
 or ({@E-} & A+);
 electing.g appointing.g: (<vc-elect> & <verb-ge>) or <verb-ge-d>;
@@ -4228,12 +4228,12 @@ electing.v appointing.v: <verb-pg> & <vc-elect>;
 <vc-name>:
   ( <vc-opt-ditrans> or
     (O+ & {[[@MV+]]} & TI+) or
-    (B- & {O+ or TI+}) or 
+    (B- & {O+ or TI+}) or
     ([[@MV+ & O*n+]])) & {@MV+};
 
 name.v designate.v label.v: VERB_PLI(<vc-name>);
 names.v designates.v labels.v: VERB_S_T(<vc-elect>);
-named.v-d designated.v-d labelled.v-d labeled.v-d: 
+named.v-d designated.v-d labelled.v-d labeled.v-d:
   VERB_SPPP_T(<vc-name>) or
   (<verb-pv-b> & ({B- or (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or
   ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
@@ -4247,7 +4247,7 @@ tag.v: VERB_PLI(<vc-tag>);
 tags.v: VERB_S_T(<vc-tag>);
 tagged.v-d:
   VERB_SPPP_T(<vc-tag>) or
-  ((<verb-pv-b> & ({B- or (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or <verb-pv>) or 
+  ((<verb-pv-b> & ({B- or (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or <verb-pv>) or
   ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
   ({@E-} & A+);
 tagging.g:
@@ -4265,14 +4265,14 @@ program.v oblige.v: VERB_PLI(<vc-program>);
 programs.v obliges.v: VERB_S_T(<vc-program>);
 programed.v-d programmed.v-d obliged.v-d:
   VERB_SPPP_T(<vc-program>) or
-  (<verb-pv> & {TO+}) or 
+  (<verb-pv> & {TO+}) or
   ({@E-} & A+) or
   ({{@MV+} & TO+} & <verb-po>);
 programing.g programming.g obliging.g: (<vc-program> & <verb-ge>) or <verb-ge-d>;
 programing.v programming.v obliging.v: <verb-pg> & <vc-program>;
 
 <vc-convince>:
-  ((O+ or B-) & {@MV+} & {TOo+ or TH+ or Ce+}) or 
+  ((O+ or B-) & {@MV+} & {TOo+ or TH+ or Ce+}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 convince.v persuade.v: VERB_PLI(<vc-convince>);
 convinces.v persuades.v: VERB_S_T(<vc-convince>);
@@ -4289,7 +4289,7 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % (QI+ & {MV+}): "I did not tell why until recently"
 
 <vc-tell>:
-  (((O+ & {O*n+ or K+}) or B-) & {@MV+} & {TH+ or Ce+ or RSe+ or Zs- or TOo+ or QI+ or BW-}) or 
+  (((O+ & {O*n+ or K+}) or B-) & {@MV+} & {TH+ or Ce+ or RSe+ or Zs- or TOo+ or QI+ or BW-}) or
   OF+ or
   (QI+ & {MV+}) or
   ([[@MV+ & {O*n+} & {@MV+}]]);
@@ -4297,23 +4297,23 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 tell.v: VERB_PLI(<vc-tell>);
 tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-);
 tells.v: VERB_S_T(<vc-tell>);
-told.v-d: VERB_SPPP_T(<vc-tell>) or 
-        (<verb-pv> & {TH+ or Ce+ or RSe+ or Zs- or TO+ or QI+ or BW-}) or 
-        (<verb-pv-b> & O+ & {@MV+}) or 
+told.v-d: VERB_SPPP_T(<vc-tell>) or
+        (<verb-pv> & {TH+ or Ce+ or RSe+ or Zs- or TO+ or QI+ or BW-}) or
+        (<verb-pv-b> & O+ & {@MV+}) or
         ({{@MV+} & (Ce+ or TO+ or QI+ or TH+)} & <verb-po>);
 telling.g: (<vc-tell> & <verb-ge>) or <verb-ge-d>;
 telling.v: <verb-pg> & <vc-tell>;
 
 % (QI+ & {MV+}): "I did not ask why until recently"
 <vc-ask>:
-  ({(O+ & {O*n+}) or B-} & {@MV+} & {TS+ or TOo+ or (QI+ & {MV+}) or BW-}) or 
+  ({(O+ & {O*n+}) or B-} & {@MV+} & {TS+ or TOo+ or (QI+ & {MV+}) or BW-}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 ask.v: VERB_PLI(<vc-ask>);
 asks.v: VERB_S_T(<vc-ask>);
-asked.v-d: VERB_SPPP_T(<vc-ask>) or 
-         (<verb-pv> & {TO+ or QI+ or BW- or TH+ or TS+}) or 
-         (<verb-pv-b> & O+ & {@MV+}) or 
+asked.v-d: VERB_SPPP_T(<vc-ask>) or
+         (<verb-pv> & {TO+ or QI+ or BW- or TH+ or TS+}) or
+         (<verb-pv-b> & O+ & {@MV+}) or
          ({{@MV+} & (TO+ or QI+ or TH+ or TS+)} & <verb-po>);
 asking.g: (<vc-ask> & <verb-ge>) or <verb-ge-d>;
 asking.v: <verb-pg> & <vc-ask>;
@@ -4324,7 +4324,7 @@ asking.v: <verb-pg> & <vc-ask>;
 
 help.v: VERB_PLI(<vc-help>);
 helps.v: VERB_S_T(<vc-help>);
-helped.v-d: VERB_SPPP_T(<vc-help>) or (<verb-pv> & {TO+}) or 
+helped.v-d: VERB_SPPP_T(<vc-help>) or (<verb-pv> & {TO+}) or
 ({{@MV+} & TO+} & <verb-po>);
 helping.g: (<vc-help> & <verb-ge>) or <verb-ge-d>;
 helping.v: <verb-pg> & <vc-help>;
@@ -4335,28 +4335,28 @@ helping.v: <verb-pg> & <vc-help>;
 
 remind.v: VERB_PLI(<vc-remind>);
 reminds.v: VERB_S_T(<vc-remind>);
-reminded.v-d: VERB_SPPP_T(<vc-remind>) or (<verb-pv> & {TO+ or TH+ or Ce+ or 
-(OF+ & {@MV+})}) or ({{@MV+} & (Ce+ or TO+ or TH+ or 
+reminded.v-d: VERB_SPPP_T(<vc-remind>) or (<verb-pv> & {TO+ or TH+ or Ce+ or
+(OF+ & {@MV+})}) or ({{@MV+} & (Ce+ or TO+ or TH+ or
 (OF+ & {@MV+}))} & <verb-po>);
 reminding.g: (<vc-remind> & <verb-ge>) or <verb-ge-d>;
 reminding.v: <verb-pg> & <vc-remind>;
 
 <vc-inform>:
-  ((O+ or B-) & {@MV+} & {(OF+ & {@MV+}) or TH+ or Zs- or Ce+}) or 
+  ((O+ or B-) & {@MV+} & {(OF+ & {@MV+}) or TH+ or Zs- or Ce+}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
-inform.v reassure.v alert.v guarantee.v notify.v forewarn.v: 
+inform.v reassure.v alert.v guarantee.v notify.v forewarn.v:
 VERB_PLI(<vc-inform>);
-informs.v reassures.v alerts.v guarantees.v notifies.v forewarns.v: 
+informs.v reassures.v alerts.v guarantees.v notifies.v forewarns.v:
 VERB_S_T(<vc-inform>);
-informed.v-d reassured.v-d alerted.v-d guaranteed.v-d 
-notified.v-d forewarned.v-d: 
-VERB_SPPP_T(<vc-inform>) or (<verb-pv> & 
+informed.v-d reassured.v-d alerted.v-d guaranteed.v-d
+notified.v-d forewarned.v-d:
+VERB_SPPP_T(<vc-inform>) or (<verb-pv> &
 {Ce+ or TH+ or Zs- or (OF+ & {@MV+})}) or ({{@MV+} & (Ce+ or
 TH+ or OF+)} & <verb-po>) or ({@E-} & A+);
-informing.g reassuring.g alerting.g guaranteeing.g notifying.g forewarning.g: 
+informing.g reassuring.g alerting.g guaranteeing.g notifying.g forewarning.g:
 (<vc-inform> & <verb-ge>) or <verb-ge-d>;
-informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v: 
+informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
 <verb-pg> & <vc-inform>;
 
 <vc-assure>:
@@ -4366,8 +4366,8 @@ informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
 
 assure.v: VERB_PLI(<vc-assure>);
 assures.v: VERB_S_T(<vc-assure>);
-assured.v-d: VERB_SPPP_T(<vc-assure>) or (<verb-pv> & 
-{(OF+ & {@MV+}) or Ce+ or TH+ or Zs-}) or ({{@MV+} & (Ce+ or 
+assured.v-d: VERB_SPPP_T(<vc-assure>) or (<verb-pv> &
+{(OF+ & {@MV+}) or Ce+ or TH+ or Zs-}) or ({{@MV+} & (Ce+ or
 TH+ or OF+)} & <verb-po>);
 assuring.g: (<vc-assure> & <verb-ge>) or <verb-ge-d>;
 assuring.v: <verb-pg> & <vc-assure>;
@@ -4387,16 +4387,16 @@ letting.v: <verb-pg> & <vc-let>;
 
 let's let’s: ({Ic-} & Wi- & {N+} & I+) or ({Ic-} & Wi- & N+);
 
-<vc-watch>: 
-  ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or 
-  ([[@MV+ & O*n+ & {@MV+}]]) or 
+<vc-watch>:
+  ((B- or O+) & {@MV+} & {I*j+ or Pg+}) or
+  ([[@MV+ & O*n+ & {@MV+}]]) or
   {@MV+};
 
 watch.v: VERB_PLI(<vc-watch>);
 watches.v: VERB_S_T(<vc-watch>);
-watched.v-d: 
+watched.v-d:
   VERB_SPPP_T(<vc-watch>) or
-  <verb-pv> or 
+  <verb-pv> or
   <verb-po>;
 
 watching.g: (<vc-watch> & <verb-ge>) or <verb-ge-d>;
@@ -4417,8 +4417,8 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
 % Pa**j is used for predicative adjectives
 % ditransitive
-<vc-make>: 
-  ((B- or O+ or OX+) & 
+<vc-make>:
+  ((B- or O+ or OX+) &
     {({@MV+} & {I*j+ or Pa**j+ or B-}) or
     ((K+ or AF-) & {@MV+})}) or
   ((<vc-ditrans> or
@@ -4467,13 +4467,13 @@ convicted.v-d:
   ({@E-} & A+) or
   ({{@MV+} & OF+} & <verb-po>);
 depriving.g accusing.g acquitting.g purging.g disabusing.g exonerating.g
-absolving.g robbing.g convicting.g: 
+absolving.g robbing.g convicting.g:
 (<vc-deprive> & <verb-ge>) or <verb-ge-d>;
 depriving.v accusing.v acquitting.v purging.v disabusing.v
 exonerating.v absolving.v robbing.v convicting.v: <verb-pg> & <vc-deprive>;
 
 <vc-clear>:
-  (((O+ or B-) & {({@MV+} & OF+) or K+}) or 
+  (((O+ or B-) & {({@MV+} & OF+) or K+}) or
     ({K+} & O*n+) or
     K+ or
     ([[{K+} & @MV+ & O*n+]])) & {@MV+};
@@ -4494,12 +4494,12 @@ clearing.v: <verb-pg> & <vc-clear>;
 bet.v-d:
   VERB_SPPP_T(<vc-bet>) or
   (<verb-ico> & <vc-bet>) or
-  (<verb-pv> & {O+ or B-} & {@MV+} & {TH+ or Ce+ or RSe+ or @MV+}); 
+  (<verb-pv> & {O+ or B-} & {@MV+} & {TH+ or Ce+ or RSe+ or @MV+});
 bets.v: VERB_S_T(<vc-bet>);
 betted.v-d:
   VERB_SPPP_T(<vc-bet>) or
   (<verb-pv-b> & {O+ or B-} & {@MV+} & {TH+ or Ce+ or RSe+ or @MV+}) or
-  ({O- or [[@MV+ & O*n+]] or TH+ or Ce+} & <verb-po>); 
+  ({O- or [[@MV+ & O*n+]] or TH+ or Ce+} & <verb-po>);
 betting.g: (<vc-bet> & <verb-ge>) or <verb-ge-d>;
 betting.v: <verb-pg> & <vc-bet>;
 
@@ -4519,25 +4519,25 @@ bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
   ([[@MV+ & O*n+]]);
 
 surprise.v alarm.v amaze.v amuse.v astonish.v astound.v excite.v depress.v
-disgust.v distress.v dismay.v irritate.v embarrass.v annoy.v: 
+disgust.v distress.v dismay.v irritate.v embarrass.v annoy.v:
   VERB_S_PLI(<vc-surprise>);
 surprises.v alarms.v amazes.v amuses.v astonishes.v astounds.v excites.v depresses.v
-disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v: 
+disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
   <verb-s-s> & <vc-surprise>;
 surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
-depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v 
-annoyed.v-d: 
+depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v
+annoyed.v-d:
   (<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-po>;
 surprising.v alarming.v amazing.v amusing.v astonishing.v astounding.v
-exciting.v depressing.v disgusting.v distressing.v dismaying.v 
-embarrassing.v annoying.v: 
+exciting.v depressing.v disgusting.v distressing.v dismaying.v
+embarrassing.v annoying.v:
   <verb-s-pg> & <vc-surprise>;
-surprising.g alarming.g amazing.g amusing.g astonishing.g astounding.g 
-exciting.g depressing.g disgusting.g distressing.g dismaying.g 
-embarrassing.g annoying.g: 
+surprising.g alarming.g amazing.g amusing.g astonishing.g astounding.g
+exciting.g depressing.g disgusting.g distressing.g dismaying.g
+embarrassing.g annoying.g:
   (<vc-surprise> & <verb-ge>) or <verb-ge-d>;
 
-<vc-prove>: 
+<vc-prove>:
   ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
   ((O+ or OX+ or B-) & {@MV+} & (TOo+ or [[Pa+]])) or
   ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or Pa+));
@@ -4545,7 +4545,7 @@ embarrassing.g annoying.g:
 prove.v: VERB_X_PLI(<vc-prove>);
 proves.v: VERB_X_S(<vc-prove>);
 proved.v-d:
-  VERB_X_SPPP(<vc-prove>) 
+  VERB_X_SPPP(<vc-prove>)
   or (<verb-s-pv> & {THi+ or TOf+})
   or ({@E-} & A+)
   or ({{@MV+} & Pa+} & <verb-po>);
@@ -4563,12 +4563,12 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 
 suggest.v anticipate.v recommend.v: VERB_PLI(<vc-suggest>);
 suggests.v anticipates.v recommends.v: VERB_S_T(<vc-suggest>);
-suggested.v-d anticipated.v-d recommended.v-d: 
-  VERB_SPPP_T(<vc-suggest>) or 
+suggested.v-d anticipated.v-d recommended.v-d:
+  VERB_SPPP_T(<vc-suggest>) or
   (<verb-s-pv> & {THi+ or TSi+ or Z-}) or
   ({@E-} & A+) or
   <verb-po>;
-suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>; 
+suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>;
 suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 
 % ditransitive
@@ -4596,7 +4596,7 @@ describe.v: VERB_PLI(<vc-describe>);
 describes.v: VERB_S_T(<vc-describe>);
 described.v-d:
   VERB_SPPP_T(<vc-describe>) or
-  (<verb-pv> & {AZ+ or Z-}) or 
+  (<verb-pv> & {AZ+ or Z-}) or
   ({@E-} & A+) or
   ({@MV+} & {AZ+} & <verb-po>);
 describing.g: (<vc-describe> & <verb-ge>) or <verb-ge-d>;
@@ -4608,14 +4608,14 @@ describing.v: <verb-pg> & <vc-describe>;
 
 portray.v depict.v regard.v view.v characterize.v: VERB_PLI(<vc-portray>);
 portrays.v depicts.v regards.v views.v characterizes.v: VERB_S_T(<vc-portray>);
-portrayed.v-d depicted.v-d regarded.v-d viewed.v-d characterized.v-d: 
+portrayed.v-d depicted.v-d regarded.v-d viewed.v-d characterized.v-d:
   VERB_SPPP_T(<vc-portray>) or
   (<verb-pv> & {AZ+}) or
   ({@E-} & A+) or
   ({@MV+} & {AZ+} & <verb-po>);
-portraying.g depicting.g regarding.g viewing.g characterizing.g: 
+portraying.g depicting.g regarding.g viewing.g characterizing.g:
   (<vc-portray> & <verb-ge>) or <verb-ge-d>;
-portraying.v depicting.v regarding.v viewing.v characterizing.v: 
+portraying.v depicting.v regarding.v viewing.v characterizing.v:
 <verb-pg> & <vc-portray>;
 
 % -------------------------------------------------------------------------------
@@ -4633,7 +4633,7 @@ comes_of_age:
   VERB_S_T(<vc-intrans>);
 
 showed_up pleaded_guilty pleaded_innocent made_way caught_up caught_on
-filed_suit picked_up jumped_ship:  
+filed_suit picked_up jumped_ship:
   VERB_SPPP_I(<vc-intrans>);
 
 plead_guilty plead_innocent:
@@ -4646,11 +4646,11 @@ let_go:
   <verb-pv>;
 
 did_so took_place took_office did_battle gave_way took_part took_off
-broke_free took_over saw_fit took_note came_true came_clean came_of_age: 
+broke_free took_over saw_fit took_note came_true came_clean came_of_age:
   VERB_SP_I(<vc-intrans>);
 
 done_so taken_place shown_up taken_office done_battle given_way
-taken_part taken_off broken_free taken_over seen_fit taken_note: 
+taken_part taken_off broken_free taken_over seen_fit taken_note:
   VERB_PP(<vc-intrans>);
 
 come_true come_clean come_of_age:
@@ -4661,12 +4661,12 @@ doing_so taking_place showing_up pleading_guilty pleading_innocent
 taking_office
 doing_battle giving_way making_way taking_part catching_up catching_on
 filing_suit picking_up taking_off breaking_free taking_over jumping_ship
-seeing_fit letting_go taking_note coming_true coming_clean coming_of_age: 
+seeing_fit letting_go taking_note coming_true coming_clean coming_of_age:
   (<vc-intrans> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-put-up-with>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
 allow_for bring_about get_rid_of let_go_of take_note_of:
-  VERB_PLI(<vc-trans>); 
+  VERB_PLI(<vc-trans>);
 puts_up_with allows_for brings_about gets_rid_of lets_go_of
 takes_note_of:
   VERB_S_T(<vc-trans>);
@@ -4674,7 +4674,7 @@ put_up_with let_go_of:
   VERB_SPPP_T(<vc-trans>) or
   (<verb-ico> & <vc-trans>);
 allowed_for brought_about got_rid_of took_note_of: VERB_SPPP_T(<vc-trans>);
-gotten_rid_of taken_note_of: VERB_PP(<vc-trans>);  
+gotten_rid_of taken_note_of: VERB_PP(<vc-trans>);
 putting_up_with allowing_for bringing_about getting_rid_of letting_go_of
 taking_note_of:
   (<vc-trans> & (<verb-ge> or <verb-pg>)) or <verb-ge-d>;
@@ -4682,11 +4682,11 @@ taking_note_of:
 <vc-take-it>: {[@MV+]} & TH+;
 take_it make_out point_out give_notice serve_notice: VERB_PLI(<vc-take-it>);
 takes_it makes_out points_out gives_notice serves_notice: VERB_S_I(<vc-take-it>);
- made_out pointed_out served_notice: 
+ made_out pointed_out served_notice:
   VERB_SPPP_I(<vc-take-it>) or <verb-pv> or <verb-po>;
 took_it gave_notice: VERB_SP_I(<vc-take-it>);
 taken_it given_notice: VERB_PP(<vc-take-it>);
-taking_it making_out pointing_out giving_notice serving_notice: 
+taking_it making_out pointing_out giving_notice serving_notice:
   (<vc-take-it> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-turn-out>: {[@MV+]} & THi+;
@@ -4701,10 +4701,10 @@ find_out figure_out: VERB_PLI(<vc-find-out>);
 finds_out figures_out: VERB_S_I(<vc-find-out>);
 found_out figured_out:
   VERB_SPPP_I(<vc-find-out>) or
-  <verb-pv> or 
+  <verb-pv> or
   <verb-po>;
 finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
-<verb-ge-d>; 
+<verb-ge-d>;
 
 <vc-keep-on>: {Pg+ or @MV+};
 keep_on give_up go_around: VERB_S_PLI(<vc-keep-on>);
@@ -4724,7 +4724,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.1.p: <verb-pv> or <verb-po>; % two-word passives
 % done_for accounted_for adhered_to arrived_at barked_at belched_at catered_to
 
-<vc-paraph>: 
+<vc-paraph>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CP- & {CC+}) or Eq+)) or
     [(Xc+ or Xe+) & Ce+]);
 
@@ -4736,10 +4736,10 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>) & (COqi+ or (CPi- & {CC+}) or Eqi+);
 
 % paraphrasing verbs like "say", "reply"
-% acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q 
+% acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
 /en/words/words.v.10.1: [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 /en/words/words.v.10.2: [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
-/en/words/words.v.10.3: 
+/en/words/words.v.10.3:
 <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)
 or [[Pvf- & <vc-it-paraph>]]));
 read.q-d: <marker-past> or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
@@ -4772,7 +4772,7 @@ asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 say.w vote.w: VERB_PLI(<vc-vote>);
 says.w votes.w: VERB_S_I(<vc-vote>);
 said.w-d voted.w-d: VERB_SPPP_I(<vc-vote>);
-saying.w voting.w: 
+saying.w voting.w:
 (<vc-vote> & <verb-pg,ge>);
 yes.misc-vote no.misc-vote: Vv-;
 
@@ -4798,28 +4798,28 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % XXX TODO: most preps below need this rule.
 <alter-preps>: MJrj- or MJlj+;
 
-<prep-main-b>: 
+<prep-main-b>:
   <conjoin-preps> or
-  [Mp-] or Pp- or MVp- or 
-  [({Xc+ & {Xd-}} & CO+)] or 
+  [Mp-] or Pp- or MVp- or
+  [({Xc+ & {Xd-}} & CO+)] or
   (Xd- & Xc+ & (MX*x- or MVx-));
 
-<prep-main-a>: 
+<prep-main-a>:
   <prep-main-b> or
   (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or
-  (Wj- & Qd+) or 
+  (Wj- & Qd+) or
   [Wq- & PF+];
 
-<prep-main-t>: 
+<prep-main-t>:
   <conjoin-preps> or
-  [Mpn-] or Pp- or MVpn- or 
-  [({Xc+ & {Xd-}} & CO*n+)] or 
+  [Mpn-] or Pp- or MVpn- or
+  [({Xc+ & {Xd-}} & CO*n+)] or
   (Xd- & Xc+ & (MX- or MVx-));
 
-<prep-main-e>: 
+<prep-main-e>:
   <conjoin-preps> or
-  [Mp-] or Pp- or MVa- or 
-  [({Xc+ & {Xd-}} & CO+)] or 
+  [Mp-] or Pp- or MVa- or
+  [({Xc+ & {Xd-}} & CO+)] or
   (Xd- & Xc+ & (MX*x- or MVx-));
 
 under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or (MVp- & B-) or (Yd- & Pp-);
@@ -4839,79 +4839,79 @@ at toward towards without:
 % XXX fixme: MVp- & J+ is wrong: "*I saw John except Fred"
 % {EBm+} & J+: "but not very much"
 % [[EBm+]]: "but not very"
-except but.misc-ex: 
+except but.misc-ex:
   ({JQ+} & (({EBm+} & J+) or [[EBm+]] or Mgp+) & <prep-main-a>)
   or (MVp- & B-)
-  or ((MVp+ or TO+) & <prep-main-a>); 
+  or ((MVp+ or TO+) & <prep-main-a>);
 
-against beyond beside: 
+against beyond beside:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
 between:
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
 
-with: 
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-)) or 
-  (Jw+ & (RJrj- or RJlj+)) or 
+with:
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-)) or
+  (Jw+ & (RJrj- or RJlj+)) or
   (MVp- & B-) or
-  (J+ & {EBm+} & ([P+] or [[O*n+]]) & 
-    ([({Xc+ & {Xd-}} & CO+)] or 
-    MVp- or 
+  (J+ & {EBm+} & ([P+] or [[O*n+]]) &
+    ([({Xc+ & {Xd-}} & CO+)] or
+    MVp- or
     (Xd- & Xc+ & (MX*x- or MVx-))));
 
 among:
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or 
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or
   (MVp- & B-);
 
-for.p: 
-  ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-)) or 
-  (J+ & (RJrj- or RJlj+)) or 
-  (MVp- & B-) or 
-  (MG- & JG+) or 
+for.p:
+  ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-)) or
+  (J+ & (RJrj- or RJlj+)) or
+  (MVp- & B-) or
+  (MG- & JG+) or
   (MVp- & FL+);
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or (MVp- & B-);
-about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or 
+about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or
   (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-)) or MVa-;
 
-through.r: 
+through.r:
 ({JQ+} & J+ & (<prep-main-a> or FM-)) or (MVp- & B-);
 <prep-across>: ({JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
-across along: <prep-across>; 
+across along: <prep-across>;
 off: <prep-across> or (MVp+ & {Xc+ & {Xd-}} & COp+);
-past.p: 
+past.p:
 ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
 
 around:
-  <alter-preps> or 
+  <alter-preps> or
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
   or [EN+] or MVa-;
 
 out.r up.r down.r:
-  ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or 
+  ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or
   K- or ({Yd-} & Pp-) or (MVp- & B-);
 
-by: 
-  <alter-preps> or 
-  ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or 
+by:
+  <alter-preps> or
+  ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or
   K- or
   (MVp- & B-);
 
-in.r: 
-  <alter-preps> or 
-  ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) or 
-  K- or 
-  (MVp- & B-) or 
+in.r:
+  <alter-preps> or
+  ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) or
+  K- or
+  (MVp- & B-) or
   (MG- & JG+);
 
-on upon: 
-  <alter-preps> or 
-  ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or 
-  K- or 
+on upon:
+  <alter-preps> or
+  ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or
+  K- or
   (MVp- & B-);
 
 over:
-  ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) or 
+  ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) or
   K- or
   EN+ or
   (MVp- & B-) or
@@ -4919,56 +4919,56 @@ over:
 
 just_over just_under well_over: EN+;
 
-% XXX original LG recommends using the LI link, however the 
+% XXX original LG recommends using the LI link, however the
 % <prep-main-b> sort of clobbers this. Should this be "fixed"?
 like.p: ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
 or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or (MVp- & B-);
-unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or 
+unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or
 (Xd- & Xc+ & (E+ or MVx-)));
 
 % (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
 % The Jd+ forces a link to the object as well.
-of: 
+of:
   ({JQ+}
     & (J+ or Mgp+ or QI+)
     & (Mp-
       or OFj-
       or OFw-
-      or (Xd- & Xc+ & MX*x-) 
+      or (Xd- & Xc+ & MX*x-)
       or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-)))
       or [[({Xc+ & {Xd-}} & CO+)]]))
   or (OFd- & Jd+)
   or ((OFj- or Mp-) & B-)
   or (MG- & JG+)
   or (NF- & NJ+)
-  or (Mp- & TI+); 
+  or (Mp- & TI+);
 
 of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
 % MX-PHRASE: The blah, to be blahed, will be blah.
 % TO- & Xc+: "I'd like to, I want to." (null infinitive)
-to.r: 
-  ({@E-} & {NT-} & I+ & 
-    (TO- or 
-    [{Xd- & Xc+} & MVi-] or 
-    <MX-PHRASE> or 
+to.r:
+  ({@E-} & {NT-} & I+ &
+    (TO- or
+    [{Xd- & Xc+} & MVi-] or
+    <MX-PHRASE> or
     [<OPENER>] or
-    [[R-]] or 
-    (SFsx+ & <S-CLAUSE>))) or 
+    [[R-]] or
+    (SFsx+ & <S-CLAUSE>))) or
   (TO- & Xc+) or
-  I*a+ or 
+  I*a+ or
   ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or
   VJ+ or
   [MVp- & B-];
 
-so_as_to: I+ & {Xd- & Xc+} & MVi-; 
+so_as_to: I+ & {Xd- & Xc+} & MVi-;
 
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 
 inside.r outside.r underneath alongside:
 {J+} & (<prep-main-b> or FM-);
-amid plus.p minus.p via onto: 
+amid plus.p minus.p via onto:
 J+ & (<prep-main-b> or [Wq- & PF+]);
 versus: (J+ & Mp-) or (G- & G+);
 vs: {Xi+} & G- & G+;
@@ -4979,14 +4979,14 @@ better_off worse_off: {EC-} & Pa- & {Pg+};
 
 off_of out_of:  ({JQ+} & J+ & <prep-main-b>) or (MVp- & B-);
 
-despite notwithstanding 
-other_than apart_from aside_from: (J+ or Mgp+) & (MVp- or (Xd- & Xc+ & 
+despite notwithstanding
+other_than apart_from aside_from: (J+ or Mgp+) & (MVp- or (Xd- & Xc+ &
 (MVx- or E+)) or
-[({Xc+ & {Xd-}} & CO+)]); 
-rather_than: (J+ or Mgp+ or Mp+ or I+) & 
-((Xd- & Xc+ & (E+ or MVx-)) or MVp- or [({Xc+ & {Xd-}} & CO+)]); 
-instead_of because_of prior_to: 
-(J+ or Mgp+) & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & 
+[({Xc+ & {Xd-}} & CO+)]);
+rather_than: (J+ or Mgp+ or Mp+ or I+) &
+((Xd- & Xc+ & (E+ or MVx-)) or MVp- or [({Xc+ & {Xd-}} & CO+)]);
+instead_of because_of prior_to:
+(J+ or Mgp+) & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ &
 (E+ or MVx-)));
 as_well_as: (J+ or Mgp+) & (MG- or Mp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or
 (Xd- & Xc+ & (MX*x- or MVx-)));
@@ -4999,25 +4999,25 @@ due_to along_with en_route_to in_connection_with:
 regardless_of as_to irrespective_of:
   (J+ or QI+) & (MVp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
 
-overhead.r midway in_public in_private en_route 
+overhead.r midway in_public in_private en_route
 a_la_mode a_la_carte side_by_side from_coast_to_coast: <prep-main-b>;
-abroad upstairs.r downstairs.r overseas.r next_door: 
+abroad upstairs.r downstairs.r overseas.r next_door:
   <prep-main-b> or FM-;
 
 elsewhere:
   <prep-main-b> or FM- or [[J-]];
 
-ahead at_hand in_store in_reverse in_place in_town 
+ahead at_hand in_store in_reverse in_place in_town
 under_way in_office out_of_office out_of_reach
 in_reach within_reach on_guard at_large in_hand on_hand for_free
-in_line in_loco_parentis on_board en_route in_bed 
+in_line in_loco_parentis on_board en_route in_bed
 out_of_bed on_strike on_top from_afar at_stake in_question
 at_issue on_lease on_trial in_league in_cahoots in_front in_back
 on_break on_camera in_command in_concert by_association in_association
 on_deck on_disk on_file on_foot on_location on_line online.r:
-  MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-)); 
+  MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-));
 
-uptown downtown.r offshore.r underground.r out_of_town: 
+uptown downtown.r offshore.r underground.r out_of_town:
   MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
 
 <common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
@@ -5027,7 +5027,7 @@ half-way two-fold downhill southward underfoot westward eastward
 northward overnight.r on_hold on_track in_situ in_toto off_balance
 in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
-behind_schedule ahead_of_schedule for_good for_keeps 
+behind_schedule ahead_of_schedule for_good for_keeps
 out_of_step out_of_phase in_tune out_of_tune in_session out_of_session
 in_phase neck_and_neck under_contract:
   <common-prep>;
@@ -5038,44 +5038,44 @@ in_phase neck_and_neck under_contract:
 upstream downstream 5' 3':
   A+ or
   NIfp+ or NItp- or
-  ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} & 
+  ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} &
     (({Xc+ & Xd-} & (Ma- or MJra-)) or
     MJra+ or
     (Wq- & PF+) or
     MVp- or
     Pp- or
     FM- or
-    (Xc+ & Xd- & (MVx- or MX-)))); 
+    (Xc+ & Xd- & (MVx- or MX-))));
 
-%upstream downstream 3' 5': 
-%A+ or 
-%((EZ- or Y-) & (MVp+ or OF+) & (MV- or MV+)) or 
-%(EI- or EZ- or Y- & Ma- & (MVp+ or OF+)) or 
+%upstream downstream 3' 5':
+%A+ or
+%((EZ- or Y-) & (MVp+ or OF+) & (MV- or MV+)) or
+%(EI- or EZ- or Y- & Ma- & (MVp+ or OF+)) or
 %(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
 
 indoors outdoors underwater.r:
-MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-); 
-everywhere anywhere: {EL+} & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or 
+MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+everywhere anywhere: {EL+} & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or
 ({Xd- & Xc+} & MVs-))) or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
-somewhere someplace: ({EL+} & (MVp- or Pp- or FM- or 
+somewhere someplace: ({EL+} & (MVp- or Pp- or FM- or
 [({Xc+ & {Xd-}} & CO+)] or (Xc+ & Xd- & MVx-)) & Mp+) or
 ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+) or
 [[{EL+} & {Xc+ & {Xd-}} & CO+]];
-nowhere: {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)); 
+nowhere: {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
 
 as_usual to_date on_average
-in_turn so_far in_particular in_response in_general thus_far in_reply: 
-MVp- or Mp- or ({Xc+ & {Xd-}} & CO+) or (Xc+ & Xd- & (MVx- or MX*x-)); 
+in_turn so_far in_particular in_response in_general thus_far in_reply:
+MVp- or Mp- or ({Xc+ & {Xd-}} & CO+) or (Xc+ & Xd- & (MVx- or MX*x-));
 
 recently: {EE- or EF+} & (({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
-{Xd-}} & CO+) or EB- or JT- or Ca+ or Qe+ or [[Mp-]]); 
+{Xd-}} & CO+) or EB- or JT- or Ca+ or Qe+ or [[Mp-]]);
 now.r: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ & {Xd-}} & CO+) or
-EB- or [[Mp-]]; 
+EB- or [[Mp-]];
 then.r: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
 {Xd-}} & CO+) or EB- or (S+ & Xd- & Xc+ & MVs-) or [[Mp-]];
 
-later earlier: 
-  ({ECa- or Yt-} & 
+later earlier:
+  ({ECa- or Yt-} &
     (E+ or
     Mp- or
     Pp- or
@@ -5088,9 +5088,9 @@ later earlier:
 
 away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
 aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
-apart: {Yd-} & K-; 
+apart: {Yd-} & K-;
 
-% wtf ?? what is home.i for ?? 
+% wtf ?? what is home.i for ??
 home.i: [[K-]];
 
 % Bare-naked MVp-: "I want it back"
@@ -5112,8 +5112,8 @@ in_place_of in_search_of:
   <alter-preps> or
   (J+ & (<prep-main-b> or [Wq- & PF+]));
 
-near.p: 
-  {EE- or EF+} & 
+near.p:
+  {EE- or EF+} &
     (<alter-preps> or
     (J+ & (<prep-main-b> or FM- or [Wq- & PF+])));
 
@@ -5127,27 +5127,27 @@ such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
 % better at the moment.
 here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
 
-there.r: 
-  J- or 
-  <prep-main-b> or 
-  ((SFst+ or SFp+ or SFut+) & <CLAUSE>) or 
-  SFIst- or 
-  SFIp- or 
-  OXt- or 
+there.r:
+  J- or
+  <prep-main-b> or
+  ((SFst+ or SFp+ or SFut+) & <CLAUSE>) or
+  SFIst- or
+  SFIp- or
+  OXt- or
   Wi-;
 
 % Patronymics and misc french/spanish/german connectives
 % Many of these are already in the adjectives list
-à auf aus aux comte comtes 
+à auf aus aux comte comtes
 dans de de_la del della delle der des du duc
 la las le.c los nach noch och os ou på por
 sans te über un une vom von zum zur zu: {G-} & G+;
 y.and: G- & G+;
 
-% TIME AND PLACE EXPRESSIONS 
+% TIME AND PLACE EXPRESSIONS
 
 this_time this_one_time this_once that_time these_days: <prep-main-t> or [[E+]];
-last_time next_time: 
+last_time next_time:
 <prep-main-t> or JT- or YS+ or [[<noun-main-s>]];
 
 % Js-: "show results from last week"
@@ -5180,7 +5180,7 @@ morning.i afternoon.i night.i evening.i:
   TD-;
 
 January.i February March April.i May.i June.i
-July August.i September.i October November December: 
+July August.i September.i October November December:
   ((DTn- or DTie- or ({TA-} & {TY+})) &
     (JT-
     or Jp-
@@ -5189,35 +5189,35 @@ July August.i September.i October November December:
     or [<noun-and-s>]
     or [[<noun-main-s>]]))
   or ((DTn- or DTie-) & <prep-main-t>)
-  or (TM+ & {TY+} & 
+  or (TM+ & {TY+} &
     ((Xd- & Xc+ & TW-)
     or ON-
     or JT-
     or [[<noun-main-s> or MVp- or Mp- or AN+]]))
   or AN+;
 
-AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock: ND- & {@MX+} & <noun-main-s> & {TZ+} ; 
+AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock: ND- & {@MX+} & <noun-main-s> & {TZ+} ;
 
 % Time-zone names
-A.tz ACDT.tz ACST.tz ADT.tz AEDT.tz AEST.tz AKDT.tz AKST.tz AST.tz 
+A.tz ACDT.tz ACST.tz ADT.tz AEDT.tz AEST.tz AKDT.tz AKST.tz AST.tz
 AWDT.tz AWST.tz B.tz BST.tz C.tz CDT.tz CEDT.tz CEST.tz CET.tz CST.tz
-CXT.tz D.tz E.tz EDT.tz EEDT.tz EEST.tz EET.tz EST.tz F.tz G.tz 
+CXT.tz D.tz E.tz EDT.tz EEDT.tz EEST.tz EET.tz EST.tz F.tz G.tz
 GMT.tz H.tz HAA.tz HAC.tz HADT.tz HAE.tz HAP.tz HAR.tz HAST.tz HAT
-HAY.tz HNA.tz HNC.tz HNE.tz HNP.tz HNR.tz HNT.tz HNY.tz I.tz IST.tz 
-K.tz L.tz M.tz MDT.tz MESZ.tz MEZ.tz MSD MSK.tz MST.tz N.tz NDT.tz 
+HAY.tz HNA.tz HNC.tz HNE.tz HNP.tz HNR.tz HNT.tz HNY.tz I.tz IST.tz
+K.tz L.tz M.tz MDT.tz MESZ.tz MEZ.tz MSD MSK.tz MST.tz N.tz NDT.tz
 NFT.tz NST.tz O.tz P.tz PDT.tz PST.tz Q.tz R.tz S.tz T.tz U.tz UTC.tz
 V.tz W.tz WDT.tz WEDT WEST.tz WET.tz WST.tz X.tz Y.tz Z.tz:
 {Xd-} & TZ-;
 
 % Abbreviated month names.
-Jan.x Feb.x Mar.x Apr.x May.x Jun.x Jul.x Aug.x Sep.x Sept.x Oct.x Nov.x Dec.x: 
- {Xi+} & TM+ & {TY+} & 
-   ((Xd- & Xc+ & TW-) or 
-   ON- or 
-   JT- or 
+Jan.x Feb.x Mar.x Apr.x May.x Jun.x Jul.x Aug.x Sep.x Sept.x Oct.x Nov.x Dec.x:
+ {Xi+} & TM+ & {TY+} &
+   ((Xd- & Xc+ & TW-) or
+   ON- or
+   JT- or
    [[<noun-main-s> or MVpn- or Mp- or AN+]]);
 
-fall.i spring.i winter.i summer.i: 
+fall.i spring.i winter.i summer.i:
   ((DTn- or DTi-) & <prep-main-t>) or
   (DTi- & (JT- or YS+ or [[<noun-main-s>]]));
 
@@ -5227,12 +5227,12 @@ centuries.i semesters.i terms.i nights.i:
 week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
 (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-))) or
-(NSa- & [[Mp- or Ys-]]) or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) 
-or MVp- or (Xd- & Xc+ & MVx-))) or Yt+)); 
+(NSa- & [[Mp- or Ys-]]) or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+)
+or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 year_and_a_half: NSa- & {EN-} & (Yt+ or OT-);
-moment.u: (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-))) or 
-({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) 
-or MVp- or (Xd- & Xc+ & MVx-))) or Yt+)); 
+moment.u: (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-))) or
+({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+)
+or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 a_while: J- or Yt+ or OT- or MVa-;
 now.i then.i: JT- or FM-;
 now_on then_on there_on: FM-;
@@ -5247,24 +5247,24 @@ ago:
 every.i: {EN-} & Ye+ & <prep-main-t>;
 times.i x.i:
   (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+ or Ca+ or Qe+)) or
-  (((({ND-} & DG-) & {Cs+}) or (ND- & Ys+)) & 
+  (((({ND-} & DG-) & {Cs+}) or (ND- & Ys+)) &
     (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
 
 time.i:
   {TT- or NR-} & DG- & {Cs+} &
-    (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)); 
+    (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-));
 
 the_year: TY+ & <noun-main-s>;
 every_time:
   {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
 
-week.n moment.n hour.n minute.n year.n instant.n period.n month.n 
+week.n moment.n hour.n minute.n year.n instant.n period.n month.n
 second.n decade.n century.n:
   {NM+} & ((<noun-modifiers> &
-    ((Ds- & {@M+} & {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
+    ((Ds- & {@M+} & {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} &
       (<noun-main-s> or
       <rel-clause-s> or
-      <noun-and-s>)) or 
+      <noun-and-s>)) or
     Us- or
     (YS+ & Ds-) or
     (GN+ & (DD- or [()])))) or
@@ -5272,10 +5272,10 @@ second.n decade.n century.n:
 
 day.n night.n:
   {NM+} & ((<noun-modifiers> &
-    (({D*u-} & {@M+} & {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} & 
+    (({D*u-} & {@M+} & {WN+ or TH+ or [[Ce+]] or (R+ & Bs+)} & {@MXs+} &
       (<noun-main-m> or
       <rel-clause-s> or
-      <noun-and-x>)) or 
+      <noun-and-x>)) or
     Us- or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
@@ -5293,20 +5293,20 @@ nights.n seconds.n decades.n centuries.n:
     (GN+ & (DD- or [()])))) or
   [[AN+]]);
 
-% XXX A major problem here is that the dict entries for miles.n, feet.n 
+% XXX A major problem here is that the dict entries for miles.n, feet.n
 % create a mass of parses that are wrong & interfere with the below.
-<units-funky-plural>: 
+<units-funky-plural>:
 ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-)) or
 (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
-blocks.i feet.i miles.i yards.i inches.i 
-meters.i millimeters.i centimeters.i micrometers.i kilometers.i 
+blocks.i feet.i miles.i yards.i inches.i
+meters.i millimeters.i centimeters.i micrometers.i kilometers.i
 microns.i Angstroms.i wavelengths.i
 AU.i au.i astronomical_units light-years.i: <units-funky-plural>;
 
-block.i foot.i mile.i yard.i inch.i 
-meter.i millimeter.i centimeter.i micrometer.i kilometer.i 
+block.i foot.i mile.i yard.i inch.i
+meter.i millimeter.i centimeter.i micrometer.i kilometer.i
 micron.i Angstrom.i wavelength.i
 astronomical_unit light-year.i:
 (NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-)) or Us-;
@@ -5322,7 +5322,7 @@ point.i percentage_point:
 points.u percentage_points: ND- & (Yd+ or MVp-);
 
 dollars.i cents.i:  NIn- & (EC+ or Yd+ or OD-);
-1_dollar one_dollar a_dollar 1_cent 
+1_dollar one_dollar a_dollar 1_cent
 one_cent a_cent: {NJ-} & (EC+ or Yd+ or OD-);
 share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
 dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
@@ -5334,15 +5334,15 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 % Add cost to Op-, try to use any other linkage before making
 % a unit be a plain-old object.
 <units-suffix>:
-((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or 
-((ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or 
-((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or 
-((ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or 
-((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or 
+((ND- or NS- or NIe-) & (NIfu+ or NItu-)) or
+((ND- or NS- or NIe-) & (AN+ or EQt+ or EQt-)) or
+((ND- or NS- or NIe-) & (DD- or EN-) & {Wd-} & ({Mp+} & Sp+ )) or
+((ND- or NS- or NIe-) & ([[{DD-} & Op-]] or Jp-) & {Mp+}) or
+((ND- or NS- or NIe-) & Xd- & MX- & Xc+) or
 ((ND- or NS-) & {NJ-} & (EC+ or Y+ or OD- or (Us- & {Mp+}))) or Us-;
 
 % Abbreviations of scientific units that follow numbers
-% km².u mi².u in².u ft².u m².u cm².u 
+% km².u mi².u in².u ft².u m².u cm².u
 /en/words/units.1: <units-suffix>;
 UNITS: <units-suffix>;
 
@@ -5359,12 +5359,12 @@ UNITS: <units-suffix>;
 /en/words/units.4.dot: {Xi+} & <time-units>;
 
 % money, similar to units, above.
-/en/words/currency: 
-((NIm- or NIn- or NIe-) & AN+) or 
-((NIm- or NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or 
+/en/words/currency:
+((NIm- or NIn- or NIe-) & AN+) or
+((NIm- or NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or
 ((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
 
-/en/words/currency.p: 
+/en/words/currency.p:
   ((NIn- or NIe-) & AN+)
   or ((NIn- or NIe-) & (Op- or Jp-) & {Mp+})
   or ((NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
@@ -5385,7 +5385,7 @@ UNITS: <units-suffix>;
 
 %who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
 %({EL+} & (S**w+ or B*w+) & (Ws- or Wq- or QI*d- or BIqd-)) or
-%({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or <costly-null>) & MX*r-)); 
+%({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
 % QI- & (): "I do not know who"
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
@@ -5394,11 +5394,11 @@ who:
   or [QI-]
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-))
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
-     & (Xd- & (Xc+ or <costly-null>) & MX*r-)); 
+     & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
 % "what are the answers?" takes Sp+
-what: 
-  ({EL+} & 
+what:
+  ({EL+} &
       (D**w+
       or Ss*w+
       or Sp*w+
@@ -5409,20 +5409,20 @@ what:
   or (D+ & JQ-);
 
 % QI- & (): "I do not know which"
-which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or 
+which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or
 [QI-] or
 ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
- or Jw- or (JQ- & D+) or ({MVp+ or MVx+} & (S**w+ or B*w+) & 
+ or Jw- or (JQ- & D+) or ({MVp+ or MVx+} & (S**w+ or B*w+) &
 ((Xc+ or <costly-null>) & Xd- & MX*r-));
 
 whom: (R- & Cr+) or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
  or (Jr- & (RS+ or Cr+)) or Jw-;
 
-whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*d-))) 
+whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*d-)))
 or (JQ- & D+) or (U+ & Jr- & (RS+ or Cr+));
 
-whoever: {EL+} & 
-  (((Ss*d+ or Bsd+ or [[CX+]]) & 
+whoever: {EL+} &
+  (((Ss*d+ or Bsd+ or [[CX+]]) &
     (<noun-main-s> or SJr- or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or
     [[(O- or J-) & CX+]]);
 whatever.c: ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) &
@@ -5430,20 +5430,20 @@ whatever.c: ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) &
 or [[(O- or J-) & CX+]]))
 or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
-whenever wherever however.c: {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or 
+whenever wherever however.c: {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or
 ({Xd- & Xc+} & MVs-)));
 no_matter: QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
 
-that.j-c: 
-  (Cet+ &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or 
+that.j-c:
+  (Cet+ &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or
   (TS- & (SI*j+ or SFI**j+) & I*j+);
 that.j-d: [{AL-} & D*u+];
 that.j-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 
 % (Rnx+ & <CLAUSE-E>): "Because I said so"
-because: 
- (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-))) or 
+because:
+ (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-))) or
  (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-))) or
  (Rnx+ & <CLAUSE-E>);
 
@@ -5524,13 +5524,13 @@ while:
 <adverb-join>: RJlv+ or RJrv-;
 
 % once as adverb
-once.e: 
-  ({Cs+ or Mp+} & 
-    (({Xc+ & {Xd-}} & CO*s+) or 
-    ({Xd- & Xc+} & MVs-) or 
-    (Xd- & Xc+ & E+))) or 
+once.e:
+  ({Cs+ or Mp+} &
+    (({Xc+ & {Xd-}} & CO*s+) or
+    ({Xd- & Xc+} & MVs-) or
+    (Xd- & Xc+ & E+))) or
   <adverb-join> or
-  E+ or 
+  E+ or
   EB-;
 
 % --------------------------------------------------------------------------
@@ -5543,13 +5543,13 @@ once.e:
 % Another possibility: (Rnx+ & <CLAUSE-E>) "Because I say so"
 % XXX should review these, they probably overlap the other conjunction
 % usages below.
-but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet: 
+but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
   [[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)]];
 
 and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 
 % and used as a conjunction in proper names:
-% The Great Southern and Western Railroad 
+% The Great Southern and Western Railroad
 % Hmm, Maybe should use MG- & JG+ here, to be consistent with "of", "for":
 % "The Society of Engineers", "The League for Abstinence"
 and.j-g: [[G- & G+]];
@@ -5583,7 +5583,7 @@ nor.j-a: AJn- & AJ+ & (A+ or Pa- or [MVa-]);
 % If one comma is there, then the other must be also.
 and.j-c or.j-c but.j-c yet.j-c:
   ((AJlc- & AJrc+) or
-  (Xd- & AJlc- & AJrc+ & Xc+)) & 
+  (Xd- & AJlc- & AJrc+ & Xc+)) &
     (((Pam- or Mam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb-) or
     Am+);
@@ -5593,9 +5593,9 @@ and.j-s:
   (AJld- & AJrd+ & (D+ or DD+));
 
 % conjoined post-nominal modifiers
-% [Ma-]: it  is more grammatically correct to have commas ... 
+% [Ma-]: it  is more grammatically correct to have commas ...
 % {EBb+}: "blah but not blah", "blah and not blah"
-but.j-m and.j-m or.j-m: 
+but.j-m and.j-m or.j-m:
   (({Xd-} & MJla- & {EBb+} & MJra+) & ([Ma-] or (Xd- & Xc+ & MX*a-))) or
   (({Xd-} & MJlp- & {EBb+} & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
   (({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
@@ -5611,7 +5611,7 @@ and.j-q: (QJ- & QJ+) & ((Wq- & (Q+ or PF+)) or QI-);
 % RJ*c: subordinate clauses: "Although he said ... and he did ..., ..."
 % RJ*j: prep-object-relative (Mj): "the man for whom and with whom ..."
 % RJ*r: "those" relative clauses: "...: those who do and those who don''t"
-and.j-r or.j-r: 
+and.j-r or.j-r:
   ((RJlv- & RJrv+) & MVr-) or
   ((RJlt- & RJrt+) & TH-) or
   ((RJlc- & RJrc+) & Cs-) or
@@ -5622,22 +5622,22 @@ and.j-r or.j-r:
 % "The cost and reliability were questioned" (Spx+)
 % "He wrote for piano and flute."  (Ju-)
 % "Where is the sickle and hammer?" (SIs-)
-% Op- has a cost, so that "they verbed X and verbed Y" gets the VJ link 
+% Op- has a cost, so that "they verbed X and verbed Y" gets the VJ link
 % at zero cost, and the SJ link at higher cost (since a "verbed Y" can be
 % understood as a modified noun).  Acutally, should probably have some
-% post-processing rule to disallow this XXX to do fix above.  Example of 
+% post-processing rule to disallow this XXX to do fix above.  Example of
 % bad SJ usage: "He bangs drums and played piano" i.e "he bangs a played piano"
 %
 % <noun-conjunction>: ({Xd-} & SJl- & SJr+) & etc.
-% would allow "X , and Y" constructions, but these have tricky rules... 
+% would allow "X , and Y" constructions, but these have tricky rules...
 %
 % noun-conj-dep-s & SI-: Are a dog and a cat here?
 %
-% XXX There should be a noun-sub-u but this requires a lot of work ... 
+% XXX There should be a noun-sub-u but this requires a lot of work ...
 <noun-conj-dep-s>: ({Xd-} & SJls- & SJrs+ & {[[Xc+]]});
-<noun-conj-dep-p>: ({Xd-} & SJlp- & SJr+  & {[[Xc+]]}) or 
+<noun-conj-dep-p>: ({Xd-} & SJlp- & SJr+  & {[[Xc+]]}) or
                    ({Xd-} & SJls- & SJrp+ & {[[Xc+]]});
-<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+  & {[[Xc+]]}) or 
+<noun-conj-dep-u>: ({Xd-} & SJlu- & SJr+  & {[[Xc+]]}) or
                    ({Xd-} & SJlp- & SJru+ & {[[Xc+]]}) or
                    ({Xd-} & SJls- & SJru+ & {[[Xc+]]});
 
@@ -5653,23 +5653,23 @@ and.j-r or.j-r:
 % "I saw the (dog and pony) show"
 %
 % and_not ,_not: "I saw John, not Mary"
-% We treat this her as an idiom, even though it's explicitly hanled for 
+% We treat this her as an idiom, even though it's explicitly hanled for
 % AJ nd RJ conjunctions.  Its just easier, for now.
 %
 % {Jd- & Dm-}: "A number of recommendations and suggestions were made"
 %   with "number of" modifying the and.j-n
 and.j-n but_not and_not ,_not:
-  (<noun-conj-dep-s> & <noun-sub-s> & 
+  (<noun-conj-dep-s> & <noun-sub-s> &
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [{Ds-} & Os-] or <post-nominal-s>)) or
-  (<noun-conj-dep-p> & <noun-sub-p> & 
+  (<noun-conj-dep-p> & <noun-sub-p> &
     (<noun-conj-head> or ({Jd- & Dm-} & Spx+ & <CLAUSE>) or SIp- or [{Dmc-} & Op-] or <post-nominal-p>)) or
-  (<noun-conj-dep-u> & <noun-sub-x> & 
+  (<noun-conj-dep-u> & <noun-sub-x> &
     (<noun-conj-head> or ({Jd- & Dm-} & Sux+ & <CLAUSE>) or SIu- or [{Dmu-} &  Ou-] or <post-nominal-u>));
 
 or.j-n:
-  (<noun-conj-dep-s> & <noun-sub-s> & 
+  (<noun-conj-dep-s> & <noun-sub-s> &
     (<noun-conj-head> or (S*x+ & <CLAUSE>) or SI- or [Os-] or <post-nominal-s>)) or
-  (<noun-conj-dep-p> & <noun-sub-p> & 
+  (<noun-conj-dep-p> & <noun-sub-p> &
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or <post-nominal-p>));
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
@@ -5682,7 +5682,7 @@ neither.j: Dn+;
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
-but.j-n: 
+but.j-n:
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
   ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
   (({Xd-} & SJl- & EBy- & SJr+) & Ou-);
@@ -5712,7 +5712,7 @@ and.j-v or.j-v: <verb-conjunction>;
 and.j-o or.j-o: <ditransitive-conjunction>;
 
 % The VJn- gaurentees that nor.j-v is used with neither.j-v
-nor.j-v: 
+nor.j-v:
   (VJn*i- & VJr*i+ & ({@MV+} & S-)) or
   (VJn*t- & VJr*t+ & ({@MV+} & S- & O+));
 
@@ -5723,15 +5723,15 @@ but.j-v:
   ((({Xd-} & VJlp-) & VJrp+) & (Sp- or ({Xd-} & VJrp-))) or
   ((VJl- & VJr+) & (I- or <verb-ico>));
 
-% The VJb- guarentees that bit.j-b is used with not_only 
+% The VJb- guarentees that bit.j-b is used with not_only
 % "We not only X'ed but also Y'ed".
 % This is the same pattern as the neither..nor... pattern above.
-but.j-b: 
+but.j-b:
   (VJb*i- & VJr*i+ & ({@MV+} & S-));
 not_only: Db+;
 
 % XJ: collocations with holes, i.e. "... blah blah X um um Y"
-% where "blah blah" is always used with "um um". 
+% where "blah blah" is always used with "um um".
 % XJ*i: with infinitives
 % ... not only X, but Y
 % "you should not only ask for your money back, but demand it"
@@ -5746,28 +5746,28 @@ nor.r: ((Xd- & CC-) or Wd-) & Qd+;
 for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
-thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or 
+thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or
 ({Xd- & Xc+} & (E+ or EB-)) or (Xd- & Xc+ & MVa-);
 
 % QI- & (): "I do not know when"
-when: 
-  ((WN- or BIh-) & Cs+) or 
-  ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or 
+when:
+  ((WN- or BIh-) & Cs+) or
+  ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or
   [QI-] or
   QJ- or QJ+ or
-  (Wq- & (Q+ or PF+)) or 
-  ((Cs+ or Mp+ or Mgp+ or Mv+) & 
+  (Wq- & (Q+ or PF+)) or
+  ((Cs+ or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
 % QI- & (): "I do not know why"
-why: 
-  ({EL+} & ((Wq- & Q+) or 
-    (QI- & (Cs+ or TOn+ or [()])) or 
-    (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-)))) or 
+why:
+  ({EL+} & ((Wq- & Q+) or
+    (QI- & (Cs+ or TOn+ or [()])) or
+    (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-)))) or
   QJ- or QJ+ or
   [[{@CO-} & Wc- & Wi+]];
 
-why_not: [[{@CO-} & Wc- & Wi+]]; 
+why_not: [[{@CO-} & Wc- & Wi+]];
 
 % QI- & (): "I do not know where"
 % R+ & Bsw+: "Where does it go to?"
@@ -5785,14 +5785,14 @@ where:
 
 whether: (((QI- or BIq-) & (Cs+ or TOn+)) or (Cs+ & SFsx+ & <S-CLAUSE>))
 or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
-whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or 
+whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or
 (Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
- 
+
 % QI- & (): "I do not know how"
-how: 
-((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) & 
+how:
+((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
 (BIqd- or QI*d- or Wq- or Ws-)) or
-(Wq- & (Q+ or AF+)) or 
+(Wq- & (Q+ or AF+)) or
 [QI-] or
 QJ- or QJ+ or
 ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
@@ -5801,13 +5801,13 @@ QJ- or QJ+ or
 %
 % EB- & EA+: modify both the verb, via EB- and the adjective, via EA+
 %   it is not sweet
-%   *it tastes not sweet       
-%   it tastes bitter, not sweet   % "not" is modifying comma    
-%   it tastes bitter and not sweet 
+%   *it tastes not sweet
+%   it tastes bitter, not sweet   % "not" is modifying comma
+%   it tastes bitter and not sweet
 % EB- & EE+: "but not very much"
 % optional {EA+} to make "he is not a good programmer"
 % FIXME: it would be nice to have some + link for this case, also.
-not.e: 
+not.e:
   (EBm- & {EA+ or EE+})
   or (EBb- & {EA+})
   or (EBx- & {EA+})
@@ -5831,24 +5831,24 @@ n't n’t: N- or EB-;
   (AJra- & {@MV+}) or
   ({@MV+} & AJla+) or
   (Dn- & AJn+) or
-  ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-))); 
+  ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
 
 % Ordinary adjectives
-% abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a 
-% "the rich and powerful": [[{DD-} & <noun-and-p>]] 
+% abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a
+% "the rich and powerful": [[{DD-} & <noun-and-p>]]
 
 <ordinary-adj>:
-  {EA- or EF+} & 
-    (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Pa- or AF+ or Ma- or MJra-) & {@MV+}) or 
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+}) or
     ({@MV+} & MJla+) or
-    AA+ or 
-    [[DD- & <noun-main-p>]] or 
-    [[{DD-} & <noun-and-p>]] or 
+    AA+ or
+    [[DD- & <noun-main-p>]] or
+    [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 /en/words/words.adj.1:
-  <marker-common-entity> or 
+  <marker-common-entity> or
   <ordinary-adj>;
 
 HYPHENATED-WORDS.a:
@@ -5857,7 +5857,7 @@ HYPHENATED-WORDS.a:
 % "We caught a through flight", "its a done job" - adjective -- !? probably over-broad.
 <adj-stuff>:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or 
+    (({[[@Ec-]]} & {Xc+} & A+) or
     ((AF+ or Ma- or MJra-) & {@MV+}) or
     ({@MV+} & MJla+) or
     AA+ or
@@ -5883,7 +5883,7 @@ long.a:
 
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
-wide.a tall.a deep.a distant.a:  
+wide.a tall.a deep.a distant.a:
   <ordinary-adj> or
   (Ya- & (Pa- or Ma- or MJra- or <adj-op>) & {@MV+}) or
   (Ya- & {@MV+} & MJla+);
@@ -5897,7 +5897,7 @@ aged.i: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) or MJra- or MJla+);
 
 % The following all have a very regular pattern, with just one variable
 % part, the TO TH type section.  This regularity should be exploted so
-% simplify the expressions ... 
+% simplify the expressions ...
 easy.a hard.a simple.a difficult.a fun.a expensive.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
@@ -5909,7 +5909,7 @@ easy.a hard.a simple.a difficult.a fun.a expensive.a:
     ({TOt+ & B+} & <adj-op>));
 
 ready.a:
-  {EA- or EF+} & 
+  {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((TOt+ & B+) or TO+) & {LE+}}) or
     ({@MV+} & {((TOt+ & B+) or TO+) & {LE+}} & MJla+) or
@@ -5940,13 +5940,13 @@ legal.a illegal.a:
     ({TOt+ & B+} & <adj-op>));
 
 good.a bad.a unusual.a useful.a a_bitch nice.a
-strange.a wonderful.a terrible.a possible.a impossible.a annoying.a 
+strange.a wonderful.a terrible.a possible.a impossible.a annoying.a
 fair.a unfair.a tough.a: <adj-good>;
 
 great.a: <marker-common-entity> or <adj-good>;
 
-important.a essential.a crucial.a necessary.a imperative.a vital.a: 
-  <marker-common-entity> or 
+important.a essential.a crucial.a necessary.a imperative.a vital.a:
+  <marker-common-entity> or
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or TOi+ or TSi+) & {LE+}}) or (TOt+ & B+))) or
@@ -5972,8 +5972,8 @@ poetical.a:
     [[{DD-} & <noun-and-p>]] or
     <adj-op>));
 
-surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a 
-rare.a embarrassing.a: 
+surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
+rare.a embarrassing.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or Ci+ or TOi+) & {LE+}}) or
@@ -5984,16 +5984,16 @@ rare.a embarrassing.a:
     <adj-op>);
 
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
-  {EA- or EF+} & 
-    (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TOi+ or THi+) & {LE+}}) or 
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TOi+ or THi+) & {LE+}}) or
     ({@MV+} & {(TO+ or TOi+ or THi+) & {LE+}} & MJla+) or
-    AA+ or 
-    [[DD- & <noun-main-p>]] or 
+    AA+ or
+    [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     ({TO+} & <adj-op>));
 
-wise.a unwise.a smart.a intelligent.a: 
+wise.a unwise.a smart.a intelligent.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TOi+) & {LE+}}) or
@@ -6036,15 +6036,15 @@ well-known.a:
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or
     ({@MV+} & {(THi+ or Ci+) & {LE+}} & MJla+) or
-    AA+ or 
+    AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
-  {EA- or EF+} & 
+  {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or QIi+) & {LE+}}) or 
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or QIi+) & {LE+}}) or
     ({@MV+} & {(THi+ or QIi+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
@@ -6058,7 +6058,7 @@ tactful.a conventional.a advisable.a prudent.a sensible.a tactless.a polite.a
 impolite.a arrogant.a conceited.a obnoxious.a valuable.a reasonable.a
 unreasonable.a traditional.a unnecessary.a tempting.a usual.a
 inadvisable.a lovely.a a_mistake ethical.a unethical.a immoral.a childish.a awkward.a
-appropriate.a costly.a customary.a desirable.a dumb.a effective.a fashionable.a 
+appropriate.a costly.a customary.a desirable.a dumb.a effective.a fashionable.a
 foolish.a healthy.a hip.a okay.a OK.a ok.a
 painful.a selfish.a sufficient.a advantageous.a boring.a
 inappropriate.a insufficient.a irrational.a irresponsible.a mandatory.a meaningless.a
@@ -6068,13 +6068,13 @@ hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {TOi+ & {LE+}}) or
     ({@MV+} & {TOi+ & {LE+}} & MJla+) or
-    AA+ or 
+    AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
-unknown.a questionable.a: 
-  {EA- or EF+} & 
+unknown.a questionable.a:
+  {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {QIi+}) or
     ({@MV+} & {QIi+} & MJla+) or
@@ -6083,18 +6083,18 @@ unknown.a questionable.a:
     [[{DD-} & <noun-and-p>]] or
     <adj-op>);
 
-certain.a: 
-  {EA- or EF+} & 
-    (({[[@Ec-]]} & {Xc+} & A+) or 
+certain.a:
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
     ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
-    AA+ or 
+    AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     ({Ce+ or TO+ or TH+ or QI+ or OF+} & <adj-op>));
 
 sure.a unsure.a uncertain.a careful.a:
-  {EA- or EF+} & 
+  {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or TO+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(Ce+ or TO+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
@@ -6104,11 +6104,11 @@ sure.a unsure.a uncertain.a careful.a:
     ({Ce+ or TO+ or TH+ or QI+ or OF+} & <adj-op>));
 
 % common adjectives, taking "to", "that" e.g. "was incorrect that"
-correct.a incorrect.a right.a excited.a 
+correct.a incorrect.a right.a excited.a
 disappointed.a upset.a sorry.a content.a determined.a
 amused.a amazed.a astonished.a astounded.a pleased.a
 disgusted.a distressed.a dismayed.a irritated.a embarrassed.a alarmed.a:
-  {EA- or EF+} & 
+  {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TH+) & {LE+}}) or
     ({@MV+} & {(TO+ or TH+) & {LE+}} & MJla+) or
@@ -6130,7 +6130,7 @@ delighted.a overjoyed.a:
 
 % common adjectives, taking "to", "of", "that" e.g. "proud that"
 proud.a scared.a:
-  {EA- or EF+} & 
+  {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TO+ or TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(TO+ or TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
@@ -6144,36 +6144,36 @@ tired.a pooped.a full.a sick.a critical.a guilty.a innocent.a typical.a
 capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
 appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
 prognostic.a dead.a:
-  {EA- or EF+} & 
-    (({[[@Ec-]]} & {Xc+} & A+) or 
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {OF+ & {@MV+}}) or
     ({@MV+} & {OF+ & {@MV+}} & MJla+) or
-    AA+ or 
+    AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     ({OF+ & {@MV+}} & <adj-op>));
 
 fond.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or 
+    (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & OF+ & {@MV+}) or
     (OF+ & {@MV+} & MJla+) or
     (OF+ & <adj-op>));
 
 afraid.a ashamed.a unafraid.a unashamed.a:
   {EA- or EF+} &
-    (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}}) or 
+    (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}}) or
     ({@MV+} & {((OF+ & {@MV+}) or Ce+ or TH+ or TO+) & {LE+}} & MJla+) or
     ({OF+ or Ce+ or TH+ or TO+} & <adj-op>));
 
 apprehensive.a secure.a optimistic.a pessimistic.a annoyed.a confused.a offended.a
-insulted.a concerned.a depressed.a doubtful.a 
-grateful.a mad.a mistaken.a hopeful.a unhappy.a: 
-  {EA- or EF+} & 
-    (({[[@Ec-]]} & {Xc+} & A+) or 
-    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TH+ & {LE+}}) or 
-    ({@MV+} & {TH+ & {LE+}} & MJla+) or 
-    AA+ or 
+insulted.a concerned.a depressed.a doubtful.a
+grateful.a mad.a mistaken.a hopeful.a unhappy.a:
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+) or
+    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TH+ & {LE+}}) or
+    ({@MV+} & {TH+ & {LE+}} & MJla+) or
+    AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     ({TH+} & <adj-op>));
@@ -6182,7 +6182,7 @@ aware.a unaware.a:
   {EA- or EF+} &
     (((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
-    AA+ or 
+    AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     ({TH+ or OF+} & <adj-op>));
@@ -6193,7 +6193,7 @@ convinced.a unconvinced.a:
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
-    AA+ or 
+    AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     ({TH+ or OF+} & <adj-op>));
@@ -6205,7 +6205,7 @@ keen.a prepared.a willing.a hesitant.a:
     ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {TO+ & {LE+}}) or
     ({@MV+} & {TO+ & {LE+}} & MJla+) or
     AA+ or
-    [[DD- & <noun-main-p>]] or 
+    [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
     ({TO+} & <adj-op>));
 
@@ -6218,7 +6218,7 @@ a_priori a_posteriori: A+ or MVa- or ({Xc+ & {Xd-}} & CO+);
 
 asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a afloat.a afoot.a
 aghast.a aglow.a agog.a ajar.a amiss.a askew.a astir.a awash.a awry.a de_rigeur
-rife.a fraught.a lacking.a: 
+rife.a fraught.a lacking.a:
   ((Ma- or Pa- or MJra-) & {@MV+}) or
   ({@MV+} & MJla+) or
   <adj-op>;
@@ -6231,7 +6231,7 @@ alone.a:
   E+;
 
 outstanding.a available.a:
-  {EA- or EF+} & 
+  {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
     ((Pa- or AF+ or Max- or MJra-) & {@MV+}) or
     ({@MV+} & MJla+) or
@@ -6242,21 +6242,21 @@ outstanding.a available.a:
 
 due.i effective.i: (TY+ or JT+) & <prep-main-b>;
 
-north.a south.a east.a west.a northeast.a northwest.a southeast.a southwest.a: 
+north.a south.a east.a west.a northeast.a northwest.a southeast.a southwest.a:
 <marker-common-entity> or
-A+ or ({Yd-} & {OF+} & (Pp- or MVp- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)))) 
+A+ or ({Yd-} & {OF+} & (Pp- or MVp- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-))))
 or [[DD- & <noun-main-p>]];
-northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a 
+northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a
 southwestern.a: <marker-common-entity> or A+ or G+;
 
 % -------------------------------------------------------------------------
 %COMPARATIVES AND SUPERLATIVES
 
-more: 
+more:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+ or AJrc- or AJlc+)) or
-  ({OF+} & (({ECn-} & 
-    (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+)) or 
-    ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+)) or 
+  ({OF+} & (({ECn-} &
+    (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+)) or
+    ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+)) or
     ({ECn- or ECx- or ND-} & (Om- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-))))) or
   (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -6264,7 +6264,7 @@ more_of_a more_of_an: Ds*m+;
 
 less:
   ({ECn-} & (Dmum+ or Om- or Jm- or (Ss+ & <CLAUSE>) or Bsm+)) or
-  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or AJrc- or AJlc+)) or 
+  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or AJrc- or AJlc+)) or
   (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 fewer:
@@ -6275,7 +6275,7 @@ farther:
   ({ECa-} & {K+} & (MVb- or Qe+ or Ca+ or AJrc- or AJlc+)) or
   A+;
 
-further.r: 
+further.r:
   ({ECa-} & {K+} & (MVb- or Qe+ or Ca+ or AJrc- or AJlc+)) or
   A+ or
   E+ or
@@ -6288,15 +6288,15 @@ as.e-y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
 
 % uses comparative links
 as.e-c: (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or Cc+))
-or (MVzo- & Ct+ & Bc+ & {U+}) 
+or (MVzo- & Ct+ & Bc+ & {U+})
 or (MVzp- & (CX+ or CQ+))
 or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
 % prepositional, mostly
-as.e: ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) & 
-(({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-))) or 
+as.e: ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
+(({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-))) or
 (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-))) or
-((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-))) or 
+((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-))) or
 (AZ- & Pa+) or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 as_possible: MVz-;
 as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
@@ -6319,15 +6319,15 @@ as_caused as_summarized as_prepared as_outlined as_occurred
 as_modified as_localized as_involved as_implied as_gauged as_exhibited
 as_encountered as_displayed as_contained as_catalyzed as_advocated
 as_achieved:
-MVz- or 
+MVz- or
 (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-));
 
 % MODIFIED 'THAN' so that it links to the clause following it
 % using 'C' links -- like a relative clause
-than: (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+}) or 
+than: (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+}) or
                Mpc+ or S**c+ or MVat+ or MVpt+ or Cc+ or Pafc+))
-or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+)) 
-or ((MVti- or LEi-) & AFdi+ & {Pa+}) 
+or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
+or ((MVti- or LEi-) & AFdi+ & {Pa+})
 or (((LE- & {AFd+}) or (LEi- & {AFdi+})) & (THc+ or TOic+ or TOfc+ or (TOtc+ & B+)))
 or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
 
@@ -6339,29 +6339,29 @@ much:
 
 slightly somewhat: EC+ or EA+ or MVa- or Em+;
 far.c infinitely: EC+;
-significantly substantially: ({EE- or EF+} & 
+significantly substantially: ({EE- or EF+} &
 (EC+ or E+ or MVa- or ({Xc+ & {Xd-}} & CO+))) or ({EE-} & EB-);
 
 % comparative adjectives
-% angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a 
+% angrier.a balder.a balmier.a baser.a bawdier.a bigger.a blacker.a
 <comp-adj>:
-  ({ECa-} & 
-    (((Pam- or Mam- or AFm+ or AJrc-) & {@MV+}) or 
+  ({ECa-} &
+    (((Pam- or Mam- or AFm+ or AJrc-) & {@MV+}) or
     ({[[@Ec-]]} & {Xc+} & Am+) or
-    AJlc+)) or 
+    AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 /en/words/words.adj.2: <comp-adj>;
 
-easier.a-c: 
-  ({ECa-} & 
-    (({[[@Ec-]]} & {Xc+} & Am+) or 
+easier.a-c:
+  ({ECa-} &
+    (({[[@Ec-]]} & {Xc+} & Am+) or
     ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
-    AJlc+)) or 
+    AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+)));
 
-harder.a-c: 
-  ({ECa-} & 
+harder.a-c:
+  ({ECa-} &
     (({[[@Ec-]]} & {Xc+} & Am+) or
     ((Pafm- or AFm+ or Mam- or AJrc-)  & {@MV+} & {((TOt+ & B+) or TOi+) & {LE+}}) or
     MVb- or
@@ -6369,17 +6369,7 @@ harder.a-c:
   (DG- & (TR+ or AF+) & {@MV+} & {(TOt+ & B+) or TOi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c:
-  ({ECa-} & 
-    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or 
-    ({[[@Ec-]]} & {Xc+} & Am+) or
-    MVb- or
-    Qe+ or
-    Ca+ or
-    AJlc+)) or
-  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
-
-sooner.a-c:
-  ({ECa- or Yt-} & 
+  ({ECa-} &
     (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
@@ -6388,9 +6378,19 @@ sooner.a-c:
     AJlc+)) or
   (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
-longer.a-c: 
+sooner.a-c:
   ({ECa- or Yt-} &
-    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or 
+    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or
+    ({[[@Ec-]]} & {Xc+} & Am+) or
+    MVb- or
+    Qe+ or
+    Ca+ or
+    AJlc+)) or
+  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+
+longer.a-c:
+  ({ECa- or Yt-} &
+    (((Pam- or AFm+ or Mam- or AJrc-) & {@MV+}) or
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
@@ -6401,14 +6401,14 @@ longer.a-c:
   (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 smarter.a-c nicer.a-c worse.a-c:
-  ({ECa-} & 
+  ({ECa-} &
     (({[[@Ec-]]} & {Xc+} & Am+) or
     ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
     AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
-better.a-c: 
-  ({ECa-} & 
+better.a-c:
+  ({ECa-} &
     (({[[@Ec-]]} & {Xc+} & Am+) or
     ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(TOi+ or THi+) & {LE+}}) or
     MVb- or
@@ -6418,23 +6418,23 @@ better.a-c:
     AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
-different.a: 
-  ({ECa- or EA- or EF+} & 
+different.a:
+  ({ECa- or EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & Am+) or
     ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+}) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     <adj-op>));
 
-than_expected than_imagined than_proposed than_suspected than_realized 
+than_expected than_imagined than_proposed than_suspected than_realized
 than_intended than_supposed than_reported than_ever than_usual
 than_normal than_suggested than_anticipated than_recommended: MVt-;
 	
-more_than no_more_than fewer_than less_than as_many_as an_estimated 
+more_than no_more_than fewer_than less_than as_many_as an_estimated
 an_additional up_to as_much_as no_fewer_than no_less_than greater_than: EN+;
 at_least: EN+ or CO+ or [[{Xd- & Xc+} & MVa-]] or EB-;
 
-% This is not quite right, since there may be other words in between 
+% This is not quite right, since there may be other words in between
 % "all ... but": "All was lost but for one tree."
 % "Everything but one tree remained."
 % nothing_but all_but: EN+ or E+;
@@ -6443,41 +6443,41 @@ nothing_but: Vd- & I+;
 
 % --------------------------------------------------------------------------
 % superlative adjectives
-% angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a 
-<superlatives>: 
-  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
+% angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a
+<superlatives>:
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or
   AJrs- or AJls+;
 
 /en/words/words.adj.3: <superlatives>;
 
-favorite.a favourite.a: <superlatives> or 
-({Xc+} & {[[@Ec-]]} & [[Lf-]]) or 
+favorite.a favourite.a: <superlatives> or
+({Xc+} & {[[@Ec-]]} & [[Lf-]]) or
 ([[Ds-]] & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
-same.a own.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
+same.a own.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
 (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
 the_same: {EZ-} & (D**y+ or Oy- or Jy- or MVy-);
-next.a: ({Xc+ & {Xd-}} & CO+) or MVp- or DTi+ or NR+ or 
-({Xc+} & {[[@Ec-]]} & L-)  
+next.a: ({Xc+ & {Xd-}} & CO+) or MVp- or DTi+ or NR+ or
+({Xc+} & {[[@Ec-]]} & L-)
 or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
-past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+}); 
+past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+});
 following.a remaining.a top.i: L-;
 
-hardest.a easiest.a: 
-  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
+hardest.a easiest.a:
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & <noun-sub-x> & {TOt+ & B+} & <noun-main-x>) or
   AJrs- or AJls+;
 
-worst.a longest.a fastest.a furthest.a farthest.a: 
-  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or 
+worst.a longest.a fastest.a furthest.a farthest.a:
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-)) or
   AJrs- or AJls+;
 
 % "he likes you best of all" has no determiner, just uses MVa-.
-best.a: 
-  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or  
+best.a:
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or (MVa- & {Mp+}))) or
   [[E+]] or
   [MVa- & {Mp+}] or
@@ -6496,7 +6496,7 @@ a_bit a_little_bit:
   or ({Xd- & Xc+} & MVa-)
   or [[<adv-of>]];
 
-% OFd+ & Dm+: "I will wait a little while of time" 
+% OFd+ & Dm+: "I will wait a little while of time"
 a_little_while:
   ({EE-} & EA+)
   or EC+
@@ -6505,7 +6505,7 @@ a_little_while:
   or [[<adv-of>]]
   or (OFd+ & Dm+);
 
-% 
+%
 pretty.e extremely very_very very_very_very exceptionally
 unbelievably incurably extraordinarily
 jolly.e mighty.e damn.e exceedingly overly downright plumb
@@ -6513,19 +6513,19 @@ vitally abundantly chronically frightfully genuinely
 humanly patently
 singularly supremely unbearably unmistakably unspeakably
 awfully decidedly demonstrably fashionably frighteningly horrifyingly
-indescribably intolerably laughably predominantly 
+indescribably intolerably laughably predominantly
 unalterably undisputedly unpardonably
 unreasonably unusually hugely infernally:
 ({EE-} & EA+) or EE+;
 
 notoriously.e: ({EE-} & EA+) or EE+ or Em+;
 
-% Adverbs whose main use is adjectival, but can be used with 
-% adverbs such as "faster", "dumber", etc. 
+% Adverbs whose main use is adjectival, but can be used with
+% adverbs such as "faster", "dumber", etc.
 % "That one is marginally better". (thus EBm+)
 % "It's an inherently better method" thus E+ link
-fabulously incomparably inherently marginally moderately 
-relatively ridiculously 
+fabulously incomparably inherently marginally moderately
+relatively ridiculously
 unacceptably unarguably undeniably unimaginably:
 ({EE-} & EA+) or EE+ or ({EE-} & EBm-) or E+;
 
@@ -6541,8 +6541,8 @@ very.e way.e:
 
 real.e: [[EA+ or EE+]];
 quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
-amazingly strangely incredibly: 
-({EE-} & EA+) or EE+ or ({Xd- & Xc+} & Em+) or ({Xc+ & {Xd-}} & CO+) or EBm- or 
+amazingly strangely incredibly:
+({EE-} & EA+) or EE+ or ({Xd- & Xc+} & Em+) or ({Xc+ & {Xd-}} & CO+) or EBm- or
 (Xd- & Xc+ & MVa-);
 rather: EA+ or EE+ or Vw- or ({Xc+ & {Xd-}} & CO+);
 particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+)) or
@@ -6551,7 +6551,7 @@ notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
 almost nearly: EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-;
 just_about: Em+ or EN+ or EZ+ or EA+;
 entirely reasonably highly fairly totally completely terribly:
-EA+ or EE+ or 
+EA+ or EE+ or
 ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
 absolutely:
 EA+ or EE+ or EBm- or
@@ -6564,7 +6564,7 @@ EA+ or EE+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+)) or
 
 really: EA+ or EE+ or Em+ or EBm-;
 surprisingly: EA+ or EE+ or ({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & E+) or
-(Xd- & Xc+ & MVa-); 
+(Xd- & Xc+ & MVa-);
 especially: EA+ or EE+ or EB- or Em+ or (MVl- & (MVp+ or MVa+ or MVs+)) or
  ({Xc+ & {Xd-}} & CO+);
 virtually: EA+ or EE+ or EN+ or EZ+ or Em+;
@@ -6580,7 +6580,7 @@ sure.ee: Em+;
 
 more_and_more less_and_less more_or_less: Em+;
 
-% Adverbs like "biochemically". These tend to answer the question "how?" 
+% Adverbs like "biochemically". These tend to answer the question "how?"
 % with a noun-form (as opposed to being verb-derived) A lot of these are
 % of the "-ically" form
 /en/words/words.adv.3:
@@ -6593,28 +6593,28 @@ in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 barefoot.e willy-nilly quarterly.e madly.e outright.e
 staccato.e legato.e all_the_way all_the_time
 anymore.e aloud.e upwards.e downwards.e upward.e downward.e
-inward.e outward.e inwards.e outwards.e anytime.e live.e 
+inward.e outward.e inwards.e outwards.e anytime.e live.e
 wholesale.e anew.e forever.e awhile.e aback.e afoul.e afresh.e aloft.e
 amok.e amuck.e onstage.e
 apiece.e askance.e astern.e asunder.e inter_alia mutatis_mutandis par_excellence
 upside-down.e ab_initio ad_infinitum ad_lib
 ad_libitum ad_nauseum aground.e astray.e into_account into_effect
-to_market to_bid from_scratch to_office for_office for_good 
+to_market to_bid from_scratch to_office for_office for_good
 at_once to_normal to_bed to_town into_office in_advance to_trial by_lot
 in_stride by_credit_card by_ear by_foot in_kind en_masse to_mind in_mind
-in_pencil in_pen to_scale for_trial all_right full_time part_time by_proxy: 
-  {Xd- & Xc+} & MVa-; 
+in_pencil in_pen to_scale for_trial all_right full_time part_time by_proxy:
+  {Xd- & Xc+} & MVa-;
 
 % Adjectives that appear post-verbally e.g. "she wiped the table dry"
 % "we will arrive exhausted"
 % comparative link *must* have EE- to "more", "less"
-% These are more or less adverbs ... 
+% These are more or less adverbs ...
 dry.e flat.e blind.e tired.e refreshed.e fresh.e exhausted.e rejuvenated.e:
   ({EE- or EF+ } & (MVa- or AJra- or AJla+)) or
   (EE- & (AJrc- or AJlc+));
 
 wild.e rampant.e shut.e tight.e
-open.e loud.e hot.e cold.e free.e: 
+open.e loud.e hot.e cold.e free.e:
   {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Ca+);
 
 hard.e wrong.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+);
@@ -6626,17 +6626,17 @@ yet.e: ({Xd- & Xc+} & MVa-) or EBm-;
 properly.e: ({Xd- & Xc+} & MVa-) or Em+;
 
 finely specially literally heavily alternately severely dearly
-voluntarily dramatically flatly purposely jointly narrowly 
-universally thickly widely: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or 
+voluntarily dramatically flatly purposely jointly narrowly
+universally thickly widely: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or
 Qe+ or Ca+ or [[EA+]]);
 respectively: ({Xd- & Xc+} & MVa-) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
 long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or OT- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
-partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;                
-exactly.e: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EZ+;              
-well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+])) or 
+partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;
+exactly.e: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EZ+;
+well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+])) or
 [{EA- or EF+} & (Pa- or AF+)] or Yd+;
-roughly approximately: EA+ or 
+roughly approximately: EA+ or
 ({EE- or EF+} & (EN+ or EZ+ or ({Xd- & Xc+} & MVa-) or E+)) or
 ({Xc+ & {Xd-}} & CO+);
 
@@ -6649,18 +6649,18 @@ hereby thereby reputedly: E+ or ({Xd- & Xc+} & EB-) or ({Xc+ & {Xd-}} & CO+);
 initially already somehow again
 once_again nowadays sometimes nevertheless nonetheless at_first
 at_best at_present of_late indeed:
-({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;           
+({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;
 
-twice.e: 
-  ({Xd- & Xc+} & MVa-) or 
-  E+ or 
-  ({Xc+ & {Xd-}} & CO+) or 
-  EBm- or 
+twice.e:
+  ({Xd- & Xc+} & MVa-) or
+  E+ or
+  ({Xc+ & {Xd-}} & CO+) or
+  EBm- or
   <adverb-join> or
-  ({EN-} & EZ+);           
+  ({EN-} & EZ+);
 
 hence: (Yt- & ({Xd- & Xc+} & MVa-)) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;
-otherwise formerly lately: 
+otherwise formerly lately:
 ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EB-;
 also.e: ({Xd- & Xc+} & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
 
@@ -6674,15 +6674,15 @@ unofficially.e effectively.e traditionally.e briefly.e
 eventually.e ultimately.e
 mysteriously.e naturally.e oddly.e plainly.e truthfully.e
 appropriately.e simply.e2:
-{EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
+{EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+ or [[EA+]]);
 
-occasionally.e often.e specifically.e generally.e originally.e: 
-{EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or 
+occasionally.e often.e specifically.e generally.e originally.e:
+{EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
 
 % ordinary manner adverbs
-% abjectly ably abnormally abortively abruptly absent-mindedly absently 
+% abjectly ably abnormally abortively abruptly absent-mindedly absently
 <ordinary-adv>:
   {EE- or EF+} &
     (({Xd- & Xc+} & MVa-) or
@@ -6696,18 +6696,18 @@ occasionally.e often.e specifically.e generally.e originally.e:
 /en/words/words.adv.1: <ordinary-adv>;
 /en/words/words-medical.adv.1: <ordinary-adv>;
 
-% words.adv.4 contains "prepositional" adverbs, e.g. lingually 
+% words.adv.4 contains "prepositional" adverbs, e.g. lingually
 % meidally subdermally ... Right now we treat these as ordinary
 % adverbs, and add the Pp- link .. but is this link actually used
 % anywhere?
 /en/words/words.adv.4: <ordinary-adv> or Pp-;
 
 differently:
-{EE- or EF+} & (({MVp+} & {Xd- & Xc+} & MVa-) or Em+ or 
+{EE- or EF+} & (({MVp+} & {Xd- & Xc+} & MVa-) or Em+ or
 ({MVp+} & {Xc+ & {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
 
 independently:
-{EE- or EF+} & (({(MVp+ or OF+)} & {Xd- & Xc+} & MVa-) or Em+ or 
+{EE- or EF+} & (({(MVp+ or OF+)} & {Xd- & Xc+} & MVa-) or Em+ or
 ({(MVp+ or OF+)} & {Xc+ & {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
 
 
@@ -6718,12 +6718,12 @@ soon: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
  & CO+) or EB- or Qe+ or Ca+)) or ({EA- or EF+} & (Pa- or AF+));
 
 certainly possibly probably importantly remarkably interestingly:	
-{EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or 
+{EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
 ({Xc+ & {Xd-}} & EB-));
 
 /en/words/words.adv.2: % ordinary clausal adverbs
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
-% absurdly actually additionally admittedly allegedly alternatively 
+% absurdly actually additionally admittedly allegedly alternatively
 
 % These are taken from words.adv.2 and allowed EB- when separated by
 % commas.
@@ -6734,7 +6734,7 @@ E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or  ({Xc+ & {Xd-}} & E
 % TODO: "similarly" and "differently" get very different linking requirements.
 % see if these should be made the same.
 similarly.e:
-({MVp+} & {Xd- & Xc+} & (E+ or MVa-)) or ({MVp+} & {Xc+ & {Xd-}} & CO+) or 
+({MVp+} & {Xd- & Xc+} & (E+ or MVa-)) or ({MVp+} & {Xc+ & {Xd-}} & CO+) or
  ({Xc+ & {Xd-}} & EBm-);
 
 
@@ -6743,68 +6743,68 @@ E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
 though.e: (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+);
 still.e presumably undoubtedly evidently apparently usually typically perhaps:
 E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
-in_fact of_course in_effect for_example for_instance e.g. i.e. : 
-E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or 
+in_fact of_course in_effect for_example for_instance e.g. i.e. :
+E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
 (EB- & {Xc+}) or (Xd- & EB- & Xc+) or ({Xd-} & CC- & Wd+);
 
 % ADVERBS USABLE POST_VERBALLY OR AS OPENERS
 % Note that similar interjective openers will be given COp+ links
 % by the UNKNOWN-WORD.a rule -- "Umm, I think he did it."
-no.e nope.e nah.e no_way 
+no.e nope.e nah.e no_way
 yes.e yeah.e yep.e yup.e
-ok.e okay.e OK.e fine.e sure.e whatever.e 
+ok.e okay.e OK.e fine.e sure.e whatever.e
 someday.e sometime.e thereafter.e anyhow.e anyway.e overall.e
-afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e 
-statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e 
+afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e
+statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
 instead.e:
   ({Xc+ & {Xd-}} & CO+);
 
 % Openers to directives, commands (Ic+ connection to infinitives)
 % or single-word interjections. These are semantically important,
 % so they've got to parse!
-no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij 
+no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
 hah.ij hey.ij well.ij:
   <directive-opener>
   or Wi-;
 
 % A single plain hello all by itself.  Costly, because its not normally
-% a sentence opener. 
+% a sentence opener.
 hello.ij:
   Wi-
   or [[<directive-opener>]];
 
 % Openers to directives, commands (Ic+ connection to infinitives)
-anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij 
+anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
 prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
 time_and_again over_and_over later_on for_now
 day_by_day day_after_day step_by_step one_by_one for_sure for_certain
-even_so more_often_than_not all_of_a_sudden: 
-  <directive-opener> or 
+even_so more_often_than_not all_of_a_sudden:
+  <directive-opener> or
   ({Xd- & Xc+} & MVa-);
 
-% sort-of-like given names ... 
+% sort-of-like given names ...
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
   <directive-opener>;
 
 high.e deep.e low.e:
   {EE- or EF+} & (
-    ({Xd- & Xc+} & MVa-) or 
+    ({Xd- & Xc+} & MVa-) or
     ({Xc+ & {Xd-}} & CO+) or
     Ca+ or
     Qe+);
 
-left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or 
-({Xc+ & {Xd-}} & CO+) or Qe+ or Ca+)) or (Kx- & Ky+) or (Pp- & Pp+); 
+left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or
+({Xc+ & {Xd-}} & CO+) or Qe+ or Ca+)) or (Kx- & Ky+) or (Pp- & Pp+);
 short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
 
 %ADVERBS USABLE ONLY PRE-VERBALLY (OR PRE-/OPENER)
-newly: E+;                
+newly: E+;
 rightly: {EE-} & E+;
-necessarily no_longer: E+ or EBm-; 
+necessarily no_longer: E+ or EBm-;
 ever: E+ or EBm- or EC+ or MVa-;
 
 never.e always: {EN-} & (E+ or EB-);
@@ -6816,10 +6816,10 @@ just.e: E+ or EC+ or [EB-] or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+ or M
 
 maybe: CO+;
 meantime.e secondly thirdly
-in_brief in_short in_sum in_essence: 
-({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+); 
+in_brief in_short in_sum in_essence:
+({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+);
 furthermore: ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+) or EB-;
-mainly primarily: 
+mainly primarily:
 E+ or ({Xc+ & {Xd-}} & CO+) or EB- or (MVl- & (MVa+ or MVp+ or MVs+));
 
 % The MV- links seemt to really confuse the issue... kill them.
@@ -6827,7 +6827,7 @@ only:
   La-
   or E+
   or EN+
-  or EB- 
+  or EB-
 %  or (MVl- & (MVp+ or MVa+ or MVs+))
 %  or MVa-
   or (Rnx+ & <CLAUSE-E>)
@@ -6835,7 +6835,7 @@ only:
 
 never.i at_no_time not_once rarely.i since_when: {MVp+} & Wq- & Q+ & {CC+};
 not_since: (J+ or Cs+) & Wq- & Q+ & {CC+};
-even.e: E+ or EC+ or EB- or ((MVp+ or MVa+ or MVs+) 
+even.e: E+ or EC+ or EB- or ((MVp+ or MVa+ or MVs+)
 & (MVl- or ({Xc+ & {Xd-}} & CO+))) or (Rnx+ & <CLAUSE-E>);
 not_even: Rnx+ & <CLAUSE-E>;
 
@@ -6847,21 +6847,21 @@ too:
     or ({Xd- & Xc+} & MVa-)
     or (Xd- & Xc+ & E+));
 
-so: (EAxk+ & {HA+}) or ({EZ-} & EExk+) or 
-((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+)) 
+so: (EAxk+ & {HA+}) or ({EZ-} & EExk+) or
+((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+))
 or (Wq- & (PF+ or CQ+)) or O- or Js-;
 
 % original
-% sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-); 
+% sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-);
 % modified
-sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} & MVa-) or E+); 
+sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} & MVa-) or E+);
 so_that such_that: Cs+ & {Xd- & Xc+} & MVs-;
 
 % much like an ordinary adverb, except even more commas allowed
 % please.e: <ordinary-adv>;
 please.e:
-{EE- or EF+} & (({Xd- & Xc+} & MVa-) or 
-({Xc+ & {Xd-}} & (Em+ or CO+)) or 
+{EE- or EF+} & (({Xd- & Xc+} & MVa-) or
+({Xc+ & {Xd-}} & (Em+ or CO+)) or
 Qe+ or Ca+ or [[EA+]]);
 
 % polite command verb
@@ -6871,10 +6871,10 @@ please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+};
 % MISCELLANEOUS WORDS AND PUNCTUATION
 
 etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
-so_on the_like vice_versa v.v.: 
-  (<noun-sub-x> & <noun-main-x>) or 
+so_on the_like vice_versa v.v.:
+  (<noun-sub-x> & <noun-main-x>) or
   <noun-and-x> or
-  ((<verb-i> or <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or 
+  ((<verb-i> or <verb-sp,pp> or <verb-pg,ge> or <verb-pv>) & {@MV+}) or
   M- or MV-;
 
 % Assorted interjections, treat like unknown adjectives.
@@ -6908,16 +6908,16 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % comma, as a conjunction
 % AJ: "They taste bitter, not sweet"
 % Give MVa a cost, so that Pa is used preferentially, if possible.
-<comma-adj-conjunction>: 
+<comma-adj-conjunction>:
   ((AJla- & EBx+ & AJra+) & (Pa- or [[MVa-]])) or
   (AJla- & AJra+ & AJla+);
 
-<comma-adv-conjunction>: 
+<comma-adv-conjunction>:
   (RJlv- & RJrv+ & RJlv+);
 
 % sometimes comma is used as if it were a semicolon
 % Allow post-comma adverbial modifiers, but discourage these
-% because the modifier my be long to a following phrase. 
+% because the modifier my be long to a following phrase.
 % e.g. "The blah, soon to be blah, will be blah." should not
 % get an EBx link to "soon".
 % XXX the correct solution to this is to add a new domain rule ! XXX
@@ -6937,9 +6937,9 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   or <verb-conjunction>
   or [[SJl- & SJr+ & SJl+]]
   or (SJn- & SJr+ & SJn+);
- 
 
-"…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) 
+
+"…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+})
 or Xe-));
 
 % The percent sign following a number
@@ -6947,12 +6947,12 @@ or Xe-));
 "%": (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
 
 % See also /en/words/currency for curency names that follow a number.
-$ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c 
+$ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 £ ₤ € ₳ ฿ ¢ ₵ ₡ ₢ ₫ ₣ ₴ ₭ ℳ  ₥  ₦ ₧ ₰ ₨  ₪ ৳ ₮ ₩ ¥ 호점
 † †† ‡ § ¶ © № "#":
   NM*x+ & (AN+ or NM*y- or [[G+]] or (NIfu+ or NItu-) or
     ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
-      (OD- or ({DD-} & {[[@M+]]} & 
+      (OD- or ({DD-} & {[[@M+]]} &
         (<noun-main-p> or <noun-and-p> or [[(Ss+ & <CLAUSE>) or SIs-]])))));
 
 "&": G- & {Xd- & G-} & G+;
@@ -6988,7 +6988,7 @@ lbracketID35 lbracketID36 lbracketID37 lbracketID38 lbracketID39
 lbracketID40 lbracketID41 lbracketID42 lbracketID43 lbracketID44
 lbracketID45 lbracketID46 lbracketID47 lbracketID48 lbracketID49
 lbracketID50 lbracketID51 lbracketID52 lbracketID53 lbracketID54
-lbracketID55 lbracketID56 lbracketID57 lbracketID58 lbracketID59 
+lbracketID55 lbracketID56 lbracketID57 lbracketID58 lbracketID59
 "(" "[": {EBx+} & Xd+;
 
 rparenID0 rparenID1 rparenID2 rparenID3 rparenID4
@@ -7014,7 +7014,7 @@ rbracketID35 rbracketID36 rbracketID37 rbracketID38 rbracketID39
 rbracketID40 rbracketID41 rbracketID42 rbracketID43 rbracketID44
 rbracketID45 rbracketID46 rbracketID47 rbracketID48 rbracketID49
 rbracketID50 rbracketID51 rbracketID52 rbracketID53 rbracketID54
-rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59 
+rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 ")" "]": {@Xca-} & Xc-;
 
 – --.r -.r: [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
@@ -7030,13 +7030,13 @@ foo: F+;
 % ING-WORDS.g: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
 % or ({@E-} & A+) or <verb-ge>;
 
-ING-WORDS.g: 
+ING-WORDS.g:
   [(<verb-pg> & <vc-tr,intr>)] or
-  [(<vc-tr,intr> & <verb-ge>)] or 
-  [({@E- or EA-}  & A+)] or 
-  [<verb-ge>] or 
-  ((<noun-modifiers> & 
-    (({D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+  [(<vc-tr,intr> & <verb-ge>)] or
+  [({@E- or EA-}  & A+)] or
+  [<verb-ge>] or
+  ((<noun-modifiers> &
+    (({D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
     <noun-and-p,u> or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])) or
@@ -7049,7 +7049,7 @@ ED-WORDS.v-d: VERB_SPPP_T(`<vc-tr,intr>') or <verb-pv> or ({@E-} & A+);
 S-WORDS.v: VERB_S_T(`<vc-tr,intr>');
 
 S-WORDS.n:
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     (YP+ & {Dmc-}) or
@@ -7057,7 +7057,7 @@ S-WORDS.n:
     Up-)) or
   [[AN+]];
 
-LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ & 
+LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -7068,8 +7068,8 @@ LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 MC-NOUN-WORDS.n: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
-  (<noun-modifiers> & 
-    (({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+  (<noun-modifiers> &
+    (({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
     ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>) or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])) or
@@ -7077,7 +7077,7 @@ MC-NOUN-WORDS.n: % guessed nouns that can be mass or countable (-in, -ine, -ion,
   AN+;
 
 C-NOUN-WORDS.n: % guessed nouns that are signular countable (-on, -or)
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     (((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or Bsm+)) or
     ({NM+ or Ds-} & <noun-and-s>) or
     (YS+ & Ds-) or
@@ -7092,11 +7092,11 @@ ADJ-WORDS.a: % guessed adjectives (-ous, -ar, -ic)
 FOLD-WORDS:
 ({EN-} & (MVp- or EC+ or A+)) or Em+;
 
-% latin (postposed) adjectives considered as mass nouns 
+% latin (postposed) adjectives considered as mass nouns
 % in the current version
 LATIN-ADJ-WORDS.a:
   (<noun-modifiers> &
-    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
     ({NM+ or D*u-} & <noun-and-p,u>) or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])) or
@@ -7106,7 +7106,7 @@ LATIN-ADJ-WORDS.a:
 % latin (postposed) adjectives or latin plural noun always considered
 % as nouns in the current version
 LATIN-ADJ-P-NOUN-WORDS:
-  (<noun-modifiers> & 
+  (<noun-modifiers> &
     (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     (YS+ & {Dmc-}) or
@@ -7115,10 +7115,10 @@ LATIN-ADJ-P-NOUN-WORDS:
   AN+;
 
 % latin (postposed) adjectives or latin singular noun always
-% considered as nouns in the current version  
+% considered as nouns in the current version
 LATIN-ADJ-S-NOUN-WORDS:
-  (<noun-modifiers> & 
-    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or 
+  (<noun-modifiers> &
+    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
     ({NM+ or D*u-} & <noun-and-p,u>) or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])) or
@@ -7128,20 +7128,20 @@ LATIN-ADJ-S-NOUN-WORDS:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
-UNKNOWN-WORD.n: 
-  <noun-modifiers> & 
-    (AN+ or 
+UNKNOWN-WORD.n:
+  <noun-modifiers> &
+    (AN+ or
     ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
     ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>) or
-    (YS+ & {D*u-}) or 
-    (GN+ & (DD- or [()])) or 
+    (YS+ & {D*u-}) or
+    (GN+ & (DD- or [()])) or
     U-);
 
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};
 UNKNOWN-WORD.a: <ordinary-adj>;
 
-LEFT-WALL: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+) & 
+LEFT-WALL: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+) &
 {CP+} & {Xx+} & {RW+ or Xp+};
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
@@ -7149,7 +7149,7 @@ RIGHT-WALL: RW- or ({@Xca-} & Xc-);
 % XXX ANDABLE-CONNECTORS is now deprecated, needs to be removed for version 5.0
 ANDABLE-CONNECTORS:   % these are the connectors that can be combined by
                       % conjunctions. They are listed alphabetically.
-      
+
 A+ & A- & AF- & AN+ & B+ & B- & BI- & C+ & C- & CC+ & CO+ & CO- & D+ &
 D- & DD- & DT- & E+ & E- & EA- & G+ & GN+ & GN- & I+ & I- & IN- & J+ &
 J- & JT- & K- & L- & M+ & M- & MV- & MV+ & MX- & ND+ & NM+ & NIn+ & O+ & O- & ON- &
@@ -7166,7 +7166,7 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
-% "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual 
+% "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual
 % Symposium, xx-yy.
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
@@ -7175,18 +7175,18 @@ although in_as_much_as whilst whereas whereof wherein:
  (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))) or
  ({Xd-} & CC- & Wd+);
 
-benumbed.a bespattered.a non_compos_mentis dead_on_arrival 
- bedimmed.a null_and_void bedewed.a au_fait 
- dead_of_other_causes right_sacrotransverse above_board 
- K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a 
+benumbed.a bespattered.a non_compos_mentis dead_on_arrival
+ bedimmed.a null_and_void bedewed.a au_fait
+ dead_of_other_causes right_sacrotransverse above_board
+ K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a
  haywire.a:
   ((Ma- or Pa- or MJra-) & {@MV+}) or
   ({@MV+} & MJla+) or
    <adj-op>;
 
-subject_to status_post in_conjunction_with sensu 
- in_relation_to neath amidst across_from circa astride 
- previous_to together_with as_regards s/p aka amongst unto 
+subject_to status_post in_conjunction_with sensu
+ in_relation_to neath amidst across_from circa astride
+ previous_to together_with as_regards s/p aka amongst unto
  apropos_of w.i W.i:
  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
 
@@ -7223,7 +7223,7 @@ whence whither:
  {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)));
 
 % Strange -- the JT- is a time-expression link .. .is that right here ??
-articulo_mortis intra_vitam in_articulo_mortis in_extremis 
+articulo_mortis intra_vitam in_articulo_mortis in_extremis
  post_cibum post_coitum:
  <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
 
@@ -7246,7 +7246,7 @@ O.K.’ing.v OK’ing.v:
 
 % "I'll hire whomever I can find": Os-
 whomever:
-  (R- & Cr+) or 
+  (R- & Cr+) or
   (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-))) or
   (Os- & Bsd+) or
   (Jr- & (RS+ or Cr+)) or Jw-;
