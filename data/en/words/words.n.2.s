@@ -8030,7 +8030,6 @@ qualifiers.n
 qualities.n
 qualms.n
 quandaries.n
-quantities.n
 quarantines.n
 quarks.n
 quarrels.n

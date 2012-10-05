@@ -344,6 +344,8 @@ I have a vast expanse of land
 I have a large flock of sheep
 I have a lot of pride
 I have a handful of money
+I have a quantity of money
+I have quantities of money
 I have bags of money
 I have a whole slew of it
 I have gobs of it
@@ -351,10 +353,16 @@ I have jillions of dollars
 I have zillions of dollars
 I have tens of billions of dollars
 
-% XXX TODO: maybe half or more of these are broken. Arghhhh
 I have a couple of cookies.
 I have a couple of them.
+I ate a couple of the cookies.
+
+% XXX TODO: maybe half or more of these are broken. Arghhhh
 I have a few of them.
+*I have a few of cookies.
+I ate a few of the cookies.
+I ate a few too many.
+
 I have few of them.
 I have some of them.
 I have some of the cookies.

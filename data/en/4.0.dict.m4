@@ -1209,6 +1209,7 @@ a_couple:
 %  [[<noun-sub-p> & <noun-main-p>]] or
   <noun-and-p>;
 
+% NNumeric modifier: "a couple of thousand dollars"
 a_couple_of:
   NN+ or ND+ or NIn+;
 
