@@ -1230,13 +1230,14 @@ some:
   or [<adv-of>];
 
 little.i:
-  ({EE-} & (MVa- or Ca+ or Qe+)) or 
-  ({EEx- or H-} &
-    (Dmu+ or 
-    (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
-    <noun-and-s>)) or
-  (AM- & (Dmuy+ or MVy- or Oy- or Jy-)) or
- ({Ds-} & <adv-of>);
+  ({EE-} & (MVa- or Ca+ or Qe+))
+  or (OFd+ & Dm+ & {A-} & D-)
+  or ({EEx- or H-}
+    & (Dmu+
+      or [<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)]
+      or <noun-and-s>))
+  or (AM- & (Dmuy+ or MVy- or Oy- or Jy-))
+  or [{Ds-} & <adv-of>];
 
 % "he likes you most" has no determiner, just uses MVa-.
 most:
@@ -1293,19 +1294,35 @@ or E+ or MVa-;
 
 no.misc-d: ({EN-} & D+) or EC+;
 
-a_little: Dmu+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or
-  EA+ or EC+ or EE+ or MVa-;
-a_great_deal: EC+ or MVa- or (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
+a_little:
+  [<noun-sub-s> & <noun-main-s>]
+  or <noun-and-s>
+  or EA+ or EC+ or EE+ or MVa-;
+
+a_great_deal:
+  EC+
+  or MVa-
+  or (OFd+ & Dmu+)
+  or [<noun-sub-s> & <noun-main-s>]
+  or <noun-and-s>;
+
 many_more a_few_more a_couple_more plenty_more a_lot_more:
-Dmcc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
-some_more: MVa- or Dm+ or (<noun-sub-x> & <noun-main-x>) or <noun-and-x>;
+  Dmcc+ or (<noun-sub-p> & <noun-main-p>) or <noun-and-p>;
+
+some_more:
+  MVa- or Dm+ or (<noun-sub-x> & <noun-main-x>) or <noun-and-x>;
+
 one_more:
   Ds+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
 
-not_many: Dmc+ or (<noun-sub-p> & (Sp+ & <CLAUSE>));
-not_all not_everything: Dm+ or (((ALx+ & Jp+) or <noun-sub-x>)
-& (S+ & <CLAUSE>));
-not_one: Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
+not_many:
+  Dmc+ or (<noun-sub-p> & (Sp+ & <CLAUSE>));
+
+not_all not_everything:
+  Dm+ or (((ALx+ & Jp+) or <noun-sub-x>) & (S+ & <CLAUSE>));
+
+not_one:
+  Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
 
 enough.n: ({OF+} & <noun-main-s>) or <noun-and-s>;
 enough.r: EF- or MVa-;
@@ -8309,8 +8326,22 @@ best.a:
 
 %ADVERBS WHOSE MAIN USE IS ADJECTIVAL
 far_from: {EE-} & EA+;
-a_bit a_little_bit a_little_while: ({EE-} & EA+) or EC+ or EE+ or 
-({Xd- & Xc+} & MVa-) or <adv-of>;
+
+a_bit a_little_bit:
+  ({EE-} & EA+)
+  or EC+
+  or EE+
+  or ({Xd- & Xc+} & MVa-)
+  or [[<adv-of>]];
+
+% OFd+ & Dm+: "I will wait a little while of time" 
+a_little_while:
+  ({EE-} & EA+)
+  or EC+
+  or EE+
+  or ({Xd- & Xc+} & MVa-)
+  or [[<adv-of>]]
+  or (OFd+ & Dm+);
 
 % 
 pretty.e extremely very_very very_very_very exceptionally
