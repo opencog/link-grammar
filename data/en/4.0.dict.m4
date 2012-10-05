@@ -1110,14 +1110,24 @@ the:
   (TR- & U+) or
   (L+ & (AJld+ or AJrd-));
 
-those:
-  ({AL-} & (Dmc+ or DD+)) or
-  (<noun-sub-p> & (<noun-main-p> or RJlr+ or RJrr-)) or
-  <noun-and-p>;
-
 this.p: <noun-main-h> or <noun-and-s>;
 this.d: ({AL-} & D*u+) or DTn+;
-these: <noun-main-p> or <noun-and-p> or ({AL-} & (Dmc+ or DD+));
+
+% [[<noun-main-p>]] costs so that ditranstive verbs don't suffer:
+% "I taught these mice to jump", taught is ditransitive, we don't want
+% "these" to be the object.  See also "those"
+these:
+  ({AL-} & (Dmc+ or DD+))
+  or [[<noun-main-p>]]
+  or <noun-and-p>;
+
+% [[<noun-main-p>]] costs so that ditranstive verbs don't suffer,
+% and get the D+ link instead of the O- link.
+% See also "these"
+those:
+  ({AL-} & (Dmc+ or DD+))
+  or (<noun-sub-p> & ([[<noun-main-p>]] or RJlr+ or RJrr-))
+  or <noun-and-p>;
 
 both.d:
   Dmc+ or
@@ -2211,8 +2221,8 @@ wouldn't wouldn’t:
 % ditranstive verbs take a direct and indirect object
 % e.g. "I gave her a rose"
 <vc-ditrans>: (O+ & {[[@MV+]]} & O*n+ & {VJd+});
-<vc-opt-ditrans>: (O+ & {{[[@MV+]]} & O*n+ & {VJd+}});
-<vc-opt-ditrans-costly>: (O+ & {{[[@MV+]]} & [O*n+] & {VJd+}});
+<vc-opt-ditrans>: (O+ & {{[[@MV+]]} & O*n+} & {VJd+});
+<vc-opt-ditrans-costly>: (O+ & {{[[@MV+]]} & [O*n+]} & {VJd+});
 
 % common intransitive verbs
 <vc-intrans>: {@MV+};
@@ -4101,10 +4111,11 @@ showing.v: <verb-pg> & <vc-show>;
 
 % ditransitive
 <vc-teach>:
-  ((O+ or B-) & ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or B- or TOo+))) or
-  ({<vc-ditrans> or
-    (B- & {[[@MV+]]} & O*n+) or
-    ([[@MV+ & O*n+]])} & {@MV+});
+  ((O+ or B-) & ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or B- or TOo+)))
+  or ({
+    <vc-opt-ditrans>
+    or (B- & {[[@MV+]]} & O*n+)
+    or ([[@MV+ & O*n+]])} & {@MV+});
 
 teach.v: VERB_PLI(<vc-teach>);
 teaches.v: VERB_S_T(<vc-teach>);
@@ -4117,6 +4128,7 @@ taught.v-d:
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
+% ditransitive
 <vc-compel>:
   ((O+ or B-) & {@MV+} & TOo+);
 
@@ -5706,8 +5718,11 @@ but.j-n:
 and.j-v or.j-v: <verb-conjunction>;
 
 % ditransitive conjunction: "I gave Bob a doll and Mary a gun"
+% Actually, optionally ditransitive, to cover more cases.
+% "I taught these mice to jump, and those mice to freeze"
+% "I taught these mice to jump, and those to freeze"
 <ditransitive-conjunction>:
-  {Xd-} & VJd- & O+ & O*n+;
+  {Xd-} & VJd- & O+ & {O*n+};
 
 and.j-o or.j-o: <ditransitive-conjunction>;
 

@@ -14,9 +14,11 @@ Version 4.7.7 (xxx 2012)
  * Fix: conjoined irregular verbs: seem, appear, do, be, prove, have
  * Disable fat link code via conditional compile.
  * Fix: "a lot of", "a gaggle of" now treated as quantifying determiners
- * Fix: likewise: "gallons of", "grams of" volume measures.
+ * Fix: likewise: "gallons of", "grams of" volume measures as determiners
  * Update German dictionary so that it actually loads.
  * Fix: assorted "but not", "not very" constructions.
+ * Pre-alpha implementation of Viterbi decoder started.
+ * Fix: conjunctions of optionally ditransitive verbs.
 
 Version 4.7.6 (26 April 2012)
  * fast-match.c: unroll recursive call into loop (thx Valery Kholodkov).

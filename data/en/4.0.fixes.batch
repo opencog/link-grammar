@@ -571,6 +571,14 @@ Oscar Peterson played piano and wrote music.
 He wrote for piano and flute.
 He plays marimba and a lot of cowbell on that track.
 
+% Optionally ditransitive verbs
+I teach
+I taught those kids
+I taught them
+I taught them to sing
+I taught them how to sing
+I teach them every day.
+
 % more ditransitive and etc.
 I stared him down.
 We shouted him down
@@ -2745,6 +2753,7 @@ I called Bob a jerk and Mary a dork
 I painted the living room red and the bedroom green
 I wrote her a love song and him a hate letter
 I taught these mice to freeze, and those mice to jump.
+I taught these mice to freeze, and those to jump.
 
 % conjoined past particples
 the water had risen and fallen with the tides
