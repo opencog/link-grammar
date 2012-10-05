@@ -1201,6 +1201,7 @@ a_lot:
 %  or [[(<noun-sub-p> & <noun-main-p>)]]
   or EC+ or MVa- or <adv-of>;
 
+% OFd+ etc: "I ate a few of the cookies."
 few:
   (OFd+ & Dm+ & {A-} & D-)
   or ({EA- or EF+ or ({EA-} & DD-)} & 
@@ -1226,13 +1227,16 @@ a_few:
     or NIn+
     or [[<noun-sub-p> & <noun-main-p>]]));
 
+% OFd+ & Dm+: "I ate some of the cookies"; cost to <nou>, <adv-of> so
+% that this comes first.
 some:
-  D+ or
-  EN+ or
-  MF+ or
-  (<noun-sub-x> & <noun-main-x>) or
-  <noun-and-x> or
-  <adv-of>;
+  D+
+  or EN+
+  or MF+
+  or (OFd+ & Dm+)
+  or [<noun-sub-x> & <noun-main-x>]
+  or <noun-and-x>
+  or [<adv-of>];
 
 little.i:
   ({EE-} & (MVa- or Ca+ or Qe+)) or 
@@ -4904,7 +4908,10 @@ unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or
 of: 
   ({JQ+}
     & (J+ or Mgp+ or QI+)
-    & (Mp- or OFj- or OFw- or (Xd- & Xc+ & MX*x-) 
+    & (Mp-
+      or OFj-
+      or OFw-
+      or (Xd- & Xc+ & MX*x-) 
       or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-)))
       or [[({Xc+ & {Xd-}} & CO+)]]))
   or (OFd- & Jd+)
