@@ -588,7 +588,7 @@ Fat Links:
    to a number of complications, including poor performance due to
    a combinatorial explosion of linkage possibilities, as well as
    an excessively complex parse algorithm.  As a result, the function
-   is now deprecated, and will be removed in version 5.0.
+   is now deprecated, and will be removed in version 4.8.
 
 
 SAT solver:
@@ -660,6 +660,15 @@ TODO -- Working Notes:
   Easy to fix: provide a more uniform API to the constituent tree.
   i.e provide word index.   Also .. provide a clear word API,
   showing word extent, suffix, etc.
+
+  Zero/phantom words:  Expressions such as "Looks good" have an implicit
+    "it" (also called a zero-it or phantom-it) in them; that is, the
+    sentence should really parse as "(it) looks good".  The dictionary
+    could be simplified by admitting such phantom words explicitly,
+    rather than modifying the grammar rules to allow such constructions.
+    Other examples, with the phantom word in parenthesis, include:
+    * I ate all (of) the cookies.
+    * I taught him (how) to swim.
 
 
   Bad grammar: When a sentence fails to parse, look for:
@@ -967,4 +976,3 @@ TODO -- Working Notes:
     -- in api.c, change many linkage_*() funs to linkage_get_*() funs
     -- get rid of sublinkages.
     -- Change Sentence, Linkage etc. to not be pointers.
-    -- move command-line.c out of the shared lib.
