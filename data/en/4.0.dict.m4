@@ -1010,9 +1010,11 @@ me him us:
   J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
 
 % Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
+% (Jd- & Dmc- & Sp+):  "Many of them could be saved"
 them:
   [J-]
   or ({Jd- & Dmc-} & Ox-)
+  or (Jd- & Dmc- & Sp+)
   or ({[[E-]]} & SJl+)
   or SJr-;
 
@@ -1028,9 +1030,11 @@ you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 
 % ([[Dm-]] & Ox-): "I have a whole slew of it"
 % Ox-: "leave it alone" "make it rain"
+% (Jd- & Dmu- & Sp+): "much of it could be saved"
 it:
    J-
    or ({[[Dm-]]} & Ox-)
+   or (Jd- & Dmu- & Sp+)
    or ((Ss+ or SFsi+) & <CLAUSE>)
    or SIs- or SFIsi- or OXi- or Vp-
    or SJls+ or SJrs- or (Dn- & SJn+);
