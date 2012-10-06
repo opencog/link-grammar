@@ -1,4 +1,4 @@
-Version 4.7.7 (xxx 2012)
+Version 4.7.7 (6 October 2012)
  * Fix configure to not bomb if c++ is not found. (weird regex.h missing)
  * Fix configure to explicitly require c++ only if sat-solver enabled.
  * Dictionary: parse comma in "Monsters, Inc."
