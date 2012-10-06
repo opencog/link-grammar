@@ -1398,13 +1398,18 @@ not_much:
   or [<noun-sub-x> & <noun-main-u>];
 
 not_all not_everything:
-  Dm+ or (((ALx+ & Jp+) or <noun-sub-x>) & (S+ & <CLAUSE>));
+  ({OFd+} & Dm+)
+  or (((ALx+ & Jp+) or <noun-sub-x>) & [S+] & <CLAUSE>);
 
 not_one:
-  Ds+ or (<noun-sub-s> & (Ss+ & <CLAUSE>));
+  Ds+
+  or (OFd+ & Dm+)
+  or (<noun-sub-s> & [Ss+] & <CLAUSE>);
 
 enough.n:
-  ({OF+} & <noun-main-s>) or <noun-and-s>;
+  (OFd+ & Dmu+)
+  or [{OF+} & <noun-main-s>]
+  or <noun-and-s>;
 
 enough.r: EF- or MVa-;
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
