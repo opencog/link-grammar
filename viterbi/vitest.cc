@@ -81,7 +81,7 @@ bool test_simple_left_disj()
 	);
 }
 
-bool test_optional_left_cset()
+bool test_simple_optional_left_cset()
 {
 	return test_hello ("optional left cset",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {CP+} & {Xx+} & {RW+ or Xp+};"
@@ -97,6 +97,14 @@ bool test_simple_right_disj()
 	);
 }
 
+bool test_simple_optional()
+{
+	return test_hello ("optionals in both csets",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {CP+} & {Xx+} & {RW+ or Xp+};"
+		"Hello: Wd- or Xi- or (Xj- & {A+ or B+});"
+	);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -104,8 +112,9 @@ main(int argc, char *argv[])
 
 	if (!test_simplest()) num_failures++;
 	if (!test_simple_left_disj()) num_failures++;
-	if (!test_optional_left_cset()) num_failures++;
+	if (!test_simple_optional_left_cset()) num_failures++;
 	if (!test_simple_right_disj()) num_failures++;
+	if (!test_simple_optional()) num_failures++;
 
 	if (num_failures)
 	{

@@ -259,19 +259,39 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 				return conn_connect_nn(left_cset, lnode, rnode);
 
 			// If we are here, then its an AND. 
-			assert(0, "Implement me");
+			assert(0, "Implement me node AND");
 		}
 
 		Link* clink = dynamic_cast<Link*>(a);
 		return conn_connect_kn(left_cset, clink, rnode);
 	}
-	
+
 	return NULL;
 }
 
 Link* Connect::conn_connect_kk(WordCset* left_cset, Link* llink, Link* rlink)
 {
-	assert(0, "Implement me");
+	for (int i = 0; i < llink->get_arity(); i++)
+	{
+		Atom* a = llink->get_outgoing_atom(i);
+		Node* lnode = dynamic_cast<Node*>(a);
+		if (lnode) 
+		{
+			if (lnode->get_name() == OPTIONAL_CLAUSE)
+				continue;
+
+			// Only one needs to be satisfied for OR clause
+			if (OR == llink->get_type())
+				return conn_connect_nk(left_cset, lnode, rlink);
+
+			// If we are here, then its an AND. 
+			assert(0, "Implement me link AND");
+		}
+
+		Link* clink = dynamic_cast<Link*>(a);
+		return conn_connect_kk(left_cset, clink, rlink);
+	}
+
 	return NULL;
 }
 
