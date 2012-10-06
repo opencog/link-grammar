@@ -1103,7 +1103,7 @@ everything everyone anyone everybody anybody anything:
 else: EL-;
 
 others:
-  {Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
+  {{Jd-} & Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
 
 mine.p yours theirs hers ours:
   <noun-main-x> or SJl+ or SJr- or (Dn- & SJn+);
