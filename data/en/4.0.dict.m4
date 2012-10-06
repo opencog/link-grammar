@@ -148,10 +148,16 @@ changecom(`%')
   <post-nominal-s> or
   <costly-null>;
 
+% used only for this, that.
+% (Jd- & Dmu- & Os-): they have plenty of this
+% (Jd- & Dmu- & {Wd-} & Ss+): "not enough of this was used"
+% XXX -- is Js- ever really needed?
 <noun-main-h>:
-  (Ss*b+ & <CLAUSE>) or SIs*b- or Js- or Os- or
-  <post-nominal-x> or
-  <costly-null>;
+  (Jd- & Dmu- & Os-)
+  or (Jd- & Dmu- & {Wd-} & Ss*b+)
+  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-]
+  or <post-nominal-x>
+  or <costly-null>;
 
 <noun-main2-x>:
   J- or O- or
@@ -1122,12 +1128,8 @@ the:
   (L+ & (AJld+ or AJrd-));
 
 % this as a pronoun
-% (Jd- & Dmu- & Os-): they have plenty of this
-% (Jd- & Dmu- & {Wd-} & Ss+): "not enough of this was used"
 this.p:
-  (Jd- & Dmu- & Os-)
-  or (Jd- & Dmu- & {Wd-} & Ss+)
-  or [<noun-main-h>]
+  <noun-main-h>
   or <noun-and-s>;
 
 % this as a determiner
@@ -5537,6 +5539,7 @@ that.j-c:
   (TS- & (SI*j+ or SFI**j+) & I*j+);
 that.j-d: [{AL-} & D*u+];
 that.j-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
+
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 
 % (Rnx+ & <CLAUSE-E>): "Because I said so"
