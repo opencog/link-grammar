@@ -1019,13 +1019,16 @@ his: DP+ or ({AL-} & {@L+} & (D+ or DD+)) or
 [<noun-main-x>];
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 
-% ([[Dm-]] & Ox-): "I have a whole slew of it"
 % Ox-: "leave it alone" "make it rain"
-% (Jd- & Dmu- & Sp+): "much of it could be saved"
+% Errr. what's the difference between Ox- and Os- ??
+% (Jd- & Dmu- & Sp+):  "much of it could be saved"
+% (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
+% (Jd- & Dmu- & Os-):  "there was enough of it"
 it:
-   J-
-   or ({[[Dm-]]} & Ox-)
-   or (Jd- & Dmu- & Sp+)
+   [J-]
+   or Os-
+   or (Jd- & Dmu- & Os-)
+   or (Jd- & Dmu- & {Wd-} & S+)
    or ((Ss+ or SFsi+) & <CLAUSE>)
    or SIs- or SFIsi- or OXi- or Vp-
    or SJls+ or SJrs- or (Dn- & SJn+);
@@ -1405,8 +1408,12 @@ enough.n:
 enough.r: EF- or MVa-;
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
 enough.ij: Wi- & {Pg+};
-not_enough: ({OF+} & <noun-main-s>) or <noun-and-s> or Dm+;
+not_enough:
+  (OFd+ & Dm+)
+  or [{OF+} & <noun-main-s>]
+  or <noun-and-s>;
 
+% =================================================================
 % NUMERICAL EXPRESSIONS
 % Numeric ranges, e.g. "15 to 20". The "to" (or hyphen) acts as a
 % number in a range, and the requirements should match NUMBER.
@@ -7460,6 +7467,9 @@ once.e:
 % Another possibility: (Rnx+ & <CLAUSE-E>) "Because I say so"
 % XXX should review these, they probably overlap the other conjunction
 % usages below.
+%
+% not.ij seems to result in bad parses quite often, do we need it?
+%
 but.ij and.ij or.ij not.ij also.ij but_not and_not and_yet:
   [[(({Xd-} & CC-) or Wc-) & {Xc+} & (Wdc+ or Qd+ or Ws+ or Wq+)]];
 
@@ -7575,13 +7585,28 @@ and.j-r or.j-r:
 %
 % {Jd- & Dm-}: "A number of recommendations and suggestions were made"
 %   with "number of" modifying the and.j-n
+% [[<noun-conj-head>]] costs so that above is prefered:
+% "there was enough of the beer and sandwiches"
+
 and.j-n but_not and_not ,_not:
-  (<noun-conj-dep-s> & <noun-sub-s> &
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [{Ds-} & Os-] or <post-nominal-s>)) or
-  (<noun-conj-dep-p> & <noun-sub-p> &
-    (<noun-conj-head> or ({Jd- & Dm-} & Spx+ & <CLAUSE>) or SIp- or [{Dmc-} & Op-] or <post-nominal-p>)) or
-  (<noun-conj-dep-u> & <noun-sub-x> &
-    (<noun-conj-head> or ({Jd- & Dm-} & Sux+ & <CLAUSE>) or SIu- or [{Dmu-} &  Ou-] or <post-nominal-u>));
+  (<noun-conj-dep-s> & <noun-sub-s> & (
+    <noun-conj-head>
+    or (Spx+ & <CLAUSE>)
+    or SIp-
+    or [{Ds-} & Os-]
+    or <post-nominal-s>))
+  or (<noun-conj-dep-p> & <noun-sub-p> & (
+    [[<noun-conj-head>]]
+    or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
+    or SIp-
+    or [{{Jd-} & Dmc-} & Op-]
+    or <post-nominal-p>))
+  or (<noun-conj-dep-u> & <noun-sub-x> & (
+    [[<noun-conj-head>]]
+    or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
+    or SIu-
+    or [{{Jd-} & Dmu-} &  Ou-]
+    or <post-nominal-u>));
 
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> &
