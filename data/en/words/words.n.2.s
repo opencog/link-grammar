@@ -1918,6 +1918,7 @@ clients.n
 cliffs.n
 climates.n
 climaxes.n
+climbs.n
 climbers.n
 climes.n
 clinchers.n

@@ -2084,8 +2084,14 @@ did.v-d:
   or ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
-% verb-pv-b: "I want it done." "I want the job done"
-<vc-done>: B- or O+ or [[@MV+ & O*n+]] or Vd+;
+% <verb-pv-b>: "I want it done." "I want the job done"
+% Os+ & @MV+: "I've done that chore many times"
+<vc-done>:
+  B-
+  or (O+ & {@MV+})
+  or [[@MV+ & O*n+]]
+  or Vd+;
+
 done.v:
   VERB_PP(<vc-done>) or
   <verb-po> or
