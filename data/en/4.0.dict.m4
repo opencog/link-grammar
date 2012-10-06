@@ -1014,7 +1014,7 @@ me him us:
 them:
   [J-]
   or ({Jd- & Dmc-} & Ox-)
-  or (Jd- & Dmc- & Sp+)
+  or (Jd- & Dmc- & {Wd-} & Sp+)
   or ({[[E-]]} & SJl+)
   or SJr-;
 
