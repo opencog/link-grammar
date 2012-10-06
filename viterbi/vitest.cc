@@ -5,6 +5,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+/// This file provides a unit test for the operation of the viterbi parser.
+
 #include <stdlib.h>
 
 #include <iostream>
@@ -24,8 +26,11 @@ using namespace link_grammar::viterbi;
 #define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
 #define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
 
+// ==================================================================
 // A simple hello test; several different dictionaries
-// should give exactly the same output.
+// should give exactly the same output.  The input sentence
+// is just one word, it should connect to the left-wall in
+// just one way.
 bool test_hello(const char *id, const char *dict_str)
 {
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
@@ -105,8 +110,7 @@ bool test_simple_optional()
 	);
 }
 
-int
-main(int argc, char *argv[])
+int ntest_simple()
 {
 	size_t num_failures = 0;
 
@@ -115,6 +119,80 @@ main(int argc, char *argv[])
 	if (!test_simple_optional_left_cset()) num_failures++;
 	if (!test_simple_right_disj()) num_failures++;
 	if (!test_simple_optional()) num_failures++;
+	return num_failures;
+}
+
+// ==================================================================
+// A test of two alternative parses of a sentence with single word in it.
+// Expect to get back a set with two alternative parses, each parse is
+// assigned a probability of 1/2.
+
+bool test_alternative(const char *id, const char *dict_str)
+{
+	Dictionary dict = dictionary_create_from_utf8(dict_str);
+
+	// print_dictionary_data(dict);
+
+	Parser parser(dict);
+	parser.streamin("Hello");
+
+	Lynk* output = parser.get_output_set();
+
+	Lynk* ans =
+	ALINK2(SET,
+		ALINK3(LINK,
+			ANODE(LINK_TYPE, "Wd"),
+			ALINK2(WORD_DISJ,
+				ANODE(WORD, "LEFT-WALL"),
+				ANODE(CONNECTOR, "Wd+")
+			),
+			ALINK2(WORD_DISJ,
+				ANODE(WORD, "Hello"),
+				ANODE(CONNECTOR, "Wd-")
+			)
+		),
+		ALINK3(LINK,
+			ANODE(LINK_TYPE, "Wi"),
+			ALINK2(WORD_DISJ,
+				ANODE(WORD, "LEFT-WALL"),
+				ANODE(CONNECTOR, "Wi+")
+			),
+			ALINK2(WORD_DISJ,
+				ANODE(WORD, "Hello"),
+				ANODE(CONNECTOR, "Wi-")
+			)
+		)
+	);
+
+	if (not (ans->operator==(output)))
+	{
+		cout << "Error: test failure on test " << id << endl;
+		cout << "expecting " << ans << endl;
+		cout << "got " << output << endl;
+		return false;
+	}
+	cout<<"PASS: test_alternative(" << id << ") " << endl;
+	return true;
+}
+
+bool test_two_alts()
+{
+	return test_alternative("two alternatives",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"Hello: Wd- or Wi-;"
+	);
+}
+
+// ==================================================================
+
+int
+main(int argc, char *argv[])
+{
+	size_t num_failures = 0;
+
+	num_failures += ntest_simple();
+	if (!test_two_alts()) num_failures++;
+
 
 	if (num_failures)
 	{

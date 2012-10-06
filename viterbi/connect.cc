@@ -241,6 +241,7 @@ bool Connect::is_optional(Atom *a)
 }
 #endif
 
+/* source code here nearly identical to below */
 Link* Connect::conn_connect_kn(WordCset* left_cset, Link* llink, Node* rnode)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
@@ -269,6 +270,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	return NULL;
 }
 
+/* source code here nearly identical to above */
 Link* Connect::conn_connect_kk(WordCset* left_cset, Link* llink, Link* rlink)
 {
 	for (int i = 0; i < llink->get_arity(); i++)
