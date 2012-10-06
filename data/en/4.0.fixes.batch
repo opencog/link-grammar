@@ -331,7 +331,12 @@ It's a polishing of prose.
 It is a thinning of the herd
 The event features a running of the bulls
 
+% ===================================================================
 % quasi-numeric determiners aka quantifying determiners
+% There are a zillion of these, mostly due to the product of the
+% special-case quantifiers (some of, none of, all of, etc) with objects, 
+% subjects, and determiners (of these, of those, of it, etc.)
+% 
 I have a lot of time
 I have some number of cookies
 I have a passel load of cookies
@@ -518,6 +523,9 @@ there was enough of the beer and sandwiches
 there was enough of it
 there was not enough of it
 
+not enough of this was used
+they have plenty of this
+
 Drink a pint of this beer.
 
 I've had enough of this farce.
@@ -526,6 +534,12 @@ I gave him a number of the cookies
 I gave him a number of cookies
 *I gave him number of cookies
 *I gave him number of the cookies
+
+I gave him a number of these
+I gave him a number of those
+a number of these were found 
+a number of those were found 
+a number of them were found 
 
 He has wads of cash
 He commands several companies of men
@@ -570,6 +584,7 @@ They made a number of recommendations and suggestions.
 There was a great degree of haste in the proceedings.
 
 
+% ===================================================================
 % assorted mis-classified verbs.
 He is allied with the Reds.
 

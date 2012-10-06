@@ -530,6 +530,9 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % but this requires other spread-out changes
 %
 %  ({{Dmu-} & Jd-} & Dmu-):  "Drink a pint of this beer"
+% XXX: perhaps the above belongs on <noun-main-u> ??? If so,
+% then we should also fix up similar connectors on "these"m, "those", "it",
+% "them" etc; see below, search for Jd-
 <mass-noun>:
   <marker-common-entity> or
   (<noun-modifiers> &
@@ -1109,14 +1112,27 @@ the:
   (TR- & U+) or
   (L+ & (AJld+ or AJrd-));
 
-this.p: <noun-main-h> or <noun-and-s>;
+% this as a pronoun
+% (Jd- & Dmu- & Os-): they have plenty of this
+% (Jd- & Dmu- & {Wd-} & Ss+): "not enough of this was used"
+this.p:
+  (Jd- & Dmu- & Os-)
+  or (Jd- & Dmu- & {Wd-} & Ss+)
+  or [<noun-main-h>]
+  or <noun-and-s>;
+
+% this as a determiner
 this.d: ({AL-} & D*u+) or DTn+;
 
 % [[<noun-main-p>]] costs so that ditranstive verbs don't suffer:
 % "I taught these mice to jump", taught is ditransitive, we don't want
 % "these" to be the object.  See also "those"
+% (Jd- & Dmu- & Op-): "I gave him a number of these"
+% (Jd- & Dmu- & {Wd-} & Sp+): "a number of these were found"
 these:
   ({AL-} & (Dmc+ or DD+))
+  or (Jd- & Dmu- & Op-)
+  or (Jd- & Dmu- & {Wd-} & Sp+)
   or [[<noun-main-p>]]
   or <noun-and-p>;
 
@@ -1125,6 +1141,8 @@ these:
 % See also "these"
 those:
   ({AL-} & (Dmc+ or DD+))
+  or (Jd- & Dmu- & Op-)
+  or (Jd- & Dmu- & {Wd-} & Sp+)
   or (<noun-sub-p> & ([[<noun-main-p>]] or RJlr+ or RJrr-))
   or <noun-and-p>;
 
