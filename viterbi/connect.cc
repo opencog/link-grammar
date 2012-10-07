@@ -180,11 +180,27 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 }
 
 // =============================================================
+/// Attempt to connect one connector in the llink cset to one connector 
+/// in the ratom cset.  If no linkage is possible, return NULL.
+/// If only one linkage is possible, return a graph of the form:
+/// (for example):
+///
+///   LINK :
+///     LINK_TYPE : Wd
+///     CONNECTOR : Wd+
+///     CONNECTOR : Wd-
+/// 
+/// If multiple alternative links are possible, then a SET of the above
+/// is returned.
 
 Link* Connect::conn_connect_ka(WordCset* left_cset, Link* llink, Atom* ratom)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
 
+	// "alternatives" records the various different successful ways
+	// that llink and ratom can be mated together.
+	OutList alternatives;
+	Link* one = NULL;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
 		Atom* a = llink->get_outgoing_atom(i);
@@ -196,17 +212,36 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 
 			// Only one needs to be satisfied for OR clause
 			if (OR == llink->get_type())
-				return conn_connect_na(left_cset, cnode, ratom);
-
-			// If we are here, then its an AND. 
-			assert(0, "Implement me cnode AND");
+			{
+				Link* rv = conn_connect_na(left_cset, cnode, ratom);
+				if (rv)
+				{
+					alternatives.push_back(rv);
+					one = rv;
+				}
+			}
+			else
+			{
+				// If we are here, then its an AND. 
+				assert(0, "Implement me cnode AND");
+			}
 		}
-
-		Link* clink = dynamic_cast<Link*>(a);
-		return conn_connect_ka(left_cset, clink, ratom);
+		else
+		{	
+			Link* clink = dynamic_cast<Link*>(a);
+			Link* rv = conn_connect_ka(left_cset, clink, ratom);
+			if (rv)
+			{
+				alternatives.push_back(rv);
+				one = rv;
+			}
+		}
 	}
 
-	return NULL;
+	if (alternatives.size() <= 1)
+		return one;
+
+	return new Link(SET, alternatives);
 }
 
 // =============================================================
