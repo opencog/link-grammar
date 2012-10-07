@@ -183,6 +183,14 @@ bool test_two_alts()
 	);
 }
 
+bool test_two_opts()
+{
+	return test_alternative("two alternatives",
+		"LEFT-WALL: Wd+ or Wi+ or {Wq+ & A+};"
+		"Hello: Wd- or Wi- or {Xj- & (A+ or B+)};"
+	);
+}
+
 // ==================================================================
 
 int
@@ -192,6 +200,7 @@ main(int argc, char *argv[])
 
 	num_failures += ntest_simple();
 	if (!test_two_alts()) num_failures++;
+	if (!test_two_opts()) num_failures++;
 
 
 	if (num_failures)
