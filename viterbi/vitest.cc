@@ -26,6 +26,8 @@ using namespace link_grammar::viterbi;
 #define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
 #define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
 
+int total_tests = 0;
+
 // ==================================================================
 // A simple hello test; several different dictionaries
 // should give exactly the same output.  The input sentence
@@ -33,6 +35,8 @@ using namespace link_grammar::viterbi;
 // just one way.
 bool test_hello(const char *id, const char *dict_str)
 {
+	total_tests++;
+
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
 
 	// print_dictionary_data(dict);
@@ -147,6 +151,8 @@ int ntest_simple()
 
 bool test_alternative(const char *id, const char *dict_str)
 {
+	total_tests++;
+
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
 
 	// print_dictionary_data(dict);
@@ -276,11 +282,14 @@ main(int argc, char *argv[])
 
 	if (num_failures)
 	{
-		cout << "Total test failures=" << num_failures << endl;
+		cout << "Test failures=" << num_failures
+		     << " out of " << total_tests
+		     << " total." << endl;
 		exit(1);
 	}
 
-	cout << "All tests pass" << endl;
+	cout << "All " << total_tests
+		     << " tests pass." << endl;
 	exit (0);
 }
 
