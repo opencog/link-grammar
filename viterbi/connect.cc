@@ -119,6 +119,7 @@ Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
 	for (int i = 0; i < conn->get_arity(); i++)
 	{
 		Ling* alt = dynamic_cast<Ling*>(conn->get_outgoing_atom(i));
+cout<<"duuuuude wtffffffffffffffffffffffffffffffffffff "<<conn->get_outgoing_atom(i)<<endl;
 		assert(alt, "Unexpected type in alternative set");
 		Ling* normed_alt = reassemble(alt, left_cset, right_cset);
 		alternatives.push_back(normed_alt);
@@ -174,8 +175,8 @@ cout<<"Yayyyyae connectors match!"<<endl;
 }
 
 /**
- * Connect left_cset and _right_cset with an LG_LING
- * lnode and rnode are the two connecters that actually mate.
+ * Connect left_cset and _right_cset with a LING
+ * lnode is a connecter we hope to mate with something from rlink.
  */
 Link* Connect::conn_connect_nk(WordCset* left_cset, Node* lnode, Link* rlink)
 {
@@ -185,6 +186,9 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 	// If the connector set is a disjunction, then try each of them, in turn.
 	if (OR == rlink->get_type())
 	{
+		// "alternatives" records the various different successful ways
+		// that lnode and rlink can be mated together.
+		OutList alternatives;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
@@ -192,8 +196,16 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 
 			// If the shoe fits, wear it.
 			if (conn)
-				return conn;
+				alternatives.push_back(conn);
 		}
+		if (0 == alternatives.size())
+			return NULL;
+		return new Set(flatten(alternatives));
+	}
+	else
+	{
+cout<<"duuuuude in nect_nk"<<rlink<<endl;
+		assert(0, "Implement the AND nk");
 	}
 
 	return NULL;
@@ -220,22 +232,26 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
 		Atom* a = llink->get_outgoing_atom(i);
-		Node* cnode = dynamic_cast<Node*>(a);
-		if (cnode) 
+		Node* chinode = dynamic_cast<Node*>(a);
+		if (chinode) 
 		{
-			if (cnode->get_name() == OPTIONAL_CLAUSE)
-				continue;
+			if (chinode->get_name() == OPTIONAL_CLAUSE)
+				assert(0, "Handle optional clauses");
 
 			// Only one needs to be satisfied for OR clause
-			if (OR == llink->get_type())
+			AtomType op = llink->get_type();
+			if (OR == op)
 			{
-				Link* rv = conn_connect_na(left_cset, cnode, ratom);
+				Link* rv = conn_connect_na(left_cset, chinode, ratom);
 				if (rv)
 					alternatives.push_back(rv);
 			}
 			else
 			{
 				// If we are here, then its an AND. 
+				assert(AND == op, "Bad connective.");
+cout<<"duuude lefty is "<<chinode<<endl;
+				// All connectors must be satsisfied.
 				assert(0, "Implement me cnode AND");
 			}
 		}
@@ -251,9 +267,16 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	if (0 == alternatives.size())
 		return NULL;
 
-	// Collapse singleton sets, if any.  This is the price we pay
-	// for otherwise being able to ignore the difference between
-	// singleton sets, and their elements.
+	return new Set(flatten(alternatives));
+}
+
+// =============================================================
+
+// Collapse singleton sets, if any.  This is the price we pay
+// for otherwise being able to ignore the difference between
+// singleton sets, and their elements.
+OutList& Connect::flatten(OutList& alternatives)
+{
 	for (int i = 0; i < alternatives.size(); i++)
 	{
 		Set* set = dynamic_cast<Set*>(alternatives[i]);
@@ -262,8 +285,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 			alternatives[i] = set->get_outgoing_atom(0);
 		}
 	}
-
-	return new Set(alternatives);
+	return alternatives;
 }
 
 // =============================================================
