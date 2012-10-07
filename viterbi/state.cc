@@ -169,9 +169,9 @@ Link* Parser::get_state_set()
 	return state_set;
 }
 
-Link* Parser::get_output_set()
+Set* Parser::get_output_set()
 {
-	return new Link(SET, _output);
+	return _output;
 }
 
 /**
@@ -192,7 +192,7 @@ cout<<"state "<<_state<<endl;
 	// For each current state, see if some connector on the word
 	// can, in some way, attach to it.
 	int omit = -1;
-	Link* replace = NULL;
+	Set* replace = NULL;
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
 		WordCset* swc = dynamic_cast<WordCset*>(state_set->get_outgoing_atom(i));
@@ -205,7 +205,7 @@ cout<<"state "<<_state<<endl;
 	if (replace)
 	{
 cout<<"Got linkage"<< replace <<endl;
-		_output.push_back(replace);
+		_output = replace;
 #if 0
 		OutList statev = state_set->get_outgoing_set();
 		statev[omit] = replace;

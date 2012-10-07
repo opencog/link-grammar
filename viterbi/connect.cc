@@ -49,7 +49,7 @@ Connect::Connect(WordCset* right_wconset)
  * Try connecting this connector set, from the left, to what was passed
  * in ctor.
  */
-Link* Connect::try_connect(WordCset* left_cset)
+Set* Connect::try_connect(WordCset* left_cset)
 {
 	assert(left_cset, "State word-connectorset is null");
 	assert(WORD_CSET == left_cset->get_type(), "Expecting left word cset.");
@@ -72,12 +72,13 @@ cout<<"got one it is "<<conn<<endl;
 	// two disjuncts that were mated.  Re-assemble these
 	// into a pair of word_disjuncts (i.e. stick the word
 	// back in there, as that is what later stages need).
-	if (SET == conn->get_type())
-	{
-		Set* alts = dynamic_cast<Set*>(conn);
+	Set* alts = dynamic_cast<Set*>(conn);
+	if (alts)
 		return reassemble(alts, left_cset, _right_cset);
-	}
-	return reassemble(conn, left_cset, _right_cset);
+
+	Ling* lg_link = dynamic_cast<Ling*>(conn);
+	if (lg_link)
+		return new Set(reassemble(lg_link, left_cset, _right_cset));
 }
 
 // =============================================================
@@ -90,7 +91,7 @@ cout<<"got one it is "<<conn<<endl;
 // The left_cset and right_cset are assumed to be the word-connector
 // sets that matched. These are needed, only to extract the words;
 // the rest is dicarded.
-Link* Connect::reassemble(Link* conn, WordCset* left_cset, WordCset* right_cset)
+Ling* Connect::reassemble(Ling* conn, WordCset* left_cset, WordCset* right_cset)
 {
 	OutList lwdj;
 	lwdj.push_back(left_cset->get_outgoing_atom(0));  // the word
@@ -106,7 +107,7 @@ Link* Connect::reassemble(Link* conn, WordCset* left_cset, WordCset* right_cset)
 	lo.push_back(conn->get_outgoing_atom(0));
 	lo.push_back(lwordj);
 	lo.push_back(rwordj);
-	Link *lg_link = new Link (LING, lo);
+	Ling *lg_link = new Ling(lo);
 
 cout<<"normalized into "<<lg_link<<endl;
 	return lg_link;
@@ -117,9 +118,9 @@ Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
 	OutList alternatives;
 	for (int i = 0; i < conn->get_arity(); i++)
 	{
-		Link* alt = dynamic_cast<Link*>(conn->get_outgoing_atom(i));
+		Ling* alt = dynamic_cast<Ling*>(conn->get_outgoing_atom(i));
 		assert(alt, "Unexpected type in alternative set");
-		Link* normed_alt = reassemble(alt, left_cset, right_cset);
+		Ling* normed_alt = reassemble(alt, left_cset, right_cset);
 		alternatives.push_back(normed_alt);
 	}
 
@@ -156,7 +157,7 @@ Link* Connect::conn_connect_na(WordCset* left_cset, Node* lnode, Atom *ratom)
  * Connect left_cset and _right_cset with an LG_LING
  * lnode and rnode are the two connecters that actually mate.
  */
-Link* Connect::conn_connect_nn(WordCset* left_cset, Node* lnode, Node* rnode)
+Ling* Connect::conn_connect_nn(WordCset* left_cset, Node* lnode, Node* rnode)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
@@ -169,7 +170,7 @@ cout<<"Yayyyyae connectors match!"<<endl;
 	linkage.push_back(new Node(LING_TYPE, link_name));
 	linkage.push_back(lnode);
 	linkage.push_back(rnode);
-	return new Link(LING, linkage);
+	return new Ling(linkage);
 }
 
 /**
@@ -201,25 +202,21 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 // =============================================================
 /// Attempt to connect one connector in the llink cset to one connector 
 /// in the ratom cset.  If no linkage is possible, return NULL.
-/// If only one linkage is possible, return a graph of the form:
+/// Otheriwse, return a set of graphs of the form:
 /// (for example):
 ///
 ///   LING :
 ///     LING_TYPE : Wd
 ///     CONNECTOR : Wd+
 ///     CONNECTOR : Wd-
-/// 
-/// If multiple alternative links are possible, then a SET of the above
-/// is returned.
 
-Link* Connect::conn_connect_ka(WordCset* left_cset, Link* llink, Atom* ratom)
+Set* Connect::conn_connect_ka(WordCset* left_cset, Link* llink, Atom* ratom)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
 
 	// "alternatives" records the various different successful ways
 	// that llink and ratom can be mated together.
 	OutList alternatives;
-	Link* one = NULL;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
 		Atom* a = llink->get_outgoing_atom(i);
@@ -234,10 +231,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 			{
 				Link* rv = conn_connect_na(left_cset, cnode, ratom);
 				if (rv)
-				{
 					alternatives.push_back(rv);
-					one = rv;
-				}
 			}
 			else
 			{
@@ -250,15 +244,12 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 			Link* clink = dynamic_cast<Link*>(a);
 			Link* rv = conn_connect_ka(left_cset, clink, ratom);
 			if (rv)
-			{
 				alternatives.push_back(rv);
-				one = rv;
-			}
 		}
 	}
 
-	if (alternatives.size() <= 1)
-		return one;
+	if (0 == alternatives.size())
+		return NULL;
 
 	return new Set(alternatives);
 }

@@ -40,6 +40,15 @@ enum AtomType
 };
 #endif
 
+class Ling : public Link
+{
+	public:
+		Ling(const OutList& ol)
+      	: Link(LING, ol)
+      {}
+};
+
+
 class WordCset : public Link
 {
 	public:
@@ -66,6 +75,9 @@ class Set : public Link
 	public:
 		Set(const OutList& ol)
       	: Link(SET, ol)
+      {}
+		Set(Atom* singleton)
+      	: Link(SET, OutList(1, singleton))
       {}
 };
 
