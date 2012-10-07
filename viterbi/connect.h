@@ -22,6 +22,7 @@ class Connect
 
 	protected:
 		Link* reassemble(Link*, WordCset*, WordCset*);
+		Set* reassemble(Set*, WordCset*, WordCset*);
 
 		Link* conn_connect_aa(WordCset*, Atom*, Atom*);
 		Link* conn_connect_na(WordCset*, Node*, Atom*);

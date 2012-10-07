@@ -72,6 +72,11 @@ cout<<"got one it is "<<conn<<endl;
 	// two disjuncts that were mated.  Re-assemble these
 	// into a pair of word_disjuncts (i.e. stick the word
 	// back in there, as that is what later stages need).
+	if (SET == conn->get_type())
+	{
+		Set* alts = dynamic_cast<Set*>(conn);
+		return reassemble(alts, left_cset, _right_cset);
+	}
 	return reassemble(conn, left_cset, _right_cset);
 }
 
@@ -105,6 +110,20 @@ Link* Connect::reassemble(Link* conn, WordCset* left_cset, WordCset* right_cset)
 
 cout<<"normalized into "<<lg_link<<endl;
 	return lg_link;
+}
+
+Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
+{
+	OutList alternatives;
+	for (int i = 0; i < conn->get_arity(); i++)
+	{
+		Link* alt = dynamic_cast<Link*>(conn->get_outgoing_atom(i));
+		assert(alt, "Unexpected type in alternative set");
+		Link* normed_alt = reassemble(alt, left_cset, right_cset);
+		alternatives.push_back(normed_alt);
+	}
+
+	return new Set(alternatives);
 }
 
 // =============================================================
@@ -241,7 +260,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	if (alternatives.size() <= 1)
 		return one;
 
-	return new Link(SET, alternatives);
+	return new Set(alternatives);
 }
 
 // =============================================================
