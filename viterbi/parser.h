@@ -40,6 +40,9 @@ class Parser
 
 		void set_state(Set*);
 
+		static bool cset_has_mandatory_left_pointer(WordCset*);
+		static bool has_mandatory_left_pointer(Atom*);
+
 		Dictionary _dict;
 	private:
 		Set* _state;

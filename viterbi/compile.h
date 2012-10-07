@@ -40,6 +40,15 @@ enum AtomType
 };
 #endif
 
+class Word : public Node
+{
+	public:
+		Word(const std::string& name)
+      	: Node(WORD, name)
+      {}
+};
+
+
 class Ling : public Link
 {
 	public:
@@ -70,6 +79,15 @@ class WordCset : public Link
 			ok = ok or b->get_type() == AND;
 			ok = ok or b->get_type() == OR;
 			assert(ok, "CSET is expecting connector set as second arg");
+		}
+
+		Word* get_word()
+		{
+			return dynamic_cast<Word*>(_oset[0]);
+		}
+		Atom* get_cset()
+		{
+			return _oset[1];
 		}
 };
 

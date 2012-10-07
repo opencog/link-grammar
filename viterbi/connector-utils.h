@@ -10,11 +10,15 @@
 
 #include <string>
 
+#include "atom.h"
+
 namespace link_grammar {
 namespace viterbi {
 
 bool conn_match(const std::string&, const std::string&);
 std::string conn_merge(const std::string&, const std::string&);
+bool is_optional(Atom *);
+
 
 } // namespace viterbi
 } // namespace link-grammar

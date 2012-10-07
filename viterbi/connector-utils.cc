@@ -94,6 +94,47 @@ string conn_merge(const string& ls, const string& rs)
 	return merger;
 }
 
+// =============================================================
+
+/// Return true if the indicated atom is an optional clause.
+/// else return false.
+bool is_optional(Atom *a)
+{
+	AtomType ty = a->get_type();
+	if (CONNECTOR == ty)
+	{
+		Node* n = dynamic_cast<Node*>(a);
+		if (n->get_name() == OPTIONAL_CLAUSE)
+			return true;
+		return false;
+	}
+	assert (OR == ty or AND == ty, "Must be boolean junction");
+
+	Link* l = dynamic_cast<Link*>(a);
+	for (int i = 0; i < l->get_arity(); i++)
+	{
+		Atom *a = l->get_outgoing_atom(i);
+		bool c = is_optional(a);
+		if (OR == ty)
+		{
+			// If anything in OR is optional, the  whole clause is optional.
+			if (c) return true;
+		}
+		else
+		{
+			// ty is AND
+			// If anything in AND is isn't optional, then something is required
+			if (!c) return false;
+		}
+	}
+	
+	// All disj were required.
+	if (OR == ty) return false;
+
+	// All conj were optional.
+	return true;
+}
+
 } // namespace viterbi
 } // namespace link-grammar
 

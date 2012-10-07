@@ -45,6 +45,7 @@ enum AtomType
 	LING        // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
 };
 
+#define OPTIONAL_CLAUSE "0"
 
 /* Base class for Nodes and Links */
 /* Atoms are not mutable, except for the TV value. That is, you cannot
@@ -119,7 +120,6 @@ class Link : public Atom
 
 		virtual bool operator==(const Atom*) const;
 	protected:
-	private:
 		// Outgoing set
 		OutList _oset;
 };

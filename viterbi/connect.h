@@ -33,8 +33,6 @@ class Connect
 
 		static const OutList& flatten(OutList&);
 
-		static bool is_optional(Atom *);
-
 	private:
 		WordCset* _right_cset;
 		Atom* _rcons;

@@ -255,10 +255,77 @@ cout<<"Got linkage"<< alternatives <<endl;
 			// If there are any danglers...
 assert(0 == danglers.size(), "Implement dangler state");
 		}
+		else
+		{
+			// If we are here, then nothing in the new word was
+			// able to attach to the left.  If the new word has
+			// no left-pointing links, that's just fine; add it
+			// to the state.  If it does have left-pointing
+			// links, then its a parse failure.
+			if (cset_has_mandatory_left_pointer(wrd_cset))
+			{
+assert(0, "Parse fail, implement me");
+			}
+		}
 	}
 
 	set_state(new_state_set);
 cout<<"in conclusion, state="<<get_state()<<endl;
+}
+
+bool Parser::cset_has_mandatory_left_pointer(WordCset* wrd_cset)
+{
+	return has_mandatory_left_pointer(wrd_cset->get_cset());
+}
+
+bool Parser::has_mandatory_left_pointer(Atom* a)
+{
+	AtomType ty = a->get_type();
+	if (CONNECTOR == ty)
+	{
+		Node* n = dynamic_cast<Node*>(a);
+		const string& name = n->get_name();
+		if (name == OPTIONAL_CLAUSE)
+			return false;
+		char dir = *name.rbegin();
+		if ('-' == dir) return true;
+		if ('+' == dir) return false;
+		assert(0, "Bad word direction");
+	}
+	assert (OR == ty or AND == ty, "Must be boolean junction");
+
+// XXX bad if we here.
+	return true;
+#if 0
+borken right now
+	Link* l = dynamic_cast<Link*>(a);
+	for (int i = 0; i < l->get_arity(); i++)
+	{
+		Atom *ota = l->get_outgoing_atom(i);
+		bool c = is_optional(ota);
+		bool lefty = false;
+		if (OR == ty)
+		{
+			// If anything in OR is optional, the  whole clause is
+			// optional, and we don't need to check direction.
+			if (c) return false;
+		}
+		else
+		{
+			// ty is AND
+			// If anything in AND is isn't optional, then something is
+			// required, and it better be right-pointing.
+			if (!c and has_mandatory_left_pointer(ota))
+				return true;
+		}
+	}
+
+	// All disj were required.
+	if (OR == ty) return falsexxxx;
+
+	// All conj were optional.
+	return truexxxa;
+#endif
 }
 
 
