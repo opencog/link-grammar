@@ -197,32 +197,22 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 	// The state set consists of a bunch of sequences
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
-		Seq* state = dynamic_cast<Seq*>(state_set->get_outgoing_atom(i));
-		assert(state, "Missing state");
+		Seq* vect = dynamic_cast<Seq*>(state_set->get_outgoing_atom(i));
+		assert(vect, "Missing state");
 
-		// For each current state, see if some connector on the word
-		// can, in some way, attach to it.
-		int omit = -1;
-		Set* replace = NULL;
-		for (int j = 0; j < state->get_arity(); j++)
-		{
-			WordCset* swc = dynamic_cast<WordCset*>(state->get_outgoing_atom(j));
-			replace = cnct.try_connect(swc);
-			omit = j;
-			if (replace)
-				break;
-		}
+		// State sequences must be sequentially satisfied: This is the
+		// viterbi equivalent of "planar graph" or "no-crossing-links"
+		// in the classical lnk-grammar parser.  That is, a new word
+		// must link to the first sequence element that has dangling
+		// right-pointing connectors.
 
-		if (replace)
+		WordCset* swc = dynamic_cast<WordCset*>(vect->get_outgoing_atom(0));
+		Set* alternatives = cnct.try_connect(swc);
+
+		if (alternatives)
 		{
-cout<<"Got linkage"<< replace <<endl;
-			_output = replace;
-#if 0
-		OutList statev = state_set->get_outgoing_set();
-		statev[omit] = replace;
-		_state = new Link(STATE, statev);
-cout<<"State is now"<<_state<<end;
-#endif
+cout<<"Got linkage"<< alternatives <<endl;
+			_output = alternatives;
 		}
 	}
 }
