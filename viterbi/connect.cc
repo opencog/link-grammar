@@ -251,6 +251,18 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	if (0 == alternatives.size())
 		return NULL;
 
+	// Collapse singleton sets, if any.  This is the price we pay
+	// for otherwise being able to ignore the difference between
+	// singleton sets, and their elements.
+	for (int i = 0; i < alternatives.size(); i++)
+	{
+		Set* set = dynamic_cast<Set*>(alternatives[i]);
+		if (set and (1 == set->get_arity()))
+		{
+			alternatives[i] = set->get_outgoing_atom(0);
+		}
+	}
+
 	return new Set(alternatives);
 }
 
