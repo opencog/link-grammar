@@ -180,6 +180,36 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 }
 
 // =============================================================
+
+Link* Connect::conn_connect_ka(WordCset* left_cset, Link* llink, Atom* ratom)
+{
+cout<<"Enter recur l=" << llink->get_type()<<endl;
+
+	for (int i = 0; i < llink->get_arity(); i++)
+	{
+		Atom* a = llink->get_outgoing_atom(i);
+		Node* cnode = dynamic_cast<Node*>(a);
+		if (cnode) 
+		{
+			if (cnode->get_name() == OPTIONAL_CLAUSE)
+				continue;
+
+			// Only one needs to be satisfied for OR clause
+			if (OR == llink->get_type())
+				return conn_connect_na(left_cset, cnode, ratom);
+
+			// If we are here, then its an AND. 
+			assert(0, "Implement me cnode AND");
+		}
+
+		Link* clink = dynamic_cast<Link*>(a);
+		return conn_connect_ka(left_cset, clink, ratom);
+	}
+
+	return NULL;
+}
+
+// =============================================================
 #if NOT_NEEDED
 bool Connect::is_optional(Atom *a)
 {
@@ -218,34 +248,6 @@ bool Connect::is_optional(Atom *a)
 	return true;
 }
 #endif
-
-Link* Connect::conn_connect_ka(WordCset* left_cset, Link* llink, Atom* ratom)
-{
-cout<<"Enter recur l=" << llink->get_type()<<endl;
-
-	for (int i = 0; i < llink->get_arity(); i++)
-	{
-		Atom* a = llink->get_outgoing_atom(i);
-		Node* lnode = dynamic_cast<Node*>(a);
-		if (lnode) 
-		{
-			if (lnode->get_name() == OPTIONAL_CLAUSE)
-				continue;
-
-			// Only one needs to be satisfied for OR clause
-			if (OR == llink->get_type())
-				return conn_connect_na(left_cset, lnode, ratom);
-
-			// If we are here, then its an AND. 
-			assert(0, "Implement me node AND");
-		}
-
-		Link* clink = dynamic_cast<Link*>(a);
-		return conn_connect_ka(left_cset, clink, ratom);
-	}
-
-	return NULL;
-}
 
 } // namespace viterbi
 } // namespace link-grammar
