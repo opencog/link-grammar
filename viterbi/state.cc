@@ -26,6 +26,8 @@
 
 using namespace std;
 
+#define DBG(X) X;
+
 namespace link_grammar {
 namespace viterbi {
 
@@ -136,7 +138,15 @@ void Parser::initialize_state()
 
 	Set *wall_disj = word_consets(wall_word);
 
-	_state = new Set(wall_disj);
+	// Each alternative in the initial wall is the root of a state.
+	OutList state_vec;
+	for (int i = 0; i < wall_disj->get_arity(); i++)
+	{
+		Atom* a = wall_disj->get_outgoing_atom(i);
+		state_vec.push_back(new Seq(a));
+	}
+
+	_state = new Set(state_vec);
 }
 
 /**
@@ -180,34 +190,40 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 	//   AND :
 	//      CONNECTOR : Wd-  etc...
 
-cout<<"state "<<_state<<endl;
+   DBG(cout << "Initial state:\n" << _state << endl);
 	Set* state_set = get_state();
 	Connect cnct(wrd_cset);
 
-	// For each current state, see if some connector on the word
-	// can, in some way, attach to it.
-	int omit = -1;
-	Set* replace = NULL;
+	// The state set consists of a bunch of sequences
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
-		WordCset* swc = dynamic_cast<WordCset*>(state_set->get_outgoing_atom(i));
-		replace = cnct.try_connect(swc);
-		omit = i;
-		if (replace)
-			break;
-	}
+		Seq* state = dynamic_cast<Seq*>(state_set->get_outgoing_atom(i));
+		assert(state, "Missing state");
 
-	if (replace)
-	{
+		// For each current state, see if some connector on the word
+		// can, in some way, attach to it.
+		int omit = -1;
+		Set* replace = NULL;
+		for (int j = 0; j < state->get_arity(); j++)
+		{
+			WordCset* swc = dynamic_cast<WordCset*>(state->get_outgoing_atom(j));
+			replace = cnct.try_connect(swc);
+			omit = j;
+			if (replace)
+				break;
+		}
+
+		if (replace)
+		{
 cout<<"Got linkage"<< replace <<endl;
-		_output = replace;
+			_output = replace;
 #if 0
 		OutList statev = state_set->get_outgoing_set();
 		statev[omit] = replace;
 		_state = new Link(STATE, statev);
 cout<<"State is now"<<_state<<end;
 #endif
-	
+		}
 	}
 }
 
