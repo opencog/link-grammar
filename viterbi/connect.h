@@ -31,7 +31,7 @@ class Connect
 		Ling* conn_connect_nn(WordCset*, Node*, Node*);
 		Link* conn_connect_nk(WordCset*, Node*, Link*);
 
-		OutList& flatten(OutList&);
+		static const OutList& flatten(OutList&);
 
 		static bool is_optional(Atom *);
 

@@ -306,9 +306,19 @@ cout<<"duuude lefty is "<<chinode<<endl;
 // Collapse singleton sets, if any.  This is the price we pay
 // for otherwise being able to ignore the difference between
 // singleton sets, and their elements.
-OutList& Connect::flatten(OutList& alternatives)
+const OutList& Connect::flatten(OutList& alternatives)
 {
-	for (int i = 0; i < alternatives.size(); i++)
+	size_t asize = alternatives.size();
+
+	// If its a singleton, and its already a set ...
+	if (1 == asize)
+	{
+		Set* set = dynamic_cast<Set*>(alternatives[0]);
+		if (set)
+			return set->get_outgoing_set();
+	}
+
+	for (int i = 0; i < asize; i++)
 	{
 		Set* set = dynamic_cast<Set*>(alternatives[i]);
 		if (set and (1 == set->get_arity()))
