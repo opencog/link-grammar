@@ -272,6 +272,35 @@ int ntest_two()
 
 // ==================================================================
 
+bool test_simple_state(const char *id, const char *dict_str)
+{
+	total_tests++;
+
+	Dictionary dict = dictionary_create_from_utf8(dict_str);
+
+	// print_dictionary_data(dict);
+
+	Parser parser(dict);
+	// Expecting more words to follow, so a non-trivial state.
+	parser.streamin("this");
+
+	Lynk* output = parser.get_output_set();
+	Lynk* state = parser.get_state();
+cout<<"test state="<<state<<endl;
+
+	return false;
+}
+
+bool test_first_state()
+{
+	return test_simple_state("first state",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+;"
+	);
+}
+
+// ==================================================================
+
 int
 main(int argc, char *argv[])
 {
@@ -279,10 +308,11 @@ main(int argc, char *argv[])
 
 	num_failures += ntest_simple();
 	num_failures += ntest_two();
+	if (!test_first_state()) num_failures++;
 
 	if (num_failures)
 	{
-		cout << "Test failures=" << num_failures
+		cout << "Test failures = " << num_failures
 		     << " out of " << total_tests
 		     << " total." << endl;
 		exit(1);

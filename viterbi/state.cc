@@ -136,10 +136,7 @@ void Parser::initialize_state()
 
 	Set *wall_disj = word_consets(wall_word);
 
-	OutList statev;
-	statev.push_back(wall_disj);
-
-	_state = new Link(STATE, statev);
+	_state = new Set(wall_disj);
 }
 
 /**
@@ -162,11 +159,9 @@ void Parser::stream_word(const string& word)
 }
 
 /** convenience wrapper */
-Link* Parser::get_state_set()
+Set* Parser::get_state()
 {
-	Link* state_set = dynamic_cast<Link*>(_state->get_outgoing_atom(0));
-	assert(state_set, "State set is empty");
-	return state_set;
+	return _state;
 }
 
 Set* Parser::get_output_set()
@@ -186,7 +181,7 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 	//      CONNECTOR : Wd-  etc...
 
 cout<<"state "<<_state<<endl;
-	Link* state_set = get_state_set();
+	Set* state_set = get_state();
 	Connect cnct(wrd_cset);
 
 	// For each current state, see if some connector on the word

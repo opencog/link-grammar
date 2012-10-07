@@ -45,7 +45,10 @@ class Ling : public Link
 	public:
 		Ling(const OutList& ol)
       	: Link(LING, ol)
-      {}
+      {
+			assert(3 == ol.size(), "LG link wrong size");
+			assert(ol[0]->get_type() == LING_TYPE, "LG link has bad first node");
+		}
 };
 
 
@@ -70,6 +73,19 @@ class WordCset : public Link
 		}
 };
 
+// Ordered sequence
+class Seq : public Link
+{
+	public:
+		Seq(const OutList& ol)
+      	: Link(SEQ, ol)
+      {}
+		Seq(Atom* singleton)
+      	: Link(SEQ, OutList(1, singleton))
+      {}
+};
+
+// Unordered sequence
 class Set : public Link
 {
 	public:

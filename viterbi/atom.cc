@@ -22,16 +22,14 @@ const string type_name(AtomType t)
 	{
 		case WORD:      return "WORD";
 		case LING_TYPE: return "LING_TYPE";
-		// case META:      return "META";
 		case CONNECTOR: return "CONNECTOR";
+		case SEQ:       return "SEQ";
 		case SET:       return "SET";
 		case OR:        return "OR";
 		case AND:       return "AND";
-		// case OPTIONAL:  return "OPTIONAL";
 		case WORD_CSET: return "WORD_CSET";
 		case WORD_DISJ: return "WORD_DISJ";
 		case LING:      return "LING";
-		case STATE:     return "STATE";
 	}
 
 	return "UNHANDLED_TYPE_NAME";
@@ -39,7 +37,6 @@ const string type_name(AtomType t)
 
 bool Atom::operator==(const Atom* other) const
 {
-cout<<"duude compare "<<other->_type<<" to "<<_type<<endl;
 	if (other == this) return true;
 	if (other->_type == this->_type) return true;
 	return false;

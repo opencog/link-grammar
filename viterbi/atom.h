@@ -36,13 +36,13 @@ enum AtomType
 
 	// Link types
 	SET,        // unordered set of children
+	SEQ,        // ordered sequence of children
 	AND,        // ordered AND of all children (order is important!)
 	OR,         // unordered OR of all children
 	// OPTIONAL,   // one child only, and its optional. XXX not used ATM
 	WORD_CSET,  // word, followed by a set of connectors for that word.
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
-	LING,       // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
-	STATE
+	LING        // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
 };
 
 

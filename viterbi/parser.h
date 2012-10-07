@@ -30,7 +30,8 @@ class Parser
 		void stream_word_conset(WordCset*);
 
 		Set* word_consets(const std::string& word);
-		Link* get_state_set();
+
+		Set* get_state();
 		Set* get_output_set();
 
 	protected:
@@ -39,7 +40,7 @@ class Parser
 
 		Dictionary _dict;
 	private:
-		Link* _state;
+		Set* _state;
 		Set* _output;
 };
 
