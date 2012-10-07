@@ -119,8 +119,6 @@ Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
 	for (int i = 0; i < conn->get_arity(); i++)
 	{
 		Ling* alt = dynamic_cast<Ling*>(conn->get_outgoing_atom(i));
-if(!alt)
-cout<<"duuuuude wtffffffffffffffffffffffffffffffffffff "<<conn->get_outgoing_atom(i)<<endl;
 		assert(alt, "Unexpected type in alternative set");
 		Ling* normed_alt = reassemble(alt, left_cset, right_cset);
 		alternatives.push_back(normed_alt);
@@ -206,7 +204,6 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 	}
 	else
 	{
-cout<<"duuuuude in nect_nk"<<rlink<<endl;
 		// For an AND connective, all connectors must connect.  The
 		// only way that this can happen for an and-link is if zero
 		// or one connectors are required, and all other connectors in

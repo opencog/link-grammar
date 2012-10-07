@@ -110,6 +110,22 @@ bool test_simple_optional()
 	);
 }
 
+bool test_simple_onereq()
+{
+	return test_hello ("one required link (simple)",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"Hello: Wd- & {A+} & {B+} & {C+};"
+	);
+}
+
+bool test_simple_zeroreq()
+{
+	return test_hello ("zero required links (simple)",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"Hello: {Wd-} & {A+} & {B+} & {C+};"
+	);
+}
+
 int ntest_simple()
 {
 	size_t num_failures = 0;
@@ -119,6 +135,8 @@ int ntest_simple()
 	if (!test_simple_optional_left_cset()) num_failures++;
 	if (!test_simple_right_disj()) num_failures++;
 	if (!test_simple_optional()) num_failures++;
+	if (!test_simple_onereq()) num_failures++;
+	if (!test_simple_zeroreq()) num_failures++;
 	return num_failures;
 }
 
@@ -185,10 +203,65 @@ bool test_two_alts()
 
 bool test_two_opts()
 {
-	return test_alternative("two alternatives",
+	return test_alternative("two alts plus opts",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
 		"Hello: Wd- or Wi- or (Xj- & {A+ or B+});"
 	);
+}
+
+bool test_two_one_opts()
+{
+	return test_alternative("two alt, or one opt",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
+		"Hello: Wd- or {Wi-} or (Xj- & {A+ or B+});"
+	);
+}
+
+bool test_two_all_opts()
+{
+	return test_alternative("two alts, or all opt",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
+		"Hello: {Wd-} or {Wi-} or (Xj- & {A+ or B+});"
+	);
+}
+
+bool test_two_and_opts()
+{
+	return test_alternative("two alts, and an opt",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
+		"Hello: Wd- or (Wi- & {Xj- & {A+ or B+}} & {C+});"
+	);
+}
+
+bool test_two_and_no_opts()
+{
+	return test_alternative("two alt, and all opt",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
+		"Hello: Wd- or ({Wi-} & {Xj- & {A+ or B+}} & {C+});"
+	);
+}
+
+bool test_two_and_excess()
+{
+	return test_alternative("two alt, and excess reqs",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
+		"Hello: Wd- or (Wi- & Xj- & {A+ or B+} & {C+}) or Wi-;"
+	);
+}
+
+int ntest_two()
+{
+	size_t num_failures = 0;
+
+	if (!test_two_alts()) num_failures++;
+	if (!test_two_opts()) num_failures++;
+	if (!test_two_one_opts()) num_failures++;
+	if (!test_two_all_opts()) num_failures++;
+	if (!test_two_and_opts()) num_failures++;
+	if (!test_two_and_no_opts()) num_failures++;
+	if (!test_two_and_excess()) num_failures++;
+
+	return num_failures;
 }
 
 // ==================================================================
@@ -199,9 +272,7 @@ main(int argc, char *argv[])
 	size_t num_failures = 0;
 
 	num_failures += ntest_simple();
-	if (!test_two_alts()) num_failures++;
-	if (!test_two_opts()) num_failures++;
-
+	num_failures += ntest_two();
 
 	if (num_failures)
 	{
