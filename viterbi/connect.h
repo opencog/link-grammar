@@ -24,8 +24,6 @@ class Connect
 		Link* reassemble(Link*, WordCset*, WordCset*);
 
 		Link* conn_connect_aa(WordCset*, Atom*, Atom*);
-		Link* conn_connect_an(WordCset*, Atom*, Node*);
-		Link* conn_connect_ak(WordCset*, Atom*, Link*);
 		Link* conn_connect_na(WordCset*, Node*, Atom*);
 		Link* conn_connect_ka(WordCset*, Link*, Atom*);
 

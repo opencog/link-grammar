@@ -113,34 +113,12 @@ cout<<"normalized into "<<lg_link<<endl;
  */
 Link* Connect::conn_connect_aa(WordCset* left_cset, Atom *latom, Atom* ratom)
 {
-	Node* rnode = dynamic_cast<Node*>(ratom);
-	if (rnode)
-		return conn_connect_an(left_cset, latom, rnode);
-
-	Link* rlink = dynamic_cast<Link*>(ratom);
-	return conn_connect_ak(left_cset, latom, rlink);
-}
-
-Link* Connect::conn_connect_an(WordCset* left_cset, Atom *latom, Node* rnode)
-{
-	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
-
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
-		return conn_connect_nn(left_cset, lnode, rnode);
+		return conn_connect_na(left_cset, lnode, ratom);
 
 	Link* llink = dynamic_cast<Link*>(latom);
-	return conn_connect_ka(left_cset, llink, rnode);
-}
-
-Link* Connect::conn_connect_ak(WordCset* left_cset, Atom *latom, Link* rlink)
-{
-	Node* lnode = dynamic_cast<Node*>(latom);
-	if (lnode)
-		return conn_connect_nk(left_cset, lnode, rlink);
-
-	Link* llink = dynamic_cast<Link*>(latom);
-	return conn_connect_ka(left_cset, llink, rlink);
+	return conn_connect_ka(left_cset, llink, ratom);
 }
 
 Link* Connect::conn_connect_na(WordCset* left_cset, Node* lnode, Atom *ratom)
