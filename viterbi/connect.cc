@@ -119,6 +119,7 @@ Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
 	for (int i = 0; i < conn->get_arity(); i++)
 	{
 		Ling* alt = dynamic_cast<Ling*>(conn->get_outgoing_atom(i));
+if(!alt)
 cout<<"duuuuude wtffffffffffffffffffffffffffffffffffff "<<conn->get_outgoing_atom(i)<<endl;
 		assert(alt, "Unexpected type in alternative set");
 		Ling* normed_alt = reassemble(alt, left_cset, right_cset);
@@ -184,31 +185,60 @@ Link* Connect::conn_connect_nk(WordCset* left_cset, Node* lnode, Link* rlink)
 cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 
 	// If the connector set is a disjunction, then try each of them, in turn.
+	OutList alternatives;
 	if (OR == rlink->get_type())
 	{
 		// "alternatives" records the various different successful ways
 		// that lnode and rlink can be mated together.
-		OutList alternatives;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
+			Node* chinode = dynamic_cast<Node*>(a);
+			if (chinode && chinode->get_name() == OPTIONAL_CLAUSE)
+				continue;
+
 			Link* conn = conn_connect_na(left_cset, lnode, a);
 
 			// If the shoe fits, wear it.
 			if (conn)
 				alternatives.push_back(conn);
 		}
-		if (0 == alternatives.size())
-			return NULL;
-		return new Set(flatten(alternatives));
 	}
 	else
 	{
 cout<<"duuuuude in nect_nk"<<rlink<<endl;
-		assert(0, "Implement the AND nk");
+		// For an AND connective, all connectors must connect.  The
+		// only way that this can happen for an and-link is if zero
+		// or one connectors are required, and all other connectors in
+		// the and-list are optional.
+		Link* req_conn = NULL;
+		for (int i = 0; i < rlink->get_arity(); i++)
+		{
+			Atom* a = rlink->get_outgoing_atom(i);
+			Link* conn = conn_connect_na(left_cset, lnode, a);
+			if (is_optional(a))
+			{
+				if (conn)
+					alternatives.push_back(conn);
+			}
+			else
+			{
+				// check for more than one required clause.
+				// If there is more than one, then connection fails.
+				if (req_conn) return NULL;
+				req_conn = conn;
+			}
+		}
+
+		// If we found exactly one required connector, and it
+		// connects, then it is the only possible connection.
+		if (req_conn)
+			return req_conn;
 	}
 
-	return NULL;
+	if (0 == alternatives.size())
+		return NULL;
+	return new Set(flatten(alternatives));
 }
 
 // =============================================================
@@ -235,8 +265,9 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 		Node* chinode = dynamic_cast<Node*>(a);
 		if (chinode) 
 		{
+			// XXX TODO -- I think this is the right response here, not sure...
 			if (chinode->get_name() == OPTIONAL_CLAUSE)
-				assert(0, "Handle optional clauses");
+				continue;
 
 			// Only one needs to be satisfied for OR clause
 			AtomType op = llink->get_type();
@@ -289,7 +320,9 @@ OutList& Connect::flatten(OutList& alternatives)
 }
 
 // =============================================================
-#if NOT_NEEDED
+
+/// Return true if the indicated atom is an optional clause.
+/// else return false.
 bool Connect::is_optional(Atom *a)
 {
 	AtomType ty = a->get_type();
@@ -320,13 +353,12 @@ bool Connect::is_optional(Atom *a)
 		}
 	}
 	
-	// All disj were requied.
+	// All disj were required.
 	if (OR == ty) return false;
 
 	// All conj were optional.
 	return true;
 }
-#endif
 
 } // namespace viterbi
 } // namespace link-grammar
