@@ -101,7 +101,7 @@ Link* Connect::reassemble(Link* conn, WordCset* left_cset, WordCset* right_cset)
 	lo.push_back(conn->get_outgoing_atom(0));
 	lo.push_back(lwordj);
 	lo.push_back(rwordj);
-	Link *lg_link = new Link (LINK, lo);
+	Link *lg_link = new Link (LING, lo);
 
 cout<<"normalized into "<<lg_link<<endl;
 	return lg_link;
@@ -134,7 +134,7 @@ Link* Connect::conn_connect_na(WordCset* left_cset, Node* lnode, Atom *ratom)
 
 // =============================================================
 /**
- * Connect left_cset and _right_cset with an LG_LINK
+ * Connect left_cset and _right_cset with an LG_LING
  * lnode and rnode are the two connecters that actually mate.
  */
 Link* Connect::conn_connect_nn(WordCset* left_cset, Node* lnode, Node* rnode)
@@ -147,14 +147,14 @@ cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name()
 cout<<"Yayyyyae connectors match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	OutList linkage;
-	linkage.push_back(new Node(LINK_TYPE, link_name));
+	linkage.push_back(new Node(LING_TYPE, link_name));
 	linkage.push_back(lnode);
 	linkage.push_back(rnode);
-	return new Link(LINK, linkage);
+	return new Link(LING, linkage);
 }
 
 /**
- * Connect left_cset and _right_cset with an LG_LINK
+ * Connect left_cset and _right_cset with an LG_LING
  * lnode and rnode are the two connecters that actually mate.
  */
 Link* Connect::conn_connect_nk(WordCset* left_cset, Node* lnode, Link* rlink)
@@ -185,8 +185,8 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 /// If only one linkage is possible, return a graph of the form:
 /// (for example):
 ///
-///   LINK :
-///     LINK_TYPE : Wd
+///   LING :
+///     LING_TYPE : Wd
 ///     CONNECTOR : Wd+
 ///     CONNECTOR : Wd-
 /// 

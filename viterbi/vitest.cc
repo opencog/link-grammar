@@ -46,8 +46,8 @@ bool test_hello(const char *id, const char *dict_str)
 	// dictionary may be.
 	Lynk* ans =
 	ALINK1(SET,
-		ALINK3(LINK,
-			ANODE(LINK_TYPE, "Wd"),
+		ALINK3(LING,
+			ANODE(LING_TYPE, "Wd"),
 			ALINK2(WORD_DISJ,
 				ANODE(WORD, "LEFT-WALL"),
 				ANODE(CONNECTOR, "Wd+")
@@ -140,8 +140,8 @@ bool test_alternative(const char *id, const char *dict_str)
 
 	Lynk* ans =
 	ALINK2(SET,
-		ALINK3(LINK,
-			ANODE(LINK_TYPE, "Wd"),
+		ALINK3(LING,
+			ANODE(LING_TYPE, "Wd"),
 			ALINK2(WORD_DISJ,
 				ANODE(WORD, "LEFT-WALL"),
 				ANODE(CONNECTOR, "Wd+")
@@ -151,8 +151,8 @@ bool test_alternative(const char *id, const char *dict_str)
 				ANODE(CONNECTOR, "Wd-")
 			)
 		),
-		ALINK3(LINK,
-			ANODE(LINK_TYPE, "Wi"),
+		ALINK3(LING,
+			ANODE(LING_TYPE, "Wi"),
 			ALINK2(WORD_DISJ,
 				ANODE(WORD, "LEFT-WALL"),
 				ANODE(CONNECTOR, "Wi+")

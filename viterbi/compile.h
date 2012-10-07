@@ -24,7 +24,7 @@ enum AtomType
 {
 	// Node types
 	WORD = 1,
-	LINK_TYPE,  // a pair of merged connectors
+	LING_TYPE,  // a pair of merged connectors
 	// META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
 	CONNECTOR,  // e.g. S+ 
 
@@ -35,7 +35,7 @@ enum AtomType
 	// OPTIONAL,   // one child only, and its optional. XXX not used ATM
 	WORD_CSET,  // word, followed by a set of connectors for that word.
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
-	LINK,       // two connected connectors, e.g. Dmcn w/o direction info
+	LING,       // two connected connectors, e.g. Dmcn w/o direction info
 	STATE
 };
 #endif

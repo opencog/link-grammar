@@ -21,7 +21,7 @@ const string type_name(AtomType t)
 	switch(t)
 	{
 		case WORD:      return "WORD";
-		case LINK_TYPE: return "LINK_TYPE";
+		case LING_TYPE: return "LING_TYPE";
 		// case META:      return "META";
 		case CONNECTOR: return "CONNECTOR";
 		case SET:       return "SET";
@@ -30,7 +30,7 @@ const string type_name(AtomType t)
 		// case OPTIONAL:  return "OPTIONAL";
 		case WORD_CSET: return "WORD_CSET";
 		case WORD_DISJ: return "WORD_DISJ";
-		case LINK:      return "LINK";
+		case LING:      return "LING";
 		case STATE:     return "STATE";
 	}
 
