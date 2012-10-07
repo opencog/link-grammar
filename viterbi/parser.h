@@ -38,6 +38,8 @@ class Parser
 		void initialize_state();
 		Atom* lg_exp_to_atom(Exp*);
 
+		void set_state(Set*);
+
 		Dictionary _dict;
 	private:
 		Set* _state;

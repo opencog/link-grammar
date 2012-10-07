@@ -146,7 +146,7 @@ void Parser::initialize_state()
 		state_vec.push_back(new Seq(a));
 	}
 
-	_state = new Set(state_vec);
+	set_state(new Set(state_vec));
 }
 
 /**
@@ -174,6 +174,21 @@ Set* Parser::get_state()
 	return _state;
 }
 
+void Parser::set_state(Set* s)
+{
+	// Clean it up, first, by removing empty state vectors.
+	const OutList& states = s->get_outgoing_set();
+	OutList new_states;
+	for (int i = 0; i < states.size(); i++)
+	{
+		Link* l = dynamic_cast<Link*>(states[i]);
+		if (l->get_arity() != 0)
+			new_states.push_back(l);
+	}
+	
+	_state = new Set(new_states);
+}
+
 Set* Parser::get_output_set()
 {
 	return _output;
@@ -190,8 +205,9 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 	//   AND :
 	//      CONNECTOR : Wd-  etc...
 
-   DBG(cout << "Initial state:\n" << _state << endl);
+   DBG(cout << "Initial state:\n" << get_state() << endl);
 	Set* state_set = get_state();
+	Set* new_state_set = state_set;
 	Connect cnct(wrd_cset);
 
 	// The state set consists of a bunch of sequences
@@ -212,9 +228,37 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 		if (alternatives)
 		{
 cout<<"Got linkage"<< alternatives <<endl;
-			_output = alternatives;
+			OutList alt_links;
+			OutList danglers;
+			for (int j = 0; j < alternatives->get_arity(); j++)
+			{
+				Atom* a = alternatives->get_outgoing_atom(j);
+				Ling* lg_link = dynamic_cast<Ling*>(a);
+				if (lg_link)
+					alt_links.push_back(lg_link);
+				else
+					danglers.push_back(a);
+			}
+			_output = new Set(alt_links);
+
+			// If all links were satisfied, then remove the state
+			if (0 == danglers.size())
+			{
+				OutList state_vect = vect->get_outgoing_set();
+				state_vect.erase(state_vect.begin());
+				Seq* new_vect = new Seq(state_vect);
+
+				OutList nssv = new_state_set->get_outgoing_set();
+				nssv[i] = new_vect;
+				new_state_set = new Set(nssv);
+			}
+			// If there are any danglers...
+assert(0 == danglers.size(), "Implement dangler state");
 		}
 	}
+
+	set_state(new_state_set);
+cout<<"in conclusion, state="<<get_state()<<endl;
 }
 
 

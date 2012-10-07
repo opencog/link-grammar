@@ -66,10 +66,20 @@ bool test_hello(const char *id, const char *dict_str)
 	if (not (ans->operator==(output)))
 	{
 		cout << "Error: test failure on test " << id << endl;
-		cout << "expecting " << ans << endl;
-		cout << "got " << output << endl;
+		cout << "=== Expecting:\n" << ans << endl;
+		cout << "=== Got:\n" << output << endl;
 		return false;
 	}
+
+	Lynk* final_state = parser.get_state();
+	if (0 != final_state->get_arity())
+	{
+		cout << "Error: test failure on test " << id << endl;
+		cout << "Expecting the final state to be the empty set, but found:\n"
+		     << final_state << endl;
+		return false;
+	}
+
 	cout<<"PASS: test_hello(" << id << ") " << endl;
 	return true;
 }
