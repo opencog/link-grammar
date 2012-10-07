@@ -63,7 +63,7 @@ cout<<"word cset "<<right<<endl;
 	// If the word connector set is a single solitary node, then
 	// its not a set, its a single connecter.  Try to hook it up
 	// to something on the left.
-	Link* conn = conn_connect_ab(left_cset, left_a, right_a);
+	Link* conn = conn_connect_aa(left_cset, left_a, right_a);
 	if (!conn)
 		return NULL;
 cout<<"got one it is "<<conn<<endl;
@@ -111,17 +111,17 @@ cout<<"normalized into "<<lg_link<<endl;
 /**
  * Dispatch appropriatly, depending on whether left atom is node or link
  */
-Link* Connect::conn_connect_ab(WordCset* left_cset, Atom *latom, Atom* ratom)
+Link* Connect::conn_connect_aa(WordCset* left_cset, Atom *latom, Atom* ratom)
 {
 	Node* rnode = dynamic_cast<Node*>(ratom);
 	if (rnode)
-		return conn_connect_a(left_cset, latom, rnode);
+		return conn_connect_an(left_cset, latom, rnode);
 
 	Link* rlink = dynamic_cast<Link*>(ratom);
-	return conn_connect_a(left_cset, latom, rlink);
+	return conn_connect_ak(left_cset, latom, rlink);
 }
 
-Link* Connect::conn_connect_a(WordCset* left_cset, Atom *latom, Node* rnode)
+Link* Connect::conn_connect_an(WordCset* left_cset, Atom *latom, Node* rnode)
 {
 	assert(rnode->get_type() == CONNECTOR, "Expecting connector on right");
 
@@ -130,20 +130,20 @@ Link* Connect::conn_connect_a(WordCset* left_cset, Atom *latom, Node* rnode)
 		return conn_connect_nn(left_cset, lnode, rnode);
 
 	Link* llink = dynamic_cast<Link*>(latom);
-	return conn_connect_kn(left_cset, llink, rnode);
+	return conn_connect_ka(left_cset, llink, rnode);
 }
 
-Link* Connect::conn_connect_a(WordCset* left_cset, Atom *latom, Link* rlink)
+Link* Connect::conn_connect_ak(WordCset* left_cset, Atom *latom, Link* rlink)
 {
 	Node* lnode = dynamic_cast<Node*>(latom);
 	if (lnode)
 		return conn_connect_nk(left_cset, lnode, rlink);
 
 	Link* llink = dynamic_cast<Link*>(latom);
-	return conn_connect_kk(left_cset, llink, rlink);
+	return conn_connect_ka(left_cset, llink, rlink);
 }
 
-Link* Connect::conn_connect_b(WordCset* left_cset, Node* lnode, Atom *ratom)
+Link* Connect::conn_connect_na(WordCset* left_cset, Node* lnode, Atom *ratom)
 {
 	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 	Node* rnode = dynamic_cast<Node*>(ratom);
@@ -190,7 +190,7 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
-			Link* conn = conn_connect_b(left_cset, lnode, a);
+			Link* conn = conn_connect_na(left_cset, lnode, a);
 
 			// If the shoe fits, wear it.
 			if (conn)
@@ -241,8 +241,7 @@ bool Connect::is_optional(Atom *a)
 }
 #endif
 
-/* source code here nearly identical to below */
-Link* Connect::conn_connect_kn(WordCset* left_cset, Link* llink, Node* rnode)
+Link* Connect::conn_connect_ka(WordCset* left_cset, Link* llink, Atom* ratom)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
 
@@ -257,41 +256,14 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 
 			// Only one needs to be satisfied for OR clause
 			if (OR == llink->get_type())
-				return conn_connect_nn(left_cset, lnode, rnode);
+				return conn_connect_na(left_cset, lnode, ratom);
 
 			// If we are here, then its an AND. 
 			assert(0, "Implement me node AND");
 		}
 
 		Link* clink = dynamic_cast<Link*>(a);
-		return conn_connect_kn(left_cset, clink, rnode);
-	}
-
-	return NULL;
-}
-
-/* source code here nearly identical to above */
-Link* Connect::conn_connect_kk(WordCset* left_cset, Link* llink, Link* rlink)
-{
-	for (int i = 0; i < llink->get_arity(); i++)
-	{
-		Atom* a = llink->get_outgoing_atom(i);
-		Node* lnode = dynamic_cast<Node*>(a);
-		if (lnode) 
-		{
-			if (lnode->get_name() == OPTIONAL_CLAUSE)
-				continue;
-
-			// Only one needs to be satisfied for OR clause
-			if (OR == llink->get_type())
-				return conn_connect_nk(left_cset, lnode, rlink);
-
-			// If we are here, then its an AND. 
-			assert(0, "Implement me link AND");
-		}
-
-		Link* clink = dynamic_cast<Link*>(a);
-		return conn_connect_kk(left_cset, clink, rlink);
+		return conn_connect_ka(left_cset, clink, ratom);
 	}
 
 	return NULL;

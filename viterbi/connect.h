@@ -23,15 +23,14 @@ class Connect
 	protected:
 		Link* reassemble(Link*, WordCset*, WordCset*);
 
-		Link* conn_connect_ab(WordCset*, Atom*, Atom*);
-		Link* conn_connect_a(WordCset*, Atom*, Node*);
-		Link* conn_connect_a(WordCset*, Atom*, Link*);
-		Link* conn_connect_b(WordCset*, Node*, Atom*);
+		Link* conn_connect_aa(WordCset*, Atom*, Atom*);
+		Link* conn_connect_an(WordCset*, Atom*, Node*);
+		Link* conn_connect_ak(WordCset*, Atom*, Link*);
+		Link* conn_connect_na(WordCset*, Node*, Atom*);
+		Link* conn_connect_ka(WordCset*, Link*, Atom*);
 
 		Link* conn_connect_nn(WordCset*, Node*, Node*);
-		Link* conn_connect_kn(WordCset*, Link*, Node*);
 		Link* conn_connect_nk(WordCset*, Node*, Link*);
-		Link* conn_connect_kk(WordCset*, Link*, Link*);
 
 		static bool is_optional(Atom *);
 
