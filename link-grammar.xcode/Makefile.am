@@ -1,2 +1,2 @@
 
-EXTRA_DIST =  project.pbxproj
+EXTRA_DIST =  project.pbxproj README
