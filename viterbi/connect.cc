@@ -37,10 +37,7 @@ Connect::Connect(WordCset* right_wconset)
 	//      CONNECTOR : Wd-  etc...
 
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
-	assert(WORD_CSET == _right_cset->get_type(), "Expecting right word cset.");
-	assert(2 == _right_cset->get_arity(), "Wrong arity for word connector set");
-
-	_rcons = _right_cset->get_outgoing_atom(1);
+	_rcons = _right_cset->get_cset();
 }
 
 /**
@@ -50,9 +47,7 @@ Connect::Connect(WordCset* right_wconset)
 Set* Connect::try_connect(WordCset* left_cset)
 {
 	assert(left_cset, "State word-connectorset is null");
-	assert(WORD_CSET == left_cset->get_type(), "Expecting left word cset.");
-	assert(2 == left_cset->get_arity(), "Wrong arity for state word conset");
-	Atom* left_a = left_cset->get_outgoing_atom(1);
+	Atom* left_a = left_cset->get_cset();
 
 	Atom *right_a = _rcons;
 cout<<"state cset "<<left<<endl;
@@ -92,20 +87,16 @@ cout<<"got one it is "<<conn<<endl;
 Ling* Connect::reassemble(Ling* conn, WordCset* left_cset, WordCset* right_cset)
 {
 	OutList lwdj;
-	lwdj.push_back(left_cset->get_outgoing_atom(0));  // the word
-	lwdj.push_back(conn->get_outgoing_atom(1));       // the connector
+	lwdj.push_back(left_cset->get_word());    // the word
+	lwdj.push_back(conn->get_left());         // the connector
 	Link *lwordj = new Link(WORD_DISJ, lwdj);
 
 	OutList rwdj;
-	rwdj.push_back(right_cset->get_outgoing_atom(0));   // the word
-	rwdj.push_back(conn->get_outgoing_atom(2));         // the connector
+	rwdj.push_back(right_cset->get_word());   // the word
+	rwdj.push_back(conn->get_right());        // the connector
 	Link *rwordj = new Link(WORD_DISJ, rwdj);
 
-	OutList lo;
-	lo.push_back(conn->get_outgoing_atom(0));
-	lo.push_back(lwordj);
-	lo.push_back(rwordj);
-	Ling *lg_link = new Ling(lo);
+	Ling *lg_link = new Ling(conn->get_ling_type(), lwordj, rwordj);
 
 cout<<"normalized into "<<lg_link<<endl;
 	return lg_link;
