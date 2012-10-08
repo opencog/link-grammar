@@ -33,7 +33,7 @@ namespace link_grammar {
 namespace viterbi {
 
 Parser::Parser(Dictionary dict)
-	: _dict(dict), _state(NULL)
+	: _dict(dict), _state(NULL), _output(NULL)
 {
 	initialize_state();
 }
@@ -214,8 +214,11 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 	// The state set consists of a bunch of sequences
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
-		Seq* vect = dynamic_cast<Seq*>(state_set->get_outgoing_atom(i));
-		assert(vect, "Missing state");
+		Seq* seq = dynamic_cast<Seq*>(state_set->get_outgoing_atom(i));
+		assert(seq, "Missing state");
+
+		OutList state_vect = seq->get_outgoing_set();
+		bool state_vect_modified = false;
 
 		// State sequences must be sequentially satisfied: This is the
 		// viterbi equivalent of "planar graph" or "no-crossing-links"
@@ -223,7 +226,7 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
 
-		WordCset* swc = dynamic_cast<WordCset*>(vect->get_outgoing_atom(0));
+		WordCset* swc = dynamic_cast<WordCset*>(seq->get_outgoing_atom(0));
 		Set* alternatives = cnct.try_connect(swc);
 
 		if (alternatives)
@@ -245,13 +248,8 @@ cout<<"Got linkage"<< alternatives <<endl;
 			// If all links were satisfied, then remove the state
 			if (0 == danglers.size())
 			{
-				OutList state_vect = vect->get_outgoing_set();
 				state_vect.erase(state_vect.begin());
-				Seq* new_vect = new Seq(state_vect);
-
-				OutList nssv = new_state_set->get_outgoing_set();
-				nssv[i] = new_vect;
-				new_state_set = new Set(nssv);
+				state_vect_modified = true;
 			}
 			// If there are any danglers...
 assert(0 == danglers.size(), "Implement dangler state");
@@ -268,12 +266,22 @@ assert(0 == danglers.size(), "Implement dangler state");
 			{
 assert(0, "Parse fail, implement me");
 			}
-cout<<"duuude he new cset is="<<new_wcset<<endl;
+			state_vect.insert(state_vect.begin(), new_wcset);
+			state_vect_modified = true;
+		}
+
+		// If the state vector was modified, then record it.
+		if (state_vect_modified)
+		{
+			Seq* new_vect = new Seq(state_vect);
+
+			OutList nssv = new_state_set->get_outgoing_set();
+			nssv[i] = new_vect;
+			new_state_set = new Set(nssv);
 		}
 	}
 
 	set_state(new_state_set);
-cout<<"in conclusion, state="<<get_state()<<endl;
 }
 
 /// Trim away all optional left pointers (coonectors with - direction)

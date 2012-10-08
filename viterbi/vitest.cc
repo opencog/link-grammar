@@ -44,8 +44,6 @@ bool test_hello(const char *id, const char *dict_str)
 	Parser parser(dict);
 	parser.streamin("Hello");
 
-	Lynk* output = parser.get_output_set();
-
 	// This is the expected output, no matter what the
 	// dictionary may be.
 	Lynk* ans =
@@ -63,6 +61,7 @@ bool test_hello(const char *id, const char *dict_str)
 		)
 	);
 
+	Lynk* output = parser.get_output_set();
 	if (not (ans->operator==(output)))
 	{
 		cout << "Error: test failure on test " << id << endl;
@@ -170,8 +169,6 @@ bool test_alternative(const char *id, const char *dict_str)
 	Parser parser(dict);
 	parser.streamin("Hello");
 
-	Lynk* output = parser.get_output_set();
-
 	Lynk* ans =
 	ALINK2(SET,
 		ALINK3(LING,
@@ -198,13 +195,24 @@ bool test_alternative(const char *id, const char *dict_str)
 		)
 	);
 
+	Lynk* output = parser.get_output_set();
 	if (not (ans->operator==(output)))
 	{
 		cout << "Error: test failure on test " << id << endl;
-		cout << "expecting " << ans << endl;
-		cout << "got " << output << endl;
+		cout << "=== Expecting:\n" << ans << endl;
+		cout << "=== Got:\n" << output << endl;
 		return false;
 	}
+
+	Lynk* final_state = parser.get_state();
+	if (0 != final_state->get_arity())
+	{
+		cout << "Error: test failure on test " << id << endl;
+		cout << "Expecting the final state to be the empty set, but found:\n"
+		     << final_state << endl;
+		return false;
+	}
+
 	cout<<"PASS: test_alternative(" << id << ") " << endl;
 	return true;
 }
@@ -295,10 +303,42 @@ bool test_simple_state(const char *id, const char *dict_str)
 	parser.streamin("this");
 
 	Lynk* output = parser.get_output_set();
-	Lynk* state = parser.get_state();
-cout<<"test state="<<state<<endl;
+	if (output)
+	{
+		cout << "Error: test failure on test " << id << endl;
+		cout << "Expecting no output, but found:\n"
+		     << output << endl;
+		return false;
+	}
 
-	return false;
+	Lynk* ans =
+	ALINK1(SET,
+		ALINK2(SEQ,
+			ALINK2(WORD_CSET,
+				ANODE(WORD, "this"),
+				ANODE(CONNECTOR, "Ss*b+")
+			),
+			ALINK2(WORD_CSET,
+				ANODE(WORD, "LEFT-WALL"),
+				ALINK3(OR,
+					ANODE(CONNECTOR, "Wd+"),
+					ANODE(CONNECTOR, "Wi+"),
+					ANODE(CONNECTOR, "Wq+")
+				)
+			)
+		)
+	);
+
+	Lynk* state = parser.get_state();
+	if (not (ans->operator==(state)))
+	{
+		cout << "Error: test failure on test " << id << endl;
+		cout << "=== Expecting state:\n" << ans << endl;
+		cout << "=== Got state:\n" << state << endl;
+		return false;
+	}
+
+	return true;
 }
 
 bool test_first_state()
