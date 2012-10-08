@@ -349,6 +349,14 @@ bool test_first_state()
 	);
 }
 
+bool test_first_opt_lefty()
+{
+	return test_simple_state("first state, left-going optional",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+ and {Xi-};"
+	);
+}
+
 // ==================================================================
 
 int
@@ -359,6 +367,7 @@ main(int argc, char *argv[])
 	num_failures += ntest_simple();
 	num_failures += ntest_two();
 	if (!test_first_state()) num_failures++;
+	if (!test_first_opt_lefty()) num_failures++;
 
 	if (num_failures)
 	{
