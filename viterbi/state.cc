@@ -60,7 +60,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		stringstream ss;
 		if (exp->multi) ss << "@";
 		ss << exp->u.string << exp->dir;
-		return new Node(CONNECTOR, ss.str());
+		return new Connector(ss.str());
 	}
 
 	// Whenever a null appears in an OR-list, it means the 
@@ -68,7 +68,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 	// in an AND-list.
 	E_list* el = exp->u.l;
 	if (NULL == el)
-		return new Node(CONNECTOR, "0");
+		return new Connector(OPTIONAL_CLAUSE);
 
 	// The data structure that link-grammar uses for connector
 	// expressions is totally insane, as witnessed by the loop below.
@@ -123,7 +123,7 @@ print_expression(exp);
 
 		// First atom at the from of the outgoing set is the word itself.
 		// Second atom is the first disjuct that must be fulfilled.
-		Node *nword = new Node(WORD, dn->string);
+		Word* nword = new Word(dn->string);
 		djset.push_back(new WordCset(nword, dj));
 	}
 	return new Set(djset);
@@ -273,6 +273,19 @@ assert(0, "Parse fail, implement me");
 cout<<"in conclusion, state="<<get_state()<<endl;
 }
 
+WordCset* Parser::cset_trim_left_pointers(WordCset* wrd_cset)
+{
+	Atom* trimmed = trim_left_pointers(wrd_cset->get_cset());
+	if (!trimmed)
+		return NULL;
+	return new WordCset(wrd_cset->get_word(), trimmed);
+}
+
+Atom* Parser::trim_left_pointers(Atom* a)
+{
+	return a;
+}
+
 bool Parser::cset_has_mandatory_left_pointer(WordCset* wrd_cset)
 {
 	return has_mandatory_left_pointer(wrd_cset->get_cset());
@@ -280,18 +293,18 @@ bool Parser::cset_has_mandatory_left_pointer(WordCset* wrd_cset)
 
 bool Parser::has_mandatory_left_pointer(Atom* a)
 {
-	AtomType ty = a->get_type();
-	if (CONNECTOR == ty)
+	Connector* ct = dynamic_cast<Connector*>(a);
+	if (ct)
 	{
-		Node* n = dynamic_cast<Node*>(a);
-		const string& name = n->get_name();
-		if (name == OPTIONAL_CLAUSE)
+		if (ct->is_optional())
 			return false;
-		char dir = *name.rbegin();
+		char dir = ct->get_direction();
 		if ('-' == dir) return true;
 		if ('+' == dir) return false;
 		assert(0, "Bad word direction");
 	}
+
+	AtomType ty = a->get_type();
 	assert (OR == ty or AND == ty, "Must be boolean junction");
 
 // XXX bad if we here.

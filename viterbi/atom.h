@@ -79,7 +79,7 @@ class Node : public Atom
 		const std::string& get_name() const { return _name; }
 
 		virtual bool operator==(const Atom*) const;
-	private:
+	protected:
 		std::string _name;
 };
 

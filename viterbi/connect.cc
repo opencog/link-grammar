@@ -131,22 +131,23 @@ Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
  */
 Link* Connect::conn_connect_aa(WordCset* left_cset, Atom *latom, Atom* ratom)
 {
-	Node* lnode = dynamic_cast<Node*>(latom);
+	Connector* lnode = dynamic_cast<Connector*>(latom);
 	if (lnode)
 		return conn_connect_na(left_cset, lnode, ratom);
 
 	Link* llink = dynamic_cast<Link*>(latom);
+	assert(llink, "Left side should be link");
 	return conn_connect_ka(left_cset, llink, ratom);
 }
 
-Link* Connect::conn_connect_na(WordCset* left_cset, Node* lnode, Atom *ratom)
+Link* Connect::conn_connect_na(WordCset* left_cset, Connector* lnode, Atom *ratom)
 {
-	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
-	Node* rnode = dynamic_cast<Node*>(ratom);
+	Connector* rnode = dynamic_cast<Connector*>(ratom);
 	if (rnode)
 		return conn_connect_nn(left_cset, lnode, rnode);
 
 	Link* rlink = dynamic_cast<Link*>(ratom);
+	assert(rlink, "Right side should be link");
 	return conn_connect_nk(left_cset, lnode, rlink);
 }
 
@@ -155,29 +156,23 @@ Link* Connect::conn_connect_na(WordCset* left_cset, Node* lnode, Atom *ratom)
  * Connect left_cset and _right_cset with an LG_LING
  * lnode and rnode are the two connecters that actually mate.
  */
-Ling* Connect::conn_connect_nn(WordCset* left_cset, Node* lnode, Node* rnode)
+Ling* Connect::conn_connect_nn(WordCset* left_cset, Connector* lnode, Connector* rnode)
 {
-	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
 	if (!conn_match(lnode->get_name(), rnode->get_name()))
 		return NULL;
 	
 cout<<"Yayyyyae connectors match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
-	OutList linkage;
-	linkage.push_back(new Node(LING_TYPE, link_name));
-	linkage.push_back(lnode);
-	linkage.push_back(rnode);
-	return new Ling(linkage);
+	return new Ling(link_name, lnode, rnode);
 }
 
 /**
  * Connect left_cset and _right_cset with a LING
  * lnode is a connecter we hope to mate with something from rlink.
  */
-Link* Connect::conn_connect_nk(WordCset* left_cset, Node* lnode, Link* rlink)
+Link* Connect::conn_connect_nk(WordCset* left_cset, Connector* lnode, Link* rlink)
 {
-	assert(lnode->get_type() == CONNECTOR, "Expecting connector on left");
 cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 
 	// If the connector set is a disjunction, then try each of them, in turn.
@@ -257,7 +252,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
 		Atom* a = llink->get_outgoing_atom(i);
-		Node* chinode = dynamic_cast<Node*>(a);
+		Connector* chinode = dynamic_cast<Connector*>(a);
 		if (chinode) 
 		{
 			// XXX TODO -- I think this is the right response here, not sure...
@@ -284,6 +279,7 @@ cout<<"duuude lefty is "<<chinode<<endl;
 		else
 		{	
 			Link* clink = dynamic_cast<Link*>(a);
+			assert(clink, "Child should be link");
 			Link* rv = conn_connect_ka(left_cset, clink, ratom);
 			if (rv)
 				alternatives.push_back(rv);

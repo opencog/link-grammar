@@ -25,11 +25,11 @@ class Connect
 		Ling* reassemble(Ling*, WordCset*, WordCset*);
 
 		Link* conn_connect_aa(WordCset*, Atom*, Atom*);
-		Link* conn_connect_na(WordCset*, Node*, Atom*);
+		Link* conn_connect_na(WordCset*, Connector*, Atom*);
 		Set* conn_connect_ka(WordCset*, Link*, Atom*);
 
-		Ling* conn_connect_nn(WordCset*, Node*, Node*);
-		Link* conn_connect_nk(WordCset*, Node*, Link*);
+		Ling* conn_connect_nn(WordCset*, Connector*, Connector*);
+		Link* conn_connect_nk(WordCset*, Connector*, Link*);
 
 		static const OutList& flatten(OutList&);
 
