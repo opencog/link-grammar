@@ -73,7 +73,9 @@ for arg in $*; do
 done
 
 if $run_configure; then
-    ./configure --enable-maintainer-mode "$@"
+    mkdir -p build
+    cd build
+    ../configure --enable-maintainer-mode "$@"
     echo
     echo "Now type 'make' to compile link-grammar."
 else
