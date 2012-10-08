@@ -1,5 +1,5 @@
 
-#include <link-grammar/link-features.h>
+#include "../link-grammar/link-features.h"
 
 LINK_BEGIN_DECLS
 void viterbi_parse(const char * sentence, Dictionary dict);
