@@ -21,6 +21,7 @@
 #include "atom.h"
 #include "compile.h"
 #include "connect.h"
+#include "connector-utils.h"
 #include "parser.h"
 #include "viterbi.h"
 
@@ -262,10 +263,12 @@ assert(0 == danglers.size(), "Implement dangler state");
 			// no left-pointing links, that's just fine; add it
 			// to the state.  If it does have left-pointing
 			// links, then its a parse failure.
-			if (cset_has_mandatory_left_pointer(wrd_cset))
+			WordCset* new_wcset = cset_trim_left_pointers(wrd_cset);
+			if (NULL == new_wcset)
 			{
 assert(0, "Parse fail, implement me");
 			}
+cout<<"duuude he new cset is="<<new_wcset<<endl;
 		}
 	}
 
@@ -273,6 +276,8 @@ assert(0, "Parse fail, implement me");
 cout<<"in conclusion, state="<<get_state()<<endl;
 }
 
+/// Trim away all optional left pointers (coonectors with - direction)
+/// If there are any non-optional left-pointers, then return NULL.
 WordCset* Parser::cset_trim_left_pointers(WordCset* wrd_cset)
 {
 	Atom* trimmed = trim_left_pointers(wrd_cset->get_cset());
@@ -283,9 +288,85 @@ WordCset* Parser::cset_trim_left_pointers(WordCset* wrd_cset)
 
 Atom* Parser::trim_left_pointers(Atom* a)
 {
-	return a;
+	Connector* ct = dynamic_cast<Connector*>(a);
+	if (ct)
+	{
+		if (ct->is_optional())
+			return a;
+		char dir = ct->get_direction();
+		if ('-' == dir) return NULL;
+		if ('+' == dir) return a;
+		assert(0, "Bad word direction");
+	}
+
+	AtomType ty = a->get_type();
+	assert (OR == ty or AND == ty, "Must be boolean junction");
+
+	if (OR == ty)
+	{
+		OutList new_ol;
+		Link* l = dynamic_cast<Link*>(a);
+		for (int i = 0; i < l->get_arity(); i++)
+		{
+			Atom* ota = l->get_outgoing_atom(i);
+			Atom* new_ota = trim_left_pointers(ota);
+			if (new_ota)
+				new_ol.push_back(new_ota);
+		}
+		if (0 == new_ol.size())
+			return NULL;
+
+		if (1 == new_ol.size())
+			return new_ol[0];
+
+		return new Link(OR, new_ol);
+	}
+
+	// If we are here, then it an andlist, and all conectors are
+	// mandatory, unless they are optional.  So fail, if there are
+	// any left-pointing non-optional connectors.
+	OutList new_ol;
+	Link* l = dynamic_cast<Link*>(a);
+	for (int i = 0; i < l->get_arity(); i++)
+	{
+		Atom* ota = l->get_outgoing_atom(i);
+		Atom* new_ota = trim_left_pointers(ota);
+		if (new_ota)
+			new_ol.push_back(new_ota);
+	}
+
+	// If the size did not change, then trimming did not destroy
+	// any mandatory connectors.  We are good to go.
+	if (new_ol.size() == l->get_arity())
+		return new Link(AND, new_ol);
+
+	if (0 == new_ol.size())
+		return NULL;
+
+	// Uhh-oh. We are here because there were some left-pointers 
+	// removed. This might be OK, if this whole clause is optional.
+	// Try to figure this out.
+	bool mandatory = true;
+	for (int i = 0; i < new_ol.size(); i++)
+	{
+		if (is_optional(new_ol[i]))
+		{
+			mandatory = false;
+			break;
+		}
+	}
+
+	// Oh no, left-pointers were mandatory!
+	if (mandatory)
+		return NULL;
+
+	if (1 == new_ol.size())
+		return new_ol[0];
+
+	return new Link(AND, new_ol);
 }
 
+#if 0
 bool Parser::cset_has_mandatory_left_pointer(WordCset* wrd_cset)
 {
 	return has_mandatory_left_pointer(wrd_cset->get_cset());
@@ -340,6 +421,7 @@ borken right now
 	return truexxxa;
 #endif
 }
+#endif
 
 
 /**

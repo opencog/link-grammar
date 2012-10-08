@@ -13,6 +13,7 @@
 
 #include "utilities.h"
 
+#include "compile.h"
 #include "connector-utils.h"
 
 using namespace std;
@@ -103,8 +104,8 @@ bool is_optional(Atom *a)
 	AtomType ty = a->get_type();
 	if (CONNECTOR == ty)
 	{
-		Node* n = dynamic_cast<Node*>(a);
-		if (n->get_name() == OPTIONAL_CLAUSE)
+		Connector* n = dynamic_cast<Connector*>(a);
+		if (n->is_optional())
 			return true;
 		return false;
 	}
