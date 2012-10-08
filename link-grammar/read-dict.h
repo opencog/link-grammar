@@ -11,7 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <link-grammar/link-features.h>
+#include "link-includes.h"  // For the version number
+
 LINK_BEGIN_DECLS
 
 #include "api-types.h"

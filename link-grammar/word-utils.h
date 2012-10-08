@@ -14,7 +14,7 @@
 #ifndef _LINK_GRAMMAR_WORD_UTILS_H_
 #define _LINK_GRAMMAR_WORD_UTILS_H_
 
-#include <link-grammar/api-types.h>
+#include "api-types.h"
 
 /* Exp utilities ... */
 void free_Exp(Exp *);

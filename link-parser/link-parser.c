@@ -58,8 +58,7 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif
 
-#include <link-grammar/link-includes.h>
-
+#include "link-includes.h"
 #include "command-line.h"
 #include "expand.h"
 #include "../viterbi/viterbi.h"

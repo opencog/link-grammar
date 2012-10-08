@@ -13,8 +13,6 @@
 #ifndef _CONSTITUENTSH_
 #define _CONSTITUENTSH_
 
-#include "link-includes.h"
-
 /* Invariant: Leaf if child==NULL */
 struct CNode_s {
   char  * label;
