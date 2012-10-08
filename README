@@ -128,6 +128,9 @@ BUILDING on MacOS:
    See also:
    http://trac.macports.org/browser/trunk/dports/textproc/link-grammar/Portfile
 
+   A MacOS project file can be found in the directory link-grammar.xcode
+   It is probably stale and out-of-date; can someone send me a new one?
+
    Users who intend to use the java bindings with java6 will need to
    make sure to compile link-grammar to produce a 64-bit binary, as
    this is not automatic on OSX. Do this during configure:
