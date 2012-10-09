@@ -202,7 +202,7 @@ Set* Parser::get_output_set()
 
 // ===================================================================
 /**
- * Add a single dictionary entry to the parse stae, if possible.
+ * Add a single dictionary entry to the parse state, if possible.
  */
 void Parser::stream_word_conset(WordCset* wrd_cset)
 {
@@ -400,7 +400,24 @@ Atom* Parser::trim_left_pointers(Atom* a)
  */
 void Parser::streamin(const string& text)
 {
-	stream_word(text);
+	// A trivial tokenizer
+	size_t pos = 0;
+	while(true)
+	{
+		size_t wend = text.find(' ', pos);
+		if (wend != string::npos)
+		{
+			string word = text.substr(pos, wend-pos);
+			stream_word(word);
+			pos = wend+1; // skip over space
+		}
+		else
+		{
+			string word = text.substr(pos);
+			stream_word(word);
+			break;
+		}
+	}
 }
 
 void viterbi_parse(Dictionary dict, const char * sentence)

@@ -338,6 +338,7 @@ bool test_simple_state(const char *id, const char *dict_str)
 		return false;
 	}
 
+	cout<<"PASS: test_simple_state(" << id << ") " << endl;
 	return true;
 }
 
@@ -405,6 +406,41 @@ int ntest_first()
 
 // ==================================================================
 
+bool test_short_sent(const char *id, const char *dict_str)
+{
+	total_tests++;
+
+	Dictionary dict = dictionary_create_from_utf8(dict_str);
+
+	// print_dictionary_data(dict);
+
+	Parser parser(dict);
+	// Expecting more words to follow, so a non-trivial state.
+	parser.streamin("this is");
+
+	Lynk* output = parser.get_output_set();
+cout<<"output is >>>" << output<<endl;
+
+	Lynk* state = parser.get_state();
+cout<<"state is >>>" << state<<endl;
+
+return false;
+
+	cout<<"PASS: test_short_sent(" << id << ") " << endl;
+	return true;
+}
+
+bool test_short_this()
+{
+	return test_short_sent("short sent",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+;"
+		"is.v: Ss- and Wi-;"
+	);
+}
+
+// ==================================================================
+
 int
 main(int argc, char *argv[])
 {
@@ -413,6 +449,7 @@ main(int argc, char *argv[])
 	num_failures += ntest_simple();
 	num_failures += ntest_two();
 	num_failures += ntest_first();
+	if (!test_short_this()) num_failures++;
 
 	if (num_failures)
 	{
