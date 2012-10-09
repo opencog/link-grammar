@@ -38,6 +38,7 @@ Parser::Parser(Dictionary dict)
 	initialize_state();
 }
 
+// ===================================================================
 /**
  * Convert LG dictionary expression to atomic formula.
  *
@@ -100,6 +101,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 	assert(0, "Not reached");
 }
 
+// ===================================================================
 /**
  * Return atomic formula connector expression for the given word.
  *
@@ -130,6 +132,7 @@ print_expression(exp);
 	return new Set(djset);
 }
 
+// ===================================================================
 /**
  * Set up initial viterbi state for the parser
  */
@@ -150,6 +153,7 @@ void Parser::initialize_state()
 	set_state(new Set(state_vec));
 }
 
+// ===================================================================
 /**
  * Add a single word to the parse.
  */
@@ -169,6 +173,7 @@ void Parser::stream_word(const string& word)
 	}
 }
 
+// ===================================================================
 /** convenience wrapper */
 Set* Parser::get_state()
 {
@@ -195,6 +200,7 @@ Set* Parser::get_output_set()
 	return _output;
 }
 
+// ===================================================================
 /**
  * Add a single dictionary entry to the parse stae, if possible.
  */
@@ -284,8 +290,14 @@ assert(0, "Parse fail, implement me");
 	set_state(new_state_set);
 }
 
-/// Trim away all optional left pointers (coonectors with - direction)
+// ===================================================================
+
+/// Trim away all optional left pointers (connectors with - direction)
 /// If there are any non-optional left-pointers, then return NULL.
+///
+/// XXX Wait, I'm confused: it could also be null if everything
+/// was optional, and everything was left-facing, so everything got
+/// trimmed away... but htat's OK, because ... ermmmm
 WordCset* Parser::cset_trim_left_pointers(WordCset* wrd_cset)
 {
 	Atom* trimmed = trim_left_pointers(wrd_cset->get_cset());
@@ -378,64 +390,8 @@ Atom* Parser::trim_left_pointers(Atom* a)
 	return new Link(AND, new_ol);
 }
 
-#if 0
-bool Parser::cset_has_mandatory_left_pointer(WordCset* wrd_cset)
-{
-	return has_mandatory_left_pointer(wrd_cset->get_cset());
-}
 
-bool Parser::has_mandatory_left_pointer(Atom* a)
-{
-	Connector* ct = dynamic_cast<Connector*>(a);
-	if (ct)
-	{
-		if (ct->is_optional())
-			return false;
-		char dir = ct->get_direction();
-		if ('-' == dir) return true;
-		if ('+' == dir) return false;
-		assert(0, "Bad word direction");
-	}
-
-	AtomType ty = a->get_type();
-	assert (OR == ty or AND == ty, "Must be boolean junction");
-
-// XXX bad if we here.
-	return true;
-#if 0
-borken right now
-	Link* l = dynamic_cast<Link*>(a);
-	for (int i = 0; i < l->get_arity(); i++)
-	{
-		Atom *ota = l->get_outgoing_atom(i);
-		bool c = is_optional(ota);
-		bool lefty = false;
-		if (OR == ty)
-		{
-			// If anything in OR is optional, the  whole clause is
-			// optional, and we don't need to check direction.
-			if (c) return false;
-		}
-		else
-		{
-			// ty is AND
-			// If anything in AND is isn't optional, then something is
-			// required, and it better be right-pointing.
-			if (!c and has_mandatory_left_pointer(ota))
-				return true;
-		}
-	}
-
-	// All disj were required.
-	if (OR == ty) return falsexxxx;
-
-	// All conj were optional.
-	return truexxxa;
-#endif
-}
-#endif
-
-
+// ===================================================================
 /**
  * Add a stream of text to the input.
  *
@@ -456,6 +412,8 @@ void viterbi_parse(Dictionary dict, const char * sentence)
 
 } // namespace viterbi
 } // namespace link-grammar
+
+// ===================================================================
 
 // Wrapper to escape out from C++
 void viterbi_parse(const char * sentence, Dictionary dict)

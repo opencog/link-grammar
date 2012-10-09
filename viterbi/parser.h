@@ -43,9 +43,6 @@ class Parser
 		static WordCset* cset_trim_left_pointers(WordCset*);
 		static Atom* trim_left_pointers(Atom*);
 
-		static bool cset_has_mandatory_left_pointer(WordCset*);
-		static bool has_mandatory_left_pointer(Atom*);
-
 		Dictionary _dict;
 	private:
 		Set* _state;
