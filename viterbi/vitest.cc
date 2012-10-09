@@ -357,6 +357,52 @@ bool test_first_opt_lefty()
 	);
 }
 
+bool test_first_or_lefty()
+{
+	return test_simple_state("first state, OR left-going",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+ or Xi-;"
+	);
+}
+
+bool test_first_or_multi_lefty()
+{
+	return test_simple_state("first state, multi-OR left-going",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+ or Xi- or Y- or Z-;"
+	);
+}
+
+bool test_first_opt_cpx()
+{
+	return test_simple_state("first state, complex left-going optional",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+ and {Xi- or P- or {Q- & Z+}};"
+	);
+}
+
+bool test_first_infer_opt()
+{
+	return test_simple_state("first state, complex infer optional",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+ and (Xi- or P- or {Q- & Z+});"
+	);
+}
+
+int ntest_first()
+{
+	size_t num_failures = 0;
+
+	if (!test_first_state()) num_failures++;
+	if (!test_first_opt_lefty()) num_failures++;
+	if (!test_first_or_lefty()) num_failures++;
+	if (!test_first_or_multi_lefty()) num_failures++;
+	if (!test_first_opt_cpx()) num_failures++;
+	if (!test_first_infer_opt()) num_failures++;
+
+	return num_failures;
+}
+
 // ==================================================================
 
 int
@@ -366,8 +412,7 @@ main(int argc, char *argv[])
 
 	num_failures += ntest_simple();
 	num_failures += ntest_two();
-	if (!test_first_state()) num_failures++;
-	if (!test_first_opt_lefty()) num_failures++;
+	num_failures += ntest_first();
 
 	if (num_failures)
 	{

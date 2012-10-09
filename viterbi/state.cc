@@ -313,7 +313,7 @@ Atom* Parser::trim_left_pointers(Atom* a)
 	if (OR == ty)
 	{
 		OutList new_ol;
-		Link* l = dynamic_cast<Link*>(a);
+		const Link* l = dynamic_cast<Link*>(a);
 		for (int i = 0; i < l->get_arity(); i++)
 		{
 			Atom* ota = l->get_outgoing_atom(i);
@@ -323,6 +323,21 @@ Atom* Parser::trim_left_pointers(Atom* a)
 		}
 		if (0 == new_ol.size())
 			return NULL;
+
+		// The result of trimming may be multiple empty nodes. 
+		// Remove all but one of them.
+		bool got_opt = false;
+		for (int i = 0; i < new_ol.size(); i++)
+		{
+			Connector* c = dynamic_cast<Connector*>(new_ol[i]);
+			if (c and c->is_optional())
+			{
+				if (!got_opt)
+					got_opt = true;
+				else
+					new_ol.erase(new_ol.begin() + i);
+			}
+		}
 
 		if (1 == new_ol.size())
 		{
