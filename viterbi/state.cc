@@ -325,14 +325,22 @@ Atom* Parser::trim_left_pointers(Atom* a)
 			return NULL;
 
 		if (1 == new_ol.size())
+		{
+			// If the entire OR-list was pruned down to one connector,
+			// and that connector is the empty connector, then it
+			// "connects to nothing" on the left, and should be removed.
+			Connector* c = dynamic_cast<Connector*>(new_ol[0]);
+			if (c and c->is_optional())
+				return NULL;
 			return new_ol[0];
+		}
 
 		return new Link(OR, new_ol);
 	}
 
 	// If we are here, then it an andlist, and all conectors are
-	// mandatory, unless they are optional.  So fail, if there are
-	// any left-pointing non-optional connectors.
+	// mandatory, unless they are optional.  So fail, if the
+	// connectors that were trimmed were not optional.
 	OutList new_ol;
 	Link* l = dynamic_cast<Link*>(a);
 	for (int i = 0; i < l->get_arity(); i++)
@@ -341,31 +349,12 @@ Atom* Parser::trim_left_pointers(Atom* a)
 		Atom* new_ota = trim_left_pointers(ota);
 		if (new_ota)
 			new_ol.push_back(new_ota);
+		else
+			if (!is_optional(ota))
+				return NULL;
 	}
-
-	// If the size did not change, then trimming did not destroy
-	// any mandatory connectors.  We are good to go.
-	if (new_ol.size() == l->get_arity())
-		return new Link(AND, new_ol);
 
 	if (0 == new_ol.size())
-		return NULL;
-
-	// Uhh-oh. We are here because there were some left-pointers 
-	// removed. This might be OK, if this whole clause is optional.
-	// Try to figure this out.
-	bool mandatory = true;
-	for (int i = 0; i < new_ol.size(); i++)
-	{
-		if (is_optional(new_ol[i]))
-		{
-			mandatory = false;
-			break;
-		}
-	}
-
-	// Oh no, left-pointers were mandatory!
-	if (mandatory)
 		return NULL;
 
 	if (1 == new_ol.size())
