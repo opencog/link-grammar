@@ -18,8 +18,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.7.7 (formatted as V4v7v7+)
-<dictionary-version-number>: V4v7v7+;
+% Dictionary version number is 4.7.8 (formatted as V4v7v8+)
+<dictionary-version-number>: V4v7v8+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -5544,7 +5544,13 @@ that.j-c:
   (Cet+ &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or
   (TS- & (SI*j+ or SFI**j+) & I*j+);
 that.j-d: [{AL-} & D*u+];
-that.j-r: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or EE+ or (EA+ & {HA+}) or DTn+;
+
+% Xd-: iffy punctuation, e.g "The man, that you saw laugh...
+that.j-r:
+  ({[Xd-]} & R- & (({MVp+ or MVx+} & RS+) or Cr+))
+  or EE+
+  or (EA+ & {HA+})
+  or DTn+;
 
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 

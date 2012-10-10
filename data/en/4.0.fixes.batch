@@ -2050,6 +2050,12 @@ We ate so-called 'brain food' for lunch.
 % punctuation: sometimes commas are used as if they were semicolons:
 Sweat stood on his brow, fury was bright in his one good eye.
 
+% Some commas seem inappropriately placed, but are common none-the-less:
+The man, that you saw laugh, jumped off a cliff.
+The man, that you saw laugh jumped off a cliff.
+The man that you saw laugh, jumped off a cliff.
+The man that you saw laugh jumped off a cliff.
+
 % Sometimes colons are used as synonyms for "is":
 The capital of France: Paris.
 Einstein's birthplace: Germany.
