@@ -5214,10 +5214,12 @@ heard.v-d:
 hearing.g: (<vc-hear> & <verb-ge>) or <verb-ge-d>;
 hearing.v: <verb-pg> & <vc-hear>;
 
+% Xc+: poor comma choice: "The man that you saw laugh, jumped off a cliff".
 <vc-see>:
-  ((B- or O+) & {@MV+} & {I*j+ or Pg+ or AZ+ or Pv+}) or
-  ({@MV+} & {TH+ or Zs- or QI+ or Ce+}) or
-  ([[@MV+ & O*n+]]);
+  ((B- or O+) & {@MV+} & {I*j+ or Pg+ or AZ+ or Pv+})
+  or (B- & {@MV+} & [I*j+ & Xc+])
+  or ({@MV+} & {TH+ or Zs- or QI+ or Ce+})
+  or ([[@MV+ & O*n+]]);
 
 see.v: 
   ((<verb-pl,i> & (<vc-see>)) or
