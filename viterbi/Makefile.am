@@ -7,7 +7,7 @@
 # Skip this entire directory, if not configured
 if WITH_VITERBI
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/link-grammar
+INCLUDES = -I.. -I$(top_srcdir) -I$(top_srcdir)/link-grammar
 
 lib_LTLIBRARIES = libvitacog.la
 

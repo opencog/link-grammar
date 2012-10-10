@@ -1,6 +1,7 @@
-Version 4.7.8 (??? 2013)
+Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.
  * Fix include file paths so that 'make install' doesn't cause recompile.
+ * Fix build break due to bad include file paths.
 
 Version 4.7.7 (6 October 2012)
  * Fix configure to not bomb if c++ is not found. (weird regex.h missing)

@@ -8,7 +8,7 @@ DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 # In link-grammar version 5, fat links will be gone!
 DEFS += -DUSE_FAT_LINKAGES
 
-INCLUDES = -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
+INCLUDES = -I.. -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 # -----------------------------------------------------------
 # Directives to build the link-parser command-line application
