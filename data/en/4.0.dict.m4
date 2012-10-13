@@ -4983,12 +4983,24 @@ about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or
   (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-)) or MVa-;
 
 through.r:
-({JQ+} & J+ & (<prep-main-a> or FM-)) or (MVp- & B-);
-<prep-across>: ({JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
+  ({JQ+} & J+ & (<prep-main-a> or FM-))
+  or (MVp- & B-);
+
+<prep-across>:
+  ({JQ+} & J+ & (<prep-main-a> or FM-))
+  or K-
+  or (MVp- & B-);
+
 across along: <prep-across>;
-off: <prep-across> or (MVp+ & {Xc+ & {Xd-}} & COp+);
+
+off:
+  <prep-across>
+  or (MVp+ & {Xc+ & {Xd-}} & COp+);
+
 past.p:
-({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-)) or K- or (MVp- & B-);
+  ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
+  or K-
+  or (MVp- & B-);
 
 around:
   <alter-preps> or
@@ -5013,10 +5025,10 @@ in.r:
   (MG- & JG+);
 
 on upon:
-  <alter-preps> or
-  ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>) or
-  K- or
-  (MVp- & B-);
+  <alter-preps>
+  or ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>)
+  or K-
+  or (MVp- & B-);
 
 over:
   ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) or
