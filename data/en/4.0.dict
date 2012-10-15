@@ -2220,9 +2220,14 @@ be.v:
   or (<vc-be> & <verb-and-sp-i+>);
 
 been.v: {@E-} & PPf- & <vc-be>;
-being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
-or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or
-<verb-ge-d>;
+being.v: 
+  ((({@EBm+} & 
+      (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+ or TO+ or THb+)
+         & {@MV+})
+       or Pa+))
+     or AF- or Pv+)
+   & <verb-pg,ge>)
+   or <verb-ge-d>;
 
 isn't isn’t:
   (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
@@ -6733,8 +6738,21 @@ said.w-d voted.w-d:
   (<verb-and-sp-i-> & (([<vc-vote>]) or ())) or
   ((<vc-vote>) & <verb-and-sp-i+>));
 saying.w voting.w:
-(<vc-vote> & <verb-pg,ge>);
-yes.misc-vote no.misc-vote: Vv-;
+  (<vc-vote> & <verb-pg,ge>);
+
+is.w:
+  <verb-x-s,u> & <vc-vote>;
+
+was.w-d:
+  <marker-past>
+  or (<verb-x-s,u> & <vc-vote>);
+
+been.w: {@E-} & PPf- & <vc-vote>;
+
+% E-: "The answer is surely yes"
+% A- & Ds-: "His answer was an emphatic yes"
+yes.vote no.vote maybe.vote:
+  ({E-} or (A- & Ds-)) & Vv-;
 
 double.v triple.v quadruple.v quintuple.v:
   {EN-} & 
@@ -8788,7 +8806,7 @@ ok.e okay.e OK.e fine.e sure.e whatever.e
 someday.e sometime.e thereafter.e anyhow.e anyway.e overall.e
 afterwards.e afterward.e lengthwise.e worldwide.e nationwide.e
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
-instead.e:
+instead.e maybe.e:
   ({Xc+ & {Xd-}} & CO+);
 
 % Openers to directives, commands (Ic+ connection to infinitives)
@@ -8846,7 +8864,6 @@ seldom rarely.e: {EE-} & (E+ or EB-);
 % EC+: "I ate just some of the cookies"
 just.e: E+ or EC+ or [EB-] or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+ or MVa-;
 
-maybe: CO+;
 meantime.e secondly thirdly
 in_brief in_short in_sum in_essence:
 ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+);
