@@ -2172,6 +2172,7 @@ hadn't.v-d hadn’t.v-d: <marker-past> or
 %  ({N+} & (AF- or Pv+ or I*v+)) or
 %  (({N+} or {Pp+}) & Pg*b+);
 
+% no-obj is costly but allows "if it weren't for Sally"
 <vc-be-no-obj>:
   ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
       (Osi+ & R+ & Bs+) or
@@ -2235,11 +2236,12 @@ was.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
-  <marker-past> or
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>) or
-  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>) or
-  (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>) or
-  [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+  <marker-past>
+  or (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>)
+  or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
+  or (<verb-and-sp-> & <vc-be>)
+  or (<vc-be> & <verb-and-sp+>)
+  or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 % XXX the verb-and construction is probably too broad.
 am.v:
@@ -2259,15 +2261,23 @@ being.v: ((({@EBm+} & (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+
 or TO+ or THb+) & {@MV+}) or Pa+)) or AF- or Pv+) & <verb-pg,ge>) or
 <verb-ge-d>;
 
-isn't isn’t: (<verb-x-s> or
-((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
-wasn't.v-d wasn’t.v-d: <marker-past> or ((({@E-} & (Ss- or SX- or SFs- or (RS- &
-Bs-))) or ((Rw- or ({Ic-} & Q-) or [()]) &
-(SI*+ or SXI+ or SFIs+))) & <vc-be>);
-aren't aren’t: (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
-((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
-weren't.v-d weren’t.v-d: <marker-past> or ((({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
-((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>);
+isn't isn’t:
+  (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
+
+wasn't.v-d wasn’t.v-d:
+  <marker-past>
+  or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-)))
+     or ((Rw- or ({Ic-} & Q-) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>);
+
+aren't aren’t:
+  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
+  or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
+
+% [[Ss-]]: "If it weren't for Joe, ..."
+weren't.v-d weren’t.v-d:
+  <marker-past>
+  or (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be>)
+  or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
 will.v can.v may.v must.v could.v might.v shall.v:
