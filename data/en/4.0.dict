@@ -8954,9 +8954,13 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   or [[SJl- & SJr+ & SJl+]]
   or (SJn- & SJr+ & SJn+);
 
-
-"…" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+})
+% :.j
+"….j" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+})
 or Xe-));
+
+% ellipsis ... trailing off 
+"..." "….ij": 
+  CO- & Wd-;
 
 % The percent sign following a number
 % Also -- see above, for handling of 12ft. 12in. not just 12%

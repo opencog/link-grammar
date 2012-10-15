@@ -2062,6 +2062,9 @@ The man that you saw laugh jumped off a cliff.
 The capital of France: Paris.
 Einstein's birthplace: Germany.
 The answer to your question: yes.
+The answer to your question is yes.
+my answer is yes.
+my answer: maybe.
 
 %
 % Institutionalized phrases:
@@ -2957,7 +2960,6 @@ if that's true, then I don't know.
 Show me my notes, if they are readable.
 If they are readable, show me my notes.
 
-If it weren't for Joe, ...
 if it weren't for Joe, it would work.
 if it were not for Joe, it would work.
 If it weren't for the Democratic Party, health care reform would have passed.
@@ -2966,6 +2968,10 @@ Just two days after President Obama extolled Chuck Grassley's bipartisan spirit 
 
 % Someone... who...
 Someone is outside who wants to see you.
+
+% ellipsis
+If it weren't for Joe, ...
+If it weren't for Joe, …
 
 % Compound queries
 % Typically, the two subphrases parse correctly, but, 

@@ -4,13 +4,13 @@
 %
 % Some of the funky UTF-8 parenthesis are used in Asian texts.
 % In order to allow single straight quote ' and double straight quote ''
-% to be sttripped off rom both the left and the right, they are
+% to be stripped off from both the left and the right, they are
 % distinguished by the suffix .x and .y (as as Mr.x Mrs.x or Jr.y Sr.y)
 % 
 % 。is an end-of-sentence marker used in Japanese texts.
 
 ")" "}" "]" ">" » 〉 〕 》 】 』 "’’" "’" ''.y '.y
-"%" "," "." 。 ":" ";" "?" "!" "…" "”" "–" "‐"
+"%" "," "." 。 ":" ";" "?" "!" "…" "..." "”" "–" "‐"
 's 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m
 ¢ ™: RPUNC+; 
 
