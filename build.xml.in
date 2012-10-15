@@ -7,7 +7,7 @@
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
-            <fileset dir="link-grammar/java" excludes="**/*.java"/>
+            <fileset dir="@srcdir@/link-grammar/java" excludes="**/*.java"/>
         </copy>
     </target>
     <target name="clean">
@@ -19,7 +19,7 @@
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
-            <src path="link-grammar/java"/>
+            <src path="@srcdir@/link-grammar/java"/>
         </javac>
         <jar basedir="bin" destfile="linkgrammar-@VERSION@.jar">
             <manifest>
