@@ -4012,18 +4012,19 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
     (K+ & ({[[@MV+]]} & O*n+)) or
     ([[@MV+ & O*n+]])) & {@MV+};
 
-give.v send.v buy.v bring.v lend.v issue.v hand.v pour.v
-telegraph.v wire.v: VERB_PLI(<vc-give>);
+give.v send.v bring.v lend.v issue.v hand.v pour.v:
+  VERB_PLI(<vc-give>);
 
-gives.v sends.v buys.v brings.v lends.v
-issues.v hands.v pours.v telegraphs.v wires.v: VERB_S_T(<vc-give>);
+gives.v sends.v brings.v lends.v
+issues.v hands.v pours.v:
+  VERB_S_T(<vc-give>);
 
-sent.v-d bought.v-d brought.v-d lent.v-d handed.v-d:
+sent.v-d brought.v-d lent.v-d handed.v-d:
   VERB_SPPP_T(<vc-give>) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
-issued.v-d poured.v-d telegraphed.v-d wired.v-d:
+issued.v-d poured.v-d:
   VERB_SPPP_T(<vc-give>) or
   ({@E-} & A+) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
@@ -4036,13 +4037,17 @@ given.v:
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
-giving.g sending.g buying.g bringing.g
-lending.g issuing.g handing.g pouring.g telegraphing.g wiring.g:
-(<vc-give> & <verb-ge>) or <verb-ge-d>;
-giving.v sending.v buying.v bringing.v lending.v issuing.v
-handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
+giving.g sending.g bringing.g
+lending.g issuing.g handing.g pouring.g:
+  (<vc-give> & <verb-ge>) or <verb-ge-d>;
 
-% ditransitive
+giving.v sending.v bringing.v
+lending.v issuing.v handing.v pouring.v:
+  <verb-pg> & <vc-give>;
+
+% ditransitive, but everything is optional. For example:
+% If you bought after the crash, you were smart
+% If you telegraphed after Sunday, I'd already left.
 <vc-pass>:
   {(B- & {O+ or K+}) or
     <vc-opt-ditrans> or
@@ -4050,17 +4055,21 @@ handing.v pouring.v telegraphing.v wiring.v: <verb-pg> & <vc-give>;
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+};
 
-pass.v pay.v sell.v deal.v: VERB_PLI(<vc-pass>);
+pass.v buy.v pay.v sell.v deal.v telegraph.v wire.v: VERB_PLI(<vc-pass>);
 
-passes.v pays.v sells.v deals.v: VERB_S_T(<vc-pass>);
-passed.v-d paid.v-d payed.v-d sold.v-d dealt.v-d:
+passes.v buys.v pays.v sells.v deals.v telegraphs.v wires.v: VERB_S_T(<vc-pass>);
+
+passed.v-d bought.v-d paid.v-d payed.v-d sold.v-d dealt.v-d
+telegraphed.v-d wired.v-d:
   VERB_SPPP_T(<vc-pass>) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
 
-passing.g paying.g selling.g dealing.g:
+passing.g buying.g paying.g selling.g dealing.g telegraphing.g wiring.g:
   (<vc-pass> & <verb-ge>) or <verb-ge-d>;
-passing.v paying.v selling.v dealing.v: <verb-pg> & <vc-pass>;
+
+passing.v buying.v paying.v selling.v dealing.v telegraphing.v wiring.v:
+  <verb-pg> & <vc-pass>;
 
 % ditransitive
 <vc-call>:
