@@ -4,6 +4,7 @@ Version 4.7.9 (??? 2013)
  * Fix: Warning in java JSON interface.
  * Fix: weren't constrctions: "If it weren't for Sally, ..."
  * Fix: Better support for ellipsis ...
+ * Fix: "He is behaving very strangely"
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.

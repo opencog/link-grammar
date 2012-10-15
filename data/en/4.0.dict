@@ -7779,6 +7779,7 @@ why:
   [[{@CO-} & Wc- & Wi+]];
 
 why_not: [[{@CO-} & Wc- & Wi+]];
+why_the_hell_not: {@CO-} & Wc- & {Xc+} & Wi+;
 
 % QI- & (): "I do not know where"
 % R+ & Bsw+: "Where does it go to?"
@@ -8557,9 +8558,24 @@ very.e way.e:
 
 real.e: [[EA+ or EE+]];
 quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
-amazingly strangely incredibly:
-({EE-} & EA+) or EE+ or ({Xd- & Xc+} & Em+) or ({Xc+ & {Xd-}} & CO+) or EBm- or
-(Xd- & Xc+ & MVa-);
+
+amazingly incredibly:
+  ({EE-} & EA+)
+  or EE+
+  or EBm-
+  or ({Xd- & Xc+} & Em+)
+  or ({Xc+ & {Xd-}} & CO+)
+  or (Xd- & Xc+ & MVa-);
+
+% MVa-: "He is behaving very strangely"
+strangely:
+  ({EE-} & EA+)
+  or EE+
+  or EBm-
+  or ({Xd- & Xc+} & Em+)
+  or ({Xc+ & {Xd-}} & CO+)
+  or ({Xd- & Xc+} & {EE-} & MVa-);
+
 rather: EA+ or EE+ or Vw- or ({Xc+ & {Xd-}} & CO+);
 particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+)) or
 ({Xc+ & {Xd-}} & CO+);
@@ -8780,7 +8796,7 @@ instead.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij:
+hah.ij hey.ij well.ij wtf.ij:
   <directive-opener>
   or Wi-;
 
