@@ -196,8 +196,8 @@ public class JSONReader
                x instanceof Boolean || 
                x instanceof String || 
                x instanceof Number ||
-               x instanceof Map ||
-               x instanceof List;
+               x instanceof Map<?,?> ||
+               x instanceof List<?>;
     }
     
     private Object object()
