@@ -456,6 +456,9 @@ if test "x$enable_java_bindings" = "xyes"; then
       -I/usr/lib/jvm/default-java/include \
       -I/usr/lib/jvm/default-java/include/freebsd \
       -I/usr/lib/jvm/default-java/include/linux \
+      -I/usr/lib/jvm/java-gcj/include \
+      -I/usr/lib/jvm/java-gcj/include/freebsd \
+      -I/usr/lib/jvm/java-gcj/include/linux \
       -I/usr/local/jdk1.6.0/include/\
       -I/usr/local/jdk1.6.0/include/freebsd \
       -I/usr/local/jdk1.6.0/include/linux \

@@ -1,5 +1,6 @@
 Version 4.7.9 (??? 2013)
  * Fix: poor comma chocies: "The man, that you saw..." (issue #36)
+ * Fix: more java jni.h search paths.
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.
