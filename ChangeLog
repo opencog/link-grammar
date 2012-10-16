@@ -2,9 +2,9 @@ Version 4.7.9 (??? 2013)
  * Fix: Poor comma chocies: "The man, that you saw..." (issue #36)
  * Fix: Add more java jni.h search paths.
  * Fix: Warning in java JSON interface.
- * Fix: weren't constrctions: "If it weren't for Sally, ..."
+ * Fix: weren't constructions: "If it weren't for Sally, ..."
  * Fix: Better support for ellipsis ...
- * Fix: "He is behaving very strangely"
+ * Fix: strangely: "He is behaving very strangely"
  * Fix: assorted usages of yes, no, maybe
  * Fix: "being" in subordinate clauses: "The blade being dull, he ..."
 
