@@ -4907,7 +4907,8 @@ said.w-d voted.w-d: VERB_SPPP_I(<vc-vote>);
 saying.w voting.w:
   (<vc-vote> & <verb-pg,ge>);
 
-is.w:
+% :.w  "My answer: yes"
+is.w ":.w":
   <verb-x-s,u> & <vc-vote>;
 
 was.w-d:
@@ -4916,10 +4917,15 @@ was.w-d:
 
 been.w: {@E-} & PPf- & <vc-vote>;
 
+be.w:
+  {@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-vote>;
+
 % E-: "The answer is surely yes"
 % A- & Ds-: "His answer was an emphatic yes"
+% Ds- & Jv-: "He replied with a yes"
 yes.vote no.vote maybe.vote:
-  ({E-} or (A- & Ds-)) & Vv-;
+  (({E-} or (A- & Ds-)) & Vv-)
+  or ({A-} & Ds- & Jv-);
 
 double.v triple.v quadruple.v quintuple.v:
   {EN-} & VERB_PLI(<vc-fill>);
@@ -6797,7 +6803,7 @@ in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
 %ADVERBS WHOSE ONLY (MAIN) USE IS POST_VERBAL
 barefoot.e willy-nilly quarterly.e madly.e outright.e
-staccato.e legato.e all_the_way all_the_time
+staccato.e legato.e all_the_way all_the_time all_along
 anymore.e aloud.e upwards.e downwards.e upward.e downward.e
 inward.e outward.e inwards.e outwards.e anytime.e live.e
 wholesale.e anew.e forever.e awhile.e aback.e afoul.e afresh.e aloft.e
@@ -6970,7 +6976,7 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij:
+hah.ij hey.ij well.ij wtf.ij hell_yes:
   <directive-opener>
   or Wi-;
 

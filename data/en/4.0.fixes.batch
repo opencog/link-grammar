@@ -70,6 +70,9 @@ He tried to saw up the wood.
 We were sawing wood when it happened.
 We were sawing up the wood when it happened.
 
+% grab with preposition
+He grabbed at it
+
 % Assorted adverbial modifiers
 It has been unbelievably poorly managed.
 It has been notoriously managed.
@@ -2062,6 +2065,11 @@ The man, that you saw laugh jumped off a cliff.
 The man that you saw laugh, jumped off a cliff.
 The man that you saw laugh jumped off a cliff.
 
+% being
+The tilt being wrong, he grabbed for it
+The reply being wrong, he panicked.
+The cutting was difficult, the blade being dull.
+
 % Sometimes colons are used as synonyms for "is":
 The capital of France: Paris.
 Einstein's birthplace: Germany.
@@ -2084,6 +2092,7 @@ The answer being yes
 The answer has been yes
 The answer has been yes all along
 The answer has been yes all the time
+The answer had been yes the whole time
 The answer must surely be yes.
 
 He replied with a yes
@@ -2097,12 +2106,8 @@ Maybe I want to know!
 Maybe, I'm not sure.
 I said yes, I'm going!
 
-%empha, surely ...
-% words.adv.1
-
 % quoted phrases:
 He said "blah blah blah".
-
 
 %
 % Institutionalized phrases:
