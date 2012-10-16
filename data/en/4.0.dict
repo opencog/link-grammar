@@ -2221,7 +2221,8 @@ be.v:
 
 been.v: {@E-} & PPf- & <vc-be>;
 
-% Ss- & Pa+ & Xc+ & Ce+: "The knife being dull, he ..."
+% S- & Pa+ & Xc+ & Ce+: "The knife being dull, he ..."
+% (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
 being.v: 
   ((({@EBm+} & 
       (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+ or TO+ or THb+)
@@ -2230,7 +2231,8 @@ being.v:
      or AF- or Pv+)
    & <verb-pg,ge>)
    or <verb-ge-d>
-   or (Ss- & Pa+ & Xc+ & Ce+);
+   or (S- & Pa+ & Xc+ & Ce+)
+   or (S- & Xd- & MVg- & Pa+);
 
 isn't isn’t:
   (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
@@ -6756,8 +6758,11 @@ been.w: {@E-} & PPf- & <vc-vote>;
 be.w:
   {@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-vote>;
 
+% S- & Vv+ & Xc+ & Ce+:  "The answer being yes, ..."
+% S- & Xd- & MVg- & Vv+: "..., the answer being yes"
 being.w:
-   Ss- & Vv+ & Xc+ & Ce+;
+   (S- & Vv+ & Xc+ & Ce+)
+   or (S- & Xd- & MVg- & Vv+);
 
 % E-: "The answer is surely yes"
 % A- & Ds-: "His answer was an emphatic yes"
