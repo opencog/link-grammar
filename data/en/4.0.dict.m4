@@ -2257,6 +2257,8 @@ be.v:
   or (<vc-be> & <verb-and-sp-i+>);
 
 been.v: {@E-} & PPf- & <vc-be>;
+
+% Ss- & Pa+ & Xc+ & Ce+: "The knife being dull, he ..."
 being.v: 
   ((({@EBm+} & 
       (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+ or TO+ or THb+)
@@ -2264,7 +2266,8 @@ being.v:
        or Pa+))
      or AF- or Pv+)
    & <verb-pg,ge>)
-   or <verb-ge-d>;
+   or <verb-ge-d>
+   or (Ss- & Pa+ & Xc+ & Ce+);
 
 isn't isn’t:
   (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
@@ -4919,6 +4922,9 @@ been.w: {@E-} & PPf- & <vc-vote>;
 
 be.w:
   {@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-vote>;
+
+being.w:
+   Ss- & Vv+ & Xc+ & Ce+;
 
 % E-: "The answer is surely yes"
 % A- & Ds-: "His answer was an emphatic yes"

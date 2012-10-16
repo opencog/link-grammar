@@ -671,7 +671,9 @@ TODO -- Working Notes:
     many clause openers, such as "the blah being blah, ..." e.g
       * Cutting was difficult, the knife being dull.
     In the above, "being" can only be used in this way, in such compound
-    sentences.
+    sentences.  The head-word is already correctly linked with C for
+    subordinate clauses.  "I told him I was angry", with "told" being the
+    head-word.
 
   Zero/phantom words:  Expressions such as "Looks good" have an implicit
     "it" (also called a zero-it or phantom-it) in them; that is, the
