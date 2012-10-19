@@ -135,7 +135,10 @@ BUILDING on MacOS:
    make sure to compile link-grammar to produce a 64-bit binary, as
    this is not automatic on OSX. Do this during configure:
 
-      ./configure CFLAGS="-arch x86_64"
+      ./configure CFLAGS="-arch x86_64" JDK_HOME=<wherever it is>
+
+   The JDK_HOME environment variable must be pointing to the JDK that
+   you wish to use.  Alternately, you may set JAVA_HOME.
 
 
 BUILDING on Windows

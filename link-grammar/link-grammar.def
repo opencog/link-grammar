@@ -153,7 +153,6 @@ linkage_constituent_node_get_child
 linkage_constituent_node_get_next
 linkage_constituent_node_get_start
 linkage_constituent_node_get_end
-issue_special_command
 lperrno
 lperrmsg
 lperror_clear

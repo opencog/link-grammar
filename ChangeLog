@@ -7,6 +7,7 @@ Version 4.7.9 (??? 2013)
  * Fix: strangely: "He is behaving very strangely"
  * Fix: assorted usages of yes, no, maybe
  * Fix: "being" in subordinate clauses: "The blade being dull, he ..."
+ * Fix: Build failure for Mac OSX.
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.

@@ -18,4 +18,5 @@ void free_effective_dist(Sentence sent);
 void build_effective_dist(Sentence sent, int has_conjunction);
 #endif /* USE_FAT_LINKAGES */
 void prepare_to_parse(Sentence sent, Parse_Options opts);
+void build_deletable(Sentence sent, int has_conjunction);
 

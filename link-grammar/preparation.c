@@ -55,7 +55,7 @@ static int conj_in_range(Sentence sent, int lw, int rw)
  * words "either", "neither", "both", "not" and "not only" are all
  * deletable.
  */
-static void build_deletable(Sentence sent, int has_conjunction)
+void build_deletable(Sentence sent, int has_conjunction)
 {
 	int i,j,k;
 
