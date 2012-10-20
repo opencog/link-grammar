@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#include "utilities.h"
+#include "utilities.h" // From base link-grammar
 
 #include "atom.h"
 #include "connect.h"
@@ -50,8 +50,8 @@ Set* Connect::try_connect(WordCset* left_cset)
 	Atom* left_a = left_cset->get_cset();
 
 	Atom *right_a = _rcons;
-cout<<"state cset "<<left<<endl;
-cout<<"word cset "<<right<<endl;
+cout<<"enter try_connect, state cset "<< left_a <<endl;
+cout<<"enter try_connect, word cset "<< right_a <<endl;
 
 	// If the word connector set is a single solitary node, then
 	// its not a set, its a single connecter.  Try to hook it up
@@ -164,7 +164,7 @@ cout<<"Yayyyyae connectors match!"<<endl;
  */
 Link* Connect::conn_connect_nk(WordCset* left_cset, Connector* lnode, Link* rlink)
 {
-cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
+cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 
 	// If the connector set is a disjunction, then try each of them, in turn.
 	OutList alternatives;
@@ -188,6 +188,7 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 	}
 	else
 	{
+cout <<"duuude explore the and link"<<endl;
 		// For an AND connective, all connectors must connect.  The
 		// only way that this can happen for an and-link is if zero
 		// or one connectors are required, and all other connectors in
@@ -197,6 +198,7 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
 			Link* conn = conn_connect_na(left_cset, lnode, a);
+cout<<"and link="<<i<<" con="<<conn<<endl;
 			if (is_optional(a))
 			{
 				if (conn)
@@ -210,6 +212,8 @@ cout<<"try match con l="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 				req_conn = conn;
 			}
 		}
+if (req_conn)
+cout <<"duuude got require conn"<<req_conn<<endl;
 
 		// If we found exactly one required connector, and it
 		// connects, then it is the only possible connection.

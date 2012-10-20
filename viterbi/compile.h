@@ -17,6 +17,8 @@ namespace viterbi {
 
 // Classes that convert run-time atom types into compile-time static
 // types, so that the compiler can check these for correctness.
+// These are here purely for C++ programming convenience; the true
+// structure that matters is the dynamic run-time (hyper-)graphs.
 
 #if 0
 // Atom types.  Right now an enum, but maybe should be dynamic!?
@@ -142,7 +144,9 @@ class WordCset : public Link
 		}
 };
 
-// Ordered sequence
+/// Ordered sequence
+/// Seq inherits fom Link, and is an ordered sequence of zero or more
+/// atoms.
 class Seq : public Link
 {
 	public:
@@ -154,7 +158,9 @@ class Seq : public Link
 		{}
 };
 
-// Unordered sequence
+/// Unordered sequence
+/// A Set inherits fom Link, and is an unordered set of zero or more
+/// atoms.
 class Set : public Link
 {
 	public:
