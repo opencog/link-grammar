@@ -18,9 +18,11 @@ class Connect
 {
 	public:
 		Connect(WordCset*);
-		Set* try_connect(WordCset*);
+		Set* try_connect(Seq*);
 
 	protected:
+		Set* next_connect(WordCset*);
+
 		Set* reassemble(Set*, WordCset*, WordCset*);
 		Ling* reassemble(Ling*, WordCset*, WordCset*);
 
@@ -34,6 +36,7 @@ class Connect
 		static const OutList& flatten(OutList&);
 
 	private:
+		Seq* _left_sequence;
 		WordCset* _right_cset;
 		Atom* _rcons;
 };

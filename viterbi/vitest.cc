@@ -413,6 +413,7 @@ bool test_short_sent(const char *id, const char *dict_str)
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
 
 	// print_dictionary_data(dict);
+cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 
 	Parser parser(dict);
 	// Expecting more words to follow, so a non-trivial state.

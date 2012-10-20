@@ -207,17 +207,20 @@ Set* Parser::get_output_set()
 void Parser::stream_word_conset(WordCset* wrd_cset)
 {
 	// wrd_cset should be pointing at:
-	// WORD_CSET :
+	// WORD_CSET : 
 	//   WORD : blah.v
 	//   AND :
 	//      CONNECTOR : Wd-  etc...
 
+   DBG(cout << "--------- enter stream_word_conset ----------" << endl);
    DBG(cout << "Initial state:\n" << get_state() << endl);
 	Set* state_set = get_state();
 	Set* new_state_set = state_set;
 	Connect cnct(wrd_cset);
 
-	// The state set consists of a bunch of sequences
+	// The state set consists of a bunch of sequences; each sequence
+	// being a single parse state.  Each parse state is a sequence of
+	// unsatisfied right-pointing links.
 	for (int i = 0; i < state_set->get_arity(); i++)
 	{
 		Seq* seq = dynamic_cast<Seq*>(state_set->get_outgoing_atom(i));
@@ -226,14 +229,13 @@ void Parser::stream_word_conset(WordCset* wrd_cset)
 		OutList state_vect = seq->get_outgoing_set();
 		bool state_vect_modified = false;
 
-		// State sequences must be sequentially satisfied: This is the
+		// Each state sequence consists of a sequence of right-pointing
+		// links. These must be sequentially satisfied: This is the
 		// viterbi equivalent of "planar graph" or "no-crossing-links"
 		// in the classical lnk-grammar parser.  That is, a new word
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
-
-		WordCset* swc = dynamic_cast<WordCset*>(seq->get_outgoing_atom(0));
-		Set* alternatives = cnct.try_connect(swc);
+		Set* alternatives = cnct.try_connect(seq);
 
 		if (alternatives)
 		{

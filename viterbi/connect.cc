@@ -24,27 +24,51 @@ namespace link_grammar {
 namespace viterbi {
 
 /**
- * constructor: argument is a right-sided connector that this class
- * will try connecting to.
+ * constructor: argument is a connector set (typically, for a single
+ * word) that will be used to try connections. This connector set is
+ * assumed to be to the right of the argument to the try_connect()
+ * method.
+ *
+ * To be precise, the right_wconset is presumed to be of the form:
+ *	WORD_CSET :
+ *    WORD : blah-blah.v
+ *	   AND :
+ *       CONNECTOR : Wd-
+ *       CONNECTOR : Abc+ etc...
  */
 Connect::Connect(WordCset* right_wconset)
 	: _right_cset(right_wconset)
 {
-	// right_cset should be pointing at:
-	// WORD_CSET :
-	//   WORD : blah.v
-	//   AND :
-	//      CONNECTOR : Wd-  etc...
-
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
 	_rcons = _right_cset->get_cset();
 }
 
 /**
+ * Try connecting this connector set sequence, from the left, to what
+ * was passed in ctor.  It is preseumed that left_seq is a single parse
+ * state: it will contain no left-pointing connectors whatsoever.  This
+ * routine will attempt to attach the right-pointing connectors to the 
+ * left-pointers passed in the ctor.  A connection is considered to be
+ * successful if *all* left-pointers in the ctor were attached (except
+ * possibly for optionals).  The returned value is a set of all possible
+ * alternative ways of making the connections.
+ *
+ * Connectors must be satisfied sequentially: that is, the first connector
+ * set in the sequence must be fully satisfied before a connection is made
+ * to the second one in the sequence, etc.
+ */
+Set* Connect::try_connect(Seq* left_seq)
+{
+	_left_sequence = left_seq;
+
+	WordCset* swc = dynamic_cast<WordCset*>(left_seq->get_outgoing_atom(0));
+	return next_connect(swc);
+}
+/**
  * Try connecting this connector set, from the left, to what was passed
  * in ctor.
  */
-Set* Connect::try_connect(WordCset* left_cset)
+Set* Connect::next_connect(WordCset* left_cset)
 {
 	assert(left_cset, "State word-connectorset is null");
 	Atom* left_a = left_cset->get_cset();
