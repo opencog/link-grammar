@@ -99,7 +99,7 @@ void State::stream_word_conset(WordCset* wrd_cset)
 
 		if (alternatives)
 		{
-cout<<"Got linkage"<< alternatives <<endl;
+cout<<"Got linkage "<< alternatives <<endl;
 			OutList alt_links;
 			OutList danglers;
 			for (int j = 0; j < alternatives->get_arity(); j++)

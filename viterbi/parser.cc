@@ -177,7 +177,8 @@ assert(1 == djset->get_arity(), "Multiple dict entries not handled");
 		Set* new_state = stset.get_state();
 
 // XXX this can't possibly be right ...
-_state = new_state;
+set_state(new_state);
+_output = stset.get_output_set();
 	}
 }
 
