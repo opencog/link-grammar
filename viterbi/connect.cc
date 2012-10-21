@@ -59,22 +59,12 @@ Connect::Connect(WordCset* right_wconset)
  */
 Set* Connect::try_connect(StatePair* left_sp)
 {
+// XXX passing only the state is .. wrong!?!?
 	Seq* left_seq = left_sp->get_state();
-// XXX unfinished, temp hack
-// in particular, the empty state is bad ... 
 	Set* bogo = try_connect(left_seq);
 cout<<"duuude got bogo="<<bogo<<endl;
 	if (bogo)
-	{
-		OutList pair_list;
-		for (int i=0; i < bogo->get_arity(); i++)
-		{
-			Ling* output = dynamic_cast<Ling*>(bogo->get_outgoing_atom(i));
-			StatePair* result = new StatePair(new Seq(), new Seq(output));
-			pair_list.push_back(result);
-		}
-		return new Set(pair_list);
-	}
+		return bogo;
 
 	// If we are here, then nothing in the right cset was
 	// able to attach to the left.  If the right cset has
@@ -105,12 +95,27 @@ assert(0, "Parse fail, implement me");
 	return alts;
 }
 
+// this is being given only a single state
+// it is returning only output which is wrong ... 
 Set* Connect::try_connect(Seq* left_seq)
 {
 	_left_sequence = left_seq;
 
+// XXX this is wrong, but works for just now .. 
 	WordCset* swc = dynamic_cast<WordCset*>(left_seq->get_outgoing_atom(0));
-	return next_connect(swc);
+	Set* ling_set = next_connect(swc);
+	if (NULL == ling_set)
+		return NULL;
+
+// This is wrong, since the state is empty!
+	OutList pair_list;
+	for (int i=0; i < ling_set->get_arity(); i++)
+	{
+		Ling* output = dynamic_cast<Ling*>(ling_set->get_outgoing_atom(i));
+		StatePair* result = new StatePair(new Seq(), new Seq(output));
+		pair_list.push_back(result);
+	}
+	return new Set(pair_list);
 }
 /**
  * Try connecting this connector set, from the left, to what was passed
