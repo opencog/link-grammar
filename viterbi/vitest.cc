@@ -402,7 +402,7 @@ int ntest_first()
 {
 	size_t num_failures = 0;
 
-	// if (!test_first_state()) num_failures++;
+	if (!test_first_state()) num_failures++;
 #if 0
 	if (!test_first_opt_lefty()) num_failures++;
 	if (!test_first_or_lefty()) num_failures++;

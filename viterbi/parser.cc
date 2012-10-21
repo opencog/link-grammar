@@ -36,6 +36,7 @@ namespace viterbi {
 Parser::Parser(Dictionary dict)
 	: _dict(dict), _alternatives(NULL)
 {
+	DBG(cout << "=============== Parser ctor ===============" << endl);
 	initialize_state();
 }
 
@@ -143,17 +144,18 @@ void Parser::initialize_state()
 
 	Set *wall_disj = word_consets(wall_word);
 
-	// Each alternative in the initial wall is the root of a state.
-cout <<"duuude wtffffffffffffffffffffffff wally arity = " << wall_disj->get_arity() << endl;
-cout<<"yahh its "<<wall_disj<<endl;
+	// We are expecting the initiall wall to be unique.
+	assert(wall_disj->get_arity() == 1, "Unexpected wall structure");
 	OutList state_vec;
-	for (int i = 0; i < wall_disj->get_arity(); i++)
-	{
-		Atom* a = wall_disj->get_outgoing_atom(i);
-		state_vec.push_back(new StatePair(new Seq(a), new Seq()));
-	}
+	Atom* word_cset = wall_disj->get_outgoing_atom(0);
 
-	_alternatives = new Set(state_vec);
+	// Initial state: no output, and the wall cset.
+	_alternatives = new Set(
+		new StatePair(
+			new Seq(word_cset),
+			new Seq()
+		)
+	);
 }
 
 // ===================================================================
