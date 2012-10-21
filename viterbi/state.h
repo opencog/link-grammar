@@ -23,8 +23,7 @@ class State
 
 		void stream_word_conset(WordCset*);
 
-		Set* get_state();
-		Set* get_output_set();
+		Set* get_alternatives();
 
 	protected:
 		void set_clean_state(Set*);
@@ -33,8 +32,7 @@ class State
 		static Atom* trim_left_pointers(Atom*);
 
 	private:
-		Set* _state;
-		Set* _output;
+		Set* _alternatives;
 };
 
 

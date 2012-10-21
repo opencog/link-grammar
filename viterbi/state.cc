@@ -28,36 +28,33 @@ namespace link_grammar {
 namespace viterbi {
 
 State::State(Set* initial_state_set)
-	:  _state(NULL), _output(NULL)
+	:  _alternatives(NULL)
 {
 	set_clean_state(initial_state_set);
 }
 
 // ===================================================================
 /** convenience wrapper */
-Set* State::get_state()
+Set* State::get_alternatives()
 {
-	return _state;
+	return _alternatives;
 }
 
 void State::set_clean_state(Set* s)
 {
 	// Clean it up, first, by removing empty state vectors.
-	const OutList& states = s->get_outgoing_set();
-	OutList new_states;
-	for (int i = 0; i < states.size(); i++)
+	const OutList& alts = s->get_outgoing_set();
+	OutList new_alts;
+	for (int i = 0; i < alts.size(); i++)
 	{
-		Link* l = dynamic_cast<Link*>(states[i]);
-		if (l->get_arity() != 0)
-			new_states.push_back(l);
+		StatePair* s = dynamic_cast<StatePair*>(alts[i]);
+		Seq* state = s->get_state();
+		Seq* output = s->get_output();
+		if (state->get_arity() != 0)
+			new_alts.push_back(s);
 	}
 	
-	_state = new Set(new_states);
-}
-
-Set* State::get_output_set()
-{
-	return _output;
+	_alternatives = new Set(new_alts);
 }
 
 // ===================================================================
@@ -73,20 +70,21 @@ void State::stream_word_conset(WordCset* wrd_cset)
 	//      CONNECTOR : Wd-  etc...
 
    DBG(cout << "--------- enter stream_word_conset ----------" << endl);
-   DBG(cout << "Initial state:\n" << get_state() << endl);
-	Set* state_set = get_state();
-	Set* new_state_set = state_set;
+   DBG(cout << "Initial alternative_set:\n" << get_alternatives() << endl);
+	Set* alts = get_alternatives();
+	Set* new_alts = alts;
 	Connect cnct(wrd_cset);
 
 	// The state set consists of a bunch of sequences; each sequence
 	// being a single parse state.  Each parse state is a sequence of
 	// unsatisfied right-pointing links.
-	for (int i = 0; i < state_set->get_arity(); i++)
+	for (int i = 0; i < alts->get_arity(); i++)
 	{
-		Seq* seq = dynamic_cast<Seq*>(state_set->get_outgoing_atom(i));
-		assert(seq, "Missing state");
+		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
+		assert(sp, "Missing state");
 
-		OutList state_vect = seq->get_outgoing_set();
+		Seq* state_seq = sp->get_state();
+		OutList state_vect = state_seq->get_outgoing_set();
 		bool state_vect_modified = false;
 
 		// Each state sequence consists of a sequence of right-pointing
@@ -95,14 +93,15 @@ void State::stream_word_conset(WordCset* wrd_cset)
 		// in the classical lnk-grammar parser.  That is, a new word
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
-		Set* alternatives = cnct.try_connect(seq);
+		Set* new_alternatives = cnct.try_connect(state_seq);
 
-		if (alternatives)
+		if (new_alternatives)
 		{
-cout<<"Got linkage "<< alternatives <<endl;
+cout<<"Got linkage "<< new_alternatives <<endl;
+#if 0
 			OutList alt_links;
 			OutList danglers;
-			for (int j = 0; j < alternatives->get_arity(); j++)
+			for (int j = 0; j <new_alternatives->get_arity(); j++)
 			{
 				Atom* a = alternatives->get_outgoing_atom(j);
 				Ling* lg_link = dynamic_cast<Ling*>(a);
@@ -121,9 +120,11 @@ cout<<"Got linkage "<< alternatives <<endl;
 			}
 			// If there are any danglers...
 assert(0 == danglers.size(), "Implement dangler state");
+#endif
 		}
 		else
 		{
+#if 0
 			// If we are here, then nothing in the new word was
 			// able to attach to the left.  If the new word has
 			// no left-pointing links, that's just fine; add it
@@ -136,20 +137,23 @@ assert(0, "Parse fail, implement me");
 			}
 			state_vect.insert(state_vect.begin(), new_wcset);
 			state_vect_modified = true;
+#endif
 		}
 
 		// If the state vector was modified, then record it.
 		if (state_vect_modified)
 		{
+#if 0
 			Seq* new_vect = new Seq(state_vect);
 
 			OutList nssv = new_state_set->get_outgoing_set();
 			nssv[i] = new_vect;
 			new_state_set = new Set(nssv);
+#endif
 		}
 	}
 
-	set_clean_state(new_state_set);
+	// set_clean_state(new_state_set);
 }
 
 // ===================================================================

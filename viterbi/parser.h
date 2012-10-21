@@ -31,19 +31,14 @@ class Parser
 
 		Set* word_consets(const std::string& word);
 
-		Set* get_state();
-		Set* get_output_set();
-
+		Set* get_alternatives();
 	protected:
 		void initialize_state();
 		Atom* lg_exp_to_atom(Exp*);
 
-		void set_state(Set*);
-
 		Dictionary _dict;
 	private:
-		Set* _state;
-		Set* _output;
+		Set* _alternatives;
 };
 
 

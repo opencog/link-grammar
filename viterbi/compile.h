@@ -73,6 +73,13 @@ class Word : public Node
 };
 
 
+/// Create a ling-grammar link. This will be of the form:
+///     LING:
+///        Ling_TYPE "MVa"
+///        Atom ...
+///        Atom ...
+/// where the Atoms are typically either connectors, or WORD_DISJ
+///
 class Ling : public Link
 {
 	public:
@@ -83,20 +90,20 @@ class Ling : public Link
 			assert(ol[0]->get_type() == LING_TYPE, "LG link has bad first node");
 		}
 		Ling(const std::string& str, Atom* a, Atom *b)
-			: Link(LING, ({OutList ol;
-				ol.push_back(new LingType(str));
-				ol.push_back(a);
-				ol.push_back(b);
-				ol; }))
-		{}
+			: Link(LING)
+		{
+			_oset.push_back(new LingType(str));
+			_oset.push_back(a);
+			_oset.push_back(b);
+		}
 
 		Ling(LingType* t, Atom* a, Atom *b)
-			: Link(LING, ({OutList ol;
-				ol.push_back(t);
-				ol.push_back(a);
-				ol.push_back(b);
-				ol; }))
-		{}
+			: Link(LING)
+		{
+			_oset.push_back(t);
+			_oset.push_back(a);
+			_oset.push_back(b);
+		}
 
 		LingType* get_ling_type()
 		{
@@ -150,6 +157,9 @@ class WordCset : public Link
 class Seq : public Link
 {
 	public:
+		Seq()
+			: Link(SEQ)
+		{}
 		Seq(const OutList& ol)
 			: Link(SEQ, ol)
 		{}
@@ -170,6 +180,29 @@ class Set : public Link
 		Set(Atom* singleton)
 			: Link(SET, OutList(1, singleton))
 		{}
+};
+
+/// A pair of two sequences.  The first sequence is the state, the
+/// second sequence is the output.  That is, the link created is of the
+/// form
+///
+///    STATE_PAIR :
+///       SEQ
+///           ...
+///       SEQ
+///           ...
+///
+class StatePair : public Link
+{
+	public:
+		StatePair(Seq* stat, Seq* outp)
+			: Link(STATE_PAIR)
+		{
+			_oset.push_back(stat);
+			_oset.push_back(outp);
+		}
+		Seq* get_state() { return dynamic_cast<Seq*>(_oset.at(0)); }
+		Seq* get_output() { return dynamic_cast<Seq*>(_oset.at(1)); }
 };
 
 

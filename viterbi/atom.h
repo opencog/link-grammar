@@ -42,7 +42,8 @@ enum AtomType
 	// OPTIONAL,   // one child only, and its optional. XXX not used ATM
 	WORD_CSET,  // word, followed by a set of connectors for that word.
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
-	LING        // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
+	LING,       // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
+	STATE_PAIR, // Current state and corresponding output.
 };
 
 #define OPTIONAL_CLAUSE "0"
@@ -96,6 +97,9 @@ class Link : public Atom
 		// The main ctor
 		Link(AtomType t, const OutList& oset)
 			: Atom(t), _oset(oset) {}
+		Link(AtomType t)
+			: Atom(t)
+		{}
 		Link(AtomType t, Atom* a)
 			: Atom(t)
 		{

@@ -34,7 +34,7 @@ namespace link_grammar {
 namespace viterbi {
 
 Parser::Parser(Dictionary dict)
-	: _dict(dict), _state(NULL), _output(NULL)
+	: _dict(dict), _alternatives(NULL)
 {
 	initialize_state();
 }
@@ -144,14 +144,16 @@ void Parser::initialize_state()
 	Set *wall_disj = word_consets(wall_word);
 
 	// Each alternative in the initial wall is the root of a state.
+cout <<"duuude wtffffffffffffffffffffffff wally arity = " << wall_disj->get_arity() << endl;
+cout<<"yahh its "<<wall_disj<<endl;
 	OutList state_vec;
 	for (int i = 0; i < wall_disj->get_arity(); i++)
 	{
 		Atom* a = wall_disj->get_outgoing_atom(i);
-		state_vec.push_back(new Seq(a));
+		state_vec.push_back(new StatePair(new Seq(a), new Seq()));
 	}
 
-	set_state(new Set(state_vec));
+	_alternatives = new Set(state_vec);
 }
 
 // ===================================================================
@@ -172,43 +174,18 @@ assert(1 == djset->get_arity(), "Multiple dict entries not handled");
 	// Try to add each dictionary entry to the parse state.
 	for (int i = 0; i < djset->get_arity(); i++)
 	{
-		State stset(_state);
+		State stset(_alternatives);
 		stset.stream_word_conset(dynamic_cast<WordCset*>(djset->get_outgoing_atom(i)));
-		Set* new_state = stset.get_state();
-
 // XXX this can't possibly be right ...
-set_state(new_state);
-_output = stset.get_output_set();
+_alternatives = stset.get_alternatives();
 	}
 }
 
 // ===================================================================
 /** convenience wrapper */
-Set* Parser::get_state()
+Set* Parser::get_alternatives()
 {
-	return _state;
-}
-
-// XXX this code is duplicated in state.cc, we need it here or there but not
-// both...
-void Parser::set_state(Set* s)
-{
-	// Clean it up, first, by removing empty state vectors.
-	const OutList& states = s->get_outgoing_set();
-	OutList new_states;
-	for (int i = 0; i < states.size(); i++)
-	{
-		Link* l = dynamic_cast<Link*>(states[i]);
-		if (l->get_arity() != 0)
-			new_states.push_back(l);
-	}
-	
-	_state = new Set(new_states);
-}
-
-Set* Parser::get_output_set()
-{
-	return _output;
+	return _alternatives;
 }
 
 // ===================================================================

@@ -20,16 +20,17 @@ const string type_name(AtomType t)
 {
 	switch(t)
 	{
-		case WORD:      return "WORD";
-		case LING_TYPE: return "LING_TYPE";
-		case CONNECTOR: return "CONNECTOR";
-		case SEQ:       return "SEQ";
-		case SET:       return "SET";
-		case OR:        return "OR";
-		case AND:       return "AND";
-		case WORD_CSET: return "WORD_CSET";
-		case WORD_DISJ: return "WORD_DISJ";
-		case LING:      return "LING";
+		case WORD:       return "WORD";
+		case LING_TYPE:  return "LING_TYPE";
+		case CONNECTOR:  return "CONNECTOR";
+		case SEQ:        return "SEQ";
+		case SET:        return "SET";
+		case OR:         return "OR";
+		case AND:        return "AND";
+		case WORD_CSET:  return "WORD_CSET";
+		case WORD_DISJ:  return "WORD_DISJ";
+		case LING:       return "LING";
+		case STATE_PAIR: return "STATE_PAIR";
 	}
 
 	return "UNHANDLED_TYPE_NAME";
