@@ -408,7 +408,6 @@ int ntest_first()
 
 // ==================================================================
 
-#if 0
 bool test_short_sent(const char *id, const char *dict_str)
 {
 	total_tests++;
@@ -422,11 +421,8 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	// Expecting more words to follow, so a non-trivial state.
 	parser.streamin("this is");
 
-	Lynk* output = parser.get_output_set();
-cout<<"output is >>>" << output<<endl;
-
-	Lynk* state = parser.get_state();
-cout<<"state is >>>" << state<<endl;
+	Lynk* output = parser.get_alternatives();
+cout<<"final alts >>>" << output<<endl;
 
 return false;
 
@@ -442,7 +438,6 @@ bool test_short_this()
 		"is.v: Ss- and Wi-;"
 	);
 }
-#endif
 
 // ==================================================================
 
@@ -454,7 +449,7 @@ main(int argc, char *argv[])
 	num_failures += ntest_simple();
 	num_failures += ntest_two();
 	num_failures += ntest_first();
-	//if (!test_short_this()) num_failures++;
+	if (!test_short_this()) num_failures++;
 
 	if (num_failures)
 	{
