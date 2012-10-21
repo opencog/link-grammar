@@ -28,9 +28,6 @@ class State
 	protected:
 		void set_clean_state(Set*);
 
-		static WordCset* cset_trim_left_pointers(WordCset*);
-		static Atom* trim_left_pointers(Atom*);
-
 	private:
 		Set* _alternatives;
 };

@@ -63,14 +63,24 @@ Set* Connect::try_connect(StatePair* left_sp)
 // XXX unfinished, temp hack
 	Set* bogo = try_connect(left_seq);
 cout<<"duuude got bogo="<<bogo<<endl;
-	OutList pair_list;
-	for (int i=0; i < bogo->get_arity(); i++)
+	if (bogo)
 	{
-		Ling* output = dynamic_cast<Ling*>(bogo->get_outgoing_atom(i));
-		StatePair* result = new StatePair(new Seq(), new Seq(output));
-		pair_list.push_back(result);
+		OutList pair_list;
+		for (int i=0; i < bogo->get_arity(); i++)
+		{
+			Ling* output = dynamic_cast<Ling*>(bogo->get_outgoing_atom(i));
+			StatePair* result = new StatePair(new Seq(), new Seq(output));
+			pair_list.push_back(result);
+		}
+		return new Set(pair_list);
 	}
-	return new Set(pair_list);
+
+	// If we are here, then nothing in the right cset was
+	// able to attach to the left.  If the right cset has
+	// no left-pointing links, that's just fine; add it
+	// to the state.  If it does have left-pointing
+	// links, then its a parse failure.
+
 }
 
 Set* Connect::try_connect(Seq* left_seq)
