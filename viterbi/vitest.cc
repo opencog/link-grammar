@@ -452,26 +452,39 @@ bool test_short_this()
 
 // ==================================================================
 
-int
-main(int argc, char *argv[])
+void report(int num_failures, bool exit_on_fail)
 {
-	size_t num_failures = 0;
-
-	num_failures += ntest_simple();
-	num_failures += ntest_two();
-	num_failures += ntest_first();
-	if (!test_short_this()) num_failures++;
-
 	if (num_failures)
 	{
 		cout << "Test failures = " << num_failures
 		     << " out of " << total_tests
-		     << " total." << endl;
-		exit(1);
+		     << " total, so far." << endl;
+		if (exit_on_fail)
+			exit(1);
 	}
 
 	cout << "All " << total_tests
-		     << " tests pass." << endl;
+		     << " tests so far pass." << endl;
+}
+
+int
+main(int argc, char *argv[])
+{
+	size_t num_failures = 0;
+	bool exit_on_fail = true;
+
+	num_failures += ntest_simple();
+	report(num_failures, exit_on_fail);
+
+	num_failures += ntest_two();
+	report(num_failures, exit_on_fail);
+
+	num_failures += ntest_first();
+	report(num_failures, exit_on_fail);
+
+	if (!test_short_this()) num_failures++;
+	report(num_failures, exit_on_fail);
+
 	exit (0);
 }
 

@@ -262,38 +262,36 @@ cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink 
 	}
 	else
 	{
-cout <<"duuude explore the and link"<<endl;
+cout <<"duuude explore the and link "<<endl;
 		// For an AND connective, all connectors must connect.  This
 		// means that we have to recurse through the state-pair system,
 		// until we manage to connect all fo the required left-pointing
 		// connectors in the right connector set.
-		Link* req_conn = NULL;
+		OutList required_conn_list;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
 			Link* conn = conn_connect_na(left_cset, lnode, a);
-cout<<"and link="<<i<<" con="<<conn<<endl;
+cout<<"and link="<<i<<" got a connction="<<conn<<endl;
 // XXX start here .... 
 			if (is_optional(a))
 			{
+				// ????
 				if (conn)
 					conn_alterns.push_back(conn);
 			}
 			else
 			{
-				// check for more than one required clause.
-				// If there is more than one, then connection fails.
-				if (req_conn) return NULL;
-				req_conn = conn;
+				if (conn)
+					required_conn_list.push_back(conn);
+				else
+					return NULL;
 			}
 		}
-if (req_conn)
-cout <<"duuude got require conn"<<req_conn<<endl;
 
-		// If we found exactly one required connector, and it
-		// connects, then it is the only possible connection.
-		if (req_conn)
-			return req_conn;
+// temp hack .. 
+if(1 == required_conn_list.size()) return
+dynamic_cast<Link*>(required_conn_list[0]);
 	}
 
 	if (0 == conn_alterns.size())
