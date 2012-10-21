@@ -80,7 +80,28 @@ cout<<"duuude got bogo="<<bogo<<endl;
 	// no left-pointing links, that's just fine; add it
 	// to the state.  If it does have left-pointing
 	// links, then its a parse failure.
+	WordCset* new_rcset = cset_trim_left_pointers(_right_cset);
+	if (NULL == new_rcset)
+	{
+assert(0, "Parse fail, implement me");
+	}
 
+	// Append the connector set to the state
+	Seq* old_state = left_sp->get_state();
+	OutList state_vect = old_state->get_outgoing_set();
+	state_vect.insert(state_vect.begin(), new_rcset);
+	Seq* new_state = new Seq(state_vect);
+
+	// In this situation, there is only one alternative: the new state
+	// vector, together with the existing output.
+	Set* alts = new Set(
+		new StatePair(
+			new_state,
+			left_sp->get_output()
+		)
+	);
+
+	return alts;
 }
 
 Set* Connect::try_connect(Seq* left_seq)

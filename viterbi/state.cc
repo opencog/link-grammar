@@ -123,35 +123,6 @@ _alternatives = new_alternatives;
 assert(0 == danglers.size(), "Implement dangler state");
 #endif
 		}
-		else
-		{
-#if 0
-			// If we are here, then nothing in the new word was
-			// able to attach to the left.  If the new word has
-			// no left-pointing links, that's just fine; add it
-			// to the state.  If it does have left-pointing
-			// links, then its a parse failure.
-			WordCset* new_wcset = cset_trim_left_pointers(wrd_cset);
-			if (NULL == new_wcset)
-			{
-assert(0, "Parse fail, implement me");
-			}
-			state_vect.insert(state_vect.begin(), new_wcset);
-			state_vect_modified = true;
-#endif
-		}
-
-		// If the state vector was modified, then record it.
-		if (state_vect_modified)
-		{
-#if 0
-			Seq* new_vect = new Seq(state_vect);
-
-			OutList nssv = new_state_set->get_outgoing_set();
-			nssv[i] = new_vect;
-			new_state_set = new Set(nssv);
-#endif
-		}
 	}
 
 	// set_clean_state(new_state_set);

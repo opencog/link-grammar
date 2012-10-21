@@ -307,33 +307,27 @@ bool test_simple_state(const char *id, const char *dict_str)
 	// Expecting more words to follow, so a non-trivial state.
 	parser.streamin("this");
 
-#if 0
-	Set* output = parser.get_altoutput_set();
-	Lynk* output = parser.get_altoutput_set();
-	if (output)
-	{
-		cout << "Error: test failure on test " << id << endl;
-		cout << "Expecting no output, but found:\n"
-		     << output << endl;
-		return false;
-	}
-#endif
+	Lynk* ans_state =
+	ALINK2(SEQ,
+		ALINK2(WORD_CSET,
+			ANODE(WORD, "this"),
+			ANODE(CONNECTOR, "Ss*b+")
+		),
+		ALINK2(WORD_CSET,
+			ANODE(WORD, "LEFT-WALL"),
+			ALINK3(OR,
+				ANODE(CONNECTOR, "Wd+"),
+				ANODE(CONNECTOR, "Wi+"),
+				ANODE(CONNECTOR, "Wq+")
+			)
+		)
+	);
 
 	Lynk* ans =
 	ALINK1(SET,
-		ALINK2(SEQ,
-			ALINK2(WORD_CSET,
-				ANODE(WORD, "this"),
-				ANODE(CONNECTOR, "Ss*b+")
-			),
-			ALINK2(WORD_CSET,
-				ANODE(WORD, "LEFT-WALL"),
-				ALINK3(OR,
-					ANODE(CONNECTOR, "Wd+"),
-					ANODE(CONNECTOR, "Wi+"),
-					ANODE(CONNECTOR, "Wq+")
-				)
-			)
+		ALINK2(STATE_PAIR,
+			ans_state,
+			ALINK0(SEQ)
 		)
 	);
 
@@ -403,13 +397,11 @@ int ntest_first()
 	size_t num_failures = 0;
 
 	if (!test_first_state()) num_failures++;
-#if 0
 	if (!test_first_opt_lefty()) num_failures++;
 	if (!test_first_or_lefty()) num_failures++;
 	if (!test_first_or_multi_lefty()) num_failures++;
 	if (!test_first_opt_cpx()) num_failures++;
 	if (!test_first_infer_opt()) num_failures++;
-#endif
 
 	return num_failures;
 }
