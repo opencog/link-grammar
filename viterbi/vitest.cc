@@ -33,7 +33,9 @@ int total_tests = 0;
 // A simple hello test; several different dictionaries
 // should give exactly the same output.  The input sentence
 // is just one word, it should connect to the left-wall in
-// just one way.
+// just one way. The result should be just one alternative:
+// that alternatives has an empty state, and output with
+// just one link.
 bool test_hello(const char *id, const char *dict_str)
 {
 	total_tests++;
@@ -125,7 +127,7 @@ bool test_simple_optional()
 
 bool test_simple_onereq()
 {
-	return test_hello ("one required link (simple)",
+	return test_hello ("one required link and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: Wd- & {A+} & {B+} & {C+};"
 	);
@@ -133,9 +135,17 @@ bool test_simple_onereq()
 
 bool test_simple_zeroreq()
 {
-	return test_hello ("zero required links (simple)",
+	return test_hello ("zero required links and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: {Wd-} & {A+} & {B+} & {C+};"
+	);
+}
+
+bool test_simple_onereq_and_left()
+{
+	return test_hello ("one required link and opt lefties (simple)",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"Hello: Wd- & {A-} & {B-} & {C+};"
 	);
 }
 
@@ -150,6 +160,7 @@ int ntest_simple()
 	if (!test_simple_optional()) num_failures++;
 	if (!test_simple_onereq()) num_failures++;
 	if (!test_simple_zeroreq()) num_failures++;
+	if (!test_simple_onereq_and_left()) num_failures++;
 	return num_failures;
 }
 

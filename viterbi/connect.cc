@@ -61,6 +61,7 @@ Set* Connect::try_connect(StatePair* left_sp)
 {
 	Seq* left_seq = left_sp->get_state();
 // XXX unfinished, temp hack
+// in particular, the empty state is bad ... 
 	Set* bogo = try_connect(left_seq);
 cout<<"duuude got bogo="<<bogo<<endl;
 	if (bogo)
@@ -121,8 +122,8 @@ Set* Connect::next_connect(WordCset* left_cset)
 	Atom* left_a = left_cset->get_cset();
 
 	Atom *right_a = _rcons;
-cout<<"enter try_connect, state cset "<< left_a <<endl;
-cout<<"enter try_connect, word cset "<< right_a <<endl;
+cout<<"enter next_connect, state cset "<< left_a <<endl;
+cout<<"in next_connect, word cset "<< right_a <<endl;
 
 	// If the word connector set is a single solitary node, then
 	// its not a set, its a single connecter.  Try to hook it up
@@ -238,10 +239,12 @@ Link* Connect::conn_connect_nk(WordCset* left_cset, Connector* lnode, Link* rlin
 cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 
 	// If the connector set is a disjunction, then try each of them, in turn.
-	OutList alternatives;
+	// Whenever something matches up, we add it to the list of possible
+	// connection alternatives.
+	OutList conn_alterns;
 	if (OR == rlink->get_type())
 	{
-		// "alternatives" records the various different successful ways
+		// "conn_alterns" records the various different successful ways
 		// that lnode and rlink can be mated together.
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
@@ -254,26 +257,27 @@ cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink 
 
 			// If the shoe fits, wear it.
 			if (conn)
-				alternatives.push_back(conn);
+				conn_alterns.push_back(conn);
 		}
 	}
 	else
 	{
 cout <<"duuude explore the and link"<<endl;
-		// For an AND connective, all connectors must connect.  The
-		// only way that this can happen for an and-link is if zero
-		// or one connectors are required, and all other connectors in
-		// the and-list are optional.
+		// For an AND connective, all connectors must connect.  This
+		// means that we have to recurse through the state-pair system,
+		// until we manage to connect all fo the required left-pointing
+		// connectors in the right connector set.
 		Link* req_conn = NULL;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
 			Link* conn = conn_connect_na(left_cset, lnode, a);
 cout<<"and link="<<i<<" con="<<conn<<endl;
+// XXX start here .... 
 			if (is_optional(a))
 			{
 				if (conn)
-					alternatives.push_back(conn);
+					conn_alterns.push_back(conn);
 			}
 			else
 			{
@@ -292,9 +296,9 @@ cout <<"duuude got require conn"<<req_conn<<endl;
 			return req_conn;
 	}
 
-	if (0 == alternatives.size())
+	if (0 == conn_alterns.size())
 		return NULL;
-	return new Set(flatten(alternatives));
+	return new Set(flatten(conn_alterns));
 }
 
 // =============================================================
