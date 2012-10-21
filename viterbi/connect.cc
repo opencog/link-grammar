@@ -57,6 +57,22 @@ Connect::Connect(WordCset* right_wconset)
  * set in the sequence must be fully satisfied before a connection is made
  * to the second one in the sequence, etc.
  */
+Set* Connect::try_connect(StatePair* left_sp)
+{
+	Seq* left_seq = left_sp->get_state();
+// XXX unfinished, temp hack
+	Set* bogo = try_connect(left_seq);
+cout<<"duuude got bogo="<<bogo<<endl;
+	OutList pair_list;
+	for (int i=0; i < bogo->get_arity(); i++)
+	{
+		Ling* output = dynamic_cast<Ling*>(bogo->get_outgoing_atom(i));
+		StatePair* result = new StatePair(new Seq(), new Seq(output));
+		pair_list.push_back(result);
+	}
+	return new Set(pair_list);
+}
+
 Set* Connect::try_connect(Seq* left_seq)
 {
 	_left_sequence = left_seq;

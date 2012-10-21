@@ -93,11 +93,12 @@ void State::stream_word_conset(WordCset* wrd_cset)
 		// in the classical lnk-grammar parser.  That is, a new word
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
-		Set* new_alternatives = cnct.try_connect(state_seq);
+		Set* new_alternatives = cnct.try_connect(sp);
 
 		if (new_alternatives)
 		{
-cout<<"Got linkage "<< new_alternatives <<endl;
+cout<<"Got alternatives "<< new_alternatives <<endl;
+_alternatives = new_alternatives;
 #if 0
 			OutList alt_links;
 			OutList danglers;

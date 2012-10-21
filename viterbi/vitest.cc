@@ -22,6 +22,7 @@ using namespace link_grammar::viterbi;
 #define Lynk link_grammar::viterbi::Link
 
 #define ANODE(TYPE,NAME) (new Node(TYPE,NAME))
+#define ALINK0(TYPE) (new Lynk(TYPE))
 #define ALINK1(TYPE,A) (new Lynk(TYPE, A))
 #define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
 #define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
@@ -45,19 +46,27 @@ bool test_hello(const char *id, const char *dict_str)
 	parser.streamin("Hello");
 
 	// This is the expected output, no matter what the
-	// dictionary may be.
+	// dictionary may be.  Its just one word, connected to the wall.
+	Lynk* one_word =
+	ALINK3(LING,
+		ANODE(LING_TYPE, "Wd"),
+		ALINK2(WORD_DISJ,
+			ANODE(WORD, "LEFT-WALL"),
+			ANODE(CONNECTOR, "Wd+")
+		),
+		ALINK2(WORD_DISJ,
+			ANODE(WORD, "Hello"),
+			ANODE(CONNECTOR, "Wd-")
+		)
+	);
+
+	// This is the expected set of alternatives: just one alternative,
+	// a single, empty state, and the output, above.
 	Lynk* ans =
 	ALINK1(SET,
-		ALINK3(LING,
-			ANODE(LING_TYPE, "Wd"),
-			ALINK2(WORD_DISJ,
-				ANODE(WORD, "LEFT-WALL"),
-				ANODE(CONNECTOR, "Wd+")
-			),
-			ALINK2(WORD_DISJ,
-				ANODE(WORD, "Hello"),
-				ANODE(CONNECTOR, "Wd-")
-			)
+		ALINK2(STATE_PAIR,
+			ALINK0(SEQ),
+			ALINK1(SEQ, one_word)
 		)
 	);
 
@@ -69,17 +78,6 @@ bool test_hello(const char *id, const char *dict_str)
 		cout << "=== Got:\n" << alts << endl;
 		return false;
 	}
-
-#if 0
-	Lynk* final_state = parser.get_state();
-	if (0 != final_state->get_arity())
-	{
-		cout << "Error: test failure on test " << id << endl;
-		cout << "Expecting the final state to be the empty set, but found:\n"
-		     << final_state << endl;
-		return false;
-	}
-#endif
 
 	cout<<"PASS: test_hello(" << id << ") " << endl;
 	return true;
@@ -146,18 +144,15 @@ int ntest_simple()
 	size_t num_failures = 0;
 
 	if (!test_simplest()) num_failures++;
-#if 0
 	if (!test_simple_left_disj()) num_failures++;
 	if (!test_simple_optional_left_cset()) num_failures++;
 	if (!test_simple_right_disj()) num_failures++;
 	if (!test_simple_optional()) num_failures++;
 	if (!test_simple_onereq()) num_failures++;
 	if (!test_simple_zeroreq()) num_failures++;
-#endif
 	return num_failures;
 }
 
-#if 0
 // ==================================================================
 // A test of two alternative parses of a sentence with single word in it.
 // Expect to get back a set with two alternative parses, each parse is
@@ -200,7 +195,7 @@ bool test_alternative(const char *id, const char *dict_str)
 		)
 	);
 
-	Lynk* output = parser.get_output_set();
+	Lynk* output = parser.get_alternatives();
 	if (not (ans->operator==(output)))
 	{
 		cout << "Error: test failure on test " << id << endl;
@@ -209,6 +204,7 @@ bool test_alternative(const char *id, const char *dict_str)
 		return false;
 	}
 
+#if 0
 	Lynk* final_state = parser.get_state();
 	if (0 != final_state->get_arity())
 	{
@@ -217,6 +213,7 @@ bool test_alternative(const char *id, const char *dict_str)
 		     << final_state << endl;
 		return false;
 	}
+#endif
 
 	cout<<"PASS: test_alternative(" << id << ") " << endl;
 	return true;
@@ -283,18 +280,20 @@ int ntest_two()
 	size_t num_failures = 0;
 
 	if (!test_two_alts()) num_failures++;
+#if 0
 	if (!test_two_opts()) num_failures++;
 	if (!test_two_one_opts()) num_failures++;
 	if (!test_two_all_opts()) num_failures++;
 	if (!test_two_and_opts()) num_failures++;
 	if (!test_two_and_no_opts()) num_failures++;
 	if (!test_two_and_excess()) num_failures++;
+#endif
 
 	return num_failures;
 }
 
 // ==================================================================
-
+#if 0
 bool test_simple_state(const char *id, const char *dict_str)
 {
 	total_tests++;
@@ -455,7 +454,7 @@ main(int argc, char *argv[])
 	size_t num_failures = 0;
 
 	num_failures += ntest_simple();
-	//num_failures += ntest_two();
+	num_failures += ntest_two();
 	//num_failures += ntest_first();
 	//if (!test_short_this()) num_failures++;
 

@@ -18,9 +18,10 @@ class Connect
 {
 	public:
 		Connect(WordCset*);
-		Set* try_connect(Seq*);
+		Set* try_connect(StatePair*);
 
 	protected:
+		Set* try_connect(Seq*);
 		Set* next_connect(WordCset*);
 
 		Set* reassemble(Set*, WordCset*, WordCset*);
