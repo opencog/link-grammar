@@ -45,13 +45,13 @@ Connect::Connect(WordCset* right_wconset)
 
 /**
  * Try connecting this connector set sequence, from the left, to what
- * was passed in ctor.  It is preseumed that left_seq is a single parse
+ * was passed in ctor.  It is preseumed that left_sp is a single parse
  * state: it will contain no left-pointing connectors whatsoever.  This
  * routine will attempt to attach the right-pointing connectors to the 
  * left-pointers passed in the ctor.  A connection is considered to be
  * successful if *all* left-pointers in the ctor were attached (except
  * possibly for optionals).  The returned value is a set of all possible
- * alternative ways of making the connections.
+ * alternative state pairs for which there is a connnection.
  *
  * Connectors must be satisfied sequentially: that is, the first connector
  * set in the sequence must be fully satisfied before a connection is made
@@ -96,18 +96,19 @@ assert(0, "Parse fail, implement me");
 }
 
 // this is being given only a single state
-// it is returning only output which is wrong ... 
 Set* Connect::try_connect(Seq* left_seq)
 {
 	_left_sequence = left_seq;
 
 // XXX this is wrong, but works for just now .. 
+// wrong because maybe we need next_connect in a loop!?
 	WordCset* swc = dynamic_cast<WordCset*>(left_seq->get_outgoing_atom(0));
 	Set* ling_set = next_connect(swc);
 	if (NULL == ling_set)
 		return NULL;
 
 // This is wrong, since the state is empty!
+// i.e. it is assuming that the connection emptied the state!
 	OutList pair_list;
 	for (int i=0; i < ling_set->get_arity(); i++)
 	{
@@ -133,7 +134,7 @@ cout<<"in next_connect, word cset "<< right_a <<endl;
 	// If the word connector set is a single solitary node, then
 	// its not a set, its a single connecter.  Try to hook it up
 	// to something on the left.
-	Link* conn = conn_connect_aa(left_cset, left_a, right_a);
+	Link* conn = conn_connect_aa(left_a, right_a);
 	if (!conn)
 		return NULL;
 cout<<"got one it is "<<conn<<endl;
@@ -197,26 +198,26 @@ Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
 /**
  * Dispatch appropriatly, depending on whether left atom is node or link
  */
-Link* Connect::conn_connect_aa(WordCset* left_cset, Atom *latom, Atom* ratom)
+Link* Connect::conn_connect_aa(Atom *latom, Atom* ratom)
 {
 	Connector* lnode = dynamic_cast<Connector*>(latom);
 	if (lnode)
-		return conn_connect_na(left_cset, lnode, ratom);
+		return conn_connect_na(lnode, ratom);
 
 	Link* llink = dynamic_cast<Link*>(latom);
 	assert(llink, "Left side should be link");
-	return conn_connect_ka(left_cset, llink, ratom);
+	return conn_connect_ka(llink, ratom);
 }
 
-Link* Connect::conn_connect_na(WordCset* left_cset, Connector* lnode, Atom *ratom)
+Link* Connect::conn_connect_na(Connector* lnode, Atom *ratom)
 {
 	Connector* rnode = dynamic_cast<Connector*>(ratom);
 	if (rnode)
-		return conn_connect_nn(left_cset, lnode, rnode);
+		return conn_connect_nn(lnode, rnode);
 
 	Link* rlink = dynamic_cast<Link*>(ratom);
 	assert(rlink, "Right side should be link");
-	return conn_connect_nk(left_cset, lnode, rlink);
+	return conn_connect_nk(lnode, rlink);
 }
 
 // =============================================================
@@ -224,7 +225,7 @@ Link* Connect::conn_connect_na(WordCset* left_cset, Connector* lnode, Atom *rato
  * Connect left_cset and _right_cset with an LG_LING
  * lnode and rnode are the two connecters that actually mate.
  */
-Ling* Connect::conn_connect_nn(WordCset* left_cset, Connector* lnode, Connector* rnode)
+Ling* Connect::conn_connect_nn(Connector* lnode, Connector* rnode)
 {
 cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
 	if (!conn_match(lnode->get_name(), rnode->get_name()))
@@ -239,7 +240,7 @@ cout<<"Yayyyyae connectors match!"<<endl;
  * Connect left_cset and _right_cset with a LING
  * lnode is a connecter we hope to mate with something from rlink.
  */
-Link* Connect::conn_connect_nk(WordCset* left_cset, Connector* lnode, Link* rlink)
+Link* Connect::conn_connect_nk(Connector* lnode, Link* rlink)
 {
 cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 
@@ -258,7 +259,7 @@ cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink 
 			if (chinode && chinode->get_name() == OPTIONAL_CLAUSE)
 				continue;
 
-			Link* conn = conn_connect_na(left_cset, lnode, a);
+			Link* conn = conn_connect_na(lnode, a);
 
 			// If the shoe fits, wear it.
 			if (conn)
@@ -276,7 +277,7 @@ cout <<"duuude explore the and link "<<endl;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
-			Link* conn = conn_connect_na(left_cset, lnode, a);
+			Link* conn = conn_connect_na(lnode, a);
 cout<<"and link="<<i<<" got a connction="<<conn<<endl;
 // XXX start here .... 
 			if (is_optional(a))
@@ -287,8 +288,28 @@ cout<<"and link="<<i<<" got a connction="<<conn<<endl;
 			}
 			else
 			{
-				if (conn)
+				if (conn) {
 					required_conn_list.push_back(conn);
+					// Now, recurse ...
+					// trim off the connector, and the state...
+cout<<"and link="<<i<<" connect is required"<<endl;
+cout<<"rlink is="<<rlink<<endl;
+					// We have to somehow remove the connector from the connector
+					// set.  The connects set being used is that in _right_cset.
+					OutList ros = rlink->get_outgoing_set();
+					ros.erase(ros.begin());
+					And* nand = new And(ros);
+cout<<"new rlink is="<<nand<<endl;
+cout<<"left seq is ="<<_left_sequence<<endl;
+					OutList los = _left_sequence->get_outgoing_set();
+					los.erase(los.begin());
+					Seq* nseq = new Seq(los);
+cout<<"new left seq is ="<<nseq<<endl;
+					// Connect(...
+					// try_connect(nseq);
+
+
+				}
 				else
 					return NULL;
 			}
@@ -315,7 +336,7 @@ dynamic_cast<Link*>(required_conn_list[0]);
 ///     CONNECTOR : Wd+
 ///     CONNECTOR : Wd-
 
-Set* Connect::conn_connect_ka(WordCset* left_cset, Link* llink, Atom* ratom)
+Set* Connect::conn_connect_ka(Link* llink, Atom* ratom)
 {
 cout<<"Enter recur l=" << llink->get_type()<<endl;
 
@@ -336,7 +357,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 			AtomType op = llink->get_type();
 			if (OR == op)
 			{
-				Link* rv = conn_connect_na(left_cset, chinode, ratom);
+				Link* rv = conn_connect_na(chinode, ratom);
 				if (rv)
 					alternatives.push_back(rv);
 			}
@@ -353,7 +374,7 @@ cout<<"duuude lefty is "<<chinode<<endl;
 		{	
 			Link* clink = dynamic_cast<Link*>(a);
 			assert(clink, "Child should be link");
-			Link* rv = conn_connect_ka(left_cset, clink, ratom);
+			Link* rv = conn_connect_ka(clink, ratom);
 			if (rv)
 				alternatives.push_back(rv);
 		}

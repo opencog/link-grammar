@@ -20,17 +20,6 @@ namespace viterbi {
 // These are here purely for C++ programming convenience; the true
 // structure that matters is the dynamic run-time (hyper-)graphs.
 
-#if 0
-// Atom types.  Right now an enum, but maybe should be dynamic!?
-enum AtomType
-{
-	// Link types
-	AND,        // ordered AND of all children (order is important!)
-	OR,         // unordered OR of all children
-	WORD_DISJ,  // word, followed by a single disjunct for that word.
-};
-#endif
-
 class Connector : public Node
 {
 	public:
@@ -72,6 +61,30 @@ class Word : public Node
 		{}
 };
 
+#if 0
+// Atom types.  Right now an enum, but maybe should be dynamic!?
+enum AtomType
+{
+	// Link types
+	OR,         // unordered OR of all children
+	WORD_DISJ,  // word, followed by a single disjunct for that word.
+};
+#endif
+
+
+/// Ordered sequence
+/// And could/should inherit fom Seq, since the order of the atoms in
+/// its outgoing set is important.
+class And : public Link
+{
+	public:
+		And()
+			: Link(AND)
+		{}
+		And(const OutList& ol)
+			: Link(AND, ol)
+		{}
+};
 
 /// Create a ling-grammar link. This will be of the form:
 ///     LING:
