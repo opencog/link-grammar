@@ -268,16 +268,17 @@ cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink 
 	}
 	else
 	{
-cout <<"duuude explore the and link "<<endl;
+cout <<"duuude explore the and link -- the lnode is "<<lnode<<endl;
 		// For an AND connective, all connectors must connect.  This
 		// means that we have to recurse through the state-pair system,
 		// until we manage to connect all fo the required left-pointing
 		// connectors in the right connector set.
+		Atom* latom = lnode;
 		OutList required_conn_list;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
-			Link* conn = conn_connect_na(lnode, a);
+			Link* conn = conn_connect_aa(latom, a);
 cout<<"and link="<<i<<" got a connction="<<conn<<endl;
 // XXX start here .... 
 			if (is_optional(a))
@@ -292,28 +293,37 @@ cout<<"and link="<<i<<" got a connction="<<conn<<endl;
 					required_conn_list.push_back(conn);
 					// Now, recurse ...
 					// trim off the connector, and the state...
-cout<<"and link="<<i<<" connect is required"<<endl;
-cout<<"rlink is="<<rlink<<endl;
-					// We have to somehow remove the connector from the connector
-					// set.  The connects set being used is that in _right_cset.
-					OutList ros = rlink->get_outgoing_set();
-					ros.erase(ros.begin());
-					And* nand = new And(ros);
-cout<<"new rlink is="<<nand<<endl;
-cout<<"left seq is ="<<_left_sequence<<endl;
-					OutList los = _left_sequence->get_outgoing_set();
-					los.erase(los.begin());
-					Seq* nseq = new Seq(los);
-cout<<"new left seq is ="<<nseq<<endl;
-					// Connect(...
-					// try_connect(nseq);
+					if (i+1 >= rlink->get_arity())
+						break;
+cout<<"i="<<i<<" left seq is ="<<_left_sequence<<endl;
+					// try to link the next AND connector to the next
+					// connector onthe left...
 
+					// If there are no further left connector sets, then
+					// everything remaining in the AND list had better be
+					// optional!
+					if (_left_sequence->get_arity() <= i+1)
+					{
+						for (int j = i+1; j < rlink->get_arity(); j++)
+						{
+							a = rlink->get_outgoing_atom(j);
+							if (!is_optional(a))
+								return NULL;
+						}
+						break;
+					}
 
+// XXX this assumes the next connector is left pointing .. what if its not?
+					Atom* lwcsa = _left_sequence->get_outgoing_atom(i+1);
+					WordCset* lwcs = dynamic_cast<WordCset*>(lwcsa);
+					latom = lwcs->get_cset();
 				}
 				else
 					return NULL;
 			}
 		}
+Set* s = new Set(required_conn_list);
+cout<<"ayyyyyyyyyyyyyyyyyyyyyyyyyyy done wi looooooooop "<<s<<endl;
 
 // temp hack .. 
 if(1 == required_conn_list.size()) return
