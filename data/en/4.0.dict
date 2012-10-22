@@ -7159,14 +7159,25 @@ there.r:
 à auf aus aux comte comtes
 dans de de_la del della delle der des du duc
 la las le.c los nach noch och os ou på por
-sans te über un une vom von zum zur zu: {G-} & G+;
+sans te über un une vom von zum zur zu:
+  {G-} & G+;
+
+% Spanish A y B
 y.and: G- & G+;
 
 % TIME AND PLACE EXPRESSIONS
 
-this_time this_one_time this_once that_time these_days: <prep-main-t> or [[E+]];
+% (Xd- & {Xc+} & MV+ & MVx-):  "We are ready, this time for sure."
+this_time this_one_time this_once that_time these_days:
+  <prep-main-t>
+  or (Xd- & {Xc+} & MV+ & MVx-)
+  or [[E+]];
+
 last_time next_time:
-<prep-main-t> or JT- or YS+ or [[<noun-main-s>]];
+  <prep-main-t>
+  or JT-
+  or YS+
+  or [[<noun-main-s>]];
 
 % Js-: "show results from last week"
 day.r week.r month.r year.r weekend.r morning.r afternoon.r evening.r
@@ -7175,7 +7186,8 @@ night.r semester.r term.r season.r session.r:
   or (DTi- & (JT- or YS+ or Js- or [[<noun-main-s>]]))
   or (DTa- & <prep-main-t>);
 
-the_next the_previous the_following this_past: DTn+;
+the_next the_previous the_following this_past:
+  DTn+;
 
 % Js- links "show results from today"
 <relative-date>:
@@ -8848,10 +8860,14 @@ by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
 time_and_again over_and_over later_on for_now
-day_by_day day_after_day step_by_step one_by_one for_sure for_certain
+day_by_day day_after_day step_by_step one_by_one
 even_so more_often_than_not all_of_a_sudden:
-  <directive-opener> or
-  ({Xd- & Xc+} & MVa-);
+  <directive-opener>
+  or ({Xd- & Xc+} & MVa-);
+
+for_sure for_certain for_real:
+  <directive-opener>
+  or ({Xd- & {MV+} & Xc+} & MVa-);
 
 % sort-of-like given names ...
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:

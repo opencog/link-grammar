@@ -2271,6 +2271,17 @@ Just a coincidence?
 They do just that.
 He did just what you asked.
 
+% Multiple MV links
+% All the different comma arrangements are valid, and make subtle
+% alterations to the meaning.
+We are ready, for real this time, for sure.
+We are ready, for real, this time, for sure.
+We are ready, for real, this time for sure.
+We are ready, this time for sure.
+We are ready to move, for real this time, for sure.
+We are ready to move, for real, this time, for sure.
+We are ready to move, for real, this time for sure.
+
 % done with MV link
 I've done that plenty of times
 I've done her plenty of times
