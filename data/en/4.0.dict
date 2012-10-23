@@ -398,11 +398,17 @@ genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
 
 %from words.y year numbers
 <date-id>:
-NMd- or ({EN-} & (NIfn+ or NItn-)) or
-NN+ or AN+ or
-((Xd- & TY- & Xc+) or TY-)
-or ({EN- or NIc-} & (ND+ or OD- or ({{@L+} & DD-} &
-([[Dmcn+]] or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
+  NMd-
+  or ({EN-} & (NIfn+ or NItn-))
+  or NN+
+  or AN+
+  or ((Xd- & TY- & Xc+) or TY-)
+  or ({EN- or NIc-}
+    & (ND+ 
+      or OD-
+      or ({{@L+} & DD-} 
+         & ([[Dmcn+]]
+           or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
 
 dateID0 dateID1 dateID2 dateID3 dateID4 dateID5 dateID6 dateID7 dateID8 dateID9
 dateID10 dateID11 dateID12 dateID13 dateID14 dateID15 dateID16 dateID17 dateID18 dateID19
@@ -411,10 +417,6 @@ dateID30 dateID31 dateID32 dateID33 dateID34 dateID35 dateID36 dateID37 dateID38
 dateID40 dateID41 dateID42 dateID43 dateID44 dateID45 dateID46 dateID47 dateID48 dateID49
 dateID50 dateID51 dateID52 dateID53 dateID54 dateID55 dateID56 dateID57 dateID58 dateID59
 dateID60: <date-id>;
-
-%  ??? wtf?  Is this like "roman numeral" ?? See I.p for "me"
-% XXX this is wrong or inappropriate ..
-% I.n: [[{Xi+} & {G-} & G+]];
 
 % Number abbreviations: no.x No.x
 No.x No..x no.x no..x Num.x Num..x num.x num..x:
