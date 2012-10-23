@@ -76,11 +76,17 @@ PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iot
 % also, both kilometer and kilometers seem to be absent(!)
 % remember "mm"!
 
-UNITS: /^([npmk]|nano|pico|milli|micro|kilo)?(g|grams?)\//   % grams/anything
-UNITS: /^([fnmp]|femto|nano|micro|pico|mu)?mol(es)?\//       % mol/anything
-UNITS: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|kg|mol|min|day|h)$/  % common endings
+% grams/anything
+UNITS: /^([npmk]|milli|micro|nano|pico|femto|atto|kilo|mega|tera)?(g|grams?)\//
+
+% mol/anything
+UNITS: /^([fnmp]|milli|micro|nano|pico|femto|atto|mu)?mol(es)?\//
+
+% common endings
+UNITS: /^[a-zA-Z\/.]+\/((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)$/
+
 % common endings, except in the style "mg.kg-1" instead of "mg/kg".
-UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|kg|mol|min|day|h)(-1|\(-1\))$/
+UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
 
 % combinations of numbers and units, e.g. "50-kDa", "1-2h"
 % TODO: Clean up and check that these are up-to-date wrt the 
