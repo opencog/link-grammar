@@ -354,9 +354,11 @@ entityID60: <marker-entity> or <entity-id>;
 % words.n.4: nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
 % piano.n flute.n belong here, because of "He plays piano"
+%
 % This class has now been eliminated: nouns are either singular, plural
 % or mass. If they can be more than one, then they are listed separately
 % in each class e.g. words.n.1 and/or words.n.2 and/or words.n.3, etc.
+% (Only a few screwbal excaptions below; should eb fixed ...)
 <noun-mass-count>:
   <noun-modifiers> &
     (({NM+} & AN+) or
@@ -540,22 +542,20 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % then we should also fix up similar connectors on "these"m, "those", "it",
 % "them" etc; see below, search for Jd-
 <mass-noun>:
-  <marker-common-entity> or
-  (<noun-modifiers> &
-    (AN+ or
-    ({NM+ or ({{Dmu-} & Jd-} & Dmu-)} &
-      ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or
-      <noun-and-p,u>)) or
-    (YS+ & {Dmu-}) or
-    (GN+ & (DD- or [()])) or
-    Up-));
+  <noun-modifiers> &
+    (AN+
+    or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
+      & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or (YS+ & {Dmu-})
+    or (GN+ & (DD- or [()]))
+    or Up-);
 
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
-/en/words/words.n.3: <mass-noun>;
+/en/words/words.n.3: <marker-common-entity> or <mass-noun>;
 
 % Want to cost this so that it doesn't interfere with given name "Tom".
-tom.n-u: [<mass-noun>];
+tom.n-u: [<marker-common-entity> or <mass-noun>];
 
 % Nouns that are also adjectives (e.g. red.n) and so we don't want to
 % allow these to take AN+ links.  We need these as nouns, so as to
@@ -842,14 +842,14 @@ vote.n bill.n:
 % Like other generic noun types, but can take "to"
 % "He took the effort to make amends"
 <noun-to>:
-  (<noun-modifiers> &
-    ((<noun-sub-uto> & (<noun-main-m> or <rel-clause-s>))
+  <noun-modifiers> &
+    (AN+
+    or ((<noun-sub-uto> & (<noun-main-m> or <rel-clause-s>)) or <noun-and-p,u>)
     or ({D*u-} & <noun-and-u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
     or Us-
-    ))
-  or AN+;
+    );
 
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
@@ -859,15 +859,18 @@ incentive.n balls.n-u cojones.n-u:
   <noun-to>;
 
 % Nouns formerly classified as mass nouns (words.n.3) but can take "to"
+% Unlike mass nouns, cannot take numeric modifiers.
 % TO+: "The inability to laugh signifies trouble"
 % "He had the honesty to come clean"
+% "He had the impudence to laugh"
 % "The solution had the acidity to eat through walls"
 /en/words/words.n.3.y: <noun-to>;
 
 % {Jd-}: "tons of offers"
-excuses.n decisions.n proposals.n failures.n efforts.n attempts.n refusals.n pledges.n
-urges.n missions.n rights.n desires.n needs.n ambitions.n capacities.n mandates.n
-promises.n abilities.n options.n commitments.n intents.n opportunities.n plans.n plots.n
+excuses.n decisions.n proposals.n failures.n efforts.n attempts.n
+refusals.n pledges.n urges.n missions.n rights.n desires.n needs.n
+ambitions.n capacities.n mandates.n promises.n abilities.n options.n
+commitments.n intents.n opportunities.n plans.n plots.n
 responsibilities.n chances.n campaigns.n offers.n pressures.n obligations orders.n
 temptations.n vows.n permits.n impetuses.n proclivities.n propensities.n moves.n
 votes.n bills.n incentives.n:
@@ -881,6 +884,7 @@ votes.n bills.n incentives.n:
     (GN+ & (DD- or [()])))) or
   [[AN+]];
 
+% WTF, the next batch below are like above, but with assorted exceptions ...
 chance.n:
   (<noun-modifiers> &
     (({D*u-} & {@M+} & {(TOn+ or TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
