@@ -1173,8 +1173,8 @@ He sits near me nightly.
 He sits near me occasionally.
 My boyfriend dresses very simply.
 
-% Buggy classification of words.n.3 vs. words.n.4:
-% The -ity and -acy words are now mostly in words.n.3.y
+% Buggy classification of mass nouns (words.n.3)
+% The -ity, -acy and -ance words are now in words.n.3.y
 There was an abundance of poverty.
 There was a continuity of action.
 There was a certain crudity to his actions.
@@ -1190,6 +1190,7 @@ He had the imprudence to laugh
 He has the impunity to do as he pleases
 He has the balls to do as he pleases
 He had the honesty to come clean
+He has the panache to pull it off
 The solution had the acidity to eat through walls
 
 
