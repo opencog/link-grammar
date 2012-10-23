@@ -177,12 +177,10 @@
   <post-nominal-s> or
   <costly-null>;
 
-% TO+: "The inability to laugh signifies trouble"
 % @M+: "The disability of John means he is slow"
-% XXX wait .. TO+ should only be for mass nouns ??
-<noun-sub-x>: {@M+} & {TO+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
-<noun-sub-s>: {@M+} & {TO+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
-<noun-sub-p>: {@M+} & {TO+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
+<noun-sub-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
+<noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
+<noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
 <noun-modifiers>: {@AN-} & {@A- & {[[@AN-]]}};
 
@@ -566,6 +564,7 @@ tom.n-u: [<mass-noun>];
 % [[Ds-]] to allow: "The house was painted a fading yellow"
 %
 % Doesn't seem to need a noun-and-x to make this work ...
+% In other respects, these are kind-of-like mass nouns...
 auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n
 tawny.n ultramarine.n yellow.n:
   <marker-common-entity> or
@@ -858,6 +857,12 @@ determination.n capacity.n unwillingness.n need.n will.n eagerness.n
 opportunity.n commitment.n ambition.n ability.n order.n obligation.n
 incentive.n:
   <noun-to>;
+
+% Nouns formerly classified as mass nouns (words.n.3) but can take "to"
+% TO+: "The inability to laugh signifies trouble"
+% "He had the honesty to come clean"
+% "The solution had the acidity to eat through walls"
+/en/words/words.n.3.y: <noun-to>;
 
 % {Jd-}: "tons of offers"
 excuses.n decisions.n proposals.n failures.n efforts.n attempts.n refusals.n pledges.n
