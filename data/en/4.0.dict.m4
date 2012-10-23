@@ -388,14 +388,14 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 % ({{Dmc-} & Jd-} & Dmc-) : "I gave him a number of the cookies"
 % want "Dmc-" on both to avoid "this cookies"
 <generic-plural-id>:
-  [[AN+]] or
-  (<noun-modifiers> &
-    (({NM+ or ({{Dmc-} & Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
-    ({NM+ or Dmc-} & <noun-and-p>) or
-    SJrp- or
-    (YP+ & {Dmc-}) or
-    (GN+ & (DD- or [()])) or
-    Up-));
+  [[AN+]]
+  or (<noun-modifiers>
+     & (({NM+ or ({{Dmc-} & Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
+       or ({NM+ or Dmc-} & <noun-and-p>)
+       or SJrp-
+       or (YP+ & {Dmc-})
+       or (GN+ & (DD- or [()]))
+       or Up-));
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
 genericID10 genericID11 genericID12 genericID13 genericID14 genericID15 genericID16 genericID17 genericID18 genericID19
@@ -844,21 +844,24 @@ vote.n bill.n:
     (GN+ & (DD- or [()])))) or
   AN+;
 
+% <noun-sub-uto>: somewhat like <noun-sub-s> but with more stuff.
 % {Jd-}: "a large amount of effort"
+<noun-sub-uto>:
+  {{Jd-} & D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+}
+
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
 determination.n capacity.n unwillingness.n need.n will.n eagerness.n
 opportunity.n commitment.n ambition.n ability.n order.n obligation.n
 incentive.n:
   (<noun-modifiers> &
-    (({{Jd-} & D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
-      (<noun-main-m> or
-      <rel-clause-s>)) or
-    ({D*u-} & <noun-and-u>) or
-    Us- or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])))) or
-  AN+;
+    ((<noun-sub-uto> & (<noun-main-m> or <rel-clause-s>))
+    or ({D*u-} & <noun-and-u>)
+    or (YS+ & {D*u-})
+    or (GN+ & (DD- or [()]))
+    or Us-
+    ))
+  or AN+;
 
 % {Jd-}: "tons of offers"
 excuses.n decisions.n proposals.n failures.n efforts.n attempts.n refusals.n pledges.n
