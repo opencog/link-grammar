@@ -358,15 +358,15 @@ entityID60: <marker-entity> or <entity-id>;
 % This class has now been eliminated: nouns are either singular, plural
 % or mass. If they can be more than one, then they are listed separately
 % in each class e.g. words.n.1 and/or words.n.2 and/or words.n.3, etc.
-% (Only a few screwbal excaptions below; should eb fixed ...)
+% (Only a few screwball exceptions below; should be fixed ...)
 <noun-mass-count>:
   <noun-modifiers> &
-    (({NM+} & AN+) or
-    ({NM+} & {D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>)) or
-    <noun-and-u> or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])) or
-    Us-);
+    (({NM+} & AN+)
+    or ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>))
+    or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
+    or (YS+ & {D*u-})
+    or (GN+ & (DD- or [()]))
+    or Us-);
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
@@ -378,15 +378,17 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 % agreement.
 % ({{Dmc-} & Jd-} & Dmc-) : "I gave him a number of the cookies"
 % want "Dmc-" on both to avoid "this cookies"
+
 <generic-plural-id>:
-  [[AN+]]
-  or (<noun-modifiers>
-     & (({NM+ or ({{Dmc-} & Jd-} & Dmc-)} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
-       or ({NM+ or Dmc-} & <noun-and-p>)
-       or SJrp-
-       or (YP+ & {Dmc-})
-       or (GN+ & (DD- or [()]))
-       or Up-));
+  <noun-modifiers> &
+    ([[AN+]]
+    or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} & 
+      <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
+    or ({NM+ or Dmc-} & <noun-and-p>)
+    or SJrp-
+    or (YP+ & {Dmc-})
+    or (GN+ & (DD- or [()]))
+    or Up-);
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
 genericID10 genericID11 genericID12 genericID13 genericID14 genericID15 genericID16 genericID17 genericID18 genericID19
@@ -522,17 +524,22 @@ HYPHENATED-WORDS.n:
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % plural nouns not ending in "s"
+% almost exactly identical to <generic-plural-id> except that there is
+% a YS+ instead of a YP+, uses a <noun-and-s> instead of <noun-and-p> 
+%
 % {Jd-}: allows a "a flock of birds" to act as determiner.
+%
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n
 /en/words/words.n.2.x
 /en/words/words.n.2.x.wiki :
   <marker-common-entity> or
   (<noun-modifiers> &
-    ([[AN+]] or
-    ({NM+ or ({Jd-} & Dmc-)} &
-      ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or
-		<noun-and-s>)) or
-    (YS+ & {Dmc-}) or (GN+ & (DD- or [()])) or Up-));
+    ([[AN+]]
+    or ({NM+ or ({Jd-} & Dmc-)} &
+      ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or <noun-and-s>))
+    or (YS+ & {Dmc-})
+    or (GN+ & (DD- or [()]))
+    or Up-));
 
 % XXX should probably eliminate <noun-and-p,u> and replace by <noun-and-u>
 % but this requires other spread-out changes
@@ -856,6 +863,10 @@ responsibility.n intent.n temptation.n readiness.n effort.n
 determination.n capacity.n unwillingness.n need.n will.n eagerness.n
 opportunity.n commitment.n ambition.n ability.n order.n obligation.n
 incentive.n panache.n balls.n-u cojones.n-u:
+  <noun-to>;
+
+% Regex-based guessing of unknown words, ending in -ity -acy -ance
+NOUN-TO-WORDS.n:
   <noun-to>;
 
 % Nouns formerly classified as mass nouns (words.n.3) but can take "to"
@@ -9180,82 +9191,66 @@ LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 % These are processed via regular-expression matching, in 4.0.regex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-MC-NOUN-WORDS.n: % guessed nouns that can be mass or countable (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
-  (<noun-modifiers> &
-    (({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
-    ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>) or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])) or
-    Us-)) or
-  AN+;
+% guessed nouns that can be mass or countable 
+% (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
+MC-NOUN-WORDS.n:
+  <noun-mass-count>;
 
-C-NOUN-WORDS.n: % guessed nouns that are signular countable (-on, -or)
-  (<noun-modifiers> &
-    (((NM+ or Ds-) & <noun-sub-s> & (<noun-main-s> or Bsm+)) or
-    ({NM+ or Ds-} & <noun-and-s>) or
-    (YS+ & Ds-) or
-    (GN+ & (DD- or [()])) or
-    Us-)) or
-  AN+;
+% guessed nouns that are signular countable (-on, -or)
+C-NOUN-WORDS.n:
+  <common-noun>;
 
-ADJ-WORDS.a: % guessed adjectives (-ous, -ar, -ic)
+% guessed adjectives (-ous, -ar, -ic)
+ADJ-WORDS.a:
   <ordinary-adj>;
 
 % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
 FOLD-WORDS:
-({EN-} & (MVp- or EC+ or A+)) or Em+;
+  ({EN-} & (MVp- or EC+ or A+)) or Em+;
 
 % latin (postposed) adjectives considered as mass nouns
-% in the current version
+% in the current version (is this right???)
 LATIN-ADJ-WORDS.a:
-  (<noun-modifiers> &
-    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
-    ({NM+ or D*u-} & <noun-and-p,u>) or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])) or
-    Us-)) or
-  AN+;
+  <noun-mass-count>;
 
-% latin (postposed) adjectives or latin plural noun always considered
-% as nouns in the current version
+% latin (postposed) adjectives or latin plural noun 
+% always considered as nouns in the current version 
+% XXX maybe should be same as words.n.2.x instead of <generic-plural-id> ???
 LATIN-ADJ-P-NOUN-WORDS:
-  (<noun-modifiers> &
-    (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
-    ({NM+ or Dmc-} & <noun-and-p>) or
-    (YS+ & {Dmc-}) or
-    (GN+ & (DD- or [()])) or
-    Up-)) or
-  AN+;
+  <generic-plural-id>;
 
-% latin (postposed) adjectives or latin singular noun always
-% considered as nouns in the current version
+% latin (postposed) adjectives or latin singular noun 
+% always considered as nouns in the current version
+% XXX this is <common-noun> with weird plural-like stuff ?? is this right?
 LATIN-ADJ-S-NOUN-WORDS:
-  (<noun-modifiers> &
-    (({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
-    ({NM+ or D*u-} & <noun-and-p,u>) or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])) or
-    Us-)) or
-  AN+;
+  <noun-modifiers> &
+   (AN+
+   or ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>))
+   or ({NM+ or D*u-} & <noun-and-p,u>)
+   or (YS+ & {D*u-})
+   or (GN+ & (DD- or [()]))
+   or Us-);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Guessing of unknown words, if none of the above rules applied.
 UNKNOWN-WORD.n:
   <noun-modifiers> &
-    (AN+ or
-    ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or Bsm+)) or
-    ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>) or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])) or
-    U-);
+    (AN+
+    or ({NM+ or ({Jd-} & D*u-)} & <noun-sub-s> & (<noun-main-m> or <rel-clause-x>))
+    or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
+    or SJrp-
+    or (YS+ & {D*u-})
+    or (GN+ & (DD- or [()]))
+    or U-);
 
 UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
  & {@MV+};
 UNKNOWN-WORD.a: <ordinary-adj>;
 
-LEFT-WALL: (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+) &
-{CP+} & {Xx+} & {RW+ or Xp+};
+LEFT-WALL:
+  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+)
+    & {CP+} & {Xx+} & {RW+ or Xp+};
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
 
