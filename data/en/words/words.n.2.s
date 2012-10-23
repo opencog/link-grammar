@@ -2014,6 +2014,7 @@ coils.n
 coinages.n
 coincidences.n
 coins.n
+cojones.n
 cokes.n
 colas.n
 colds.n
