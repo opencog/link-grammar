@@ -838,13 +838,11 @@ vote.n bill.n:
 % <noun-sub-uto>: somewhat like <noun-sub-s> but with more stuff.
 % {Jd-}: "a large amount of effort"
 <noun-sub-uto>:
-  {{Jd-} & D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+}
+  {{Jd-} & D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+};
 
-failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
-responsibility.n intent.n temptation.n readiness.n effort.n
-determination.n capacity.n unwillingness.n need.n will.n eagerness.n
-opportunity.n commitment.n ambition.n ability.n order.n obligation.n
-incentive.n:
+% Like other generic noun types, but can take "to"
+% "He took the effort to make amends"
+<noun-to>:
   (<noun-modifiers> &
     ((<noun-sub-uto> & (<noun-main-m> or <rel-clause-s>))
     or ({D*u-} & <noun-and-u>)
@@ -853,6 +851,13 @@ incentive.n:
     or Us-
     ))
   or AN+;
+
+failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
+responsibility.n intent.n temptation.n readiness.n effort.n
+determination.n capacity.n unwillingness.n need.n will.n eagerness.n
+opportunity.n commitment.n ambition.n ability.n order.n obligation.n
+incentive.n:
+  <noun-to>;
 
 % {Jd-}: "tons of offers"
 excuses.n decisions.n proposals.n failures.n efforts.n attempts.n refusals.n pledges.n

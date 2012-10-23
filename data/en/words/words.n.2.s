@@ -263,6 +263,7 @@ ambits.n
 ambulances.n
 ambushes.n
 amendments.n
+amends.n
 amenities.n
 Americans.n
 amnesties.n
