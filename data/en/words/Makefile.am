@@ -31,6 +31,7 @@ WORDS=			\
 	words.n.2.x	\
 	words.n.2.x.wiki	\
 	words.n.3	\
+	words.n.3.y	\
 	words.n.t	\
 	words-medical.prep.1	\
 	words.v.10.1	\
