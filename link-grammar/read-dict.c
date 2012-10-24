@@ -473,7 +473,11 @@ static inline int dict_order_wild(const char * s, const char * t)
 		if (s != so) return 0;
 	}
 
-	return (((*s == '.')?(0):(*s)) - ((*t == '.')?(0):(*t)));
+	// Careful here: do now allow four dots to accidentally match
+	// the ellipsis in the dict.  s is always the input string,
+	// t is always the dict dn->string.
+	// return (((*s == '.')?(0):(*s)) - ((*t == '.')?(0):(*t)));
+	return ((*s) - ((*t == '.')?(0):(*t)));
 }
 
 /**
