@@ -5029,10 +5029,13 @@ at toward towards without:
 
 %
 % XXX fixme: MVp- & J+ is wrong: "*I saw John except Fred"
+% XXX (The MVp- coming from prep-main-a)
+% So give J+ a cost, to minimize this, for now ...
+% Could this be fixable in postprocessing?
 % {EBm+} & J+: "but not very much"
 % [[EBm+]]: "but not very"
 except but.misc-ex:
-  ({JQ+} & (({EBm+} & J+) or [[EBm+]] or Mgp+) & <prep-main-a>)
+  ({JQ+} & (({EBm+} & [[J+]]) or [[EBm+]] or Mgp+) & <prep-main-a>)
   or (MVp- & B-)
   or ((MVp+ or TO+) & <prep-main-a>);
 
