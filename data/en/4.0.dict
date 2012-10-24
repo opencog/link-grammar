@@ -9055,8 +9055,12 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 or Xe-));
 
 % ellipsis ... trailing off 
+% We is used only for connecting ellipsis to the left wall.
+% We- & J+: ... a ballroom polished like a skull.
+% S+ has a cost so that the infinitive I+ is preferred.
 "..." "….ij": 
-  CO- & Wd-;
+  (CO- & Wd-)
+  or (We- & (J+ or [S+] or I+ or M+ or MV+));
 
 % The percent sign following a number
 % Also -- see above, for handling of 12ft. 12in. not just 12%
@@ -9249,7 +9253,7 @@ UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
 UNKNOWN-WORD.a: <ordinary-adj>;
 
 LEFT-WALL:
-  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or Qd+)
+  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
     & {CP+} & {Xx+} & {RW+ or Xp+};
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
