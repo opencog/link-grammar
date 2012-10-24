@@ -35,7 +35,7 @@
 static inline char * deinflect(const char * str)
 {
 	char * s = strdup(str);
-	char * p = strchr(s, '.');
+	char * p = strrchr(s, '.');
 	if (p && p != s) *p = 0x0;
 	return s;
 }
