@@ -8833,31 +8833,54 @@ certainly possibly probably importantly remarkably interestingly:
 {EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
 ({Xc+ & {Xd-}} & EB-));
 
-/en/words/words.adv.2: % ordinary clausal adverbs
-E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
+% ordinary clausal adverbs
 % absurdly actually additionally admittedly allegedly alternatively
+/en/words/words.adv.2:
+  E+
+  or (Xd- & Xc+ & (E+ or MVa-))
+  or ({Xc+ & {Xd-}} & CO+)
+  or EBm-;
 
 % These are taken from words.adv.2 and allowed EB- when separated by
 % commas.
 however.e consequently.e moreover.e potentially.e conversely.e
 finally.e actually.e thusly.e:
-E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or  ({Xc+ & {Xd-}} & EBm-);
+  E+
+  or (Xd- & Xc+ & (E+ or MVa-))
+  or ({Xc+ & {Xd-}} & CO+)
+  or ({Xc+ & {Xd-}} & EBm-);
 
 % TODO: "similarly" and "differently" get very different linking requirements.
 % see if these should be made the same.
 similarly.e:
-({MVp+} & {Xd- & Xc+} & (E+ or MVa-)) or ({MVp+} & {Xc+ & {Xd-}} & CO+) or
- ({Xc+ & {Xd-}} & EBm-);
-
+  ({MVp+} & {Xd- & Xc+} & (E+ or MVa-))
+  or ({MVp+} & {Xc+ & {Xd-}} & CO+)
+  or ({Xc+ & {Xd-}} & EBm-);
 
 not_suprisingly if_nothing_else:
-E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EBm-;
-though.e: (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+);
+  E+
+  or (Xd- & Xc+ & (E+ or MVa-))
+  or ({Xc+ & {Xd-}} & CO+)
+  or EBm-;
+
+though.e:
+  (Xd- & Xc+ & (E+ or MVa-))
+  or ({Xc+ & {Xd-}} & CO+);
+
+% Nearly identical to words.adv.2, but do not force the EBm-
 still.e presumably undoubtedly evidently apparently usually typically perhaps:
-E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
+  E+
+  or (Xd- & Xc+ & (E+ or MVa-))
+  or ({Xc+ & {Xd-}} & CO+)
+  or EB-;
+
 in_fact of_course in_effect for_example for_instance e.g. i.e. :
-E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
-(EB- & {Xc+}) or (Xd- & EB- & Xc+) or ({Xd-} & CC- & Wd+);
+  E+
+  or (Xd- & Xc+ & (E+ or MVa-))
+  or ({Xc+ & {Xd-}} & CO+)
+  or (EB- & {Xc+})
+  or (Xd- & EB- & Xc+)
+  or ({Xd-} & CC- & Wd+);
 
 % ADVERBS USABLE POST_VERBALLY OR AS OPENERS
 % Note that similar interjective openers will be given COp+ links
