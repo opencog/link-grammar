@@ -1985,10 +1985,6 @@ It's a hundred and two in the shade.
 What's two 'n two?
 press the button when the dial reads zero.
 
-% Fix/spell-check "its"
-Its broken.
-It's broken.
-
 % date ranges are simple modifiers, not numerical mods
 It was the 1989-90 crop that failed.
 
@@ -2001,6 +1997,12 @@ You want part no. 1234-567.
 You want part no 1234-567A.
 You want part no. 1234-567A.
 You want part num. 1234-567A.
+
+% 123A, the "A" suffix is assumed to be a unit, leading to a bad parse.
+You want part number 123
+You want part no. 123
+You want part no. 123A
+You want part no. 123ABC
 
 % Years as adjectival modifiers:
 He drove a souped-up '57 Chevy.
@@ -2052,6 +2054,7 @@ By the 1950's, he was very prosperous.
 % quote is stripped, but "50s," cannot be found in the dict.
 By the '50s, he was very prosperous.
 
+% More ordinals
 Mike finished in first place, and John in third.
 Mike finished in first place, and John in last.
 He finished the season in first.
@@ -2061,13 +2064,25 @@ He finished the season in third place.
 He finished the season in last.
 He finished the season last.
 He finished the season dead last.
+He finished the season dead fucking last.
+He finished the season DFL.
 
 % problem with "of" in entity names.
 The National Voter Registration Act of 1993 makes it easy
 
+% Informal numeric determiners
+the real question is how those two should work with one another.
+the real question is how we two should work with one another.
+the real question is how us two should work with one another.
+
+% ===========================================================
 % Spell checker now does a good job of splitting words.
 Marywent shoppingat thestore.
 Mary wentshopping atthe store.
+
+% Fix/spell-check "its"
+Its broken.
+It's broken.
 
 % quotations can be used for grouping modifiers into an almost-idiom
 We ate so-called 'brain food' for lunch.
@@ -3050,6 +3065,7 @@ If it weren't for Joe, …
 ... polished like a skull
 ... like a skull
 ... gleamed like dogs' eyes in a car's headlights
+... how those two should work together
 
 % Compound queries
 % Typically, the two subphrases parse correctly, but, 
@@ -3158,12 +3174,6 @@ Sue answered the door.
 
 % Tom as a mass noun interferes with far-more-likely common-name "Tom".
 Could we add some tom-tom to that track?
-
-% 123A, the "A" suffix is assumed to be a unit, leading to a bad parse.
-You want part number 123
-You want part no. 123
-You want part no. 123A
-You want part no. 123ABC
 
 % ... or both -- drunk wants Pa link, both wants Opt link
 Was the man drunk or crazy or both?

@@ -1036,8 +1036,12 @@ she he:
   {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+ or (Dn- & SJn+));
 
 % The E- is for "It's either us or them" ... not ideal, but OK
-me him us:
+me him:
   J- or Ox- or ({[[E-]]} & SJl+) or SJr-;
+
+% DD+: "... how us two should work together"
+us:
+  J- or Ox- or ({[[E-]]} & SJl+) or SJr- or DD+;
 
 % Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
 % (Jd- & Dmc- & Sp+):  "Many of them could be saved"
@@ -1078,10 +1082,12 @@ they:
   Ox- or
   SJlp+ or SJrp- or (Dn- & SJn+);
 
+% DD+: "... how we two should work together"
 we:
-  (Sp+ & <CLAUSE>) or
-  Ox- or
-  SIp- or SJlp+ or SJrp- or (Dn- & SJn+);
+  (Sp+ & <CLAUSE>)
+  or Ox-
+  or DD+
+  or SIp- or SJlp+ or SJrp- or (Dn- & SJn+);
 
 % XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make I've work?
 % We use <marker-entity> here to prevent lower-case magnling by
@@ -1694,8 +1700,16 @@ NW- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 first.a: L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or A+ or [Jp-] or
 TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
 
-last.a dead_last: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or [Jp-] or
-DTi+ or TT+ or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or A+;
+last.a dead_last dead_fucking_last DFL:
+  L-
+  or Pa-
+  or MVa-
+  or ({Xc+ & {Xd-}} & CO+)
+  or [Jp-]
+  or DTi+
+  or TT+
+  or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>)
+  or A+;
 
 second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
@@ -9088,8 +9102,9 @@ or Xe-));
 % We- is used only for connecting ellipsis to the left wall.
 % We- & J+: ... a ballroom polished like a skull.
 % S+ has a cost so that the infinitive I+ is preferred.
+% BI+, QI+: "... how those two should work together"
 ....x ….x: 
-  We- & (J+ or [S+] or I+ or M+ or MV+);
+  We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or QI+);
 
 % The percent sign following a number
 % Also -- see above, for handling of 12ft. 12in. not just 12%
