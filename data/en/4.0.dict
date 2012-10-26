@@ -7482,7 +7482,10 @@ who:
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
 % "what are the answers?" takes Sp+
-what.r:
+% Wi-: Dr. Who: "What!"
+% <directive-opener>: "What, were you expecting Santa?"
+% Wd- & O+: "What a jerk!"
+what:
   ({EL+} &
       (D**w+
       or Ss*w+
@@ -7491,7 +7494,10 @@ what.r:
     & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
-  or (D+ & JQ-);
+  or (D+ & JQ-)
+  or (Wd- & O+)
+  or <directive-opener>
+  or Wi-;
 
 % QI- & (): "I do not know which"
 which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or
@@ -8921,7 +8927,7 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij hell_yes what.ij:
+hah.ij hey.ij well.ij wtf.ij hell_yes:
   <directive-opener>
   or Wi-;
 
