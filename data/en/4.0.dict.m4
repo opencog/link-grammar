@@ -1470,9 +1470,14 @@ enough.n:
   or [{OF+} & <noun-main-s>]
   or <noun-and-s>;
 
-enough.r: EF- or MVa-;
+% EF-: "He is good enough" but *He is very good enough
+enough.r: EF-;
+
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
+
+% Wi-: "Enough rough-housing! Enough!"
 enough.ij: Wi- & {Pg+};
+
 not_enough:
   (OFd+ & Dm+)
   or [{OF+} & <noun-main-s>]
