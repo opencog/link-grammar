@@ -222,11 +222,12 @@ LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 % never a verb. To return to this ordering, move this regex just
 % after the CAPITALIZED-WORDS regex.
 % We also match on commas, dots, brackets: n-amino-3-azabicyclo[3.3.0]octane
-% [:alnum:] fails, I don't know why ...
 % []] means "match right-bracket"
-% HYPHENATED-WORDS: /^[:alnum:][[:alnum:],.-]*-[[:alnum:],.-]*[:alnum:]$/
+% Explicitly call out (5'|3') so that we don't all a generic match to 'll
+% But something is funky about this 5'-3' business since 2' also matches ???
+%  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
 HYPHENATED-WORDS:
-  /^[[:alpha:][:digit:]][][:alpha:][:digit:],.\[-]*-[][:alpha:][:digit:],.\[-]*[[:alpha:][:digit:]]$/
+  /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
 
 
 % Sequence of punctuation marks. If some mark appears in the affix table
