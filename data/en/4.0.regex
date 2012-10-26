@@ -221,11 +221,13 @@ LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 % treated as a HYPHENATED-WORD (a generic adjective/noun), and
 % never a verb. To return to this ordering, move this regex just
 % after the CAPITALIZED-WORDS regex.
-HYPHENATED-WORDS: /^[[:alpha:][:digit:],.][[:alpha:][:digit:],.-]*-[[:alpha:][:digit:],.-]*[[:alpha:][:digit:],.]$/
+% We also match on commas, dots, brackets: n-amino-3-azabicyclo[3.3.0]octane
+% [:alnum:] fails, I don't know why ...
+% []] means "match right-bracket"
+% HYPHENATED-WORDS: /^[:alnum:][[:alnum:],.-]*-[[:alnum:],.-]*[:alnum:]$/
+HYPHENATED-WORDS:
+  /^[[:alpha:][:digit:]][][:alpha:][:digit:],.\[-]*-[][:alpha:][:digit:],.\[-]*[[:alpha:][:digit:]]$/
 
-% proteins often end with "ase", so we'll assume those things are names.
-% removed, too many false positives.
-% NAME: /ase$/
 
 % Sequence of punctuation marks. If some mark appears in the affix table
 % such as a period, comma, dash or underscore, and there's a sequence of
