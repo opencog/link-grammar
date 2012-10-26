@@ -5662,7 +5662,7 @@ who:
 % {EL+} & Wd-: "What else?" "What the fuck?"
 % <directive-opener>: "What, were you expecting Santa?"
 % Wd- & O+: "What a jerk!"
-% O*n-: "I'll tell you what", "Say what?"
+% QI-: "I'll tell you what", "Say what?"
 what:
   ({EL+} &
       (D**w+
@@ -5675,36 +5675,49 @@ what:
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
   or (Wd- & O+)
-  or O*n-
+  or [QI-]
   or <directive-opener>;
 
 % QI- & (): "I do not know which"
-which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or
-[QI-] or
-((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
- or Jw- or (JQ- & D+) or ({MVp+ or MVx+} & (S**w+ or B*w+) &
-((Xc+ or <costly-null>) & Xd- & MX*r-));
+which: 
+  ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+))
+  or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
+  or (JQ- & D+)
+  or ({MVp+ or MVx+} & (S**w+ or B*w+) & ((Xc+ or <costly-null>) & Xd- & MX*r-))
+  or [QI-]
+  or Jw-;
 
-whom: (R- & Cr+) or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
- or (Jr- & (RS+ or Cr+)) or Jw-;
+whom:
+  (R- & Cr+)
+  or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
+  or (Jr- & (RS+ or Cr+))
+  or Jw-;
 
-whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*d-)))
-or (JQ- & D+) or (U+ & Jr- & (RS+ or Cr+));
+whose:
+  (D**w+ & (
+    Mr-
+    or Wq-
+    or Ws-
+    or QI*d-
+    or BIqd-
+    or ((Xc+ or <costly-null>) & Xd- & MX*d-)))
+  or (JQ- & D+)
+  or (U+ & Jr- & (RS+ or Cr+));
 
-% Os-: "I'll hire whomever I can find"
+% Os-: "I'll hire whomever I can find" "I'll hire whomever"
 % EL+ & SJr-: "Bring him and whomever else"
 % ({EL+} & Os- & Bsd+): Bring whomever else you care to.
 whomever:
   (R- & Cr+)
   or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
   or ({EL+} & SJr-)
-  or ({EL+} & (Ss*d+ or Bsd+) & Os-)
+  or ({EL+} & (Ss*d+ or Bsd+ or {[[]]}) & Os-)
   or (Jr- & (RS+ or Cr+))
   or Jw-;
 
 % EL+ & SJr-: "Bring him and whomever else"
 whoever: {EL+} &
-  (((Ss*d+ or Bsd+ or [[CX+]]) &
+  (((Ss*d+ or Bsd+ or [[CX+]] or {[[]]}) &
     (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ({EL+} & SJr-)
   or [[(O- or J-) & CX+]]);
@@ -5738,6 +5751,57 @@ whence whither:
 although in_as_much_as whilst whereas whereof wherein:
   (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
   or ({Xd-} & CC- & Wd+);
+
+% QI- & (): "I do not know when"
+when:
+  ((WN- or BIh-) & Cs+) or
+  ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or
+  [QI-] or
+  QJ- or QJ+ or
+  (Wq- & (Q+ or PF+)) or
+  ((Cs+ or Mp+ or Mgp+ or Mv+) &
+    (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
+
+% QI- & (): "I do not know why"
+% <directive-opener> or Wi-: "Why, of course it will!"
+% N-: "why not?"  "Why the hell not?"
+why:
+  ({EL+} & (
+    (Wq- & Q+)
+    or (QI- & (Cs+ or TOn+ or [()]))
+    or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
+    or ((Wi- or <directive-opener>) & {N+})
+    ))
+  or QJ- or QJ+;
+
+% QI- & (): "I do not know where"
+% R+ & Bsw+: "Where does it go to?"
+% Cs+ & Bsw+ & QI-: "Can you tell us where those strange ideas came from?"
+where:
+  {EL+}
+    & (
+      (Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+))
+      or [QI-]
+      or QJ-
+      or QJ+
+      or (Cs+ & Bsw+ & QI-)
+      or ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+      or ((Cs+ or PF+ or WR+) & <prep-main-b>));
+
+whether: (((QI- or BIq-) & (Cs+ or TOn+)) or (Cs+ & SFsx+ & <S-CLAUSE>))
+or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
+whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or
+(Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
+
+% QI- & (): "I do not know how"
+% EL+: "How else would you say that?"
+how:
+  ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
+    (BIqd- or QI*d- or Wq- or Ws-))
+   or (Wq- & (({EL+} & Q+) or AF+))
+   or [QI-]
+   or QJ- or QJ+
+   or ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -6084,59 +6148,6 @@ yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
 
 thus therefore: ({Xc+ & {Xd-}} & CO+) or ({Xd-} & CC- & Wd+) or
 ({Xd- & Xc+} & (E+ or EB-)) or (Xd- & Xc+ & MVa-);
-
-% QI- & (): "I do not know when"
-when:
-  ((WN- or BIh-) & Cs+) or
-  ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or
-  [QI-] or
-  QJ- or QJ+ or
-  (Wq- & (Q+ or PF+)) or
-  ((Cs+ or Mp+ or Mgp+ or Mv+) &
-    (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
-
-% QI- & (): "I do not know why"
-why:
-  ({EL+} & ((Wq- & Q+)
-    or (QI- & (Cs+ or TOn+ or [()]))
-    or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))))
-  or QJ- or QJ+
-  or [[{@CO-} & Wc- & Wi+]];
-
-why_not: [[{@CO-} & Wc- & Wi+]];
-
-% XXX FIXME: should use EL link, like "the fuck"
-% "Why the hell not, yes"
-why_the_hell_not: {@CO-} & Wc- & {Xc+} & Wi+;
-
-% QI- & (): "I do not know where"
-% R+ & Bsw+: "Where does it go to?"
-% Cs+ & Bsw+ & QI-: "Can you tell us where those strange ideas came from?"
-where:
-  {EL+}
-    & (
-      (Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+))
-      or [QI-]
-      or QJ-
-      or QJ+
-      or (Cs+ & Bsw+ & QI-)
-      or ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
-      or ((Cs+ or PF+ or WR+) & <prep-main-b>));
-
-whether: (((QI- or BIq-) & (Cs+ or TOn+)) or (Cs+ & SFsx+ & <S-CLAUSE>))
-or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
-whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or
-(Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
-
-% QI- & (): "I do not know how"
-% EL+: "How else would you say that?"
-how:
-  ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
-    (BIqd- or QI*d- or Wq- or Ws-))
-   or (Wq- & (({EL+} & Q+) or AF+))
-   or [QI-]
-   or QJ- or QJ+
-   or ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % EBy+ link is for "verbed not X but Y" "I saw not Mary, but John"
 %
@@ -7151,7 +7162,7 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij hell_yes:
+hah.ij hey.ij well.ij wtf.ij hell_yes of_course:
   <directive-opener>
   or Wi-;
 
