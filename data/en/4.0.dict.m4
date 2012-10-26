@@ -1150,8 +1150,8 @@ everything everyone anyone everybody anybody anything:
 
 % EL-: "what the fuck happened?" "what else happened?"
 % Amazing how profanity works this way...
-else fucking.e the_fuck the_shit the_piss
-the_bleep bleeping.e
+else the_fuck the_shit the_piss
+the_bleep
 in_heck in_the_heck the_heck
 in_hell in_the_hell the_hell
 in_goddamn_hell in_the_godammn in_goddamned_hell in_the_godammned
@@ -1164,6 +1164,10 @@ in_Lords_name in_the_Lord's_name the_bejesus
 the_almighty almighty_lord the_almighty_lord
 the_piss_Christ in_piss_Christ:
   EL-;
+
+% E+: "Why didn't you fucking say so?"
+fucking.e bleeping.e:
+  EL- or E+;
 
 others:
   {{Jd-} & Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
