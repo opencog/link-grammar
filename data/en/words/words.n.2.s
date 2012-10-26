@@ -2935,6 +2935,8 @@ diarists.n
 diatribes.n
 dichotomies.n
 dickeys.n
+dickheads.n
+dicks.n
 dickybirds.n
 dictates.n
 dictations.n
@@ -3156,6 +3158,7 @@ doorstoppers.n
 doorways.n
 dopes.n
 dories.n
+dorks.n
 dormers.n
 dormitories.n
 dosages.n
@@ -3290,6 +3293,7 @@ dutars.n
 duties.n
 duvets.n
 dwarfs.n
+dweebs.n
 dwellers.n
 dwellings.n
 dyers.n

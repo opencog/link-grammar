@@ -1138,7 +1138,7 @@ everything everyone anyone everybody anybody anything:
 <noun-main-s>) or <noun-and-s> or YS+);
 
 % EL-: "what the fuck happened?" "what else happened?"
-else the_fuck in_hell in_the_hell: EL-;
+else the_fuck the_shit in_hell in_the_hell the_hell: EL-;
 
 others:
   {{Jd-} & Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
@@ -7888,13 +7888,16 @@ when:
 
 % QI- & (): "I do not know why"
 why:
-  ({EL+} & ((Wq- & Q+) or
-    (QI- & (Cs+ or TOn+ or [()])) or
-    (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-)))) or
-  QJ- or QJ+ or
-  [[{@CO-} & Wc- & Wi+]];
+  ({EL+} & ((Wq- & Q+)
+    or (QI- & (Cs+ or TOn+ or [()]))
+    or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))))
+  or QJ- or QJ+
+  or [[{@CO-} & Wc- & Wi+]];
 
 why_not: [[{@CO-} & Wc- & Wi+]];
+
+% XXX FIXME: should use EL link, like "the fuck"
+% "Why the hell not, yes"
 why_the_hell_not: {@CO-} & Wc- & {Xc+} & Wi+;
 
 % QI- & (): "I do not know where"
@@ -7917,13 +7920,14 @@ whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or
 (Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
 
 % QI- & (): "I do not know how"
+% EL+: "How else would you say that?"
 how:
-((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
-(BIqd- or QI*d- or Wq- or Ws-)) or
-(Wq- & (Q+ or AF+)) or
-[QI-] or
-QJ- or QJ+ or
-((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
+  ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
+    (BIqd- or QI*d- or Wq- or Ws-))
+   or (Wq- & (({EL+} & Q+) or AF+))
+   or [QI-]
+   or QJ- or QJ+
+   or ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % EBy+ link is for "verbed not X but Y" "I saw not Mary, but John"
 %
