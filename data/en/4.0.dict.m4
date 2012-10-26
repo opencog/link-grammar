@@ -2864,7 +2864,10 @@ thought.v-d: VERB_SPPP_T(<vc-think>) or (<verb-s-pv> & {THi+ or Z-});
 thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
 
-<vc-matter>: {@MV+} & {THi+ or QIi+};
+% B-: "what does it matter?"
+<vc-matter>: 
+  ({@MV+} & {THi+ or QIi+})
+  or B-;
 matter.v: VERB_S_PLI(<vc-matter>);
 matters.v: <verb-s-s> & <vc-matter>;
 mattered.v-d: VERB_SPPP_I(<vc-matter>);
@@ -5316,7 +5319,7 @@ away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
 aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
 apart: {Yd-} & K-;
 
-% wtf ?? what is home.i for ??
+% XXX FIXME wtf ?? what is home.i for ??
 home.i: [[K-]];
 
 % Bare-naked MVp-: "I want it back"
@@ -5635,7 +5638,7 @@ who:
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
 % "what are the answers?" takes Sp+
-what:
+what.r:
   ({EL+} &
       (D**w+
       or Ss*w+
@@ -7074,7 +7077,7 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij hell_yes:
+hah.ij hey.ij well.ij wtf.ij hell_yes what.ij:
   <directive-opener>
   or Wi-;
 
