@@ -1140,10 +1140,13 @@ everything everyone anyone everybody anybody anything:
 <noun-main-s>) or <noun-and-s> or YS+);
 
 % EL-: "what the fuck happened?" "what else happened?"
+% Amazing how profanity works this way...
 else fucking.e the_fuck the_shit the_piss
+the_bleep bleeping.e
 in_heck in_the_heck the_heck
 in_hell in_the_hell the_hell
 in_goddamn_hell in_the_godammn in_goddamned_hell in_the_godammned
+in_bleeping_hell
 goddamn goddamned
 for_christ_sake for_christs_sake for_Christ_sake for_Christs_sake
 for_christ's_sake for_Christ's_sake
@@ -7492,12 +7495,12 @@ UNITS: <units-suffix>;
 
 % QI- & (): "I do not know who"
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
-% {EL+} & Wd-: "Who?" "Who else?"
+% {EL+ & {N+}} & Wd-: "Who?" "Who else?" "Who else not?"
 who:
   (R- & (({MVp+ or MVx+} & RS+) or Cr+))
   or [QI-]
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-))
-  or ({EL+} & Wd-)
+  or ({EL+ & {N+}} & Wd-)
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
@@ -8795,7 +8798,8 @@ purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 sure.ee: Em+;
 
 % Em+: "It sure the fuck is great to see you, man!"
-the_fuck: [Em+];
+% "It sure the hell is!"
+the_fuck the_hell: [Em+];
 
 more_and_more less_and_less more_or_less: Em+;
 
