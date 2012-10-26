@@ -1062,7 +1062,9 @@ them:
   or SJr-;
 
 myself yourself himself herself itself themselves
-ourselves yourselves: J- or O- or E+ or MVa-;
+ourselves yourselves thyself oneself one's one’s:
+  J- or O- or E+ or MVa-;
+
 each_other: J- or O- or YS+;
 her.d: ({AL-} & {@L+} & (D+ or DD+)) or DP+;
 her.p: J- or Ox-;
@@ -5083,6 +5085,7 @@ among:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or
   (MVp- & B-);
 
+% FL+ "for long"
 for.p:
   ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-)) or
   (J+ & (RJrj- or RJlj+)) or
@@ -5625,7 +5628,8 @@ UNITS: <units-suffix>;
 % (<noun-main-x> or Bsm+)) or (({D*u-} or {Dmc-}) & Us- & {Mp+})) or A+;
 % Above screw up the usual units processing.
 
-%QUESTION WORDS & CONJUNCTIONS
+% ======================================================================
+% QUESTION WORDS
 
 %who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
 %({EL+} & (S**w+ or B*w+) & (Ws- or Wq- or QI*d- or BIqd-)) or
@@ -5676,18 +5680,51 @@ whom: (R- & Cr+) or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null
 whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*d-)))
 or (JQ- & D+) or (U+ & Jr- & (RS+ or Cr+));
 
+% Os-: "I'll hire whomever I can find"
+whomever:
+  (R- & Cr+)
+  or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
+  or (Os- & Bsd+)
+  or (Jr- & (RS+ or Cr+))
+  or Jw-;
+
 whoever: {EL+} &
   (((Ss*d+ or Bsd+ or [[CX+]]) &
     (<noun-main-s> or SJr- or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or
     [[(O- or J-) & CX+]]);
-whatever.c: ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) &
-(<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
-or [[(O- or J-) & CX+]]))
-or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
-whenever wherever however.c: {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or
-({Xd- & Xc+} & MVs-)));
-no_matter: QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
+whatever.c:
+  ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+)
+      & (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
+    or [[(O- or J-) & CX+]]))
+  or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
+
+whenever wherever however.c:
+  {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)));
+
+whyever:
+  ({EL+} & (
+     (Wq- & Q+)
+     or (QI- & (Cs+ or TOn+))
+     or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-))))
+  or [[{@CO-} & Wc- & Wi+]];
+
+whichever:
+ ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+)
+     & (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
+       or [[(O- or J-) & CX+]]))
+  or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
+
+whence whither:
+ {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+)
+    or ({Xd- & Xc+} & MVs-)));
+
+although in_as_much_as whilst whereas whereof wherein:
+  (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
+  or ({Xd-} & CC- & Wd+);
+
+% ----------------------------------------------------
+% CONJUNCTIONS  & ADVERBS
 
 that.j-c:
   (Cet+ &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or
@@ -7504,10 +7541,6 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
 
-although in_as_much_as whilst whereas whereof wherein:
- (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))) or
- ({Xd-} & CC- & Wd+);
-
 benumbed.a bespattered.a non_compos_mentis dead_on_arrival
  bedimmed.a null_and_void bedewed.a au_fait
  dead_of_other_causes right_sacrotransverse above_board
@@ -7525,10 +7558,6 @@ subject_to status_post in_conjunction_with sensu
 
 oftenest correctliest soonest disquietingliest:
  EA+;
-
-% XXX aren't these optional transitive ?
-gells.v O.K.'s.v OK's.v O.K.’s OK’s:
-  VERB_S_I(<vc-intrans>);
 
 propension.n:
  (<noun-modifiers> & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
@@ -7552,40 +7581,27 @@ attestation.n:
 O.K.'d.v-d  OK'd.v-d  O.K.’d.v-d  OK’d.v-d:
  VERB_SPPP_I(<vc-intrans>);
 
-whence whither:
- {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)));
+% XXX aren't these optional transitive ?
+gells.v O.K.'s.v OK's.v O.K.’s OK’s:
+  VERB_S_I(<vc-intrans>);
+
+O.K.'ing.v OK'ing.v
+O.K.’ing.v OK’ing.v:
+ (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 % Strange -- the JT- is a time-expression link .. .is that right here ??
 articulo_mortis intra_vitam in_articulo_mortis in_extremis
  post_cibum post_coitum:
  <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
 
-
 lest:
  (Cs+ or Mgp+ or Mv+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
-
-whyever:
- ({EL+} & ((Wq- & Q+) or (QI- & (Cs+ or TOn+)) or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-)))) or [[{@CO-} & Wc- & Wi+]];
 
 albeit:
  (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
 
-whichever:
- ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+) & (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or [[(O- or J-) & CX+]])) or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
-
-O.K.'ing.v OK'ing.v
-O.K.’ing.v OK’ing.v:
- (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
-
-% "I'll hire whomever I can find": Os-
-whomever:
-  (R- & Cr+) or
-  (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-))) or
-  (Os- & Bsd+) or
-  (Jr- & (RS+ or Cr+)) or Jw-;
-
-thyself oneself one's one’s:
- J- or O- or E+ or MVa-;
+no_matter:
+  QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
 
 % Handy test
 % grrr: (A- & B- & C+ & D+) or [(E- & @F+ & @G+ & H+)] or [[(I- & J- & @K- & @L+)]];
