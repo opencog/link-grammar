@@ -1140,7 +1140,18 @@ everything everyone anyone everybody anybody anything:
 <noun-main-s>) or <noun-and-s> or YS+);
 
 % EL-: "what the fuck happened?" "what else happened?"
-else the_fuck the_shit in_hell in_the_hell the_hell: EL-;
+else fucking.e the_fuck the_shit the_piss
+in_heck in_the_heck the_heck
+in_hell in_the_hell the_hell
+in_goddamn_hell in_the_godammn in_goddamned_hell in_the_godammned
+goddamn goddamned
+for_christ_sake for_christs_sake for_Christ_sake for_Christs_sake
+for_christ's_sake for_Christ's_sake
+in_Jesus in_Jesus_name in_Jesus'_name in_God's_name in_Lord's_name
+in_Lords_name in_the_Lord's_name the_bejesus
+the_almighty almighty_lord the_almighty_lord
+the_piss_Christ in_piss_Christ:
+  EL-;
 
 others:
   {{Jd-} & Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
@@ -7525,17 +7536,22 @@ whose: (D**w+ & (Mr- or Wq- or Ws- or QI*d- or BIqd- or ((Xc+ or <costly-null>) 
 or (JQ- & D+) or (U+ & Jr- & (RS+ or Cr+));
 
 % Os-: "I'll hire whomever I can find"
+% EL+ & SJr-: "Bring him and whomever else"
+% ({EL+} & Os- & Bsd+): Bring whomever else you care to.
 whomever:
   (R- & Cr+)
   or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
-  or (Os- & Bsd+)
+  or ({EL+} & SJr-)
+  or ({EL+} & (Ss*d+ or Bsd+) & Os-)
   or (Jr- & (RS+ or Cr+))
   or Jw-;
 
+% EL+ & SJr-: "Bring him and whomever else"
 whoever: {EL+} &
   (((Ss*d+ or Bsd+ or [[CX+]]) &
-    (<noun-main-s> or SJr- or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-))) or
-    [[(O- or J-) & CX+]]);
+    (<noun-main-s> or (Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or ({EL+} & SJr-)
+  or [[(O- or J-) & CX+]]);
 
 whatever.c:
   ({EL+} & (((Ss*d+ or Bsd+ or BW+ or D**w+)
