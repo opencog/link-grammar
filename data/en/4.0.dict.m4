@@ -1145,7 +1145,9 @@ nothing no_one nobody:
 everything everyone anyone everybody anybody anything:
 {EN-} & {EL+} & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} &
 <noun-main-s>) or <noun-and-s> or YS+);
-else: EL-;
+
+% EL-: "what the fuck happened?" "what else happened?"
+else the_fuck in_hell in_the_hell: EL-;
 
 others:
   {{Jd-} & Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
@@ -2141,11 +2143,12 @@ did.v-d:
   or [[@MV+ & O*n+]]
   or Vd+;
 
+% <verb-pv-b> & <vc-done>: Pv- & B-: "he fixed what damage there had been done"
 done.v:
-  VERB_PP(<vc-done>) or
-  <verb-po> or
-  <verb-pv-b> or
-  S-;
+  VERB_PP(<vc-done>)
+  or <verb-po>
+  or (<verb-pv-b> & <vc-done>)
+  or S-;
 
 % adjectival modifier: "I am done working", "I am through being mad"
 done.a finished.a through.a:
@@ -5630,17 +5633,21 @@ UNITS: <units-suffix>;
 
 % QI- & (): "I do not know who"
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
+% {EL+} & Wd-: "Who?" "Who else?"
 who:
   (R- & (({MVp+ or MVx+} & RS+) or Cr+))
   or [QI-]
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-))
+  or ({EL+} & Wd-)
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
 % "what are the answers?" takes Sp+
-% Wi-: Dr. Who: "What!"
+% Wd-: Dr. Who: "What!"
+% {EL+} & Wd-: "What else?" "What the fuck?"
 % <directive-opener>: "What, were you expecting Santa?"
 % Wd- & O+: "What a jerk!"
+% O*n-: "I'll tell you what", "Say what?"
 what:
   ({EL+} &
       (D**w+
@@ -5648,12 +5655,13 @@ what:
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
     & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+  or ({EL+} & Wd-)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
   or (Wd- & O+)
-  or <directive-opener>
-  or Wi-;
+  or O*n-
+  or <directive-opener>;
 
 % QI- & (): "I do not know which"
 which: ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+)) or
@@ -6871,8 +6879,11 @@ barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
 partly.e largely.e mostly.e chiefly.e simply.e1
 purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
-% "It sure is great"
+% Em+: "It sure is great"
 sure.ee: Em+;
+
+% Em+: "It sure the fuck is great to see you, man!"
+the_fuck: [Em+];
 
 more_and_more less_and_less more_or_less: Em+;
 

@@ -11,6 +11,8 @@ Version 4.7.9 (??? 2013)
  * Fix: "... this time for real".
  * Fix: "... the impudence to laugh."
  * Fix: "we two", "us two"
+ * Fix: very old parse bug, using "enough"
+ * Fix: "the fuck", "in hell", "in the hell" as synonyms to "else"
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.
