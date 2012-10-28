@@ -101,7 +101,7 @@ void spellcheck_destroy(void * chk)
 /**
  * Return boolean: 1 if spelling looks good, else zero
  */
-int spellcheck_test(void * chk, const char * word)
+Boolean spellcheck_test(void * chk, const char * word)
 {
 	if (NULL == chk)
 	{
@@ -109,7 +109,7 @@ int spellcheck_test(void * chk, const char * word)
 		return 0;
 	}
 
-	return Hunspell_spell((Hunhandle *)chk, word);
+	return (Boolean) Hunspell_spell((Hunhandle *)chk, word);
 }
 
 int spellcheck_suggest(void * chk, char ***sug, const char * word)

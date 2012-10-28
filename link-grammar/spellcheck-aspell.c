@@ -32,6 +32,9 @@ struct linkgrammar_aspell {
 	AspellSpeller *speller;
 };
 
+/**
+ * create a neew spell-checker for the language 'lang'
+ */
 void * spellcheck_create(const char * lang)
 {
 	struct linkgrammar_aspell *aspell = NULL;
@@ -73,6 +76,9 @@ void * spellcheck_create(const char * lang)
 	return aspell;
 }
 
+/**
+ * Free memory structures used wiith spell-checker 'chk'
+ */
 void spellcheck_destroy(void * chk)
 {
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
@@ -84,15 +90,19 @@ void spellcheck_destroy(void * chk)
 	}
 }
 
-int spellcheck_test(void * chk, const char * word)
+/**
+ * Ask the spell-checker if the spelling looks good.
+ * Return true if the spelling is good, else false.
+ */
+Boolean spellcheck_test(void * chk, const char * word)
 {
 	int val = 0;
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
 	if (aspell && aspell->speller)  {
 		/* this can return -1 on failure */
 		val = aspell_speller_check(aspell->speller, word, -1);
-	}	
-	return (val == 1) ? 1 : 0;
+	}
+	return (val == 1) ? TRUE : FALSE;
 }
 
 int spellcheck_suggest(void * chk, char ***sug, const char * word)

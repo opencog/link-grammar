@@ -798,7 +798,7 @@ static void handle_unknown_word(Sentence sent, int i, char * s)
  */
 static void guess_misspelled_word(Sentence sent, int i, char * s)
 {
-	int spelling_ok;
+	Boolean spelling_ok;
 	char str[MAX_WORD+1];
 	Dictionary dict = sent->dict;
 	X_node *d, *head = NULL;
@@ -813,7 +813,7 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
 	}
 
 	/* If the spell-checker knows about this word, and we don't ... 
-	 * Dang. We should fix it  someday. Accept it as such. */
+	 * Dang. We should fix it someday. Accept it as such. */
 	spelling_ok = spellcheck_test(dict->spell_checker, s);
 	if (spelling_ok)
 	{

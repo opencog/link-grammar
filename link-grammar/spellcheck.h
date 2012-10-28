@@ -11,10 +11,11 @@
 /*************************************************************************/
 
 #if (defined HAVE_HUNSPELL) || (defined HAVE_ASPELL)
+#include "api-types.h"
 
 void * spellcheck_create(const char * lang);
 void spellcheck_destroy(void *);
-int spellcheck_test(void *, const char * word);
+Boolean spellcheck_test(void *, const char * word);
 int spellcheck_suggest(void * chk, char ***sug, const char * word);
 void spellcheck_free_suggest(char **sug, int size);
 
@@ -24,7 +25,7 @@ void spellcheck_free_suggest(char **sug, int size);
 
 static inline void * spellcheck_create(const char * lang) { return NULL; }
 static inline void spellcheck_destroy(void * chk) {}
-static inline int spellcheck_test(void * chk, const char * word) { return 0; }
+static inline Boolean spellcheck_test(void * chk, const char * word) { return 0; }
 static inline int spellcheck_suggest(void * chk, char ***sug, const char * word) { return 0; }
 static inline void spellcheck_free_suggest(char **sug, int size) {}
 
