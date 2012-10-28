@@ -160,7 +160,10 @@ static int contains_digits(const char * s)
 }
 
 /** 
- * The string s is the next word of the sentence. 
+ * Make the string 's' be the next word of the sentence. 
+ * That is, it looks like 's' is a word we can handle, so record it
+ * as a bona-fide word in the sentence.
+ *
  * Do not issue the empty string.  
  * Return false if too many words or the word is too long. 
  */
@@ -878,6 +881,16 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
  * Else if just w' is in dict, use disjuncts of w', together with
  * the CAPITALIZED-WORDS rule.
  * Else leave the disjuncts alone.
+ *
+ * XXX There is a fundamental algorithmic failure here, with regards to
+ * spell guessing.  If the mispelled word "dont" shows up, the
+ * spell-guesser will offer both "done" and "don't" as alternatives.
+ * The second alternative should really be affix-stripped, and issued
+ * as two words, not one. But the former only issues as one word.  So,
+ * should we issue two word or one?  ... and so we can't correctly
+ * build sentence expressions for this, since we don't have the correct
+ * word count bythis point.  The viterbi incremental parser won't have
+ * this bug.
  */
 int build_sentence_expressions(Sentence sent, Parse_Options opts)
 {

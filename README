@@ -775,6 +775,12 @@ TODO -- Working Notes:
      some alternate, higher-level logic, could disambiguate (e.g.
      by making use of semantic content).
    * Eliminate many of the hard-coded array sizes in the code.
+   * Fixes the word-count problem during spell-guessing. So, for
+     example, if the mis-spelled word "dont" shows up in the input, it
+     could be issued as one word ("done") or two ("do n't") and the
+     current suffix-stripping/word-issueing algo cannot deal with this
+     correctly. By contrast, this should not be an issue for the 
+     Viterbi algo, as it could explore both states at once.
  
    One may argue that Viterbi is a more natural, biological way of
    working with sequences.  Some experimental, psychological support
