@@ -7353,7 +7353,8 @@ or Xe-));
 
 % ellipsis ... at the end, trailing off ...
 ....y ….y: 
-  CO- & Wd-;
+  (CO- & Wd-)
+  or O-;
 
 % ellipsis ... at the start
 % We- is used only for connecting ellipsis to the left wall.

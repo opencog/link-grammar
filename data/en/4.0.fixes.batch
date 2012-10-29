@@ -3176,6 +3176,7 @@ Someone is outside who wants to see you.
 % ellipsis
 If it weren't for Joe, ...
 If it weren't for Joe, …
+He is more intelligent than ...
 ... a ballroom polished like a skull
 ... polished like a skull
 ... like a skull
@@ -3183,7 +3184,7 @@ If it weren't for Joe, …
 ... how those two should work together
 
 % Compound queries
-% Typically, the two subphrases parse correctly, but, 
+% Typically, the two sub-phrases parse correctly, but, 
 % put together, they do not.
 What is a motor, and how does it work?
 What is a motor; how does it work?
