@@ -79,8 +79,15 @@ My many female friends were angered by the hearings
 Many who initially supported Thomas later changed their minds
 The stupidity of the senators annoyed all my friends
 *The stupidity of the senators annoyed many my friends
+
+% The below is hard to get right. So, although we have
+% "*I want a gift inexpensive" it is OK with a definite determiner:
+% "I want the gift [to be] inexpensive." The phantom [to be] makes
+% the attachment of adjectives difficult to deal with.
+% See 4.0.fixes.batch, "I want it green" for more examples.
 I need to buy a present, but I want something inexpensive
 *I need to buy a present, but I want a gift inexpensive
+
 Anyone who thinks this will work is crazy
 Their program is better than ours
 Those that want to come can come

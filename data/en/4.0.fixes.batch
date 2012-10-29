@@ -1202,16 +1202,32 @@ I'm feeling awful.
 I asked him a question.
 I told Jim a story.
 
+% There is a phantom "to be" in these: "I want it [to be] back"
+% The phantom becomes explicit in the past tense: "I wish it was back"
+% Giving instructions to a shopper:  "I want the gift [to be] inexpensive"
+% However, "*I want a gift inexpensive" is just wrong
 I want it back.
 I want the book back.
 I want it now.
 I want the book now.
 I want the book here, now.
-I want it green.   
+
+% More definite/indefineite determiner distinctions....
+I want the shed to be painted green
+I want the shed painted green
+I want the shed green
+I want it green.
+*I want a shed green
+I want a shed green in color
+
+I want my coffee fresh
+*I want coffee fresh
+
 I want it shiny.
 I wish it was shiny.
 I want it brilliant.
 I want the review to be brilliant.
+I want the review brilliant.
 I want it done.  
 I want the job done.
 I want it finished. 
