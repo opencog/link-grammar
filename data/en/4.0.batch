@@ -75,6 +75,12 @@ Many people were angered by the hearings
 *Many person were angered by the hearings
 Many were angered by the hearings
 My many female friends were angered by the hearings
+
+% "My" is in the dictionary as a female given name.  Thus, the below parses
+% just like "John, some female friends were angered..." with the missing
+% comma allowed, but at high cost (allowed because people get sloppy with
+% their punctuation, and we want to understand people even if they're
+% sloppy.
 *My some female friends were angered by the hearings
 Many who initially supported Thomas later changed their minds
 The stupidity of the senators annoyed all my friends
@@ -173,6 +179,10 @@ I've been grading these stupid exams all day
 *I've been grading these stupid days all exam
 We're having a big party Tuesday
 *We're having a big party our house
+
+% January is in the dictionary as a female given name.  Thus, "important
+% meeting January" is a name with two adjectival modifiers, and thus can
+% be the object of "There is going to be..."
 *There is going to be an important meeting January
 There is going to be an important meeting in January
 There is going to be an important meeting next January
@@ -199,6 +209,10 @@ He left here a quarter of an hour ago
 *He left here a quarter of a dog ago
 *He left here a picture of an hour ago
 I still remember the day I kissed him
+
+% I appears in the dictionary as roman numeral I, so this parses as "room
+% the first", and since "I remember the room kissed him" parses, the below
+% will also.
 *I still remember the room I kissed him
 I'm going to Europe the day I graduate
 Clinton is expected to return to Washington Thursday morning
@@ -215,6 +229,8 @@ In January 1990, a historic new law was passed
 On January 15, 1990, a historic new law was passed
 *On January 320, 1990, a historic new law was passed
 He was convicted under an obscure 1990 law 
+
+% '50 law' parses, because '57 Chevy' has to parse.
 *He was convicted under an obscure 50 law
 I wish I could see him 100 times a day
 *I wish I could see him 3 meals a day

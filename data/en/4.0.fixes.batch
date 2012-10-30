@@ -2117,6 +2117,12 @@ He drove a souped-up '57 Chevy.
 He drove a souped-up 1957 Chevy.
 The 47 Ford came screamin' down the track.
 
+% Decade possessives:
+It's an old 50's love song.
+He's an old 1920's crooner.
+These ideas date back to the 60's
+These ideas date back to the 1860's
+
 % Simple mathematical equation parsing:
 Phosphorylation was observed (P = 0.06).
 Phosphorylation was observed (probability = 0.06).
@@ -3182,6 +3188,7 @@ He is more intelligent than ...
 ... like a skull
 ... gleamed like dogs' eyes in a car's headlights
 ... how those two should work together
+... the 60's.
 
 % Compound queries
 % Typically, the two sub-phrases parse correctly, but, 
