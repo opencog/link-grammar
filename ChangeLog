@@ -14,6 +14,7 @@ Version 4.7.9 (??? 2013)
  * Fix: very old parse bug, using "enough"
  * Fix: assorted profanity as synonyms to "else"
  * Fix: whoever, whomever
+ * Fix: decade possessives: "It's a 60's hit"
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.
