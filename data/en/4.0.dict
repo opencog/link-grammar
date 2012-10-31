@@ -1069,9 +1069,10 @@ you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
 % (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
 % (Jd- & Dmu- & Os-):  "there was enough of it"
+% (Os- & {@M+}): "Do you have it ready?"
 it:
    [J-]
-   or Os-
+   or (Os- & {@M+})
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
    or ((Ss+ or SFsi+) & <CLAUSE>)
