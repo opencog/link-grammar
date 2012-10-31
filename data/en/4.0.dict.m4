@@ -1165,6 +1165,11 @@ the_almighty almighty_lord the_almighty_lord
 the_piss_Christ in_piss_Christ:
   EL-;
 
+% Like above, but more polite, and with commas:
+% "What, exactly, do you want?"
+exactly.ee precisely.ee:
+  {Xc+ & {Xd-}} & EL-;
+
 % E+: "Why didn't you fucking say so?"
 fucking.e bleeping.e:
   EL- or E+;
@@ -6958,7 +6963,8 @@ wholly fully critically greatly grossly duly unduly: EA+ or
 ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
 seemingly utterly: EA+ or Em+;
 barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
-partly.e largely.e mostly.e chiefly.e simply.e1
+
+partly.e largely.e mostly.e chiefly.e simply.e
 purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % Em+: "It sure is great"
@@ -7063,9 +7069,14 @@ simultaneously.e subsequently.e superficially.e thankfully.e
 unofficially.e effectively.e traditionally.e briefly.e
 eventually.e ultimately.e
 mysteriously.e naturally.e oddly.e plainly.e truthfully.e
-appropriately.e simply.e2:
-{EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or
-({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+ or [[EA+]]);
+appropriately.e simply.ee:
+  {EE- or EF+} & (
+    ({Xd- & Xc+} & (MVa- or E+))
+     or ({Xc+ & {Xd-}} & CO+)
+     or EB-
+     or Qe+
+     or Ca+
+     or [[EA+]]);
 
 occasionally.e often.e specifically.e generally.e originally.e:
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or
