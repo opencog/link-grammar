@@ -16,6 +16,8 @@ Version 4.7.9 (??? 2013)
  * Fix: whoever, whomever
  * Fix: decade possessives: "It's a 60's hit"
  * Fix: "... chances that ... could be ..."
+ * Fix: "Do you have it ready?"
+ * Fix: "What John wants are those cats"
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.

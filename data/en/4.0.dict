@@ -2265,10 +2265,13 @@ is.v:
 % are.v:
 %  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
 %    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
+rr.v: S- &O+;
 
 % Don't allow are.v with uncountable noun objects.
+% Ss*t-: "What he wants are the cats"
+%        "What John loves about this movie are the sound effects"
 are.v:
- ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
+ ({@E-} & (Spx- or Ss*t- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
 was.v-d:
