@@ -9245,7 +9245,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % S+ has a cost so that the infinitive I+ is preferred.
 % BI+, QI+: "... how those two should work together"
 ....x ….x: 
-  We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or QI+);
+  We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or QI+ or (R+ & B+ & {S+}));
 
 % ellipsis in the middle
 % Cr- & S+: "... chances that ... could be ..."
