@@ -2640,6 +2640,8 @@ rising.v falling.v:
 %   "What are the chances that Sherlock could really CATCH the criminal?"
 % ({@E-} & B- & O+ & Pa**j+): 
 %   "What are the chances she will really DRIVE him crazy?"
+% ({@E-} & B- & O+ & K+): 
+%   "What are the chances she will DRIVE him up to the farm?"
 %
 % Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
 % "Make it nice and soft"
@@ -2647,10 +2649,11 @@ rising.v falling.v:
 % and so should be reclassed.
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+)
-  or ({O+ or B-} & {K+})
-  or ((O+ or B-) & ({@MV+} & Pa**j+))
-  or ({@E-} & B- & O+ & {Pa**j+})
-  or [[@MV+ & O*n+]]) & {@MV+};
+    or ({O+ or B-} & {K+})
+    or ((O+ or B-) & ({@MV+} & Pa**j+))
+    or ({@E-} & B- & O+ & {Pa**j+ or K+})
+    or [[@MV+ & O*n+]]
+  ) & {@MV+};
 
 /en/words/words.v.6.1:
   
@@ -2850,10 +2853,14 @@ forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v unde
 % See also words.v.6 for optionally transitive verbs.
 % XXX TODO: should be reviewed, as some of them are optionally transitive
 %
+% B- & O+ & {K+}:
+%    what are the chances she will TRACK him down to the farm?
+%
 <vc-kick>:
-  ((K+ & {[[@MV+]]} & O*n+) or
-  ((O+ or B-) & {K+}) or
-  [[@MV+ & O*n+]]) & {@MV+};
+  ((K+ & {[[@MV+]]} & O*n+)
+  or ((O+ or B-) & {K+})
+  or ({@E-} & B- & O+ & {K+})
+  or [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.8.1: 
   ((<verb-pl,i> & (<vc-kick>)) or
@@ -6981,18 +6988,19 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   [({Xc+ & {Xd-}} & CO+)] or
   (Xd- & Xc+ & (MX*x- or MVx-));
 
-under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or (MVp- & B-) or (Yd- & Pp-);
-below above behind.p: ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or (MVp- & B-);
-within:                        ({JQ+} & J+ & <prep-main-a>)           or (MVp- & B-);
-during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or (MVp- & B-);
+under beneath:        ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))   or [MVp- & B-] or (Yd- & Pp-);
+below above behind.p: ({Yd-} & {{JQ+} & J+} & (<prep-main-a> or FM-)) or [MVp- & B-];
+within:                        ({JQ+} & J+ & <prep-main-a>)           or [MVp- & B-];
+during:                        ({JQ+} & J+ & (<prep-main-a> or UN-))  or [MVp- & B-];
 
 from:
   ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
-  or (MVp- & B-)
+  or [MVp- & B-]
   or NIr+;
 
 at toward towards without:
-({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
+  ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+   or [MVp- & B-];
 
 %
 % XXX fixme: MVp- & J+ is wrong: "*I saw John except Fred"
@@ -7003,48 +7011,56 @@ at toward towards without:
 % [[EBm+]]: "but not very"
 except but.misc-ex:
   ({JQ+} & (({EBm+} & [[J+]]) or [[EBm+]] or Mgp+) & <prep-main-a>)
-  or (MVp- & B-)
+  or [MVp- & B-]
   or ((MVp+ or TO+) & <prep-main-a>);
 
 against beyond beside:
-  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-);
+  ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or [MVp- & B-];
 
 between:
-  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or (MVp- & B-) or NIr+;
+  ({JQ+} & (J+ or Mgp+) & <prep-main-a>)
+  or [MVp- & B-]
+  or NIr+;
 
 with:
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-)) or
-  (Jw+ & (RJrj- or RJlj+)) or
-  (MVp- & B-) or
-  (J+ & {EBm+} & ([P+] or [[O*n+]]) &
-    ([({Xc+ & {Xd-}} & CO+)] or
-    MVp- or
-    (Xd- & Xc+ & (MX*x- or MVx-))));
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or RJrv-))
+  or (Jw+ & (RJrj- or RJlj+))
+  or [MVp- & B-]
+  or (J+ & {EBm+} & ([P+] or [[O*n+]]) & (
+    [({Xc+ & {Xd-}} & CO+)]
+    or MVp-
+    or (Xd- & Xc+ & (MX*x- or MVx-))));
 
 among:
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or
-  (MVp- & B-);
+  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
+  or [MVp- & B-];
 
 % FL+ "for long"
 for.p:
-  ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-)) or
-  (J+ & (RJrj- or RJlj+)) or
-  (MVp- & B-) or
-  (MG- & JG+) or
-  (MVp- & FL+);
+  ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-))
+  or (J+ & (RJrj- or RJlj+))
+  or [MVp- & B-]
+  or (MG- & JG+)
+  or (MVp- & FL+);
 
-into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or (MVp- & B-);
-about: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or EN+ or EZ+ or
-  (MVp- & B-) or (TOf+ & (Mp- or MVp- or Pp-)) or MVa-;
+into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
+about:
+  ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
+  or EN+
+  or EZ+
+  or [MVp- & B-]
+  or (TOf+ & (Mp- or MVp- or Pp-))
+  or MVa-;
 
 through.r:
   ({JQ+} & J+ & (<prep-main-a> or FM-))
-  or (MVp- & B-);
+  or [MVp- & B-];
 
 <prep-across>:
   ({JQ+} & J+ & (<prep-main-a> or FM-))
   or K-
-  or (MVp- & B-);
+  or [MVp- & B-];
 
 across along: <prep-across>;
 
@@ -7055,49 +7071,53 @@ off:
 past.p:
   ({Yd-} & {JQ+} & J+ & (<prep-main-a> or FM-))
   or K-
-  or (MVp- & B-);
+  or [MVp- & B-];
 
 around:
-  <alter-preps> or
-  ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-)) or K- or (MVp- & B-)
+  <alter-preps>
+  or ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
+  or K-
+  or [MVp- & B-]
   or [EN+] or MVa-;
 
 out.r up.r down.r:
-  ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-)) or
-  K- or ({Yd-} & Pp-) or (MVp- & B-);
+  ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-))
+  or K-
+  or ({Yd-} & Pp-)
+  or [MVp- & B-];
 
 by:
-  <alter-preps> or
-  ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-)) or
-  K- or
-  (MVp- & B-);
+  <alter-preps>
+  or ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-))
+  or K-
+  or [MVp- & B-];
 
 in.r:
-  <alter-preps> or
-  ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-)) or
-  K- or
-  (MVp- & B-) or
-  (MG- & JG+);
+  <alter-preps>
+  or ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-))
+  or K-
+  or [MVp- & B-]
+  or (MG- & JG+);
 
 on upon:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>)
   or K-
-  or (MVp- & B-);
+  or [MVp- & B-];
 
 over:
-  ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-)) or
-  K- or
-  EN+ or
-  (MVp- & B-) or
-  (Yd- & Pp-);
+  ({Yd-} & {JQ+} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
+  or K-
+  or EN+
+  or [MVp- & B-]
+  or (Yd- & Pp-);
 
 just_over just_under well_over: EN+;
 
 % XXX original LG recommends using the LI link, however the
 % <prep-main-b> sort of clobbers this. Should this be "fixed"?
 like.p: ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
-or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or (MVp- & B-);
+or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or [MVp- & B-];
 unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or
 (Xd- & Xc+ & (E+ or MVx-)));
 
@@ -7152,7 +7172,7 @@ worth.p: (Mp- & (J+ or OF+)) or (Paf- & Mgp+) or (Pa- & (J+ or B-));
 opposite.p: J+ & <prep-main-b>;
 better_off worse_off: {EC-} & Pa- & {Pg+};
 
-off_of out_of:  ({JQ+} & J+ & <prep-main-b>) or (MVp- & B-);
+off_of out_of:  ({JQ+} & J+ & <prep-main-b>) or [MVp- & B-];
 
 despite notwithstanding
 other_than apart_from aside_from: (J+ or Mgp+) & (MVp- or (Xd- & Xc+ &
