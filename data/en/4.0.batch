@@ -986,6 +986,9 @@ The Zongle of Bongle Dongle resigned today
 % A Zongle with a Mercedes Benz resigned today -- is valid.
 % *A Zongle with a Bongle Dongle resigned today
 The National Association of Linguists is meeting here
+
+% "An" appears in the dictionary as a female given name, thus allowing the
+% below to parse in a rather awkward manner.
 *An Association that many Linguists belong to is meeting here
 An association that many linguists belong to is meeting here
 If you were a middle-class American without a job, who would you vote for

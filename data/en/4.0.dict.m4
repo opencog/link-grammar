@@ -6271,15 +6271,18 @@ easy.a hard.a simple.a difficult.a fun.a expensive.a:
     [[{DD-} & <noun-and-p>]] or
     ({TOt+ & B+} & <adj-op>));
 
+% M-: "Do you have an example ready?"
+% Although we'd like to use Ma- for the above, post-processing prevents this.
 ready.a:
-  {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((TOt+ & B+) or TO+) & {LE+}}) or
-    ({@MV+} & {((TOt+ & B+) or TO+) & {LE+}} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    ({TO+ or (TOt+ & B+)} & <adj-op>));
+  {EA- or EF+} & (
+    ({[[@Ec-]]} & {Xc+} & A+)
+    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((TOt+ & B+) or TO+) & {LE+}})
+    or ({@MV+} & {((TOt+ & B+) or TO+) & {LE+}} & MJla+)
+    or AA+
+    or M-
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({TO+ or (TOt+ & B+)} & <adj-op>));
 
 silly.a nasty.a pleasant.a unpleasant.a dangerous.a cruel.a standard.a safe.a
 legal.a illegal.a:
