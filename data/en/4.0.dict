@@ -7446,7 +7446,7 @@ block.i foot.i mile.i yard.i inch.i
 meter.i millimeter.i centimeter.i micrometer.i kilometer.i
 micron.i Angstrom.i wavelength.i
 astronomical_unit light-year.i:
-(NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-)) or Us-;
+  (NS- & {NJ-} & {EN-} & (Yd+ or EC+ or [[MVp-]] or Ya+ or OD-)) or Us-;
 
 % make sure that mile.i always has precedence over mile.n
 % XXX TODO: probably same for the other .i's above...
@@ -7462,7 +7462,6 @@ dollars.i cents.i:  NIn- & (EC+ or Yd+ or OD-);
 1_dollar one_dollar a_dollar 1_cent
 one_cent a_cent: {NJ-} & (EC+ or Yd+ or OD-);
 share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
-dollar.i cent.i: ((NIm- or NIn- or NIe-) & AN+) or (NS- & {NJ-} & (EC+ or Yd+ or OD-));
 
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
 tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+ or
@@ -7496,10 +7495,12 @@ UNITS: <units-suffix>;
 /en/words/units.4.dot: {Xi+} & <time-units>;
 
 % money, similar to units, above.
+% Ds-: "We are talking about the dollar"
 /en/words/currency:
-((NIm- or NIn- or NIe-) & AN+) or
-((NIm- or NIn- or NIe-) & (Op- or Jp-) & {Mp+}) or
-((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-)) or Us-;
+  ((NIm- or NIn- or NIe-) & AN+)
+  or ((NIm- or NIn- or NIe- or Ds-) & (Op- or Jp-) & {Mp+})
+  or ((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
+  or Us-;
 
 /en/words/currency.p:
   ((NIn- or NIe-) & AN+)
