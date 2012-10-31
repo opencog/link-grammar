@@ -572,7 +572,8 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % Gonna treat these as mass nouns, not sure if this is correct.
 % "She wished me goodnight" "She wishes you well"
-bye.n-u farewell.n-u goodbye.n-u goodnight.n-u welcome.n-u well.n-u:
+adieu.n-u bye.n-u farewell.n-u fare-thee-well good-bye.n-u goodbye.n-u
+good-night.n-u goodnight.n-u welcome.n-u well.n-u:
   <mass-noun>;
 
 % Want to cost this so that it doesn't interfere with given name "Tom".
