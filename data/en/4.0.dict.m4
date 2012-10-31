@@ -734,7 +734,7 @@ accusation.n possibility.n idea.n problem.n claim.n result.n
 statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
 message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n inkling.n supposition.n
-finding.n amount.n answer.n crux.n shame.n:
+finding.n amount.n answer.n crux.n shame.n thing.n:
   (<noun-modifiers> &
     ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-s> or
