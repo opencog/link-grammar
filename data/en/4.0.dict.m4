@@ -2567,18 +2567,18 @@ rising.v falling.v:
 % The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
 %   "she walked out of the room two minutes"
 %
-% ({@E-} & I- & B- & O+): 
-%   "What are the chances that Sherlock could really CAPTURE the criminal?"
+% ({@E-} & B- & O+): 
+%   "What are the chances that Sherlock could really CATCH the criminal?"
 %
 % Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
 % "Make it nice and soft"
 % XXX However, very few of these verbs actually take the Pa**j link ...
-% and so should be reclaased.
+% and so should be reclassed.
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+)
   or ({O+ or B-} & {K+})
   or ((O+ or B-) & ({@MV+} & Pa**j+))
-  or ({@E-} & I- & B- & O+)
+  or ({@E-} & B- & O+)
   or [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.6.1:
@@ -2656,16 +2656,18 @@ and.v-fill:
 % ------------------------------------------------------------
 % common transitive verbs
 % abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v
-<vc-trans>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
-
-% ({@E-} & I- & B- & O+):
+%
+% ({@E-} & B- & O+):
 %    "What are the chances that Sherlock could really solve a crime?"
-/en/words/words.v.4.1 :
-   VERB_PLI(<vc-trans>)
-   or ({@E-} & I- & B- & O+);
-/en/words/words-medical.v.4.1:
-   VERB_PLI(<vc-trans>)
-   or ({@E-} & I- & B- & O+);
+<vc-trans>:
+  (O+
+   or B-
+   or [[@MV+ & O*n+]]
+   or ({@E-} & B- & O+)
+  ) & {@MV+};
+
+/en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
+/en/words/words-medical.v.4.1: VERB_PLI(<vc-trans>);
 
 /en/words/words.v.4.2: VERB_S_T(<vc-trans>);
 /en/words/words-medical.v.4.2: VERB_S_T(<vc-trans>);
