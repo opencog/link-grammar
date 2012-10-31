@@ -2331,10 +2331,13 @@ am.v:
 % S*x- used for passive participles: "this action be taken".
 % XXX I used verb-and-sp-i- but maybe this is wrong ..
 % "Show me my notes and be nice about it."
+% ({@E-} & I- & B- & O+):
+%   "What are the chances that Einstein could really be a genius?"
 be.v:
   ({@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be>] or ()))
-  or (<vc-be> & <verb-and-sp-i+>);
+  or (<vc-be> & <verb-and-sp-i+>)
+  or ({@E-} & I- & B- & O+);
 
 been.v: {@E-} & PPf- & <vc-be>;
 
@@ -2561,7 +2564,13 @@ rising.v falling.v:
   ({O+ or B-} & {K+}) or
   ((B- or O+) & ({@MV+} & Pa**j+)) or
   [[@MV+ & O*n+]]) & {@MV+};
-/en/words/words.v.6.1: VERB_PLI(<vc-fill>);
+
+% ({@E-} & I- & B- & O+):
+%   "What are the chances that Sherlock could really catch the criminal?"
+/en/words/words.v.6.1:
+  VERB_PLI(<vc-fill>)
+  or ({@E-} & I- & B- & O+);
+
 /en/words/words.v.6.2: VERB_S_T(<vc-fill>);
 /en/words/words.v.6.3:
   VERB_SPPP_T(<vc-fill>) or
@@ -2635,8 +2644,15 @@ and.v-fill:
 % common transitive verbs
 % abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v
 <vc-trans>: (O+ or B- or [[@MV+ & O*n+]]) & {@MV+};
-/en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
-/en/words/words-medical.v.4.1: VERB_PLI(<vc-trans>);
+
+% ({@E-} & I- & B- & O+):
+%    "What are the chances that Sherlock could really solve a crime?"
+/en/words/words.v.4.1 :
+   VERB_PLI(<vc-trans>)
+   or ({@E-} & I- & B- & O+);
+/en/words/words-medical.v.4.1:
+   VERB_PLI(<vc-trans>)
+   or ({@E-} & I- & B- & O+);
 
 /en/words/words.v.4.2: VERB_S_T(<vc-trans>);
 /en/words/words-medical.v.4.2: VERB_S_T(<vc-trans>);
@@ -7366,8 +7382,8 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   or (SJn- & SJr+ & SJn+);
 
 % :.j
-"….j" ":.j" "•": ({@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+})
-or Xe-));
+"….j" ":.j" "•":
+  {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) or Xe-);
 
 % ellipsis ... at the end, trailing off ...
 ....y ….y: 
@@ -7381,6 +7397,11 @@ or Xe-));
 % BI+, QI+: "... how those two should work together"
 ....x ….x: 
   We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or QI+);
+
+% ellipsis in the middle
+% Cr- & S+: "... chances that ... could be ..."
+....xy ….xy:
+   Cr- & S+;
 
 % The percent sign following a number
 % Also -- see above, for handling of 12ft. 12in. not just 12%
