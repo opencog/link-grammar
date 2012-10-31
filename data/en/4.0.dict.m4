@@ -1948,10 +1948,14 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & (Pv- or Mv-);
-<verb-ge>: {@E-} & (<MX-PHRASE> or
- <OPENER> or
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
- [DP- & J-] or [[Wq- & PF+]]);
+
+<verb-ge>:
+  {@E-} & (
+    <MX-PHRASE>
+    or <OPENER>
+    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
+    or [DP- & J-]
+    or [[Wq- & PF+]]);
 
 % ({[[Ds-]]} & OF+) : "a running of the bulls" "a polishing of prose"
 % AJ: allows use of gerunds as adjectives: "described as smooth and obliging"
@@ -1967,15 +1971,21 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
      <noun-and-u>)) or
   [[AN+]];
 
-<verb-pg,ge>: {@E-} & (
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
- Mg- or Pg- or
- <MX-PHRASE> or <OPENER> or
- [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
+<verb-pg,ge>:
+  {@E-} & (
+    <MX-PHRASE>
+    or <OPENER>
+    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
+    or Mg-
+    or Pg-
+    or [DP- & J-]
+    or [[Wq- & PF+ & {@MV+}]]);
 
-<verb-po>: {@E-} & {@MV+} & (
- <MX-PHRASE> or <OPENER> or
- [[Wq- & PF+ & {@MV+} & {CC+}]]);
+<verb-phrase-opener>:
+  {@E-} & {@MV+} & (
+    <MX-PHRASE>
+    or <OPENER>
+    or [[Wq- & PF+ & {@MV+} & {CC+}]]);
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -1999,10 +2009,15 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-x-sp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-)));
 <verb-x-pp>: {@E-} & PPf-;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
-<verb-x-pg,ge>: {@E-} & (Pgf- or Mg- or
- ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>)) or
- <MX-PHRASE> or <OPENER> or
- [DP- & J-] or [[Wq- & PF+ & {@MV+}]]);
+<verb-x-pg,ge>:
+  {@E-} & (
+    <MX-PHRASE>
+    or <OPENER>
+    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
+    or Mg-
+    or Pgf-
+    or [DP- & J-]
+    or [[Wq- & PF+ & {@MV+}]]);
 
 % conjoined verbs.
 % VJr == left
@@ -2134,7 +2149,7 @@ define(`VERB_X_PLI',`'
 %({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
 %does.v: (<verb-x-s> & <vc-do>) or ((SIs+ or SFIs+) & (({Q-} & I*d+) or CQ-));
 %did.v: (<verb-x-sp> & <vc-do>) or ((SI+ or SFI+) & (({Q-} & I*d+) or CQ-));
-%done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-pv> or <verb-po>;
+%done.v: (<verb-pp> & (B- or O+ or [[@MV+ & O*n+]] or Vd+)) or <verb-pv> or <verb-phrase-opener>;
 %doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 %doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 %
@@ -2180,7 +2195,7 @@ did.v-d:
 % <verb-pv-b> & <vc-done>: Pv- & B-: "he fixed what damage there had been done"
 done.v:
   VERB_PP(<vc-done>)
-  or <verb-po>
+  or <verb-phrase-opener>
   or (<verb-pv-b> & <vc-done>)
   or S-;
 
@@ -2500,7 +2515,7 @@ came.v-d: VERB_SPPP_I(<vc-come>);
   VERB_SPPP_T(`<vc-tr,intr>') or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 /en/words/words.v.2.4:
   <verb-pg> & <vc-tr,intr>;
@@ -2517,14 +2532,14 @@ shrunk.v withdrawn.v sunk.v forgiven.v:
   VERB_PP(`<vc-tr,intr>') or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
   VERB_SPPP_T(`<vc-tr,intr>')
   or (<verb-ico> & <vc-tr,intr>)
   or <verb-pv>
   or ({@E-} & A+)
-  or <verb-po>;
+  or <verb-phrase-opener>;
 
 % --------------------------------------------------------------
 
@@ -2538,7 +2553,7 @@ judged.v-d:
   VERB_SPPP_T(`<vc-judge>') or
   (<verb-pv> & {{@MV+} & Pa+}) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 judging.v:
   <verb-pg> & <vc-judge>;
 judging.g:
@@ -2589,14 +2604,14 @@ rising.v falling.v:
   VERB_SPPP_T(<vc-fill>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   ({@E-} & A+) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 
 split.v-d spread.v-d beat.v-d fit.v-d shut.v-d cast.v-d:
   VERB_SPPP_T(<vc-fill>) or
   (<verb-ico> & <vc-fill>) or
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
 drove.v-d flew.v-d froze.v-d hid.v-d ran.v-d
@@ -2629,12 +2644,12 @@ stridden.v slain_dead:
   VERB_PP(<vc-fill>) or
   (<verb-pv> & {K+}) or
   ({@E-} & A+) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 
 run.v: VERB_PLI(<vc-fill>) or
   VERB_PP(<vc-fill>) or
   (<verb-pv> & {K+}) or
-  ({@E-} & A+) or ({K+} & <verb-po>);
+  ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.6.4:
   (<verb-pg> & <vc-fill>) or
@@ -2676,7 +2691,7 @@ and.v-fill:
   VERB_SPPP_T(<vc-trans>) or
   <verb-pv> or
   (({@E-} or {@EA-} or {@AN-}) & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 % !?XXX many of the new additions fail some common sentences, such as:
 % The candle guttered. It plummeted to the bottom. Prices plummeted!
@@ -2684,7 +2699,7 @@ and.v-fill:
   VERB_SPPP_T(<vc-trans>) or
   <verb-pv> or
   (({@E-} or {@EA-} or {@AN-}) & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d
 overran.v-d mistook.v-d underwrote.v-d: VERB_SP_T(<vc-trans>);
@@ -2694,12 +2709,12 @@ overrun.v-d upset.v-d undercut.v-d:
   (<verb-ico> & <vc-trans>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v:
   VERB_PP(<vc-trans>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 /en/words/words.v.4.4
 /en/words/words-medical.v.4.4:
@@ -2733,19 +2748,19 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
   VERB_PP(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   ({@E-} & A+) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 
 /en/words/words.v.8.3:
   VERB_SPPP_T(<vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   ({@E-} & A+) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 
 cut.v:
   VERB_SPPP_T(<vc-kick>) or
   (<verb-ico> & <vc-kick>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
-  ({@E-} & A+) or ({K+} & <verb-po>);
+  ({@E-} & A+) or ({K+} & <verb-phrase-opener>);
 /en/words/words.v.8.4: <verb-pg> & <vc-kick>;
 /en/words/words.v.8.5:
   (<vc-kick> & <verb-ge>) or
@@ -2759,7 +2774,7 @@ raised.v-d lowered.v-d upped.v-d:
   VERB_SPPP_T(<vc-raise>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 raising.v lowering.v upping.v: <verb-pg> & <vc-raise>;
 raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
 
@@ -2773,7 +2788,7 @@ tended.v-d:
   VERB_SPPP_T(<vc-tend>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 tending.v: <verb-pg> & <vc-tend>;
 
 % INTRANSITIVE COMPLEX VERBS (those that do not take O+)
@@ -3077,7 +3092,7 @@ professed.v-d desired.v-d:
   VERB_SPPP_T(<vc-attempt>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 undertook.v-d: VERB_SP_T(<vc-attempt>);
 undertaken.v: VERB_PP(<vc-attempt>) or <verb-pv>;
 attempting.g undertaking.g deserving.g
@@ -3096,7 +3111,7 @@ desiring.v:
 ([[@MV+ & O*n+]])) & {@MV+});
 seek.v: VERB_PLI(<vc-seek>);
 seeks.v: VERB_S_T(<vc-seek>);
-sought.v-d: VERB_SPPP_T(<vc-seek>) or <verb-pv> or <verb-po>;
+sought.v-d: VERB_SPPP_T(<vc-seek>) or <verb-pv> or <verb-phrase-opener>;
 seeking.g: (<vc-seek> & <verb-ge>) or <verb-ge-d>;
 seeking.v: <verb-pg> & <vc-seek>;
 
@@ -3107,7 +3122,7 @@ declines.v fails.v hastens.v volunteers.v aims.v: VERB_S_T(<vc-decline>);
 declined.v-d hastened.v-d volunteered.v-d aimed.v-d:
   VERB_SPPP_T(<vc-decline>) or
   <verb-pv> or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 failed.v-d:
   VERB_SPPP_T(<vc-decline>) or
@@ -3130,7 +3145,7 @@ declining.v failing.v hastening.v volunteering.v aiming.v:
 fight.v: VERB_PLI(<vc-fight>);
 fights.v: VERB_S_T(<vc-fight>);
 fought.v-d: VERB_SPPP_T(<vc-fight>) or (<verb-pv-b> & {K+} & {@MV+}) or
-({K+} & <verb-po>);
+({K+} & <verb-phrase-opener>);
 fighting.g: (<vc-fight> & <verb-ge>) or <verb-ge-d>;
 fighting.v: <verb-pg> & <vc-fight>;
 
@@ -3147,7 +3162,7 @@ threatened.v-d meant.v-d arranged.v-d pledged.v-d:
   VERB_SPPP_T(<vc-threaten>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 meaning.g arranging.g threatening.g pledging.g:
   (<vc-threaten> & <verb-ge>) or <verb-ge-d>;
@@ -3163,7 +3178,7 @@ planned.v-d confessed.v-d:
   VERB_SPPP_T(<vc-plan>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 planning.g confessing.g: (<vc-plan> & <verb-ge>) or <verb-ge-d>;
 planning.v confessing.v: <verb-pg> & <vc-plan>;
 
@@ -3177,7 +3192,7 @@ decides.v resolves.v: VERB_S_T(<vc-decide>);
 decided.v-d resolved.v-d:
   VERB_SPPP_T(<vc-decide>) or
   (<verb-s-pv> & {THi+}) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 deciding.v resolving.v: <verb-pg> & <vc-decide>;
 deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
@@ -3188,13 +3203,13 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
-remembered.v-d: VERB_SPPP_T(<vc-forget>) or <verb-pv> or <verb-po>;
+remembered.v-d: VERB_SPPP_T(<vc-forget>) or <verb-pv> or <verb-phrase-opener>;
 forgot.v-d: VERB_SP_T(<vc-forget>);
 forgotten.v:
   VERB_PP(<vc-forget>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 remembering.g forgetting.g: (<vc-forget> & <verb-ge>) or <verb-ge-d>;
 remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
@@ -3203,7 +3218,7 @@ remembering.v forgetting.v: <verb-pg> & <vc-forget>;
   ({@MV+} & (TH+ or TO+ or Ce+ or RSe+ or Zs- or QI+ or (OF+ & {@MV+})));
 learn.v: VERB_PLI(<vc-learn>);
 learns.v: VERB_S_T(<vc-learn>);
-learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-po>;
+learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-opener>;
 learning.g: (<vc-learn> & <verb-ge>) or <verb-ge-d>;
 learning.v: <verb-pg> & <vc-learn>;
 
@@ -3212,7 +3227,7 @@ learning.v: <verb-pg> & <vc-learn>;
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
 proposed.v-d: VERB_SPPP_T(<vc-propose>) or
-(<verb-s-pv> & {THi+ or TSi+ or Z-}) or ({@E-} & A+) or <verb-po>;
+(<verb-s-pv> & {THi+ or TSi+ or Z-}) or ({@E-} & A+) or <verb-phrase-opener>;
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
@@ -3221,7 +3236,7 @@ proposing.v: <verb-pg> & <vc-propose>;
 demand.v: VERB_PLI(<vc-demand>);
 demands.v: VERB_S_T(<vc-demand>);
 demanded.v-d: VERB_SPPP_T(<vc-demand>) or <verb-pv> or
-<verb-po>;
+<verb-phrase-opener>;
 demanding.v: <verb-pg> & <vc-demand>;
 demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
 
@@ -3230,7 +3245,7 @@ demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
 beg.v plead.v: VERB_PLI(<vc-beg>);
 begs.v pleads.v: VERB_S_T(<vc-beg>);
 begged.v-d pleaded.v-d: VERB_SPPP_T(<vc-beg>) or <verb-pv> or
-<verb-po>;
+<verb-phrase-opener>;
 begging.v pleading.v: <verb-pg> & <vc-beg>;
 begging.g pleading.g: (<vc-beg> & <verb-ge>) or <verb-ge-d>;
 
@@ -3240,7 +3255,7 @@ bear.v:
   (<verb-pl> & <vc-bear>);
 bears.v: VERB_S_T(<vc-bear>);
 bore.v-d: VERB_SPPP_T(<vc-bear>);
-born.v: VERB_PP(<vc-bear>) or <verb-pv> or <verb-po>;
+born.v: VERB_PP(<vc-bear>) or <verb-pv> or <verb-phrase-opener>;
 bearing.g: (<vc-bear> & <verb-ge>) or <verb-ge-d>;
 bearing.v: <verb-pg> & <vc-bear>;
 
@@ -3254,7 +3269,7 @@ loves.v dislikes.v hates.v: VERB_S_T(<vc-love>);
 loved.v-d disliked.v-d hated.v-d:
   VERB_SPPP_T(<vc-love>) or
   <verb-pv> or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 loving.g disliking.g hating.g: (<vc-love> & <verb-ge>) or <verb-ge-d>;
 loving.v disliking.v hating.v: <verb-pg> & <vc-love>;
@@ -3268,15 +3283,15 @@ begins.v continues.v ceases.v: VERB_S_T(<vc-begin>);
 ceased.v-d:
   VERB_SPPP_T(<vc-begin>) or
   <verb-pv> or
-  <verb-po>;
+  <verb-phrase-opener>;
 continued.v-d:
   VERB_SPPP_T(<vc-begin>) or
   <verb-pv> or
-  <verb-po> or
+  <verb-phrase-opener> or
   ({@E-} & A+);
 began.v-d: VERB_SP_T(<vc-begin>);
 
-begun.v: VERB_PP(<vc-begin>) or <verb-pv> or <verb-po>;
+begun.v: VERB_PP(<vc-begin>) or <verb-pv> or <verb-phrase-opener>;
 beginning.g ceasing.g:
   (<vc-begin> & <verb-ge>) or <verb-ge-d>;
 continuing.g: (<vc-begin> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
@@ -3294,7 +3309,7 @@ starts.v stops.v tries.v: VERB_S_T(<vc-start>);
 started.v-d stopped.v-d tried.v-d:
   VERB_SPPP_T(<vc-start>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 
 starting.g stopping.g trying.g: (<vc-start> & <verb-ge>) or <verb-ge-d>;
 starting.v stopping.v trying.v: <verb-pg> & <vc-start>;
@@ -3317,7 +3332,7 @@ recounted.v-d signified.v-d clarified.v-d disclosed.v-d
 recollected.v-d adduced.v-d posited.v-d
 reiterated.v-d inferred.v-d presupposed.v-d:
  VERB_SPPP_T(<vc-dispute>) or (<verb-s-pv> & {THi+}) or ({@E-} & A+)
-or <verb-po>;
+or <verb-phrase-opener>;
 recognizing.g disputing.g accepting.g calculating.g deducing.g recording.g
 envisioning.g recounting.g signifying.g clarifying.g disclosing.g
 recollecting.g adducing.g positing.g reiterating.g inferring.g presupposing.g:
@@ -3335,12 +3350,12 @@ repeats.v reflects.v provides.v counters.v signals.v: VERB_S_T(<vc-repeat>);
 repeated.v-d reflected.v-d countered.v-d signaled.v-d signalled.v-d:
   VERB_SPPP_T(<vc-repeat>) or
   <verb-pv> or
-  <verb-po> or
+  <verb-phrase-opener> or
   ({@E-} & A+);
 provided.v-d:
   VERB_SPPP_T(<vc-repeat>) or
   <verb-pv> or
-  <verb-po> or
+  <verb-phrase-opener> or
   ({@E-} & A+) or
   ((TH+ or Ce+) & (({{Xd-} & Xc+} & CO+) or ({Xd- & Xc+} & MVs-)));
 repeating.v reflecting.v providing.v countering.v signaling.v signalling.v:
@@ -3367,7 +3382,7 @@ trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
   VERB_SPPP_T(<vc-sense>) or
   (<verb-s-pv> & {THi+}) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 reaffirming.g sensing.g doubting.g stipulating.g
 reckoning.g regretting.g proclaiming.g ascertaining.g
 discerning.g affirming.g certifying.g trusting.g
@@ -3393,7 +3408,7 @@ imagined.v:
   VERB_SPPP_T(<vc-imagine>) or
   (<verb-s-pv> & {THi+}) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
 imagining.v: <verb-pg> & <vc-imagine>;
 
@@ -3414,13 +3429,13 @@ confirmed.v-d stressed.v-d assumed.v-d:
   VERB_SPPP_T(<vc-declare>) or
   (<verb-s-pv> & {THi+ or ({@MV+} & Pa+) }) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 foresaw.v-d: VERB_SP_T(<vc-declare>);
 foreseen.v:
   VERB_PP(<vc-declare>) or
   (<verb-s-pv> & {@MV+ or THi+}) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 declaring.g fearing.g concluding.g suspecting.g conceding.g
 presuming.g foreseeing.g emphasizing.g maintaining.g acknowledging.g
 noting.g confirming.g stressing.g assuming.g:
@@ -3435,7 +3450,7 @@ noting.v confirming.v stressing.v assuming.v:
 believe.v answer.v worry.v protest.v: VERB_PLI(<vc-believe>);
 believes.v answers.v worries.v protests.v: VERB_S_T(<vc-believe>);
 believed.v-d answered.v-d worried.v-d protested.v-d:
-  VERB_SPPP_T(<vc-believe>) or (<verb-s-pv> & {THi+ or TOf+}) or <verb-po>;
+  VERB_SPPP_T(<vc-believe>) or (<verb-s-pv> & {THi+ or TOf+}) or <verb-phrase-opener>;
 believing.g answering.g worrying.g protesting.g:
 (<vc-believe> & <verb-ge>) or <verb-ge-d>;
 believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
@@ -3451,7 +3466,7 @@ rules.v adds.v: VERB_S_T(<vc-rule>);
 ruled.v-d added.v-d:
   VERB_SPPP_T(<vc-rule>) or
   (<verb-s-pv-b> & {({@MV+} & (THi+ or TOf+)) or ({K+} & {@MV+})}) or
-  ({K+} & <verb-po>) or
+  ({K+} & <verb-phrase-opener>) or
   ({@E-} & A+);
 ruling.g adding.g: (<vc-rule> & <verb-ge>) or <verb-ge-d>;
 ruling.v adding.v: <verb-pg> & <vc-rule>;
@@ -3466,7 +3481,7 @@ figures.v: VERB_S_T(<vc-figure>);
 figured.v-d:
   VERB_SPPP_T(<vc-figure>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 figuring.g: (<vc-figure> & <verb-ge>) or <verb-ge-d>;
 figuring.v: <verb-pg> & <vc-figure>;
 
@@ -3493,12 +3508,12 @@ envisaged.v-d:
   VERB_SPPP_T(<vc-predict>) or
   (<verb-s-pv> & {THi+}) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
   ({@E-} & (Pvf- or [[Mv-]]) & {@MV+} & {THi+}) or
   [[{@E-} & A+]] or
-  [[<verb-po>]];
+  [[<verb-phrase-opener>]];
 predicting.g realizing.g discovering.g determining.g
 announcing.g saying.g mentioning.g admitting.g recalling.g revealing.g
 stating.g observing.g indicating.g
@@ -3520,11 +3535,11 @@ guess.v estimate.v understand.v notice.v explain.v demonstrate.v:
 guesses.v estimates.v understands.v notices.v explains.v demonstrates.v:
   VERB_S_T(<vc-guess>);
 guessed.v-d understood.v-d noticed.v-d explained.v-d demonstrated.v-d:
-  VERB_SPPP_T(<vc-guess>) or (<verb-s-pv> & {THi+}) or <verb-po>;
+  VERB_SPPP_T(<vc-guess>) or (<verb-s-pv> & {THi+}) or <verb-phrase-opener>;
 estimated.v-d:
   VERB_SPPP_T(<vc-guess>) or
   (<verb-s-pv> & {THi+}) or
-  <verb-po> or
+  <verb-phrase-opener> or
   ({@E-} & A+);
 guessing.g estimating.g understanding.g noticing.g explaining.g
 demonstrating.g: (<vc-guess> & <verb-ge>) or <verb-ge-d>;
@@ -3542,7 +3557,7 @@ knew.v-d: VERB_SP_T(<vc-know>);
 known.v:
   VERB_PP(<vc-know>) or
   (<verb-s-pv> & {THi+ or TOf+ or QIi+}) or
-  <verb-po> or
+  <verb-phrase-opener> or
   ({@E-} & A+);
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
 knowing.v: <verb-pg> & <vc-know>;
@@ -3555,7 +3570,7 @@ requested.v-d:
   VERB_SPPP_T(<vc-request>) or
   (<verb-s-pv> & {THi+ or TSi+}) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 requesting.g: (<vc-request> & <verb-ge>) or <verb-ge-d>;
 requesting.v: <verb-pg> & <vc-request>;
 
@@ -3563,7 +3578,7 @@ requesting.v: <verb-pg> & <vc-request>;
   ({@MV+} & (Pa+ or TH+ or Ce+ or RSe+ or AF- or Vf+ or (LI+ or {@MV+}) or [[Pv+]]));
 feel.v: VERB_PLI(<vc-feel>);
 feels.v: VERB_S_T(<vc-feel>);
-felt.v-d: VERB_SPPP_T(<vc-feel>) or (<verb-s-pv> & {THi+}) or <verb-po>;
+felt.v-d: VERB_SPPP_T(<vc-feel>) or (<verb-s-pv> & {THi+}) or <verb-phrase-opener>;
 feeling.g: (<vc-feel> & <verb-ge>) or <verb-ge-d>;
 feeling.v: <verb-pg> & <vc-feel>;
 
@@ -3571,7 +3586,7 @@ feeling.v: <verb-pg> & <vc-feel>;
   ({@MV+} & (QI+ or TH+ or Pg+));
 mind.v: VERB_PLI(<vc-mind>);
 minds.v: VERB_S_T(<vc-mind>);
-minded.v-d: VERB_SPPP_T(<vc-mind>) or <verb-pv> or <verb-po>;
+minded.v-d: VERB_SPPP_T(<vc-mind>) or <verb-pv> or <verb-phrase-opener>;
 minding.g: (<vc-mind> & <verb-ge>) or <verb-ge-d>;
 minding.v: <verb-pg> & <vc-mind>;
 
@@ -3581,7 +3596,7 @@ studies.v: VERB_S_T(<vc-study>);
 studied.v-d:
   VERB_SPPP_T(<vc-study>) or
   <verb-pv> or ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 studying.g: (<vc-study> & <verb-ge>) or <verb-ge-d>;
 studying.v: <verb-pg> & <vc-study>;
 
@@ -3589,7 +3604,7 @@ studying.v: <verb-pg> & <vc-study>;
 <vc-discuss>: <vc-trans> or ({@MV+} & (Pg+ or QI+));
 discuss.v: VERB_PLI(<vc-discuss>);
 discusses.v: VERB_S_T(<vc-discuss>);
-discussed.v-d: VERB_SPPP_T(<vc-discuss>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+discussed.v-d: VERB_SPPP_T(<vc-discuss>) or <verb-pv> or ({@E-} & A+) or <verb-phrase-opener>;
 discussing.g: (<vc-discuss> & <verb-ge>) or <verb-ge-d>;
 discussing.v:
 <verb-pg> & <vc-discuss>;
@@ -3607,7 +3622,7 @@ necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d:
   VERB_SPPP_T(<vc-oppose>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 opposing.g enjoying.g advocating.g contemplating.g
 entailing.g necessitating.g justifying.g risking.g avoiding.g
@@ -3624,13 +3639,13 @@ finishes.v practices.v resists.v quits.v: VERB_S_T(<vc-finish>);
 
 % <verb-pv>: "I want it finished"
 finished.v-d practiced.v-d resisted.v-d quitted.v-d:
-  VERB_SPPP_T(<vc-finish>) or <verb-pv> or ({@E-} & A+) or <verb-po>;
+  VERB_SPPP_T(<vc-finish>) or <verb-pv> or ({@E-} & A+) or <verb-phrase-opener>;
 quit.v-d:
   VERB_PLI(<vc-finish>) or
   VERB_SPPP_T(<vc-finish>) or
   <verb-pv> or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 finishing.g practicing.g resisting.g
 quitting.g: (<vc-finish> & <verb-ge>) or <verb-ge-d>;
 finishing.v practicing.v resisting.v quitting.v: <verb-pg> & <vc-finish>;
@@ -3649,7 +3664,7 @@ over_with: <verb-pv-b>;
 turn.v: VERB_PLI(<vc-turn>);
 turns.v: VERB_S_T(<vc-turn>);
 turned.v-d: VERB_SPPP_T(<vc-turn>) or (<verb-pv-b> & {K+} & {@MV+})
-or ({K+} & <verb-po>);
+or ({K+} & <verb-phrase-opener>);
 turning.v: <verb-pg> & <vc-turn>;
 turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 
@@ -3681,7 +3696,7 @@ grown.v:
   VERB_PP(<vc-grow>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
   ({@E-} & A+) or
-  ({K+} & <verb-po>);
+  ({K+} & <verb-phrase-opener>);
 growing.g: (<vc-grow> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 growing.v: <verb-pg> & <vc-grow>;
 
@@ -3690,7 +3705,7 @@ growing.v: <verb-pg> & <vc-grow>;
 approve.v: VERB_PLI(<vc-approve>);
 approves.v: VERB_S_T(<vc-approve>);
 approved.v-d: VERB_SPPP_T(<vc-approve>) or <verb-pv> or ({@E-} & A+)
-or <verb-po>;
+or <verb-phrase-opener>;
 approving.g: (<vc-approve> & <verb-ge>) or <verb-ge-d>;
 approving.v: <verb-pg> & <vc-approve>;
 
@@ -3699,7 +3714,7 @@ approving.v: <verb-pg> & <vc-approve>;
 dispose.v conceive.v: VERB_PLI(<vc-dispose>);
 disposes.v conceives.v: VERB_S_T(<vc-dispose>);
 disposed.v-d conceived.v-d: VERB_SPPP_T(<vc-dispose>) or <verb-pv> or
-({@E-} & A+) or <verb-po>;
+({@E-} & A+) or <verb-phrase-opener>;
 disposing.g conceiving.g: (<vc-dispose> & <verb-ge>) or <verb-ge-d>;
 disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
 
@@ -3712,7 +3727,7 @@ spoke.v-d: VERB_SP_T(<vc-speak>);
 spoken.v:
   VERB_PP(<vc-speak>) or
   (<verb-pv-b> & {K+} & {@MV+}) or
-  ({K+} & <verb-po>) or
+  ({K+} & <verb-phrase-opener>) or
   ({@E-} & A+);
 speaking.v: <verb-pg> & <vc-speak>;
 speaking.g: (<vc-speak> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
@@ -3721,7 +3736,7 @@ speaking.g: (<vc-speak> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+));
 taste.v: VERB_PLI(<vc-taste>);
 tastes.v: VERB_S_T(<vc-taste>);
-tasted.v-d: VERB_SPPP_T(<vc-taste>) or <verb-pv> or <verb-po>;
+tasted.v-d: VERB_SPPP_T(<vc-taste>) or <verb-pv> or <verb-phrase-opener>;
 tasting.g: (<vc-taste> & <verb-ge>) or <verb-ge-d>;
 tasting.v: <verb-pg> & <vc-taste>;
 
@@ -3729,7 +3744,7 @@ tasting.v: <verb-pg> & <vc-taste>;
 ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+));
 reek.v smell.v: VERB_PLI(<vc-smell>);
 reeks.v smells.v: VERB_S_T(<vc-smell>);
-reeked.v-d smelled.v-d: VERB_SPPP_T(<vc-smell>) or <verb-pv> or <verb-po>;
+reeked.v-d smelled.v-d: VERB_SPPP_T(<vc-smell>) or <verb-pv> or <verb-phrase-opener>;
 reeking.g smelling.g: (<vc-smell> & <verb-ge>) or <verb-ge-d>;
 reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
@@ -3743,7 +3758,7 @@ take.v: VERB_S_PLI(<vc-take>);
 takes.v: <verb-s-s> & <vc-take>;
 took.v-d: <verb-s-sp> & <vc-take>;
 taken.v: (<verb-s-pp> & <vc-take>) or (<verb-pv-b> &
-{K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-po>) or (Pvf- & Vtg+ & THi+);
+{K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-phrase-opener>) or (Pvf- & Vtg+ & THi+);
 taking.v: <verb-s-pg> & <vc-take>;
 taking.g: (<vc-take> & <verb-ge>) or <verb-ge-d>;
 for_granted: Vtg-;
@@ -3759,7 +3774,7 @@ put.v-d:
   VERB_SPPP_T(<vc-put>) or
   (<verb-ico> & <vc-put>) or
   (<verb-pv-b> & (K+ or Pp+ or WR-) & {@MV+}) or
-  ((K+ or Pp+) & <verb-po>);
+  ((K+ or Pp+) & <verb-phrase-opener>);
 puts.v: VERB_S_T(<vc-put>);
 putting.v: <verb-pg> & <vc-put>;
 putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
@@ -3774,7 +3789,7 @@ putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
 cost.v-d: VERB_S_PLI(<vc-cost>) or (<verb-s-sp,pp> & <vc-cost>);
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
   (<verb-pv-b> & (({K+} & {@MV+}) or Pa+ or Pg+)) or
-  ({K+ or Pa+ or Pg+} & <verb-po>);
+  ({K+ or Pa+ or Pg+} & <verb-phrase-opener>);
 costs.v: <verb-s-s> & <vc-cost>;
 costing.v: <verb-s-pg> & <vc-cost>;
 costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
@@ -3792,7 +3807,7 @@ find.v: VERB_PLI(<vc-find>);
 finds.v: VERB_S_T(<vc-find>);
 found.v-d: VERB_SPPP_T(<vc-find>) or
   (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pa+ or Pg+)) or
-  ({K+ or Pa+ or Pg+} & <verb-po>);
+  ({K+ or Pa+ or Pg+} & <verb-phrase-opener>);
 finding.v: <verb-pg> & <vc-find>;
 finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
@@ -3812,7 +3827,7 @@ got.v-d: VERB_SPPP_T(<vc-get>);
 gotten.v:
   VERB_PP(<vc-get>) or
   (<verb-pv-b> & {K+ or Pp+} & {@MV+}) or
-  ({K+ or Pp+} & <verb-po>);
+  ({K+ or Pp+} & <verb-phrase-opener>);
 getting.v: <verb-pg> & <vc-get>;
 getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
@@ -3825,7 +3840,7 @@ leaves.v: VERB_S_T(<vc-leave>);
 left.v-d:
   VERB_SPPP_T(<vc-leave>) or
   (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or
-  ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-po>);
+  ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-phrase-opener>);
 leaving.v: <verb-pg> & <vc-leave>;
 leaving.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
@@ -3837,7 +3852,7 @@ keep.v: VERB_PLI(<vc-keep>);
 keeps.v: VERB_S_T(<vc-keep>);
 kept.v-d: VERB_SPPP_T(<vc-keep>) or
 (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pa+ or Pg+ or Pv+)) or
-({K+ or ({@MV+} & (Pa+ or Pg+ or Pv+))} & <verb-po>);
+({K+ or ({@MV+} & (Pa+ or Pg+ or Pv+))} & <verb-phrase-opener>);
 keeping.v: <verb-pg> & <vc-keep>;
 keeping.g: (<vc-keep> & <verb-ge>) or <verb-ge-d>;
 
@@ -3853,7 +3868,7 @@ set.v-d:
   (<verb-ico> & <vc-set>) or
   (<verb-pv> & {K+ or Vs+} & {@MV+}) or
   ({@E-} & A+) or
-  ({K+ or Vs+} & <verb-po>);
+  ({K+ or Vs+} & <verb-phrase-opener>);
 sets.v: VERB_S_T(<vc-set>);
 setting.v: <verb-pg> & <vc-set>;
 setting.g: (<vc-set> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
@@ -3866,7 +3881,7 @@ free.i straight.i loose.i: Vs- & {MV+};
 hold.v: VERB_PLI(<vc-hold>);
 holds.v: VERB_S_T(<vc-hold>);
 held.v-d: VERB_SPPP_T(<vc-hold>) or (<verb-pv-b> & {K+ or Vh+} & {@MV+}) or
-({@E-} & A+) or ({K+ or Vh+} & <verb-po>);
+({@E-} & A+) or ({K+ or Vh+} & <verb-phrase-opener>);
 holding.v: <verb-pg> & <vc-hold>;
 holding.g: (<vc-hold> & <verb-ge>) or <verb-ge-d>;
 
@@ -3880,7 +3895,7 @@ hostage.i captive.i: Vh- or Vth-;
 expect.v claim.v: VERB_PLI(<vc-expect>);
 expects.v claims.v: VERB_S_T(<vc-expect>);
 expected.v-d claimed.v-d: VERB_SPPP_T(<vc-expect>) or (<verb-s-pv> &
-{TOf+ or THi+ or Z-}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
+{TOf+ or THi+ or Z-}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 expecting.g claiming.g: (<vc-expect> & <verb-ge>) or <verb-ge-d>;
 expecting.v claiming.v: <verb-pg> & <vc-expect>;
 
@@ -3890,7 +3905,7 @@ expecting.v claiming.v: <verb-pg> & <vc-expect>;
 intend.v: VERB_PLI(<vc-intend>);
 intends.v: VERB_S_T(<vc-intend>);
 intended.v-d: VERB_SPPP_T(<vc-intend>) or (<verb-pv> & {TO+ or Z- or @MV+})
- or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
+ or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 intending.g: (<vc-intend> & <verb-ge>) or <verb-ge-d>;
 intending.v: <verb-pg> & <vc-intend>;
 
@@ -3902,7 +3917,7 @@ intending.v: <verb-pg> & <vc-intend>;
 dare.v: VERB_PLI(<vc-dare>);
 dares.v: VERB_S_T(<vc-dare>);
 dared.v-d: VERB_SPPP_T(<vc-dare>) or (<verb-pv> & TO+) or
-({@MV+} & TO+ & <verb-po>);
+({@MV+} & TO+ & <verb-phrase-opener>);
 daring.g: (<vc-dare> & <verb-ge>) or <verb-ge-d>;
 daring.v: <verb-pg> & <vc-dare>;
 
@@ -3913,7 +3928,7 @@ daring.v: <verb-pg> & <vc-dare>;
 
 like.v: VERB_PLI(<vc-like>);
 likes.v: VERB_S_T(<vc-like>);
-liked.v-d: VERB_SPPP_T(<vc-like>) or <verb-pv> or <verb-po>;
+liked.v-d: VERB_SPPP_T(<vc-like>) or <verb-pv> or <verb-phrase-opener>;
 liking.g: (<vc-like> & <verb-ge>) or <verb-ge-d>;
 liking.v: <verb-pg> & <vc-like>;
 
@@ -3927,7 +3942,7 @@ liking.v: <verb-pg> & <vc-like>;
 offer.v: VERB_PLI(<vc-offer>);
 offers.v: VERB_S_T(<vc-offer>);
 offered.v-d: VERB_SPPP_T(<vc-offer>) or (<verb-pv-b> & {O+ or B-
-or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or [[@MV+ & O*n+]]} or <verb-po>);
+or [[@MV+ & O*n+]]} & {@MV+}) or ({O+ or [[@MV+ & O*n+]]} or <verb-phrase-opener>);
 offering.g: (<vc-offer> & <verb-ge>) or <verb-ge-d>;
 offering.v: <verb-pg> & <vc-offer>;
 
@@ -3942,7 +3957,7 @@ offering.v: <verb-pg> & <vc-offer>;
 refuse.v: VERB_PLI(<vc-refuse>);
 refuses.v: VERB_S_T(<vc-refuse>);
 refused.v-d: VERB_SPPP_T(<vc-refuse>) or (<verb-pv-b> & {O+ or B- or
-[[@MV+ & O*n+]]} & {@MV+}) or ({O+ or [[@MV+ & O*n+]]} & <verb-po>);
+[[@MV+ & O*n+]]} & {@MV+}) or ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 refusing.g: (<vc-refuse> & <verb-ge>) or <verb-ge-d>;
 refusing.v: <verb-pg> & <vc-refuse>;
 
@@ -3957,7 +3972,7 @@ want.v need.v: VERB_PLI(<vc-want>);
 need.i: {@E-} & (S- or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: VERB_S_T(<vc-want>);
 wanted.v-d needed.v-d: VERB_SPPP_T(<vc-want>) or <verb-pv> or ({@E-} & A+)
-or <verb-po>;
+or <verb-phrase-opener>;
 wanting.g needing.g: (<vc-want> & <verb-ge>) or <verb-ge-d>;
 wanting.v needing.v: <verb-pg> & <vc-want>;
 
@@ -3973,7 +3988,7 @@ chosen.v:
   VERB_PP(<vc-choose>) or
   (<verb-pv> & {TO+}) or
   ({@E-} & A+) or
-  ({@MV+} & {TO+} & <verb-po>);
+  ({@MV+} & {TO+} & <verb-phrase-opener>);
 choosing.g: (<vc-choose> & <verb-ge>) or <verb-ge-d>;
 choosing.v: <verb-pg> & <vc-choose>;
 
@@ -3986,7 +4001,7 @@ choosing.v: <verb-pg> & <vc-choose>;
 prepare.v press.v: VERB_PLI(<vc-prepare>);
 prepares.v presses.v: VERB_S_T(<vc-prepare>);
 prepared.v-d pressed.v-d: VERB_SPPP_T(<vc-prepare>) or <verb-pv> or
-({@E-} & A+) or <verb-po>;
+({@E-} & A+) or <verb-phrase-opener>;
 preparing.g pressing.g: (<vc-prepare> & <verb-ge>) or <verb-ge-d>;
 preparing.v pressing.v: <verb-pg> & <vc-prepare>;
 
@@ -3999,7 +4014,7 @@ preparing.v pressing.v: <verb-pg> & <vc-prepare>;
 require.v: VERB_PLI(<vc-require>);
 requires.v: VERB_S_T(<vc-require>);
 required.v-d: VERB_SPPP_T(<vc-require>) or
-(<verb-pv> & {TO+ or TSi+}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
+(<verb-pv> & {TO+ or TSi+}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 requiring.g: (<vc-require> & <verb-ge>) or <verb-ge-d>;
 requiring.v: <verb-pg> & <vc-require>;
 
@@ -4011,7 +4026,7 @@ requiring.v: <verb-pg> & <vc-require>;
 command.v order.v urge.v: VERB_PLI(<vc-command>);
 commands.v orders.v urges.v: VERB_S_T(<vc-command>);
 <vc-commanded>: VERB_SPPP_T(<vc-command>) or (<verb-pv> & {TO+ or TH+ or TS+})
-or ({@MV+} & {TH+ or TO+ or TS+} & <verb-po>);
+or ({@MV+} & {TH+ or TO+ or TS+} & <verb-phrase-opener>);
 commanded.v-d urged.v-d: <vc-commanded>;
 % An "ordered list"
 ordered.v: <vc-commanded> or ({@E-} & A+);
@@ -4028,7 +4043,7 @@ considers.v: VERB_S_T(<vc-consider>);
 considered.v-d: VERB_SPPP_T(<vc-consider>) or (<verb-s-pv-b> &
 (({@MV+} & (TOf+ or Pa+)) or ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+})))
 or ((({@MV+} & (TOf+ or Pa+)) or ({O+ or [[@MV+ & O*n+]]}))
-& <verb-po>);
+& <verb-phrase-opener>);
 considering.g: (<vc-consider> & <verb-ge>) or <verb-ge-d>;
 considering.v: <verb-pg> & <vc-consider>;
 
@@ -4040,7 +4055,7 @@ considering.v: <verb-pg> & <vc-consider>;
 perceive.v: VERB_PLI(<vc-perceive>);
 perceives.v: VERB_S_T(<vc-perceive>);
 perceived.v-d: VERB_SPPP_T(<vc-perceive>) or (<verb-pv> & {TO+}) or
-({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
+({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 perceiving.g: (<vc-perceive> & <verb-ge>) or <verb-ge-d>;
 perceiving.v: <verb-pg> & <vc-perceive>;
 
@@ -4052,7 +4067,7 @@ perceiving.v: <verb-pg> & <vc-perceive>;
 report.v: VERB_PLI(<vc-report>);
 reports.v: VERB_S_T(<vc-report>);
 reported.v-d: VERB_SPPP_T(<vc-report>) or (<verb-s-pv> & {TOf+ or Z-}) or
-({@E-} & A+) or ({@MV+} & {TO+} & <verb-po>);
+({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 reporting.g: (<vc-report> & <verb-ge>) or <verb-ge-d>;
 reporting.v: <verb-pg> & <vc-report>;
 
@@ -4065,7 +4080,7 @@ caution.v: VERB_PLI(<vc-caution>);
 cautions.v: VERB_S_T(<vc-caution>);
 cautioned.v-d: VERB_SPPP_T(<vc-caution>) or (<verb-pv> &
 ((O+ or B-) & {@MV+} &
-{TH+ or Ce+ or Zs- or TO+})) or ({@MV+} & {TH+ or Ce+ or TO+} & <verb-po>);
+{TH+ or Ce+ or Zs- or TO+})) or ({@MV+} & {TH+ or Ce+ or TO+} & <verb-phrase-opener>);
 cautioning.g: (<vc-caution> & <verb-ge>) or <verb-ge-d>;
 cautioning.v: <verb-pg> & <vc-caution>;
 
@@ -4079,7 +4094,7 @@ warns.v advises.v: VERB_S_T(<vc-warn>);
 warned.v-d advised.v-d:
   VERB_SPPP_T(<vc-warn>) or
   (<verb-pv> & {TH+ or Ce+ or Zs- or TO+ or (OF+ & {@MV+})}) or
-  ({@MV+} & {TH+ or Ce+ or TO+ or OF+} & <verb-po>);
+  ({@MV+} & {TH+ or Ce+ or TO+ or OF+} & <verb-phrase-opener>);
 warning.g advising.g: (<vc-warn> & <verb-ge>) or <verb-ge-d>;
 warning.v advising.v: <verb-pg> & <vc-warn>;
 
@@ -4093,7 +4108,7 @@ hears.v: VERB_S_T(<vc-hear>);
 heard.v-d:
   VERB_SPPP_T(<vc-hear>) or
   (<verb-pv> & {Pg+}) or
-  ({@MV+} & {Pg+} & <verb-po>);
+  ({@MV+} & {Pg+} & <verb-phrase-opener>);
 
 hearing.g: (<vc-hear> & <verb-ge>) or <verb-ge-d>;
 hearing.v: <verb-pg> & <vc-hear>;
@@ -4112,7 +4127,7 @@ saw.v-d: VERB_SP_T(<vc-see>);
 seen.v:
   VERB_PP(<vc-see>) or
   (<verb-pv> & {Pg+ or AZ+}) or
-  ({@MV+} & {Pg+ or AZ+} & <verb-po>);
+  ({@MV+} & {Pg+ or AZ+} & <verb-phrase-opener>);
 seeing.g: (<vc-see> & <verb-ge>) or <verb-ge-d>;
 seeing.v: <verb-pg> & <vc-see>;
 
@@ -4133,7 +4148,7 @@ owed.v delivered.v accorded.v awarded.v
 granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d:
   VERB_SPPP_T(<vc-owe>) or
   (<verb-pv-b> & {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or [[@MV+ & O*n+]]} & <verb-po>);
+  ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 owing.v delivering.v according.v awarding.v terming.v granting.v
 begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v:
 <verb-pg> & <vc-owe>;
@@ -4145,7 +4160,7 @@ assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g:
 termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
   VERB_SPPP_T(<vc-owe>) or
   (<verb-pv-b> & {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or [[@MV+ & O*n+]]} & <verb-po>) or
+  ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
 
 % ditransitive
@@ -4169,20 +4184,20 @@ issues.v hands.v pours.v:
 sent.v-d brought.v-d lent.v-d handed.v-d:
   VERB_SPPP_T(<vc-give>) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
 issued.v-d poured.v-d:
   VERB_SPPP_T(<vc-give>) or
   ({@E-} & A+) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
 gave.v-d: VERB_SP_T(<vc-give>);
 given.v:
   VERB_PP(<vc-give>) or
   ({@E-} & A+) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
 giving.g sending.g bringing.g
 lending.g issuing.g handing.g pouring.g:
@@ -4210,7 +4225,7 @@ passed.v-d bought.v-d paid.v-d payed.v-d sold.v-d dealt.v-d
 telegraphed.v-d wired.v-d:
   VERB_SPPP_T(<vc-pass>) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
 passing.g buying.g paying.g selling.g dealing.g telegraphing.g wiring.g:
   (<vc-pass> & <verb-ge>) or <verb-ge-d>;
@@ -4230,7 +4245,7 @@ call.v shout.v: VERB_PLI(<vc-call>);
 calls.v shouts.v: VERB_S_T(<vc-call>);
 called.v-d shouted.v-d: VERB_SPPP_T(<vc-call>) or
 (<verb-pv-b> & {O+ or B- or K+ or Pa+ or [[@MV+ & O*n+]]} & {@MV+}) or
-({O+ or K+ or Pa+ or [[@MV+ & O*n+]]} & <verb-po>);
+({O+ or K+ or Pa+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 calling.g shouting.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
 calling.v shouting.v: <verb-pg> & <vc-call>;
 
@@ -4245,7 +4260,7 @@ colors.v colours.v paints.v: VERB_S_T(<vc-color>);
 colored.v-d coloured.v-d painted.v-d:
   VERB_SPPP_T(<vc-color>) or
   (<verb-pv-b> & {O+ or K+} & {@MV+}) or
-  ({K+} & <verb-po>) or
+  ({K+} & <verb-phrase-opener>) or
   ({@E-} & A+);
 coloring.v colouring.v painting.v:
   (<verb-pg> & <vc-color>) or
@@ -4273,15 +4288,15 @@ read.v-d:
   VERB_SPPP_T(<vc-write>) or
   (<verb-ico> & <vc-write>) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 charged.v-d:
   VERB_SPPP_T(<vc-write>) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>);
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 written.v drawn.v:
   VERB_PP(<vc-write>) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-po>) or
+  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
 writing.g reading.g charging.g drawing.g: (<vc-write> & <verb-ge>) or <verb-ge-d>;
 writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
@@ -4320,7 +4335,7 @@ allow.v: VERB_PLI(<vc-allow>);
 allows.v: VERB_S_T(<vc-allow>);
 allowed.v-d: VERB_SPPP_T(<vc-allow>) or
 (<verb-pv-b> & (({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or ({@MV+} & TO+)))
-or ({O+ or [[@MV+ & O*n+]] or ({@MV+} & TO+)} & <verb-po>);
+or ({O+ or [[@MV+ & O*n+]] or ({@MV+} & TO+)} & <verb-phrase-opener>);
 allowing.g: (<vc-allow> & <verb-ge>) or <verb-ge-d>;
 allowing.v: <verb-pg> & <vc-allow>;
 
@@ -4335,7 +4350,7 @@ promises.v: VERB_S_T(<vc-promise>);
 promised.v-d: VERB_SPPP_T(<vc-promise>) or (<verb-pv-b> &
 (({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
 ({@MV+} & (TO+ or Ce+ or TH+ or RSe+ or Zs-)))) or ({@E-} & A+) or
-({O+ or [[@MV+ & O*n+]] or ({{@MV+} & (TO+ or Ce+ or TH+)})} & <verb-po>);
+({O+ or [[@MV+ & O*n+]] or ({{@MV+} & (TO+ or Ce+ or TH+)})} & <verb-phrase-opener>);
 promising.g: (<vc-promise> & <verb-ge>) or <verb-ge-d>;
 promising.v: <verb-pg> & <vc-promise>;
 
@@ -4357,7 +4372,7 @@ shown.v:
   (<verb-s-pv-b> &
     (({O+ or K+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
     ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs-)))) or
-  ({O+ or K+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-po>);
+  ({O+ or K+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-phrase-opener>);
 showing.g: (<vc-show> & <verb-ge>) or <verb-ge-d>;
 showing.v: <verb-pg> & <vc-show>;
 
@@ -4376,7 +4391,7 @@ taught.v-d:
   (<verb-pv-b> &
     (({O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
     ({@MV+} & (QI+ or Ce+ or TH+ or RSe+ or Zs- or TO+)))) or
-  ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-po>);
+  ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or Ce+ or TH+))} & <verb-phrase-opener>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
@@ -4386,7 +4401,7 @@ teaching.v: <verb-pg> & <vc-teach>;
 compel.v: VERB_PLI(<vc-compel>);
 compels.v: VERB_S_T(<vc-compel>);
 compelled.v-d: VERB_SPPP_T(<vc-compel>) or (<verb-pv> & TO+)
-or ({@MV+} & TO+ & <verb-po>);
+or ({@MV+} & TO+ & <verb-phrase-opener>);
 compelling.v: <verb-pg> & <vc-compel>;
 compelling.g: (<vc-compel> & <verb-ge>) or <verb-ge-d>;
 
@@ -4401,7 +4416,7 @@ forced.v-d willed.v-d:
   VERB_SPPP_T(<vc-force>) or
   (<verb-pv-b> & ((K+ & {@MV+}) or
   ({@MV+} & TO+))) or
-  ((K+ or ({@MV+} & TO+)) & <verb-po>) or
+  ((K+ or ({@MV+} & TO+)) & <verb-phrase-opener>) or
   ({@E-} & A+);
 forcing.g: (<vc-force> & <verb-ge>) or <verb-ge-d>;
 forcing.v: <verb-pg> & <vc-force>;
@@ -4439,13 +4454,13 @@ implored.v-d motivated.v-d impelled.v-d:
   VERB_SPPP_T(<vc-design>) or
   (<verb-pv> & {TO+}) or
   ({@E-} & A+) or
-  ({{@MV+} & TO+} & <verb-po>);
+  ({{@MV+} & TO+} & <verb-phrase-opener>);
 forbade.v-d: VERB_SP_T(<vc-design>);
 forbidden.v:
   VERB_PP(<vc-design>) or
   (<verb-pv> & {TO+}) or
   ({@E-} & A+) or
-  ({{@MV+} & TO+} & <verb-po>);
+  ({{@MV+} & TO+} & <verb-phrase-opener>);
 designing.g permitting.g pressuring.g causing.g enabling.g
 training.g sentencing.g authorizing.g prompting.g
 spurring.g inviting.g disinclining.g
@@ -4467,7 +4482,7 @@ used.v-d:
   VERB_SPPP_T(<vc-design>) or
   (<verb-pv> & {TOo+}) or
   (<verb-sp> & TO+) or
-  ({@MV+} & {TOo+} & <verb-po>) or
+  ({@MV+} & {TOo+} & <verb-phrase-opener>) or
   ({@E-} & A+);
 using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
@@ -4482,7 +4497,7 @@ elect.v appoint.v: VERB_PLI(<vc-elect>);
 elects.v appoints.v: VERB_S_T(<vc-elect>);
 elected.v-d appointed.v-d: VERB_SPPP_T(<vc-elect>) or (<verb-pv-b> & (({B- or
 (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])} & {@MV+}) or ({@MV+} & TO+)))
-or (({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} or ({@MV+} & TO+)) & <verb-po>)
+or (({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} or ({@MV+} & TO+)) & <verb-phrase-opener>)
 or ({@E-} & A+);
 electing.g appointing.g: (<vc-elect> & <verb-ge>) or <verb-ge-d>;
 electing.v appointing.v: <verb-pg> & <vc-elect>;
@@ -4499,7 +4514,7 @@ names.v designates.v labels.v: VERB_S_T(<vc-elect>);
 named.v-d designated.v-d labelled.v-d labeled.v-d:
   VERB_SPPP_T(<vc-name>) or
   (<verb-pv-b> & ({B- or (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or
-  ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
+  ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
 naming.g designating.g labelling.g labeling.g: (<vc-name> & <verb-ge>) or <verb-ge-d>;
 naming.v designating.v labelling.v labeling.v: <verb-pg> & <vc-name>;
@@ -4511,7 +4526,7 @@ tags.v: VERB_S_T(<vc-tag>);
 tagged.v-d:
   VERB_SPPP_T(<vc-tag>) or
   ((<verb-pv-b> & ({B- or (O+ or TI+ or [[@MV+ & (O*n+ or TI+)]])}) & {@MV+}) or <verb-pv>) or
-  ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-po>) or
+  ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
 tagging.g:
   (<vc-tag> & <verb-ge>) or
@@ -4530,7 +4545,7 @@ programed.v-d programmed.v-d obliged.v-d:
   VERB_SPPP_T(<vc-program>) or
   (<verb-pv> & {TO+}) or
   ({@E-} & A+) or
-  ({{@MV+} & TO+} & <verb-po>);
+  ({{@MV+} & TO+} & <verb-phrase-opener>);
 programing.g programming.g obliging.g: (<vc-program> & <verb-ge>) or <verb-ge-d>;
 programing.v programming.v obliging.v: <verb-pg> & <vc-program>;
 
@@ -4542,7 +4557,7 @@ convinces.v persuades.v: VERB_S_T(<vc-convince>);
 convinced.v-d persuaded.v-d:
   VERB_SPPP_T(<vc-convince>) or
   (<verb-pv> & {TO+ or TH+ or Ce+}) or
-  ({{@MV+} & (TO+ or TH+ or Ce+)} & <verb-po>);
+  ({{@MV+} & (TO+ or TH+ or Ce+)} & <verb-phrase-opener>);
 convincing.g persuading.g: (<vc-convince> & <verb-ge>) or <verb-ge-d>;
 convincing.v persuading.v: <verb-pg> & <vc-convince>;
 
@@ -4563,7 +4578,7 @@ tells.v: VERB_S_T(<vc-tell>);
 told.v-d: VERB_SPPP_T(<vc-tell>) or
         (<verb-pv> & {TH+ or Ce+ or RSe+ or Zs- or TO+ or QI+ or BW-}) or
         (<verb-pv-b> & O+ & {@MV+}) or
-        ({{@MV+} & (Ce+ or TO+ or QI+ or TH+)} & <verb-po>);
+        ({{@MV+} & (Ce+ or TO+ or QI+ or TH+)} & <verb-phrase-opener>);
 telling.g: (<vc-tell> & <verb-ge>) or <verb-ge-d>;
 telling.v: <verb-pg> & <vc-tell>;
 
@@ -4577,7 +4592,7 @@ asks.v: VERB_S_T(<vc-ask>);
 asked.v-d: VERB_SPPP_T(<vc-ask>) or
          (<verb-pv> & {TO+ or QI+ or BW- or TH+ or TS+}) or
          (<verb-pv-b> & O+ & {@MV+}) or
-         ({{@MV+} & (TO+ or QI+ or TH+ or TS+)} & <verb-po>);
+         ({{@MV+} & (TO+ or QI+ or TH+ or TS+)} & <verb-phrase-opener>);
 asking.g: (<vc-ask> & <verb-ge>) or <verb-ge-d>;
 asking.v: <verb-pg> & <vc-ask>;
 
@@ -4588,7 +4603,7 @@ asking.v: <verb-pg> & <vc-ask>;
 help.v: VERB_PLI(<vc-help>);
 helps.v: VERB_S_T(<vc-help>);
 helped.v-d: VERB_SPPP_T(<vc-help>) or (<verb-pv> & {TO+}) or
-({{@MV+} & TO+} & <verb-po>);
+({{@MV+} & TO+} & <verb-phrase-opener>);
 helping.g: (<vc-help> & <verb-ge>) or <verb-ge-d>;
 helping.v: <verb-pg> & <vc-help>;
 
@@ -4600,7 +4615,7 @@ remind.v: VERB_PLI(<vc-remind>);
 reminds.v: VERB_S_T(<vc-remind>);
 reminded.v-d: VERB_SPPP_T(<vc-remind>) or (<verb-pv> & {TO+ or TH+ or Ce+ or
 (OF+ & {@MV+})}) or ({{@MV+} & (Ce+ or TO+ or TH+ or
-(OF+ & {@MV+}))} & <verb-po>);
+(OF+ & {@MV+}))} & <verb-phrase-opener>);
 reminding.g: (<vc-remind> & <verb-ge>) or <verb-ge-d>;
 reminding.v: <verb-pg> & <vc-remind>;
 
@@ -4616,7 +4631,7 @@ informed.v-d reassured.v-d alerted.v-d guaranteed.v-d
 notified.v-d forewarned.v-d:
 VERB_SPPP_T(<vc-inform>) or (<verb-pv> &
 {Ce+ or TH+ or Zs- or (OF+ & {@MV+})}) or ({{@MV+} & (Ce+ or
-TH+ or OF+)} & <verb-po>) or ({@E-} & A+);
+TH+ or OF+)} & <verb-phrase-opener>) or ({@E-} & A+);
 informing.g reassuring.g alerting.g guaranteeing.g notifying.g forewarning.g:
 (<vc-inform> & <verb-ge>) or <verb-ge-d>;
 informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
@@ -4631,7 +4646,7 @@ assure.v: VERB_PLI(<vc-assure>);
 assures.v: VERB_S_T(<vc-assure>);
 assured.v-d: VERB_SPPP_T(<vc-assure>) or (<verb-pv> &
 {(OF+ & {@MV+}) or Ce+ or TH+ or Zs-}) or ({{@MV+} & (Ce+ or
-TH+ or OF+)} & <verb-po>);
+TH+ or OF+)} & <verb-phrase-opener>);
 assuring.g: (<vc-assure> & <verb-ge>) or <verb-ge-d>;
 assuring.v: <verb-pg> & <vc-assure>;
 
@@ -4643,7 +4658,7 @@ let.v-d:
   VERB_SPPP_T(<vc-let>) or
   (<verb-ico> & <vc-let>) or
   (<verb-pv-b> & ((K+ or Pp+) & {@MV+})) or
-  ((K+ or Pp+) & <verb-po>);
+  ((K+ or Pp+) & <verb-phrase-opener>);
 lets.v: VERB_S_T(<vc-let>);
 letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
@@ -4660,7 +4675,7 @@ watches.v: VERB_S_T(<vc-watch>);
 watched.v-d:
   VERB_SPPP_T(<vc-watch>) or
   <verb-pv> or
-  <verb-po>;
+  <verb-phrase-opener>;
 
 watching.g: (<vc-watch> & <verb-ge>) or <verb-ge-d>;
 watching.v: <verb-pg> & <vc-watch>;
@@ -4674,7 +4689,7 @@ appreciates.v spends.v: VERB_S_T(<vc-appreciate>);
 appreciated.v-d spent.v-d:
   VERB_SPPP_T(<vc-appreciate>) or
   (<verb-pv> & {Pg+}) or
-  ({{@MV+} & Pg+} & <verb-po>);
+  ({{@MV+} & Pg+} & <verb-phrase-opener>);
 appreciating.g spending.g: (<vc-appreciate> & <verb-ge>) or <verb-ge-d>;
 appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
@@ -4695,11 +4710,11 @@ makes.v: VERB_S_T(<vc-make>);
 made.v-d:
   VERB_SPPP_T(<vc-make>) or
   (<verb-s-pv-b> & (({@MV+} & Pa+) or ({K+} & {@MV+}))) or
-  ({({@MV+} & Pa+) or K+} & <verb-po>);
+  ({({@MV+} & Pa+) or K+} & <verb-phrase-opener>);
 
 built_of built_up_of composed_of constructed_of formed_of made_of
 made_up_of:
-  (<verb-pv-b> & (B- or O+) & {@MV+}) or (O+ & <verb-po>);
+  (<verb-pv-b> & (B- or O+) & {@MV+}) or (O+ & <verb-phrase-opener>);
 
 making.g: (<vc-make> & <verb-ge>) or <verb-ge-d>;
 making.v: <verb-pg> & <vc-make>;
@@ -4711,7 +4726,7 @@ making.v: <verb-pg> & <vc-make>;
 render.v deem.v: VERB_PLI(<vc-render>);
 renders.v deems.v: VERB_S_T(<vc-render>);
 rendered.v-d deemed.v-d: VERB_SPPP_T(<vc-render>) or (<verb-pv> & {Pa+ or AF-})
-or ({{@MV+} & Pa+} & <verb-po>);
+or ({{@MV+} & Pa+} & <verb-phrase-opener>);
 rendering.g deeming.g: (<vc-render> & <verb-ge>) or <verb-ge-d>;
 rendering.v deeming.v: <verb-pg> & <vc-render>;
 
@@ -4728,7 +4743,7 @@ convicted.v-d:
   VERB_SPPP_T(<vc-deprive>) or
   (<verb-pv> & {OF+} & {@MV+}) or
   ({@E-} & A+) or
-  ({{@MV+} & OF+} & <verb-po>);
+  ({{@MV+} & OF+} & <verb-phrase-opener>);
 depriving.g accusing.g acquitting.g purging.g disabusing.g exonerating.g
 absolving.g robbing.g convicting.g:
 (<vc-deprive> & <verb-ge>) or <verb-ge-d>;
@@ -4746,7 +4761,7 @@ clears.v: VERB_S_T(<vc-clear>);
 cleared.v-d:
   VERB_SPPP_T(<vc-clear>) or
   (<verb-pv-b> & {({@MV+} & OF+) or K+} & {@MV+}) or
-  ({K+ or ({@MV+} & OF+)} & <verb-po>);
+  ({K+ or ({@MV+} & OF+)} & <verb-phrase-opener>);
 clearing.g: (<vc-clear> & <verb-ge>) or <verb-ge-d>;
 clearing.v: <verb-pg> & <vc-clear>;
 
@@ -4762,7 +4777,7 @@ bets.v: VERB_S_T(<vc-bet>);
 betted.v-d:
   VERB_SPPP_T(<vc-bet>) or
   (<verb-pv-b> & {O+ or B-} & {@MV+} & {TH+ or Ce+ or RSe+ or @MV+}) or
-  ({O- or [[@MV+ & O*n+]] or TH+ or Ce+} & <verb-po>);
+  ({O- or [[@MV+ & O*n+]] or TH+ or Ce+} & <verb-phrase-opener>);
 betting.g: (<vc-bet> & <verb-ge>) or <verb-ge-d>;
 betting.v: <verb-pg> & <vc-bet>;
 
@@ -4773,7 +4788,7 @@ betting.v: <verb-pg> & <vc-bet>;
 
 bother.v: VERB_S_PLI(<vc-bother>);
 bothers.v: <verb-s-s> & <vc-bother>;
-bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-po>;
+bothered.v-d: (<verb-s-sp,pp> & <vc-bother>) or <verb-pv> or <verb-phrase-opener>;
 bothering.v: <verb-s-pg> & <vc-bother>;
 bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
 
@@ -4790,7 +4805,7 @@ disgusts.v distresses.v dismays.v irritates.v embarrasses.v annoys.v:
 surprised.v alarmed.v amazed.v amused.v astonished.v astounded.v excited.v
 depressed.v disgusted.v distressed.v dismayed.v irritated.v embarrassed.v
 annoyed.v-d:
-  (<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-po>;
+  (<verb-s-sp,pp> & <vc-surprise>) or <verb-pv> or <verb-phrase-opener>;
 surprising.v alarming.v amazing.v amusing.v astonishing.v astounding.v
 exciting.v depressing.v disgusting.v distressing.v dismaying.v
 embarrassing.v annoying.v:
@@ -4811,12 +4826,12 @@ proved.v-d:
   VERB_X_SPPP(<vc-prove>)
   or (<verb-s-pv> & {THi+ or TOf+})
   or ({@E-} & A+)
-  or ({{@MV+} & Pa+} & <verb-po>);
+  or ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proven.v:
   (<verb-x-pp> & <vc-prove>) or
   (<verb-s-pv> & {THi+ or TOf+ or Pa+}) or
   ({@E-} & A+) or
-  ({{@MV+} & Pa+} & <verb-po>);
+  ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
 proving.v: <verb-x-pg> &  <vc-prove>;
 
@@ -4830,7 +4845,7 @@ suggested.v-d anticipated.v-d recommended.v-d:
   VERB_SPPP_T(<vc-suggest>) or
   (<verb-s-pv> & {THi+ or TSi+ or Z-}) or
   ({@E-} & A+) or
-  <verb-po>;
+  <verb-phrase-opener>;
 suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>;
 suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 
@@ -4846,7 +4861,7 @@ denies.v: VERB_S_T(<vc-deny>);
 denied.v-d:
   VERB_SPPP_T(<vc-deny>) or
   (<verb-pv-b> & {O+ or B- or [[@MV+ & O*n+]]} & {@MV+}) or
-  ({O+ or ([[@MV+ & O*n+]])} & <verb-po>);
+  ({O+ or ([[@MV+ & O*n+]])} & <verb-phrase-opener>);
 denying.g: (<vc-deny> & <verb-ge>) or <verb-ge-d>;
 denying.v: <verb-pg> & <vc-deny>;
 
@@ -4861,7 +4876,7 @@ described.v-d:
   VERB_SPPP_T(<vc-describe>) or
   (<verb-pv> & {AZ+ or Z-}) or
   ({@E-} & A+) or
-  ({@MV+} & {AZ+} & <verb-po>);
+  ({@MV+} & {AZ+} & <verb-phrase-opener>);
 describing.g: (<vc-describe> & <verb-ge>) or <verb-ge-d>;
 describing.v: <verb-pg> & <vc-describe>;
 
@@ -4875,7 +4890,7 @@ portrayed.v-d depicted.v-d regarded.v-d viewed.v-d characterized.v-d:
   VERB_SPPP_T(<vc-portray>) or
   (<verb-pv> & {AZ+}) or
   ({@E-} & A+) or
-  ({@MV+} & {AZ+} & <verb-po>);
+  ({@MV+} & {AZ+} & <verb-phrase-opener>);
 portraying.g depicting.g regarding.g viewing.g characterizing.g:
   (<vc-portray> & <verb-ge>) or <verb-ge-d>;
 portraying.v depicting.v regarding.v viewing.v characterizing.v:
@@ -4946,7 +4961,7 @@ taking_note_of:
 take_it make_out point_out give_notice serve_notice: VERB_PLI(<vc-take-it>);
 takes_it makes_out points_out gives_notice serves_notice: VERB_S_I(<vc-take-it>);
  made_out pointed_out served_notice:
-  VERB_SPPP_I(<vc-take-it>) or <verb-pv> or <verb-po>;
+  VERB_SPPP_I(<vc-take-it>) or <verb-pv> or <verb-phrase-opener>;
 took_it gave_notice: VERB_SP_I(<vc-take-it>);
 taken_it given_notice: VERB_PP(<vc-take-it>);
 taking_it making_out pointing_out giving_notice serving_notice:
@@ -4965,7 +4980,7 @@ finds_out figures_out: VERB_S_I(<vc-find-out>);
 found_out figured_out:
   VERB_SPPP_I(<vc-find-out>) or
   <verb-pv> or
-  <verb-po>;
+  <verb-phrase-opener>;
 finding_out figuring_out: (<vc-find-out> & <verb-pg,ge>) or
 <verb-ge-d>;
 
@@ -4984,7 +4999,7 @@ ends_up: <verb-s-s> & <vc-end-up>;
 ended_up: <verb-s-sp,pp> & <vc-end-up>;
 ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
-/en/words/words.v.1.p: <verb-pv> or <verb-po>; % two-word passives
+/en/words/words.v.1.p: <verb-pv> or <verb-phrase-opener>; % two-word passives
 % done_for accounted_for adhered_to arrived_at barked_at belched_at catered_to
 
 <vc-paraph>:
@@ -5069,7 +5084,7 @@ double.v triple.v quadruple.v quintuple.v:
 doubles.v triples.v quadruples.v quintuples.v:
   {EN-} & VERB_S_T(<vc-fill>);
 doubled.v-d tripled.v-d quadrupled.v-d quintupled.v-d:
-  {EN-} & (VERB_SPPP_T(<vc-fill>) or <verb-pv> or ({@E-} & A+) or <verb-po>);
+  {EN-} & (VERB_SPPP_T(<vc-fill>) or <verb-pv> or ({@E-} & A+) or <verb-phrase-opener>);
 doubling.v tripling.v quadrupling.v quintupling.v:
   {EN-} & (<verb-pg> & <vc-fill>);
 doubling.g tripling.g quadrupling.g quintupling.g:
