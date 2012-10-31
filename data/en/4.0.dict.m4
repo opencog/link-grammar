@@ -2565,23 +2565,24 @@ rising.v falling.v:
 % like "up" and "out" -- see also words.v.8
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v
 % The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
-% "she walked out of the room two minutes"
+%   "she walked out of the room two minutes"
+%
+% ({@E-} & I- & B- & O+): 
+%   "What are the chances that Sherlock could really CAPTURE the criminal?"
 %
 % Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
 % "Make it nice and soft"
 % XXX However, very few of these verbs actually take the Pa**j link ...
 % and so should be reclaased.
 <vc-fill>:
-  ((K+ & {[[@MV+]]} & O*n+) or
-  ({O+ or B-} & {K+}) or
-  ((B- or O+) & ({@MV+} & Pa**j+)) or
-  [[@MV+ & O*n+]]) & {@MV+};
+  ((K+ & {[[@MV+]]} & O*n+)
+  or ({O+ or B-} & {K+})
+  or ((O+ or B-) & ({@MV+} & Pa**j+))
+  or ({@E-} & I- & B- & O+)
+  or [[@MV+ & O*n+]]) & {@MV+};
 
-% ({@E-} & I- & B- & O+):
-%   "What are the chances that Sherlock could really catch the criminal?"
 /en/words/words.v.6.1:
-  VERB_PLI(<vc-fill>)
-  or ({@E-} & I- & B- & O+);
+  VERB_PLI(<vc-fill>);
 
 /en/words/words.v.6.2: VERB_S_T(<vc-fill>);
 /en/words/words.v.6.3:
@@ -3019,6 +3020,7 @@ looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: "She waved him over."
 % vc-ditrans:  "She waved me goodbye"
+% MV+: "who did you wave to?"
 <vc-wave>:
   {@MV+}
   or ((O+ & K+) & {@MV+})
