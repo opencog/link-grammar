@@ -2584,6 +2584,8 @@ rising.v falling.v:
 %
 % ({@E-} & B- & O+): 
 %   "What are the chances that Sherlock could really CATCH the criminal?"
+% ({@E-} & B- & O+ & Pa**j+): 
+%   "What are the chances she will really DRIVE him crazy?"
 %
 % Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
 % "Make it nice and soft"
@@ -2593,7 +2595,7 @@ rising.v falling.v:
   ((K+ & {[[@MV+]]} & O*n+)
   or ({O+ or B-} & {K+})
   or ((O+ or B-) & ({@MV+} & Pa**j+))
-  or ({@E-} & B- & O+)
+  or ({@E-} & B- & O+ & {Pa**j+})
   or [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.6.1:
