@@ -2805,10 +2805,9 @@ happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
   ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or
   <vc-ditrans>;
 wish.v: VERB_PLI(<vc-wish>);
-wished.v-d: VERB_SPPP_I(<vc-wish>);
 wishes.v: VERB_S_I(<vc-wish>);
+wished.v-d: VERB_SPPP_I(<vc-wish>);
 wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
-
 
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
@@ -3010,13 +3009,24 @@ acted.v-d: VERB_SPPP_I(<vc-act>) or (<verb-pv-b> & {K+} & {@MV+});
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: She looked him over.
-<vc-look>: {({@MV+} & (LI+ or Pa+)) or
-  ({K+ or AF-} & {@MV+}) or
-  ((O+ & K+) & {@MV+})};
+<vc-look>: {({@MV+} & (LI+ or Pa+))
+  or ({K+ or AF-} & {@MV+})
+  or ((O+ & K+) & {@MV+})};
 look.v: VERB_PLI(<vc-look>);
 looks.v: VERB_S_T(<vc-look>);
 looked.v-d: VERB_SPPP_T(<vc-look>);
 looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
+
+% O+ & K+: "She waved him over."
+% vc-ditrans:  "She waved me goodbye"
+<vc-wave>:
+  ({@MV+} & {TH+ or Ce+ or RSe+ or TO+})
+  or ((O+ & K+) & {@MV+})
+  or <vc-ditrans>;
+wave.v: VERB_PLI(<vc-wave>);
+waves.v: VERB_S_I(<vc-wave>);
+waved.v-d: VERB_SPPP_I(<vc-wave>);
+waving.v: (<vc-wave> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-repent>: {{@MV+ or ({Xc+} & @EB+)} & OF+};
 repent.v disapprove.v: VERB_PLI(<vc-repent>);
@@ -4366,7 +4376,6 @@ taught.v-d:
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
-% ditransitive
 <vc-compel>:
   ((O+ or B-) & {@MV+} & TOo+);
 

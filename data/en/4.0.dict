@@ -2996,16 +2996,15 @@ wish.v:
   ((<verb-pl,i> & (<vc-wish>)) or
   (<verb-and-pl-> & ([(<vc-wish>)] or ())) or
   ((<vc-wish>) & <verb-and-pl+>));
-wished.v-d: 
-  ((<verb-sp,pp> & (<vc-wish>)) or
-  (<verb-and-sp-i-> & (([<vc-wish>]) or ())) or
-  ((<vc-wish>) & <verb-and-sp-i+>));
 wishes.v: 
   ((<verb-s> & (<vc-wish>)) or
   (<verb-and-s-> & ([(<vc-wish>)] or ())) or
   ((<vc-wish>) & <verb-and-s+>));
+wished.v-d: 
+  ((<verb-sp,pp> & (<vc-wish>)) or
+  (<verb-and-sp-i-> & (([<vc-wish>]) or ())) or
+  ((<vc-wish>) & <verb-and-sp-i+>));
 wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
-
 
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
@@ -3408,9 +3407,9 @@ acted.v-d:
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 
 % O+ & K+: She looked him over.
-<vc-look>: {({@MV+} & (LI+ or Pa+)) or
-  ({K+ or AF-} & {@MV+}) or
-  ((O+ & K+) & {@MV+})};
+<vc-look>: {({@MV+} & (LI+ or Pa+))
+  or ({K+ or AF-} & {@MV+})
+  or ((O+ & K+) & {@MV+})};
 look.v: 
   ((<verb-pl,i> & (<vc-look>)) or
   (<verb-and-pl-> & ([(<vc-look>)] or ())) or
@@ -3426,6 +3425,26 @@ looked.v-d:
   ((<vc-look>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>;
 looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
+
+% O+ & K+: "She waved him over."
+% vc-ditrans:  "She waved me goodbye"
+<vc-wave>:
+  ({@MV+} & {TH+ or Ce+ or RSe+ or TO+})
+  or ((O+ & K+) & {@MV+})
+  or <vc-ditrans>;
+wave.v: 
+  ((<verb-pl,i> & (<vc-wave>)) or
+  (<verb-and-pl-> & ([(<vc-wave>)] or ())) or
+  ((<vc-wave>) & <verb-and-pl+>));
+waves.v: 
+  ((<verb-s> & (<vc-wave>)) or
+  (<verb-and-s-> & ([(<vc-wave>)] or ())) or
+  ((<vc-wave>) & <verb-and-s+>));
+waved.v-d: 
+  ((<verb-sp,pp> & (<vc-wave>)) or
+  (<verb-and-sp-i-> & (([<vc-wave>]) or ())) or
+  ((<vc-wave>) & <verb-and-sp-i+>));
+waving.v: (<vc-wave> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-repent>: {{@MV+ or ({Xc+} & @EB+)} & OF+};
 repent.v disapprove.v: 
@@ -5796,7 +5815,6 @@ taught.v-d:
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
-% ditransitive
 <vc-compel>:
   ((O+ or B-) & {@MV+} & TOo+);
 
