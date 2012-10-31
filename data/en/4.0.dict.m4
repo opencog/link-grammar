@@ -555,7 +555,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 %
 %  ({{Dmu-} & Jd-} & Dmu-):  "Drink a pint of this beer"
 % XXX: perhaps the above belongs on <noun-main-u> ??? If so,
-% then we should also fix up similar connectors on "these"m, "those", "it",
+% then we should also fix up similar connectors on "these", "those", "it",
 % "them" etc; see below, search for Jd-
 <mass-noun>:
   <noun-modifiers> &
@@ -569,6 +569,11 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
 /en/words/words.n.3: <marker-common-entity> or <mass-noun>;
+
+% Gonna treat these as mass nouns, not sure if this is correct.
+% "She wished me goodnight" "She wishes you well"
+bye.n-u farewell.n-u goodbye.n-u goodnight.n-u welcome.n-u well.n-u:
+  <mass-noun>;
 
 % Want to cost this so that it doesn't interfere with given name "Tom".
 tom.n-u: [<marker-common-entity> or <mass-noun>];
@@ -2497,6 +2502,12 @@ came.v-d: VERB_SPPP_I(<vc-come>);
   ({@E-} & A+) or
   <verb-po>;
 
+/en/words/words.v.2.4:
+  <verb-pg> & <vc-tr,intr>;
+
+/en/words/words.v.2.5:
+  (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
+
 shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d
 spoilt.v-d unbent.v-d overfed.v-d:
   VERB_SPPP_T(`<vc-tr,intr>') or
@@ -2507,16 +2518,13 @@ shrunk.v withdrawn.v sunk.v forgiven.v:
   <verb-pv> or
   ({@E-} & A+) or
   <verb-po>;
+
 bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
-  VERB_SPPP_T(`<vc-tr,intr>') or
-  (<verb-ico> & <vc-tr,intr>) or
-  <verb-pv> or
-  ({@E-} & A+) or
-  <verb-po>;
-/en/words/words.v.2.4:
-  <verb-pg> & <vc-tr,intr>;
-/en/words/words.v.2.5:
-  (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
+  VERB_SPPP_T(`<vc-tr,intr>')
+  or (<verb-ico> & <vc-tr,intr>)
+  or <verb-pv>
+  or ({@E-} & A+)
+  or <verb-po>;
 
 % --------------------------------------------------------------
 
@@ -2672,7 +2680,7 @@ and.v-fill:
 /en/words/words-medical.v.4.3:
   VERB_SPPP_T(<vc-trans>) or
   <verb-pv> or
-  (({@E-} or {@EA-}) & A+) or
+  (({@E-} or {@EA-} or {@AN-}) & A+) or
   <verb-po>;
 
 forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d
@@ -2800,6 +2808,7 @@ wish.v: VERB_PLI(<vc-wish>);
 wished.v-d: VERB_SPPP_I(<vc-wish>);
 wishes.v: VERB_S_I(<vc-wish>);
 wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
+
 
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
@@ -4129,11 +4138,12 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.
 % 'sent', 'poured': optional indirect object.
 <vc-give>:
-  ((B- & {O+ or K+}) or
-    <vc-opt-ditrans-costly> or
-    (O+ & K+) or
-    (K+ & ({[[@MV+]]} & O*n+)) or
-    ([[@MV+ & O*n+]])) & {@MV+};
+  ((B- & {O+ or K+})
+    or <vc-opt-ditrans-costly>
+    or (O+ & K+)
+    or (K+ & {[[@MV+]]} & O*n+)
+    or ([[@MV+ & O*n+]])
+  ) & {@MV+};
 
 give.v send.v bring.v lend.v issue.v hand.v pour.v:
   VERB_PLI(<vc-give>);
