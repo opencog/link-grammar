@@ -3020,7 +3020,7 @@ looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
 % O+ & K+: "She waved him over."
 % vc-ditrans:  "She waved me goodbye"
 <vc-wave>:
-  ({@MV+} & {TH+ or Ce+ or RSe+ or TO+})
+  {@MV+}
   or ((O+ & K+) & {@MV+})
   or <vc-ditrans>;
 wave.v: VERB_PLI(<vc-wave>);
