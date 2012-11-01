@@ -2580,11 +2580,12 @@ hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
   or <verb-phrase-opener>;
 
 % <vc-ditrans>: "She bid him adieu"
-bid.v-d:
+% O+ & I+: "she bade him sit down"
+bid.v-d bade.v-d:
   
-  ((<verb-sp,pp> & (<vc-tr,intr> or <vc-ditrans>)) or
-  (<verb-and-sp-i-> & (([<vc-tr,intr> or <vc-ditrans>]) or ())) or
-  ((<vc-tr,intr> or <vc-ditrans>) & <verb-and-sp-i+>)) or
+  ((<verb-sp,pp> & (<vc-tr,intr> or <vc-ditrans> or (O+ & {@MV+} & I+))) or
+  (<verb-and-sp-i-> & (([<vc-tr,intr> or <vc-ditrans> or (O+ & {@MV+} & I+)]) or ())) or
+  ((<vc-tr,intr> or <vc-ditrans> or (O+ & {@MV+} & I+)) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>
   or (<verb-ico> & <vc-tr,intr>)
   or <verb-pv>

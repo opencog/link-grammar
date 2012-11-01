@@ -2553,8 +2553,9 @@ hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
   or <verb-phrase-opener>;
 
 % <vc-ditrans>: "She bid him adieu"
-bid.v-d:
-  VERB_SPPP_T(`<vc-tr,intr> or <vc-ditrans>')
+% O+ & I+: "she bade him sit down"
+bid.v-d bade.v-d:
+  VERB_SPPP_T(`<vc-tr,intr> or <vc-ditrans> or (O+ & {@MV+} & I+)')
   or (<verb-ico> & <vc-tr,intr>)
   or <verb-pv>
   or ({@E-} & A+)
