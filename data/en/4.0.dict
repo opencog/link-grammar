@@ -2902,7 +2902,9 @@ bakes.v dictates.v kisses.v slices.v:
   (<verb-and-sp-i-> & (([<vc-bake>]) or ())) or
   ((<vc-bake>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-baked.v-d dictated.v-d kissed.v-d sliced.v-d:
+
+% A+: "she gave him some slcied bread"
+baked.v-d sliced.v-d:
   
   ((<verb-sp,pp> & (<vc-bake>)) or
   (<verb-and-sp-i-> & (([<vc-bake>]) or ())) or
@@ -2911,6 +2913,14 @@ baked.v-d dictated.v-d kissed.v-d sliced.v-d:
   or <verb-pv>
   or (({@E-} or {@EA-} or {@AN-}) & A+)
   or <verb-phrase-opener>;
+dictated.v-d kissed.v-d:
+  
+  ((<verb-sp,pp> & (<vc-bake>)) or
+  (<verb-and-sp-i-> & (([<vc-bake>]) or ())) or
+  ((<vc-bake>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t>
+  or <verb-pv>
+  or <verb-phrase-opener>;
 baking.v dictating.v kissing.v slicing.v:
   <verb-pg> & <vc-bake>;
 baking.g dictating.g kissing.g slicing.g:
@@ -2918,6 +2928,7 @@ baking.g dictating.g kissing.g slicing.g:
 
 % O+ & K+: "She buttered him up"
 % ditrans: "She buttered him some toast"
+% A+: "She gave him some buttered bread"
 <vc-butter>:
   <vc-trans>
   or ((O+ & K+) & {@MV+})
@@ -2930,11 +2941,17 @@ butters.v:
   ((<verb-s> & (<vc-butter>)) or
   (<verb-and-s-> & ([(<vc-butter>)] or ())) or
   ((<vc-butter>) & <verb-and-s+>));
-buttered.v-d: 
+buttered.v-d:
+  
   ((<verb-sp,pp> & (<vc-butter>)) or
   (<verb-and-sp-i-> & (([<vc-butter>]) or ())) or
-  ((<vc-butter>) & <verb-and-sp-i+>));
-buttering.v: (<vc-butter> & <verb-pg,ge>) or <verb-ge-d>;
+  ((<vc-butter>) & <verb-and-sp-i+>))
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+);
+buttering.v:
+  <verb-pg> & <vc-butter>;
+buttering.g:
+  (<vc-butter> & <verb-ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"

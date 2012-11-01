@@ -2767,10 +2767,16 @@ bake.v dictate.v kiss.v slice.v:
   VERB_PLI(<vc-bake>);
 bakes.v dictates.v kisses.v slices.v:
   VERB_S_T(<vc-bake>);
-baked.v-d dictated.v-d kissed.v-d sliced.v-d:
+
+% A+: "she gave him some slcied bread"
+baked.v-d sliced.v-d:
   VERB_SPPP_T(<vc-bake>)
   or <verb-pv>
   or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-phrase-opener>;
+dictated.v-d kissed.v-d:
+  VERB_SPPP_T(<vc-bake>)
+  or <verb-pv>
   or <verb-phrase-opener>;
 baking.v dictating.v kissing.v slicing.v:
   <verb-pg> & <vc-bake>;
@@ -2779,14 +2785,21 @@ baking.g dictating.g kissing.g slicing.g:
 
 % O+ & K+: "She buttered him up"
 % ditrans: "She buttered him some toast"
+% A+: "She gave him some buttered bread"
 <vc-butter>:
   <vc-trans>
   or ((O+ & K+) & {@MV+})
   or <vc-ditrans>;
 butter.v: VERB_PLI(<vc-butter>);
 butters.v: VERB_S_I(<vc-butter>);
-buttered.v-d: VERB_SPPP_I(<vc-butter>);
-buttering.v: (<vc-butter> & <verb-pg,ge>) or <verb-ge-d>;
+buttered.v-d:
+  VERB_SPPP_I(<vc-butter>)
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+);
+buttering.v:
+  <verb-pg> & <vc-butter>;
+buttering.g:
+  (<vc-butter> & <verb-ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
