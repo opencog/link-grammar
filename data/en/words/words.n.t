@@ -5,7 +5,6 @@ accompanist.t
 accountant.t
 administrator.t
 admiral.t
-admiral.t
 adviser.t
 advisor.t
 agent.t

@@ -466,9 +466,9 @@ JD.y J.D..y  KBE.y K.B.E..y LLD.y LL.D..y
 MA.y M.A..y MBA.y M.B.A..y MD.y M.D.y MFA.y M.F.A..y
 MS.y M.S..y MSc.y M.Sc..y
 OFM.y
-PE.y P.E..y Pharm.D..y
+PE.y P.E..y Pfc.y Pharm.D..y
 PhD.y Ph.D.y Ph.D..y
-RA.y R.A..y RIBA.y R.I.B.A..y RN.y R.N..y
+RA.y R.A..y RIBA.y R.I.B.A..y RN.y R.N..y Sgt.y
 USMC.y USN.y:
   {Xi+} & {Xd- & {Xc+}} & G- & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
@@ -632,9 +632,10 @@ carte_blanche:
 
 % title nouns (president, chairman)
 % auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t
+% Ou-: "He was made knight by the crown"
 /en/words/words.n.t:
-  <noun-modifiers> &
-    {@M+} & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or TI-);
+  <noun-modifiers> & {@M+} 
+    & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or Ou- or TI-);
 
 % Almost identical to below.
 % Ds- & {NM+} & <noun-sub-x> &.. "the number 12 is a lucky number"
