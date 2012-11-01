@@ -2406,9 +2406,18 @@ wouldn't wouldn’t:
 % abbreviations for ditransitive and optionally ditranstive verbs
 % ditranstive verbs take a direct and indirect object
 % e.g. "I gave her a rose"
-<vc-ditrans>: (O+ & {[[@MV+]]} & O*n+ & {VJd+});
-<vc-opt-ditrans>: (O+ & {{[[@MV+]]} & O*n+} & {VJd+});
-<vc-opt-ditrans-costly>: (O+ & {{[[@MV+]]} & [O*n+]} & {VJd+});
+% B- & O+ & O*n+: "What are the chances you'll give her a kiss?"
+<vc-ditrans>:
+  (O+ & {[[@MV+]]} & O*n+ & {VJd+}) 
+  or ({@E-} & B- & O+ & O*n+);
+
+<vc-opt-ditrans>:
+  (O+ & {{[[@MV+]]} & O*n+} & {VJd+})
+  or ({@E-} & B- & O+ & O*n+);
+
+<vc-opt-ditrans-costly>:
+  (O+ & {{[[@MV+]]} & [O*n+]} & {VJd+})
+  or ({@E-} & B- & O+ & O*n+);
 
 % common intransitive verbs
 <vc-intrans>: {@MV+};
