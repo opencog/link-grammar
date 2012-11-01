@@ -5446,6 +5446,7 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 
 % MX-PHRASE: The blah, to be blahed, will be blah.
 % TO- & Xc+: "I'd like to, I want to." (null infinitive)
+% give [J+] a cost, so that numeric intervals are peferred
 to.r:
   ({@E-} & {NT-} & I+ &
     (TO- or
@@ -5456,7 +5457,7 @@ to.r:
     (SFsx+ & <S-CLAUSE>))) or
   (TO- & Xc+) or
   I*a+ or
-  ({JQ+} & (J+ or Mgp+) & <prep-main-a>) or
+  ({JQ+} & ([J+] or Mgp+) & <prep-main-a>) or
   VJ+ or
   [MVp- & B-];
 
