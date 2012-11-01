@@ -2707,8 +2707,18 @@ and.v-fill:
   (({@E-} or {@EA-} or {@AN-}) & A+) or
   <verb-phrase-opener>;
 
+/en/words/words.v.4.4
+/en/words/words-medical.v.4.4:
+  <verb-pg> & <vc-trans>;
+
+/en/words/words.v.4.5
+/en/words/words-medical.v.4.5:
+  (<vc-trans> & <verb-ge>) or <verb-ge-d>;
+
 forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d
-overran.v-d mistook.v-d underwrote.v-d: VERB_SP_T(<vc-trans>);
+overran.v-d mistook.v-d underwrote.v-d:
+  VERB_SP_T(<vc-trans>);
+
 hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d offset.v-d
 overrun.v-d upset.v-d undercut.v-d:
   VERB_SPPP_T(<vc-trans>) or
@@ -2716,19 +2726,13 @@ overrun.v-d upset.v-d undercut.v-d:
   <verb-pv> or
   ({@E-} & A+) or
   <verb-phrase-opener>;
-forsaken.v overridden.v overtaken.v rewritten.v undone.v beset.v mistaken.v underwritten.v:
+
+forsaken.v overridden.v overtaken.v rewritten.v undone.v
+beset.v mistaken.v underwritten.v:
   VERB_PP(<vc-trans>) or
   <verb-pv> or
   ({@E-} & A+) or
   <verb-phrase-opener>;
-
-/en/words/words.v.4.4
-/en/words/words-medical.v.4.4:
-<verb-pg> & <vc-trans>;
-
-/en/words/words.v.4.5
-/en/words/words-medical.v.4.5:
-(<vc-trans> & <verb-ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
@@ -2835,7 +2839,8 @@ happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 wish.v: VERB_PLI(<vc-wish>);
 wishes.v: VERB_S_I(<vc-wish>);
 wished.v-d: VERB_SPPP_I(<vc-wish>);
-wishing.v: (<vc-wish> & <verb-pg,ge>) or <verb-ge-d>;
+wishing.v: <verb-pg> & <vc-wish>;
+wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
 
 % The O+ target is to handle "I hope so", but really, we should have
 % a special-case for this (i.e. a new minor letter).
