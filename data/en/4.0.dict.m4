@@ -4295,9 +4295,9 @@ coloring.g colouring.g painting.g:
     ([[@MV+ & O*n+]])} & {@MV+}) or
   ({@MV+} & (TH+ or Ce+));
 
-write.v charge.v draw.v: VERB_PLI(<vc-write>);
-writes.v reads.v charges.v draws.v: VERB_S_T(<vc-write>);
-wrote.v-d drew.v-d: VERB_SP_T(<vc-write>);
+write.v charge.v draw.v ink.v: VERB_PLI(<vc-write>);
+writes.v reads.v charges.v draws.v inks.v: VERB_S_T(<vc-write>);
+wrote.v-d drew.v-d inked.v-d: VERB_SP_T(<vc-write>);
 
 read.v-d:
   VERB_SPPP_T(<vc-write>) or
@@ -4313,8 +4313,11 @@ written.v drawn.v:
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
-writing.g reading.g charging.g drawing.g: (<vc-write> & <verb-ge>) or <verb-ge-d>;
-writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
+
+writing.v reading.v charging.v drawing.v inking.v:
+  <verb-pg> & <vc-write>;
+writing.g reading.g charging.g drawing.g inking.g:
+  (<vc-write> & <verb-ge>) or <verb-ge-d>;
 
 % ditransitive
 % Singing: if there's an indirect object, then a direct object is

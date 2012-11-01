@@ -5650,16 +5650,16 @@ coloring.g colouring.g painting.g:
     ([[@MV+ & O*n+]])} & {@MV+}) or
   ({@MV+} & (TH+ or Ce+));
 
-write.v charge.v draw.v: 
+write.v charge.v draw.v ink.v: 
   ((<verb-pl,i> & (<vc-write>)) or
   (<verb-and-pl-> & ([(<vc-write>)] or ())) or
   ((<vc-write>) & <verb-and-pl+>));
-writes.v reads.v charges.v draws.v: 
+writes.v reads.v charges.v draws.v inks.v: 
   ((<verb-s> & (<vc-write>)) or
   (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
   ((<vc-write>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-wrote.v-d drew.v-d: 
+wrote.v-d drew.v-d inked.v-d: 
   ((<verb-sp> & (<vc-write>)) or
   (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
   ((<vc-write>) & <verb-and-sp-i+>)) or
@@ -5690,8 +5690,11 @@ written.v drawn.v:
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
-writing.g reading.g charging.g drawing.g: (<vc-write> & <verb-ge>) or <verb-ge-d>;
-writing.v reading.v charging.v drawing.v: <verb-pg> & <vc-write>;
+
+writing.v reading.v charging.v drawing.v inking.v:
+  <verb-pg> & <vc-write>;
+writing.g reading.g charging.g drawing.g inking.g:
+  (<vc-write> & <verb-ge>) or <verb-ge-d>;
 
 % ditransitive
 % Singing: if there's an indirect object, then a direct object is
