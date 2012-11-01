@@ -2456,6 +2456,7 @@ wouldn't wouldn’t:
   (O+ & {{[[@MV+]]} & [O*n+]} & {VJd+})
   or ({@E-} & B- & O+ & O*n+);
 
+% -----------------------------------------------------------
 % common intransitive verbs
 <vc-intrans>: {@MV+};
 
@@ -2485,6 +2486,17 @@ fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
   ({[[O+]]} & <vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 arisen.v: {@E-} & PP- & {@MV+};
+
+O.K.'d.v-d  OK'd.v-d  O.K.’d.v-d  OK’d.v-d:
+ VERB_SPPP_I(<vc-intrans>);
+
+% XXX aren't these optional transitive ?
+gells.v O.K.'s.v OK's.v O.K.’s OK’s:
+  VERB_S_I(<vc-intrans>);
+
+O.K.'ing.v OK'ing.v
+O.K.’ing.v OK’ing.v:
+ (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
 % --------------------------------------------------------------
 % intransitive verbs that can take particles like "up" and "out"
@@ -2596,6 +2608,7 @@ rising.v falling.v:
   ({@E-} & A+) or
   <verb-ge-d>;
 
+% --------------------------------------------------------------
 % words.v.6: Optionally transitive verbs that can take particles
 % like "up" and "out" -- see also words.v.8
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v
@@ -5200,6 +5213,9 @@ says.q: {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
 said.q-d: <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
 saying.q: {@E-} & Pg- & <vc-paraph>;
 
+avow.q:
+ [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+
 tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
 tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
 told.q-d: <marker-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
@@ -5348,6 +5364,7 @@ for.p:
   or (MVp- & FL+);
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
+
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EN+
@@ -5512,6 +5529,19 @@ such_as:
     MVa-
     or Mp-
     or (Xc+ & Xd- & (MVx- or MX*x-)));
+
+lest:
+  (Cs+ or Mgp+ or Mv+) & (
+    ({Xc+ & {Xd-}} & CO*s+)
+    or ({Xd- & Xc+} & MVs-)
+    or (Xd- & Xc+ & E+));
+
+albeit:
+  (Cs+ & {Xc+ & {Xd-}} & CO*s+)
+  or ({Xd-} & CC- & Wd+);
+
+no_matter:
+  QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
 
 % --------------------------------------------------------
 % Preps that specify time-like relations
@@ -6834,7 +6864,8 @@ proud.a scared.a:
     ({TO+ or TH+ or OF+} & <adj-op>));
 
 % common adjectives, taking "of" e.g. "tired of", "sick of" etc.
-tired.a pooped.a full.a sick.a critical.a guilty.a innocent.a typical.a
+tired.a pooped.a full.a sick.a critical.a guilty.a innocent.a
+typical.a exemplary.a
 capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
 appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
 prognostic.a dead.a:
@@ -7947,9 +7978,6 @@ oftenest correctliest soonest disquietingliest:
 propension.n:
  (<noun-modifiers> & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
-avow.q:
- [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
-
 longest-term.a:
  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
 
@@ -7963,30 +7991,10 @@ longer-term.a:
 attestation.n:
  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
-O.K.'d.v-d  OK'd.v-d  O.K.’d.v-d  OK’d.v-d:
- VERB_SPPP_I(<vc-intrans>);
-
-% XXX aren't these optional transitive ?
-gells.v O.K.'s.v OK's.v O.K.’s OK’s:
-  VERB_S_I(<vc-intrans>);
-
-O.K.'ing.v OK'ing.v
-O.K.’ing.v OK’ing.v:
- (<vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
-
 % Strange -- the JT- is a time-expression link .. .is that right here ??
 articulo_mortis intra_vitam in_articulo_mortis in_extremis
  post_cibum post_coitum:
  <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
-
-lest:
- (Cs+ or Mgp+ or Mv+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
-
-albeit:
- (Cs+ & {Xc+ & {Xd-}} & CO*s+) or ({Xd-} & CC- & Wd+);
-
-no_matter:
-  QI+ & ((Xc+ & {Xd-} & CO+) or ({Xd- & Xc+} & MVs-));
 
 % Handy test
 % grrr: (A- & B- & C+ & D+) or [(E- & @F+ & @G+ & H+)] or [[(I- & J- & @K- & @L+)]];
