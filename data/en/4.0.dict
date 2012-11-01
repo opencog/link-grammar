@@ -6495,15 +6495,18 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 % Pa**j is used for predicative adjectives
 % ditransitive
 <vc-make>:
-  ((B- or O+ or OX+) &
-    {({@MV+} & {I*j+ or Pa**j+ or B-}) or
-    ((K+ or AF-) & {@MV+})}) or
-  ((<vc-ditrans> or
-    (K+ & {[[@MV+]]} & O*n+) or
-    K+ or
-    Vm+ or
-    ([[{K+} & @MV+ & O*n+]])) & {@MV+}) or
-  [[()]];
+  ((B- or O+ or OX+) & {
+    ({@MV+} & {I*j+ or Pa**j+ or B-})
+    or ((K+ or AF-) & {@MV+})})
+  or ((
+    <vc-ditrans>
+    or (K+ & {[[@MV+]]} & O*n+)
+    or K+
+    or Vm+
+    or ([[{K+} & @MV+ & O*n+]])
+  ) & {@MV+})
+  or [[()]];
+
 make.v: 
   ((<verb-pl,i> & (<vc-make>)) or
   (<verb-and-pl-> & ([(<vc-make>)] or ())) or
@@ -6518,9 +6521,9 @@ made.v-d:
   ((<verb-sp,pp> & (<vc-make>)) or
   (<verb-and-sp-i-> & (([<vc-make>]) or ())) or
   ((<vc-make>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or
-  (<verb-s-pv-b> & (({@MV+} & Pa+) or ({K+} & {@MV+}))) or
-  ({({@MV+} & Pa+) or K+} & <verb-phrase-opener>);
+  <verb-and-sp-t>
+  or (<verb-s-pv-b> & (({@MV+} & Pa+) or ({O+ or K+} & {@MV+})))
+  or ({({@MV+} & Pa+) or K+} & <verb-phrase-opener>);
 
 built_of built_up_of composed_of constructed_of formed_of made_of
 made_up_of:
