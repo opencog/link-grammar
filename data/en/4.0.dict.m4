@@ -5564,6 +5564,7 @@ everywhere anywhere:
 % Pp-: "We are finally getting somewhere."
 % Pp- & {EL+}: "I want to be somewhere else"
 % MVp-: "The record skips somewhere else, too."
+% EE+: "somewhere near, a mouse scratched."
 somewhere someplace:
   ({EL+} & (
     MVp- 
@@ -5574,7 +5575,8 @@ somewhere someplace:
   ) & Mp+)
   or ({EL+} & (MVp- or Pp-))
   or ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+)
-  or ({EL+} & {Xc+ & {Xd-}} & [[CO+]]);
+  or ({EL+} & {Xc+ & {Xd-}} & [[CO+]])
+  or EE+;
 
 nowhere:
   {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
@@ -5635,11 +5637,6 @@ home.i: [[K-]];
 back.r: ({Yd-} & K-) or (MVp+ & (MVp- or FM-)) or MVp-;
 forth aside.p: K- or MVa-;
 
-% SF*p+: "nearby is another temple" (using p for 'prep')
-% SFpp+: "nearby are more ruins"
-nearby: A+ or MVp- or Pp- or FM- or (SF*p+ & <CLAUSE>);
-close_by: (SF*p+ & <CLAUSE>);
-
 next_to in_back_of in_front_of close_to on_top_of outside_of
 inside_of atop:
   <alter-preps> or
@@ -5650,10 +5647,23 @@ in_place_of in_search_of:
   <alter-preps> or
   (J+ & (<prep-main-b> or [Wq- & PF+]));
 
+% EE- & COp+: "somewhere near, a mouse scratched."
 near.p:
-  {EE- or EF+} &
-    (<alter-preps> or
-    (J+ & (<prep-main-b> or FM- or [Wq- & PF+])));
+  ({EE- or EF+} & (
+    <alter-preps>
+    or (J+ & (<prep-main-b> or FM- or [Wq- & PF+]))))
+  or (EE- & {Xc+} & COp+);
+
+% SF*p+: "nearby is another temple" (using p for 'prep')
+% SFpp+: "nearby are more ruins"
+% {EE-} & {Xc+} & COp+: "{somewhere} nearby, a mouse scratched"
+nearby:
+  A+ or MVp- or Pp- or FM- or (SF*p+ & <CLAUSE>)
+  or ({EE-} & {Xc+} & COp+);
+
+close_by:
+  (SF*p+ & <CLAUSE>)
+  or ({EE-} & {Xc+} & COp+);
 
 all_over all_around: {J+} & (Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-
 or Mp-);
