@@ -8147,6 +8147,7 @@ rangers.n
 ranges.n
 ranks.n
 ransoms.n
+rants.n
 rapes.n
 rapids.n
 rapiers.n
@@ -8179,6 +8180,7 @@ rattlesnakes.n
 ravens.n
 raves.n
 ravines.n
+ravings.n
 rays.n
 razorbacks.n
 razorblades.n
