@@ -2808,10 +2808,10 @@ and.v-fill:
   ((<verb-sp,pp> & (<vc-trans>)) or
   (<verb-and-sp-i-> & (([<vc-trans>]) or ())) or
   ((<vc-trans>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or
-  <verb-pv> or
-  (({@E-} or {@EA-} or {@AN-}) & A+) or
-  <verb-phrase-opener>;
+  <verb-and-sp-t>
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-phrase-opener>;
 
 /en/words/words.v.4.4
 /en/words/words-medical.v.4.4:
@@ -2850,6 +2850,91 @@ beset.v mistaken.v underwritten.v:
   <verb-pv> or
   ({@E-} & A+) or
   <verb-phrase-opener>;
+
+% -----------------------------------------------------------------
+% The simplest transitive, ditransitive constructions
+% i.e. must take an object
+% Almost exactly like words.v.4 above, but ditrans
+<vc-corral>:
+  <vc-trans>
+  or <vc-ditrans>;
+
+corral.v crown.v decant.v ink.v intone.v rope.v:
+  
+  ((<verb-pl,i> & (<vc-corral>)) or
+  (<verb-and-pl-> & ([(<vc-corral>)] or ())) or
+  ((<vc-corral>) & <verb-and-pl+>));
+corrals.v crowns.v decants.v inks.v intones.v ropes.v:
+  
+  ((<verb-s> & (<vc-corral>)) or
+  (<verb-and-sp-i-> & (([<vc-corral>]) or ())) or
+  ((<vc-corral>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
+corralled.v-d crowned.v-d decanted.v-d inked.v-d
+intoned.v-d roped.v-d:
+  
+  ((<verb-sp,pp> & (<vc-corral>)) or
+  (<verb-and-sp-i-> & (([<vc-corral>]) or ())) or
+  ((<vc-corral>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t>
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-phrase-opener>;
+corralling.v crowning.v decanting.v inking.v intoning.v roping.v:
+  <verb-pg> & <vc-corral>;
+corralling.g crowning.g decanting.g inking.g intoning.g roping.g:
+  (<vc-corral> & <verb-ge>) or <verb-ge-d>;
+
+% The simplest optionally-transitive, and ditransitive constructions
+<vc-bake>:
+  {@MV+}
+  or <vc-trans>
+  or <vc-ditrans>;
+
+bake.v dictate.v kiss.v slice.v:
+  
+  ((<verb-pl,i> & (<vc-bake>)) or
+  (<verb-and-pl-> & ([(<vc-bake>)] or ())) or
+  ((<vc-bake>) & <verb-and-pl+>));
+bakes.v dictates.v kisses.v slices.v:
+  
+  ((<verb-s> & (<vc-bake>)) or
+  (<verb-and-sp-i-> & (([<vc-bake>]) or ())) or
+  ((<vc-bake>) & <verb-and-sp-i+>) or
+  <verb-and-sp-t>);
+baked.v-d dictated.v-d kissed.v-d sliced.v-d:
+  
+  ((<verb-sp,pp> & (<vc-bake>)) or
+  (<verb-and-sp-i-> & (([<vc-bake>]) or ())) or
+  ((<vc-bake>) & <verb-and-sp-i+>)) or
+  <verb-and-sp-t>
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-phrase-opener>;
+baking.v dictating.v kissing.v slicing.v:
+  <verb-pg> & <vc-bake>;
+baking.g dictating.g kissing.g slicing.g:
+  (<vc-bake> & <verb-ge>) or <verb-ge-d>;
+
+% O+ & K+: "She buttered him up"
+% ditrans: "She buttered him some toast"
+<vc-butter>:
+  <vc-trans>
+  or ((O+ & K+) & {@MV+})
+  or <vc-ditrans>;
+butter.v: 
+  ((<verb-pl,i> & (<vc-butter>)) or
+  (<verb-and-pl-> & ([(<vc-butter>)] or ())) or
+  ((<vc-butter>) & <verb-and-pl+>));
+butters.v: 
+  ((<verb-s> & (<vc-butter>)) or
+  (<verb-and-s-> & ([(<vc-butter>)] or ())) or
+  ((<vc-butter>) & <verb-and-s+>));
+buttered.v-d: 
+  ((<verb-sp,pp> & (<vc-butter>)) or
+  (<verb-and-sp-i-> & (([<vc-butter>]) or ())) or
+  ((<vc-butter>) & <verb-and-sp-i+>));
+buttering.v: (<vc-butter> & <verb-pg,ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
@@ -5641,25 +5726,28 @@ coloring.g colouring.g painting.g:
 % ditransitive
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
-% 'he wrote me that S' but '*he drew me that S'
+% 'he wrote me that blah happend' but '*he drew me that blah happened'
+%
+% <vc-opt-ditrans> & TH+: "he wrote her that he loved her"
 <vc-write>:
-  ({(B- & {O+ or K+}) or
-    <vc-opt-ditrans> or
-    (O+ & K+) or
-    (K+ & {{[[@MV+]]} & O*n+}) or
-    ([[@MV+ & O*n+]])} & {@MV+}) or
-  ({@MV+} & (TH+ or Ce+));
+  ({(B- & {O+ or K+})
+    or (<vc-opt-ditrans> & {TH+})
+    or (O+ & K+)
+    or (K+ & {{[[@MV+]]} & O*n+})
+    or ([[@MV+ & O*n+]])
+  } & {@MV+})
+  or ({@MV+} & (TH+ or Ce+));
 
-write.v charge.v draw.v ink.v: 
+write.v charge.v draw.v: 
   ((<verb-pl,i> & (<vc-write>)) or
   (<verb-and-pl-> & ([(<vc-write>)] or ())) or
   ((<vc-write>) & <verb-and-pl+>));
-writes.v reads.v charges.v draws.v inks.v: 
+writes.v reads.v charges.v draws.v: 
   ((<verb-s> & (<vc-write>)) or
   (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
   ((<vc-write>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-wrote.v-d drew.v-d inked.v-d: 
+wrote.v-d drew.v-d: 
   ((<verb-sp> & (<vc-write>)) or
   (<verb-and-sp-i-> & (([<vc-write>]) or ())) or
   ((<vc-write>) & <verb-and-sp-i+>)) or
@@ -5691,9 +5779,9 @@ written.v drawn.v:
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
 
-writing.v reading.v charging.v drawing.v inking.v:
+writing.v reading.v charging.v drawing.v:
   <verb-pg> & <vc-write>;
-writing.g reading.g charging.g drawing.g inking.g:
+writing.g reading.g charging.g drawing.g:
   (<vc-write> & <verb-ge>) or <verb-ge-d>;
 
 % ditransitive

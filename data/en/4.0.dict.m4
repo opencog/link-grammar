@@ -2702,10 +2702,10 @@ and.v-fill:
 % !?XXX many of the new additions fail some common sentences, such as:
 % The candle guttered. It plummeted to the bottom. Prices plummeted!
 /en/words/words-medical.v.4.3:
-  VERB_SPPP_T(<vc-trans>) or
-  <verb-pv> or
-  (({@E-} or {@EA-} or {@AN-}) & A+) or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-trans>)
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-phrase-opener>;
 
 /en/words/words.v.4.4
 /en/words/words-medical.v.4.4:
@@ -2733,6 +2733,60 @@ beset.v mistaken.v underwritten.v:
   <verb-pv> or
   ({@E-} & A+) or
   <verb-phrase-opener>;
+
+% -----------------------------------------------------------------
+% The simplest transitive, ditransitive constructions
+% i.e. must take an object
+% Almost exactly like words.v.4 above, but ditrans
+<vc-corral>:
+  <vc-trans>
+  or <vc-ditrans>;
+
+corral.v crown.v decant.v ink.v intone.v rope.v:
+  VERB_PLI(<vc-corral>);
+corrals.v crowns.v decants.v inks.v intones.v ropes.v:
+  VERB_S_T(<vc-corral>);
+corralled.v-d crowned.v-d decanted.v-d inked.v-d
+intoned.v-d roped.v-d:
+  VERB_SPPP_T(<vc-corral>)
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-phrase-opener>;
+corralling.v crowning.v decanting.v inking.v intoning.v roping.v:
+  <verb-pg> & <vc-corral>;
+corralling.g crowning.g decanting.g inking.g intoning.g roping.g:
+  (<vc-corral> & <verb-ge>) or <verb-ge-d>;
+
+% The simplest optionally-transitive, and ditransitive constructions
+<vc-bake>:
+  {@MV+}
+  or <vc-trans>
+  or <vc-ditrans>;
+
+bake.v dictate.v kiss.v slice.v:
+  VERB_PLI(<vc-bake>);
+bakes.v dictates.v kisses.v slices.v:
+  VERB_S_T(<vc-bake>);
+baked.v-d dictated.v-d kissed.v-d sliced.v-d:
+  VERB_SPPP_T(<vc-bake>)
+  or <verb-pv>
+  or (({@E-} or {@EA-} or {@AN-}) & A+)
+  or <verb-phrase-opener>;
+baking.v dictating.v kissing.v slicing.v:
+  <verb-pg> & <vc-bake>;
+baking.g dictating.g kissing.g slicing.g:
+  (<vc-bake> & <verb-ge>) or <verb-ge-d>;
+
+% O+ & K+: "She buttered him up"
+% ditrans: "She buttered him some toast"
+<vc-butter>:
+  <vc-trans>
+  or ((O+ & K+) & {@MV+})
+  or <vc-ditrans>;
+butter.v: VERB_PLI(<vc-butter>);
+butters.v: VERB_S_I(<vc-butter>);
+buttered.v-d: VERB_SPPP_I(<vc-butter>);
+buttering.v: (<vc-butter> & <verb-pg,ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % words.v.8: Transitive verbs that can take particles like "up" and "out"
@@ -4286,18 +4340,21 @@ coloring.g colouring.g painting.g:
 % ditransitive
 % Writing -- direct and indirect object are optional:
 % 'he wrote' 'he wrote a letter' 'he wrote me a letter' 'he wrote me'
-% 'he wrote me that S' but '*he drew me that S'
+% 'he wrote me that blah happend' but '*he drew me that blah happened'
+%
+% <vc-opt-ditrans> & TH+: "he wrote her that he loved her"
 <vc-write>:
-  ({(B- & {O+ or K+}) or
-    <vc-opt-ditrans> or
-    (O+ & K+) or
-    (K+ & {{[[@MV+]]} & O*n+}) or
-    ([[@MV+ & O*n+]])} & {@MV+}) or
-  ({@MV+} & (TH+ or Ce+));
+  ({(B- & {O+ or K+})
+    or (<vc-opt-ditrans> & {TH+})
+    or (O+ & K+)
+    or (K+ & {{[[@MV+]]} & O*n+})
+    or ([[@MV+ & O*n+]])
+  } & {@MV+})
+  or ({@MV+} & (TH+ or Ce+));
 
-write.v charge.v draw.v ink.v: VERB_PLI(<vc-write>);
-writes.v reads.v charges.v draws.v inks.v: VERB_S_T(<vc-write>);
-wrote.v-d drew.v-d inked.v-d: VERB_SP_T(<vc-write>);
+write.v charge.v draw.v: VERB_PLI(<vc-write>);
+writes.v reads.v charges.v draws.v: VERB_S_T(<vc-write>);
+wrote.v-d drew.v-d: VERB_SP_T(<vc-write>);
 
 read.v-d:
   VERB_SPPP_T(<vc-write>) or
@@ -4314,9 +4371,9 @@ written.v drawn.v:
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
 
-writing.v reading.v charging.v drawing.v inking.v:
+writing.v reading.v charging.v drawing.v:
   <verb-pg> & <vc-write>;
-writing.g reading.g charging.g drawing.g inking.g:
+writing.g reading.g charging.g drawing.g:
   (<vc-write> & <verb-ge>) or <verb-ge-d>;
 
 % ditransitive
