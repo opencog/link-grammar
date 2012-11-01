@@ -3034,8 +3034,12 @@ dreaming.v complaining.v: <verb-pg> & <vc-dream>;
 % The O+ is to handle "do you think so, too?", however, a special
 % target for objects like "so" or "it" would be better...
 % "hope.v" has the same problem.
-<vc-think>: ({@MV+} & {Ce+ or TH+ or RSe+ or Z- or (OF+ & {@MV+}) or BW-})
-or [[O+ & {@MV+}]];
+% O+ & O*n: "She will think it an act of kindness."
+% O+ & Pa**j: "She will think it true."
+<vc-think>:
+  ({@MV+} & {Ce+ or TH+ or RSe+ or Z- or (OF+ & {@MV+}) or BW-})
+  or (O+ & {@MV+} & {O*n+ or Pa**j+});
+
 think.v: VERB_PLI(<vc-think>);
 thinks.v: VERB_S_T(<vc-think>);
 thought.v-d: VERB_SPPP_T(<vc-think>) or (<verb-s-pv> & {THi+ or Z-});
