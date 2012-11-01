@@ -2545,8 +2545,16 @@ shrunk.v withdrawn.v sunk.v forgiven.v:
   ({@E-} & A+) or
   <verb-phrase-opener>;
 
-bid.v-d hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
+hurt.v-d thrust.v-d broadcast.v-d outbid.v-d sublet.v-d:
   VERB_SPPP_T(`<vc-tr,intr>')
+  or (<verb-ico> & <vc-tr,intr>)
+  or <verb-pv>
+  or ({@E-} & A+)
+  or <verb-phrase-opener>;
+
+% <vc-ditrans>: "She bid him adieu"
+bid.v-d:
+  VERB_SPPP_T(`<vc-tr,intr> or <vc-ditrans>')
   or (<verb-ico> & <vc-tr,intr>)
   or <verb-pv>
   or ({@E-} & A+)
