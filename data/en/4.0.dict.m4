@@ -5463,13 +5463,12 @@ to.r:
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
 
+% --------------------------------------------------------
+% Preps suggesting comparative relations, orderings
+
 besides: {J+ or Mgp+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 throughout: {J+} & ([({Xc+ & {Xd-}} & CO+)] or MVp- or [Wq- & PF+]);
 
-inside.r outside.r underneath alongside:
-{J+} & (<prep-main-b> or FM-);
-amid plus.p minus.p via onto:
-J+ & (<prep-main-b> or [Wq- & PF+]);
 versus: (J+ & Mp-) or (G- & G+);
 vs: {Xi+} & G- & G+;
 
@@ -5480,16 +5479,21 @@ better_off worse_off: {EC-} & Pa- & {Pg+};
 off_of out_of:  ({JQ+} & J+ & <prep-main-b>) or [MVp- & B-];
 
 despite notwithstanding
-other_than apart_from aside_from: (J+ or Mgp+) & (MVp- or (Xd- & Xc+ &
-(MVx- or E+)) or
-[({Xc+ & {Xd-}} & CO+)]);
-rather_than: (J+ or Mgp+ or Mp+ or I+) &
-((Xd- & Xc+ & (E+ or MVx-)) or MVp- or [({Xc+ & {Xd-}} & CO+)]);
+other_than apart_from aside_from:
+  (J+ or Mgp+) & (MVp- or (Xd- & Xc+ & (MVx- or E+))
+  or [({Xc+ & {Xd-}} & CO+)]);
+
+rather_than:
+  (J+ or Mgp+ or Mp+ or I+) &
+    ((Xd- & Xc+ & (E+ or MVx-)) or MVp- or [({Xc+ & {Xd-}} & CO+)]);
+
 instead_of because_of prior_to:
-(J+ or Mgp+) & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ &
-(E+ or MVx-)));
-as_well_as: (J+ or Mgp+) & (MG- or Mp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or
-(Xd- & Xc+ & (MX*x- or MVx-)));
+  (J+ or Mgp+)
+  & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
+
+as_well_as:
+  (J+ or Mgp+) & (MG- or Mp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (MX*x- or MVx-)));
+
 according_to as_of in_case_of in_response_to unbeknownst_to thanks_to:
   J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
 
@@ -5499,91 +5503,21 @@ due_to along_with en_route_to in_connection_with:
 regardless_of as_to irrespective_of:
   (J+ or QI+) & (MVp- or [({Xc+ & {Xd-}} & CO+)] or (Xd- & Xc+ & (E+ or MVx-)));
 
-overhead.r midway in_public in_private en_route
-a_la_mode a_la_carte side_by_side from_coast_to_coast: <prep-main-b>;
-abroad upstairs.r downstairs.r overseas.r next_door:
-  <prep-main-b> or FM-;
-
-elsewhere:
-  <prep-main-b> or FM- or [[J-]];
-
-ahead at_hand in_store in_reverse in_place in_town
-under_way in_office out_of_office out_of_reach
-in_reach within_reach on_guard at_large in_hand on_hand for_free
-in_line in_loco_parentis on_board en_route in_bed
-out_of_bed on_strike on_top from_afar at_stake in_question
-at_issue on_lease on_trial in_league in_cahoots in_front in_back
-on_break on_camera in_command in_concert by_association in_association
-on_deck on_disk on_file on_foot on_location on_line online.r:
-  MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-));
-
-uptown downtown.r offshore.r underground.r out_of_town:
-  MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
-
-<common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
-
-forward.r backward forwards.r backwards sideways ashore abreast aft
-half-way two-fold downhill southward underfoot westward eastward
-northward overnight.r on_hold on_track in_situ in_toto off_balance
-in_check on_course off_course under_oath at_end by_example on_holiday
-by_invitation on_patrol on_stage in_step in_tempo on_schedule
-behind_schedule ahead_of_schedule for_good for_keeps
-out_of_step out_of_phase in_tune out_of_tune in_session out_of_session
-in_phase neck_and_neck under_contract:
-  <common-prep>;
-
-/en/words/words-medical.prep.1: <common-prep>;
-
-% 5' 3' are DNA ends
-upstream downstream 5' 3':
-  A+ or
-  NIfp+ or NItp- or
-  ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} &
-    (({Xc+ & Xd-} & (Ma- or MJra-)) or
-    MJra+ or
-    (Wq- & PF+) or
-    MVp- or
-    Pp- or
-    FM- or
-    (Xc+ & Xd- & (MVx- or MX-))));
-
-%upstream downstream 3' 5':
-%A+ or
-%((EZ- or Y-) & (MVp+ or OF+) & (MV- or MV+)) or
-%(EI- or EZ- or Y- & Ma- & (MVp+ or OF+)) or
-%(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
-
-indoors outdoors underwater.r:
-  MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
-
-everywhere anywhere:
-  {EL+} & (
-    (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
-    or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
-
-% Pp-: "We are finally getting somewhere."
-% Pp- & {EL+}: "I want to be somewhere else"
-% MVp-: "The record skips somewhere else, too."
-% EE+: "somewhere near, a mouse scratched."
-somewhere someplace:
-  ({EL+} & (
-    MVp- 
-    or Pp-
-    or FM-
-    or [({Xc+ & {Xd-}} & CO+)]
-    or (Xc+ & Xd- & MVx-)
-  ) & Mp+)
-  or ({EL+} & (MVp- or Pp-))
-  or ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+)
-  or ({EL+} & {Xc+ & {Xd-}} & [[CO+]])
-  or EE+;
-
-nowhere:
-  {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
-
 as_usual to_date on_average in_turn so_far
 in_particular in_response in_general thus_far in_reply:
-  MVp- or Mp- or ({Xc+ & {Xd-}} & CO+) or (Xc+ & Xd- & (MVx- or MX*x-));
+  MVp-
+  or Mp-
+  or ({Xc+ & {Xd-}} & CO+)
+  or (Xc+ & Xd- & (MVx- or MX*x-));
+
+such_as:
+  J+ & (
+    MVa-
+    or Mp-
+    or (Xc+ & Xd- & (MVx- or MX*x-)));
+
+% --------------------------------------------------------
+% Preps that specify time-like relations
 
 recently:
   {EE- or EF+} & (
@@ -5626,26 +5560,33 @@ later earlier:
     AJrc- or AJlc+)) or
   (Yt- & (Ca+ or Qe+));
 
-away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
-aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
-apart: {Yd-} & K-;
+% --------------------------------------------------------
+% Preps that specify space-like relations
+everywhere anywhere:
+  {EL+} & (
+    (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+    or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
 
-% XXX FIXME wtf ?? what is home.i for ??
-home.i: [[K-]];
+% Pp-: "We are finally getting somewhere."
+% Pp- & {EL+}: "I want to be somewhere else"
+% MVp-: "The record skips somewhere else, too."
+% EE+: "somewhere near, a mouse scratched."
+% MVp+ & COp+: "Somewhere, far away, a dog barked."
+somewhere someplace:
+  ({EL+} & (
+    MVp- 
+    or Pp-
+    or FM-
+    or [({Xc+ & {Xd-}} & CO+)]
+    or (Xc+ & Xd- & MVx-)
+  ) & Mp+)
+  or ({EL+} & (MVp- or Pp-))
+  or ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+)
+  or ({EL+} & {Xc+ & {Xd-}} & [[CO+]])
+  or EE+;
 
-% Bare-naked MVp-: "I want it back"
-back.r: ({Yd-} & K-) or (MVp+ & (MVp- or FM-)) or MVp-;
-forth aside.p: K- or MVa-;
-
-next_to in_back_of in_front_of close_to on_top_of outside_of
-inside_of atop:
-  <alter-preps> or
-  (J+ & (<prep-main-b> or FM- or [Wq- & PF+]));
-
-ahead_of by_way_of akin_to betwixt vis-a-vis in_lieu_of on_account_of
-in_place_of in_search_of:
-  <alter-preps> or
-  (J+ & (<prep-main-b> or [Wq- & PF+]));
+nowhere:
+  {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
 
 % EE- & COp+: "somewhere near, a mouse scratched."
 near.p:
@@ -5665,9 +5606,8 @@ close_by:
   (SF*p+ & <CLAUSE>)
   or ({EE-} & {Xc+} & COp+);
 
-all_over all_around: {J+} & (Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-
-or Mp-);
-such_as: J+ & (MVa- or Mp- or (Xc+ & Xd- & (MVx- or MX*x-)));
+all_over all_around:
+  {J+} & (MVp- or Mp- or Pp- or FM- or [({Xc+ & {Xd-}} & CO+)]);
 
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
 % or the more questionable [Wq- & PF+].  Note that (Wd- & PF+) is barred
@@ -5684,6 +5624,95 @@ there.r:
   OXt- or
   Wi-;
 
+away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
+aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
+apart: {Yd-} & K-;
+
+inside.r outside.r underneath alongside:
+  {J+} & (<prep-main-b> or FM-);
+amid plus.p minus.p via onto:
+  J+ & (<prep-main-b> or [Wq- & PF+]);
+
+% XXX FIXME wtf ?? what is home.i for ??
+home.i: [[K-]];
+
+% Bare-naked MVp-: "I want it back"
+back.r: ({Yd-} & K-) or (MVp+ & (MVp- or FM-)) or MVp-;
+forth aside.p: K- or MVa-;
+
+next_to in_back_of in_front_of close_to on_top_of outside_of
+inside_of atop:
+  <alter-preps> or
+  (J+ & (<prep-main-b> or FM- or [Wq- & PF+]));
+
+ahead_of by_way_of akin_to betwixt vis-a-vis in_lieu_of on_account_of
+in_place_of in_search_of:
+  <alter-preps> or
+  (J+ & (<prep-main-b> or [Wq- & PF+]));
+
+% --------------------------------------------------------
+% More complex space-like prepositional phrases
+
+overhead.r midway in_public in_private en_route
+a_la_mode a_la_carte side_by_side from_coast_to_coast: <prep-main-b>;
+
+abroad upstairs.r downstairs.r overseas.r next_door:
+  <prep-main-b> or FM-;
+
+elsewhere:
+  <prep-main-b> or FM- or [[J-]];
+
+ahead at_hand in_store in_reverse in_place in_town
+under_way in_office out_of_office out_of_reach
+in_reach within_reach on_guard at_large in_hand on_hand for_free
+in_line in_loco_parentis on_board en_route in_bed
+out_of_bed on_strike on_top from_afar at_stake in_question
+at_issue on_lease on_trial in_league in_cahoots in_front in_back
+on_break on_camera in_command in_concert by_association in_association
+on_deck on_disk on_file on_foot on_location on_line online.r:
+  MVp- or Mp- or Pp- or (Xc+ & Xd- & (MX*x- or MVx-));
+
+uptown downtown.r offshore.r underground.r out_of_town:
+  MVp- or Mp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+
+<common-prep>: MVp- or Pp- or (Xc+ & Xd- & MVx-);
+
+/en/words/words-medical.prep.1: <common-prep>;
+
+forward.r backward forwards.r backwards sideways ashore abreast aft
+half-way two-fold downhill southward underfoot westward eastward
+northward overnight.r on_hold on_track in_situ in_toto off_balance
+in_check on_course off_course under_oath at_end by_example on_holiday
+by_invitation on_patrol on_stage in_step in_tempo on_schedule
+behind_schedule ahead_of_schedule for_good for_keeps
+out_of_step out_of_phase in_tune out_of_tune in_session out_of_session
+in_phase neck_and_neck under_contract:
+  <common-prep>;
+
+
+% 5' 3' are DNA ends
+upstream downstream 5' 3':
+  A+ or
+  NIfp+ or NItp- or
+  ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} &
+    (({Xc+ & Xd-} & (Ma- or MJra-)) or
+    MJra+ or
+    (Wq- & PF+) or
+    MVp- or
+    Pp- or
+    FM- or
+    (Xc+ & Xd- & (MVx- or MX-))));
+
+%upstream downstream 3' 5':
+%A+ or
+%((EZ- or Y-) & (MVp+ or OF+) & (MV- or MV+)) or
+%(EI- or EZ- or Y- & Ma- & (MVp+ or OF+)) or
+%(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
+
+indoors outdoors underwater.r:
+  MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
+
+% --------------------------------------------------------
 % Patronymics and misc french/spanish/german connectives
 % Many of these are already in the adjectives list
 à auf aus aux comte comtes
@@ -5692,9 +5721,10 @@ la las le.c los nach noch och os ou på por
 sans te über un une vom von zum zur zu:
   {G-} & G+;
 
-% Spanish A y B
+% Spanish/Italian: "Dolce y Gabbana"
 y.and: G- & G+;
 
+% ====================================================================
 % TIME AND PLACE EXPRESSIONS
 
 % (Xd- & {Xc+} & MV+ & MVx-):  "We are ready, this time for sure."
