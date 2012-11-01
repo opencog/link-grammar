@@ -3449,33 +3449,60 @@ providing.g:
   <verb-ge-d> or
   ((TH+ or Ce+) & (({{Xd-} & Xc+} & CO+) or ({Xd- & Xc+} & MVs-)));
 
-<vc-sense>: <vc-trans> or
-  ({@MV+} & (Ce+ or TH+ or RSe+ or Pg+));
-sense.v doubt.v reaffirm.v reckon.v regret.v proclaim.v ascertain.v discern.v
+% -----------------------------------------------------
+<vc-sense>:
+  <vc-trans>
+  or ({@MV+} & (Ce+ or TH+ or RSe+ or Pg+));
+
+sense.v doubt.v reaffirm.v reckon.v regret.v ascertain.v discern.v
 stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v boast.v:
   VERB_PLI(<vc-sense>);
-senses.v reaffirms.v doubts.v reckons.v regrets.v proclaims.v
+senses.v reaffirms.v doubts.v reckons.v regrets.v
 stipulates.v ascertains.v discerns.v affirms.v certifies.v trusts.v
 postulates.v ensures.v implies.v verifies.v boasts.v:
   VERB_S_T(<vc-sense>);
 doubted.v-d reaffirmed.v-d sensed.v-d reckoned.v-d regretted.v-d stipulated.v-d
-proclaimed.v-d ascertained.v-d discerned.v-d affirmed.v-d certified.v-d
+ascertained.v-d discerned.v-d affirmed.v-d certified.v-d
 trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d boasted.v-d:
-  VERB_SPPP_T(<vc-sense>) or
-  (<verb-s-pv> & {THi+}) or
-  ({@E-} & A+) or
-  <verb-phrase-opener>;
-reaffirming.g sensing.g doubting.g stipulating.g
-reckoning.g regretting.g proclaiming.g ascertaining.g
-discerning.g affirming.g certifying.g trusting.g
-postulating.g ensuring.g implying.g verifying.g boasting.g:
- (<vc-sense> & <verb-ge>) or <verb-ge-d>;
+  VERB_SPPP_T(<vc-sense>)
+  or (<verb-s-pv> & {THi+})
+  or ({@E-} & A+)
+  or <verb-phrase-opener>;
+
 sensing.v doubting.v reckoning.v reaffirming.v stipulating.v
-regretting.v proclaiming.v ascertaining.v discerning.v
+regretting.v ascertaining.v discerning.v
 affirming.v certifying.v trusting.v postulating.v ensuring.v
 implying.v verifying.v boasting.v:
   <verb-pg> & <vc-sense>;
 
+reaffirming.g sensing.g doubting.g stipulating.g
+reckoning.g regretting.g ascertaining.g
+discerning.g affirming.g certifying.g trusting.g
+postulating.g ensuring.g implying.g verifying.g boasting.g:
+  (<vc-sense> & <verb-ge>) or <verb-ge-d>;
+
+% -----------------------------------------------------
+% ditrans: "She proclaimed him a liar and a thief"
+<vc-proclaim>:
+  <vc-trans>
+  or ({@MV+} & (Ce+ or TH+ or RSe+ or Pg+))
+  or <vc-ditrans>;
+
+proclaim.v:
+  VERB_PLI(<vc-proclaim>);
+proclaims.v:
+  VERB_S_T(<vc-proclaim>);
+proclaimed.v-d:
+  VERB_SPPP_T(<vc-proclaim>)
+  or (<verb-s-pv> & {THi+})
+  or ({@E-} & A+)
+  or <verb-phrase-opener>;
+proclaiming.v:
+  <verb-pg> & <vc-proclaim>;
+proclaiming.g:
+  (<vc-proclaim> & <verb-ge>) or <verb-ge-d>;
+
+% -----------------------------------------------------
 % Pv+ link: "John imagines himself lost in the woods."
 % Pg+ link: "John imagines himself singing from a mountaintop"
 % AZ+ link: "John imagined Mary as innocent as a lamb"
@@ -4323,11 +4350,15 @@ passing.v buying.v paying.v selling.v dealing.v telegraphing.v wiring.v:
     (K+ & {{[[@MV+]]} & O*n+}) or
     ([[@MV+ & O*n+]])} & {@MV+};
 
+% This is not quite right:
+% "she called him" but "*she shouted him"
 call.v shout.v: VERB_PLI(<vc-call>);
 calls.v shouts.v: VERB_S_T(<vc-call>);
-called.v-d shouted.v-d: VERB_SPPP_T(<vc-call>) or
-(<verb-pv-b> & {O+ or B- or K+ or Pa+ or [[@MV+ & O*n+]]} & {@MV+}) or
-({O+ or K+ or Pa+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+called.v-d shouted.v-d:
+  VERB_SPPP_T(<vc-call>)
+  or (<verb-pv-b> & {O+ or B- or K+ or Pa+ or [[@MV+ & O*n+]]} & {@MV+})
+  or ({O+ or K+ or Pa+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+
 calling.g shouting.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
 calling.v shouting.v: <verb-pg> & <vc-call>;
 
@@ -5103,14 +5134,29 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
-/en/words/words.v.10.1: [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
-/en/words/words.v.10.2: [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
+/en/words/words.v.10.1: 
+  [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
+
+/en/words/words.v.10.2:
+  [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
+
 /en/words/words.v.10.3:
-<marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)
-or [[Pvf- & <vc-it-paraph>]]));
-read.q-d: <marker-past> or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
-wrote.q-d: <marker-past> or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+  <marker-past>
+  or ({@E-} & (
+    ((S- or PP-) & <vc-paraph>)
+    or (SI*j+ & <vc-paraph-inv>)
+    or [[Pvf- & <vc-it-paraph>]]));
+
+read.q-d:
+   <marker-past>
+   or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+
+wrote.q-d:
+  <marker-past>
+   or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+
 written.q: {@E-} & PP- & <vc-paraph>;
+
 /en/words/words.v.10.4: [[{@E-} & Pg- & <vc-paraph>]];
 
 seem.q appear.q: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
@@ -5141,6 +5187,7 @@ said.w-d voted.w-d: VERB_SPPP_I(<vc-vote>);
 saying.w voting.w:
   (<vc-vote> & <verb-pg,ge>);
 
+% ---------------------------------------------------------
 % :.w  "My answer: yes"
 is.w ":.w":
   <verb-x-s,u> & <vc-vote>;
