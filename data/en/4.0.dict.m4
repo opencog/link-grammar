@@ -72,10 +72,10 @@ changecom(`%')
 % Currently, two different nulls are defined: a regular null, and a
 % costly null.  The regular null is used to make determiners optional;
 % this allows for the parsing of newspaper headlines and clipped
-% technical speech (e.g. medical, engineering, where dterminers are
-% dropped).  The costly-null is used during panic parsing.
-% Currently, both have the same cost: using the ordinary null allows
-% too many sentences to be parsed incorrectly.
+% technical speech (e.g. medical, engineering, where determiners are
+% often dropped).  The costly-null is used during panic parsing.
+% Currently, both have the same cost: using a less cotly null results
+% in too many sentences being parsed incorrectly.
 
 <null>: [[[()]]];
 <costly-null>: [[[()]]];
@@ -86,6 +86,7 @@ changecom(`%')
 % The marker-common-entity is used to identify all common nouns
 % and adjectives that might appear in entity names:
 % e.g. "Great Southern Federal Bank and Railroad" or "Aluminum Bahrain"
+% These markers are used in the Java interfaces, to help identify entities.
 <marker-entity>: XXXENTITY+;
 <marker-common-entity>: XXXGIVEN+;
 
