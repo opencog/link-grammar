@@ -7171,10 +7171,10 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <alter-preps>: MJrj- or MJlj+;
 
 <prep-main-b>:
-  <conjoin-preps> or
-  [Mp-] or Pp- or MVp- or
-  [({Xc+ & {Xd-}} & CO+)] or
-  (Xd- & Xc+ & (MX*x- or MVx-));
+  <conjoin-preps>
+  or [Mp-] or Pp- or MVp-
+  or [({Xc+ & {Xd-}} & CO+)]
+  or (Xd- & Xc+ & (MX*x- or MVx-));
 
 <prep-main-a>:
   <prep-main-b> or
@@ -7234,8 +7234,8 @@ with:
   or (Jw+ & (RJrj- or RJlj+))
   or [MVp- & B-]
   or (J+ & {EBm+} & ([P+] or [[O*n+]]) & (
-    [({Xc+ & {Xd-}} & CO+)]
-    or MVp-
+    MVp-
+    or [({Xc+ & {Xd-}} & CO+)]
     or (Xd- & Xc+ & (MX*x- or MVx-))));
 
 among:
@@ -7408,10 +7408,7 @@ regardless_of as_to irrespective_of:
 
 as_usual to_date on_average in_turn so_far
 in_particular in_response in_general thus_far in_reply:
-  MVp-
-  or Mp-
-  or ({Xc+ & {Xd-}} & CO+)
-  or (Xc+ & Xd- & (MVx- or MX*x-));
+  <prep-main-b>;
 
 such_as:
   J+ & (
@@ -7475,11 +7472,12 @@ everywhere anywhere:
 % MVp-: "The record skips somewhere else, too."
 % EE+: "somewhere near, a mouse scratched."
 % MVp+ & COp+: "Somewhere, far away, a dog barked."
+% almost like <prep-main-b> ...
 somewhere someplace:
   ({EL+} & (
-    MVp- 
+    FM-
     or Pp-
-    or FM-
+    or MVp- 
     or [({Xc+ & {Xd-}} & CO+)]
     or (Xc+ & Xd- & MVx-)
   ) & Mp+)
@@ -7509,6 +7507,7 @@ close_by:
   (SF*p+ & <CLAUSE>)
   or ({EE-} & {Xc+} & COp+);
 
+% XXX almost like <prep-main-b> .... is it?
 all_over all_around:
   {J+} & (MVp- or Mp- or Pp- or FM- or [({Xc+ & {Xd-}} & CO+)]);
 
@@ -7535,9 +7534,6 @@ inside.r outside.r underneath alongside:
   {J+} & (<prep-main-b> or FM-);
 amid plus.p minus.p via onto:
   J+ & (<prep-main-b> or [Wq- & PF+]);
-
-% XXX FIXME wtf ?? what is home.i for ??
-home.i: [[K-]];
 
 % Bare-naked MVp-: "I want it back"
 back.r: ({Yd-} & K-) or (MVp+ & (MVp- or FM-)) or MVp-;
