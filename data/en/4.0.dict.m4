@@ -5587,17 +5587,24 @@ nowhere:
   {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
 
 % EE- & COp+: "somewhere near, a mouse scratched."
+% EE- & FM-: "The ticking came from somewhere near."
 near.p:
   ({EE- or EF+} & (
     <alter-preps>
     or (J+ & (<prep-main-b> or FM- or [Wq- & PF+]))))
-  or (EE- & {Xc+} & COp+);
+  or (EE- & {Xc+} & COp+)
+  or (EE- & FM-);
 
 % SF*p+: "nearby is another temple" (using p for 'prep')
 % SFpp+: "nearby are more ruins"
 % {EE-} & {Xc+} & COp+: "{somewhere} nearby, a mouse scratched"
+% {EE-} & FM-: "The ticking came from {somewhere} nearby."
 nearby:
-  A+ or MVp- or Pp- or FM- or (SF*p+ & <CLAUSE>)
+  A+
+  or MVp-
+  or Pp-
+  or (SF*p+ & <CLAUSE>)
+  or ({EE-} & FM-)
   or ({EE-} & {Xc+} & COp+);
 
 close_by:
