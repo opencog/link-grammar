@@ -2372,14 +2372,13 @@ Just thought you'd like to know.
 It was previously thought they were wrong.
 
 % elided "to be" (phantom to be)
-% Need a Ce+ link on "think" ??
+% Handled by Pa**j, O*n
 She will think it an act of kindness.
 She will think it to be an act of kindness.
 She will think it true.
 She will think it common.
 
-% Phantom verbs -- the second doesn't parse, although it
-% implicitly should have a verb sitting there.
+% Phantom verbs -- the second sentance has an implicit verb...
 an examination conducted when it happened revealed chicanery.
 an examination when it happened revealed chicanery
 

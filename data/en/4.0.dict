@@ -7910,13 +7910,15 @@ although in_as_much_as whilst whereas whereof wherein:
   or ({Xd-} & CC- & Wd+);
 
 % QI- & (): "I do not know when"
+% (Mv- & Cs+): "an examination when it happened revealed chicanery"
 when:
-  ((WN- or BIh-) & Cs+) or
-  ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>))) or
-  [QI-] or
-  QJ- or QJ+ or
-  (Wq- & (Q+ or PF+)) or
-  ((Cs+ or Mp+ or Mgp+ or Mv+) &
+  ((WN- or BIh-) & Cs+)
+  or ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+  or (Mv- & Cs+)
+  or [QI-]
+  or QJ- or QJ+
+  or (Wq- & (Q+ or PF+))
+  or ((Cs+ or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
 % QI- & (): "I do not know why"
