@@ -5622,8 +5622,13 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % ditransitive
 % 'Give' requires both direct *and* indirect object: X gave Y a Z.
 % 'sent', 'poured': optional indirect object.
+% XXX Some of these verbs don't belong here ...
+% (): "I already gave", "I already gave at the office"
+% K+: "She gave in to him"
 <vc-give>:
-  ((B- & {O+ or K+})
+  (()
+    or K+
+    or (B- & {O+ or K+})
     or <vc-opt-ditrans-costly>
     or (O+ & K+)
     or (K+ & {[[@MV+]]} & O*n+)

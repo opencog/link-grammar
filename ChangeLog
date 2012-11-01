@@ -18,6 +18,11 @@ Version 4.7.9 (??? 2013)
  * Fix: "... chances that ... could be ..."
  * Fix: "Do you have it ready?"
  * Fix: "What John wants are those cats"
+ * Fix: greetings
+ * Fix: misc verbs: wave, ink, kiss, bake, corral, crown, decant, rope,
+        slice, ink, butter, proclaim, make, give
+ * Fix: titles can behave as indefinite nouns.
+
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.
