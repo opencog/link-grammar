@@ -13,7 +13,7 @@ dean.t defendant.t defender.t delegate.t
 deputy.t diplomat.t director.t economist.t editor.t emissary.t 
 emperor.t empress.t engineer.t executive.t executor.t father.t foreman.t 
 founder.t general.t governor.t head.t headmaster.t headmistress.t inspector.t 
-intern.t justice.t 
+intern.t justice.t king.t knight.t
 lawyer.t leader.t librarian.t lobbyist.t manager.t  marquise.t mayor.t 
 minister.t mother.t officer.t owner.t partner.t pastor.t postmaster.t premier.t 
 president.t prime_minister 
