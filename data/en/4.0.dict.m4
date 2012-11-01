@@ -5554,25 +5554,63 @@ upstream downstream 5' 3':
 %(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
 
 indoors outdoors underwater.r:
-MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
-everywhere anywhere: {EL+} & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or
-({Xd- & Xc+} & MVs-))) or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
-somewhere someplace: ({EL+} & (MVp- or Pp- or FM- or
-[({Xc+ & {Xd-}} & CO+)] or (Xc+ & Xd- & MVx-)) & Mp+) or
-({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+) or
-[[{EL+} & {Xc+ & {Xd-}} & CO+]];
-nowhere: {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
+  MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-);
 
-as_usual to_date on_average
-in_turn so_far in_particular in_response in_general thus_far in_reply:
-MVp- or Mp- or ({Xc+ & {Xd-}} & CO+) or (Xc+ & Xd- & (MVx- or MX*x-));
+everywhere anywhere:
+  {EL+} & (
+    (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+    or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
 
-recently: {EE- or EF+} & (({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
-{Xd-}} & CO+) or EB- or JT- or Ca+ or Qe+ or [[Mp-]]);
-now.r: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ & {Xd-}} & CO+) or
-EB- or [[Mp-]];
-then.r: ({Xd- & Xc+} & MVp-) or Pp- or E+ or ({Xc+ &
-{Xd-}} & CO+) or EB- or (S+ & Xd- & Xc+ & MVs-) or [[Mp-]];
+% Pp-: "We are finally getting somewhere."
+% Pp- & {EL+}: "I want to be somewhere else"
+% MVp-: "The record skips somewhere else, too."
+somewhere someplace:
+  ({EL+} & (
+    MVp- 
+    or Pp-
+    or FM-
+    or [({Xc+ & {Xd-}} & CO+)]
+    or (Xc+ & Xd- & MVx-)
+  ) & Mp+)
+  or ({EL+} & (MVp- or Pp-))
+  or ({EL+} & {Xc+ & {Xd-}} & MVp+ & {Xc+ & {Xd-}} & COp+)
+  or ({EL+} & {Xc+ & {Xd-}} & [[CO+]]);
+
+nowhere:
+  {EL+} & (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-));
+
+as_usual to_date on_average in_turn so_far
+in_particular in_response in_general thus_far in_reply:
+  MVp- or Mp- or ({Xc+ & {Xd-}} & CO+) or (Xc+ & Xd- & (MVx- or MX*x-));
+
+recently:
+  {EE- or EF+} & (
+    ({Xd- & Xc+} & MVp-)
+    or Pp-
+    or E+
+    or ({Xc+ & {Xd-}} & CO+)
+    or EB-
+    or JT-
+    or Ca+
+    or Qe+
+    or [[Mp-]]);
+
+now.r:
+  ({Xd- & Xc+} & MVp-)
+  or Pp-
+  or E+
+  or ({Xc+ & {Xd-}} & CO+)
+  or EB-
+  or [[Mp-]];
+
+then.r:
+  ({Xd- & Xc+} & MVp-)
+  or Pp-
+  or E+
+  or ({Xc+ & {Xd-}} & CO+)
+  or EB-
+  or (S+ & Xd- & Xc+ & MVs-)
+  or [[Mp-]];
 
 later earlier:
   ({ECa- or Yt-} &
