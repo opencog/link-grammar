@@ -1178,7 +1178,7 @@ exactly.ee precisely.ee:
   {Xc+ & {Xd-}} & EL-;
 
 % E+: "Why didn't you fucking say so?"
-fucking.e bleeping.e:
+fucking.e bleeping.e flat_out:
   EL- or E+;
 
 others:
@@ -5232,7 +5232,8 @@ around:
   or [MVp- & B-]
   or [EN+] or MVa-;
 
-out.r up.r down.r:
+% "They ran the motor flat out"
+out.r flat_out up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-))
   or K-
   or ({Yd-} & Pp-)
