@@ -5378,6 +5378,10 @@ about:
   or (TOf+ & (Mp- or MVp- or Pp-))
   or MVa-;
 
+% Grep also for "just_about", used as syonym for "nearly", "almost"
+just_about nearly_about almost_about right_about:
+  {JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>;
+
 % EN- & Pp-: "you are half-way through"
 % EN- & J-: "He stopped, about half-way through" 
 through.r:
@@ -7320,10 +7324,6 @@ almost nearly: EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-;
 
 % The below is similar to "nearly" ...
 just_about: Em+ or EN+ or EZ+ or EA+;
-
-% The below is similar to "about" ... Hmmm.
-just_about nearly_about almost_about right_about:
-  {JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>;
 
 entirely reasonably highly fairly totally completely terribly:
 EA+ or EE+ or
