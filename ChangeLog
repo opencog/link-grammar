@@ -22,6 +22,8 @@ Version 4.7.9 (??? 2013)
  * Fix: misc verbs: wave, ink, kiss, bake, corral, crown, decant, rope,
         slice, ink, butter, proclaim, make, give, bid, bade, think
  * Fix: titles can behave as indefinite nouns.
+ * Fix: somewhere, near, nearby, halfway, about
+ * Fix: police-interrogation style questions
 
 
 Version 4.7.8 (10 October 2012)
