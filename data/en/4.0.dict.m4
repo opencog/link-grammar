@@ -1229,6 +1229,10 @@ those:
   or (<noun-sub-p> & ([[<noun-main-p>]] or RJlr+ or RJrr-))
   or <noun-and-p>;
 
+% "Them there beans ought to be picked"
+them_there:
+  Dm+;
+
 both.d:
   Dmc+ or
   E+ or
@@ -5402,10 +5406,12 @@ around:
   or [EN+] or MVa-;
 
 % "They ran the motor flat out"
+% EN- & Pp-: "you are halfway out"
 out.r flat_out up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-))
   or K-
   or ({Yd-} & Pp-)
+  or (EN- & Pp-)
   or [MVp- & B-];
 
 by:
@@ -5655,6 +5661,7 @@ all_over all_around:
 here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
 
 % EN- & Pp-: "you are halfway there"
+% Wi-: "There!"
 there.r:
   J-
   or <prep-main-b>
@@ -6192,6 +6199,9 @@ that.j-r:
   or DTn+;
 
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
+
+% "No one is sitting at that there table"
+that_there: Ds+;
 
 % (Rnx+ & <CLAUSE-E>): "Because I said so"
 because:
@@ -7578,7 +7588,7 @@ hah.ij hey.ij well.ij wtf.ij hell_yes of_course:
 
 % A single plain hello all by itself.  Costly, because its not normally
 % a sentence opener.
-hello.ij:
+hello.ij hello_there:
   Wi-
   or [[<directive-opener>]];
 
