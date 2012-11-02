@@ -7989,14 +7989,14 @@ which:
 
 whom:
   (R- & Cr+)
-  or (R+ & B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
+  or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
   or (Jr- & (RS+ or Cr+))
   or Jw-;
 
 whose:
   (D**w+ & (
     Mr-
-    or Wq-
+    or ({EW-} & Wq-)
     or Ws-
     or QI*d-
     or BIqd-
@@ -9338,12 +9338,16 @@ respectively: ({Xd- & Xc+} & MVa-) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
 long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or OT- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;
-exactly.e: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EZ+;
-well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+])) or
-[{EA- or EF+} & (Pa- or AF+)] or Yd+;
-roughly approximately: EA+ or
-({EE- or EF+} & (EN+ or EZ+ or ({Xd- & Xc+} & MVa-) or E+)) or
-({Xc+ & {Xd-}} & CO+);
+
+well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+]))
+  or [{EA- or EF+} & (Pa- or AF+)] or Yd+;
+
+exactly.e: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EW+ or EZ+;
+
+roughly approximately:
+  EA+
+  or ({EE- or EF+} & (EN+ or EW+ or EZ+ or ({Xd- & Xc+} & MVa-) or E+))
+  or ({Xc+ & {Xd-}} & CO+);
 
 together: ({Xd- & Xc+} & MVa-) or E+ or K- or [Mp-] or ({Xc+ & {Xd-}} & CO+);
 definitely: {EE-} & (E+ or EB- or (Xd- & Xc+ & MVa-));
