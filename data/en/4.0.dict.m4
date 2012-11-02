@@ -5373,6 +5373,7 @@ into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EN+
+  or EW+
   or EZ+
   or [MVp- & B-]
   or (TOf+ & (Mp- or MVp- or Pp-))
@@ -5380,7 +5381,8 @@ about:
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
 just_about nearly_about almost_about right_about:
-  {JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>;
+  ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
+  or EW+;
 
 % EN- & Pp-: "you are half-way through"
 % EN- & J-: "He stopped, about half-way through" 
@@ -6041,7 +6043,7 @@ UNITS: <units-suffix>;
 who:
   (R- & (({MVp+ or MVx+} & RS+) or Cr+))
   or [QI-]
-  or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & (Ws- or Wq- or QI*d- or BIqd-))
+  or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
@@ -6058,7 +6060,7 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+    & {EW-} & (Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
   or ({EL+} & Wd-)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
@@ -6070,7 +6072,7 @@ what:
 % QI- & (): "I do not know which"
 which: 
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+))
-  or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & (Wq- or Ws- or QI*d- or BIqd-))
+  or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
   or ({MVp+ or MVx+} & (S**w+ or B*w+) & ((Xc+ or <costly-null>) & Xd- & MX*r-))
   or [QI-]
@@ -6149,7 +6151,7 @@ when:
   or (Mv- & Cs+)
   or [QI-]
   or QJ- or QJ+
-  or (Wq- & (Q+ or PF+))
+  or ({EW-} & Wq- & (Q+ or PF+))
   or ((Cs+ or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
@@ -6158,7 +6160,7 @@ when:
 % N-: "why not?"  "Why the hell not?"
 why:
   ({EL+} & (
-    (Wq- & Q+)
+    ({EW-} & Wq- & Q+)
     or (QI- & (Cs+ or TOn+ or [()]))
     or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or ((Wi- or <directive-opener>) & {N+})
@@ -6168,10 +6170,11 @@ why:
 % QI- & (): "I do not know where"
 % R+ & Bsw+: "Where does it go to?"
 % Cs+ & Bsw+ & QI-: "Can you tell us where those strange ideas came from?"
+% {EW-}: "about where did you put it?"
 where:
   {EL+}
     & (
-      (Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+))
+      ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+))
       or [QI-]
       or QJ-
       or QJ+
@@ -6189,7 +6192,7 @@ whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     (BIqd- or QI*d- or Wq- or Ws-))
-   or (Wq- & (({EL+} & Q+) or AF+))
+   or ({EW-} & Wq- & (({EL+} & Q+) or AF+))
    or [QI-]
    or QJ- or QJ+
    or ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
@@ -7638,7 +7641,15 @@ seldom rarely.e: {EE-} & (E+ or EB-);
 
 % MVa-: "He did just what you asked."
 % EC+: "I ate just some of the cookies"
-just.e: E+ or EC+ or [EB-] or (MVl- & (MVa+ or MVp+ or MVs+)) or EN+ or EZ+ or MVa-;
+just.e:
+  E+
+  or [EB-]
+  or EC+
+  or EN+
+  or EW+
+  or EZ+
+  or (MVl- & (MVa+ or MVp+ or MVs+))
+  or MVa-;
 
 meantime.e secondly thirdly
 in_brief in_short in_sum in_essence:
