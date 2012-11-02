@@ -5414,10 +5414,12 @@ by:
   or K-
   or [MVp- & B-];
 
+% EN- & Pp-: "you are halfway in"
 in.r:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-))
   or K-
+  or (EN- & Pp-)
   or [MVp- & B-]
   or (MG- & JG+);
 
@@ -5652,14 +5654,16 @@ all_over all_around:
 % better at the moment.
 here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
 
+% EN- & Pp-: "you are halfway there"
 there.r:
-  J- or
-  <prep-main-b> or
-  ((SFst+ or SFp+ or SFut+) & <CLAUSE>) or
-  SFIst- or
-  SFIp- or
-  OXt- or
-  Wi-;
+  J-
+  or <prep-main-b>
+  or ((SFst+ or SFp+ or SFut+) & <CLAUSE>)
+  or SFIst-
+  or SFIp-
+  or OXt-
+  or (EN- & Pp-)
+  or Wi-;
 
 away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
 aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
@@ -7251,6 +7255,7 @@ unreasonably unusually hugely infernally:
 
 notoriously.e: ({EE-} & EA+) or EE+ or Em+;
 
+% ---------------------------------------------------------
 % Adverbs whose main use is adjectival, but can be used with
 % adverbs such as "faster", "dumber", etc.
 % "That one is marginally better". (thus EBm+)
@@ -7340,6 +7345,7 @@ EA+ or ({Xd- & Xc+} & (E+ or MVa-)) or EBm- or ({{Xd-} & Xc+} & CO+);
 in_part: EB- or (MVl- & (MVp+ or MVa+ or MVs+));
 % academically administratively aesthetically
 
+% ---------------------------------------------------------
 %ADVERBS WHOSE ONLY (MAIN) USE IS POST_VERBAL
 barefoot.e willy-nilly quarterly.e madly.e outright.e
 staccato.e legato.e all_the_way all_the_time all_along
@@ -7373,6 +7379,18 @@ early.e late.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or TA+ or Qe+ or Ca+);
 far.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Ca+ or Qe+ or Yd+);
 yet.e: ({Xd- & Xc+} & MVa-) or EBm-;
 
+high.e deep.e low.e:
+  {EE- or EF+} & (
+    ({Xd- & Xc+} & MVa-) or
+    ({Xc+ & {Xd-}} & CO+) or
+    Ca+ or
+    Qe+);
+
+left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or
+({Xc+ & {Xd-}} & CO+) or Qe+ or Ca+)) or (Kx- & Ky+) or (Pp- & Pp+);
+short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
+
+% ---------------------------------------------------------
 %ADVERBS USABLE POST-VERBALLY OR PRE-VERBALLY
 properly.e: ({Xd- & Xc+} & MVa-) or Em+;
 
@@ -7396,6 +7414,7 @@ definitely: {EE-} & (E+ or EB- or (Xd- & Xc+ & MVa-));
 by_far: EB- or E+ or MVa-;
 hereby thereby reputedly: E+ or ({Xd- & Xc+} & EB-) or ({Xc+ & {Xd-}} & CO+);
 
+% ---------------------------------------------------------
 %ADVERBS USABLE POST-VERBALLY, PRE-VERBALLY, OR AS OPENERS
 initially already somehow again
 once_again nowadays sometimes nevertheless nonetheless at_first
@@ -7437,6 +7456,7 @@ occasionally.e often.e specifically.e generally.e originally.e:
 {EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or
 ({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
 
+% ---------------------------------------------------------
 % ordinary manner adverbs
 % abjectly ably abnormally abortively abruptly absent-mindedly absently
 <ordinary-adv>:
@@ -7452,6 +7472,13 @@ occasionally.e often.e specifically.e generally.e originally.e:
 /en/words/words.adv.1: <ordinary-adv>;
 /en/words/words-medical.adv.1: <ordinary-adv>;
 
+% EN+: "you are halfway there"
+% EN- & EN+: "you are about halfway there"
+halfway.e partway.e:
+  <ordinary-adv>
+  or ({EN-} & EN+);
+
+% ---------------------------------------------------------
 % words.adv.4 contains "prepositional" adverbs, e.g. lingually
 % meidally subdermally ... Right now we treat these as ordinary
 % adverbs, and add the Pp- link .. but is this link actually used
@@ -7477,6 +7504,7 @@ certainly possibly probably importantly remarkably interestingly:
 {EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
 ({Xc+ & {Xd-}} & EB-));
 
+% ---------------------------------------------------------
 % ordinary clausal adverbs
 % absurdly actually additionally admittedly allegedly alternatively
 /en/words/words.adv.2:
@@ -7526,6 +7554,7 @@ in_fact of_course in_effect for_example for_instance e.g. i.e. :
   or (Xd- & EB- & Xc+)
   or ({Xd-} & CC- & Wd+);
 
+% -----------------------------------------------------------
 % ADVERBS USABLE POST_VERBALLY OR AS OPENERS
 % Note that similar interjective openers will be given COp+ links
 % by the UNKNOWN-WORD.a rule -- "Umm, I think he did it."
@@ -7573,17 +7602,7 @@ for_sure for_certain for_real:
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
   <directive-opener>;
 
-high.e deep.e low.e:
-  {EE- or EF+} & (
-    ({Xd- & Xc+} & MVa-) or
-    ({Xc+ & {Xd-}} & CO+) or
-    Ca+ or
-    Qe+);
-
-left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or
-({Xc+ & {Xd-}} & CO+) or Qe+ or Ca+)) or (Kx- & Ky+) or (Pp- & Pp+);
-short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
-
+% -----------------------------------------------------------
 %ADVERBS USABLE ONLY PRE-VERBALLY (OR PRE-/OPENER)
 newly: E+;
 rightly: {EE-} & E+;
@@ -7650,6 +7669,7 @@ Qe+ or Ca+ or [[EA+]]);
 please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+};
 
 
+% ==========================================================
 % MISCELLANEOUS WORDS AND PUNCTUATION
 
 etc: {Xi-} & Xd- & Xc+ & (MX- or MVa-);
