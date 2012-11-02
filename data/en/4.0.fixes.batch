@@ -1156,6 +1156,7 @@ The record skips nearly about there.
 You are nearly about there.
 You are nearly almost there.
 
+% EW links
 where are you?
 about where are you?
 Just about where did you see this?
@@ -1179,11 +1180,22 @@ Just whom are you talking about?
 Just who did you see?
 Just whose book is this?
 Exactly whose book is this?
-Approximately how long before you got home?
-Approximately how long was it before you got home?
+
+% The below use QI links to form indirect questions
+I wonder where you put it?
+I wonder why you said that?
 
 % This is blocked by post-processing....
 How long before you got home?
+Approximately how long before you got home?
+Approximately how long was it before you got home?
+
+
+You put it where?
+It happened when?
+you did what?
+It happened how?
+You slept with who?
 
 Ma'am, where did it happen?
 where did it happen, ma'am?
@@ -2744,6 +2756,8 @@ Physical Volumes (LUN) allocated from SAN pool zoned to VIOS.
 % Idiomatic phrases
 It's a good bet he did it.
 It's a good bet that he did it.
+It's a good thing he did it.
+It's a good thing that he did it.
 He's not the least bit interested.
 Let me tell you this: it stank.
 Halloween is a great time of year.

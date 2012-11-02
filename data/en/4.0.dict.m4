@@ -6033,10 +6033,6 @@ UNITS: <units-suffix>;
 % ======================================================================
 % QUESTION WORDS
 
-%who: (R- & (({MVp+ or MVx+} & RS+) or Cr+)) or
-%({EL+} & (S**w+ or B*w+) & (Ws- or Wq- or QI*d- or BIqd-)) or
-%({MVp+ or MVx+} & (S**w+ or B*w+) & (Xd- & (Xc+ or <costly-null>) & MX*r-));
-
 % QI- & (): "I do not know who"
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
 % {EL+ & {N+}} & Wd-: "Who?" "Who else?" "Who else not?"
@@ -6048,7 +6044,7 @@ who:
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
      & (Xd- & (Xc+ or <costly-null>) & MX*r-));
 
-% "what are the answers?" takes Sp+
+% Sp+: "what are the answers?"
 % Wd-: Dr. Who: "What!"
 % {EL+} & Wd-: "What else?" "What the fuck?"
 % <directive-opener>: "What, were you expecting Santa?"
