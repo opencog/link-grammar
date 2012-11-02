@@ -5378,8 +5378,14 @@ about:
   or (TOf+ & (Mp- or MVp- or Pp-))
   or MVa-;
 
+just_about nearly_about almost_about right_about:
+  {JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>;
+
+% EN- & Pp-: "you are half-way through"
+% EN- & J-: "He stopped, about half-way through" 
 through.r:
   ({JQ+} & J+ & (<prep-main-a> or FM-))
+  or (EN- & (Pp- or J-))
   or [MVp- & B-];
 
 <prep-across>:
@@ -5407,11 +5413,12 @@ around:
 
 % "They ran the motor flat out"
 % EN- & Pp-: "you are halfway out"
+% EN- & J-: "We stopped, about halfway up"
 out.r flat_out up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & MVa-) or FM-))
   or K-
   or ({Yd-} & Pp-)
-  or (EN- & Pp-)
+  or (EN- & (Pp- or J-))
   or [MVp- & B-];
 
 by:
@@ -5421,11 +5428,12 @@ by:
   or [MVp- & B-];
 
 % EN- & Pp-: "you are halfway in"
+% EN- & J-: "we stopped, about halfway in"
 in.r:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+ or IN+) & (<prep-main-a> or FM-))
   or K-
-  or (EN- & Pp-)
+  or (EN- & (Pp- or J-))
   or [MVp- & B-]
   or (MG- & JG+);
 
@@ -5661,6 +5669,7 @@ all_over all_around:
 here: J- or <prep-main-b> or (SFst+ & <CLAUSE>);
 
 % EN- & Pp-: "you are halfway there"
+% EN- & J-: "we stopped about halway there"
 % Wi-: "There!"
 there.r:
   J-
@@ -5669,7 +5678,7 @@ there.r:
   or SFIst-
   or SFIp-
   or OXt-
-  or (EN- & Pp-)
+  or (EN- & (Pp- or J-))
   or Wi-;
 
 away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
@@ -5725,7 +5734,8 @@ uptown downtown.r offshore.r underground.r out_of_town:
 /en/words/words-medical.prep.1: <common-prep>;
 
 forward.r backward forwards.r backwards sideways ashore abreast aft
-half-way two-fold downhill southward underfoot westward eastward
+half-way.r halfway.r
+two-fold downhill southward underfoot westward eastward
 northward overnight.r on_hold on_track in_situ in_toto off_balance
 in_check on_course off_course under_oath at_end by_example on_holiday
 by_invitation on_patrol on_stage in_step in_tempo on_schedule
@@ -7484,8 +7494,8 @@ occasionally.e often.e specifically.e generally.e originally.e:
 
 % EN+: "you are halfway there"
 % EN- & EN+: "you are about halfway there"
-halfway.e partway.e:
-  <ordinary-adv>
+halfway.e partway.e half-way.e part-way.e:
+  [<ordinary-adv>]
   or ({EN-} & EN+);
 
 % ---------------------------------------------------------
