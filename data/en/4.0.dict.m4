@@ -7433,7 +7433,13 @@ partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;
 well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+]))
   or [{EA- or EF+} & (Pa- or AF+)] or Yd+;
 
-exactly.e: E+ or ({Xd- & Xc+} & MVa-) or EB- or EN+ or EW+ or EZ+;
+exactly.e:
+  E+
+  or ({Xd- & Xc+} & MVa-)
+  or EB-
+  or EN+
+  or EW+
+  or EZ+;
 
 roughly approximately:
   EA+
@@ -7453,23 +7459,31 @@ at_best at_present of_late indeed:
 ({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;
 
 twice.e:
-  ({Xd- & Xc+} & MVa-) or
-  E+ or
-  ({Xc+ & {Xd-}} & CO+) or
-  EBm- or
-  <adverb-join> or
-  ({EN-} & EZ+);
+  ({Xd- & Xc+} & MVa-)
+  or E+
+  or ({Xc+ & {Xd-}} & CO+)
+  or EBm-
+  or <adverb-join>
+  or ({EN-} & EZ+);
 
 hence: (Yt- & ({Xd- & Xc+} & MVa-)) or E+ or ({Xc+ & {Xd-}} & CO+) or EBm-;
+
 otherwise formerly lately:
-({Xd- & Xc+} & MVa-) or E+ or ({Xc+ & {Xd-}} & CO+) or EB-;
-also.e: ({Xd- & Xc+} & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or EB-;
+  ({Xd- & Xc+} & MVa-)
+  or E+
+  or ({Xc+ & {Xd-}} & CO+)
+  or EB-;
+
+also.e:
+  ({Xd- & Xc+} & (E+ or MVa-))
+  or ({Xc+ & {Xd-}} & CO+)
+  or EB-;
 
 gradually.e sadly.e broadly.e clearly.e
 annually.e characteristically.e comparatively.e
 confidentially.e currently.e fundamentally.e hypothetically.e
 ironically.e justifiably.e momentarily.e mercifully.e
-nominally.e ominously.e periodically.e precisely.e realistically.e
+nominally.e ominously.e periodically.e realistically.e
 simultaneously.e subsequently.e superficially.e thankfully.e
 unofficially.e effectively.e traditionally.e briefly.e
 eventually.e ultimately.e
@@ -7483,9 +7497,22 @@ appropriately.e simply.ee:
      or Ca+
      or [[EA+]]);
 
-occasionally.e often.e specifically.e generally.e originally.e:
-{EE- or EF+} & (({Xd- & Xc+} & (MVa- or E+)) or
-({Xc+ & {Xd-}} & CO+) or EB- or Qe+ or Ca+);
+precisely.e specifically.e generally.e:
+  {EE- or EF+} & (
+    ({Xd- & Xc+} & (MVa- or E+))
+     or ({Xc+ & {Xd-}} & CO+)
+     or EB-
+     or Qe+
+     or Ca+
+     or EW+);
+
+occasionally.e often.e originally.e:
+  {EE- or EF+} & (
+    ({Xd- & Xc+} & (MVa- or E+))
+    or ({Xc+ & {Xd-}} & CO+)
+    or EB-
+    or Qe+
+    or Ca+);
 
 % ---------------------------------------------------------
 % ordinary manner adverbs
