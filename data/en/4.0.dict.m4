@@ -6191,11 +6191,11 @@ whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or
 % EL+: "How else would you say that?"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
-    (BIqd- or QI*d- or Wq- or Ws-))
-   or ({EW-} & Wq- & (({EL+} & Q+) or AF+))
-   or [QI-]
-   or QJ- or QJ+
-   or ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
+    {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
+  or ({EW-} & Wq- & (({EL+} & Q+) or AF+))
+  or [QI-]
+  or QJ- or QJ+
+  or ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -6627,9 +6627,9 @@ responsible.a accountable.a:
     <adj-op>);
 
 long.a:
-  <ordinary-adj> or
-  ((Ya- or Yt-) & (Pa- or Ma- or MJra- or MJla+)) or
-  (H- & (BT+ or Yt+));
+  <ordinary-adj>
+  or ((Ya- or Yt-) & (Pa- or Ma- or MJra- or MJla+))
+  or (H- & (BT+ or Yt+));
 
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
