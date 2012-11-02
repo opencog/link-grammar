@@ -7287,9 +7287,6 @@ about:
   or (TOf+ & (Mp- or MVp- or Pp-))
   or MVa-;
 
-just_about nearly_about almost_about right_about:
-  {JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>;
-
 % EN- & Pp-: "you are half-way through"
 % EN- & J-: "He stopped, about half-way through" 
 through.r:
@@ -9229,7 +9226,14 @@ particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+)) or
 ({Xc+ & {Xd-}} & CO+);
 notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
 almost nearly: EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-;
+
+% The below is similar to "nearly" ...
 just_about: Em+ or EN+ or EZ+ or EA+;
+
+% The below is similar to "about" ... Hmmm.
+just_about nearly_about almost_about right_about:
+  {JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>;
+
 entirely reasonably highly fairly totally completely terribly:
 EA+ or EE+ or
 ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
