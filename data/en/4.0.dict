@@ -733,18 +733,19 @@ accusation.n possibility.n idea.n problem.n claim.n result.n
 statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
 message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n inkling.n supposition.n
-finding.n amount.n answer.n crux.n shame.n thing.n:
-  (<noun-modifiers> &
-    ((Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+finding.n amount.n answer.n crux.n shame.n thing.n bet.n:
+  <noun-modifiers> & (
+    AN+
+    or (Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-s> or
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
-      <rel-clause-s>)) or
-    ({Ds-} & <noun-and-s>) or
-    Us- or
-    (YS+ & Ds-) or
-    (GN+ & (DD- or [()])))) or
-  AN+;
+      <rel-clause-s>))
+    or ({Ds-} & <noun-and-s>)
+    or SJrs-
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or Us-);
 
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n
 disclosure.n fear.n acknowledgment.n acknowledgement.n principle.n
@@ -1038,6 +1039,7 @@ times.n:
     (GN+ & (DD- or [()])))) or
   [[AN+]];
 
+% ====================================================================
 %PRONOUNS
 
 she he:
@@ -1181,6 +1183,7 @@ mine.p yours theirs hers ours:
   <noun-main-x> or SJl+ or SJr- or (Dn- & SJn+);
 
 
+% ====================================================================
 % DETERMINERS
 
 % (L+ & (AJld+ or AJrd-)): "the biggest and the baddest ..."
