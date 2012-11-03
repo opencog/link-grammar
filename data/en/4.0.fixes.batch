@@ -3540,13 +3540,15 @@ we should not forget the innocent people that was put in jail
 % We are going to put *'s in front of them, until they are fixed...
 *You are as sweet as sugar.
 *The situation is not so bad as you suggest.
-*I slipped on the ice as I ran home.
 *He was so foolish as to lie.
 *Ridiculous as it seems, the tale is true.
 *the hotel is quite comfortable as such establishments go
 *I don't know as I can answer your question.
 *Fuck off and have a great day, twit!
 *Fuck off and have a great day, jerk!
+
+% Use to parse incorrectly, but looks OK to me now ...
+I slipped on the ice as I ran home.
 
 % --------------------------------------------------------------------
 % assorted unclassified breakages, wating for a fix:
