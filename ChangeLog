@@ -1,4 +1,4 @@
-Version 4.7.9 (??? 2013)
+Version 4.7.9 (3 November 2012)
  * Fix: Poor comma chocies: "The man, that you saw..." (issue #36)
  * Fix: Add more java jni.h search paths.
  * Fix: Warning in java JSON interface.
@@ -24,7 +24,6 @@ Version 4.7.9 (??? 2013)
  * Fix: titles can behave as indefinite nouns.
  * Fix: somewhere, near, nearby, halfway, about
  * Fix: police-interrogation style questions
-
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.

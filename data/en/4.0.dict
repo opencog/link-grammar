@@ -9,8 +9,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.7.8 (formatted as V4v7v8+)
-<dictionary-version-number>: V4v7v8+;
+% Dictionary version number is 4.7.9 (formatted as V4v7v9+)
+<dictionary-version-number>: V4v7v9+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -33,16 +33,6 @@
  %    F. Pre-verbal/openers	
  % XII. MISCELLANEOUS WORDS AND PUNCTUATION
  %
- % NEW LINKS INVENTED BY MIKE ROSS
- % Ct and Cta are used with comparatives so that 'than' links to the relative clause
- % John is bigger than Dave is.
- % John wants more cookies than Dave wants.
- %
- % Rw is used similarly to Ct, Cta, and Rn to link question words to the relative clauses
- % that follow them.
- % For auxillary verbs, replaced "{Q-}" with "(Rw- or Q-}".
- % For nouns and others, replaced "B*m+" with "(Rw+ & B*m+)" (for any *)
- % For who,what,which,whom, replaced "B*" with "(R+ & B*+)" (for any *)
  %
  % TODO:
  % To-do: many verb simple past-tense forms include ({@E-} & A+) to
