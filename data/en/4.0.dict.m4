@@ -3063,7 +3063,9 @@ dreaming.v complaining.v: <verb-pg> & <vc-dream>;
 
 think.v: VERB_PLI(<vc-think>);
 thinks.v: VERB_S_T(<vc-think>);
-thought.v-d: VERB_SPPP_T(<vc-think>) or (<verb-s-pv> & {THi+ or Z-});
+
+% <verb-s-pv> & Cet+: (phantom that) "It was previously thought they were wrong."
+thought.v-d: VERB_SPPP_T(<vc-think>) or (<verb-s-pv> & {Cet+ or THi+ or Z-});
 thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
 

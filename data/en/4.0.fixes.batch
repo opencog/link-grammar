@@ -2467,6 +2467,11 @@ Kenny sure is a bastard.
 % elided "that" (phantom that)
 Just thought you'd like to know.
 It was previously thought they were wrong.
+It's a good bet he did it.
+It's a good bet that he did it.
+It's a good thing he did it.
+It's a good thing that he did it.
+
 
 % elided "to be" (phantom to be)
 % Handled by Pa**j, O*n
@@ -2754,10 +2759,6 @@ John, aged 80, is ill.
 Physical Volumes (LUN) allocated from SAN pool zoned to VIOS.
 
 % Idiomatic phrases
-It's a good bet he did it.
-It's a good bet that he did it.
-It's a good thing he did it.
-It's a good thing that he did it.
 He's not the least bit interested.
 Let me tell you this: it stank.
 Halloween is a great time of year.

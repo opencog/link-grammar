@@ -3420,11 +3420,13 @@ thinks.v:
   (<verb-and-sp-i-> & (([<vc-think>]) or ())) or
   ((<vc-think>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
+
+% <verb-s-pv> & Cet+: (phantom that) "It was previously thought they were wrong."
 thought.v-d: 
   ((<verb-sp,pp> & (<vc-think>)) or
   (<verb-and-sp-i-> & (([<vc-think>]) or ())) or
   ((<vc-think>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or (<verb-s-pv> & {THi+ or Z-});
+  <verb-and-sp-t> or (<verb-s-pv> & {Cet+ or THi+ or Z-});
 thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
 
