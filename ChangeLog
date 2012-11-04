@@ -1,5 +1,5 @@
 Version 4.7.10 (xxx 2013 ???)
- * Fix: ...
+ * Fix: add "gurgle.n" to dictionary
 
 Version 4.7.9 (3 November 2012)
  * Fix: Poor comma chocies: "The man, that you saw..." (issue #36)

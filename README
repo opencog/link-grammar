@@ -65,7 +65,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.7.8.tar.gz.asc
+   gpg --verify link-grammar-4.7.10.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
