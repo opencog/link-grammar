@@ -20,7 +20,7 @@
 #ifndef _API_TYPES_H_
 #define _API_TYPES_H_
 
-#define MAX_TOKEN_LENGTH 50          /* maximum number of chars in a token */
+#define MAX_TOKEN_LENGTH 250       /* maximum number of chars in a token */
 
 /* MAX_SENTENCE cannot be more than 254, because word MAX_SENTENCE+1 is 
  * used to indicate that nothing can connect to this connector, and this 
