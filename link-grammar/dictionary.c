@@ -277,7 +277,7 @@ dictionary_six(const char * lang, const char * dict_name,
 	wchar_t* input = get_file_contents(dict_name);
 	if (NULL == input)
 	{
-		prt_error("Error: Could not open dictionary %s\n", dict_name);
+		prt_error("Error: Could not open dictionary %s", dict_name);
 		return NULL;
 	}
 
@@ -316,7 +316,7 @@ Dictionary dictionary_create_lang(const char * lang)
 	}
 	else
 	{
-		prt_error("Error: No language specified!\n");
+		prt_error("Error: No language specified!");
 		dictionary = NULL;
 	}
 
@@ -366,7 +366,7 @@ Dictionary dictionary_create_from_utf8(const char * input)
 		cv = mbtowc(wp, p, 8);
 		if (-1 == cv)
 		{
-			prt_error("Error: Conversion failure!\n");
+			prt_error("Error: Conversion failure!");
 		goto failure;
 		}
 		if (0 == cv)
@@ -396,7 +396,7 @@ failure:
 int dictionary_delete(Dictionary dict)
 {
 	if (verbosity > 0) {
-		prt_error("Info: Freeing dictionary %s\n", dict->name);
+		prt_error("Info: Freeing dictionary %s", dict->name);
 	}
 
 #if USE_CORPUS

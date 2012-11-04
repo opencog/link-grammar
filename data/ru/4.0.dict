@@ -5,7 +5,10 @@
 %% http://sz.ru/parser/
 %% svp dot zuzino.net.ru, svp dot tj.ru
 %%
-%% Below uses the utf8 encoding
+%% This file uses the utf8 encoding
+
+%% Dictionary version number is 4.7.10 (formatted as V4v7v10+)
+<dictionary-version-number>: V4v7v10+;
 
 <наречие-куда>: ({Xc-} & Ed-) or ({XIc+} & EId+) or ({Xt- & S-});
 <наречие-откуда>: ({Xc-} & Es-) or ({XIc+} & EIs+) or Mp- or ({Xt-} & S-);

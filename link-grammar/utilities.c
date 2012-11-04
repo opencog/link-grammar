@@ -199,7 +199,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't downcase multi-byte string!\n");
+		prt_error("Error: can't downcase multi-byte string!");
 		return;
 	}
 
@@ -232,7 +232,7 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	if ((nbh < nbl) && (to == from))
 	{
 		/* I'm to lazy to fix this */
-		prt_error("Error: can't upcase multi-byte string!\n");
+		prt_error("Error: can't upcase multi-byte string!");
 		return;
 	}
 
@@ -368,7 +368,7 @@ void * xalloc(size_t size)
 #endif /* TRACK_SPACE_USAGE */
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space.\n");
+		prt_error("Fatal Error: Ran out of space.");
 		abort();
 		exit(1);
 	}
@@ -384,7 +384,7 @@ void * xrealloc(void *p, size_t oldsize, size_t newsize)
 	p = realloc(p, newsize);
 	if ((p == NULL) && (newsize != 0))
 	{
-		prt_error("Fatal Error: Ran out of space on realloc.\n");
+		prt_error("Fatal Error: Ran out of space on realloc.");
 		abort();
 		exit(1);
 	}
@@ -415,7 +415,7 @@ void * exalloc(size_t size)
 
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space.\n");
+		prt_error("Fatal Error: Ran out of space.");
 		abort();
 		exit(1);
 	}
@@ -577,7 +577,7 @@ char * dictionary_get_data_dir(void)
 		if (GetModuleFileName(hInstance, dll_path, MAX_PATH))
 		{
 #ifdef _DEBUG
-			prt_error("Info: GetModuleFileName=%s\n", (dll_path ? dll_path : "NULL"));
+			prt_error("Info: GetModuleFileName=%s", (dll_path ? dll_path : "NULL"));
 #endif
 			data_dir = path_get_dirname(dll_path);
 		}
@@ -609,7 +609,7 @@ char * dictionary_get_data_dir(void)
 					prog_path[i] = prog_path16[k];
 				}
 #ifdef _DEBUG
-				prt_error("Info: GetModuleFileName=%s\n", (prog_path ? prog_path : "NULL"));
+				prt_error("Info: GetModuleFileName=%s", (prog_path ? prog_path : "NULL"));
 #endif
 				data_dir16 = path_get_dirname(prog_path);
 				if (data_dir16 != NULL)
@@ -680,7 +680,7 @@ void * object_open(const char *filename,
 	{
 		char * data_dir = dictionary_get_data_dir();
 #ifdef _DEBUG
-		prt_error("Info: data_dir=%s\n", (data_dir?data_dir:"NULL"));
+		prt_error("Info: data_dir=%s", (data_dir?data_dir:"NULL"));
 #endif
 		if (data_dir) {
 			snprintf(fulldictpath, MAX_PATH_NAME,
@@ -717,7 +717,7 @@ void * object_open(const char *filename,
 		*(completename+(pos-oldpos)) = DIR_SEPARATOR;
 		strcpy(completename+(pos-oldpos)+1, filename);
 #ifdef _DEBUG
-		prt_error("Info: object_open() trying %s\n", completename);
+		prt_error("Info: object_open() trying %s", completename);
 #endif
 		if ((fp = opencb(completename, user_data)) != NULL) {
 			return fp;
@@ -737,7 +737,7 @@ static void * dict_file_open(const char * fullname, void * user_data)
 	if (fh && NULL == path_found)
 	{
 		path_found = strdup (fullname);
-		prt_error("Info: Dictionary found at %s\n", fullname);
+		prt_error("Info: Dictionary found at %s", fullname);
 	}
 	return (void *) fh;
 }
@@ -823,7 +823,7 @@ wchar_t *get_file_contents(const char * dict_name)
 
 	if (left < 0)
 	{
-		prt_error("Fatal Error: File size is insane!\n");
+		prt_error("Fatal Error: File size is insane!");
 		exit(1);
 	}
 

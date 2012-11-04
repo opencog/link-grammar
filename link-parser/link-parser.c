@@ -686,9 +686,9 @@ int main(int argc, char * argv[])
 	parse_options_set_screen_width(popts, 79);
 #endif
 
-	prt_error("Info: Dictionary version %s.\n",
+	prt_error("Info: Dictionary version %s.",
 		linkgrammar_get_dict_version(dict));
-	prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
+	prt_error("Info: Library version %s. Enter \"!help\" for help.",
 		linkgrammar_get_version());
 
 	/* Main input loop */

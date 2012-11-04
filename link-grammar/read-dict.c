@@ -1319,7 +1319,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 		ec.sent = NULL;
 		err_msg(&ec, Warn, "Warning: Word \"%s\" found near line %d.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
-		        "\tThis word will be ignored.\n",
+		        "\tThis word will be ignored.",
 		        dn->string, dict->line_number);
 		free_dict_node(dn);
 	}
@@ -1329,7 +1329,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 		err_ctxt ec;
 		ec.sent = NULL;
 		err_msg(&ec, Warn, "Warning: The word \"%s\" "
-		          "found near line %d of %s matches the following words:\n",
+		          "found near line %d of %s matches the following words:",
 	             dn->string, dict->line_number, dict->name);
 		for (dnx = dn_head; dnx != NULL; dnx = dnx->right) {
 			fprintf(stderr, "\t%s", dnx->string);
@@ -1383,7 +1383,7 @@ static int read_entry(Dictionary dict)
 			{
 				err_ctxt ec;
 				ec.sent = NULL;
-				err_msg(&ec, Error, "Error opening word file %s\n", dict->token);
+				err_msg(&ec, Error, "Error opening word file %s", dict->token);
 				return 0;
 			}
 		}
