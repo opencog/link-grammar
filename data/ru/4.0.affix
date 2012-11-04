@@ -1,1 +1,6 @@
-% This file is currently empty!   Maybe it shouldn't be!
+
+")" "%" "," "." ":" ";" "?" "!" "''" "'": RPUNC+;
+"(" "$" "``": LPUNC+;
+
+
+
