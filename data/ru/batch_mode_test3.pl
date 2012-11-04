@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
-use lib 'LP/blib/lib';
-use lib 'LP/blib/arch';
+# use lib 'LP/blib/lib';
+# use lib 'LP/blib/arch';
 
-use Lingua::LinkParser;
+# use Lingua::LinkParser;
 use TestLem;
 use strict;
 
