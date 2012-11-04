@@ -141,8 +141,10 @@ static int link_advance(Dictionary dict);
 
 static void dict_error2(Dictionary dict, const char * s, const char *s2)
 {
+#define ERRBUFLEN 1024
+	char tokens[ERRBUFLEN], t[ERRBUFLEN];
+	int pos = 1;
 	int i;
-	char tokens[1024], t[128];
 
 	if (dict->recursive_error) return;
 	dict->recursive_error = TRUE;
@@ -150,10 +152,12 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	tokens[0] = '\0';
 	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
 	{
-		sprintf(t, "\"%s\" ", dict->token);
-		strcat(tokens, t);
+		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", dict->token);
+		strncat(tokens, t, ERRBUFLEN-1-pos);
 		link_advance(dict);
 	}
+	tokens[pos] = '\0';
+
 	if (s2)
 	{
 		err_ctxt ec;
@@ -228,7 +232,7 @@ static int is_special(wchar_t wc, mbstate_t *ps)
 }
 
 /**
- * This reads the next token from the input into token.
+ * This reads the next token from the input into 'token'.
  * Return 1 if a character was read, else return 0 (and print a warning).
  */
 static int link_advance(Dictionary dict)
