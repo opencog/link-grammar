@@ -278,23 +278,13 @@ dictionary_six(const char * lang, const char * dict_name,
 	if (NULL == input)
 	{
 		prt_error("Error: Could not open dictionary %s\n", dict_name);
-		goto failure;
+		return NULL;
 	}
 
 	dict = dictionary_six_str(lang, input, dict_name, pp_name,
 	                          cons_name, affix_name, regex_name);
-	if (NULL == dict)
-	{
-		free(input);
-		goto failure;
-	}
 	free(input);
 	return dict;
-
-failure:
-	string_set_delete(dict->string_set);
-	xfree(dict, sizeof(struct Dictionary_s));
-	return NULL;
 }
 
 Dictionary dictionary_create_lang(const char * lang)
