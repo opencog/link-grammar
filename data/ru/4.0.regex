@@ -1,1 +1,37 @@
-% This file is currently empty!   Maybe it shouldn't be!
+ %***************************************************************************%
+ %                                                                           %
+ %  See file "LICENSE" for information about commercial use of this system   %
+ %                                                                           %
+ %***************************************************************************%
+
+% This file contains regular expressions that are used to match
+% tokens not found in the dictionary. Each regex is given a name which
+% determines the disjuncts assigned when the regex matches; this name
+% must be defined in the dictionary along with the appropriate disjuncts.
+% Note that the order of the regular expressions matters: matches will
+% be attempted in the order in which the regexs appear in this file,
+% and only the first match will be used.
+%
+% XXXXXXXX TODO: the russian dictionary currently does not use this!
+
+% Allows at most two colons in hour-muinute-second HH:MM:SS expressions
+% Allows at most two digits between colons
+HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?(AM|PM|am|pm)?$/
+
+% Allows any number of commas or periods
+% Be careful not match the period at the end of a sentence; 
+% for example: "It happened in 1942."
+NUMBERS: /^[0-9,.]*[0-9]$/
+% This parses signed numbers and ranges, e.g. "-5" and "5-10" and "9+/-6.5"
+NUMBERS: /^[0-9.,-]*[0-9](\+\/-[0-9.,-]*[0-9])?$/
+% Parses simple fractions e.g. "1/60" with no decimal points or anything fancy
+FRACTION: /^[0-9]+\/[0-9]+$/
+% "10(3)" exponent (used in PubMed)
+NUMBERS: /^[0-9.,-]*[0-9][0-9.,-]*\([0-9:.,-]*[0-9][0-9.,-]*\)$/
+
+% Roman numerals
+% The first expr has the potential(?) problem that it matches an empty
+% string. Thus, the next three rules specify that at least one section
+% is non-empty.
+ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
+
