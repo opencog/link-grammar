@@ -44,8 +44,8 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		{
 			fprintf(stderr, "%s ", ec->sent->word[i].string);
 		}
-		fprintf(stderr, "\n");
 	}
+	fprintf(stderr, "\n");
 }
 
 void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
