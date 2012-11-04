@@ -9,20 +9,20 @@ use strict;
 
 use locale;
 
-my $input_string = " По невыясненным обстоятельствам , Мурманский филиал Почты России не выполнил условия данного договора , в связи с чем почтовая корреспонденция в адрес ООО КНТ в году не поступала . \n";
+my $input_string = " п÷п╬ п╫п╣п╡я▀я▐я│п╫п╣п╫п╫я▀п╪ п╬п╠я│я┌п╬я▐я┌п╣п╩я▄я│я┌п╡п╟п╪ , п°я┐я─п╪п╟п╫я│п╨п╦п╧ я└п╦п╩п╦п╟п╩ п÷п╬я┤я┌я▀ п═п╬я│я│п╦п╦ п╫п╣ п╡я▀п©п╬п╩п╫п╦п╩ я┐я│п╩п╬п╡п╦я▐ п╢п╟п╫п╫п╬пЁп╬ п╢п╬пЁп╬п╡п╬я─п╟ , п╡ я│п╡я▐п╥п╦ я│ я┤п╣п╪ п©п╬я┤я┌п╬п╡п╟я▐ п╨п╬я─я─п╣я│п©п╬п╫п╢п╣п╫я├п╦я▐ п╡ п╟п╢я─п╣я│ п·п·п· п п²п╒ п╡ пЁп╬п╢я┐ п╫п╣ п©п╬я│я┌я┐п©п╟п╩п╟ . \n";
 #my $input_string;
 
 my $cntok = 0; my $cntnotok = 0; my $pnotok = 0;
 my $width = 260; my $max_parse_time = 60;
-print "Ширина экрана: $width\n";
-print "Максимальное время разбора: $max_parse_time\n";
+print "п╗п╦я─п╦п╫п╟ я█п╨я─п╟п╫п╟: $width\n";
+print "п°п╟п╨я│п╦п╪п╟п╩я▄п╫п╬п╣ п╡я─п╣п╪я▐ я─п╟п╥п╠п╬я─п╟: $max_parse_time\n";
 
 while (<>) {
 	$input_string = $_;
 	chomp $input_string;
 	next if ($input_string =~ /^[\s\ ]+$/);
 	next if ($input_string =~ /^$/);
-	print "\n Обрабатываем:[$input_string]\n";
+	print "\n п·п╠я─п╟п╠п╟я┌я▀п╡п╟п╣п╪:[$input_string]\n";
 
         my $snt = $input_string;
          $snt =~ s/\n/ /g; $snt =~ s/\r/ /g;
@@ -38,7 +38,7 @@ while (<>) {
 	 $snt =~ s/\"\ /\ \"\ /g;
 	 $snt =~ s/\ \"/\ \"\ /g;
         $input_string = $snt;
-	print "Предобработка:[$input_string]\n";
+	print "п÷я─п╣п╢п╬п╠я─п╟п╠п╬я┌п╨п╟:[$input_string]\n";
 
 
 	my $sublink = ""; my $part_f = ""; my $sublink2 = "";
@@ -70,7 +70,7 @@ while (<>) {
 		print $parser->get_diagram($linkage), "\n";
 		print @sublinkages[0], "\n"; 
 	} else {
-		print "За $max_parse_time секунд разбора не обнаружено: [$input_string]\n";
+		print "п≈п╟ $max_parse_time я│п╣п╨я┐п╫п╢ я─п╟п╥п╠п╬я─п╟ п╫п╣ п╬п╠п╫п╟я─я┐п╤п╣п╫п╬: [$input_string]\n";
 	}
 
 	#sleep 1;
