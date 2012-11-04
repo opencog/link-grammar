@@ -498,8 +498,9 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	 * "wend" to the end of the word. */
 
 	s_stripped = -1;
-	strncpy(word, w, MIN(wend-w, MAX_WORD));
-	word[MIN(wend-w, MAX_WORD)] = '\0';
+	sz = MIN(wend-w, MAX_WORD);
+	strncpy(word, w, sz);
+	word[sz] = '\0';
 
 	/* Umm, double-check, if need be ... !?? */
 	if (FALSE == word_is_in_dict)
@@ -531,8 +532,9 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 			if (s_ok || i == s_strippable)
 			{
-				strncpy(newword, w, MIN((wend-len)-w, MAX_WORD));
-				newword[MIN((wend-len)-w, MAX_WORD)] = '\0';
+				size_t sz = MIN((wend-len)-w, MAX_WORD);
+				strncpy(newword, w, sz);
+				newword[sz] = '\0';
 
 				/* Check if the remainder is in the dictionary;
 				 * for the no-suffix case, it won't be */
@@ -542,8 +544,9 @@ static int separate_word(Sentence sent, Parse_Options opts,
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
 					s_stripped = i;
 					wend -= len;
-					strncpy(word, w, MIN(wend-w, MAX_WORD));
-					word[MIN(wend-w, MAX_WORD)] = '\0';
+					sz = MIN(wend-w, MAX_WORD);
+					strncpy(word, w, sz);
+					word[sz] = '\0';
 					word_is_in_dict = TRUE;
 					break;
 				}
@@ -846,6 +849,7 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
 		if (t != NULL)
 		{
 			size_t off = t - d->string;
+			off = MIN(off, MAX_WORD-3); /* make room for [~] */
 			strncpy(str, d->string, off);
 			str[off] = 0;
 			strcat(str, "[~]");
