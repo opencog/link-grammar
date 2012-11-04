@@ -141,7 +141,7 @@ sub TestLem {
 
 #my %cat2 = ();
 
-open FILE, "base.dict";
+open FILE, "4.0.morph";
 while (<FILE>) {
 	next unless /^\%/;
 	next unless /morph/;
