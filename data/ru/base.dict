@@ -1,11 +1,11 @@
-%
-% Link Grammar for Russian
-%
-% Sergey Protasov 
-% http://sz.ru/parser/
-% svp dot zuzino.net.ru, svp dot tj.ru
-%
-% KOI8-R
+%%
+%% Link Grammar for Russian
+%%
+%% Sergey Protasov 
+%% http://sz.ru/parser/
+%% svp dot zuzino.net.ru, svp dot tj.ru
+%%
+%% Below uses the utf8 encoding
 
 <наречие-куда>: ({Xc-} & Ed-) or ({XIc+} & EId+) or ({Xt- & S-});
 <наречие-откуда>: ({Xc-} & Es-) or ({XIc+} & EIs+) or Mp- or ({Xt-} & S-);
