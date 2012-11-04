@@ -387,6 +387,7 @@ You, least of all, should know.
 You, most of all, should know.
 You, out of everyone, should know.
 You, at least, should know.
+we should at least feed the goats in the petting area
 This is the man who, in some ways, I would like to hire
 
 % Color names can be nouns as well as adjectives:
@@ -3205,7 +3206,7 @@ I idolized and idealized the man.
 I grimaced and idolized the man.
 
 % correct parse is "I (saw and greeted) Sue"
-I saw and greeted Sue.
+*I saw and greeted Sue.
 we sang and danced the night away
 He shrank and withdrew from the crowd
 The boat lurched forward and sank
@@ -3245,6 +3246,9 @@ He was sent abroad and resided on the continent, chiefly in France, for more tha
 
 John describes and analyzes literature.
 Chief describes and analyzes the character of the families in a village, remarking that they all act completely the same.
+
+% conjoined infinitives are still broken...
+They advised us to avoid sunlight and to limit the consumption of fish.
 
 % conjoined verbs with modifiers, negation
 He cannot change the beliefs of popular society as a whole.
