@@ -30,20 +30,22 @@ CONTENTS of this directory:
    link-grammar/java/*      Optional Java language bindings.
    link-grammar/minisat/*   Optional SAT Solver. (Written in C++)
    link-grammar/sat-solver  Optional SAT Solver. (Written in C++)
+   link-grammar/viterbi     Experimental Viterbi algorithm parser.
 
    data/en/*                English language dictionaries.
    data/en/4.0.dict         The file containing the dictionary definitions.
    data/en/4.0.knowledge    The post-processing knowledge file.
    data/en/4.0.constituents The constituent knowledge file.
-   data/en/4.0.affix        The affix file.
-   data/en/4.0.regex        Regex-based morphology guesser.
+   data/en/4.0.affix        The affix (prefix/suffix) file.
+   data/en/4.0.regex        Regular expression-based morphology guesser.
    data/en/tiny.dict        A small sample dictionary.
    data/en/words/*          A directory full of word lists.
    data/en/4.0*.batch       These files contain sentences (both grammatical
-                            and ungrammatical ones) that are handled correctly
-                            by this release of the system.  These can be
+                            and ungrammatical ones) that are used for
+                            testing the link-parser These can be
                             run through the parser with the command
                             "./link-parser < 4.0.*.batch"
+   data/de/*                A small German dictionary
 
    COPYING                  The license for this code and data
    ChangeLog                A compendium of recent changes.
