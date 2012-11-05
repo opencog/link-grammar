@@ -1281,7 +1281,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
  * It inserts the list into the dictionary.
  * It does the middle one first, then the left half, then the right.
  *
- * Note: I think this insert middle, then left, then right, has
+ * Note: I think this "insert middle, then left, then right" algo has
  * its origins as a lame attempt to hack around the fact that the 
  * resulting binary tree is rather badly unbalanced. This has been 
  * fixed by using the DSW rebalancing algo. Now, that would seem

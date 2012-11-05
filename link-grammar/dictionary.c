@@ -34,95 +34,109 @@
  * rid of it, as otherwise stipping is messed up. */
 static inline char * deinflect(const char * str)
 {
-	char * s = strdup(str);
-	char * p = strrchr(s, '.');
-	if (p && p != s) *p = 0x0;
+	size_t len;
+	char *s;
+	char *p = strrchr(str, '.');
+	if (!p || (p == str)) return strdup(str);
+
+	len = p - str;
+	s = malloc(len * sizeof(char));
+	strncpy(s, str, len);
+	s[len] = '\0';
 	return s;
+}
+
+
+/**
+ * Call function "func" on each dictionary node in the dictionary.
+ */
+static void iterate_on_dictionary(Dictionary dict, Dict_node *root,
+                                  void (*func)(Dictionary, Dict_node*))
+{
+	if (root == NULL) return;
+	(*func)(dict, root);
+
+	iterate_on_dictionary(dict, root->left, func);
+	iterate_on_dictionary(dict, root->right, func);
+}
+
+static const char * rpunc_con = "RPUNC";
+static const char * lpunc_con = "LPUNC";
+static const char * units_con = "UNITS";
+
+/* Hmmmm SUF and PRE do not seem to be used at this time ... */
+static const char * suf_con = "SUF";
+static const char * pre_con = "PRE";
+
+static void count_affix(Dictionary dict, Dict_node *dn)
+{
+	if (word_has_connector(dn, rpunc_con, 0)) dict->r_strippable++;
+	if (word_has_connector(dn, lpunc_con, 0)) dict->l_strippable++;
+	if (word_has_connector(dn, units_con, 0)) dict->u_strippable++;
+	if (word_has_connector(dn, suf_con, 0)) dict->s_strippable++;
+	if (word_has_connector(dn, pre_con, 0)) dict->p_strippable++;
+}
+
+static void load_affix(Dictionary dict, Dict_node *dn)
+{
+	static int i = 0;
+	static int j = 0;
+	static int k = 0;
+	static int l = 0;
+	static int m = 0;
+
+	if (word_has_connector(dn, rpunc_con, 0))
+	{
+		dict->strip_right[i] = deinflect(dn->string);
+		i++;
+	}
+	if (word_has_connector(dn, lpunc_con, 0))
+	{
+		dict->strip_left[j] = deinflect(dn->string);
+		j++;
+	}
+	if (word_has_connector(dn, units_con, 0))
+	{
+		dict->strip_units[m] = deinflect(dn->string);
+		m++;
+	}
+	if (word_has_connector(dn, suf_con, 0))
+	{
+		dict->suffix[k] = dn->string;
+		k++;
+	}
+	if (word_has_connector(dn, pre_con, 0))
+	{
+		dict->prefix[l] = dn->string;
+		l++;
+	}
 }
 
 static void affix_list_create(Dictionary dict)
 {
-	int i, j, k, l, m;
-	int r_strippable=0, l_strippable=0, u_strippable=0;
-	int s_strippable=0, p_strippable=0;
-	Dict_node * dn, * dn2, * start_dn;
-
-	const char * rpunc_con = "RPUNC";
-	const char * lpunc_con = "LPUNC";
-	const char * units_con = "UNITS";
-
-	/* Hmm SUF and PRE do not seem to be used at this time ... */
-	const char * suf_con = "SUF";
-	const char * pre_con = "PRE";
-
 	dict->strip_left = NULL;
 	dict->strip_right = NULL;
 	dict->strip_units = NULL;
 	dict->prefix = NULL;
 	dict->suffix = NULL;
 
-	/* Load affixes from the affix table.
-	 */
-	start_dn = list_whole_dictionary(dict->root, NULL);
-	for (dn = start_dn; dn != NULL; dn = dn->right)
-	{
-		if (word_has_connector(dn, rpunc_con, 0)) r_strippable++;
-		if (word_has_connector(dn, lpunc_con, 0)) l_strippable++;
-		if (word_has_connector(dn, units_con, 0)) u_strippable++;
-		if (word_has_connector(dn, suf_con, 0)) s_strippable++;
-		if (word_has_connector(dn, pre_con, 0)) p_strippable++;
-	}
-	dict->strip_right = (const char **) xalloc(r_strippable * sizeof(char *));
-	dict->strip_left = (const char **) xalloc(l_strippable * sizeof(char *));
-	dict->strip_units = (const char **) xalloc(u_strippable * sizeof(char *));
-	dict->suffix = (const char **) xalloc(s_strippable * sizeof(char *));
-	dict->prefix = (const char **) xalloc(p_strippable * sizeof(char *));
+	dict->r_strippable = 0;
+	dict->l_strippable = 0;
+	dict->u_strippable = 0;
+	dict->p_strippable = 0;
+	dict->s_strippable = 0;
 
-	dict->r_strippable = r_strippable;
-	dict->l_strippable = l_strippable;
-	dict->u_strippable = u_strippable;
-	dict->p_strippable = p_strippable;
-	dict->s_strippable = s_strippable;
+	/* Count how many affixes of each type we have ... */
+	iterate_on_dictionary(dict, dict->root, count_affix);
 
-	i = 0;
-	j = 0;
-	k = 0;
-	l = 0;
-	m = 0;
-	dn = start_dn;
+	dict->strip_right = (const char **) xalloc(dict->r_strippable * sizeof(char *));
+	dict->strip_left = (const char **) xalloc(dict->l_strippable * sizeof(char *));
+	dict->strip_units = (const char **) xalloc(dict->u_strippable * sizeof(char *));
+	dict->suffix = (const char **) xalloc(dict->s_strippable * sizeof(char *));
+	dict->prefix = (const char **) xalloc(dict->p_strippable * sizeof(char *));
 
-	while (dn != NULL)
-	{
-		if (word_has_connector(dn, rpunc_con, 0))
-		{
-			dict->strip_right[i] = deinflect(dn->string);
-			i++;
-		}
-		if (word_has_connector(dn, lpunc_con, 0))
-		{
-			dict->strip_left[j] = deinflect(dn->string);
-			j++;
-		}
-		if (word_has_connector(dn, units_con, 0))
-		{
-			dict->strip_units[m] = deinflect(dn->string);
-			m++;
-		}
-		if (word_has_connector(dn, suf_con, 0))
-		{
-			dict->suffix[k] = dn->string;
-			k++;
-		}
-		if (word_has_connector(dn, pre_con, 0))
-		{
-			dict->prefix[l] = dn->string;
-			l++;
-		}
-		dn2 = dn->right;
-		dn->right = NULL;
-		xfree(dn, sizeof(Dict_node));
-		dn = dn2;
-	}
+	/* Load affixes from the affix table. */
+	iterate_on_dictionary(dict, dict->root, load_affix);
 }
 
 static void affix_list_delete(Dictionary dict)
@@ -272,7 +286,7 @@ dictionary_six(const char * lang, const char * dict_name,
                 const char * pp_name, const char * cons_name,
                 const char * affix_name, const char * regex_name)
 {
-   Dictionary dict;
+	Dictionary dict;
 
 	wchar_t* input = get_file_contents(dict_name);
 	if (NULL == input)
