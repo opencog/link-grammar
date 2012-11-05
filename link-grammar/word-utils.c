@@ -483,16 +483,6 @@ int word_contains(Dictionary dict, const char * word, const char * macro)
 	return ret;
 }
 
-Dict_node * list_whole_dictionary(Dict_node *root, Dict_node *dn)
-{
-	Dict_node *c, *d;
-	if (root == NULL) return dn;
-	c = (Dict_node *) xalloc(sizeof(Dict_node));
-	*c = *root;
-	d = list_whole_dictionary(root->left, dn);
-	c->right = list_whole_dictionary(root->right, d);
-	return c;
-}
 
 #define PAST_TENSE_FORM_MARKER "<marker-past>"
 #define ENTITY_MARKER          "<marker-entity>"
