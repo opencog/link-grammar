@@ -109,8 +109,9 @@
                                  should not be longer than this */
 
 /*      Some size definitions.  Reduce these for small machines */
-#define MAX_WORD 60           /* maximum number of chars in a word */
-#define MAX_LINE 1500         /* maximum number of chars in a sentence */
+/* MAX_WORD is large, because unicode entries can use a lot of space */
+#define MAX_WORD 180          /* maximum number of bytes in a word */
+#define MAX_LINE 2500         /* maximum number of chars in a sentence */
 #define MAX_DISJUNCT_COST 10000
 
 /* conditional compiling flags */
