@@ -1391,8 +1391,11 @@ static Boolean read_entry(Dictionary dict)
 		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
 		{
 			if (0 == link_advance(dict)) goto syntax_error;
-printf("duuude filename is >>%s<<\n", dict->token);
+
          /* OK, token contains the filename to read ... */
+			Dictionary inc = dictionary_six(dict->lang, dict->token, NULL, NULL, NULL, NULL);
+printf("duuude filename is >>%s<<\n", dict->token);
+			dictionary_delete(inc);
 
 			if (0 == link_advance(dict)) goto syntax_error;
          if (';' != dict->token[0]) goto syntax_error;

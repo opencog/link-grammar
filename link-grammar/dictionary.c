@@ -161,11 +161,6 @@ static void affix_list_delete(Dictionary dict)
 	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
 }
 
-static Dictionary
-dictionary_six(const char * lang, const char * dict_name,
-                const char * pp_name, const char * cons_name,
-                const char * affix_name, const char * regex_name);
-
 /**
  * Read dictionary entries from a wide-character string "input".
  * All other parts are read from files.
@@ -180,8 +175,6 @@ dictionary_six_str(const char * lang,
 	const char * t;
 	Dictionary dict;
 	Dict_node *dict_node;
-
-	init_memusage();
 
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
@@ -281,7 +274,7 @@ failure:
 /**
  * Use filenames of six different files to put together the dictionary.
  */
-static Dictionary
+Dictionary
 dictionary_six(const char * lang, const char * dict_name,
                 const char * pp_name, const char * cons_name,
                 const char * affix_name, const char * regex_name)
@@ -305,6 +298,7 @@ Dictionary dictionary_create_lang(const char * lang)
 {
 	Dictionary dictionary;
 
+	init_memusage();
 	if (lang && *lang)
 	{
 		char * dict_name;
@@ -368,6 +362,8 @@ Dictionary dictionary_create_from_utf8(const char * input)
 	const char *p;
 	int cv;
 
+	init_memusage();
+
 	/* Convert input string to wide chars. This is needed for locale
 	 * compatibility with the dictionary read routines. */
 	len = strlen(input) + 1;
@@ -409,6 +405,8 @@ failure:
 
 int dictionary_delete(Dictionary dict)
 {
+	if (!dict) return 0;
+
 	if (verbosity > 0) {
 		prt_error("Info: Freeing dictionary %s", dict->name);
 	}
@@ -449,6 +447,7 @@ Dictionary
 dictionary_create(const char * dict_name, const char * pp_name,
                   const char * cons_name, const char * affix_name)
 {
+	init_memusage();
 	return dictionary_six("en", dict_name, pp_name, cons_name, affix_name, NULL);
 }
 
