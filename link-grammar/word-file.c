@@ -95,30 +95,3 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	return dn;
 }
 
-void save_files(Dictionary dict)
-{
-	Word_file *wf;
-	FILE *fp;
-	for (wf = dict->word_file_header; wf != NULL; wf = wf->next) {
-		if (wf->changed) {
-			if ((fp = fopen(wf->file, "w")) == NULL) {
-				printf("\nCannot open %s. Gee, this shouldn't happen.\n", wf->file);
-				printf("file not saved\n");
-				return;
-			}
-			printf("   saving file \"%s\"\n", wf->file);
-			/*output_dictionary(dict_root, fp, wf);*/
-			fclose(fp);
-			wf->changed = FALSE;
-		}
-	}
-}
-
-int files_need_saving(Dictionary dict)
-{
-	Word_file *wf;
-	for (wf = dict->word_file_header; wf != NULL; wf = wf->next) {
-		if (wf->changed) return TRUE;
-	}
-	return FALSE;
-}

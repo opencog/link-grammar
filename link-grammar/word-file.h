@@ -10,6 +10,4 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-int         files_need_saving(Dictionary dict);
-void        save_files(Dictionary dict);
 Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename);
