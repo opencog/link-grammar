@@ -1392,17 +1392,34 @@ static Boolean read_entry(Dictionary dict)
 		{
 			if (0 == link_advance(dict)) goto syntax_error;
 
-         /* OK, token contains the filename to read ... */
+			/* OK, token contains the filename to read ... */
 			Dictionary inc = dictionary_six(dict->lang, dict->token, NULL, NULL, NULL, NULL);
-printf("duuude filename is >>%s<<\n", dict->token);
-			dictionary_delete(inc);
+
+printf("duuude filename is >>%s<<  res=%p\n", dict->token, inc);
+			if (inc)
+			{
+				size_t len = 0;
+				Dict_node *top = dsw_tree_to_vine(inc->root);
+				Dict_node *dn = top;
+				while (dn)
+				{
+					dn->string = string_set_add(dn->string, dict->string_set);
+               dn->left = dn->right;
+					dn->right = NULL;
+					dn = dn->left;
+					len++;
+				}
+				insert_list(dict, top, len);
+				inc->root = NULL;
+				dictionary_delete(inc);
+			}
 
 			if (0 == link_advance(dict)) goto syntax_error;
-         if (';' != dict->token[0]) goto syntax_error;
+			if (';' != dict->token[0]) goto syntax_error;
 
-         /* when we return, point to the next entry */
+			/* when we return, point to the next entry */
 			if (0 == link_advance(dict)) goto syntax_error;
-         return TRUE;
+			return TRUE;
 		}
 		else
 		{

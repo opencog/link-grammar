@@ -11,7 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api.h"
+#include "api-types.h"
+#include "string-set.h"
+#include "structures.h"
 
 /**
  * Suppose you have a program that generates strings and keeps pointers to them.
