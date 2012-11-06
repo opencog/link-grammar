@@ -87,7 +87,7 @@ int yywrap(void);  /* --DS */
 #include <unistd.h>
 
 /* Use prototypes in function declarations. */
-#define YY_USE_PROTOS
+#define YY_USE_PROTOS 1
 
 /* The "const" storage-class-modifier is valid. */
 #define YY_USE_CONST
@@ -1243,12 +1243,7 @@ static int input(void)
 #endif /* THIS_FUNCTION_IS_NOT_USED_ANYMORE */
 
 
-#ifdef YY_USE_PROTOS
 void yyrestart( FILE *input_file )
-#else
-void yyrestart( input_file )
-FILE *input_file;
-#endif
 	{
 	if ( ! yy_current_buffer )
 		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE );
@@ -1258,12 +1253,7 @@ FILE *input_file;
 	}
 
 
-#ifdef YY_USE_PROTOS
 void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
-#else
-void yy_switch_to_buffer( new_buffer )
-YY_BUFFER_STATE new_buffer;
-#endif
 	{
 	if ( yy_current_buffer == new_buffer )
 		return;
@@ -1288,11 +1278,7 @@ YY_BUFFER_STATE new_buffer;
 	}
 
 
-#ifdef YY_USE_PROTOS
 void yy_load_buffer_state( void )
-#else
-void yy_load_buffer_state()
-#endif
 	{
 	yy_n_chars = yy_current_buffer->yy_n_chars;
 	yytext_ptr = yy_c_buf_p = yy_current_buffer->yy_buf_pos;
@@ -1301,13 +1287,7 @@ void yy_load_buffer_state()
 	}
 
 
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_create_buffer( FILE *file, int size )
-#else
-YY_BUFFER_STATE yy_create_buffer( file, size )
-FILE *file;
-int size;
-#endif
 	{
 	YY_BUFFER_STATE b;
 
@@ -1332,13 +1312,10 @@ int size;
 	}
 
 
-#ifdef YY_USE_PROTOS
 void yy_delete_buffer( YY_BUFFER_STATE b )
-#else
-void yy_delete_buffer( b )
-YY_BUFFER_STATE b;
-#endif
 	{
+	if ( b == NULL ) return;
+
 	if ( b == yy_current_buffer )
 		yy_current_buffer = (YY_BUFFER_STATE) 0;
 
@@ -1355,15 +1332,7 @@ extern int isatty YY_PROTO(( int ));
 #endif
 #endif
 
-#ifdef YY_USE_PROTOS
 void yy_init_buffer( YY_BUFFER_STATE b, FILE *file )
-#else
-void yy_init_buffer( b, file )
-YY_BUFFER_STATE b;
-FILE *file;
-#endif
-
-
 	{
 	yy_flush_buffer( b );
 
@@ -1382,13 +1351,7 @@ FILE *file;
 	}
 
 
-#ifdef YY_USE_PROTOS
 void yy_flush_buffer( YY_BUFFER_STATE b )
-#else
-void yy_flush_buffer( b )
-YY_BUFFER_STATE b;
-#endif
-
 	{
 	b->yy_n_chars = 0;
 
@@ -1410,13 +1373,7 @@ YY_BUFFER_STATE b;
 
 
 #ifndef YY_NO_SCAN_BUFFER
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )
-#else
-YY_BUFFER_STATE yy_scan_buffer( base, size )
-char *base;
-yy_size_t size;
-#endif
 	{
 	YY_BUFFER_STATE b;
 
@@ -1448,12 +1405,7 @@ yy_size_t size;
 
 
 #ifndef YY_NO_SCAN_STRING
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_string( const char *str )
-#else
-YY_BUFFER_STATE yy_scan_string( str )
-const char *str;
-#endif
 	{
 	int len;
 	for ( len = 0; str[len]; ++len )
@@ -1465,13 +1417,7 @@ const char *str;
 
 
 #ifndef YY_NO_SCAN_BYTES
-#ifdef YY_USE_PROTOS
 YY_BUFFER_STATE yy_scan_bytes( const char *bytes, int len )
-#else
-YY_BUFFER_STATE yy_scan_bytes( bytes, len )
-const char *bytes;
-int len;
-#endif
 	{
 	YY_BUFFER_STATE b;
 	char *buf;
@@ -1504,12 +1450,7 @@ int len;
 
 
 #ifndef YY_NO_PUSH_STATE
-#ifdef YY_USE_PROTOS
 static void yy_push_state( int new_state )
-#else
-static void yy_push_state( new_state )
-int new_state;
-#endif
 	{
 	if ( yy_start_stack_ptr >= yy_start_stack_depth )
 		{
@@ -1559,12 +1500,7 @@ static int yy_top_state()
 #define YY_EXIT_FAILURE 2
 #endif
 
-#ifdef YY_USE_PROTOS
 static void yy_fatal_error( const char msg[] )
-#else
-static void yy_fatal_error( msg )
-char msg[];
-#endif
 	{
 	(void) fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
@@ -1607,12 +1543,7 @@ int n;
 #endif
 
 
-#ifdef YY_USE_PROTOS
 static void *yy_flex_alloc( yy_size_t size )
-#else
-static void *yy_flex_alloc( size )
-yy_size_t size;
-#endif
 	{
 	return (void *) malloc( size );
 	}
@@ -1630,12 +1561,7 @@ yy_size_t size;
 	}
 #endif  /* --DS */
 
-#ifdef YY_USE_PROTOS
 static void yy_flex_free( void *ptr )
-#else
-static void yy_flex_free( ptr )
-void *ptr;
-#endif
 	{
 	free( ptr );
 	}
@@ -1679,14 +1605,15 @@ void pp_lexer_close(PPLexTable *lt)
       /* free the linked list */
       node = lt->nodes_of_label[i];
       while (node)
-	{
-	  next = node->next;
-	  xfree(node, sizeof(pp_label_node));
-	  node=next;
-	}
+        {
+          next = node->next;
+          xfree(node, sizeof(pp_label_node));
+          node=next;
+        }
     }
   string_set_delete(lt->string_set);
   xfree(lt, sizeof(PPLexTable));
+  yy_delete_buffer(yy_current_buffer);
 }
 
 int pp_lexer_set_label(PPLexTable *lt, const char *label) 
