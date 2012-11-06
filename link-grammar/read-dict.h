@@ -17,7 +17,7 @@ LINK_BEGIN_DECLS
 
 #include "api-types.h"
 
-int  read_dictionary(Dictionary dict);
+Boolean read_dictionary(Dictionary dict);
 void dict_display_word_info(Dictionary dict, const char * s);
 void dict_display_word_expr(Dictionary dict, const char * s);
 void print_dictionary_data(Dictionary dict);

@@ -1356,7 +1356,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
  * and is terminated by a semi-colon.
  * Add these words to the dictionary.
  */
-static int read_entry(Dictionary dict)
+static Boolean read_entry(Dictionary dict)
 {
 	Exp *n;
 	int i;
@@ -1371,7 +1371,7 @@ static int read_entry(Dictionary dict)
 		if (dict->is_special)
 		{
 			dict_error(dict, "I expected a word but didn\'t get it.");
-			return 0;
+			return FALSE;
 		}
 
 		/* If it's a word-file name */
@@ -1385,8 +1385,21 @@ static int read_entry(Dictionary dict)
 				err_ctxt ec;
 				ec.sent = NULL;
 				err_msg(&ec, Error, "Error opening word file %s", dict->token);
-				return 0;
+				return FALSE;
 			}
+		}
+		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
+		{
+			if (0 == link_advance(dict)) goto syntax_error;
+printf("duuude filename is >>%s<<\n", dict->token);
+         /* OK, token contains the filename to read ... */
+
+			if (0 == link_advance(dict)) goto syntax_error;
+         if (';' != dict->token[0]) goto syntax_error;
+
+         /* when we return, point to the next entry */
+			if (0 == link_advance(dict)) goto syntax_error;
+         return TRUE;
 		}
 		else
 		{
@@ -1434,11 +1447,11 @@ static int read_entry(Dictionary dict)
 		i++;
 	}
 	insert_list(dict, dn, i);
-	return 1;
+	return TRUE;
 
 syntax_error:
 	free_lookup_list(dn);
-	return 0;
+	return FALSE;
 }
 
 #if ! defined INFIX_NOTATION
@@ -1595,22 +1608,22 @@ void print_dictionary_data(Dictionary dict)
 	rprint_dictionary_data(dict->root);
 }
 
-int read_dictionary(Dictionary dict)
+Boolean read_dictionary(Dictionary dict)
 {
 	if (!link_advance(dict))
 	{
-		return 0;
+		return FALSE;
 	}
 	while (dict->token[0] != '\0')
 	{
 		if (!read_entry(dict))
 		{
-			return 0;
+			return FALSE;
 		}
 	}
 	dict->root = dsw_tree_to_vine(dict->root);
 	dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
-	return 1;
+	return TRUE;
 }
 
 /* ======================================================================= */
