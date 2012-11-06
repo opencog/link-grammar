@@ -18,6 +18,7 @@
 #include "api.h"
 #include "disjunct-utils.h"
 #include "error.h"
+#include "word-file.h"
 
 const char * linkgrammar_get_version(void)
 {

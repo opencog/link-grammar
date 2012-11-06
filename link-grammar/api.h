@@ -59,7 +59,6 @@
 #include "string-set.h"
 #include "tokenize.h"
 #include "utilities.h"
-#include "word-file.h"
 #include "word-utils.h"
 
 #endif
