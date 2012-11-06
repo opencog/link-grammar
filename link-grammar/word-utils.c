@@ -383,7 +383,7 @@ int match_in_connector_set(Sentence sent, Connector_set *conset, Connector * c, 
  * connector-matching function used in parsing - except it ignores
  * "priority" (used to handle fat links)
  */
-static int easy_match(const char * s, const char * t)
+static Boolean easy_match(const char * s, const char * t)
 {
 	while(isupper((int)*s) || isupper((int)*t)) {
 		if (*s != *t) return FALSE;
@@ -412,25 +412,25 @@ static int easy_match(const char * s, const char * t)
  * if a word has a connector in a normal dictionary. The connector
  * check uses a "smart-match", the same kind used by the parser.
  */
-int word_has_connector(Dict_node * dn, const char * cs, int direction)
+Boolean word_has_connector(Dict_node * dn, const char * cs, int direction)
 {
 	Connector * c2 = NULL;
 	Disjunct *d, *d0;
-	if (dn == NULL) return -1;
+	if (dn == NULL) return FALSE;
 	d0 = d = build_disjuncts_for_dict_node(dn);
-	if (d == NULL) return 0;
+	if (d == NULL) return FALSE;
 	for (; d != NULL; d = d->next) {
 		if (direction == 0) c2 = d->right;
 		if (direction == 1) c2 = d->left;
 		for (; c2 != NULL; c2 = c2->next) {
-			if (easy_match(c2->string, cs) == 1) {
+			if (easy_match(c2->string, cs)) {
 				free_disjuncts(d0);
-				return 1;
+				return TRUE;
 			}
 		}
 	}
 	free_disjuncts(d0);
-	return 0;
+	return FALSE;
 }
 
 /* ======================================================== */
