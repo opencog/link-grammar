@@ -405,14 +405,15 @@ static Boolean easy_match(const char * s, const char * t)
  * word_has_connector() -- return TRUE if dictionary expression has connector
  * This function takes a dict_node (corresponding to an entry in a
  * given dictionary), a string (representing a connector), and a
- * direction (0 = right-pointing, 1 = left-pointing); it returns 1
+ * direction (+ = right-pointing, '-' = left-pointing); it returns true
  * if the dictionary expression for the word includes the connector,
- * 0 otherwise.  This can be used to see if a word is in a certain
+ * false otherwise.  This can be used to see if a word is in a certain
  * category (checking for a category connector in a table), or to see
  * if a word has a connector in a normal dictionary. The connector
  * check uses a "smart-match", the same kind used by the parser.
  */
-Boolean word_has_connector(Dict_node * dn, const char * cs, int direction)
+#if CRAZY_OBESE_CHECKING_AGLO
+Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
 {
 	Connector * c2 = NULL;
 	Disjunct *d, *d0;
@@ -420,8 +421,8 @@ Boolean word_has_connector(Dict_node * dn, const char * cs, int direction)
 	d0 = d = build_disjuncts_for_dict_node(dn);
 	if (d == NULL) return FALSE;
 	for (; d != NULL; d = d->next) {
-		if (direction == 0) c2 = d->right;
-		if (direction == 1) c2 = d->left;
+		if (direction == '+') c2 = d->right;
+		if (direction == '-') c2 = d->left;
 		for (; c2 != NULL; c2 = c2->next) {
 			if (easy_match(c2->string, cs)) {
 				free_disjuncts(d0);
@@ -432,6 +433,29 @@ Boolean word_has_connector(Dict_node * dn, const char * cs, int direction)
 	free_disjuncts(d0);
 	return FALSE;
 }
+#else /* CRAZY_OBESE_CHECKING_AGLO */
+
+static Boolean exp_has_connector(Exp * e, const char * cs, char direction)
+{
+	E_list * el;
+	if (e->type == CONNECTOR_type)
+	{
+		if (direction == e->dir)
+			return easy_match(e->u.string, cs);
+		return FALSE;
+	}
+	for (el = e->u.l; el != NULL; el = el->next)
+	{
+		if (exp_has_connector(el->e, cs, direction)) return TRUE;
+	}
+	return FALSE;
+}
+
+Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
+{
+	return exp_has_connector(dn->exp, cs, direction);
+}
+#endif /* CRAZY_OBESE_CHECKING_AGLO */
 
 /* ======================================================== */
 /* Dictionary utilities ... */

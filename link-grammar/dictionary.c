@@ -70,11 +70,11 @@ static const char * pre_con = "PRE";
 
 static void count_affix(Dictionary dict, Dict_node *dn)
 {
-	if (word_has_connector(dn, rpunc_con, 0)) dict->r_strippable++;
-	if (word_has_connector(dn, lpunc_con, 0)) dict->l_strippable++;
-	if (word_has_connector(dn, units_con, 0)) dict->u_strippable++;
-	if (word_has_connector(dn, suf_con, 0)) dict->s_strippable++;
-	if (word_has_connector(dn, pre_con, 0)) dict->p_strippable++;
+	if (word_has_connector(dn, rpunc_con, '+')) dict->r_strippable++;
+	if (word_has_connector(dn, lpunc_con, '+')) dict->l_strippable++;
+	if (word_has_connector(dn, units_con, '+')) dict->u_strippable++;
+	if (word_has_connector(dn, suf_con, '+')) dict->s_strippable++;
+	if (word_has_connector(dn, pre_con, '+')) dict->p_strippable++;
 }
 
 static void load_affix(Dictionary dict, Dict_node *dn)
@@ -85,27 +85,27 @@ static void load_affix(Dictionary dict, Dict_node *dn)
 	static int l = 0;
 	static int m = 0;
 
-	if (word_has_connector(dn, rpunc_con, 0))
+	if (word_has_connector(dn, rpunc_con, '+'))
 	{
 		dict->strip_right[i] = deinflect(dn->string);
 		i++;
 	}
-	if (word_has_connector(dn, lpunc_con, 0))
+	if (word_has_connector(dn, lpunc_con, '+'))
 	{
 		dict->strip_left[j] = deinflect(dn->string);
 		j++;
 	}
-	if (word_has_connector(dn, units_con, 0))
+	if (word_has_connector(dn, units_con, '+'))
 	{
 		dict->strip_units[m] = deinflect(dn->string);
 		m++;
 	}
-	if (word_has_connector(dn, suf_con, 0))
+	if (word_has_connector(dn, suf_con, '+'))
 	{
 		dict->suffix[k] = dn->string;
 		k++;
 	}
-	if (word_has_connector(dn, pre_con, 0))
+	if (word_has_connector(dn, pre_con, '+'))
 	{
 		dict->prefix[l] = dn->string;
 		l++;
