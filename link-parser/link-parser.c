@@ -102,6 +102,12 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 	static char * pline = NULL;
 	const char * prompt = "linkparser> ";
 
+	if (NULL == in)
+	{
+		if (pline) free(pline);
+		return NULL;
+	}
+
 	if (in != stdin)
 	{
 		static char input_string[MAX_INPUT];
@@ -134,6 +140,8 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 
 #else
 	static char input_string[MAX_INPUT];
+
+	if (NULL == in) return NULL; 
 
 	if ((!parse_options_get_batch_mode(opts)) && 
 	    (verbosity > 0) && 
@@ -883,6 +891,7 @@ int main(int argc, char * argv[])
 	parse_options_delete(panic_parse_opts);
 	parse_options_delete(opts);
 	dictionary_delete(dict);
+	fget_input_string(NULL, NULL, NULL);
 
 	printf ("Bye.\n");
 	return 0;
