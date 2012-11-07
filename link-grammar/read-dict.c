@@ -1391,18 +1391,23 @@ static Boolean read_entry(Dictionary dict)
 		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
 		{
 			wchar_t* instr;
-			char * dict_name = dict->token;
-			Boolean   save_is_special     = dict->is_special;
-			const wchar_t * save_input    = dict->input;
-			const wchar_t * save_pin      = dict->pin; 
-			wint_t    save_already_got_it = dict->already_got_it;
-			int       save_line_number    = dict->line_number; 
-
+			char * dict_name;
+			Boolean save_is_special;
+			const wchar_t * save_input;
+			const wchar_t * save_pin;
+			wint_t save_already_got_it;
+			int save_line_number;
 
 			if (0 == link_advance(dict)) goto syntax_error;
 
+			dict_name = dict->token;
+			save_is_special     = dict->is_special;
+			save_input          = dict->input;
+			save_pin            = dict->pin; 
+			save_already_got_it = dict->already_got_it;
+			save_line_number    = dict->line_number; 
+
 			/* OK, token contains the filename to read ... */
-printf("duuude filename is >>%s<< \n", dict_name);
 			instr = get_file_contents(dict_name);
 			if (NULL == instr)
 			{
@@ -1427,11 +1432,15 @@ printf("duuude filename is >>%s<< \n", dict_name);
 			dict->already_got_it = save_already_got_it;
 			dict->line_number    = save_line_number; 
 
-			if (0 == link_advance(dict)) goto syntax_error;
-			if (';' != dict->token[0]) goto syntax_error;
-
 			/* when we return, point to the next entry */
 			if (0 == link_advance(dict)) goto syntax_error;
+
+			/* If a semicolon follows the include, that's OK... ignore it. */
+			if (';' == dict->token[0])
+			{
+				if (0 == link_advance(dict)) goto syntax_error;
+			}
+
 			return TRUE;
 		}
 		else
