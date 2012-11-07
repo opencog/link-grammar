@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 4.7.9
+                          Version 4.7.10
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -91,10 +91,23 @@ CREATING the system:
         make install
         ldconfig
 
-   This will install the lib-link-grammar.so library into /usr/local/lib,
+   This will install the liblink-grammar.so library into /usr/local/lib,
    the header files in /usr/local/include/link-grammar, and the
    dictionaries into /usr/local/share/link-grammar.  Running 'ldconfig'
    will rebuild the shared library cache.
+
+   If libedit-dev is installed, then the arrow keys can be used to edit
+   the input to the link-parser tool; the up and down arrow keys will
+   recall previious entries.  You want this; it makes testing and
+   editing much easier.  Note, however, most versions of editline are
+   not UTF8-capable, and so won't work, for example, with the Russian
+   dictionaries.  A UTF8-enabled version of libedit can be found here:
+
+      http://www.thrysoee.dk/editline/
+
+   Use of editline can be disabled by saying 
+
+       ./configure --disable-editline
 
    By default, the Makefiles attempt to build the Java bindings.
    The use of the Java bindings is *OPTIONAL*; you do not need these if
@@ -338,9 +351,10 @@ TESTING the program:
    batch file does report some errors, as do the files "4.0.biolg.batch"
    and "4.0.fixes.batch".  Work is ongoing to fix these.
 
-   The "4.0.fixes.batch" file contains sentences that have been fixed
-   since the original 4.1 release of link-grammar. The "4.0.biolg.batch"
-   contains biology/medical-text sentences from the BioLG project.
+   The "4.0.fixes.batch" file contains thousands of sentences that have
+   been fixed since the original 4.1 release of link-grammar. The 
+   "4.0.biolg.batch" contains biology/medical-text sentences from the
+   BioLG project.
 
 
 USING the parser in your own applications:
@@ -644,7 +658,8 @@ ADDRESSES
      Linas Vepstas - <linasvepstas@gmail.com>
      Dom Lachowicz - <domlachowicz@gmail.com>
 
-   The original authors of the Link Grammar parser are:
+   A complete list of authors and copyright holders can be found in the
+   AUTHORS file.  The original authors of the Link Grammar parser are:
 
      Daniel Sleator                    sleator@cs.cmu.edu
      Computer Science Department       412-268-7563
