@@ -131,7 +131,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
   generated for idioms.
 
   Dictionary words may be followed by a dot (period, "."), and a "subscript"
-  identifying the word type. The subscript may be one or more letters or 
+  identifying the word type. The subscript may be one or more letters or
   numbers, but must begin with a letter. Currently, the dictionary contains
   (mostly?) subscripts consisting of a single letter, and these serve mostly
   to identify the part-of-speech. In general, subscripts can also be used
@@ -352,7 +352,7 @@ static int is_equal(Dictionary dict, wint_t c)
 	        dict->token[1] == '\0');
 }
 
-/** 
+/**
  * Make sure the string s is a valid connector.
  * Return 1 if the connector is valid, else return 0,
  * and print an appropriate warning message.
@@ -404,16 +404,16 @@ static int check_connector(Dictionary dict, const char * s)
  * example, "make" < "make.n" < "make-up" -- suffixed words come after
  * the bare words, but before any other other words with non-ascii-alpha
  * characters (such as the hyphen in "make-up", or possibly UTF8
- * characters). Thus, stright "strcmp" can't be used to determine 
- * dictionary order. 
+ * characters). Thus, stright "strcmp" can't be used to determine
+ * dictionary order.
  *
  * Thus, a set of specialized string comparison and ordering functions
  * are provided. These "do the right thing" when matching string with
  * and without suffixes.
  */
-/** 
+/**
  * dict_order - order two dictionary words in proper sort order.
- * Return zero if the strings match, else return standard 
+ * Return zero if the strings match, else return standard
  * (locale-dependent) UTF8 sort order.
  * XXX but its not UTF-8 ordered ...! Does this matter ???
  */
@@ -461,9 +461,9 @@ static inline int dict_order(const char *s, const char *t)
  *
  * Note: wild-cards are not used in the English dictionaries;
  * nor are they used in the Persian or Arabic dictionaries...
- * perhaps they are used to handle stemming in some other 
+ * perhaps they are used to handle stemming in some other
  * languages ?????? XXX FIXME, these wildcards might just be
- * old dead code ... 
+ * old dead code ...
  */
 static inline int dict_order_wild(const char * s, const char * t)
 {
@@ -483,11 +483,11 @@ static inline int dict_order_wild(const char * s, const char * t)
 
 /**
  * dict_match --  return true if strings match, else false.
- * A "bare" string (one without a suffix) will match any corresponding 
- * string with a suffix; so, for example, "make" and "make.n" are 
+ * A "bare" string (one without a suffix) will match any corresponding
+ * string with a suffix; so, for example, "make" and "make.n" are
  * a match.  If both strings have suffixes, then the suffixes must match.
  *
- * A subscript is the part that followes the last "." in the word, and 
+ * A subscript is the part that followes the last "." in the word, and
  * that does not begin with a digit.
  */
 static int dict_match(const char * s, const char * t)
@@ -729,7 +729,7 @@ static Exp * connector(Dictionary dict)
 		}
 		n = make_unary_node(dict, dn->exp);
 		free_lookup_list(dn_head);
-	} 
+	}
 	else
 	{
 		/* If we are here, token is a connector */
@@ -1056,7 +1056,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		n->type = OR_type;
 		n->cost = 0.0f;
 		return n;
-	} 
+	}
 
 	return nl;
 }
@@ -1143,13 +1143,13 @@ static Dict_node *rebalance(Dict_node *root)
 
 /* ======================================================================== */
 /* Implementation of the DSW algo for rebalancing a binary tree.
- * The point is -- after building the dictionary tree, we rebalance it 
- * once at the end. This is a **LOT LOT** quicker than maintaing an 
+ * The point is -- after building the dictionary tree, we rebalance it
+ * once at the end. This is a **LOT LOT** quicker than maintaing an
  * AVL tree along the way (less than quarter-of-a-second vs. about
  * a minute or more!) FWIW, the DSW tree is even more balanced than
  * the AVL tree is (its less deep, more full).
  *
- * The DSW algo, with C++ code, is described in 
+ * The DSW algo, with C++ code, is described in
  *
  * Timothy J. Rolfe, "One-Time Binary Search Tree Balancing:
  * The Day/Stout/Warren (DSW) Algorithm", inroads, Vol. 34, No. 4
@@ -1250,7 +1250,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 		{
 			n->left = newnode;
 			return n;
-		} 
+		}
 		n->left = insert_dict(dict, n->left, newnode);
 		return n;
 		/* return rebalance(n); Uncomment to get an AVL tree */
@@ -1283,8 +1283,8 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
  * It does the middle one first, then the left half, then the right.
  *
  * Note: I think this "insert middle, then left, then right" algo has
- * its origins as a lame attempt to hack around the fact that the 
- * resulting binary tree is rather badly unbalanced. This has been 
+ * its origins as a lame attempt to hack around the fact that the
+ * resulting binary tree is rather badly unbalanced. This has been
  * fixed by using the DSW rebalancing algo. Now, that would seem
  * to render this crazy bisected-insertion algo obsoloete, but ..
  * oddly enough, it seems to make the DSW balancing go really fast!
@@ -1406,9 +1406,9 @@ static Boolean read_entry(Dictionary dict)
 			save_name           = dict->name;
 			save_is_special     = dict->is_special;
 			save_input          = dict->input;
-			save_pin            = dict->pin; 
+			save_pin            = dict->pin;
 			save_already_got_it = dict->already_got_it;
-			save_line_number    = dict->line_number; 
+			save_line_number    = dict->line_number;
 
 			/* OK, token contains the filename to read ... */
 			instr = get_file_contents(dict_name);
@@ -1419,16 +1419,20 @@ static Boolean read_entry(Dictionary dict)
 			}
 			dict->input = instr;
 			dict->pin = dict->input;
+
+			/* The line number and dict name are used for error reporting */
 			dict->line_number = 0;
 			dict->name = dict_name;
+
+			/* Now read the thing in. */
 			rc = read_dictionary(dict);
 
 			dict->name           = save_name;
 			dict->is_special     = save_is_special;
 			dict->input          = save_input;
-			dict->pin            = save_pin; 
+			dict->pin            = save_pin;
 			dict->already_got_it = save_already_got_it;
-			dict->line_number    = save_line_number; 
+			dict->line_number    = save_line_number;
 
 			free(instr);
 			free(dict_name);
@@ -1566,7 +1570,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 	}
 
 	/* Look for optional, and print only that */
-	el = n->u.l; 
+	el = n->u.l;
 	if (el == NULL)
 	{
 		for (i=0; i<icost; i++) printf("[");
