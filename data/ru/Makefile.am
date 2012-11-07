@@ -8,6 +8,7 @@ DICTS=					\
 	4.0.morph	\
 	4.0.regex	\
 	stem.dict	\
+	morph.dict	\
 	suffix.dict
 
 dictdir=$(pkgdatadir)/ru
