@@ -15,6 +15,7 @@
 #include <wctype.h>
 #include "api.h"
 #include "error.h"
+#include "word-file.h"
 
 /**
  * Reads in one word from the file, allocates space for it,

@@ -163,10 +163,10 @@ struct Dictionary_s
 	const wchar_t * input;
 	const wchar_t * pin;
 	char            token[MAX_TOKEN_LENGTH];
-	int             is_special;        /* boolean */
+	Boolean         recursive_error;
+	Boolean         is_special;
 	wint_t          already_got_it;
 	int             line_number;
-	int             recursive_error;   /* boolean */
 	mbstate_t       mbss; /* multi-byte shift state */
 };
 

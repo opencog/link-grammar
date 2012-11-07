@@ -224,7 +224,7 @@ static wchar_t get_character(Dictionary dict, int quote_mode)
  * Return true if the input wide-character is one of the special
  * characters used to define the syntax of the dictionary.
  */
-static int is_special(wchar_t wc, mbstate_t *ps)
+static Boolean is_special(wchar_t wc, mbstate_t *ps)
 {
 	char buff[MB_LEN_MAX];
 	int nr = wcrtomb(buff, wc, ps);
@@ -1390,29 +1390,42 @@ static Boolean read_entry(Dictionary dict)
 		}
 		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
 		{
+			wchar_t* instr;
+			char * dict_name = dict->token;
+			Boolean   save_is_special     = dict->is_special;
+			const wchar_t * save_input    = dict->input;
+			const wchar_t * save_pin      = dict->pin; 
+			wint_t    save_already_got_it = dict->already_got_it;
+			int       save_line_number    = dict->line_number; 
+
+
 			if (0 == link_advance(dict)) goto syntax_error;
 
 			/* OK, token contains the filename to read ... */
-			Dictionary inc = dictionary_six(dict->lang, dict->token, NULL, NULL, NULL, NULL);
-
-printf("duuude filename is >>%s<<  res=%p\n", dict->token, inc);
-			if (inc)
+printf("duuude filename is >>%s<< \n", dict_name);
+			instr = get_file_contents(dict_name);
+			if (NULL == instr)
 			{
-				size_t len = 0;
-				Dict_node *top = dsw_tree_to_vine(inc->root);
-				Dict_node *dn = top;
-				while (dn)
-				{
-					dn->string = string_set_add(dn->string, dict->string_set);
-               dn->left = dn->right;
-					dn->right = NULL;
-					dn = dn->left;
-					len++;
-				}
-				insert_list(dict, top, len);
-				inc->root = NULL;
-				dictionary_delete(inc);
+				prt_error("Error: Could not open dictionary %s", dict_name);
+				goto syntax_error;
 			}
+			dict->input = instr;
+			dict->pin = dict->input;
+			if (!read_dictionary(dict))
+			{
+				dict->pin = NULL;
+				dict->input = NULL;
+				free(instr);
+				goto syntax_error;
+			}
+			
+			free(instr);
+
+			dict->is_special     = save_is_special;
+			dict->input          = save_input;
+			dict->pin            = save_pin; 
+			dict->already_got_it = save_already_got_it;
+			dict->line_number    = save_line_number; 
 
 			if (0 == link_advance(dict)) goto syntax_error;
 			if (';' != dict->token[0]) goto syntax_error;
