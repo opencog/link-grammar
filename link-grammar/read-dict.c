@@ -1390,8 +1390,10 @@ static Boolean read_entry(Dictionary dict)
 		}
 		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
 		{
+			int rc;
 			wchar_t* instr;
 			char * dict_name;
+			const char * save_name;
 			Boolean save_is_special;
 			const wchar_t * save_input;
 			const wchar_t * save_pin;
@@ -1400,7 +1402,8 @@ static Boolean read_entry(Dictionary dict)
 
 			if (0 == link_advance(dict)) goto syntax_error;
 
-			dict_name = dict->token;
+			dict_name           = strdup(dict->token);
+			save_name           = dict->name;
 			save_is_special     = dict->is_special;
 			save_input          = dict->input;
 			save_pin            = dict->pin; 
@@ -1416,21 +1419,20 @@ static Boolean read_entry(Dictionary dict)
 			}
 			dict->input = instr;
 			dict->pin = dict->input;
-			if (!read_dictionary(dict))
-			{
-				dict->pin = NULL;
-				dict->input = NULL;
-				free(instr);
-				goto syntax_error;
-			}
-			
-			free(instr);
+			dict->line_number = 0;
+			dict->name = dict_name;
+			rc = read_dictionary(dict);
 
+			dict->name           = save_name;
 			dict->is_special     = save_is_special;
 			dict->input          = save_input;
 			dict->pin            = save_pin; 
 			dict->already_got_it = save_already_got_it;
 			dict->line_number    = save_line_number; 
+
+			free(instr);
+			free(dict_name);
+			if (!rc) goto syntax_error;
 
 			/* when we return, point to the next entry */
 			if (0 == link_advance(dict)) goto syntax_error;
