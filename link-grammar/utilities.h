@@ -146,16 +146,6 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define GNUC_MALLOC
 #endif
 
-static inline int wctomb_check(char *s, wchar_t wc, mbstate_t *ps)
-{
-	int nr = wcrtomb(s, wc, ps);
-	if (nr < 0) {
-		prt_error("Fatal Error: unknown character set %s\n", nl_langinfo(CODESET));
-		exit(1);
-	}
-	return nr;
-}
-
 static inline size_t utf8_strlen(const char *s)
 {
 	mbstate_t mbss;
@@ -250,6 +240,7 @@ static inline int utf8_upper_match(const char * s, const char * t)
 	return TRUE;
 }
 
+int wctomb_check(char *s, wchar_t wc, mbstate_t *ps);
 void downcase_utf8_str(char *to, const char * from, size_t usize);
 void upcase_utf8_str(char *to, const char * from, size_t usize);
 
