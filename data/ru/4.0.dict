@@ -1065,3 +1065,12 @@ CAPITALIZED-WORDS NAME: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 %% Слова с большой буквы
 Вам.m2sd: <мест-sub> & (Jd- or [[MVad-]] or [[MVIad+]] or Nd- or <макро-сущ-d>); % МС,2л,ед,дт
 
+% stems (roots)
+#include "/ru/stem.dict";
+
+% morphology linkages
+#include "/ru/morph.dict";
+
+% suffixes
+#include "/ru/suffix.dict";
+

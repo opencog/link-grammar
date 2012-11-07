@@ -1,3 +1,15 @@
+
+linkparser> это теста
+Found 1 linkage (1 had no P.P. violations)
+	Unique linkage, cost vector = (UNUSED=0 DIS=0 FAT=0 AND=0 LEN=4)
+
+             +-------MVAip------+
+    +---Wd---+       +---LLCAG--+
+    |        |       |          |
+LEFT-WALL это.msi тест.s а.С,ср,но,мн,им 
+
+
+
 linkparser> width set to 500
 linkparser> No complete linkages found.
 ++++Time                                          2,77 seconds (2,77 total)
@@ -15,3 +27,4 @@ LEFT-WALL по.jd невыясненным.apd обстоятельствам.nd
 
 Press RETURN for the next linkage.
 linkparser> 
+
