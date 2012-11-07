@@ -379,7 +379,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
  */
 static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 {
-	int i, j, k, cl, cr, row, top_row, width, flag;
+	int i, j, k, cl, cr, row, top_row, width, uwidth, flag;
 	const char *s;
 	char *t;
 	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
@@ -593,24 +593,32 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	pctx->N_rows = 0;
 	pctx->row_starts[pctx->N_rows] = 0;
 	pctx->N_rows++;
-	while(i < N_words_to_print) {
+	while (i < N_words_to_print)
+	{
 		append_string(string, "\n");
 		width = 0;
+		uwidth = 0;
 		do {
-			// width += utf8_strlen(linkage->word[i])+1;
-			width += strlen(linkage->word[i])+1;
+			width += strlen(linkage->word[i]) + 1;
+			uwidth += utf8_strlen(linkage->word[i]) + 1;
 			i++;
-		} while ((i<N_words_to_print) &&
-			  (width + (strlen(linkage->word[i]))+1 < x_screen_width));
+		} while ((i < N_words_to_print) &&
+			  (uwidth + utf8_strlen(linkage->word[i]) + 1 < x_screen_width));
+
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i<N_words_to_print) pctx->N_rows++;     /* same */
-		for (row = top_row; row >= 0; row--) {
+
+		for (row = top_row; row >= 0; row--)
+		{
 			flag = TRUE;
-			for (j=k;flag&&(j<k+width)&&(xpicture[row][j]!='\0'); j++){
+			for (j = k; flag && (j < k + width) && (xpicture[row][j] != '\0'); j++)
+			{
 				flag = flag && (xpicture[row][j] == ' ');
 			}
-			if (!flag) {
-				for (j=k;(j<k+width)&&(xpicture[row][j]!='\0'); j++){
+			if (!flag)
+			{
+				for (j = k; (j < k + width) && (xpicture[row][j] != '\0'); j++)
+				{
 					append_string(string, "%c", xpicture[row][j]);
 				}
 				append_string(string, "\n");
