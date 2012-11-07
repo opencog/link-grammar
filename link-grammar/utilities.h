@@ -156,6 +156,14 @@ static inline int wctomb_check(char *s, wchar_t wc, mbstate_t *ps)
 	return nr;
 }
 
+static inline size_t utf8_strlen(const char *s)
+{
+	mbstate_t mbss;
+	memset(&mbss, 0, sizeof(mbss));
+
+	return mbsrtowcs(NULL, &s, 0, &mbss);
+}
+
 static inline int is_utf8_upper(const char *s)
 {
 	mbstate_t mbs;

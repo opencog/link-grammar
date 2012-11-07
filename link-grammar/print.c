@@ -21,9 +21,7 @@ const char * header(int mode);
 
 static void set_centers(const Linkage linkage, int center[], int print_word_0, int N_words_to_print)
 {
-	mbstate_t mbss;
 	int i, len, tot;
-	memset(&mbss, 0, sizeof(mbss));
 
 	tot = 0;
 	if (print_word_0) i=0; else i=1;
@@ -32,8 +30,9 @@ static void set_centers(const Linkage linkage, int center[], int print_word_0, i
 		/* Centers obtained by counting the characters, 
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
+		 * len = mbsrtowcs(NULL, &linkage->word[i], 0, &mbss);
 		 */
-		len = mbsrtowcs(NULL, &linkage->word[i], 0, &mbss);
+		len = utf8_strlen(linkage->word[i]);
 		center[i] = tot + (len/2);
 		tot += len+1;
 	}
@@ -598,10 +597,11 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		append_string(string, "\n");
 		width = 0;
 		do {
+			// width += utf8_strlen(linkage->word[i])+1;
 			width += strlen(linkage->word[i])+1;
 			i++;
-		} while((i<N_words_to_print) &&
-			  (width + ((int)strlen(linkage->word[i]))+1 < x_screen_width));
+		} while ((i<N_words_to_print) &&
+			  (width + (strlen(linkage->word[i]))+1 < x_screen_width));
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i<N_words_to_print) pctx->N_rows++;     /* same */
 		for (row = top_row; row >= 0; row--) {
