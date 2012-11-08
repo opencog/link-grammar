@@ -243,7 +243,7 @@ changecom(`%')
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
-CAPITALIZED-WORDS INITIALS NAME <entity-singular>:
+CAPITALIZED-WORDS INITIALS <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
       ([<noun-sub-s> & (JG- or <noun-main-s>)] or
