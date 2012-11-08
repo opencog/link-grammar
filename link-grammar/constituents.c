@@ -17,6 +17,7 @@
 #include "error.h"
 #include "constituents.h"
 #include "post-process.h"
+#include "print-util.h"
 
 #define MAXCONSTITUENTS 8192
 #define MAXSUBL 16

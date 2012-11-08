@@ -10,8 +10,8 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-#ifndef _PRINTUTILH_
-#define _PRINTUTILH_
+#ifndef LG_PRINT_UTIL_H_
+#define LG_PRINT_UTIL_H_
 
 #if     __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
 #define GNUC_PRINTF( format_idx, arg_idx )    \
@@ -20,12 +20,15 @@
 #define GNUC_PRINTF( format_idx, arg_idx )
 #endif
 
+#include <stdlib.h>
+
 typedef struct String_s String;
 
 String * string_new(void);
 void string_delete(String *);
 char * string_copy(String *);
 void append_string(String * string, const char *fmt, ...) GNUC_PRINTF(2,3);
+size_t append_utf8_char(String * string, char * mbs);
 
 #endif
 

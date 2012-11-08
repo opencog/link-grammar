@@ -12,7 +12,7 @@
 /*************************************************************************/
 
 #include <stdarg.h>
-#include "api.h"
+#include "print-util.h"
 #include "utilities.h"
 
 /* This is a "safe" append function, used here to build up a link diagram
@@ -85,3 +85,15 @@ void append_string(String * string, const char *fmt, ...)
 	}
 }
 
+size_t append_utf8_char(String * string, char * mbs)
+{
+	/* Copy exactly one multi-byte character to buf */
+	char buf[10];
+	size_t n = utf8_next(mbs);
+
+	assert(n<10, "Multi-byte character is too long!");
+	strncpy(buf, mbs, n); 
+	buf[n] = 0;
+	append_string(string, "%s", buf);
+	return n;
+}

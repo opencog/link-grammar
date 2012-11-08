@@ -52,7 +52,6 @@
 #include "pp_linkset.h"
 #include "preparation.h"
 #include "print.h"
-#include "print-util.h"
 #include "prune.h"
 #include "read-dict.h"
 #include "resources.h"

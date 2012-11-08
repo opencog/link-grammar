@@ -15,6 +15,7 @@
 #include <stdarg.h>
 #include "api.h"
 #include "corpus/corpus.h"
+#include "print-util.h"
 
 const char * trailer(int mode);
 const char * header(int mode);
@@ -637,12 +638,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 				for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
 				{
 					/* Copy exactly one multi-byte character to buf */
-					char buf[10];
-					size_t n = utf8_next(&xpicture[row][j]);
-					strncpy(buf, &xpicture[row][j], n); 
-					buf[n] = 0;
-					append_string(string, "%s", buf);
-					j += n;
+					j += append_utf8_char(string, &xpicture[row][j]); 
 					mbcnt ++;
 				}
 				append_string(string, "\n");
