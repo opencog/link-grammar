@@ -610,7 +610,6 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		} while ((i < N_words_to_print) &&
 			  (uwidth + utf8_strlen(linkage->word[i]) + 1 < x_screen_width));
 
-printf("duuude OK, mbwid=%d\n", uwidth);
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
 
@@ -619,7 +618,7 @@ printf("duuude OK, mbwid=%d\n", uwidth);
 			int mbcnt = 0;
 			flag = TRUE;
 			k = start[row];
-			for (j = k; flag && (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
+			for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
 			{
 				size_t n = utf8_next(&xpicture[row][j]);
 				flag = flag && (xpicture[row][j] == ' ');
