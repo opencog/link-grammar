@@ -381,7 +381,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
  */
 static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 {
-	int i, j, k, cl, cr, row, top_row, uwidth, flag;
+	int i, j, k, cl, cr, row, top_row;
 	const char *s;
 	char *t;
 	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
@@ -602,8 +602,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	pctx->N_rows++;
 	while (i < N_words_to_print)
 	{
-		append_string(string, "\n");
-		uwidth = 0;
+		/* Count number of multi-byte chars in the words,
+		 * up to the max screen width. */
+		int uwidth = 0;
 		do {
 			uwidth += utf8_strlen(linkage->word[i]) + 1;
 			i++;
@@ -613,20 +614,24 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
 
+		append_string(string, "\n");
 		for (row = top_row; row >= 0; row--)
 		{
+			/* print each row of the picture */
+			/* 'blank' is used solely to detect blank lines */
 			int mbcnt = 0;
-			flag = TRUE;
+			Boolean blank = TRUE;
 			k = start[row];
 			for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
 			{
 				size_t n = utf8_next(&xpicture[row][j]);
-				flag = flag && (xpicture[row][j] == ' ');
+				blank = blank && (xpicture[row][j] == ' ');
 				j += n;
 				mbcnt ++;
 			}
          start[row] = j;
-			if (!flag)
+
+			if (!blank)
 			{
 				mbcnt = 0;
 				for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
