@@ -182,7 +182,8 @@ EXTRA_DIST=                               \
 	java/org/linkgrammar/Link.java         \
 	java/org/linkgrammar/ParseResult.java  \
 	link-grammar.def                       \
-	link-grammar-java.def
+	link-grammar-java.def                  \
+	lisp/link-interface.cl
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
