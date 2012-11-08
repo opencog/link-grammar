@@ -51,19 +51,24 @@ typedef struct
 
 /**
  * prints s then prints the last |t|-|s| characters of t.
- *  if s is longer than t, it truncates s.
-XXX TODO NOT UTF8 safe
+ * if s is longer than t, it truncates s.
+ * multi-byte enabled.
  */
 static void left_append_string(String * string, const char * s, const char * t)
 {
-	int i, j, k;
-	j = strlen(t);
-	k = strlen(s);
-	for (i=0; i<j; i++) {
-		if (i<k) {
-			append_string(string, "%c", s[i]);
-		} else {
-			append_string(string, "%c", t[i]);
+	size_ti;
+	size_t slen = strlen(s);
+	size_t tlen = strlen(t);
+
+	for (i = 0; i < tlen; )
+	{
+		if (i < slen)
+		{
+			i += append_utf8_char(string, &s[i]);
+		}
+		else
+		{
+			i += append_utf8_char(string, &t[i]);
 		}
 	}
 }
