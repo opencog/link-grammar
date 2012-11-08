@@ -94,6 +94,7 @@
 
 почему.i : ( W- & W+ & Xq+ ) or ( W- & Xq+ );
 
+% See 4.0.affix for lists of punctuation.
 % -- - : Xt+;
 <точка> : {@XIc-} &  Xp- & ((W+ & Xp+) or RW+);
 "!" : {@XIc-} &  Xp- & RW+ ;
@@ -106,6 +107,7 @@
 ")" : BR- & (XIc+ or EI+);
 "╚" : ( Wd+ & BRq+ ) or ( Mg- & Mg+ & BRt+) or ( G- & G+ & BRt+);
 "╩" : ( BRq- & (XIc+ or EI+) ) or ( BRt- );
+
 не.p : Xn+;
 бы.p : XIb-;
 обе.amia: Ami+;
@@ -118,12 +120,15 @@ UNKNOWN-WORD: NO+;
 <name-макро-перечисление>: NX+
         or (Xc- & NX- & (NX+ or [<name-перечисление-сущ>]))
         or (Xi- & NX- & <name-перечисление-сущ>);
-CAPITALIZED-WORDS NAME: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
+
+% See 4.0.regex for CAPITALIZED-WORDS
+CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	((S*3+ or SI*3-) & Wd-)
 	or ({Xt-} & S-)
 	or <name-макро-перечисление>
 	or Ji-
 )) or (G- & {Xp+} & {G+}) or (MVv-);
+
 %% НАРЕЧИЯ СТЕПЕНИ
 %% последующие две недели прошли чересчур спокойно 
 очень.ep слишком.ep чересчур.ep сравнительно.ep довольно.ep весьма.ep относительно.ep крайне.ep чрезвычайно.ep необычайно.ep предельно.ep необыкновенно.ep : [EE-] or EEI+;
