@@ -56,7 +56,7 @@ typedef struct
  */
 static void left_append_string(String * string, const char * s, const char * t)
 {
-	size_ti;
+	size_t i;
 	size_t slen = strlen(s);
 	size_t tlen = strlen(t);
 
@@ -382,7 +382,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 #define MAX_HEIGHT 30
 
 /** 
- * String allocated with exalloc.  
+ * Print the indicated linkage into a utf8-diagram.
+ * Works fine for general utf8 multi-byte sentences.
+ * links and connectors are still mostly assumed to be ASCII, though;
+ * to fix this, grep for strlen in he code below.
+ *
+ * Returned string is allocated with exalloc.  
  * Needs to be freed with linkage_free_diagram()
  */
 static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
@@ -656,6 +661,14 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	return gr_string; 
 }
 
+/** 
+ * Print the indicated linkage as utf8-art intp the given string.
+ * The width of the diagram is given by the terminal width, taken
+ * from the parse options.
+ *
+ * The returned string is malloed, and needs to be freed with
+ * linkage_free_diagram()
+ */
 char * linkage_print_diagram(const Linkage linkage)
 {
 	ps_ctxt_t ctx;
