@@ -51,8 +51,10 @@ typedef struct
 /**
  * prints s then prints the last |t|-|s| characters of t.
  *  if s is longer than t, it truncates s.
+XXX TODO NOT UTF8 safe
  */
-static void left_append_string(String * string, const char * s, const char * t) {
+static void left_append_string(String * string, const char * s, const char * t)
+{
 	int i, j, k;
 	j = strlen(t);
 	k = strlen(s);
@@ -379,7 +381,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
  */
 static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 {
-	int i, j, k, cl, cr, row, top_row, width, uwidth, flag;
+	int i, j, k, cl, cr, row, top_row, uwidth, flag;
 	const char *s;
 	char *t;
 	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
@@ -393,11 +395,12 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	char * gr_string;
 	Dictionary dict = linkage->sent->dict;
 	Parse_Options opts = linkage->opts;
-	int x_screen_width = parse_options_get_screen_width(opts);
+	size_t x_screen_width = parse_options_get_screen_width(opts);
 	int N_words_to_print;
 
 	char picture[MAX_HEIGHT][MAX_LINE];
 	char xpicture[MAX_HEIGHT][MAX_LINE];
+	size_t start[MAX_HEIGHT];
 
 
 	string = string_new();
@@ -589,43 +592,59 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	/* we've built the picture, now print it out */
 	
 	if (print_word_0) i = 0; else i = 1;
-	k = 0;
+
+	/* start locations, for each row.  These may vary, due to different
+	 * utf8 character widths */
+	for (row = top_row; row >= 0; row--)
+		start[row] = 0;
 	pctx->N_rows = 0;
 	pctx->row_starts[pctx->N_rows] = 0;
 	pctx->N_rows++;
 	while (i < N_words_to_print)
 	{
 		append_string(string, "\n");
-		width = 0;
 		uwidth = 0;
 		do {
-			width += strlen(linkage->word[i]) + 1;
 			uwidth += utf8_strlen(linkage->word[i]) + 1;
 			i++;
 		} while ((i < N_words_to_print) &&
 			  (uwidth + utf8_strlen(linkage->word[i]) + 1 < x_screen_width));
 
+printf("duuude OK, mbwid=%d\n", uwidth);
 		pctx->row_starts[pctx->N_rows] = i - (!print_word_0);    /* PS junk */
-		if (i<N_words_to_print) pctx->N_rows++;     /* same */
+		if (i < N_words_to_print) pctx->N_rows++;     /* same */
 
 		for (row = top_row; row >= 0; row--)
 		{
+			int mbcnt = 0;
 			flag = TRUE;
-			for (j = k; flag && (j < k + width) && (xpicture[row][j] != '\0'); j++)
+			k = start[row];
+			for (j = k; flag && (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
 			{
+				size_t n = utf8_next(&xpicture[row][j]);
 				flag = flag && (xpicture[row][j] == ' ');
+				j += n;
+				mbcnt ++;
 			}
+         start[row] = j;
 			if (!flag)
 			{
-				for (j = k; (j < k + width) && (xpicture[row][j] != '\0'); j++)
+				mbcnt = 0;
+				for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
 				{
-					append_string(string, "%c", xpicture[row][j]);
+					/* Copy exactly one multi-byte character to buf */
+					char buf[10];
+					size_t n = utf8_next(&xpicture[row][j]);
+					strncpy(buf, &xpicture[row][j], n); 
+					buf[n] = 0;
+					append_string(string, "%s", buf);
+					j += n;
+					mbcnt ++;
 				}
 				append_string(string, "\n");
 			}
 		}
 		append_string(string, "\n");
-		k += width;
 	}
 	gr_string = string_copy(string);
 	string_delete(string);

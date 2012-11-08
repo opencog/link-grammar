@@ -197,7 +197,7 @@ static void warning(Dictionary dict, const char * s)
 /**
  * This gets the next character from the input, eliminating comments.
  * If we're in quote mode, it does not consider the % character for
- * comments.
+ * comments.   Note that the returned chacracter is a wide character!
  */
 static wchar_t get_character(Dictionary dict, int quote_mode)
 {

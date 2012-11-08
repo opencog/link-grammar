@@ -146,12 +146,32 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define GNUC_MALLOC
 #endif
 
+/**
+ * Return the length, in codepoints/glyphs, of the utf8-encoded 
+ * string.  This is needed when printing strings in a formatted way.
+ */
 static inline size_t utf8_strlen(const char *s)
 {
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
 
 	return mbsrtowcs(NULL, &s, 0, &mbss);
+}
+
+/**
+ * Return the distance, in bytes, to the next character, in this
+ * input utf8-encoded string
+ */
+static inline size_t utf8_next(const char *s)
+{
+	int n = 0;
+	while (0 != *s)
+	{
+		if ((0x80 <= ((unsigned char) *s)) && 
+        (((unsigned char) *s) < 0xc0)) { s++; n++; }
+		else return n+1;
+	}
+	return n;
 }
 
 static inline int is_utf8_upper(const char *s)
