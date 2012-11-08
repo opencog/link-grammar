@@ -374,8 +374,9 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	 * found in the dict.  Next, the comma is removed, and "50s" is still
 	 * not in the dict ... the trick was that the comma should be 
 	 * right-stripped first, then the possible quotes. 
-	 * More generally, link-grammar does not support multiple possible
-	 * tokenizations.
+	 * More generally, the current implementation of the link-parser algo
+	 * does not support multiple alternative tokenizations; the viterbi
+	 * parser, under development, should be able to do better.
 	 */
 	for (;;)
 	{
@@ -507,7 +508,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	{
 		if (boolean_reg_dict_lookup(sent->dict, word))
 			word_is_in_dict = TRUE;
-		else if (is_first_word && downcase_is_in_dict (sent->dict,word))
+		else if (is_first_word && downcase_is_in_dict (sent->dict, word))
 			word_is_in_dict = TRUE;
 	}
 
@@ -559,7 +560,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 					{
 						if (strncmp(w, prefix[j], strlen(prefix[j])) == 0)
 						{
-							int sz = MIN((wend-len)-(w+strlen(prefix[j])), MAX_WORD);
+							int sz = MIN((wend - len) - (w + strlen(prefix[j])), MAX_WORD);
 							strncpy(newword, w+strlen(prefix[j]), sz);
 							newword[sz] = '\0';
 							if (boolean_reg_dict_lookup(sent->dict, newword))
@@ -618,13 +619,14 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		n = spellcheck_suggest(sent->dict->spell_checker, &alternates, word);
 		for (j=0; j<n; j++)
 		{
-			/* Uhh, XXX this is not utf8 safe! */
+			/* Uhh, XXX this is not utf8 safe! ?? */
 			sp = strchr(alternates[j], ' ');
 			if (sp) break;
 		}
 
 		if (sp) issued = TRUE;
 
+		/* It may be three run-on words or more. Loop over all */
 		wp = alternates[j];
 		while (sp)
 		{
