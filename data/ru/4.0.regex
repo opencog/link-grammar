@@ -40,3 +40,11 @@
 % is non-empty.
 % ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 
+% Other proper nouns.
+% We demand that these end with an alphanumeric, i.e. explicitly
+% reject punctuation. We don't want this regex to "swallow" any trailing
+% commas, colons, or periods/question-marks at the end of sentences.
+% In addition, this must not swallow words ending in 's 'll etc.
+% (... any affix, for that matter ...) and so no embedded apostrophe
+CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
+
