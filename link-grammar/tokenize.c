@@ -1016,6 +1016,10 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 							s, is_entity(sent->dict,s), 
 							is_common_entity(sent->dict,lc));
 					}
+
+					/* If we are here, then we want both upper and lower case
+					 * expressions. The upper-case ones were build above, so now
+					 * append the lower-case ones. */
 					e = build_word_expressions(sent->dict, lc);
 					sent->word[i].x =
 						catenate_X_nodes(sent->word[i].x, e);
@@ -1026,8 +1030,12 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 					{
 						printf("Info: First word: %s downcase only\n", lc);
 					}
+
+					/* If we are here, then we want the lower-case 
+					 * expressions only.  Erase the upper-case ones, built
+					 * previously up above. */
 					sent->word[i].string = lc;  /* lc already in sent->string-set */
-					e = build_word_expressions(sent->dict, s);
+					e = build_word_expressions(sent->dict, lc);
 					free_X_nodes(sent->word[i].x);
 					sent->word[i].x = e;
 				}
