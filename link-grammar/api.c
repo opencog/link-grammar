@@ -723,6 +723,9 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->length = 0;
 	sent->word = NULL;
 	sent->post_quote = NULL;
+	sent->pref.alternatives = NULL;
+	sent->stem.alternatives = NULL;
+	sent->suff.alternatives = NULL;
 	sent->num_linkages_found = 0;
 	sent->num_linkages_alloced = 0;
 	sent->num_linkages_post_processed = 0;

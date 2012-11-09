@@ -178,7 +178,7 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 	sent->word[len].x = NULL;
 	sent->word[len].d = NULL;
 
-	sent->word[len].alternatives = (const char **) malloc(2*sizeof(char *));
+	sent->word[len].alternatives = (const char **) malloc(2*sizeof(const char *));
 	sent->word[len].alternatives[0] = string_set_add(s, sent->string_set);
 	sent->word[len].alternatives[1] = NULL;
 
@@ -189,6 +189,171 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 	else sent->word[len].firstupper = FALSE;
 
 	sent->length++;
+}
+
+static size_t altlen(const char **arr)
+{
+	size_t len = 0;
+	if (arr)
+		while (arr[len] != NULL) len++;
+	return len;
+}
+
+static const char ** resize_alts(const char **arr, size_t len)
+{
+	arr = realloc(arr, (len+2) * sizeof(const char *));
+	arr[len+1] = NULL;
+	return arr;
+}
+
+/**
+ * Accumulate different word-stemming possibilities 
+ */
+static void add_suffix_alternatives(Sentence sent,
+                                   const char * stem, const char * suffix)
+{
+	char buff[MAX_WORD+1];
+	size_t sz;
+	
+	size_t stemlen = altlen(sent->stem.alternatives);
+	size_t sufflen = altlen(sent->suff.alternatives);
+
+printf("duuude adding these %s %s\n", stem, suffix);
+	sent->stem.alternatives = resize_alts(sent->stem.alternatives, stemlen);
+	sent->stem.alternatives[stemlen] = string_set_add(stem, sent->string_set);
+
+	if (NULL == suffix)
+		return;
+
+	sent->suff.alternatives = resize_alts(sent->suff.alternatives, sufflen);
+
+	/* Add an equals-sign to the suffix.  This is needed to distinguish
+	 * suffixes that were stripped off from ordinary words that just
+	 * happen to be the same as the suffix. Kind-of a weird hack,
+	 * but I'm not sure what else to do... */
+	sz = MIN(strlen(suffix) + 2, MAX_WORD);
+	buff[0] = '=';
+	strncpy(&buff[1], suffix, sz);
+	buff[sz] = 0;
+
+	sent->suff.alternatives[sufflen] = string_set_add(buff, sent->string_set);
+}
+
+static void add_presuff_alternatives(Sentence sent, const char *prefix,
+                                   const char * stem, const char * suffix)
+{
+	char buff[MAX_WORD+1];
+	size_t sz;
+
+	size_t preflen = altlen(sent->pref.alternatives);
+	size_t stemlen = altlen(sent->stem.alternatives);
+	size_t sufflen = altlen(sent->suff.alternatives);
+
+	sent->pref.alternatives = resize_alts(sent->pref.alternatives, preflen);
+	sent->pref.alternatives[preflen] = string_set_add(prefix, sent->string_set);
+
+	sent->stem.alternatives = resize_alts(sent->stem.alternatives, stemlen);
+	sent->stem.alternatives[stemlen] = string_set_add(stem, sent->string_set);
+
+	if (NULL == suffix)
+		return;
+
+	sent->suff.alternatives = resize_alts(sent->suff.alternatives, sufflen);
+
+	/* Add an equals-sign to the suffix.  This is needed to distinguish
+	 * suffixes that were stripped off from ordinary words that just
+	 * happen to be the same as the suffix. Kind-of a weird hack,
+	 * but I'm not sure what else to do... */
+	sz = MIN(strlen(suffix) + 2, MAX_WORD);
+	buff[0] = '=';
+	strncpy(&buff[1], suffix, sz);
+	buff[sz] = 0;
+
+	sent->suff.alternatives[sufflen] = string_set_add(buff, sent->string_set);
+}
+
+/**
+ * Same as issue_sentence_word, except that here, we issue multiple
+ * alternative prefix-stem-suffix possibilities. Up to three "words"
+ * may be issued.
+ */
+static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
+{
+	Boolean issued = FALSE;
+	size_t len = sent->length;
+	size_t preflen = altlen(sent->pref.alternatives);
+	size_t stemlen = altlen(sent->stem.alternatives);
+	size_t sufflen = altlen(sent->suff.alternatives);
+
+	if (preflen)
+	{
+		size_t i;
+
+		sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+		sent->post_quote[len] = quote_found;
+
+		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+		sent->word[len].x = NULL;
+		sent->word[len].d = NULL;
+
+		sent->word[len].alternatives = sent->pref.alternatives;
+		sent->pref.alternatives = NULL;
+
+		sent->word[len].firstupper = FALSE;
+		for(i=0; NULL != sent->pref.alternatives[i]; i++) {
+			const char *s = sent->pref.alternatives[i];
+		   if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
+		}
+
+		len++;
+		issued = TRUE;
+	}
+
+	if (stemlen)
+	{
+		sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+		sent->post_quote[len] = preflen ? FALSE : quote_found;
+
+		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+		sent->word[len].x = NULL;
+		sent->word[len].d = NULL;
+
+		sent->word[len].alternatives = sent->stem.alternatives;
+		sent->stem.alternatives = NULL;
+
+		sent->word[len].firstupper = FALSE;
+		if (0 == preflen)
+		{
+			size_t i;
+			for (i = 0; NULL != sent->stem.alternatives[i]; i++) {
+				const char *s = sent->stem.alternatives[i];
+		   	if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
+			}
+		}
+
+		len++;
+		issued = TRUE;
+	}
+
+	if (sufflen)
+	{
+		sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+		sent->post_quote[len] = FALSE;
+
+		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+		sent->word[len].x = NULL;
+		sent->word[len].d = NULL;
+
+		sent->word[len].alternatives = sent->suff.alternatives;
+		sent->suff.alternatives = NULL;
+
+		sent->word[len].firstupper = FALSE;
+		len++;
+		issued = TRUE;
+	}
+
+	sent->length = len;
+	return issued;
 }
 
 /*
@@ -272,7 +437,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	int i, j, len;
 	int r_strippable=0, l_strippable=0, u_strippable=0;
 	int s_strippable=0, p_strippable=0;
-	int  n_r_stripped, s_stripped;
+	int  n_r_stripped;
 	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
 
@@ -447,7 +612,6 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	/* Now we strip off suffixes...w points to the remaining word, 
 	 * "wend" to the end of the word. */
 
-	s_stripped = -1;
 	sz = MIN(wend-w, MAX_WORD);
 	strncpy(word, w, sz);
 	word[sz] = '\0';
@@ -462,15 +626,12 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	if (FALSE == word_is_in_dict)
 	{
 		j = 0;
-		/* for (i=0; i <= s_strippable; i++)
-		 * XXX Above uses some crazy logic, for zero-length suffixes,
-		 * but it makes no sense to me.  This needs fixing! FIXME
-		 */
-		for (i=0; i < s_strippable; i++)
+		for (i=0; i <= s_strippable; i++)
 		{
 			Boolean s_ok = FALSE;
 			/* Go through once for each suffix; then go through one 
-			 * final time for the no-suffix case */
+			 * final time for the no-suffix case (i.e. to look for
+			 * prefixes only, without suffixes.) */
 			if (i < s_strippable)
 			{
 				len = strlen(suffix[i]);
@@ -494,13 +655,12 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 				{
 					if ((verbosity>1) && (i < s_strippable))
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
-					s_stripped = i;
 					wend -= len;
 					sz = MIN(wend-w, MAX_WORD);
 					strncpy(word, w, sz);
 					word[sz] = '\0';
 					word_is_in_dict = TRUE;
-					break;
+					add_suffix_alternatives(sent, newword, suffix[i]);
 				}
 
 				/* If the remainder isn't in the dictionary, 
@@ -519,15 +679,13 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 								if ((verbosity>1) && (i < s_strippable))
 									printf("Splitting word into three: %s-%s-%s\n",
 										prefix[j], newword, suffix[i]);
-								issue_sentence_word(sent, prefix[j], quote_found);
-								if (i < s_strippable) s_stripped = i;
 								wend -= len;
 								w += strlen(prefix[j]);
 								sz = MIN(wend-w, MAX_WORD);
 								strncpy(word, w, sz);
 								word[sz] = '\0';
 								word_is_in_dict = TRUE;
-								break;
+								add_presuff_alternatives(sent, prefix[j], newword, suffix[i]);
 							}
 						}
 					}
@@ -593,27 +751,14 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 #endif /* HAVE_HUNSPELL */
 
 	if (FALSE == issued)
-	{
+		issued = issue_alternatives(sent, quote_found);
+
+	if (FALSE == issued)
 		issue_sentence_word(sent, word, quote_found);
-	}
 
-	if (s_stripped != -1)
+	for (i = n_r_stripped - 1; i >= 0; i--)
 	{
-		/* Add an equals-sign to the suffix.  This is needed to distinguish
-		 * suffixes that were stripped off from ordinary words that just
-		 * happen to be the same as the suffix. Kind-of a weird hack,
-		 * but I'm not sure what else to do... */
-		size_t sz = MIN(strlen(suffix[s_stripped]) + 2, MAX_WORD);
-		char buff[MAX_WORD+1];
-		buff[0] = '=';
-		strncpy(&buff[1], suffix[s_stripped], sz);
-		buff[sz] = 0;
-		issue_sentence_word(sent, buff, quote_found);
-	}
-
-	for (i = n_r_stripped-1; i>=0; i--)
-	{
-		issue_sentence_word(sent, r_stripped[i], quote_found);
+		issue_sentence_word(sent, r_stripped[i], FALSE);
 	}
 
 	return TRUE;
