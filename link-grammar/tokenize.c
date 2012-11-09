@@ -244,17 +244,6 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-static Boolean boolean_reg_dict_lookup(Dictionary dict, const char * word)
-{
-	const char * regex_name;
-	if (boolean_dictionary_lookup(dict, word)) return TRUE;
-
-	regex_name = match_regex(dict, word);
-	if (NULL == regex_name) return FALSE;
-
-	return boolean_dictionary_lookup(dict, regex_name);
-}
-
 static Boolean downcase_is_in_dict(Dictionary dict, char * word)
 {
 	int i;
@@ -265,6 +254,7 @@ static Boolean downcase_is_in_dict(Dictionary dict, char * word)
 	int nbl, nbh;
 	mbstate_t mbs, mbss;
 
+	/* We already checked preciously; just return false */
 	if (!is_utf8_upper(word)) return FALSE;
 
 	memset(&mbs, 0, sizeof(mbs));
@@ -283,10 +273,39 @@ static Boolean downcase_is_in_dict(Dictionary dict, char * word)
 	for (i=0; i<nbl; i++) { save[i] = word[i]; word[i] = low[i]; }
 
 	/* Look it up, then restore old value */
-	rc = boolean_reg_dict_lookup(dict, word);
+	rc = boolean_dictionary_lookup(dict, word);
 	for (i=0; i<nbh; i++) { word[i] = save[i]; }
 
 	return rc; 
+}
+
+static Boolean find_word_in_dict(Dictionary dict, char * word, Boolean is_first_word)
+{
+	const char * regex_name;
+
+	/* We want to do the non-regex first, since the CAPITALIZED_WORDS
+	 * regex will match upper-case words, which wrecks teh first-word
+	 * logic. */
+	if (boolean_dictionary_lookup (dict, word))
+		return TRUE;
+	if (is_first_word && downcase_is_in_dict (dict, word))
+		return TRUE;
+
+	regex_name = match_regex(dict, word);
+	if (NULL == regex_name) return FALSE;
+
+	return boolean_dictionary_lookup(dict, regex_name);
+}
+
+static Boolean boolean_reg_dict_lookup(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	if (boolean_dictionary_lookup(dict, word)) return TRUE;
+
+	regex_name = match_regex(dict, word);
+	if (NULL == regex_name) return FALSE;
+
+	return boolean_dictionary_lookup(dict, regex_name);
 }
 
 /**
@@ -305,7 +324,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	int r_strippable=0, l_strippable=0, u_strippable=0;
 	int s_strippable=0, p_strippable=0;
 	int  n_r_stripped, s_stripped;
-	Boolean word_is_in_dict, s_ok;
+	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
 
 	int found_number = 0;
@@ -328,12 +347,9 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	sz = MIN(wend-w, MAX_WORD);
 	strncpy(word, w, sz);
 	word[sz] = '\0';
-	word_is_in_dict = FALSE;
 
-	if (boolean_reg_dict_lookup(sent->dict, word))
-		word_is_in_dict = TRUE;
-	else if (is_first_word && downcase_is_in_dict (sent->dict,word))
-		word_is_in_dict = TRUE;
+	/* The simplest case: no affixes, suffixes, etc. */
+	word_is_in_dict = find_word_in_dict (sent->dict, word, is_first_word);
 
 	if (word_is_in_dict)
 	{
@@ -406,14 +422,8 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
-		if (boolean_reg_dict_lookup(sent->dict, word))
-		{
-			word_is_in_dict = TRUE;
-			break;
-		}
-
-		/* This could happen if it's a word after a colon, also! */
-		if (is_first_word && downcase_is_in_dict (sent->dict, word))
+		/* Note: is_first_word can be true, if it's a word after a colon, also! */
+		if (find_word_in_dict(sent->dict, word, is_first_word))
 		{
 			word_is_in_dict = TRUE;
 			break;
@@ -494,21 +504,23 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	strncpy(word, w, sz);
 	word[sz] = '\0';
 
-	/* Umm, double-check, if need be ... !?? */
+	/* Umm, double-check, if need be ... !??  Why? */
 	if (FALSE == word_is_in_dict)
 	{
-		if (boolean_reg_dict_lookup(sent->dict, word))
-			word_is_in_dict = TRUE;
-		else if (is_first_word && downcase_is_in_dict (sent->dict, word))
-			word_is_in_dict = TRUE;
+		word_is_in_dict = find_word_in_dict(sent->dict, word, is_first_word);
 	}
 
+	/* OK, now try to strip suffixes. */
 	if (FALSE == word_is_in_dict)
 	{
-		j=0;
-		for (i=0; i <= s_strippable; i++)
+		j = 0;
+		/* for (i=0; i <= s_strippable; i++)
+		 * XXX Above uses some crazy logic, for zero-length suffixes,
+		 * but it makes no sense to me.  This needs fixing! FIXME
+		 */
+		for (i=0; i < s_strippable; i++)
 		{
-			s_ok = FALSE;
+			Boolean s_ok = FALSE;
 			/* Go through once for each suffix; then go through one 
 			 * final time for the no-suffix case */
 			if (i < s_strippable)
