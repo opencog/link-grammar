@@ -244,63 +244,10 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-static Boolean downcase_is_in_dict(Dictionary dict, char * word)
-{
-	int i;
-	Boolean rc;
-	char low[MB_LEN_MAX];
-	char save[MB_LEN_MAX];
-	wchar_t c;
-	int nbl, nbh;
-	mbstate_t mbs, mbss;
-
-	/* We already checked preciously; just return false */
-	if (!is_utf8_upper(word)) return FALSE;
-
-	memset(&mbs, 0, sizeof(mbs));
-	memset(&mbss, 0, sizeof(mbss));
-
-	nbh = mbrtowc (&c, word, MB_CUR_MAX, &mbs);
-	c = towlower(c);
-	nbl = wctomb_check(low, c, &mbss);
-	if (nbh != nbl)
-	{
-		prt_error("Warning: can't downcase multi-byte string: %s\n", word);
-		return FALSE;
-	}
-
-	/* Downcase */
-	for (i=0; i<nbl; i++) { save[i] = word[i]; word[i] = low[i]; }
-
-	/* Look it up, then restore old value */
-	rc = boolean_dictionary_lookup(dict, word);
-	for (i=0; i<nbh; i++) { word[i] = save[i]; }
-
-	return rc; 
-}
-
-static Boolean find_word_in_dict(Dictionary dict, char * word, Boolean is_first_word)
+static Boolean find_word_in_dict(Dictionary dict, const char * word)
 {
 	const char * regex_name;
-
-	/* We want to do the non-regex first, since the CAPITALIZED_WORDS
-	 * regex will match upper-case words, which wrecks teh first-word
-	 * logic. */
-	if (boolean_dictionary_lookup (dict, word))
-		return TRUE;
-	if (is_first_word && downcase_is_in_dict (dict, word))
-		return TRUE;
-
-	regex_name = match_regex(dict, word);
-	if (NULL == regex_name) return FALSE;
-
-	return boolean_dictionary_lookup(dict, regex_name);
-}
-
-static Boolean boolean_reg_dict_lookup(Dictionary dict, const char * word)
-{
-	const char * regex_name;
-	if (boolean_dictionary_lookup(dict, word)) return TRUE;
+	if (boolean_dictionary_lookup (dict, word)) return TRUE;
 
 	regex_name = match_regex(dict, word);
 	if (NULL == regex_name) return FALSE;
@@ -317,7 +264,7 @@ static Boolean boolean_reg_dict_lookup(Dictionary dict, const char * word)
  */
 static Boolean separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
-                         Boolean is_first_word, Boolean quote_found)
+                         Boolean quote_found)
 {
 	size_t sz;
 	int i, j, len;
@@ -349,7 +296,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	word[sz] = '\0';
 
 	/* The simplest case: no affixes, suffixes, etc. */
-	word_is_in_dict = find_word_in_dict (sent->dict, word, is_first_word);
+	word_is_in_dict = find_word_in_dict (sent->dict, word);
 
 	if (word_is_in_dict)
 	{
@@ -422,8 +369,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
-		/* Note: is_first_word can be true, if it's a word after a colon, also! */
-		if (find_word_in_dict(sent->dict, word, is_first_word))
+		if (find_word_in_dict(sent->dict, word))
 		{
 			word_is_in_dict = TRUE;
 			break;
@@ -507,7 +453,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	/* Umm, double-check, if need be ... !??  Why? */
 	if (FALSE == word_is_in_dict)
 	{
-		word_is_in_dict = find_word_in_dict(sent->dict, word, is_first_word);
+		word_is_in_dict = find_word_in_dict(sent->dict, word);
 	}
 
 	/* OK, now try to strip suffixes. */
@@ -542,7 +488,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 
 				/* Check if the remainder is in the dictionary;
 				 * for the no-suffix case, it won't be */
-				if (boolean_reg_dict_lookup(sent->dict, newword))
+				if (find_word_in_dict(sent->dict, newword))
 				{
 					if ((verbosity>1) && (i < s_strippable))
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
@@ -566,7 +512,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 							int sz = MIN((wend - len) - (w + strlen(prefix[j])), MAX_WORD);
 							strncpy(newword, w+strlen(prefix[j]), sz);
 							newword[sz] = '\0';
-							if (boolean_reg_dict_lookup(sent->dict, newword))
+							if (find_word_in_dict(sent->dict, newword))
 							{
 								if ((verbosity>1) && (i < s_strippable))
 									printf("Splitting word into three: %s-%s-%s\n",
@@ -680,7 +626,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 Boolean separate_sentence(Sentence sent, Parse_Options opts)
 {
 	const char *t;
-	Boolean is_first, quote_found;
+	Boolean quote_found;
 	Dictionary dict = sent->dict;
 	mbstate_t mbs;
 	const char * s = sent->orig_sentence;
@@ -693,7 +639,6 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 	/* Reset the multibyte shift state to the initial state */
 	memset(&mbs, 0, sizeof(mbs));
 
-	is_first = TRUE;
 	for(;;) 
 	{
 		int isq;
@@ -732,8 +677,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 			if (0 > nb) goto failure;
 		}
 
-		if (!separate_word(sent, opts, s, t, is_first, quote_found)) return FALSE;
-		is_first = FALSE;
+		if (!separate_word(sent, opts, s, t, quote_found)) return FALSE;
 		s = t;
 		if (*s == '\0') break;
 	}
@@ -843,7 +787,7 @@ static void guess_misspelled_word(Sentence sent, int i, const char * s)
 	n = spellcheck_suggest(dict->spell_checker, &alternates, s);
 	for (j=0; j<n; j++)
 	{
-		if (boolean_reg_dict_lookup(sent->dict, alternates[j]))
+		if (find_word_in_dict(sent->dict, alternates[j]))
 		{
 			X_node *x = build_word_expressions(sent->dict, alternates[j]);
 			head = catenate_X_nodes(x, head);
@@ -1065,7 +1009,7 @@ Boolean sentence_in_dictionary(Sentence sent)
 	for (w=0; w<sent->length; w++)
 	{
 		s = sent->word[w].string;
-		if (!boolean_reg_dict_lookup(dict, s))
+		if (!find_word_in_dict(dict, s))
 		{
 			if (ok_so_far)
 			{
