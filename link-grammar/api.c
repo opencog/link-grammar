@@ -801,11 +801,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	/* Look up each word in the dictionary, collect up all
 	 * plausible disjunct expressions for each word.
 	 */
-	if (!build_sentence_expressions(sent, opts))
-	{
-		sent->num_valid_linkages = 0;
-		return -3;
-	}
+	build_sentence_expressions(sent, opts);
 
 	return 0;
 }

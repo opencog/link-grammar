@@ -118,7 +118,7 @@ static Boolean is_quote(wchar_t wc)
  * The ":" is included here so we allow "10:30" to be a number.
  * We also allow U+00A0 "no-break space"
  */
-static int is_number(const char * s)
+static Boolean is_number(const char * s)
 {
 	mbstate_t mbs;
 	int nb = 1;
@@ -143,7 +143,7 @@ static int is_number(const char * s)
 /**
  * Returns true if the word contains digits. 
  */
-static int contains_digits(const char * s)
+static Boolean contains_digits(const char * s)
 {
 	mbstate_t mbs;
 	int nb = 1;
@@ -244,7 +244,7 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-static int boolean_reg_dict_lookup(Dictionary dict, const char * word)
+static Boolean boolean_reg_dict_lookup(Dictionary dict, const char * word)
 {
 	const char * regex_name;
 	if (boolean_dictionary_lookup(dict, word)) return TRUE;
@@ -255,9 +255,10 @@ static int boolean_reg_dict_lookup(Dictionary dict, const char * word)
 	return boolean_dictionary_lookup(dict, regex_name);
 }
 
-static int downcase_is_in_dict(Dictionary dict, char * word)
+static Boolean downcase_is_in_dict(Dictionary dict, char * word)
 {
-	int i, rc;
+	int i;
+	Boolean rc;
 	char low[MB_LEN_MAX];
 	char save[MB_LEN_MAX];
 	wchar_t c;
@@ -295,7 +296,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
  * parts.  The process is described above.  Returns TRUE if OK, FALSE if
  * too many punctuation marks or other separation error.
  */
-static int separate_word(Sentence sent, Parse_Options opts,
+static Boolean separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
                          Boolean is_first_word, Boolean quote_found)
 {
@@ -304,7 +305,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	int r_strippable=0, l_strippable=0, u_strippable=0;
 	int s_strippable=0, p_strippable=0;
 	int  n_r_stripped, s_stripped;
-	int word_is_in_dict, s_ok;
+	Boolean word_is_in_dict, s_ok;
 	Boolean issued = FALSE;
 
 	int found_number = 0;
@@ -507,7 +508,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		j=0;
 		for (i=0; i <= s_strippable; i++)
 		{
-			s_ok = 0;
+			s_ok = FALSE;
 			/* Go through once for each suffix; then go through one 
 			 * final time for the no-suffix case */
 			if (i < s_strippable)
@@ -516,7 +517,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 				/* The remaining w is too short for a possible match */
 				if ((wend-w) < len) continue;
-				if (strncmp(wend-len, suffix[i], len) == 0) s_ok=1;
+				if (strncmp(wend-len, suffix[i], len) == 0) s_ok = TRUE;
 			}
 			else
 				len = 0;
@@ -664,7 +665,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
  * the sent->word[] array.  Returns TRUE if all is well, FALSE otherwise.
  * Quote marks are treated just like blanks.
  */
-int separate_sentence(Sentence sent, Parse_Options opts)
+Boolean separate_sentence(Sentence sent, Parse_Options opts)
 {
 	const char *t;
 	Boolean is_first, quote_found;
@@ -728,7 +729,8 @@ int separate_sentence(Sentence sent, Parse_Options opts)
 	if (dict->right_wall_defined)
 		issue_sentence_word(sent, RIGHT_WALL_WORD, FALSE);
 
-	return (sent->length > dict->left_wall_defined + dict->right_wall_defined);
+	return (sent->length > (dict->left_wall_defined ? 1 : 0) +
+	       (dict->right_wall_defined ? 1 : 0));
 
 failure:
 	prt_error("Unable to process UTF8 input string in current locale %s\n",
@@ -893,7 +895,7 @@ static void guess_misspelled_word(Sentence sent, int i, const char * s)
  * word count bythis point.  The viterbi incremental parser won't have
  * this bug.
  */
-int build_sentence_expressions(Sentence sent, Parse_Options opts)
+void build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	int i, first_word;  /* the index of the first word after the wall */
 	const char *s;
@@ -1020,8 +1022,6 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 			}
 		}
 	}
-
-	return TRUE;
 }
 
 
@@ -1033,9 +1033,10 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
  *
  * This code is called only is the 'unkown-words' flag is set.
  */
-int sentence_in_dictionary(Sentence sent)
+Boolean sentence_in_dictionary(Sentence sent)
 {
-	int w, ok_so_far;
+	Boolean ok_so_far;
+	int w;
 	const char * s;
 	Dictionary dict = sent->dict;
 	char temp[1024];

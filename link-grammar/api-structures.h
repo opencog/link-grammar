@@ -117,17 +117,16 @@ struct Dictionary_s
 	const char *    name;
 	const char *    lang;
 
-	int             use_unknown_word;
-	int             unknown_word_defined;
+	Boolean         use_unknown_word;
+	Boolean         unknown_word_defined;
+	Boolean         left_wall_defined;
+	Boolean         right_wall_defined;
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker; /* spell checker handle */
 #if USE_CORPUS
 	Corpus *        corpus; /* Statistics database */
 #endif
-
-	int             left_wall_defined;
-	int             right_wall_defined;
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
@@ -144,7 +143,6 @@ struct Dictionary_s
 
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
-	int             andable_defined;
 	Connector_set * andable_connector_set;  /* NULL=everything is andable */
 	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */
 	int             max_cost;

@@ -749,19 +749,6 @@ void print_expression_sizes(Sentence sent)
 	printf("\n\n");
 }
 
-/**
- * this version just prints it on one line. 
- */
-void print_sentence(FILE *fp, Sentence sent, int w)
-{
-	int i;
-	if (sent->dict->left_wall_defined) i=1; else i=0;
-	for (; i<sent->length - sent->dict->right_wall_defined; i++) {
-		fprintf(fp, "%s ", sent->word[i].string);
-	}
-	fprintf(fp, "\n");
-}
-
 const char * trailer(int mode)
 {
 	static const char * trailer_string=
