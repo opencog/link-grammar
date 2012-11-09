@@ -218,7 +218,7 @@ struct Sentence_s
 	Dictionary  dict;           /* words are defined from this dictionary */
 	const char *orig_sentence;  /* Copy of original sentence */
 	int    length;              /* number of words */
-	Word   word[MAX_SENTENCE];  /* array of words after tokenization */
+	Word  *word;                /* array of words after tokenization */
 #ifdef USE_FAT_LINKAGES
 	char * is_conjunction;      /* Array of flags, one per word; set to
 	                               TRUE if conjunction, as defined by dictionary */
@@ -247,7 +247,7 @@ struct Sentence_s
 	And_data       and_data;    /* used to keep track of fat disjuncts */
 #endif /* USE_FAT_LINKAGES */
 	char  q_pruned_rules;       /* don't prune rules more than once in p.p. */
-	int   post_quote[MAX_SENTENCE]; /* Used only by tokenizer. */
+	Boolean   *post_quote;      /* Used only by tokenizer. */
 
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
 	count_context_t * count_ctxt; /* private state info used for counting */

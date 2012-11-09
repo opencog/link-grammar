@@ -10,9 +10,7 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
-void free_sentence_expressions(Sentence sent);
 #ifdef USE_FAT_LINKAGES
-void free_sentence_disjuncts(Sentence sent);
 void free_deletable(Sentence sent);
 void free_effective_dist(Sentence sent);
 void build_effective_dist(Sentence sent, int has_conjunction);

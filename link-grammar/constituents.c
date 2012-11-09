@@ -1529,7 +1529,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 
 			/* Now, if the first character of the word was
 			   originally uppercase, we put it back that way */
-			if (sent->word[w].firstupper == 1)
+			if (sent->word[w].firstupper)
 				upcase_utf8_str(s, s, MAX_WORD);
 			append_string(cs, "%s ", s);
 		}

@@ -45,14 +45,14 @@
  * names -- e.g. "Sun State Bank" -- "sun", "state" and "bank" are all 
  * common nouns.
  */
-static int is_common_entity(Dictionary dict, const char * str)
+static Boolean is_common_entity(Dictionary dict, const char * str)
 {
 	if (word_contains(dict, str, COMMON_ENTITY_MARKER) == 1)
 		return TRUE;
 	return FALSE;
 }
 
-static int is_entity(Dictionary dict, const char * str)
+static Boolean is_entity(Dictionary dict, const char * str)
 {
 	const char * regex_name;
 	if (word_contains(dict, str, ENTITY_MARKER) == 1)
@@ -73,7 +73,7 @@ static int is_entity(Dictionary dict, const char * str)
  * Basically, if word starts with upper-case latter, we assume
  * its a proper name, and that's that.
  */
-static int is_proper_name(const char * word)
+static Boolean is_proper_name(const char * word)
 {
 	return is_utf8_upper(word);
 }
@@ -104,7 +104,7 @@ static const wchar_t *list_of_quotes(void)
 /**
  * Return TRUE if the character is a quotation character.
  */
-static int is_quote(wchar_t wc)
+static Boolean is_quote(wchar_t wc)
 {
 	static const wchar_t *quotes = NULL;
 	if (NULL == quotes) quotes = list_of_quotes();
@@ -165,29 +165,28 @@ static int contains_digits(const char * s)
  * as a bona-fide word in the sentence.
  *
  * Do not issue the empty string.  
- * Return false if too many words or the word is too long. 
  */
-static int issue_sentence_word(Sentence sent, const char * s)
+static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_found)
 {
-	if (*s == '\0') return TRUE;
-	if (sent->length >= MAX_SENTENCE)
-	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Error, 
-		   "Error separating sentence. The sentence has too many words.\n");
-		return FALSE;
-	}
+	size_t len = sent->length;
+	if (*s == '\0') return;
 
-	sent->word[sent->length].string = string_set_add(s, sent->string_set);
+	sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+	sent->post_quote[len] = quote_found;
+
+	sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+	sent->word[len].x = NULL;
+	sent->word[len].d = NULL;
+
+	sent->word[len].string = string_set_add(s, sent->string_set);
 
 	/* Now we record whether the first character of the word is upper-case.
 	   (The first character may be made lower-case
 	   later, but we may want to get at the original version) */
-	if (is_utf8_upper(s)) sent->word[sent->length].firstupper=1;
-	else sent->word[sent->length].firstupper = 0;
+	if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
+	else sent->word[len].firstupper = FALSE;
+
 	sent->length++;
-	return TRUE;
 }
 
 /*
@@ -298,7 +297,7 @@ static int downcase_is_in_dict(Dictionary dict, char * word)
  */
 static int separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
-                         int is_first_word, int quote_found)
+                         Boolean is_first_word, Boolean quote_found)
 {
 	size_t sz;
 	int i, j, len;
@@ -306,7 +305,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 	int s_strippable=0, p_strippable=0;
 	int  n_r_stripped, s_stripped;
 	int word_is_in_dict, s_ok;
-	int issued = FALSE;
+	Boolean issued = FALSE;
 
 	int found_number = 0;
 	int n_r_stripped_save;
@@ -337,7 +336,8 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 	if (word_is_in_dict)
 	{
-		return issue_sentence_word(sent, word);
+		issue_sentence_word(sent, word, quote_found);
+		return TRUE;
 	}
 
 	/* Set up affix tables.  */
@@ -376,7 +376,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 			sz = strlen(strip_left[i]);
 			if (strncmp(w, strip_left[i], sz) == 0)
 			{
-				if (!issue_sentence_word(sent, strip_left[i])) return FALSE;
+				issue_sentence_word(sent, strip_left[i], quote_found);
 				w += sz;
 				break;
 			}
@@ -558,7 +558,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 								if ((verbosity>1) && (i < s_strippable))
 									printf("Splitting word into three: %s-%s-%s\n",
 										prefix[j], newword, suffix[i]);
-								if (!issue_sentence_word(sent, prefix[j])) return FALSE;
+								issue_sentence_word(sent, prefix[j], quote_found);
 								if (i < s_strippable) s_stripped = i;
 								wend -= len;
 								w += strlen(prefix[j]);
@@ -588,8 +588,6 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		n_r_stripped = 0;
 		word_is_in_dict = TRUE;
 	}
-
-	if (quote_found == TRUE) sent->post_quote[sent->length] = 1;
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	/* If the word is still not being found, then it might be 
@@ -621,12 +619,12 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		while (sp)
 		{
 			*sp = 0x0;
-			if (!issue_sentence_word(sent, wp)) return FALSE;
+			issue_sentence_word(sent, wp, quote_found);
 			wp = sp+1;
 			sp = strchr(wp, ' ');
 			if (NULL == sp)
 			{
-				if (!issue_sentence_word(sent, wp)) return FALSE;
+				issue_sentence_word(sent, wp, quote_found);
 			}
 		}
 		if (alternates) spellcheck_free_suggest(alternates, n);
@@ -635,7 +633,7 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 	if (FALSE == issued)
 	{
-		if (!issue_sentence_word(sent, word)) return FALSE;
+		issue_sentence_word(sent, word, quote_found);
 	}
 
 	if (s_stripped != -1)
@@ -649,12 +647,12 @@ static int separate_word(Sentence sent, Parse_Options opts,
 		buff[0] = '=';
 		strncpy(&buff[1], suffix[s_stripped], sz);
 		buff[sz] = 0;
-		if (!issue_sentence_word(sent, buff)) return FALSE;
+		issue_sentence_word(sent, buff, quote_found);
 	}
 
 	for (i = n_r_stripped-1; i>=0; i--)
 	{
-		if (!issue_sentence_word(sent, r_stripped[i])) return FALSE;
+		issue_sentence_word(sent, r_stripped[i], quote_found);
 	}
 
 	return TRUE;
@@ -669,16 +667,15 @@ static int separate_word(Sentence sent, Parse_Options opts,
 int separate_sentence(Sentence sent, Parse_Options opts)
 {
 	const char *t;
-	int is_first, quote_found;
+	Boolean is_first, quote_found;
 	Dictionary dict = sent->dict;
 	mbstate_t mbs;
 	const char * s = sent->orig_sentence;
 
-	memset(sent->post_quote, 0, MAX_SENTENCE*sizeof(int));
 	sent->length = 0;
 
 	if (dict->left_wall_defined)
-		if (!issue_sentence_word(sent, LEFT_WALL_WORD)) return FALSE;
+		issue_sentence_word(sent, LEFT_WALL_WORD, FALSE);
 
 	/* Reset the multibyte shift state to the initial state */
 	memset(&mbs, 0, sizeof(mbs));
@@ -729,7 +726,7 @@ int separate_sentence(Sentence sent, Parse_Options opts)
 	}
 
 	if (dict->right_wall_defined)
-		if (!issue_sentence_word(sent, RIGHT_WALL_WORD)) return FALSE;
+		issue_sentence_word(sent, RIGHT_WALL_WORD, FALSE);
 
 	return (sent->length > dict->left_wall_defined + dict->right_wall_defined);
 
@@ -955,7 +952,7 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 	{
 		if (! (i == first_word ||
 		      (i > 0 && strcmp(":", sent->word[i-1].string)==0) || 
-		       sent->post_quote[i] == 1)) continue;
+		       sent->post_quote[i])) continue;
 		s = sent->word[i].string;
 
 		/* If the lower-case version of this word is in the dictionary, 

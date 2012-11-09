@@ -17,6 +17,7 @@
 #include <string.h>
 #include "api.h"
 #include "disjuncts.h"
+#include "disjunct-utils.h"
 #include "error.h"
 #include "preparation.h"
 #include "read-regex.h"
@@ -720,6 +721,8 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	memset(sent, 0, sizeof(struct Sentence_s));
 	sent->dict = dict;
 	sent->length = 0;
+	sent->word = NULL;
+	sent->post_quote = NULL;
 	sent->num_linkages_found = 0;
 	sent->num_linkages_alloced = 0;
 	sent->num_linkages_post_processed = 0;
@@ -765,7 +768,6 @@ static void set_is_conjunction(Sentence sent)
 
 int sentence_split(Sentence sent, Parse_Options opts)
 {
-	int i;
 	Dictionary dict = sent->dict;
 
 	/* Cleanup stuff previously allocated. This is because some free 
@@ -789,13 +791,6 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	initialize_conjunction_tables(sent);
 #endif /* USE_FAT_LINKAGES */
 
-	for (i=0; i<sent->length; i++)
-	{
-		/* in case we free these before they set to anything else */
-		sent->word[i].x = NULL;
-		sent->word[i].d = NULL;
-	}
-
 	if (!(dict->unknown_word_defined && dict->use_unknown_word))
 	{
 		if (!sentence_in_dictionary(sent)) {
@@ -815,14 +810,27 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	return 0;
 }
 
+static void free_sentence_words(Sentence sent)
+{
+	int i;
+	for (i = 0; i < sent->length; i++)
+	{
+		free_X_nodes(sent->word[i].x);
+		free_disjuncts(sent->word[i].d);
+	}
+	free(sent->word);
+	sent->word = NULL;
+	free(sent->post_quote);
+}
+
 void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
 	sat_sentence_delete(sent);
 #ifdef USE_FAT_LINKAGES
-	free_sentence_disjuncts(sent);
+	free_AND_tables(sent);
 #endif /* USE_FAT_LINKAGES */
-	free_sentence_expressions(sent);
+	free_sentence_words(sent);
 	string_set_delete(sent->string_set);
 	if (sent->parse_info) free_parse_info(sent->parse_info);
 	free_post_processing(sent);
@@ -849,12 +857,14 @@ int sentence_length(Sentence sent)
 const char * sentence_get_word(Sentence sent, int index)
 {
 	if (!sent) return NULL;
+	if (index >= sent->length) return NULL;
 	return sent->word[index].string;
 }
 
 const char * sentence_get_nth_word(Sentence sent, int index)
 {
 	if (!sent) return NULL;
+	if (index >= sent->length) return NULL;
 	return sent->word[index].string;
 }
 
@@ -978,6 +988,17 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	free_fast_matcher(sent);
 }
 
+static void free_sentence_disjuncts(Sentence sent)
+{
+	int i;
+
+	for (i = 0; i < sent->length; ++i)
+	{
+		free_disjuncts(sent->word[i].d);
+		sent->word[i].d = NULL;
+	}
+}
+
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;
@@ -1003,8 +1024,9 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 
 	/* Initialize/free any leftover garbage */
+	free_sentence_disjuncts(sent);  /* Is this really needed ??? */
 #ifdef USE_FAT_LINKAGES
-	free_sentence_disjuncts(sent);
+	if (sentence_contains_conjunction(sent)) free_AND_tables(sent);
 #endif /* USE_FAT_LINKAGES */
 	resources_reset_space(opts->resources);
 

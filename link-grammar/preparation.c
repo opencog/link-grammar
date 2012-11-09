@@ -272,15 +272,6 @@ static void set_connector_length_limits(Sentence sent, Parse_Options opts)
 	}
 }
 
-void free_sentence_expressions(Sentence sent)
-{
-  int i;
-  for (i=0; i<sent->length; i++) {
-	free_X_nodes(sent->word[i].x);
-  }
-}
-
-
 #ifdef USE_FAT_LINKAGES
 /**
  * Return true if the sentence contains a conjunction.  Assumes
@@ -303,16 +294,6 @@ int sentence_contains_conjunction(Sentence sent)
 	return FALSE;
 }
 
-void free_sentence_disjuncts(Sentence sent)
-{
-	int i;
-
-	for (i=0; i<sent->length; ++i) {
-		free_disjuncts(sent->word[i].d);
-		sent->word[i].d = NULL;
-	}
-	if (sentence_contains_conjunction(sent)) free_AND_tables(sent);
-}
 #else
 
 int sentence_contains_conjunction(Sentence sent)

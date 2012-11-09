@@ -336,6 +336,7 @@ static void free_LT(Sentence sent)
 
 void free_AND_tables(Sentence sent)
 {
+	if (!sentence_contains_conjunction(sent)) return;
 	free_LT(sent);
 	free_HT(sent);
 }
