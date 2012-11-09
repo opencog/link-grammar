@@ -346,14 +346,6 @@ struct List_o_links_struct
 #define GENTLE 1
 #define RUTHLESS 0
 
-typedef struct string_node_struct String_node;
-struct string_node_struct
-{
-    char * string;
-    String_node * next;
-    int size;
-};
-
 typedef struct Parse_choice_struct Parse_choice;
 
 struct Link_s
