@@ -650,7 +650,16 @@ static int separate_word(Sentence sent, Parse_Options opts,
 
 	if (s_stripped != -1)
 	{
-	  if (!issue_sentence_word(sent, suffix[s_stripped])) return FALSE;
+		/* Add an equals-sign to the suffix.  This is needed to distinguish
+		 * suffixes that were stripped off from ordinary words that just
+		 * happen to be the same as the suffix. Kind-of a weird hack,
+		 * but I'm not sure what else to do... */
+		size_t sz = MIN(strlen(suffix[s_stripped]) + 2, MAX_WORD);
+		char buff[MAX_WORD+1];
+		buff[0] = '=';
+		strncpy(&buff[1], suffix[s_stripped], sz);
+		buff[sz] = 0;
+		if (!issue_sentence_word(sent, buff)) return FALSE;
 	}
 
 	for (i = n_r_stripped-1; i>=0; i--)
