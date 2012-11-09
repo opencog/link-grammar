@@ -257,8 +257,6 @@ link_public_api(int)
      sentence_parse(Sentence sent, Parse_Options opts);
 link_public_api(int)
      sentence_length(Sentence sent);
-link_public_api(const char *)
-     sentence_get_word(Sentence sent, int wordnum);
 link_public_api(int)
      sentence_null_count(Sentence sent);
 link_public_api(int)
@@ -457,13 +455,19 @@ link_public_api(Dictionary)
      dictionary_create(const char * dict_name,
                        const char * pp_name,
                        const char * cons_name,
-                       const char * affix_name);
+                       const char * affix_name) GNUC_DEPRECATED;
 
 /* Both are deprecated, exported only for backwards-compat w/Java API. */
 link_public_api(int)
-     dictionary_is_past_tense_form(Dictionary dict, const char * str);
+     dictionary_is_past_tense_form(Dictionary dict, const char * str) GNUC_DEPRECATED;
 link_public_api(int)
-     dictionary_is_entity(Dictionary dict, const char * str);
+     dictionary_is_entity(Dictionary dict, const char * str) GNUC_DEPRECATED;
+
+/* For languages with regular prefix/suffix structure, this
+ * function returrns misleading information. Do not use it
+ * in new code! use linkage_get_word() instead! */
+link_public_api(const char *)
+     sentence_get_word(Sentence sent, int wordnum) GNUC_DEPRECATED;
 
 /* Identical to sentence_get_word()
  * XXX TBD: make this go away in Version 5.0. */

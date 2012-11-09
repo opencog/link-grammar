@@ -879,7 +879,9 @@ const char * sentence_get_word(Sentence sent, int index)
  */
 const char * sentence_get_nth_word(Sentence sent, int index)
 {
-	return sentence_get_word(sent, index);
+	if (!sent) return NULL;
+	if (index >= sent->length) return NULL;
+	return sent->word[index].alternatives[0];
 }
 
 int sentence_null_count(Sentence sent) {
