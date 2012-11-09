@@ -85,7 +85,7 @@ void append_string(String * string, const char *fmt, ...)
 	}
 }
 
-size_t append_utf8_char(String * string, char * mbs)
+size_t append_utf8_char(String * string, const char * mbs)
 {
 	/* Copy exactly one multi-byte character to buf */
 	char buf[10];

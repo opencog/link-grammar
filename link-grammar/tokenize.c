@@ -189,7 +189,7 @@ static int issue_sentence_word(Sentence sent, const char * s)
 		return FALSE;
 	}
 
-	strcpy(sent->word[sent->length].string, s);
+	sent->word[sent->length].string = string_set_add(s, sent->string_set);
 
 	/* Now we record whether the first character of the word is upper-case.
 	   (The first character may be made lower-case
@@ -784,7 +784,7 @@ static void tag_regex_string(Sentence sent, int i, const char * type)
  * to those of the unknown words
  * so "grok" becomes "grok[?].v" 
  */
-static void handle_unknown_word(Sentence sent, int i, char * s)
+static void handle_unknown_word(Sentence sent, int i, const char * s)
 {
 	char *t;
 	X_node *d;
@@ -813,7 +813,7 @@ static void handle_unknown_word(Sentence sent, int i, char * s)
  * If a word appears to be mis-spelled, then add alternate
  * spellings. Maybe one of those will do ... 
  */
-static void guess_misspelled_word(Sentence sent, int i, char * s)
+static void guess_misspelled_word(Sentence sent, int i, const char * s)
 {
 	Boolean spelling_ok;
 	char str[MAX_WORD+1];
@@ -910,7 +910,8 @@ static void guess_misspelled_word(Sentence sent, int i, char * s)
 int build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	int i, first_word;  /* the index of the first word after the wall */
-	char *s, temp_word[MAX_WORD+1];
+	const char *s;
+	char temp_word[MAX_WORD+1];
 	const char * regex_name;
 	X_node * e;
 	Dictionary dict = sent->dict;
@@ -1025,7 +1026,7 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 					{
 						printf("Info: First word: %s downcase only\n", lc);
 					}
-					safe_strcpy(s, lc, MAX_WORD);
+					sent->word[i].string = lc;  /* lc already in sent->string-set */
 					e = build_word_expressions(sent->dict, s);
 					free_X_nodes(sent->word[i].x);
 					sent->word[i].x = e;
@@ -1049,7 +1050,7 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 int sentence_in_dictionary(Sentence sent)
 {
 	int w, ok_so_far;
-	char * s;
+	const char * s;
 	Dictionary dict = sent->dict;
 	char temp[1024];
 

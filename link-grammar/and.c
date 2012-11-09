@@ -988,7 +988,7 @@ Disjunct * build_COMMA_disjunct_list(Sentence sent)
  * two ways.  I don't know an easy way to avoid this
  * the string is either "and", or "or", or "nor" at the moment.
  */
-Disjunct * build_AND_disjunct_list(Sentence sent, char * s)
+Disjunct * build_AND_disjunct_list(Sentence sent, const char * s)
 {
 	int lab;
 	Disjunct *d_list, *d1, *d3, *d, *d_copy;

@@ -202,7 +202,7 @@ struct X_node_struct
 
 struct Word_struct
 {
-    char string[MAX_WORD+1];
+    const char *string;
     X_node * x;      /* sentence starts out with these */
     Disjunct * d;    /* eventually these get generated */
     int firstupper;

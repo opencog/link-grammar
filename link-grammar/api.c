@@ -751,7 +751,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 static void set_is_conjunction(Sentence sent)
 {
 	int w;
-	char * s;
+	const char * s;
 	for (w=0; w<sent->length; w++) {
 		s = sent->word[w].string;
 		sent->is_conjunction[w] = 

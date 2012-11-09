@@ -17,7 +17,7 @@ link_private void       init_andable_hash_table(Dictionary dict);
 link_private void       free_andable_hash_table(Dictionary dict);
 link_private void       initialize_conjunction_tables(Sentence sent);
 link_private int        is_canonical_linkage(Sentence sent);
-link_private Disjunct * build_AND_disjunct_list(Sentence sent, char *);
+link_private Disjunct * build_AND_disjunct_list(Sentence sent, const char *);
 link_private Disjunct * build_COMMA_disjunct_list(Sentence sent);
 link_private Disjunct * explode_disjunct_list(Sentence sent, Disjunct *);
 link_private void       build_conjunction_tables(Sentence);
