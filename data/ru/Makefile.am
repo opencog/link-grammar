@@ -5,7 +5,6 @@ DICTS=					\
 	4.0.constituent-knowledge	\
 	4.0.dict			\
 	4.0.knowledge	\
-	4.0.morph	\
 	4.0.regex	\
 	stem.dict	\
 	morph.dict	\
