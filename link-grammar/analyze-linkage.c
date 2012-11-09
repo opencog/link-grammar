@@ -628,7 +628,7 @@ static void and_dfs_commas(analyze_context_t *actx, Sentence sent, int w)
 		/* we only consider UP or DOWN priority links here */
 		if (lol->dir == 1)
 		{
-			if (strcmp(sent->word[lol->word].string, ",") == 0)
+			if (strcmp(sent->word[lol->word].alternatives[0], ",") == 0)
 			{
 				/* pointing to a comma */
 				and_dfs_commas(actx, sent, lol->word);

@@ -187,7 +187,7 @@ static void construct_comma(Sentence sent)
 {
 	int w;
 	for (w=0; w<sent->length-1; w++) {
-		if ((strcmp(sent->word[w].string, ",")==0) && sent->is_conjunction[w+1]) {
+		if ((strcmp(sent->word[w].alternatives[0], ",")==0) && sent->is_conjunction[w+1]) {
 			sent->word[w].d = catenate_disjuncts(special_disjunct(COMMA_LABEL,'+',"", ","), sent->word[w].d);
 			sent->word[w+1].d = glom_comma_connector(sent->word[w+1].d);
 		}
@@ -200,7 +200,7 @@ static int sentence_contains(Sentence sent, const char * s)
 {
 	int w;
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, s) == 0) return TRUE;
+		if (strcmp(sent->word[w].alternatives[0], s) == 0) return TRUE;
 	}
 	return FALSE;
 }
@@ -211,6 +211,7 @@ static int sentence_contains(Sentence sent, const char * s)
    both...and..., not only...but...
 XXX FIXME: This routine uses "sentence_contains" to test for explicit 
 English words, and clearly this fails for other langauges!! XXX FIXME!
+Screw it. This code is obsolete, and will be removed before long.
 */
 
 static void construct_either(Sentence sent)
@@ -218,14 +219,14 @@ static void construct_either(Sentence sent)
 	int w;
 	if (!sentence_contains(sent, "either")) return;
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "either") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "either") != 0) continue;
 		sent->word[w].d = catenate_disjuncts(
 				   special_disjunct(EITHER_LABEL,'+',"", "either"),
 				   sent->word[w].d);
 	}
 
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "or") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "or") != 0) continue;
 		sent->word[w].d = glom_aux_connector
 						  (sent->word[w].d, EITHER_LABEL, FALSE);
 	}
@@ -248,14 +249,14 @@ static void construct_neither(Sentence sent)
 		return;
 	}
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "neither") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "neither") != 0) continue;
 		sent->word[w].d = catenate_disjuncts(
 				   special_disjunct(NEITHER_LABEL,'+',"", "neither"),
 				   sent->word[w].d);
 	}
 
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "nor") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "nor") != 0) continue;
 		sent->word[w].d = glom_aux_connector
 						  (sent->word[w].d, NEITHER_LABEL, TRUE);
 	}
@@ -269,11 +270,11 @@ static void construct_notonlybut(Sentence sent)
 		return;
 	}
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "not") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "not") != 0) continue;
 		sent->word[w].d = catenate_disjuncts(
 			 special_disjunct(NOT_LABEL,'+',"", "not"),
 			 sent->word[w].d);
-		if (w<sent->length-1 &&  strcmp(sent->word[w+1].string, "only")==0) {
+		if (w<sent->length-1 &&  strcmp(sent->word[w+1].alternatives[0], "only")==0) {
 			sent->word[w+1].d = catenate_disjuncts(
 						  special_disjunct(NOTONLY_LABEL, '-',"","only"),
 						  sent->word[w+1].d);
@@ -296,7 +297,7 @@ static void construct_notonlybut(Sentence sent)
 	  It's getting confused by the "not".)
 	 */
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "but") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "but") != 0) continue;
 		sent->word[w].d = glom_aux_connector
 						  (sent->word[w].d, NOT_LABEL, FALSE);
 		/* The above line use to have a TRUE in it */
@@ -308,14 +309,14 @@ static void construct_both(Sentence sent)
 	int w;
 	if (!sentence_contains(sent, "both")) return;
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "both") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "both") != 0) continue;
 		sent->word[w].d = catenate_disjuncts(
 				   special_disjunct(BOTH_LABEL,'+',"", "both"),
 				   sent->word[w].d);
 	}
 
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].string, "and") != 0) continue;
+		if (strcmp(sent->word[w].alternatives[0], "and") != 0) continue;
 		sent->word[w].d = glom_aux_connector(sent->word[w].d, BOTH_LABEL, FALSE);
 	}
 }

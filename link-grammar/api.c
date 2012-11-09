@@ -750,18 +750,28 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 #ifdef USE_FAT_LINKAGES
 /* XXX Extreme hack alert -- English-language words are used
  * completely naked in the C source code!!! FIXME !!!!
+ * That's OK, this code is deprecated/obsolete, and will be
+ * removed shortly.  We've added the Russian for now, but
+ * really, the Russian dictionary needs to be fixed to support
+ * conjunctions properly.
  */
 static void set_is_conjunction(Sentence sent)
 {
 	int w;
 	const char * s;
 	for (w=0; w<sent->length; w++) {
-		s = sent->word[w].string;
+		s = sent->word[w].alternatives[0];
 		sent->is_conjunction[w] = 
-			(strcmp(s, "and")==0) ||
-			(strcmp(s, "or" )==0) ||
-			(strcmp(s, "but")==0) ||
-			(strcmp(s, "nor")==0);
+			/* English, obviously ... */
+			(strcmp(s, "and") == 0) ||
+			(strcmp(s, "or" ) == 0) ||
+			(strcmp(s, "but") == 0) ||
+			(strcmp(s, "nor") == 0) ||
+			/* Russian */
+			(strcmp(s, "и") == 0) ||
+			(strcmp(s, "или") == 0) ||
+			(strcmp(s, "но") == 0) ||
+			(strcmp(s, "ни") == 0);
 	}
 }
 #endif /* USE_FAT_LINKAGES */
@@ -813,6 +823,7 @@ static void free_sentence_words(Sentence sent)
 	{
 		free_X_nodes(sent->word[i].x);
 		free_disjuncts(sent->word[i].d);
+		free(sent->word[i].alternatives);
 	}
 	free(sent->word);
 	sent->word = NULL;
@@ -850,18 +861,25 @@ int sentence_length(Sentence sent)
 	return sent->length;
 }
 
+/**
+ * Deprecated; fails to indicate which alternative was
+ * actually used in the parse!  Well, OK, this works for
+ * ENglish, but is a failure for Russian.
+ */
 const char * sentence_get_word(Sentence sent, int index)
 {
 	if (!sent) return NULL;
 	if (index >= sent->length) return NULL;
-	return sent->word[index].string;
+	return sent->word[index].alternatives[0];
 }
 
+/**
+ * Deprecated; fails to indicate which alternative was
+ * actually used in the parse!
+ */
 const char * sentence_get_nth_word(Sentence sent, int index)
 {
-	if (!sent) return NULL;
-	if (index >= sent->length) return NULL;
-	return sent->word[index].string;
+	return sentence_get_word(sent, index);
 }
 
 int sentence_null_count(Sentence sent) {
@@ -913,7 +931,8 @@ int sentence_disjunct_cost(Sentence sent, int i) {
 	return sent->link_info[i].disjunct_cost;
 }
 
-int sentence_link_cost(Sentence sent, int i) {
+int sentence_link_cost(Sentence sent, int i)
+{
 	if (!sent) return 0;
 
 	/* The sat solver (currently) fails to fill in link_info */

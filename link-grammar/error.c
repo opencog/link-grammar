@@ -42,7 +42,7 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		fprintf(stderr, "\tFailing sentence was:\n\t");
 		for (i=0; i<ec->sent->length; i++)
 		{
-			fprintf(stderr, "%s ", ec->sent->word[i].string);
+			fprintf(stderr, "%s ", ec->sent->word[i].alternatives[0]);
 		}
 	}
 	fprintf(stderr, "\n");

@@ -939,7 +939,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		if ((ctxt->constituent[c].right == linkage->num_words -3) &&
 			(ctxt->constituent[c].left == 1) &&
 			(strcmp(ctxt->constituent[c].type, "S") == 0) &&
-			(strcmp(sent->word[linkage->num_words -2].string, ".") == 0))
+			(strcmp(sent->word[linkage->num_words -2].alternatives[0], ".") == 0))
 			ctxt->constituent[c].right++;
 	}
 
@@ -1507,7 +1507,10 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 		if (have_opened && (w < linkage->num_words - 1))
 		{
 			char *p;
-			strcpy(s, sent->word[w].string);
+			/* XXX FIXME -- using alternatives[0] is wrong here,
+			 * especially for Russian. We'll punt for now, though.
+			 * Consider using linkage->word[w] instead. */
+			strcpy(s, sent->word[w].alternatives[0]);
 
 			/* Constituent processing will crash if the sentence contains
 			 * square brackets, so we have to do something ... replace

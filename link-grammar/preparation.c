@@ -85,9 +85,9 @@ void build_deletable(Sentence sent, int has_conjunction)
 			}
 			else if ((j > i + 2) && (sent->is_conjunction[i+1] ||
 								 sent->is_conjunction[j-1] ||
-								(strcmp(",", sent->word[i+1].string) == 0 &&
+								(strcmp(",", sent->word[i+1].alternatives[0]) == 0 &&
 								 conj_in_range(sent, i+2, j-1)) ||
-								 (strcmp(",",sent->word[j-1].string) == 0 &&
+								 (strcmp(",",sent->word[j-1].alternatives[0]) == 0 &&
 								 conj_in_range(sent, j, sent->length - 1))))
 			{
 				sent->deletable[i][j] = TRUE;
@@ -96,12 +96,12 @@ void build_deletable(Sentence sent, int has_conjunction)
 			{
 				for (k=i+1; k<j; k++)
 				{
-					if ((strcmp("either", sent->word[k].string) == 0) ||
-						(strcmp("neither", sent->word[k].string) == 0) ||
-						(strcmp("both", sent->word[k].string) == 0) ||
-						(strcmp("not", sent->word[k].string) == 0)) continue;
-					if ((strcmp("only", sent->word[k].string)==0) && (k > i+1) &&
-								   (strcmp("not", sent->word[k-1].string)==0)) continue;
+					if ((strcmp("either", sent->word[k].alternatives[0]) == 0) ||
+						(strcmp("neither", sent->word[k].alternatives[0]) == 0) ||
+						(strcmp("both", sent->word[k].alternatives[0]) == 0) ||
+						(strcmp("not", sent->word[k].alternatives[0]) == 0)) continue;
+					if ((strcmp("only", sent->word[k].alternatives[0])==0) && (k > i+1) &&
+						 (strcmp("not", sent->word[k-1].alternatives[0])==0)) continue;
 					break;
 				}
 				sent->deletable[i][j] = (k == j);
@@ -223,11 +223,11 @@ static void install_fat_connectors(Sentence sent)
 	for (i=0; i<sent->length; i++) {
 		if (sent->is_conjunction[i]) {
 			sent->word[i].d = catenate_disjuncts(sent->word[i].d,
-							   build_AND_disjunct_list(sent, sent->word[i].string));
+			                    build_AND_disjunct_list(sent, sent->word[i].alternatives[0]));
 		} else {
 			sent->word[i].d = catenate_disjuncts(sent->word[i].d,
 							   explode_disjunct_list(sent, sent->word[i].d));
-			if (strcmp(sent->word[i].string, ",") == 0) {
+			if (strcmp(sent->word[i].alternatives[0], ",") == 0) {
 				sent->word[i].d = catenate_disjuncts(sent->word[i].d,
 											   build_COMMA_disjunct_list(sent));
 			}

@@ -330,26 +330,30 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 void compute_chosen_words(Sentence sent, Linkage linkage)
 {
 	int i, l;
-	const char *t;
 	char * s, *u;
 	Parse_info pi = sent->parse_info;
 	const char * chosen_words[MAX_SENTENCE];
 	Parse_Options opts = linkage->opts;
 
 	for (i=0; i<sent->length; i++)
-	{   /* get rid of those ugly ".Ixx" */
-		chosen_words[i] = sent->word[i].string;
-		if (pi->chosen_disjuncts[i] == NULL) {  
+	{
+		const char *t;
+		if (pi->chosen_disjuncts[i] == NULL)
+		{
 			/* no disjunct is used on this word because of null-links */
-			t = chosen_words[i];
+
+			/* Well, alternative[0] is not really right, but what else can we print? */
+			t = sent->word[i].alternatives[0];
 			l = strlen(t) + 2;
 			s = (char *) xalloc(l+1);
 			sprintf(s, "[%s]", t);
 			t = string_set_add(s, sent->string_set);
 			xfree(s, l+1);
-			chosen_words[i] = t;
-		} else if (opts->display_word_subscripts) {
+		}
+		else if (opts->display_word_subscripts)
+		{
 			t = pi->chosen_disjuncts[i]->string;        
+			/* get rid of those ugly ".Ixx" */
 			if (is_idiom_word(t)) {
 				l = strlen(t);
 				s = (char *) xalloc(l+1);
@@ -359,12 +363,20 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				*u = '\0';
 				t = string_set_add(s, sent->string_set);
 				xfree(s, l+1);
-				chosen_words[i] = t;
-			} else {
-				chosen_words[i] = t;
 			}
 		}
+		else
+		{
+			/* XXX This is wrong, since it fails to indicate what
+			 * was actally used for the parse, which might not actually 
+			 * be alternative 0.  We should use linkage->->word[i] instead,
+			 * and, umm, manually strip the subscript, or something ...
+			 */
+			t = sent->word[i].alternatives[0];
+		}
+		chosen_words[i] = t;
 	}
+
 	if (sent->dict->left_wall_defined) {
 		chosen_words[0] = LEFT_WALL_DISPLAY;
 	}
@@ -730,7 +742,8 @@ void print_disjunct_counts(Sentence sent)
 		for (d=sent->word[i].d; d != NULL; d = d->next) {
 			c++;
 		}
-		printf("%s(%d) ",sent->word[i].string, c);
+		/* XXX alternatives[0] is not really correct, here .. */
+		printf("%s(%d) ",sent->word[i].alternatives[0], c);
 	}
 	printf("\n\n");
 }
@@ -744,7 +757,8 @@ void print_expression_sizes(Sentence sent)
 		for (x=sent->word[w].x; x!=NULL; x = x->next) {
 			size += size_of_expression(x->exp);
 		}
-		printf("%s[%d] ",sent->word[w].string, size);
+		/* XXX alternatives[0] is not really correct, here .. */
+		printf("%s[%d] ",sent->word[w].alternatives[0], size);
 	}
 	printf("\n\n");
 }

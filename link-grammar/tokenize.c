@@ -178,7 +178,9 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 	sent->word[len].x = NULL;
 	sent->word[len].d = NULL;
 
-	sent->word[len].string = string_set_add(s, sent->string_set);
+	sent->word[len].alternatives = (const char **) malloc(2*sizeof(char *));
+	sent->word[len].alternatives[0] = string_set_add(s, sent->string_set);
+	sent->word[len].alternatives[1] = NULL;
 
 	/* Now we record whether the first character of the word is upper-case.
 	   (The first character may be made lower-case
@@ -700,26 +702,28 @@ failure:
  * Also, add a subscript to the resulting word to indicate the
  * rule origin.
  */
-static void tag_regex_string(Sentence sent, int i, const char * type)
+static X_node * build_regex_expressions(Sentence sent, int i,
+                             const char * word_type, const char * word)
 {
-	char str[MAX_WORD+1];
-	char * t;
-	X_node * e;
-	sent->word[i].x = build_word_expressions(sent->dict, type);
-	for (e = sent->word[i].x; e != NULL; e = e->next)
+	X_node *e, *we;
+
+	we = build_word_expressions(sent->dict, word_type);
+	for (e = we; e != NULL; e = e->next)
 	{
+		char str[MAX_WORD+1];
+		char * t;
 		t = strchr(e->string, '.');
-		e->string = sent->word[i].string;
 		if (NULL != t)
 		{
-			snprintf(str, MAX_WORD, "%.50s[!].%.5s", e->string, t+1);
+			snprintf(str, MAX_WORD, "%.50s[!].%.5s", word, t+1);
 		}
 		else
 		{
-			snprintf(str, MAX_WORD, "%.50s", e->string);
+			snprintf(str, MAX_WORD, "%.50s[!]", word);
 		}
 		e->string = string_set_add(str, sent->string_set);
 	}
+	return we;
 }
 
 /**
@@ -729,18 +733,17 @@ static void tag_regex_string(Sentence sent, int i, const char * type)
  * to those of the unknown words
  * so "grok" becomes "grok[?].v" 
  */
-static void handle_unknown_word(Sentence sent, int i, const char * s)
+static X_node * handle_unknown_word(Sentence sent, int i, const char * s)
 {
-	char *t;
-	X_node *d;
-	char str[MAX_WORD+1];
+	X_node *d, *we;
 
-	sent->word[i].x = build_word_expressions(sent->dict, UNKNOWN_WORD);
-	assert(sent->word[i].x, "UNKNOWN_WORD must be defined in the dictionary!");
+	we = build_word_expressions(sent->dict, UNKNOWN_WORD);
+	assert(we, "UNKNOWN_WORD must be defined in the dictionary!");
 
-	for (d = sent->word[i].x; d != NULL; d = d->next)
+	for (d = we; d != NULL; d = d->next)
 	{
-		t = strchr(d->string, '.');
+		char str[MAX_WORD+1];
+		char *t = strchr(d->string, '.');
 		if (t != NULL)
 		{
 			snprintf(str, MAX_WORD, "%.50s[?].%.5s", s, t+1);
@@ -751,16 +754,16 @@ static void handle_unknown_word(Sentence sent, int i, const char * s)
 		}
 		d->string = string_set_add(str, sent->string_set);
 	}
+	return we;
 }
 
 /**
  * If a word appears to be mis-spelled, then add alternate
  * spellings. Maybe one of those will do ... 
  */
-static void guess_misspelled_word(Sentence sent, int i, const char * s)
+static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
 {
 	Boolean spelling_ok;
-	char str[MAX_WORD+1];
 	Dictionary dict = sent->dict;
 	X_node *d, *head = NULL;
 	int j, n;
@@ -769,8 +772,7 @@ static void guess_misspelled_word(Sentence sent, int i, const char * s)
 	/* Spell-guessing is disabled if no spell-checker is speficified */
 	if (NULL == dict->spell_checker)
 	{
-		handle_unknown_word(sent, i, s);
-		return;
+		return handle_unknown_word(sent, i, s);
 	}
 
 	/* If the spell-checker knows about this word, and we don't ... 
@@ -778,8 +780,7 @@ static void guess_misspelled_word(Sentence sent, int i, const char * s)
 	spelling_ok = spellcheck_test(dict->spell_checker, s);
 	if (spelling_ok)
 	{
-		handle_unknown_word(sent, i, s);
-		return;
+		return handle_unknown_word(sent, i, s);
 	}
 
 	/* Else, ask the spell-checker for alternate spellings
@@ -793,13 +794,13 @@ static void guess_misspelled_word(Sentence sent, int i, const char * s)
 			head = catenate_X_nodes(x, head);
 		}
 	}
-	sent->word[i].x = head;
 	if (alternates) spellcheck_free_suggest(alternates, n);
 
 	/* Add a [~] to the output to signify that its the result of
 	 * guessing. */
-	for (d = sent->word[i].x; d != NULL; d = d->next)
+	for (d = head; d != NULL; d = d->next)
 	{
+		char str[MAX_WORD+1];
 		const char * t = strchr(d->string, '.');
 		if (t != NULL)
 		{
@@ -820,8 +821,9 @@ static void guess_misspelled_word(Sentence sent, int i, const char * s)
 	/* If nothing found at all... */
 	if (NULL == head)
 	{
-		handle_unknown_word(sent, i, s);
+		return handle_unknown_word(sent, i, s);
 	}
+	return head;
 }
 
 /**
@@ -869,121 +871,128 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 	 * (nothing special for 1st word) */
 	for (i=0; i<sent->length; i++)
 	{
-		s = sent->word[i].string;
-		if (boolean_dictionary_lookup(sent->dict, s))
+		size_t ialt;
+		for (ialt=0; NULL != sent->word[i].alternatives[ialt]; ialt++)
 		{
-			sent->word[i].x = build_word_expressions(sent->dict, s);
-		}
-		else if ((NULL != (regex_name = match_regex(sent->dict, s))) &&
-		         boolean_dictionary_lookup(sent->dict, regex_name))
-		{
-			tag_regex_string(sent, i, regex_name);
-		}
-		else if (dict->unknown_word_defined && dict->use_unknown_word)
-		{
-			if (opts->use_spell_guess)
+			X_node *we;
+
+			s = sent->word[i].alternatives[ialt];
+			if (boolean_dictionary_lookup(sent->dict, s))
 			{
-				guess_misspelled_word(sent, i, s);
+				we = build_word_expressions(sent->dict, s);
 			}
-			else
+			else if ((NULL != (regex_name = match_regex(sent->dict, s))) &&
+			         boolean_dictionary_lookup(sent->dict, regex_name))
 			{
-				handle_unknown_word(sent, i, s);
+				we = build_regex_expressions(sent, i, regex_name, s);
 			}
-		}
-		else 
-		{
-			/* The reason I can assert this is that the word
-			 * should have been looked up already if we get here.
-			 */
-			assert(FALSE, "I should have found that word.");
-		}
-	}
-
-	/* Under certain cases--if it's the first word of the sentence,
-	 * or if it follows a colon or a quotation mark--a word that's 
-	 * capitalized has to be looked up as an uncapitalized word
-	 * (as well as a capitalized word).
-	 * XXX This rule is English-language-oriented, and should be
-	 * abstracted.
-	 */
-	for (i=0; i<sent->length; i++)
-	{
-		if (! (i == first_word ||
-		      (i > 0 && strcmp(":", sent->word[i-1].string)==0) || 
-		       sent->post_quote[i])) continue;
-		s = sent->word[i].string;
-
-		/* If the lower-case version of this word is in the dictionary, 
-		 * then add the disjuncts for the lower-case version. The upper
-		 * case version disjuncts had previously come from matching the 
-		 * CAPITALIZED-WORDS regex.
-		 *
-		 * Err .. add the lower-case version only if the lower-case word
-		 * is a common noun or adjective; otherwise, *replace* the
-		 * upper-case word with the lower-case one.  This allows common
-		 * nouns and adjectives to be used for entity names: e.g.
-		 * "Great Southern Union declares bankruptcy", allowing Great
-		 * to be capitalized, while preventing an upper-case "She" being
-		 * used as a proper name in "She declared bankruptcy".
-		 *
-		 * Arghh. This is still messed up. The capitalized-regex runs
-		 * too early, I think. We need to *add* Sue.f (female name Sue)
-		 * even though sue.v (the verb "to sue") is in the dict. So 
-		 * test for capitalized entity names. Glurg. Too much complexity
-		 * here, it seems to me.
-		 *
-		 * This is actually a great example of a combo of an algorithm
-		 * together with a list of words used to determine grammatical
-		 * function.
-		 */
-		if (is_utf8_upper(s))
-		{
-			char temp_word[MAX_WORD+1];
-			const char * lc;
-			downcase_utf8_str(temp_word, s, MAX_WORD);
-			lc = string_set_add(temp_word, sent->string_set);
-
-			/* The lower-case dict lookup might trigger regex 
-			 * matches in the dictionary. We want to avoid these.
-			 * e.g. "Cornwallis" triggers both PL-CAPITALIZED_WORDS
-			 * and S-WORDS. Since its not an entity, the regex 
-			 * matches will erroneously discard the upper-case version.
-			 */
-			if (boolean_dictionary_lookup(sent->dict, lc))
+			else if (dict->unknown_word_defined && dict->use_unknown_word)
 			{
-				if (is_entity(sent->dict,s) ||
-				    is_common_entity(sent->dict,lc))
+				if (opts->use_spell_guess)
 				{
-					if (1 < verbosity)
-					{
-						printf ("Info: First word: %s entity=%d common=%d\n", 
-							s, is_entity(sent->dict,s), 
-							is_common_entity(sent->dict,lc));
-					}
-
-					/* If we are here, then we want both upper and lower case
-					 * expressions. The upper-case ones were build above, so now
-					 * append the lower-case ones. */
-					e = build_word_expressions(sent->dict, lc);
-					sent->word[i].x =
-						catenate_X_nodes(sent->word[i].x, e);
+					we = guess_misspelled_word(sent, i, s);
 				}
 				else
 				{
-					if (1 < verbosity)
-					{
-						printf("Info: First word: %s downcase only\n", lc);
-					}
-
-					/* If we are here, then we want the lower-case 
-					 * expressions only.  Erase the upper-case ones, built
-					 * previously up above. */
-					sent->word[i].string = lc;  /* lc already in sent->string-set */
-					e = build_word_expressions(sent->dict, lc);
-					free_X_nodes(sent->word[i].x);
-					sent->word[i].x = e;
+					we = handle_unknown_word(sent, i, s);
 				}
 			}
+			else 
+			{
+				/* The reason I can assert this is that the word
+				 * should have been looked up already if we get here.
+				 */
+				assert(FALSE, "I should have found that word.");
+			}
+
+			/* Under certain cases--if it's the first word of the sentence,
+			 * or if it follows a colon or a quotation mark--a word that's 
+			 * capitalized has to be looked up as an uncapitalized word
+			 * (possibly also as well as a capitalized word).
+			 *
+			 * XXX This rule is English-language-oriented, and should be
+			 * abstracted.
+			 */
+			if ((i == first_word ||
+			     (i > 0 && strcmp(":", sent->word[i-1].alternatives[0])==0) || 
+			     sent->post_quote[i]) &&
+			   (is_utf8_upper(s)))
+			{
+
+				/* If the lower-case version of this word is in the dictionary, 
+				 * then add the disjuncts for the lower-case version. The upper
+				 * case version disjuncts had previously come from matching the 
+				 * CAPITALIZED-WORDS regex.
+				 *
+				 * Err .. add the lower-case version only if the lower-case word
+				 * is a common noun or adjective; otherwise, *replace* the
+				 * upper-case word with the lower-case one.  This allows common
+				 * nouns and adjectives to be used for entity names: e.g.
+				 * "Great Southern Union declares bankruptcy", allowing Great
+				 * to be capitalized, while preventing an upper-case "She" being
+				 * used as a proper name in "She declared bankruptcy".
+				 *
+				 * Arghh. This is still messed up. The capitalized-regex runs
+				 * too early, I think. We need to *add* Sue.f (female name Sue)
+				 * even though sue.v (the verb "to sue") is in the dict. So 
+				 * test for capitalized entity names. Glurg. Too much complexity
+				 * here, it seems to me.
+				 *
+				 * This is actually a great example of a combo of an algorithm
+				 * together with a list of words used to determine grammatical
+				 * function.
+				 */
+				char temp_word[MAX_WORD+1];
+				const char * lc;
+
+				downcase_utf8_str(temp_word, s, MAX_WORD);
+				lc = string_set_add(temp_word, sent->string_set);
+	
+				/* The lower-case dict lookup might trigger regex 
+				 * matches in the dictionary. We want to avoid these.
+				 * e.g. "Cornwallis" triggers both PL-CAPITALIZED_WORDS
+				 * and S-WORDS. Since its not an entity, the regex 
+				 * matches will erroneously discard the upper-case version.
+				 */
+				if (boolean_dictionary_lookup(sent->dict, lc))
+				{
+					if (is_entity(sent->dict,s) ||
+					    is_common_entity(sent->dict,lc))
+					{
+						if (1 < verbosity)
+						{
+							printf ("Info: First word: %s entity=%d common=%d\n", 
+								s, is_entity(sent->dict,s), 
+								is_common_entity(sent->dict,lc));
+						}
+	
+						/* If we are here, then we want both upper and lower case
+						 * expressions. The upper-case ones were build above, so now
+						 * append the lower-case ones. */
+						e = build_word_expressions(sent->dict, lc);
+						we = catenate_X_nodes(we, e);
+					}
+					else
+					{
+						if (1 < verbosity)
+						{
+							printf("Info: First word: %s downcase only\n", lc);
+						}
+	
+						/* If we are here, then we want the lower-case 
+						 * expressions only.  Erase the upper-case ones, built
+						 * previously up above. */
+						sent->word[i].alternatives[ialt] = lc;  /* lc already in sent->string-set */
+						e = build_word_expressions(sent->dict, lc);
+						free_X_nodes(we);
+						we = e;
+					}
+				}
+			}
+
+			/* At last .. concatentate the word expressions we build for
+			 * this alternative. */
+			sent->word[i].x = catenate_X_nodes(sent->word[i].x, we);
 		}
 	}
 }
@@ -1008,17 +1017,21 @@ Boolean sentence_in_dictionary(Sentence sent)
 	ok_so_far = TRUE;
 	for (w=0; w<sent->length; w++)
 	{
-		s = sent->word[w].string;
-		if (!find_word_in_dict(dict, s))
+		size_t ialt;
+		for (ialt=0; NULL != sent->word[w].alternatives[ialt]; ialt++)
 		{
-			if (ok_so_far)
+			s = sent->word[w].alternatives[ialt];
+			if (!find_word_in_dict(dict, s))
 			{
-				safe_strcpy(temp, "The following words are not in the dictionary:", sizeof(temp));
-				ok_so_far = FALSE;
+				if (ok_so_far)
+				{
+					safe_strcpy(temp, "The following words are not in the dictionary:", sizeof(temp));
+					ok_so_far = FALSE;
+				}
+				safe_strcat(temp, " \"", sizeof(temp));
+				safe_strcat(temp, s, sizeof(temp));
+				safe_strcat(temp, "\"", sizeof(temp));
 			}
-			safe_strcat(temp, " \"", sizeof(temp));
-			safe_strcat(temp, sent->word[w].string, sizeof(temp));
-			safe_strcat(temp, "\"", sizeof(temp));
 		}
 	}
 	if (!ok_so_far)
