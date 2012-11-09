@@ -218,7 +218,6 @@ static void add_suffix_alternatives(Sentence sent,
 	size_t stemlen = altlen(sent->stem.alternatives);
 	size_t sufflen = altlen(sent->suff.alternatives);
 
-printf("duuude adding these %s %s\n", stem, suffix);
 	sent->stem.alternatives = resize_alts(sent->stem.alternatives, stemlen);
 	sent->stem.alternatives[stemlen] = string_set_add(stem, sent->string_set);
 
@@ -319,7 +318,6 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].d = NULL;
 
 		sent->word[len].alternatives = sent->stem.alternatives;
-		sent->stem.alternatives = NULL;
 
 		sent->word[len].firstupper = FALSE;
 		if (0 == preflen)
@@ -331,6 +329,7 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 			}
 		}
 
+		sent->stem.alternatives = NULL;
 		len++;
 		issued = TRUE;
 	}
@@ -651,16 +650,14 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 
 				/* Check if the remainder is in the dictionary;
 				 * for the no-suffix case, it won't be */
-				if (find_word_in_dict(sent->dict, newword))
+				if ((i < s_strippable) &&
+				    find_word_in_dict(sent->dict, newword))
 				{
-					if ((verbosity>1) && (i < s_strippable))
+					if (1 < verbosity)
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
-					wend -= len;
-					sz = MIN(wend-w, MAX_WORD);
-					strncpy(word, w, sz);
-					word[sz] = '\0';
-					word_is_in_dict = TRUE;
+
 					add_suffix_alternatives(sent, newword, suffix[i]);
+					word_is_in_dict = TRUE;
 				}
 
 				/* If the remainder isn't in the dictionary, 
@@ -676,16 +673,20 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 							newword[sz] = '\0';
 							if (find_word_in_dict(sent->dict, newword))
 							{
-								if ((verbosity>1) && (i < s_strippable))
-									printf("Splitting word into three: %s-%s-%s\n",
-										prefix[j], newword, suffix[i]);
-								wend -= len;
-								w += strlen(prefix[j]);
-								sz = MIN(wend-w, MAX_WORD);
-								strncpy(word, w, sz);
-								word[sz] = '\0';
+								if (verbosity>1)
+								{
+									if (i < s_strippable)
+										printf("Splitting word into three: %s-%s-%s\n",
+											prefix[j], newword, suffix[i]);
+									else
+										printf("Splitting off a prefix: %s-%s\n",
+											prefix[j], newword);
+								}
 								word_is_in_dict = TRUE;
-								add_presuff_alternatives(sent, prefix[j], newword, suffix[i]);
+								if (i < s_strippable)
+									add_presuff_alternatives(sent, prefix[j], newword, suffix[i]);
+								else
+									add_presuff_alternatives(sent, prefix[j], newword, NULL);
 							}
 						}
 					}
