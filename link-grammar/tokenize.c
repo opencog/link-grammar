@@ -170,16 +170,6 @@ static int contains_digits(const char * s)
 static int issue_sentence_word(Sentence sent, const char * s)
 {
 	if (*s == '\0') return TRUE;
-	if (strlen(s) > MAX_WORD)
-	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Error, 
-		   "Error separating sentence. The word \"%s\" is too long.\n"
-		   "A word can have a maximum of %d characters.\n", s, MAX_WORD);
-		return FALSE;
-	}
-
 	if (sent->length >= MAX_SENTENCE)
 	{
 		err_ctxt ec;
@@ -791,8 +781,7 @@ static void handle_unknown_word(Sentence sent, int i, const char * s)
 	char str[MAX_WORD+1];
 
 	sent->word[i].x = build_word_expressions(sent->dict, UNKNOWN_WORD);
-	if (sent->word[i].x == NULL)
-		assert(FALSE, "UNKNOWN_WORD should have been there");
+	assert(sent->word[i].x, "UNKNOWN_WORD must be defined in the dictionary!");
 
 	for (d = sent->word[i].x; d != NULL; d = d->next)
 	{
@@ -911,7 +900,6 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	int i, first_word;  /* the index of the first word after the wall */
 	const char *s;
-	char temp_word[MAX_WORD+1];
 	const char * regex_name;
 	X_node * e;
 	Dictionary dict = sent->dict;
@@ -995,6 +983,7 @@ int build_sentence_expressions(Sentence sent, Parse_Options opts)
 		 */
 		if (is_utf8_upper(s))
 		{
+			char temp_word[MAX_WORD+1];
 			const char * lc;
 			downcase_utf8_str(temp_word, s, MAX_WORD);
 			lc = string_set_add(temp_word, sent->string_set);
