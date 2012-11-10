@@ -10,18 +10,34 @@
 /*                                                                         */
 /***************************************************************************/
 
+/**
+ * Arghhhh. This hacks around mutiple stupidities in readline/editline.
+ * 1) most version of editline don't have wide-char support.
+ * 2) All versions of editline don't have UTF8 support.
+ * So basically readline() is just plain broken.
+ * So hack one up, using the wide-char interfaces.  This is a hack. Argh. 
+ */
+
 #include "lg_readline.h"
 
 #ifdef HAVE_EDITLINE
-#ifdef EL_PROMPT_ESC
 
 #include <histedit.h>
+
+/* The wide-char variant of editline has EL_PROMPT_ESC defined;
+ * the non-wide-char version does not.
+ */
+#ifdef EL_PROMPT_ESC
+
 #include <stdlib.h>
 
-/**
- * Arghhhh  readline() is not utf8-capable.  So hack one up, using the
- * wide-char interfaces.  This is a hack. Argh. 
- */
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef TRUE
+#define TRUE 1
+#endif
 
 static wchar_t * wc_prompt = NULL;
 static wchar_t * prompt(EditLine *el)
@@ -66,8 +82,11 @@ char *lg_readline(const char *mb_prompt)
 	/* Received end-of-file */
 	if (0 == numc) return NULL;
 
-	history_w(hist, &ev, H_ENTER, wc_line);
-	history_w(hist, &ev, H_SAVE, HFILE);
+	if (1 < numc)
+	{
+		history_w(hist, &ev, H_ENTER, wc_line);
+		history_w(hist, &ev, H_SAVE, HFILE);
+	}
 	/* fwprintf(stderr, L"==> got %d %ls", numc, wc_line); */
 
 	byte_len = wcstombs(NULL, wc_line, 0) + 4;
@@ -78,5 +97,20 @@ char *lg_readline(const char *mb_prompt)
 }
 
 #else /* EL_PROMPT_ESC */
+
+#include <editline/readline.h>
+
+char *lg_readline(const char *prompt)
+{
+	char * pline = readline(prompt);
+
+	/* Save non-blank lines */
+   if (pline && *pline)
+   {
+      if (*pline) add_history(pline);
+   }
+
+	return pline;
+}
 #endif /* EL_PROMPT_ESC*/
 #endif /* HAVE_EDITLINE */

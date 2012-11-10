@@ -15,7 +15,9 @@ INCLUDES = -I.. -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUN
 bin_PROGRAMS=link-parser
 link_parser_SOURCES = link-parser.c \
                       command-line.c \
-                      command-line.h
+                      lg_readline.c \
+                      command-line.h \
+                      lg_readline.h
 
 link_parser_LDADD = $(LIBEDIT_LIBS)
 

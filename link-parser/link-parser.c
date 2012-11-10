@@ -50,10 +50,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_EDITLINE
-#include <editline/readline.h>
-#endif 
-
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif
@@ -61,6 +57,7 @@
 #include "link-includes.h"
 #include "command-line.h"
 #include "expand.h"
+#include "lg_readline.h"
 #include "../viterbi/viterbi.h"
 
 #ifndef FALSE
@@ -129,13 +126,8 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 	}
 	input_pending = FALSE;
 	if (pline) free(pline);
-	pline = readline(prompt);
+	pline = lg_readline(prompt);
 
-	/* Save non-blank lines */
-	if (pline && *pline)
-	{
-		if (*pline) add_history(pline);
-	}
 	return pline;
 
 #else
