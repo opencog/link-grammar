@@ -68,10 +68,15 @@ char *lg_readline(const char *mb_prompt)
 		wc_prompt = malloc (sz*sizeof(wchar_t));
 		mbstowcs(wc_prompt, mb_prompt, sz);
 
-		hist = history_winit();    /* Init built-in history     */
-		history_w(hist, &ev, H_SETSIZE, 20);  /* Remember 20 events       */
+		hist = history_winit();    /* Init built-in history */
+		history_w(hist, &ev, H_SETSIZE, 20);  /* Remember 20 events */
 		history_w(hist, &ev, H_LOAD, HFILE);
 		el = el_init("link-parser", stdin, stdout, stderr);
+
+		/* By default, it comes up in vi mode, with the editor not in
+		 * insert mode; and even when in insert mode, it drops back to
+		 * command mode at the drop of a hat. Totally confusing/lame. */
+		el_wset(el, EL_EDITOR, L"emacs");
 		el_wset(el, EL_HIST, history_w, hist);
 		el_wset(el, EL_PROMPT_ESC, prompt, '\1'); /* Set the prompt function */
 		el_source(el, NULL); /* Source the user's defaults file. */
