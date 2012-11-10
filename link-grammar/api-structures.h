@@ -121,12 +121,7 @@ struct Dictionary_s
 	Boolean         unknown_word_defined;
 	Boolean         left_wall_defined;
 	Boolean         right_wall_defined;
-
-	/* If not null, then use spelling guesser for unknown words */
-	void *          spell_checker; /* spell checker handle */
-#if USE_CORPUS
-	Corpus *        corpus; /* Statistics database */
-#endif
+	Boolean         have_empty_suffix;
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
@@ -140,6 +135,12 @@ struct Dictionary_s
 	const char ** strip_units;
 	const char ** prefix;
 	const char ** suffix;
+
+	/* If not null, then use spelling guesser for unknown words */
+	void *          spell_checker; /* spell checker handle */
+#if USE_CORPUS
+	Corpus *        corpus; /* Statistics database */
+#endif
 
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;

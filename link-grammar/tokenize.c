@@ -428,7 +428,7 @@ static Boolean find_word_in_dict(Dictionary dict, const char * word)
  * parts.  The process is described above.  Returns TRUE if OK, FALSE if
  * too many punctuation marks or other separation error.
  */
-static Boolean separate_word(Sentence sent, Parse_Options opts,
+static void separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
                          Boolean quote_found)
 {
@@ -439,6 +439,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	int  n_r_stripped;
 	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
+	Boolean have_empty_suffix = FALSE;
 
 	int found_number = 0;
 	int n_r_stripped_save;
@@ -454,6 +455,11 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 
 	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
 
+	if (sent->dict->affix_table != NULL)
+	{
+		have_empty_suffix = sent->dict->affix_table->have_empty_suffix;
+	}
+
 	/* First, see if we can already recognize the word as-is. If
 	 * so, then we are done. Else we'll try stripping prefixes, suffixes.
 	 */
@@ -464,10 +470,13 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	/* The simplest case: no affixes, suffixes, etc. */
 	word_is_in_dict = find_word_in_dict (sent->dict, word);
 
-	if (word_is_in_dict)
+	/* ... unless its a lang like Russian, which allows empty
+	 * suffixes, which have a real morphological linkage.
+	 * In which case, we have to try them out. */
+	if (word_is_in_dict & !have_empty_suffix)
 	{
 		issue_sentence_word(sent, word, quote_found);
-		return TRUE;
+		return;
 	}
 
 	/* Set up affix tables.  */
@@ -486,6 +495,12 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 		prefix = dict->prefix;
 		suffix = dict->suffix;
 	}
+
+	/* If we found the word in the dict, but it also can have an
+	 * empty suffix, then just skip right over to suffix processing
+	 */
+	if (word_is_in_dict && have_empty_suffix)
+		goto do_suffix_processing;
 
 	/* Strip off punctuation, etc. on the left-hand side. */
 	/* XXX FIXME: this fails in certain cases: e.g.
@@ -518,7 +533,7 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	 * left-punctuation, in which case, it has all been issued.
 	 * So -- we're done, return.
 	 */
-	if (w >= wend) return TRUE;
+	if (w >= wend) return;
 
 	/* Now w points to the string starting just to the right of
 	 * any left-stripped characters.
@@ -608,21 +623,21 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 		}
 	}
 
-	/* Now we strip off suffixes...w points to the remaining word, 
-	 * "wend" to the end of the word. */
-
-	sz = MIN(wend-w, MAX_WORD);
-	strncpy(word, w, sz);
-	word[sz] = '\0';
-
 	/* Umm, double-check, if need be ... !??  Why? */
 	if (FALSE == word_is_in_dict)
 	{
+		/* w points to the remaining word, 
+i		 * "wend" to the end of the word. */
+		sz = MIN(wend-w, MAX_WORD);
+		strncpy(word, w, sz);
+		word[sz] = '\0';
+
 		word_is_in_dict = find_word_in_dict(sent->dict, word);
 	}
 
+do_suffix_processing:
 	/* OK, now try to strip suffixes. */
-	if (FALSE == word_is_in_dict)
+	if (!word_is_in_dict || have_empty_suffix)
 	{
 		j = 0;
 		for (i=0; i <= s_strippable; i++)
@@ -637,7 +652,10 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 
 				/* The remaining w is too short for a possible match */
 				if ((wend-w) < len) continue;
-				if (strncmp(wend-len, suffix[i], len) == 0) s_ok = TRUE;
+
+				/* Always match the zero-lenght suffix */
+				if (0 == len) s_ok = TRUE;
+				else if (strncmp(wend-len, suffix[i], len) == 0) s_ok = TRUE;
 			}
 			else
 				len = 0;
@@ -761,8 +779,6 @@ static Boolean separate_word(Sentence sent, Parse_Options opts,
 	{
 		issue_sentence_word(sent, r_stripped[i], FALSE);
 	}
-
-	return TRUE;
 }
 
 /**
@@ -825,7 +841,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 			if (0 > nb) goto failure;
 		}
 
-		if (!separate_word(sent, opts, s, t, quote_found)) return FALSE;
+		separate_word(sent, opts, s, t, quote_found);
 		s = t;
 		if (*s == '\0') break;
 	}

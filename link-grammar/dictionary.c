@@ -102,6 +102,11 @@ static void load_affix(Dictionary dict, Dict_node *dn)
 	}
 	if (word_has_connector(dn, suf_con, '+'))
 	{
+		if (0 == strcmp("=", dn->string))
+		{
+			dn->string = string_set_add("", dict->string_set);
+			dict->have_empty_suffix = TRUE;
+		}
 		dict->suffix[k] = dn->string;
 		k++;
 	}
@@ -157,6 +162,9 @@ static void affix_list_delete(Dictionary dict)
 	xfree(dict->strip_right, dict->r_strippable * sizeof(char *));
 	xfree(dict->strip_left, dict->l_strippable * sizeof(char *));
 	xfree(dict->strip_units, dict->u_strippable * sizeof(char *));
+
+	/* The prefix and suffix words are in the string set,
+	 * and are deleted here. */
 	xfree(dict->suffix, dict->s_strippable * sizeof(char *));
 	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
 }
@@ -213,6 +221,7 @@ dictionary_six_str(const char * lang,
 	dict->input = NULL;
 
 	dict->affix_table = NULL;
+	dict->have_empty_suffix = FALSE;
 	if (affix_name != NULL)
 	{
 		dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
