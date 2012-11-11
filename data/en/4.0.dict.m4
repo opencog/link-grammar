@@ -7631,6 +7631,10 @@ hello.ij hello_there:
   Wi-
   or [[<directive-opener>]];
 
+% Single plain word by itself.  "OK, Bye!"
+bye.ij goodbye.ij:
+  Wi-;
+
 % Openers to directives, commands (Ic+ connection to infinitives)
 anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
 prima_facie before_long

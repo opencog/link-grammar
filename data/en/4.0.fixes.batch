@@ -2719,6 +2719,16 @@ Why, of course it will!
 Why not?
 Why the fuck not?
 
+% short greetings
+Hello!
+Hello there!
+Hey there!
+Bye!
+Goodbye!
+OK, bye!
+OK, then, bye!
+How are you doing?
+
 % WH-words
 I do not know why
 I do not know how
@@ -3252,6 +3262,7 @@ Chief describes and analyzes the character of the families in a village, remarki
 
 % conjoined infinitives are still broken...
 They advised us to avoid sunlight and to limit the consumption of fish.
+I am expecting this sentence to parse correctly, and to yield a very wide diagram.
 
 % conjoined verbs with modifiers, negation
 He cannot change the beliefs of popular society as a whole.
