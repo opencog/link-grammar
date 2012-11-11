@@ -138,7 +138,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
   to distinguish different word senses.
 */
 
-static int link_advance(Dictionary dict);
+static Boolean link_advance(Dictionary dict);
 
 static void dict_error2(Dictionary dict, const char * s, const char *s2)
 {
@@ -147,6 +147,8 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	int pos = 1;
 	int i;
 
+	/* The link_advance used to print the error emssage can
+	 * throw more errors... */
 	if (dict->recursive_error) return;
 	dict->recursive_error = TRUE;
 
@@ -236,7 +238,7 @@ static Boolean is_special(wchar_t wc, mbstate_t *ps)
  * This reads the next token from the input into 'token'.
  * Return 1 if a character was read, else return 0 (and print a warning).
  */
-static int link_advance(Dictionary dict)
+static Boolean link_advance(Dictionary dict)
 {
 	wchar_t c;
 	int nr, i;
@@ -254,7 +256,7 @@ static int link_advance(Dictionary dict)
 			dict->token[1] = '\0';
 		}
 		dict->already_got_it = '\0';
-		return 1;
+		return TRUE;
 	}
 
 	do { c = get_character(dict, FALSE); } while (iswspace(c));
@@ -266,17 +268,17 @@ static int link_advance(Dictionary dict)
 	{
 		if (i > MAX_TOKEN_LENGTH-3) {  /* 3 for multi-byte tokens */
 			dict_error(dict, "Token too long");
-			return 0;
+			return FALSE;
 		}
 		if (quote_mode) {
 			if (c == '\"') {
 				quote_mode = FALSE;
 				dict->token[i] = '\0';
-				return 1;
+				return TRUE;
 			}
 			if (iswspace(c)) {
 				dict_error(dict, "White space inside of token");
-				return 0;
+				return FALSE;
 			}
 
 			/* Although we read wide chars, we store UTF8 internally, always. */
@@ -289,7 +291,7 @@ static int link_advance(Dictionary dict)
 #else
 				dict_error(dict, "Unable to read UTF8 string in current locale");
 #endif
-				return 0;
+				return FALSE;
 			}
 			i += nr;
 		} else {
@@ -300,24 +302,24 @@ static int link_advance(Dictionary dict)
 					dict->token[0] = c;  /* special toks are one char always */
 					dict->token[1] = '\0';
 					dict->is_special = TRUE;
-					return 1;
+					return TRUE;
 				}
 				dict->token[i] = '\0';
 				dict->already_got_it = c;
-				return 1;
+				return TRUE;
 			}
 			if (c == 0x0) {
 				if (i == 0) {
 					dict->token[0] = '\0';
-					return 1;
+					return TRUE;
 				}
 				dict->token[i] = '\0';
 				dict->already_got_it = c;
-				return 1;
+				return TRUE;
 			}
 			if (iswspace(c)) {
 				dict->token[i] = '\0';
-				return 1;
+				return TRUE;
 			}
 			if (c == '\"') {
 				quote_mode = TRUE;
@@ -332,14 +334,14 @@ static int link_advance(Dictionary dict)
 #else
 					dict_error(dict, "Unable to read UTF8 string in current locale");
 #endif
-					return 0;
+					return FALSE;
 				}
 				i += nr;
 			}
 		}
 		c = get_character(dict, quote_mode);
 	}
-	return 1;
+	return TRUE;
 }
 
 /**
@@ -567,7 +569,7 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 void free_lookup_list(Dict_node *llist)
 {
 	Dict_node * n;
-	while(llist != NULL)
+	while (llist != NULL)
 	{
 		n = llist->right;
 		free_dict_node(llist);
@@ -1371,7 +1373,7 @@ static Boolean read_entry(Dictionary dict)
 		if (dict->is_special)
 		{
 			dict_error(dict, "I expected a word but didn\'t get it.");
-			return FALSE;
+			goto syntax_error;
 		}
 
 		/* If it's a word-file name */
@@ -1390,7 +1392,7 @@ static Boolean read_entry(Dictionary dict)
 		}
 		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
 		{
-			int rc;
+			Boolean rc;
 			wchar_t* instr;
 			char * dict_name;
 			const char * save_name;
@@ -1400,7 +1402,7 @@ static Boolean read_entry(Dictionary dict)
 			wint_t save_already_got_it;
 			int save_line_number;
 
-			if (0 == link_advance(dict)) goto syntax_error;
+			if (!link_advance(dict)) goto syntax_error;
 
 			dict_name           = strdup(dict->token);
 			save_name           = dict->name;
@@ -1439,12 +1441,12 @@ static Boolean read_entry(Dictionary dict)
 			if (!rc) goto syntax_error;
 
 			/* when we return, point to the next entry */
-			if (0 == link_advance(dict)) goto syntax_error;
+			if (!link_advance(dict)) goto syntax_error;
 
 			/* If a semicolon follows the include, that's OK... ignore it. */
 			if (';' == dict->token[0])
 			{
-				if (0 == link_advance(dict)) goto syntax_error;
+				if (!link_advance(dict)) goto syntax_error;
 			}
 
 			return TRUE;
@@ -1453,13 +1455,15 @@ static Boolean read_entry(Dictionary dict)
 		{
 			dn_new = dict_node_new();
 			dn_new->left = dn;
+			dn_new->right = NULL;
+			dn_new->exp = NULL;
 			dn = dn_new;
 			dn->file = NULL;
 			dn->string = string_set_add(dict->token, dict->string_set);
 		}
 
 		/* Advance to next entry, unless error */
-		if (0 == link_advance(dict)) goto syntax_error;
+		if (!link_advance(dict)) goto syntax_error;
 	}
 
 	/* pass the : */
