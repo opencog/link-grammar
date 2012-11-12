@@ -23,8 +23,8 @@ namespace viterbi {
  * of a list of conjoined connectors.  The goal of this conversion is to
  * simplify the parsing algorithm.
  */
-
 Atom* disjoin(Atom* mixed_form);
+Atom* conjoin(Atom* mixed_form);
 
 
 } // namespace viterbi
