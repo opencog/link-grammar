@@ -26,6 +26,7 @@
 #include "compile.h"
 #include "connect.h"
 #include "connector-utils.h"
+#include "disjoin.h"
 #include "parser.h"
 #include "state.h"
 #include "viterbi.h"
@@ -99,10 +100,10 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		alist.push_back(lg_exp_to_atom(el->e));
 
 	if (AND_type == exp->type)
-		return new Link(AND, alist);
+		return new And(alist);
 
 	if (OR_type == exp->type)
-		return new Link(OR, alist);
+		return new Or(alist);
 
 	assert(0, "Not reached");
 }
@@ -129,6 +130,8 @@ cout<<"duude the word: " << dn->string << ": ";
 print_expression(exp);
 
 		Atom *dj = lg_exp_to_atom(exp);
+// xxxx not yet, the code is buggy
+		// dj = disjoin(dj);
 
 		// First atom at the from of the outgoing set is the word itself.
 		// Second atom is the first disjuct that must be fulfilled.
