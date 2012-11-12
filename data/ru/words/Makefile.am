@@ -246,7 +246,8 @@ WORDS=			\
 	words.244 \
 	words.245 \
 	words.246 \
-	words.247
+	words.247 \
+	words.248
 
 wordsdir=$(pkgdatadir)/ru/words
 words_DATA = $(WORDS)
