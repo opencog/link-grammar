@@ -1,10 +1,11 @@
 Version 4.7.10 (xxx 2013 ???)
  * New: Russian dictionaries from Sergey Protasov!
  * Fix: add "gurgle.n" to dictionary.
- * Improve memory utilization (remove pointless malloc/free)
+ * Improve memory utilization (remove pointless malloc/free).
  * Fix: UTF8 multi-byte diagram printing.
  * Add UTF8 multi-byte editline support, when available.
- * Include Common Lisp bindings, from Peter Szolovits (circa 2009)
+ * Include Common Lisp bindings, from Peter Szolovits (circa 2009).
+ * Ongoing work on pre-alpha Viterbi decoder.
 
 Version 4.7.9 (3 November 2012)
  * Fix: Poor comma chocies: "The man, that you saw..." (issue #36)
@@ -32,6 +33,7 @@ Version 4.7.9 (3 November 2012)
  * Fix: titles can behave as indefinite nouns.
  * Fix: somewhere, near, nearby, halfway, about
  * Fix: police-interrogation style questions
+ * Ongoing work on pre-alpha Viterbi decoder.
 
 Version 4.7.8 (10 October 2012)
  * Ongoing work on pre-alpha Viterbi decoder.

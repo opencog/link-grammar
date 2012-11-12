@@ -11,3 +11,8 @@ a natural setting for storing Vitebrbi state information; that is, for
 holding the various partly-finished parses, and effecting state
 transformations on them.
 
+Currently, the parser should be able to parse all single-word sentences
+(yes, that sounds easy, but its not), and a handful of two-word sentences.
+
+The vitest.cc file contains unit tests. Currently, it consists of some
+21 tests that pass, and a 22nd one that fails.  We're working on it.

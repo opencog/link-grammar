@@ -23,6 +23,7 @@ libvitacog_la_SOURCES = \
 	compile.h \
 	connect.h \
 	connector-utils.h \
+	disjoin.h \
 	parser.h \
 	state.h \
 	viterbi.h
