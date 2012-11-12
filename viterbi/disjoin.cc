@@ -74,6 +74,7 @@ Atom* disjoin(Atom* mixed_form)
 		return mixed_form;
 
 	Atom *orat = junct->get_outgoing_atom(i);
+	i++;
 
 	OutList rest;
 	for(; i<sz; i++)
