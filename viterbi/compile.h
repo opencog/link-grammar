@@ -75,6 +75,32 @@ enum AtomType
 #endif
 
 
+/// Unordered sequence
+/// A Set inherits fom Link, and is an unordered set of zero or more
+/// atoms.
+class Set : public Link
+{
+	public:
+		Set(const OutList& ol)
+			: Link(SET, ol)
+		{}
+		Set(Atom* singleton)
+			: Link(SET, OutList(1, singleton))
+		{}
+
+		Set* flatten() const { return new Set(flatset()); }
+
+protected:
+		/// The sole purpose of this ctor is to allow inheritance.
+		Set(AtomType t)
+			: Link(t)
+		{}
+		Set(AtomType t, const OutList& oset)
+			: Link(t, oset)
+		{}
+		OutList flatset() const;
+};
+
 /// Ordered sequence
 /// And could/should inherit fom Seq, since the order of the atoms in
 /// its outgoing set is important.
@@ -90,17 +116,17 @@ class And : public Link
 };
 
 /// Unordered OR of all children
-class Or : public Link
+class Or : public Set
 {
 	public:
 		Or()
-			: Link(OR)
+			: Set(OR)
 		{}
 		Or(const OutList& ol)
-			: Link(OR, ol)
+			: Set(OR, ol)
 		{}
 
-		Or* flatten() const;
+		Or* flatten() const { return new Or(flatset()); }
 };
 
 /// Create a ling-grammar link. This will be of the form:
@@ -195,20 +221,6 @@ class Seq : public Link
 		{}
 		Seq(Atom* singleton)
 			: Link(SEQ, OutList(1, singleton))
-		{}
-};
-
-/// Unordered sequence
-/// A Set inherits fom Link, and is an unordered set of zero or more
-/// atoms.
-class Set : public Link
-{
-	public:
-		Set(const OutList& ol)
-			: Link(SET, ol)
-		{}
-		Set(Atom* singleton)
-			: Link(SET, OutList(1, singleton))
 		{}
 };
 

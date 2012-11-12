@@ -14,28 +14,28 @@
 namespace link_grammar {
 namespace viterbi {
 
-Or* Or::flatten() const
+OutList Set::flatset() const
 {
 	size_t sz = _oset.size();
 	OutList newset;
 	for (int i=0; i<sz; i++)
 	{
-		Or* ora = dynamic_cast<Or*>(_oset[i]);
-		if (!ora)
+		/* Copy without change, if types differ. */
+		if (_type != _oset[i]->get_type())
 		{
-			/* Copy without change */
 			newset.push_back(_oset[i]);
 			continue;
 		}
 
 		/* Get rid of a level */
-		ora = ora->flatten();
-		size_t osz = ora->get_arity();
+		Set* ora = dynamic_cast<Set*>(_oset[i]);
+		OutList fora = ora->flatset();
+		size_t osz = fora.size();
 		for (int j=0; j<osz; j++)
-			newset.push_back(ora->_oset[j]);
+			newset.push_back(fora[j]);
 	}
 
-	return new Or(newset);
+	return newset;
 }
 
 } // namespace viterbi
