@@ -70,7 +70,6 @@ class Word : public Node
 enum AtomType
 {
 	// Link types
-	OR,         // unordered OR of all children
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
 };
 #endif
@@ -88,6 +87,20 @@ class And : public Link
 		And(const OutList& ol)
 			: Link(AND, ol)
 		{}
+};
+
+/// Unordered OR of all children
+class Or : public Link
+{
+	public:
+		Or()
+			: Link(OR)
+		{}
+		Or(const OutList& ol)
+			: Link(OR, ol)
+		{}
+
+		Or* flatten() const;
 };
 
 /// Create a ling-grammar link. This will be of the form:
@@ -122,16 +135,16 @@ class Ling : public Link
 			_oset.push_back(b);
 		}
 
-		LingType* get_ling_type()
+		LingType* get_ling_type() const
 		{
 			return dynamic_cast<LingType*>(get_outgoing_atom(0));
 		}
 
-		Atom* get_left()
+		Atom* get_left() const
 		{
 			return get_outgoing_atom(1);
 		}
-		Atom* get_right()
+		Atom* get_right() const
 		{
 			return get_outgoing_atom(2);
 		}
@@ -218,8 +231,8 @@ class StatePair : public Link
 			_oset.push_back(stat);
 			_oset.push_back(outp);
 		}
-		Seq* get_state() { return dynamic_cast<Seq*>(_oset.at(0)); }
-		Seq* get_output() { return dynamic_cast<Seq*>(_oset.at(1)); }
+		Seq* get_state() const { return dynamic_cast<Seq*>(_oset.at(0)); } 
+		Seq* get_output() const { return dynamic_cast<Seq*>(_oset.at(1)); }
 };
 
 

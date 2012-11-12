@@ -13,6 +13,7 @@ lib_LTLIBRARIES = libvitacog.la
 
 libvitacog_la_SOURCES = \
 	atom.cc \
+	compile.cc \
 	connect.cc \
 	connector-utils.cc \
 	disjoin.cc \

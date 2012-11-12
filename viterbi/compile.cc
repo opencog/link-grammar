@@ -14,37 +14,29 @@
 namespace link_grammar {
 namespace viterbi {
 
-/**
- * Convert dictionary-normal form into disjunctive normal form.
- * That is, convert the mixed-form dictionary entries into a disjunction
- * of a list of conjoined connectors.  The goal of this conversion is to
- * simplify the parsing algorithm.
- */
-
-Atom* disjoin(Atom* mixed_form)
+Or* Or::flatten() const
 {
-	AtomType intype = mixed_form->get_type();
-	if ((OR != intype) && (AND != intype))
-		return mixed_form;
-
-	const Link* junct = dynamic_cast<Link*>(mixed_form);
-	if (OR == intype)
+	size_t sz = _oset.size();
+	OutList newset;
+	for (int i=0; i<sz; i++)
 	{
-		const OutList& oset = junct->get_outgoing_set();
-		size_t sz = junct->get_arity();
-		OutList new_oset;
-		for(int i=0; i<sz; i++)
+		Or* ora = dynamic_cast<Or*>(_oset[i]);
+		if (!ora)
 		{
-			Atom* norm = disjoin(oset[i]);
-			new_oset.push_back(norm);
+			/* Copy without change */
+			newset.push_back(_oset[i]);
+			continue;
 		}
-		// Link* new_or = Or(new_oset);
+
+		/* Get rid of a level */
+		ora = ora->flatten();
+		size_t osz = ora->get_arity();
+		for (int j=0; j<osz; j++)
+			newset.push_back(ora->_oset[j]);
 	}
 
-	return NULL;
+	return new Or(newset);
 }
-
 
 } // namespace viterbi
 } // namespace link-grammar
-

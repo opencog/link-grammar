@@ -54,7 +54,7 @@ enum AtomType
 
 /* Base class for Nodes and Links */
 /* Atoms are not mutable, except for the TV value. That is, you cannot
- * change the type of the atom.
+ * change the type of the atom.  In particular, all methods are const.
  */
 class Atom
 {
@@ -65,7 +65,7 @@ class Atom
 		virtual bool operator==(const Atom*) const;
 		virtual ~Atom() {}
 	protected:
-		AtomType _type;
+		const AtomType _type;
 };
 
 /* A Node may be 
@@ -74,6 +74,7 @@ class Atom
  -- a disjunct (the std::string holds the disjunct)
  -- etc.
  * Nodes are immuatble; the name can be set but not changed.
+ * Note: all methods are const.
  */
 class Node : public Atom
 {
@@ -85,7 +86,7 @@ class Node : public Atom
 
 		virtual bool operator==(const Atom*) const;
 	protected:
-		std::string _name;
+		const std::string _name;
 };
 
 // Uhhhh ... 
@@ -94,6 +95,7 @@ typedef std::vector<Atom*> OutList;
 /*
  * Links hold a bunch of atoms
  * Links are immutable; the outgoing set cannot be changed.
+ * Note: all methods are const.
  */
 class Link : public Atom
 {
@@ -115,7 +117,7 @@ class Link : public Atom
 			_oset.push_back(a);
 			_oset.push_back(b);
 		}
-		Link(AtomType t, Atom* a, Atom*b, Atom* c)
+		Link(AtomType t, Atom* a, Atom* b, Atom* c)
 			: Atom(t)
 		{
 			_oset.push_back(a);
