@@ -107,6 +107,7 @@ Atom* disjoin(Atom* mixed_form)
 			distrib.push_back(rest[j]);
 
 		And *andy = new And(distrib);
+		andy = andy->clean();
 		new_oset.push_back(andy);
 	}
 

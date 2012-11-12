@@ -48,5 +48,27 @@ OutList Set::flatset() const
 	return newset;
 }
 
+/// Remove optional connectors.
+///
+/// It doesn't make any sense at all to have an optional connector
+/// in an AND-clause, so just remove it.  (Well, OK, it "makes sense",
+/// its just effectively a no-op, and so doesn't have any effect.  So,
+/// removing it here simplifies logic in other places.)
+And* And::clean() const
+{
+	OutList cl;
+	size_t sz = _oset.size();
+	for (int i=0; i<sz; i++)
+	{
+		Connector* cn = dynamic_cast<Connector*>(_oset[i]);
+		if (cn and cn->is_optional())
+			continue;
+
+		cl.push_back(_oset[i]);
+	}
+
+	return new And(cl);
+}
+
 } // namespace viterbi
 } // namespace link-grammar

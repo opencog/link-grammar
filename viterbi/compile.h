@@ -146,6 +146,9 @@ class And : public Seq
 
 		// See the Set class for documentation
 		And* flatten() const { return new And(flatset()); }
+
+		/// Remove optional clauses.
+		And* clean() const;
 };
 
 /// Unordered OR of all children
