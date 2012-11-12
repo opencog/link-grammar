@@ -125,6 +125,10 @@ Atom* disjoin(Atom* mixed_form)
  * That is, convert a boolean logic expression (mixture of AND and OR
  * terms) into a conjunction of a list of disjoined terms.
  *
+ * The code below is almost the same as teh code above, but with AND
+ * and OR exchanged with one-another.  (There are other differences
+ * too, since optinal terms behave differently in such cases.)
+ *
  * The primary user of this function is the parser, to convert the 
  * mixed-form dictionary entries into a simpler structure, thus
  * simplifying the parser algorithm.
@@ -172,7 +176,7 @@ Atom* conjoin(Atom* mixed_form)
 	{
 		Atom* a = conjoin(junct->get_outgoing_atom(i));
 		AtomType t = a->get_type();
-		if (OR == t)
+		if (AND == t)
 			break;
 		front.push_back(a);
 	}
@@ -181,7 +185,7 @@ Atom* conjoin(Atom* mixed_form)
 	if (i == sz)
 		return junct;
 
-	Atom *orat = junct->get_outgoing_atom(i);
+	Atom *andatom = junct->get_outgoing_atom(i);
 	i++;
 
 	OutList rest;
@@ -191,12 +195,12 @@ Atom* conjoin(Atom* mixed_form)
 		rest.push_back(norm);
 	}
 
-	And* orn = dynamic_cast<And*>(orat);
-	assert(orn, "Bad link type found during conjoin");
+	And* anda = dynamic_cast<And*>(andatom);
+	assert(anda, "Bad link type found during conjoin");
 
 	// Distribute over the elements in OR-list
 	OutList new_oset;
-	sz = orn->get_arity();
+	sz = anda->get_arity();
 	for (i=0; i<sz; i++)
 	{
 		OutList distrib;
@@ -207,7 +211,7 @@ Atom* conjoin(Atom* mixed_form)
 			distrib.push_back(front[j]);
 
 		// insert one atom.
-		distrib.push_back(orn->get_outgoing_atom(i));
+		distrib.push_back(anda->get_outgoing_atom(i));
 
 		// Copy the rest.
 		jsz = rest.size();
