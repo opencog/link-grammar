@@ -43,7 +43,6 @@ enum AtomType
 	SEQ,        // ordered sequence of children
 	AND,        // ordered AND of all children (order is important!)
 	OR,         // unordered OR of all children
-	// OPTIONAL,   // one child only, and its optional. XXX not used ATM
 	WORD_CSET,  // word, followed by a set of connectors for that word.
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
 	LING,       // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
@@ -107,31 +106,23 @@ class Link : public Atom
 			: Atom(t)
 		{}
 		Link(AtomType t, Atom* a)
-			: Atom(t)
-		{
-			_oset.push_back(a);
-		}
+			: Atom(t), _oset(1, a)
+		{}
 		Link(AtomType t, Atom* a, Atom*b)
-			: Atom(t)
-		{
-			_oset.push_back(a);
-			_oset.push_back(b);
-		}
+			: Atom(t), _oset(({OutList o(1,a); o.push_back(b); o;}))
+		{}
 		Link(AtomType t, Atom* a, Atom* b, Atom* c)
-			: Atom(t)
-		{
-			_oset.push_back(a);
-			_oset.push_back(b);
-			_oset.push_back(c);
-		}
+			: Atom(t), _oset(({OutList o(1,a); o.push_back(b);
+			                   o.push_back(c); o;}))
+		{}
 		size_t get_arity() const { return _oset.size(); }
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
 
 		virtual bool operator==(const Atom*) const;
 	protected:
-		// Outgoing set
-		OutList _oset;
+		// Outgoing set is const, nnot modifiable.
+		const OutList _oset;
 };
 
 std::ostream& operator<<(std::ostream& out, const Atom*);

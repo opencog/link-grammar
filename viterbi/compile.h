@@ -180,20 +180,10 @@ class Ling : public Link
 			assert(ol[0]->get_type() == LING_TYPE, "LG link has bad first node");
 		}
 		Ling(const std::string& str, Atom* a, Atom *b)
-			: Link(LING)
-		{
-			_oset.push_back(new LingType(str));
-			_oset.push_back(a);
-			_oset.push_back(b);
-		}
+			: Link(LING, new LingType(str), a, b) {}
 
 		Ling(LingType* t, Atom* a, Atom *b)
-			: Link(LING)
-		{
-			_oset.push_back(t);
-			_oset.push_back(a);
-			_oset.push_back(b);
-		}
+			: Link(LING, t, a, b) {}
 
 		LingType* get_ling_type() const
 		{
@@ -255,11 +245,7 @@ class StatePair : public Link
 {
 	public:
 		StatePair(Seq* stat, Seq* outp)
-			: Link(STATE_PAIR)
-		{
-			_oset.push_back(stat);
-			_oset.push_back(outp);
-		}
+			: Link(STATE_PAIR, stat, outp) {}
 		Seq* get_state() const { return dynamic_cast<Seq*>(_oset.at(0)); } 
 		Seq* get_output() const { return dynamic_cast<Seq*>(_oset.at(1)); }
 };
