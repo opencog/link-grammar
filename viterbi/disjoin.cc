@@ -62,7 +62,7 @@ Atom* disjoin(Atom* mixed_form)
 	int i;
 	for(i=0; i<sz; i++)
 	{
-		Atom* a = junct->get_outgoing_atom(i);
+		Atom* a = disjoin(junct->get_outgoing_atom(i));
 		AtomType t = a->get_type();
 		if (OR == t)
 			break;
@@ -71,7 +71,7 @@ Atom* disjoin(Atom* mixed_form)
 
 	/* If no disjunctions found, we are done */
 	if (i == sz)
-		return mixed_form;
+		return junct;
 
 	Atom *orat = junct->get_outgoing_atom(i);
 	i++;
@@ -79,8 +79,8 @@ Atom* disjoin(Atom* mixed_form)
 	OutList rest;
 	for(; i<sz; i++)
 	{
-		Atom* a = junct->get_outgoing_atom(i);
-		rest.push_back(a);
+		Atom* norm = disjoin(junct->get_outgoing_atom(i));
+		rest.push_back(norm);
 	}
 
 	Or* orn = dynamic_cast<Or*>(orat);
@@ -111,8 +111,8 @@ Atom* disjoin(Atom* mixed_form)
 	}
 
 	Or* new_or = new Or(new_oset);
-
-	return new_or->flatten();
+	new_or = new_or->flatten();
+	return disjoin(new_or);
 }
 
 
