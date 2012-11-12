@@ -28,77 +28,89 @@ Atom* disjoin(Atom* mixed_form)
 	if ((OR != intype) && (AND != intype))
 		return mixed_form;
 
-	Set* junct = dynamic_cast<Set*>(mixed_form);
-	junct = junct->flatten();
-
-	size_t sz = junct->get_arity();
-	OutList new_oset;
-
 	if (OR == intype)
 	{
+		Or* junct = dynamic_cast<Or*>(mixed_form);
+		assert(junct, "disjoin: given a naked OR link!");
+
+		junct = junct->flatten();
+
+		size_t sz = junct->get_arity();
+		OutList new_oset;
+
 		// Just a recursive call, that's all.
 		for(int i=0; i<sz; i++)
 		{
 			Atom* norm = disjoin(junct->get_outgoing_atom(i));
 			new_oset.push_back(norm);
 		}
+
+		Or* new_or = new Or(new_oset);
+		return new_or->flatten();
 	}
-	else
+
+	And* junct = dynamic_cast<And*>(mixed_form);
+	assert(junct, "disjoin: given a naked AND link!");
+
+	junct = junct->flatten();
+
+	// If we are here, the outgoing set is a conjunction of atoms.
+	// Search for the first disjunction in that set, and distribute
+	// over it.
+	OutList front;
+	size_t sz = junct->get_arity();
+	int i;
+	for(i=0; i<sz; i++)
 	{
-		// If we are here, the outgoing set is a conjunction of atoms.
-		// Search for the first disjunction in that set, and distribute
-		// over it.
-		OutList front;
-		int i;
-		for(i=0; i<sz; i++)
-		{
-			Atom* a = junct->get_outgoing_atom(i);
-			AtomType t = a->get_type();
-			if (OR == t)
-				break;
-			front.push_back(a);
-		}
-
-		/* If no disjunctions found, we are done */
-		if (i == sz)
-			return mixed_form;
-
-		Atom *orat = junct->get_outgoing_atom(i);
-
-		OutList rest;
-		for(; i<sz; i++)
-		{
-			Atom* a = junct->get_outgoing_atom(i);
-			rest.push_back(a);
-		}
-
-		Or* orn = dynamic_cast<Or*>(orat);
-		assert(orn, "Bad link type found during disjoin");
-
-		// Distribute over the elements in OR-list
-		sz = orn->get_arity();
-		for (i=0; i<sz; i++)
-		{
-			OutList distrib;
-
-			// Copy the front, without change.
-			size_t jsz = front.size();
-			for (int j=0; j<jsz; j++)
-				distrib.push_back(front[j]);
-
-			// insert one atom.
-			distrib.push_back(orn->get_outgoing_atom(i));
-
-			// Copy the rest.
-			jsz = rest.size();
-			for (int j=0; j<jsz; j++)
-				distrib.push_back(rest[j]);
-
-			And *andy = new And(distrib);
-			new_oset.push_back(andy);
-		}
+		Atom* a = junct->get_outgoing_atom(i);
+		AtomType t = a->get_type();
+		if (OR == t)
+			break;
+		front.push_back(a);
 	}
+
+	/* If no disjunctions found, we are done */
+	if (i == sz)
+		return mixed_form;
+
+	Atom *orat = junct->get_outgoing_atom(i);
+
+	OutList rest;
+	for(; i<sz; i++)
+	{
+		Atom* a = junct->get_outgoing_atom(i);
+		rest.push_back(a);
+	}
+
+	Or* orn = dynamic_cast<Or*>(orat);
+	assert(orn, "Bad link type found during disjoin");
+
+	// Distribute over the elements in OR-list
+	OutList new_oset;
+	sz = orn->get_arity();
+	for (i=0; i<sz; i++)
+	{
+		OutList distrib;
+
+		// Copy the front, without change.
+		size_t jsz = front.size();
+		for (int j=0; j<jsz; j++)
+			distrib.push_back(front[j]);
+
+		// insert one atom.
+		distrib.push_back(orn->get_outgoing_atom(i));
+
+		// Copy the rest.
+		jsz = rest.size();
+		for (int j=0; j<jsz; j++)
+			distrib.push_back(rest[j]);
+
+		And *andy = new And(distrib);
+		new_oset.push_back(andy);
+	}
+
 	Or* new_or = new Or(new_oset);
+
 	return new_or->flatten();
 }
 
