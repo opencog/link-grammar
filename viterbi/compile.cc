@@ -14,6 +14,16 @@
 namespace link_grammar {
 namespace viterbi {
 
+
+/// Flatten a set.  That is, remove the nested, recursive
+/// structure of the set, and return all elements as just
+/// one single set. For example, the flattened version of
+/// {a, {b,c}} is {a, b, c}
+///
+// Note that this algo, as currently implemented, is order-preserving.
+// This is important for the Seq class, and the And class (since the
+// link-grammar AND must be an ordered sequence, to preserve planarity
+// of the parses.
 OutList Set::flatset() const
 {
 	size_t sz = _oset.size();

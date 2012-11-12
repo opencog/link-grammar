@@ -88,6 +88,7 @@ class Set : public Link
 			: Link(SET, OutList(1, singleton))
 		{}
 
+		// See the C file for documentation
 		Set* flatten() const { return new Set(flatset()); }
 
 protected:
@@ -102,17 +103,49 @@ protected:
 };
 
 /// Ordered sequence
-/// And could/should inherit fom Seq, since the order of the atoms in
+/// Seq inherits from Set, and is an ordered sequence of zero or more
+/// atoms.
+class Seq : public Set
+{
+	public:
+		Seq()
+			: Set(SEQ)
+		{}
+		Seq(const OutList& ol)
+			: Set(SEQ, ol)
+		{}
+		Seq(Atom* singleton)
+			: Set(SEQ, OutList(1, singleton))
+		{}
+
+		// See the Set class for documentation
+		Seq* flatten() const { return new Seq(flatset()); }
+
+protected:
+		/// The sole purpose of this ctor is to allow inheritance.
+		Seq(AtomType t)
+			: Set(t)
+		{}
+		Seq(AtomType t, const OutList& oset)
+			: Set(t, oset)
+		{}
+};
+
+/// Ordered sequence
+/// And inherits from Seq, since the order of the atoms in
 /// its outgoing set is important.
-class And : public Link
+class And : public Seq
 {
 	public:
 		And()
-			: Link(AND)
+			: Seq(AND)
 		{}
 		And(const OutList& ol)
-			: Link(AND, ol)
+			: Seq(AND, ol)
 		{}
+
+		// See the Set class for documentation
+		And* flatten() const { return new And(flatset()); }
 };
 
 /// Unordered OR of all children
@@ -126,6 +159,7 @@ class Or : public Set
 			: Set(OR, ol)
 		{}
 
+		// See the Set class for documentation
 		Or* flatten() const { return new Or(flatset()); }
 };
 
@@ -205,23 +239,6 @@ class WordCset : public Link
 		{
 			return _oset[1];
 		}
-};
-
-/// Ordered sequence
-/// Seq inherits fom Link, and is an ordered sequence of zero or more
-/// atoms.
-class Seq : public Link
-{
-	public:
-		Seq()
-			: Link(SEQ)
-		{}
-		Seq(const OutList& ol)
-			: Link(SEQ, ol)
-		{}
-		Seq(Atom* singleton)
-			: Link(SEQ, OutList(1, singleton))
-		{}
 };
 
 /// A pair of two sequences.  The first sequence is the state, the
