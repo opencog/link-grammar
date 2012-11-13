@@ -24,7 +24,6 @@ namespace viterbi {
  * simplify the parsing algorithm.
  */
 Atom* disjoin(Atom* mixed_form);
-Atom* conjoin(Atom* mixed_form);
 
 
 } // namespace viterbi

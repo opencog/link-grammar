@@ -130,8 +130,9 @@ cout<<"duude the word: " << dn->string << ": ";
 print_expression(exp);
 
 		Atom *dj = lg_exp_to_atom(exp);
-// xxxx not yet, the code is buggy
-		// dj = disjoin(dj);
+cout <<"duuude the bbbbbbbbbbbbbbbbb efore it is "<<dj<<endl;
+		dj = disjoin(dj);
+cout <<"duuude the ddddddddddddddddddddddddddddddddddddddsijoined thing is "<<dj<<endl;
 
 		// First atom at the from of the outgoing set is the word itself.
 		// Second atom is the first disjuct that must be fulfilled.
