@@ -15,6 +15,31 @@
 namespace link_grammar {
 namespace viterbi {
 
+/// Flatten a set by pulling up all singletons.
+/// This is a valid operation for link-grammar AND, OR sequences/sets.
+/// Since such singleton sets are the same as the contained element.
+static Atom* super_flatten(Atom* in)
+{
+	Set* set = dynamic_cast<Set*>(in);
+	if (!set)
+		return in;
+
+	size_t sz = set->get_arity();
+	if (1 == sz) return set->get_outgoing_atom(0);
+
+	OutList newlist;
+	for (int i=0; i<sz; i++)
+	{
+		Atom* a = set->get_outgoing_atom(i);
+		Link* l = dynamic_cast<Link*>(a);
+		if (l and (1 == l->get_arity()))
+			newlist.push_back(l->get_outgoing_atom(0));
+		else
+			newlist.push_back(a);
+	}
+	return upcast(new Link(set->get_type(), newlist));
+}
+
 /**
  * Convert mixed connector expressions into disjunctive normal form.
  * The final form will consist of disjunction of conjunctions of
@@ -58,7 +83,7 @@ Atom* disjoin(Atom* mixed_form)
 		}
 
 		Or* new_or = new Or(new_oset);
-		return new_or->flatten();
+		return super_flatten(new_or->flatten());
 	}
 
 	And* junct = dynamic_cast<And*>(mixed_form);
@@ -125,7 +150,7 @@ Atom* disjoin(Atom* mixed_form)
 
 	Or* new_or = new Or(new_oset);
 	new_or = new_or->flatten();
-	return disjoin(new_or);
+	return super_flatten(disjoin(new_or));
 }
 
 

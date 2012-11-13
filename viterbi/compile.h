@@ -253,6 +253,9 @@ class StatePair : public Link
 		Seq* get_output() const { return dynamic_cast<Seq*>(_oset.at(1)); }
 };
 
+/// Given an atom of a some type, return the C++ class of that type.
+Atom* upcast(const Atom*);
+
 
 } // namespace viterbi
 } // namespace link-grammar

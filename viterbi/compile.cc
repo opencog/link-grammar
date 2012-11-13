@@ -70,5 +70,28 @@ And* And::clean() const
 	return new And(cl);
 }
 
+
+Atom* upcast(const Atom* a)
+{
+	const Node* n = dynamic_cast<const Node*>(a);
+	const Link* l = dynamic_cast<const Link*>(a);
+
+	switch (a->get_type())
+	{
+		// Links
+		case AND:
+			return new And(l->get_outgoing_set());
+		case OR:
+			return new Or(l->get_outgoing_set());
+
+		// Nodes
+		case CONNECTOR:
+			return new Connector(n->get_name());
+
+		default:
+			assert(0, "upcast: implement me!");
+	}
+}
+
 } // namespace viterbi
 } // namespace link-grammar
