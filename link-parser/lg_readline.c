@@ -22,6 +22,7 @@
 
 #ifdef HAVE_EDITLINE
 
+#include <string.h>
 #include <histedit.h>
 
 /* The wide-char variant of editline has EL_PROMPT_ESC defined;
@@ -57,6 +58,7 @@ char *lg_readline(const char *mb_prompt)
 	size_t byte_len;
 	const wchar_t *wc_line;
 	char *mb_line;
+	char *nl;
 
 	if (!is_init)
 	{
@@ -97,6 +99,11 @@ char *lg_readline(const char *mb_prompt)
 	byte_len = wcstombs(NULL, wc_line, 0) + 4;
 	mb_line = malloc(byte_len);
 	wcstombs(mb_line, wc_line, byte_len);
+
+	/* In order to be compatible with regular libedit, we have to
+	 * strip away the trailing newline, if any. */
+	nl = strchr(mb_line, '\n');
+	if (nl) *nl = 0x0;
 	
 	return mb_line;
 }
