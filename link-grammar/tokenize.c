@@ -436,7 +436,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	int i, j, len;
 	int r_strippable=0, l_strippable=0, u_strippable=0;
 	int s_strippable=0, p_strippable=0;
-	int  n_r_stripped;
+	int  n_r_stripped = 0;
 	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
 	Boolean have_empty_suffix = FALSE;
