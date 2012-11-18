@@ -15,12 +15,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <aspell.h>
 #include "link-includes.h"
 #include "spellcheck.h"
 #include "utilities.h"  /* For Win32 compatibility */
 
 #ifdef HAVE_ASPELL
+#include <aspell.h>
 
 #define ASPELL_LANG_KEY  "lang"
 static const char *spellcheck_lang_mapping[] = {
