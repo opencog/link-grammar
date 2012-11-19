@@ -1154,10 +1154,11 @@ everything everyone anyone everybody anybody anything:
 else the_fuck the_shit the_piss
 the_bleep
 in_heck in_the_heck the_heck
-in_hell in_the_hell the_hell
+in_hell in_the_hell the_hell bloody_hell dirty_hell
 in_goddamn_hell in_the_godammn in_goddamned_hell in_the_godammned
-in_bleeping_hell
-goddamn goddamned
+in_bleeping_hell in_bloody_hell in_dirty_hell
+in_holy_shit the_holy_shit the_shit holy_crap the_holy_crap
+goddamn goddamned damn.ee
 for_christ_sake for_christs_sake for_Christ_sake for_Christs_sake
 for_christ's_sake for_Christ's_sake
 in_Jesus in_Jesus_name in_Jesus'_name in_God's_name in_Lord's_name
@@ -1168,7 +1169,7 @@ the_piss_Christ in_piss_Christ:
 
 % Like above, but more polite, and with commas:
 % "What, exactly, do you want?"
-exactly.ee precisely.ee:
+exactly.ee precisely.ee really.ee:
   {Xc+ & {Xd-}} & EL-;
 
 % E+: "Why didn't you fucking say so?"
@@ -7258,7 +7259,7 @@ a_little_while:
 %
 pretty.e extremely very_very very_very_very exceptionally
 unbelievably incurably extraordinarily
-jolly.e mighty.e damn.e exceedingly overly downright plumb
+jolly.e mighty.e damn.e bloody.e exceedingly overly downright plumb
 vitally abundantly chronically frightfully genuinely
 humanly patently
 singularly supremely unbearably unmistakably unspeakably
@@ -7266,9 +7267,10 @@ awfully decidedly demonstrably fashionably frighteningly horrifyingly
 indescribably intolerably laughably predominantly
 unalterably undisputedly unpardonably
 unreasonably unusually hugely infernally:
-({EE-} & EA+) or EE+;
+  ({EE-} & EA+) or EE+;
 
-notoriously.e: ({EE-} & EA+) or EE+ or Em+;
+notoriously.e:
+  ({EE-} & EA+) or EE+ or Em+;
 
 % ---------------------------------------------------------
 % Adverbs whose main use is adjectival, but can be used with
@@ -7278,7 +7280,7 @@ notoriously.e: ({EE-} & EA+) or EE+ or Em+;
 fabulously incomparably inherently marginally moderately
 relatively ridiculously
 unacceptably unarguably undeniably unimaginably:
-({EE-} & EA+) or EE+ or ({EE-} & EBm-) or E+;
+  ({EE-} & EA+) or EE+ or ({EE-} & EBm-) or E+;
 
 wide.e: EE+;
 
@@ -7328,10 +7330,14 @@ EA+ or EE+ or EBm- or
 
 % allowing as opener also
 altogether equally:
-EA+ or EE+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+)) or
-({Xc+ & {Xd-}} & CO+);
+  EA+
+  or EE+
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+))
+  or ({Xc+ & {Xd-}} & CO+);
 
-really: EA+ or EE+ or Em+ or EBm-;
+really.e:
+  EA+ or EE+ or Em+ or EBm-;
+
 surprisingly: EA+ or EE+ or ({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & E+) or
 (Xd- & Xc+ & MVa-);
 especially: EA+ or EE+ or EB- or Em+ or (MVl- & (MVp+ or MVa+ or MVs+)) or
