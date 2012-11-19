@@ -322,6 +322,11 @@ RUNNING the program:
    When accessing dictionaries in non-standard locations, the standard
    filenames are still assumed (i.e. 4.0.dict, 4.0.affix, etc.)
 
+   The Russian dictionaries are in data/ru. Thus, the Russian parser
+   can be started as:
+
+      link-parser data/ru
+
    If you see errors similar to this:
 
        Warning: The word "encyclop" found near line 252 of en/4.0.dict
