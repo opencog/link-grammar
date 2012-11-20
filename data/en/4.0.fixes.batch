@@ -50,7 +50,6 @@ I often tended, for years at a time, to believe that shepherds quietly tend shee
 
 % misc nouns, verbs
 The smelter weighs 30 tonnes.
-He wears a mustache on the sitcom.
 She's sharp-witted and funny.
 He resigned that post.
 Exxon discovers gas offshore.
@@ -60,6 +59,20 @@ Give it a shake.
 Take the two shakes over to table five.
 
 There was wind and rain.
+
+% Problems with "on"
+% Below, "on" should modify "wears", using MVp
+He wears a mustache on the sitcom.
+
+% "on" should modify "report" via Mp
+% XXX this is still broken, at the moment...
+I have a report on sitcoms.
+I saw a report on sitcoms.
+I read a report on sitcoms.
+
+% "with" should modify verb with MVp, not object with Mp
+I have a date with Ben.
+I read a report with Ben.
 
 % "saw" w/ particle
 He tried to saw the wood.

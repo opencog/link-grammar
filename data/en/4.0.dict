@@ -2180,11 +2180,15 @@ didn't.v-d didn’t.v-d:
   ((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
     ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]));
 
+% Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
+% e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
+% However, "I have a date with Bob": we want "with" to MVp modify have,
+% and not Mp modify "date"... XXX this is all very broken ATM...
 <vc-have>:
-  ({@MV+} & TO+) or
-  ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or
-  (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+}) or
-  ({N+} & PP+);
+  ({@MV+} & TO+)
+  or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]})
+  or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+})
+  or ({N+} & PP+);
 
 have.v:
   
@@ -7193,6 +7197,8 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % XXX TODO: most preps below need this rule.
 <alter-preps>: MJrj- or MJlj+;
 
+% Mp- (which modifies nouns) has a cost, so that modifying verbs 
+% (using MVp-) is generally preferred.
 <prep-main-b>:
   <conjoin-preps>
   or [Mp-] or Pp- or MVp-
