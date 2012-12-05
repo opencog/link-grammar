@@ -58,6 +58,7 @@
 #include "command-line.h"
 #include "expand.h"
 #include "lg_readline.h"
+#include "utilities.h"     /* For MSVC portability */
 #include "../viterbi/viterbi.h"
 
 #ifndef FALSE
