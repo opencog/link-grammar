@@ -201,10 +201,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\link-grammar\command-line.h"
-				>
-			</File>
-			<File
 				RelativePath="..\link-grammar\constituents.h"
 				>
 			</File>
@@ -341,10 +337,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\link-grammar\command-line.c"
-				>
-			</File>
-			<File
 				RelativePath="..\link-grammar\constituents.c"
 				>
 			</File>
@@ -378,10 +370,6 @@
 			</File>
 			<File
 				RelativePath="..\link-grammar\idiom.c"
-				>
-			</File>
-			<File
-				RelativePath="..\link-grammar\link-parser.c"
 				>
 			</File>
 			<File

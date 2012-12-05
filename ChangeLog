@@ -7,6 +7,7 @@ Version 4.7.10 (xxx 2013 ???)
  * Include Common Lisp bindings, from Peter Szolovits (circa 2009).
  * Ongoing work on pre-alpha Viterbi decoder.
  * Fix: Bug 55: aspell header file included even if disabled.
+ * Updated MSVC6, MSVC9 project files.
 
 Version 4.7.9 (3 November 2012)
  * Fix: Poor comma chocies: "The man, that you saw..." (issue #36)

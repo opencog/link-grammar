@@ -108,10 +108,6 @@ SOURCE="..\..\link-grammar\build-disjuncts.c"
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\command-line.c"
-# End Source File
-# Begin Source File
-
 SOURCE="..\..\link-grammar\constituents.c"
 # End Source File
 # Begin Source File
