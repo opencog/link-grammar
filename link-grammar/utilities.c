@@ -19,7 +19,10 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifndef _WIN32
 #include <unistd.h>
+#endif /* _WIN32 */
 
 
 #ifdef USE_PTHREADS
@@ -161,11 +164,12 @@ strtok_r (char *s, const char *delim, char **saveptr)
 char *
 strndup (char *str, size_t size)
 {
+	size_t len;
 	char *result = (char *) NULL;
 
 	if ((char *) NULL == str) return (char *) NULL;
 
-	size_t len = strlen (str);
+	len = strlen (str);
 	if (!len) return strdup ("");
 	if (size > len) size = len;
 
