@@ -664,7 +664,7 @@ int main(int argc, char * argv[])
 	verbosity = parse_options_get_verbosity(opts);
 	check_winsize(opts);
 #ifdef _WIN32
-	parse_options_set_screen_width(popts, 79);
+	parse_options_set_screen_width(opts, 79);
 #endif
 
 	prt_error("Info: Dictionary version %s.",
