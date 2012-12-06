@@ -36,14 +36,9 @@
 
 #include <errno.h>
 #include <locale.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <wchar.h>
 
 /* Used for terminal resizing */
 #ifndef _WIN32
-#include <langinfo.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
@@ -60,21 +55,6 @@
 #include "lg_readline.h"
 #include "utilities.h"     /* For MSVC portability */
 #include "../viterbi/viterbi.h"
-
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-#ifndef TRUE
-#define TRUE 1
-#endif
-
-#if !defined(MIN)
-#define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
-#endif
-#if !defined(MAX)
-#define MAX(X,Y)  ( ((X) > (Y)) ? (X) : (Y))
-#endif
 
 #define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
