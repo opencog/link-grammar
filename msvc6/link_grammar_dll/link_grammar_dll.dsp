@@ -116,6 +116,10 @@ SOURCE="..\..\link-grammar\count.c"
 # End Source File
 # Begin Source File
 
+SOURCE="..\..\link-grammar\dictionary.c"
+# End Source File
+# Begin Source File
+
 SOURCE="..\..\link-grammar\disjuncts.c"
 # End Source File
 # Begin Source File

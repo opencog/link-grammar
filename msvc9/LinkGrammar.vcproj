@@ -345,6 +345,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\link-grammar\dictionary.c"
+				>
+			</File>
+			<File
 				RelativePath="..\link-grammar\disjunct-utils.c"
 				>
 			</File>
