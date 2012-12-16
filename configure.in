@@ -371,8 +371,8 @@ AC_CHECK_FUNCS(regexec,,[AC_CHECK_LIB(regex,regexec,
                [AC_MSG_ERROR([No regex library found])])])
 AC_SUBST(REGEX_LIBS)
 
-dnl ====================================================================
-dnl check compiler flags
+# ====================================================================
+# check compiler flags
 
 AC_DEFUN([LINK_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
@@ -446,74 +446,105 @@ AC_SUBST(LINK_CFLAGS)
 
 # =====================================================================
 # Try to guess location of the jni.h file.
-# Might be useful to look at env variables $JDK_HOME and $JAVA_HOME for these.
 #
+# The core issue here is that most Sun/Oracle java installations are
+# missing the pkgconfig file, which means that a simple and easy check
+# for jni is impossible on such systems.  What a bunch of losers.
+# Java sucks.
+#
+# There's libgcj-4.2.pc  and libgcj8.pc but nothing for Sun java ...
+#
+# PKG_CHECK_MODULES(LIBJDK, libjdk-1.5 >= $LIBJDK_REQUIRED)
+# AC_SUBST(LIBJDK_CFLAGS)
+# AC_SUBST(LIBJDK_LIBS)
+
 JNIfound=no
 
 if test "x$enable_java_bindings" = "xyes"; then
-   JNI_GUESS=" \
-      -I $JAVA_HOME/include \
-      -I $JAVA_HOME/include/freebsd \
-      -I $JAVA_HOME/include/linux \
-      -I $JAVA_HOME/include/win32 \
-      -I $JAVA_HOME/Headers \
-      -I $JDK_HOME/include \
-      -I $JDK_HOME/include/freebsd \
-      -I $JDK_HOME/include/linux \
-      -I $JDK_HOME/include/win32 \
-      -I $JDK_HOME/Headers \
-      -I/usr/include/classpath/ \
-      -I/usr/lib/jvm/default-java/include \
-      -I/usr/lib/jvm/default-java/include/freebsd \
-      -I/usr/lib/jvm/default-java/include/linux \
-      -I/usr/lib/jvm/java-gcj/include \
-      -I/usr/lib/jvm/java-gcj/include/freebsd \
-      -I/usr/lib/jvm/java-gcj/include/linux \
-      -I/usr/local/jdk1.6.0/include/\
-      -I/usr/local/jdk1.6.0/include/freebsd \
-      -I/usr/local/jdk1.6.0/include/linux \
-      -I/usr/lib/jvm/java-6-sun/include/ \
-      -I/usr/lib/jvm/java-6-sun/include/freebsd \
-      -I/usr/lib/jvm/java-6-sun/include/linux \
-      -I/usr/lib/j2sdk1.6-ibm/include \
-      -I/usr/lib/j2sdk1.6-ibm/include/freebsd \
-      -I/usr/lib/j2sdk1.6-ibm/include/linux \
-      -I/opt/jdk1.5/include/ \
-      -I/opt/jdk1.5/include/freebsd \
-      -I/opt/jdk1.5/include/linux \
-      -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include \
-      -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/freebsd \
-      -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/linux \
-      -I/c/java/jdk1.6.0/include/ \
-      -I/c/java/jdk1.6.0/include/win32/ \
-      -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
-      -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
-      -I /System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers"
-
    AC_MSG_CHECKING(for jni.h)
-   AC_PREPROC_IFELSE([AC_LANG_SOURCE([[#include <jni.h>]])],[AC_MSG_RESULT([yes, will build java libs])
-           JNIfound=yes],[ 
-          SAVE_CPPFLAGS=${CPPFLAGS}
-          CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
-          AC_MSG_WARN([Can't find jni.h header in standard locations, trying again with ${CPPFLAGS}]) 
-          AC_TRY_CPP( [#include <jni.h>], 
-                  [AC_MSG_RESULT([yes, will build java libs])
-                  JNIfound=yes], 
-                  [ AC_MSG_WARN([cannot find jni.h header, needed for Java bindings support.]) 
-                   CPPFLAGS=${SAVE_CPPFLAGS}
-                   JNIfound=no])
-          ])
+
+   # Try looking for jni in the standard locations first.
+   AC_TRY_CPP(
+      [#include <jni.h>], 
+      [AC_MSG_RESULT([yes, will build java libs])
+         JNIfound=yes], 
+      [AC_MSG_WARN([cannot find jni.h in standard location.]) 
+         JNIfound=no])
+
+   # Didn't find it yet. Try looking in user-specified locations.
+   if test $JNIfound = "no"; then
+      JNI_GUESS=" \
+         -I $JAVA_HOME/include \
+         -I $JAVA_HOME/include/freebsd \
+         -I $JAVA_HOME/include/linux \
+         -I $JAVA_HOME/include/win32 \
+         -I $JAVA_HOME/Headers \
+         -I $JDK_HOME/include \
+         -I $JDK_HOME/include/freebsd \
+         -I $JDK_HOME/include/linux \
+         -I $JDK_HOME/include/win32 \
+         -I $JDK_HOME/Headers"
+  
+      AC_MSG_CHECKING(for jni.h in user-specified location)
+      SAVE_CPPFLAGS=${CPPFLAGS}
+      CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
+      AC_TRY_CPP(
+         [#include <jni.h>], 
+         [AC_MSG_RESULT([yes, will build java libs])
+            JNIfound=yes], 
+         [AC_MSG_WARN([cannot find jni.h in user-specified location.]) 
+            CPPFLAGS=${SAVE_CPPFLAGS}
+            JNIfound=no])
+   fi
+
+   # Still didn't find it. Try looking in some non-standard locations.
+   if test $JNIfound = "no"; then
+      JNI_GUESS=" \
+         -I/usr/include/classpath/ \
+         -I/usr/lib/jvm/default-java/include \
+         -I/usr/lib/jvm/default-java/include/freebsd \
+         -I/usr/lib/jvm/default-java/include/linux \
+         -I/usr/lib/jvm/java-gcj/include \
+         -I/usr/lib/jvm/java-gcj/include/freebsd \
+         -I/usr/lib/jvm/java-gcj/include/linux \
+         -I/usr/local/jdk1.6.0/include/\
+         -I/usr/local/jdk1.6.0/include/freebsd \
+         -I/usr/local/jdk1.6.0/include/linux \
+         -I/usr/lib/jvm/java-6-sun/include/ \
+         -I/usr/lib/jvm/java-6-sun/include/freebsd \
+         -I/usr/lib/jvm/java-6-sun/include/linux \
+         -I/usr/lib/j2sdk1.6-ibm/include \
+         -I/usr/lib/j2sdk1.6-ibm/include/freebsd \
+         -I/usr/lib/j2sdk1.6-ibm/include/linux \
+         -I/opt/jdk1.5/include/ \
+         -I/opt/jdk1.5/include/freebsd \
+         -I/opt/jdk1.5/include/linux \
+         -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include \
+         -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/freebsd \
+         -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/linux \
+         -I/c/java/jdk1.6.0/include/ \
+         -I/c/java/jdk1.6.0/include/win32/ \
+         -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
+         -I/Developer/SDKs/MacOSX10.4u.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
+         -I /System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers"
+  
+      AC_MSG_CHECKING(for jni.h in non-standard location)
+      SAVE_CPPFLAGS=${CPPFLAGS}
+      CPPFLAGS="${CPPFLAGS} ${JNI_GUESS}"
+      AC_TRY_CPP(
+         [#include <jni.h>], 
+         [AC_MSG_RESULT([yes, will build java libs])
+            JNIfound=yes], 
+         [AC_MSG_WARN([cannot find jni.h in anywhere.]) 
+            CPPFLAGS=${SAVE_CPPFLAGS}
+            JNIfound=no])
+   fi
+
    AC_SUBST(CPPFLAGS)
 
-   # Hmm .. there seems to be a missing pkgconfig for Sun java ... 
-   # There's libgcj-4.2.pc  and libgcj8.pc but nothing for Sun java??
-   # PKG_CHECK_MODULES(LIBJDK, libjdk-1.5 >= $LIBJDK_REQUIRED)
-   # AC_SUBST(LIBJDK_CFLAGS)
-   # AC_SUBST(LIBJDK_LIBS)
-
-   # For now, we assume that if the jni files are there, then the javac
-   # ant, and jar compilers/builders are install as well. This is used
-   # to build the jar file and install it.
+   # For now, we assume that if the jni files are there, then the 
+   # javac, ant, and jar compilers/builders are installed as well.
+   # These are used to build the jar file and install it.
    AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
 else
    AM_CONDITIONAL(HAVE_JAVA, false)

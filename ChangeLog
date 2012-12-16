@@ -8,6 +8,7 @@ Version 4.7.10 (xxx 2013 ???)
  * Ongoing work on pre-alpha Viterbi decoder.
  * Fix: Bug 55: aspell header file included even if disabled.
  * Updated MSVC6, MSVC9 project files.
+ * New, improved search for java jni.h
 
 Version 4.7.9 (3 November 2012)
  * Fix: Poor comma chocies: "The man, that you saw..." (issue #36)
