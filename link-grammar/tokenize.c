@@ -410,17 +410,6 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-static Boolean find_word_in_dict(Dictionary dict, const char * word)
-{
-	const char * regex_name;
-	if (boolean_dictionary_lookup (dict, word)) return TRUE;
-
-	regex_name = match_regex(dict, word);
-	if (NULL == regex_name) return FALSE;
-
-	return boolean_dictionary_lookup(dict, regex_name);
-}
-
 /**
  * w points to a string, wend points to the char one after the end.  The
  * "word" w contains no blanks.  This function splits up the word if

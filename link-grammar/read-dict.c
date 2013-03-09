@@ -18,6 +18,7 @@
 #include "api.h"
 #include "disjunct-utils.h"
 #include "error.h"
+#include "regex-morph.h"
 #include "word-file.h"
 
 const char * linkgrammar_get_version(void)
@@ -657,13 +658,29 @@ Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 	return llist;
 }
 
-int boolean_dictionary_lookup(Dictionary dict, const char *s)
+Boolean boolean_dictionary_lookup(Dictionary dict, const char *s)
 {
 	Dict_node *llist = dictionary_lookup_list(dict, s);
-	int boool = (llist != NULL);
+	Boolean boool = (llist != NULL);
 	free_lookup_list(llist);
 	return boool;
 }
+
+/**
+ * Return true if word is in dicationary, or if word is matched by
+ * regex.
+ */
+Boolean find_word_in_dict(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	if (boolean_dictionary_lookup (dict, word)) return TRUE;
+
+	regex_name = match_regex(dict, word);
+	if (NULL == regex_name) return FALSE;
+
+	return boolean_dictionary_lookup(dict, regex_name);
+}
+
 
 /* ======================================================================== */
 /**

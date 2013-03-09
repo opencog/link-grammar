@@ -18,12 +18,15 @@ LINK_BEGIN_DECLS
 #include "api-types.h"
 
 Boolean read_dictionary(Dictionary dict);
-void dict_display_word_info(Dictionary dict, const char * s);
-void dict_display_word_expr(Dictionary dict, const char * s);
+void dict_display_word_info(Dictionary dict, const char *);
+void dict_display_word_expr(Dictionary dict, const char *);
 void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);
 void print_expression(Exp *);
-int  boolean_dictionary_lookup(Dictionary dict, const char *);
+
+Boolean boolean_dictionary_lookup(Dictionary dict, const char *);
+Boolean find_word_in_dict(Dictionary dict, const char *);
+
 int  delete_dictionary_words(Dictionary dict, const char *);
 
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
