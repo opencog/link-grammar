@@ -1,5 +1,6 @@
 Version 4.7.10 (xxx 2013 ???)
  * New: Russian dictionaries from Sergey Protasov!
+ * Improve prefix, suffix handling and stemming (needed for Russian)
  * Fix: add "gurgle.n" to dictionary.
  * Improve memory utilization (remove pointless malloc/free).
  * Fix: UTF8 multi-byte diagram printing.
