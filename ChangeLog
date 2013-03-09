@@ -1,4 +1,4 @@
-Version 4.7.10 (xxx 2013 ???)
+Version 4.7.10 (9 March 2013)
  * New: Russian dictionaries from Sergey Protasov!
  * Improve prefix, suffix handling and stemming (needed for Russian)
  * Fix: add "gurgle.n" to dictionary.
@@ -11,9 +11,10 @@ Version 4.7.10 (xxx 2013 ???)
  * Updated MSVC6, MSVC9 project files.
  * New, improved search for java jni.h
  * Faster counting of disjuncts for the !! command.
+ * The !! command now shows regex entries and stem+suffix splits.
 
 Version 4.7.9 (3 November 2012)
- * Fix: Poor comma chocies: "The man, that you saw..." (issue #36)
+ * Fix: Poor comma choices: "The man, that you saw..." (issue #36)
  * Fix: Add more java jni.h search paths.
  * Fix: Warning in java JSON interface.
  * Fix: weren't constructions: "If it weren't for Sally, ..."
