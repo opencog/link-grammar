@@ -239,10 +239,8 @@ struct Sentence_s
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 
 	/* Tokenizer internal/private state */
-	Boolean   *post_quote;
-	Word      pref;
-	Word      stem;
-	Word      suff;
+	Boolean       *post_quote;
+	Tokenizer     tokenizer;
 
 	/* parser internal/private state */
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */

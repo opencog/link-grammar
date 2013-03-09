@@ -209,22 +209,22 @@ static const char ** resize_alts(const char **arr, size_t len)
 /**
  * Accumulate different word-stemming possibilities 
  */
-static void add_suffix_alternatives(Sentence sent,
+static void add_suffix_alternatives(Tokenizer * tok,
                                    const char * stem, const char * suffix)
 {
 	char buff[MAX_WORD+1];
 	size_t sz;
 	
-	size_t stemlen = altlen(sent->stem.alternatives);
-	size_t sufflen = altlen(sent->suff.alternatives);
+	size_t stemlen = altlen(tok->stem.alternatives);
+	size_t sufflen = altlen(tok->suff.alternatives);
 
-	sent->stem.alternatives = resize_alts(sent->stem.alternatives, stemlen);
-	sent->stem.alternatives[stemlen] = string_set_add(stem, sent->string_set);
+	tok->stem.alternatives = resize_alts(tok->stem.alternatives, stemlen);
+	tok->stem.alternatives[stemlen] = string_set_add(stem, tok->string_set);
 
 	if (NULL == suffix)
 		return;
 
-	sent->suff.alternatives = resize_alts(sent->suff.alternatives, sufflen);
+	tok->suff.alternatives = resize_alts(tok->suff.alternatives, sufflen);
 
 	/* Add an equals-sign to the suffix.  This is needed to distinguish
 	 * suffixes that were stripped off from ordinary words that just
@@ -235,29 +235,29 @@ static void add_suffix_alternatives(Sentence sent,
 	strncpy(&buff[1], suffix, sz);
 	buff[sz] = 0;
 
-	sent->suff.alternatives[sufflen] = string_set_add(buff, sent->string_set);
+	tok->suff.alternatives[sufflen] = string_set_add(buff, tok->string_set);
 }
 
-static void add_presuff_alternatives(Sentence sent, const char *prefix,
-                                   const char * stem, const char * suffix)
+static void add_presuff_alternatives(Tokenizer * tok, const char * prefix,
+                                    const char * stem, const char * suffix)
 {
 	char buff[MAX_WORD+1];
 	size_t sz;
 
-	size_t preflen = altlen(sent->pref.alternatives);
-	size_t stemlen = altlen(sent->stem.alternatives);
-	size_t sufflen = altlen(sent->suff.alternatives);
+	size_t preflen = altlen(tok->pref.alternatives);
+	size_t stemlen = altlen(tok->stem.alternatives);
+	size_t sufflen = altlen(tok->suff.alternatives);
 
-	sent->pref.alternatives = resize_alts(sent->pref.alternatives, preflen);
-	sent->pref.alternatives[preflen] = string_set_add(prefix, sent->string_set);
+	tok->pref.alternatives = resize_alts(tok->pref.alternatives, preflen);
+	tok->pref.alternatives[preflen] = string_set_add(prefix, tok->string_set);
 
-	sent->stem.alternatives = resize_alts(sent->stem.alternatives, stemlen);
-	sent->stem.alternatives[stemlen] = string_set_add(stem, sent->string_set);
+	tok->stem.alternatives = resize_alts(tok->stem.alternatives, stemlen);
+	tok->stem.alternatives[stemlen] = string_set_add(stem, tok->string_set);
 
 	if (NULL == suffix)
 		return;
 
-	sent->suff.alternatives = resize_alts(sent->suff.alternatives, sufflen);
+	tok->suff.alternatives = resize_alts(tok->suff.alternatives, sufflen);
 
 	/* Add an equals-sign to the suffix.  This is needed to distinguish
 	 * suffixes that were stripped off from ordinary words that just
@@ -268,7 +268,7 @@ static void add_presuff_alternatives(Sentence sent, const char *prefix,
 	strncpy(&buff[1], suffix, sz);
 	buff[sz] = 0;
 
-	sent->suff.alternatives[sufflen] = string_set_add(buff, sent->string_set);
+	tok->suff.alternatives[sufflen] = string_set_add(buff, tok->string_set);
 }
 
 /**
@@ -280,9 +280,9 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 {
 	Boolean issued = FALSE;
 	size_t len = sent->length;
-	size_t preflen = altlen(sent->pref.alternatives);
-	size_t stemlen = altlen(sent->stem.alternatives);
-	size_t sufflen = altlen(sent->suff.alternatives);
+	size_t preflen = altlen(sent->tokenizer.pref.alternatives);
+	size_t stemlen = altlen(sent->tokenizer.stem.alternatives);
+	size_t sufflen = altlen(sent->tokenizer.suff.alternatives);
 
 	if (preflen)
 	{
@@ -295,12 +295,12 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->pref.alternatives;
-		sent->pref.alternatives = NULL;
+		sent->word[len].alternatives = sent->tokenizer.pref.alternatives;
+		sent->tokenizer.pref.alternatives = NULL;
 
 		sent->word[len].firstupper = FALSE;
-		for(i=0; NULL != sent->pref.alternatives[i]; i++) {
-			const char *s = sent->pref.alternatives[i];
+		for (i=0; NULL != sent->tokenizer.pref.alternatives[i]; i++) {
+			const char *s = sent->tokenizer.pref.alternatives[i];
 		   if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
 		}
 
@@ -317,19 +317,19 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->stem.alternatives;
+		sent->word[len].alternatives = sent->tokenizer.stem.alternatives;
 
 		sent->word[len].firstupper = FALSE;
 		if (0 == preflen)
 		{
 			size_t i;
-			for (i = 0; NULL != sent->stem.alternatives[i]; i++) {
-				const char *s = sent->stem.alternatives[i];
+			for (i = 0; NULL != sent->tokenizer.stem.alternatives[i]; i++) {
+				const char *s = sent->tokenizer.stem.alternatives[i];
 		   	if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
 			}
 		}
 
-		sent->stem.alternatives = NULL;
+		sent->tokenizer.stem.alternatives = NULL;
 		len++;
 		issued = TRUE;
 	}
@@ -343,8 +343,8 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->suff.alternatives;
-		sent->suff.alternatives = NULL;
+		sent->word[len].alternatives = sent->tokenizer.suff.alternatives;
+		sent->tokenizer.suff.alternatives = NULL;
 
 		sent->word[len].firstupper = FALSE;
 		len++;
@@ -663,7 +663,7 @@ do_suffix_processing:
 					if (1 < verbosity)
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
 
-					add_suffix_alternatives(sent, newword, suffix[i]);
+					add_suffix_alternatives(&sent->tokenizer, newword, suffix[i]);
 					word_is_in_dict = TRUE;
 				}
 
@@ -691,9 +691,9 @@ do_suffix_processing:
 								}
 								word_is_in_dict = TRUE;
 								if (i < s_strippable)
-									add_presuff_alternatives(sent, prefix[j], newword, suffix[i]);
+									add_presuff_alternatives(&sent->tokenizer, prefix[j], newword, suffix[i]);
 								else
-									add_presuff_alternatives(sent, prefix[j], newword, NULL);
+									add_presuff_alternatives(&sent->tokenizer, prefix[j], newword, NULL);
 							}
 						}
 					}

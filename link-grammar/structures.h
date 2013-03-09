@@ -208,6 +208,16 @@ struct Word_struct
     Boolean firstupper;
 };
 
+struct Tokenizer_struct
+{
+	String_set * string_set;
+	Word         pref;
+	Word         stem;
+	Word         suff;
+};
+
+typedef struct Tokenizer_struct Tokenizer;
+
 /** 
  * Types of Exp_struct structures
  */
