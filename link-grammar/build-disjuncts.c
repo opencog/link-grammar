@@ -439,31 +439,20 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 #else /* OBSOLETE_MEMORY_PIGGY */
 
 /**
- * Count number of disjuncts given the clause list c.
- * string is the print name of word that generated this disjunct.
+ * Count number of disjuncts given the dict node dn.
  */
-
-static unsigned int count_disjuncts_for_X_node(X_node * x, float cost_cutoff)
+unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 {
 	Clause *c, *cl;
 	unsigned int cnt = 0;
-	c = build_clause(x->exp);
+	c = build_clause(dn->exp);
 	for (cl = c; cl != NULL; cl = cl->next)
 	{
-		if (cl->maxcost <= cost_cutoff)
+		if (cl->maxcost <= MAX_CONNECTOR_COST)
          cnt ++;
 	}
 	free_clause_list(c);
 	return cnt;
-}
-
-unsigned int count_disjunct_for_dict_node(Dict_node *dn)
-{
-	Disjunct *dj;
-	X_node x;
-	x.exp = dn->exp;
-	x.string = dn->string;
-	return count_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
 }
 #endif /* OBSOLETE_MEMORY_PIGGY */
 
