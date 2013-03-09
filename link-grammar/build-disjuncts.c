@@ -423,8 +423,9 @@ void prt_exp(Exp *e, int i)
 /**
  * Build a list of disjuncts.
  *
- * This is mostly used only for counting the number of disjuncts
- * (but is otherwise "almost" obsolete ??)
+ * The only place where this is used is for counting the number
+ * of disjuncts, called by dict_display_word_info().  Unfortunately,
+ * this is a huge memory pig, esp for the Russian dictionary.
  */
 Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 {
@@ -439,20 +440,51 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 #else /* OBSOLETE_MEMORY_PIGGY */
 
 /**
+ * Count the number of clauses (disjuncts) for the expression e.
+ * Should return the number of disjuncts that would be returned
+ * by build_disjunct().  This in turn should be equal to the number
+ * of clauses built by build_clause().
+ *
+ * Only one minor cheat here: we are ignoring the cost_cutoff, so
+ * this potentially over-counts if the cost_cutoff is se low.
+ */
+static unsigned int count_clause(Exp *e)
+{
+   unsigned int cnt = 0;
+	E_list * e_list;
+
+	assert(e != NULL, "count_clause called with null parameter");
+	if (e->type == AND_type)
+	{
+      /* multiplicative combinatorial explosion */
+		cnt = 1;
+		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+			cnt *= count_clause(e_list->e);
+	}
+	else if (e->type == OR_type)
+	{
+      /* Just additive */
+		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
+         cnt += count_clause(e_list->e);
+	}
+	else if (e->type == CONNECTOR_type)
+	{
+		return 1;
+	}
+	else
+	{
+		assert(FALSE, "an expression node with no type");
+	}
+
+	return cnt;
+}
+
+/**
  * Count number of disjuncts given the dict node dn.
  */
 unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 {
-	Clause *c, *cl;
-	unsigned int cnt = 0;
-	c = build_clause(dn->exp);
-	for (cl = c; cl != NULL; cl = cl->next)
-	{
-		if (cl->maxcost <= MAX_CONNECTOR_COST)
-         cnt ++;
-	}
-	free_clause_list(c);
-	return cnt;
+	return count_clause(dn->exp);
 }
 #endif /* OBSOLETE_MEMORY_PIGGY */
 
