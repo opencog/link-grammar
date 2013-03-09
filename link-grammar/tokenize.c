@@ -411,8 +411,13 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
+/**
+ * Split word into prefix, stem and suffix. 
+ * Record all of the alternative splittings in the tokenizer
+ * alternatives arrays.
+ */
 static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
-                         const char *w, const char *wend)
+                            const char *w, const char *wend)
 {
 	int i, j, len;
 	int p_strippable, s_strippable;
@@ -507,6 +512,16 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 }
 
 /**
+ * Split word into prefix, stem and suffix. 
+ * Record all of the alternative splittings in the tokenizer
+ * alternatives arrays.
+ */
+Boolean split_word(Tokenizer *tokenizer, Dictionary dict, const char *word)
+{
+	return suffix_split(tokenizer, dict, word, word + strlen(word));
+}
+
+/**
  * w points to a string, wend points to the char one after the end.  The
  * "word" w contains no blanks.  This function splits up the word if
  * necessary, and calls "issue_sentence_word()" on each of the resulting
@@ -536,13 +551,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
 
-	Tokenizer *tokenizer = &sent->tokenizer;
 	Dictionary dict = sent->dict;
-
-	tokenizer->string_set = sent->string_set;
-	tokenizer->pref_alternatives = NULL;
-	tokenizer->stem_alternatives = NULL;
-	tokenizer->suff_alternatives = NULL;
 
 	if (dict->affix_table != NULL)
 	{
@@ -724,6 +733,13 @@ do_suffix_processing:
 	/* OK, now try to strip suffixes. */
 	if (!word_is_in_dict || have_empty_suffix)
 	{
+		Tokenizer *tokenizer = &sent->tokenizer;
+
+		tokenizer->string_set = dict->string_set;
+		tokenizer->pref_alternatives = NULL;
+		tokenizer->stem_alternatives = NULL;
+		tokenizer->suff_alternatives = NULL;
+
 		word_is_in_dict = suffix_split(tokenizer, dict, w, wend);
 	}
 

@@ -1834,6 +1834,7 @@ void free_dictionary(Dictionary dict)
  */
 void dict_display_word_info(Dictionary dict, const char * word)
 {
+	Tokenizer toker;
 	const char * regex_name;
 	Dict_node *dn, *dn_head;
 
@@ -1865,6 +1866,17 @@ void dict_display_word_info(Dictionary dict, const char * word)
 		dict_display_word_info(dict, regex_name);
 		return;
 	}
+
+	toker.pref_alternatives = NULL;
+	toker.stem_alternatives = NULL;
+	toker.suff_alternatives = NULL;
+	toker.string_set = dict->string_set;
+	if (split_word (&toker, dict, word))
+	{
+		printf("duude got one!\n");
+		return;
+	}
+
 	printf("	\"%s\" matches nothing in the dictionary.\n", word);
 }
 

@@ -13,3 +13,6 @@
 Boolean separate_sentence(Sentence, Parse_Options);
 void build_sentence_expressions(Sentence, Parse_Options);
 Boolean sentence_in_dictionary(Sentence);
+
+Boolean split_word(Tokenizer *, Dictionary, const char *);
+
