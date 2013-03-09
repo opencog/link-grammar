@@ -279,10 +279,11 @@ static void add_presuff_alternatives(Tokenizer * tok, const char * prefix,
 static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 {
 	Boolean issued = FALSE;
+	Tokenizer *tokenizer = &sent->tokenizer;
 	size_t len = sent->length;
-	size_t preflen = altlen(sent->tokenizer.pref_alternatives);
-	size_t stemlen = altlen(sent->tokenizer.stem_alternatives);
-	size_t sufflen = altlen(sent->tokenizer.suff_alternatives);
+	size_t preflen = altlen(tokenizer->pref_alternatives);
+	size_t stemlen = altlen(tokenizer->stem_alternatives);
+	size_t sufflen = altlen(tokenizer->suff_alternatives);
 
 	if (preflen)
 	{
@@ -295,12 +296,12 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->tokenizer.pref_alternatives;
-		sent->tokenizer.pref_alternatives = NULL;
+		sent->word[len].alternatives = tokenizer->pref_alternatives;
+		tokenizer->pref_alternatives = NULL;
 
 		sent->word[len].firstupper = FALSE;
-		for (i=0; NULL != sent->tokenizer.pref_alternatives[i]; i++) {
-			const char *s = sent->tokenizer.pref_alternatives[i];
+		for (i=0; NULL != tokenizer->pref_alternatives[i]; i++) {
+			const char *s = tokenizer->pref_alternatives[i];
 		   if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
 		}
 
@@ -317,19 +318,19 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->tokenizer.stem_alternatives;
+		sent->word[len].alternatives = tokenizer->stem_alternatives;
 
 		sent->word[len].firstupper = FALSE;
 		if (0 == preflen)
 		{
 			size_t i;
-			for (i = 0; NULL != sent->tokenizer.stem_alternatives[i]; i++) {
-				const char *s = sent->tokenizer.stem_alternatives[i];
+			for (i = 0; NULL != tokenizer->stem_alternatives[i]; i++) {
+				const char *s = tokenizer->stem_alternatives[i];
 		   	if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
 			}
 		}
 
-		sent->tokenizer.stem_alternatives = NULL;
+		tokenizer->stem_alternatives = NULL;
 		len++;
 		issued = TRUE;
 	}
@@ -343,8 +344,8 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->tokenizer.suff_alternatives;
-		sent->tokenizer.suff_alternatives = NULL;
+		sent->word[len].alternatives = tokenizer->suff_alternatives;
+		tokenizer->suff_alternatives = NULL;
 
 		sent->word[len].firstupper = FALSE;
 		len++;
@@ -444,10 +445,12 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
 
-	sent->tokenizer.string_set = sent->string_set;
-	sent->tokenizer.pref_alternatives = NULL;
-	sent->tokenizer.stem_alternatives = NULL;
-	sent->tokenizer.suff_alternatives = NULL;
+	Tokenizer *tokenizer = &sent->tokenizer;
+
+	tokenizer->string_set = sent->string_set;
+	tokenizer->pref_alternatives = NULL;
+	tokenizer->stem_alternatives = NULL;
+	tokenizer->suff_alternatives = NULL;
 
 	if (sent->dict->affix_table != NULL)
 	{
@@ -668,7 +671,7 @@ do_suffix_processing:
 					if (1 < verbosity)
 						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
 
-					add_suffix_alternatives(&sent->tokenizer, newword, suffix[i]);
+					add_suffix_alternatives(tokenizer, newword, suffix[i]);
 					word_is_in_dict = TRUE;
 				}
 
@@ -696,9 +699,9 @@ do_suffix_processing:
 								}
 								word_is_in_dict = TRUE;
 								if (i < s_strippable)
-									add_presuff_alternatives(&sent->tokenizer, prefix[j], newword, suffix[i]);
+									add_presuff_alternatives(tokenizer, prefix[j], newword, suffix[i]);
 								else
-									add_presuff_alternatives(&sent->tokenizer, prefix[j], newword, NULL);
+									add_presuff_alternatives(tokenizer, prefix[j], newword, NULL);
 							}
 						}
 					}
