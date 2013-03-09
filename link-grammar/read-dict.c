@@ -1829,6 +1829,14 @@ void free_dictionary(Dictionary dict)
 	free_Exp_list(dict->exp_list);
 }
 
+static size_t altlen(const char **arr)
+{
+	size_t len = 0;
+	if (arr)
+		while (arr[len] != NULL) len++;
+	return len;
+}
+
 /**
  *  dict_display_word_info() - display the information about the given word.
  */
@@ -1867,13 +1875,37 @@ void dict_display_word_info(Dictionary dict, const char * word)
 		return;
 	}
 
+	/* If word still wasn't found, try splitting it into 
+	 * prefix-stem-suffix, and print the dict entries for those */
 	toker.pref_alternatives = NULL;
 	toker.stem_alternatives = NULL;
 	toker.suff_alternatives = NULL;
 	toker.string_set = dict->string_set;
 	if (split_word (&toker, dict, word))
 	{
-		printf("duude got one!\n");
+		size_t i;
+		size_t preflen = altlen(toker.pref_alternatives);
+		size_t stemlen = altlen(toker.stem_alternatives);
+		size_t sufflen = altlen(toker.suff_alternatives);
+
+		if (preflen)
+		{
+			printf("Prefix --------\n");
+			for (i=0; NULL != toker.pref_alternatives[i]; i++)
+				dict_display_word_info(dict, toker.pref_alternatives[i]);
+		}
+		if (stemlen)
+		{
+			printf("Stem --------\n");
+			for (i=0; NULL != toker.stem_alternatives[i]; i++)
+				dict_display_word_info(dict, toker.stem_alternatives[i]);
+		}
+		if (sufflen)
+		{
+			printf("Suffix --------\n");
+			for (i=0; NULL != toker.suff_alternatives[i]; i++)
+				dict_display_word_info(dict, toker.suff_alternatives[i]);
+		}
 		return;
 	}
 
@@ -1885,6 +1917,7 @@ void dict_display_word_info(Dictionary dict, const char * word)
  */
 void dict_display_word_expr(Dictionary dict, const char * word)
 {
+	Tokenizer toker;
 	const char * regex_name;
 	Dict_node *dn, *dn_head;
 
@@ -1911,5 +1944,40 @@ void dict_display_word_expr(Dictionary dict, const char * word)
 		dict_display_word_expr(dict, regex_name);
 		return;
 	}
+
+	/* If word still wasn't found, try splitting it into 
+	 * prefix-stem-suffix, and print the dict entries for those */
+	toker.pref_alternatives = NULL;
+	toker.stem_alternatives = NULL;
+	toker.suff_alternatives = NULL;
+	toker.string_set = dict->string_set;
+	if (split_word (&toker, dict, word))
+	{
+		size_t i;
+		size_t preflen = altlen(toker.pref_alternatives);
+		size_t stemlen = altlen(toker.stem_alternatives);
+		size_t sufflen = altlen(toker.suff_alternatives);
+
+		if (preflen)
+		{
+			printf("Prefix --------\n");
+			for (i=0; NULL != toker.pref_alternatives[i]; i++)
+				dict_display_word_expr(dict, toker.pref_alternatives[i]);
+		}
+		if (stemlen)
+		{
+			printf("Stem --------\n");
+			for (i=0; NULL != toker.stem_alternatives[i]; i++)
+				dict_display_word_expr(dict, toker.stem_alternatives[i]);
+		}
+		if (sufflen)
+		{
+			printf("Suffix --------\n");
+			for (i=0; NULL != toker.suff_alternatives[i]; i++)
+				dict_display_word_expr(dict, toker.suff_alternatives[i]);
+		}
+		return;
+	}
+
 	printf("	\"%s\" matches nothing in the dictionary.\n", word);
 }
