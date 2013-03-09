@@ -411,6 +411,104 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 #undef		MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
+static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
+                         const char *w, const char *wend)
+{
+	int i, j, len;
+	int s_strippable=0, p_strippable=0;
+	const char ** prefix = NULL;
+	const char ** suffix = NULL;
+	char newword[MAX_WORD+1];
+	Boolean word_is_in_dict = FALSE;
+
+	/* Set up affix tables.  */
+	if (dict->affix_table != NULL)
+	{
+		Dictionary adict = dict->affix_table;
+		p_strippable = adict->p_strippable;
+		s_strippable = adict->s_strippable;
+
+		prefix = adict->prefix;
+		suffix = adict->suffix;
+	}
+
+	j = 0;
+	for (i=0; i <= s_strippable; i++)
+	{
+		Boolean s_ok = FALSE;
+		/* Go through once for each suffix; then go through one 
+		 * final time for the no-suffix case (i.e. to look for
+		 * prefixes only, without suffixes.) */
+		if (i < s_strippable)
+		{
+			len = strlen(suffix[i]);
+
+			/* The remaining w is too short for a possible match */
+			if ((wend-w) < len) continue;
+
+			/* Always match the zero-lenght suffix */
+			if (0 == len) s_ok = TRUE;
+			else if (strncmp(wend-len, suffix[i], len) == 0) s_ok = TRUE;
+		}
+		else
+			len = 0;
+
+		if (s_ok || i == s_strippable)
+		{
+			size_t sz = MIN((wend-len)-w, MAX_WORD);
+			strncpy(newword, w, sz);
+			newword[sz] = '\0';
+
+			/* Check if the remainder is in the dictionary;
+			 * for the no-suffix case, it won't be */
+			if ((i < s_strippable) &&
+			    find_word_in_dict(dict, newword))
+			{
+				if (1 < verbosity)
+					printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
+
+				add_suffix_alternatives(tokenizer, newword, suffix[i]);
+				word_is_in_dict = TRUE;
+			}
+
+			/* If the remainder isn't in the dictionary, 
+			 * try stripping off prefixes */
+			else
+			{
+				for (j=0; j<p_strippable; j++)
+				{
+					if (strncmp(w, prefix[j], strlen(prefix[j])) == 0)
+					{
+						int sz = MIN((wend - len) - (w + strlen(prefix[j])), MAX_WORD);
+						strncpy(newword, w+strlen(prefix[j]), sz);
+						newword[sz] = '\0';
+						if (find_word_in_dict(dict, newword))
+						{
+							if (verbosity>1)
+							{
+								if (i < s_strippable)
+									printf("Splitting word into three: %s-%s-%s\n",
+										prefix[j], newword, suffix[i]);
+								else
+									printf("Splitting off a prefix: %s-%s\n",
+										prefix[j], newword);
+							}
+							word_is_in_dict = TRUE;
+							if (i < s_strippable)
+								add_presuff_alternatives(tokenizer, prefix[j], newword, suffix[i]);
+							else
+								add_presuff_alternatives(tokenizer, prefix[j], newword, NULL);
+						}
+					}
+				}
+			}
+			if (j != p_strippable) break;
+		}
+	}
+
+	return word_is_in_dict;
+}
+
 /**
  * w points to a string, wend points to the char one after the end.  The
  * "word" w contains no blanks.  This function splits up the word if
@@ -636,79 +734,7 @@ do_suffix_processing:
 	/* OK, now try to strip suffixes. */
 	if (!word_is_in_dict || have_empty_suffix)
 	{
-		j = 0;
-		for (i=0; i <= s_strippable; i++)
-		{
-			Boolean s_ok = FALSE;
-			/* Go through once for each suffix; then go through one 
-			 * final time for the no-suffix case (i.e. to look for
-			 * prefixes only, without suffixes.) */
-			if (i < s_strippable)
-			{
-				len = strlen(suffix[i]);
-
-				/* The remaining w is too short for a possible match */
-				if ((wend-w) < len) continue;
-
-				/* Always match the zero-lenght suffix */
-				if (0 == len) s_ok = TRUE;
-				else if (strncmp(wend-len, suffix[i], len) == 0) s_ok = TRUE;
-			}
-			else
-				len = 0;
-
-			if (s_ok || i == s_strippable)
-			{
-				size_t sz = MIN((wend-len)-w, MAX_WORD);
-				strncpy(newword, w, sz);
-				newword[sz] = '\0';
-
-				/* Check if the remainder is in the dictionary;
-				 * for the no-suffix case, it won't be */
-				if ((i < s_strippable) &&
-				    find_word_in_dict(sent->dict, newword))
-				{
-					if (1 < verbosity)
-						printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
-
-					add_suffix_alternatives(tokenizer, newword, suffix[i]);
-					word_is_in_dict = TRUE;
-				}
-
-				/* If the remainder isn't in the dictionary, 
-				 * try stripping off prefixes */
-				else
-				{
-					for (j=0; j<p_strippable; j++)
-					{
-						if (strncmp(w, prefix[j], strlen(prefix[j])) == 0)
-						{
-							int sz = MIN((wend - len) - (w + strlen(prefix[j])), MAX_WORD);
-							strncpy(newword, w+strlen(prefix[j]), sz);
-							newword[sz] = '\0';
-							if (find_word_in_dict(sent->dict, newword))
-							{
-								if (verbosity>1)
-								{
-									if (i < s_strippable)
-										printf("Splitting word into three: %s-%s-%s\n",
-											prefix[j], newword, suffix[i]);
-									else
-										printf("Splitting off a prefix: %s-%s\n",
-											prefix[j], newword);
-								}
-								word_is_in_dict = TRUE;
-								if (i < s_strippable)
-									add_presuff_alternatives(tokenizer, prefix[j], newword, suffix[i]);
-								else
-									add_presuff_alternatives(tokenizer, prefix[j], newword, NULL);
-							}
-						}
-					}
-				}
-				if (j != p_strippable) break;
-			}
-		}
+		word_is_in_dict = suffix_split(tokenizer, sent->dict, w, wend);
 	}
 
 	/* word is now what remains after all the stripping has been done */
