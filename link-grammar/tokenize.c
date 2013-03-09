@@ -215,16 +215,16 @@ static void add_suffix_alternatives(Tokenizer * tok,
 	char buff[MAX_WORD+1];
 	size_t sz;
 	
-	size_t stemlen = altlen(tok->stem.alternatives);
-	size_t sufflen = altlen(tok->suff.alternatives);
+	size_t stemlen = altlen(tok->stem_alternatives);
+	size_t sufflen = altlen(tok->suff_alternatives);
 
-	tok->stem.alternatives = resize_alts(tok->stem.alternatives, stemlen);
-	tok->stem.alternatives[stemlen] = string_set_add(stem, tok->string_set);
+	tok->stem_alternatives = resize_alts(tok->stem_alternatives, stemlen);
+	tok->stem_alternatives[stemlen] = string_set_add(stem, tok->string_set);
 
 	if (NULL == suffix)
 		return;
 
-	tok->suff.alternatives = resize_alts(tok->suff.alternatives, sufflen);
+	tok->suff_alternatives = resize_alts(tok->suff_alternatives, sufflen);
 
 	/* Add an equals-sign to the suffix.  This is needed to distinguish
 	 * suffixes that were stripped off from ordinary words that just
@@ -235,7 +235,7 @@ static void add_suffix_alternatives(Tokenizer * tok,
 	strncpy(&buff[1], suffix, sz);
 	buff[sz] = 0;
 
-	tok->suff.alternatives[sufflen] = string_set_add(buff, tok->string_set);
+	tok->suff_alternatives[sufflen] = string_set_add(buff, tok->string_set);
 }
 
 static void add_presuff_alternatives(Tokenizer * tok, const char * prefix,
@@ -244,20 +244,20 @@ static void add_presuff_alternatives(Tokenizer * tok, const char * prefix,
 	char buff[MAX_WORD+1];
 	size_t sz;
 
-	size_t preflen = altlen(tok->pref.alternatives);
-	size_t stemlen = altlen(tok->stem.alternatives);
-	size_t sufflen = altlen(tok->suff.alternatives);
+	size_t preflen = altlen(tok->pref_alternatives);
+	size_t stemlen = altlen(tok->stem_alternatives);
+	size_t sufflen = altlen(tok->suff_alternatives);
 
-	tok->pref.alternatives = resize_alts(tok->pref.alternatives, preflen);
-	tok->pref.alternatives[preflen] = string_set_add(prefix, tok->string_set);
+	tok->pref_alternatives = resize_alts(tok->pref_alternatives, preflen);
+	tok->pref_alternatives[preflen] = string_set_add(prefix, tok->string_set);
 
-	tok->stem.alternatives = resize_alts(tok->stem.alternatives, stemlen);
-	tok->stem.alternatives[stemlen] = string_set_add(stem, tok->string_set);
+	tok->stem_alternatives = resize_alts(tok->stem_alternatives, stemlen);
+	tok->stem_alternatives[stemlen] = string_set_add(stem, tok->string_set);
 
 	if (NULL == suffix)
 		return;
 
-	tok->suff.alternatives = resize_alts(tok->suff.alternatives, sufflen);
+	tok->suff_alternatives = resize_alts(tok->suff_alternatives, sufflen);
 
 	/* Add an equals-sign to the suffix.  This is needed to distinguish
 	 * suffixes that were stripped off from ordinary words that just
@@ -268,7 +268,7 @@ static void add_presuff_alternatives(Tokenizer * tok, const char * prefix,
 	strncpy(&buff[1], suffix, sz);
 	buff[sz] = 0;
 
-	tok->suff.alternatives[sufflen] = string_set_add(buff, tok->string_set);
+	tok->suff_alternatives[sufflen] = string_set_add(buff, tok->string_set);
 }
 
 /**
@@ -280,9 +280,9 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 {
 	Boolean issued = FALSE;
 	size_t len = sent->length;
-	size_t preflen = altlen(sent->tokenizer.pref.alternatives);
-	size_t stemlen = altlen(sent->tokenizer.stem.alternatives);
-	size_t sufflen = altlen(sent->tokenizer.suff.alternatives);
+	size_t preflen = altlen(sent->tokenizer.pref_alternatives);
+	size_t stemlen = altlen(sent->tokenizer.stem_alternatives);
+	size_t sufflen = altlen(sent->tokenizer.suff_alternatives);
 
 	if (preflen)
 	{
@@ -295,12 +295,12 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->tokenizer.pref.alternatives;
-		sent->tokenizer.pref.alternatives = NULL;
+		sent->word[len].alternatives = sent->tokenizer.pref_alternatives;
+		sent->tokenizer.pref_alternatives = NULL;
 
 		sent->word[len].firstupper = FALSE;
-		for (i=0; NULL != sent->tokenizer.pref.alternatives[i]; i++) {
-			const char *s = sent->tokenizer.pref.alternatives[i];
+		for (i=0; NULL != sent->tokenizer.pref_alternatives[i]; i++) {
+			const char *s = sent->tokenizer.pref_alternatives[i];
 		   if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
 		}
 
@@ -317,19 +317,19 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->tokenizer.stem.alternatives;
+		sent->word[len].alternatives = sent->tokenizer.stem_alternatives;
 
 		sent->word[len].firstupper = FALSE;
 		if (0 == preflen)
 		{
 			size_t i;
-			for (i = 0; NULL != sent->tokenizer.stem.alternatives[i]; i++) {
-				const char *s = sent->tokenizer.stem.alternatives[i];
+			for (i = 0; NULL != sent->tokenizer.stem_alternatives[i]; i++) {
+				const char *s = sent->tokenizer.stem_alternatives[i];
 		   	if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
 			}
 		}
 
-		sent->tokenizer.stem.alternatives = NULL;
+		sent->tokenizer.stem_alternatives = NULL;
 		len++;
 		issued = TRUE;
 	}
@@ -343,8 +343,8 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 
-		sent->word[len].alternatives = sent->tokenizer.suff.alternatives;
-		sent->tokenizer.suff.alternatives = NULL;
+		sent->word[len].alternatives = sent->tokenizer.suff_alternatives;
+		sent->tokenizer.suff_alternatives = NULL;
 
 		sent->word[len].firstupper = FALSE;
 		len++;
@@ -443,6 +443,11 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	char newword[MAX_WORD+1];
 
 	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
+
+	sent->tokenizer.string_set = sent->string_set;
+	sent->tokenizer.pref_alternatives = NULL;
+	sent->tokenizer.stem_alternatives = NULL;
+	sent->tokenizer.suff_alternatives = NULL;
 
 	if (sent->dict->affix_table != NULL)
 	{

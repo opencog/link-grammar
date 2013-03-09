@@ -733,11 +733,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->parse_info = NULL;
 	sent->string_set = string_set_create();
 
-	sent->tokenizer.string_set = sent->string_set;
-	sent->tokenizer.pref.alternatives = NULL;
-	sent->tokenizer.stem.alternatives = NULL;
-	sent->tokenizer.suff.alternatives = NULL;
-
 	sent->q_pruned_rules = FALSE;
 #ifdef USE_FAT_LINKAGES
 	sent->deletable = NULL;

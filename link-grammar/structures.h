@@ -142,6 +142,16 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 #define PARSE_NUM_OVERFLOW (((s64)1)<<24)  
 #endif
 
+struct Tokenizer_struct
+{
+	String_set  * string_set;
+	const char ** pref_alternatives;
+	const char ** stem_alternatives;
+	const char ** suff_alternatives;
+};
+
+typedef struct Tokenizer_struct Tokenizer;
+
 struct Connector_struct
 {
     short label;
@@ -207,16 +217,6 @@ struct Word_struct
     Disjunct * d;    /* eventually these get generated */
     Boolean firstupper;
 };
-
-struct Tokenizer_struct
-{
-	String_set * string_set;
-	Word         pref;
-	Word         stem;
-	Word         suff;
-};
-
-typedef struct Tokenizer_struct Tokenizer;
 
 /** 
  * Types of Exp_struct structures
