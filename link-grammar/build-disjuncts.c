@@ -419,6 +419,7 @@ void prt_exp(Exp *e, int i)
 }
 #endif
 
+#ifdef OBSOLETE_MEMORY_PIGGY
 /**
  * Build a list of disjuncts.
  *
@@ -435,6 +436,37 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
 	/* print_disjunct_list(dj); */
 	return dj;
 }
+#else /* OBSOLETE_MEMORY_PIGGY */
+
+/**
+ * Count number of disjuncts given the clause list c.
+ * string is the print name of word that generated this disjunct.
+ */
+
+static unsigned int count_disjuncts_for_X_node(X_node * x, float cost_cutoff)
+{
+	Clause *c, *cl;
+	unsigned int cnt = 0;
+	c = build_clause(x->exp);
+	for (cl = c; cl != NULL; cl = cl->next)
+	{
+		if (cl->maxcost <= cost_cutoff)
+         cnt ++;
+	}
+	free_clause_list(c);
+	return cnt;
+}
+
+unsigned int count_disjunct_for_dict_node(Dict_node *dn)
+{
+	Disjunct *dj;
+	X_node x;
+	x.exp = dn->exp;
+	x.string = dn->string;
+	return count_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+}
+#endif /* OBSOLETE_MEMORY_PIGGY */
+
 
 /**
  * build_word_expressions() -- build list of expressions for a word

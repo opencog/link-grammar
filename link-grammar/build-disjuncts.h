@@ -16,6 +16,9 @@
 
 void build_sentence_disjuncts(Sentence sent, float cost_cutoff);
 X_node *   build_word_expressions(Dictionary dict, const char *);
+#ifdef OBSOLETE_MEMORY_PIGGY
 Disjunct * build_disjuncts_for_dict_node(Dict_node *);
+#endif
 Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff);
 
+unsigned int count_disjunct_for_dict_node(Dict_node *dn);

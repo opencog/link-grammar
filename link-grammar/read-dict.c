@@ -1818,8 +1818,6 @@ void free_dictionary(Dictionary dict)
 void dict_display_word_info(Dictionary dict, const char * s)
 {
 	Dict_node *dn, *dn_head;
-	Disjunct * d1, * d2;
-	int len;
 	dn_head = dictionary_lookup_list(dict, s);
 	if (dn_head == NULL)
 	{
@@ -1829,13 +1827,18 @@ void dict_display_word_info(Dictionary dict, const char * s)
 	printf("Matches:\n");
 	for (dn = dn_head; dn != NULL; dn = dn->right)
 	{
-		len = 0;
+		int len = 0;
+#ifdef OBSOLETE_MEMORY_PIGGY
+		Disjunct * d1, * d2;
 		d1 = build_disjuncts_for_dict_node(dn);
-		for(d2 = d1 ; d2 != NULL; d2 = d2->next)
+		for (d2 = d1 ; d2 != NULL; d2 = d2->next)
 		{
 			len++;
 		}
 		free_disjuncts(d1);
+#else
+		len = count_disjunct_for_dict_node(dn);
+#endif /* OBSOLETE_MEMORY_PIGGY */
 		printf("    ");
 		left_print_string(stdout, dn->string,
 			"                         ");
