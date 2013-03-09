@@ -1853,17 +1853,25 @@ static void display_counts(Dict_node *dn_head)
 /**
  *  dict_display_word_info() - display the information about the given word.
  */
-void dict_display_word_info(Dictionary dict, const char * s)
+void dict_display_word_info(Dictionary dict, const char * word)
 {
+	const char * regex_name;
 	Dict_node *dn_head;
-	dn_head = dictionary_lookup_list(dict, s);
-	if (dn_head == NULL)
+	dn_head = dictionary_lookup_list(dict, word);
+	if (dn_head)
 	{
-		printf("	\"%s\" matches nothing in the dictionary.\n", s);
+		display_counts(dn_head);
+		free_lookup_list(dn_head);
 		return;
 	}
-	display_counts(dn_head);
-	free_lookup_list(dn_head);
+
+	regex_name = match_regex(dict, word);
+	if (regex_name)
+	{
+		dict_display_word_info(dict, regex_name);
+		return;
+	}
+	printf("	\"%s\" matches nothing in the dictionary.\n", word);
 }
 
 /**
