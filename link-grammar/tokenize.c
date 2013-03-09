@@ -415,22 +415,19 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
                          const char *w, const char *wend)
 {
 	int i, j, len;
-	int s_strippable=0, p_strippable=0;
-	const char ** prefix = NULL;
-	const char ** suffix = NULL;
+	int p_strippable, s_strippable;
+	const char **prefix, **suffix;
 	char newword[MAX_WORD+1];
 	Boolean word_is_in_dict = FALSE;
 
 	/* Set up affix tables.  */
-	if (dict->affix_table != NULL)
-	{
-		Dictionary adict = dict->affix_table;
-		p_strippable = adict->p_strippable;
-		s_strippable = adict->s_strippable;
+	Dictionary afdict = dict->affix_table;
+	if (NULL == afdict) return FALSE;
 
-		prefix = adict->prefix;
-		suffix = adict->suffix;
-	}
+	p_strippable = afdict->p_strippable;
+	s_strippable = afdict->s_strippable;
+	prefix = afdict->prefix;
+	suffix = afdict->suffix;
 
 	j = 0;
 	for (i=0; i <= s_strippable; i++)
@@ -521,9 +518,8 @@ static void separate_word(Sentence sent, Parse_Options opts,
                          Boolean quote_found)
 {
 	size_t sz;
-	int i, j, len;
+	int i, len;
 	int r_strippable=0, l_strippable=0, u_strippable=0;
-	int s_strippable=0, p_strippable=0;
 	int  n_r_stripped = 0;
 	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
@@ -536,23 +532,21 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	const char ** strip_left = NULL;
 	const char ** strip_right = NULL;
 	const char ** strip_units = NULL;
-	const char ** prefix = NULL;
-	const char ** suffix = NULL;
 	char word[MAX_WORD+1];
-	char newword[MAX_WORD+1];
 
 	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
 
 	Tokenizer *tokenizer = &sent->tokenizer;
+	Dictionary dict = sent->dict;
 
 	tokenizer->string_set = sent->string_set;
 	tokenizer->pref_alternatives = NULL;
 	tokenizer->stem_alternatives = NULL;
 	tokenizer->suff_alternatives = NULL;
 
-	if (sent->dict->affix_table != NULL)
+	if (dict->affix_table != NULL)
 	{
-		have_empty_suffix = sent->dict->affix_table->have_empty_suffix;
+		have_empty_suffix = dict->affix_table->have_empty_suffix;
 	}
 
 	/* First, see if we can already recognize the word as-is. If
@@ -563,7 +557,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	word[sz] = '\0';
 
 	/* The simplest case: no affixes, suffixes, etc. */
-	word_is_in_dict = find_word_in_dict (sent->dict, word);
+	word_is_in_dict = find_word_in_dict (dict, word);
 
 	/* ... unless its a lang like Russian, which allows empty
 	 * suffixes, which have a real morphological linkage.
@@ -575,20 +569,16 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	}
 
 	/* Set up affix tables.  */
-	if (sent->dict->affix_table != NULL)
+	if (dict->affix_table != NULL)
 	{
-		Dictionary dict = sent->dict->affix_table;
-		r_strippable = dict->r_strippable;
-		l_strippable = dict->l_strippable;
-		u_strippable = dict->u_strippable;
-		p_strippable = dict->p_strippable;
-		s_strippable = dict->s_strippable;
+		Dictionary afdict = dict->affix_table;
+		r_strippable = afdict->r_strippable;
+		l_strippable = afdict->l_strippable;
+		u_strippable = afdict->u_strippable;
 
-		strip_left = dict->strip_left;
-		strip_right = dict->strip_right;
-		strip_units = dict->strip_units;
-		prefix = dict->prefix;
-		suffix = dict->suffix;
+		strip_left = afdict->strip_left;
+		strip_right = afdict->strip_right;
+		strip_units = afdict->strip_units;
 	}
 
 	/* If we found the word in the dict, but it also can have an
@@ -645,7 +635,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		word[sz] = '\0';
 		if (wend == w) break;  /* it will work without this */
 
-		if (find_word_in_dict(sent->dict, word))
+		if (find_word_in_dict(dict, word))
 		{
 			word_is_in_dict = TRUE;
 			break;
@@ -727,14 +717,14 @@ i		 * "wend" to the end of the word. */
 		strncpy(word, w, sz);
 		word[sz] = '\0';
 
-		word_is_in_dict = find_word_in_dict(sent->dict, word);
+		word_is_in_dict = find_word_in_dict(dict, word);
 	}
 
 do_suffix_processing:
 	/* OK, now try to strip suffixes. */
 	if (!word_is_in_dict || have_empty_suffix)
 	{
-		word_is_in_dict = suffix_split(tokenizer, sent->dict, w, wend);
+		word_is_in_dict = suffix_split(tokenizer, dict, w, wend);
 	}
 
 	/* word is now what remains after all the stripping has been done */
@@ -758,14 +748,14 @@ do_suffix_processing:
 	 */
 	if ((FALSE == word_is_in_dict) && 
 	    TRUE == opts->use_spell_guess &&
-	    sent->dict->spell_checker &&
+	    dict->spell_checker &&
 	    (FALSE == is_proper_name(word)))
 	{
 		char **alternates = NULL;
 		char *sp = NULL;
 		char *wp;
 		int j, n;
-		n = spellcheck_suggest(sent->dict->spell_checker, &alternates, word);
+		n = spellcheck_suggest(dict->spell_checker, &alternates, word);
 		for (j=0; j<n; j++)
 		{
 			/* Uhh, XXX this is not utf8 safe! ?? */
