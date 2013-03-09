@@ -1832,30 +1832,13 @@ void free_dictionary(Dictionary dict)
 /**
  *  dict_display_word_info() - display the information about the given word.
  */
-void dict_display_word_info(Dictionary dict, const char * s)
+static void display_counts(Dict_node *dn_head)
 {
-	Dict_node *dn, *dn_head;
-	dn_head = dictionary_lookup_list(dict, s);
-	if (dn_head == NULL)
-	{
-		printf("	\"%s\" matches nothing in the dictionary.\n", s);
-		return;
-	}
+	Dict_node *dn;
 	printf("Matches:\n");
 	for (dn = dn_head; dn != NULL; dn = dn->right)
 	{
-		int len = 0;
-#ifdef OBSOLETE_MEMORY_PIGGY
-		Disjunct * d1, * d2;
-		d1 = build_disjuncts_for_dict_node(dn);
-		for (d2 = d1 ; d2 != NULL; d2 = d2->next)
-		{
-			len++;
-		}
-		free_disjuncts(d1);
-#else
-		len = count_disjunct_for_dict_node(dn);
-#endif /* OBSOLETE_MEMORY_PIGGY */
+		unsigned int len = count_disjunct_for_dict_node(dn);
 		printf("    ");
 		left_print_string(stdout, dn->string,
 			"                         ");
@@ -1866,8 +1849,21 @@ void dict_display_word_info(Dictionary dict, const char * s)
 		}
 		printf("\n");
 	}
+}
+/**
+ *  dict_display_word_info() - display the information about the given word.
+ */
+void dict_display_word_info(Dictionary dict, const char * s)
+{
+	Dict_node *dn_head;
+	dn_head = dictionary_lookup_list(dict, s);
+	if (dn_head == NULL)
+	{
+		printf("	\"%s\" matches nothing in the dictionary.\n", s);
+		return;
+	}
+	display_counts(dn_head);
 	free_lookup_list(dn_head);
-	return;
 }
 
 /**
