@@ -1840,29 +1840,19 @@ static size_t altlen(const char **arr)
 /**
  *  dict_display_word_info() - display the information about the given word.
  */
-void dict_display_word_info(Dictionary dict, const char * word)
+static void display_word(Dictionary dict, const char * word,
+                         void (*disp_node)(Dict_node*),
+                         void (*recurse)(Dictionary, const char *))
+     
 {
 	Tokenizer toker;
 	const char * regex_name;
-	Dict_node *dn, *dn_head;
+	Dict_node *dn_head;
 
 	dn_head = dictionary_lookup_list(dict, word);
 	if (dn_head)
 	{
-		printf("Matches:\n");
-		for (dn = dn_head; dn != NULL; dn = dn->right)
-		{
-			unsigned int len = count_disjunct_for_dict_node(dn);
-			printf("    ");
-			left_print_string(stdout, dn->string,
-				"                         ");
-			printf(" %5d  disjuncts ", len);
-			if (dn->file != NULL)
-			{
-				printf("<%s>", dn->file->file);
-			}
-			printf("\n");
-		}
+		disp_node(dn_head);
 		free_lookup_list(dn_head);
 		return;
 	}
@@ -1871,7 +1861,7 @@ void dict_display_word_info(Dictionary dict, const char * word)
 	regex_name = match_regex(dict, word);
 	if (regex_name)
 	{
-		dict_display_word_info(dict, regex_name);
+		recurse(dict, regex_name);
 		return;
 	}
 
@@ -1890,21 +1880,21 @@ void dict_display_word_info(Dictionary dict, const char * word)
 
 		if (preflen)
 		{
-			printf("Prefix --------\n");
+			printf("\nPrefix ===================================================\n\n");
 			for (i=0; NULL != toker.pref_alternatives[i]; i++)
-				dict_display_word_info(dict, toker.pref_alternatives[i]);
+				recurse(dict, toker.pref_alternatives[i]);
 		}
 		if (stemlen)
 		{
-			printf("Stem --------\n");
+			printf("\nStem ===================================================\n\n");
 			for (i=0; NULL != toker.stem_alternatives[i]; i++)
-				dict_display_word_info(dict, toker.stem_alternatives[i]);
+				recurse(dict, toker.stem_alternatives[i]);
 		}
 		if (sufflen)
 		{
-			printf("Suffix --------\n");
+			printf("\nSuffix ===================================================\n\n");
 			for (i=0; NULL != toker.suff_alternatives[i]; i++)
-				dict_display_word_info(dict, toker.suff_alternatives[i]);
+				recurse(dict, toker.suff_alternatives[i]);
 		}
 		return;
 	}
@@ -1913,71 +1903,54 @@ void dict_display_word_info(Dictionary dict, const char * word)
 }
 
 /**
+ * Display the number of disjuncts associated wth this dict node
+ */
+static void display_counts(Dict_node *dn)
+{
+	printf("Matches:\n");
+	for (; dn != NULL; dn = dn->right)
+	{
+		unsigned int len = count_disjunct_for_dict_node(dn);
+		printf("    ");
+		left_print_string(stdout, dn->string,
+			"                         ");
+		printf(" %5d  disjuncts ", len);
+		if (dn->file != NULL)
+		{
+			printf("<%s>", dn->file->file);
+		}
+		printf("\n");
+	}
+}
+
+/**
+ *  dict_display_word_info() - display the information about the given word.
+ */
+void dict_display_word_info(Dictionary dict, const char * word)
+{
+	display_word(dict, word, display_counts, dict_display_word_info);
+}
+
+/**
+ * Display the number of disjuncts associated wth this dict node
+ */
+static void display_expr(Dict_node *dn)
+{
+	printf("\nExpressions:\n");
+	for (; dn != NULL; dn = dn->right)
+	{
+		printf("    ");
+		left_print_string(stdout, dn->string,
+			"                         ");
+		print_expression(dn->exp);
+		printf("\n\n");
+	}
+}
+
+/**
  *  dict_display_word_expr() - display the connector info for a given word.
  */
 void dict_display_word_expr(Dictionary dict, const char * word)
 {
-	Tokenizer toker;
-	const char * regex_name;
-	Dict_node *dn, *dn_head;
-
-	dn_head = dictionary_lookup_list(dict, word);
-	if (dn_head)
-	{
-		printf("\nExpressions:\n");
-		for (dn = dn_head; dn != NULL; dn = dn->right)
-		{
-			printf("    ");
-			left_print_string(stdout, dn->string,
-				"                         ");
-			print_expression(dn->exp);
-			printf("\n\n");
-		}
-		free_lookup_list(dn_head);
-		return;
-	}
-
-	/* Recurse, if its a regex match */
-	regex_name = match_regex(dict, word);
-	if (regex_name)
-	{
-		dict_display_word_expr(dict, regex_name);
-		return;
-	}
-
-	/* If word still wasn't found, try splitting it into 
-	 * prefix-stem-suffix, and print the dict entries for those */
-	toker.pref_alternatives = NULL;
-	toker.stem_alternatives = NULL;
-	toker.suff_alternatives = NULL;
-	toker.string_set = dict->string_set;
-	if (split_word (&toker, dict, word))
-	{
-		size_t i;
-		size_t preflen = altlen(toker.pref_alternatives);
-		size_t stemlen = altlen(toker.stem_alternatives);
-		size_t sufflen = altlen(toker.suff_alternatives);
-
-		if (preflen)
-		{
-			printf("Prefix --------\n");
-			for (i=0; NULL != toker.pref_alternatives[i]; i++)
-				dict_display_word_expr(dict, toker.pref_alternatives[i]);
-		}
-		if (stemlen)
-		{
-			printf("Stem --------\n");
-			for (i=0; NULL != toker.stem_alternatives[i]; i++)
-				dict_display_word_expr(dict, toker.stem_alternatives[i]);
-		}
-		if (sufflen)
-		{
-			printf("Suffix --------\n");
-			for (i=0; NULL != toker.suff_alternatives[i]; i++)
-				dict_display_word_expr(dict, toker.suff_alternatives[i]);
-		}
-		return;
-	}
-
-	printf("	\"%s\" matches nothing in the dictionary.\n", word);
+	display_word(dict, word, display_expr, dict_display_word_expr);
 }
