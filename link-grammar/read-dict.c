@@ -1832,39 +1832,33 @@ void free_dictionary(Dictionary dict)
 /**
  *  dict_display_word_info() - display the information about the given word.
  */
-static void display_counts(Dict_node *dn_head)
-{
-	Dict_node *dn;
-	printf("Matches:\n");
-	for (dn = dn_head; dn != NULL; dn = dn->right)
-	{
-		unsigned int len = count_disjunct_for_dict_node(dn);
-		printf("    ");
-		left_print_string(stdout, dn->string,
-			"                         ");
-		printf(" %5d  disjuncts ", len);
-		if (dn->file != NULL)
-		{
-			printf("<%s>", dn->file->file);
-		}
-		printf("\n");
-	}
-}
-/**
- *  dict_display_word_info() - display the information about the given word.
- */
 void dict_display_word_info(Dictionary dict, const char * word)
 {
 	const char * regex_name;
-	Dict_node *dn_head;
+	Dict_node *dn, *dn_head;
+
 	dn_head = dictionary_lookup_list(dict, word);
 	if (dn_head)
 	{
-		display_counts(dn_head);
+		printf("Matches:\n");
+		for (dn = dn_head; dn != NULL; dn = dn->right)
+		{
+			unsigned int len = count_disjunct_for_dict_node(dn);
+			printf("    ");
+			left_print_string(stdout, dn->string,
+				"                         ");
+			printf(" %5d  disjuncts ", len);
+			if (dn->file != NULL)
+			{
+				printf("<%s>", dn->file->file);
+			}
+			printf("\n");
+		}
 		free_lookup_list(dn_head);
 		return;
 	}
 
+	/* Recurse, if its a regex match */
 	regex_name = match_regex(dict, word);
 	if (regex_name)
 	{
@@ -1877,25 +1871,33 @@ void dict_display_word_info(Dictionary dict, const char * word)
 /**
  *  dict_display_word_expr() - display the connector info for a given word.
  */
-void dict_display_word_expr(Dictionary dict, const char * s)
+void dict_display_word_expr(Dictionary dict, const char * word)
 {
+	const char * regex_name;
 	Dict_node *dn, *dn_head;
 
-	dn_head = dictionary_lookup_list(dict, s);
-	if (dn_head == NULL)
+	dn_head = dictionary_lookup_list(dict, word);
+	if (dn_head)
 	{
-		printf("	\"%s\" matches nothing in the dictionary.\n", s);
+		printf("\nExpressions:\n");
+		for (dn = dn_head; dn != NULL; dn = dn->right)
+		{
+			printf("    ");
+			left_print_string(stdout, dn->string,
+				"                         ");
+			print_expression(dn->exp);
+			printf("\n\n");
+		}
+		free_lookup_list(dn_head);
 		return;
 	}
-	printf("\nExpressions:\n");
-	for (dn = dn_head; dn != NULL; dn = dn->right)
+
+	/* Recurse, if its a regex match */
+	regex_name = match_regex(dict, word);
+	if (regex_name)
 	{
-		printf("    ");
-		left_print_string(stdout, dn->string,
-			"                         ");
-		print_expression(dn->exp);
-		printf("\n\n");
+		dict_display_word_expr(dict, regex_name);
+		return;
 	}
-	free_lookup_list(dn_head);
-	return;
+	printf("	\"%s\" matches nothing in the dictionary.\n", word);
 }
