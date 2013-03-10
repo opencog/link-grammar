@@ -79,7 +79,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 	if (NULL == el)
 		return new Connector(OPTIONAL_CLAUSE);
 
-	// The data structure that link-grammar uses for connector
+	// The C data structure that link-grammar uses for connector
 	// expressions is totally insane, as witnessed by the loop below.
 	// Anyway: operators are infixed, i.e. are always binary,
 	// with exp->u.l->e being the left hand side, and
@@ -113,8 +113,8 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
  * Return atomic formula connector expression for the given word.
  *
  * This looks up the word in the link-grammar dictionary, and converts
- * the resulting link-grammar connective expression into an atomic
- * formula.
+ * the resulting link-grammar connective expression into an formula
+ * composed of atoms.
  */
 Set * Parser::word_consets(const string& word)
 {
@@ -152,15 +152,15 @@ void Parser::initialize_state()
 
 	Set *wall_disj = word_consets(wall_word);
 
-	// We are expecting the initiall wall to be unique.
+	// We are expecting the initial wall to be unique.
 	assert(wall_disj->get_arity() == 1, "Unexpected wall structure");
 	OutList state_vec;
-	Atom* word_cset = wall_disj->get_outgoing_atom(0);
+	Atom* wall_cset = wall_disj->get_outgoing_atom(0);
 
 	// Initial state: no output, and the wall cset.
 	_alternatives = new Set(
 		new StatePair(
-			new Seq(word_cset),
+			new Seq(wall_cset),
 			new Seq()
 		)
 	);
@@ -185,7 +185,8 @@ assert(1 == djset->get_arity(), "Multiple dict entries not handled");
 	for (int i = 0; i < djset->get_arity(); i++)
 	{
 		State stset(_alternatives);
-		stset.stream_word_conset(dynamic_cast<WordCset*>(djset->get_outgoing_atom(i)));
+		Atom* cset = djset->get_outgoing_atom(i);
+		stset.stream_word_conset(dynamic_cast<WordCset*>(cset));
 // XXX this can't possibly be right ...
 _alternatives = stset.get_alternatives();
 	}
