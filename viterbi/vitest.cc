@@ -31,6 +31,20 @@ using namespace link_grammar::viterbi;
 #define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
 #define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
 
+
+#define CHECK(NAME, EXPECTED, COMPUTED)                              \
+	total_tests++;                                                    \
+	if (not (EXPECTED->operator==(COMPUTED)))                         \
+	{                                                                 \
+		cout << "Error: test failure on " << NAME << endl;             \
+		cout << "=== Expecting:\n" << EXPECTED << endl;                \
+		cout << "=== Got:\n" << COMPUTED << endl;                      \
+		return false;                                                  \
+	}                                                                 \
+	cout<<"PASS: " << NAME << endl;                                   \
+	return true;
+
+
 int total_tests = 0;
 
 // ==================================================================
@@ -38,29 +52,62 @@ int total_tests = 0;
 
 bool test_and_dnf_single()
 {
-	total_tests++;
-
 	And* and_singleton = new And(ANODE(WORD, "AA1"));
-	Or* expected = new Or(ANODE(WORD, "AA1"));
-
 	Or* computed = and_singleton->disjoin();
 
-	if (not (expected->operator==(computed)))
-	{
-		cout << "Error: test failure on test_and_dnf_single" << endl;
-		cout << "=== Expecting:\n" << expected << endl;
-		cout << "=== Got:\n" << computed << endl;
-		return false;
-	}
+	Or* expected = new Or(ANODE(WORD, "AA1"));
 
-	cout<<"PASS: test_and_dnf_single" << endl;
-	return true;
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_and_dnf_double()
+{
+	And* and_two = new And(ANODE(WORD, "AA1"), ANODE(WORD, "BB2"));
+	Or* computed = and_two->disjoin();
+
+	Or* expected = new Or(and_two);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_and_distrib_left()
+{
+	And* and_right = new And(
+      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ANODE(WORD, "RR1"));
+	Or* computed = and_right->disjoin();
+
+	Lynk* expected = 
+	ALINK2(OR, 
+		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1")),
+		ALINK2(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_and_distrib_right()
+{
+	And* and_right = new And(ANODE(WORD, "AA1"),
+      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
+	Or* computed = and_right->disjoin();
+
+	Lynk* expected = 
+	ALINK2(OR, 
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
 }
 
 int ntest_disjoin()
 {
 	size_t num_failures = 0;
 	if (!test_and_dnf_single()) num_failures++;
+	if (!test_and_dnf_double()) num_failures++;
+	if (!test_and_distrib_left()) num_failures++;
+	if (!test_and_distrib_right()) num_failures++;
 
 	return num_failures;
 }
@@ -513,6 +560,7 @@ main(int argc, char *argv[])
 	num_failures += ntest_disjoin();
 	report(num_failures, exit_on_fail);
 
+exit(0);
 	num_failures += ntest_simple();
 	report(num_failures, exit_on_fail);
 

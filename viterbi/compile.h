@@ -144,6 +144,12 @@ class Or : public Set
 		Or(Atom* singleton)
 			: Set(OR, OutList(1, singleton))
 		{}
+		Or(Atom* a, Atom* b)
+			: Set(OR, ({OutList o(1,a); o.push_back(b); o;}))
+		{}
+		Or(Atom* a, Atom* b, Atom* c)
+			: Set(OR, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}))
+		{}
 
 		// Return disjunctive normal form (DNF)
 		Or* disjoin() const;
@@ -171,6 +177,13 @@ class And : public Seq
 		And(Atom* singleton)
 			: Seq(AND, OutList(1, singleton))
 		{}
+		And(Atom* a, Atom* b)
+			: Seq(AND, ({OutList o(1,a); o.push_back(b); o;}))
+		{}
+		And(Atom* a, Atom* b, Atom* c)
+			: Seq(AND, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}))
+		{}
+
 
 		// Return disjunctive normal form (DNF)
 		// Does not modify this atom; just returns a new one.
