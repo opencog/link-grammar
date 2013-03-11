@@ -177,22 +177,32 @@ std::cout<<"duuude stumpy=\n"<<stumpy<<std::endl;
 
 	// finally, distribute last elt back onto the end.
 	OutList dnf;
-	sz = stumpy->get_arity();
-	for (size_t i=0; i<sz; i++)
+
+	if (OR != last->get_type())
+		last = new Or(last);
+
+	Link* ll = dynamic_cast<Link*>(last);
+	size_t jsz = ll->get_arity();
+	for (size_t j=0; j<jsz; j++)
 	{
-		Atom* a = stumpy->get_outgoing_atom(i);
-		AtomType ty = a->get_type();
-		if (AND == ty)
+		Atom* tail = ll->get_outgoing_atom(j);
+		sz = stumpy->get_arity();
+		for (size_t i=0; i<sz; i++)
 		{
-			Link* l = dynamic_cast<Link*>(a);
-			OutList al = l->get_outgoing_set();
-			al.push_back(last);
-			dnf.push_back(new And(al));
-		}
-		else
-		{
-std::cout<<"duuude pair "<<a <<" yyyand "<<last<<std::endl;
-			dnf.push_back(new And(a, last));
+			Atom* a = stumpy->get_outgoing_atom(i);
+			AtomType ty = a->get_type();
+			if (AND == ty)
+			{
+				Link* l = dynamic_cast<Link*>(a);
+				OutList al = l->get_outgoing_set();
+				al.push_back(tail);
+				dnf.push_back(new And(al));
+			}
+			else
+			{
+std::cout<<"duuude pair "<<a <<" yyyand "<<tail<<std::endl;
+				dnf.push_back(new And(a, tail));
+			}
 		}
 	}
 for(size_t i=0; i<dnf.size(); i++) {

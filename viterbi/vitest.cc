@@ -55,7 +55,7 @@ bool test_and_dnf_single()
 	And* and_singleton = new And(ANODE(WORD, "AA1"));
 	Or* computed = and_singleton->disjoin();
 
-	Or* expected = new Or(ANODE(WORD, "AA1"));
+	Lynk* expected = ALINK1(OR, ANODE(WORD, "AA1"));
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -65,7 +65,8 @@ bool test_and_dnf_double()
 	And* and_two = new And(ANODE(WORD, "AA1"), ANODE(WORD, "BB2"));
 	Or* computed = and_two->disjoin();
 
-	Or* expected = new Or(and_two);
+	Lynk* expected =
+	ALINK1(OR, ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")));
 
 	CHECK(__FUNCTION__, expected, computed);
 }
