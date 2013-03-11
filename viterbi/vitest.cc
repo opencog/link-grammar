@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2012 Linas Vepstas <linasvepstas@gmail.com>             */
+/* Copyright (c) 2012, 2013 Linas Vepstas <linasvepstas@gmail.com>       */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the Viterbi parsing system is subject to the terms of the      */
@@ -744,7 +744,6 @@ main(int argc, char *argv[])
 	num_failures += ntest_disjoin();
 	report(num_failures, exit_on_fail);
 
-exit(0);
 	num_failures += ntest_simple();
 	report(num_failures, exit_on_fail);
 

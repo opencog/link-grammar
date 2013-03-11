@@ -57,6 +57,11 @@ static Atom* super_flatten(Atom* in)
  * The primary user of this function is the parser, to convert the 
  * mixed-form dictionary entries into a simpler structure, thus
  * simplifying the parser algorithm.
+ *
+ * XXX This code somewhat duplicates the function offered by the
+ * disjoin() methods on the OR and AND nodes.  BTW, those functions
+ * are unit-tested; this one is not.  However, this one handles
+ * optionals, the other does not.
  */
 
 Atom* disjoin(Atom* mixed_form)

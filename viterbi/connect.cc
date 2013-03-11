@@ -45,6 +45,7 @@ Connect::Connect(WordCset* right_wconset)
 {
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
 	_rcons = _right_cset->get_cset();
+cout<<"------------------------- duuude rcons=\n"<<_rcons<<endl;
 }
 
 /**
@@ -380,6 +381,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 				// If we are here, then its an AND. 
 				assert(AND == op, "Bad connective.");
 cout<<"duuude lefty is "<<chinode<<endl;
+cout<<"duuude righty is "<<ratom<<endl;
 				// All connectors must be satsisfied.
 				assert(0, "Implement me cnode AND");
 			}

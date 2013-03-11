@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2012 Linas Vepstas <linasvepstas@gmail.com>             */
+/* Copyright (c) 2012, 2013 Linas Vepstas <linasvepstas@gmail.com>       */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the Viterbi parsing system is subject to the terms of the      */
@@ -75,6 +75,11 @@ And* And::clean() const
 /// Presumes that the oset is a nested list consisting
 /// of And and Or nodes.  If the oset contains non-boolean
 /// terms, these are left in place, unmolested.
+///
+/// XXX Note: this somewhat duplicates the function of the
+/// disjoin() subroutine defined in disjoin.cc ...
+/// Note: this one is unit-tested, the other is not.
+/// Note, however, that one handles optional clauses; this does not.
 Or* Or::disjoin() const
 {
 	OutList dnf;
@@ -108,6 +113,11 @@ Or* Or::disjoin() const
 /// Presumes that the oset is a nested list consisting
 /// of And and Or nodes.  If the oset contains non-boolean
 /// terms, these are left in place, unmolested.
+///
+/// XXX Note: this somewhat duplicates the function of the
+/// disjoin() subroutine defined in disjoin.cc ...
+/// Note: this one is unit-tested, the other is not.
+/// Note, however, that one handles optional clauses; this does not.
 Or* And::disjoin()
 {
 	size_t sz = get_arity();
