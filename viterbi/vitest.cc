@@ -34,6 +34,39 @@ using namespace link_grammar::viterbi;
 int total_tests = 0;
 
 // ==================================================================
+// Make sure that the disjoind functions actually work.
+
+bool test_and_dnf_single()
+{
+	total_tests++;
+
+	And* and_singleton = new And(ANODE(WORD, "AA1"));
+	Or* expected = new Or(ANODE(WORD, "AA1"));
+
+	Or* computed = and_singleton->disjoin();
+
+	if (not (expected->operator==(computed)))
+	{
+		cout << "Error: test failure on test_and_dnf_single" << endl;
+		cout << "=== Expecting:\n" << expected << endl;
+		cout << "=== Got:\n" << computed << endl;
+		return false;
+	}
+
+	cout<<"PASS: test_and_dnf_single" << endl;
+	return true;
+}
+
+int ntest_disjoin()
+{
+	size_t num_failures = 0;
+	if (!test_and_dnf_single()) num_failures++;
+
+	return num_failures;
+}
+
+
+// ==================================================================
 // A simple hello test; several different dictionaries
 // should give exactly the same output.  The input sentence
 // is just one word, it should connect to the left-wall in
@@ -476,6 +509,9 @@ main(int argc, char *argv[])
 {
 	size_t num_failures = 0;
 	bool exit_on_fail = true;
+
+	num_failures += ntest_disjoin();
+	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_simple();
 	report(num_failures, exit_on_fail);

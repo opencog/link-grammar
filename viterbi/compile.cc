@@ -75,6 +75,38 @@ And* And::clean() const
 /// Presumes that the oset is a nested list consisting
 /// of And and Or nodes.  If the oset contains non-boolean
 /// terms, these are left in place, unmolested.
+Or* Or::disjoin() const
+{
+	OutList dnf;
+	size_t sz = get_arity();
+	for (size_t i=0; i<sz; i++)
+	{
+		Atom* a = get_outgoing_atom(i);
+		AtomType ty = a->get_type();
+		if (AND == ty)
+		{
+			And* al = dynamic_cast<And*>(a);
+			Or* l = al->disjoin();
+			for (size_t j=0; j<l->get_arity(); j++)
+				dnf.push_back(l->get_outgoing_atom(j));
+		}
+		else if (OR == ty)
+		{
+			Link* l = dynamic_cast<Link*>(a);
+			for (size_t j=0; j<l->get_arity(); j++)
+				dnf.push_back(l->get_outgoing_atom(j));
+		}
+		else
+			dnf.push_back(a);
+	}
+	return new Or(dnf);
+}
+
+/// Return disjunctive normal form (DNF)
+///
+/// Presumes that the oset is a nested list consisting
+/// of And and Or nodes.  If the oset contains non-boolean
+/// terms, these are left in place, unmolested.
 Or* And::disjoin()
 {
 	size_t sz = get_arity();
@@ -85,7 +117,7 @@ Or* And::disjoin()
 	// of the children are boolean operators.
 	bool done = true;
 	bool needs_flattening = false;
-	for (int i=0; i<sz; i++)
+	for (size_t i=0; i<sz; i++)
 	{
 		AtomType ty = _oset[i]->get_type();
 		if (AND == ty)
@@ -107,7 +139,7 @@ Or* And::disjoin()
 	{
 		bool did_flatten = false;
 		OutList* flat = new OutList();
-		for (int i=0; i<sz; i++)
+		for (size_t i=0; i<sz; i++)
 		{
 			Atom* a = ol->at(i);
 			AtomType ty = a->get_type();
@@ -137,7 +169,7 @@ Or* And::disjoin()
 	// finally, distribute last elt back onto the end.
 	OutList dnf;
 	sz = stumpy->get_arity();
-	for (int i=0; i<sz; i++)
+	for (size_t i=0; i<sz; i++)
 	{
 		Atom* a = stumpy->get_outgoing_atom(i);
 		AtomType ty = a->get_type();

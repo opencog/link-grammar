@@ -168,6 +168,9 @@ class And : public Seq
 		And(const OutList& ol)
 			: Seq(AND, ol)
 		{}
+		And(Atom* singleton)
+			: Seq(AND, OutList(1, singleton))
+		{}
 
 		// Return disjunctive normal form (DNF)
 		// Does not modify this atom; just returns a new one.
