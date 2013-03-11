@@ -36,22 +36,25 @@ namespace viterbi {
  * To be precise, the right_wconset is presumed to be of the form:
  *	WORD_CSET :
  *    WORD : blah-blah.v
- *	   AND :
+ *	   OR :
  *       CONNECTOR : Wd-
  *       CONNECTOR : Abc+ etc...
+ * 
+ * In particular, it is assumed to be in DNF (disjunctive normal form).
  */
 Connect::Connect(WordCset* right_wconset)
 	: _right_cset(right_wconset)
 {
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
 	_rcons = _right_cset->get_cset();
+cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
 cout<<"------------------------- duuude rcons=\n"<<_rcons<<endl;
 }
 
 /**
  * Try connecting this connector set sequence, from the left, to what
  * was passed in ctor.  It is preseumed that left_sp is a single parse
- * state: it will contain no left-pointing connectors whatsoever.  This
+ * state: it should contain no left-pointing connectors whatsoever.  This
  * routine will attempt to attach the right-pointing connectors to the 
  * left-pointers passed in the ctor.  A connection is considered to be
  * successful if *all* left-pointers in the ctor were attached (except
@@ -60,13 +63,11 @@ cout<<"------------------------- duuude rcons=\n"<<_rcons<<endl;
  *
  * Connectors must be satisfied sequentially: that is, the first connector
  * set in the sequence must be fully satisfied before a connection is made
- * to the second one in the sequence, etc.
+ * to the second one in the sequence, etc. (counting from zero).
  */
 Set* Connect::try_connect(StatePair* left_sp)
 {
-// XXX passing only the state is .. wrong!?!?
-	Seq* left_seq = left_sp->get_state();
-	Set* bogo = try_connect(left_seq);
+	Set* bogo = try_connect_a(left_sp);
 cout<<"duuude got bogo="<<bogo<<endl;
 	if (bogo)
 		return bogo;
@@ -100,13 +101,16 @@ assert(0, "Parse fail, implement me");
 	return alts;
 }
 
-// this is being given only a single state
-Set* Connect::try_connect(Seq* left_seq)
+/// Same as try_connect(), except that it doesn't handle the cases
+/// where the right set doesn't connect to the left.
+Set* Connect::try_connect_a(StatePair* left_sp)
 {
-	_left_sequence = left_seq;
+	Seq* left_seq = left_sp->get_state();
 
 // XXX this is wrong, but works for just now .. 
 // wrong because maybe we need next_connect in a loop!?
+// wrong thecause the sequence may be a list of several unconnected
+// words and we have to loop over all of them.
 	WordCset* swc = dynamic_cast<WordCset*>(left_seq->get_outgoing_atom(0));
 	Set* ling_set = next_connect(swc);
 	if (NULL == ling_set)
@@ -125,29 +129,65 @@ Set* Connect::try_connect(Seq* left_seq)
 }
 /**
  * Try connecting this connector set, from the left, to what was passed
- * in ctor.
+ * in ctor.  This returns a set of alternative connections, as state
+ * pairs: each alternative will consist of new state, and the links that
+ * were issued.
  */
 Set* Connect::next_connect(WordCset* left_cset)
 {
 	assert(left_cset, "State word-connectorset is null");
 	Atom* left_a = left_cset->get_cset();
 
-	Atom *right_a = _rcons;
-cout<<"enter next_connect, state cset "<< left_a <<endl;
-cout<<"in next_connect, word cset "<< right_a <<endl;
+cout<<"enter next_connect, state cset dnf "<< left_a <<endl;
 
-	// If the word connector set is a single solitary node, then
-	// its not a set, its a single connecter.  Try to hook it up
-	// to something on the left.
-	Link* conn = conn_connect_aa(left_a, right_a);
+	Or* left_dnf = NULL;
+	if (CONNECTOR == left_a->get_type())
+		left_dnf = new Or(left_a);
+	else
+		left_dnf = dynamic_cast<Or*>(upcast(left_a));
+	assert(left_dnf != NULL, "Left disjuncts not in DNF");
+
+	Atom *right_a = _rcons;
+cout<<"in next_connect, word cset dnf "<< right_a <<endl;
+	Or* right_dnf = NULL;
+	if (CONNECTOR == right_a->get_type())
+		right_dnf = new Or(right_a);
+	else
+		right_dnf = dynamic_cast<Or*>(upcast(right_a));
+	assert(right_dnf != NULL, "Right disjuncts not in DNF");
+
+
+	// At this point, both left_dnf and right_dnf should be in
+	// disjunctive normal form.  Perform a nested loop over each
+	// of them, connecting each to each.
+	size_t lsz = left_dnf->get_arity();
+	for (size_t i=0; i<lsz; i++)
+	{
+		Atom* ldj = left_dnf->get_outgoing_atom(i);
+		AtomType lty = ldj->get_type();
+		assert((AND == lty) or (CONNECTOR == lty), "Left dj not a conjunction");
+		size_t rsz = right_dnf->get_arity();
+		for (size_t j=0; j<rsz; j++)
+		{
+			Atom* rdj = right_dnf->get_outgoing_atom(j);
+			AtomType rty = rdj->get_type();
+			assert((AND == rty) or (CONNECTOR == rty), "Right dj not a conjunction");
+
+			Link* conn = conn_connect_aa(ldj, rdj);
+			// At this point, conn holds an LG link type, and the
+			// two disjuncts that were mated.  Re-assemble these
+			// into a pair of word_disjuncts (i.e. stick the word
+			// back in there, as that is what later stages need).
+cout<<"duuude at last got conn="<<conn<<endl;
+assert(0, "Under construction");
+		}
+	}
+
+#if 0
 	if (!conn)
 		return NULL;
 cout<<"got one it is "<<conn<<endl;
 
-	// At this point, conn holds an LG link type, and the
-	// two disjuncts that were mated.  Re-assemble these
-	// into a pair of word_disjuncts (i.e. stick the word
-	// back in there, as that is what later stages need).
 	Set* alts = dynamic_cast<Set*>(conn);
 	if (alts)
 		return reassemble(alts, left_cset, _right_cset);
@@ -155,6 +195,8 @@ cout<<"got one it is "<<conn<<endl;
 	Ling* lg_link = dynamic_cast<Ling*>(conn);
 	if (lg_link)
 		return new Set(reassemble(lg_link, left_cset, _right_cset));
+#endif
+return NULL;
 }
 
 // =============================================================
@@ -211,6 +253,7 @@ Link* Connect::conn_connect_aa(Atom *latom, Atom* ratom)
 
 	Link* llink = dynamic_cast<Link*>(latom);
 	assert(llink, "Left side should be link");
+cout<<"duude come from aa"<<endl;
 	return conn_connect_ka(llink, ratom);
 }
 
@@ -283,6 +326,7 @@ cout <<"duuude explore the and link -- the lnode is "<<lnode<<endl;
 		for (int i = 0; i < rlink->get_arity(); i++)
 		{
 			Atom* a = rlink->get_outgoing_atom(i);
+cout<<"duude gonna lok for ith and connect, i="<<i<<endl;
 			Link* conn = conn_connect_aa(latom, a);
 cout<<"and link="<<i<<" got a connction="<<conn<<endl;
 // XXX start here .... 
@@ -294,7 +338,9 @@ cout<<"and link="<<i<<" got a connction="<<conn<<endl;
 			}
 			else
 			{
+assert(0, "Dead code");
 				if (conn) {
+#if DEAD_CODE
 					required_conn_list.push_back(conn);
 					// Now, recurse ...
 					// trim off the connector, and the state...
@@ -322,6 +368,7 @@ cout<<"i="<<i<<" left seq is ="<<_left_sequence<<endl;
 					Atom* lwcsa = _left_sequence->get_outgoing_atom(i+1);
 					WordCset* lwcs = dynamic_cast<WordCset*>(lwcsa);
 					latom = lwcs->get_cset();
+#endif
 				}
 				else
 					return NULL;
@@ -361,6 +408,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 	for (int i = 0; i < llink->get_arity(); i++)
 	{
 		Atom* a = llink->get_outgoing_atom(i);
+cout<<"duude looping over ith term="<<i<< " term is "<<a<<endl;
 		Connector* chinode = dynamic_cast<Connector*>(a);
 		if (chinode) 
 		{
@@ -368,6 +416,7 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 			if (chinode->get_name() == OPTIONAL_CLAUSE)
 				continue;
 
+cout<<"duude got the chinode "<<endl;
 			// Only one needs to be satisfied for OR clause
 			AtomType op = llink->get_type();
 			if (OR == op)
@@ -382,12 +431,15 @@ cout<<"Enter recur l=" << llink->get_type()<<endl;
 				assert(AND == op, "Bad connective.");
 cout<<"duuude lefty is "<<chinode<<endl;
 cout<<"duuude righty is "<<ratom<<endl;
+				Link* rv = conn_connect_na(chinode, ratom);
+
 				// All connectors must be satsisfied.
 				assert(0, "Implement me cnode AND");
 			}
 		}
 		else
 		{	
+cout<<"duude not the chinode!"<<endl;
 			Link* clink = dynamic_cast<Link*>(a);
 			assert(clink, "Child should be link");
 			Link* rv = conn_connect_ka(clink, ratom);
@@ -396,6 +448,7 @@ cout<<"duuude righty is "<<ratom<<endl;
 		}
 	}
 
+cout<< "duude done with recur, alter sz="<<alternatives.size()<<endl;
 	if (0 == alternatives.size())
 		return NULL;
 

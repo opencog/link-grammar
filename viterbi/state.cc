@@ -94,7 +94,7 @@ void State::stream_word_conset(WordCset* wrd_cset)
 		// Each state sequence consists of a sequence of right-pointing
 		// links. These must be sequentially satisfied: This is the
 		// viterbi equivalent of "planar graph" or "no-crossing-links"
-		// in the classical lnk-grammar parser.  That is, a new word
+		// in the classical link-grammar parser.  That is, a new word
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
 		Set* new_alternatives = cnct.try_connect(sp);

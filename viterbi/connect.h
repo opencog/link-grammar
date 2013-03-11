@@ -25,7 +25,7 @@ class Connect
 		Set* try_connect(StatePair*);
 
 	protected:
-		Set* try_connect(Seq*);
+		Set* try_connect_a(StatePair*);
 		Set* next_connect(WordCset*);
 
 		Set* reassemble(Set*, WordCset*, WordCset*);
@@ -41,9 +41,8 @@ class Connect
 		static const OutList& flatten(OutList&);
 
 	private:
-		Seq* _left_sequence;
 		WordCset* _right_cset;
-		Atom* _rcons;
+		Atom* _rcons;  // just the connector(s), without the word.
 };
 
 
