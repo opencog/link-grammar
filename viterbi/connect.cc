@@ -192,7 +192,31 @@ cout<<"got one it is "<<conn<<endl;
 					And* rand = dynamic_cast<And*>(upcast(rdj));
 					assert(rand, "Right dj not a conjunction");
 
-assert(0, "lconny Under construction");
+					Atom* rfirst = rand->get_outgoing_atom(0);
+					Connector* rfc = dynamic_cast<Connector*>(rfirst);
+					assert(rfc, "Exepcting a connector in the right conjunct");
+
+					Ling* conn = conn_connect_nn(lcon, rfc);
+					if (!conn)
+						continue;
+cout<<"super got one it is "<<conn<<endl;
+
+					// At this point, conn holds an LG link type, and the
+					// two disjuncts that were mated.  Re-assemble these
+					// into a pair of word_disjuncts (i.e. stick the word
+					// back in there, as that is what later stages need).
+					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+
+assert(0, "not done yet");
+#if 0
+					// The right cset bettter not have any left-popinting 
+               // links, since these cannot be satisfied ...
+					OutList state = land->get_outgoing_set();
+					state.erase(state.begin());
+					StatePair* sp = new StatePair(new Seq(state), out);
+					alternatives.push_back(sp);
+cout<<"state pair just crated: "<<sp<<endl;
+#endif
 				}
 			}
 		}
@@ -210,7 +234,7 @@ assert(0, "lconny Under construction");
 				{
 					Atom* lfirst = land->get_outgoing_atom(0);
 					Connector* lfc = dynamic_cast<Connector*>(lfirst);
-					assert(lfc, "Exepcting a connector in the conjunct");
+					assert(lfc, "Exepcting a connector in the left conjunct");
 
 					Ling* conn = conn_connect_nn(lfc, rcon);
 					if (!conn)
@@ -224,9 +248,13 @@ cout<<"yah got one it is "<<conn<<endl;
 					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
 
 					// The state is now everything left in the conjunct.
-					OutList state = land->get_outgoing_set();
-					state.erase(state.begin());
-					StatePair* sp = new StatePair(new Seq(state), out);
+					// We need top build this back up into WordCset.
+					OutList remaining_cons = land->get_outgoing_set();
+					remaining_cons.erase(remaining_cons.begin());
+               And* remaining_cj = new And(remaining_cons);
+					WordCset* rem_cset = new WordCset(left_cset->get_word(), remaining_cj);
+ 
+					StatePair* sp = new StatePair(new Seq(rem_cset), out);
 					alternatives.push_back(sp);
 cout<<"state pair just crated: "<<sp<<endl;
 				}
