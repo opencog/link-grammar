@@ -111,7 +111,12 @@ Or* And::disjoin()
 {
 	size_t sz = get_arity();
 	if (0 == sz) return new Or();
-	if (1 == sz) return new Or(_oset);
+	if (1 == sz)
+	{
+		if (OR == _oset[0]->get_type())
+			return dynamic_cast<Or*>(upcast(_oset[0]));
+		return new Or(_oset);
+	}
 
 	// Perhaps there is nothing to be done, because none
 	// of the children are boolean operators.
@@ -158,13 +163,17 @@ Or* And::disjoin()
 		ol = flat;
 	}
 
+std::cout<<"duuude initally=\n"<<this<<std::endl;
 	// Get the last element off of the list of and'ed terms
-	Atom* last = *(ol->rend());
+	Atom* last = *(ol->rbegin());
+std::cout<<"duuude last "<<last<<std::endl;
 	ol->pop_back();
 	And shorter(*ol);
+std::cout<<"duuude shorty=\n"<<&shorter<<std::endl;
 
 	// recurse ...
 	Or* stumpy = shorter.disjoin();
+std::cout<<"duuude stumpy=\n"<<stumpy<<std::endl;
 
 	// finally, distribute last elt back onto the end.
 	OutList dnf;
@@ -181,8 +190,18 @@ Or* And::disjoin()
 			dnf.push_back(new And(al));
 		}
 		else
-			dnf.push_back(a);
+		{
+std::cout<<"duuude pair "<<a <<" yyyand "<<last<<std::endl;
+			dnf.push_back(new And(a, last));
+		}
 	}
+for(size_t i=0; i<dnf.size(); i++) {
+std::cout<<"duuude dnf "<<i <<" v="<<dnf[i]<<std::endl;
+}
+
+std::cout<<"duuude at last "<<new Or(dnf)<<std::endl;
+std::cout<<"duuude OK"<<std::endl;
+
 	return new Or(dnf);
 }
 
