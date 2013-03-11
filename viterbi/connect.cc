@@ -130,6 +130,7 @@ Set* Connect::next_connect(WordCset* left_cset)
 
 cout<<"enter next_connect, state cset dnf "<< left_a <<endl;
 
+	// Wrap bare connector with OR; this simplifie the nested loop below.
 	Or* left_dnf = NULL;
 	if (CONNECTOR == left_a->get_type())
 		left_dnf = new Or(left_a);
@@ -152,46 +153,90 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 	// of them, connecting each to each.
 
 	// "alternatives" records the various different successful ways
-	// that connectors can be mated.
+	// that connectors can be mated.  Its a list of state pairs.
 	OutList alternatives;
 
 	size_t lsz = left_dnf->get_arity();
 	for (size_t i=0; i<lsz; i++)
 	{
 		Atom* ldj = left_dnf->get_outgoing_atom(i);
-		Connector* lcon = dynamic_cast<Connector*>(ldj);		
+		Connector* lcon = dynamic_cast<Connector*>(ldj);
 
-		AtomType lty = ldj->get_type();
-		assert((AND == lty) or lcon, "Left dj not a conjunction");
-		size_t rsz = right_dnf->get_arity();
-		for (size_t j=0; j<rsz; j++)
+		if (lcon)
 		{
-			Atom* rdj = right_dnf->get_outgoing_atom(j);
-			Connector* rcon = dynamic_cast<Connector*>(rdj);		
-
-			AtomType rty = rdj->get_type();
-			assert((AND == rty) or rcon, "Right dj not a conjunction");
-
-			if (lcon and rcon)
+			size_t rsz = right_dnf->get_arity();
+			for (size_t j=0; j<rsz; j++)
 			{
-				Ling* conn = conn_connect_nn(lcon, rcon);
-				if (!conn)
-					continue;
+				Atom* rdj = right_dnf->get_outgoing_atom(j);
+				Connector* rcon = dynamic_cast<Connector*>(rdj);		
+
+				if (rcon)
+				{
+					Ling* conn = conn_connect_nn(lcon, rcon);
+					if (!conn)
+						continue;
 cout<<"got one it is "<<conn<<endl;
 
-				// At this point, conn holds an LG link type, and the
-				// two disjuncts that were mated.  Re-assemble these
-				// into a pair of word_disjuncts (i.e. stick the word
-				// back in there, as that is what later stages need).
-				Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+					// At this point, conn holds an LG link type, and the
+					// two disjuncts that were mated.  Re-assemble these
+					// into a pair of word_disjuncts (i.e. stick the word
+					// back in there, as that is what later stages need).
+					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
 
-				// Meanwhile, we exhausted the state, so that's empty.
-				StatePair* sp = new StatePair(new Seq(), out);
-				alternatives.push_back(sp);
+					// Meanwhile, we exhausted the state, so that's empty.
+					StatePair* sp = new StatePair(new Seq(), out);
+					alternatives.push_back(sp);
+				}
+				else
+				{
+					And* rand = dynamic_cast<And*>(upcast(rdj));
+					assert(rand, "Right dj not a conjunction");
+
+assert(0, "lconny Under construction");
+				}
 			}
-			else
+		}
+		else
+		{
+			And* land = dynamic_cast<And*>(upcast(ldj));
+			assert(land, "Left dj not a conjunction");
+			size_t rsz = right_dnf->get_arity();
+			for (size_t j=0; j<rsz; j++)
 			{
-assert(0, "Under construction");
+				Atom* rdj = right_dnf->get_outgoing_atom(j);
+				Connector* rcon = dynamic_cast<Connector*>(rdj);		
+
+				if (rcon)
+				{
+					Atom* lfirst = land->get_outgoing_atom(0);
+					Connector* lfc = dynamic_cast<Connector*>(lfirst);
+					assert(lfc, "Exepcting a connector in the conjunct");
+
+					Ling* conn = conn_connect_nn(lfc, rcon);
+					if (!conn)
+						continue;
+cout<<"yah got one it is "<<conn<<endl;
+
+					// At this point, conn holds an LG link type, and the
+					// two disjuncts that were mated.  Re-assemble these
+					// into a pair of word_disjuncts (i.e. stick the word
+					// back in there, as that is what later stages need).
+					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+
+					// The state is now everything left in the conjunct.
+					OutList state = land->get_outgoing_set();
+					state.erase(state.begin());
+					StatePair* sp = new StatePair(new Seq(state), out);
+					alternatives.push_back(sp);
+cout<<"state pair just crated: "<<sp<<endl;
+				}
+				else
+				{
+					And* rand = dynamic_cast<And*>(upcast(rdj));
+					assert(rand, "Right dj not a conjunction");
+
+assert(0, "Still Under construction");
+				}
 			}
 		}
 	}
