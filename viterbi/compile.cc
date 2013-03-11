@@ -85,14 +85,15 @@ Or* Or::disjoin() const
 		AtomType ty = a->get_type();
 		if (AND == ty)
 		{
-			And* al = dynamic_cast<And*>(a);
+			And* al = dynamic_cast<And*>(upcast(a));
 			Or* l = al->disjoin();
 			for (size_t j=0; j<l->get_arity(); j++)
 				dnf.push_back(l->get_outgoing_atom(j));
 		}
 		else if (OR == ty)
 		{
-			Link* l = dynamic_cast<Link*>(a);
+			Or* ol = dynamic_cast<Or*>(upcast(a));
+			Or* l = ol->disjoin();
 			for (size_t j=0; j<l->get_arity(); j++)
 				dnf.push_back(l->get_outgoing_atom(j));
 		}
@@ -163,17 +164,13 @@ Or* And::disjoin()
 		ol = flat;
 	}
 
-std::cout<<"duuude initally=\n"<<this<<std::endl;
 	// Get the last element off of the list of and'ed terms
 	Atom* last = *(ol->rbegin());
-std::cout<<"duuude last "<<last<<std::endl;
 	ol->pop_back();
 	And shorter(*ol);
-std::cout<<"duuude shorty=\n"<<&shorter<<std::endl;
 
 	// recurse ...
 	Or* stumpy = shorter.disjoin();
-std::cout<<"duuude stumpy=\n"<<stumpy<<std::endl;
 
 	// finally, distribute last elt back onto the end.
 	OutList dnf;
@@ -200,18 +197,10 @@ std::cout<<"duuude stumpy=\n"<<stumpy<<std::endl;
 			}
 			else
 			{
-std::cout<<"duuude pair "<<a <<" yyyand "<<tail<<std::endl;
 				dnf.push_back(new And(a, tail));
 			}
 		}
 	}
-for(size_t i=0; i<dnf.size(); i++) {
-std::cout<<"duuude dnf "<<i <<" v="<<dnf[i]<<std::endl;
-}
-
-std::cout<<"duuude at last "<<new Or(dnf)<<std::endl;
-std::cout<<"duuude OK"<<std::endl;
-
 	return new Or(dnf);
 }
 

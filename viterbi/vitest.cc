@@ -215,6 +215,66 @@ bool test_or_distrib_left()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+bool test_or_distrib_right()
+{
+	Or* or_right = new Or(
+		ALINK2(AND,
+   		ANODE(WORD, "AA1"),
+      	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
+	);
+	Or* computed = or_right->disjoin();
+
+	Lynk* expected = 
+	ALINK2(OR, 
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_or_distrib_nest()
+{
+	Or* or_right = new Or(
+		ALINK1(OR,
+			ALINK2(AND,
+   			ANODE(WORD, "AA1"),
+     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))))
+	);
+	Or* computed = or_right->disjoin();
+
+	Lynk* expected = 
+	ALINK2(OR, 
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_or_distrib_nest2()
+{
+	Or* or_right = new Or(
+		ALINK3(OR,
+			ANODE(WORD, "DD4"),
+			ALINK2(AND,
+   			ANODE(WORD, "AA1"),
+     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
+			ANODE(WORD, "EE5"))
+	);
+	Or* computed = or_right->disjoin();
+
+	Lynk* expected = 
+	ALINK4(OR, 
+		ANODE(WORD, "DD4"),
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3")),
+		ANODE(WORD, "EE5")
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
 int ntest_disjoin()
 {
 	size_t num_failures = 0;
@@ -230,6 +290,9 @@ int ntest_disjoin()
 	if (!test_or_dnf_single()) num_failures++;
 	if (!test_or_dnf_double()) num_failures++;
 	if (!test_or_distrib_left()) num_failures++;
+	if (!test_or_distrib_right()) num_failures++;
+	if (!test_or_distrib_nest()) num_failures++;
+	if (!test_or_distrib_nest2()) num_failures++;
 	return num_failures;
 }
 
