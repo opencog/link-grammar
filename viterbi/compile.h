@@ -131,6 +131,31 @@ protected:
 		{}
 };
 
+/// Unordered OR of all children
+class Or : public Set
+{
+	public:
+		Or()
+			: Set(OR)
+		{}
+		Or(const OutList& ol)
+			: Set(OR, ol)
+		{}
+		Or(Atom* singleton)
+			: Set(OR, OutList(1, singleton))
+		{}
+
+		// Return disjunctive normal form (DNF)
+		Or* disjoin() const;
+
+		// See the Set class for documentation
+		// XXX This is a "dangerous" operation, as it ignores the
+		// type structure of heirarchical nestings: viz. flattening
+		// a hierarchical nesting of And/Or sets erases the distinction
+		// between the And's and Or's!
+		Or* flatten() const { return new Or(flatset()); }
+};
+
 /// Ordered sequence
 /// And inherits from Seq, since the order of the atoms in
 /// its outgoing set is important.
@@ -144,26 +169,19 @@ class And : public Seq
 			: Seq(AND, ol)
 		{}
 
+		// Return disjunctive normal form (DNF)
+		// Does not modify this atom; just returns a new one.
+		Or* disjoin();
+
 		// See the Set class for documentation
+		// XXX This is a "dangerous" operation, as it ignores the
+		// type structure of heirarchical nestings: viz. flattening
+		// a hierarchical nesting of And/Or sets erases the distinction
+		// between the And's and Or's!
 		And* flatten() const { return new And(flatset()); }
 
 		/// Remove optional clauses.
 		And* clean() const;
-};
-
-/// Unordered OR of all children
-class Or : public Set
-{
-	public:
-		Or()
-			: Set(OR)
-		{}
-		Or(const OutList& ol)
-			: Set(OR, ol)
-		{}
-
-		// See the Set class for documentation
-		Or* flatten() const { return new Or(flatset()); }
 };
 
 /// Create a ling-grammar link. This will be of the form:

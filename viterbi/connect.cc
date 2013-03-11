@@ -428,5 +428,6 @@ const OutList& Connect::flatten(OutList& alternatives)
 	return alternatives;
 }
 
+
 } // namespace viterbi
 } // namespace link-grammar

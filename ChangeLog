@@ -1,3 +1,6 @@
+Version 4.7.11 (??? 2013)
+ * Ongoing devlopment of the Viterbi prototype.
+
 Version 4.7.10 (9 March 2013)
  * New: Russian dictionaries from Sergey Protasov!
  * Improve prefix, suffix handling and stemming (needed for Russian)

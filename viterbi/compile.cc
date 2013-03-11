@@ -23,7 +23,7 @@ namespace viterbi {
 // Note that this algo, as currently implemented, is order-preserving.
 // This is important for the Seq class, and the And class (since the
 // link-grammar AND must be an ordered sequence, to preserve planarity
-// of the parses.
+// of the parses.  
 OutList Set::flatset() const
 {
 	size_t sz = _oset.size();
@@ -68,6 +68,90 @@ And* And::clean() const
 	}
 
 	return new And(cl);
+}
+
+/// Return disjunctive normal form (DNF)
+///
+/// Presumes that the oset is a nested list consisting
+/// of And and Or nodes.  If the oset contains non-boolean
+/// terms, these are left in place, unmolested.
+Or* And::disjoin()
+{
+	size_t sz = get_arity();
+	if (0 == sz) return new Or();
+	if (1 == sz) return new Or(_oset);
+
+	// Perhaps there is nothing to be done, because none
+	// of the children are boolean operators.
+	bool done = true;
+	bool needs_flattening = false;
+	for (int i=0; i<sz; i++)
+	{
+		AtomType ty = _oset[i]->get_type();
+		if (AND == ty)
+		{
+			done = false;
+			needs_flattening = true;
+		}
+		else if (OR == ty)
+			done = false;
+	}
+	if (done)
+	{
+		return new Or(this);
+	}
+
+	// First, flatten out any nested And's
+	OutList* ol = new OutList(_oset);
+	while (needs_flattening)
+	{
+		bool did_flatten = false;
+		OutList* flat = new OutList();
+		for (int i=0; i<sz; i++)
+		{
+			Atom* a = ol->at(i);
+			AtomType ty = a->get_type();
+			if (AND == ty)
+			{
+				did_flatten = true;
+				Link* l = dynamic_cast<Link*>(a);
+				for (size_t j=0; j<l->get_arity(); j++)
+					flat->push_back(l->get_outgoing_atom(j));
+			}
+			else
+				flat->push_back(a);
+		}
+
+		if (not did_flatten) break;
+		ol = flat;
+	}
+
+	// Get the last element off of the list of and'ed terms
+	Atom* last = *(ol->rend());
+	ol->pop_back();
+	And shorter(*ol);
+
+	// recurse ...
+	Or* stumpy = shorter.disjoin();
+
+	// finally, distribute last elt back onto the end.
+	OutList dnf;
+	sz = stumpy->get_arity();
+	for (int i=0; i<sz; i++)
+	{
+		Atom* a = stumpy->get_outgoing_atom(i);
+		AtomType ty = a->get_type();
+		if (AND == ty)
+		{
+			Link* l = dynamic_cast<Link*>(a);
+			OutList al = l->get_outgoing_set();
+			al.push_back(last);
+			dnf.push_back(new And(al));
+		}
+		else
+			dnf.push_back(a);
+	}
+	return new Or(dnf);
 }
 
 
