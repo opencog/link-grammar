@@ -30,6 +30,7 @@ using namespace link_grammar::viterbi;
 #define ALINK1(TYPE,A) (new Lynk(TYPE, A))
 #define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
 #define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
+#define ALINK4(TYPE,A,B,C,D) (new Lynk(TYPE, A,B,C,D))
 
 
 #define CHECK(NAME, EXPECTED, COMPUTED)                              \
@@ -102,6 +103,118 @@ bool test_and_distrib_right()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+bool test_and_distrib_middle()
+{
+	And* and_mid = new And(ANODE(WORD, "AA1"),
+      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+      ANODE(WORD, "DD4"));
+	Or* computed = and_mid->disjoin();
+
+	Lynk* expected = 
+	ALINK2(OR, 
+		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), ANODE(WORD, "DD4")),
+		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), ANODE(WORD, "DD4"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_and_distrib_quad()
+{
+	And* and_mid = new And(
+      ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+      ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
+	Or* computed = and_mid->disjoin();
+
+	Lynk* expected = 
+	ALINK4(OR, 
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3")),
+		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "DD4")),
+		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "DD4"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_and_distrib_quad_right()
+{
+	And* and_mid = new And(
+      ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+      ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")),
+      ANODE(WORD, "EE5")
+   );
+	Or* computed = and_mid->disjoin();
+
+	Lynk* expected = 
+	ALINK4(OR, 
+		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), ANODE(WORD, "EE5")),
+		ALINK3(AND, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), ANODE(WORD, "EE5")),
+		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "DD4"), ANODE(WORD, "EE5")),
+		ALINK3(AND, ANODE(WORD, "BB2"), ANODE(WORD, "DD4"), ANODE(WORD, "EE5"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_and_distrib_quad_left()
+{
+	And* and_mid = new And(
+      ANODE(WORD, "EE5"),
+      ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+      ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
+	Or* computed = and_mid->disjoin();
+
+	Lynk* expected = 
+	ALINK4(OR, 
+		ALINK3(AND, ANODE(WORD, "EE5"), ANODE(WORD, "AA1"), ANODE(WORD, "CC3")),
+		ALINK3(AND, ANODE(WORD, "EE5"), ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ALINK3(AND, ANODE(WORD, "EE5"), ANODE(WORD, "AA1"), ANODE(WORD, "DD4")),
+		ALINK3(AND, ANODE(WORD, "EE5"), ANODE(WORD, "BB2"), ANODE(WORD, "DD4"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_or_dnf_single()
+{
+	Or* or_singleton = new Or(ANODE(WORD, "AA1"));
+	Or* computed = or_singleton->disjoin();
+
+	Lynk* expected = ALINK1(OR, ANODE(WORD, "AA1"));
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_or_dnf_double()
+{
+	Or* or_two = new Or(ANODE(WORD, "AA1"), ANODE(WORD, "BB2"));
+	Or* computed = or_two->disjoin();
+
+	Lynk* expected =
+	ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"));
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_or_distrib_left()
+{
+	Or* or_right = new Or(
+      ALINK2(AND,
+      	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+			ANODE(WORD, "RR1"))
+	);
+	Or* computed = or_right->disjoin();
+
+	Lynk* expected = 
+	ALINK2(OR, 
+		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1")),
+		ALINK2(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
 int ntest_disjoin()
 {
 	size_t num_failures = 0;
@@ -109,7 +222,14 @@ int ntest_disjoin()
 	if (!test_and_dnf_double()) num_failures++;
 	if (!test_and_distrib_left()) num_failures++;
 	if (!test_and_distrib_right()) num_failures++;
+	if (!test_and_distrib_middle()) num_failures++;
+	if (!test_and_distrib_quad()) num_failures++;
+	if (!test_and_distrib_quad_right()) num_failures++;
+	if (!test_and_distrib_quad_left()) num_failures++;
 
+	if (!test_or_dnf_single()) num_failures++;
+	if (!test_or_dnf_double()) num_failures++;
+	if (!test_or_distrib_left()) num_failures++;
 	return num_failures;
 }
 
