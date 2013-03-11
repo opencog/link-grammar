@@ -28,7 +28,6 @@ class Connect
 		Set* try_connect_a(StatePair*);
 		Set* next_connect(WordCset*);
 
-		Set* reassemble(Set*, WordCset*, WordCset*);
 		Ling* reassemble(Ling*, WordCset*, WordCset*);
 
 		Link* conn_connect_aa(Atom*, Atom*);

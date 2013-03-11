@@ -68,10 +68,10 @@ cout<<"------------------------- duuude rcons=\n"<<_rcons<<endl;
 Set* Connect::try_connect(StatePair* left_sp)
 {
 	Set* bogo = try_connect_a(left_sp);
-cout<<"duuude got bogo="<<bogo<<endl;
 	if (bogo)
 		return bogo;
 
+assert(0, "Parse fail, implement me");
 	// If we are here, then nothing in the right cset was
 	// able to attach to the left.  If the right cset has
 	// no left-pointing links, that's just fine; add it
@@ -112,21 +112,11 @@ Set* Connect::try_connect_a(StatePair* left_sp)
 // wrong thecause the sequence may be a list of several unconnected
 // words and we have to loop over all of them.
 	WordCset* swc = dynamic_cast<WordCset*>(left_seq->get_outgoing_atom(0));
-	Set* ling_set = next_connect(swc);
-	if (NULL == ling_set)
-		return NULL;
+	Set* pair_set = next_connect(swc);
 
-// This is wrong, since the state is empty!
-// i.e. it is assuming that the connection emptied the state!
-	OutList pair_list;
-	for (int i=0; i < ling_set->get_arity(); i++)
-	{
-		Ling* output = dynamic_cast<Ling*>(ling_set->get_outgoing_atom(i));
-		StatePair* result = new StatePair(new Seq(), new Seq(output));
-		pair_list.push_back(result);
-	}
-	return new Set(pair_list);
+	return pair_set;
 }
+
 /**
  * Try connecting this connector set, from the left, to what was passed
  * in ctor.  This returns a set of alternative connections, as state
@@ -160,43 +150,53 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 	// At this point, both left_dnf and right_dnf should be in
 	// disjunctive normal form.  Perform a nested loop over each
 	// of them, connecting each to each.
+
+	// "alternatives" records the various different successful ways
+	// that connectors can be mated.
+	OutList alternatives;
+
 	size_t lsz = left_dnf->get_arity();
 	for (size_t i=0; i<lsz; i++)
 	{
 		Atom* ldj = left_dnf->get_outgoing_atom(i);
+		Connector* lcon = dynamic_cast<Connector*>(ldj);		
+
 		AtomType lty = ldj->get_type();
-		assert((AND == lty) or (CONNECTOR == lty), "Left dj not a conjunction");
+		assert((AND == lty) or lcon, "Left dj not a conjunction");
 		size_t rsz = right_dnf->get_arity();
 		for (size_t j=0; j<rsz; j++)
 		{
 			Atom* rdj = right_dnf->get_outgoing_atom(j);
-			AtomType rty = rdj->get_type();
-			assert((AND == rty) or (CONNECTOR == rty), "Right dj not a conjunction");
+			Connector* rcon = dynamic_cast<Connector*>(rdj);		
 
-			Link* conn = conn_connect_aa(ldj, rdj);
-			// At this point, conn holds an LG link type, and the
-			// two disjuncts that were mated.  Re-assemble these
-			// into a pair of word_disjuncts (i.e. stick the word
-			// back in there, as that is what later stages need).
-cout<<"duuude at last got conn="<<conn<<endl;
+			AtomType rty = rdj->get_type();
+			assert((AND == rty) or rcon, "Right dj not a conjunction");
+
+			if (lcon and rcon)
+			{
+				Ling* conn = conn_connect_nn(lcon, rcon);
+				if (!conn)
+					continue;
+cout<<"got one it is "<<conn<<endl;
+
+				// At this point, conn holds an LG link type, and the
+				// two disjuncts that were mated.  Re-assemble these
+				// into a pair of word_disjuncts (i.e. stick the word
+				// back in there, as that is what later stages need).
+				Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+
+				// Meanwhile, we exhausted the state, so that's empty.
+				StatePair* sp = new StatePair(new Seq(), out);
+				alternatives.push_back(sp);
+			}
+			else
+			{
 assert(0, "Under construction");
+			}
 		}
 	}
 
-#if 0
-	if (!conn)
-		return NULL;
-cout<<"got one it is "<<conn<<endl;
-
-	Set* alts = dynamic_cast<Set*>(conn);
-	if (alts)
-		return reassemble(alts, left_cset, _right_cset);
-
-	Ling* lg_link = dynamic_cast<Ling*>(conn);
-	if (lg_link)
-		return new Set(reassemble(lg_link, left_cset, _right_cset));
-#endif
-return NULL;
+	return new Set(alternatives);
 }
 
 // =============================================================
@@ -211,6 +211,8 @@ return NULL;
 // the rest is dicarded.
 Ling* Connect::reassemble(Ling* conn, WordCset* left_cset, WordCset* right_cset)
 {
+	assert(conn, "Bad cast to Ling");
+
 	OutList lwdj;
 	lwdj.push_back(left_cset->get_word());    // the word
 	lwdj.push_back(conn->get_left());         // the connector
@@ -225,20 +227,6 @@ Ling* Connect::reassemble(Ling* conn, WordCset* left_cset, WordCset* right_cset)
 
 cout<<"normalized into "<<lg_link<<endl;
 	return lg_link;
-}
-
-Set* Connect::reassemble(Set* conn, WordCset* left_cset, WordCset* right_cset)
-{
-	OutList alternatives;
-	for (int i = 0; i < conn->get_arity(); i++)
-	{
-		Ling* alt = dynamic_cast<Ling*>(conn->get_outgoing_atom(i));
-		assert(alt, "Unexpected type in alternative set");
-		Ling* normed_alt = reassemble(alt, left_cset, right_cset);
-		alternatives.push_back(normed_alt);
-	}
-
-	return new Set(alternatives);
 }
 
 // =============================================================
@@ -292,99 +280,8 @@ Link* Connect::conn_connect_nk(Connector* lnode, Link* rlink)
 {
 cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink << endl;
 
-	// If the connector set is a disjunction, then try each of them, in turn.
-	// Whenever something matches up, we add it to the list of possible
-	// connection alternatives.
-	OutList conn_alterns;
-	if (OR == rlink->get_type())
-	{
-		// "conn_alterns" records the various different successful ways
-		// that lnode and rlink can be mated together.
-		for (int i = 0; i < rlink->get_arity(); i++)
-		{
-			Atom* a = rlink->get_outgoing_atom(i);
-			Node* chinode = dynamic_cast<Node*>(a);
-			if (chinode && chinode->get_name() == OPTIONAL_CLAUSE)
-				continue;
-
-			Link* conn = conn_connect_na(lnode, a);
-
-			// If the shoe fits, wear it.
-			if (conn)
-				conn_alterns.push_back(conn);
-		}
-	}
-	else
-	{
-cout <<"duuude explore the and link -- the lnode is "<<lnode<<endl;
-		// For an AND connective, all connectors must connect.  This
-		// means that we have to recurse through the state-pair system,
-		// until we manage to connect all fo the required left-pointing
-		// connectors in the right connector set.
-		Atom* latom = lnode;
-		OutList required_conn_list;
-		for (int i = 0; i < rlink->get_arity(); i++)
-		{
-			Atom* a = rlink->get_outgoing_atom(i);
-cout<<"duude gonna lok for ith and connect, i="<<i<<endl;
-			Link* conn = conn_connect_aa(latom, a);
-cout<<"and link="<<i<<" got a connction="<<conn<<endl;
-// XXX start here .... 
-			if (is_optional(a))
-			{
-				// ????
-				if (conn)
-					conn_alterns.push_back(conn);
-			}
-			else
-			{
-assert(0, "Dead code");
-				if (conn) {
-#if DEAD_CODE
-					required_conn_list.push_back(conn);
-					// Now, recurse ...
-					// trim off the connector, and the state...
-					if (i+1 >= rlink->get_arity())
-						break;
-cout<<"i="<<i<<" left seq is ="<<_left_sequence<<endl;
-					// try to link the next AND connector to the next
-					// connector onthe left...
-
-					// If there are no further left connector sets, then
-					// everything remaining in the AND list had better be
-					// optional!
-					if (_left_sequence->get_arity() <= i+1)
-					{
-						for (int j = i+1; j < rlink->get_arity(); j++)
-						{
-							a = rlink->get_outgoing_atom(j);
-							if (!is_optional(a))
-								return NULL;
-						}
-						break;
-					}
-
-// XXX this assumes the next connector is left pointing .. what if its not?
-					Atom* lwcsa = _left_sequence->get_outgoing_atom(i+1);
-					WordCset* lwcs = dynamic_cast<WordCset*>(lwcsa);
-					latom = lwcs->get_cset();
-#endif
-				}
-				else
-					return NULL;
-			}
-		}
-Set* s = new Set(required_conn_list);
-cout<<"ayyyyyyyyyyyyyyyyyyyyyyyyyyy done wi looooooooop "<<s<<endl;
-
-// temp hack .. 
-if(1 == required_conn_list.size()) return
-dynamic_cast<Link*>(required_conn_list[0]);
-	}
-
-	if (0 == conn_alterns.size())
-		return NULL;
-	return new Set(flatten(conn_alterns));
+	assert(0, "Ohhh no mr billl");
+	return NULL;
 }
 
 // =============================================================
