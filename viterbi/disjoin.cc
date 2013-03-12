@@ -84,7 +84,11 @@ Atom* disjoin(Atom* mixed_form)
 		for(int i=0; i<sz; i++)
 		{
 			Atom* norm = disjoin(junct->get_outgoing_atom(i));
-			new_oset.push_back(norm);
+
+			// Discard empty AND sets.
+			And* l = dynamic_cast<And*>(norm);
+			if (l and 0 < l->get_arity())
+				new_oset.push_back(norm);
 		}
 
 		Or* new_or = new Or(new_oset);
