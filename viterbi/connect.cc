@@ -191,6 +191,8 @@ cout<<"=====================> direct state pair just crated: "<<sp<<endl;
 				{
 					And* rand = dynamic_cast<And*>(upcast(rdj));
 					assert(rand, "Right dj not a conjunction");
+					if (0 == rand->get_arity())
+						continue;
 
 					Atom* rfirst = rand->get_outgoing_atom(0);
 					Connector* rfc = dynamic_cast<Connector*>(rfirst);
