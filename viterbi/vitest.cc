@@ -496,7 +496,7 @@ int ntest_simple()
 // Expect to get back a set with two alternative parses, each parse is
 // assigned a probability of 1/2.
 
-bool test_alternative(const char *id, const char *dict_str)
+bool test_alternative(const char *id, const char *dict_str, bool empty_state)
 {
 	total_tests++;
 
@@ -533,27 +533,63 @@ bool test_alternative(const char *id, const char *dict_str)
 		)
 	);
 
-	// This is the expected set of alternatives: two alternatives,
-	// each with an empty state, and one of the two outputs, above.
-	Lynk* ans =
-	ALINK2(SET,
-		ALINK2(STATE_PAIR,
-			ALINK0(SEQ),
-			ALINK1(SEQ, alt_out_one)
-		),
-		ALINK2(STATE_PAIR,
-			ALINK0(SEQ),
-			ALINK1(SEQ, alt_out_two)
-		)
+	Lynk* alt_pair_one =
+	ALINK2(STATE_PAIR,
+		ALINK0(SEQ),
+		ALINK1(SEQ, alt_out_one)
 	);
 
-	Lynk* output = parser.get_alternatives();
-	if (not (ans->operator==(output)))
+	Lynk* alt_pair_two = 
+	ALINK2(STATE_PAIR,
+		ALINK0(SEQ),
+		ALINK1(SEQ, alt_out_two)
+	);
+
+	if (empty_state)
 	{
-		cout << "Error: test failure on test " << id << endl;
-		cout << "=== Expecting:\n" << ans << endl;
-		cout << "=== Got:\n" << output << endl;
-		return false;
+		// This is the expected set of alternatives: two alternatives,
+		// each with an empty state, and one of the two outputs, above.
+		Lynk* ans = ALINK2(SET, alt_pair_one, alt_pair_two);
+
+		Lynk* output = parser.get_alternatives();
+		if (not (ans->operator==(output)))
+		{
+			cout << "Error: test failure on test \"" << id <<"\"" << endl;
+			cout << "=== Expecting:\n" << ans << endl;
+			cout << "=== Got:\n" << output << endl;
+			return false;
+		}
+	}
+	else
+	{
+		// The final state here might not be empty.  However, both
+		// of the alternatives should show up somwhere in the output.
+
+		bool found_one = false;
+		bool found_two = false;
+		Lynk* alts = parser.get_alternatives();
+		for (size_t i=0; i<alts->get_arity(); i++)
+		{
+			Atom* alt = alts->get_outgoing_atom(i);
+			StatePair* sp = dynamic_cast<StatePair*>(alt);
+
+			// At least one alternative should have an empty state.
+			if (alt_pair_one->operator==(alt))
+				found_one = true;
+
+			if (alt_pair_two->operator==(alt))
+				found_two = true;
+		}
+
+		// Both should have been found, somewhere.
+		if (not alt_pair_one or not alt_pair_two)
+		{
+			cout << "Error: test failure on test \"" << id << "\"" << endl;
+			cout << "=== Expecting this alt:\n" << alt_pair_one << endl;
+			cout << "=== Expecting this alt:\n" << alt_pair_two << endl;
+			cout << "=== Got:\n" << alts << endl;
+			return false;
+		}
 	}
 
 	cout<<"PASS: test_alternative(" << id << ") " << endl;
@@ -564,7 +600,8 @@ bool test_two_alts()
 {
 	return test_alternative("two alternatives",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
-		"Hello: Wd- or Wi-;"
+		"Hello: Wd- or Wi-;", 
+		true
 	);
 }
 
@@ -572,7 +609,8 @@ bool test_two_opts()
 {
 	return test_alternative("two alts plus opts",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
-		"Hello: Wd- or Wi- or (Xj- & {A+ or B+});"
+		"Hello: Wd- or Wi- or (Xj- & {A+ or B+});",
+		true
 	);
 }
 
@@ -580,7 +618,8 @@ bool test_two_one_opts()
 {
 	return test_alternative("two alt, or one opt",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
-		"Hello: Wd- or {Wi-} or (Xj- & {A+ or B+});"
+		"Hello: Wd- or {Wi-} or (Xj- & {A+ or B+});",
+		true
 	);
 }
 
@@ -588,7 +627,8 @@ bool test_two_all_opts()
 {
 	return test_alternative("two alts, or all opt",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
-		"Hello: {Wd-} or {Wi-} or (Xj- & {A+ or B+});"
+		"Hello: {Wd-} or {Wi-} or (Xj- & {A+ or B+});",
+		true
 	);
 }
 
@@ -596,7 +636,8 @@ bool test_two_and_opts()
 {
 	return test_alternative("two alts, and an opt",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
-		"Hello: Wd- or (Wi- & {Xj- & {A+ or B+}} & {C+});"
+		"Hello: Wd- or (Wi- & {Xj- & {A+ or B+}} & {C+});",
+		false
 	);
 }
 
@@ -604,7 +645,8 @@ bool test_two_and_no_opts()
 {
 	return test_alternative("two alt, and all opt",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
-		"Hello: Wd- or ({Wi-} & {Xj- & {A+ or B+}} & {C+});"
+		"Hello: Wd- or ({Wi-} & {Xj- & {A+ or B+}} & {C+});",
+		true
 	);
 }
 
@@ -612,7 +654,8 @@ bool test_two_and_excess()
 {
 	return test_alternative("two alt, and excess reqs",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
-		"Hello: Wd- or (Wi- & Xj- & {A+ or B+} & {C+}) or Wi-;"
+		"Hello: Wd- or (Wi- & Xj- & {A+ or B+} & {C+}) or Wi-;",
+		true
 	);
 }
 
