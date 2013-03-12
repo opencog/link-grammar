@@ -31,6 +31,8 @@ class Connect
 		Ling* conn_connect_nn(Connector*, Connector*);
 		Ling* reassemble(Ling*, WordCset*, WordCset*);
 
+		StatePair* try_alternative(Atom*, Atom*);
+
 		StatePair* alternative(Connector*, Connector*);
 		StatePair* alternative(Connector*, And*);
 		StatePair* alternative(And*, Connector*);

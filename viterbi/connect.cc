@@ -155,74 +155,64 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 	// "alternatives" records the various different successful ways
 	// that connectors can be mated.  Its a list of state pairs.
 	OutList alternatives;
-
-	// XXX TODO: the nested loops below contain four different cases
-	// that need to be handled. These four cases should be split into
-	// four helper methods; this will make the code easier to read.
 	size_t lsz = left_dnf->get_arity();
 	for (size_t i=0; i<lsz; i++)
 	{
 		Atom* ldj = left_dnf->get_outgoing_atom(i);
-		Connector* lcon = dynamic_cast<Connector*>(ldj);
 
-		if (lcon)
+		size_t rsz = right_dnf->get_arity();
+		for (size_t j=0; j<rsz; j++)
 		{
-			size_t rsz = right_dnf->get_arity();
-			for (size_t j=0; j<rsz; j++)
-			{
-				Atom* rdj = right_dnf->get_outgoing_atom(j);
-				Connector* rcon = dynamic_cast<Connector*>(rdj);		
+			Atom* rdj = right_dnf->get_outgoing_atom(j);
 
-				if (rcon)
-				{
-					StatePair* sp = alternative(lcon, rcon);
-					if (!sp)
-						continue;
-					alternatives.push_back(sp);
-				}
-				else
-				{
-					And* rand = dynamic_cast<And*>(upcast(rdj));
-					assert(rand, "Right dj not a conjunction");
-					StatePair* sp = alternative(lcon, rand);
-					if (!sp)
-						continue;
-					alternatives.push_back(sp);
-				}
-			}
-		}
-		else
-		{
-			And* land = dynamic_cast<And*>(upcast(ldj));
-			assert(land, "Left dj not a conjunction");
-			size_t rsz = right_dnf->get_arity();
-			for (size_t j=0; j<rsz; j++)
-			{
-				Atom* rdj = right_dnf->get_outgoing_atom(j);
-				Connector* rcon = dynamic_cast<Connector*>(rdj);		
-
-				if (rcon)
-				{
-					StatePair* sp = alternative(land, rcon);
-					if (!sp)
-						continue;
-					alternatives.push_back(sp);
-				}
-				else
-				{
-					And* rand = dynamic_cast<And*>(upcast(rdj));
-					assert(rand, "Right dj not a conjunction");
-
-					StatePair* sp = alternative(land, rand);
-					if (!sp)
-						continue;
-					alternatives.push_back(sp);
-				}
-			}
+			StatePair* sp = try_alternative(ldj, rdj);
+			if (sp)
+				alternatives.push_back(sp);
 		}
 	}
 
 	return new Set(alternatives);
+}
+
+// =============================================================
+
+/// Dispatch to each of the alternative handlers, depending
+/// on whether the arguments are single or multi-connectors.
+StatePair* Connect::try_alternative(Atom* ldj, Atom*rdj)
+{
+	Connector* lcon = dynamic_cast<Connector*>(ldj);
+
+	if (lcon)
+	{
+		Connector* rcon = dynamic_cast<Connector*>(rdj);		
+		if (rcon)
+			return alternative(lcon, rcon);
+		else
+		{
+			And* rand = dynamic_cast<And*>(upcast(rdj));
+			assert(rand, "Right dj not a conjunction");
+			return alternative(lcon, rand);
+		}
+	}
+	else
+	{
+		And* land = dynamic_cast<And*>(upcast(ldj));
+		assert(land, "Left dj not a conjunction");
+
+		Connector* rcon = dynamic_cast<Connector*>(rdj);		
+
+		if (rcon)
+			return alternative(land, rcon);
+		else
+		{
+			And* rand = dynamic_cast<And*>(upcast(rdj));
+			assert(rand, "Right dj not a conjunction");
+
+			return alternative(land, rand);
+		}
+	}
+
+	return NULL; // Not reached.
 }
 
 // =============================================================
