@@ -48,7 +48,6 @@ Connect::Connect(WordCset* right_wconset)
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
 	_rcons = _right_cset->get_cset();
 cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
-cout<<"------------------------- duuude rcons=\n"<<_rcons<<endl;
 }
 
 /**
@@ -186,6 +185,7 @@ cout<<"got one it is "<<conn<<endl;
 					// Meanwhile, we exhausted the state, so that's empty.
 					StatePair* sp = new StatePair(new Seq(), out);
 					alternatives.push_back(sp);
+cout<<"=====================> direct state pair just crated: "<<sp<<endl;
 				}
 				else
 				{
@@ -256,7 +256,7 @@ cout<<"yah got one it is "<<conn<<endl;
  
 					StatePair* sp = new StatePair(new Seq(rem_cset), out);
 					alternatives.push_back(sp);
-cout<<"state pair just crated: "<<sp<<endl;
+cout<<"=====================> state pair just crated: "<<sp<<endl;
 				}
 				else
 				{
@@ -278,7 +278,7 @@ cout<<"duude rand="<<rand<<endl;
 						Ling* conn = conn_connect_nn(lfc, rfc);
 						if (!conn)
 							break;
-cout<<"super got one it is "<<conn<<endl;
+cout<<"whoa super got one it is "<<conn<<endl;
 
 						// At this point, conn holds an LG link type, and the
 						// two disjuncts that were mated.  Re-assemble these

@@ -304,7 +304,7 @@ int ntest_disjoin()
 // just one way. The result should be just one alternative:
 // that alternatives has an empty state, and output with
 // just one link.
-bool test_hello(const char *id, const char *dict_str)
+bool test_hello(const char *id, const char *dict_str, bool empty_state)
 {
 	total_tests++;
 
@@ -330,20 +330,48 @@ bool test_hello(const char *id, const char *dict_str)
 		)
 	);
 
-	// This is the expected set of alternatives: just one alternative,
-	// a single, empty state, and the output, above.
-	Lynk* ans =
-	ALINK1(SET,
-		ALINK2(STATE_PAIR,
-			ALINK0(SEQ),
-			ALINK1(SEQ, one_word)
-		)
-	);
-
-	Lynk* alts = parser.get_alternatives();
-	if (not (ans->operator==(alts)))
+	if (empty_state)
 	{
-		cout << "Error: test failure on test " << id << endl;
+		// This is the expected set of alternatives: just one alternative,
+		// a single, empty state, and the output, above.
+		Lynk* ans =
+		ALINK1(SET,
+			ALINK2(STATE_PAIR,
+				ALINK0(SEQ),
+				ALINK1(SEQ, one_word)
+			)
+		);
+
+		Lynk* alts = parser.get_alternatives();
+		if (not (ans->operator==(alts)))
+		{
+			cout << "Error: test failure on test \"" << id << "\"" << endl;
+			cout << "=== Expecting:\n" << ans << endl;
+			cout << "=== Got:\n" << alts << endl;
+			return false;
+		}
+	}
+	else
+	{
+		// This test will have lots of alternatives. One should have
+		// an empty state.
+		Lynk* ans =
+			ALINK2(STATE_PAIR,
+				ALINK0(SEQ),
+				ALINK1(SEQ, one_word)
+			);
+
+		Lynk* alts = parser.get_alternatives();
+		for (size_t i=0; i<alts->get_arity(); i++)
+		{
+			Atom* alt = alts->get_outgoing_atom(i);
+			if (ans->operator==(alt))
+			{
+				cout<<"PASS: test_hello(" << id << ") " << endl;
+				return true;
+			}
+		}
+		cout << "Error: test failure on test \"" << id << "\"" << endl;
 		cout << "=== Expecting:\n" << ans << endl;
 		cout << "=== Got:\n" << alts << endl;
 		return false;
@@ -357,7 +385,8 @@ bool test_simplest()
 {
 	return test_hello ("test_simplest",
 		"LEFT-WALL: Wd+;"
-		"Hello: Wd-;"
+		"Hello: Wd-;",
+		true
 	);
 }
 
@@ -365,7 +394,8 @@ bool test_simple_left_disj()
 {
 	return test_hello ("simple left disj",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
-		"Hello: Wd-;"
+		"Hello: Wd-;",
+		true
 	);
 }
 
@@ -373,7 +403,8 @@ bool test_simple_optional_left_cset()
 {
 	return test_hello ("optional left cset",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {CP+} & {Xx+} & {RW+ or Xp+};"
-		"Hello: Wd-;"
+		"Hello: Wd-;",
+		false
 	);
 }
 
@@ -381,7 +412,8 @@ bool test_simple_right_disj()
 {
 	return test_hello ("simple right disj",
 		"LEFT-WALL: Wd+;"
-		"Hello: Wd- or Wi-;"
+		"Hello: Wd- or Wi-;",
+		true
 	);
 }
 
@@ -389,7 +421,8 @@ bool test_simple_right_required_cset()
 {
 	return test_hello ("required right cset",
 		"LEFT-WALL: Wd+;"
-		"Hello: Wd- or Xi- or (Xj- & (A+ or B+));"
+		"Hello: Wd- or Xi- or (Xj- & (A+ or B+));",
+		true
 	);
 }
 
@@ -397,7 +430,8 @@ bool test_simple_optional()
 {
 	return test_hello ("optionals in both csets",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {CP+} & {Xx+} & {RW+ or Xp+};"
-		"Hello: Wd- or Xi- or (Xj- & {A+ or B+});"
+		"Hello: Wd- or Xi- or (Xj- & {A+ or B+});",
+		false
 	);
 }
 
@@ -405,7 +439,8 @@ bool test_simple_onereq()
 {
 	return test_hello ("one required link and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
-		"Hello: Wd- & {A+} & {B+} & {C+};"
+		"Hello: Wd- & {A+} & {B+} & {C+};",
+		true
 	);
 }
 
@@ -413,7 +448,8 @@ bool test_simple_zeroreq()
 {
 	return test_hello ("zero required links and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
-		"Hello: {Wd-} & {A+} & {B+} & {C+};"
+		"Hello: {Wd-} & {A+} & {B+} & {C+};",
+		true
 	);
 }
 
@@ -421,7 +457,8 @@ bool test_simple_onereq_and_left()
 {
 	return test_hello ("one required link and opt lefties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
-		"Hello: Wd- & {A-} & {B-} & {C+};"
+		"Hello: Wd- & {A-} & {B-} & {C+};",
+		true
 	);
 }
 
