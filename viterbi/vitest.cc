@@ -610,7 +610,7 @@ bool test_two_opts()
 	return test_alternative("two alts plus opts",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
 		"Hello: Wd- or Wi- or (Xj- & {A+ or B+});",
-		true
+		false
 	);
 }
 
@@ -619,7 +619,7 @@ bool test_two_one_opts()
 	return test_alternative("two alt, or one opt",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
 		"Hello: Wd- or {Wi-} or (Xj- & {A+ or B+});",
-		true
+		false
 	);
 }
 
@@ -628,7 +628,7 @@ bool test_two_all_opts()
 	return test_alternative("two alts, or all opt",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
 		"Hello: {Wd-} or {Wi-} or (Xj- & {A+ or B+});",
-		true
+		false
 	);
 }
 
