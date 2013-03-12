@@ -361,15 +361,28 @@ bool test_hello(const char *id, const char *dict_str, bool empty_state)
 				ALINK1(SEQ, one_word)
 			);
 
+		Lynk* out = new Seq(one_word);
+
+		bool pass_test = false;
 		Lynk* alts = parser.get_alternatives();
 		for (size_t i=0; i<alts->get_arity(); i++)
 		{
 			Atom* alt = alts->get_outgoing_atom(i);
+			StatePair* sp = dynamic_cast<StatePair*>(alt);
+
+			// At least one alternative should have an empty state.
 			if (ans->operator==(alt))
-			{
-				cout<<"PASS: test_hello(" << id << ") " << endl;
-				return true;
-			}
+				pass_test = true;
+
+			// In all cases, the output should be just the one word, 
+			// no matter what the state.
+			if (not sp->get_output()->operator==(out))
+				pass_test = false;
+		}
+		if (pass_test)
+		{
+			cout<<"PASS: test_hello(" << id << ") " << endl;
+			return true;
 		}
 		cout << "Error: test failure on test \"" << id << "\"" << endl;
 		cout << "=== Expecting:\n" << ans << endl;
