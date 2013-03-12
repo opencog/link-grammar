@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2012 Linas Vepstas <linasvepstas@gmail.com>             */
+/* Copyright (c) 2012, 2013 Linas Vepstas <linasvepstas@gmail.com>       */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the Viterbi parsing system is subject to the terms of the      */
@@ -39,7 +39,7 @@ namespace viterbi {
  *	   OR :
  *       CONNECTOR : Wd-
  *       CONNECTOR : Abc+ etc...
- * 
+ *
  * In particular, it is assumed to be in DNF (disjunctive normal form).
  */
 Connect::Connect(WordCset* right_wconset)
@@ -54,7 +54,7 @@ cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
  * Try connecting this connector set sequence, from the left, to what
  * was passed in ctor.  It is preseumed that left_sp is a single parse
  * state: it should contain no left-pointing connectors whatsoever.  This
- * routine will attempt to attach the right-pointing connectors to the 
+ * routine will attempt to attach the right-pointing connectors to the
  * left-pointers passed in the ctor.  A connection is considered to be
  * successful if *all* left-pointers in the ctor were attached (except
  * possibly for optionals).  The returned value is a set of all possible
@@ -106,7 +106,7 @@ Set* Connect::try_connect_a(StatePair* left_sp)
 {
 	Seq* left_seq = left_sp->get_state();
 
-// XXX this is wrong, but works for just now .. 
+// XXX this is wrong, but works for just now ..
 // wrong because maybe we need next_connect in a loop!?
 // wrong thecause the sequence may be a list of several unconnected
 // words and we have to loop over all of them.
@@ -213,76 +213,10 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 					And* rand = dynamic_cast<And*>(upcast(rdj));
 					assert(rand, "Right dj not a conjunction");
 
-cout<<"duude land="<<land<<endl;
-cout<<"duude rand="<<rand<<endl;
-
-					OutList outputs;
-					size_t m = 0;
-					size_t rsz = rand->get_arity();
-					size_t lsz = land->get_arity();
-					size_t sz = (lsz<rsz) ? lsz : rsz;
-					while (m < sz)
-					{
-						Atom* rfirst = rand->get_outgoing_atom(m);
-						Connector* rfc = dynamic_cast<Connector*>(rfirst);
-						assert(rfc, "Exepecting a connector in the right conjunct");
-
-						Atom* lfirst = land->get_outgoing_atom(m);
-						Connector* lfc = dynamic_cast<Connector*>(lfirst);
-						assert(lfc, "Exepecting a connector in the left conjunct");
-
-
-						Ling* conn = conn_connect_nn(lfc, rfc);
-						if (!conn)
-							break;
-cout<<"whoa super got one for "<< m <<" it is "<<conn<<endl;
-						m++;
-
-						// At this point, conn holds an LG link type, and the
-						// two disjuncts that were mated.  Re-assemble these
-						// into a pair of word_disjuncts (i.e. stick the word
-						// back in there, as that is what later stages need).
-						outputs.push_back(conn);
-					}
-cout<<"duude matched a total of m="<<m<<endl;
-					if (0 == m)
+					StatePair* sp = alternative(land, rand);
+					if (!sp)
 						continue;
-
-					// Add the un-connected parts of the left and right csets
-					// to the state.  But first, check to make sure that the 
-					// right cset does not have any (non-optional)
-					// left-pointers, because these will never be fulfilled.
-					// Lets start with the right cset.
-					// We need to build this back up into WordCset.
-					OutList remaining_cons = rand->get_outgoing_set();
-					for (size_t k = 0; k<m; k++)
-						remaining_cons.erase(remaining_cons.begin());
-               And* remaining_cj = new And(remaining_cons);
-					WordCset* rem_cset = new WordCset(_right_cset->get_word(), remaining_cj);
-					rem_cset = cset_trim_left_pointers(rem_cset);
-					if (NULL == rem_cset)
-						continue;
-
-					// If we are here, the remaining right connectors all
-					// point right.  Put them into the state.
-					OutList statel;
-					statel.push_back(rem_cset);
-
-					// And now repeat for the left cset.
-					remaining_cons = land->get_outgoing_set();
-					for (size_t k = 0; k<m; k++)
-						remaining_cons.erase(remaining_cons.begin());
-               remaining_cj = new And(remaining_cons);
-					rem_cset = new WordCset(left_cset->get_word(), remaining_cj);
-					statel.push_back(rem_cset);
-
-					Seq* state = new Seq(statel);
-
-					Seq* out = new Seq(outputs);
- 
-					StatePair* sp = new StatePair(state, out);
 					alternatives.push_back(sp);
-cout<<"=====================> multi state pair just created: "<<sp<<endl;
 				}
 			}
 		}
@@ -295,7 +229,7 @@ cout<<"=====================> multi state pair just created: "<<sp<<endl;
 /// Connect a pair of connectors, and return the resulting state pair.
 /// If no connection is possible return NULL.
 /// The state pair will contain the output generated (if any) and
-/// the final state after the connection is made. 
+/// the final state after the connection is made.
 StatePair* Connect::alternative(Connector* lcon, Connector* rcon)
 {
 	Ling* conn = conn_connect_nn(lcon, rcon);
@@ -337,10 +271,10 @@ cout<<"super got one it is "<<conn<<endl;
 	// back in there, as that is what later stages need).
 	Seq* out = new Seq(conn);
 
-	// The right cset better not have any left-pointing 
+	// The right cset better not have any left-pointing
 	// links, because if we are here, these cannot be
 	// satisfied ...
-// XXX should use the ttrim fun here 
+// XXX should use the ttrim fun here
 // xxxxxxx
 	size_t rsz = rand->get_arity();
 	bool unmatched_left_pointer = false;
@@ -351,7 +285,7 @@ cout<<"super got one it is "<<conn<<endl;
 		assert(rc, "Exepcting a connector in the right conjunct");
 
 		char dir = rc->get_direction();
-		if ('-' == dir) 
+		if ('-' == dir)
 		{
 			unmatched_left_pointer = true;
 			break;
@@ -368,7 +302,7 @@ cout<<"super got one it is "<<conn<<endl;
 	remaining_cons.erase(remaining_cons.begin());
 	And* remaining_cj = new And(remaining_cons);
 	WordCset* rem_cset = new WordCset(_right_cset->get_word(), remaining_cj);
- 
+
 	StatePair* sp = new StatePair(new Seq(rem_cset), out);
 cout<<"=====================> randy state pair just crated: "<<sp<<endl;
 	return sp;
@@ -398,9 +332,86 @@ cout<<"yah got one it is "<<conn<<endl;
 	remaining_cons.erase(remaining_cons.begin());
 	And* remaining_cj = new And(remaining_cons);
 	WordCset* rem_cset = new WordCset(_left_cset->get_word(), remaining_cj);
- 
+
 	StatePair* sp = new StatePair(new Seq(rem_cset), out);
 cout<<"=====================> state pair just crated: "<<sp<<endl;
+	return sp;
+}
+
+// See docs above
+StatePair* Connect::alternative(And* land, And* rand)
+{
+cout<<"duude land="<<land<<endl;
+cout<<"duude rand="<<rand<<endl;
+
+	OutList outputs;
+	size_t m = 0;
+	size_t rsz = rand->get_arity();
+	size_t lsz = land->get_arity();
+	size_t sz = (lsz<rsz) ? lsz : rsz;
+	while (m < sz)
+	{
+		Atom* rfirst = rand->get_outgoing_atom(m);
+		Connector* rfc = dynamic_cast<Connector*>(rfirst);
+		assert(rfc, "Exepecting a connector in the right conjunct");
+
+		Atom* lfirst = land->get_outgoing_atom(m);
+		Connector* lfc = dynamic_cast<Connector*>(lfirst);
+		assert(lfc, "Exepecting a connector in the left conjunct");
+
+
+		Ling* conn = conn_connect_nn(lfc, rfc);
+		if (!conn)
+			break;
+cout<<"whoa super got one for "<< m <<" it is "<<conn<<endl;
+		m++;
+
+		// At this point, conn holds an LG link type, and the
+		// two disjuncts that were mated.  Re-assemble these
+		// into a pair of word_disjuncts (i.e. stick the word
+		// back in there, as that is what later stages need).
+		outputs.push_back(conn);
+	}
+cout<<"duude matched a total of m="<<m<<endl;
+	if (0 == m)
+		return NULL;
+
+	// Add the un-connected parts of the left and right csets
+	// to the state.  But first, check to make sure that the
+	// right cset does not have any (non-optional)
+	// left-pointers, because these will never be fulfilled.
+	// Lets start with the right cset.
+	// We need to build this back up into WordCset.
+	OutList remaining_cons = rand->get_outgoing_set();
+	for (size_t k = 0; k<m; k++)
+		remaining_cons.erase(remaining_cons.begin());
+
+	And* remaining_cj = new And(remaining_cons);
+	WordCset* rem_cset = new WordCset(_right_cset->get_word(), remaining_cj);
+	rem_cset = cset_trim_left_pointers(rem_cset);
+	if (NULL == rem_cset)
+		return NULL;
+
+	// If we are here, the remaining right connectors all
+	// point right.  Put them into the state.
+	OutList statel;
+	statel.push_back(rem_cset);
+
+	// And now repeat for the left cset.
+	remaining_cons = land->get_outgoing_set();
+	for (size_t k = 0; k<m; k++)
+		remaining_cons.erase(remaining_cons.begin());
+
+	remaining_cj = new And(remaining_cons);
+	rem_cset = new WordCset(_left_cset->get_word(), remaining_cj);
+	statel.push_back(rem_cset);
+
+	Seq* state = new Seq(statel);
+
+	Seq* out = new Seq(outputs);
+
+	StatePair* sp = new StatePair(state, out);
+cout<<"=====================> multi state pair just created: "<<sp<<endl;
 	return sp;
 }
 
