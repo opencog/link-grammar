@@ -367,33 +367,6 @@ cout<<"normalized into "<<lg_link<<endl;
 
 // =============================================================
 /**
- * Dispatch appropriatly, depending on whether left atom is node or link
- */
-Link* Connect::conn_connect_aa(Atom *latom, Atom* ratom)
-{
-	Connector* lnode = dynamic_cast<Connector*>(latom);
-	if (lnode)
-		return conn_connect_na(lnode, ratom);
-
-	Link* llink = dynamic_cast<Link*>(latom);
-	assert(llink, "Left side should be link");
-cout<<"duude come from aa"<<endl;
-	return conn_connect_ka(llink, ratom);
-}
-
-Link* Connect::conn_connect_na(Connector* lnode, Atom *ratom)
-{
-	Connector* rnode = dynamic_cast<Connector*>(ratom);
-	if (rnode)
-		return conn_connect_nn(lnode, rnode);
-
-	Link* rlink = dynamic_cast<Link*>(ratom);
-	assert(rlink, "Right side should be link");
-	return conn_connect_nk(lnode, rlink);
-}
-
-// =============================================================
-/**
  * Connect left_cset and _right_cset with an LG_LING
  * lnode and rnode are the two connecters that actually mate.
  */
@@ -406,86 +379,6 @@ cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name()
 cout<<"Yayyyyae connectors match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	return new Ling(link_name, lnode, rnode);
-}
-
-/**
- * Connect left_cset and _right_cset with a LING
- * lnode is a connecter we hope to mate with something from rlink.
- */
-Link* Connect::conn_connect_nk(Connector* lnode, Link* rlink)
-{
-cout<<"enter cnt_nk try match lnode="<<lnode->get_name()<<" to cset r="<< rlink << endl;
-
-	assert(0, "Ohhh no mr billl");
-	return NULL;
-}
-
-// =============================================================
-/// Attempt to connect one connector in the llink cset to one connector 
-/// in the ratom cset.  If no linkage is possible, return NULL.
-/// Otheriwse, return a set of graphs of the form:
-/// (for example):
-///
-///   LING :
-///     LING_TYPE : Wd
-///     CONNECTOR : Wd+
-///     CONNECTOR : Wd-
-
-Set* Connect::conn_connect_ka(Link* llink, Atom* ratom)
-{
-cout<<"Enter recur l=" << llink->get_type()<<endl;
-
-	// "alternatives" records the various different successful ways
-	// that llink and ratom can be mated together.
-	OutList alternatives;
-	for (int i = 0; i < llink->get_arity(); i++)
-	{
-		Atom* a = llink->get_outgoing_atom(i);
-cout<<"duude looping over ith term="<<i<< " term is "<<a<<endl;
-		Connector* chinode = dynamic_cast<Connector*>(a);
-		if (chinode) 
-		{
-			// XXX TODO -- I think this is the right response here, not sure...
-			if (chinode->get_name() == OPTIONAL_CLAUSE)
-				continue;
-
-cout<<"duude got the chinode "<<endl;
-			// Only one needs to be satisfied for OR clause
-			AtomType op = llink->get_type();
-			if (OR == op)
-			{
-				Link* rv = conn_connect_na(chinode, ratom);
-				if (rv)
-					alternatives.push_back(rv);
-			}
-			else
-			{
-				// If we are here, then its an AND. 
-				assert(AND == op, "Bad connective.");
-cout<<"duuude lefty is "<<chinode<<endl;
-cout<<"duuude righty is "<<ratom<<endl;
-				Link* rv = conn_connect_na(chinode, ratom);
-
-				// All connectors must be satsisfied.
-				assert(0, "Implement me cnode AND");
-			}
-		}
-		else
-		{	
-cout<<"duude not the chinode!"<<endl;
-			Link* clink = dynamic_cast<Link*>(a);
-			assert(clink, "Child should be link");
-			Link* rv = conn_connect_ka(clink, ratom);
-			if (rv)
-				alternatives.push_back(rv);
-		}
-	}
-
-cout<< "duude done with recur, alter sz="<<alternatives.size()<<endl;
-	if (0 == alternatives.size())
-		return NULL;
-
-	return new Set(flatten(alternatives));
 }
 
 // =============================================================
