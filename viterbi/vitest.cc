@@ -453,7 +453,7 @@ bool test_simple_onereq()
 	return test_hello ("one required link and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: Wd- & {A+} & {B+} & {C+};",
-		true
+		false
 	);
 }
 
@@ -462,7 +462,7 @@ bool test_simple_zeroreq()
 	return test_hello ("zero required links and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: {Wd-} & {A+} & {B+} & {C+};",
-		true
+		false
 	);
 }
 
@@ -471,7 +471,7 @@ bool test_simple_onereq_and_left()
 	return test_hello ("one required link and opt lefties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: Wd- & {A-} & {B-} & {C+};",
-		true
+		false
 	);
 }
 
