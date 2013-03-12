@@ -196,6 +196,7 @@ cout<<"=====================> direct state pair just crated: "<<sp<<endl;
 					Connector* rfc = dynamic_cast<Connector*>(rfirst);
 					assert(rfc, "Exepcting a connector in the right conjunct");
 
+cout<<"duuude rand="<<rand<<endl;
 					Ling* conn = conn_connect_nn(lcon, rfc);
 					if (!conn)
 						continue;
@@ -207,16 +208,39 @@ cout<<"super got one it is "<<conn<<endl;
 					// back in there, as that is what later stages need).
 					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
 
-					// The right cset bettter not have any left-pointing 
-               // links, since these cannot be satisfied ...
-assert(0, "not done yet");
-#if 0
-					OutList state = land->get_outgoing_set();
-					state.erase(state.begin());
-					StatePair* sp = new StatePair(new Seq(state), out);
+					// The right cset better not have any left-pointing 
+               // links, because if we are here, these cannot be
+					// satisfied ...
+					size_t rsz = rand->get_arity();
+					bool unmatched_left_pointer = false;
+					for (size_t k=1; k<rsz; k++)
+					{
+						Atom* ra = rand->get_outgoing_atom(k);
+						Connector* rc = dynamic_cast<Connector*>(ra);
+						assert(rc, "Exepcting a connector in the right conjunct");
+
+						char dir = rc->get_direction();
+						if ('-' == dir) 
+						{
+							unmatched_left_pointer = true;
+							break;
+						}
+					}
+
+					// If unmatched, fail, and try again.
+					if (unmatched_left_pointer)
+						continue;
+
+					// The state is now everything else left in the conjunct.
+					// We need to build this back up into WordCset.
+					OutList remaining_cons = rand->get_outgoing_set();
+					remaining_cons.erase(remaining_cons.begin());
+               And* remaining_cj = new And(remaining_cons);
+					WordCset* rem_cset = new WordCset(_right_cset->get_word(), remaining_cj);
+ 
+					StatePair* sp = new StatePair(new Seq(rem_cset), out);
 					alternatives.push_back(sp);
-cout<<"state pair just crated: "<<sp<<endl;
-#endif
+cout<<"=====================> randy state pair just crated: "<<sp<<endl;
 				}
 			}
 		}
@@ -248,7 +272,7 @@ cout<<"yah got one it is "<<conn<<endl;
 					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
 
 					// The state is now everything left in the conjunct.
-					// We need top build this back up into WordCset.
+					// We need to build this back up into WordCset.
 					OutList remaining_cons = land->get_outgoing_set();
 					remaining_cons.erase(remaining_cons.begin());
                And* remaining_cj = new And(remaining_cons);
@@ -262,33 +286,40 @@ cout<<"=====================> state pair just crated: "<<sp<<endl;
 				{
 					And* rand = dynamic_cast<And*>(upcast(rdj));
 					assert(rand, "Right dj not a conjunction");
+cout<<"duude land="<<land<<endl;
+cout<<"duude rand="<<rand<<endl;
 
+					OutList outputs;
+					size_t m = 0;
 					while (1)
 					{
-						Atom* rfirst = rand->get_outgoing_atom(0);
+						Atom* rfirst = rand->get_outgoing_atom(m);
 						Connector* rfc = dynamic_cast<Connector*>(rfirst);
 						assert(rfc, "Exepcting a connector in the right conjunct");
 
-						Atom* lfirst = land->get_outgoing_atom(0);
+						Atom* lfirst = land->get_outgoing_atom(m);
 						Connector* lfc = dynamic_cast<Connector*>(lfirst);
 						assert(lfc, "Exepcting a connector in the left conjunct");
 
-cout<<"duude land="<<land<<endl;
-cout<<"duude rand="<<rand<<endl;
+
 						Ling* conn = conn_connect_nn(lfc, rfc);
 						if (!conn)
 							break;
-cout<<"whoa super got one it is "<<conn<<endl;
+cout<<"whoa super got one for "<< m <<" it is "<<conn<<endl;
+						m++;
 
 						// At this point, conn holds an LG link type, and the
 						// two disjuncts that were mated.  Re-assemble these
 						// into a pair of word_disjuncts (i.e. stick the word
 						// back in there, as that is what later stages need).
-						Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+						outputs.push_back(reassemble(conn, left_cset, _right_cset));
 
 						// The right cset bettter not have any left-pointing 
                	// links, since these cannot be satisfied ...
-assert(0, "not done yet");
+					}
+cout<<"duude matched a total of m="<<m<<endl;
+if (0 != m)
+assert(0, "super not done yet");
 #if 0
 						OutList state = land->get_outgoing_set();
 						state.erase(state.begin());
@@ -296,7 +327,6 @@ assert(0, "not done yet");
 						alternatives.push_back(sp);
 cout<<"state pair just crated: "<<sp<<endl;
 #endif
-					}
 				}
 			}
 		}
