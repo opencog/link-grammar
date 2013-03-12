@@ -99,8 +99,8 @@ static Seq* merge_wordlists(Seq* wla, Seq* wlb)
 		Atom* csa = wcsa->get_cset();
 		Atom* csb = wcsb->get_cset();
 		Or* dj = new Or(csa, csb);
+		dj = dj->flatten();
 
-		// flatten
 		WordCset* merge = new WordCset(wa, dj);
 		seq.push_back(merge);
 	}
