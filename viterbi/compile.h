@@ -163,6 +163,9 @@ class Or : public Set
 		// a hierarchical nesting of And/Or sets erases the distinction
 		// between the And's and Or's!
 		Or* flatten() const { return new Or(flatset()); }
+
+		// Remove repeated entries
+		Or* uniq() const;
 };
 
 /// Ordered sequence

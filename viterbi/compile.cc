@@ -48,26 +48,29 @@ OutList Set::flatset() const
 	return newset;
 }
 
-/// Remove optional connectors.
-///
-/// It doesn't make any sense at all to have an optional connector
-/// in an AND-clause, so just remove it.  (Well, OK, it "makes sense",
-/// its just effectively a no-op, and so doesn't have any effect.  So,
-/// removing it here simplifies logic in other places.)
-And* And::clean() const
+/// Remove repeated entries.
+Or* Or::uniq() const
 {
-	OutList cl;
-	size_t sz = _oset.size();
-	for (int i=0; i<sz; i++)
+	OutList uniq;
+	size_t sz = get_arity();
+	for (size_t i=0; i<sz; i++)
 	{
-		Connector* cn = dynamic_cast<Connector*>(_oset[i]);
-		if (cn and cn->is_optional())
-			continue;
+		Atom* a = get_outgoing_atom(i);
+		bool is_uniq = true;
+		for (size_t j=i+1; j<sz; j++)
+		{
+			Atom* b = get_outgoing_atom(j);
+			if (a->operator==(b))
+			{
+				is_uniq = false;
+				break;
+			}
+		}
 
-		cl.push_back(_oset[i]);
+		if (is_uniq)
+			uniq.push_back(a);
 	}
-
-	return new And(cl);
+	return new Or(uniq);
 }
 
 /// Return disjunctive normal form (DNF)
@@ -212,6 +215,28 @@ Or* And::disjoin()
 		}
 	}
 	return new Or(dnf);
+}
+
+/// Remove optional connectors.
+///
+/// It doesn't make any sense at all to have an optional connector
+/// in an AND-clause, so just remove it.  (Well, OK, it "makes sense",
+/// its just effectively a no-op, and so doesn't have any effect.  So,
+/// removing it here simplifies logic in other places.)
+And* And::clean() const
+{
+	OutList cl;
+	size_t sz = _oset.size();
+	for (int i=0; i<sz; i++)
+	{
+		Connector* cn = dynamic_cast<Connector*>(_oset[i]);
+		if (cn and cn->is_optional())
+			continue;
+
+		cl.push_back(_oset[i]);
+	}
+
+	return new And(cl);
 }
 
 
