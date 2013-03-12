@@ -31,7 +31,8 @@ class Connect
 		Ling* conn_connect_nn(Connector*, Connector*);
 		Ling* reassemble(Ling*, WordCset*, WordCset*);
 
-		StatePair* alternative_ss(Connector*, Connector*);
+		StatePair* alternative(Connector*, Connector*);
+		StatePair* alternative(Connector*, And*);
 
 		static const OutList& flatten(OutList&);
 
