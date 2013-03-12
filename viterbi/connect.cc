@@ -207,10 +207,10 @@ cout<<"super got one it is "<<conn<<endl;
 					// back in there, as that is what later stages need).
 					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
 
+					// The right cset bettter not have any left-pointing 
+               // links, since these cannot be satisfied ...
 assert(0, "not done yet");
 #if 0
-					// The right cset bettter not have any left-popinting 
-               // links, since these cannot be satisfied ...
 					OutList state = land->get_outgoing_set();
 					state.erase(state.begin());
 					StatePair* sp = new StatePair(new Seq(state), out);
@@ -263,7 +263,40 @@ cout<<"state pair just crated: "<<sp<<endl;
 					And* rand = dynamic_cast<And*>(upcast(rdj));
 					assert(rand, "Right dj not a conjunction");
 
-assert(0, "Still Under construction");
+					while (1)
+					{
+						Atom* rfirst = rand->get_outgoing_atom(0);
+						Connector* rfc = dynamic_cast<Connector*>(rfirst);
+						assert(rfc, "Exepcting a connector in the right conjunct");
+
+						Atom* lfirst = land->get_outgoing_atom(0);
+						Connector* lfc = dynamic_cast<Connector*>(lfirst);
+						assert(lfc, "Exepcting a connector in the left conjunct");
+
+cout<<"duude land="<<land<<endl;
+cout<<"duude rand="<<rand<<endl;
+						Ling* conn = conn_connect_nn(lfc, rfc);
+						if (!conn)
+							break;
+cout<<"super got one it is "<<conn<<endl;
+
+						// At this point, conn holds an LG link type, and the
+						// two disjuncts that were mated.  Re-assemble these
+						// into a pair of word_disjuncts (i.e. stick the word
+						// back in there, as that is what later stages need).
+						Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+
+						// The right cset bettter not have any left-pointing 
+               	// links, since these cannot be satisfied ...
+assert(0, "not done yet");
+#if 0
+						OutList state = land->get_outgoing_set();
+						state.erase(state.begin());
+						StatePair* sp = new StatePair(new Seq(state), out);
+						alternatives.push_back(sp);
+cout<<"state pair just crated: "<<sp<<endl;
+#endif
+					}
 				}
 			}
 		}

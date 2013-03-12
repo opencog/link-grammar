@@ -385,6 +385,14 @@ bool test_simple_right_disj()
 	);
 }
 
+bool test_simple_right_required_cset()
+{
+	return test_hello ("required right cset",
+		"LEFT-WALL: Wd+;"
+		"Hello: Wd- or Xi- or (Xj- & (A+ or B+));"
+	);
+}
+
 bool test_simple_optional()
 {
 	return test_hello ("optionals in both csets",
@@ -425,6 +433,7 @@ int ntest_simple()
 	if (!test_simple_left_disj()) num_failures++;
 	if (!test_simple_optional_left_cset()) num_failures++;
 	if (!test_simple_right_disj()) num_failures++;
+	if (!test_simple_right_required_cset()) num_failures++;
 	if (!test_simple_optional()) num_failures++;
 	if (!test_simple_onereq()) num_failures++;
 	if (!test_simple_zeroreq()) num_failures++;
