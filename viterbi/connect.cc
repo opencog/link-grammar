@@ -176,37 +176,47 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 
 // =============================================================
 
-/// Dispatch to each of the alternative handlers, depending
-/// on whether the arguments are single or multi-connectors.
-StatePair* Connect::try_alternative(Atom* ldj, Atom*rdj)
+/// Try to connect the left and right disjuncts.
+///
+/// If the connection attempt is successful, then return a
+/// StatePair given the emitted output, and the resulting state.
+///
+/// The implementation below is just a dispatcher for each of the
+/// alternative handlers, depending on whether the arguments are
+/// single or multi-connectors.
+StatePair* Connect::try_alternative(Atom* ldj, Atom* rdj)
 {
 	Connector* lcon = dynamic_cast<Connector*>(ldj);
+	Connector* rcon = dynamic_cast<Connector*>(rdj);
 
+	// Left disjunct is a single connector
 	if (lcon)
 	{
-		Connector* rcon = dynamic_cast<Connector*>(rdj);		
+		// Right disjunct is a single connector
 		if (rcon)
 			return alternative(lcon, rcon);
 		else
 		{
+			// Right disunct better be a multi-connector
 			And* rand = dynamic_cast<And*>(upcast(rdj));
-			assert(rand, "Right dj not a conjunction");
+			assert(rand, "Right dj not a disjunct");
 			return alternative(lcon, rand);
 		}
 	}
 	else
 	{
+		// Left disjunct better be a multi-connector.
 		And* land = dynamic_cast<And*>(upcast(ldj));
-		assert(land, "Left dj not a conjunction");
+		assert(land, "Left dj not a disjunct");
 
-		Connector* rcon = dynamic_cast<Connector*>(rdj);		
-
+		// Right disjunct is a single connector
 		if (rcon)
 			return alternative(land, rcon);
 		else
 		{
+			// Right disunct better be a multi-connector
 			And* rand = dynamic_cast<And*>(upcast(rdj));
-			assert(rand, "Right dj not a conjunction");
+			assert(rand, "Right dj not a disjunct");
 
 			return alternative(land, rand);
 		}
@@ -216,10 +226,22 @@ StatePair* Connect::try_alternative(Atom* ldj, Atom*rdj)
 }
 
 // =============================================================
-/// Connect a pair of connectors, and return the resulting state pair.
-/// If no connection is possible return NULL.
-/// The state pair will contain the output generated (if any) and
-/// the final state after the connection is made.
+/// Try connecting the left and right disjuncts.
+///
+/// If a connection was made, return the resulting state pair.
+/// If no connection is possible, return NULL.
+///
+/// The state pair will contain the output generated and the final
+/// state (if any) after the connection is made.
+///
+/// There are four distinct methods below, depending on whether
+/// each disjunct is a single or a multi connector.  Multi-connectors
+/// are just a list of conjoind (AND) single-connectors.  A multi-
+/// connector is also called a "disjunct" because it is one of the
+/// terms in a connector set that has been expanded into dsjunctive
+/// normal form. Viz. a single disjunct is a conjoined set of
+/// connectors.
+//
 StatePair* Connect::alternative(Connector* lcon, Connector* rcon)
 {
 	Ling* conn = conn_connect_nn(lcon, rcon);
@@ -248,7 +270,7 @@ StatePair* Connect::alternative(Connector* lcon, And* rand)
 cout<<"duuude rand="<<rand<<endl;
 	Atom* rfirst = rand->get_outgoing_atom(0);
 	Connector* rfc = dynamic_cast<Connector*>(rfirst);
-	assert(rfc, "Exepcting a connector in the right conjunct");
+	assert(rfc, "Exepcting a connector in the right disjunct");
 
 	Ling* conn = conn_connect_nn(lcon, rfc);
 	if (!conn)
@@ -272,7 +294,7 @@ cout<<"super got one it is "<<conn<<endl;
 	{
 		Atom* ra = rand->get_outgoing_atom(k);
 		Connector* rc = dynamic_cast<Connector*>(ra);
-		assert(rc, "Exepcting a connector in the right conjunct");
+		assert(rc, "Exepcting a connector in the right disjunct");
 
 		char dir = rc->get_direction();
 		if ('-' == dir)
@@ -286,7 +308,7 @@ cout<<"super got one it is "<<conn<<endl;
 	if (unmatched_left_pointer)
 		return NULL;
 
-	// The state is now everything else left in the conjunct.
+	// The state is now everything else left in the disjunct.
 	// We need to build this back up into WordCset.
 	OutList remaining_cons = rand->get_outgoing_set();
 	remaining_cons.erase(remaining_cons.begin());
@@ -303,7 +325,7 @@ StatePair* Connect::alternative(And* land, Connector* rcon)
 {
 	Atom* lfirst = land->get_outgoing_atom(0);
 	Connector* lfc = dynamic_cast<Connector*>(lfirst);
-	assert(lfc, "Exepcting a connector in the left conjunct");
+	assert(lfc, "Exepcting a connector in the left disjunct");
 
 	Ling* conn = conn_connect_nn(lfc, rcon);
 	if (!conn)
@@ -316,7 +338,7 @@ cout<<"yah got one it is "<<conn<<endl;
 	// back in there, as that is what later stages need).
 	Seq* out = new Seq(conn);
 
-	// The state is now everything left in the conjunct.
+	// The state is now everything left in the disjunct.
 	// We need to build this back up into WordCset.
 	OutList remaining_cons = land->get_outgoing_set();
 	remaining_cons.erase(remaining_cons.begin());
@@ -343,11 +365,11 @@ cout<<"duude rand="<<rand<<endl;
 	{
 		Atom* rfirst = rand->get_outgoing_atom(m);
 		Connector* rfc = dynamic_cast<Connector*>(rfirst);
-		assert(rfc, "Exepecting a connector in the right conjunct");
+		assert(rfc, "Exepecting a connector in the right disjunct");
 
 		Atom* lfirst = land->get_outgoing_atom(m);
 		Connector* lfc = dynamic_cast<Connector*>(lfirst);
-		assert(lfc, "Exepecting a connector in the left conjunct");
+		assert(lfc, "Exepecting a connector in the left disjunct");
 
 
 		Ling* conn = conn_connect_nn(lfc, rfc);
@@ -447,7 +469,7 @@ cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name()
 	if (rnode->is_optional()) return NULL;
 	if (!conn_match(lnode->get_name(), rnode->get_name()))
 		return NULL;
-	
+
 cout<<"Yayyyyae connectors match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	Ling* ling = new Ling(link_name, lnode, rnode);
