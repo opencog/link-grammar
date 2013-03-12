@@ -646,7 +646,7 @@ bool test_two_and_no_opts()
 	return test_alternative("two alt, and all opt",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
 		"Hello: Wd- or ({Wi-} & {Xj- & {A+ or B+}} & {C+});",
-		true
+		false
 	);
 }
 
@@ -655,7 +655,7 @@ bool test_two_and_excess()
 	return test_alternative("two alt, and excess reqs",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {A+};"
 		"Hello: Wd- or (Wi- & Xj- & {A+ or B+} & {C+}) or Wi-;",
-		true
+		false
 	);
 }
 

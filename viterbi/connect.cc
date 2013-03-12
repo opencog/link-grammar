@@ -197,11 +197,11 @@ cout<<"=====================> direct state pair just crated: "<<sp<<endl;
 					if (0 == rand->get_arity())
 						continue;
 
+cout<<"duuude rand="<<rand<<endl;
 					Atom* rfirst = rand->get_outgoing_atom(0);
 					Connector* rfc = dynamic_cast<Connector*>(rfirst);
 					assert(rfc, "Exepcting a connector in the right conjunct");
 
-cout<<"duuude rand="<<rand<<endl;
 					Ling* conn = conn_connect_nn(lcon, rfc);
 					if (!conn)
 						continue;
@@ -291,12 +291,16 @@ cout<<"=====================> state pair just crated: "<<sp<<endl;
 				{
 					And* rand = dynamic_cast<And*>(upcast(rdj));
 					assert(rand, "Right dj not a conjunction");
+
 cout<<"duude land="<<land<<endl;
 cout<<"duude rand="<<rand<<endl;
 
 					OutList outputs;
 					size_t m = 0;
-					while (1)
+					size_t rsz = rand->get_arity();
+					size_t lsz = land->get_arity();
+					size_t sz = (lsz<rsz) ? lsz : rsz;
+					while (m < sz)
 					{
 						Atom* rfirst = rand->get_outgoing_atom(m);
 						Connector* rfc = dynamic_cast<Connector*>(rfirst);
