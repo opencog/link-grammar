@@ -28,15 +28,17 @@ class Connect
 		Set* try_connect_a(StatePair*);
 		Set* next_connect(WordCset*);
 
+		Ling* conn_connect_nn(Connector*, Connector*);
 		Ling* reassemble(Ling*, WordCset*, WordCset*);
 
-		Ling* conn_connect_nn(Connector*, Connector*);
+		StatePair* alternative_ss(Connector*, Connector*);
 
 		static const OutList& flatten(OutList&);
 
 	private:
 		WordCset* _right_cset;
 		Atom* _rcons;  // just the connector(s), without the word.
+		WordCset* _left_cset;
 };
 
 

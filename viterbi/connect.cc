@@ -124,6 +124,7 @@ Set* Connect::try_connect_a(StatePair* left_sp)
  */
 Set* Connect::next_connect(WordCset* left_cset)
 {
+	_left_cset = left_cset;
 	assert(left_cset, "State word-connectorset is null");
 	Atom* left_a = left_cset->get_cset();
 
@@ -174,21 +175,10 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 
 				if (rcon)
 				{
-					Ling* conn = conn_connect_nn(lcon, rcon);
-					if (!conn)
+					StatePair* sp = alternative_ss(lcon, rcon);
+					if (!sp)
 						continue;
-cout<<"got one it is "<<conn<<endl;
-
-					// At this point, conn holds an LG link type, and the
-					// two disjuncts that were mated.  Re-assemble these
-					// into a pair of word_disjuncts (i.e. stick the word
-					// back in there, as that is what later stages need).
-					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
-
-					// Meanwhile, we exhausted the state, so that's empty.
-					StatePair* sp = new StatePair(new Seq(), out);
 					alternatives.push_back(sp);
-cout<<"=====================> direct state pair just crated: "<<sp<<endl;
 				}
 				else
 				{
@@ -211,7 +201,7 @@ cout<<"super got one it is "<<conn<<endl;
 					// two disjuncts that were mated.  Re-assemble these
 					// into a pair of word_disjuncts (i.e. stick the word
 					// back in there, as that is what later stages need).
-					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+					Seq* out = new Seq(conn);
 
 					// The right cset better not have any left-pointing 
                // links, because if we are here, these cannot be
@@ -274,7 +264,7 @@ cout<<"yah got one it is "<<conn<<endl;
 					// two disjuncts that were mated.  Re-assemble these
 					// into a pair of word_disjuncts (i.e. stick the word
 					// back in there, as that is what later stages need).
-					Seq* out = new Seq(reassemble(conn, left_cset, _right_cset));
+					Seq* out = new Seq(conn);
 
 					// The state is now everything left in the conjunct.
 					// We need to build this back up into WordCset.
@@ -321,7 +311,7 @@ cout<<"whoa super got one for "<< m <<" it is "<<conn<<endl;
 						// two disjuncts that were mated.  Re-assemble these
 						// into a pair of word_disjuncts (i.e. stick the word
 						// back in there, as that is what later stages need).
-						outputs.push_back(reassemble(conn, left_cset, _right_cset));
+						outputs.push_back(conn);
 					}
 cout<<"duude matched a total of m="<<m<<endl;
 					if (0 == m)
@@ -371,6 +361,30 @@ cout<<"=====================> multi state pair just created: "<<sp<<endl;
 }
 
 // =============================================================
+/// Connect a pair of connectors, and return the resulting state pair.
+/// If no connection is possible return NULL.
+/// The state pair will contain the output generated (if any) and
+/// the final state after the connection is made. 
+StatePair* Connect::alternative_ss(Connector* lcon, Connector* rcon)
+{
+	Ling* conn = conn_connect_nn(lcon, rcon);
+	if (!conn)
+		return NULL;
+cout<<"got one it is "<<conn<<endl;
+
+	// At this point, conn holds an LG link type, and the
+	// two disjuncts that were mated.  Re-assemble these
+	// into a pair of word_disjuncts (i.e. stick the word
+	// back in there, as that is what later stages need).
+	Seq* out = new Seq(conn);
+
+	// Meanwhile, we exhausted the state, so that's empty.
+	StatePair* sp = new StatePair(new Seq(), out);
+cout<<"=====================> direct state pair just crated: "<<sp<<endl;
+	return sp;
+}
+
+// =============================================================
 
 // At this point, conn holds an LG link type, and the
 // two disjuncts that were mated.  Re-assemble these
@@ -415,7 +429,10 @@ cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name()
 	
 cout<<"Yayyyyae connectors match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
-	return new Ling(link_name, lnode, rnode);
+	Ling* ling = new Ling(link_name, lnode, rnode);
+
+	ling = reassemble(ling, _left_cset, _right_cset);
+	return ling;
 }
 
 // =============================================================
