@@ -33,6 +33,8 @@ class Connect
 
 		StatePair* alternative(Connector*, Connector*);
 		StatePair* alternative(Connector*, And*);
+		StatePair* alternative(And*, Connector*);
+		StatePair* alternative(And*, And*);
 
 		static const OutList& flatten(OutList&);
 

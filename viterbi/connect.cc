@@ -188,7 +188,6 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 					if (!sp)
 						continue;
 					alternatives.push_back(sp);
-
 				}
 			}
 		}
@@ -204,31 +203,10 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 
 				if (rcon)
 				{
-					Atom* lfirst = land->get_outgoing_atom(0);
-					Connector* lfc = dynamic_cast<Connector*>(lfirst);
-					assert(lfc, "Exepcting a connector in the left conjunct");
-
-					Ling* conn = conn_connect_nn(lfc, rcon);
-					if (!conn)
+					StatePair* sp = alternative(land, rcon);
+					if (!sp)
 						continue;
-cout<<"yah got one it is "<<conn<<endl;
-
-					// At this point, conn holds an LG link type, and the
-					// two disjuncts that were mated.  Re-assemble these
-					// into a pair of word_disjuncts (i.e. stick the word
-					// back in there, as that is what later stages need).
-					Seq* out = new Seq(conn);
-
-					// The state is now everything left in the conjunct.
-					// We need to build this back up into WordCset.
-					OutList remaining_cons = land->get_outgoing_set();
-					remaining_cons.erase(remaining_cons.begin());
-               And* remaining_cj = new And(remaining_cons);
-					WordCset* rem_cset = new WordCset(left_cset->get_word(), remaining_cj);
- 
-					StatePair* sp = new StatePair(new Seq(rem_cset), out);
 					alternatives.push_back(sp);
-cout<<"=====================> state pair just crated: "<<sp<<endl;
 				}
 				else
 				{
@@ -337,6 +315,7 @@ cout<<"=====================> direct state pair just crated: "<<sp<<endl;
 	return sp;
 }
 
+// See docs above
 StatePair* Connect::alternative(Connector* lcon, And* rand)
 {
 	if (0 == rand->get_arity())
@@ -392,6 +371,36 @@ cout<<"super got one it is "<<conn<<endl;
  
 	StatePair* sp = new StatePair(new Seq(rem_cset), out);
 cout<<"=====================> randy state pair just crated: "<<sp<<endl;
+	return sp;
+}
+
+// See docs above
+StatePair* Connect::alternative(And* land, Connector* rcon)
+{
+	Atom* lfirst = land->get_outgoing_atom(0);
+	Connector* lfc = dynamic_cast<Connector*>(lfirst);
+	assert(lfc, "Exepcting a connector in the left conjunct");
+
+	Ling* conn = conn_connect_nn(lfc, rcon);
+	if (!conn)
+		return NULL;
+cout<<"yah got one it is "<<conn<<endl;
+
+	// At this point, conn holds an LG link type, and the
+	// two disjuncts that were mated.  Re-assemble these
+	// into a pair of word_disjuncts (i.e. stick the word
+	// back in there, as that is what later stages need).
+	Seq* out = new Seq(conn);
+
+	// The state is now everything left in the conjunct.
+	// We need to build this back up into WordCset.
+	OutList remaining_cons = land->get_outgoing_set();
+	remaining_cons.erase(remaining_cons.begin());
+	And* remaining_cj = new And(remaining_cons);
+	WordCset* rem_cset = new WordCset(_left_cset->get_word(), remaining_cj);
+ 
+	StatePair* sp = new StatePair(new Seq(rem_cset), out);
+cout<<"=====================> state pair just crated: "<<sp<<endl;
 	return sp;
 }
 
