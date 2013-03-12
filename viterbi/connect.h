@@ -28,15 +28,15 @@ class Connect
 		Set* try_connect_a(StatePair*);
 		Set* next_connect(WordCset*);
 
-		Ling* conn_connect_nn(Connector*, Connector*);
-		Ling* reassemble(Ling*, WordCset*, WordCset*);
-
 		StatePair* try_alternative(Atom*, Atom*);
 
 		StatePair* alternative(Connector*, Connector*);
 		StatePair* alternative(Connector*, And*);
 		StatePair* alternative(And*, Connector*);
 		StatePair* alternative(And*, And*);
+
+		Ling* conn_connect_nn(Connector*, Connector*);
+		Ling* reassemble(Ling*, WordCset*, WordCset*);
 
 		static const OutList& flatten(OutList&);
 

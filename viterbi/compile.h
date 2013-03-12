@@ -117,6 +117,9 @@ class Seq : public Set
 		Seq(Atom* singleton)
 			: Set(SEQ, OutList(1, singleton))
 		{}
+		Seq(Atom* a, Atom* b)
+			: Set(SEQ, ({OutList o(1,a); o.push_back(b); o;}))
+		{}
 
 		// See the Set class for documentation
 		Seq* flatten() const { return new Seq(flatset()); }

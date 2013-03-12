@@ -304,7 +304,8 @@ int ntest_disjoin()
 // just one way. The result should be just one alternative:
 // that alternatives has an empty state, and output with
 // just one link.
-bool test_hello(const char *id, const char *dict_str, bool empty_state)
+bool test_hello(const char *id, const char *dict_str, 
+                bool empty_state, bool must_connect)
 {
 	total_tests++;
 
@@ -376,7 +377,7 @@ bool test_hello(const char *id, const char *dict_str, bool empty_state)
 
 			// In all cases, the output should be just the one word, 
 			// no matter what the state.
-			if (not sp->get_output()->operator==(out))
+			if (must_connect and not sp->get_output()->operator==(out))
 				pass_test = false;
 		}
 		if (pass_test)
@@ -399,7 +400,7 @@ bool test_simplest()
 	return test_hello ("test_simplest",
 		"LEFT-WALL: Wd+;"
 		"Hello: Wd-;",
-		true
+		true, true
 	);
 }
 
@@ -408,7 +409,7 @@ bool test_simple_left_disj()
 	return test_hello ("simple left disj",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: Wd-;",
-		true
+		true, true
 	);
 }
 
@@ -417,7 +418,7 @@ bool test_simple_optional_left_cset()
 	return test_hello ("optional left cset",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {CP+} & {Xx+} & {RW+ or Xp+};"
 		"Hello: Wd-;",
-		false
+		false, true
 	);
 }
 
@@ -426,7 +427,7 @@ bool test_simple_right_disj()
 	return test_hello ("simple right disj",
 		"LEFT-WALL: Wd+;"
 		"Hello: Wd- or Wi-;",
-		true
+		true, true
 	);
 }
 
@@ -435,7 +436,7 @@ bool test_simple_right_required_cset()
 	return test_hello ("required right cset",
 		"LEFT-WALL: Wd+;"
 		"Hello: Wd- or Xi- or (Xj- & (A+ or B+));",
-		true
+		true, true
 	);
 }
 
@@ -444,7 +445,7 @@ bool test_simple_optional()
 	return test_hello ("optionals in both csets",
 		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {CP+} & {Xx+} & {RW+ or Xp+};"
 		"Hello: Wd- or Xi- or (Xj- & {A+ or B+});",
-		false
+		false, true
 	);
 }
 
@@ -453,7 +454,7 @@ bool test_simple_onereq()
 	return test_hello ("one required link and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: Wd- & {A+} & {B+} & {C+};",
-		false
+		false, true
 	);
 }
 
@@ -462,7 +463,7 @@ bool test_simple_zeroreq()
 	return test_hello ("zero required links and opt righties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: {Wd-} & {A+} & {B+} & {C+};",
-		false
+		false, false
 	);
 }
 
@@ -471,7 +472,7 @@ bool test_simple_onereq_and_left()
 	return test_hello ("one required link and opt lefties (simple)",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"Hello: Wd- & {A-} & {B-} & {C+};",
-		false
+		false, true
 	);
 }
 

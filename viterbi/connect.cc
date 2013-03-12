@@ -24,6 +24,8 @@
 
 using namespace std;
 
+#define DBG(X) X;
+
 namespace link_grammar {
 namespace viterbi {
 
@@ -231,8 +233,8 @@ StatePair* Connect::try_alternative(Atom* ldj, Atom* rdj)
 /// If a connection was made, return the resulting state pair.
 /// If no connection is possible, return NULL.
 ///
-/// The state pair will contain the output generated and the final
-/// state (if any) after the connection is made.
+/// The state pair will contain the output generated (if any) and the
+/// final state (if any) after the connection is made.
 ///
 /// There are four distinct methods below, depending on whether
 /// each disjunct is a single or a multi connector.  Multi-connectors
@@ -246,8 +248,23 @@ StatePair* Connect::alternative(Connector* lcon, Connector* rcon)
 {
 	Ling* conn = conn_connect_nn(lcon, rcon);
 	if (!conn)
-		return NULL;
-cout<<"got one it is "<<conn<<endl;
+	{
+		// If we are here, then no connection was possible. It may
+		// be the case that rcon was right-pointing, in which case,
+		// it can be added to the state.
+		char dir = rcon->get_direction();
+		if ('-' == dir)
+			return NULL;
+
+		Word* lword = _left_cset->get_word();
+		Word* rword = _right_cset->get_word();
+		WordCset* lcset = new WordCset(lword, lcon);
+		WordCset* rcset = new WordCset(rword, rcon);
+		Seq* state = new Seq(lcset, rcset);
+		StatePair* sp = new StatePair(state, new Seq());
+		DBG(cout<<"------ Empty-output alternative created:\n" << sp << endl;);
+		return sp;
+	}
 
 	// At this point, conn holds an LG link type, and the
 	// two disjuncts that were mated.  Re-assemble these
@@ -257,7 +274,7 @@ cout<<"got one it is "<<conn<<endl;
 
 	// Meanwhile, we exhausted the state, so that's empty.
 	StatePair* sp = new StatePair(new Seq(), out);
-cout<<"=====================> direct state pair just crated: "<<sp<<endl;
+   DBG(cout<<"----- single-connector alternative created:\n" << sp << endl;);
 	return sp;
 }
 
