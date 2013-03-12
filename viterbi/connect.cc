@@ -19,6 +19,7 @@
 #include "utilities.h" // From base link-grammar
 
 #include "atom.h"
+#include "compress.h"
 #include "connect.h"
 #include "connector-utils.h"
 
@@ -260,7 +261,7 @@ StatePair* Connect::alternative(Connector* lcon, Connector* rcon)
 		Word* rword = _right_cset->get_word();
 		WordCset* lcset = new WordCset(lword, lcon);
 		WordCset* rcset = new WordCset(rword, rcon);
-		Seq* state = new Seq(lcset, rcset);
+		Seq* state = new Seq(rcset, lcset);
 		StatePair* sp = new StatePair(state, new Seq());
 		DBG(cout<<"------ Empty-output alternative created:\n" << sp << endl;);
 		return sp;

@@ -14,6 +14,7 @@ lib_LTLIBRARIES = libvitacog.la
 libvitacog_la_SOURCES = \
 	atom.cc \
 	compile.cc \
+	compress.cc \
 	connect.cc \
 	connector-utils.cc \
 	disjoin.cc \
@@ -21,6 +22,7 @@ libvitacog_la_SOURCES = \
 	state.cc \
 	atom.h \
 	compile.h \
+	compress.h \
 	connect.h \
 	connector-utils.h \
 	disjoin.h \

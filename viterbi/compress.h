@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2012, 2013 Linas Vepstas <linasvepstas@gmail.com>       */
+/* Copyright (c) 2013 Linas Vepstas <linasvepstas@gmail.com>             */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the Viterbi parsing system is subject to the terms of the      */
@@ -9,8 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_VITERBI_CONNECT_H
-#define _LG_VITERBI_CONNECT_H
+#ifndef _LG_VITERBI_COMPRESS_H
+#define _LG_VITERBI_COMPRESS_H
 
 #include "atom.h"
 #include "compile.h"
@@ -18,36 +18,9 @@
 namespace link_grammar {
 namespace viterbi {
 
-class Connect
-{
-	public:
-		Connect(WordCset*);
-		Set* try_connect(StatePair*);
-
-	protected:
-		Set* try_connect_a(StatePair*);
-		Set* next_connect(WordCset*);
-
-		StatePair* try_alternative(Atom*, Atom*);
-
-		StatePair* alternative(Connector*, Connector*);
-		StatePair* alternative(Connector*, And*);
-		StatePair* alternative(And*, Connector*);
-		StatePair* alternative(And*, And*);
-
-		Ling* conn_connect_nn(Connector*, Connector*);
-		Ling* reassemble(Ling*, WordCset*, WordCset*);
-
-		static const OutList& flatten(OutList&);
-
-	private:
-		WordCset* _right_cset;
-		Atom* _rcons;  // just the connector(s), without the word.
-		WordCset* _left_cset;
-};
-
+Set* compress_alternatives(Set*);
 
 } // namespace viterbi
 } // namespace link-grammar
 
-#endif // _LG_VITERBI_CONNECT_H
+#endif // _LG_VITERBI_COMPRESS_H
