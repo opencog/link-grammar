@@ -144,7 +144,8 @@ cout<<"enter next_connect, state cset dnf "<< left_a <<endl;
 	Atom *right_a = _rcons;
 cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 	Or* right_dnf = NULL;
-	if (CONNECTOR == right_a->get_type())
+	AtomType rt = right_a->get_type();
+	if (CONNECTOR == rt or AND == rt)
 		right_dnf = new Or(right_a);
 	else
 		right_dnf = dynamic_cast<Or*>(upcast(right_a));
@@ -471,7 +472,6 @@ Ling* Connect::reassemble(Ling* conn, WordCset* left_cset, WordCset* right_cset)
 
 	Ling *lg_link = new Ling(conn->get_ling_type(), lwordj, rwordj);
 
-cout<<"normalized into "<<lg_link<<endl;
 	return lg_link;
 }
 

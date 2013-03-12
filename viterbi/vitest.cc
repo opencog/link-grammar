@@ -804,7 +804,7 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	parser.streamin("this is");
 
 	Lynk* output = parser.get_alternatives();
-cout<<"final alts >>>" << output<<endl;
+cout<<"vitest final alts >>>" << output<<endl;
 
 return false;
 
@@ -835,7 +835,7 @@ void report(int num_failures, bool exit_on_fail)
 	}
 
 	cout << "All " << total_tests
-		     << " tests so far pass." << endl;
+	     << " tests so far pass." << endl;
 }
 
 int
