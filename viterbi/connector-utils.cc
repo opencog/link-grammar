@@ -142,7 +142,7 @@ bool is_optional(Atom *a)
 
 // ===================================================================
 
-// Utility for below.
+// Utility for below. See description given there.
 static Atom* trim_left_pointers(Atom* a)
 {
 	Connector* ct = dynamic_cast<Connector*>(a);
@@ -159,6 +159,11 @@ static Atom* trim_left_pointers(Atom* a)
 	AtomType ty = a->get_type();
 	assert (OR == ty or AND == ty, "Must be boolean junction");
 
+	// Note: With the new DNF style of processing esewhere in the code,
+	// it will never be the case that the block of code will be hit.
+	// None-the-less, the code below works great for arbitrarily-nested
+	// connector sets (i.e. sets that are not in any normal form) and
+	// so its left here in case you need it.
 	if (OR == ty)
 	{
 		OutList new_ol;
@@ -219,20 +224,19 @@ static Atom* trim_left_pointers(Atom* a)
 	}
 
 	if (0 == new_ol.size())
-		return NULL;
+		return new And();
 
 	if (1 == new_ol.size())
 		return new_ol[0];
 
-	return new Link(AND, new_ol);
+	return new And(new_ol);
 }
 
 /// Trim away all optional left pointers (connectors with - direction)
 /// If there are any non-optional left-pointers, then return NULL.
 ///
-/// XXX Wait, I'm confused: it could also be null if everything
-/// was optional, and everything was left-facing, so everything got
-/// trimmed away... but that's OK, because ... ermmmm
+/// If all of the connectors were optional left-pointers, then they
+/// are all trimmed away, and a single, empty AND is returned.
 WordCset* cset_trim_left_pointers(WordCset* wrd_cset)
 {
 	Atom* trimmed = trim_left_pointers(wrd_cset->get_cset());
