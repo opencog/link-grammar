@@ -38,8 +38,8 @@ bool conn_match(const string& ls, const string& rs)
 {
 	char ldir = *ls.rbegin();
 	char rdir = *rs.rbegin();
-	assert (ldir == '+' or ldir == '-', "Bad word direction");
-	assert (rdir == '+' or rdir == '-', "Bad word direction");
+	assert (ldir == '+' or ldir == '-', "Bad word direction (l)");
+	assert (rdir == '+' or rdir == '-', "Bad word direction (r)");
 
 	// Direction signs must couple.
 	if ('+' == ldir and '-' != rdir) return false;
@@ -153,7 +153,7 @@ static Atom* trim_left_pointers(Atom* a)
 		char dir = ct->get_direction();
 		if ('-' == dir) return NULL;
 		if ('+' == dir) return a;
-		assert(0, "Bad word direction");
+		assert(0, "Bad word direction (t)");
 	}
 
 	AtomType ty = a->get_type();

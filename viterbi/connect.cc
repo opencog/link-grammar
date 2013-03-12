@@ -155,6 +155,9 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 	// that connectors can be mated.  Its a list of state pairs.
 	OutList alternatives;
 
+	// XXX TODO: the nested loops below contain four different cases
+	// that need to be handled. These four cases should be split into
+	// four helper methods; this will make the code easier to read.
 	size_t lsz = left_dnf->get_arity();
 	for (size_t i=0; i<lsz; i++)
 	{
@@ -369,12 +372,14 @@ cout<<"normalized into "<<lg_link<<endl;
 
 // =============================================================
 /**
- * Connect left_cset and _right_cset with an LG_LING
- * lnode and rnode are the two connecters that actually mate.
+ * Try to connect the left and right connectors. If they do connect,
+ * then return an LG_LING structure linking them.
  */
 Ling* Connect::conn_connect_nn(Connector* lnode, Connector* rnode)
 {
 cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
+	if (lnode->is_optional()) return NULL;
+	if (rnode->is_optional()) return NULL;
 	if (!conn_match(lnode->get_name(), rnode->get_name()))
 		return NULL;
 	
