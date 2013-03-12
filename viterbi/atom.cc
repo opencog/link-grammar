@@ -42,6 +42,7 @@ const string type_name(AtomType t)
 
 bool Atom::operator==(const Atom* other) const
 {
+	if (!other) return false;
 	if (other == this) return true;
 	if (other->_type == this->_type) return true;
 	return false;
@@ -49,6 +50,7 @@ bool Atom::operator==(const Atom* other) const
 
 bool Node::operator==(const Atom* other) const
 {
+	if (!other) return false;
 	if (other == this) return true;
 	if (other->get_type() != this->get_type()) return false;
 	const Node* nother = dynamic_cast<const Node*>(other);
@@ -58,6 +60,7 @@ bool Node::operator==(const Atom* other) const
 
 bool Link::operator==(const Atom* other) const
 {
+	if (!other) return false;
 	if (other == this) return true;
 	if (other->get_type() != this->get_type()) return false;
 	const Link* lother = dynamic_cast<const Link*>(other);

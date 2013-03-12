@@ -174,7 +174,7 @@ cout<<"in next_connect, word cset dnf "<< right_a <<endl;
 		}
 	}
 
-	return new Set(alternatives);
+	return compress_alternatives(new Set(alternatives));
 }
 
 // =============================================================
