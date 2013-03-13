@@ -25,7 +25,6 @@ class Connect
 		Set* try_connect(StatePair*);
 
 	protected:
-		Set* try_connect_a(StatePair*);
 		Set* next_connect(WordCset*);
 
 		StatePair* try_alternative(Atom*, Atom*);

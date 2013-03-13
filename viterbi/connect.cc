@@ -69,54 +69,33 @@ cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
  */
 Set* Connect::try_connect(StatePair* left_sp)
 {
-	Set* bogo = try_connect_a(left_sp);
-	if (bogo)
-		return bogo;
-
-assert(0, "Parse fail, implement me");
-	// If we are here, then nothing in the right cset was
-	// able to attach to the left.  If the right cset has
-	// no left-pointing links, that's just fine; add it
-	// to the state.  If it does have left-pointing
-	// links, then its a parse failure.
-	WordCset* new_rcset = cset_trim_left_pointers(_right_cset);
-	if (NULL == new_rcset)
+	// Zipper up the zipper.
+	// The left state can the thought of as a strand of zipper teeth,
+	// or half of a strand of DNA, if you wish. Each of the zipper teeth
+	// are right-pointing connectors.  These must be mated with the
+	// left-pointing connectors from the right cset.  The reason its
+	// zipper-like is that the right cset might connect to multiple csets
+	// on the left.  The connectins must be made in order, and so we loop
+	// through the left state, first trying to satisfy all connectors in
+	// the first cset, then the second, and so on, until all of the
+	// left-pointing connectors in the right cset have been connected,
+	// or they're optional, or there is a failure to connect. 
+	Seq* left_state = left_sp->get_state();
+	size_t sz = left_state->get_arity();
+	for (size_t i=0; i<sz; i++)
 	{
-assert(0, "Parse fail, implement me");
+		Atom* a = left_state->get_outgoing_atom(i);
+		WordCset* lwc = dynamic_cast<WordCset*>(a);
+		Set* alternatives = next_connect(lwc);
+
+		// OK, so do any of the alternatives include state with
+		// left-pointing connectors?  If not, then we are done. If so,
+		// then these need to be mated to the next word cset on the left.
+		// If they can't be mated, then fail, and we are done.
+		return alternatives;
 	}
 
-	// Append the connector set to the state
-	Seq* old_state = left_sp->get_state();
-	OutList state_vect = old_state->get_outgoing_set();
-	state_vect.insert(state_vect.begin(), new_rcset);
-	Seq* new_state = new Seq(state_vect);
-
-	// In this situation, there is only one alternative: the new state
-	// vector, together with the existing output.
-	Set* alts = new Set(
-		new StatePair(
-			new_state,
-			left_sp->get_output()
-		)
-	);
-
-	return alts;
-}
-
-/// Same as try_connect(), except that it doesn't handle the cases
-/// where the right set doesn't connect to the left.
-Set* Connect::try_connect_a(StatePair* left_sp)
-{
-	Seq* left_seq = left_sp->get_state();
-
-// XXX this is wrong, but works for just now ..
-// wrong because maybe we need next_connect in a loop!?
-// wrong thecause the sequence may be a list of several unconnected
-// words and we have to loop over all of them.
-	WordCset* swc = dynamic_cast<WordCset*>(left_seq->get_outgoing_atom(0));
-	Set* pair_set = next_connect(swc);
-
-	return pair_set;
+	return NULL;
 }
 
 /**
@@ -292,6 +271,7 @@ cout<<"duuude rand="<<rand<<endl;
 	assert(rfc, "Exepcting a connector in the right disjunct");
 
 	Ling* conn = conn_connect_nn(lcon, rfc);
+// XXX fixme ;;; can't return NULL, all left-pointers might be opt ... 
 	if (!conn)
 		return NULL;
 cout<<"super got one it is "<<conn<<endl;
