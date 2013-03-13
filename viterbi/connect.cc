@@ -53,6 +53,26 @@ Connect::Connect(WordCset* right_wconset)
 cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
 }
 
+static StatePair* unite(StatePair* old_sp, StatePair* new_sp,
+         size_t old_peel_off, size_t new_peel_off)
+{
+	OutList united_states;
+	Seq* old_state = old_sp->get_state();
+	size_t osz = old_state->get_arity();
+	for (size_t i = old_peel_off; i<osz; i++)
+		united_states.push_back(old_state->get_outgoing_atom(i));
+
+	Seq* new_state = new_sp->get_state();
+	size_t nsz = new_state->get_arity();
+	for (size_t i = new_peel_off; i<nsz; i++)
+		united_states.push_back(new_state->get_outgoing_atom(i));
+
+	// XXX unite the outputs too, I guess ... 
+	OutList united_outputs;
+
+	return new StatePair(new Seq(united_states), new Seq(united_outputs));
+}
+
 /**
  * Try connecting this connector set sequence, from the left, to what
  * was passed in ctor.  It is preseumed that left_sp is a single parse
@@ -67,6 +87,7 @@ cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
  * set in the sequence must be fully satisfied before a connection is made
  * to the second one in the sequence, etc. (counting from zero).
  */
+// XXX most of this should probably be moved to State class
 Set* Connect::try_connect(StatePair* left_sp)
 {
 	// Zipper up the zipper.
@@ -85,6 +106,9 @@ Set* Connect::try_connect(StatePair* left_sp)
 	WordCset* lwc = dynamic_cast<WordCset*>(a);
 	Set* alternatives = next_connect(lwc);
 
+	size_t lsz = left_state->get_arity();
+	size_t lnext = 1;
+
 	// OK, so do any of the alternatives include state with
 	// left-pointing connectors?  If not, then we are done. If so,
 	// then these need to be mated to the next word cset on the left.
@@ -94,21 +118,46 @@ Set* Connect::try_connect(StatePair* left_sp)
 	for (size_t i=0; i<sz; i++)
 	{
 		Atom* a = alternatives->get_outgoing_atom(i);
-		StatePair* sp = dynamic_cast<StatePair*>(a);
-		Seq* new_state = sp->get_state();
+		StatePair* new_sp = dynamic_cast<StatePair*>(a);
+		Seq* new_state = new_sp->get_state();
 
 		if (0 == new_state->get_arity())
 		{
-			filtered_alts.push_back(sp);
+// XXX need to append old and state, old and new output before pushing back.
+if (lnext < lsz)
+cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
+			filtered_alts.push_back(new_sp);
 			continue;
 		}
 		a = new_state->get_outgoing_atom(0);
-		WordCset* cset = dynamic_cast<WordCset*>(a);
-		if (cset->has_left_pointers())
+		WordCset* new_cset = dynamic_cast<WordCset*>(a);
+		if (new_cset->has_left_pointers())
 		{
+			// The left-pointers are either mandatory or optional.
+			// If they're mandatory and there is no state to zipper with,
+			// then its a parse fail. Otherwise recurse.
+// XX check for optional...
+			if (lnext < lsz)
+			{
+				Atom* a = left_state->get_outgoing_atom(lnext);
+				
+cout <<"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrecurse"<<endl;
+cout << "old sp, rm "<<lnext<<": " << left_sp<<endl;
+cout << "new sp rm 1:" << new_sp<<endl;
+				// Recurse
+				StatePair* united_sp = unite(left_sp, new_sp, lnext, 1);
+cout << "United states:" << united_sp<<endl;
+				Connect recurse(new_cset);
+				Set* new_alts = recurse.try_connect(united_sp);
+cout << "woot got this:" << new_alts<<endl;
+
+			}
 		}
 		
-		filtered_alts.push_back(sp);
+// XXX need to append old and state, old and new output before pushing back.
+if (lnext < lsz)
+cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
+		filtered_alts.push_back(new_sp);
 	}
 
 	return new Set(filtered_alts);
@@ -130,7 +179,8 @@ cout<<"enter next_connect, state cset dnf "<< left_a <<endl;
 
 	// Wrap bare connector with OR; this simplifie the nested loop below.
 	Or* left_dnf = NULL;
-	if (CONNECTOR == left_a->get_type())
+	AtomType lt = left_a->get_type();
+	if (CONNECTOR == lt or AND == lt)
 		left_dnf = new Or(left_a);
 	else
 		left_dnf = dynamic_cast<Or*>(upcast(left_a));
