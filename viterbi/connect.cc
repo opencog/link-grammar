@@ -81,21 +81,28 @@ Set* Connect::try_connect(StatePair* left_sp)
 	// left-pointing connectors in the right cset have been connected,
 	// or they're optional, or there is a failure to connect. 
 	Seq* left_state = left_sp->get_state();
-	size_t sz = left_state->get_arity();
+	Atom* a = left_state->get_outgoing_atom(0);
+	WordCset* lwc = dynamic_cast<WordCset*>(a);
+	Set* alternatives = next_connect(lwc);
+
+	// OK, so do any of the alternatives include state with
+	// left-pointing connectors?  If not, then we are done. If so,
+	// then these need to be mated to the next word cset on the left.
+	// If they can't be mated, then fail, and we are done.
+	OutList filtered_alts;
+	size_t sz = alternatives->get_arity();
 	for (size_t i=0; i<sz; i++)
 	{
-		Atom* a = left_state->get_outgoing_atom(i);
-		WordCset* lwc = dynamic_cast<WordCset*>(a);
-		Set* alternatives = next_connect(lwc);
+		Atom* a = alternatives->get_outgoing_atom(i);
+		StatePair* sp = dynamic_cast<StatePair*>(a);
+		Seq* new_state = sp->get_state();
 
-		// OK, so do any of the alternatives include state with
-		// left-pointing connectors?  If not, then we are done. If so,
-		// then these need to be mated to the next word cset on the left.
-		// If they can't be mated, then fail, and we are done.
-		return alternatives;
+		// bool has_neg = has_lefties(new_state);
+		
+		filtered_alts.push_back(sp);
 	}
 
-	return NULL;
+	return new Set(filtered_alts);
 }
 
 /**
@@ -271,41 +278,15 @@ cout<<"duuude rand="<<rand<<endl;
 	assert(rfc, "Exepcting a connector in the right disjunct");
 
 	Ling* conn = conn_connect_nn(lcon, rfc);
-// XXX fixme ;;; can't return NULL, all left-pointers might be opt ... 
+// XXX fixme ;;; if all left-pointers are opt, then OK to create state ...
 	if (!conn)
 		return NULL;
-cout<<"super got one it is "<<conn<<endl;
 
 	// At this point, conn holds an LG link type, and the
 	// two disjuncts that were mated.  Re-assemble these
 	// into a pair of word_disjuncts (i.e. stick the word
 	// back in there, as that is what later stages need).
 	Seq* out = new Seq(conn);
-
-	// The right cset better not have any left-pointing
-	// links, because if we are here, these cannot be
-	// satisfied ...
-// XXX should use the ttrim fun here
-// xxxxxxx
-	size_t rsz = rand->get_arity();
-	bool unmatched_left_pointer = false;
-	for (size_t k=1; k<rsz; k++)
-	{
-		Atom* ra = rand->get_outgoing_atom(k);
-		Connector* rc = dynamic_cast<Connector*>(ra);
-		assert(rc, "Exepcting a connector in the right disjunct");
-
-		char dir = rc->get_direction();
-		if ('-' == dir)
-		{
-			unmatched_left_pointer = true;
-			break;
-		}
-	}
-
-	// If unmatched, fail, and try again.
-	if (unmatched_left_pointer)
-		return NULL;
 
 	// The state is now everything else left in the disjunct.
 	// We need to build this back up into WordCset.
@@ -315,7 +296,7 @@ cout<<"super got one it is "<<conn<<endl;
 	WordCset* rem_cset = new WordCset(_right_cset->get_word(), remaining_cj);
 
 	StatePair* sp = new StatePair(new Seq(rem_cset), out);
-cout<<"=====================> randy state pair just crated: "<<sp<<endl;
+   DBG(cout<<"----- right multi-conn alternative created:\n" << sp << endl;);
 	return sp;
 }
 
