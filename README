@@ -168,11 +168,15 @@ BUILDING on Windows
 
    Link-grammar now requires a working version of POSIX-standard regex
    libraries. Since these are not provided by Microsoft, a copy must be
-   obtained elsewhere. One possibility is from the gnuwin32 system:
+   obtained elsewhere. A popular choice is PCRE, 'Perl-Compatible
+   Regular Expressions', available at:
+   http://www.pcre.org/
+   Recent 32 and 64-bit binaries can be found at:
+   http://www.airesoft.co.uk/pcre
+   Older 32-bit binaries are at:
    http://gnuwin32.sourceforge.net/packages/regex.htm
-   http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
    See also:
-   http://www.pcre.org/ Perl-Compatible Regular Expressions.
+   http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
    These different build methods are NOT regularly tested, and some
    linkgrammar versions may have build issues.  If you are an
