@@ -48,6 +48,7 @@ OutList Set::flatset() const
 	return newset;
 }
 
+// ============================================================
 /// Remove repeated entries.
 Or* Or::uniq() const
 {
@@ -73,6 +74,7 @@ Or* Or::uniq() const
 	return new Or(uniq);
 }
 
+// ============================================================
 /// Return disjunctive normal form (DNF)
 ///
 /// Presumes that the oset is a nested list consisting
@@ -217,6 +219,7 @@ Or* And::disjoin()
 	return new Or(dnf);
 }
 
+// ============================================================
 /// Remove optional connectors.
 ///
 /// It doesn't make any sense at all to have an optional connector
@@ -239,7 +242,41 @@ And* And::clean() const
 	return new And(cl);
 }
 
+// ============================================================
 
+// Helper function for below.
+static bool has_lefties(Atom* a)
+{
+	Connector* c = dynamic_cast<Connector*>(a);
+	if (c)
+	{
+		if ('-' == c->get_direction())
+			return true;
+		return false;
+	} 
+
+	// Verify we've got a valid disjunct
+	AtomType at = a->get_type();
+	assert ((at == OR) or (at == AND), "Disjunct, expecting OR or AND");
+
+	// Recurse down into disjunct
+	Link* l = dynamic_cast<Link*>(a);
+	size_t sz = l->get_arity();
+	for (size_t i=0; i<sz; i++)
+	{
+		if (has_lefties(l->get_outgoing_atom(i)))
+			return true;
+	}
+	return false;
+}
+
+/// Return true if any of the connectors in the cset point to the left.
+bool WordCset::has_left_pointers()
+{
+	return has_lefties(get_cset());
+}
+
+// ============================================================
 Atom* upcast(const Atom* a)
 {
 	const Node* n = dynamic_cast<const Node*>(a);

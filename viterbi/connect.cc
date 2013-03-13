@@ -97,7 +97,16 @@ Set* Connect::try_connect(StatePair* left_sp)
 		StatePair* sp = dynamic_cast<StatePair*>(a);
 		Seq* new_state = sp->get_state();
 
-		// bool has_neg = has_lefties(new_state);
+		if (0 == new_state->get_arity())
+		{
+			filtered_alts.push_back(sp);
+			continue;
+		}
+		a = new_state->get_outgoing_atom(0);
+		WordCset* cset = dynamic_cast<WordCset*>(a);
+		if (cset->has_left_pointers())
+		{
+		}
 		
 		filtered_alts.push_back(sp);
 	}

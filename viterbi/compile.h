@@ -272,6 +272,7 @@ class WordCset : public Link
 		{
 			return _oset[1];
 		}
+		bool has_left_pointers();
 };
 
 /// A pair of two sequences.  The first sequence is the state, the
