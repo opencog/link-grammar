@@ -882,12 +882,83 @@ bool test_short_this_opt()
 	);
 }
 
+bool test_short_this_obj_opt()
+{
+	return test_short_sent("short sent with obj",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+ or Os-;"
+		"is.v: Ss- and Wi- and {O+};",
+		false
+	);
+}
+
+bool test_short_this_costly()
+{
+	return test_short_sent("short sent with costly null",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+ or [[[()]]];"
+		"is.v: Ss- and Wi-;",
+		true
+	);
+}
+
+bool test_short_this_complex()
+{
+	return test_short_sent("short sent complex",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		""
+		"<CLAUSE>: {({@COd-} & (C-)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};"
+		"<noun-main-h>:"
+		"  (Jd- & Dmu- & Os-)"
+		"  or (Jd- & Dmu- & {Wd-} & Ss*b+)"
+		"  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-];"
+		""
+		"this:"
+		"  <noun-main-h>;"
+		""
+		"is.v: Ss- and Wi- and {O+};",
+		false
+	);
+}
+
+bool test_short_this_dict()
+{
+	return test_short_sent("short sent realistic dict",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"<costly-null>: [[[()]]];"
+		""
+		"<post-nominal-x>:"
+		"  ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-);"
+		""
+		"<clause-conjoin>: RJrc- or RJlc+;"
+		""
+		"<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};"
+		""
+		"<noun-main-h>:"
+		"  (Jd- & Dmu- & Os-)"
+		"  or (Jd- & Dmu- & {Wd-} & Ss*b+)"
+		"  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-]"
+		"  or <post-nominal-x>"
+		"  or <costly-null>;"
+		""
+		"this:"
+		"  <noun-main-h>;"
+		""
+		"is.v: Ss- and Wi- and {O+};",
+		false
+	);
+}
+
 int ntest_short()
 {
 	size_t num_failures = 0;
 
 	if (!test_short_this()) num_failures++;
 	if (!test_short_this_opt()) num_failures++;
+	if (!test_short_this_obj_opt()) num_failures++;
+	if (!test_short_this_costly()) num_failures++;
+	// if (!test_short_this_complex()) num_failures++;
+	// if (!test_short_this_dict()) num_failures++;
 
 	return num_failures;
 }
