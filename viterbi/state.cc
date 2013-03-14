@@ -44,6 +44,7 @@ Set* State::get_alternatives()
 	return _alternatives;
 }
 
+// XXX is this really needed ???
 void State::set_clean_state(Set* s)
 {
 	// Clean it up, first, by removing empty state vectors.
@@ -75,21 +76,17 @@ void State::stream_word_conset(WordCset* wrd_cset)
 
    DBG(cout << "--------- enter stream_word_conset ----------" << endl);
    DBG(cout << "Initial alternative_set:\n" << get_alternatives() << endl);
-	Set* alts = get_alternatives();
-	Set* new_alts = alts;
 	Connect cnct(wrd_cset);
 
 	// The state set consists of a bunch of sequences; each sequence
 	// being a single parse state.  Each parse state is a sequence of
 	// unsatisfied right-pointing links.
+	OutList new_alts;
+	Set* alts = get_alternatives();
 	for (int i = 0; i < alts->get_arity(); i++)
 	{
 		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
 		assert(sp, "Missing state");
-
-		Seq* state_seq = sp->get_state();
-		OutList state_vect = state_seq->get_outgoing_set();
-		bool state_vect_modified = false;
 
 		// Each state sequence consists of a sequence of right-pointing
 		// links. These must be sequentially satisfied: This is the
@@ -97,37 +94,15 @@ void State::stream_word_conset(WordCset* wrd_cset)
 		// in the classical link-grammar parser.  That is, a new word
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
-		Set* new_alternatives = cnct.try_connect(sp);
+		Set* next_alts = cnct.try_connect(sp);
 
-		if (new_alternatives)
+		if (next_alts and (0 < next_alts->get_arity()))
 		{
-cout<<"Got alternatives "<< new_alternatives <<endl;
-_alternatives = new_alternatives;
-#if 0
-			OutList alt_links;
-			OutList danglers;
-			for (int j = 0; j <new_alternatives->get_arity(); j++)
-			{
-				Atom* a = alternatives->get_outgoing_atom(j);
-				Ling* lg_link = dynamic_cast<Ling*>(a);
-				if (lg_link)
-					alt_links.push_back(lg_link);
-				else
-					danglers.push_back(a);
-			}
-			_output = new Set(alt_links);
-
-			// If all links were satisfied, then remove the state
-			if (0 == danglers.size())
-			{
-				state_vect.erase(state_vect.begin());
-				state_vect_modified = true;
-			}
-			// If there are any danglers...
-assert(0 == danglers.size(), "Implement dangler state");
-#endif
+			const OutList& oset = next_alts->get_outgoing_set();
+			new_alts.insert(new_alts.end(), oset.begin(), oset.end());
 		}
 	}
+	_alternatives = new Set(new_alts);
 
 	// set_clean_state(new_state_set);
 }

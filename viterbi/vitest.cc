@@ -957,8 +957,8 @@ int ntest_short()
 	if (!test_short_this_opt()) num_failures++;
 	if (!test_short_this_obj_opt()) num_failures++;
 	if (!test_short_this_costly()) num_failures++;
-	// if (!test_short_this_complex()) num_failures++;
-	// if (!test_short_this_dict()) num_failures++;
+	if (!test_short_this_complex()) num_failures++;
+	if (!test_short_this_dict()) num_failures++;
 
 	return num_failures;
 }
