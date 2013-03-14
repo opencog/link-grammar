@@ -853,6 +853,25 @@ bool test_short_this()
 	);
 }
 
+bool test_short_this_opt()
+{
+	return test_short_sent("short sent opt",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+;"
+		"is.v: Ss- and Wi- and {O+};"
+	);
+}
+
+int ntest_short()
+{
+	size_t num_failures = 0;
+
+	if (!test_short_this()) num_failures++;
+	if (!test_short_this_opt()) num_failures++;
+
+	return num_failures;
+}
+
 // ==================================================================
 
 void report(int num_failures, bool exit_on_fail)
@@ -888,7 +907,7 @@ main(int argc, char *argv[])
 	num_failures += ntest_first();
 	report(num_failures, exit_on_fail);
 
-	if (!test_short_this()) num_failures++;
+	num_failures += ntest_short();
 	report(num_failures, exit_on_fail);
 
 	exit (0);
