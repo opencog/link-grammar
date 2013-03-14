@@ -26,19 +26,20 @@ namespace viterbi {
 // of the parses.  
 OutList Set::flatset() const
 {
-	size_t sz = _oset.size();
 	OutList newset;
-	for (int i=0; i<sz; i++)
+	size_t sz = get_arity();
+	for (size_t i=0; i<sz; i++)
 	{
+		Atom* a = get_outgoing_atom(i);
 		/* Copy without change, if types differ. */
-		if (_type != _oset[i]->get_type())
+		if (_type != a->get_type())
 		{
-			newset.push_back(_oset[i]);
+			newset.push_back(a);
 			continue;
 		}
 
 		/* Get rid of a level */
-		Set* ora = dynamic_cast<Set*>(_oset[i]);
+		Set* ora = dynamic_cast<Set*>(a);
 		OutList fora = ora->flatset();
 		size_t osz = fora.size();
 		for (int j=0; j<osz; j++)
@@ -46,6 +47,61 @@ OutList Set::flatset() const
 	}
 
 	return newset;
+}
+
+/// Recursively flatten everything that inherits from set.
+/// This does preserve the type hierarchy: that is, types are respected, 
+/// and the flattening only happens within a single type.  The only
+/// exception to this is if the set contains just a single element,
+/// in which case this returns that one element.
+Atom* Set::super_flatten() const
+{
+	size_t sz = get_arity();
+
+	// If its a singleton, just return that. But super-flatten
+	// it first!
+	if (1 == sz)
+	{
+		Atom* a = get_outgoing_atom(0);
+		Set* set = dynamic_cast<Set*>(a);
+		if (!set)
+			return a;
+		return set->super_flatten();
+	}
+
+	OutList newset;
+	for (size_t i=0; i<sz; i++)
+	{
+		Atom* a = get_outgoing_atom(i);
+		Set* set = dynamic_cast<Set*>(a);
+
+		/* Copy without change, if types differ. */
+		/* But flatten it first, if it inherits from set. */
+		if (get_type() != a->get_type())
+		{
+			if (set)
+				newset.push_back(set->super_flatten());
+			else
+				newset.push_back(a);
+			continue;
+		}
+
+		// type if this equals type of children.
+		/* Get rid of a level */
+		Atom* achld = set->super_flatten();
+		Set* chld = dynamic_cast<Set*>(achld);
+		if (!chld)
+		{
+			newset.push_back(achld);
+			continue;
+		}
+
+		size_t csz = chld->get_arity();
+		for (int j=0; j<csz; j++)
+			newset.push_back(chld->get_outgoing_atom(j));
+	}
+
+	return  upcast(new Link(get_type(), newset));
 }
 
 // ============================================================
@@ -271,9 +327,20 @@ static bool has_lefties(Atom* a)
 }
 
 /// Return true if any of the connectors in the cset point to the left.
-bool WordCset::has_left_pointers()
+bool WordCset::has_left_pointers() const
 {
 	return has_lefties(get_cset());
+}
+
+/// Simplify any gratuituousnesting in the cset.
+WordCset* WordCset::flatten()
+{
+	// AND and OR inherit from Set
+	Set* s = dynamic_cast<Set*>(get_cset());
+	if (NULL == s)
+		return this;
+
+	return new WordCset(get_word(), s->super_flatten());
 }
 
 // ============================================================

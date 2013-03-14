@@ -155,7 +155,6 @@ cout << "woot got this:" << new_alts<<endl;
 		}
 		
 // XXX need to append old and state, old and new output before pushing back.
-if (lnext < lsz)
 cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
 		filtered_alts.push_back(new_sp);
 	}

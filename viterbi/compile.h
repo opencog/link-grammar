@@ -90,6 +90,7 @@ class Set : public Link
 
 		// See the C file for documentation
 		Set* flatten() const { return new Set(flatset()); }
+		Atom* super_flatten() const;
 
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
@@ -158,10 +159,6 @@ class Or : public Set
 		Or* disjoin() const;
 
 		// See the Set class for documentation
-		// XXX This is a "dangerous" operation, as it ignores the
-		// type structure of heirarchical nestings: viz. flattening
-		// a hierarchical nesting of And/Or sets erases the distinction
-		// between the And's and Or's!
 		Or* flatten() const { return new Or(flatset()); }
 
 		// Remove repeated entries
@@ -196,10 +193,6 @@ class And : public Seq
 		Or* disjoin();
 
 		// See the Set class for documentation
-		// XXX This is a "dangerous" operation, as it ignores the
-		// type structure of heirarchical nestings: viz. flattening
-		// a hierarchical nesting of And/Or sets erases the distinction
-		// between the And's and Or's!
 		And* flatten() const { return new And(flatset()); }
 
 		/// Remove optional clauses.
@@ -272,7 +265,8 @@ class WordCset : public Link
 		{
 			return _oset[1];
 		}
-		bool has_left_pointers();
+		bool has_left_pointers() const;
+		WordCset* flatten();
 };
 
 /// A pair of two sequences.  The first sequence is the state, the
