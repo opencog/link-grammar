@@ -795,9 +795,7 @@ bool test_short_sent(const char *id, const char *dict_str, bool empty_state)
 	total_tests++;
 
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
-
 	// print_dictionary_data(dict);
-cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 
 	Parser parser(dict);
 	// Expecting more words to follow, so a non-trivial state.
@@ -923,7 +921,7 @@ bool test_short_this_complex()
 
 bool test_short_this_noun_dict()
 {
-	return test_short_sent("short sent realistic dict",
+	return test_short_sent("short sent realistic dict entry for noun",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"<costly-null>: [[[()]]];"
 		""
@@ -949,9 +947,185 @@ bool test_short_this_noun_dict()
 	);
 }
 
-bool test_short_this_verb_dict()
+int ntest_short()
 {
-	return test_short_sent("short sent realistic dict",
+	size_t num_failures = 0;
+
+	if (!test_short_this()) num_failures++;
+	if (!test_short_this_opt()) num_failures++;
+	if (!test_short_this_obj_opt()) num_failures++;
+	if (!test_short_this_costly()) num_failures++;
+	if (!test_short_this_complex()) num_failures++;
+	if (!test_short_this_noun_dict()) num_failures++;
+
+	return num_failures;
+}
+
+// ==================================================================
+
+bool test_seq_sent(const char *id, const char *dict_str, bool empty_state)
+{
+	total_tests++;
+
+	Dictionary dict = dictionary_create_from_utf8(dict_str);
+
+	// print_dictionary_data(dict);
+cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
+
+	Parser parser(dict);
+	// Expecting more words to follow, so a non-trivial state.
+	parser.streamin("this is");
+
+	Lynk* alts = parser.get_alternatives();
+
+	// At least one result should be this state pair.
+	Lynk* sp =
+		ALINK2(STATE_PAIR,
+			ALINK0(SEQ),  // empty state
+			ALINK2(SEQ,
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Ss*b"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "this"),
+						ANODE(CONNECTOR, "Ss*b+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "is.v"),
+						ANODE(CONNECTOR, "Ss-"))),
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Wi"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "LEFT-WALL"),
+						ANODE(CONNECTOR, "Wi+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "is.v"),
+						ANODE(CONNECTOR, "Wi-")))));
+
+	if (empty_state)
+	{
+		Lynk* ans = ALINK1(SET, sp);
+		if (not (ans->operator==(alts)))
+		{
+			cout << "Error: test failure on test \"" << id <<"\"" << endl;
+			cout << "=== Expecting:\n" << ans << endl;
+			cout << "=== Got:\n" << alts << endl;
+			return false;
+		}
+	}
+	else
+	{
+		// At least one alternative should be the desired state pair.
+		bool found = false;
+		size_t sz = alts->get_arity();
+		for (size_t i=0; i<sz; i++)
+		{
+			Atom* a = alts->get_outgoing_atom(i);
+			if (sp->operator==(a))
+				found = true;
+		}
+		if (not found)
+		{
+			cout << "Error: test failure on test \"" << id <<"\"" << endl;
+			cout << "=== Expecting one of them to be:\n" << sp << endl;
+			cout << "=== Got:\n" << alts << endl;
+			return false;
+		}
+	}
+
+	cout<<"PASS: test_short_sent(" << id << ") " << endl;
+	return true;
+}
+
+bool test_seq_this()
+{
+	return test_seq_sent("short seq sent",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Wd- and Ss*b+;"
+		"is.v: Ss-;",
+		true
+	);
+}
+
+bool test_seq_this_opt()
+{
+	return test_seq_sent("short seq sent opt",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Wd- and Ss*b+;"
+		"is.v: Ss- and {O+};",
+		false
+	);
+}
+
+bool test_seq_this_obj_opt()
+{
+	return test_seq_sent("short seq sent with obj",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Wd- and (Ss*b+ or Os-);"
+		"is.v: Ss- and {O+};",
+		false
+	);
+}
+
+bool test_seq_this_costly()
+{
+	return test_seq_sent("short seq sent with costly null",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Wd- and (Ss*b+ or [[[()]]]);"
+		"is.v: Ss-;",
+		true
+	);
+}
+
+bool test_seq_this_complex()
+{
+	return test_seq_sent("short seq sent complex",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		""
+		"<CLAUSE>: {({@COd-} & (C-)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};"
+		"<noun-main-h>:"
+		"  (Jd- & Dmu- & Os-)"
+		"  or (Jd- & Dmu- & {Wd-} & Ss*b+)"
+		"  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-];"
+		""
+		"this:"
+		"  <noun-main-h>;"
+		""
+		"is.v: Ss- and {O+};",
+		false
+	);
+}
+
+bool test_seq_this_noun_dict()
+{
+	return test_seq_sent("short seq sent realistic dict entry for noun",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"<costly-null>: [[[()]]];"
+		""
+		"<post-nominal-x>:"
+		"  ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-);"
+		""
+		"<clause-conjoin>: RJrc- or RJlc+;"
+		""
+		"<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};"
+		""
+		"<noun-main-h>:"
+		"  (Jd- & Dmu- & Os-)"
+		"  or (Jd- & Dmu- & {Wd-} & Ss*b+)"
+		"  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-]"
+		"  or <post-nominal-x>"
+		"  or <costly-null>;"
+		""
+		"this:"
+		"  <noun-main-h>;"
+		""
+		"is.v: Ss- and {O+};",
+		false
+	);
+}
+
+
+bool test_seq_this_verb_dict()
+{
+	return test_seq_sent("short seq sent realistic dict entry for verb",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"<costly-null>: [[[()]]];"
 		""
@@ -995,7 +1169,6 @@ bool test_short_this_verb_dict()
 		"<vc-be>: <vc-be-no-obj> or <vc-be-obj>;"
 		""
 		"is.v:"
-		"  (<verb-x-s,u> & <vc-be>) or"
 		"  (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or"
 		"  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) & <vc-be>);"
 		"",
@@ -1003,17 +1176,17 @@ bool test_short_this_verb_dict()
 	);
 }
 
-int ntest_short()
+int ntest_short_seq()
 {
 	size_t num_failures = 0;
 
-	if (!test_short_this()) num_failures++;
-	if (!test_short_this_opt()) num_failures++;
-	if (!test_short_this_obj_opt()) num_failures++;
-	if (!test_short_this_costly()) num_failures++;
-	if (!test_short_this_complex()) num_failures++;
-	if (!test_short_this_noun_dict()) num_failures++;
-	if (!test_short_this_verb_dict()) num_failures++;
+	if (!test_seq_this()) num_failures++;
+	if (!test_seq_this_opt()) num_failures++;
+	if (!test_seq_this_obj_opt()) num_failures++;
+	if (!test_seq_this_costly()) num_failures++;
+	if (!test_seq_this_complex()) num_failures++;
+	if (!test_seq_this_noun_dict()) num_failures++;
+	if (!test_seq_this_verb_dict()) num_failures++;
 
 	return num_failures;
 }
@@ -1054,6 +1227,9 @@ main(int argc, char *argv[])
 	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_short();
+	report(num_failures, exit_on_fail);
+
+	num_failures += ntest_short_seq();
 	report(num_failures, exit_on_fail);
 
 	exit (0);
