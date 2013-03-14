@@ -351,7 +351,8 @@ cout<<"duuude rand="<<rand<<endl;
 	OutList remaining_cons = rand->get_outgoing_set();
 	remaining_cons.erase(remaining_cons.begin());
 	And* remaining_cj = new And(remaining_cons);
-	WordCset* rem_cset = new WordCset(_right_cset->get_word(), remaining_cj);
+	Atom* rema = remaining_cj->super_flatten();
+	WordCset* rem_cset = new WordCset(_right_cset->get_word(), rema);
 
 	StatePair* sp = new StatePair(new Seq(rem_cset), out);
    DBG(cout<<"----- right multi-conn alternative created:\n" << sp << endl;);
