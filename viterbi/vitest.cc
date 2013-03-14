@@ -804,9 +804,41 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	parser.streamin("this is");
 
 	Lynk* output = parser.get_alternatives();
-cout<<"vitest final alts >>>" << output<<endl;
 
-return false;
+	// The expected answer...
+	Lynk* ans = 
+	ALINK1(SET,
+		ALINK2(STATE_PAIR,
+			ALINK0(SEQ),  // empty state
+			ALINK2(SEQ,
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Ss*b"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "this"),
+						ANODE(CONNECTOR, "Ss*b+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "is.v"),
+						ANODE(CONNECTOR, "Ss-"))),
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Wi"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "LEFT-WALL"),
+						ANODE(CONNECTOR, "Wi+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "is.v"),
+						ANODE(CONNECTOR, "Wi-"))))));
+	
+	bool empty_state = true;
+	if (empty_state)
+	{
+		if (not (ans->operator==(output)))
+		{
+			cout << "Error: test failure on test \"" << id <<"\"" << endl;
+			cout << "=== Expecting:\n" << ans << endl;
+			cout << "=== Got:\n" << output << endl;
+			return false;
+		}
+	}
 
 	cout<<"PASS: test_short_sent(" << id << ") " << endl;
 	return true;

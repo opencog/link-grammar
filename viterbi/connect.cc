@@ -53,22 +53,41 @@ Connect::Connect(WordCset* right_wconset)
 cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
 }
 
+/// Unite two states into one. 
+///
+/// This is needed to implement zippering properly: The old set of
+/// states is the collection of as-yet unconnected connectors; the 
+/// new set of states is the collection that remains after connecting.
+/// We have to peel off and discard some certain number of the old
+/// states (as these are now connected), ad append in their place
+/// the new states.  We also typically peel off one new one, as that
+/// one will be used for trying new onnections.
 static StatePair* unite(StatePair* old_sp, StatePair* new_sp,
          size_t old_peel_off, size_t new_peel_off)
 {
 	OutList united_states;
 	Seq* old_state = old_sp->get_state();
-	size_t osz = old_state->get_arity();
-	for (size_t i = old_peel_off; i<osz; i++)
-		united_states.push_back(old_state->get_outgoing_atom(i));
-
 	Seq* new_state = new_sp->get_state();
-	size_t nsz = new_state->get_arity();
-	for (size_t i = new_peel_off; i<nsz; i++)
-		united_states.push_back(new_state->get_outgoing_atom(i));
 
-	// XXX unite the outputs too, I guess ... 
+	const OutList& oo = old_state->get_outgoing_set();
+	united_states.insert(united_states.end(), 
+	                     oo.begin() + old_peel_off, oo.end());
+
+	const OutList& no = new_state->get_outgoing_set();
+	united_states.insert(united_states.end(), 
+	                     no.begin() + new_peel_off, no.end());
+
+	// Unite the outputs too ... 
+	// This is easy, just concatenate old and append new.
 	OutList united_outputs;
+	Seq* old_output = old_sp->get_output();
+	Seq* new_output = new_sp->get_output();
+
+	const OutList& ooo = old_output->get_outgoing_set();
+	united_outputs.insert(united_outputs.end(), ooo.begin(), ooo.end());
+
+	const OutList& noo = new_output->get_outgoing_set();
+	united_outputs.insert(united_outputs.end(), noo.begin(), noo.end());
 
 	return new StatePair(new Seq(united_states), new Seq(united_outputs));
 }
@@ -125,7 +144,7 @@ Set* Connect::try_connect(StatePair* left_sp)
 		{
 // XXX need to append old and state, old and new output before pushing back.
 if (lnext < lsz)
-cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
+cout<<"amoooxxxxxxxxxxxxxxxxxxoooooooooooooooooooore"<<endl;
 			filtered_alts.push_back(new_sp);
 			continue;
 		}
@@ -151,11 +170,25 @@ cout << "United states:" << united_sp<<endl;
 				Set* new_alts = recurse.try_connect(united_sp);
 cout << "woot got this:" << new_alts<<endl;
 
+				size_t nsz = new_alts->get_arity();
+				for (size_t k = 0; k < nsz; k++)
+				{
+					Atom* a = new_alts->get_outgoing_atom(i);
+					StatePair* asp = dynamic_cast<StatePair*>(a);
+					StatePair* mrg = unite(united_sp, asp, 1, 0);
+					filtered_alts.push_back(mrg);
+cout << "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmerge result="<<mrg<<endl;
+				}
+				continue;
 			}
 		}
 		
-// XXX need to append old and state, old and new output before pushing back.
+		// Append old and new output and state, before pushing back.
+		// XXX I think the below is correct, its untested.
 cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
+		StatePair* mrg = unite(left_sp, new_sp, lnext, 0);
+// cout<<"left sp was "<<left_sp<<endl;
+// cout<<"new sp was "<<new_sp<<endl;
 		filtered_alts.push_back(new_sp);
 	}
 
