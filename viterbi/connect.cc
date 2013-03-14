@@ -173,7 +173,7 @@ cout << "woot got this:" << new_alts<<endl;
 				size_t nsz = new_alts->get_arity();
 				for (size_t k = 0; k < nsz; k++)
 				{
-					Atom* a = new_alts->get_outgoing_atom(i);
+					Atom* a = new_alts->get_outgoing_atom(k);
 					StatePair* asp = dynamic_cast<StatePair*>(a);
 					StatePair* mrg = unite(united_sp, asp, 1, 0);
 					filtered_alts.push_back(mrg);

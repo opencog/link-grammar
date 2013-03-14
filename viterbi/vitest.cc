@@ -79,8 +79,8 @@ bool test_and_distrib_left()
 		ANODE(WORD, "RR1"));
 	Or* computed = and_right->disjoin();
 
-	Lynk* expected = 
-	ALINK2(OR, 
+	Lynk* expected =
+	ALINK2(OR,
 		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1")),
 		ALINK2(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"))
 	);
@@ -94,8 +94,8 @@ bool test_and_distrib_right()
       ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
 	Or* computed = and_right->disjoin();
 
-	Lynk* expected = 
-	ALINK2(OR, 
+	Lynk* expected =
+	ALINK2(OR,
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
 	);
@@ -110,8 +110,8 @@ bool test_and_distrib_middle()
       ANODE(WORD, "DD4"));
 	Or* computed = and_mid->disjoin();
 
-	Lynk* expected = 
-	ALINK2(OR, 
+	Lynk* expected =
+	ALINK2(OR,
 		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), ANODE(WORD, "DD4")),
 		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), ANODE(WORD, "DD4"))
 	);
@@ -126,8 +126,8 @@ bool test_and_distrib_quad()
       ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
 	Or* computed = and_mid->disjoin();
 
-	Lynk* expected = 
-	ALINK4(OR, 
+	Lynk* expected =
+	ALINK4(OR,
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3")),
 		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "DD4")),
@@ -146,8 +146,8 @@ bool test_and_distrib_quad_right()
    );
 	Or* computed = and_mid->disjoin();
 
-	Lynk* expected = 
-	ALINK4(OR, 
+	Lynk* expected =
+	ALINK4(OR,
 		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), ANODE(WORD, "EE5")),
 		ALINK3(AND, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), ANODE(WORD, "EE5")),
 		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "DD4"), ANODE(WORD, "EE5")),
@@ -165,8 +165,8 @@ bool test_and_distrib_quad_left()
       ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
 	Or* computed = and_mid->disjoin();
 
-	Lynk* expected = 
-	ALINK4(OR, 
+	Lynk* expected =
+	ALINK4(OR,
 		ALINK3(AND, ANODE(WORD, "EE5"), ANODE(WORD, "AA1"), ANODE(WORD, "CC3")),
 		ALINK3(AND, ANODE(WORD, "EE5"), ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 		ALINK3(AND, ANODE(WORD, "EE5"), ANODE(WORD, "AA1"), ANODE(WORD, "DD4")),
@@ -206,8 +206,8 @@ bool test_or_distrib_left()
 	);
 	Or* computed = or_right->disjoin();
 
-	Lynk* expected = 
-	ALINK2(OR, 
+	Lynk* expected =
+	ALINK2(OR,
 		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1")),
 		ALINK2(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"))
 	);
@@ -224,8 +224,8 @@ bool test_or_distrib_right()
 	);
 	Or* computed = or_right->disjoin();
 
-	Lynk* expected = 
-	ALINK2(OR, 
+	Lynk* expected =
+	ALINK2(OR,
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
 	);
@@ -243,8 +243,8 @@ bool test_or_distrib_nest()
 	);
 	Or* computed = or_right->disjoin();
 
-	Lynk* expected = 
-	ALINK2(OR, 
+	Lynk* expected =
+	ALINK2(OR,
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
 	);
@@ -264,8 +264,8 @@ bool test_or_distrib_nest2()
 	);
 	Or* computed = or_right->disjoin();
 
-	Lynk* expected = 
-	ALINK4(OR, 
+	Lynk* expected =
+	ALINK4(OR,
 		ANODE(WORD, "DD4"),
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
 		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3")),
@@ -304,7 +304,7 @@ int ntest_disjoin()
 // just one way. The result should be just one alternative:
 // that alternatives has an empty state, and output with
 // just one link.
-bool test_hello(const char *id, const char *dict_str, 
+bool test_hello(const char *id, const char *dict_str,
                 bool empty_state, bool must_connect)
 {
 	total_tests++;
@@ -375,7 +375,7 @@ bool test_hello(const char *id, const char *dict_str,
 			if (ans->operator==(alt))
 				pass_test = true;
 
-			// In all cases, the output should be just the one word, 
+			// In all cases, the output should be just the one word,
 			// no matter what the state.
 			if (must_connect and not sp->get_output()->operator==(out))
 				pass_test = false;
@@ -540,7 +540,7 @@ bool test_alternative(const char *id, const char *dict_str, bool empty_state)
 		ALINK1(SEQ, alt_out_one)
 	);
 
-	Lynk* alt_pair_two = 
+	Lynk* alt_pair_two =
 	ALINK2(STATE_PAIR,
 		ALINK0(SEQ),
 		ALINK1(SEQ, alt_out_two)
@@ -601,7 +601,7 @@ bool test_two_alts()
 {
 	return test_alternative("two alternatives",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
-		"Hello: Wd- or Wi-;", 
+		"Hello: Wd- or Wi-;",
 		true
 	);
 }
@@ -790,7 +790,7 @@ int ntest_first()
 
 // ==================================================================
 
-bool test_short_sent(const char *id, const char *dict_str)
+bool test_short_sent(const char *id, const char *dict_str, bool empty_state)
 {
 	total_tests++;
 
@@ -803,11 +803,10 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	// Expecting more words to follow, so a non-trivial state.
 	parser.streamin("this is");
 
-	Lynk* output = parser.get_alternatives();
+	Lynk* alts = parser.get_alternatives();
 
-	// The expected answer...
-	Lynk* ans = 
-	ALINK1(SET,
+	// At least one result should be this state pair.
+	Lynk* sp =
 		ALINK2(STATE_PAIR,
 			ALINK0(SEQ),  // empty state
 			ALINK2(SEQ,
@@ -826,16 +825,35 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 						ANODE(CONNECTOR, "Wi+")),
 					ALINK2(WORD_DISJ,
 						ANODE(WORD, "is.v"),
-						ANODE(CONNECTOR, "Wi-"))))));
-	
-	bool empty_state = true;
+						ANODE(CONNECTOR, "Wi-")))));
+
 	if (empty_state)
 	{
-		if (not (ans->operator==(output)))
+		Lynk* ans = ALINK1(SET, sp);
+		if (not (ans->operator==(alts)))
 		{
 			cout << "Error: test failure on test \"" << id <<"\"" << endl;
 			cout << "=== Expecting:\n" << ans << endl;
-			cout << "=== Got:\n" << output << endl;
+			cout << "=== Got:\n" << alts << endl;
+			return false;
+		}
+	}
+	else
+	{
+		// At least one alternative should be the desired state pair.
+		bool found = false;
+		size_t sz = alts->get_arity();
+		for (size_t i=0; i<sz; i++)
+		{
+			Atom* a = alts->get_outgoing_atom(i);
+			if (sp->operator==(a))
+				found = true;
+		}
+		if (not found)
+		{
+			cout << "Error: test failure on test \"" << id <<"\"" << endl;
+			cout << "=== Expecting one of them to be:\n" << sp << endl;
+			cout << "=== Got:\n" << alts << endl;
 			return false;
 		}
 	}
@@ -849,7 +867,8 @@ bool test_short_this()
 	return test_short_sent("short sent",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"this: Ss*b+;"
-		"is.v: Ss- and Wi-;"
+		"is.v: Ss- and Wi-;",
+		true
 	);
 }
 
@@ -858,7 +877,8 @@ bool test_short_this_opt()
 	return test_short_sent("short sent opt",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"this: Ss*b+;"
-		"is.v: Ss- and Wi- and {O+};"
+		"is.v: Ss- and Wi- and {O+};",
+		false
 	);
 }
 
