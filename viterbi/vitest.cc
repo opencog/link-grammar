@@ -921,7 +921,7 @@ bool test_short_this_complex()
 	);
 }
 
-bool test_short_this_dict()
+bool test_short_this_noun_dict()
 {
 	return test_short_sent("short sent realistic dict",
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
@@ -949,6 +949,60 @@ bool test_short_this_dict()
 	);
 }
 
+bool test_short_this_verb_dict()
+{
+	return test_short_sent("short sent realistic dict",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"<costly-null>: [[[()]]];"
+		""
+		"<post-nominal-x>:"
+		"  ({[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-);"
+		""
+		"<clause-conjoin>: RJrc- or RJlc+;"
+		""
+		"<CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};"
+		""
+		"<noun-main-h>:"
+		"  (Jd- & Dmu- & Os-)"
+		"  or (Jd- & Dmu- & {Wd-} & Ss*b+)"
+		"  or (Ss*b+ & <CLAUSE>) or SIs*b- or [[Js-]] or [Os-]"
+		"  or <post-nominal-x>"
+		"  or <costly-null>;"
+		""
+		"this:"
+		"  <noun-main-h>;"
+		""
+		"<verb-and-s->: {@E-} & VJrs-;"
+		"<verb-and-s+>: {@E-} & VJls+;"
+		""
+		"<verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));"
+		""
+		"<vc-be-obj>:"
+		"  {@EBm+} & O*t+ & {@MV+};"
+		""
+		"<vc-be-no-obj>:"
+		"  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or"
+		"      (Osi+ & R+ & Bs+) or"
+		"      (Opi+ & R+ & Bp+) or"
+		"      [[()]]) & {@MV+}) or"
+		"    (Pp+ & {THi+ or @MV+}) or"
+		"    THb+ or"
+		"    TO+ or"
+		"    Pa+)) or"
+		"  ({N+} & (AF- or Pv+ or I*v+)) or"
+		"  (({N+} or {Pp+}) & Pg*b+);"
+		""
+		"<vc-be>: <vc-be-no-obj> or <vc-be-obj>;"
+		""
+		"is.v:"
+		"  (<verb-x-s,u> & <vc-be>) or"
+		"  (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or"
+		"  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) & <vc-be>);"
+		"",
+		false
+	);
+}
+
 int ntest_short()
 {
 	size_t num_failures = 0;
@@ -958,7 +1012,8 @@ int ntest_short()
 	if (!test_short_this_obj_opt()) num_failures++;
 	if (!test_short_this_costly()) num_failures++;
 	if (!test_short_this_complex()) num_failures++;
-	if (!test_short_this_dict()) num_failures++;
+	if (!test_short_this_noun_dict()) num_failures++;
+	if (!test_short_this_verb_dict()) num_failures++;
 
 	return num_failures;
 }
