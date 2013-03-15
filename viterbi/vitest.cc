@@ -1169,6 +1169,7 @@ bool test_seq_this_verb_dict()
 		"<vc-be>: <vc-be-no-obj> or <vc-be-obj>;"
 		""
 		"is.v:"
+		"  (<verb-x-s,u> & <vc-be>) or"
 		"  (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or"
 		"  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) & <vc-be>);"
 		"",

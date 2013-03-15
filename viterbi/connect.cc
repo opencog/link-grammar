@@ -124,7 +124,6 @@ Set* Connect::try_connect(StatePair* left_sp)
 	Atom* a = left_state->get_outgoing_atom(0);
 	WordCset* lwc = dynamic_cast<WordCset*>(a);
 	Set* alternatives = next_connect(lwc);
-cout<<"wtfffff got alts"<<alternatives<<endl;
 
 	size_t lsz = left_state->get_arity();
 	size_t lnext = 1;
@@ -135,10 +134,8 @@ cout<<"wtfffff got alts"<<alternatives<<endl;
 	// If they can't be mated, then fail, and we are done.
 	OutList filtered_alts;
 	size_t sz = alternatives->get_arity();
-cout<<"wtffff got arity="<<sz<<endl;
 	for (size_t i=0; i<sz; i++)
 	{
-cout<<"wtffff enter i="<<i<<endl;
 		Atom* a = alternatives->get_outgoing_atom(i);
 		StatePair* new_sp = dynamic_cast<StatePair*>(a);
 		Seq* new_state = new_sp->get_state();
@@ -190,13 +187,12 @@ cout << "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmerge result="<<mrg<<endl;
 		// XXX I think the below is correct, its untested.
 cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
 		StatePair* mrg = unite(left_sp, lnext, new_sp, 0);
-cout<<"left sp was "<<left_sp<<endl;
-cout<<"new sp was "<<new_sp<<endl;
-cout<<"mrg is "<<mrg<<endl;
+//cout<<"left sp was "<<left_sp<<endl;
+//cout<<"new sp was "<<new_sp<<endl;
+//cout<<"mrg is "<<mrg<<endl;
 		filtered_alts.push_back(mrg);
 	}
 
-cout<<"wtfffff returning"<<new Set(filtered_alts)<<endl;
 	return new Set(filtered_alts);
 }
 
