@@ -160,11 +160,14 @@ cout<<"wtffff enter i="<<i<<endl;
 cout <<"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrecurse"<<endl;
 cout << "old sp, rm "<<lnext<<": " << left_sp<<endl;
 cout << "new sp rm 1:" << new_sp<<endl;
-					// Recurse
+					// Recurse -- zipper up the next unconnected left-pointer.
 					StatePair* united_sp = unite(left_sp, lnext, new_sp, 1);
+					// zero out output before continuing... we want only
+					// the fresh output just minted by the recurse
+					StatePair* usp = new StatePair(united_sp->get_state(), new Seq());
 cout << "United states:" << united_sp<<endl;
 					Connect recurse(new_cset);
-					Set* new_alts = recurse.try_connect(united_sp);
+					Set* new_alts = recurse.try_connect(usp);
 cout << "woot got this:" << new_alts<<endl;
 
 					size_t nsz = new_alts->get_arity();
@@ -178,6 +181,8 @@ cout << "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmerge result="<<mrg<<endl;
 					}
 					continue;
 				}
+// XXX we need to increment lnext at some point ...  if there are more
+// than one lefty that is undone.
 			}
 		}
 		
