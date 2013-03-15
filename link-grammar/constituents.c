@@ -420,16 +420,21 @@ static int find_next_element(con_context_t *ctxt,
 			constituent_t *ct = &ctxt->constituent[t];
 
 			if (cc->subl == ct->subl)
-				ok=0;
+			{
+				ok = 0;
+				break;
+			}
+
+			/* Check for overlapping intervals */
 			if (((cc->left < ct->left) && (cc->right > ct->left))
 				||
-				((cc->right > ct->right) && (cc->left < ct->right))
-				||
-				((cc->right > ct->right) && (cc->left < ct->right))
+				((cc->left < ct->right) && (cc->right > ct->right))
 				||
 				((cc->left > ct->left) && (cc->right < ct->right)))
-				ok=0;
-
+			{
+				ok = 0;
+				break;
+			}
 			for (c2=0; c2<numcon_total; c2++)
 			{
 				if (ctxt->constituent[c2].canon != cc->canon)
@@ -438,9 +443,16 @@ static int find_next_element(con_context_t *ctxt,
 				{
 					if ((ctxt->constituent[c3].canon == ct->canon)
 						&& (ctxt->constituent[c3].subl == ctxt->constituent[c2].subl))
-						ok=0;
+					{
+						ok = 0;
+						break;
+					}
 				}
+				if (!ok)
+					break;
 			}
+			if (!ok)
+				break;
 		}
 		if (ok == 0) continue;
 
