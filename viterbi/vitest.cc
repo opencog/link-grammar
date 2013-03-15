@@ -984,21 +984,21 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 			ALINK0(SEQ),  // empty state
 			ALINK2(SEQ,
 				ALINK3(LING,
+					ANODE(LING_TYPE, "Wd"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "LEFT-WALL"),
+						ANODE(CONNECTOR, "Wd+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "this"),
+						ANODE(CONNECTOR, "Wd-"))),
+				ALINK3(LING,
 					ANODE(LING_TYPE, "Ss*b"),
 					ALINK2(WORD_DISJ,
 						ANODE(WORD, "this"),
 						ANODE(CONNECTOR, "Ss*b+")),
 					ALINK2(WORD_DISJ,
 						ANODE(WORD, "is.v"),
-						ANODE(CONNECTOR, "Ss-"))),
-				ALINK3(LING,
-					ANODE(LING_TYPE, "Wi"),
-					ALINK2(WORD_DISJ,
-						ANODE(WORD, "LEFT-WALL"),
-						ANODE(CONNECTOR, "Wi+")),
-					ALINK2(WORD_DISJ,
-						ANODE(WORD, "is.v"),
-						ANODE(CONNECTOR, "Wi-")))));
+						ANODE(CONNECTOR, "Ss-")))));
 
 	if (empty_state)
 	{

@@ -62,8 +62,8 @@ cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
 /// states (as these are now connected), ad append in their place
 /// the new states.  We also typically peel off one new one, as that
 /// one will be used for trying new onnections.
-static StatePair* unite(StatePair* old_sp, StatePair* new_sp,
-         size_t old_peel_off, size_t new_peel_off)
+static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
+                        StatePair* new_sp, size_t new_peel_off)
 {
 	OutList united_states;
 	Seq* old_state = old_sp->get_state();
@@ -124,6 +124,7 @@ Set* Connect::try_connect(StatePair* left_sp)
 	Atom* a = left_state->get_outgoing_atom(0);
 	WordCset* lwc = dynamic_cast<WordCset*>(a);
 	Set* alternatives = next_connect(lwc);
+cout<<"wtfffff got alts"<<alternatives<<endl;
 
 	size_t lsz = left_state->get_arity();
 	size_t lnext = 1;
@@ -134,64 +135,63 @@ Set* Connect::try_connect(StatePair* left_sp)
 	// If they can't be mated, then fail, and we are done.
 	OutList filtered_alts;
 	size_t sz = alternatives->get_arity();
+cout<<"wtffff got arity="<<sz<<endl;
 	for (size_t i=0; i<sz; i++)
 	{
+cout<<"wtffff enter i="<<i<<endl;
 		Atom* a = alternatives->get_outgoing_atom(i);
 		StatePair* new_sp = dynamic_cast<StatePair*>(a);
 		Seq* new_state = new_sp->get_state();
 
-		if (0 == new_state->get_arity())
+		if (0 < new_state->get_arity())
 		{
-// XXX need to append old and state, old and new output before pushing back.
-if (lnext < lsz)
-cout<<"amoooxxxxxxxxxxxxxxxxxxoooooooooooooooooooore"<<endl;
-			filtered_alts.push_back(new_sp);
-			continue;
-		}
-		a = new_state->get_outgoing_atom(0);
-		WordCset* new_cset = dynamic_cast<WordCset*>(a);
-		if (new_cset->has_left_pointers())
-		{
-			// The left-pointers are either mandatory or optional.
-			// If they're mandatory and there is no state to zipper with,
-			// then its a parse fail. Otherwise recurse.
-// XX check for optional...
-			if (lnext < lsz)
+			a = new_state->get_outgoing_atom(0);
+			WordCset* new_cset = dynamic_cast<WordCset*>(a);
+			if (new_cset->has_left_pointers())
 			{
-				Atom* a = left_state->get_outgoing_atom(lnext);
+				// The left-pointers are either mandatory or optional.
+				// If they're mandatory and there is no state to zipper with,
+				// then its a parse fail. Otherwise recurse.
+// XX check for optional...
+				if (lnext < lsz)
+				{
+					Atom* a = left_state->get_outgoing_atom(lnext);
 				
 cout <<"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrecurse"<<endl;
 cout << "old sp, rm "<<lnext<<": " << left_sp<<endl;
 cout << "new sp rm 1:" << new_sp<<endl;
-				// Recurse
-				StatePair* united_sp = unite(left_sp, new_sp, lnext, 1);
+					// Recurse
+					StatePair* united_sp = unite(left_sp, lnext, new_sp, 1);
 cout << "United states:" << united_sp<<endl;
-				Connect recurse(new_cset);
-				Set* new_alts = recurse.try_connect(united_sp);
+					Connect recurse(new_cset);
+					Set* new_alts = recurse.try_connect(united_sp);
 cout << "woot got this:" << new_alts<<endl;
 
-				size_t nsz = new_alts->get_arity();
-				for (size_t k = 0; k < nsz; k++)
-				{
-					Atom* a = new_alts->get_outgoing_atom(k);
-					StatePair* asp = dynamic_cast<StatePair*>(a);
-					StatePair* mrg = unite(united_sp, asp, 1, 0);
-					filtered_alts.push_back(mrg);
+					size_t nsz = new_alts->get_arity();
+					for (size_t k = 0; k < nsz; k++)
+					{
+						Atom* a = new_alts->get_outgoing_atom(k);
+						StatePair* asp = dynamic_cast<StatePair*>(a);
+						StatePair* mrg = unite(united_sp, 1, asp, 0);
+						filtered_alts.push_back(mrg);
 cout << "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmerge result="<<mrg<<endl;
+					}
+					continue;
 				}
-				continue;
 			}
 		}
 		
 		// Append old and new output and state, before pushing back.
 		// XXX I think the below is correct, its untested.
 cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
-		StatePair* mrg = unite(left_sp, new_sp, lnext, 0);
-// cout<<"left sp was "<<left_sp<<endl;
-// cout<<"new sp was "<<new_sp<<endl;
-		filtered_alts.push_back(new_sp);
+		StatePair* mrg = unite(left_sp, lnext, new_sp, 0);
+cout<<"left sp was "<<left_sp<<endl;
+cout<<"new sp was "<<new_sp<<endl;
+cout<<"mrg is "<<mrg<<endl;
+		filtered_alts.push_back(mrg);
 	}
 
+cout<<"wtfffff returning"<<new Set(filtered_alts)<<endl;
 	return new Set(filtered_alts);
 }
 
