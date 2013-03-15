@@ -1126,7 +1126,10 @@ bool test_seq_this_noun_dict()
 bool test_seq_this_verb_dict()
 {
 	return test_seq_sent("short seq sent realistic dict entry for verb",
-		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"LEFT-WALL:"
+		"  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)"
+		"    & {CP+} & {Xx+} & {RW+ or Xp+};"
+		""
 		"<costly-null>: [[[()]]];"
 		""
 		"<post-nominal-x>:"
