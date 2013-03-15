@@ -15,6 +15,60 @@
 namespace link_grammar {
 namespace viterbi {
 
+/**
+ * Order connectors so that all left-pointers appear before all right-
+ * pointers.  This is required, as the connect algo always tries to make
+ * connections sequentially, so of right-going connectors appear before
+ * the left-goers, the left-goers fail to connect.
+ *
+ * The input to this is presumed to be in DNF.
+ */
+static Atom* normal_order(Atom* dnf)
+{
+	
+	// Simply recurse on down.
+	Or* ora = dynamic_cast<Or*>(dnf);
+	if (ora)
+	{
+		OutList norm;
+		size_t sz = ora->get_arity();
+		for (size_t i=0; i<sz; i++)
+		{
+			Atom* a = ora->get_outgoing_atom(i);
+			norm.push_back(normal_order(a));
+		}
+		return new Or(norm);
+	}
+
+	And* andy = dynamic_cast<And*>(dnf);
+	if (andy)
+	{
+		OutList norm;
+		size_t sz = andy->get_arity();
+		for (size_t i=0; i<sz; i++)
+		{
+			Atom* a = andy->get_outgoing_atom(i);
+			Connector* c = dynamic_cast<Connector*>(a);
+			assert(c, "normal_order: expecting a connector in the disjunct");
+			if ('-' == c->get_direction())
+				norm.push_back(normal_order(c));
+		}
+		for (size_t i=0; i<sz; i++)
+		{
+			Atom* a = andy->get_outgoing_atom(i);
+			Connector* c = dynamic_cast<Connector*>(a);
+			assert(c, "normal_order: expecting a connector in the disjunct");
+			if ('+' == c->get_direction())
+				norm.push_back(normal_order(c));
+		}
+		return new And(norm);
+	}
+
+	// no-op
+	return dnf;
+}
+
+
 
 /**
  * Convert mixed connector expressions into disjunctive normal form.
@@ -43,7 +97,7 @@ namespace viterbi {
 Atom* disjoin(Atom* mixed_form)
 {
 	AtomType intype = mixed_form->get_type();
-	if ((OR != intype) && (AND != intype))
+	if ((OR != intype) and (AND != intype))
 		return mixed_form;
 
 	if (OR == intype)
@@ -64,7 +118,7 @@ Atom* disjoin(Atom* mixed_form)
 		}
 
 		Or* new_or = new Or(new_oset);
-		return new_or->super_flatten();
+		return normal_order(new_or->super_flatten());
 	}
 
 	And* junct = dynamic_cast<And*>(mixed_form);
@@ -89,7 +143,7 @@ Atom* disjoin(Atom* mixed_form)
 
 	/* If no disjunctions found, we are done */
 	if (i == sz)
-		return junct;
+		return normal_order(junct);
 
 	Atom *orat = junct->get_outgoing_atom(i);
 	i++;
@@ -135,8 +189,8 @@ Atom* disjoin(Atom* mixed_form)
 
 	Set* newset = dynamic_cast<Set*>(new_a);
 	if (newset)
-		return newset->super_flatten();
-	return new_a;
+		return normal_order(newset->super_flatten());
+	return normal_order(new_a);
 }
 
 
