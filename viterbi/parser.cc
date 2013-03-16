@@ -27,6 +27,7 @@
 #include "connect.h"
 #include "connector-utils.h"
 #include "disjoin.h"
+#include "garbage.h"
 #include "parser.h"
 #include "state.h"
 #include "viterbi.h"
@@ -42,6 +43,7 @@ Parser::Parser(Dictionary dict)
 	: _dict(dict), _alternatives(NULL)
 {
 	DBG(cout << "=============== Parser ctor ===============" << endl);
+	lg_init_gc();
 	initialize_state();
 }
 

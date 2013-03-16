@@ -16,6 +16,8 @@
 #include <string>
 #include <vector>
 
+#include "garbage.h"
+
 namespace link_grammar {
 namespace viterbi {
 
@@ -54,8 +56,10 @@ enum AtomType
 /* Base class for Nodes and Links */
 /* Atoms are not mutable, except for the TV value. That is, you cannot
  * change the type of the atom.  In particular, all methods are const.
+ *
+ * All atoms are automatically garbage-collected.
  */
-class Atom
+class Atom : public gc
 {
 	public:
 		Atom(AtomType type) : _type(type) {}

@@ -18,6 +18,7 @@ libvitacog_la_SOURCES = \
 	connect.cc \
 	connector-utils.cc \
 	disjoin.cc \
+	garbage.cc \
 	parser.cc \
 	state.cc \
 	atom.h \
@@ -26,6 +27,7 @@ libvitacog_la_SOURCES = \
 	connect.h \
 	connector-utils.h \
 	disjoin.h \
+	garbage.h \
 	parser.h \
 	state.h \
 	viterbi.h
@@ -36,7 +38,7 @@ noinst_PROGRAMS = vitest
 vitest_SOURCES = vitest.cc
 vitest_LDADD = libvitacog.la
 vitest_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
-
+vitest_LDADD += $(LIBGC_LIBS)
 
 
 endif

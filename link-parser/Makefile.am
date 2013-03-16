@@ -19,7 +19,8 @@ link_parser_SOURCES = link-parser.c \
                       command-line.h \
                       lg_readline.h
 
-link_parser_LDADD = $(LIBEDIT_LIBS)
+link_parser_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
+link_parser_LDADD += $(LIBEDIT_LIBS)
 
 if WITH_SAT_SOLVER
 link_parser_LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
@@ -28,8 +29,7 @@ endif
 
 if WITH_VITERBI
 link_parser_LDADD += $(top_builddir)/viterbi/libvitacog.la
+link_parser_LDADD += $(LIBGC_LIBS)
 endif
-
-link_parser_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
 
 
