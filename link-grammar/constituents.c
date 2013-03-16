@@ -425,6 +425,10 @@ static int find_next_element(con_context_t *ctxt,
 				break;
 			}
 
+#ifdef USE_FAT_LINKAGES
+			/* It appears that none of this code matters when fat linkages
+			 * are disabled. There's probably lots more in this file that
+			 * isn't used when fat linkages are disabled... */ 
 			/* Check for overlapping intervals */
 			if (((cc->left < ct->left) && (cc->right > ct->left))
 				||
@@ -454,6 +458,8 @@ static int find_next_element(con_context_t *ctxt,
 			if (!ok)
 				break;
 		}
+#endif /* USE_FAT_LINKAGES */
+
 		if (ok == 0) continue;
 
 		ctxt->templist[num_elements] = c;
