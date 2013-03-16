@@ -25,7 +25,8 @@
 
 using namespace std;
 
-#define DBG(X) X;
+// #define DBG(X) X;
+#define DBG(X) 
 
 namespace link_grammar {
 namespace viterbi {
@@ -50,7 +51,7 @@ Connect::Connect(WordCset* right_wconset)
 {
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
 	_rcons = _right_cset->get_cset();
-cout<<"------------------------- duuude rwcset=\n"<<_right_cset<<endl;
+	DBG(cout << "--------------- Connect ctor right=\n" << _right_cset << endl);
 }
 
 /// Unite two states into one. 
@@ -154,18 +155,18 @@ Set* Connect::try_connect(StatePair* left_sp)
 				{
 					Atom* a = left_state->get_outgoing_atom(lnext);
 				
-cout <<"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrecurse"<<endl;
-cout << "old sp, rm "<<lnext<<": " << left_sp<<endl;
-cout << "new sp rm 1:" << new_sp<<endl;
+// cout <<"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrecurse"<<endl;
+// cout << "old sp, rm "<<lnext<<": " << left_sp<<endl;
+// cout << "new sp rm 1:" << new_sp<<endl;
 					// Recurse -- zipper up the next unconnected left-pointer.
 					StatePair* united_sp = unite(left_sp, lnext, new_sp, 1);
 					// zero out output before continuing... we want only
 					// the fresh output just minted by the recurse
 					StatePair* usp = new StatePair(united_sp->get_state(), new Seq());
-cout << "United states:" << united_sp<<endl;
+i					DBG(cout << "United states:" << united_sp << endl);
 					Connect recurse(new_cset);
 					Set* new_alts = recurse.try_connect(usp);
-cout << "woot got this:" << new_alts<<endl;
+// cout << "woot got this:" << new_alts<<endl;
 
 					size_t nsz = new_alts->get_arity();
 					for (size_t k = 0; k < nsz; k++)
@@ -174,7 +175,7 @@ cout << "woot got this:" << new_alts<<endl;
 						StatePair* asp = dynamic_cast<StatePair*>(a);
 						StatePair* mrg = unite(united_sp, 1, asp, 0);
 						filtered_alts.push_back(mrg);
-cout << "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmerge result="<<mrg<<endl;
+						DBG(cout << "merge result=" << mrg << endl);
 					}
 					continue;
 				}
@@ -185,7 +186,7 @@ cout << "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmerge result="<<mrg<<endl;
 		
 		// Append old and new output and state, before pushing back.
 		// XXX I think the below is correct, its untested.
-cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
+// cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
 		StatePair* mrg = unite(left_sp, lnext, new_sp, 0);
 //cout<<"left sp was "<<left_sp<<endl;
 //cout<<"new sp was "<<new_sp<<endl;
@@ -208,7 +209,7 @@ Set* Connect::next_connect(WordCset* left_cset)
 	assert(left_cset, "State word-connectorset is null");
 	Atom* left_a = left_cset->get_cset();
 
-cout<<"enter next_connect, state cset dnf "<< left_a <<endl;
+	DBG(cout << "Enter next_connect(), left cset " << left_a << endl);
 
 	// Wrap bare connector with OR; this simplifie the nested loop below.
 	Or* left_dnf = NULL;
@@ -220,7 +221,7 @@ cout<<"enter next_connect, state cset dnf "<< left_a <<endl;
 	assert(left_dnf != NULL, "Left disjuncts not in DNF");
 
 	Atom *right_a = _rcons;
-cout<<"in next_connect, word cset dnf "<< right_a <<endl;
+	DBG(cout << "in next_connect(), right cset "<< right_a <<endl);
 	Or* right_dnf = NULL;
 	AtomType rt = right_a->get_type();
 	if (CONNECTOR == rt or AND == rt)
@@ -364,7 +365,6 @@ StatePair* Connect::alternative(Connector* lcon, And* rand)
 	if (0 == rand->get_arity())
 		return NULL;
 
-cout<<"duuude rand="<<rand<<endl;
 	Atom* rfirst = rand->get_outgoing_atom(0);
 	Connector* rfc = dynamic_cast<Connector*>(rfirst);
 	assert(rfc, "Exepcting a connector in the right disjunct");
@@ -403,7 +403,6 @@ StatePair* Connect::alternative(And* land, Connector* rcon)
 	Ling* conn = conn_connect_nn(lfc, rcon);
 	if (!conn)
 		return NULL;
-cout<<"yah got one it is "<<conn<<endl;
 
 	// At this point, conn holds an LG link type, and the
 	// two disjuncts that were mated.  Re-assemble these
@@ -419,15 +418,15 @@ cout<<"yah got one it is "<<conn<<endl;
 	WordCset* rem_cset = new WordCset(_left_cset->get_word(), remaining_cj);
 
 	StatePair* sp = new StatePair(new Seq(rem_cset), out);
-cout<<"=====================> state pair just crated: "<<sp<<endl;
+	DBG(cout << "=================> state pair created: " << sp << endl);
 	return sp;
 }
 
 // See docs above
 StatePair* Connect::alternative(And* land, And* rand)
 {
-cout<<"duude land="<<land<<endl;
-cout<<"duude rand="<<rand<<endl;
+// cout<<"duude land="<<land<<endl;
+// cout<<"duude rand="<<rand<<endl;
 
 	OutList outputs;
 	size_t m = 0;
@@ -448,7 +447,6 @@ cout<<"duude rand="<<rand<<endl;
 		Ling* conn = conn_connect_nn(lfc, rfc);
 		if (!conn)
 			break;
-cout<<"whoa super got one for "<< m <<" it is "<<conn<<endl;
 		m++;
 
 		// At this point, conn holds an LG link type, and the
@@ -457,7 +455,6 @@ cout<<"whoa super got one for "<< m <<" it is "<<conn<<endl;
 		// back in there, as that is what later stages need).
 		outputs.push_back(conn);
 	}
-cout<<"duude matched a total of m="<<m<<endl;
 	if (0 == m)
 		return NULL;
 
@@ -496,7 +493,7 @@ cout<<"duude matched a total of m="<<m<<endl;
 	Seq* out = new Seq(outputs);
 
 	StatePair* sp = new StatePair(state, out);
-cout<<"=====================> multi state pair just created: "<<sp<<endl;
+	DBG(cout << "============> multi state pair created: " << sp << endl);
 	return sp;
 }
 
@@ -536,13 +533,13 @@ Ling* Connect::reassemble(Ling* conn, WordCset* left_cset, WordCset* right_cset)
  */
 Ling* Connect::conn_connect_nn(Connector* lnode, Connector* rnode)
 {
-cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
+// cout<<"try match connectors l="<<lnode->get_name()<<" to r="<< rnode->get_name() << endl;
 	if (lnode->is_optional()) return NULL;
 	if (rnode->is_optional()) return NULL;
 	if (!conn_match(lnode->get_name(), rnode->get_name()))
 		return NULL;
 
-cout<<"Yayyyyae connectors match!"<<endl;
+// cout << "Yayyyyae connectors match!"<<endl;
 	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	Ling* ling = new Ling(link_name, lnode, rnode);
 

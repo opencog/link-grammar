@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2012 Linas Vepstas <linasvepstas@gmail.com>             */
+/* Copyright (c) 2012, 2013 Linas Vepstas <linasvepstas@gmail.com>       */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the Viterbi parsing system is subject to the terms of the      */
@@ -26,7 +26,8 @@
 
 using namespace std;
 
-#define DBG(X) X;
+// #define DBG(X) X;
+#define DBG(X) 
 
 namespace link_grammar {
 namespace viterbi {
