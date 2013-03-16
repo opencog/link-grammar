@@ -231,6 +231,23 @@ void viterbi_parse(Dictionary dict, const char * sentence)
 	Parser pars(dict);
 
 	pars.streamin(sentence);
+	Link* alts = pars.get_alternatives();
+
+	/* Print some diagnostic outputs ... for now. Remove whhen finished. */
+	size_t num_alts = alts->get_arity();
+	printf("Found %lu alternatives\n", num_alts);
+	for (size_t i=0; i<num_alts; i++)
+	{
+		Atom* a = alts->get_outgoing_atom(i);
+		StatePair* sp = dynamic_cast<StatePair*>(a);
+		Seq* state = sp->get_state();
+		size_t state_sz = state->get_arity();
+		if (0 == state_sz)
+		{
+			cout << "\nAlternative =============== " << i << endl;
+			cout << sp->get_output() << endl;
+		}
+	}
 }
 
 } // namespace viterbi
