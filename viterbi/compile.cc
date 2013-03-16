@@ -104,6 +104,18 @@ Atom* Set::super_flatten() const
 	return  upcast(new Link(get_type(), newset));
 }
 
+/// Add (append) other set to this set.
+Set* Set::add(const Set* other)
+{
+	if (!other) return this;
+	if (0 == other->get_arity()) return this;
+
+	OutList o = get_outgoing_set();
+	const OutList& oth = other->get_outgoing_set();
+	o.insert(o.end(), oth.begin(), oth.end());
+	return new Set(o);
+}
+
 // ============================================================
 /// Remove repeated entries.
 Or* Or::uniq() const

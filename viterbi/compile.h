@@ -87,10 +87,16 @@ class Set : public Link
 		Set(Atom* singleton)
 			: Link(SET, OutList(1, singleton))
 		{}
+		Set()
+			: Link(SET)
+		{}
 
 		// See the C file for documentation
 		Set* flatten() const { return new Set(flatset()); }
 		Atom* super_flatten() const;
+
+		// Add (append) other set  to this set.
+		Set* add(const Set*);
 
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.

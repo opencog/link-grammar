@@ -182,8 +182,8 @@ assert(1 == djset->get_arity(), "Multiple dict entries not handled");
 	// Try to add each dictionary entry to the parse state.
 	for (int i = 0; i < djset->get_arity(); i++)
 	{
-		State stset(_alternatives);
 		Atom* cset = djset->get_outgoing_atom(i);
+		State stset(_alternatives);
 		stset.stream_word_conset(dynamic_cast<WordCset*>(cset));
 // XXX this can't possibly be right ...
 _alternatives = stset.get_alternatives();

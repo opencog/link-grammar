@@ -81,7 +81,7 @@ void State::stream_word_conset(WordCset* wrd_cset)
 	// The state set consists of a bunch of sequences; each sequence
 	// being a single parse state.  Each parse state is a sequence of
 	// unsatisfied right-pointing links.
-	OutList new_alts;
+	Set* new_alts = new Set();
 	Set* alts = get_alternatives();
 	for (int i = 0; i < alts->get_arity(); i++)
 	{
@@ -95,14 +95,9 @@ void State::stream_word_conset(WordCset* wrd_cset)
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
 		Set* next_alts = cnct.try_connect(sp);
-
-		if (next_alts and (0 < next_alts->get_arity()))
-		{
-			const OutList& oset = next_alts->get_outgoing_set();
-			new_alts.insert(new_alts.end(), oset.begin(), oset.end());
-		}
+		new_alts = new_alts->add(next_alts);
 	}
-	_alternatives = new Set(new_alts);
+	_alternatives = new_alts;
 
 	// set_clean_state(new_state_set);
 }
