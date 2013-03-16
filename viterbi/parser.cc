@@ -177,17 +177,16 @@ void Parser::stream_word(const string& word)
 		return;
 	}
 
-assert(1 == djset->get_arity(), "Multiple dict entries not handled");
-
 	// Try to add each dictionary entry to the parse state.
+	Set* new_alts = new Set();
 	for (int i = 0; i < djset->get_arity(); i++)
 	{
 		Atom* cset = djset->get_outgoing_atom(i);
 		State stset(_alternatives);
 		stset.stream_word_conset(dynamic_cast<WordCset*>(cset));
-// XXX this can't possibly be right ...
-_alternatives = stset.get_alternatives();
+		new_alts = new_alts->add(stset.get_alternatives());
 	}
+	_alternatives = new_alts;
 }
 
 // ===================================================================
