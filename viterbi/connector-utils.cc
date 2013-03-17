@@ -48,12 +48,15 @@ bool conn_match(const string& ls, const string& rs)
 	// Captial letters must match. Wildcards match anything lower-case.
 	string::const_iterator lp = ls.begin();
 	string::const_iterator rp = rs.begin();
-	size_t len = -1 + min(ls.size(), rs.size());
+	size_t lslen = ls.size();
+	size_t rslen = rs.size();
+	size_t minlen = min(lslen, rslen);
+	size_t len = minlen - 1;  // -1 for direction
 	while (0 < len)
 	{
 		if (*lp != *rp)
 		{
-			// All upper-case letters must match!
+			// All upper-case letters must match exactly!
 			if (isupper(*lp) or isupper(*rp)) return false;
 			// Wild-card matches anything.
 			if ('*' != *lp and '*' != *rp) return false;
@@ -62,6 +65,9 @@ bool conn_match(const string& ls, const string& rs)
 		rp++;
 		len--;
 	}
+	// If the longer string is sill upper-case .. ouch
+	if ((minlen < lslen) and isupper(*lp)) return false;
+	if ((minlen < rslen) and isupper(*rp)) return false;
 
 	return true;
 }
