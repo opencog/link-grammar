@@ -16,11 +16,12 @@
 
 #include "atom.h"
 #include "compile.h"
+#include "garbage.h"
 
 namespace link_grammar {
 namespace viterbi {
 
-class State
+class State : public gc
 {
 	public:
 		State(Set *);

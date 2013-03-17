@@ -48,10 +48,11 @@ Set* State::get_alternatives()
 // XXX is this really needed ???
 void State::set_clean_state(Set* s)
 {
+	size_t sz = s->get_arity();
 	// Clean it up, first, by removing empty state vectors.
 	const OutList& alts = s->get_outgoing_set();
 	OutList new_alts;
-	for (int i = 0; i < alts.size(); i++)
+	for (int i = 0; i < sz; i++)
 	{
 		StatePair* s = dynamic_cast<StatePair*>(alts[i]);
 		Seq* state = s->get_state();

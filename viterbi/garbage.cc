@@ -19,7 +19,11 @@ namespace viterbi {
 
 void lg_init_gc()
 {
-	GC_all_interior_pointers = 0;
+	static bool is_inited = false;
+	if (is_inited)  // not thread safe.
+		return;
+	is_inited = true;
+
 	GC_init();
 
 	/* Max heap size of a quarter-gig. */

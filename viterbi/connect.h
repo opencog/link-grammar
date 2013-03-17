@@ -14,11 +14,12 @@
 
 #include "atom.h"
 #include "compile.h"
+#include "garbage.h"
 
 namespace link_grammar {
 namespace viterbi {
 
-class Connect
+class Connect : public gc
 {
 	public:
 		Connect(WordCset*);

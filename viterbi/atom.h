@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <gc/gc_allocator.h>
 
 #include "garbage.h"
 
@@ -62,7 +63,11 @@ enum AtomType
 class Atom : public gc
 {
 	public:
-		Atom(AtomType type) : _type(type) {}
+		Atom(AtomType type) : _type(type)
+		{
+			// Marking stubborn, since its immutable.
+			GC_change_stubborn(this);
+		}
 		AtomType get_type() const { return _type; }
 		TV tv;
 		virtual bool operator==(const Atom*) const;
@@ -92,8 +97,9 @@ class Node : public Atom
 		const std::string _name;
 };
 
-// Uhhhh ... 
-typedef std::vector<Atom*> OutList;
+/// All outgoing lists will be handled as vectors.
+// Must use the bdw-gc allocator to track these pointers.
+typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
 
 /*
  * Links hold a bunch of atoms

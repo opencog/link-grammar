@@ -75,7 +75,7 @@ bool Link::operator==(const Atom* other) const
 
 std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 {
-	const char *indent_str = "  ";
+	static const char *indent_str = "  ";
 	const Node* n = dynamic_cast<const Node*>(a);
 	if (n)
 	{
@@ -91,7 +91,8 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 		out << type_name(l->get_type()) <<" :" << endl;
 
 		ilvl++;
-		for (int i=0; i < l->get_arity(); i++)
+		size_t lsz = l->get_arity();
+		for (int i=0; i < lsz; i++)
 		{
 			do_prt(out, l->get_outgoing_atom(i), ilvl);
 		}

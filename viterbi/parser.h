@@ -16,6 +16,7 @@
 
 #include "atom.h"
 #include "compile.h"
+#include "garbage.h"
 
 // link-grammar include files, needed for Exp, Dict
 #include "api-types.h"
@@ -24,7 +25,7 @@
 namespace link_grammar {
 namespace viterbi {
 
-class Parser
+class Parser : public gc
 {
 	public:
 		Parser(Dictionary dict);
