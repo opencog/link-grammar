@@ -17,7 +17,7 @@ intelligence.
 A less abstract list of expected benefits include:
 
  * Incremental parsing: the ability to obtain partial results after
-   providing partial senences, a word at a time.
+   providing partial sentences, a word at a time.
  * Less sensitivity to sentence boundaries, allowing longer,
    run-on sentences to be parsed far more quickly.
  * Mitigation of the combinatorial explosion of parses.
@@ -25,6 +25,8 @@ A less abstract list of expected benefits include:
    in general, to do better with slang, hip-speak.
  * Enable co-reference resolution and anaphora resolution across
    sentences (resolve pronouns, etc.)
+ * Enable annotation of the parse graph with word-sense data, entity
+   markers.
  * Allow richer state to be passed up to higher layers: specifically,
    alternate parses for fractions of a sentence, alternative reference
    resolutions.
@@ -41,14 +43,14 @@ A less abstract list of expected benefits include:
 
 
 The data structures used to implement this resemble those of the
-OpenCog AtomSpace.  All data classs inherit from a class called Atom
+OpenCog AtomSpace.  All data classes inherit from a class called Atom
 (which is an atomic predicate, in the sense of mathematical logic).
-Atoms further subdivide into Links and Nodes, thus all data is
-represented in the form of a "term algebra" (aka the "Free Theory",
+Atoms are typed; the two core types are Links and Nodes. Thus, all data
+is represented in the form of a "term algebra" (aka the "Free Theory",
 in the sense of model theory).  This structure allows all data to be
 represented as (hyper-)graphs, which in turn makes the implementation
 of graph algorithms easier to implement.  All these theoretical
-considerations provide a natural setting for storing Vitebrbi state
+considerations provide a natural setting for storing Viterbi state
 information.  Put differently, this provide a generic, uniform way of
 holding the various partly-finished parses, and effecting state
 transformations on them.  
@@ -61,8 +63,12 @@ tightly (and cleanly) with high-level semantic analysis algorithms.
 Thus, reference and anaphora resolution can be done using the same
 graph structure as used for parsing; it should also allow graphical
 transformations, such as those currently implemented in RelEx.
-Annotation with word-sense data, entity markers and the like all become
-possible and uniform using the same infrastructure.
+
+Since all of the data is represented dynamically (at run-time) by
+these (hyper-)graphs composed of atoms, developing custom algorithms
+to manipulate the parse becomes easy: there are no strange compile-time
+structures to master.  All algorithms can access the data in a uniform,
+common way.
 
 One may argue that Viterbi is a more natural, biological way of working
 with sequences.  Some experimental, psychological support for this can
@@ -74,7 +80,7 @@ Currently, the parser can correctly parse many short sentences.  It
 currently runs very slowly, as no pruning algorithms have yet been
 implemented.
 
-To use this parser, you must run configure with the --enable-viterbi
+To use this parser, you must first configure with the --enable-viterbi
 flag:
 
    configure --enable-viterbi
