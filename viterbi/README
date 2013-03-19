@@ -6,6 +6,8 @@
 This directory contains code for a prototype Viterbi decoder for Link
 Grammar. It barely functions and is currently very slow.
 
+Motivation
+==========
 The goal of providing this decoder is to present a flexible, powerful
 interface for implementing high-level semantic algorithms on top of
 the the low-level link-grammar syntactic parser, and, in particular,
@@ -76,10 +78,46 @@ be found here:
 http://www.sciencedaily.com/releases/2012/09/120925143555.htm
 per Morten Christiansen, Cornell professor of psychology.
 
+Why "Viterbi"?
+==============
+The parser implemeneted here is called a "Viterbi decoder" because it is
+inspired by (and vaguely resembles) the Viterbi algorithm famous from signal
+processing.  A characteristic feature of that algorithm is that it maintains
+a set of states in parallel. As each new bit is received, some of the states
+become inherently inconsistent (e.g. because some checksum is violated),
+while other new states become possible.  Once some certain number of bits 
+have been received, the ones that can be consistently interpreted with the 
+checksum constraints can be output. The process then repeats with each new bit
+streaming in.  Likewise, the code here keeps a set of states in parallel;
+each state is tied to some possible pending output that is consistent with
+that state.  As each new word comes in, some of the states become invalid
+and are discarded (because the word cannot link to that state). When all
+states agree on some linkage, that linkage can be confidently output. 
+As words flow in, the process is repeated.  If there are ambiguities, then
+multiple parse alternatives can be output (this is rather unlike the
+original Vioterbi algorithm, whose goal is to generate only one output,
+the single most likely output).  For language parsing, however, it is
+useful to convey parse alternatives to higher-order processes which can
+make a final; determination (analogous to having a higher-order checksum
+functioning within the Viterbi decoder).
+
+I like this analogy because it is vaguely biological as well: or perhaps
+I should say "neural net-ish".  The multiple, provisional states that
+are kept around are sort of like the activation states of a feed-forward
+artificial neural network.  But this is not very deep: the feed-forward
+neural net looks like a Hidden Markov Model (HMM), and the Viterbi
+algorithm is essentially an HMM algorithm.  No surprise!
+
+
+Status
+======
 Currently, the parser can correctly parse many short sentences.  It
 currently runs very slowly, as no pruning algorithms have yet been
-implemented.
+implemented.  No probabilities or weights have yet been implemented.
 
+
+Using the parser
+================
 To use this parser, you must first configure with the --enable-viterbi
 flag:
 
@@ -93,7 +131,7 @@ tests, and all of them pass.  More tests will be added.
 
 
 Historical dates
-----------------
+================
 Idea conceived: April 2008
 Coding started: October 2012
 First successful long sentence parse: March 2013

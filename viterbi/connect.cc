@@ -163,7 +163,7 @@ Set* Connect::try_connect(StatePair* left_sp)
 					// zero out output before continuing... we want only
 					// the fresh output just minted by the recurse
 					StatePair* usp = new StatePair(united_sp->get_state(), new Seq());
-i					DBG(cout << "United states:" << united_sp << endl);
+					DBG(cout << "United states:" << united_sp << endl);
 					Connect recurse(new_cset);
 					Set* new_alts = recurse.try_connect(usp);
 // cout << "woot got this:" << new_alts<<endl;
