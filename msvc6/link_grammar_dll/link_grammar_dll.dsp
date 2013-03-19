@@ -92,135 +92,135 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE="..\..\link-grammar\analyze-linkage.c"
+SOURCE=..\..\link-grammar\analyze-linkage.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\and.c"
+SOURCE=..\..\link-grammar\and.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\api.c"
+SOURCE=..\..\link-grammar\api.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\build-disjuncts.c"
+SOURCE=..\..\link-grammar\build-disjuncts.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\constituents.c"
+SOURCE=..\..\link-grammar\constituents.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\count.c"
+SOURCE=..\..\link-grammar\count.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\dictionary.c"
+SOURCE=..\..\link-grammar\dictionary.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\disjuncts.c"
+SOURCE=..\..\link-grammar\disjuncts.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\disjunct-utils.c"
+SOURCE=..\..\link-grammar\disjunct-utils.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\error.c"
+SOURCE=..\..\link-grammar\error.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\extract-links.c"
+SOURCE=..\..\link-grammar\extract-links.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\fast-match.c"
+SOURCE=..\..\link-grammar\fast-match.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\idiom.c"
+SOURCE=..\..\link-grammar\idiom.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\massage.c"
+SOURCE=..\..\link-grammar\massage.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\post-process.c"
+SOURCE=..\..\link-grammar\post-process.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\pp_knowledge.c"
+SOURCE=..\..\link-grammar\pp_knowledge.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\pp_lexer.c"
+SOURCE=..\..\link-grammar\pp_lexer.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\pp_linkset.c"
+SOURCE=..\..\link-grammar\pp_linkset.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\prefix.c"
+SOURCE=..\..\link-grammar\prefix.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\preparation.c"
+SOURCE=..\..\link-grammar\preparation.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\print-util.c"
+SOURCE=..\..\link-grammar\print-util.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\print.c"
+SOURCE=..\..\link-grammar\print.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\prune.c"
+SOURCE=..\..\link-grammar\prune.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\read-dict.c"
+SOURCE=..\..\link-grammar\read-dict.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\read-regex.c"
+SOURCE=..\..\link-grammar\read-regex.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\regex-morph.c"
+SOURCE=..\..\link-grammar\regex-morph.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\resources.c"
+SOURCE=..\..\link-grammar\resources.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\spellcheck-hun.c"
+SOURCE=..\..\link-grammar\spellcheck-hun.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\string-set.c"
+SOURCE=..\..\link-grammar\string-set.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\tokenize.c"
+SOURCE=..\..\link-grammar\tokenize.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\utilities.c"
+SOURCE=..\..\link-grammar\utilities.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\word-file.c"
+SOURCE=..\..\link-grammar\word-file.c
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\word-utils.c"
+SOURCE=..\..\link-grammar\word-utils.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -228,119 +228,119 @@ SOURCE="..\..\link-grammar\word-utils.c"
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE="..\..\link-grammar\analyze-linkage.h"
+SOURCE=..\..\link-grammar\analyze-linkage.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\and.h"
+SOURCE=..\..\link-grammar\and.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\api-structures.h"
+SOURCE=..\..\link-grammar\api-structures.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\api-types.h"
+SOURCE=..\..\link-grammar\api-types.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\api.h"
+SOURCE=..\..\link-grammar\api.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\build-disjuncts.h"
+SOURCE=..\..\link-grammar\build-disjuncts.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\command-line.h"
+SOURCE=..\..\link-grammar\command-line.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\constituents.h"
+SOURCE=..\..\link-grammar\constituents.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\count.h"
+SOURCE=..\..\link-grammar\count.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\error.h"
+SOURCE=..\..\link-grammar\error.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\externs.h"
+SOURCE=..\..\link-grammar\externs.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\extract-links.h"
+SOURCE=..\..\link-grammar\extract-links.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\fast-match.h"
+SOURCE=..\..\link-grammar\fast-match.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\idiom.h"
+SOURCE=..\..\link-grammar\idiom.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\link-features.h"
+SOURCE=..\..\link-grammar\link-features.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\link-includes.h"
+SOURCE=..\..\link-grammar\link-includes.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\massage.h"
+SOURCE=..\..\link-grammar\massage.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\post-process.h"
+SOURCE=..\..\link-grammar\post-process.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\pp_knowledge.h"
+SOURCE=..\..\link-grammar\pp_knowledge.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\pp_lexer.h"
+SOURCE=..\..\link-grammar\pp_lexer.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\pp_linkset.h"
+SOURCE=..\..\link-grammar\pp_linkset.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\prefix.h"
+SOURCE=..\..\link-grammar\prefix.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\preparation.h"
+SOURCE=..\..\link-grammar\preparation.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\print-util.h"
+SOURCE=..\..\link-grammar\print-util.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\print.h"
+SOURCE=..\..\link-grammar\print.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\prune.h"
+SOURCE=..\..\link-grammar\prune.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\read-dict.h"
+SOURCE=..\..\link-grammar\read-dict.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\read-regex.h"
+SOURCE=..\..\link-grammar\read-regex.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\regex-morph.h"
+SOURCE=..\..\link-grammar\regex-morph.h
 # End Source File
 # Begin Source File
 
@@ -348,35 +348,35 @@ SOURCE=..\..\..\gnuwin32_regex\include\regex.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\resources.h"
+SOURCE=..\..\link-grammar\resources.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\spellcheck-hun.h"
+SOURCE=..\..\link-grammar\spellcheck-hun.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\string-set.h"
+SOURCE=..\..\link-grammar\string-set.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\structures.h"
+SOURCE=..\..\link-grammar\structures.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\tokenize.h"
+SOURCE=..\..\link-grammar\tokenize.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\utilities.h"
+SOURCE=..\..\link-grammar\utilities.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\word-file.h"
+SOURCE=..\..\link-grammar\word-file.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\link-grammar\word-utils.h"
+SOURCE=..\..\link-grammar\word-utils.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
