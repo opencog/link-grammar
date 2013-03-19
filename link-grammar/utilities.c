@@ -162,7 +162,7 @@ strtok_r (char *s, const char *delim, char **saveptr)
 
 /* Emulates glibc's strndup() */
 char *
-strndup (char *str, size_t size)
+strndup (const char *str, size_t size)
 {
 	size_t len;
 	char *result = (char *) NULL;
