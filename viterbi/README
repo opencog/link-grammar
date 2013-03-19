@@ -1,9 +1,9 @@
 
                            Viterbi Decoder
                            ---------------
-                     Linas Vepstas March 2013
+                      Linas Vepstas March 2013
 
-This directory contains code for prototype Viterbi decoder for Link
+This directory contains code for a prototype Viterbi decoder for Link
 Grammar. It barely functions and is currently very slow.
 
 The goal of providing this decoder is to present a flexible, powerful
@@ -14,11 +14,37 @@ allows the parser to move beyond being merely a syntactic parser,
 and to become fully integrated with general semantic artificial
 intelligence.
 
+A less abstract list of expected benefits include:
+
+ * Incremental parsing: the ability to obtain partial results after
+   providing partial senences, a word at a time.
+ * Less sensitivity to sentence boundaries, allowing longer,
+   run-on sentences to be parsed far more quickly.
+ * Mitigation of the combinatorial explosion of parses.
+ * Allow gramatically broken/incorrect chat dialog to be parsed;
+   in general, to do better with slang, hip-speak.
+ * Enable co-reference resolution and anaphora resolution across
+   sentences (resolve pronouns, etc.)
+ * Allow richer state to be passed up to higher layers: specifically,
+   alternate parses for fractions of a sentence, alternative reference
+   resolutions.
+ * Allow a plug-in architecture, so that plugins, employing higher-
+   level semantic (AGI) algorithms can provide parse guidance and
+   parse disambiguation.
+ * Eliminate many of the hard-coded array sizes in the code.
+ * Fix the word-count problem during spell-guessing. So, for
+   example, if the mis-spelled word "dont" shows up in the input, it
+   could be issued as one word ("done") or two ("do n't"). The
+   current suffix-stripping/word-issuing algo cannot deal with this
+   correctly. This is also an issue for the Russian dictionary, where
+   the stem+suffix processing can generate variable word counts.
+
+
 The data structures used to implement this resemble those of the
 OpenCog AtomSpace.  All data classs inherit from a class called Atom
 (which is an atomic predicate, in the sense of mathematical logic).
 Atoms further subdivide into Links and Nodes, thus all data is
-represented in the form of a "term algebra" (aka the "Free Theory"
+represented in the form of a "term algebra" (aka the "Free Theory",
 in the sense of model theory).  This structure allows all data to be
 represented as (hyper-)graphs, which in turn makes the implementation
 of graph algorithms easier to implement.  All these theoretical
@@ -37,6 +63,12 @@ graph structure as used for parsing; it should also allow graphical
 transformations, such as those currently implemented in RelEx.
 Annotation with word-sense data, entity markers and the like all become
 possible and uniform using the same infrastructure.
+
+One may argue that Viterbi is a more natural, biological way of working
+with sequences.  Some experimental, psychological support for this can
+be found here:
+http://www.sciencedaily.com/releases/2012/09/120925143555.htm
+per Morten Christiansen, Cornell professor of psychology.
 
 Currently, the parser can correctly parse many short sentences.  It
 currently runs very slowly, as no pruning algorithms have yet been

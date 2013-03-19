@@ -209,6 +209,8 @@ if test "x$enable_viterbi" = "xyes"; then
 	    [AC_MSG_ERROR([C++ compiler not found; it is needed for the Viterbi parser])])
 	AC_LANG([C])
 
+	# The vieterbi decoder is designed to leak memory like crazy.
+	# Must use garbage collection in order for it to work.
 	PKG_CHECK_MODULES([LIBGC], [bdw-gc], [gc=yes], [gc=no])
 	AC_SUBST(LIBGC_LIBS)
 	AC_SUBST(LIBGC_CFLAGS)

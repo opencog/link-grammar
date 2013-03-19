@@ -792,7 +792,7 @@ TODO -- Working Notes:
    * Less sensitive to sentence boundaries: this would allow longer,
      run-on sentences to be parsed far more quickly.
    * Could do better with slang, hip-speak.
-   * Would enable co-reference resultion across sentences (resolve
+   * Would enable co-reference resolution across sentences (resolve
      pronouns, etc.)
    * Would allow richer state to be passed up to higher layers:
      specifically, alternate parses for fractions of a sentence,
