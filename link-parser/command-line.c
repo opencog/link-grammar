@@ -104,7 +104,7 @@ static Switch default_switches[] =
 #endif /* USE_SAT_SOLVER */
    {"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
 #ifdef USE_VITERBI
-   {"vit",        Bool, "Use Viterbit-based parser",       &local.use_viterbi},
+   {"viterbi",    Bool, "Use Viterbit-based parser",       &local.use_viterbi},
 #endif
    {"walls",      Bool, "Display wall words",              &local.display_walls},
    {"width",      Int,  "The width of the display",        &local.screen_width},

@@ -36,7 +36,8 @@ class TV
 enum AtomType
 {
 	// Node types
-	WORD = 1,
+	NODE = 1,
+	WORD,       // a word
 	LING_TYPE,  // a pair of merged connectors (LG LINK TYPE)
 	// META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
 	CONNECTOR,  // e.g. S+ 
@@ -50,6 +51,8 @@ enum AtomType
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
 	LING,       // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
 	STATE_PAIR, // Current state and corresponding output.
+
+	RULE,       // Base class for graph re-write rules
 };
 
 #define OPTIONAL_CLAUSE "0"
@@ -87,6 +90,9 @@ class Atom : public gc
 class Node : public Atom
 {
 	public:
+		Node(const std::string& n)
+			: Atom(NODE), _name(n) {}
+
 		Node(AtomType t, const std::string& n)
 			: Atom(t), _name(n) {}
 

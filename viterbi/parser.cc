@@ -134,7 +134,7 @@ Set * Parser::word_consets(const string& word)
 		Atom *dj = lg_exp_to_atom(exp);
 		dj = disjoin(dj);
 
-		// First atom at the from of the outgoing set is the word itself.
+		// First atom at the front of the outgoing set is the word itself.
 		// Second atom is the first disjuct that must be fulfilled.
 		Word* nword = new Word(dn->string);
 		djset.push_back(new WordCset(nword, dj));

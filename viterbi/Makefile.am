@@ -20,6 +20,7 @@ libvitacog_la_SOURCES = \
 	disjoin.cc \
 	garbage.cc \
 	parser.cc \
+	rewrite.cc \
 	state.cc \
 	atom.h \
 	compile.h \
@@ -29,6 +30,7 @@ libvitacog_la_SOURCES = \
 	disjoin.h \
 	garbage.h \
 	parser.h \
+	rewrite.h \
 	state.h \
 	viterbi.h
 
