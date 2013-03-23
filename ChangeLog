@@ -1,7 +1,7 @@
 Version 4.7.11 (23 March 2013)
- * MSVC6 build environment fixes.
- * Ongoing devlopment of the Viterbi prototype.
  * Fix build bug introduced recently (build_disjuncts_for_dict_node)
+ * MSVC6 build environment fixes.
+ * Ongoing development of the Viterbi prototype.
 
 Version 4.7.10 (9 March 2013)
  * New: Russian dictionaries from Sergey Protasov!
