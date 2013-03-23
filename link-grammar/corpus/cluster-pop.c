@@ -21,6 +21,17 @@
 #include "../read-dict.h"
 #include "../structures.h"
 
+static Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
+{
+   Disjunct *dj;
+   X_node x;
+   x.exp = dn->exp;
+   x.string = dn->string;
+   dj = build_disjuncts_for_X_node(&x, MAX_CONNECTOR_COST);
+   /* print_disjunct_list(dj); */
+   return dj;
+}
+
 int main (int argc, char * argv[])
 {
 	sqlite3 *dbconn;
