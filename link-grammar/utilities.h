@@ -88,12 +88,15 @@ char * strndup (const char *str, size_t size);
 #endif /* _MSC_VER || __MINGW32__ */
 
 /*
- * CYGWIN on Windows doesn't have UTF8 support, or wide chars ... 
- * However, MS Visual C appearently does, as does MinGW.  Since
+ * CYGWIN prioer to version 1.7 did not have UTF8 support, or wide
+ * chars ... However, MS Visual C does, as does MinGW.  Since
  * some users have both cygwin and MinGW installed, crap out the 
- * UTF8 code only when MinGW is missing.
+ * UTF8 code only when MinGW is missing (and the CYGWIN version
+ * is very old) XXX This code is dangerous and should be removed.
  */
 #if defined (__CYGWIN__) && !defined(__MINGW32__)
+#if CYGWIN_VERSION_DLL_MAJOR < 1007
+#error "Your Cygwin version is too old! Version 1.7 or later is needed for UTF8 support!"
 #define mbstate_t char
 #define mbrtowc(w,s,n,x)  ({*((char *)(w)) = *(s); 1;})
 #define wcrtomb(s,w,x)    ({*((char *)(s)) = ((char)(w)); 1;})
@@ -107,6 +110,7 @@ char * strndup (const char *str, size_t size);
 #define WEOF      EOF
 #define towlower  tolower
 #define towupper  toupper
+#endif /* CYGWIN_VERSION_DLL_MAJOR < 1007 */
 #endif /* __CYGWIN__ and not __MINGW32__ */
 
 #endif /* _WIN32 */
