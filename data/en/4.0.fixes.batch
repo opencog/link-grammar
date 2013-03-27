@@ -1201,6 +1201,39 @@ Exactly whose book is this?
 I wonder where you put it?
 I wonder why you said that?
 
+% Problems with questions:  modifiers in query.
+% The below parses, but incorrectly. "a dog" should modify
+% "big".  Fixing this will probably render the HA and the A links
+% obsolete, completely.
+% Pied-piping: How-big is a pied-piper, pulling the subordinate
+% "a dog" over to the right: "*It is a how big dog?".
+*How big a dog is it?
+How big of a dog can you imagine?
+How big is it?
+it is how big?
+It was too big a dog to fit
+It was too big a dog to fit through the hole in the fence.
+It was that big a dog.
+It was so big a dog that it filled the cage
+
+How much should I use?
+How much sugar should I use?
+With whome does he live?
+How long did you take?
+How long a walk did you take?
+How long a walk in the park did you take?
+
+How much sugar for the cake is needed?
+How much sugar is needed?
+How much is needed?
+How big a dog is wanted?
+How much of a dog is wanted?
+
+How much of a man is he?
+How much of a lie was it?
+How big a lie was it?
+
+
 % This is blocked by post-processing....
 How long before you got home?
 Approximately how long before you got home?
