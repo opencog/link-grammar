@@ -11,6 +11,9 @@
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
+% Dictionary version number is 4.3.4 (formatted as V4v3v4+)
+<dictionary-version-number>: V4v3v4+;
+%
 %
 % Ženklai:
 % Ą Č Ę Ė Į Š Ų Ū Ž
@@ -133,3 +136,4 @@ namo: PV+ or (PV- & {Xp+});
 % Žodžiai, kurie gali pradėti sakini.
 CAPITALIZED-WORDS: Wd-;
 LEFT-WALL: Wd+;
+UNKNOWN-WORD:  XXX+;
