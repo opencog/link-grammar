@@ -1207,6 +1207,9 @@ I wonder why you said that?
 % obsolete, completely.
 % Pied-piping: How-big is a pied-piper, pulling the subordinate
 % "a dog" over to the right: "*It is a how big dog?".
+% Basically, in "How big [a dog] is it?" the phrase "a dog" is
+% optional.  Therefore, by definition, it is a 'modifier' to
+% "how big".  That generates the simplest, easiest parse rules!
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
@@ -1215,13 +1218,22 @@ It was too big a dog to fit
 It was too big a dog to fit through the hole in the fence.
 It was that big a dog.
 It was so big a dog that it filled the cage
+How big a dog did he buy?
+*How big did he buy?
+% Actually, the above is allowed, e.g. while talking about 
+% house prices, the conclusion might be: "So, how big did he buy?"
+
+Our neighbours have too big a dog to keep in the house
+Our neighbours have a dog too big to keep in the house
+Our neighbours have dogs too big to keep in the house
 
 How much should I use?
 How much sugar should I use?
-With whome does he live?
+With whom does he live?
 How long did you take?
 How long a walk did you take?
 How long a walk in the park did you take?
+How old a wine do you want?
 
 How much sugar for the cake is needed?
 How much sugar is needed?

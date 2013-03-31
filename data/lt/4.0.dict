@@ -136,4 +136,8 @@ namo: PV+ or (PV- & {Xp+});
 % Žodžiai, kurie gali pradėti sakini.
 CAPITALIZED-WORDS: Wd-;
 LEFT-WALL: Wd+;
+
+% With the following line in the dictionary, the parser will simply 
+% skip over (null-link) unknown words. If you remove it, the parser 
+% will output an error for any unknown words.
 UNKNOWN-WORD:  XXX+;

@@ -496,7 +496,8 @@ PL-GREEK-LETTER-AND-NUMBER:    BZZT+;
 UNITS:        BZZT+;
 PL-CAPITALIZED-WORDS:    BZZT+;
 
-% With the following line in the dictionary, the parser will simply skip over (null-link) 
-% unknown words. If you remove it, the parser will output an error for any unknown words.
+% With the following line in the dictionary, the parser will simply
+% skip over (null-link) unknown words. If you remove it, the parser
+% will output an error for any unknown words.
 UNKNOWN-WORD: NO+;
 

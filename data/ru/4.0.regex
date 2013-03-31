@@ -48,3 +48,12 @@
 % (... any affix, for that matter ...) and so no embedded apostrophe
 CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 
+% Sequence of punctuation marks. If some mark appears in the affix table
+% such as a period, comma, dash or underscore, and there's a sequence of
+% these, then treat it as a "fill-in-the-blank" placeholder.
+% This matters only for punc. appearing in the affix table, since the
+% tokenizer explicitly mangles based on these punctution marks.
+%
+% Look for at least four in a row.
+UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
+

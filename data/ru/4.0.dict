@@ -115,7 +115,7 @@
 
 LEFT-WALL: W+ & (Xp+ or RW+);
 RIGHT-WALL: {Xc-} & RW-;
-UNKNOWN-WORD: NO+;
+
 <name-перечисление-сущ>: J- or ((Sp3+ or SIp3-) & Wd-) or ({Xt-} & S-) or Mg-;
 <name-макро-перечисление>: NX+
         or (Xc- & NX- & (NX+ or [<name-перечисление-сущ>]))
@@ -1082,3 +1082,7 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 % suffixes
 #include "/ru/suffix.dict";
 
+% With the following line in the dictionary, the parser will simply
+% skip over (null-link) unknown words. If you remove it, the parser
+% will output an error for any unknown words.
+UNKNOWN-WORD: XXX+;
