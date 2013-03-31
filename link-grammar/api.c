@@ -801,6 +801,8 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	initialize_conjunction_tables(sent);
 #endif /* USE_FAT_LINKAGES */
 
+	/* If unknown_word is not defined, then no special processing
+	 * will be done for e.g. capitalized words. */
 	if (!(dict->unknown_word_defined && dict->use_unknown_word))
 	{
 		if (!sentence_in_dictionary(sent)) {
