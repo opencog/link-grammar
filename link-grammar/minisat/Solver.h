@@ -235,12 +235,12 @@ class Solver {
   }
 
   void printStats() {
-    printf("restarts              : .%lld.\n", starts);
-    printf("conflicts             : .%-12lld.   \n", conflicts);
-    printf("decisions             : .%-12lld.   (%4.2f %% random) \n", decisions, 
+    printf("restarts              : .%lu.\n", starts);
+    printf("conflicts             : .%-12lu.   \n", conflicts);
+    printf("decisions             : .%-12lu.   (%4.2f %% random) \n", decisions, 
 	   (float)rnd_decisions*100 / (float)decisions);
-    printf("propagations          : .%-12lld.   \n", propagations);
-    printf("conflict literals     : .%-12lld.   (%4.2f %% deleted)\n", tot_literals, 
+    printf("propagations          : .%-12lu.   \n", propagations);
+    printf("conflict literals     : .%-12lu.   (%4.2f %% deleted)\n", tot_literals, 
 	   (max_literals - tot_literals)*100 / (double)max_literals);
   }
 
