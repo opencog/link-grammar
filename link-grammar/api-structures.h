@@ -263,8 +263,10 @@ struct Sentence_s
 	/* thread-safe random number state */
 	unsigned int rand_state;
 
+#ifdef USE_SAT_SOLVER
 	/* Hook for the SAT solver */
 	void *hook;
+#endif /* USE_SAT_SOLVER */
 };
 
 /*********************************************************

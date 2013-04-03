@@ -741,6 +741,10 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->effective_dist = NULL;
 #endif /* USE_FAT_LINKAGES */
 
+#ifdef USE_SAT_SOLVER
+	sent->hook = NULL;
+#endif /* USE_SAT_SOLVER */
+
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
 
