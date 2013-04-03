@@ -393,7 +393,11 @@ static int find_next_element(con_context_t *ctxt,
                              int num_elements,
                              int num_lists)
 {
-	int c, a, ok, c2, c3, addedone=0;
+	int c, a, ok, addedone=0;
+#ifdef USE_FAT_LINKAGES
+	int c2, c3;
+#endif /* USE_FAT_LINKAGES */
+
 
 	assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
 
@@ -457,8 +461,8 @@ static int find_next_element(con_context_t *ctxt,
 			}
 			if (!ok)
 				break;
-		}
 #endif /* USE_FAT_LINKAGES */
+		}
 
 		if (ok == 0) continue;
 
