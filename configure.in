@@ -613,6 +613,7 @@ $PACKAGE-$VERSION
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
+	Generate 'fat' linkages:        ${enable_fat_links}
 	Boolean SAT parser:             ${enable_sat_solver}
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
