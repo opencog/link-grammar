@@ -109,7 +109,7 @@ AM_CONDITIONAL(WITH_BINRELOC, test "x$br_cv_binreloc" = "xyes")
 dnl ====================================================================
 
 AC_ARG_ENABLE( debug,
-  [  --enable-debug               compile with debugging flags set],
+  [  --enable-debug          compile with debugging flags set],
   [],
   [enable_debug=no])
 
@@ -125,7 +125,7 @@ fi
 dnl ====================================================================
 
 AC_ARG_ENABLE( mudflap,
-  [  --enable-mudflap           compile with mudflap checking],
+  [  --enable-mudflap        compile with mudflap checking],
   [],
   [enable_mudflap=no])
 
@@ -138,7 +138,7 @@ fi
 dnl ====================================================================
 
 AC_ARG_ENABLE( profile,
-  [  --enable-profile           compile with profiling set],
+  [  --enable-profile        compile with profiling set],
   [],
   [enable_profile=no]
 )
@@ -151,7 +151,7 @@ fi
 dnl ====================================================================
 
 AC_ARG_ENABLE( pthreads,
-  [  --enable-pthreads          compile with pthread support],
+  [  --enable-pthreads       compile with pthread support],
   [],
   [enable_pthreads=no]
 )
@@ -166,14 +166,14 @@ AM_CONDITIONAL(WITH_PTHREADS, test x${enable_pthreads} = xyes)
 dnl ====================================================================
 
 AC_ARG_ENABLE( java-bindings,
-  [  --disable-java-bindings    disable build of java bindings],
+  [  --disable-java-bindings disable build of java bindings],
        [],
        [enable_java_bindings=yes])
 
 dnl ====================================================================
 
 AC_ARG_ENABLE( fat-links,
-  [  --disable-fat-links        disable use of fat linkages during parsing],
+  [  --disable-fat-links     disable use of fat linkages during parsing],
        [],
        [enable_fat_links=yes])
 
@@ -182,7 +182,7 @@ AM_CONDITIONAL(WITH_FAT_LINKS, test x${enable_fat_links} = xyes)
 dnl ====================================================================
 
 AC_ARG_ENABLE( sat-solver,
-  [  --enable-sat-solver        enable use of the Boolean SAT parser],
+  [  --enable-sat-solver     enable use of the Boolean SAT parser],
   [],
   [enable_sat_solver=no]
 )
@@ -233,7 +233,7 @@ AM_CONDITIONAL(WITH_VITERBI, test x${enable_viterbi} = xyes)
 dnl ====================================================================
 
 AC_ARG_ENABLE( corpus-stats,
-  [  --enable-corpus-stats      use corpus statistics],
+  [  --enable-corpus-stats   use corpus statistics],
   [],
   [enable_corpus_stats=no]
 )
