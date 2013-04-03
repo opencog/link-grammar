@@ -251,7 +251,7 @@ public:
   // If guiding params for this variable are not set earlier, they are
   // now set to default
   int fat_link(int wi, int wj) {
-    assert(_sent->is_conjunction[wj] || strcmp(_sent->word[wj].string, ",") == 0,
+    assert(_sent->is_conjunction[wj] || strcmp(_sent->word[wj].alternatives[0], ",") == 0,
            "Fat link can up only to a connective word");
     int var;
     if (!get_fat_link_variable(wi, wj, var)) {
@@ -272,7 +272,7 @@ public:
    * it can positively affect the search guiding.
    */
   int neighbor_fat_link(int w) {
-    assert(_sent->is_conjunction[w] || strcmp(_sent->word[w].string, ",") == 0,
+    assert(_sent->is_conjunction[w] || strcmp(_sent->word[w].alternatives[0], ",") == 0,
            "Only connective words can have fat links down");
     int var;
     char name[MAX_VARIABLE_NAME];

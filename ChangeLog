@@ -2,6 +2,7 @@ Version 4.7.12 (xxx 2013)
  * Windows: Explicitly fail if cygwin version is too old.
  * Tweak the lt dict to work again with the modern parser.
  * Make use of fat linkages compile-time configurable.
+ * Fix SAT-solver build.
 
 Version 4.7.11 (23 March 2013)
  * Fix build bug introduced recently (build_disjuncts_for_dict_node)
