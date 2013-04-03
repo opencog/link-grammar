@@ -6,6 +6,7 @@ bool isEndingInterpunction(const char* str) {
     strcmp(str, "!") == 0;
 }
 
+#ifdef USE_FAT_LINKAGES
 bool isConnective(Sentence sent, int w) {
   return sent->is_conjunction[w];
 }
@@ -17,7 +18,9 @@ bool isComma(Sentence sent, int w) {
 bool isConnectiveOrComma(Sentence sent, int w) {
   return isConnective(sent, w) || isComma(sent, w);
 }
+#endif /* USE_FAT_LINKAGES */
 
 const char* word(Sentence sent, int w) {
-  return sent->word[w].string;
+  // XXX FIXME this is fundamentally wrong, should explore all alternatives!
+  return sent->word[w].alternatives[0];
 }

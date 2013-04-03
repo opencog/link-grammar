@@ -328,6 +328,7 @@ private:
 
   virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr);
 
+#ifdef USE_FAT_LINKAGES
   virtual void generate_encoding_specific_clauses();
 
   // various fat-link conditions
@@ -342,6 +343,7 @@ private:
   void generate_fat_link_existence();
   void generate_fat_link_neighbor();
   void generate_label_compatibility();
+#endif /* USE_FAT_LINKAGES */
 
   // link_cw variables
 
