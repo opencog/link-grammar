@@ -99,6 +99,7 @@ void SATEncoder::generate_or_definition(Lit lhs, vec<Lit>& rhs) {
   }
 }
 
+#ifdef USE_FAT_LINKAGES
 void SATEncoder::generate_conditional_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs) {
   {
     vec<Lit> clause;
@@ -121,6 +122,7 @@ void SATEncoder::generate_conditional_or_definition(Lit condition, Lit lhs, vec<
     add_clause(clause);
   }
 }
+#endif /* USE_FAT_LINKAGES */
 
 void SATEncoder::generate_conditional_lr_implication_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs) {
   {
@@ -1538,6 +1540,7 @@ bool SATEncoderConjunctionFreeSentences::extract_links(Parse_info pi)
 }
 
 
+#ifdef USE_FAT_LINKAGES
 /*******************************************************************************
  *              SAT encoding for sentences that contain conjunction.           *
  *******************************************************************************/
@@ -1569,7 +1572,6 @@ void SATEncoderConjunctiveSentences::handle_null_expression(int w)
 
 void SATEncoderConjunctiveSentences::determine_satisfaction(int w, char* name)
 {
-#ifdef USE_FAT_LINKAGES
   if (!parse_options_get_use_fat_links(_opts) ||
       !isConnectiveOrComma(w)) {
     // Non-conjunctive words must have their tags satisfied
@@ -1578,9 +1580,6 @@ void SATEncoderConjunctiveSentences::determine_satisfaction(int w, char* name)
     // Tags of conjunctive words are satisfied iff they are not fat-linked
     either_tag_or_fat_link(w, Lit(_variables->string(name)));
   }
-#else
-  generate_literal(Lit(_variables->string(name)));
-#endif /* USE_FAT_LINKAGES */
 }
 
 
@@ -1639,7 +1638,6 @@ void SATEncoderConjunctiveSentences::generate_satisfaction_for_connector(int wi,
       generate_link_top_cw_iff_link_cw(wj, wi, pi, Ci);
     }
 
-#ifdef USE_FAT_LINKAGES
     // Commas cannot be directly connected if they have fat links down
     if (parse_options_get_use_fat_links(_opts) &&
         isComma(_sent, wj)) {
@@ -1650,7 +1648,6 @@ void SATEncoderConjunctiveSentences::generate_satisfaction_for_connector(int wi,
       clause.push(~Lit(_variables->link_top_cw(wj, wi, pi, Ci)));
       add_clause(clause);
     }
-#endif /* USE_FAT_LINKAGES */
   }
 
   vec<Lit> _link_cw_;
@@ -1687,7 +1684,6 @@ void SATEncoderConjunctiveSentences::add_additional_power_pruning_conditions(vec
   clause.push(Lit(_variables->string(str)));
 }
 
-#ifdef USE_FAT_LINKAGES
 void SATEncoderConjunctiveSentences::generate_encoding_specific_clauses() {
   generate_label_compatibility();
   generate_fat_link_existence();
@@ -1711,7 +1707,6 @@ void SATEncoderConjunctiveSentences::init_connective_words() {
     }
   }
 }
-#endif /* USE_FAT_LINKAGES */
 
 /* If there is a direct link between a connective word wi and a
    connector (w,p), then there is an indirect link between wi and (w, p).
@@ -1761,34 +1756,21 @@ void SATEncoderConjunctiveSentences::generate_link_top_cw_up_definition(int wj, 
 
   for (int k = 0; k < Wk.size(); k++) {
     int wk = Wk[k];
-#ifdef USE_FAT_LINKAGES
     clause.growTo(4);
     clause[0] = link_top_cw_wj;
     clause[1] = ~link_cw_wj;
     clause[2] = ~Lit(_variables->fat_link(wj, wk));
     clause[3] = Lit(_variables->link_cw(wk, wi, pi, Ci));
-#else
-    clause.growTo(3);
-    clause[0] = link_top_cw_wj;
-    clause[1] = ~link_cw_wj;
-    clause[2] = Lit(_variables->link_cw(wk, wi, pi, Ci));
-#endif /* USE_FAT_LINKAGES */
     add_clause(clause);
   }
 
   clause.clear();
   for (int k = 0; k < Wk.size(); k++) {
     int wk = Wk[k];
-#ifdef USE_FAT_LINKAGES
     clause.growTo(3);
     clause[0] = ~link_top_cw_wj;
     clause[1] = ~Lit(_variables->fat_link(wj, wk));
     clause[2] = ~Lit(_variables->link_cw(wk, wi, pi, Ci));
-#else
-    clause.growTo(2);
-    clause[0] = ~link_top_cw_wj;
-    clause[1] = ~Lit(_variables->link_cw(wk, wi, pi, Ci));
-#endif /* USE_FAT_LINKAGES */
     add_clause(clause);
   }
 
@@ -1796,12 +1778,10 @@ void SATEncoderConjunctiveSentences::generate_link_top_cw_up_definition(int wj, 
   clause.clear();
   clause.push(~link_cw_wj);
   clause.push(link_top_cw_wj);
-#ifdef USE_FAT_LINKAGES
   for (int k = 0; k < Wk.size(); k++) {
     int wk = Wk[k];
     clause.push(Lit(_variables->fat_link(wj, wk)));
   }
-#endif /* USE_FAT_LINKAGES */
   add_clause(clause);
 
 
@@ -1823,16 +1803,10 @@ void SATEncoderConjunctiveSentences::generate_link_top_cw_up_definition(int wj, 
     clause.clear();
     for (int k = 0; k < Wk.size(); k++) {
       int wk = Wk[k];
-#ifdef USE_FAT_LINKAGES
       clause.growTo(3);
       clause[0] = ~Lit(_variables->fat_link(wj, wk));
       clause[1] = ~Lit(_variables->link_top_cw(wj, wi, pi, Ci));
       clause[2] = ~Lit(_variables->link_top_cw(wk, wi, pi, Ci));
-#else
-      clause.growTo(2);
-      clause[0] = ~Lit(_variables->link_top_cw(wj, wi, pi, Ci));
-      clause[1] = ~Lit(_variables->link_top_cw(wk, wi, pi, Ci));
-#endif /* USE_FAT_LINKAGES */
       add_clause(clause);
     }
   }
@@ -1907,29 +1881,21 @@ void SATEncoderConjunctiveSentences::generate_link_cw_connective_definition(int 
     if (!(link_cw_possible_cache[wk1 - wl] = link_cw_possible(wj, pj, Cj, dir, wk1, wl, wr)))
       continue;
 
-#ifdef USE_FAT_LINKAGES
     clause.growTo(3);
     clause[0] = ~link_cw_k1;
     clause[1] = ~Lit(_variables->fat_link(wk1, wi));
     clause[2] = Lit(_variables->link_cw(wk1, wj, pj, Cj));
-#else
-    clause.growTo(2);
-    clause[0] = ~link_cw_k1;
-    clause[1] = Lit(_variables->link_cw(wk1, wj, pj, Cj));
-#endif /* USE_FAT_LINKAGES */
     add_clause(clause);
   }
 
   clause.clear();
   clause.push(~link_cw_k1);
-#ifdef USE_FAT_LINKAGES
   for (int wk1 = wl; wk1 < wr; wk1++) {
     if (!link_cw_possible_cache[wk1 - wl])
       continue;
 
     clause.push(Lit(_variables->fat_link(wk1, wi)));
   }
-#endif /* USE_FAT_LINKAGES */
   add_clause(clause);
 
   // Faster
@@ -1948,16 +1914,10 @@ void SATEncoderConjunctiveSentences::generate_link_cw_connective_definition(int 
   for (int wk1 = wl; wk1 < wr; wk1++) {
     if (!link_cw_possible_cache[wk1 - wl])
       continue;
-#ifdef USE_FAT_LINKAGES
     clause.growTo(3);
     clause[0] = ~Lit(_variables->fat_link(wk1, wi));
     clause[1] = ~Lit(_variables->link_cw(wk1, wj, pj, Cj));
     clause[2] = link_cw_k1;
-#else
-    clause.growTo(2);
-    clause[0] = ~Lit(_variables->link_cw(wk1, wj, pj, Cj));
-    clause[1] = link_cw_k1;
-#endif /* USE_FAT_LINKAGES */
     add_clause(clause);
   }
 
@@ -1978,29 +1938,21 @@ void SATEncoderConjunctiveSentences::generate_link_cw_connective_definition(int 
     if (!(link_cw_possible_cache[wk2 - wl] = link_cw_possible(wj, pj, Cj, dir, wk2, wl, wr)))
       continue;
 
-#ifdef USE_FAT_LINKAGES
     clause.growTo(3);
     clause[0] = ~link_cw_k2;
     clause[1] = ~Lit(_variables->fat_link(wk2, wi));
     clause[2] = Lit(_variables->link_cw(wk2, wj, pj, Cj));
-#else
-    clause.growTo(2);
-    clause[0] = ~link_cw_k2;
-    clause[1] = Lit(_variables->link_cw(wk2, wj, pj, Cj));
-#endif /* USE_FAT_LINKAGES */
     add_clause(clause);
   }
 
   clause.clear();
   clause.push(~link_cw_k2);
-#ifdef USE_FAT_LINKAGES
   for (int wk2 = wl; wk2 < wr; wk2++) {
     if (!link_cw_possible_cache[wk2 - wl])
       continue;
 
     clause.push(Lit(_variables->fat_link(wk2, wi)));
   }
-#endif /* USE_FAT_LINKAGES */
   add_clause(clause);
 
   // Faster
@@ -2018,16 +1970,10 @@ void SATEncoderConjunctiveSentences::generate_link_cw_connective_definition(int 
   for (int wk2 = wl; wk2 < wr; wk2++) {
     if (!link_cw_possible_cache[wk2 - wl])
       continue;
-#ifdef USE_FAT_LINKAGES
     clause.growTo(3);
     clause[0] = ~Lit(_variables->fat_link(wk2, wi));
     clause[1] = ~Lit(_variables->link_cw(wk2, wj, pj, Cj));
     clause[2] = link_cw_k2;
-#else
-    clause.growTo(2);
-    clause[0] = ~Lit(_variables->link_cw(wk2, wj, pj, Cj));
-    clause[1] = link_cw_k2;
-#endif /* USE_FAT_LINKAGES */
     add_clause(clause);
   }
 
@@ -2048,7 +1994,6 @@ void SATEncoderConjunctiveSentences::generate_link_cw_connective_impossible(int 
 }
 
 
-#ifdef USE_FAT_LINKAGES
 void SATEncoderConjunctiveSentences::generate_fat_link_up_definitions() {
   Lit lhs;
   vec<Lit> rhs;
@@ -2478,7 +2423,6 @@ void SATEncoderConjunctiveSentences::either_tag_or_fat_link(int w, Lit tag) {
 
   DEBUG_print("----end either tag or fat_link");
 }
-#endif /* USE_FAT_LINKAGES */
 
 // Check if there can be a connection between the connector (wi, pi)
 // with the word w when the word w has fat links down
@@ -2520,7 +2464,6 @@ bool SATEncoderConjunctiveSentences::link_cw_possible(int wi, int pi, const char
 }
 
 
-#ifdef USE_FAT_LINKAGES
 void SATEncoderConjunctiveSentences::generate_link_top_ww_connective_comma_definition(Lit lhs, int w1, int w2) {
   DEBUG_print("---- link_top_connective_comma");
 
@@ -2574,8 +2517,6 @@ void SATEncoderConjunctiveSentences::generate_link_top_ww_connective_comma_defin
 
   DEBUG_print("---- end link_top_connective_comma");
 }
-#endif /* USE_FAT_LINKAGES */
-
 
 void SATEncoderConjunctiveSentences::generate_linked_definitions() {
   Matrix<int> _thin_link_possible;
@@ -2642,12 +2583,10 @@ void SATEncoderConjunctiveSentences::generate_linked_definitions() {
       rhs.clear();
       if (_thin_link_possible(w1, w2))
         rhs.push(Lit(_variables->thin_link(w1, w2)));
-#ifdef USE_FAT_LINKAGES
       if (isConnectiveOrComma(w1) && w2 < _sent->length - 1)
         rhs.push(Lit(_variables->fat_link(w2, w1)));
       if (isConnectiveOrComma(w2) && w1 > 0)
         rhs.push(Lit(_variables->fat_link(w1, w2)));
-#endif /* USE_FAT_LINKAGES */
 
       if (rhs.size() > 0) {
         lhs = Lit(_variables->linked(w1, w2));
@@ -2705,7 +2644,6 @@ void SATEncoderConjunctiveSentences::get_satisfied_link_top_cw_connectors(int wo
     }
   } else {
 
-#ifdef USE_FAT_LINKAGES
     // Find two words that are fat_linked up to the top word
     for (int w = 1; w < _sent->length - 1; w++) {
       if (w == top_word)
@@ -2714,7 +2652,6 @@ void SATEncoderConjunctiveSentences::get_satisfied_link_top_cw_connectors(int wo
         get_satisfied_link_top_cw_connectors(word, w, link_top_cw_vars);
       }
     }
-#endif /* USE_FAT_LINKAGES */
   }
 }
 
@@ -2731,7 +2668,6 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
 
     const Variables::LinkedVar* var = _variables->linked_variable(*i);
 
-#ifdef USE_FAT_LINKAGES
     // Check if words are connected with a fat-link
     bool fl_lr = 0 < var->left_word && var->right_word < _sent->length - 1 &&
       parse_options_get_use_fat_links(_opts) &&
@@ -2761,7 +2697,6 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
       current_link++;
       fat = true;
     } else
-#endif /* USE_FAT_LINKAGES */
     {
       // a thin link
       std::vector<int> link_top_cw_vars_right;
@@ -2814,6 +2749,7 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
   pi->N_links = current_link;
   return fat;
 }
+#endif /* USE_FAT_LINKAGES */
 
 
 /****************************************************************************
@@ -2825,14 +2761,13 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   if (encoder) delete encoder;
 
   // Prepare for parsing - extracted for "preparation.c"
-  build_deletable(sent, 0);
 #ifdef USE_FAT_LINKAGES
+  build_deletable(sent, 0);
   build_effective_dist(sent, 0);
 #endif /* USE_FAT_LINKAGES */
   init_count(sent);
 #ifdef USE_FAT_LINKAGES
   count_set_effective_distance(sent);
-#endif /* USE_FAT_LINKAGES */
 
   bool conjunction = FALSE;
   if (parse_options_get_use_fat_links(opts)) {
@@ -2847,6 +2782,9 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
     DEBUG_print("Conjunction free sentence\n");
     encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
   }
+#else
+  encoder = new SATEncoderConjunctionFreeSentences(sent, opts);
+#endif /* USE_FAT_LINKAGES */
   sent->hook = encoder;
   encoder->encode();
 

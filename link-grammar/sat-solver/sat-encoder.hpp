@@ -225,7 +225,9 @@ protected:
   void generate_and(vec<Lit>& vect);
   void generate_or(vec<Lit>& vect);
   void generate_xor_conditions(vec<Lit>& vect);
+#ifdef USE_FAT_LINKAGES
   void generate_conditional_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs);
+#endif /* USE_FAT_LINKAGES */
   void generate_conditional_lr_implication_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs);
   void generate_conditional_lr_implication_or_definition(Lit condition1, Lit condition2, Lit lhs, vec<Lit>& rhs);
 
@@ -312,6 +314,7 @@ public:
 /*******************************************************************************
  *              SAT encoding for sentences that contain conjunction.           *
  *******************************************************************************/
+#ifdef USE_FAT_LINKAGES
 class SATEncoderConjunctiveSentences : public SATEncoder {
 public:
   SATEncoderConjunctiveSentences(Sentence sent, Parse_Options  opts)
@@ -328,7 +331,6 @@ private:
 
   virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr);
 
-#ifdef USE_FAT_LINKAGES
   virtual void generate_encoding_specific_clauses();
 
   // various fat-link conditions
@@ -343,7 +345,6 @@ private:
   void generate_fat_link_existence();
   void generate_fat_link_neighbor();
   void generate_label_compatibility();
-#endif /* USE_FAT_LINKAGES */
 
   // link_cw variables
 
@@ -381,3 +382,4 @@ private:
     return _is_connective_or_comma[w];
   }
 };
+#endif /* USE_FAT_LINKAGES */
