@@ -15,7 +15,7 @@ char* fast_sprintf(char* buffer, int num) {
   }
 
   *buffer = '\0';
-  
+
   return buffer;
 }
 

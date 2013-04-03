@@ -3,9 +3,9 @@
 
 #include <string>
 
-/* 
-   Trie that supports strings made out of alphabeth letters, 
-   digits and underscores 
+/*
+   Trie that supports strings made out of alphabeth letters,
+   digits and underscores
 */
 template<class T>
 class Trie {
@@ -28,7 +28,7 @@ private:
 
   // Number of supported chars - digits + upper + lower + other
   const static int NUM_CHARS = 10 + 1 + 10 + 1;
-  // hash chars 
+  // hash chars
   int char_to_pos(char c);
 
   bool _terminal;
@@ -38,7 +38,7 @@ private:
 
 
 template <class T>
-Trie<T>::Trie() 
+Trie<T>::Trie()
   : _terminal(false) {
   memset(_next, 0, NUM_CHARS*sizeof(Trie*));
 }
@@ -55,19 +55,19 @@ Trie<T>::~Trie() {
 template <class T>
 int Trie<T>::char_to_pos(char c) {
   static int pos[] = {
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
-    -1, -1, -1, -1, -1, -1, -1, 
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    -1, -1, -1, -1, -1, -1, -1,
 //   A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T   U   V   W   X   Y   Z
-    -1, -1, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-    -1, -1, -1, -1, 11, -1, 
+    -1, -1, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, 11, -1,
 //   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z
     -1, -1, 12, 13, 14, 15, -1, -1, 16, -1, -1, 17, -1, 18, -1, -1, -1, 19, -1, -1, 20, -1, 21, -1, -1, -1};
   assert(pos[c] != -1, "NOT FOUND");
   return pos[c];
-  /*  
+  /*
   if ('0' <= c && c <= '9')
     return c-'0' + 26 + 26;
   if (c == 'c')

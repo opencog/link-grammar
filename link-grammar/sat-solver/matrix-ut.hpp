@@ -40,7 +40,7 @@ protected:
   virtual int pos (int i, int j, int n) const {
     return n*i + j;
   }
-  
+
   virtual int size(int n) const {
     return n*n;
   }
@@ -52,7 +52,7 @@ protected:
 template <class T>
 class MatrixUpperTriangle : public Matrix<T> {
 public:
-  MatrixUpperTriangle(int n = 1, T init = T()) 
+  MatrixUpperTriangle(int n = 1, T init = T())
     : Matrix<T>(n, init) {
   }
 

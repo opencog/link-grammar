@@ -32,7 +32,7 @@ public:
 
   // Solve the formula, returning the next linkage.
   Linkage get_next_linkage();
- 
+
 protected:
 
   /**
@@ -53,8 +53,8 @@ protected:
   virtual void determine_satisfaction(int w, char* name) = 0;
 
   // Generates satisfaction condition for the connector (wi, pi)
-  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
-						   char dir, bool multi, int cost, char* var) = 0;
+  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
+                                                   char dir, bool multi, int cost, char* var) = 0;
 
   // Definition of link_cw((wi, pi), wj) variables when wj is an ordinary word
   void generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci, char dir, int cost, int wj);
@@ -68,7 +68,7 @@ protected:
 
   // Number of connectors in an expression
   int num_connectors(Exp* e);
-  
+
   // This expression can be matched without using any connectors of
   // the given direction
   static int  empty_connectors(Exp* exp, char dir);
@@ -78,21 +78,21 @@ protected:
   static int  non_empty_connectors(Exp* exp, char dir);
 
   // Trailing connectors of a given direction in the given expression
-  void trailing_connectors(int w, Exp* exp, char dir, int& dfs_position, 
-			   std::vector<PositionConnector*>& connectors);
-  bool trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position, 
-				   std::vector<PositionConnector*>& connectors);
+  void trailing_connectors(int w, Exp* exp, char dir, int& dfs_position,
+                           std::vector<PositionConnector*>& connectors);
+  bool trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
+                                   std::vector<PositionConnector*>& connectors);
 
   // Connectors of the given direction that cannot be trailing
   // connectors
   void certainly_non_trailing(int w, Exp* exp, char dir, int& dfs_position,
-			      std::vector<PositionConnector*>& connectors, bool has_right);
+                              std::vector<PositionConnector*>& connectors, bool has_right);
 
   // Connectors that can act as leading connectors of a given
   // direction in the given direction
-  void leading_connectors(int w, Exp* exp, char dir, int& dfs_position, 
-			  std::vector<PositionConnector*>& connectors);
-  
+  void leading_connectors(int w, Exp* exp, char dir, int& dfs_position,
+                          std::vector<PositionConnector*>& connectors);
+
   /**
    *  Definitions of linked(wi, wj) variables.
    */
@@ -165,9 +165,9 @@ protected:
 
   // Power pruning
   void power_prune();
-  // auxiliary method that extends power pruning clauses with additional literals 
+  // auxiliary method that extends power pruning clauses with additional literals
   // (e.g., link should not be power-prunned if there words are fat-linked)
-  virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr) 
+  virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr)
   {}
 
 
@@ -175,7 +175,7 @@ protected:
   /**
    *   Cost cutoff
    */
-  
+
   // Cost cutoff treshold value. Nodes of the expression tree are
   // pruned if their cost exceeds this value. Cost cutoff is performed
   // during satisfaction condition generating.
@@ -193,12 +193,12 @@ protected:
 #endif
     for (int i = 0; i < clause.size(); i++) {
       while (var(clause[i]) >= _solver->nVars()) {
-	_solver->newVar();
+        _solver->newVar();
       }
     }
     _solver->addClause(clause);
   }
-  
+
 
   // Print clause literals to standard output
   static void print_clause(const vec<Lit>& clause) {
@@ -207,7 +207,7 @@ protected:
     cout << "Clause: ." << num++ << ". ";
     for (int i = 0; i < clause.size(); i++)
       cout << (sign(clause[i]) ? '-' : '+') << var(clause[i]) << " ";
-    cout << endl;  
+    cout << endl;
   }
 
 
@@ -242,16 +242,16 @@ protected:
 
 
   // Find all matching connectors between two words
-  void find_all_matches_between_words(int w1, int w2, 
-				      std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches);
+  void find_all_matches_between_words(int w1, int w2,
+                                      std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches);
 
   // Check if the connector (wi, pi) can match any word in [l, r)
-  bool matches_in_interval(int wi, int pi, int l, int r);  
-  
-  
+  bool matches_in_interval(int wi, int pi, int l, int r);
+
+
   // Join several expressions corresponding to different dictionary
   // entries of a word into a single expression.
-  Exp* join_alternatives(int w); 
+  Exp* join_alternatives(int w);
 
   // Erase auxiliary expression tree nodes obtained by joining several
   // expressions into one.
@@ -278,7 +278,7 @@ protected:
 
   // The MiniSAT solver instance. The solver keeps the set of clauses.
   Solver* _solver;
-  
+
   // Sentence that is being parsed.
   Sentence _sent;
 
@@ -299,8 +299,8 @@ public:
 
   virtual void handle_null_expression(int w);
   virtual void determine_satisfaction(int w, char* name);
-  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
-						   char dir, bool multi, int cost, char* var);
+  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
+                                                   char dir, bool multi, int cost, char* var);
 
 
   virtual void generate_linked_definitions();
@@ -317,20 +317,20 @@ public:
   SATEncoderConjunctiveSentences(Sentence sent, Parse_Options  opts)
     : SATEncoder(sent, opts) {
     init_connective_words();
-  }  
+  }
 
 private:
   virtual void handle_null_expression(int w);
   virtual void determine_satisfaction(int w, char* name);
 
-  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci, 
-						   char dir, bool multi, int cost, char* var);
+  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
+                                                   char dir, bool multi, int cost, char* var);
 
   virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr);
 
   virtual void generate_encoding_specific_clauses();
 
-  // various fat-link conditions	
+  // various fat-link conditions
   void either_tag_or_fat_link(int w, Lit tag);
   void generate_fat_link_up_definitions();
   void generate_fat_link_down_definitions();
@@ -352,10 +352,10 @@ private:
   void generate_link_cw_connective_definition         (int wi, int pi, const char* Cj, int wj);
 
   // link_top_cw variables
-  void generate_link_top_cw_up_definition                  (int wi, 
-							    int wj, int pj, const char* Cj, bool multi);
-  void generate_link_top_cw_iff_link_cw                    (int wi, 
-							    int wj, int pj, const char* Cj);  
+  void generate_link_top_cw_up_definition                  (int wi,
+                                                            int wj, int pj, const char* Cj, bool multi);
+  void generate_link_top_cw_iff_link_cw                    (int wi,
+                                                            int wj, int pj, const char* Cj);
   // link_top_ww
   void generate_link_top_ww_connective_comma_definition    (Lit lhs, int wi, int wj);
 

@@ -6,18 +6,18 @@ void SATEncoder::generate_power_pruning_right(int w, Exp* exp, int& dfs_position
     dfs_position++;
     if (exp->dir == '+' && !exp->multi) {
       for (int w_l = w + 2; w_l < _sent->length; w_l++) {
-	if (_sent->word[w_l].x == NULL)
-	  continue;
+        if (_sent->word[w_l].x == NULL)
+          continue;
 
-	char name_l[MAX_VARIABLE_NAME];
-	sprintf(name_l, "w%d", w_l);
-	bool join = _sent->word[w_l].x->next != NULL;
-	Exp* e_l = join ? join_alternatives(w_l) : _sent->word[w_l].x->exp;
-	int dfs_position_l = 0;
-	generate_power_pruning_left(w_l, e_l, dfs_position_l, empty_conditions, name_l, NULL,
-				    w, dfs_position, exp->u.string);
-	if (join)
-	  free_alternatives(e_l);
+        char name_l[MAX_VARIABLE_NAME];
+        sprintf(name_l, "w%d", w_l);
+        bool join = _sent->word[w_l].x->next != NULL;
+        Exp* e_l = join ? join_alternatives(w_l) : _sent->word[w_l].x->exp;
+        int dfs_position_l = 0;
+        generate_power_pruning_left(w_l, e_l, dfs_position_l, empty_conditions, name_l, NULL,
+                                    w, dfs_position, exp->u.string);
+        if (join)
+          free_alternatives(e_l);
       }
     }
   } else if (exp->type == OR_type) {
@@ -28,14 +28,14 @@ void SATEncoder::generate_power_pruning_right(int w, Exp* exp, int& dfs_position
       int i;
       E_list* l;
       for (l = exp->u.l, i = 0; l != NULL; l = l->next, i++) {
-	char new_var[MAX_VARIABLE_NAME];
-	if (var != NULL) {
-	  sprintf(new_var, "%s_d%d", var, i);
-	} else {
-	  sprintf(new_var, "d%d", i);
-	}
+        char new_var[MAX_VARIABLE_NAME];
+        if (var != NULL) {
+          sprintf(new_var, "%s_d%d", var, i);
+        } else {
+          sprintf(new_var, "d%d", i);
+        }
 
-	generate_power_pruning_right(w, l->e, dfs_position, empty_conditions, name, new_var);
+        generate_power_pruning_right(w, l->e, dfs_position, empty_conditions, name, new_var);
       }
     }
   } else if (exp->type == AND_type) {
@@ -46,14 +46,14 @@ void SATEncoder::generate_power_pruning_right(int w, Exp* exp, int& dfs_position
       int i;
       E_list* l;
       for (l = exp->u.l, i = 0; l != NULL; l = l->next, i++) {
-	char new_var[MAX_VARIABLE_NAME];
-	if (var != NULL) {
-	  sprintf(new_var, "%s_c%d", var, i);
-	} else {
-	  sprintf(new_var, "c%d", i);
-	}
-	generate_power_pruning_right(w, l->e, dfs_position, empty_conditions, name, new_var);
-	empty_conditions.push_back(-_variables->epsilon(name, new_var, '+'));
+        char new_var[MAX_VARIABLE_NAME];
+        if (var != NULL) {
+          sprintf(new_var, "%s_c%d", var, i);
+        } else {
+          sprintf(new_var, "c%d", i);
+        }
+        generate_power_pruning_right(w, l->e, dfs_position, empty_conditions, name, new_var);
+        empty_conditions.push_back(-_variables->epsilon(name, new_var, '+'));
       }
     }
   }
@@ -79,19 +79,19 @@ void SATEncoder::generate_power_pruning_left(int w, Exp* exp, int& dfs_position,
       c2.priority = THIN_priority;
       c2.string = exp->u.string;
 
-      //     cout << name_r << "_" << w_r << "_" << pos_r << " vs " 
-      //	   << exp->u.string << "_" << w << "_" << dfs_position << endl;
+      //     cout << name_r << "_" << w_r << "_" << pos_r << " vs "
+      //           << exp->u.string << "_" << w << "_" << dfs_position << endl;
 
       if (!WordTag::match(c1, '+', c2))
-	return;
-	
+        return;
+
 
       cout << "POS: ";
-      cout << name_r << "_." << w_r << "._." << pos_r << ". vs " 
-	   << exp->u.string << "_." << w << "._." << dfs_position << endl;
+      cout << name_r << "_." << w_r << "._." << pos_r << ". vs "
+           << exp->u.string << "_." << w << "._." << dfs_position << endl;
 
-      empty_conditions.push_back(-_variables->link(w_r, pos_r, name_r, w, 
-						   dfs_position, exp->u.string));
+      empty_conditions.push_back(-_variables->link(w_r, pos_r, name_r, w,
+                                                   dfs_position, exp->u.string));
       generate_or(empty_conditions);
     }
   } else if (exp->type == OR_type) {
@@ -102,14 +102,14 @@ void SATEncoder::generate_power_pruning_left(int w, Exp* exp, int& dfs_position,
       int i;
       E_list* l;
       for (l = exp->u.l, i = 0; l != NULL; l = l->next, i++) {
-	char new_var[MAX_VARIABLE_NAME];
-	if (var != NULL) {
-	  sprintf(new_var, "%s_d%d", var, i);
-	} else {
-	  sprintf(new_var, "d%d", i);
-	}
+        char new_var[MAX_VARIABLE_NAME];
+        if (var != NULL) {
+          sprintf(new_var, "%s_d%d", var, i);
+        } else {
+          sprintf(new_var, "d%d", i);
+        }
 
-	generate_power_pruning_left(w, l->e, dfs_position, empty_conditions, name, new_var, w_r, pos_r, name_r);
+        generate_power_pruning_left(w, l->e, dfs_position, empty_conditions, name, new_var, w_r, pos_r, name_r);
       }
     }
   } else if (exp->type == AND_type) {
@@ -120,14 +120,14 @@ void SATEncoder::generate_power_pruning_left(int w, Exp* exp, int& dfs_position,
       int i;
       E_list* l;
       for (l = exp->u.l, i = 0; l != NULL; l = l->next, i++) {
-	char new_var[MAX_VARIABLE_NAME];
-	if (var != NULL) {
-	  sprintf(new_var, "%s_c%d", var, i);
-	} else {
-	  sprintf(new_var, "c%d", i);
-	}
-	generate_power_pruning_left(w, l->e, dfs_position, empty_conditions, name, new_var, w_r, pos_r, name_r);
-	empty_conditions.push_back(-_variables->epsilon(name, new_var, '-'));
+        char new_var[MAX_VARIABLE_NAME];
+        if (var != NULL) {
+          sprintf(new_var, "%s_c%d", var, i);
+        } else {
+          sprintf(new_var, "c%d", i);
+        }
+        generate_power_pruning_left(w, l->e, dfs_position, empty_conditions, name, new_var, w_r, pos_r, name_r);
+        empty_conditions.push_back(-_variables->epsilon(name, new_var, '-'));
       }
     }
   }
@@ -136,14 +136,14 @@ void SATEncoder::generate_power_pruning_left(int w, Exp* exp, int& dfs_position,
 
 bool SATEncoder::pp_match(const char* name) {
   //  cout << "PPMATCH: " << name << endl;
-  for (int w = 0; w < _sent->length; w++) 
+  for (int w = 0; w < _sent->length; w++)
     if (_word_tags[w].pp_check(name))
       return true;
   return false;
 }
 
 bool SATEncoder::pp_check(const char* connector) {
-  if (_sent->dict->postprocessor == NULL) 
+  if (_sent->dict->postprocessor == NULL)
     return true;
 
   pp_knowledge * knowledge;
@@ -155,9 +155,9 @@ bool SATEncoder::pp_check(const char* connector) {
     pp_linkset * link_set;
 
     rule = knowledge->contains_one_rules[i]; /* the ith rule */
-    selector = rule.selector;				/* selector string for this rule */
-    link_set = rule.link_set;				/* the set of criterion links */
-    if (strchr(selector, '*') != NULL) 
+    selector = rule.selector;                                /* selector string for this rule */
+    link_set = rule.link_set;                                /* the set of criterion links */
+    if (strchr(selector, '*') != NULL)
       continue;  /* If it has a * forget it */
     if (!post_process_match(selector, connector)) continue;
     cout << "Trigger: " << connector << endl;
@@ -166,45 +166,45 @@ bool SATEncoder::pp_check(const char* connector) {
     bool match_possible = false;
     for (int hashval = 0; hashval < link_set->hash_table_size && !match_possible; hashval++) {
       for (p = link_set->hash_table[hashval]; p!=NULL && !match_possible; p=p->next) {
-	const char * t;
-	char name[20], *s;
-	strncpy(name, p->str, sizeof(name)-1);
-	name[sizeof(name)-1] = '\0';
+        const char * t;
+        char name[20], *s;
+        strncpy(name, p->str, sizeof(name)-1);
+        name[sizeof(name)-1] = '\0';
 
-	cout << "NAME: " << name << endl;
+        cout << "NAME: " << name << endl;
 
-	for (s = name; isupper((int)*s); s++)
-	  ;
-	for (;*s != '\0'; s++) 
-	  if (*s != '*') 
-	    *s = '#';
-	for (s = name, t = p->str; isupper((int) *s); s++, t++)
-	  ;
-	
-	int bad = 0;
-	int n_subscripts = 0;
-	for (;*s != '\0' && bad==0; s++, t++) {
-	  if (*s == '*')
-	    continue;
-	  n_subscripts++;
-	  /* after the upper case part, and is not a * so must be a regular subscript */
-	  *s = *t;
-	  if (!pp_match(name))
-	    bad++;
-	  *s = '#';
-	}
+        for (s = name; isupper((int)*s); s++)
+          ;
+        for (;*s != '\0'; s++)
+          if (*s != '*')
+            *s = '#';
+        for (s = name, t = p->str; isupper((int) *s); s++, t++)
+          ;
 
-	if (n_subscripts == 0) {
-	  /* now we handle the special case which occurs if there
-	     were 0 subscripts */
-	  if (!pp_match(name)) 
-	    bad++;
-	}
+        int bad = 0;
+        int n_subscripts = 0;
+        for (;*s != '\0' && bad==0; s++, t++) {
+          if (*s == '*')
+            continue;
+          n_subscripts++;
+          /* after the upper case part, and is not a * so must be a regular subscript */
+          *s = *t;
+          if (!pp_match(name))
+            bad++;
+          *s = '#';
+        }
 
-	/* now if bad==0 this criterion link does the job
-	   to satisfy the needs of the trigger link */
-	if (bad == 0) 
-	  match_possible = true;
+        if (n_subscripts == 0) {
+          /* now we handle the special case which occurs if there
+             were 0 subscripts */
+          if (!pp_match(name))
+            bad++;
+        }
+
+        /* now if bad==0 this criterion link does the job
+           to satisfy the needs of the trigger link */
+        if (bad == 0)
+          match_possible = true;
       }
     }
     if (!match_possible) {
@@ -226,7 +226,7 @@ bool WordTag::pp_check(const char* connector) {
       return true;
   for (i = _right_connectors.begin(); i != _right_connectors.end(); i++)
     if (post_process_match(connector, i->connector->string))
-      return true;	
+      return true;
   return false;
 }
 
@@ -235,7 +235,7 @@ static void split(const std::string& str, char c, std::vector<std::string>& part
   const char *s, *e;
   e = str.c_str();
   while(1) {
-    s = e + 1; 
+    s = e + 1;
     e = strchr(s, c);
     if (!e) {
       parts.push_back(str.substr(s - str.c_str()));

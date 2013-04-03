@@ -33,22 +33,22 @@ extern ostream& var_defs_stream;
 
 static char* construct_link_label(const char* connector1, const char* connector2) {
   char* result = (char*)xalloc((std::max(strlen(connector1), strlen(connector2)) + 1)*
-			       sizeof(char));
+                               sizeof(char));
   char* presult = result;
   while (*connector1 != '\0' && *connector2 != '\0') {
     if (*connector1 == '*')
       *presult++ = *connector2;
     else if (*connector2 == '*')
       *presult++ = *connector1;
-    else 
+    else
       *presult++ = std::max(*connector1, *connector2);
 
     connector1++;
     connector2++;
   }
-  while(*connector1 != '\0') 
+  while(*connector1 != '\0')
     *presult++ = *connector1++;
-  while(*connector2 != '\0') 
+  while(*connector2 != '\0')
     *presult++ = *connector2++;
   *presult = '\0';
   return result;
@@ -66,7 +66,7 @@ static bool labels_match(const char* label1, const char* label2) {
 
   while(*label1 != '\0' && *label2 != '\0') {
     if (*label1 != '*' && *label2 != '*' &&
-	*label1 != *label2)
+        *label1 != *label2)
       return false;
 
     label1++; label2++;
@@ -77,7 +77,7 @@ static bool labels_match(const char* label1, const char* label2) {
 ////////////////////////////////////////////////////////////////////////////
 class Variables {
 public:
-  Variables(Sentence sent) 
+  Variables(Sentence sent)
     :_var(0)
     ,_sent(sent)
     ,_linked_variable_map(sent->length, -1)
@@ -97,15 +97,15 @@ public:
     std::vector<LinkVar*>::iterator i;
     for (i = _link_variables.begin(); i != _link_variables.end(); i++) {
       if ((*i) != 0) {
-	xfree((*i)->label, strlen((*i)->label));
-	delete *i;
+        xfree((*i)->label, strlen((*i)->label));
+        delete *i;
       }
     }
     delete _guiding;
   }
-  
 
-  /* 
+
+  /*
    * General purpose variables specified by their names
    */
 
@@ -123,7 +123,7 @@ public:
   }
 
   // If the cost is explicitely given, guiding params are calculated
-  // using the cost. Any params set earlier are overridden. 
+  // using the cost. Any params set earlier are overridden.
   int string_cost(const char* name, int cost) {
     int var;
     var = string(name);
@@ -209,7 +209,7 @@ public:
    * Variables that specify that a direct link has been established
    * between the connectors ci of the word_i at position i and
    * cj of the word_j at position j
-   */ 
+   */
 
   // If guiding params are unknown, they are set do default
   int link(int wi, int pi, const char* ci, int wj, int pj, const char* cj) {
@@ -217,8 +217,8 @@ public:
     int var;
     if (!get_link_variable(wi, pi, wj, pj, var)) {
 #ifdef _VARS
-      var_defs_stream << "link_" << wi << "_" << pi << "_" << ci << "_" 
-		      << wj << "_" << pj << "_" << cj << "\t" << var << endl;
+      var_defs_stream << "link_" << wi << "_" << pi << "_" << ci << "_"
+                      << wj << "_" << pj << "_" << cj << "\t" << var << endl;
 #endif
       add_link_variable(wi, pi, ci, wj, pj, cj, var);
       _guiding->setLinkParameters(var, wi, ci, wj, cj, _link_variables[var]->label);
@@ -227,10 +227,10 @@ public:
     return var;
   }
 
-  // If the cost is specified, guiding params are calculated 
+  // If the cost is specified, guiding params are calculated
   // using the cost. Any guiding params that are set earlier are overridden
-  int link_cost(int wi, int pi, const char* ci, int wj, int pj, const char* cj, 
-		int cost) {
+  int link_cost(int wi, int pi, const char* ci, int wj, int pj, const char* cj,
+                int cost) {
     assert(wi < wj, "Variables: link should be ordered");
     int var = link(wi, pi, ci, wj, pj, cj);
     _guiding->setLinkParameters(var, wi, ci, wj, cj, link_variable(var)->label, cost);
@@ -251,8 +251,8 @@ public:
   // If guiding params for this variable are not set earlier, they are
   // now set to default
   int fat_link(int wi, int wj) {
-    assert(_sent->is_conjunction[wj] || strcmp(_sent->word[wj].string, ",") == 0, 
-	   "Fat link can up only to a connective word");
+    assert(_sent->is_conjunction[wj] || strcmp(_sent->word[wj].string, ",") == 0,
+           "Fat link can up only to a connective word");
     int var;
     if (!get_fat_link_variable(wi, wj, var)) {
 #ifdef _VARS
@@ -265,15 +265,15 @@ public:
     return var;
   }
 
-  /* 
-   *                   fat_link_neighbor(w) 
+  /*
+   *                   fat_link_neighbor(w)
    * It seems that connective words usually have fat links to at least one
    * neighboring word. This is a definitional variable for that notion and
-   * it can positively affect the search guiding. 
+   * it can positively affect the search guiding.
    */
   int neighbor_fat_link(int w) {
-    assert(_sent->is_conjunction[w] || strcmp(_sent->word[w].string, ",") == 0, 
-	   "Only connective words can have fat links down");
+    assert(_sent->is_conjunction[w] || strcmp(_sent->word[w].string, ",") == 0,
+           "Only connective words can have fat links down");
     int var;
     char name[MAX_VARIABLE_NAME];
     sprintf(name, "nfl_%d", w);
@@ -314,7 +314,7 @@ public:
    * between the word i and connector cj of the word_j at position
    * j.
    */
-  
+
   // If guiding params for this variable are not set earlier, they are
   // now set to default
   int link_cw(int wi, int wj, int pj, const char* cj) {
@@ -322,17 +322,17 @@ public:
     if (!get_link_cw_variable(wi, wj, pj, var)) {
 #ifdef _VARS
       var_defs_stream << "link_cw_"
-		      << "(" << wj << "_" << pj << "_" << cj  << ")_"  
-		      << wi
-		      << "\t" << var << endl;
+                      << "(" << wj << "_" << pj << "_" << cj  << ")_"
+                      << wi
+                      << "\t" << var << endl;
 #endif
       _guiding->setLinkCWParameters(var, wi, wj, cj);
     }
     assert(var != -1, "Var == -1");
     return var;
-  }  
+  }
 
-  
+
   /*
    *                 link_top_cw(wi, wj, pj)
    * Variables that specify that a connective word has been directly
@@ -348,10 +348,10 @@ public:
       _guiding->setLinkTopCWParameters(var, wi, wj, cj);
 #ifdef _VARS
       var_defs_stream << "link_top_cw_"
-		      << "(" << wj << "_" << pj << "_" << cj  << ")_" 
-		      << wi
-		      << "\t" << var << endl;
-#endif            
+                      << "(" << wj << "_" << pj << "_" << cj  << ")_"
+                      << wi
+                      << "\t" << var << endl;
+#endif
     }
     assert(var != -1, "Var == -1");
     return var;
@@ -404,7 +404,7 @@ public:
   }
 #endif
 
-  /* 
+  /*
    *      link(wi, pi, wj, pj)
    */
   // Returns the indices of all link variables
@@ -420,13 +420,13 @@ public:
 
   // Additional info about the link(wi, pi, wj, pj) variable
   struct LinkVar {
-    LinkVar(const std::string& _name, char* _label, 
-	    int _lw, int _lp, int _rw, int _rp, const char* _lc, const char* _rc) 
+    LinkVar(const std::string& _name, char* _label,
+            int _lw, int _lp, int _rw, int _rp, const char* _lc, const char* _rc)
       : name(_name), label(_label),
-	left_word(_lw), right_word(_rw), left_position(_lp), right_position(_rp),
-	left_connector(_lc), right_connector(_rc) {
+        left_word(_lw), right_word(_rw), left_position(_lp), right_position(_rp),
+        left_connector(_lc), right_connector(_rc) {
     }
-    
+
     std::string name;
     char* label;
     const char* left_connector;
@@ -442,8 +442,8 @@ public:
     return _link_variables[var];
   }
 
-  /* 
-   *       linked(wi, wj) 
+  /*
+   *       linked(wi, wj)
    */
   // Returns the indices of all linked variables
   const std::vector<int>& linked_variables() {
@@ -452,25 +452,25 @@ public:
 
   // Additional info about the linked(i, j) variable
   struct LinkedVar {
-    LinkedVar(int lw, int rw) 
+    LinkedVar(int lw, int rw)
       : left_word(lw), right_word(rw) {
     }
 
     int left_word;
     int right_word;
-  };  
+  };
 
   // Returns additional info about the given linked variable
   const LinkedVar* linked_variable(int var) {
     return _linked_variables[var];
   }
-  
 
 
-  /* 
+
+  /*
    *           link_top_cw((wi, pi), wj)
    */
-  
+
   // Returns indices of all link_top_cw variables
   const std::vector<int>& link_top_cw_variables() {
     return _link_top_cw_variables_indices;
@@ -478,10 +478,10 @@ public:
 
   // Additional info about the link_top_cw(wi, wj, pj) variable
   struct LinkTopCWVar {
-    LinkTopCWVar(const std::string& _name, int _tw, int _cw, const char* _c) 
+    LinkTopCWVar(const std::string& _name, int _tw, int _cw, const char* _c)
       : name(_name), connector_word(_cw), top_word(_tw), connector(_c) {
     }
-    
+
     std::string name;
     char* label;
     const char* connector;
@@ -494,22 +494,22 @@ public:
     return _link_top_cw_variables[var];
   }
 
-  /* 
+  /*
    *           fat_link(wi, wj)
    */
-  // Returns indices of all fat-link variables 
+  // Returns indices of all fat-link variables
   const std::vector<int>& fat_link_variables() {
     return _fat_link_variables_indices;
   }
 
   // Additional info about the fatlink(wi, wj) variable
   struct FatLinkVar {
-    FatLinkVar(int down, int up) 
+    FatLinkVar(int down, int up)
       : down_word(down), up_word(up) {
     }
 
     int down_word;
-    int up_word;  
+    int up_word;
   };
 
   // Return additional info about the given fat-link variable
@@ -526,15 +526,15 @@ private:
   /* Sentence that is being parsed */
   Sentence _sent;
 
-  /* 
-   * Information about string variables 
+  /*
+   * Information about string variables
    */
 
   // What is the number of the variable with the given name?
   Trie<int> _variable_trie;
 
   /*
-   * Information about link(wi, pi, wj, pj) variables 
+   * Information about link(wi, pi, wj, pj) variables
    */
 
   // What is the number of the link(wi, pi, wj, pj) variable?
@@ -578,14 +578,14 @@ private:
   }
 
 
-  /* 
-   * Information about linked(i, j) variables 
+  /*
+   * Information about linked(i, j) variables
    */
 
 
   // What is the number of the linked(i, j) variable?
   MatrixUpperTriangle<int> _linked_variable_map;
-  
+
   // What are the numbers of all linked(i, j) variables?
   std::vector<int>  _linked_variables_indices;
 
@@ -596,7 +596,7 @@ private:
   void add_linked_variable(int i, int j, int var) {
     if (var >= _linked_variables.size()) {
       _linked_variables.resize(var + 1, 0);
-    }    
+    }
     _linked_variables[var] = new LinkedVar(i, j);
     _linked_variables_indices.push_back(var);
   }
@@ -607,8 +607,8 @@ private:
   // What is the number of the linked_max(i, j) variable?
   Matrix<int> _linked_max_variable_map;
 
-  /* 
-   * Information about the fat_link(i, j) variables 
+  /*
+   * Information about the fat_link(i, j) variables
    */
 
   // What is the number of the fatlink(wi, wj) variable?
@@ -624,19 +624,19 @@ private:
   void add_fatlink_variable(int i, int j, int var) {
     if (var >= _fat_link_variables.size()) {
       _fat_link_variables.resize(var + 1, 0);
-    }    
+    }
     _fat_link_variables[var] = new FatLinkVar(i, j);
     _fat_link_variables_indices.push_back(var);
   }
 
-  /* 
+  /*
    * Information about the thin_link(i, j) variables
    */
   // What is the number of the thin_link(i, j) variable?
   MatrixUpperTriangle<int> _thin_link_variable_map;
 
-  /* 
-   * Information about the link_top_cw(w, wj, pj) variables 
+  /*
+   * Information about the link_top_cw(w, wj, pj) variables
    */
 
   // What is the number of the link_top_cw(wi, wj, pj) variable?
@@ -671,14 +671,14 @@ private:
     _link_top_cw_variables_indices.push_back(var);
   }
 
-  /* 
+  /*
    *   Information about the link_cw(w, wj, pj) variables
    */
   // What is the number of the link_cw(wi, wj, pj) variable?
   Matrix< std::map<int, int> > _link_cw_variable_map;
 
-  /* 
-   * Information about the link_top_ww(i, j) variables 
+  /*
+   * Information about the link_top_ww(i, j) variables
    */
 
   // What is the number of the link_top_ww(i, j) variable?
@@ -709,23 +709,23 @@ private:
     try {
       int num = _variable_trie.lookup(name);
       if (num != Trie<int>::NOT_FOUND) {
-	var = num;
-	return true;
+        var = num;
+        return true;
       }
       else {
-	var = get_fresh_var();
-	_variable_trie.insert(name, var);
-	return false;
+        var = get_fresh_var();
+        _variable_trie.insert(name, var);
+        return false;
       }
     } catch (const std::string& s) {
-      cout << s << endl; 
+      cout << s << endl;
       exit(EXIT_FAILURE);
     }
   }
 
-  
-  bool get_2int_variable(int i, int j, int& var, 
-			 Matrix<int>& mp) {
+
+  bool get_2int_variable(int i, int j, int& var,
+                         Matrix<int>& mp) {
     var = mp(i, j);
     if (var == -1) {
       var = get_fresh_var();
@@ -735,8 +735,8 @@ private:
     return true;
   }
 
-  bool get_3int_variable(int i, int j, int pj, int& var, 
-			 Matrix< std::map<int, int> >& mp) {
+  bool get_3int_variable(int i, int j, int pj, int& var,
+                         Matrix< std::map<int, int> >& mp) {
     std::map<int, int>& m = mp(i, j);
     std::map<int, int>::iterator it = m.find(pj);
     if (it == m.end()) {
@@ -749,8 +749,8 @@ private:
     }
   }
 
-  bool get_4int_variable(int i, int pi, int j, int pj, int& var, 
-			 Matrix< std::map<std::pair<int, int>, int> >& mp) {
+  bool get_4int_variable(int i, int pi, int j, int pj, int& var,
+                         Matrix< std::map<std::pair<int, int>, int> >& mp) {
     std::map< std::pair<int, int>, int >& m = mp(i, j);
     std::pair<int, int> p(pi, pj);
     std::map< std::pair<int, int>, int >::iterator it = m.find(p);
@@ -761,7 +761,7 @@ private:
     } else {
       var = it->second;
       return true;
-    }    
+    }
   }
 
   bool get_link_variable(int i, int pi, int j, int pj, int& var) {

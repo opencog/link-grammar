@@ -8,7 +8,7 @@
 class Guiding {
 public:
   struct SATParameters {
-    /* Should the variable with the given number be used as a decision 
+    /* Should the variable with the given number be used as a decision
        variable during the SAT search? */
     bool isDecision;
     /* What is the decision priority of the variable with the given number
@@ -40,8 +40,8 @@ public:
 
   /* link_cc variables */
   virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label) = 0;
-  virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label, 
-				     int cost) = 0;
+  virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label,
+                                     int cost) = 0;
 
   /* linked_variables */
   virtual void setLinkedParameters  (int var, int wi, int wj) {
@@ -86,9 +86,9 @@ public:
     for (int v = 0; v < _parameters.size(); v++) {
       solver->setDecisionVar(v, _parameters[v].isDecision);
       if (_parameters[v].isDecision) {
-	solver->setActivity(v, _parameters[v].priority);
-	/* TODO: make polarity double instead of boolean*/
-	solver->setPolarity(v, _parameters[v].polarity > 0.0);
+        solver->setActivity(v, _parameters[v].priority);
+        /* TODO: make polarity double instead of boolean*/
+        solver->setPolarity(v, _parameters[v].polarity > 0.0);
       }
     }
   }
@@ -119,7 +119,7 @@ public:
   double cost2priority(int cost) {
     return cost == 0 ? 0.0 : (double)(_sent->length + cost);
   }
-  
+
   CostDistanceGuiding(Sentence sent)
     : Guiding(sent) {
   }
@@ -128,18 +128,18 @@ public:
     bool isDecision = cost > 0.0;
     double priority = cost2priority(cost);
     double polarity = 0.0;
-    setParameters(var, isDecision, priority, polarity);        
+    setParameters(var, isDecision, priority, polarity);
   }
 
   virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label) {
     bool isDecision = true;
     double priority = 0.0;
     double polarity = 0.0;
-    setParameters(var, isDecision, priority, polarity);    
+    setParameters(var, isDecision, priority, polarity);
   }
 
-  virtual void setLinkParameters(int var, int i, const char* ci, int j, const char* cj, const char* label, 
-				 int cost)  {
+  virtual void setLinkParameters(int var, int i, const char* ci, int j, const char* cj, const char* label,
+                                 int cost)  {
     bool isDecision = true;
     double priority = cost2priority(cost);
     double polarity = 0.0;
@@ -173,7 +173,7 @@ public:
        isEndingInterpunction(_sent->word[j].alternatives[0])) {
       polarity = 1.0;
     }
-    if (i == 0 && j == _sent->length - 1 && 
+    if (i == 0 && j == _sent->length - 1 &&
       !isEndingInterpunction(_sent->word[j - 1].alternatives[0])) {
       polarity = 1.0;
     }
@@ -186,7 +186,7 @@ public:
     bool isDecision = true;
     double priority = _sent->length;
     double polarity = 1.0;
-    setParameters(var, isDecision, priority, polarity);    
+    setParameters(var, isDecision, priority, polarity);
   }
 #endif /* USE_FAT_LINKAGES */
 
@@ -200,7 +200,7 @@ public:
   double cost2priority(int cost) {
     return cost == 0 ? 0.0 : (double)(_sent->length + cost);
   }
-  
+
   CostDistanceGuidingOnlyLink(Sentence sent)
     : Guiding(sent) {
   }
@@ -209,18 +209,18 @@ public:
     bool isDecision = cost > 0.0;
     double priority = cost2priority(cost);
     double polarity = 0.0;
-    setParameters(var, isDecision, priority, polarity);        
+    setParameters(var, isDecision, priority, polarity);
   }
 
   virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label) {
     bool isDecision = true;
     double priority = _sent->length - (wj - wi);
     double polarity = wj - wi <= 3 ? 1.0 : 0.0;;
-    setParameters(var, isDecision, priority, polarity);    
+    setParameters(var, isDecision, priority, polarity);
   }
 
-  virtual void setLinkParameters(int var, int wi, const char* ci, int wj, const char* cj, const char* label, 
-				 int cost)  {
+  virtual void setLinkParameters(int var, int wi, const char* ci, int wj, const char* cj, const char* label,
+                                 int cost)  {
     bool isDecision = true;
     double priority = cost > 0 ? cost2priority(cost) : wj - wi;
     double polarity = wj - wi <= 3 ? 1.0 : 0.0;
@@ -250,7 +250,7 @@ public:
     bool isDecision = true;
     double priority = _sent->length;
     double polarity = 1.0;
-    setParameters(var, isDecision, priority, polarity);    
+    setParameters(var, isDecision, priority, polarity);
   }
 #endif /* USE_FAT_LINKAGES */
 

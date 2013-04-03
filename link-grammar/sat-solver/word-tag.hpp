@@ -14,9 +14,9 @@ extern "C" {
 
 struct PositionConnector {
   PositionConnector(Connector* c, char d, int w, int p, int cst, int pcst,
-		    bool lr, bool ll, const std::vector<int>& er, const std::vector<int>& el) 
+                    bool lr, bool ll, const std::vector<int>& er, const std::vector<int>& el)
     : connector(c), dir(d), word(w), position(p), cost(cst), parrent_cost(pcst),
-      leading_right(lr), leading_left(ll),  
+      leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el) {
     /*
     cout << c->string << " : ." << w << ". : ." << p << ". ";
@@ -62,7 +62,7 @@ class WordTag {
 private:
   std::vector<PositionConnector> _left_connectors;
   std::vector<PositionConnector> _right_connectors;
-  
+
   std::vector<char> _dir;
   std::vector<int> _position;
 
@@ -80,7 +80,7 @@ private:
   }
 
 public:
-  WordTag(int word, Variables* variables, Sentence sent, Parse_Options opts) 
+  WordTag(int word, Variables* variables, Sentence sent, Parse_Options opts)
     : _word(word), _variables(variables), _sent(sent), _opts(opts) {
     _match_possible.resize(_sent->length);
   }
@@ -104,7 +104,7 @@ public:
 
   void set_connector_length_limit(Connector* c) {
     int short_len = _opts->short_length;
-    if (short_len > UNLIMITED_LEN) 
+    if (short_len > UNLIMITED_LEN)
       short_len = UNLIMITED_LEN;
 
     Connector_set *conset = _sent->dict->unlimited_connector_set;
@@ -122,25 +122,25 @@ public:
     if (conjunction) {
       switch (dir) {
       case '+':
-	return ::prune_match(0, &cntr1, &cntr2);
+        return ::prune_match(0, &cntr1, &cntr2);
       case '-':
-	return ::prune_match(0, &cntr2, &cntr1);
+        return ::prune_match(0, &cntr2, &cntr1);
       default:
-	throw std::string("Unknown connector direction: ") + dir;
-      } 
+        throw std::string("Unknown connector direction: ") + dir;
+      }
     } else {
       return ::do_match(_sent, &cntr1, &cntr2, w1, w2);
     }
   }
 
-  void insert_connectors(Exp* exp, int& dfs_position, 
-			 bool& leading_right, bool& leading_left, 
-			 std::vector<int>& eps_right,
-			 std::vector<int>& eps_left, 
-			 char* var, bool root, int parrent_cost);
+  void insert_connectors(Exp* exp, int& dfs_position,
+                         bool& leading_right, bool& leading_left,
+                         std::vector<int>& eps_right,
+                         std::vector<int>& eps_left,
+                         char* var, bool root, int parrent_cost);
 
   // Caches information about the found matches to the _matches vector, and also
-  // updates the _matches vector of all connectors in the given tag. 
+  // updates the _matches vector of all connectors in the given tag.
   // In order to have all possible matches correctly cached, the function assumes that it is
   // iteratively called for all words in the sentence, where the tag is on the right side of
   // this word
@@ -150,13 +150,11 @@ public:
   void find_matches(int w, const char* C, char dir,  std::vector<PositionConnector*>& matches);
 
   // A simpler function: Can any connector in this word match a connector wi, pi?
-  // It is assumed that 
+  // It is assumed that
   bool match_possible(int wi, int pi) {
     return _match_possible[wi].find(pi) != _match_possible[wi].end();
   }
 
-
-  
 };
 
 #endif

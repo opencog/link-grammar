@@ -1,11 +1,11 @@
 #include "word-tag.hpp"
 #include "fast-sprintf.hpp"
 
-void WordTag::insert_connectors(Exp* exp, int& dfs_position, 
-				bool& leading_right, bool& leading_left, 
-				std::vector<int>& eps_right,
-				std::vector<int>& eps_left, 
-				char* var, bool root, int parrent_cost) {
+void WordTag::insert_connectors(Exp* exp, int& dfs_position,
+                                bool& leading_right, bool& leading_left,
+                                std::vector<int>& eps_right,
+                                std::vector<int>& eps_left,
+                                char* var, bool root, int parrent_cost) {
   int cost = parrent_cost + exp->cost;
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
@@ -16,23 +16,23 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     connector->multi = exp->multi;
     connector->string = name;
     set_connector_length_limit(connector);
-    
+
 
     switch(exp->dir) {
     case '+':
       _position.push_back(_right_connectors.size());
       _dir.push_back('+');
-      _right_connectors.push_back(PositionConnector(connector, '+', _word, dfs_position, exp->cost, cost, 
-						    leading_right, false, 
-						    eps_right, eps_left));
+      _right_connectors.push_back(PositionConnector(connector, '+', _word, dfs_position, exp->cost, cost,
+                                                    leading_right, false,
+                                                    eps_right, eps_left));
       leading_right = false;
       break;
     case '-':
       _position.push_back(_left_connectors.size());
       _dir.push_back('-');
       _left_connectors.push_back(PositionConnector(connector, '-', _word, dfs_position, exp->cost, cost,
-						   false, leading_left, 
-						   eps_right, eps_left));
+                                                   false, leading_left,
+                                                   eps_right, eps_left));
       leading_left = false;
       break;
     default:
@@ -43,35 +43,35 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       /* zeroary and */
     } else
       if (exp->u.l != NULL && exp->u.l->next == NULL) {
-	/* unary and - skip */
-	insert_connectors(exp->u.l->e, dfs_position, leading_right, leading_left, eps_right, eps_left, var, root, cost);
+        /* unary and - skip */
+        insert_connectors(exp->u.l->e, dfs_position, leading_right, leading_left, eps_right, eps_left, var, root, cost);
       } else {
-	int i;
-	E_list* l;
+        int i;
+        E_list* l;
 
-	char new_var[MAX_VARIABLE_NAME];
-	char* last_new_var = new_var;
-	char* last_var = var;
-	while(*last_new_var = *last_var) {
-	  last_new_var++;
-	  last_var++;
-	}
+        char new_var[MAX_VARIABLE_NAME];
+        char* last_new_var = new_var;
+        char* last_var = var;
+        while(*last_new_var = *last_var) {
+          last_new_var++;
+          last_var++;
+        }
 
-	for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
-	  char* s = last_new_var;
-	  *s++ = 'c';
-	  fast_sprintf(s, i);
-	  
-	  insert_connectors(l->e, dfs_position, leading_right, leading_left, eps_right, eps_left, new_var, false, cost);
-	  if (leading_right && var != NULL) {
-	    eps_right.push_back(_variables->epsilon(new_var, '+'));
-	  }
+        for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
+          char* s = last_new_var;
+          *s++ = 'c';
+          fast_sprintf(s, i);
 
-	  
-	  if (leading_left && var != NULL) {
-	    eps_left.push_back(_variables->epsilon(new_var, '-'));
-	  }
-	}
+          insert_connectors(l->e, dfs_position, leading_right, leading_left, eps_right, eps_left, new_var, false, cost);
+          if (leading_right && var != NULL) {
+            eps_right.push_back(_variables->epsilon(new_var, '+'));
+          }
+
+
+          if (leading_left && var != NULL) {
+            eps_left.push_back(_variables->epsilon(new_var, '-'));
+          }
+        }
       }
   } else if (exp->type == OR_type) {
     if (exp->u.l != NULL && exp->u.l->next == NULL) {
@@ -87,23 +87,23 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       char* last_new_var = new_var;
       char* last_var = var;
       while(*last_new_var = *last_var) {
-	last_new_var++;
-	last_var++;
+        last_new_var++;
+        last_var++;
       }
 
       for (i = 0, l = exp->u.l; l != NULL; l = l->next, i++) {
-	bool lr = leading_right, ll = leading_left;
-	std::vector<int> er = eps_right, el = eps_left;
+        bool lr = leading_right, ll = leading_left;
+        std::vector<int> er = eps_right, el = eps_left;
 
-	char* s = last_new_var;
-	*s++ = 'd';
-	fast_sprintf(s, i);
+        char* s = last_new_var;
+        *s++ = 'd';
+        fast_sprintf(s, i);
 
-	insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost);
-	if (lr)
-	  lr_true = true;
-	if (ll)
-	  ll_true = true;
+        insert_connectors(l->e, dfs_position, lr, ll, er, el, new_var, false, cost);
+        if (lr)
+          lr_true = true;
+        if (ll)
+          ll_true = true;
       }
       leading_right = lr_true;
       leading_left = ll_true;

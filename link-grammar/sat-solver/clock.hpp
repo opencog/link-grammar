@@ -9,7 +9,7 @@
 #include <ctime>
 
 class Clock {
-private: 
+private:
 	clock_t  start;
 public:
 	Clock() {
@@ -23,7 +23,7 @@ public:
 
 public:	
 	double elapsed()
-	{  
+	{
 		clock_t stop = clock();
 		return ((double)stop-(double)start)/CLOCKS_PER_SEC;
 	
