@@ -238,11 +238,10 @@ public:
     return var;
   }
 
+#ifdef USE_FAT_LINKAGES
   /*
    * The following types of variables are used for conjunction handling
    */
-
-
   /*
    *                  fat_link(wi, wj)
    * Variables that specify that there is a fat link from the word i
@@ -287,6 +286,8 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
+#endif /* USE_FAT_LINKAGES */
+
 
   /*
    *             thin_link(wi, wj)
