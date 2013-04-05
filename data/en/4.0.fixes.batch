@@ -2875,6 +2875,16 @@ The effects were less severe and less prolonged
 % 'but' works as a fat link, leaving 'rather' out to dry ...
 He didn't do it, but rather went home.
 
+% The second sentence parses, but should not.
+% For example "*Bill may distort" is handled correctly.
+% See "Catena (linguistics)" in wikipedia for more.
+% See "gapping" or "stripping (ellipsis)" in wikipedia for more.
+Bill may hide the truth, or distort it.
+*Bill may hide the truth, or distort.
+John wants to pay for the beer, not steal it.
+*John wants to pay for the beer, not steal.
+
+
 % conjunctions treated with thin links:
 % CJ link in this case.
 All large burial places, or tombs, became known as mausoleums.
@@ -3464,6 +3474,13 @@ He is more intelligent than ...
 ... gleamed like dogs' eyes in a car's headlights
 ... how those two should work together
 ... the 60's.
+
+% gapping ellipses
+% See wikipedia article on gapping
+Should I attempt to call you, or you me?
+
+% The below parses, but parses incorrectly.
+*Susan likes to work the late shift, and Sam the early shift.
 
 % Compound queries
 % Typically, the two sub-phrases parse correctly, but, 
