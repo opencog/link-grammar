@@ -11,11 +11,52 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "link-includes.h"  // For the version number
+#ifndef _LG_READ_DICT_H_
+#define  _LG_READ_DICT_H_
+
+#include <link-grammar/link-includes.h>
 
 LINK_BEGIN_DECLS
 
-#include "api-types.h"
+/* forwardd decls */
+typedef char Boolean;
+typedef struct Dict_node_struct Dict_node;
+typedef struct Exp_struct Exp;
+typedef struct E_list_struct E_list;
+
+/** 
+ * Types of Exp_struct structures
+ */
+#define OR_type 0
+#define AND_type 1
+#define CONNECTOR_type 2
+
+/** 
+ * The E_list and Exp structures defined below comprise the expression
+ * trees that are stored in the dictionary.  The expression has a type
+ * (AND, OR or TERMINAL).  If it is not a terminal it has a list
+ * (an E_list) of children.
+ */
+struct Exp_struct
+{
+    Exp * next; /* Used only for mem management,for freeing */
+    char type;  /* One of three types, see above */
+    char dir;   /* '-' means to the left, '+' means to right (for connector) */
+    char multi; /* TRUE if a multi-connector (for connector)  */
+    union {
+        E_list * l;           /* only needed for non-terminals */
+        const char * string;  /* only needed if it's a connector */
+    } u;
+    float cost;   /* The cost of using this expression.
+                     Only used for non-terminals */
+};
+
+struct E_list_struct
+{
+    E_list * next;
+    Exp * e;
+};
+
 
 Boolean read_dictionary(Dictionary dict);
 void dict_display_word_info(Dictionary dict, const char *);
@@ -46,3 +87,5 @@ dictionary_six(const char * lang, const char * dict_name,
 
 
 LINK_END_DECLS
+
+#endif /* _LG_READ_DICT_H_ */

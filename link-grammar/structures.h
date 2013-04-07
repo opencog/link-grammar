@@ -15,6 +15,7 @@
 #define _STRUCTURES_H_
 
 #include "api-types.h"
+#include "read-dict.h"  /* For Exp, Exp_list */
 #include "utilities.h"  /* Needed for inline defn in Windows */
 
 /*
@@ -218,38 +219,6 @@ struct Word_struct
     Boolean firstupper;
 };
 
-/** 
- * Types of Exp_struct structures
- */
-#define OR_type 0
-#define AND_type 1
-#define CONNECTOR_type 2
-
-/** 
- * The E_list and Exp structures defined below comprise the expression
- * trees that are stored in the dictionary.  The expression has a type
- * (AND, OR or TERMINAL).  If it is not a terminal it has a list
- * (an E_list) of children.
- */
-struct Exp_struct
-{
-    Exp * next; /* Used only for mem management,for freeing */
-    char type;  /* One of three types, see above */
-    char dir;   /* '-' means to the left, '+' means to right (for connector) */
-    char multi; /* TRUE if a multi-connector (for connector)  */
-    union {
-        E_list * l;           /* only needed for non-terminals */
-        const char * string;  /* only needed if it's a connector */
-    } u;
-    float cost;   /* The cost of using this expression.
-                     Only used for non-terminals */
-};
-
-struct E_list_struct
-{
-    E_list * next;
-    Exp * e;
-};
 
 /* The structure below stores a list of dictionary word files. */
 struct Word_file_struct
@@ -303,6 +272,7 @@ struct PP_node_struct
 
 /* Davy added these */
 
+#ifdef USE_FAT_LINKAGES
 typedef struct Andlist_struct Andlist;
 struct Andlist_struct
 {
@@ -314,6 +284,7 @@ struct Andlist_struct
     int outside_word[MAX_SENTENCE];
     int cost;
 };
+#endif /* USE_FAT_LINKAGES */
 
 /** 
  * This is for building the graphs of links in post-processing and 

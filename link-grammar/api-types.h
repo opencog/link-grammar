@@ -32,10 +32,11 @@
 
 
 /* Widely used private typedefs */
+#ifdef USE_FAT_LINKAGES
 typedef struct And_data_s And_data;
+#endif /* USE_FAT_LINKAGES */
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;
-typedef struct Dict_node_struct Dict_node;
 typedef struct Domain_s Domain;
 typedef struct DTreeLeaf_s DTreeLeaf;
 typedef struct Image_node_struct Image_node;
@@ -50,15 +51,12 @@ typedef struct Resources_s * Resources;
 typedef struct Sublinkage_s Sublinkage;
 
 /* Some of the more obscure typedefs */
-typedef char Boolean;
 typedef struct analyze_context_s analyze_context_t;
 typedef struct count_context_s count_context_t;
 typedef struct match_context_s match_context_t;
 
 typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;
-typedef struct Exp_struct Exp;
-typedef struct E_list_struct E_list;
 typedef struct Link_s Link;
 typedef struct List_o_links_struct List_o_links;
 typedef struct Parse_set_struct Parse_set;

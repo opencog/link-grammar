@@ -22,6 +22,7 @@ using std::endl;
 extern "C" {
 #include <link-grammar/api.h>
 #include "preparation.h"
+#include "read-dict.h"
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
