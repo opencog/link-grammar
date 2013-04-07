@@ -23,6 +23,7 @@ typedef char Boolean;
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
 typedef struct E_list_struct E_list;
+typedef struct Word_file_struct Word_file;
 
 /** 
  * Types of Exp_struct structures
@@ -55,6 +56,20 @@ struct E_list_struct
 {
     E_list * next;
     Exp * e;
+};
+
+
+/** 
+ * The dictionary is stored as a binary tree comprised of the following
+ * nodes.  A list of these (via right pointers) is used to return
+ * the result of a dictionary lookup.
+ */
+struct Dict_node_struct
+{
+    const char * string;  /* the word itself */
+    Word_file * file;    /* the file the word came from (NULL if dict file) */
+    Exp       * exp;
+    Dict_node *left, *right;
 };
 
 

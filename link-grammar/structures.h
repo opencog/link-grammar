@@ -228,19 +228,6 @@ struct Word_file_struct
     Word_file * next;
 };
 
-/** 
- * The dictionary is stored as a binary tree comprised of the following
- * nodes.  A list of these (via right pointers) is used to return
- * the result of a dictionary lookup.
- */
-struct Dict_node_struct
-{
-    const char * string;  /* the word itself */
-    Word_file * file;    /* the file the word came from (NULL if dict file) */
-    Exp       * exp;
-    Dict_node *left, *right;
-};
-
 /* The regexs are stored as a linked list of the following nodes. */
 struct Regex_node_s
 {

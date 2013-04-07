@@ -62,7 +62,6 @@ typedef struct List_o_links_struct List_o_links;
 typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
 typedef struct Word_struct Word;
-typedef struct Word_file_struct Word_file;
 typedef struct X_table_connector_struct X_table_connector;
 
 
