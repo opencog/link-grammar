@@ -3,6 +3,7 @@ Version 4.7.12 (xxx 2013)
  * Tweak the lt dict to work again with the modern parser.
  * Make the fat linkages code be compile-time configurable.
  * Fix SAT-solver build; recent changes had broken it.
+ * Export read-dict.h as a public API. 
 
 Version 4.7.11 (23 March 2013)
  * Fix build bug introduced recently (build_disjuncts_for_dict_node)

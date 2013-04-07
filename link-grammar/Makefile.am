@@ -162,8 +162,9 @@ liblink_grammar_la_SOURCES =        \
 
 liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
+	link-features.h                  \
 	link-includes.h                  \
-	link-features.h
+	read-dict.h
 
 liblink_grammar_java_la_SOURCES =   \
 	jni-client.h                     \
