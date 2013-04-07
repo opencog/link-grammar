@@ -204,9 +204,11 @@ struct Parse_info_struct
 	 * NULL if not a fat word. */
 	Image_node ** image_array;
 
+#ifdef USE_FAT_LINKAGES
 	/* Array of boolean flags, one per word. Set to TRUE if this 
 	 * word has a fat down link. FALSE otherise */
 	Boolean *has_fat_down;
+#endif /* USE_FAT_LINKAGES */
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
