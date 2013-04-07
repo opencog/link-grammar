@@ -28,9 +28,12 @@ typedef struct Word_file_struct Word_file;
 /** 
  * Types of Exp_struct structures
  */
-#define OR_type 0
-#define AND_type 1
-#define CONNECTOR_type 2
+typedef enum
+{
+	OR_type = 1,
+	AND_type,
+	CONNECTOR_type
+} Exp_type;
 
 /** 
  * The E_list and Exp structures defined below comprise the expression
@@ -41,9 +44,9 @@ typedef struct Word_file_struct Word_file;
 struct Exp_struct
 {
     Exp * next; /* Used only for mem management,for freeing */
-    char type;  /* One of three types, see above */
+    Exp_type type;  /* One of three types, see above */
     char dir;   /* '-' means to the left, '+' means to right (for connector) */
-    char multi; /* TRUE if a multi-connector (for connector)  */
+    Boolean multi; /* TRUE if a multi-connector (for connector)  */
     union {
         E_list * l;           /* only needed for non-terminals */
         const char * string;  /* only needed if it's a connector */
