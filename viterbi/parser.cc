@@ -139,6 +139,7 @@ Set * Parser::word_consets(const string& word)
 		Word* nword = new Word(dn->string);
 		djset.push_back(new WordCset(nword, dj));
 	}
+	free_lookup_list(dn_head);
 	return new Set(djset);
 }
 

@@ -169,6 +169,10 @@ static void affix_list_delete(Dictionary dict)
 	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
 }
 
+static Dictionary
+dictionary_six(const char * lang, const char * dict_name,
+                const char * pp_name, const char * cons_name,
+                const char * affix_name, const char * regex_name);
 /**
  * Read dictionary entries from a wide-character string "input".
  * All other parts are read from files.
@@ -283,7 +287,7 @@ failure:
 /**
  * Use filenames of six different files to put together the dictionary.
  */
-Dictionary
+static Dictionary
 dictionary_six(const char * lang, const char * dict_name,
                 const char * pp_name, const char * cons_name,
                 const char * affix_name, const char * regex_name)
