@@ -98,11 +98,6 @@ Exp *       Exp_create(Dictionary dict);
 
 Dictionary dictionary_create_from_utf8(const char * input);
 
-Dictionary
-dictionary_six(const char * lang, const char * dict_name,
-                const char * pp_name, const char * cons_name,
-                const char * affix_name, const char * regex_name);
-
 
 LINK_END_DECLS
 
