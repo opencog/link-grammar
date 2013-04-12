@@ -1210,6 +1210,13 @@ I wonder why you said that?
 % Basically, in "How big [a dog] is it?" the phrase "a dog" is
 % optional.  Therefore, by definition, it is a 'modifier' to
 % "how big".  That generates the simplest, easiest parse rules!
+%
+% For an anaysis, and more related sentences, see
+% Paul Kay & Ivan A. Sag, "Cleaning up the Big Mess: Discontinuous
+% Dependencies and Complex Determiners" (2012) chapter 5 in 
+% "Sign-Based Construction Grammar."
+% http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
+
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
