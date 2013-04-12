@@ -5497,7 +5497,6 @@ to.r:
   (TO- & Xc+) or
   I*a+ or
   ({JQ+} & ([J+] or Mgp+) & <prep-main-a>) or
-  VJ+ or
   [MVp- & B-];
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
