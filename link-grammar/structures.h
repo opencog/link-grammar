@@ -292,7 +292,9 @@ struct Linkage_info_struct
     double corpus_cost;
     int island[MAX_SENTENCE];
     size_t nwords;
+#ifdef USE_FAT_LINKAGES
     Andlist * andlist;
+#endif /* USE_FAT_LINKAGES */
     char **disjunct_list_str;
 #ifdef USE_CORPUS
     Sense **sense_list;
