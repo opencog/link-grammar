@@ -970,7 +970,6 @@ bool test_seq_sent(const char *id, const char *dict_str, bool empty_state)
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
 
 	// print_dictionary_data(dict);
-cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 
 	Parser parser(dict);
 	// Expecting more words to follow, so a non-trivial state.
@@ -1197,6 +1196,54 @@ int ntest_short_seq()
 
 // ==================================================================
 
+bool test_state_sent(const char *id, const char *dict_str, bool empty_state)
+{
+	total_tests++;
+
+	Dictionary dict = dictionary_create_from_utf8(dict_str);
+
+	// print_dictionary_data(dict);
+
+cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
+	Parser parser(dict);
+	// Expecting more words to follow, so a non-trivial state.
+	parser.streamin("this is a test");
+
+	Lynk* alts = parser.get_alternatives();
+cout<<"got this:"<<alts<<endl;
+
+#if 0
+	// At least one result should be this state pair.
+	Lynk* sp =
+		ALINK2(STATE_PAIR,
+			ALINK0(SEQ),  // empty state
+#endif
+
+	return true;
+}
+
+bool test_state_order()
+{
+	return test_state_sent("short state sent",
+		"LEFT-WALL: Wq+;"
+		"this.J2: JDBKQ+;"
+		"is.v: SIs+;"
+		"a: Ds+;"
+		"test.n: XXXGIVEN+ or AN+;",
+		false
+	);
+}
+
+int ntest_short_state()
+{
+	size_t num_failures = 0;
+
+	if (!test_state_order()) num_failures++;
+	return num_failures;
+}
+
+// ==================================================================
+
 void report(int num_failures, bool exit_on_fail)
 {
 	if (num_failures)
@@ -1234,6 +1281,9 @@ main(int argc, char *argv[])
 	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_short_seq();
+	report(num_failures, exit_on_fail);
+
+	num_failures += ntest_short_state();
 	report(num_failures, exit_on_fail);
 
 	exit (0);
