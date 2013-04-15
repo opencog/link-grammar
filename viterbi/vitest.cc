@@ -799,7 +799,12 @@ bool test_short_sent(const char *id, const char *dict_str, bool empty_state)
 	// print_dictionary_data(dict);
 
 	Parser parser(dict);
+
 	// Expecting more words to follow, so a non-trivial state.
+	// In particular, the dictionary will link the left-wall to
+	// "is", so "this" has to be pushed on stack until the "is"
+	// shows up.  The test_seq_sent() below will link the other
+	// way around.
 	parser.streamin("this is");
 
 	Lynk* alts = parser.get_alternatives();
@@ -976,6 +981,8 @@ bool test_seq_sent(const char *id, const char *dict_str, bool empty_state)
 
 	Parser parser(dict);
 	// Expecting more words to follow, so a non-trivial state.
+	// Unlike test_short_sent() above, here, we link "this" to
+	// the left wall, followed by "is" to for a sequence.
 	parser.streamin("this is");
 
 	Lynk* alts = parser.get_alternatives();
@@ -1215,6 +1222,8 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	Lynk* alts = parser.get_alternatives();
 
 	// We expect no output, and a crazy state:
+	// The provided dictionary will not allow a linkage to happen;
+	// this is really just testing the push of stack state.
 	Lynk* sp =
 		ALINK2(STATE_PAIR,
 			ALINK5(SEQ,
@@ -1266,11 +1275,24 @@ bool test_state_order()
 	);
 }
 
+bool test_state_order_left()
+{
+	return test_state_sent("short state sent leftwards",
+		"LEFT-WALL: Wq+;"
+		"this.J2: JDBKQ+ or JAAA-;"
+		"is.v: SIs+ or KBB-;"
+		"a: Ds+ & {Junk-} ;"
+		"test.n: XXXGIVEN+ or BOGUS- or (AN+ & {GLOP-});",
+		false
+	);
+}
+
 int ntest_short_state()
 {
 	size_t num_failures = 0;
 
 	if (!test_state_order()) num_failures++;
+	if (!test_state_order_left()) num_failures++;
 	return num_failures;
 }
 
