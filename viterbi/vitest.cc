@@ -1206,7 +1206,7 @@ int ntest_short_seq()
 
 // ==================================================================
 
-bool test_state_sent(const char *id, const char *dict_str, bool empty_state)
+bool test_state_sent(const char *id, const char *dict_str)
 {
 	total_tests++;
 
@@ -1214,7 +1214,6 @@ bool test_state_sent(const char *id, const char *dict_str, bool empty_state)
 
 	// print_dictionary_data(dict);
 
-cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	Parser parser(dict);
 	// Expecting more words to follow, so a non-trivial state.
 	parser.streamin("this is a test");
@@ -1270,8 +1269,7 @@ bool test_state_order()
 		"this.J2: JDBKQ+;"
 		"is.v: SIs+;"
 		"a: Ds+;"
-		"test.n: XXXGIVEN+ or AN+;",
-		false
+		"test.n: XXXGIVEN+ or AN+;"
 	);
 }
 
@@ -1282,8 +1280,7 @@ bool test_state_order_left()
 		"this.J2: JDBKQ+ or JAAA-;"
 		"is.v: SIs+ or KBB-;"
 		"a: Ds+ & {Junk-} ;"
-		"test.n: XXXGIVEN+ or BOGUS- or (AN+ & {GLOP-});",
-		false
+		"test.n: XXXGIVEN+ or BOGUS- or (AN+ & {GLOP-});"
 	);
 }
 
@@ -1293,6 +1290,85 @@ int ntest_short_state()
 
 	if (!test_state_order()) num_failures++;
 	if (!test_state_order_left()) num_failures++;
+	return num_failures;
+}
+
+// ==================================================================
+
+bool test_right_wall(const char *id, const char *dict_str, bool empty_state)
+{
+	total_tests++;
+
+	Dictionary dict = dictionary_create_from_utf8(dict_str);
+
+	// print_dictionary_data(dict);
+
+cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
+	Parser parser(dict);
+	// Expecting more words to follow, so a non-trivial state.
+	parser.streamin("this is .");
+
+	Lynk* alts = parser.get_alternatives();
+
+cout <<"duuude yah "<<alts<<endl;
+#if 0
+	// We expect empty final state.
+	Lynk* sp =
+		ALINK2(STATE_PAIR,
+			ALINK5(SEQ,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "test.n"),
+					ALINK2(OR,
+						ANODE(CONNECTOR, "XXXGIVEN+"),
+						ANODE(CONNECTOR, "AN+")))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "a"),
+					ANODE(CONNECTOR, "Ds+"))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "is.v"),
+					ANODE(CONNECTOR, "SIs+"))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "this.J2"),
+					ANODE(CONNECTOR, "JDBKQ+"))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "LEFT-WALL"),
+					ANODE(CONNECTOR, "Wq+"))
+			),
+			ALINK0(SEQ));  // empty output
+
+	Lynk* ans = ALINK1(SET, sp);
+	if (not (ans->operator==(alts)))
+	{
+		cout << "Error: test failure on test \"" << id <<"\"" << endl;
+		cout << "=== Expecting:\n" << ans << endl;
+		cout << "=== Got:\n" << alts << endl;
+		return false;
+	}
+#endif
+	cout<<"PASS: test_right_wall(" << id << ") " << endl;
+	return true;
+}
+
+bool test_period()
+{
+	return test_right_wall("period",
+		"LEFT-WALL: (Wd+ or Wi+ or Wq+) & {Xp+};"
+		"this: Wd- and Ss*b+;"
+		"is.v: Ss-;"
+		"\".\": Xp-;",
+		false
+	);
+}
+
+int ntest_right_wall()
+{
+	size_t num_failures = 0;
+
+	if (!test_period()) num_failures++;
 	return num_failures;
 }
 
@@ -1338,6 +1414,9 @@ main(int argc, char *argv[])
 	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_short_state();
+	report(num_failures, exit_on_fail);
+
+	num_failures += ntest_right_wall();
 	report(num_failures, exit_on_fail);
 
 	exit (0);

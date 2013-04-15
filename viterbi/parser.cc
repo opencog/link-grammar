@@ -184,6 +184,7 @@ void Parser::stream_word(const string& word)
 	if (!djset)
 	{
 		cout << "Unhandled error; word not in dict: " << word << endl;
+		assert (0, "word not in dict");
 		return;
 	}
 
