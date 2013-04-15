@@ -1310,35 +1310,39 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 
 	Lynk* alts = parser.get_alternatives();
 
-cout <<"duuude yah "<<alts<<endl;
-#if 0
 	// We expect empty final state.
 	Lynk* sp =
 		ALINK2(STATE_PAIR,
-			ALINK5(SEQ,
-				ALINK2(WORD_CSET,
-					ANODE(WORD, "test.n"),
-					ALINK2(OR,
-						ANODE(CONNECTOR, "XXXGIVEN+"),
-						ANODE(CONNECTOR, "AN+")))
+			ALINK0(SEQ),  // empty state
+			ALINK3(SEQ,
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Wd"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "LEFT-WALL"),
+						ANODE(CONNECTOR, "Wd+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "this"),
+						ANODE(CONNECTOR, "Wd-")))
 				,
-				ALINK2(WORD_CSET,
-					ANODE(WORD, "a"),
-					ANODE(CONNECTOR, "Ds+"))
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Ss*b"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "this"),
+						ANODE(CONNECTOR, "Ss*b+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "is.v"),
+						ANODE(CONNECTOR, "Ss-")))
 				,
-				ALINK2(WORD_CSET,
-					ANODE(WORD, "is.v"),
-					ANODE(CONNECTOR, "SIs+"))
-				,
-				ALINK2(WORD_CSET,
-					ANODE(WORD, "this.J2"),
-					ANODE(CONNECTOR, "JDBKQ+"))
-				,
-				ALINK2(WORD_CSET,
-					ANODE(WORD, "LEFT-WALL"),
-					ANODE(CONNECTOR, "Wq+"))
-			),
-			ALINK0(SEQ));  // empty output
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Xp"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "LEFT-WALL"),
+						ANODE(CONNECTOR, "Xp+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "."),
+						ANODE(CONNECTOR, "Xp-")))
+			));
+
 
 	Lynk* ans = ALINK1(SET, sp);
 	if (not (ans->operator==(alts)))
@@ -1348,7 +1352,6 @@ cout <<"duuude yah "<<alts<<endl;
 		cout << "=== Got:\n" << alts << endl;
 		return false;
 	}
-#endif
 	cout<<"PASS: test_right_wall(" << id << ") " << endl;
 	return true;
 }

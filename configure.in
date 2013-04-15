@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[4.7.11],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[4.7.12],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -49,7 +49,7 @@ LT_INIT([win32-dll])
 AM_BINRELOC
 PKG_PROG_PKG_CONFIG
 
-# The below says "use the C compiler for all reamining tests".
+# The below says "use the C compiler for all remaining tests".
 # That way, if g++ is not installed, configure won't crap out
 # (with a mystery error about not finding regex.h)
 AC_LANG([C])
