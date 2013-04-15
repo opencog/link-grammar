@@ -25,8 +25,8 @@
 
 using namespace std;
 
-// #define DBG(X) X;
-#define DBG(X) 
+#define DBG(X) X;
+// #define DBG(X) 
 
 namespace link_grammar {
 namespace viterbi {
@@ -60,7 +60,7 @@ Connect::Connect(WordCset* right_wconset)
 /// states is the collection of as-yet unconnected connectors; the 
 /// new set of states is the collection that remains after connecting.
 /// We have to peel off and discard some certain number of the old
-/// states (as these are now connected), ad append in their place
+/// states (as these are now connected), and append in their place
 /// the new states.  We also typically peel off one new one, as that
 /// one will be used for trying new onnections.
 static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
@@ -70,13 +70,16 @@ static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
 	Seq* old_state = old_sp->get_state();
 	Seq* new_state = new_sp->get_state();
 
-	const OutList& oo = old_state->get_outgoing_set();
-	united_states.insert(united_states.end(), 
-	                     oo.begin() + old_peel_off, oo.end());
-
+	// The no-links-cross rule means that the first state with
+	// unconnected right-going links must necessarily be at the
+	// head of the state vector. That is, new comes before old.
 	const OutList& no = new_state->get_outgoing_set();
 	united_states.insert(united_states.end(), 
 	                     no.begin() + new_peel_off, no.end());
+
+	const OutList& oo = old_state->get_outgoing_set();
+	united_states.insert(united_states.end(), 
+	                     oo.begin() + old_peel_off, oo.end());
 
 	// Unite the outputs too ... 
 	// This is easy, just concatenate old and append new.
@@ -84,6 +87,8 @@ static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
 	Seq* old_output = old_sp->get_output();
 	Seq* new_output = new_sp->get_output();
 
+	// I don't think the output order matters much, but appending
+	// new output to old seems reasonable.
 	const OutList& ooo = old_output->get_outgoing_set();
 	united_outputs.insert(united_outputs.end(), ooo.begin(), ooo.end());
 
