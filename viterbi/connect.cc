@@ -190,7 +190,6 @@ Set* Connect::try_connect(StatePair* left_sp)
 		}
 		
 		// Append old and new output and state, before pushing back.
-		// XXX I think the below is correct, its untested.
 // cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
 		StatePair* mrg = unite(left_sp, lnext, new_sp, 0);
 //cout<<"left sp was "<<left_sp<<endl;
@@ -422,7 +421,15 @@ StatePair* Connect::alternative(And* land, Connector* rcon)
 	And* remaining_cj = new And(remaining_cons);
 	WordCset* rem_cset = new WordCset(_left_cset->get_word(), remaining_cj);
 
-	StatePair* sp = new StatePair(new Seq(rem_cset), out);
+	// The remaining cset could be empty (e.g. an AND link with
+	// nothing left in it.)
+	rem_cset = rem_cset->flatten();
+	StatePair* sp;
+	if (NULL != rem_cset)
+		sp = new StatePair(new Seq(rem_cset), out);
+	else
+		sp = new StatePair(new Seq(), out);
+
 	DBG(cout << "=================> state pair created: " << sp << endl);
 	return sp;
 }

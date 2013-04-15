@@ -352,7 +352,14 @@ WordCset* WordCset::flatten()
 	if (NULL == s)
 		return this;
 
-	return new WordCset(get_word(), s->super_flatten());
+	Atom* flat = s->super_flatten();
+
+	// If there is nothing left after flattening, return NULL.
+	const Link* fl = dynamic_cast<const Link*>(flat);
+	if (fl && 0 == fl->get_arity())
+		return NULL;
+
+	return new WordCset(get_word(), flat);
 }
 
 // ============================================================

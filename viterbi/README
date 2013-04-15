@@ -6,6 +6,7 @@
 This directory contains code for a prototype Viterbi decoder for Link
 Grammar. It barely functions and is currently very slow.
 
+
 Motivation
 ==========
 The goal of providing this decoder is to present a flexible, powerful
@@ -77,6 +78,7 @@ with sequences.  Some experimental, psychological support for this can
 be found here:
 http://www.sciencedaily.com/releases/2012/09/120925143555.htm
 per Morten Christiansen, Cornell professor of psychology.
+
 
 Why "Viterbi"?
 ==============
