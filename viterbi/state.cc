@@ -70,7 +70,7 @@ void State::set_clean_state(Set* s)
  */
 void State::stream_word_conset(WordCset* wrd_cset)
 {
-	// wrd_cset should be pointing at:
+	// wrd_cset should be pointing at a word connector set:
 	// WORD_CSET : 
 	//   WORD : blah.v
 	//   AND :

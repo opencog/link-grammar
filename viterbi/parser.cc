@@ -173,6 +173,7 @@ void Parser::initialize_state()
  */
 void Parser::stream_word(const string& word)
 {
+	// Look up the dictionary entries for this word.
 	Set *djset = word_consets(word);
 	if (!djset)
 	{
@@ -235,7 +236,7 @@ void viterbi_parse(Dictionary dict, const char * sentence)
 	pars.streamin(sentence);
 	Link* alts = pars.get_alternatives();
 
-	/* Print some diagnostic outputs ... for now. Remove whhen finished. */
+	/* Print some diagnostic outputs ... for now. Remove when finished. */
 	size_t num_alts = alts->get_arity();
 	printf("Found %lu alternatives\n", num_alts);
 	for (size_t i=0; i<num_alts; i++)
@@ -248,6 +249,13 @@ void viterbi_parse(Dictionary dict, const char * sentence)
 		{
 			cout << "\nAlternative =============== " << i << endl;
 			cout << sp->get_output() << endl;
+		}
+		else
+		{
+			cout << "\nIncomplete parse =============== " << i << endl;
+			cout << sp->get_output() << endl;
+			cout << "\n---- state for ----" << i << endl;
+			cout << sp->get_state() << endl;
 		}
 	}
 }
