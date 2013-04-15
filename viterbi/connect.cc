@@ -25,8 +25,8 @@
 
 using namespace std;
 
-#define DBG(X) X;
-// #define DBG(X) 
+// #define DBG(X) X;
+#define DBG(X) 
 
 namespace link_grammar {
 namespace viterbi {

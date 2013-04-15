@@ -29,9 +29,10 @@ class Connector : public Node
 	public:
 		// Last letter of the connector must be + or -
 		// indicating the direction of the connector.
-		Connector(const std::string& name)
+		Connector(const std::string& name, float likeli=1.0f)
 			: Node(CONNECTOR, name)
 		{
+			_tv._strength = likeli;
 			if (name == OPTIONAL_CLAUSE)
 				return;
 			char dir = *name.rbegin();

@@ -25,11 +25,12 @@ namespace viterbi {
 // Classes generally resembling those of the OpenCog AtomSpace
 // These are tailored for use for parsing.
 
-/* TV: strength or likelihood of a link */
+/** TV (truth value): strength or likelihood of a link */
 class TV
 {
 	public:
-		float strength;
+		TV() : _strength(1.0f) {}
+		float _strength;
 };
 
 // Atom types.  Right now an enum, but maybe should be dynamic!?
@@ -58,7 +59,8 @@ enum AtomType
 #define OPTIONAL_CLAUSE "0"
 
 /* Base class for Nodes and Links */
-/* Atoms are not mutable, except for the TV value. That is, you cannot
+/**
+ * Atoms are not mutable, except for the TV value. That is, you cannot
  * change the type of the atom.  In particular, all methods are const.
  *
  * All atoms are automatically garbage-collected.
@@ -72,18 +74,19 @@ class Atom : public gc
 			GC_change_stubborn(this);
 		}
 		AtomType get_type() const { return _type; }
-		TV tv;
+		TV _tv;
 		virtual bool operator==(const Atom*) const;
 		virtual ~Atom() {}
 	protected:
 		const AtomType _type;
 };
 
-/* A Node may be 
- -- a word (the std::string holds the word)
- -- a link (the std::string holds the link)
- -- a disjunct (the std::string holds the disjunct)
- -- etc.
+/**
+ * A Node may be 
+ * -- a word (the std::string holds the word)
+ * -- a link (the std::string holds the link)
+ * -- a disjunct (the std::string holds the disjunct)
+ * -- etc.
  * Nodes are immuatble; the name can be set but not changed.
  * Note: all methods are const.
  */
@@ -105,9 +108,10 @@ class Node : public Atom
 
 /// All outgoing lists will be handled as vectors.
 // Must use the bdw-gc allocator to track these pointers.
+// If this is not done, the GC will fail to see the pointers here.
 typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
 
-/*
+/**
  * Links hold a bunch of atoms
  * Links are immutable; the outgoing set cannot be changed.
  * Note: all methods are const.

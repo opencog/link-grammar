@@ -10,6 +10,7 @@
 /*************************************************************************/
 
 #include <ctype.h>
+#include <math.h>
 
 #include <algorithm>
 #include <iostream>
@@ -71,7 +72,12 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		stringstream ss;
 		if (exp->multi) ss << "@";
 		ss << exp->u.string << exp->dir;
-		return new Connector(ss.str());
+
+		// Make the likelihood be 2^(-cost).
+		// Since most costs are zero, the likeli will be 1.0
+		// Most of the rest will be 0.5 and 0.25
+		float likli = expf (-0.693147181 * exp->cost);
+		return new Connector(ss.str(), likli);
 	}
 
 	// Whenever a null appears in an OR-list, it means the 
