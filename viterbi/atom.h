@@ -135,6 +135,11 @@ class Link : public Atom
 			: Atom(t), _oset(({OutList o(1,a); o.push_back(b);
 			                   o.push_back(c); o.push_back(d); o;}))
 		{}
+		Link(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, Atom* e)
+			: Atom(t), _oset(({OutList o(1,a); o.push_back(b);
+			                   o.push_back(c); o.push_back(d);
+			                   o.push_back(e); o;}))
+		{}
 		size_t get_arity() const { return _oset.size(); }
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
