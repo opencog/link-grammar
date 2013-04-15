@@ -31,6 +31,7 @@ using namespace link_grammar::viterbi;
 #define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
 #define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
 #define ALINK4(TYPE,A,B,C,D) (new Lynk(TYPE, A,B,C,D))
+#define ALINK5(TYPE,A,B,C,D,E) (new Lynk(TYPE, A,B,C,D,E))
 
 
 #define CHECK(NAME, EXPECTED, COMPUTED)                              \
@@ -815,7 +816,8 @@ bool test_short_sent(const char *id, const char *dict_str, bool empty_state)
 						ANODE(CONNECTOR, "Ss*b+")),
 					ALINK2(WORD_DISJ,
 						ANODE(WORD, "is.v"),
-						ANODE(CONNECTOR, "Ss-"))),
+						ANODE(CONNECTOR, "Ss-")))
+				,
 				ALINK3(LING,
 					ANODE(LING_TYPE, "Wi"),
 					ALINK2(WORD_DISJ,
@@ -823,7 +825,8 @@ bool test_short_sent(const char *id, const char *dict_str, bool empty_state)
 						ANODE(CONNECTOR, "Wi+")),
 					ALINK2(WORD_DISJ,
 						ANODE(WORD, "is.v"),
-						ANODE(CONNECTOR, "Wi-")))));
+						ANODE(CONNECTOR, "Wi-")))
+			));
 
 	if (empty_state)
 	{
@@ -1210,15 +1213,44 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	parser.streamin("this is a test");
 
 	Lynk* alts = parser.get_alternatives();
-cout<<"got this:"<<alts<<endl;
 
-#if 0
-	// At least one result should be this state pair.
+	// We expect no output, and a crazy state:
 	Lynk* sp =
 		ALINK2(STATE_PAIR,
-			ALINK0(SEQ),  // empty state
-#endif
+			ALINK5(SEQ,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "test.n"),
+					ALINK2(OR,
+						ANODE(CONNECTOR, "XXXGIVEN+"),
+						ANODE(CONNECTOR, "AN+")))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "a"),
+					ANODE(CONNECTOR, "Ds+"))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "is.v"),
+					ANODE(CONNECTOR, "SIs+"))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "this.J2"),
+					ANODE(CONNECTOR, "JDBKQ+"))
+				,
+				ALINK2(WORD_CSET,
+					ANODE(WORD, "LEFT-WALL"),
+					ANODE(CONNECTOR, "Wq+"))
+			),
+			ALINK0(SEQ));  // empty output
 
+	Lynk* ans = ALINK1(SET, sp);
+	if (not (ans->operator==(alts)))
+	{
+		cout << "Error: test failure on test \"" << id <<"\"" << endl;
+		cout << "=== Expecting:\n" << ans << endl;
+		cout << "=== Got:\n" << alts << endl;
+		return false;
+	}
+	cout<<"PASS: test_state_sent(" << id << ") " << endl;
 	return true;
 }
 
