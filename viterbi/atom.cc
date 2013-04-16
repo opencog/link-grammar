@@ -80,15 +80,21 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 	if (n)
 	{
 		for (int i=0; i<ilvl; i++) cout << indent_str;
-		out << type_name(n->get_type()) <<" : ";
-		out << n->get_name() << endl;
+		out << type_name(n->get_type()) << " : "
+		    << n->get_name();
+		if (n->_tv._strength < 1.0f)
+			out << "    (" << n->_tv._strength << ")";
+		out << endl;
 		return out;
 	}
 	const Link* l = dynamic_cast<const Link*>(a);
 	if (l)
 	{
 		for (int i=0; i<ilvl; i++) cout << indent_str;
-		out << type_name(l->get_type()) <<" :" << endl;
+		out << type_name(l->get_type()) <<" :";
+		if (l->_tv._strength < 1.0f)
+			out << "     (" << l->_tv._strength << ")";
+      out << endl;
 
 		ilvl++;
 		size_t lsz = l->get_arity();

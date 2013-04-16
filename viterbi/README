@@ -132,6 +132,17 @@ The vitest.cc file contains unit tests. Currently, it consists of 49
 tests, and all of them pass.  More tests will be added.
 
 
+Design
+======
+What follows is a writeup of the current design.  It is incomplete.
+Parts of it may also be stale & out-of-date. This part is meant only for
+programmers wishing to update this code.  If you are just a user, you
+can skip reading this section.
+
+
+
+
+
 Historical dates
 ================
 Idea conceived: April 2008
