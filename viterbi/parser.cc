@@ -183,7 +183,7 @@ void Parser::stream_word(const string& word)
 	Set *djset = word_consets(word);
 	if (!djset)
 	{
-		cout << "Unhandled error; word not in dict: " << word << endl;
+		cout << "Unhandled error; word not in dict: >>" << word << "<<" << endl;
 		assert (0, "word not in dict");
 		return;
 	}
@@ -227,17 +227,20 @@ void Parser::streamin(const string& text)
 	size_t pos = 0;
 	while(true)
 	{
-		size_t wend = text.find(' ', pos);
+		size_t wend = text.find(' ', pos); // wend == word end
 		if (wend != string::npos)
 		{
-			string word = text.substr(pos, wend-pos);
+			const string word = text.substr(pos, wend-pos);
 			stream_word(word);
-			pos = wend+1; // skip over space
+			pos = wend + 1; // skip over space
+         while (' ' == text[pos])
+				pos++;
 		}
 		else
 		{
-			string word = text.substr(pos);
-			stream_word(word);
+			const string word = text.substr(pos);
+			if (0 < word.size())
+				stream_word(word);
 			break;
 		}
 	}
