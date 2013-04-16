@@ -392,6 +392,12 @@ StatePair* Connect::alternative(Connector* lcon, And* rand)
 	Atom* rema = remaining_cj->super_flatten();
 	WordCset* rem_cset = new WordCset(_right_cset->get_word(), rema);
 
+// XXX TODO probably need to flatten haere and make sure that
+// the new state isn't empty.
+Link* rl = dynamic_cast<Link*>(rema);
+if (rl and rl->get_arity() == 0)
+assert(0, "Need to handle this empty state case like all the others");
+
 	StatePair* sp = new StatePair(new Seq(rem_cset), out);
    DBG(cout<<"----- right multi-conn alternative created:\n" << sp << endl;);
 	return sp;
@@ -496,9 +502,12 @@ StatePair* Connect::alternative(And* land, And* rand)
 	for (size_t k = 0; k<m; k++)
 		remaining_cons.erase(remaining_cons.begin());
 
-	remaining_cj = new And(remaining_cons);
-	rem_cset = new WordCset(_left_cset->get_word(), remaining_cj);
-	statel.push_back(rem_cset);
+	if (0 < remaining_cons.size())
+	{
+		remaining_cj = new And(remaining_cons);
+		rem_cset = new WordCset(_left_cset->get_word(), remaining_cj);
+		statel.push_back(rem_cset);
+	}
 
 	Seq* state = new Seq(statel);
 
