@@ -33,6 +33,7 @@ class Parser : public gc
 		void streamin(const std::string&);
 		void stream_word(const std::string&);
 		void stream_word_conset(WordCset*);
+		void stream_end();
 
 		Set* word_consets(const std::string& word);
 

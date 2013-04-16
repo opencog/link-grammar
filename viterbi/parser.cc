@@ -200,6 +200,13 @@ void Parser::stream_word(const string& word)
 	_alternatives = new_alts;
 }
 
+void Parser::stream_word_conset(WordCset* cset)
+{
+	State stset(_alternatives);
+	stset.stream_word_conset(cset);
+	_alternatives = stset.get_alternatives();
+}
+
 // ===================================================================
 /** convenience wrapper */
 Set* Parser::get_alternatives()
@@ -236,11 +243,30 @@ void Parser::streamin(const string& text)
 	}
 }
 
+// Send in the right wall -- the traditional link-grammar 
+// design wants this to terminate sentences.
+void Parser::stream_end()
+{
+	const char * right_wall_word = "RIGHT-WALL";
+	Set *wall_disj = word_consets(right_wall_word);
+
+	// We are expecting the initial wall to be unique.
+	assert(wall_disj->get_arity() == 1, "Unexpected wall structure");
+	Atom* wall_cset = wall_disj->get_outgoing_atom(0);
+	WordCset* rwcs = dynamic_cast<WordCset*>(wall_cset);
+	stream_word_conset(rwcs);
+}
+
 void viterbi_parse(Dictionary dict, const char * sentence)
 {
 	Parser pars(dict);
 
 	pars.streamin(sentence);
+
+	// The old link-grammar design insists on  having a RIGHT-WALL,
+	// so provide one.
+	pars.stream_end();
+
 	Link* alts = pars.get_alternatives();
 
 	/* Print some diagnostic outputs ... for now. Remove when finished. */
