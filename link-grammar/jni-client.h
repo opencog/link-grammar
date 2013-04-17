@@ -35,6 +35,22 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setDictionariesPath
 
 /*
  * Class:     LinkGrammar
+ * Method:    setLanguage
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setLanguage
+  (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     LinkGrammar
+ * Method:    setMaxLinkages
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setMaxLinkages
+	(JNIEnv *, jclass, jint);
+
+/*
+ * Class:     LinkGrammar
  * Method:    init
  * Signature: (Ljava/lang/String;)V
  */

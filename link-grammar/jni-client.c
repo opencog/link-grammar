@@ -20,6 +20,9 @@
 #include "jni-client.h"
 #include "utilities.h"
 
+/* Default to the english language. */
+static char* in_language = "en";
+
 typedef struct
 {
 	Dictionary    dict;
@@ -49,6 +52,7 @@ static void java_key_alloc(void)
 #else
 static per_thread_data * global_ptd = NULL;
 #endif
+
 
 static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 {
@@ -142,10 +146,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_verbosity(ptd->opts,0);
 	parse_options_set_spell_guess(ptd->opts, FALSE);
 
-	/* Default to the english language; will need to fix
-	 * this if/when more languages are supported.
-	 */
-	ptd->dict = dictionary_create_lang("en");
+	ptd->dict = dictionary_create_lang(in_language);
 	if (!ptd->dict) throwException(env, "Error: unable to open dictionary");
 	else test();
 
@@ -370,6 +371,29 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
 		dictionary_set_data_dir(nativePath);
 	}
 	(*env)->ReleaseStringUTFChars(env,path, nativePath);
+}
+
+/*
+ * Class:      LinkGrammar
+ * Method:     setLanguage
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL
+Java_org_linkgrammar_LinkGrammar_setLanguage(JNIEnv *env, jclass cls, jstring str)
+{
+	in_language = (*env)->GetStringUTFChars(env,str,0);
+}
+
+/*
+ * Class:      LinkGrammar
+ * Method:     setMaxLinkages
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL
+Java_org_linkgrammar_LinkGrammar_setMaxLinkages(JNIEnv *env, jclass cls, jint maxLinkages)
+{
+	per_thread_data *ptd = get_ptd(env, cls);
+	parse_options_set_linkage_limit(ptd->opts, maxLinkages);
 }
 
 /*
