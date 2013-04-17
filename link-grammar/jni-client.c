@@ -21,7 +21,7 @@
 #include "utilities.h"
 
 /* Default to the english language. */
-static char* in_language = "en";
+static const char* in_language = "en";
 
 typedef struct
 {
