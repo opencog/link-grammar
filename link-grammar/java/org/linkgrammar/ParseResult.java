@@ -43,7 +43,7 @@ public class ParseResult implements Iterable<Linkage>
 	}
 	
 	/**
-	 * past-tense verbs have a usbscript of .v-d, .w-d or .q-d
+	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
 	 * look at the subscript instead, to see if a verb is past-tense.
 	 * @deprecated
 	 */
@@ -52,7 +52,7 @@ public class ParseResult implements Iterable<Linkage>
 		return pastTenseFlags[i];
 	}
 	
-	public boolean isEntity(int i)
+	@Deprecated public boolean isEntity(int i)
 	{
 		return entityFlags[i];
 	}
@@ -77,28 +77,35 @@ public class ParseResult implements Iterable<Linkage>
 		this.text = text;
 	}
 
-	public String[] getWords()
+	/**
+	 * Use Linkage.getWords instead.
+	 *
+	 * This method will return misleading results for languages
+	 * with prefixes/suffixes in the dictionary (such as Russian).
+	 * @deprecated
+	 */
+	@Deprecated public String[] getWords()
 	{
 		return words;
 	}
 
-	public void setWords(String[] words)
+	@Deprecated public void setWords(String[] words)
 	{
 		this.words = words;
 	}
 
-	public boolean[] getEntityFlags()
+	@Deprecated public boolean[] getEntityFlags()
 	{
 		return entityFlags;
 	}
 
-	public void setEntityFlags(boolean[] entityFlags)
+	@Deprecated public void setEntityFlags(boolean[] entityFlags)
 	{
 		this.entityFlags = entityFlags;
 	}
 
 	/**
-	 * past-tense verbs have a usbscript of .v-d, .w-d or .q-d
+	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
 	 * look at the subscript instead, to see if a verb is past-tense.
 	 * @deprecated
 	 */
@@ -108,12 +115,11 @@ public class ParseResult implements Iterable<Linkage>
 	}
 
 	/**
-	 * past-tense verbs have a usbscript of .v-d, .w-d or .q-d
+	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
 	 * look at the subscript instead, to see if a verb is past-tense.
 	 * @deprecated
 	 */
-	@Deprecated
-	public void setPastTenseFlags(boolean[] pastTenseFlags)
+	@Deprecated public void setPastTenseFlags(boolean[] pastTenseFlags)
 	{
 		this.pastTenseFlags = pastTenseFlags;
 	}
