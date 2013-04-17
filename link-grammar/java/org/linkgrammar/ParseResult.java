@@ -102,8 +102,7 @@ public class ParseResult implements Iterable<Linkage>
 	 * look at the subscript instead, to see if a verb is past-tense.
 	 * @deprecated
 	 */
-	@Deprecated
-	public boolean[] getPastTenseFlags()
+	@Deprecated public boolean[] getPastTenseFlags()
 	{
 		return pastTenseFlags;
 	}

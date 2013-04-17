@@ -460,6 +460,8 @@ Java_org_linkgrammar_LinkGrammar_getNumWords(JNIEnv *env, jclass cls)
 }
 
 /*
+ * This is making a call to a deprecated API function. The coresponding
+ * java function should be marked deprecated as well.
  * Class:      LinkGrammar
  * Method:     getWord
  * Signature: (I)Ljava/lang/String;

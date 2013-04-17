@@ -65,9 +65,9 @@ public class LinkGrammar
     // C sentence access functions
     public static native int getNumWords();
 
-    public static native String getWord(int i);
+    @Deprecated public static native String getWord(int i);
 
-    // Get the inflected form of the word.
+    // Get the subscripted form of the word.
     public static native String getLinkageWord(int i);
 
     // Get string representing the disjunct actually used.
@@ -109,8 +109,8 @@ public class LinkGrammar
     public static native double getLinkageSenseScore(int word, int sense);
 
     // OTHER UTILITY C FUNCTIONS
-    public static native boolean isPastTenseForm(String word);
+    @Deprecated public static native boolean isPastTenseForm(String word);
 
-    public static native boolean isEntity(String word);
+    @Deprecated public static native boolean isEntity(String word);
 }
 
