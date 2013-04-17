@@ -12,10 +12,15 @@
 
 /**
  * Arghhhh. This hacks around mutiple stupidities in readline/editline.
- * 1) most version of editline don't have wide-char support.
+ * 1) most versions of editline don't have wide-char support.
  * 2) All versions of editline don't have UTF8 support.
  * So basically readline() is just plain broken.
  * So hack one up, using the wide-char interfaces.  This is a hack. Argh. 
+ *
+ * Double-arghh.  Current versions of readline hang in an infinte loop
+ * on __read_nocancel() in read_char() called from el_wgets() (line 92
+ * below) when the input is "He said 《 This is bull shit 》" Notice
+ * the unicode angle-brackets. 
  */
 
 #include "lg_readline.h"
