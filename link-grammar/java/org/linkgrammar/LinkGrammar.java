@@ -52,6 +52,8 @@ public class LinkGrammar
 
     public static native void setMaxCost(int maxCost);
 
+    public static native void setMaxLinkages(int maxLinkages);
+
     // Defaults to /usr/local/share/link-grammar/
     public static native void setDictionariesPath(String path);
 
@@ -109,6 +111,8 @@ public class LinkGrammar
     public static native double getLinkageSenseScore(int word, int sense);
 
     // OTHER UTILITY C FUNCTIONS
+    public static native void setLanguage(String word);
+
     @Deprecated public static native boolean isPastTenseForm(String word);
 
     @Deprecated public static native boolean isEntity(String word);
