@@ -83,21 +83,29 @@ static Boolean is_proper_name(const char * word)
  * be a quotation mark. This works, because link-grammar is more
  * or less ignorant of quotes at this time.
  */
-static const wchar_t *list_of_quotes(void) 
+static const wchar_t* list_of_quotes(void) 
 {
+#ifdef _MSC_VER
+	/* Microsoft Visual Studio understands these unicode chars as
+	 * wide chars, so just return them as-is.  At least, this is what
+	 * Alexander Tkachuk reports, circa 17 April 2013.
+	 */
+	static const wchar_t* wqs = "\"«»《》【】『』`„“";
+#else
+	/* Unix (Linux) and GCC understand the embedded unicode chars
+	 * as utf8, so convert them to wide chars before use.
+	 */
 #define QUSZ 50
 	static wchar_t wqs[QUSZ];
 	mbstate_t mbs;
 	/* Single-quotes are used for abbreviations, don't mess with them */
 	/* const char * qs = "\"\'«»《》【】『』‘’`„“"; */
-	const char * qs = "\"«»《》【】『』`„“";
+	const char* qs = "\"«»《》【】『』`„“";
 
-	const char *pqs = qs;
-
+	const char* pqs = qs;
 	memset(&mbs, 0, sizeof(mbs));
-
 	mbsrtowcs(wqs, &pqs, QUSZ, &mbs);
-
+#endif /* _MSC_VER */
 	return wqs;
 }
 
