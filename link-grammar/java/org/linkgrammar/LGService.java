@@ -153,8 +153,12 @@ public class LGService
 			LinkGrammar.setMaxCost(config.getMaxCost());
 		if (config.getMaxParseSeconds() > -1)
 			LinkGrammar.setMaxParseSeconds(config.getMaxParseSeconds());
+		if (config.getMaxLinkages() > -1)
+			LinkGrammar.setMaxLinkages(config.getMaxLinkages());
 		if (config.getDictionaryLocation() != null)
 			LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
+		if (config.getLanguage() != null)
+			LinkGrammar.setLanguage(config.getLanguage());
 	}
 
 	/**
@@ -173,6 +177,8 @@ public class LGService
 		parseResult.setParserVersion(LinkGrammar.getVersion());
 		parseResult.setDictVersion(LinkGrammar.getDictVersion());
 		parseResult.numSkippedWords = LinkGrammar.getNumSkippedWords();
+
+		/* All three of these are deprecated, and should be removed someday. */
 		parseResult.words = new String[LinkGrammar.getNumWords()];
 		parseResult.entityFlags = new boolean[LinkGrammar.getNumWords()];
 		parseResult.pastTenseFlags = new boolean[LinkGrammar.getNumWords()];
@@ -182,6 +188,8 @@ public class LGService
 			parseResult.entityFlags[i] = LinkGrammar.isEntity(word);
 			parseResult.pastTenseFlags[i] = LinkGrammar.isPastTenseForm(word);
 		}
+
+
 		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());
 		for (int li = 0; li < maxLinkages; li++)
 		{
@@ -227,8 +235,8 @@ public class LGService
         StringBuffer buf = new StringBuffer();      
         buf.append("{\"tokens\":[],"); 
         buf.append("\"numSkippedWords\":0,");
-        buf.append("\"entity\":[],");
-        buf.append("\"pastTense\":[],");
+        buf.append("\"entity\":[],");      // deprecated
+        buf.append("\"pastTense\":[],");   // deprecated
         buf.append("\"linkages\":[],");
         buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\",");
         buf.append("\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"}");

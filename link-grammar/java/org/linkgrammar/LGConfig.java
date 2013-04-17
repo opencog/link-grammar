@@ -24,6 +24,7 @@ public class LGConfig
 	private int maxCost = -1;
 	private boolean allowSkippedWords = true;
 	private String dictionaryLocation = null;
+	private String language = null;
 
 	// mis-named; if flag is set, then a load is done, 
 	// not a store.
@@ -69,6 +70,14 @@ public class LGConfig
 	public void setDictionaryLocation(String d)
 	{
 		dictionaryLocation = d;
+	}
+	public String getLanguage()
+	{
+		return language;
+	}
+	public void setLanguage(String l)
+	{
+		language = l;
 	}
 
 	// mis-named; if flag is set, then a load is done, 
