@@ -1302,8 +1302,6 @@ bool test_right_wall(const char *id, const char *dict_str, bool empty_state)
 	Dictionary dict = dictionary_create_from_utf8(dict_str);
 
 	// print_dictionary_data(dict);
-
-cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	Parser parser(dict);
 	// Expecting more words to follow, so a non-trivial state.
 	parser.streamin("this is .");
@@ -1377,6 +1375,106 @@ int ntest_right_wall()
 
 // ==================================================================
 
+// XXX currently a copy f test_short_sent ... 
+bool test_cost(const char *id, const char *dict_str, bool empty_state)
+{
+	total_tests++;
+
+	Dictionary dict = dictionary_create_from_utf8(dict_str);
+	// print_dictionary_data(dict);
+
+cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
+	Parser parser(dict);
+
+	// Expecting more words to follow, so a non-trivial state.
+	// In particular, the dictionary will link the left-wall to
+	// "is", so "this" has to be pushed on stack until the "is"
+	// shows up.  The test_seq_sent() below will link the other
+	// way around.
+	parser.streamin("this is");
+
+	Lynk* alts = parser.get_alternatives();
+
+	// At least one result should be this state pair.
+	Lynk* sp =
+		ALINK2(STATE_PAIR,
+			ALINK0(SEQ),  // empty state
+			ALINK2(SEQ,
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Ss*b"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "this"),
+						ANODE(CONNECTOR, "Ss*b+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "is.v"),
+						ANODE(CONNECTOR, "Ss-")))
+				,
+				ALINK3(LING,
+					ANODE(LING_TYPE, "Wi"),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "LEFT-WALL"),
+						ANODE(CONNECTOR, "Wi+")),
+					ALINK2(WORD_DISJ,
+						ANODE(WORD, "is.v"),
+						ANODE(CONNECTOR, "Wi-")))
+			));
+
+	if (empty_state)
+	{
+		Lynk* ans = ALINK1(SET, sp);
+		if (not (ans->operator==(alts)))
+		{
+			cout << "Error: test failure on test \"" << id <<"\"" << endl;
+			cout << "=== Expecting:\n" << ans << endl;
+			cout << "=== Got:\n" << alts << endl;
+			return false;
+		}
+	}
+	else
+	{
+		// At least one alternative should be the desired state pair.
+		bool found = false;
+		size_t sz = alts->get_arity();
+		for (size_t i=0; i<sz; i++)
+		{
+			Atom* a = alts->get_outgoing_atom(i);
+			if (sp->operator==(a))
+				found = true;
+		}
+		if (not found)
+		{
+			cout << "Error: test failure on test \"" << id <<"\"" << endl;
+			cout << "=== Expecting one of them to be:\n" << sp << endl;
+			cout << "=== Got:\n" << alts << endl;
+			return false;
+		}
+	}
+
+	cout<<"PASS: test_short_sent(" << id << ") " << endl;
+	return true;
+}
+
+bool test_cost_this()
+{
+	return test_cost("short cost sent",
+		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
+		"this: Ss*b+;"
+		"is.v: Ss- and Wi-;"
+		"is.w: [[Ss- and Wi-]];",
+		true
+	);
+}
+
+int ntest_cost()
+{
+	size_t num_failures = 0;
+
+	if (!test_cost_this()) num_failures++;
+	return num_failures;
+}
+
+// ==================================================================
+
 void report(int num_failures, bool exit_on_fail)
 {
 	if (num_failures)
@@ -1420,6 +1518,9 @@ main(int argc, char *argv[])
 	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_right_wall();
+	report(num_failures, exit_on_fail);
+
+	num_failures += ntest_cost();
 	report(num_failures, exit_on_fail);
 
 	exit (0);
