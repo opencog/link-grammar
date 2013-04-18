@@ -68,8 +68,8 @@ enum AtomType
 class Atom : public gc
 {
 	public:
-		Atom(AtomType type, float likeli=1.0f) :
-			_type(type), _tv(likeli)
+		Atom(AtomType type, const TV& tv = TV(1.0f)) :
+			_type(type), _tv(tv)
 		{
 			// Marking stubborn, since its immutable.
 			GC_change_stubborn(this);
@@ -97,8 +97,8 @@ class Node : public Atom
 		Node(const std::string& n)
 			: Atom(NODE), _name(n) {}
 
-		Node(AtomType t, const std::string& n, float likeli=1.0f)
-			: Atom(t, likeli), _name(n) {}
+		Node(AtomType t, const std::string& n, const TV& tv = TV(1.0f))
+			: Atom(t, TV(tv)), _name(n) {}
 
 		const std::string& get_name() const { return _name; }
 
@@ -121,8 +121,8 @@ class Link : public Atom
 {
 	public:
 		// The main ctor
-		Link(AtomType t, const OutList& oset, float likeli=1.0f)
-			: Atom(t, likeli), _oset(oset) {}
+		Link(AtomType t, const OutList& oset, const TV& tv = TV(1.0f))
+			: Atom(t, tv), _oset(oset) {}
 		Link(AtomType t)
 			: Atom(t)
 		{}

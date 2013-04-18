@@ -1460,7 +1460,7 @@ bool test_cost_this()
 		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
 		"this: Ss*b+;"
 		"is.v: Ss- and Wi-;"
-		"is.w: [[Ss- and Wi-]];",
+		"is.w: [[Ss- and Wd-]];",
 		true
 	);
 }
