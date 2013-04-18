@@ -95,7 +95,7 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 		for (int i=0; i<ilvl; i++) cout << indent_str;
 		out << type_name(n->get_type()) << " : "
 		    << n->get_name();
-		if (n->_tv._strength < 1.0f)
+		if (n->_tv._strength > 0.0f)
 			out << "    (" << n->_tv._strength << ")";
 		out << endl;
 		return out;
@@ -105,7 +105,7 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 	{
 		for (int i=0; i<ilvl; i++) cout << indent_str;
 		out << type_name(l->get_type()) <<" :";
-		if (l->_tv._strength < 1.0f)
+		if (l->_tv._strength > 0.0f)
 			out << "     (" << l->_tv._strength << ")";
       out << endl;
 

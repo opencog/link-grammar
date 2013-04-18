@@ -183,14 +183,14 @@ class And : public Seq
 		And(const OutList& ol, const TV& tv = TV())
 			: Seq(AND, ol, tv)
 		{}
-		And(Atom* singleton)
-			: Seq(AND, OutList(1, singleton))
+		And(Atom* singleton, const TV& tv = TV())
+			: Seq(AND, OutList(1, singleton), tv)
 		{}
-		And(Atom* a, Atom* b)
-			: Seq(AND, ({OutList o(1,a); o.push_back(b); o;}))
+		And(Atom* a, Atom* b, const TV& tv = TV())
+			: Seq(AND, ({OutList o(1,a); o.push_back(b); o;}), tv)
 		{}
-		And(Atom* a, Atom* b, Atom* c)
-			: Seq(AND, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}))
+		And(Atom* a, Atom* b, Atom* c, const TV& tv = TV())
+			: Seq(AND, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}), tv)
 		{}
 
 

@@ -32,6 +32,12 @@ namespace viterbi {
  * rather than the probability.  This makes the numbers more
  * comprehensible and easier to read and debug.  To obtain the
  * probability (likelihood), just raise 2 to minus this value.
+ *
+ * Measuring in bits allows us to conflate ideas of energy, entropy,
+ * complexity, cost.  In particular, long linkages will get a complexity
+ * cost, whereas certain disjuncts have an innate cost, obtained from
+ * entropy principles. These can be added together; they'e on the same
+ * scale.
  */
 class TV
 {
@@ -131,27 +137,27 @@ class Link : public Atom
 		// The main ctor
 		Link(AtomType t, const OutList& oset, const TV& tv = TV())
 			: Atom(t, tv), _oset(oset) {}
-		Link(AtomType t)
-			: Atom(t)
+		Link(AtomType t, const TV& tv = TV())
+			: Atom(t, tv)
 		{}
-		Link(AtomType t, Atom* a)
-			: Atom(t), _oset(1, a)
+		Link(AtomType t, Atom* a, const TV& tv = TV())
+			: Atom(t, tv), _oset(1, a)
 		{}
-		Link(AtomType t, Atom* a, Atom*b)
-			: Atom(t), _oset(({OutList o(1,a); o.push_back(b); o;}))
+		Link(AtomType t, Atom* a, Atom*b, const TV& tv = TV())
+			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b); o;}))
 		{}
-		Link(AtomType t, Atom* a, Atom* b, Atom* c)
-			: Atom(t), _oset(({OutList o(1,a); o.push_back(b);
-			                   o.push_back(c); o;}))
+		Link(AtomType t, Atom* a, Atom* b, Atom* c, const TV& tv = TV())
+			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b);
+			                      o.push_back(c); o;}))
 		{}
-		Link(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d)
-			: Atom(t), _oset(({OutList o(1,a); o.push_back(b);
-			                   o.push_back(c); o.push_back(d); o;}))
+		Link(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, const TV& tv = TV())
+			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b);
+			                      o.push_back(c); o.push_back(d); o;}))
 		{}
-		Link(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, Atom* e)
-			: Atom(t), _oset(({OutList o(1,a); o.push_back(b);
-			                   o.push_back(c); o.push_back(d);
-			                   o.push_back(e); o;}))
+		Link(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, Atom* e, const TV& tv = TV())
+			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b);
+			                      o.push_back(c); o.push_back(d);
+			                      o.push_back(e); o;}))
 		{}
 		size_t get_arity() const { return _oset.size(); }
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
