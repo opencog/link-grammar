@@ -29,7 +29,7 @@ namespace viterbi {
 class TV
 {
 	public:
-		TV() : _strength(1.0f) {}
+		TV(float likeli=1.0f) : _strength(likeli) {}
 		float _strength;
 };
 
@@ -68,7 +68,8 @@ enum AtomType
 class Atom : public gc
 {
 	public:
-		Atom(AtomType type) : _type(type)
+		Atom(AtomType type, float likeli=1.0f) :
+			_type(type), _tv(likeli)
 		{
 			// Marking stubborn, since its immutable.
 			GC_change_stubborn(this);
@@ -96,8 +97,8 @@ class Node : public Atom
 		Node(const std::string& n)
 			: Atom(NODE), _name(n) {}
 
-		Node(AtomType t, const std::string& n)
-			: Atom(t), _name(n) {}
+		Node(AtomType t, const std::string& n, float likeli=1.0f)
+			: Atom(t, likeli), _name(n) {}
 
 		const std::string& get_name() const { return _name; }
 
@@ -120,8 +121,8 @@ class Link : public Atom
 {
 	public:
 		// The main ctor
-		Link(AtomType t, const OutList& oset)
-			: Atom(t), _oset(oset) {}
+		Link(AtomType t, const OutList& oset, float likeli=1.0f)
+			: Atom(t, likeli), _oset(oset) {}
 		Link(AtomType t)
 			: Atom(t)
 		{}

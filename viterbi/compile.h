@@ -30,9 +30,8 @@ class Connector : public Node
 		// Last letter of the connector must be + or -
 		// indicating the direction of the connector.
 		Connector(const std::string& name, float likeli=1.0f)
-			: Node(CONNECTOR, name)
+			: Node(CONNECTOR, name, likeli)
 		{
-			_tv._strength = likeli;
 			if (name == OPTIONAL_CLAUSE)
 				return;
 			char dir = *name.rbegin();
@@ -82,8 +81,8 @@ enum AtomType
 class Set : public Link
 {
 	public:
-		Set(const OutList& ol)
-			: Link(SET, ol)
+		Set(const OutList& ol, float likeli=1.0f)
+			: Link(SET, ol, likeli)
 		{}
 		Set(Atom* singleton)
 			: Link(SET, OutList(1, singleton))
@@ -104,8 +103,8 @@ protected:
 		Set(AtomType t)
 			: Link(t)
 		{}
-		Set(AtomType t, const OutList& oset)
-			: Link(t, oset)
+		Set(AtomType t, const OutList& oset, float likeli=1.0f)
+			: Link(t, oset, likeli)
 		{}
 		OutList flatset() const;
 };
@@ -119,8 +118,8 @@ class Seq : public Set
 		Seq()
 			: Set(SEQ)
 		{}
-		Seq(const OutList& ol)
-			: Set(SEQ, ol)
+		Seq(const OutList& ol, float likeli=1.0f)
+			: Set(SEQ, ol, likeli)
 		{}
 		Seq(Atom* singleton)
 			: Set(SEQ, OutList(1, singleton))
@@ -137,8 +136,8 @@ protected:
 		Seq(AtomType t)
 			: Set(t)
 		{}
-		Seq(AtomType t, const OutList& oset)
-			: Set(t, oset)
+		Seq(AtomType t, const OutList& oset, float likeli=1.0f)
+			: Set(t, oset, likeli)
 		{}
 };
 
@@ -149,8 +148,8 @@ class Or : public Set
 		Or()
 			: Set(OR)
 		{}
-		Or(const OutList& ol)
-			: Set(OR, ol)
+		Or(const OutList& ol, float likeli=1.0f)
+			: Set(OR, ol, likeli)
 		{}
 		Or(Atom* singleton)
 			: Set(OR, OutList(1, singleton))
@@ -181,8 +180,8 @@ class And : public Seq
 		And()
 			: Seq(AND)
 		{}
-		And(const OutList& ol)
-			: Seq(AND, ol)
+		And(const OutList& ol, float likeli=1.0f)
+			: Seq(AND, ol, likeli)
 		{}
 		And(Atom* singleton)
 			: Seq(AND, OutList(1, singleton))

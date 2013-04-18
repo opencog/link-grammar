@@ -67,16 +67,17 @@ Parser::Parser(Dictionary dict)
  */
 Atom * Parser::lg_exp_to_atom(Exp* exp)
 {
+	// Make the likelihood be 2^(-cost).
+	// Since most costs are zero, the likeli will be 1.0
+	// Most of the rest will be 0.5 and 0.25
+	float likli = expf (-0.693147181 * exp->cost);
+
 	if (CONNECTOR_type == exp->type)
 	{
 		stringstream ss;
 		if (exp->multi) ss << "@";
 		ss << exp->u.string << exp->dir;
 
-		// Make the likelihood be 2^(-cost).
-		// Since most costs are zero, the likeli will be 1.0
-		// Most of the rest will be 0.5 and 0.25
-		float likli = expf (-0.693147181 * exp->cost);
 		return new Connector(ss.str(), likli);
 	}
 
@@ -85,7 +86,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 	// in an AND-list.
 	E_list* el = exp->u.l;
 	if (NULL == el)
-		return new Connector(OPTIONAL_CLAUSE);
+		return new Connector(OPTIONAL_CLAUSE, likli);
 
 	// The C data structure that link-grammar uses for connector
 	// expressions is totally insane, as witnessed by the loop below.
@@ -108,10 +109,10 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		alist.push_back(lg_exp_to_atom(el->e));
 
 	if (AND_type == exp->type)
-		return new And(alist);
+		return new And(alist, likli);
 
 	if (OR_type == exp->type)
-		return new Or(alist);
+		return new Or(alist, likli);
 
 	assert(0, "Not reached");
 }
@@ -138,6 +139,7 @@ Set * Parser::word_consets(const string& word)
 			print_expression(exp); });
 
 		Atom *dj = lg_exp_to_atom(exp);
+cout <<"duuude dj="<<dj<<endl;
 		dj = disjoin(dj);
 
 		// First atom at the front of the outgoing set is the word itself.
