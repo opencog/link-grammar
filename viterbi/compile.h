@@ -29,8 +29,8 @@ class Connector : public Node
 	public:
 		// Last letter of the connector must be + or -
 		// indicating the direction of the connector.
-		Connector(const std::string& name, float likeli=1.0f)
-			: Node(CONNECTOR, name, likeli)
+		Connector(const std::string& name, const TV& tv = TV())
+			: Node(CONNECTOR, name, tv)
 		{
 			if (name == OPTIONAL_CLAUSE)
 				return;
@@ -81,8 +81,8 @@ enum AtomType
 class Set : public Link
 {
 	public:
-		Set(const OutList& ol, float likeli=1.0f)
-			: Link(SET, ol, likeli)
+		Set(const OutList& ol, const TV& tv = TV())
+			: Link(SET, ol, tv)
 		{}
 		Set(Atom* singleton)
 			: Link(SET, OutList(1, singleton))
@@ -92,7 +92,7 @@ class Set : public Link
 		{}
 
 		// See the C file for documentation
-		Set* flatten() const { return new Set(flatset()); }
+		Set* flatten() const { return new Set(flatset(), _tv); }
 		Atom* super_flatten() const;
 
 		// Add (append) other set  to this set.
@@ -103,8 +103,8 @@ protected:
 		Set(AtomType t)
 			: Link(t)
 		{}
-		Set(AtomType t, const OutList& oset, float likeli=1.0f)
-			: Link(t, oset, likeli)
+		Set(AtomType t, const OutList& oset, const TV& tv = TV())
+			: Link(t, oset, tv)
 		{}
 		OutList flatset() const;
 };
@@ -118,8 +118,8 @@ class Seq : public Set
 		Seq()
 			: Set(SEQ)
 		{}
-		Seq(const OutList& ol, float likeli=1.0f)
-			: Set(SEQ, ol, likeli)
+		Seq(const OutList& ol, const TV& tv = TV())
+			: Set(SEQ, ol, tv)
 		{}
 		Seq(Atom* singleton)
 			: Set(SEQ, OutList(1, singleton))
@@ -129,15 +129,15 @@ class Seq : public Set
 		{}
 
 		// See the Set class for documentation
-		Seq* flatten() const { return new Seq(flatset()); }
+		Seq* flatten() const { return new Seq(flatset(), _tv); }
 
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Seq(AtomType t)
 			: Set(t)
 		{}
-		Seq(AtomType t, const OutList& oset, float likeli=1.0f)
-			: Set(t, oset, likeli)
+		Seq(AtomType t, const OutList& oset, const TV& tv = TV())
+			: Set(t, oset, tv)
 		{}
 };
 
@@ -148,8 +148,8 @@ class Or : public Set
 		Or()
 			: Set(OR)
 		{}
-		Or(const OutList& ol, float likeli=1.0f)
-			: Set(OR, ol, likeli)
+		Or(const OutList& ol, const TV& tv = TV())
+			: Set(OR, ol, tv)
 		{}
 		Or(Atom* singleton)
 			: Set(OR, OutList(1, singleton))
@@ -165,7 +165,7 @@ class Or : public Set
 		Or* disjoin() const;
 
 		// See the Set class for documentation
-		Or* flatten() const { return new Or(flatset()); }
+		Or* flatten() const { return new Or(flatset(), _tv); }
 
 		// Remove repeated entries
 		Or* uniq() const;
@@ -180,8 +180,8 @@ class And : public Seq
 		And()
 			: Seq(AND)
 		{}
-		And(const OutList& ol, float likeli=1.0f)
-			: Seq(AND, ol, likeli)
+		And(const OutList& ol, const TV& tv = TV())
+			: Seq(AND, ol, tv)
 		{}
 		And(Atom* singleton)
 			: Seq(AND, OutList(1, singleton))
@@ -199,7 +199,7 @@ class And : public Seq
 		Or* disjoin();
 
 		// See the Set class for documentation
-		And* flatten() const { return new And(flatset()); }
+		And* flatten() const { return new And(flatset(), _tv); }
 
 		/// Remove optional clauses.
 		And* clean() const;
