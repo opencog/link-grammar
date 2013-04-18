@@ -139,7 +139,6 @@ Set * Parser::word_consets(const string& word)
 			print_expression(exp); });
 
 		Atom *dj = lg_exp_to_atom(exp);
-cout <<"duuude dj="<<dj<<endl;
 		dj = disjoin(dj);
 
 		// First atom at the front of the outgoing set is the word itself.

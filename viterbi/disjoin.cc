@@ -37,7 +37,7 @@ static Atom* normal_order(Atom* dnf)
 			Atom* a = ora->get_outgoing_atom(i);
 			norm.push_back(normal_order(a));
 		}
-		return new Or(norm);
+		return new Or(norm, ora->_tv);
 	}
 
 	And* andy = dynamic_cast<And*>(dnf);
@@ -61,7 +61,7 @@ static Atom* normal_order(Atom* dnf)
 			if ('+' == c->get_direction())
 				norm.push_back(normal_order(c));
 		}
-		return new And(norm);
+		return new And(norm, andy->_tv);
 	}
 
 	// no-op
@@ -117,12 +117,13 @@ Atom* disjoin(Atom* mixed_form)
 			new_oset.push_back(norm);
 		}
 
+// XXX TODO -- TV value is surely wrong here ...
 		Or* new_or = new Or(new_oset);
 		return normal_order(new_or->super_flatten());
 	}
 
 	And* junct = dynamic_cast<And*>(mixed_form);
-	assert(junct, "disjoin: given a naked AND link!");
+	assert(junct, "disjoin: mixed form is not AND link!");
 
 	junct = junct->flatten();
 
@@ -178,15 +179,18 @@ Atom* disjoin(Atom* mixed_form)
 		for (int j=0; j<jsz; j++)
 			distrib.push_back(rest[j]);
 
+// XXX TODO -- TV value is surely wrong here ...
 		And *andy = new And(distrib);
 		andy = andy->clean();
 		new_oset.push_back(andy);
 	}
 
+// XXX TODO -- TV value is surely wrong here ...
 	Or* new_or = new Or(new_oset);
 	Atom* new_a = new_or->super_flatten();
 	new_a = disjoin(new_a);
 
+// XXX TODO -- TV value is surely wrong here ...
 	Set* newset = dynamic_cast<Set*>(new_a);
 	if (newset)
 		return normal_order(newset->super_flatten());

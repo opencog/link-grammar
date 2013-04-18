@@ -54,6 +54,8 @@ OutList Set::flatset() const
 /// and the flattening only happens within a single type.  The only
 /// exception to this is if the set contains just a single element,
 /// in which case this returns that one element.
+//
+// XXX TODO: handling of TV's during flattening is probably broken !?!
 Atom* Set::super_flatten() const
 {
 	size_t sz = get_arity();
@@ -101,7 +103,7 @@ Atom* Set::super_flatten() const
 			newset.push_back(chld->get_outgoing_atom(j));
 	}
 
-	return  upcast(new Link(get_type(), newset));
+	return  upcast(new Link(get_type(), newset, _tv));
 }
 
 /// Add (append) other set to this set.
@@ -372,13 +374,13 @@ Atom* upcast(const Atom* a)
 	{
 		// Links
 		case AND:
-			return new And(l->get_outgoing_set());
+			return new And(l->get_outgoing_set(), l->_tv);
 		case OR:
-			return new Or(l->get_outgoing_set());
+			return new Or(l->get_outgoing_set(), l->_tv);
 
 		// Nodes
 		case CONNECTOR:
-			return new Connector(n->get_name());
+			return new Connector(n->get_name(), n->_tv);
 
 		default:
 			assert(0, "upcast: implement me!");
