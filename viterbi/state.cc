@@ -39,11 +39,6 @@ State::State(Set* initial_state_set)
 }
 
 // ===================================================================
-/** convenience wrapper */
-Set* State::get_alternatives()
-{
-	return _alternatives;
-}
 
 // XXX is this really needed ???
 void State::set_clean_state(Set* s)
@@ -68,7 +63,7 @@ void State::set_clean_state(Set* s)
 /**
  * Add a single dictionary entry to the parse state, if possible.
  */
-void State::stream_word_conset(WordCset* wrd_cset)
+Set* State::stream_word_conset(WordCset* wrd_cset)
 {
 	// wrd_cset should be pointing at a word connector set:
 	// WORD_CSET : 
@@ -77,14 +72,14 @@ void State::stream_word_conset(WordCset* wrd_cset)
 	//      CONNECTOR : Wd-  etc...
 
    DBG(cout << "--------- enter stream_word_conset ----------" << endl);
-   DBG(cout << "Initial alternative_set:\n" << get_alternatives() << endl);
+   DBG(cout << "Initial alternative_set:\n" << _alternatives << endl);
 	Connect cnct(wrd_cset);
 
 	// The state set consists of a bunch of sequences; each sequence
 	// being a single parse state.  Each parse state is a sequence of
 	// unsatisfied right-pointing links.
 	Set* new_alts = new Set();
-	Set* alts = get_alternatives();
+	Set* alts = _alternatives;
 	for (int i = 0; i < alts->get_arity(); i++)
 	{
 		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
@@ -99,9 +94,9 @@ void State::stream_word_conset(WordCset* wrd_cset)
 		Set* next_alts = cnct.try_connect(sp);
 		new_alts = new_alts->add(next_alts);
 	}
-	_alternatives = new_alts;
 
 	// set_clean_state(new_state_set);
+	return new_alts;
 }
 
 }} // end of namespaces

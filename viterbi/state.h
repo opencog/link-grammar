@@ -26,9 +26,7 @@ class State : public gc
 	public:
 		State(Set *);
 
-		void stream_word_conset(WordCset*);
-
-		Set* get_alternatives();
+		Set* stream_word_conset(WordCset*);
 
 	protected:
 		void set_clean_state(Set*);
