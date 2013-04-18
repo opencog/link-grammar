@@ -503,10 +503,16 @@ public class LGService
 	 */
 	public static ParseResult parse(LGConfig config, String text)
 	{
-		if (!isInitialized() && 
-			config.getDictionaryLocation() != null && 
-			config.getDictionaryLocation().trim().length() > 0)
-			LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
+		if (!isInitialized())
+		{
+			if (config.getDictionaryLocation() != null && 
+				config.getDictionaryLocation().trim().length() > 0)
+				LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
+
+			if (config.getLanguage() != null && 
+				config.getLanguage().trim().length() > 0)
+				LinkGrammar.setLanguage(config.getLanguage());
+		}
 		configure(config);
 		LinkGrammar.parse(text);
 		return getAsParseResult(config);

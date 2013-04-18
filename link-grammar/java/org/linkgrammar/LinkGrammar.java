@@ -57,6 +57,8 @@ public class LinkGrammar
     // Defaults to /usr/local/share/link-grammar/
     public static native void setDictionariesPath(String path);
 
+    public static native void setLanguage(String lang);
+
     // C functions in the linkparser API
     public static native void init();
 
@@ -111,8 +113,6 @@ public class LinkGrammar
     public static native double getLinkageSenseScore(int word, int sense);
 
     // OTHER UTILITY C FUNCTIONS
-    public static native void setLanguage(String word);
-
     @Deprecated public static native boolean isPastTenseForm(String word);
 
     @Deprecated public static native boolean isEntity(String word);
