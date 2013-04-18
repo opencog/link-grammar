@@ -566,22 +566,20 @@ bool test_costly_or_dnf_double()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
-// -----------------------------------------------
-// XXX FIXME -- finish working on the costsly tests below ...
 bool test_costly_or_distrib_left()
 {
 	Or* or_right = new Or(
-      ALINK2(AND,
-      	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
-			ANODE(WORD, "RR1"))
-	);
+      ALINK2C(AND,
+      	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f),
+			ANODE(WORD, "RR1"), 0.22f),
+	0.333f);
 	Or* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK2(OR,
-		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1")),
-		ALINK2(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"))
-	);
+	ALINK2C(OR,
+		ALINK2C(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1"), 0.32f),
+		ALINK2C(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"), 0.32f),
+	0.333f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -589,17 +587,17 @@ bool test_costly_or_distrib_left()
 bool test_costly_or_distrib_right()
 {
 	Or* or_right = new Or(
-		ALINK2(AND,
+		ALINK2C(AND,
    		ANODE(WORD, "AA1"),
-      	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
-	);
+      	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.111f), 0.222f),
+	0.5f);
 	Or* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK2(OR,
-		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
-		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
-	);
+	ALINK2C(OR,
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.333f),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.333f),
+	0.5f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -607,22 +605,26 @@ bool test_costly_or_distrib_right()
 bool test_costly_or_distrib_nest()
 {
 	Or* or_right = new Or(
-		ALINK1(OR,
-			ALINK2(AND,
+		ALINK1C(OR,
+			ALINK2C(AND,
    			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))))
-	);
+     		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f),
+			0.02f),
+		0.003f),
+	0.0004f);
 	Or* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK2(OR,
-		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
-		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
-	);
+	ALINK2C(OR,
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.123f),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.123f),
+	0.0004f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+// -----------------------------------------------
+// XXX FIXME -- finish working on the costsly tests below ...
 bool test_costly_or_distrib_nest2()
 {
 	Or* or_right = new Or(

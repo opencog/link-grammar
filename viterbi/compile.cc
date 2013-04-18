@@ -176,8 +176,16 @@ Or* Or::disjoin() const
 		{
 			Or* ol = dynamic_cast<Or*>(upcast(a));
 			Or* l = ol->disjoin();
+			TV cost = l->_tv;
 			for (size_t j=0; j<l->get_arity(); j++)
-				dnf.push_back(l->get_outgoing_atom(j));
+			{
+				// XXX We've got to distribute the cost, somehow, but
+				// I don't really like bumping it like this ... its not
+				// a pure play.
+				Atom* aol = l->get_outgoing_atom(j);
+				aol->_tv += cost;
+				dnf.push_back(aol);
+			}
 		}
 		else
 			dnf.push_back(a);
