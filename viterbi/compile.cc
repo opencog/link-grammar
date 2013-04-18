@@ -189,6 +189,8 @@ Or* Or::disjoin() const
 /// of And and Or nodes.  If the oset contains non-boolean
 /// terms, these are left in place, unmolested.
 ///
+/// Costs are distributed over disjuncts.
+///
 /// XXX Note: this somewhat duplicates the function of the
 /// disjoin() subroutine defined in disjoin.cc ...
 /// Note: this one is unit-tested, the other is not.
@@ -196,12 +198,12 @@ Or* Or::disjoin() const
 Or* And::disjoin()
 {
 	size_t sz = get_arity();
-	if (0 == sz) return new Or();
+	if (0 == sz) return new Or(_tv);
 	if (1 == sz)
 	{
 		if (OR == _oset[0]->get_type())
 			return dynamic_cast<Or*>(upcast(_oset[0]));
-		return new Or(_oset);
+		return new Or(_oset, _tv);
 	}
 
 	// Perhaps there is nothing to be done, because none
@@ -278,11 +280,11 @@ Or* And::disjoin()
 				Link* l = dynamic_cast<Link*>(a);
 				OutList al = l->get_outgoing_set();
 				al.push_back(tail);
-				dnf.push_back(new And(al));
+				dnf.push_back(new And(al, stumpy->_tv));
 			}
 			else
 			{
-				dnf.push_back(new And(a, tail));
+				dnf.push_back(new And(a, tail, stumpy->_tv));
 			}
 		}
 	}

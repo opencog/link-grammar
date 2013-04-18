@@ -396,19 +396,36 @@ bool test_costly_and_dnf_double_w()
 bool test_costly_and_distrib_left()
 {
 	And* and_right = new And(
-      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
 		ANODE(WORD, "RR1"));
 	Or* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
-		ALINK2(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1")),
-		ALINK2(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"))
+		ALINK2C(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1"), 1.1f),
+		ALINK2C(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"), 1.1f)
 	);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+bool test_costly_and_distrib_left_w()
+{
+	And* and_right = new And(
+      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ANODEC(WORD, "RR1", 3.14f));
+	Or* computed = and_right->disjoin();
+
+	Lynk* expected =
+	ALINK2(OR,
+		ALINK2(AND, ANODE(WORD, "BB2"), ANODEC(WORD, "RR1", 3.14f)),
+		ALINK2(AND, ANODE(WORD, "CC3"), ANODEC(WORD, "RR1", 3.14f))
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+// -----------------------------------------------
 bool test_costly_and_distrib_right()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
@@ -601,9 +618,13 @@ int ntest_costly_disjoin()
 	size_t num_failures = 0;
 	if (!test_costly_and_dnf_single()) num_failures++;
 	if (!test_costly_and_dnf_single_ne()) num_failures++;
+
 	if (!test_costly_and_dnf_double()) num_failures++;
 	if (!test_costly_and_dnf_double_w()) num_failures++;
+
 	if (!test_costly_and_distrib_left()) num_failures++;
+	if (!test_costly_and_distrib_left_w()) num_failures++;
+
 	if (!test_costly_and_distrib_right()) num_failures++;
 	if (!test_costly_and_distrib_middle()) num_failures++;
 	if (!test_costly_and_distrib_quad()) num_failures++;

@@ -84,11 +84,11 @@ class Set : public Link
 		Set(const OutList& ol, const TV& tv = TV())
 			: Link(SET, ol, tv)
 		{}
-		Set(Atom* singleton)
-			: Link(SET, OutList(1, singleton))
+		Set(Atom* singleton, const TV& tv = TV())
+			: Link(SET, OutList(1, singleton), tv)
 		{}
-		Set()
-			: Link(SET)
+		Set(const TV& tv = TV())
+			: Link(SET, tv)
 		{}
 
 		// See the C file for documentation
@@ -100,8 +100,8 @@ class Set : public Link
 
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
-		Set(AtomType t)
-			: Link(t)
+		Set(AtomType t, const TV& tv = TV())
+			: Link(t, tv)
 		{}
 		Set(AtomType t, const OutList& oset, const TV& tv = TV())
 			: Link(t, oset, tv)
@@ -145,8 +145,8 @@ protected:
 class Or : public Set
 {
 	public:
-		Or()
-			: Set(OR)
+		Or(const TV& tv = TV())
+			: Set(OR, tv)
 		{}
 		Or(const OutList& ol, const TV& tv = TV())
 			: Set(OR, ol, tv)
