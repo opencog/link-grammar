@@ -472,24 +472,24 @@ bool test_costly_and_distrib_right_sum()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
-// -----------------------------------------------
-// XXX FIXME -- finish working on the costsly tests below ...
 bool test_costly_and_distrib_middle()
 {
 	And* and_mid = new And(ANODE(WORD, "AA1"),
-      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
-      ANODE(WORD, "DD4"));
+      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 2.1f),
+      ANODE(WORD, "DD4"), 0.6f);
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
-		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), ANODE(WORD, "DD4")),
-		ALINK3(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), ANODE(WORD, "DD4"))
+		ALINK3C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), ANODE(WORD, "DD4"), 2.7f),
+		ALINK3C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 2.7f)
 	);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+// -----------------------------------------------
+// XXX FIXME -- finish working on the costsly tests below ...
 bool test_costly_and_distrib_quad()
 {
 	And* and_mid = new And(
