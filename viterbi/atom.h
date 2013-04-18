@@ -45,6 +45,18 @@ class TV
 		TV(float likeli=0.0f) : _strength(likeli) {}
 		float _strength;
 		bool operator==(const TV&) const;
+
+		/// Log-likelihoods (costs, energies, entropies) add.
+		TV& operator+=(const TV& other)
+		{
+			_strength += other._strength;
+			return *this;
+		}
+
+		const TV operator+(const TV& other) const
+		{
+			return TV(*this) += other;
+		}
 };
 
 // Atom types.  Right now an enum, but maybe should be dynamic!?

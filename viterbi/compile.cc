@@ -271,6 +271,9 @@ Or* And::disjoin()
 	{
 		Atom* tail = ll->get_outgoing_atom(j);
 		sz = stumpy->get_arity();
+
+		// Costs distribute additively: AND over OR.
+		TV cost = stumpy->_tv + _tv;
 		for (size_t i=0; i<sz; i++)
 		{
 			Atom* a = stumpy->get_outgoing_atom(i);
@@ -280,11 +283,11 @@ Or* And::disjoin()
 				Link* l = dynamic_cast<Link*>(a);
 				OutList al = l->get_outgoing_set();
 				al.push_back(tail);
-				dnf.push_back(new And(al, stumpy->_tv));
+				dnf.push_back(new And(al, cost));
 			}
 			else
 			{
-				dnf.push_back(new And(a, tail, stumpy->_tv));
+				dnf.push_back(new And(a, tail, cost));
 			}
 		}
 	}

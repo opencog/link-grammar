@@ -409,6 +409,22 @@ bool test_costly_and_distrib_left()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+bool test_costly_and_distrib_left_sum()
+{
+	And* and_right = new And(
+      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
+		ANODE(WORD, "RR1"), 0.8f);
+	Or* computed = and_right->disjoin();
+
+	Lynk* expected =
+	ALINK2(OR,
+		ALINK2C(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1"), 1.9f),
+		ALINK2C(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"), 1.9f)
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
 bool test_costly_and_distrib_left_w()
 {
 	And* and_right = new And(
@@ -623,6 +639,7 @@ int ntest_costly_disjoin()
 	if (!test_costly_and_dnf_double_w()) num_failures++;
 
 	if (!test_costly_and_distrib_left()) num_failures++;
+	if (!test_costly_and_distrib_left_sum()) num_failures++;
 	if (!test_costly_and_distrib_left_w()) num_failures++;
 
 	if (!test_costly_and_distrib_right()) num_failures++;

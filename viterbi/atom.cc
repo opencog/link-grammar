@@ -50,6 +50,8 @@ bool TV::operator==(const TV& other) const
 	return false;
 }
 
+// ====================================================
+
 bool Atom::operator==(const Atom* other) const
 {
 	if (!other) return false;
