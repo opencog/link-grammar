@@ -602,6 +602,7 @@ bool test_costly_or_distrib_right()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+// -----------------------------------------------
 bool test_costly_or_distrib_nest()
 {
 	Or* or_right = new Or(
@@ -623,17 +624,54 @@ bool test_costly_or_distrib_nest()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
-// -----------------------------------------------
-// XXX FIXME -- finish working on the costsly tests below ...
 bool test_costly_or_distrib_nest2()
 {
 	Or* or_right = new Or(
-		ALINK3(OR,
-			ANODE(WORD, "DD4"),
-			ALINK2(AND,
+		ALINK1C(OR,
+			ALINK2C(AND,
    			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
-			ANODE(WORD, "EE5"))
+     		 	ANODEC(WORD, "BB2", 0.1f),
+			0.02f),
+		0.003f),
+	0.0004f);
+	Or* computed = or_right->disjoin();
+
+	Lynk* expected =
+	ALINK1C(OR,
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODEC(WORD, "BB2", 0.1f), 0.023f),
+	0.0004f);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_costly_or_distrib_nest3()
+{
+	Or* or_right = new Or(
+		ALINK1C(OR,
+     	 	ANODEC(WORD, "BB2", 0.1f),
+		0.003f),
+	0.0004f);
+	Or* computed = or_right->disjoin();
+
+	Lynk* expected =
+	ALINK1C(OR,
+		ANODEC(WORD, "BB2", 0.103f), 
+	0.0004f);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+// -----------------------------------------------
+// XXX FIXME -- finish working on the costsly tests below ...
+bool test_costly_or_distrib_nest4()
+{
+	Or* or_right = new Or(
+		ALINK3C(OR,
+			ANODE(WORD, "DD4"),
+			ALINK2C(AND,
+   			ANODE(WORD, "AA1"),
+     		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f), 0.02f),
+			ANODE(WORD, "EE5"), 0.003f)
 	);
 	Or* computed = or_right->disjoin();
 
@@ -673,8 +711,11 @@ int ntest_costly_disjoin()
 	if (!test_costly_or_dnf_double()) num_failures++;
 	if (!test_costly_or_distrib_left()) num_failures++;
 	if (!test_costly_or_distrib_right()) num_failures++;
+
 	if (!test_costly_or_distrib_nest()) num_failures++;
 	if (!test_costly_or_distrib_nest2()) num_failures++;
+	if (!test_costly_or_distrib_nest3()) num_failures++;
+	if (!test_costly_or_distrib_nest4()) num_failures++;
 	return num_failures;
 }
 
