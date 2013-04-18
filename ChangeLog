@@ -5,7 +5,7 @@ Version 4.7.12 (xxx 2013)
  * Fix SAT-solver build; recent changes had broken it.
  * Export read-dict.h as a public API. 
  * Ongoing development of the Viterbi prototype.
- * Windows: some UTF*/widechar refactoring.
+ * Windows: some UTF8/widechar refactoring.
  * Java bindings: add method to set the language.
 
 Version 4.7.11 (23 March 2013)
