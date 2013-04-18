@@ -10,7 +10,6 @@
 /*************************************************************************/
 
 #include <ctype.h>
-#include <math.h>
 
 #include <algorithm>
 #include <iostream>
@@ -67,10 +66,8 @@ Parser::Parser(Dictionary dict)
  */
 Atom * Parser::lg_exp_to_atom(Exp* exp)
 {
-	// Make the likelihood be 2^(-cost).
-	// Since most costs are zero, the likeli will be 1.0
-	// Most of the rest will be 0.5 and 0.25
-	float likli = expf (-0.693147181 * exp->cost);
+	// log-likelihood is identical to the link-grammar cost.
+	float likli = exp->cost;
 
 	if (CONNECTOR_type == exp->type)
 	{

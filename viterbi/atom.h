@@ -25,11 +25,18 @@ namespace viterbi {
 // Classes generally resembling those of the OpenCog AtomSpace
 // These are tailored for use for parsing.
 
-/** TV (truth value): strength or likelihood of a link */
+/**
+ * TV (truth value): strength or likelihood of a link.
+ *
+ * Actually, we store the log-likelihood here, in units of bits,
+ * rather than the probability.  This makes the numbers more
+ * comprehensible and easier to read and debug.  To obtain the
+ * probability (likelihood), just raise 2 to minus this value.
+ */
 class TV
 {
 	public:
-		TV(float likeli=1.0f) : _strength(likeli) {}
+		TV(float likeli=0.0f) : _strength(likeli) {}
 		float _strength;
 		bool operator==(const TV&) const;
 };
