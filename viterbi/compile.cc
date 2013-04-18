@@ -151,6 +151,8 @@ Or* Or::uniq() const
 /// of And and Or nodes.  If the oset contains non-boolean
 /// terms, these are left in place, unmolested.
 ///
+/// Costs are distributed over disjuncts.
+///
 /// XXX Note: this somewhat duplicates the function of the
 /// disjoin() subroutine defined in disjoin.cc ...
 /// Note: this one is unit-tested, the other is not.
@@ -180,7 +182,7 @@ Or* Or::disjoin() const
 		else
 			dnf.push_back(a);
 	}
-	return new Or(dnf);
+	return new Or(dnf, _tv);
 }
 
 /// Return disjunctive normal form (DNF)

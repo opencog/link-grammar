@@ -151,14 +151,14 @@ class Or : public Set
 		Or(const OutList& ol, const TV& tv = TV())
 			: Set(OR, ol, tv)
 		{}
-		Or(Atom* singleton)
-			: Set(OR, OutList(1, singleton))
+		Or(Atom* singleton, const TV& tv = TV())
+			: Set(OR, OutList(1, singleton), tv)
 		{}
-		Or(Atom* a, Atom* b)
-			: Set(OR, ({OutList o(1,a); o.push_back(b); o;}))
+		Or(Atom* a, Atom* b, const TV& tv = TV())
+			: Set(OR, ({OutList o(1,a); o.push_back(b); o;}), tv)
 		{}
-		Or(Atom* a, Atom* b, Atom* c)
-			: Set(OR, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}))
+		Or(Atom* a, Atom* b, Atom* c, const TV& tv = TV())
+			: Set(OR, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}), tv)
 		{}
 
 		// Return disjunctive normal form (DNF)
