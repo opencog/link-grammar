@@ -273,7 +273,7 @@ Or* And::disjoin()
 		sz = stumpy->get_arity();
 
 		// Costs distribute additively: AND over OR.
-		TV cost = stumpy->_tv + _tv;
+		TV cost = stumpy->_tv + _tv + last->_tv;
 		for (size_t i=0; i<sz; i++)
 		{
 			Atom* a = stumpy->get_outgoing_atom(i);

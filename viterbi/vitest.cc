@@ -445,18 +445,35 @@ bool test_costly_and_distrib_left_w()
 bool test_costly_and_distrib_right()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
-      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
+      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35));
 	Or* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
-		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
-		ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"))
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.35),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.35)
 	);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+bool test_costly_and_distrib_right_sum()
+{
+	And* and_right = new And(ANODE(WORD, "AA1"),
+      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35f), 0.5f);
+	Or* computed = and_right->disjoin();
+
+	Lynk* expected =
+	ALINK2(OR,
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.85f),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.85f)
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+// -----------------------------------------------
+// XXX FIXME -- finish working on the costsly tests below ...
 bool test_costly_and_distrib_middle()
 {
 	And* and_mid = new And(ANODE(WORD, "AA1"),
@@ -643,6 +660,8 @@ int ntest_costly_disjoin()
 	if (!test_costly_and_distrib_left_w()) num_failures++;
 
 	if (!test_costly_and_distrib_right()) num_failures++;
+	if (!test_costly_and_distrib_right_sum()) num_failures++;
+
 	if (!test_costly_and_distrib_middle()) num_failures++;
 	if (!test_costly_and_distrib_quad()) num_failures++;
 	if (!test_costly_and_distrib_quad_right()) num_failures++;
