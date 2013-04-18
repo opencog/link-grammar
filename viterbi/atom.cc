@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include <assert.h>
+#include <math.h>
 
 #include "atom.h"
 
@@ -24,6 +25,9 @@ const string type_name(AtomType t)
 {
 	switch(t)
 	{
+		case NODE:       return "NODE";
+		// case LINK:       return "LINK";
+
 		case WORD:       return "WORD";
 		case LING_TYPE:  return "LING_TYPE";
 		case CONNECTOR:  return "CONNECTOR";
@@ -40,11 +44,18 @@ const string type_name(AtomType t)
 	return "UNHANDLED_TYPE_NAME";
 }
 
+bool TV::operator==(const TV& other) const
+{
+	if (fabs(other._strength - _strength) < 1.0e-6) return true;
+	return false;
+}
+
 bool Atom::operator==(const Atom* other) const
 {
 	if (!other) return false;
 	if (other == this) return true;
-	if (other->_type == this->_type) return true;
+	if (other->_type == this->_type and
+	    other->_tv == this->_tv) return true;
 	return false;
 }
 
@@ -53,6 +64,7 @@ bool Node::operator==(const Atom* other) const
 	if (!other) return false;
 	if (other == this) return true;
 	if (other->get_type() != this->get_type()) return false;
+	if (not other->_tv.operator==(this->_tv)) return false;
 	const Node* nother = dynamic_cast<const Node*>(other);
 	if (nother->_name != this->_name)  return false;
 	return true;
@@ -63,6 +75,7 @@ bool Link::operator==(const Atom* other) const
 	if (!other) return false;
 	if (other == this) return true;
 	if (other->get_type() != this->get_type()) return false;
+	if (not other->_tv.operator==(this->_tv)) return false;
 	const Link* lother = dynamic_cast<const Link*>(other);
 	if (lother->get_arity() != this->get_arity())  return false;
 	for (size_t i=0; i<get_arity(); i++)

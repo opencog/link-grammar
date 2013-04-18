@@ -31,6 +31,7 @@ class TV
 	public:
 		TV(float likeli=1.0f) : _strength(likeli) {}
 		float _strength;
+		bool operator==(const TV&) const;
 };
 
 // Atom types.  Right now an enum, but maybe should be dynamic!?
@@ -94,11 +95,11 @@ class Atom : public gc
 class Node : public Atom
 {
 	public:
-		Node(const std::string& n)
-			: Atom(NODE), _name(n) {}
+		Node(const std::string& n, const TV& tv = TV())
+			: Atom(NODE, tv), _name(n) {}
 
 		Node(AtomType t, const std::string& n, const TV& tv = TV())
-			: Atom(t, TV(tv)), _name(n) {}
+			: Atom(t, tv), _name(n) {}
 
 		const std::string& get_name() const { return _name; }
 

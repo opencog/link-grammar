@@ -47,10 +47,49 @@ using namespace link_grammar::viterbi;
 	return true;
 
 
+#define CHECK_NE(NAME, EXPECTED, COMPUTED)                           \
+	total_tests++;                                                    \
+	if (EXPECTED->operator==(COMPUTED))                               \
+	{                                                                 \
+		cout << "Error: test failure on " << NAME << endl;             \
+		cout << "=== Expecting:\n" << EXPECTED << endl;                \
+		cout << "=== To differ from:\n" << COMPUTED << endl;           \
+		return false;                                                  \
+	}                                                                 \
+	cout<<"PASS: " << NAME << endl;                                   \
+	return true;
+
+
 int total_tests = 0;
 
 // ==================================================================
-// Make sure that the disjoind functions actually work.
+// Test some basic atomic functions.
+
+bool test_operator_equals()
+{
+	Node* na = new Node("abc");
+	Node* nb = new Node("abc", 0.8f);
+	CHECK_NE(__FUNCTION__, na, nb);
+}
+
+bool test_operator_equals2()
+{
+	Node* na = new Node("abcd", 0.8f*0.8f);
+	Node* nb = new Node("abcd", 0.6400001f);
+	CHECK(__FUNCTION__, na, nb);
+}
+
+int ntest_core()
+{
+	size_t num_failures = 0;
+	if (!test_operator_equals()) num_failures++;
+	if (!test_operator_equals2()) num_failures++;
+	return num_failures;
+}
+
+
+// ==================================================================
+// Make sure that the disjoined functions actually work.
 
 bool test_and_dnf_single()
 {
@@ -1495,6 +1534,9 @@ main(int argc, char *argv[])
 {
 	size_t num_failures = 0;
 	bool exit_on_fail = true;
+
+	num_failures += ntest_core();
+	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_disjoin();
 	report(num_failures, exit_on_fail);
