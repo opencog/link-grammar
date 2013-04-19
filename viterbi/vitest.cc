@@ -1006,6 +1006,86 @@ bool test_costly_or_distrib_nest4()
 bool test_costly_or_distrib_nest5()
 {
 	Or* or_right = new Or(
+		ANODE(WORD, "AA1"),
+  	 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.01),
+	0.1f);
+	Atom* computed = or_right->disjoin();
+
+	Lynk* expected =
+	ALINK3C(OR,
+		ANODE(WORD, "AA1"),
+		ANODEC(WORD, "BB2", 0.01f),
+		ANODEC(WORD, "CC3", 0.01f),
+	0.1f);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_costly_or_distrib_nest6()
+{
+	Or* or_right = new Or(
+		ALINK2C(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.001f),
+		0.01f),
+	0.1f);
+	Atom* computed = or_right->disjoin();
+
+	Lynk* expected =
+	ALINK3C(OR,
+		ANODE(WORD, "AA1"),
+		ANODEC(WORD, "BB2", 0.001f),
+		ANODEC(WORD, "CC3", 0.001f),
+	0.11f);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_costly_or_distrib_nest7()
+{
+	And* and_right = new And(
+		ALINK2C(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.001f),
+		0.01f),
+	0.1f);
+	Atom* computed = and_right->disjoin();
+
+	Lynk* expected =
+	ALINK3C(OR,
+		ANODE(WORD, "AA1"),
+		ANODEC(WORD, "BB2", 0.001f),
+		ANODEC(WORD, "CC3", 0.001f),
+	0.11f);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_costly_or_distrib_nest8()
+{
+	Or* or_right = new Or(
+		ALINK1C(AND,
+			ALINK2C(OR,
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.0004f),
+			0.003f),
+		0.02f),
+	0.1f);
+	Atom* computed = or_right->disjoin();
+
+	Lynk* expected =
+	ALINK3C(OR,
+		ANODE(WORD, "AA1"),
+		ANODEC(WORD, "BB2", 0.0004f),
+		ANODEC(WORD, "CC3", 0.0004f),
+	0.123f);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_costly_or_distrib_nest9()
+{
+	Or* or_right = new Or(
 		ALINK3C(AND,
 			ANODE(WORD, "DD4"),
 			ALINK2C(OR,
@@ -1057,6 +1137,10 @@ int ntest_costly_disjoin()
 	if (!test_costly_or_distrib_nest3()) num_failures++;
 	if (!test_costly_or_distrib_nest4()) num_failures++;
 	if (!test_costly_or_distrib_nest5()) num_failures++;
+	if (!test_costly_or_distrib_nest6()) num_failures++;
+	if (!test_costly_or_distrib_nest7()) num_failures++;
+	if (!test_costly_or_distrib_nest8()) num_failures++;
+	if (!test_costly_or_distrib_nest9()) num_failures++;
 	return num_failures;
 }
 
