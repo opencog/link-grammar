@@ -20,10 +20,13 @@ namespace viterbi {
 /// one single set. For example, the flattened version of
 /// {a, {b,c}} is {a, b, c}
 ///
+/// See also super_flatten(), which recursively flattens
+/// anything deriving from class Set, recursively.
+///
 // Note that this algo, as currently implemented, is order-preserving.
 // This is important for the Seq class, and the And class (since the
 // link-grammar AND must be an ordered sequence, to preserve planarity
-// of the parses.  
+// of the parses.)
 OutList Set::flatset() const
 {
 	OutList newset;
@@ -50,7 +53,7 @@ OutList Set::flatset() const
 }
 
 /// Recursively flatten everything that inherits from set.
-/// This does preserve the type hierarchy: that is, types are respected, 
+/// This does preserve the type hierarchy: that is, types are respected,
 /// and the flattening only happens within a single type.  The only
 /// exception to this is if the set contains just a single element,
 /// in which case this returns that one element.
@@ -65,7 +68,7 @@ Atom* Set::super_flatten() const
 	if (1 == sz)
 	{
 		Atom* a = get_outgoing_atom(0);
-		Set* set = dynamic_cast<Set*>(a);
+		Set* set = dynamic_cast<Set*>(upcast(a));
 		if (!set)
 			return a;
 		return set->super_flatten();
@@ -75,16 +78,18 @@ Atom* Set::super_flatten() const
 	for (size_t i=0; i<sz; i++)
 	{
 		Atom* a = get_outgoing_atom(i);
-		Set* set = dynamic_cast<Set*>(a);
+		Set* set = dynamic_cast<Set*>(upcast(a));
+		if (NULL == set)
+		{
+			newset.push_back(a);
+			continue;
+		}
 
 		/* Copy without change, if types differ. */
 		/* But flatten it first, if it inherits from set. */
 		if (get_type() != a->get_type())
 		{
-			if (set)
-				newset.push_back(set->super_flatten());
-			else
-				newset.push_back(a);
+			newset.push_back(set->super_flatten());
 			continue;
 		}
 
@@ -360,7 +365,7 @@ static bool has_lefties(Atom* a)
 		if ('-' == c->get_direction())
 			return true;
 		return false;
-	} 
+	}
 
 	// Verify we've got a valid disjunct
 	AtomType at = a->get_type();
@@ -402,7 +407,8 @@ WordCset* WordCset::flatten()
 }
 
 // ============================================================
-Atom* upcast(const Atom* a)
+
+Atom* upcast(Atom* a)
 {
 	const Node* n = dynamic_cast<const Node*>(a);
 	const Link* l = dynamic_cast<const Link*>(a);
@@ -411,13 +417,20 @@ Atom* upcast(const Atom* a)
 	{
 		// Links
 		case AND:
+			if (dynamic_cast<And*>(a)) return a;
 			return new And(l->get_outgoing_set(), l->_tv);
 		case OR:
+			if (dynamic_cast<Or*>(a)) return a;
 			return new Or(l->get_outgoing_set(), l->_tv);
 
 		// Nodes
 		case CONNECTOR:
+			if (dynamic_cast<Connector*>(a)) return a;
 			return new Connector(n->get_name(), n->_tv);
+
+		case WORD:
+			if (dynamic_cast<Word*>(a)) return a;
+			return new Word(n->get_name(), n->_tv);
 
 		default:
 			assert(0, "upcast: implement me!");

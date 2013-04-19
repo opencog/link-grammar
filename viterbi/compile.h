@@ -52,16 +52,16 @@ class Connector : public Node
 class LingType : public Node
 {
 	public:
-		LingType(const std::string& name)
-			: Node(LING_TYPE, name)
+		LingType(const std::string& name, const TV& tv = TV())
+			: Node(LING_TYPE, name, tv)
 		{}
 };
 
 class Word : public Node
 {
 	public:
-		Word(const std::string& name)
-			: Node(WORD, name)
+		Word(const std::string& name, const TV& tv = TV())
+			: Node(WORD, name, tv)
 		{}
 };
 
@@ -296,7 +296,7 @@ class StatePair : public Link
 };
 
 /// Given an atom of a some type, return the C++ class of that type.
-Atom* upcast(const Atom*);
+Atom* upcast(Atom*);
 
 
 } // namespace viterbi

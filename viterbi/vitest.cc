@@ -142,15 +142,13 @@ bool test_flatten_nest()
 			ANODE(WORD, "AA1"),
   		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
 	);
-	And* computed = and_right->flatten();
+	Atom* computed = and_right->super_flatten();
 
 	Lynk* expected =
-	ALINK1(AND,
-		ALINK3(OR,
-			ANODE(WORD, "AA1"),
-			ANODE(WORD, "BB2"),
-			ANODE(WORD, "CC3")
-		)
+	ALINK3(OR,
+		ANODE(WORD, "AA1"),
+		ANODE(WORD, "BB2"),
+		ANODE(WORD, "CC3")
 	);
 
 	CHECK(__FUNCTION__, expected, computed);
@@ -169,21 +167,19 @@ bool test_flatten_nest_deep()
 			)
 		)
 	);
-	And* computed = and_right->flatten();
+	Atom* computed = and_right->super_flatten();
 
 	Lynk* expected =
-	ALINK1(AND,
-		ALINK4(OR,
-			ANODE(WORD, "AA1"),
-			ANODE(WORD, "BB2"),
-			ANODE(WORD, "CC3"),
-			ALINK5(AND,
-				ANODE(WORD, "XAA1"),
-				ANODE(WORD, "XBB2"),
-				ANODE(WORD, "XCC3"),
-				ANODE(WORD, "XDD4"),
-				ANODE(WORD, "XEE5")
-			)
+	ALINK4(OR,
+		ANODE(WORD, "AA1"),
+		ANODE(WORD, "BB2"),
+		ANODE(WORD, "CC3"),
+		ALINK5(AND,
+			ANODE(WORD, "XAA1"),
+			ANODE(WORD, "XBB2"),
+			ANODE(WORD, "XCC3"),
+			ANODE(WORD, "XDD4"),
+			ANODE(WORD, "XEE5")
 		)
 	);
 
