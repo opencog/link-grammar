@@ -190,7 +190,7 @@ bool test_cost_flatten()
 {
 	Or* or_right = new Or(
   		ANODEC(WORD, "AA1", 0.01),
-		ALINK2C(OR, ANODEC(WORD, "BB2",0.02), ANODEC(WORD, "CC3", 0.03), 0.001),
+		ALINK2C(OR, ANODEC(WORD, "BB2", 0.02), ANODEC(WORD, "CC3", 0.03), 0.001),
 	0.1f);
 	Or* computed = or_right->flatten();
 
@@ -207,18 +207,22 @@ bool test_cost_flatten()
 bool test_cost_flatten_rec()
 {
 	Or* or_right = new Or(
-		ALINK2(OR,
-			ANODE(WORD, "AA1"),
-  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
+		ALINK2C(OR,
+			ANODEC(WORD, "AA1", 0.01f),
+  		 	ALINK2C(OR,
+				ANODEC(WORD, "BB2", 0.02f),
+				ANODEC(WORD, "CC3",0.03f),
+			0.003f),
+		0.0004f),
 	0.1f);
 	Or* computed = or_right->flatten();
 
 	Lynk* expected =
-	ALINK3(OR,
-		ANODE(WORD, "AA1"),
-		ANODE(WORD, "BB2"),
-		ANODE(WORD, "CC3")
-	);
+	ALINK3C(OR,
+		ANODEC(WORD, "AA1", 0.0104f),
+		ANODEC(WORD, "BB2", 0.0234f),
+		ANODEC(WORD, "CC3", 0.0334f),
+	0.1f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
