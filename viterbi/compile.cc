@@ -65,7 +65,6 @@ OutList Set::flatset() const
 /// exception to this is if the set contains just a single element,
 /// in which case this returns that one element.
 //
-// XXX TODO: handling of TV's during flattening is probably broken !?!
 Atom* Set::super_flatten() const
 {
 	size_t sz = get_arity();
@@ -76,9 +75,10 @@ Atom* Set::super_flatten() const
 	{
 		Atom* a = get_outgoing_atom(0);
 		Set* set = dynamic_cast<Set*>(upcast(a));
-		if (!set)
-			return a;
-		return set->super_flatten();
+		if (set)
+			a = set->super_flatten();
+		a->_tv += _tv;
+		return a;
 	}
 
 	OutList newset;

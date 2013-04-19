@@ -231,17 +231,21 @@ bool test_cost_flatten_nest()
 {
 	And* and_right = new And(
 		ALINK2C(OR,
-			ANODE(WORD, "AA1"),
-  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")), 0.1f),
+			ANODEC(WORD, "AA1", 0.01f),
+  		 	ALINK2C(OR,
+				ANODEC(WORD, "BB2", 0.02f),
+				ANODEC(WORD, "CC3", 0.03f),
+			0.003f),
+		0.0004f),
 	0.1f);
 	Atom* computed = and_right->super_flatten();
 
 	Lynk* expected =
-	ALINK3(OR,
-		ANODE(WORD, "AA1"),
-		ANODE(WORD, "BB2"),
-		ANODE(WORD, "CC3")
-	);
+	ALINK3C(OR,
+		ANODEC(WORD, "AA1", 0.01f),
+		ANODEC(WORD, "BB2", 0.023f),
+		ANODEC(WORD, "CC3", 0.033f),
+	0.1004f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
