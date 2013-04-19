@@ -513,9 +513,9 @@ bool test_or_distrib_nest7()
 
 	Lynk* expected =
 	ALINK3(OR,
-		ALINK3(AND, ANODE(WORD, "DDD4"), ANODE(WORD, "AA1"), ANODE(WORD, "EE5")),
-		ALINK3(AND, ANODE(WORD, "DDD4"), ANODE(WORD, "BB2"), ANODE(WORD, "EE5")),
-		ALINK3(AND, ANODE(WORD, "DDD4"), ANODE(WORD, "CC3"), ANODE(WORD, "EE5"))
+		ALINK3(AND, ANODE(WORD, "DD4"), ANODE(WORD, "AA1"), ANODE(WORD, "EE5")),
+		ALINK3(AND, ANODE(WORD, "DD4"), ANODE(WORD, "BB2"), ANODE(WORD, "EE5")),
+		ALINK3(AND, ANODE(WORD, "DD4"), ANODE(WORD, "CC3"), ANODE(WORD, "EE5"))
 	);
 
 	CHECK(__FUNCTION__, expected, computed);
@@ -558,7 +558,7 @@ bool test_costly_and_dnf_single()
 	And* and_singleton = new And(ANODEC(WORD, "AA1", 1.5f));
 	Atom* computed = and_singleton->disjoin();
 
-	Lynk* expected = ALINK1(OR, ANODEC(WORD, "AA1", 1.5f));
+	Atom* expected = ANODEC(WORD, "AA1", 1.5f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -568,9 +568,19 @@ bool test_costly_and_dnf_single_ne()
 	And* and_singleton = new And(ANODEC(WORD, "AA1", 1.5f));
 	Atom* computed = and_singleton->disjoin();
 
-	Lynk* expected = ALINK1(OR, ANODEC(WORD, "AA1", 31.6f));
+	Atom* expected = ANODEC(WORD, "AA1", 31.6f);
 
 	CHECK_NE(__FUNCTION__, expected, computed);
+}
+
+bool test_costly_and_dnf_single_sum()
+{
+	And* and_singleton = new And(ANODEC(WORD, "AA1", 1.5f), 0.3f);
+	Atom* computed = and_singleton->disjoin();
+
+	Atom* expected = ANODEC(WORD, "AA1", 1.8f);
+
+	CHECK(__FUNCTION__, expected, computed);
 }
 
 // -----------------------------------------------
@@ -580,7 +590,7 @@ bool test_costly_and_dnf_double()
 	Atom* computed = and_two->disjoin();
 
 	Lynk* expected =
-	ALINK1(OR, ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 1.6f));
+	ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 1.6f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -591,7 +601,7 @@ bool test_costly_and_dnf_double_w()
 	Atom* computed = and_two->disjoin();
 
 	Lynk* expected =
-	ALINK1(OR, ALINK2(AND, ANODE(WORD, "AA1"), ANODEC(WORD, "BB2", 2.8f)));
+	ALINK2(AND, ANODE(WORD, "AA1"), ANODEC(WORD, "BB2", 2.8f));
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -754,7 +764,7 @@ bool test_costly_or_dnf_single()
 	Or* or_singleton = new Or(ANODE(WORD, "AA1"), 0.75f);
 	Atom* computed = or_singleton->disjoin();
 
-	Lynk* expected = ALINK1C(OR, ANODE(WORD, "AA1"), 0.75f);
+	Atom* expected = ANODEC(WORD, "AA1", 0.75f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -915,6 +925,7 @@ int ntest_costly_disjoin()
 	size_t num_failures = 0;
 	if (!test_costly_and_dnf_single()) num_failures++;
 	if (!test_costly_and_dnf_single_ne()) num_failures++;
+	if (!test_costly_and_dnf_single_sum()) num_failures++;
 
 	if (!test_costly_and_dnf_double()) num_failures++;
 	if (!test_costly_and_dnf_double_w()) num_failures++;
