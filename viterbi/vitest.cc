@@ -215,7 +215,7 @@ bool test_and_dnf_double()
 	Atom* computed = and_two->disjoin();
 
 	Lynk* expected =
-	ALINK1(OR, ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")));
+	ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"));
 
 	CHECK(__FUNCTION__, expected, computed);
 }

@@ -323,8 +323,31 @@ Atom* And::disjoin()
 	And shorter(*ol);
 
 	// recurse ...
-	Atom* stumpy = shorter.disjoin();
-std::cout<<"duuude stumpy="<<stumpy<<std::endl;
+	Atom* stumper = shorter.disjoin();
+	Or* stumpy = dynamic_cast<Or*>(stumper);
+
+	if (!stumpy)
+	{
+		// If we are here, then the front was just a single atom,
+		// and the last element was (possibly) an OR-list. So
+		// distribute the front onto the tail. (using AND, of course)
+		OutList dnf;
+
+		if (OR != last->get_type())
+			last = new Or(last);
+
+		// Costs distribute additively: AND over OR.
+		TV cost = fl->_tv + last->_tv;
+
+		Link* ll = dynamic_cast<Link*>(last);
+		size_t jsz = ll->get_arity();
+		for (size_t j=0; j<jsz; j++)
+		{
+			Atom* tail = ll->get_outgoing_atom(j);
+			dnf.push_back(new And(stumper, tail, cost));
+		}
+		return new Or(dnf);
+	}
 
 	// finally, distribute last elt back onto the end.
 	OutList dnf;
@@ -337,14 +360,12 @@ std::cout<<"duuude stumpy="<<stumpy<<std::endl;
 
 	Link* ll = dynamic_cast<Link*>(last);
 	size_t jsz = ll->get_arity();
+	size_t ssz = stumpy->get_arity();
 	for (size_t j=0; j<jsz; j++)
 	{
 		Atom* tail = ll->get_outgoing_atom(j);
 
-#if LATER
-		sz = stumpy->get_arity();
-
-		for (size_t i=0; i<sz; i++)
+		for (size_t i=0; i<ssz; i++)
 		{
 			Atom* a = stumpy->get_outgoing_atom(i);
 			AtomType ty = a->get_type();
@@ -360,7 +381,6 @@ std::cout<<"duuude stumpy="<<stumpy<<std::endl;
 				dnf.push_back(new And(a, tail, cost));
 			}
 		}
-#endif
 	}
 	return new Or(dnf);
 }
