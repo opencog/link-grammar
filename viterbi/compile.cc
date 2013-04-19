@@ -20,6 +20,9 @@ namespace viterbi {
 /// one single set. For example, the flattened version of
 /// {a, {b,c}} is {a, b, c}
 ///
+/// Any costs (i.e. truth values) associated with the removed
+/// levels are accumulated onto the children.
+///
 /// See also super_flatten(), which recursively flattens
 /// anything deriving from class Set, recursively.
 ///
@@ -42,11 +45,15 @@ OutList Set::flatset() const
 		}
 
 		/* Get rid of a level */
+		const TV& cost = a->_tv;
 		Set* ora = dynamic_cast<Set*>(upcast(a));
 		OutList fora = ora->flatset();
 		size_t osz = fora.size();
 		for (int j=0; j<osz; j++)
+		{
+			fora[j]->_tv += cost;
 			newset.push_back(fora[j]);
+		}
 	}
 
 	return newset;

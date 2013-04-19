@@ -186,6 +186,94 @@ bool test_flatten_nest_deep()
 	CHECK(__FUNCTION__, expected, computed);
 }
 
+bool test_cost_flatten()
+{
+	Or* or_right = new Or(
+  		ANODEC(WORD, "AA1", 0.01),
+		ALINK2C(OR, ANODEC(WORD, "BB2",0.02), ANODEC(WORD, "CC3", 0.03), 0.001),
+	0.1f);
+	Or* computed = or_right->flatten();
+
+	Lynk* expected =
+	ALINK3C(OR,
+		ANODEC(WORD, "AA1", 0.01f),
+		ANODEC(WORD, "BB2", 0.021f),
+		ANODEC(WORD, "CC3", 0.031f),
+	0.1f);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_cost_flatten_rec()
+{
+	Or* or_right = new Or(
+		ALINK2(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
+	0.1f);
+	Or* computed = or_right->flatten();
+
+	Lynk* expected =
+	ALINK3(OR,
+		ANODE(WORD, "AA1"),
+		ANODE(WORD, "BB2"),
+		ANODE(WORD, "CC3")
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_cost_flatten_nest()
+{
+	And* and_right = new And(
+		ALINK2C(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")), 0.1f),
+	0.1f);
+	Atom* computed = and_right->super_flatten();
+
+	Lynk* expected =
+	ALINK3(OR,
+		ANODE(WORD, "AA1"),
+		ANODE(WORD, "BB2"),
+		ANODE(WORD, "CC3")
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_cost_flatten_nest_deep()
+{
+	And* and_right = new And(
+		ALINK3C(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+			ALINK3(AND,
+				ANODE(WORD, "XAA1"),
+  		 		ALINK2(AND, ANODE(WORD, "XBB2"), ANODE(WORD, "XCC3")),
+  		 		ALINK2(AND, ANODE(WORD, "XDD4"), ANODE(WORD, "XEE5"))
+			), 0.1f
+		),
+	0.1f);
+	Atom* computed = and_right->super_flatten();
+
+	Lynk* expected =
+	ALINK4(OR,
+		ANODE(WORD, "AA1"),
+		ANODE(WORD, "BB2"),
+		ANODE(WORD, "CC3"),
+		ALINK5(AND,
+			ANODE(WORD, "XAA1"),
+			ANODE(WORD, "XBB2"),
+			ANODE(WORD, "XCC3"),
+			ANODE(WORD, "XDD4"),
+			ANODE(WORD, "XEE5")
+		)
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
 int ntest_flatten()
 {
 	size_t num_failures = 0;
@@ -193,6 +281,11 @@ int ntest_flatten()
 	if (!test_flatten_rec()) num_failures++;
 	if (!test_flatten_nest()) num_failures++;
 	if (!test_flatten_nest_deep()) num_failures++;
+
+	if (!test_cost_flatten()) num_failures++;
+	if (!test_cost_flatten_rec()) num_failures++;
+	if (!test_cost_flatten_nest()) num_failures++;
+	if (!test_cost_flatten_nest_deep()) num_failures++;
 	return num_failures;
 }
 
