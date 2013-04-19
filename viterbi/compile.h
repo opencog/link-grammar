@@ -162,7 +162,7 @@ class Or : public Set
 		{}
 
 		// Return disjunctive normal form (DNF)
-		Or* disjoin() const;
+		Atom* disjoin() const;
 
 		// See the Set class for documentation
 		Or* flatten() const { return new Or(flatset(), _tv); }

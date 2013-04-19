@@ -162,9 +162,20 @@ Or* Or::uniq() const
 /// disjoin() subroutine defined in disjoin.cc ...
 /// Note: this one is unit-tested, the other is not.
 /// Note, however, that one handles optional clauses; this does not.
-Or* Or::disjoin() const
+Atom* Or::disjoin() const
 {
-	Or* fl = flatten();
+	// Trying to disjoin anything that is not in a flattened
+	// form is crazy-making.
+	Atom* sfl = super_flatten();
+	Set* fl = dynamic_cast<Set*>(sfl);
+	if (NULL == fl) return sfl;
+
+	// If the flattenting discarded the top-level Or, deal with it.
+	And* afl = dynamic_cast<And*>(sfl);
+	if (afl) return afl->disjoin();
+
+	// If we are not an Or link, then wtf!?
+	assert(dynamic_cast<Or*>(sfl), "We are deeply confused!");
 
 	OutList dnf;
 	size_t sz = fl->get_arity();
@@ -181,6 +192,8 @@ Or* Or::disjoin() const
 		}
 		else if (OR == ty)
 		{
+assert(0, "not expecting Or after flattening");
+#if 0
 			Or* ol = dynamic_cast<Or*>(upcast(a));
 			Or* l = ol->disjoin();
 			TV cost = l->_tv;
@@ -193,6 +206,7 @@ Or* Or::disjoin() const
 				aol->_tv += cost;
 				dnf.push_back(aol);
 			}
+#endif
 		}
 		else
 			dnf.push_back(a);
