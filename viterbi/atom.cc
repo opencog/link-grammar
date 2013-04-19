@@ -47,7 +47,7 @@ const string type_name(AtomType t)
 bool TV::operator==(const TV& other) const
 {
 	// The ULP for single-precision floating point is approx 1.0e-7.2
-	if (fabs(other._strength - _strength) < 1.0e-7) return true;
+	if (fabs(other._strength - _strength) < 1.0e-6) return true;
 	return false;
 }
 

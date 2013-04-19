@@ -900,10 +900,10 @@ bool test_costly_or_distrib_left()
 	Atom* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK2C(OR,
-		ALINK2C(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1"), 0.32f),
-		ALINK2C(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"), 0.32f),
-	0.333f);
+	ALINK2(OR,
+		ALINK2C(AND, ANODE(WORD, "BB2"), ANODE(WORD, "RR1"), 0.653f),
+		ALINK2C(AND, ANODE(WORD, "CC3"), ANODE(WORD, "RR1"), 0.653f)
+	);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -918,10 +918,10 @@ bool test_costly_or_distrib_right()
 	Atom* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK2C(OR,
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.333f),
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.333f),
-	0.5f);
+	ALINK2(OR,
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.833f),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.833f)
+	);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -940,10 +940,10 @@ bool test_costly_or_distrib_nest()
 	Atom* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK2C(OR,
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.123f),
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.123f),
-	0.0004f);
+	ALINK2(OR,
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.1234f),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.1234f)
+	);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -961,9 +961,7 @@ bool test_costly_or_distrib_nest2()
 	Atom* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK1C(OR,
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODEC(WORD, "BB2", 0.1f), 0.023f),
-	0.0004f);
+	ALINK2C(AND, ANODE(WORD, "AA1"), ANODEC(WORD, "BB2", 0.1f), 0.0234f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -977,10 +975,7 @@ bool test_costly_or_distrib_nest3()
 	0.0004f);
 	Atom* computed = or_right->disjoin();
 
-	Lynk* expected =
-	ALINK1C(OR,
-		ANODEC(WORD, "BB2", 0.103f),
-	0.0004f);
+	Atom* expected = ANODEC(WORD, "BB2", 0.1034f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -999,11 +994,11 @@ bool test_costly_or_distrib_nest4()
 
 	Lynk* expected =
 	ALINK4C(OR,
-		ANODEC(WORD, "DD4", 0.003f),
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.123f),
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.123f),
-		ANODEC(WORD, "EE5", 0.003f),
-	0.0004f);
+		ANODEC(WORD, "DD4", 0.0f),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.12f),
+		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.12f),
+		ANODEC(WORD, "EE5", 0.0f),
+	0.0034f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -1021,11 +1016,11 @@ bool test_costly_or_distrib_nest5()
 	Atom* computed = or_right->disjoin();
 
 	Lynk* expected =
-	ALINK2C(OR,
-		ALINK3C(AND, ANODE(WORD, "DDD4"), ANODE(WORD, "AA1"), ANODE(WORD, "EE5"), 0.023f),
-//xxxxxxxxxxxxxxxxxxxxxxx this is all wrong!
-		ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "CC3"), 0.123f),
-	0.0004f);
+	ALINK3C(OR,
+		ALINK3C(AND, ANODE(WORD, "DD4"), ANODE(WORD, "AA1"), ANODE(WORD, "EE5"), 0.0234f),
+		ALINK3C(AND, ANODE(WORD, "DD4"), ANODEC(WORD, "BB2", 0.1f), ANODE(WORD, "EE5"), 0.0234f),
+		ALINK3C(AND, ANODE(WORD, "DD4"), ANODEC(WORD, "CC3", 0.1f), ANODE(WORD, "EE5"), 0.0234f),
+	0.0f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
