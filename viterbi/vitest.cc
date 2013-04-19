@@ -95,6 +95,110 @@ int ntest_core()
 	return num_failures;
 }
 
+// ==================================================================
+// Test the flatten function
+
+bool test_flatten()
+{
+	Or* or_right = new Or(
+  		ANODE(WORD, "AA1"),
+		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))
+	);
+	Or* computed = or_right->flatten();
+
+	Lynk* expected =
+	ALINK3(OR,
+		ANODE(WORD, "AA1"),
+		ANODE(WORD, "BB2"),
+		ANODE(WORD, "CC3")
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_flatten_rec()
+{
+	Or* or_right = new Or(
+		ALINK2(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
+	);
+	Or* computed = or_right->flatten();
+
+	Lynk* expected =
+	ALINK3(OR,
+		ANODE(WORD, "AA1"),
+		ANODE(WORD, "BB2"),
+		ANODE(WORD, "CC3")
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_flatten_nest()
+{
+	And* and_right = new And(
+		ALINK2(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
+	);
+	And* computed = and_right->flatten();
+
+	Lynk* expected =
+	ALINK1(AND,
+		ALINK3(OR,
+			ANODE(WORD, "AA1"),
+			ANODE(WORD, "BB2"),
+			ANODE(WORD, "CC3")
+		)
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+bool test_flatten_nest_deep()
+{
+	And* and_right = new And(
+		ALINK3(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+			ALINK3(AND,
+				ANODE(WORD, "XAA1"),
+  		 		ALINK2(AND, ANODE(WORD, "XBB2"), ANODE(WORD, "XCC3")),
+  		 		ALINK2(AND, ANODE(WORD, "XDD4"), ANODE(WORD, "XEE5"))
+			)
+		)
+	);
+	And* computed = and_right->flatten();
+
+	Lynk* expected =
+	ALINK1(AND,
+		ALINK4(OR,
+			ANODE(WORD, "AA1"),
+			ANODE(WORD, "BB2"),
+			ANODE(WORD, "CC3"),
+			ALINK5(AND,
+				ANODE(WORD, "XAA1"),
+				ANODE(WORD, "XBB2"),
+				ANODE(WORD, "XCC3"),
+				ANODE(WORD, "XDD4"),
+				ANODE(WORD, "XEE5")
+			)
+		)
+	);
+
+	CHECK(__FUNCTION__, expected, computed);
+}
+
+int ntest_flatten()
+{
+	size_t num_failures = 0;
+	if (!test_flatten()) num_failures++;
+	if (!test_flatten_rec()) num_failures++;
+	if (!test_flatten_nest()) num_failures++;
+	if (!test_flatten_nest_deep()) num_failures++;
+	return num_failures;
+}
 
 // ==================================================================
 // Make sure that the disjoined functions actually work.
@@ -123,7 +227,7 @@ bool test_and_dnf_double()
 bool test_and_distrib_left()
 {
 	And* and_right = new And(
-      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 		ANODE(WORD, "RR1"));
 	Or* computed = and_right->disjoin();
 
@@ -139,7 +243,7 @@ bool test_and_distrib_left()
 bool test_and_distrib_right()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
-      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
+		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
 	Or* computed = and_right->disjoin();
 
 	Lynk* expected =
@@ -154,8 +258,8 @@ bool test_and_distrib_right()
 bool test_and_distrib_middle()
 {
 	And* and_mid = new And(ANODE(WORD, "AA1"),
-      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
-      ANODE(WORD, "DD4"));
+		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ANODE(WORD, "DD4"));
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -170,8 +274,8 @@ bool test_and_distrib_middle()
 bool test_and_distrib_quad()
 {
 	And* and_mid = new And(
-      ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
-      ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
+		ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+		ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -188,10 +292,10 @@ bool test_and_distrib_quad()
 bool test_and_distrib_quad_right()
 {
 	And* and_mid = new And(
-      ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
-      ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")),
-      ANODE(WORD, "EE5")
-   );
+		ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+		ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")),
+		ANODE(WORD, "EE5")
+	);
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -208,9 +312,9 @@ bool test_and_distrib_quad_right()
 bool test_and_distrib_quad_left()
 {
 	And* and_mid = new And(
-      ANODE(WORD, "EE5"),
-      ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
-      ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
+		ANODE(WORD, "EE5"),
+		ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
+		ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -248,8 +352,8 @@ bool test_or_dnf_double()
 bool test_or_distrib_left()
 {
 	Or* or_right = new Or(
-      ALINK2(AND,
-      	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ALINK2(AND,
+			ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 			ANODE(WORD, "RR1"))
 	);
 	Or* computed = or_right->disjoin();
@@ -267,8 +371,8 @@ bool test_or_distrib_right()
 {
 	Or* or_right = new Or(
 		ALINK2(AND,
-   		ANODE(WORD, "AA1"),
-      	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
+			ANODE(WORD, "AA1"),
+			ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
 	);
 	Or* computed = or_right->disjoin();
 
@@ -286,8 +390,8 @@ bool test_or_distrib_nest()
 	Or* or_right = new Or(
 		ALINK1(OR,
 			ALINK2(AND,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))))
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))))
 	);
 	Or* computed = or_right->disjoin();
 
@@ -306,8 +410,8 @@ bool test_or_distrib_nest2()
 		ALINK3(OR,
 			ANODE(WORD, "DD4"),
 			ALINK2(AND,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
 			ANODE(WORD, "EE5"))
 	);
 	Or* computed = or_right->disjoin();
@@ -326,8 +430,8 @@ bool test_or_distrib_nest2()
 bool test_or_distrib_nest3()
 {
 	Or* or_right = new Or(
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
+		ANODE(WORD, "AA1"),
+  	 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
 	Or* computed = or_right->disjoin();
 
 	Lynk* expected =
@@ -343,9 +447,9 @@ bool test_or_distrib_nest3()
 bool test_or_distrib_nest4()
 {
 	Or* or_right = new Or(
-			ALINK2(OR,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
+		ALINK2(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
 	);
 	Or* computed = or_right->disjoin();
 
@@ -362,9 +466,9 @@ bool test_or_distrib_nest4()
 bool test_or_distrib_nest5()
 {
 	And* and_right = new And(
-			ALINK2(OR,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
+		ALINK2(OR,
+			ANODE(WORD, "AA1"),
+  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
 	);
 	Or* computed = and_right->disjoin();
 
@@ -383,8 +487,8 @@ bool test_or_distrib_nest6()
 	Or* or_right = new Or(
 		ALINK1(AND,
 			ALINK2(OR,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")))
 			)
 	);
 	Or* computed = or_right->disjoin();
@@ -405,8 +509,8 @@ bool test_or_distrib_nest7()
 		ALINK3(AND,
 			ANODE(WORD, "DD4"),
 			ALINK2(OR,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"))),
 			ANODE(WORD, "EE5"))
 	);
 	Or* computed = or_right->disjoin();
@@ -500,7 +604,7 @@ bool test_costly_and_dnf_double_w()
 bool test_costly_and_distrib_left()
 {
 	And* and_right = new And(
-      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
+		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
 		ANODE(WORD, "RR1"));
 	Or* computed = and_right->disjoin();
 
@@ -516,7 +620,7 @@ bool test_costly_and_distrib_left()
 bool test_costly_and_distrib_left_sum()
 {
 	And* and_right = new And(
-      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
+		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
 		ANODE(WORD, "RR1"), 0.8f);
 	Or* computed = and_right->disjoin();
 
@@ -532,7 +636,7 @@ bool test_costly_and_distrib_left_sum()
 bool test_costly_and_distrib_left_w()
 {
 	And* and_right = new And(
-      ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
+		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 		ANODEC(WORD, "RR1", 3.14f));
 	Or* computed = and_right->disjoin();
 
@@ -549,7 +653,7 @@ bool test_costly_and_distrib_left_w()
 bool test_costly_and_distrib_right()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
-      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35));
+		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35));
 	Or* computed = and_right->disjoin();
 
 	Lynk* expected =
@@ -564,7 +668,7 @@ bool test_costly_and_distrib_right()
 bool test_costly_and_distrib_right_sum()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
-      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35f), 0.5f);
+		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35f), 0.5f);
 	Or* computed = and_right->disjoin();
 
 	Lynk* expected =
@@ -579,8 +683,8 @@ bool test_costly_and_distrib_right_sum()
 bool test_costly_and_distrib_middle()
 {
 	And* and_mid = new And(ANODE(WORD, "AA1"),
-      ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 2.1f),
-      ANODE(WORD, "DD4"), 0.6f);
+		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 2.1f),
+		ANODE(WORD, "DD4"), 0.6f);
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -595,8 +699,8 @@ bool test_costly_and_distrib_middle()
 bool test_costly_and_distrib_quad()
 {
 	And* and_mid = new And(
-      ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 1.1f),
-      ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 2.2f), 0.4f);
+		ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 1.1f),
+		ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 2.2f), 0.4f);
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -613,10 +717,10 @@ bool test_costly_and_distrib_quad()
 bool test_costly_and_distrib_quad_right()
 {
 	And* and_mid = new And(
-      ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.25f),
-      ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 0.35f),
-      ANODE(WORD, "EE5"), 0.5f
-   );
+		ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.25f),
+		ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 0.35f),
+		ANODE(WORD, "EE5"), 0.5f
+	);
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -633,9 +737,9 @@ bool test_costly_and_distrib_quad_right()
 bool test_costly_and_distrib_quad_left()
 {
 	And* and_mid = new And(
-      ANODE(WORD, "EE5"),
-      ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.11f),
-      ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 0.22f), 0.1f);
+		ANODE(WORD, "EE5"),
+		ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.11f),
+		ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 0.22f), 0.1f);
 	Or* computed = and_mid->disjoin();
 
 	Lynk* expected =
@@ -673,8 +777,8 @@ bool test_costly_or_dnf_double()
 bool test_costly_or_distrib_left()
 {
 	Or* or_right = new Or(
-      ALINK2C(AND,
-      	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f),
+		ALINK2C(AND,
+			ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f),
 			ANODE(WORD, "RR1"), 0.22f),
 	0.333f);
 	Or* computed = or_right->disjoin();
@@ -692,8 +796,8 @@ bool test_costly_or_distrib_right()
 {
 	Or* or_right = new Or(
 		ALINK2C(AND,
-   		ANODE(WORD, "AA1"),
-      	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.111f), 0.222f),
+			ANODE(WORD, "AA1"),
+			ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.111f), 0.222f),
 	0.5f);
 	Or* computed = or_right->disjoin();
 
@@ -712,8 +816,8 @@ bool test_costly_or_distrib_nest()
 	Or* or_right = new Or(
 		ALINK1C(OR,
 			ALINK2C(AND,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f),
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f),
 			0.02f),
 		0.003f),
 	0.0004f);
@@ -733,8 +837,8 @@ bool test_costly_or_distrib_nest2()
 	Or* or_right = new Or(
 		ALINK1C(OR,
 			ALINK2C(AND,
-   			ANODE(WORD, "AA1"),
-     		 	ANODEC(WORD, "BB2", 0.1f),
+				ANODE(WORD, "AA1"),
+	  		 	ANODEC(WORD, "BB2", 0.1f),
 			0.02f),
 		0.003f),
 	0.0004f);
@@ -752,14 +856,14 @@ bool test_costly_or_distrib_nest3()
 {
 	Or* or_right = new Or(
 		ALINK1C(OR,
-     	 	ANODEC(WORD, "BB2", 0.1f),
+	  	 	ANODEC(WORD, "BB2", 0.1f),
 		0.003f),
 	0.0004f);
 	Or* computed = or_right->disjoin();
 
 	Lynk* expected =
 	ALINK1C(OR,
-		ANODEC(WORD, "BB2", 0.103f), 
+		ANODEC(WORD, "BB2", 0.103f),
 	0.0004f);
 
 	CHECK(__FUNCTION__, expected, computed);
@@ -771,8 +875,8 @@ bool test_costly_or_distrib_nest4()
 		ALINK3C(OR,
 			ANODE(WORD, "DD4"),
 			ALINK2C(AND,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f), 0.02f),
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f), 0.02f),
 			ANODE(WORD, "EE5"), 0.003f),
 	0.0004f);
 	Or* computed = or_right->disjoin();
@@ -794,8 +898,8 @@ bool test_costly_or_distrib_nest5()
 		ALINK3C(AND,
 			ANODE(WORD, "DD4"),
 			ALINK2C(OR,
-   			ANODE(WORD, "AA1"),
-     		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f), 0.02f),
+				ANODE(WORD, "AA1"),
+	  		 	ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.1f), 0.02f),
 			ANODE(WORD, "EE5"), 0.003f),
 	0.0004f);
 	Or* computed = or_right->disjoin();
@@ -1922,7 +2026,7 @@ int ntest_right_wall()
 
 // ==================================================================
 
-// XXX currently a copy f test_short_sent ... 
+// XXX currently a copy f test_short_sent ...
 bool test_cost(const char *id, const char *dict_str, bool empty_state)
 {
 	total_tests++;
@@ -2044,6 +2148,9 @@ main(int argc, char *argv[])
 	bool exit_on_fail = true;
 
 	num_failures += ntest_core();
+	report(num_failures, exit_on_fail);
+
+	num_failures += ntest_flatten();
 	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_disjoin();
