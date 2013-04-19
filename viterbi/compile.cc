@@ -39,7 +39,7 @@ OutList Set::flatset() const
 		}
 
 		/* Get rid of a level */
-		Set* ora = dynamic_cast<Set*>(a);
+		Set* ora = dynamic_cast<Set*>(upcast(a));
 		OutList fora = ora->flatset();
 		size_t osz = fora.size();
 		for (int j=0; j<osz; j++)
@@ -159,11 +159,13 @@ Or* Or::uniq() const
 /// Note, however, that one handles optional clauses; this does not.
 Or* Or::disjoin() const
 {
+	Or* fl = flatten();
+
 	OutList dnf;
-	size_t sz = get_arity();
+	size_t sz = fl->get_arity();
 	for (size_t i=0; i<sz; i++)
 	{
-		Atom* a = get_outgoing_atom(i);
+		Atom* a = fl->get_outgoing_atom(i);
 		AtomType ty = a->get_type();
 		if (AND == ty)
 		{
@@ -236,8 +238,27 @@ Or* And::disjoin()
 		return new Or(this);
 	}
 
-	// First, flatten out any nested And's
+	// First, disjoin any child nodes
 	OutList* ol = new OutList(_oset);
+#if 0
+	for (size_t i=0; i<sz; i++)
+	{
+		Atom* a = ol->at(i);
+		AtomType ty = a->get_type();
+		if (OR == ty)
+		{
+			Or* oo = dynamic_cast<Or*>(upcast(a));
+			(*ol)[i] = oo->disjoin();
+		}
+		else if (AND == ty)
+		{
+			And* aa = dynamic_cast<And*>(upcast(a));
+			(*ol)[i] = aa->disjoin();
+		}
+	}
+#endif
+
+	// Next, flatten out any nested And's
 	while (needs_flattening)
 	{
 		bool did_flatten = false;
