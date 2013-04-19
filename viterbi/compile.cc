@@ -170,12 +170,12 @@ Atom* Or::disjoin() const
 	Set* fl = dynamic_cast<Set*>(sfl);
 	if (NULL == fl) return sfl;
 
-	// If the flattenting discarded the top-level Or, deal with it.
+	// If the flattening discarded the top-level Or, deal with it.
 	And* afl = dynamic_cast<And*>(sfl);
 	if (afl) return afl->disjoin();
 
 	// If we are not an Or link, then wtf!?
-	assert(dynamic_cast<Or*>(sfl), "We are deeply confused!");
+	assert(dynamic_cast<Or*>(sfl), "We are deeply confused disjoining!");
 
 	OutList dnf;
 	size_t sz = fl->get_arity();
@@ -186,9 +186,17 @@ Atom* Or::disjoin() const
 		if (AND == ty)
 		{
 			And* al = dynamic_cast<And*>(upcast(a));
-			Or* l = al->disjoin();
-			for (size_t j=0; j<l->get_arity(); j++)
-				dnf.push_back(l->get_outgoing_atom(j));
+			Atom* a = al->disjoin();
+			Link* l = dynamic_cast<Link*>(a);
+			if (l)
+			{
+				for (size_t j=0; j<l->get_arity(); j++)
+					dnf.push_back(l->get_outgoing_atom(j));
+			}
+			else
+			{
+				dnf.push_back(a);
+			}
 		}
 		else if (OR == ty)
 		{
@@ -211,7 +219,7 @@ assert(0, "not expecting Or after flattening");
 		else
 			dnf.push_back(a);
 	}
-	return new Or(dnf, _tv);
+	return new Or(dnf, fl->_tv);
 }
 
 /// Return disjunctive normal form (DNF)
@@ -226,16 +234,24 @@ assert(0, "not expecting Or after flattening");
 /// disjoin() subroutine defined in disjoin.cc ...
 /// Note: this one is unit-tested, the other is not.
 /// Note, however, that one handles optional clauses; this does not.
-Or* And::disjoin()
+Atom* And::disjoin()
 {
-	size_t sz = get_arity();
-	if (0 == sz) return new Or(_tv);
-	if (1 == sz)
-	{
-		if (OR == _oset[0]->get_type())
-			return dynamic_cast<Or*>(upcast(_oset[0]));
-		return new Or(_oset, _tv);
-	}
+	// Trying to disjoin anything that is not in a flattened
+	// form is crazy-making.
+	Atom* sfl = super_flatten();
+	Set* fl = dynamic_cast<Set*>(sfl);
+	if (NULL == fl) return sfl;
+
+	// If the flattening discarded the top-level And, deal with it.
+	Or* orfl = dynamic_cast<Or*>(sfl);
+	if (orfl) return orfl->disjoin();
+
+	// If we are not an And link, then wtf!?
+	assert(dynamic_cast<And*>(sfl), "And we are deeply confused!");
+
+	size_t sz = fl->get_arity();
+	if (0 == sz) return new Or(fl->_tv);
+	if (1 == sz) return fl->get_outgoing_atom(0);
 
 	// Perhaps there is nothing to be done, because none
 	// of the children are boolean operators.
@@ -243,7 +259,7 @@ Or* And::disjoin()
 	bool needs_flattening = false;
 	for (size_t i=0; i<sz; i++)
 	{
-		AtomType ty = _oset[i]->get_type();
+		AtomType ty = fl->get_outgoing_atom(i)->get_type();
 		if (AND == ty)
 		{
 			done = false;
@@ -254,11 +270,11 @@ Or* And::disjoin()
 	}
 	if (done)
 	{
-		return new Or(this);
+		return fl;
 	}
 
 	// First, disjoin any child nodes
-	OutList* ol = new OutList(_oset);
+	OutList* ol = new OutList(fl->get_outgoing_set());
 #if 0
 	for (size_t i=0; i<sz; i++)
 	{
@@ -307,7 +323,8 @@ Or* And::disjoin()
 	And shorter(*ol);
 
 	// recurse ...
-	Or* stumpy = shorter.disjoin();
+	Atom* stumpy = shorter.disjoin();
+std::cout<<"duuude stumpy="<<stumpy<<std::endl;
 
 	// finally, distribute last elt back onto the end.
 	OutList dnf;
@@ -316,13 +333,15 @@ Or* And::disjoin()
 		last = new Or(last);
 
 	// Costs distribute additively: AND over OR.
-	TV cost = stumpy->_tv + _tv + last->_tv;
+	TV cost = stumpy->_tv + fl->_tv + last->_tv;
 
 	Link* ll = dynamic_cast<Link*>(last);
 	size_t jsz = ll->get_arity();
 	for (size_t j=0; j<jsz; j++)
 	{
 		Atom* tail = ll->get_outgoing_atom(j);
+
+#if LATER
 		sz = stumpy->get_arity();
 
 		for (size_t i=0; i<sz; i++)
@@ -341,6 +360,7 @@ Or* And::disjoin()
 				dnf.push_back(new And(a, tail, cost));
 			}
 		}
+#endif
 	}
 	return new Or(dnf);
 }

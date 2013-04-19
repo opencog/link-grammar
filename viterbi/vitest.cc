@@ -202,9 +202,9 @@ int ntest_flatten()
 bool test_and_dnf_single()
 {
 	And* and_singleton = new And(ANODE(WORD, "AA1"));
-	Or* computed = and_singleton->disjoin();
+	Atom* computed = and_singleton->disjoin();
 
-	Lynk* expected = ALINK1(OR, ANODE(WORD, "AA1"));
+	Atom* expected = ANODE(WORD, "AA1");
 
 	CHECK(__FUNCTION__, expected, computed);
 }
@@ -212,7 +212,7 @@ bool test_and_dnf_single()
 bool test_and_dnf_double()
 {
 	And* and_two = new And(ANODE(WORD, "AA1"), ANODE(WORD, "BB2"));
-	Or* computed = and_two->disjoin();
+	Atom* computed = and_two->disjoin();
 
 	Lynk* expected =
 	ALINK1(OR, ALINK2(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")));
@@ -225,7 +225,7 @@ bool test_and_distrib_left()
 	And* and_right = new And(
 		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 		ANODE(WORD, "RR1"));
-	Or* computed = and_right->disjoin();
+	Atom* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -240,7 +240,7 @@ bool test_and_distrib_right()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
 		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")));
-	Or* computed = and_right->disjoin();
+	Atom* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -256,7 +256,7 @@ bool test_and_distrib_middle()
 	And* and_mid = new And(ANODE(WORD, "AA1"),
 		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 		ANODE(WORD, "DD4"));
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -272,7 +272,7 @@ bool test_and_distrib_quad()
 	And* and_mid = new And(
 		ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
 		ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK4(OR,
@@ -292,7 +292,7 @@ bool test_and_distrib_quad_right()
 		ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")),
 		ANODE(WORD, "EE5")
 	);
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK4(OR,
@@ -311,7 +311,7 @@ bool test_and_distrib_quad_left()
 		ANODE(WORD, "EE5"),
 		ALINK2(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2")),
 		ALINK2(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4")));
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK4(OR,
@@ -556,7 +556,7 @@ int ntest_disjoin()
 bool test_costly_and_dnf_single()
 {
 	And* and_singleton = new And(ANODEC(WORD, "AA1", 1.5f));
-	Or* computed = and_singleton->disjoin();
+	Atom* computed = and_singleton->disjoin();
 
 	Lynk* expected = ALINK1(OR, ANODEC(WORD, "AA1", 1.5f));
 
@@ -566,7 +566,7 @@ bool test_costly_and_dnf_single()
 bool test_costly_and_dnf_single_ne()
 {
 	And* and_singleton = new And(ANODEC(WORD, "AA1", 1.5f));
-	Or* computed = and_singleton->disjoin();
+	Atom* computed = and_singleton->disjoin();
 
 	Lynk* expected = ALINK1(OR, ANODEC(WORD, "AA1", 31.6f));
 
@@ -577,7 +577,7 @@ bool test_costly_and_dnf_single_ne()
 bool test_costly_and_dnf_double()
 {
 	And* and_two = new And(ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 1.6f);
-	Or* computed = and_two->disjoin();
+	Atom* computed = and_two->disjoin();
 
 	Lynk* expected =
 	ALINK1(OR, ALINK2C(AND, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 1.6f));
@@ -588,7 +588,7 @@ bool test_costly_and_dnf_double()
 bool test_costly_and_dnf_double_w()
 {
 	And* and_two = new And(ANODE(WORD, "AA1"), ANODEC(WORD, "BB2", 2.8f));
-	Or* computed = and_two->disjoin();
+	Atom* computed = and_two->disjoin();
 
 	Lynk* expected =
 	ALINK1(OR, ALINK2(AND, ANODE(WORD, "AA1"), ANODEC(WORD, "BB2", 2.8f)));
@@ -602,7 +602,7 @@ bool test_costly_and_distrib_left()
 	And* and_right = new And(
 		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
 		ANODE(WORD, "RR1"));
-	Or* computed = and_right->disjoin();
+	Atom* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -618,7 +618,7 @@ bool test_costly_and_distrib_left_sum()
 	And* and_right = new And(
 		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 1.1f),
 		ANODE(WORD, "RR1"), 0.8f);
-	Or* computed = and_right->disjoin();
+	Atom* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -634,7 +634,7 @@ bool test_costly_and_distrib_left_w()
 	And* and_right = new And(
 		ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
 		ANODEC(WORD, "RR1", 3.14f));
-	Or* computed = and_right->disjoin();
+	Atom* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -650,7 +650,7 @@ bool test_costly_and_distrib_right()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
 		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35));
-	Or* computed = and_right->disjoin();
+	Atom* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -665,7 +665,7 @@ bool test_costly_and_distrib_right_sum()
 {
 	And* and_right = new And(ANODE(WORD, "AA1"),
 		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 0.35f), 0.5f);
-	Or* computed = and_right->disjoin();
+	Atom* computed = and_right->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -681,7 +681,7 @@ bool test_costly_and_distrib_middle()
 	And* and_mid = new And(ANODE(WORD, "AA1"),
 		ALINK2C(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3"), 2.1f),
 		ANODE(WORD, "DD4"), 0.6f);
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK2(OR,
@@ -697,7 +697,7 @@ bool test_costly_and_distrib_quad()
 	And* and_mid = new And(
 		ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 1.1f),
 		ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 2.2f), 0.4f);
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK4(OR,
@@ -717,7 +717,7 @@ bool test_costly_and_distrib_quad_right()
 		ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 0.35f),
 		ANODE(WORD, "EE5"), 0.5f
 	);
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK4(OR,
@@ -736,7 +736,7 @@ bool test_costly_and_distrib_quad_left()
 		ANODE(WORD, "EE5"),
 		ALINK2C(OR, ANODE(WORD, "AA1"), ANODE(WORD, "BB2"), 0.11f),
 		ALINK2C(OR, ANODE(WORD, "CC3"), ANODE(WORD, "DD4"), 0.22f), 0.1f);
-	Or* computed = and_mid->disjoin();
+	Atom* computed = and_mid->disjoin();
 
 	Lynk* expected =
 	ALINK4(OR,

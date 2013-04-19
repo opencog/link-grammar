@@ -196,7 +196,7 @@ class And : public Seq
 
 		// Return disjunctive normal form (DNF)
 		// Does not modify this atom; just returns a new one.
-		Or* disjoin();
+		Atom* disjoin();
 
 		// See the Set class for documentation
 		And* flatten() const { return new And(flatset(), _tv); }
