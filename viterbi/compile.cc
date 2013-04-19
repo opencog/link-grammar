@@ -70,7 +70,7 @@ Atom* Set::super_flatten() const
 	size_t sz = get_arity();
 
 	// If its a singleton, just return that. But super-flatten
-	// it first!
+	// it first!  Push the cost of this node down onto the child.
 	if (1 == sz)
 	{
 		Atom* a = get_outgoing_atom(0);
@@ -110,9 +110,15 @@ Atom* Set::super_flatten() const
 			continue;
 		}
 
+		// perform the actual flattening, distributing the cost
+		// of the deleted atom onto its children.
 		size_t csz = chld->get_arity();
 		for (int j=0; j<csz; j++)
-			newset.push_back(chld->get_outgoing_atom(j));
+		{
+			Atom* c = chld->get_outgoing_atom(j);
+			c->_tv += a->_tv;
+			newset.push_back(c);
+		}
 	}
 
 	return  upcast(new Link(get_type(), newset, _tv));

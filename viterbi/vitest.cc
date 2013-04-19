@@ -254,30 +254,39 @@ bool test_cost_flatten_nest_deep()
 {
 	And* and_right = new And(
 		ALINK3C(OR,
-			ANODE(WORD, "AA1"),
-  		 	ALINK2(OR, ANODE(WORD, "BB2"), ANODE(WORD, "CC3")),
-			ALINK3(AND,
-				ANODE(WORD, "XAA1"),
-  		 		ALINK2(AND, ANODE(WORD, "XBB2"), ANODE(WORD, "XCC3")),
-  		 		ALINK2(AND, ANODE(WORD, "XDD4"), ANODE(WORD, "XEE5"))
-			), 0.1f
-		),
+			ANODEC(WORD, "AA1", 0.01f),
+  		 	ALINK2C(OR,
+				ANODEC(WORD, "BB2", 0.02f),
+				ANODEC(WORD, "CC3", 0.03f),
+			0.003f),
+			ALINK3C(AND,
+				ANODEC(WORD, "XAA1", 0.00001f),
+  		 		ALINK2C(AND,
+					ANODEC(WORD, "XBB2", 0.00002f),
+					ANODEC(WORD, "XCC3", 0.00003f),
+				0.000003f),
+  		 		ALINK2C(AND,
+					ANODEC(WORD, "XDD4", 0.00004f),
+					ANODEC(WORD, "XEE5", 0.00005f),
+				0.000006f),
+			0.5f),
+		0.00007f),
 	0.1f);
 	Atom* computed = and_right->super_flatten();
 
 	Lynk* expected =
-	ALINK4(OR,
-		ANODE(WORD, "AA1"),
-		ANODE(WORD, "BB2"),
-		ANODE(WORD, "CC3"),
-		ALINK5(AND,
-			ANODE(WORD, "XAA1"),
-			ANODE(WORD, "XBB2"),
-			ANODE(WORD, "XCC3"),
-			ANODE(WORD, "XDD4"),
-			ANODE(WORD, "XEE5")
-		)
-	);
+	ALINK4C(OR,
+		ANODEC(WORD, "AA1", 0.01f),
+		ANODEC(WORD, "BB2", 0.023f),
+		ANODEC(WORD, "CC3", 0.033f),
+		ALINK5C(AND,
+			ANODEC(WORD, "XAA1", 0.00001f),
+			ANODEC(WORD, "XBB2", 0.000023f),
+			ANODEC(WORD, "XCC3", 0.000033f),
+			ANODEC(WORD, "XDD4", 0.000046f),
+			ANODEC(WORD, "XEE5", 0.000056f),
+		0.5f),
+	0.10007f);
 
 	CHECK(__FUNCTION__, expected, computed);
 }
