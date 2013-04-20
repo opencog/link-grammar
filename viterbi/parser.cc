@@ -77,7 +77,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		return new Connector(ss.str(), likli);
 	}
 
-	// Whenever a null appears in an OR-list, it means the 
+	// Whenever a null appears in an OR-list, it means the
 	// entire OR-list is optional.  A null can never appear
 	// in an AND-list.
 	E_list* el = exp->u.l;
@@ -199,12 +199,6 @@ void Parser::stream_word(const string& word)
 	_alternatives = new_alts;
 }
 
-void Parser::stream_word_conset(WordCset* wrd_cset)
-{
-	Connect cnct(wrd_cset);
-	_alternatives = cnct.try_connect(_alternatives);
-}
-
 // ===================================================================
 /** convenience wrapper */
 Set* Parser::get_alternatives()
@@ -231,7 +225,7 @@ void Parser::streamin(const string& text)
 			const string word = text.substr(pos, wend-pos);
 			stream_word(word);
 			pos = wend + 1; // skip over space
-         while (' ' == text[pos])
+			while (' ' == text[pos])
 				pos++;
 		}
 		else
@@ -244,7 +238,7 @@ void Parser::streamin(const string& text)
 	}
 }
 
-// Send in the right wall -- the traditional link-grammar 
+// Send in the right wall -- the traditional link-grammar
 // design wants this to terminate sentences.
 void Parser::stream_end()
 {
@@ -255,7 +249,9 @@ void Parser::stream_end()
 	assert(wall_disj->get_arity() == 1, "Unexpected wall structure");
 	Atom* wall_cset = wall_disj->get_outgoing_atom(0);
 	WordCset* rwcs = dynamic_cast<WordCset*>(wall_cset);
-	stream_word_conset(rwcs);
+
+	Connect cnct(rwcs);
+	_alternatives = cnct.try_connect(_alternatives);
 }
 
 void viterbi_parse(Dictionary dict, const char * sentence)

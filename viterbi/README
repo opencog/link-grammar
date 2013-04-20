@@ -129,7 +129,7 @@ flag:
 Then, in the client, switch to the viterbi parser with the ! command
 !viterbi  (If confused, try !help and !var for general help).
 
-The vitest.cc file contains unit tests. Currently, it consists of 97
+The vitest.cc file contains unit tests. Currently, it consists of 95
 tests, and all but the last of them pass.  More tests will be added.
 
 
