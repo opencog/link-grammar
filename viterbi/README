@@ -140,6 +140,159 @@ programmers wishing to update this code.  If you are just a user, you
 can skip reading this section.
 
 
+Atomspace Design
+----------------
+The concept of Atoms, Nodes, Links used in the implementation here
+generally resembles the concepts with the matching names, in OpenCog.
+That is, Nodes and Links are two fundamental types of Atoms.  Nodes
+have names, whereas Links contain lists of Atoms.  These two types are
+used to form hypergraphs, where nodes are labelled, but links ar not.
+In C++, these are implemented as derived classes.  Each, in turn, has
+further subtypes, for example, Word is a special type of Node, and Set
+is a subtype of Link. 
+
+Each atom has associated with it a 'truth value'.  In OpenCog, truth
+values may be rather complicated; in the current implementation, here,
+each truth value is just a single floating point number.  It is meant to
+be interpreted as the 'log likelihood', or the 'cost' or the 'entropy',
+depending on the context.  The word 'cost' comes from link-grammar,
+and is used to indicate preference: a parse with the lest total cost
+is the most likely parse.  Note that costs are additive.
+
+Roughly speaking, probability P can be defined as P = exp(-C) where
+C is the cost. Traditional OpenCog stores P in truth values; we store
+C instead.  It just seems easier to debug using C instead of P.  One
+can always convert the one into the other.
+
+It is the intent of the Viterbi parser design to not only use cost
+as a guide for selecting and prioritizing parses, but also to eventually
+collect statistical data on real-world corpora, and automatically,
+through machine learning, to update the dictionary with costs and
+new disjuncts.  Thus, the hypergraphs will behave somewhat like Bayesian
+networks, or perhaps somwheat like Markov Logic Networks.  Detailed
+interpretation of costs and how they are distributed and propagated
+through the network, both during parsing, and during learning, have
+not yet been figured out.
+
+The traditional OpenCog Atomspace design insists that there can only
+ever be one single instance of any given atom at any time.  This is
+not yet enforced in the code here, but might be 'real soon now'.
+
+
+Disjunct Design
+---------------
+The core underlying concept of link-grammar are 'disjuncts', which are
+sets of connectors, each of which must be connected in order for a
+disjunct to be satsfied. A given dictionary word may have many
+disjuncts, however, only one may be satsified at a time.  A typical
+dictionary entry for a word consists of several connectors composed
+with '&' and 'or' operators.  Although it is very tempting to think of
+'&' and 'or' as being boolean operator, they are not. First of all,
+connectors must be kept in sequential order: they do not commute
+under '&'.  Next, one can distribute 'or' over '&' but not vice versa.
+Thus, if A+, B+ and C+ are connectors, then it is true that 
+
+   A+ & (B+ or C+) == A+ & (C+ or B+)
+                   == (A+ & B+) or (A+ & C+)
+                   == (A+ & C+) or (A+ & B+)
+
+However, one cannot distribute the other way: 
+
+   A+ or (B+ & C+) != (A+ or B+) & (A+ or C+)
+   
+Roughly speaking, 'or' does behave like boolean OR, but '&' does not.
+Alternately, 'or' behaves like 'tensor plus' while '&' behaves
+like 'tensor times' in linear logic. Except that tensor times is 
+commutative, and & is not...  Alternately, 'or' behaves sort-of
+like 'exclusive-or', in that only one of the arguments to 'exclusive-or'
+is allowed to hold.  An N>2 argument xor is more correctly called
+a 'choose-one-of-N' function, a logic demultiplexer.
+
+In the C++ code, the '&' operator will be called 'Tensand' (tensor-and),
+while the 'or' operator will be called 'Plexor' (multiplexed-or).
+(TODO change the names.)
+
+Link-grammar dictionary entries are written as exprssions of connectors,
+'&' and 'or'.  In order to actually use them in parsing a sentence, it
+seems easiest to expand them into disjunctive normal form (DNF). This 
+makes it easy to determine that one and only one disjunct is being used,
+and that all of the connectors in the disjunct are being satisfied.
+The various disjoin() methods on the various classes are used to place
+expressions into DNF.
+
+Several complications arise when we want to consider truth values 
+(probabilities, or 'costs') associated with disjuncts.  First of all,
+costs need to be corectly distributed when disjuncts are being formed.
+Thus, for example, using [[]] to denote cost (just as in the
+link-grammar dicts), we have:
+
+   [[A+]] & (B+ or C+) == ([[A+]] & B+) or ([[A+]] & C+)
+                       == [[A+ & B+]] or [[A+ & C+]]
+                       == [[A+ & (B+ or C+)]]
+                       == A+ & [[B+ or C+]]
+
+while
+
+   A+ & ([[B+]] or C+) == (A+ & [[B+]]) or (A+ & C+)
+                       == [[A+ & B+]] or (A+ & C+)
+
+Thus, the disjunct [[A+ & B+]] is costly, while (A+ & C+) is not. 
+
+The next issue is that the same disjunct can have different costs when
+used with different words. Thus, [[A+ & B+]] may be costly when used
+with the verb 'to be' but not when used with the verb 'to go'.  Thus,
+the cost annotation must be associated with the word-disjunct pair,
+and not with the disjunct alone.  Putting all these different
+observations together results in the following representation for an
+entry in the dictinary (after it has been placed in DNF):
+
+Dictionary entry as it appear in link-grammar dicts:
+
+   jabberwoky: A+ & ([[B+]] or C+);
+
+Dictionary entry, as represented in the atomspace, after being disjoined:
+
+   Plexor
+       WordCset    (cost 2.0)      ; Notice non-zero cost
+          Word     "jabberwoky"
+          Tensand                  ; Notice cost of zero for tensand
+             Connector "A+"
+             Connector "B+"
+
+       WordCset
+          Word     "blah-blah"
+          Tensand
+             Connector "A+"
+             Connector "C+"
+
+Note that the act of disjoining has to have the Plexor 'pass through'
+the word labels (but not the Tensand).  So, for example, just after
+the dictionary entry is read from the file, but before before it is
+placed into the atomspace, it is represented as:
+
+   WordCset
+      Word     "jabberwoky"
+      Tensand
+         Connector "A+"
+         Plexor
+             Connector "B+"  (cost 2.0)
+             Connector "C+"
+
+which is certainly more compact than above, except that:
+
+1) Its very hard to develop an algo that will correctly couple
+   connectors during a parse, when the entry is in this form.
+
+2) The cost on B+ means that we have to be careful that this connector
+   is not in the atomspace.  This is because there is only one,
+   singular, unique atom called "Connector B+" in the atomspace, and
+   changing its cost would affect all users of it!
+
+3) Updating costs on Tensands (disjuncts) also raises similar issues:
+   there is one and only one disjunct of the form
+   (Tensand (Connector "A+") (Connector "B+")) in the atomspace, so 
+   setting its cost would change the perceived cost for any other
+   thing that might be using this.
 
 
 
