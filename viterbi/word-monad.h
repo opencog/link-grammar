@@ -25,13 +25,8 @@ class WordMonad : public gc
 		WordMonad(WordCset*);
 		Set* try_connect(Set*);
 
-	protected:
-		Set* try_connect_one(StatePair*);
-		Set* next_connect(WordCset*);
-
 	private:
 		WordCset* _right_cset;
-		Atom* _rcons;  // just the connector(s), without the word.
 };
 
 

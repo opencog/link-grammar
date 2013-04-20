@@ -60,7 +60,6 @@ WordMonad::WordMonad(WordCset* right_wconset)
 	: _right_cset(right_wconset)
 {
 	assert(_right_cset, "Unexpected NULL dictionary entry!");
-	_rcons = _right_cset->get_cset();
 	DBG(cout << "--------------- WordMonad ctor right=\n" << _right_cset << endl);
 }
 
@@ -109,37 +108,63 @@ static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
 }
 
 /**
- * Try connecting the connector set, given in the cnstructor, to each
- * state in the set of states.  Return a new set of states.
+ * Try connecting this connector set, from the left, to the right cset.
+ * This returns a set of alternative connections, as state pairs: each
+ * alternative will consist of new state, and the links that were issued.
  */
-Set* WordMonad::try_connect(Set* alts)
+static Set* next_connect(WordCset* left_cset, WordCset* right_cset)
 {
-	// The state set consists of a bunch of sequences; each sequence
-	// being a single parse state.  Each parse state is a sequence of
-	// unsatisfied right-pointing links.
-	Set* new_alts = new Set();
-	for (int i = 0; i < alts->get_arity(); i++)
+	assert(left_cset, "State word-connectorset is null");
+	Atom* left_a = left_cset->get_cset();
+
+	DBG(cout << "Enter next_connect(), left cset " << left_a << endl);
+
+	// Wrap bare connector with OR; this simplifie the nested loop below.
+	Or* left_dnf = NULL;
+	AtomType lt = left_a->get_type();
+	if (CONNECTOR == lt or AND == lt)
+		left_dnf = new Or(left_a);
+	else
+		left_dnf = dynamic_cast<Or*>(upcast(left_a));
+	assert(left_dnf != NULL, "Left disjuncts not in DNF");
+
+
+	Atom *right_a = right_cset->get_cset();
+	DBG(cout << "in next_connect(), right cset "<< right_a <<endl);
+	Or* right_dnf = NULL;
+	AtomType rt = right_a->get_type();
+	if (CONNECTOR == rt or AND == rt)
+		right_dnf = new Or(right_a);
+	else
+		right_dnf = dynamic_cast<Or*>(upcast(right_a));
+	assert(right_dnf != NULL, "Right disjuncts not in DNF");
+
+
+	// At this point, both left_dnf and right_dnf should be in
+	// disjunctive normal form.  Perform a nested loop over each
+	// of them, connecting each to each.
+
+	// "alternatives" records the various different successful ways
+	// that connectors can be mated.  Its a list of state pairs.
+	OutList alternatives;
+	size_t lsz = left_dnf->get_arity();
+	for (size_t i=0; i<lsz; i++)
 	{
-		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
-		assert(sp, "Missing state");
+		Atom* ldj = left_dnf->get_outgoing_atom(i);
 
-		// If there is nothing to connect to, there is nothing we can don.
-		Seq* state = sp->get_state();
-		if (0 == state->get_arity())
-			continue;
+		size_t rsz = right_dnf->get_arity();
+		for (size_t j=0; j<rsz; j++)
+		{
+			Atom* rdj = right_dnf->get_outgoing_atom(j);
 
-		// Each state sequence consists of a sequence of right-pointing
-		// links. These must be sequentially satisfied: This is the
-		// viterbi equivalent of "planar graph" or "no-crossing-links"
-		// in the classical link-grammar parser.  That is, a new word
-		// must link to the first sequence element that has dangling
-		// right-pointing connectors.
-		Set* next_alts = try_connect_one(sp);
-		new_alts = new_alts->add(next_alts);
+			Connect cnct(left_cset, right_cset);
+			StatePair* sp = cnct.try_alternative(ldj, rdj);
+			if (sp)
+				alternatives.push_back(sp);
+		}
 	}
 
-	// set_clean_state(new_state_set);
-	return new_alts;
+	return compress_alternatives(new Set(alternatives));
 }
 
 /**
@@ -156,7 +181,7 @@ Set* WordMonad::try_connect(Set* alts)
  * set in the sequence must be fully satisfied before a connection is made
  * to the second one in the sequence, etc. (counting from zero).
  */
-Set* WordMonad::try_connect_one(StatePair* left_sp)
+static Set* try_connect_one(StatePair* left_sp, WordCset* right_cset)
 {
 	// Zipper up the zipper.
 	// The left state can the thought of as a strand of zipper teeth,
@@ -172,7 +197,7 @@ Set* WordMonad::try_connect_one(StatePair* left_sp)
 	Seq* left_state = left_sp->get_state();
 	Atom* a = left_state->get_outgoing_atom(0);
 	WordCset* lwc = dynamic_cast<WordCset*>(a);
-	Set* alternatives = next_connect(lwc);
+	Set* alternatives = next_connect(lwc, right_cset);
 
 	size_t lsz = left_state->get_arity();
 	size_t lnext = 1;
@@ -212,8 +237,7 @@ Set* WordMonad::try_connect_one(StatePair* left_sp)
 					// the fresh output just minted by the recurse
 					StatePair* usp = new StatePair(united_sp->get_state(), new Seq());
 					DBG(cout << "United states:" << united_sp << endl);
-					WordMonad recurse(new_cset);
-					Set* new_alts = recurse.try_connect_one(usp);
+					Set* new_alts = try_connect_one(usp, new_cset);
 // cout << "woot got this:" << new_alts<<endl;
 
 					size_t nsz = new_alts->get_arity();
@@ -245,63 +269,37 @@ Set* WordMonad::try_connect_one(StatePair* left_sp)
 }
 
 /**
- * Try connecting this connector set, from the left, to what was passed
- * in ctor.  This returns a set of alternative connections, as state
- * pairs: each alternative will consist of new state, and the links that
- * were issued.
+ * Try connecting the connector set, given in the cnstructor, to each
+ * state in the set of states.  Return a new set of states.
  */
-Set* WordMonad::next_connect(WordCset* left_cset)
+Set* WordMonad::try_connect(Set* alts)
 {
-	assert(left_cset, "State word-connectorset is null");
-	Atom* left_a = left_cset->get_cset();
-
-	DBG(cout << "Enter next_connect(), left cset " << left_a << endl);
-
-	// Wrap bare connector with OR; this simplifie the nested loop below.
-	Or* left_dnf = NULL;
-	AtomType lt = left_a->get_type();
-	if (CONNECTOR == lt or AND == lt)
-		left_dnf = new Or(left_a);
-	else
-		left_dnf = dynamic_cast<Or*>(upcast(left_a));
-	assert(left_dnf != NULL, "Left disjuncts not in DNF");
-
-	Atom *right_a = _rcons;
-	DBG(cout << "in next_connect(), right cset "<< right_a <<endl);
-	Or* right_dnf = NULL;
-	AtomType rt = right_a->get_type();
-	if (CONNECTOR == rt or AND == rt)
-		right_dnf = new Or(right_a);
-	else
-		right_dnf = dynamic_cast<Or*>(upcast(right_a));
-	assert(right_dnf != NULL, "Right disjuncts not in DNF");
-
-
-	// At this point, both left_dnf and right_dnf should be in
-	// disjunctive normal form.  Perform a nested loop over each
-	// of them, connecting each to each.
-
-	// "alternatives" records the various different successful ways
-	// that connectors can be mated.  Its a list of state pairs.
-	OutList alternatives;
-	size_t lsz = left_dnf->get_arity();
-	for (size_t i=0; i<lsz; i++)
+	// The state set consists of a bunch of sequences; each sequence
+	// being a single parse state.  Each parse state is a sequence of
+	// unsatisfied right-pointing links.
+	Set* new_alts = new Set();
+	for (int i = 0; i < alts->get_arity(); i++)
 	{
-		Atom* ldj = left_dnf->get_outgoing_atom(i);
+		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
+		assert(sp, "Missing state");
 
-		size_t rsz = right_dnf->get_arity();
-		for (size_t j=0; j<rsz; j++)
-		{
-			Atom* rdj = right_dnf->get_outgoing_atom(j);
+		// If there is nothing to connect to, there is nothing we can don.
+		Seq* state = sp->get_state();
+		if (0 == state->get_arity())
+			continue;
 
-			Connect cnct(left_cset, _right_cset);
-			StatePair* sp = cnct.try_alternative(ldj, rdj);
-			if (sp)
-				alternatives.push_back(sp);
-		}
+		// Each state sequence consists of a sequence of right-pointing
+		// links. These must be sequentially satisfied: This is the
+		// viterbi equivalent of "planar graph" or "no-crossing-links"
+		// in the classical link-grammar parser.  That is, a new word
+		// must link to the first sequence element that has dangling
+		// right-pointing connectors.
+		Set* next_alts = try_connect_one(sp, _right_cset);
+		new_alts = new_alts->add(next_alts);
 	}
 
-	return compress_alternatives(new Set(alternatives));
+	// set_clean_state(new_state_set);
+	return new_alts;
 }
 
 } // namespace viterbi
