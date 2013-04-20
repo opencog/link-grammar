@@ -191,17 +191,19 @@ void Parser::stream_word(const string& word)
 	for (int i = 0; i < djset->get_arity(); i++)
 	{
 		Atom* cset = djset->get_outgoing_atom(i);
-		State stset(_alternatives);
-		Set* alts = stset.stream_word_conset(dynamic_cast<WordCset*>(cset));
+		WordCset* wrd_cset = dynamic_cast<WordCset*>(cset);
+
+		Connect cnct(wrd_cset);
+		Set* alts = cnct.try_connect(_alternatives);
 		new_alts = new_alts->add(alts);
 	}
 	_alternatives = new_alts;
 }
 
-void Parser::stream_word_conset(WordCset* cset)
+void Parser::stream_word_conset(WordCset* wrd_cset)
 {
-	State stset(_alternatives);
-	_alternatives = stset.stream_word_conset(cset);
+	Connect cnct(wrd_cset);
+	_alternatives = cnct.try_connect(_alternatives);
 }
 
 // ===================================================================

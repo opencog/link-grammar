@@ -119,6 +119,11 @@ Set* Connect::try_connect(Set* alts)
 		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
 		assert(sp, "Missing state");
 
+		// If there is nothing to connect to, there is nothing we can don.
+		Seq* state = sp->get_state();
+		if (0 == state->get_arity())
+			continue;
+
 		// Each state sequence consists of a sequence of right-pointing
 		// links. These must be sequentially satisfied: This is the
 		// viterbi equivalent of "planar graph" or "no-crossing-links"
