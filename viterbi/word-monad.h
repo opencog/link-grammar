@@ -9,8 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_VITERBI_CONNECT_H
-#define _LG_VITERBI_CONNECT_H
+#ifndef _LG_VITERBI_WORD_MONAD_H
+#define _LG_VITERBI_WORD_MONAD_H
 
 #include "atom.h"
 #include "compile.h"
@@ -19,31 +19,23 @@
 namespace link_grammar {
 namespace viterbi {
 
-class Connect : public gc
+class WordMonad : public gc
 {
 	public:
-		Connect(WordCset*, WordCset*);
-		StatePair* try_alternative(Atom*, Atom*);
+		WordMonad(WordCset*);
+		Set* try_connect(Set*);
 
 	protected:
-
-		StatePair* alternative(Connector*, Connector*);
-		StatePair* alternative(Connector*, And*);
-		StatePair* alternative(And*, Connector*);
-		StatePair* alternative(And*, And*);
-
-		Ling* conn_connect_nn(Connector*, Connector*);
-		Ling* reassemble(Ling*, WordCset*, WordCset*);
-
-		static const OutList& flatten(OutList&);
+		Set* try_connect_one(StatePair*);
+		Set* next_connect(WordCset*);
 
 	private:
 		WordCset* _right_cset;
-		WordCset* _left_cset;
+		Atom* _rcons;  // just the connector(s), without the word.
 };
 
 
 } // namespace viterbi
 } // namespace link-grammar
 
-#endif // _LG_VITERBI_CONNECT_H
+#endif // _LG_VITERBI_WORD_MONAD_H

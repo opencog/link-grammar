@@ -24,12 +24,11 @@
 
 #include "atom.h"
 #include "compile.h"
-#include "connect.h"
-#include "connector-utils.h"
 #include "disjoin.h"
 #include "garbage.h"
 #include "parser.h"
 #include "viterbi.h"
+#include "word-monad.h"
 
 using namespace std;
 
@@ -192,7 +191,7 @@ void Parser::stream_word(const string& word)
 		Atom* cset = djset->get_outgoing_atom(i);
 		WordCset* wrd_cset = dynamic_cast<WordCset*>(cset);
 
-		Connect cnct(wrd_cset);
+		WordMonad cnct(wrd_cset);
 		Set* alts = cnct.try_connect(_alternatives);
 		new_alts = new_alts->add(alts);
 	}
@@ -250,7 +249,7 @@ void Parser::stream_end()
 	Atom* wall_cset = wall_disj->get_outgoing_atom(0);
 	WordCset* rwcs = dynamic_cast<WordCset*>(wall_cset);
 
-	Connect cnct(rwcs);
+	WordMonad cnct(rwcs);
 	_alternatives = cnct.try_connect(_alternatives);
 }
 
