@@ -29,7 +29,6 @@
 #include "disjoin.h"
 #include "garbage.h"
 #include "parser.h"
-#include "state.h"
 #include "viterbi.h"
 
 using namespace std;

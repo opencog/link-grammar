@@ -21,7 +21,6 @@ libvitacog_la_SOURCES = \
 	garbage.cc \
 	parser.cc \
 	rewrite.cc \
-	state.cc \
 	atom.h \
 	compile.h \
 	compress.h \
@@ -31,7 +30,6 @@ libvitacog_la_SOURCES = \
 	garbage.h \
 	parser.h \
 	rewrite.h \
-	state.h \
 	viterbi.h
 
 # Unit test, to make sure the parser is working correctly.
