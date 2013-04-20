@@ -23,7 +23,7 @@ class WordMonad : public gc
 {
 	public:
 		WordMonad(WordCset*);
-		Set* try_connect(Set*);
+		Set* operator()(Set*);
 
 	private:
 		WordCset* _right_cset;

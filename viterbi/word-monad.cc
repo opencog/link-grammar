@@ -269,10 +269,19 @@ static Set* try_connect_one(StatePair* left_sp, WordCset* right_cset)
 }
 
 /**
- * Try connecting the connector set, given in the cnstructor, to each
- * state in the set of states.  Return a new set of states.
+ * Given a set of state alternatives, try attaching the connector set
+ * that was given in the constructor.  Return a set of states that
+ * result from successful attachements.
+ *
+ * For just right now, we've given this the signature of "operator()"
+ * because we want to suggest the monad-like nature of this thing:
+ * its being given a state, and its transforming it to some other state.
+ * its expected that someday, in the future, there will be a unch of
+ * these.  In OpenCog terms, this is kind-of-like a "MindAgent", except
+ * that it is not an independent thread/process.  The ideas expressed
+ * in these last few sentences are subject to change...
  */
-Set* WordMonad::try_connect(Set* alts)
+Set* WordMonad::operator()(Set* alts)
 {
 	// The state set consists of a bunch of sequences; each sequence
 	// being a single parse state.  Each parse state is a sequence of

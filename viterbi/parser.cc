@@ -192,7 +192,7 @@ void Parser::stream_word(const string& word)
 		WordCset* wrd_cset = dynamic_cast<WordCset*>(cset);
 
 		WordMonad cnct(wrd_cset);
-		Set* alts = cnct.try_connect(_alternatives);
+		Set* alts = cnct(_alternatives);
 		new_alts = new_alts->add(alts);
 	}
 	_alternatives = new_alts;
@@ -250,7 +250,7 @@ void Parser::stream_end()
 	WordCset* rwcs = dynamic_cast<WordCset*>(wall_cset);
 
 	WordMonad cnct(rwcs);
-	_alternatives = cnct.try_connect(_alternatives);
+	_alternatives = cnct(_alternatives);
 }
 
 void viterbi_parse(Dictionary dict, const char * sentence)
