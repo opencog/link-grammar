@@ -75,28 +75,8 @@ Set* State::stream_word_conset(WordCset* wrd_cset)
    DBG(cout << "Initial alternative_set:\n" << _alternatives << endl);
 	Connect cnct(wrd_cset);
 
-	// The state set consists of a bunch of sequences; each sequence
-	// being a single parse state.  Each parse state is a sequence of
-	// unsatisfied right-pointing links.
-	Set* new_alts = new Set();
-	Set* alts = _alternatives;
-	for (int i = 0; i < alts->get_arity(); i++)
-	{
-		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
-		assert(sp, "Missing state");
-
-		// Each state sequence consists of a sequence of right-pointing
-		// links. These must be sequentially satisfied: This is the
-		// viterbi equivalent of "planar graph" or "no-crossing-links"
-		// in the classical link-grammar parser.  That is, a new word
-		// must link to the first sequence element that has dangling
-		// right-pointing connectors.
-		Set* next_alts = cnct.try_connect(sp);
-		new_alts = new_alts->add(next_alts);
-	}
-
 	// set_clean_state(new_state_set);
-	return new_alts;
+	return cnct.try_connect(_alternatives);
 }
 
 }} // end of namespaces

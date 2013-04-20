@@ -23,9 +23,10 @@ class Connect : public gc
 {
 	public:
 		Connect(WordCset*);
-		Set* try_connect(StatePair*);
+		Set* try_connect(Set*);
 
 	protected:
+		Set* try_connect_one(StatePair*);
 		Set* next_connect(WordCset*);
 
 		StatePair* try_alternative(Atom*, Atom*);

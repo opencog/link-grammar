@@ -32,6 +32,16 @@ namespace link_grammar {
 namespace viterbi {
 
 /**
+ * This class is vaguely monad-like.  The constructor takes some
+ * arguments.  It returns a "function" called try_connect() which
+ * acts on state, and returns different state.
+ *
+ * The "core" function wrapped by the monad is reassemble().
+ * Everything else is a 'wrapper' around this, handling the various
+ * special cases that appear in the state.
+ */
+
+/**
  * constructor: argument is a connector set (typically, for a single
  * word) that will be used to try connections. This connector set is
  * assumed to be to the right of the argument to the try_connect()
@@ -39,7 +49,7 @@ namespace viterbi {
  *
  * To be precise, the right_wconset is presumed to be of the form:
  *	WORD_CSET :
- *    WORD : blah-blah.v
+ *    WORD : jabberwoky.n
  *	   OR :
  *       CONNECTOR : Wd-
  *       CONNECTOR : Abc+ etc...
@@ -98,6 +108,31 @@ static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
 	return new StatePair(new Seq(united_states), new Seq(united_outputs));
 }
 
+Set* Connect::try_connect(Set* alts)
+{
+	// The state set consists of a bunch of sequences; each sequence
+	// being a single parse state.  Each parse state is a sequence of
+	// unsatisfied right-pointing links.
+	Set* new_alts = new Set();
+	for (int i = 0; i < alts->get_arity(); i++)
+	{
+		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
+		assert(sp, "Missing state");
+
+		// Each state sequence consists of a sequence of right-pointing
+		// links. These must be sequentially satisfied: This is the
+		// viterbi equivalent of "planar graph" or "no-crossing-links"
+		// in the classical link-grammar parser.  That is, a new word
+		// must link to the first sequence element that has dangling
+		// right-pointing connectors.
+		Set* next_alts = try_connect_one(sp);
+		new_alts = new_alts->add(next_alts);
+	}
+
+	// set_clean_state(new_state_set);
+	return new_alts;
+}
+
 /**
  * Try connecting this connector set sequence, from the left, to what
  * was passed in ctor.  It is preseumed that left_sp is a single parse
@@ -112,8 +147,7 @@ static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
  * set in the sequence must be fully satisfied before a connection is made
  * to the second one in the sequence, etc. (counting from zero).
  */
-// XXX most of this should probably be moved to State class
-Set* Connect::try_connect(StatePair* left_sp)
+Set* Connect::try_connect_one(StatePair* left_sp)
 {
 	// Zipper up the zipper.
 	// The left state can the thought of as a strand of zipper teeth,
@@ -170,7 +204,7 @@ Set* Connect::try_connect(StatePair* left_sp)
 					StatePair* usp = new StatePair(united_sp->get_state(), new Seq());
 					DBG(cout << "United states:" << united_sp << endl);
 					Connect recurse(new_cset);
-					Set* new_alts = recurse.try_connect(usp);
+					Set* new_alts = recurse.try_connect_one(usp);
 // cout << "woot got this:" << new_alts<<endl;
 
 					size_t nsz = new_alts->get_arity();
