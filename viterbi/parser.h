@@ -40,6 +40,7 @@ class Parser : public gc
 	protected:
 		void initialize_state();
 		Atom* lg_exp_to_atom(Exp*);
+		Set* raw_word_consets(const std::string& word);
 
 		Dictionary _dict;
 	private:

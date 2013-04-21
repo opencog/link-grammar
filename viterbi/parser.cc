@@ -120,7 +120,67 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
  * the resulting link-grammar connective expression into an formula
  * composed of atoms.
  */
-Set * Parser::word_consets(const string& word)
+Set* Parser::word_consets(const string& word)
+{
+	Set* raw_csets = raw_word_consets(word);
+	OutList cooked;
+	size_t sz = raw_csets->get_arity();
+	for (int i=0; i<sz; i++)
+	{
+		Atom* a = raw_csets->get_outgoing_atom(i);
+		WordCset* wcs = dynamic_cast<WordCset*>(a);
+
+		Atom* c = wcs->get_cset();
+		Or* orc = dynamic_cast<Or*>(c);
+		if (!orc)
+		{
+			cooked.push_back(wcs);
+			continue;
+		}
+
+		// If we are here, then we have a set of disjuncts.
+		// Push them up, propagating the costs.
+		size_t osz = orc->get_arity();
+		for (int j=0; j<osz; j++)
+		{
+			Atom* a = orc->get_outgoing_atom(j);
+			WordCset* dj = new WordCset(wcs->get_word(), a);
+			dj->_tv = a->_tv;
+			a->_tv = 0.0f;
+			cooked.push_back(dj);
+		}
+	}
+	return new Set(cooked);
+}
+
+// ===================================================================
+/**
+ * Return atomic formula connector expression for the given word.
+ *
+ * This looks up the word in the link-grammar dictionary, and converts
+ * the resulting link-grammar connective expression into a formula
+ * composed of atoms.
+ *
+ * The return form is 'raw' in that the costs have not yet been correctly
+ * distributed over the words: i.e. this might return a connector set that
+ * might be a disjunction over different costs.  For example:
+ *
+ * SET :
+ *   WORD_CSET :
+ *     WORD : is.v
+ *     OR:
+ *       AND :
+ *         CONNECTOR : Ss-
+ *         CONNECTOR : Wi-
+ *       AND :     (2)
+ *         CONNECTOR : Ss-
+ *         CONNECTOR : Wd-
+ * 
+ * Notice the cost on the second disjunt: this would completely mess
+ * things up if it were placed into the atomspace, since that cost would
+ * screw things up for any other expressions having this sub-expression.
+ */
+Set * Parser::raw_word_consets(const string& word)
 {
 	// See if we know about this word, or not.
 	Dict_node* dn_head = dictionary_lookup_list(_dict, word.c_str());
@@ -177,6 +237,7 @@ void Parser::stream_word(const string& word)
 		assert (0, "word not in dict");
 		return;
 	}
+std::cout<<"duuude dj="<<djset<<std::endl;
 
 	// Try to add each dictionary entry to the parse state.
 	Set* new_alts = new Set();
