@@ -114,15 +114,20 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 
 // ===================================================================
 /**
- * Return atomic formula connector expression for the given word.
+ * Iterate over a set of connector-sets. If there is a mixture of
+ * different costs found in a connector-set, then split it up into
+ * several differeent ones, each with the appropriate cost.
  *
- * This looks up the word in the link-grammar dictionary, and converts
- * the resulting link-grammar connective expression into an formula
- * composed of atoms.
+ * In principle, we could split up everything.  Right now, we don't
+ * because:
+ * 1) the current unit tests would be surprised by this, and some
+ *    would fail.
+ * 2) the resulting graph would be larger, more verbose.
+ * On the other hand, if we did split up everything here, then the
+ * parsing algo could become simpler/smaller. Hmmm... what to do ... 
  */
-Set* Parser::word_consets(const string& word)
+static Set* cost_split(Set* raw_csets)
 {
-	Set* raw_csets = raw_word_consets(word);
 	OutList cooked;
 	size_t sz = raw_csets->get_arity();
 	for (int i=0; i<sz; i++)
@@ -143,11 +148,6 @@ Set* Parser::word_consets(const string& word)
 
 		// If we are here, then we have a set of disjuncts.
 		// Split out any costly disjuncts into their own.
-		// We could split up everything, except for several reasons:
-		// 1) the current unit tests would be surprised by this.
-		// 2) the hypergraphs are more compact if we don't split...
-		// On the other hand, the connector algos could be simplified
-		// if we split everything up... Hmmm. What to do?
 		OutList trim;
 		size_t osz = orc->get_arity();
 		for (int j=0; j<osz; j++)
@@ -170,6 +170,72 @@ Set* Parser::word_consets(const string& word)
 		}
 	}
 	return new Set(cooked);
+}
+
+// ===================================================================
+
+/// Given a disjunct of connectors, propagate a cost
+/// on any one of them up to the disjunct as a whole.
+static void promote_cost(And* disjunct)
+{
+	// Promote costs, if any, from each connector, to the disjunct
+	size_t sz = disjunct->get_arity();
+	for (size_t j=0; j<sz; j++)
+	{
+		Atom* a = disjunct->get_outgoing_atom(j);
+		disjunct->_tv += a->_tv;
+		a->_tv = 0.0f;
+	}
+}
+
+/// Given a list of connector sets, search for any costs pasted onto
+/// some individual connector, and push it up onto the disjunct that
+/// contains that connector.
+static Set* cost_up(Set* raw_csets)
+{
+	size_t sz = raw_csets->get_arity();
+	for (size_t i=0; i<sz; i++)
+	{
+		Atom* a = raw_csets->get_outgoing_atom(i);
+		WordCset* wcs = dynamic_cast<WordCset*>(a);
+
+		Atom* c = wcs->get_cset();
+		And* dj = dynamic_cast<And*>(c);
+		if (dj)
+		{
+			promote_cost(dj);
+			continue;
+		}
+
+		Or* orc = dynamic_cast<Or*>(c);
+		if (orc)
+		{
+			size_t osz = orc->get_arity();
+			for (size_t j=0; j<osz; j++)
+			{
+				Atom* oa = orc->get_outgoing_atom(j);
+				And* dj = dynamic_cast<And*>(oa);
+				if (dj)
+					promote_cost(dj);
+			}
+		}
+	}
+
+	return raw_csets;
+}
+
+// ===================================================================
+/**
+ * Return atomic formula connector expression for the given word.
+ *
+ * This looks up the word in the link-grammar dictionary, and converts
+ * the resulting link-grammar connective expression into an formula
+ * composed of atoms.
+ */
+Set* Parser::word_consets(const string& word)
+{
+	Set* raw_csets = raw_word_consets(word);
+	return cost_split(cost_up(raw_csets));
 }
 
 // ===================================================================
