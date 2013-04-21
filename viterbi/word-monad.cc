@@ -233,7 +233,7 @@ static Set* try_connect_one(StateTriple* left_sp, WordCset* right_cset)
 				// The left-pointers are either mandatory or optional.
 				// If they're mandatory and there is no state to zipper with,
 				// then its a parse fail. Otherwise recurse.
-// XX check for optional...
+// XXX check for optional...
 				if (lnext < lsz)
 				{
 					Atom* a = left_state->get_outgoing_atom(lnext);
@@ -303,11 +303,19 @@ Set* WordMonad::operator()(Set* alts)
 		StateTriple* sp = dynamic_cast<StateTriple*>(alts->get_outgoing_atom(i));
 		assert(sp, "Missing state");
 
-		// If there is nothing to connect to, there is nothing we can don.
 		Seq* state = sp->get_state();
 		if (0 == state->get_arity())
+		{
+			// If there is nothing to connect to, then we presume that we're
+			// dealing with a sentence boundary.  Seentence boundaries cannot
+			// have any left-pointers in them.
+			if (_right_cset->has_left_pointers())
+				continue;
+			Set* next_alts = new Set(new StateTriple(new Seq(),
+			                         new Seq(_right_cset), new Set()));
+			new_alts = new_alts->add(next_alts);
 			continue;
-
+		}
 		// Each state sequence consists of a sequence of right-pointing
 		// links. These must be sequentially satisfied: This is the
 		// viterbi equivalent of "planar graph" or "no-crossing-links"

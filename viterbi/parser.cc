@@ -151,23 +151,16 @@ Set * Parser::word_consets(const string& word)
  */
 void Parser::initialize_state()
 {
-	const char * wall_word = "LEFT-WALL";
-
-	Set *wall_disj = word_consets(wall_word);
-
-	// We are expecting the initial wall to be unique.
-	assert(wall_disj->get_arity() == 1, "Unexpected wall structure");
-	OutList state_vec;
-	Atom* wall_cset = wall_disj->get_outgoing_atom(0);
-
-	// Initial state: no output, and the wall cset.
 	_alternatives = new Set(
 		new StateTriple(
 			new Seq(),
-			new Seq(wall_cset),
+			new Seq(),
 			new Set()
 		)
 	);
+
+	const char * wall_word = "LEFT-WALL";
+	stream_word(wall_word);
 }
 
 // ===================================================================
