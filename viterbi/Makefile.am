@@ -34,13 +34,20 @@ libvitacog_la_SOURCES = \
 	viterbi.h \
 	word-monad.h
 
-# Unit test, to make sure the parser is working correctly.
-noinst_PROGRAMS = vitest
+libvitacog_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
+libvitacog_la_LIBADD += $(LIBGC_LIBS)
 
-vitest_SOURCES = vitest.cc
-vitest_LDADD = libvitacog.la
-vitest_LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
-vitest_LDADD += $(LIBGC_LIBS)
+# Unit test, to make sure the parser is working correctly.
+TESTS = test-disjoin test-parser
+
+check_PROGRAMS = test-disjoin test-parser
+
+test_disjoin_SOURCES = test-disjoin.cc
+test_parser_SOURCES = test-parser.cc
+
+LDADD = libvitacog.la
+LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
+LDADD += $(LIBGC_LIBS)
 
 
 endif
