@@ -269,7 +269,7 @@ Set * Parser::raw_word_consets(const string& word)
 {
 	// See if we know about this word, or not.
 	Dict_node* dn_head = dictionary_lookup_list(_dict, word.c_str());
-	if (!dn_head) return NULL;
+	if (!dn_head) return new Set();
 
 	OutList djset;
 	for (Dict_node*dn = dn_head; dn; dn= dn->right)

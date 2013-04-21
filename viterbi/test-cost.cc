@@ -17,6 +17,66 @@
 #include <link-grammar/read-dict.h>
 
 // ==================================================================
+bool test_disjoin_cost()
+{
+	total_tests++;
+	const char* post_nominal = 
+		"<costly-null>: [[[()]]];"
+		"wtf: ({[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-);";
+
+	Dictionary dict = dictionary_create_from_utf8(post_nominal);
+	Parser parser(dict);
+
+	Set* csets = parser.word_consets("wtf");
+
+	Lynk* expected =
+		ALINK4(SET,
+			ALINK2C(WORD_CSET, 
+				ANODE(WORD, "wtf"),
+				ALINK4(AND,
+					ANODE(CONNECTOR, "Xd-"),
+					ANODE(CONNECTOR, "MX-"),
+					ANODE(CONNECTOR, "Bpj+"),
+					ANODE(CONNECTOR, "Xc+")
+				),
+			1.0f),
+			ALINK2C(WORD_CSET, 
+				ANODE(WORD, "wtf"),
+				ALINK3(AND,
+					ANODE(CONNECTOR, "Xd-"),
+					ANODE(CONNECTOR, "MX-"),
+					ANODE(CONNECTOR, "Xc+")
+				),
+			0.0f),
+			ALINK2C(WORD_CSET, 
+				ANODE(WORD, "wtf"),
+				ALINK3(AND,
+					ANODE(CONNECTOR, "Xd-"),
+					ANODE(CONNECTOR, "MX-"),
+					ANODE(CONNECTOR, "Bpj+")
+				),
+			4.0f),
+			ALINK2C(WORD_CSET, 
+				ANODE(WORD, "wtf"),
+				ALINK2(AND,
+					ANODE(CONNECTOR, "Xd-"),
+					ANODE(CONNECTOR, "MX-")
+				),
+			3.0f)
+		);
+
+	if (not (csets->operator==(expected)))
+	{
+		cout << "Error: test failure on test \"test_disjoin_cost\"" << endl;
+		cout << "=== Expecting:\n" << expected << endl;
+		cout << "=== Got:\n" << csets << endl;
+		return false;
+	}
+	cout << "PASS: test_disjoin_cost" << endl;
+	return true;
+}
+
+// ==================================================================
 // XXX currently a copy of test_short_sent ...
 bool test_cost(const char *id, const char *dict_str, bool empty_state)
 {
@@ -111,6 +171,8 @@ bool test_cost_this()
 int ntest_cost()
 {
 	size_t num_failures = 0;
+
+	if (!test_disjoin_cost()) num_failures++;
 
 	if (!test_cost_this()) num_failures++;
 	return num_failures;
