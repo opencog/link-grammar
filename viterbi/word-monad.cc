@@ -33,12 +33,21 @@ namespace viterbi {
 
 /**
  * This class is vaguely monad-like.  The constructor takes some
- * arguments.  It returns a "function" called try_connect() which
+ * arguments.  It returns a "function" called operator() which
  * acts on state, and returns different state.
  *
  * The "core" function wrapped by the monad is reassemble().
  * Everything else is a 'wrapper' around this, handling the various
  * special cases that appear in the state.
+ *
+ * It is both a C++ functor (because it defines operator()) and it is
+ * also a hypergraph functor (because it maps one hypergraph into
+ * another).  It has an adjoint functor, which can look at the parse
+ * state, and rip out the right-most word, to restore the original
+ * state.  (This adjoint is not currently implemented; its not
+ * obviously useful.  A different functor, which looks at state, and
+ * generates a string of words, left-to-right, might be useful for
+ * speech generation.)
  */
 
 /**
