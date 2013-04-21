@@ -202,14 +202,28 @@ connectors, then it is true that
 However, one cannot distribute the other way: 
 
    A+ or (B+ & C+) != (A+ or B+) & (A+ or C+)
+
+There are several ways to understand the above prohibition:
+ 1) Non-copying of connectors: connectors cannot be duplicated. The
+    RHS of the above has two copies of A+, but the LHS has just one.
+    (Non-copying is quantum-like. How weird is that?).
    
-Roughly speaking, 'or' does behave like boolean OR, but '&' does not.
-Alternately, 'or' behaves like 'tensor plus' while '&' behaves
-like 'tensor times' in linear logic. Except that tensor times is 
-commutative, and & is not...  Alternately, 'or' behaves sort-of
-like 'exclusive-or', in that only one of the arguments to 'exclusive-or'
-is allowed to hold.  An N>2 argument XOR is more correctly called
-a 'choose-one-of-N' function: a logic demultiplexer.
+ 2) One might say that 'or' does behave like boolean OR, but '&' does
+    not.
+
+ 3) One might say that 'or' behaves like 'tensor plus' while '&'
+    behaves like 'tensor times' in linear logic. Except that tensor
+    times is commutative, and & is not...
+
+ 4) Alternately, 'or' behaves sort-of like 'exclusive-or', in that
+    only one of the arguments to 'exclusive-or' is allowed to hold.
+    An N>2 argument XOR is more correctly called a 'choose-one-of-N'
+    function: a logic demultiplexer.
+
+The simplest interpretation seems to be a 'many-worlds' interpretation:
+That is, use 4) so that 'or' is 'choose-one-world-of-many', and enforce
+1) non-copying of connectors within a single world.  BTW, note that any
+connector prefixes with a '@' is explicitly copyable!
 
 In the C++ code, the '&' operator will be called 'Tensand' (tensor-and),
 while the 'or' operator will be called 'Plexor' (multiplexed-or).
