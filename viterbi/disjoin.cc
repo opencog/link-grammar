@@ -60,6 +60,9 @@ static Atom* normal_order(Atom* dnf)
 			assert(c, "normal_order: expecting a connector in the disjunct");
 			if ('+' == c->get_direction())
 				norm.push_back(normal_order(c));
+
+			// Optional connectors are not allowed to appear in disjuncts!
+			assert(not c->is_optional(), "Optional connector in disjunct");
 		}
 		return new And(norm, andy->_tv);
 	}
@@ -117,8 +120,7 @@ Atom* disjoin(Atom* mixed_form)
 			new_oset.push_back(norm);
 		}
 
-// XXX TODO -- TV value is surely wrong here ...
-		Or* new_or = new Or(new_oset);
+		Or* new_or = new Or(new_oset, junct->_tv);
 		return normal_order(new_or->super_flatten());
 	}
 
@@ -126,6 +128,7 @@ Atom* disjoin(Atom* mixed_form)
 	assert(junct, "disjoin: mixed form is not AND link!");
 
 	junct = junct->flatten();
+	junct = junct->clean();
 
 	// If we are here, the outgoing set is a conjunction of atoms.
 	// Search for the first disjunction in that set, and distribute
@@ -179,18 +182,15 @@ Atom* disjoin(Atom* mixed_form)
 		for (int j=0; j<jsz; j++)
 			distrib.push_back(rest[j]);
 
-// XXX TODO -- TV value is surely wrong here ...
 		And *andy = new And(distrib);
 		andy = andy->clean();
 		new_oset.push_back(andy);
 	}
 
-// XXX TODO -- TV value is surely wrong here ...
-	Or* new_or = new Or(new_oset);
+	Or* new_or = new Or(new_oset, orn->_tv);
 	Atom* new_a = new_or->super_flatten();
 	new_a = disjoin(new_a);
 
-// XXX TODO -- TV value is surely wrong here ...
 	Set* newset = dynamic_cast<Set*>(new_a);
 	if (newset)
 		return normal_order(newset->super_flatten());

@@ -405,20 +405,29 @@ Atom* And::disjoin()
 /// in an AND-clause, so just remove it.  (Well, OK, it "makes sense",
 /// its just effectively a no-op, and so doesn't have any effect.  So,
 /// removing it here simplifies logic in other places.)
+///
+/// The cost of the optional is passed up to the dsjunct. The reason for
+/// this is that the doctionary contains entries such as
+/// <post-nominal-x>, whcih has (Xc+ or <costly-null>) & MX-
+/// After being disjoined, we need to pass that cost up.
 And* And::clean() const
 {
+	TV tv = _tv;
 	OutList cl;
 	size_t sz = _oset.size();
 	for (int i=0; i<sz; i++)
 	{
 		Connector* cn = dynamic_cast<Connector*>(_oset[i]);
 		if (cn and cn->is_optional())
+		{
+			tv += cn->_tv;
 			continue;
+		}
 
 		cl.push_back(_oset[i]);
 	}
 
-	return new And(cl);
+	return new And(cl, tv);
 }
 
 // ============================================================
