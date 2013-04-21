@@ -33,6 +33,13 @@ bool test_disjoin_cost()
 		ALINK4(SET,
 			ALINK2C(WORD_CSET, 
 				ANODE(WORD, "wtf"),
+				ALINK2(AND,
+					ANODE(CONNECTOR, "Xd-"),
+					ANODE(CONNECTOR, "MX-")
+				),
+			3.0f),
+			ALINK2C(WORD_CSET, 
+				ANODE(WORD, "wtf"),
 				ALINK4(AND,
 					ANODE(CONNECTOR, "Xd-"),
 					ANODE(CONNECTOR, "MX-"),
@@ -45,24 +52,17 @@ bool test_disjoin_cost()
 				ALINK3(AND,
 					ANODE(CONNECTOR, "Xd-"),
 					ANODE(CONNECTOR, "MX-"),
-					ANODE(CONNECTOR, "Xc+")
-				),
-			0.0f),
-			ALINK2C(WORD_CSET, 
-				ANODE(WORD, "wtf"),
-				ALINK3(AND,
-					ANODE(CONNECTOR, "Xd-"),
-					ANODE(CONNECTOR, "MX-"),
 					ANODE(CONNECTOR, "Bpj+")
 				),
 			4.0f),
 			ALINK2C(WORD_CSET, 
 				ANODE(WORD, "wtf"),
-				ALINK2(AND,
+				ALINK3(AND,
 					ANODE(CONNECTOR, "Xd-"),
-					ANODE(CONNECTOR, "MX-")
+					ANODE(CONNECTOR, "MX-"),
+					ANODE(CONNECTOR, "Xc+")
 				),
-			3.0f)
+			0.0f)
 		);
 
 	if (not (csets->operator==(expected)))
