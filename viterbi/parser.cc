@@ -134,19 +134,38 @@ Set* Parser::word_consets(const string& word)
 		Or* orc = dynamic_cast<Or*>(c);
 		if (!orc)
 		{
+			// Promote costs, if any, from the disjunct to the connector set.
+			wcs->_tv = c->_tv;
+			c->_tv = 0.0f;
 			cooked.push_back(wcs);
 			continue;
 		}
 
 		// If we are here, then we have a set of disjuncts.
-		// Push them up, propagating the costs.
+		// Split out any costly disjuncts into their own.
+		// We could split up everything, except for several reasons:
+		// 1) the current unit tests would be surprised by this.
+		// 2) the hypergraphs are more compact if we don't split...
+		// On the other hand, the connector algos could be simplified
+		// if we split everything up... Hmmm. What to do?
+		OutList trim;
 		size_t osz = orc->get_arity();
 		for (int j=0; j<osz; j++)
 		{
-			Atom* a = orc->get_outgoing_atom(j);
-			WordCset* dj = new WordCset(wcs->get_word(), a);
-			dj->_tv = a->_tv;
-			a->_tv = 0.0f;
+			Atom* dj = orc->get_outgoing_atom(j);
+			if (dj->_tv == 0.0f)
+			{
+				trim.push_back(dj);
+				continue;
+			}
+			WordCset* cwcs = new WordCset(wcs->get_word(), dj);
+			cwcs->_tv = dj->_tv;
+			dj->_tv = 0.0f;
+			cooked.push_back(cwcs);
+		}
+		if (0 < trim.size())
+		{
+			WordCset* dj = new WordCset(wcs->get_word(), new Or(trim));
 			cooked.push_back(dj);
 		}
 	}
