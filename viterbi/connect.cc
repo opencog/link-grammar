@@ -42,12 +42,12 @@ Connect::Connect(WordCset* lcs, WordCset* rcs)
 /// Try to connect the left and right disjuncts.
 ///
 /// If the connection attempt is successful, then return a
-/// StatePair given the emitted output, and the resulting state.
+/// StateTriple given the emitted output, and the resulting state.
 ///
 /// The implementation below is just a dispatcher for each of the
 /// alternative handlers, depending on whether the arguments are
 /// single or multi-connectors.
-StatePair* Connect::try_alternative(Atom* ldj, Atom* rdj)
+StateTriple* Connect::try_alternative(Atom* ldj, Atom* rdj)
 {
 	Connector* lcon = dynamic_cast<Connector*>(ldj);
 	Connector* rcon = dynamic_cast<Connector*>(rdj);
@@ -105,7 +105,7 @@ StatePair* Connect::try_alternative(Atom* ldj, Atom* rdj)
 /// normal form. Viz. a single disjunct is a conjoined set of
 /// connectors.
 //
-StatePair* Connect::alternative(Connector* lcon, Connector* rcon)
+StateTriple* Connect::alternative(Connector* lcon, Connector* rcon)
 {
 	Ling* conn = conn_connect_nn(lcon, rcon);
 	if (!conn)
@@ -122,7 +122,7 @@ StatePair* Connect::alternative(Connector* lcon, Connector* rcon)
 		WordCset* lcset = new WordCset(lword, lcon);
 		WordCset* rcset = new WordCset(rword, rcon);
 		Seq* state = new Seq(rcset, lcset);
-		StatePair* sp = new StatePair(state, new Seq());
+		StateTriple* sp = new StateTriple(new Seq(), state, new Set());
 		DBG(cout<<"------ Empty-output alternative created:\n" << sp << endl;);
 		return sp;
 	}
@@ -131,16 +131,16 @@ StatePair* Connect::alternative(Connector* lcon, Connector* rcon)
 	// two disjuncts that were mated.  Re-assemble these
 	// into a pair of word_disjuncts (i.e. stick the word
 	// back in there, as that is what later stages need).
-	Seq* out = new Seq(conn);
+	Set* out = new Set(conn);
 
 	// Meanwhile, we exhausted the state, so that's empty.
-	StatePair* sp = new StatePair(new Seq(), out);
+	StateTriple* sp = new StateTriple(new Seq(), new Seq(), out);
    DBG(cout<<"----- single-connector alternative created:\n" << sp << endl;);
 	return sp;
 }
 
 // See docs above
-StatePair* Connect::alternative(Connector* lcon, And* rand)
+StateTriple* Connect::alternative(Connector* lcon, And* rand)
 {
 	if (0 == rand->get_arity())
 		return NULL;
@@ -158,7 +158,7 @@ StatePair* Connect::alternative(Connector* lcon, And* rand)
 	// two disjuncts that were mated.  Re-assemble these
 	// into a pair of word_disjuncts (i.e. stick the word
 	// back in there, as that is what later stages need).
-	Seq* out = new Seq(conn);
+	Set* out = new Set(conn);
 
 	// The state is now everything else left in the disjunct.
 	// We need to build this back up into WordCset.
@@ -174,13 +174,13 @@ Link* rl = dynamic_cast<Link*>(rema);
 if (rl and rl->get_arity() == 0)
 assert(0, "Need to handle this empty state case like all the others");
 
-	StatePair* sp = new StatePair(new Seq(rem_cset), out);
+	StateTriple* sp = new StateTriple(new Seq(), new Seq(rem_cset), out);
    DBG(cout<<"----- right multi-conn alternative created:\n" << sp << endl;);
 	return sp;
 }
 
 // See docs above
-StatePair* Connect::alternative(And* land, Connector* rcon)
+StateTriple* Connect::alternative(And* land, Connector* rcon)
 {
 	Atom* lfirst = land->get_outgoing_atom(0);
 	Connector* lfc = dynamic_cast<Connector*>(lfirst);
@@ -194,7 +194,7 @@ StatePair* Connect::alternative(And* land, Connector* rcon)
 	// two disjuncts that were mated.  Re-assemble these
 	// into a pair of word_disjuncts (i.e. stick the word
 	// back in there, as that is what later stages need).
-	Seq* out = new Seq(conn);
+	Set* out = new Set(conn);
 
 	// The state is now everything left in the disjunct.
 	// We need to build this back up into WordCset.
@@ -206,18 +206,18 @@ StatePair* Connect::alternative(And* land, Connector* rcon)
 	// The remaining cset could be empty (e.g. an AND link with
 	// nothing left in it.)
 	rem_cset = rem_cset->flatten();
-	StatePair* sp;
+	StateTriple* sp;
 	if (NULL != rem_cset)
-		sp = new StatePair(new Seq(rem_cset), out);
+		sp = new StateTriple(new Seq(), new Seq(rem_cset), out);
 	else
-		sp = new StatePair(new Seq(), out);
+		sp = new StateTriple(new Seq(), new Seq(), out);
 
-	DBG(cout << "=================> state pair created: " << sp << endl);
+	DBG(cout << "=================> state triple created: " << sp << endl);
 	return sp;
 }
 
 // See docs above
-StatePair* Connect::alternative(And* land, And* rand)
+StateTriple* Connect::alternative(And* land, And* rand)
 {
 // cout<<"duude land="<<land<<endl;
 // cout<<"duude rand="<<rand<<endl;
@@ -287,9 +287,9 @@ StatePair* Connect::alternative(And* land, And* rand)
 
 	Seq* state = new Seq(statel);
 
-	Seq* out = new Seq(outputs);
+	Set* out = new Set(outputs);
 
-	StatePair* sp = new StatePair(state, out);
+	StateTriple* sp = new StateTriple(new Seq(), state, out);
 	DBG(cout << "============> multi state pair created: " << sp << endl);
 	return sp;
 }

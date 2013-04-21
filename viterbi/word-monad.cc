@@ -81,8 +81,8 @@ WordMonad::WordMonad(WordCset* right_wconset)
 /// states (as these are now connected), and append in their place
 /// the new states.  We also typically peel off one new one, as that
 /// one will be used for trying new onnections.
-static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
-                        StatePair* new_sp, size_t new_peel_off)
+static StateTriple* unite(StateTriple* old_sp, size_t old_peel_off,
+                          StateTriple* new_sp, size_t new_peel_off)
 {
 	OutList united_states;
 	Seq* old_state = old_sp->get_state();
@@ -102,8 +102,8 @@ static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
 	// Unite the outputs too ... 
 	// This is easy, just concatenate old and append new.
 	OutList united_outputs;
-	Seq* old_output = old_sp->get_output();
-	Seq* new_output = new_sp->get_output();
+	Set* old_output = old_sp->get_output();
+	Set* new_output = new_sp->get_output();
 
 	// I don't think the output order matters much, but appending
 	// new output to old seems reasonable.
@@ -113,7 +113,8 @@ static StatePair* unite(StatePair* old_sp, size_t old_peel_off,
 	const OutList& noo = new_output->get_outgoing_set();
 	united_outputs.insert(united_outputs.end(), noo.begin(), noo.end());
 
-	return new StatePair(new Seq(united_states), new Seq(united_outputs));
+// XXX clearly failing to deal with input ...
+	return new StateTriple(new Seq(), new Seq(united_states), new Set(united_outputs));
 }
 
 /**
@@ -167,7 +168,7 @@ static Set* next_connect(WordCset* left_cset, WordCset* right_cset)
 			Atom* rdj = right_dnf->get_outgoing_atom(j);
 
 			Connect cnct(left_cset, right_cset);
-			StatePair* sp = cnct.try_alternative(ldj, rdj);
+			StateTriple* sp = cnct.try_alternative(ldj, rdj);
 			if (sp)
 				alternatives.push_back(sp);
 		}
@@ -190,7 +191,7 @@ static Set* next_connect(WordCset* left_cset, WordCset* right_cset)
  * set in the sequence must be fully satisfied before a connection is made
  * to the second one in the sequence, etc. (counting from zero).
  */
-static Set* try_connect_one(StatePair* left_sp, WordCset* right_cset)
+static Set* try_connect_one(StateTriple* left_sp, WordCset* right_cset)
 {
 	// Zipper up the zipper.
 	// The left state can the thought of as a strand of zipper teeth,
@@ -220,7 +221,7 @@ static Set* try_connect_one(StatePair* left_sp, WordCset* right_cset)
 	for (size_t i=0; i<sz; i++)
 	{
 		Atom* a = alternatives->get_outgoing_atom(i);
-		StatePair* new_sp = dynamic_cast<StatePair*>(a);
+		StateTriple* new_sp = dynamic_cast<StateTriple*>(a);
 		Seq* new_state = new_sp->get_state();
 
 		if (0 < new_state->get_arity())
@@ -241,10 +242,11 @@ static Set* try_connect_one(StatePair* left_sp, WordCset* right_cset)
 // cout << "old sp, rm "<<lnext<<": " << left_sp<<endl;
 // cout << "new sp rm 1:" << new_sp<<endl;
 					// Recurse -- zipper up the next unconnected left-pointer.
-					StatePair* united_sp = unite(left_sp, lnext, new_sp, 1);
+					StateTriple* united_sp = unite(left_sp, lnext, new_sp, 1);
 					// zero out output before continuing... we want only
 					// the fresh output just minted by the recurse
-					StatePair* usp = new StatePair(united_sp->get_state(), new Seq());
+					StateTriple* usp = new StateTriple(new Seq(), 
+					            united_sp->get_state(), new Set());
 					DBG(cout << "United states:" << united_sp << endl);
 					Set* new_alts = try_connect_one(usp, new_cset);
 // cout << "woot got this:" << new_alts<<endl;
@@ -253,8 +255,8 @@ static Set* try_connect_one(StatePair* left_sp, WordCset* right_cset)
 					for (size_t k = 0; k < nsz; k++)
 					{
 						Atom* a = new_alts->get_outgoing_atom(k);
-						StatePair* asp = dynamic_cast<StatePair*>(a);
-						StatePair* mrg = unite(united_sp, 1, asp, 0);
+						StateTriple* asp = dynamic_cast<StateTriple*>(a);
+						StateTriple* mrg = unite(united_sp, 1, asp, 0);
 						filtered_alts.push_back(mrg);
 						DBG(cout << "merge result=" << mrg << endl);
 					}
@@ -267,7 +269,7 @@ static Set* try_connect_one(StatePair* left_sp, WordCset* right_cset)
 		
 		// Append old and new output and state, before pushing back.
 // cout<<"mooooooooooooooooooooooooooooooooooooooooooooore"<<endl;
-		StatePair* mrg = unite(left_sp, lnext, new_sp, 0);
+		StateTriple* mrg = unite(left_sp, lnext, new_sp, 0);
 //cout<<"left sp was "<<left_sp<<endl;
 //cout<<"new sp was "<<new_sp<<endl;
 //cout<<"mrg is "<<mrg<<endl;
@@ -298,7 +300,7 @@ Set* WordMonad::operator()(Set* alts)
 	Set* new_alts = new Set();
 	for (int i = 0; i < alts->get_arity(); i++)
 	{
-		StatePair* sp = dynamic_cast<StatePair*>(alts->get_outgoing_atom(i));
+		StateTriple* sp = dynamic_cast<StateTriple*>(alts->get_outgoing_atom(i));
 		assert(sp, "Missing state");
 
 		// If there is nothing to connect to, there is nothing we can don.

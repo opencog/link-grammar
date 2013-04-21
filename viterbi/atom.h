@@ -77,7 +77,7 @@ enum AtomType
 	WORD_CSET,  // word, followed by a set of connectors for that word.
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
 	LING,       // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
-	STATE_PAIR, // Current state and corresponding output.
+	STATE_TRIPLE, // Current pending input, parse state and corresponding output.
 
 	RULE,       // Base class for graph re-write rules
 };

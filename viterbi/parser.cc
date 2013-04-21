@@ -162,9 +162,10 @@ void Parser::initialize_state()
 
 	// Initial state: no output, and the wall cset.
 	_alternatives = new Set(
-		new StatePair(
+		new StateTriple(
+			new Seq(),
 			new Seq(wall_cset),
-			new Seq()
+			new Set()
 		)
 	);
 }
@@ -271,7 +272,7 @@ void viterbi_parse(Dictionary dict, const char * sentence)
 	for (size_t i=0; i<num_alts; i++)
 	{
 		Atom* a = alts->get_outgoing_atom(i);
-		StatePair* sp = dynamic_cast<StatePair*>(a);
+		StateTriple* sp = dynamic_cast<StateTriple*>(a);
 		Seq* state = sp->get_state();
 		size_t state_sz = state->get_arity();
 		if (0 == state_sz)

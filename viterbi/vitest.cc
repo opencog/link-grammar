@@ -1185,9 +1185,10 @@ bool test_hello(const char *id, const char *dict_str,
 		// a single, empty state, and the output, above.
 		Lynk* ans =
 		ALINK1(SET,
-			ALINK2(STATE_PAIR,
+			ALINK3(STATE_TRIPLE,
 				ALINK0(SEQ),
-				ALINK1(SEQ, one_word)
+				ALINK0(SEQ),
+				ALINK1(SET, one_word)
 			)
 		);
 
@@ -1205,19 +1206,20 @@ bool test_hello(const char *id, const char *dict_str,
 		// This test will have lots of alternatives. One should have
 		// an empty state.
 		Lynk* ans =
-			ALINK2(STATE_PAIR,
+			ALINK3(STATE_TRIPLE,
 				ALINK0(SEQ),
-				ALINK1(SEQ, one_word)
+				ALINK0(SEQ),
+				ALINK1(SET, one_word)
 			);
 
-		Lynk* out = new Seq(one_word);
+		Lynk* out = new Set(one_word);
 
 		bool pass_test = false;
 		Lynk* alts = parser.get_alternatives();
 		for (size_t i=0; i<alts->get_arity(); i++)
 		{
 			Atom* alt = alts->get_outgoing_atom(i);
-			StatePair* sp = dynamic_cast<StatePair*>(alt);
+			StateTriple* sp = dynamic_cast<StateTriple*>(alt);
 
 			// At least one alternative should have an empty state.
 			if (ans->operator==(alt))
@@ -1383,15 +1385,17 @@ bool test_alternative(const char *id, const char *dict_str, bool empty_state)
 	);
 
 	Lynk* alt_pair_one =
-	ALINK2(STATE_PAIR,
+	ALINK3(STATE_TRIPLE,
 		ALINK0(SEQ),
-		ALINK1(SEQ, alt_out_one)
+		ALINK0(SEQ),
+		ALINK1(SET, alt_out_one)
 	);
 
 	Lynk* alt_pair_two =
-	ALINK2(STATE_PAIR,
+	ALINK3(STATE_TRIPLE,
 		ALINK0(SEQ),
-		ALINK1(SEQ, alt_out_two)
+		ALINK0(SEQ),
+		ALINK1(SET, alt_out_two)
 	);
 
 	if (empty_state)
@@ -1420,7 +1424,7 @@ bool test_alternative(const char *id, const char *dict_str, bool empty_state)
 		for (size_t i=0; i<alts->get_arity(); i++)
 		{
 			Atom* alt = alts->get_outgoing_atom(i);
-			StatePair* sp = dynamic_cast<StatePair*>(alt);
+			StateTriple* sp = dynamic_cast<StateTriple*>(alt);
 
 			// At least one alternative should have an empty state.
 			if (alt_pair_one->operator==(alt))
@@ -1555,9 +1559,10 @@ bool test_simple_state(const char *id, const char *dict_str)
 
 	Lynk* ans =
 	ALINK1(SET,
-		ALINK2(STATE_PAIR,
+		ALINK3(STATE_TRIPLE,
+			ALINK0(SEQ),
 			ans_state,
-			ALINK0(SEQ)
+			ALINK0(SET)
 		)
 	);
 
@@ -1658,9 +1663,10 @@ bool test_short_sent(const char *id, const char *dict_str, bool empty_state)
 
 	// At least one result should be this state pair.
 	Lynk* sp =
-		ALINK2(STATE_PAIR,
+		ALINK3(STATE_TRIPLE,
+			ALINK0(SEQ),  // empty input
 			ALINK0(SEQ),  // empty state
-			ALINK2(SEQ,
+			ALINK2(SET,
 				ALINK3(LING,
 					ANODE(LING_TYPE, "Ss*b"),
 					ALINK2(WORD_DISJ,
@@ -1836,9 +1842,10 @@ bool test_seq_sent(const char *id, const char *dict_str, bool empty_state)
 
 	// At least one result should be this state pair.
 	Lynk* sp =
-		ALINK2(STATE_PAIR,
+		ALINK3(STATE_TRIPLE,
+			ALINK0(SEQ),  // empty input
 			ALINK0(SEQ),  // empty state
-			ALINK2(SEQ,
+			ALINK2(SET,
 				ALINK3(LING,
 					ANODE(LING_TYPE, "Wd"),
 					ALINK2(WORD_DISJ,
@@ -2071,7 +2078,8 @@ bool test_state_sent(const char *id, const char *dict_str)
 	// The provided dictionary will not allow a linkage to happen;
 	// this is really just testing the push of stack state.
 	Lynk* sp =
-		ALINK2(STATE_PAIR,
+		ALINK3(STATE_TRIPLE,
+			ALINK0(SEQ),      // empyt input
 			ALINK5(SEQ,
 				ALINK2(WORD_CSET,
 					ANODE(WORD, "test.n"),
@@ -2095,7 +2103,7 @@ bool test_state_sent(const char *id, const char *dict_str)
 					ANODE(WORD, "LEFT-WALL"),
 					ANODE(CONNECTOR, "Wq+"))
 			),
-			ALINK0(SEQ));  // empty output
+			ALINK0(SET));  // empty output
 
 	Lynk* ans = ALINK1(SET, sp);
 	if (not (ans->operator==(alts)))
@@ -2157,9 +2165,10 @@ bool test_right_wall(const char *id, const char *dict_str, bool empty_state)
 
 	// We expect empty final state.
 	Lynk* sp =
-		ALINK2(STATE_PAIR,
+		ALINK3(STATE_TRIPLE,
+			ALINK0(SEQ),  // empty input
 			ALINK0(SEQ),  // empty state
-			ALINK3(SEQ,
+			ALINK3(SET,
 				ALINK3(LING,
 					ANODE(LING_TYPE, "Wd"),
 					ALINK2(WORD_DISJ,
@@ -2244,9 +2253,10 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 
 	// At least one result should be this state pair.
 	Lynk* sp =
-		ALINK2(STATE_PAIR,
+		ALINK3(STATE_TRIPLE,
+			ALINK0(SEQ),  // empty input
 			ALINK0(SEQ),  // empty state
-			ALINK2(SEQ,
+			ALINK2(SET,
 				ALINK3(LING,
 					ANODE(LING_TYPE, "Ss*b"),
 					ALINK2(WORD_DISJ,

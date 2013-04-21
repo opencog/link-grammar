@@ -38,7 +38,7 @@ const string type_name(AtomType t)
 		case WORD_CSET:  return "WORD_CSET";
 		case WORD_DISJ:  return "WORD_DISJ";
 		case LING:       return "LING";
-		case STATE_PAIR: return "STATE_PAIR";
+		case STATE_TRIPLE: return "STATE_TRIPLE";
 	}
 
 	return "UNHANDLED_TYPE_NAME";

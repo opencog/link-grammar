@@ -275,24 +275,32 @@ class WordCset : public Link
 		WordCset* flatten();
 };
 
-/// A pair of two sequences.  The first sequence is the state, the
-/// second sequence is the output.  That is, the link created is of the
-/// form
+/// A triple of three sequences.  The first sequence is a sequence of 'input'
+/// words (a sentence or phrase that has not yet been parsed).  The second
+/// sequence is the current parse state.  The third sequence is the 'output'
+/// of the parse, i.e. a set of connected words.
 ///
-///    STATE_PAIR :
+/// It of the form
+///
+///    STATE_TRIPLE :
+///       SEQ
+///           WORD
+///           WORD
 ///       SEQ
 ///           WORD_CSET ...
 ///           WORD_CSET ...
-///       SEQ
-///           ...
+///       SET
+///           LING ...
+///           LING ...
 ///
-class StatePair : public Link
+class StateTriple : public Link
 {
 	public:
-		StatePair(Seq* stat, Seq* outp)
-			: Link(STATE_PAIR, stat, outp) {}
-		Seq* get_state() const { return dynamic_cast<Seq*>(_oset.at(0)); } 
-		Seq* get_output() const { return dynamic_cast<Seq*>(_oset.at(1)); }
+		StateTriple(Seq* input, Seq* state, Set* output)
+			: Link(STATE_TRIPLE, input, state, output) {}
+		Seq* get_input() const { return dynamic_cast<Seq*>(_oset.at(0)); } 
+		Seq* get_state() const { return dynamic_cast<Seq*>(_oset.at(1)); } 
+		Set* get_output() const { return dynamic_cast<Set*>(_oset.at(2)); }
 };
 
 /// Given an atom of a some type, return the C++ class of that type.

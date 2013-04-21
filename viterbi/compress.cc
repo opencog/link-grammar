@@ -71,7 +71,11 @@ static Seq* merge_wordlists(Seq* wla, Seq* wlb)
 /// states into disjuncts.  Best explained by example:  Suppose that
 /// the input is 
 /// SET :
-///   STATE_PAIR :
+///   STATE_TRIPLE :
+///     SEQ :
+///       WORD : is
+///       WORD : a
+///       WORD : test
 ///     SEQ :
 ///       WORD_CSET :
 ///         WORD : this
@@ -80,7 +84,11 @@ static Seq* merge_wordlists(Seq* wla, Seq* wlb)
 ///         WORD : LEFT-WALL
 ///         CONNECTOR : Wd+
 ///     SEQ :
-///   STATE_PAIR :
+///   STATE_TRIPLE :
+///     SEQ :
+///       WORD : is
+///       WORD : a
+///       WORD : test
 ///     SEQ :
 ///       WORD_CSET :
 ///         WORD : this
@@ -92,7 +100,11 @@ static Seq* merge_wordlists(Seq* wla, Seq* wlb)
 /// 
 /// Then the compressed output will be:
 /// SET :
-///   STATE_PAIR :
+///   STATE_TRIPLE :
+///     SEQ :
+///       WORD : is
+///       WORD : a
+///       WORD : test
 ///     SEQ :
 ///       WORD_CSET :
 ///         WORD : this
@@ -104,34 +116,38 @@ static Seq* merge_wordlists(Seq* wla, Seq* wlb)
 ///           CONNECTOR : Wi+
 ///     SEQ :
 ///
-/// Note how two alternative state pairs were collapsed down into a
+/// Note how two alternative state triples were collapsed down into a
 /// single word cset.  The goal of this compression is to shrink down
 /// the state to make the output more tractable, slightly less
-/// combinatoric-explosiony.
+/// combinatoric-explosion-y.
 //
-// XXX TODO: if we created a special atomthat held only alternatives,
+// XXX TODO: if we created a special atom that held only alternatives,
 // then this would be a method on that that atom.  Do we need such an
 // atom?  It could help avoid confusion ...
 
 Set* compress_alternatives(Set* state_alternatives)
 {
 	OutList alts;
-	Seq* prev_out = NULL;
+	Seq* prev_in = NULL;
+	Set* prev_out = NULL;
 	Seq* merged = NULL;
 
 	size_t sz = state_alternatives->get_arity();
 	for (size_t i = 0; i < sz; i++)
 	{
 		Atom* a = state_alternatives->get_outgoing_atom(i);
-		StatePair* sp = dynamic_cast<StatePair*>(a);
+		StateTriple* sp = dynamic_cast<StateTriple*>(a);
 
-		// If the outputs differ, the state pairs are fundamentally not
-		// mergable.  Move along.
-		Seq* out = sp->get_output();
-		if (not out->operator==(prev_out))
+		// If the inputs or the outputs differ, the state triples are
+		// fundamentally not mergable.  Move along.
+		Seq* in = sp->get_input();
+		Set* out = sp->get_output();
+		if ((not in->operator==(prev_in)) or
+		    (not out->operator==(prev_out)))
 		{
 			if (merged)
-				alts.push_back(new StatePair(merged, prev_out));
+				alts.push_back(new StateTriple(prev_in, merged, prev_out));
+			prev_in = in;
 			prev_out = out;
 			merged = sp->get_state();
 			continue;
@@ -147,7 +163,7 @@ Set* compress_alternatives(Set* state_alternatives)
 	}
 
 	if (merged)
-		alts.push_back(new StatePair(merged, prev_out));
+		alts.push_back(new StateTriple(prev_in, merged, prev_out));
 
 	return new Set(alts);
 }

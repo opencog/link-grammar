@@ -23,14 +23,14 @@ class Connect : public gc
 {
 	public:
 		Connect(WordCset*, WordCset*);
-		StatePair* try_alternative(Atom*, Atom*);
+		StateTriple* try_alternative(Atom*, Atom*);
 
 	protected:
 
-		StatePair* alternative(Connector*, Connector*);
-		StatePair* alternative(Connector*, And*);
-		StatePair* alternative(And*, Connector*);
-		StatePair* alternative(And*, And*);
+		StateTriple* alternative(Connector*, Connector*);
+		StateTriple* alternative(Connector*, And*);
+		StateTriple* alternative(And*, Connector*);
+		StateTriple* alternative(And*, And*);
 
 		Ling* conn_connect_nn(Connector*, Connector*);
 		Ling* reassemble(Ling*, WordCset*, WordCset*);
