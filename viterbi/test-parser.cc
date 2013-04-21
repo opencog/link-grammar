@@ -10,64 +10,10 @@
 /*************************************************************************/
 
 /// This file provides a unit test for the operation of the viterbi parser.
-
-#include <stdlib.h>
-#include <iostream>
+#include "test-header.h"
 
 #include <link-grammar/link-includes.h>
 #include <link-grammar/read-dict.h>
-
-#include "parser.h"
-
-using namespace std;
-using namespace link_grammar::viterbi;
-
-#define Lynk link_grammar::viterbi::Link
-
-#define ANODE(TYPE,NAME) (new Node(TYPE,NAME))
-#define ALINK0(TYPE) (new Lynk(TYPE))
-#define ALINK1(TYPE,A) (new Lynk(TYPE, A))
-#define ALINK2(TYPE,A,B) (new Lynk(TYPE, A,B))
-#define ALINK3(TYPE,A,B,C) (new Lynk(TYPE, A,B,C))
-#define ALINK4(TYPE,A,B,C,D) (new Lynk(TYPE, A,B,C,D))
-#define ALINK5(TYPE,A,B,C,D,E) (new Lynk(TYPE, A,B,C,D,E))
-
-#define ANODEC(TYPE,NAME,COST) (new Node(TYPE,NAME,COST))
-#define ALINK0C(TYPE,COST) (new Lynk(TYPE,COST))
-#define ALINK1C(TYPE,A,COST) (new Lynk(TYPE, A,COST))
-#define ALINK2C(TYPE,A,B,COST) (new Lynk(TYPE, A,B,COST))
-#define ALINK3C(TYPE,A,B,C,COST) (new Lynk(TYPE, A,B,C,COST))
-#define ALINK4C(TYPE,A,B,C,D,COST) (new Lynk(TYPE, A,B,C,D,COST))
-#define ALINK5C(TYPE,A,B,C,D,E,COST) (new Lynk(TYPE, A,B,C,D,E,COST))
-
-
-#define CHECK(NAME, EXPECTED, COMPUTED)                              \
-	total_tests++;                                                    \
-	if (not (EXPECTED->operator==(COMPUTED)))                         \
-	{                                                                 \
-		cout << "Error: test failure on " << NAME << endl;             \
-		cout << "=== Expecting:\n" << EXPECTED << endl;                \
-		cout << "=== Got:\n" << COMPUTED << endl;                      \
-		return false;                                                  \
-	}                                                                 \
-	cout<<"PASS: " << NAME << endl;                                   \
-	return true;
-
-
-#define CHECK_NE(NAME, EXPECTED, COMPUTED)                           \
-	total_tests++;                                                    \
-	if (EXPECTED->operator==(COMPUTED))                               \
-	{                                                                 \
-		cout << "Error: test failure on " << NAME << endl;             \
-		cout << "=== Expecting:\n" << EXPECTED << endl;                \
-		cout << "=== To differ from:\n" << COMPUTED << endl;           \
-		return false;                                                  \
-	}                                                                 \
-	cout<<"PASS: " << NAME << endl;                                   \
-	return true;
-
-
-int total_tests = 0;
 
 // ==================================================================
 // A simple hello test; several different dictionaries
@@ -1155,122 +1101,6 @@ int ntest_right_wall()
 
 // ==================================================================
 
-// XXX currently a copy f test_short_sent ...
-bool test_cost(const char *id, const char *dict_str, bool empty_state)
-{
-	total_tests++;
-
-	Dictionary dict = dictionary_create_from_utf8(dict_str);
-	// print_dictionary_data(dict);
-
-cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
-	Parser parser(dict);
-
-	// Expecting more words to follow, so a non-trivial state.
-	// In particular, the dictionary will link the left-wall to
-	// "is", so "this" has to be pushed on stack until the "is"
-	// shows up.  The test_seq_sent() below will link the other
-	// way around.
-	parser.streamin("this is");
-
-	Lynk* alts = parser.get_alternatives();
-
-	// At least one result should be this state pair.
-	Lynk* sp =
-		ALINK3(STATE_TRIPLE,
-			ALINK0(SEQ),  // empty input
-			ALINK0(SEQ),  // empty state
-			ALINK2(SET,
-				ALINK3(LING,
-					ANODE(LING_TYPE, "Ss*b"),
-					ALINK2(WORD_DISJ,
-						ANODE(WORD, "this"),
-						ANODE(CONNECTOR, "Ss*b+")),
-					ALINK2(WORD_DISJ,
-						ANODE(WORD, "is.v"),
-						ANODE(CONNECTOR, "Ss-")))
-				,
-				ALINK3(LING,
-					ANODE(LING_TYPE, "Wi"),
-					ALINK2(WORD_DISJ,
-						ANODE(WORD, "LEFT-WALL"),
-						ANODE(CONNECTOR, "Wi+")),
-					ALINK2(WORD_DISJ,
-						ANODE(WORD, "is.v"),
-						ANODE(CONNECTOR, "Wi-")))
-			));
-
-	if (empty_state)
-	{
-		Lynk* ans = ALINK1(SET, sp);
-		if (not (ans->operator==(alts)))
-		{
-			cout << "Error: test failure on test \"" << id <<"\"" << endl;
-			cout << "=== Expecting:\n" << ans << endl;
-			cout << "=== Got:\n" << alts << endl;
-			return false;
-		}
-	}
-	else
-	{
-		// At least one alternative should be the desired state pair.
-		bool found = false;
-		size_t sz = alts->get_arity();
-		for (size_t i=0; i<sz; i++)
-		{
-			Atom* a = alts->get_outgoing_atom(i);
-			if (sp->operator==(a))
-				found = true;
-		}
-		if (not found)
-		{
-			cout << "Error: test failure on test \"" << id <<"\"" << endl;
-			cout << "=== Expecting one of them to be:\n" << sp << endl;
-			cout << "=== Got:\n" << alts << endl;
-			return false;
-		}
-	}
-
-	cout<<"PASS: test_short_sent(" << id << ") " << endl;
-	return true;
-}
-
-bool test_cost_this()
-{
-	return test_cost("short cost sent",
-		"LEFT-WALL: Wd+ or Wi+ or Wq+;"
-		"this: Ss*b+;"
-		"is.v: Ss- and Wi-;"
-		"is.w: [[Ss- and Wd-]];",
-		true
-	);
-}
-
-int ntest_cost()
-{
-	size_t num_failures = 0;
-
-	if (!test_cost_this()) num_failures++;
-	return num_failures;
-}
-
-// ==================================================================
-
-void report(int num_failures, bool exit_on_fail)
-{
-	if (num_failures)
-	{
-		cout << "Test failures = " << num_failures
-		     << " out of " << total_tests
-		     << " total, so far." << endl;
-		if (exit_on_fail)
-			exit(1);
-	}
-
-	cout << "All " << total_tests
-	     << " tests so far pass." << endl;
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -1296,9 +1126,6 @@ main(int argc, char *argv[])
 	report(num_failures, exit_on_fail);
 
 	num_failures += ntest_right_wall();
-	report(num_failures, exit_on_fail);
-
-	num_failures += ntest_cost();
 	report(num_failures, exit_on_fail);
 
 	exit (0);
