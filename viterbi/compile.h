@@ -202,7 +202,8 @@ class And : public Seq
 		And* flatten() const { return new And(flatset(), _tv); }
 
 		/// Remove optional clauses.
-		And* clean() const;
+		/// XXX Perhaps this should not be a method on this class...
+		Atom* clean() const;
 };
 
 /// Create a ling-grammar link. This will be of the form:

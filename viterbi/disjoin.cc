@@ -128,7 +128,13 @@ Atom* disjoin(Atom* mixed_form)
 	assert(junct, "disjoin: mixed form is not AND link!");
 
 	junct = junct->flatten();
-	junct = junct->clean();
+	Atom* ajunct = junct->clean();
+
+	// After cleaning, it might be just a single optional clause.
+	// e.g. after (A+ or [[()]]) & B+;
+	junct = dynamic_cast<And*>(ajunct);
+	if (not junct)
+		return ajunct;
 
 	// If we are here, the outgoing set is a conjunction of atoms.
 	// Search for the first disjunction in that set, and distribute
@@ -183,8 +189,7 @@ Atom* disjoin(Atom* mixed_form)
 			distrib.push_back(rest[j]);
 
 		And *andy = new And(distrib);
-		andy = andy->clean();
-		new_oset.push_back(andy);
+		new_oset.push_back(andy->clean());
 	}
 
 	Or* new_or = new Or(new_oset, orn->_tv);

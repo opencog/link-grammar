@@ -410,14 +410,24 @@ Atom* And::disjoin()
 /// this is that the doctionary contains entries such as
 /// <post-nominal-x>, whcih has (Xc+ or <costly-null>) & MX-
 /// After being disjoined, we need to pass that cost up.
-And* And::clean() const
+Atom* And::clean() const
 {
 	TV tv = _tv;
 	OutList cl;
-	size_t sz = _oset.size();
-	for (int i=0; i<sz; i++)
+	size_t sz = get_arity();
+
+	// Special case: it could be a andl-clause containing a single,
+	// optional connector, in which case, we flatten the thing
+	// (returning the optional connector!)
+	if (1 == sz)
 	{
-		Connector* cn = dynamic_cast<Connector*>(_oset[i]);
+		Atom* a = get_outgoing_atom(0);
+		a->_tv += _tv;
+		return a;
+	}
+	for (size_t i=0; i<sz; i++)
+	{
+		Connector* cn = dynamic_cast<Connector*>(get_outgoing_atom(i));
 		if (cn and cn->is_optional())
 		{
 			tv += cn->_tv;
