@@ -163,7 +163,12 @@ static Set* cost_split(Set* raw_csets)
 			dj->_tv = 0.0f;
 			cooked.push_back(cwcs);
 		}
-		if (0 < trim.size())
+		if (1 == trim.size())
+		{
+			WordCset* dj = new WordCset(wcs->get_word(), trim[0]);
+			cooked.push_back(dj);
+		}
+		else if (1 < trim.size())
 		{
 			WordCset* dj = new WordCset(wcs->get_word(), new Or(trim));
 			cooked.push_back(dj);
@@ -220,7 +225,6 @@ static Set* cost_up(Set* raw_csets)
 			}
 		}
 	}
-
 	return raw_csets;
 }
 
@@ -322,7 +326,6 @@ void Parser::stream_word(const string& word)
 		assert (0, "word not in dict");
 		return;
 	}
-std::cout<<"duuude dj="<<djset<<std::endl;
 
 	// Try to add each dictionary entry to the parse state.
 	Set* new_alts = new Set();
