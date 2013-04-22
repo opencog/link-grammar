@@ -47,6 +47,7 @@ class Connector : public Node
 		{
 			return *_name.rbegin();
 		}
+      virtual Connector* clone() const { return new Connector(*this); }
 };
 
 class LingType : public Node
@@ -98,6 +99,7 @@ class Set : public Link
 		// Add (append) other set  to this set.
 		Set* add(const Set*);
 
+      virtual Set* clone() const { return new Set(*this); }
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Set(AtomType t, const TV& tv = TV())
@@ -131,6 +133,7 @@ class Seq : public Set
 		// See the Set class for documentation
 		Seq* flatten() const { return new Seq(flatset(), _tv); }
 
+      virtual Seq* clone() const { return new Seq(*this); }
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Seq(AtomType t)
@@ -169,6 +172,8 @@ class Or : public Set
 
 		// Remove repeated entries
 		Or* uniq() const;
+
+      virtual Or* clone() const { return new Or(*this); }
 };
 
 /// Ordered sequence
@@ -204,6 +209,8 @@ class And : public Seq
 		/// Remove optional clauses.
 		/// XXX Perhaps this should not be a method on this class...
 		Atom* clean() const;
+
+      virtual And* clone() const { return new And(*this); }
 };
 
 /// Create a ling-grammar link. This will be of the form:

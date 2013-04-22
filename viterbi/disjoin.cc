@@ -176,17 +176,19 @@ Atom* disjoin(Atom* mixed_form)
 		OutList distrib;
 
 		// Copy the front, without change.
+		// We've got to clone the thing, because otherwise propagating
+		// thye costs upwards becomes an ugly mess.
 		size_t jsz = front.size();
 		for (int j=0; j<jsz; j++)
-			distrib.push_back(front[j]);
+			distrib.push_back(front[j]->clone());
 
 		// insert one atom.
-		distrib.push_back(orn->get_outgoing_atom(i));
+		distrib.push_back(orn->get_outgoing_atom(i)->clone());
 
-		// Copy the rest.
+		// Copy the rest.  Again with the clone(). Irritating.
 		jsz = rest.size();
 		for (int j=0; j<jsz; j++)
-			distrib.push_back(rest[j]);
+			distrib.push_back(rest[j]->clone());
 
 		And *andy = new And(distrib);
 		new_oset.push_back(andy->clean());

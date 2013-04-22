@@ -89,6 +89,13 @@ enum AtomType
  * Atoms are not mutable, except for the TV value. That is, you cannot
  * change the type of the atom.  In particular, all methods are const.
  *
+ * The mutable TV value can cause problems.  In particular, when
+ * propagating costs upwards when putting mixed expressions into DNF,
+ * this mutability can mess things up.  The work-around for this is to
+ * have a clone() function.  I'm not sure I like this.  Its ugly, because
+ * of course, once an atom is in the atom space, its unique, and not clonable.
+ * Ick.  Perhaps TV should not be mutable??
+ *
  * All atoms are automatically garbage-collected.
  */
 class Atom : public gc
@@ -103,6 +110,7 @@ class Atom : public gc
 		AtomType get_type() const { return _type; }
 		TV _tv;
 		virtual bool operator==(const Atom*) const;
+		virtual Atom* clone() const = 0;
 		virtual ~Atom() {}
 	protected:
 		const AtomType _type;
@@ -129,6 +137,7 @@ class Node : public Atom
 		const std::string& get_name() const { return _name; }
 
 		virtual bool operator==(const Atom*) const;
+		virtual Node* clone() const { return new Node(*this); }
 	protected:
 		const std::string _name;
 };
@@ -176,6 +185,7 @@ class Link : public Atom
 		const OutList& get_outgoing_set() const { return _oset; }
 
 		virtual bool operator==(const Atom*) const;
+		virtual Link* clone() const { return new Link(*this); }
 	protected:
 		// Outgoing set is const, nnot modifiable.
 		const OutList _oset;
