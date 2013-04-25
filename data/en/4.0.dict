@@ -8051,6 +8051,11 @@ although in_as_much_as whilst whereas whereof wherein:
 
 % QI- & (): "I do not know when"
 % (Mv- & Cs+): "an examination when it happened revealed chicanery"
+% The above is yucky, since it allows broken parses, e.g.
+% *The school when I lived in England was wonderful
+% Perhaps a better solution might be some special case of WN+ on
+% examination? (would require 'examination' and all other 'operation' 
+% nouns to be in their own class...
 when:
   ((WN- or BIh-) & Cs+)
   or ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))

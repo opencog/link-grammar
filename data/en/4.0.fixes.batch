@@ -2569,6 +2569,10 @@ She will think it common.
 an examination conducted when it happened revealed chicanery.
 an examination when it happened revealed chicanery
 
+% The fix for the above breaks the below :-(
+The year when I lived in England was wonderful
+*The school when I lived in England was wonderful
+
 
 % misc idioms
 Not everything looks grim.
