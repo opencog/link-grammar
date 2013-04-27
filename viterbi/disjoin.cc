@@ -177,7 +177,7 @@ Atom* disjoin(Atom* mixed_form)
 
 		// Copy the front, without change.
 		// We've got to clone the thing, because otherwise propagating
-		// thye costs upwards becomes an ugly mess.
+		// the costs upwards becomes an ugly mess.
 		size_t jsz = front.size();
 		for (int j=0; j<jsz; j++)
 			distrib.push_back(front[j]->clone());
