@@ -8,6 +8,7 @@ Version 4.7.12 (xxx 2013)
  * Windows: some UTF8/widechar refactoring.
  * Java bindings: add method to set the language.
  * CMake: add version checking to the CMakefile
+ * Fix: failed handling of capitalized first word for Russian.
 
 Version 4.7.11 (23 March 2013)
  * Fix build bug introduced recently (build_disjuncts_for_dict_node)

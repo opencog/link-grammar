@@ -547,7 +547,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	int  n_r_stripped = 0;
 	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
-	Boolean have_empty_suffix = FALSE;
+	Boolean have_suffix = FALSE;
 
 	int found_number = 0;
 	int n_r_stripped_save;
@@ -564,7 +564,8 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	if (dict->affix_table != NULL)
 	{
-		have_empty_suffix = dict->affix_table->have_empty_suffix;
+		have_suffix = (0 < dict->affix_table->s_strippable) ||
+		              (0 < dict->affix_table->p_strippable);
 	}
 
 	/* First, see if we can already recognize the word as-is. If
@@ -580,8 +581,8 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	/* ... unless its a lang like Russian, which allows empty
 	 * suffixes, which have a real morphological linkage.
 	 * In which case, we have to try them out.
-	 * XXX FIXME but the current russian dict does not have empty suffixes ... */
-	if (word_is_in_dict && !have_empty_suffix)
+	 */
+	if (word_is_in_dict && !have_suffix)
 	{
 		issue_sentence_word(sent, word, quote_found);
 		return;
@@ -602,7 +603,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		/* If we found the word in the dict, but it also can have an
 		 * empty suffix, then just skip right over to suffix processing
 		 */
-		if (word_is_in_dict && have_empty_suffix)
+		if (word_is_in_dict && have_suffix)
 			goto do_suffix_processing;
 
 		/* Strip off punctuation, etc. on the left-hand side. */
@@ -741,7 +742,7 @@ i		 * "wend" to the end of the word. */
 
 do_suffix_processing:
 	/* OK, now try to strip suffixes. */
-	if (!word_is_in_dict || have_empty_suffix)
+	if (!word_is_in_dict || have_suffix)
 	{
 		Tokenizer *tokenizer = &sent->tokenizer;
 
