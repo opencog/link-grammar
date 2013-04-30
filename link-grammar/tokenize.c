@@ -582,6 +582,15 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * suffixes, which have a real morphological linkage.
 	 * In which case, we have to try them out.
 	 */
+	/* XXX FIXME: currently, we are doing a check for capitalized first
+	 * words in the build_sentence_expressions() routine, but really, 
+	 * we should be doing it here, and building two alternatives, one
+	 * capitalized, and one not.  This is particularly true for the
+	 * Russian dictionaries, where captialization and suffix splitting
+	 * only 'accidentally' work, due toe CAPITALIZED_WORDS in the regex
+	 * file, which matches capitalized stems (for all the wrong reasons...)
+	 * Now that we have alternatives, we should use them wisely.
+	 */
 	if (word_is_in_dict && !have_suffix)
 	{
 		issue_sentence_word(sent, word, quote_found);
@@ -1114,6 +1123,15 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			 *
 			 * XXX This rule is English-language-oriented, and should be
 			 * abstracted.
+			 *
+			 * XXX For the first-word case, we should be handling capitalization
+			 * as an alternative, when doing separate_word(), and not here.
+			 * separate_word() should build capitalized and non-capitalized
+			 * altenatives.  This is especially true for Russian, where we
+			 * need to deal with capitalized stems; thhis is not really the
+			 * right place to do it, and this works 'by accident' only because
+			 * there is a CAPITALIZED_WORDS regex match for Russian that matches
+			 * stems. Baaaddd.
 			 */
 			if ((i == first_word ||
 			     (i > 0 && strcmp(":", sent->word[i-1].alternatives[0])==0) || 

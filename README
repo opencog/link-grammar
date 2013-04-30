@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 4.7.10
+                          Version 4.7.12
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -693,6 +693,11 @@ TODO -- Working Notes:
   Easy to fix: provide a more uniform API to the constituent tree.
   i.e provide word index.   Also .. provide a clear word API,
   showing word extent, suffix, etc.
+
+  Capitalized first words:
+    There are subtle technical issues for handling capitalized first
+    words. This needs to be fixed. See tokenize.c circa line 586 for
+    details.  Also line 1131.
 
   Head words:
     The head-word of a sentences is usually the verb; head-words should
