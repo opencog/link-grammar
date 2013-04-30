@@ -579,7 +579,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	/* ... unless its a lang like Russian, which allows empty
 	 * suffixes, which have a real morphological linkage.
 	 * In which case, we have to try them out. */
-	if (word_is_in_dict & !have_empty_suffix)
+	if (word_is_in_dict && !have_empty_suffix)
 	{
 		issue_sentence_word(sent, word, quote_found);
 		return;
