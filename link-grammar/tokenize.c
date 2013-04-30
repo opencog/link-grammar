@@ -170,7 +170,8 @@ static Boolean contains_digits(const char * s)
 /** 
  * Make the string 's' be the next word of the sentence. 
  * That is, it looks like 's' is a word we can handle, so record it
- * as a bona-fide word in the sentence.
+ * as a bona-fide word in the sentence.  Increment the sentence length
+ * when done.
  *
  * Do not issue the empty string.  
  */
@@ -578,7 +579,8 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	/* ... unless its a lang like Russian, which allows empty
 	 * suffixes, which have a real morphological linkage.
-	 * In which case, we have to try them out. */
+	 * In which case, we have to try them out.
+	 * XXX FIXME but the current russian dict does not have empty suffixes ... */
 	if (word_is_in_dict && !have_empty_suffix)
 	{
 		issue_sentence_word(sent, word, quote_found);
@@ -596,132 +598,132 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		strip_left = afdict->strip_left;
 		strip_right = afdict->strip_right;
 		strip_units = afdict->strip_units;
-	}
 
-	/* If we found the word in the dict, but it also can have an
-	 * empty suffix, then just skip right over to suffix processing
-	 */
-	if (word_is_in_dict && have_empty_suffix)
-		goto do_suffix_processing;
-
-	/* Strip off punctuation, etc. on the left-hand side. */
-	/* XXX FIXME: this fails in certain cases: e.g.
-	 * "By the '50s, he was very prosperous."
-	 * where the leading quote is striped, and then "50s," cannot be
-	 * found in the dict.  Next, the comma is removed, and "50s" is still
-	 * not in the dict ... the trick was that the comma should be 
-	 * right-stripped first, then the possible quotes. 
-	 * More generally, the current implementation of the link-parser algo
-	 * does not support multiple alternative tokenizations; the viterbi
-	 * parser, under development, should be able to do better.
-	 */
-	for (;;)
-	{
-		for (i=0; i<l_strippable; i++)
-		{
-			/* This is UTF8-safe, I beleive ... */
-			sz = strlen(strip_left[i]);
-			if (strncmp(w, strip_left[i], sz) == 0)
-			{
-				issue_sentence_word(sent, strip_left[i], quote_found);
-				w += sz;
-				break;
-			}
-		}
-		if (i == l_strippable) break;
-	}
-
-	/* Its possible that the token consisted entirely of
-	 * left-punctuation, in which case, it has all been issued.
-	 * So -- we're done, return.
-	 */
-	if (w >= wend) return;
-
-	/* Now w points to the string starting just to the right of
-	 * any left-stripped characters.
-	 * stripped[] is an array of numbers, indicating the index
-	 * numbers (in the strip_right array) of any strings stripped off;
-	 * stripped[0] is the number of the first string stripped off, etc.
-	 * When it breaks out of this loop, n_stripped will be the number
-	 * of strings stripped off.
-	 */
-	for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) 
-	{
-		sz = MIN(wend-w, MAX_WORD);
-		strncpy(word, w, sz);
-		word[sz] = '\0';
-		if (wend == w) break;  /* it will work without this */
-
-		if (find_word_in_dict(dict, word))
-		{
-			word_is_in_dict = TRUE;
-			break;
-		}
-
-		for (i=0; i < r_strippable; i++)
-		{
-			len = strlen(strip_right[i]);
-
-			/* the remaining w is too short for a possible match */
-			if ((wend-w) < len) continue;
-			if (strncmp(wend-len, strip_right[i], len) == 0)
-			{
-				r_stripped[n_r_stripped] = strip_right[i];
-				wend -= len;
-				break;
-			}
-		}
-		if (i == r_strippable) break;
-	}
-
-	/* Is there a number in the word? If so, then search for
-	 * trailing units suffixes.
-	 */
-	if ((FALSE == word_is_in_dict) && contains_digits(word))
-	{
-		/* Same as above, but with a twist: the only thing that can
-		 * preceed a units suffix is a number. This is so that we can
-		 * split up things like "12ft" (twelve feet) but not split up
-		 * things like "Delft blue". Multiple passes allow for
-		 * constructions such as 12sq.ft.
+		/* If we found the word in the dict, but it also can have an
+		 * empty suffix, then just skip right over to suffix processing
 		 */
-		n_r_stripped_save = n_r_stripped;
-		wend_save = wend;
-		for (; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+		if (word_is_in_dict && have_empty_suffix)
+			goto do_suffix_processing;
+
+		/* Strip off punctuation, etc. on the left-hand side. */
+		/* XXX FIXME: this fails in certain cases: e.g.
+		 * "By the '50s, he was very prosperous."
+		 * where the leading quote is striped, and then "50s," cannot be
+		 * found in the dict.  Next, the comma is removed, and "50s" is still
+		 * not in the dict ... the trick was that the comma should be 
+		 * right-stripped first, then the possible quotes. 
+		 * More generally, the current implementation of the link-parser algo
+		 * does not support multiple alternative tokenizations; the viterbi
+		 * parser, under development, should be able to do better.
+		 */
+		for (;;)
 		{
-			size_t sz = MIN(wend-w, MAX_WORD);
+			for (i=0; i<l_strippable; i++)
+			{
+				/* This is UTF8-safe, I beleive ... */
+				sz = strlen(strip_left[i]);
+				if (strncmp(w, strip_left[i], sz) == 0)
+				{
+					issue_sentence_word(sent, strip_left[i], quote_found);
+					w += sz;
+					break;
+				}
+			}
+			if (i == l_strippable) break;
+		}
+
+		/* Its possible that the token consisted entirely of
+		 * left-punctuation, in which case, it has all been issued.
+		 * So -- we're done, return.
+		 */
+		if (w >= wend) return;
+
+		/* Now w points to the string starting just to the right of
+		 * any left-stripped characters.
+		 * stripped[] is an array of numbers, indicating the index
+		 * numbers (in the strip_right array) of any strings stripped off;
+		 * stripped[0] is the number of the first string stripped off, etc.
+		 * When it breaks out of this loop, n_stripped will be the number
+		 * of strings stripped off.
+		 */
+		for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+		{
+			sz = MIN(wend-w, MAX_WORD);
 			strncpy(word, w, sz);
 			word[sz] = '\0';
 			if (wend == w) break;  /* it will work without this */
 
-			/* Number */
-			if (is_number(word))
+			if (find_word_in_dict(dict, word))
 			{
-				found_number = 1;
+				word_is_in_dict = TRUE;
 				break;
 			}
 
-			for (i=0; i < u_strippable; i++)
+			for (i=0; i < r_strippable; i++)
 			{
-				len = strlen(strip_units[i]);
+				len = strlen(strip_right[i]);
 
 				/* the remaining w is too short for a possible match */
 				if ((wend-w) < len) continue;
-				if (strncmp(wend-len, strip_units[i], len) == 0)
+				if (strncmp(wend-len, strip_right[i], len) == 0)
 				{
-					r_stripped[n_r_stripped] = strip_units[i];
+					r_stripped[n_r_stripped] = strip_right[i];
 					wend -= len;
 					break;
 				}
 			}
-			if (i == u_strippable) break;
+			if (i == r_strippable) break;
 		}
 
-		/* The root *must* be a number! */
-		if (0 == found_number)
+		/* Is there a number in the word? If so, then search for
+		 * trailing units suffixes.
+		 */
+		if ((FALSE == word_is_in_dict) && contains_digits(word))
 		{
-			wend = wend_save;
-			n_r_stripped = n_r_stripped_save;
+			/* Same as above, but with a twist: the only thing that can
+			 * preceed a units suffix is a number. This is so that we can
+			 * split up things like "12ft" (twelve feet) but not split up
+			 * things like "Delft blue". Multiple passes allow for
+			 * constructions such as 12sq.ft.
+			 */
+			n_r_stripped_save = n_r_stripped;
+			wend_save = wend;
+			for (; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+			{
+				size_t sz = MIN(wend-w, MAX_WORD);
+				strncpy(word, w, sz);
+				word[sz] = '\0';
+				if (wend == w) break;  /* it will work without this */
+
+				/* Number */
+				if (is_number(word))
+				{
+					found_number = 1;
+					break;
+				}
+
+				for (i=0; i < u_strippable; i++)
+				{
+					len = strlen(strip_units[i]);
+
+					/* the remaining w is too short for a possible match */
+					if ((wend-w) < len) continue;
+					if (strncmp(wend-len, strip_units[i], len) == 0)
+					{
+						r_stripped[n_r_stripped] = strip_units[i];
+						wend -= len;
+						break;
+					}
+				}
+				if (i == u_strippable) break;
+			}
+
+			/* The root *must* be a number! */
+			if (0 == found_number)
+			{
+				wend = wend_save;
+				n_r_stripped = n_r_stripped_save;
+			}
 		}
 	}
 
