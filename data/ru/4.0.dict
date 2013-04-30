@@ -7,8 +7,8 @@
 %%
 %% This file uses the utf8 encoding
 
-%% Dictionary version number is 4.7.11 (formatted as V4v7v11+)
-<dictionary-version-number>: V4v7v11+;
+%% Dictionary version number is 4.7.12 (formatted as V4v7v12+)
+<dictionary-version-number>: V4v7v12+;
 
 <наречие-куда>: ({Xc-} & Ed-) or ({XIc+} & EId+) or ({Xt- & S-});
 <наречие-откуда>: ({Xc-} & Es-) or ({XIc+} & EIs+) or Mp- or ({Xt-} & S-);
