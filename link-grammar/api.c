@@ -125,6 +125,7 @@ Parse_Options parse_options_create(void)
 	po->display_disjuncts = FALSE;
 	po->display_links = FALSE;
 	po->display_senses = FALSE;
+	po->display_suffixes = FALSE;
 
 	return po;
 }
@@ -413,6 +414,14 @@ void parse_options_set_display_senses(Parse_Options opts, int dummy) {
 
 int parse_options_get_display_senses(Parse_Options opts) {
 	return opts->display_senses;
+}
+
+int parse_options_get_display_suffixes(Parse_Options opts) {
+	return opts->display_suffixes;
+}
+
+void parse_options_set_display_suffixes(Parse_Options opts, int dummy) {
+	opts->display_suffixes = dummy;
 }
 
 void parse_options_set_display_walls(Parse_Options opts, int dummy) {

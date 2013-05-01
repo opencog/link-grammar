@@ -33,12 +33,13 @@
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2  /* length of above */
 
-#define HIDE_SUFFIX   (1)
+#define HIDE_SUFFIX   (!display_suffixes)
 
 
 static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
 {
 	int i, len, tot;
+	Boolean display_suffixes = linkage->opts->display_suffixes;
 
 	tot = 0;
 	if (print_word_0) i=0; else i=1;
@@ -359,6 +360,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	Parse_info pi = sent->parse_info;
 	const char * chosen_words[MAX_SENTENCE];
 	Parse_Options opts = linkage->opts;
+	Boolean display_suffixes = opts->display_suffixes;
 
 	for (i=0; i<sent->length; i++)
 	{
@@ -484,6 +486,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	char xpicture[MAX_HEIGHT][MAX_LINE];
 	size_t start[MAX_HEIGHT];
 
+	Boolean display_suffixes = opts->display_suffixes;
 
 	string = string_new();
 

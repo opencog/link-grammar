@@ -231,9 +231,9 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_display_senses(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_display_union(Parse_Options opts, int val);
+     parse_options_set_display_suffixes(Parse_Options opts, int val);
 link_public_api(int)
-     parse_options_get_display_union(Parse_Options opts);
+     parse_options_get_display_suffixes(Parse_Options opts);
 link_public_api(void)
      parse_options_set_echo_on(Parse_Options opts, int val);
 link_public_api(int)
@@ -447,6 +447,14 @@ link_public_api(void)
  * XXX TBD: These will all go away in Version 5.0.
  *
  ********************************************************/
+
+/* Fat linkages will be going away "real soon now" */
+#ifdef USE_FAT_LINKAGES
+link_public_api(void)
+     parse_options_set_display_union(Parse_Options opts, int val) GNUC_DEPRECATED;
+link_public_api(int)
+     parse_options_get_display_union(Parse_Options opts) GNUC_DEPRECATED;
+#endif /* USE_FAT_LINKAGES */
 
 /* Fails to include the regex file name, which is needed in any
  * practical application.  Thus, this call is deprecated.
