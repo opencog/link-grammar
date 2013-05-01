@@ -19,15 +19,14 @@
 
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
-                                  /* then suppress the display of the wall  */
-                                  /* bogus name to prevent ever suppressing */
+                                  /* then suppress the display of the wall. */
 #define RIGHT_WALL_DISPLAY  ("RIGHT-WALL")   /* the string to use to show the wall */
 #define RIGHT_WALL_SUPPRESS ("RW") /* If this connector is used on the wall, */
 
 /* The Russian dictionary makes use of the empty word to deal with
  * the splitting of words into variable-length word-counts */
 #define EMPTY_WORD ("=.zzz") /* pure whitespace */
-#define EMPTY_WORD_SUPRESS ("ZZZ") /* link to pure whitespace */
+#define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
 
 static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
@@ -520,7 +519,11 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			if (!print_word_0 && (ppla[j]->l == 0)) continue;
 			/* gets rid of the irrelevant link to the left wall */
 			if (!print_word_N && (ppla[j]->r == linkage->num_words-1)) continue;            
+			/* Get rid of links to empty words */
+			if (0 == strcmp(ppla[j]->name, EMPTY_WORD_SUPPRESS)) continue;
+
 			/* gets rid of the irrelevant link to the right wall */
+			/* ??? */
 
 			/* put it into the lowest position */
 			cl = center[ppla[j]->l];
