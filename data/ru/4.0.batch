@@ -3,7 +3,8 @@
 !verbosity=1
 !echo
 !limit=1000
-!use-fat=1
+!suffixes=1
+!use-fat=0
 
 % test
 это тест
