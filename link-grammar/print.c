@@ -20,7 +20,7 @@
 const char * trailer(int mode);
 const char * header(int mode);
 
-static void set_centers(const Linkage linkage, int center[], int print_word_0, int N_words_to_print)
+static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
 {
 	int i, len, tot;
 
@@ -338,11 +338,11 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	for (i=0; i<sent->length; i++)
 	{
 		const char *t;
+		/* If chosen_disjuncts is NULL, then this is an 'island' word
+		 * that has not been linked to. */
 		if (pi->chosen_disjuncts[i] == NULL)
 		{
-			/* no disjunct is used on this word because of null-links */
-
-			/* Well, alternative[0] is not really right, but what else can we print? */
+			/* Alternative[0] is as good as anything, I guess... */
 			t = sent->word[i].alternatives[0];
 			l = strlen(t) + 2;
 			s = (char *) xalloc(l+1);
@@ -371,6 +371,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			 * was actally used for the parse, which might not actually 
 			 * be alternative 0.  We should use linkage->->word[i] instead,
 			 * and, umm, manually strip the subscript, or something ...
+			 * Except that this code is never reached, because 
+			 * opts->display_word_subscripts is always true...
 			 */
 			t = sent->word[i].alternatives[0];
 		}
@@ -396,8 +398,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 /** 
  * Print the indicated linkage into a utf8-diagram.
  * Works fine for general utf8 multi-byte sentences.
- * links and connectors are still mostly assumed to be ASCII, though;
- * to fix this, grep for strlen in he code below.
+ * Links and connectors are still mostly assumed to be ASCII, though;
+ * to fix this, grep for "strlen" in the code below, replace by utf8 len.
  *
  * Returned string is allocated with exalloc.  
  * Needs to be freed with linkage_free_diagram()
@@ -407,7 +409,8 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	int i, j, k, cl, cr, row, top_row;
 	const char *s;
 	char *t;
-	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
+	Boolean print_word_0 = 0, print_word_N = 0;
+	int N_wall_connectors, suppressor_used;
 	int center[MAX_SENTENCE];
 	char connector[MAX_TOKEN_LENGTH];
 	int line_len, link_length;
