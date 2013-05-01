@@ -760,7 +760,9 @@ do_suffix_processing:
 		tokenizer->stem_alternatives = NULL;
 		tokenizer->suff_alternatives = NULL;
 
-		word_is_in_dict = suffix_split(tokenizer, dict, w, wend);
+		if (word_is_in_dict)
+			add_suffix_alternatives(tokenizer, word, NULL);
+		word_is_in_dict |= suffix_split(tokenizer, dict, w, wend);
 	}
 
 	/* word is now what remains after all the stripping has been done */
@@ -1061,7 +1063,7 @@ static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
  * as two words, not one. But the former only issues as one word.  So,
  * should we issue two word or one?  ... and so we can't correctly
  * build sentence expressions for this, since we don't have the correct
- * word count bythis point.  The viterbi incremental parser won't have
+ * word count by this point.  The viterbi incremental parser won't have
  * this bug.
  */
 void build_sentence_expressions(Sentence sent, Parse_Options opts)
