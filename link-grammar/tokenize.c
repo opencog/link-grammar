@@ -761,7 +761,7 @@ do_suffix_processing:
 		tokenizer->suff_alternatives = NULL;
 
 		if (word_is_in_dict)
-			add_suffix_alternatives(tokenizer, word, NULL);
+			add_suffix_alternatives(tokenizer, word, "");
 		word_is_in_dict |= suffix_split(tokenizer, dict, w, wend);
 	}
 
