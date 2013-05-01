@@ -90,17 +90,9 @@
 /* Upper bound on the cost of any connector. */
 #define MAX_CONNECTOR_COST 1000.0f
 
-#define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
-#define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
-                                  /* then suppress the display of the wall  */
-                                  /* bogus name to prevent ever suppressing */
-#define RIGHT_WALL_DISPLAY  ("RIGHT-WALL")   /* the string to use to show the wall */
-#define RIGHT_WALL_SUPPRESS ("RW") /* If this connector is used on the wall, */
-
 /* The following define the names of the special strings in the dictionary. */
 #define LEFT_WALL_WORD   ("LEFT-WALL")
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
-#define POSTPROCESS_WORD ("POSTPROCESS")
 
 #ifdef USE_FAT_LINKAGES
 #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
@@ -123,10 +115,13 @@
 #define PLURALIZATION
       /* If defined, Turns on the pluralization operation in        */
       /* "and", "or" and "nor" */
+      /* XXX maybe this should die with USE_FAT_LINAKGES ? */
+
 #define INFIX_NOTATION
       /* If defined, then we're using infix notation for the dictionary */
       /* otherwise we're using prefix notation */
 
+/* XXX These should be enums, not #defines */
 #define DOWN_priority 2
 #define UP_priority   1
 #define THIN_priority 0

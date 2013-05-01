@@ -17,8 +17,15 @@
 #include "corpus/corpus.h"
 #include "print-util.h"
 
-const char * trailer(int mode);
-const char * header(int mode);
+#define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
+#define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
+                                  /* then suppress the display of the wall  */
+                                  /* bogus name to prevent ever suppressing */
+#define RIGHT_WALL_DISPLAY  ("RIGHT-WALL")   /* the string to use to show the wall */
+#define RIGHT_WALL_SUPPRESS ("RW") /* If this connector is used on the wall, */
+
+#define EMPTY_WORD ("=.zzz") /* pure whitespace */
+
 
 static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
 {
@@ -363,6 +370,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				*u = '\0';
 				t = string_set_add(s, sent->string_set);
 				xfree(s, l+1);
+			}
+
+			/* sSsuppress the empty word. */
+			if (!strcmp(t, EMPTY_WORD))
+			{
+				t = string_set_add("", sent->string_set);
 			}
 		}
 		else
@@ -710,6 +723,10 @@ void linkage_free_senses(char * s)
 	exfree(s, strlen(s)+1);
 }
 
+/* Forward declarations, the gunk is at the bottom. */
+static const char * trailer(int mode);
+static const char * header(int mode);
+
 char * linkage_print_postscript(Linkage linkage, int mode)
 {
 	char * ps, * qs;
@@ -766,7 +783,7 @@ void print_expression_sizes(Sentence sent)
 	printf("\n\n");
 }
 
-const char * trailer(int mode)
+static const char * trailer(int mode)
 {
 	static const char * trailer_string=
 		"diagram\n"
@@ -778,7 +795,7 @@ const char * trailer(int mode)
 	else return "";
 }
 
-const char * header(int mode)
+static const char * header(int mode)
 {
 	static const char * header_string=
 		"%!PS-Adobe-2.0 EPSF-1.2\n"
