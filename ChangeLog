@@ -9,7 +9,8 @@ Version 4.7.12 (xxx 2013)
  * Java bindings: add method to set the language.
  * CMake: add version checking to the CMakefile
  * Fix: failed handling of capitalized first word for Russian.
- * Fix: stemming in certain unusual cases (for Russian dictionaries)
+ * Fix: stemming failures in many cases (for Russian dictionaries)
+ * Add flag to suppress stem-suffix printing.
 
 Version 4.7.11 (23 March 2013)
  * Fix build bug introduced recently (build_disjuncts_for_dict_node)
