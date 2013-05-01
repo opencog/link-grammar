@@ -24,7 +24,10 @@
 #define RIGHT_WALL_DISPLAY  ("RIGHT-WALL")   /* the string to use to show the wall */
 #define RIGHT_WALL_SUPPRESS ("RW") /* If this connector is used on the wall, */
 
+/* The Russian dictionary makes use of the empty word to deal with
+ * the splitting of words into variable-length word-counts */
 #define EMPTY_WORD ("=.zzz") /* pure whitespace */
+#define EMPTY_WORD_SUPRESS ("ZZZ") /* link to pure whitespace */
 
 
 static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
@@ -42,7 +45,8 @@ static void set_centers(const Linkage linkage, int center[], Boolean print_word_
 		 */
 		len = utf8_strlen(linkage->word[i]);
 		center[i] = tot + (len/2);
-		tot += len+1;
+		if (0 < len)  /* len is zero for the empty word. */
+			tot += len+1;
 	}
 }
 
@@ -373,7 +377,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			}
 
 			/* sSsuppress the empty word. */
-			if (!strcmp(t, EMPTY_WORD))
+			if (0 == strcmp(t, EMPTY_WORD))
 			{
 				t = string_set_add("", sent->string_set);
 			}
@@ -444,6 +448,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 
 	string = string_new();
 
+	/* Do we want to print the left wall? */
 	N_wall_connectors = 0;
 	if (dict->left_wall_defined)
 	{
@@ -456,7 +461,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 				{
 					if (ppla[j]->r == linkage->num_words-1) continue;
 					N_wall_connectors ++;
-					if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0)
+					if (0 == strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS))
 					{
 						suppressor_used = TRUE;
 					}
@@ -471,6 +476,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		print_word_0 = TRUE;
 	}
 
+	/* Do we want to print the right wall? */
 	N_wall_connectors = 0;
 	if (dict->right_wall_defined)
 	{
@@ -480,7 +486,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			if (ppla[j]->r == linkage->num_words-1)
 			{
 				N_wall_connectors ++;
-				if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0)
+				if (0 == strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS))
 				{
 					suppressor_used = TRUE;
 				}
@@ -496,7 +502,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
-	
+
 	set_centers(linkage, center, print_word_0, N_words_to_print);
 	line_len = center[N_words_to_print-1]+1;
 	
