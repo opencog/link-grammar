@@ -39821,11 +39821,11 @@
 тест.s :
   LLAAQ+ or LLCAG+ or LLDMT+;
 
-тест.ndmsv :  <morph-С,мр,но,ед,вн>;
+тест.ndmsv :  {ZZZ+} & <morph-С,мр,но,ед,вн>;
 
-тест.ndnpg :  <morph-С,ср,но,мн,рд>;
+тест.ndnpg :  {ZZZ+} & <morph-С,ср,но,мн,рд>;
 
-тест.ndmsi :  <morph-С,мр,но,ед,им>;
+тест.ndmsi :  {ZZZ+} & <morph-С,мр,но,ед,им>;
 
 тестир.s :
   LLCDD+ or LLFAK+;

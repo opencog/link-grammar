@@ -10,6 +10,9 @@
 %% Dictionary version number is 4.7.12 (formatted as V4v7v12+)
 <dictionary-version-number>: V4v7v12+;
 
+% The empty word.
+=.zzz: ZZZ-;
+
 <наречие-куда>: ({Xc-} & Ed-) or ({XIc+} & EId+) or ({Xt- & S-});
 <наречие-откуда>: ({Xc-} & Es-) or ({XIc+} & EIs+) or Mp- or ({Xt-} & S-);
 <наречие-где>: ({Xc-} & Ew-) or ({XIc+} & EIw+) or ({Xt-} & S-);
@@ -458,7 +461,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 будет.vpp : S*3- & Wd- & ( MVAi+ or MVat+ );
 
 %% это был голос живого существа, это голос
-это.msi : ( Wd- & MVAi+ ) or S+;
+это.msi : {ZZZ+} & ((Wd- & MVAi+) or S+);
+
 -.i --.i есть.v -_это : ( {S*3-} & ( ( { Ew- } & MVAi+ ) or I+ or MVv+ or ( { EI- } & E+ ) or ( { EI- } & EI+ ) ) & {Wd-}) or Xt+;
 
 %% были как призраки
