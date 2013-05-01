@@ -28,6 +28,13 @@
 #define EMPTY_WORD ("=.zzz") /* pure whitespace */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
+#define SUFFIX_WORD ("=")  /* suffixes start with this */
+#define SUFFIX_WORD_L 1     /* length of above */
+#define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
+#define SUFFIX_SUPPRESS_L 2  /* length of above */
+
+#define HIDE_SUFFIX   (1)
+
 
 static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
 {
@@ -37,6 +44,14 @@ static void set_centers(const Linkage linkage, int center[], Boolean print_word_
 	if (print_word_0) i=0; else i=1;
 	for (; i < N_words_to_print; i++)
 	{
+		/* Ignore suffixes */
+		if (HIDE_SUFFIX &&
+		    0 == strncmp (SUFFIX_WORD, linkage->word[i], SUFFIX_WORD_L))
+		{
+			center[i] = tot;
+			continue;
+		}
+
 		/* Centers obtained by counting the characters, 
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
@@ -365,20 +380,45 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			t = pi->chosen_disjuncts[i]->string;        
 			/* get rid of those ugly ".Ixx" */
 			if (is_idiom_word(t)) {
-				l = strlen(t);
-				s = (char *) xalloc(l+1);
-				strcpy(s,t);
-				for (u=s; *u != '.'; u++)
-				  ;
+				s = strdup(t);
+				u = strrchr(s, '.');
 				*u = '\0';
 				t = string_set_add(s, sent->string_set);
-				xfree(s, l+1);
+				free(s);
 			}
 
-			/* sSsuppress the empty word. */
+			/* Suppress the empty word. */
 			if (0 == strcmp(t, EMPTY_WORD))
 			{
 				t = string_set_add("", sent->string_set);
+			}
+
+			/* Concatenate the stem and the sufix together into one word */
+			if (HIDE_SUFFIX)
+			{
+				if (0 == strncmp(t, SUFFIX_WORD, SUFFIX_WORD_L))
+				{
+					const char * stem = pi->chosen_disjuncts[i-1]->string;
+					size_t len = strlen(stem) + strlen (t);
+					char * join = malloc(len+1);
+					strcpy(join, stem);
+					u = strrchr(join, '.');
+					*u = '\0';
+					strcat(join, t + SUFFIX_WORD_L);
+					t = string_set_add(join, sent->string_set);
+					free(join);
+				}
+
+				/* Suppress printing of the stem, if the next word is the suffix */
+				if (i+1 < sent->length)
+				{
+					const char * next = pi->chosen_disjuncts[i+1]->string;
+					if (0 == strncmp(next, SUFFIX_WORD, SUFFIX_WORD_L) &&
+						 0 != strcmp(next, EMPTY_WORD))
+					{
+						t = string_set_add("", sent->string_set);
+					}
+				}
 			}
 		}
 		else
@@ -521,6 +561,10 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			if (!print_word_N && (ppla[j]->r == linkage->num_words-1)) continue;            
 			/* Get rid of links to empty words */
 			if (0 == strcmp(ppla[j]->name, EMPTY_WORD_SUPPRESS)) continue;
+
+			if (HIDE_SUFFIX &&
+			    0 == strncmp(ppla[j]->name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L))
+				continue;
 
 			/* gets rid of the irrelevant link to the right wall */
 			/* ??? */
