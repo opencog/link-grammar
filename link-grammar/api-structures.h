@@ -61,46 +61,48 @@ struct Resources_s
 struct Parse_Options_s
 {
 	int verbosity;         /* Level of detail to give about the computation 0 */
-	int use_sat_solver;    /* Use the Boolean SAT based parser */
-	int use_viterbi;       /* Use the Viterbi decoder-based parser */
+	Boolean use_sat_solver;/* Use the Boolean SAT based parser */
+	Boolean use_viterbi;   /* Use the Viterbi decoder-based parser */
 	int linkage_limit;     /* The maximum number of linkages processed 100 */
 	float disjunct_cost;   /* Max disjunct cost to allow */
-	int use_fat_links;     /* Look for fat linkages */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
 	int null_block;        /* consecutive blocks of this many words are
 	                          considered as one null link  (default=1) */
-	int islands_ok;        /* If TRUE, then linkages with islands
+	Boolean islands_ok;    /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
 	int twopass_length;    /* min length for two-pass post processing */
 	int max_sentence_length;
 	int short_length;      /* Links that are limited in length can be
 	                        * no longer than this.  Default = 6 */
-	int all_short;         /* If true, there can be no connectors that are exempt */
-	int use_spell_guess;   /* Perform spell-guessing of unknown words. */ 
+	Boolean all_short;     /* If true, there can be no connectors that are exempt */
+	Boolean use_spell_guess; /* Perform spell-guessing of unknown words. */ 
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
 	Resources resources;   /* For deciding when to abort the parsing */
 
 	/* Flags governing the command-line client; not used by parser */
-	int display_short;
-	int display_word_subscripts;  /* as in "dog.n" as opposed to "dog" */
-	int display_link_subscripts;  /* as in "Ss" as opposed to "S" */
-	int display_walls;
-	int display_union;            /* print squashed version of linkage with conjunction? */
-	int allow_null;               /* true if we allow null links in parsing */
-	int use_cluster_disjuncts;    /* if true, atttempt using a borader list of disjuncts */
-	int echo_on;                  /* true if we should echo the input sentence */
-	int batch_mode;               /* if true, process sentences non-interactively */
-	int panic_mode;               /* if true, parse in "panic mode" after all else fails */
-	int screen_width;             /* width of screen for displaying linkages */
-	int display_on;               /* if true, output graphical linkage diagram */
-	int display_postscript;       /* if true, output postscript linkage */
+	Boolean display_short;
+	Boolean display_word_subscripts;  /* as in "dog.n" as opposed to "dog" */
+	Boolean display_link_subscripts;  /* as in "Ss" as opposed to "S" */
+	Boolean display_walls;
+#ifdef USE_FAT_LINKAGES
+	Boolean use_fat_links;     /* Look for fat linkages */
+	Boolean display_union;     /* print squashed version of linkage with conjunction? */
+#endif /* USE_FAT_LINKAGES */
+	Boolean allow_null;        /* true if we allow null links in parsing */
+	Boolean use_cluster_disjuncts;    /* if true, atttempt using a borader list of disjuncts */
+	Boolean echo_on;           /* true if we should echo the input sentence */
+	Boolean batch_mode;        /* if true, process sentences non-interactively */
+	Boolean panic_mode;        /* if true, parse in "panic mode" after all else fails */
+	int screen_width;          /* width of screen for displaying linkages */
+	Boolean display_on;        /* if true, output graphical linkage diagram */
+	Boolean display_postscript;    /* if true, output postscript linkage */
 	ConstituentDisplayStyle display_constituents;     /* style for displaying constituent structure */
-	int display_bad;              /* if true, bad linkages are displayed */
-	int display_disjuncts;        /* if true, print disjuncts that were used */
-	int display_links;            /* if true, a list o' links is printed out */
-	int display_senses;           /* if true, sense candidates are printed out */
+	Boolean display_bad;       /* if true, bad linkages are displayed */
+	Boolean display_disjuncts; /* if true, print disjuncts that were used */
+	Boolean display_links;     /* if true, a list o' links is printed out */
+	Boolean display_senses;    /* if true, sense candidates are printed out */
 };
 
 struct Connector_set_s

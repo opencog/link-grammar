@@ -109,7 +109,9 @@ Parse_Options parse_options_create(void)
 	po->display_word_subscripts = TRUE;
 	po->display_link_subscripts = TRUE;
 	po->display_walls = FALSE;
+#ifdef USE_FAT_LINKAGES
 	po->display_union = FALSE;
+#endif /* USE_FAT_LINKAGES */
 	po->allow_null = TRUE;
 	po->use_cluster_disjuncts = FALSE;
 	po->echo_on = FALSE;
@@ -421,6 +423,7 @@ int parse_options_get_display_walls(Parse_Options opts) {
 	return opts->display_walls;
 }
 
+#ifdef USE_FAT_LINKAGES
 int parse_options_get_display_union(Parse_Options opts) {
 	return opts->display_union;
 }
@@ -428,6 +431,7 @@ int parse_options_get_display_union(Parse_Options opts) {
 void parse_options_set_display_union(Parse_Options opts, int dummy) {
 	opts->display_union = dummy;
 }
+#endif /* USE_FAT_LINKAGES */
 
 int parse_options_timer_expired(Parse_Options opts) {
 	return resources_timer_expired(opts->resources);
