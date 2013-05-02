@@ -446,7 +446,10 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 	if (NULL == afdict) return FALSE;
 
 	/* Record the original word */
-	tokenizer->unsplit_word = string_set_add(w, tokenizer->string_set);
+	len = MIN(wend-w, MAX_WORD);
+	strncpy(newword, w, len);
+	newword[len] = '\0';
+	tokenizer->unsplit_word = string_set_add(newword, tokenizer->string_set);
 
 	p_strippable = afdict->p_strippable;
 	s_strippable = afdict->s_strippable;

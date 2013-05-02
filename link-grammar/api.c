@@ -983,11 +983,12 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
 	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
+#define INFIX_MARK '='
+
 static void sane_suffix_links(Sentence sent, Parse_Options opts)
 {
 	int lk, i;
 	Parse_info pi = sent->parse_info;
-printf("hello world\n");
 
 	for (lk = 0; lk < sent->num_linkages_found; lk++)
 	{
@@ -995,12 +996,47 @@ printf("hello world\n");
 		extract_links(lifo->index, sent->null_count, pi);
 		for (i=0; i<sent->length; i++)
 		{
-			if (pi->chosen_disjuncts[i] == NULL)
+			const char *djw;
+			size_t len;
+
+			/* Ignore island words */
+			if (NULL == pi->chosen_disjuncts[i])
 				continue;
-printf("duude lk=%d i=%d w=%s\n", lk, i, pi->chosen_disjuncts[i]->string);
-printf("duude sent unplit aword=%s\n", sent->word[i].unsplit_word);
-// sent->num_valid_linkages --;
-lifo->N_violations ++;
+
+			/* Ignore suffixes, for now */
+			if (NULL == sent->word[i].unsplit_word)
+				continue;
+
+			/* If its a perfect match, then keep going */
+			djw = pi->chosen_disjuncts[i]->string;
+			if (0 == strncmp(djw, sent->word[i].unsplit_word,
+			                 strlen(sent->word[i].unsplit_word)))
+				continue;
+
+			/* If the next word is a suffix, and, when united with
+			 * the stem, it recreates the original word, then we
+			 * are very hapy, and keep going. */
+			len = strlen(djw);
+			if ((INFIX_MARK == djw[len-1]) &&
+			    ((i+1) < sent->length) && 
+			    (INFIX_MARK == pi->chosen_disjuncts[i+1]->string[0]))
+			{
+				char *p;
+				char newword[MAX_WORD+1];
+				strcpy(newword, djw);
+				p = strrchr(newword, '.');
+				if (p) *p = 0x0;
+				strcat(newword, pi->chosen_disjuncts[i+1]->string+1);
+				if (0 == strncmp(newword, sent->word[i].unsplit_word,
+				                 strlen(sent->word[i].unsplit_word)))
+					continue;
+			}
+// XXX TODO  the above fails for capializatino, handle this ... 
+
+			/* Oh no ... we've joined together the stem and suffix incorrectly! */
+			sent->num_valid_linkages --;
+			lifo->N_violations ++;
+			break;
 		}
 	}
 }
