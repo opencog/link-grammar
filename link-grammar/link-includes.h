@@ -17,12 +17,6 @@
 
 LINK_BEGIN_DECLS
 
-#if  __GNUC__ > 2
-#define GNUC_DEPRECATED __attribute__((deprecated))
-#else
-#define GNUC_DEPRECATED
-#endif
-
 /**********************************************************************
  *
  * System initialization
@@ -432,69 +426,85 @@ link_public_api(void)
  *
  ********************************************************/
 
+#if  __GNUC__ > 2
+#define GNUC_DEPRECATED __attribute__((deprecated))
+#else
+#define GNUC_DEPRECATED
+#endif
+
+#ifdef _MSC_VER
+#define MS_DEPRECATED __declspec(deprecated)
+#else
+#define MS_DEPRECATED 
+#endif
+
+#ifdef USE_FAT_LINKAGES
+#pragma message("WARNING: Support for FAT linakges is going away!")
+#endif /* USE_FAT_LINKAGES */
+
 /* When fat links are gone, there's no union to compute. */
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      linkage_compute_union(Linkage linkage) GNUC_DEPRECATED;
 
 /* When fat links go away, all linkages are thin */
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      linkage_is_fat(const Linkage linkage) GNUC_DEPRECATED;
 
 /* When fat links go away, the number of sublinkages will always be one */
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      linkage_get_num_sublinkages(const Linkage linkage) GNUC_DEPRECATED;
 
 /* When fat links go away, the only valid sublinkage will be zero. */
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      linkage_set_current_sublinkage(Linkage linkage, int index) GNUC_DEPRECATED;
 
 /* When fat links go away, the only valid sublinkage will be zero. */
-link_public_api(int) 
+MS_DEPRECATED link_public_api(int) 
      linkage_get_current_sublinkage(const Linkage linkage) GNUC_DEPRECATED;
 
 /* When fat links go away, all linkages are proper. */
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      linkage_is_improper(const Linkage linkage) GNUC_DEPRECATED;
 
 /* Fat linkages will be going away "real soon now" */
-link_public_api(void)
+MS_DEPRECATED link_public_api(void)
      parse_options_set_use_fat_links(Parse_Options opts, int use_fat_links) GNUC_DEPRECATED;
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      parse_options_get_use_fat_links(Parse_Options opts) GNUC_DEPRECATED;
-link_public_api(void)
+MS_DEPRECATED link_public_api(void)
      parse_options_set_display_union(Parse_Options opts, int val) GNUC_DEPRECATED;
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      parse_options_get_display_union(Parse_Options opts) GNUC_DEPRECATED;
 
 /* Fails to include the regex file name, which is needed in any
  * practical application.  Thus, this call is deprecated.
  * XXX TBD: this will go away in Version 5.0. */
-link_public_api(Dictionary)
+MS_DEPRECATED link_public_api(Dictionary)
      dictionary_create(const char * dict_name,
                        const char * pp_name,
                        const char * cons_name,
                        const char * affix_name) GNUC_DEPRECATED;
 
 /* Both are deprecated, exported only for backwards-compat w/Java API. */
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      dictionary_is_past_tense_form(Dictionary dict, const char * str) GNUC_DEPRECATED;
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      dictionary_is_entity(Dictionary dict, const char * str) GNUC_DEPRECATED;
 
 /* For languages with regular prefix/suffix structure, this
  * function returrns misleading information. Do not use it
  * in new code! use linkage_get_word() instead! */
-link_public_api(const char *)
+MS_DEPRECATED link_public_api(const char *)
      sentence_get_word(Sentence sent, int wordnum) GNUC_DEPRECATED;
 
 /* Identical to sentence_get_word()
  * XXX TBD: make this go away in Version 5.0. */
-link_public_api(const char *)
+MS_DEPRECATED link_public_api(const char *)
      sentence_get_nth_word(Sentence sent, int i) GNUC_DEPRECATED;
 
 /* Who uses this function, anyway? How did this get exported?
  * XXX TBD: make this go away in Version 5.0. */
-link_public_api(int)
+MS_DEPRECATED link_public_api(int)
      sentence_nth_word_has_disjunction(Sentence sent, int i) GNUC_DEPRECATED;
 
 /* This is not intended for general use; its specific to the internals
@@ -505,12 +515,11 @@ link_public_api(int)
 
 /* These are obsolete, and do nothing.
  * XXX TBD: make these go away in Version 5.0. */
-link_public_api(void)
+MS_DEPRECATED link_public_api(void)
      lperror_clear(void) GNUC_DEPRECATED;
-extern link_public_api(int)
-     lperrno;
-extern link_public_api(char)
-     lperrmsg[];
+
+extern link_public_api(int) lperrno;
+extern link_public_api(char) lperrmsg[];
 
 LINK_END_DECLS
 
