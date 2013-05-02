@@ -740,6 +740,23 @@ static Dict_node * get_all_non_stems (Dict_node *llist, Dict_node * dn)
 	return llist;
 }
 
+/* Return the (single, solitary, unique) dictionary entry for 
+ * string s. This returns not a copy, but a pointer to the 
+ * original, suitable for editing.
+ */
+static Dict_node ** raw_lookup(Dict_node * dn, const char * s)
+{
+	int m;
+	if (dn == NULL) return NULL;
+	m = dict_order(s, dn->string);
+	if (m > 0)
+		return raw_lookup(dn->right, s);
+	if (m < 0)
+		return raw_lookup(dn->left, s);
+
+	return &dn;
+}
+
 /* Return ordering, consistent with ict_order, but only comparing
  * everything before the suffix.
  */
@@ -751,7 +768,23 @@ static inline int bare_order(const char *s, const char *t)
 
 static Exp * make_optional_node(Dictionary dict, Exp * e);
 
+/**
+ * Insert empty-word connectors.
+ *
+ * Empty words are used to work around a fundamental parser design flaw.
+ * The flaw is that the parser assumes that there exist a fixed number of
+ * words in a sentence, independent of tokenization.  Unfortuntely, this
+ * is not true when corecting spelling errors, or when the dictionary
+ * contains entries for plain words and also as stems.  For example,
+ * in the Russian dictionary, это.msi appears as a single word, but also
+ * as the stem form это.=  The problem arises when the stem is split from
+ * a suffix -- this generates two words
+ * a 
 
+xxx this is wrong
+
+22.5 K
+ */
 void add_empty_words(Dictionary dict)
 {
 	Dict_node *stems, *s;
@@ -778,11 +811,15 @@ void add_empty_words(Dictionary dict)
 		}
 		else
 		{
+			Dict_node **pdn;
 			Exp *zn, *an;
 			E_list *elist, *flist;
 
 			/* If we are here, then a word appears both as a stem,
-			 * and as a plain word. Create {ZZZ+} & (plain-word-exp) */
+			 * and as a plain word. Create {ZZZ+} & (plain-word-exp).
+			 * The original dictionary entry is in pdn. */
+			pdn = raw_lookup(dict->root, n->string);
+			assert(pdn, "Fatal Error: stem lookup failure!");
 
 			/* zn points at {ZZZ+} */
 			zn = Exp_create(dict);
@@ -796,7 +833,7 @@ void add_empty_words(Dictionary dict)
 			/* flist is plain-word-exp */
 			flist = (E_list *) xalloc(sizeof(E_list));
 			flist->next = NULL;
-			flist->e = n->exp;
+			flist->e = (*pdn)->exp;
 
 			/* elist is {ZZZ+} */
 			elist = (E_list *) xalloc(sizeof(E_list));
@@ -810,7 +847,7 @@ void add_empty_words(Dictionary dict)
 			an->u.l = elist;
 
 			/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
-			n->exp = an;
+			(*pdn)->exp = an;
 
 			/* Iterate */
 			s = s->right;
