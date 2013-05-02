@@ -86,10 +86,10 @@ public:
     ,_link_variable_map(sent->length)
 #ifdef USE_FAT_LINKAGES
     ,_fat_link_variable_map(sent->length, -1)
+    ,_link_top_ww_variable_map(sent->length, -1)
 #endif /* USE_FAT_LINKAGES */
     ,_link_top_cw_variable_map(sent->length)
     , _link_cw_variable_map(sent->length)
-    ,_link_top_ww_variable_map(sent->length, -1)
     ,_thin_link_variable_map(sent->length, -1)
     ,_guiding(new CostDistanceGuiding(sent))
   {
@@ -359,6 +359,7 @@ public:
     return var;
   }
 
+#ifdef USE_FAT_LINKAGES
   /*
    *             link_top_ww(wi, wj)
    * Variables that specify that word wi is linked to the word wj, and
@@ -377,6 +378,7 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
+#endif /* USE_FAT_LINKAGES */
 
 
 
@@ -632,6 +634,12 @@ private:
     _fat_link_variables[var] = new FatLinkVar(i, j);
     _fat_link_variables_indices.push_back(var);
   }
+
+  /*
+   * Information about the link_top_ww(i, j) variables
+   */
+  // What is the number of the link_top_ww(i, j) variable?
+  Matrix<int> _link_top_ww_variable_map;
 #endif /* USE_FAT_LINKAGES */
 
   /*
@@ -681,13 +689,6 @@ private:
    */
   // What is the number of the link_cw(wi, wj, pj) variable?
   Matrix< std::map<int, int> > _link_cw_variable_map;
-
-  /*
-   * Information about the link_top_ww(i, j) variables
-   */
-
-  // What is the number of the link_top_ww(i, j) variable?
-  Matrix<int> _link_top_ww_variable_map;
 
 
 #ifdef _CONNECTIVITY_
@@ -795,6 +796,9 @@ private:
   bool get_fat_link_variable(int i, int j, int& var) {
     return get_2int_variable(i, j, var, _fat_link_variable_map);
   }
+  bool get_link_top_ww_variable(int i, int j, int& var) {
+    return get_2int_variable(i, j, var, _link_top_ww_variable_map);
+  }
 #endif /* USE_FAT_LINKAGES */
 
   bool get_thin_link_variable(int i, int j, int& var) {
@@ -807,10 +811,6 @@ private:
 
   bool get_link_top_cw_variable(int i, int j, int pj, int& var) {
     return get_3int_variable(i, j, pj, var, _link_top_cw_variable_map);
-  }
-
-  bool get_link_top_ww_variable(int i, int j, int& var) {
-    return get_2int_variable(i, j, var, _link_top_ww_variable_map);
   }
 
 
