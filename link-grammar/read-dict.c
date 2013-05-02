@@ -462,11 +462,9 @@ static inline int dict_order(const char *s, const char *t)
  * by "\0", and take the difference.  This behavior matches that
  * of the function dict_order().
  *
- * Note: wild-cards are not used in the English dictionaries;
- * nor are they used in the Persian or Arabic dictionaries...
- * perhaps they are used to handle stemming in some other
- * languages ?????? XXX FIXME, these wildcards might just be
- * old dead code ...
+ * Note: words in the dictionary itself don't have wild-card
+ * chars in them; the wild-card support is here only if you are
+ * searching for part of a word.
  */
 static inline int dict_order_wild(const char * s, const char * t)
 {
@@ -1701,11 +1699,9 @@ Boolean read_dictionary(Dictionary dict)
  * Returns true if it finds a non-idiom dict_node in a file that matches
  * the string s.
  *
- ** note: this now DOES include non-file words in its search.
- *
  * Also sets parent and to_be_deleted appropriately.
  */
-static int find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
+static Boolean find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
                                    const char * s,
                                    Dict_node **parent, Dict_node **to_be_deleted)
 {
