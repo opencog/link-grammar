@@ -1099,6 +1099,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
 #ifdef USE_FAT_LINKAGES
 	li.improper_fat_linkage = FALSE;
+	li.andlist = NULL;
 #endif /* USE_FAT_LINKAGES */
 	li.inconsistent_domains = FALSE;
 	if (opts->use_sat_solver)
@@ -1112,7 +1113,6 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
 	li.corpus_cost = -1.0f;
-	li.andlist = NULL;
 
 	if (pp == NULL)
 	{

@@ -147,7 +147,9 @@ struct Dictionary_s
 
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
+#ifdef USE_FAT_LINKAGES
 	Connector_set * andable_connector_set;  /* NULL=everything is andable */
+#endif /* USE_FAT_LINKAGES */
 	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */
 	int             max_cost;
 	String_set *    string_set;  /* Set of link names constructed during parsing */

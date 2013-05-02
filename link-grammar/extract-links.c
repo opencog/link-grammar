@@ -117,8 +117,10 @@ Parse_info parse_info_new(int nwords)
 	pi->image_array = (Image_node **) xalloc(nwords * sizeof(Image_node *));
 	memset(pi->image_array, 0, nwords * sizeof(Image_node *));
 
+#ifdef USE_FAT_LINKAGES
 	pi->has_fat_down = (char *) xalloc(nwords * sizeof(Boolean));
 	memset(pi->has_fat_down, 0, nwords * sizeof(Boolean));
+#endif /* USE_FAT_LINKAGES */
 
 	/* Alloc the x_table */
 	if (nwords >= 10) {
@@ -151,7 +153,9 @@ void free_parse_info(Parse_info pi)
 	len = pi->N_words;
 	xfree(pi->chosen_disjuncts, len * sizeof(Disjunct *));
 	xfree(pi->image_array, len * sizeof(Image_node*));
+#ifdef USE_FAT_LINKAGES
 	xfree(pi->has_fat_down, len * sizeof(Boolean));
+#endif /* USE_FAT_LINKAGES */
 
 	for (i=0; i<pi->x_table_size; i++)
 	{

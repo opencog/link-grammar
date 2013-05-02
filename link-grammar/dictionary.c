@@ -262,12 +262,14 @@ dictionary_six_str(const char * lang,
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = TRUE;
 
+#ifdef USE_FAT_LINKAGES
 	if ((dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD)) != NULL) {
 		dict->andable_connector_set = connector_set_create(dict_node->exp);
 	} else {
 		dict->andable_connector_set = NULL;
 	}
 	free_lookup_list(dict_node);
+#endif /* USE_FAT_LINKAGES */
 
 	if ((dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD)) != NULL) {
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
@@ -434,7 +436,9 @@ int dictionary_delete(Dictionary dict)
 	}
 	spellcheck_destroy(dict->spell_checker);
 
+#ifdef USE_FAT_LINKAGES
 	connector_set_delete(dict->andable_connector_set);
+#endif /* USE_FAT_LINKAGES */
 	connector_set_delete(dict->unlimited_connector_set);
 
 	post_process_close(dict->postprocessor);

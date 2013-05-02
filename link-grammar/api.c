@@ -81,7 +81,6 @@ Parse_Options parse_options_create(void)
 	po->verbosity	 = 1;
 	po->linkage_limit = 100;
 	po->disjunct_cost = MAX_DISJUNCT_COST;
-	po->use_fat_links = FALSE;
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->null_block = 1;
@@ -110,6 +109,7 @@ Parse_Options parse_options_create(void)
 	po->display_link_subscripts = TRUE;
 	po->display_walls = FALSE;
 #ifdef USE_FAT_LINKAGES
+	po->use_fat_links = FALSE;
 	po->display_union = FALSE;
 #endif /* USE_FAT_LINKAGES */
 	po->allow_null = TRUE;
@@ -194,12 +194,14 @@ int parse_options_get_use_viterbi(Parse_Options opts) {
 	return opts->use_viterbi;
 }
 
+#ifdef USE_FAT_LINKAGES
 void parse_options_set_use_fat_links(Parse_Options opts, int dummy) {
 	opts->use_fat_links = dummy;
 }
 int parse_options_get_use_fat_links(Parse_Options opts) {
 	return opts->use_fat_links;
 }
+#endif /* USE_FAT_LINKAGES */
 
 void parse_options_set_linkage_limit(Parse_Options opts, int dummy) {
 	opts->linkage_limit = dummy;
@@ -493,6 +495,7 @@ static void linkage_info_delete(Linkage_info *link_info, int sz)
 	xfree(link_info, sz);
 }
 
+#ifdef USE_FAT_LINKAGES
 static void free_andlists(Sentence sent)
 {
 	int L;
@@ -510,12 +513,15 @@ static void free_andlists(Sentence sent)
 	}
 	/* printf("\n"); */
 }
+#endif /* USE_FAT_LINKAGES */
 
 static void free_post_processing(Sentence sent)
 {
 	if (sent->link_info != NULL) {
 		/* postprocessing must have been done */
+#ifdef USE_FAT_LINKAGES
 		free_andlists(sent);
+#endif /* USE_FAT_LINKAGES */
 		linkage_info_delete(sent->link_info, sent->num_linkages_alloced);
 		sent->link_info = NULL;
 	}
