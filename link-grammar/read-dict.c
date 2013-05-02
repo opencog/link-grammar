@@ -687,6 +687,47 @@ Boolean find_word_in_dict(Dictionary dict, const char * word)
 
 
 /* ======================================================================== */
+/* Empty-word handling. */
+
+/* stems, by definition, always end with ".=" */
+#define STEM_MARK '='
+
+static Dict_node * get_all_stems (Dict_node *llist, Dict_node * dn)
+{
+	Dict_node * dn_new;
+	size_t len;
+
+	if (dn == NULL) return llist;
+	len = strlen(dn->string);
+	if ((STEM_MARK != dn->string[len-1]) &&
+	    (STEM_MARK != dn->string[0]) &&
+	    ('<' != dn->string[0]))
+	{
+		dn_new = dict_node_new();
+		*dn_new = *dn;
+		dn_new->right = llist;
+		llist = dn_new;
+	}
+	
+	llist = get_all_stems(llist, dn->left);
+	llist = get_all_stems(llist, dn->right);
+
+	return llist;
+}
+
+void add_empty_words(Dictionary dict)
+{
+	Dict_node * stems;
+
+	stems = get_all_stems(NULL, dict->root);
+
+int cnt=0;
+for (Dict_node *s = stems; s; s=s->right) cnt++;
+printf("hello world %d\n", cnt);
+	free_lookup_list(stems);
+}
+
+/* ======================================================================== */
 /**
  * Allocate a new Exp node and link it into the exp_list for freeing later.
  */

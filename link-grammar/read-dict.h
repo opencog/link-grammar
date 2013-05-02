@@ -100,6 +100,7 @@ Dictionary dictionary_create_from_utf8(const char * input);
 Exp *       Exp_create(Dictionary dict);
 void        free_dictionary(Dictionary dict);
 Boolean read_dictionary(Dictionary dict);
+void add_empty_words(Dictionary dict);
 
 
 LINK_END_DECLS
