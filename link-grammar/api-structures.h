@@ -354,7 +354,9 @@ struct Sublinkage_s
 	PP_data   pp_data;
 };
 
+#ifdef USE_FAT_LINKAGES
 typedef struct DIS_node_struct DIS_node;
+#endif /* USE_FAT_LINKAGES */
 
 struct Linkage_s
 {
@@ -367,7 +369,10 @@ struct Linkage_s
 	int             unionized;  /* if TRUE, union of links has been computed */
 	Sentence        sent;
 	Parse_Options   opts;
+#ifdef USE_FAT_LINKAGES
 	DIS_node      * dis_con_tree; /* Disjunction-conjunction tree */
+#endif /* USE_FAT_LINKAGES */
+
 };
 
 

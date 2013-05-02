@@ -1067,7 +1067,9 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	Postprocessor * postprocessor;
 	Sublinkage *sublinkage;
 	Parse_info pi = sent->parse_info;
+#ifdef USE_FAT_LINKAGES
 	analyze_context_t *actx = sent->analyze_ctxt;
+#endif /* USE_FAT_LINKAGES */
 
 	sublinkage = x_create_sublinkage(pi);
 	postprocessor = sent->dict->postprocessor;
@@ -1148,6 +1150,8 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	}
 }
 
+#ifdef USE_FAT_LINKAGES
+
 #ifdef DBG
 static void prt_lol(Sentence sent , List_o_links *lol)
 {
@@ -1211,7 +1215,6 @@ static void prt_dis_con_tree(Sentence sent, DIS_node *dis)
 static inline void prt_dis_con_tree(Sentence sent, DIS_node *dis) {}
 #endif
 
-#ifdef USE_FAT_LINKAGES
 /**
  * This procedure mimics analyze_fat_linkage in order to
  * extract the sublinkages and copy them to the Linkage

@@ -1291,11 +1291,12 @@ Linkage SATEncoder::create_linkage()
     extract_thin_linkage(_sent, _opts, linkage);
   else
     extract_fat_linkage(_sent, _opts, linkage);
+
+  linkage_set_current_sublinkage(linkage, 0);
 #else
   extract_thin_linkage(_sent, _opts, linkage);
 #endif /* USE_FAT_LINKAGES */
 
-  linkage_set_current_sublinkage(linkage, 0);
   return linkage;
 }
 

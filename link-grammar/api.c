@@ -1124,7 +1124,9 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	linkage->sent = sent;
 	linkage->opts = opts;
 	linkage->info = &sent->link_info[k];
+#ifdef USE_FAT_LINKAGES
 	linkage->dis_con_tree = NULL;
+#endif /* USE_FAT_LINKAGES */
 
 	extract_links(sent->link_info[k].index, sent->null_count, sent->parse_info);
 	compute_chosen_words(sent, linkage);
@@ -1572,7 +1574,11 @@ int linkage_has_inconsistent_domains(const Linkage linkage)
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 {
+#ifdef USE_FAT_LINKAGES
 	int N_sublinkages = linkage_get_num_sublinkages(linkage);
+#else
+	int N_sublinkages = 1;
+#endif /* USE_FAT_LINKAGES */
 	Parse_Options opts = linkage->opts;
 	Sentence sent = linkage->sent;
 	Sublinkage * subl;

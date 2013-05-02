@@ -293,16 +293,10 @@ typedef struct Linkage_s * Linkage;
 
 link_public_api(Linkage)
      linkage_create(int index, Sentence sent, Parse_Options opts);
-link_public_api(int) 
-     linkage_get_current_sublinkage(const Linkage linkage); 
-link_public_api(int)
-     linkage_set_current_sublinkage(Linkage linkage, int index);
 link_public_api(void)
      linkage_delete(Linkage linkage);
 link_public_api(Sentence)
      linkage_get_sentence(const Linkage linkage);
-link_public_api(int)
-     linkage_get_num_sublinkages(const Linkage linkage);
 link_public_api(int)
      linkage_get_num_words(const Linkage linkage);
 link_public_api(int)
@@ -373,8 +367,6 @@ link_public_api(double)
      linkage_corpus_cost(const Linkage linkage);
 link_public_api(int)
      linkage_is_canonical(const Linkage linkage);
-link_public_api(int)
-     linkage_is_improper(const Linkage linkage);
 link_public_api(int)
      linkage_has_inconsistent_domains(const Linkage linkage);
 link_public_api(const char *)
@@ -447,6 +439,22 @@ link_public_api(void)
  * XXX TBD: These will all go away in Version 5.0.
  *
  ********************************************************/
+
+/* When fat links go away, the number of sublinkages will always be one */
+link_public_api(int)
+     linkage_get_num_sublinkages(const Linkage linkage) GNUC_DEPRECATED;
+
+/* When fat links go away, the only valid sublinkage will be zero. */
+link_public_api(int)
+     linkage_set_current_sublinkage(Linkage linkage, int index) GNUC_DEPRECATED;
+
+/* When fat links go away, the only valid sublinkage will be zero. */
+link_public_api(int) 
+     linkage_get_current_sublinkage(const Linkage linkage) GNUC_DEPRECATED;
+
+/* When fat links go away, all linkages are proper. */
+link_public_api(int)
+     linkage_is_improper(const Linkage linkage) GNUC_DEPRECATED;
 
 /* Fat linkages will be going away "real soon now" */
 #ifdef USE_FAT_LINKAGES
