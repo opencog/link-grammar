@@ -691,6 +691,7 @@ Boolean find_word_in_dict(Dictionary dict, const char * word)
 
 /* stems, by definition, always end with ".=" */
 #define STEM_MARK '='
+#define EMPTY_CONNECTOR "ZZZ"
 
 /** Return all the words that are stems in the dictionary */
 static Dict_node * get_all_stems (Dict_node *llist, Dict_node * dn)
@@ -748,15 +749,18 @@ static inline int bare_order(const char *s, const char *t)
 	return ((*s == '.')?(1):(*s))  -  ((*t == '.')?(1):(*t));
 }
 
+static Exp * make_optional_node(Dictionary dict, Exp * e);
+
+
 void add_empty_words(Dictionary dict)
 {
 	Dict_node *stems, *s;
 	Dict_node *non_stems, *n;
+	int cnt=0;
 
 	stems = get_all_stems(NULL, dict->root);
 	non_stems = get_all_non_stems(NULL, dict->root);
 
-int cnt=0;
 	/* Find all words that appear in the dict both as single
 	 * words, and alo as stems. */
 	s = stems;
@@ -774,15 +778,50 @@ int cnt=0;
 		}
 		else
 		{
+			Exp *zn, *an;
+			E_list *elist, *flist;
+
 			/* If we are here, then a word appears both as a stem,
-			 * and as a plain word. */
+			 * and as a plain word. Create {ZZZ+} & (plain-word-exp) */
+
+			/* zn points at {ZZZ+} */
+			zn = Exp_create(dict);
+			zn->dir = '+';
+			zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
+			zn->multi = FALSE;
+			zn->type = CONNECTOR_type;
+			zn->cost = 0.0f;
+			zn = make_optional_node(dict, zn);
+
+			/* flist is plain-word-exp */
+			flist = (E_list *) xalloc(sizeof(E_list));
+			flist->next = NULL;
+			flist->e = n->exp;
+
+			/* elist is {ZZZ+} */
+			elist = (E_list *) xalloc(sizeof(E_list));
+			elist->next = flist;
+			elist->e = zn;
+
+			/* an will be {ZZZ+} & (plain-word-exp) */
+			an = Exp_create(dict);
+			an->type = AND_type;
+			an->cost = 0.0f;
+			an->u.l = elist;
+
+			/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
+			n->exp = an;
+
+			/* Iterate */
 			s = s->right;
 			n = n->right;
-cnt++;
+			cnt++;
 		}
 	}
 
-printf("count %d\n", cnt);
+#ifdef DBG
+	printf("Dictionary contains %d plain-word, stem pairs\n", cnt);
+#endif
 
 	free_lookup_list(stems);
 	free_lookup_list(non_stems);
