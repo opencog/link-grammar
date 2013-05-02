@@ -728,7 +728,7 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	Exp *zn, *an;
 	E_list *elist, *flist;
 
-   if (! dict->empty_word_defined) return;
+	if (! dict->empty_word_defined) return;
 
 	if (STEM_MARK == dn->string[0]) return;
 

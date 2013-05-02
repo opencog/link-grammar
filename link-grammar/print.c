@@ -248,6 +248,8 @@ char * linkage_print_disjuncts(const Linkage linkage)
 }
 
 /**
+ * XXX TODO: port over the suppression of ZZZ links, and also
+ * the HIDE_SUFFIX stuff, fom the ascii printing code, way below.
  */
 static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *pctx)
 {

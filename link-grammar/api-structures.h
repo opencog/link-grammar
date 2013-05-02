@@ -182,6 +182,7 @@ struct Label_node_s
 
 #define HT_SIZE (1<<10)
 
+#ifdef USE_FAT_LINKAGES
 struct And_data_s
 {
 	int          LT_bound;
@@ -193,6 +194,7 @@ struct And_data_s
 	int STAT_N_disjuncts;
 	int STAT_calls_to_equality_test;
 };
+#endif /* USE_FAT_LINKAGES */
 
 struct Parse_info_struct
 {

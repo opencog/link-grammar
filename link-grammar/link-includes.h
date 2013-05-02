@@ -266,9 +266,6 @@ link_public_api(int)
 link_public_api(int)
      sentence_link_cost(Sentence sent, int i);
 
-link_public_api(int)
-     sentence_contains_conjunction(Sentence sent);
-
 /**********************************************************************
  *
  * Functions that create and manipulate Linkages.
@@ -465,6 +462,9 @@ MS_DEPRECATED link_public_api(int)
 /* When fat links go away, all linkages are proper. */
 MS_DEPRECATED link_public_api(int)
      linkage_is_improper(const Linkage linkage) GNUC_DEPRECATED;
+
+MS_DEPRECATED link_public_api(int)
+     sentence_contains_conjunction(Sentence sent) GNUC_DEPRECATED;
 
 /* Fat linkages will be going away "real soon now" */
 MS_DEPRECATED link_public_api(void)
