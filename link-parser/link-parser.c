@@ -174,9 +174,9 @@ static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 static void process_linkage(Linkage linkage, Parse_Options opts)
 {
 	char * string;
-	int j=0, mode;
+	int mode;
 #ifdef USE_FAT_LINKAGES
-	int first_sublinkage;
+	int j, first_sublinkage;
 	int nlink;
 #endif /* USE_FAT_LINKAGES */
 
@@ -196,9 +196,9 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 
 	nlink = linkage_get_num_sublinkages(linkage);
 	for (j=first_sublinkage; j<nlink; ++j)
-#endif /* USE_FAT_LINKAGES */
 	{
 		linkage_set_current_sublinkage(linkage, j);
+#endif /* USE_FAT_LINKAGES */
 		if (parse_options_get_display_on(opts))
 		{
 			string = linkage_print_diagram(linkage);
@@ -229,7 +229,9 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 			fprintf(stdout, "%s\n", string);
 			linkage_free_postscript(string);
 		}
+#ifdef USE_FAT_LINKAGES
 	}
+#endif /* USE_FAT_LINKAGES */
 	if ((mode = parse_options_get_display_constituents(opts)))
 	{
 		string = linkage_print_constituent_tree(linkage, mode);
