@@ -461,7 +461,7 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 будет.vpp : S*3- & Wd- & ( MVAi+ or MVat+ );
 
 %% это был голос живого существа, это голос
-это.msi : {ZZZ+} & ((Wd- & MVAi+) or S+);
+это.msi : (Wd- & MVAi+) or S+;
 
 -.i --.i есть.v -_это : ( {S*3-} & ( ( { Ew- } & MVAi+ ) or I+ or MVv+ or ( { EI- } & E+ ) or ( { EI- } & EI+ ) ) & {Wd-}) or Xt+;
 
