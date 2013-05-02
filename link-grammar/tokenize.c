@@ -192,6 +192,9 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 	sent->word[len].alternatives[0] = string_set_add(s, sent->string_set);
 	sent->word[len].alternatives[1] = NULL;
 
+	/* Record the original form, as well. */
+	sent->word[len].unsplit_word = sent->word[len].alternatives[0];
+
 	/* Now we record whether the first character of the word is upper-case.
 	   (The first character may be made lower-case
 	   later, but we may want to get at the original version) */
@@ -305,6 +308,7 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
+		sent->word[len].unsplit_word = NULL;
 
 		sent->word[len].alternatives = tokenizer->pref_alternatives;
 		tokenizer->pref_alternatives = NULL;
@@ -327,6 +331,7 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
+		sent->word[len].unsplit_word = tokenizer->unsplit_word;
 
 		sent->word[len].alternatives = tokenizer->stem_alternatives;
 
@@ -353,6 +358,7 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
+		sent->word[len].unsplit_word = NULL;
 
 		sent->word[len].alternatives = tokenizer->suff_alternatives;
 		tokenizer->suff_alternatives = NULL;
@@ -438,6 +444,9 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 	/* Set up affix tables.  */
 	Dictionary afdict = dict->affix_table;
 	if (NULL == afdict) return FALSE;
+
+	/* Record the original word */
+	tokenizer->unsplit_word = string_set_add(w, tokenizer->string_set);
 
 	p_strippable = afdict->p_strippable;
 	s_strippable = afdict->s_strippable;

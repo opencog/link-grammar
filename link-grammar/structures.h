@@ -140,6 +140,7 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 struct Tokenizer_struct
 {
 	String_set  * string_set;
+	const char * unsplit_word;
 	const char ** pref_alternatives;
 	const char ** stem_alternatives;
 	const char ** suff_alternatives;
@@ -218,6 +219,7 @@ struct X_node_struct
 
 struct Word_struct
 {
+    const char *unsplit_word;
     const char **alternatives;
     X_node * x;      /* sentence starts out with these */
     Disjunct * d;    /* eventually these get generated */
