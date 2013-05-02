@@ -363,13 +363,19 @@ struct Linkage_s
 	int             num_words;  /* number of (tokenized) words */
 	const char *  * word;       /* array of word spellings */
 	Linkage_info*   info;       /* index and cost information */
-	int             num_sublinkages; /* One for thin linkages, bigger for fat */
-	int             current;    /* Allows user to select particular sublinkage */
+#ifdef USE_FAT_LINKAGES
 	Sublinkage *    sublinkage; /* A parse with conjunctions will have several */
-	int             unionized;  /* if TRUE, union of links has been computed */
+#else
+	Sublinkage      sublinkage; /* A parse with conjunctions will have several */
+#endif /* USE_FAT_LINKAGES */
+
 	Sentence        sent;
 	Parse_Options   opts;
+
 #ifdef USE_FAT_LINKAGES
+	int             num_sublinkages; /* One for thin linkages, bigger for fat */
+	int             current;    /* Allows user to select particular sublinkage */
+	int             unionized;  /* if TRUE, union of links has been computed */
 	DIS_node      * dis_con_tree; /* Disjunction-conjunction tree */
 #endif /* USE_FAT_LINKAGES */
 

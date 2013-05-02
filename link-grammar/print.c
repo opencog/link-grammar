@@ -254,7 +254,11 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	int link, i,j;
 	int d;
 	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
+#ifdef USE_FAT_LINKAGES
 	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
+#else
+	Sublinkage *sublinkage = &(linkage->sublinkage);
+#endif /* USE_FAT_LINKAGES */
 	int N_links = sublinkage->num_links;
 	Link **ppla = sublinkage->link;
 	String  * string;
@@ -473,7 +477,11 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	int center[MAX_SENTENCE];
 	char connector[MAX_TOKEN_LENGTH];
 	int line_len, link_length;
+#ifdef USE_FAT_LINKAGES
 	Sublinkage *sublinkage=&(linkage->sublinkage[linkage->current]);
+#else
+	Sublinkage *sublinkage=&(linkage->sublinkage);
+#endif /* USE_FAT_LINKAGES */
 	int N_links = sublinkage->num_links;
 	Link **ppla = sublinkage->link;
 	String * string;

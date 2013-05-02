@@ -20,9 +20,12 @@
 #include "print-util.h"
 
 #define MAXCONSTITUENTS 8192
-#define MAXSUBL 16
 #define OPEN_BRACKET '['
 #define CLOSE_BRACKET ']'
+
+#ifdef USE_FAT_LINKAGES
+#define MAXSUBL 16
+#endif /* USE_FAT_LINKAGES */
 
 typedef enum {OPEN_TOK, CLOSE_TOK, WORD_TOK} CType;
 typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
@@ -33,23 +36,12 @@ typedef struct
 	const char * start_link;
 	int left;      /* leftmost word */
 	int right;     /* rightmost word */
+#ifdef USE_FAT_LINKAGES
 	int subl;
+#endif /* USE_FAT_LINKAGES */
 	int canon;
 	int valid;
 	char domain_type;
-#ifdef AUX_CODE_IS_DEAD
-	/* The only code that actually sets aux to a non-zero value is code
-	 * followed by code that zets it to zero. -- its dead code, and so 
-	 * aux is never actually used. Comment this code out. It was here
-	 * TreeBank I compatibility, and isn't used in TreeBank II.
-	 */
-	int start_num; /* starting link */
-	int aux;	
-	/* 0: it's an ordinary VP (or other type);
-	 * 1: it's an AUX, don't print it;
-	 * 2: it's an AUX, and print it
-	 */
-#endif /* AUX_CODE_IS_DEAD */
 } constituent_t;
 
 /* XXX it seems like the old code worked fine with MAX_ELTS=10 */
@@ -70,7 +62,11 @@ typedef struct
 {
 	String_set * phrase_ss;
 	WType wordtype[MAX_SENTENCE];
+#ifdef USE_FAT_LINKAGES
 	int word_used[MAXSUBL][MAX_SENTENCE];
+#else
+	int word_used[MAX_SENTENCE];
+#endif /* USE_FAT_LINKAGES */
 	int templist[MAX_ELTS];
 	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
@@ -96,7 +92,11 @@ static void adjust_for_left_comma(con_context_t * ctxt, Linkage linkage, int c)
 	{
 		w++;
 		while (1) {
+#ifdef USE_FAT_LINKAGES
 			if (ctxt->word_used[linkage->current][w] == 1) break;
+#else
+			if (ctxt->word_used[w] == 1) break;
+#endif /* USE_FAT_LINKAGES */
 			w++;
 		}
 	}
@@ -113,7 +113,11 @@ static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 		w--;
 		while (1)
 		{
+#ifdef USE_FAT_LINKAGES
 			if (ctxt->word_used[linkage->current][w]==1) break;
+#else
+			if (ctxt->word_used[w]==1) break;
+#endif /* USE_FAT_LINKAGES */
 			w--;
 		}
 	}
@@ -258,7 +262,11 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 								   RIGHT of c1 */
 						w = ctxt->constituent[c1].right+1;
 						while(1) {
-							if (ctxt->word_used[linkage->current][w]==1)
+#ifdef USE_FAT_LINKAGES
+							if (ctxt->word_used[linkage->current][w] == 1)
+#else
+							if (ctxt->word_used[w] == 1)
+#endif /* USE_FAT_LINKAGES */
 								break;
 							w++;
 						}
@@ -273,7 +281,11 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					else {
 						w = ctxt->constituent[c1].left-1;
 						while(1) {
+#ifdef USE_FAT_LINKAGES
 							if (ctxt->word_used[linkage->current][w] == 1)
+#else
+							if (ctxt->word_used[w] == 1)
+#endif /* USE_FAT_LINKAGES */
 								break;
 							w--;
 						}
@@ -293,10 +305,6 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					ctxt->constituent[c].domain_type = 'x';
 					ctxt->constituent[c].start_link =
 						string_set_add("XX", ctxt->phrase_ss);
-#ifdef AUX_CODE_IS_DEAD
-					ctxt->constituent[c].start_num =
-						ctxt->constituent[c1].start_num; /* bogus */
-#endif /* AUX_CODE_IS_DEAD */
 					if (verbosity >= 2)
 					{
 						printf("Larger c found: c %d (%s); ",
@@ -357,7 +365,11 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 						(ctxt->constituent[c2].domain_type == 'a')) {
 						w = ctxt->constituent[c].left-1;
 						while (1) {
+#ifdef USE_FAT_LINKAGES
 							if (ctxt->word_used[linkage->current][w] == 1) break;
+#else
+							if (ctxt->word_used[w] == 1) break;
+#endif /* USE_FAT_LINKAGES */
 							w--;
 						}
 						ctxt->constituent[c2].right = w;
@@ -393,24 +405,24 @@ static int find_next_element(con_context_t *ctxt,
                              int num_elements,
                              int num_lists)
 {
-	int c, a, ok, addedone=0;
+	int a, addedone=0;
 #ifdef USE_FAT_LINKAGES
-	int c2, c3;
+	int ok, c, c2, c3;
 #endif /* USE_FAT_LINKAGES */
-
 
 	assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
 
-	for (c=start+1; c<numcon_total; c++)
+#ifdef USE_FAT_LINKAGES
+	for (c = start + 1; c < numcon_total; c++)
 	{
 		constituent_t *cc = &ctxt->constituent[c];
 
 		if (cc->valid == 0)
 			continue;
-		if (strcmp(ctxt->constituent[ctxt->templist[0]].type, cc->type)!=0)
+		if (strcmp(ctxt->constituent[ctxt->templist[0]].type, cc->type) != 0)
 			continue;
-		ok = 1;
 
+		ok = 1;
 		/* We're considering adding constituent c to the andlist.
 		   If c is in the same sublinkage as one of the other andlist
 		   elements, don't add it. If it overlaps with one of the other
@@ -429,7 +441,6 @@ static int find_next_element(con_context_t *ctxt,
 				break;
 			}
 
-#ifdef USE_FAT_LINKAGES
 			/* It appears that none of this code matters when fat linkages
 			 * are disabled. There's probably lots more in this file that
 			 * isn't used when fat linkages are disabled... */ 
@@ -461,7 +472,6 @@ static int find_next_element(con_context_t *ctxt,
 			}
 			if (!ok)
 				break;
-#endif /* USE_FAT_LINKAGES */
 		}
 
 		if (ok == 0) continue;
@@ -489,10 +499,11 @@ static int find_next_element(con_context_t *ctxt,
 			return MAX_ANDS;
 		}
 	}
+#endif /* USE_FAT_LINKAGES */
 
 	if (addedone == 0 && num_elements > 1)
 	{
-		for (a=0; a<num_elements; a++) {
+		for (a = 0; a < num_elements; a++) {
 			ctxt->andlist[num_lists].e[a] = ctxt->templist[a];
 			ctxt->andlist[num_lists].num = num_elements;
 		}
@@ -547,6 +558,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		}
 	}
 
+#ifdef USE_FAT_LINKAGES
 	/* If constituents A and B in different sublinkages X and Y
 	 * have one endpoint in common, but A is larger at the other end,
 	 * and B has no duplicate in X, then declare B invalid. (Example:
@@ -589,6 +601,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 			}
 		}
 	}
+#endif /* USE_FAT_LINKAGES */
 
 	/* Now go through and find duplicates; if a pair is found,
 	 * mark one as invalid. (It doesn't matter if they're in the
@@ -763,27 +776,6 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		ctxt->constituent[c1].valid = 1;
 		ctxt->constituent[c1].start_link = ctxt->constituent[c2].start_link;  /* bogus */
 
-#ifdef AUX_CODE_IS_DEAD /* See comments above */
-		ctxt->constituent[c1].start_num = ctxt->constituent[c2].start_num;	/* bogus */
-
-		/* If a constituent within the andlist is an aux (aux==1),
-		 * set aux for the whole-list constituent to 2, also set
-		 * aux for the smaller constituent to 2, meaning they'll both
-		 * be printed (as an "X"). (If aux is 2 for the smaller
-		 * constituent going in, the same thing should be done,
-		 * though I doubt this ever happens.)
-		 */
-		for (a = 0; a < ctxt->andlist[n].num; a++)
-		{
-			c2 = ctxt->andlist[n].e[a];
-			if ((ctxt->constituent[c2].aux == 1) || (ctxt->constituent[c2].aux == 2))
-			{
-				ctxt->constituent[c1].aux = 2;
-				ctxt->constituent[c2].aux = 2;
-			}
-		}
-#endif /* AUX_CODE_IS_DEAD */
-
 		if (verbosity >= 2)
 			printf("Adding constituent:\n");
 		print_constituent(ctxt, linkage, c1);
@@ -932,22 +924,6 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		{
 			ctxt->constituent[c].left--;
 		}
-
-#ifdef AUX_CODE_IS_DEAD /* See comments at top */
-		/* If a constituent has type VP and its aux value is 2,
-		   this means it's an aux that should be printed; change its
-		   type to "X". If its aux value is 1, set "valid" to 0. (This
-		   applies to Treebank I only) */
-
-		if (ctxt->constituent[c].aux == 2)
-		{
-			ctxt->constituent[c].type = string_set_add("X", ctxt->phrase_ss);
-		}
-		if (ctxt->constituent[c].aux == 1)
-		{
-			ctxt->constituent[c].valid = 0;
-		}
-#endif /* AUX_CODE_IS_DEAD */
 	}
 
 	numcon_total += newcon_total;
@@ -1039,10 +1015,12 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
  */
 static void count_words_used(con_context_t *ctxt, Linkage linkage)
 {
-	int i, w, link, num_subl;
+	int w, link;
+#ifdef USE_FAT_LINKAGES
+	int i, num_subl;
 
 	num_subl = linkage->num_sublinkages;
-	if(linkage->unionized == 1 && num_subl > 1) num_subl--;
+	if (linkage->unionized == 1 && num_subl > 1) num_subl--;
 
 	if (verbosity >= 2)
 		printf("Number of sublinkages = %d\n", num_subl);
@@ -1051,6 +1029,7 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 	{
 		for (w = 0; w < linkage->num_words; w++) ctxt->word_used[i][w] = 0;
 		linkage->current = i;
+
 		for (link = 0; link < linkage_get_num_links(linkage); link++)
 		{
 			ctxt->word_used[i][linkage_get_link_lword(linkage, link)] = 1;
@@ -1067,6 +1046,25 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 			printf("\n");
 		}
 	}
+#else
+	for (w = 0; w < linkage->num_words; w++) ctxt->word_used[w] = 0;
+
+	for (link = 0; link < linkage_get_num_links(linkage); link++)
+	{
+		ctxt->word_used[linkage_get_link_lword(linkage, link)] = 1;
+		ctxt->word_used[linkage_get_link_rword(linkage, link)] = 1;
+	}
+	if (verbosity >= 2)
+	{
+		printf("Word used: ");
+		for (w = 0; w < linkage->num_words; w++)
+		{
+			if (ctxt->word_used[w] == 0) printf("0 ");
+			if (ctxt->word_used[w] == 1) printf("1 ");
+		}
+		printf("\n");
+	}
+#endif /* USE_FAT_LINKAGES */
 }
 
 static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
@@ -1088,9 +1086,6 @@ static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
 	ctxt->constituent[c].domain_type = domain->type;
 	ctxt->constituent[c].start_link =
 		linkage_get_link_label(linkage, domain->start_link);
-#ifdef AUX_CODE_IS_DEAD
-	ctxt->constituent[c].start_num = domain->start_link;
-#endif /* AUX_CODE_IS_DEAD */
 	return c;
 }
 
@@ -1146,7 +1141,11 @@ static const char * cons_of_domain(const Linkage linkage, char domain_type)
 }
 
 static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
-                                          int numcon_total, int s)
+                                          int numcon_total
+#ifdef USE_FAT_LINKAGES
+                                          , int s
+#endif /* USE_FAT_LINKAGES */
+                                          )
 {
 	int d, c, leftlimit, l, leftmost, rightmost, w, c2, numcon_subl = 0, w2;
 	List_o_links * dlink;
@@ -1155,7 +1154,11 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	const char * name;
 	Domain domain;
 
+#ifdef USE_FAT_LINKAGES
 	subl = &linkage->sublinkage[s];
+#else
+	subl = &linkage->sublinkage;
+#endif /* USE_FAT_LINKAGES */
 
 	for (d = 0, c = numcon_total; d < subl->pp_data.N_domains; d++, c++)
 	{
@@ -1310,8 +1313,13 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	/* numcon_subl = handle_islands(linkage, numcon_total, numcon_subl);  */
 
 	if (verbosity >= 2)
+#ifdef USE_FAT_LINKAGES
 		printf("Constituents added at first stage for subl %d:\n",
 			   linkage->current);
+#else
+		printf("Constituents added at first stage:\n");
+#endif /* USE_FAT_LINKAGES */
+
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
 	{
 		print_constituent(ctxt, linkage, c);
@@ -1420,37 +1428,6 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		if (adjustment_made == 0) break;
 	}
 
-#ifdef AUX_CODE_IS_DEAD 
-/* The code here is ifdef-dead as it appears to be dead, as the computation it does
- * is immediately undone in the very next block.
- */
-	/* This labels certain words as auxiliaries (such as forms of "be"
-	 * with passives, forms of "have" wth past participles,
-	 * "to" with infinitives). These words start VP's which include
-	 * them. In Treebank I, these don't get printed unless they're part of an
-	 * andlist, in which case they get labeled "X". (this is why we need to
-	 * label them as "aux".) In Treebank II, however, they seem to be treated
-	 * just like other verbs, so the "aux" stuff isn't needed.
-	 */
-	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
-	{
-		ctxt->constituent[c].subl = linkage->current;
-		if (((ctxt->constituent[c].domain_type == 'v') &&
-			(ctxt->wordtype[linkage_get_link_rword(linkage,
-											 ctxt->constituent[c].start_num)] == PTYPE))
-		   ||
-		   ((ctxt->constituent[c].domain_type == 't') &&
-			(strcmp(ctxt->constituent[c].type, "VP") == 0)))
-		{
-			ctxt->constituent[c].aux = 1;
-		}
-		else
-		{
-			ctxt->constituent[c].aux = 0;
-		}
-	}
-#endif /* AUX_CODE_IS_DEAD */
-
 	if (MAXCONSTITUENTS <= numcon_total + numcon_subl)
 	{
 		err_ctxt ec;
@@ -1458,13 +1435,12 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		err_msg(&ec, Error, "Error: Too many constituents (a2).\n");
 		numcon_total = MAXCONSTITUENTS - numcon_subl;
 	}
+#ifdef USE_FAT_LINKAGES
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
 	{
 		ctxt->constituent[c].subl = linkage->current;
-#ifdef AUX_CODE_IS_DEAD /* See comments at top */
-		ctxt->constituent[c].aux = 0;
-#endif /* AUX_CODE_IS_DEAD */
 	}
+#endif /* USE_FAT_LINKAGES */
 
 	return numcon_subl;
 }
@@ -1517,9 +1493,6 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			/* have_open is a hack to avoid printing anything until
 			 * bracket is opened */
 			if (w == 1) have_opened = 0;
-#ifdef AUX_CODE_IS_DEAD /* See comments at top */
-			if (ctxt->constituent[best].aux == 1) continue;
-#endif /* AUX_CODE_IS_DEAD */
 			have_opened = 1;
 			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
 		}
@@ -1574,10 +1547,6 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			if (best == -1)
 				break;
 			rightdone[best] = 1;
-#ifdef AUX_CODE_IS_DEAD /* See comments at top */
-			if (ctxt->constituent[best].aux == 1)
-				continue;
-#endif /* AUX_CODE_IS_DEAD */
 			append_string(cs, "%s%c ", ctxt->constituent[best].type, CLOSE_BRACKET);
 		}
 	}
@@ -1591,8 +1560,11 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
 	Postprocessor * pp;
-	int s, numcon_total, numcon_subl, num_subl;
+	int numcon_total, numcon_subl;
 	char * q;
+#ifdef USE_FAT_LINKAGES
+	int s, num_subl;
+#endif /* USE_FAT_LINKAGES */
 
 	ctxt->phrase_ss = string_set_create();
 	pp = linkage->sent->dict->constituent_pp;
@@ -1600,6 +1572,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 	count_words_used(ctxt, linkage);
 
+#ifdef USE_FAT_LINKAGES
 	/* 1 < num_sublinkages only if a parse used fat links. */
 	/* A lot of the complixity here could go away once we
 	 * eliminate fat links for good ...  */
@@ -1613,11 +1586,19 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 	if (linkage->unionized == 1 && num_subl > 1) num_subl--;
 	for (s = 0; s < num_subl; s++)
+#endif /* USE_FAT_LINKAGES */
 	{
+#ifdef USE_FAT_LINKAGES
 		linkage_set_current_sublinkage(linkage, s);
+#endif /* USE_FAT_LINKAGES */
 		linkage_post_process(linkage, pp);
 		generate_misc_word_info(ctxt, linkage);
+
+#ifdef USE_FAT_LINKAGES
 		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total, s);
+#else
+		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
+#endif /* USE_FAT_LINKAGES */
 		numcon_total += numcon_subl;
 		if (MAXCONSTITUENTS <= numcon_total)
 		{
@@ -1625,7 +1606,9 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 			ec.sent = linkage->sent;
 			err_msg(&ec, Error, "Error: Too many constituents (c).\n");
 			numcon_total = MAXCONSTITUENTS-1;
+#ifdef USE_FAT_LINKAGES
 			break;
+#endif /* USE_FAT_LINKAGES */
 		}
 	}
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);

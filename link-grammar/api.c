@@ -434,15 +434,19 @@ int parse_options_get_display_walls(Parse_Options opts) {
 	return opts->display_walls;
 }
 
-#ifdef USE_FAT_LINKAGES
 int parse_options_get_display_union(Parse_Options opts) {
+#ifdef USE_FAT_LINKAGES
 	return opts->display_union;
+#else
+	return 0;
+#endif /* USE_FAT_LINKAGES */
 }
 
 void parse_options_set_display_union(Parse_Options opts, int dummy) {
+#ifdef USE_FAT_LINKAGES
 	opts->display_union = dummy;
-}
 #endif /* USE_FAT_LINKAGES */
+}
 
 int parse_options_timer_expired(Parse_Options opts) {
 	return resources_timer_expired(opts->resources);
@@ -1117,14 +1121,14 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 
 	linkage->num_words = sent->length;
 	linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
-	linkage->current = 0;
-	linkage->num_sublinkages=0;
-	linkage->sublinkage = NULL;
-	linkage->unionized = FALSE;
 	linkage->sent = sent;
 	linkage->opts = opts;
 	linkage->info = &sent->link_info[k];
 #ifdef USE_FAT_LINKAGES
+	linkage->sublinkage = NULL;
+	linkage->unionized = FALSE;
+	linkage->current = 0;
+	linkage->num_sublinkages=0;
 	linkage->dis_con_tree = NULL;
 #endif /* USE_FAT_LINKAGES */
 
@@ -1152,17 +1156,23 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 
 int linkage_get_current_sublinkage(const Linkage linkage)
 { 
+#ifdef USE_FAT_LINKAGES
 	return linkage->current; 
+#else
+	return 0;
+#endif /* USE_FAT_LINKAGES */
 } 
 
 int linkage_set_current_sublinkage(Linkage linkage, int index)
 {
+#ifdef USE_FAT_LINKAGES
 	if ((index < 0) ||
 		(index >= linkage->num_sublinkages))
 	{
 		return 0;
 	}
 	linkage->current = index;
+#endif /* USE_FAT_LINKAGES */
 	return 1;
 }
 
@@ -1182,32 +1192,41 @@ void linkage_delete(Linkage linkage)
 	/* Can happen on panic timeout or user error */
 	if (NULL == linkage) return;
 
-	for (i=0; i<linkage->num_words; ++i)
+	for (i = 0; i < linkage->num_words; ++i)
 	{
 		exfree((void *) linkage->word[i], strlen(linkage->word[i])+1);
 	}
 	exfree(linkage->word, sizeof(char *)*linkage->num_words);
 
-	for (i=0; i<linkage->num_sublinkages; ++i)
+#ifdef USE_FAT_LINKAGES
+	for (i = 0; i < linkage->num_sublinkages; ++i)
+#endif /* USE_FAT_LINKAGES */
 	{
+#ifdef USE_FAT_LINKAGES
 		s = &(linkage->sublinkage[i]);
-		for (j=0; j<s->num_links; ++j) {
+#else
+		s = &(linkage->sublinkage);
+#endif /* USE_FAT_LINKAGES */
+		for (j = 0; j < s->num_links; ++j) {
 			exfree_link(s->link[j]);
 		}
-		exfree(s->link, sizeof(Link)*s->num_links);
+		exfree(s->link, sizeof(Link) * s->num_links);
 		if (s->pp_info != NULL) {
-			for (j=0; j<s->num_links; ++j) {
+			for (j = 0; j < s->num_links; ++j) {
 				exfree_pp_info(&s->pp_info[j]);
 			}
-			exfree(s->pp_info, sizeof(PP_info)*s->num_links);
+			exfree(s->pp_info, sizeof(PP_info) * s->num_links);
 			s->pp_info = NULL;
 			post_process_free_data(&s->pp_data);
 		}
 		if (s->violation != NULL) {
-			exfree((void *) s->violation, sizeof(char)*(strlen(s->violation)+1));
+			exfree((void *) s->violation, sizeof(char) * (strlen(s->violation)+1));
 		}
 	}
+#ifdef USE_FAT_LINKAGES
 	exfree(linkage->sublinkage, sizeof(Sublinkage)*linkage->num_sublinkages);
+#endif /* USE_FAT_LINKAGES */
+
 #ifdef USE_FAT_LINKAGES
 	if (linkage->dis_con_tree)
 		free_DIS_tree(linkage->dis_con_tree);
@@ -1335,7 +1354,11 @@ int linkage_compute_union(Linkage linkage)
 
 int linkage_get_num_sublinkages(const Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	return linkage->num_sublinkages;
+#else
+	return 1;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int linkage_get_num_words(const Linkage linkage)
@@ -1345,14 +1368,22 @@ int linkage_get_num_words(const Linkage linkage)
 
 int linkage_get_num_links(const Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	int current = linkage->current;
 	return linkage->sublinkage[current].num_links;
+#else
+	return linkage->sublinkage.num_links;
+#endif /* USE_FAT_LINKAGES */
 }
 
 static inline int verify_link_index(const Linkage linkage, int index)
 {
 	if ((index < 0) ||
+#ifdef USE_FAT_LINKAGES
 		(index >= linkage->sublinkage[linkage->current].num_links))
+#else
+		(index >= linkage->sublinkage.num_links))
+#endif /* USE_FAT_LINKAGES */
 	{
 		return 0;
 	}
@@ -1364,7 +1395,9 @@ int linkage_get_link_length(const Linkage linkage, int index)
 	Link *link;
 	int word_has_link[MAX_SENTENCE];
 	int i, length;
+#ifdef USE_FAT_LINKAGES
 	int current = linkage->current;
+#endif /* USE_FAT_LINKAGES */
 
 	if (!verify_link_index(linkage, index)) return -1;
 
@@ -1372,13 +1405,24 @@ int linkage_get_link_length(const Linkage linkage, int index)
 		word_has_link[i] = FALSE;
 	}
 
-	for (i=0; i<linkage->sublinkage[current].num_links; ++i) {
+#ifdef USE_FAT_LINKAGES
+	for (i=0; i<linkage->sublinkage[current].num_links; ++i)
+	{
 		link = linkage->sublinkage[current].link[i];
 		word_has_link[link->l] = TRUE;
 		word_has_link[link->r] = TRUE;
 	}
-
 	link = linkage->sublinkage[current].link[index];
+#else
+	for (i=0; i<linkage->sublinkage.num_links; ++i)
+	{
+		link = linkage->sublinkage.link[i];
+		word_has_link[link->l] = TRUE;
+		word_has_link[link->r] = TRUE;
+	}
+	link = linkage->sublinkage.link[index];
+#endif /* USE_FAT_LINKAGES */
+
 	length = link->r - link->l;
 	for (i= link->l+1; i < link->r; ++i) {
 		if (!word_has_link[i]) length--;
@@ -1390,7 +1434,11 @@ int linkage_get_link_lword(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
+#ifdef USE_FAT_LINKAGES
 	link = linkage->sublinkage[linkage->current].link[index];
+#else
+	link = linkage->sublinkage.link[index];
+#endif /* USE_FAT_LINKAGES */
 	return link->l;
 }
 
@@ -1398,7 +1446,11 @@ int linkage_get_link_rword(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return -1;
+#ifdef USE_FAT_LINKAGES
 	link = linkage->sublinkage[linkage->current].link[index];
+#else
+	link = linkage->sublinkage.link[index];
+#endif /* USE_FAT_LINKAGES */
 	return link->r;
 }
 
@@ -1406,7 +1458,11 @@ const char * linkage_get_link_label(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
+#ifdef USE_FAT_LINKAGES
 	link = linkage->sublinkage[linkage->current].link[index];
+#else
+	link = linkage->sublinkage.link[index];
+#endif /* USE_FAT_LINKAGES */
 	return link->name;
 }
 
@@ -1414,7 +1470,11 @@ const char * linkage_get_link_llabel(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
+#ifdef USE_FAT_LINKAGES
 	link = linkage->sublinkage[linkage->current].link[index];
+#else
+	link = linkage->sublinkage.link[index];
+#endif /* USE_FAT_LINKAGES */
 	return link->lc->string;
 }
 
@@ -1422,7 +1482,11 @@ const char * linkage_get_link_rlabel(const Linkage linkage, int index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
+#ifdef USE_FAT_LINKAGES
 	link = linkage->sublinkage[linkage->current].link[index];
+#else
+	link = linkage->sublinkage.link[index];
+#endif /* USE_FAT_LINKAGES */
 	return link->rc->string;
 }
 
@@ -1530,7 +1594,11 @@ int linkage_get_link_num_domains(const Linkage linkage, int index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
+#ifdef USE_FAT_LINKAGES
 	pp_info = &linkage->sublinkage[linkage->current].pp_info[index];
+#else
+	pp_info = &linkage->sublinkage.pp_info[index];
+#endif /* USE_FAT_LINKAGES */
 	return pp_info->num_domains;
 }
 
@@ -1538,13 +1606,21 @@ const char ** linkage_get_link_domain_names(const Linkage linkage, int index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
+#ifdef USE_FAT_LINKAGES
 	pp_info = &linkage->sublinkage[linkage->current].pp_info[index];
+#else
+	pp_info = &linkage->sublinkage.pp_info[index];
+#endif /* USE_FAT_LINKAGES */
 	return pp_info->domain_name;
 }
 
 const char * linkage_get_violation_name(const Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	return linkage->sublinkage[linkage->current].violation;
+#else
+	return linkage->sublinkage.violation;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int linkage_is_canonical(const Linkage linkage)
@@ -1576,19 +1652,24 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 {
 #ifdef USE_FAT_LINKAGES
 	int N_sublinkages = linkage_get_num_sublinkages(linkage);
-#else
-	int N_sublinkages = 1;
 #endif /* USE_FAT_LINKAGES */
 	Parse_Options opts = linkage->opts;
 	Sentence sent = linkage->sent;
 	Sublinkage * subl;
 	PP_node * pp;
-	int i, j, k;
+	int j, k;
 	D_type_list * d;
 
+#ifdef USE_FAT_LINKAGES
+	int i;
 	for (i = 0; i < N_sublinkages; ++i)
+#endif /* USE_FAT_LINKAGES */
 	{
+#ifdef USE_FAT_LINKAGES
 		subl = &linkage->sublinkage[i];
+#else
+		subl = &linkage->sublinkage;
+#endif /* USE_FAT_LINKAGES */
 		if (subl->pp_info != NULL)
 		{
 			for (j = 0; j < subl->num_links; ++j)
@@ -1596,9 +1677,9 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 				exfree_pp_info(&subl->pp_info[j]);
 			}
 			post_process_free_data(&subl->pp_data);
-			exfree(subl->pp_info, sizeof(PP_info)*subl->num_links);
+			exfree(subl->pp_info, sizeof(PP_info) * subl->num_links);
 		}
-		subl->pp_info = (PP_info *) exalloc(sizeof(PP_info)*subl->num_links);
+		subl->pp_info = (PP_info *) exalloc(sizeof(PP_info) * subl->num_links);
 		for (j = 0; j < subl->num_links; ++j)
 		{
 			subl->pp_info[j].num_domains = 0;
@@ -1606,7 +1687,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 		}
 		if (subl->violation != NULL)
 		{
-			exfree((void *)subl->violation, sizeof(char)*(strlen(subl->violation)+1));
+			exfree((void *)subl->violation, sizeof(char) * (strlen(subl->violation)+1));
 			subl->violation = NULL;
 		}
 

@@ -133,10 +133,6 @@ link_public_api(void)
 link_public_api(Cost_Model_type)
      parse_options_get_cost_model_type(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_use_fat_links(Parse_Options opts, int use_fat_links);
-link_public_api(int)
-     parse_options_get_use_fat_links(Parse_Options opts);
-link_public_api(void)
      parse_options_set_use_sat_parser(Parse_Options opts, int use_sat_solver);
 link_public_api(int)
      parse_options_get_use_sat_parser(Parse_Options opts);
@@ -352,10 +348,6 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_diagram(char * str);
 link_public_api(int)
-     linkage_compute_union(Linkage linkage);
-link_public_api(int)
-     linkage_is_fat(const Linkage linkage);
-link_public_api(int)
      linkage_unused_word_cost(const Linkage linkage);
 link_public_api(int)
      linkage_disjunct_cost(const Linkage linkage);
@@ -440,6 +432,14 @@ link_public_api(void)
  *
  ********************************************************/
 
+/* When fat links are gone, there's no union to compute. */
+link_public_api(int)
+     linkage_compute_union(Linkage linkage) GNUC_DEPRECATED;
+
+/* When fat links go away, all linkages are thin */
+link_public_api(int)
+     linkage_is_fat(const Linkage linkage) GNUC_DEPRECATED;
+
 /* When fat links go away, the number of sublinkages will always be one */
 link_public_api(int)
      linkage_get_num_sublinkages(const Linkage linkage) GNUC_DEPRECATED;
@@ -457,12 +457,14 @@ link_public_api(int)
      linkage_is_improper(const Linkage linkage) GNUC_DEPRECATED;
 
 /* Fat linkages will be going away "real soon now" */
-#ifdef USE_FAT_LINKAGES
+link_public_api(void)
+     parse_options_set_use_fat_links(Parse_Options opts, int use_fat_links) GNUC_DEPRECATED;
+link_public_api(int)
+     parse_options_get_use_fat_links(Parse_Options opts) GNUC_DEPRECATED;
 link_public_api(void)
      parse_options_set_display_union(Parse_Options opts, int val) GNUC_DEPRECATED;
 link_public_api(int)
      parse_options_get_display_union(Parse_Options opts) GNUC_DEPRECATED;
-#endif /* USE_FAT_LINKAGES */
 
 /* Fails to include the regex file name, which is needed in any
  * practical application.  Thus, this call is deprecated.

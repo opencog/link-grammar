@@ -117,26 +117,35 @@ static Sublinkage * x_create_sublinkage(Parse_info pi)
 	return s;
 }
 
-static Sublinkage * ex_create_sublinkage(Parse_info pi)
+static void ex_init_sublinkage(Parse_info pi, Sublinkage *s)
 {
-	Sublinkage *s = (Sublinkage *) exalloc (sizeof(Sublinkage));
 	s->link = (Link **) exalloc(pi->N_links*sizeof(Link *));
 	s->num_links = pi->N_links;
 
 	zero_sublinkage(s);
 
 	assert(pi->N_links < MAX_LINKS, "Too many links");
+}
+
+#ifdef USE_FAT_LINKAGES
+static Sublinkage * ex_create_sublinkage(Parse_info pi)
+{
+	Sublinkage *s = (Sublinkage *) exalloc (sizeof(Sublinkage));
+	ex_init_sublinkage(pi, s);
 	return s;
 }
+#endif /* USE_FAT_LINKAGES */
 
 static void free_sublinkage(Sublinkage *s)
 {
 	int i;
-	for (i=0; i<MAX_LINKS; i++) {
-		if (s->link[i]!=NULL) exfree_link(s->link[i]);
+	for (i = 0; i < MAX_LINKS; i++) {
+		if (s->link[i] != NULL) exfree_link(s->link[i]);
 	}
 	xfree(s->link, MAX_LINKS*sizeof(Link));
+#ifdef USE_FAT_LINKAGES
 	xfree(s, sizeof(Sublinkage));
+#endif /* USE_FAT_LINKAGES */
 }
 
 #ifdef USE_FAT_LINKAGES
@@ -1140,13 +1149,22 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 	int i;
 	Parse_info pi = sent->parse_info;
 
+#ifdef USE_FAT_LINKAGES
 	linkage->num_sublinkages = 1;
+	linkage->current = 0;
 	linkage->sublinkage = ex_create_sublinkage(pi);
+#else
+	ex_init_sublinkage(pi, &linkage->sublinkage);
+#endif /* USE_FAT_LINKAGES */
 
 	compute_link_names(sent);
 	for (i=0; i<pi->N_links; ++i)
 	{
+#ifdef USE_FAT_LINKAGES
 		linkage->sublinkage->link[i] = excopy_link(&(pi->link_array[i]));
+#else
+		linkage->sublinkage.link[i] = excopy_link(&(pi->link_array[i]));
+#endif /* USE_FAT_LINKAGES */
 	}
 }
 
