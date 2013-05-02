@@ -407,7 +407,7 @@ static int check_connector(Dictionary dict, const char * s)
  * example, "make" < "make.n" < "make-up" -- suffixed words come after
  * the bare words, but before any other other words with non-ascii-alpha
  * characters (such as the hyphen in "make-up", or possibly UTF8
- * characters). Thus, stright "strcmp" can't be used to determine
+ * characters). Thus, plain "strcmp" can't be used to determine
  * dictionary order.
  *
  * Thus, a set of specialized string comparison and ordering functions
@@ -416,9 +416,11 @@ static int check_connector(Dictionary dict, const char * s)
  */
 /**
  * dict_order - order two dictionary words in proper sort order.
- * Return zero if the strings match, else return standard
- * (locale-dependent) UTF8 sort order.
- * XXX but its not UTF-8 ordered ...! Does this matter ???
+ * Return zero if the strings match, else return in a unique order.
+ * The order is NOT (locale-dependent) UTF8 sort order; its ordered
+ * baed on numeric values single bytes.  I beleive that this will
+ * uniquely order UTF8 strings, just not in a LANG-dependent
+ * (locale-dependent) order.
  */
 /* verbose version */
 /*
@@ -465,6 +467,10 @@ static inline int dict_order(const char *s, const char *t)
  * Note: words in the dictionary itself don't have wild-card
  * chars in them; the wild-card support is here only if you are
  * searching for part of a word.
+ *
+ * XXX ... except that essentially no one is searching for a fraction
+ * of a word, and so this wild-card search is ... unused.  Mostly
+ * harmless, I suppose ...
  */
 static inline int dict_order_wild(const char * s, const char * t)
 {
@@ -621,8 +627,8 @@ static Dict_node * rdictionary_lookup(Dict_node *llist,
  * dictionary_lookup_list() - return lookup list of words in the dictionary
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
- * Matches include word that appear in idioms.  Use
- * abridged_lookup_list() to obtain matches, excluding idioms.
+ * Matches include words that appear in idioms.  To exclude idioms, use
+ * abridged_lookup_list() to obtain matches.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
@@ -665,7 +671,7 @@ Boolean boolean_dictionary_lookup(Dictionary dict, const char *s)
 }
 
 /**
- * Return true if word is in dicationary, or if word is matched by
+ * Return true if word is in dictionary, or if word is matched by
  * regex.
  */
 Boolean find_word_in_dict(Dictionary dict, const char * word)
