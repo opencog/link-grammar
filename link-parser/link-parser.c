@@ -174,8 +174,11 @@ static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 static void process_linkage(Linkage linkage, Parse_Options opts)
 {
 	char * string;
-	int j, mode, first_sublinkage;
+	int j=0, mode;
+#ifdef USE_FAT_LINKAGES
+	int first_sublinkage;
 	int nlink;
+#endif /* USE_FAT_LINKAGES */
 
 	if (!linkage) return;  /* Can happen in timeout mode */
 
@@ -187,13 +190,13 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 		first_sublinkage = linkage_get_num_sublinkages(linkage)-1;
 	}
 	else
-#endif /* USE_FAT_LINKAGES */
 	{
 		first_sublinkage = 0;
 	}
 
 	nlink = linkage_get_num_sublinkages(linkage);
 	for (j=first_sublinkage; j<nlink; ++j)
+#endif /* USE_FAT_LINKAGES */
 	{
 		linkage_set_current_sublinkage(linkage, j);
 		if (parse_options_get_display_on(opts))
