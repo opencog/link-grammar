@@ -288,9 +288,9 @@ struct Andlist_struct
 struct Linkage_info_struct
 {
     int index;
-    Boolean fat;
     Boolean canonical;
 #ifdef USE_FAT_LINKAGES
+    Boolean fat;
     Boolean improper_fat_linkage;
 #endif /* USE_FAT_LINKAGES */
     Boolean inconsistent_domains;

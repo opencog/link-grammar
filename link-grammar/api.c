@@ -42,9 +42,11 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	else if (p1->unused_word_cost != p2->unused_word_cost) {
 		return (p1->unused_word_cost - p2->unused_word_cost);
 	}
+#ifdef USE_FAT_LINKAGES
 	else if (p1->fat != p2->fat) {
 		return (p1->fat - p2->fat);
 	}
+#endif /* USE_FAT_LINKAGES */
 	else if (p1->disjunct_cost != p2->disjunct_cost) {
 		return (p1->disjunct_cost - p2->disjunct_cost);
 	}
@@ -657,6 +659,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage_info *lifo = &link_info[N_linkages_post_processed];
 		extract_links(indices[in], sent->null_count, sent->parse_info);
 #ifdef USE_FAT_LINKAGES
+		lifo->fat = FALSE;
 		if (set_has_fat_down(sent))
 		{
 			canonical = is_canonical_linkage(sent);
@@ -669,13 +672,15 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 #endif /* USE_FAT_LINKAGES */
 		{
 			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
-			lifo->fat = FALSE;
 			lifo->canonical = TRUE;
 		}
 		if (0 == lifo->N_violations)
 		{
 			N_valid_linkages++;
-			if (FALSE == lifo->fat) N_thin_linkages++;
+#ifdef USE_FAT_LINKAGES
+			if (FALSE == lifo->fat)
+#endif /* USE_FAT_LINKAGES */
+				N_thin_linkages++;
 		}
 		lifo->index = indices[in];
 		lg_corpus_score(sent, lifo);
@@ -978,6 +983,28 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
 	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
+static void sane_suffix_links(Sentence sent, Parse_Options opts)
+{
+	int lk, i;
+	Parse_info pi = sent->parse_info;
+printf("hello world\n");
+
+	for (lk = 0; lk < sent->num_linkages_found; lk++)
+	{
+		Linkage_info *lifo = &sent->link_info[lk];
+		extract_links(lifo->index, sent->null_count, pi);
+		for (i=0; i<sent->length; i++)
+		{
+			if (pi->chosen_disjuncts[i] == NULL)
+				continue;
+printf("duude lk=%d i=%d w=%s\n", lk, i, pi->chosen_disjuncts[i]->string);
+printf("duude sent unplit aword=%s\n", sent->word[i].unsplit_word);
+// sent->num_valid_linkages --;
+lifo->N_violations ++;
+		}
+	}
+}
+
 static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
@@ -1023,6 +1050,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		print_time(opts, "Counted parses");
 
 		post_process_linkages(sent, opts);
+		sane_suffix_links(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 
 		/* If we are here, then no valid linakges were found.
