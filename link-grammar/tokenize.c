@@ -38,6 +38,7 @@
 
 #define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
+#define INFIX_MARK '='
 
 /**
  * is_common_entity - Return true if word is a common noun or adjective
@@ -240,7 +241,7 @@ static void add_suffix_alternatives(Tokenizer * tok,
 	 * happen to be the same as the suffix. Kind-of a weird hack,
 	 * but I'm not sure what else to do... */
 	sz = MIN(strlen(suffix) + 2, MAX_WORD);
-	buff[0] = '=';
+	buff[0] = INFIX_MARK;
 	strncpy(&buff[1], suffix, sz);
 	buff[sz] = 0;
 
@@ -610,7 +611,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		strip_units = afdict->strip_units;
 
 		/* If we found the word in the dict, but it also can have an
-		 * empty suffix, then just skip right over to suffix processing
+		 * empty suffix, then just skip right over to suffix processing.
 		 */
 		if (word_is_in_dict && have_suffix)
 			goto do_suffix_processing;
@@ -760,8 +761,13 @@ do_suffix_processing:
 		tokenizer->stem_alternatives = NULL;
 		tokenizer->suff_alternatives = NULL;
 
+		/* If the word is in the dict and can also be split into two,
+		 * then we need to insert a two-word version, with the second
+		 * word being the empty word.  This is a crazy hack to always
+		 * keep a uniform word-count */
 		if (word_is_in_dict)
 			add_suffix_alternatives(tokenizer, word, "");
+
 		word_is_in_dict |= suffix_split(tokenizer, dict, w, wend);
 	}
 

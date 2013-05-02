@@ -64,9 +64,11 @@ static const char * rpunc_con = "RPUNC";
 static const char * lpunc_con = "LPUNC";
 static const char * units_con = "UNITS";
 
-/* Hmmmm SUF and PRE do not seem to be used at this time ... */
+/* SUF is used in the Russian dict; PRE is not used anywhere, yet ... */
 static const char * suf_con = "SUF";
 static const char * pre_con = "PRE";
+
+#define INFIX_MARK "=."
 
 static void count_affix(Dictionary dict, Dict_node *dn)
 {
@@ -102,7 +104,7 @@ static void load_affix(Dictionary dict, Dict_node *dn)
 	}
 	if (word_has_connector(dn, suf_con, '+'))
 	{
-		if (0 == strcmp("=", dn->string))
+		if (0 == strncmp(INFIX_MARK, dn->string, 2))
 		{
 			dn->string = string_set_add("", dict->string_set);
 			dict->have_empty_suffix = TRUE;
