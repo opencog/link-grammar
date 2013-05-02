@@ -412,11 +412,12 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				}
 
 				/* Suppress printing of the stem, if the next word is the suffix */
-				if (i+1 < sent->length)
+				if ((i+1 < sent->length) &&
+				    (pi->chosen_disjuncts[i+1]))
 				{
 					const char * next = pi->chosen_disjuncts[i+1]->string;
 					if (0 == strncmp(next, SUFFIX_WORD, SUFFIX_WORD_L) &&
-						 0 != strcmp(next, EMPTY_WORD))
+					    0 != strcmp(next, EMPTY_WORD))
 					{
 						t = string_set_add("", sent->string_set);
 					}
