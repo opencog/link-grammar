@@ -693,79 +693,6 @@ Boolean find_word_in_dict(Dictionary dict, const char * word)
 #define STEM_MARK '='
 #define EMPTY_CONNECTOR "ZZZ"
 
-/** Return all the words that are stems in the dictionary */
-static Dict_node * get_all_stems (Dict_node *llist, Dict_node * dn)
-{
-	Dict_node * dn_new;
-	size_t len;
-
-	if (dn == NULL) return llist;
-	len = strlen(dn->string);
-	if ((STEM_MARK == dn->string[len-1]) &&
-	    ('.' == dn->string[len-2]))
-	{
-		dn_new = dict_node_new();
-		*dn_new = *dn;
-		dn_new->right = llist;
-		llist = dn_new;
-	}
-	
-	llist = get_all_stems(llist, dn->left);
-	llist = get_all_stems(llist, dn->right);
-
-	return llist;
-}
-
-/** Return all the words that are NOT stems in the dictionary */
-static Dict_node * get_all_non_stems (Dict_node *llist, Dict_node * dn)
-{
-	Dict_node * dn_new;
-	size_t len;
-
-	if (dn == NULL) return llist;
-	len = strlen(dn->string);
-	if ((STEM_MARK != dn->string[len-1]) &&
-	    (STEM_MARK != dn->string[0]) &&
-	    ('<' != dn->string[0]))
-	{
-		dn_new = dict_node_new();
-		*dn_new = *dn;
-		dn_new->right = llist;
-		llist = dn_new;
-	}
-	
-	llist = get_all_non_stems(llist, dn->left);
-	llist = get_all_non_stems(llist, dn->right);
-
-	return llist;
-}
-
-/* Return the (single, solitary, unique) dictionary entry for 
- * string s. This returns not a copy, but a pointer to the 
- * original, suitable for editing.
- */
-static Dict_node ** raw_lookup(Dict_node * dn, const char * s)
-{
-	int m;
-	if (dn == NULL) return NULL;
-	m = dict_order(s, dn->string);
-	if (m > 0)
-		return raw_lookup(dn->right, s);
-	if (m < 0)
-		return raw_lookup(dn->left, s);
-
-	return &dn;
-}
-
-/* Return ordering, consistent with ict_order, but only comparing
- * everything before the suffix.
- */
-static inline int bare_order(const char *s, const char *t)
-{
-	while (*s != '\0' && *s == *t && *s != '.') {s++; t++;}
-	return ((*s == '.')?(1):(*s))  -  ((*t == '.')?(1):(*t));
-}
-
 static Exp * make_optional_node(Dictionary dict, Exp * e);
 
 /**
@@ -774,104 +701,32 @@ static Exp * make_optional_node(Dictionary dict, Exp * e);
  * Empty words are used to work around a fundamental parser design flaw.
  * The flaw is that the parser assumes that there exist a fixed number of
  * words in a sentence, independent of tokenization.  Unfortuntely, this
- * is not true when corecting spelling errors, or when the dictionary
+ * is not true when correcting spelling errors, or when the dictionary
  * contains entries for plain words and also as stems.  For example,
- * in the Russian dictionary, это.msi appears as a single word, but also
- * as the stem form это.=  The problem arises when the stem is split from
- * a suffix -- this generates two words
- * a 
-
-эт.= =о.mnsi
-xxx this is wrong
-
-22.5 K
+ * in the Russian dictionary, это.msi appears as a single word, but can
+ * also be split into эт.= =о.mnsi. The problem arises because это.msi
+ * is a single word, while эт.= =о.mnsi counts as two words, and there 
+ * is no pretty way to handle both during parsing.  Thus a work-around
+ * is introduced: add the empty wored =.zzz: ZZZ+; to the dictionary.
+ * this becomes a pseudo-suffix that can attach to any plain word.  It
+ * can attach to any plain word only because the routine below,
+ * add_empty_word(), adds the corresponding connector ZZZ- to the plain
+ * word.  This is don "on the fly", because we don't want to pollute the
+ * dictionary with this stuff. Besides, the Russian dictionary has
+ * more then 23K words that qualify for this treatment (It has 22.5K
+ * words that appear both as plain words, and as stems, and can thus
+ * attach to null suffixes. For non-null suffix splits, there are
+ * clearly many more.)
+ *
+ * Note that the printing of ZZZ connectors is supressed in print.c,
+ * although API users will see this link.
  */
-void add_empty_words(Dictionary dict)
-{
-	Dict_node *stems, *s;
-	Dict_node *non_stems, *n;
-	int cnt=0;
-
-	stems = get_all_stems(NULL, dict->root);
-	non_stems = get_all_non_stems(NULL, dict->root);
-
-	/* Find all words that appear in the dict both as single
-	 * words, and alo as stems. */
-	s = stems;
-	n = non_stems;
-	while (s != NULL && n != NULL)
-	{
-		int ord = bare_order(s->string, n->string);
-		if (0 < ord)
-		{
-			s = s->right;
-		}
-		else if (0 > ord)
-		{
-			n = n->right;
-		}
-		else
-		{
-			Dict_node **pdn;
-			Exp *zn, *an;
-			E_list *elist, *flist;
-
-			/* If we are here, then a word appears both as a stem,
-			 * and as a plain word. Create {ZZZ+} & (plain-word-exp).
-			 * The original dictionary entry is in pdn. */
-			pdn = raw_lookup(dict->root, n->string);
-			assert(pdn, "Fatal Error: stem lookup failure!");
-
-			/* zn points at {ZZZ+} */
-			zn = Exp_create(dict);
-			zn->dir = '+';
-			zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
-			zn->multi = FALSE;
-			zn->type = CONNECTOR_type;
-			zn->cost = 0.0f;
-			zn = make_optional_node(dict, zn);
-
-			/* flist is plain-word-exp */
-			flist = (E_list *) xalloc(sizeof(E_list));
-			flist->next = NULL;
-			flist->e = (*pdn)->exp;
-
-			/* elist is {ZZZ+} */
-			elist = (E_list *) xalloc(sizeof(E_list));
-			elist->next = flist;
-			elist->e = zn;
-
-			/* an will be {ZZZ+} & (plain-word-exp) */
-			an = Exp_create(dict);
-			an->type = AND_type;
-			an->cost = 0.0f;
-			an->u.l = elist;
-
-			/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
-			(*pdn)->exp = an;
-
-			/* Iterate */
-			s = s->right;
-			n = n->right;
-			cnt++;
-		}
-	}
-
-#ifdef DBG
-	printf("Dictionary contains %d plain-word, stem pairs\n", cnt);
-#endif
-
-	free_lookup_list(stems);
-	free_lookup_list(non_stems);
-}
 
 void add_empty_word(Dictionary dict, Dict_node * dn)
 {
 	size_t len;
-	Dict_node **pdn;
 	Exp *zn, *an;
 	E_list *elist, *flist;
-
 
    if (! dict->empty_word_defined) return;
 
@@ -880,8 +735,8 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	len = strlen(dn->string);
 	if (STEM_MARK == dn->string[len-1]) return;
 	if (is_idiom_word(dn->string)) return;
-
-printf("dello world %s\n", dn->string);
+	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
+	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
 
 	/* If we are here, then this appears to be not a stem, not a
 	 * suffix, and not an idiom word.
