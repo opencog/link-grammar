@@ -121,11 +121,6 @@
       /* If defined, then we're using infix notation for the dictionary */
       /* otherwise we're using prefix notation */
 
-/* XXX These should be enums, not #defines */
-#define DOWN_priority 2
-#define UP_priority   1
-#define THIN_priority 0
-
 #define NORMAL_LABEL  (-1) /* used for normal connectors            */
                            /* the labels >= 0 are used by fat links */
 
@@ -152,6 +147,15 @@ struct Tokenizer_struct
 
 typedef struct Tokenizer_struct Tokenizer;
 
+#ifdef USE_FAT_LINKAGES
+typedef enum
+{
+	THIN_priority,
+	UP_priority,
+	DOWN_priority
+} Priority;
+#endif /* USE_FAT_LINKAGES */
+
 struct Connector_struct
 {
     short label;
@@ -166,8 +170,10 @@ struct Connector_struct
                      this is strictly a funcion of the connector
                      name, efficiency is the only reason to store
                      this.  If no limit, the value is set to 255. */
-    char priority;/* one of the three priorities above */
     char multi;   /* TRUE if this is a multi-connector */
+#ifdef USE_FAT_LINKAGES
+    Priority priority;/* one of the three priorities above */
+#endif /* USE_FAT_LINKAGES */
     Connector * next;
     const char * string;
 

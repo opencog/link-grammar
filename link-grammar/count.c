@@ -122,8 +122,8 @@ void count_unset_effective_distance(Sentence sent)
 int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
-	int x, y;
 #ifdef USE_FAT_LINKAGES
+	int x, y;
 	int dist;
 #endif /* USE_FAT_LINKAGES */
 
@@ -139,10 +139,9 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		t++;
 	}
 
+#ifdef USE_FAT_LINKAGES
 	x = a->priority;
 	y = b->priority;
-
-#ifdef USE_FAT_LINKAGES
 
 	/* Probably not necessary, as long as 
 	 * effective_dist[0][0]=0 and is defined */
@@ -157,9 +156,9 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 	/*	printf("M: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
 		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
-#endif /* USE_FAT_LINKAGES */
 
 	if ((x == THIN_priority) && (y == THIN_priority))
+#endif /* USE_FAT_LINKAGES */
 	{
 		/*
 		   Remember that "*" matches anything, and "^" matches nothing
@@ -171,7 +170,7 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		{
 #ifdef USE_FAT_LINKAGES
 			if ((*s == '*') || (*t == '*') ||
-				((*s == *t) && (*s != '^')))
+			   ((*s == *t) && (*s != '^')))
 #else
 			if ((*s == '*') || (*t == '*') || (*s == *t))
 #endif /* USE_FAT_LINKAGES */
@@ -184,6 +183,7 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		}
 		return TRUE;
 	}
+#ifdef USE_FAT_LINKAGES
 	else if ((x == UP_priority) && (y == DOWN_priority))
 	{
 		/*
@@ -199,11 +199,7 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		   */
 		while ((*s != '\0') && (*t != '\0'))
 		{
-#ifdef USE_FAT_LINKAGES
 			if ((*s == *t) || (*s == '*') || (*t == '^'))
-#else
-			if ((*s == *t) || (*s == '*'))
-#endif /* USE_FAT_LINKAGES */
 			{
 				s++;
 				t++;
@@ -215,11 +211,7 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 	{
 		while ((*s != '\0') && (*t != '\0'))
 		{
-#ifdef USE_FAT_LINKAGES
 			if ((*s == *t) || (*t == '*') || (*s == '^'))
-#else
-			if ((*s == *t) || (*t == '*'))
-#endif /* USE_FAT_LINKAGES */
 			{
 				s++;
 				t++;
@@ -230,6 +222,7 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		return TRUE;
 	}
 	else
+#endif /* USE_FAT_LINKAGES */
 		return FALSE;
 }
 
@@ -320,9 +313,9 @@ static s64 pseudocount(Sentence sent,
 static s64 do_count(Sentence sent, int lw, int rw,
                     Connector *le, Connector *re, int null_count)
 {
-	s64 total, pseudototal;
+	s64 total;
 	int start_word, end_word, w;
-	s64 leftcount, rightcount;
+	s64 leftcount, rightcount, pseudototal;
 	int lcost, rcost, Lmatch, Rmatch;
 
 	Match_node * m, *m1;

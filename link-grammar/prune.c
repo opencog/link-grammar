@@ -166,10 +166,12 @@ int prune_match(int dist, Connector *a, Connector *b)
 		   s, t, x, y, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
+#ifdef USE_FAT_LINKAGES
 	x = a->priority;
 	y = b->priority;
 
 	if ((x == THIN_priority) && (y == THIN_priority))
+#endif /* USE_FAT_LINKAGES */
 	{
 #if defined(PLURALIZATION)
 /*
@@ -213,6 +215,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 		}
 		return TRUE;
 	}
+#ifdef USE_FAT_LINKAGES
 	else if ((x == UP_priority) && (y == DOWN_priority))
 	{
 		while ((*s!='\0') && (*t!='\0'))
@@ -244,6 +247,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 		return TRUE;
 	}
 	else
+#endif /* USE_FAT_LINKAGES */
 		return FALSE;
 }
 
@@ -266,8 +270,10 @@ static void insert_connector(connector_table *ct, Connector * c)
 	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
 		if ((strcmp(c->string, e->string) == 0) && 
-		    (c->label == e->label) && 
-		    (c->priority == e->priority))
+#ifdef USE_FAT_LINKAGES
+		    (c->priority == e->priority) &&
+#endif /* USE_FAT_LINKAGES */
+		    (c->label == e->label))
 			return;
 	}
 	c->tableNext = ct[h];
@@ -830,7 +836,9 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 			Connector dummy;
 			init_connector(&dummy);
 			dummy.label = NORMAL_LABEL;
+#ifdef USE_FAT_LINKAGES
 			dummy.priority = THIN_priority;
+#endif /* USE_FAT_LINKAGES */
 			dummy.string = e->u.string;
 			if (!matches_S(ct, &dummy, dir))
 			{

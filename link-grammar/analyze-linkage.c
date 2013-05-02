@@ -53,6 +53,7 @@ struct analyze_context_s
 	Patch_element patch_array[MAX_LINKS];
 };
 
+#ifdef USE_FAT_LINKAGES
 typedef struct CON_node_struct CON_node;
 typedef struct CON_list_struct CON_list;
 typedef struct DIS_list_struct DIS_list;
@@ -91,6 +92,7 @@ struct Links_to_patch_struct
 	char dir;   /* this is 'r' or 'l' depending on which end of the link
 				      is to be patched. */
 };
+#endif /* USE_FAT_LINKAGES */
 
 void zero_sublinkage(Sublinkage *s)
 {
@@ -158,6 +160,7 @@ static void copy_full_link(Link **dest, Link *src)
 /* end new code 9/97 ALB */
 
 
+#ifdef USE_FAT_LINKAGES
 /**
  * Constructs a graph in the wordlinks array based on the contents of
  * the global link_array.  Makes the wordlinks array point to a list of
@@ -170,6 +173,7 @@ static void copy_full_link(Link **dest, Link *src)
 static void build_digraph(analyze_context_t *actx, Parse_info pi)
 {
 	int i, link;
+	Priority p;
 	Link *lp;
 	List_o_links * lol;
 
@@ -191,10 +195,10 @@ static void build_digraph(analyze_context_t *actx, Parse_info pi)
 		actx->word_links[lp->l] = lol;
 		lol->link = link;
 		lol->word = lp->r;
-		i = lp->lc->priority;
-		if (i == THIN_priority) {
+		p = lp->lc->priority;
+		if (p == THIN_priority) {
 			lol->dir = 0;
-		} else if (i == DOWN_priority) {
+		} else if (p == DOWN_priority) {
 			lol->dir = 1;
 		} else {
 			lol->dir = -1;
@@ -205,10 +209,10 @@ static void build_digraph(analyze_context_t *actx, Parse_info pi)
 		actx->word_links[lp->r] = lol;
 		lol->link = link;
 		lol->word = lp->l;
-		i = lp->rc->priority;
-		if (i == THIN_priority) {
+		p = lp->rc->priority;
+		if (p == THIN_priority) {
 			lol->dir = 0;
-		} else if (i == DOWN_priority) {
+		} else if (p == DOWN_priority) {
 			lol->dir = 1;
 		} else {
 			lol->dir = -1;
@@ -331,7 +335,6 @@ static DIS_node * build_DIS_node(analyze_context_t *actx,
 	return dn;
 }
 
-#ifdef USE_FAT_LINKAGES
 static void height_dfs(analyze_context_t *actx, int w, int height)
 {
 	List_o_links * lol;
@@ -433,7 +436,6 @@ static DIS_node * build_DIS_CON_tree(analyze_context_t *actx, Parse_info pi)
 	}
 	return dnroot;
 }
-#endif /* USE_FAT_LINKAGES */
 
 static int advance_CON(CON_node *);
 
@@ -597,7 +599,6 @@ static void free_CON_tree(CON_node * cn)
 	xfree((void *) cn, sizeof(CON_node));
 }
 
-#ifdef USE_FAT_LINKAGES
 /** scope out this and element */
 static void and_dfs_full(analyze_context_t *actx, int w)
 {
@@ -1085,7 +1086,9 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 		return li;
 	}
 
+#ifdef USE_FAT_LINKAGES
 	build_digraph(actx, pi);
+#endif /* USE_FAT_LINKAGES */
 
 	/* The code below can be used to generate the "islands" array.
 	 * For this to work, however, you have to call "build_digraph"
@@ -1124,7 +1127,9 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	}
 
 	free_sublinkage(sublinkage);
+#ifdef USE_FAT_LINKAGES
 	free_digraph(actx, pi);
+#endif /* USE_FAT_LINKAGES */
 	return li;
 }
 

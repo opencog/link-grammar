@@ -219,7 +219,9 @@ Connector * connector_new(void)
 	c->string = "";
 	c->label = NORMAL_LABEL;
 	c->hash = -1;
+#ifdef USE_FAT_LINKAGES
 	c->priority = THIN_priority;
+#endif /* USE_FAT_LINKAGES */
 	c->multi = FALSE;
 	c->next = NULL;
 	c->tableNext = NULL;

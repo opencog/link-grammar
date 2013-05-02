@@ -1206,8 +1206,10 @@ void linkage_delete(Linkage linkage)
 		}
 	}
 	exfree(linkage->sublinkage, sizeof(Sublinkage)*linkage->num_sublinkages);
+#ifdef USE_FAT_LINKAGES
 	if (linkage->dis_con_tree)
 		free_DIS_tree(linkage->dis_con_tree);
+#endif /* USE_FAT_LINKAGES */
 	exfree(linkage, sizeof(struct Linkage_s));
 }
 
