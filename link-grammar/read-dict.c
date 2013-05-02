@@ -480,7 +480,7 @@ static inline int dict_order_wild(const char * s, const char * t)
 	if ((*s == '*') || (*t == '*'))
 	{
 		/* Do not allow wild-card as the very first char.
-		 * Basically, allow *.v and *.eq in the Enlgish dict.
+		 * Basically, allow *.v and *.eq in the English dict.
 		 */
 		if (s != so) return 0;
 	}
@@ -497,7 +497,7 @@ static inline int dict_order_wild(const char * s, const char * t)
  * A subscript is the part that followes the last "." in the word, and
  * that does not begin with a digit.
  */
-static int dict_match(const char * s, const char * t)
+static Boolean dict_match(const char * s, const char * t)
 {
 	char *ds, *dt;
 	ds = strrchr(s, '.');
@@ -692,7 +692,31 @@ Boolean find_word_in_dict(Dictionary dict, const char * word)
 /* stems, by definition, always end with ".=" */
 #define STEM_MARK '='
 
+/** Return all the words that are stems in the dictionary */
 static Dict_node * get_all_stems (Dict_node *llist, Dict_node * dn)
+{
+	Dict_node * dn_new;
+	size_t len;
+
+	if (dn == NULL) return llist;
+	len = strlen(dn->string);
+	if ((STEM_MARK == dn->string[len-1]) &&
+	    ('.' == dn->string[len-2]))
+	{
+		dn_new = dict_node_new();
+		*dn_new = *dn;
+		dn_new->right = llist;
+		llist = dn_new;
+	}
+	
+	llist = get_all_stems(llist, dn->left);
+	llist = get_all_stems(llist, dn->right);
+
+	return llist;
+}
+
+/** Return all the words that are NOT stems in the dictionary */
+static Dict_node * get_all_non_stems (Dict_node *llist, Dict_node * dn)
 {
 	Dict_node * dn_new;
 	size_t len;
@@ -709,22 +733,59 @@ static Dict_node * get_all_stems (Dict_node *llist, Dict_node * dn)
 		llist = dn_new;
 	}
 	
-	llist = get_all_stems(llist, dn->left);
-	llist = get_all_stems(llist, dn->right);
+	llist = get_all_non_stems(llist, dn->left);
+	llist = get_all_non_stems(llist, dn->right);
 
 	return llist;
 }
 
+/* Return ordering, consistent with ict_order, but only comparing
+ * everything before the suffix.
+ */
+static inline int bare_order(const char *s, const char *t)
+{
+	while (*s != '\0' && *s == *t && *s != '.') {s++; t++;}
+	return ((*s == '.')?(1):(*s))  -  ((*t == '.')?(1):(*t));
+}
+
 void add_empty_words(Dictionary dict)
 {
-	Dict_node * stems;
+	Dict_node *stems, *s;
+	Dict_node *non_stems, *n;
 
 	stems = get_all_stems(NULL, dict->root);
+	non_stems = get_all_non_stems(NULL, dict->root);
 
 int cnt=0;
-for (Dict_node *s = stems; s; s=s->right) cnt++;
-printf("hello world %d\n", cnt);
+	/* Find all words that appear in the dict both as single
+	 * words, and alo as stems. */
+	s = stems;
+	n = non_stems;
+	while (s != NULL && n != NULL)
+	{
+		int ord = bare_order(s->string, n->string);
+		if (0 < ord)
+		{
+			s = s->right;
+		}
+		else if (0 > ord)
+		{
+			n = n->right;
+		}
+		else
+		{
+			/* If we are here, then a word appears both as a stem,
+			 * and as a plain word. */
+			s = s->right;
+			n = n->right;
+cnt++;
+		}
+	}
+
+printf("count %d\n", cnt);
+
 	free_lookup_list(stems);
+	free_lookup_list(non_stems);
 }
 
 /* ======================================================================== */
@@ -1299,7 +1360,7 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
  * and right fields of it are NULL.
  *
  * The resulting tree is highly unbalanced. It needs to be rebalanced
- * before used.
+ * before being used.  The DSW algo below is ideal for that.
  */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 {
