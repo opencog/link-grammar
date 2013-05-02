@@ -207,11 +207,11 @@ struct Parse_info_struct
 	int            N_links;
 	Link          link_array[MAX_LINKS];
 
+#ifdef USE_FAT_LINKAGES
 	/* Points to the image structure for each word.
 	 * NULL if not a fat word. */
 	Image_node ** image_array;
 
-#ifdef USE_FAT_LINKAGES
 	/* Array of boolean flags, one per word. Set to TRUE if this 
 	 * word has a fat down link. FALSE otherise */
 	Boolean *has_fat_down;
