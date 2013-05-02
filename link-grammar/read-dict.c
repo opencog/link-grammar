@@ -865,6 +865,22 @@ void add_empty_words(Dictionary dict)
 	free_lookup_list(non_stems);
 }
 
+void add_empty_word(Dictionary dict, Dict_node * dn)
+{
+	size_t len;
+
+   if (! dict->empty_word_defined) return;
+
+	if (STEM_MARK == dn->string[0]) return;
+
+	len = strlen(dn->string);
+	if (STEM_MARK == dn->string[len-1]) return;
+	if (is_idiom_word(dn->string)) return;
+
+printf("dello world %s\n", dn->string);
+}
+
+
 /* ======================================================================== */
 /**
  * Allocate a new Exp node and link it into the exp_list for freeing later.

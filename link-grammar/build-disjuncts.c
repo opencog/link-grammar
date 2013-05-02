@@ -489,7 +489,6 @@ unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 }
 #endif /* OBSOLETE_MEMORY_PIGGY */
 
-
 /**
  * build_word_expressions() -- build list of expressions for a word
  *
@@ -508,6 +507,8 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 	x = NULL;
 	while (dn != NULL)
 	{
+		add_empty_word(dict, dn);
+
 		y = (X_node *) xalloc(sizeof(X_node));
 		y->next = x;
 		x = y;

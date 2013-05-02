@@ -17,7 +17,7 @@
 /** 
  * Returns TRUE if the string contains an underbar character.
  */
-int contains_underbar(const char * s)
+Boolean contains_underbar(const char * s)
 {
 	while(*s != '\0') {
 		if (*s == '_') return TRUE;
@@ -32,7 +32,7 @@ int contains_underbar(const char * s)
  *   () contains no "."
  *   () non-empty strings separated by _
  */
-static int is_idiom_string(const char * s)
+static Boolean is_idiom_string(const char * s)
 {
 	size_t len;
 	const char * t;
@@ -58,7 +58,7 @@ static int is_idiom_string(const char * s)
 /** 
  * return TRUE if the string s is a sequence of digits.
  */
-static int is_number(const char *s)
+static Boolean is_number(const char *s)
 {
 	int nb;
 	while(*s != '\0') {
@@ -348,7 +348,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 /** 
  * returns TRUE if this is a word ending in ".Ix", where x is a number.
  */
-int is_idiom_word(const char * s)
+Boolean is_idiom_word(const char * s)
 {
 	return (numberfy(s) != -1) ;
 }
@@ -360,7 +360,7 @@ int is_idiom_word(const char * s)
    to be able to insert the word anyway, as long as it doesn't match
    exactly.
 */
-int only_idiom_words(Dict_node * dn)
+Boolean only_idiom_words(Dict_node * dn)
 {
 	while(dn != NULL) {
 		if (!is_idiom_word(dn->string)) return FALSE;

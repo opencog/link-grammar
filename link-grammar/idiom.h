@@ -11,5 +11,5 @@
 /*                                                                              */
 /********************************************************************************/
 void insert_idiom(Dictionary dict, Dict_node *);
-int  contains_underbar(const char *);
-int  is_idiom_word(const char *);
+Boolean  contains_underbar(const char *);
+Boolean  is_idiom_word(const char *);
