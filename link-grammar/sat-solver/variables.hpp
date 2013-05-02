@@ -84,7 +84,9 @@ public:
     ,_linked_min_variable_map(sent->length, -1)
     ,_linked_max_variable_map(sent->length, -1)
     ,_link_variable_map(sent->length)
+#ifdef USE_FAT_LINKAGES
     ,_fat_link_variable_map(sent->length, -1)
+#endif /* USE_FAT_LINKAGES */
     ,_link_top_cw_variable_map(sent->length)
     , _link_cw_variable_map(sent->length)
     ,_link_top_ww_variable_map(sent->length, -1)
@@ -494,6 +496,7 @@ public:
     return _link_top_cw_variables[var];
   }
 
+#ifdef USE_FAT_LINKAGES
   /*
    *           fat_link(wi, wj)
    */
@@ -516,6 +519,7 @@ public:
   const FatLinkVar* fat_link_variable(int var) const {
     return _fat_link_variables[var];
   }
+#endif /* USE_FAT_LINKAGES */
 
   /* Pass SAT search parameters to the MiniSAT solver */
   void setVariableParameters(Solver* solver) {
@@ -607,10 +611,10 @@ private:
   // What is the number of the linked_max(i, j) variable?
   Matrix<int> _linked_max_variable_map;
 
+#ifdef USE_FAT_LINKAGES
   /*
    * Information about the fat_link(i, j) variables
    */
-
   // What is the number of the fatlink(wi, wj) variable?
   Matrix<int> _fat_link_variable_map;
 
@@ -628,6 +632,7 @@ private:
     _fat_link_variables[var] = new FatLinkVar(i, j);
     _fat_link_variables_indices.push_back(var);
   }
+#endif /* USE_FAT_LINKAGES */
 
   /*
    * Information about the thin_link(i, j) variables
@@ -786,9 +791,11 @@ private:
     return get_2int_variable(i, j, var, _linked_max_variable_map);
   }
 
+#ifdef USE_FAT_LINKAGES
   bool get_fat_link_variable(int i, int j, int& var) {
     return get_2int_variable(i, j, var, _fat_link_variable_map);
   }
+#endif /* USE_FAT_LINKAGES */
 
   bool get_thin_link_variable(int i, int j, int& var) {
     return get_2int_variable(i, j, var, _thin_link_variable_map);
