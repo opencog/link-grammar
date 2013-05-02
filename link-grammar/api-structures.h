@@ -124,7 +124,7 @@ struct Dictionary_s
 	Boolean         unknown_word_defined;
 	Boolean         left_wall_defined;
 	Boolean         right_wall_defined;
-	Boolean         have_empty_suffix;
+	Boolean         empty_word_defined;
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;

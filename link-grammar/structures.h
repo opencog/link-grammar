@@ -93,6 +93,7 @@
 /* The following define the names of the special strings in the dictionary. */
 #define LEFT_WALL_WORD   ("LEFT-WALL")
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
+#define EMPTY_WORD  ("=.zzz")
 
 #ifdef USE_FAT_LINKAGES
 #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")

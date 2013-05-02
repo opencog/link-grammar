@@ -68,7 +68,6 @@ static const char * units_con = "UNITS";
 static const char * suf_con = "SUF";
 static const char * pre_con = "PRE";
 
-#define INFIX_MARK "=."
 
 static void count_affix(Dictionary dict, Dict_node *dn)
 {
@@ -104,11 +103,6 @@ static void load_affix(Dictionary dict, Dict_node *dn)
 	}
 	if (word_has_connector(dn, suf_con, '+'))
 	{
-		if (0 == strncmp(INFIX_MARK, dn->string, 2))
-		{
-			dn->string = string_set_add("", dict->string_set);
-			dict->have_empty_suffix = TRUE;
-		}
 		dict->suffix[k] = dn->string;
 		k++;
 	}
@@ -227,7 +221,6 @@ dictionary_six_str(const char * lang,
 	dict->input = NULL;
 
 	dict->affix_table = NULL;
-	dict->have_empty_suffix = FALSE;
 	if (affix_name != NULL)
 	{
 		dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
@@ -258,6 +251,9 @@ dictionary_six_str(const char * lang,
 
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
+
+	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD);
+
 	dict->postprocessor	  = post_process_open(pp_name);
 	dict->constituent_pp	 = post_process_open(cons_name);
 
