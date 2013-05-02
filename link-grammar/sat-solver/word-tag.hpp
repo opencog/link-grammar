@@ -85,11 +85,11 @@ public:
     _match_possible.resize(_sent->length);
   }
 
-  const std::vector<PositionConnector>& get_left_connectors() {
+  const std::vector<PositionConnector>& get_left_connectors() const {
     return _left_connectors;
   }
 
-  const std::vector<PositionConnector>& get_right_connectors() {
+  const std::vector<PositionConnector>& get_right_connectors() const {
     return _right_connectors;
   }
 

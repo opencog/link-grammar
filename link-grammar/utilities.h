@@ -310,7 +310,7 @@ wchar_t * get_file_contents(const char *filename);
 static inline int next_power_of_two_up(int i)
 {
    int j=1;
-   while(j<i) j = j<<1;
+   while(j<i) j <<= 1;
    return j;
 }
 

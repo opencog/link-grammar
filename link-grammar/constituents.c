@@ -789,8 +789,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		print_constituent(ctxt, linkage, c1);
 		c1++;
 	}
-	numcon_total = c1;
-	return numcon_total;
+	return c1;
 }
 
 /**
@@ -951,7 +950,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 #endif /* AUX_CODE_IS_DEAD */
 	}
 
-	numcon_total = numcon_total + newcon_total;
+	numcon_total += newcon_total;
 
 	/* If there's a global S constituent that includes everything
 	   except a final period or question mark, extend it by one word */
@@ -1619,7 +1618,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 		linkage_post_process(linkage, pp);
 		generate_misc_word_info(ctxt, linkage);
 		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total, s);
-		numcon_total = numcon_total + numcon_subl;
+		numcon_total += numcon_subl;
 		if (MAXCONSTITUENTS <= numcon_total)
 		{
 			err_ctxt ec;

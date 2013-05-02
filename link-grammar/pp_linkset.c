@@ -47,7 +47,7 @@ static int compute_hash(pp_linkset *ls, const char *str)
   hashval=LINKSET_SEED_VALUE;
   for (i=0; isupper((int)str[i]); i++)
     hashval = str[i] + 31*hashval;
-  hashval = hashval % ls->hash_table_size;
+  hashval %= ls->hash_table_size;
   if (hashval<0) hashval*=-1;
   return hashval;
 }

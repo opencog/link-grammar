@@ -408,7 +408,7 @@ public:
    *      link(wi, pi, wj, pj)
    */
   // Returns the indices of all link variables
-  const std::vector<int>& link_variables() {
+  const std::vector<int>& link_variables() const {
     return _link_variables_indices;
   }
 
@@ -438,7 +438,7 @@ public:
   };
 
   // Returns additional info about the given link variable
-  const LinkVar* link_variable(int var) {
+  const LinkVar* link_variable(int var) const {
     return _link_variables[var];
   }
 
@@ -446,7 +446,7 @@ public:
    *       linked(wi, wj)
    */
   // Returns the indices of all linked variables
-  const std::vector<int>& linked_variables() {
+  const std::vector<int>& linked_variables() const {
     return _linked_variables_indices;
   }
 
@@ -461,7 +461,7 @@ public:
   };
 
   // Returns additional info about the given linked variable
-  const LinkedVar* linked_variable(int var) {
+  const LinkedVar* linked_variable(int var) const {
     return _linked_variables[var];
   }
 
@@ -472,7 +472,7 @@ public:
    */
 
   // Returns indices of all link_top_cw variables
-  const std::vector<int>& link_top_cw_variables() {
+  const std::vector<int>& link_top_cw_variables() const {
     return _link_top_cw_variables_indices;
   }
 
@@ -490,7 +490,7 @@ public:
   };
 
   // Returns additional info about the given link_top_cw variable
-  const LinkTopCWVar* link_top_cw_variable(int var) {
+  const LinkTopCWVar* link_top_cw_variable(int var) const {
     return _link_top_cw_variables[var];
   }
 
@@ -498,7 +498,7 @@ public:
    *           fat_link(wi, wj)
    */
   // Returns indices of all fat-link variables
-  const std::vector<int>& fat_link_variables() {
+  const std::vector<int>& fat_link_variables() const {
     return _fat_link_variables_indices;
   }
 
@@ -513,7 +513,7 @@ public:
   };
 
   // Return additional info about the given fat-link variable
-  const FatLinkVar* fat_link_variable(int var) {
+  const FatLinkVar* fat_link_variable(int var) const {
     return _fat_link_variables[var];
   }
 

@@ -1914,7 +1914,7 @@ static void display_counts(Dict_node *dn)
 		printf("    ");
 		left_print_string(stdout, dn->string,
 			"                         ");
-		printf(" %5d  disjuncts ", len);
+		printf(" %5u  disjuncts ", len);
 		if (dn->file != NULL)
 		{
 			printf("<%s>", dn->file->file);

@@ -116,7 +116,7 @@ protected:
 ////////////////////////////////////////////////////////////////////////////
 class CostDistanceGuiding : public Guiding {
 public:
-  double cost2priority(int cost) {
+  double cost2priority(int cost) const {
     return cost == 0 ? 0.0 : (double)(_sent->length + cost);
   }
 
@@ -165,7 +165,7 @@ public:
     double priority = (double)(j - i);
 #ifdef USE_FAT_LINKAGES
     if (_sent->is_conjunction[i] || _sent->is_conjunction[j])
-      priority = priority / 2;
+      priority /= 2;
 #endif /* USE_FAT_LINKAGES */
 
     double polarity = j - i == 1 ? 1.0 : 0.0;
@@ -197,7 +197,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////
 class CostDistanceGuidingOnlyLink : public Guiding {
 public:
-  double cost2priority(int cost) {
+  double cost2priority(int cost) const {
     return cost == 0 ? 0.0 : (double)(_sent->length + cost);
   }
 

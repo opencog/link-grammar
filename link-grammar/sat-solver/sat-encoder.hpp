@@ -378,7 +378,7 @@ private:
   // Cache isConnectiveOrComma results for faster checking
   std::vector<bool> _is_connective_or_comma;
 
-  bool isConnectiveOrComma(int w) {
+  bool isConnectiveOrComma(int w) const {
     return _is_connective_or_comma[w];
   }
 };

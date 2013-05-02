@@ -66,7 +66,7 @@ static unsigned int stride_hash_string(const char *str, const String_set *ss)
 static unsigned int next_prime_up(unsigned int start)
 {
 	unsigned int i;
-	start = start | 1; /* make it odd */
+	start |= 1; /* make it odd */
 	for (;;) {
 		for (i=3; (i <= (start/i)); i += 2) {
 			if (start % i == 0) break;

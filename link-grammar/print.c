@@ -668,7 +668,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		for (row=0; row < top_row+1; row++) {
 			strcpy(xpicture[row+2],picture[row]);
 		}
-		top_row = top_row+2;
+		top_row += 2;
 	} else {
 		for (row=0; row < top_row+1; row++) {
 			strcpy(xpicture[2*row+2],picture[row]);
