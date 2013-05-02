@@ -2,6 +2,7 @@ Version 4.7.12 (xxx 2013)
  * Windows: Explicitly fail if cygwin version is too old.
  * Tweak the lt dict to work again with the modern parser.
  * Make the fat linkages code be compile-time configurable.
+ * Disable fat linkages by default; mark as deprecated.
  * Fix SAT-solver build; recent changes had broken it.
  * Export read-dict.h as a public API. 
  * Ongoing development of the Viterbi prototype.
