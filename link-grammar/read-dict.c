@@ -868,6 +868,10 @@ void add_empty_words(Dictionary dict)
 void add_empty_word(Dictionary dict, Dict_node * dn)
 {
 	size_t len;
+	Dict_node **pdn;
+	Exp *zn, *an;
+	E_list *elist, *flist;
+
 
    if (! dict->empty_word_defined) return;
 
@@ -878,6 +882,38 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	if (is_idiom_word(dn->string)) return;
 
 printf("dello world %s\n", dn->string);
+
+	/* If we are here, then this appears to be not a stem, not a
+	 * suffix, and not an idiom word.
+	 * Create {ZZZ+} & (plain-word-exp). */
+
+	/* zn points at {ZZZ+} */
+	zn = Exp_create(dict);
+	zn->dir = '+';
+	zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
+	zn->multi = FALSE;
+	zn->type = CONNECTOR_type;
+	zn->cost = 0.0f;
+	zn = make_optional_node(dict, zn);
+
+	/* flist is plain-word-exp */
+	flist = (E_list *) xalloc(sizeof(E_list));
+	flist->next = NULL;
+	flist->e = dn->exp;
+
+	/* elist is {ZZZ+} */
+	elist = (E_list *) xalloc(sizeof(E_list));
+	elist->next = flist;
+	elist->e = zn;
+
+	/* an will be {ZZZ+} & (plain-word-exp) */
+	an = Exp_create(dict);
+	an->type = AND_type;
+	an->cost = 0.0f;
+	an->u.l = elist;
+
+	/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
+	dn->exp = an;
 }
 
 
