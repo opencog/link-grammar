@@ -37,11 +37,6 @@ public class ParseResult implements Iterable<Linkage>
 	List<Linkage> linkages = new ArrayList<Linkage>();
 	int numSkippedWords;
 	
-	public String wordAt(int i)
-	{
-		return words[i];
-	}
-	
 	/**
 	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
 	 * look at the subscript instead, to see if a verb is past-tense.
@@ -77,6 +72,18 @@ public class ParseResult implements Iterable<Linkage>
 		this.text = text;
 	}
 
+	/**
+	 * Use Linkage.wordAt instead.
+	 *
+	 * This method will return misleading results for languages
+	 * with prefixes/suffixes in the dictionary (such as Russian).
+	 * @deprecated
+	 */
+	@Deprecated public String wordAt(int i)
+	{
+		return words[i];
+	}
+	
 	/**
 	 * Use Linkage.getWords instead.
 	 *

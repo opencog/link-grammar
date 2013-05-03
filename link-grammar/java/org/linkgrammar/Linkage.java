@@ -74,12 +74,12 @@ public class Linkage implements Iterable<Link>
 		this.words = words;
 	}
 
-	public int getAndCost()
+	@Deprecated public int getAndCost()
 	{
 		return andCost;
 	}
 
-	public void setAndCost(int andCost)
+	@Deprecated public void setAndCost(int andCost)
 	{
 		this.andCost = andCost;
 	}
