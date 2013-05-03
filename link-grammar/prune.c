@@ -173,6 +173,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 	if ((x == THIN_priority) && (y == THIN_priority))
 #endif /* USE_FAT_LINKAGES */
 	{
+#ifdef USE_FAT_LINKAGES
 #if defined(PLURALIZATION)
 /*
 		if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&  (*t=='p')) {
@@ -199,14 +200,19 @@ int prune_match(int dist, Connector *a, Connector *b)
    The third line above ensures that the connector is either "S" or "SI".
 */
 #endif
+#endif /* USE_FAT_LINKAGES */
 		while ((*s != '\0') && (*t != '\0'))
 		{
+#ifdef USE_FAT_LINKAGES
 			if ((*s == '*') || (*t == '*') ||
 				((*s == *t) && (*s != '^')))
-			{
 			  /* this last case here is rather obscure.  It prevents
 				 '^' from matching '^'.....Is this necessary?
 					 ......yes, I think it is.   */
+#else
+			if ((*s == '*') || (*t == '*') || (*s == *t))
+#endif /* USE_FAT_LINKAGES */
+			{
 				s++;
 				t++;
 			}
@@ -419,7 +425,7 @@ void prune(Sentence sent)
    another.  It works by hashing them all, and checking for domination.
 */
 
-#if FALSE
+#if 0
 /* ============================================================x */
 
 /*

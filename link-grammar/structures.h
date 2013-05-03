@@ -68,6 +68,7 @@
     sentence[].string because it contains the suffixes.  It differs from
     chosen_disjunct[].string in that the idiom symbols have been removed.
 
+#ifdef USE_FAT_LINKAGES
  has_fat_down[]
     An array of chars, one for each word.  TRUE if there is a fat link
     down from this word, FALSE otherwise.  (Only set if there is at least
@@ -77,6 +78,7 @@
  is_conjunction[]
     An array of chars, one for each word.  TRUE if the word is a conjunction
     ("and", "or", "nor", or "but" at the moment).  False otherwise. 
+#endif USE_FAT_LINKAGES 
 */
 
 
@@ -96,7 +98,13 @@
 #define EMPTY_WORD  ("=.zzz")
 
 #ifdef USE_FAT_LINKAGES
-#define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
+  #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
+
+  /* conditional compiling flags */
+  #define PLURALIZATION
+      /* If defined, Turns on the pluralization operation in        */
+      /* "and", "or" and "nor" */
+
 #endif /* USE_FAT_LINKAGES */
 
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
@@ -113,11 +121,6 @@
 #define MAX_DISJUNCT_COST 10000
 
 /* conditional compiling flags */
-#define PLURALIZATION
-      /* If defined, Turns on the pluralization operation in        */
-      /* "and", "or" and "nor" */
-      /* XXX maybe this should die with USE_FAT_LINAKGES ? */
-
 #define INFIX_NOTATION
       /* If defined, then we're using infix notation for the dictionary */
       /* otherwise we're using prefix notation */
