@@ -27,7 +27,7 @@ public class LinkGrammar
         // Windows looks for "link-grammar-java.dll"
         // MacOS looks for "liblink-grammar-java.dylib"
         //
-        // On a Windows system, we also need to load the prequisite
+        // On a Windows system, we also need to load the prerequisite
         // libraries first. (Linux loaders do this automatically).
         // Actually, I guess Windows does this too, unless the user
         // failed to add the working directory to %PATH
@@ -86,7 +86,7 @@ public class LinkGrammar
 
     public static native int getLinkageNumViolations();
 
-    public static native int getLinkageAndCost();
+    @Deprecated public static native int getLinkageAndCost();
 
     public static native int getLinkageDisjunctCost();
 
