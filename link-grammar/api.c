@@ -50,9 +50,11 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	else if (p1->disjunct_cost != p2->disjunct_cost) {
 		return (p1->disjunct_cost - p2->disjunct_cost);
 	}
+#ifdef USE_FAT_LINKAGES
 	else if (p1->and_cost != p2->and_cost) {
 		return (p1->and_cost - p2->and_cost);
 	}
+#endif /* USE_FAT_LINKAGES */
 	else {
 		return (p1->link_cost - p2->link_cost);
 	}
@@ -962,11 +964,15 @@ int sentence_num_violations(Sentence sent, int i) {
 }
 
 int sentence_and_cost(Sentence sent, int i) {
+#ifdef USE_FAT_LINKAGES
 	if (!sent) return 0;
 
 	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->link_info) return 0;
 	return sent->link_info[i].and_cost;
+#else
+	return 0;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int sentence_disjunct_cost(Sentence sent, int i) {
@@ -1758,9 +1764,13 @@ int linkage_is_improper(const Linkage linkage)
 
 int linkage_has_inconsistent_domains(const Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return FALSE;
 	return linkage->info->inconsistent_domains;
+#else
+	return FALSE;
+#endif /* USE_FAT_LINKAGES */
 }
 
 void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)

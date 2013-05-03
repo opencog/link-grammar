@@ -961,7 +961,6 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		return li;
 	}
 
-#ifdef USE_FAT_LINKAGES
 	if (analyze_pass == PP_SECOND_PASS)
 	{
 	  li.andlist = build_andlist(actx, sent);
@@ -969,7 +968,6 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	  if (li.andlist) li.and_cost = li.andlist->cost;
 	}
 	else li.and_cost = 0;
-#endif /* USE_FAT_LINKAGES */
 
 	compute_link_names(sent);
 
@@ -1109,13 +1107,13 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 
 	memset(&li, 0, sizeof(li));
 	li.N_violations = 0;
-	li.and_cost = 0;
 	li.unused_word_cost = unused_word_cost(sent->parse_info);
 #ifdef USE_FAT_LINKAGES
+	li.and_cost = 0;
 	li.improper_fat_linkage = FALSE;
 	li.andlist = NULL;
-#endif /* USE_FAT_LINKAGES */
 	li.inconsistent_domains = FALSE;
+#endif /* USE_FAT_LINKAGES */
 	if (opts->use_sat_solver)
 	{
 		li.disjunct_cost = 0.0;

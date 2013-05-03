@@ -295,10 +295,13 @@ struct Linkage_info_struct
     Boolean canonical;
     Boolean fat;
     Boolean improper_fat_linkage;
-#endif /* USE_FAT_LINKAGES */
     Boolean inconsistent_domains;
+    short and_cost;
+#endif /* USE_FAT_LINKAGES */
     short N_violations;
-    short null_cost, unused_word_cost, and_cost, link_cost;
+    short null_cost;
+    short unused_word_cost;
+    short link_cost;
     float disjunct_cost;
     double corpus_cost;
     int island[MAX_SENTENCE];
