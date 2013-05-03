@@ -340,8 +340,6 @@ link_public_api(int)
 link_public_api(int)
      linkage_disjunct_cost(const Linkage linkage);
 link_public_api(int)
-     linkage_and_cost(const Linkage linkage);
-link_public_api(int)
      linkage_link_cost(const Linkage linkage);
 link_public_api(double)
      linkage_corpus_cost(const Linkage linkage);
@@ -463,6 +461,10 @@ MS_DEPRECATED link_public_api(int)
 /* Not possible without fat links */
 MS_DEPRECATED link_public_api(int)
      linkage_has_inconsistent_domains(const Linkage linkage) GNUC_DEPRECATED;
+
+/* and cost is always zero without fat links */
+MS_DEPRECATED link_public_api(int)
+     linkage_and_cost(const Linkage linkage) GNUC_DEPRECATED;
 
 /* All linkages are thin, when none are fat */
 MS_DEPRECATED link_public_api(int)
