@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright 2008, 2009 Linas Vepstas                                    */
+/* Copyright 2008, 2009, 2013 Linas Vepstas                              */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -1005,7 +1005,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	int lk, i;
 	Parse_info pi = sent->parse_info;
 
-	for (lk = 0; lk < sent->num_linkages_found; lk++)
+	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
 		Linkage_info *lifo = &sent->link_info[lk];
 		extract_links(lifo->index, sent->null_count, pi);
