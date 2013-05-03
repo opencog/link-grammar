@@ -1056,10 +1056,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 
 			/* If the next word is a suffix, and, when united with
 			 * the stem, it recreates the original word, then we
-			 * are very hapy, and keep going. */
+			 * are very happy, and keep going. */
 			len = strlen(djw);
 			if ((INFIX_MARK == djw[len-1]) &&
 			    ((i+1) < sent->length) && 
+			    (NULL != pi->chosen_disjuncts[i+1]) &&
 			    (INFIX_MARK == pi->chosen_disjuncts[i+1]->string[0]))
 			{
 				char *p;
