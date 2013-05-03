@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright 2013 Linas Vepstas                                          */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -375,13 +376,21 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		 * that has not been linked to. */
 		if (pi->chosen_disjuncts[i] == NULL)
 		{
-			/* Alternative[0] is as good as anything, I guess... */
-			t = sent->word[i].alternatives[0];
-			l = strlen(t) + 2;
-			s = (char *) xalloc(l+1);
-			sprintf(s, "[%s]", t);
-			t = string_set_add(s, sent->string_set);
-			xfree(s, l+1);
+			/* The unsplit_sord is the original word; if its been split
+			 * into stem+suffix, then one of these will be null, and should
+			 * not be printed.
+			 */
+			t = sent->word[i].unsplit_word;
+			if (t)
+			{
+				l = strlen(t) + 2;
+				s = (char *) xalloc(l+1);
+				sprintf(s, "[%s]", t);
+				t = string_set_add(s, sent->string_set);
+				xfree(s, l+1);
+			}
+			else
+				t = string_set_add("", sent->string_set);
 		}
 		else if (opts->display_word_subscripts)
 		{
@@ -434,9 +443,9 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		{
 			/* XXX This is wrong, since it fails to indicate what
 			 * was actally used for the parse, which might not actually 
-			 * be alternative 0.  We should use linkage->->word[i] instead,
-			 * and, umm, manually strip the subscript, or something ...
-			 * Except that this code is never reached, because 
+			 * be alternative 0.  We should do like the above, and then
+			 * manually strip the subscript.
+			 * Except that this code is never ever reached, because 
 			 * opts->display_word_subscripts is always true...
 			 */
 			t = sent->word[i].alternatives[0];
