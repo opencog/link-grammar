@@ -329,11 +329,11 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 				fprintf(stdout, "	Linkage %d, ", num_displayed+1);
 			}
 
+#ifdef USE_FAT_LINKAGES
 			if (!linkage_is_canonical(linkage))
 			{
 				fprintf(stdout, "non-canonical, ");
 			}
-#ifdef USE_FAT_LINKAGES
 			if (linkage_is_improper(linkage))
 			{
 				fprintf(stdout, "improper fat linkage, ");
