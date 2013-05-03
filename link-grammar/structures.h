@@ -288,8 +288,8 @@ struct Andlist_struct
 struct Linkage_info_struct
 {
     int index;
-    Boolean canonical;
 #ifdef USE_FAT_LINKAGES
+    Boolean canonical;
     Boolean fat;
     Boolean improper_fat_linkage;
 #endif /* USE_FAT_LINKAGES */

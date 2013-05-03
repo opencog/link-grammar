@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright 2013 Linas Vepstas                                          */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -349,8 +350,6 @@ link_public_api(int)
 link_public_api(double)
      linkage_corpus_cost(const Linkage linkage);
 link_public_api(int)
-     linkage_is_canonical(const Linkage linkage);
-link_public_api(int)
      linkage_has_inconsistent_domains(const Linkage linkage);
 link_public_api(const char *)
      linkage_get_violation_name(const Linkage linkage);
@@ -397,7 +396,7 @@ link_public_api(int)
 /**********************************************************************
  *
  * Internal functions -- do not use these in new code!
- * These are not intended for general public use, but are required to 
+ * These are not intended for general public use, but are required to
  * work around certain Micorsoft Windows linking oddities
  * (specifically, to be callable from the JNI bindings library.)
  *
@@ -432,7 +431,7 @@ link_public_api(void)
 #ifdef _MSC_VER
 #define MS_DEPRECATED __declspec(deprecated)
 #else
-#define MS_DEPRECATED 
+#define MS_DEPRECATED
 #endif
 
 #ifdef USE_FAT_LINKAGES
@@ -456,12 +455,16 @@ MS_DEPRECATED link_public_api(int)
      linkage_set_current_sublinkage(Linkage linkage, int index) GNUC_DEPRECATED;
 
 /* When fat links go away, the only valid sublinkage will be zero. */
-MS_DEPRECATED link_public_api(int) 
+MS_DEPRECATED link_public_api(int)
      linkage_get_current_sublinkage(const Linkage linkage) GNUC_DEPRECATED;
 
 /* When fat links go away, all linkages are proper. */
 MS_DEPRECATED link_public_api(int)
      linkage_is_improper(const Linkage linkage) GNUC_DEPRECATED;
+
+/* All linkages are canonical when there are no fat links. */
+MS_DEPRECATED link_public_api(int)
+     linkage_is_canonical(const Linkage linkage) GNUC_DEPRECATED;
 
 MS_DEPRECATED link_public_api(int)
      sentence_contains_conjunction(Sentence sent) GNUC_DEPRECATED;

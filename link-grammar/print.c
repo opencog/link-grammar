@@ -620,15 +620,18 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			}
 			s = ppla[j]->name;
 			
+			/* display_link_subscripts is always true ... hard-coded */
 			if (opts->display_link_subscripts)
 			{
+#ifdef USE_FAT_LINKAGES
 				if (!is_utf8_alpha(s))
-				  s = "";
+				  s = "";  /* Don't print fat link connector name */
+#endif /* USE_FAT_LINKAGES */
 			}
 			else
 			{
 				if (!is_utf8_upper(s)) {
-				  s = "";   /* Don't print fat link connector name */
+				  s = "";
 				}
 			}
 			strncpy(connector, s, MAX_TOKEN_LENGTH-1);

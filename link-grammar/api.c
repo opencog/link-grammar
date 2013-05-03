@@ -660,6 +660,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		extract_links(indices[in], sent->null_count, sent->parse_info);
 #ifdef USE_FAT_LINKAGES
 		lifo->fat = FALSE;
+		lifo->canonical = TRUE;
 		if (set_has_fat_down(sent))
 		{
 			canonical = is_canonical_linkage(sent);
@@ -672,7 +673,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 #endif /* USE_FAT_LINKAGES */
 		{
 			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
-			lifo->canonical = TRUE;
 		}
 		if (0 == lifo->N_violations)
 		{
@@ -1726,9 +1726,13 @@ const char * linkage_get_violation_name(const Linkage linkage)
 
 int linkage_is_canonical(const Linkage linkage)
 {
+#ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage->info) return TRUE;
 	return linkage->info->canonical;
+#else
+	return TRUE;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int linkage_is_improper(const Linkage linkage)
