@@ -51,6 +51,7 @@ static void set_centers(const Linkage linkage, int center[], Boolean print_word_
 		    0 == strncmp (SUFFIX_WORD, linkage->word[i], SUFFIX_WORD_L))
 		{
 			center[i] = tot;
+			tot++;  // hack alert -- a trailing blank gets printed anyway ...
 			continue;
 		}
 
@@ -61,8 +62,7 @@ static void set_centers(const Linkage linkage, int center[], Boolean print_word_
 		 */
 		len = utf8_strlen(linkage->word[i]);
 		center[i] = tot + (len/2);
-		if (0 < len)  /* len is zero for the empty word. */
-			tot += len+1;
+		tot += len+1;
 	}
 }
 
