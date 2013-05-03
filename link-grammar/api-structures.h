@@ -241,7 +241,6 @@ struct Sentence_s
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
 	int    num_valid_linkages;  /* number with no pp violations */
-	int    num_thin_linkages;   /* valid linkages which are not fat */
 	int    null_links;          /* null links allowed */
 	int    null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
@@ -257,6 +256,7 @@ struct Sentence_s
 	match_context_t * match_ctxt; /* private state info used for matching */
 
 #ifdef USE_FAT_LINKAGES
+	int    num_thin_linkages;   /* valid linkages which are not fat */
 	/* Obsolete fat-linkage state */
 	char * is_conjunction;      /* Array of flags, one per word; set to
 	                               TRUE if conjunction, as defined by dictionary */
@@ -266,7 +266,7 @@ struct Sentence_s
 	And_data       and_data;    /* used to keep track of fat disjuncts */
 #endif /* USE_FAT_LINKAGES */
 
-	/* Post-processor priavte/internal state */
+	/* Post-processor private/internal state */
 	Boolean  q_pruned_rules;    /* don't prune rules more than once in p.p. */
 
 	/* thread-safe random number state */

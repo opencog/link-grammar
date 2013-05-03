@@ -257,8 +257,6 @@ link_public_api(int)
 link_public_api(int)
      sentence_num_linkages_post_processed(Sentence sent);
 link_public_api(int)
-     sentence_num_thin_linkages(Sentence sent);
-link_public_api(int)
      sentence_num_violations(Sentence sent, int i);
 link_public_api(int)
      sentence_and_cost(Sentence sent, int i);
@@ -466,6 +464,11 @@ MS_DEPRECATED link_public_api(int)
 MS_DEPRECATED link_public_api(int)
      linkage_is_canonical(const Linkage linkage) GNUC_DEPRECATED;
 
+/* All linkages are thin, when none are fat */
+MS_DEPRECATED link_public_api(int)
+     sentence_num_thin_linkages(Sentence sent) GNUC_DEPRECATED;
+
+/* Bogus/pointless when no fat links */
 MS_DEPRECATED link_public_api(int)
      sentence_contains_conjunction(Sentence sent) GNUC_DEPRECATED;
 

@@ -539,10 +539,10 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	int in, block_bottom, block_top;
 	int N_linkages_found, N_linkages_alloced;
 	int N_linkages_post_processed, N_valid_linkages;
-	int N_thin_linkages;
 	int overflowed;
 	Linkage_info *link_info;
 #ifdef USE_FAT_LINKAGES
+	int N_thin_linkages;
 	int only_canonical_allowed;
 	int canonical;
 #endif /* USE_FAT_LINKAGES */
@@ -567,7 +567,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		sent->num_linkages_alloced = 0;
 		sent->num_linkages_post_processed = 0;
 		sent->num_valid_linkages = 0;
+#ifdef USE_FAT_LINKAGES
 		sent->num_thin_linkages = 0;
+#endif /* USE_FAT_LINKAGES */
 		sent->link_info = NULL;
 		return;
 	}
@@ -652,7 +654,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	/* second pass: actually perform post-processing */
 	N_linkages_post_processed = 0;
+#ifdef USE_FAT_LINKAGES
 	N_thin_linkages = 0;
+#endif /* USE_FAT_LINKAGES */
 	for (in=0; (in < N_linkages_alloced) &&
 			   (!resources_exhausted(opts->resources)); in++)
 	{
@@ -679,8 +683,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_valid_linkages++;
 #ifdef USE_FAT_LINKAGES
 			if (FALSE == lifo->fat)
-#endif /* USE_FAT_LINKAGES */
 				N_thin_linkages++;
+#endif /* USE_FAT_LINKAGES */
 		}
 		lifo->index = indices[in];
 		lg_corpus_score(sent, lifo);
@@ -728,7 +732,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	sent->num_linkages_alloced = N_linkages_alloced;
 	sent->num_linkages_post_processed = N_linkages_post_processed;
 	sent->num_valid_linkages = N_valid_linkages;
+#ifdef USE_FAT_LINKAGES
 	sent->num_thin_linkages = N_thin_linkages;
+#endif /* USE_FAT_LINKAGES */
 	sent->link_info = link_info;
 
 	xfree(indices, N_linkages_alloced * sizeof(int));
@@ -925,7 +931,11 @@ int sentence_null_count(Sentence sent) {
 
 int sentence_num_thin_linkages(Sentence sent) {
 	if (!sent) return 0;
+#ifdef USE_FAT_LINKAGES
 	return sent->num_thin_linkages;
+#else
+	return sent->num_valid_linkages;
+#endif /* USE_FAT_LINKAGES */
 }
 
 int sentence_num_linkages_found(Sentence sent) {
