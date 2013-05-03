@@ -983,9 +983,24 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
 	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
+/* ============================================================== */
+/* A kind of morphism post-processing */
+
 #define INFIX_MARK '='
 
-static void sane_suffix_links(Sentence sent, Parse_Options opts)
+/**
+ * This routine solves the problem of mis-link stem + suffix.
+ * It checks that the actual stem+suffix, when concatenated, restores
+ * the original word.  This is a work-around for somewhat sloppy
+ * dictionaries, which aren't entirely careful with making sure
+ * that the stem+suffix links are unique. Here's an illustrartion of
+ * the problem: The word Russian "тест" can be split into 
+ * тест.= =.ndmsi and also тес.= =т.amss The, during linkage, 
+ * тес.= and =.ndmsi are linked -- but this is not the original word; 
+ * its junk.  This routine marks such linkages as 'bad'.  Really, the
+ * dictionary should eb fixed ,, but what the hell. This isn't hard.
+ */
+static void sane_morphism(Sentence sent, Parse_Options opts)
 {
 	int lk, i;
 	Parse_info pi = sent->parse_info;
@@ -1013,6 +1028,16 @@ static void sane_suffix_links(Sentence sent, Parse_Options opts)
 			                 strlen(sent->word[i].unsplit_word)))
 				continue;
 
+			/* Perhaps its a perfect match after capitalization. */
+			if (sent->word[i].firstupper)
+			{
+				char temp_word[MAX_WORD+1];
+				downcase_utf8_str(temp_word, sent->word[i].unsplit_word, MAX_WORD);
+				if (0 == strncmp(djw, temp_word,
+				                 strlen(temp_word)))
+					continue;
+			}
+
 			/* If the next word is a suffix, and, when united with
 			 * the stem, it recreates the original word, then we
 			 * are very hapy, and keep going. */
@@ -1027,11 +1052,23 @@ static void sane_suffix_links(Sentence sent, Parse_Options opts)
 				p = strrchr(newword, '.');
 				if (p) *p = 0x0;
 				strcat(newword, pi->chosen_disjuncts[i+1]->string+1);
+
+				/* OK, we built the concatenation .. does it match? */
 				if (0 == strncmp(newword, sent->word[i].unsplit_word,
 				                 strlen(sent->word[i].unsplit_word)))
 					continue;
+
+				/* If we are here, it didn't match. Is that because of
+				 * capitalization? Lets check. */
+				if (sent->word[i].firstupper)
+				{
+					char temp_word[MAX_WORD+1];
+					downcase_utf8_str(temp_word, sent->word[i].unsplit_word, MAX_WORD);
+					if (0 == strncmp(newword, temp_word,
+					                 strlen(temp_word)))
+						continue;
+				}
 			}
-// XXX TODO  the above fails for capializatino, handle this ... 
 
 			/* Oh no ... we've joined together the stem and suffix incorrectly! */
 			sent->num_valid_linkages --;
@@ -1086,7 +1123,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		print_time(opts, "Counted parses");
 
 		post_process_linkages(sent, opts);
-		sane_suffix_links(sent, opts);
+		sane_morphism(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 
 		/* If we are here, then no valid linakges were found.
