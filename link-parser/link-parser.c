@@ -338,11 +338,11 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 			{
 				fprintf(stdout, "improper fat linkage, ");
 			}
-#endif /* USE_FAT_LINKAGES */
 			if (linkage_has_inconsistent_domains(linkage))
 			{
 				fprintf(stdout, "inconsistent domains, ");
 			}
+#endif /* USE_FAT_LINKAGES */
 
 			corpus_cost = linkage_corpus_cost(linkage);
 #ifdef USE_FAT_LINKAGES
