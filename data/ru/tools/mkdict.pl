@@ -313,7 +313,7 @@ foreach my $stems ( sort keys %fwd ) {
     if ( $#words < 40 ) {
         my $cnt = 0;
         foreach my $w ( @words ) {
-             print RTS eu($w).".s ";
+             print RTS eu($w).".= ";
              $cnt++;
              if (5 < $cnt) {
                  print RTS "\n";
@@ -325,12 +325,12 @@ foreach my $stems ( sort keys %fwd ) {
         print RTS "/ru/words/words.$filecnt:\n";
         open WFILE, ">words/words.$filecnt";
         foreach my $w ( @words ) {
-             print WFILE eu($w).".s\n";
+             print WFILE eu($w).".=\n";
         }
         close WFILE;
         $filecnt++;
     }
-#   абонент.s : LLACI+ or LLBRO+ or LLBZF+;
+#   абонент.= : LLACI+ or LLBRO+ or LLBZF+;
     my @links = map { "LL".alnum($_)."+" } @nums;
     #print RTS join(" ", @nums)."\n";
     my %emptysuflinks = ();
