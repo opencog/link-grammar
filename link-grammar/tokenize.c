@@ -1207,7 +1207,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 						}
 	
 						/* If we are here, then we want both upper and lower case
-						 * expressions. The upper-case ones were build above, so now
+						 * expressions. The upper-case ones were built above, so now
 						 * append the lower-case ones. */
 						e = build_word_expressions(sent->dict, lc);
 						we = catenate_X_nodes(we, e);
