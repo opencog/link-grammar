@@ -429,14 +429,27 @@ static void batch_process_some_linkages(Label label,
                                         Sentence sent,
                                         Parse_Options opts)
 {
-	Linkage linkage;
-
 	if (there_was_an_error(label, sent, opts)) {
-		/* Note: sentence_num_linkages_found returns total linkages
-		 * not valid linkages. So the printed linkage might be bad... 
-		 */
+		/* If linkages were found, prnt them */
 		if (sentence_num_linkages_found(sent) > 0) {
-			linkage = linkage_create(0, sent, opts);
+			Linkage linkage = NULL;
+			/* If we found at least one good linkage, print it. */
+			if (sentence_num_valid_linkages(sent) > 0) {
+				int i;
+				for (i=0; i<sentence_num_linkages_post_processed(sent); i++)
+				{
+					if (0 == sentence_num_violations(sent, i))
+					{
+						linkage = linkage_create(i, sent, opts);
+						break;
+					}
+				}
+			}
+			else
+			{
+				/* This linkage will be bad; no good ones were found. */
+				linkage = linkage_create(0, sent, opts);
+			}
 			process_linkage(linkage, opts);
 			linkage_delete(linkage);
 		}
