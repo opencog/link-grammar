@@ -1,17 +1,17 @@
 #!/usr/bin/perl
 
-#use strict;
-#use warnings;
+use strict;
+use warnings;
 
 use BerkeleyDB;
 use Encode;
 use utf8;
 use vars qw( %rule %tail %add %root );
 
-tie %rule, "BerkeleyDB::Hash", -Filename => "rule.db" or die "Error blin ";
-tie %tail, "BerkeleyDB::Hash", -Filename => "tail.db" or die "Error blin ";
-tie %add,  "BerkeleyDB::Hash", -Filename => "add.db" or die "Error blin ";
-tie %root, "BerkeleyDB::Hash", -Filename => "root.db" or die "Error blin ";
+tie %rule, "BerkeleyDB::Hash", -Filename => "rule.db",  -Flags => DB_RDONLY  or die "cant";
+tie %tail, "BerkeleyDB::Hash", -Filename => "tail.db",  -Flags => DB_RDONLY  or die "cant";
+tie %add,  "BerkeleyDB::Hash", -Filename => "add.db",   -Flags => DB_RDONLY  or die "cant";
+tie %root, "BerkeleyDB::Hash", -Filename => "root.db",  -Flags => DB_RDONLY  or die "cant";
 
 sub lgtrim($) {
         my ($cur) = @_;
@@ -38,13 +38,29 @@ sub alnum($) {
 }
 
 # These words are defined in the base.dict ( 4.0.dict ) 
-my @nonwords = qw(не как где и если когда два две оба обе три четыре);
-
-my @nonwords = ("бы.p", "когда.i", "если.i", "и.i", "как.e",
+my @nonwords1 = ("бы.p", "когда.i", "если.i", "и.i", "как.e",
 	"не.p", "отныне.e", "отовсюду.e", "задом.e", "вполоборота.e",
 	"боком.e", "велик.amss");
+my %skipwords = (); $skipwords{$_}++ foreach @nonwords1;
 
-my %skipwords = (); $skipwords{$_}++ foreach @nonwords;
+my @nonwords2 = qw(не как где и если когда два две оба обе три четыре);
+my $rHskipstemcon = ();
+foreach my $nw1 ( @nonwords2 ) {
+    for(my $i=0; $i <= length $nw1; $i++) {
+        my ($left, $right) = (substr($nw1,0,$i), substr($nw1,$i));
+        if(my $d = $root{encode("KOI8-R",$left)}) {
+            my @num = split(/:/, $d);
+            shift @num;
+            foreach my $num(@num){
+                if(my $c = decode("KOI8-R",$tail{encode("KOI8-R","$num:$right")})) {
+                    my $alcon = "LL".alnum($num)."+";
+                    $rHskipstemcon->{$left}->{$num}++;
+                    #print eu("$i\t$nw1\t$left\t$right\t$num\t$alcon\t$c\n");
+                }
+            }
+        }
+    }
+}
 
 my %nums_for_empty_stem = ();
 while (my ($stem, $val) = each(%root)){
@@ -90,10 +106,10 @@ while (my ($numsuf, $modestr) = each(%tail)){
             foreach (@res) {
                 my $rrr = $rr."рд";
                 my $rri = $rr."им";
-                #$l = 1 if /П$rrr.*/; # correct
-                #$n = 1 if /П$rri.*/;
-                $l = 1 if /П$rrрд.*/; # incorrect, but match with TestLem.pm
-                $n = 1 if /П$rrим.*/;
+                $l = 1 if /П$rrr.*/; # correct
+                $n = 1 if /П$rri.*/;
+                #$l = 1 if /П$rrрд.*/; # incorrect, but match with TestLem.pm
+                #$n = 1 if /П$rrим.*/;
             }
             $res[$i] .= ",од" if $l;
             $res[$i] .= ",но" if $n;
@@ -153,8 +169,9 @@ my @ssuftagli = sort @suftagli;
 my %common=();
 my $nsf = 0;
 foreach my $suftag(@ssuftagli) {
-    my $left = $lefties{$suftag};
-    my $right = $righties{$suftag};
+    my $left = defined $lefties{$suftag} ? $lefties{$suftag} : "";
+    my $right = defined $righties{$suftag} ? $righties{$suftag} : "";
+
     chomp $left;
     chomp $right;
     
@@ -199,12 +216,12 @@ close(SUF);
 
 sub eu {
     my $s = shift;
-    return encode("utf-8", $s);
+    return encode("UTF-8", $s);
 }
 
 # mkmorph
 
-my %cat2 = (); my %uni = (); my %ord = ();
+my %cat2 = (); my %uni = (); my %ord = (); my %cmnt = ();
 
 # load the morphology info.
 my $comment = "";
@@ -279,7 +296,7 @@ close(MRF);
 
 # mkroot mkstem
 
-my $rcnt = 0; my %uniq = (); my %rev = ();
+$rcnt = 0; my %uniq = (); %rev = ();
 
 while (my ($stem, $val) = each(%root)){
    chomp $val; $val =~ s/^://;
@@ -296,7 +313,7 @@ while (my ($stem, $val) = each(%root)){
 # Worse, the stems are divided into 6955 classes! Ouch
 
 print "gen stem\n";
-my $un = scalar( keys %uniq );
+$un = scalar( keys %uniq );
 my $revcnt = scalar( keys %rev );
 
 open(RTS,">stem.dict") or die("cant");
@@ -310,6 +327,7 @@ my %fwd= ();
 while (my ($nums, $stems) = each(%rev)){
     $stems = decode("KOI8-R", $stems);
     chomp $stems; $stems =~ s/^\s+|\s+$//g;
+    # вист грипп блеф кейф кикс флирт 16:1383
     $fwd{$stems} = $nums;
 }
 
@@ -319,10 +337,23 @@ $revcnt = 0; my $filecnt = 1;
 
 foreach my $stems ( sort keys %fwd ) {
     $stems =~ s/^\s+|\s+$//g;
-    my @words = sort split(/\s+/, $stems);
     next unless defined $fwd{$stems};
+    my @words = sort split(/\s+/, $stems);
     my @nums = split /:/, $fwd{$stems};
     next unless $#nums > -1;
+
+    # абонент.s : LLACI+ or LLBRO+ or LLBZF+;
+    my @numsgrep = (); 
+    foreach my $n ( @nums ) {
+        my $skipflag = 0;
+        foreach my $w ( @words ) {
+            if ( defined $rHskipstemcon->{$w} and defined $rHskipstemcon->{$w}->{$n} ) {
+                $skipflag = 1; # skip @nonwords like "два", "три", "четыре"
+            }
+        }
+        push @numsgrep, $n if ( $skipflag eq 0 );
+    }
+    next unless $#numsgrep > -1;
 
     # write inline if less than 40 words, else dump to a file
     if ( $#words < 40 ) {
@@ -346,7 +377,7 @@ foreach my $stems ( sort keys %fwd ) {
         $filecnt++;
     }
 #   абонент.= : LLACI+ or LLBRO+ or LLBZF+;
-    my @links = map { "LL".alnum($_)."+" } @nums;
+    my @links = map { "LL".alnum($_)."+" }  @numsgrep;
     #print RTS join(" ", @nums)."\n";
     my %emptysuflinks = ();
     foreach my $snum ( @nums ) {
@@ -363,27 +394,21 @@ foreach my $stems ( sort keys %fwd ) {
     next unless scalar( keys %emptysuflinks ) > 0;
 
     # write inline if less than 40 words, else dump to a file
-
     foreach my $key (keys %emptysuflinks ) {
-    my $cnt = 0;
-    foreach my $w ( @words ) {
+        my $cnt = 0;
+        foreach my $w ( @words ) {
              my $wkey = $w.".".parse($key);
              next if ( defined $skipwords{$wkey} );
+             next if ( defined $skipwords{$w} );
              print RTS eu($wkey)." ";
              $cnt++;
              if (5 < $cnt) {
                  print RTS "\n";
                  $cnt = 0;
              }
+        }
+        print RTS ":  ".eu("<morph-$key>").";\n\n";
     }
-    
-    print RTS ":  ".eu("<morph-$key>").";\n\n";
-
-    }
-
-
-
-
 }
 # print "% duude revers=$revcnt\n";
 close(RTS);
@@ -411,7 +436,7 @@ sub parse
         $res .= "w" if $s =~ /^МС-П(,|$)/; # местоимение-предлог
         $res .= "u" if $s =~ /^МС-ПРЕДК(,|$)/; # местоимение-предикатив
         $res .= "n" if $s =~ /,нс(,|$)/; # несовершенное imperfective
-        $res .= "s" if $s =~ /,св(,|$)/; # совершенное  perfective
+        $res .= "s" if $s =~ /,св(,|$)/; # совершенное   perfective
         $res .= "n" if $s =~ /,нп(,|$)/; # непереходный
         $res .= "p" if $s =~ /,пе(,|$)/; # переходный
         $res .= "p" if $s =~ /,прч(,|$)/; # причастие
@@ -419,9 +444,9 @@ sub parse
         $res .= "s" if $s =~ /,стр(,|$)/; # страдательный залог  passive voice 
         $res .= "d" if $s =~ /,дпр(,|$)/; # деепричастие
         $res .= "i" if $s =~ /,инф(,|$)/; # инфинитив 
-        $res .= "n" if $s =~ /,нст(,|$)/; # настоящее
-        $res .= "f" if $s =~ /,буд(,|$)/; # будущее future
-        $res .= "p" if $s =~ /,прш(,|$)/; # прошлое past
+        $res .= "n" if $s =~ /,нст(,|$)/; # настоящее  present
+        $res .= "f" if $s =~ /,буд(,|$)/; # будущее    future
+        $res .= "p" if $s =~ /,прш(,|$)/; # прошлое    past
         $res .= "v" if $s =~ /,пвл(,|$)/; # повелительное наклонение 
         $res .= "1" if $s =~ /,1л(,|$)/; # 1-ое лицо
         $res .= "2" if $s =~ /,2л(,|$)/; # 2-ое лицо
@@ -430,11 +455,11 @@ sub parse
         $res .= "a" if $s =~ /,аббр(,|$)/; # аббревиатура
         $res .= "d" if $s =~ /,но(,|$)/; # неодушевленное
         $res .= "l" if $s =~ /,од(,|$)/; # одушевленное 
-        $res .= "m" if $s =~ /,мр(,|$)/; # мужской род
-        $res .= "f" if $s =~ /,жр(,|$)/; # женский род
-        $res .= "n" if $s =~ /,ср(,|$)/; # средний род
-        $res .= "s" if $s =~ /,ед(,|$)/; # единственное
-        $res .= "p" if $s =~ /,мн(,|$)/; # множественное
+        $res .= "m" if $s =~ /,мр(,|$)/; # мужской род   masculine gender
+        $res .= "f" if $s =~ /,жр(,|$)/; # женский род   feminine
+        $res .= "n" if $s =~ /,ср(,|$)/; # средний род   neuter gender
+        $res .= "s" if $s =~ /,ед(,|$)/; # единственное  singular
+        $res .= "p" if $s =~ /,мн(,|$)/; # множественное plural
         $res .= "i" if $s =~ /,им(,|$)/; # именительный  common case
         $res .= "g" if $s =~ /,рд(,|$)/; # родительный   genitive case
         $res .= "d" if $s =~ /,дт(,|$)/; # дательный     dative case
