@@ -37,8 +37,13 @@ sub alnum($) {
     return "$lc$lb$la";
 }
 
-# This words was defined in base.dict ( 4.0.dict ) 
-my @nonwords = ("бы.p", "когда.i", "если.i", "и.i", "как.e", "не.p", "отныне.e", "отовсюду.e", "задом.e", "вполоборота.e", "боком.e", "велик.amss");
+# These words are defined in the base.dict ( 4.0.dict ) 
+my @nonwords = qw(не как где и если когда два две оба обе три четыре);
+
+my @nonwords = ("бы.p", "когда.i", "если.i", "и.i", "как.e",
+	"не.p", "отныне.e", "отовсюду.e", "задом.e", "вполоборота.e",
+	"боком.e", "велик.amss");
+
 my %skipwords = (); $skipwords{$_}++ foreach @nonwords;
 
 my %nums_for_empty_stem = ();
