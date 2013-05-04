@@ -1,4 +1,10 @@
 #!/usr/bin/perl
+#
+# Generate Russian dictionaries for Link Grammar. 
+# Based on aot.ru opensource files
+#
+# Copyright (c) 2004, 2012, 2013 Sergey Protasov
+# Copyright (c) 2012, 2013 Linas Vepstas
 
 use strict;
 use warnings;
