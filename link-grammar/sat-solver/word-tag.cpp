@@ -136,7 +136,11 @@ void WordTag::find_matches(int w, const char* C, char dir, std::vector<PositionC
     throw std::string("Unknown connector direction: ") + dir;
   }
 
+#ifdef USE_FAT_LINKAGES
   bool conjunction = sentence_contains_conjunction(_sent);
+#else
+  bool conjunction = false;
+#endif /* USE_FAT_LINKAGES */
   std::vector<PositionConnector>::iterator i;
   for (i = connectors->begin(); i != connectors->end(); i++) {
     if (WordTag::match(w, search_cntr, dir, (*i).word, *((*i).connector),  conjunction)) {
