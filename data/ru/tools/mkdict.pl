@@ -353,10 +353,20 @@ foreach my $stems ( sort keys %fwd ) {
         }
         push @numsgrep, $n if ( $skipflag eq 0 );
     }
-    next unless $#numsgrep > -1;
 
-    # write inline if less than 40 words, else dump to a file
-    if ( $#words < 40 ) {
+    my %emptysuflinks = ();
+    foreach my $snum ( @nums ) {
+        if ( defined $rHse->{$snum} ) {
+            foreach my $key ( keys %{$rHse->{$snum}} ) {
+                next unless defined $posex{$key};
+                $emptysuflinks{$key}++;
+            }
+        }
+    }
+
+    if ( $#numsgrep > -1 ) {
+      # write inline if less than 40 words, else dump to a file
+      if ( $#words < 40 ) {
         my $cnt = 0;
         foreach my $w ( @words ) {
              print RTS eu($w).".= ";
@@ -367,7 +377,7 @@ foreach my $stems ( sort keys %fwd ) {
              }
         }
         print RTS ":\n";
-    } else {
+      } else {
         print RTS "/ru/words/words.$filecnt:\n";
         open WFILE, ">words/words.$filecnt";
         foreach my $w ( @words ) {
@@ -375,22 +385,14 @@ foreach my $stems ( sort keys %fwd ) {
         }
         close WFILE;
         $filecnt++;
-    }
-#   абонент.= : LLACI+ or LLBRO+ or LLBZF+;
-    my @links = map { "LL".alnum($_)."+" }  @numsgrep;
-    #print RTS join(" ", @nums)."\n";
-    my %emptysuflinks = ();
-    foreach my $snum ( @nums ) {
-        if ( defined $rHse->{$snum} ) {
-            foreach my $key ( keys %{$rHse->{$snum}} ) {
-                next unless defined $posex{$key};
-                $emptysuflinks{$key}++;
-            }
-        }
-    }
-    print RTS "  ".eu(join(" or ", @links)).";\n\n";
+      }
 
-    $revcnt ++;
+      # абонент.= : LLACI+ or LLBRO+ or LLBZF+;
+      my @links = map { "LL".alnum($_)."+" }  @numsgrep;
+      print RTS "  ".eu(join(" or ", @links)).";\n\n";
+      $revcnt ++;
+    }
+
     next unless scalar( keys %emptysuflinks ) > 0;
 
     # write inline if less than 40 words, else dump to a file
