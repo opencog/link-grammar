@@ -207,10 +207,15 @@ sub eu {
 my %cat2 = (); my %uni = (); my %ord = ();
 
 # load the morphology info.
+my $comment = "";
 my $cnt = 0;
 open FILE, "4.0.morph";
 while (<FILE>) {
    next unless /^\%/;
+
+   # Save the inline comments for later re-printing.
+   if (!/morph/) { $comment .= decode("utf-8",$_); }
+
    next unless /morph/;
    my $str = decode("utf-8",$_);
    chomp $str;
@@ -226,6 +231,8 @@ while (<FILE>) {
    $cnt++;
    $uni{$nr} = $cnt;
    $ord{$cnt} = $nr;
+   $cmnt{$cnt} = $comment;
+   $comment = "";
 }
 close FILE;
 
@@ -234,9 +241,9 @@ open(MRF,">morph.dict") or die("cant");
 print MRF <<EOF;
 %%
 %% Link Grammar for Russian -- Morphology rules.
-%% 
+%%
 %% based on aot.ru opensource files
-%% 
+%%
 %% Copyright (c) 2004, 2012 Sergey Protasov
 %% http://sz.ru/parser/
 %% svp dot zuzino.net.ru, svp dot tj.ru
@@ -256,6 +263,9 @@ foreach my $cnt ( sort { $a <=> $b } values %uni ) {
       # print " Elided: $cnt\n"; $rcnt++;
    }
    $rcnt++;
+
+   # Print the in-line comments, if any.
+   if ($cnt > 1) { print MRF eu($cmnt{$cnt}); }
    print MRF "<morph-".eu($pos)."> :\n  ".eu($rule).";\n\n";
 }
 
