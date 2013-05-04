@@ -2,24 +2,23 @@
 % Tagged Suffix Table
 %
 % Total number of suffixes = 106484
-% Total number of tagged suffixes = 27375
+% Total number of tagged suffixes = 27396
 % Number of unique stem-to-suffix connectors = 4064
 %
 %
-% Total number of suftags = 27375
+% Total number of suftags = 27396
 %
 %
-% Total number of entries = 25299
+% Total number of entries = 25399
 %
 
 =-.ansi :
   (LLFLZ-)
     & <morph-П,ср,ед,им>;
 
-=-го.adlmsv
-=одный.adlmsv :
+=-го.almsv :
   (LLFLZ- or LLFMA-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =-го.amsg :
   (LLFLZ- or LLFMA-)
@@ -114,9 +113,9 @@
   (LLAEG- or LLDXI-)
     & <morph-П,0>;
 
-=.adlmsv :
+=.admsv :
   (LLADW- or LLADX- or LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAED- or LLAEE- or LLDXH- or LLFUO- or LLFUR- or LLFUS- or LLFUV- or LLFVB- or LLFVH- or LLFVN- or LLFVO-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =.amsi :
   (LLADW- or LLADX- or LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAED- or LLAEE- or LLDXH- or LLFUO- or LLFUR- or LLFUS- or LLFUV- or LLFVB- or LLFVH- or LLFVN- or LLFVO-)
@@ -490,9 +489,9 @@
   (LLDSX-)
     & <morph-МС-П,0>;
 
-=.wdlmsv :
+=.wdmsv :
   (LLDSV- or LLDSW-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =.wmsi :
   (LLDSU- or LLDSV- or LLDSW-)
@@ -550,10 +549,6 @@
   (LLCLE-)
     & <morph-МС-П,жр,ед,им>;
 
-=а.adlmsv :
-  (LLADY- or LLADZ- or LLAEA- or LLFUO- or LLFUS- or LLFVO-)
-    & <morph-П,мр,ед,вн,од,но>;
-
 =а.afsi :
   (LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAEE- or LLDXH- or LLDXZ- or LLDZT- or LLFUO- or LLFUR- or LLFUS- or LLFUV- or LLFUY- or LLFVB- or LLFVH- or LLFVM- or LLFVO-)
     & <morph-П,жр,ед,им>;
@@ -561,6 +556,10 @@
 =а.afss :
   (LLAEF- or LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDX- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKW- or LLDKX- or LLDKY- or LLEGA- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHL- or LLEHM- or LLEHP- or LLEHV- or LLEHW- or LLEIA- or LLEIC- or LLEIE- or LLEIF- or LLEIL- or LLEIO- or LLEIZ- or LLEJH- or LLEJL- or LLEJP- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEJX- or LLEKC- or LLEKF- or LLEKM- or LLFGB- or LLFGC- or LLFMW- or LLFMZ- or LLFPE- or LLFVC- or LLFVD- or LLFVE- or LLFVJ- or LLGRS-)
     & <morph-П,жр,ед,кр>;
+
+=а.almsv :
+  (LLADY- or LLADZ- or LLAEA- or LLFUO- or LLFUS- or LLFVO-)
+    & <morph-П,мр,ед,вн,од>;
 
 =а.amsg :
   (LLADW- or LLADX- or LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAED- or LLDXH- or LLDXZ- or LLDZT- or LLFUO- or LLFUR- or LLFUS- or LLFUV- or LLFUY- or LLFVB- or LLFVM- or LLFVN- or LLFVO-)
@@ -2049,19 +2048,17 @@
   (LLAHI-)
     & <morph-П,жр,ед,им>;
 
-=аленькие.adlpv
-=аленьких.adlpv :
+=аленькие.adpv :
   (LLAHI-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =аленькие.api :
   (LLAHI-)
     & <morph-П,мн,им>;
 
-=аленький.adlmsv
-=аленького.adlmsv :
+=аленький.admsv :
   (LLAHI-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =аленький.amsi :
   (LLAHI-)
@@ -2083,6 +2080,10 @@
   (LLAHI-)
     & <morph-П,мн,тв>;
 
+=аленьких.alpv :
+  (LLAHI-)
+    & <morph-П,мн,вн,од>;
+
 =аленьких.apg :
   (LLAHI-)
     & <morph-П,мн,рд>;
@@ -2090,6 +2091,10 @@
 =аленьких.app :
   (LLAHI-)
     & <morph-П,мн,пр>;
+
+=аленького.almsv :
+  (LLAHI-)
+    & <morph-П,мр,ед,вн,од>;
 
 =аленького.amsg :
   (LLAHI-)
@@ -5178,10 +5183,9 @@
   (LLFGG-)
     & <morph-ЧИСЛ,сравн>;
 
-=большего.adlmsv
-=больший.adlmsv :
+=большего.almsv :
   (LLEGM-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =большего.amsg :
   (LLEGM-)
@@ -5232,14 +5236,17 @@
   (LLEGM-)
     & <morph-П,ср,ед,дт>;
 
-=большие.adlpv
-=больших.adlpv :
+=большие.adpv :
   (LLALI- or LLEGM-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =большие.api :
   (LLALI- or LLEGM-)
     & <morph-П,мн,им>;
+
+=больший.admsv :
+  (LLEGM-)
+    & <morph-П,мр,ед,вн,но>;
 
 =больший.amsi :
   (LLEGM-)
@@ -5261,6 +5268,10 @@
   (LLALI- or LLEGM-)
     & <morph-П,мн,тв>;
 
+=больших.alpv :
+  (LLALI- or LLEGM-)
+    & <morph-П,мн,вн,од>;
+
 =больших.apg :
   (LLALI- or LLEGM-)
     & <morph-П,мн,рд>;
@@ -5269,10 +5280,9 @@
   (LLALI- or LLEGM-)
     & <morph-П,мн,пр>;
 
-=большого.adlmsv
-=большой.adlmsv :
+=большого.almsv :
   (LLALH- or LLALI- or LLALJ- or LLEGL- or LLEGN-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =большого.amsg :
   (LLALH- or LLALI- or LLALJ- or LLEGL- or LLEGN-)
@@ -5289,6 +5299,10 @@
 =большое.ansv :
   (LLALH- or LLALI- or LLALJ- or LLEGL- or LLEGN-)
     & <morph-П,ср,ед,вн>;
+
+=большой.admsv :
+  (LLALH- or LLALI- or LLALJ- or LLEGL- or LLEGN-)
+    & <morph-П,мр,ед,вн,но>;
 
 =большой.afsd :
   (LLALH- or LLALI- or LLALJ- or LLEGL- or LLEGN-)
@@ -7900,17 +7914,17 @@
   (LLAML-)
     & <morph-П,жр,ед,вн>;
 
-=веклоуборочные.adlpv :
+=веклоуборочные.adpv :
   (LLAML-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =веклоуборочные.api :
   (LLAML-)
     & <morph-П,мн,им>;
 
-=веклоуборочный.adlmsv :
+=веклоуборочный.admsv :
   (LLAML-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =веклоуборочный.amsi :
   (LLAML-)
@@ -11634,22 +11648,25 @@
   (LLANF- or LLAYO- or LLAYX- or LLDIV- or LLDIW- or LLDIX- or LLFTX- or LLGCB- or LLGEG- or LLGLS- or LLGMJ- or LLGOR-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=гие.adlpv
-=гих.adlpv :
+=гие.adpv :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =гие.api :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
     & <morph-П,мн,им>;
 
-=гий.adlmsv :
-  (LLANL- or LLANM- or LLANN- or LLANO- or LLEKA- or LLFVL-)
-    & <morph-П,мр,ед,вн,од,но>;
+=гий.admsv :
+  (LLANL- or LLANM- or LLANN- or LLANO- or LLFVL-)
+    & <morph-П,мр,ед,вн,но>;
 
 =гий.amsi :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLFVL-)
     & <morph-П,мр,ед,им>;
+
+=гий.amsv :
+  (LLEKA-)
+    & <morph-П,мр,ед,вн>;
 
 =гим.amst :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
@@ -11702,6 +11719,10 @@
 =гитесь.vsndv2p :
   (LLANJ- or LLANK- or LLAYR- or LLAZA- or LLDJG- or LLFEC- or LLGCC- or LLGIS- or LLGJE- or LLGOL- or LLGQI-)
     & <morph-Г,св,нп,дст,пвл,2л,мн>;
+
+=гих.alpv :
+  (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
+    & <morph-П,мн,вн,од>;
 
 =гих.apg :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
@@ -12057,9 +12078,9 @@
   (LLDUC-)
     & <morph-МС-ПРЕДК,ед,рд>;
 
-=гого.adlmsv :
+=гого.almsv :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =гого.amsg :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
@@ -12129,9 +12150,9 @@
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
     & <morph-П,ср,ед,вн>;
 
-=гой.adlmsv :
-  (LLANS- or LLEIV-)
-    & <morph-П,мр,ед,вн,од,но>;
+=гой.admsv :
+  (LLANS-)
+    & <morph-П,мр,ед,вн,но>;
 
 =гой.afsd :
   (LLANL- or LLANM- or LLANN- or LLANO- or LLANS- or LLEIV- or LLEKA- or LLFVL-)
@@ -12153,6 +12174,10 @@
 =гой.amsi :
   (LLANS-)
     & <morph-П,мр,ед,им>;
+
+=гой.amsv :
+  (LLEIV-)
+    & <morph-П,мр,ед,вн>;
 
 =гой.ndfst
 =гою.ndfst :
@@ -16930,19 +16955,17 @@
   (LLAQZ- or LLARA-)
     & <morph-П,мн,кр>;
 
-=дкие.adlpv
-=дких.adlpv :
+=дкие.adpv :
   (LLAQZ- or LLARA-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =дкие.api :
   (LLAQZ- or LLARA-)
     & <morph-П,мн,им>;
 
-=дкий.adlmsv
-=дкого.adlmsv :
+=дкий.admsv :
   (LLAQZ- or LLARA-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =дкий.amsi :
   (LLAQZ- or LLARA-)
@@ -16964,6 +16987,10 @@
   (LLAQZ- or LLARA-)
     & <morph-П,мн,тв>;
 
+=дких.alpv :
+  (LLAQZ- or LLARA-)
+    & <morph-П,мн,вн,од>;
+
 =дких.apg :
   (LLAQZ- or LLARA-)
     & <morph-П,мн,рд>;
@@ -16975,6 +17002,10 @@
 =дко.anss :
   (LLAQZ- or LLARA-)
     & <morph-П,ср,ед,кр>;
+
+=дкого.almsv :
+  (LLAQZ- or LLARA-)
+    & <morph-П,мр,ед,вн,од>;
 
 =дкого.amsg :
   (LLAQZ- or LLARA-)
@@ -17042,10 +17073,9 @@
   (LLAOA-)
     & <morph-С,мр,но,ед,пр>;
 
-=днего.adlmsv
-=дний.adlmsv :
+=днего.almsv :
   (LLEGH-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =днего.amsg :
   (LLEGH-)
@@ -17125,14 +17155,17 @@
   (LLAOA-)
     & <morph-С,мр,но,мн,вн>;
 
-=дние.adlpv
-=дних.adlpv :
+=дние.adpv :
   (LLEGH-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =дние.api :
   (LLEGH-)
     & <morph-П,мн,им>;
+
+=дний.admsv :
+  (LLEGH-)
+    & <morph-П,мр,ед,вн,но>;
 
 =дний.amsi :
   (LLEGH-)
@@ -17153,6 +17186,10 @@
 =дними.apt :
   (LLEGH-)
     & <morph-П,мн,тв>;
+
+=дних.alpv :
+  (LLEGH-)
+    & <morph-П,мн,вн,од>;
 
 =дних.apg :
   (LLEGH-)
@@ -17211,9 +17248,9 @@
   (LLARB- or LLARC- or LLARG-)
     & <morph-П,ср,ед,кр>;
 
-=дого.adlmsv :
+=дого.almsv :
   (LLARB- or LLARC- or LLARG-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =дого.amsg :
   (LLARB- or LLARC- or LLARG-)
@@ -17231,9 +17268,9 @@
   (LLARB- or LLARC- or LLARG-)
     & <morph-П,ср,ед,вн>;
 
-=дой.adlmsv :
+=дой.admsv :
   (LLARB- or LLARC-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =дой.afsd :
   (LLARB- or LLARC- or LLARG-)
@@ -18450,18 +18487,17 @@
   (LLARB- or LLARC- or LLARG-)
     & <morph-П,мн,кр>;
 
-=дые.adlpv
-=дых.adlpv :
+=дые.adpv :
   (LLARB- or LLARC- or LLARG-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =дые.api :
   (LLARB- or LLARC- or LLARG-)
     & <morph-П,мн,им>;
 
-=дый.adlmsv :
+=дый.admsv :
   (LLARG-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =дый.amsi :
   (LLARG-)
@@ -18482,6 +18518,10 @@
 =дыми.apt :
   (LLARB- or LLARC- or LLARG-)
     & <morph-П,мн,тв>;
+
+=дых.alpv :
+  (LLARB- or LLARC- or LLARG-)
+    & <morph-П,мн,вн,од>;
 
 =дых.apg :
   (LLARB- or LLARC- or LLARG-)
@@ -19029,19 +19069,17 @@
   (LLAES-)
     & <morph-С,мр,но,ед,пр>;
 
-=е-то.wdlpv
-=ех-то.wdlpv :
+=е-то.wdpv :
   (LLCLE-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =е-то.wpi :
   (LLCLE-)
     & <morph-МС-П,мн,им>;
 
-=е.adlpv
-=х.adlpv :
+=е.adpv :
   (LLASG-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =е.amsp :
   (LLADW- or LLADY- or LLFVO-)
@@ -19212,10 +19250,9 @@
   (LLASE- or LLASF-)
     & <morph-С,мн,мн,вн>;
 
-=е.wdlpv
-=ех.wdlpv :
+=е.wdpv :
   (LLDVU-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =е.wnsi :
   (LLDSV- or LLDVB- or LLDVC- or LLDVD-)
@@ -19265,9 +19302,9 @@
   (LLDUG-)
     & <morph-МС,вн>;
 
-=ев.adlmsv :
+=ев.admsv :
   (LLDXZ- or LLFVM-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =ев.amsi :
   (LLDXZ- or LLFVM-)
@@ -20532,10 +20569,9 @@
   (LLFGA-)
     & <morph-П,сравн>;
 
-=евого.adlmsv
-=евой.adlmsv :
+=евого.almsv :
   (LLFGA-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =евого.amsg :
   (LLFGA-)
@@ -20552,6 +20588,10 @@
 =евое.ansv :
   (LLFGA-)
     & <morph-П,ср,ед,вн>;
+
+=евой.admsv :
+  (LLFGA-)
+    & <morph-П,мр,ед,вн,но>;
 
 =евой.afsd :
   (LLFGA-)
@@ -21223,10 +21263,9 @@
   (LLAWJ- or LLAXR- or LLAXS- or LLAXT- or LLAXU- or LLAXV- or LLFFB- or LLGAQ- or LLGKO- or LLGLV- or LLGLX- or LLGMD- or LLGQZ-)
     & <morph-Г,св,нп,прч,прш,дст,ед,жр,вн>;
 
-=евые.adlpv
-=евых.adlpv :
+=евые.adpv :
   (LLFGA-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =евые.api :
   (LLFGA-)
@@ -21247,6 +21286,10 @@
 =евыми.apt :
   (LLFGA-)
     & <morph-П,мн,тв>;
+
+=евых.alpv :
+  (LLFGA-)
+    & <morph-П,мн,вн,од>;
 
 =евых.apg :
   (LLFGA-)
@@ -21327,9 +21370,9 @@
   (LLDWG-)
     & <morph-МС,ср,ед,рд>;
 
-=его.adlmsv :
+=его.almsv :
   (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLDKB- or LLDKC- or LLDKZ- or LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP- or LLGRS- or LLGRT- or LLGRU-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =его.amsg :
   (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEF- or LLBEG- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLBFD- or LLDKB- or LLDKC- or LLDKZ- or LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP- or LLGRS- or LLGRT- or LLGRU-)
@@ -21375,9 +21418,9 @@
   (LLATW-)
     & <morph-С,ср,од,ед,рд>;
 
-=его.wdlmsv :
+=его.wlmsv :
   (LLDSV- or LLDUJ- or LLDUT- or LLDUX- or LLDVB- or LLDVC- or LLDVD-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =его.wmsg :
   (LLDSV- or LLDUJ- or LLDUT- or LLDUX- or LLDVB- or LLDVC- or LLDVD-)
@@ -21387,9 +21430,9 @@
   (LLDSV- or LLDUJ- or LLDUT- or LLDUX- or LLDVB- or LLDVC- or LLDVD-)
     & <morph-МС-П,ср,ед,рд>;
 
-=егося.adlmsv :
+=егося.almsv :
   (LLBFI- or LLBFJ-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =егося.amsg :
   (LLBFI- or LLBFJ- or LLBFK-)
@@ -22256,28 +22299,25 @@
   (LLDRF-)
     & <morph-С,жр,но,ед,тв>;
 
-=ей-либо.wdlmsv
-=ьего-либо.wdlmsv :
+=ей-либо.wdmsv :
   (LLATZ-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ей-либо.wmsi :
   (LLATZ-)
     & <morph-МС-П,мр,ед,им>;
 
-=ей-нибудь.wdlmsv
-=ьего-нибудь.wdlmsv :
+=ей-нибудь.wdmsv :
   (LLAUA-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ей-нибудь.wmsi :
   (LLAUA-)
     & <morph-МС-П,мр,ед,им>;
 
-=ей-то.wdlmsv
-=ьего-то.wdlmsv :
+=ей-то.wdmsv :
   (LLAUB-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ей-то.wmsi :
   (LLAUB-)
@@ -22431,9 +22471,9 @@
   (LLBKO- or LLBKP- or LLBKQ- or LLGDA- or LLGDG- or LLGMQ-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=ей.wdlmsv :
+=ей.wdmsv :
   (LLDUI- or LLDUJ-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ей.wfsd :
   (LLDSV- or LLDUJ- or LLDUT- or LLDUX- or LLDVB- or LLDVC- or LLDVD-)
@@ -22609,19 +22649,17 @@
   (LLAYP- or LLGMV-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=екие.adlpv
-=еких.adlpv :
+=екие.adpv :
   (LLAUP-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =екие.api :
   (LLAUP-)
     & <morph-П,мн,им>;
 
-=екий.adlmsv
-=екого.adlmsv :
+=екий.admsv :
   (LLAUP-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =екий.amsi :
   (LLAUP-)
@@ -22648,6 +22686,10 @@
   (LLAYP- or LLGMV-)
     & <morph-Г,св,пе,дст,пвл,2л,мн>;
 
+=еких.alpv :
+  (LLAUP-)
+    & <morph-П,мн,вн,од>;
+
 =еких.apg :
   (LLAUP-)
     & <morph-П,мн,рд>;
@@ -22659,6 +22701,10 @@
 =еко.anss :
   (LLAUP-)
     & <morph-П,ср,ед,кр>;
+
+=екого.almsv :
+  (LLAUP-)
+    & <morph-П,мр,ед,вн,од>;
 
 =екого.amsg :
   (LLAUP-)
@@ -24603,10 +24649,9 @@
   (LLAVA-)
     & <morph-С,мр,но,мн,рд>;
 
-=еного.adlmsv
-=еный.adlmsv :
+=еного.almsv :
   (LLAVJ- or LLEKN-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =еного.amsg :
   (LLAVJ- or LLEKN-)
@@ -24737,18 +24782,25 @@
   (LLFSN- or LLFSR- or LLFSS- or LLFSU- or LLFSW- or LLFSX- or LLFTB- or LLFTJ- or LLFTK- or LLFTO- or LLFTW- or LLFUC- or LLFUG-)
     & <morph-Г,св,пе,прч,прш,стр,мн,кр>;
 
-=еные.adlpv
-=еных.adlpv :
+=еные.adpv :
   (LLAVJ- or LLEKN-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =еные.api :
   (LLAVJ- or LLEKN-)
     & <morph-П,мн,им>;
 
+=еный.admsv :
+  (LLAVJ-)
+    & <morph-П,мр,ед,вн,но>;
+
 =еный.amsi :
   (LLAVJ-)
     & <morph-П,мр,ед,им>;
+
+=еный.amsv :
+  (LLEKN-)
+    & <morph-П,мр,ед,вн>;
 
 =еным.amst :
   (LLAVJ- or LLEKN-)
@@ -24766,6 +24818,10 @@
   (LLAVJ- or LLEKN-)
     & <morph-П,мн,тв>;
 
+=еных.alpv :
+  (LLAVJ- or LLEKN-)
+    & <morph-П,мн,вн,од>;
+
 =еных.apg :
   (LLAVJ- or LLEKN-)
     & <morph-П,мн,рд>;
@@ -24774,10 +24830,9 @@
   (LLAVJ- or LLEKN-)
     & <morph-П,мн,пр>;
 
-=ень.adlmsv
-=ня.adlmsv :
+=ень.admsv :
   (LLAVO-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =ень.amsi :
   (LLAVO-)
@@ -26355,10 +26410,9 @@
   (LLAWJ- or LLAWK- or LLGKK- or LLGQZ-)
     & <morph-Г,св,нп,дст,инф>;
 
-=есь.wdlmsv
-=сего.wdlmsv :
+=есь.wdmsv :
   (LLDUP-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =есь.wmsi :
   (LLDUP-)
@@ -26704,6 +26758,10 @@
   (LLBPE-)
     & <morph-С,ср,од,мн,пр>;
 
+=ех-то.wlpv :
+  (LLCLE-)
+    & <morph-МС-П,мн,вн,од>;
+
 =ех-то.wpg :
   (LLCLE-)
     & <morph-МС-П,мн,рд>;
@@ -26723,6 +26781,10 @@
 =ех.cv :
   (LLDUE- or LLDUQ-)
     & <morph-ЧИСЛ,вн>;
+
+=ех.wlpv :
+  (LLDVU-)
+    & <morph-МС-П,мн,вн,од>;
 
 =ех.wpg :
   (LLDVU-)
@@ -27165,9 +27227,9 @@
   (LLBFV-)
     & <morph-Г,нс,нп,прч,нст,дст,ед,жр,вн>;
 
-=еы.adlpv :
+=еы.adpv :
   (LLDXZ- or LLFVM-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =еы.api :
   (LLDXZ- or LLFVM-)
@@ -32256,19 +32318,17 @@
   (LLBBM-)
     & <morph-П,мн,кр>;
 
-=зкие.adlpv
-=зких.adlpv :
+=зкие.adpv :
   (LLBBM-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =зкие.api :
   (LLBBM-)
     & <morph-П,мн,им>;
 
-=зкий.adlmsv
-=зкого.adlmsv :
+=зкий.admsv :
   (LLBBM-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =зкий.amsi :
   (LLBBM-)
@@ -32290,6 +32350,10 @@
   (LLBBM-)
     & <morph-П,мн,тв>;
 
+=зких.alpv :
+  (LLBBM-)
+    & <morph-П,мн,вн,од>;
+
 =зких.apg :
   (LLBBM-)
     & <morph-П,мн,рд>;
@@ -32301,6 +32365,10 @@
 =зко.anss :
   (LLBBM-)
     & <morph-П,ср,ед,кр>;
+
+=зкого.almsv :
+  (LLBBM-)
+    & <morph-П,мр,ед,вн,од>;
 
 =зкого.amsg :
   (LLBBM-)
@@ -34731,9 +34799,9 @@
   (LLAIY- or LLAJB- or LLAJC- or LLAJG- or LLAJJ- or LLAJO- or LLAJR- or LLAJU- or LLAXG- or LLAXH- or LLAXJ- or LLAXK- or LLAXL- or LLAXM- or LLAXN- or LLBJW- or LLBJX- or LLBJY- or LLBKA- or LLBKB- or LLBKD- or LLBKH- or LLBKI- or LLBKJ- or LLBKK- or LLBKR- or LLBKT- or LLBKU- or LLBKV- or LLBKX- or LLBKY- or LLBKZ- or LLBLE- or LLBLF- or LLBLG- or LLBLH- or LLBLI- or LLBLJ- or LLBLK- or LLBLL- or LLBLQ- or LLBLR- or LLBLS- or LLBLT- or LLBLU- or LLBLV- or LLBLW- or LLBLX- or LLBLY- or LLBLZ- or LLBMA- or LLBMB- or LLBMC- or LLBMD- or LLCLK- or LLCLL- or LLCWO- or LLCWP- or LLCWQ- or LLDDA- or LLDDB- or LLDGG- or LLDGH- or LLDGI- or LLDGJ- or LLDGK- or LLDGM- or LLDGN- or LLDGO- or LLDGP- or LLFAY- or LLFCT- or LLFRO- or LLFSU- or LLFSV- or LLFSW- or LLFSX- or LLFTB- or LLFTJ- or LLFTK- or LLFTW- or LLFUC- or LLFUF- or LLFUG- or LLFWI- or LLFWK- or LLFWL- or LLFWV- or LLFWX- or LLFXI- or LLFYR- or LLFYU- or LLFZJ- or LLGAA- or LLGAT- or LLGBG- or LLGBN- or LLGCX- or LLGDL- or LLGDN- or LLGDP- or LLGDZ- or LLGEA- or LLGEM- or LLGEP- or LLGEQ- or LLGFH- or LLGFN- or LLGFX- or LLGGI- or LLGJX- or LLGKC- or LLGKM- or LLGMN- or LLGMT- or LLGNC- or LLGNE- or LLGNF- or LLGNH- or LLGNU- or LLGOF- or LLGOQ- or LLGOS- or LLGQA- or LLGQC- or LLGQL- or LLGQS- or LLGRG-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=и.wdlpv :
+=и.wdpv :
   (LLDSV- or LLDSW- or LLDVB- or LLDVC- or LLDVD- or LLDVV-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =и.wpi :
   (LLDSV- or LLDSW- or LLDVB- or LLDVC- or LLDVD- or LLDVV-)
@@ -35701,36 +35769,33 @@
   (LLBDA-)
     & <morph-Г,нс,нп,дст,дпр,нст>;
 
-=ие-либо.wdlpv
-=их-либо.wdlpv :
+=ие-либо.wdpv :
   (LLCJP-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ие-либо.wpi :
   (LLCJP-)
     & <morph-МС-П,мн,им>;
 
-=ие-нибудь.wdlpv
-=их-нибудь.wdlpv :
+=ие-нибудь.wdpv :
   (LLCJQ-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ие-нибудь.wpi :
   (LLCJQ-)
     & <morph-МС-П,мн,им>;
 
-=ие-то.wdlpv
-=их-то.wdlpv :
+=ие-то.wdpv :
   (LLCJR-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ие-то.wpi :
   (LLCJR-)
     & <morph-МС-П,мн,им>;
 
-=ие.adlpv :
+=ие.adpv :
   (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDX- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEF- or LLBEG- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLBFD- or LLCIU- or LLCIX- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYX- or LLDZU- or LLDZZ- or LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP- or LLEKV- or LLFPD- or LLFUQ- or LLGRQ- or LLGRR- or LLGRS- or LLGRT- or LLGRU-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ие.api :
   (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDX- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEF- or LLBEG- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLBFD- or LLCIU- or LLCIX- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYX- or LLDZU- or LLDZZ- or LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP- or LLEKV- or LLFPD- or LLFUQ- or LLGRQ- or LLGRR- or LLGRS- or LLGRT- or LLGRU-)
@@ -35797,9 +35862,9 @@
   (LLATW-)
     & <morph-С,ср,од,мн,им>;
 
-=ие.wdlpv :
+=ие.wdpv :
   (LLDUS- or LLDUT- or LLDUU- or LLDUV- or LLDUW- or LLDUX- or LLDVN-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ие.wnsi :
   (LLDUJ-)
@@ -35817,9 +35882,9 @@
   (LLBDC- or LLBDD-)
     & <morph-С,ср,но,ед,тв>;
 
-=иеся.adlpv :
+=иеся.adpv :
   (LLBFI- or LLBFJ- or LLBFK-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =иеся.api :
   (LLBFI- or LLBFJ- or LLBFK-)
@@ -35838,17 +35903,17 @@
   (LLBDC- or LLBDD-)
     & <morph-С,ср,но,ед,пр>;
 
-=ии.wdlpv :
+=ии.wdpv :
   (LLDUJ-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ии.wpi :
   (LLDUJ-)
     & <morph-МС-П,мн,им>;
 
-=ий.adlmsv :
-  (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDX- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEF- or LLBEG- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLBFD- or LLBFE- or LLBFF- or LLBFG- or LLDYV- or LLDYW- or LLDYX- or LLDYY- or LLDYZ- or LLDZA- or LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP- or LLFPD- or LLFUQ- or LLGRQ- or LLGRR- or LLGRS- or LLGRT- or LLGRU-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ий.admsv :
+  (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDX- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEF- or LLBEG- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLBFD- or LLBFE- or LLBFF- or LLBFG- or LLDYV- or LLDYW- or LLDYX- or LLDYY- or LLDYZ- or LLDZA- or LLFPD- or LLFUQ- or LLGRQ- or LLGRR- or LLGRS- or LLGRT- or LLGRU-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ий.amsi :
   (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDX- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEF- or LLBEG- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLBFD- or LLBFE- or LLBFF- or LLBFG- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYX- or LLDYY- or LLDYZ- or LLDZA- or LLFPD- or LLFUQ- or LLGRQ- or LLGRR- or LLGRS- or LLGRT- or LLGRU-)
@@ -35858,10 +35923,13 @@
   (LLBQQ-)
     & <morph-П,мр,ед,кр>;
 
-=ий.kdlmsv
-=ьего.kdlmsv :
+=ий.amsv :
+  (LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP-)
+    & <morph-П,мр,ед,вн>;
+
+=ий.kdmsv :
   (LLDUY-)
-    & <morph-ЧИСЛ-П,мр,ед,вн,од,но>;
+    & <morph-ЧИСЛ-П,мр,ед,вн,но>;
 
 =ий.kmsi :
   (LLDUY-)
@@ -35923,17 +35991,17 @@
   (LLDNU-)
     & <morph-С,ср,од,мн,вн>;
 
-=ий.wdlmsv :
+=ий.wdmsv :
   (LLDUS- or LLDUT- or LLDUU- or LLDUV- or LLDUW- or LLDUX-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ий.wmsi :
   (LLDUS- or LLDUT- or LLDUU- or LLDUV- or LLDUW- or LLDUX-)
     & <morph-МС-П,мр,ед,им>;
 
-=ийся.adlmsv :
+=ийся.admsv :
   (LLBFI- or LLBFJ- or LLBFK-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =ийся.amsi :
   (LLBFI- or LLBFJ- or LLBFK-)
@@ -36606,10 +36674,9 @@
   (LLEFZ- or LLFQE-)
     & <morph-ЧИСЛ,мр,вн>;
 
-=ин.kdlmsv
-=ного.kdlmsv :
+=ин.kdmsv :
   (LLDUZ-)
-    & <morph-ЧИСЛ-П,мр,ед,вн,од,но>;
+    & <morph-ЧИСЛ-П,мр,ед,вн,но>;
 
 =ин.kmsi :
   (LLDUZ-)
@@ -36627,10 +36694,9 @@
   (LLBFS-)
     & <morph-С,мр,од,ед,вн>;
 
-=ин.wdlmsv
-=ного.wdlmsv :
+=ин.wdmsv :
   (LLDUZ- or LLEFY-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ин.wmsi :
   (LLDUZ- or LLEFY-)
@@ -37338,6 +37404,10 @@
   (LLBPE-)
     & <morph-С,ср,од,ед,пр>;
 
+=их-либо.wlpv :
+  (LLCJP-)
+    & <morph-МС-П,мн,вн,од>;
+
 =их-либо.wpg :
   (LLCJP-)
     & <morph-МС-П,мн,рд>;
@@ -37345,6 +37415,10 @@
 =их-либо.wpp :
   (LLCJP-)
     & <morph-МС-П,мн,пр>;
+
+=их-нибудь.wlpv :
+  (LLCJQ-)
+    & <morph-МС-П,мн,вн,од>;
 
 =их-нибудь.wpg :
   (LLCJQ-)
@@ -37354,6 +37428,10 @@
   (LLCJQ-)
     & <morph-МС-П,мн,пр>;
 
+=их-то.wlpv :
+  (LLCJR-)
+    & <morph-МС-П,мн,вн,од>;
+
 =их-то.wpg :
   (LLCJR-)
     & <morph-МС-П,мн,рд>;
@@ -37362,9 +37440,9 @@
   (LLCJR-)
     & <morph-МС-П,мн,пр>;
 
-=их.adlpv :
+=их.alpv :
   (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLCIU- or LLCIX- or LLCJE- or LLCJF- or LLCJG- or LLDYV- or LLDZU- or LLDZZ- or LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP- or LLEKV- or LLFPD- or LLFUQ- or LLGRQ- or LLGRR- or LLGRS- or LLGRT- or LLGRU-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =их.apg :
   (LLBDK- or LLBDL- or LLBDM- or LLBDN- or LLBDO- or LLBDP- or LLBDQ- or LLBDR- or LLBDS- or LLBDT- or LLBDU- or LLBDV- or LLBDW- or LLBDX- or LLBDY- or LLBDZ- or LLBEA- or LLBEB- or LLBEC- or LLBED- or LLBEE- or LLBEF- or LLBEG- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLBEQ- or LLBER- or LLBES- or LLBET- or LLBEU- or LLBEV- or LLBEW- or LLBEX- or LLBEY- or LLBEZ- or LLBFA- or LLBFB- or LLBFC- or LLBFD- or LLCIU- or LLCIX- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLDYR- or LLDYS- or LLDYT- or LLDYV- or LLDYW- or LLDYX- or LLDZU- or LLDZZ- or LLEHM- or LLEHV- or LLEHY- or LLEIA- or LLEII- or LLEIK- or LLEIM- or LLEIS- or LLEJB- or LLEJC- or LLEKP- or LLEKV- or LLFPD- or LLFUQ- or LLGRQ- or LLGRR- or LLGRS- or LLGRT- or LLGRU-)
@@ -37454,9 +37532,9 @@
   (LLATW-)
     & <morph-С,ср,од,мн,вн>;
 
-=их.wdlpv :
+=их.wlpv :
   (LLDSV- or LLDSW- or LLDUJ- or LLDUS- or LLDUT- or LLDUU- or LLDUV- or LLDUW- or LLDUX- or LLDVB- or LLDVC- or LLDVD- or LLDVN- or LLDVV-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,од>;
 
 =их.wpg :
   (LLDSV- or LLDSW- or LLDUJ- or LLDUS- or LLDUT- or LLDUU- or LLDUV- or LLDUW- or LLDUX- or LLDVB- or LLDVC- or LLDVD- or LLDVN- or LLDVV-)
@@ -37470,9 +37548,9 @@
   (LLDYU-)
     & <morph-П,мн,рд>;
 
-=ихся.adlpv :
+=ихся.alpv :
   (LLBFI- or LLBFJ-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =ихся.apg :
   (LLBFI- or LLBFJ- or LLBFK-)
@@ -37715,9 +37793,9 @@
   (LLBLA- or LLBLH- or LLBLN- or LLBOM- or LLDDF- or LLDDG- or LLDDH- or LLDDI- or LLDDJ- or LLDDK- or LLDDQ- or LLDDR- or LLDDT- or LLDDU- or LLDDV- or LLDDX- or LLDDY- or LLDRX- or LLDRY- or LLDSA- or LLEVX- or LLFCU- or LLFRI- or LLFRX- or LLFSN- or LLFWQ- or LLFWT- or LLFXW- or LLFYL- or LLFYU- or LLFZX- or LLGAR- or LLGAW- or LLGHU- or LLGPH-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=й.wdlmsv :
+=й.wdmsv :
   (LLDVB- or LLDVC- or LLDVD-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =й.wmsi :
   (LLDVB- or LLDVC- or LLDVD-)
@@ -38316,23 +38394,25 @@
   (LLBPZ-)
     & <morph-С,мн,мн,вн>;
 
-=йкие.adlpv
-=йких.adlpv :
+=йкие.adpv :
   (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =йкие.api :
   (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
     & <morph-П,мн,им>;
 
-=йкий.adlmsv
-=йкого.adlmsv :
-  (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
-    & <morph-П,мр,ед,вн,од,но>;
+=йкий.admsv :
+  (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLFUU-)
+    & <morph-П,мр,ед,вн,но>;
 
 =йкий.amsi :
   (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLFUU-)
     & <morph-П,мр,ед,им>;
+
+=йкий.amsv :
+  (LLEJF-)
+    & <morph-П,мр,ед,вн>;
 
 =йким.amst :
   (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
@@ -38353,6 +38433,10 @@
 =йкими.apt :
   (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
     & <morph-П,мн,тв>;
+
+=йких.alpv :
+  (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
+    & <morph-П,мн,вн,од>;
 
 =йких.apg :
   (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
@@ -38385,6 +38469,10 @@
 =йков.nlmpv :
   (LLAUL-)
     & <morph-С,мр,од,мн,вн>;
+
+=йкого.almsv :
+  (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
+    & <morph-П,мр,ед,вн,од>;
 
 =йкого.amsg :
   (LLBQA- or LLBQB- or LLBQC- or LLBQD- or LLEJF- or LLFUU-)
@@ -38690,10 +38778,9 @@
   (LLBQS-)
     & <morph-С,жр,но,ед,пр>;
 
-=йнего.adlmsv
-=йний.adlmsv :
+=йнего.almsv :
   (LLBQG-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =йнего.amsg :
   (LLBQG-)
@@ -38773,14 +38860,17 @@
   (LLBQS-)
     & <morph-С,жр,но,ед,рд>;
 
-=йние.adlpv
-=йних.adlpv :
+=йние.adpv :
   (LLBQG-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =йние.api :
   (LLBQG-)
     & <morph-П,мн,им>;
+
+=йний.admsv :
+  (LLBQG-)
+    & <morph-П,мр,ед,вн,но>;
 
 =йний.amsi :
   (LLBQG-)
@@ -38802,6 +38892,10 @@
   (LLBQG-)
     & <morph-П,мн,тв>;
 
+=йних.alpv :
+  (LLBQG-)
+    & <morph-П,мн,вн,од>;
+
 =йних.apg :
   (LLBQG-)
     & <morph-П,мн,рд>;
@@ -38818,9 +38912,9 @@
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
     & <morph-П,ср,ед,кр>;
 
-=йного.adlmsv :
+=йного.almsv :
   (LLBQH- or LLBQI- or LLBQK- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHU- or LLEKH- or LLFUZ-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =йного.amsg :
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
@@ -38882,21 +38976,25 @@
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
     & <morph-П,мн,кр>;
 
-=йные.adlpv :
+=йные.adpv :
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =йные.api :
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
     & <morph-П,мн,им>;
 
-=йный.adlmsv :
-  (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
-    & <morph-П,мр,ед,вн,од,но>;
+=йный.admsv :
+  (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLFUZ-)
+    & <morph-П,мр,ед,вн,но>;
 
 =йный.amsi :
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLFUZ-)
     & <morph-П,мр,ед,им>;
+
+=йный.amsv :
+  (LLEHF- or LLEHR- or LLEHU- or LLEKH-)
+    & <morph-П,мр,ед,вн>;
 
 =йным.amst :
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
@@ -38918,9 +39016,9 @@
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
     & <morph-П,мн,тв>;
 
-=йных.adlpv :
+=йных.alpv :
   (LLBQH- or LLBQI- or LLBQK- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHU- or LLEKH- or LLFUZ-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =йных.apg :
   (LLBQH- or LLBQI- or LLBQJ- or LLBQK- or LLBQL- or LLBQM- or LLBQN- or LLBQO- or LLBQP- or LLBQQ- or LLBQR- or LLEHF- or LLEHR- or LLEHU- or LLEKH- or LLFUZ-)
@@ -41015,21 +41113,25 @@
   (LLCLR- or LLDIU- or LLDIZ- or LLDJA- or LLDJB- or LLDJC- or LLFXJ- or LLGCV- or LLGKY- or LLGLW- or LLGNN- or LLGQM-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=кие.adlpv :
+=кие.adpv :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLEHX- or LLEIR- or LLEIY- or LLEJJ- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =кие.api :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLEHX- or LLEIR- or LLEIY- or LLEJJ- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
     & <morph-П,мн,им>;
 
-=кий.adlmsv :
-  (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLEHX- or LLEIR- or LLEIY- or LLEJJ- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
-    & <morph-П,мр,ед,вн,од,но>;
+=кий.admsv :
+  (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLFVA-)
+    & <morph-П,мр,ед,вн,но>;
 
 =кий.amsi :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLFVA-)
     & <morph-П,мр,ед,им>;
+
+=кий.amsv :
+  (LLEHX- or LLEIR- or LLEIY- or LLEJJ- or LLEJY- or LLEKB- or LLEKQ-)
+    & <morph-П,мр,ед,вн>;
 
 =ким.amst :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLEHX- or LLEIR- or LLEIY- or LLEJJ- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
@@ -41083,9 +41185,9 @@
   (LLCLT- or LLDJI- or LLDJJ- or LLGAK- or LLGKD- or LLGMW-)
     & <morph-Г,св,нп,дст,пвл,2л,мн>;
 
-=ких.adlpv :
+=ких.alpv :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLEHX- or LLEIR- or LLEIY- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =ких.apg :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLEHX- or LLEIR- or LLEIY- or LLEJJ- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
@@ -41243,9 +41345,9 @@
   (LLBSN- or LLBSO- or LLDZI-)
     & <morph-С,мн,мн,рд>;
 
-=кого.adlmsv :
+=кого.almsv :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLEHX- or LLEIR- or LLEIY- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =кого.amsg :
   (LLBSQ- or LLBSR- or LLBSS- or LLBST- or LLBSU- or LLBSV- or LLBSW- or LLBSX- or LLBSY- or LLBSZ- or LLBTA- or LLBTB- or LLBTC- or LLEHX- or LLEIR- or LLEIY- or LLEJJ- or LLEJY- or LLEKB- or LLEKQ- or LLFVA-)
@@ -44767,9 +44869,9 @@
   (LLAUV- or LLCKL- or LLEDA- or LLFMI-)
     & <morph-С,мр,од,мн,вн>;
 
-=лого.adlmsv :
+=лого.almsv :
   (LLBUD- or LLBUG- or LLBUH-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =лого.amsg :
   (LLBUD- or LLBUG- or LLBUH-)
@@ -44787,9 +44889,9 @@
   (LLBUD- or LLBUG- or LLBUH-)
     & <morph-П,ср,ед,вн>;
 
-=лой.adlmsv :
+=лой.admsv :
   (LLBUD-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =лой.afsd :
   (LLBUD- or LLBUG- or LLBUH-)
@@ -44970,18 +45072,17 @@
   (LLBUF-)
     & <morph-С,мн,мн,вн>;
 
-=лые.adlpv
-=лых.adlpv :
+=лые.adpv :
   (LLBUD- or LLBUG- or LLBUH-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =лые.api :
   (LLBUD- or LLBUG- or LLBUH-)
     & <morph-П,мн,им>;
 
-=лый.adlmsv :
+=лый.admsv :
   (LLBUG- or LLBUH-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =лый.amsi :
   (LLBUG- or LLBUH-)
@@ -45002,6 +45103,10 @@
 =лыми.apt :
   (LLBUD- or LLBUG- or LLBUH-)
     & <morph-П,мн,тв>;
+
+=лых.alpv :
+  (LLBUD- or LLBUG- or LLBUH-)
+    & <morph-П,мн,вн,од>;
 
 =лых.apg :
   (LLBUD- or LLBUG- or LLBUH-)
@@ -47785,10 +47890,9 @@
   (LLAVC- or LLAVM- or LLBUU- or LLFNR- or LLGSF- or LLGSG-)
     & <morph-С,мр,од,ед,пр>;
 
-=него.adlmsv
-=ний.adlmsv :
+=него.almsv :
   (LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEIH- or LLEKI- or LLFMY-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =него.amsg :
   (LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEIH- or LLEKI- or LLFMY-)
@@ -48020,9 +48124,9 @@
   (LLBZN- or LLBZO- or LLBZQ- or LLBZR- or LLBZS-)
     & <morph-С,жр,но,ед,тв>;
 
-=ни.adlpv :
+=ни.adpv :
   (LLAVO-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ни.api :
   (LLAVO-)
@@ -48041,10 +48145,9 @@
   (LLEFZ- or LLFQE-)
     & <morph-ЧИСЛ,вн>;
 
-=ни.kdlpv
-=них.kdlpv :
+=ни.kdpv :
   (LLDUZ-)
-    & <morph-ЧИСЛ-П,мн,вн,од,но>;
+    & <morph-ЧИСЛ-П,мн,вн,но>;
 
 =ни.kpi :
   (LLDUZ-)
@@ -48106,26 +48209,33 @@
   (LLAJL- or LLAJM- or LLAJN- or LLBWX- or LLBWY- or LLBWZ- or LLBXA- or LLBXB- or LLBXC- or LLCTT- or LLDSD- or LLDSE- or LLFWY- or LLGAS- or LLGEE- or LLGFK- or LLGIZ- or LLGJY- or LLGKI- or LLGKP- or LLGLP-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=ни.wdlpv
-=них.wdlpv :
+=ни.wdpv :
   (LLDUZ- or LLEFY-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ни.wpi :
   (LLDUZ- or LLEFY-)
     & <morph-МС-П,мн,им>;
 
-=ние.adlpv :
+=ние.adpv :
   (LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEIH- or LLEKI- or LLFMY-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ние.api :
   (LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEIH- or LLEKI- or LLFMY-)
     & <morph-П,мн,им>;
 
+=ний.admsv :
+  (LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLFMY-)
+    & <morph-П,мр,ед,вн,но>;
+
 =ний.amsi :
   (LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLFMY-)
     & <morph-П,мр,ед,им>;
+
+=ний.amsv :
+  (LLEIH- or LLEKI-)
+    & <morph-П,мр,ед,вн>;
 
 =ним.amst :
   (LLAVO- or LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEIH- or LLEKI- or LLFMY-)
@@ -48239,9 +48349,9 @@
   (LLAKN- or LLBXD- or LLBXE- or LLBXF- or LLBXG- or LLBXH- or LLCUA- or LLDSM- or LLFDT- or LLFWZ- or LLGCW- or LLGEC- or LLGJA- or LLGJK- or LLGKJ- or LLGKQ- or LLGPD- or LLGSC-)
     & <morph-Г,св,нп,дст,пвл,2л,мн>;
 
-=них.adlpv :
+=них.alpv :
   (LLAVO- or LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEIH- or LLEKI- or LLFMY-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =них.apg :
   (LLAVO- or LLBVJ- or LLBVK- or LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEIH- or LLEKI- or LLFMY-)
@@ -48254,6 +48364,10 @@
 =них.cg :
   (LLEFZ- or LLFQE-)
     & <morph-ЧИСЛ,рд>;
+
+=них.klpv :
+  (LLDUZ-)
+    & <morph-ЧИСЛ-П,мн,вн,од>;
 
 =них.kpg :
   (LLDUZ-)
@@ -48270,6 +48384,10 @@
 =них.nlmpv :
   (LLBFR-)
     & <morph-С,мр,од,мн,вн>;
+
+=них.wlpv :
+  (LLDUZ- or LLEFY-)
+    & <morph-МС-П,мн,вн,од>;
 
 =них.wpg :
   (LLDUZ- or LLEFY-)
@@ -48573,13 +48691,17 @@
   (LLDZM-)
     & <morph-С,мн,мн,рд>;
 
-=ного.adlmsv :
-  (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYY- or LLBYZ- or LLBZA- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZL- or LLBZM- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHS- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ного.almsv :
+  (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYY- or LLBYZ- or LLBZA- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZL- or LLBZM- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHS- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEKC- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
+    & <morph-П,мр,ед,вн,од>;
 
 =ного.amsg :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
     & <morph-П,мр,ед,рд>;
+
+=ного.amsv :
+  (LLFMV-)
+    & <morph-П,мр,ед,вн>;
 
 =ного.ansg :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
@@ -48592,6 +48714,10 @@
 =ного.cng :
   (LLEFZ- or LLFQE-)
     & <morph-ЧИСЛ,ср,рд>;
+
+=ного.klmsv :
+  (LLDUZ-)
+    & <morph-ЧИСЛ-П,мр,ед,вн,од>;
 
 =ного.kmsg :
   (LLDUZ-)
@@ -48609,6 +48735,10 @@
   (LLBFR-)
     & <morph-С,мр,од,ед,вн>;
 
+=ного.wlmsv :
+  (LLDUZ- or LLEFY-)
+    & <morph-МС-П,мр,ед,вн,од>;
+
 =ного.wmsg :
   (LLDUZ- or LLEFY-)
     & <morph-МС-П,мр,ед,рд>;
@@ -48625,9 +48755,9 @@
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
     & <morph-П,ср,ед,вн>;
 
-=ной.adlmsv :
-  (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLEIW-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ной.admsv :
+  (LLBVR- or LLBVS- or LLBVT- or LLBVU-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ной.afsd :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
@@ -48648,6 +48778,10 @@
 =ной.amsi :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU-)
     & <morph-П,мр,ед,им>;
+
+=ной.amsv :
+  (LLEIW-)
+    & <morph-П,мр,ед,вн>;
 
 =ной.cfd :
   (LLEFZ- or LLFQE-)
@@ -50356,21 +50490,25 @@
   (LLFRI- or LLFRX-)
     & <morph-Г,св,пе,прч,прш,стр,мн,кр>;
 
-=ные.adlpv :
+=ные.adpv :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ные.api :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
     & <morph-П,мн,им>;
 
-=ный.adlmsv :
-  (LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ный.admsv :
+  (LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ный.amsi :
   (LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
     & <morph-П,мр,ед,им>;
+
+=ный.amsv :
+  (LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC-)
+    & <morph-П,мр,ед,вн>;
 
 =ным.amst :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
@@ -50392,9 +50530,9 @@
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
     & <morph-П,мн,тв>;
 
-=ных.adlpv :
+=ных.alpv :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYY- or LLBYZ- or LLBZA- or LLBZD- or LLBZE- or LLBZF- or LLBZH- or LLBZL- or LLBZM- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHS- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =ных.apg :
   (LLBVR- or LLBVS- or LLBVT- or LLBVU- or LLBXM- or LLBXN- or LLBXO- or LLBXP- or LLBXQ- or LLBXR- or LLBXS- or LLBXT- or LLBXU- or LLBXV- or LLBXW- or LLBXX- or LLBXY- or LLBXZ- or LLBYA- or LLBYB- or LLBYC- or LLBYD- or LLBYE- or LLBYF- or LLBYG- or LLBYH- or LLBYI- or LLBYJ- or LLBYK- or LLBYL- or LLBYM- or LLBYN- or LLBYO- or LLBYP- or LLBYQ- or LLBYR- or LLBYS- or LLBYT- or LLBYU- or LLBYV- or LLBYW- or LLBYX- or LLBYY- or LLBYZ- or LLBZA- or LLBZB- or LLBZC- or LLBZD- or LLBZE- or LLBZF- or LLBZG- or LLBZH- or LLBZI- or LLBZJ- or LLBZK- or LLBZL- or LLBZM- or LLDZN- or LLEGA- or LLEHA- or LLEHB- or LLEHC- or LLEHI- or LLEHN- or LLEHQ- or LLEHS- or LLEHT- or LLEHZ- or LLEIB- or LLEIC- or LLEIG- or LLEIJ- or LLEIN- or LLEIQ- or LLEIW- or LLEIX- or LLEIZ- or LLEJI- or LLEJL- or LLEJM- or LLEJN- or LLEJO- or LLEJP- or LLEJX- or LLEJZ- or LLEKC- or LLFMV- or LLFPE- or LLFUP- or LLFUT- or LLFUW- or LLFVC- or LLFVE-)
@@ -50475,6 +50613,10 @@
 =ня.afss :
   (LLBVL- or LLBVM- or LLEGI- or LLEGP- or LLEKI-)
     & <morph-П,жр,ед,кр>;
+
+=ня.almsv :
+  (LLAVO-)
+    & <morph-П,мр,ед,вн,од>;
 
 =ня.amsg :
   (LLAVO-)
@@ -51552,9 +51694,9 @@
   (LLAER-)
     & <morph-С,мр,но,мн,рд>;
 
-=ов.adlmsv :
+=ов.admsv :
   (LLDZT- or LLFUY-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =ов.amsi :
   (LLDZT- or LLFUY-)
@@ -54836,9 +54978,9 @@
   (LLDWB-)
     & <morph-МС,мр,ед,вн>;
 
-=ого-либо.wdlmsv :
+=ого-либо.wlmsv :
   (LLCJP- or LLDLW-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =ого-либо.wmsg :
   (LLCJP- or LLDLW-)
@@ -54856,9 +54998,9 @@
   (LLDWD-)
     & <morph-МС,мр,ед,вн>;
 
-=ого-нибудь.wdlmsv :
+=ого-нибудь.wlmsv :
   (LLCJQ- or LLDLX-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =ого-нибудь.wmsg :
   (LLCJQ- or LLDLX-)
@@ -54876,9 +55018,9 @@
   (LLDWF-)
     & <morph-МС,мр,ед,вн>;
 
-=ого-то.wdlmsv :
+=ого-то.wlmsv :
   (LLCJR- or LLCLE- or LLDLY-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =ого-то.wmsg :
   (LLCJR- or LLCLE- or LLDLY-)
@@ -54888,29 +55030,33 @@
   (LLCJR- or LLCLE- or LLDLY-)
     & <morph-МС-П,ср,ед,рд>;
 
-=ого.adlmsv :
-  (LLADZ- or LLBDV- or LLBDW- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJC- or LLCJE- or LLCJF- or LLCJG- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLDKA- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKJ- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKU- or LLDKW- or LLDKX- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLF- or LLDLH- or LLDLJ- or LLDLK- or LLDLL- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYY- or LLDZZ- or LLEAA- or LLEAP- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIT- or LLEJD- or LLEJE- or LLEJG- or LLEJQ- or LLEJU- or LLEKD- or LLEKL- or LLEKM- or LLEKU- or LLEKV- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMW- or LLFMZ- or LLFNY- or LLFPD- or LLFUN- or LLFUQ- or LLFUS- or LLFVD- or LLFVF- or LLFVG- or LLFVJ- or LLGRP- or LLGRQ- or LLGRR-)
-    & <morph-П,мр,ед,вн,од,но>;
-
-=ого.adlpv :
-  (LLDLR-)
-    & <morph-П,мн,вн,од,но>;
-
 =ого.afsg :
   (LLDYR-)
     & <morph-П,жр,ед,рд>;
+
+=ого.almsv :
+  (LLADZ- or LLBDV- or LLBDW- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJC- or LLCJE- or LLCJF- or LLCJG- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLDKA- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKJ- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKU- or LLDKW- or LLDKX- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLF- or LLDLH- or LLDLJ- or LLDLK- or LLDLL- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYY- or LLDZZ- or LLEAA- or LLEAP- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIT- or LLEJD- or LLEJE- or LLEJG- or LLEJQ- or LLEJU- or LLEKD- or LLEKL- or LLEKM- or LLEKU- or LLEKV- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMZ- or LLFNY- or LLFPD- or LLFUN- or LLFUQ- or LLFUS- or LLFVD- or LLFVF- or LLFVG- or LLFVJ- or LLGRP- or LLGRQ- or LLGRR-)
+    & <morph-П,мр,ед,вн,од>;
 
 =ого.amsg :
   (LLADZ- or LLAEE- or LLBDV- or LLBDW- or LLBDX- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDKA- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLT- or LLDLU- or LLDLV- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYX- or LLDYY- or LLDYZ- or LLDZN- or LLDZZ- or LLEAA- or LLEAP- or LLEAQ- or LLEAR- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJG- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKM- or LLEKR- or LLEKU- or LLEKV- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMZ- or LLFNY- or LLFPD- or LLFUN- or LLFUQ- or LLFUS- or LLFVD- or LLFVF- or LLFVG- or LLFVH- or LLFVJ- or LLGRP- or LLGRQ- or LLGRR-)
     & <morph-П,мр,ед,рд>;
 
+=ого.amsv :
+  (LLFMW-)
+    & <morph-П,мр,ед,вн>;
+
 =ого.ansg :
   (LLADZ- or LLAEE- or LLBDV- or LLBDW- or LLBDX- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDKA- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLT- or LLDLU- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYX- or LLDYZ- or LLDZU- or LLDZZ- or LLEAA- or LLEAP- or LLEAQ- or LLEAR- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJG- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKM- or LLEKR- or LLEKU- or LLEKV- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMW- or LLFMZ- or LLFNY- or LLFPD- or LLFUN- or LLFUQ- or LLFUS- or LLFVD- or LLFVF- or LLFVG- or LLFVH- or LLFVJ- or LLGRP- or LLGRQ- or LLGRR-)
     & <morph-П,ср,ед,рд>;
 
-=ого.kdlmsv :
+=ого.apv :
+  (LLDLR-)
+    & <morph-П,мн,вн>;
+
+=ого.klmsv :
   (LLDVP- or LLDWN- or LLEKX- or LLEKZ- or LLELA-)
-    & <morph-ЧИСЛ-П,мр,ед,вн,од,но>;
+    & <morph-ЧИСЛ-П,мр,ед,вн,од>;
 
 =ого.kmsg :
   (LLDVP- or LLDWN- or LLEKX- or LLEKY- or LLEKZ- or LLELA-)
@@ -54969,9 +55115,9 @@
   (LLDVJ-)
     & <morph-МС-ПРЕДК,ед,вн>;
 
-=ого.wdlmsv :
+=ого.wlmsv :
   (LLDSW- or LLDUS- or LLDUU- or LLDUV- or LLDVM- or LLDVN- or LLDVO- or LLDVU- or LLDVV- or LLDWL- or LLDWM-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =ого.wmsg :
   (LLDSW- or LLDUS- or LLDUU- or LLDUV- or LLDVM- or LLDVN- or LLDVO- or LLDVU- or LLDVV- or LLDWL- or LLDWM-)
@@ -54989,14 +55135,17 @@
   (LLFLZ- or LLFMA-)
     & <morph-П,жр,ед,вн>;
 
-=одные.adlpv
-=одных.adlpv :
+=одные.adpv :
   (LLFLZ- or LLFMA-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =одные.api :
   (LLFLZ- or LLFMA-)
     & <morph-П,мн,им>;
+
+=одный.admsv :
+  (LLFLZ- or LLFMA-)
+    & <morph-П,мр,ед,вн,но>;
 
 =одный.amsi :
   (LLFLZ- or LLFMA-)
@@ -55021,6 +55170,10 @@
 =одными.apt :
   (LLFLZ- or LLFMA-)
     & <morph-П,мн,тв>;
+
+=одных.alpv :
+  (LLFLZ- or LLFMA-)
+    & <morph-П,мн,вн,од>;
 
 =одных.apg :
   (LLFLZ- or LLFMA-)
@@ -55533,9 +55686,9 @@
   (LLDUS- or LLDUU- or LLDUV- or LLDUW- or LLDVM- or LLDVN- or LLDVO- or LLDWL- or LLDWM-)
     & <morph-МС-П,ср,ед,вн>;
 
-=оего.wdlmsv :
+=оего.wlmsv :
   (LLDUU- or LLDUW-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =оего.wmsg :
   (LLDUU- or LLDUW-)
@@ -56864,9 +57017,9 @@
   (LLDTX-)
     & <morph-ЧИСЛ,ср,пр>;
 
-=оих.wdlpv :
+=оих.wlpv :
   (LLDUW-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,од>;
 
 =оих.wpg :
   (LLDUW-)
@@ -56876,9 +57029,9 @@
   (LLDUW-)
     & <morph-МС-П,мн,пр>;
 
-=ой-либо.wdlmsv :
+=ой-либо.wdmsv :
   (LLCJP-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ой-либо.wfsd :
   (LLCJP- or LLDLW-)
@@ -56901,9 +57054,9 @@
   (LLCJP-)
     & <morph-МС-П,мр,ед,им>;
 
-=ой-нибудь.wdlmsv :
+=ой-нибудь.wdmsv :
   (LLCJQ-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ой-нибудь.wfsd :
   (LLCJQ- or LLDLX-)
@@ -56946,9 +57099,9 @@
   (LLDXU-)
     & <morph-С,жр,но,ед,тв>;
 
-=ой-то.wdlmsv :
+=ой-то.wdmsv :
   (LLCJR-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ой-то.wfsd :
   (LLCJR- or LLCLE- or LLDLY-)
@@ -56971,9 +57124,9 @@
   (LLCJR-)
     & <morph-МС-П,мр,ед,им>;
 
-=ой.adlmsv :
-  (LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDZZ- or LLEAA- or LLEHJ- or LLEHK- or LLEHW- or LLEIL- or LLEJG- or LLEKM- or LLEKV- or LLEKW-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ой.admsv :
+  (LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDZZ- or LLEAA-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ой.afsd :
   (LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAEE- or LLALA- or LLALB- or LLBDV- or LLBDW- or LLBDX- or LLBEH- or LLBEI- or LLBEJ- or LLBEK- or LLBEL- or LLBEM- or LLBEN- or LLBEO- or LLBEP- or LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDKA- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLT- or LLDLU- or LLDXH- or LLDXZ- or LLDYR- or LLDYS- or LLDYT- or LLDYU- or LLDYV- or LLDYW- or LLDYX- or LLDYY- or LLDYZ- or LLDZT- or LLDZZ- or LLEAA- or LLEAP- or LLEAQ- or LLEAR- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJG- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKM- or LLEKR- or LLEKU- or LLEKV- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMD- or LLFMW- or LLFMZ- or LLFNY- or LLFPD- or LLFUN- or LLFUO- or LLFUQ- or LLFUR- or LLFUS- or LLFUV- or LLFUY- or LLFVB- or LLFVD- or LLFVF- or LLFVG- or LLFVH- or LLFVJ- or LLFVM- or LLFVO- or LLGRP- or LLGRQ- or LLGRR-)
@@ -56999,9 +57152,13 @@
   (LLCIS- or LLCIT- or LLCIU- or LLCIV- or LLCIW- or LLCIX- or LLCIY- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJE- or LLCJF- or LLCJG- or LLCJH- or LLCJI- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDZZ- or LLEAA-)
     & <morph-П,мр,ед,им>;
 
-=ой.kdlmsv :
+=ой.amsv :
+  (LLEHJ- or LLEHK- or LLEHW- or LLEIL- or LLEJG- or LLEKM- or LLEKV- or LLEKW-)
+    & <morph-П,мр,ед,вн>;
+
+=ой.kdmsv :
   (LLDVP-)
-    & <morph-ЧИСЛ-П,мр,ед,вн,од,но>;
+    & <morph-ЧИСЛ-П,мр,ед,вн,но>;
 
 =ой.kfsd :
   (LLDVP- or LLDWN- or LLEKX- or LLEKY- or LLEKZ- or LLELA-)
@@ -57115,9 +57272,9 @@
   (LLAXI- or LLDME- or LLDMF- or LLFZO- or LLGBJ-)
     & <morph-Г,св,пе,дст,пвл,2л,ед>;
 
-=ой.wdlmsv :
+=ой.wdmsv :
   (LLDVM- or LLDVN- or LLDVO-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ой.wfsd :
   (LLDSW- or LLDUS- or LLDUU- or LLDUV- or LLDUW- or LLDVM- or LLDVN- or LLDVO- or LLDVU- or LLDVV- or LLDWL- or LLDWM-)
@@ -57279,19 +57436,17 @@
   (LLCJV- or LLCJX-)
     & <morph-С,мр,но,мн,вн>;
 
-=окие.adlpv
-=оких.adlpv :
+=окие.adpv :
   (LLCKH- or LLCKI-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =окие.api :
   (LLCKH- or LLCKI-)
     & <morph-П,мн,им>;
 
-=окий.adlmsv
-=окого.adlmsv :
+=окий.admsv :
   (LLCKH- or LLCKI-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =окий.amsi :
   (LLCKH- or LLCKI-)
@@ -57313,6 +57468,10 @@
   (LLCKH- or LLCKI-)
     & <morph-П,мн,тв>;
 
+=оких.alpv :
+  (LLCKH- or LLCKI-)
+    & <morph-П,мн,вн,од>;
+
 =оких.apg :
   (LLCKH- or LLCKI-)
     & <morph-П,мн,рд>;
@@ -57328,6 +57487,10 @@
 =оков.ndmpg :
   (LLCJV- or LLCJX-)
     & <morph-С,мр,но,мн,рд>;
+
+=окого.almsv :
+  (LLCKH- or LLCKI-)
+    & <morph-П,мр,ед,вн,од>;
 
 =окого.amsg :
   (LLCKH- or LLCKI-)
@@ -58326,10 +58489,9 @@
   (LLEGQ-)
     & <morph-П,ср,ед,кр>;
 
-=олодого.adlmsv
-=олодой.adlmsv :
+=олодого.almsv :
   (LLEGQ-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =олодого.amsg :
   (LLEGQ-)
@@ -58346,6 +58508,10 @@
 =олодое.ansv :
   (LLEGQ-)
     & <morph-П,ср,ед,вн>;
+
+=олодой.admsv :
+  (LLEGQ-)
+    & <morph-П,мр,ед,вн,но>;
 
 =олодой.afsd :
   (LLEGQ-)
@@ -58392,10 +58558,9 @@
   (LLEGQ-)
     & <morph-П,мн,кр>;
 
-=олодые.adlpv
-=олодых.adlpv :
+=олодые.adpv :
   (LLEGQ-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =олодые.api :
   (LLEGQ-)
@@ -58416,6 +58581,10 @@
 =олодыми.apt :
   (LLEGQ-)
     & <morph-П,мн,тв>;
+
+=олодых.alpv :
+  (LLEGQ-)
+    & <morph-П,мн,вн,од>;
 
 =олодых.apg :
   (LLEGQ-)
@@ -60822,9 +60991,9 @@
   (LLAHO- or LLGQX-)
     & <morph-Г,св,нп,прч,прш,дст,ед,жр,вн>;
 
-=от-то.wdlmsv :
+=от-то.wdmsv :
   (LLCLE-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =от-то.wmsi :
   (LLCLE-)
@@ -60854,9 +61023,9 @@
   (LLCLK- or LLGAA-)
     & <morph-Г,св,пе,прч,нст,стр,ед,мр,кр>;
 
-=от.wdlmsv :
+=от.wdmsv :
   (LLDVU- or LLDVV-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =от.wmsi :
   (LLDVU- or LLDVV-)
@@ -61535,9 +61704,9 @@
   (LLDJO- or LLFEO- or LLGNQ-)
     & <morph-Г,св,нп,дст,буд,3л,мн>;
 
-=оы.adlpv :
+=оы.adpv :
   (LLDZT- or LLFUY-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =оы.api :
   (LLDZT- or LLFUY-)
@@ -64425,10 +64594,9 @@
   (LLCMV- or LLCMW- or LLCMX-)
     & <morph-Г,св,пе,дст,инф>;
 
-=рого.adlmsv
-=рый.adlmsv :
+=рого.almsv :
   (LLCMY- or LLCMZ- or LLCNA-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =рого.amsg :
   (LLCMY- or LLCMZ- or LLCNA-)
@@ -64921,14 +65089,17 @@
   (LLAVT- or LLCKW-)
     & <morph-С,мр,од,мн,им>;
 
-=рые.adlpv
-=рых.adlpv :
+=рые.adpv :
   (LLCMY- or LLCMZ- or LLCNA-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =рые.api :
   (LLCMY- or LLCMZ- or LLCNA-)
     & <morph-П,мн,им>;
+
+=рый.admsv :
+  (LLCMY- or LLCMZ- or LLCNA-)
+    & <morph-П,мр,ед,вн,но>;
 
 =рый.amsi :
   (LLCMY- or LLCMZ- or LLCNA-)
@@ -64949,6 +65120,10 @@
 =рыми.apt :
   (LLCMY- or LLCMZ- or LLCNA-)
     & <morph-П,мн,тв>;
+
+=рых.alpv :
+  (LLCMY- or LLCMZ- or LLCNA-)
+    & <morph-П,мн,вн,од>;
 
 =рых.apg :
   (LLCMY- or LLCMZ- or LLCNA-)
@@ -65904,10 +66079,9 @@
   (LLAWD-)
     & <morph-С,мр,од,ед,пр>;
 
-=се.wdlpv
-=сех.wdlpv :
+=се.wdpv :
   (LLDUP-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =се.wnsi :
   (LLDUP-)
@@ -66229,6 +66403,10 @@
   (LLCNP- or LLGOH-)
     & <morph-Г,св,нп,прч,прш,дст,ед,жр,вн>;
 
+=сего.wlmsv :
+  (LLDUP-)
+    & <morph-МС-П,мр,ед,вн,од>;
+
 =сего.wmsg :
   (LLDUP-)
     & <morph-МС-П,мр,ед,рд>;
@@ -66482,6 +66660,10 @@
   (LLCNP- or LLGOH-)
     & <morph-Г,св,нп,дст,инф>;
 
+=сех.wlpv :
+  (LLDUP-)
+    & <morph-МС-П,мн,вн,од>;
+
 =сех.wpg :
   (LLDUP-)
     & <morph-МС-П,мн,рд>;
@@ -66546,10 +66728,9 @@
   (LLEGO-)
     & <morph-П,ср,ед,кр>;
 
-=сивого.adlmsv
-=сивый.adlmsv :
+=сивого.almsv :
   (LLEGO-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =сивого.amsg :
   (LLEGO-)
@@ -67362,14 +67543,17 @@
   (LLEGO-)
     & <morph-П,мн,кр>;
 
-=сивые.adlpv
-=сивых.adlpv :
+=сивые.adpv :
   (LLEGO-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =сивые.api :
   (LLEGO-)
     & <morph-П,мн,им>;
+
+=сивый.admsv :
+  (LLEGO-)
+    & <morph-П,мр,ед,вн,но>;
 
 =сивый.amsi :
   (LLEGO-)
@@ -67390,6 +67574,10 @@
 =сивыми.apt :
   (LLEGO-)
     & <morph-П,мн,тв>;
+
+=сивых.alpv :
+  (LLEGO-)
+    & <morph-П,мн,вн,од>;
 
 =сивых.apg :
   (LLEGO-)
@@ -69426,23 +69614,25 @@
   (LLCPQ- or LLEKE-)
     & <morph-П,мн,кр>;
 
-=ские.adlpv
-=ских.adlpv :
+=ские.adpv :
   (LLCPQ- or LLEKE-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ские.api :
   (LLCPQ- or LLEKE-)
     & <morph-П,мн,им>;
 
-=ский.adlmsv
-=ского.adlmsv :
-  (LLCPQ- or LLEKE-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ский.admsv :
+  (LLCPQ-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ский.amsi :
   (LLCPQ-)
     & <morph-П,мр,ед,им>;
+
+=ский.amsv :
+  (LLEKE-)
+    & <morph-П,мр,ед,вн>;
 
 =ским.amst :
   (LLCPQ- or LLEKE-)
@@ -69460,6 +69650,10 @@
   (LLCPQ- or LLEKE-)
     & <morph-П,мн,тв>;
 
+=ских.alpv :
+  (LLCPQ- or LLEKE-)
+    & <morph-П,мн,вн,од>;
+
 =ских.apg :
   (LLCPQ- or LLEKE-)
     & <morph-П,мн,рд>;
@@ -69471,6 +69665,10 @@
 =ско.anss :
   (LLCPQ- or LLEKE-)
     & <morph-П,ср,ед,кр>;
+
+=ского.almsv :
+  (LLCPQ- or LLEKE-)
+    & <morph-П,мр,ед,вн,од>;
 
 =ского.amsg :
   (LLCPQ- or LLEKE-)
@@ -70542,19 +70740,17 @@
   (LLCPX-)
     & <morph-П,мн,кр>;
 
-=сокие.adlpv
-=соких.adlpv :
+=сокие.adpv :
   (LLCPX-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =сокие.api :
   (LLCPX-)
     & <morph-П,мн,им>;
 
-=сокий.adlmsv
-=сокого.adlmsv :
+=сокий.admsv :
   (LLCPX-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =сокий.amsi :
   (LLCPX-)
@@ -70576,6 +70772,10 @@
   (LLCPX-)
     & <morph-П,мн,тв>;
 
+=соких.alpv :
+  (LLCPX-)
+    & <morph-П,мн,вн,од>;
+
 =соких.apg :
   (LLCPX-)
     & <morph-П,мн,рд>;
@@ -70587,6 +70787,10 @@
 =соко.anss :
   (LLCPX-)
     & <morph-П,ср,ед,кр>;
+
+=сокого.almsv :
+  (LLCPX-)
+    & <morph-П,мр,ед,вн,од>;
 
 =сокого.amsg :
   (LLCPX-)
@@ -74491,9 +74695,9 @@
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
     & <morph-П,ср,ед,кр>;
 
-=стого.adlmsv :
+=стого.almsv :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =стого.amsg :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
@@ -74511,9 +74715,9 @@
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
     & <morph-П,ср,ед,вн>;
 
-=стой.adlmsv :
-  (LLCTF- or LLCTG- or LLEJT- or LLFVI-)
-    & <morph-П,мр,ед,вн,од,но>;
+=стой.admsv :
+  (LLCTF- or LLCTG- or LLFVI-)
+    & <morph-П,мр,ед,вн,но>;
 
 =стой.afsd :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
@@ -74535,6 +74739,10 @@
 =стой.amsi :
   (LLCTF- or LLCTG- or LLFVI-)
     & <morph-П,мр,ед,им>;
+
+=стой.amsv :
+  (LLEJT-)
+    & <morph-П,мр,ед,вн>;
 
 =стом.amsp :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
@@ -74568,18 +74776,17 @@
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
     & <morph-П,мн,кр>;
 
-=стые.adlpv
-=стых.adlpv :
+=стые.adpv :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =стые.api :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
     & <morph-П,мн,им>;
 
-=стый.adlmsv :
+=стый.admsv :
   (LLCTH-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =стый.amsi :
   (LLCTH-)
@@ -74604,6 +74811,10 @@
 =стыми.apt :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
     & <morph-П,мн,тв>;
+
+=стых.alpv :
+  (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
+    & <morph-П,мн,вн,од>;
 
 =стых.apg :
   (LLCTF- or LLCTG- or LLCTH- or LLEJT- or LLFVI-)
@@ -80300,19 +80511,17 @@
   (LLCYW-)
     & <morph-С,жр,но,ед,рд>;
 
-=ткие.adlpv
-=тких.adlpv :
+=ткие.adpv :
   (LLCYX-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ткие.api :
   (LLCYX-)
     & <morph-П,мн,им>;
 
-=ткий.adlmsv
-=ткого.adlmsv :
+=ткий.admsv :
   (LLCYX-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =ткий.amsi :
   (LLCYX-)
@@ -80334,6 +80543,10 @@
   (LLCYX-)
     & <morph-П,мн,тв>;
 
+=тких.alpv :
+  (LLCYX-)
+    & <morph-П,мн,вн,од>;
+
 =тких.apg :
   (LLCYX-)
     & <morph-П,мн,рд>;
@@ -80345,6 +80558,10 @@
 =тко.anss :
   (LLCYX-)
     & <morph-П,ср,ед,кр>;
+
+=ткого.almsv :
+  (LLCYX-)
+    & <morph-П,мр,ед,вн,од>;
 
 =ткого.amsg :
   (LLCYX-)
@@ -80614,10 +80831,9 @@
   (LLCLD-)
     & <morph-С,мр,од,мн,вн>;
 
-=того.adlmsv
-=той.adlmsv :
+=того.almsv :
   (LLCYY- or LLCYZ- or LLCZA- or LLEJV- or LLEKG- or LLFVK-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =того.amsg :
   (LLCYY- or LLCYZ- or LLCZA- or LLEJV- or LLEKG- or LLFVK-)
@@ -80681,6 +80897,10 @@
   (LLAXF- or LLCTT- or LLDDE- or LLDDI- or LLDDO- or LLDDP- or LLFCU- or LLFXU- or LLFXW- or LLGEH- or LLGIZ-)
     & <morph-Г,св,пе,прч,прш,стр,ед,ср,вн>;
 
+=той.admsv :
+  (LLCYY- or LLCYZ- or LLCZA- or LLFVK-)
+    & <morph-П,мр,ед,вн,но>;
+
 =той.afsd :
   (LLCYY- or LLCYZ- or LLCZA- or LLEJV- or LLEKG- or LLFVK-)
     & <morph-П,жр,ед,дт>;
@@ -80701,6 +80921,10 @@
 =той.amsi :
   (LLCYY- or LLCYZ- or LLCZA- or LLFVK-)
     & <morph-П,мр,ед,им>;
+
+=той.amsv :
+  (LLEJV- or LLEKG-)
+    & <morph-П,мр,ед,вн>;
 
 =той.vnppdpfsd :
   (LLCTK- or LLDAK-)
@@ -81983,10 +82207,9 @@
   (LLFCU-)
     & <morph-Г,св,пе,прч,прш,стр,мн,им>;
 
-=тые.adlpv
-=тых.adlpv :
+=тые.adpv :
   (LLCYY- or LLCYZ- or LLCZA- or LLEJV- or LLEKG- or LLFVK-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =тые.api :
   (LLCYY- or LLCYZ- or LLCZA- or LLEJV- or LLEKG- or LLFVK-)
@@ -82069,6 +82292,10 @@
 =тыми.vsppsppt :
   (LLAXF- or LLCTT- or LLDDE- or LLDDI- or LLDDO- or LLDDP- or LLFCU- or LLFXU- or LLFXW- or LLGEH- or LLGIZ-)
     & <morph-Г,св,пе,прч,прш,стр,мн,тв>;
+
+=тых.alpv :
+  (LLCYY- or LLCYZ- or LLCZA- or LLEJV- or LLEKG- or LLFVK-)
+    & <morph-П,мн,вн,од>;
 
 =тых.apg :
   (LLCYY- or LLCYZ- or LLCZA- or LLEJV- or LLEKG- or LLFVK-)
@@ -85750,6 +85977,10 @@
   (LLCMV- or LLCMW- or LLCMX-)
     & <morph-Г,св,пе,дст,пвл,2л,мн>;
 
+=х.alpv :
+  (LLASG-)
+    & <morph-П,мн,вн,од>;
+
 =х.amss :
   (LLDHU- or LLDHW- or LLEJK-)
     & <morph-П,мр,ед,кр>;
@@ -87515,18 +87746,17 @@
   (LLCLO-)
     & <morph-С,мр,но,мн,вн>;
 
-=хие.adlpv
-=хих.adlpv :
+=хие.adpv :
   (LLDHU- or LLDHW- or LLEJK-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =хие.api :
   (LLDHU- or LLDHW- or LLEJK-)
     & <morph-П,мн,им>;
 
-=хий.adlmsv :
+=хий.admsv :
   (LLDHU-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =хий.amsi :
   (LLDHU-)
@@ -87547,6 +87777,10 @@
 =хими.apt :
   (LLDHU- or LLDHW- or LLEJK-)
     & <morph-П,мн,тв>;
+
+=хих.alpv :
+  (LLDHU- or LLDHW- or LLEJK-)
+    & <morph-П,мн,вн,од>;
 
 =хих.apg :
   (LLDHU- or LLDHW- or LLEJK-)
@@ -87572,9 +87806,9 @@
   (LLCLO-)
     & <morph-С,мр,но,мн,рд>;
 
-=хого.adlmsv :
+=хого.almsv :
   (LLDHU- or LLDHW- or LLEJK-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =хого.amsg :
   (LLDHU- or LLDHW- or LLEJK-)
@@ -87592,9 +87826,9 @@
   (LLDHU- or LLDHW- or LLEJK-)
     & <morph-П,ср,ед,вн>;
 
-=хой.adlmsv :
-  (LLDHW- or LLEJK-)
-    & <morph-П,мр,ед,вн,од,но>;
+=хой.admsv :
+  (LLDHW-)
+    & <morph-П,мр,ед,вн,но>;
 
 =хой.afsd :
   (LLDHU- or LLDHW- or LLEJK-)
@@ -87616,6 +87850,10 @@
 =хой.amsi :
   (LLDHW-)
     & <morph-П,мр,ед,им>;
+
+=хой.amsv :
+  (LLEJK-)
+    & <morph-П,мр,ед,вн>;
 
 =хом.amsp :
   (LLDHU- or LLDHW- or LLEJK-)
@@ -87653,10 +87891,9 @@
   (LLEKT-)
     & <morph-П,жр,ед,им>;
 
-=хорошего.adlmsv
-=хороший.adlmsv :
+=хорошего.almsv :
   (LLEKT-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =хорошего.amsg :
   (LLEKT-)
@@ -87711,14 +87948,17 @@
   (LLEKT-)
     & <morph-П,мн,кр>;
 
-=хорошие.adlpv
-=хороших.adlpv :
+=хорошие.adpv :
   (LLEKT-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =хорошие.api :
   (LLEKT-)
     & <morph-П,мн,им>;
+
+=хороший.amsv :
+  (LLEKT-)
+    & <morph-П,мр,ед,вн>;
 
 =хорошим.amst :
   (LLEKT-)
@@ -87735,6 +87975,10 @@
 =хорошими.apt :
   (LLEKT-)
     & <morph-П,мн,тв>;
+
+=хороших.alpv :
+  (LLEKT-)
+    & <morph-П,мн,вн,од>;
 
 =хороших.apg :
   (LLEKT-)
@@ -88591,10 +88835,9 @@
   (LLDIL-)
     & <morph-П,жр,ед,им>;
 
-=чивого.adlmsv
-=чивый.adlmsv :
+=чивого.almsv :
   (LLDIL-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =чивого.amsg :
   (LLDIL-)
@@ -88648,14 +88891,17 @@
   (LLDIL-)
     & <morph-П,жр,ед,вн>;
 
-=чивые.adlpv
-=чивых.adlpv :
+=чивые.adpv :
   (LLDIL-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =чивые.api :
   (LLDIL-)
     & <morph-П,мн,им>;
+
+=чивый.admsv :
+  (LLDIL-)
+    & <morph-П,мр,ед,вн,но>;
 
 =чивый.amsi :
   (LLDIL-)
@@ -88676,6 +88922,10 @@
 =чивыми.apt :
   (LLDIL-)
     & <morph-П,мн,тв>;
+
+=чивых.alpv :
+  (LLDIL-)
+    & <morph-П,мн,вн,од>;
 
 =чивых.apg :
   (LLDIL-)
@@ -93177,9 +93427,9 @@
   (LLAER-)
     & <morph-С,мр,но,мн,вн>;
 
-=ы.adlpv :
+=ы.adpv :
   (LLADW- or LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAED- or LLAEE- or LLCAT- or LLFUO- or LLFUR- or LLFUS- or LLFUV- or LLFVH- or LLFVN- or LLFVO-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ы.api :
   (LLADW- or LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAED- or LLAEE- or LLCAT- or LLFUO- or LLFUR- or LLFUS- or LLFUV- or LLFVH- or LLFVN- or LLFVO-)
@@ -94541,44 +94791,41 @@
   (LLDMI- or LLDMJ- or LLGCG- or LLGIF-)
     & <morph-Г,св,нп,прч,прш,дст,ед,жр,вн>;
 
-=ые-либо.wdlpv
-=ых-либо.wdlpv :
+=ые-либо.wdpv :
   (LLDLW-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ые-либо.wpi :
   (LLDLW-)
     & <morph-МС-П,мн,им>;
 
-=ые-нибудь.wdlpv
-=ых-нибудь.wdlpv :
+=ые-нибудь.wdpv :
   (LLDLX-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ые-нибудь.wpi :
   (LLDLX-)
     & <morph-МС-П,мн,им>;
 
-=ые-то.wdlpv
-=ых-то.wdlpv :
+=ые-то.wdpv :
   (LLDLY-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ые-то.wpi :
   (LLDLY-)
     & <morph-МС-П,мн,им>;
 
-=ые.adlpv :
+=ые.adpv :
   (LLALB- or LLCIS- or LLCIT- or LLCIV- or LLCIW- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJJ- or LLCJK- or LLCJL- or LLCJN- or LLCJO- or LLDKA- or LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDKZ- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLU- or LLDLV- or LLEAA- or LLEAP- or LLEAQ- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKM- or LLEKR- or LLEKU- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMW- or LLFMZ- or LLFNY- or LLFUN- or LLFVD- or LLFVF- or LLFVG- or LLFVJ- or LLGRP-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ые.api :
   (LLALB- or LLCIS- or LLCIT- or LLCIV- or LLCIW- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDKA- or LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDKZ- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLT- or LLDLU- or LLDLV- or LLEAA- or LLEAP- or LLEAQ- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKM- or LLEKR- or LLEKU- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMW- or LLFMZ- or LLFNY- or LLFUN- or LLFVD- or LLFVF- or LLFVG- or LLFVJ- or LLGRP-)
     & <morph-П,мн,им>;
 
-=ые.kdlpv :
+=ые.kdpv :
   (LLDVP- or LLDWN- or LLEKX- or LLEKY- or LLEKZ- or LLELA-)
-    & <morph-ЧИСЛ-П,мн,вн,од,но>;
+    & <morph-ЧИСЛ-П,мн,вн,но>;
 
 =ые.kpi :
   (LLDVP- or LLDWN- or LLEKX- or LLEKY- or LLEKZ- or LLELA-)
@@ -94629,54 +94876,61 @@
   (LLCIL-)
     & <morph-С,ср,од,мн,им>;
 
-=ые.wdlpv
-=ых.wdlpv :
+=ые.wdpv :
   (LLDVM- or LLDVO- or LLDWL- or LLDWM-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ые.wpi :
   (LLDVM- or LLDVO- or LLDWL- or LLDWM-)
     & <morph-МС-П,мн,им>;
 
-=ый-либо.wdlmsv :
+=ый-либо.wdmsv :
   (LLDLW-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ый-либо.wmsi :
   (LLDLW-)
     & <morph-МС-П,мр,ед,им>;
 
-=ый-нибудь.wdlmsv :
+=ый-нибудь.wdmsv :
   (LLDLX-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ый-нибудь.wmsi :
   (LLDLX-)
     & <morph-МС-П,мр,ед,им>;
 
-=ый-то.wdlmsv :
+=ый-то.wdmsv :
   (LLDLY-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ый-то.wmsi :
   (LLDLY-)
     & <morph-МС-П,мр,ед,им>;
 
-=ый.adlmsv :
-  (LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDKZ- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLT- or LLDLU- or LLDLV- or LLEAP- or LLEAQ- or LLEAR- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHL- or LLEHP- or LLEIE- or LLEIF- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKR- or LLEKU- or LLFGB- or LLFGC- or LLFMB- or LLFMZ- or LLFNY- or LLFUN- or LLFVD- or LLFVF- or LLFVG- or LLFVJ- or LLGRP-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ый.admsv :
+  (LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDKZ- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLT- or LLDLU- or LLDLV- or LLEAP- or LLEAQ- or LLEAR- or LLEGG- or LLEGR- or LLEGX- or LLFGB- or LLFGC- or LLFMB- or LLFMZ- or LLFNY- or LLFUN- or LLFVD- or LLFVF- or LLFVG- or LLFVJ-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ый.amsi :
   (LLDKA- or LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDKZ- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLT- or LLDLU- or LLDLV- or LLEAP- or LLEAQ- or LLEAR- or LLEGG- or LLEGR- or LLEGX- or LLFFZ- or LLFGB- or LLFGC- or LLFMB- or LLFMZ- or LLFNY- or LLFUN- or LLFVD- or LLFVF- or LLFVG- or LLFVJ-)
     & <morph-П,мр,ед,им>;
 
-=ый.kdlmsv :
-  (LLDWN- or LLEKX- or LLEKY- or LLEKZ- or LLELA-)
-    & <morph-ЧИСЛ-П,мр,ед,вн,од,но>;
+=ый.amsv :
+  (LLEHD- or LLEHG- or LLEHL- or LLEHP- or LLEIE- or LLEIF- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKR- or LLEKU- or LLGRP-)
+    & <morph-П,мр,ед,вн>;
+
+=ый.kdmsv :
+  (LLDWN- or LLEKX- or LLEKY- or LLELA-)
+    & <morph-ЧИСЛ-П,мр,ед,вн,но>;
 
 =ый.kmsi :
   (LLDWN- or LLEKX- or LLEKY- or LLELA-)
     & <morph-ЧИСЛ-П,мр,ед,им>;
+
+=ый.kmsv :
+  (LLEKZ-)
+    & <morph-ЧИСЛ-П,мр,ед,вн>;
 
 =ый.mmsi :
   (LLDWL- or LLEGV-)
@@ -94698,9 +94952,9 @@
   (LLDJZ- or LLEDV- or LLEDW- or LLFFZ- or LLFMC- or LLFMD- or LLFNQ-)
     & <morph-С,мр,од,ед,им>;
 
-=ый.wdlmsv :
+=ый.wdmsv :
   (LLDWL- or LLDWM-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,но>;
 
 =ый.wmsi :
   (LLDWL- or LLDWM-)
@@ -95273,6 +95527,10 @@
   (LLDMI- or LLDMJ- or LLGCG- or LLGIF-)
     & <morph-Г,св,нп,дст,инф>;
 
+=ых-либо.wlpv :
+  (LLDLW-)
+    & <morph-МС-П,мн,вн,од>;
+
 =ых-либо.wpg :
   (LLDLW-)
     & <morph-МС-П,мн,рд>;
@@ -95280,6 +95538,10 @@
 =ых-либо.wpp :
   (LLDLW-)
     & <morph-МС-П,мн,пр>;
+
+=ых-нибудь.wlpv :
+  (LLDLX-)
+    & <morph-МС-П,мн,вн,од>;
 
 =ых-нибудь.wpg :
   (LLDLX-)
@@ -95289,6 +95551,10 @@
   (LLDLX-)
     & <morph-МС-П,мн,пр>;
 
+=ых-то.wlpv :
+  (LLDLY-)
+    & <morph-МС-П,мн,вн,од>;
+
 =ых-то.wpg :
   (LLDLY-)
     & <morph-МС-П,мн,рд>;
@@ -95297,9 +95563,9 @@
   (LLDLY-)
     & <morph-МС-П,мн,пр>;
 
-=ых.adlpv :
+=ых.alpv :
   (LLADZ- or LLAEA- or LLCIS- or LLCIT- or LLCIV- or LLCIW- or LLCIZ- or LLCJA- or LLCJC- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKJ- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKU- or LLDKW- or LLDKX- or LLDKZ- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLF- or LLDLH- or LLDLJ- or LLDLK- or LLDLL- or LLDLN- or LLDLO- or LLDLP- or LLEAA- or LLEAP- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIT- or LLEJD- or LLEJE- or LLEJQ- or LLEJU- or LLEKD- or LLEKL- or LLEKM- or LLEKU- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMW- or LLFMZ- or LLFNY- or LLFUN- or LLFUO- or LLFUS- or LLFVD- or LLFVF- or LLFVG- or LLFVJ- or LLGRP-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =ых.apg :
   (LLADW- or LLADY- or LLADZ- or LLAEA- or LLAEB- or LLAEC- or LLAED- or LLAEE- or LLALB- or LLCAT- or LLCIS- or LLCIT- or LLCIV- or LLCIW- or LLCIZ- or LLCJA- or LLCJB- or LLCJC- or LLCJD- or LLCJJ- or LLCJK- or LLCJL- or LLCJM- or LLCJN- or LLCJO- or LLDKA- or LLDKB- or LLDKC- or LLDKD- or LLDKE- or LLDKF- or LLDKG- or LLDKH- or LLDKI- or LLDKJ- or LLDKK- or LLDKL- or LLDKM- or LLDKN- or LLDKO- or LLDKP- or LLDKQ- or LLDKR- or LLDKS- or LLDKT- or LLDKU- or LLDKV- or LLDKW- or LLDKX- or LLDKY- or LLDKZ- or LLDLA- or LLDLB- or LLDLC- or LLDLD- or LLDLE- or LLDLF- or LLDLG- or LLDLH- or LLDLI- or LLDLJ- or LLDLK- or LLDLL- or LLDLM- or LLDLN- or LLDLO- or LLDLP- or LLDLQ- or LLDLR- or LLDLS- or LLDLU- or LLDLV- or LLEAA- or LLEAP- or LLEAQ- or LLEGG- or LLEGR- or LLEGX- or LLEHD- or LLEHG- or LLEHJ- or LLEHK- or LLEHL- or LLEHP- or LLEHW- or LLEIE- or LLEIF- or LLEIL- or LLEIO- or LLEIT- or LLEIU- or LLEJD- or LLEJE- or LLEJH- or LLEJQ- or LLEJS- or LLEJU- or LLEJW- or LLEKD- or LLEKF- or LLEKJ- or LLEKL- or LLEKM- or LLEKR- or LLEKU- or LLEKW- or LLFGB- or LLFGC- or LLFMB- or LLFMW- or LLFMZ- or LLFNY- or LLFUN- or LLFUO- or LLFUR- or LLFUS- or LLFUV- or LLFVD- or LLFVF- or LLFVG- or LLFVH- or LLFVJ- or LLFVN- or LLFVO- or LLGRP-)
@@ -95325,9 +95591,9 @@
   (LLDVI-)
     & <morph-ЧИСЛ,вн>;
 
-=ых.kdlpv :
+=ых.klpv :
   (LLDVP- or LLDWN- or LLEKX- or LLEKZ- or LLELA-)
-    & <morph-ЧИСЛ-П,мн,вн,од,но>;
+    & <morph-ЧИСЛ-П,мн,вн,од>;
 
 =ых.kpg :
   (LLDVP- or LLDWN- or LLEKX- or LLEKY- or LLEKZ- or LLELA-)
@@ -95404,6 +95670,10 @@
 =ых.nlnpv :
   (LLCIL-)
     & <morph-С,ср,од,мн,вн>;
+
+=ых.wlpv :
+  (LLDVM- or LLDVO- or LLDWL- or LLDWM-)
+    & <morph-МС-П,мн,вн,од>;
 
 =ых.wpg :
   (LLDVM- or LLDVO- or LLDWL- or LLDWM-)
@@ -95813,6 +96083,10 @@
   (LLACK- or LLATY- or LLBFQ- or LLDMX- or LLDPR-)
     & <morph-С,мр,од,мн,вн>;
 
+=ьего-либо.wlmsv :
+  (LLATZ-)
+    & <morph-МС-П,мр,ед,вн,од>;
+
 =ьего-либо.wmsg :
   (LLATZ-)
     & <morph-МС-П,мр,ед,рд>;
@@ -95820,6 +96094,10 @@
 =ьего-либо.wnsg :
   (LLATZ-)
     & <morph-МС-П,ср,ед,рд>;
+
+=ьего-нибудь.wlmsv :
+  (LLAUA-)
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =ьего-нибудь.wmsg :
   (LLAUA-)
@@ -95829,6 +96107,10 @@
   (LLAUA-)
     & <morph-МС-П,ср,ед,рд>;
 
+=ьего-то.wlmsv :
+  (LLAUB-)
+    & <morph-МС-П,мр,ед,вн,од>;
+
 =ьего-то.wmsg :
   (LLAUB-)
     & <morph-МС-П,мр,ед,рд>;
@@ -95837,9 +96119,9 @@
   (LLAUB-)
     & <morph-МС-П,ср,ед,рд>;
 
-=ьего.adlmsv :
+=ьего.almsv :
   (LLBFF-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =ьего.amsg :
   (LLBFE- or LLBFF- or LLBFG- or LLDZA-)
@@ -95848,6 +96130,10 @@
 =ьего.ansg :
   (LLBFE- or LLBFF- or LLBFG- or LLDZA-)
     & <morph-П,ср,ед,рд>;
+
+=ьего.klmsv :
+  (LLDUY-)
+    & <morph-ЧИСЛ-П,мр,ед,вн,од>;
 
 =ьего.kmsg :
   (LLDUY-)
@@ -95869,9 +96155,9 @@
   (LLBDJ-)
     & <morph-С,мр,од,ед,вн>;
 
-=ьего.wdlmsv :
+=ьего.wlmsv :
   (LLDUI-)
-    & <morph-МС-П,мр,ед,вн,од,но>;
+    & <morph-МС-П,мр,ед,вн,од>;
 
 =ьего.wmsg :
   (LLDUI-)
@@ -96248,45 +96534,41 @@
   (LLDPK- or LLDPL-)
     & <morph-С,жр,но,ед,тв>;
 
-=ьи-либо.wdlpv
-=ьих-либо.wdlpv :
+=ьи-либо.wdpv :
   (LLATZ-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ьи-либо.wpi :
   (LLATZ-)
     & <morph-МС-П,мн,им>;
 
-=ьи-нибудь.wdlpv
-=ьих-нибудь.wdlpv :
+=ьи-нибудь.wdpv :
   (LLAUA-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ьи-нибудь.wpi :
   (LLAUA-)
     & <morph-МС-П,мн,им>;
 
-=ьи-то.wdlpv
-=ьих-то.wdlpv :
+=ьи-то.wdpv :
   (LLAUB-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ьи-то.wpi :
   (LLAUB-)
     & <morph-МС-П,мн,им>;
 
-=ьи.adlpv :
+=ьи.adpv :
   (LLBFE- or LLBFF- or LLBFG-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ьи.api :
   (LLBFE- or LLBFF- or LLBFG-)
     & <morph-П,мн,им>;
 
-=ьи.kdlpv
-=ьих.kdlpv :
+=ьи.kdpv :
   (LLDUY-)
-    & <morph-ЧИСЛ-П,мн,вн,од,но>;
+    & <morph-ЧИСЛ-П,мн,вн,но>;
 
 =ьи.kpi :
   (LLDUY-)
@@ -96328,10 +96610,9 @@
   (LLDPH- or LLDPI- or LLDPJ-)
     & <morph-С,мр,од,ед,рд>;
 
-=ьи.wdlpv
-=ьих.wdlpv :
+=ьи.wdpv :
   (LLDUI-)
-    & <morph-МС-П,мн,вн,од,но>;
+    & <morph-МС-П,мн,вн,но>;
 
 =ьи.wpi :
   (LLDUI-)
@@ -96449,6 +96730,10 @@
   (LLDUI-)
     & <morph-МС-П,мн,тв>;
 
+=ьих-либо.wlpv :
+  (LLATZ-)
+    & <morph-МС-П,мн,вн,од>;
+
 =ьих-либо.wpg :
   (LLATZ-)
     & <morph-МС-П,мн,рд>;
@@ -96456,6 +96741,10 @@
 =ьих-либо.wpp :
   (LLATZ-)
     & <morph-МС-П,мн,пр>;
+
+=ьих-нибудь.wlpv :
+  (LLAUA-)
+    & <morph-МС-П,мн,вн,од>;
 
 =ьих-нибудь.wpg :
   (LLAUA-)
@@ -96465,6 +96754,10 @@
   (LLAUA-)
     & <morph-МС-П,мн,пр>;
 
+=ьих-то.wlpv :
+  (LLAUB-)
+    & <morph-МС-П,мн,вн,од>;
+
 =ьих-то.wpg :
   (LLAUB-)
     & <morph-МС-П,мн,рд>;
@@ -96473,9 +96766,9 @@
   (LLAUB-)
     & <morph-МС-П,мн,пр>;
 
-=ьих.adlpv :
+=ьих.alpv :
   (LLBFF-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =ьих.apg :
   (LLBFE- or LLBFF- or LLBFG-)
@@ -96484,6 +96777,10 @@
 =ьих.app :
   (LLBFE- or LLBFF- or LLBFG-)
     & <morph-П,мн,пр>;
+
+=ьих.klpv :
+  (LLDUY-)
+    & <morph-ЧИСЛ-П,мн,вн,од>;
 
 =ьих.kpg :
   (LLDUY-)
@@ -96504,6 +96801,10 @@
 =ьих.nlmpv :
   (LLBDJ-)
     & <morph-С,мр,од,мн,вн>;
+
+=ьих.wlpv :
+  (LLDUI-)
+    & <morph-МС-П,мн,вн,од>;
 
 =ьих.wpg :
   (LLDUI-)
@@ -96681,19 +96982,17 @@
   (LLDNZ- or LLEAV-)
     & <morph-С,мн,мн,вн>;
 
-=ькие.adlpv
-=ьких.adlpv :
+=ькие.adpv :
   (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ькие.api :
   (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
     & <morph-П,мн,им>;
 
-=ький.adlmsv
-=ького.adlmsv :
+=ький.admsv :
   (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,но>;
 
 =ький.amsi :
   (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
@@ -96718,6 +97017,10 @@
 =ькими.apt :
   (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
     & <morph-П,мн,тв>;
+
+=ьких.alpv :
+  (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
+    & <morph-П,мн,вн,од>;
 
 =ьких.apg :
   (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
@@ -96746,6 +97049,10 @@
 =ьков.nlmpv :
   (LLAUN-)
     & <morph-С,мр,од,мн,вн>;
+
+=ького.almsv :
+  (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
+    & <morph-П,мр,ед,вн,од>;
 
 =ького.amsg :
   (LLDOA- or LLDOB- or LLDOC- or LLFUX-)
@@ -97076,9 +97383,9 @@
   (LLDOF- or LLDOG- or LLDOH- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
     & <morph-П,ср,ед,кр>;
 
-=ьного.adlmsv :
+=ьного.almsv :
   (LLDOF- or LLDOG- or LLDOH- or LLDOJ- or LLDOK- or LLDOL- or LLDOO- or LLDOP- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLEHE- or LLEHH- or LLEHO- or LLEJA- or LLEKK- or LLEKS-)
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 =ьного.amsg :
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
@@ -97096,9 +97403,9 @@
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
     & <morph-П,ср,ед,вн>;
 
-=ьной.adlmsv :
-  (LLDOF- or LLDOG- or LLEKS-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ьной.admsv :
+  (LLDOF- or LLDOG-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ьной.afsd :
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
@@ -97119,6 +97426,10 @@
 =ьной.amsi :
   (LLDOF- or LLDOG-)
     & <morph-П,мр,ед,им>;
+
+=ьной.amsv :
+  (LLEKS-)
+    & <morph-П,мр,ед,вн>;
 
 =ьном.amsp :
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
@@ -97148,21 +97459,25 @@
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
     & <morph-П,мн,кр>;
 
-=ьные.adlpv :
+=ьные.adpv :
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 =ьные.api :
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
     & <morph-П,мн,им>;
 
-=ьный.adlmsv :
-  (LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO-)
-    & <morph-П,мр,ед,вн,од,но>;
+=ьный.admsv :
+  (LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY-)
+    & <morph-П,мр,ед,вн,но>;
 
 =ьный.amsi :
   (LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY-)
     & <morph-П,мр,ед,им>;
+
+=ьный.amsv :
+  (LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO-)
+    & <morph-П,мр,ед,вн>;
 
 =ьным.amst :
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
@@ -97184,9 +97499,9 @@
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
     & <morph-П,мн,тв>;
 
-=ьных.adlpv :
+=ьных.alpv :
   (LLDOF- or LLDOG- or LLDOH- or LLDOJ- or LLDOK- or LLDOL- or LLDOO- or LLDOP- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLEHE- or LLEHH- or LLEHO- or LLEJA- or LLEKK- or LLEKS-)
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,од>;
 
 =ьных.apg :
   (LLDOF- or LLDOG- or LLDOH- or LLDOI- or LLDOJ- or LLDOK- or LLDOL- or LLDOM- or LLDON- or LLDOO- or LLDOP- or LLDOQ- or LLDOR- or LLDOS- or LLDOT- or LLDOU- or LLDOV- or LLDOW- or LLDOX- or LLDOY- or LLEHE- or LLEHH- or LLEHO- or LLEID- or LLEIP- or LLEJA- or LLEJR- or LLEKK- or LLEKO- or LLEKS-)
@@ -102079,14 +102394,11 @@
   ()
     & <morph-П,сравн>;
 
-большие.adlpv
-больших.adlpv
-плохие.adlpv
-плохих.adlpv
-хорошие.adlpv
-хороших.adlpv :
+большие.adpv
+плохие.adpv
+хорошие.adpv :
   ()
-    & <morph-П,мн,вн,од,но>;
+    & <morph-П,мн,вн,но>;
 
 большие.api
 плохие.api
@@ -102118,6 +102430,12 @@
   ()
     & <morph-П,мн,тв>;
 
+больших.alpv
+плохих.alpv
+хороших.alpv :
+  ()
+    & <morph-П,мн,вн,од>;
+
 больших.apg
 плохих.apg
 хороших.apg :
@@ -102130,14 +102448,11 @@
   ()
     & <morph-П,мн,пр>;
 
-большого.adlmsv
-большой.adlmsv
-плохого.adlmsv
-плохой.adlmsv
-хорошего.adlmsv
-хороший.adlmsv :
+большого.almsv
+плохого.almsv
+хорошего.almsv :
   ()
-    & <morph-П,мр,ед,вн,од,но>;
+    & <morph-П,мр,ед,вн,од>;
 
 большого.amsg
 плохого.amsg
@@ -102162,6 +102477,12 @@
 хорошее.ansv :
   ()
     & <morph-П,ср,ед,вн>;
+
+большой.admsv
+плохой.admsv
+хороший.admsv :
+  ()
+    & <morph-П,мр,ед,вн,но>;
 
 большой.afsd
 плохой.afsd
