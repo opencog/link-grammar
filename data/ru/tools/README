@@ -4,8 +4,8 @@ The original dictionaries are in KOI8-R  ... to convert to UTF8, do this:
       iconv -f KOI8-R -t UTF-8  <infile>  >   <outfile>
 
 Morphological dictionary encoded in *.db files; to convert
-to the current form, run these scripts:
+to the current form, run this script:
 
-time ./mkroot.pl > stem.dict
-time ./mksuf.pl > suffix.dict
+time ./mkdict.pl
 
+This should take about 20 seconds (or less, on newer cpus).
