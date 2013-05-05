@@ -343,6 +343,7 @@ $revcnt = 0; my $filecnt = 1;
 
 foreach my $stems ( sort keys %fwd ) {
     $stems =~ s/^\s+|\s+$//g;
+    next if ( $stems eq "" ); # skip nums_for_empty_stem
     next unless defined $fwd{$stems};
     my @words = sort split(/\s+/, $stems);
     my @nums = split /:/, $fwd{$stems};
