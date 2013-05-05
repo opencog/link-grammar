@@ -9,7 +9,7 @@
 % Total number of suftags = 27396
 %
 %
-% Total number of entries = 25399
+% Total number of entries = 25398
 %
 
 =-.ansi :
@@ -142,7 +142,7 @@
     & <morph-ЧИСЛ,вн>;
 
 =.e :
-  (LLAEK- or LLDTC-)
+  (LLDTC-)
     & <morph-Н,0>;
 
 =.f :
@@ -150,7 +150,7 @@
     & <morph-ФРАЗ,0>;
 
 =.i :
-  (LLAEN- or LLDTC- or LLDTF- or LLDTI- or LLDTJ- or LLDTK- or LLDTL- or LLDTM- or LLDTN- or LLDTO-)
+  (LLAEN- or LLDTC- or LLDTF- or LLDTJ- or LLDTL- or LLDTN- or LLDTO-)
     & <morph-СОЮЗ,0>;
 
 =.j :
@@ -438,11 +438,11 @@
     & <morph-ПОСЛ,0>;
 
 =.p :
-  (LLAEP- or LLDTC- or LLDTH- or LLDTK- or LLDTM- or LLDTN- or LLDTQ- or LLDTS- or LLDTT-)
+  (LLAEP- or LLDTC- or LLDTH- or LLDTN- or LLDTQ- or LLDTT-)
     & <morph-ЧАСТ,0>;
 
 =.q :
-  (LLAEO- or LLDTG- or LLDTJ- or LLDTK- or LLDTL- or LLDTP- or LLDTQ- or LLDTR-)
+  (LLAEO- or LLDTG- or LLDTJ- or LLDTL- or LLDTP- or LLDTQ- or LLDTR-)
     & <morph-МЕЖД,0>;
 
 =.vnndi :
@@ -586,19 +586,19 @@
     & <morph-ЧИСЛ,им>;
 
 =а.cmi :
-  (LLDTX- or LLDTY-)
+  ()
     & <morph-ЧИСЛ,мр,им>;
 
 =а.cmv :
-  (LLDTX- or LLDTY-)
+  ()
     & <morph-ЧИСЛ,мр,вн>;
 
 =а.cni :
-  (LLDTX- or LLDTY-)
+  ()
     & <morph-ЧИСЛ,ср,им>;
 
 =а.cnv :
-  (LLDTX- or LLDTY-)
+  ()
     & <morph-ЧИСЛ,ср,вн>;
 
 =а.cp :
@@ -19110,15 +19110,15 @@
     & <morph-ЧИСЛ,дт>;
 
 =е.cfi :
-  (LLDTX- or LLDTY-)
+  ()
     & <morph-ЧИСЛ,жр,им>;
 
 =е.cfv :
-  (LLDTX- or LLDTY-)
+  ()
     & <morph-ЧИСЛ,жр,вн>;
 
 =е.ci :
-  (LLDUE- or LLDUF-)
+  (LLDUF-)
     & <morph-ЧИСЛ,им>;
 
 =е.cp :
@@ -19126,7 +19126,7 @@
     & <morph-ЧИСЛ,пр>;
 
 =е.cv :
-  (LLDUE- or LLDUF-)
+  (LLDUF-)
     & <morph-ЧИСЛ,вн>;
 
 =е.mnsi :
@@ -34648,7 +34648,7 @@
     & <morph-ЧИСЛ,рд>;
 
 =и.ci :
-  (LLDUQ- or LLFML-)
+  (LLFML-)
     & <morph-ЧИСЛ,им>;
 
 =и.cp :
@@ -34656,7 +34656,7 @@
     & <morph-ЧИСЛ,пр>;
 
 =и.cv :
-  (LLDUQ- or LLFML-)
+  (LLFML-)
     & <morph-ЧИСЛ,вн>;
 
 =и.mpi :
@@ -64294,8 +64294,9 @@
   (LLAVU-)
     & <morph-Г,нс,нп,дст,пвл,2л,ед>;
 
-=ри.vnpdv2s :
-  (LLAVV-)
+=ри.vnpdv2s
+шли.vnpdv2s :
+  ()
     & <morph-Г,нс,пе,дст,пвл,2л,ед>;
 
 =ри.vsndv2s :
@@ -103480,10 +103481,6 @@
 шлешь.vnpdn2s :
   ()
     & <morph-Г,нс,пе,дст,нст,2л,ед>;
-
-шли.vnpdv2s :
-  ()
-    & <morph-Г,нс,пе,дст,пвл,2л,ед>;
 
 шлите.vnpdv2p :
   ()

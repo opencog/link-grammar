@@ -10960,7 +10960,7 @@
 даш.nlfpv наташ.nlfpv :  <morph-С,жр,од,мн,вн>;
 
 дв.= :
-  LLDUO+;
+  LLDTY+ or LLDUO+;
 
 двадцат.= тридцат.= :
   LLBRK+ or LLDWN+ or LLDWO+;
@@ -13434,6 +13434,10 @@
 ед.= :
   LLAGL+ or LLBSX+;
 
+едва.= когда.= отчего.= покамест.= покуда.= причем.= 
+только-только.= :
+  LLAEK+ or LLDTI+;
+
 едва.i отчего.i покамест.i покуда.i причем.i только-только.i 
 :  <morph-СОЮЗ,0>;
 
@@ -13456,6 +13460,12 @@
 еж.ndmsv :  <morph-С,мр,но,ед,вн>;
 
 еж.ndmsi :  <morph-С,мр,но,ед,им>;
+
+аль.= благо.= буде.= впрочем.= дабы.= ежели.= 
+если.= зато.= ибо.= итак.= коли.= коль.= 
+нежели.= поелику.= поколь.= поскольку.= постольку.= сиречь.= 
+также.= чем.= что.= яко.= :
+  LLDTI+;
 
 аль.i благо.i буде.i впрочем.i дабы.i ежели.i 
 зато.i ибо.i итак.i коли.i коль.i нежели.i 
@@ -15443,7 +15453,7 @@
   LLAUN+ or LLDMX+;
 
 и.= :
-  LLGKX+ or LLEOU+ or LLEOV+ or LLGLB+ or LLGLE+ or LLGLF+ or LLGLG+;
+  LLDTK+ or LLGKX+ or LLEOU+ or LLEOV+ or LLGLB+ or LLGLE+ or LLGLF+ or LLGLG+;
 
 :  <morph-СОЮЗ,0>;
 
@@ -16235,7 +16245,7 @@
 кайф.ndmsi :  <morph-С,мр,но,ед,им>;
 
 как.= :
-  LLDVN+ or LLCJP+ or LLCJQ+ or LLCJR+;
+  LLDTM+ or LLAEK+ or LLDVN+ or LLCJP+ or LLCJQ+ or LLCJR+;
 
 как.i :  <morph-СОЮЗ,0>;
 
@@ -24199,7 +24209,7 @@
   LLFZB+ or LLGJI+;
 
 не.= :
-  LLALI+ or LLBQT+ or LLEAY+;
+  LLDTS+ or LLALI+ or LLBQT+ or LLEAY+;
 
 :  <morph-ЧАСТ,0>;
 
@@ -25126,7 +25136,7 @@
   LLGSR+ or LLDTG+ or LLGSR+ or LLBTJ+ or LLGNV+ or LLGNW+ or LLGNX+ or LLGNY+;
 
 об.= :
-  LLGSR+ or LLFWP+ or LLFYE+ or LLFXH+ or LLFYN+ or LLGMO+ or LLGMP+ or LLGKS+ or LLGKT+ or LLGMQ+ or LLGMR+ or LLGAD+ or LLGAE+ or LLGMY+ or LLGAG+ or LLGAH+ or LLGNA+ or LLGNB+ or LLGAL+ or LLFZG+ or LLFZH+ or LLGND+ or LLGBV+ or LLGCS+ or LLGCT+ or LLGNO+ or LLGNP+ or LLGCY+ or LLGNQ+ or LLEAU+;
+  LLGSR+ or LLDTX+ or LLFWP+ or LLFYE+ or LLFXH+ or LLFYN+ or LLGMO+ or LLGMP+ or LLGKS+ or LLGKT+ or LLGMQ+ or LLGMR+ or LLGAD+ or LLGAE+ or LLGMY+ or LLGAG+ or LLGAH+ or LLGNA+ or LLGNB+ or LLGAL+ or LLFZG+ or LLFZH+ or LLGND+ or LLGBV+ or LLGCS+ or LLGCT+ or LLGNO+ or LLGNP+ or LLGCY+ or LLGNQ+ or LLEAU+;
 
 обаб.= :
   LLFYW+ or LLFYX+ or LLCJW+;
@@ -39025,7 +39035,7 @@
 сяк.e :  <morph-Н,0>;
 
 т.= :
-  LLAWA+ or LLDVU+ or LLCLE+ or LLDWJ+ or LLDOD+;
+  LLAVV+ or LLAWA+ or LLDVU+ or LLCLE+ or LLDWJ+ or LLDOD+;
 
 та.= :
   LLAYG+ or LLBIK+ or LLBNP+ or LLBQI+ or LLDRJ+;
@@ -39332,6 +39342,9 @@
 
 терп.= :
   LLFLT+ or LLAXO+ or LLBSW+;
+
+/ru/words/words.228:
+  LLAEK+;
 
 абазински.e абсолютно.e абстрактно.e абсурдно.e абхазски.e авансом.e 
 аварски.e автоматически.e адекватно.e аджарски.e адски.e адыгейски.e 
@@ -39965,7 +39978,7 @@
 
 тип.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.228:
+/ru/words/words.229:
   LLAAJ+;
 
 автогараж.ndmsv бердыш.ndmsv буж.ndmsv витраж.ndmsv вольтаж.ndmsv галдеж.ndmsv 
@@ -40298,7 +40311,7 @@
 точно.p :  <morph-ЧАСТ,0>;
 
 тр.= :
-  LLDVA+;
+  LLDUQ+ or LLDVA+;
 
 трав.= :
   LLAFX+ or LLBII+ or LLBNN+ or LLBRK+ or LLBUI+ or LLBYZ+ or LLDJS+;
@@ -40320,7 +40333,7 @@
 
 буер.ndmsi рукав.ndmsi трактор.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.229:
+/ru/words/words.230:
   LLFRE+ or LLFWA+;
 
 транжир.= :
@@ -40890,7 +40903,7 @@
 толстен.= тяжелен.= :
   LLAUO+ or LLBYU+;
 
-/ru/words/words.230:
+/ru/words/words.231:
   LLBYN+;
 
 авторизирован.amss бездействен.amss безжизнен.amss благонамерен.amss богоустановлен.amss всепредан.amss 
@@ -41393,7 +41406,7 @@
 уравнове.= :
   LLCOU+;
 
-/ru/words/words.231:
+/ru/words/words.232:
   LLGAW+;
 
 уре.= :
@@ -41402,7 +41415,7 @@
 бузин.= камфар.= урем.= целин.= :
   LLAGL+ or LLBYZ+;
 
-/ru/words/words.232:
+/ru/words/words.233:
   LLEFV+;
 
 урод.= :
@@ -41581,7 +41594,7 @@
 уш.= :
   LLBCB+ or LLGDA+ or LLGDB+ or LLBTG+;
 
-/ru/words/words.233:
+/ru/words/words.234:
   LLFWV+ or LLFWW+;
 
 ушиб.= :
@@ -41709,7 +41722,7 @@
 
 посад.ndmsi фес.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.234:
+/ru/words/words.235:
   LLCAG+ or LLCBK+;
 
 актерств.ndnpg акушерств.ndnpg атаманств.ndnpg барств.ndnpg безумств.ndnpg беспутств.ndnpg 
@@ -41811,7 +41824,7 @@
 нормандк.= финляндк.= фламандк.= :
   LLAHB+;
 
-/ru/words/words.235:
+/ru/words/words.236:
   LLACZ+;
 
 капел.= кудел.= медал.= панел.= синел.= фланел.= 
@@ -41926,7 +41939,7 @@
 
 форт.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.236:
+/ru/words/words.237:
   LLADL+ or LLAEG+ or LLAEK+;
 
 адажио.e алегретто.e аллегро.e анданте.e андантино.e аппассионато.e 
@@ -41997,7 +42010,7 @@
 
 фридман.nlmpg :  <morph-С,мр,од,мн,рд>;
 
-/ru/words/words.237:
+/ru/words/words.238:
   LLCBK+;
 
 фск.= :
@@ -42234,7 +42247,7 @@
 
 хлеб.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.238:
+/ru/words/words.239:
   LLCAM+ or LLCBK+;
 
 хлебосол.= :
@@ -42904,7 +42917,7 @@
 
 чернов.nlmsi :  <morph-С,мр,од,ед,им>;
 
-/ru/words/words.239:
+/ru/words/words.240:
   LLAYI+ or LLBRO+;
 
 желтокож.= рыж.= темнокож.= чернокож.= :
@@ -42970,7 +42983,7 @@
   LLAKS+ or LLCIZ+;
 
 четыр.= :
-  LLDUN+;
+  LLDUE+ or LLDUN+;
 
 четырехлет.= :
   LLBDC+ or LLCKD+;
@@ -43300,7 +43313,7 @@
 шато.= :
   LLACA+ or LLBPM+;
 
-/ru/words/words.240:
+/ru/words/words.241:
   LLACA+;
 
 шатун.= :
@@ -43441,7 +43454,7 @@
 
 шепот.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.241:
+/ru/words/words.242:
   LLAAO+;
 
 анальгин.ndmsv аспирин.ndmsv ацетон.ndmsv ацидофилин.ndmsv батист.ndmsv биос.ndmsv 
@@ -43479,7 +43492,7 @@
 шерст.= :
   LLBIL+ or LLBNQ+ or LLBRK+ or LLBYU+ or LLDNF+;
 
-/ru/words/words.242:
+/ru/words/words.243:
   LLAFX+ or LLBRK+;
 
 ампул.ndfpg байдар.ndfpg балясин.ndfpg берез.ndfpg бисерин.ndfpg блуз.ndfpg 
@@ -43517,7 +43530,7 @@
 
 шест.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.243:
+/ru/words/words.244:
   LLCBF+;
 
 шестер.= :
@@ -44047,7 +44060,7 @@
 сосуществ.= экспериментир.= :
   LLCBF+ or LLCBK+;
 
-/ru/words/words.244:
+/ru/words/words.245:
   LLDQK+;
 
 эксплуатир.= :
@@ -44103,7 +44116,7 @@
 эмулир.= :
   LLGHH+ or LLELL+ or LLFWA+;
 
-/ru/words/words.245:
+/ru/words/words.246:
   LLEFT+;
 
 энн.= :
@@ -44282,7 +44295,7 @@
 яйценос.= :
   LLBSV+ or LLBYU+;
 
-/ru/words/words.246:
+/ru/words/words.247:
   LLDJV+;
 
 якор.= :
@@ -44330,7 +44343,7 @@
 
 яр.ndmsi :  <morph-С,мр,но,ед,им>;
 
-/ru/words/words.247:
+/ru/words/words.248:
   LLFJT+;
 
 авдашин.nlfpg авершин.nlfpg авилин.nlfpg акулин.nlfpg аллабердин.nlfpg андрюшин.nlfpg 
