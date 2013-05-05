@@ -6,10 +6,10 @@
 % Number of unique stem-to-suffix connectors = 4064
 %
 %
-% Total number of suftags = 27396
+% Total number of suftags = 27389
 %
 %
-% Total number of entries = 25398
+% Total number of entries = 25392
 %
 
 =-.ansi :
@@ -584,22 +584,6 @@
 =а.ci :
   (LLDTW- or LLFML-)
     & <morph-ЧИСЛ,им>;
-
-=а.cmi :
-  ()
-    & <morph-ЧИСЛ,мр,им>;
-
-=а.cmv :
-  ()
-    & <morph-ЧИСЛ,мр,вн>;
-
-=а.cni :
-  ()
-    & <morph-ЧИСЛ,ср,им>;
-
-=а.cnv :
-  ()
-    & <morph-ЧИСЛ,ср,вн>;
 
 =а.cp :
   (LLDSZ- or LLDVF-)
@@ -19108,14 +19092,6 @@
 =е.cd :
   (LLDTW- or LLFML-)
     & <morph-ЧИСЛ,дт>;
-
-=е.cfi :
-  ()
-    & <morph-ЧИСЛ,жр,им>;
-
-=е.cfv :
-  ()
-    & <morph-ЧИСЛ,жр,вн>;
 
 =е.ci :
   (LLDUF-)
@@ -64294,11 +64270,6 @@
   (LLAVU-)
     & <morph-Г,нс,нп,дст,пвл,2л,ед>;
 
-=ри.vnpdv2s
-шли.vnpdv2s :
-  ()
-    & <morph-Г,нс,пе,дст,пвл,2л,ед>;
-
 =ри.vsndv2s :
   (LLAVW- or LLAVX- or LLGJH-)
     & <morph-Г,св,нп,дст,пвл,2л,ед>;
@@ -103481,6 +103452,10 @@
 шлешь.vnpdn2s :
   ()
     & <morph-Г,нс,пе,дст,нст,2л,ед>;
+
+шли.vnpdv2s :
+  ()
+    & <morph-Г,нс,пе,дст,пвл,2л,ед>;
 
 шлите.vnpdv2p :
   ()
