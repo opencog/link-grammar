@@ -61,6 +61,7 @@ foreach my $nw1 ( @nonwords2 ) {
                 if(my $c = decode("KOI8-R",$tail{encode("KOI8-R","$num:$right")})) {
                     my $alcon = "LL".alnum($num)."+";
                     $rHskipstemcon->{$left}->{$num}++;
+                    $rHskipstemcon->{"=".$right}->{$num}++;
                     #print eu("$i\t$nw1\t$left\t$right\t$num\t$alcon\t$c\n");
                 }
             }
@@ -142,7 +143,9 @@ while (my ($numsuf, $modestr) = each(%tail)){
        if ( not defined $nums_for_empty_stem{$lcon} ) {
            my $alcon = alnum($lcon);
            my $lcontor = "LL$alcon-";
-           $lefties{$suftag} .= $lcontor . " ";
+           if ( not defined $rHskipstemcon->{$suf}->{$lcon} ) {
+               $lefties{$suftag} .= $lcontor . " ";
+           }
        } else {
            $suftag =~ s/^=//;
        }
@@ -192,6 +195,7 @@ foreach my $suftag(@ssuftagli) {
     my @sleftli = sort @leftli;
 
     # Compute the connection string....
+    # suftag:=а.cmv constr:(LLDTX- or LLDTY-)
     my $constr = "(".join(" or ", @sleftli).")\n";
 
     $constr .= "    & " . $uright[0];
@@ -349,18 +353,6 @@ foreach my $stems ( sort keys %fwd ) {
     my @nums = split /:/, $fwd{$stems};
     next unless $#nums > -1;
 
-    # абонент.s : LLACI+ or LLBRO+ or LLBZF+;
-    my @numsgrep = (); 
-    foreach my $n ( @nums ) {
-        my $skipflag = 0;
-        foreach my $w ( @words ) {
-            if ( defined $rHskipstemcon->{$w} and defined $rHskipstemcon->{$w}->{$n} ) {
-                $skipflag = 1; # skip @nonwords like "два", "три", "четыре"
-            }
-        }
-        push @numsgrep, $n if ( $skipflag eq 0 );
-    }
-
     my %emptysuflinks = ();
     foreach my $snum ( @nums ) {
         if ( defined $rHse->{$snum} ) {
@@ -371,9 +363,8 @@ foreach my $stems ( sort keys %fwd ) {
         }
     }
 
-    if ( $#numsgrep > -1 ) {
-      # write inline if less than 40 words, else dump to a file
-      if ( $#words < 40 ) {
+    # write inline if less than 40 words, else dump to a file
+    if ( $#words < 40 ) {
         my $cnt = 0;
         foreach my $w ( @words ) {
              print RTS eu($w).".= ";
@@ -384,7 +375,7 @@ foreach my $stems ( sort keys %fwd ) {
              }
         }
         print RTS ":\n";
-      } else {
+    } else {
         print RTS "/ru/words/words.$filecnt:\n";
         open WFILE, ">words/words.$filecnt";
         foreach my $w ( @words ) {
@@ -392,13 +383,11 @@ foreach my $stems ( sort keys %fwd ) {
         }
         close WFILE;
         $filecnt++;
-      }
-
-      # абонент.= : LLACI+ or LLBRO+ or LLBZF+;
-      my @links = map { "LL".alnum($_)."+" }  @numsgrep;
-      print RTS "  ".eu(join(" or ", @links)).";\n\n";
-      $revcnt ++;
     }
+
+    my @links = map { "LL".alnum($_)."+" }  @nums;
+    print RTS "  ".eu(join(" or ", @links)).";\n\n";
+    $revcnt ++;
 
     next unless scalar( keys %emptysuflinks ) > 0;
 
