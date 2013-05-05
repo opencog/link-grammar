@@ -376,9 +376,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		 * that has not been linked to. */
 		if (pi->chosen_disjuncts[i] == NULL)
 		{
-			/* The unsplit_sord is the original word; if its been split
-			 * into stem+suffix, then one of these will be null, and should
-			 * not be printed.
+			/* The unsplit_word is the original word; if its been split
+			 * into stem+suffix, and eitehr one hasn't been choosen, then
+			 * neither should be printed.  Do, however, put brackets around
+			 * the original word, and print that.
 			 */
 			t = sent->word[i].unsplit_word;
 			if (t)
@@ -413,7 +414,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			/* Concatenate the stem and the sufix together into one word */
 			if (HIDE_SUFFIX)
 			{
-				if (0 == strncmp(t, SUFFIX_WORD, SUFFIX_WORD_L))
+				if (0 == strncmp(t, SUFFIX_WORD, SUFFIX_WORD_L) &&
+				   pi->chosen_disjuncts[i-1])
 				{
 					const char * stem = pi->chosen_disjuncts[i-1]->string;
 					size_t len = strlen(stem) + strlen (t);
