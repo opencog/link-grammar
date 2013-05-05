@@ -1029,28 +1029,30 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		{
 			const char *djw;
 			size_t len;
+			const char *unsplit = sent->word[i].unsplit_word;
+			size_t unlen;
 
 			/* Ignore island words */
 			if (NULL == pi->chosen_disjuncts[i])
 				continue;
 
 			/* Ignore suffixes, for now */
-			if (NULL == sent->word[i].unsplit_word)
+			if (NULL == unsplit)
 				continue;
 
 			/* If its a perfect match, then keep going */
+			unlen = strlen(unsplit);
 			djw = pi->chosen_disjuncts[i]->string;
-			if (0 == strncmp(djw, sent->word[i].unsplit_word,
-			                 strlen(sent->word[i].unsplit_word)))
+			if (0 == strncmp(djw, unsplit, unlen)
+			   )
 				continue;
 
 			/* Perhaps its a perfect match after capitalization. */
 			if (sent->word[i].firstupper)
 			{
 				char temp_word[MAX_WORD+1];
-				downcase_utf8_str(temp_word, sent->word[i].unsplit_word, MAX_WORD);
-				if (0 == strncmp(djw, temp_word,
-				                 strlen(temp_word)))
+				downcase_utf8_str(temp_word, unsplit, MAX_WORD);
+				if (0 == strncmp(djw, temp_word, strlen(temp_word)))
 					continue;
 			}
 
@@ -1071,8 +1073,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				strcat(newword, pi->chosen_disjuncts[i+1]->string+1);
 
 				/* OK, we built the concatenation .. does it match? */
-				if (0 == strncmp(newword, sent->word[i].unsplit_word,
-				                 strlen(sent->word[i].unsplit_word)))
+				if (0 == strncmp(newword, unsplit, unlen))
 					continue;
 
 				/* If we are here, it didn't match. Is that because of
@@ -1080,9 +1081,8 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				if (sent->word[i].firstupper)
 				{
 					char temp_word[MAX_WORD+1];
-					downcase_utf8_str(temp_word, sent->word[i].unsplit_word, MAX_WORD);
-					if (0 == strncmp(newword, temp_word,
-					                 strlen(temp_word)))
+					downcase_utf8_str(temp_word, unsplit, MAX_WORD);
+					if (0 == strncmp(newword, temp_word, strlen(temp_word)))
 						continue;
 				}
 			}
