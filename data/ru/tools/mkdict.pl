@@ -194,6 +194,8 @@ foreach my $suftag(@ssuftagli) {
     my @leftli = split / /, $left;
     my @sleftli = sort @leftli;
 
+    next if ($#sleftli eq -1 and $suftag =~ m/^\=/);
+
     # Compute the connection string....
     # suftag:=а.cmv constr:(LLDTX- or LLDTY-)
     my $constr = "(".join(" or ", @sleftli).")\n";
