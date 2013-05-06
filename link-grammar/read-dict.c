@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright 2013 Linas Vepstas                                          */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -734,7 +735,6 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 
 	len = strlen(dn->string);
 	if (STEM_MARK == dn->string[len-1]) return;
-	if (is_idiom_word(dn->string)) return;
 	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
 	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
 

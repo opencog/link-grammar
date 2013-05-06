@@ -1043,8 +1043,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			/* If its a perfect match, then keep going */
 			unlen = strlen(unsplit);
 			djw = pi->chosen_disjuncts[i]->string;
-			if (0 == strncmp(djw, unsplit, unlen)
-			   )
+			if (0 == strncmp(djw, unsplit, unlen))
 				continue;
 
 			/* Perhaps its a perfect match after capitalization. */
