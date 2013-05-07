@@ -91,6 +91,7 @@ Parse_Options parse_options_create(void)
 	po->islands_ok = FALSE;
 	po->use_spell_guess = TRUE;
 	po->use_sat_solver = FALSE;
+	po->use_viterbi = FALSE;
 
 #ifdef XXX_USE_CORPUS
 	/* Use the corpus cost model, if available.
