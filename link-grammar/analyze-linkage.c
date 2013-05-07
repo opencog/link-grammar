@@ -1138,6 +1138,8 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	free_sublinkage(sublinkage);
 #ifdef USE_FAT_LINKAGES
 	free_digraph(actx, pi);
+#else
+	xfree(sublinkage, sizeof(Sublinkage));
 #endif /* USE_FAT_LINKAGES */
 	return li;
 }
