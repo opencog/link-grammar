@@ -61,6 +61,8 @@
 
 /* MS Visual C does not support some C99 standard floating-point functions */
 #define fmaxf(a,b) ((a) > (b) ? (a) : (b))
+#define floorf(x) floor(x)
+#define ceilf(x) ceil(x)
 
 #endif /* _MSC_VER */
 
