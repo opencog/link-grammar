@@ -44,6 +44,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <mbctype.h>
 
 #ifdef _MSC_VER
 /* The Microsoft Visual C compiler doesn't support the "inline" keyword. */
@@ -90,7 +91,7 @@ char * strndup (const char *str, size_t size);
 #endif /* _MSC_VER || __MINGW32__ */
 
 /*
- * CYGWIN prioer to version 1.7 did not have UTF8 support, or wide
+ * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
  * chars ... However, MS Visual C does, as does MinGW.  Since
  * some users have both cygwin and MinGW installed, crap out the 
  * UTF8 code only when MinGW is missing (and the CYGWIN version
