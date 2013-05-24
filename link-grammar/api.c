@@ -47,9 +47,8 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 		return (p1->fat - p2->fat);
 	}
 #endif /* USE_FAT_LINKAGES */
-	else if (p1->disjunct_cost != p2->disjunct_cost) {
-		return (p1->disjunct_cost - p2->disjunct_cost);
-	}
+	else if (p1->disjunct_cost > p2->disjunct_cost) return 1;
+	else if (p1->disjunct_cost < p2->disjunct_cost) return -1;
 #ifdef USE_FAT_LINKAGES
 	else if (p1->and_cost != p2->and_cost) {
 		return (p1->and_cost - p2->and_cost);
@@ -222,7 +221,7 @@ void parse_options_set_disjunct_costf(Parse_Options opts, float dummy) {
 	opts->disjunct_cost = dummy;
 }
 int parse_options_get_disjunct_cost(Parse_Options opts) {
-	return opts->disjunct_cost;
+	return (int) ceilf(opts->disjunct_cost);
 }
 float parse_options_get_disjunct_costf(Parse_Options opts) {
 	return opts->disjunct_cost;
@@ -868,7 +867,7 @@ static void free_sentence_words(Sentence sent)
 		free_disjuncts(sent->word[i].d);
 		free(sent->word[i].alternatives);
 	}
-	free(sent->word);
+	free((void *) sent->word);
 	sent->word = NULL;
 	free(sent->post_quote);
 }
@@ -981,7 +980,7 @@ int sentence_disjunct_cost(Sentence sent, int i) {
 
 	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->link_info) return 0;
-	return sent->link_info[i].disjunct_cost;
+	return (int) ceilf(sent->link_info[i].disjunct_cost);
 }
 
 int sentence_link_cost(Sentence sent, int i)
@@ -1297,7 +1296,7 @@ int linkage_set_current_sublinkage(Linkage linkage, int index)
 static void exfree_pp_info(PP_info *ppi)
 {
 	if (ppi->num_domains > 0)
-		exfree(ppi->domain_name, sizeof(const char *)*ppi->num_domains);
+		exfree((void *) ppi->domain_name, sizeof(const char *) * ppi->num_domains);
 	ppi->domain_name = NULL;
 	ppi->num_domains = 0;
 }
@@ -1314,7 +1313,7 @@ void linkage_delete(Linkage linkage)
 	{
 		exfree((void *) linkage->word[i], strlen(linkage->word[i])+1);
 	}
-	exfree(linkage->word, sizeof(char *)*linkage->num_words);
+	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 
 #ifdef USE_FAT_LINKAGES
 	for (i = 0; i < linkage->num_sublinkages; ++i)
@@ -1683,7 +1682,7 @@ int linkage_is_fat(const Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 }
 
-int linkage_and_cost(Linkage linkage)
+int linkage_and_cost(const Linkage linkage)
 {
 #ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
