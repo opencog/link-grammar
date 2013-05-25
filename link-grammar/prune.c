@@ -1268,6 +1268,7 @@ static void clean_table(int size, C_list ** t)
  * (and the two words that these came from) and returns TRUE if it is
  * possible for these two to match based on local considerations.
  */
+#ifdef USE_FAT_LINKAGES
 static int possible_connection(prune_context *pc,
                                Connector *lc, Connector *rc,
                                int lshallow, int rshallow,
@@ -1302,21 +1303,43 @@ static int possible_connection(prune_context *pc,
 		} else {
 			if ((!pc->null_links) &&
 				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi)
-#ifdef USE_FAT_LINKAGES
 				&& !pc->deletable[lword][rword]
-#endif /* USE_FAT_LINKAGES */
 				)
 			{
 				return FALSE;
 			}
 		}
-#ifdef USE_FAT_LINKAGES
 		return prune_match(pc->effective_dist[lword][rword], lc, rc);
-#else
-		return prune_match(rword - lword, lc, rc);
-#endif /* USE_FAT_LINKAGES */
 	}
 }
+#else /* not USE_FAT_LINKAGES */
+
+static int possible_connection(prune_context *pc,
+                               Connector *lc, Connector *rc,
+                               int lshallow, int rshallow,
+                               int lword, int rword)
+{
+	if ((!lshallow) && (!rshallow)) return FALSE;
+	  /* two deep connectors can't work */
+	if ((lc->word > rword) || (rc->word < lword)) return FALSE;
+	  /* word range constraints */
+
+	assert(lword < rword, "Bad word order in possible connection.");
+
+	if (lword == rword-1) {
+		if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
+	}
+	else
+	if ((!pc->null_links) &&
+	    (lc->next == NULL) &&
+	    (rc->next == NULL) &&
+	    (!lc->multi) && (!rc->multi))
+	{
+		return FALSE;
+	}
+	return prune_match(rword - lword, lc, rc);
+}
+#endif /* USE_FAT_LINKAGES */
 
 
 /**
