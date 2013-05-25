@@ -354,7 +354,7 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 		else
 		{
 			float val = -1.0;
-			val = atof(y);
+			val = (float) atof(y);
 			if (val < 0.0f)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
