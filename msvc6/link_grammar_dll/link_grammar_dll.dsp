@@ -132,6 +132,10 @@ SOURCE=..\..\link-grammar\error.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\link-grammar\expand.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\link-grammar\extract-links.c
 # End Source File
 # Begin Source File
@@ -265,6 +269,10 @@ SOURCE=..\..\link-grammar\count.h
 # Begin Source File
 
 SOURCE=..\..\link-grammar\error.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\link-grammar\expand.h
 # End Source File
 # Begin Source File
 
