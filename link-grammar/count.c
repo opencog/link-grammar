@@ -89,11 +89,6 @@ static void init_table(Sentence sent)
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 }
 
-int x_match(Sentence sent, Connector *a, Connector *b)
-{
-	return do_match(sent, a, b, 0, 0);
-}
-
 #ifdef USE_FAT_LINKAGES
 void count_set_effective_distance(Sentence sent)
 {

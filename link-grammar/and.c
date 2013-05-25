@@ -1395,6 +1395,11 @@ static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label)
 	return d;
 }
 
+static int x_match(Sentence sent, Connector *a, Connector *b)
+{
+   return do_match(sent, a, b, 0, 0);
+}
+
 /**
  * is_canonical_linkage --
  * This uses link_array[], chosen_disjuncts[], has_fat_down[].

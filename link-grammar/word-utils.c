@@ -372,7 +372,7 @@ int match_in_connector_set(Sentence sent, Connector_set *conset, Connector * c, 
 	h = connector_set_hash(conset, c->string, d);
 	for (c1 = conset->hash_table[h]; c1 != NULL; c1 = c1->next)
 	{
-		if (x_match(sent, c1, c) && (d == c1->word)) return TRUE;
+		if (do_match(sent, c1, c, 0, 0) && (d == c1->word)) return TRUE;
 	}
 	return FALSE;
 }
