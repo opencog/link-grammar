@@ -14,6 +14,7 @@
 #ifndef _LINKINCLUDESH_
 #define _LINKINCLUDESH_
 
+#include <stdio.h>  /* Needed for FILE* below */
 #include <link-grammar/link-features.h>
 
 LINK_BEGIN_DECLS
@@ -397,8 +398,8 @@ link_public_api(void)
      dict_display_word_expr(Dictionary dict, const char *);
 link_public_api(void)
      dict_display_word_info(Dictionary dict, const char *);
-/*link_public_api(void)
-     left_print_string(FILE* fp, const char *, const char *); */
+link_public_api(void)
+     left_print_string(FILE* fp, const char *, const char *);
 link_public_api(int)
      lg_expand_disjunct_list(Sentence sent);
 

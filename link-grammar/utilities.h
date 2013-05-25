@@ -276,8 +276,6 @@ void safe_strcpy(char *u, const char * v, size_t usize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
 
-void left_print_string(FILE* fp, const char *, const char *);
-
 /* routines for allocating basic objects */
 void init_memusage(void);
 void * xalloc(size_t) GNUC_MALLOC;
