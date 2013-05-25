@@ -1346,7 +1346,9 @@ static int possible_connection(prune_context *pc,
  * This returns TRUE if the right table of word w contains
  * a connector that can match to c.  shallow tells if c is shallow.
  */
-static int right_table_search(prune_context *pc, int w, Connector *c, int shallow, int word_c)
+static int 
+right_table_search(prune_context *pc, int w, Connector *c,
+                   int shallow, int word_c)
 {
 	int size, h;
 	C_list *cl;
@@ -1369,7 +1371,9 @@ static int right_table_search(prune_context *pc, int w, Connector *c, int shallo
  * This returns TRUE if the right table of word w contains
  * a connector that can match to c.  shallows tells if c is shallow
  */
-static int left_table_search(prune_context *pc, int w, Connector *c, int shallow, int word_c)
+static int 
+left_table_search(prune_context *pc, int w, Connector *c,
+                  int shallow, int word_c)
 {
 	int size, h;
 	C_list *cl;
@@ -1388,31 +1392,22 @@ static int left_table_search(prune_context *pc, int w, Connector *c, int shallow
 	return FALSE;
 }
 
-#if NOT_USED_NOW
-static int ok_cwords(Sentence sent, Connector *c)
-{
-	for (; c != NULL; c=c->next) {
-		if (c->word == BAD_WORD) return FALSE;
-		if (c->word >= sent->length) return FALSE;
-	}
-	return TRUE;
-}
-#endif
-
 /**
- * take this connector list, and try to match it with the words
- * w-1, w-2, w-3...Returns the word to which the first connector of the
- * list could possibly be matched.  If c is NULL, returns w.  If there
- * is no way to match this list, it returns a negative number.
+ * Take this connector list, and try to match it with the words
+ * w-1, w-2, w-3...  Returns the word to which the first connector of
+ * the list could possibly be matched.  If c is NULL, returns w.  If 
+ * there is no way to match this list, it returns a negative number.
  * If it does find a way to match it, it updates the c->word fields
  * correctly.
  */
-static int left_connector_list_update(prune_context *pc, Connector *c, int word_c, int w, int shallow)
+static int
+left_connector_list_update(prune_context *pc, Connector *c,
+                           int word_c, int w, int shallow)
 {
 	int n;
 	int foundmatch;
 
-	if (c==NULL) return w;
+	if (c == NULL) return w;
 	n = left_connector_list_update(pc, c->next, word_c, w, FALSE) - 1;
 	if (((int) c->word) < n) n = c->word;
 
@@ -1433,15 +1428,16 @@ static int left_connector_list_update(prune_context *pc, Connector *c, int word_
 }
 
 /**
- * take this connector list, and try to match it with the words
- * w+1, w+2, w+3...Returns the word to which the first connector of the
- * list could possibly be matched.  If c is NULL, returns w.  If there
- * is no way to match this list, it returns a number greater than N_words-1
- * If it does find a way to match it, it updates the c->word fields
- * correctly.
+ * Take this connector list, and try to match it with the words
+ * w+1, w+2, w+3...  Returns the word to which the first connector of
+ * the list could possibly be matched.  If c is NULL, returns w.  If
+ * there is no way to match this list, it returns a number greater than
+ * N_words - 1.   If it does find a way to match it, it updates the
+ * c->word fields correctly.
  */
-static int right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
-                                       int word_c, int w, int shallow)
+static int
+right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
+                            int word_c, int w, int shallow)
 {
 	int n;
 	int foundmatch;
