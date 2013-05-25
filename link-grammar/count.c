@@ -104,7 +104,6 @@ void count_unset_effective_distance(Sentence sent)
 {
 	sent->count_ctxt->effective_dist = NULL;
 }
-#endif /* USE_FAT_LINKAGES */
 
 /*
  * Returns TRUE if s and t match according to the connector matching
@@ -122,10 +121,8 @@ void count_unset_effective_distance(Sentence sent)
 int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
-#ifdef USE_FAT_LINKAGES
 	int x, y;
 	int dist;
-#endif /* USE_FAT_LINKAGES */
 
 	if (a->label != b->label) return FALSE;
 
@@ -139,7 +136,6 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		t++;
 	}
 
-#ifdef USE_FAT_LINKAGES
 	x = a->priority;
 	y = b->priority;
 
@@ -158,7 +154,6 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
 	if ((x == THIN_priority) && (y == THIN_priority))
-#endif /* USE_FAT_LINKAGES */
 	{
 		/*
 		   Remember that "*" matches anything, and "^" matches nothing
@@ -168,12 +163,8 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		   */
 		while ((*s != '\0') && (*t != '\0'))
 		{
-#ifdef USE_FAT_LINKAGES
 			if ((*s == '*') || (*t == '*') ||
 			   ((*s == *t) && (*s != '^')))
-#else
-			if ((*s == '*') || (*t == '*') || (*s == *t))
-#endif /* USE_FAT_LINKAGES */
 			{
 				s++;
 				t++;
@@ -183,7 +174,6 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		}
 		return TRUE;
 	}
-#ifdef USE_FAT_LINKAGES
 	else if ((x == UP_priority) && (y == DOWN_priority))
 	{
 		/*
@@ -222,9 +212,26 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 		return TRUE;
 	}
 	else
-#endif /* USE_FAT_LINKAGES */
 		return FALSE;
 }
+
+#else /* not USE_FAT_LINKAGES */
+
+/*
+ * Returns TRUE if s and t match according to the connector matching
+ * rules.  The connector strings must be properly formed, starting with
+ * zero or more upper case letters, followed by some other letters, and
+ * The algorithm is symmetric with respect to a and b.
+ *
+ * It works as follows:  The labels must match.  
+ * The sequence of upper case letters must match exactly.  After these comes
+ * a sequence of lower case letters or "*"s. 
+ */
+int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
+{
+   return prune_match(bw - aw, a, b);
+}
+#endif /* not USE_FAT_LINKAGES */
 
 /** 
  * Stores the value in the table.  Assumes it's not already there.
