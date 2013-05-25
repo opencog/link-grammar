@@ -75,9 +75,6 @@ struct Dict_node_struct
     Dict_node *left, *right;
 };
 
-
-void dict_display_word_info(Dictionary dict, const char *);
-void dict_display_word_expr(Dictionary dict, const char *);
 void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);
 void print_expression(Exp *);

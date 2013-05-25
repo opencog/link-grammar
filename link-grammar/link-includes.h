@@ -389,6 +389,24 @@ link_public_api(int)
  *
  * Internal functions -- do not use these in new code!
  * These are not intended for general public use, but are required to
+ * get the link-parser executable to link under MSVC6.
+ *
+ ***********************************************************************/
+
+link_public_api(void)
+     dict_display_word_expr(Dictionary dict, const char *);
+link_public_api(void)
+     dict_display_word_info(Dictionary dict, const char *);
+/*link_public_api(void)
+     left_print_string(FILE* fp, const char *, const char *); */
+link_public_api(int)
+     lg_expand_disjunct_list(Sentence sent);
+
+
+/**********************************************************************
+ *
+ * Internal functions -- do not use these in new code!
+ * These are not intended for general public use, but are required to
  * work around certain Micorsoft Windows linking oddities
  * (specifically, to be callable from the JNI bindings library.)
  *
