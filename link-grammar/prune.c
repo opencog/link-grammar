@@ -69,9 +69,9 @@ struct prune_context_s
 #ifdef USE_FAT_LINKAGES
 	char ** deletable;
 	char ** effective_dist;
+	int power_prune_mode;  /* either GENTLE or RUTHLESS */
 #endif /* USE_FAT_LINKAGES */
 	int power_cost;
-	int power_prune_mode;  /* either GENTLE or RUTHLESS */
 	int N_changed;   /* counts the number of changes
 						   of c->word fields in a pass */
 
@@ -1477,12 +1477,12 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 
 	pc = (prune_context *) malloc (sizeof(prune_context));
 	pc->power_cost = 0;
-	pc->power_prune_mode = mode;
 	pc->null_links = (opts->min_null_count > 0);
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
 
 	pc->sent = sent;
 #ifdef USE_FAT_LINKAGES
+	pc->power_prune_mode = mode;
 	pc->deletable = sent->deletable;
 	pc->effective_dist = sent->effective_dist;
 	count_set_effective_distance(sent);
