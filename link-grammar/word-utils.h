@@ -107,7 +107,6 @@ static inline int connector_hash(Connector * c)
 	}
 #endif
 
-	c->prune_string = s;
 	c->hash = i;
 	return i;
 }

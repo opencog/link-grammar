@@ -144,18 +144,16 @@ static inline int hash_S(Connector * c)
 int prune_match(int dist, Connector *a, Connector *b)
 {
 	const char *s, *t;
+#ifdef USE_FAT_LINKAGES
 	int x, y;
+#endif /* USE_FAT_LINKAGES */
 
 	if (a->label != b->label) return FALSE;
-
-	x = hash_S(a);
-	y = hash_S(b);
-	if (x != y) return FALSE;
 
 	s = a->string;
 	t = b->string;
 
-	while(s < a->prune_string || t < b->prune_string)
+	while(isupper((int)*s) || isupper((int)*t))
 	{
 		if (*s != *t) return FALSE;
 		s++;
@@ -163,7 +161,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 	}
 
 	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  a->ll=%d b->ll=%d  dist=%d\n",
-		   s, t, x, y, a->length_limit, b->length_limit, dist); */
+	   s, t, x, y, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
 #ifdef USE_FAT_LINKAGES

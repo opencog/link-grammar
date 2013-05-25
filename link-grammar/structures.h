@@ -184,7 +184,6 @@ struct Connector_struct
 
     /* Hash table next pointer, used only during pruning. */
     Connector * tableNext;
-    const char * prune_string;
 };
 
 static inline void connector_set_string(Connector *c, const char *s)
