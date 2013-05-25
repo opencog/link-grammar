@@ -1044,9 +1044,9 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 	1) successive connectors on the same disjunct have to go to
 	   nearer and nearer words.
 
-	2) two deep connectors cannot attach to eachother
-	   (A connectors is deep if it is not the first in its list, it
-	   is shallow if it is the first in its list, it is deepest if it
+	2) two deep connectors cannot attach to each other
+	   (A connectors is deep if it is not the first in its list; it
+	   is shallow if it is the first in its list; it is deepest if it
 	   is the last on its list.)
 
 	3) on two adjacent words, a pair of connectors can be used
