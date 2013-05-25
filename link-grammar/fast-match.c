@@ -11,8 +11,10 @@
 /*                                                                        */
 /**************************************************************************/
 
-#include "api.h"
+#include "api-structures.h"
+#include "externs.h"
 #include "fast-match.h"
+#include "word-utils.h"
 
 /** 
  * returns the number of disjuncts in the list that have non-null
