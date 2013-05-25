@@ -71,6 +71,7 @@ int yywrap(void);  /* --DS */
 
 #include <stdio.h>
 #include <wchar.h>
+#include <unistd.h>
 
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
@@ -84,7 +85,6 @@ int yywrap(void);  /* --DS */
 #ifdef __cplusplus
 
 #include <stdlib.h>
-#include <unistd.h>
 
 /* Use prototypes in function declarations. */
 #define YY_USE_PROTOS 1
@@ -1328,7 +1328,7 @@ void yy_delete_buffer( YY_BUFFER_STATE b )
 
 #ifndef YY_ALWAYS_INTERACTIVE
 #ifndef YY_NEVER_INTERACTIVE
-extern int isatty YY_PROTO(( int ));
+/* extern int isatty YY_PROTO(( int ));  get this from unistd.h */ 
 #endif
 #endif
 
