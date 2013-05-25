@@ -250,8 +250,6 @@ int prune_match(int dist, Connector *a, Connector *b)
 {
 	const char *s, *t;
 
-	if (a->label != b->label) return FALSE;
-
 	s = a->string;
 	t = b->string;
 
@@ -296,12 +294,15 @@ static void insert_connector(connector_table *ct, Connector * c)
 
 	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
-		if ((strcmp(c->string, e->string) == 0) && 
 #ifdef USE_FAT_LINKAGES
+		if ((strcmp(c->string, e->string) == 0) && 
 		    (c->priority == e->priority) &&
-#endif /* USE_FAT_LINKAGES */
 		    (c->label == e->label))
 			return;
+#else /* USE_FAT_LINKAGES */
+		if (strcmp(c->string, e->string) == 0)
+			return;
+#endif /* USE_FAT_LINKAGES */
 	}
 	c->tableNext = ct[h];
 	ct[h] = c;
@@ -862,8 +863,8 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
 		{
 			Connector dummy;
 			init_connector(&dummy);
-			dummy.label = NORMAL_LABEL;
 #ifdef USE_FAT_LINKAGES
+			dummy.label = NORMAL_LABEL;
 			dummy.priority = THIN_priority;
 #endif /* USE_FAT_LINKAGES */
 			dummy.string = e->u.string;
@@ -1500,8 +1501,8 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
 				if (left_connector_list_update(pc, d->left, w, w, TRUE) < 0) {
-					for (c=d->left  ;c!=NULL; c = c->next) c->word = BAD_WORD;
-					for (c=d->right ;c!=NULL; c = c->next) c->word = BAD_WORD;
+					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
+					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
 					total_deleted++;
 				}
@@ -1534,9 +1535,9 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			if (parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
-				if (right_connector_list_update(pc, sent, d->right,w,w,TRUE) >= sent->length){
-					for (c=d->right;c!=NULL; c = c->next) c->word = BAD_WORD;
-					for (c=d->left ;c!=NULL; c = c->next) c->word = BAD_WORD;
+				if (right_connector_list_update(pc, sent, d->right, w, w, TRUE) >= sent->length) {
+					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
+					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
 					total_deleted++;
 				}

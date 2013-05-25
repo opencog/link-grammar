@@ -98,7 +98,11 @@ static inline int connector_hash(Connector * c)
 
 #else
 	/* sdbm hash */
+#ifdef USE_FAT_LINKAGES
 	i = (0xff & c->label);
+#else
+	i = 0xff;
+#endif /* USE_FAT_LINKAGES */
 	s = c->string;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{

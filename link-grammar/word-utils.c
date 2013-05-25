@@ -217,9 +217,9 @@ Connector * connector_new(void)
 	Connector *c = (Connector *) xalloc(sizeof(Connector));
 	c->length_limit = UNLIMITED_LEN;
 	c->string = "";
-	c->label = NORMAL_LABEL;
 	c->hash = -1;
 #ifdef USE_FAT_LINKAGES
+	c->label = NORMAL_LABEL;
 	c->priority = THIN_priority;
 #endif /* USE_FAT_LINKAGES */
 	c->multi = FALSE;

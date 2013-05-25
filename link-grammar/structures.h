@@ -105,6 +105,8 @@
       /* If defined, Turns on the pluralization operation in        */
       /* "and", "or" and "nor" */
 
+  #define NORMAL_LABEL  (-1) /* used for normal connectors            */
+                             /* the labels >= 0 are used by fat links */
 #endif /* USE_FAT_LINKAGES */
 
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
@@ -124,9 +126,6 @@
 #define INFIX_NOTATION
       /* If defined, then we're using infix notation for the dictionary */
       /* otherwise we're using prefix notation */
-
-#define NORMAL_LABEL  (-1) /* used for normal connectors            */
-                           /* the labels >= 0 are used by fat links */
 
 #define UNLIMITED_LEN 255
 #define SHORT_LEN 6
@@ -163,7 +162,6 @@ typedef enum
 
 struct Connector_struct
 {
-    short label;
     short hash;
     unsigned char word;
                    /* The nearest word to my left (or right) that
@@ -178,6 +176,7 @@ struct Connector_struct
     char multi;   /* TRUE if this is a multi-connector */
 #ifdef USE_FAT_LINKAGES
     Priority priority;/* one of the three priorities above */
+    short label;
 #endif /* USE_FAT_LINKAGES */
     Connector * next;
     const char * string;

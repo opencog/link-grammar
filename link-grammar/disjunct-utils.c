@@ -118,9 +118,9 @@ static inline int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
  */
 static int connectors_equal_prune(Connector *c1, Connector *c2)
 {
-	return (c1->label == c2->label) &&
-		   (c1->multi == c2->multi) &&
+	return (c1->multi == c2->multi) &&
 #ifdef USE_FAT_LINKAGES
+		   (c1->label == c2->label) &&
 		   (c1->priority == c2->priority) &&
 #endif /* USE_FAT_LINKAGES */
 		   (strcmp(c1->string, c2->string) == 0);

@@ -335,11 +335,16 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 		append_string(string,"[%d %d %d",
 				ppla[link]->l-d, ppla[link]->r-d, 
 				pctx->link_heights[link]);
+#ifdef USE_FAT_LINKAGES
 		if (ppla[link]->lc->label < 0) {
 			append_string(string," (%s)]", ppla[link]->name);
 		} else {
 			append_string(string," ()]");
 		}
+#else
+		append_string(string," (%s)]", ppla[link]->name);
+#endif /* USE_FAT_LINKAGES */
+
 	}
 	append_string(string,"]");
 	append_string(string,"\n");
@@ -377,7 +382,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		if (pi->chosen_disjuncts[i] == NULL)
 		{
 			/* The unsplit_word is the original word; if its been split
-			 * into stem+suffix, and eitehr one hasn't been choosen, then
+			 * into stem+suffix, and either one hasn't been choosen, then
 			 * neither should be printed.  Do, however, put brackets around
 			 * the original word, and print that.
 			 */
