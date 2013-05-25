@@ -141,12 +141,11 @@ static inline int hash_S(Connector * c)
  * on a word to its right.  This is what this version of match allows.
  * We assume that a is on a word to the left of b.
  */
+#ifdef USE_FAT_LINKAGES
 int prune_match(int dist, Connector *a, Connector *b)
 {
 	const char *s, *t;
-#ifdef USE_FAT_LINKAGES
 	int x, y;
-#endif /* USE_FAT_LINKAGES */
 
 	if (a->label != b->label) return FALSE;
 
@@ -164,14 +163,11 @@ int prune_match(int dist, Connector *a, Connector *b)
 	   s, t, x, y, a->length_limit, b->length_limit, dist); */
 	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
-#ifdef USE_FAT_LINKAGES
 	x = a->priority;
 	y = b->priority;
 
 	if ((x == THIN_priority) && (y == THIN_priority))
-#endif /* USE_FAT_LINKAGES */
 	{
-#ifdef USE_FAT_LINKAGES
 #if defined(PLURALIZATION)
 /*
 		if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&  (*t=='p')) {
@@ -198,18 +194,13 @@ int prune_match(int dist, Connector *a, Connector *b)
    The third line above ensures that the connector is either "S" or "SI".
 */
 #endif
-#endif /* USE_FAT_LINKAGES */
 		while ((*s != '\0') && (*t != '\0'))
 		{
-#ifdef USE_FAT_LINKAGES
 			if ((*s == '*') || (*t == '*') ||
 				((*s == *t) && (*s != '^')))
 			  /* this last case here is rather obscure.  It prevents
 				 '^' from matching '^'.....Is this necessary?
 					 ......yes, I think it is.   */
-#else
-			if ((*s == '*') || (*t == '*') || (*s == *t))
-#endif /* USE_FAT_LINKAGES */
 			{
 				s++;
 				t++;
@@ -219,7 +210,6 @@ int prune_match(int dist, Connector *a, Connector *b)
 		}
 		return TRUE;
 	}
-#ifdef USE_FAT_LINKAGES
 	else if ((x == UP_priority) && (y == DOWN_priority))
 	{
 		while ((*s!='\0') && (*t!='\0'))
@@ -251,9 +241,42 @@ int prune_match(int dist, Connector *a, Connector *b)
 		return TRUE;
 	}
 	else
-#endif /* USE_FAT_LINKAGES */
 		return FALSE;
 }
+
+#else /* not USE_FAT_LINKAGES */
+
+int prune_match(int dist, Connector *a, Connector *b)
+{
+	const char *s, *t;
+
+	if (a->label != b->label) return FALSE;
+
+	s = a->string;
+	t = b->string;
+
+	while(isupper((int)*s) || isupper((int)*t))
+	{
+		if (*s != *t) return FALSE;
+		s++;
+		t++;
+	}
+
+	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
+
+	while ((*s != '\0') && (*t != '\0'))
+	{
+		if ((*s == '*') || (*t == '*') || (*s == *t))
+		{
+			s++;
+			t++;
+		}
+		else
+			return FALSE;
+	}
+	return TRUE;
+}
+#endif /* USE_FAT_LINKAGES */
 
 static void zero_connector_table(connector_table *ct)
 {
