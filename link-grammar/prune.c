@@ -134,7 +134,7 @@ static inline int hash_S(Connector * c)
 }
 
 /**
- * This is almost identical to match().  Its reason for existance
+ * This is almost identical to do_match().  Its reason for existance
  * is the rather subtle fact that with "and" can transform a "Ss"
  * connector into "Sp".  This means that in order for pruning to
  * work, we must allow a "Ss" connector on word match an "Sp" connector
@@ -919,6 +919,9 @@ static void clean_up_expressions(Sentence sent, int w)
 	sent->word[w].x = head_node.next;
 }
 
+/* #define DBG(X) X */
+#define DBG(X) 
+
 void expression_prune(Sentence sent)
 {
 	int N_deleted;
@@ -940,15 +943,15 @@ void expression_prune(Sentence sent)
 			/* For every expression in word */
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-/* printf("before marking: "); print_expression(x->exp); printf("\n"); */
+DBG(printf("before marking: "); print_expression(x->exp); printf("\n"););
 				N_deleted += mark_dead_connectors(ct, x->exp, '-');
-/* printf(" after marking: "); print_expression(x->exp); printf("\n"); */
+DBG(printf(" after marking: "); print_expression(x->exp); printf("\n"););
 			}
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
-/* printf("before purging: "); print_expression(x->exp); printf("\n"); */
+DBG(printf("before purging: "); print_expression(x->exp); printf("\n"););
 				x->exp = purge_Exp(x->exp);
-/* printf("after purging: "); print_expression(x->exp); printf("\n"); */
+DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 			}
 
 			/* gets rid of X_nodes with NULL exp */
@@ -1257,7 +1260,7 @@ static int possible_connection(prune_context *pc,
 	assert(lword < rword, "Bad word order in possible connection.");
 
 	/* Now, notice that the only differences between the following two
-	   cases is that (1) ruthless uses match and gentle uses prune_match.
+	   cases is that (1) ruthless uses do_match and gentle uses prune_match.
 	   and (2) ruthless doesn't use deletable[][].  This latter fact is
 	   irrelevant, since deletable[][] is now guaranteed to have been
 	   created. */
