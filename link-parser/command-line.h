@@ -11,5 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
-int issue_special_command(const char * line, Parse_Options opts, Dictionary dict);
+#include <link-grammar/link-features.h>
 
+LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
+link_public_api(int)
+     issue_special_command(const char * line, Parse_Options opts, Dictionary dict);
+LINK_END_DECLS
