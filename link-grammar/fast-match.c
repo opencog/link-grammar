@@ -20,7 +20,7 @@
  * returns the number of disjuncts in the list that have non-null
  * left connector lists.
  */
-static int left_disjunct_list_length(Disjunct * d)
+static int left_disjunct_list_length(const Disjunct * d)
 {
 	int i;
 	for (i=0; d!=NULL; d=d->next) {
@@ -29,7 +29,7 @@ static int left_disjunct_list_length(Disjunct * d)
 	return i;
 }
 
-static int right_disjunct_list_length(Disjunct * d)
+static int right_disjunct_list_length(const Disjunct * d)
 {
 	int i;
 	for (i=0; d!=NULL; d=d->next) {
@@ -266,7 +266,8 @@ void init_fast_matcher(Sentence sent)
  */
 Match_node * 
 form_match_list(Sentence sent, int w, 
-                Connector *lc, int lw, Connector *rc, int rw)
+                Connector *lc, int lw,
+                Connector *rc, int rw)
 {
 	Match_node *ml, *mr, *mx, *my, * mz, *front, *free_later;
 
@@ -305,8 +306,7 @@ form_match_list(Sentence sent, int w,
 	}
 	mr = front;   /* mr is now the list of things that could match the right */
 
-	/* now we want to eliminate duplicates from the lists */
-
+	/* Now we want to eliminate duplicates from the lists */
 	free_later = NULL;
 	front = NULL;
 	for (mx = mr; mx != NULL; mx = mz)
