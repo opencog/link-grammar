@@ -1,3 +1,6 @@
+Version 4.7.13 (xxxx 2013)
+ * ...
+
 Version 4.7.12 (25 May 2013)
  * Large fixes to the Russian dictionaries.
  * Windows: Explicitly fail if cygwin version is too old.

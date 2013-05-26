@@ -92,7 +92,7 @@ char *lg_readline(const char *mb_prompt)
 	wc_line = el_wgets(el, &numc);
 
 	/* Received end-of-file */
-	if (0 == numc)
+	if (numc <= 0)
 	{
 		el_end(el);
 		history_wend(hist);
