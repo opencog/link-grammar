@@ -1183,7 +1183,7 @@ static power_table * power_table_new(Sentence sent)
 	pt = (power_table *) malloc (sizeof(power_table));
 	pt->power_table_size = sent->length;
 
-   /* first we initialize the word fields of the connectors, and
+   /* First, we initialize the word fields of the connectors, and
 	  eliminate those disjuncts with illegal connectors */
 	for (w=0; w<sent->length; w++)
 	{
@@ -1385,10 +1385,8 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	h = connector_hash(c) & (size-1);
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
-	  if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
-		{
-		  return TRUE;
-	  }
+		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
+			return TRUE;
 	}
 	return FALSE;
 }
@@ -1414,7 +1412,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 
 	/* n is now the rightmost word we need to check */
 	foundmatch = FALSE;
-	for (; (n >= 0) && ((w-n) < MAX_SENTENCE); n--) {
+	for (; n >= 0 ; n--) {
 		pc->power_cost++;
 		if (right_table_search(pc, n, c, shallow, word_c)) {
 			foundmatch = TRUE;
@@ -1443,13 +1441,13 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 	int n;
 	int foundmatch;
 
-	if (c==NULL) return w;
+	if (c == NULL) return w;
 	n = right_connector_list_update(pc, sent, c->next, word_c, w, FALSE) + 1;
 	if (c->word > n) n = c->word;
 
 	/* n is now the leftmost word we need to check */
 	foundmatch = FALSE;
-	for (; (n < sent->length) && ((n-w) < MAX_SENTENCE); n++) {
+	for (; n < sent->length ; n++) {
 		pc->power_cost++;
 		if (left_table_search(pc, n, c, shallow, word_c)) {
 			foundmatch = TRUE;
