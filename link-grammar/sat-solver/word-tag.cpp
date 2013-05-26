@@ -117,8 +117,8 @@ void WordTag::find_matches(int w, const char* C, char dir, std::vector<PositionC
   //  cout << "Look connection on: ." << _word << ". ." << w << ". " << C << dir << endl;
   Connector search_cntr;
   init_connector(&search_cntr);
-  search_cntr.label = NORMAL_LABEL;
 #ifdef USE_FAT_LINKAGES
+  search_cntr.label = NORMAL_LABEL;
   search_cntr.priority = THIN_priority;
 #endif /* USE_FAT_LINKAGES */
   search_cntr.string = C;
