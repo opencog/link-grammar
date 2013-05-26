@@ -1249,9 +1249,9 @@ static void clean_table(int size, C_list ** t)
 {
 	int i;
 	C_list * m, * xm, * head;
-	for (i=0; i<size; i++) {
+	for (i = 0; i < size; i++) {
 		head = NULL;
-		for (m=t[i]; m!=NULL; m=xm) {
+		for (m = t[i]; m != NULL; m = xm) {
 			xm = m->next;
 			if (m->c->word != BAD_WORD) {
 				m->next = head;
@@ -1521,7 +1521,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 		if (verbosity > 2) {
-		   printf("l->r pass changed %d and deleted %d\n",pc->N_changed,N_deleted);
+			printf("l->r pass changed %d and deleted %d\n",pc->N_changed,N_deleted);
 		}
 
 		if (pc->N_changed == 0) break;
@@ -1556,7 +1556,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		}
 
 		if (verbosity > 2) {
-		   printf("r->l pass changed %d and deleted %d\n", pc->N_changed,N_deleted);
+			printf("r->l pass changed %d and deleted %d\n", pc->N_changed,N_deleted);
 		}
 
 		if (pc->N_changed == 0) break;
@@ -1895,7 +1895,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		}
 
 		if (verbosity > 2) {
-		   printf("pp_prune pass deleted %d\n", N_deleted);
+			printf("pp_prune pass deleted %d\n", N_deleted);
 		}
 
 	}
