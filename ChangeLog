@@ -1,4 +1,5 @@
-Version 4.7.12 (xxx 2013)
+Version 4.7.12 (25 May 2013)
+ * Large fixes to the Russian dictionaries.
  * Windows: Explicitly fail if cygwin version is too old.
  * Tweak the lt dict to work again with the modern parser.
  * Make the fat linkages code be compile-time configurable.
@@ -13,6 +14,7 @@ Version 4.7.12 (xxx 2013)
  * Fix: stemming failures in many cases (for Russian dictionaries)
  * Add flag to suppress stem-suffix printing.
  * Windows: Fixes to MSVC6 build files.
+ * Fix: hash-table bug affecting Russian dictionaries
 
 Version 4.7.11 (23 March 2013)
  * Fix build bug introduced recently (build_disjuncts_for_dict_node)
