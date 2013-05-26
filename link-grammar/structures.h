@@ -162,7 +162,7 @@ typedef enum
 
 struct Connector_struct
 {
-    short hash;
+    int hash;
     unsigned char word;
                    /* The nearest word to my left (or right) that
                       this could connect to.  Computed by power pruning */
