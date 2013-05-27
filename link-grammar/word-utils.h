@@ -79,15 +79,19 @@ static inline int connector_hash(Connector * c)
 
 	if (-1 != c->hash) return c->hash;
 
-	/* For most situations, both hashes are very nearly equal;
-	 * sdbm seems to be about 5% faster than djb2, hard to say.
-	 * In either case, realize that the connector string is
-	 * very very short - usually one or two letters, so we have
-	 * probably only 8 or 10 bits total entropy coming in!  */
-#if 0
+	/* For most situations, all three hashes are very nearly equal;
+	 * as to which is faster depends on the parsed text.
+	 * For both English and Russian, there are about 100 pre-defined
+	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
+	 * connectors, and the LLxxx suffix connectors for Russian).
+	 * Turns out the cost of settting up the hash table dominates the
+	 * cost of collistions. */
+#ifdef USE_DJB2
 	/* djb2 hash */
 	i = 5381;
+#ifdef USE_FAT_LINKAGES
 	i = ((i << 5) + i) + (0xff & c->label);
+#endif /* USE_FAT_LINKAGES */
 	s = c->string;
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
@@ -95,21 +99,39 @@ static inline int connector_hash(Connector * c)
 		s++;
 	}
 	i += i>>14;
+#endif /* USE_DJB2 */
 
-#else
+#define USE_JENKINS
+#ifdef USE_JENKINS
+	/* Jenkins one-at-a-time hash */
+	i = 0;
+	s = c->string;
+	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i += *s;
+		i += (i<<10);
+		i ^= (i>>6);
+		s++;
+	}
+	i += (i << 3);
+	i ^= (i >> 11);
+	i += (i << 15);
+#endif /* USE_JENKINS */
+
+#ifdef USE_SDBM
 	/* sdbm hash */
 #ifdef USE_FAT_LINKAGES
 	i = (0xff & c->label);
 #else
-	i = 0xff;
+	i = 0;
 #endif /* USE_FAT_LINKAGES */
 	s = c->string;
-	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper((int) *s))
 	{
 		i = *s + (i << 6) + (i << 16) - i;
 		s++;
 	}
-#endif
+#endif /* USE_SDBM */
 
 	c->hash = i;
 	return i;

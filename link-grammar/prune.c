@@ -1204,8 +1204,25 @@ static power_table * power_table_new(Sentence sent)
 
 	for (w=0; w<sent->length; w++)
 	{
+		/* The below uses variable-sized hash tables. This seems to
+		 * provide performance that is equal or better than the best
+		 * fixed-size prformance.
+		 * The best fixed-size performance seems to come at about 
+		 * a 1K table size, for both English and Russian. (Both have
+		 * about 100 fixed link-types, and many thousands of auto-genned
+		 * link types (IDxxx idioms for both, LLxxx suffix links for
+		 * Russian).  Plusses and minuses:
+		 * + small fixed tables are faster to initialize.
+		 * - small fixed tables have more collisions
+		 * - variable-size tables require counting connectors.
+		 *   (and the more complex code to go with)
+		 * CPU cache-size effects ...
+		 * Strong depenence on the hashing algo!
+		 */
 		len = left_connector_count(sent->word[w].d);
 		size = next_power_of_two_up(len);
+#define TOPSZ 32768
+		if (TOPSZ < size) size = TOPSZ;
 		pt->l_table_size[w] = size;
 		t = pt->l_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
@@ -1222,6 +1239,7 @@ static power_table * power_table_new(Sentence sent)
 
 		len = right_connector_count(sent->word[w].d);
 		size = next_power_of_two_up(len);
+		if (TOPSZ < size) size = TOPSZ;
 		pt->r_table_size[w] = size;
 		t = pt->r_table[w] = (C_list **) xalloc(size * sizeof(C_list *));
 		for (i=0; i<size; i++) t[i] = NULL;
