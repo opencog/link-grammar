@@ -446,7 +446,7 @@ link_public_api(void)
 #endif
 
 #ifdef USE_FAT_LINKAGES
-#pragma message("WARNING: Support for FAT linakges is going away!")
+#pragma message("WARNING: Support for FAT linkages is going away!")
 #endif /* USE_FAT_LINKAGES */
 
 /* When fat links are gone, there's no union to compute. */
@@ -523,7 +523,7 @@ MS_DEPRECATED link_public_api(int)
      dictionary_is_entity(Dictionary dict, const char * str) GNUC_DEPRECATED;
 
 /* For languages with regular prefix/suffix structure, this
- * function returrns misleading information. Do not use it
+ * function returns misleading information. Do not use it
  * in new code! use linkage_get_word() instead! */
 MS_DEPRECATED link_public_api(const char *)
      sentence_get_word(Sentence sent, int wordnum) GNUC_DEPRECATED;
