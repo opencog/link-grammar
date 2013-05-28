@@ -439,10 +439,12 @@ link_public_api(void)
 #define GNUC_DEPRECATED
 #endif
 
-#ifdef _MSC_VER
-#define MS_DEPRECATED __declspec(deprecated)
-#else
 #define MS_DEPRECATED
+#ifdef _MSC_VER
+ #if _MSC_VER > 1200  /* Only if newer than MSVC6 */ 
+  #undef MS_DEPRECATED
+  #define MS_DEPRECATED __declspec(deprecated)
+ #endif
 #endif
 
 #ifdef USE_FAT_LINKAGES
