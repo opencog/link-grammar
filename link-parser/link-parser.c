@@ -715,6 +715,8 @@ int main(int argc, char * argv[])
 		if (strncmp(input_string, "!file", 5) == 0)
 		{
 			char * filename = &input_string[6];
+			char * cr = strchr(filename, '\r'); // MS Windows borkenness
+			if (cr) *cr = NULL;
 			input_fh = fopen(filename, "r");
 			if (NULL == input_fh)
 			{

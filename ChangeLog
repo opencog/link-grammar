@@ -1,5 +1,5 @@
 Version 4.7.13 (xxxx 2013)
- * ...
+ * Remove trailing carriage return in MSVC6 filenames.
 
 Version 4.7.12 (25 May 2013)
  * Large fixes to the Russian dictionaries.
