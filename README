@@ -249,8 +249,10 @@ BUILDING on Windows (MinGW)
 
 BUILDING on Windows (MSVC)
 --------------------------
-   Microsoft Visual C/C++ project files can be found in the msvc6 and
-   msvc9 directories.
+   Microsoft Visual C/C++ project files can be found in the msvc9 
+   directory.  MSVC6 build files are also provided; however, this
+   compiler is deprecated due to the lack of locale support.  In
+   particular, the Russian dictionaries cannot work with MSVC6!
 
    Please note that the regex package, which includes libraries and
    header files, must be seperately downloaded and installed, as
