@@ -584,6 +584,7 @@ int main(int argc, char * argv[])
 	 */
 	setlocale(LC_ALL, "");
 
+#if !defined(_MSC_VER) || _MSC_VER > 1200
 	/* Check to make sure the current locale is UTF8; if its not,
 	 * then force-set this to the english utf8 locale 
 	 */
@@ -595,6 +596,13 @@ int main(int argc, char * argv[])
 		     argv[0], codeset);
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
+#else
+ #pragma message("WARNING: MSVC6 does not support unicode!\n"
+                 "Unicode is needed for Russian and other languages!");
+	fprintf(stderr, 
+	    "%s: Warning: MSVC6 does not support unicode!\n"
+	    "Unicode is needed for Russian and other languages!", argv[0]);
+#endif
 
 	for (; i<argc; i++)
 	{
@@ -715,7 +723,7 @@ int main(int argc, char * argv[])
 		if (strncmp(input_string, "!file", 5) == 0)
 		{
 			char * filename = &input_string[6];
-			char * cr = strchr(filename, '\r'); // MS Windows borkenness
+			char * cr = strchr(filename, '\r'); /* MS Windows borkenness */
 			if (cr) *cr = NULL;
 			input_fh = fopen(filename, "r");
 			if (NULL == input_fh)
