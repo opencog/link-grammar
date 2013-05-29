@@ -76,36 +76,14 @@ int yywrap(void);  /* --DS */
 #endif
 #endif
 
-
-#ifdef __cplusplus
-
 #include <stdlib.h>
-
-/* The "const" storage-class-modifier is valid. */
-#define YY_USE_CONST
-
-#else	/* ! __cplusplus */
-
-#if __STDC__
-
-#define YY_USE_CONST
-
-#endif	/* __STDC__ */
-#endif	/* ! __cplusplus */
 
 #ifdef __TURBOC__
  #pragma warn -rch
  #pragma warn -use
-#include <io.h>
-#include <stdlib.h>
-#define YY_USE_CONST
+ #include <io.h>
 #endif
 
-#ifndef YY_USE_CONST
-#ifndef const
-#define const
-#endif
-#endif
 
 #define YY_PROTO(proto) proto
 
@@ -177,8 +155,6 @@ extern FILE *yyin, *yyout;
 		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
 	while ( 0 )
-
- /* #define unput(c) yyunput( c, yytext_ptr ) --DS */
 
 /* The following is because we cannot portably get our hands on size_t
  * (without autoconf's help, which isn't available because we want
@@ -310,48 +286,14 @@ static void yy_flex_free YY_PROTO(( void * ));
 
 #define YY_USES_REJECT
 typedef unsigned char YY_CHAR;
-#ifdef VMS
-#ifndef __VMS_POSIX
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
-#else
-FILE *yyin = stdin, *yyout = stdout;
-#endif
-#else
-FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
-#endif
 typedef int yy_state_type;
 extern int yylineno;
 int yylineno = 1;
 extern char *yytext;
 #define yytext_ptr yytext
 
-#ifndef YY_SKIP_YYWRAP
-#ifdef __cplusplus
-extern "C" int yywrap YY_PROTO(( void ));
-#else
 extern int yywrap YY_PROTO(( void ));
-#endif
-#endif
-
-#if 0  /* --DS */
-#ifndef YY_NO_UNPUT
-static void yyunput YY_PROTO(( int c, char *buf_ptr ));
-#endif
-#endif /* --DS */
-
-#ifndef yytext_ptr
-static void yy_flex_strncpy YY_PROTO(( char *, const char *, int ));
-#endif
-
-#ifdef THIS_FUNCTION_IS_NO_LONGER_USED
-#ifndef YY_NO_INPUT
-#ifdef __cplusplus
-static int yyinput YY_PROTO(( void ));
-#else
-static int input YY_PROTO(( void ));
-#endif
-#endif
-#endif /* THIS_FUNCTION_IS_NO_LONGER_USED */
 
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
@@ -475,9 +417,7 @@ goto find_rule; \
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 char *yytext;
-/* #line 1 "pp_lexer.fl" --DS */
 #define INITIAL 0
-/* #line 2 "pp_lexer.fl" --DS */
 /**************************************************************************
     Lex specification for post-process knowledge file 
     6/96 ALB
@@ -504,13 +444,10 @@ static void setup(PPLexTable *lt);
 static void set_label(PPLexTable *lt, const char *label);
 static void add_string_to_label(PPLexTable *lt, const char *str);
 static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set);
-/* static void show_bindings(PPLexTable *lt); --DS */
 static int  get_index_of_label(PPLexTable *lt, const char *label);
 static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 /* see above */
 #define INCLUDE 1
-
-/* #line 490 "pp_lexer.c" --DS */
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -643,9 +580,6 @@ YY_DECL
 	memset(&mbss, 0, sizeof(mbss));
 
 	/* #line 56 "pp_lexer.fl" --DS */
-
-
-	/* #line 619 "pp_lexer.c" --DS */
 
 	if ( yy_init )
 		{
@@ -1233,7 +1167,6 @@ void yy_flush_buffer( YY_BUFFER_STATE b )
 	}
 
 
-#ifndef YY_NO_SCAN_BUFFER
 YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )
 	{
 	YY_BUFFER_STATE b;
@@ -1262,10 +1195,8 @@ YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )
 
 	return b;
 	}
-#endif
 
 
-#ifndef YY_NO_SCAN_STRING
 YY_BUFFER_STATE yy_scan_string( const char *str )
 	{
 	int len;
@@ -1274,10 +1205,8 @@ YY_BUFFER_STATE yy_scan_string( const char *str )
 
 	return yy_scan_bytes( str, len );
 	}
-#endif
 
 
-#ifndef YY_NO_SCAN_BYTES
 YY_BUFFER_STATE yy_scan_bytes( const char *bytes, int len )
 	{
 	YY_BUFFER_STATE b;
@@ -1307,7 +1236,6 @@ YY_BUFFER_STATE yy_scan_bytes( const char *bytes, int len )
 
 	return b;
 	}
-#endif
 
 
 #ifndef YY_NO_PUSH_STATE
@@ -1386,16 +1314,6 @@ static void yy_fatal_error( const char msg[] )
 
 
 /* Internal utility routines. */
-
-#ifndef yytext_ptr
-static void yy_flex_strncpy( char *s1, const char *s2, int n )
-	{
-	register int i;
-	for ( i = 0; i < n; ++i )
-		s1[i] = s2[i];
-	}
-#endif
-
 
 static void *yy_flex_alloc( yy_size_t size )
 	{
@@ -1636,28 +1554,6 @@ static void add_set_of_strings_to_label(PPLexTable *lt,const char *label_of_set)
   for (p=lt->nodes_of_label[idx_of_label_of_set]; p!=NULL; p=p->next)
     add_string_to_label(lt, p->str);
 }
-
-#if 0
-/* --DS */
-static void show_bindings(PPLexTable *lt)
-{
-  /* Diagnostic. Show contents of knowledge file, as arranged internally */
-  int i,j;
-  char *la;
-  pp_label_node *p;
-  printf("The symbol table's contents: \n");
-  for (i=0; (la=lt->labels[i])!=NULL; i++)
-    {
-      printf("\n\n%s\n", la);
-      for (j=0; j<strlen(la); j++)
-	printf("=");
-      printf("\n");
-      for (p=lt->nodes_of_label[i]; p!=NULL; p=p->next)
-	printf(" %s ", p->str);
-    }
-  printf("\n");
-}
-#endif
 
 static int get_index_of_label(PPLexTable *lt, const char *label)
 {
