@@ -41,9 +41,6 @@ int yywrap(void);  /* --DS */
 
 #define yy_create_buffer pp_lexer__create_buffer
 #define yy_delete_buffer pp_lexer__delete_buffer
-#define yy_scan_buffer pp_lexer__scan_buffer
-#define yy_scan_string pp_lexer__scan_string
-#define yy_scan_bytes pp_lexer__scan_bytes
 #define yy_flex_debug pp_lexer__flex_debug
 #define yy_init_buffer pp_lexer__init_buffer
 #define yy_flush_buffer pp_lexer__flush_buffer
@@ -256,10 +253,6 @@ void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));
 void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));
 void yy_flush_buffer YY_PROTO(( YY_BUFFER_STATE b ));
 #define YY_FLUSH_BUFFER yy_flush_buffer( yy_current_buffer )
-
-YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size ));
-YY_BUFFER_STATE yy_scan_string YY_PROTO(( const char *str ));
-YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( const char *bytes, int len ));
 
 static void *yy_flex_alloc YY_PROTO(( yy_size_t ));
 /* static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t )); --DS */
@@ -1121,12 +1114,6 @@ void yy_delete_buffer( YY_BUFFER_STATE b )
 	}
 
 
-#ifndef YY_ALWAYS_INTERACTIVE
-#ifndef YY_NEVER_INTERACTIVE
-/* extern int isatty YY_PROTO(( int ));  get this from unistd.h */ 
-#endif
-#endif
-
 void yy_init_buffer( YY_BUFFER_STATE b, FILE *file )
 	{
 	yy_flush_buffer( b );
@@ -1164,77 +1151,6 @@ void yy_flush_buffer( YY_BUFFER_STATE b )
 
 	if ( b == yy_current_buffer )
 		yy_load_buffer_state();
-	}
-
-
-YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )
-	{
-	YY_BUFFER_STATE b;
-
-	if ( size < 2 ||
-	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
-	     base[size-1] != YY_END_OF_BUFFER_CHAR )
-		/* They forgot to leave room for the EOB's. */
-		return 0;
-
-	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) );
-	if ( ! b )
-		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
-
-	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
-	b->yy_buf_pos = b->yy_ch_buf = base;
-	b->yy_is_our_buffer = 0;
-	b->yy_input_file = 0;
-	b->yy_n_chars = b->yy_buf_size;
-	b->yy_is_interactive = 0;
-	b->yy_at_bol = 1;
-	b->yy_fill_buffer = 0;
-	b->yy_buffer_status = YY_BUFFER_NEW;
-
-	yy_switch_to_buffer( b );
-
-	return b;
-	}
-
-
-YY_BUFFER_STATE yy_scan_string( const char *str )
-	{
-	int len;
-	for ( len = 0; str[len]; ++len )
-		;
-
-	return yy_scan_bytes( str, len );
-	}
-
-
-YY_BUFFER_STATE yy_scan_bytes( const char *bytes, int len )
-	{
-	YY_BUFFER_STATE b;
-	char *buf;
-	yy_size_t n;
-	int i;
-
-	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = len + 2;
-	buf = (char *) yy_flex_alloc( n );
-	if ( ! buf )
-		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
-
-	for ( i = 0; i < len; ++i )
-		buf[i] = bytes[i];
-
-	buf[len] = buf[len+1] = YY_END_OF_BUFFER_CHAR;
-
-	b = yy_scan_buffer( buf, n );
-	if ( ! b )
-		YY_FATAL_ERROR( "bad buffer in yy_scan_bytes()" );
-
-	/* It's okay to grow etc. this buffer, and we should throw it
-	 * away when we're done.
-	 */
-	b->yy_is_our_buffer = 1;
-
-	return b;
 	}
 
 
