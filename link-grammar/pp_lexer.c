@@ -37,6 +37,14 @@
      Commented out code and prototype declarations for the unused functions
  */
 
+/* If YY_ALWAYS_INTERACTIVE is set, then input is read as wide-char,
+ * instead of multi-byte. This perhaps fixes MS windows bugs ...
+ */
+
+#ifdef _MSC_VER
+#define YY_ALWAYS_INTERACTIVE 1
+#endif
+
 int yywrap(void);  /* --DS */
 
 #define yy_create_buffer pp_lexer__create_buffer
@@ -259,13 +267,6 @@ static void *yy_flex_alloc YY_PROTO(( yy_size_t ));
 static void yy_flex_free YY_PROTO(( void * ));
 
 #define yy_new_buffer yy_create_buffer
-
-#define yy_set_interactive(is_interactive) \
-	{ \
-	if ( ! yy_current_buffer ) \
-		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE ); \
-	yy_current_buffer->yy_is_interactive = is_interactive; \
-	}
 
 #define yy_set_bol(at_bol) \
 	{ \
@@ -1087,14 +1088,9 @@ void yy_init_buffer( YY_BUFFER_STATE b, FILE *file )
 	b->yy_input_file = file;
 	b->yy_fill_buffer = 1;
 
+	b->yy_is_interactive = 0;
 #if YY_ALWAYS_INTERACTIVE
 	b->yy_is_interactive = 1;
-#else
-#if YY_NEVER_INTERACTIVE
-	b->yy_is_interactive = 0;
-#else
-	b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
-#endif
 #endif
 	}
 
