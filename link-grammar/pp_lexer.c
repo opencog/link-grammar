@@ -446,26 +446,6 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
  * section 1.
  */
 
-#if YY_STACK_USED
-static int yy_start_stack_ptr = 0;
-static int yy_start_stack_depth = 0;
-static int *yy_start_stack = 0;
-#ifndef YY_NO_PUSH_STATE
-static void yy_push_state YY_PROTO(( int new_state ));
-#endif
-#ifndef YY_NO_POP_STATE
-static void yy_pop_state YY_PROTO(( void ));
-#endif
-#ifndef YY_NO_TOP_STATE
-static int yy_top_state YY_PROTO(( void ));
-#endif
-
-#else
-#define YY_NO_PUSH_STATE 1
-#define YY_NO_POP_STATE 1
-#define YY_NO_TOP_STATE 1
-#endif
-
 #ifdef YY_MALLOC_DECL
 YY_MALLOC_DECL
 #else
@@ -1153,53 +1133,6 @@ void yy_flush_buffer( YY_BUFFER_STATE b )
 		yy_load_buffer_state();
 	}
 
-
-#ifndef YY_NO_PUSH_STATE
-static void yy_push_state( int new_state )
-	{
-	if ( yy_start_stack_ptr >= yy_start_stack_depth )
-		{
-		yy_size_t new_size;
-
-		yy_start_stack_depth += YY_START_STACK_INCR;
-		new_size = yy_start_stack_depth * sizeof( int );
-
-		if ( ! yy_start_stack )
-			yy_start_stack = (int *) yy_flex_alloc( new_size );
-
-		else
-			yy_start_stack = (int *) yy_flex_realloc(
-					(void *) yy_start_stack, new_size );
-
-		if ( ! yy_start_stack )
-			YY_FATAL_ERROR(
-			"out of memory expanding start-condition stack" );
-		}
-
-	yy_start_stack[yy_start_stack_ptr++] = YY_START;
-
-	BEGIN(new_state);
-	}
-#endif
-
-
-#ifndef YY_NO_POP_STATE
-static void yy_pop_state()
-	{
-	if ( --yy_start_stack_ptr < 0 )
-		YY_FATAL_ERROR( "start-condition stack underflow" );
-
-	BEGIN(yy_start_stack[yy_start_stack_ptr]);
-	}
-#endif
-
-
-#ifndef YY_NO_TOP_STATE
-static int yy_top_state()
-	{
-	return yy_start_stack[yy_start_stack_ptr - 1];
-	}
-#endif
 
 #ifndef YY_EXIT_FAILURE
 #define YY_EXIT_FAILURE 2
