@@ -909,13 +909,13 @@ static Exp * make_optional_node(Dictionary dict, Exp * e)
 
 #if ! defined INFIX_NOTATION
 
-Exp * expression(Dictionary dict);
+static Exp * expression(Dictionary dict);
 /**
  * We're looking at the first of the stuff after an "and" or "or".
  * Build a Exp node for this expression.  Set the cost and optional
  * fields to the default values.  Set the type field according to type
  */
-Exp * operator_exp(Dictionary dict, int type)
+static Exp * operator_exp(Dictionary dict, int type)
 {
 	Exp * n;
 	E_list first;
@@ -945,7 +945,7 @@ Exp * operator_exp(Dictionary dict, int type)
  * Looks for the stuff that is allowed to be inside of parentheses
  * either & or | followed by a list, or a terminal symbol.
  */
-Exp * in_parens(Dictionary dict)
+static Exp * in_parens(Dictionary dict)
 {
 	Exp * e;
 
@@ -969,7 +969,7 @@ Exp * in_parens(Dictionary dict)
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
  */
-Exp * expression(Dictionary dict)
+static Exp * expression(Dictionary dict)
 {
 	Exp * n;
 	if (is_equal(dict, '(')) {
