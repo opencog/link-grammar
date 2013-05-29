@@ -125,10 +125,25 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 	}
 	input_pending = FALSE;
 
-	/* For UTF-8 input, I think its still technically correct to
-	 * use fgets() and not fgetws() at this point. */
+#ifdef _MSC_VER
+	{
+		/* It appears that MS Win always provides wide chars, even if
+		 * one asked for "just a string".  So lets explicitly ask for
+		 * wide chars here, and convert to multi-byte UTF-8 on the fly.
+		 */
+		wchar_t winput_string[MAX_INPUT];
+		if (fgetws(winput_string, MAX_INPUT, in)) 
+		{
+			size_t nc = wcstombs(input_string, winput_string, MAX_INPUT);
+			if (nc && (((size_t) -1) != nc))
+				return input_string;
+		}
+	}
+#else
+	/* Linux et al return UTF-8 multi-byte strings. */
 	if (fgets(input_string, MAX_INPUT, in)) return input_string;
-	else return NULL;
+#endif
+	return NULL;
 #endif
 }
 
