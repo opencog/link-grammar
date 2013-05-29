@@ -445,21 +445,7 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
-
-#ifdef YY_MALLOC_DECL
-YY_MALLOC_DECL
-#else
-#if __STDC__
-#ifndef __cplusplus
 #include <stdlib.h>
-#endif
-#else
-/* Just try to get by without declaring the routines.  This will fail
- * miserably on non-ANSI systems for which sizeof(size_t) != sizeof(int)
- * or sizeof(void*) != sizeof(int).
- */
-#endif
-#endif
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
