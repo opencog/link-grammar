@@ -13,6 +13,7 @@
 
 #include "api.h"
 #include "disjunct-utils.h"
+#include "resources.h"
 
 #ifdef USE_FAT_LINKAGES
 void free_deletable(Sentence sent)

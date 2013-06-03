@@ -37,6 +37,7 @@ int getrusage(int who, struct rusage *rusage);
 #endif /* __sun__ */
 
 #include "api.h"
+#include "resources.h"
 
 #define MAX_PARSE_TIME_UNLIMITED -1
 #define MAX_MEMORY_UNLIMITED ((size_t) -1)
@@ -98,7 +99,7 @@ void resources_reset_space(Resources r)
 	r->space_when_parse_started = get_space_in_use();
 }
 
-int resources_exhausted(Resources r)
+Boolean resources_exhausted(Resources r)
 {
 	if (r->timer_expired || r->memory_exhausted)
 		return TRUE;
@@ -112,14 +113,14 @@ int resources_exhausted(Resources r)
 	return (r->timer_expired || r->memory_exhausted);
 }
 
-int resources_timer_expired(Resources r)
+Boolean resources_timer_expired(Resources r)
 {
 	if (r->max_parse_time == MAX_PARSE_TIME_UNLIMITED) return 0;
 	else return (r->timer_expired || 
 	     (current_usage_time() - r->time_when_parse_started > r->max_parse_time));
 }
 
-int resources_memory_exhausted(Resources r)
+Boolean resources_memory_exhausted(Resources r)
 {
 	if (r->max_memory == MAX_MEMORY_UNLIMITED) return 0;
 	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));

@@ -13,6 +13,7 @@
 
 #include "api.h"
 #include "disjunct-utils.h"
+#include "resources.h"
 
 #define CONTABSZ 8192
 typedef Connector * connector_table;
@@ -24,9 +25,7 @@ struct disjunct_dup_table_s
 	Disjunct ** dup_table;
 };
 
-/* the indiction in a word field that this connector cannot
- * be used -- is obsolete.
- */
+/* Indicator that this connector cannot be used -- that its "obsolete".  */
 #define BAD_WORD (MAX_SENTENCE+1)
 
 typedef struct c_list_s C_list;

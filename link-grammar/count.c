@@ -13,6 +13,7 @@
 
 #include "api.h"
 #include "disjunct-utils.h"
+#include "resources.h"
 
 /* This file contains the exhaustive search algorithm. */
 

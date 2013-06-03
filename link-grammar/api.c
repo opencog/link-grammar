@@ -22,6 +22,7 @@
 #include "preparation.h"
 #include "read-regex.h"
 #include "regex-morph.h"
+#include "resources.h"
 #include "sat-solver/sat-encoder.h"
 #include "corpus/corpus.h"
 #include "spellcheck.h"

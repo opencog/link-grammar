@@ -54,7 +54,6 @@
 #include "print.h"
 #include "prune.h"
 #include "read-dict.h"
-#include "resources.h"
 #include "string-set.h"
 #include "tokenize.h"
 #include "utilities.h"
