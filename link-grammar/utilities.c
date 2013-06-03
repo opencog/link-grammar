@@ -805,7 +805,12 @@ wchar_t *get_file_contents(const char * dict_name)
 	struct stat buf;
 	wchar_t * contents, *p;
 
+#ifdef _MSC_VER
+	/* binary, otherwise file length is confused by crlf treated as one entry */
+	FILE *fp = dictopen(dict_name, "rb");
+#else
 	FILE *fp = dictopen(dict_name, "r");
+#endif
 	if (fp == NULL)
 		return NULL;
 
