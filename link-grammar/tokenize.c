@@ -488,7 +488,7 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 			if ((i < s_strippable) &&
 			    find_word_in_dict(dict, newword))
 			{
-				if (1 < verbosity)
+				if (2 < verbosity)
 					printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
 
 				add_suffix_alternatives(tokenizer, newword, suffix[i]);
@@ -508,7 +508,7 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 						newword[sz] = '\0';
 						if (find_word_in_dict(dict, newword))
 						{
-							if (verbosity>1)
+							if (2 < verbosity)
 							{
 								if (i < s_strippable)
 									printf("Splitting word into three: %s-%s-%s\n",
@@ -1199,7 +1199,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 					if (is_entity(sent->dict,s) ||
 					    is_common_entity(sent->dict,lc))
 					{
-						if (1 < verbosity)
+						if (2 < verbosity)
 						{
 							printf ("Info: First word: %s entity=%d common=%d\n", 
 								s, is_entity(sent->dict,s), 
@@ -1214,7 +1214,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 					}
 					else
 					{
-						if (1 < verbosity)
+						if (2 < verbosity)
 						{
 							printf("Info: First word: %s downcase only\n", lc);
 						}
