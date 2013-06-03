@@ -1513,7 +1513,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	{
 		/* left-to-right pass */
 		for (w = 0; w < sent->length; w++) {
-			if (parse_options_resources_exhausted(opts)) break;
+			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
 				if (left_connector_list_update(pc, d->left, w, w, TRUE) < 0) {
@@ -1548,7 +1548,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		/* right-to-left pass */
 
 		for (w = sent->length-1; w >= 0; w--) {
-			if (parse_options_resources_exhausted(opts)) break;
+			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
 				if (right_connector_list_update(pc, sent, d->right, w, w, TRUE) >= sent->length) {

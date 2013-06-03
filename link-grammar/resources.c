@@ -100,12 +100,15 @@ void resources_reset_space(Resources r)
 
 int resources_exhausted(Resources r)
 {
-	if (resources_timer_expired(r)) {
+	if (r->timer_expired || r->memory_exhausted)
+		return TRUE;
+
+	if (resources_timer_expired(r))
 		r->timer_expired = TRUE;
-	}
-	if (resources_memory_exhausted(r)) {
+
+	if (resources_memory_exhausted(r))
 		r->memory_exhausted = TRUE;
-	}
+
 	return (r->timer_expired || r->memory_exhausted);
 }
 
