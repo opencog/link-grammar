@@ -619,8 +619,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 
 #ifdef USE_FAT_LINKAGES
-	only_canonical_allowed = !(overflowed || (N_linkages_found > 2*opts->linkage_limit));
-#endif /* USE_FAT_LINKAGES */
 	/* When we're processing only a small subset of the linkages,
 	 * don't worry about restricting the set we consider to be
 	 * canonical ones.  In the extreme case where we are only
@@ -628,6 +626,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	 * that we'll hit two symmetric variants of the same linkage
 	 * anyway.
 	 */
+	only_canonical_allowed = !(overflowed || (N_linkages_found > 2*opts->linkage_limit));
+#endif /* USE_FAT_LINKAGES */
+
 	/* (optional) first pass: just visit the linkages */
 	/* The purpose of these two passes is to make the post-processing
 	 * more efficient.  Because (hopefully) by the time you do the
@@ -636,8 +637,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	 */
 	if (sent->length >= opts->twopass_length)
 	{
-		for (in=0; (in < N_linkages_alloced) &&
-				   (!resources_exhausted(opts->resources)); in++)
+		for (in=0; in < N_linkages_alloced; in++)
 		{
 			extract_links(indices[in], sent->null_count, sent->parse_info);
 #ifdef USE_FAT_LINKAGES
@@ -651,6 +651,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			{
 				analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
 			}
+			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 		}
 	}
 
@@ -659,8 +660,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 #ifdef USE_FAT_LINKAGES
 	N_thin_linkages = 0;
 #endif /* USE_FAT_LINKAGES */
-	for (in=0; (in < N_linkages_alloced) &&
-			   (!resources_exhausted(opts->resources)); in++)
+	for (in=0; in < N_linkages_alloced; in++)
 	{
 		Linkage_info *lifo = &link_info[N_linkages_post_processed];
 		extract_links(indices[in], sent->null_count, sent->parse_info);
@@ -691,6 +691,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		lifo->index = indices[in];
 		lg_corpus_score(sent, lifo);
 		N_linkages_post_processed++;
+		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 	}
 
 	print_time(opts, "Postprocessed all linkages");
