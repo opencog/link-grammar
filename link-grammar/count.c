@@ -40,6 +40,8 @@ struct count_context_s
 	int     log2_table_size;
 	Table_connector ** table;
 	Resources current_resources;
+	Boolean exhausted;
+	int     checktimer;
 };
 
 static void free_table(count_context_t *ctxt)
@@ -266,10 +268,16 @@ find_table_pointer(count_context_t *ctxt,
 
 	/* Create a new connector only if resources are exhausted.
 	 * (???) Huh? I guess we're in panic parse mode in that case.
+	 * checktimer is a device to avoid a gazillion system calls
+	 * to get the timer value. On circa-2009 machines, it results
+	 * in maybe 5-10 timer calls per second.
 	 */
-	if ((ctxt->current_resources != NULL) && 
-	     resources_exhausted(ctxt->current_resources))
+	ctxt->checktimer ++;
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%450100) &&
+	                       (ctxt->current_resources != NULL) && 
+	                       resources_exhausted(ctxt->current_resources)))
 	{
+		ctxt->exhausted = TRUE;
 		return table_store(ctxt, lw, rw, le, re, cost, 0);
 	}
 	else return NULL;
@@ -514,6 +522,8 @@ s64 do_parse(Sentence sent, int null_count, Parse_Options opts)
 	count_context_t *ctxt = sent->count_ctxt;
 
 	ctxt->current_resources = opts->resources;
+	ctxt->exhausted = resources_exhausted(ctxt->current_resources);
+	ctxt->checktimer = 0;
 	ctxt->local_sent = sent->word;
 #ifdef USE_FAT_LINKAGES
 	count_set_effective_distance(sent);
@@ -526,6 +536,7 @@ s64 do_parse(Sentence sent, int null_count, Parse_Options opts)
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
+	ctxt->checktimer = 0;
 	return total;
 }
 
@@ -837,6 +848,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
+	ctxt->checktimer = 0;
 	ctxt->deletable = NULL;
 	count_unset_effective_distance(sent);
 }
