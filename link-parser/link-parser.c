@@ -652,12 +652,12 @@ int main(int argc, char * argv[])
 		i++;
 	}
 
+#ifndef _MSC_VER
 	/* Get the locale from the environment... 
-	 * perhaps we should someday get it from the dictionary ??
+	 * Perhaps we should someday get it from the dictionary ??
 	 */
 	setlocale(LC_ALL, "");
 
-#if !defined(_MSC_VER) || _MSC_VER > 1200
 	/* Check to make sure the current locale is UTF8; if its not,
 	 * then force-set this to the english utf8 locale 
 	 */
@@ -670,11 +670,11 @@ int main(int argc, char * argv[])
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
 #else
- #pragma message("WARNING: MSVC6 does not support unicode!\n"
-                 "Unicode is needed for Russian and other languages!");
+ #pragma message("WARNING: Windows console (cmd.exe) does not support unicode input!\n"
+                 "Will attempt to convert from the native encoding!");
 	fprintf(stderr, 
-	    "%s: Warning: MSVC6 does not support unicode!\n"
-	    "Unicode is needed for Russian and other languages!", argv[0]);
+	    "%s: Warning: Windows console (cmd.exe) does not support unicode\n"
+	    "input!  Will attempt to convert from the native encoding!", argv[0]);
 #endif
 
 	for (; i<argc; i++)
