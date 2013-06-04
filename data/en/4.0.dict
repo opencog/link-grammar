@@ -7923,9 +7923,10 @@ UNITS: <units-suffix>;
   or ((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
   or Us-;
 
+% {NI-} & Jp-: "a purseful of dollars"
 /en/words/currency.p:
   ((NIn- or NIe-) & AN+)
-  or ((NIn- or NIe-) & (Op- or Jp-) & {Mp+})
+  or ({NIn- or NIe-} & (Op- or Jp-) & {Mp+})
   or ((NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
   or Us-;
 
