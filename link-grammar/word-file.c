@@ -26,19 +26,17 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 	char word[MAX_WORD+4]; /* allow for 4-byte wide chars */
 	const char * s;
 	wint_t c;
-	mbstate_t mbss;
 	int j;
 
 	do {
-		c = fgetwc(fp);
-	} while ((c != WEOF) && iswspace(c));
-	if (c == WEOF) return NULL;
+		c = fgetc(fp);
+	} while ((c != EOF) && isspace(c));
+	if (c == EOF) return NULL;
 
-	memset(&mbss, 0, sizeof(mbss));
-	for (j=0; (j <= MAX_WORD-1) && (!iswspace(c)) && (c != WEOF);)
+	for (j=0; (j <= MAX_WORD-1) && (!isspace(c)) && (c != EOF); j++)
 	{
-		j += wctomb_check(&word[j], c, &mbss);
-		c = fgetwc(fp);
+		word[j] = c;
+		c = fgetc(fp);
 	}
 
 	if (j >= MAX_WORD) {
