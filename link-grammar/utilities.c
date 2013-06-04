@@ -186,8 +186,8 @@ strndup (const char *str, size_t size)
 
 int wctomb_check(char *s, wchar_t wc)
 {
-#ifdef _MSC_VER
 	int nr;
+#ifdef _MSC_VER
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
 	if (nr < 0) {
@@ -197,7 +197,7 @@ int wctomb_check(char *s, wchar_t wc)
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
-	int nr = wcrtomb(s, wc, &mbss);
+	nr = wcrtomb(s, wc, &mbss);
 	if (nr < 0) {
 		prt_error("Fatal Error: unknown character set %s\n", nl_langinfo(CODESET));
 		exit(1);

@@ -739,7 +739,7 @@ int main(int argc, char * argv[])
 		{
 			char * filename = &input_string[6];
 			char * cr = strchr(filename, '\r'); /* MS Windows borkenness */
-			if (cr) *cr = NULL;
+			if (cr) *cr = '\0';
 			input_fh = fopen(filename, "r");
 			if (NULL == input_fh)
 			{
