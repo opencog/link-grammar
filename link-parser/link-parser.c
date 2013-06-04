@@ -73,6 +73,36 @@ typedef enum
 	NO_LABEL=' '
 } Label;
 
+#ifdef _MSC_VER
+/* Windows console (cmd.exe) input to utf8 */
+static char* oem_to_utf8(char *instring)
+{
+	char * out;
+	wchar_t *winput, *wp;
+	size_t len;
+	const char *p;
+	int cv;
+	unsigned int consolecp;
+
+	consolecp = GetConsoleOutputCP(); 
+
+	/* Convert input string to wide chars. */
+	len = strlen(instring) + 1;
+	cv = MultiByteToWideChar(consolecp, 0, instring, len, NULL, 0);
+	winput = (wchar_t*) malloc(cv * sizeof(wchar_t));
+	cv = MultiByteToWideChar(consolecp, 0, instring, len, winput, cv);
+
+	/* Convert wide chars to utf8. */
+	cv = WideCharToMultiByte(CP_UTF8, 0, winput, len, NULL, 0, NULL, NULL);
+	out = (char*) malloc(cv);
+	cv = WideCharToMultiByte(CP_UTF8, 0, winput, len, out, cv, NULL, NULL);
+
+	free(winput);
+
+	return out;
+}
+#endif
+
 static char *
 fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 {
@@ -126,6 +156,19 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 	input_pending = FALSE;
 
 #ifdef _MSC_VER
+	/* Windows console input comes using the console codepage;
+	 * convert it to utf8 */
+	if (stdin == in)
+	{
+		static char * pline = NULL;
+		if (fgetws(input_string, MAX_INPUT, in))
+		{
+			if (pline) free(pline);
+			pline = oem_to_utf8(inpt_string);
+			return pline;
+		}
+	}
+	else
 	{
 		/* It appears that MS Win always provides wide chars, even if
 		 * one asked for "just a string".  So lets explicitly ask for
