@@ -161,10 +161,17 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 	if (stdin == in)
 	{
 		static char * pline = NULL;
-		if (fgetws(input_string, MAX_INPUT, in))
+		if (fgets(input_string, MAX_INPUT, in))
 		{
+			char *cr, *lf;
 			if (pline) free(pline);
 			pline = oem_to_utf8(inpt_string);
+
+			cr = strchr(pline, '\r');
+			if (cr) *cr = '\0';
+			lf = strchr(pline, '\n');
+			if (lf) *lf = '\0';
+
 			return pline;
 		}
 	}
@@ -178,8 +185,16 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 		if (fgetws(winput_string, MAX_INPUT, in)) 
 		{
 			size_t nc = wcstombs(input_string, winput_string, MAX_INPUT);
-			if (nc && (((size_t) -1) != nc))
+			if (nc && (((size_t) -1) != nc)) 
+			{
+				char *cr, *lf;
+				cr = strchr(input_string, '\r');
+				if (cr) *cr = '\0';
+				lf = strchr(input_string, '\n');
+				if (lf) *lf = '\0';
+
 				return input_string;
+			}
 		}
 	}
 #else
@@ -781,8 +796,6 @@ int main(int argc, char * argv[])
 		if (strncmp(input_string, "!file", 5) == 0)
 		{
 			char * filename = &input_string[6];
-			char * cr = strchr(filename, '\r'); /* MS Windows borkenness */
-			if (cr) *cr = '\0';
 			input_fh = fopen(filename, "r");
 			if (NULL == input_fh)
 			{
