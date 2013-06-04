@@ -672,7 +672,7 @@ int main(int argc, char * argv[])
 
 	if (dict == NULL)
 	{
-		fprintf(stderr, "%s: Fatal error: Unable to open  dictionary.\n", argv[0]);
+		fprintf(stderr, "%s: Fatal error: Unable to open dictionary.\n", argv[0]);
 		exit(-1);
 	}
 
