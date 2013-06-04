@@ -14,8 +14,6 @@
 
 #include <limits.h>
 #include <string.h>
-#include <wchar.h>
-#include <wctype.h>
 #include "api.h"
 #include "disjunct-utils.h"
 #include "error.h"
