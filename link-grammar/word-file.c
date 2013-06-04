@@ -23,8 +23,7 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 {
 	char word[MAX_WORD+4]; /* allow for 4-byte wide chars */
 	const char * s;
-	char c;
-	int j;
+	int c, j;
 
 	do {
 		c = fgetc(fp);

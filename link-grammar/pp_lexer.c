@@ -429,7 +429,7 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
 #define YY_INPUT(buf,result,max_size) \
 	if ( yy_current_buffer->yy_is_interactive ) \
 		{ \
-		char c = '*'; \
+		int c = '*'; \
 		int n; \
 		for ( n = 0; n < max_size && \
 			     (c = fgetc( yyin )) != EOF && c != '\n'; ) \
