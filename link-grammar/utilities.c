@@ -184,13 +184,25 @@ strndup (const char *str, size_t size)
 /* ============================================================= */
 /* UTF8 utilities */
 
-int wctomb_check(char *s, wchar_t wc, mbstate_t *ps)
+int wctomb_check(char *s, wchar_t wc)
 {
-	int nr = wcrtomb(s, wc, ps);
+#ifdef _MSC_VER
+	int nr;
+	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
+	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
+	if (nr < 0) {
+		wprintf(L"Fatal Error: wctomb_check failed: %d %S\n", nr, &wc);
+		exit(1);
+	}
+#else
+	mbstate_t mbss;
+	memset(&mbss, 0, sizeof(mbss));
+	int nr = wcrtomb(s, wc, &mbss);
 	if (nr < 0) {
 		prt_error("Fatal Error: unknown character set %s\n", nl_langinfo(CODESET));
 		exit(1);
 	}
+#endif
 	return nr;
 }
 
@@ -202,12 +214,15 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	wchar_t c;
 	int i, nbl, nbh;
 	char low[MB_LEN_MAX];
-	mbstate_t mbss;
 
+#ifdef _MSC_VER
+	nbh = MultiByteToWideChar(CP_UTF8, 0, from, 1, NULL, 0);
+	nbh = sizeof(wchar_t) * MultiByteToWideChar(CP_UTF8, 0, from, 1, &c, nbh);
+#else
 	nbh = mbtowc (&c, from, MB_CUR_MAX);
+#endif
 	c = towlower(c);
-	memset(&mbss, 0, sizeof(mbss));
-	nbl = wctomb_check(low, c, &mbss);
+	nbl = wctomb_check(low, c);
 
 	/* Check for error on an in-place copy */
 	if ((nbh < nbl) && (to == from))
@@ -235,12 +250,15 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	wchar_t c;
 	int i, nbl, nbh;
 	char low[MB_LEN_MAX];
-	mbstate_t mbss;
 
+#ifdef _MSC_VER
+	nbh = MultiByteToWideChar(CP_UTF8, 0, from, 1, NULL, 0);
+	nbh = sizeof(wchar_t) * MultiByteToWideChar(CP_UTF8, 0, from, 1, &c, nbh);
+#else
 	nbh = mbtowc (&c, from, MB_CUR_MAX);
+#endif
 	c = towupper(c);
-	memset(&mbss, 0, sizeof(mbss));
-	nbl = wctomb_check(low, c, &mbss);
+	nbl = wctomb_check(low, c);
 
 	/* Check for error on an in-place copy */
 	if ((nbh < nbl) && (to == from))
