@@ -115,6 +115,13 @@ char * strndup (const char *str, size_t size);
 
 #endif /* _WIN32 */
 
+/* MSVC10 isspace asserts when passed utf8 */
+#ifdef _MSC_VER
+  #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
+#else
+  #define lg_isspace isspace
+#endif
+
 #if defined(__sun__)
 int strncasecmp(const char *s1, const char *s2, size_t n);
 /* This does not appear to be in string.h header file in sunos

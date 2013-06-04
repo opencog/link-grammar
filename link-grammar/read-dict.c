@@ -294,7 +294,7 @@ static Boolean link_advance(Dictionary dict)
 		return TRUE;
 	}
 
-	do { c = get_character(dict, FALSE); } while (isspace(c[0]));
+	do { c = get_character(dict, FALSE); } while (lg_isspace(c[0]));
 
 	quote_mode = FALSE;
 
@@ -311,7 +311,7 @@ static Boolean link_advance(Dictionary dict)
 				dict->token[i] = '\0';
 				return TRUE;
 			}
-			if (isspace(c[0])) {
+			if (lg_isspace(c[0])) {
 				dict_error(dict, "White space inside of token");
 				return FALSE;
 			}
@@ -341,7 +341,7 @@ static Boolean link_advance(Dictionary dict)
 				dict->already_got_it = '\0';
 				return TRUE;
 			}
-			if (isspace(c[0])) {
+			if (lg_isspace(c[0])) {
 				dict->token[i] = '\0';
 				return TRUE;
 			}

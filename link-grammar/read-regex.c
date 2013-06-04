@@ -67,7 +67,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 				c = fgetc(fp);
 				if (c == '\n') { line++; }
 			}
-			while(isspace(c));
+			while (lg_isspace(c));
 
 			if (c == '%')
 			{
@@ -75,7 +75,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 				line++;
 			}
 		}
-		while(isspace(c));
+		while (lg_isspace(c));
 
 		if (c == EOF) { break; } /* done. */
 
@@ -91,11 +91,11 @@ int read_regex_file(Dictionary dict, const char *file_name)
 			name[i++] = c;
 			c = fgetc(fp);
 		}
-		while ((!isspace(c)) && (c != ':') && (c != EOF));
+		while ((!lg_isspace(c)) && (c != ':') && (c != EOF));
 		name[i] = '\0';
 		
 		/* Skip possible whitespace after name, expect colon. */
-		while (isspace(c))
+		while (lg_isspace(c))
 		{ 
 			if (c == '\n') { line++; }
 			c = fgetc(fp); 
@@ -112,7 +112,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 			if (c == '\n') { line++; }
 			c = fgetc(fp); 
 		}
-		while (isspace(c));
+		while (lg_isspace(c));
 		if (c != '/') {
 			prt_error("Error: Regex missing leading slash on line %d\n", line);
 			goto failure;
