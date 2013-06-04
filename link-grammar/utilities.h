@@ -108,9 +108,6 @@ char * strndup (const char *str, size_t size);
 #define iswdigit  isdigit
 #define iswspace  isspace
 #define wchar_t   char
-#define wint_t    unsigned int  /* I think ?? not sure */
-#define fgetwc    fgetc
-#define WEOF      EOF
 #define towlower  tolower
 #define towupper  toupper
 #endif /* CYGWIN_VERSION_DLL_MAJOR < 1007 */

@@ -11,8 +11,6 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include <wchar.h>
-#include <wctype.h>
 #include "api.h"
 #include "error.h"
 #include "word-file.h"
