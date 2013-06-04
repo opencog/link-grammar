@@ -165,7 +165,7 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 		{
 			char *cr, *lf;
 			if (pline) free(pline);
-			pline = oem_to_utf8(inpt_string);
+			pline = oem_to_utf8(input_string);
 
 			cr = strchr(pline, '\r');
 			if (cr) *cr = '\0';
