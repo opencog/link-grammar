@@ -303,7 +303,7 @@ void * object_open(const char *filename,
                    void * (*opencb)(const char *, void *),
                    void * user_data);
 
-wchar_t * get_file_contents(const char *filename);
+char * get_file_contents(const char *filename);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1

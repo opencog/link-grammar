@@ -791,22 +791,20 @@ FILE *dictopen(const char *filename, const char *how)
 /* ======================================================== */
 
 /**
- * Read in the whole stinkin file.
- * We read it as wide chars, one char at a time, so that any LC_CTYPE
- * setting are obeyed.  Later, during dictionary grokking, these will
- * be converted to the internal UTF8 format.  This routine returns
+ * Read in the whole stinkin file. This routine returns
  * malloced memory, which should be freed as soon as possible.
  */
-wchar_t *get_file_contents(const char * dict_name)
+char *get_file_contents(const char * dict_name)
 {
 	int fd;
 	size_t tot_size;
 	int left;
 	struct stat buf;
-	wchar_t * contents, *p;
+	char * contents, *p;
 
 #ifdef _MSC_VER
-	/* binary, otherwise file length is confused by crlf treated as one entry */
+	/* binary, otherwise fstat file length is confused by crlf
+	 * counted as one byte. */
 	FILE *fp = dictopen(dict_name, "rb");
 #else
 	FILE *fp = dictopen(dict_name, "r");
@@ -819,18 +817,14 @@ wchar_t *get_file_contents(const char * dict_name)
 	fstat(fd, &buf);
 	tot_size = buf.st_size;
 
-	/* This is surely more than we need. But that's OK, better
-	 * too much than too little.  That is, the file-size (measured
-	 * in bytes) over-estimate for the number of wide chars that
-	 * we expect to get out of it. 7 more for good luck. (wide chars)*/
-	contents = (wchar_t *) malloc(sizeof(wchar_t) * (tot_size+7));
+	contents = (char *) malloc(sizeof(char) * (tot_size+7));
 
 	/* Now, read the whole file. */
 	p = contents;
 	left = tot_size + 7;
 	while (1)
 	{
-		wchar_t *rv = fgetws(p, left, fp);
+		char *rv = fgets(p, left, fp);
 		if (NULL == rv || feof(fp))
 			break;
 		while (*p != 0x0) { p++; left--; }

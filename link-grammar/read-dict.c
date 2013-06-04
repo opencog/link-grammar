@@ -149,8 +149,8 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	int pos = 1;
 	int i;
 
-	/* The link_advance used to print the error emssage can
-	 * throw more errors... */
+	/* The link_advance used to print the error message can
+	 * throw more errors while printing... */
 	if (dict->recursive_error) return;
 	dict->recursive_error = TRUE;
 
@@ -199,22 +199,60 @@ static void warning(Dictionary dict, const char * s)
 }
 
 /**
- * This gets the next character from the input, eliminating comments.
+ * This gets the next UTF8 character from the input, eliminating comments.
  * If we're in quote mode, it does not consider the % character for
  * comments.   Note that the returned chacracter is a wide character!
  */
-static wchar_t get_character(Dictionary dict, int quote_mode)
+typedef char* utf8char;
+static utf8char get_character(Dictionary dict, int quote_mode)
 {
-	wchar_t c;
+	static char uc[7];
+	int i = 0;
 
-	c = *(dict->pin++);
-
-	if ((c == '%') && (!quote_mode))
+	while (1)
 	{
-		while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
+		char c = *(dict->pin++);
+
+		/* Skip over all comments */
+		if ((c == '%') && (!quote_mode))
+		{
+			while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
+			dict->line_number++;
+			continue;
+		}
+
+		/* Newline counts as whitespace */
+		if (c == '\n')
+			dict->line_number++;
+
+		/* If its a 7-bit ascii, we are done */
+		if ((0 == i) && ((c & 0x80) == 0x0))
+		{
+			uc[0] = c;
+			uc[1] = 0x0;
+			return uc;
+		}
+
+		uc[0] = c;
+		i = 1;
+		while (i < 6)
+		{
+			c = *(dict->pin++);
+			/* If we're onto the next char, we're done. */
+			if (((c & 0x80) == 0x0) || ((c & 0xc0) == 0xc0))
+			{
+				dict->pin--;
+				uc[i] = 0x0;
+				return uc;
+			}
+			uc[i] = c;
+			i++;
+		}
+		dict_error(dict, "Fatal Error: UTF8 char is too long");
+		exit(1);
 	}
-	if (c == '\n') dict->line_number++;
-	return c;
+	uc[0] = 0x0;
+	return uc;
 }
 
 
@@ -225,15 +263,12 @@ static wchar_t get_character(Dictionary dict, int quote_mode)
 #define SPECIAL "(){};[]&|:"
 
 /**
- * Return true if the input wide-character is one of the special
+ * Return true if the input character is one of the special
  * characters used to define the syntax of the dictionary.
  */
-static Boolean is_special(wchar_t wc, mbstate_t *ps)
+static Boolean char_is_special(char c)
 {
-	char buff[MB_LEN_MAX];
-	int nr = wcrtomb(buff, wc, ps);
-	if (1 != nr) return FALSE;
-	return (NULL != strchr(SPECIAL, buff[0]));
+	return (NULL != strchr(SPECIAL, c));
 }
 
 /**
@@ -242,7 +277,7 @@ static Boolean is_special(wchar_t wc, mbstate_t *ps)
  */
 static Boolean link_advance(Dictionary dict)
 {
-	wchar_t c;
+	utf8char c;
 	int nr, i;
 	int quote_mode;
 
@@ -250,8 +285,8 @@ static Boolean link_advance(Dictionary dict)
 
 	if (dict->already_got_it != '\0')
 	{
-		dict->is_special = is_special(dict->already_got_it, &dict->mbss);
-		if (dict->already_got_it == WEOF) {
+		dict->is_special = char_is_special(dict->already_got_it);
+		if (dict->already_got_it == EOF) {
 			dict->token[0] = '\0';
 		} else {
 			dict->token[0] = dict->already_got_it; /* specials are one byte */
@@ -261,84 +296,62 @@ static Boolean link_advance(Dictionary dict)
 		return TRUE;
 	}
 
-	do { c = get_character(dict, FALSE); } while (iswspace(c));
+	do { c = get_character(dict, FALSE); } while (isspace(c[0]));
 
 	quote_mode = FALSE;
 
 	i = 0;
 	for (;;)
 	{
-		if (i > MAX_TOKEN_LENGTH-3) {  /* 3 for multi-byte tokens */
+		if (i > MAX_TOKEN_LENGTH-3) {
 			dict_error(dict, "Token too long");
 			return FALSE;
 		}
 		if (quote_mode) {
-			if (c == '\"') {
+			if (c[0] == '\"') {
 				quote_mode = FALSE;
 				dict->token[i] = '\0';
 				return TRUE;
 			}
-			if (iswspace(c)) {
+			if (isspace(c[0])) {
 				dict_error(dict, "White space inside of token");
 				return FALSE;
 			}
 
-			/* Although we read wide chars, we store UTF8 internally, always. */
-			nr = wcrtomb(&dict->token[i], c, &dict->mbss);
-			if (nr < 0) {
-#ifndef _WIN32
-				dict_error2(dict, "Unable to read UTF8 string in current locale",
-				         nl_langinfo(CODESET));
-				fprintf (stderr, "\tTry setting the locale with \"export LANG=en_US.UTF-8\"\n");
-#else
-				dict_error(dict, "Unable to read UTF8 string in current locale");
-#endif
-				return FALSE;
-			}
-			i += nr;
+			nr = 0;
+			while (c[nr]) {dict->token[i] = c[nr]; i++; nr++; }
 		} else {
-			if (is_special(c, &dict->mbss))
+			if ('\0' == c[1] && char_is_special(c[0]))
 			{
 				if (i == 0)
 				{
-					dict->token[0] = c;  /* special toks are one char always */
+					dict->token[0] = c[0];  /* special toks are one char always */
 					dict->token[1] = '\0';
 					dict->is_special = TRUE;
 					return TRUE;
 				}
 				dict->token[i] = '\0';
-				dict->already_got_it = c;
+				dict->already_got_it = c[0];
 				return TRUE;
 			}
-			if (c == 0x0) {
+			if (c[0] == 0x0) {
 				if (i == 0) {
 					dict->token[0] = '\0';
 					return TRUE;
 				}
 				dict->token[i] = '\0';
-				dict->already_got_it = c;
+				dict->already_got_it = '\0';
 				return TRUE;
 			}
-			if (iswspace(c)) {
+			if (isspace(c[0])) {
 				dict->token[i] = '\0';
 				return TRUE;
 			}
-			if (c == '\"') {
+			if (c[0] == '\"') {
 				quote_mode = TRUE;
 			} else {
-				/* store UTF8 internally, always. */
-				nr = wctomb_check(&dict->token[i], c, &dict->mbss);
-				if (nr < 0) {
-#ifndef _WIN32
-					dict_error2(dict, "Unable to read UTF8 string in current locale",
-					         nl_langinfo(CODESET));
-					fprintf (stderr, "\tTry setting the locale with \"export LANG=en_US.UTF-8\"\n");
-#else
-					dict_error(dict, "Unable to read UTF8 string in current locale");
-#endif
-					return FALSE;
-				}
-				i += nr;
+				nr = 0;
+				while (c[nr]) {dict->token[i] = c[nr]; i++; nr++; }
 			}
 		}
 		c = get_character(dict, quote_mode);
@@ -1472,9 +1485,6 @@ static Boolean read_entry(Dictionary dict)
 
 	Dict_node *dn_new, *dnx, *dn = NULL;
 
-	/* Reset multi-byte shift state every line. */
-	memset(&dict->mbss, 0, sizeof(dict->mbss));
-
 	while (!is_equal(dict, ':'))
 	{
 		if (dict->is_special)
@@ -1500,13 +1510,13 @@ static Boolean read_entry(Dictionary dict)
 		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
 		{
 			Boolean rc;
-			wchar_t* instr;
-			char * dict_name;
+			char* instr;
+			char* dict_name;
 			const char * save_name;
 			Boolean save_is_special;
-			const wchar_t * save_input;
-			const wchar_t * save_pin;
-			wint_t save_already_got_it;
+			const char * save_input;
+			const char * save_pin;
+			char save_already_got_it;
 			int save_line_number;
 
 			if (!link_advance(dict)) goto syntax_error;

@@ -175,7 +175,7 @@ dictionary_six(const char * lang, const char * dict_name,
  */
 static Dictionary
 dictionary_six_str(const char * lang,
-                const wchar_t * input,
+                const char * input,
                 const char * dict_name,
                 const char * pp_name, const char * cons_name,
                 const char * affix_name, const char * regex_name)
@@ -294,7 +294,7 @@ dictionary_six(const char * lang, const char * dict_name,
 {
 	Dictionary dict;
 
-	wchar_t* input = get_file_contents(dict_name);
+	char* input = get_file_contents(dict_name);
 	if (NULL == input)
 	{
 		prt_error("Error: Could not open dictionary %s", dict_name);
@@ -370,48 +370,19 @@ Dictionary dictionary_create_from_utf8(const char * input)
 {
 	Dictionary dictionary = NULL;
 	char * lang;
-	wchar_t *winput, *wp;
-	size_t len;
-	const char *p;
-	int cv;
 
 	init_memusage();
 
-	/* Convert input string to wide chars. This is needed for locale
-	 * compatibility with the dictionary read routines. */
-	len = strlen(input) + 1;
-	winput = (wchar_t*) malloc(len * sizeof(wchar_t));
-
-	p = input;
-	wp = winput;
-	while (1)
-	{
-		cv = mbtowc(wp, p, 8);
-		if (-1 == cv)
-		{
-			prt_error("Error: Conversion failure!");
-		goto failure;
-		}
-		if (0 == cv)
-			break;
-		p += cv;
-		wp++;
-	}
-
-
 	lang = get_default_locale();
 	if (lang && *lang) {
-		dictionary = dictionary_six_str(lang, winput, "string",
+		dictionary = dictionary_six_str(lang, input, "string",
 		                                NULL, NULL, NULL, NULL);
 		free(lang);
 	} else {
 		/* Default to en when locales are broken (e.g. WIN32) */
-		dictionary = dictionary_six_str("en", winput, "string",
+		dictionary = dictionary_six_str("en", input, "string",
 		                                NULL, NULL, NULL, NULL);
 	}
-
-failure:
-	free(winput);
 
 	return dictionary;
 }

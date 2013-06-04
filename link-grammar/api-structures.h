@@ -33,7 +33,6 @@
 #ifndef _API_STRUCTURESH_
 #define _API_STRUCTURESH_
 
-#include <wchar.h>
 #include "api-types.h"
 #include "structures.h" /* for definition of Link */
 #include "corpus/corpus.h"
@@ -164,14 +163,13 @@ struct Dictionary_s
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.
 	 */
-	const wchar_t * input;
-	const wchar_t * pin;
+	const char    * input;
+	const char    * pin;
 	char            token[MAX_TOKEN_LENGTH];
 	Boolean         recursive_error;
 	Boolean         is_special;
-	wint_t          already_got_it;
+	char            already_got_it;
 	int             line_number;
-	mbstate_t       mbss; /* multi-byte shift state */
 };
 
 struct Label_node_s
