@@ -610,6 +610,26 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		return;
 	}
 
+	/* Ugly hack: "let's" is in the english dict, but "Let's" is not. Thus,
+	 * sentences beginning with upper-case let's fail, while lower-case
+	 * pass! Again, need to fix this, since let's can also split into two ...
+	 * XXX should also check to see if its after a colon...
+	 */
+	if (((dict->left_wall_defined && sent->length == 1) ||
+	    (!dict->left_wall_defined && sent->length == 0)) &&
+	    is_utf8_upper(word))
+	{
+		char temp_word[MAX_WORD+1];
+		downcase_utf8_str(temp_word, word, MAX_WORD);
+		word_is_in_dict = find_word_in_dict (dict, temp_word);
+		if (word_is_in_dict)
+		{
+			const char *lc = string_set_add(temp_word, sent->string_set);
+			issue_sentence_word(sent, lc, quote_found);
+			return;
+		}
+	}
+
 	/* Set up affix tables.  */
 	if (dict->affix_table != NULL)
 	{
