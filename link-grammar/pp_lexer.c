@@ -70,7 +70,6 @@ int yywrap(void);  /* --DS */
 #define YY_FLEX_MINOR_VERSION 5
 
 #include <stdio.h>
-#include <wchar.h>
 #include <unistd.h>
 
 
@@ -291,7 +290,7 @@ extern int yywrap YY_PROTO(( void ));
 
 static yy_state_type yy_get_previous_state YY_PROTO(( void ));
 static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_state ));
-static int yy_get_next_buffer YY_PROTO(( mbstate_t * ));
+static int yy_get_next_buffer YY_PROTO(( void ));
 static void yy_fatal_error YY_PROTO(( const char msg[] ));
 
 /* Done after the current pattern has been matched and before the
@@ -466,17 +465,17 @@ static PPLexTable *clt=NULL; /* ptr to lex table we're currently filling in */
  * is returned in "result".
  */
 #ifndef YY_INPUT
-#define YY_INPUT(buf,result,max_size,pmbss) \
+#define YY_INPUT(buf,result,max_size) \
 	if ( yy_current_buffer->yy_is_interactive ) \
 		{ \
-		wint_t c = '*'; \
+		char c = '*'; \
 		int n; \
 		for ( n = 0; n < max_size && \
-			     (c = fgetwc( yyin )) != WEOF && c != '\n'; ) \
-			n += wcrtomb(&buf[n], c, pmbss); \
+			     (c = fgetc( yyin )) != EOF && c != '\n'; ) \
+			buf[n++] = c; \
 		if ( c == '\n' ) \
 			buf[n++] = '\n'; \
-		if ( c == WEOF && ferror( yyin ) ) \
+		if ( c == EOF && ferror( yyin ) ) \
 			YY_FATAL_ERROR( "input in flex scanner failed" ); \
 		result = n; \
 		} \
@@ -534,10 +533,6 @@ YY_DECL
 	yy_state_type yy_current_state;
 	char *yy_cp, *yy_bp;
 	int yy_act;
-
-	/* Reset multi-byte shift state */
-	mbstate_t mbss;
-	memset(&mbss, 0, sizeof(mbss));
 
 	/* #line 56 "pp_lexer.fl" --DS */
 
@@ -746,7 +741,7 @@ ECHO;
 				}
 			}
 
-		else switch ( yy_get_next_buffer(&mbss) )
+		else switch ( yy_get_next_buffer() )
 			{
 			case EOB_ACT_END_OF_FILE:
 				{
@@ -816,7 +811,7 @@ ECHO;
  *	EOB_ACT_END_OF_FILE - end of file
  */
 
-static int yy_get_next_buffer(mbstate_t *pmbss)
+static int yy_get_next_buffer(void)
 {
 	char *dest = yy_current_buffer->yy_ch_buf;
 	char *source = yytext_ptr;
@@ -912,7 +907,7 @@ static int yy_get_next_buffer(mbstate_t *pmbss)
 
 		/* Read in more data. */
 		YY_INPUT( (&yy_current_buffer->yy_ch_buf[number_to_move]),
-			yy_n_chars, num_to_read, pmbss );
+			yy_n_chars, num_to_read);
 		}
 
 	if ( yy_n_chars == 0 )
