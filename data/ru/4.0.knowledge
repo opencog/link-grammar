@@ -26,6 +26,24 @@ DOMAIN_STARTER_LINKS:
  W   
 
 
+URFL_DOMAIN_STARTER_LINKS:
+
+
+URFL_ONLY_DOMAIN_STARTER_LINKS:
+
+
+DOMAIN_CONTAINS_LINKS:
+
+
+MUST_FORM_A_CYCLE_LINKS:
+
+
+RESTRICTED_LINKS:
+
+
+MUST_FORM_A_CYCLE_LINKS:
+
+
 ; ----------------------------------------------------------------------
 ; ---------------------- LINK TYPE TABLE-------------------------------
 ; ----------------------------------------------------------------------
