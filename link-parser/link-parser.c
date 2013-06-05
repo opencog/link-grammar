@@ -905,13 +905,13 @@ int main(int argc, char * argv[])
 				}
 			}
 
-			if (parse_options_timer_expired(opts))
+			if (verbosity > 0)
 			{
-				if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
-			}
-			if (parse_options_memory_exhausted(opts))
-			{
-				if (verbosity > 0) fprintf(stdout, "Memory is exhausted!\n");
+				if (parse_options_timer_expired(opts))
+					fprintf(stdout, "Timer is expired!\n");
+
+				if (parse_options_memory_exhausted(opts))
+					fprintf(stdout, "Memory is exhausted!\n");
 			}
 
 			if ((num_linkages == 0) &&
@@ -924,8 +924,10 @@ int main(int argc, char * argv[])
 				parse_options_reset_resources(panic_parse_opts);
 				parse_options_set_verbosity(panic_parse_opts, verbosity);
 				num_linkages = sentence_parse(sent, panic_parse_opts);
-				if (parse_options_timer_expired(panic_parse_opts)) {
-					if (verbosity > 0) fprintf(stdout, "Timer is expired!\n");
+				if (verbosity > 0)
+				{
+					if (parse_options_timer_expired(panic_parse_opts))
+						fprintf(stdout, "Panic timer is expired!\n");
 				}
 			}
 
