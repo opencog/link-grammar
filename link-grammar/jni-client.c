@@ -136,9 +136,6 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	ptd = (per_thread_data *) malloc(sizeof(per_thread_data));
 	memset(ptd, 0, sizeof(per_thread_data));
 
-	ptd->panic_parse_opts = parse_options_create();
-	setup_panic_parse_options(ptd->panic_parse_opts);
-
 	ptd->opts = parse_options_create();
 	parse_options_set_disjunct_costf(ptd->opts, 3.0f);
 	parse_options_set_max_sentence_length(ptd->opts, 170);
@@ -147,6 +144,10 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_short_length(ptd->opts, 10);
 	parse_options_set_verbosity(ptd->opts,0);
 	parse_options_set_spell_guess(ptd->opts, FALSE);
+
+	parse_options_set_panic_mode(ptd->opts, TRUE);
+	ptd->panic_parse_opts = parse_options_create();
+	setup_panic_parse_options(ptd->panic_parse_opts);
 
 	ptd->dict = dictionary_create_lang(in_language);
 	if (!ptd->dict) throwException(env, "Error: unable to open dictionary");
@@ -290,7 +291,8 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	}
 
 	if ((ptd->num_linkages == 0) &&
-	    parse_options_resources_exhausted(opts))
+	    parse_options_resources_exhausted(opts) &&
+	    parse_options_get_panic_mode(opts))
 	{
 		parse_options_print_total_time(opts);
 		if (jverbosity > 0) prt_error("Warning: JNI: Entering \"panic\" mode...\n");
