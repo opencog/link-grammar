@@ -1872,7 +1872,7 @@ DAY-ORDINALS.ord ORDINALS.ord :
 % Relations
 % "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
 =.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
-equiv.v sim.v simeq.v approx.v ~.v:
+equiv.v sim.v simeq.v approx.v ~.v ～.v:
 ([S-] or EQ*r-) &  ([O+] or EQ*r+) &
 (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
 
@@ -9689,10 +9689,10 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 
 ".": ((Xp- or ({@Xca-} & Xc-)) & RW+) or Xi-;
 
-"!" "?": ((Xp- or ({@Xca-} & Xc-)) & RW+) or ({@Xca-} & Xq+);
+"!" "?" ‽ ؟ ？！: ((Xp- or ({@Xca-} & Xc-)) & RW+) or ({@Xca-} & Xq+);
 
 <semicol>: {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
-";": <semicol>;
+";" ；: <semicol>;
 
 % comma, as a conjunction
 % AJ: "They taste bitter, not sweet"
@@ -9728,7 +9728,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   or (SJn- & SJr+ & SJn+);
 
 % :.j
-"….j" ":.j" "•":
+"….j" ":.j" "•" ⁂ ❧ ☞ ◊ ※ :
   {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) or Xe-);
 
 % ellipsis ... at the end, trailing off ...
@@ -9749,18 +9749,24 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 ....xy ….xy:
    Cr- & S+;
 
-% The percent sign following a number
+% The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%
-"%": (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
+"%" ‰ ‱ : (ND- & {DD-} & <noun-sub-x> & <noun-main-x>) or (ND- & (OD- or AN+));
 
 % See also /en/words/currency for curency names that follow a number.
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
-£ ₤ € ₳ ฿ ¢ ₵ ₡ ₢ ₫ ₣ ₴ ₭ ℳ  ₥  ₦ ₧ ₰ ₨  ₪ ৳ ₮ ₩ ¥ 호점
-† †† ‡ § ¶ © № "#":
+£ ₤ € ¤ ₳ ฿ ¢ ₵ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ₸ ₮ ₩ ¥ ៛ 호점
+† †† ‡ § ¶ © ® ℗ № "#":
   NM*x+ & (AN+ or NM*y- or [[G+]] or (NIfu+ or NItu-) or
     ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
       (OD- or ({DD-} & {[[@M+]]} &
         (<noun-main-p> or <noun-and-p> or [[(Ss+ & <CLAUSE>) or SIs-]])))));
+
+% service mark, trademark.
+% ℠ ™ :
+
+% Espagnol stuff
+% ¿ ¡:
 
 "&": G- & {Xd- & G-} & G+;
 
@@ -9827,7 +9833,9 @@ rbracketID50 rbracketID51 rbracketID52 rbracketID53 rbracketID54
 rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 ")" "]": {@Xca-} & Xc-;
 
-– --.r -.r: [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
+% 、 is the "enumeration-comma" used like a dash ...
+% ‧ is the "middle dot"
+– --.r -.r 、 ～.r ~.r ‧ : [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
 ({@Xca-} & (({EBx+} & Xd+) or Xc-));
 
 foo: F+;
