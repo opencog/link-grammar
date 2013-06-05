@@ -41,8 +41,10 @@ MUST_FORM_A_CYCLE_LINKS:
 RESTRICTED_LINKS:
 
 
-MUST_FORM_A_CYCLE_LINKS:
+LEFT_DOMAIN_STARTER_LINKS:
 
+
+IGNORE_THESE_LINKS:
 
 ; ----------------------------------------------------------------------
 ; ---------------------- LINK TYPE TABLE-------------------------------
@@ -53,4 +55,14 @@ MUST_FORM_A_CYCLE_LINKS:
 
 STARTING_LINK_TYPE_TABLE: 
  W     m  
+
+
+CONTAINS_ONE_RULES:
+
+
+CONTAINS_NONE_RULES:
+
+
+FORM_A_CYCLE_RULES:
+
 
