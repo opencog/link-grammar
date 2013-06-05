@@ -280,13 +280,13 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 		}
 	}
 
-	if (parse_options_timer_expired(opts))
+	if (jverbosity > 0)
 	{
-		if (jverbosity > 0) prt_error("Warning: JNI: Timer is expired!\n");
-	}
-	if (parse_options_memory_exhausted(opts))
-	{
-		if (jverbosity > 0) prt_error("Warning: JNI: Memory is exhausted!\n");
+		if (parse_options_timer_expired(opts))
+			prt_error("Warning: JNI: Timer is expired!\n");
+
+		if (parse_options_memory_exhausted(opts))
+			prt_error("Warning: JNI: Memory is exhausted!\n");
 	}
 
 	if ((ptd->num_linkages == 0) &&
@@ -297,8 +297,10 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 		parse_options_reset_resources(ptd->panic_parse_opts);
 		parse_options_set_verbosity(ptd->panic_parse_opts, jverbosity);
 		ptd->num_linkages = sentence_parse(ptd->sent, ptd->panic_parse_opts);
-		if (parse_options_timer_expired(ptd->panic_parse_opts)) {
-			if (jverbosity > 0) prt_error("Error: JNI: Timer is expired!\n");
+		if (jverbosity > 0)
+		{
+			if (parse_options_timer_expired(ptd->panic_parse_opts)) 
+				prt_error("Error: JNI: Panic timer is expired!\n");
 		}
 	}
 }
