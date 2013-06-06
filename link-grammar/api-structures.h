@@ -118,6 +118,7 @@ struct Dictionary_s
 	Regex_node *    regex_root;
 	const char *    name;
 	const char *    lang;
+	const char *    version;
 
 	Boolean         use_unknown_word;
 	Boolean         unknown_word_defined;

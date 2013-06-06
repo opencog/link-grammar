@@ -28,12 +28,12 @@ const char * linkgrammar_get_version(void)
 
 const char * linkgrammar_get_dict_version(Dictionary dict)
 {
-	static char * ver = NULL;
+	char * ver;
 	char * p;
 	Dict_node *dn;
 	Exp *e;
 
-	if (ver) return ver;
+	if (dict->version) return dict->version;
 
 	/* The newer dictionaries should contain a macro of the form:
 	 * <dictionary-version-number>: V4v6v6+;
@@ -53,7 +53,9 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	}
 
 	free_lookup_list(dn);
-	return ver;
+	dict->version = string_set_add(ver, dict->string_set);
+	free(ver);
+	return dict->version;
 }
 
 

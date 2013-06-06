@@ -193,6 +193,7 @@ dictionary_six_str(const char * lang,
 	t = strrchr (lang, '/');
 	if (t) dict->lang = string_set_add(t+1, dict->string_set);
 	dict->name = string_set_add(dict_name, dict->string_set);
+	dict->version = NULL;
 
 	dict->max_cost = 1000;
 	dict->num_entries = 0;
