@@ -424,7 +424,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				{
 					const char * stem = pi->chosen_disjuncts[i-1]->string;
 					size_t len = strlen(stem) + strlen (t);
-					char * join = malloc(len+1);
+					char * join = (char *)malloc(len+1);
 					strcpy(join, stem);
 					u = strrchr(join, '.');
 					*u = '\0';

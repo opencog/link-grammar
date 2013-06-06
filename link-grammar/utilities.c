@@ -45,7 +45,7 @@
 #endif
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR == (ch))
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #define DICTIONARY_DIR "."
 #endif
 #define DEFAULTPATH DICTIONARY_DIR
@@ -643,7 +643,10 @@ char * dictionary_get_data_dir(void)
 #ifdef _DEBUG
 				prt_error("Info: GetModuleFileName=%s", (prog_path ? prog_path : "NULL"));
 #endif
-				data_dir16 = path_get_dirname(prog_path);
+				if (sizeof(TCHAR) == 1)
+				    data_dir16 = path_get_dirname(prog_path16);
+				else
+				    data_dir16 = path_get_dirname(prog_path);
 				if (data_dir16 != NULL)
 				{
 					printf("   found dir for current prog %s\n", data_dir16);
@@ -820,7 +823,7 @@ char *get_file_contents(const char * dict_name)
 	struct stat buf;
 	char * contents, *p;
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	/* binary, otherwise fstat file length is confused by crlf
 	 * counted as one byte. */
 	FILE *fp = dictopen(dict_name, "rb");

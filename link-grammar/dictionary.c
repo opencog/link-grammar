@@ -40,7 +40,7 @@ static inline char * deinflect(const char * str)
 	if (!p || (p == str)) return strdup(str);
 
 	len = p - str;
-	s = malloc(len + 1);
+	s = (char *)malloc(len + 1);
 	strncpy(s, str, len);
 	s[len] = '\0';
 	return s;

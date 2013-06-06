@@ -40,11 +40,11 @@ static struct
 	int use_sat_solver;
 	int use_viterbi;
 	int echo_on;
-	int cost_model;
+	Cost_Model_type cost_model;
 	float max_cost;
 	int screen_width;
 	int display_on;
-	int display_constituents;
+	ConstituentDisplayStyle display_constituents;
 	int max_sentence_length;
 	int display_postscript;
 	int display_bad;

@@ -7,7 +7,7 @@
  * Copyright (c) 2008 Linas Vepstas <linas@linas.org>
  */
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
 #include <execinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -206,4 +206,4 @@ void my_init_hook(void)
 }
 
 void (*__malloc_initialize_hook)(void) = my_init_hook;
-#endif //_MSC_VER
+#endif /*_MSC_VER && __MINGW32__*/

@@ -3,6 +3,7 @@ Version 4.7.13 (xxxx 2013)
  * Performance improvement: avoid excess system timer calls.
  * Unicode fixes for Windows.
  * Fix: "... a purseful of pesos"; other currency fixes.
+ * MinGW, unicode fixes from Per Larsson
 
 Version 4.7.12 (25 May 2013)
  * Large fixes to the Russian dictionaries.

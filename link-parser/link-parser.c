@@ -73,7 +73,7 @@ typedef enum
 	NO_LABEL=' '
 } Label;
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 /* Windows console (cmd.exe) input to utf8 */
 static char* oem_to_utf8(char *instring)
 {
@@ -155,7 +155,7 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 	}
 	input_pending = FALSE;
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	/* Windows console input comes using the console codepage;
 	 * convert it to utf8 */
 	if (stdin == in)
@@ -247,7 +247,7 @@ static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 static void process_linkage(Linkage linkage, Parse_Options opts)
 {
 	char * string;
-	int mode;
+	ConstituentDisplayStyle mode;
 #ifdef USE_FAT_LINKAGES
 	int j, first_sublinkage;
 	int nlink;
@@ -652,7 +652,7 @@ int main(int argc, char * argv[])
 		i++;
 	}
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
 	/* Get the locale from the environment... 
 	 * Perhaps we should someday get it from the dictionary ??
 	 */
@@ -670,8 +670,7 @@ int main(int argc, char * argv[])
 		setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
 #else
- #pragma message("WARNING: Windows console (cmd.exe) does not support unicode input!\n"
-                 "Will attempt to convert from the native encoding!");
+ #pragma message("WARNING: Windows console (cmd.exe) does not support unicode input!\nWill attempt to convert from the native encoding!");
 	fprintf(stderr, 
 	    "%s: Warning: Windows console (cmd.exe) does not support unicode\n"
 	    "input!  Will attempt to convert from the native encoding!", argv[0]);

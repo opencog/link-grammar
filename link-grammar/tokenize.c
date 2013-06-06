@@ -181,10 +181,10 @@ static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_fou
 	size_t len = sent->length;
 	if (*s == '\0') return;
 
-	sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+	sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
 	sent->post_quote[len] = quote_found;
 
-	sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+	sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
 	sent->word[len].x = NULL;
 	sent->word[len].d = NULL;
 
@@ -214,7 +214,7 @@ static size_t altlen(const char **arr)
 
 static const char ** resize_alts(const char **arr, size_t len)
 {
-	arr = realloc(arr, (len+2) * sizeof(const char *));
+	arr = (const char **)realloc(arr, (len+2) * sizeof(const char *));
 	arr[len+1] = NULL;
 	return arr;
 }
@@ -302,10 +302,10 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 	{
 		size_t i;
 
-		sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+		sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
 		sent->post_quote[len] = quote_found;
 
-		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+		sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 		sent->word[len].unsplit_word = NULL;
@@ -325,10 +325,10 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 
 	if (stemlen)
 	{
-		sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+		sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
 		sent->post_quote[len] = preflen ? FALSE : quote_found;
 
-		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+		sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 		sent->word[len].unsplit_word = tokenizer->unsplit_word;
@@ -352,10 +352,10 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 
 	if (sufflen)
 	{
-		sent->post_quote = realloc(sent->post_quote, (len+1) * sizeof(Boolean));
+		sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
 		sent->post_quote[len] = FALSE;
 
-		sent->word = realloc(sent->word, (len+1) * sizeof(Word));
+		sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
 		sent->word[len].x = NULL;
 		sent->word[len].d = NULL;
 		sent->word[len].unsplit_word = NULL;
