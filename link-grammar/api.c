@@ -1473,6 +1473,7 @@ int linkage_compute_union(Linkage linkage)
 
 int linkage_get_num_sublinkages(const Linkage linkage)
 {
+	if (!linkage) return 0;
 #ifdef USE_FAT_LINKAGES
 	return linkage->num_sublinkages;
 #else
@@ -1482,11 +1483,13 @@ int linkage_get_num_sublinkages(const Linkage linkage)
 
 int linkage_get_num_words(const Linkage linkage)
 {
+	if (!linkage) return 0;
 	return linkage->num_words;
 }
 
 int linkage_get_num_links(const Linkage linkage)
 {
+	if (!linkage) return 0;
 #ifdef USE_FAT_LINKAGES
 	int current = linkage->current;
 	return linkage->sublinkage[current].num_links;
@@ -1495,8 +1498,9 @@ int linkage_get_num_links(const Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 }
 
-static inline int verify_link_index(const Linkage linkage, int index)
+static inline Boolean verify_link_index(const Linkage linkage, int index)
 {
+	if (!linkage) return FALSE;
 	if ((index < 0) ||
 #ifdef USE_FAT_LINKAGES
 		(index >= linkage->sublinkage[linkage->current].num_links))
@@ -1504,9 +1508,9 @@ static inline int verify_link_index(const Linkage linkage, int index)
 		(index >= linkage->sublinkage.num_links))
 #endif /* USE_FAT_LINKAGES */
 	{
-		return 0;
+		return FALSE;
 	}
-	return 1;
+	return TRUE;
 }
 
 int linkage_get_link_length(const Linkage linkage, int index)
@@ -1623,6 +1627,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, int w)
 {
 	Disjunct *dj;
 
+	if (NULL == linkage) return "";
 	if (NULL == linkage->info->disjunct_list_str)
 	{
 		lg_compute_disjunct_strings(linkage->sent, linkage->info);
@@ -1656,6 +1661,7 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, int w)
 
 const char * linkage_get_word(const Linkage linkage, int w)
 {
+	if (!linkage) return NULL;
 	return linkage->word[w];
 }
 
