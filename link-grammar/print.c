@@ -786,6 +786,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 char * linkage_print_diagram(const Linkage linkage)
 {
 	ps_ctxt_t ctx;
+	if (!linkage) return NULL;
 	return linkage_print_diagram_ctxt(linkage, &ctx);
 }
 
