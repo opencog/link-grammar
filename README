@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 4.7.12
+                          Version 4.7.13
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -65,7 +65,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.7.10.tar.gz.asc
+   gpg --verify link-grammar-4.7.13.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -616,6 +616,12 @@ Fat Links:
    by default, and is now deprecated.  The function is still there,
    and can be turned on by specifying the !use-fat=1 command, or by
    calling parse_options_use_fat_links(TRUE) from programs.
+
+   As of version 4.7.12, the "fat link" code is no longer compiled
+   by default.  To obtain the fat-link version, ./configure must
+   be run with the --enable-fat-links flag.  Enabling this will
+   generate a lot of warning messages during compilation.  Note that
+   the Russian dictionaries still use fat links to support conjunctions.
 
    Older versions of the link-grammar parser used "fat links" to
    support conjunctions (and, or, but, ...). However, this lead
