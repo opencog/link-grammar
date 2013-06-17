@@ -45,7 +45,7 @@
 #endif
 
 #define IS_DIR_SEPARATOR(ch) (DIR_SEPARATOR == (ch))
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _MSC_VER
 #define DICTIONARY_DIR "."
 #endif
 #define DEFAULTPATH DICTIONARY_DIR
