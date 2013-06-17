@@ -1489,11 +1489,13 @@ int linkage_get_num_words(const Linkage linkage)
 
 int linkage_get_num_links(const Linkage linkage)
 {
-	if (!linkage) return 0;
 #ifdef USE_FAT_LINKAGES
-	int current = linkage->current;
+	int current;
+	if (!linkage) return 0;
+	current = linkage->current;
 	return linkage->sublinkage[current].num_links;
 #else
+	if (!linkage) return 0;
 	return linkage->sublinkage.num_links;
 #endif /* USE_FAT_LINKAGES */
 }
