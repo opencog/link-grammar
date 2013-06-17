@@ -1,3 +1,6 @@
+Version 4.7.14 (xxx 2013)
+ * xxx ... xxx ... coming real soon now: new link types fro Ruiting!? 
+
 Version 4.7.13 (17 June 2013)
  * Remove trailing carriage return in MSVC6 filenames.
  * Performance improvement: avoid excess system timer calls.
