@@ -100,6 +100,7 @@ liblink_grammar_la_SOURCES =        \
 	expand.c                         \
 	extract-links.c                  \
 	fast-match.c                     \
+	fat.c                            \
 	idiom.c                          \
 	massage.c                        \
 	post-process.c                   \
