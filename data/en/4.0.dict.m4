@@ -12,14 +12,14 @@ changecom(`%')
  %                                                                           %
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
  %       Copyright (c) 2003  Peter Szolovits and MIT.                        %
- %       Copyright (c) 2008-2012  Linas Vepstas                              %
+ %       Copyright (c) 2008-2013  Linas Vepstas                              %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.7.13 (formatted as V4v7v13+)
-<dictionary-version-number>: V4v7v13+;
+% Dictionary version number is 4.7.14 (formatted as V4v7v14+)
+<dictionary-version-number>: V4v7v14+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -1929,6 +1929,16 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 % These are the verb-form expressions for ordinary verbs.
 %
+% The general patterns here are:
+% <verb-s>    : links verbs to singular subjects
+% <verb-pl>   : links verbs to plural subjects
+% <verb-i>    : links to infinitve
+% <verb-pl,i> : to plural subjects or infinitives
+% <verb-sp>   : to singular or plural subject
+% <verb-pp>   : to past-participles
+% <verb-sp,pp>: to singular or plural subject or past-participles
+% <verb-pg>   : to gerunds
+%
 % <marker-past> is a marker which should never be used in a link.
 % It is used to flag past-tense forms in the dictionary.  It's only use
 % is to supply an answer to the "isPastTense" call in the Java API.
@@ -1938,6 +1948,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % as soon as possible, and removed by late-2010/early-2011
 
 <marker-past>: XXXPAST+;
+
+
 <verb-ico>: {@E-} & ((I- & {@E-}) or ({CO-} & Wi-));
 <verb-pl,i>: ({@E-} & (Sp- or (RS- & Bp-))) or <verb-ico>;
 <verb-pl>: {@E-} & (Sp- or (RS- & Bp-));
