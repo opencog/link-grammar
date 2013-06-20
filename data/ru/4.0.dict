@@ -7,8 +7,8 @@
 %%
 %% This file uses the utf8 encoding
 
-%% Dictionary version number is 4.7.13 (formatted as V4v7v13+)
-<dictionary-version-number>: V4v7v13+;
+%% Dictionary version number is 4.7.14 (formatted as V4v7v14+)
+<dictionary-version-number>: V4v7v14+;
 
 % The empty word.
 =.zzz: ZZZ-;
