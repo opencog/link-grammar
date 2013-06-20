@@ -509,22 +509,16 @@ int word_contains(Dictionary dict, const char * word, const char * macro)
 	return ret;
 }
 
-
-#define PAST_TENSE_FORM_MARKER "<marker-past>"
-#define ENTITY_MARKER          "<marker-entity>"
-#define COMMON_ENTITY_MARKER   "<marker-common-entity>"
-
-/* This is exported to public API (for Java) 
+/**
  * @deprecated -- past-tense verbs are tagged with .v-d or .w-d or .q-d
  * subscripts. use those instead to figure out if a verb is past tense.
  */
 int dictionary_is_past_tense_form(Dictionary dict, const char * str)
 {
-	if (word_contains(dict, str, PAST_TENSE_FORM_MARKER) == 1)
-		return 1;
 	return 0;
 }
 
+#define ENTITY_MARKER          "<marker-entity>"
 /**
  * dictionary_is_entity - Return true if word is entity.
  * Entities are proper names (geographical names,

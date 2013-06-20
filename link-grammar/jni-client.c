@@ -779,14 +779,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 JNIEXPORT jboolean JNICALL
 Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstring str)
 {
-	jboolean rv = FALSE;
-
-	per_thread_data *ptd = get_ptd(env, cls);
-	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (dictionary_is_past_tense_form(ptd->dict, cStr) == 1)
-		rv = TRUE;
-	(*env)->ReleaseStringUTFChars(env,str,cStr);
-	return rv;
+	return FALSE;
 }
 
 /*
