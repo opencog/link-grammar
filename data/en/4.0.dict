@@ -9,8 +9,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.7.14 (formatted as V4v7v14+)
-<dictionary-version-number>: V4v7v14+;
+% Dictionary version number is 4.7.15 (formatted as V4v7v15+)
+<dictionary-version-number>: V4v7v15+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -1930,24 +1930,13 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 %
-% <marker-past> is a marker which should never be used in a link.
-% It is used to flag past-tense forms in the dictionary.  It's only use
-% is to supply an answer to the "isPastTense" call in the Java API.
-% which is needed by relex-version 1.2.0 and earlier.  Newer versions
-% use the v-d, w-d, and q-d tags to identify past-tense verbs, and so
-% the Java API is no longer needed. It should be marked obsolete/deprecated
-% as soon as possible, and removed by late-2010/early-2011
-
-<marker-past>: XXXPAST+;
-
-
 <verb-ico>: {@E-} & ((I- & {@E-}) or ({CO-} & Wi-));
 <verb-pl,i>: ({@E-} & (Sp- or (RS- & Bp-))) or <verb-ico>;
 <verb-pl>: {@E-} & (Sp- or (RS- & Bp-));
 <verb-s>: {@E-} & (Ss- or (RS- & Bs-));
 <verb-i>: {@E-} & I-;
-<verb-sp,pp>: <marker-past> or ({@E-} & (S- or (RS- & B-) or PP-));
-<verb-sp>: <marker-past> or ({@E-} & (S- or (RS- & B-)));
+<verb-sp,pp>: {@E-} & (S- or (RS- & B-) or PP-);
+<verb-sp>: {@E-} & (S- or (RS- & B-));
 <verb-pp>: {@E-} & PP-;
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
@@ -1996,8 +1985,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 
 <verb-s-pl,i>: {@E-} & (Sp- or If- or (RS- & Bp-) or Wi-);
 <verb-s-s>: {@E-} & (Ss- or SFsi- or (RS- & Bs-));
-<verb-s-sp,pp>: <marker-past> or ({@E-} & (S- or SFsi- or PPf- or (RS- & B-)));
-<verb-s-sp>:  <marker-past> or ({@E-} & (S- or SFsi- or (RS- & B-)));
+<verb-s-sp,pp>: {@E-} & (S- or SFsi- or PPf- or (RS- & B-));
+<verb-s-sp>: {@E-} & (S- or SFsi- or (RS- & B-));
 <verb-s-pp>: {@E-} & PPf-;
 <verb-s-pg>: {@E-} & (Pgf- or Mg-);
 <verb-s-pv>: {@E-} & (Pvf- or Mv-) & {@MV+};
@@ -2009,8 +1998,8 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-) or PPf-));
-<verb-x-sp>: <marker-past> or ({@E-} & (S- or SF- or (RS- & B-)));
+<verb-x-sp,pp>: {@E-} & (S- or SF- or (RS- & B-) or PPf-);
+<verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf-;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>:
@@ -2121,7 +2110,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 %(RS- & Bp-) or Wi-))) & (I*d+ or [[()]]);
 %doesn't: (({Q-} & (SIs+ or SFIs+) & I*d+) or <verb-x-s>) &
 %(I*d+ or [[()]]);
-%didn't: <marker-past> or ((({Q-} & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
+%didn't: ((({Q-} & (SI+ or SFI+)) or ({@E-} & (S- or SF- or
 %(RS- & B-)))) & (I*d+ or [[()]]));
 
 %Mike replaced "{Q-}" with "(Rw- or Q- or [()])"
@@ -2188,9 +2177,8 @@ doesn't doesn’t:
   <verb-x-s>) & (I*d+ or [[()]]);
 
 didn't.v-d didn’t.v-d:
-  <marker-past> or
-  ((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]));
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
+    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]);
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
@@ -2235,10 +2223,10 @@ hasn't hasn’t:
 haven't haven’t:
 (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or
 (RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
-hadn't.v-d hadn’t.v-d: <marker-past> or
-((((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} &
+hadn't.v-d hadn’t.v-d: 
+(((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} &
 (S- or SFs- or SFp- or (RS- & B-)))) &
-(PP+ or ([[O+]] & {@MV+}) or [[()]]));
+(PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
 % Give [K+] a cost so as to prefer Pp+ in general
 %<vc-be>:
@@ -2312,7 +2300,6 @@ are.v:
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
 was.v-d:
-  <marker-past> or
   (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
   ({@E-} & SX- & <vc-be>) or
@@ -2320,8 +2307,7 @@ was.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
-  <marker-past>
-  or (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>)
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
   or (<verb-and-sp-> & <vc-be>)
   or (<vc-be> & <verb-and-sp+>)
@@ -2362,9 +2348,8 @@ isn't isn’t:
   (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
 wasn't.v-d wasn’t.v-d:
-  <marker-past>
-  or ((({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-)))
-     or ((Rw- or ({Ic-} & Q-) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>);
+  (({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-)))
+  or ((Rw- or ({Ic-} & Q-) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
 
 aren't aren’t:
   (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
@@ -2372,8 +2357,7 @@ aren't aren’t:
 
 % [[Ss-]]: "If it weren't for Joe, ..."
 weren't.v-d weren’t.v-d:
-  <marker-past>
-  or (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be>)
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
@@ -7091,19 +7075,16 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
   [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
 
 /en/words/words.v.10.3:
-  <marker-past>
-  or ({@E-} & (
+  {@E-} & (
     ((S- or PP-) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
-    or [[Pvf- & <vc-it-paraph>]]));
+    or [[Pvf- & <vc-it-paraph>]]);
 
 read.q-d:
-   <marker-past>
-   or ({@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+   {@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 wrote.q-d:
-  <marker-past>
-   or ({@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+   {@E-} & ((S- & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 
 written.q: {@E-} & PP- & <vc-paraph>;
 
@@ -7111,12 +7092,12 @@ written.q: {@E-} & PP- & <vc-paraph>;
 
 seem.q appear.q: [[{@E-} & (SFp- or If-) & <vc-it-paraph>]];
 seems.q appears.q: [[{@E-} & SFs- & <vc-it-paraph>]];
-seemed.q-d appeared.q-d: <marker-past> or ({@E-} & (SF- or PPf-) & <vc-it-paraph>);
+seemed.q-d appeared.q-d: {@E-} & (SF- or PPf-) & <vc-it-paraph>;
 seeming.q appearing.q: [[{@E-} & Pgf- & <vc-it-paraph>]];
 
 say.q: {@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>));
 says.q: {@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>));
-said.q-d: <marker-past> or ({@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>)));
+said.q-d: {@E-} & (((S- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
 saying.q: {@E-} & Pg- & <vc-paraph>;
 
 avow.q:
@@ -7124,12 +7105,12 @@ avow.q:
 
 tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
 tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
-told.q-d: <marker-past> or ({@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>);
+told.q-d: {@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>;
 telling.q: [[{@E-} & Pg- & O+ & <vc-paraph>]];
 
 ask.q: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
 asks.q: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
-asked.q-d: <marker-past> or ({@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>);
+asked.q-d: {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>;
 asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 
 % idiomatic "voted yes/no" expressions using the V link.
@@ -7155,8 +7136,7 @@ is.w ":.w":
   <verb-x-s,u> & <vc-vote>;
 
 was.w-d:
-  <marker-past>
-  or (<verb-x-s,u> & <vc-vote>);
+  <verb-x-s,u> & <vc-vote>;
 
 been.w: {@E-} & PPf- & <vc-vote>;
 
