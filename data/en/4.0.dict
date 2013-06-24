@@ -1616,7 +1616,7 @@ ROMAN-NUMERAL-WORDS.rn: NMr-;
 ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
 % NMa-: Allow post-posed letter moifiers: e.g. "Vitamin A"
-% NIa+: Alow numbered, bulleted lists: "2: Press button firmly"
+% NIa+: Alow numbered, bulleted lists: "B: Press button firmly"
 A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
    NMa- or NIa+;
