@@ -3103,7 +3103,7 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % Hmm ... changes to go.v seem to have obsoleted the need for this ...
 % go.w: {E-} & (Wi- or S-) & I+;
 
-<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+} & {@MV+};
+<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+} & {@MV+} & {X+};
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
@@ -5687,6 +5687,9 @@ there.r:
   or OXt-
   or (EN- & (Pp- or J-))
   or Wi-;
+
+% This seems to be the simplest way to make "Go home!" parse correctly...
+home.r: MVp-;
 
 away: ({Yd-} & (MVp- or Pp- or ({Xc+ & {Xd-}} & CO+))) or K-;
 aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
