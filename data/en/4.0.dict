@@ -493,7 +493,7 @@ HYPHENATED-WORDS.n:
 <common-noun>:
   <noun-modifiers> &
     (AN+
-    or ((NM+ or ({[NM+]} & (Ds- or <null>)))
+    or ((NM+ or ({[NM+]} & {Ds-}))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
@@ -826,6 +826,7 @@ stipulations.n:
     (GN+ & (DD- or [()])))) or
   [[AN+]];
 
+% (NM+ & Ss+ & Wd-): "Proposal 2: Hire a plumber"
 excuse.n decision.n proposal.n attempt.n plan.n plot.n pledge.n urge.n
 mission.n right.n desire.n mandate.n promise.n option.n campaign.n
 offer.n vow.n permit.n impetus.n proclivity.n propensity.n move.n
@@ -837,7 +838,8 @@ vote.n bill.n:
     ({Ds-} & <noun-and-s>) or
     Us- or
     (YS+ & Ds-) or
-    (GN+ & (DD- or [()])))) or
+    (GN+ & (DD- or [()])) or
+    ({NM+} & Ss+ & Wd-))) or
   AN+;
 
 % <noun-sub-uto>: somewhat like <noun-sub-s> but with more stuff.
@@ -906,6 +908,7 @@ chance.n:
     (GN+ & (DD- or [()])))) or
   AN+;
 
+% ({NM+} & Ss+): "Question 2: Was he present at the meeting?"
 question.n issue.n:
   (<noun-modifiers> &
     ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+} &
@@ -916,6 +919,7 @@ question.n issue.n:
     ({Ds-} & <noun-and-s>) or
     Us- or
     (YS+ & Ds-) or
+    ({NM+} & Ss+) or
     (GN+ & (DD- or [()])))) or
   AN+;
 
@@ -9720,9 +9724,10 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   or [[SJl- & SJr+ & SJl+]]
   or (SJn- & SJr+ & SJn+);
 
+% Put a cost on Xx- since we want to find other uses for colon first.
 % :.j
 "….j" ":.j" "•" ⁂ ❧ ☞ ◊ ※ :
-  {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) or Xe-);
+  {@Xca-} & (([Xx-] & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) or Xe-);
 
 % ellipsis ... at the end, trailing off ...
 ....y ….y: 
