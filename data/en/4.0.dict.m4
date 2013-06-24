@@ -5225,11 +5225,12 @@ asked.q-d: {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>;
 asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 
 % idiomatic "voted yes/no" expressions using the V link.
+% "he answered yes", "say yes!", "Just say no!"
 <vc-vote>: Vv+ & {@MV+};
-say.w vote.w: VERB_PLI(<vc-vote>);
-says.w votes.w: VERB_S_I(<vc-vote>);
-said.w-d voted.w-d: VERB_SPPP_I(<vc-vote>);
-saying.w voting.w:
+answer.w say.w vote.w: VERB_PLI(<vc-vote>);
+answers.w says.w votes.w: VERB_S_I(<vc-vote>);
+answered.w-d said.w-d voted.w-d: VERB_SPPP_I(<vc-vote>);
+answering.w saying.w voting.w:
   (<vc-vote> & <verb-pg,ge>);
 
 % ---------------------------------------------------------

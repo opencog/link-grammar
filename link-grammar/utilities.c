@@ -103,6 +103,9 @@ void safe_strcat(char *u, const char *v, size_t usize)
 /**
  * prints s then prints the last |t|-|s| characters of t.
  * if s is longer than t, it truncates s.
+ *
+ * XXX This is not UTF8-correct, which mostly doesn't matter,
+ * unless printing dictionary entries... FIXME someday.
  */
 void left_print_string(FILE * fp, const char * s, const char * t)
 {
