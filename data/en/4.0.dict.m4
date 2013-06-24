@@ -64,8 +64,8 @@ changecom(`%')
 % this allows for the parsing of newspaper headlines and clipped
 % technical speech (e.g. medical, engineering, where determiners are
 % often dropped).  The costly-null is used during panic parsing.
-% Currently, both have the same cost: using a less cotly null results
-% in too many sentences being parsed incorrectly.
+% Currently, both have the same cost: using the less costly null results
+% in too many sentences being parsed incorrectly.  Oh well.
 
 <null>: [[[()]]];
 <costly-null>: [[[()]]];
