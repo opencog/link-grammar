@@ -725,6 +725,8 @@ percent.u:
 % to pick up "that" in "The crux of it is that we must act first."
 % However, report.n and sign.n and remark.n, etc. do not seem to
 % need this connector ...
+%
+% ({NM+} & Ss+ & Wd-): "Hypothesis 2: The door on the left hides the prize."
 argument.n report.n sign.n impression.n conclusion.n complaint.n
 allegation.n announcement.n position.n restriction.n notion.n
 remark.n assertion.n proclamation.n reassurance.n saying.n
@@ -732,7 +734,7 @@ accusation.n possibility.n idea.n problem.n claim.n result.n
 statement.n hunch.n assumption.n concept.n hypothesis.n implication.n
 message.n premonition.n prerequisite.n indication.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n inkling.n supposition.n
-finding.n amount.n answer.n crux.n shame.n thing.n bet.n:
+finding.n amount.n answer.n crux.n shame.n thing.n bet.n guess.n:
   <noun-modifiers> & (
     AN+
     or (Ds- & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
@@ -743,6 +745,7 @@ finding.n amount.n answer.n crux.n shame.n thing.n bet.n:
     or ({Ds-} & <noun-and-s>)
     or SJrs-
     or (YS+ & Ds-)
+    or ({NM+} & Ss+ & Wd-)
     or (GN+ & (DD- or [()]))
     or Us-);
 
@@ -2283,6 +2286,8 @@ hadn't.v-d hadn’t.v-d:
 %  (({N+} or {Pp+}) & Pg*b+);
 
 % no-obj is costly but allows "if it weren't for Sally"
+% [Cet+]: elided (silent "that"): "my guess is the door on the left hides the prize."
+% which really should be: "my guess is [that] the door on the left hides the prize."
 <vc-be-no-obj>:
   ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
       (Osi+ & R+ & Bs+) or
@@ -2290,6 +2295,7 @@ hadn't.v-d hadn’t.v-d:
       [[()]]) & {@MV+}) or
     (Pp+ & {THi+ or @MV+}) or
     THb+ or
+    [Cet+] or
     TO+ or
     Pa+)) or
   ({N+} & (AF- or Pv+ or I*v+)) or
