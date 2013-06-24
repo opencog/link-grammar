@@ -7116,19 +7116,19 @@ asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 % idiomatic "voted yes/no" expressions using the V link.
 % "he answered yes", "say yes!", "Just say no!"
 <vc-vote>: Vv+ & {@MV+};
-answer.w say.w vote.w: 
+answer.w reply.w say.w vote.w: 
   ((<verb-pl,i> & (<vc-vote>)) or
   (<verb-and-pl-> & ([(<vc-vote>)] or ())) or
   ((<vc-vote>) & <verb-and-pl+>));
-answers.w says.w votes.w: 
+answers.w replies.w says.w votes.w: 
   ((<verb-s> & (<vc-vote>)) or
   (<verb-and-s-> & ([(<vc-vote>)] or ())) or
   ((<vc-vote>) & <verb-and-s+>));
-answered.w-d said.w-d voted.w-d: 
+answered.w-d replied.w said.w-d voted.w-d: 
   ((<verb-sp,pp> & (<vc-vote>)) or
   (<verb-and-sp-i-> & (([<vc-vote>]) or ())) or
   ((<vc-vote>) & <verb-and-sp-i+>));
-answering.w saying.w voting.w:
+answering.w replying.w saying.w voting.w:
   (<vc-vote> & <verb-pg,ge>);
 
 % ---------------------------------------------------------
