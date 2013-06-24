@@ -502,7 +502,7 @@ HYPHENATED-WORDS.n:
 <common-noun>:
   <noun-modifiers> &
     (AN+
-    or ((NM+ or ({[NM+]} & {Ds-}))
+    or ((NM+ or ({[NM+]} & (Ds- or <null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
@@ -2293,6 +2293,7 @@ hadn't.v-d hadn’t.v-d:
 % no-obj is costly but allows "if it weren't for Sally"
 % [Cet+]: elided (silent "that"): "my guess is the door on the left hides the prize."
 % which really should be: "my guess is [that] the door on the left hides the prize."
+% Except that this breaks lots of stuff ... Arghhh.
 <vc-be-no-obj>:
   ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
       (Osi+ & R+ & Bs+) or
@@ -2300,7 +2301,6 @@ hadn't.v-d hadn’t.v-d:
       [[()]]) & {@MV+}) or
     (Pp+ & {THi+ or @MV+}) or
     THb+ or
-    [Cet+] or
     TO+ or
     Pa+)) or
   ({N+} & (AF- or Pv+ or I*v+)) or
@@ -3108,7 +3108,7 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % Hmm ... changes to go.v seem to have obsoleted the need for this ...
 % go.w: {E-} & (Wi- or S-) & I+;
 
-<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+} & {@MV+} & {X+};
+<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+} & {@MV+};
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
