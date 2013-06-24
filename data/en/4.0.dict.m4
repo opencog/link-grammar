@@ -726,7 +726,8 @@ percent.u:
 % However, report.n and sign.n and remark.n, etc. do not seem to
 % need this connector ...
 %
-% ({NM+} & Ss+ & Wd-): "Hypothesis 2: The door on the left hides the prize."
+% ({NM+} & {Ss+} & Wd-): "Hypothesis 2: The door on the left hides the prize."
+% "Problem: How do you convince your customer that you are on the right path?"
 argument.n report.n sign.n impression.n conclusion.n complaint.n
 allegation.n announcement.n position.n restriction.n notion.n
 remark.n assertion.n proclamation.n reassurance.n saying.n
@@ -745,7 +746,7 @@ finding.n amount.n answer.n crux.n shame.n thing.n bet.n guess.n:
     or ({Ds-} & <noun-and-s>)
     or SJrs-
     or (YS+ & Ds-)
-    or ({NM+} & Ss+ & Wd-)
+    or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
     or Us-);
 
@@ -921,6 +922,7 @@ chance.n:
   AN+;
 
 % ({NM+} & Ss+): "Question 2: Was he present at the meeting?"
+% Wd-: "Question: How do you convince your customer that you are on the right path?"
 question.n issue.n:
   (<noun-modifiers> &
     ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+} &
@@ -932,6 +934,7 @@ question.n issue.n:
     Us- or
     (YS+ & Ds-) or
     ({NM+} & Ss+) or
+    Wd- or
     (GN+ & (DD- or [()])))) or
   AN+;
 
@@ -1621,12 +1624,14 @@ ROMAN-NUMERAL-WORDS.rn: NMr-;
 % excessive ambiguity.
 ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
-% Allow post-posed letter moifiers: e.g. "Vitamin A"
+% NMa-: Allow post-posed letter moifiers: e.g. "Vitamin A"
+% NIa+: Alow numbered, bulleted lists: "2: Press button firmly"
 A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
-O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id: NMa-;
+O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
+   NMa- or NIa+;
 
 % Avoid having I.id interfere with pronoun I.
-I.id: [[NMa-]];
+I.id: [[NMa- or NIa+]];
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
@@ -7824,10 +7829,23 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   or [[SJl- & SJr+ & SJl+]]
   or (SJn- & SJr+ & SJn+);
 
-% Put a cost on Xx- since we want to find other uses for colon first.
 % :.j
-"….j" ":.j" "•" ⁂ ❧ ☞ ◊ ※ :
-  {@Xca-} & (([Xx-] & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) or Xe-);
+<colon>:
+  {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) or Xe-);
+
+% Put a cost on this, because  we want to find other uses first ...
+":.j": [<colon>] or ({NI-} & Wd- & W+);
+
+% ({NI-} & Wd- & W+): Optionally numbered, bulleted lists
+*.j "•" ⁂ ❧ ☞ ◊ ※  "….j":
+  <colon> or ({NI-} & Wd- & W+);
+
+% 、 is the "enumeration-comma" used like a dash ...
+% ‧ is the "middle dot"
+– --.r -.r 、 ～.r ~.r ‧ : 
+  [[<colon>]] or
+  ({@Xca-} & (({EBx+} & Xd+) or Xc-)) or
+  ({NI-} & Wd- & W+);
 
 % ellipsis ... at the end, trailing off ...
 ....y ….y: 
@@ -7930,11 +7948,6 @@ rbracketID45 rbracketID46 rbracketID47 rbracketID48 rbracketID49
 rbracketID50 rbracketID51 rbracketID52 rbracketID53 rbracketID54
 rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 ")" "]": {@Xca-} & Xc-;
-
-% 、 is the "enumeration-comma" used like a dash ...
-% ‧ is the "middle dot"
-– --.r -.r 、 ～.r ~.r ‧ : [[{@Xca-} & Xx- & (W+ or J+ or Qd+ or TH+ or TO+) & {Xx+}]] or
-({@Xca-} & (({EBx+} & Xd+) or Xc-));
 
 foo: F+;
 
