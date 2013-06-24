@@ -1942,6 +1942,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % These are the verb-form expressions for ordinary verbs.
 %
 % The general patterns here are:
+% <verb-wall> : links verb to wall or to controlling phrase.
 % <verb-s>    : links verbs to singular subjects
 % <verb-pl>   : links verbs to plural subjects
 % <verb-i>    : links to infinitve
@@ -1951,13 +1952,19 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 %
+% <verb-wall>: WV- or CV- or [[()]]; 
+% <verb-wall>: WV- or CV-; 
+<verb-wall>: ();
+% <subord-verb>: CV+;
+<subord-verb>: ();
+
 <verb-ico>: {@E-} & ((I- & {@E-}) or ({CO-} & Wi-));
-<verb-pl,i>: ({@E-} & (Sp- or (RS- & Bp-))) or <verb-ico>;
-<verb-pl>: {@E-} & (Sp- or (RS- & Bp-));
-<verb-s>: {@E-} & (Ss- or (RS- & Bs-));
+<verb-pl,i>: ({@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-))) or <verb-ico>;
+<verb-pl>: {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
+<verb-s>: {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
 <verb-i>: {@E-} & I-;
-<verb-sp,pp>: {@E-} & (S- or (RS- & B-) or PP-);
-<verb-sp>: {@E-} & (S- or (RS- & B-));
+<verb-sp,pp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-) or PP-);
+<verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>: {@E-} & PP-;
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
@@ -2016,11 +2023,11 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
 
-<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
-<verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
-<verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & (S- or SF- or (RS- & B-) or PPf-);
-<verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
+<verb-x-pl,i>: {@E-} & ((Sp- & <verb-wall>) or SFp- or If- or (RS- & Bp-) or Wi-);
+<verb-x-s>: {@E-} & ((Ss- & <verb-wall>) or SFs- or (RS- & Bs-));
+<verb-x-s,u>: {@E-} & ((Ss- & <verb-wall>) or SFs- or SFu- or (RS- & Bs-));
+<verb-x-sp,pp>: {@E-} & ((S- & <verb-wall>) or SF- or (RS- & B-) or PPf-);
+<verb-x-sp>: {@E-} & ((S- & <verb-wall>) or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf-;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>:
@@ -2354,7 +2361,7 @@ are.v:
 was.v-d:
   (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
-  ({@E-} & SX- & <vc-be>) or
+  ({@E-} & SX- & <verb-wall> & <vc-be>) or
   (((Rw- or ({Ic-} & Q-) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
@@ -6215,13 +6222,13 @@ how:
 % CONJUNCTIONS  & ADVERBS
 
 that.j-c:
-  (Cet+ &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or
+  (Cet+ & <subord-verb> &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or
   (TS- & (SI*j+ or SFI**j+) & I*j+);
 that.j-d: [{AL-} & D*u+];
 
 % Xd-: iffy punctuation, e.g "The man, that you saw laugh...
 that.j-r:
-  ({[Xd-]} & R- & (({MVp+ or MVx+} & RS+) or Cr+))
+  ({[Xd-]} & R- & (({MVp+ or MVx+} & RS+) or (Cr+ & <subord-verb>)))
   or EE+
   or (EA+ & {HA+})
   or DTn+;
@@ -8054,7 +8061,7 @@ UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
 UNKNOWN-WORD.a: <ordinary-adj>;
 
 LEFT-WALL:
-  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
+  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+) & {WV+}
     & {CP+} & {Xx+} & {RW+ or Xp+};
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
