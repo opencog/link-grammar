@@ -1051,12 +1051,8 @@ TODO -- Working Notes:
     theory, analysis, and applications'' Ed. Anthony Paul Cowie (1998)
     Oxford University Press pp. 23-54.
 
-  Conjunction cleanup: parser has some special-case code for dealing
-    with conjunctions. Unfortunately, some of this code has hard-wired
-    English words in them. These are in construct_either() and in
-    set_is_conjunction().  Actually, all of massage.c Grep for XXX FIXME.
-    All of this can now be deleted for version 5.0.
-
+    More generally, all of link-grammar could benefit from a MTT-izing
+    of infrastructure.
 
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
