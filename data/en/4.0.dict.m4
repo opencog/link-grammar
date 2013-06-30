@@ -1885,7 +1885,7 @@ DAY-ORDINALS.ord ORDINALS.ord :
 (Wd- & {M+} & Ss*o+);
 
 % EQUATIONS ETC.
-% The below is just barely enough to parse just very simple equation
+% The below is just barely enough to parse just very simple equations
 % and expressions, nothing complex -- no general math or anything like
 % that. Relations are treated as "transitive verbs", taking a subject
 % and requiring an object.

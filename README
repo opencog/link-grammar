@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 4.7.14
+                          Version 4.7.15
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -65,7 +65,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.7.14.tar.gz.asc
+   gpg --verify link-grammar-4.7.15.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -692,6 +692,40 @@ ADDRESSES
      Computer Science Department       412-268-6791
      Carnegie Mellon University        www.cs.cmu.edu/~lafferty
      Pittsburgh, PA 15213
+
+
+Mathematical Theory:
+--------------------
+   The mathematical theory of link-grammar is deeper and more
+   interesting than the origianl, foundational papers on it let on.
+   This section provides a random list of remarks about this.
+
+   -- Although link-grammar links are un-oriented, a defacto direction
+      can be given to them that is completely consistent with a
+      dependency grammar.
+
+   -- Dependency-grammar arrows are:
+        * anti-reflexive (a word cannot depend on itself)
+        * anti-symmetric (if Word1 depends on Word2, then Word2 cannot
+          depend on Word1) (so e.g. determiners depend on nouns)
+        * anti-transitive (if Word1 depends on Word2 and Word2 depends
+          on Word3, then Word1 cannot depend directly on Word3)
+      The last property means that dependency graphs are always 
+      skeletons of limits (in the sense of category theory).  
+      Here, by "limit" we mean that the dependency arrow is the
+      universal, unique arrow through which all other dependencies
+      must pass (i.e. limit in the sense of category theory).
+      Note, however: skeletons are not categories: the first property
+      means there are no identity morphisms, the third property says
+      that arrows are not composable.
+
+   -- Link types can be handled with "type theory".  In particular,
+      Link types can be mapped to types that appear in categorial
+      grammars.  The nice thing about link-grammar is that the link
+      types form a type system that is much easier to use and comprehend
+      than that of categorial grammar, and yet can be directly converted 
+      to that system!  That is, link-grammar is completely compatible
+      with categorial grammar, and is easier-to-use.
 
 
 TODO -- Working Notes:
