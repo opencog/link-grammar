@@ -4,6 +4,7 @@
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
  %       Copyright (c) 2003  Peter Szolovits and MIT.                        %
  %       Copyright (c) 2008-2013  Linas Vepstas                              %
+ %       Copyright (c) 2013  Lian Ruiting                                    %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
@@ -1117,31 +1118,10 @@ I.p:
   (Dn- & SJn+) or
   SXI-;
 
-<verb-wall>: WV- or CV- or [[()]];
-
 them_all us_all you_all: Ox- or J-;
 % it_all gets a cost when used as direct object (Ox) to avoid
 % inappropriate parse "Please paint it all white"
 it_all: [[Ox-]] or J-;
-
-%we're they're I'm you're:
-%(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
-%({N+} & (Pg+ or Pv+))) & <CLAUSE>;
-
-’m 'm: SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
-({N+} & (Pg+ or Pv+)));
-’re 're: Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
-({N+} & (Pg+ or Pv+)));
-
-%I've they've you've we've: PP+ & <CLAUSE>;
-
-’ve 've: Sp- & PP+ & <verb-wall>;
-
-%we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
-%I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
-
-’d 'd: S- & (PP+ or I+) & <verb-wall>;
-’ll 'll: S- & I+ & <verb-wall>;
 
 something someone somebody:
 {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
@@ -1877,41 +1857,6 @@ ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
 DAY-ORDINALS.ord ORDINALS.ord :
 (Wd- & {M+} & Ss*o+);
 
-% EQUATIONS ETC.
-% The below is just barely enough to parse just very simple equations
-% and expressions, nothing complex -- no general math or anything like
-% that. Relations are treated as "transitive verbs", taking a subject
-% and requiring an object.
-
-% Relations
-% "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
-=.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
-equiv.v sim.v simeq.v approx.v ~.v ～.v:
-([S-] or EQ*r-) &  ([O+] or EQ*r+) &
-(Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
-
-% Binary operators:
-% these occur in "simple" expressions
-*.v "/.v" +.v -.v x.v:
-([S-] or EQ-) &  ([O+] or EQ+) &
-(Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
-
-% Allows parsing of "dollars per day" or "mL/sec" but is somewhat
-% inconsistent with the equation persing otherwise described below.
-% XXX overall, eqn parsing could be strengthened.
-per "/.per": Us+ & Mp-;
-
-% Binary operators, strict:
-% Here EQt attaches only to terms, which may be numbers or letters.
-% By contrast, EQrr can only attach to relations (=, < > etc.)
-+.eq -.eq *.eq "/.eq" x.eqn:
-(EQt+ & EQt-) & (EQrr- or EQrr+ or AN+);
-
-->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
-
-% "adverb" use, e.g. "< 10" for "less than 10"
-=.e <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
-
 % TODO: un-parenthesized cases, e.g.
 % - preparations of 5 x 10(8) cfu/ml are made
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
@@ -1926,6 +1871,12 @@ EQt+ or EQt-;
 fiscal.i: TY+ & <noun-main-s>;
 
 or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
+
+% Allows parsing of "dollars per day" or "mL/sec" but is somewhat
+% inconsistent with the equation persing otherwise described below.
+% XXX overall, eqn parsing could be strengthened.
+per "/.per": Us+ & Mp-;
+
 
 %VERBS
 
@@ -1958,7 +1909,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-i>: {@E-} & I-;
 <verb-sp,pp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-) or PP-);
 <verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
-<verb-pp>: {@E-} & PP-;
+<verb-pp>: {@E-} & PP- & <verb-wall>;
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & (Pv- or Mv-);
@@ -2004,11 +1955,11 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & (Sp- or If- or (RS- & Bp-) or Wi-);
-<verb-s-s>: {@E-} & (Ss- or SFsi- or (RS- & Bs-));
-<verb-s-sp,pp>: {@E-} & (S- or SFsi- or PPf- or (RS- & B-));
-<verb-s-sp>: {@E-} & (S- or SFsi- or (RS- & B-));
-<verb-s-pp>: {@E-} & PPf-;
+<verb-s-pl,i>: {@E-} & ((Sp- & <verb-wall>) or If- or (RS- & Bp-) or Wi-);
+<verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
+<verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
+<verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
+<verb-s-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-s-pg>: {@E-} & (Pgf- or Mg-);
 <verb-s-pv>: {@E-} & (Pvf- or Mv-) & {@MV+};
 <verb-s-pv-b>: {@E-} & (Pvf- or Mv-);
@@ -2016,12 +1967,12 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
 
-<verb-x-pl,i>: {@E-} & ((Sp- & <verb-wall>) or SFp- or If- or (RS- & Bp-) or Wi-);
-<verb-x-s>: {@E-} & ((Ss- & <verb-wall>) or SFs- or (RS- & Bs-));
-<verb-x-s,u>: {@E-} & ((Ss- & <verb-wall>) or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & ((S- & <verb-wall>) or SF- or (RS- & B-) or PPf-);
-<verb-x-sp>: {@E-} & ((S- & <verb-wall>) or SF- or (RS- & B-));
-<verb-x-pp>: {@E-} & PPf-;
+<verb-x-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
+<verb-x-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
+<verb-x-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
+<verb-x-sp,pp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-) or PPf-);
+<verb-x-sp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-));
+<verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>:
   {@E-} & (
@@ -2114,6 +2065,37 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % and <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
 % examples that actually need this.
 
+% EQUATIONS ETC.
+%
+% The below is just barely enough to parse just very simple equations
+% and expressions, nothing complex -- no general math or anything like
+% that. Relations are treated as "transitive verbs", taking a subject
+% and requiring an object.
+
+% Relations
+% "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
+=.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
+equiv.v sim.v simeq.v approx.v ~.v ～.v:
+  ([S- & <verb-wall>] or EQ*r-) & ([O+] or EQ*r+) &
+  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+
+% Binary operators:
+% these occur in "simple" expressions
+*.v "/.v" +.v -.v x.v:
+  ([S- & <verb-wall>] or EQ-) &  ([O+] or EQ+) &
+  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+
+% Binary operators, strict:
+% Here EQt attaches only to terms, which may be numbers or letters.
+% By contrast, EQrr can only attach to relations (=, < > etc.)
++.eq -.eq *.eq "/.eq" x.eqn:
+(EQt+ & EQt-) & (EQrr- or EQrr+ or AN+);
+
+->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
+
+% "adverb" use, e.g. "< 10" for "less than 10"
+=.e <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
+
 % AUXILIARY VERBS
 
 %<vc-do>: (((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
@@ -2199,7 +2181,12 @@ doesn't doesn’t:
 
 didn't.v-d didn’t.v-d:
   (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]);
+    ({@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)))) & (I*d+ or [[()]]);
+
+daren't mayn't shan't oughtn't mightn't
+daren’t mayn’t shan’t oughtn’t mightn’t:
+  ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or 
+  ({@E-} & (((S- or SF-)  & <verb-wall>) or (RS- & B-)) & (I+ or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
@@ -2218,6 +2205,9 @@ have.v:
   or ((<vc-have>) & <verb-and-sp-i+>))
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
+%I've they've you've we've: PP+ & <CLAUSE>;
+’ve 've: Sp- & PP+;
+
 has.v:
   
   ((<verb-x-s> & (<vc-have>))
@@ -2235,15 +2225,21 @@ had.v-d:
     (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or
   [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
+%we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
+’d 'd: S- & (PP+ or I+);
+
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
 hasn't hasn’t:
-(((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
-(PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
+    (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+
 haven't haven’t:
-(((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or
-(RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or 
+  ({@E-} & (((Sp- or SFp-) & <verb-wall>) or (RS- & Bp-)))) & 
+    (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+
 hadn't.v-d hadn’t.v-d: 
 (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} &
 (S- or SFs- or SFp- or (RS- & B-)))) &
@@ -2319,8 +2315,17 @@ is.v:
 % Ss*t-: "What he wants are the cats"
 %        "What John loves about this movie are the sound effects"
 are.v:
- ({@E-} & (Spx- or Ss*t- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
+ ({@E-} & (((Spx- or Ss*t- or SFp-) & <verb-wall>) or (RS- & Bp-)) & <vc-be-sp>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
+
+%we're they're I'm you're:
+%(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+%({N+} & (Pg+ or Pv+))) & <CLAUSE>;
+
+% they're we're
+’re 're:
+  Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+    ({N+} & (Pg+ or Pv+)));
 
 was.v-d:
   (<verb-x-s,u> & <vc-be>) or
@@ -2330,7 +2335,7 @@ was.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (((Spx- or SFp- or [[Ss-]] or [[SX-]]) & <verb-wall>) or (RS- & Bp-))) & <vc-be>)
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
   or (<verb-and-sp-> & <vc-be>)
   or (<vc-be> & <verb-and-sp+>)
@@ -2340,6 +2345,11 @@ were.v-d:
 am.v:
   ((({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>) or
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
+
+% I'm == I am
+’m 'm: 
+  SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+    ({N+} & (Pg+ or Pv+)));
 
 % S*x- used for passive participles: "this action be taken".
 % XXX I used verb-and-sp-i- but maybe this is wrong ..
@@ -2364,18 +2374,18 @@ being.v:
      or AF- or Pv+)
    & <verb-pg,ge>)
    or <verb-ge-d>
-   or (S- & Pa+ & Xc+ & Ce+)
-   or (S- & Xd- & MVg- & Pa+);
+   or (S- & Pa+ & Xc+ & Ce+ & <verb-wall>)
+   or (S- & Xd- & MVg- & Pa+ & <verb-wall>);
 
 isn't isn’t:
   (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
 wasn't.v-d wasn’t.v-d:
-  (({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-)))
+  (({@E-} & (((Ss- or SX- or SFs-) & <verb-wall>) or (RS- & Bs-)))
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
 
 aren't aren’t:
-  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (((Spx- or SFp-) & <verb-wall>) or (RS- & Bp-))) & <vc-be>)
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 % [[Ss-]]: "If it weren't for Joe, ..."
@@ -2389,6 +2399,9 @@ will.v can.v may.v must.v could.v might.v shall.v:
   ({N+} & {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & {N+} & {@E-} & I+) or
   ({N+} & {@E-} & I+ & <verb-and-sp+>);
+
+%I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
+’ll 'll: S- & I+;
 
 should.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
@@ -7080,14 +7093,14 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-paraph>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CP- & {CC+}) or Eq+)) or
-    [(Xc+ or Xe+) & Ce+]);
+    [(Xc+ or Xe+) & Ce+]) & <verb-wall>;
 
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CPx- & {CC+}) or Eq+)) or
-    [(Xc+ or Xe+) & Ce+]);
+    [(Xc+ or Xe+) & Ce+]) & <verb-wall>;
 
 <vc-it-paraph>:
-  {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>) & (COqi+ or (CPi- & {CC+}) or Eqi+);
+  {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>) & (COqi+ or (CPi- & {CC+}) or Eqi+) & <verb-wall>;
 
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
@@ -8934,6 +8947,16 @@ or [[DD- & <noun-main-p>]];
 northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a
 southwestern.a: <marker-common-entity> or A+ or G+;
 
+% .. is this correct?
+benumbed.a bespattered.a non_compos_mentis dead_on_arrival
+ bedimmed.a null_and_void bedewed.a au_fait
+ dead_of_other_causes right_sacrotransverse above_board
+ K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a
+ haywire.a:
+  ((Ma- or Pa- or MJra-) & {@MV+}) or
+  ({@MV+} & MJla+) or
+   <adj-op>;
+
 % -------------------------------------------------------------------------
 %COMPARATIVES AND SUPERLATIVES
 
@@ -9974,12 +9997,14 @@ UNKNOWN-WORD.n:
     or (GN+ & (DD- or [()]))
     or U-);
 
-UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
- & {@MV+};
+UNKNOWN-WORD.v:
+  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+} & {@MV+};
+
 UNKNOWN-WORD.a: <ordinary-adj>;
 
 LEFT-WALL:
-  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+) & {WV+}
+  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
+    & {WV+}
     & {CP+} & {Xx+} & {RW+ or Xp+};
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
@@ -10009,15 +10034,6 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
 
-benumbed.a bespattered.a non_compos_mentis dead_on_arrival
- bedimmed.a null_and_void bedewed.a au_fait
- dead_of_other_causes right_sacrotransverse above_board
- K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a
- haywire.a:
-  ((Ma- or Pa- or MJra-) & {@MV+}) or
-  ({@MV+} & MJla+) or
-   <adj-op>;
-
 subject_to status_post in_conjunction_with sensu
  in_relation_to neath amidst across_from circa astride
  previous_to together_with as_regards s/p aka amongst unto
@@ -10032,10 +10048,6 @@ propension.n:
 
 longest-term.a:
  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
-
-daren't mayn't shan't oughtn't mightn't
-daren’t mayn’t shan’t oughtn’t mightn’t:
- ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or ({@E-} & (((S- or SF-)  & <verb-wall>) or (RS- & B-)) & (I+ or [[()]]));
 
 longer-term.a:
  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
