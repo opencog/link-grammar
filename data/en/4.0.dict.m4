@@ -1126,6 +1126,8 @@ I.p:
   (Dn- & SJn+) or
   SXI-;
 
+<verb-wall>: WV- or CV- or [[()]];
+
 them_all us_all you_all: Ox- or J-;
 % it_all gets a cost when used as direct object (Ox) to avoid
 % inappropriate parse "Please paint it all white"
@@ -1142,13 +1144,13 @@ it_all: [[Ox-]] or J-;
 
 %I've they've you've we've: PP+ & <CLAUSE>;
 
-’ve 've: Sp- & PP+;
+’ve 've: Sp- & PP+ & <verb-wall>;
 
 %we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
 %I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
 
-’d 'd: S- & (PP+ or I+);
-’ll 'll: S- & I+;
+’d 'd: S- & (PP+ or I+) & <verb-wall>;
+’ll 'll: S- & I+ & <verb-wall>;
 
 something someone somebody:
 {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
@@ -1914,7 +1916,7 @@ per "/.per": Us+ & Mp-;
 +.eq -.eq *.eq "/.eq" x.eqn:
 (EQt+ & EQt-) & (EQrr- or EQrr+ or AN+);
 
-->.eq -->.eq: (S- & O+) & (AN+ or (Xd- & Xc+ & MX-));
+->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
 
 % "adverb" use, e.g. "< 10" for "less than 10"
 =.e <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
@@ -2189,7 +2191,7 @@ define(`VERB_X_PLI',`'
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
 do.v:
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
+  ({@E-} & (((Sp- or SFp-) & <verb-wall>)  or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-))
@@ -2218,7 +2220,7 @@ done.v:
   VERB_PP(<vc-done>)
   or <verb-phrase-opener>
   or (<verb-pv-b> & <vc-done>)
-  or S-;
+  or (S- & <verb-wall>);
 
 % adjectival modifier: "I am done working", "I am through being mad"
 done.a finished.a through.a:
@@ -2232,7 +2234,7 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 don't don’t:
   (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
+  ({@E-} & (((Sp- or SFp-) & <verb-wall>) or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
 
 doesn't doesn’t:
   (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+) & I*d+) or
@@ -2349,7 +2351,6 @@ is.v:
 % are.v:
 %  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
 %    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
-rr.v: S- &O+;
 
 % Don't allow are.v with uncountable noun objects.
 % Ss*t-: "What he wants are the cats"
@@ -2422,37 +2423,37 @@ weren't.v-d weren’t.v-d:
 % XXX probably should be verb-and-sp-i- etc !?
 will.v can.v may.v must.v could.v might.v shall.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & {N+} & {@E-} & I+) or
   ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
 should.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 would.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & {Vw+} & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
+  ({N+} & {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
 ought.v:
   (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-))) or
+    ({@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-))) or
     <verb-and-sp->) &
   (TO+ or (N+ & I+));
 
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
   ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]])) or
+  ({@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)) & (I+ or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>);
 
 wouldn't wouldn’t:
   ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
-  ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or [[()]])) or
+  ({@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)) & (({RT+} & I+) or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
 
@@ -2506,7 +2507,7 @@ fundheld.v-d strove.v-d: VERB_SPPP_I(<vc-intrans>);
 /en/words/words.v.1.4:
   ({[[O+]]} & <vc-intrans> & <verb-pg,ge>) or ({@E-} & A+) or <verb-ge-d>;
 
-arisen.v: {@E-} & PP- & {@MV+};
+arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 
 O.K.'d.v-d  OK'd.v-d  O.K.’d.v-d  OK’d.v-d:
  VERB_SPPP_I(<vc-intrans>);
@@ -4137,7 +4138,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
   [[CX- & {@MV+}]];
 
 want.v need.v: VERB_PLI(<vc-want>);
-need.i: {@E-} & (S- or (RS- & B-)) & (N+ & I+);
+need.i: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: VERB_S_T(<vc-want>);
 wanted.v-d needed.v-d: VERB_SPPP_T(<vc-want>) or <verb-pv> or ({@E-} & A+)
 or <verb-phrase-opener>;
@@ -5271,8 +5272,8 @@ be.w:
 % S- & Vv+ & Xc+ & Ce+:  "The answer being yes, ..."
 % S- & Xd- & MVg- & Vv+: "..., the answer being yes"
 being.w:
-   (S- & Vv+ & Xc+ & Ce+)
-   or (S- & Xd- & MVg- & Vv+);
+   (S- & Vv+ & Xc+ & Ce+ & <verb-wall>)
+   or (S- & Xd- & MVg- & Vv+ & <verb-wall>) ;
 
 % E-: "The answer is surely yes"
 % A- & Ds-: "His answer was an emphatic yes"
@@ -6510,11 +6511,11 @@ but.j-n:
 % The weirdo (B- & {B+}) allows the following to parse:
 % "This is a problem Moscow created and failed to solve."
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss-) or (I- & {@MV+}) or ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp-) or (I- & {@MV+}) or ({Xd-} & VJrpi-))) or
-  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss-) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp-) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+})) or
+  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+}) or ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+}) or ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
   ((VJlg- & VJrg+) & (J-)) or
   ((VJlp- & VJrp+) & <verb-ico>) or
   ((VJls- & VJrs+) & <verb-ico>);
@@ -6532,21 +6533,21 @@ and.j-o or.j-o: <ditransitive-conjunction>;
 
 % The VJn- gaurentees that nor.j-v is used with neither.j-v
 nor.j-v:
-  (VJn*i- & VJr*i+ & ({@MV+} & S-)) or
-  (VJn*t- & VJr*t+ & ({@MV+} & S- & O+));
+  (VJn*i- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
+  (VJn*t- & VJr*t+ & ({@MV+} & S- & O+ & <verb-wall>));
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
 but.j-v:
-  ((({Xd-} & VJls-) & VJrs+) & (Ss- or ({Xd-} & VJrs-))) or
-  ((({Xd-} & VJlp-) & VJrp+) & (Sp- or ({Xd-} & VJrp-))) or
+  ((({Xd-} & VJls-) & VJrs+) & ((Ss- & <verb-wall>) or ({Xd-} & VJrs-))) or
+  ((({Xd-} & VJlp-) & VJrp+) & ((Sp- & <verb-wall>) or ({Xd-} & VJrp-))) or
   ((VJl- & VJr+) & (I- or <verb-ico>));
 
 % The VJb- guarentees that bit.j-b is used with not_only
 % "We not only X'ed but also Y'ed".
 % This is the same pattern as the neither..nor... pattern above.
 but.j-b:
-  (VJb*i- & VJr*i+ & ({@MV+} & S-));
+  (VJb*i- & VJr*i+ & ({@MV+} & S- & <verb-wall>));
 not_only: Db+;
 
 % XJ: collocations with holes, i.e. "... blah blah X um um Y"
@@ -8117,7 +8118,7 @@ longest-term.a:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
- ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
+ ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or ({@E-} & (((S- or SF-)  & <verb-wall>) or (RS- & B-)) & (I+ or [[()]]));
 
 longer-term.a:
  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
