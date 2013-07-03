@@ -4354,6 +4354,9 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 % XXX Some of these verbs don't belong here ...
 % (): "I already gave", "I already gave at the office"
 % K+: "She gave in to him"
+% We really really do not want @MV between of O+ and the O*n+ since it
+% allows bad sentences: "I gave him for his birthday a guitar" so why
+% the heck is it even here???
 <vc-give>:
   (()
     or K+
