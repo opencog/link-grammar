@@ -2243,6 +2243,11 @@ didn't.v-d didn’t.v-d:
   (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
     ({@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)))) & (I*d+ or [[()]]);
 
+daren't mayn't shan't oughtn't mightn't
+daren’t mayn’t shan’t oughtn’t mightn’t:
+  ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or 
+  ({@E-} & (((S- or SF-)  & <verb-wall>) or (RS- & B-)) & (I+ or [[()]]));
+
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
 % However, "I have a date with Bob": we want "with" to MVp modify have,
@@ -8119,10 +8124,6 @@ propension.n:
 
 longest-term.a:
  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
-
-daren't mayn't shan't oughtn't mightn't
-daren’t mayn’t shan’t oughtn’t mightn’t:
- ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or ({@E-} & (((S- or SF-)  & <verb-wall>) or (RS- & B-)) & (I+ or [[()]]));
 
 longer-term.a:
  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
