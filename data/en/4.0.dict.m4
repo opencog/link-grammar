@@ -13,6 +13,7 @@ changecom(`%')
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
  %       Copyright (c) 2003  Peter Szolovits and MIT.                        %
  %       Copyright (c) 2008-2013  Linas Vepstas                              %
+ %       Copyright (c) 2013  Lian Ruiting                                    %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
@@ -1126,8 +1127,6 @@ I.p:
   (Dn- & SJn+) or
   SXI-;
 
-<verb-wall>: WV- or CV- or [[()]];
-
 them_all us_all you_all: Ox- or J-;
 % it_all gets a cost when used as direct object (Ox) to avoid
 % inappropriate parse "Please paint it all white"
@@ -1896,14 +1895,14 @@ DAY-ORDINALS.ord ORDINALS.ord :
 % "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
 =.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
 equiv.v sim.v simeq.v approx.v ~.v ～.v:
-([S-] or EQ*r-) &  ([O+] or EQ*r+) &
-(Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+  ([S- & <verb-wall>] or EQ*r-) & ([O+] or EQ*r+) &
+  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
 
 % Binary operators:
 % these occur in "simple" expressions
 *.v "/.v" +.v -.v x.v:
-([S-] or EQ-) &  ([O+] or EQ+) &
-(Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+  ([S- & <verb-wall>] or EQ-) &  ([O+] or EQ+) &
+  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
 
 % Allows parsing of "dollars per day" or "mL/sec" but is somewhat
 % inconsistent with the equation persing otherwise described below.
@@ -1967,7 +1966,7 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 <verb-i>: {@E-} & I-;
 <verb-sp,pp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-) or PP-);
 <verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
-<verb-pp>: {@E-} & PP-;
+<verb-pp>: {@E-} & PP- & <verb-wall>;
 <verb-pg>: {@E-} & (Pg- or Mg-);
 <verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & (Pv- or Mv-);
@@ -2013,11 +2012,11 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & (Sp- or If- or (RS- & Bp-) or Wi-);
-<verb-s-s>: {@E-} & (Ss- or SFsi- or (RS- & Bs-));
-<verb-s-sp,pp>: {@E-} & (S- or SFsi- or PPf- or (RS- & B-));
-<verb-s-sp>: {@E-} & (S- or SFsi- or (RS- & B-));
-<verb-s-pp>: {@E-} & PPf-;
+<verb-s-pl,i>: {@E-} & ((Sp- & <verb-wall>) or If- or (RS- & Bp-) or Wi-);
+<verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
+<verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
+<verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
+<verb-s-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-s-pg>: {@E-} & (Pgf- or Mg-);
 <verb-s-pv>: {@E-} & (Pvf- or Mv-) & {@MV+};
 <verb-s-pv-b>: {@E-} & (Pvf- or Mv-);
@@ -2025,12 +2024,12 @@ or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
 
-<verb-x-pl,i>: {@E-} & ((Sp- & <verb-wall>) or SFp- or If- or (RS- & Bp-) or Wi-);
-<verb-x-s>: {@E-} & ((Ss- & <verb-wall>) or SFs- or (RS- & Bs-));
-<verb-x-s,u>: {@E-} & ((Ss- & <verb-wall>) or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & ((S- & <verb-wall>) or SF- or (RS- & B-) or PPf-);
-<verb-x-sp>: {@E-} & ((S- & <verb-wall>) or SF- or (RS- & B-));
-<verb-x-pp>: {@E-} & PPf-;
+<verb-x-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
+<verb-x-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
+<verb-x-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
+<verb-x-sp,pp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-) or PPf-);
+<verb-x-sp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-));
+<verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>:
   {@E-} & (
@@ -2242,7 +2241,7 @@ doesn't doesn’t:
 
 didn't.v-d didn’t.v-d:
   (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
-    ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]);
+    ({@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)))) & (I*d+ or [[()]]);
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
@@ -2276,11 +2275,14 @@ having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
 hasn't hasn’t:
-(((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
-(PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
+    (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+
 haven't haven’t:
-(((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or ({@E-} & (Sp- or SFp- or
-(RS- & Bp-)))) & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or 
+  ({@E-} & (((Sp- or SFp-) & <verb-wall>) or (RS- & Bp-)))) & 
+    (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+
 hadn't.v-d hadn’t.v-d: 
 (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} &
 (S- or SFs- or SFp- or (RS- & B-)))) &
@@ -2356,7 +2358,7 @@ is.v:
 % Ss*t-: "What he wants are the cats"
 %        "What John loves about this movie are the sound effects"
 are.v:
- ({@E-} & (Spx- or Ss*t- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
+ ({@E-} & (((Spx- or Ss*t- or SFp-) & <verb-wall>) or (RS- & Bp-)) & <vc-be-sp>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
 was.v-d:
