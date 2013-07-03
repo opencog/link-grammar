@@ -2369,7 +2369,7 @@ was.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (((Spx- or SFp- or [[Ss-]] or [[SX-]]) & <verb-wall>) or (RS- & Bp-))) & <vc-be>)
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
   or (<verb-and-sp-> & <vc-be>)
   or (<vc-be> & <verb-and-sp+>)
@@ -2403,18 +2403,18 @@ being.v:
      or AF- or Pv+)
    & <verb-pg,ge>)
    or <verb-ge-d>
-   or (S- & Pa+ & Xc+ & Ce+)
-   or (S- & Xd- & MVg- & Pa+);
+   or (S- & Pa+ & Xc+ & Ce+ & <verb-wall>)
+   or (S- & Xd- & MVg- & Pa+ & <verb-wall>);
 
 isn't isn’t:
   (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
 wasn't.v-d wasn’t.v-d:
-  (({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-)))
+  (({@E-} & (((Ss- or SX- or SFs-) & <verb-wall>) or (RS- & Bs-)))
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
 
 aren't aren’t:
-  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (((Spx- or SFp-) & <verb-wall>) or (RS- & Bp-))) & <vc-be>)
   or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 % [[Ss-]]: "If it weren't for Joe, ..."
@@ -5193,14 +5193,14 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-paraph>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CP- & {CC+}) or Eq+)) or
-    [(Xc+ or Xe+) & Ce+]);
+    [(Xc+ or Xe+) & Ce+]) & <verb-wall>;
 
 <vc-paraph-inv>:
   {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CPx- & {CC+}) or Eq+)) or
-    [(Xc+ or Xe+) & Ce+]);
+    [(Xc+ or Xe+) & Ce+]) & <verb-wall>;
 
 <vc-it-paraph>:
-  {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>) & (COqi+ or (CPi- & {CC+}) or Eqi+);
+  {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>) & (COqi+ or (CPi- & {CC+}) or Eqi+) & <verb-wall>;
 
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
@@ -8059,12 +8059,14 @@ UNKNOWN-WORD.n:
     or (GN+ & (DD- or [()]))
     or U-);
 
-UNKNOWN-WORD.v: {@E-} & (Sp- or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+}
- & {@MV+};
+UNKNOWN-WORD.v:
+  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+} & {@MV+};
+
 UNKNOWN-WORD.a: <ordinary-adj>;
 
 LEFT-WALL:
-  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+) & {WV+}
+  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
+    & {WV+}
     & {CP+} & {Xx+} & {RW+ or Xp+};
 
 RIGHT-WALL: RW- or ({@Xca-} & Xc-);
