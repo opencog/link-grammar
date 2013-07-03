@@ -1902,11 +1902,11 @@ per "/.per": Us+ & Mp-;
 % <subord-verb>: CV+;
 <subord-verb>: ();
 
-<verb-ico>: {@E-} & ((I- & {@E-}) or ({CO-} & Wi-));
+<verb-ico>: {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi-));
 <verb-pl,i>: ({@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-))) or <verb-ico>;
 <verb-pl>: {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-s>: {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
-<verb-i>: {@E-} & I-;
+<verb-i>: {@E-} & I- & <verb-wall>;
 <verb-sp,pp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-) or PP-);
 <verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>: {@E-} & PP- & <verb-wall>;
