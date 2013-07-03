@@ -7032,6 +7032,16 @@ or [[DD- & <noun-main-p>]];
 northern.a southern.a eastern.a western.a northeastern.a northwestern.a southeastern.a
 southwestern.a: <marker-common-entity> or A+ or G+;
 
+% .. is this correct?
+benumbed.a bespattered.a non_compos_mentis dead_on_arrival
+ bedimmed.a null_and_void bedewed.a au_fait
+ dead_of_other_causes right_sacrotransverse above_board
+ K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a
+ haywire.a:
+  ((Ma- or Pa- or MJra-) & {@MV+}) or
+  ({@MV+} & MJla+) or
+   <adj-op>;
+
 % -------------------------------------------------------------------------
 %COMPARATIVES AND SUPERLATIVES
 
@@ -8100,15 +8110,6 @@ UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
 % Symposium, xx-yy.
 % Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
 %
-
-benumbed.a bespattered.a non_compos_mentis dead_on_arrival
- bedimmed.a null_and_void bedewed.a au_fait
- dead_of_other_causes right_sacrotransverse above_board
- K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a
- haywire.a:
-  ((Ma- or Pa- or MJra-) & {@MV+}) or
-  ({@MV+} & MJla+) or
-   <adj-op>;
 
 subject_to status_post in_conjunction_with sensu
  in_relation_to neath amidst across_from circa astride
