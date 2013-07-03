@@ -1866,41 +1866,6 @@ ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
 DAY-ORDINALS.ord ORDINALS.ord :
 (Wd- & {M+} & Ss*o+);
 
-% EQUATIONS ETC.
-% The below is just barely enough to parse just very simple equations
-% and expressions, nothing complex -- no general math or anything like
-% that. Relations are treated as "transitive verbs", taking a subject
-% and requiring an object.
-
-% Relations
-% "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
-=.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
-equiv.v sim.v simeq.v approx.v ~.v ～.v:
-  ([S- & <verb-wall>] or EQ*r-) & ([O+] or EQ*r+) &
-  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
-
-% Binary operators:
-% these occur in "simple" expressions
-*.v "/.v" +.v -.v x.v:
-  ([S- & <verb-wall>] or EQ-) &  ([O+] or EQ+) &
-  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
-
-% Allows parsing of "dollars per day" or "mL/sec" but is somewhat
-% inconsistent with the equation persing otherwise described below.
-% XXX overall, eqn parsing could be strengthened.
-per "/.per": Us+ & Mp-;
-
-% Binary operators, strict:
-% Here EQt attaches only to terms, which may be numbers or letters.
-% By contrast, EQrr can only attach to relations (=, < > etc.)
-+.eq -.eq *.eq "/.eq" x.eqn:
-(EQt+ & EQt-) & (EQrr- or EQrr+ or AN+);
-
-->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
-
-% "adverb" use, e.g. "< 10" for "less than 10"
-=.e <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
-
 % TODO: un-parenthesized cases, e.g.
 % - preparations of 5 x 10(8) cfu/ml are made
 % - the strength was in the order of gerE > cotD > yfhP P2 > yfhP P1
@@ -1915,6 +1880,12 @@ EQt+ or EQt-;
 fiscal.i: TY+ & <noun-main-s>;
 
 or_so: ND- & {{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & <noun-main-p>));
+
+% Allows parsing of "dollars per day" or "mL/sec" but is somewhat
+% inconsistent with the equation persing otherwise described below.
+% XXX overall, eqn parsing could be strengthened.
+per "/.per": Us+ & Mp-;
+
 
 %VERBS
 
@@ -2142,6 +2113,37 @@ define(`VERB_X_PLI',`'
 % XXX TODO need to provide macro-ized versions for <verb-s-s>, <verb-s-sp>
 % and <verb-s-sp,pp> variants as well.  Maybe. I can't think of good
 % examples that actually need this.
+
+% EQUATIONS ETC.
+%
+% The below is just barely enough to parse just very simple equations
+% and expressions, nothing complex -- no general math or anything like
+% that. Relations are treated as "transitive verbs", taking a subject
+% and requiring an object.
+
+% Relations
+% "verb" use, e.g. "( p < 0.01 )" for "( p is less than 0.01 )"
+=.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
+equiv.v sim.v simeq.v approx.v ~.v ～.v:
+  ([S- & <verb-wall>] or EQ*r-) & ([O+] or EQ*r+) &
+  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+
+% Binary operators:
+% these occur in "simple" expressions
+*.v "/.v" +.v -.v x.v:
+  ([S- & <verb-wall>] or EQ-) &  ([O+] or EQ+) &
+  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+
+% Binary operators, strict:
+% Here EQt attaches only to terms, which may be numbers or letters.
+% By contrast, EQrr can only attach to relations (=, < > etc.)
++.eq -.eq *.eq "/.eq" x.eqn:
+(EQt+ & EQt-) & (EQrr- or EQrr+ or AN+);
+
+->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
+
+% "adverb" use, e.g. "< 10" for "less than 10"
+=.e <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
 
 % AUXILIARY VERBS
 
