@@ -1132,25 +1132,6 @@ them_all us_all you_all: Ox- or J-;
 % inappropriate parse "Please paint it all white"
 it_all: [[Ox-]] or J-;
 
-%we're they're I'm you're:
-%(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
-%({N+} & (Pg+ or Pv+))) & <CLAUSE>;
-
-’m 'm: SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
-({N+} & (Pg+ or Pv+)));
-’re 're: Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
-({N+} & (Pg+ or Pv+)));
-
-%I've they've you've we've: PP+ & <CLAUSE>;
-
-’ve 've: Sp- & PP+ & <verb-wall>;
-
-%we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
-%I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
-
-’d 'd: S- & (PP+ or I+) & <verb-wall>;
-’ll 'll: S- & I+ & <verb-wall>;
-
 something someone somebody:
 {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
 nothing no_one nobody:
@@ -2262,6 +2243,9 @@ have.v:
   VERB_X_PLI(<vc-have>)
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
 
+%I've they've you've we've: PP+ & <CLAUSE>;
+’ve 've: Sp- & PP+;
+
 has.v:
   VERB_X_S(<vc-have>)
   or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
@@ -2275,6 +2259,9 @@ had.v-d:
     ((B- or O+) & {@MV+} & {[I*j+ or Pv+]}) or
     (([[@MV+ & O*n+]] or CX-) & {@MV+}))) or
   [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
+
+%we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
+’d 'd: S- & (PP+ or I+);
 
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
@@ -2366,6 +2353,15 @@ are.v:
  ({@E-} & (((Spx- or Ss*t- or SFp-) & <verb-wall>) or (RS- & Bp-)) & <vc-be-sp>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
+%we're they're I'm you're:
+%(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+%({N+} & (Pg+ or Pv+))) & <CLAUSE>;
+
+% they're we're
+’re 're:
+  Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+    ({N+} & (Pg+ or Pv+)));
+
 was.v-d:
   (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
@@ -2384,6 +2380,11 @@ were.v-d:
 am.v:
   ((({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>) or
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
+
+% I'm == I am
+’m 'm: 
+  SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+    ({N+} & (Pg+ or Pv+)));
 
 % S*x- used for passive participles: "this action be taken".
 % XXX I used verb-and-sp-i- but maybe this is wrong ..
@@ -2433,6 +2434,9 @@ will.v can.v may.v must.v could.v might.v shall.v:
   ({N+} & {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & {N+} & {@E-} & I+) or
   ({N+} & {@E-} & I+ & <verb-and-sp+>);
+
+%I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
+’ll 'll: S- & I+;
 
 should.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
