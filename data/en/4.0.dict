@@ -1902,17 +1902,19 @@ per "/.per": Us+ & Mp-;
 % <subord-verb>: CV+;
 <subord-verb>: ();
 
+% Pv- & <verb-wall>: "a historic new law was passed"
+
 <verb-ico>: {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi-));
 <verb-pl,i>: ({@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-))) or <verb-ico>;
 <verb-pl>: {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-s>: {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
 <verb-i>: {@E-} & I- & <verb-wall>;
-<verb-sp,pp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-) or PP-);
+<verb-sp,pp>: {@E-} & (((S- or PP-) & <verb-wall>) or (RS- & B-));
 <verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>: {@E-} & PP- & <verb-wall>;
 <verb-pg>: {@E-} & (Pg- or Mg-);
-<verb-pv>: {@E-} & (Pv- or Mv-) & {@MV+};
-<verb-pv-b>: {@E-} & (Pv- or Mv-);
+<verb-pv>: {@E-} & ((Pv- & <verb-wall>) or Mv-) & {@MV+};
+<verb-pv-b>: {@E-} & ((Pv- & <verb-wall>) or Mv-);
 
 <verb-ge>:
   {@E-} & (
@@ -1966,12 +1968,13 @@ per "/.per": Us+ & Mp-;
 
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
+% These are used almost exclusively with auxiliary verbs.
 
-<verb-x-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
-<verb-x-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
-<verb-x-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-) or PPf-);
-<verb-x-sp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-));
+<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
+<verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
+<verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
+<verb-x-sp,pp>: {@E-} & (S- or SF- or (RS- & B-) or PPf-);
+<verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>:

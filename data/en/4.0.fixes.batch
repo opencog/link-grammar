@@ -10,6 +10,14 @@
 
 % Example sentences showing BUG FIXES since link-grammar 4.1b
 % as well as demonstating bugs that remain to be fixed.
+
+% But first ... some simple sentences that work fine with the old
+% link-grammar, but cause trouble for the new WV and CV links. 
+I am having trouble with it.
+A historic new law was passed
+*How tired are you that John is coming
+
+
 %
 % Missing nouns.
 He picked up the game die.
