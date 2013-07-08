@@ -1963,8 +1963,8 @@ per "/.per": Us+ & Mp-;
 <verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
 <verb-s-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-s-pg>: {@E-} & (Pgf- or Mg-);
-<verb-s-pv>: {@E-} & (Pvf- or Mv-) & {@MV+};
-<verb-s-pv-b>: {@E-} & (Pvf- or Mv-);
+<verb-s-pv>: {@E-} & ((Pvf- & <verb-wall>) or Mv-) & {@MV+};
+<verb-s-pv-b>: {@E-} & ((Pvf- & <verb-wall>) or Mv-);
 
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
@@ -2131,19 +2131,19 @@ do.v:
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-))
-  or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}));
+  or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & <verb-wall>);
 
 does.v:
   
   ((<verb-x-s> & (<vc-do>))
   or (<verb-and-s-> & ([(<vc-do>)] or ()))
   or ((<vc-do>) & <verb-and-s+>))
-  or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+  or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & I*d+) or CQ-));
 
 did.v-d:
   (<verb-x-sp> & <vc-do>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-));
+  or ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
@@ -2302,7 +2302,7 @@ hadn't.v-d hadn’t.v-d:
 is.v:
   (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
+  (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
 
 's.v ’s.v: [[(<verb-x-s,u> &
 (({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ or
@@ -2320,6 +2320,7 @@ is.v:
 are.v:
  ({@E-} & (Spx- or Ss*t- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
+%  or (Ss*t- & <vc-be-sp> & <verb-wall>)
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
@@ -2333,26 +2334,26 @@ are.v:
 was.v-d:
   (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
-  ({@E-} & SX- & <vc-be>) or
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
+  ({@E-} & SX- & <vc-be> & <verb-wall>) or
+  (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX-]] or (RS- & Bp-))) & <vc-be>)
-  or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be>)
+  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
   or (<verb-and-sp-> & <vc-be>)
   or (<vc-be> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 % XXX the verb-and construction is probably too broad.
 am.v:
-  ((({@E-} & SX-) or ((Rw- or ({Ic-} & Q-) or [()]) & SXI+)) & <vc-be>) or
+  ((({@E-} & SX- & <verb-wall>) or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & SXI+)) & <vc-be>) or
   (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
 
 % I'm == I am
 ’m 'm: 
   SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
-    ({N+} & (Pg+ or Pv+)));
+    ({N+} & (Pg+ or Pv+))) & <verb-wall>;
 
 % S*x- used for passive participles: "this action be taken".
 % XXX I used verb-and-sp-i- but maybe this is wrong ..
@@ -2360,12 +2361,12 @@ am.v:
 % ({@E-} & I- & B- & O+):
 %   "What are the chances that Einstein could really be a genius?"
 be.v:
-  ({@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-be>)
+  ({@E-} & (Ix- or ({Ic-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
-  or ({@E-} & I- & B- & O+);
+  or ({@E-} & I- & B- & O+ & <verb-wall>);
 
-been.v: {@E-} & PPf- & <vc-be>;
+been.v: {@E-} & PPf- & <vc-be> & <verb-wall>;
 
 % S- & Pa+ & Xc+ & Ce+: "The knife being dull, he ..."
 % (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
@@ -2381,20 +2382,20 @@ being.v:
    or (S- & Xd- & MVg- & Pa+ & <verb-wall>);
 
 isn't isn’t:
-  (<verb-x-s> or ((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
+  (<verb-x-s> or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
 
 wasn't.v-d wasn’t.v-d:
-  (({@E-} & (Ss- or SX- or SFs- or (RS- & Bs-)))
-  or ((Rw- or ({Ic-} & Q-) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
+  (({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)))
+  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
 
 aren't aren’t:
   (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
-  or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
+  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 % [[Ss-]]: "If it weren't for Joe, ..."
 weren't.v-d weren’t.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be>)
-  or ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
+  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
 will.v can.v may.v must.v could.v might.v shall.v:
@@ -6372,7 +6373,7 @@ tell.v:
   ((<verb-pl,i> & (<vc-tell>)) or
   (<verb-and-pl-> & ([(<vc-tell>)] or ())) or
   ((<vc-tell>) & <verb-and-pl+>));
-tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-);
+tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or Ce+ or RSe+ or Zs-) & <verb-wall>;
 tells.v: 
   ((<verb-s> & (<vc-tell>)) or
   (<verb-and-sp-i-> & (([<vc-tell>]) or ())) or
@@ -7146,12 +7147,12 @@ avow.q:
 
 tell.q: [[{@E-} & (Sp- or I- or SIpj+) & O+ & <vc-paraph>]];
 tells.q: [[{@E-} & (Ss- or SIsj+) & O+ & <vc-paraph>]];
-told.q-d: {@E-} & (((S- or PP- or SI*j+) & O+) or Pv-) & <vc-paraph>;
+told.q-d: {@E-} & (((S- or PP- or SI*j+) & O+) or (Pv- & <verb-wall>)) & <vc-paraph>;
 telling.q: [[{@E-} & Pg- & O+ & <vc-paraph>]];
 
 ask.q: [[{@E-} & (((Sp- or I-) & {O+}) or SIpj+) & <vc-paraph>]];
 asks.q: [[{@E-} & ((Ss- & {O+}) or SIsj+) & <vc-paraph>]];
-asked.q-d: {@E-} & (((S- or PP-) & {O+}) or Pv- or SI*j+) & <vc-paraph>;
+asked.q-d: {@E-} & (((S- or PP-) & {O+}) or (Pv- & <verb-wall>) or SI*j+) & <vc-paraph>;
 asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 
 % idiomatic "voted yes/no" expressions using the V link.
@@ -7175,15 +7176,15 @@ answering.w replying.w saying.w voting.w:
 % ---------------------------------------------------------
 % :.w  "My answer: yes"
 is.w ":.w":
-  <verb-x-s,u> & <vc-vote>;
+  <verb-x-s,u> & <vc-vote> & <verb-wall>;
 
 was.w-d:
-  <verb-x-s,u> & <vc-vote>;
+  <verb-x-s,u> & <vc-vote> & <verb-wall>;
 
-been.w: {@E-} & PPf- & <vc-vote>;
+been.w: {@E-} & PPf- & <vc-vote> & <verb-wall>;
 
 be.w:
-  {@E-} & (Ix- or ({Ic-} & Wi-) or [S*x-]) & <vc-vote>;
+  {@E-} & (Ix- or ({Ic-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
 
 % S- & Vv+ & Xc+ & Ce+:  "The answer being yes, ..."
 % S- & Xd- & MVg- & Vv+: "..., the answer being yes"
@@ -8438,10 +8439,10 @@ but.j-n:
 % The weirdo (B- & {B+}) allows the following to parse:
 % "This is a problem Moscow created and failed to solve."
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+}) or ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+}) or ({Xd-} & VJrpi-))) or
-  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+})) & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
   (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
   ((VJlg- & VJrg+) & (J-)) or
   ((VJlp- & VJrp+) & <verb-ico>) or
@@ -8468,7 +8469,7 @@ nor.j-v:
 but.j-v:
   ((({Xd-} & VJls-) & VJrs+) & ((Ss- & <verb-wall>) or ({Xd-} & VJrs-))) or
   ((({Xd-} & VJlp-) & VJrp+) & ((Sp- & <verb-wall>) or ({Xd-} & VJrp-))) or
-  ((VJl- & VJr+) & (I- or <verb-ico>));
+  ((VJl- & VJr+) & ((I- & <verb-wall>) or <verb-ico>));
 
 % The VJb- guarentees that bit.j-b is used with not_only
 % "We not only X'ed but also Y'ed".
@@ -9700,7 +9701,7 @@ please.e:
 Qe+ or Ca+ or [[EA+]]);
 
 % polite command verb
-please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+};
+please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
 
 
 % ==========================================================
@@ -10003,7 +10004,7 @@ UNKNOWN-WORD.n:
     or U-);
 
 UNKNOWN-WORD.v:
-  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or I- or ({Ic-} & Wi-)) & {B- or O+} & {@MV+};
+  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wi- & <verb-wall>)) & {B- or O+} & {@MV+};
 
 UNKNOWN-WORD.a: <ordinary-adj>;
 
