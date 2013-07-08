@@ -2286,8 +2286,8 @@ hadn't.v-d hadn’t.v-d:
 <vc-be-obj-u>:
   {@EBm+} & Out+ & {@MV+};
 
-<vc-be>: <vc-be-no-obj> or <vc-be-obj>;
-<vc-be-sp>: <vc-be-no-obj> or <vc-be-obj-sp>;
+<vc-be>: <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
+<vc-be-sp>: <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
 
 
 % Colon can be used as a synonym for "is"
