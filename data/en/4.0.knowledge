@@ -214,13 +214,13 @@ CONTAINS_ONE_RULES:
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
  O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
 ; SFs, SFp SFu: force subject-object agreement for singular/plural/uncountable noun objects
- SFst  ,  O*t    Ost    Omt    Bs#t    B*#t    Bc#t    , "Bad use of 'there'32s"           ,
- SFp   ,  O*t    Opt    Omt    Bp#t    B*#t    Bc#t    , "Bad use of 'there'32p"           ,
- SFu   ,  O*t    Out    Omt    Bp#t    B*#t    Bc#t    , "Bad use of 'there'32u"           ,
+ SFst  ,  O*t   Ost   Omt   Omm   Bs#t    B*#t    Bc#t    , "Bad use of 'there'32s"           ,
+ SFp   ,  O*t   Opt   Omt   Omm   Bp#t    B*#t    Bc#t    , "Bad use of 'there'32p"           ,
+ SFu   ,  O*t   Out   Omt   Omm   Bp#t    B*#t    Bc#t    , "Bad use of 'there'32u"           ,
 ;
- SFIst ,  O*t    Ost    Omt    Bs#t    B*#t    Bc#t    , "Bad use of 'there'34"           ,
- SFIp  ,  O*t    Opt    Omt    Bp#t    B*#t    Bc#t    , "Bad use of 'there'35"           ,
- OXt   ,  O#t    B##t                     ,   "Bad use of 'there'36"           ,
+ SFIst ,  O*t   Ost   Omt    Bs#t    B*#t    Bc#t    , "Bad use of 'there'34"           ,
+ SFIp  ,  O*t   Opt   Omt    Bp#t    B*#t    Bc#t    , "Bad use of 'there'35"           ,
+ OXt   ,  O#t   B##t                     ,   "Bad use of 'there'36"           ,
  SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi   
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'37"           ,
  SFIsi ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi   

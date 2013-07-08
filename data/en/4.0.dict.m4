@@ -2314,18 +2314,18 @@ hadn't.v-d hadn’t.v-d:
   ({N+} & (AF- or Pv+ or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+);
 
+% O*m+ allows "If only there were more!"
 <vc-be-obj>:
-  {@EBm+} & O*t+ & {@MV+};
+  {@EBm+} & (O*t+ or O*m+) & {@MV+};
 
 <vc-be-obj-sp>:
-  {@EBm+} & (Ost+ or Opt+) & {@MV+};
+  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+};
 
 <vc-be-obj-u>:
   {@EBm+} & Out+ & {@MV+};
 
-<vc-be>: <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
+<vc-be>:    <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>: <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
-
 
 % Colon can be used as a synonym for "is"
 % "The answer to your question: yes"
@@ -7057,12 +7057,13 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % -------------------------------------------------------------------------
 %COMPARATIVES AND SUPERLATIVES
 
+% Omm-: "I want more" -- the second m blocks O*t+ on <vc-be>
 more:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+ or AJrc- or AJlc+))
   or ({OF+} & (
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
-    or ({ECn- or ECx- or ND-} & (Om- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
+    or ({ECn- or ECx- or ND-} & (Omm- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
   or (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 more_of_a more_of_an: Ds*m+;
