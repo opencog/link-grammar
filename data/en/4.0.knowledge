@@ -82,6 +82,7 @@ IGNORE_THESE_LINKS: Xca
 ; Ce links noun of subordinate clause to the dominating phrase, while
 ; CV links the verb of the subordinate clause to the dominating phrase.
 ; Both the linked noun and verb must be in the same subordinate clause.
+; Example: "I wish I could see him 100 times a day"
  
 MUST_FORM_A_CYCLE_LINKS:  R#*  TOt  EXx  HA  SFsic  Jd  Jr  JQ  OFd Xca  WV CV
 
