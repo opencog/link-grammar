@@ -1905,11 +1905,11 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 %
- <verb-wall>: WV- or CV- or [[()]]; 
+<verb-wall>: WV- or CV- or [[()]]; 
 % <verb-wall>: WV- or CV-; 
 %<verb-wall>: ();
-% <subord-verb>: CV+;
-<subord-verb>: ();
+<subord-verb>: CV+;
+% <subord-verb>: ();
 
 % Pv- & <verb-wall>: "a historic new law was passed"
 
@@ -2988,7 +2988,7 @@ happening.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
 
 % ditransitve
 <vc-wish>:
-  ({@MV+} & {TH+ or Ce+ or RSe+ or TO+}) or
+  ({@MV+} & {TH+ or (Ce+ & <subord-verb>) or RSe+ or TO+}) or
   <vc-ditrans>;
 wish.v: VERB_PLI(<vc-wish>);
 wishes.v: VERB_S_I(<vc-wish>);
