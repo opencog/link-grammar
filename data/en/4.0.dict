@@ -2277,6 +2277,20 @@ hadn't.v-d hadn’t.v-d:
   ({N+} & (AF- or Pv+ or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+);
 
+% Identical to above, but no wall.  This is used only in "and.j-v" constructions,
+% so that WV links to the "and.j-v" instead of "be".
+<vc-be-no-obj-no-wall>:
+  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
+      (Osi+ & R+ & Bs+) or
+      (Opi+ & R+ & Bp+) or
+      [[()]]) & {@MV+}) or
+    (Pp+ & {THi+ or @MV+}) or
+    THb+ or
+    TO+ or
+    Pa+)) or
+  ({N+} & (AF- or Pv+ or I*v+)) or
+  (({N+} or {Pp+}) & Pg*b+);
+
 % O*m+ allows "If only there were more!"
 <vc-be-obj>:
   {@EBm+} & (O*t+ or O*m+) & {@MV+};
@@ -2289,6 +2303,7 @@ hadn't.v-d hadn’t.v-d:
 
 <vc-be>:    <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>: <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
+<vc-be-and>:<vc-be-no-obj-no-wall> or <vc-be-obj>;
 
 % Colon can be used as a synonym for "is"
 % "The answer to your question: yes"
@@ -2301,7 +2316,7 @@ hadn't.v-d hadn’t.v-d:
 % and has to be removed via post-processing.
 is.v:
   (<verb-x-s,u> & <vc-be>) or
-  (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
+  (<verb-and-s-> & <vc-be-and>) or (<vc-be-and> & <verb-and-s+>) or
   (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
 
 's.v ’s.v: [[(<verb-x-s,u> &
@@ -2332,7 +2347,7 @@ are.v:
 
 was.v-d:
   (<verb-x-s,u> & <vc-be>) or
-  (<verb-and-s-> & <vc-be>) or (<vc-be> & <verb-and-s+>) or
+  (<verb-and-s-> & <vc-be-and>) or (<vc-be-and> & <verb-and-s+>) or
   ({@E-} & SX- & <vc-be> & <verb-wall>) or
   (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
 
@@ -2340,14 +2355,14 @@ was.v-d:
 were.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be>)
   or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
-  or (<verb-and-sp-> & <vc-be>)
-  or (<vc-be> & <verb-and-sp+>)
+  or (<verb-and-sp-> & <vc-be-and>)
+  or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 % XXX the verb-and construction is probably too broad.
 am.v:
   ((({@E-} & SX- & <verb-wall>) or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & SXI+)) & <vc-be>) or
-  (<verb-and-sp-> & <vc-be>) or (<vc-be> & <verb-and-sp+>);
+  (<verb-and-sp-> & <vc-be-and>) or (<vc-be-and> & <verb-and-sp+>);
 
 % I'm == I am
 ’m 'm: 
@@ -2361,7 +2376,7 @@ am.v:
 %   "What are the chances that Einstein could really be a genius?"
 be.v:
   ({@E-} & (Ix- or ({Ic-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
-  or (<verb-and-sp-i-> & ([<vc-be>] or ()))
+  or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
 
