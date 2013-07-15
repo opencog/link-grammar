@@ -77,8 +77,14 @@ IGNORE_THESE_LINKS: Xca
 ; the same phrase, forming a cycle, as otherwise, nonsense happens, such as
 ; *He stated the fact that there be an investigation 
 ; with W linking to "he" and WV linking to "be" (instead of "stated")
+; ---
+; CV: similar to WV above, must form a loop along with Ce (typically).
+; Ce links noun of subordinate clause to the dominating phrase, while
+; CV links the verb of the subordinate clause to the dominating phrase.
+; Both the linked noun and verb must be in the same subordinate clause.
+ 
+MUST_FORM_A_CYCLE_LINKS:  R#*  TOt  EXx  HA  SFsic  Jd  Jr  JQ  OFd Xca  WV CV
 
-MUST_FORM_A_CYCLE_LINKS:  R#*   TOt   EXx   HA    SFsic  Jd  Jr  JQ  OFd Xca  WV
 
 
 ; ----------------------------------------------------------------------
