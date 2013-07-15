@@ -1905,9 +1905,9 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 %
-% <verb-wall>: WV- or CV- or [[()]]; 
+ <verb-wall>: WV- or CV- or [[()]]; 
 % <verb-wall>: WV- or CV-; 
-<verb-wall>: ();
+%<verb-wall>: ();
 % <subord-verb>: CV+;
 <subord-verb>: ();
 
@@ -2310,7 +2310,7 @@ hadn't.v-d hadn’t.v-d:
     (Pp+ & {THi+ or @MV+}) or
     THb+ or
     TO+ or
-    Pa+)) or
+    (Pa+ & <verb-wall>))) or
   ({N+} & (AF- or Pv+ or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+);
 
@@ -2342,9 +2342,9 @@ is.v:
   (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
 
 's.v ’s.v: [[(<verb-x-s,u> &
-(({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ or
+(({@EBm+} & ((((O*t+ & <verb-wall>) or [K+] or BI+ or OF+ or
 (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+}) or
-(Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)) or
+(Pp+ & {THi+ or @MV+}) or THb+ or TO+ or (Pa+ & <verb-wall>))) or ({Pp+} & Pg+) or Pv+ or PP+)) or
 (SIs+ & PF-)]];
 
 % are.v:
@@ -2357,7 +2357,6 @@ is.v:
 are.v:
  ({@E-} & (Spx- or Ss*t- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
-%  or (Ss*t- & <vc-be-sp> & <verb-wall>)
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
@@ -2365,7 +2364,7 @@ are.v:
 
 % they're we're
 ’re 're:
-  Spx- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+  Spx- & (({@EBm+} & ((((O*t+ & <verb-wall>) or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or (Pa+ & <verb-wall>) )) or
     ({N+} & (Pg+ or Pv+)));
 
 was.v-d:
@@ -2389,7 +2388,7 @@ am.v:
 
 % I'm == I am
 ’m 'm: 
-  SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
+  SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or (Pa+ & <verb-wall>))) or
     ({N+} & (Pg+ or Pv+))) & <verb-wall>;
 
 % S*x- used for passive participles: "this action be taken".
@@ -3001,13 +3000,13 @@ sworn.v: VERB_PP(<vc-hope>) or ({@E-} & A+);
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-appear>: {@MV+} & {Pa+ or TOf+ or THi+ or AF- or [[Pv+]]};
+<vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or TOf+ or THi+ or AF- or [[Pv+]]};
 appear.v: VERB_X_PLI(<vc-appear>);
 appears.v: VERB_X_S(<vc-appear>);
 appeared.v-d: VERB_X_SPPP(<vc-appear>);
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-<vc-seem>: {@MV+} & (Pa+ or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
+<vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: VERB_X_PLI(<vc-seem>);
 seems.v: VERB_X_S(<vc-seem>);
 seemed.v-d: VERB_X_SPPP(<vc-seem>);
@@ -3141,10 +3140,10 @@ go.v: VERB_PLI(<vc-go>);
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
 % However, prefer Pg over O*t when possible...
 goes.v:
-  (<verb-x-s> & (<vc-go> or [[O*t+ & {@MV+}]])) or
+  (<verb-x-s> & (<vc-go> or [[O*t+ & {@MV+} & <verb-wall>]])) or
   (<verb-and-s-> & <vc-go>) or (<vc-go> & <verb-and-s+>);
 went.v-d:
-  (<verb-x-sp> & (<vc-go> or [[O*t+ & {@MV+}]])) or
+  (<verb-x-sp> & (<vc-go> or [[O*t+ & {@MV+} & <verb-wall>]])) or
   (<verb-and-sp-i-> & <vc-go>) or (<vc-go> & <verb-and-sp-i+>);
 
 gone.v: VERB_PP(<vc-go>);
@@ -3156,7 +3155,7 @@ gone.a:
 
 % XXX TODO maybe need VJ and-able links for going etc. ???
 going.v:
-  ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
+  ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge> & <verb-wall>) or
   ({@E-} & A+) or
   <verb-ge-d>;
 
@@ -5024,7 +5023,7 @@ embarrassing.g annoying.g:
 <vc-prove>:
   ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
   ((O+ or OX+ or B-) & {@MV+} & (TOo+ or [[Pa+]])) or
-  ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or Pa+));
+  ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
 prove.v: VERB_X_PLI(<vc-prove>);
 proves.v: VERB_X_S(<vc-prove>);
