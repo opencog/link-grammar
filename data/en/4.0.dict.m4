@@ -2307,7 +2307,7 @@ hadn't.v-d hadn’t.v-d:
       (Osi+ & R+ & Bs+) or
       (Opi+ & R+ & Bp+) or
       [[()]]) & {@MV+}) or
-    (Pp+ & {THi+ or @MV+}) or
+    (<verb-wall> & Pp+ & {THi+ or @MV+}) or
     THb+ or
     TO+ or
     (Pa+ & <verb-wall>))) or
@@ -2402,7 +2402,7 @@ be.v:
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
 
-been.v: {@E-} & PPf- & <vc-be> & <verb-wall>;
+been.v: {@E-} & PPf- & <vc-be>;
 
 % S- & Pa+ & Xc+ & Ce+: "The knife being dull, he ..."
 % (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
