@@ -69,9 +69,16 @@ IGNORE_THESE_LINKS: Xca
 
 ; ----------------------------------------------------------------------
 ; These links may only be used in cycles.
+; ---
 ; Jd and OFd are used with determiner D: "I have a lot of cookies"
+; ---
+; WV must form a cycle with W links: WV links to the root verb to the wall,
+; and W links the leading noun to the wall. Both verb and noun must be in
+; the same phrase, forming a cycle, as otherwise, nonsense happens, such as
+; *He stated the fact that there be an investigation 
+; with W linking to "he" and WV linking to "be" (instead of "stated")
 
-MUST_FORM_A_CYCLE_LINKS:  R#*   TOt   EXx   HA    SFsic  Jd  Jr  JQ  OFd Xca
+MUST_FORM_A_CYCLE_LINKS:  R#*   TOt   EXx   HA    SFsic  Jd  Jr  JQ  OFd Xca  WV
 
 
 ; ----------------------------------------------------------------------
