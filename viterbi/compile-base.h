@@ -12,8 +12,6 @@
 #ifndef _LG_VITERBI_COMPILE_H
 #define _LG_VITERBI_COMPILE_H
 
-#include "utilities.h"  // needed for assert
-
 #include "atom.h"
 
 namespace link_grammar {
