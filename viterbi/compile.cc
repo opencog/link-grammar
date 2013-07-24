@@ -11,9 +11,9 @@
 
 #include "compile.h"
 
-namespace link_grammar {
-namespace viterbi {
-
+// XXX temporary hack until dynamic types are supported !?
+namespace atombase {
+using namespace link_grammar::viterbi;
 
 // ============================================================
 /// Remove optional connectors.
@@ -58,6 +58,43 @@ Atom* And::clean() const
 }
 
 // ============================================================
+
+Atom* upcast(Atom* a)
+{
+	const Node* n = dynamic_cast<const Node*>(a);
+	const Link* l = dynamic_cast<const Link*>(a);
+
+	switch (a->get_type())
+	{
+		// Links
+		case AND:
+			if (dynamic_cast<And*>(a)) return a;
+			return new And(l->get_outgoing_set(), l->_tv);
+		case OR:
+			if (dynamic_cast<Or*>(a)) return a;
+			return new Or(l->get_outgoing_set(), l->_tv);
+
+		// Nodes
+		case CONNECTOR:
+			if (dynamic_cast<Connector*>(a)) return a;
+			return new Connector(n->get_name(), n->_tv);
+
+		case WORD:
+			if (dynamic_cast<Word*>(a)) return a;
+			return new Word(n->get_name(), n->_tv);
+
+		default:
+			assert(0, "upcast: implement me!");
+	}
+}
+
+} // namespace atombase
+
+// ============================================================
+
+namespace link_grammar {
+namespace viterbi {
+
 
 // Helper function for below.
 static bool has_lefties(Atom* a)
@@ -109,36 +146,6 @@ WordCset* WordCset::flatten()
 	return new WordCset(get_word(), flat);
 }
 
-// ============================================================
-
-Atom* upcast(Atom* a)
-{
-	const Node* n = dynamic_cast<const Node*>(a);
-	const Link* l = dynamic_cast<const Link*>(a);
-
-	switch (a->get_type())
-	{
-		// Links
-		case AND:
-			if (dynamic_cast<And*>(a)) return a;
-			return new And(l->get_outgoing_set(), l->_tv);
-		case OR:
-			if (dynamic_cast<Or*>(a)) return a;
-			return new Or(l->get_outgoing_set(), l->_tv);
-
-		// Nodes
-		case CONNECTOR:
-			if (dynamic_cast<Connector*>(a)) return a;
-			return new Connector(n->get_name(), n->_tv);
-
-		case WORD:
-			if (dynamic_cast<Word*>(a)) return a;
-			return new Word(n->get_name(), n->_tv);
-
-		default:
-			assert(0, "upcast: implement me!");
-	}
-}
 
 } // namespace viterbi
 } // namespace link-grammar

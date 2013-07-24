@@ -12,8 +12,7 @@
 #include "compile-base.h"
 #include "utilities.h"  // needed for assert
 
-namespace link_grammar {
-namespace viterbi {
+namespace atombase {
 
 
 /// Flatten a set.  That is, remove the nested, recursive
@@ -399,8 +398,4 @@ Atom* And::disjoin()
 	return new Or(dnf);
 }
 
-// ============================================================
-
-
-} // namespace viterbi
-} // namespace link-grammar
+} // namespace atombase

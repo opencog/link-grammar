@@ -14,8 +14,7 @@
 
 using namespace std;
 
-namespace link_grammar {
-namespace viterbi {
+namespace atombase {
 
 void lg_init_gc()
 {
@@ -32,5 +31,4 @@ void lg_init_gc()
 }
 
 
-} // namespace viterbi
-} // namespace link-grammar
+} // namespace atombase

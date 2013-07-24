@@ -20,6 +20,10 @@
 namespace link_grammar {
 namespace viterbi {
 
+using namespace atombase;
+
+#define OPTIONAL_CLAUSE "0"
+
 // Classes that convert run-time atom types into compile-time static
 // types, so that the compiler can check these for correctness.
 // These are here purely for C++ programming convenience; the true
@@ -84,7 +88,7 @@ enum AtomType
 ///        Atom ...
 /// where the Atoms are typically either connectors, or WORD_DISJ
 ///
-class Ling : public Link
+class Ling : public atombase::Link
 {
 	public:
 		Ling(const OutList& ol)
@@ -115,7 +119,7 @@ class Ling : public Link
 };
 
 
-class WordCset : public Link
+class WordCset : public atombase::Link
 {
 	public:
 		WordCset(Word* a, Atom* b)
@@ -165,7 +169,7 @@ class WordCset : public Link
 ///           LING ...
 ///           LING ...
 ///
-class StateTriple : public Link
+class StateTriple : public atombase::Link
 {
 	public:
 		StateTriple(Seq* input, Seq* state, Set* output)

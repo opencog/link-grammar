@@ -16,13 +16,14 @@
 
 namespace link_grammar {
 namespace viterbi {
+using namespace atombase;
 
 // Base class for all graph-rewrite rules.
 // For now, most/all rewrite rules will be implemented in C++
 // Eventually, the goal is not to do this, but for now, this seems
 // like the shortest path to something functional.  So assorted
 // misc algrothms will inherit from this class.
-class Rule : public Link
+class Rule : public atombase::Link
 {
 	public:
 		Rule(void)

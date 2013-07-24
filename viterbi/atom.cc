@@ -16,8 +16,7 @@
 
 #include "atom.h"
 
-namespace link_grammar {
-namespace viterbi {
+namespace atombase {
 
 using namespace std;
 
@@ -26,11 +25,12 @@ const string type_name(AtomType t)
 	switch(t)
 	{
 		case NODE:       return "NODE";
-		// case LINK:       return "LINK";
 
 		case WORD:       return "WORD";
 		case LING_TYPE:  return "LING_TYPE";
 		case CONNECTOR:  return "CONNECTOR";
+
+		// case LINK:       return "LINK";
 		case SEQ:        return "SEQ";
 		case SET:        return "SET";
 		case OR:         return "OR";
@@ -39,6 +39,7 @@ const string type_name(AtomType t)
 		case WORD_DISJ:  return "WORD_DISJ";
 		case LING:       return "LING";
 		case STATE_TRIPLE: return "STATE_TRIPLE";
+
 	}
 
 	return "UNHANDLED_TYPE_NAME";
@@ -136,6 +137,5 @@ std::ostream& operator<<(std::ostream& out, AtomType t)
 	return out;
 }
 
+} // namespace atom
 
-} // namespace viterbi
-} // namespace link-grammar

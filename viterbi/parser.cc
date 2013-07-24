@@ -406,7 +406,7 @@ void viterbi_parse(Dictionary dict, const char * sentence)
 	// so provide one.
 	pars.stream_end();
 
-	Link* alts = pars.get_alternatives();
+	atombase::Link* alts = pars.get_alternatives();
 
 	/* Print some diagnostic outputs ... for now. Remove when finished. */
 	size_t num_alts = alts->get_arity();

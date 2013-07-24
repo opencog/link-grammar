@@ -19,8 +19,7 @@
 
 #include "garbage.h"
 
-namespace link_grammar {
-namespace viterbi {
+namespace atombase {
 
 // Classes generally resembling those of the OpenCog AtomSpace
 // These are tailored for use for parsing.
@@ -81,8 +80,6 @@ enum AtomType
 
 	RULE,       // Base class for graph re-write rules
 };
-
-#define OPTIONAL_CLAUSE "0"
 
 /* Base class for Nodes and Links */
 /**
@@ -195,7 +192,6 @@ std::ostream& operator<<(std::ostream& out, const Atom*);
 std::ostream& operator<<(std::ostream& out, AtomType);
 
 
-} // namespace viterbi
-} // namespace link-grammar
+} // namespace atombase
 
 #endif // _LG_VITERBI_ATOM_H

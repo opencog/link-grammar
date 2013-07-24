@@ -9,13 +9,12 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_VITERBI_COMPILE_H
-#define _LG_VITERBI_COMPILE_H
+#ifndef _ATOMBASE_COMPILE_H
+#define _ATOMBASE_COMPILE_H
 
 #include "atom.h"
 
-namespace link_grammar {
-namespace viterbi {
+namespace atombase {
 
 // Classes that convert run-time atom types into compile-time static
 // types, so that the compiler can check these for correctness.
@@ -164,8 +163,7 @@ class And : public Seq
 /// Given an atom of a some type, return the C++ class of that type.
 Atom* upcast(Atom*);
 
+} // namespace atombase
 
-} // namespace viterbi
-} // namespace link-grammar
 
-#endif // _LG_VITERBI_COMPILE_H
+#endif // _ATOMBASE_COMPILE_H
