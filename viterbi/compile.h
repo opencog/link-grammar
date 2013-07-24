@@ -15,7 +15,7 @@
 #include "utilities.h"  // needed for assert
 
 #include "atom.h"
-#include "compile.h"
+#include "compile-base.h"
 
 namespace link_grammar {
 namespace viterbi {
