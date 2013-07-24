@@ -13,6 +13,7 @@ lib_LTLIBRARIES = libvitacog.la
 
 libvitacog_la_SOURCES = \
 	atom.cc \
+	compile-base.cc \
 	compile.cc \
 	compress.cc \
 	connect.cc \
@@ -23,6 +24,7 @@ libvitacog_la_SOURCES = \
 	rewrite.cc \
 	word-monad.cc \
 	atom.h \
+	compile-base.h \
 	compile.h \
 	compress.h \
 	connect.h \
