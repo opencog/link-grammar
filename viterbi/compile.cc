@@ -73,6 +73,9 @@ Atom* upcast(Atom* a)
 		case OR:
 			if (dynamic_cast<Or*>(a)) return a;
 			return new Or(l->get_outgoing_set(), l->_tv);
+		case SET:
+			if (dynamic_cast<Set*>(a)) return a;
+			return new Set(l->get_outgoing_set(), l->_tv);
 
 		// Nodes
 		case CONNECTOR:
@@ -85,6 +88,28 @@ Atom* upcast(Atom* a)
 
 		default:
 			assert(0, "upcast: implement me!");
+	}
+}
+
+// ============================================================
+
+Link* appendatom(const Link* l, Atom* a)
+{
+	OutList ol = l->get_outgoing_set();
+	ol.push_back(a);
+
+	switch (l->get_type())
+	{
+		// Links
+		case AND:
+			return new And(ol, l->_tv);
+		case OR:
+			return new Or(ol, l->_tv);
+		case SET:
+			return new Set(ol, l->_tv);
+
+		default:
+			assert(0, "append: implement me!");
 	}
 }
 

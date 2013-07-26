@@ -144,6 +144,13 @@ class Node : public Atom
 // If this is not done, the GC will fail to see the pointers here.
 typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
 
+/// Given an atom of a given type, return the C++ class of that type.
+Atom* upcast(Atom*);
+class Link;
+
+/// Append atom to link; upcast the result.
+Link* appendatom(const Link*, Atom*);
+
 /**
  * Links hold a bunch of atoms
  * Links are immutable; the outgoing set cannot be changed.
@@ -181,12 +188,7 @@ class Link : public Atom
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
 
-		Link* append(Atom* a)
-		{
-			OutList ol = _oset;
-			ol.push_back(a);
-			return new Link(_type, ol, _tv);
-		}
+		Link* append(Atom* a) const { return appendatom(this, a); }
 
 		virtual bool operator==(const Atom*) const;
 		virtual Link* clone() const { return new Link(*this); }

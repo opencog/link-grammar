@@ -159,10 +159,6 @@ class And : public Seq
       virtual And* clone() const { return new And(*this); }
 };
 
-
-/// Given an atom of a some type, return the C++ class of that type.
-Atom* upcast(Atom*);
-
 } // namespace atombase
 
 
