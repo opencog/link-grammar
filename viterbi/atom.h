@@ -181,6 +181,13 @@ class Link : public Atom
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
 
+		Link* append(Atom* a)
+		{
+			OutList ol = _oset;
+			ol.push_back(a);
+			return new Link(_type, ol, _tv);
+		}
+
 		virtual bool operator==(const Atom*) const;
 		virtual Link* clone() const { return new Link(*this); }
 	protected:
