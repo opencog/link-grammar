@@ -200,7 +200,7 @@ class Link : public Atom
 // just right now...
 // Anyway, this implements the semantics "foreach VAR of TYPENAME in LNK"
 #define foreach_outgoing(TYPENAME,VAR,LNK) \
-	atombase::Link* _ll_##VAR; \
+	const atombase::Link* _ll_##VAR; \
 	size_t _ii_##VAR, _ee_##VAR; \
 	atombase::Atom* _aa_##VAR; \
 	TYPENAME VAR; \
