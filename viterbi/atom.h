@@ -190,16 +190,18 @@ class Link : public Atom
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
 
-		// What I really want here is to eb able to say:
-		// foo = bar->append<__typeof__(*bar)>(a);
-		// without having to explicitly say "typeof" in the above...
+		// What I really want here is to be able to say:
+		//   foo = bar->append(a);
+		// and have it mean this:
+		//   foo = bar->append<__typeof__(bar)>(a);
+		// but I don't see how...
 		template<typename RetType>
-		RetType* append(Atom* a) const { return dynamic_cast<RetType*>(appendatom(this, a)); }
+		RetType append(Atom* a) const { return dynamic_cast<RetType>(appendatom(this, a)); }
 
 		virtual bool operator==(const Atom*) const;
 		virtual Link* clone() const { return new Link(*this); }
 	protected:
-		// Outgoing set is const, nnot modifiable.
+		// Outgoing set is const, not modifiable.
 		const OutList _oset;
 };
 
