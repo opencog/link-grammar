@@ -109,9 +109,14 @@ class Atom : public gc
 		virtual bool operator==(const Atom*) const;
 		virtual Atom* clone() const = 0;
 		virtual ~Atom() {}
+		Atom* upcaster();
 	protected:
 		const AtomType _type;
 };
+
+/// Given an atom of a given type, return the C++ class of that type.
+template<typename T>
+T upcast(Atom* a) { return dynamic_cast<T>(a->upcaster()); }
 
 /**
  * A Node may be 
@@ -143,11 +148,6 @@ class Node : public Atom
 // Must use the bdw-gc allocator to track these pointers.
 // If this is not done, the GC will fail to see the pointers here.
 typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
-
-/// Given an atom of a given type, return the C++ class of that type.
-Atom* upcastatom(Atom*);
-template<typename T>
-T upcast(Atom* a) { return dynamic_cast<T>(upcastatom(a)); }
 
 /**
  * Links hold a bunch of atoms

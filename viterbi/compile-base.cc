@@ -121,7 +121,7 @@ Atom* Set::super_flatten() const
 		}
 	}
 
-	return  upcastatom(new Link(get_type(), newset, _tv));
+	return (new Link(get_type(), newset, _tv))->upcaster();
 }
 
 /// Add (append) other set to this set.

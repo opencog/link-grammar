@@ -59,35 +59,38 @@ Atom* And::clean() const
 
 // ============================================================
 
-Atom* upcastatom(Atom* a)
+Atom* Atom::upcaster()
 {
-	const Node* n = dynamic_cast<const Node*>(a);
-	const Link* l = dynamic_cast<const Link*>(a);
+	const Node* n = dynamic_cast<const Node*>(this);
+	const Link* l = dynamic_cast<const Link*>(this);
 
-	switch (a->get_type())
+	switch (get_type())
 	{
 		// Links
 		case AND:
-			if (dynamic_cast<And*>(a)) return a;
-			return new And(l->get_outgoing_set(), l->_tv);
+			if (dynamic_cast<And*>(this)) return this;
+			return new And(l->get_outgoing_set(), _tv);
 		case OR:
-			if (dynamic_cast<Or*>(a)) return a;
-			return new Or(l->get_outgoing_set(), l->_tv);
+			if (dynamic_cast<Or*>(this)) return this;
+			return new Or(l->get_outgoing_set(), _tv);
+		case SEQ:
+			if (dynamic_cast<Seq*>(this)) return this;
+			return new Seq(l->get_outgoing_set(), _tv);
 		case SET:
-			if (dynamic_cast<Set*>(a)) return a;
-			return new Set(l->get_outgoing_set(), l->_tv);
+			if (dynamic_cast<Set*>(this)) return this;
+			return new Set(l->get_outgoing_set(), _tv);
 
 		// Nodes
 		case CONNECTOR:
-			if (dynamic_cast<Connector*>(a)) return a;
-			return new Connector(n->get_name(), n->_tv);
+			if (dynamic_cast<Connector*>(this)) return this;
+			return new Connector(n->get_name(), _tv);
 
 		case WORD:
-			if (dynamic_cast<Word*>(a)) return a;
-			return new Word(n->get_name(), n->_tv);
+			if (dynamic_cast<Word*>(this)) return this;
+			return new Word(n->get_name(), _tv);
 
 		default:
-			assert(0, "upcast: implement me!");
+			assert(0, "Atom::upcaster(): implement me!");
 	}
 }
 
