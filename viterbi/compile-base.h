@@ -46,6 +46,8 @@ class Set : public Link
 		Set* add(const Set*);
 
       virtual Set* clone() const { return new Set(*this); }
+
+		Set* append(Atom* a) { return dynamic_cast<Set*>(Link::append(a)); }
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Set(AtomType t, const TV& tv = TV())
@@ -80,6 +82,8 @@ class Seq : public Set
 		Seq* flatten() const { return new Seq(flatset(), _tv); }
 
       virtual Seq* clone() const { return new Seq(*this); }
+
+		Seq* append(Atom* a) { return dynamic_cast<Seq*>(Link::append(a)); }
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Seq(AtomType t)
@@ -120,6 +124,8 @@ class Or : public Set
 		Or* uniq() const;
 
       virtual Or* clone() const { return new Or(*this); }
+
+		Or* append(Atom* a) { return dynamic_cast<Or*>(Link::append(a)); }
 };
 
 /// Ordered sequence
@@ -157,6 +163,8 @@ class And : public Seq
 		Atom* clean() const;
 
       virtual And* clone() const { return new And(*this); }
+
+		And* append(Atom* a) { return dynamic_cast<And*>(Link::append(a)); }
 };
 
 } // namespace atombase

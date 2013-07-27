@@ -93,20 +93,22 @@ Atom* upcastatom(Atom* a)
 
 // ============================================================
 
-Link* appendatom(const Link* l, Atom* a)
+Link* Link::append(Atom* a) const
 {
-	OutList ol = l->get_outgoing_set();
+	OutList ol = get_outgoing_set();
 	ol.push_back(a);
 
-	switch (l->get_type())
+	switch (get_type())
 	{
 		// Links
 		case AND:
-			return new And(ol, l->_tv);
+			return new And(ol, _tv);
 		case OR:
-			return new Or(ol, l->_tv);
+			return new Or(ol, _tv);
+		case SEQ:
+			return new Seq(ol, _tv);
 		case SET:
-			return new Set(ol, l->_tv);
+			return new Set(ol, _tv);
 
 		default:
 			assert(0, "append: implement me!");

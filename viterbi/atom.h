@@ -149,10 +149,6 @@ Atom* upcastatom(Atom*);
 template<typename T>
 T upcast(Atom* a) { return dynamic_cast<T>(upcastatom(a)); }
 
-/// Append atom to link; upcast the result.
-class Link;
-Link* appendatom(const Link*, Atom*);
-
 /**
  * Links hold a bunch of atoms
  * Links are immutable; the outgoing set cannot be changed.
@@ -190,13 +186,7 @@ class Link : public Atom
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
 
-		// What I really want here is to be able to say:
-		//   foo = bar->append(a);
-		// and have it mean this:
-		//   foo = bar->append<__typeof__(bar)>(a);
-		// but I don't see how...
-		template<typename RetType>
-		RetType append(Atom* a) const { return dynamic_cast<RetType>(appendatom(this, a)); }
+		Link* append(Atom* a) const;
 
 		virtual bool operator==(const Atom*) const;
 		virtual Link* clone() const { return new Link(*this); }
