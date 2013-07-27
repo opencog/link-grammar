@@ -59,7 +59,7 @@ Atom* And::clean() const
 
 // ============================================================
 
-Atom* upcast(Atom* a)
+Atom* upcastatom(Atom* a)
 {
 	const Node* n = dynamic_cast<const Node*>(a);
 	const Link* l = dynamic_cast<const Link*>(a);

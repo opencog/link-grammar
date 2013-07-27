@@ -145,10 +145,12 @@ class Node : public Atom
 typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
 
 /// Given an atom of a given type, return the C++ class of that type.
-Atom* upcast(Atom*);
-class Link;
+Atom* upcastatom(Atom*);
+template<typename T>
+T upcast(Atom* a) { return dynamic_cast<T>(upcastatom(a)); }
 
 /// Append atom to link; upcast the result.
+class Link;
 Link* appendatom(const Link*, Atom*);
 
 /**

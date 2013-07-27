@@ -135,7 +135,7 @@ static Set* next_connect(WordCset* left_cset, WordCset* right_cset)
 	if (CONNECTOR == lt or AND == lt)
 		left_dnf = new Or(left_a);
 	else
-		left_dnf = dynamic_cast<Or*>(upcast(left_a));
+		left_dnf = upcast<Or*>(left_a);
 	assert(left_dnf != NULL, "Left disjuncts not in DNF");
 
 
@@ -146,7 +146,7 @@ static Set* next_connect(WordCset* left_cset, WordCset* right_cset)
 	if (CONNECTOR == rt or AND == rt)
 		right_dnf = new Or(right_a);
 	else
-		right_dnf = dynamic_cast<Or*>(upcast(right_a));
+		right_dnf = upcast<Or*>(right_a);
 	assert(right_dnf != NULL, "Right disjuncts not in DNF");
 
 

@@ -61,7 +61,7 @@ StateTriple* Connect::try_alternative(Atom* ldj, Atom* rdj)
 		else
 		{
 			// Right disunct better be a multi-connector
-			And* rand = dynamic_cast<And*>(upcast(rdj));
+			And* rand = upcast<And*>(rdj);
 			assert(rand, "Right dj not a disjunct");
 			return alternative(lcon, rand);
 		}
@@ -69,7 +69,7 @@ StateTriple* Connect::try_alternative(Atom* ldj, Atom* rdj)
 	else
 	{
 		// Left disjunct better be a multi-connector.
-		And* land = dynamic_cast<And*>(upcast(ldj));
+		And* land = upcast<And*>(ldj);
 		assert(land, "Left dj not a disjunct");
 
 		// Right disjunct is a single connector
@@ -78,7 +78,7 @@ StateTriple* Connect::try_alternative(Atom* ldj, Atom* rdj)
 		else
 		{
 			// Right disunct better be a multi-connector
-			And* rand = dynamic_cast<And*>(upcast(rdj));
+			And* rand = upcast<And*>(rdj);
 			assert(rand, "Right dj not a disjunct");
 
 			return alternative(land, rand);

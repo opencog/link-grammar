@@ -46,7 +46,7 @@ OutList Set::flatset() const
 
 		/* Get rid of a level */
 		const TV& cost = a->_tv;
-		Set* ora = dynamic_cast<Set*>(upcast(a));
+		Set* ora = upcast<Set*>(a);
 		OutList fora = ora->flatset();
 		size_t osz = fora.size();
 		for (int j=0; j<osz; j++)
@@ -74,7 +74,7 @@ Atom* Set::super_flatten() const
 	if (1 == sz)
 	{
 		Atom* a = get_outgoing_atom(0);
-		Set* set = dynamic_cast<Set*>(upcast(a));
+		Set* set = upcast<Set*>(a);
 		if (set)
 			a = set->super_flatten();
 		a->_tv += _tv;
@@ -85,7 +85,7 @@ Atom* Set::super_flatten() const
 	for (size_t i=0; i<sz; i++)
 	{
 		Atom* a = get_outgoing_atom(i);
-		Set* set = dynamic_cast<Set*>(upcast(a));
+		Set* set = upcast<Set*>(a);
 		if (NULL == set)
 		{
 			newset.push_back(a);
@@ -121,7 +121,7 @@ Atom* Set::super_flatten() const
 		}
 	}
 
-	return  upcast(new Link(get_type(), newset, _tv));
+	return  upcastatom(new Link(get_type(), newset, _tv));
 }
 
 /// Add (append) other set to this set.
@@ -198,7 +198,7 @@ Atom* Or::disjoin() const
 		AtomType ty = a->get_type();
 		if (AND == ty)
 		{
-			And* al = dynamic_cast<And*>(upcast(a));
+			And* al = upcast<And*>(a);
 			Atom* a = al->disjoin();
 			Link* l = dynamic_cast<Link*>(a);
 			if (l)
@@ -215,7 +215,7 @@ Atom* Or::disjoin() const
 		{
 assert(0, "not expecting Or after flattening");
 #if 0
-			Or* ol = dynamic_cast<Or*>(upcast(a));
+			Or* ol = upcast<Or*>(a);
 			Or* l = ol->disjoin();
 			TV cost = l->_tv;
 			for (size_t j=0; j<l->get_arity(); j++)
@@ -295,12 +295,12 @@ Atom* And::disjoin()
 		AtomType ty = a->get_type();
 		if (OR == ty)
 		{
-			Or* oo = dynamic_cast<Or*>(upcast(a));
+			Or* oo = upcast<Or*>(a);
 			(*ol)[i] = oo->disjoin();
 		}
 		else if (AND == ty)
 		{
-			And* aa = dynamic_cast<And*>(upcast(a));
+			And* aa = upcast<And*>(a);
 			(*ol)[i] = aa->disjoin();
 		}
 	}
