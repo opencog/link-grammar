@@ -195,6 +195,22 @@ class Link : public Atom
 		const OutList _oset;
 };
 
+// An unsanitary fore-each loop, to simplify iterating over
+// the outgoing set.  I don't see a more elegant way to do this,
+// just right now...
+// Anyway, this implements the semantics "foreach VAR of TYPENAME in LNK"
+#define foreach_outgoing(TYPENAME,VAR,LNK) \
+	atombase::Link* _ll_##VAR; \
+	size_t _ii_##VAR, _ee_##VAR; \
+	atombase::Atom* _aa_##VAR; \
+	TYPENAME VAR; \
+	for (_ll_##VAR = (LNK), _ii_##VAR = 0, \
+	     _ee_##VAR = _ll_##VAR->get_arity(); \
+	     _ii_##VAR < _ee_##VAR; \
+	     _aa_##VAR = _ll_##VAR->get_outgoing_atom(_ii_##VAR), \
+	    VAR = dynamic_cast<TYPENAME>(_aa_##VAR), \
+	    _ii_##VAR++)
+
 std::ostream& operator<<(std::ostream& out, const Atom*);
 std::ostream& operator<<(std::ostream& out, AtomType);
 

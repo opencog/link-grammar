@@ -31,10 +31,8 @@ static Atom* normal_order(Atom* dnf)
 	if (ora)
 	{
 		OutList norm;
-		size_t sz = ora->get_arity();
-		for (size_t i=0; i<sz; i++)
+		foreach_outgoing(Atom*, a, ora)
 		{
-			Atom* a = ora->get_outgoing_atom(i);
 			norm.push_back(normal_order(a));
 		}
 		return new Or(norm, ora->_tv);
@@ -44,25 +42,20 @@ static Atom* normal_order(Atom* dnf)
 	if (andy)
 	{
 		OutList norm;
-		size_t sz = andy->get_arity();
-		for (size_t i=0; i<sz; i++)
+		foreach_outgoing(Connector*, c, andy)
 		{
-			Atom* a = andy->get_outgoing_atom(i);
-			Connector* c = dynamic_cast<Connector*>(a);
 			assert(c, "normal_order: expecting a connector in the disjunct");
 			if ('-' == c->get_direction())
 				norm.push_back(normal_order(c));
 		}
-		for (size_t i=0; i<sz; i++)
+		foreach_outgoing(Connector*, cc, andy)
 		{
-			Atom* a = andy->get_outgoing_atom(i);
-			Connector* c = dynamic_cast<Connector*>(a);
-			assert(c, "normal_order: expecting a connector in the disjunct");
-			if ('+' == c->get_direction())
-				norm.push_back(normal_order(c));
+			assert(cc, "normal_order: expecting a connector in the disjunct");
+			if ('+' == cc->get_direction())
+				norm.push_back(normal_order(cc));
 
 			// Optional connectors are not allowed to appear in disjuncts!
-			assert(not c->is_optional(), "Optional connector in disjunct");
+			assert(not cc->is_optional(), "Optional connector in disjunct");
 		}
 		return new And(norm, andy->_tv);
 	}

@@ -129,12 +129,8 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 static Set* cost_split(Set* raw_csets)
 {
 	OutList cooked;
-	size_t sz = raw_csets->get_arity();
-	for (int i=0; i<sz; i++)
+	foreach_outgoing(WordCset*, wcs, raw_csets)
 	{
-		Atom* a = raw_csets->get_outgoing_atom(i);
-		WordCset* wcs = dynamic_cast<WordCset*>(a);
-
 		Atom* c = wcs->get_cset();
 		Or* orc = dynamic_cast<Or*>(c);
 		if (!orc)
@@ -149,10 +145,8 @@ static Set* cost_split(Set* raw_csets)
 		// If we are here, then we have a set of disjuncts.
 		// Split out any costly disjuncts into their own.
 		OutList trim;
-		size_t osz = orc->get_arity();
-		for (int j=0; j<osz; j++)
+		foreach_outgoing(Atom*, dj, orc)
 		{
-			Atom* dj = orc->get_outgoing_atom(j);
 			if (dj->_tv == 0.0f)
 			{
 				trim.push_back(dj);
@@ -184,10 +178,8 @@ static Set* cost_split(Set* raw_csets)
 static void promote_cost(And* disjunct)
 {
 	// Promote costs, if any, from each connector, to the disjunct
-	size_t sz = disjunct->get_arity();
-	for (size_t j=0; j<sz; j++)
+	foreach_outgoing(Atom*, a, disjunct)
 	{
-		Atom* a = disjunct->get_outgoing_atom(j);
 		disjunct->_tv += a->_tv;
 		a->_tv = 0.0f;
 	}
@@ -198,12 +190,8 @@ static void promote_cost(And* disjunct)
 /// contains that connector.
 static Set* cost_up(Set* raw_csets)
 {
-	size_t sz = raw_csets->get_arity();
-	for (size_t i=0; i<sz; i++)
+	foreach_outgoing(WordCset*, wcs, raw_csets)
 	{
-		Atom* a = raw_csets->get_outgoing_atom(i);
-		WordCset* wcs = dynamic_cast<WordCset*>(a);
-
 		Atom* c = wcs->get_cset();
 		And* dj = dynamic_cast<And*>(c);
 		if (dj)
@@ -215,11 +203,8 @@ static Set* cost_up(Set* raw_csets)
 		Or* orc = dynamic_cast<Or*>(c);
 		if (orc)
 		{
-			size_t osz = orc->get_arity();
-			for (size_t j=0; j<osz; j++)
+			foreach_outgoing(And*, dj, orc)
 			{
-				Atom* oa = orc->get_outgoing_atom(j);
-				And* dj = dynamic_cast<And*>(oa);
 				if (dj)
 					promote_cost(dj);
 			}
@@ -329,11 +314,8 @@ void Parser::stream_word(const string& word)
 
 	// Try to add each dictionary entry to the parse state.
 	Set* new_alts = new Set();
-	for (int i = 0; i < djset->get_arity(); i++)
+	foreach_outgoing(WordCset*, wrd_cset, djset)
 	{
-		Atom* cset = djset->get_outgoing_atom(i);
-		WordCset* wrd_cset = dynamic_cast<WordCset*>(cset);
-
 		WordMonad cnct(wrd_cset);
 		Set* alts = cnct(_alternatives);
 		new_alts = new_alts->add(alts);

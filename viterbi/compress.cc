@@ -132,12 +132,8 @@ Set* compress_alternatives(Set* state_alternatives)
 	Set* prev_out = NULL;
 	Seq* merged = NULL;
 
-	size_t sz = state_alternatives->get_arity();
-	for (size_t i = 0; i < sz; i++)
+	foreach_outgoing(StateTriple*, sp, state_alternatives)
 	{
-		Atom* a = state_alternatives->get_outgoing_atom(i);
-		StateTriple* sp = dynamic_cast<StateTriple*>(a);
-
 		// If the inputs or the outputs differ, the state triples are
 		// fundamentally not mergable.  Move along.
 		Seq* in = sp->get_input();
