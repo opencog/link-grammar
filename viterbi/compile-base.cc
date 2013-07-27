@@ -33,10 +33,8 @@ namespace atombase {
 OutList Set::flatset() const
 {
 	OutList newset;
-	size_t sz = get_arity();
-	for (size_t i=0; i<sz; i++)
+	foreach_outgoing(Atom*, a, this)
 	{
-		Atom* a = get_outgoing_atom(i);
 		/* Copy without change, if types differ. */
 		if (_type != a->get_type())
 		{
@@ -112,10 +110,8 @@ Atom* Set::super_flatten() const
 
 		// perform the actual flattening, distributing the cost
 		// of the deleted atom onto its children.
-		size_t csz = chld->get_arity();
-		for (int j=0; j<csz; j++)
+		foreach_outgoing(Atom*, c, chld)
 		{
-			Atom* c = chld->get_outgoing_atom(j);
 			c->_tv += a->_tv;
 			newset.push_back(c);
 		}
@@ -191,10 +187,8 @@ Atom* Or::disjoin() const
 	assert(dynamic_cast<Or*>(sfl), "We are deeply confused disjoining!");
 
 	OutList dnf;
-	size_t sz = fl->get_arity();
-	for (size_t i=0; i<sz; i++)
+	foreach_outgoing(Atom*, a, fl)
 	{
-		Atom* a = fl->get_outgoing_atom(i);
 		AtomType ty = a->get_type();
 		if (AND == ty)
 		{
@@ -203,8 +197,8 @@ Atom* Or::disjoin() const
 			Link* l = dynamic_cast<Link*>(a);
 			if (l)
 			{
-				for (size_t j=0; j<l->get_arity(); j++)
-					dnf.push_back(l->get_outgoing_atom(j));
+				foreach_outgoing(Atom*, b, l)
+					dnf.push_back(b);
 			}
 			else
 			{
@@ -218,12 +212,11 @@ assert(0, "not expecting Or after flattening");
 			Or* ol = upcast<Or*>(a);
 			Or* l = ol->disjoin();
 			TV cost = l->_tv;
-			for (size_t j=0; j<l->get_arity(); j++)
+			foreach_outgoing(Atom*, aol, l)
 			{
 				// XXX We've got to distribute the cost, somehow, but
 				// I don't really like bumping it like this ... its not
 				// a pure play.
-				Atom* aol = l->get_outgoing_atom(j);
 				aol->_tv += cost;
 				dnf.push_back(aol);
 			}
@@ -319,8 +312,8 @@ Atom* And::disjoin()
 			{
 				did_flatten = true;
 				Link* l = dynamic_cast<Link*>(a);
-				for (size_t j=0; j<l->get_arity(); j++)
-					flat->push_back(l->get_outgoing_atom(j));
+				foreach_outgoing(Atom*, b, l)
+					flat->push_back(b);
 			}
 			else
 				flat->push_back(a);
@@ -353,12 +346,9 @@ Atom* And::disjoin()
 		TV cost = fl->_tv + last->_tv;
 
 		Link* ll = dynamic_cast<Link*>(last);
-		size_t jsz = ll->get_arity();
-		for (size_t j=0; j<jsz; j++)
-		{
-			Atom* tail = ll->get_outgoing_atom(j);
+		foreach_outgoing(Atom*, tail, ll)
 			dnf.push_back(new And(stumper, tail, cost));
-		}
+
 		return new Or(dnf);
 	}
 
@@ -372,15 +362,10 @@ Atom* And::disjoin()
 	TV cost = stumpy->_tv + fl->_tv + last->_tv;
 
 	Link* ll = dynamic_cast<Link*>(last);
-	size_t jsz = ll->get_arity();
-	size_t ssz = stumpy->get_arity();
-	for (size_t j=0; j<jsz; j++)
+	foreach_outgoing(Atom*, tail, ll)
 	{
-		Atom* tail = ll->get_outgoing_atom(j);
-
-		for (size_t i=0; i<ssz; i++)
+		foreach_outgoing(Atom*, a, stumpy)
 		{
-			Atom* a = stumpy->get_outgoing_atom(i);
 			AtomType ty = a->get_type();
 			if (AND == ty)
 			{
