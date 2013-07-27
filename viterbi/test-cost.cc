@@ -137,10 +137,8 @@ cout<<"xxxxxxxxxxxxxxxxxxxxxxxx last test xxxxxxxxxxxxxxxx" <<endl;
 	{
 		// At least one alternative should be the desired state pair.
 		bool found = false;
-		size_t sz = alts->get_arity();
-		for (size_t i=0; i<sz; i++)
+		foreach_outgoing(Atom*, a, alts)
 		{
-			Atom* a = alts->get_outgoing_atom(i);
 			if (sp->operator==(a))
 				found = true;
 		}

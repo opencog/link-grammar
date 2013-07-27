@@ -86,13 +86,10 @@ bool test_hello(const char *id, const char *dict_str,
 
 		bool pass_test = false;
 		Lynk* alts = parser.get_alternatives();
-		for (size_t i=0; i<alts->get_arity(); i++)
+		foreach_outgoing(StateTriple*, sp, alts)
 		{
-			Atom* alt = alts->get_outgoing_atom(i);
-			StateTriple* sp = dynamic_cast<StateTriple*>(alt);
-
 			// At least one alternative should have an empty state.
-			if (ans->operator==(alt))
+			if (ans->operator==(sp))
 				pass_test = true;
 
 			// In all cases, the output should be just the one word,
@@ -291,16 +288,13 @@ bool test_alternative(const char *id, const char *dict_str, bool empty_state)
 		bool found_one = false;
 		bool found_two = false;
 		Lynk* alts = parser.get_alternatives();
-		for (size_t i=0; i<alts->get_arity(); i++)
+		foreach_outgoing(StateTriple*, sp, alts)
 		{
-			Atom* alt = alts->get_outgoing_atom(i);
-			StateTriple* sp = dynamic_cast<StateTriple*>(alt);
-
 			// At least one alternative should have an empty state.
-			if (alt_pair_one->operator==(alt))
+			if (alt_pair_one->operator==(sp))
 				found_one = true;
 
-			if (alt_pair_two->operator==(alt))
+			if (alt_pair_two->operator==(sp))
 				found_two = true;
 		}
 
@@ -571,10 +565,8 @@ bool test_short_sent(const char *id, const char *dict_str, bool empty_state)
 	{
 		// At least one alternative should be the desired state pair.
 		bool found = false;
-		size_t sz = alts->get_arity();
-		for (size_t i=0; i<sz; i++)
+		foreach_outgoing(Atom*, a, alts)
 		{
-			Atom* a = alts->get_outgoing_atom(i);
 			if (sp->operator==(a))
 				found = true;
 		}
@@ -748,10 +740,8 @@ bool test_seq_sent(const char *id, const char *dict_str, bool empty_state)
 	{
 		// At least one alternative should be the desired state pair.
 		bool found = false;
-		size_t sz = alts->get_arity();
-		for (size_t i=0; i<sz; i++)
+		foreach_outgoing(Atom*, a, alts)
 		{
-			Atom* a = alts->get_outgoing_atom(i);
 			if (sp->operator==(a))
 				found = true;
 		}
