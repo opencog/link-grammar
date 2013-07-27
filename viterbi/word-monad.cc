@@ -157,16 +157,10 @@ static Set* next_connect(WordCset* left_cset, WordCset* right_cset)
 	// "alternatives" records the various different successful ways
 	// that connectors can be mated.  Its a list of state pairs.
 	OutList alternatives;
-	size_t lsz = left_dnf->get_arity();
-	for (size_t i=0; i<lsz; i++)
+	foreach_outgoing(Atom*, ldj, left_dnf)
 	{
-		Atom* ldj = left_dnf->get_outgoing_atom(i);
-
-		size_t rsz = right_dnf->get_arity();
-		for (size_t j=0; j<rsz; j++)
+		foreach_outgoing(Atom*, rdj, right_dnf)
 		{
-			Atom* rdj = right_dnf->get_outgoing_atom(j);
-
 			Connect cnct(left_cset, right_cset);
 			StateTriple* sp = cnct.try_alternative(ldj, rdj);
 			if (sp)
@@ -217,16 +211,13 @@ static Set* try_connect_one(StateTriple* left_sp, WordCset* right_cset)
 	// then these need to be mated to the next word cset on the left.
 	// If they can't be mated, then fail, and we are done.
 	OutList filtered_alts;
-	size_t sz = alternatives->get_arity();
-	for (size_t i=0; i<sz; i++)
+	foreach_outgoing(StateTriple*, new_sp, alternatives)
 	{
-		Atom* a = alternatives->get_outgoing_atom(i);
-		StateTriple* new_sp = dynamic_cast<StateTriple*>(a);
 		Seq* new_state = new_sp->get_state();
 
 		if (0 < new_state->get_arity())
 		{
-			a = new_state->get_outgoing_atom(0);
+			Atom* a = new_state->get_outgoing_atom(0);
 			WordCset* new_cset = dynamic_cast<WordCset*>(a);
 			if (new_cset->has_left_pointers())
 			{
@@ -251,11 +242,8 @@ static Set* try_connect_one(StateTriple* left_sp, WordCset* right_cset)
 					Set* new_alts = try_connect_one(usp, new_cset);
 // cout << "woot got this:" << new_alts<<endl;
 
-					size_t nsz = new_alts->get_arity();
-					for (size_t k = 0; k < nsz; k++)
+					foreach_outgoing(StateTriple*, asp, new_alts)
 					{
-						Atom* a = new_alts->get_outgoing_atom(k);
-						StateTriple* asp = dynamic_cast<StateTriple*>(a);
 						StateTriple* mrg = unite(united_sp, 1, asp, 0);
 						filtered_alts.push_back(mrg);
 						DBG(cout << "merge result=" << mrg << endl);
@@ -298,9 +286,8 @@ Set* WordMonad::operator()(Set* alts)
 	// being a single parse state.  Each parse state is a sequence of
 	// unsatisfied right-pointing links.
 	Set* new_alts = new Set();
-	for (int i = 0; i < alts->get_arity(); i++)
+	foreach_outgoing(StateTriple*, sp, alts)
 	{
-		StateTriple* sp = dynamic_cast<StateTriple*>(alts->get_outgoing_atom(i));
 		assert(sp, "Missing state");
 
 		Seq* state = sp->get_state();
