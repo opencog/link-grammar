@@ -12,15 +12,15 @@
 #include <gc/gc.h>
 #include "garbage.h"
 
-using namespace std;
-
 namespace atombase {
 
-void lg_init_gc()
+bool gc_is_inited = do_init_gc();
+
+bool do_init_gc()
 {
 	static bool is_inited = false;
 	if (is_inited)  // not thread safe.
-		return;
+		return is_inited;
 	is_inited = true;
 
 	GC_init();
@@ -30,5 +30,11 @@ void lg_init_gc()
 
 }
 
+// Overkill ... and even so, its not called unless someone explicitly
+// touches gc_is_inited or calls do_init_gc() !???? WTF?
+static __attribute__ ((constructor)) void gc_init(void)
+{
+	do_init_gc();
+}
 
 } // namespace atombase

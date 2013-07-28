@@ -16,7 +16,7 @@
 
 namespace atombase {
 
-void lg_init_gc();
+bool do_init_gc();
 
 } // namespace atombase
 

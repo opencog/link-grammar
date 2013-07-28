@@ -41,7 +41,7 @@ Parser::Parser(Dictionary dict)
 	: _dict(dict), _alternatives(NULL)
 {
 	DBG(cout << "=============== Parser ctor ===============" << endl);
-	lg_init_gc();
+	do_init_gc();
 	initialize_state();
 }
 
