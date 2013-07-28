@@ -28,16 +28,29 @@ namespace atombase {
 class Set : public Link
 {
 	public:
+		Set(const TV& tv = TV())
+			: Link(SET, tv)
+		{}
 		Set(const OutList& ol, const TV& tv = TV())
 			: Link(SET, ol, tv)
 		{}
 		Set(Atom* singleton, const TV& tv = TV())
 			: Link(SET, OutList(1, singleton), tv)
 		{}
-		Set(const TV& tv = TV())
-			: Link(SET, tv)
+		Set(Atom* a, Atom* b, const TV& tv = TV())
+			: Link(SET, ({OutList o(1,a); o.push_back(b); o;}), tv)
 		{}
 
+	protected:
+		// Only for classes that inherit from Set
+		Set(AtomType t, Atom* singleton, const TV& tv = TV())
+			: Link(t, OutList(1, singleton), tv)
+		{}
+		Set(AtomType t, Atom* a, Atom* b, const TV& tv = TV())
+			: Link(t, ({OutList o(1,a); o.push_back(b); o;}), tv)
+		{}
+
+	public:
 		// See the C file for documentation
 		Set* flatten() const { return new Set(flatset(), _tv); }
 		Atom* super_flatten() const;
@@ -47,7 +60,7 @@ class Set : public Link
 
       virtual Set* clone() const { return new Set(*this); }
 
-		Set* append(Atom* a) { return dynamic_cast<Set*>(Link::append(a)); }
+		Set* append(Atom* a) const { return dynamic_cast<Set*>(Link::append(a)); }
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Set(AtomType t, const TV& tv = TV())
@@ -71,11 +84,11 @@ class Seq : public Set
 		Seq(const OutList& ol, const TV& tv = TV())
 			: Set(SEQ, ol, tv)
 		{}
-		Seq(Atom* singleton)
-			: Set(SEQ, OutList(1, singleton))
+		Seq(Atom* singleton, const TV& tv = TV())
+			: Set(SEQ, OutList(1, singleton), tv)
 		{}
-		Seq(Atom* a, Atom* b)
-			: Set(SEQ, ({OutList o(1,a); o.push_back(b); o;}))
+		Seq(Atom* a, Atom* b, const TV& tv = TV())
+			: Set(SEQ, ({OutList o(1,a); o.push_back(b); o;}), tv)
 		{}
 
 		// See the Set class for documentation
@@ -83,7 +96,7 @@ class Seq : public Set
 
       virtual Seq* clone() const { return new Seq(*this); }
 
-		Seq* append(Atom* a) { return dynamic_cast<Seq*>(Link::append(a)); }
+		Seq* append(Atom* a) const { return dynamic_cast<Seq*>(Link::append(a)); }
 protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Seq(AtomType t)
@@ -125,7 +138,7 @@ class Or : public Set
 
       virtual Or* clone() const { return new Or(*this); }
 
-		Or* append(Atom* a) { return dynamic_cast<Or*>(Link::append(a)); }
+		Or* append(Atom* a) const { return dynamic_cast<Or*>(Link::append(a)); }
 };
 
 /// Ordered sequence
@@ -164,7 +177,7 @@ class And : public Seq
 
       virtual And* clone() const { return new And(*this); }
 
-		And* append(Atom* a) { return dynamic_cast<And*>(Link::append(a)); }
+		And * append(Atom* a) const { return dynamic_cast<And*>(Link::append(a)); }
 };
 
 } // namespace atombase

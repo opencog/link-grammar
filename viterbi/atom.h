@@ -9,8 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_VITERBI_ATOM_H
-#define _LG_VITERBI_ATOM_H
+#ifndef _ATOMBASE_ATOM_H
+#define _ATOMBASE_ATOM_H
 
 #include <iostream>
 #include <string>
@@ -66,7 +66,7 @@ enum AtomType
 	WORD,       // a word
 	LING_TYPE,  // a pair of merged connectors (LG LINK TYPE)
 	// META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
-	CONNECTOR,  // e.g. S+ 
+	CONNECTOR,  // e.g. S+
 
 	// Link types
 	SET,        // unordered set of children
@@ -119,7 +119,7 @@ template<typename T>
 T upcast(Atom* a) { return dynamic_cast<T>(a->upcaster()); }
 
 /**
- * A Node may be 
+ * A Node may be
  * -- a word (the std::string holds the word)
  * -- a link (the std::string holds the link)
  * -- a disjunct (the std::string holds the disjunct)
@@ -215,7 +215,6 @@ class Link : public Atom
 std::ostream& operator<<(std::ostream& out, const Atom*);
 std::ostream& operator<<(std::ostream& out, AtomType);
 
-
 } // namespace atombase
 
-#endif // _LG_VITERBI_ATOM_H
+#endif // _ATOMBASE_ATOM_H
