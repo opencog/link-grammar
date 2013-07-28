@@ -195,7 +195,7 @@ class Link : public Atom
 		const OutList _oset;
 };
 
-// An unsanitary fore-each loop, to simplify iterating over
+// An unhygenic for-each loop, to simplify iterating over
 // the outgoing set.  I don't see a more elegant way to do this,
 // just right now...
 // Anyway, this implements the semantics "foreach VAR of TYPENAME in LNK"
