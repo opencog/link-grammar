@@ -206,10 +206,11 @@ class Link : public Atom
 	TYPENAME VAR; \
 	for (_ll_##VAR = (LNK), _ii_##VAR = 0, \
 	     _ee_##VAR = _ll_##VAR->get_arity(); \
+	     _aa_##VAR = _ii_##VAR < _ee_##VAR ? \
+	        _ll_##VAR->get_outgoing_atom(_ii_##VAR) : 0x0, \
+	     VAR = dynamic_cast<TYPENAME>(_aa_##VAR), \
 	     _ii_##VAR < _ee_##VAR; \
-	     _aa_##VAR = _ll_##VAR->get_outgoing_atom(_ii_##VAR), \
-	    VAR = dynamic_cast<TYPENAME>(_aa_##VAR), \
-	    _ii_##VAR++)
+	     _ii_##VAR++)
 
 std::ostream& operator<<(std::ostream& out, const Atom*);
 std::ostream& operator<<(std::ostream& out, AtomType);
