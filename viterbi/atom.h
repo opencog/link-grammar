@@ -116,7 +116,12 @@ class Atom : public gc
 
 /// Given an atom of a given type, return the C++ class of that type.
 template<typename T>
-T upcast(Atom* a) { return dynamic_cast<T>(a->upcaster()); }
+T upcast(Atom* a)
+{
+	T t = dynamic_cast<T>(a);
+	if (t) return t;
+	return dynamic_cast<T>(a->upcaster());
+}
 
 /**
  * A Node may be
