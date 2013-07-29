@@ -40,6 +40,9 @@ class Set : public Link
 		Set(Atom* a, Atom* b, const TV& tv = TV())
 			: Link(SET, ({OutList o(1,a); o.push_back(b); o;}), tv)
 		{}
+		Set(Atom* a, Atom* b, Atom* c, const TV& tv = TV())
+			: Link(SET, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}), tv)
+		{}
 
 	protected:
 		// Only for classes that inherit from Set
@@ -48,6 +51,9 @@ class Set : public Link
 		{}
 		Set(AtomType t, Atom* a, Atom* b, const TV& tv = TV())
 			: Link(t, ({OutList o(1,a); o.push_back(b); o;}), tv)
+		{}
+		Set(AtomType t, Atom* a, Atom* b, Atom* c, const TV& tv = TV())
+			: Link(t, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}), tv)
 		{}
 
 	public:
