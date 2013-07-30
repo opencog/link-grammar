@@ -2,6 +2,7 @@ Version 4.7.15 (xxx 2013)
  * Fix "he answered yes"
  * Support bulleted, numbered lists.
  * New link types from Lian Ruiting, for identifying the head-verb.
+ * Java: fix bug when totalling WordNet word-sense score.
 
 Version 4.7.14 (20 June 2013)
  * Fix build break on MacOSX

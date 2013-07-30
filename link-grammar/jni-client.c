@@ -549,7 +549,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageSenseScore(JNIEnv *env,
 {
 	per_thread_data *ptd = get_ptd(env, cls);
 	Linkage lkg = ptd->linkage;
-	Linkage_info *lifo = lkg;
+	Linkage_info *lifo = lkg->info;
 	Sense *sns;
 	double score = 0.0;
 
