@@ -714,7 +714,7 @@ int main(int argc, char * argv[])
 		exit(-1);
 	}
 	setup_panic_parse_options(panic_parse_opts);
-	parse_options_set_max_sentence_length(opts, MAX_SENTENCE-3);
+	parse_options_set_max_sentence_length(opts, 230);
 	parse_options_set_panic_mode(opts, TRUE);
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
