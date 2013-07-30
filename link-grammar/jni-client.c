@@ -134,12 +134,12 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	memset(ptd, 0, sizeof(per_thread_data));
 
 	ptd->opts = parse_options_create();
-	parse_options_set_disjunct_costf(ptd->opts, 3.0f);
-	parse_options_set_max_sentence_length(ptd->opts, 170);
+	parse_options_set_disjunct_costf(ptd->opts, 2.0f);
+	parse_options_set_max_sentence_length(ptd->opts, MAX_SENTENCE-3);
 	parse_options_set_max_parse_time(ptd->opts, 30);
 	parse_options_set_linkage_limit(ptd->opts, 1000);
 	parse_options_set_short_length(ptd->opts, 10);
-	parse_options_set_verbosity(ptd->opts,0);
+	parse_options_set_verbosity(ptd->opts, 0);
 	parse_options_set_spell_guess(ptd->opts, FALSE);
 
 	parse_options_set_panic_mode(ptd->opts, TRUE);

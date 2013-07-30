@@ -104,10 +104,10 @@ Parse_Options parse_options_create(void)
 	po->cost_model.compare_fn = &VDAL_compare_parse;
 	po->cost_model.type = VDAL;
 #endif /* USE_CORPUS */
-	po->short_length = 6;
+	po->short_length = 10;
 	po->all_short = FALSE;
 	po->twopass_length = 30;
-	po->max_sentence_length = 170;
+	po->max_sentence_length = MAX_SENTENCE-3;
 	po->resources = resources_create();
 	po->display_short = TRUE;
 	po->display_word_subscripts = TRUE;
