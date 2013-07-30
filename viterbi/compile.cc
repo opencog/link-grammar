@@ -61,6 +61,8 @@ Atom* And::clean() const
 
 Atom* Atom::upcaster()
 {
+	if (!this) return this;
+
 	const Node* n = dynamic_cast<const Node*>(this);
 	const Link* l = dynamic_cast<const Link*>(this);
 
