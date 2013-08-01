@@ -47,7 +47,7 @@ OutList Set::flatset() const
 		Set* ora = upcast<Set*>(a);
 		OutList fora = ora->flatset();
 		size_t osz = fora.size();
-		for (int j=0; j<osz; j++)
+		for (size_t j=0; j<osz; j++)
 		{
 			fora[j]->_tv += cost;
 			newset.push_back(fora[j]);

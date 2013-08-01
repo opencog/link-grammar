@@ -28,6 +28,7 @@ bool do_init_gc()
 	/* Max heap size of a quarter-gig. */
 	GC_set_max_heap_size(256*1024*1024);
 
+	return is_inited;
 }
 
 // Overkill ... and even so, its not called unless someone explicitly

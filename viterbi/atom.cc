@@ -115,7 +115,7 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 
 		ilvl++;
 		size_t lsz = l->get_arity();
-		for (int i=0; i < lsz; i++)
+		for (size_t i=0; i < lsz; i++)
 		{
 			do_prt(out, l->get_outgoing_atom(i), ilvl);
 		}

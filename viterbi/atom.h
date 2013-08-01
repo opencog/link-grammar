@@ -98,7 +98,7 @@ class Atom : public gc
 {
 	public:
 		Atom(AtomType type, const TV& tv = TV()) :
-			_type(type), _tv(tv)
+			_tv(tv), _type(type)
 		{
 			// Marking stubborn, since its immutable.
 			GC_change_stubborn(this);
