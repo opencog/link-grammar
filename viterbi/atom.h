@@ -16,8 +16,7 @@
 #include <string>
 #include <vector>
 #include <gc/gc_allocator.h>
-
-#include "garbage.h"
+#include <gc/gc_cpp.h>
 
 namespace atombase {
 

@@ -12,8 +12,6 @@
 #ifndef _ATOMBASE_GARBAGE_H
 #define _ATOMBASE_GARBAGE_H
 
-#include <gc/gc_cpp.h>
-
 namespace atombase {
 
 bool do_init_gc();
