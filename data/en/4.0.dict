@@ -206,6 +206,8 @@
 <rel-clause-s>: {Rw+} & Bsm+;
 <rel-clause-p>: {Rw+} & Bpm+;
 
+<inf-verb>: IV+;
+
 % The use of COa here needs to be carefully rexamined; it is used much too freely.
 <directive-opener>:
   {[[Wi-]]} &
@@ -892,7 +894,7 @@ responsibilities.n chances.n campaigns.n offers.n pressures.n obligations orders
 temptations.n vows.n permits.n impetuses.n proclivities.n propensities.n moves.n
 votes.n bills.n incentives.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {(TOn+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {((TOn+ & <inf-verb>) or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main-p> or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
@@ -1896,11 +1898,12 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 %
-<verb-wall>: WV- or CV- or [[()]]; 
-% <verb-wall>: WV- or CV-; 
+<verb-wall>: WV- or CV- or IV- or [[()]]; 
+% <verb-wall>: WV- or CV- or IV-; 
 %<verb-wall>: ();
 <subord-verb>: CV+;
 % <subord-verb>: ();
+% <inf-verb>: IV+; % already defined above ...
 
 % Pv- & <verb-wall>: "a historic new law was passed"
 
