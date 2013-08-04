@@ -121,11 +121,9 @@ bool is_optional(Atom *a)
 	}
 	assert (OR == ty or AND == ty, "Must be boolean junction");
 
-	Link* l = dynamic_cast<Link*>(a);
-	for (int i = 0; i < l->get_arity(); i++)
+	foreach_outgoing(Atom*, atom, dynamic_cast<Link*>(a))
 	{
-		Atom *a = l->get_outgoing_atom(i);
-		bool c = is_optional(a);
+		bool c = is_optional(atom);
 		if (OR == ty)
 		{
 			// If anything in OR is optional, the  whole clause is optional.
@@ -173,10 +171,8 @@ static Atom* trim_left_pointers(Atom* a)
 	if (OR == ty)
 	{
 		OutList new_ol;
-		const Link* l = dynamic_cast<Link*>(a);
-		for (int i = 0; i < l->get_arity(); i++)
+		foreach_outgoing(Atom*, ota, dynamic_cast<Link*>(a))
 		{
-			Atom* ota = l->get_outgoing_atom(i);
 			Atom* new_ota = trim_left_pointers(ota);
 			if (new_ota)
 				new_ol.push_back(new_ota);
@@ -187,7 +183,8 @@ static Atom* trim_left_pointers(Atom* a)
 		// The result of trimming may be multiple empty nodes. 
 		// Remove all but one of them.
 		bool got_opt = false;
-		for (int i = 0; i < new_ol.size(); i++)
+		size_t nsz = new_ol.size();
+		for (size_t i = 0; i < nsz; i++)
 		{
 			Connector* c = dynamic_cast<Connector*>(new_ol[i]);
 			if (c and c->is_optional())
@@ -217,10 +214,8 @@ static Atom* trim_left_pointers(Atom* a)
 	// mandatory, unless they are optional.  So fail, if the
 	// connectors that were trimmed were not optional.
 	OutList new_ol;
-	Link* l = dynamic_cast<Link*>(a);
-	for (int i = 0; i < l->get_arity(); i++)
+	foreach_outgoing(Atom*, ota, dynamic_cast<Link*>(a))
 	{
-		Atom* ota = l->get_outgoing_atom(i);
 		Atom* new_ota = trim_left_pointers(ota);
 		if (new_ota)
 			new_ol.push_back(new_ota);
