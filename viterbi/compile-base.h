@@ -101,6 +101,10 @@ class Uniq : public Set
 			: Set(UNIQ, uniqify(({OutList o(1,a); o.push_back(b); o.push_back(c); o;})), tv)
 		{}
 
+		// Special copy constructor
+		Uniq(Set* set)
+			: Set(UNIQ, uniqify(set->get_outgoing_set()), set->_tv)
+		{}
 	protected:
 		static OutList uniqify(const OutList& ol);
 };
