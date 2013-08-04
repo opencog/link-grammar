@@ -361,7 +361,7 @@ const OutList& Connect::flatten(OutList& alternatives)
 			return set->get_outgoing_set();
 	}
 
-	for (int i = 0; i < asize; i++)
+	for (size_t i = 0; i < asize; i++)
 	{
 		Set* set = dynamic_cast<Set*>(alternatives[i]);
 		if (set and (1 == set->get_arity()))

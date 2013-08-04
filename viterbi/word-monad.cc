@@ -227,7 +227,7 @@ static Set* try_connect_one(StateTriple* left_sp, WordCset* right_cset)
 // XXX check for optional...
 				if (lnext < lsz)
 				{
-					Atom* a = left_state->get_outgoing_atom(lnext);
+					// Atom* a = left_state->get_outgoing_atom(lnext);
 				
 // cout <<"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrecurse"<<endl;
 // cout << "old sp, rm "<<lnext<<": " << left_sp<<endl;

@@ -38,8 +38,8 @@ class Connect : public gc
 		static const OutList& flatten(OutList&);
 
 	private:
-		WordCset* _right_cset;
 		WordCset* _left_cset;
+		WordCset* _right_cset;
 };
 
 
