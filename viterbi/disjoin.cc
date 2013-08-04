@@ -103,15 +103,10 @@ Atom* disjoin(Atom* mixed_form)
 
 		junct = junct->flatten();
 
-		size_t sz = junct->get_arity();
-		OutList new_oset;
-
 		// Just a recursive call, that's all.
-		for(int i=0; i<sz; i++)
-		{
-			Atom* norm = disjoin(junct->get_outgoing_atom(i));
-			new_oset.push_back(norm);
-		}
+		OutList new_oset;
+		foreach_outgoing(Atom*, norm, junct)
+			new_oset.push_back(disjoin(norm));
 
 		Or* new_or = new Or(new_oset, junct->_tv);
 		return normal_order(new_or->super_flatten());
@@ -134,8 +129,8 @@ Atom* disjoin(Atom* mixed_form)
 	// over it.
 	OutList front;
 	size_t sz = junct->get_arity();
-	int i;
-	for(i=0; i<sz; i++)
+	size_t i;
+	for (i=0; i<sz; i++)
 	{
 		Atom* a = disjoin(junct->get_outgoing_atom(i));
 		AtomType t = a->get_type();
@@ -172,7 +167,7 @@ Atom* disjoin(Atom* mixed_form)
 		// We've got to clone the thing, because otherwise propagating
 		// the costs upwards becomes an ugly mess.
 		size_t jsz = front.size();
-		for (int j=0; j<jsz; j++)
+		for (size_t j=0; j<jsz; j++)
 			distrib.push_back(front[j]->clone());
 
 		// insert one atom.
@@ -180,7 +175,7 @@ Atom* disjoin(Atom* mixed_form)
 
 		// Copy the rest.  Again with the clone(). Irritating.
 		jsz = rest.size();
-		for (int j=0; j<jsz; j++)
+		for (size_t j=0; j<jsz; j++)
 			distrib.push_back(rest[j]->clone());
 
 		And *andy = new And(distrib);
