@@ -24,7 +24,8 @@ namespace atombase {
 
 /// Unordered sequence
 /// A Set inherits fom Link, and is an unordered set of zero or more
-/// atoms.
+/// atoms.  Properly speaking, it is a multi-set; the same atom may
+/// appear more than once in the set.
 class Set : public Link
 {
 	public:
@@ -45,6 +46,13 @@ class Set : public Link
 		{}
 
 	protected:
+		/// The sole purpose of this ctor is to allow inheritance.
+		Set(AtomType t, const TV& tv = TV())
+			: Link(t, tv)
+		{}
+		Set(AtomType t, const OutList& oset, const TV& tv = TV())
+			: Link(t, oset, tv)
+		{}
 		// Only for classes that inherit from Set
 		Set(AtomType t, Atom* singleton, const TV& tv = TV())
 			: Link(t, OutList(1, singleton), tv)
@@ -67,15 +75,34 @@ class Set : public Link
       virtual Set* clone() const { return new Set(*this); }
 
 		Set* append(Atom* a) const { return dynamic_cast<Set*>(Link::append(a)); }
-protected:
-		/// The sole purpose of this ctor is to allow inheritance.
-		Set(AtomType t, const TV& tv = TV())
-			: Link(t, tv)
-		{}
-		Set(AtomType t, const OutList& oset, const TV& tv = TV())
-			: Link(t, oset, tv)
-		{}
+
+	protected:
 		OutList flatset() const;
+};
+
+/// Unique set. An atom may appear at most once in the outgoing set.
+/// Duplicates are removed during construction.
+class Uniq : public Set
+{
+	public:
+		Uniq(const TV& tv = TV())
+			: Set(UNIQ, tv)
+		{}
+		Uniq(const OutList& ol, const TV& tv = TV())
+			: Set(UNIQ, uniqify(ol), tv)
+		{}
+		Uniq(Atom* singleton, const TV& tv = TV())
+			: Set(UNIQ, uniqify(OutList(1, singleton)), tv)
+		{}
+		Uniq(Atom* a, Atom* b, const TV& tv = TV())
+			: Set(UNIQ, uniqify(({OutList o(1,a); o.push_back(b); o;})), tv)
+		{}
+		Uniq(Atom* a, Atom* b, Atom* c, const TV& tv = TV())
+			: Set(UNIQ, uniqify(({OutList o(1,a); o.push_back(b); o.push_back(c); o;})), tv)
+		{}
+
+	protected:
+		static OutList uniqify(const OutList& ol);
 };
 
 /// Ordered sequence

@@ -54,5 +54,10 @@ LDADD = libvitacog.la
 LDADD += $(top_builddir)/link-grammar/liblink-grammar.la
 LDADD += $(LIBGC_LIBS)
 
+EXTRA_DIST =            \
+   README               \
+   README.atombase
+
+
 
 endif

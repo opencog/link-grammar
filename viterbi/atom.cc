@@ -33,12 +33,14 @@ const string type_name(AtomType t)
 		// case LINK:       return "LINK";
 		case SEQ:        return "SEQ";
 		case SET:        return "SET";
+		case UNIQ:       return "UNIQ";
 		case OR:         return "OR";
 		case AND:        return "AND";
 		case WORD_CSET:  return "WORD_CSET";
 		case WORD_DISJ:  return "WORD_DISJ";
 		case LING:       return "LING";
 		case STATE_TRIPLE: return "STATE_TRIPLE";
+		case RULE:       return "RULE";
 
 	}
 

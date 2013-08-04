@@ -68,7 +68,8 @@ enum AtomType
 	CONNECTOR,  // e.g. S+
 
 	// Link types
-	SET,        // unordered set of children
+	SET,        // unordered multiset of children
+	UNIQ,       // unordered set of children
 	SEQ,        // ordered sequence of children
 	AND,        // ordered AND of all children (order is important!)
 	OR,         // unordered OR of all children

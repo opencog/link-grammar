@@ -9,6 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <unordered_set>
+
 #include "compile-base.h"
 #include "utilities.h"  // needed for assert
 
@@ -130,6 +132,27 @@ Set* Set::add(const Set* other)
 	const OutList& oth = other->get_outgoing_set();
 	o.insert(o.end(), oth.begin(), oth.end());
 	return new Set(o);
+}
+
+// ============================================================
+
+
+OutList Uniq::uniqify(const OutList& ol)
+{
+	std::unordered_set<Atom*> us;
+
+	// force uniqueness by copying into a set, and then back out.
+	// I assume this is faster than sorting!?
+	auto end = ol.end();
+	for (auto it = ol.begin(); it != end; it++)
+		us.insert(*it);
+	
+	OutList ret;
+	auto usend = us.end();
+	for (auto ut = us.begin(); ut != usend; ut++)
+		ret.push_back(*ut);
+	
+	return ret;
 }
 
 // ============================================================
