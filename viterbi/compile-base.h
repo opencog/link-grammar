@@ -130,6 +130,7 @@ class Seq : public Set
       virtual Seq* clone() const { return new Seq(*this); }
 
 		Seq* append(Atom* a) const { return dynamic_cast<Seq*>(Link::append(a)); }
+
 	protected:
 		/// The sole purpose of this ctor is to allow inheritance.
 		Seq(AtomType t)

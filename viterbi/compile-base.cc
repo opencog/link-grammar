@@ -136,12 +136,12 @@ Set* Set::add(const Set* other)
 
 // ============================================================
 
-
+/// Utility to create a list of uniq items, given a non-unique list.
 OutList Uniq::uniqify(const OutList& ol)
 {
 	std::unordered_set<Atom*> us;
 
-	// force uniqueness by copying into a set, and then back out.
+	// Force uniqueness by copying into a set, and then back out.
 	// I assume this is faster than sorting!?
 	auto end = ol.end();
 	for (auto it = ol.begin(); it != end; it++)
