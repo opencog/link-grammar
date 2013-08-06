@@ -33,6 +33,9 @@ class Index : public Node
 		Index(int a, int b, const TV& tv = TV())
 			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%d, %d", a, b); buff;}), tv)
 		{}
+		Index(unsigned int a, int b, int c, const TV& tv = TV())
+			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%u, %d, %d", a, b, c); buff;}), tv)
+		{}
 };
 
 /// Unordered sequence
