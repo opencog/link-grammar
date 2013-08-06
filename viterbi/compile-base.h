@@ -57,6 +57,12 @@ class Set : public Link
 		Set(Atom* a, Atom* b, Atom* c, const TV& tv = TV())
 			: Link(SET, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}), tv)
 		{}
+		Set(Atom* a, Atom* b, Atom* c, Atom* d, const TV& tv = TV())
+			: Link(SET, ({OutList o(1,a); o.push_back(b); o.push_back(c); o.push_back(d); o;}), tv)
+		{}
+		Set(Atom* a, Atom* b, Atom* c, Atom* d, Atom* e, const TV& tv = TV())
+			: Link(SET, ({OutList o(1,a); o.push_back(b); o.push_back(c); o.push_back(d); o.push_back(e); o;}), tv)
+		{}
 
 	protected:
 		/// The sole purpose of this ctor is to allow inheritance.
@@ -75,6 +81,12 @@ class Set : public Link
 		{}
 		Set(AtomType t, Atom* a, Atom* b, Atom* c, const TV& tv = TV())
 			: Link(t, ({OutList o(1,a); o.push_back(b); o.push_back(c); o;}), tv)
+		{}
+		Set(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, const TV& tv = TV())
+			: Link(t, ({OutList o(1,a); o.push_back(b); o.push_back(c); o.push_back(d); o;}), tv)
+		{}
+		Set(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, Atom* e, const TV& tv = TV())
+			: Link(t, ({OutList o(1,a); o.push_back(b); o.push_back(c); o.push_back(d); o.push_back(e); o;}), tv)
 		{}
 
 	public:
