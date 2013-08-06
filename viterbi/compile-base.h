@@ -21,6 +21,19 @@ namespace atombase {
 // These are here purely for C++ programming convenience; the true
 // structure that matters is the dynamic run-time (hyper-)graphs.
 
+/// Index, ID
+/// Identification Node, holds one or several numeric ID values.
+/// Intended primarily for debugging.
+class Index : public Node
+{
+	public:
+		Index(int a, const TV& tv = TV())
+			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%d", a); buff;}), tv)
+		{}
+		Index(int a, int b, const TV& tv = TV())
+			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%d, %d", a, b); buff;}), tv)
+		{}
+};
 
 /// Unordered sequence
 /// A Set inherits fom Link, and is an unordered set of zero or more

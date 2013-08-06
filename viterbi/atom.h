@@ -60,19 +60,24 @@ class TV
 // Atom types.  Right now an enum, but maybe should be dynamic!?
 enum AtomType
 {
-	// Node types
+	// Generic Node types
 	NODE = 1,
+	INDEX,
+
+	// Viterbi-specific Node types
 	WORD,       // a word
 	LING_TYPE,  // a pair of merged connectors (LG LINK TYPE)
 	// META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
 	CONNECTOR,  // e.g. S+
 
-	// Link types
+	// Generic Link types
 	SET,        // unordered multiset of children
 	UNIQ,       // unordered set of children
 	SEQ,        // ordered sequence of children
 	AND,        // ordered AND of all children (order is important!)
 	OR,         // unordered OR of all children
+
+	// Viterbi-specific Link types
 	WORD_CSET,  // word, followed by a set of connectors for that word.
 	WORD_DISJ,  // word, followed by a single disjunct for that word.
 	LING,       // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
