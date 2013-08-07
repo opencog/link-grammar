@@ -178,17 +178,12 @@ public class LGService
 		parseResult.setDictVersion(LinkGrammar.getDictVersion());
 		parseResult.numSkippedWords = LinkGrammar.getNumSkippedWords();
 
-		/* All three of these are deprecated, and should be removed someday. */
 		parseResult.words = new String[LinkGrammar.getNumWords()];
-		parseResult.entityFlags = new boolean[LinkGrammar.getNumWords()];
-		parseResult.pastTenseFlags = new boolean[LinkGrammar.getNumWords()];
 		for (int i = 0; i < parseResult.words.length; i++)
 		{
-			String word = parseResult.words[i] = LinkGrammar.getWord(i);
-			parseResult.entityFlags[i] = LinkGrammar.isEntity(word);
-			parseResult.pastTenseFlags[i] = LinkGrammar.isPastTenseForm(word);
+			// XXX fixme, should get words from linkage ... 
+			parseResult.words[i] = LinkGrammar.getWord(i);
 		}
-
 
 		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());
 		for (int li = 0; li < maxLinkages; li++)
@@ -235,8 +230,6 @@ public class LGService
 		StringBuffer buf = new StringBuffer();
 		buf.append("{\"tokens\":[],");
 		buf.append("\"numSkippedWords\":0,");
-		buf.append("\"entity\":[],");      // deprecated
-		buf.append("\"pastTense\":[],");   // deprecated
 		buf.append("\"linkages\":[],");
 		buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\",");
 		buf.append("\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"}");
@@ -298,27 +291,7 @@ public class LGService
 				buf.append(",");
 		}
 		buf.append("],\"numSkippedWords\":" + LinkGrammar.getNumSkippedWords());
-		buf.append(",\"entity\":[");
-		boolean first = true;
-		for (int i = 0; i < numWords; i++)
-			if (LinkGrammar.isEntity(LinkGrammar.getWord(i)))
-			{
-				if (!first)
-					buf.append(",");
-				first = false;
-				buf.append(Integer.toString(i));
-			}
-		buf.append("],\"pastTense\":[");
-		first = true;
-		for (int i = 0; i < numWords; i++)
-			if (LinkGrammar.isPastTenseForm(LinkGrammar.getWord(i).toLowerCase()))
-			{
-				if (!first)
-					buf.append(",");
-				first = false;
-				buf.append(Integer.toString(i));
-			}
-		buf.append("],\"linkages\":[");
+		buf.append(",\"linkages\":[");
 		for (int li = 0; li < maxLinkages; li++)
 		{
 			LinkGrammar.makeLinkage(li);
