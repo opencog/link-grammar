@@ -509,28 +509,4 @@ int word_contains(Dictionary dict, const char * word, const char * macro)
 	return ret;
 }
 
-/**
- * @deprecated -- past-tense verbs are tagged with .v-d or .w-d or .q-d
- * subscripts. use those instead to figure out if a verb is past tense.
- */
-int dictionary_is_past_tense_form(Dictionary dict, const char * str)
-{
-	return 0;
-}
-
-#define ENTITY_MARKER          "<marker-entity>"
-/**
- * dictionary_is_entity - Return true if word is entity.
- * Entities are proper names (geographical names,
- * names of people), street addresses, phone numbers,
- * etc.
- */
-/* This is exported to public API (for Java) */
-int dictionary_is_entity(Dictionary dict, const char * str)
-{
-	if (word_contains(dict, str, ENTITY_MARKER) == 1)
-		return 1;
-	return 0;
-}
-
 /* ========================= END OF FILE ============================== */

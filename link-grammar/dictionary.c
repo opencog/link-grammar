@@ -426,15 +426,3 @@ int dictionary_get_max_cost(Dictionary dict)
 	return dict->max_cost;
 }
 
-/**
- * Support function for the old, deprecated API.
- * Do not use this function in new developemnt!
- */
-Dictionary
-dictionary_create(const char * dict_name, const char * pp_name,
-                  const char * cons_name, const char * affix_name)
-{
-	init_memusage();
-	return dictionary_six("en", dict_name, pp_name, cons_name, affix_name, NULL);
-}
-

@@ -507,21 +507,6 @@ MS_DEPRECATED link_public_api(void)
 MS_DEPRECATED link_public_api(int)
      parse_options_get_display_union(Parse_Options opts) GNUC_DEPRECATED;
 
-/* Fails to include the regex file name, which is needed in any
- * practical application.  Thus, this call is deprecated.
- * XXX TBD: this will go away in Version 5.0. */
-MS_DEPRECATED link_public_api(Dictionary)
-     dictionary_create(const char * dict_name,
-                       const char * pp_name,
-                       const char * cons_name,
-                       const char * affix_name) GNUC_DEPRECATED;
-
-/* Both are deprecated, exported only for backwards-compat w/Java API. */
-MS_DEPRECATED link_public_api(int)
-     dictionary_is_past_tense_form(Dictionary dict, const char * str) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(int)
-     dictionary_is_entity(Dictionary dict, const char * str) GNUC_DEPRECATED;
-
 /* For languages with regular prefix/suffix structure, this
  * function returns misleading information. Do not use it
  * in new code! use linkage_get_word() instead! */
@@ -538,19 +523,6 @@ MS_DEPRECATED link_public_api(const char *)
 MS_DEPRECATED link_public_api(int)
      sentence_nth_word_has_disjunction(Sentence sent, int i) GNUC_DEPRECATED;
 
-/* This is not intended for general use; its specific to the internals
- * of the command-line client.  It was exported by accident.
- * XXX TBD: make this go away in Version 5.0. */
-link_public_api(int)
-     issue_special_command(const char * line, Parse_Options opts, Dictionary dict);
-
-/* These are obsolete, and do nothing.
- * XXX TBD: make these go away in Version 5.0. */
-MS_DEPRECATED link_public_api(void)
-     lperror_clear(void) GNUC_DEPRECATED;
-
-extern link_public_api(int) lperrno;
-extern link_public_api(char) lperrmsg[];
 
 LINK_END_DECLS
 

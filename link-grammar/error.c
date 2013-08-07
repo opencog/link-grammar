@@ -75,17 +75,3 @@ void prt_error(const char *fmt, ...)
 }
 
 /* ============================================================ */
-/* These are deprecated, obsolete, and unused, but are still here 
- * because these are exported in the public API. Do not use these.
- */
-DLLEXPORT int  lperrno = 0;
-DLLEXPORT char lperrmsg[1];
-
-extern void lperror_clear(void);
-void lperror_clear(void)
-{
-	lperrmsg[0] = 0x0;
-	lperrno = 0;
-}
-
-/* ============================================================ */
