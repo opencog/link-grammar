@@ -32,25 +32,8 @@ public class ParseResult implements Iterable<Linkage>
 	String dictVersion;
 	String text;
 	String [] words;
-	boolean [] entityFlags;
-	boolean [] pastTenseFlags;
 	List<Linkage> linkages = new ArrayList<Linkage>();
 	int numSkippedWords;
-
-	/**
-	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
-	 * look at the subscript instead, to see if a verb is past-tense.
-	 * @deprecated
-	 */
-	@Deprecated public boolean isPastTenseForm(int i)
-	{
-		return pastTenseFlags[i];
-	}
-
-	@Deprecated public boolean isEntity(int i)
-	{
-		return entityFlags[i];
-	}
 
 	public Iterator<Linkage> iterator()
 	{
