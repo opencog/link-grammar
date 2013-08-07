@@ -27,35 +27,35 @@ import java.util.concurrent.TimeUnit;
 /**
  * A simple server implementation for running Link Grammar as a
  * standalone server. The server accepts parsing requests and returns
- * the result as a JSON formatted string (see this 
+ * the result as a JSON formatted string (see this
  * <a href="http://www.json.org">JSON</a> website for more information).
  * There is no session maintained between client and server, it's a
  * simple, stateless, single round-trip, request-response protocol.
- * 
+ *
  * Requests consist of a bag of parameters separated by the null '\0'
- * character. Each request must be terminated with the newline '\n' 
+ * character. Each request must be terminated with the newline '\n'
  * character. Each parameter has the form <em>name:value\0</em> where
  * <em>name</em> and <em>value</em> can contain any character except
  * '\0' and '\n'. The following parameters are recognized:
- * 
+ *
  * <ul>
  * <li><b>maxCost</b> - ??</li>
  * <li><b>storeConstituentString</b> - whether to return the constituent
- *      string for each Linkage as part of the result.</li> 
+ *      string for each Linkage as part of the result.</li>
  * <li><b>maxLinkages</b> - maximum number of parses to return in the
  *      result. Note that this does not affect the parser behavior which
  *      computes all parses anyway.</li>
  * <li><b>maxParseSeconds</b> - ??</li>
  * <li><b>text</b> - The text to parse. Note that it must be stripped
- *      from newlines.</li>   
+ *      from newlines.</li>
  * </ul>
- * 
+ *
  * The server maintains incoming requests in an unbounded queue and
  * handles them in thread pool whose size can be specified at the
  * command line. A thread pool of size > 1 will only work if the Link
- * Grammar version used is thread-safe. 
- * 
- * Execute this class as a main program to view a list of options.   
+ * Grammar version used is thread-safe.
+ *
+ * Execute this class as a main program to view a list of options.
  *
  * @author Borislav Iordanov
  *
@@ -71,11 +71,11 @@ public class LGService
 	// separate copy of the dictionaries, which in unfortunate design.
 	// Nevertheless, we want to avoid initializing before every parse
 	// activity so we maintain a thread local flag and initialize on
-	// demand only. 
+	// demand only.
 	//
 	// The C library itself does not have this restriction; one
 	// dictionary can be shared by many threads. However, the java
-	// bindings do have this restriction; the java bindings were 
+	// bindings do have this restriction; the java bindings were
 	// never designed to be run multi-threaded. XXX This needs to be
 	// fixed.
 	//
@@ -85,7 +85,7 @@ public class LGService
 	//
 	private static ThreadLocal<Boolean> initialized = new ThreadLocal<Boolean>()
 	{ protected Boolean initialValue() { return Boolean.FALSE; } };
-	
+
 	/**
 	 * <p>Return <code>true</code> if LinkGrammar is initialized for the current thread
 	 * and <code>false</code> otherwise.
@@ -94,7 +94,7 @@ public class LGService
 	{
 		return initialized.get();
 	}
-	
+
 	/**
 	 * <p>
 	 * Initialize LinkGrammar for the current is this is not already done. Note that
@@ -113,7 +113,7 @@ public class LGService
 
 	/**
 	 * <p>
-	 * Cleanup allocated memory for use of LinkGrammar in the current thread. 
+	 * Cleanup allocated memory for use of LinkGrammar in the current thread.
 	 * </p>
 	 */
 	public static void close()
@@ -123,27 +123,27 @@ public class LGService
 	}
 
 
-	private static void trace(String s) 
+	private static void trace(String s)
 	{
 		if (verbose)
-			System.out.println("LG " + dateFormatter.format(new java.util.Date()) + " " + s); 
+			System.out.println("LG " + dateFormatter.format(new java.util.Date()) + " " + s);
 	}
 
 	private static boolean getBool(String name, Map<String, String> msg, boolean def)
 	{
 		String x = msg.get(name);
-		return x == null ? def : Boolean.valueOf(x);		
+		return x == null ? def : Boolean.valueOf(x);
 	}
-	
+
 	private static int getInt(String name, Map<String, String> msg, int def)
 	{
 		String x = msg.get(name);
-		return x == null ? def : Integer.parseInt(x);		
+		return x == null ? def : Integer.parseInt(x);
 	}
 
 	/**
 	 * <p>
-	 * Apply configuration parameters to the parser. 
+	 * Apply configuration parameters to the parser.
 	 * </p>
 	 */
 	public static void configure(LGConfig config)
@@ -164,15 +164,15 @@ public class LGService
 	/**
 	 * Assuming <code>LinkGrammar.parse</code> has already been called,
 	 * construct a full <code>ParseResult</code> given the passed in
-	 * configuration. For example, no more that 
+	 * configuration. For example, no more that
 	 * <code>config.getMaxLinkages</code> are returned, etc.
-	 * 
+	 *
 	 * @param config
 	 * @return
 	 */
 	public static ParseResult getAsParseResult(LGConfig config)
 	{
-		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes		
+		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes
 		ParseResult parseResult = new ParseResult();
 		parseResult.setParserVersion(LinkGrammar.getVersion());
 		parseResult.setDictVersion(LinkGrammar.getDictVersion());
@@ -224,16 +224,16 @@ public class LGService
 				linkage.setConstituentString(LinkGrammar.getConstituentString());
 			parseResult.linkages.add(linkage);
 		}
-		return parseResult;		
+		return parseResult;
 	}
-	
+
 	/**
-	 * Construct a JSON formatted result for a parse which yielded 0 linkages. 
+	 * Construct a JSON formatted result for a parse which yielded 0 linkages.
 	 */
 	public static String getEmptyJSONResult(LGConfig config)
 	{
 		StringBuffer buf = new StringBuffer();
-		buf.append("{\"tokens\":[],"); 
+		buf.append("{\"tokens\":[],");
 		buf.append("\"numSkippedWords\":0,");
 		buf.append("\"entity\":[],");      // deprecated
 		buf.append("\"pastTense\":[],");   // deprecated
@@ -242,9 +242,9 @@ public class LGService
 		buf.append("\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"}");
 		return buf.toString();
 	}
-	
+
 	static char[] hex = "0123456789ABCDEF".toCharArray();
-	
+
 	private static String jsonString(String s)
 	{
 		if (s == null)
@@ -252,7 +252,7 @@ public class LGService
 		StringBuffer b = new StringBuffer();
 		b.append("\"");
 		CharacterIterator it = new StringCharacterIterator(s);
-		for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
+		for (char c = it.first(); c != CharacterIterator.DONE; c = it.next())
 		{
 			if (c == '"') b.append("\\\"");
 			else if (c == '\\') b.append("\\\\");
@@ -262,7 +262,7 @@ public class LGService
 			else if (c == '\n') b.append("\\n");
 			else if (c == '\r') b.append("\\r");
 			else if (c == '\t') b.append("\\t");
-			else if (Character.isISOControl(c)) 
+			else if (Character.isISOControl(c))
 			{
 				int n = c;
 				for (int i = 0; i < 4; ++i) {
@@ -270,8 +270,8 @@ public class LGService
 					b.append(hex[digit]);
 					n <<= 4;
 				}
-			} 
-			else 
+			}
+			else
 			{
 				b.append(c);
 			}
@@ -279,18 +279,18 @@ public class LGService
 		b.append("\"");
 		return b.toString();
 	}
-	
+
 	/**
 	 * Format the current parsing result as a JSON string. This method
-	 * assume that <code>LinkGrammar.parse</code> has been called before. 
+	 * assume that <code>LinkGrammar.parse</code> has been called before.
 	 */
 	public static String getAsJSONFormat(LGConfig config)
 	{
 		LinkGrammar.makeLinkage(0); // need to call at least once, otherwise it crashes
 		int numWords = LinkGrammar.getNumWords();
-		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());		
-		StringBuffer buf = new StringBuffer();		
-		buf.append("{\"tokens\":["); 
+		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());
+		StringBuffer buf = new StringBuffer();
+		buf.append("{\"tokens\":[");
 		for (int i = 0; i < numWords; i++)
 		{
 			buf.append(jsonString(LinkGrammar.getWord(i)));
@@ -322,16 +322,16 @@ public class LGService
 		for (int li = 0; li < maxLinkages; li++)
 		{
 			LinkGrammar.makeLinkage(li);
-			buf.append("{\"words\":["); 
+			buf.append("{\"words\":[");
 			for (int i = 0; i < numWords; i++)
 			{
 				buf.append(jsonString(LinkGrammar.getLinkageWord(i)));
 				if (i + 1 < numWords)
 					buf.append(",");
 			}
-			buf.append("], \"disjuncts\":["); 
+			buf.append("], \"disjuncts\":[");
 			for (int i = 0; i < numWords; i++)
-			{				
+			{
 				buf.append(jsonString(LinkGrammar.getLinkageDisjunct(i)));
 				if (i + 1 < numWords)
 					buf.append(",");
@@ -347,8 +347,8 @@ public class LGService
 			if (config.isStoreConstituentString())
 			{
 				buf.append(", \"constituentString\":");
-				buf.append(jsonString(LinkGrammar.getConstituentString()));				
-			}			
+				buf.append(jsonString(LinkGrammar.getConstituentString()));
+			}
 			buf.append(", \"links\":[");
 			int numLinks = LinkGrammar.getNumLinks();
 			for (int i = 0; i < numLinks; i++)
@@ -360,9 +360,9 @@ public class LGService
 				buf.append("\"rightLabel\":" + jsonString(LinkGrammar.getLinkRLabel(i)) + "}");
 				if (i + 1 < numLinks)
 					buf.append(",");
-			}			
+			}
 			buf.append("]");
-			buf.append("}");	
+			buf.append("}");
 			if (li < maxLinkages - 1)
 				buf.append(",");
 		}
@@ -371,11 +371,11 @@ public class LGService
 		buf.append("}");
 		return buf.toString();
 	}
-	
+
 	/**
 	 * A stub method for now for implementing a compact binary format
 	 * for parse results.
-	 * 
+	 *
 	 * @param config
 	 * @return
 	 */
@@ -388,13 +388,13 @@ public class LGService
 		System.arraycopy(buf, 0, result, 0, size);
 		return result;
 	}
-	
+
 	private static Map<String, String> readMsg(Reader in) throws java.io.IOException
 	{
 		int length = 0;
 		char [] buf = new char[1024];
-		for (int count = in.read(buf, length, buf.length - length); 
-		     count > -1; 
+		for (int count = in.read(buf, length, buf.length - length);
+		     count > -1;
 		     count = in.read(buf, length, buf.length - length))
 		{
 			length += count;
@@ -429,10 +429,10 @@ public class LGService
 			}
 		}
 		if (start != -1 || column != -1)
-			throw new RuntimeException("Malformat message:" + new String(buf, 0, length));		
-		return result;		
+			throw new RuntimeException("Malformat message:" + new String(buf, 0, length));
+		return result;
 	}
-	
+
 	private static void handleClient(Socket clientSocket)
 	{
 		init();
@@ -440,12 +440,12 @@ public class LGService
 		PrintWriter out = null;
 		try
 		{
-			trace("Connection accepted from : " + clientSocket.getInetAddress());			
+			trace("Connection accepted from : " + clientSocket.getInetAddress());
 			in = new InputStreamReader(clientSocket.getInputStream());
-			Map<String, String> msg = readMsg(in); 
+			Map<String, String> msg = readMsg(in);
 			if (verbose)
 				trace("Received msg '" + msg + "' from " + clientSocket.getInetAddress());
-			String json = "{}";			
+			String json = "{}";
 			if ("version".equals(msg.get("get"))) // special case msg 'get:version'
 				json = "{\"version\":\"" + LinkGrammar.getVersion() + "\"}";
 			else
@@ -473,7 +473,7 @@ public class LGService
 			out.print('\n');
 			out.print(json);
 			out.print('\n');
-			out.flush();				
+			out.flush();
 			trace("Response written to " + clientSocket.getInetAddress() + ", closing client connection...");
 		}
 		catch (Throwable t)
@@ -487,12 +487,12 @@ public class LGService
 			if (clientSocket != null) try { clientSocket.close(); } catch (Throwable t) { }
 		}
 	}
-	
+
 	/**
 	 * <p>
 	 * Parse a piece of text with the given configuration and return the <code>ParseResult</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param config The configuration to be used. If this is the first time the <code>parse</code>
 	 * method is called within the current thread, the dictionary location (if not <code>null</code>)
 	 * of this parameter will be used to initialize the parser. Otherwise the dictionary location is
@@ -505,11 +505,11 @@ public class LGService
 	{
 		if (!isInitialized())
 		{
-			if (config.getDictionaryLocation() != null && 
+			if (config.getDictionaryLocation() != null &&
 				config.getDictionaryLocation().trim().length() > 0)
 				LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
 
-			if (config.getLanguage() != null && 
+			if (config.getLanguage() != null &&
 				config.getLanguage().trim().length() > 0)
 				LinkGrammar.setLanguage(config.getLanguage());
 		}
@@ -517,7 +517,7 @@ public class LGService
 		LinkGrammar.parse(text);
 		return getAsParseResult(config);
 	}
-	
+
 	public static void main(String [] argv)
 	{
 		int threads = 1;
@@ -526,7 +526,7 @@ public class LGService
 		try
 		{
 			int argIdx = 0;
-			if (argv[argIdx].equals("-verbose")) { verbose = true; argIdx++; }			
+			if (argv[argIdx].equals("-verbose")) { verbose = true; argIdx++; }
 			if (argv[argIdx].equals("-threads")) { threads = Integer.parseInt(argv[++argIdx]); argIdx++; }
 			port = Integer.parseInt(argv[argIdx++]);
 			if (argv.length > argIdx)
@@ -542,24 +542,24 @@ public class LGService
 			System.out.println("\t -threads specifies the number of concurrent threads/clients allowed (default 1) and ");
 			System.out.println("\t 'dictionaryPath' full path to the Link Grammar dictionaries (optional).");
 			System.exit(-1);
-		}	
+		}
 
 		if (dictionaryPath != null)
 		{
 			File f = new File(dictionaryPath);
-			if (!f.exists()) 
+			if (!f.exists())
 			{ System.err.println("Dictionary path " + dictionaryPath + " not found."); System.exit(-1); }
-			else if (!f.isDirectory()) 
+			else if (!f.isDirectory())
 			{ System.err.println("Dictionary path " + dictionaryPath + " not a directory."); System.exit(-1); }
 		}
-		
+
 		System.out.println("Starting Link Grammar Server at port " + port +
-				", with " + threads + " available processing threads and " + 
-				((dictionaryPath == null) ? " with default dictionary location." : 
+				", with " + threads + " available processing threads and " +
+				((dictionaryPath == null) ? " with default dictionary location." :
 					"with dictionary location '" + dictionaryPath + "'."));
-		ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threads, 
+		ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threads,
 		                                                  threads,
-		                                                  Long.MAX_VALUE, 
+		                                                  Long.MAX_VALUE,
 		                                                  TimeUnit.SECONDS,
 		                                                  new LinkedBlockingQueue<Runnable>());
 		try
@@ -570,7 +570,7 @@ public class LGService
 			while (true)
 			{
 				trace("Waiting for client connections...");
-				final Socket clientSocket = serverSocket.accept();				
+				final Socket clientSocket = serverSocket.accept();
 				threadPool.submit(new Runnable() { public void run() { handleClient(clientSocket); } });
 			}
 		}
