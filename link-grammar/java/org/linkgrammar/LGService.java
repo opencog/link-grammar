@@ -227,57 +227,57 @@ public class LGService
 		return parseResult;		
 	}
 	
-    /**
-     * Construct a JSON formatted result for a parse which yielded 0 linkages. 
-     */
-    public static String getEmptyJSONResult(LGConfig config)
-    {
-        StringBuffer buf = new StringBuffer();      
-        buf.append("{\"tokens\":[],"); 
-        buf.append("\"numSkippedWords\":0,");
-        buf.append("\"entity\":[],");      // deprecated
-        buf.append("\"pastTense\":[],");   // deprecated
-        buf.append("\"linkages\":[],");
-        buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\",");
-        buf.append("\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"}");
-        return buf.toString();
-    }
+	/**
+	 * Construct a JSON formatted result for a parse which yielded 0 linkages. 
+	 */
+	public static String getEmptyJSONResult(LGConfig config)
+	{
+		StringBuffer buf = new StringBuffer();
+		buf.append("{\"tokens\":[],"); 
+		buf.append("\"numSkippedWords\":0,");
+		buf.append("\"entity\":[],");      // deprecated
+		buf.append("\"pastTense\":[],");   // deprecated
+		buf.append("\"linkages\":[],");
+		buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\",");
+		buf.append("\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"}");
+		return buf.toString();
+	}
 	
 	static char[] hex = "0123456789ABCDEF".toCharArray();
 	
 	private static String jsonString(String s)
 	{
-	    if (s == null)
-	        return null;
+		if (s == null)
+			return null;
 		StringBuffer b = new StringBuffer();
 		b.append("\"");
-        CharacterIterator it = new StringCharacterIterator(s);
-        for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
-        {
-            if (c == '"') b.append("\\\"");
-            else if (c == '\\') b.append("\\\\");
-            else if (c == '/') b.append("\\/");
-            else if (c == '\b') b.append("\\b");
-            else if (c == '\f') b.append("\\f");
-            else if (c == '\n') b.append("\\n");
-            else if (c == '\r') b.append("\\r");
-            else if (c == '\t') b.append("\\t");
-            else if (Character.isISOControl(c)) 
-            {
-                int n = c;
-                for (int i = 0; i < 4; ++i) {
-                    int digit = (n & 0xf000) >> 12;
-                	b.append(hex[digit]);
-                    n <<= 4;
-                }
-            } 
-            else 
-            {
-            	b.append(c);
-            }
-        }
-        b.append("\"");
-        return b.toString();
+		CharacterIterator it = new StringCharacterIterator(s);
+		for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
+		{
+			if (c == '"') b.append("\\\"");
+			else if (c == '\\') b.append("\\\\");
+			else if (c == '/') b.append("\\/");
+			else if (c == '\b') b.append("\\b");
+			else if (c == '\f') b.append("\\f");
+			else if (c == '\n') b.append("\\n");
+			else if (c == '\r') b.append("\\r");
+			else if (c == '\t') b.append("\\t");
+			else if (Character.isISOControl(c)) 
+			{
+				int n = c;
+				for (int i = 0; i < 4; ++i) {
+					int digit = (n & 0xf000) >> 12;
+					b.append(hex[digit]);
+					n <<= 4;
+				}
+			} 
+			else 
+			{
+				b.append(c);
+			}
+		}
+		b.append("\"");
+		return b.toString();
 	}
 	
 	/**
@@ -331,7 +331,7 @@ public class LGService
 			}
 			buf.append("], \"disjuncts\":["); 
 			for (int i = 0; i < numWords; i++)
-			{			    
+			{				
 				buf.append(jsonString(LinkGrammar.getLinkageDisjunct(i)));
 				if (i + 1 < numWords)
 					buf.append(",");
@@ -364,7 +364,7 @@ public class LGService
 			buf.append("]");
 			buf.append("}");	
 			if (li < maxLinkages - 1)
-			    buf.append(",");
+				buf.append(",");
 		}
 		buf.append("],\"version\":\"" + LinkGrammar.getVersion() + "\"");
 		buf.append(",\"dictVersion\":\"" + LinkGrammar.getDictVersion() + "\"");
@@ -394,8 +394,8 @@ public class LGService
 		int length = 0;
 		char [] buf = new char[1024];
 		for (int count = in.read(buf, length, buf.length - length); 
-			 count > -1; 
-			 count = in.read(buf, length, buf.length - length))
+		     count > -1; 
+		     count = in.read(buf, length, buf.length - length))
 		{
 			length += count;
 			if (length == buf.length)
@@ -456,24 +456,24 @@ public class LGService
 				config.setMaxLinkages(getInt("maxLinkages", msg, config.getMaxLinkages()));
 				config.setMaxParseSeconds(getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
 				configure(config);
-                String text = msg.get("text");
-                if (text != null && text.trim().length() > 0)
-                {
-                    LinkGrammar.parse(text);
-                    if (LinkGrammar.getNumLinkages() > 0)
-                        json = getAsJSONFormat(config);
-                    else
-                        json = getEmptyJSONResult(config);
-                }
-                else
-                    json = getEmptyJSONResult(config);
-            }
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.print(json.length() + 1);
-            out.print('\n');
-            out.print(json);
-            out.print('\n');
-            out.flush();				
+				String text = msg.get("text");
+				if (text != null && text.trim().length() > 0)
+				{
+					LinkGrammar.parse(text);
+					if (LinkGrammar.getNumLinkages() > 0)
+						json = getAsJSONFormat(config);
+					else
+						json = getEmptyJSONResult(config);
+				}
+				else
+					json = getEmptyJSONResult(config);
+			}
+			out = new PrintWriter(clientSocket.getOutputStream(), true);
+			out.print(json.length() + 1);
+			out.print('\n');
+			out.print(json);
+			out.print('\n');
+			out.flush();				
 			trace("Response written to " + clientSocket.getInetAddress() + ", closing client connection...");
 		}
 		catch (Throwable t)
@@ -558,10 +558,10 @@ public class LGService
 				((dictionaryPath == null) ? " with default dictionary location." : 
 					"with dictionary location '" + dictionaryPath + "'."));
 		ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threads, 
-				  											   threads,
-				  											   Long.MAX_VALUE, 
-				  											   TimeUnit.SECONDS,
-				  											   new LinkedBlockingQueue<Runnable>());
+		                                                  threads,
+		                                                  Long.MAX_VALUE, 
+		                                                  TimeUnit.SECONDS,
+		                                                  new LinkedBlockingQueue<Runnable>());
 		try
 		{
 			if (dictionaryPath != null)
