@@ -394,15 +394,21 @@ public class LGService
 			else if (c == '\0')
 			{
 				if (start == -1 || column == -1)
-					throw new RuntimeException("Malformat message:" + new String(buf, 0, length));
+					throw new RuntimeException("Malformed message:" + new String(buf, 0, length));
 				String name = new String(buf, start, column - start);
 				String value = new String(buf, column + 1, offset - column - 1);
 				result.put(name, value);
 				start = column = -1;
 			}
 		}
+		if (start != -1 && column != -1) {
+			String name = new String(buf, start, column - start);
+			String value = new String(buf, column + 1, length - column - 1);
+			result.put(name, value);
+			start = column = -1;
+		}
 		if (start != -1 || column != -1)
-			throw new RuntimeException("Malformat message:" + new String(buf, 0, length));
+			throw new RuntimeException("Malformed message:" + new String(buf, 0, length));
 		return result;
 	}
 
