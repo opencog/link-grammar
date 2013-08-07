@@ -416,6 +416,35 @@ JAVA bindings:
       ./configure --disable-java-bindings
 
 
+Using JAVA
+----------
+   This release also contains java code that implements a client and
+   network server, so that link-grammar can be used over tcp/ip.
+   A single server can respond to multiple clients.   The client-server
+   protocol is JSON.  The client and server code will be built if 
+   Apache 'ant' is installed.
+
+   The server can be started by saying:
+
+      java -classpath linkgrammar.jar org.linkgrammar.LGService 1234
+
+   The above starts the server on port 1234. It the port is ommitted,
+   help on other command options is printed.
+
+   The server can be contacted directly via tcpip; for example:
+
+     telnet localhost 1234
+
+   (Alternately, use netcat instead of telnet). After connecting, type
+   in:
+
+     text:  this is an example sentence to parse
+
+   The returned bytes will be a JSON message providing teh parse to
+   the sentence.
+
+
+
 Spell Checking:
 ---------------
    The parser will run a spell-checker at an early stage, if it
