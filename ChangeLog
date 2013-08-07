@@ -3,6 +3,8 @@ Version 4.7.15 (xxx 2013)
  * Support bulleted, numbered lists.
  * New link types from Lian Ruiting, for identifying the head-verb.
  * Java: fix bug when totalling WordNet word-sense score.
+ * Java: add info to README about using the JSON parse server.
+ * Java: remove many deprecated functions.
 
 Version 4.7.14 (20 June 2013)
  * Fix build break on MacOSX

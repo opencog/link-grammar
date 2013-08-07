@@ -618,18 +618,6 @@ Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls
 
 /*
  * Class:      LinkGrammar
- * Method:     linkageAndCost
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL
-Java_org_linkgrammar_LinkGrammar_getLinkageAndCost(JNIEnv *env, jclass cls)
-{
-	per_thread_data *ptd = get_ptd(env, cls);
-	return sentence_and_cost(ptd->sent, ptd->cur_linkage);
-}
-
-/*
- * Class:      LinkGrammar
  * Method:     linkageDisjunctCost
  * Signature: ()I
  */
@@ -768,34 +756,3 @@ Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 	return j;
 }
 
-/*
- * Class:      LinkParser
- * Method:     isPastTenseForm
- * Signature: (Ljava/lang/String;)Z
- *
- * @deprecated -- past-tense verbs are tagged with .v-d or .w-d or .q-d
- * subscripts. use those instead to figure out if a verb is past tense.
- */
-JNIEXPORT jboolean JNICALL
-Java_org_linkgrammar_LinkGrammar_isPastTenseForm(JNIEnv *env, jclass cls, jstring str)
-{
-	return FALSE;
-}
-
-/*
- * Class:      LinkParser
- * Method:     isEntity
- * Signature: (Ljava/lang/String;)Z
- */
-JNIEXPORT jboolean JNICALL
-Java_org_linkgrammar_LinkGrammar_isEntity(JNIEnv *env, jclass cls, jstring str)
-{
-	jboolean rv = FALSE;
-
-	per_thread_data *ptd = get_ptd(env, cls);
-	const char *cStr = (*env)->GetStringUTFChars(env,str,0);
-	if (dictionary_is_entity(ptd->dict, cStr) == 1)
-		rv = TRUE;
-	(*env)->ReleaseStringUTFChars(env,str,cStr);
-	return rv;
-}

@@ -109,10 +109,5 @@ public class LinkGrammar
     public static native String getLinkageSense(int word, int sense);
 
     public static native double getLinkageSenseScore(int word, int sense);
-
-    // OTHER UTILITY C FUNCTIONS
-    @Deprecated public static native boolean isPastTenseForm(String word);
-
-    @Deprecated public static native boolean isEntity(String word);
 }
 
