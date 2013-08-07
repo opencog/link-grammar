@@ -101,36 +101,6 @@ public class ParseResult implements Iterable<Linkage>
 		this.words = words;
 	}
 
-	@Deprecated public boolean[] getEntityFlags()
-	{
-		return entityFlags;
-	}
-
-	@Deprecated public void setEntityFlags(boolean[] entityFlags)
-	{
-		this.entityFlags = entityFlags;
-	}
-
-	/**
-	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
-	 * look at the subscript instead, to see if a verb is past-tense.
-	 * @deprecated
-	 */
-	@Deprecated public boolean[] getPastTenseFlags()
-	{
-		return pastTenseFlags;
-	}
-
-	/**
-	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
-	 * look at the subscript instead, to see if a verb is past-tense.
-	 * @deprecated
-	 */
-	@Deprecated public void setPastTenseFlags(boolean[] pastTenseFlags)
-	{
-		this.pastTenseFlags = pastTenseFlags;
-	}
-
 	public int getNumSkippedWords()
 	{
 		return numSkippedWords;
