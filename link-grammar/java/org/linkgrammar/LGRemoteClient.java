@@ -48,14 +48,6 @@ public class LGRemoteClient
         ParseResult result = new ParseResult();
         result.setParserVersion((String)top.get("version"));
         result.setWords(((List<String>)(top.get("tokens"))).toArray(new String[0]));
-        boolean [] A = new boolean[result.getWords().length];
-        for (Long idx : ((List<Long>)top.get("entity")))
-            A[idx.intValue()] = true;
-        result.setEntityFlags(A);
-        A = new boolean[result.getWords().length];
-        for (Long idx : ((List<Long>)top.get("pastTense")))
-            A[idx.intValue()] = true;
-        result.setPastTenseFlags(A);
         result.setNumSkippedWords(((Number)top.get("numSkippedWords")).intValue());
         for (Map x : (List<Map>)top.get("linkages"))
         {
