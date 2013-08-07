@@ -11,10 +11,10 @@
 package org.linkgrammar;
 
 /**
- * Represents a <em>Link Grammar</em> link as part of a parse result. 
+ * Represents a <em>Link Grammar</em> link as part of a parse result.
  * Link objects contain the indices of the word they link to as well
  * as an identifier of the type of link and label for the left and
- * right connectors.   
+ * right connectors.
  *
  * @author Borislav Iordanov
  *
@@ -23,7 +23,7 @@ public class Link
 {
 	private int left, right;
 	private String label, leftLabel, rightLabel;
-	
+
 	public int getLeft()
 	{
 		return left;
@@ -63,5 +63,5 @@ public class Link
 	public void setRightLabel(String rightLabel)
 	{
 		this.rightLabel = rightLabel;
-	}	
+	}
 }

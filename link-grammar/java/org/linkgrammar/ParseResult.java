@@ -14,13 +14,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 
+ *
  * <p>
  * Represents the result of parsing a piece of text. The result
  * consists of some global meta information about the whole parse
  * and a list of <code>Linkage</code>s returned by the parser. The
  * original parsed text is available as the <code>text</code> attribute
- * and a tokenized version as the <code>String[] words</code> attribute.  
+ * and a tokenized version as the <code>String[] words</code> attribute.
  * </p>
  *
  * @author Borislav Iordanov
@@ -36,7 +36,7 @@ public class ParseResult implements Iterable<Linkage>
 	boolean [] pastTenseFlags;
 	List<Linkage> linkages = new ArrayList<Linkage>();
 	int numSkippedWords;
-	
+
 	/**
 	 * past-tense verbs have a subscript of .v-d, .w-d or .q-d
 	 * look at the subscript instead, to see if a verb is past-tense.
@@ -46,12 +46,12 @@ public class ParseResult implements Iterable<Linkage>
 	{
 		return pastTenseFlags[i];
 	}
-	
+
 	@Deprecated public boolean isEntity(int i)
 	{
 		return entityFlags[i];
 	}
-	
+
 	public Iterator<Linkage> iterator()
 	{
 		return linkages.iterator();
@@ -61,7 +61,7 @@ public class ParseResult implements Iterable<Linkage>
 	{
 		return linkages;
 	}
-	
+
 	public String getText()
 	{
 		return text;
@@ -83,7 +83,7 @@ public class ParseResult implements Iterable<Linkage>
 	{
 		return words[i];
 	}
-	
+
 	/**
 	 * Use Linkage.getWords instead.
 	 *
@@ -149,7 +149,7 @@ public class ParseResult implements Iterable<Linkage>
 	public void setParserVersion(String parserVersion)
 	{
 		this.parserVersion = parserVersion;
-	}	
+	}
 
 	public String getDictVersion()
 	{
@@ -159,5 +159,5 @@ public class ParseResult implements Iterable<Linkage>
 	public void setDictVersion(String dictVersion)
 	{
 		this.dictVersion = dictVersion;
-	}	
+	}
 }

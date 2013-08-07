@@ -18,7 +18,7 @@ import java.util.List;
  * returned by the Link Grammar parser. Each <code>Linkage</code>
  * is defined by a list of <code>Link</code>s between the tokens
  * in a sentence.  A <code>Linkage</code> also has some metadata
- *  associated with it, e.g. for various cost measures. 
+ *  associated with it, e.g. for various cost measures.
  *
  * @author Borislav Iordanov
  */
@@ -33,22 +33,22 @@ public class Linkage implements Iterable<Link>
 	private int disjunctCost;
 	private int linkCost;
 	private int numViolations;
-	
+
 	public List<Link> getLinks()
 	{
 		return links;
 	}
-	
+
 	public Iterator<Link> iterator()
 	{
 		return links.iterator();
 	}
-	
+
 	public String disjunctAt(int i)
 	{
 		return disjuncts[i];
 	}
- 
+
 	public String[] getDisjuncts()
 	{
 		return disjuncts;
@@ -63,7 +63,7 @@ public class Linkage implements Iterable<Link>
 	{
 		return words[i];
 	}
- 
+
 	public String[] getWords()
 	{
 		return words;
@@ -132,5 +132,5 @@ public class Linkage implements Iterable<Link>
 	public void setConstituentString(String constituentString)
 	{
 		this.constituentString = constituentString;
-	}	
+	}
 }

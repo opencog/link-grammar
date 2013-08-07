@@ -13,7 +13,7 @@ package org.linkgrammar;
  * A plain Java bean to hold configuration of the Link Grammar parser.
  * Some configuration parameters are not really passed onto the parser,
  * but applied only when constructing a <code>ParseResult</code>. Those
- * are <code>maxLinkages</code> and <code>allowSkippedWords</code>. 
+ * are <code>maxLinkages</code> and <code>allowSkippedWords</code>.
  *
  * @author Borislav Iordanov
  */
@@ -26,9 +26,9 @@ public class LGConfig
 	private String dictionaryLocation = null;
 	private String language = null;
 
-	// mis-named; if flag is set, then a load is done, 
+	// mis-named; if flag is set, then a load is done,
 	// not a store.
-	private boolean storeConstituentString = true; 
+	private boolean storeConstituentString = true;
 	private boolean loadSense = false;
 	
 	public int getMaxLinkages()
@@ -80,7 +80,7 @@ public class LGConfig
 		language = l;
 	}
 
-	// mis-named; if flag is set, then a load is done, 
+	// mis-named; if flag is set, then a load is done,
 	// not a store.
 	public boolean isStoreConstituentString()
 	{

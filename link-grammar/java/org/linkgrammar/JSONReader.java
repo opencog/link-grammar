@@ -56,10 +56,10 @@ public class JSONReader
 
     private void error(String msg)
     {
-        throw new RuntimeException("JSON parse error near position " + 
+        throw new RuntimeException("JSON parse error near position " +
                                    it.getIndex() + ":" + msg);
     }
-    
+
     private char next()
     {
         c = it.next();
@@ -193,13 +193,13 @@ public class JSONReader
     private boolean isValue(Object x)
     {
         return x == null ||
-               x instanceof Boolean || 
-               x instanceof String || 
+               x instanceof Boolean ||
+               x instanceof String ||
                x instanceof Number ||
                x instanceof Map<?,?> ||
                x instanceof List<?>;
     }
-    
+
     private Object object()
     {
         Map<Object, Object> ret = new HashMap<Object, Object>();
@@ -210,18 +210,18 @@ public class JSONReader
                 error("Expecting a string as key in object, but got '" + key + "'");
             Object colon = read();
             if (colon != COLON)
-                error("Expecting a colon, but found '" + 
+                error("Expecting a colon, but found '" +
                       colon + "' after object key '" + key + "'");
             Object value = read();
             if (!isValue(value))
-                error("Unexpected value in object with key '" + key + "' -- '" + value + 
+                error("Unexpected value in object with key '" + key + "' -- '" + value +
                       "', expecting boolean, number string, array or object.");
             ret.put(key, value);
             key = read();
             if (key == COMMA)
                 key = read();
             else if (key != OBJECT_END)
-                error("Unexpected token in object '" + key + "', expecting comma or }.");                
+                error("Unexpected token in object '" + key + "', expecting comma or }.");
         }
         return ret;
     }
@@ -233,14 +233,14 @@ public class JSONReader
         while (value != ARRAY_END)
         {
             if (!isValue(value))
-                error("Unexpected value in array '" + value + 
+                error("Unexpected value in array '" + value +
                       "', expecting boolean, number string, array or object.");
             ret.add(value);
             value = read();
             if (value == COMMA)
                 value = read();
             else if (value != ARRAY_END)
-                error("Unexpected token in array '" + 
+                error("Unexpected token in array '" +
                       value + "', expecting comma or ].");
         }
         return ret;

@@ -15,18 +15,18 @@ import java.util.Map;
  * method to call is {@link parse} which produces a {@link ParseResult}. At
  * a minimum, the <code>hostname</code> and <code>port</code> properties
  * must be set beforehand. Configuration settings of the remote parser itself
- * are specified with the <code>config</code> property. 
+ * are specified with the <code>config</code> property.
  * </p>
- * 
+ *
  * <p>
  * This client is persistent in its attempts to perform a parse. By default
  * it will keep trying to connect to a server indefinitely (unless the host is
  * unknown). To change that,
  * set the <code>connectRetryCount</code> property. Also, if call to the server
  * fails for whatever reason, it will retry at least once. The increase the number
- * of retries, set the <code>parseRetryCount</code> property. 
+ * of retries, set the <code>parseRetryCount</code> property.
  * </p>
- * 
+ *
  * @author Borislav Iordanov
  *
  */
@@ -59,7 +59,7 @@ public class LGRemoteClient
         result.setNumSkippedWords(((Number)top.get("numSkippedWords")).intValue());
         for (Map x : (List<Map>)top.get("linkages"))
         {
-            Linkage linkage = new Linkage();            
+            Linkage linkage = new Linkage();
             linkage.setAndCost(((Number)x.get("andCost")).intValue());
             linkage.setDisjunctCost(((Number)x.get("disjunctCost")).intValue());
             linkage.setLinkCost(((Number)x.get("linkageCost")).intValue());
@@ -83,7 +83,7 @@ public class LGRemoteClient
         }
         return result;
     }
-    
+
     private String makeLGRequest(String text)
     {
         if (config != null)
@@ -95,25 +95,25 @@ public class LGRemoteClient
         else
             return "text:" + text + "\0";
     }
-    
+
     private String readResponse(BufferedReader in, int size) throws IOException
     {
-        char [] buf = new char[size];       
+        char [] buf = new char[size];
         for (int count = 0; count < size; )
             count += in.read(buf, count, size-count);
         return new String(buf, 0, size);
     }
-    
+
     private String callParser(String request) throws InterruptedException, IOException
     {
         if (hostname == null || hostname.length() == 0 || port <= 1024)
             throw new RuntimeException("No hostname for remote parser or invalid port number < 1024");
-        
+
         //
         // Connect:
         //
         Socket socket = null;
-        
+
         for (int i = 0; i < connectRetryCount && socket == null; i++)
         {
             try
@@ -131,19 +131,19 @@ public class LGRemoteClient
             if (socket == null)
                 Thread.sleep(connectRetryWait);
         }
-        
+
         if (socket == null)
             throw new RuntimeException("Failed to connect to " + hostname + ":" + port);
-        
+
         //
         // Call parser:
         //
-        PrintWriter out = null; 
+        PrintWriter out = null;
         BufferedReader in = null;
         try
         {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));            
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out.print(request);
             out.print('\n');
             out.flush();
@@ -155,11 +155,11 @@ public class LGRemoteClient
         finally
         {
             if (out != null) try { out.close(); } catch (Throwable t) { }
-            if (in != null) try { in.close(); } catch (Throwable t) { } 
+            if (in != null) try { in.close(); } catch (Throwable t) { }
             try { socket.close(); } catch (Throwable t) { }
         }
     }
-    
+
     /**
      * <p>Return the link grammar version. A call to the server is made to
      * obtain the version which is henceforth cached.</p>
@@ -187,18 +187,18 @@ public class LGRemoteClient
         }
         return parserVersion;
     }
-        
+
     public ParseResult parse(String sentence) throws InterruptedException
     {
         String parserResponse = null;
         for (int i = 0; i < parseRetryCount && parserResponse == null; i++)
             try { parserResponse = callParser(makeLGRequest(sentence)); }
-            catch (IOException ex) 
-            { 
+            catch (IOException ex)
+            {
                 if (i == 0) // Trace exception only on the first failure.
                 {
-                    System.err.println("Link grammar called failed on '" + 
-                                       sentence + "'" + ", will retry " + 
+                    System.err.println("Link grammar called failed on '" +
+                                       sentence + "'" + ", will retry " +
                                        Integer.toString(parseRetryCount - 1) +
                                        " more time.");
                     ex.printStackTrace();

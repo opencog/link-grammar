@@ -181,7 +181,7 @@ public class LGService
 		parseResult.words = new String[LinkGrammar.getNumWords()];
 		for (int i = 0; i < parseResult.words.length; i++)
 		{
-			// XXX fixme, should get words from linkage ... 
+			// XXX fixme, should get words from linkage ...
 			parseResult.words[i] = LinkGrammar.getWord(i);
 		}
 
