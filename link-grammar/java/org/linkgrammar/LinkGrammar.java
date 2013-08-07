@@ -86,8 +86,6 @@ public class LinkGrammar
 
     public static native int getLinkageNumViolations();
 
-    @Deprecated public static native int getLinkageAndCost();
-
     public static native int getLinkageDisjunctCost();
 
     public static native int getLinkageLinkCost();

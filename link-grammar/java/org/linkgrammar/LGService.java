@@ -190,7 +190,6 @@ public class LGService
 		{
 			LinkGrammar.makeLinkage(li);
 			Linkage linkage = new Linkage();
-			linkage.setAndCost(LinkGrammar.getLinkageAndCost());
 			linkage.setDisjunctCost(LinkGrammar.getLinkageDisjunctCost());
 			linkage.setLinkCost(LinkGrammar.getLinkageLinkCost());
 			linkage.setLinkedWordCount(LinkGrammar.getNumWords());
@@ -309,9 +308,7 @@ public class LGService
 				if (i + 1 < numWords)
 					buf.append(",");
 			}
-			buf.append("], \"andCost\":");
-			buf.append(Integer.toString(LinkGrammar.getLinkageAndCost()));
-			buf.append(", \"disjunctCost\":");
+			buf.append("], \"disjunctCost\":");
 			buf.append(Integer.toString(LinkGrammar.getLinkageDisjunctCost()));
 			buf.append(", \"linkageCost\":");
 			buf.append(Integer.toString(LinkGrammar.getLinkageLinkCost()));
@@ -515,11 +512,14 @@ public class LGService
 		{
 			if (argv.length > 0)
 				ex.printStackTrace(System.err);
-			System.out.println("Syntax: java org.linkgrammar.LGService [-verbose] [-threads n] port [dictionaryPath]");
-			System.out.println("\t where 'port' is the TCP port the service should listen to and");
-			System.out.println("\t -verbose forces tracing of every message received and");
-			System.out.println("\t -threads specifies the number of concurrent threads/clients allowed (default 1) and ");
-			System.out.println("\t 'dictionaryPath' full path to the Link Grammar dictionaries (optional).");
+			System.out.println("Usage: java org.linkgrammar.LGService [-verbose] [-threads n] port [dictPath]");
+			System.out.println("Start a link-grammar parse server on tcp/ip port.  The server returns JSON-");
+			System.out.println("formated parse results.  Socket input should be a single sentence to parse,");
+			System.out.println("preceeded by the identifier \"text:\".\n");
+			System.out.println("  'port'      The TCP port the service should listen to.");
+			System.out.println("  -verbose    Generate verbose output.");
+			System.out.println("  -threads    Specify number of concurrent threads/clients allowed (default 1).");
+			System.out.println("  'dictPath'  Full path to the Link-Grammar dictionaries.");
 			System.exit(-1);
 		}
 

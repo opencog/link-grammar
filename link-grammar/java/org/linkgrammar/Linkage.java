@@ -29,7 +29,6 @@ public class Linkage implements Iterable<Link>
 	private String [] words;
 	private String constituentString;
 	private int linkedWordCount;
-	private int andCost;
 	private int disjunctCost;
 	private int linkCost;
 	private int numViolations;
@@ -72,16 +71,6 @@ public class Linkage implements Iterable<Link>
 	public void setWords(String[] words)
 	{
 		this.words = words;
-	}
-
-	@Deprecated public int getAndCost()
-	{
-		return andCost;
-	}
-
-	@Deprecated public void setAndCost(int andCost)
-	{
-		this.andCost = andCost;
 	}
 
 	public int getDisjunctCost()
