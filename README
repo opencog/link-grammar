@@ -105,7 +105,7 @@ CREATING the system:
 
       http://www.thrysoee.dk/editline/
 
-   Use of editline can be disabled by saying 
+   Use of editline can be disabled by saying
 
        ./configure --disable-editline
 
@@ -249,7 +249,7 @@ BUILDING on Windows (MinGW)
 
 BUILDING on Windows (MSVC)
 --------------------------
-   Microsoft Visual C/C++ project files can be found in the msvc9 
+   Microsoft Visual C/C++ project files can be found in the msvc9
    directory.  MSVC6 build files are also provided; however, this
    compiler is deprecated due to the lack of locale support.  In
    particular, the Russian dictionaries cannot work with MSVC6!
@@ -363,7 +363,7 @@ TESTING the program:
    and "4.0.fixes.batch".  Work is ongoing to fix these.
 
    The "4.0.fixes.batch" file contains thousands of sentences that have
-   been fixed since the original 4.1 release of link-grammar. The 
+   been fixed since the original 4.1 release of link-grammar. The
    "4.0.biolg.batch" contains biology/medical-text sentences from the
    BioLG project.
 
@@ -418,31 +418,42 @@ JAVA bindings:
 
 Using JAVA
 ----------
-   This release also contains java code that implements a client and
-   network server, so that link-grammar can be used over tcp/ip.
-   A single server can respond to multiple clients.   The client-server
-   protocol is JSON.  The client and server code will be built if 
-   Apache 'ant' is installed.
+   This release provides java files that offer three ways of accessing
+   the parser.  The simplest way is to use the org.linkgrammar.LinkGrammar
+   class; this provides a very simple Java API to the parser.
 
-   The server can be started by saying:
+   The second possiblity is to use the LGService class.  This implements
+   a tcpi/ip network server, providing parse results as JSON messages.
+   Any JSON-capable client can connect to this server and obtain parsed
+   text.
 
-      java -classpath linkgrammar.jar org.linkgrammar.LGService 1234
+   The third possibility is to use the org.linkgrammar.LGRemoteClient
+   class, and in particular, the parse() method.  This class is a network
+   client that connects to the JSON server, and converts the response
+   back to results accessible via the ParseResult API.
 
-   The above starts the server on port 1234. It the port is ommitted,
-   help on other command options is printed.
+   The above-described code will be built if Apache 'ant' is installed.
 
-   The server can be contacted directly via tcpip; for example:
 
-     telnet localhost 1234
+Using the Network Server
+------------------------
+   The network server can be started by saying:
+
+      java -classpath linkgrammar.jar org.linkgrammar.LGService 9000
+
+   The above starts the server on port 9000. It the port is ommitted,
+   help text is printed.  This server can be contacted directly via
+   tcpip; for example:
+
+     telnet localhost 9000
 
    (Alternately, use netcat instead of telnet). After connecting, type
    in:
 
      text:  this is an example sentence to parse
 
-   The returned bytes will be a JSON message providing teh parse to
+   The returned bytes will be a JSON message providing the parse to
    the sentence.
-
 
 
 Spell Checking:
@@ -739,8 +750,8 @@ Mathematical Theory:
           depend on Word1) (so e.g. determiners depend on nouns)
         * anti-transitive (if Word1 depends on Word2 and Word2 depends
           on Word3, then Word1 cannot depend directly on Word3)
-      The last property means that dependency graphs are always 
-      skeletons of limits (in the sense of category theory).  
+      The last property means that dependency graphs are always
+      skeletons of limits (in the sense of category theory).
       Here, by "limit" we mean that the dependency arrow is the
       universal, unique arrow through which all other dependencies
       must pass (i.e. limit in the sense of category theory).
@@ -752,7 +763,7 @@ Mathematical Theory:
       Link types can be mapped to types that appear in categorial
       grammars.  The nice thing about link-grammar is that the link
       types form a type system that is much easier to use and comprehend
-      than that of categorial grammar, and yet can be directly converted 
+      than that of categorial grammar, and yet can be directly converted
       to that system!  That is, link-grammar is completely compatible
       with categorial grammar, and is easier-to-use.
 
@@ -881,9 +892,9 @@ TODO -- Working Notes:
      example, if the mis-spelled word "dont" shows up in the input, it
      could be issued as one word ("done") or two ("do n't") and the
      current suffix-stripping/word-issueing algo cannot deal with this
-     correctly. By contrast, this should not be an issue for the 
+     correctly. By contrast, this should not be an issue for the
      Viterbi algo, as it could explore both states at once.
- 
+
    One may argue that Viterbi is a more natural, biological way of
    working with sequences.  Some experimental, psychological support
    for this can be found here:
