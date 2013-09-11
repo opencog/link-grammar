@@ -551,7 +551,26 @@ public class LGService
 			{
 				trace("Waiting for client connections...");
 				final Socket clientSocket = serverSocket.accept();
-				threadPool.submit(new Runnable() { public void run() { handleClient(clientSocket); } });
+				threadPool.submit(new Runnable()
+				{
+					public void run()
+					{
+						// We must catch in here, and not outside the
+						// thread pool, because the submit method will
+						// silently swallow the exception. There is a 
+						// CERT advisory for this feature/bug:
+						// http://www.securecoding.cert.org/confluence/display/java/TPS03-J.+Ensure+that+tasks+executing+in+a+thread+pool+do+not+fail+silently
+						try
+						{
+							handleClient(clientSocket);
+						}
+						catch (Throwable t)
+						{
+							t.printStackTrace(System.err);
+							System.exit(-1);
+						}
+					} 
+				});
 			}
 		}
 		catch (Throwable t)
