@@ -1,8 +1,17 @@
-Parser = require "./src/index"
+Parser = require "../build/index.js"
+assert = require "assert"
 
-dataPath = "./data"
-input = "turn off the light"
+parser = new Parser()
 
-parser = new Parser "#{dataPath}/4.0.dict", "#{dataPath}/4.0.knowledge", "#{dataPath}/4.0.constituent-knowledge", "#{dataPath}/4.0.affix"
+describe("Link Grammar Tests", () ->
+	
+	it("should return the correct number of links", () ->
+		links = parser.getLinks "turn off the light"
+		assert.equal links.length, 4
+	)
 
-console.log parser.getLinks input
+	it("should return the correct tree", () ->
+		root = parser.getTree "mute music"
+		assert.equal root.child.child.label, "mute"
+	)
+)

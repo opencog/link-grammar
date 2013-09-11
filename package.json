@@ -1,17 +1,33 @@
 {
   "name": "link-grammer",
-  "version": "0.0.0",
-  "description": "ERROR: No README.md file found!",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "0.0.1",
+  "description": "Link grammar library node interface",
+  "main": "./build/index.js",
   "repository": "",
-  "author": "",
-  "license": "BSD",
+  "author": "Richard van der Dys",
+  "keywords": ["link", "grammar", "word", "sentence", "parse"],
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://raw.github.com/rompetoto/wiki/master/LICENSE"
+  }],
+  "engines": {
+    "node": ">=0.6.0"
+  },
   "dependencies": {
     "ffi": "latest",
     "ref": "latest",
     "ref-struct": "latest"
+  },
+  "homepage": "https://github.com/rompetoto/link-grammar",
+  "bugs": "https://github.com/rompetoto/link-grammar/issues",
+  "scripts": {
+    "clean": "rm -f build/*.js && rm -f tests/*.js",
+    "compile": "mkdir -p build/ && kal -o build/ src/*kal && kal -o tests/ tests/*.kal",
+    "test": "mocha -R spec -b tests/",
+    "make": "npm run-script clean && npm run-script compile && npm run-script test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rompetoto/link-grammar.git"
   }
 }
