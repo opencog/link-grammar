@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
+// import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -97,7 +98,7 @@ public class LGService
 
 	/**
 	 * <p>
-	 * Initialize LinkGrammar for the current is this is not already done. Note that
+	 * Initialize LinkGrammar for the current thread, if this is not already done. Note that
 	 * this method is called by all other methods in this class that invoke LinkGrammar
 	 * so there's no really need to call it yourself. It is safe to call the method repeatedly.
 	 * </p>
@@ -537,10 +538,10 @@ public class LGService
 				((dictionaryPath == null) ? " with default dictionary location." :
 					"with dictionary location '" + dictionaryPath + "'."));
 		ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threads,
-		                                                  threads,
-		                                                  Long.MAX_VALUE,
-		                                                  TimeUnit.SECONDS,
-		                                                  new LinkedBlockingQueue<Runnable>());
+		                                        threads,
+		                                        Long.MAX_VALUE,
+		                                        TimeUnit.SECONDS,
+		                                        new LinkedBlockingQueue<Runnable>());
 		try
 		{
 			if (dictionaryPath != null)

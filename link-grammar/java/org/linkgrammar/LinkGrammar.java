@@ -32,13 +32,24 @@ public class LinkGrammar
         // Actually, I guess Windows does this too, unless the user
         // failed to add the working directory to %PATH
         //
-        String osname = System.getProperty("os.name");
-        if (osname.indexOf("win") > -1 || osname.indexOf("Win") > -1)
+        try
         {
-            System.loadLibrary("link-grammar");
+            String osname = System.getProperty("os.name");
+            if (osname.indexOf("win") > -1 || osname.indexOf("Win") > -1)
+            {
+                System.loadLibrary("link-grammar");
+            }
+            // if (osname.indexOf("Mac OS X") > -1) {}
+            System.loadLibrary("link-grammar-java");
         }
-        // if (osname.indexOf("Mac OS X") > -1) {}
-        System.loadLibrary("link-grammar-java");
+        catch (Throwable ex)
+        {
+            // If we don't catch here, then the thread pool will
+            // silently eat the exception and make us into fools.
+            // https://www.securecoding.cert.org/confluence/display/java/TPS03-J.+Ensure+that+tasks+executing+in+a+thread+pool+do+not+fail+silently
+            System.err.println(ex);
+            System.exit(-1);
+        }
     }
 
     //! Get the version string for the parser.
