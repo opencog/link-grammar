@@ -1,0 +1,8 @@
+Parser = require "./src/index"
+
+dataPath = "./data"
+input = "turn off the light"
+
+parser = new Parser "#{dataPath}/4.0.dict", "#{dataPath}/4.0.knowledge", "#{dataPath}/4.0.constituent-knowledge", "#{dataPath}/4.0.affix"
+
+console.log parser.getLinks input
