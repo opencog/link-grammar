@@ -28,6 +28,7 @@ public class Linkage implements Iterable<Link>
 	private String [] disjuncts;
 	private String [] words;
 	private String constituentString;
+	private String diagramString;
 	private int linkedWordCount;
 	private int disjunctCost;
 	private int linkCost;
@@ -121,5 +122,15 @@ public class Linkage implements Iterable<Link>
 	public void setConstituentString(String constituentString)
 	{
 		this.constituentString = constituentString;
+	}
+
+	public String getDiagramString()
+	{
+		return diagramString;
+	}
+
+	public void setDiagramString(String diagramString)
+	{
+		this.diagramString = diagramString;
 	}
 }

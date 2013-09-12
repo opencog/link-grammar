@@ -40,13 +40,15 @@ import java.util.concurrent.TimeUnit;
  * '\0' and '\n'. The following parameters are recognized:
  *
  * <ul>
- * <li><b>maxCost</b> - ??</li>
- * <li><b>storeConstituentString</b> - whether to return the constituent
- *      string for each Linkage as part of the result.</li>
  * <li><b>maxLinkages</b> - maximum number of parses to return in the
  *      result. Note that this does not affect the parser behavior which
  *      computes all parses anyway.</li>
- * <li><b>maxParseSeconds</b> - ??</li>
+ * <li><b>maxParseSeconds</b> - abort parsing if it takes longer than this</li>
+ * <li><b>maxCost</b> - don't report linkages with cost greater than this</li>
+ * <li><b>storeConstituentString</b> - whether to return the constituent
+ *      string for each Linkage as part of the result.</li>
+ * <li><b>storeDiagramString</b> - return ASCII-art diagram.</li>
+ * <li><b>storeSense</b> - return word-sense tags.</li>
  * <li><b>text</b> - The text to parse. Note that it must be stripped
  *      from newlines.</li>
  * </ul>
@@ -217,6 +219,8 @@ public class LGService
 			}
 			if (config.isStoreConstituentString())
 				linkage.setConstituentString(LinkGrammar.getConstituentString());
+			if (config.isStoreDiagramString())
+				linkage.setDiagramString(LinkGrammar.getLinkString());
 			parseResult.linkages.add(linkage);
 		}
 		return parseResult;
@@ -320,6 +324,11 @@ public class LGService
 				buf.append(", \"constituentString\":");
 				buf.append(jsonString(LinkGrammar.getConstituentString()));
 			}
+			if (config.isStoreDiagramString())
+			{
+				buf.append(", \"diagramString\":");
+				buf.append(jsonString(LinkGrammar.getLinkString()));
+			}
 			buf.append(", \"links\":[");
 			int numLinks = LinkGrammar.getNumLinks();
 			for (int i = 0; i < numLinks; i++)
@@ -362,6 +371,10 @@ public class LGService
 
 	private static Map<String, String> readMsg(Reader in) throws java.io.IOException
 	{
+		// Read chars from input until input is exhausted, or until
+		// newline is encountered. "length" will be set to the final
+		// length of the input.  The char array buf stores the input;
+		// it is automatically expanded to handle very long inputs.
 		int length = 0;
 		char [] buf = new char[1024];
 		for (int count = in.read(buf, length, buf.length - length);
@@ -378,8 +391,12 @@ public class LGService
 			if (buf[length-1] == '\n')
 				break;
 		}
+
+		// "result" will contain a map of key-value pairs extracted from
+		// the JSON input. (viz, buf is assumed to contain valid json)
 		Map<String, String> result = new HashMap<String, String>();
 
+		boolean gotText = false;
 		int start = -1;
 		int column = -1;
 		for (int offset = 0; offset < length - 1; offset++)
@@ -388,20 +405,38 @@ public class LGService
 			if (start == -1)
 				start = offset;
 			else if (c == ':' && column == -1)
+			{
 				column = offset;
-			else if (c == '\0')
+				String name = new String(buf, start, column - start);
+				name = name.trim();
+				if ("text" == name) gotText = true;
+			}
+
+			// Any commas appearing in the text will fuck this up, so
+			// we treat this as a JSON message, unly until the key "text"
+			// is seen. After that, all commas are assumed to be part of
+			// the text message. (ergo, "text" must the last keyword in the
+			// message.
+			else if (c == '\0' || (!gotText && c == ','))
 			{
 				if (start == -1 || column == -1)
 					throw new RuntimeException("Malformed message:" + new String(buf, 0, length));
 				String name = new String(buf, start, column - start);
 				String value = new String(buf, column + 1, offset - column - 1);
+				name = name.trim();
+				value = value.trim();
 				result.put(name, value);
 				start = column = -1;
 			}
 		}
+
+		// If we are here, the the last byte wasn't null. This is the
+		// normal exit, I guess ... 
 		if (start != -1 && column != -1) {
 			String name = new String(buf, start, column - start);
 			String value = new String(buf, column + 1, length - column - 1);
+			name = name.trim();
+			value = value.trim();
 			result.put(name, value);
 			start = column = -1;
 		}
@@ -428,10 +463,13 @@ public class LGService
 			else
 			{
 				LGConfig config = new LGConfig();
-				config.setStoreConstituentString(getBool("storeConstituentString", msg, config.isStoreConstituentString()));
 				config.setMaxCost(getInt("maxCost", msg, config.getMaxCost()));
 				config.setMaxLinkages(getInt("maxLinkages", msg, config.getMaxLinkages()));
 				config.setMaxParseSeconds(getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
+				config.setStoreConstituentString(
+					getBool("storeConstituentString", msg, config.isStoreConstituentString()));
+				config.setStoreDiagramString(
+					getBool("storeDiagramString", msg, config.isStoreDiagramString()));
 				configure(config);
 				String text = msg.get("text");
 				if (text != null && text.trim().length() > 0)

@@ -26,10 +26,9 @@ public class LGConfig
 	private String dictionaryLocation = null;
 	private String language = null;
 
-	// mis-named; if flag is set, then a load is done,
-	// not a store.
 	private boolean storeConstituentString = true;
-	private boolean loadSense = false;
+	private boolean storeDiagramString = false;
+	private boolean storeSense = false;
 	
 	public int getMaxLinkages()
 	{
@@ -80,8 +79,6 @@ public class LGConfig
 		language = l;
 	}
 
-	// mis-named; if flag is set, then a load is done,
-	// not a store.
 	public boolean isStoreConstituentString()
 	{
 		return storeConstituentString;
@@ -91,12 +88,21 @@ public class LGConfig
 		storeConstituentString = s;
 	}	
 
-	public boolean isLoadSense()
+	public boolean isStoreDiagramString()
 	{
-		return loadSense;
+		return storeDiagramString;
 	}
-	public void setLoadSense(boolean s)
+	public void setStoreDiagramString(boolean s)
 	{
-		loadSense = s;
+		storeDiagramString = s;
+	}	
+
+	public boolean isStoreSense()
+	{
+		return storeSense;
+	}
+	public void setStoreSense(boolean s)
+	{
+		storeSense = s;
 	}	
 }
