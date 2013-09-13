@@ -452,8 +452,11 @@ Using the Network Server
 
      text:  this is an example sentence to parse
 
-   The returned bytes will be a JSON message providing the parse to
-   the sentence.
+   The returned bytes will be a JSON message providing the parses of
+   the sentence.  By default, the ASCII-art parse of the text is not
+   transmitted. This can be obtained by sending messages of the form:
+
+     storeDiagramString:true, text: this is a test.
 
 
 Spell Checking:
