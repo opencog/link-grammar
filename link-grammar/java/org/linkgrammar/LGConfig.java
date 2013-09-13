@@ -23,9 +23,6 @@ public class LGConfig
 	private int maxParseSeconds = 60;
 	private int maxCost = -1;
 	private boolean allowSkippedWords = true;
-	private String dictionaryLocation = null;
-	private String language = null;
-
 	private boolean storeConstituentString = true;
 	private boolean storeDiagramString = false;
 	private boolean storeSense = false;
@@ -62,23 +59,6 @@ public class LGConfig
 	{
 		allowSkippedWords = a;
 	}
-	public String getDictionaryLocation()
-	{
-		return dictionaryLocation;
-	}
-	public void setDictionaryLocation(String d)
-	{
-		dictionaryLocation = d;
-	}
-	public String getLanguage()
-	{
-		return language;
-	}
-	public void setLanguage(String l)
-	{
-		language = l;
-	}
-
 	public boolean isStoreConstituentString()
 	{
 		return storeConstituentString;

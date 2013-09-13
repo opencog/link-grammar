@@ -7,7 +7,8 @@ Version 4.8.0 (xxx 2013)
  * Java: remove many deprecated functions.
  * C API: remove some deprecated functions.
  * Java: fix silent failure when library is not found.
- * Java: Add support for fetching the diagram string.
+ * Java: Add support for fetching the ASCII-art diagram string.
+ * Java: Fix insane language selection initialization.
 
 Version 4.7.14 (20 June 2013)
  * Fix build break on MacOSX

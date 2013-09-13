@@ -103,6 +103,7 @@ public class LGService
 	 * Initialize LinkGrammar for the current thread, if this is not already done. Note that
 	 * this method is called by all other methods in this class that invoke LinkGrammar
 	 * so there's no really need to call it yourself. It is safe to call the method repeatedly.
+	 * Note that the dictionary language/location must be set *before* calling init.
 	 * </p>
 	 */
 	public static void init()
@@ -152,16 +153,13 @@ public class LGService
 	public static void configure(LGConfig config)
 	{
 		init();
+
 		if (config.getMaxCost() > -1)
 			LinkGrammar.setMaxCost(config.getMaxCost());
 		if (config.getMaxParseSeconds() > -1)
 			LinkGrammar.setMaxParseSeconds(config.getMaxParseSeconds());
 		if (config.getMaxLinkages() > -1)
 			LinkGrammar.setMaxLinkages(config.getMaxLinkages());
-		if (config.getDictionaryLocation() != null)
-			LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
-		if (config.getLanguage() != null)
-			LinkGrammar.setLanguage(config.getLanguage());
 	}
 
 	/**
@@ -518,16 +516,7 @@ public class LGService
 	 */
 	public static ParseResult parse(LGConfig config, String text)
 	{
-		if (!isInitialized())
-		{
-			if (config.getDictionaryLocation() != null &&
-				config.getDictionaryLocation().trim().length() > 0)
-				LinkGrammar.setDictionariesPath(config.getDictionaryLocation());
-
-			if (config.getLanguage() != null &&
-				config.getLanguage().trim().length() > 0)
-				LinkGrammar.setLanguage(config.getLanguage());
-		}
+		init();
 		configure(config);
 		LinkGrammar.parse(text);
 		return getAsParseResult(config);
@@ -538,6 +527,7 @@ public class LGService
 		int threads = 1;
 		int port = 0;
 		String dictionaryPath = null;
+		String language = null;
 		try
 		{
 			int argIdx = 0;
@@ -545,19 +535,22 @@ public class LGService
 			if (argv[argIdx].equals("-threads")) { threads = Integer.parseInt(argv[++argIdx]); argIdx++; }
 			port = Integer.parseInt(argv[argIdx++]);
 			if (argv.length > argIdx)
-				dictionaryPath = argv[argIdx];
+				language = argv[argIdx++];
+			if (argv.length > argIdx)
+				dictionaryPath = argv[argIdx++];
 		}
 		catch (Throwable ex)
 		{
 			if (argv.length > 0)
 				ex.printStackTrace(System.err);
-			System.out.println("Usage: java org.linkgrammar.LGService [-verbose] [-threads n] port [dictPath]");
+			System.out.println("Usage: java org.linkgrammar.LGService [-verbose] [-threads n] port [language] [dictPath]");
 			System.out.println("Start a link-grammar parse server on tcp/ip port.  The server returns JSON-");
 			System.out.println("formated parse results.  Socket input should be a single sentence to parse,");
 			System.out.println("preceeded by the identifier \"text:\".\n");
 			System.out.println("  'port'      The TCP port the service should listen to.");
 			System.out.println("  -verbose    Generate verbose output.");
 			System.out.println("  -threads    Specify number of concurrent threads/clients allowed (default 1).");
+			System.out.println("  'language'  Language abbreviation (en, ru, de, lt or fr).");
 			System.out.println("  'dictPath'  Full path to the Link-Grammar dictionaries.");
 			System.exit(-1);
 		}
@@ -582,6 +575,8 @@ public class LGService
 		                                        new LinkedBlockingQueue<Runnable>());
 		try
 		{
+			if (language != null)
+				LinkGrammar.setLanguage(language);
 			if (dictionaryPath != null)
 				LinkGrammar.setDictionariesPath(dictionaryPath);
 			ServerSocket serverSocket = new ServerSocket(port);
