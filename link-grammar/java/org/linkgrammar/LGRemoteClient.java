@@ -40,7 +40,7 @@ public class LGRemoteClient
     private int connectRetryCount = Integer.MAX_VALUE;
     private long connectRetryWait = 1000l;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     private ParseResult jsonToParseResult(String json)
     {
         JSONReader reader = new JSONReader();
