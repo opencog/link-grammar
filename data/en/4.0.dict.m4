@@ -1985,15 +1985,10 @@ per "/.per": Us+ & Mp-;
 % These are used almost exclusively with auxiliary verbs.
 % This is why they don't have & <verb-wall> in them: we don't want the
 % auxiliary attaching to the wall, we want only the main verb doing this.
-%
-% Unfortunately, it seems that "appears.v" uses <verb-x-s> but maybe
-% it should be using <verb-s-s> instead ??? (i.e. we do want it to 
-% attach.)  But the SFsi causes problems...  XXX FIXME 
-% viz: "there appears to be a problem" uses SFst to link ... 
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & (S- or SF- or (RS- & B-) or PPf-);
+<verb-x-sp,pp>: {@E-} & (S- or SF- or PPf- or (RS- & B-));
 <verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
@@ -2006,6 +2001,15 @@ per "/.per": Us+ & Mp-;
     or Pgf-
     or [DP- & J-]
     or [[Wq- & PF+ & {@MV+}]]);
+
+% Almost identical to the above, except that the verb attaches to the
+% wall. We cannot use verb-s for this, since the SFsi prevents the parse
+% of sentences like  "there appears to be a problem".
+<verb-y-pl,i>: {@E-} & (((Sp- or SFp-) & <verb-wall>) or If- or (RS- & Bp-) or Wi-);
+<verb-y-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
+<verb-y-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
+<verb-y-sp,pp>: {@E-} & (((S- or SF- or PPf-) & <verb-wall>) or (RS- & B-));
+<verb-y-sp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-));
 
 % conjoined verbs.
 % VJr == left
@@ -2107,20 +2111,34 @@ define(`VERB_S_PLI',`'
   (($1) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>)
 
-% This may be too broad ...
+% This may allow overly broad 'and' constructions.
 define(`VERB_X_S',`'
   ((<verb-x-s> & ($1))
   or (<verb-and-s-> & ([($1)] or ()))
   or (($1) & <verb-and-s+>)))
 
-define(`VERB_X_SPPP',`'
-  ((<verb-x-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
-  (($1) & <verb-and-sp-i+>)))
-
+% This may allow overly broad 'and' constructions.
 % I haven't completely verified this one, it may be buggy..
 define(`VERB_X_PLI',`'
   ((<verb-x-pl,i> & ($1))
+  or (<verb-and-sp-i-> & ([($1)] or ()))
+  or (($1) & <verb-and-sp-i+>)))
+
+% This may allow overly broad 'and' constructions.
+define(`VERB_Y_S',`'
+  ((<verb-y-s> & ($1))
+  or (<verb-and-s-> & ([($1)] or ()))
+  or (($1) & <verb-and-s+>)))
+
+define(`VERB_Y_SPPP',`'
+  ((<verb-y-sp,pp> & ($1)) or
+  (<verb-and-sp-i-> & (([$1]) or ())) or
+  (($1) & <verb-and-sp-i+>)))
+
+% This may allow overly broad 'and' constructions.
+% I haven't completely verified this one, it may be buggy..
+define(`VERB_Y_PLI',`'
+  ((<verb-y-pl,i> & ($1))
   or (<verb-and-sp-i-> & ([($1)] or ()))
   or (($1) & <verb-and-sp-i+>)))
 
@@ -3027,15 +3045,15 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
 <vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or THi+ or AF- or [[Pv+]]};
-appear.v: VERB_X_PLI(<vc-appear>);
-appears.v: VERB_X_S(<vc-appear>);
-appeared.v-d: VERB_X_SPPP(<vc-appear>);
+appear.v: VERB_Y_PLI(<vc-appear>);
+appears.v: VERB_Y_S(<vc-appear>);
+appeared.v-d: VERB_Y_SPPP(<vc-appear>);
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or LI+ or THi+ or AF- or [[Pv+]]);
-seem.v: VERB_X_PLI(<vc-seem>);
-seems.v: VERB_X_S(<vc-seem>);
-seemed.v-d: VERB_X_SPPP(<vc-seem>);
+seem.v: VERB_Y_PLI(<vc-seem>);
+seems.v: VERB_Y_S(<vc-seem>);
+seemed.v-d: VERB_Y_SPPP(<vc-seem>);
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-care>: {@MV+} & {TO+ or QI+};
@@ -5052,10 +5070,10 @@ embarrassing.g annoying.g:
   ((O+ or OX+ or B-) & {@MV+} & (TOo+ or [[Pa+]])) or
   ({@MV+} & ((TOf+ & <inf-verb>) or TH+ or Ce+ or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
-prove.v: VERB_X_PLI(<vc-prove>);
-proves.v: VERB_X_S(<vc-prove>);
+prove.v: VERB_Y_PLI(<vc-prove>);
+proves.v: VERB_Y_S(<vc-prove>);
 proved.v-d:
-  VERB_X_SPPP(<vc-prove>)
+  VERB_Y_SPPP(<vc-prove>)
   or (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>)})
   or ({@E-} & A+)
   or ({{@MV+} & Pa+} & <verb-phrase-opener>);

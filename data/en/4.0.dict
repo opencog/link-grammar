@@ -1974,11 +1974,12 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
 % These are used almost exclusively with auxiliary verbs.
-
+% This is why they don't have & <verb-wall> in them: we don't want the
+% auxiliary attaching to the wall, we want only the main verb doing this.
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & (S- or SF- or (RS- & B-) or PPf-);
+<verb-x-sp,pp>: {@E-} & (S- or SF- or PPf- or (RS- & B-));
 <verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
@@ -1991,6 +1992,15 @@ per "/.per": Us+ & Mp-;
     or Pgf-
     or [DP- & J-]
     or [[Wq- & PF+ & {@MV+}]]);
+
+% Almost identical to the above, except that the verb attaches to the
+% wall. We cannot use verb-s for this, since the SFsi prevents the parse
+% of sentences like  "there appears to be a problem".
+<verb-y-pl,i>: {@E-} & (((Sp- or SFp-) & <verb-wall>) or If- or (RS- & Bp-) or Wi-);
+<verb-y-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
+<verb-y-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
+<verb-y-sp,pp>: {@E-} & (((S- or SF- or PPf-) & <verb-wall>) or (RS- & B-));
+<verb-y-sp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-));
 
 % conjoined verbs.
 % VJr == left
@@ -2061,11 +2071,19 @@ per "/.per": Us+ & Mp-;
 % the filler-it  variation of the above rules.
 
 
-% This may be too broad ...
+% This may allow overly broad 'and' constructions.
+
+
+% This may allow overly broad 'and' constructions.
+% I haven't completely verified this one, it may be buggy..
+
+
+% This may allow overly broad 'and' constructions.
 
 
 
 
+% This may allow overly broad 'and' constructions.
 % I haven't completely verified this one, it may be buggy..
 
 
@@ -3288,30 +3306,30 @@ hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 
 <vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or THi+ or AF- or [[Pv+]]};
 appear.v: 
-  ((<verb-x-pl,i> & (<vc-appear>))
+  ((<verb-y-pl,i> & (<vc-appear>))
   or (<verb-and-sp-i-> & ([(<vc-appear>)] or ()))
   or ((<vc-appear>) & <verb-and-sp-i+>));
 appears.v: 
-  ((<verb-x-s> & (<vc-appear>))
+  ((<verb-y-s> & (<vc-appear>))
   or (<verb-and-s-> & ([(<vc-appear>)] or ()))
   or ((<vc-appear>) & <verb-and-s+>));
 appeared.v-d: 
-  ((<verb-x-sp,pp> & (<vc-appear>)) or
+  ((<verb-y-sp,pp> & (<vc-appear>)) or
   (<verb-and-sp-i-> & (([<vc-appear>]) or ())) or
   ((<vc-appear>) & <verb-and-sp-i+>));
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
 <vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: 
-  ((<verb-x-pl,i> & (<vc-seem>))
+  ((<verb-y-pl,i> & (<vc-seem>))
   or (<verb-and-sp-i-> & ([(<vc-seem>)] or ()))
   or ((<vc-seem>) & <verb-and-sp-i+>));
 seems.v: 
-  ((<verb-x-s> & (<vc-seem>))
+  ((<verb-y-s> & (<vc-seem>))
   or (<verb-and-s-> & ([(<vc-seem>)] or ()))
   or ((<vc-seem>) & <verb-and-s+>));
 seemed.v-d: 
-  ((<verb-x-sp,pp> & (<vc-seem>)) or
+  ((<verb-y-sp,pp> & (<vc-seem>)) or
   (<verb-and-sp-i-> & (([<vc-seem>]) or ())) or
   ((<vc-seem>) & <verb-and-sp-i+>));
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
@@ -6801,16 +6819,16 @@ embarrassing.g annoying.g:
   ({@MV+} & ((TOf+ & <inf-verb>) or TH+ or Ce+ or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
 prove.v: 
-  ((<verb-x-pl,i> & (<vc-prove>))
+  ((<verb-y-pl,i> & (<vc-prove>))
   or (<verb-and-sp-i-> & ([(<vc-prove>)] or ()))
   or ((<vc-prove>) & <verb-and-sp-i+>));
 proves.v: 
-  ((<verb-x-s> & (<vc-prove>))
+  ((<verb-y-s> & (<vc-prove>))
   or (<verb-and-s-> & ([(<vc-prove>)] or ()))
   or ((<vc-prove>) & <verb-and-s+>));
 proved.v-d:
   
-  ((<verb-x-sp,pp> & (<vc-prove>)) or
+  ((<verb-y-sp,pp> & (<vc-prove>)) or
   (<verb-and-sp-i-> & (([<vc-prove>]) or ())) or
   ((<vc-prove>) & <verb-and-sp-i+>))
   or (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>)})
