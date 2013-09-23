@@ -215,6 +215,8 @@ changecom(`%')
 <rel-clause-s>: {Rw+} & Bsm+;
 <rel-clause-p>: {Rw+} & Bpm+;
 
+% TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
+% TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
 <inf-verb>: IV+;
 
 % The use of COa here needs to be carefully rexamined; it is used much too freely.
@@ -848,7 +850,7 @@ mission.n right.n desire.n mandate.n promise.n option.n campaign.n
 offer.n vow.n permit.n impetus.n proclivity.n propensity.n move.n
 vote.n bill.n:
   (<noun-modifiers> &
-    ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+    ((Ds- & {@M+} & {((TOn+ & <inf-verb>) or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main-s> or
       <rel-clause-s>)) or
     ({Ds-} & <noun-and-s>) or
@@ -861,7 +863,7 @@ vote.n bill.n:
 % <noun-sub-uto>: somewhat like <noun-sub-s> but with more stuff.
 % {Jd-}: "a large amount of effort"
 <noun-sub-uto>:
-  {{Jd-} & D*u-} & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+};
+  {{Jd-} & D*u-} & {@M+} & {((TOn+ & <inf-verb>) or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+};
 
 % Like other generic noun types, but can take "to"
 % "He took the effort to make amends"
@@ -915,7 +917,7 @@ votes.n bills.n incentives.n:
 % WTF, the next batch below are like above, but with assorted exceptions ...
 chance.n:
   (<noun-modifiers> &
-    (({D*u-} & {@M+} & {(TOn+ or TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+    (({D*u-} & {@M+} & {((TOn+ & <inf-verb>) or TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main-s> or
       <rel-clause-s>)) or
     ({D*u-} & <noun-and-s>) or
@@ -956,7 +958,7 @@ questions.n issues.n:
 
 reason.n:
   (<noun-modifiers> &
-    (({D*u-} & {@M+} & {TH+ or Ce+ or TOn+ or WY+ or (R+ & Bs+)} & {@MXs+} &
+    (({D*u-} & {@M+} & {TH+ or Ce+ or (TOn+ & <inf-verb>) or WY+ or (R+ & Bs+)} & {@MXs+} &
       (<noun-main2-s> or
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
@@ -969,7 +971,7 @@ reason.n:
 
 reasons.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {TH+ or Ce+ or TOn+ or WY+ or (R+ & Bp+)} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {TH+ or Ce+ or (TOn+ & <inf-verb>) or WY+ or (R+ & Bp+)} & {@MXp+} &
       (<noun-main-p> or
        <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
@@ -980,7 +982,7 @@ reasons.n:
 
 way.n:
   (<noun-modifiers> &
-    ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bs+)} & {@MXs+} &
+    ((Ds- & {@M+} & {(TOn+ & <inf-verb>) or TH+ or Ce+ or (R+ & Bs+)} & {@MXs+} &
       (MVa- or
       <noun-main-s> or
       <rel-clause-s>)) or
@@ -992,7 +994,7 @@ way.n:
 
 place.n:
   (<noun-modifiers> &
-    ((Ds- & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bs+)} & {@MXs+} &
+    ((Ds- & {@M+} & {(TOn+ & <inf-verb>) or TH+ or Ce+ or (R+ & Bs+)} & {@MXs+} &
       ([[MVa-]] or
       <noun-main-s> or
       <rel-clause-s>)) or
@@ -1005,7 +1007,7 @@ place.n:
 
 time.n:
   (<noun-modifiers> &
-    (({D*u-} & {@M+} & {TOn+ or WN+ or TH+ or Ce+ or (R+ & Bs+)} & {@MXs+} &
+    (({D*u-} & {@M+} & {(TOn+ & <inf-verb>) or WN+ or TH+ or Ce+ or (R+ & Bs+)} & {@MXs+} &
       ([[MVa-]] or
       <noun-main-m> or
       <rel-clause-s>)) or
@@ -1017,7 +1019,7 @@ time.n:
 
 ways.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(TOn+ & <inf-verb>) or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
       (MVa- or
       <noun-main-p> or
       <rel-clause-p>)) or
@@ -1029,7 +1031,7 @@ ways.n:
 
 places.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(TOn+ & <inf-verb>) or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
       ([[MVa-]] or
       <noun-main-p> or
       <rel-clause-p>)) or
@@ -1041,7 +1043,7 @@ places.n:
 
 times.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {TOn+ or WN+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(TOn+ & <inf-verb>) or WN+ or TH+ or Ce+ or (R+ & Bp+)} & {@MXp+} &
       ([[MVa-]] or
       <noun-main-p> or
       <rel-clause-p>)) or
@@ -1745,7 +1747,7 @@ ninths.m tenths.m:
 NW- & {EN-} & (NF+ or (<noun-sub-x> & <noun-main-x>));
 
 first.a: L- or Pa- or E+ or MVa- or ({Xc+ & {Xd-}} & CO+) or A+ or [Jp-] or
-TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {TOn+} & <noun-main-x>);
+TT+ or ((DD- or [[NSa-]]) & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>);
 
 last.a dead_last dead_fucking_last DFL:
   L-
@@ -1754,12 +1756,12 @@ last.a dead_last dead_fucking_last DFL:
   or ({Xc+ & {Xd-}} & CO+)
   or DTi+
   or TT+
-  or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>)
+  or (DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>)
   or A+
   or [Jp-];
 
 second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
-(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or NR+ or A+;
+(DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or NR+ or A+;
 
 % This uses the L link for superlatives, but leads to strange parses:
 % "We celebrated their eleventh anniversary" parses differently
@@ -1770,7 +1772,7 @@ second.a: L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 third.a fourth.a fifth.a sixth.a seventh.a eighth.a ninth.a tenth.a :
 L- or Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 (NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or
-(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+ or Jp-;
+(DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)})) & <noun-main-x>) or NR+ or A+ or Jp-;
 
 % NS-: "I gave him a third of the loot."
 eleventh.a twelfth.a thirteenth.a fourteenth.a fifteenth.a
@@ -1809,7 +1811,7 @@ ninety-fourth.a ninety-fifth.a ninety-sixth.a
 ninety-seventh.a ninety-eighth.a ninety-ninth.a:
 Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 (NS- & {EN-} & NF+) or (((NS- & <noun-sub-x> & {EN-}) or
-(DD- & <noun-sub-x> & {TOn+})) & <noun-main-x>) or NR+ or A+ or Jp-;
+(DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)})) & <noun-main-x>) or NR+ or A+ or Jp-;
 
 % Miscellaneous ordinal numbers, adjectival usage
 % prefer G+ over A+ in general, as these are typically parts of names.
@@ -1818,7 +1820,7 @@ DAY-ORDINALS.a ORDINALS.a:
   Pa- or
   MVa- or
   ({Xc+ & {Xd-}} & CO+) or
-  (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or
+  (DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or
   NR+ or
   G+ or
   [A+] or
@@ -6179,7 +6181,7 @@ whenever wherever however.c:
 whyever:
   ({EL+} & (
      (Wq- & Q+)
-     or (QI- & (Cs+ or TOn+))
+     or (QI- & (Cs+ or (TOn+ & <inf-verb>)))
      or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-))))
   or [[{@CO-} & Wc- & Wi+]];
 
@@ -6206,7 +6208,7 @@ although in_as_much_as whilst whereas whereof wherein:
 % nouns to be in their own class...
 when:
   ((WN- or BIh-) & Cs+)
-  or ((PF+ or TOn+ or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+  or ((PF+ or (TOn+ & <inf-verb>) or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & Cs+)
   or [QI-]
   or QJ- or QJ+
@@ -6220,7 +6222,7 @@ when:
 why:
   ({EL+} & (
     ({EW-} & Wq- & Q+)
-    or (QI- & (Cs+ or TOn+ or [()]))
+    or (QI- & (Cs+ or (TOn+ & <inf-verb>) or [()]))
     or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or ((Wi- or <directive-opener>) & {N+})
     ))
@@ -6238,12 +6240,12 @@ where:
       or QJ-
       or QJ+
       or (Cs+ & Bsw+ & QI-)
-      or ((WR+ or Cs+ or TOn+ or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+      or ((WR+ or Cs+ or (TOn+ & <inf-verb>) or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
       or ((Cs+ or PF+ or WR+) & <prep-main-b>));
 
-whether: (((QI- or BIq-) & (Cs+ or TOn+)) or (Cs+ & SFsx+ & <S-CLAUSE>))
+whether: (((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>))) or (Cs+ & SFsx+ & <S-CLAUSE>))
 or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
-whether_or_not: ((QI- or BIq-) & (Cs+ or TOn+)) or
+whether_or_not: ((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>))) or
 (Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
 
 % QI- & (): "I do not know how"
@@ -6254,7 +6256,7 @@ how:
   or ({EW-} & Wq- & (({EL+} & Q+) or AF+))
   or [QI-]
   or QJ- or QJ+
-  or ((Cs+ or TOn+) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
+  or ((Cs+ or (TOn+ & <inf-verb>)) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -7275,22 +7277,22 @@ nothing_but: Vd- & I+;
 % angriest.a baldest.a balmiest.a basest.a bawdiest.a biggest.a
 <superlatives>:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-  ({NR- or ND-} & DD- & <noun-sub-x> & {TOn+} & <noun-main-x>) or
+  ({NR- or ND-} & DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or
   AJrs- or AJls+;
 
 /en/words/words.adj.3: <superlatives>;
 
 favorite.a favourite.a: <superlatives> or
 ({Xc+} & {[[@Ec-]]} & [[Lf-]]) or
-([[Ds-]] & <noun-sub-x> & {TOn+} & <noun-main-x>);
+([[Ds-]] & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>);
 
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
 same.a own.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-(DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
+(DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>);
 the_same: {EZ-} & (D**y+ or Oy- or Jy- or MVy-);
 next.a: ({Xc+ & {Xd-}} & CO+) or MVp- or DTi+ or NR+ or
 ({Xc+} & {[[@Ec-]]} & L-)
-or (DD- & <noun-sub-x> & {TOn+} & <noun-main-x>);
+or (DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>);
 past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+});
 following.a remaining.a top.i: L-;
 
@@ -7301,13 +7303,13 @@ hardest.a easiest.a:
 
 worst.a longest.a fastest.a furthest.a farthest.a:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-  ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-)) or
+  ({NR- or ND-} & DD- & ((<noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or MVa-)) or
   AJrs- or AJls+;
 
 % "he likes you best of all" has no determiner, just uses MVa-.
 best.a:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-  ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or (MVa- & {Mp+}))) or
+  ({NR- or ND-} & DD- & ((<noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or (MVa- & {Mp+}))) or
   [[E+]] or
   [MVa- & {Mp+}] or
   AJrs- or AJls+;
@@ -7887,7 +7889,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 
 % :.j
 <colon>:
-  {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or TOn+) & {Xx+}) or Xe-);
+  {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or (TOn+ & <inf-verb>)) & {Xx+}) or Xe-);
 
 % Put a cost on this, because  we want to find other uses first ...
 ":.j": [<colon>] or ({NI-} & Wd- & W+);
@@ -8152,10 +8154,10 @@ oftenest correctliest soonest disquietingliest:
  EA+;
 
 propension.n:
- (<noun-modifiers> & ((Ds- & {@M+} & {(TOn+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+ (<noun-modifiers> & ((Ds- & {@M+} & {((TOn+ & <inf-verb>) or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 longest-term.a:
- ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {TOn+} & <noun-main-x>) or MVa-));
+ ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or MVa-));
 
 longer-term.a:
  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+) or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(TOi+ or THi+) & {LE+}}))) or (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
