@@ -3284,7 +3284,7 @@ sworn.v:
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or TOf+ or THi+ or AF- or [[Pv+]]};
+<vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or THi+ or AF- or [[Pv+]]};
 appear.v: 
   ((<verb-x-pl,i> & (<vc-appear>))
   or (<verb-and-sp-i-> & ([(<vc-appear>)] or ()))
@@ -3299,7 +3299,7 @@ appeared.v-d:
   ((<vc-appear>) & <verb-and-sp-i+>));
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-<vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
+<vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: 
   ((<verb-x-pl,i> & (<vc-seem>))
   or (<verb-and-sp-i-> & ([(<vc-seem>)] or ()))
@@ -3369,7 +3369,7 @@ supposed.v-d:
   (<verb-and-sp-i-> & (([<vc-assert>]) or ())) or
   ((<vc-assert>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or
-  (<verb-s-pv> & {TOf+ or THi+ or Z-}) or
+  (<verb-s-pv> & {(TOf+ & <inf-verb>) or THi+ or Z-}) or
   ({@E-} & A+);
 asserting.v contending.v remarking.v retorting.v intimating.v
 exclaiming.v conjecturing.v alleging.v surmising.v opining.v insinuating.v
@@ -4459,7 +4459,7 @@ believed.v-d answered.v-d worried.v-d protested.v-d:
   ((<verb-sp,pp> & (<vc-believe>)) or
   (<verb-and-sp-i-> & (([<vc-believe>]) or ())) or
   ((<vc-believe>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or (<verb-s-pv> & {THi+ or TOf+}) or <verb-phrase-opener>;
+  <verb-and-sp-t> or (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>)}) or <verb-phrase-opener>;
 believing.g answering.g worrying.g protesting.g:
 (<vc-believe> & <verb-ge>) or <verb-ge-d>;
 believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
@@ -4485,7 +4485,7 @@ ruled.v-d added.v-d:
   (<verb-and-sp-i-> & (([<vc-rule>]) or ())) or
   ((<vc-rule>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or
-  (<verb-s-pv-b> & {({@MV+} & (THi+ or TOf+)) or ({K+} & {@MV+})}) or
+  (<verb-s-pv-b> & {({@MV+} & (THi+ or (TOf+ & <inf-verb>))) or ({K+} & {@MV+})}) or
   ({K+} & <verb-phrase-opener>) or
   ({@E-} & A+);
 ruling.g adding.g: (<vc-rule> & <verb-ge>) or <verb-ge-d>;
@@ -4631,7 +4631,7 @@ known.v:
   ((<verb-pp> & (<vc-know>)) or
   (<verb-and-had-> & (([<vc-know>]) or ())) or
   ((<vc-know>) & <verb-and-had+>)) or
-  (<verb-s-pv> & {THi+ or TOf+ or QIi+}) or
+  (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>) or QIi+}) or
   <verb-phrase-opener> or
   ({@E-} & A+);
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
@@ -5249,7 +5249,7 @@ expected.v-d claimed.v-d:
   (<verb-and-sp-i-> & (([<vc-expect>]) or ())) or
   ((<vc-expect>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or (<verb-s-pv> &
-{TOf+ or THi+ or Z-}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
+{(TOf+ & <inf-verb>) or THi+ or Z-}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 expecting.g claiming.g: (<vc-expect> & <verb-ge>) or <verb-ge-d>;
 expecting.v claiming.v: <verb-pg> & <vc-expect>;
 
@@ -5519,8 +5519,8 @@ considered.v-d:
   (<verb-and-sp-i-> & (([<vc-consider>]) or ())) or
   ((<vc-consider>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or (<verb-s-pv-b> &
-(({@MV+} & (TOf+ or Pa+)) or ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+})))
-or ((({@MV+} & (TOf+ or Pa+)) or ({O+ or [[@MV+ & O*n+]]}))
+(({@MV+} & ((TOf+ & <inf-verb>) or Pa+)) or ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+})))
+or ((({@MV+} & ((TOf+ & <inf-verb>) or Pa+)) or ({O+ or [[@MV+ & O*n+]]}))
 & <verb-phrase-opener>);
 considering.g: (<vc-consider> & <verb-ge>) or <verb-ge-d>;
 considering.v: <verb-pg> & <vc-consider>;
@@ -5566,7 +5566,7 @@ reported.v-d:
   ((<verb-sp,pp> & (<vc-report>)) or
   (<verb-and-sp-i-> & (([<vc-report>]) or ())) or
   ((<vc-report>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or (<verb-s-pv> & {TOf+ or Z-}) or
+  <verb-and-sp-t> or (<verb-s-pv> & {(TOf+ & <inf-verb>) or Z-}) or
 ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 reporting.g: (<vc-report> & <verb-ge>) or <verb-ge-d>;
 reporting.v: <verb-pg> & <vc-report>;
@@ -6796,7 +6796,7 @@ embarrassing.g annoying.g:
 <vc-prove>:
   ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
   ((O+ or OX+ or B-) & {@MV+} & (TOo+ or [[Pa+]])) or
-  ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or (Pa+ & <verb-wall>)));
+  ({@MV+} & ((TOf+ & <inf-verb>) or TH+ or Ce+ or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
 prove.v: 
   ((<verb-x-pl,i> & (<vc-prove>))
@@ -6811,12 +6811,12 @@ proved.v-d:
   ((<verb-x-sp,pp> & (<vc-prove>)) or
   (<verb-and-sp-i-> & (([<vc-prove>]) or ())) or
   ((<vc-prove>) & <verb-and-sp-i+>))
-  or (<verb-s-pv> & {THi+ or TOf+})
+  or (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>)})
   or ({@E-} & A+)
   or ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proven.v:
   (<verb-x-pp> & <vc-prove>) or
-  (<verb-s-pv> & {THi+ or TOf+ or Pa+}) or
+  (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>) or Pa+}) or
   ({@E-} & A+) or
   ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
@@ -7340,7 +7340,7 @@ about:
   or EW+
   or EZ+
   or [MVp- & B-]
-  or (TOf+ & (Mp- or MVp- or Pp-))
+  or ((TOf+ & <inf-verb>) & (Mp- or MVp- or Pp-))
   or MVa-;
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
@@ -8727,8 +8727,8 @@ wise.a unwise.a smart.a intelligent.a:
 unlikely.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or
-    ({@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}}) or
+    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -8737,8 +8737,8 @@ unlikely.a:
 likely.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or
-    ({@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}}) or
+    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -8807,8 +8807,8 @@ unknown.a questionable.a:
 certain.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
-    ({@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or (TOf+ & <inf-verb>) or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    ({@MV+} & {(Ce+ or (TOf+ & <inf-verb>) or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or

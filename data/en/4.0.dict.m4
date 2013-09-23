@@ -3018,13 +3018,13 @@ sworn.v: VERB_PP(<vc-hope>) or ({@E-} & A+);
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or TOf+ or THi+ or AF- or [[Pv+]]};
+<vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or THi+ or AF- or [[Pv+]]};
 appear.v: VERB_X_PLI(<vc-appear>);
 appears.v: VERB_X_S(<vc-appear>);
 appeared.v-d: VERB_X_SPPP(<vc-appear>);
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-<vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or TOf+ or LI+ or THi+ or AF- or [[Pv+]]);
+<vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or (TOf+ & <inf-verb>) or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: VERB_X_PLI(<vc-seem>);
 seems.v: VERB_X_S(<vc-seem>);
 seemed.v-d: VERB_X_SPPP(<vc-seem>);
@@ -3054,7 +3054,7 @@ alleged.v-d:
   ({@E-} & A+);
 supposed.v-d:
   VERB_SPPP_T(<vc-assert>) or
-  (<verb-s-pv> & {TOf+ or THi+ or Z-}) or
+  (<verb-s-pv> & {(TOf+ & <inf-verb>) or THi+ or Z-}) or
   ({@E-} & A+);
 asserting.v contending.v remarking.v retorting.v intimating.v
 exclaiming.v conjecturing.v alleging.v surmising.v opining.v insinuating.v
@@ -3656,7 +3656,7 @@ noting.v confirming.v stressing.v assuming.v:
 believe.v answer.v worry.v protest.v: VERB_PLI(<vc-believe>);
 believes.v answers.v worries.v protests.v: VERB_S_T(<vc-believe>);
 believed.v-d answered.v-d worried.v-d protested.v-d:
-  VERB_SPPP_T(<vc-believe>) or (<verb-s-pv> & {THi+ or TOf+}) or <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-believe>) or (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>)}) or <verb-phrase-opener>;
 believing.g answering.g worrying.g protesting.g:
 (<vc-believe> & <verb-ge>) or <verb-ge-d>;
 believing.v answering.v worrying.v protesting.v: <verb-pg> & <vc-believe>;
@@ -3671,7 +3671,7 @@ rule.v add.v: VERB_PLI(<vc-rule>);
 rules.v adds.v: VERB_S_T(<vc-rule>);
 ruled.v-d added.v-d:
   VERB_SPPP_T(<vc-rule>) or
-  (<verb-s-pv-b> & {({@MV+} & (THi+ or TOf+)) or ({K+} & {@MV+})}) or
+  (<verb-s-pv-b> & {({@MV+} & (THi+ or (TOf+ & <inf-verb>))) or ({K+} & {@MV+})}) or
   ({K+} & <verb-phrase-opener>) or
   ({@E-} & A+);
 ruling.g adding.g: (<vc-rule> & <verb-ge>) or <verb-ge-d>;
@@ -3762,7 +3762,7 @@ knew.v-d: VERB_SP_T(<vc-know>);
 
 known.v:
   VERB_PP(<vc-know>) or
-  (<verb-s-pv> & {THi+ or TOf+ or QIi+}) or
+  (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>) or QIi+}) or
   <verb-phrase-opener> or
   ({@E-} & A+);
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
@@ -4101,7 +4101,7 @@ hostage.i captive.i: Vh- or Vth-;
 expect.v claim.v: VERB_PLI(<vc-expect>);
 expects.v claims.v: VERB_S_T(<vc-expect>);
 expected.v-d claimed.v-d: VERB_SPPP_T(<vc-expect>) or (<verb-s-pv> &
-{TOf+ or THi+ or Z-}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
+{(TOf+ & <inf-verb>) or THi+ or Z-}) or ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 expecting.g claiming.g: (<vc-expect> & <verb-ge>) or <verb-ge-d>;
 expecting.v claiming.v: <verb-pg> & <vc-expect>;
 
@@ -4247,8 +4247,8 @@ commanding.v ordering.v urging.v: <verb-pg> & <vc-command>;
 consider.v: VERB_PLI(<vc-consider>);
 considers.v: VERB_S_T(<vc-consider>);
 considered.v-d: VERB_SPPP_T(<vc-consider>) or (<verb-s-pv-b> &
-(({@MV+} & (TOf+ or Pa+)) or ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+})))
-or ((({@MV+} & (TOf+ or Pa+)) or ({O+ or [[@MV+ & O*n+]]}))
+(({@MV+} & ((TOf+ & <inf-verb>) or Pa+)) or ({O+ or B- or [[@MV+ & O*n+]]} & {@MV+})))
+or ((({@MV+} & ((TOf+ & <inf-verb>) or Pa+)) or ({O+ or [[@MV+ & O*n+]]}))
 & <verb-phrase-opener>);
 considering.g: (<vc-consider> & <verb-ge>) or <verb-ge-d>;
 considering.v: <verb-pg> & <vc-consider>;
@@ -4272,7 +4272,7 @@ perceiving.v: <verb-pg> & <vc-perceive>;
 
 report.v: VERB_PLI(<vc-report>);
 reports.v: VERB_S_T(<vc-report>);
-reported.v-d: VERB_SPPP_T(<vc-report>) or (<verb-s-pv> & {TOf+ or Z-}) or
+reported.v-d: VERB_SPPP_T(<vc-report>) or (<verb-s-pv> & {(TOf+ & <inf-verb>) or Z-}) or
 ({@E-} & A+) or ({@MV+} & {TO+} & <verb-phrase-opener>);
 reporting.g: (<vc-report> & <verb-ge>) or <verb-ge-d>;
 reporting.v: <verb-pg> & <vc-report>;
@@ -5042,18 +5042,18 @@ embarrassing.g annoying.g:
 <vc-prove>:
   ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
   ((O+ or OX+ or B-) & {@MV+} & (TOo+ or [[Pa+]])) or
-  ({@MV+} & (TOf+ or TH+ or Ce+ or RSe+ or Zs- or (Pa+ & <verb-wall>)));
+  ({@MV+} & ((TOf+ & <inf-verb>) or TH+ or Ce+ or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
 prove.v: VERB_X_PLI(<vc-prove>);
 proves.v: VERB_X_S(<vc-prove>);
 proved.v-d:
   VERB_X_SPPP(<vc-prove>)
-  or (<verb-s-pv> & {THi+ or TOf+})
+  or (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>)})
   or ({@E-} & A+)
   or ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proven.v:
   (<verb-x-pp> & <vc-prove>) or
-  (<verb-s-pv> & {THi+ or TOf+ or Pa+}) or
+  (<verb-s-pv> & {THi+ or (TOf+ & <inf-verb>) or Pa+}) or
   ({@E-} & A+) or
   ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
@@ -5431,7 +5431,7 @@ about:
   or EW+
   or EZ+
   or [MVp- & B-]
-  or (TOf+ & (Mp- or MVp- or Pp-))
+  or ((TOf+ & <inf-verb>) & (Mp- or MVp- or Pp-))
   or MVa-;
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
@@ -6818,8 +6818,8 @@ wise.a unwise.a smart.a intelligent.a:
 unlikely.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or
-    ({@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}}) or
+    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -6828,8 +6828,8 @@ unlikely.a:
 likely.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}}) or
-    ({@MV+} & {(TOf+ or THi+ or Ci+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}}) or
+    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -6898,8 +6898,8 @@ unknown.a questionable.a:
 certain.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
-    ({@MV+} & {(Ce+ or TOf+ or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(Ce+ or (TOf+ & <inf-verb>) or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    ({@MV+} & {(Ce+ or (TOf+ & <inf-verb>) or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
