@@ -3172,8 +3172,9 @@ gone.a:
   ({@MV+} & AJla+);
 
 % XXX TODO maybe need VJ and-able links for going etc. ???
+% (TOf+ & <inf-verb>): "there is going to be a meeting"
 going.v:
-  ((TOf+ or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge> & <verb-wall>) or
+  (((TOf+ & <inf-verb>) or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge> & <verb-wall>) or
   ({@E-} & A+) or
   <verb-ge-d>;
 
