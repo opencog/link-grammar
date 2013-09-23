@@ -1983,7 +1983,13 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
 % These are used almost exclusively with auxiliary verbs.
-
+% This is why they don't have & <verb-wall> in them: we don't want the
+% auxiliary attaching to the wall, we want only the main verb doing this.
+%
+% Unfortunately, it seems that "appears.v" uses <verb-x-s> but maybe
+% it should be using <verb-s-s> instead ??? (i.e. we do want it to 
+% attach.)  But the SFsi causes problems...  XXX FIXME 
+% viz: "there appears to be a problem" uses SFst to link ... 
 <verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
