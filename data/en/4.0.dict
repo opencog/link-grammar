@@ -1975,11 +1975,11 @@ per "/.per": Us+ & Mp-;
 % either filler-"it" or filler-"there" as a subject.
 % These are used almost exclusively with auxiliary verbs.
 
-<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
-<verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
-<verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
-<verb-x-sp,pp>: {@E-} & (S- or SF- or (RS- & B-) or PPf-);
-<verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
+<verb-x-pl,i>: {@E-} & (((Sp- or SFp-) & <verb-wall>) or If- or (RS- & Bp-) or Wi-);
+<verb-x-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
+<verb-x-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
+<verb-x-sp,pp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-) or PPf-);
+<verb-x-sp>: {@E-} & (((S- or SF-) & <verb-wall>) or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
 <verb-x-pg,ge>:
@@ -2325,9 +2325,9 @@ is.v:
   (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
 
 's.v ’s.v: [[(<verb-x-s,u> &
-(({@EBm+} & ((((O*t+ & <verb-wall>) or [K+] or BI+ or OF+ or
+(({@EBm+} & (((O*t+ or [K+] or BI+ or OF+ or
 (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+)) & {@MV+}) or
-(Pp+ & {THi+ or @MV+}) or THb+ or TO+ or (Pa+ & <verb-wall>))) or ({Pp+} & Pg+) or Pv+ or PP+)) or
+(Pp+ & {THi+ or @MV+}) or THb+ or TO+ or Pa+)) or ({Pp+} & Pg+) or Pv+ or PP+)) or
 (SIs+ & PF-)]];
 
 % are.v:
