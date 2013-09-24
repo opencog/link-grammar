@@ -2288,8 +2288,10 @@ hadn't.v-d hadn’t.v-d:
 % [Cet+]: elided (silent "that"): "my guess is the door on the left hides the prize."
 % which really should be: "my guess is [that] the door on the left hides the prize."
 % Except that this breaks lots of stuff ... Arghhh.
+%
+% (<verb-wall> & BI+): "The question is who we should invite"
 <vc-be-no-obj>:
-  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
+  ({@EBm+} & ((([B**t-] or [K+] or (<verb-wall> & BI+) or OF+ or PF- or
       (Osi+ & R+ & Bs+) or
       (Opi+ & R+ & Bp+) or
       [[()]]) & {@MV+}) or
