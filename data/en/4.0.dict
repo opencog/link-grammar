@@ -2386,7 +2386,7 @@ were.v-d:
 
 % XXX the verb-and construction is probably too broad.
 am.v:
-  ((({@E-} & SX- & <verb-wall>) or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & SXI+)) & <vc-be>) or
+  ((({@E-} & SX-) or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & SXI+)) & <vc-be>) or
   (<verb-and-sp-> & <vc-be-and>) or (<vc-be-and> & <verb-and-sp+>);
 
 % I'm == I am
