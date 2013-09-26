@@ -1,5 +1,5 @@
 (function () {
-  var ffi, ref, Struct, pointerType, string, int, ParseOptions, Dictionary, Sentence, Linkage, CNode, CNodePtr, apiTemplate, libPath, lib, merge, getNodePtrFromPtr, defaultConfig;
+  var ffi, ref, Struct, pointerType, string, int, ParseOptions, Dictionary, Sentence, Linkage, CNode, CNodePtr, apiTemplate, libPath, lib, defaultDataPath, merge, getNodePtrFromPtr, defaultConfig;
 
   /* # Link Grammar Parser 
       
@@ -33,8 +33,9 @@
   /*  
      Load the library. 
       */
-  libPath = "./lib/libparser";
+  libPath = __dirname + "/../lib/libparser";
   lib = ffi.Library(libPath, apiTemplate);
+  defaultDataPath = __dirname + "/../data/";
   /*  
      Utility functions... 
       */
@@ -70,7 +71,7 @@
   /*  
      Default configuration for data paths. 
       */
-  defaultConfig = {dictPath: "./data/4.0.dict", ppPath: "./data/4.0.knowledge", consPath: "./data/4.0.constituent-knowledge", affixPath: "./data/4.0.affix"};
+  defaultConfig = {dictPath: defaultDataPath + "4.0.dict", ppPath: defaultDataPath + "4.0.knowledge", consPath: defaultDataPath + "4.0.constituent-knowledge", affixPath: defaultDataPath + "4.0.affix"};
 
   /*  
      Main parser class which interfaces the native library to make it very simple to get link grammar data from an input string. 
