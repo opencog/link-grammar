@@ -1,7 +1,7 @@
 
 # Link Grammar Parser
 
-A node library which interfaces a well known link grammar native library <http://www.link.cs.cmu.edu/link/>
+A node library which interfaces a well known link grammar native [library](<http://www.link.cs.cmu.edu/link/>)
 
 The point of this project is to make the library easier to use, especially in node!
 
@@ -31,15 +31,15 @@ Parser = require("link-grammar");
  * @param {string} input - input sentence to parse
  * @returns {array} - array of linkages which each contain grammar links
  */
-links = Parser.getLinks "my name is sam"
+links = Parser.getLinks("my name is sam");
 
 /**
  * Gets constituent tree
  * @param {string} input - input sentence to parse
  * @returns {object} - root node of tree, each node contains a label and which nodes it links to
  */
-root = Parser.getTree "the dog ate my homework"
+root = Parser.getTree("the dog ate my homework");
 
 ```
 
-Link Grammar Documentation <http://www.link.cs.cmu.edu/link/dict/>
+Link Grammar [Documentation](<http://www.link.cs.cmu.edu/link/dict/>)
