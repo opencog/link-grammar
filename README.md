@@ -26,19 +26,22 @@ Which will clean, compile, and test the project.
  */
 Parser = require("link-grammar");
 
+/* Create a parser */
+parser = new Parser();
+
 /**
  * Gets grammar links
  * @param {string} input - input sentence to parse
  * @returns {array} - array of linkages which each contain grammar links
  */
-links = Parser.getLinks("my name is sam");
+links = parser.getLinks("my name is sam");
 
 /**
  * Gets constituent tree
  * @param {string} input - input sentence to parse
  * @returns {object} - root node of tree, each node contains a label and which nodes it links to
  */
-root = Parser.getTree("the dog ate my homework");
+root = parser.getTree("the dog ate my homework");
 
 ```
 
