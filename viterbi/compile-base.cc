@@ -146,12 +146,12 @@ OutList Uniq::uniqify(const OutList& ol)
 	auto end = ol.end();
 	for (auto it = ol.begin(); it != end; it++)
 		us.insert(*it);
-	
+
 	OutList ret;
 	auto usend = us.end();
 	for (auto ut = us.begin(); ut != usend; ut++)
 		ret.push_back(*ut);
-	
+
 	return ret;
 }
 

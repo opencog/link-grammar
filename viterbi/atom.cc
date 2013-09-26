@@ -27,6 +27,7 @@ const string type_name(AtomType t)
 		// Generic node types
 		case NODE:       return "NODE";
 		case INDEX:      return "INDEX";
+		case LABEL:      return "LABEL";
 
 		// Viterbi-specific node types
 		case WORD:       return "WORD";
@@ -144,5 +145,5 @@ std::ostream& operator<<(std::ostream& out, AtomType t)
 	return out;
 }
 
-} // namespace atom
+} // namespace atombase
 

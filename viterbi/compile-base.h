@@ -21,6 +21,14 @@ namespace atombase {
 // These are here purely for C++ programming convenience; the true
 // structure that matters is the dynamic run-time (hyper-)graphs.
 
+/// Simple string label node.
+class Label : public Node
+{
+	public:
+		Label(const std::string& n, const TV& tv = TV())
+         : Node(LABEL, n, tv) {}
+};
+
 /// Index, ID
 /// Identification Node, holds one or several numeric ID values.
 /// Intended primarily for debugging.
@@ -133,6 +141,8 @@ class Uniq : public Set
 		Uniq(Set* set)
 			: Set(UNIQ, uniqify(set->get_outgoing_set()), set->_tv)
 		{}
+
+		// XXX TODO we really should overload append, and enforce uniqueness. ...
 	protected:
 		static OutList uniqify(const OutList& ol);
 };
@@ -162,6 +172,18 @@ class Seq : public Set
       virtual Seq* clone() const { return new Seq(*this); }
 
 		Seq* append(Atom* a) const { return dynamic_cast<Seq*>(Link::append(a)); }
+
+		/// Get the first and last atoms in the sequence
+		Atom* get_first() const {
+			if (0 < get_arity()) return get_outgoing_atom(0);
+			else return NULL;
+		}
+		Atom* get_last() const {
+			size_t sz = get_arity();
+			if (0 < sz) return get_outgoing_atom(sz-1);
+			else return NULL;
+		}
+
 
 	protected:
 		/// The sole purpose of this ctor is to allow inheritance.

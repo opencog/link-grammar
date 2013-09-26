@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 #include <gc/gc_allocator.h>
 #include <gc/gc_cpp.h>
 
@@ -63,6 +64,7 @@ enum AtomType
 	// Generic Node types
 	NODE = 1,
 	INDEX,
+	LABEL,
 
 	// Viterbi-specific Node types
 	WORD,       // a word
@@ -154,10 +156,15 @@ class Node : public Atom
 		const std::string _name;
 };
 
+
 /// All outgoing lists will be handled as vectors.
 // Must use the bdw-gc allocator to track these pointers.
 // If this is not done, the GC will fail to see the pointers here.
-typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
+template <typename T> 
+using AtomList = std::vector<T*, gc_allocator<Atom*> >;
+ 
+// typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
+typedef AtomList<Atom> OutList;
 
 /**
  * Links hold a bunch of atoms
@@ -221,6 +228,7 @@ class Link : public Atom
 	     VAR = dynamic_cast<TYPENAME>(_aa_##VAR), \
 	     _ii_##VAR < _ee_##VAR; \
 	     _ii_##VAR++)
+
 
 std::ostream& operator<<(std::ostream& out, const Atom*);
 std::ostream& operator<<(std::ostream& out, AtomType);
