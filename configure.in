@@ -539,6 +539,9 @@ if test "x$enable_java_bindings" = "xyes"; then
          -I/opt/jdk1.5/include/ \
          -I/opt/jdk1.5/include/freebsd \
          -I/opt/jdk1.5/include/linux \
+         -I/usr/lib/jvm/java-1.5.0-gcj-4.8-amd64/include \
+         -I/usr/lib/jvm/java-1.5.0-gcj-4.8-amd64/include/freebsd \
+         -I/usr/lib/jvm/java-1.5.0-gcj-4.8-amd64/include/linux \
          -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include \
          -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/freebsd \
          -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/linux \
