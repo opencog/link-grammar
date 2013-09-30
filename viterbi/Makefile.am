@@ -22,7 +22,6 @@ libvitacog_la_SOURCES = \
 	garbage.cc \
 	parser.cc \
 	rewrite.cc \
-	subspace.cc \
 	word-monad.cc \
 	atom.h \
 	compile-base.h \
@@ -34,7 +33,6 @@ libvitacog_la_SOURCES = \
 	garbage.h \
 	parser.h \
 	rewrite.h \
-	subspace.h \
 	viterbi.h \
 	word-monad.h
 
