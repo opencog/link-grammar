@@ -300,7 +300,7 @@ Set* WordMonad::operator()(Set* alts)
 				continue;
 			Set* next_alts = new Set(new StateTriple(new Seq(),
 			                         new Seq(_right_cset), new Set()));
-			new_alts = new_alts->add(next_alts);
+			new_alts = new_alts->sum(next_alts);
 			continue;
 		}
 		// Each state sequence consists of a sequence of right-pointing
@@ -310,7 +310,7 @@ Set* WordMonad::operator()(Set* alts)
 		// must link to the first sequence element that has dangling
 		// right-pointing connectors.
 		Set* next_alts = try_connect_one(sp, _right_cset);
-		new_alts = new_alts->add(next_alts);
+		new_alts = new_alts->sum(next_alts);
 	}
 
 	// set_clean_state(new_state_set);

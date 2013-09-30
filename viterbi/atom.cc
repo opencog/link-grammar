@@ -9,12 +9,13 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <algorithm>
 #include <iostream>
 #include <string>
-#include <assert.h>
 #include <math.h>
 
 #include "atom.h"
+#include "compile-base.h"
 
 namespace atombase {
 
@@ -35,7 +36,7 @@ const string type_name(AtomType t)
 		case CONNECTOR:  return "CONNECTOR";
 
 		// Generic link types
-		// case LINK:       return "LINK";
+		case LINK:       return "LINK";
 		case SEQ:        return "SEQ";
 		case SET:        return "SET";
 		case UNIQ:       return "UNIQ";
@@ -58,6 +59,194 @@ bool TV::operator==(const TV& other) const
 	// The ULP for single-precision floating point is approx 1.0e-7.2
 	if (fabs(other._strength - _strength) < 1.0e-6) return true;
 	return false;
+}
+
+// ====================================================
+
+// Single, global mutex for locking the incoming set.
+std::mutex Atom::IncomingSet::_mtx;
+
+// Destructor.
+Atom::~Atom()
+{
+	if (_incoming_set)
+	{
+		std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
+		_incoming_set->_iset.clear();
+		delete _incoming_set;
+		_incoming_set = NULL;
+	}
+}
+
+/// Start tracking the incoming set for this atom.
+/// An atom can't know what it's incoming set is, until this method
+/// is called.  If this atom is added to any links before this call
+/// is made, those links won't show up in the incoming set.
+///
+/// We don't automatically track incoming sets for two reasons:
+/// 1) std::set takes up 48 bytes
+/// 2) adding and remoiving uses up cpu cycles.
+/// Thus, if the incoming set isn't needed, then don't bother
+/// tracking it.
+void Atom::keep_incoming_set()
+{
+	if (_incoming_set) return;
+	_incoming_set = new IncomingSet;
+}
+
+/// Stop tracking the incoming set for this atom.
+/// After this call, the incoming set for this atom can no longer
+/// be queried; it si erased.
+void Atom::drop_incoming_set()
+{
+	if (NULL == _incoming_set) return;
+	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
+	_incoming_set->_iset.clear();
+	// delete _incoming_set;
+	_incoming_set = NULL;
+}
+
+/// Add an atom to the incoming set.
+void Atom::insert_atom(Link *a)
+{
+	if (NULL == _incoming_set) return;
+	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
+	// XXX TODO, I'm pretty sure I need to call
+	// GC_register_disappearing_link() on the location inside of set
+	// that is holding the actual value. Not sure how ...
+	_incoming_set->_iset.insert(a);
+}
+
+/// Remove an atom from the incoming set.
+void Atom::remove_atom(Link *a)
+{
+	if (NULL == _incoming_set) return;
+	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
+	_incoming_set->_iset.erase(a);
+}
+
+/// Return a copy of the entire incoming set of this atom.
+///
+/// This returns a copy of the incoming set at the time it was called.
+/// This call is thread-safe, and thread-consistent (i.e. the incoming
+/// set is guaranteed not to get smaller for as long as the link is
+/// held; it may, however, get larger, if there are any atoms creted
+/// after this method returns.
+Link* Atom::get_incoming_set()
+{
+	if (NULL == _incoming_set) return NULL;
+	std::unique_lock<std::mutex> lck (_incoming_set->_mtx);
+	OutList oset;
+	std::set<Link*>::iterator it = _incoming_set->_iset.begin();
+	std::set<Link*>::iterator end = _incoming_set->_iset.end();
+	for (; it != end; ++it)
+	{
+		oset.push_back(*it);
+	}
+
+	// Unlock the mutex before calling new, below.
+	lck.unlock();
+
+	// Hmm .. SET would be better than LINK, here ... !?
+	return new Link(LINK, oset);
+}
+
+/// Like above, but filtering for type.
+Link* Atom::get_incoming_set(AtomType type)
+{
+	if (NULL == _incoming_set) return NULL;
+	std::unique_lock<std::mutex> lck (_incoming_set->_mtx);
+	OutList oset;
+	std::set<Link*>::iterator it = _incoming_set->_iset.begin();
+	std::set<Link*>::iterator end = _incoming_set->_iset.end();
+	for (; it != end; ++it)
+	{
+		if ((*it)->get_type() == type) oset.push_back(*it);
+	}
+
+	// Unlock the mutex before calling new, below.
+	lck.unlock();
+
+	// Hmm .. SET would be better than LINK, here ... !?
+	return new Link(LINK, oset);
+}
+
+// ====================================================
+
+/// Constructor.  Place self into incoming set.
+/// For every atom in the outgoing set of this link, add this link
+/// to that atom's incoming set.
+void Link::add_to_incoming_set()
+{
+	size_t arity = get_arity();
+	for (size_t i=0; i<arity; i++)
+		_oset[i]->insert_atom(this);
+}
+
+/// Place self into incoming sets, but only they are of type t.
+/// For every atom of type t in the outgoing set of this link, add this
+/// link to that atom's incoming set.
+void Link::add_to_incoming_set(AtomType t)
+{
+	size_t arity = get_arity();
+	for (size_t i=0; i<arity; i++)
+		if (_oset[i]->get_type() == t)
+			_oset[i]->insert_atom(this);
+}
+
+/// Remove self from the incoming sets, if they are of type t.
+/// For every atom of type t in the outgoing set of this link, remove
+/// this link from that atom's incoming set.
+void Link::remove_from_incoming_set(AtomType t)
+{
+	size_t arity = get_arity();
+	for (size_t i=0; i<arity; i++)
+		if (_oset[i]->get_type() == t)
+			_oset[i]->remove_atom(this);
+}
+
+/// Enable the tracking of incoming sets for atoms of type t.
+/// For every atom of type t in the outgoing set of this link, enable
+/// incoming-set tracking, and add this link to that atom's incoming set.
+void Link::enable_keep_incoming_set(AtomType t)
+{
+	size_t arity = get_arity();
+	for (size_t i=0; i<arity; i++)
+		if (_oset[i]->get_type() == t)
+		{
+			_oset[i]->keep_incoming_set();
+			_oset[i]->insert_atom(this);
+		}
+}
+
+/// Disable the tracking of incoming sets for atoms of type t.
+/// For every atom of type t in the outgoing set of this link, disable
+/// incoming-set tracking.
+void Link::disable_keep_incoming_set(AtomType t)
+{
+	size_t arity = get_arity();
+	for (size_t i=0; i<arity; i++)
+		if (_oset[i]->get_type() == t)
+		{
+			_oset[i]->drop_incoming_set();
+		}
+}
+
+// Destructor.  Remove self from incoming set.
+// Note: with garbage collection, this destructor is never called
+// (and that is how things should be).  We keep it around here, for the
+// rainy day when we swith to reference-counted pointers. 
+//
+// Note also: if this ever was called during gc, e.g. as a finalizer,
+// it will lead to deadlocks, since gc could get triggered by the call
+// to insert_atom(), which aleady holds the same global lock that
+// remove_atom() would use. i.e. using this in a finalizer will dead-lock
+// (unless we convert to per-atom locks, which could be wasteful).
+Link::~Link()
+{
+	size_t arity = get_arity();
+	for (size_t i=0; i<arity; i++)
+		_oset[i]->remove_atom(this);
 }
 
 // ====================================================

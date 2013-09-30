@@ -318,7 +318,7 @@ void Parser::stream_word(const string& word)
 	{
 		WordMonad cnct(wrd_cset);
 		Set* alts = cnct(_alternatives);
-		new_alts = new_alts->add(alts);
+		new_alts = new_alts->sum(alts);
 	}
 	_alternatives = new_alts;
 }

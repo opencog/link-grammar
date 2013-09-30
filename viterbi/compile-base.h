@@ -105,8 +105,8 @@ class Set : public Link
 		Set* flatten() const { return new Set(flatset(), _tv); }
 		Atom* super_flatten() const;
 
-		// Add (append) other set  to this set.
-		Set* add(const Set*);
+		// Set-union (append) other set  to this set.
+		virtual Set* sum(const Set*) const;
 
       virtual Set* clone() const { return new Set(*this); }
 
@@ -138,8 +138,8 @@ class Uniq : public Set
 		{}
 
 		// Special copy constructor
-		Uniq(Set* set)
-			: Set(UNIQ, uniqify(set->get_outgoing_set()), set->_tv)
+		Uniq(Set* sset)
+			: Set(UNIQ, uniqify(sset->get_outgoing_set()), sset->_tv)
 		{}
 
 		// XXX TODO we really should overload append, and enforce uniqueness. ...

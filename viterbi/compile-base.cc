@@ -122,16 +122,15 @@ Atom* Set::super_flatten() const
 	return (new Link(get_type(), newset, _tv))->upcaster();
 }
 
-/// Add (append) other set to this set.
-Set* Set::add(const Set* other)
+/// Set union (append) other set to this set.
+Set* Set::sum(const Set* other) const
 {
-	if (!other) return this;
-	if (0 == other->get_arity()) return this;
+	if (0 == other->get_arity()) return new Set(*this);
 
 	OutList o = get_outgoing_set();
 	const OutList& oth = other->get_outgoing_set();
 	o.insert(o.end(), oth.begin(), oth.end());
-	return new Set(o);
+	return new Set(o);  // XXX what about the tv ???
 }
 
 // ============================================================

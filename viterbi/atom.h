@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2012 Linas Vepstas <linasvepstas@gmail.com>             */
+/* Copyright (c) 2012, 2013 Linas Vepstas <linasvepstas@gmail.com>       */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the Viterbi parsing system is subject to the terms of the      */
@@ -13,6 +13,8 @@
 #define _ATOMBASE_ATOM_H
 
 #include <iostream>
+#include <mutex>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -73,6 +75,7 @@ enum AtomType
 	CONNECTOR,  // e.g. S+
 
 	// Generic Link types
+	LINK,
 	SET,        // unordered multiset of children
 	UNIQ,       // unordered set of children
 	SEQ,        // ordered sequence of children
@@ -102,23 +105,44 @@ enum AtomType
  *
  * All atoms are automatically garbage-collected.
  */
+class Link;
 class Atom : public gc
 {
 	public:
 		Atom(AtomType type, const TV& tv = TV()) :
-			_tv(tv), _type(type)
-		{
-			// Marking stubborn, since its immutable.
-			GC_change_stubborn(this);
-		}
+			_tv(tv), _type(type), _incoming_set(NULL) {}
+		virtual ~Atom();
 		AtomType get_type() const { return _type; }
 		TV _tv;
+
+		void keep_incoming_set();
+		void drop_incoming_set();
+		Link* get_incoming_set();
+		Link* get_incoming_set(AtomType);
+
 		virtual bool operator==(const Atom*) const;
 		virtual Atom* clone() const = 0;
-		virtual ~Atom() {}
 		Atom* upcaster();
 	protected:
+		friend class Link;  // wtf ???
+		void insert_atom(Link*);
+		void remove_atom(Link*);
+
 		const AtomType _type;
+
+		struct IncomingSet : public gc
+		{
+				// Just right now, we will use a single shared mutex for all
+				// locking on the incoming set.  If this causes too much
+				// contention, then we can fall back to a non-global lock,
+				// at the cost of 40 additional bytes per atom.
+				static std::mutex _mtx;
+				// incoming set is not tracked by garbage collector,
+				// to avoid cyclic references.
+				// std::set<ptr> uses 48 bytes (per atom).
+				std::set<Link*, std::less<Link*>, gc_allocator<Atom*> > _iset;
+		};
+		IncomingSet* _incoming_set;
 };
 
 /// Given an atom of a given type, return the C++ class of that type.
@@ -161,10 +185,10 @@ class Node : public Atom
 // Must use the bdw-gc allocator to track these pointers.
 // If this is not done, the GC will fail to see the pointers here.
 template <typename T> 
-using AtomList = std::vector<T*, gc_allocator<Atom*> >;
- 
+using AtomList = std::vector<T, gc_allocator<Atom*> >;
+
 // typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
-typedef AtomList<Atom> OutList;
+typedef AtomList<Atom*> OutList;
 
 /**
  * Links hold a bunch of atoms
@@ -176,34 +200,42 @@ class Link : public Atom
 	public:
 		// The main ctor
 		Link(AtomType t, const OutList& oset, const TV& tv = TV())
-			: Atom(t, tv), _oset(oset) {}
+			: Atom(t, tv), _oset(oset)
+		{ add_to_incoming_set(); }
 		Link(AtomType t, const TV& tv = TV())
 			: Atom(t, tv)
-		{}
+		{ add_to_incoming_set(); }
 		Link(AtomType t, Atom* a, const TV& tv = TV())
 			: Atom(t, tv), _oset(1, a)
-		{}
+		{ add_to_incoming_set(); }
 		Link(AtomType t, Atom* a, Atom*b, const TV& tv = TV())
 			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b); o;}))
-		{}
+		{ add_to_incoming_set(); }
 		Link(AtomType t, Atom* a, Atom* b, Atom* c, const TV& tv = TV())
 			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b);
 			                      o.push_back(c); o;}))
-		{}
+		{ add_to_incoming_set(); }
 		Link(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, const TV& tv = TV())
 			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b);
 			                      o.push_back(c); o.push_back(d); o;}))
-		{}
+		{ add_to_incoming_set(); }
 		Link(AtomType t, Atom* a, Atom* b, Atom* c, Atom* d, Atom* e, const TV& tv = TV())
 			: Atom(t, tv), _oset(({OutList o(1,a); o.push_back(b);
 			                      o.push_back(c); o.push_back(d);
 			                      o.push_back(e); o;}))
-		{}
+		{ add_to_incoming_set(); }
+		virtual ~Link();
+
 		size_t get_arity() const { return _oset.size(); }
 		Atom* get_outgoing_atom(size_t pos) const { return _oset.at(pos); }
 		const OutList& get_outgoing_set() const { return _oset; }
 
-		Link* append(Atom* a) const;
+		void enable_keep_incoming_set(AtomType);
+		void disable_keep_incoming_set(AtomType);
+		void add_to_incoming_set();
+		void add_to_incoming_set(AtomType);
+		void remove_from_incoming_set(AtomType);
+		Link* append(Atom*) const;
 
 		virtual bool operator==(const Atom*) const;
 		virtual Link* clone() const { return new Link(*this); }
@@ -211,6 +243,7 @@ class Link : public Atom
 		// Outgoing set is const, not modifiable.
 		const OutList _oset;
 };
+
 
 // An unhygenic for-each loop, to simplify iterating over
 // the outgoing set.  I don't see a more elegant way to do this,
@@ -223,7 +256,7 @@ class Link : public Atom
 	TYPENAME VAR; \
 	for (_ll_##VAR = (LNK), _ii_##VAR = 0, \
 	     _ee_##VAR = _ll_##VAR->get_arity(); \
-	     _aa_##VAR = _ii_##VAR < _ee_##VAR ? \
+	     _aa_##VAR = (_ii_##VAR < _ee_##VAR) ? \
 	        _ll_##VAR->get_outgoing_atom(_ii_##VAR) : 0x0, \
 	     VAR = dynamic_cast<TYPENAME>(_aa_##VAR), \
 	     _ii_##VAR < _ee_##VAR; \
