@@ -21,6 +21,8 @@
 #include <gc/gc_allocator.h>
 #include <gc/gc_cpp.h>
 
+#include "atom-types.h"
+
 namespace atombase {
 
 // Classes generally resembling those of the OpenCog AtomSpace
@@ -58,37 +60,6 @@ class TV
 		{
 			return TV(*this) += other;
 		}
-};
-
-// Atom types.  Right now an enum, but maybe should be dynamic!?
-enum AtomType
-{
-	// Generic Node types
-	NODE = 1,
-	INDEX,
-	LABEL,
-
-	// Viterbi-specific Node types
-	WORD,       // a word
-	LING_TYPE,  // a pair of merged connectors (LG LINK TYPE)
-	// META,       // special-word, e.g. LEFT-WALL, RIGHT-WALL
-	CONNECTOR,  // e.g. S+
-
-	// Generic Link types
-	LINK,
-	SET,        // unordered multiset of children
-	UNIQ,       // unordered set of children
-	SEQ,        // ordered sequence of children
-	AND,        // ordered AND of all children (order is important!)
-	OR,         // unordered OR of all children
-
-	// Viterbi-specific Link types
-	WORD_CSET,  // word, followed by a set of connectors for that word.
-	WORD_DISJ,  // word, followed by a single disjunct for that word.
-	LING,       // two connected connectors, (LGLINK) e.g. Dmcn w/o direction info
-	STATE_TRIPLE, // Current pending input, parse state and corresponding output.
-
-	RULE,       // Base class for graph re-write rules
 };
 
 /* Base class for Nodes and Links */

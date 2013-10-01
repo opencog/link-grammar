@@ -24,6 +24,7 @@ libvitacog_la_SOURCES = \
 	rewrite.cc \
 	word-monad.cc \
 	atom.h \
+	atom-types.h \
 	compile-base.h \
 	compile.h \
 	compress.h \
