@@ -235,7 +235,6 @@ class Link : public Atom
 
 
 std::ostream& operator<<(std::ostream& out, const Atom*);
-std::ostream& operator<<(std::ostream& out, AtomType);
 
 } // namespace atombase
 

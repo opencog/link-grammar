@@ -12,6 +12,8 @@
 #ifndef _ATOMBASE_ATOM_TYPES_H
 #define _ATOMBASE_ATOM_TYPES_H
 
+#include <iostream>
+
 namespace atombase {
 
 // Atom types.  Right now an enum, but maybe should be dynamic!?
@@ -30,6 +32,7 @@ enum AtomType
 
 	// Generic Link types
 	LINK,
+	RELATION,   // model-theoretic relation (OpenCog ExecutionLink)
 	SET,        // unordered multiset of children
 	UNIQ,       // unordered set of children
 	SEQ,        // ordered sequence of children

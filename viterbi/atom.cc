@@ -21,39 +21,6 @@ namespace atombase {
 
 using namespace std;
 
-const string type_name(AtomType t)
-{
-	switch(t)
-	{
-		// Generic node types
-		case NODE:       return "NODE";
-		case INDEX:      return "INDEX";
-		case LABEL:      return "LABEL";
-
-		// Viterbi-specific node types
-		case WORD:       return "WORD";
-		case LING_TYPE:  return "LING_TYPE";
-		case CONNECTOR:  return "CONNECTOR";
-
-		// Generic link types
-		case LINK:       return "LINK";
-		case SEQ:        return "SEQ";
-		case SET:        return "SET";
-		case UNIQ:       return "UNIQ";
-		case OR:         return "OR";
-		case AND:        return "AND";
-
-		// Viterbi-specific link types
-		case WORD_CSET:  return "WORD_CSET";
-		case WORD_DISJ:  return "WORD_DISJ";
-		case LING:       return "LING";
-		case STATE_TRIPLE: return "STATE_TRIPLE";
-		case RULE:       return "RULE";
-	}
-
-	return "UNHANDLED_TYPE_NAME";
-}
-
 bool TV::operator==(const TV& other) const
 {
 	// The ULP for single-precision floating point is approx 1.0e-7.2
@@ -294,8 +261,7 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 	if (n)
 	{
 		for (int i=0; i<ilvl; i++) cout << indent_str;
-		out << type_name(n->get_type()) << " : "
-		    << n->get_name();
+		out << n->get_type() << " : " << n->get_name();
 		if (0.0f != n->_tv._strength)
 			out << "    (" << n->_tv._strength << ")";
 		out << endl;
@@ -305,7 +271,7 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 	if (l)
 	{
 		for (int i=0; i<ilvl; i++) cout << indent_str;
-		out << type_name(l->get_type()) <<" :";
+		out << l->get_type() <<" :";
 		if (0.0f != l->_tv._strength)
 			out << "     (" << l->_tv._strength << ")";
       out << endl;
@@ -326,12 +292,6 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 std::ostream& operator<<(std::ostream& out, const Atom* a)
 {
 	return do_prt(out, a, 0);
-}
-
-std::ostream& operator<<(std::ostream& out, AtomType t)
-{
-	out << type_name(t);
-	return out;
 }
 
 } // namespace atombase

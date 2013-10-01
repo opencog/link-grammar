@@ -13,6 +13,7 @@ lib_LTLIBRARIES = libvitacog.la
 
 libvitacog_la_SOURCES = \
 	atom.cc \
+	atom-types.cc \
 	compile-base.cc \
 	compile.cc \
 	compress.cc \
