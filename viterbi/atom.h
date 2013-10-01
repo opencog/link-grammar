@@ -77,6 +77,8 @@ class TV
  * All atoms are automatically garbage-collected.
  */
 class Link;
+class Relation;
+class Set;
 class Atom : public gc
 {
 	public:
@@ -88,8 +90,12 @@ class Atom : public gc
 
 		void keep_incoming_set();
 		void drop_incoming_set();
-		Link* get_incoming_set();
-		Link* get_incoming_set(AtomType);
+		Set* get_incoming_set();
+		Set* get_incoming_set(AtomType);
+
+		Relation* add_relation(const std::string&, Atom*);
+		Set* get_relations(const std::string&) const;
+		Set* get_relation_vals(const std::string&) const;
 
 		virtual bool operator==(const Atom*) const;
 		virtual Atom* clone() const = 0;
@@ -114,6 +120,8 @@ class Atom : public gc
 				std::set<Link*, std::less<Link*>, gc_allocator<Atom*> > _iset;
 		};
 		IncomingSet* _incoming_set;
+
+		Set* filter_iset(std::function<Atom* (Atom*)>) const;
 };
 
 /// Given an atom of a given type, return the C++ class of that type.

@@ -48,6 +48,8 @@ enum AtomType
 	RULE,       // Base class for graph re-write rules
 };
 
+std::ostream& operator<<(std::ostream& out, AtomType t);
+
 } // namespace atombase
 
 #endif // _ATOMBASE_ATOM_TYPES_H

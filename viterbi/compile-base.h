@@ -12,6 +12,8 @@
 #ifndef _ATOMBASE_COMPILE_H
 #define _ATOMBASE_COMPILE_H
 
+#include <map>
+#include <stdexcept>
 #include "atom.h"
 
 namespace atombase {
@@ -44,9 +46,35 @@ class Index : public Node
 		Index(unsigned int a, int b, int c, const TV& tv = TV())
 			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%u, %d, %d", a, b, c); buff;}), tv)
 		{}
+		Index(double a, const TV& tv = TV())
+			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%15.12f", a); buff;}), tv)
+		{}
 };
 
-/// Unordered sequence
+/// Named relation, as defined in model theory.
+///
+/// This consists of a name (Label), followed by an ordered sequence
+/// of atoms.  The atoms are all related by the relation.  There are
+/// many different ways of thinking about this:
+/// 1) as a predicate: the relation is true/satisfied if it exists.
+///    (the truth of which is given by the _tv, of course)
+/// 2) as a graph of a function (in the sense of Bourbaki)
+/// 3) as a (named) function, the first n atoms being the arguments,
+///    the last being the value of the function for those arguments.
+/// 4) the atom that is equivalent to the OpenCog ExecutionLink
+class Relation : public Link
+{
+	public:
+		// Binary relation; add others if needed.
+		Relation(Label* lab, Atom* arg, Atom* val, const TV& tv = TV())
+			: Link(RELATION,  ({OutList o(1,lab); o.push_back(arg); o.push_back(val); o;}), tv)
+		{}
+		Relation(const std::string& name, Atom* arg, Atom* val, const TV& tv = TV())
+			: Link(RELATION,  ({OutList o(1, new Label(name)); o.push_back(arg); o.push_back(val); o;}), tv)
+		{}
+};
+
+/// Unordered multiset
 /// A Set inherits fom Link, and is an unordered set of zero or more
 /// atoms.  Properly speaking, it is a multi-set; the same atom may
 /// appear more than once in the set.
@@ -115,6 +143,7 @@ class Set : public Link
 	protected:
 		OutList flatset() const;
 };
+
 
 /// Unique set. An atom may appear at most once in the outgoing set.
 /// Duplicates are removed during construction.

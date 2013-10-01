@@ -15,6 +15,7 @@
 #include <math.h>
 
 #include "atom.h"
+#include "utilities.h"
 #include "compile-base.h"
 
 namespace atombase {
@@ -99,9 +100,16 @@ void Atom::remove_atom(Link *a)
 /// set is guaranteed not to get smaller for as long as the link is
 /// held; it may, however, get larger, if there are any atoms creted
 /// after this method returns.
-Link* Atom::get_incoming_set()
+Set* Atom::get_incoming_set()
 {
-	if (NULL == _incoming_set) return NULL;
+	if (NULL == _incoming_set) return new Set();
+	std::function<Atom* (Atom*)> filter = [&](Atom* a) -> Atom*
+	{
+		return a;
+	};
+	return filter_iset(filter);
+#ifdef EQUIVALENT_TO_ABOVE
+	// The above expands out into this.
 	std::unique_lock<std::mutex> lck (_incoming_set->_mtx);
 	OutList oset;
 	std::set<Link*>::iterator it = _incoming_set->_iset.begin();
@@ -110,32 +118,82 @@ Link* Atom::get_incoming_set()
 	{
 		oset.push_back(*it);
 	}
-
-	// Unlock the mutex before calling new, below.
 	lck.unlock();
-
-	// Hmm .. SET would be better than LINK, here ... !?
-	return new Link(LINK, oset);
+	return new Set(oset);
+#endif
 }
 
 /// Like above, but filtering for type.
-Link* Atom::get_incoming_set(AtomType type)
+Set* Atom::get_incoming_set(AtomType type)
 {
-	if (NULL == _incoming_set) return NULL;
+	if (NULL == _incoming_set) return new Set();
+	std::function<Atom* (Atom*)> filter = [type](Atom* a) -> Atom*
+	{
+		if (a->get_type() != type) return NULL;
+		return a;
+	};
+	return filter_iset(filter);
+}
+
+// ====================================================
+
+/// Add a nemed relation to the atom.
+/// This method only creates named binary relations.
+Relation* Atom::add_relation(const std::string& name, Atom* val)
+{
+	// We need to keep the incoming set, else the relation will not be findable.
+	keep_incoming_set();
+	return new Relation(name, this, val);
+}
+
+Set* Atom::filter_iset(std::function<Atom* (Atom*)> filter) const
+{
+	if (NULL == _incoming_set) return new Set();
 	std::unique_lock<std::mutex> lck (_incoming_set->_mtx);
 	OutList oset;
 	std::set<Link*>::iterator it = _incoming_set->_iset.begin();
 	std::set<Link*>::iterator end = _incoming_set->_iset.end();
 	for (; it != end; ++it)
 	{
-		if ((*it)->get_type() == type) oset.push_back(*it);
+		Atom* a = filter(*it);
+		if (a) oset.push_back(a);
 	}
 
 	// Unlock the mutex before calling new, below.
 	lck.unlock();
+	return new Set(oset);
+}
 
-	// Hmm .. SET would be better than LINK, here ... !?
-	return new Link(LINK, oset);
+/// Get the set of all named relations
+Set* Atom::get_relations(const std::string& name) const
+{
+	Label* lab = new Label(name);
+	std::function<Atom* (Atom*)> filter = [this, lab](Atom* a) -> Atom*
+	{
+		if (RELATION != a->get_type()) return NULL;
+		Relation* rel = dynamic_cast<Relation*>(a);
+		assert(1 < rel->get_arity(), "Relation cannot be zero-ary");
+		if (lab != rel->get_outgoing_atom(0)) return NULL;
+		assert(this == rel->get_outgoing_atom(1), "Corrupted outgoing set for relation");
+		return a;
+	};
+	return filter_iset(filter);
+}
+
+/// Get the set of all the values of the named relations
+Set* Atom::get_relation_vals(const std::string& name) const
+{
+	Label* lab = new Label(name);
+	std::function<Atom* (Atom*)> filter = [this, lab](Atom* a) -> Atom*
+	{
+		if (RELATION != a->get_type()) return NULL;
+		Relation* rel = dynamic_cast<Relation*>(a);
+		assert(3 == rel->get_arity(), "Expecting binary relation");
+		if (lab != rel->get_outgoing_atom(0)) return NULL;
+		assert(this == rel->get_outgoing_atom(1), "Corrupted outgoing set for relation");
+		return rel->get_outgoing_atom(2);
+	};
+	return filter_iset(filter);
 }
 
 // ====================================================
