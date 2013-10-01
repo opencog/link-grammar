@@ -100,7 +100,7 @@ void Atom::remove_atom(Link *a)
 /// set is guaranteed not to get smaller for as long as the link is
 /// held; it may, however, get larger, if there are any atoms creted
 /// after this method returns.
-Set* Atom::get_incoming_set()
+Set* Atom::get_incoming_set() const
 {
 	if (NULL == _incoming_set) return new Set();
 	std::function<Atom* (Atom*)> filter = [&](Atom* a) -> Atom*
@@ -124,7 +124,7 @@ Set* Atom::get_incoming_set()
 }
 
 /// Like above, but filtering for type.
-Set* Atom::get_incoming_set(AtomType type)
+Set* Atom::get_incoming_set(AtomType type) const
 {
 	if (NULL == _incoming_set) return new Set();
 	std::function<Atom* (Atom*)> filter = [type](Atom* a) -> Atom*

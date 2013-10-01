@@ -26,7 +26,7 @@
 namespace atombase {
 
 // Classes generally resembling those of the OpenCog AtomSpace
-// These are tailored for use for parsing.
+// These are tailored for use for the tracking task.
 
 /**
  * TV (truth value): strength or likelihood of a link.
@@ -90,8 +90,8 @@ class Atom : public gc
 
 		void keep_incoming_set();
 		void drop_incoming_set();
-		Set* get_incoming_set();
-		Set* get_incoming_set(AtomType);
+		Set* get_incoming_set() const;
+		Set* get_incoming_set(AtomType) const;
 
 		Relation* add_relation(const std::string&, Atom*);
 		Set* get_relations(const std::string&) const;
