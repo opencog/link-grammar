@@ -1173,7 +1173,7 @@ mine.p yours theirs hers ours:
 % ====================================================================
 % DETERMINERS
 
-% (L+ & (AJld+ or AJrd-)): "the biggest and the baddest ..."
+% (L+ & (AJld+ or AJrd-)): "...is the biggest and the baddest thug."
 the:
   ({AL-} & {@L+} & (D+ or DD+)) or
   DG+ or
@@ -8358,8 +8358,11 @@ and.j-c or.j-c but.j-c yet.j-c:
     ({[ECa-]} & MVb-) or
     Am+);
 
+% [MVa-] : "he ran the fastest and the farthest"
 and.j-s:
   (AJls- & AJrs+ & La-) or
+  (AJls- & AJrs+ & DD- & [MVa-]) or
+  (AJle- & AJre+ & [MVa-]) or
   (AJld- & AJrd+ & (D+ or DD+));
 
 % conjoined post-nominal modifiers
@@ -9225,22 +9228,25 @@ or (DD- & <noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>);
 past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+});
 following.a remaining.a top.i: L-;
 
-hardest.a easiest.a:
+hardest.a-s easiest.a-s:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & <noun-sub-x> & {TOt+ & B+} & <noun-main-x>) or
+  ({NR- or ND-} & DD- & (AJre- or AJle+)) or
   AJrs- or AJls+;
 
-worst.a longest.a fastest.a furthest.a farthest.a:
+worst.a-s longest.a-s fastest.a-s furthest.a-s farthest.a-s slowest.a-s:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & ((<noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or MVa-)) or
+  ({NR- or ND-} & DD- & (AJre- or AJle+)) or
   AJrs- or AJls+;
 
 % "he likes you best of all" has no determiner, just uses MVa-.
-best.a:
+best.a-s:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & ((<noun-sub-x> & {(TOn+ & <inf-verb>)} & <noun-main-x>) or (MVa- & {Mp+}))) or
   [[E+]] or
   [MVa- & {Mp+}] or
+  ({NR- or ND-} & DD- & (AJre- or AJle+)) or
   AJrs- or AJls+;
 
 % ===========================================================================
