@@ -6239,7 +6239,7 @@ when:
   or ((PF+ or (TOn+ & <inf-verb>) or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & Cs+)
   or [QI-]
-  or QJ- or QJ+
+  or ({EW-} & (QJ- or QJ+))
   or ({EW-} & Wq- & (Q+ or PF+))
   or ((Cs+ or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
@@ -6253,8 +6253,8 @@ why:
     or (QI- & (Cs+ or (TOn+ & <inf-verb>) or [()]))
     or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or ((Wi- or <directive-opener>) & {N+})
-    ))
-  or QJ- or QJ+;
+    or ({EW-} & (QJ- or QJ+))
+    ));
 
 % QI- & (): "I do not know where"
 % R+ & Bsw+: "Where does it go to?"
@@ -6265,8 +6265,7 @@ where:
     & (
       ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+))
       or [QI-]
-      or QJ-
-      or QJ+
+      or ({EW-} & (QJ- or QJ+))
       or (Cs+ & Bsw+ & QI-)
       or ((WR+ or Cs+ or (TOn+ & <inf-verb>) or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
       or ((Cs+ or PF+ or WR+) & <prep-main-b>));
@@ -6283,7 +6282,7 @@ how:
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
   or ({EW-} & Wq- & (({EL+} & Q+) or AF+))
   or [QI-]
-  or QJ- or QJ+
+  or ({EW-} & (QJ- or QJ+))
   or ((Cs+ or (TOn+ & <inf-verb>)) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % ----------------------------------------------------
