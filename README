@@ -671,7 +671,10 @@ Fat Links:
    to a number of complications, including poor performance due to
    a combinatorial explosion of linkage possibilities, as well as
    an excessively complex parse algorithm.  As a result, the function
-   is now deprecated, and will be removed in version 4.8.
+   is now deprecated, and will be removed in version 4.9.0.
+
+   The use of fat links by the Russian dictionaries is the major
+   road-block to the removal of fat links.
 
 
 SAT solver:
