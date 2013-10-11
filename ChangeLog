@@ -11,6 +11,7 @@ Version 4.8.0 (xxx 2013)
  * Java: Fix insane language selection initialization.
  * Fix: "The pig runs SLOWER than the cat."
  * Fix: conjoined superlatives: "... the longest and the farthest."
+ * Fix: "inside" can be used with conjunction: "near or inside..."
 
 Version 4.7.14 (20 June 2013)
  * Fix build break on MacOSX

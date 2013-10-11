@@ -5774,7 +5774,9 @@ aboard: ((MVp- or Mp- or Pp-) & {J+}) or K-;
 apart: {Yd-} & K-;
 
 inside.r outside.r underneath alongside:
-  {J+} & (<prep-main-b> or FM-);
+  <alter-preps>
+  or ({J+} & (<prep-main-b> or FM-));
+
 amid plus.p minus.p via onto:
   J+ & (<prep-main-b> or [Wq- & PF+]);
 
