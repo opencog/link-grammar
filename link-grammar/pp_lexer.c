@@ -1031,9 +1031,13 @@ void yy_delete_buffer( YY_BUFFER_STATE b )
 		yy_current_buffer = (YY_BUFFER_STATE) 0;
 
 	if ( b->yy_is_our_buffer )
+	{
 		yy_flex_free( (void *) b->yy_ch_buf );
+		b->yy_ch_buf = NULL;
+	}
 
 	yy_flex_free( (void *) b );
+	b = NULL;
 	}
 
 
@@ -1151,6 +1155,7 @@ void pp_lexer_close(PPLexTable *lt)
   string_set_delete(lt->string_set);
   xfree(lt, sizeof(PPLexTable));
   yy_delete_buffer(yy_current_buffer);
+  yy_current_buffer = NULL;
 }
 
 int pp_lexer_set_label(PPLexTable *lt, const char *label) 
