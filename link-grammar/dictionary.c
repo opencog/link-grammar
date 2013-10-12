@@ -31,7 +31,7 @@
 ****************************************************************/
 
 /* Units will typically have a ".u" at the end. Get
- * rid of it, as otherwise stipping is messed up. */
+ * rid of it, as otherwise stripping is messed up. */
 static inline char * deinflect(const char * str)
 {
 	size_t len;
@@ -80,36 +80,35 @@ static void count_affix(Dictionary dict, Dict_node *dn)
 
 static void load_affix(Dictionary dict, Dict_node *dn)
 {
-	static int i = 0;
-	static int j = 0;
-	static int k = 0;
-	static int l = 0;
-	static int m = 0;
-
 	if (word_has_connector(dn, rpunc_con, '+'))
 	{
-		dict->strip_right[i] = deinflect(dn->string);
-		i++;
+		assert(dict->r_stripped < dict->r_strippable, "bad r affix table size");
+		dict->strip_right[dict->r_stripped] = deinflect(dn->string);
+		dict->r_stripped++;
 	}
 	if (word_has_connector(dn, lpunc_con, '+'))
 	{
-		dict->strip_left[j] = deinflect(dn->string);
-		j++;
+		assert(dict->l_stripped < dict->l_strippable, "bad l affix table size");
+		dict->strip_left[dict->l_stripped] = deinflect(dn->string);
+		dict->l_stripped++;
 	}
 	if (word_has_connector(dn, units_con, '+'))
 	{
-		dict->strip_units[m] = deinflect(dn->string);
-		m++;
+		assert(dict->u_stripped < dict->u_strippable, "bad u affix table size");
+		dict->strip_units[dict->u_stripped] = deinflect(dn->string);
+		dict->u_stripped++;
 	}
 	if (word_has_connector(dn, suf_con, '+'))
 	{
-		dict->suffix[k] = dn->string;
-		k++;
+		assert(dict->s_stripped < dict->s_strippable, "bad s affix table size");
+		dict->suffix[dict->s_stripped] = dn->string;
+		dict->s_stripped++;
 	}
 	if (word_has_connector(dn, pre_con, '+'))
 	{
-		dict->prefix[l] = dn->string;
-		l++;
+		assert(dict->p_stripped < dict->p_strippable, "bad p affix table size");
+		dict->prefix[dict->p_stripped] = dn->string;
+		dict->p_stripped++;
 	}
 }
 

@@ -133,6 +133,11 @@ struct Dictionary_s
 	int u_strippable; /* units on left */
 	int s_strippable; /* generic suffix */
 	int p_strippable; /* generic prefix */
+	int r_stripped;
+	int l_stripped;
+	int u_stripped;
+	int s_stripped;
+	int p_stripped;
 	const char ** strip_left;
 	const char ** strip_right;
 	const char ** strip_units;
