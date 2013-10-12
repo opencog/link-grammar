@@ -1923,7 +1923,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl>: {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-s>: {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
 <verb-i>: {@E-} & I- & <verb-wall>;
-<verb-sp,pp>: {@E-} & (((S- or PP-) & <verb-wall>) or (RS- & B-));
+<verb-sp,pp>: {@E-} & (((S- or PP-) & <verb-wall>) or ((S- or RS-) & B-));
 <verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>: {@E-} & PP- & <verb-wall>;
 <verb-pg>: {@E-} & (Pg- or Mg-);
