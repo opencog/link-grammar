@@ -7450,10 +7450,17 @@ just_over just_under well_over: EN+;
 
 % XXX original LG recommends using the LI link, however the
 % <prep-main-b> sort of clobbers this. Should this be "fixed"?
-like.p: ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
-or (Vf- & Mgp+) or (LI- & (J+ or Cs+)))) or [MVp- & B-];
-unlike: J+ & (MVp- or Pp- or [({Xc+ & {Xd-}} & CO+)] or
-(Xd- & Xc+ & (E+ or MVx-)));
+like.p:
+  ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
+     or (Vf- & Mgp+)
+     or (LI- & (J+ or Cs+))))
+   or [MVp- & B-];
+
+unlike:
+   J+ & (MVp-
+     or Pp-
+     or [({Xc+ & {Xd-}} & CO+)]
+     or (Xd- & Xc+ & (E+ or MVx-)));
 
 % (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
 % The Jd+ forces a link to the object as well.
@@ -7871,13 +7878,15 @@ centuries.i semesters.i terms.i nights.i:
 ((ND- or [[EN-]] or [()]) & (Yt+ or (OT- & {Mp+}))) or (ND- & Ye-) or (TQ- & BT+);
 week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
-(NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-))) or
-(NSa- & [[Mp- or Ys-]]) or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+)
-or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
+  (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-)))
+  or (NSa- & [[Mp- or Ys-]])
+  or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
+
 year_and_a_half: NSa- & {EN-} & (Yt+ or OT-);
-moment.u: (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-))) or
-({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+)
-or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
+moment.u:
+  (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-)))
+  or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
+
 a_while: J- or Yt+ or OT- or MVa-;
 now.i then.i: JT- or FM-;
 now_on then_on there_on: FM-;
@@ -8130,7 +8139,7 @@ whichever:
   or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
 whence whither:
- {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+)
+  {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+)
     or ({Xd- & Xc+} & MVs-)));
 
 although in_as_much_as whilst whereas whereof wherein:
@@ -8145,13 +8154,13 @@ although in_as_much_as whilst whereas whereof wherein:
 % examination? (would require 'examination' and all other 'operation' 
 % nouns to be in their own class...
 when:
-  ((WN- or BIh-) & Cs+)
-  or ((PF+ or (TOn+ & <inf-verb>) or Cs+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
-  or (Mv- & Cs+)
+  ((WN- or BIh-) & Cs+ & <subord-verb>)
+  or ((PF+ or (TOn+ & <inf-verb>) or (Cs+ & <subord-verb>)) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+  or (Mv- & Cs+ & <subord-verb>)
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
   or ({EW-} & Wq- & (Q+ or PF+))
-  or ((Cs+ or Mp+ or Mgp+ or Mv+) &
+  or (((Cs+ & <subord-verb>) or Mp+ or Mgp+ or Mv+) &
     (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+) or (Xd- & Xc+ & E+)));
 
 % QI- & (): "I do not know why"
@@ -8180,10 +8189,14 @@ where:
       or ((WR+ or Cs+ or (TOn+ & <inf-verb>) or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
       or ((Cs+ or PF+ or WR+) & <prep-main-b>));
 
-whether: (((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>))) or (Cs+ & SFsx+ & <S-CLAUSE>))
-or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
-whether_or_not: ((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>))) or
-(Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
+whether:
+  ((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>)))
+  or (Cs+ & SFsx+ & <S-CLAUSE>)
+  or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
+
+whether_or_not:
+  ((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>)))
+  or (Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
 
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
@@ -8217,9 +8230,9 @@ that_there: Ds+;
 
 % (Rnx+ & <CLAUSE-E>): "Because I said so"
 because:
- (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-))) or
- (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-))) or
- (Rnx+ & <CLAUSE-E>);
+  (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-)))
+  or (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-)))
+  or (Rnx+ & <CLAUSE-E>);
 
 now_that just_as if_only in_case whereby whereupon insofar_as
 inasmuch_as ere on_the_grounds_that on_grounds_that in_that
@@ -9059,11 +9072,14 @@ or (MVzp- & (CX+ or CQ+))
 or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
 % prepositional, mostly
-as.e: ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
-(({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-))) or
-(Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-))) or
-((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-))) or
-(AZ- & Pa+) or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
+as.e:
+  ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
+    (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
+  or (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
+  or (AZ- & Pa+)
+  or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
+
 as_possible: MVz-;
 as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
 as_realized as_proposed as_intended as_supposed
@@ -9724,10 +9740,19 @@ only:
   or (Rnx+ & <CLAUSE-E>)
   or (MVp+ & Wq- & Q+);
 
-never.i at_no_time not_once rarely.i since_when: {MVp+} & Wq- & Q+ & {CC+};
-not_since: (J+ or Cs+) & Wq- & Q+ & {CC+};
-even.e: E+ or EC+ or EB- or ((MVp+ or MVa+ or MVs+)
-& (MVl- or ({Xc+ & {Xd-}} & CO+))) or (Rnx+ & <CLAUSE-E>);
+never.i at_no_time not_once rarely.i since_when:
+  {MVp+} & Wq- & Q+ & {CC+};
+
+not_since:
+  (J+ or Cs+) & Wq- & Q+ & {CC+};
+
+even.e:
+  E+
+  or EC+
+  or EB-
+  or ((MVp+ or MVa+ or MVs+) & (MVl- or ({Xc+ & {Xd-}} & CO+)))
+  or (Rnx+ & <CLAUSE-E>);
+
 not_even: Rnx+ & <CLAUSE-E>;
 
 % {EE-} & EE+: "but not too much"
@@ -9746,7 +9771,9 @@ or (Wq- & (PF+ or CQ+)) or O- or Js-;
 % sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-);
 % modified
 sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} & MVa-) or E+);
-so_that such_that: Cs+ & {Xd- & Xc+} & MVs-;
+
+so_that such_that:
+  Cs+ & {Xd- & Xc+} & MVs-;
 
 % much like an ordinary adverb, except even more commas allowed
 % please.e: <ordinary-adv>;
