@@ -387,7 +387,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 <generic-plural-id>:
   <noun-modifiers> &
     ([[AN+]]
-    or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} & 
+    or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} &
       <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
     or ({NM+ or Dmc-} & <noun-and-p>)
     or SJrp-
@@ -411,9 +411,9 @@ genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
   or AN+
   or ((Xd- & TY- & Xc+) or TY-)
   or ({EN- or NIc-}
-    & (ND+ 
+    & (ND+
       or OD-
-      or ({{@L+} & DD-} 
+      or ({{@L+} & DD-}
          & ([[Dmcn+]]
            or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
 
@@ -530,7 +530,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % plural nouns not ending in "s"
 % almost exactly identical to <generic-plural-id> except that there is
-% a YS+ instead of a YP+, uses a <noun-and-s> instead of <noun-and-p> 
+% a YS+ instead of a YP+, uses a <noun-and-s> instead of <noun-and-p>
 %
 % {Jd-}: allows a "a flock of birds" to act as determiner.
 %
@@ -639,7 +639,7 @@ carte_blanche:
 % auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t
 % Ou-: "He was made knight by the crown"
 /en/words/words.n.t:
-  <noun-modifiers> & {@M+} 
+  <noun-modifiers> & {@M+}
     & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or Ou- or TI-);
 
 % Almost identical to below.
@@ -1909,8 +1909,8 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 %
-<verb-wall>: WV- or CV- or IV- or [[()]]; 
-% <verb-wall>: WV- or CV- or IV-; 
+<verb-wall>: WV- or CV- or IV- or [[()]];
+% <verb-wall>: WV- or CV- or IV-;
 %<verb-wall>: ();
 <subord-verb>: CV+;
 % <subord-verb>: ();
@@ -2260,7 +2260,7 @@ didn't.v-d didn’t.v-d:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
-  ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or 
+  ({{Ic-} & Q-} & (SI+ or SFI+) & I+) or
   ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
@@ -2305,11 +2305,11 @@ hasn't hasn’t:
     (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
 haven't haven’t:
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or 
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & 
+  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) &
     (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
-hadn't.v-d hadn’t.v-d: 
+hadn't.v-d hadn’t.v-d:
 (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} &
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]);
@@ -2433,7 +2433,7 @@ am.v:
   (<verb-and-sp-> & <vc-be-and>) or (<vc-be-and> & <verb-and-sp+>);
 
 % I'm == I am
-’m 'm: 
+’m 'm:
   SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or TO+ or Pa+)) or
     ({N+} & (Pg+ or Pv+))) & <verb-wall>;
 
@@ -2452,8 +2452,8 @@ been.v: {@E-} & PPf- & <vc-be>;
 
 % S- & Pa+ & Xc+ & Ce+: "The knife being dull, he ..."
 % (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
-being.v: 
-  ((({@EBm+} & 
+being.v:
+  ((({@EBm+} &
       (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+ or TO+ or THb+)
          & {@MV+})
        or Pa+))
@@ -2531,7 +2531,7 @@ wouldn't wouldn’t:
 % O+ & @MV+ & O*n+: "I gave him for his birthday a very expensive present"
 % The above is costly because the above is an awkward construction...
 <vc-ditrans>:
-  (O+ & {[[@MV+]]} & O*n+ & {VJd+}) 
+  (O+ & {[[@MV+]]} & O*n+ & {VJd+})
   or ({@E-} & B- & O+ & O*n+);
 
 <vc-opt-ditrans>:
@@ -2701,11 +2701,11 @@ rising.v falling.v:
 % The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
 %   "she walked out of the room two minutes"
 %
-% ({@E-} & B- & O+): 
+% ({@E-} & B- & O+):
 %   "What are the chances that Sherlock could really CATCH the criminal?"
-% ({@E-} & B- & O+ & Pa**j+): 
+% ({@E-} & B- & O+ & Pa**j+):
 %   "What are the chances she will really DRIVE him crazy?"
-% ({@E-} & B- & O+ & K+): 
+% ({@E-} & B- & O+ & K+):
 %   "What are the chances she will DRIVE him up to the farm?"
 %
 % Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
@@ -3148,7 +3148,7 @@ thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
 
 % B-: "what does it matter?"
-<vc-matter>: 
+<vc-matter>:
   ({@MV+} & {THi+ or QIi+})
   or B-;
 matter.v: VERB_S_PLI(<vc-matter>);
@@ -4464,7 +4464,7 @@ passes.v buys.v pays.v sells.v deals.v telegraphs.v wires.v: VERB_S_T(<vc-pass>)
 passed.v-d bought.v-d paid.v-d payed.v-d sold.v-d dealt.v-d
 telegraphed.v-d wired.v-d:
   VERB_SPPP_T(<vc-pass>) or
-  (S- & B-) or   
+  (S- & B-) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
@@ -4880,18 +4880,23 @@ reminding.v: <verb-pg> & <vc-remind>;
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 inform.v reassure.v alert.v guarantee.v notify.v forewarn.v:
-VERB_PLI(<vc-inform>);
+  VERB_PLI(<vc-inform>);
+
 informs.v reassures.v alerts.v guarantees.v notifies.v forewarns.v:
-VERB_S_T(<vc-inform>);
+  VERB_S_T(<vc-inform>);
+
 informed.v-d reassured.v-d alerted.v-d guaranteed.v-d
 notified.v-d forewarned.v-d:
-VERB_SPPP_T(<vc-inform>) or (<verb-pv> &
-{Ce+ or TH+ or Zs- or (OF+ & {@MV+})}) or ({{@MV+} & (Ce+ or
-TH+ or OF+)} & <verb-phrase-opener>) or ({@E-} & A+);
+  VERB_SPPP_T(<vc-inform>)
+  or (<verb-pv> & {Ce+ or TH+ or Zs- or (OF+ & {@MV+})})
+  or ({{@MV+} & (Ce+ or TH+ or OF+)} & <verb-phrase-opener>)
+  or ({@E-} & A+);
+
 informing.g reassuring.g alerting.g guaranteeing.g notifying.g forewarning.g:
-(<vc-inform> & <verb-ge>) or <verb-ge-d>;
+  (<vc-inform> & <verb-ge>) or <verb-ge-d>;
+
 informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
-<verb-pg> & <vc-inform>;
+  <verb-pg> & <vc-inform>;
 
 <vc-assure>:
   ((O+ or B-) & {@MV+} & {(OF+ & {@MV+}) or TH+ or Zs- or Ce+}) or
@@ -4900,9 +4905,11 @@ informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
 
 assure.v: VERB_PLI(<vc-assure>);
 assures.v: VERB_S_T(<vc-assure>);
-assured.v-d: VERB_SPPP_T(<vc-assure>) or (<verb-pv> &
-{(OF+ & {@MV+}) or Ce+ or TH+ or Zs-}) or ({{@MV+} & (Ce+ or
-TH+ or OF+)} & <verb-phrase-opener>);
+assured.v-d:
+  VERB_SPPP_T(<vc-assure>)
+  or (<verb-pv> & {(OF+ & {@MV+}) or Ce+ or TH+ or Zs-})
+  or ({{@MV+} & (Ce+ or TH+ or OF+)} & <verb-phrase-opener>);
+
 assuring.g: (<vc-assure> & <verb-ge>) or <verb-ge-d>;
 assuring.v: <verb-pg> & <vc-assure>;
 
@@ -5274,7 +5281,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
-/en/words/words.v.10.1: 
+/en/words/words.v.10.1:
   [[{@E-} & (((Sp- or I-) & <vc-paraph>) or (SIpj+ & <vc-paraph-inv>))]];
 
 /en/words/words.v.10.2:
@@ -5376,7 +5383,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % XXX TODO: most preps below need this rule.
 <alter-preps>: MJrj- or MJlj+;
 
-% Mp- (which modifies nouns) has a cost, so that modifying verbs 
+% Mp- (which modifies nouns) has a cost, so that modifying verbs
 % (using MVp-) is generally preferred.
 <prep-main-b>:
   <conjoin-preps>
@@ -5475,7 +5482,7 @@ just_about nearly_about almost_about right_about:
   or EW+;
 
 % EN- & Pp-: "you are half-way through"
-% EN- & J-: "He stopped, about half-way through" 
+% EN- & J-: "He stopped, about half-way through"
 through.r:
   ({JQ+} & J+ & (<prep-main-a> or FM-))
   or (EN- & (Pp- or J-))
@@ -5720,7 +5727,7 @@ somewhere someplace:
   ({EL+} & (
     FM-
     or Pp-
-    or MVp- 
+    or MVp-
     or [({Xc+ & {Xd-}} & CO+)]
     or (Xc+ & Xd- & MVx-)
   ) & Mp+)
@@ -6170,7 +6177,7 @@ what:
   or <directive-opener>;
 
 % QI- & (): "I do not know which"
-which: 
+which:
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
@@ -6248,7 +6255,7 @@ although in_as_much_as whilst whereas whereof wherein:
 % The above is yucky, since it allows broken parses, e.g.
 % *The school when I lived in England was wonderful
 % Perhaps a better solution might be some special case of WN+ on
-% examination? (would require 'examination' and all other 'operation' 
+% examination? (would require 'examination' and all other 'operation'
 % nouns to be in their own class...
 when:
   ((WN- or BIh-) & Cs+ & <subord-verb>)
@@ -7967,13 +7974,13 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
-– --.r -.r 、 ～.r ~.r ‧ : 
+– --.r -.r 、 ～.r ~.r ‧ :
   [[<colon>]] or
   ({@Xca-} & (({EBx+} & Xd+) or Xc-)) or
   ({NI-} & Wd- & W+);
 
 % ellipsis ... at the end, trailing off ...
-....y ….y: 
+....y ….y:
   (CO- & Wd-)
   or O-;
 
@@ -7982,7 +7989,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
 % We- & J+: ... a ballroom polished like a skull.
 % S+ has a cost so that the infinitive I+ is preferred.
 % BI+, QI+: "... how those two should work together"
-....x ….x: 
+....x ….x:
   We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or QI+ or (R+ & B+ & {S+}));
 
 % ellipsis in the middle
@@ -8121,7 +8128,7 @@ LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
 % These are processed via regular-expression matching, in 4.0.regex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% guessed nouns that can be mass or countable 
+% guessed nouns that can be mass or countable
 % (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
 MC-NOUN-WORDS.n:
   <noun-mass-count>;
@@ -8143,13 +8150,13 @@ FOLD-WORDS:
 LATIN-ADJ-WORDS.a:
   <noun-mass-count>;
 
-% latin (postposed) adjectives or latin plural noun 
-% always considered as nouns in the current version 
+% latin (postposed) adjectives or latin plural noun
+% always considered as nouns in the current version
 % XXX maybe should be same as words.n.2.x instead of <generic-plural-id> ???
 LATIN-ADJ-P-NOUN-WORDS:
   <generic-plural-id>;
 
-% latin (postposed) adjectives or latin singular noun 
+% latin (postposed) adjectives or latin singular noun
 % always considered as nouns in the current version
 % XXX this is <common-noun> with weird plural-like stuff ?? is this right?
 LATIN-ADJ-S-NOUN-WORDS:
