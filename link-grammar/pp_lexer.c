@@ -1121,6 +1121,8 @@ static void yy_flex_free( void *ptr )
 
 PPLexTable *pp_lexer_open(FILE *f)
 {
+  PPLexTable *lt;
+
   // initialiaze all yy static globals!! We do this here, so
   // that we can be called multiple times w/o crash.
   yy_current_buffer = NULL;
@@ -1128,7 +1130,6 @@ PPLexTable *pp_lexer_open(FILE *f)
   yy_init = 1;
   yy_start = 0;
 
-  PPLexTable *lt;
   if (f == NULL)
   {
     prt_error("Fatal Error: pp_lexer_open: passed a NULL file pointer");
@@ -1141,6 +1142,9 @@ PPLexTable *pp_lexer_open(FILE *f)
   yylex();  
   clt = NULL; 
   lt->idx_of_active_label=-1;
+
+  yy_delete_buffer(yy_current_buffer);
+  yy_current_buffer = NULL;
   return lt;
 }
 
