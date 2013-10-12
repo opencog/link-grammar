@@ -1121,6 +1121,13 @@ static void yy_flex_free( void *ptr )
 
 PPLexTable *pp_lexer_open(FILE *f)
 {
+  // initialiaze all yy static globals!! We do this here, so
+  // that we can be called multiple times w/o crash.
+  yy_current_buffer = NULL;
+  yy_c_buf_p = NULL;
+  yy_init = 1;
+  yy_start = 0;
+
   PPLexTable *lt;
   if (f == NULL)
   {
@@ -1156,6 +1163,7 @@ void pp_lexer_close(PPLexTable *lt)
   xfree(lt, sizeof(PPLexTable));
   yy_delete_buffer(yy_current_buffer);
   yy_current_buffer = NULL;
+  yy_c_buf_p = NULL;
 }
 
 int pp_lexer_set_label(PPLexTable *lt, const char *label) 
