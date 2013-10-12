@@ -1923,7 +1923,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl>: {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-s>: {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
 <verb-i>: {@E-} & I- & <verb-wall>;
-<verb-sp,pp>: {@E-} & (((S- or PP-) & <verb-wall>) or ((S- or RS-) & B-));
+<verb-sp,pp>: {@E-} & (((S- or PP-) & <verb-wall>) or (RS- & B-));
 <verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>: {@E-} & PP- & <verb-wall>;
 <verb-pg>: {@E-} & (Pg- or Mg-);
@@ -4460,9 +4460,11 @@ pass.v buy.v pay.v sell.v deal.v telegraph.v wire.v: VERB_PLI(<vc-pass>);
 
 passes.v buys.v pays.v sells.v deals.v telegraphs.v wires.v: VERB_S_T(<vc-pass>);
 
+% (S- & B-) : allows WV-less attach to "The dog which Chris bought is ugly"
 passed.v-d bought.v-d paid.v-d payed.v-d sold.v-d dealt.v-d
 telegraphed.v-d wired.v-d:
   VERB_SPPP_T(<vc-pass>) or
+  (S- & B-) or   
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
