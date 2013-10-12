@@ -5386,7 +5386,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 
 <prep-main-a>:
   <prep-main-b> or
-  (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-))) or
+  (Cs+ & <subord-verb> & (Mj- or (Xd- & Xc+ & MX*j-))) or
   (Wj- & Qd+) or
   [Wq- & PF+];
 
@@ -5550,7 +5550,7 @@ just_over just_under well_over: EN+;
 like.p:
   ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
      or (Vf- & Mgp+)
-     or (LI- & (J+ or Cs+))))
+     or (LI- & (J+ or (Cs+ & <subord-verb>)))))
    or [MVp- & B-];
 
 unlike:
@@ -5568,7 +5568,7 @@ of:
       or OFj-
       or OFw-
       or (Xd- & Xc+ & MX*x-)
-      or (Cs+ & (Mj- or (Xd- & Xc+ & MX*j-)))
+      or (Cs+ & <subord-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
       or [[({Xc+ & {Xd-}} & CO+)]]))
   or (OFd- & Jd+)
   or ((OFj- or Mp-) & B-)
@@ -5647,13 +5647,13 @@ such_as:
     or (Xc+ & Xd- & (MVx- or MX*x-)));
 
 lest:
-  (Cs+ or Mgp+ or Mv+) & (
+  ((Cs+ & <subord-verb>) or Mgp+ or Mv+) & (
     ({Xc+ & {Xd-}} & CO*s+)
     or ({Xd- & Xc+} & MVs-)
     or (Xd- & Xc+ & E+));
 
 albeit:
-  (Cs+ & {Xc+ & {Xd-}} & CO*s+)
+  (Cs+ & <subord-verb> & {Xc+ & {Xd-}} & CO*s+)
   or ({Xd-} & CC- & Wd+);
 
 no_matter:
@@ -5707,7 +5707,7 @@ later earlier:
 % Preps that specify space-like relations
 everywhere anywhere:
   {EL+} & (
-    (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+    (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
     or (MVp- or Pp- or FM- or (Xc+ & Xd- & MVx-)));
 
 % Pp-: "We are finally getting somewhere."
@@ -5977,12 +5977,12 @@ week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
   (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-)))
   or (NSa- & [[Mp- or Ys-]])
-  or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
+  or ({NR- or TT-} & DG- & ((Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 
 year_and_a_half: NSa- & {EN-} & (Yt+ or OT-);
 moment.u:
   (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-)))
-  or ({NR- or TT-} & DG- & ((Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
+  or ({NR- or TT-} & DG- & ((Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 
 a_while: J- or Yt+ or OT- or MVa-;
 now.i then.i: JT- or FM-;
@@ -5998,16 +5998,16 @@ ago:
 every.i: {EN-} & Ye+ & <prep-main-t>;
 times.i x.i:
   (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+ or Ca+ or Qe+)) or
-  (((({ND-} & DG-) & {Cs+}) or (ND- & Ys+)) &
+  (((({ND-} & DG-) & {Cs+ & <subord-verb>}) or (ND- & Ys+)) &
     (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
 
 time.i:
-  {TT- or NR-} & DG- & {Cs+} &
+  {TT- or NR-} & DG- & {Cs+ & <subord-verb>} &
     (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-));
 
 the_year: TY+ & <noun-main-s>;
 every_time:
-  {EN-} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
+  {EN-} & (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
 
 week.n moment.n hour.n minute.n year.n instant.n period.n month.n
 second.n decade.n century.n:
@@ -6220,13 +6220,13 @@ whatever.c:
   or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
 whenever wherever however.c:
-  {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)));
+  {EL+} & (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)));
 
 whyever:
   ({EL+} & (
      (Wq- & Q+)
-     or (QI- & (Cs+ or (TOn+ & <inf-verb>)))
-     or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-))))
+     or (QI- & ((Cs+ & <subord-verb>) or (TOn+ & <inf-verb>)))
+     or (Cs+ & <subord-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq-))))
   or [[{@CO-} & Wc- & Wi+]];
 
 whichever:
@@ -6236,11 +6236,11 @@ whichever:
   or ((ALx+ & J+) & (({Xd-} & Xc+ & CO+) or ({Xd- & Xc+} & MVs-)));
 
 whence whither:
-  {EL+} & (Cs+ & (({Xc+ & {Xd-}} & CO+)
+  {EL+} & (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO+)
     or ({Xd- & Xc+} & MVs-)));
 
 although in_as_much_as whilst whereas whereof wherein:
-  (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
+  (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
   or ({Xd-} & CC- & Wd+);
 
 % QI- & (): "I do not know when"
@@ -6266,8 +6266,8 @@ when:
 why:
   ({EL+} & (
     ({EW-} & Wq- & Q+)
-    or (QI- & (Cs+ or (TOn+ & <inf-verb>) or [()]))
-    or (Cs+ & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
+    or (QI- & ((Cs+ & <subord-verb>) or (TOn+ & <inf-verb>) or [()]))
+    or (Cs+ & <subord-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or ((Wi- or <directive-opener>) & {N+})
     or ({EW-} & (QJ- or QJ+))
     ));
@@ -6282,18 +6282,18 @@ where:
       ({EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or ({Rw+} & PF+) or Q+))
       or [QI-]
       or ({EW-} & (QJ- or QJ+))
-      or (Cs+ & Bsw+ & QI-)
-      or ((WR+ or Cs+ or (TOn+ & <inf-verb>) or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
-      or ((Cs+ or PF+ or WR+) & <prep-main-b>));
+      or (Cs+ & <subord-verb> & Bsw+ & QI-)
+      or ((WR+ or (Cs+ & <subord-verb>) or (TOn+ & <inf-verb>) or PF+) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
+      or (((Cs+ & <subord-verb>) or PF+ or WR+) & <prep-main-b>));
 
 whether:
-  ((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>)))
-  or (Cs+ & SFsx+ & <S-CLAUSE>)
-  or [[(Cs+ or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
+  ((QI- or BIq-) & ((Cs+ & <subord-verb>) or (TOn+ & <inf-verb>)))
+  or (Cs+ & <subord-verb> & SFsx+ & <S-CLAUSE>)
+  or [[((Cs+ & <subord-verb>) or MV+) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+))]];
 
 whether_or_not:
-  ((QI- or BIq-) & (Cs+ or (TOn+ & <inf-verb>)))
-  or (Cs+ & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
+  ((QI- or BIq-) & ((Cs+ & <subord-verb>) or (TOn+ & <inf-verb>)))
+  or ((Cs+ & <subord-verb>) & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)));
 
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
@@ -6303,7 +6303,7 @@ how:
   or ({EW-} & Wq- & (({EL+} & Q+) or AF+))
   or [QI-]
   or ({EW-} & (QJ- or QJ+))
-  or ((Cs+ or (TOn+ & <inf-verb>)) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
+  or (((Cs+ & <subord-verb>) or (TOn+ & <inf-verb>)) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -6327,14 +6327,14 @@ that_there: Ds+;
 
 % (Rnx+ & <CLAUSE-E>): "Because I said so"
 because:
-  (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-)))
+  (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-)))
   or (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-)))
   or (Rnx+ & <CLAUSE-E>);
 
 now_that just_as if_only in_case whereby whereupon insofar_as
 inasmuch_as ere on_the_grounds_that on_grounds_that in_that
 in_the_event_that in_the_event:
-  Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
+  Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
 
 if_only:
   ((MVp+ or MVa+ or MVs+) & ({Xd- & Xc+} & MVp-)) or (Wd+ & Wc-);
@@ -6343,54 +6343,54 @@ on_condition:
   (TH+ or TS+) & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
 
 unless though.c even_though:
-  (Cs+ or Mgp+ or Mv+)
+  ((Cs+ & <subord-verb>) or Mgp+ or Mv+)
     & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+));
 
 as_if as_though:
-  ((Cs+ or Mgp+ or Mv+ or Mp+)
+  (((Cs+ & <subord-verb>) or Mgp+ or Mv+ or Mp+)
     & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)))
-  or ((BIh- or LI-) & Cs+);
+  or ((BIh- or LI-) & Cs+ & <subord-verb>);
 
 as_soon_as:
-  Cs+ & {Xc+ & {Xd-}} & CO*s+;
+  Cs+ & <subord-verb> & {Xc+ & {Xd-}} & CO*s+;
 
 % J+ & CO+: "Until yesterday, ..."
 until 'til ’til ‘til ``til til:
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
-  or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
+  or (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
 
 since:
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
-  or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
+  or (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))
   or [[MVa-]] or [[E+]];
 
 ever_since:
-  (J+ or Mgp+ or Cs+)
+  (J+ or Mgp+ or (Cs+ & <subord-verb>))
      & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-));
 
 after:
   {EI- or Yt-}
     & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or Ca+ or Qe+))
-      or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))));
+      or (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))));
 
 before:
   ({EI- or Yt-}
     & (({Mgp+ or J+ or JT+} & (<prep-main-b> or UN-))
-      or (Cs+ & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
+      or (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
   or (Yt- & (Ca+ or Qe+));
 
 if only_if if_and_only_if iff:
-  (Cs+ & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
-  or ((Cs+ or [Mgp+] or [Mv+])
+  (Cs+ & <subord-verb> & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
+  or (((Cs+ & <subord-verb>) or [Mgp+] or [Mv+])
     & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & CO*s+)))
-  or (QI- & Cs+);
+  or (QI- & (Cs+ & <subord-verb>));
 
 % Perhaps the below is a cop-out, but getting the links just
 % right between commas, buts, nots and onlys is proving to be hard.
 but_only_if but_not_if:
-  Cs+ & (Xd- or [[()]]) & Xc+ & MVs-;
+  Cs+ & <subord-verb> & (Xd- or [[()]]) & Xc+ & MVs-;
 
 if_possible if_necessary:
   MVp-
@@ -6403,14 +6403,14 @@ if_so:
 no_wonder: Wd+ & Wc-;
 
 while:
-  ((Cs+ or Mgp+ or Mp+)
+  (((Cs+ & <subord-verb>) or Mgp+ or Mp+)
     & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-) or (Xd- & Xc+ & E+)));
 
 <adverb-join>: RJlv+ or RJrv-;
 
 % once as adverb
 once.e:
-  ({Cs+ or Mp+} &
+  ({(Cs+ & <subord-verb>) or Mp+} &
     (({Xc+ & {Xd-}} & CO*s+) or
     ({Xd- & Xc+} & MVs-) or
     (Xd- & Xc+ & E+))) or
@@ -6506,7 +6506,7 @@ and.j-r or.j-r:
   ((RJlv- & RJrv+) & MVr-) or
   ((RJlt- & RJrt+) & TH-) or
   ((RJlc- & RJrc+) & Cs-) or
-  ((RJlj- & RJrj+) & Mj- & Cs+) or
+  ((RJlj- & RJrj+) & Mj- & (Cs+ & <subord-verb>)) or
   (({Xd-} & RJlr- & RJrr+) & J-);
 
 % Conjoined nouns/noun phrases.
@@ -7134,14 +7134,14 @@ more:
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
     or ({ECn- or ECx- or ND-} & (Omm- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
-  or (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
+  or (DG- & (({MVa+} & (Cs+ & <subord-verb>)) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 more_of_a more_of_an: Ds*m+;
 
 less:
   ({ECn-} & (Dmum+ or Om- or Jm- or (Ss+ & <CLAUSE>) or Bsm+)) or
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or AJrc- or AJlc+)) or
-  (DG- & (({MVa+} & Cs+) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
+  (DG- & (({MVa+} & (Cs+ & <subord-verb>)) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 fewer:
   ({ECn-} & (Dmcm+ or Om- or Jm- or (Sp+ & <CLAUSE>) or AJrc- or AJlc+)) or
@@ -7172,7 +7172,7 @@ or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 as.e:
   ((J+ or Mp+ or TI+ or ({SFsic+} & Zs+)) &
     (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-)))
-  or (Cs+ & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
+  or (Cs+ & <subord-verb> & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-)))
   or ((J+ or Mp+ or BIt+) & ([Mp-] or (Xd- & Xc+ & MX*x-)))
   or (AZ- & Pa+)
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
@@ -7260,7 +7260,7 @@ higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
     Qe+ or
     Ca+ or
     AJlc+)) or
-  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  (DG- & (TR+ or AF+ or (Cs+ & <subord-verb>)) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 sooner.a-c:
   ({ECa- or Yt-} &
@@ -7270,7 +7270,7 @@ sooner.a-c:
     Qe+ or
     Ca+ or
     AJlc+)) or
-  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  (DG- & (TR+ or AF+ or (Cs+ & <subord-verb>)) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 longer.a-c:
   ({ECa- or Yt-} &
@@ -7282,7 +7282,7 @@ longer.a-c:
     OT- or
     FL- or
     AJlc+)) or
-  (DG- & (TR+ or AF+ or Cs+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
+  (DG- & (TR+ or AF+ or (Cs+ & <subord-verb>)) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} &
@@ -7841,7 +7841,7 @@ never.i at_no_time not_once rarely.i since_when:
   {MVp+} & Wq- & Q+ & {CC+};
 
 not_since:
-  (J+ or Cs+) & Wq- & Q+ & {CC+};
+  (J+ or (Cs+ & <subord-verb>)) & Wq- & Q+ & {CC+};
 
 even.e:
   E+
@@ -7870,7 +7870,7 @@ or (Wq- & (PF+ or CQ+)) or O- or Js-;
 sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} & MVa-) or E+);
 
 so_that such_that:
-  Cs+ & {Xd- & Xc+} & MVs-;
+  Cs+ & <subord-verb> & {Xd- & Xc+} & MVs-;
 
 % much like an ordinary adverb, except even more commas allowed
 % please.e: <ordinary-adv>;
