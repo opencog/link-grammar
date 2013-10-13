@@ -2338,8 +2338,9 @@ hadn't.v-d hadn’t.v-d:
 % Except that this breaks lots of stuff ... Arghhh.
 %
 % (<verb-wall> & BI+): "The question is who we should invite"
+% [CV- & B**t-]: "How fast a program does he think it is"
 <vc-be-no-obj>:
-  ({@EBm+} & ((([B**t-] or [K+] or (<verb-wall> & BI+) or OF+ or PF- or
+  ({@EBm+} & ((([CV- & B**t-] or [K+] or (<verb-wall> & BI+) or OF+ or PF- or
       (Osi+ & R+ & Bs+) or
       (Opi+ & R+ & Bp+) or
       [[()]]) & {@MV+}) or
@@ -3733,6 +3734,7 @@ figuring.v: <verb-pg> & <vc-figure>;
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs-))
   or ({@MV+} & (QI+ & {MV+}));
 
+% I- & B- & <embed-verb>: "What did John say you should do?"
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
 recall.v reveal.v state.v observe.v indicate.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
@@ -3745,6 +3747,7 @@ mentions.v admits.v recalls.v reveals.v states.v observes.v indicates.v
 analyses.v analyzes.v assesses.v establishes.v evaluates.v examines.v
 questions.v tests.v hypothesizes.v hypothesises.v envisages.v documents.v:
   VERB_S_T(<vc-predict>);
+
 predicted.v realized.v discovered.v determined.v announced.v mentioned.v
 admitted.v recalled.v revealed.v stated.v observed.v indicated.v
 analysed.v analyzed.v assessed.v established.v evaluated.v examined.v
@@ -3755,11 +3758,13 @@ envisaged.v-d:
   (<verb-s-pv> & {THi+}) or
   ({@E-} & A+) or
   <verb-phrase-opener>;
+
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
   ({@E-} & (Pvf- or [[Mv-]]) & {@MV+} & {THi+}) or
   [[{@E-} & A+]] or
   [[<verb-phrase-opener>]];
+
 predicting.g realizing.g discovering.g determining.g
 announcing.g saying.g mentioning.g admitting.g recalling.g revealing.g
 stating.g observing.g indicating.g
