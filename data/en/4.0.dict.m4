@@ -612,6 +612,8 @@ tawny.n ultramarine.n yellow.n:
 <marker-entity> or <entity-singular>;
 
 % Enable parsing of "Mother likes her"
+% XXX FIXME: unfortunately, this doubles the number of parses for many
+% things, e.g. colliding with mother.n-f
 aunt.f auntie.f brother.m dad.m daddy.m father.m grandmother.f granny.f
 granddad.m grandfather.m grandpa.f grandpop.m mom.f mommy.f mother.f
 pop.m papa.m poppy.m pops.m sis.f sister.f uncle.m:
@@ -4844,20 +4846,24 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % bare MVp+ for "Today, we will tell about ..."
 % OF+ for "They have told of the soldiers' fear"
 % (QI+ & {MV+}): "I did not tell why until recently"
-
+% <embed-verb>: "He told me that Fred is dead."
 <vc-tell>:
-  (((O+ & {O*n+ or K+}) or B-) & {@MV+} & {TH+ or <embed-verb> or RSe+ or Zs- or TOo+ or QI+ or BW-}) or
-  OF+ or
-  (QI+ & {MV+}) or
-  ([[@MV+ & {O*n+} & {@MV+}]]);
+  (((O+ & {O*n+ or K+}) or B-)
+     & {@MV+} & {TH+ or RSe+ or Zs- or TOo+ or QI+ or BW-})
+  or <embed-verb>
+  or OF+
+  or (QI+ & {MV+})
+  or ([[@MV+ & {O*n+} & {@MV+}]]);
 
 tell.v: VERB_PLI(<vc-tell>);
 tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or <embed-verb> or RSe+ or Zs-) & <verb-wall>;
 tells.v: VERB_S_T(<vc-tell>);
-told.v-d: VERB_SPPP_T(<vc-tell>) or
-        (<verb-pv> & {TH+ or <embed-verb> or RSe+ or Zs- or TO+ or QI+ or BW-}) or
-        (<verb-pv-b> & O+ & {@MV+}) or
-        ({{@MV+} & (<embed-verb> or TO+ or QI+ or TH+)} & <verb-phrase-opener>);
+told.v-d:
+  VERB_SPPP_T(<vc-tell>)
+  or (<verb-pv> & {TH+ or <embed-verb> or RSe+ or Zs- or TO+ or QI+ or BW-})
+  or (<verb-pv-b> & O+ & {@MV+})
+  or ({{@MV+} & (<embed-verb> or TO+ or QI+ or TH+)} & <verb-phrase-opener>);
+
 telling.g: (<vc-tell> & <verb-ge>) or <verb-ge-d>;
 telling.v: <verb-pg> & <vc-tell>;
 
@@ -6338,9 +6344,12 @@ how:
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
 
+% EBx+: He told me that even his mother likes me
 that.j-c:
-  (Cet+ & <subord-verb> &  ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-)) or
-  (TS- & (SI*j+ or SFI**j+) & I*j+);
+  {EBx+} & (Cet+ & <subord-verb> & ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
+  or (TS- & (SI*j+ or SFI**j+) & I*j+);
+
+% D*u+: "Give me that thing"
 that.j-d: [{AL-} & D*u+];
 
 % Xd-: iffy punctuation, e.g "The man, that you saw laugh...
@@ -6350,6 +6359,7 @@ that.j-r:
   or (EA+ & {HA+})
   or DTn+;
 
+% naked Osn-: "give me that"
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 
 % "No one is sitting at that there table"
