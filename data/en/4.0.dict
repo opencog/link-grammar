@@ -2467,9 +2467,10 @@ weren't.v-d weren’t.v-d:
   or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
+% No <verb-wall> here, these are almost entirely just auxiliary verbs.
 will.v can.v may.v must.v could.v might.v shall.v:
   ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-))
-  or ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & <verb-wall> & (I+ or (CX- & {@MV+}) or [[()]]))
+  or ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]]))
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
