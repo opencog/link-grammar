@@ -533,8 +533,7 @@ HYPHENATED-WORDS.n:
     or Us-);
 
 /en/words/words.n.1
-/en/words/words.n.1.gerund
-/en/words/words.n.1.wiki :
+/en/words/words.n.1.gerund :
   <marker-common-entity> or <common-noun>;
 
 % Common plural nouns ending in "s"
