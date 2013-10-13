@@ -224,8 +224,8 @@ changecom(`%')
 <advcl-verb>: Ca+ & CV+;
 <fitcl-verb>: Ci+ & CV+;
 <porcl-verb>: Cr+ & CV+;
-% XXX TODO:  Ct,Cta (than)
-% exceppt AF and B already do the Ct ones ... 
+% We don't handle Ct,Cta in the above, because the AF and B link plays
+% the role of CV, connecting to the head-verb.
 
 % The use of COa here needs to be carefully rexamined; it is used much too freely.
 <directive-opener>:
@@ -1919,11 +1919,16 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 %
+
+% <verb-wall>: these connect to the head verb:
+% WV connects the wall to the head-verb,
+% CV connects the dominant clause to the head verb,
+% IV connects infinitives to the head-verb
+% There are some other such connectors that don't quite fit this patten:
+% AF, and in many cases B.
 <verb-wall>: WV- or CV- or IV- or [[()]];
 % <verb-wall>: WV- or CV- or IV-;
 %<verb-wall>: ();
-% <subord-verb>: ();
-% <inf-verb>: IV+; % already defined above ...
 
 % Pv- & <verb-wall>: "a historic new law was passed"
 
@@ -3917,12 +3922,14 @@ over_with: <verb-pv-b>;
 
 % <vc-trans> with particle
 % and also Pa**j for "The witch turned him green"
-<vc-turn>: ((O+ or
-  (K+ & {[[@MV+]]} & O*n+) or
-  ({O+ or B-} & {K+}) or
-  ((O+ or B-) & Pa**j+) or
-  [[@MV+ & O*n+]]) & {@MV+}) or
-({@MV+} & (Pa+ or AF-));
+<vc-turn>: 
+  ((O+
+    or (K+ & {[[@MV+]]} & O*n+)
+    or ({O+ or B-} & {K+})
+    or ((O+ or B-) & Pa**j+)
+    or [[@MV+ & O*n+]]) & {@MV+})
+  or ({@MV+} & (Pa+ or AF-));
+
 turn.v: VERB_PLI(<vc-turn>);
 turns.v: VERB_S_T(<vc-turn>);
 turned.v-d: VERB_SPPP_T(<vc-turn>) or (<verb-pv-b> & {K+} & {@MV+})
@@ -7212,10 +7219,11 @@ further.r:
 as.e-y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
 
 % uses comparative links
-as.e-c: (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or Cc+))
-or (MVzo- & Ct+ & Bc+ & {U+})
-or (MVzp- & (CX+ or CQ+))
-or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
+as.e-c:
+  (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or Cc+))
+  or (MVzo- & Ct+ & Bc+ & {U+})
+  or (MVzp- & (CX+ or CQ+))
+  or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
 % prepositional, mostly
 as.e:
@@ -7252,12 +7260,13 @@ MVz- or
 
 % MODIFIED 'THAN' so that it links to the clause following it
 % using 'C' links -- like a relative clause
-than: (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+}) or
-               Mpc+ or S**c+ or MVat+ or MVpt+ or Cc+ or Pafc+))
-or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
-or ((MVti- or LEi-) & AFdi+ & {Pa+})
-or (((LE- & {AFd+}) or (LEi- & {AFdi+})) & (THc+ or TOic+ or TOfc+ or (TOtc+ & B+)))
-or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
+than:
+  (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+}) or
+                Mpc+ or S**c+ or MVat+ or MVpt+ or Cc+ or Pafc+))
+  or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
+  or ((MVti- or LEi-) & AFdi+ & {Pa+})
+  or (((LE- & {AFd+}) or (LEi- & {AFdi+})) & (THc+ or TOic+ or TOfc+ or (TOtc+ & B+)))
+  or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
 
 % cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
 % ({OFd+} & Dmu+): "I drank much of the beer"
