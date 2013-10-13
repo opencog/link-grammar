@@ -223,7 +223,8 @@ changecom(`%')
 <subcl-verb>: Cs+ & CV+;
 <advcl-verb>: Ca+ & CV+;
 <fitcl-verb>: Ci+ & CV+;
-% XXX TODO: Cr (relative)  Ct,Cta (than)
+<porcl-verb>: Cr+ & CV+;
+% XXX TODO:  Ct,Cta (than)
 % exceppt AF and B already do the Ct ones ... 
 
 % The use of COa here needs to be carefully rexamined; it is used much too freely.
@@ -6184,7 +6185,7 @@ UNITS: <units-suffix>;
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
 % {EL+ & {N+}} & Wd-: "Who?" "Who else?" "Who else not?"
 who:
-  (R- & (({MVp+ or MVx+} & RS+) or Cr+))
+  (R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or [QI-]
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
@@ -6214,7 +6215,7 @@ what:
 
 % QI- & (): "I do not know which"
 which:
-  ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or Cr+))
+  ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
   or ({MVp+ or MVx+} & (S**w+ or B*w+) & ((Xc+ or <costly-null>) & Xd- & MX*r-))
@@ -6222,9 +6223,9 @@ which:
   or Jw-;
 
 whom:
-  (R- & Cr+)
+  (R- & <porcl-verb>)
   or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
-  or (Jr- & (RS+ or Cr+))
+  or (Jr- & (RS+ or <porcl-verb>))
   or Jw-;
 
 whose:
@@ -6236,17 +6237,17 @@ whose:
     or BIqd-
     or ((Xc+ or <costly-null>) & Xd- & MX*d-)))
   or (JQ- & D+)
-  or (U+ & Jr- & (RS+ or Cr+));
+  or (U+ & Jr- & (RS+ or <porcl-verb>));
 
 % Os-: "I'll hire whomever I can find" "I'll hire whomever"
 % EL+ & SJr-: "Bring him and whomever else"
 % ({EL+} & Os- & Bsd+): Bring whomever else you care to.
 whomever:
-  (R- & Cr+)
+  (R- & <porcl-verb>)
   or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
   or ({EL+} & SJr-)
   or ({EL+} & (Ss*d+ or Bsd+ or {[[]]}) & Os-)
-  or (Jr- & (RS+ or Cr+))
+  or (Jr- & (RS+ or <porcl-verb>))
   or Jw-;
 
 % EL+ & SJr-: "Bring him and whomever else"
@@ -6362,7 +6363,7 @@ that.j-d: [{AL-} & D*u+];
 
 % Xd-: iffy punctuation, e.g "The man, that you saw laugh...
 that.j-r:
-  ({[Xd-]} & R- & (({MVp+ or MVx+} & RS+) or (Cr+ & <subord-verb>)))
+  ({[Xd-]} & R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or EE+
   or (EA+ & {HA+})
   or DTn+;
