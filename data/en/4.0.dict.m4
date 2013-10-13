@@ -218,6 +218,7 @@ changecom(`%')
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
 % XXX TODO: there are many many more TO+  -- do these need an IV also ???
 <inf-verb>: IV+;
+<to-verb>:  TO+ & IV+;
 <ton-verb>: TOn+ & IV+;
 <tof-verb>: TOf+ & IV+;
 
@@ -3541,7 +3542,7 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
   ((({O+ or B-} & {K+}) or
     (K+ & {[[@MV+]]} & O*n+) or
     [[@MV+ & O*n+]]) & {@MV+}) or
-  ({@MV+} & (TO+ or Pg+));
+  ({@MV+} & (<to-verb> or Pg+));
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
 starts.v stops.v tries.v: VERB_S_T(<vc-start>);
