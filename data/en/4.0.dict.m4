@@ -222,7 +222,8 @@ changecom(`%')
 <embed-verb>: Ce+ & CV+;
 <subcl-verb>: Cs+ & CV+;
 <advcl-verb>: Ca+ & CV+;
-% XXX TODO: Ci (filler-it)  Cr (relative)  Ct,Cta (than)
+<fitcl-verb>: Ci+ & CV+;
+% XXX TODO: Cr (relative)  Ct,Cta (than)
 % exceppt AF and B already do the Ct ones ... 
 
 % The use of COa here needs to be carefully rexamined; it is used much too freely.
@@ -6887,8 +6888,8 @@ surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
 rare.a embarrassing.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or Ci+ or TOi+) & {LE+}}) or
-    ({@MV+} & {(THi+ or Ci+ or TOi+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or TOi+) & {LE+}}) or
+    ({@MV+} & {(THi+ or <fitcl-verb> or TOi+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -6917,8 +6918,8 @@ wise.a unwise.a smart.a intelligent.a:
 unlikely.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}}) or
-    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or <fitcl-verb>) & {LE+}}) or
+    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -6927,8 +6928,8 @@ unlikely.a:
 likely.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}}) or
-    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or Ci+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((TOf+ & <inf-verb>) or THi+ or <fitcl-verb>) & {LE+}}) or
+    ({@MV+} & {((TOf+ & <inf-verb>) or THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
@@ -6945,8 +6946,8 @@ lamentable.a regrettable.a
 well-known.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or Ci+) & {LE+}}) or
-    ({@MV+} & {(THi+ or Ci+) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb>) & {LE+}}) or
+    ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
