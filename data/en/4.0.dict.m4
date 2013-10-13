@@ -550,8 +550,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 % {Jd-}: allows a "a flock of birds" to act as determiner.
 %
 % aircraft.p bacteria.p bellmen.n buffalo.p businessmen.n chairmen.n
-/en/words/words.n.2.x
-/en/words/words.n.2.x.wiki :
+/en/words/words.n.2.x :
   <marker-common-entity> or
   (<noun-modifiers> &
     ([[AN+]]

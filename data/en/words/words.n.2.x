@@ -1,5 +1,6 @@
-aircraft.p
+﻿aircraft.p
 bacteria.p
+basemen.n
 beano.p
 bellmen.p
 buffalo.p
@@ -15,6 +16,7 @@ criteria.p
 data.p
 deer.p
 dice.p
+dodecahedra.n
 dressing.p
 emphases.p
 enzyme.p
@@ -25,6 +27,7 @@ flora.p
 flounder.p
 foremen.p
 freshmen.p
+frontmen.n
 fungi.p
 geese.p
 gentlemen.p
@@ -36,10 +39,11 @@ kin.p
 larvae.p
 lobstermen.p
 mailmen.p
-milkmen.p
+manga.n
 media.p
 men.p
 mice.p
+milkmen.p
 millenia.p
 nemeses.p
 papaya.p
@@ -51,6 +55,8 @@ phenomena.p
 policemen.p
 police.p
 policewomen.p
+quanta.n
+radii.n
 rebellion.p
 salesmen.p
 salmon.p
@@ -59,7 +65,11 @@ shrubbery.p
 smelt.p
 spokesmen.p
 spokeswomen.p
+statesmen.n
+subgenera.n
+tambon.n
 teeth.p
+trivia.n
 waterfowl.p
 women.p
 zucchini.p

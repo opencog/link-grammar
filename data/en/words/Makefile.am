@@ -26,10 +26,7 @@ WORDS=			\
 	words.n.1	\
 	words.n.1.gerund	\
 	words.n.2.s	\
-	words.n.2.s.biolg \
-	words.n.2.s.wiki	\
 	words.n.2.x	\
-	words.n.2.x.wiki	\
 	words.n.3	\
 	words.n.3.y	\
 	words.n.t	\
