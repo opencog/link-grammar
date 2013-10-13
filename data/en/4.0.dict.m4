@@ -2277,7 +2277,7 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 % and not Mp modify "date"... XXX this is all very broken ATM...
 <vc-have>:
   ({@MV+} & TO+)
-  or ((B- or O+) & {@MV+} & {[I*j+ or Pv+]})
+  or ((B- or (O+ & <verb-wall>)) & {@MV+} & {[I*j+ or Pv+]})
   or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+})
   or ({N+} & PP+);
 
