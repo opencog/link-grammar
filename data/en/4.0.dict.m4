@@ -216,13 +216,14 @@ changecom(`%')
 
 % TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
+% TOt+ & B+: this is one where B makes the link
 <inf-verb>: IV+;
 <to-verb>:  TO+ & IV+;
 <tof-verb>: TOf+ & IV+;
 <toi-verb>: TOi+ & IV+;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
-<tot-verb>: TOt+ & IV+;
+<tot-verb>: TOt+ & B+;
 
 <subord-verb>: CV+;
 <embed-verb>: Ce+ & CV+;
@@ -4032,7 +4033,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 % <vc-trans> plus partcle and Vt
 <vc-take>:
   (((K+ & {[[@MV+]]} & O*n+) or ((O+ or B-) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & {@MV+}) or
-  ({O+} & (OT+ or BT-) & {@MV+} & {(<tot-verb> & B+) or <toi-verb>}) or
+  ({O+} & (OT+ or BT-) & {@MV+} & {<tot-verb> or <toi-verb>}) or
   (OXii+ & Vtg+ & {@MV+} & TH+) or
   @MV+;
 take.v: VERB_S_PLI(<vc-take>);
@@ -6830,46 +6831,46 @@ aged.i: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) or MJra- or MJla+);
 easy.a hard.a simple.a difficult.a fun.a expensive.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((<tot-verb> & B+) or <toi-verb>) & {LE+}}) or
-    ({@MV+} & {((<tot-verb> & B+) or <toi-verb>) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
+    ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb> & B+} & <adj-op>));
+    ({<tot-verb>} & <adj-op>));
 
 % M-: "Do you have an example ready?"
 % Although we'd like to use Ma- for the above, post-processing prevents this.
 ready.a:
   {EA- or EF+} & (
     ({[[@Ec-]]} & {Xc+} & A+)
-    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {((<tot-verb> & B+) or <to-verb>) & {LE+}})
-    or ({@MV+} & {((<tot-verb> & B+) or <to-verb>) & {LE+}} & MJla+)
+    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <to-verb>) & {LE+}})
+    or ({@MV+} & {(<tot-verb> or <to-verb>) & {LE+}} & MJla+)
     or AA+
     or M-
     or [[DD- & <noun-main-p>]]
     or [[{DD-} & <noun-and-p>]]
-    or ({<to-verb> or (<tot-verb> & B+)} & <adj-op>));
+    or ({<to-verb> or <tot-verb>} & <adj-op>));
 
 silly.a nasty.a pleasant.a unpleasant.a dangerous.a cruel.a standard.a safe.a
 legal.a illegal.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((<tot-verb> & B+) or <toi-verb>) & {LE+}}) or
-    ({@MV+} & {((<tot-verb> & B+) or <toi-verb>) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
+    ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb> & B+} & <adj-op>));
+    ({<tot-verb>} & <adj-op>));
 
 <adj-good>:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {((<tot-verb> & B+) or THi+ or <toi-verb>) & {LE+}}) or
-    ({@MV+} & {((<tot-verb> & B+) or THi+ or <toi-verb>) & {LE+}} & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}}) or
+    ({@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb> & B+} & <adj-op>));
+    ({<tot-verb>} & <adj-op>));
 
 good.a bad.a unusual.a useful.a a_bitch nice.a
 strange.a wonderful.a terrible.a possible.a impossible.a annoying.a
@@ -6881,12 +6882,12 @@ important.a essential.a crucial.a necessary.a imperative.a vital.a:
   <marker-common-entity> or
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or (<tot-verb> & B+))) or
-    ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or (<tot-verb> & B+)) & MJla+) or
+    ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>)) or
+    ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb> & B+} & <adj-op>)));
+    ({<tot-verb>} & <adj-op>)));
 
 common.a practical.a original.a normal.a helpful.a striking.a
 confusing.a frustrating.a disturbing.a
@@ -7277,7 +7278,8 @@ than:
                 Mpc+ or S**c+ or MVat+ or MVpt+ or Cc+ or Pafc+))
   or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
   or ((MVti- or LEi-) & AFdi+ & {Pa+})
-  or (((LE- & {AFd+}) or (LEi- & {AFdi+})) & (THc+ or TOic+ or TOfc+ or (TOtc+ & B+)))
+  or (((LE- & {AFd+}) or (LEi- & {AFdi+}))
+    & (THc+ or (TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
   or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
 
 % cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
@@ -7310,17 +7312,17 @@ significantly substantially: ({EE- or EF+} &
 easier.a-c:
   ({ECa-} &
     (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {((<tot-verb> & B+) or <toi-verb>) & {LE+}}) or
+    ((Pafm- or AFm+ or Mam- or AJrc-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
     AJlc+)) or
-  (DG- & (TR+ or AF+) & {@MV+} & {(<tot-verb> & B+) or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
+  (DG- & (TR+ or AF+) & {@MV+} & {<tot-verb> or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
 
 harder.a-c:
   ({ECa-} &
     (({[[@Ec-]]} & {Xc+} & Am+) or
-    ((Pafm- or AFm+ or Mam- or AJrc-)  & {@MV+} & {((<tot-verb> & B+) or <toi-verb>) & {LE+}}) or
+    ((Pafm- or AFm+ or Mam- or AJrc-)  & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
     MVb- or
     AJlc+)) or
-  (DG- & (TR+ or AF+) & {@MV+} & {(<tot-verb> & B+) or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
+  (DG- & (TR+ or AF+) & {@MV+} & {<tot-verb> or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
 
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
   ({ECa-} &
@@ -7421,7 +7423,7 @@ following.a remaining.a top.i: L-;
 
 hardest.a-s easiest.a-s:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-  ({NR- or ND-} & DD- & <noun-sub-x> & {<tot-verb> & B+} & <noun-main-x>) or
+  ({NR- or ND-} & DD- & <noun-sub-x> & {<tot-verb>} & <noun-main-x>) or
   ({NR- or ND-} & DD- & (AJre- or AJle+)) or
   AJrs- or AJls+;
 
