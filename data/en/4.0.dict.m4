@@ -515,6 +515,11 @@ HYPHENATED-WORDS.n:
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n
 % The naked SJr- allows article to be skipped in conjunction (and,or)
 % constructions ("the hammer and sickle")
+%
+% XXX TODO fixme: there are many gerund-like nouns in here (e.g. "reading")
+% which screw things up when linking to "be" (e.g. "I have to be reading now")
+% by appearing as objects (O-) connector when really the verb form (Pg-)
+% is what should be happening. So rip these words out...
 <common-noun>:
   <noun-modifiers> &
     (AN+
@@ -1943,7 +1948,7 @@ per "/.per": Us+ & Mp-;
 <verb-sp,pp>: {@E-} & (((S- or PP-) & <verb-wall>) or (RS- & B-));
 <verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>: {@E-} & PP- & <verb-wall>;
-<verb-pg>: {@E-} & (Pg- or Mg-);
+<verb-pg>: {@E-} & ((Pg- & <verb-wall>) or Mg-);
 <verb-pv>: {@E-} & ((Pv- & <verb-wall>) or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & ((Pv- & <verb-wall>) or Mv-);
 
@@ -2290,7 +2295,7 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 %
 % TO+ & <verb-wall>: "I have to ..." means have can connect to wall.
 <vc-have>:
-  ({@MV+} & TO+ & <verb-wall>)
+  ({@MV+} & TO+ & <inf-verb> & <verb-wall>)
   or ((B- or (O+ & <verb-wall>)) & {@MV+} & {[I*j+ or Pv+]})
   or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+})
   or ({N+} & PP+);
