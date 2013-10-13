@@ -216,6 +216,7 @@ changecom(`%')
 
 % TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
+% XXX TODO: there are many many more TO+  -- do these need an IV also ???
 <inf-verb>: IV+;
 <ton-verb>: TOn+ & IV+;
 <tof-verb>: TOf+ & IV+;
