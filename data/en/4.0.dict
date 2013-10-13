@@ -1148,13 +1148,13 @@ them_all us_all you_all: Ox- or J-;
 it_all: [[Ox-]] or J-;
 
 something someone somebody:
-{EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
+  {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
 nothing no_one nobody:
-{EN-} & {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} &
-<noun-main-s>) or <noun-and-s> or YS+);
+  {EN-} & {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
+
 everything everyone anyone everybody anybody anything:
-{EN-} & {EL+} & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} &
-<noun-main-s>) or <noun-and-s> or YS+);
+  {EN-} & {EL+}
+    & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
 
 % EL-: "what the fuck happened?" "what else happened?"
 % Amazing how profanity works this way...
@@ -9403,11 +9403,13 @@ wide.e: EE+;
 
 % {EE-} & EE+: "not very much"
 % [[EE-]]: "It hurts, but not very"
+% MVl- & MVl+: "we are going to arrive very nearly on time"
 very.e way.e:
   ({EE-} & EA+)
   or ({EE-} & EE+)
   or [[EE-]]
-  or [[La-]];
+  or [[La-]]
+  or (MVl- & MVl+);
 
 real.e: [[EA+ or EE+]];
 quite: ({EE-} & EA+) or EE+ or EZ+ or [[Em+]];
