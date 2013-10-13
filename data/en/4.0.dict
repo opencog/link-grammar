@@ -2298,10 +2298,11 @@ hadn't.v-d hadn’t.v-d:
 % (<verb-wall> & BI+): "The question is who we should invite?"
 % [{CV-} & B**t-]: "How fast a program does he think it is?"
 % CV- optional to parse: "How efficient a program is it?"
+% O*i+ & R+ & Bs+ & <verb-wall>: "I believe it was John"
 <vc-be-no-obj>:
   ({@EBm+} & ((([{CV-} & B**t-] or [K+] or (<verb-wall> & BI+) or OF+ or PF- or
-      (Osi+ & R+ & Bs+) or
-      (Opi+ & R+ & Bp+) or
+      (Osi+ & R+ & Bs+ & <verb-wall>) or
+      (Opi+ & R+ & Bp+ & <verb-wall>) or
       [[()]]) & {@MV+}) or
     (<verb-wall> & Pp+ & {THi+ or @MV+}) or
     THb+ or
