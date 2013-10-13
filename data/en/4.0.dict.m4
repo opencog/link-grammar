@@ -84,10 +84,9 @@ changecom(`%')
 % The RJ links connect to "and"; the l,r prevent cross-linking
 <clause-conjoin>: RJrc- or RJlc+;
 
+% {@COd-} : "That is the man who, in Joe's opinion, we should hire"
 <CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+})) or [Rn-]};
-
 <S-CLAUSE>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- & {CC+}))};
-
 <CLAUSE-E>: {({@COd-} & (C- or <clause-conjoin>)) or ({@CO-} & (Wd- or {CC+})) or Re-};
 
 % Post-nominal qualifiers, complete with commas, etc.
@@ -222,6 +221,9 @@ changecom(`%')
 <subord-verb>: CV+;
 <embed-verb>: Ce+ & CV+;
 <subcl-verb>: Cs+ & CV+;
+<advcl-verb>: Ca+ & CV+;
+% XXX TODO: Ci (filler-it)  Cr (relative)  Ct,Cta (than)
+% exceppt AF and B already do the Ct ones ... 
 
 % The use of COa here needs to be carefully rexamined; it is used much too freely.
 <directive-opener>:
@@ -7695,11 +7697,12 @@ occasionally.e often.e originally.e:
 % ---------------------------------------------------------
 % ordinary manner adverbs
 % abjectly ably abnormally abortively abruptly absent-mindedly absently
+% COa+ prevents linking of these to relative causes (via COd- on CLAUSE)
 <ordinary-adv>:
   {EE- or EF+} &
     (({Xd- & Xc+} & MVa-) or
     Em+ or
-    ({Xc+ & {Xd-}} & CO+) or
+    ({Xc+ & {Xd-}} & COa+) or
     Qe+ or
     Ca+ or
     <adverb-join> or
