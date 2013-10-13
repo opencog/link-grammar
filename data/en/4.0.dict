@@ -1355,7 +1355,7 @@ some:
   or [[<adv-of>]];
 
 little.i:
-  ({EE-} & (MVa- or Ca+ or Qe+))
+  ({EE-} & (MVa- or <advcl-verb> or Qe+))
   or (OFd+ & Dm+ & {A-} & D-)
   or ({EEx- or H-}
     & (Dmu+
@@ -7615,7 +7615,7 @@ recently:
     or ({Xc+ & {Xd-}} & CO+)
     or EB-
     or JT-
-    or Ca+
+    or <advcl-verb>
     or Qe+
     or [[Mp-]]);
 
@@ -7646,7 +7646,7 @@ later earlier:
     (Xd- & Xc+ & (MX*x- or MVx-)) or
     ({[[@Ec-]]} & {Xc+} & A+) or
     AJrc- or AJlc+)) or
-  (Yt- & (Ca+ or Qe+));
+  (Yt- & (<advcl-verb> or Qe+));
 
 % --------------------------------------------------------
 % Preps that specify space-like relations
@@ -7938,11 +7938,11 @@ a_long_time some_time a_few_moments moments.u:
   Yt+ or OT-;
 
 ago:
-  Yt- & (<prep-main-e> or Ca+ or Qe+ or JT- or Js-);
+  Yt- & (<prep-main-e> or <advcl-verb> or Qe+ or JT- or Js-);
 
 every.i: {EN-} & Ye+ & <prep-main-t>;
 times.i x.i:
-  (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+ or Ca+ or Qe+)) or
+  (ND- & (({Xc+ & {Xd-}} & CO+) or MVp- or EC+ or EZ+ or <advcl-verb> or Qe+)) or
   (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
     (({Xc+ & {Xd-}} & CO+) or MVp- or (Xd- & Xc+ & MVx-)));
 
@@ -8322,14 +8322,14 @@ ever_since:
 
 after:
   {EI- or Yt-}
-    & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or Ca+ or Qe+))
+    & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or <advcl-verb> or Qe+))
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-))));
 
 before:
   ({EI- or Yt-}
     & (({Mgp+ or J+ or JT+} & (<prep-main-b> or UN-))
       or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)))))
-  or (Yt- & (Ca+ or Qe+));
+  or (Yt- & (<advcl-verb> or Qe+));
 
 if only_if if_and_only_if iff:
   (<subcl-verb> & {Xc+ & {Xd-}} & (Wd- & (Qd+ or Ws+ or Wq+)))
@@ -9079,7 +9079,7 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 
 % Omm-: "I want more" -- the second m blocks O*t+ on <vc-be>
 more:
-  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or Ca+ or AJrc- or AJlc+))
+  ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or AJrc- or AJlc+))
   or ({OF+} & (
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
@@ -9098,11 +9098,11 @@ fewer:
   (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
 
 farther:
-  ({ECa-} & {K+} & (MVb- or Qe+ or Ca+ or AJrc- or AJlc+)) or
+  ({ECa-} & {K+} & (MVb- or Qe+ or <advcl-verb> or AJrc- or AJlc+)) or
   A+;
 
 further.r:
-  ({ECa-} & {K+} & (MVb- or Qe+ or Ca+ or AJrc- or AJlc+)) or
+  ({ECa-} & {K+} & (MVb- or Qe+ or <advcl-verb> or AJrc- or AJlc+)) or
   A+ or
   E+ or
   ({Xd-} & Xc+ & CO+);
@@ -9164,7 +9164,7 @@ or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+});
 % ({OFd+} & Dmu+): "I drank much of the beer"
 % cost on [[<noun-main-s>]] so that the above is prefered to an O- link
 much:
-  ({EE-} & ([[MVa-]] or ECa+ or Ca+ or Qe+))
+  ({EE-} & ([[MVa-]] or ECa+ or <advcl-verb> or Qe+))
   or ({EEx- or H-} & (
     ECn+
     or ({OFd+} & Dmu+)
@@ -9208,7 +9208,7 @@ higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
-    Ca+ or
+    <advcl-verb> or
     AJlc+)) or
   (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -9218,7 +9218,7 @@ sooner.a-c:
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
-    Ca+ or
+    <advcl-verb> or
     AJlc+)) or
   (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -9228,7 +9228,7 @@ longer.a-c:
     ({[[@Ec-]]} & {Xc+} & Am+) or
     MVb- or
     Qe+ or
-    Ca+ or
+    <advcl-verb> or
     OT- or
     FL- or
     AJlc+)) or
@@ -9248,7 +9248,7 @@ better.a-c:
     MVb- or
     E+ or
     Qe+ or
-    Ca+ or
+    <advcl-verb> or
     AJlc+)) or
   (DG- & (TR+ or AF+) & {@MV+} & {TOi+ or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -9409,16 +9409,16 @@ just_about: Em+ or EN+ or EZ+ or EA+;
 
 entirely reasonably highly fairly totally completely terribly:
 EA+ or EE+ or
-({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
+({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 absolutely:
 EA+ or EE+ or EBm- or
-({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
+({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 % allowing as opener also
 altogether equally:
   EA+
   or EE+
-  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+))
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>))
   or ({Xc+ & {Xd-}} & CO+);
 
 really.e:
@@ -9430,7 +9430,7 @@ especially: EA+ or EE+ or EB- or Em+ or (MVl- & (MVp+ or MVa+ or MVs+)) or
  ({Xc+ & {Xd-}} & CO+);
 virtually: EA+ or EE+ or EN+ or EZ+ or Em+;
 wholly fully critically greatly grossly duly unduly: EA+ or
-({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or Ca+));
+({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 seemingly utterly: EA+ or Em+;
 barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
 
@@ -9482,22 +9482,22 @@ dry.e flat.e blind.e tired.e refreshed.e fresh.e exhausted.e rejuvenated.e:
 
 wild.e rampant.e shut.e tight.e
 open.e loud.e hot.e cold.e free.e:
-  {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Ca+);
+  {EE- or EF+} & (({Xd- & Xc+} & MVa-) or <advcl-verb>);
 
-hard.e wrong.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+);
-early.e late.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or TA+ or Qe+ or Ca+);
-far.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Ca+ or Qe+ or Yd+);
+hard.e wrong.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or <advcl-verb>);
+early.e late.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or TA+ or Qe+ or <advcl-verb>);
+far.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or <advcl-verb> or Qe+ or Yd+);
 yet.e: ({Xd- & Xc+} & MVa-) or EBm-;
 
 high.e deep.e low.e:
   {EE- or EF+} & (
     ({Xd- & Xc+} & MVa-) or
     ({Xc+ & {Xd-}} & CO+) or
-    Ca+ or
+    <advcl-verb> or
     Qe+);
 
 left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or
-({Xc+ & {Xd-}} & CO+) or Qe+ or Ca+)) or (Kx- & Ky+) or (Pp- & Pp+);
+({Xc+ & {Xd-}} & CO+) or Qe+ or <advcl-verb>)) or (Kx- & Ky+) or (Pp- & Pp+);
 short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
 
 % ---------------------------------------------------------
@@ -9507,13 +9507,13 @@ properly.e: ({Xd- & Xc+} & MVa-) or Em+;
 finely specially literally heavily alternately severely dearly
 voluntarily dramatically flatly purposely jointly narrowly
 universally thickly widely: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or
-Qe+ or Ca+ or [[EA+]]);
+Qe+ or <advcl-verb> or [[EA+]]);
 respectively: ({Xd- & Xc+} & MVa-) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
 long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or OT- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & MVa-) or E+ or EB-;
 
-well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or Ca+ or [E+]))
+well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or <advcl-verb> or [E+]))
   or [{EA- or EF+} & (Pa- or AF+)] or Yd+;
 
 exactly.e:
@@ -9577,7 +9577,7 @@ appropriately.e simply.ee:
      or ({Xc+ & {Xd-}} & CO+)
      or EB-
      or Qe+
-     or Ca+
+     or <advcl-verb>
      or [[EA+]]);
 
 precisely.e specifically.e generally.e:
@@ -9586,7 +9586,7 @@ precisely.e specifically.e generally.e:
      or ({Xc+ & {Xd-}} & CO+)
      or EB-
      or Qe+
-     or Ca+
+     or <advcl-verb>
      or EW+);
 
 occasionally.e often.e originally.e:
@@ -9595,7 +9595,7 @@ occasionally.e often.e originally.e:
     or ({Xc+ & {Xd-}} & CO+)
     or EB-
     or Qe+
-    or Ca+);
+    or <advcl-verb>);
 
 % ---------------------------------------------------------
 % ordinary manner adverbs
@@ -9607,7 +9607,7 @@ occasionally.e often.e originally.e:
     Em+ or
     ({Xc+ & {Xd-}} & COa+) or
     Qe+ or
-    Ca+ or
+    <advcl-verb> or
     <adverb-join> or
     [[EA+]]);
 
@@ -9629,18 +9629,18 @@ halfway.e partway.e half-way.e part-way.e:
 
 differently:
 {EE- or EF+} & (({MVp+} & {Xd- & Xc+} & MVa-) or Em+ or
-({MVp+} & {Xc+ & {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
+({MVp+} & {Xc+ & {Xd-}} & CO+) or Qe+ or <advcl-verb> or [[EA+]]);
 
 independently:
 {EE- or EF+} & (({(MVp+ or OF+)} & {Xd- & Xc+} & MVa-) or Em+ or
-({(MVp+ or OF+)} & {Xc+ & {Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
+({(MVp+ or OF+)} & {Xc+ & {Xd-}} & CO+) or Qe+ or <advcl-verb> or [[EA+]]);
 
 
 shortly: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
- & CO+) or Qe+ or Ca+);
+ & CO+) or Qe+ or <advcl-verb>);
 immediately stat.e: ({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}} & CO+) or EB-;
 soon: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or E+ or EI+ or ({Xc+ & {Xd-}}
- & CO+) or EB- or Qe+ or Ca+)) or ({EA- or EF+} & (Pa- or AF+));
+ & CO+) or EB- or Qe+ or <advcl-verb>)) or ({EA- or EF+} & (Pa- or AF+));
 
 certainly possibly probably importantly remarkably interestingly:	
 {EE-} & (E+ or (Xd- & Xc+ & (E+ or MVa-)) or ({Xc+ & {Xd-}} & CO+) or
@@ -9828,7 +9828,7 @@ so_that such_that:
 please.e:
 {EE- or EF+} & (({Xd- & Xc+} & MVa-) or
 ({Xc+ & {Xd-}} & (Em+ or CO+)) or
-Qe+ or Ca+ or [[EA+]]);
+Qe+ or <advcl-verb> or [[EA+]]);
 
 % polite command verb
 please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
@@ -10070,8 +10070,14 @@ S-WORDS.n:
     Up-)) or
   [[AN+]];
 
-LY-WORDS.e: {EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or ({Xc+ &
-{Xd-}} & CO+) or Qe+ or Ca+ or [[EA+]]);
+LY-WORDS.e:
+  {EE- or EF+} & (
+    ({Xd- & Xc+} & MVa-)
+    or Em+
+    or ({Xc+ & {Xd-}} & CO+)
+    or Qe+
+    or <advcl-verb>
+    or [[EA+]]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing extension rules from BioLG-1.1.12
