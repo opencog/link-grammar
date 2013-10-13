@@ -2287,8 +2287,10 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
 % However, "I have a date with Bob": we want "with" to MVp modify have,
 % and not Mp modify "date"... XXX this is all very broken ATM...
+%
+% TO+ & <verb-wall>: "I have to ..." means have can connect to wall.
 <vc-have>:
-  ({@MV+} & TO+)
+  ({@MV+} & TO+ & <verb-wall>)
   or ((B- or (O+ & <verb-wall>)) & {@MV+} & {[I*j+ or Pv+]})
   or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+})
   or ({N+} & PP+);
@@ -2504,10 +2506,10 @@ weren't.v-d weren’t.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 will.v can.v may.v must.v could.v might.v shall.v:
-  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-)) or
-  ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
-  (<verb-and-sp-> & {N+} & {@E-} & I+) or
-  ({N+} & {@E-} & I+ & <verb-and-sp+>);
+  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & I+) or CQ-))
+  or ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & <verb-wall> & (I+ or (CX- & {@MV+}) or [[()]]))
+  or (<verb-and-sp-> & {N+} & {@E-} & I+)
+  or ({N+} & {@E-} & I+ & <verb-and-sp+>);
 
 %I'll he'll she'll we'll they'll you'll it'll: I+ & <CLAUSE>;
 ’ll 'll: S- & I+;
