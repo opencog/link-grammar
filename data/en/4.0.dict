@@ -529,11 +529,9 @@ HYPHENATED-WORDS.n:
 
 % Common plural nouns ending in "s"
 % allocations.n allotments.n allowances.n alloys.n allures.n allusions.n
-/en/words/words.n.2.s
-/en/words/words.n.2.s.wiki :
+/en/words/words.n.2.s :
   <marker-common-entity> or <generic-plural-id>;
 
-/en/words/words.n.2.s.biolg: <generic-plural-id>;
 PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 
 % plural nouns not ending in "s"
