@@ -2207,12 +2207,14 @@ equiv.v sim.v simeq.v approx.v ~.v ～.v:
   or ({N+} & I*d+);
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
+% I- & <verb-wall>: "What did John say you should do?"
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-))
-  or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & <verb-wall>);
+  or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & <verb-wall>)
+  or ({@E-} & I- & <verb-wall>);
 
 does.v:
   VERB_X_S(<vc-do>)
@@ -3146,7 +3148,10 @@ think.v: VERB_PLI(<vc-think>);
 thinks.v: VERB_S_T(<vc-think>);
 
 % <verb-s-pv> & Cet+: (phantom that) "It was previously thought they were wrong."
-thought.v-d: VERB_SPPP_T(<vc-think>) or (<verb-s-pv> & {Cet+ or THi+ or Z-});
+thought.v-d:
+  VERB_SPPP_T(<vc-think>)
+  or (<verb-s-pv> & {(Cet+ & <subord-verb>) or THi+ or Z-});
+
 thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
 
@@ -3723,14 +3728,18 @@ figuring.g: (<vc-figure> & <verb-ge>) or <verb-ge-d>;
 figuring.v: <verb-pg> & <vc-figure>;
 
 % (QI+ & {MV+}): "I did not say why until recently"
-<vc-predict>: <vc-trans> or
-  ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs-)) or
-  ({@MV+} & (QI+ & {MV+}));
+<vc-predict>:
+  <vc-trans>
+  or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs-))
+  or ({@MV+} & (QI+ & {MV+}));
+
 predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
 recall.v reveal.v state.v observe.v indicate.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
 hypothesize.v hypothesise.v document.v envisage.v:
-  VERB_PLI(<vc-predict>);
+  VERB_PLI(<vc-predict>)
+  or (I- & B- & <embed-verb>);
+
 predicts.v realizes.v discovers.v determines.v announces.v says.v
 mentions.v admits.v recalls.v reveals.v states.v observes.v indicates.v
 analyses.v analyzes.v assesses.v establishes.v evaluates.v examines.v
