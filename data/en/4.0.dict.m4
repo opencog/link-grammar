@@ -1935,7 +1935,10 @@ per "/.per": Us+ & Mp-;
 % CV connects the dominant clause to the head verb,
 % IV connects infinitives to the head-verb
 % There are some other such connectors that don't quite fit this patten:
-% AF, and in many cases B.
+% AF, and in many cases B (for example TOt+ & B+) for this reason, we
+% have to have a costly null [[()]] below, although we would really really
+% like to get rid of it.  But that would take a lot of B and AF link fiddling
+% about, so we have to live with this for now.
 <verb-wall>: WV- or CV- or IV- or [[()]];
 % <verb-wall>: WV- or CV- or IV-;
 %<verb-wall>: ();
