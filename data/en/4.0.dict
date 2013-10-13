@@ -510,7 +510,8 @@ HYPHENATED-WORDS.n:
 % XXX TODO fixme: there are many gerund-like nouns in here (e.g. "reading")
 % which screw things up when linking to "be" (e.g. "I have to be reading now")
 % by appearing as objects (O-) connector when really the verb form (Pg-)
-% is what should be happening. So rip these words out...
+% is what should be happening. So rip these words out... (similar remarks for 
+% words.n.3)
 <common-noun>:
   <noun-modifiers> &
     (AN+
@@ -523,6 +524,7 @@ HYPHENATED-WORDS.n:
     or Us-);
 
 /en/words/words.n.1
+/en/words/words.n.1.gerund
 /en/words/words.n.1.wiki :
   <marker-common-entity> or <common-noun>;
 

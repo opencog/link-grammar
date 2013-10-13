@@ -24,6 +24,7 @@ WORDS=			\
 	words.adv.3	\
 	words.adv.4	\
 	words.n.1	\
+	words.n.1.gerund	\
 	words.n.1.wiki	\
 	words.n.2.s	\
 	words.n.2.s.biolg \
