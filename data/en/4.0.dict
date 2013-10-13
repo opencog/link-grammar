@@ -2147,8 +2147,9 @@ equiv.v sim.v simeq.v approx.v ~.v ～.v:
 
 %Mike replaced "{Q-}" with "(Rw- or Q- or [()])"
 
+% O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
 <vc-do>:
-  ((B- or O+ or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
+  ((B- or (O+ & <verb-wall>) or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
   or ({N+} & I*d+);
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
