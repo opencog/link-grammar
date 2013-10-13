@@ -1930,9 +1930,9 @@ per "/.per": Us+ & Mp-;
 % have to have a costly null [[()]] below, although we would really really
 % like to get rid of it.  But that would take a lot of B and AF link fiddling
 % about, so we have to live with this for now.
+%
 <verb-wall>: WV- or CV- or IV- or [[()]];
 % <verb-wall>: WV- or CV- or IV-;
-%<verb-wall>: ();
 
 % Pv- & <verb-wall>: "a historic new law was passed"
 
