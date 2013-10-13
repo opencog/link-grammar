@@ -221,6 +221,7 @@ changecom(`%')
 <tof-verb>: TOf+ & IV+;
 <toi-verb>: TOi+ & IV+;
 <ton-verb>: TOn+ & IV+;
+<too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & IV+;
 
 <subord-verb>: CV+;
@@ -4169,7 +4170,7 @@ hostage.i captive.i: Vh- or Vth-;
 
 <vc-expect>:
   ({@MV+} & (<embed-verb> or TH+ or RSe+ or Z- or <to-verb>)) or
-  ((O+ or OX+ or B-) & {@MV+} & {TOo+}) or
+  ((O+ or OX+ or B-) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+]]);
 
 expect.v claim.v: VERB_PLI(<vc-expect>);
@@ -4181,7 +4182,7 @@ expecting.v claiming.v: <verb-pg> & <vc-expect>;
 
 <vc-intend>:
   ({@MV+} & (TH+ or Z- or <to-verb>)) or
-  ((O+ or OX+ or B-) & {@MV+} & TOo+);
+  ((O+ or OX+ or B-) & {@MV+} & <too-verb>);
 intend.v: VERB_PLI(<vc-intend>);
 intends.v: VERB_S_T(<vc-intend>);
 intended.v-d: VERB_SPPP_T(<vc-intend>) or (<verb-pv> & {<to-verb> or Z- or @MV+})
@@ -4192,7 +4193,7 @@ intending.v: <verb-pg> & <vc-intend>;
 <vc-dare>:
   (N+ & I+) or
   ({@MV+} & <to-verb>) or
-  ((O+ or B-) & {@MV+} & TOo+);
+  ((O+ or B-) & {@MV+} & <too-verb>);
 
 dare.v: VERB_PLI(<vc-dare>);
 dares.v: VERB_S_T(<vc-dare>);
@@ -4203,7 +4204,7 @@ daring.v: <verb-pg> & <vc-dare>;
 
 <vc-like>:
   ({@MV+} & (<to-verb> or Pg+)) or
-  ((O+ or B- or OX+) & {@MV+} & {TOo+}) or
+  ((O+ or B- or OX+) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+]]);
 
 like.v: VERB_PLI(<vc-like>);
@@ -4244,7 +4245,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 % Pa**j+: predicative adjective -- "I want it green", "I want it very shiny."
 <vc-want>:
   ({@MV+} & <to-verb>) or
-  ((O+ or OX+ or B-) & {@MV+} & {TOo+ or Pv+ or Pa**j+}) or
+  ((O+ or OX+ or B-) & {@MV+} & {<too-verb> or Pv+ or Pa**j+}) or
   ([[@MV+ & O*n+]]) or
   [[CX- & {@MV+}]];
 
@@ -4258,7 +4259,7 @@ wanting.v needing.v: <verb-pg> & <vc-want>;
 
 <vc-choose>:
   ({@MV+} & {<to-verb>}) or
-  ((O+ or B-) & {@MV+} & {TOo+}) or
+  ((O+ or B-) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+]]);
 
 choose.v: VERB_PLI(<vc-choose>);
@@ -4275,7 +4276,7 @@ choosing.v: <verb-pg> & <vc-choose>;
 % <vc-prepare> is identical to <vc-choose>
 <vc-prepare>:
   ({@MV+} & {<to-verb>}) or
-  ((O+ or B-) & {@MV+} & {TOo+}) or
+  ((O+ or B-) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+]]);
 
 prepare.v press.v: VERB_PLI(<vc-prepare>);
@@ -4286,7 +4287,7 @@ preparing.g pressing.g: (<vc-prepare> & <verb-ge>) or <verb-ge-d>;
 preparing.v pressing.v: <verb-pg> & <vc-prepare>;
 
 <vc-require>:
-  ((O+ or B-) & {@MV+} & {TOo+}) or
+  ((O+ or B-) & {@MV+} & {<too-verb>}) or
   ({@MV+} & (TH+ or <embed-verb> or TS+ or (SI*j+ & I*j+))) or
   Zs- or
   ([[@MV+ & O*n+]]);
@@ -4300,7 +4301,7 @@ requiring.v: <verb-pg> & <vc-require>;
 
 <vc-command>:
   ({@MV+} & (TH+ or Zs- or TS+ or <embed-verb>)) or
-  ((O+ or B-) & {@MV+} & {TOo+}) or
+  ((O+ or B-) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & {O*n+}]]);
 
 command.v order.v urge.v: VERB_PLI(<vc-command>);
@@ -4316,7 +4317,7 @@ commanding.v ordering.v urging.v: <verb-pg> & <vc-command>;
 % ditransitive
 <vc-consider>:
   ({@MV+} & (TH+ or Pg+)) or
-  ((O+ or OX+ or B-) & {@MV+} & {TOo+ or Pa+}) or
+  ((O+ or OX+ or B-) & {@MV+} & {<too-verb> or Pa+}) or
   (((O+ & (B- or ({[[@MV+]]} & O*n+))) or ([[@MV+ & O*n+]])) & {@MV+});
 consider.v: VERB_PLI(<vc-consider>);
 considers.v: VERB_S_T(<vc-consider>);
@@ -4329,7 +4330,7 @@ considering.v: <verb-pg> & <vc-consider>;
 
 <vc-perceive>:
   ({@MV+} & (TH+ or <embed-verb>)) or
-  ((O+ or OX+ or B-) & {@MV+} & {TOo+}) or
+  ((O+ or OX+ or B-) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+]]);
 
 perceive.v: VERB_PLI(<vc-perceive>);
@@ -4341,7 +4342,7 @@ perceiving.v: <verb-pg> & <vc-perceive>;
 
 <vc-report>:
   ({@MV+} & {TH+ or Z- or <embed-verb>}) or
-  ((O+ or B-) & {@MV+} & {TOo+}) or
+  ((O+ or B-) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+]]);
 
 report.v: VERB_PLI(<vc-report>);
@@ -4352,7 +4353,7 @@ reporting.g: (<vc-report> & <verb-ge>) or <verb-ge-d>;
 reporting.v: <verb-pg> & <vc-report>;
 
 <vc-caution>:
-  ((O+ or B-) & {@MV+} & {TH+ or <embed-verb> or TOo+}) or
+  ((O+ or B-) & {@MV+} & {TH+ or <embed-verb> or <too-verb>}) or
   ({@MV+} & {TH+ or Zs-}) or
   ([[@MV+ & O*n+]]);
 
@@ -4367,7 +4368,7 @@ cautioning.g: (<vc-caution> & <verb-ge>) or <verb-ge-d>;
 cautioning.v: <verb-pg> & <vc-caution>;
 
 <vc-warn>:
-  ((O+ or B-) & {@MV+} & {TH+ or <embed-verb> or TOo+ or (OF+ & {@MV+})}) or
+  ((O+ or B-) & {@MV+} & {TH+ or <embed-verb> or <too-verb> or (OF+ & {@MV+})}) or
   ({@MV+} & {TH+ or Zs- or (OF+ & {@MV+})}) or
   ([[@MV+ & O*n+]]);
 
@@ -4628,7 +4629,7 @@ singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
 <vc-allow>:
   ((<vc-ditrans> or
     ([[@MV+]] & O*n+)) & {@MV+}) or
-  ((O+ or B-) & {@MV+} & {B- or TOo+});
+  ((O+ or B-) & {@MV+} & {B- or <too-verb>});
 
 allow.v: VERB_PLI(<vc-allow>);
 allows.v: VERB_S_T(<vc-allow>);
@@ -4678,7 +4679,7 @@ showing.v: <verb-pg> & <vc-show>;
 
 % ditransitive
 <vc-teach>:
-  ((O+ or B-) & ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or B- or TOo+)))
+  ((O+ or B-) & ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or B- or <too-verb>)))
   or ({
     <vc-opt-ditrans>
     or (B- & {[[@MV+]]} & O*n+)
@@ -4696,7 +4697,7 @@ teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
 <vc-compel>:
-  ((O+ or B-) & {@MV+} & TOo+);
+  ((O+ or B-) & {@MV+} & <too-verb>);
 
 compel.v: VERB_PLI(<vc-compel>);
 compels.v: VERB_S_T(<vc-compel>);
@@ -4706,7 +4707,7 @@ compelling.v: <verb-pg> & <vc-compel>;
 compelling.g: (<vc-compel> & <verb-ge>) or <verb-ge-d>;
 
 <vc-force>:
-  (((O+ or B-) & (({@MV+} & TOo+) or K+ or [()])) or
+  (((O+ or B-) & (({@MV+} & <too-verb>) or K+ or [()])) or
     (K+ & O*n+) or
     ([[{K+} & @MV+ & O*n+]])) & {@MV+};
 
@@ -4728,8 +4729,8 @@ forcing.v: <verb-pg> & <vc-force>;
 % The the O+ link below should use <verb-wall>.  I don't see any non-awkward
 % "boil the ocean" fix for this. Arghhh.
 <vc-design>:
-  (B- & {@MV+} & {TOo+}) or
-  (O+ & {@MV+} & {TOo+}) or
+  (B- & {@MV+} & {<too-verb>}) or
+  (O+ & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 design.v permit.v authorize.v use.v cause.v enable.v
@@ -4785,16 +4786,16 @@ exhorting.v imploring.v motivating.v impelling.v:
 <verb-pg> & <vc-design>;
 used.v-d:
   VERB_SPPP_T(<vc-design>) or
-  (<verb-pv> & {TOo+}) or
+  (<verb-pv> & {<too-verb>}) or
   (<verb-sp> & <to-verb>) or
-  ({@MV+} & {TOo+} & <verb-phrase-opener>) or
+  ({@MV+} & {<too-verb>} & <verb-phrase-opener>) or
   ({@E-} & A+);
 using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
 % --------------------------------------------------
 
 <vc-elect>:
-  ((O+ or B-) & (({@MV+} & {TOo+}) or
+  ((O+ or B-) & (({@MV+} & {<too-verb>}) or
     ({[[@MV+]]} & (O*n+ or TI+)))) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
@@ -4840,7 +4841,7 @@ tagging.g:
 tagging.v: <verb-pg> & <vc-tag>;
 
 <vc-program>:
-  {((O+ or B-) & {@MV+} & {TOo+}) or
+  {((O+ or B-) & {@MV+} & {<too-verb>}) or
   @MV+ or
   ([[@MV+ & O*n+ & {@MV+}]])};
 
@@ -4855,7 +4856,7 @@ programing.g programming.g obliging.g: (<vc-program> & <verb-ge>) or <verb-ge-d>
 programing.v programming.v obliging.v: <verb-pg> & <vc-program>;
 
 <vc-convince>:
-  ((O+ or B-) & {@MV+} & {TOo+ or TH+ or <embed-verb>}) or
+  ((O+ or B-) & {@MV+} & {<too-verb> or TH+ or <embed-verb>}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 convince.v persuade.v: VERB_PLI(<vc-convince>);
 convinces.v persuades.v: VERB_S_T(<vc-convince>);
@@ -4875,7 +4876,7 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % 
 <vc-tell>:
   (((O+ & {O*n+ or K+}) or B-)
-     & {@MV+} & {TH+ or RSe+ or Zs- or TOo+ or QI+ or BW-})
+     & {@MV+} & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & {@MV+}} & <embed-verb>)
   or OF+
   or (QI+ & {MV+})
@@ -4895,7 +4896,7 @@ telling.v: <verb-pg> & <vc-tell>;
 
 % (QI+ & {MV+}): "I did not ask why until recently"
 <vc-ask>:
-  ({(O+ & {O*n+}) or B-} & {@MV+} & {TS+ or TOo+ or (QI+ & {MV+}) or BW-}) or
+  ({(O+ & {O*n+}) or B-} & {@MV+} & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-}) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 ask.v: VERB_PLI(<vc-ask>);
@@ -4919,7 +4920,7 @@ helping.g: (<vc-help> & <verb-ge>) or <verb-ge-d>;
 helping.v: <verb-pg> & <vc-help>;
 
 <vc-remind>:
-  ((O+ or B-) & {@MV+} & (TOo+ or TH+ or <embed-verb> or (OF+ & {@MV+}))) or
+  ((O+ or B-) & {@MV+} & (<too-verb> or TH+ or <embed-verb> or (OF+ & {@MV+}))) or
   ([[@MV+ & O*n+ & {@MV+}]]);
 
 remind.v: VERB_PLI(<vc-remind>);
@@ -5138,7 +5139,7 @@ embarrassing.g annoying.g:
 
 <vc-prove>:
   ((O+ or B- or [[@MV+ & O*n+]]) & {@MV+}) or
-  ((O+ or OX+ or B-) & {@MV+} & (TOo+ or [[Pa+]])) or
+  ((O+ or OX+ or B-) & {@MV+} & (<too-verb> or [[Pa+]])) or
   ({@MV+} & (<tof-verb> or TH+ or <embed-verb> or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
 prove.v: VERB_Y_PLI(<vc-prove>);
