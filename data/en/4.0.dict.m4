@@ -3803,9 +3803,11 @@ guessing.v estimating.v understanding.v noticing.v explaining.v
 demonstrating.v: <verb-pg> & <vc-guess>;
 
 % (QI+ & {MV+}): "I did not know why until recently"
+% MVb+: "He should know better"
 <vc-know>:
-  {<vc-trans>} or
-  ({@MV+} & (((OF+ or QI+)& {@MV+}) or <embed-verb> or TH+ or RSe+ or Zs-));
+  {<vc-trans>}
+  or ({@MV+} & (((OF+ or QI+)& {@MV+}) or <embed-verb> or TH+ or RSe+ or Zs-))
+  or ({Xc+} & MVb+);
 know.v: VERB_PLI(<vc-know>);
 knows.v: VERB_S_T(<vc-know>);
 knew.v-d: VERB_SP_T(<vc-know>);
@@ -6345,8 +6347,9 @@ how:
 % CONJUNCTIONS  & ADVERBS
 
 % EBx+: He told me that even his mother likes me
+% (perhaps this should be changed to a different EB ??)
 that.j-c:
-  {EBx+} & (Cet+ & <subord-verb> & ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
+  ({EBx+} & Cet+ & <subord-verb> & ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
   or (TS- & (SI*j+ or SFI**j+) & I*j+);
 
 % D*u+: "Give me that thing"

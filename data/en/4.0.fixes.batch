@@ -35,6 +35,18 @@ John wants more cookies than Dave wants.
 It was covered with bites.
 Alice took a bite out of it.
 
+% Know, even
+He knows nothing but sin.
+Even a child knows better.
+He should know better
+We will know sooner or later.
+We will know, sooner or later.
+Even his mother likes me
+
+% the below parses, but not correctly; it should parse similar to above ...
+*Even a child can do better.
+
+
 % phantom commas
 I have no idea, what that is.
 I have no idea what that is.
