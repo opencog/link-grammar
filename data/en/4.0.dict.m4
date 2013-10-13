@@ -5527,6 +5527,7 @@ for.p:
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
 
+% cost on MVa- to give preference to MVl-
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EN+
@@ -5534,9 +5535,11 @@ about:
   or EZ+
   or [MVp- & B-]
   or (<tof-verb> & (Mp- or MVp- or Pp-))
-  or MVa-;
+  or [MVa-]
+  or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % Grep also for "just_about", used as syonym for "nearly", "almost"
+% XXX is this really needed ?? Seems to duplicate other stuff .. 
 just_about nearly_about almost_about right_about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EW+;
@@ -7524,20 +7527,28 @@ strangely:
   or ({Xd- & Xc+} & {EE-} & MVa-);
 
 rather: EA+ or EE+ or Vw- or ({Xc+ & {Xd-}} & CO+);
-particularly: EA+ or EE+ or Em+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+)) or
-({Xc+ & {Xd-}} & CO+);
+
+particularly:
+  EA+ or EE+ or Em+ or EB-
+  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or ({Xc+ & {Xd-}} & CO+);
+
 notably: EB- or EA+ or EE+ or ({Xc+ & {Xd-}} & CO+);
-almost nearly: EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-;
+
+almost nearly:
+  EA+ or EE+ or EN+ or EZ+ or Em+ or EBm-
+  or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % The below is similar to "nearly" ...
 just_about: Em+ or EN+ or EZ+ or EA+;
 
 entirely reasonably highly fairly totally completely terribly:
-EA+ or EE+ or
-({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+  EA+ or EE+
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+
 absolutely:
-EA+ or EE+ or EBm- or
-({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+  EA+ or EE+ or EBm-
+  or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 % allowing as opener also
 altogether equally:
@@ -7549,18 +7560,28 @@ altogether equally:
 really.e:
   EA+ or EE+ or Em+ or EBm-;
 
-surprisingly: EA+ or EE+ or ({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & E+) or
-(Xd- & Xc+ & MVa-);
-especially: EA+ or EE+ or EB- or Em+ or (MVl- & (MVp+ or MVa+ or MVs+)) or
- ({Xc+ & {Xd-}} & CO+);
+surprisingly:
+  EA+ or EE+
+  or ({Xc+ & {Xd-}} & CO+)
+  or ({Xd- & Xc+} & E+)
+  or (Xd- & Xc+ & MVa-);
+
+especially:
+  EA+ or EE+ or EB- or Em+
+  or (MVl- & (MVp+ or MVa+ or MVs+))
+  or ({Xc+ & {Xd-}} & CO+);
+
 virtually: EA+ or EE+ or EN+ or EZ+ or Em+;
-wholly fully critically greatly grossly duly unduly: EA+ or
-({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+
+wholly fully critically greatly grossly duly unduly:
+  EA+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
+
 seemingly utterly: EA+ or Em+;
 barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
 
-partly.e largely.e mostly.e chiefly.e simply.e
-purely.e solely.e: Em+ or EA+ or EB- or (MVl- & (MVp+ or MVa+ or MVs+));
+partly.e largely.e mostly.e chiefly.e simply.e purely.e solely.e:
+  Em+ or EA+ or EB-
+  or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % Em+: "It sure is great"
 sure.ee: Em+;
@@ -7643,11 +7664,12 @@ well.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Qe+ or <advcl-verb> or [E+]))
 
 exactly.e:
   E+
-  or ({Xd- & Xc+} & MVa-)
   or EB-
   or EN+
   or EW+
-  or EZ+;
+  or EZ+
+  or [{Xd- & Xc+} & MVa-]
+  or (MVl- & (MVp+ or MVa+ or MVs+));
 
 roughly approximately:
   EA+
@@ -7885,6 +7907,7 @@ seldom rarely.e: {EE-} & (E+ or EB-);
 
 % MVa-: "He did just what you asked."
 % EC+: "I ate just some of the cookies"
+% MVl- & MVl+: " we are going to arrive just about on time"
 just.e:
   E+
   or [EB-]
@@ -7892,7 +7915,7 @@ just.e:
   or EN+
   or EW+
   or EZ+
-  or (MVl- & (MVa+ or MVp+ or MVs+))
+  or (MVl- & (MVa+ or MVp+ or MVs+ or MVl+))
   or MVa-;
 
 meantime.e secondly thirdly
@@ -7900,9 +7923,12 @@ in_brief in_short in_sum in_essence:
 ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+);
 furthermore: ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & CO+) or EB-;
 mainly primarily:
-E+ or ({Xc+ & {Xd-}} & CO+) or EB- or (MVl- & (MVa+ or MVp+ or MVs+));
+  E+ 
+  or ({Xc+ & {Xd-}} & CO+)
+  or EB-
+  or (MVl- & (MVa+ or MVp+ or MVs+));
 
-% The MV- links seemt to really confuse the issue... kill them.
+% The MV- links seem to really confuse the issue... kill them.
 only:
   La-
   or E+
