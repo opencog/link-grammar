@@ -1113,10 +1113,10 @@ you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
 % (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
 % (Jd- & Dmu- & Os-):  "there was enough of it"
-% (Os- & {@M+}): "Do you have it ready?"
+% (Osx- & {@M+}): "Do you have it ready?" (the x prevents links as indirect object)
 it:
    [J-]
-   or (Os- & {@M+})
+   or (Osx- & {@M+})
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
    or ((Ss+ or SFsi+) & <CLAUSE>)
@@ -2477,8 +2477,9 @@ am.v:
 % "Show me my notes and be nice about it."
 % ({@E-} & I- & B- & O+):
 %   "What are the chances that Einstein could really be a genius?"
+% Icx-: the x prevents link to does.v: "*It does be correct"
 be.v:
-  ({@E-} & (Ix- or ({Ic-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & (Ix- or ({Icx-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
