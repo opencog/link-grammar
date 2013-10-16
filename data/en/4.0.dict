@@ -2250,9 +2250,10 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 % However, "I have a date with Bob": we want "with" to MVp modify have,
 % and not Mp modify "date"... XXX this is all very broken ATM...
 %
-% <to-verb> & <verb-wall>: "I have to ..." means have can connect to wall.
+% <to-verb> & <verb-wall>: "I have to verb-inf" allows "have" to connect to wall.
+% [TO+]: allows null-infinitive: "Because I have to."
 <vc-have>:
-  ({@MV+} & <to-verb> & <inf-verb> & <verb-wall>)
+  ({@MV+} & (<to-verb> or [TO+]) & <verb-wall>)
   or ((B- or (O+ & <verb-wall>)) & {@MV+} & {[I*j+ or Pv+]})
   or (([[@MV+ & O*n+]] or CX- or [[()]]) & {@MV+})
   or ({N+} & PP+);
