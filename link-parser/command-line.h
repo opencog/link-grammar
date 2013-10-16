@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <link-grammar/link-features.h>
+#include <link-grammar/link-includes.h>
 
 LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
 link_public_api(int)

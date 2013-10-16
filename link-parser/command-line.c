@@ -15,6 +15,7 @@
 #include <wchar.h>
 #include <wctype.h>
 
+#include "command-line.h"
 #include "link-includes.h"
 #include "read-dict.h"  /* For non-public dict_display_word_info */
 #include "utilities.h"  /* For MSWindows portability */
