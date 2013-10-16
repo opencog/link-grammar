@@ -70,9 +70,9 @@ Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
 }
 
 /** Returns the number of disjuncts in the list pointed to by d */
-int count_disjuncts(Disjunct * d)
+unsigned int count_disjuncts(Disjunct * d)
 {
-	int count = 0;
+	unsigned int count = 0;
 	for (; d != NULL; d = d->next)
 	{
 		count++;
@@ -85,7 +85,7 @@ int count_disjuncts(Disjunct * d)
 typedef struct disjunct_dup_table_s disjunct_dup_table;
 struct disjunct_dup_table_s
 {
-	int dup_table_size;
+	unsigned int dup_table_size;
 	Disjunct ** dup_table;
 };
 
@@ -95,10 +95,10 @@ struct disjunct_dup_table_s
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static inline int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
+static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 {
-	int i;
 	Connector *e;
+	unsigned int i;
 	i = 0;
 	for (e = d->left ; e != NULL; e = e->next) {
 		i += string_hash(e->string);
@@ -176,7 +176,7 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
  */
 Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 {
-	int i, h, count;
+	unsigned int i, h, count;
 	Disjunct *dn, *dx;
 	disjunct_dup_table *dt;
 

@@ -21,7 +21,7 @@ typedef Connector * connector_table;
 typedef struct disjunct_dup_table_s disjunct_dup_table;
 struct disjunct_dup_table_s
 {
-	int dup_table_size;
+	unsigned int dup_table_size;
 	Disjunct ** dup_table;
 };
 
@@ -32,16 +32,16 @@ typedef struct c_list_s C_list;
 struct c_list_s
 {
 	Connector * c;
-	int shallow;
+	Boolean shallow;
 	C_list * next;
 };
 
 typedef struct power_table_s power_table;
 struct power_table_s
 {
-	int power_table_size;
-	int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
-	int r_table_size[MAX_SENTENCE];
+	unsigned int power_table_size;
+	unsigned int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
+	unsigned int r_table_size[MAX_SENTENCE];
 	C_list ** l_table[MAX_SENTENCE];
 	C_list ** r_table[MAX_SENTENCE];
 };
@@ -126,9 +126,9 @@ struct prune_context_s
  * the connector string, and the label fields.  This ensures that if two
  * strings match (formally), then they must hash to the same place.
  */
-static inline int hash_S(Connector * c)
+static inline unsigned int hash_S(Connector * c)
 {
-	int h = connector_hash(c);
+	unsigned int h = connector_hash(c);
 	return (h & (CONTABSZ-1));
 }
 
@@ -286,7 +286,7 @@ static void zero_connector_table(connector_table *ct)
  */
 static void insert_connector(connector_table *ct, Connector * c)
 {
-	int h;
+	unsigned int h;
 	Connector * e;
 
 	h = hash_S(c);
@@ -340,7 +340,7 @@ void prune(Sentence sent)
 				/* For every left clause of this disjunct */
 				while (e)
 				{
-					int h = hash_S(e);
+					unsigned int h = hash_S(e);
 					for (f = ct[h]; f != NULL; f = f->tableNext)
 					{
 						if (prune_match(0, f, e)) break;
@@ -397,7 +397,7 @@ void prune(Sentence sent)
 
 				while (e)
 				{
-					int h = hash_S(e);
+					unsigned int h = hash_S(e);
 					for (f = ct[h]; f != NULL; f = f->tableNext)
 					{
 						if (prune_match(0, e, f)) break;
@@ -827,7 +827,7 @@ static Exp* purge_Exp(Exp *e)
 static inline int matches_S(connector_table *ct, Connector * c, int dir)
 {
 	Connector * e;
-	int h = hash_S(c);
+	unsigned int h = hash_S(c);
 
 	if (dir == '-')
 	{
@@ -1123,8 +1123,8 @@ static void free_C_list(C_list * t)
  */
 static void power_table_delete(power_table *pt)
 {
-	int w;
-	int i;
+	unsigned int w;
+	unsigned int i;
 
 	for (w = 0; w < pt->power_table_size; w++)
 	{
@@ -1147,9 +1147,9 @@ static void power_table_delete(power_table *pt)
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
-static void put_into_power_table(int size, C_list ** t, Connector * c, int shal)
+static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, Boolean shal)
 {
-	int h;
+	unsigned int h;
 	C_list * m;
 	h = connector_hash(c) & (size-1);
 	m = (C_list *) xalloc (sizeof(C_list));
@@ -1174,7 +1174,8 @@ static int set_dist_fields(Connector * c, int w, int delta)
 static power_table * power_table_new(Sentence sent)
 {
 	power_table *pt;
-	int w, len, size, i;
+	int w, len;
+	unsigned int i, size;
 	C_list ** t;
 	Disjunct * d, * xd, * head;
 	Connector * c;
@@ -1262,9 +1263,9 @@ static power_table * power_table_new(Sentence sent)
  * who are obsolete.  The word fields of an obsolete one has been set to
  * BAD_WORD.
  */
-static void clean_table(int size, C_list ** t)
+static void clean_table(unsigned int size, C_list ** t)
 {
-	int i;
+	unsigned int i;
 	C_list * m, * xm, * head;
 	for (i = 0; i < size; i++) {
 		head = NULL;
@@ -1287,9 +1288,9 @@ static void clean_table(int size, C_list ** t)
  * possible for these two to match based on local considerations.
  */
 #ifdef USE_FAT_LINKAGES
-static int possible_connection(prune_context *pc,
+static Boolean possible_connection(prune_context *pc,
                                Connector *lc, Connector *rc,
-                               int lshallow, int rshallow,
+                               Boolean lshallow, Boolean rshallow,
                                int lword, int rword)
 {
 	if ((!lshallow) && (!rshallow)) return FALSE;
@@ -1332,9 +1333,9 @@ static int possible_connection(prune_context *pc,
 }
 #else /* not USE_FAT_LINKAGES */
 
-static int possible_connection(prune_context *pc,
+static Boolean possible_connection(prune_context *pc,
                                Connector *lc, Connector *rc,
-                               int lshallow, int rshallow,
+                               Boolean lshallow, Boolean rshallow,
                                int lword, int rword)
 {
 	if ((!lshallow) && (!rshallow)) return FALSE;
@@ -1364,11 +1365,11 @@ static int possible_connection(prune_context *pc,
  * This returns TRUE if the right table of word w contains
  * a connector that can match to c.  shallow tells if c is shallow.
  */
-static int 
+static Boolean
 right_table_search(prune_context *pc, int w, Connector *c,
-                   int shallow, int word_c)
+                   Boolean shallow, int word_c)
 {
-	int size, h;
+	unsigned int size, h;
 	C_list *cl;
 	power_table *pt;
 
@@ -1389,11 +1390,11 @@ right_table_search(prune_context *pc, int w, Connector *c,
  * This returns TRUE if the right table of word w contains
  * a connector that can match to c.  shallows tells if c is shallow
  */
-static int 
+static Boolean
 left_table_search(prune_context *pc, int w, Connector *c,
-                  int shallow, int word_c)
+                  Boolean shallow, int word_c)
 {
-	int size, h;
+	unsigned int size, h;
 	C_list *cl;
 	power_table *pt;
 
@@ -1418,7 +1419,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
-                           int word_c, int w, int shallow)
+                           int word_c, int w, Boolean shallow)
 {
 	int n;
 	int foundmatch;
@@ -1453,7 +1454,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
  */
 static int
 right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
-                            int word_c, int w, int shallow)
+                            int word_c, int w, Boolean shallow)
 {
 	int n;
 	int foundmatch;
@@ -1713,7 +1714,7 @@ static void cms_table_delete(multiset_table *mt)
 	free(mt);
 }
 
-static int cms_hash(const char * s)
+static unsigned int cms_hash(const char * s)
 {
 	unsigned int i = 5381;
 	while (isupper((int) *s)) /* connector names are not yet UTF8-capable */
@@ -1751,7 +1752,7 @@ static Cms * lookup_in_cms_table(multiset_table *cmt, const char * str)
 static void insert_in_cms_table(multiset_table *cmt, const char * str)
 {
 	Cms * cms;
-	int h;
+	unsigned int h;
 	cms = lookup_in_cms_table(cmt, str);
 	if (cms != NULL) {
 		cms->count++;
@@ -1781,9 +1782,9 @@ static int delete_from_cms_table(multiset_table *cmt, const char * str)
 	return FALSE;
 }
 
-static int rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
+static Boolean rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 {
-	int hashval;
+	unsigned int hashval;
 	const char * t;
 	char name[20], *s;
 	pp_linkset_node *p;

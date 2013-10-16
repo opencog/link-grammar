@@ -65,7 +65,7 @@ static void free_table(count_context_t *ctxt)
 
 static void init_table(Sentence sent)
 {
-	int shift;
+	unsigned int shift;
 	/* A piecewise exponential function determines the size of the
 	 * hash table. Probably should make use of the actual number of
 	 * disjuncts, rather than just the number of words.
@@ -85,7 +85,7 @@ static void init_table(Sentence sent)
 
 	/* Clamp at max 4*(1<<24) == 64 MBytes */
 	if (24 < shift) shift = 24;
-	ctxt->table_size = (1 << shift);
+	ctxt->table_size = (1U << shift);
 	ctxt->log2_table_size = shift;
 	ctxt->table = (Table_connector**) 
 		xalloc(ctxt->table_size * sizeof(Table_connector*));
@@ -240,7 +240,7 @@ static Table_connector * table_store(count_context_t *ctxt,
                                      unsigned int cost, s64 count)
 {
 	Table_connector *t, *n;
-	int h;
+	unsigned int h;
 
 	n = (Table_connector *) xalloc(sizeof(Table_connector));
 	n->count = count;
@@ -260,7 +260,7 @@ find_table_pointer(count_context_t *ctxt,
                    unsigned int cost)
 {
 	Table_connector *t;
-	int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
+	unsigned int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
 	t = ctxt->table[h];
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw) && (t->le == le) && (t->re == re)

@@ -315,10 +315,10 @@ char * get_file_contents(const char *filename);
 /**
  * Returns the smallest power of two that is at least i and at least 1
  */
-static inline int next_power_of_two_up(int i)
+static inline unsigned int next_power_of_two_up(unsigned int i)
 {
-   int j=1;
-   while(j<i) j <<= 1;
+   unsigned int j=1;
+   while (j<i) j <<= 1;
    return j;
 }
 

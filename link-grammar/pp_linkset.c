@@ -40,22 +40,21 @@ static void initialize(pp_linkset *ls, int size)
   clear_hash_table(ls);
 }
 
-static int compute_hash(pp_linkset *ls, const char *str)
+static unsigned int compute_hash(pp_linkset *ls, const char *str)
  {
    /* hash is computed from capitalized prefix only */
-  int i, hashval;
-  hashval=LINKSET_SEED_VALUE;
-  for (i=0; isupper((int)str[i]); i++)
+  unsigned int i, hashval;
+  hashval = LINKSET_SEED_VALUE;
+  for (i = 0; isupper((int)str[i]); i++)
     hashval = str[i] + 31*hashval;
   hashval %= ls->hash_table_size;
-  if (hashval<0) hashval*=-1;
   return hashval;
 }
 
 static pp_linkset_node *add_internal(pp_linkset *ls, const char *str)
 {
   pp_linkset_node *p, *n;
-  int hashval;
+  unsigned int hashval;
 
   /* look for str (exactly) in linkset */
   hashval = compute_hash(ls, str);
@@ -90,19 +89,19 @@ void pp_linkset_close(pp_linkset *ls)
 void pp_linkset_clear(pp_linkset *ls)
 {
   /* clear dangling linked lists, but retain hash table itself */
-  int i;
+  unsigned int i;
   pp_linkset_node *p;
-  if (ls==NULL) return;
+  if (ls == NULL) return;
   for (i=0; i<ls->hash_table_size; i++) {
     p=ls->hash_table[i];
     while (p) {
       pp_linkset_node *q = p;
-      p=p->next;
+      p = p->next;
       xfree((void*) q, sizeof(pp_linkset_node));
     }
   }
   clear_hash_table(ls);
-  ls->population=0;
+  ls->population = 0;
 }
 
 /**
@@ -139,19 +138,19 @@ int pp_linkset_match(pp_linkset *ls, const char *str)
 
 int pp_linkset_match_bw(pp_linkset *ls, const char *str)
 {
-  int hashval;
+  unsigned int hashval;
   pp_linkset_node *p;
-  if (ls==NULL) return 0;
+  if (ls == NULL) return 0;
   hashval = compute_hash(ls, str);
   p = ls->hash_table[hashval];
-  while(p!=0) {
-    if (post_process_match(str,p->str)) return 1;
-    p=p->next;
+  while (p != 0) {
+    if (post_process_match(str, p->str)) return 1;
+    p = p->next;
   }
   return 0;
 }
 
-int pp_linkset_population(pp_linkset *ls)
+unsigned int pp_linkset_population(pp_linkset *ls)
 {
   return (ls==NULL)? 0 : ls->population;
 }

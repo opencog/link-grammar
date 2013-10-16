@@ -41,8 +41,8 @@ static int right_disjunct_list_length(const Disjunct * d)
 struct match_context_s
 {
 	int match_cost;
-	int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
-	int r_table_size[MAX_SENTENCE];
+	unsigned int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
+	unsigned int r_table_size[MAX_SENTENCE];
 
 	/* the beginnings of the hash tables */
 	Match_node ** l_table[MAX_SENTENCE];
@@ -102,7 +102,7 @@ static void free_match_list(Match_node * t)
 void free_fast_matcher(Sentence sent)
 {
 	int w;
-	int i;
+	unsigned int i;
 	match_context_t *ctxt = sent->match_ctxt;
 
 	if (verbosity > 1) printf("%d Match cost\n", ctxt->match_cost);
@@ -194,10 +194,10 @@ static Match_node * add_to_left_table_list(Match_node * m, Match_node * l)
  * dir =  1, we're putting this into a right table.
  * dir = -1, we're putting this into a left table.
  */
-static void put_into_match_table(int size, Match_node ** t,
+static void put_into_match_table(unsigned int size, Match_node ** t,
 								 Disjunct * d, Connector * c, int dir )
 {
-	int h;
+	unsigned int h;
 	Match_node * m;
 	h = connector_hash(c) & (size-1);
 	m = (Match_node *) xalloc (sizeof(Match_node));
@@ -212,7 +212,8 @@ static void put_into_match_table(int size, Match_node ** t,
 
 void init_fast_matcher(Sentence sent)
 {
-	int w, len, size, i;
+   unsigned int size, i;
+	int w, len;
 	Match_node ** t;
 	Disjunct * d;
 	match_context_t *ctxt;

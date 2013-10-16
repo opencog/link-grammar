@@ -302,7 +302,7 @@ void exfree_link(Link * l)
  * This hash function only looks at the leading upper case letters of
  * the string, and the direction, '+' or '-'.
  */
-static int connector_set_hash(Connector_set *conset, const char * s, int d)
+static unsigned int connector_set_hash(Connector_set *conset, const char * s, int d)
 {
 	unsigned int i;
 	/* djb2 hash */
@@ -320,7 +320,7 @@ static void build_connector_set_from_expression(Connector_set * conset, Exp * e)
 {
 	E_list * l;
 	Connector * c;
-	int h;
+	unsigned int h;
 	if (e->type == CONNECTOR_type)
 	{
 		c = connector_new();
@@ -338,7 +338,7 @@ static void build_connector_set_from_expression(Connector_set * conset, Exp * e)
 
 Connector_set * connector_set_create(Exp *e)
 {
-	int i;
+	unsigned int i;
 	Connector_set *conset;
 
 	conset = (Connector_set *) xalloc(sizeof(Connector_set));
@@ -352,7 +352,7 @@ Connector_set * connector_set_create(Exp *e)
 
 void connector_set_delete(Connector_set * conset)
 {
-	int i;
+	unsigned int i;
 	if (conset == NULL) return;
 	for (i=0; i<conset->table_size; i++) free_connectors(conset->hash_table[i]);
 	xfree(conset->hash_table, conset->table_size * sizeof(Connector *));
@@ -364,9 +364,9 @@ void connector_set_delete(Connector_set * conset)
  * d='+' means this connector is on the right side of the disjunct.
  * d='-' means this connector is on the left side of the disjunct.
  */
-int match_in_connector_set(Sentence sent, Connector_set *conset, Connector * c, int d)
+Boolean match_in_connector_set(Sentence sent, Connector_set *conset, Connector * c, int d)
 {
-	int h;
+	unsigned int h;
 	Connector * c1;
 	if (conset == NULL) return FALSE;
 	h = connector_set_hash(conset, c->string, d);

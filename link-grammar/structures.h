@@ -381,8 +381,8 @@ typedef struct pp_linkset_node_s
 
 typedef struct pp_linkset_s
 {
-    int hash_table_size;
-    int population;
+    unsigned int hash_table_size;
+    unsigned int population;
     pp_linkset_node **hash_table;    /* data actually lives here */
 } pp_linkset;
 

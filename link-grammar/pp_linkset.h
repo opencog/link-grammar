@@ -16,5 +16,5 @@ void pp_linkset_clear     (pp_linkset *ls);
 int  pp_linkset_add       (pp_linkset *ls, const char *str);
 int  pp_linkset_match     (pp_linkset *ls, const char *str);
 int  pp_linkset_match_bw  (pp_linkset *ls, const char *str);
-int  pp_linkset_population(pp_linkset *ls); 
+unsigned int  pp_linkset_population(pp_linkset *ls); 
 

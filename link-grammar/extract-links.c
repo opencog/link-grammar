@@ -147,7 +147,8 @@ Parse_info parse_info_new(int nwords)
  */
 void free_parse_info(Parse_info pi)
 {
-	int i, len;
+	unsigned int i;
+	int len;
 	X_table_connector *t, *x;
 
 	len = pi->N_words;
@@ -207,7 +208,7 @@ static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connecto
 								  unsigned int cost, Parse_info pi)
 {
 	X_table_connector *t, *n;
-	int h;
+	unsigned int h;
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
 	n->set = empty_set();
@@ -445,9 +446,9 @@ static int verify_set_node(Parse_set *set)
 	return FALSE;
 }
 
-static int verify_set(Parse_info pi)
+static Boolean verify_set(Parse_info pi)
 {
-	int i;
+	unsigned int i;
 
 	assert(pi->x_table != NULL, "called verify_set when x_table==NULL");
 	for (i=0; i<pi->x_table_size; i++)

@@ -108,8 +108,7 @@ struct Parse_Options_s
 struct Connector_set_s
 {
 	Connector ** hash_table;
-	int          table_size;
-	int          is_defined;  /* if 0 then there is no such set */
+	unsigned int table_size;
 };
 
 struct Dictionary_s
@@ -202,8 +201,8 @@ struct And_data_s
 
 struct Parse_info_struct
 {
-	int            x_table_size;
-	int            log2_x_table_size;
+	unsigned int   x_table_size;
+	unsigned int   log2_x_table_size;
 	X_table_connector ** x_table;
 	Parse_set *    parse_set;
 	int            N_words;

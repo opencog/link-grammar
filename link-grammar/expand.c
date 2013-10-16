@@ -52,7 +52,7 @@ int lg_expand_disjunct_list(Sentence sent)
 			Disjunct *dx = build_expansion_disjuncts(clu, x);
 			if (dx)
 			{
-				int cnt = count_disjuncts(d);
+				unsigned int cnt = count_disjuncts(d);
 				d = catenate_disjuncts(dx, d);
 				d = eliminate_duplicate_disjuncts(d);
 				if (cnt < count_disjuncts(d)) expanded = TRUE;
