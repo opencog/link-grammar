@@ -310,7 +310,7 @@ CONTAINS_NONE_RULES:
 
 
 ; ----------------------------------------------------------------------
-; The following rule asserts that all specified domains must have the
+; The following rules assert that all specified domains must have the
 ; property that all of the words that touch a link in the domain are
 ; not to the left of the root word of the domain. These rules are
 ; different from the above in that the first field is a *domain name*,

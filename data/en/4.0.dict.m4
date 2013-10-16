@@ -3513,9 +3513,10 @@ born.v: VERB_PP(<vc-bear>) or <verb-pv> or <verb-phrase-opener>;
 bearing.g: (<vc-bear> & <verb-ge>) or <verb-ge-d>;
 bearing.v: <verb-pg> & <vc-bear>;
 
+% [TO+]: allows null-infinitive: "Yes, I'd love to."
 <vc-love>:
   <vc-trans> or
-  ({@MV+} & (<to-verb> or Pg+));
+  ({@MV+} & (<to-verb> or [TO+] or Pg+));
 
 love.v dislike.v hate.v: VERB_PLI(<vc-love>);
 loves.v dislikes.v hates.v: VERB_S_T(<vc-love>);
@@ -4214,8 +4215,9 @@ dared.v-d: VERB_SPPP_T(<vc-dare>) or (<verb-pv> & <to-verb>) or
 daring.g: (<vc-dare> & <verb-ge>) or <verb-ge-d>;
 daring.v: <verb-pg> & <vc-dare>;
 
+% [TO+]: allows null-infinitive: "Yes, I'd love to."
 <vc-like>:
-  ({@MV+} & (<to-verb> or Pg+)) or
+  ({@MV+} & (<to-verb> or [TO+] or Pg+)) or
   ((O+ or B- or OX+) & {@MV+} & {<too-verb>}) or
   ([[@MV+ & O*n+]]);
 
@@ -4255,8 +4257,9 @@ refusing.g: (<vc-refuse> & <verb-ge>) or <verb-ge-d>;
 refusing.v: <verb-pg> & <vc-refuse>;
 
 % Pa**j+: predicative adjective -- "I want it green", "I want it very shiny."
+% [TO+]: allows null-infinitive: "Because I want to."
 <vc-want>:
-  ({@MV+} & <to-verb>) or
+  ({@MV+} & (<to-verb> or [TO+])) or
   ((O+ or OX+ or B-) & {@MV+} & {<too-verb> or Pv+ or Pa**j+}) or
   ([[@MV+ & O*n+]]) or
   [[CX- & {@MV+}]];
