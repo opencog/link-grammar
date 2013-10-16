@@ -107,47 +107,47 @@ void pp_linkset_clear(pp_linkset *ls)
 /**
  * returns 0 if already there, 1 if new. Stores only the pointer
  */
-int pp_linkset_add(pp_linkset *ls, const char *str)
+Boolean pp_linkset_add(pp_linkset *ls, const char *str)
 {
-  if (ls==NULL)
+  if (ls == NULL)
   {
     prt_error("Fatal Error: pp_linkset internal error: Trying to add to a null set");
     exit(1);
   }
-  if (add_internal(ls, str) == NULL) return 0;
+  if (add_internal(ls, str) == NULL) return FALSE;
   ls->population++;
-  return 1;
+  return TRUE;
 }
 
 /**
  * Set query. Returns 1 if str pp-matches something in the set, 0 otherwise
  */
-int pp_linkset_match(pp_linkset *ls, const char *str)
+Boolean pp_linkset_match(pp_linkset *ls, const char *str)
 {
   int hashval;
   pp_linkset_node *p;
-  if (ls==NULL) return 0;
-  hashval = compute_hash(ls, str);
-  p = ls->hash_table[hashval];
-  while(p!=0) {
-    if (post_process_match(p->str,str)) return 1;
-    p=p->next;
-  }
-  return 0;
-}
-
-int pp_linkset_match_bw(pp_linkset *ls, const char *str)
-{
-  unsigned int hashval;
-  pp_linkset_node *p;
-  if (ls == NULL) return 0;
+  if (ls == NULL) return FALSE;
   hashval = compute_hash(ls, str);
   p = ls->hash_table[hashval];
   while (p != 0) {
-    if (post_process_match(str, p->str)) return 1;
+    if (post_process_match(p->str,str)) return TRUE;
+    p=p->next;
+  }
+  return FALSE;
+}
+
+Boolean pp_linkset_match_bw(pp_linkset *ls, const char *str)
+{
+  unsigned int hashval;
+  pp_linkset_node *p;
+  if (ls == NULL) return FALSE;
+  hashval = compute_hash(ls, str);
+  p = ls->hash_table[hashval];
+  while (p != 0) {
+    if (post_process_match(str, p->str)) return TRUE;
     p = p->next;
   }
-  return 0;
+  return FALSE;
 }
 
 unsigned int pp_linkset_population(pp_linkset *ls)
