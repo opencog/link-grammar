@@ -1741,7 +1741,10 @@ killions umptillions zillions.a:
   [{DD- or Dmcx-} & <noun-sub-p> & <noun-main-p>]
   or (OFd+ & (ND+ or NIn+ or Dm+));
 
-tens: {DD-} & OF+ & <noun-main-p>;
+% OFd+ & Dm+: "tens of years ago ..."
+tens:
+  ({DD-} & OF+ & <noun-main-p>)
+  or (OFd+ & Dm+);
 
 1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8 ½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞:
 ({NNx-} & NNy+) or NF+ or NIe+
@@ -7956,9 +7959,13 @@ fall.i spring.i winter.i summer.i:
   ((DTn- or DTi-) & <prep-main-t>) or
   (DTi- & (JT- or YS+ or [[<noun-main-s>]]));
 
+% Jd- & Dmc-: "Millions of years ago..."
 weeks.i days.i hours.i minutes.i seconds.i months.i years.i decades.i
 centuries.i semesters.i terms.i nights.i:
-((ND- or [[EN-]] or [()]) & (Yt+ or (OT- & {Mp+}))) or (ND- & Ye-) or (TQ- & BT+);
+  ((ND- or (Jd- & Dmc-) or [[EN-]] or [()]) & (Yt+ or (OT- & {Mp+})))
+  or (ND- & Ye-)
+  or (TQ- & BT+);
+
 week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
   (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-)))
