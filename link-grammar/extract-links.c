@@ -240,12 +240,13 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  */
 static Parse_set * parse_set(Sentence sent,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
-					  Connector *le, Connector *re, int cost,
-                 int islands_ok, Parse_info pi)
+					  Connector *le, Connector *re, unsigned int cost,
+                 Boolean islands_ok, Parse_info pi)
 {
 	Disjunct * d, * dis;
 	int start_word, end_word, w;
-	int lcost, rcost, Lmatch, Rmatch;
+	Boolean Lmatch, Rmatch;
+	unsigned int lcost, rcost;
 	int i, j;
 	Parse_set *ls[4], *rs[4], *lset, *rset;
 	Parse_choice * a_choice;
@@ -254,7 +255,7 @@ static Parse_set * parse_set(Sentence sent,
 	X_table_connector *xt;
 	s64 count;
 
-	assert(cost >= 0, "parse_set() called with cost < 0.");
+	assert(cost < 0x7fffffff, "parse_set() called with cost < 0.");
 
 	count = table_lookup(sent, lw, rw, le, re, cost);
 

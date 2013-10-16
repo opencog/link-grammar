@@ -327,7 +327,8 @@ static s64 do_count(Sentence sent, int lw, int rw,
 	s64 total;
 	int start_word, end_word, w;
 	s64 leftcount, rightcount, pseudototal;
-	unsigned int lcost, rcost, Lmatch, Rmatch;
+	Boolean Lmatch, Rmatch;
+	unsigned int lcost, rcost;
 
 	Match_node * m, *m1;
 	Table_connector *t;
