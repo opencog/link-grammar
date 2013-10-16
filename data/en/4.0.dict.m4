@@ -4521,10 +4521,12 @@ pass.v buy.v pay.v sell.v deal.v telegraph.v wire.v: VERB_PLI(<vc-pass>);
 passes.v buys.v pays.v sells.v deals.v telegraphs.v wires.v: VERB_S_T(<vc-pass>);
 
 % (S- & B-) : allows WV-less attach to "The dog which Chris bought is ugly"
+% (({@E-} or {@EA-} or {@AN-}) & A+): "The telegraphed orders never arrived"
 passed.v-d bought.v-d paid.v-d payed.v-d sold.v-d dealt.v-d
 telegraphed.v-d wired.v-d:
   VERB_SPPP_T(<vc-pass>) or
   (S- & B-) or
+  (({@E-} or {@EA-} or {@AN-}) & A+) or
   (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
