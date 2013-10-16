@@ -8316,11 +8316,12 @@ that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 % "No one is sitting at that there table"
 that_there: Ds+;
 
-% (Rnx+ & <CLAUSE-E>): "Because I said so"
+% (Rnx+ & CV+ & <CLAUSE-E>): "Because I said so"
+% Not using Rnx+ & B+ above, because B+ goes too far...
 because:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-)))
   or (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-)))
-  or (Rnx+ & <CLAUSE-E>);
+  or (Rnx+ & CV+ & <CLAUSE-E>);
 
 now_that just_as if_only in_case whereby whereupon insofar_as
 inasmuch_as ere on_the_grounds_that on_grounds_that in_that
