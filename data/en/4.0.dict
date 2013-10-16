@@ -1746,10 +1746,14 @@ tens:
   ({DD-} & OF+ & <noun-main-p>)
   or (OFd+ & Dm+);
 
+% XXX FIXME: noun-main-x has O- in it, and that's just wrong, here.
 1/2 3/4 2/3 1/3 1/4 1/8 3/8 5/8 7/8 ½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞:
-({NNx-} & NNy+) or NF+ or NIe+
-or ({NNx-} & {EN- or NIc-} & (ND+ or NIn+ or OD- or ({DD-} &
-([[Ds+]] or Dmcn+ or (<noun-sub-x> & <noun-main-x>)))));
+  ({NNx-} & NNy+)
+  or NF+
+  or NIe+
+  or ({NNx-} & {EN- or NIc-}
+    & (ND+ or NIn+ or OD-
+      or ({DD-} & ([[Ds+]] or Dmcn+ or (<noun-sub-x> & <noun-main-x>)))));
 
 and_a_half: (NW- or NSn-) &
 (NNy+ or ({EN- or NIc-} & (ND+ or NIn+ or ({DD-} &
@@ -7985,8 +7989,10 @@ from_now: Yt- & <prep-main-t>;
 a_long_time some_time a_few_moments moments.u:
   Yt+ or OT-;
 
+% I can't figure out what the Js- would be for... ??
+% ago: Yt- & (<prep-main-e> or <advcl-verb> or Qe+ or JT- or Js-);
 ago:
-  Yt- & (<prep-main-e> or <advcl-verb> or Qe+ or JT- or Js-);
+  Yt- & (<prep-main-e> or <advcl-verb> or Qe+ or JT-);
 
 every.i: {EN-} & Ye+ & <prep-main-t>;
 times.i x.i:
