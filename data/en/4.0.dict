@@ -1733,11 +1733,12 @@ half_a_dozen half_a_million:
 ({EN- or NIc-} & (ND+ or NIn+ or OD- or ({{@L+} & DD-} &
 (Dmcn+ or (<noun-sub-p> & <noun-main-p>)))));
 
+%  Dmcx-: prevents linkage to DMcn "*5 millions attended" but "Many millions attended"
 dozens scores.a hundreds.a thousands millions billions trillions
 bajillions bazillions gadzillions gagillions gajillions gazillions
 godzillions jillions jizillions kabillions kajillions katrillions
 killions umptillions zillions.a:
-  [{DD- or Dmc-} & <noun-sub-p> & <noun-main-p>]
+  [{DD- or Dmcx-} & <noun-sub-p> & <noun-main-p>]
   or (OFd+ & (ND+ or NIn+ or Dm+));
 
 tens: {DD-} & OF+ & <noun-main-p>;
