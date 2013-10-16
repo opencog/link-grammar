@@ -327,7 +327,7 @@ static s64 do_count(Sentence sent, int lw, int rw,
 	s64 total;
 	int start_word, end_word, w;
 	s64 leftcount, rightcount, pseudototal;
-	int lcost, rcost, Lmatch, Rmatch;
+	unsigned int lcost, rcost, Lmatch, Rmatch;
 
 	Match_node * m, *m1;
 	Table_connector *t;
@@ -430,9 +430,11 @@ static s64 do_count(Sentence sent, int lw, int rw,
 		m1 = m = form_match_list(sent, w, le, lw, re, rw);
 		for (; m != NULL; m = m->next)
 		{
+			unsigned int null_count_p1;
 			Disjunct * d;
 			d = m->d;
-			for (lcost = 0; lcost <= null_count; lcost++)
+			null_count_p1 = null_count + 1; /* avoid gcc warning: unsafe loop opt */
+			for (lcost = 0; lcost < null_count_p1; lcost++)
 			{
 				rcost = null_count - lcost;
 				/* Now lcost and rcost are the costs we're assigning
