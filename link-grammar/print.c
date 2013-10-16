@@ -487,27 +487,27 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
  */
 static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 {
-	int i, j, k, cl, cr, row, top_row;
+	unsigned int i, j, k, cl, cr, row, top_row, top_row_p1;
 	const char *s;
 	char *t;
 	Boolean print_word_0 = 0, print_word_N = 0;
 	int N_wall_connectors, suppressor_used;
 	int center[MAX_SENTENCE];
 	char connector[MAX_TOKEN_LENGTH];
-	int line_len, link_length;
+	unsigned int line_len, link_length;
 #ifdef USE_FAT_LINKAGES
 	Sublinkage *sublinkage=&(linkage->sublinkage[linkage->current]);
 #else
 	Sublinkage *sublinkage=&(linkage->sublinkage);
 #endif /* USE_FAT_LINKAGES */
-	int N_links = sublinkage->num_links;
+	unsigned int N_links = sublinkage->num_links;
 	Link **ppla = sublinkage->link;
 	String * string;
 	char * gr_string;
 	Dictionary dict = linkage->sent->dict;
 	Parse_Options opts = linkage->opts;
 	size_t x_screen_width = parse_options_get_screen_width(opts);
-	int N_words_to_print;
+	unsigned int N_words_to_print;
 
 	char picture[MAX_HEIGHT][MAX_LINE];
 	char xpicture[MAX_HEIGHT][MAX_LINE];
@@ -584,7 +584,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	for (link_length = 1; link_length < N_words_to_print; link_length++) {
 		for (j=0; j<N_links; j++) {
 			if (ppla[j]->l == -1) continue;
-			if ((ppla[j]->r - ppla[j]->l) != link_length)
+			if (((unsigned int) (ppla[j]->r - ppla[j]->l)) != link_length)
 			  continue;
 			if (!print_word_0 && (ppla[j]->l == 0)) continue;
 			/* gets rid of the irrelevant link to the left wall */
@@ -720,16 +720,18 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 
 	/* start locations, for each row.  These may vary, due to different
 	 * utf8 character widths */
-	for (row = top_row; row >= 0; row--)
+	top_row_p1 = top_row + 1;
+	for (row = 0; row < top_row_p1; row++)
 		start[row] = 0;
 	pctx->N_rows = 0;
 	pctx->row_starts[pctx->N_rows] = 0;
 	pctx->N_rows++;
 	while (i < N_words_to_print)
 	{
+		unsigned int revrs;
 		/* Count number of multi-byte chars in the words,
 		 * up to the max screen width. */
-		int uwidth = 0;
+		unsigned int uwidth = 0;
 		do {
 			uwidth += utf8_strlen(linkage->word[i]) + 1;
 			i++;
@@ -740,12 +742,15 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		if (i < N_words_to_print) pctx->N_rows++;     /* same */
 
 		append_string(string, "\n");
-		for (row = top_row; row >= 0; row--)
+		top_row_p1 = top_row + 1;
+		for (revrs = 0; revrs < top_row_p1; revrs++)
 		{
 			/* print each row of the picture */
 			/* 'blank' is used solely to detect blank lines */
-			int mbcnt = 0;
+			unsigned int mbcnt = 0;
 			Boolean blank = TRUE;
+
+			row = top_row - revrs;
 			k = start[row];
 			for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
 			{
@@ -754,7 +759,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 				j += n;
 				mbcnt ++;
 			}
-         start[row] = j;
+			start[row] = j;
 
 			if (!blank)
 			{
