@@ -64,7 +64,7 @@ struct multiset_table_s
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
-	int null_links;
+	Boolean null_links;
 #ifdef USE_FAT_LINKAGES
 	char ** deletable;
 	char ** effective_dist;

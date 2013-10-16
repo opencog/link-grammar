@@ -35,14 +35,14 @@ struct count_context_s
 #endif /* USE_FAT_LINKAGES */
 	Word *  local_sent;
 	int     null_block;
-	int     islands_ok;
-	int     null_links;
+	Boolean islands_ok;
+	Boolean null_links;
 	int     table_size;
 	int     log2_table_size;
 	Table_connector ** table;
 	Resources current_resources;
 	Boolean exhausted;
-	int     checktimer;
+	int     checktimer;  /* Avoid excess system calls */
 };
 
 static void free_table(count_context_t *ctxt)
