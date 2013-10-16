@@ -33,7 +33,7 @@ static Parse_set * dummy_set(void)
 }
 
 /** Returns an empty set of parses */
-static Parse_set * empty_set(void)
+static inline Parse_set * empty_set(void)
 {
 	Parse_set *s;
 	s = (Parse_set *) xalloc(sizeof(Parse_set));
@@ -204,13 +204,13 @@ Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
  * Stores the value in the x_table.  Assumes it's not already there.
  */
 static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re,
-								  unsigned int cost, Parse_set * set, Parse_info pi)
+								  unsigned int cost, Parse_info pi)
 {
 	X_table_connector *t, *n;
 	int h;
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
-	n->set = set;
+	n->set = empty_set();
 	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
 	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, cost);
 	t = pi->x_table[h];
@@ -274,7 +274,7 @@ static Parse_set * parse_set(Sentence sent,
 
 	/* Start it out with the empty set of options. */
 	/* This entry must be updated before we return. */
-	xt = x_table_store(lw, rw, le, re, cost, empty_set(), pi);
+	xt = x_table_store(lw, rw, le, re, cost, pi);
 
 	xt->set->count = count;  /* the count we already computed */
 	/* this count is non-zero */

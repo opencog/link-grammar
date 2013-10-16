@@ -209,7 +209,7 @@ struct Parse_info_struct
 	int            N_words;
 	Disjunct **    chosen_disjuncts;
 	int            N_links;
-	Link          link_array[MAX_LINKS];
+	Link           link_array[MAX_LINKS];
 
 #ifdef USE_FAT_LINKAGES
 	/* Points to the image structure for each word.
