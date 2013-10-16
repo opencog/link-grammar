@@ -22,7 +22,7 @@ struct Table_connector_s
 {
 	short            lw, rw;
 	Connector        *le, *re;
-	short            cost;
+	unsigned short   cost;
 	s64              count;
 	Table_connector  *next;
 };
@@ -237,7 +237,7 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 static Table_connector * table_store(count_context_t *ctxt,
                                      int lw, int rw,
                                      Connector *le, Connector *re,
-                                     int cost, s64 count)
+                                     unsigned int cost, s64 count)
 {
 	Table_connector *t, *n;
 	int h;
@@ -257,7 +257,7 @@ static Table_connector *
 find_table_pointer(count_context_t *ctxt,
                    int lw, int rw, 
                    Connector *le, Connector *re,
-                   int cost)
+                   unsigned int cost)
 {
 	Table_connector *t;
 	int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
@@ -286,7 +286,7 @@ find_table_pointer(count_context_t *ctxt,
 
 /** returns the count for this quintuple if there, -1 otherwise */
 s64 table_lookup(Sentence sent, 
-                 int lw, int rw, Connector *le, Connector *re, int cost)
+                 int lw, int rw, Connector *le, Connector *re, unsigned int cost)
 {
 	Table_connector *t = find_table_pointer(sent->count_ctxt, lw, rw, le, re, cost);
 
@@ -314,7 +314,7 @@ static void table_update(count_context_t *ctxt, int lw, int rw,
  * with a count value of 0.
  */
 static s64 pseudocount(Sentence sent,
-                       int lw, int rw, Connector *le, Connector *re, int cost)
+                       int lw, int rw, Connector *le, Connector *re, unsigned int cost)
 {
 	s64 count;
 	count = table_lookup(sent, lw, rw, le, re, cost);

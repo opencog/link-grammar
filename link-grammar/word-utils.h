@@ -144,7 +144,7 @@ static inline int connector_hash(Connector * c)
 static inline int pair_hash(int log2_table_size,
                             int lw, int rw,
                             const Connector *le, const Connector *re,
-                            int cost)
+                            unsigned int cost)
 {
 	int table_size = (1 << log2_table_size);
 	unsigned int i = 0;

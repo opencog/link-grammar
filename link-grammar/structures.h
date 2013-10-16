@@ -357,7 +357,7 @@ struct Parse_set_struct
 struct X_table_connector_struct
 {
     short             lw, rw;
-    short             cost;
+    unsigned short    cost;
     Parse_set         *set;
     Connector         *le, *re;
     X_table_connector *next;

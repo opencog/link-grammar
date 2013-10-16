@@ -640,7 +640,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		for (in=0; in < N_linkages_alloced; in++)
 		{
-			extract_links(indices[in], sent->null_count, sent->parse_info);
+			extract_links(indices[in], sent->parse_info);
 #ifdef USE_FAT_LINKAGES
 			if (set_has_fat_down(sent))
 			{
@@ -664,7 +664,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	for (in=0; in < N_linkages_alloced; in++)
 	{
 		Linkage_info *lifo = &link_info[N_linkages_post_processed];
-		extract_links(indices[in], sent->null_count, sent->parse_info);
+		extract_links(indices[in], sent->parse_info);
 #ifdef USE_FAT_LINKAGES
 		lifo->fat = FALSE;
 		lifo->canonical = TRUE;
@@ -1026,7 +1026,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
 		Linkage_info *lifo = &sent->link_info[lk];
-		extract_links(lifo->index, sent->null_count, pi);
+		extract_links(lifo->index, pi);
 		for (i=0; i<sent->length; i++)
 		{
 			const char *djw;
@@ -1251,7 +1251,7 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	linkage->dis_con_tree = NULL;
 #endif /* USE_FAT_LINKAGES */
 
-	extract_links(sent->link_info[k].index, sent->null_count, sent->parse_info);
+	extract_links(sent->link_info[k].index, sent->parse_info);
 	compute_chosen_words(sent, linkage);
 
 #ifdef USE_FAT_LINKAGES

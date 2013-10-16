@@ -12,5 +12,5 @@
 /*************************************************************************/
 Parse_info parse_info_new(int nwords);
 void free_parse_info(Parse_info);
-int   build_parse_set(Sentence sent, int cost, Parse_Options opts);
-void  extract_links(int index, int cost, Parse_info pi);
+int   build_parse_set(Sentence sent, unsigned int cost, Parse_Options opts);
+void  extract_links(int index, Parse_info pi);

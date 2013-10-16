@@ -180,7 +180,7 @@ void free_parse_info(Parse_info pi)
  * Returns the pointer to this info, NULL if not there.
  */
 static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connector *re,
-									int cost, Parse_info pi)
+									unsigned int cost, Parse_info pi)
 {
 	X_table_connector *t;
 	t = pi->x_table[pair_hash(pi->log2_x_table_size, lw, rw, le, re, cost)];
@@ -192,7 +192,7 @@ static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connec
 
 #if DEAD_CODE
 Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
-						   int cost, Parse_info pi) {
+						   unsigned int cost, Parse_info pi) {
 	/* returns the count for this quintuple if there, -1 otherwise */
 	X_table_connector *t = x_table_pointer(lw, rw, le, re, cost, pi);
 
@@ -204,7 +204,7 @@ Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
  * Stores the value in the x_table.  Assumes it's not already there.
  */
 static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re,
-								  int cost, Parse_set * set, Parse_info pi)
+								  unsigned int cost, Parse_set * set, Parse_info pi)
 {
 	X_table_connector *t, *n;
 	int h;
@@ -221,7 +221,7 @@ static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connecto
 
 #ifdef UNUSED_FUNCTION
 static void x_table_update(int lw, int rw, Connector *le, Connector *re,
-					int cost, Parse_set * set, Parse_info pi) {
+					unsigned int cost, Parse_set * set, Parse_info pi) {
 	/* Stores the value in the x_table.  Unlike x_table_store, it assumes it's already there */
 	X_table_connector *t = x_table_pointer(lw, rw, le, re, cost, pi);
 
@@ -255,7 +255,7 @@ static Parse_set * parse_set(Sentence sent,
 	X_table_connector *xt;
 	s64 count;
 
-	assert(cost < 0x7fffffff, "parse_set() called with cost < 0.");
+	assert(cost < 0x7fff, "parse_set() called with cost < 0.");
 
 	count = table_lookup(sent, lw, rw, le, re, cost);
 
@@ -477,7 +477,7 @@ static int verify_set(Parse_info pi)
  * This routine returns TRUE iff overflowed occurred.
  */
 
-int build_parse_set(Sentence sent, int cost, Parse_Options opts)
+int build_parse_set(Sentence sent, unsigned int cost, Parse_Options opts)
 {
 	Parse_set * whole_set;
 
@@ -617,7 +617,7 @@ static void list_random_links(Parse_info pi, Parse_set * set)
  * sentence.  For this to work, you must have already called parse, and
  * already built the whole_set.
  */
-void extract_links(int index, int cost, Parse_info pi)
+void extract_links(int index, Parse_info pi)
 {
 	initialize_links(pi);
 	pi->rand_state = index;
