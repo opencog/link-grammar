@@ -2355,6 +2355,9 @@ hadn't.v-d hadn’t.v-d:
 <vc-be-obj>:
   {@EBm+} & (O*t+ or O*m+) & {@MV+};
 
+<vc-be-obj-p>:
+  {@EBm+} & (Opt+ or Omm+) & {@MV+};
+
 <vc-be-obj-sp>:
   {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+};
 
@@ -2390,10 +2393,12 @@ is.v:
 %    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
 
 % Don't allow are.v with uncountable noun objects.
-% Ss*t-: "What he wants are the cats"
+% Ss*t- & <vc-be-obj-p>:  (requires a plural object)
+%        "What he wants are the cats"
 %        "What John loves about this movie are the sound effects"
 are.v:
- ({@E-} & (Spx- or Ss*t- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
+ ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
+ ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>) or
  ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
 
 %we're they're I'm you're:
