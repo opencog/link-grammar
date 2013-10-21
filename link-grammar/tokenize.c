@@ -543,6 +543,41 @@ Boolean split_word(Tokenizer *tokenizer, Dictionary dict, const char *word)
 	return suffix_split(tokenizer, dict, word, word + strlen(word));
 }
 
+
+/* Return TRUE if the word might be capitalized by convention:
+ * -- if its the first word of a sentence
+ * -- if its the first word following a colon
+ * -- if its the first word of a quote
+ *
+ * XXX FIXME: These rules are rather English-centric.  Someone should
+ * do something about this someday.
+ */
+static Boolean is_capitalizable(Sentence sent)
+{
+	int first_word;
+	int curr_word = sent->length;
+	Dictionary dict = sent->dict;
+
+	if (dict->left_wall_defined) {
+		first_word = 1;
+	} else {
+		first_word = 0;
+	}
+
+	/* Words at the start of sentences are capitalizable */
+	if (curr_word == first_word) return TRUE;
+
+	/* Words following colons are capitalizable */
+	if (curr_word > 0 && strcmp(":", sent->word[curr_word-1].alternatives[0])==0)
+		return TRUE;
+
+	/* First word after a quote mark can be capitalized */
+	if (sent->post_quote[curr_word])
+		return TRUE;
+
+	return FALSE;
+}
+
 /**
  * w points to a string, wend points to the char one after the end.  The
  * "word" w contains no blanks.  This function splits up the word if
@@ -570,6 +605,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
 	Boolean have_suffix = FALSE;
+	Boolean iscap;
 
 	int found_number = 0;
 	int n_r_stripped_save;
@@ -613,6 +649,11 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * file, which matches capitalized stems (for all the wrong reasons...)
 	 * Now that we have alternatives, we should use them wisely.
 	 */
+
+   iscap = is_capitalizable(sent);
+if (iscap)
+printf("duuude iscap: %s\n", word);
+
 	if (word_is_in_dict && !have_suffix)
 	{
 		issue_sentence_word(sent, word, quote_found);
