@@ -234,7 +234,7 @@ changecom(`%')
 % We don't handle Ct,Cta in the above, because the AF and B link plays
 % the role of CV, connecting to the head-verb.
 
-% The use of COa here needs to be carefully rexamined; it is used much too freely.
+% The use of COa here needs to be carefully re-examined; it is used much too freely.
 <directive-opener>:
   {[[Wi-]]} &
     ((Xc+ & Ic+) or
@@ -1944,11 +1944,14 @@ per "/.per": Us+ & Mp-;
 % WV connects the wall to the head-verb,
 % CV connects the dominant clause to the head verb,
 % IV connects infinitives to the head-verb
+%
 % There are some other such connectors that don't quite fit this patten:
 % AF, and in many cases B (for example TOt+ & B+) for this reason, we
 % have to have a costly null [[()]] below, although we would really really
 % like to get rid of it.  But that would take a lot of B and AF link fiddling
 % about, so we have to live with this for now.
+%
+% Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined with <verb-wall>
 %
 <verb-wall>: WV- or CV- or IV- or [[()]];
 % <verb-wall>: WV- or CV- or IV-;
@@ -6256,7 +6259,7 @@ who:
 % Sp+: "what are the answers?"
 % Wd-: Dr. Who: "What!"
 % {EL+} & Wd-: "What else?" "What the fuck?"
-% <directive-opener>: "What, were you expecting Santa?"
+% Xc+ & Ic+: "What, were you expecting Santa?"
 % Wd- & O+: "What a jerk!"
 % QI-: "I'll tell you what", "Say what?"
 what:
@@ -6272,7 +6275,7 @@ what:
   or (D+ & JQ-)
   or (Wd- & O+)
   or [QI-]
-  or <directive-opener>;
+  or (Xc+ & Ic+);
 
 % QI- & (): "I do not know which"
 which:
