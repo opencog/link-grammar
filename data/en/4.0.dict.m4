@@ -4123,13 +4123,14 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
 % ditranstive
 <vc-get>:
-  ((O+ or B-) & (({K+} & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+)))) or
-  ((<vc-ditrans> or
-    (K+ & {[[@MV+]]} & O*n+) or
-    K+ or
-    (B- & O+)
-  ) & {@MV+}) or
-  ({@MV+} & (Pa+ or AF- or Pv+ or Pp+ or <to-verb>));
+  ((O+ or B-) & (({K+} & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pv+))))
+  or ((<vc-ditrans>
+    or (K+ & {[[@MV+]]} & O*n+)
+    or K+ 
+    or (B- & O+)
+    ) & {@MV+})
+  or ({@MV+} & (Pa+ or AF- or Pp+ or <to-verb>));
+
 get.v: VERB_PLI(<vc-get>);
 gets.v: VERB_S_T(<vc-get>);
 got.v-d: VERB_SPPP_T(<vc-get>);
