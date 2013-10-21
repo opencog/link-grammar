@@ -296,13 +296,15 @@ PL-CAPITALIZED-WORDS:
 
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
+% Wi-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
 <given-names>:
-  {G-} & {[MG+]} &
+  ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
       (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or
-        YS+ or YP+)) or
-    AN+ or
-    G+);
+        YS+ or YP+))
+    or AN+
+    or G+))
+  or Wi-;
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
@@ -7890,13 +7892,26 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij hell_yes of_course:
+hah.ij hey.ij well.ij wtf.ij hell_yes of_course oh_no
+yikes ouch:
   <directive-opener>
+  or Wi-;
+
+% Like above, but also used as plain-old interjections, so treat
+% as adjectives, as well.
+oh.ij ohh doh dohh woo_hoo
+gee gosh wow.ij ah ahh eh ehh hmm hmmm
+goody.ij jeepers Jee-sus oops amen.ij huh
+howdy dammit shucks.ij golly
+sonuvabitch aw aww awww oh_great oh_wow:
+  <ordinary-adj>
+  or ({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+)
+  or <directive-opener>
   or Wi-;
 
 % A single plain hello all by itself.  Costly, because its not normally
 % a sentence opener.
-hello.ij hello_there:
+hello.ij hello_there shh shhh:
   Wi-
   or [[<directive-opener>]];
 
@@ -8025,11 +8040,8 @@ so_on the_like vice_versa v.v.:
   M- or MV-;
 
 % Assorted interjections, treat like unknown adjectives.
-er err.ij errr um.ij umm uh uhh oh.ij ohh doh dohh ooo woo_hoo
-gee gosh wow.ij ah ahh eh ehh hmm hmmm hoo zowie
-goody.ij jeepers Jee-sus hubba Kee-reist oops amen.ij huh
-howdy dammit whammo shucks.ij heck anyways honey.ij golly man.ij
-baby.ij hush.ij sonuvabitch aw aww awww oh_great oh_wow
+er err.ij errr um.ij umm uh uhh ooo hoo zowie hubba Kee-reist whammo
+heck anyways honey.ij man.ij baby.ij hush.ij 
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
 emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
 emoticonID10 emoticonID11 emoticonID12 emoticonID13 emoticonID14

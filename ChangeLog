@@ -14,6 +14,7 @@ Version 4.8.0 (xxx 2013)
  * Fix: "inside" can be used with conjunction: "near or inside..."
  * Fix: conjoined question modifiers: "exactly when and precisely where..."
  * Fix: issue 59: crash/corruption when dictionary opened twice.
+ * Fix: assorted exclamations!
 
 Version 4.7.14 (20 June 2013)
  * Fix build break on MacOSX
