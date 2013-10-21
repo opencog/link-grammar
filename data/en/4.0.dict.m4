@@ -2279,11 +2279,11 @@ done.v:
   or (<verb-pv-b> & <vc-done>)
   or (S- & <verb-wall>);
 
-% adjectival modifier: "I am done working", "I am through being mad"
+% Pa- & Pg+: "I am done working", "I am through being mad"
 done.a finished.a through.a:
-  ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or
-  (AJra- & {@MV+}) or
-  ({@MV+} & AJla+);
+  ({@E-} & Pa- & {Pg+ or @MV+})
+  or (AJra- & {@MV+})
+  or ({@MV+} & AJla+);
 
 doing.v: <verb-pg> & (O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+};
 doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
