@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2009, 2012 Linas Vepstas                                */
+/* Copyright (c) 2009, 2012, 2013 Linas Vepstas                          */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -549,6 +549,15 @@ Boolean split_word(Tokenizer *tokenizer, Dictionary dict, const char *word)
  * necessary, and calls "issue_sentence_word()" on each of the resulting
  * parts.  The process is described above.  Returns TRUE if OK, FALSE if
  * too many punctuation marks or other separation error.
+ *
+ * This is used to split Russian words into stem+suffix, issueing a
+ * separate "word" for each.  In addition, there are many English
+ * constructions that need splitting:
+ *
+ * 86mm  -> 86 + mm (millimeters, measureument)
+ * $10   ->  $ + 10 (dollar sign plus a number)
+ * Surprise!  -> surprise + !  (pry the punctuation off the end of the word)
+ * you've   -> you + 've  (undo contraction, treat 've as synonym for 'have')
  */
 static void separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
@@ -600,7 +609,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * we should be doing it here, and building two alternatives, one
 	 * capitalized, and one not.  This is particularly true for the
 	 * Russian dictionaries, where captialization and suffix splitting
-	 * only 'accidentally' work, due toe CAPITALIZED_WORDS in the regex
+	 * only 'accidentally' work, due to CAPITALIZED_WORDS in the regex
 	 * file, which matches capitalized stems (for all the wrong reasons...)
 	 * Now that we have alternatives, we should use them wisely.
 	 */
@@ -1168,7 +1177,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			 * as an alternative, when doing separate_word(), and not here.
 			 * separate_word() should build capitalized and non-capitalized
 			 * altenatives.  This is especially true for Russian, where we
-			 * need to deal with capitalized stems; thhis is not really the
+			 * need to deal with capitalized stems; this is not really the
 			 * right place to do it, and this works 'by accident' only because
 			 * there is a CAPITALIZED_WORDS regex match for Russian that matches
 			 * stems. Baaaddd.

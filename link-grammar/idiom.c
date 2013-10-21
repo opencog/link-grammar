@@ -143,7 +143,8 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 {
 	Dict_node * dn, * dn_new;
 	char * t, *s, *p;
-	int more, sz;
+	Boolean more;
+	unsigned int sz;
 	dn = NULL;
 
 	sz = strlen(string)+1;
@@ -152,7 +153,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 
 	while (*s != '\0') {
 		t = s;
-		while((*s != '\0') && (*s != '_')) s++;
+		while ((*s != '\0') && (*s != '_')) s++;
 		if (*s == '_') {
 			more = TRUE;
 			*s = '\0';
@@ -250,7 +251,9 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	}
 
 	dn_list = start_dn_list = make_idiom_Dict_nodes(dict, s);
+
 	xfree((char *)dn, sizeof (Dict_node));
+	dn = NULL;
 
 	if (dn_list->right == NULL) {
 	  prt_error("Fatal Error: Idiom string with only one connector -- should have been caught");
