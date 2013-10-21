@@ -5355,15 +5355,18 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % done_for accounted_for adhered_to arrived_at barked_at belched_at catered_to
 
 <vc-paraph>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CP- & {CC+}) or Eq+)) or
-    [(Xc+ or Xe+) & <embed-verb>]) & <verb-wall>;
+  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>)
+      & (COq+ or (CP- & {CC+}) or Eq+ or <verb-wall>)) or
+    [(Xc+ or Xe+) & <embed-verb>]);
 
 <vc-paraph-inv>:
-  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) & (COq+ or (CPx- & {CC+}) or Eq+)) or
-    [(Xc+ or Xe+) & <embed-verb>]) & <verb-wall>;
+  {@MV+} & (((Xd- or Xq-) & (Xc+ or <costly-null>) 
+      & (COq+ or (CPx- & {CC+}) or Eq+ or <verb-wall>))
+    or [(Xc+ or Xe+) & <embed-verb>]);
 
 <vc-it-paraph>:
-  {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>) & (COqi+ or (CPi- & {CC+}) or Eqi+) & <verb-wall>;
+  {@MV+} & (Xd- or Xq-) & (Xc+ or <costly-null>)
+    & (COqi+ or (CPi- & {CC+}) or Eqi+ or <verb-wall>);
 
 % paraphrasing verbs like "say", "reply"
 % acknowledge.q add.q admit.q affirm.q agree.q announce.q argue.q
