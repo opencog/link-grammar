@@ -2829,6 +2829,7 @@ rising.v falling.v:
 % "Make it nice and soft"
 % XXX However, very few of these verbs actually take the Pa**j link ...
 % and so should be reclassed.
+% e.g.  *they're building a skyscraper tall
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+)
     or ({O+ or B-} & {K+})
@@ -2946,6 +2947,10 @@ and.v-fill:
 %
 % ({@E-} & B- & O+):
 %    "What are the chances that Sherlock could really solve a crime?"
+% unfortunately:
+%    *This is the man we love him
+% Solution would be to have a special R for "that", propagate it to B,
+% and then allow B- & O+ only when the B- came from "that".
 <vc-trans>:
   (O+
    or B-
