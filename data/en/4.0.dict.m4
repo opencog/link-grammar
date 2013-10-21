@@ -2861,8 +2861,6 @@ and.v-fill:
 %    "What are the chances that Sherlock could really solve a crime?"
 % unfortunately:
 %    *This is the man we love him
-% Solution would be to have a special R for "that", propagate it to B,
-% and then allow B- & O+ only when the B- came from "that".
 <vc-trans>:
   (O+
    or B-
