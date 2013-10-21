@@ -1011,12 +1011,12 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
  * It checks that the actual stem+suffix, when concatenated, restores
  * the original word.  This is a work-around for somewhat sloppy
  * dictionaries, which aren't entirely careful with making sure
- * that the stem+suffix links are unique. Here's an illustrartion of
+ * that the stem+suffix links are unique. Here's an illustration of
  * the problem: The word Russian "тест" can be split into 
  * тест.= =.ndmsi and also тес.= =т.amss The, during linkage, 
  * тес.= and =.ndmsi are linked -- but this is not the original word; 
  * its junk.  This routine marks such linkages as 'bad'.  Really, the
- * dictionary should eb fixed ,, but what the hell. This isn't hard.
+ * dictionary should be fixed, but what the hell. This isn't hard.
  */
 static void sane_morphism(Sentence sent, Parse_Options opts)
 {
@@ -1057,10 +1057,18 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 					continue;
 			}
 
+			/* If this word isn't a stem, and the next word isn't
+			 * a suffix, there's nothing to check. */
+			len = strlen(djw);
+			if ((INFIX_MARK != djw[len-1]) &&
+			    ((i+1) < sent->length) && 
+			    (NULL != pi->chosen_disjuncts[i+1]) &&
+			    (INFIX_MARK != pi->chosen_disjuncts[i+1]->string[0]))
+				continue;
+
 			/* If the next word is a suffix, and, when united with
 			 * the stem, it recreates the original word, then we
 			 * are very happy, and keep going. */
-			len = strlen(djw);
 			if ((INFIX_MARK == djw[len-1]) &&
 			    ((i+1) < sent->length) && 
 			    (NULL != pi->chosen_disjuncts[i+1]) &&
@@ -1215,6 +1223,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Finished parse");
 
+	assert(0 <= sent->num_valid_linkages, "Miscount of valid linkages!")
 	return sent->num_valid_linkages;
 }
 

@@ -840,13 +840,6 @@ int main(int argc, char * argv[])
 			parse_options_reset_resources(opts);
 
 			num_linkages = sentence_parse(sent, opts);
-			if (num_linkages < 0)
-			{
-				sentence_delete(sent);
-				sent = NULL;
-				continue;
-			}
-
 #if 0
 			/* Try again, this time ommitting the requirement for
 			 * definite articles, etc. This should allow for the parsing
