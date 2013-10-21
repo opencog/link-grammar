@@ -2242,14 +2242,14 @@ equiv.v sim.v simeq.v approx.v ~.v ～.v:
   or ({N+} & I*d+);
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
-% I- & <verb-wall>: "What did John say you should do?"
+% I- & CV-: "What did John say you should do?"
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-))
   or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & <verb-wall>)
-  or ({@E-} & I- & <verb-wall>);
+  or ({@E-} & I- & CV-);
 
 does.v:
   VERB_X_S(<vc-do>)
