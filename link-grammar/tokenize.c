@@ -552,10 +552,9 @@ Boolean split_word(Tokenizer *tokenizer, Dictionary dict, const char *word)
  * XXX FIXME: These rules are rather English-centric.  Someone should
  * do something about this someday.
  */
-static Boolean is_capitalizable(Sentence sent)
+static Boolean is_capitalizable(Sentence sent, int curr_word)
 {
-	int first_word;
-	int curr_word = sent->length;
+	int first_word; /* the index of the first word after the wall */
 	Dictionary dict = sent->dict;
 
 	if (dict->left_wall_defined) {
@@ -605,7 +604,6 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	Boolean word_is_in_dict;
 	Boolean issued = FALSE;
 	Boolean have_suffix = FALSE;
-	Boolean iscap;
 
 	int found_number = 0;
 	int n_r_stripped_save;
@@ -648,11 +646,14 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * only 'accidentally' work, due to CAPITALIZED_WORDS in the regex
 	 * file, which matches capitalized stems (for all the wrong reasons...)
 	 * Now that we have alternatives, we should use them wisely.
+	 *
+	 * Well, actually, easier said-than-done. The problem is that
+	 * captilized words will match regex's during build_expressions,
+	 * and we sometimes need to wipe those out...
 	 */
-
-   iscap = is_capitalizable(sent);
-if (iscap)
-printf("duuude iscap: %s\n", word);
+#if 0
+	if (is_capitalizable(sent, sent->length) && is_utf8_upper(word)) {}
+#endif
 
 	if (word_is_in_dict && !have_suffix)
 	{
@@ -1158,17 +1159,11 @@ static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
  */
 void build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
-	int i, first_word;  /* the index of the first word after the wall */
+	int i;
 	const char *s;
 	const char * regex_name;
 	X_node * e;
 	Dictionary dict = sent->dict;
-
-	if (dict->left_wall_defined) {
-		first_word = 1;
-	} else {
-		first_word = 0;
-	}
 
 	/* The following loop treats all words the same
 	 * (nothing special for 1st word) */
@@ -1213,9 +1208,6 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			 * capitalized has to be looked up as an uncapitalized word
 			 * (possibly also as well as a capitalized word).
 			 *
-			 * XXX This rule is English-language-oriented, and should be
-			 * abstracted.
-			 *
 			 * XXX For the first-word case, we should be handling capitalization
 			 * as an alternative, when doing separate_word(), and not here.
 			 * separate_word() should build capitalized and non-capitalized
@@ -1225,12 +1217,8 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			 * there is a CAPITALIZED_WORDS regex match for Russian that matches
 			 * stems. Baaaddd.
 			 */
-			if ((i == first_word ||
-			     (i > 0 && strcmp(":", sent->word[i-1].alternatives[0])==0) || 
-			     sent->post_quote[i]) &&
-			   (is_utf8_upper(s)))
+			if (is_capitalizable(sent, i) && is_utf8_upper(s))
 			{
-
 				/* If the lower-case version of this word is in the dictionary, 
 				 * then add the disjuncts for the lower-case version. The upper
 				 * case version disjuncts had previously come from matching the 
@@ -1268,16 +1256,14 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 				 */
 				if (boolean_dictionary_lookup(sent->dict, lc))
 				{
+					if (2 < verbosity)
+						printf ("Info: First word: %s is_entity=%d is_common=%d\n", 
+						        s, is_entity(sent->dict,s),
+						        is_common_entity(sent->dict,lc));
+
 					if (is_entity(sent->dict,s) ||
 					    is_common_entity(sent->dict,lc))
 					{
-						if (2 < verbosity)
-						{
-							printf ("Info: First word: %s entity=%d common=%d\n", 
-								s, is_entity(sent->dict,s), 
-								is_common_entity(sent->dict,lc));
-						}
-	
 						/* If we are here, then we want both upper and lower case
 						 * expressions. The upper-case ones were built above, so now
 						 * append the lower-case ones. */
@@ -1287,9 +1273,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 					else
 					{
 						if (2 < verbosity)
-						{
 							printf("Info: First word: %s downcase only\n", lc);
-						}
 	
 						/* If we are here, then we want the lower-case 
 						 * expressions only.  Erase the upper-case ones, built
