@@ -887,11 +887,11 @@ do_suffix_processing:
  */
 Boolean separate_sentence(Sentence sent, Parse_Options opts)
 {
-	const char *t;
+	const char * word_end;
 	Boolean quote_found;
 	Dictionary dict = sent->dict;
 	mbstate_t mbs;
-	const char * s = sent->orig_sentence;
+	const char * word_start = sent->orig_sentence;
 
 	sent->length = 0;
 
@@ -905,7 +905,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 	{
 		int isq;
 		wchar_t c;
-		int nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+		int nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
 		quote_found = FALSE;
 
 		if (0 > nb) goto failure;
@@ -919,29 +919,31 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 		if (isq) quote_found = TRUE;
 		while (iswspace(c) || isq)
 		{
-			s += nb;
-			nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+			word_start += nb;
+			nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
 			if (0 == nb) break;
 			if (0 > nb) goto failure;
 			isq = is_quote (c);
 			if (isq) quote_found = TRUE;
 		}
 
-		if (*s == '\0') break;
+		if ('\0' == *word_start) break;
 
-		t = s;
-		nb = mbrtowc(&c, t, MB_CUR_MAX, &mbs);
+      /* Loop over non-blank characters until word-end is found. */
+		word_end = word_start;
+		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
 		while (!iswspace(c) && !is_quote(c) && (c != 0) && (nb != 0))
 		{
-			t += nb;
-			nb = mbrtowc(&c, t, MB_CUR_MAX, &mbs);
+			word_end += nb;
+			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 			if (0 > nb) goto failure;
 		}
 
-		separate_word(sent, opts, s, t, quote_found);
-		s = t;
-		if (*s == '\0') break;
+      /* Perform prefix, suffix splitting, if needed */
+		separate_word(sent, opts, word_start, word_end, quote_found);
+		word_start = word_end;
+		if ('\0' == *word_start) break;
 	}
 
 	if (dict->right_wall_defined)
@@ -1108,7 +1110,7 @@ static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
  * spell-guesser will offer both "done" and "don't" as alternatives.
  * The second alternative should really be affix-stripped, and issued
  * as two words, not one. But the former only issues as one word.  So,
- * should we issue two word or one?  ... and so we can't correctly
+ * should we issue two words, or one?  ... and so we can't correctly
  * build sentence expressions for this, since we don't have the correct
  * word count by this point.  The viterbi incremental parser won't have
  * this bug.
