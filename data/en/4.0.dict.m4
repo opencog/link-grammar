@@ -2756,6 +2756,10 @@ rising.v falling.v:
 %
 % ({@E-} & B- & O+):
 %   "What are the chances that Sherlock could really CATCH the criminal?"
+%   "What are the chances that Sherlock PLAYED tennis?"
+%    but
+%   "*The man whom I play tennis is here"  ... arghh
+%
 % ({@E-} & B- & O+ & Pa**j+):
 %   "What are the chances she will really DRIVE him crazy?"
 % ({@E-} & B- & O+ & K+):
