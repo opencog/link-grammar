@@ -8025,9 +8025,9 @@ so_on the_like vice_versa v.v.:
   M- or MV-;
 
 % Assorted interjections, treat like unknown adjectives.
-er err.ij errr um.ij umm uh uhh oh.ij ohh ooo woo_hoo
+er err.ij errr um.ij umm uh uhh oh.ij ohh doh dohh ooo woo_hoo
 gee gosh wow.ij ah ahh eh ehh hmm hmmm hoo zowie
-goody.ij jeepers Jee-sus hubba Kee-reist oops amen huh
+goody.ij jeepers Jee-sus hubba Kee-reist oops amen.ij huh
 howdy dammit whammo shucks.ij heck anyways honey.ij golly man.ij
 baby.ij hush.ij sonuvabitch aw aww awww oh_great oh_wow
 emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
