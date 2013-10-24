@@ -35,5 +35,6 @@ EXTRA_DIST =            \
 	FindLinkGrammar.cmake\
 	LICENSE              \
 	MAINTAINERS          \
+	NEWS                 \
 	README               \
 	TODO
