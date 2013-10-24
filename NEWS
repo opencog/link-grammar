@@ -1,0 +1,66 @@
+Version 4.8.0 of the Link Grammar Parser is now available. 
+
+This is the start of a new version series, containing an important
+change to the English language dictionary. Three new link types are
+introduced WV, CV and IV. These are used to connect the left-wall to
+the primary verb of the sentence (WV), to connect the ruling clause
+to the primary verb of a dependent clause (CV), and a similar link
+for certain infinitive verbs (IV).  The goal of these links is to
+make it easier to locate verbs, and thus to provide a more direct
+mapping from the link-grammar formalism to a dependency parse (as
+dependency parses always put the verb at the root of a sentnece).
+
+These are not the first links that explcitly indicate root verbs:
+several other link types already play this role: The AF, CP, Eq, COq
+and B links already play this role. The new WV, CV and IV links
+round out this capability and do so in a very general form.  See
+http://www.abisource.com/projects/link-grammar/dict/section-WV.html
+for details.
+
+With this release, we expect that all (non-auxilliary) verbs in a
+sentence will be linked either to the wall, or to a controlling parent.
+We also expect there to be some addtional fixes and tightening-up
+to occur in future releases, especially in regards to comparative 
+sentencs.
+
+This release also includes a variety of fixes to the Java API/server.
+In addition, some ancient, deprecated C code was removed.
+
+--------------------
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+Download:
+http://www.abiword.org/downloads/link-grammar/4.7.9/link-grammar-4.7.9.tar.gz
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax.  Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.). The RelEx extension provides dependency-parse output.
+
+
+CHANGELOG:
+
+Version 4.8.0 (24 October 2013)
+ * Fix "he answered yes"
+ * Support bulleted, numbered lists.
+ * New link types from Lian Ruiting, for identifying the head-verb.
+ * Java: fix bug when totalling WordNet word-sense score.
+ * Java: add info to README about using the JSON parse server.
+ * Java: remove many deprecated functions.
+ * C API: remove some deprecated functions.
+ * Java: fix silent failure when library is not found.
+ * Java: Add support for fetching the ASCII-art diagram string.
+ * Java: Fix insane language selection initialization.
+ * Fix: "The pig runs SLOWER than the cat."
+ * Fix: conjoined superlatives: "... the longest and the farthest."
+ * Fix: "inside" can be used with conjunction: "near or inside..."
+ * Fix: conjoined question modifiers: "exactly when and precisely where..."
+ * Fix: issue 59: crash/corruption when dictionary opened twice.
+ * Fix: assorted exclamations!
+
