@@ -8,9 +8,9 @@ to the primary verb of a dependent clause (CV), and a similar link
 for certain infinitive verbs (IV).  The goal of these links is to
 make it easier to locate verbs, and thus to provide a more direct
 mapping from the link-grammar formalism to a dependency parse (as
-dependency parses always put the verb at the root of a sentnece).
+dependency parses always put the verb at the root of a sentence).
 
-These are not the first links that explcitly indicate root verbs:
+These are not the first links that explicitly indicate root verbs:
 several other link types already play this role: The AF, CP, Eq, COq
 and B links already play this role. The new WV, CV and IV links
 round out this capability and do so in a very general form.  See
