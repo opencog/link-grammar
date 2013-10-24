@@ -17,11 +17,11 @@ round out this capability and do so in a very general form.  See
 http://www.abisource.com/projects/link-grammar/dict/section-WV.html
 for details.
 
-With this release, we expect that all (non-auxilliary) verbs in a
+With this release, we expect that all (non-auxiliary) verbs in a
 sentence will be linked either to the wall, or to a controlling parent.
-We also expect there to be some addtional fixes and tightening-up
+We also expect there to be some additional fixes and tightening-up
 to occur in future releases, especially in regards to comparative 
-sentencs.
+sentences.
 
 This release also includes a variety of fixes to the Java API/server.
 In addition, some ancient, deprecated C code was removed.
@@ -50,7 +50,7 @@ Version 4.8.0 (24 October 2013)
  * Fix "he answered yes"
  * Support bulleted, numbered lists.
  * New link types from Lian Ruiting, for identifying the head-verb.
- * Java: fix bug when totalling WordNet word-sense score.
+ * Java: fix bug when totaling WordNet word-sense score.
  * Java: add info to README about using the JSON parse server.
  * Java: remove many deprecated functions.
  * C API: remove some deprecated functions.
