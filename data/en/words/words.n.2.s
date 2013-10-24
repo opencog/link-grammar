@@ -3711,6 +3711,7 @@ executioners.n
 executions.n
 executives.n
 executors.n
+exegeses.n
 exemplifications.n
 exemptions.n
 exercises.n
@@ -4927,6 +4928,7 @@ heresies.n
 heretics.n
 heritages.n
 hermaphrodites.n
+hermeneutics.n
 hermitages.n
 hermits.n
 hernias.n
