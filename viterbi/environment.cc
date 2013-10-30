@@ -55,6 +55,7 @@ Relation* Environment::add_relation(const std::string& name, Atom* arg, Atom* va
 /// argument (value from its domain).
 Set* Environment::get_relations(const std::string& name, Atom* arg)
 {
+printf("duude rela look for %s\n", name.c_str());
 	// XXX this should use a pre-computed index, instead of searching ...
 	// XXX FIXME
 	OutList oset;
@@ -67,8 +68,8 @@ Set* Environment::get_relations(const std::string& name, Atom* arg)
 		if (a->get_type() != RELATION) continue;
 		Link* l = dynamic_cast<Link*>(a);
 		if (l->get_arity() != 3) continue;
-		if (l->get_outgoing_atom(1) != arg) continue;
-		if (l->get_outgoing_atom(0) != lab) continue;
+		if (not l->get_outgoing_atom(1)->operator==(arg)) continue;
+		if (not l->get_outgoing_atom(0)->operator==(lab)) continue;
 		oset.push_back(l);
 	}
 
