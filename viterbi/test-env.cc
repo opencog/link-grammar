@@ -57,8 +57,17 @@ bool test_func_clobber()
 
 	Environment* env = new Environment();
 
-	Atom* word = ANODE(WORD, "wtf");
+	Atom* word = ANODE(WORD, "asdf");
 	Atom* disj =
+		ALINK2(AND,
+			ANODE(CONNECTOR, "AAA-"),
+			ANODE(CONNECTOR, "Q-")
+		);
+
+	env->set_function("con", word, disj);
+
+	word = ANODE(WORD, "wtf");
+	disj =
 		ALINK2(AND,
 			ANODE(CONNECTOR, "ZZ-"),
 			ANODE(CONNECTOR, "WWW-")
