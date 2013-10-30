@@ -37,7 +37,7 @@ bool test_func()
 			ANODE(CONNECTOR, "MX-")
 		);
 
-	if (not (got->operator==(expected)))
+	if (not (expected->operator==(got)))
 	{
 		cout << "Error: test failure on test \"test_disjoin_cost\"" << endl;
 		cout << "=== Expecting:\n" << expected << endl;
