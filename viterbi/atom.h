@@ -163,11 +163,14 @@ class Node : public Atom
 /// All outgoing lists will be handled as vectors.
 // Must use the bdw-gc allocator to track these pointers.
 // If this is not done, the GC will fail to see the pointers here.
+#if __cplusplus > 199711L
+// using requires C++11
 template <typename T> 
 using AtomList = std::vector<T, gc_allocator<Atom*> >;
-
-// typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
 typedef AtomList<Atom*> OutList;
+#else
+typedef std::vector<Atom*, gc_allocator<Atom*> > OutList;
+#endif
 
 /**
  * Links hold a bunch of atoms

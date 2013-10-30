@@ -12,13 +12,14 @@
 #ifndef _ATOMBASE_ENVIRONMENT_H
 #define _ATOMBASE_ENVIRONMENT_H
 
-#include <atombase/compile-base.h>
+#include "compile-base.h"
 
 namespace atombase {
 
 ///  Kind-of-like the opencog AtomSpace ... but smaller, simpler.
 class Environment : public gc
 {
+	public:
 	Environment();
 
 	void insert_atom(Atom*);

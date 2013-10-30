@@ -37,13 +37,7 @@ std::mutex Atom::IncomingSet::_mtx;
 // Destructor.
 Atom::~Atom()
 {
-	if (_incoming_set)
-	{
-		std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
-		_incoming_set->_iset.clear();
-		delete _incoming_set;
-		_incoming_set = NULL;
-	}
+	drop_incoming_set();
 }
 
 /// Start tracking the incoming set for this atom.
@@ -75,7 +69,7 @@ void Atom::drop_incoming_set()
 }
 
 /// Add an atom to the incoming set.
-void Atom::insert_atom(Link *a)
+void Atom::insert_atom(Link* a)
 {
 	if (NULL == _incoming_set) return;
 	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
@@ -86,7 +80,7 @@ void Atom::insert_atom(Link *a)
 }
 
 /// Remove an atom from the incoming set.
-void Atom::remove_atom(Link *a)
+void Atom::remove_atom(Link* a)
 {
 	if (NULL == _incoming_set) return;
 	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);

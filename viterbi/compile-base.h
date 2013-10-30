@@ -61,7 +61,7 @@ class Index : public Node
 /// 2) as a graph of a function (in the sense of Bourbaki)
 /// 3) as a (named) function, the first n atoms being the arguments,
 ///    the last being the value of the function for those arguments.
-/// 4) the atom that is equivalent to the OpenCog ExecutionLink
+/// 4) the atom that is (more or less) equivalent to the OpenCog ExecutionLink
 class Relation : public Link
 {
 	public:

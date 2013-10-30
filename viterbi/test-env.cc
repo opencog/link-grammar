@@ -29,7 +29,7 @@ bool test_func()
 		);
 
 	env->set_function("con", word, disj);
-	Atom* got = env->get_function_val("con", word);
+	Atom* got = env->get_function_value("con", word);
 
 	Atom* expected =  // same as disj, just different addrs
 		ALINK2(AND,
@@ -41,7 +41,7 @@ bool test_func()
 	{
 		cout << "Error: test failure on test \"test_disjoin_cost\"" << endl;
 		cout << "=== Expecting:\n" << expected << endl;
-		cout << "=== Got:\n" << csets << endl;
+		cout << "=== Got:\n" << got << endl;
 		return false;
 	}
 	cout << "PASS: test_disjoin_cost" << endl;
