@@ -15,6 +15,7 @@
 #include "environment.h"
 
 // ==================================================================
+
 bool test_func()
 {
 	total_tests++;
@@ -44,7 +45,50 @@ bool test_func()
 		cout << "=== Got:\n" << got << endl;
 		return false;
 	}
-	cout << "PASS: test_disjoin_cost" << endl;
+	cout << "PASS: test_func" << endl;
+	return true;
+}
+
+// ==================================================================
+
+bool test_func_clobber()
+{
+	total_tests++;
+
+	Environment* env = new Environment();
+
+	Atom* word = ANODE(WORD, "wtf");
+	Atom* disj =
+		ALINK2(AND,
+			ANODE(CONNECTOR, "ZZ-"),
+			ANODE(CONNECTOR, "WWW-")
+		);
+
+	env->set_function("con", word, disj);
+
+	disj =
+		ALINK2(AND,
+			ANODE(CONNECTOR, "Xd-"),
+			ANODE(CONNECTOR, "MX-")
+		);
+
+	env->set_function("con", word, disj);
+	Atom* got = env->get_function_value("con", word);
+
+	Atom* expected =  // same as disj, just different addrs
+		ALINK2(AND,
+			ANODE(CONNECTOR, "Xd-"),
+			ANODE(CONNECTOR, "MX-")
+		);
+
+	if (not (expected->operator==(got)))
+	{
+		cout << "Error: test failure on test \"test_disjoin_cost\"" << endl;
+		cout << "=== Expecting:\n" << expected << endl;
+		cout << "=== Got:\n" << got << endl;
+		return false;
+	}
+	cout << "PASS: test_func_clobber" << endl;
 	return true;
 }
 
@@ -54,6 +98,7 @@ int ntest_env()
 	size_t num_failures = 0;
 
 	if (!test_func()) num_failures++;
+	if (!test_func_clobber()) num_failures++;
 	return num_failures;
 }
 
