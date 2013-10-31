@@ -1,17 +1,17 @@
 
                    AtomBase
                    --------
-                  Version 0.02
+                  Version 0.03
 
-A set of classes inspired by the OpenCog AtomSpace, but implemented in 
-a simpler, lighter-weight, higher-performance fashion.  This code is 
+A set of classes inspired by the OpenCog AtomSpace, but implemented in
+a simpler, lighter-weight, higher-performance fashion.  This code is
 experimental, and aims to identify the required features needed for
 general use in an AI/machine-learning environment.  Goals include:
 
 -- Lockless thread safety.  This is implemented with immutable data
-   structures, and locks, under-the-covers, where unavoidable.
+   structures, atomic ops, and locks, under-the-covers, where unavoidable.
 
--- Direct access to state. 
+-- Direct access to state.
 
 Some desired, and generally met, goals:
 
@@ -43,14 +43,24 @@ Code Overview
 -------------
 atom.h         -- The main atom classes
 compile-base.h -- The derived classes, specific to certain atom types.
-subspace.h     -- Index for the atom incoming set.
+environment.h  -- Top-level atom holder, kind-of-like the OpenCog AtomSpace.
+garbage.h      -- wrapper for the BDWGC garbage collector
+
+
+The Environment
+---------------
+The primary use for the environment is to hold relations.  Relations are
+more or less the same thing as OpenCog ExecutionLinks.
 
 
 Memory Management
 -----------------
-The use of immutable data structures makes direct pointer access to 
+The use of immutable data structures makes direct pointer access to
 objects safe.  It also means that pointers are splurged, and that
 objects are created at a rapid rate.  Tow memory management choices are
 available for such a scenario: smart pointers, and garbage collection.
-The current code makes use of garbage collection, using the Boehm GC. 
-This seems like a reasonable choice at this time. 
+The current code makes use of garbage collection, using the Boehm GC.
+This seems like a reasonable choice at this time.
+
+Its possible that using C++11 shared_ptr<T>/weak_ptr<T> might be a
+safer, surer, if somewhat slower and more awkward solution.
