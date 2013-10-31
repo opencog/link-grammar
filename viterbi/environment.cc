@@ -9,6 +9,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <math.h>
 #include <gc/gc.h>
 #include "environment.h"
 #include "utilities.h"
@@ -26,7 +27,7 @@ Environment::Environment()
 }
 
 /// Insert an atom into the environment.
-/// The environment keeps a pointer to the atom, so that it won't 
+/// The environment keeps a pointer to the atom, so that it won't
 /// get garbage collected.
 void Environment::insert_atom(Atom* a)
 {
@@ -95,7 +96,7 @@ Set* Environment::get_relation_vals(const std::string& name, Atom* arg)
 /// defines a 'function' in the mathematical sense: given a function
 /// name and a value from its domain, it returns a single, unique value
 /// from its codomain.
-/// 
+///
 Relation* Environment::set_function(const std::string& name, Atom* arg, Atom* val)
 {
 	Relation* old = get_function(name, arg);
@@ -117,11 +118,28 @@ Relation* Environment::get_function(const std::string& name, Atom* arg)
 	return dynamic_cast<Relation*>(relset->get_outgoing_atom(0));
 }
 
+// Get the value of function 'name' at argument 'arg'
 Atom* Environment::get_function_value(const std::string& name, Atom* arg)
 {
 	Relation* val = get_function(name, arg);
 	if (val) return val->get_outgoing_atom(2);
 	return NULL;
+}
+
+// Set the value of numeric function 'name' at argument 'arg'
+Relation* Environment::set_number(const std::string& name, Atom* arg, double v)
+{
+	return set_function(name, arg, new Number(v));
+}
+
+// Get the value of numeric function 'name' at argument 'arg'
+double Environment::get_number(const std::string& name, Atom* arg)
+{
+	Atom* a = get_function_value(name, arg);
+	if (!a) return nan("");
+	Number* n = upcast<Number*>(a);
+	if (!n) return nan("");
+	return n->get_value();
 }
 
 } // namespace atombase

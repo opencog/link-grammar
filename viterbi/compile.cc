@@ -83,6 +83,10 @@ Atom* Atom::upcaster()
 			return new Set(l->get_outgoing_set(), _tv);
 
 		// Nodes
+		case NUMBER:
+			if (dynamic_cast<Number*>(this)) return this;
+			return new Number(atof(n->get_name().c_str()), _tv);
+
 		case CONNECTOR:
 			if (dynamic_cast<Connector*>(this)) return this;
 			return new Connector(n->get_name(), _tv);

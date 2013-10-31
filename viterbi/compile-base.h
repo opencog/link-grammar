@@ -47,8 +47,21 @@ class Index : public Node
 			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%u, %d, %d", a, b, c); buff;}), tv)
 		{}
 		Index(double a, const TV& tv = TV())
-			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%15.12f", a); buff;}), tv)
+			: Node(INDEX, ({ char buff[80]; snprintf(buff, 80, "%20.16f", a); buff;}), tv)
 		{}
+};
+
+/// Holder of one floating-poing number
+class Number : public Node
+{
+	public:
+		Number(double a, const TV& tv = TV())
+			: Node(NUMBER, ({ char buff[80]; snprintf(buff, 80, "%20.16g", a); buff;}), tv),
+			_value(a)
+		{}
+		double get_value() const { return _value; }
+	protected:
+		double _value;
 };
 
 /// Named relation, as defined in model theory.

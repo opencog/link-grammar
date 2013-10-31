@@ -20,20 +20,23 @@ namespace atombase {
 class Environment : public gc
 {
 	public:
-	Environment();
+		Environment();
 
-	void insert_atom(Atom*);
-	void remove_atom(Atom*);
+		void insert_atom(Atom*);
+		void remove_atom(Atom*);
 
-	Relation* add_relation(const std::string&, Atom*, Atom*);
-	Set* get_relations(const std::string&, Atom*);
-	Set* get_relation_vals(const std::string&, Atom*);
+		Relation* add_relation(const std::string&, Atom*, Atom*);
+		Set* get_relations(const std::string&, Atom*);
+		Set* get_relation_vals(const std::string&, Atom*);
 
-	Relation* set_function(const std::string&, Atom*, Atom*);
-	Relation* get_function(const std::string&, Atom*);
-	Atom* get_function_value(const std::string&, Atom*);
+		Relation* set_function(const std::string&, Atom*, Atom*);
+		Relation* get_function(const std::string&, Atom*);
+		Atom* get_function_value(const std::string&, Atom*);
 
-	static Environment* top();
+		Relation* set_number(const std::string&, Atom*, double);
+		double get_number(const std::string&, Atom*);
+
+		static Environment* top();
 	protected:
 		// Distinct mutex per envirnoment; this should avoid contention.
 		std::mutex _mtx;
