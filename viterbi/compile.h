@@ -174,8 +174,8 @@ class StateTriple : public atombase::Link
 	public:
 		StateTriple(Seq* input, Seq* state, Set* output)
 			: Link(STATE_TRIPLE, input, state, output) {}
-		Seq* get_input() const { return dynamic_cast<Seq*>(_oset.at(0)); } 
-		Seq* get_state() const { return dynamic_cast<Seq*>(_oset.at(1)); } 
+		Seq* get_input() const { return dynamic_cast<Seq*>(_oset.at(0)); }
+		Seq* get_state() const { return dynamic_cast<Seq*>(_oset.at(1)); }
 		Set* get_output() const { return dynamic_cast<Set*>(_oset.at(2)); }
 };
 

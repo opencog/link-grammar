@@ -254,7 +254,7 @@ void Link::disable_keep_incoming_set(AtomType t)
 // Destructor.  Remove self from incoming set.
 // Note: with garbage collection, this destructor is never called
 // (and that is how things should be).  We keep it around here, for the
-// rainy day when we swith to reference-counted pointers. 
+// rainy day when we swith to reference-counted pointers.
 //
 // Note also: if this ever was called during gc, e.g. as a finalizer,
 // it will lead to deadlocks, since gc could get triggered by the call

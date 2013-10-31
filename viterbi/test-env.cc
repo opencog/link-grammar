@@ -82,6 +82,7 @@ bool test_func_clobber()
 		);
 
 	env->set_function("con", word, disj);
+	word = ANODE(WORD, "wtf");
 	Atom* got = env->get_function_value("con", word);
 
 	Atom* expected =  // same as disj, just different addrs
@@ -102,12 +103,42 @@ bool test_func_clobber()
 }
 
 
+// ==================================================================
+
+bool test_number()
+{
+	total_tests++;
+
+	Environment* env = new Environment();
+
+	Atom* word = ANODE(WORD, "asdf");
+	env->set_number("f", word, 41.0);
+
+	word = ANODE(WORD, "asdf");
+	env->set_number("f", word, 42.0);
+
+	word = ANODE(WORD, "asdf");
+	double got = env->get_number("f", word);
+
+	if (not (got == 42.0))
+	{
+		cout << "Error: test failure on test \"test_disjoin_cost\"" << endl;
+		cout << "=== Expecting: 42.0\n";
+		cout << "=== Got:\n" << got << endl;
+		return false;
+	}
+	cout << "PASS: test_number" << endl;
+	return true;
+}
+
+
 int ntest_env()
 {
 	size_t num_failures = 0;
 
 	if (!test_func()) num_failures++;
 	if (!test_func_clobber()) num_failures++;
+	if (!test_number()) num_failures++;
 	return num_failures;
 }
 

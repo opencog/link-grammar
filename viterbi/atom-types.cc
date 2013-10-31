@@ -21,6 +21,7 @@ const std::string type_name(AtomType t)
 		case NODE:       return "NODE";
 		case INDEX:      return "INDEX";
 		case LABEL:      return "LABEL";
+		case NUMBER:     return "NUMBER";
 
 		// Viterbi-specific node types
 		case WORD:       return "WORD";

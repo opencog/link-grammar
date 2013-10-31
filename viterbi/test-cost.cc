@@ -20,7 +20,7 @@
 bool test_disjoin_cost()
 {
 	total_tests++;
-	const char* post_nominal = 
+	const char* post_nominal =
 		"<costly-null>: [[[()]]];"
 		"wtf: ({[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-);";
 
@@ -31,14 +31,14 @@ bool test_disjoin_cost()
 
 	Lynk* expected =
 		ALINK4(SET,
-			ALINK2C(WORD_CSET, 
+			ALINK2C(WORD_CSET,
 				ANODE(WORD, "wtf"),
 				ALINK2(AND,
 					ANODE(CONNECTOR, "Xd-"),
 					ANODE(CONNECTOR, "MX-")
 				),
 			3.0f),
-			ALINK2C(WORD_CSET, 
+			ALINK2C(WORD_CSET,
 				ANODE(WORD, "wtf"),
 				ALINK4(AND,
 					ANODE(CONNECTOR, "Xd-"),
@@ -47,7 +47,7 @@ bool test_disjoin_cost()
 					ANODE(CONNECTOR, "Xc+")
 				),
 			1.0f),
-			ALINK2C(WORD_CSET, 
+			ALINK2C(WORD_CSET,
 				ANODE(WORD, "wtf"),
 				ALINK3(AND,
 					ANODE(CONNECTOR, "Xd-"),
@@ -55,7 +55,7 @@ bool test_disjoin_cost()
 					ANODE(CONNECTOR, "Bpj+")
 				),
 			4.0f),
-			ALINK2C(WORD_CSET, 
+			ALINK2C(WORD_CSET,
 				ANODE(WORD, "wtf"),
 				ALINK3(AND,
 					ANODE(CONNECTOR, "Xd-"),

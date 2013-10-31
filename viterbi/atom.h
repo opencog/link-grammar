@@ -165,7 +165,7 @@ class Node : public Atom
 // If this is not done, the GC will fail to see the pointers here.
 #if __cplusplus > 199711L
 // using requires C++11
-template <typename T> 
+template <typename T>
 using AtomList = std::vector<T, gc_allocator<Atom*> >;
 typedef AtomList<Atom*> OutList;
 #else

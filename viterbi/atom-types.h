@@ -23,6 +23,7 @@ enum AtomType
 	NODE = 1,
 	INDEX,
 	LABEL,
+	NUMBER,
 
 	// Viterbi-specific Node types
 	WORD,       // a word
