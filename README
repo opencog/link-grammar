@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 4.8.0
+                          Version 4.8.1
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -65,7 +65,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-4.8.0.tar.gz.asc
+   gpg --verify link-grammar-4.8.1.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -168,8 +168,11 @@ BUILDING on Windows
 
    Link-grammar now requires a working version of POSIX-standard regex
    libraries. Since these are not provided by Microsoft, a copy must be
-   obtained elsewhere. A popular choice is PCRE, 'Perl-Compatible
-   Regular Expressions', available at:
+   obtained elsewhere.  One popular choice is TRE, available at:
+   http://laurikari.net/tre/
+
+   Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
+   available at:
    http://www.pcre.org/
    Recent 32 and 64-bit binaries can be found at:
    http://www.airesoft.co.uk/pcre
