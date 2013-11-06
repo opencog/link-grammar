@@ -1,6 +1,7 @@
 Version 4.8.1 (xxxx 2013)
  * Ongoing work on viterbi.
  * Updated MSVC9 project files from Jand Hashemi (Lucky--)
+ * Fix important bug in Java services: return top parses, not random ones.
 
 Version 4.8.0 (24 October 2013)
  * Fix "he answered yes"

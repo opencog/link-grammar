@@ -158,8 +158,16 @@ public class LGService
 			LinkGrammar.setMaxCost(config.getMaxCost());
 		if (config.getMaxParseSeconds() > -1)
 			LinkGrammar.setMaxParseSeconds(config.getMaxParseSeconds());
-		if (config.getMaxLinkages() > -1)
-			LinkGrammar.setMaxLinkages(config.getMaxLinkages());
+
+		// XXX DO NOT DO THIS!!! This will royally screw up results!
+		// Setting the link-grammar max linkages to a low number,
+		// e.g. 4, when there are a dozen or more parses, will cause a
+		// RANDOM 4 sentences to be returned out of the dozen, instead
+		// of the top 4.  We almost surely do NOT want that! Or rather,
+		// I'm assuming no one actually wants that; we want the top 4!!
+		// So, setting the link-grammar max linkages iss a huge mistake!
+		// if (config.getMaxLinkages() > -1)
+		//	LinkGrammar.setMaxLinkages(config.getMaxLinkages());
 	}
 
 	/**
