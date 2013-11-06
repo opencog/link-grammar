@@ -544,12 +544,12 @@ public class LGService
 			if (argv.length > 0)
 				ex.printStackTrace(System.err);
 			System.out.println("Usage: java org.linkgrammar.LGService [-verbose] [-threads n] port [language] [dictPath]");
-			System.out.println("Start a link-grammar parse server on tcp/ip port.  The server returns JSON-");
-			System.out.println("formated parse results.  Socket input should be a single sentence to parse,");
-			System.out.println("preceeded by the identifier \"text:\".\n");
+			System.out.println("Start a link-grammar parse server on tcp/ip port.  The server returns");
+			System.out.println("JSON-formated parse results.  Socket input should be a single sentence");
+			System.out.println("to parse, preceeded by the identifier \"text:\".\n");
 			System.out.println("  'port'      The TCP port the service should listen to.");
 			System.out.println("  -verbose    Generate verbose output.");
-			System.out.println("  -threads    Specify number of concurrent threads/clients allowed (default 1).");
+			System.out.println("  -threads    Number of concurrent threads/clients allowed (default 1).");
 			System.out.println("  'language'  Language abbreviation (en, ru, de, lt or fr).");
 			System.out.println("  'dictPath'  Full path to the Link-Grammar dictionaries.");
 			System.exit(-1);
