@@ -454,7 +454,7 @@ public class LGService
 		if (start != -1 || column != -1)
 			throw new RuntimeException("Malformed message:"
 				+ new String(buf, 0, length)
-				+ "\nDid you forget to say \"text:\" at the start of the message?");
+				+ "Did you forget to say \"text:\" at the start of the message?");
 		return result;
 	}
 
