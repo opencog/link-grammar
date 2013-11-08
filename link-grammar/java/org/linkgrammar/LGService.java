@@ -402,6 +402,11 @@ public class LGService
 		// the JSON input. (viz, buf is assumed to contain valid json)
 		Map<String, String> result = new HashMap<String, String>();
 
+		// Note that we expect the JSON part of 'buf' to be in ASCII.
+		// However, the everything after 'text:' might be in UTF-8
+		// That's OK, since the code below just assumes ASCII while
+		// grepping for 'text:' and then lets Java String constructor
+		// deal with the UTF-8. Anyway, it works.
 		boolean gotText = false;
 		int start = -1;
 		int column = -1;
@@ -418,11 +423,11 @@ public class LGService
 				if ("text" == name) gotText = true;
 			}
 
-			// Any commas appearing in the text will fuck this up, so
-			// we treat this as a JSON message, unly until the key "text"
-			// is seen. After that, all commas are assumed to be part of
-			// the text message. (ergo, "text" must the last keyword in the
-			// message.
+			// Any commas appearing in the sentence text will fuck this up,
+			// so we treat this as a JSON message, but only until the key
+			// "text" is seen. After that, all commas are assumed to be part
+			// of the text message. (ergo, "text" must the last keyword in
+			// the message.) Note also: after that, the rest might be in UTF-8
 			else if (c == '\0' || (!gotText && c == ','))
 			{
 				if (start == -1 || column == -1)
@@ -437,7 +442,7 @@ public class LGService
 		}
 
 		// If we are here, the the last byte wasn't null. This is the
-		// normal exit, I guess ... 
+		// normal exit, I guess ...
 		if (start != -1 && column != -1) {
 			String name = new String(buf, start, column - start);
 			String value = new String(buf, column + 1, length - column - 1);
@@ -447,7 +452,9 @@ public class LGService
 			start = column = -1;
 		}
 		if (start != -1 || column != -1)
-			throw new RuntimeException("Malformed message:" + new String(buf, 0, length));
+			throw new RuntimeException("Malformed message:"
+				+ new String(buf, 0, length)
+				+ "\nDid you forget to say \"text:\" at the start of the message?");
 		return result;
 	}
 
@@ -598,7 +605,7 @@ public class LGService
 					{
 						// We must catch in here, and not outside the
 						// thread pool, because the submit method will
-						// silently swallow the exception. There is a 
+						// silently swallow the exception. There is a
 						// CERT advisory for this feature/bug:
 						// http://www.securecoding.cert.org/confluence/display/java/TPS03-J.+Ensure+that+tasks+executing+in+a+thread+pool+do+not+fail+silently
 						try
@@ -610,7 +617,7 @@ public class LGService
 							t.printStackTrace(System.err);
 							System.exit(-1);
 						}
-					} 
+					}
 				});
 			}
 		}
