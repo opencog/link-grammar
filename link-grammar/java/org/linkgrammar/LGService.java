@@ -328,11 +328,12 @@ public class LGService
 		init();
 		Reader in = null;
 		PrintWriter out = null;
+		JSONUtils msgreader = new JSONUtils();
 		try
 		{
 			trace("Connection accepted from : " + clientSocket.getInetAddress());
 			in = new InputStreamReader(clientSocket.getInputStream());
-			Map<String, String> msg = JSONUtils.readMsg(in);
+			Map<String, String> msg = msgreader.readMsg(in);
 			if (verbose)
 				trace("Received msg '" + msg + "' from " + clientSocket.getInetAddress());
 			String json = "{}";

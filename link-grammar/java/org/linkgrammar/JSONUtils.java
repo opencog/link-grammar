@@ -73,7 +73,10 @@ public class JSONUtils
 		return b.toString();
 	}
 
-	public static Map<String, String> readMsg(Reader in) throws java.io.IOException
+	private String rawText;
+	public String getRawText() { return rawText; }
+
+	public Map<String, String> readMsg(Reader in) throws java.io.IOException
 	{
 		// Read chars from input until input is exhausted, or until
 		// newline is encountered. "length" will be set to the final
@@ -95,11 +98,11 @@ public class JSONUtils
 			if (buf[length-1] == '\n')
 				break;
 		}
+		rawText = new String(buf);
 
 		// "result" will contain a map of key-value pairs extracted from
 		// the JSON input. (viz, buf is assumed to contain valid json)
 		Map<String, String> result = new HashMap<String, String>();
-		result.put("rawtext", new String(buf));
 
 		// Note that we expect the JSON part of 'buf' to be in ASCII.
 		// However, the everything after 'text:' might be in UTF-8
