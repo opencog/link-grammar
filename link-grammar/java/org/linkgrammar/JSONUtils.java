@@ -99,6 +99,7 @@ public class JSONUtils
 		// "result" will contain a map of key-value pairs extracted from
 		// the JSON input. (viz, buf is assumed to contain valid json)
 		Map<String, String> result = new HashMap<String, String>();
+		result.put("rawtext", new String(buf));
 
 		// Note that we expect the JSON part of 'buf' to be in ASCII.
 		// However, the everything after 'text:' might be in UTF-8
