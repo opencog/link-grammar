@@ -15,9 +15,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.CharacterIterator;
 import java.text.SimpleDateFormat;
-import java.text.StringCharacterIterator;
 import java.util.Map;
 // import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -233,43 +231,6 @@ public class LGService
 		return buf.toString();
 	}
 
-	static char[] hex = "0123456789ABCDEF".toCharArray();
-
-	private static String jsonString(String s)
-	{
-		if (s == null)
-			return null;
-		StringBuffer b = new StringBuffer();
-		b.append("\"");
-		CharacterIterator it = new StringCharacterIterator(s);
-		for (char c = it.first(); c != CharacterIterator.DONE; c = it.next())
-		{
-			if (c == '"') b.append("\\\"");
-			else if (c == '\\') b.append("\\\\");
-			else if (c == '/') b.append("\\/");
-			else if (c == '\b') b.append("\\b");
-			else if (c == '\f') b.append("\\f");
-			else if (c == '\n') b.append("\\n");
-			else if (c == '\r') b.append("\\r");
-			else if (c == '\t') b.append("\\t");
-			else if (Character.isISOControl(c))
-			{
-				int n = c;
-				for (int i = 0; i < 4; ++i) {
-					int digit = (n & 0xf000) >> 12;
-					b.append(hex[digit]);
-					n <<= 4;
-				}
-			}
-			else
-			{
-				b.append(c);
-			}
-		}
-		b.append("\"");
-		return b.toString();
-	}
-
 	/**
 	 * Format the current parsing result as a JSON string. This method
 	 * assume that <code>LinkGrammar.parse</code> has been called before.
@@ -283,7 +244,7 @@ public class LGService
 		buf.append("{\"tokens\":[");
 		for (int i = 0; i < numWords; i++)
 		{
-			buf.append(jsonString(LinkGrammar.getWord(i)));
+			buf.append(JSONUtils.jsonString(LinkGrammar.getWord(i)));
 			if (i + 1 < numWords)
 				buf.append(",");
 		}
@@ -295,14 +256,14 @@ public class LGService
 			buf.append("{\"words\":[");
 			for (int i = 0; i < numWords; i++)
 			{
-				buf.append(jsonString(LinkGrammar.getLinkageWord(i)));
+				buf.append(JSONUtils.jsonString(LinkGrammar.getLinkageWord(i)));
 				if (i + 1 < numWords)
 					buf.append(",");
 			}
 			buf.append("], \"disjuncts\":[");
 			for (int i = 0; i < numWords; i++)
 			{
-				buf.append(jsonString(LinkGrammar.getLinkageDisjunct(i)));
+				buf.append(JSONUtils.jsonString(LinkGrammar.getLinkageDisjunct(i)));
 				if (i + 1 < numWords)
 					buf.append(",");
 			}
@@ -315,22 +276,22 @@ public class LGService
 			if (config.isStoreConstituentString())
 			{
 				buf.append(", \"constituentString\":");
-				buf.append(jsonString(LinkGrammar.getConstituentString()));
+				buf.append(JSONUtils.jsonString(LinkGrammar.getConstituentString()));
 			}
 			if (config.isStoreDiagramString())
 			{
 				buf.append(", \"diagramString\":");
-				buf.append(jsonString(LinkGrammar.getLinkString()));
+				buf.append(JSONUtils.jsonString(LinkGrammar.getLinkString()));
 			}
 			buf.append(", \"links\":[");
 			int numLinks = LinkGrammar.getNumLinks();
 			for (int i = 0; i < numLinks; i++)
 			{
-				buf.append("{\"label\":" + jsonString(LinkGrammar.getLinkLabel(i)) + ",");
+				buf.append("{\"label\":" + JSONUtils.jsonString(LinkGrammar.getLinkLabel(i)) + ",");
 				buf.append("\"left\":" + LinkGrammar.getLinkLWord(i) + ",");
 				buf.append("\"right\":" + LinkGrammar.getLinkRWord(i) + ",");
-				buf.append("\"leftLabel\":" + jsonString(LinkGrammar.getLinkLLabel(i)) + ",");
-				buf.append("\"rightLabel\":" + jsonString(LinkGrammar.getLinkRLabel(i)) + "}");
+				buf.append("\"leftLabel\":" + JSONUtils.jsonString(LinkGrammar.getLinkLLabel(i)) + ",");
+				buf.append("\"rightLabel\":" + JSONUtils.jsonString(LinkGrammar.getLinkRLabel(i)) + "}");
 				if (i + 1 < numLinks)
 					buf.append(",");
 			}

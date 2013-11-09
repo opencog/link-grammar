@@ -24,13 +24,13 @@ import java.util.Map;
  */
 public class JSONUtils
 {
-	static boolean getBool(String name, Map<String, String> msg, boolean def)
+	public static boolean getBool(String name, Map<String, String> msg, boolean def)
 	{
 		String x = msg.get(name);
 		return x == null ? def : Boolean.valueOf(x);
 	}
 
-	static int getInt(String name, Map<String, String> msg, int def)
+	public static int getInt(String name, Map<String, String> msg, int def)
 	{
 		String x = msg.get(name);
 		return x == null ? def : Integer.parseInt(x);
@@ -38,7 +38,7 @@ public class JSONUtils
 
 	static char[] hex = "0123456789ABCDEF".toCharArray();
 
-	static String jsonString(String s)
+	public static String jsonString(String s)
 	{
 		if (s == null)
 			return null;
@@ -73,7 +73,7 @@ public class JSONUtils
 		return b.toString();
 	}
 
-	static Map<String, String> readMsg(Reader in) throws java.io.IOException
+	public static Map<String, String> readMsg(Reader in) throws java.io.IOException
 	{
 		// Read chars from input until input is exhausted, or until
 		// newline is encountered. "length" will be set to the final
