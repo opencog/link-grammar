@@ -82,6 +82,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_linkage_limit(opts, 100);
 	parse_options_set_verbosity(opts, 0);
 	parse_options_set_spell_guess(opts, FALSE);
+	parse_options_set_screen_width(opts, 4096);
 }
 
 static inline void test(void)
@@ -141,6 +142,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_short_length(ptd->opts, 10);
 	parse_options_set_verbosity(ptd->opts, 0);
 	parse_options_set_spell_guess(ptd->opts, FALSE);
+	parse_options_set_screen_width(ptd->opts, 4096);
 
 	parse_options_set_panic_mode(ptd->opts, TRUE);
 	ptd->panic_parse_opts = parse_options_create();
