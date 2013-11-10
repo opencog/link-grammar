@@ -175,7 +175,7 @@ char * linkage_print_senses(Linkage linkage)
 {
 	String * s = string_new();
 	char * sense_string;
-#if USE_CORPUS
+#ifdef USE_CORPUS
 	Linkage_info *lifo = linkage->info;
 	Sense *sns;
 	size_t w, nwords;
@@ -209,7 +209,7 @@ char * linkage_print_senses(Linkage linkage)
 
 char * linkage_print_disjuncts(const Linkage linkage)
 {
-#if USE_CORPUS
+#ifdef USE_CORPUS
 	double score;
 #endif
 	double cost;
@@ -236,7 +236,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		dj = linkage_get_disjunct_str(linkage, w);
 		cost = linkage_get_disjunct_cost(linkage, w);
 
-#if USE_CORPUS
+#ifdef USE_CORPUS
 		score = linkage_get_disjunct_corpus_score(linkage, w);
 		append_string(s, "%21s    %5.1f %6.3f %s\n", infword, cost, score, dj);
 #else

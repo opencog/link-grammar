@@ -241,7 +241,7 @@ dictionary_six_str(const char * lang,
 		if (rc) goto failure;
 	}
 
-#if USE_CORPUS
+#ifdef USE_CORPUS
 	dict->corpus = NULL;
 	if (affix_name != NULL) /* Don't do this for the second time */
 	{
@@ -395,7 +395,7 @@ int dictionary_delete(Dictionary dict)
 		prt_error("Info: Freeing dictionary %s", dict->name);
 	}
 
-#if USE_CORPUS
+#ifdef USE_CORPUS
 	lg_corpus_delete(dict->corpus);
 #endif
 
