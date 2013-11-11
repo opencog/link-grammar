@@ -178,7 +178,7 @@ static inline size_t utf8_strlen(const char *s)
  */
 static inline size_t utf8_next(const char *s)
 {
-	int n = 0;
+	size_t n = 0;
 	while (0 != *s)
 	{
 		if ((0x80 <= ((unsigned char) *s)) && 
@@ -196,6 +196,7 @@ static inline int is_utf8_upper(const char *s)
 
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+	if (nbytes < 0) return 0;  /* invalid mb sequence */
 	if (iswupper(c)) return nbytes;
 	return 0;
 }
@@ -208,6 +209,7 @@ static inline int is_utf8_alpha(const char *s)
 
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+	if (nbytes < 0) return 0;  /* invalid mb sequence */
 	if (iswalpha(c)) return nbytes;
 	return 0;
 }
@@ -220,6 +222,7 @@ static inline int is_utf8_digit(const char *s)
 
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+	if (nbytes < 0) return 0;  /* invalid mb sequence */
 	if (iswdigit(c)) return nbytes;
 	return 0;
 }
@@ -232,6 +235,7 @@ static inline int is_utf8_space(const char *s)
 
 	memset(&mbs, 0, sizeof(mbs));
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+	if (nbytes < 0) return 0;  /* invalid mb sequence */
 	if (iswspace(c)) return nbytes;
 	return 0;
 }
@@ -252,7 +256,7 @@ static inline const char * skip_utf8_upper(const char * s)
  * two input strings match. Comparison stops when
  * both srings descend to lowercase.
  */
-static inline int utf8_upper_match(const char * s, const char * t)
+static inline Boolean utf8_upper_match(const char * s, const char * t)
 {
 	mbstate_t mbs, mbt;
 	wchar_t ws, wt;
@@ -263,6 +267,7 @@ static inline int utf8_upper_match(const char * s, const char * t)
 
 	ns = mbrtowc(&ws, s, MB_CUR_MAX, &mbs);
 	nt = mbrtowc(&wt, t, MB_CUR_MAX, &mbt);
+	if (ns < 0 || nt < 0) return FALSE;  /* invalid mb sequence */
 	while (iswupper(ws) || iswupper(wt))
 	{
 		if (ws != wt) return FALSE;
@@ -270,6 +275,7 @@ static inline int utf8_upper_match(const char * s, const char * t)
 		t += nt;
 		ns = mbrtowc(&ws, s, MB_CUR_MAX, &mbs);
 		nt = mbrtowc(&wt, t, MB_CUR_MAX, &mbt);
+		if (ns < 0 || nt < 0) return FALSE;  /* invalid mb sequence */
 	}
 	return TRUE;
 }
