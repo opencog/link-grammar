@@ -125,6 +125,8 @@ static Boolean is_quote(wchar_t wc)
 /**
  * Returns true if the word can be interpreted as a number.
  * The ":" is included here so we allow "10:30" to be a number.
+ * The "." and "," allow numbers in both US and European notation:
+ * e.g. American million: 1,000,000.00  Euro million: 1.000.000,00
  * We also allow U+00A0 "no-break space"
  */
 static Boolean is_number(const char * s)
@@ -162,6 +164,7 @@ static Boolean contains_digits(const char * s)
 	while ((*s != 0) && (0 < nb))
 	{
 		nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
+		if (nb < 0) return FALSE;
 		if (iswdigit(c)) return TRUE;
 		s += nb;
 	}
@@ -975,7 +978,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
-		while (!iswspace(c) && !is_quote(c) && (c != 0) && (nb != 0))
+		while (!iswspace(c) && !is_quote(c) && (c != 0) && (0 < nb))
 		{
 			word_end += nb;
 			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
