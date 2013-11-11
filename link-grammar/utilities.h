@@ -256,7 +256,7 @@ static inline const char * skip_utf8_upper(const char * s)
  * two input strings match. Comparison stops when
  * both srings descend to lowercase.
  */
-static inline Boolean utf8_upper_match(const char * s, const char * t)
+static inline int utf8_upper_match(const char * s, const char * t)
 {
 	mbstate_t mbs, mbt;
 	wchar_t ws, wt;

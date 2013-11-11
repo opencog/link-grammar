@@ -18,7 +18,7 @@
 
 LINK_BEGIN_DECLS
 
-/* forwardd decls */
+/* forward decls */
 typedef char Boolean;
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
