@@ -189,19 +189,23 @@ strndup (const char *str, size_t size)
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 
-/** XXX this doesn't loook correct to me... */
-static size_t get_utf8_charlen(const char *xc)
+/** Returns length of UTF8 character.
+ * Current algo is based on the first character ony.
+ * If pointer is not pointing at first char, no not a valid value, returns 0.
+ * Returns 0 for NULL as well.
+ */
+static int get_utf8_charlen(const char *xc)
 {
 	unsigned char c;
 
 	c = (unsigned char) *xc;
 
 	if (c == 0) return 0;
-	if (c < 128) return 1;
-	if ((c >= 0xc2) && (c < 0xe0)) return 2;
-	if ((c >= 0xe0) && (c < 0xf0)) return 3;
-	if ((c >= 0xf0) && (c <= 0xf4)) return 4; /* Well, this one would need 2 utf-16 chars... */
-	return 0;
+	if (c < 0x80) return 1;
+	if ((c >= 0xc2) && (c < 0xe0)) return 2; /* First byte of a code point U +0080 - U +07FF */
+	if ((c >= 0xe0) && (c < 0xf0)) return 3; /* First byte of a code point U +0800 - U +FFFF */
+	if ((c >= 0xf0) && (c <= 0xf4)) return 4; /* First byte of a code point U +10000 - U +10FFFF */
+	return -1; /* Fallthrough -- not the first byte of a code-point. */
 }
 
 /**
@@ -212,13 +216,15 @@ static size_t get_utf8_charlen(const char *xc)
  */
 size_t xmbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
-	size_t nb, nb2;
+	int nb, nb2;
 
 	if (NULL == s) return 0;
 	if (0 == n) return -2;
 	if (0 == *s) { *pwc = 0; return 0; }
 
 	nb = get_utf8_charlen(s);
+	if (0 == nb) return 0;
+	if (0 > nb) return nb;
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, NULL, 0);
 	nb2 = MultiByteToWideChar(CP_UTF8, 0, s, nb, pwc, nb2);
 	if (0 == nb2) return 0;
