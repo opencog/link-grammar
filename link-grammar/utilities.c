@@ -256,6 +256,10 @@ int wctomb_check(char *s, wchar_t wc)
 
 /**
  * Downcase the first letter of the word.
+ * XXX FIXME This works 'most of the time', but is not techically correct.
+ * This is because towlower() and towupper() are locale dependant, and also
+ * because the byte-counts might not match up, e.g. German ß and SS.
+ * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
 void downcase_utf8_str(char *to, const char * from, size_t usize)
 {
@@ -299,6 +303,10 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 
 /**
  * Upcase the first letter of the word.
+ * XXX FIXME This works 'most of the time', but is not techically correct.
+ * This is because towlower() and towupper() are locale dependant, and also
+ * because the byte-counts might not match up, e.g. German ß and SS.
+ * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
 void upcase_utf8_str(char *to, const char * from, size_t usize)
 {
