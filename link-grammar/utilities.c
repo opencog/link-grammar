@@ -775,7 +775,11 @@ void * object_open(const char *filename,
 	 * Unix: starts with leading slash.
 	 * Windows: starts with C:\  except that the drive letter may differ.
 	 */
-	if ((filename[0] == '/') || ((filename[1] == ':') && (filename[2] == '\\')))
+	if ((filename[0] == '/')
+#ifdef _WIN32
+		|| ((filename[1] == ':') && (filename[2] == '\\'))
+#endif
+	)
 	{
 		/* fopen returns NULL if the file does not exist. */
 		fp = opencb(filename, user_data);
