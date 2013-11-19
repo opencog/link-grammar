@@ -726,7 +726,7 @@ char * dictionary_get_data_dir(void)
 				printf("   FAIL GetModuleFileName for current program \n");
 			}
 		}
-   }  /* BHayes - end added else block */
+   }
 #endif
 
 	return data_dir;
@@ -774,10 +774,12 @@ void * object_open(const char *filename,
 	/* Look for absolute filename.
 	 * Unix: starts with leading slash.
 	 * Windows: starts with C:\  except that the drive letter may differ.
+	 * Note that only native windows C library uses backslashs; mingw 
+	 * seems to use forward-slash, from what I can tell.
 	 */
 	if ((filename[0] == '/')
-#ifdef _WIN32
-		|| ((filename[1] == ':') && (filename[2] == '\\'))
+#if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+		|| ((filename[1] == ':') && (filename[2] == DIR_SEPARATOR))
 #endif
 	)
 	{
@@ -860,7 +862,7 @@ FILE *dictopen(const char *filename, const char *how)
 	 * in the *same* directory in which the first one was found.
 	 * (The first one is typcailly "en/4.0.dict")
 	 * The global "path_found" records where the first dict was found.
-	 * The goal here is to avoid fractured install insanity.
+	 * The goal here is to avoid insanity due to user's fractured installs.
 	 */
 	if (path_found)
 	{
