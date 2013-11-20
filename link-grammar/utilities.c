@@ -209,12 +209,12 @@ static int get_utf8_charlen(const char *xc)
 }
 
 /**
- * (Experimental) Implementation of mbrtowc for Windows.  Under construction.
+ * (Experimental) Implementation of mbrtowc for Windows.
  * This is required because the other, commonly available implementations
  * seem to not work very well, based on user reports.  Someone who is
  * really, really good at windows programming needs to review this stuff!
  */
-size_t xmbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
+size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
 	int nb, nb2;
 
@@ -242,6 +242,8 @@ int wctomb_check(char *s, wchar_t wc)
 		wprintf(L"Fatal Error: wctomb_check failed: %d %S\n", nr, &wc);
 		exit(1);
 	}
+	/* XXX TODO I suspect that the below needs to be uncommented??? */
+	/* nr = nr / sizeof(wchar_t); */
 #else
 	mbstate_t mbss;
 	memset(&mbss, 0, sizeof(mbss));
@@ -268,13 +270,8 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 	char low[MB_LEN_MAX];
 	mbstate_t mbs;
 
-#ifdef _MSC_VER
-	nbh = MultiByteToWideChar(CP_UTF8, 0, from, 1, NULL, 0);
-	nbh = sizeof(wchar_t) * MultiByteToWideChar(CP_UTF8, 0, from, 1, &c, nbh);
-#else
 	memset(&mbs, 0, sizeof(mbs));
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
-#endif
 	if (nbh < 0)
 	{
 		prt_error("Error: Invalid multi-byte string!");
@@ -315,13 +312,8 @@ void upcase_utf8_str(char *to, const char * from, size_t usize)
 	char low[MB_LEN_MAX];
 	mbstate_t mbs;
 
-#ifdef _MSC_VER
-	nbh = MultiByteToWideChar(CP_UTF8, 0, from, 1, NULL, 0);
-	nbh = sizeof(wchar_t) * MultiByteToWideChar(CP_UTF8, 0, from, 1, &c, nbh);
-#else
 	memset(&mbs, 0, sizeof(mbs));
 	nbh = mbrtowc (&c, from, MB_CUR_MAX, &mbs);
-#endif
 	if (nbh < 0)
 	{
 		prt_error("Error: Invalid multi-byte string!");
