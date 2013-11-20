@@ -538,14 +538,22 @@ void exfree(void * p, size_t size)
 char * join_path(const char * prefix, const char * suffix)
 {
 	char * path;
-	int path_len;
+	size_t path_len, prel;
 
 	path_len = strlen(prefix) + 1 /* len(DIR_SEPARATOR) */ + strlen(suffix);
 	path = (char *) malloc(path_len + 1);
 
 	strcpy(path, prefix);
-	path[strlen(path)+1] = '\0';
-	path[strlen(path)] = DIR_SEPARATOR;
+
+	/* Windows is allergic to multiple path separators, so append one
+	 * only if the prefix isn't already terminated by a path sep.
+	 */
+	prel = strlen(path);
+	if (0 < prel && path[prel-1] != DIR_SEPARATOR)
+	{
+		path[prel] = DIR_SEPARATOR;
+		path[prel+1] = '\0';
+	}
 	strcat(path, suffix);
 
 	return path;
