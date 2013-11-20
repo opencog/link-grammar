@@ -232,7 +232,7 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 }
 #endif /* defined(_MSC_VER) || defined(__MINGW32__) */
 
-int wctomb_check(char *s, wchar_t wc)
+static int wctomb_check(char *s, wchar_t wc)
 {
 	int nr;
 #ifdef _MSC_VER

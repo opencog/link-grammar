@@ -290,7 +290,6 @@ static inline int utf8_upper_match(const char * s, const char * t)
 	return TRUE;
 }
 
-int wctomb_check(char *s, wchar_t wc);
 void downcase_utf8_str(char *to, const char * from, size_t usize);
 void upcase_utf8_str(char *to, const char * from, size_t usize);
 
