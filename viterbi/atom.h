@@ -93,9 +93,9 @@ class Atom : public gc
 		Set* get_incoming_set() const;
 		Set* get_incoming_set(AtomType) const;
 
-		Relation* add_relation(const std::string&, Atom*);
-		Set* get_relations(const std::string&) const;
-		Set* get_relation_vals(const std::string&) const;
+		Relation* add_relation(const char*, Atom*);
+		Set* get_relations(const char*) const;
+		Set* get_relation_vals(const char*) const;
 
 		virtual bool operator==(const Atom*) const;
 		virtual Atom* clone() const = 0;
@@ -107,6 +107,7 @@ class Atom : public gc
 
 		const AtomType _type;
 
+		typedef unsigned long int WeakLinkPtr;
 		struct IncomingSet : public gc
 		{
 				// Just right now, we will use a single shared mutex for all
@@ -117,11 +118,11 @@ class Atom : public gc
 				// incoming set is not tracked by garbage collector,
 				// to avoid cyclic references.
 				// std::set<ptr> uses 48 bytes (per atom).
-				std::set<Link*, std::less<Link*>, gc_allocator<Atom*> > _iset;
+				std::set<WeakLinkPtr, std::less<WeakLinkPtr>, gc_allocator<WeakLinkPtr> > _iset;
 		};
 		IncomingSet* _incoming_set;
 
-		Set* filter_iset(std::function<Atom* (Atom*)>) const;
+		Set* filter_iset(std::function<Atom* (Link*)>) const;
 };
 
 /// Given an atom of a given type, return the C++ class of that type.
@@ -133,6 +134,7 @@ T upcast(Atom* a)
 	return dynamic_cast<T>(a->upcaster());
 }
 
+typedef std::basic_string<char, std::char_traits<char>, gc_allocator<char> > NameString;
 /**
  * A Node may be
  * -- a word (the std::string holds the word)
@@ -145,18 +147,21 @@ T upcast(Atom* a)
 class Node : public Atom
 {
 	public:
-		Node(const std::string& n, const TV& tv = TV())
+		Node(const char* n, const TV& tv = TV())
 			: Atom(NODE, tv), _name(n) {}
 
-		Node(AtomType t, const std::string& n, const TV& tv = TV())
+		Node(const NameString& n, const TV& tv = TV())
+			: Atom(NODE, tv), _name(n) {}
+
+		Node(AtomType t, const NameString& n, const TV& tv = TV())
 			: Atom(t, tv), _name(n) {}
 
-		const std::string& get_name() const { return _name; }
+		const NameString& get_name() const { return _name; }
 
 		virtual bool operator==(const Atom*) const;
 		virtual Node* clone() const { return new Node(*this); }
 	protected:
-		const std::string _name;
+		const NameString _name;
 };
 
 

@@ -27,7 +27,7 @@ namespace atombase {
 class Label : public Node
 {
 	public:
-		Label(const std::string& n, const TV& tv = TV())
+		Label(const NameString& n, const TV& tv = TV())
          : Node(LABEL, n, tv) {}
 };
 
@@ -82,7 +82,7 @@ class Relation : public Link
 		Relation(Label* lab, Atom* arg, Atom* val, const TV& tv = TV())
 			: Link(RELATION,  ({OutList o(1,lab); o.push_back(arg); o.push_back(val); o;}), tv)
 		{}
-		Relation(const std::string& name, Atom* arg, Atom* val, const TV& tv = TV())
+		Relation(const char* name, Atom* arg, Atom* val, const TV& tv = TV())
 			: Link(RELATION,  ({OutList o(1, new Label(name)); o.push_back(arg); o.push_back(val); o;}), tv)
 		{}
 };

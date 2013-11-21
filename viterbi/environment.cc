@@ -45,7 +45,7 @@ void Environment::remove_atom(Atom* a)
 }
 
 /// Create a relation link, and put it into the environment, all in one go.
-Relation* Environment::add_relation(const std::string& name, Atom* arg, Atom* val)
+Relation* Environment::add_relation(const char* name, Atom* arg, Atom* val)
 {
 	Relation *rel = new Relation(name, arg, val);
 	insert_atom(rel);
@@ -54,7 +54,7 @@ Relation* Environment::add_relation(const std::string& name, Atom* arg, Atom* va
 
 /// Return a set of all of the relations with the given name, and given
 /// argument (value from its domain).
-Set* Environment::get_relations(const std::string& name, Atom* arg)
+Set* Environment::get_relations(const char* name, Atom* arg)
 {
 	// XXX this should use a pre-computed index, instead of searching ...
 	// XXX FIXME
@@ -78,7 +78,7 @@ Set* Environment::get_relations(const std::string& name, Atom* arg)
 
 /// Return a set of of the "outputs" (codomain) of a relation, given it's
 /// name and input argument (value from its domain).
-Set* Environment::get_relation_vals(const std::string& name, Atom* arg)
+Set* Environment::get_relation_vals(const char* name, Atom* arg)
 {
 	Set* relset = get_relations(name, arg);
 	OutList oset;
@@ -97,7 +97,7 @@ Set* Environment::get_relation_vals(const std::string& name, Atom* arg)
 /// name and a value from its domain, it returns a single, unique value
 /// from its codomain.
 ///
-Relation* Environment::set_function(const std::string& name, Atom* arg, Atom* val)
+Relation* Environment::set_function(const char* name, Atom* arg, Atom* val)
 {
 	Relation* old = get_function(name, arg);
 	if (old)
@@ -108,7 +108,7 @@ Relation* Environment::set_function(const std::string& name, Atom* arg, Atom* va
 	return func;
 }
 
-Relation* Environment::get_function(const std::string& name, Atom* arg)
+Relation* Environment::get_function(const char* name, Atom* arg)
 {
 	Set* relset = get_relations(name, arg);
 	size_t arity = relset->get_arity();
@@ -119,7 +119,7 @@ Relation* Environment::get_function(const std::string& name, Atom* arg)
 }
 
 // Get the value of function 'name' at argument 'arg'
-Atom* Environment::get_function_value(const std::string& name, Atom* arg)
+Atom* Environment::get_function_value(const char* name, Atom* arg)
 {
 	Relation* val = get_function(name, arg);
 	if (val) return val->get_outgoing_atom(2);
@@ -127,13 +127,13 @@ Atom* Environment::get_function_value(const std::string& name, Atom* arg)
 }
 
 // Set the value of numeric function 'name' at argument 'arg'
-Relation* Environment::set_number(const std::string& name, Atom* arg, double v)
+Relation* Environment::set_number(const char* name, Atom* arg, double v)
 {
 	return set_function(name, arg, new Number(v));
 }
 
 // Get the value of numeric function 'name' at argument 'arg'
-double Environment::get_number(const std::string& name, Atom* arg)
+double Environment::get_number(const char* name, Atom* arg)
 {
 	Atom* a = get_function_value(name, arg);
 	if (!a) return nan("");

@@ -63,20 +63,28 @@ void Atom::drop_incoming_set()
 {
 	if (NULL == _incoming_set) return;
 	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
+
+	// Perform an explicit free and delete; this alleviates
+	// pressure on the garbage collector.
 	_incoming_set->_iset.clear();
-	// delete _incoming_set;
+	delete _incoming_set;
 	_incoming_set = NULL;
 }
+
+// #define WEAK_POINTER_HASH 0x5555555555555555UL
+#define WEAK_POINTER_HASH 0x0UL
 
 /// Add an atom to the incoming set.
 void Atom::insert_atom(Link* a)
 {
 	if (NULL == _incoming_set) return;
 	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
-	// XXX TODO, I'm pretty sure I need to call
-	// GC_register_disappearing_link() on the location inside of set
-	// that is holding the actual value. Not sure how ...
-	_incoming_set->_iset.insert(a);
+	// Create a weak pointer, hidden from GC, by XOR'ing it.  I think
+	// thi si the right thing to do.  The Boehm GC docs suggest that
+	// GC_register_disappearing_link() be used, but I think that's only
+	// when registering finalizers, which we don't do.
+	WeakLinkPtr wa = (WeakLinkPtr) a;
+	_incoming_set->_iset.insert(wa ^ WEAK_POINTER_HASH);
 }
 
 /// Remove an atom from the incoming set.
@@ -84,7 +92,8 @@ void Atom::remove_atom(Link* a)
 {
 	if (NULL == _incoming_set) return;
 	std::lock_guard<std::mutex> lck (_incoming_set->_mtx);
-	_incoming_set->_iset.erase(a);
+	WeakLinkPtr wa = (WeakLinkPtr) a;
+	_incoming_set->_iset.erase(wa ^ WEAK_POINTER_HASH);
 }
 
 /// Return a copy of the entire incoming set of this atom.
@@ -97,7 +106,7 @@ void Atom::remove_atom(Link* a)
 Set* Atom::get_incoming_set() const
 {
 	if (NULL == _incoming_set) return new Set();
-	std::function<Atom* (Atom*)> filter = [&](Atom* a) -> Atom*
+	std::function<Atom* (Link*)> filter = [&](Link* a) -> Atom*
 	{
 		return a;
 	};
@@ -121,7 +130,7 @@ Set* Atom::get_incoming_set() const
 Set* Atom::get_incoming_set(AtomType type) const
 {
 	if (NULL == _incoming_set) return new Set();
-	std::function<Atom* (Atom*)> filter = [type](Atom* a) -> Atom*
+	std::function<Atom* (Link*)> filter = [type](Link* a) -> Atom*
 	{
 		if (a->get_type() != type) return NULL;
 		return a;
@@ -133,23 +142,26 @@ Set* Atom::get_incoming_set(AtomType type) const
 
 /// Add a nemed relation to the atom.
 /// This method only creates named binary relations.
-Relation* Atom::add_relation(const std::string& name, Atom* val)
+Relation* Atom::add_relation(const char* name, Atom* val)
 {
 	// We need to keep the incoming set, else the relation will not be findable.
 	keep_incoming_set();
 	return new Relation(name, this, val);
 }
 
-Set* Atom::filter_iset(std::function<Atom* (Atom*)> filter) const
+Set* Atom::filter_iset(std::function<Atom* (Link*)> filter) const
 {
 	if (NULL == _incoming_set) return new Set();
 	std::unique_lock<std::mutex> lck (_incoming_set->_mtx);
 	OutList oset;
-	std::set<Link*>::iterator it = _incoming_set->_iset.begin();
-	std::set<Link*>::iterator end = _incoming_set->_iset.end();
+	std::set<WeakLinkPtr>::iterator it = _incoming_set->_iset.begin();
+	std::set<WeakLinkPtr>::iterator end = _incoming_set->_iset.end();
 	for (; it != end; ++it)
 	{
-		Atom* a = filter(*it);
+		WeakLinkPtr wa = *it;
+		wa = wa ^ WEAK_POINTER_HASH;
+		Link* l = (Link*) wa;
+		Atom* a = filter(l);
 		if (a) oset.push_back(a);
 	}
 
@@ -159,33 +171,31 @@ Set* Atom::filter_iset(std::function<Atom* (Atom*)> filter) const
 }
 
 /// Get the set of all named relations
-Set* Atom::get_relations(const std::string& name) const
+Set* Atom::get_relations(const char* name) const
 {
 	Label* lab = new Label(name);
-	std::function<Atom* (Atom*)> filter = [this, lab](Atom* a) -> Atom*
+	std::function<Atom* (Link*)> filter = [this, lab](Link* a) -> Atom*
 	{
 		if (RELATION != a->get_type()) return NULL;
-		Relation* rel = dynamic_cast<Relation*>(a);
-		assert(1 < rel->get_arity(), "Relation cannot be zero-ary");
-		if (lab != rel->get_outgoing_atom(0)) return NULL;
-		assert(this == rel->get_outgoing_atom(1), "Corrupted outgoing set for relation");
+		assert(1 < a->get_arity(), "Relation cannot be zero-ary");
+		if (lab != a->get_outgoing_atom(0)) return NULL;
+		assert(this == a->get_outgoing_atom(1), "Corrupted outgoing set for relation");
 		return a;
 	};
 	return filter_iset(filter);
 }
 
 /// Get the set of all the values of the named relations
-Set* Atom::get_relation_vals(const std::string& name) const
+Set* Atom::get_relation_vals(const char* name) const
 {
 	Label* lab = new Label(name);
-	std::function<Atom* (Atom*)> filter = [this, lab](Atom* a) -> Atom*
+	std::function<Atom* (Link*)> filter = [this, lab](Link* a) -> Atom*
 	{
 		if (RELATION != a->get_type()) return NULL;
-		Relation* rel = dynamic_cast<Relation*>(a);
-		assert(3 == rel->get_arity(), "Expecting binary relation");
-		if (lab != rel->get_outgoing_atom(0)) return NULL;
-		assert(this == rel->get_outgoing_atom(1), "Corrupted outgoing set for relation");
-		return rel->get_outgoing_atom(2);
+		assert(3 == a->get_arity(), "Expecting binary relation");
+		if (lab != a->get_outgoing_atom(0)) return NULL;
+		assert(this == a->get_outgoing_atom(1), "Corrupted outgoing set for relation");
+		return a->get_outgoing_atom(2);
 	};
 	return filter_iset(filter);
 }
@@ -263,9 +273,17 @@ void Link::disable_keep_incoming_set(AtomType t)
 // (unless we convert to per-atom locks, which could be wasteful).
 Link::~Link()
 {
+	// Alleviate pressure on the GC, whenever possible.
 	size_t arity = get_arity();
+
+	// Cast-away const so that we can trash the contents.
+	OutList& os = (OutList&) _oset;
 	for (size_t i=0; i<arity; i++)
-		_oset[i]->remove_atom(this);
+	{
+		os[i]->remove_atom(this);
+		os[i] = NULL;
+	}
+	os.resize(0);
 }
 
 // ====================================================
@@ -326,7 +344,7 @@ std::ostream& do_prt(std::ostream& out, const Atom* a, int ilvl)
 		out << l->get_type() <<" :";
 		if (0.0f != l->_tv._strength)
 			out << "     (" << l->_tv._strength << ")";
-      out << endl;
+		out << endl;
 
 		ilvl++;
 		size_t lsz = l->get_arity();

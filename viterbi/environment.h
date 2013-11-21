@@ -25,16 +25,16 @@ class Environment : public gc
 		void insert_atom(Atom*);
 		void remove_atom(Atom*);
 
-		Relation* add_relation(const std::string&, Atom*, Atom*);
-		Set* get_relations(const std::string&, Atom*);
-		Set* get_relation_vals(const std::string&, Atom*);
+		Relation* add_relation(const char*, Atom*, Atom*);
+		Set* get_relations(const char*, Atom*);
+		Set* get_relation_vals(const char*, Atom*);
 
-		Relation* set_function(const std::string&, Atom*, Atom*);
-		Relation* get_function(const std::string&, Atom*);
-		Atom* get_function_value(const std::string&, Atom*);
+		Relation* set_function(const char*, Atom*, Atom*);
+		Relation* get_function(const char*, Atom*);
+		Atom* get_function_value(const char*, Atom*);
 
-		Relation* set_number(const std::string&, Atom*, double);
-		double get_number(const std::string&, Atom*);
+		Relation* set_number(const char*, Atom*, double);
+		double get_number(const char*, Atom*);
 
 		static Environment* top();
 	protected:
