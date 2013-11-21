@@ -242,7 +242,7 @@ static int wctomb_check(char *s, wchar_t wc)
 		wprintf(L"Fatal Error: wctomb_check failed: %d %S\n", nr, &wc);
 		exit(1);
 	}
-	/* XXX TODO I suspect that the below needs to be uncommented??? */
+	/* XXX TODO Perhaps the below needs to be uncommented?  .. tucker says no ... */
 	/* nr = nr / sizeof(wchar_t); */
 #else
 	mbstate_t mbss;
@@ -779,7 +779,8 @@ void * object_open(const char *filename,
 	 */
 	if ((filename[0] == '/')
 #if defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
-		|| ((filename[1] == ':') && (filename[2] == DIR_SEPARATOR))
+		|| ((filename[1] == ':')
+			 && ((filename[2] == '\\') || (filename[2] == '/')))
 #endif
 	)
 	{
