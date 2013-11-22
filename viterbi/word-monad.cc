@@ -13,7 +13,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
 
 #include "utilities.h" // From base link-grammar

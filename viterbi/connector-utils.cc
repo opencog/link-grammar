@@ -13,14 +13,11 @@
 
 #include <algorithm>
 #include <iostream>
-#include <string>
 
 #include "utilities.h"
 
 #include "compile.h"
 #include "connector-utils.h"
-
-using namespace std;
 
 namespace link_grammar {
 namespace viterbi {
@@ -34,7 +31,7 @@ namespace viterbi {
  * wild-cards on the right; thus, only need to compare against the
  * shorter of the * two strings.
  */
-bool conn_match(const string& ls, const string& rs)
+bool conn_match(const NameString& ls, const NameString& rs)
 {
 	char ldir = *ls.rbegin();
 	char rdir = *rs.rbegin();
@@ -46,11 +43,11 @@ bool conn_match(const string& ls, const string& rs)
 	if ('-' == ldir and '+' != rdir) return false;
 
 	// Captial letters must match. Wildcards match anything lower-case.
-	string::const_iterator lp = ls.begin();
-	string::const_iterator rp = rs.begin();
+	NameString::const_iterator lp = ls.begin();
+	NameString::const_iterator rp = rs.begin();
 	size_t lslen = ls.size();
 	size_t rslen = rs.size();
-	size_t minlen = min(lslen, rslen);
+	size_t minlen = std::min(lslen, rslen);
 	size_t len = minlen - 1;  // -1 for direction
 	while (0 < len)
 	{
@@ -78,12 +75,12 @@ bool conn_match(const string& ls, const string& rs)
  * done to detect if they don't. 
  * Example:   W*n+ merged with Wi*dy- gives Windy
  */
-string conn_merge(const string& ls, const string& rs)
+NameString conn_merge(const NameString& ls, const NameString& rs)
 {
-	string::const_iterator lp = ls.begin();
-	string::const_iterator rp = rs.begin();
-	size_t len = -1 + max(ls.size(), rs.size());
-	string merger;
+	NameString::const_iterator lp = ls.begin();
+	NameString::const_iterator rp = rs.begin();
+	size_t len = -1 + std::max(ls.size(), rs.size());
+	NameString merger;
 	merger.reserve(len);
 	while (0 < len)
 	{

@@ -34,7 +34,7 @@ class Connector : public Node
 	public:
 		// Last letter of the connector must be + or -
 		// indicating the direction of the connector.
-		Connector(const std::string& name, const TV& tv = TV())
+		Connector(const NameString& name, const TV& tv = TV())
 			: Node(CONNECTOR, name, tv)
 		{
 			if (name == OPTIONAL_CLAUSE)
@@ -58,7 +58,7 @@ class Connector : public Node
 class LingType : public Node
 {
 	public:
-		LingType(const std::string& name, const TV& tv = TV())
+		LingType(const NameString& name, const TV& tv = TV())
 			: Node(LING_TYPE, name, tv)
 		{}
 };
@@ -66,7 +66,7 @@ class LingType : public Node
 class Word : public Node
 {
 	public:
-		Word(const std::string& name, const TV& tv = TV())
+		Word(const NameString& name, const TV& tv = TV())
 			: Node(WORD, name, tv)
 		{}
 };
@@ -97,7 +97,7 @@ class Ling : public atombase::Link
 			assert(3 == ol.size(), "LG link wrong size");
 			assert(ol[0]->get_type() == LING_TYPE, "LG link has bad first node");
 		}
-		Ling(const std::string& str, Atom* a, Atom *b)
+		Ling(const NameString& str, Atom* a, Atom *b)
 			: Link(LING, new LingType(str), a, b) {}
 
 		Ling(LingType* t, Atom* a, Atom *b)

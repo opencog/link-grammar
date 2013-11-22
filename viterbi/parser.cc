@@ -73,7 +73,7 @@ Atom * Parser::lg_exp_to_atom(Exp* exp)
 		if (exp->multi) ss << "@";
 		ss << exp->u.string << exp->dir;
 
-		return new Connector(ss.str(), likli);
+		return new Connector(ss.str().c_str(), likli);
 	}
 
 	// Whenever a null appears in an OR-list, it means the

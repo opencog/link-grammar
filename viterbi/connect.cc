@@ -13,7 +13,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
 
 #include "utilities.h" // From base link-grammar
@@ -337,7 +336,7 @@ Ling* Connect::conn_connect_nn(Connector* lnode, Connector* rnode)
 		return NULL;
 
 // cout << "Yayyyyae connectors match!"<<endl;
-	string link_name = conn_merge(lnode->get_name(), rnode->get_name());
+	NameString link_name = conn_merge(lnode->get_name(), rnode->get_name());
 	Ling* ling = new Ling(link_name, lnode, rnode);
 
 	ling = reassemble(ling, _left_cset, _right_cset);
