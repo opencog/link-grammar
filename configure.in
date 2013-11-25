@@ -601,6 +601,7 @@ msvc6/link_grammar_dll/Makefile
 msvc6/link_grammar_exe/Makefile
 msvc6/link_grammar_java_dll/Makefile
 msvc9/Makefile
+msvc12/Makefile
 viterbi/Makefile
 ])
 AC_OUTPUT
