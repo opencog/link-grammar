@@ -403,24 +403,6 @@ link_public_api(void)
 link_public_api(int)
      lg_expand_disjunct_list(Sentence sent);
 
-/**********************************************************************
- *
- * Windows portability. Sigh.
- * Currently used in the perser client; should not be used elsewhere.
- *
- ***********************************************************************/
-
-#if defined(_MSC_VER) || defined(__MINGW32__)
-/* Users report that the default mbrtowc that comes with windows and/or
- * cygwin just doesn't work very well. So we use our own custom version,
- * instead.
- */
-link_public_api(size_t) lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
-#ifdef mbrtowc
-#undef mbrtowc
-#endif
-#define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
-#endif /* _MSC_VER || __MINGW32__ */
 
 /**********************************************************************
  *
