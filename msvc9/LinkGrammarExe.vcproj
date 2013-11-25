@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(GNUREGEX)\include;../."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_MSC_VER"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -121,7 +121,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="$(GNUREGEX)\include;../."
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_MSC_VER"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -197,15 +197,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\link-grammar\command-line.c"
+				>
+			</File>
+			<File
 				RelativePath="..\link-grammar\constituents.c"
 				>
 			</File>
 			<File
 				RelativePath="..\link-grammar\count.c"
-				>
-			</File>
-			<File
-				RelativePath="..\link-grammar\dictionary.c"
 				>
 			</File>
 			<File
@@ -234,6 +234,10 @@
 			</File>
 			<File
 				RelativePath="..\link-grammar\idiom.c"
+				>
+			</File>
+			<File
+				RelativePath="..\link-grammar\link-parser.c"
 				>
 			</File>
 			<File
@@ -318,18 +322,6 @@
 			</File>
 			<File
 				RelativePath="..\link-grammar\word-utils.c"
-				>
-			</File>
-			<File
-				RelativePath="..\link-parser\command-line.c"
-				>
-			</File>
-			<File
-				RelativePath="..\link-parser\lg_readline.c"
-				>
-			</File>
-			<File
-				RelativePath="..\link-parser\link-parser.c"
 				>
 			</File>
 		</Filter>

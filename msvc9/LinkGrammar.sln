@@ -1,52 +1,30 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammarJava", "LinkGrammarJava.vcxproj", "{D74DF531-C18E-4988-8A8C-4F23556DEC1B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0A6C539A-3140-48BD-865C-05F45637B93B} = {0A6C539A-3140-48BD-865C-05F45637B93B}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammarJava", "LinkGrammarJava.vcproj", "{D74DF531-C18E-4988-8A8C-4F23556DEC1B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammar", "LinkGrammar.vcxproj", "{0A6C539A-3140-48BD-865C-05F45637B93B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammar", "LinkGrammar.vcproj", "{0A6C539A-3140-48BD-865C-05F45637B93B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammarExe", "LinkGrammarExe.vcxproj", "{532EFF4D-758A-4705-91EE-9A4AC72C017B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0A6C539A-3140-48BD-865C-05F45637B93B} = {0A6C539A-3140-48BD-865C-05F45637B93B}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkGrammarExe", "LinkGrammarExe.vcproj", "{532EFF4D-758A-4705-91EE-9A4AC72C017B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
-		Debug|x64 = Debug|x64
 		Release|Win32 = Release|Win32
-		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|Win32.Build.0 = Debug|Win32
-		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|x64.ActiveCfg = Debug|x64
-		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Debug|x64.Build.0 = Debug|x64
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Release|Win32.ActiveCfg = Release|Win32
 		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Release|Win32.Build.0 = Release|Win32
-		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Release|x64.ActiveCfg = Release|x64
-		{D74DF531-C18E-4988-8A8C-4F23556DEC1B}.Release|x64.Build.0 = Release|x64
-		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|Win32.ActiveCfg = Debug|x64
-		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|Win32.Build.0 = Debug|x64
-		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|x64.ActiveCfg = Debug|x64
-		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|x64.Build.0 = Debug|x64
+		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A6C539A-3140-48BD-865C-05F45637B93B}.Debug|Win32.Build.0 = Debug|Win32
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Release|Win32.ActiveCfg = Release|Win32
 		{0A6C539A-3140-48BD-865C-05F45637B93B}.Release|Win32.Build.0 = Release|Win32
-		{0A6C539A-3140-48BD-865C-05F45637B93B}.Release|x64.ActiveCfg = Release|x64
-		{0A6C539A-3140-48BD-865C-05F45637B93B}.Release|x64.Build.0 = Release|x64
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|Win32.Build.0 = Debug|Win32
-		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|x64.ActiveCfg = Debug|x64
-		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Debug|x64.Build.0 = Debug|x64
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|Win32.ActiveCfg = Release|Win32
 		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|Win32.Build.0 = Release|Win32
-		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|x64.ActiveCfg = Release|x64
-		{532EFF4D-758A-4705-91EE-9A4AC72C017B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
