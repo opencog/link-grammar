@@ -178,6 +178,7 @@ EXTRA_DIST=                               \
 	autoit/README                          \
 	java/README                            \
 	java/org/linkgrammar/JSONReader.java   \
+	java/org/linkgrammar/JSONUtils.java    \
 	java/org/linkgrammar/LGConfig.java     \
 	java/org/linkgrammar/LGRemoteClient.java  \
 	java/org/linkgrammar/LGService.java    \

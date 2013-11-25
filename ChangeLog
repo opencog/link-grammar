@@ -1,3 +1,7 @@
+Version 4.8.2 (25 November 2014)
+ * More windows UTF-8/multi-byte fixes (for Russian)
+ * Add missing JSONUtils file.
+
 Version 4.8.1 (21 November 2013)
  * Ongoing work on viterbi.
  * Updated MSVC9 project files from Jand Hashemi (Lucky--)
