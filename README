@@ -1112,6 +1112,10 @@ TODO -- Working Notes:
       -- Split out parse-options, so that the command-line client
          options are not in the parse-options struct.
 
+   UTF-8 cleanup:
+      -- Replace the mbrtowc code with proper language support; it seems
+         that the correct solution is to use ICU http://site.icu-project.org/
+
   Version 5.0 TODO list:
     Version 5.0 will completely eliminate both fat links, and vestiges thereof.
     In particular, this will get rid of sublinkages, and all uses thereof.
