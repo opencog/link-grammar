@@ -1,0 +1,28 @@
+This directory contains project files for building Link Grammar with the
+Miscrosoft Visual C++ 2008 IDE. They were created and tested with the 
+Express Edition of that product. 
+
+
+- to compile LinkGrammar, open the solution file LinkGrammar.sln and build 
+the LinkGrammar project. You might get compile errors about a missing 
+link-features.h include file. If so, please go ahead and rename the file
+'link-grammar/link-features.h.in' to link-features.h. This is normally done
+by a Unix configure script, but needs to be manually done when compiling with
+Visual C++.
+- to compile the Java bindings, you need to add Java include directories to
+the LinkGrammarJava project first. This is in project properties->C/C++->General->
+Additional Include Directories. You need both JAVA_HOME/include and JAVA_HOME/include/win32
+where JAVA_HOME is your JDK's installation directory.
+- the projects are configured to create a debug version by default, it's probably
+a good idea to switch the a "Release" configuration. You can do this at
+Build Menu->Configuration Manager.
+
+NOTE: The created DLLs need the MSVC9 runtime environment to run. This is normally
+already installed in your machine with the installation of the IDE. But to be
+able to run Link Grammar on other computer you need to install the Visual C++ 2008 
+runtime redistributable from:
+
+http://www.microsoft.com/downloads/details.aspx?FamilyID=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=en
+
+this redistributable does not contain debug version of the MSVC runtime, so only
+"Release" Link Grammar will work with it.
