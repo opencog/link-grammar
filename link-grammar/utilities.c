@@ -235,7 +235,7 @@ size_t lg_mbrtowc(wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 static int wctomb_check(char *s, wchar_t wc)
 {
 	int nr;
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, NULL, 0, NULL, NULL);
 	nr = WideCharToMultiByte(CP_UTF8, 0, &wc, 1, s, nr, NULL, NULL);
 	if (nr < 0) {
