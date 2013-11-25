@@ -197,15 +197,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\link-grammar\command-line.c"
-				>
-			</File>
-			<File
 				RelativePath="..\link-grammar\constituents.c"
 				>
 			</File>
 			<File
 				RelativePath="..\link-grammar\count.c"
+				>
+			</File>
+			<File
+				RelativePath="..\link-grammar\dictionary.c"
 				>
 			</File>
 			<File
@@ -234,10 +234,6 @@
 			</File>
 			<File
 				RelativePath="..\link-grammar\idiom.c"
-				>
-			</File>
-			<File
-				RelativePath="..\link-grammar\link-parser.c"
 				>
 			</File>
 			<File
@@ -322,6 +318,18 @@
 			</File>
 			<File
 				RelativePath="..\link-grammar\word-utils.c"
+				>
+			</File>
+			<File
+				RelativePath="..\link-parser\command-line.c"
+				>
+			</File>
+			<File
+				RelativePath="..\link-parser\lg_readline.c"
+				>
+			</File>
+			<File
+				RelativePath="..\link-parser\link-parser.c"
 				>
 			</File>
 		</Filter>
