@@ -1112,6 +1112,9 @@ TODO -- Working Notes:
       -- Split out parse-options, so that the command-line client
          options are not in the parse-options struct.
 
+      -- Add capitalization cost to X_node, so that Bill gets lower
+         cost than bill.n when parsing "Bill went on a walk".
+
    UTF-8 cleanup:
       -- Replace the mbrtowc code with proper language support; it seems
          that the correct solution is to use ICU http://site.icu-project.org/

@@ -2349,7 +2349,7 @@ hadn't.v-d hadn’t.v-d:
     <to-verb> or
     (Pa+ & <verb-wall>))) or
   ({N+} & (AF- or Pv+ or I*v+)) or
-  (({N+} or {Pp+}) & Pg*b+);
+  (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v" constructions,
 % so that WV links to the "and.j-v" instead of "be".
