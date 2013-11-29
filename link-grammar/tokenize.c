@@ -664,14 +664,12 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		return;
 	}
 
-	/* Ugly hack: "let's" is in the english dict, but "Let's" is not. Thus,
-	 * sentences beginning with upper-case let's fail, while lower-case
-	 * pass! Again, need to fix this, since let's can also split into two ...
-	 * XXX should also check to see if its after a colon...
+	/* Ugly hack: "let's" is in the english dict, but "Let's" is not.
+	 * Thus, without this fix, sentences beginning with upper-case Let's
+	 * fail, while lower-case pass! So we work around this, since let's
+	 * can also split into two ...
 	 */
-	if (((dict->left_wall_defined && sent->length == 1) ||
-	    (!dict->left_wall_defined && sent->length == 0)) &&
-	    is_utf8_upper(word))
+	if (is_capitalizable(sent, sent->length) && is_utf8_upper(word))
 	{
 		char temp_word[MAX_WORD+1];
 		downcase_utf8_str(temp_word, word, MAX_WORD);
