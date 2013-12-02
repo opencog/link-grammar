@@ -223,6 +223,7 @@ class Link : public Atom
 		void add_to_incoming_set(AtomType);
 		void remove_from_incoming_set(AtomType);
 		Link* append(Atom*) const;
+		Link* replace(Atom*, Atom*) const;
 
 		virtual bool operator==(const Atom*) const;
 		virtual Link* clone() const { return new Link(*this); }

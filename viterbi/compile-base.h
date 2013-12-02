@@ -152,6 +152,9 @@ class Set : public Link
       virtual Set* clone() const { return new Set(*this); }
 
 		Set* append(Atom* a) const { return dynamic_cast<Set*>(Link::append(a)); }
+		Set* replace(Atom* novi, Atom* ctari) const {
+			return dynamic_cast<Set*>(Link::replace(novi, ctari));
+		}
 
 	protected:
 		OutList flatset() const;
