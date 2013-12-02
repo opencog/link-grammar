@@ -24,6 +24,7 @@ libvitacog_la_SOURCES = \
 	garbage.cc \
 	parser.cc \
 	rewrite.cc \
+	upcast.cc \
 	word-monad.cc \
 	atom.h \
 	atom-types.h \

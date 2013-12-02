@@ -47,6 +47,14 @@ Atom* Atom::upcaster()
 			if (dynamic_cast<Number*>(this)) return this;
 			return new Number(atof(n->get_name().c_str()), _tv);
 
+		case CONNECTOR:
+			if (dynamic_cast<Connector*>(this)) return this;
+			return new Connector(n->get_name(), _tv);
+
+		case WORD:
+			if (dynamic_cast<Word*>(this)) return this;
+			return new Word(n->get_name(), _tv);
+
 		default:
 			assert(0, "Atom::upcaster(): implement me!");
 	}
