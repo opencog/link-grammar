@@ -11,9 +11,11 @@
 
 #include <stdlib.h>
 
-#include <atombase/compile-base.h>
-#include <atombase/utilities.h>  // needed for assert
-#include <atoms/track.h>
+#include "compile.h"
+#include "compile-base.h"
+#include "utilities.h"  // needed for assert
+
+using namespace link_grammar::viterbi;
 
 namespace atombase {
 
