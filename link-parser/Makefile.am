@@ -10,7 +10,7 @@ if WITH_FAT_LINKS
 DEFS += -DUSE_FAT_LINKAGES
 endif
 
-INCLUDES = -I.. -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 # -----------------------------------------------------------
 # Directives to build the link-parser command-line application
