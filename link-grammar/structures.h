@@ -15,7 +15,7 @@
 #define _STRUCTURES_H_
 
 #include "api-types.h"
-#include "read-dict.h"  /* For Exp, Exp_list */
+#include "dict-structures.h"  /* For Exp, Exp_list */
 #include "utilities.h"  /* Needed for inline defn in Windows */
 
 /*

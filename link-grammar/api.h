@@ -34,6 +34,7 @@
 #include "structures.h"
 #include "link-includes.h"
 #include "api-structures.h"
+#include "dict-structures.h"
 #include "externs.h"
 
 #include "analyze-linkage.h"
@@ -53,7 +54,6 @@
 #include "preparation.h"
 #include "print.h"
 #include "prune.h"
-#include "read-dict.h"
 #include "string-set.h"
 #include "tokenize.h"
 #include "utilities.h"

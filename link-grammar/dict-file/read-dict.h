@@ -14,66 +14,9 @@
 #ifndef _LG_READ_DICT_H_
 #define  _LG_READ_DICT_H_
 
-#include <link-grammar/link-includes.h>
+#include <link-grammar/dict-structures.h>
 
 LINK_BEGIN_DECLS
-
-/* forward decls */
-typedef char Boolean;
-typedef struct Dict_node_struct Dict_node;
-typedef struct Exp_struct Exp;
-typedef struct E_list_struct E_list;
-typedef struct Word_file_struct Word_file;
-
-/** 
- * Types of Exp_struct structures
- */
-typedef enum
-{
-	OR_type = 1,
-	AND_type,
-	CONNECTOR_type
-} Exp_type;
-
-/** 
- * The E_list and Exp structures defined below comprise the expression
- * trees that are stored in the dictionary.  The expression has a type
- * (AND, OR or TERMINAL).  If it is not a terminal it has a list
- * (an E_list) of children.
- */
-struct Exp_struct
-{
-    Exp * next; /* Used only for mem management,for freeing */
-    Exp_type type;  /* One of three types, see above */
-    char dir;   /* '-' means to the left, '+' means to right (for connector) */
-    Boolean multi; /* TRUE if a multi-connector (for connector)  */
-    union {
-        E_list * l;           /* only needed for non-terminals */
-        const char * string;  /* only needed if it's a connector */
-    } u;
-    float cost;   /* The cost of using this expression.
-                     Only used for non-terminals */
-};
-
-struct E_list_struct
-{
-    E_list * next;
-    Exp * e;
-};
-
-
-/** 
- * The dictionary is stored as a binary tree comprised of the following
- * nodes.  A list of these (via right pointers) is used to return
- * the result of a dictionary lookup.
- */
-struct Dict_node_struct
-{
-    const char * string;  /* the word itself */
-    Word_file * file;    /* the file the word came from (NULL if dict file) */
-    Exp       * exp;
-    Dict_node *left, *right;
-};
 
 void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);

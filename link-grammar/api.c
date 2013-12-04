@@ -20,7 +20,6 @@
 #include "disjunct-utils.h"
 #include "error.h"
 #include "preparation.h"
-#include "read-regex.h"
 #include "regex-morph.h"
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"

@@ -30,6 +30,7 @@
 #define MAX_SENTENCE 250      /* maximum number of words in a sentence */
 #define MAX_LINKS (2*MAX_SENTENCE-3) /* maximum number of links allowed */
 
+typedef char Boolean;
 
 /* Widely used private typedefs */
 #ifdef USE_FAT_LINKAGES

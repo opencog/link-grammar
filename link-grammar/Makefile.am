@@ -134,6 +134,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-dict.h            \
 	dict-file/read-regex.h           \
 	dict-file/word-file.h            \
+	dict-structures.h                \
 	disjunct-utils.h                 \
 	disjuncts.h                      \
 	error.h                          \
