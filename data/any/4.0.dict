@@ -1,7 +1,7 @@
 
  %***************************************************************************%
  %                                                                           %
- %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %       Copyright (C) 2013 Linas Vepstas                                    %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
@@ -11,5 +11,5 @@
 <dictionary-version-number>: V4v0v0+;
 
 
-ANY-WORD: ({ANY-} & ANY+) or (ANY- & {ANY+});
+ANY-WORD: ({@ANY-} & @ANY+) or (@ANY- & {@ANY+});
 
