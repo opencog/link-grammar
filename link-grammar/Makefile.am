@@ -93,6 +93,9 @@ liblink_grammar_la_SOURCES =        \
 	build-disjuncts.c                \
 	constituents.c                   \
 	count.c                          \
+	dict-file/read-dict.c            \
+	dict-file/read-regex.c           \
+	dict-file/word-file.c            \
 	dictionary.c                     \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
@@ -112,8 +115,6 @@ liblink_grammar_la_SOURCES =        \
 	print.c                          \
 	print-util.c                     \
 	prune.c                          \
-	read-dict.c                      \
-	read-regex.c                     \
 	regex-morph.c                    \
 	resources.c                      \
 	spellcheck-aspell.c              \
@@ -121,7 +122,6 @@ liblink_grammar_la_SOURCES =        \
 	string-set.c                     \
 	tokenize.c                       \
 	utilities.c                      \
-	word-file.c                      \
 	word-utils.c                     \
 	api.h                            \
 	api-structures.h                 \
@@ -131,6 +131,9 @@ liblink_grammar_la_SOURCES =        \
 	build-disjuncts.h                \
 	constituents.h                   \
 	count.h                          \
+	dict-file/read-dict.h            \
+	dict-file/read-regex.h           \
+	dict-file/word-file.h            \
 	disjunct-utils.h                 \
 	disjuncts.h                      \
 	error.h                          \
@@ -149,7 +152,6 @@ liblink_grammar_la_SOURCES =        \
 	print.h                          \
 	print-util.h                     \
 	prune.h                          \
-	read-dict.h                      \
 	read-regex.h                     \
 	regex-morph.h                    \
 	resources.h                      \
@@ -158,7 +160,6 @@ liblink_grammar_la_SOURCES =        \
 	structures.h                     \
 	tokenize.h                       \
 	utilities.h                      \
-	word-file.h                      \
 	word-utils.h
 
 liblink_grammar_includedir = $(includedir)/link-grammar

@@ -1,0 +1,19 @@
+
+           Directories
+           -----------
+
+These directories contain bindings for different programming languages:
+
+autoit -- contains AutoIt bindings
+java   -- contains Java bindings
+lisp   -- contains Lisp bindings
+
+The minisat and sat-solver directories contain code for the Boolean-SAT
+parser.
+
+The corpus directory contains code to read word-sense disambiguation
+data from an SQL file.
+
+The dict-file directory contains code to read dictionaries from files.
+The dict-sql directory contains code to read dictionaries from an SQL DB.
+
