@@ -5,6 +5,6 @@
  %                                                                           %
  %***************************************************************************%
 
-% Reject any punctuation
-ANY-WORD:  /^[[:alnum:]]*[^[:punct:]]$/
+ANY-WORD:  /^[[:alnum:]]*$/
+ANY-PUNCT:  /^[[:punct:]]*$/
 
