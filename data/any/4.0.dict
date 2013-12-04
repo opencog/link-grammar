@@ -11,6 +11,7 @@
 <dictionary-version-number>: V4v0v0+;
 
 
-ANY-WORD: ({@ANY-} & @ANY+) or (@ANY- & {@ANY+});
+LEFT-WALL: ANY+;
+ANY-WORD: {@ANY-} & {@ANY+};
+ANY-PUNCT: {@ANY-} & {@ANY+};
 
-ANY-PUNCT: ({@ANY-} & @ANY+) or (@ANY- & {@ANY+});
