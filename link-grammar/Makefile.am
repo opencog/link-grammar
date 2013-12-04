@@ -96,6 +96,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-dict.c            \
 	dict-file/read-regex.c           \
 	dict-file/word-file.c            \
+	dict-sql/read-sql.c              \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
