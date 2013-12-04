@@ -15,8 +15,10 @@
 /* stuff for transforming a dictionary entry into a disjunct list */
 
 #include <math.h>
-#include "api.h"
+#include "build-disjuncts.h"
+#include "dict-api.h"
 #include "disjunct-utils.h"
+#include "word-utils.h"
 #include "utilities.h" /* For Win32 compatibility features */
 
 /* Temporary connectors used while converting expressions into disjunct lists */

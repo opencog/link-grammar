@@ -75,7 +75,6 @@ struct Dict_node_struct
     Dict_node *left, *right;
 };
 
-
 LINK_END_DECLS
 
 #endif /* _LG_DICT_STRUCTURES_H_ */
