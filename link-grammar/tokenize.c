@@ -18,9 +18,9 @@
 #include <limits.h>
 
 #include "build-disjuncts.h"
+#include "dict-api.h"
 #include "error.h"
 #include "externs.h"
-#include "read-dict.h"
 #include "regex-morph.h"
 #include "spellcheck.h"
 #include "string-set.h"

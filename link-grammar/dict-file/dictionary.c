@@ -13,6 +13,7 @@
 /*************************************************************************/
 
 #include "api-structures.h"
+#include "dict-api.h"
 #include "externs.h"
 #include "read-dict.h"
 #include "read-regex.h"

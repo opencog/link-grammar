@@ -1,6 +1,5 @@
 # 
-# Automake file for building both liblink-grammar.so and 
-# the command line application link-parser.
+# Automake file for building both liblink-grammar.so
 #
 
 if WITH_SAT_SOLVER
@@ -93,10 +92,10 @@ liblink_grammar_la_SOURCES =        \
 	build-disjuncts.c                \
 	constituents.c                   \
 	count.c                          \
+	dict-file/dictionary.c           \
 	dict-file/read-dict.c            \
 	dict-file/read-regex.c           \
 	dict-file/word-file.c            \
-	dictionary.c                     \
 	disjunct-utils.c                 \
 	disjuncts.c                      \
 	error.c                          \
@@ -168,7 +167,7 @@ liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
-	read-dict.h
+	dict-file/read-dict.h
 
 liblink_grammar_java_la_SOURCES =   \
 	jni-client.h                     \

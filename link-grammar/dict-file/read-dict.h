@@ -14,7 +14,7 @@
 #ifndef _LG_READ_DICT_H_
 #define  _LG_READ_DICT_H_
 
-#include <link-grammar/dict-structures.h>
+#include <link-grammar/dict-api.h>
 
 LINK_BEGIN_DECLS
 
@@ -22,20 +22,14 @@ void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);
 void print_expression(Exp *);
 
-Boolean boolean_dictionary_lookup(Dictionary dict, const char *);
 Boolean find_word_in_dict(Dictionary dict, const char *);
 
 int  delete_dictionary_words(Dictionary dict, const char *);
-
-Dict_node * abridged_lookup_list(Dictionary dict, const char *);
-
-Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
 Dictionary dictionary_create_from_utf8(const char * input);
 
 /* Below are not really for public consumption.
  * These need to be moved to a private header file. TODO XXX */
-Exp *       Exp_create(Dictionary dict);
 void        free_dictionary(Dictionary dict);
 Boolean read_dictionary(Dictionary dict);
 

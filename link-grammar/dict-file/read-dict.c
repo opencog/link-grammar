@@ -14,10 +14,14 @@
 
 #include <limits.h>
 #include <string.h>
-#include "api.h"
+#include "build-disjuncts.h"
 #include "disjunct-utils.h"
 #include "error.h"
+#include "idiom.h"
+#include "read-dict.h"
 #include "regex-morph.h"
+#include "string-set.h"
+#include "tokenize.h"
 #include "word-file.h"
 
 const char * linkgrammar_get_version(void)

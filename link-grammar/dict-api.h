@@ -21,12 +21,21 @@
 LINK_BEGIN_DECLS
 
 
+Boolean boolean_dictionary_lookup(Dictionary dict, const char *);
+
+Dict_node * abridged_lookup_list(Dictionary dict, const char *);
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
+
+Boolean find_word_in_dict(Dictionary dict, const char *);
+
 void free_lookup_list(Dict_node *);
+
+Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
 
 /* Below are not really for public consumption.
  * These need to be moved to a private header file. TODO XXX */
+Exp *       Exp_create(Dictionary dict);
 void add_empty_word(Dictionary dict, Dict_node *);
 
 LINK_END_DECLS

@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "link-includes.h"
-#include "read-dict.h"  /* For Boolean */
 #include "spellcheck.h"
 #include "utilities.h"  /* For Win32 compatibility */
 

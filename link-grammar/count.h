@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <link-grammar/api-structures.h>
+
 s64  table_lookup(Sentence, int, int, Connector *, Connector *, unsigned int);
 int  do_match(Sentence, Connector *a, Connector *b, int wa, int wb);
 s64  do_parse(Sentence sent, int mincost, Parse_Options opts);

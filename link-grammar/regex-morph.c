@@ -15,8 +15,8 @@
 #include <stddef.h>
 #include <regex.h>
 #include "api-structures.h"
+#include "dict-api.h"
 #include "link-includes.h"
-#include "read-dict.h"
 #include "regex-morph.h"
 #include "structures.h"
 
