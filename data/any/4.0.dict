@@ -7,8 +7,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.0.0 (formatted as V4v0v0+)
-<dictionary-version-number>: V4v0v0+;
+% Dictionary version number is 4.8.0 (formatted as V4v8v0+)
+<dictionary-version-number>: V4v8v0+;
 
 
 LEFT-WALL: ANY+;
