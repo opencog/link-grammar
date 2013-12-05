@@ -596,6 +596,7 @@ data/ru/Makefile
 data/ru/words/Makefile
 man/Makefile
 autopackage/default.apspec
+link-grammar.xcode/Makefile
 msvc6/Makefile
 msvc6/link_grammar_dll/Makefile
 msvc6/link_grammar_exe/Makefile
