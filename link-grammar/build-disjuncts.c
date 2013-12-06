@@ -15,6 +15,7 @@
 /* stuff for transforming a dictionary entry into a disjunct list */
 
 #include <math.h>
+#include "api-structures.h"
 #include "build-disjuncts.h"
 #include "dict-api.h"
 #include "disjunct-utils.h"

@@ -11,10 +11,14 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "api-structures.h"
+#include "api-types.h"
 #include "dict-api.h"
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
+#include "structures.h"
+#include "utilities.h"
 
 /** 
  * Returns TRUE if the string contains an underbar character.

@@ -10,6 +10,9 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+
+#include "api-types.h"
+
 String_set * string_set_create(void);
 const char * string_set_add(const char * source_string, String_set * ss);
 const char * string_set_lookup(const char * source_string, String_set * ss);

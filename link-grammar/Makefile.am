@@ -168,7 +168,8 @@ liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
-	dict-file/read-dict.h
+	dict-api.h                       \
+	dict-structures.h
 
 liblink_grammar_java_la_SOURCES =   \
 	jni-client.h                     \

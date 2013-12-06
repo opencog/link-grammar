@@ -15,6 +15,7 @@
 #include <limits.h>
 #include <string.h>
 #include "build-disjuncts.h"
+#include "dict-api.h"
 #include "disjunct-utils.h"
 #include "error.h"
 #include "idiom.h"

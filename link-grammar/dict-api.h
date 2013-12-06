@@ -14,12 +14,12 @@
 #ifndef _LG_DICT_API_H_
 #define  _LG_DICT_API_H_
 
-#include <link-grammar/api-structures.h>
 #include <link-grammar/dict-structures.h>
-#include <link-grammar/link-features.h>
+#include <link-grammar/link-includes.h>
 
 LINK_BEGIN_DECLS
 
+Dictionary dictionary_create_from_utf8(const char * input);
 
 Boolean boolean_dictionary_lookup(Dictionary dict, const char *);
 
@@ -32,6 +32,7 @@ void free_lookup_list(Dict_node *);
 
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
+void print_expression(Exp *);
 
 /* Below are not really for public consumption.
  * These need to be moved to a private header file. TODO XXX */

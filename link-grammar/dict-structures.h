@@ -14,12 +14,12 @@
 #ifndef _LG_DICT_STRUCTURES_H_
 #define  _LG_DICT_STRUCTURES_H_
 
-#include <link-grammar/api-types.h>
 #include <link-grammar/link-features.h>
 
 LINK_BEGIN_DECLS
 
 /* forward decls */
+typedef char Boolean;
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
 typedef struct E_list_struct E_list;
