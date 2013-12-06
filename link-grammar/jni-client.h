@@ -49,6 +49,9 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setLanguage
 JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setMaxLinkages
 	(JNIEnv *, jclass, jint);
 
+JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getMaxLinkages
+	(JNIEnv *, jclass);
+
 /*
  * Class:     LinkGrammar
  * Method:    init

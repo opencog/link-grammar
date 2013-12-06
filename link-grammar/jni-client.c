@@ -404,6 +404,13 @@ Java_org_linkgrammar_LinkGrammar_setMaxLinkages(JNIEnv *env, jclass cls, jint ma
 	parse_options_set_linkage_limit(ptd->opts, maxLinkages);
 }
 
+JNIEXPORT jint JNICALL
+Java_org_linkgrammar_LinkGrammar_getMaxLinkages(JNIEnv *env, jclass cls)
+{
+	per_thread_data *ptd = get_ptd(env, cls);
+	return parse_options_get_linkage_limit(ptd->opts);
+}
+
 /*
  * Class:      LinkGrammar
  * Method:     init
@@ -435,7 +442,7 @@ Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 {
 	const char *cStr;
 	char * tmp;
-	per_thread_data *ptd = get_ptd(env, cls);;
+	per_thread_data *ptd = get_ptd(env, cls);
 	cStr = (*env)->GetStringUTFChars(env,str,0);
 	tmp = strdup(cStr);
 	jParse(env, ptd, tmp);
@@ -451,7 +458,7 @@ Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = get_ptd(env, cls);;
+	per_thread_data *ptd = get_ptd(env, cls);
 	finish(ptd);
 }
 
@@ -463,7 +470,7 @@ Java_org_linkgrammar_LinkGrammar_close(JNIEnv *env, jclass cls)
 JNIEXPORT jint JNICALL
 Java_org_linkgrammar_LinkGrammar_getNumWords(JNIEnv *env, jclass cls)
 {
-	per_thread_data *ptd = get_ptd(env, cls);;
+	per_thread_data *ptd = get_ptd(env, cls);
 	return linkage_get_num_words(ptd->linkage);
 }
 

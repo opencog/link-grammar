@@ -64,6 +64,7 @@ public class LinkGrammar
     public static native void setMaxCost(int maxCost);
 
     public static native void setMaxLinkages(int maxLinkages);
+    public static native int getMaxLinkages();
 
     // Defaults to /usr/local/share/link-grammar/
     public static native void setDictionariesPath(String path);
