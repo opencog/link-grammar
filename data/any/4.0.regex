@@ -5,6 +5,9 @@
  %                                                                           %
  %***************************************************************************%
 
-ANY-WORD:  /^[[:alnum:]]*$/
-ANY-PUNCT:  /^[[:punct:]]*$/
+% Want to match apostrophes, for abreviations (I'm I've, etc.) since these
+% cannot be auto-split with the current splitter.  Also want to accept
+% hyphenated words.
+ANY-WORD:  /^[[:alnum:]'-]+$/
+ANY-PUNCT:  /^[[:punct:]]+$/
 
