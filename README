@@ -1118,6 +1118,8 @@ TODO -- Working Notes:
    UTF-8 cleanup:
       -- Replace the mbrtowc code with proper language support; it seems
          that the correct solution is to use ICU http://site.icu-project.org/
+      -- Another alternative is libunistring (which seems to be LGPL!?)
+         http://www.gnu.org/software/libunistring/
 
   Version 5.0 TODO list:
     Version 5.0 will completely eliminate both fat links, and vestiges thereof.
