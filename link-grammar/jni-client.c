@@ -140,7 +140,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	/* Disable repeatable_rand. We'll be using Java primarily to
 	 * parse large texts, and we want a good distribution when
 	 * linkages overflow (very rare for mature grammars, but crucial
-	 * for grammar learning. 
+	 * for grammar learning. That is, for the 'any' language.
 	 */
 	parse_options_set_repeatable_rand(ptd->opts, FALSE);
 	parse_options_set_disjunct_costf(ptd->opts, 2.0f);
