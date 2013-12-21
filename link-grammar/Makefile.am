@@ -154,7 +154,6 @@ liblink_grammar_la_SOURCES =        \
 	print.h                          \
 	print-util.h                     \
 	prune.h                          \
-	read-regex.h                     \
 	regex-morph.h                    \
 	resources.h                      \
 	spellcheck.h                     \
