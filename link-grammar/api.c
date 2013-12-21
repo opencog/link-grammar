@@ -761,6 +761,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 *
 ****************************************************************/
 
+/* Its OK if this is racey across threads.  Any mild shuffling is enough. */
+static unsigned int global_rand_state;
+
 Sentence sentence_create(const char *input_string, Dictionary dict)
 {
 	Sentence sent;
@@ -780,6 +783,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->null_count = 0;
 	sent->parse_info = NULL;
 	sent->string_set = string_set_create();
+	sent->rand_state = global_rand_state;
 
 	sent->q_pruned_rules = FALSE;
 #ifdef USE_FAT_LINKAGES
@@ -906,6 +910,7 @@ void sentence_delete(Sentence sent)
 #ifdef USE_FAT_LINKAGES
 	if (sent->is_conjunction) xfree(sent->is_conjunction, sizeof(char)*sent->length);
 #endif /* USE_FAT_LINKAGES */
+	global_rand_state = sent->rand_state;
 	xfree((char *) sent, sizeof(struct Sentence_s));
 }
 
