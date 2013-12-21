@@ -72,6 +72,7 @@ static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
+	parse_options_set_repeatable_rand(opts, FALSE);
 	parse_options_set_disjunct_costf(opts, 3.0f);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
@@ -135,6 +136,13 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	memset(ptd, 0, sizeof(per_thread_data));
 
 	ptd->opts = parse_options_create();
+
+	/* Disable repeatable_rand. We'll be using Java primarily to
+	 * parse large texts, and we want a good distribution when
+	 * linkages overflow (very rare for mature grammars, but crucial
+	 * for grammar learning. 
+	 */
+	parse_options_set_repeatable_rand(ptd->opts, FALSE);
 	parse_options_set_disjunct_costf(ptd->opts, 2.0f);
 	parse_options_set_max_sentence_length(ptd->opts, MAX_SENTENCE-3);
 	parse_options_set_max_parse_time(ptd->opts, 30);

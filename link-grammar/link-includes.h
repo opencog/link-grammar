@@ -163,6 +163,10 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_all_short_connectors(Parse_Options opts);
 link_public_api(void)
+     parse_options_set_repeatable_rand(Parse_Options opts, int val);
+link_public_api(int)
+     parse_options_get_repeatable_rand(Parse_Options opts);
+link_public_api(void)
      parse_options_reset_resources(Parse_Options opts);
 
 

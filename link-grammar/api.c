@@ -282,6 +282,14 @@ int parse_options_get_all_short_connectors(Parse_Options opts) {
 	return opts->all_short;
 }
 
+void parse_options_set_repeatable_rand(Parse_Options opts, int val) {
+	opts->repeatable_rand = val;
+}
+
+int parse_options_get_repeatable_rand(Parse_Options opts) {
+	return opts->repeatable_rand;
+}
+
 void parse_options_set_max_parse_time(Parse_Options opts, int dummy) {
 	opts->resources->max_parse_time = dummy;
 }
