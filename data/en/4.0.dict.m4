@@ -443,25 +443,36 @@ dateID50 dateID51 dateID52 dateID53 dateID54 dateID55 dateID56 dateID57 dateID58
 dateID60: <date-id>;
 
 % Number abbreviations: no.x No.x
-No.x No..x no.x no..x Num.x Num..x num.x num..x:
+% pp. paragraph, page   art article
+% RR roural route
+No.x No..x no.x no..x Nos.x Nos..x nos.x nos..x
+Nr.x Nr..x Nrs.x Nrs..x nr.x nr..x nrs.x nrs..x
+Num.x Num..x num.x num..x pp.x pp..x
+Art..x art..x RR..x RR.x rr..x :
   (Xi+ or [[()]]) & AN+;
 
 % Explicitly include the period at the end of the abbreviation.
-Ms..x Mrs..x Mr..x Messrs..x Rev..x Dr..x Prof..x Atty..x
-Gov..x Sen..x Rep..x
-Gen..x Brig..x Col..x Capt..x Lieut..x Lt..x Maj..x Sgt..x Pvt..x Cmdr..x
-Adm..x Corp..x St..x Mt..x Ft..x Cie..x HMS..x:
+Adj..x Adm..x Adv..x Asst..x Atty..x Bart..x Bldg..x Brig..x Bros..x Capt..x Cie..x
+Cmdr..x Col..x Comdr..x Con..x Corp..x Cpl..x DR..x Dr..x Drs..x Ens..x Ft..x
+Gen..x Gov..x Hon..x Hr..x Hosp..x HMS..x Insp..x Lieut..x Lt..x MM..x MR..x MRS..x 
+MS..x Maj..x Messrs..x Mlle..x Mme..x Mr..x Mrs..x Ms..x Msgr..x Mt..x Op..x
+Ord..x Pfc..x Ph..x Prof..x Pvt..x Rep..x Reps..x Res..x Rev..x Rt..x
+Sen..x Sens..x Sfc..x Sgt..x Sr..x St..x Supt..x Surg..x:
   G+;
 
 % Period is missing in the abbreviation! Accept, but with a cost.
-Ms.x Mrs.x Mr.x Messrs.x Rev.x Sir.x Dr.x Prof.x Atty.x
-Gov.x Sen.x Rep.x
-Gen.x Brig.x Col.x Capt.x Lieut.x Lt.x Maj.x Sgt.x Pvt.x Cmdr.x
-Adm.x Corp.x St.x Mt.x Ft.x Cie.x HMS.x:
+Adj.x Adm.x Adv.x Asst.x Atty.x Bart.x Bldg.x Brig.x Bros.x Capt.x Cie.x
+Cmdr.x Col.x Comdr.x Con.x Corp.x Cpl.x DR.x Dr.x Drs.x Ens.x Ft.x
+Gen.x Gov.x Hon.x Hr.x Hosp.x HMS.x Insp.x Lieut.x Lt.x MM.x MR.x MRS.x 
+MS.x Maj.x Messrs.x Mlle.x Mme.x Mr.x Mrs.x Ms.x Msgr.x Mt.x Op.x
+Ord.x Pfc.x Ph.x Prof.x Pvt.x Rep.x Reps.x Res.x Rev.x Rt.x
+Sen.x Sens.x Sfc.x Sgt.x Sr.x St.x Supt.x Surg.x:
   [[G+]];
 
+% Street addresses, company abbreviations
 St.y St..y Ave.y Ave..y Av.y Av..y Pl.y Pl..y Ct.y Ct..y Dr.y Dr..y
-Gr.y Gr..y Rd.y Rd..y Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
+Gr.y Gr..y Ln.y Ln..y Rd.y Rd..y Rt.y Rt..y 
+Blvd.y Blvd..y Pkwy.y Pkwy..y Hwy.y Hwy..y
 AG.y Assn.y Assn..y
 Corp.y Corp..y Co.y Co..y Inc.y Inc..y PLC.y
 Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
@@ -475,7 +486,7 @@ Pty.y Pty..y Ltd.y Ltd..y LTD.y Bldg.y Bldg..y and_Co GmBH.y:
     G+);
 
 
-% e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D.
+% Titles, e.g. Joe Blow, Esq. or Dr. Smarty Pants, Ph.D.
 % Gack. See absurdely large collection at:
 % http://en.wikipedia.org/wiki/List_of_post-nominal_letters
 Jr.y Jr..y Sr.y Sr..y Esq.y Esq..y
