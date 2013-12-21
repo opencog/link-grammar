@@ -53,9 +53,10 @@ static void free_set(Parse_set *s)
 	xfree((void *)s, sizeof(*s));
 }
 
-static Parse_choice * make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
-						   Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
-						   Disjunct *ld, Disjunct *md, Disjunct *rd)
+static Parse_choice * 
+make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
+            Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
+            Disjunct *ld, Disjunct *md, Disjunct *rd)
 {
 	Parse_choice *pc;
 	pc = (Parse_choice *) xalloc(sizeof(*pc));
@@ -193,7 +194,8 @@ static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connec
 
 #if DEAD_CODE
 Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
-						   unsigned int cost, Parse_info pi) {
+                           unsigned int cost, Parse_info pi)
+{
 	/* returns the count for this quintuple if there, -1 otherwise */
 	X_table_connector *t = x_table_pointer(lw, rw, le, re, cost, pi);
 
@@ -205,7 +207,7 @@ Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
  * Stores the value in the x_table.  Assumes it's not already there.
  */
 static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re,
-								  unsigned int cost, Parse_info pi)
+                                  unsigned int cost, Parse_info pi)
 {
 	X_table_connector *t, *n;
 	unsigned int h;
@@ -241,7 +243,7 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  */
 static Parse_set * parse_set(Sentence sent,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
-					  Connector *le, Connector *re, unsigned int cost,
+                 Connector *le, Connector *re, unsigned int cost,
                  Boolean islands_ok, Parse_info pi)
 {
 	Disjunct * d, * dis;
@@ -590,27 +592,27 @@ static void list_links(Parse_info pi, Parse_set * set, int index)
 
 static void list_random_links(Parse_info pi, Parse_set * set)
 {
-	 Parse_choice *pc;
-	 int num_pc, new_index;
+	Parse_choice *pc;
+	int num_pc, new_index;
 
-	 if (set == NULL || set->first == NULL) return;
-	 num_pc = 0;
-	 for (pc = set->first; pc != NULL; pc = pc->next) {
-		  num_pc++;
-	 }
+	if (set == NULL || set->first == NULL) return;
+	num_pc = 0;
+	for (pc = set->first; pc != NULL; pc = pc->next) {
+		num_pc++;
+	}
 
-	 new_index = rand_r(&pi->rand_state) % num_pc;
+	new_index = rand_r(&pi->rand_state) % num_pc;
 
-	 num_pc = 0;
-	 for (pc = set->first; pc != NULL; pc = pc->next) {
-		  if (new_index == num_pc) break;
-		  num_pc++;
-	 }
+	num_pc = 0;
+	for (pc = set->first; pc != NULL; pc = pc->next) {
+		if (new_index == num_pc) break;
+		num_pc++;
+	}
 
-	 assert(pc != NULL, "Couldn't get a random parse choice");
-	 issue_links_for_choice(pi, pc);
-	 list_random_links(pi, pc->set[0]);
-	 list_random_links(pi, pc->set[1]);
+	assert(pc != NULL, "Couldn't get a random parse choice");
+	issue_links_for_choice(pi, pc);
+	list_random_links(pi, pc->set[0]);
+	list_random_links(pi, pc->set[1]);
 }
 
 /**
@@ -621,8 +623,8 @@ static void list_random_links(Parse_info pi, Parse_set * set)
 void extract_links(int index, Parse_info pi)
 {
 	initialize_links(pi);
-	pi->rand_state = index;
 	if (index < 0) {
+		pi->rand_state = index;
 		list_random_links(pi, pi->parse_set);
 	}
 	else {

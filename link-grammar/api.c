@@ -107,6 +107,7 @@ Parse_Options parse_options_create(void)
 	po->all_short = FALSE;
 	po->twopass_length = 30;
 	po->max_sentence_length = MAX_SENTENCE-3;
+	po->repeatable_rand = TRUE;
 	po->resources = resources_create();
 	po->display_short = TRUE;
 	po->display_word_subscripts = TRUE;
@@ -606,7 +607,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	}
 	else
 	{
-		sent->rand_state = N_linkages_found + sent->length;
+		if (opts->repeatable_rand)
+			sent->rand_state = N_linkages_found + sent->length;
+
 		for (in=0; in<N_linkages_alloced; in++)
 		{
 			double frac = (double) N_linkages_found;

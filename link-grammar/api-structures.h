@@ -77,6 +77,7 @@ struct Parse_Options_s
 	                        * no longer than this.  Default = 6 */
 	Boolean all_short;     /* If true, there can be no connectors that are exempt */
 	Boolean use_spell_guess; /* Perform spell-guessing of unknown words. */ 
+	Boolean repeatable_rand; /* Reset rand number gen after every parse. */
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
 	Resources resources;   /* For deciding when to abort the parsing */
 
