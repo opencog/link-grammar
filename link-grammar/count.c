@@ -11,9 +11,16 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api.h"
+#include <limits.h>
+#include "link-includes.h"
+#include "api-structures.h"
+#include "count.h"
 #include "disjunct-utils.h"
+#include "fast-match.h"
+#include "prune.h"
 #include "resources.h"
+#include "structures.h"
+#include "word-utils.h"
 
 /* This file contains the exhaustive search algorithm. */
 
@@ -503,6 +510,15 @@ static s64 do_count(Sentence sent, int lw, int rw,
 					if ((le == NULL) && (rightcount > 0)) {
 						/* evaluate using the right match, but not the left */
 						total += rightcount * do_count(sent, lw, w, le, d->left, lcost);
+					}
+
+					/* Sigh. Overflows can and do occur, esp for the ANY language. */
+					if (INT_MAX < total)
+					{
+						total = INT_MAX;
+						t->count = total;
+						put_match_list(sent, m1);
+						return total;
 					}
 				}
 			}
