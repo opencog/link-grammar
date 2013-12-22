@@ -7,7 +7,10 @@
 
 % Want to match apostrophes, for abreviations (I'm I've, etc.) since these
 % cannot be auto-split with the current splitter.  Also want to accept
-% hyphenated words.
-ANY-WORD:  /^[[:alnum:]'-]+$/
+% hyphenated words, and word with underbars in them.
+ANY-WORD:  /^[[:alnum:]_'-]+$/
 ANY-PUNCT:  /^[[:punct:]]+$/
 
+% Match anything that doesn't mathc the above.
+% Match anything that isn't white-space.
+JUNK: /^[^[:space:]]+$/
