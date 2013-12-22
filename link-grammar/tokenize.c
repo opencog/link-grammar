@@ -123,6 +123,19 @@ static Boolean is_quote(wchar_t wc)
 }
 
 /**
+ * Return TRUE if the character is white-space
+ */
+static Boolean is_space(wchar_t wc)
+{
+	if (iswspace(wc)) return TRUE;
+
+	/* 0xc2 0xa0 is U+00A0, c2 a0, NO-BREAK SPACE */
+	/* For some reason, iswspace doesn't get this */
+	if (0xa0 == wc) return TRUE;
+	return FALSE;
+}
+
+/**
  * Returns true if the word can be interpreted as a number.
  * The ":" is included here so we allow "10:30" to be a number.
  * The "." and "," allow numbers in both US and European notation:
@@ -960,7 +973,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 		 */
 		isq = is_quote (c);
 		if (isq) quote_found = TRUE;
-		while (iswspace(c) || isq)
+		while (is_space(c) || isq)
 		{
 			word_start += nb;
 			nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
@@ -976,7 +989,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
-		while (!iswspace(c) && !is_quote(c) && (c != 0) && (0 < nb))
+		while (!is_space(c) && !is_quote(c) && (c != 0) && (0 < nb))
 		{
 			word_end += nb;
 			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);

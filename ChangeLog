@@ -4,6 +4,7 @@ Version 4.8.3 (xxx 2014)
  * Add verb-wall connector for present participles.
  * Fix build-time include file directory paths.
  * Provide the 'any' language to enumerate all possible linkages.
+ * Fix recoginition of U+00A0, c2 a0, NO-BREAK SPACE as whitespace.
 
 Version 4.8.2 (25 November 2013)
  * More windows UTF-8/multi-byte fixes (for Russian).

@@ -247,6 +247,11 @@ static inline int is_utf8_space(const char *s)
 	nbytes = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
 	if (nbytes < 0) return 0;  /* invalid mb sequence */
 	if (iswspace(c)) return nbytes;
+
+	/* 0xc2 0xa0 is U+00A0, c2 a0, NO-BREAK SPACE */
+	/* For some reason, iswspace doesn't get this */
+	if ((2==nbytes) && ((0xff & s[0]) == 0xc2) && ((0xff & s[1]) == 0xa0)) return 2;
+	if ((2==nbytes) && (c == 0xa0)) return 2;
 	return 0;
 }
 
