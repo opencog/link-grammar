@@ -462,7 +462,7 @@ void * xalloc(size_t size)
 #endif /* TRACK_SPACE_USAGE */
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space.");
+		prt_error("Fatal Error: Ran out of space. (int)");
 		abort();
 		exit(1);
 	}
@@ -509,7 +509,7 @@ void * exalloc(size_t size)
 
 	if ((p == NULL) && (size != 0))
 	{
-		prt_error("Fatal Error: Ran out of space.");
+		prt_error("Fatal Error: Ran out of space. (ext)");
 		abort();
 		exit(1);
 	}

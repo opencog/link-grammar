@@ -1149,7 +1149,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		}
 
 		/* Give up if the parse count is overflowing */
-		if (PARSE_NUM_OVERFLOW < total)
+		if ((PARSE_NUM_OVERFLOW < total) || (total < 0))
 		{
 			if (verbosity > 0)
 			{
@@ -1158,6 +1158,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 					sent->null_count, total);
 			}
 			total = (total>INT_MAX) ? INT_MAX : total;
+			total = (total<0) ? INT_MAX : total;
 		}
 
 		sent->num_linkages_found = (int) total;
