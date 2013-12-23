@@ -11,6 +11,9 @@
 ANY-WORD:  /^[[:alnum:]_'-]+$/
 ANY-PUNCT:  /^[[:punct:]]+$/
 
-% Match anything that doesn't mathc the above.
+% Match anything that doesn't match the above.
 % Match anything that isn't white-space.
-JUNK: /^[^[:space:]]+$/
+% Well ... actually, reject anything that begins or ends with
+% punctuation. We do this, so that tokenize can split off the
+% the affixes (trailing commas, etc) correctly.
+JUNK: /^[^[:punct:]][^[:space:]]+[^[:punct:]]$/
