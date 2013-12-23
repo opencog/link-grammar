@@ -309,7 +309,8 @@ void * xalloc(size_t) GNUC_MALLOC;
 void * xrealloc(void *, size_t oldsize, size_t newsize) GNUC_MALLOC;
 void * exalloc(size_t) GNUC_MALLOC;
 
-#define TRACK_SPACE_USAGE
+/* Tracking the space usage can help with debugging */
+/* #define TRACK_SPACE_USAGE 1 */
 #ifdef TRACK_SPACE_USAGE
 void xfree(void *, size_t);
 void exfree(void *, size_t);
