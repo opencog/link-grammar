@@ -36,6 +36,14 @@
 
 #define HIDE_SUFFIX   (!display_suffixes)
 
+/* XXX FIXME
+ * There are several problems with the handling of suffixes here.
+ * 1) Valid English constructions like "I think that 2 + 2 = 4" display
+ *    bizarrely.  This needs fixing.
+ * 2) Engish sentences like "this is a hey= =.zzz test" display
+ *    unexpectely. (because the suffixes were contracted.
+ * In breif, the mechanism should be disabled for English.
+ */
 
 static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
 {
@@ -427,10 +435,16 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 					char * join = (char *)malloc(len+1);
 					strcpy(join, stem);
 					u = strrchr(join, '.');
-					*u = '\0';
-					strcat(join, t + SUFFIX_WORD_L);
-					t = string_set_add(join, sent->string_set);
-					free(join);
+
+					/* u can be null, if the the sentence happens to have
+					 * an equals sign in it, for other reasons. */
+					if (u)
+					{
+						*u = '\0';
+						strcat(join, t + SUFFIX_WORD_L);
+						t = string_set_add(join, sent->string_set);
+						free(join);
+					}
 				}
 
 				/* Suppress printing of the stem, if the next word is the suffix */
