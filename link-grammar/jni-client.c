@@ -30,9 +30,6 @@ typedef struct
 	Sentence      sent;
 	Linkage       linkage;
 	int           num_linkages, cur_linkage;
-#if DO_PHRASE_TREE
-	CNode*        tree;
-#endif
 } per_thread_data;
 
 /* XXX FIXME
@@ -171,12 +168,6 @@ static void finish(per_thread_data *ptd)
 	if (ptd->sent)
 		sentence_delete(ptd->sent);
 	ptd->sent = NULL;
-
-#if DO_PHRASE_TREE
-	if (tree)
-		linkage_free_constituent_tree(tree);
-	tree = NULL;
-#endif
 
 	if (ptd->linkage)
 		linkage_delete(ptd->linkage);
@@ -326,13 +317,6 @@ static void makeLinkage(per_thread_data *ptd)
 		linkage_set_current_sublinkage(ptd->linkage,
 		                        linkage_get_num_sublinkages(ptd->linkage)-1);
 #endif /* USE_FAT_LINKAGES */
-
-#if DO_PHRASE_TREE
-		if (tree)
-			linkage_free_constituent_tree(tree);
-		tree = linkage_constituent_tree(linkage);
-		printTree(tree);
-#endif
 	}
 }
 
