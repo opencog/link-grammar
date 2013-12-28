@@ -86,10 +86,10 @@ static void setup_panic_parse_options(Parse_Options opts)
 static inline void test(void)
 {
 #ifdef DEBUG
-	printf("%d\n",word_contains("said",PAST_TENSE_FORM_MARKER,dict));
-	printf("%d\n",word_contains("gave.v",PAST_TENSE_FORM_MARKER,dict));
-	printf("%d\n",word_contains("have",PAST_TENSE_FORM_MARKER,dict));
-	printf("%d\n",word_contains("had",PAST_TENSE_FORM_MARKER,dict));
+	printf("%d\n", word_contains("said", PAST_TENSE_FORM_MARKER, dict));
+	printf("%d\n", word_contains("gave.v", PAST_TENSE_FORM_MARKER, dict));
+	printf("%d\n", word_contains("have", PAST_TENSE_FORM_MARKER, dict));
+	printf("%d\n", word_contains("had", PAST_TENSE_FORM_MARKER, dict));
 #endif
 }
 
@@ -233,6 +233,11 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	Parse_Options opts = ptd->opts;
 	int jverbosity = parse_options_get_verbosity(opts);
 
+	/* Clean up a bit */
+	if (ptd->linkage)
+		linkage_delete(ptd->linkage);
+	ptd->linkage = NULL;
+
 	if (ptd->sent)
 		sentence_delete(ptd->sent);
 
@@ -296,7 +301,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 		ptd->num_linkages = sentence_parse(ptd->sent, ptd->panic_parse_opts);
 		if (jverbosity > 0)
 		{
-			if (parse_options_timer_expired(ptd->panic_parse_opts)) 
+			if (parse_options_timer_expired(ptd->panic_parse_opts))
 				prt_error("Error: JNI: Panic timer is expired!\n");
 		}
 	}
@@ -309,7 +314,7 @@ static void makeLinkage(per_thread_data *ptd)
 		if (ptd->linkage)
 			linkage_delete(ptd->linkage);
 
-		ptd->linkage = linkage_create(ptd->cur_linkage,ptd->sent,ptd->opts);
+		ptd->linkage = linkage_create(ptd->cur_linkage, ptd->sent, ptd->opts);
 
 #ifdef USE_FAT_LINKAGES
 		if (!ptd->linkage) return;
@@ -363,14 +368,14 @@ JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
                                               jclass cls, jstring path)
 {
-	const char *nativePath = (*env)->GetStringUTFChars(env,path, 0);
+	const char *nativePath = (*env)->GetStringUTFChars(env, path, 0);
 
 	// Java passes null pointers as the string "null"
 	if (nativePath && strcmp(nativePath, "null"))
 	{
 		dictionary_set_data_dir(nativePath);
 	}
-	(*env)->ReleaseStringUTFChars(env,path, nativePath);
+	(*env)->ReleaseStringUTFChars(env, path, nativePath);
 }
 
 /*
@@ -381,7 +386,7 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setLanguage(JNIEnv *env, jclass cls, jstring str)
 {
-	in_language = (*env)->GetStringUTFChars(env,str,0);
+	in_language = (*env)->GetStringUTFChars(env, str, 0);
 }
 
 /*
@@ -435,11 +440,11 @@ Java_org_linkgrammar_LinkGrammar_parse(JNIEnv *env, jclass cls, jstring str)
 	const char *cStr;
 	char * tmp;
 	per_thread_data *ptd = get_ptd(env, cls);
-	cStr = (*env)->GetStringUTFChars(env,str,0);
+	cStr = (*env)->GetStringUTFChars(env, str, 0);
 	tmp = strdup(cStr);
 	jParse(env, ptd, tmp);
 	free(tmp);
-	(*env)->ReleaseStringUTFChars(env,str,cStr);
+	(*env)->ReleaseStringUTFChars(env, str, cStr);
 }
 
 /*
