@@ -100,6 +100,12 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
 #define mbrtowc(w,s,n,x) lg_mbrtowc(w,s,n,x)
 #endif /* _MSC_VER || __MINGW32__ */
 
+#if __APPLE__
+/* Junk, to keep the Mac OSX linker happy, because this is listed in
+ * the link-grammar.def symbol export file.  */
+void lg_mbrtowc();
+#endif
+
 /*
  * CYGWIN prior to version 1.7 did not have UTF8 support, or wide
  * chars ... However, MS Visual C does, as does MinGW.  Since
@@ -310,7 +316,15 @@ void * xrealloc(void *, size_t oldsize, size_t newsize) GNUC_MALLOC;
 void * exalloc(size_t) GNUC_MALLOC;
 
 /* Tracking the space usage can help with debugging */
-/* #define TRACK_SPACE_USAGE 1 */
+#if defined(_WIN32) || __APPLE__
+  /* **MUST** define for win32, Mac OSX, because xfree is listed in
+   * link-grammar.def and the win/osx linker fails if there is no
+   * xfree. So, keep the linker happy. (xfree is used in both dict-file
+   * and sat solver)
+   */
+  #define TRACK_SPACE_USAGE 1
+#endif /* defined(_WIN32) || __APPLE__ */
+
 #ifdef TRACK_SPACE_USAGE
 void xfree(void *, size_t);
 void exfree(void *, size_t);
