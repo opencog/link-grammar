@@ -1,6 +1,7 @@
 
 #ifndef USE_FAT_LINKAGES
 
+#if defined(_WIN32) || __APPLE__
 /* Arghhh. Both Mac OSX and also MSWin fail because these are specified
  * in link-grammar.def, but are absent in the library.  So hack around
  * this by creating stub routines.  Don't care about the signature;
@@ -30,6 +31,7 @@ void parse_options_set_use_fat_links (void) {}
 
 void set_has_fat_down (void);
 void set_has_fat_down (void) {}
+#endif /* defined(_WIN32) || __APPLE__ */
 
 #endif /* USE_FAT_LINKAGES */
 
