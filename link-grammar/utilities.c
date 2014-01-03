@@ -363,10 +363,12 @@ typedef struct
 	size_t space_in_use;
 	size_t num_xallocs;
 	size_t num_xfrees;
+	size_t max_outstanding_xallocs;
 	size_t max_external_space_used;
 	size_t external_space_in_use;
 	size_t num_exallocs;
 	size_t num_exfrees;
+	size_t max_outstanding_exallocs;
 } space_t;
 
 #ifdef USE_PTHREADS
@@ -410,10 +412,12 @@ static space_t * do_init_memusage(void)
 	s->space_in_use = 0;
 	s->num_xallocs = 0;
 	s->num_xfrees = 0;
+	s->max_outstanding_xallocs = 0;
 	s->max_external_space_used = 0;
 	s->external_space_in_use = 0;
 	s->num_exallocs = 0;
 	s->num_exfrees = 0;
+	s->max_outstanding_exallocs = 0;
 
 	return s;
 }
@@ -472,8 +476,11 @@ void * xalloc(size_t size)
 #ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->space_in_use += size;
-	s->num_xallocs ++;
 	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
+	s->num_xallocs ++;
+	if (s->max_outstanding_xallocs < (s->num_xallocs - s->num_xfrees))
+		s->max_outstanding_xallocs = (s->num_xallocs - s->num_xfrees);
+
 #endif /* TRACK_SPACE_USAGE */
 	if ((p == NULL) && (size != 0))
 	{
@@ -484,11 +491,13 @@ void * xalloc(size_t size)
 	return p;
 }
 
+#ifdef USE_FAT_LINKAGES
 void * xrealloc(void *p, size_t oldsize, size_t newsize)
 {
 #ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->space_in_use -= oldsize;
+	s->num_xfrees ++;
 #endif /* TRACK_SPACE_USAGE */
 	p = realloc(p, newsize);
 	if ((p == NULL) && (newsize != 0))
@@ -499,15 +508,18 @@ void * xrealloc(void *p, size_t oldsize, size_t newsize)
 	}
 #ifdef TRACK_SPACE_USAGE
 	s->space_in_use += newsize;
+	s->num_xallocs ++;
 	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
 #endif /* TRACK_SPACE_USAGE */
 	return p;
 }
+#endif /* USE_FAT_LINKAGES */
 
 #ifdef TRACK_SPACE_USAGE
 void xfree(void * p, size_t size)
 {
-	getspace()->space_in_use -= size;
+	space_t *s = getspace();
+	s->space_in_use -= size;
 	s->num_xfrees ++;
 
 	free(p);
@@ -520,9 +532,11 @@ void * exalloc(size_t size)
 #ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->external_space_in_use += size;
-	s->num_exallocs ++;
 	if (s->max_external_space_used < s->external_space_in_use)
 		s->max_external_space_used = s->external_space_in_use;
+	s->num_exallocs ++;
+	if (s->max_outstanding_exallocs < (s->num_exallocs - s->num_exfrees))
+		s->max_outstanding_exallocs = (s->num_exallocs - s->num_exfrees);
 #endif /* TRACK_SPACE_USAGE */
 
 	if ((p == NULL) && (size != 0))
