@@ -15,7 +15,7 @@ Version 4.8.3 (30 December 2014)
  * Fix crash on certain sentences containing equals sign.
 
 Version 4.8.2 (25 November 2013)
- * More windows UTF-8/multi-byte fixes (for Russian).
+ * More MSWindows UTF-8/multi-byte fixes (for Russian).
  * Add missing JSONUtils file.
 
 Version 4.8.1 (21 November 2013)
@@ -23,7 +23,7 @@ Version 4.8.1 (21 November 2013)
  * Updated MSVC9 project files from Jand Hashemi (Lucky--)
  * Fix important bug in Java services: return top parses, not random ones.
  * Java: for the link-diagram string, do not limit to 80 char term width.
- * Windows: UTF-8 fixes so that Russian works in most windows locales.
+ * Windows: UTF-8 fixes so that Russian works in most MSWindows locales.
 
 Version 4.8.0 (24 October 2013)
  * Fix "he answered yes"
@@ -352,7 +352,7 @@ Version 4.5.8 (2 July 2009)
  * Fix: Biological texts commonly have adj-noun-adj-noun chains
 
 Version 4.5.7 (4 June 2009)
- * Fix 'make install' for windows (abi bug 12049)
+ * Fix 'make install' for MSWindows (abi bug 12049)
  * Fix multi-threaded bug when TRACK_SPACE_USAGE is defined.
  * Add './configure --enable-mudflap' just for fun...
  * Fix: "Walk tall", "Think quick"
@@ -541,7 +541,7 @@ Version 4.3.5 (29 April 2008) includes the following changes:
  * Don't build the JNI library if Java isn't found. Fixes build on Windows.
  * Fix install bug for NetBSD systems.
  * Pre-detected entities cannot participate in G links.
- * There is no UTF8 support in windows, so stub it out.
+ * There is no UTF8 support in MSWindows, so stub it out.
  * Fix crash in constituent output, bug #22 in googlecode bugtacker.
  * Some small steps taken to eventually make library thread-safe.
  * There are three constituent string styles, enable all three.
