@@ -1354,7 +1354,7 @@ void linkage_delete(Linkage linkage)
 		for (j = 0; j < s->num_links; ++j) {
 			exfree_link(s->link[j]);
 		}
-		exfree(s->link, sizeof(Link) * s->num_links);
+		exfree(s->link, sizeof(Link*) * s->num_links);
 		if (s->pp_info != NULL) {
 			for (j = 0; j < s->num_links; ++j) {
 				exfree_pp_info(&s->pp_info[j]);
