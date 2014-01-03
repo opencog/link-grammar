@@ -877,7 +877,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 void init_count(Sentence sent)
 {
 	if (NULL == sent->count_ctxt)
-		sent->count_ctxt = (count_context_t *) malloc (sizeof(count_context_t));
+		sent->count_ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(sent->count_ctxt, 0, sizeof(count_context_t));
 
 	init_table(sent);
@@ -888,6 +888,6 @@ void free_count(Sentence sent)
 	if (NULL == sent->count_ctxt) return;
 
 	free_table(sent->count_ctxt);
-	free(sent->count_ctxt);
+	xfree(sent->count_ctxt, sizeof(count_context_t));
 	sent->count_ctxt = NULL;
 }
