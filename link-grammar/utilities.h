@@ -312,8 +312,11 @@ char *safe_strdup(const char *u);
 /* routines for allocating basic objects */
 void init_memusage(void);
 void * xalloc(size_t) GNUC_MALLOC;
-void * xrealloc(void *, size_t oldsize, size_t newsize) GNUC_MALLOC;
 void * exalloc(size_t) GNUC_MALLOC;
+
+#ifdef USE_FAT_LINKAGES
+void * xrealloc(void *, size_t oldsize, size_t newsize) GNUC_MALLOC;
+#endif /* USE_FAT_LINKAGES */
 
 /* Tracking the space usage can help with debugging */
 #if defined(_WIN32) || __APPLE__
