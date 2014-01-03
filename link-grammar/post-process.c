@@ -35,7 +35,7 @@
 int post_process_match(const char *s, const char *t)
 {
 	char c;
-	while(isupper((int)*s) || isupper((int)*t))
+	while (isupper((int)*s) || isupper((int)*t))
 	{
 		if (*s != *t) return FALSE;
 		s++;
@@ -499,18 +499,20 @@ apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 {
 	List_o_links *lol;
 	int w;
-	for (w=0; w<pp->pp_data.length; w++) {
+	for (w=0; w<pp->pp_data.length; w++)
+	{
 		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 		{
-				if (w > lol->word) continue;	/* only consider each edge once */
-				if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->name)) continue;
-				memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
-				reachable_without_dfs(pp, sublinkage, w, lol->word, w);
-				if (!pp->visited[lol->word]) return FALSE;
+			if (w > lol->word) continue;	/* only consider each edge once */
+			if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->name)) continue;
+			memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
+			reachable_without_dfs(pp, sublinkage, w, lol->word, w);
+			if (!pp->visited[lol->word]) return FALSE;
 		}
 	}
 
-	for (lol = pp->pp_data.links_to_ignore; lol != NULL; lol = lol->next) {
+	for (lol = pp->pp_data.links_to_ignore; lol != NULL; lol = lol->next)
+	{
 		w = sublinkage->link[lol->link]->l;
 		/* (w, lol->word) are the left and right ends of the edge we're considering */
 		if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->name)) continue;
@@ -535,10 +537,12 @@ apply_bounded(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 	int d, lw, d_type;
 	List_o_links * lol;
 	d_type = rule->domain;
-	for (d=0; d<pp->pp_data.N_domains; d++) {
+	for (d=0; d<pp->pp_data.N_domains; d++)
+	{
 		if (pp->pp_data.domain_array[d].type != d_type) continue;
 		lw = sublinkage->link[pp->pp_data.domain_array[d].start_link]->l;
-		for (lol = pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next) {
+		for (lol = pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
+		{
 			if (sublinkage->link[lol->link]->l < lw) return FALSE;
 		}
 	}
@@ -824,7 +828,7 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 #if defined(CHECK_DOMAIN_NESTING)
 	/* These messages were deemed to not be useful, so
 		 this code is commented out.	See comment above. */
-	if(!check_domain_nesting(pp, sublinkage->num_links))
+	if (!check_domain_nesting(pp, sublinkage->num_links))
 			printf("WARNING: The domains are not nested.\n");
 #endif
 
@@ -990,7 +994,7 @@ PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 {
 	const char *msg;
 
-	if (pp==NULL) return NULL;
+	if (pp == NULL) return NULL;
 
 	pp->pp_data.links_to_ignore = NULL;
 	pp->pp_data.length = sent->length;
