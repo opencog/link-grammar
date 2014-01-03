@@ -85,7 +85,7 @@ unsigned int count_disjuncts(Disjunct * d)
 typedef struct disjunct_dup_table_s disjunct_dup_table;
 struct disjunct_dup_table_s
 {
-	unsigned int dup_table_size;
+	size_t dup_table_size;
 	Disjunct ** dup_table;
 };
 
@@ -153,7 +153,7 @@ static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 {
 	size_t i;
 	disjunct_dup_table *dt;
-	dt = (disjunct_dup_table *) malloc(sizeof(disjunct_dup_table));
+	dt = (disjunct_dup_table *) xalloc(sizeof(disjunct_dup_table));
 
 	dt->dup_table_size = sz;
 	dt->dup_table = (Disjunct **) xalloc(sz * sizeof(Disjunct *));
@@ -165,8 +165,8 @@ static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 
 static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 {
-	xfree((char *) dt->dup_table, dt->dup_table_size * sizeof(Disjunct *));
-	free(dt);
+	xfree(dt->dup_table, dt->dup_table_size * sizeof(Disjunct *));
+	xfree(dt, sizeof(disjunct_dup_table));
 }
 
 /**
