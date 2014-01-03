@@ -361,8 +361,12 @@ typedef struct
 {
 	size_t max_space_used;
 	size_t space_in_use;
+	size_t num_xallocs;
+	size_t num_xfrees;
 	size_t max_external_space_used;
 	size_t external_space_in_use;
+	size_t num_exallocs;
+	size_t num_exfrees;
 } space_t;
 
 #ifdef USE_PTHREADS
@@ -404,8 +408,12 @@ static space_t * do_init_memusage(void)
 
 	s->max_space_used = 0;
 	s->space_in_use = 0;
+	s->num_xallocs = 0;
+	s->num_xfrees = 0;
 	s->max_external_space_used = 0;
 	s->external_space_in_use = 0;
+	s->num_exallocs = 0;
+	s->num_exfrees = 0;
 
 	return s;
 }
@@ -464,6 +472,7 @@ void * xalloc(size_t size)
 #ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->space_in_use += size;
+	s->num_xallocs ++;
 	if (s->max_space_used < s->space_in_use) s->max_space_used = s->space_in_use;
 #endif /* TRACK_SPACE_USAGE */
 	if ((p == NULL) && (size != 0))
@@ -499,6 +508,8 @@ void * xrealloc(void *p, size_t oldsize, size_t newsize)
 void xfree(void * p, size_t size)
 {
 	getspace()->space_in_use -= size;
+	s->num_xfrees ++;
+
 	free(p);
 }
 #endif /* TRACK_SPACE_USAGE */
@@ -509,6 +520,7 @@ void * exalloc(size_t size)
 #ifdef TRACK_SPACE_USAGE
 	space_t *s = getspace();
 	s->external_space_in_use += size;
+	s->num_exallocs ++;
 	if (s->max_external_space_used < s->external_space_in_use)
 		s->max_external_space_used = s->external_space_in_use;
 #endif /* TRACK_SPACE_USAGE */
@@ -525,7 +537,9 @@ void * exalloc(size_t size)
 #ifdef TRACK_SPACE_USAGE
 void exfree(void * p, size_t size)
 {
-	getspace()->external_space_in_use -= size;
+	space_t *s = getspace();
+	s->external_space_in_use -= size;
+	s->num_exfrees ++;
 	free(p);
 }
 #endif /* TRACK_SPACE_USAGE */
