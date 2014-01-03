@@ -443,8 +443,8 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 						*u = '\0';
 						strcat(join, t + SUFFIX_WORD_L);
 						t = string_set_add(join, sent->string_set);
-						free(join);
 					}
+					free(join);
 				}
 
 				/* Suppress printing of the stem, if the next word is the suffix */
@@ -799,7 +799,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
  * The width of the diagram is given by the terminal width, taken
  * from the parse options.
  *
- * The returned string is malloed, and needs to be freed with
+ * The returned string is malloced, and needs to be freed with
  * linkage_free_diagram()
  */
 char * linkage_print_diagram(const Linkage linkage)
