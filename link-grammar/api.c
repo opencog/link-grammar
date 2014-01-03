@@ -509,7 +509,7 @@ static void linkage_info_delete(Linkage_info *link_info, int sz)
 		lg_sense_delete(lifo);
 #endif
 	}
-	xfree(link_info, sz);
+	xfree(link_info, sz * sizeof(Linkage_info));
 }
 
 #ifdef USE_FAT_LINKAGES
