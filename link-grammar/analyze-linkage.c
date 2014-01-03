@@ -142,10 +142,8 @@ static void free_sublinkage(Sublinkage *s)
 	for (i = 0; i < MAX_LINKS; i++) {
 		if (s->link[i] != NULL) exfree_link(s->link[i]);
 	}
-	xfree(s->link, MAX_LINKS*sizeof(Link));
-#ifdef USE_FAT_LINKAGES
+	xfree(s->link, MAX_LINKS*sizeof(Link *));
 	xfree(s, sizeof(Sublinkage));
-#endif /* USE_FAT_LINKAGES */
 }
 
 #ifdef USE_FAT_LINKAGES
@@ -1138,8 +1136,6 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	free_sublinkage(sublinkage);
 #ifdef USE_FAT_LINKAGES
 	free_digraph(actx, pi);
-#else
-	xfree(sublinkage, sizeof(Sublinkage));
 #endif /* USE_FAT_LINKAGES */
 	return li;
 }
