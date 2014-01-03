@@ -209,7 +209,7 @@ void exfree_connectors(Connector *e)
 	for(;e != NULL; e = n) {
 		n = e->next;
 		exfree((void *) e->string, sizeof(char)*(strlen(e->string)+1));
-		exfree(e, sizeof(Connector));
+		xfree(e, sizeof(Connector)); /* even in this case, connector came from xalloc */
 	}
 }
 
