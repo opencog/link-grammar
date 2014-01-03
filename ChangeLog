@@ -1,3 +1,6 @@
+Version 4.8.5 (XXX 2014)
+ * Update memory usage accounting; fix accounting bugs.
+
 Version 4.8.4 (30 December 2014)
  * Fix build break for Mac OSX
 
