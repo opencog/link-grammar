@@ -122,7 +122,7 @@ void free_fast_matcher(Sentence sent)
 	free_match_list(ctxt->mn_free_list);
 	ctxt->mn_free_list = NULL;
 
-	free(ctxt);
+	xfree(ctxt, sizeof(match_context_t));
 	sent->match_ctxt = NULL;
 }
 
@@ -218,7 +218,7 @@ void init_fast_matcher(Sentence sent)
 	Disjunct * d;
 	match_context_t *ctxt;
 
-	ctxt = (match_context_t *) malloc(sizeof(match_context_t));
+	ctxt = (match_context_t *) xalloc(sizeof(match_context_t));
 	sent->match_ctxt = ctxt;
 
 	ctxt->match_cost = 0;

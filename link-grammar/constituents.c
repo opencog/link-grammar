@@ -1650,10 +1650,10 @@ static char * print_flat_constituents(Linkage linkage)
 	 * This was discovered only after much work. Bummer.
 	 */
 	char * p;
-	con_context_t *ctxt = (con_context_t *) malloc (sizeof(con_context_t));
+	con_context_t *ctxt = (con_context_t *) xalloc (sizeof(con_context_t));
 	memset(ctxt, 0, sizeof(con_context_t));
 	p = do_print_flat_constituents(ctxt, linkage);
-	free(ctxt);
+	xfree(ctxt, sizeof(con_context_t));
 	return p;
 }
 

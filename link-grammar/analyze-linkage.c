@@ -888,7 +888,7 @@ void init_analyze(Sentence s)
 
 	if (NULL == actx)
 	{
-		actx = (analyze_context_t *) malloc (sizeof(analyze_context_t));
+		actx = (analyze_context_t *) xalloc (sizeof(analyze_context_t));
 		s->analyze_ctxt = actx;
 	}
 
@@ -897,7 +897,7 @@ void init_analyze(Sentence s)
 
 void free_analyze(Sentence s)
 {
-	if (s->analyze_ctxt != NULL) free(s->analyze_ctxt);
+	if (s->analyze_ctxt != NULL) xfree(s->analyze_ctxt, sizeof(analyze_context_t));
 	s->analyze_ctxt = NULL;
 }
 

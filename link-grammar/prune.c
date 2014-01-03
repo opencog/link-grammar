@@ -1140,7 +1140,7 @@ static void power_table_delete(power_table *pt)
 		}
 		xfree((char *)pt->r_table[w], pt->r_table_size[w] * sizeof (C_list *));
 	}
-	free(pt);
+	xfree(pt, sizeof(power_table));
 }
 
 /**
@@ -1180,7 +1180,7 @@ static power_table * power_table_new(Sentence sent)
 	Disjunct * d, * xd, * head;
 	Connector * c;
 
-	pt = (power_table *) malloc (sizeof(power_table));
+	pt = (power_table *) xalloc (sizeof(power_table));
 	pt->power_table_size = sent->length;
 
    /* First, we initialize the word fields of the connectors, and
@@ -1488,7 +1488,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	Connector *c;
 	int w, N_deleted, total_deleted;
 
-	pc = (prune_context *) malloc (sizeof(prune_context));
+	pc = (prune_context *) xalloc (sizeof(prune_context));
 	pc->power_cost = 0;
 	pc->null_links = (opts->min_null_count > 0);
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
@@ -1602,7 +1602,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
-	free(pc);
+	xfree(pc, sizeof(prune_context));
 	return total_deleted;
 }
 
@@ -1691,7 +1691,7 @@ static multiset_table * cms_table_new(void)
 	multiset_table *mt;
 	int i;
 
-	mt = (multiset_table *) malloc(sizeof(multiset_table));
+	mt = (multiset_table *) xalloc(sizeof(multiset_table));
 
 	for (i=0; i<CMS_SIZE; i++) {
 		mt->cms_table[i] = NULL;
@@ -1711,7 +1711,7 @@ static void cms_table_delete(multiset_table *mt)
 			xfree(cms, sizeof(Cms));
 		}
 	}
-	free(mt);
+	xfree(mt, sizeof(multiset_table));
 }
 
 static unsigned int cms_hash(const char * s)
