@@ -386,7 +386,9 @@ Java_org_linkgrammar_LinkGrammar_setDictionariesPath(JNIEnv *env,
 JNIEXPORT void JNICALL
 Java_org_linkgrammar_LinkGrammar_setLanguage(JNIEnv *env, jclass cls, jstring str)
 {
-	in_language = (*env)->GetStringUTFChars(env, str, 0);
+	const char *tmp = (*env)->GetStringUTFChars(env, str, 0);
+	in_language = strdup(tmp);
+	(*env)->ReleaseStringUTFChars(env, str, tmp);
 }
 
 /*
