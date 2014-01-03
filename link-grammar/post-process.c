@@ -29,7 +29,7 @@
  * link. The upper case parts must match. We imagine that the first
  * arg is padded with an infinite sequence of "#" and that the 2nd one
  * is padded with "*". "#" matches anything, but "*" is just like an
- * ordinary char for matching purposes. 
+ * ordinary char for matching purposes.
  */
 
 int post_process_match(const char *s, const char *t)
@@ -66,7 +66,7 @@ static int string_in_list(const char * s, const char * a[])
 	return FALSE;
 }
 
-/** 
+/**
  * Return the name of the domain associated with the provided starting
  * link. Return -1 if link isn't associated with a domain.
  */
@@ -83,7 +83,7 @@ static int find_domain_name(Postprocessor *pp, const char *link)
 }
 
 /** Returns TRUE if domain d1 is contained in domain d2 */
-static int contained_in(const Domain * d1, const Domain * d2, 
+static int contained_in(const Domain * d1, const Domain * d2,
                         const Sublinkage *sublinkage)
 {
 	char mark[MAX_LINKS];
@@ -138,14 +138,15 @@ static int check_domain_nesting(Postprocessor *pp, int num_links)
 }
 #endif
 
-/** 
+/**
  * Free the list of links pointed to by lol
  * (does not free any strings)
  */
 static void free_List_o_links(List_o_links *lol)
 {
 	List_o_links * xlol;
-	while(lol != NULL) {
+	while (lol != NULL)
+	{
 		xlol = lol->next;
 		xfree(lol, sizeof(List_o_links));
 		lol = xlol;
@@ -155,14 +156,15 @@ static void free_List_o_links(List_o_links *lol)
 static void free_D_tree_leaves(DTreeLeaf *dtl)
 {
 	DTreeLeaf * xdtl;
-	while(dtl != NULL) {
+	while (dtl != NULL)
+	{
 		xdtl = dtl->next;
 		xfree(dtl, sizeof(DTreeLeaf));
 		dtl = xdtl;
 	}
 }
 
-/** 
+/**
  * Gets called after every invocation of post_process()
  */
 void post_process_free_data(PP_data * ppd)
@@ -308,7 +310,7 @@ static void reset_pp_node(Postprocessor *pp)
 static int apply_rules(Postprocessor *pp,
 							 int (applyfn) (Postprocessor *,Sublinkage *,pp_rule *),
 							 Sublinkage *sublinkage,
-							 pp_rule *rule_array,	
+							 pp_rule *rule_array,
 							 const char **msg)
 {
 	int i;
@@ -321,7 +323,7 @@ static int
 apply_relevant_rules(Postprocessor *pp,
 						 int(applyfn)(Postprocessor *pp,Sublinkage*,pp_rule *rule),
 						 Sublinkage *sublinkage,
-						 pp_rule *rule_array,	
+						 pp_rule *rule_array,
 						 int *relevant_rules,
 						 const char **msg)
 {
@@ -405,7 +407,7 @@ apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 	return TRUE;
 }
 
-/** 
+/**
  * Returns TRUE if and only if
  * (1) the sentence doesn't contain the selector link for the rule, or
  * (2) it does, and it also contains one or more from the rule's link set
@@ -439,7 +441,7 @@ apply_connected(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 	/* There is actually just one (or none, if user didn't specify it)
 		 rule asserting that linkage is connected. */
 	if (!is_connected(pp)) return 0;
-	return 1;										
+	return 1;
 }
 
 #if 0
@@ -470,16 +472,19 @@ apply_connected_without(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 	 end points of that link are still connected.
 */
 
-static void reachable_without_dfs(Postprocessor *pp, Sublinkage *sublinkage, int a, int b, int w) {
-		 /* This is a depth first search of words reachable from w, excluding any direct edge
-		between word a and word b. */
-		List_o_links *lol;
-		pp->visited[w] = TRUE;
-		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
-		if (!pp->visited[lol->word] && !(w == a && lol->word == b) && ! (w == b && lol->word == a)) {
+static void reachable_without_dfs(Postprocessor *pp, Sublinkage *sublinkage, int a, int b, int w)
+{
+	/* This is a depth first search of words reachable from w, excluding
+	 * any direct edge between word a and word b. */
+	List_o_links *lol;
+	pp->visited[w] = TRUE;
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
+		if (!pp->visited[lol->word] && !(w == a && lol->word == b) && ! (w == b && lol->word == a))
+		{
 				reachable_without_dfs(pp, sublinkage, a, b, lol->word);
 		}
-		}
+	}
 }
 
 /**
@@ -495,7 +500,8 @@ apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 	List_o_links *lol;
 	int w;
 	for (w=0; w<pp->pp_data.length; w++) {
-		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
+		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+		{
 				if (w > lol->word) continue;	/* only consider each edge once */
 				if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->name)) continue;
 				memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
@@ -554,29 +560,30 @@ static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 		pp->pp_data.word_links[i] = NULL;
 
 	for (link=0; link<sublinkage->num_links; link++)
+	{
+		if (sublinkage->link[link]->l == -1) continue;
+		if (pp_linkset_match(pp->knowledge->ignore_these_links, sublinkage->link[link]->name))
 		{
-			if (sublinkage->link[link]->l == -1) continue;
-			if (pp_linkset_match(pp->knowledge->ignore_these_links, sublinkage->link[link]->name)) {
 			lol = (List_o_links *) xalloc(sizeof(List_o_links));
 			lol->next = pp->pp_data.links_to_ignore;
 			pp->pp_data.links_to_ignore = lol;
 			lol->link = link;
 			lol->word = sublinkage->link[link]->r;
 			continue;
-			}
-
-			lol = (List_o_links *) xalloc(sizeof(List_o_links));
-			lol->next = pp->pp_data.word_links[sublinkage->link[link]->l];
-			pp->pp_data.word_links[sublinkage->link[link]->l] = lol;
-			lol->link = link;
-			lol->word = sublinkage->link[link]->r;
-
-			lol = (List_o_links *) xalloc(sizeof(List_o_links));
-			lol->next = pp->pp_data.word_links[sublinkage->link[link]->r];
-			pp->pp_data.word_links[sublinkage->link[link]->r] = lol;
-			lol->link = link;
-			lol->word = sublinkage->link[link]->l;
 		}
+
+		lol = (List_o_links *) xalloc(sizeof(List_o_links));
+		lol->next = pp->pp_data.word_links[sublinkage->link[link]->l];
+		pp->pp_data.word_links[sublinkage->link[link]->l] = lol;
+		lol->link = link;
+		lol->word = sublinkage->link[link]->r;
+
+		lol = (List_o_links *) xalloc(sizeof(List_o_links));
+		lol->next = pp->pp_data.word_links[sublinkage->link[link]->r];
+		pp->pp_data.word_links[sublinkage->link[link]->r] = lol;
+		lol->link = link;
+		lol->word = sublinkage->link[link]->l;
+	}
 }
 
 static void setup_domain_array(Postprocessor *pp,
@@ -801,7 +808,8 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 	if (!apply_relevant_rules(pp,apply_contains_one_globally,
 								sublinkage,
 								pp->knowledge->contains_one_rules,
-								pp->relevant_contains_one_rules, msg)) {
+								pp->relevant_contains_one_rules, msg))
+	{
 		for (i=0; i<pp->pp_data.length; i++)
 			pp->pp_data.word_links[i] = NULL;
 		pp->pp_data.N_domains = 0;
@@ -864,7 +872,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 		}
 	}
 	pp->relevant_contains_one_rules[rcoIDX] = -1;	/* end sentinel */
-	
+
 	for (cnIDX=0;;cnIDX++)
 	{
 		rule = &(pp->knowledge->contains_none_rules[cnIDX]);
@@ -910,7 +918,7 @@ Postprocessor * post_process_open(const char *path)
 			(int *) xalloc ((pp->knowledge->n_contains_none_rules+1)
 							*(sizeof pp->relevant_contains_none_rules[0]));
 	pp->relevant_contains_one_rules[0]	= -1;
-	pp->relevant_contains_none_rules[0] = -1;	
+	pp->relevant_contains_none_rules[0] = -1;
 	pp->pp_node = NULL;
 	pp->pp_data.links_to_ignore = NULL;
 	pp->n_local_rules_firing	= 0;
@@ -946,7 +954,7 @@ void post_process_close_sentence(Postprocessor *pp)
 	pp->n_local_rules_firing	= 0;
 	pp->n_global_rules_firing = 0;
 	pp->relevant_contains_one_rules[0]	= -1;
-	pp->relevant_contains_none_rules[0] = -1;	
+	pp->relevant_contains_none_rules[0] = -1;
 	free_pp_node(pp);
 }
 
@@ -998,7 +1006,7 @@ PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 		prune_irrelevant_rules(pp);
 	sent->q_pruned_rules=TRUE;
 
-	switch(internal_process(pp, sublinkage, &msg))
+	switch (internal_process(pp, sublinkage, &msg))
 	{
 		case -1:
 			/* some global test failed even before we had to build the domains */
