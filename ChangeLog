@@ -1,5 +1,6 @@
 Version 4.8.5 (XXX 2014)
  * Update memory usage accounting; fix accounting bugs.
+ * Fix Java garbage collection bug.
 
 Version 4.8.4 (30 December 2014)
  * Fix build break for Mac OSX
@@ -10,7 +11,7 @@ Version 4.8.3 (30 December 2014)
  * Add verb-wall connector for present participles.
  * Fix build-time include file directory paths.
  * Provide the 'any' language to enumerate all possible linkages.
- * Fix recoginition of U+00A0, c2 a0, NO-BREAK SPACE as whitespace.
+ * Fix recognition of U+00A0, c2 a0, NO-BREAK SPACE as whitespace.
  * Improve parse-time performance of exceptionally long sentences.
  * Fix crash on certain sentences containing equals sign.
 
