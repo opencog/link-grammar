@@ -15,11 +15,11 @@
 #define  _LG_DICT_STRUCTURES_H_
 
 #include <link-grammar/link-features.h>
+#include <link-grammar/link-includes.h>
 
 LINK_BEGIN_DECLS
 
 /* Forward decls */
-typedef char Boolean;
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
 typedef struct E_list_struct E_list;

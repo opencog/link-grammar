@@ -19,6 +19,9 @@
 
 LINK_BEGIN_DECLS
 
+/* Unused in the API, at the moment, but needed for structures. */
+typedef char Boolean;
+
 /**********************************************************************
  *
  * System initialization

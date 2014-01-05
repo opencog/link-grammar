@@ -1,6 +1,8 @@
-Version 4.8.5 (XXX 2014)
+Version 4.8.5 (5 January 2014)
  * Update memory usage accounting; fix accounting bugs.
  * Fix Java garbage collection bug.
+ * Fix numerous compiler warnings in the SAT-solver code.
+ * Fix build-break involving multiple declaration of 'Boolean'
 
 Version 4.8.4 (30 December 2014)
  * Fix build break for Mac OSX
