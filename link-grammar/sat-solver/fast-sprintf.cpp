@@ -22,7 +22,7 @@ char* fast_sprintf(char* buffer, int num)
 
 char* fast_sprintf(char* buffer, const char* str)
 {
-  while(*buffer++ = *str++)
+  while ((*buffer++ = *str++))
     ;
   return buffer - 1;
 }
