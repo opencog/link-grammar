@@ -69,8 +69,8 @@ int Trie<T>::char_to_pos(char c) {
     -1, -1, -1, -1, 11, -1,
 //   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o   p   q   r   s   t   u   v   w   x   y   z
     -1, -1, 12, 13, 14, 15, -1, -1, 16, -1, -1, 17, -1, 18, -1, -1, -1, 19, -1, -1, 20, -1, 21, -1, -1, -1};
-  assert(pos[c] != -1, "NOT FOUND");
-  return pos[c];
+  assert(pos[(short)c] != -1, "NOT FOUND");
+  return pos[(short)c];
   /*
   if ('0' <= c && c <= '9')
     return c-'0' + 26 + 26;

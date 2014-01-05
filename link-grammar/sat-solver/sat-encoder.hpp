@@ -16,7 +16,8 @@ public:
 
   // Construct the encoder based on given sentence
   SATEncoder(Sentence sent, Parse_Options  opts)
-    : _sent(sent), _opts(opts), _solver(new Solver()), _variables(new Variables(sent)) {
+    : _variables(new Variables(sent)), _solver(new Solver()), _sent(sent), _opts(opts)
+  {
     // Preprocess word tags of the sentence
     build_word_tags();
   }

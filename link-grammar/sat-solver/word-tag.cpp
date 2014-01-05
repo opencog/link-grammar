@@ -52,7 +52,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
         char* last_var = var;
-        while(*last_new_var = *last_var) {
+        while ((*last_new_var = *last_var)) {
           last_new_var++;
           last_var++;
         }
@@ -86,7 +86,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
       char new_var[MAX_VARIABLE_NAME];
       char* last_new_var = new_var;
       char* last_var = var;
-      while(*last_new_var = *last_var) {
+      while ((*last_new_var = *last_var)) {
         last_new_var++;
         last_var++;
       }

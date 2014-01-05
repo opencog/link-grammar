@@ -21,7 +21,8 @@ struct PositionConnector {
                     bool lr, bool ll, const std::vector<int>& er, const std::vector<int>& el)
     : connector(c), dir(d), word(w), position(p), cost(cst), parrent_cost(pcst),
       leading_right(lr), leading_left(ll),
-      eps_right(er), eps_left(el) {
+      eps_right(er), eps_left(el)
+  {
     /*
     cout << c->string << " : ." << w << ". : ." << p << ". ";
     if (leading_right) {
@@ -50,8 +51,8 @@ struct PositionConnector {
   int parrent_cost;
 
   bool leading_right;
-  std::vector<int> eps_right;
   bool leading_left;
+  std::vector<int> eps_right;
   std::vector<int> eps_left;
 
   // Matches with other words

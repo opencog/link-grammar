@@ -90,7 +90,7 @@ public:
 
   /* Pass SAT search parameters to the MiniSAT solver */
   void passParametersToSolver(Solver* solver) {
-    for (int v = 0; v < _parameters.size(); v++) {
+    for (size_t v = 0; v < _parameters.size(); v++) {
       solver->setDecisionVar(v, _parameters[v].isDecision);
       if (_parameters[v].isDecision) {
         solver->setActivity(v, _parameters[v].priority);
@@ -102,7 +102,7 @@ public:
 
 protected:
   /* Set the parameters for the given variable to given values */
-  void setParameters(int var, bool isDecision, double priority, double polarity) {
+  void setParameters(size_t var, bool isDecision, double priority, double polarity) {
     if (var >= _parameters.size())
       _parameters.resize(var + 1);
     _parameters[var].isDecision = isDecision;

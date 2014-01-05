@@ -50,6 +50,7 @@ static char* construct_link_label(const char* connector1, const char* connector2
   return result;
 }
 
+#ifdef USE_FAT_LINKAGES
 static bool labels_match(const char* label1, const char* label2) {
   //  printf("Compare: %s %s\n", label1, label2);
 
@@ -69,25 +70,27 @@ static bool labels_match(const char* label1, const char* label2) {
   }
   return true;
 }
+#endif /* USE_FAT_LINKAGES */
 
 ////////////////////////////////////////////////////////////////////////////
-class Variables {
+class Variables
+{
 public:
   Variables(Sentence sent)
-    :_var(0)
-    ,_sent(sent)
+    :_sent(sent)
+    ,_link_variable_map(sent->length)
     ,_linked_variable_map(sent->length, -1)
     ,_linked_min_variable_map(sent->length, -1)
     ,_linked_max_variable_map(sent->length, -1)
-    ,_link_variable_map(sent->length)
 #ifdef USE_FAT_LINKAGES
     ,_fat_link_variable_map(sent->length, -1)
     ,_link_top_ww_variable_map(sent->length, -1)
 #endif /* USE_FAT_LINKAGES */
-    ,_link_top_cw_variable_map(sent->length)
-    , _link_cw_variable_map(sent->length)
     ,_thin_link_variable_map(sent->length, -1)
+    ,_link_top_cw_variable_map(sent->length)
+    ,_link_cw_variable_map(sent->length)
     ,_guiding(new CostDistanceGuiding(sent))
+    ,_var(0)
   {
   }
 
@@ -429,12 +432,12 @@ public:
 
     std::string name;
     char* label;
+    int left_word;
+    int right_word;
+    int left_position;
+    int right_position;
     const char* left_connector;
     const char* right_connector;
-    int left_word;
-    int left_position;
-    int right_word;
-    int right_position;
   };
 
   // Returns additional info about the given link variable
@@ -483,10 +486,10 @@ public:
     }
 
     std::string name;
-    char* label;
-    const char* connector;
     int connector_word;
     int top_word;
+    char* label;
+    const char* connector;
   };
 
   // Returns additional info about the given link_top_cw variable
@@ -554,7 +557,8 @@ private:
   std::vector<LinkVar*> _link_variables;
 
   // Set this additional info
-  void add_link_variable(int i, int pi, const char* ci, int j, int pj, const char* cj, int var) {
+  void add_link_variable(int i, int pi, const char* ci, int j, int pj, const char* cj, size_t var)
+  {
     char name[MAX_VARIABLE_NAME];
     char* s = name;
     *s++ = 'l';    *s++ = 'i';     *s++ = 'n';     *s++ = 'k';
@@ -595,7 +599,7 @@ private:
   std::vector<LinkedVar*> _linked_variables;
 
   // Set the additional info
-  void add_linked_variable(int i, int j, int var) {
+  void add_linked_variable(int i, int j, size_t var) {
     if (var >= _linked_variables.size()) {
       _linked_variables.resize(var + 1, 0);
     }
@@ -658,7 +662,7 @@ private:
   std::vector<LinkTopCWVar*> _link_top_cw_variables;
 
   // Set this additional info
-  void add_link_top_cw_variable(int i, int j, int pj, const char* cj, int var) {
+  void add_link_top_cw_variable(int i, int j, int pj, const char* cj, size_t var) {
     char name[MAX_VARIABLE_NAME];
     char* s = name;
     *s++ = 'l';    *s++ = 'i';     *s++ = 'n';     *s++ = 'k'; *s++ = '_'; *s++ = 't'; *s++ = 'o'; *s++ = 'p';
@@ -695,7 +699,7 @@ private:
   Guiding* _guiding;
 
   /* Current free variable number */
-  int _var;
+  size_t _var;
 
   /* Get a variable number that has not been used before */
   int get_fresh_var(void) {

@@ -372,7 +372,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
         char* last_var = var;
-        while(*last_new_var = *last_var) {
+        while((*last_new_var = *last_var)) {
           last_new_var++;
           last_var++;
         }
@@ -420,7 +420,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
         char* last_var = var;
-        while(*last_new_var = *last_var) {
+        while ((*last_new_var = *last_var)) {
           last_new_var++;
           last_var++;
         }
@@ -826,7 +826,7 @@ void SATEncoder::dfs(int node, const MatrixUpperTriangle<int>& graph, int compon
     return;
 
   components[node] = component;
-  for (int other_node = node + 1; other_node < components.size(); other_node++) {
+  for (size_t other_node = node + 1; other_node < components.size(); other_node++) {
     if (graph(node, other_node))
       dfs(other_node, graph, component, components);
   }
@@ -952,8 +952,8 @@ void SATEncoder::generate_epsilon_definitions() {
 }
 
 bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* e,
-                                                 char* var, bool root, char dir) {
-  E_list *l;
+                                                 char* var, bool root, char dir)
+{
   if (e->type == CONNECTOR_type) {
     dfs_position++;
     if (var != NULL) {
@@ -985,7 +985,7 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
         char new_var[MAX_VARIABLE_NAME];
         char* last_new_var = new_var;
         char* last_var = var;
-        while(*last_new_var = *last_var) {
+        while ((*last_new_var = *last_var)) {
           last_new_var++;
           last_var++;
         }
@@ -1035,7 +1035,7 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
       char new_var[MAX_VARIABLE_NAME];
       char* last_new_var = new_var;
       char* last_var = var;
-      while(*last_new_var = *last_var) {
+      while ((*last_new_var = *last_var)) {
         last_new_var++;
         last_var++;
       }
@@ -1174,7 +1174,8 @@ void SATEncoder::power_prune() {
 /*--------------------------------------------------------------------------*
  *        P O S T P R O C E S S I N G   &  P P     P R U N I N G            *
  *--------------------------------------------------------------------------*/
-void SATEncoder::pp_prune() {
+void SATEncoder::pp_prune()
+{
   const std::vector<int>& link_variables = _variables->link_variables();
 
 
@@ -1184,18 +1185,15 @@ void SATEncoder::pp_prune() {
   pp_knowledge * knowledge;
   knowledge = _sent->dict->postprocessor->knowledge;
 
-  for (int i=0; i<knowledge->n_contains_one_rules; i++) {
-    pp_rule rule;
-    const char * selector;
-    pp_linkset * link_set;
-
-    rule = knowledge->contains_one_rules[i];
-    selector = rule.selector;                                /* selector string for this rule */
-    link_set = rule.link_set;                                /* the set of criterion links */
+  for (int i=0; i<knowledge->n_contains_one_rules; i++)
+  {
+    pp_rule rule = knowledge->contains_one_rules[i];
+    // const char * selector = rule.selector;         /* selector string for this rule */
+    pp_linkset * link_set = rule.link_set;            /* the set of criterion links */
 
 
     vec<Lit> triggers;
-    for (int i = 0; i < link_variables.size(); i++) {
+    for (size_t i = 0; i < link_variables.size(); i++) {
       const Variables::LinkVar* var = _variables->link_variable(link_variables[i]);
       if (post_process_match(rule.selector, var->label)) {
         triggers.push(Lit(link_variables[i]));
@@ -1206,9 +1204,9 @@ void SATEncoder::pp_prune() {
       continue;
 
     vec<Lit> criterions;
-    for (int j = 0; j < link_variables.size(); j++) {
+    for (size_t j = 0; j < link_variables.size(); j++) {
       pp_linkset_node *p;
-      for (int hashval = 0; hashval < link_set->hash_table_size; hashval++) {
+      for (size_t hashval = 0; hashval < link_set->hash_table_size; hashval++) {
         for (p = link_set->hash_table[hashval]; p!=NULL; p=p->next) {
           const Variables::LinkVar* var = _variables->link_variable(link_variables[j]);
           if (post_process_match(p->str, var->label)) {
@@ -1364,7 +1362,8 @@ void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* nam
 }
 
 void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                                             char dir, bool multi, int cost, char* var) {
+                                                                             char dir, bool multi, int cost, char* var)
+{
   Lit lhs = Lit(_variables->string_cost(var, cost));
 
 #ifdef _DEBUG
@@ -1389,7 +1388,7 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(int
   }
 
   vec<Lit> _link_cw_;
-  for (int i = 0; i < _w_.size(); i++)
+  for (size_t i = 0; i < _w_.size(); i++)
     _link_cw_.push(Lit(_variables->link_cw(_w_[i], wi, pi, Ci)));
   generate_or_definition(lhs, _link_cw_);
 
