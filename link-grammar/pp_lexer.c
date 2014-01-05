@@ -13,10 +13,15 @@
 
 /* XXX the original flex source for this file is missing !! */
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "error.h"
+#include "pp_lexer.h"
+#include "string-set.h"
+
 
 /* If YY_ALWAYS_INTERACTIVE is set, then input is read as wide-char,
  * instead of multi-byte. This perhaps fixes MS windows bugs ...
@@ -386,9 +391,6 @@ char *yytext;
 
  In the case of (1), uncomment the three %option lines below. 
 **************************************************************************/
-
-#include <stdarg.h>
-#include "api.h"
 
 #undef yywrap
 
