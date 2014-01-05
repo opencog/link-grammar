@@ -15,16 +15,33 @@
 #include <limits.h>
 #include <math.h>
 #include <string.h>
+
+#include "analyze-linkage.h"
+#include "corpus/corpus.h"
+#include "count.h"
 #include "disjuncts.h"
 #include "disjunct-utils.h"
 #include "error.h"
+#include "externs.h"
+#include "extract-links.h"
+#include "fast-match.h"
+#include "post-process.h"
 #include "preparation.h"
+#include "print.h"
+#include "prune.h"
 #include "regex-morph.h"
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
-#include "corpus/corpus.h"
 #include "spellcheck.h"
+#include "string-set.h"
+#include "structures.h"
+#include "tokenize.h"
 #include "utilities.h"
+#include "word-utils.h"
+
+#ifdef USE_FAT_LINKAGES
+#include "and.h"
+#endif /* USE_FAT_LINKAGES */
 
 /***************************************************************
 *

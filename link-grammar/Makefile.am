@@ -123,7 +123,6 @@ liblink_grammar_la_SOURCES =        \
 	tokenize.c                       \
 	utilities.c                      \
 	word-utils.c                     \
-	api.h                            \
 	api-structures.h                 \
 	api-types.h                      \
 	analyze-linkage.h                \

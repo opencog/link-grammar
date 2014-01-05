@@ -11,8 +11,9 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include "api.h"
 #include "error.h"
+#include "string-set.h"
+#include "structures.h"
 #include "word-file.h"
 
 /**

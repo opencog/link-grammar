@@ -19,7 +19,9 @@
 
 #ifdef USE_FAT_LINKAGES
 
+#include "count.h"
 #include "disjunct-utils.h"
+#include "word-utils.h"
 
 /*
                              Notes about AND

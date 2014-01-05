@@ -20,6 +20,10 @@
 #include "structures.h"
 #include "word-utils.h"
 
+#ifdef USE_FAT_LINKAGES
+#include "count.h"
+#endif /* USE_FAT_LINKAGES */
+
 /**
  * The functions in this file do several things: () take a linkage
  * involving fat links and expand it into a sequence of linkages

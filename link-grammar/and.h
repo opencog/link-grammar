@@ -14,6 +14,16 @@
 #include "link-includes.h"
 
 #ifdef USE_FAT_LINKAGES
+
+#include "api-types.h"
+
+#if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__)
+#define link_private    __attribute__((__visibility__("hidden")))
+#else
+#define link_private
+#endif
+
+
 link_private void       free_AND_tables(Sentence sent);
 link_private void       print_AND_statistics(Sentence sent);
 link_private void       init_andable_hash_table(Dictionary dict);

@@ -10,4 +10,7 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+
+#include "dict-api.h"
+
 Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename);

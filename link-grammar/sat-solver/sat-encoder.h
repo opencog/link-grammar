@@ -1,4 +1,4 @@
-#include <link-grammar/api.h>
+#include <link-grammar/link-includes.h>
 
 #ifdef USE_SAT_SOLVER
 int sat_parse(Sentence sent, Parse_Options  opts);
