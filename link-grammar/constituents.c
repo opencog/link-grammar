@@ -13,11 +13,14 @@
 
 #include <stdarg.h>
 #include <string.h>
-#include "api.h"
+
+#include "api-structures.h"
 #include "error.h"
+#include "externs.h"
 #include "constituents.h"
 #include "post-process.h"
 #include "print-util.h"
+#include "string-set.h"
 
 #define MAXCONSTITUENTS 8192
 #define OPEN_BRACKET '['

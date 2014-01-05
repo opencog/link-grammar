@@ -67,6 +67,7 @@ typedef struct Word_struct Word;
 typedef struct X_table_connector_struct X_table_connector;
 
 
+/* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;
 
 typedef struct corpus_s Corpus;
