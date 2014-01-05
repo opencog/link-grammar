@@ -11,7 +11,11 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api.h"
+#include "and.h"
+#include "api-structures.h"
+#include "dict-structures.h"
+#include "structures.h"
+#include "string-set.h"
 
 #ifdef USE_FAT_LINKAGES
 

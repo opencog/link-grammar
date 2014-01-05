@@ -10,6 +10,9 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+
+#include "link-includes.h"
+
 #ifdef USE_FAT_LINKAGES
 link_private void       free_AND_tables(Sentence sent);
 link_private void       print_AND_statistics(Sentence sent);
