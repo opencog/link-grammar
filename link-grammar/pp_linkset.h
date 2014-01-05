@@ -10,6 +10,9 @@
 /* forms, with or without modification, subject to certain conditions.          */
 /*                                                                              */
 /********************************************************************************/
+
+#include "structures.h"
+
 pp_linkset *pp_linkset_open(int size); 
 void pp_linkset_close     (pp_linkset *ls);
 void pp_linkset_clear     (pp_linkset *ls);

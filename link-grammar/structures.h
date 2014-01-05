@@ -15,6 +15,7 @@
 #define _STRUCTURES_H_
 
 #include "api-types.h"
+#include "api-structures.h"
 #include "dict-structures.h"  /* For Exp, Exp_list */
 #include "utilities.h"  /* Needed for inline defn in Windows */
 
@@ -140,17 +141,6 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 #define PARSE_NUM_OVERFLOW (((s64)1)<<24)  
 #endif
 
-struct Tokenizer_struct
-{
-	String_set  * string_set;
-	const char * unsplit_word;
-	const char ** pref_alternatives;
-	const char ** stem_alternatives;
-	const char ** suff_alternatives;
-};
-
-typedef struct Tokenizer_struct Tokenizer;
-
 #ifdef USE_FAT_LINKAGES
 typedef enum
 {
@@ -259,7 +249,6 @@ struct D_type_list_struct
     int type;
 };
 
-typedef struct PP_node_struct PP_node;
 struct PP_node_struct
 {
     D_type_list *d_type_array[MAX_LINKS];
@@ -332,13 +321,6 @@ struct List_o_links_struct
 
 typedef struct Parse_choice_struct Parse_choice;
 
-struct Link_s
-{
-	short l, r;
-	Connector * lc, * rc;
-	const char * name;              /* spelling of full link name */
-};
-
 struct Parse_choice_struct
 {
     Parse_choice * next;
@@ -379,12 +361,12 @@ typedef struct pp_linkset_node_s
     struct pp_linkset_node_s *next;
 } pp_linkset_node;
 
-typedef struct pp_linkset_s
+struct pp_linkset_s
 {
     unsigned int hash_table_size;
     unsigned int population;
     pp_linkset_node **hash_table;    /* data actually lives here */
-} pp_linkset;
+};
 
 
 /* from pp_lexer.c */

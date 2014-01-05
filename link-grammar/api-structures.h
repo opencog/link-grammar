@@ -34,7 +34,7 @@
 #define _API_STRUCTURESH_
 
 #include "api-types.h"
-#include "structures.h" /* for definition of Link */
+#include "dict-structures.h"
 #include "corpus/corpus.h"
 #include "error.h"
 
@@ -200,6 +200,13 @@ struct And_data_s
 };
 #endif /* USE_FAT_LINKAGES */
 
+struct Link_s
+{
+	short l, r;
+	Connector * lc, * rc;
+	const char * name;				  /* spelling of full link name */
+};
+
 struct Parse_info_struct
 {
 	unsigned int   x_table_size;
@@ -223,6 +230,15 @@ struct Parse_info_struct
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
+};
+
+struct Tokenizer_struct
+{
+	String_set  * string_set;
+	const char * unsplit_word;
+	const char ** pref_alternatives;
+	const char ** stem_alternatives;
+	const char ** suff_alternatives;
 };
 
 struct Sentence_s

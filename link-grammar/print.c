@@ -14,9 +14,15 @@
 
 
 #include <stdarg.h>
-#include "api.h"
+
+#include "print.h"
+#include "api-structures.h"
 #include "corpus/corpus.h"
+#include "idiom.h"
 #include "print-util.h"
+#include "string-set.h"
+#include "utilities.h"
+#include "word-utils.h"
 
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */

@@ -11,10 +11,10 @@
 #ifndef _LINKGRAMMAR_CORPUS_H
 #define _LINKGRAMMAR_CORPUS_H
 
-#ifdef USE_CORPUS
-
 #include "../api-types.h"
 #include "../link-includes.h"
+
+#ifdef USE_CORPUS
 
 Corpus * lg_corpus_new(void);
 void lg_corpus_delete(Corpus *);

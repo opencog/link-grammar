@@ -10,6 +10,10 @@
 /* forms, with or without modification, subject to certain conditions.          */
 /*                                                                              */
 /********************************************************************************/
+
+#include "dict-structures.h"
+#include "link-includes.h"
+
 void insert_idiom(Dictionary dict, Dict_node *);
 Boolean  contains_underbar(const char *);
 Boolean  is_idiom_word(const char *);

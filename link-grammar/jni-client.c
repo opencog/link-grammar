@@ -14,7 +14,7 @@
 #include <pthread.h>
 #endif
 
-#include "api.h"
+#include "api-structures.h"
 #include "corpus/corpus.h"
 #include "error.h"
 #include "jni-client.h"

@@ -10,6 +10,9 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+
+#include "link-includes.h"
+
 #ifdef USE_FAT_LINKAGES
 void free_deletable(Sentence sent);
 void free_effective_dist(Sentence sent);

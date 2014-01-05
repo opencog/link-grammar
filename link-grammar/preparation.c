@@ -11,9 +11,17 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api.h"
+#include "api-structures.h"
+#include "build-disjuncts.h"
+#include "count.h"
 #include "disjunct-utils.h"
+#include "externs.h"
+#include "preparation.h"
+#include "print.h"
+#include "prune.h"
 #include "resources.h"
+#include "structures.h"
+#include "word-utils.h"
 
 #ifdef USE_FAT_LINKAGES
 void free_deletable(Sentence sent)

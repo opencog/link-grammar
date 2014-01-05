@@ -63,12 +63,15 @@ typedef struct Link_s Link;
 typedef struct List_o_links_struct List_o_links;
 typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
+typedef struct Tokenizer_struct Tokenizer;
 typedef struct Word_struct Word;
 typedef struct X_table_connector_struct X_table_connector;
 
 
 /* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;
+typedef struct pp_linkset_s pp_linkset;
+typedef struct PP_node_struct PP_node;
 
 typedef struct corpus_s Corpus;
 typedef struct sense_s Sense;

@@ -20,6 +20,7 @@
 #include <string.h>
 #include "api-structures.h"
 #include "disjuncts.h"
+#include "structures.h"
 #include "utilities.h"
 
 /* ========================================================= */

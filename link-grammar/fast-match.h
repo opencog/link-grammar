@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "link-includes.h"
+#include "structures.h"
+
 void init_fast_matcher(Sentence sent);
 void free_fast_matcher(Sentence sent);
 void put_match_list(Sentence, Match_node *);

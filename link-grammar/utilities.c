@@ -29,7 +29,8 @@
 #include <pthread.h>
 #endif
 
-#include "api.h"
+#include "structures.h"
+#include "utilities.h"
 
 #ifdef ENABLE_BINRELOC
 #include "prefix.h"

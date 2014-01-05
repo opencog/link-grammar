@@ -19,8 +19,12 @@
  pp_lexer.h
 ***********************************************************************/
 
-#include "api.h"
 #include "error.h"
+#include "externs.h"
+#include "pp_knowledge.h"
+#include "pp_lexer.h"
+#include "pp_linkset.h"
+#include "string-set.h"
 #include "utilities.h"
 
 #define PP_MAX_UNIQUE_LINK_NAMES 1024  /* just needs to be approximate */
