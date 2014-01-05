@@ -4,10 +4,10 @@ Version 4.8.5 (5 January 2014)
  * Fix numerous compiler warnings in the SAT-solver code.
  * Fix build-break involving multiple declaration of 'Boolean'
 
-Version 4.8.4 (30 December 2014)
+Version 4.8.4 (30 December 2013)
  * Fix build break for Mac OSX
 
-Version 4.8.3 (30 December 2014)
+Version 4.8.3 (30 December 2013)
  * Create new msvc12 build files, restore old msvc9 files.
  * Revert location of the Windows mbrtowc declaration.
  * Add verb-wall connector for present participles.
