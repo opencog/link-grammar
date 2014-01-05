@@ -15,6 +15,8 @@
 
 #include "disjunct-utils.h"
 #include "massage.h"
+#include "structures.h"
+#include "word-utils.h"
 
 /* This file contains the functions for massaging disjuncts of the
    sentence in special ways having to do with conjunctions.

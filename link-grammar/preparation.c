@@ -24,6 +24,10 @@
 #include "word-utils.h"
 
 #ifdef USE_FAT_LINKAGES
+
+#include "and.h"
+#include "massage.h"
+
 void free_deletable(Sentence sent)
 {
 	int w;
