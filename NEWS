@@ -1,3 +1,71 @@
+Version 4.8.5 of the Link Grammar Parser is now available. 
+
+This is the third release in about a week; each prompted by a
+build-break in the previous version.  Sorry!  There's been assorted
+(minor) new work, and this has been enough to cause trouble for
+various people.
+
+Some notable changes in the last 6 weeks:
+ * Improved Russian (UTF-8) support for MSWindows users.
+ * Build files for MSVC12
+ * Several Java binding fixes
+ * English dictionary: add a verb-wall connector for present participles.
+
+A full list of changes is given below. If none of these seem to affect
+you, there is no particular need to upgrade.
+
+--------------------
+
+The link-grammar homepage:
+http://www.abiword.org/projects/link-grammar/
+
+Download:
+http://www.abiword.org/downloads/link-grammar/4.7.9/link-grammar-4.7.9.tar.gz
+
+WHAT IS LINK GRAMMAR?
+The Link Grammar Parser is a syntactic parser of English (and other
+languages as well), based on link grammar, an original theory of English
+syntax.  Given a sentence, the system assigns to it a syntactic
+structure, which consists of a set of labelled links connecting pairs of
+words. The parser also produces a "constituent" (Penn tree-bank style
+phrase tree) representation of a sentence (showing noun phrases, verb
+phrases, etc.). The RelEx extension provides dependency-parse output.
+
+
+CHANGELOG:
+
+Version 4.8.5 (5 January 2014)
+ * Update memory usage accounting; fix accounting bugs.
+ * Fix Java garbage collection bug.
+ * Fix numerous compiler warnings in the SAT-solver code.
+ * Fix build-break involving multiple declaration of 'Boolean'.
+
+Version 4.8.4 (30 December 2013)
+ * Fix build break for Mac OSX.
+
+Version 4.8.3 (30 December 2013)
+ * Create new msvc12 build files, restore old msvc9 files.
+ * Revert location of the Windows mbrtowc declaration.
+ * Add verb-wall connector for present participles.
+ * Fix build-time include file directory paths.
+ * Provide the 'any' language to enumerate all possible linkages.
+ * Fix recognition of U+00A0, c2 a0, NO-BREAK SPACE as whitespace.
+ * Improve parse-time performance of exceptionally long sentences.
+ * Fix crash on certain sentences containing equals sign.
+
+Version 4.8.2 (25 November 2013)
+ * More MSWindows UTF-8/multi-byte fixes (for Russian).
+ * Add missing JSONUtils file.
+
+Version 4.8.1 (21 November 2013)
+ * Ongoing work on viterbi.
+ * Updated MSVC9 project files from Jand Hashemi (Lucky--)
+ * Fix important bug in Java services: return top parses, not random ones.
+ * Java: for the link-diagram string, do not limit to 80 char term width.
+ * Windows: UTF-8 fixes so that Russian works in most MSWindows locales.
+
+
+=================================================================
 Version 4.8.0 of the Link Grammar Parser is now available. 
 
 This is the start of a new version series, containing an important

@@ -1,11 +1,14 @@
+Version 4.8.6 (XXX 2014)
+ *
+
 Version 4.8.5 (5 January 2014)
  * Update memory usage accounting; fix accounting bugs.
  * Fix Java garbage collection bug.
  * Fix numerous compiler warnings in the SAT-solver code.
- * Fix build-break involving multiple declaration of 'Boolean'
+ * Fix build-break involving multiple declaration of 'Boolean'.
 
 Version 4.8.4 (30 December 2013)
- * Fix build break for Mac OSX
+ * Fix build break for Mac OSX.
 
 Version 4.8.3 (30 December 2013)
  * Create new msvc12 build files, restore old msvc9 files.
@@ -22,7 +25,7 @@ Version 4.8.2 (25 November 2013)
  * Add missing JSONUtils file.
 
 Version 4.8.1 (21 November 2013)
- * Ongoing work on viterbi.
+ * Ongoing work on Viterbi.
  * Updated MSVC9 project files from Jand Hashemi (Lucky--)
  * Fix important bug in Java services: return top parses, not random ones.
  * Java: for the link-diagram string, do not limit to 80 char term width.
