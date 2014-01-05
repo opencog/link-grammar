@@ -15,7 +15,6 @@
 #include <limits.h>
 #include <math.h>
 #include <string.h>
-#include "api.h"
 #include "disjuncts.h"
 #include "disjunct-utils.h"
 #include "error.h"

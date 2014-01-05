@@ -36,8 +36,9 @@ int getrusage(int who, struct rusage *rusage);
 /* Declaration missing from sys/resource.h in sun operating systems (?) */
 #endif /* __sun__ */
 
-#include "api.h"
+#include "api-structures.h"
 #include "resources.h"
+#include "utilities.h"
 
 #define MAX_PARSE_TIME_UNLIMITED -1
 #define MAX_MEMORY_UNLIMITED ((size_t) -1)

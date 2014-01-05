@@ -10,6 +10,10 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+
+#include "api-structures.h"
+#include "link-includes.h"
+
 Parse_info parse_info_new(int nwords);
 void free_parse_info(Parse_info);
 int   build_parse_set(Sentence sent, unsigned int cost, Parse_Options opts);

@@ -12,7 +12,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api.h"
+#include "count.h"
+#include "fast-match.h"
+#include "extract-links.h"
+#include "word-utils.h"
 
 /**
  * The first thing we do is we build a data structure to represent the

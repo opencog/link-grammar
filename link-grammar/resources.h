@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "api-types.h"
+#include "link-includes.h"
+
 void      print_time(Parse_Options opts, const char * s);
 void      print_total_space(Parse_Options opts);
 void      resources_reset(Resources r);
