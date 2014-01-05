@@ -4,10 +4,6 @@
 #include <vector>
 #include <map>
 
-extern "C" {
-#include <link-grammar/api.h>
-}
-
 #include "guiding.hpp"
 #include "Solver.h"
 #include "trie.hpp"

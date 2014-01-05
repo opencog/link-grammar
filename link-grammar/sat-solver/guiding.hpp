@@ -4,6 +4,13 @@
 #include "Solver.h"
 #include "util.hpp"
 
+extern "C" {
+
+#include "api-structures.h"
+#include "structures.h"
+
+};
+
 // This class represents different guding strategies of LinkParser SAT search
 class Guiding {
 public:

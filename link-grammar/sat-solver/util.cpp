@@ -1,5 +1,11 @@
 #include "util.hpp"
 
+extern "C" {
+#include "api-structures.h"
+#include "structures.h"
+#include "utilities.h"
+};
+
 bool isEndingInterpunction(const char* str) {
   return strcmp(str, ".") == 0 ||
     strcmp(str, "?") == 0 ||

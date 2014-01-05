@@ -1,5 +1,5 @@
 extern "C" {
-#include <link-grammar/api.h>
+#include <link-grammar/link-includes.h>
 }
 
 extern "C" int sat_encode(Sentence sent, Parse_Options  opts);

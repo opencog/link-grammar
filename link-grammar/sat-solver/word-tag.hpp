@@ -5,9 +5,13 @@
 #include <map>
 #include <set>
 
+#include <link-grammar/link-includes.h>
+
 extern "C" {
-#include <link-grammar/api.h>
-}
+#include "count.h"
+#include "prune.h"
+#include "word-utils.h"
+};
 
 #include "variables.hpp"
 
@@ -100,6 +104,7 @@ public:
     case '-':
       return &_left_connectors[_position[dfs_position - 1]];
     }
+    return NULL;
   }
 
   void set_connector_length_limit(Connector* c) {

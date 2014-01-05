@@ -1,9 +1,7 @@
 #ifndef __UTIL_HPP__
 #define __UTIL_HPP__
 
-extern "C" {
-#include <link-grammar/api.h>
-}
+#include <link-grammar/link-includes.h>
 
 bool isEndingInterpunction(const char* str);
 

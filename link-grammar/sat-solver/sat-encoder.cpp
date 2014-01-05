@@ -20,9 +20,12 @@ using std::endl;
 
 
 extern "C" {
-#include <link-grammar/api.h>
+#include "analyze-linkage.h"
+#include "and.h"
+#include "extract-links.h"
+#include "post-process.h"
 #include "preparation.h"
-#include "read-dict.h"
+#include "dict-file/read-dict.h"
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
