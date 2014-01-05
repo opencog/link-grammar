@@ -10,6 +10,9 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+
+#include "link-includes.h"
+
 void   print_disjunct_counts(Sentence sent);
 void   print_expression_sizes(Sentence sent);
 void   compute_chosen_words(Sentence sent, Linkage linkage);

@@ -15,9 +15,16 @@
 
 #include <stdarg.h>
 #include <memory.h>
-#include "api.h"
+
 #include "post-process.h"
+
+#include "api-structures.h"
 #include "error.h"
+#include "externs.h"
+#include "pp_knowledge.h"
+#include "pp_linkset.h"
+#include "structures.h"
+#include "string-set.h"
 
 #define PP_MAX_DOMAINS 128
 

@@ -10,6 +10,10 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+
+#include "api-types.h"
+#include "link-includes.h"
+
 void       prune(Sentence sent);
 int        power_prune(Sentence sent, int mode, Parse_Options opts);
 void       pp_and_power_prune(Sentence sent, int mode, Parse_Options opts);

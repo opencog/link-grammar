@@ -398,16 +398,6 @@ typedef struct pp_label_node_s
 } pp_label_node;                 /* next=NULL: end of list */
 
 
-typedef struct PPLexTable_s
-{
-    String_set *string_set;
-    const char *labels[PP_LEXER_MAX_LABELS];             /* array of labels  */
-    pp_label_node *nodes_of_label[PP_LEXER_MAX_LABELS]; /*str. for each label*/
-    pp_label_node *last_node_of_label[PP_LEXER_MAX_LABELS];    /* efficiency */
-    pp_label_node *current_node_of_active_label;/* state: curr node of label */
-    int idx_of_active_label;                    /* read state: current label */
-} PPLexTable;
-
 /* from pp_knowledge.c */
 typedef struct StartingLinkAndDomain_s
 {
@@ -427,6 +417,7 @@ typedef struct pp_rule_s
     const char  *msg;     /* explanation (NULL=end sentinel in array)*/
 } pp_rule;
 
+typedef struct PPLexTable_s PPLexTable;
 struct pp_knowledge_s
 {
     PPLexTable *lt; /* Internal rep'n of sets of strings from knowledge file */

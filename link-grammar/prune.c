@@ -11,9 +11,15 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "api.h"
+#include "api-structures.h"
+#include "count.h"
 #include "disjunct-utils.h"
+#include "externs.h"
+#include "post-process.h"
+#include "print.h"
+#include "prune.h"
 #include "resources.h"
+#include "word-utils.h"
 
 #define CONTABSZ 8192
 typedef Connector * connector_table;
