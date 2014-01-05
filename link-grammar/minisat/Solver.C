@@ -780,7 +780,7 @@ lbool Solver::search(int nof_conflicts, int nof_learnts)
 
   starts++;
 
-  bool first = true;
+  // bool first = true;
 
   for (;;){
     Clause* confl = propagate();
@@ -792,7 +792,7 @@ lbool Solver::search(int nof_conflicts, int nof_learnts)
 
       if (decisionLevel() == 0) return l_False;
       
-      first = false;
+      // first = false;
 
       learnt_clause.clear();
       analyze(confl, learnt_clause, backtrack_level);
@@ -973,7 +973,6 @@ lbool Solver::solve(const vec<Lit>& assumps)
 
 void Solver::verifyModel()
 {
-  bool failed = false;
   for (int i = 0; i < clauses.size(); i++){
     Clause& c = *clauses[i];
     for (int j = 0; j < c.size(); j++)
@@ -983,7 +982,8 @@ void Solver::verifyModel()
     reportf("unsatisfied clause: ");
     printClause(*clauses[i]);
     reportf("\n");
-    failed = true;
+    // bool failed = false;
+    // failed = true;
   next:;
   }
 
