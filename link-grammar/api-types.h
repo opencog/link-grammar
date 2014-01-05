@@ -20,14 +20,14 @@
 #ifndef _API_TYPES_H_
 #define _API_TYPES_H_
 
-#define MAX_TOKEN_LENGTH 250       /* maximum number of chars in a token */
+#define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
 
 /* MAX_SENTENCE cannot be more than 254, because word MAX_SENTENCE+1 is 
  * used to indicate that nothing can connect to this connector, and this 
  * should fit in one byte (if the word field of a connector is an 
  * unsigned char).
  */
-#define MAX_SENTENCE 250      /* maximum number of words in a sentence */
+#define MAX_SENTENCE 250       /* Maximum number of words in a sentence */
 #define MAX_LINKS (2*MAX_SENTENCE-3) /* maximum number of links allowed */
 
 typedef char Boolean;
@@ -35,6 +35,7 @@ typedef char Boolean;
 /* Widely used private typedefs */
 #ifdef USE_FAT_LINKAGES
 typedef struct And_data_s And_data;
+typedef struct DIS_node_struct DIS_node;
 #endif /* USE_FAT_LINKAGES */
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;

@@ -13,7 +13,12 @@
 
 
 #include <stdarg.h>
-#include "api.h"
+#include "analyze-linkage.h"
+#include "and.h"
+#include "api-structures.h"
+#include "post-process.h"
+#include "structures.h"
+#include "word-utils.h"
 
 /**
  * The functions in this file do several things: () take a linkage

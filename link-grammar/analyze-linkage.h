@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "api-types.h"
+#include "link-includes.h"
+
 void init_analyze(Sentence);
 void free_analyze(Sentence);
 

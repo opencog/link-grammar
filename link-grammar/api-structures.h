@@ -360,10 +360,6 @@ struct Sublinkage_s
 	PP_data   pp_data;
 };
 
-#ifdef USE_FAT_LINKAGES
-typedef struct DIS_node_struct DIS_node;
-#endif /* USE_FAT_LINKAGES */
-
 struct Linkage_s
 {
 	int             num_words;  /* number of (tokenized) words */

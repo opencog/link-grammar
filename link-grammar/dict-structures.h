@@ -18,7 +18,7 @@
 
 LINK_BEGIN_DECLS
 
-/* forward decls */
+/* Forward decls */
 typedef char Boolean;
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
@@ -43,16 +43,16 @@ typedef enum
  */
 struct Exp_struct
 {
-    Exp * next; /* Used only for mem management,for freeing */
-    Exp_type type;  /* One of three types, see above */
-    char dir;   /* '-' means to the left, '+' means to right (for connector) */
+    Exp * next;    /* Used only for mem management,for freeing */
+    Exp_type type; /* One of three types, see above */
+    char dir;      /* '-' means to the left, '+' means to right (for connector) */
     Boolean multi; /* TRUE if a multi-connector (for connector)  */
     union {
-        E_list * l;           /* only needed for non-terminals */
-        const char * string;  /* only needed if it's a connector */
+        E_list * l;           /* Only needed for non-terminals */
+        const char * string;  /* Only needed if it's a connector */
     } u;
-    float cost;   /* The cost of using this expression.
-                     Only used for non-terminals */
+    float cost;    /* The cost of using this expression.
+                      Only used for non-terminals */
 };
 
 struct E_list_struct
@@ -69,8 +69,8 @@ struct E_list_struct
  */
 struct Dict_node_struct
 {
-    const char * string;  /* the word itself */
-    Word_file * file;    /* the file the word came from (NULL if dict file) */
+    const char * string;  /* The word itself */
+    Word_file * file;     /* The file the word came from (NULL if dict file) */
     Exp       * exp;
     Dict_node *left, *right;
 };
