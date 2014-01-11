@@ -546,7 +546,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		{
 			for (j=0; j<N_links; j++)
 			{
-				if ((ppla[j]->l == 0))
+				if (0 == ppla[j]->l)
 				{
 					if (ppla[j]->r == linkage->num_words-1) continue;
 					N_wall_connectors ++;
