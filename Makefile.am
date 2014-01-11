@@ -6,8 +6,7 @@ pkgconfig_DATA = link-grammar.pc
 ACLOCAL_AMFLAGS = -I m4
 
 # Build and install the jar file in $(PREFIX)/share/java ...
-# XXX FIXME configure should look to see if it can find ant
-if HAVE_JAVA
+if HAVE_ANT
 linkgrammar-@VERSION@.jar:
 	ant
 

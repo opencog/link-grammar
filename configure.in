@@ -565,12 +565,18 @@ if test "x$enable_java_bindings" = "xyes"; then
 
    AC_SUBST(CPPFLAGS)
 
-   # For now, we assume that if the jni files are there, then the 
-   # javac, ant, and jar compilers/builders are installed as well.
-   # These are used to build the jar file and install it.
-   AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
+	# This allows jni-client.c to be built
+	AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
+
+	# For now, we assume that if the ant tool is there, then the javac and
+	# jar compiler/packager are installed as well. These are needed to build
+	# the jar file and install it.
+	AC_CHECK_PROG(ANTfound,ant,yes,no)
+	AM_CONDITIONAL(HAVE_ANT, test x${ANTfound} = xyes)
+
 else
    AM_CONDITIONAL(HAVE_JAVA, false)
+   AM_CONDITIONAL(HAVE_ANT, false)
 fi
 
 dnl ===================================================================
@@ -617,7 +623,8 @@ $PACKAGE-$VERSION
 	autopackage:                    ${br_cv_binreloc}
 	Posix threads:                  ${enable_pthreads}
 	Editline command-line history:  ${edlin}
-	Java interfaces:                ${JNIfound}
+	Java libraries:                 ${JNIfound}
+	Java interfaces:                ${ANTfound}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
