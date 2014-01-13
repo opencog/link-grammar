@@ -40,6 +40,7 @@
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 #define NOT_SUFFIX_WORD ("=[!]") /* This is not a suffix */
+#define NOT_SUFFIX_WTOO ("=.e")  /* This is not a suffix (for the English dict) */
 
 #define HIDE_SUFFIX   (!display_suffixes)
 
@@ -49,8 +50,26 @@
  *    bizarrely.  This needs fixing.
  * 2) Engish sentences like "this is a hey= =.zzz test" display
  *    unexpectely. (because the suffixes were contracted!)
- * In breif, the mechanism should be disabled for English.
+ * In brief, the mechanism should be disabled for English.
  */
+
+/**
+ * Return TRUE if the word is a suffix.
+ *
+ * Suffixes have the form =asdf.asdf and "null" suffixes have the form
+ * =.asdf. Ordinary equals signs appearing in regular text are either
+ * = or =[!] or =.e with the last form being used in the English dict.
+ * This is a bit of a mess, but I can't think of a better way ...
+ * At this time, suffixes are used only in the Russian dicts.
+ */
+static Boolean is_suffix(const char* w)
+{
+	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
+	if (1 == strlen(w)) return FALSE;
+	if (0 == strcmp(NOT_SUFFIX_WORD, w)) return FALSE;
+	if (0 == strcmp(NOT_SUFFIX_WTOO, w)) return FALSE;
+	return TRUE;
+}
 
 static void 
 set_centers(const Linkage linkage, int center[],
@@ -63,15 +82,8 @@ set_centers(const Linkage linkage, int center[],
 	if (print_word_0) i=0; else i=1;
 	for (; i < N_words_to_print; i++)
 	{
-		/* Ignore suffixes. Suffixes have the form =asdf.asdf and "null"
-		 * suffixes have the form =.asdf. Ordinary equals signs appearing
-		 * in regular text are either = or =[!].   This is a bit of a mess,
-		 * but I can't think of a better way ...
-		 */
-		if (HIDE_SUFFIX &&
-		    0 == strncmp(SUFFIX_WORD, linkage->word[i], SUFFIX_WORD_L) &&
-		    1 != strlen(linkage->word[i]) &&
-		    0 != strcmp(NOT_SUFFIX_WORD, linkage->word[i]))
+		/* Ignore suffixes. */
+		if (HIDE_SUFFIX && is_suffix(linkage->word[i]))
 		{
 			center[i] = tot;
 			tot++;  // hack alert -- a trailing blank gets printed anyway ...
@@ -439,11 +451,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				t = string_set_add("", sent->string_set);
 			}
 
-			/* Concatenate the stem and the sufix together into one word */
+			/* Concatenate the stem and the suffix together into one word */
 			if (HIDE_SUFFIX)
 			{
-				if (0 == strncmp(t, SUFFIX_WORD, SUFFIX_WORD_L) &&
-				   pi->chosen_disjuncts[i-1])
+				if (is_suffix(t) && pi->chosen_disjuncts[i-1])
 				{
 					const char * stem = pi->chosen_disjuncts[i-1]->string;
 					size_t len = strlen(stem) + strlen (t);
@@ -467,8 +478,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				    (pi->chosen_disjuncts[i+1]))
 				{
 					const char * next = pi->chosen_disjuncts[i+1]->string;
-					if (0 == strncmp(next, SUFFIX_WORD, SUFFIX_WORD_L) &&
-					    0 != strcmp(next, EMPTY_WORD))
+					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD))
 					{
 						t = string_set_add("", sent->string_set);
 					}
