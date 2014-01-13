@@ -39,8 +39,6 @@
 #define SUFFIX_WORD_L 1        /* length of above */
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
-#define NOT_SUFFIX_WORD ("=[!]") /* This is not a suffix */
-#define NOT_SUFFIX_WTOO ("=.e")  /* This is not a suffix (for the English dict) */
 
 #define HIDE_SUFFIX   (!display_suffixes)
 
@@ -56,9 +54,8 @@
 /**
  * Return TRUE if the word is a suffix.
  *
- * Suffixes have the form =asdf.asdf and "null" suffixes have the form
- * =.asdf. Ordinary equals signs appearing in regular text are either
- * = or =[!] or =.e with the last form being used in the English dict.
+ * Suffixes have the form =asdf.asdf and "null" suffixes have the form =.asdf.
+ * Ordinary equals signs appearing in regular text are either = or =[!].
  * This is a bit of a mess, but I can't think of a better way ...
  * At this time, suffixes are used only in the Russian dicts.
  */
@@ -66,8 +63,7 @@ static Boolean is_suffix(const char* w)
 {
 	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
 	if (1 == strlen(w)) return FALSE;
-	if (0 == strcmp(NOT_SUFFIX_WORD, w)) return FALSE;
-	if (0 == strcmp(NOT_SUFFIX_WTOO, w)) return FALSE;
+	if (0 == strcmp("=[!]", w)) return FALSE;
 	return TRUE;
 }
 
