@@ -2548,7 +2548,7 @@ equiv.v sim.v simeq.v approx.v ~.v ～.v:
 ->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
 
 % "adverb" use, e.g. "< 10" for "less than 10"
-=.e <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
+=.eq <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
 
 % ===================================================================
 % COMMON VERB CATEGORIES (The last number of the file name indicates
