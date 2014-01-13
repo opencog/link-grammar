@@ -1,6 +1,7 @@
 Version 4.8.6 (XXX 2014)
  * Fix minor OSX compiler warnings.
  * Check for presence of Java ant before assuming it is there.
+ * Fix crash on certain sentences containing equals sign.
 
 Version 4.8.5 (5 January 2014)
  * Update memory usage accounting; fix accounting bugs.

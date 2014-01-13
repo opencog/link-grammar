@@ -667,17 +667,17 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			if (opts->display_link_subscripts)
 				k = strlen(connector);
 			else
-				for (t=connector; isupper((int)*t); t++) k++; /* uppercase len of conn*/
+				for (t = connector; isupper((int)*t); t++) k++; /* uppercase len of conn*/
 			if ((cl+cr-k)/2 + 1 <= cl) {
 				t = picture[row] + cl + 1;
 			} else {
-				t = picture[row] + (cl+cr-k)/2 + 1;
+				t = picture[row] + (cl + cr + 2 - k)/2;
 			}
 			s = connector;
 			if (opts->display_link_subscripts)
-				while((*s != '\0') && (*t == '-')) *t++ = *s++; 
+				while ((*s != '\0') && (*t == '-')) *t++ = *s++; 
 			else
-				while(isupper((int)*s) && (*t == '-')) *t++ = *s++; 
+				while (isupper((int)*s) && (*t == '-')) *t++ = *s++; 
 
 			/* now put in the | below this one, where needed */
 			for (k=0; k<row; k++) {
