@@ -56,7 +56,11 @@
  *
  * Suffixes have the form =asdf.asdf and "null" suffixes have the form =.asdf.
  * Ordinary equals signs appearing in regular text are either = or =[!].
+ * In the English dict, equals signs appear as =.v and =.eq and are handled
+ * specially below. This works only because these do not appear in the
+ * Russian dict.  It will get nastier as more languages are added.
  * This is a bit of a mess, but I can't think of a better way ...
+ * Perhaps a different character, perhaps some obscure UTF-8 marker?
  * At this time, suffixes are used only in the Russian dicts.
  */
 static Boolean is_suffix(const char* w)
@@ -64,6 +68,8 @@ static Boolean is_suffix(const char* w)
 	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
 	if (1 == strlen(w)) return FALSE;
 	if (0 == strcmp("=[!]", w)) return FALSE;
+	if (0 == strcmp("=.v", w)) return FALSE;
+	if (0 == strcmp("=.eq", w)) return FALSE;
 	return TRUE;
 }
 
