@@ -27,18 +27,19 @@
 #define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
-#define RIGHT_WALL_DISPLAY  ("RIGHT-WALL")   /* the string to use to show the wall */
+#define RIGHT_WALL_DISPLAY  ("RIGHT-WALL") /* the string to use to show the wall */
 #define RIGHT_WALL_SUPPRESS ("RW") /* If this connector is used on the wall, */
 
 /* The Russian dictionary makes use of the empty word to deal with
  * the splitting of words into variable-length word-counts */
-#define EMPTY_WORD ("=.zzz") /* pure whitespace */
+#define EMPTY_WORD ("=.zzz")   /* pure whitespace */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
-#define SUFFIX_WORD ("=")  /* suffixes start with this */
-#define SUFFIX_WORD_L 1     /* length of above */
+#define SUFFIX_WORD ("=")      /* suffixes start with this */
+#define SUFFIX_WORD_L 1        /* length of above */
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
-#define SUFFIX_SUPPRESS_L 2  /* length of above */
+#define SUFFIX_SUPPRESS_L 2    /* length of above */
+#define NOT_SUFFIX_WORD ("=[!]") /* This is not a suffix */
 
 #define HIDE_SUFFIX   (!display_suffixes)
 
@@ -47,11 +48,13 @@
  * 1) Valid English constructions like "I think that 2 + 2 = 4" display
  *    bizarrely.  This needs fixing.
  * 2) Engish sentences like "this is a hey= =.zzz test" display
- *    unexpectely. (because the suffixes were contracted.
+ *    unexpectely. (because the suffixes were contracted!)
  * In breif, the mechanism should be disabled for English.
  */
 
-static void set_centers(const Linkage linkage, int center[], Boolean print_word_0, int N_words_to_print)
+static void 
+set_centers(const Linkage linkage, int center[],
+            Boolean print_word_0, int N_words_to_print)
 {
 	int i, len, tot;
 	Boolean display_suffixes = linkage->opts->display_suffixes;
@@ -60,9 +63,15 @@ static void set_centers(const Linkage linkage, int center[], Boolean print_word_
 	if (print_word_0) i=0; else i=1;
 	for (; i < N_words_to_print; i++)
 	{
-		/* Ignore suffixes */
+		/* Ignore suffixes. Suffixes have the form =asdf.asdf and "null"
+		 * suffixes have the form =.asdf. Ordinary equals signs appearing
+		 * in regular text are either = or =[!].   This is a bit of a mess,
+		 * but I can't think of a better way ...
+		 */
 		if (HIDE_SUFFIX &&
-		    0 == strncmp (SUFFIX_WORD, linkage->word[i], SUFFIX_WORD_L))
+		    0 == strncmp(SUFFIX_WORD, linkage->word[i], SUFFIX_WORD_L) &&
+		    1 != strlen(linkage->word[i]) &&
+		    0 != strcmp(NOT_SUFFIX_WORD, linkage->word[i]))
 		{
 			center[i] = tot;
 			tot++;  // hack alert -- a trailing blank gets printed anyway ...
@@ -516,9 +525,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	char connector[MAX_TOKEN_LENGTH];
 	unsigned int line_len, link_length;
 #ifdef USE_FAT_LINKAGES
-	Sublinkage *sublinkage=&(linkage->sublinkage[linkage->current]);
+	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
 #else
-	Sublinkage *sublinkage=&(linkage->sublinkage);
+	Sublinkage *sublinkage = &(linkage->sublinkage);
 #endif /* USE_FAT_LINKAGES */
 	unsigned int N_links = sublinkage->num_links;
 	Link **ppla = sublinkage->link;
