@@ -7615,11 +7615,11 @@ to.r:
     <MX-PHRASE> or
     [<OPENER>] or
     [[R-]] or
-    (SFsx+ & <S-CLAUSE>))) or
-  (TO- & Xc+) or
-  I*a+ or
-  ({JQ+} & ([J+] or Mgp+) & <prep-main-a>) or
-  [MVp- & B-];
+    (SFsx+ & <S-CLAUSE>)))
+  or (TO- & Xc+)
+  or I*a+
+  or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
+  or [MVp- & B-];
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
 
@@ -8583,12 +8583,12 @@ and.j-r or.j-r:
 % "I saw the (dog and pony) show"
 %
 % and_not ,_not: "I saw John, not Mary"
-% We treat this her as an idiom, even though it's explicitly hanled for
+% We treat this here as an idiom, even though it's explicitly hanled for
 % AJ nd RJ conjunctions.  Its just easier, for now.
 %
 % {Jd- & Dm-}: "A number of recommendations and suggestions were made"
 %   with "number of" modifying the and.j-n
-% [[<noun-conj-head>]] costs so that above is prefered:
+% [[<noun-conj-head>]] costs so that above is prefered: (huh????)
 % "there was enough of the beer and sandwiches"
 
 and.j-n but_not and_not ,_not:
@@ -8599,13 +8599,13 @@ and.j-n but_not and_not ,_not:
     or [{Ds-} & Os-]
     or <post-nominal-s>))
   or (<noun-conj-dep-p> & <noun-sub-p> & (
-    [[<noun-conj-head>]]
+    <noun-conj-head>
     or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
     or SIp-
     or [{{Jd-} & Dmc-} & Op-]
     or <post-nominal-p>))
   or (<noun-conj-dep-u> & <noun-sub-x> & (
-    [[<noun-conj-head>]]
+    <noun-conj-head>
     or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
     or SIu-
     or [{{Jd-} & Dmu-} &  Ou-]
@@ -9992,7 +9992,10 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   <ordinary-adj> or
   ({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+);
 
-".": ((Xp- or ({@Xca-} & Xc-)) & RW+) or Xi-;
+% Cost on Xc- because Xc is intended for commas, not periods.
+% Without this cost, lists, such as "Paris, London and Berlin." 
+% get linked incorrectly with the MX link.
+".": ((Xp- or ({@Xca-} & [[Xc-]])) & RW+) or Xi-;
 
 "!" "?" ‽ ؟ ？！: ((Xp- or ({@Xca-} & Xc-)) & RW+) or ({@Xca-} & Xq+);
 
@@ -10029,7 +10032,7 @@ emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
   or <verb-conjunction>
-  or [[SJl- & SJr+ & SJl+]]
+  or (SJl- & SJr+ & SJl+)
   or (SJn- & SJr+ & SJn+);
 
 % :.j
@@ -10276,9 +10279,12 @@ LEFT-WALL:
     & {WV+}
     & {CP+} & {Xx+} & {RW+ or Xp+};
 
-RIGHT-WALL: RW- or ({@Xca-} & Xc-);
+% Cost on Xc- because Xc is intended for commas, not sentence-ends.
+% Without this cost, the right wall gets used incorrectly with MX links.
+RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
-% XXX ANDABLE-CONNECTORS is now deprecated, needs to be removed for version 5.0
+% XXX ANDABLE-CONNECTORS is now deprecated, needs to be removed for 
+% version 5.0. These were used with fat-links, which are now gone.
 ANDABLE-CONNECTORS:   % these are the connectors that can be combined by
                       % conjunctions. They are listed alphabetically.
 
