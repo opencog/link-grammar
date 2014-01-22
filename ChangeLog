@@ -3,6 +3,7 @@ Version 4.8.6 (XXX 2014)
  * Check for presence of Java ant before assuming it is there.
  * Fix crash on certain sentences containing equals sign.
  * Fix parsing of lists (blah, blah and blah).
+ * Fix build break for uClibc systems (Gentoo).
 
 Version 4.8.5 (5 January 2014)
  * Update memory usage accounting; fix accounting bugs.

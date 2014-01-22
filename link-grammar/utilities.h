@@ -159,6 +159,10 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
     }                                                             \
 }
 
+#if defined(__UCLIBC__)
+#define fmaxf(a,b) ((a) > (b) ? (a) : (b))
+#endif
+
 #if !defined(MIN)
 #define MIN(X,Y)  ( ((X) < (Y)) ? (X) : (Y))
 #endif
