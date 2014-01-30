@@ -132,6 +132,18 @@ static Boolean is_space(wchar_t wc)
 	/* 0xc2 0xa0 is U+00A0, c2 a0, NO-BREAK SPACE */
 	/* For some reason, iswspace doesn't get this */
 	if (0xa0 == wc) return TRUE;
+
+	/* iswspace seems to use somewhat different rules than what we want,
+	 * so over-ride special cases in the U+2000 to U+206F range.
+	 * Caution: this potentially screws with arabic, and right-to-left
+	 * languages.
+	 */
+/***  later, not now ..
+	if (0x2000 <= wc && wc <= 0x200f) return TRUE;
+	if (0x2028 <= wc && wc <= 0x202f) return TRUE;
+	if (0x205f <= wc && wc <= 0x206f) return TRUE;
+***/
+
 	return FALSE;
 }
 
