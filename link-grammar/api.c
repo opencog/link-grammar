@@ -1264,7 +1264,8 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
 		prt_error("WARNING: Combinatorial explosion! nulls=%d cnt=%d\n"
-			"Consider retrying the parse with the max allowed disjunct cost set lower.\n",
+			"Consider retrying the parse with the max allowed disjunct cost set lower.\n"
+			"At the command line, use !cost-max\n",
 			sent->null_count, sent->num_linkages_found);
 	}
 	assert(0 <= sent->num_valid_linkages, "Miscount of valid linkages!")
