@@ -99,7 +99,7 @@ Parse_Options parse_options_create(void)
 	/* Here's where the values are initialized */
 	po->verbosity	 = 1;
 	po->linkage_limit = 100;
-	po->disjunct_cost = MAX_DISJUNCT_COST;
+	po->disjunct_cost = 2.0f;   /* Maybe should be 1.0f ?? */
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->null_block = 1;
@@ -224,23 +224,29 @@ int parse_options_get_use_fat_links(Parse_Options opts) {
 }
 #endif /* USE_FAT_LINKAGES */
 
-void parse_options_set_linkage_limit(Parse_Options opts, int dummy) {
+void parse_options_set_linkage_limit(Parse_Options opts, int dummy)
+{
 	opts->linkage_limit = dummy;
 }
-int parse_options_get_linkage_limit(Parse_Options opts) {
+int parse_options_get_linkage_limit(Parse_Options opts)
+{
 	return opts->linkage_limit;
 }
 
-void parse_options_set_disjunct_cost(Parse_Options opts, int dummy) {
+void parse_options_set_disjunct_cost(Parse_Options opts, int dummy)
+{
 	opts->disjunct_cost = dummy;
 }
-void parse_options_set_disjunct_costf(Parse_Options opts, float dummy) {
+void parse_options_set_disjunct_costf(Parse_Options opts, float dummy)
+{
 	opts->disjunct_cost = dummy;
 }
-int parse_options_get_disjunct_cost(Parse_Options opts) {
+int parse_options_get_disjunct_cost(Parse_Options opts)
+{
 	return (int) ceilf(opts->disjunct_cost);
 }
-float parse_options_get_disjunct_costf(Parse_Options opts) {
+float parse_options_get_disjunct_costf(Parse_Options opts)
+{
 	return opts->disjunct_cost;
 }
 
@@ -1008,7 +1014,8 @@ int sentence_and_cost(Sentence sent, int i) {
 #endif /* USE_FAT_LINKAGES */
 }
 
-int sentence_disjunct_cost(Sentence sent, int i) {
+int sentence_disjunct_cost(Sentence sent, int i)
+{
 	if (!sent) return 0;
 
 	/* The sat solver (currently) fails to fill in link_info */
