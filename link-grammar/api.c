@@ -1178,18 +1178,9 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 				sent->null_count, total);
 		}
 
-		/* Give up if the parse count is overflowing */
-		if ((PARSE_NUM_OVERFLOW < total) || (total < 0))
-		{
-			if (verbosity > 0)
-			{
-				prt_error("WARNING: Combinatorial explosion! nulls=%d cnt=%lld\n"
-					"Consider retrying the parse with the max allowed disjunct cost set lower.\n",
-					sent->null_count, total);
-			}
-			total = (total>INT_MAX) ? INT_MAX : total;
-			total = (total<0) ? INT_MAX : total;
-		}
+		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
+		total = (total>INT_MAX) ? INT_MAX : total;
+		total = (total<0) ? INT_MAX : total;
 
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
@@ -1269,6 +1260,13 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Finished parse");
 
+	if ((verbosity > 0) && 
+	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
+	{
+		prt_error("WARNING: Combinatorial explosion! nulls=%d cnt=%d\n"
+			"Consider retrying the parse with the max allowed disjunct cost set lower.\n",
+			sent->null_count, sent->num_linkages_found);
+	}
 	assert(0 <= sent->num_valid_linkages, "Miscount of valid linkages!")
 	return sent->num_valid_linkages;
 }
