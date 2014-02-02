@@ -1165,7 +1165,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	if (sent->parse_info) free_parse_info(sent->parse_info);
 	sent->parse_info = parse_info_new(sent->length);
 
-	for (nl = opts->min_null_count; nl<=opts->max_null_count ; ++nl)
+	for (nl = opts->min_null_count; nl <= opts->max_null_count ; ++nl)
 	{
 		s64 total;
 		if (resources_exhausted(opts->resources)) break;
