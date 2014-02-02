@@ -801,7 +801,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->num_linkages_post_processed = 0;
 	sent->num_valid_linkages = 0;
 	sent->link_info = NULL;
-	sent->num_valid_linkages = 0;
 	sent->null_count = 0;
 	sent->parse_info = NULL;
 	sent->string_set = string_set_create();
@@ -1045,16 +1044,16 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
 #define INFIX_MARK '='
 
 /**
- * This routine solves the problem of mis-link stem + suffix.
+ * This routine solves the problem of mis-linked stem + suffix.
  * It checks that the actual stem+suffix, when concatenated, restores
  * the original word.  This is a work-around for somewhat sloppy
  * dictionaries, which aren't entirely careful with making sure
  * that the stem+suffix links are unique. Here's an illustration of
  * the problem: The word Russian "тест" can be split into 
- * тест.= =.ndmsi and also тес.= =т.amss The, during linkage, 
+ * тест.= =.ndmsi and also тес.= =т.amss  Then, during linkage, 
  * тес.= and =.ndmsi are linked -- but this is not the original word; 
  * its junk.  This routine marks such linkages as 'bad'.  Really, the
- * dictionary should be fixed, but what the hell. This isn't hard.
+ * dictionary should be fixed, but what the hell. This check isn't hard.
  */
 static void sane_morphism(Sentence sent, Parse_Options opts)
 {
@@ -1064,6 +1063,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
 		Linkage_info *lifo = &sent->link_info[lk];
+
+		/* Don't bother with linkages that already failed post-processing... */
+		if (0 != lifo->N_violations)
+			continue;
+
 		extract_links(lifo->index, pi);
 		for (i=0; i<sent->length; i++)
 		{
@@ -1095,8 +1099,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 					continue;
 			}
 
-			/* If this word isn't a stem, and the next word isn't
-			 * a suffix, there's nothing to check. */
+			/* If this word isn't a stem, **and** the next word isn't
+			 * a suffix, there's nothing to check. (We do need to reject
+			 * the case where this word is a stem but the next is not a
+			 * suffix, or vice-versa.)
+			 */
 			len = strlen(djw);
 			if ((INFIX_MARK != djw[len-1]) &&
 			    ((i+1) < sent->length) && 

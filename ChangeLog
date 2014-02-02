@@ -5,6 +5,7 @@ Version 4.8.6 (XXX 2014)
  * Fix parsing of lists (blah, blah and blah).
  * Fix build break for uClibc systems (Gentoo).
  * Allow ungrammatical usage of 'ages' instead of 'aged'.
+ * Fix crash on certain sentences containing words with periods.
 
 Version 4.8.5 (5 January 2014)
  * Update memory usage accounting; fix accounting bugs.
