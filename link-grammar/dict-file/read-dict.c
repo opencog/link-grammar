@@ -473,15 +473,17 @@ static inline int dict_order(const char *s, const char *t)
 
 /**
  * dict_order_wild() -- order dictionary strings, with wildcard.
- * Assuming that s is a pointer to a dictionary string, and that
- * t is a pointer to a search string, this returns 0 if they
- * match, >0 if s>t, and <0 if s<t.
+ * Assuming that s is a pointer to the search string, and that t is
+ * a pointer to a dictionary string, this returns 0 if they match, 
+ * returns >0 if s>t, and <0 if s<t.
  *
  * The matching is done as follows.  Walk down the strings until
  * you come to the end of one of them, or until you find unequal
  * characters.  A "*" matches anything.  Otherwise, replace "."
  * by "\0", and take the difference.  This behavior matches that
  * of the function dict_order().
+ *
+ * Err
  *
  * Note: words in the dictionary itself don't have wild-card
  * chars in them; the wild-card support is here only if you are
@@ -613,7 +615,7 @@ static void free_dict_node_recursive(Dict_node * dn)
 /**
  * rdictionary_lookup() -- recursive dictionary lookup
  * Walk binary tree, given by 'dn', looking for the string 's'.
- * For every node in the tree where 's' matches (including wildcards)
+ * For every node in the tree where 's' matches (including wildcards),
  * make a copy of that node, and append it to llist.
  */
 static Dict_node * rdictionary_lookup(Dict_node *llist,
@@ -1802,11 +1804,15 @@ Boolean read_dictionary(Dictionary dict)
 
 /* ======================================================================= */
 /* the following functions are for handling deletion */
+
+#ifdef USEFUL_BUT_NOT_CURRENTLY_USED
 /**
  * Returns true if it finds a non-idiom dict_node in a file that matches
  * the string s.
  *
  * Also sets parent and to_be_deleted appropriately.
+ * Note: this function is used in only one place: delete_dictionary_words()
+ * which is, itself, not currently used ...
  */
 static Boolean find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
                                    const char * s,
@@ -1885,6 +1891,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return TRUE;
 	}
 }
+#endif USEFUL_BUT_NOT_CURRENTLY_USED
 
 static void free_Word_file(Word_file * wf)
 {
