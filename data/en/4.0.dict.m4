@@ -6889,8 +6889,12 @@ old.a:
   <ordinary-adj> or
   (Ytm- & (Pa- or Ma- or <adj-op> or MJra- or MJla+));
 
-% ??? adj-op already has MX*a- in it, why do we need a bar MX- here ?
-aged.i: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) or MJra- or MJla+);
+% ??? adj-op already has MX*a- in it, why do we need a bare MX- here ?
+<aged>: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) or MJra- or MJla+);
+aged.i: <aged>;
+% People aged 20-40 sometimes write "people ages 20-40..."  so make
+% "ages" work like aged, but with a cost.
+ages.i: [<aged>];
 
 % The following all have a very regular pattern, with just one variable
 % part, the TO TH type section.  This regularity should be exploted so
