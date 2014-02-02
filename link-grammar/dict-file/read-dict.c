@@ -485,12 +485,18 @@ static inline int dict_order(const char *s, const char *t)
  * allow user-provided strings with dots in them.  Yes, these are
  * non-words, probably due to some broken input, but hey ... users
  * give us broken input all the time...
+ *
+ * With one odd-ball exception: if the user-provided string is
+ * one or more dots (e.g. a period at end of sentence, or an ellipsis)
+ * then we do have to match those (i.e. use a null-byte).
  */
 static inline int dict_order_user(const char * s, Dict_node * dn)
 {
+	const char * so = s;
 	const char * t = dn->string;
 	while ((*s != '\0') && (*s == *t)) {s++; t++;}
-	return ((*s) - ((*t == '.')?(0):(*t)));
+	// return (*s) - ((*t == '.')?(0):(*t));
+	return (('.' == *so)?(0):(*s)) - ((*t == '.')?(0):(*t));
 }
 
 /**
@@ -1875,7 +1881,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return TRUE;
 	}
 }
-#endif USEFUL_BUT_NOT_CURRENTLY_USED
+#endif /* USEFUL_BUT_NOT_CURRENTLY_USED */
 
 static void free_Word_file(Word_file * wf)
 {
