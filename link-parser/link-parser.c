@@ -850,7 +850,7 @@ int main(int argc, char * argv[])
 				continue;
 			}
 #if 0
-			/* Try again, this time ommitting the requirement for
+			/* Try again, this time omitting the requirement for
 			 * definite articles, etc. This should allow for the parsing
 			 * of newspaper headlines and other clipped speech.
 			 *
