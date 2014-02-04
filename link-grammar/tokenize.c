@@ -498,7 +498,7 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 			/* The remaining w is too short for a possible match */
 			if ((wend-w) < len) continue;
 
-			/* Always match the zero-lenght suffix */
+			/* Always match the zero-length suffix */
 			if (0 == len) s_ok = TRUE;
 			else if (strncmp(wend-len, suffix[i], len) == 0) s_ok = TRUE;
 		}
