@@ -13,7 +13,7 @@
 /**
  * Arghhhh. This hacks around mutiple stupidities in readline/editline.
  * 1) most versions of editline don't have wide-char support.
- * 2) All versions of editline don't have UTF8 support.
+ * 2) No versions of editline have UTF8 support.
  * So basically readline() is just plain broken.
  * So hack one up, using the wide-char interfaces.  This is a hack. Argh. 
  *
