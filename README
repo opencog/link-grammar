@@ -96,6 +96,8 @@ CREATING the system:
    dictionaries into /usr/local/share/link-grammar.  Running 'ldconfig'
    will rebuild the shared library cache.
 
+   Editline
+   --------
    If libedit-dev is installed, then the arrow keys can be used to edit
    the input to the link-parser tool; the up and down arrow keys will
    recall previious entries.  You want this; it makes testing and
@@ -111,11 +113,16 @@ CREATING the system:
 
    when building it, otherwise you won't actually get the UTF8 support!
    Attention: the above configure is for libedit, not for link-grammar!
+   (In addtition, you will need to uninstall the system default editline
+   in order to get the above. You may also need to set the environment
+   variable PKG_CONFIG_PATH to include /usr/local/lib/pkgconfig)
 
    Use of editline in the link-parser can be disabled by saying:
 
        ./configure --disable-editline
 
+   Java Bindings
+   -------------
    By default, the Makefiles attempt to build the Java bindings.
    The use of the Java bindings is *OPTIONAL*; you do not need these if
    you do not plan to use link-grammar with Java.  You can skip building
@@ -123,6 +130,8 @@ CREATING the system:
 
       ./configure --disable-java-bindings
 
+   Install location
+   ----------------
    The /usr/local install target can be over-ridden using the
    standard GNU configure --prefix option, so for example:
 
@@ -131,6 +140,8 @@ CREATING the system:
    By using pkg-config (see below), non-standard install locations
    can be automatically detected.
 
+   Configure help
+   --------------
    Additional config options are printed by
 
       ./configure --help
@@ -167,15 +178,15 @@ BUILDING on MacOS:
 BUILDING on Windows
 -------------------
    There are three different ways in which link-grammr can be compiled
-   on Windows. One way is to use Cygwin, which provides a Linux
-   compatibility layer for Windows. Unfortunately, the Cygwin system
+   on Windows.  One way is to use Cygwin, which provides a Linux
+   compatibility layer for Windows.  Unfortunately, the Cygwin system
    is not compatible with Java for Windows.  Another way is use the
-   MSVC system. A third way is to use the MinGW system, which uses the
+   MSVC system.  A third way is to use the MinGW system, which uses the
    Gnu toolset to compile windows programs.
 
-   Link-grammar now requires a working version of POSIX-standard regex
-   libraries. Since these are not provided by Microsoft, a copy must be
-   obtained elsewhere.  One popular choice is TRE, available at:
+   Link-grammar requires a working version of POSIX-standard regex
+   libraries.  Since these are not provided by Microsoft, a copy must
+   be obtained elsewhere.  One popular choice is TRE, available at:
    http://laurikari.net/tre/
 
    Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
@@ -188,10 +199,10 @@ BUILDING on Windows
    See also:
    http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README
 
-   These different build methods are NOT regularly tested, and some
-   linkgrammar versions may have build issues.  If you are an
+   The different build methods below are NOT regularly tested, and
+   some link-grammar versions may have build issues.  If you are an
    experienced Windows developer who knows how to make things work
-   in the Microsoft environment, we need your help!
+   in the Microsoft environment, your help would be appreciated!
 
 
 BUILDING on Windows (Cygwin)
@@ -259,10 +270,11 @@ BUILDING on Windows (MinGW)
 
 BUILDING on Windows (MSVC)
 --------------------------
-   Microsoft Visual C/C++ project files can be found in the msvc9
-   directory.  MSVC6 build files are also provided; however, this
-   compiler is deprecated due to the lack of locale support.  In
-   particular, the Russian dictionaries cannot work with MSVC6!
+   Microsoft Visual C/C++ project files can be found in the msvc12
+   and msvc9 directories.  MSVC6 build files are also provided;
+   however, this compiler is deprecated due to the lack of locale
+   support.  In particular, the Russian dictionaries cannot work
+   with MSVC6!
 
    Please note that the regex package, which includes libraries and
    header files, must be seperately downloaded and installed, as
@@ -276,12 +288,12 @@ BUILDING on Windows (MSVC)
    -- JAVA_HOME must be pointing to a locally installed JDK.
 
    Those two can be set either as system environment variables (Windows
-   users are supposed to know how to do this :) or as MSVC9 user macros.
-   But just in case you don't, here's how:
+   users are supposed to know how to do this :) or as MSVC12/MSVC9 user
+   macros.  But just in case you don't, here's how:
 
-   1) Start > Control Panel > System (remember in Vista or 7 you need
-      to switch to "Classic View" or "Large icons" respectively to see
-      the System icon).
+   1) Start > Control Panel > System (Remember, in Vista or Windows 7,
+      you need to switch to "Classic View" or "Large icons",
+      respectively to see the System icon).
    2) "Advanced system settings" (or "Advanced" tab under XP)
    3) On all versions you will see a button with the caption
       "Environment Variables", press it.... (ALL REMAINING STEPS
@@ -566,39 +578,33 @@ Corpus Statistics:
 
 MULTI-THREADED USE:
 -------------------
-   The link-grammar library should be thread-safe as of version 4.3.6,
-   although this has not yet been tested very well, and may possibly be
-   buggy.  To enable the thread-safe version of the library, run
-   ./configure like so:
+   It is safe to use link-grammar for parsing in multiple threads, once
+   the dictionaries have been loaded.  The dictionary loading itself is
+   not thread-safe; it is not protected in any way.  Thus, link-grammar
+   should not be used from multiple threads until the dictionary has
+   been loaded.  Different threads may use different dictionaries.
+   Parse options can be set on a per-thread basis, with the exception
+   of verbosity, which is a global, shared by all threads.  It is the
+   only global, outside of the Java bindings.
+
+   For multi-threaded Java use, a per-thread variable is needed.  This
+   must be enabled during the configure stage:
 
       ./configure --enable-pthreads
 
-   The resulting library is thread-safe for all parsing and general
-   use, with the exception of the startup/initialization code.  That
-   is, the initial open/creation of the parser dictionary should be
-   done only once, from a single thread, and parsing should not be
-   started until after the dictionary has been read and initialized.
-
-   Parse options can be set on a per-thread basis, with the exception
-   of verbosity, which is treated as a global.
-
-   The library uses pthreads for the few spots where it needs to manage
-   per-thread storage. It is possibly quite reasonable to abolish these
-   few spots, thus making the library not only thread-safe, but thread
-   agnostic (i.e. not require pthreads).
-
    The following exceptions and special notes apply:
 
-      utilities.c -- has global "verbosity". Uses pthreads for tracking
-                     memory usage. The memory usage code is just about
-                     obsolete, and could probably be discarded.
-      jni-client.c - uses per-thread struct, but needs to be attached
-                     to JNIEnv somehow.
+      utilities.c -- has global "verbosity". Memory usage code (disabled
+                     by default) also has a global, and so requires
+                     pthreads for tracking memory usage.
+      jni-client.c - uses per-thread struct. This should somehow be
+                     attached to JNIEnv somehow.  A Java JNI expert is
+                     needed.
       malloc-dbg.c - not thread safe, not normally used;
                      only for debugging.
       prefix.c     - not thread-safe, but doesn't need to be; used only
                      during initialization, and only if binreloc turned
-                     on.
+                     on. But binreloc is never used by anyone !?
       pp_lexer.c  -- autogened code, original lex sources lost.
                      This is only used when reading dictionaries,
                      during initialization, and so doesn't need
@@ -607,10 +613,11 @@ MULTI-THREADED USE:
 
 BioLG merger:
 -------------
-   Much of the BioLG project changes have been merged into this version.
-   The current version of link-grammar has superior parse coverage to BioLG
-   on all texts, including biomedical texts.  The original BioLG test suite
-   can be found in data/en/4.0.biolg.batch.
+   As of version 4.5.0 (April 2009), the most important parts of the
+   BioLG project have been merged.  The current version of link-grammar
+   has superior parse coverage to BioLG on all texts, including
+   biomedical texts.  The original BioLG test suite can be found in
+   data/en/4.0.biolg.batch.
 
    The following changes in BioLG have NOT been merged:
    -- Part of speech hinting. The BioLG code can accept part-of-speech
@@ -630,61 +637,64 @@ BioLG merger:
 
 Medical Terms Merger
 --------------------
-Many, but not all, of the "medical terms" from Peter Szolovits have been
-merged into version 4.3.1 (January 2008) of link-grammar. The origiginal
-project page was at:
+   Many, but not all, of the "medical terms" from Peter Szolovits have
+   been merged into version 4.3.1 (January 2008) of link-grammar. The
+   original project page was at:
 
-   http://groups.csail.mit.edu/medg/projects/text/lexicon.html
+       http://groups.csail.mit.edu/medg/projects/text/lexicon.html
 
-The following "extra" files were either merged directly, renamed, or
-skipped (omitted):
+   The following "extra" files were either merged directly, renamed, or
+   skipped (omitted):
 
-/extra.1: -- merged
-/extra.2: -- skip, too big
-/extra.3: -- skip, too big
-/extra.4: -- /en/words/words-medical.v.4.2:
-/extra.5: -- /en/words/words-medical.v.4.1:
-/extra.6: -- /en/words/words-medical.adj.2:
-/extra.7: -- /en/words/words-medical.n.p
-/extra.8: -- skip, too big
-/extra.9: -- skip, random names
-/extra.10: -- /en/words/words-medical.adv.1:
-/extra.11: -- /en/words/words-medical.v.4.5:
-/extra.12: -- skip, too big
-/extra.13: -- /en/words/words-medical.v.4.3:
-/extra.14: -- /en/words/words-medical.prep.1
-/extra.15: -- /en/words/words-medical.adj.3:
-/extra.16: -- /en/words/words-medical.v.2.1:
-/extra.17: -- skip, too big
+   /extra.1: -- merged
+   /extra.2: -- skip, too big
+   /extra.3: -- skip, too big
+   /extra.4: -- /en/words/words-medical.v.4.2:
+   /extra.5: -- /en/words/words-medical.v.4.1:
+   /extra.6: -- /en/words/words-medical.adj.2:
+   /extra.7: -- /en/words/words-medical.n.p
+   /extra.8: -- skip, too big
+   /extra.9: -- skip, random names
+   /extra.10: -- /en/words/words-medical.adv.1:
+   /extra.11: -- /en/words/words-medical.v.4.5:
+   /extra.12: -- skip, too big
+   /extra.13: -- /en/words/words-medical.v.4.3:
+   /extra.14: -- /en/words/words-medical.prep.1
+   /extra.15: -- /en/words/words-medical.adj.3:
+   /extra.16: -- /en/words/words-medical.v.2.1:
+   /extra.17: -- skip, too big
 
-The make use of the "skipped" files, download the original extension,
-gut the contents of "extra.dict" except for the parts refering to the
-skipped files above, and then append to 4.0.dict (as per original
-instructions).
+   To make use of the "skipped" files, download the original extension,
+   gut the contents of "extra.dict" except for the parts refering to the
+   skipped files above, and then append to 4.0.dict (as per original
+   instructions).
+
+   Its not at all clear that the "skipped" files improve parse accuracy
+   in any way; they may, in fact, damage accuracy.
 
 
 Fat Links:
 ----------
-   As of version 4.7.0, parsing using "fat links" has been disabled
-   by default, and is now deprecated.  The function is still there,
-   and can be turned on by specifying the !use-fat=1 command, or by
-   calling parse_options_use_fat_links(TRUE) from programs.
+   As of version 4.7.0 (September 2010), parsing using "fat links" has
+   been disabled by default, and is now deprecated.  The function is
+   still there, and can be turned on by specifying the !use-fat=1 command,
+   or by calling parse_options_use_fat_links(TRUE) from programs.
 
-   As of version 4.7.12, the "fat link" code is no longer compiled
-   by default.  To obtain the fat-link version, ./configure must
-   be run with the --enable-fat-links flag.  Enabling this will
-   generate a lot of warning messages during compilation.  Note that
-   the Russian dictionaries still use fat links to support conjunctions.
+   As of version 4.7.12 (May 2013), the "fat link" code is no longer
+   compiled by default.  To obtain the fat-link version, ./configure
+   must be run with the --enable-fat-links flag.  Enabling this will
+   generate a lot of warning messages during compilation.
 
    Older versions of the link-grammar parser used "fat links" to
-   support conjunctions (and, or, but, ...). However, this lead
+   support conjunctions (and, or, but, ...). However, this leads
    to a number of complications, including poor performance due to
    a combinatorial explosion of linkage possibilities, as well as
    an excessively complex parse algorithm.  As a result, the function
-   is now deprecated, and will be removed in version 4.9.0.
+   is now deprecated, and will be removed in some future version.
 
+   The Russian dictionaries still use fat links to support conjunctions.
    The use of fat links by the Russian dictionaries is the major
-   road-block to the removal of fat links.
+   road-block to the removal of the fat links code.
 
 
 SAT solver:
@@ -782,6 +792,11 @@ Mathematical Theory:
       than that of categorial grammar, and yet can be directly converted
       to that system!  That is, link-grammar is completely compatible
       with categorial grammar, and is easier-to-use.
+
+      See, for example, the work by Bob Coeke on category theory and
+      grammar; there, it becomes abundantly clear that the category
+      theoretic appraoch is equivalent to link-grammar, even though
+      this is not stated anywhere.
 
 
 TODO -- Working Notes:
