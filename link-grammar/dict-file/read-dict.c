@@ -472,6 +472,29 @@ static inline int dict_order_internal(const char *s, const char *t)
 }
 
 /**
+ * dict_order_strict() -- order user vs. dictionary string.
+ * Assuming that s is a pointer to the search string, and that t is
+ * a pointer to a dictionary string, this returns 0 if they match,
+ * returns >0 if s>t, and <0 if s<t.
+ *
+ * The matching is done as follows.  Walk down the strings until
+ * you come to the end of one of them, or until you find unequal
+ * characters.  If the dictionary string contains a dot ".", then
+ * replace "." by "\0", and take the difference.  This behavior
+ * matches that of the function dict_order(), except that here, we
+ * allow user-provided strings with dots in them.  Yes, these are
+ * non-words, probably due to some broken input, but hey ... users
+ * give us broken input all the time...
+ */
+static inline int dict_order_strict(const char * s, Dict_node * dn)
+{
+	const char * so = s;
+	const char * t = dn->string;
+	while ((*s != '\0') && (*s == *t)) {s++; t++;}
+	return ((*s == '.')?(0):(*s))  -  ((*t == '.')?(0):(*t));
+}
+
+/**
  * dict_order_user() -- order user vs. dictionary string.
  * Assuming that s is a pointer to the search string, and that t is
  * a pointer to a dictionary string, this returns 0 if they match,
@@ -501,8 +524,16 @@ static inline int dict_order_user(const char * s, Dict_node * dn)
 
 /**
  * dict_order_wild() -- order dictionary strings, with wildcard.
- * Assuming that s is a pointer to a dictionary string, and that
- * t is a pointer to a search string, this returns 0 if they
+ *
+ * This routine is used to support command-line parser users who
+ * want to search for all dictionary entries of some given word or
+ * partial word, containing a wild-card. This is done by using the
+ * !!blah* command at the command-line.  sers need this function to
+ * debug the dictionary.  This is the ONLY place in the link-parser
+ * where wild-card search is needed; ordinary parsing does not use it.
+ *
+ * Assuming that s is a pointer to a search string, and that
+ * t is a pointer to a dictionary string, this returns 0 if they
  * match, >0 if s>t, and <0 if s<t.
  *
  * The matching is done as follows.  Walk down the strings until
@@ -510,26 +541,14 @@ static inline int dict_order_user(const char * s, Dict_node * dn)
  * characters.  A "*" matches anything.  Otherwise, replace "."
  * by "\0", and take the difference.  This behavior matches that
  * of the function dict_order().
- *
- * Note: words in the dictionary itself don't have wild-card
- * chars in them; the wild-card support is here only if a you are
- * searching for part of a word, by typing in !!something* at the
- * command-line parser prompt. In other words, the ONLY users of
- * wild-card seearch are going to be people doing dictionary debugging.
  */
 static inline int dict_order_wild(const char * s, Dict_node * dn)
 {
 	const char * t = dn->string;
-	const char *so = s;
+
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
 
-	if ((*s == '*') || (*t == '*'))
-	{
-		/* Do not allow wild-card as the very first char.
-		 * Basically, allow *.v and *.eq in the English dict.
-		 */
-		if (s != so) return 0;
-	}
+	if (*s == '*') return 0;
 
 	return (((*s == '.')?(0):(*s)) - ((*t == '.')?(0):(*t)));
 }
@@ -649,7 +668,7 @@ rdictionary_lookup(Dict_node *llist,
                    Dict_node * dn,
                    const char * s,
                    Boolean match_idiom,
-                   Boolean affix_lookup,
+                   Boolean strict_lookup,
                    Boolean wild_lookup)
 {
 	/* see comment in dictionary_lookup below */
@@ -659,12 +678,14 @@ rdictionary_lookup(Dict_node *llist,
 
 	if (wild_lookup)
 		m = dict_order_wild(s, dn);
+	else if (strict_lookup)
+		m = dict_order_strict(s, dn);
 	else
 		m = dict_order_user(s, dn);
 
 	if (m >= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, affix_lookup, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, strict_lookup, wild_lookup);
 	}
 	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)))
 	{
@@ -675,7 +696,7 @@ rdictionary_lookup(Dict_node *llist,
 	}
 	if (m <= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, affix_lookup, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, strict_lookup, wild_lookup);
 	}
 	return llist;
 }
