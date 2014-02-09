@@ -3,6 +3,7 @@
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
 /* Copyright (c) 2009, 2012, 2013 Linas Vepstas                          */
+/* Copyright (c) 2014 Amir Plivatsky                                     */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
