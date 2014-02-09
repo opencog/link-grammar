@@ -2434,6 +2434,11 @@ He drove a souped-up '57 Chevy.
 He drove a souped-up 1957 Chevy.
 The 47 Ford came screamin' down the track.
 
+% Hyphenated words must be kept hyphenated!
+This is a must-see movie.
+*This is a must see movie.
+*He drove a souped up '57 Chevy.
+
 % Decade possessives:
 It's an old 50's love song.
 He's an old 1920's crooner.
