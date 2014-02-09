@@ -363,6 +363,7 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 
 		sent->word[len].alternatives = tokenizer->stem_alternatives;
 
+		/* Perform a check for captialization only if no prefixes. */
 		sent->word[len].firstupper = FALSE;
 		if (0 == preflen)
 		{

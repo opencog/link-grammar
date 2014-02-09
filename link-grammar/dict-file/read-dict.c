@@ -605,7 +605,7 @@ static void free_dict_node_recursive(Dict_node * dn)
 /**
  * rdictionary_lookup() -- recursive dictionary lookup
  * Walk binary tree, given by 'dn', looking for the string 's'.
- * For every node in the tree where 's' matches (including wildcards),
+ * For every node in the tree where 's' matches,
  * make a copy of that node, and append it to llist.
  */
 static Dict_node * rdictionary_lookup(Dict_node *llist,
