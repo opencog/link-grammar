@@ -585,7 +585,7 @@ static inline void free_dict_node(Dict_node *dn)
  * prune_lookup_list -- discard all list entries that don't match string
  * Walk the lookup list (of right links), discarding all nodes that do
  * not match the dictionary string s. The matching is dictionary matching:
- * suffixed entries will match "bare" entries.
+ * subscripted entries will match "bare" entries.
  */
 static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 {
@@ -701,9 +701,7 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 
 static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 {
-	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE, TRUE);
-	llist = prune_lookup_list(llist, s);
-	return llist;
+	return rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE, TRUE);
 }
 
 /**

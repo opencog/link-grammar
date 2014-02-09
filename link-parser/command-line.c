@@ -285,8 +285,8 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
             left_print_string(stdout, user_command[i].str, "                                                    ");
 			printf("\n");
 		}
-		printf(" !!<string>      Print all the dictionary words matching <string>.\n");
-		printf("                 Also print the number of disjuncts of each.\n");
+		printf(" !!<string>      Print all the dictionary word that matchs <string>.\n");
+		printf("                 A wildcard * may be used to find multiple matches.\n");
 		printf("\n");
 		printf(" !<var>          Toggle the specified boolean variable.\n");
 		printf(" !<var>=<val>    Assign that value to that variable.\n");
