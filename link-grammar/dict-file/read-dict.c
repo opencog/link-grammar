@@ -474,7 +474,7 @@ static inline int dict_order_internal(const char *s, const char *t)
 /**
  * dict_order_user() -- order user vs. dictionary string.
  * Assuming that s is a pointer to the search string, and that t is
- * a pointer to a dictionary string, this returns 0 if they match, 
+ * a pointer to a dictionary string, this returns 0 if they match,
  * returns >0 if s>t, and <0 if s<t.
  *
  * The matching is done as follows.  Walk down the strings until
@@ -537,9 +537,9 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 
 /**
  * dict_match --  return true if strings match, else false.
- * A "bare" string (one without a suffix) will match any corresponding
+ * A "bare" string (one without a subscript) will match any corresponding
  * string with a suffix; so, for example, "make" and "make.n" are
- * a match.  If both strings have suffixes, then the suffixes must match.
+ * a match.  If both strings have subscripts, then the subscripts must match.
  *
  * A subscript is the part that followes the last "." in the word, and
  * that does not begin with a digit.
@@ -644,19 +644,27 @@ static void free_dict_node_recursive(Dict_node * dn)
  * For every node in the tree where 's' matches,
  * make a copy of that node, and append it to llist.
  */
-static Dict_node * rdictionary_lookup(Dict_node *llist,
-                                      Dict_node * dn,
-                                      const char * s,
-                                      Boolean match_idiom)
+static Dict_node *
+rdictionary_lookup(Dict_node *llist,
+                   Dict_node * dn,
+                   const char * s,
+                   Boolean match_idiom,
+                   Boolean affix_lookup,
+                   Boolean wild_lookup)
 {
 	/* see comment in dictionary_lookup below */
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return llist;
-	m = dict_order_user(s, dn);
+
+	if (wild_lookup)
+		m = dict_order_wild(s, dn);
+	else
+		m = dict_order_user(s, dn);
+
 	if (m >= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, match_idiom);
+		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, affix_lookup, wild_lookup);
 	}
 	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)))
 	{
@@ -667,7 +675,7 @@ static Dict_node * rdictionary_lookup(Dict_node *llist,
 	}
 	if (m <= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->left, s, match_idiom);
+		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, affix_lookup, wild_lookup);
 	}
 	return llist;
 }
@@ -686,7 +694,14 @@ static Dict_node * rdictionary_lookup(Dict_node *llist,
  */
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 {
-	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE);
+	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE, FALSE);
+	llist = prune_lookup_list(llist, s);
+	return llist;
+}
+
+static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
+{
+	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE, TRUE);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -706,7 +721,7 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, FALSE);
+	llist = rdictionary_lookup(NULL, dict->root, s, FALSE, FALSE, FALSE);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -754,7 +769,7 @@ static Exp * make_optional_node(Dictionary dict, Exp * e);
  * contains entries for plain words and also as stems.  For example,
  * in the Russian dictionary, это.msi appears as a single word, but can
  * also be split into эт.= =о.mnsi. The problem arises because это.msi
- * is a single word, while эт.= =о.mnsi counts as two words, and there 
+ * is a single word, while эт.= =о.mnsi counts as two words, and there
  * is no pretty way to handle both during parsing.  Thus a work-around
  * is introduced: add the empty wored =.zzz: ZZZ+; to the dictionary.
  * this becomes a pseudo-suffix that can attach to any plain word.  It
@@ -1976,18 +1991,21 @@ static size_t altlen(const char **arr)
 }
 
 /**
- *  dict_display_word_info() - display the information about the given word.
+ * dict_display_word_info() - display the information about the given word.
+ *
+ * Supports wild-card search; the command-line user can type in !!word* and
+ * get a list of all words that match up to the wild-card.
  */
 static void display_word(Dictionary dict, const char * word,
                          void (*disp_node)(Dict_node*),
                          void (*recurse)(Dictionary, const char *))
-     
+
 {
 	Tokenizer toker;
 	const char * regex_name;
 	Dict_node *dn_head;
 
-	dn_head = dictionary_lookup_list(dict, word);
+	dn_head = dictionary_lookup_wild(dict, word);
 	if (dn_head)
 	{
 		disp_node(dn_head);
@@ -2003,7 +2021,7 @@ static void display_word(Dictionary dict, const char * word,
 		return;
 	}
 
-	/* If word still wasn't found, try splitting it into 
+	/* If word still wasn't found, try splitting it into
 	 * prefix-stem-suffix, and print the dict entries for those */
 	toker.pref_alternatives = NULL;
 	toker.stem_alternatives = NULL;
