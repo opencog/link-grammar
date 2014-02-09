@@ -1,5 +1,5 @@
 Version 4.8.7 (XXX 2014)
- * xxxx
+ * Initial support for Hebrew tokenization.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

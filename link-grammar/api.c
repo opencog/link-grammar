@@ -818,6 +818,9 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->hook = NULL;
 #endif /* USE_SAT_SOLVER */
 
+	sent->t_start = 0;
+	sent->t_count = 0;
+
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add (input_string, sent->string_set);
 
@@ -1076,19 +1079,35 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			const char *unsplit = sent->word[i].unsplit_word;
 			size_t unlen;
 
+			if (verbosity > 4)
+				printf("%%%%>>>%d  Checking word %d/%d\n", lk, i, sent->length);
 			/* Ignore island words */
 			if (NULL == pi->chosen_disjuncts[i])
+			{
+				if (verbosity > 4)
+					printf("%%%%>>>%d ignore island\n", lk);
 				continue;
+			}
 
 			/* Ignore suffixes, for now */
 			if (NULL == unsplit)
+			{
+				if (verbosity > 4)
+					printf("%%%%>>>%d ignore suffix\n", lk);
 				continue;
+			}
 
 			/* If its a perfect match, then keep going */
 			unlen = strlen(unsplit);
 			djw = pi->chosen_disjuncts[i]->string;
+			if (verbosity > 4)
+				printf("%%%%>>>%d unsplit=%s, djw=%s\n", lk, unsplit, djw);
 			if (0 == strncmp(djw, unsplit, unlen))
+			{
+				if (verbosity > 4)
+					printf("%%%%>>>%d OK perfect match\n", lk);
 				continue;
+			}
 
 			/* Perhaps its a perfect match after capitalization. */
 			if (sent->word[i].firstupper)
@@ -1096,7 +1115,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				char temp_word[MAX_WORD+1];
 				downcase_utf8_str(temp_word, unsplit, MAX_WORD);
 				if (0 == strncmp(djw, temp_word, strlen(temp_word)))
+				{
+					if (verbosity > 4)
+						printf("%%%%>>>%d OK perfect Match\n", lk);
 					continue;
+				}
 			}
 
 			/* If this word isn't a stem, **and** the next word isn't
@@ -1109,7 +1132,25 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			    ((i+1) < sent->length) && 
 			    (NULL != pi->chosen_disjuncts[i+1]) &&
 			    (INFIX_MARK != pi->chosen_disjuncts[i+1]->string[0]))
+			    {
+				if (verbosity > 4)
+					printf("%%%%>>>%d OK djw!=stem %s!=suffix\n", lk, pi->chosen_disjuncts[i+1]->string);
 				continue;
+			    }
+
+			/* check why non-stems are in the position of a split stem */
+			if (((verbosity > 4) && (INFIX_MARK != djw[len-1])) ||
+			(((i+1) < sent->length) &&
+			(NULL != pi->chosen_disjuncts[i+1]) &&
+			(INFIX_MARK != pi->chosen_disjuncts[i+1]->string[0])))
+			{
+				const char **a;
+				printf("%%%%>>>%d Alternatives for word %d:", lk, i);
+				for (a = sent->word[i].alternatives; *a; a++) {
+					printf(" %s", *a);
+				}
+				printf("\n");
+			}
 
 			/* If the next word is a suffix, and, when united with
 			 * the stem, it recreates the original word, then we
@@ -1121,6 +1162,8 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			{
 				char *p;
 				char newword[MAX_WORD+1];
+				if (verbosity > 4)
+					printf("%%%%>>>%d Checking word %d, djw=%s djw+1=%s\n", lk, i, djw, pi->chosen_disjuncts[i+1]->string);
 				strcpy(newword, djw);
 				p = strrchr(newword, '.');
 				if (p) *p = 0x0;
@@ -1128,7 +1171,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 
 				/* OK, we built the concatenation .. does it match? */
 				if (0 == strncmp(newword, unsplit, unlen))
+				{
+					if (verbosity > 4)
+						printf("%%%%>>>%d OK perfect match\n", lk);
 					continue;
+				}
 
 				/* If we are here, it didn't match. Is that because of
 				 * capitalization? Lets check. */
@@ -1137,10 +1184,16 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 					char temp_word[MAX_WORD+1];
 					downcase_utf8_str(temp_word, unsplit, MAX_WORD);
 					if (0 == strncmp(newword, temp_word, strlen(temp_word)))
+					{
+						if (verbosity > 4)
+							printf("%%%%>>>%d OK perfect Match\n", lk);
 						continue;
+					}
 				}
 			}
 
+			if (verbosity > 4)
+				printf("%%%%>>>%d FAILED\n", lk);
 			/* Oh no ... we've joined together the stem and suffix incorrectly! */
 			sent->num_valid_linkages --;
 			lifo->N_violations ++;

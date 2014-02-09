@@ -133,15 +133,18 @@ struct Dictionary_s
 	int u_strippable; /* units on left */
 	int s_strippable; /* generic suffix */
 	int p_strippable; /* generic prefix */
+	int mp_strippable; /* multi-prefix */
 	int r_stripped;
 	int l_stripped;
 	int u_stripped;
 	int s_stripped;
 	int p_stripped;
+	int mp_stripped;
 	const char ** strip_left;
 	const char ** strip_right;
 	const char ** strip_units;
 	const char ** prefix;
+	const char ** mprefix;
 	const char ** suffix;
 
 	/* If not null, then use spelling guesser for unknown words */
@@ -246,6 +249,8 @@ struct Sentence_s
 	Dictionary  dict;           /* words are defined from this dictionary */
 	const char *orig_sentence;  /* Copy of original sentence */
 	int    length;              /* number of words */
+	int    t_start;		    /* start position the current token sequence */
+	int    t_count;		    /* number of subwords in the current token sequence */
 	Word  *word;                /* array of words after tokenization */
 	String_set *   string_set;  /* used for word names, not connectors */
 
