@@ -434,7 +434,7 @@ static int check_connector(Dictionary dict, const char * s)
  * and without suffixes.
  */
 /**
- * dict_order - order two dictionary words in proper sort order.
+ * dict_order_strict - order two dictionary words in proper sort order.
  * Return zero if the strings match, else return in a unique order.
  * The order is NOT (locale-dependent) UTF8 sort order; its ordered
  * based on numeric values of single bytes.  This will uniquely order
@@ -443,7 +443,7 @@ static int check_connector(Dictionary dict, const char * s)
  */
 /* verbose version, for demonstration only */
 /*
-int dict_order_internal(char *s, char *t)
+int dict_order_strict(char *s, char *t)
 {
 	int ss, tt;
 	while (*s != '\0' && *s == *t) {
@@ -465,37 +465,27 @@ int dict_order_internal(char *s, char *t)
 */
 
 /* terse version */
-static inline int dict_order_internal(const char *s, const char *t)
+/* If one word contains a dot, the other one must also! */
+static inline int dict_order_strict(const char *s, Dict_node * dn)
 {
+	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
 	return ((*s == '.')?(1):(*s))  -  ((*t == '.')?(1):(*t));
 }
 
-/**
- * dict_order_strict() -- order user vs. dictionary string.
- * Assuming that s is a pointer to the search string, and that t is
- * a pointer to a dictionary string, this returns 0 if they match,
- * returns >0 if s>t, and <0 if s<t.
- *
- * The matching is done as follows.  Walk down the strings until
- * you come to the end of one of them, or until you find unequal
- * characters.  If the dictionary string contains a dot ".", then
- * replace "." by "\0", and take the difference.  This behavior
- * matches that of the function dict_order(), except that here, we
- * allow user-provided strings with dots in them.  Yes, these are
- * non-words, probably due to some broken input, but hey ... users
- * give us broken input all the time...
+/* Similar to above, except that a "bare" search string will match
+ * a dictionary entry with a dot.
  */
-static inline int dict_order_strict(const char * s, Dict_node * dn)
+static inline int dict_order_internal(const char *s, Dict_node * dn)
 {
-	const char * so = s;
 	const char * t = dn->string;
-	while ((*s != '\0') && (*s == *t)) {s++; t++;}
+	while (*s != '\0' && *s == *t) {s++; t++;}
 	return ((*s == '.')?(0):(*s))  -  ((*t == '.')?(0):(*t));
 }
 
 /**
  * dict_order_user() -- order user vs. dictionary string.
+ *
  * Assuming that s is a pointer to the search string, and that t is
  * a pointer to a dictionary string, this returns 0 if they match,
  * returns >0 if s>t, and <0 if s<t.
@@ -504,10 +494,10 @@ static inline int dict_order_strict(const char * s, Dict_node * dn)
  * you come to the end of one of them, or until you find unequal
  * characters.  If the dictionary string contains a dot ".", then
  * replace "." by "\0", and take the difference.  This behavior
- * matches that of the function dict_order(), except that here, we
- * allow user-provided strings with dots in them.  Yes, these are
- * non-words, probably due to some broken input, but hey ... users
- * give us broken input all the time...
+ * matches that of the function dict_order_internal(), except that
+ * here, we allow user-provided strings with dots in them.  Yes, these
+ * are garbage-words, probably due to some broken input, but hey ...
+ * users give us broken input all the time, and it has to be tolerated.
  *
  * With one odd-ball exception: if the user-provided string is
  * one or more dots (e.g. a period at end of sentence, or an ellipsis)
@@ -540,7 +530,7 @@ static inline int dict_order_user(const char * s, Dict_node * dn)
  * you come to the end of one of them, or until you find unequal
  * characters.  A "*" matches anything.  Otherwise, replace "."
  * by "\0", and take the difference.  This behavior matches that
- * of the function dict_order().
+ * of the function dict_order_internal().
  */
 static inline int dict_order_wild(const char * s, Dict_node * dn)
 {
@@ -668,7 +658,7 @@ rdictionary_lookup(Dict_node *llist,
                    Dict_node * dn,
                    const char * s,
                    Boolean match_idiom,
-                   Boolean strict_lookup,
+                   Boolean affix_lookup,
                    Boolean wild_lookup)
 {
 	/* see comment in dictionary_lookup below */
@@ -678,14 +668,14 @@ rdictionary_lookup(Dict_node *llist,
 
 	if (wild_lookup)
 		m = dict_order_wild(s, dn);
-	else if (strict_lookup)
-		m = dict_order_strict(s, dn);
+	else if (affix_lookup)
+		m = dict_order_internal(s, dn);
 	else
 		m = dict_order_user(s, dn);
 
 	if (m >= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, strict_lookup, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, affix_lookup, wild_lookup);
 	}
 	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)))
 	{
@@ -696,7 +686,7 @@ rdictionary_lookup(Dict_node *llist,
 	}
 	if (m <= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, strict_lookup, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, affix_lookup, wild_lookup);
 	}
 	return llist;
 }
@@ -717,6 +707,13 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE, FALSE);
 	llist = prune_lookup_list(llist, s);
+	return llist;
+}
+
+Dict_node * dictionary_lookup_internal(Dictionary dict, const char *s)
+{
+	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, TRUE, FALSE);
+	// llist = prune_lookup_list(llist, s);
 	return llist;
 }
 
@@ -1434,7 +1431,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 
 	if (NULL == n) return newnode;
 
-	comp = dict_order_internal(newnode->string, n->string);
+	comp = dict_order_strict(newnode->string, n);
 	if (comp < 0)
 	{
 		if (NULL == n->left)
