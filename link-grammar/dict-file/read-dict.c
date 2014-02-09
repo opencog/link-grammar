@@ -418,13 +418,13 @@ static int check_connector(Dictionary dict, const char * s)
  * The data structure storing the dictionary is simply a binary tree.
  * The entries in the binary tree are sorted by alphabetical order.
  * There is one catch, however: words may have suffixes (a dot, followed
- * by the suffix), and these suffixes are to be handled appripriately
+ * by the suffix), and these suffixes are to be handled appropriately
  * during sorting and comparison.
  *
  * The use of suffixes means that the ordering of the words is not
  * exactly the order given by strcmp.  The order must be such that, for
  * example, "make" < "make.n" < "make-up" -- suffixed words come after
- * the bare words, but before any other other words with non-ascii-alpha
+ * the bare words, but before any other other words with non-alphabetic
  * characters (such as the hyphen in "make-up", or possibly UTF8
  * characters). Thus, plain "strcmp" can't be used to determine
  * dictionary order.
@@ -437,13 +437,13 @@ static int check_connector(Dictionary dict, const char * s)
  * dict_order - order two dictionary words in proper sort order.
  * Return zero if the strings match, else return in a unique order.
  * The order is NOT (locale-dependent) UTF8 sort order; its ordered
- * baed on numeric values single bytes.  I beleive that this will
- * uniquely order UTF8 strings, just not in a LANG-dependent
- * (locale-dependent) order.
+ * based on numeric values of single bytes.  This will uniquely order
+ * UTF8 strings, just not in a LANG-dependent (locale-dependent) order.
+ * But we don't need/want locale-dependent ordering!
  */
-/* verbose version */
+/* verbose version, for demonstration only */
 /*
-int dict_order(char *s, char *t)
+int dict_order_internal(char *s, char *t)
 {
 	int ss, tt;
 	while (*s != '\0' && *s == *t) {
@@ -465,7 +465,7 @@ int dict_order(char *s, char *t)
 */
 
 /* terse version */
-static inline int dict_order(const char *s, const char *t)
+static inline int dict_order_internal(const char *s, const char *t)
 {
 	while (*s != '\0' && *s == *t) {s++; t++;}
 	return ((*s == '.')?(1):(*s))  -  ((*t == '.')?(1):(*t));
@@ -498,6 +498,42 @@ static inline int dict_order_user(const char * s, Dict_node * dn)
 	// return (*s) - ((*t == '.')?(0):(*t));
 	return (('.' == *so)?(0):(*s)) - ((*t == '.')?(0):(*t));
 }
+
+/**
+ * dict_order_wild() -- order dictionary strings, with wildcard.
+ * Assuming that s is a pointer to a dictionary string, and that
+ * t is a pointer to a search string, this returns 0 if they
+ * match, >0 if s>t, and <0 if s<t.
+ *
+ * The matching is done as follows.  Walk down the strings until
+ * you come to the end of one of them, or until you find unequal
+ * characters.  A "*" matches anything.  Otherwise, replace "."
+ * by "\0", and take the difference.  This behavior matches that
+ * of the function dict_order().
+ *
+ * Note: words in the dictionary itself don't have wild-card
+ * chars in them; the wild-card support is here only if a you are
+ * searching for part of a word, by typing in !!something* at the
+ * command-line parser prompt. In other words, the ONLY users of
+ * wild-card seearch are going to be people doing dictionary debugging.
+ */
+static inline int dict_order_wild(const char * s, Dict_node * dn)
+{
+	const char * t = dn->string;
+	const char *so = s;
+	while((*s != '\0') && (*s == *t)) {s++; t++;}
+
+	if ((*s == '*') || (*t == '*'))
+	{
+		/* Do not allow wild-card as the very first char.
+		 * Basically, allow *.v and *.eq in the English dict.
+		 */
+		if (s != so) return 0;
+	}
+
+	return (((*s == '.')?(0):(*s)) - ((*t == '.')?(0):(*t)));
+}
+
 
 /**
  * dict_match --  return true if strings match, else false.
@@ -609,7 +645,9 @@ static void free_dict_node_recursive(Dict_node * dn)
  * make a copy of that node, and append it to llist.
  */
 static Dict_node * rdictionary_lookup(Dict_node *llist,
-                                      Dict_node * dn, const char * s, int match_idiom)
+                                      Dict_node * dn,
+                                      const char * s,
+                                      Boolean match_idiom)
 {
 	/* see comment in dictionary_lookup below */
 	int m;
@@ -1362,7 +1400,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
 
 	if (NULL == n) return newnode;
 
-	comp = dict_order(newnode->string, n->string);
+	comp = dict_order_internal(newnode->string, n->string);
 	if (comp < 0)
 	{
 		if (NULL == n->left)
