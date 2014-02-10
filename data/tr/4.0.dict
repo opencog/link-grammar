@@ -1,0 +1,90 @@
+% Dictionary version number is 4.8.6 (formatted as V4v8v6+)
+<dictionary-version-number>: V4v8v6+;
+% The empty word.
+=.zzz: ZZZ+;
+
+%adjectives: fat, sick, angry
+şişman.a hasta.a kızgın.a : {A-} & {A+};
+%şişman.a hasta.a kızgın.a : {A+} or (Ajl+ or Ajr-);
+
+%nouns: man, woman, kid, apple
+adam kadın çocuk elma: {W-}& {Ds-} & {@A-} & (O+ or (({Sjl+} & {Sjr-}) or {S3s+}));
+
+%pronouns: I, thou, he/she, we, you, they
+ben : ({S1s+} or (Sjl+ or Sjr-));
+sen : ({S2s+} or (Sjl+ or Sjr-));
+o : (S3s+ or (Sjl+ and Sjr-));
+biz : ({S1p+} or (Sjl+ or Sjr-));
+siz : ({S2p+} or (Sjl+ or Sjr-));
+onlar : ({S3p+} or (Sjl+ or Sjr-));
+
+%plural nouns (not sure I need this, I could do it with a suffix)
+adamlar kadınlar elmalar: {Dmc-} & {A-} & ({S3p+} or (Sjl+ or Sjr-));
+
+%determiners (most of, some, every
+çoğu : Ds+; 
+bazı: Dmc+ ;
+her.d bir.d : Ds ;
+
+%adverbs
+çok.d : A+;
+
+
+%intransitive verbs: come
+gel.= : {W-} & S- & ({VPast+} or {VPres+} or {VImp+}) ;
+
+%transitive verbs: eat
+ye.= :{W-} & S- & {O-} & ({VPast+} or {VPres+} or {VImp+}) ;
+
+%verb suffixes: past tense, present cont., imperative
+=dim.past1ps: {VPast-} & {S1s-};
+=din.past2ps: {VPast-} & {S2s-};
+=di.past3ps: {VPast-} & {S3s-};
+=dik.past1pp: {VPast-} & {S1p-};
+=diniz.past2pp: {VPast-} & {S2p-};
+=diler.past3pp: {VPast-} & {S3p-};
+
+=iyor.pres3ps: {VPres-} & {S2s-};
+=.imp: Vimp-;
+
+%conjunctions: and
+ve.j-n: Sjl- & Sjr+ & {W-} & {A-} & {S+};
+ve.j-a: Ajl- & Ajr+ & {W-} & {A+} ;
+
+%punctuations (not sure how to do "man, woman and kid came"
+%",": (Sjl- & Sjr+) or ({Ajl+ & Ajr-});
+",": Xc-;
+
+ANDABLE-CONNECTORS: S+ & S- & A+ & A- & MV+ & MV- & D- & O+ & O- &
+J+ & J- & C-;
+
+LEFT-WALL :W+ or Q+;
+
+HMS-TIME: XXX-;
+DECADE-TIME: XXX-;
+DAY-ORDINALS: XXX-;
+ORDINALS: XXX-;
+NUMBERS: XXX-;
+FRACTION: XXX-;
+ROMAN-NUMERAL-WORDS: XXX-;
+INITIALS: XXX-;
+GREEK-LETTER-AND-NUMBER: XXX-;
+PL-GREEK-LETTER-AND-NUMBER: XXX-;
+UNITS: XXX-;
+FOLD-WORDS: XXX-;
+PL-CAPITALIZED-WORDS: XXX-;
+CAPITALIZED-WORDS: XXX-;
+ING-WORDS: XXX-;
+S-WORDS: XXX-;
+ED-WORDS: XXX-;
+LY-WORDS: XXX-;
+MC-NOUN-WORDS: XXX-;
+NOUN-TO-WORDS: XXX-;
+C-NOUN-WORDS: XXX-;
+ADJ-WORDS: XXX-;
+LATIN-ADJ-WORDS: XXX-;
+LATIN-ADJ-P-NOUN-WORDS: XXX-;
+LATIN-ADJ-S-NOUN-WORDS: XXX-;
+HYPHENATED-WORDS: XXX-;
+UNKNOWN-WORD: XXX-;
+
