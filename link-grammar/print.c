@@ -445,6 +445,13 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				*u = '\0';
 				t = string_set_add(s, sent->string_set);
 				free(s);
+			} else {
+				/* Convert the badly-printing ^C into a period */
+				s = strdup(t);
+				u = strrchr(s, SUBSCRIPT_MARK);
+				if (u) *u = '.';
+				t = string_set_add(s, sent->string_set);
+				free(s);
 			}
 
 			/* Suppress the empty word. */
