@@ -2076,9 +2076,12 @@ static void display_counts(Dict_node *dn)
 	for (; dn != NULL; dn = dn->right)
 	{
 		unsigned int len = count_disjunct_for_dict_node(dn);
+		char * s = strdup(dn->string);
+		char * t = strrchr(s, SUBSCRIPT_MARK);
+		if (t) *t = '.';
 		printf("    ");
-		left_print_string(stdout, dn->string,
-			"                         ");
+		left_print_string(stdout, s, "                         ");
+		free(s);
 		printf(" %5u  disjuncts ", len);
 		if (dn->file != NULL)
 		{
@@ -2104,9 +2107,12 @@ static void display_expr(Dict_node *dn)
 	printf("\nExpressions:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
+		char * s = strdup(dn->string);
+		char * t = strrchr(s, SUBSCRIPT_MARK);
+		if (t) *t = '.';
 		printf("    ");
-		left_print_string(stdout, dn->string,
-			"                         ");
+		left_print_string(stdout, s, "                         ");
+		free(s);
 		print_expression(dn->exp);
 		printf("\n\n");
 	}
