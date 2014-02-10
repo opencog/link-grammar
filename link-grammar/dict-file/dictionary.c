@@ -68,6 +68,7 @@ static const char * units_con = "UNITS";
 /* SUF is used in the Russian dict; PRE is not used anywhere, yet ... */
 static const char * suf_con = "SUF";
 static const char * pre_con = "PRE";
+static const char * mpre_con = "MPRE";	/* multi-prefix, for Hebrew */
 
 
 static void count_affix(Dictionary dict, Dict_node *dn)
@@ -77,6 +78,7 @@ static void count_affix(Dictionary dict, Dict_node *dn)
 	if (word_has_connector(dn, units_con, '+')) dict->u_strippable++;
 	if (word_has_connector(dn, suf_con, '+')) dict->s_strippable++;
 	if (word_has_connector(dn, pre_con, '+')) dict->p_strippable++;
+	if (word_has_connector(dn, mpre_con, '+')) dict->mp_strippable++;
 }
 
 static void load_affix(Dictionary dict, Dict_node *dn)
@@ -111,6 +113,12 @@ static void load_affix(Dictionary dict, Dict_node *dn)
 		dict->prefix[dict->p_stripped] = dn->string;
 		dict->p_stripped++;
 	}
+	if (word_has_connector(dn, mpre_con, '+'))
+	{
+		assert(dict->mp_stripped < dict->mp_strippable, "bad mp affix table size");
+		dict->mprefix[dict->mp_stripped] = dn->string;
+		dict->mp_stripped++;
+	}
 }
 
 static void affix_list_create(Dictionary dict)
@@ -119,12 +127,14 @@ static void affix_list_create(Dictionary dict)
 	dict->strip_right = NULL;
 	dict->strip_units = NULL;
 	dict->prefix = NULL;
+	dict->mprefix = NULL;
 	dict->suffix = NULL;
 
 	dict->r_strippable = 0;
 	dict->l_strippable = 0;
 	dict->u_strippable = 0;
 	dict->p_strippable = 0;
+	dict->mp_strippable = 0;
 	dict->s_strippable = 0;
 
 	/* Count how many affixes of each type we have ... */
@@ -135,6 +145,7 @@ static void affix_list_create(Dictionary dict)
 	dict->strip_units = (const char **) xalloc(dict->u_strippable * sizeof(char *));
 	dict->suffix = (const char **) xalloc(dict->s_strippable * sizeof(char *));
 	dict->prefix = (const char **) xalloc(dict->p_strippable * sizeof(char *));
+	dict->mprefix = (const char **) xalloc(dict->mp_strippable * sizeof(char *));
 
 	/* Load affixes from the affix table. */
 	iterate_on_dictionary(dict, dict->root, load_affix);
@@ -163,6 +174,7 @@ static void affix_list_delete(Dictionary dict)
 	 * and are deleted here. */
 	xfree(dict->suffix, dict->s_strippable * sizeof(char *));
 	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
+	xfree(dict->mprefix, dict->mp_strippable * sizeof(char *));
 }
 
 static Dictionary
