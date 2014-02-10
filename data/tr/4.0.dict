@@ -1,59 +1,61 @@
-% Dictionary version number is 4.8.6 (formatted as V4v8v6+)
-<dictionary-version-number>: V4v8v6+;
+% Dictionary version number is 4.8.1 (formatted as V4v8v1+)
+<dictionary-version-number>: V4v8v1+;
 % The empty word.
 =.zzz: ZZZ+;
 
 %adjectives: fat, sick, angry
-şişman.a hasta.a kızgın.a : {A-} & {A+};
-%şişman.a hasta.a kızgın.a : {A+} or (Ajl+ or Ajr-);
+şişman.a hasta.a kızgın.a : {W-} & {EA-} & (({AJl+} & {AJr-}) or {A+}) ;
 
 %nouns: man, woman, kid, apple
-adam kadın çocuk elma: {W-}& {Ds-} & {@A-} & (O+ or (({Sjl+} & {Sjr-}) or {S3s+}));
-
+adam kadın çocuk elma: {W-} & {@A-} & {Ds-} & {O+} & (({SJl+} & {SJr-}) or {S3s+});
+ 
 %pronouns: I, thou, he/she, we, you, they
-ben : ({S1s+} or (Sjl+ or Sjr-));
-sen : ({S2s+} or (Sjl+ or Sjr-));
-o : (S3s+ or (Sjl+ and Sjr-));
-biz : ({S1p+} or (Sjl+ or Sjr-));
-siz : ({S2p+} or (Sjl+ or Sjr-));
-onlar : ({S3p+} or (Sjl+ or Sjr-));
+ben :   {W-} & (({SJl+} & {SJr-}) or {S1s+});
+sen :   {W-} & (({SJl+} & {SJr-}) or {S2s+});
+o:      {W-} & (({SJl+} & {SJr-}) or {S3s+});
+biz :   {W-} & (({SJl+} & {SJr-}) or {S1p+});
+siz :   {W-} & (({SJl+} & {SJr-}) or {S2p+});
+onlar : {W-} & (({SJl+} & {SJr-}) or {S3p+});
 
 %plural nouns (not sure I need this, I could do it with a suffix)
-adamlar kadınlar elmalar: {Dmc-} & {A-} & ({S3p+} or (Sjl+ or Sjr-));
+%adamlar kadınlar elmalar: {W-} & {@A-} & {Dmc-} & {O+} & (({SJl+} & {SJr-}) or {S3p+});
+adamlar : {W-} & {@A-} & {Ds-} & {O+} & (({SJl+} & {SJr-}) or {S3p+});
 
 %determiners (most of, some, every
 çoğu : Ds+; 
 bazı: Dmc+ ;
-her.d bir.d : Ds ;
+her.d bir.d : Ds+ ;
 
 %adverbs
-çok.d : A+;
+çok.ad : {W-} & EA+;
 
-
-%intransitive verbs: come
-gel.= : {W-} & S- & ({VPast+} or {VPres+} or {VImp+}) ;
+%verbs: come, finish
+gel.= bitir.= ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+});
 
 %transitive verbs: eat
-ye.= :{W-} & S- & {O-} & ({VPast+} or {VPres+} or {VImp+}) ;
+ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+}) & {O-};
 
 %verb suffixes: past tense, present cont., imperative
-=dim.past1ps: {VPast-} & {S1s-};
-=din.past2ps: {VPast-} & {S2s-};
-=di.past3ps: {VPast-} & {S3s-};
-=dik.past1pp: {VPast-} & {S1p-};
-=diniz.past2pp: {VPast-} & {S2p-};
-=diler.past3pp: {VPast-} & {S3p-};
-
-=iyor.pres3ps: {VPres-} & {S2s-};
+=dim.past1s: {VPast-} & {S1s-};
+=din.past2s: {VPast-} & {S2s-};
+=di.past3s: {VPast-} & {S3s-};
+=dik.past1p: {VPast-} & {S1p-};
+=diniz.past2p: {VPast-} & {S2p-};
+=diler.past3p: {VPast-} & {S3p-};
+=di.past3p: {Vpast-} & {S3p-};
+=iyor.pres3s: {VPres-} & {S2s-};
 =.imp: Vimp-;
 
 %conjunctions: and
-ve.j-n: Sjl- & Sjr+ & {W-} & {A-} & {S+};
-ve.j-a: Ajl- & Ajr+ & {W-} & {A+} ;
+ve.j-n: {W-} & {A-} & SJl- & SJr+ & {S3p+}  ;
+ve.j-a: {W-} & AJl- & AJr+ & {A+} ;
+ve.j-v: {W-} & VJl- & VJr+ & {S-} ;
 
-%punctuations (not sure how to do "man, woman and kid came"
-%",": (Sjl- & Sjr+) or ({Ajl+ & Ajr-});
-",": Xc-;
+%punctuations 
+",": (SJl- & SJr+ & SJl+ ) 
+   or (AJl- & AJr+ & AJl+) 
+   or (VJl- & VJr+ & VJl+) ;
+%",": Xc- & Xd+;
 
 ANDABLE-CONNECTORS: S+ & S- & A+ & A- & MV+ & MV- & D- & O+ & O- &
 J+ & J- & C-;

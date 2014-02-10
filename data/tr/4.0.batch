@@ -1,0 +1,33 @@
+% man came
+adam geldi
+% men came (colloquial)
+adamlar geldi
+% men came 
+adamlar geldiler
+% man and woman came
+adam ve kadın geldi
+% man, kid and woman came
+adam, çocuk ve kadın geldi
+% fat, angry and sick man came
+şişman, kızgın ve hasta adam geldi
+% fat angry sick man came (doesn't parse as it should)
+şişman kızgın hasta adam geldi
+% very fat man came
+çok şişman adam geldi
+% I came
+ben geldim
+% He/she came
+o geldi
+% They came
+onlar geldiler
+%They came (colloquial) (doesn't parse as it should)
+onlar geldi
+% man came and finished (doesn't parse as it should)
+adam geldi ve bitirdi 
+% man ate (how can I make the man-ate link be preferntially subject and not object)
+adam yedi 
+% man ate apple (doesn't parse as it should)
+adam elma yedi
+
+ 
+
