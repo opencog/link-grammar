@@ -534,8 +534,7 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
  * string with a suffix; so, for example, "make" and "make.n" are
  * a match.  If both strings have subscripts, then the subscripts must match.
  *
- * A subscript is the part that followes the last "." in the word, and
- * that does not begin with a digit.
+ * A subscript is the part that followes the SUBSCRIPT_MARK.
  */
 static Boolean dict_match(const char * s, const char * t)
 {
@@ -863,7 +862,7 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 }
 
 /* Replace the right-most dot with SUBSCRIPT_MARK */
-static void patch_subscript(char * s)
+void patch_subscript(char * s)
 {
 	char *ds, *de;
 	ds = strrchr(s, '.');
@@ -1628,7 +1627,6 @@ static Boolean read_entry(Dictionary dict)
 		}
 		else
 		{
-			char * subs;
 			dn_new = dict_node_new();
 			dn_new->left = dn;
 			dn_new->right = NULL;

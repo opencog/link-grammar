@@ -16,6 +16,8 @@
 #include "structures.h"
 #include "word-file.h"
 
+extern void patch_subscript(char * s);  /* Arghhh move me to a header file! */
+
 /**
  * Reads in one word from the file, allocates space for it,
  * and returns it.
@@ -44,6 +46,7 @@ static const char * get_a_word(Dictionary dict, FILE * fp)
 		exit(1);
 	}
 	word[j] = '\0';
+	patch_subscript(word);
 	s = string_set_add(word, dict->string_set);
 	return s;
 }
