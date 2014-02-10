@@ -543,12 +543,14 @@ static Boolean dict_match(const char * s, const char * t)
 	ds = strrchr(s, SUBSCRIPT_MARK);
 	dt = strrchr(t, SUBSCRIPT_MARK);
 
+#if SUBSCRIPT_MARK == '.'
 	/* a dot at the end or a dot followed by a number is NOT
 	 * considered a subscript */
 	if ((dt != NULL) && ((*(dt+1) == '\0') ||
 	    (isdigit((int)*(dt+1))))) dt = NULL;
 	if ((ds != NULL) && ((*(ds+1) == '\0') ||
 	    (isdigit((int)*(ds+1))))) ds = NULL;
+#endif
 
 	/* dt is NULL when there's no prefix ... */
 	if (dt == NULL && ds != NULL) {
@@ -860,6 +862,21 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	return n;
 }
 
+/* Replace the right-most dot with SUBSCRIPT_MARK */
+static void patch_subscript(char * s)
+{
+	char *ds, *de;
+	ds = strrchr(s, '.');
+	if (!ds) return;
+
+	/* a dot at the end or a dot followed by a number is NOT
+	 * considered a subscript */
+	de = ds + 1;
+	if (*de == '\0') return;
+	if (isdigit((int)*de)) return;
+	*ds = SUBSCRIPT_MARK;
+}
+
 /**
  * connector() -- make a node for a connector or dictionary word.
  *
@@ -875,9 +892,7 @@ static Exp * connector(Dictionary dict)
 	if ((dict->token[i] != '+') && (dict->token[i] != '-'))
 	{
 		/* If we are here, token is a word */
-		/* Replace the right-most dot with SUBSCRIPT_MARK */
-		char * subs = strrchr(dict->token, '.');
-		if (subs) *subs = SUBSCRIPT_MARK;
+		patch_subscript(dict->token);
 		dn_head = abridged_lookup_list(dict, dict->token);
 		dn = dn_head;
 		while ((dn != NULL) && (strcmp(dn->string, dict->token) != 0))
@@ -1621,9 +1636,7 @@ static Boolean read_entry(Dictionary dict)
 			dn = dn_new;
 			dn->file = NULL;
 
-			/* Replace the right-most dot with SUBSCRIPT_MARK */
-			subs = strrchr(dict->token, '.');
-			if (subs) *subs = SUBSCRIPT_MARK;
+			patch_subscript(dict->token);
 			dn->string = string_set_add(dict->token, dict->string_set);
 		}
 
@@ -1863,7 +1876,7 @@ static Boolean find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
 	if (dn == NULL) return FALSE;
 	m = dict_order_bare(s, dn);
 	if (m <= 0) {
-		if (find_one_non_idiom_node(dn,dn->left, s, parent, to_be_deleted)) return TRUE;
+		if (find_one_non_idiom_node(dn, dn->left, s, parent, to_be_deleted)) return TRUE;
 	}
 /*	if ((m == 0) && (!is_idiom_word(dn->string)) && (dn->file != NULL)) { */
 	if ((m == 0) && (!is_idiom_word(dn->string))) {
@@ -1872,7 +1885,7 @@ static Boolean find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
 		return TRUE;
 	}
 	if (m >= 0) {
-		if (find_one_non_idiom_node(dn,dn->right, s, parent, to_be_deleted)) return TRUE;
+		if (find_one_non_idiom_node(dn, dn->right, s, parent, to_be_deleted)) return TRUE;
 	}
 	return FALSE;
 }
