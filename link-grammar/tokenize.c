@@ -442,7 +442,7 @@ static void add_alternative(Sentence sent, int prefnum, const char **prefix, int
 	int numlist[] = { prefnum, stemnum, suffnum };
 	enum affixtype { PREFIX, STEM, SUFFIX, END };
 	enum affixtype at;
-	char buff[MAX_WORD+1];
+	char buff[MAX_WORD+3];
 
 	if (3 < verbosity) { /* DEBUG */
 		printf(">>>add_alternative: ");
@@ -510,10 +510,16 @@ static void add_alternative(Sentence sent, int prefnum, const char **prefix, int
 					buff[sz] = INFIX_MARK;
 					buff[sz+1] = 0;
 					break;
-				case STEM:	/* word.= */	/* TEMPORARY NOTE: a corrected dict_order_user() is needed! */
-					strcpy(buff, *affix);
-					if (suffnum && *suffix[0] != '\0') /* there is a suffix, so we must dictionary-fetch only a stem */
-						strcat(buff, ".=");	/* XXX should use SUFFIX_WORD but it is not yet defined globally */
+				case STEM:	/* word.= */
+					sz = MIN(strlen(*affix), MAX_WORD);
+					strncpy(buff, *affix, sz);
+					buff[sz] = 0;
+					if (suffnum && *suffix[0] != '\0') { /* there is a suffix, so we must dictionary-fetch only a stem */
+						/* XXX should use SUFFIX_WORD but it is not yet defined globally */
+						buff[sz] = SUBSCRIPT_MARK;
+						buff[sz+1] = INFIX_MARK;
+						buff[sz+2] = 0;
+					}
 					break;
 				case SUFFIX:	/* =word */
 					sz = MIN(strlen(*affix) + 2, MAX_WORD);

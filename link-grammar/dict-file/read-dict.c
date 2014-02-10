@@ -1691,7 +1691,7 @@ void print_expression(Exp * n)
 	{
 		for (i=0; i<icost; i++) printf("[");
 		if (n->multi) printf("@");
-		printf("%s%c",n->u.string, n->dir);
+		printf("%s%c", n->u.string, n->dir);
 		for (i=0; i<icost; i++) printf("]");
 		if (icost > 0) printf(" ");
 	}
@@ -1733,7 +1733,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 	{
 		for (i=0; i<icost; i++) printf("[");
 		if (n->multi) printf("@");
-		printf("%s%c",n->u.string, n->dir);
+		printf("%s%c", n->u.string, n->dir);
 		for (i=0; i<icost; i++) printf("]");
 		return;
 	}
