@@ -16,8 +16,6 @@
 #include "structures.h"
 #include "word-file.h"
 
-extern void patch_subscript(char * s);  /* Arghhh move me to a header file! */
-
 /**
  * Reads in one word from the file, allocates space for it,
  * and returns it.

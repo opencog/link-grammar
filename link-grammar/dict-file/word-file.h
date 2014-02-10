@@ -14,3 +14,7 @@
 #include "dict-api.h"
 
 Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename);
+
+/* This belongs in a differnt header file, but which? */
+void patch_subscript(char * s);
+

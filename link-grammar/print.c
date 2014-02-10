@@ -21,6 +21,7 @@
 #include "idiom.h"
 #include "print-util.h"
 #include "string-set.h"
+#include "structures.h" /* needed for EMPTY_WORD */
 #include "utilities.h"
 #include "word-utils.h"
 
@@ -32,7 +33,6 @@
 
 /* The Russian dictionary makes use of the empty word to deal with
  * the splitting of words into variable-length word-counts */
-#define EMPTY_WORD ("=.zzz")   /* pure whitespace */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
 #define SUFFIX_WORD ("=")      /* suffixes start with this */

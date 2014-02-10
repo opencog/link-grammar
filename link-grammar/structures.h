@@ -96,7 +96,12 @@
 /* The following define the names of the special strings in the dictionary. */
 #define LEFT_WALL_WORD   ("LEFT-WALL")
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
-#define EMPTY_WORD  ("=.zzz")
+
+/* Word subscripts come after the subscript mark (ASCII ETX) */
+/* #define SUBSCRIPT_MARK '.' */
+#define SUBSCRIPT_MARK 0x3
+/* #define EMPTY_WORD  "=.zzz" */
+#define EMPTY_WORD  "=zzz"
 
 #ifdef USE_FAT_LINKAGES
   #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
