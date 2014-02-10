@@ -19,6 +19,10 @@
 
 LINK_BEGIN_DECLS
 
+/* word subscripts come after the subscript mark (ASCII ETX) */
+// #define SUBSCRIPT_MARK 0x3
+#define SUBSCRIPT_MARK '.'
+
 /* Forward decls */
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;

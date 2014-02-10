@@ -1165,7 +1165,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				if (verbosity > 4)
 					printf("%%%%>>>%d Checking word %d, djw=%s djw+1=%s\n", lk, i, djw, pi->chosen_disjuncts[i+1]->string);
 				strcpy(newword, djw);
-				p = strrchr(newword, '.');
+				p = strrchr(newword, SUBSCRIPT_MARK);
 				if (p) *p = 0x0;
 				strcat(newword, pi->chosen_disjuncts[i+1]->string+1);
 

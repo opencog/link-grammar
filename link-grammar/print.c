@@ -441,7 +441,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			/* get rid of those ugly ".Ixx" */
 			if (is_idiom_word(t)) {
 				s = strdup(t);
-				u = strrchr(s, '.');
+				u = strrchr(s, SUBSCRIPT_MARK);
 				*u = '\0';
 				t = string_set_add(s, sent->string_set);
 				free(s);
@@ -462,7 +462,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 					size_t len = strlen(stem) + strlen (t);
 					char * join = (char *)malloc(len+1);
 					strcpy(join, stem);
-					u = strrchr(join, '.');
+					u = strrchr(join, SUBSCRIPT_MARK);
 
 					/* u can be null, if the the sentence happens to have
 					 * an equals sign in it, for other reasons. */

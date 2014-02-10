@@ -450,12 +450,12 @@ int dict_order_strict(char *s, char *t)
 		s++;
 		t++;
 	}
-	if (*s == '.') {
+	if (*s == SUBSCRIPT_MARK) {
 		ss = 1;
 	} else {
 		ss = (*s)<<1;
 	}
-	if (*t == '.') {
+	if (*t == SUBSCRIPT_MARK) {
 		tt = 1;
 	} else {
 		tt = (*t)<<1;
@@ -470,17 +470,17 @@ static inline int dict_order_strict(const char *s, Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
-	return ((*s == '.')?(1):(*s))  -  ((*t == '.')?(1):(*t));
+	return ((*s == SUBSCRIPT_MARK)?(1):(*s))  -  ((*t == SUBSCRIPT_MARK)?(1):(*t));
 }
 
 /* Similar to above, except that a "bare" search string will match
  * a dictionary entry with a dot.
  */
-static inline int dict_order_internal(const char *s, Dict_node * dn)
+static inline int dict_order_bare(const char *s, Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
-	return ((*s == '.')?(0):(*s))  -  ((*t == '.')?(0):(*t));
+	return ((*s == SUBSCRIPT_MARK)?(0):(*s))  -  ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
 /**
@@ -490,27 +490,11 @@ static inline int dict_order_internal(const char *s, Dict_node * dn)
  * a pointer to a dictionary string, this returns 0 if they match,
  * returns >0 if s>t, and <0 if s<t.
  *
- * The matching is done as follows.  Walk down the strings until
- * you come to the end of one of them, or until you find unequal
- * characters.  If the dictionary string contains a dot ".", then
- * replace "." by "\0", and take the difference.  This behavior
- * matches that of the function dict_order_internal(), except that
- * here, we allow user-provided strings with dots in them.  Yes, these
- * are garbage-words, probably due to some broken input, but hey ...
- * users give us broken input all the time, and it has to be tolerated.
- *
- * With one odd-ball exception: if the user-provided string is
- * one or more dots (e.g. a period at end of sentence, or an ellipsis)
- * then we do have to match those (i.e. use a null-byte).
+ * The matching is done as follows.  Walk down the strings until you
+ * come to the end of one of them, or until you find unequal characters.
+ * If the dictionary string contains a SUBSCRIPT_MARK, then replace the
+ * mark by "\0", and take the difference.
  */
-static inline int dict_order_user(const char * s, Dict_node * dn)
-{
-	const char * so = s;
-	const char * t = dn->string;
-	while ((*s != '\0') && (*s == *t)) {s++; t++;}
-	// return (*s) - ((*t == '.')?(0):(*t));
-	return (('.' == *so)?(0):(*s)) - ((*t == '.')?(0):(*t));
-}
 
 /**
  * dict_order_wild() -- order dictionary strings, with wildcard.
@@ -540,7 +524,7 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 
 	if (*s == '*') return 0;
 
-	return (((*s == '.')?(0):(*s)) - ((*t == '.')?(0):(*t)));
+	return (((*s == '.')?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
 }
 
 
@@ -556,8 +540,8 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 static Boolean dict_match(const char * s, const char * t)
 {
 	char *ds, *dt;
-	ds = strrchr(s, '.');
-	dt = strrchr(t, '.');
+	ds = strrchr(s, SUBSCRIPT_MARK);
+	dt = strrchr(t, SUBSCRIPT_MARK);
 
 	/* a dot at the end or a dot followed by a number is NOT
 	 * considered a subscript */
@@ -658,7 +642,6 @@ rdictionary_lookup(Dict_node *llist,
                    Dict_node * dn,
                    const char * s,
                    Boolean match_idiom,
-                   Boolean affix_lookup,
                    Boolean wild_lookup)
 {
 	/* see comment in dictionary_lookup below */
@@ -668,14 +651,12 @@ rdictionary_lookup(Dict_node *llist,
 
 	if (wild_lookup)
 		m = dict_order_wild(s, dn);
-	else if (affix_lookup)
-		m = dict_order_internal(s, dn);
 	else
-		m = dict_order_user(s, dn);
+		m = dict_order_bare(s, dn);
 
 	if (m >= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, affix_lookup, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, wild_lookup);
 	}
 	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)))
 	{
@@ -686,7 +667,7 @@ rdictionary_lookup(Dict_node *llist,
 	}
 	if (m <= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, affix_lookup, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, wild_lookup);
 	}
 	return llist;
 }
@@ -705,21 +686,14 @@ rdictionary_lookup(Dict_node *llist,
  */
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 {
-	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE, FALSE);
+	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE);
 	llist = prune_lookup_list(llist, s);
-	return llist;
-}
-
-Dict_node * dictionary_lookup_internal(Dictionary dict, const char *s)
-{
-	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, TRUE, FALSE);
-	// llist = prune_lookup_list(llist, s);
 	return llist;
 }
 
 static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 {
-	return rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE, TRUE);
+	return rdictionary_lookup(NULL, dict->root, s, TRUE, TRUE);
 }
 
 /**
@@ -737,7 +711,7 @@ static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, FALSE, FALSE, FALSE);
+	llist = rdictionary_lookup(NULL, dict->root, s, FALSE, FALSE);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -788,10 +762,10 @@ static Exp * make_optional_node(Dictionary dict, Exp * e);
  * is a single word, while эт.= =о.mnsi counts as two words, and there
  * is no pretty way to handle both during parsing.  Thus a work-around
  * is introduced: add the empty wored =.zzz: ZZZ+; to the dictionary.
- * this becomes a pseudo-suffix that can attach to any plain word.  It
+ * This becomes a pseudo-suffix that can attach to any plain word.  It
  * can attach to any plain word only because the routine below,
  * add_empty_word(), adds the corresponding connector ZZZ- to the plain
- * word.  This is don "on the fly", because we don't want to pollute the
+ * word.  This is done "on the fly", because we don't want to pollute the
  * dictionary with this stuff. Besides, the Russian dictionary has
  * more then 23K words that qualify for this treatment (It has 22.5K
  * words that appear both as plain words, and as stems, and can thus
@@ -901,6 +875,9 @@ static Exp * connector(Dictionary dict)
 	if ((dict->token[i] != '+') && (dict->token[i] != '-'))
 	{
 		/* If we are here, token is a word */
+		/* Replace the right-most dot with SUBSCRIPT_MARK */
+		char * subs = strrchr(dict->token, '.');
+		if (subs) *subs = SUBSCRIPT_MARK;
 		dn_head = abridged_lookup_list(dict, dict->token);
 		dn = dn_head;
 		while ((dn != NULL) && (strcmp(dn->string, dict->token) != 0))
@@ -911,7 +888,7 @@ static Exp * connector(Dictionary dict)
 		{
 			free_lookup_list(dn_head);
 			dict_error(dict, "\nPerhaps missing + or - in a connector.\n"
-			                 "Or perhaps you forgot the suffix on a word.\n"
+			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps a word is used before it is defined.\n");
 			return NULL;
 		}
@@ -1636,12 +1613,17 @@ static Boolean read_entry(Dictionary dict)
 		}
 		else
 		{
+			char * subs;
 			dn_new = dict_node_new();
 			dn_new->left = dn;
 			dn_new->right = NULL;
 			dn_new->exp = NULL;
 			dn = dn_new;
 			dn->file = NULL;
+
+			/* Replace the right-most dot with SUBSCRIPT_MARK */
+			subs = strrchr(dict->token, '.');
+			if (subs) *subs = SUBSCRIPT_MARK;
 			dn->string = string_set_add(dict->token, dict->string_set);
 		}
 
@@ -1879,7 +1861,7 @@ static Boolean find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
 {
 	int m;
 	if (dn == NULL) return FALSE;
-	m = dict_order_user(s, dn);
+	m = dict_order_bare(s, dn);
 	if (m <= 0) {
 		if (find_one_non_idiom_node(dn,dn->left, s, parent, to_be_deleted)) return TRUE;
 	}

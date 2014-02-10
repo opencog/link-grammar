@@ -35,7 +35,7 @@ Boolean contains_underbar(const char * s)
 /** 
  * Returns FALSE if it is not a correctly formed idiom string.
  * Such a string is correct if it:
- *   () contains no "."
+ *   () contains no SUBSCRIPT_MARK
  *   () non-empty strings separated by _
  */
 static Boolean is_idiom_string(const char * s)
@@ -45,7 +45,7 @@ static Boolean is_idiom_string(const char * s)
 
 	for (t = s; *t != '\0'; t++)
 	{
-		if (*t == '.') return FALSE;
+		if (*t == SUBSCRIPT_MARK) return FALSE;
 	}
 
 	len = strlen(s);
@@ -76,14 +76,14 @@ static Boolean is_number(const char *s)
 }
 
 /**
- * If the string contains a single ".", and ends in ".Ix" where
+ * If the string contains a SUBSCIPT_MARK, and ends in ".Ix" where
  * x is a number, return x.  Return -1 if not of this form.
  */
 static int numberfy(const char * s)
 {
-	for (; (*s != '\0') && (*s != '.'); s++)
+	for (; (*s != '\0') && (*s != SUBSCRIPT_MARK); s++)
 	  ;
-	if (*s++ != '.') return -1;
+	if (*s++ != SUBSCRIPT_MARK) return -1;
 	if (*s++ != 'I') return -1;
 	if (!is_number(s)) return -1;
 	return atoi(s);
@@ -125,13 +125,13 @@ static const char * build_idiom_word_name(Dictionary dict, const char * s)
 	free_lookup_list(dn);
 
 	x = buff;
-	while((*s != '\0') && (*s != '.'))
+	while((*s != '\0') && (*s != SUBSCRIPT_MARK))
 	{
 		*x = *s;
 		x++;
 		s++;
 	}
-	sprintf(x, ".I%d",count);
+	sprintf(x, "%cI%d", SUBSCRIPT_MARK, count);
 
 	return string_set_add(buff, dict->string_set);
 }

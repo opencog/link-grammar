@@ -1405,7 +1405,7 @@ static X_node * build_regex_expressions(Sentence sent, int i,
 	{
 		char str[MAX_WORD+1];
 		char * t;
-		t = strchr(e->string, '.');
+		t = strchr(e->string, SUBSCRIPT_MARK);
 		if (NULL != t)
 		{
 			snprintf(str, MAX_WORD, "%.50s[!].%.5s", word, t+1);
@@ -1436,7 +1436,7 @@ static X_node * handle_unknown_word(Sentence sent, int i, const char * s)
 	for (d = we; d != NULL; d = d->next)
 	{
 		char str[MAX_WORD+1];
-		char *t = strchr(d->string, '.');
+		char *t = strchr(d->string, SUBSCRIPT_MARK);
 		if (t != NULL)
 		{
 			snprintf(str, MAX_WORD, "%.50s[?].%.5s", s, t+1);
@@ -1501,7 +1501,7 @@ static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
 	for (d = head; d != NULL; d = d->next)
 	{
 		char str[MAX_WORD+1];
-		const char * t = strchr(d->string, '.');
+		const char * t = strchr(d->string, SUBSCRIPT_MARK);
 		if (t != NULL)
 		{
 			size_t off = t - d->string;

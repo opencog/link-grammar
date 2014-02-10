@@ -37,7 +37,7 @@ static inline char * deinflect(const char * str)
 {
 	size_t len;
 	char *s;
-	char *p = strrchr(str, '.');
+	char *p = strrchr(str, SUBSCRIPT_MARK);
 	if (!p || (p == str)) return strdup(str);
 
 	len = p - str;
