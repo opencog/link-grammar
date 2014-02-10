@@ -473,18 +473,11 @@ static inline int dict_order_strict(const char *s, Dict_node * dn)
 	return ((*s == SUBSCRIPT_MARK)?(1):(*s))  -  ((*t == SUBSCRIPT_MARK)?(1):(*t));
 }
 
-/* Similar to above, except that a "bare" search string will match
- * a dictionary entry with a dot.
- */
-static inline int dict_order_bare(const char *s, Dict_node * dn)
-{
-	const char * t = dn->string;
-	while (*s != '\0' && *s == *t) {s++; t++;}
-	return ((*s == SUBSCRIPT_MARK)?(0):(*s))  -  ((*t == SUBSCRIPT_MARK)?(0):(*t));
-}
-
 /**
- * dict_order_user() -- order user vs. dictionary string.
+ * dict_order_bare() -- order user vs. dictionary string.
+ *
+ * Similar to above, except that a "bare" search string will match
+ * a dictionary entry with a dot.
  *
  * Assuming that s is a pointer to the search string, and that t is
  * a pointer to a dictionary string, this returns 0 if they match,
@@ -495,6 +488,13 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
  * If the dictionary string contains a SUBSCRIPT_MARK, then replace the
  * mark by "\0", and take the difference.
  */
+
+static inline int dict_order_bare(const char *s, Dict_node * dn)
+{
+	const char * t = dn->string;
+	while (*s != '\0' && *s == *t) {s++; t++;}
+	return ((*s == SUBSCRIPT_MARK)?(0):(*s))  -  ((*t == SUBSCRIPT_MARK)?(0):(*t));
+}
 
 /**
  * dict_order_wild() -- order dictionary strings, with wildcard.
