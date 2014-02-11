@@ -2,6 +2,10 @@
 # Automake file for programming language bindings to link-grammar
 #
 
+if HAVE_JAVA
+SUBDIRS=java-jni
+endif
+
 
 EXTRA_DIST=                               \
    autoit/_LGTest.au3                     \

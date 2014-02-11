@@ -33,57 +33,41 @@ INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 
-if HAVE_JAVA
-lib_LTLIBRARIES += liblink-grammar-java.la
-endif
-
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar.def
-
-liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar-java.def
 
 if OS_WIN32
 liblink_grammar_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
-liblink_grammar_java_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
 endif
 
 liblink_grammar_la_LIBADD  =  ${REGEX_LIBS}
-liblink_grammar_java_la_LIBADD  = liblink-grammar.la  ${REGEX_LIBS}
 
 if HAVE_HUNSPELL
 liblink_grammar_la_LIBADD  +=  ${HUNSPELL_LIBS}
-liblink_grammar_java_la_LIBADD  += ${HUNSPELL_LIBS}
 endif
 
 if HAVE_ASPELL
 liblink_grammar_la_LIBADD  +=  ${ASPELL_LIBS}
-liblink_grammar_java_la_LIBADD  += ${ASPELL_LIBS}
 endif
 
 if WITH_SAT_SOLVER
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
-liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
-liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
 endif
 
 if WITH_CORPUS
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
-liblink_grammar_java_la_LIBADD  += $(top_builddir)/link-grammar/corpus/liblink-corpus.la ${SQLITE3_LIBS}
 endif
 
 if WITH_BINRELOC
 liblink_grammar_la_LIBADD  += -lpthread
-liblink_grammar_java_la_LIBADD  += -lpthread
 endif
 
 if WITH_PTHREADS
 liblink_grammar_la_LIBADD  += -lpthread
-liblink_grammar_java_la_LIBADD  += -lpthread
 endif
 
 # Math libraries are needed for floorf, etc.
 liblink_grammar_la_LIBADD  += -lm
-liblink_grammar_java_la_LIBADD  += -lm
 
 liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
@@ -169,14 +153,9 @@ liblink_grammar_include_HEADERS =   \
 	dict-api.h                       \
 	dict-structures.h
 
-liblink_grammar_java_la_SOURCES =   \
-	jni-client.h                     \
-	jni-client.c
-
 EXTRA_DIST=                               \
 	prefix.h                               \
-	link-grammar.def                       \
-	link-grammar-java.def
+	link-grammar.def
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
