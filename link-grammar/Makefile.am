@@ -1,5 +1,5 @@
 # 
-# Automake file for building both liblink-grammar.so
+# Automake file for building liblink-grammar.so
 #
 
 if WITH_SAT_SOLVER
@@ -175,22 +175,8 @@ liblink_grammar_java_la_SOURCES =   \
 
 EXTRA_DIST=                               \
 	prefix.h                               \
-	autoit/_LGTest.au3                     \
-	autoit/_LinkGrammar.au3                \
-	autoit/README                          \
-	java/README                            \
-	java/org/linkgrammar/JSONReader.java   \
-	java/org/linkgrammar/JSONUtils.java    \
-	java/org/linkgrammar/LGConfig.java     \
-	java/org/linkgrammar/LGRemoteClient.java  \
-	java/org/linkgrammar/LGService.java    \
-	java/org/linkgrammar/Linkage.java      \
-	java/org/linkgrammar/LinkGrammar.java  \
-	java/org/linkgrammar/Link.java         \
-	java/org/linkgrammar/ParseResult.java  \
 	link-grammar.def                       \
-	link-grammar-java.def                  \
-	lisp/link-interface.cl
+	link-grammar-java.def
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib
