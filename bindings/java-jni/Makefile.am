@@ -1,6 +1,7 @@
 # 
-# Automake file for building liblink-grammar.so
+# Automake file for building liblink-grammar-java.so
 #
+
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\"
 
@@ -11,7 +12,7 @@ endif
 
 INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS) 
 
-lib_LTLIBRARIES += liblink-grammar-java.la
+lib_LTLIBRARIES = liblink-grammar-java.la
 
 liblink_grammar_java_la_LDFLAGS = -version-info @VERSION_INFO@ -export-dynamic -no-undefined -export-symbols $(srcdir)/link-grammar-java.def
 
@@ -56,7 +57,3 @@ liblink_grammar_java_la_SOURCES =   \
 EXTRA_DIST=                               \
 	link-grammar-java.def
 
-# -----------------------------------------------------------
-install-data-local: install-libtool-import-lib
-
-uninstall-local: uninstall-libtool-import-lib
