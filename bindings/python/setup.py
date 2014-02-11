@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 from distutils.core import Extension
 from distutils.core import setup
@@ -18,7 +18,7 @@ setup(name='pylinkgrammar', version=pylinkgrammar.__version__,
     author_email='engineering@lexile.com',
     ext_modules=[link_grammar_ext],
     packages=['pylinkgrammar'],
-    url='https://www.bitbucket.org/metametrics/pylinkgrammar/',
+    url='https://abisource.com/projects/link-grammar/',
     classifiers = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

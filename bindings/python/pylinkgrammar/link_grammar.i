@@ -10,7 +10,6 @@ typedef struct Parse_Options_s * Parse_Options;
 typedef struct Sentence_s * Sentence;
 typedef struct Linkage_s * Linkage;
 typedef struct Postprocessor_s PostProcessor;
-typedef struct CNode_s CNode;
 
 
 const char * linkgrammar_get_version(void);
@@ -92,7 +91,6 @@ int  sentence_num_linkages_found(Sentence sent);
 int  sentence_num_valid_linkages(Sentence sent);
 int  sentence_num_linkages_post_processed(Sentence sent);
 int  sentence_num_violations(Sentence sent, int i);
-int  sentence_and_cost(Sentence sent, int i);
 int  sentence_disjunct_cost(Sentence sent, int i);
 int  sentence_link_cost(Sentence sent, int i);
 char * sentence_get_nth_word(Sentence sent, int i);
@@ -149,7 +147,6 @@ char * linkage_print_postscript(Linkage linkage, int mode);
 int linkage_compute_union(Linkage linkage);
 int linkage_unused_word_cost(Linkage linkage);
 int linkage_disjunct_cost(Linkage linkage);
-int linkage_and_cost(Linkage linkage);
 int linkage_link_cost(Linkage linkage);
 double linkage_corpus_cost(Linkage linkage);
 int linkage_is_canonical(Linkage linkage);
@@ -167,16 +164,3 @@ PostProcessor * post_process_open(char *path);
 void post_process_close(PostProcessor *);
 void linkage_post_process(Linkage, PostProcessor *);
 
-/**********************************************************************
-*
-* Constituent node
-*
-***********************************************************************/
-
-CNode * linkage_constituent_tree(Linkage linkage);
-void linkage_free_constituent_tree(CNode * n);
-char * linkage_constituent_node_get_label(const CNode *n);
-CNode * linkage_constituent_node_get_child(const CNode *n);
-CNode * linkage_constituent_node_get_next(const CNode *n);
-int linkage_constituent_node_get_start(const CNode *n);
-int linkage_constituent_node_get_end(const CNode *n);

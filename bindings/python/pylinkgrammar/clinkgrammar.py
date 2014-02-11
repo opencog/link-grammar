@@ -300,10 +300,6 @@ def sentence_num_violations(*args):
   return _clinkgrammar.sentence_num_violations(*args)
 sentence_num_violations = _clinkgrammar.sentence_num_violations
 
-def sentence_and_cost(*args):
-  return _clinkgrammar.sentence_and_cost(*args)
-sentence_and_cost = _clinkgrammar.sentence_and_cost
-
 def sentence_disjunct_cost(*args):
   return _clinkgrammar.sentence_disjunct_cost(*args)
 sentence_disjunct_cost = _clinkgrammar.sentence_disjunct_cost
@@ -331,14 +327,6 @@ linkage_delete = _clinkgrammar.linkage_delete
 def linkage_print_diagram(*args):
   return _clinkgrammar.linkage_print_diagram(*args)
 linkage_print_diagram = _clinkgrammar.linkage_print_diagram
-
-def linkage_get_current_sublinkage(*args):
-  return _clinkgrammar.linkage_get_current_sublinkage(*args)
-linkage_get_current_sublinkage = _clinkgrammar.linkage_get_current_sublinkage
-
-def linkage_set_current_sublinkage(*args):
-  return _clinkgrammar.linkage_set_current_sublinkage(*args)
-linkage_set_current_sublinkage = _clinkgrammar.linkage_set_current_sublinkage
 
 def linkage_get_sentence(*args):
   return _clinkgrammar.linkage_get_sentence(*args)
@@ -412,10 +400,6 @@ def linkage_print_postscript(*args):
   return _clinkgrammar.linkage_print_postscript(*args)
 linkage_print_postscript = _clinkgrammar.linkage_print_postscript
 
-def linkage_compute_union(*args):
-  return _clinkgrammar.linkage_compute_union(*args)
-linkage_compute_union = _clinkgrammar.linkage_compute_union
-
 def linkage_unused_word_cost(*args):
   return _clinkgrammar.linkage_unused_word_cost(*args)
 linkage_unused_word_cost = _clinkgrammar.linkage_unused_word_cost
@@ -424,10 +408,6 @@ def linkage_disjunct_cost(*args):
   return _clinkgrammar.linkage_disjunct_cost(*args)
 linkage_disjunct_cost = _clinkgrammar.linkage_disjunct_cost
 
-def linkage_and_cost(*args):
-  return _clinkgrammar.linkage_and_cost(*args)
-linkage_and_cost = _clinkgrammar.linkage_and_cost
-
 def linkage_link_cost(*args):
   return _clinkgrammar.linkage_link_cost(*args)
 linkage_link_cost = _clinkgrammar.linkage_link_cost
@@ -435,18 +415,6 @@ linkage_link_cost = _clinkgrammar.linkage_link_cost
 def linkage_corpus_cost(*args):
   return _clinkgrammar.linkage_corpus_cost(*args)
 linkage_corpus_cost = _clinkgrammar.linkage_corpus_cost
-
-def linkage_is_canonical(*args):
-  return _clinkgrammar.linkage_is_canonical(*args)
-linkage_is_canonical = _clinkgrammar.linkage_is_canonical
-
-def linkage_is_improper(*args):
-  return _clinkgrammar.linkage_is_improper(*args)
-linkage_is_improper = _clinkgrammar.linkage_is_improper
-
-def linkage_has_inconsistent_domains(*args):
-  return _clinkgrammar.linkage_has_inconsistent_domains(*args)
-linkage_has_inconsistent_domains = _clinkgrammar.linkage_has_inconsistent_domains
 
 def linkage_get_violation_name(*args):
   return _clinkgrammar.linkage_get_violation_name(*args)
@@ -464,33 +432,6 @@ def linkage_post_process(*args):
   return _clinkgrammar.linkage_post_process(*args)
 linkage_post_process = _clinkgrammar.linkage_post_process
 
-def linkage_constituent_tree(*args):
-  return _clinkgrammar.linkage_constituent_tree(*args)
-linkage_constituent_tree = _clinkgrammar.linkage_constituent_tree
-
-def linkage_free_constituent_tree(*args):
-  return _clinkgrammar.linkage_free_constituent_tree(*args)
-linkage_free_constituent_tree = _clinkgrammar.linkage_free_constituent_tree
-
-def linkage_constituent_node_get_label(*args):
-  return _clinkgrammar.linkage_constituent_node_get_label(*args)
-linkage_constituent_node_get_label = _clinkgrammar.linkage_constituent_node_get_label
-
-def linkage_constituent_node_get_child(*args):
-  return _clinkgrammar.linkage_constituent_node_get_child(*args)
-linkage_constituent_node_get_child = _clinkgrammar.linkage_constituent_node_get_child
-
-def linkage_constituent_node_get_next(*args):
-  return _clinkgrammar.linkage_constituent_node_get_next(*args)
-linkage_constituent_node_get_next = _clinkgrammar.linkage_constituent_node_get_next
-
-def linkage_constituent_node_get_start(*args):
-  return _clinkgrammar.linkage_constituent_node_get_start(*args)
-linkage_constituent_node_get_start = _clinkgrammar.linkage_constituent_node_get_start
-
-def linkage_constituent_node_get_end(*args):
-  return _clinkgrammar.linkage_constituent_node_get_end(*args)
-linkage_constituent_node_get_end = _clinkgrammar.linkage_constituent_node_get_end
 # This file is compatible with both classic and new-style classes.
 
 
