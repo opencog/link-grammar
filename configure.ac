@@ -584,7 +584,7 @@ AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
 PERL_GUESS=`perl -MConfig -e 'print $Config{archlib}'`
 
-CPPFLAGS="${CPPFLAGS} -I/${PERL_GUESS} -I/${PERL_GUESS}/CORE"
+CPPFLAGS="${CPPFLAGS} -I${PERL_GUESS} -I${PERL_GUESS}/CORE"
 
 AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
 AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)

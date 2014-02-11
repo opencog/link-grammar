@@ -5,7 +5,14 @@
 SWIG_SOURCES = ../swig/link_grammar.i
 BUILT_SOURCES = $(top_builddir)/bindings/perl/link_grammar_wrap.cc
 
+# /usr/local/lib/perl/5.14.2/auto
+# /usr/local/share/perl/5.14.2
 
+# XXX this is wrong, its failing to install the perl module in a sane place ..
+pkgperl_PERL = \
+   $(top_builddir)/bindings/perl/clinkgrammar.pm
+
+# XXX this is wrong; this should be installed with the perl module.
 lib_LTLIBRARIES = liblink-grammar-perl.la
 
 liblink_grammar_perl_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
@@ -27,11 +34,13 @@ if HAVE_ASPELL
 liblink_grammar_perl_la_LIBADD  += ${ASPELL_LIBS}
 endif
 
-
 $(BUILT_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) -perl5 -I$(top_srcdir)/link-grammar -o $@ $<
 #	$(SWIG) $(SWIG_PERL_OPT) -I$(top_srcdir)/link-grammar -o $@ $<
 
 
+EXTRA_DIST =     \
+   README        \
+   test.pl
 
 

@@ -35,7 +35,8 @@ FIND_PATH(LINK_GRAMMAR_INCLUDE_DIR link-grammar/link-includes.h)
 FIND_PATH(LINK_GRAMMAR_DATA_DIR 4.0.dict
 	PATHS 
 		/usr/share/link-grammar/en/
-		/usr/local/share/link-grammar/en/)
+		/usr/local/share/link-grammar/en/
+		/opt/local/share/link-grammar/en/)
 
 # Look for the library
 FIND_LIBRARY(LINK_GRAMMAR_LIBRARY
