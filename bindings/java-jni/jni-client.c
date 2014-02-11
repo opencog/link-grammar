@@ -193,40 +193,6 @@ static void finish(per_thread_data *ptd)
 /* ================================================================= */
 /* Misc utilities */
 
-#ifdef DEBUG_DO_PHRASE_TREE
-static void r_printTree(CNode* cn, int level)
-{
-	int i;
-	CNode* c;
-
-	if (cn == NULL) return;
-
-	/* print label */
-	if (cn->label != NULL) {
-		printf("(%s ", cn->label);
-	} else {
-		printf("NULL\n");
-	}
-
-	/* Recurse on children. */
-	for (c = cn->child; c!=NULL; c=c->next) {
-		if (c->child)
-			r_printTree(c, level+1);
-		else
-			printf("%s ", c->label);
-	}
-	printf(")\n");
-	for (i=0; i<=level; i++)
-		printf ("   ");
-}
-
-static void printTree(CNode* cn)
-{
-	r_printTree(cn,0);
-	printf("\n");
-}
-#endif /* DEBUG */
-
 static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 {
 	int maxlen;

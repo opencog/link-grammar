@@ -4,6 +4,7 @@ Version 4.8.7 (XXX 2014)
  * Add prototype Turkish dictionary from Can Bruce.
  * Re-arrange programming language bindings directory.
  * Adopt the orphaned/unsupported pylinkgrammar Python bindings.
+ * Deprecate the obsolete CNode interface.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

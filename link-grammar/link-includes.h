@@ -372,29 +372,6 @@ link_public_api(void)
 
 /**********************************************************************
  *
- * Constituent node
- *
- ***********************************************************************/
-
-typedef struct CNode_s CNode;
-
-link_public_api(CNode *)
-     linkage_constituent_tree(Linkage linkage);
-link_public_api(void)
-     linkage_free_constituent_tree(CNode * n);
-link_public_api(const char *)
-     linkage_constituent_node_get_label(const CNode *n);
-link_public_api(CNode *)
-     linkage_constituent_node_get_child(const CNode *n);
-link_public_api(CNode *)
-     linkage_constituent_node_get_next(const CNode *n);
-link_public_api(int)
-     linkage_constituent_node_get_start(const CNode *n);
-link_public_api(int)
-     linkage_constituent_node_get_end(const CNode *n);
-
-/**********************************************************************
- *
  * Internal functions -- do not use these in new code!
  * These are not intended for general public use, but are required to
  * get the link-parser executable to link under MSVC6.
@@ -530,6 +507,29 @@ MS_DEPRECATED link_public_api(const char *)
 MS_DEPRECATED link_public_api(int)
      sentence_nth_word_has_disjunction(Sentence sent, int i) GNUC_DEPRECATED;
 
+
+/**********************************************************************
+ *
+ * Constituent node
+ *
+ ***********************************************************************/
+
+typedef struct CNode_s CNode;
+
+MS_DEPRECATED link_public_api(CNode *)
+     linkage_constituent_tree(Linkage linkage) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(void)
+     linkage_free_constituent_tree(CNode * n) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(const char *)
+     linkage_constituent_node_get_label(const CNode *n) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(CNode *)
+     linkage_constituent_node_get_child(const CNode *n) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(CNode *)
+     linkage_constituent_node_get_next(const CNode *n) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(int)
+     linkage_constituent_node_get_start(const CNode *n) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(int)
+     linkage_constituent_node_get_end(const CNode *n) GNUC_DEPRECATED;
 
 LINK_END_DECLS
 
