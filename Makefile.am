@@ -1,4 +1,17 @@
-SUBDIRS=link-grammar viterbi bindings link-parser data man link-grammar.xcode msvc6 msvc9 msvc12
+#
+# Master Makefile for the Link Grammar system
+#
+SUBDIRS =               \
+   link-grammar         \
+   viterbi              \
+   bindings             \
+   link-parser          \
+   data                 \
+   man                  \
+   link-grammar.xcode   \
+   msvc6                \
+   msvc9                \
+   msvc12
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = link-grammar.pc

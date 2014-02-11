@@ -328,6 +328,14 @@ def linkage_print_diagram(*args):
   return _clinkgrammar.linkage_print_diagram(*args)
 linkage_print_diagram = _clinkgrammar.linkage_print_diagram
 
+def linkage_get_current_sublinkage(*args):
+  return _clinkgrammar.linkage_get_current_sublinkage(*args)
+linkage_get_current_sublinkage = _clinkgrammar.linkage_get_current_sublinkage
+
+def linkage_set_current_sublinkage(*args):
+  return _clinkgrammar.linkage_set_current_sublinkage(*args)
+linkage_set_current_sublinkage = _clinkgrammar.linkage_set_current_sublinkage
+
 def linkage_get_sentence(*args):
   return _clinkgrammar.linkage_get_sentence(*args)
 linkage_get_sentence = _clinkgrammar.linkage_get_sentence
@@ -400,6 +408,10 @@ def linkage_print_postscript(*args):
   return _clinkgrammar.linkage_print_postscript(*args)
 linkage_print_postscript = _clinkgrammar.linkage_print_postscript
 
+def linkage_compute_union(*args):
+  return _clinkgrammar.linkage_compute_union(*args)
+linkage_compute_union = _clinkgrammar.linkage_compute_union
+
 def linkage_unused_word_cost(*args):
   return _clinkgrammar.linkage_unused_word_cost(*args)
 linkage_unused_word_cost = _clinkgrammar.linkage_unused_word_cost
@@ -416,6 +428,18 @@ def linkage_corpus_cost(*args):
   return _clinkgrammar.linkage_corpus_cost(*args)
 linkage_corpus_cost = _clinkgrammar.linkage_corpus_cost
 
+def linkage_is_canonical(*args):
+  return _clinkgrammar.linkage_is_canonical(*args)
+linkage_is_canonical = _clinkgrammar.linkage_is_canonical
+
+def linkage_is_improper(*args):
+  return _clinkgrammar.linkage_is_improper(*args)
+linkage_is_improper = _clinkgrammar.linkage_is_improper
+
+def linkage_has_inconsistent_domains(*args):
+  return _clinkgrammar.linkage_has_inconsistent_domains(*args)
+linkage_has_inconsistent_domains = _clinkgrammar.linkage_has_inconsistent_domains
+
 def linkage_get_violation_name(*args):
   return _clinkgrammar.linkage_get_violation_name(*args)
 linkage_get_violation_name = _clinkgrammar.linkage_get_violation_name
@@ -431,7 +455,6 @@ post_process_close = _clinkgrammar.post_process_close
 def linkage_post_process(*args):
   return _clinkgrammar.linkage_post_process(*args)
 linkage_post_process = _clinkgrammar.linkage_post_process
-
 # This file is compatible with both classic and new-style classes.
 
 

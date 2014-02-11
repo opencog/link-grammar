@@ -42,6 +42,7 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_INSTALL
+AC_PROG_LIBTOOL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_HEADER_STDC
@@ -538,15 +539,6 @@ if test "x$enable_java_bindings" = "xyes"; then
          -I/usr/lib/j2sdk1.6-ibm/include \
          -I/usr/lib/j2sdk1.6-ibm/include/freebsd \
          -I/usr/lib/j2sdk1.6-ibm/include/linux \
-         -I/opt/jdk1.5/include/ \
-         -I/opt/jdk1.5/include/freebsd \
-         -I/opt/jdk1.5/include/linux \
-         -I/usr/lib/jvm/java-1.5.0-gcj-4.8-amd64/include \
-         -I/usr/lib/jvm/java-1.5.0-gcj-4.8-amd64/include/freebsd \
-         -I/usr/lib/jvm/java-1.5.0-gcj-4.8-amd64/include/linux \
-         -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include \
-         -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/freebsd \
-         -I/usr/lib/jvm/java-1.5.0-sun-1.5.0.15/include/linux \
          -I/c/java/jdk1.6.0/include/ \
          -I/c/java/jdk1.6.0/include/win32/ \
          -I/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/JavaVM.framework/Headers/ \
@@ -573,13 +565,25 @@ if test "x$enable_java_bindings" = "xyes"; then
 	# For now, we assume that if the ant tool is there, then the javac and
 	# jar compiler/packager are installed as well. These are needed to build
 	# the jar file and install it.
-	AC_CHECK_PROG(ANTfound,ant,yes,no)
+	AC_CHECK_PROG(ANTfound, ant, yes, no)
 	AM_CONDITIONAL(HAVE_ANT, test x${ANTfound} = xyes)
 
 else
    AM_CONDITIONAL(HAVE_JAVA, false)
    AM_CONDITIONAL(HAVE_ANT, false)
 fi
+
+dnl ===================================================================
+# swig is needed for compiling teh python bindings
+
+
+AM_PATH_PYTHON(2.3)
+AC_PROG_SWIG(1.3.21)
+SWIG_ENABLE_CXX
+SWIG_PYTHON
+
+AC_CHECK_PROG(SWIGfound, swig, yes, no)
+AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
 dnl ===================================================================
 
@@ -630,6 +634,7 @@ $PACKAGE-$VERSION
 	Editline command-line history:  ${edlin}
 	Java libraries:                 ${JNIfound}
 	Java interfaces:                ${ANTfound}
+	Python interfaces:              ${SWIGfound}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}

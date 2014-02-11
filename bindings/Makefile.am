@@ -6,6 +6,10 @@ if HAVE_JAVA
 SUBDIRS=java-jni
 endif
 
+if HAVE_SWIG
+SUBDIRS=python
+endif
+
 
 EXTRA_DIST=                               \
    autoit/_LGTest.au3                     \
