@@ -598,6 +598,7 @@ link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
 bindings/Makefile
 bindings/java-jni/Makefile
+bindings/perl/Makefile
 bindings/python/Makefile
 link-parser/Makefile
 data/Makefile

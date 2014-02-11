@@ -3,11 +3,11 @@
 #
 
 if HAVE_JAVA
-SUBDIRS=java-jni
+SUBDIRS = java-jni
 endif
 
 if HAVE_SWIG
-SUBDIRS=python
+SUBDIRS = perl python
 endif
 
 
@@ -26,16 +26,6 @@ EXTRA_DIST=                               \
    java/org/linkgrammar/Link.java         \
    java/org/linkgrammar/ParseResult.java  \
    lisp/link-interface.cl                 \
-   python/AUTHORS                         \
-   python/LICENSE                         \
-   python/README                          \
-   python/pylinkgrammar                   \
-   python/pylinkgrammar/CMakeLists.txt    \
-   python/pylinkgrammar/__init__.py       \
-   python/pylinkgrammar/clinkgrammar.py   \
-   python/pylinkgrammar/link_grammar.i    \
-   python/pylinkgrammar/linkgrammar.py    \
-   python/pylinkgrammar/tests.py          \
-   python/setup.py
+   swig/link_grammar.i
 
 
