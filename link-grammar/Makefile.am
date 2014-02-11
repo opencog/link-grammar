@@ -2,12 +2,14 @@
 # Automake file for building liblink-grammar.so
 #
 
+SUBDIRS=
+
 if WITH_SAT_SOLVER
-SUBDIRS=minisat sat-solver
+SUBDIRS += minisat sat-solver
 endif
 
 if WITH_CORPUS
-SUBDIRS=corpus
+SUBDIRS += corpus
 endif
 
 if OS_WIN32

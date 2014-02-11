@@ -574,7 +574,7 @@ else
 fi
 
 dnl ===================================================================
-# swig and python both are needed for compiling the python bindings
+# swig is needed for compiling the perl and python bindings
 
 AM_PATH_PYTHON(2.6)
 AC_PROG_SWIG(2.0.0)
@@ -584,11 +584,13 @@ SWIG_PYTHON
 AC_CHECK_PROG(SWIGfound, swig, yes, no)
 AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
+AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
+AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
+
 dnl ===================================================================
 
 AC_CONFIG_FILES([
 Makefile
-build.xml
 link-grammar.pc
 link-grammar.spec
 link-grammar/Makefile
@@ -598,6 +600,8 @@ link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
 bindings/Makefile
 bindings/java-jni/Makefile
+bindings/java/Makefile
+bindings/java/build.xml
 bindings/perl/Makefile
 bindings/python/Makefile
 link-parser/Makefile
