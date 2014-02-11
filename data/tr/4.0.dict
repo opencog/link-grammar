@@ -1,7 +1,7 @@
 % Dictionary version number is 4.8.1 (formatted as V4v8v1+)
 <dictionary-version-number>: V4v8v1+;
 % The empty word.
-=.zzz: ZZZ+;
+=.zzz: ZZZ-;
 
 %adjectives: fat, sick, angry
 şişman.a hasta.a kızgın.a : {W-} & {EA-} & (({AJl+} & {AJr-}) or {A+}) ;
@@ -30,10 +30,10 @@ her.d bir.d : Ds+ ;
 çok.ad : {W-} & EA+;
 
 %verbs: come, finish
-gel.= bitir.= ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+});
+gel.= bitir.= ye.=: W- & ({VJl+} & {VJr-}) & (VPast+ or VPres+ or VImp+);
 
 %transitive verbs: eat
-ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+}) & {O-};
+% ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+}) & {O-};
 
 %verb suffixes: past tense, present cont., imperative
 =dim.past1s: {VPast-} & {S1s-};
@@ -42,9 +42,9 @@ ye.=:{W-} & ({VJl+} & {VJr-}) & ({VPast+} or {VPres+} or {VImp+}) & {O-};
 =dik.past1p: {VPast-} & {S1p-};
 =diniz.past2p: {VPast-} & {S2p-};
 =diler.past3p: {VPast-} & {S3p-};
-=di.past3p: {Vpast-} & {S3p-};
+=di.past3p: {VPast-} & {S3p-};
 =iyor.pres3s: {VPres-} & {S2s-};
-=.imp: Vimp-;
+=.imp: VImp-;
 
 %conjunctions: and
 ve.j-n: {W-} & {A-} & SJl- & SJr+ & {S3p+}  ;
@@ -57,10 +57,8 @@ ve.j-v: {W-} & VJl- & VJr+ & {S-} ;
    or (VJl- & VJr+ & VJl+) ;
 %",": Xc- & Xd+;
 
-ANDABLE-CONNECTORS: S+ & S- & A+ & A- & MV+ & MV- & D- & O+ & O- &
-J+ & J- & C-;
 
-LEFT-WALL :W+ or Q+;
+LEFT-WALL: W+ or Q+;
 
 HMS-TIME: XXX-;
 DECADE-TIME: XXX-;
