@@ -11,8 +11,24 @@ typedef struct Sentence_s * Sentence;
 typedef struct Linkage_s * Linkage;
 typedef struct Postprocessor_s PostProcessor;
 
+typedef enum
+{
+   NO_DISPLAY = 0,        /** Display is disabled */
+   MULTILINE = 1,         /** multi-line, indented display */
+   BRACKET_TREE = 2,      /** single-line, bracketed tree */
+   SINGLE_LINE = 3,       /** single line, round parenthesis */
+   MAX_STYLES = 3         /* this must always be last, largest */
+} ConstituentDisplayStyle;
+
+typedef enum
+{
+   VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
+   CORPUS, /* Sort by Corpus cost */
+} Cost_Model_type;
+
 
 const char * linkgrammar_get_version(void);
+const char * linkgrammar_get_dict_version(Dictionary dict);
 
 /**********************************************************************
 *
@@ -20,15 +36,12 @@ const char * linkgrammar_get_version(void);
 *
 ***********************************************************************/
 
-Dictionary dictionary_create(char * dict_name, char * pp_name, char * cons_name, char * affix_name);
 Dictionary dictionary_create_lang(const char * lang);
 Dictionary dictionary_create_default_lang(void);
 int dictionary_delete(Dictionary dict);
 int dictionary_get_max_cost(Dictionary dict);
 void dictionary_set_data_dir(const char * path);
 char * dictionary_get_data_dir(void);
-int dictionary_is_past_tense_form(Dictionary dict, const char * str);
-int dictionary_is_entity(Dictionary dict, const char * str);
 
 /**********************************************************************
 *
@@ -60,8 +73,8 @@ void parse_options_set_max_sentence_length(Parse_Options  opts, int len);
 int  parse_options_get_max_sentence_length(Parse_Options opts);
 void parse_options_set_max_parse_time(Parse_Options  opts, int secs);
 int  parse_options_get_max_parse_time(Parse_Options opts);
-void parse_options_set_cost_model_type(Parse_Options opts, int cm);
-int  parse_options_get_cost_model_type(Parse_Options opts);
+void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm);
+Cost_Model_type  parse_options_get_cost_model_type(Parse_Options opts);
 int  parse_options_timer_expired(Parse_Options opts);
 int  parse_options_memory_exhausted(Parse_Options opts);
 int  parse_options_resources_exhausted(Parse_Options opts);
@@ -85,7 +98,6 @@ Sentence sentence_create(char *input_string, Dictionary dict);
 void sentence_delete(Sentence sent);
 int  sentence_parse(Sentence sent, Parse_Options opts);
 int  sentence_length(Sentence sent);
-char * sentence_get_word(Sentence sent, int wordnum);
 int  sentence_null_count(Sentence sent);
 int  sentence_num_linkages_found(Sentence sent);
 int  sentence_num_valid_linkages(Sentence sent);
@@ -93,8 +105,6 @@ int  sentence_num_linkages_post_processed(Sentence sent);
 int  sentence_num_violations(Sentence sent, int i);
 int  sentence_disjunct_cost(Sentence sent, int i);
 int  sentence_link_cost(Sentence sent, int i);
-char * sentence_get_nth_word(Sentence sent, int i);
-int sentence_nth_word_has_disjunction(Sentence sent, int i);
 
 /**********************************************************************
 *
@@ -122,11 +132,7 @@ Linkage linkage_create(int index, Sentence sent, Parse_Options opts);
 void linkage_delete(Linkage linkage);
 char * linkage_print_diagram(Linkage linkage);
 
-int linkage_get_current_sublinkage(Linkage linkage); 
-int linkage_set_current_sublinkage(Linkage linkage, int index);
-
 Sentence linkage_get_sentence(Linkage linkage);
-int linkage_get_num_sublinkages(Linkage linkage);
 int linkage_get_num_words(Linkage linkage);
 int linkage_get_num_links(Linkage linkage);
 int linkage_get_link_lword(Linkage linkage, int index);
@@ -142,16 +148,12 @@ const char ** linkage_get_words(Linkage linkage);
 const char *  linkage_get_word(Linkage linkage, int w);
 char * linkage_print_links_and_domains(Linkage linkage);
 char * linkage_print_senses(Linkage linkage);
-char * linkage_print_constituent_tree(Linkage linkage, int mode);
+char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 char * linkage_print_postscript(Linkage linkage, int mode);
-int linkage_compute_union(Linkage linkage);
 int linkage_unused_word_cost(Linkage linkage);
 int linkage_disjunct_cost(Linkage linkage);
 int linkage_link_cost(Linkage linkage);
 double linkage_corpus_cost(Linkage linkage);
-int linkage_is_canonical(Linkage linkage);
-int linkage_is_improper(Linkage linkage);
-int linkage_has_inconsistent_domains(Linkage linkage);
 const char * linkage_get_violation_name(Linkage linkage);
 
 

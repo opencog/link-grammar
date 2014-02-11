@@ -20,7 +20,7 @@ if OS_WIN32
 liblink_grammar_java_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
 endif
 
-liblink_grammar_java_la_LIBADD  = ../../link-grammar/liblink-grammar.la  ${REGEX_LIBS}
+liblink_grammar_java_la_LIBADD  = $(top_builddir)/link-grammar/liblink-grammar.la  ${REGEX_LIBS}
 
 if HAVE_HUNSPELL
 liblink_grammar_java_la_LIBADD  += ${HUNSPELL_LIBS}
