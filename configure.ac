@@ -574,7 +574,6 @@ fi
 dnl ===================================================================
 # swig is needed for compiling the perl and python bindings
 
-AM_PATH_PYTHON(2.6)
 AC_PROG_SWIG(2.0.0)
 SWIG_ENABLE_CXX
 SWIG_PYTHON
@@ -582,12 +581,20 @@ SWIG_PYTHON
 AC_CHECK_PROG(SWIGfound, swig, yes, no)
 AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
-PERL_GUESS=`perl -MConfig -e 'print $Config{archlib}'`
+if test "x$SWIGfound" = "xyes"; then
+   # XXX where is AM_PATH_PERL ???
+   # AM_PATH_PERL
+   PERL_GUESS=`perl -MConfig -e 'print $Config{archlib}'`
+   CPPFLAGS="${CPPFLAGS} -I${PERL_GUESS} -I${PERL_GUESS}/CORE"
+   AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
+   AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
 
-CPPFLAGS="${CPPFLAGS} -I${PERL_GUESS} -I${PERL_GUESS}/CORE"
-
-AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
-AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
+   AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
+   AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
+else
+   AM_CONDITIONAL(HAVE_PERL, false)
+   AM_CONDITIONAL(HAVE_PYTHON, false)
+fi
 
 AC_SUBST(CPPFLAGS)
 
@@ -643,7 +650,9 @@ $PACKAGE-$VERSION
 	Editline command-line history:  ${edlin}
 	Java libraries:                 ${JNIfound}
 	Java interfaces:                ${ANTfound}
-	Python interfaces:              ${SWIGfound}
+	Swig interfaces generator:      ${SWIGfound}
+	Perl interfaces:                ${PerlFound}
+	Python interfaces:              ${PythonFound}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
