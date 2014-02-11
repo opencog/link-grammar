@@ -14,13 +14,13 @@
 #include <pthread.h>
 #endif
 
-#include "api-structures.h"
+#include <link-grammar/api-structures.h>
 #include "corpus/corpus.h"
 #include "error.h"
 #include "jni-client.h"
 #include "utilities.h"
 
-/* Default to the english language. */
+/* Default to the English language. */
 static const char* in_language = "en";
 
 typedef struct

@@ -2,6 +2,7 @@ Version 4.8.7 (XXX 2014)
  * Initial support for Hebrew tokenization, from Amir P.
  * Fix wild-card matching for user-supplied word lookup.
  * Add prototype Turkish dictionary from Can Bruce.
+ * Re-arrange programming language bindings directory.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

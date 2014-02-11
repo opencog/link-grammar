@@ -10,7 +10,7 @@ if WITH_FAT_LINKS
 DEFS += -DUSE_FAT_LINKAGES
 endif
 
-INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS) 
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/link-grammar $(ANSI_CFLAGS) $(LINK_CFLAGS) 
 
 lib_LTLIBRARIES = liblink-grammar-java.la
 
@@ -20,7 +20,7 @@ if OS_WIN32
 liblink_grammar_java_la_LDFLAGS += -D_JNI_IMPLEMENTATION_ -Wl,--kill-at
 endif
 
-liblink_grammar_java_la_LIBADD  = liblink-grammar.la  ${REGEX_LIBS}
+liblink_grammar_java_la_LIBADD  = ../../link-grammar/liblink-grammar.la  ${REGEX_LIBS}
 
 if HAVE_HUNSPELL
 liblink_grammar_java_la_LIBADD  += ${HUNSPELL_LIBS}
