@@ -31,7 +31,6 @@ EXTRA_DIST =                       \
    AUTHORS                         \
    LICENSE                         \
    README                          \
-   pylinkgrammar                   \
    pylinkgrammar/__init__.py       \
    pylinkgrammar/linkgrammar.py    \
    pylinkgrammar/tests.py          \

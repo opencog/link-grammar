@@ -20,6 +20,10 @@
 #include "jni-client.h"
 #include "utilities.h"
 
+/* Make the compiler shut up about the deprecated functions */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 /* Default to the English language. */
 static const char* in_language = "en";
 
