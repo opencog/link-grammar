@@ -21,5 +21,17 @@ EXTRA_DIST=                               \
    java/org/linkgrammar/LinkGrammar.java  \
    java/org/linkgrammar/Link.java         \
    java/org/linkgrammar/ParseResult.java  \
-   lisp/link-interface.cl
+   lisp/link-interface.cl                 \
+   python/AUTHORS                         \
+   python/LICENSE                         \
+   python/README                          \
+   python/pylinkgrammar                   \
+   python/pylinkgrammar/CMakeLists.txt    \
+   python/pylinkgrammar/__init__.py       \
+   python/pylinkgrammar/clinkgrammar.py   \
+   python/pylinkgrammar/link_grammar.i    \
+   python/pylinkgrammar/linkgrammar.py    \
+   python/pylinkgrammar/tests.py          \
+   python/setup.py
+
 
