@@ -257,7 +257,7 @@ if test x${enable_corpus_stats} = xyes; then
 	AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
 	AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 
-	# If there are sqlite3 and pkgconfig on MacOS, then 
+	# If sqlite3 and pkg-config are not found on MacOS, then 
 	# recommend that user install MacPorts http://www.macports.org/
 	if test "x${SQLiteFound}" = "xyes"; then
   		PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0)
@@ -557,8 +557,6 @@ if test "x$enable_java_bindings" = "xyes"; then
             JNIfound=no])
    fi
 
-   AC_SUBST(CPPFLAGS)
-
 	# This allows jni-client.c to be built
 	AM_CONDITIONAL(HAVE_JAVA, test x${JNIfound} = xyes)
 
@@ -584,8 +582,14 @@ SWIG_PYTHON
 AC_CHECK_PROG(SWIGfound, swig, yes, no)
 AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
+PERL_GUESS=`perl -MConfig -e 'print $Config{archlib}'`
+
+CPPFLAGS="${CPPFLAGS} -I/${PERL_GUESS} -I/${PERL_GUESS}/CORE"
+
 AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
 AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
+
+AC_SUBST(CPPFLAGS)
 
 dnl ===================================================================
 

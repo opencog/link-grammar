@@ -25,6 +25,7 @@ liblink_grammar_python_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.
 
 $(BUILT_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) $(SWIG_PYTHON_OPT) -I$(top_srcdir)/link-grammar -o $@ $<
+#	$(SWIG) -python -I$(top_srcdir)/link-grammar -o $@ $<
 
 EXTRA_DIST =                       \
    AUTHORS                         \

@@ -29,7 +29,7 @@ endif
 
 
 $(BUILT_SOURCES): $(SWIG_SOURCES)
-	$(SWIG) -perl -I$(top_srcdir)/link-grammar -o $@ $<
+	$(SWIG) -perl5 -I$(top_srcdir)/link-grammar -o $@ $<
 #	$(SWIG) $(SWIG_PERL_OPT) -I$(top_srcdir)/link-grammar -o $@ $<
 
 
