@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#
+# pylinkgrammar setup script.
+#
 
 from distutils.core import Extension
 from distutils.core import setup

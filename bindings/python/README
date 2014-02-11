@@ -4,13 +4,7 @@ README
 
 Description
 ===========
-This package contains a Python interface to the Link Grammar C library.
-
-Install
-=======
-To install pylinkgrammar::
-
-    pip install pylinkgrammar
+This directory contains a Python interface to the Link Grammar C library.
 
 How to use
 ==========
