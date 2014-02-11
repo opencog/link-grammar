@@ -574,11 +574,10 @@ else
 fi
 
 dnl ===================================================================
-# swig is needed for compiling teh python bindings
+# swig and python both are needed for compiling the python bindings
 
-
-AM_PATH_PYTHON(2.3)
-AC_PROG_SWIG(1.3.21)
+AM_PATH_PYTHON(2.6)
+AC_PROG_SWIG(2.0.0)
 SWIG_ENABLE_CXX
 SWIG_PYTHON
 
@@ -599,6 +598,7 @@ link-grammar/sat-solver/Makefile
 link-grammar/link-features.h
 bindings/Makefile
 bindings/java-jni/Makefile
+bindings/python/Makefile
 link-parser/Makefile
 data/Makefile
 data/any/Makefile
