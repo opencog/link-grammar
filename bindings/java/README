@@ -1,0 +1,9 @@
+
+                 Java Bindings for Link Grammar
+                 ------------------------------
+
+These files implement Java language bindings for Link Grammar. They do
+not extend the parsing algorithms already present in Link-Grammar in
+any way. They do, however, allow certain types of remote/server
+operation, and, in particular, are needed for use by the RelEx
+dependency parser.
