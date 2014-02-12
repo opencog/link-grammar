@@ -28,6 +28,11 @@
 % ė == .e   Ė
 % ū == -u   Ū
 % 
+% Pagal J. Ambraška ir J. Žiugžda
+% "Lietuvių Kalbos Gramatika (I dalis) Fonetika ir Morpfologia" (1937)
+% JAV LB Kultūros Fondas
+% Perspausdinta iš pirmos 1937 M. Sakalo b-vės laidos
+% VI laida Morkūno Spaustuvė, Čikago IL 1966 Jaunimo metai.
 % 
 % D  == Daiktavardis
 % DV == Vardininkas Kas?  DVv == vyriška, DVm == moteriška giminė
@@ -83,6 +88,7 @@ eina: {VJ-} & (LI+ or PV+);
 % -------------------------------
 % Daiktavardžai ...
 svečiai: VO+ & {Wd-};
+šachmatais: VI-;
 
 svečias: DVv- & VJv+ & {Wd-};
 mokytojas studentas: DVv- & {Xp+} & {Wd-};
@@ -100,10 +106,10 @@ brol.= kurm.= : LLPIRMi+;
 =is.pvv: LLPIRMi- & {DVv-} & VJ+ & {Wd-};
 =o.pvk: LLPIRMa- & DK+;
 =io.pvk: LLPIRMi- & DK+;
-=ui.pvn: LLPIRMa-;
-=iui.pvn: LLPIRMi-;
-=ą.pvg: LLPIRMa-;
-=į.pvg: LLPIRMi-;
+=ui.pvn: LLPIRMa- & DN+;
+=iui.pvn: LLPIRMi- & DN+;
+=ą.pvg: LLPIRMa- & VG+;
+=į.pvg: LLPIRMi- & VG+;
 =u.pvi: LLPIRMa-;
 =iu.pvi: LLPIRMi-;
 =e.pvu: LLPIRMa-;
@@ -129,7 +135,9 @@ atvažiavom: {VM-} & (LI+ or PV+) & {Wd-};
 % gali turėti galininka iš dešines.
 irkluoja skaite skaito skaitys: VJ- & {DG+}; 
 
-skaitau: {VA-} & {DG+} & {Wd-};
+skaitau: {VA- or DN-} & {DG+} & {Wd-};
+
+sumušiau: VG- & {Wd-} & {VI+};
 
 % -------------------------------
 % Įvardžiai
