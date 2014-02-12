@@ -1,8 +1,8 @@
 #! /usr/bin/env perl
 #
-# invoke this at:
-# perl -I ../../build/bindings/perl test.pl
 
-use clinkgrammar;
+use link_grammar_perl;
 
-print clinkgrammar::linkgrammar_get_version();
+$ver = link_grammar_perl::linkgrammar_get_version();
+
+print "Hello world, found version $ver\n";
