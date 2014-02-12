@@ -249,8 +249,6 @@ struct Sentence_s
 	Dictionary  dict;           /* words are defined from this dictionary */
 	const char *orig_sentence;  /* Copy of original sentence */
 	int    length;              /* number of words */
-	int    t_start;		    /* start position the current token sequence */
-	int    t_count;		    /* number of subwords in the current token sequence */
 	Word  *word;                /* array of words after tokenization */
 	String_set *   string_set;  /* used for word names, not connectors */
 
@@ -273,6 +271,8 @@ struct Sentence_s
 
 	/* Tokenizer internal/private state */
 	Boolean       *post_quote;
+	int           t_start;	    /* start word of the current token sequence */
+	int           t_count;	    /* number of words in the current token sequence */
 	Tokenizer     tokenizer;
 
 	/* parser internal/private state */
