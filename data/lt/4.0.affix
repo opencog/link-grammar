@@ -2,5 +2,11 @@
 ")" "%" "," "." ":" ";" "?" "!" "''" "'": RPUNC+;
 "(" "$" "``": LPUNC+;
 
+% Pirmoji linksnioutė
+as  o  ui ą  u   e 
+is io iui į iu yje i
+ ai  ų  ams  us  ais  uose 
+iai ių iams ius iais iuose: SUF+;
+
 
 

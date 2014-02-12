@@ -3,16 +3,19 @@
 %  =========== Lithuanian link-grammar dictionary ===============
 %
 % Experimental and incomplete ... 
-% It can parse 4.0.batch more ore less correctly.
+% It can parse 4.0.batch more or less correctly.
 %
-% Copyright (c) 2008 Linas Vepstas (Vepštas) linas@linas.org
+% Copyright (c) 2008, 2013 Linas Vepstas (Vepštas) linas@linas.org
 %
 % This file uses utf-8 characater encoding.
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
-% Dictionary version number is 4.3.4 (formatted as V4v3v4+)
-<dictionary-version-number>: V4v3v4+;
+% Dictionary version number is 4.8.7 (formatted as V4v8v7+)
+<dictionary-version-number>: V4v8v7+;
+
+% Empty word; required for basic morphology analysis.
+=.zzz: ZZZ-;
 %
 %
 % Ženklai:
@@ -81,12 +84,35 @@ eina: {VJ-} & (LI+ or PV+);
 % Daiktavardžai ...
 svečiai: VO+ & {Wd-};
 
-namas svečias: DVv- & VJv+ & {Wd-};
+svečias: DVv- & VJv+ & {Wd-};
 mokytojas studentas: DVv- & {Xp+} & {Wd-};
 mokytoja studentė: DVm- & {Xp+} & {Wd-};
 
 % reikalauja veiksmažodi ant kairės.
-laivelį knygą mokyklą sodžių: DG- & {LI-} & {Xp+};
+laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-} & {Xp+};
+
+% Pirmoji linksniuotė
+kaim.= nam.= tilt.= : LLPIRMa+;
+brol.= kurm.= : LLPIRMi+;
+
+% Pirmoji linksniuotė vienaskaita
+=as.pvv: LLPIRMa- & {DVv-} & VJ+ & {Wd-};
+=is.pvv: LLPIRMi- & {DVv-} & VJ+ & {Wd-};
+=o.pvk: LLPIRMa- & DK+;
+=io.pvk: LLPIRMi- & DK+;
+=ui.pvn: LLPIRMa-;
+=iui.pvn: LLPIRMi-;
+=ą.pvg: LLPIRMa-;
+=į.pvg: LLPIRMi-;
+=u.pvi: LLPIRMa-;
+=iu.pvi: LLPIRMi-;
+=e.pvu: LLPIRMa-;
+=yje.pvu: LLPIRMi-;
+=e.pvs: LLPIRMa-;
+=i.pvs: LLPIRMi-;
+
+% Pirmoji linksniuotė daugiskaita
+%=o.pvk: LLPIRM-;
 
 % -------------------------------
 % Būdvardžiai
@@ -102,6 +128,8 @@ atvažiavom: {VM-} & (LI+ or PV+) & {Wd-};
 
 % gali turėti galininka iš dešines.
 irkluoja skaite skaito skaitys: VJ- & {DG+}; 
+
+skaitau: {VA-} & {DG+} & {Wd-};
 
 % -------------------------------
 % Įvardžiai

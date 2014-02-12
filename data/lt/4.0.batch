@@ -9,6 +9,12 @@
 !short=20
 !constituents=1
 
+Skaitau.
+Aš skaitau.
+Skaitau knygą.
+Aš skaitau knygą.
+Aš skaitau brolio knygą.
+
 Jonas skaite knygą.
 Aš esu studentas.
 Ji yra studentė.
@@ -20,6 +26,13 @@ Einame namo.
 Ji eina į mokyklą.
 Atvažiavom į sodžių.
 Svečiai namo išvažiavo.
+
+% Pirmoji linksniuotė vienaskaita -as
+Tiltas yra gražus.
+
+% Pirmoji linksniuotė vienaskaita -is
+Brolis eina į mokyklą.
+Skaitau brolio kyngą.
 
 % Neaišku ar čia klaida are ne ... "Žiurėkit! Mano namas!"
 *Mano namas.
