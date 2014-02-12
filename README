@@ -25,12 +25,15 @@ CONTENTS of this directory:
    LICENSE                  The license describing terms of use
 
    link-grammar/*.c         The program.  (Written in ANSI-C)
-   link-grammar/autoit/*    Optional AutoIt language bindings.
    link-grammar/corpus/*.c  Optional corpus statistics database.
-   link-grammar/java/*      Optional Java language bindings.
    link-grammar/minisat/*   Optional SAT Solver. (Written in C++)
    link-grammar/sat-solver  Optional SAT Solver. (Written in C++)
    link-grammar/viterbi     Experimental Viterbi algorithm parser.
+
+   link-grammar/bindings/autoit/* Optional AutoIt language bindings.
+   link-grammar/bindings/java/*   Optional Java language bindings.
+   link-grammar/bindings/perl/*   Optional Java language bindings.
+   link-grammar/bindings/python/* Optional Java language bindings.
 
    data/en/*                English language dictionaries.
    data/en/4.0.dict         The file containing the dictionary definitions.
@@ -38,20 +41,23 @@ CONTENTS of this directory:
    data/en/4.0.constituents The constituent knowledge file.
    data/en/4.0.affix        The affix (prefix/suffix) file.
    data/en/4.0.regex        Regular expression-based morphology guesser.
-   data/en/tiny.dict        A small sample dictionary.
+   data/en/tiny.dict        A small example dictionary.
    data/en/words/*          A directory full of word lists.
    data/en/4.0*.batch       These files contain sentences (both grammatical
                             and ungrammatical ones) that are used for
                             testing the link-parser These can be
                             run through the parser with the command
                             "./link-parser < 4.0.*.batch"
+   data/ru/*                A full-fledged Russian dictionary
    data/de/*                A small German dictionary
+   data/lt/*                A experimental Lithuanian dictionary
+   data/tr/*                A experimental Turkish dictionary
 
    COPYING                  The license for this code and data
    ChangeLog                A compendium of recent changes.
    configure                The GNU configuration script
    autogen.sh               Developer's configure maintenance tool
-   msvc6, msvc9             Microsoft Visual-C project files
+   msvc6, msvc9, msvc12     Microsoft Visual-C project files
 
 
 UNPACKING and signature verification:
@@ -129,6 +135,18 @@ CREATING the system:
    the Java bindings by disabling as follows:
 
       ./configure --disable-java-bindings
+
+   Perl, Python Bindings
+   ---------------------
+   By default, the Makefiles attempt to build perl and Python bindings.
+   The use of the Java bindings is *OPTIONAL*; you do not need these if
+   you do not plan to use link-grammar with perl or python.  Both of
+   these provide a low-level interface, called clinkgrammar.  This
+   low-level interface should not be used in new code; only the
+   high-level interfaces should be used. 
+
+   The linkgrammar.py module provides a high-level interface in Python.
+   A high-level interface for perl is yet to be developed.
 
    Install location
    ----------------
