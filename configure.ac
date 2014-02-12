@@ -587,10 +587,11 @@ AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 # AX_PATH_EXT
 if test -z "$PERL_EXT_INC" ; then
    PERL_EXT_INC=`perl -MConfig -e 'print $Config{archlib}'`
-   CPPFLAGS="${CPPFLAGS} -I${PERL_EXT_INC} -I${PERL_EXT_INC}/CORE"
 fi
 AC_MSG_RESULT([$PERL_EXT_INC])
+PERL_CFLAGS="-I${PERL_EXT_INC} -I${PERL_EXT_INC}/CORE"
 AC_SUBST(PERL_EXT_INC)
+AC_SUBST(PERL_CFLAGS)
 
 # PERL_EXT_LIB is where to install, typically /usr/local/lib/perl/5.14.2
 # or similar.
@@ -600,14 +601,18 @@ fi
 AC_MSG_RESULT([$PERL_EXT_LIB])
 AC_SUBST(PERL_EXT_LIB)
 
+save_cpp_flags=${CPPFLAGS}
+CPPFLAGS="${CPPFLAGS} ${PERL_CFLAGS}"
 AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
 AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
+CPPFLAGS=$save_cpp_flags
 
 # Find python things
 SWIG_PYTHON
 AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
 AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 
+AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 
 dnl ===================================================================
