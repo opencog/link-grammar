@@ -1,7 +1,10 @@
+#
+# Python link-grammar test script
+#
 from itertools import chain
 import unittest
 
-from linkgrammar import Parser, Linkage, ConstituentNode, ParseOptions, Link
+from linkgrammar import Parser, Linkage, ParseOptions, Link
 import clinkgrammar as clg
 
 class ParseOptionsTestCase(unittest.TestCase):
@@ -261,18 +264,4 @@ class LinkTestCase(unittest.TestCase):
         self.assertEqual(unicode(Link('Left','Link','Link*','Right')),
                          u'Left-Link-Link*-Right')
         
-class ConstituentPhraseTestCase(unittest.TestCase):
-    def setUp(self):
-        self.p = Parser()
-
-    def test_simple_one_word_one_phrase_sentence(self):
-        linkages = self.p.parse_sent("Go.")
-        self.assertEqual(linkages[0].constituent_phrases_nested,
-                         [ConstituentNode('S', words=['.']), [ConstituentNode('VP', words=['Go'])]])
-
-    def test_simple_one_word_one_phrase_sentence_with_flattened_result(self):
-        linkages = self.p.parse_sent("Go.")
-        self.assertEqual(linkages[0].constituent_phrases_flat,
-                         [ConstituentNode('S', words=['.']), ConstituentNode('VP', words=['Go'])])
-
 unittest.main()

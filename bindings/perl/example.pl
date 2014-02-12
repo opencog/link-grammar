@@ -17,7 +17,7 @@ sub prtdiag
     my $sent = link_grammar_perl::sentence_create($txt, $dict);
     my $num_parses = link_grammar_perl::sentence_parse($sent, $po);
     $num_parses = link_grammar_perl::sentence_num_valid_linkages($sent);
-    print "Found $num_parses valid parses:\n";
+    print "Found $num_parses valid parses for \"$txt\":\n";
 
     for (my $i=0; $i<$num_parses; $i++) {
         my $linkage = link_grammar_perl::linkage_create($i, $sent, $po);

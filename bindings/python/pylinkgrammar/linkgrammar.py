@@ -303,7 +303,6 @@ class Linkage(object):
         return linkage_obj
 
     def __init__(self, linkage_swig_obj, calculate_sub_linkages=True, null_count=0):
-        self.num_of_sublinkages = clg.linkage_get_num_sublinkages(linkage_swig_obj)
         self.num_of_words = clg.linkage_get_num_words(linkage_swig_obj)
         self.num_of_links = clg.linkage_get_num_links(linkage_swig_obj)
         self.link_cost = clg.linkage_link_cost(linkage_swig_obj)
@@ -315,63 +314,9 @@ class Linkage(object):
                            self.words[clg.linkage_get_link_rword(linkage_swig_obj,i)]) for i in range(self.num_of_links)]
         self.null_count = null_count
         self.link_distances = [clg.linkage_get_link_length(linkage_swig_obj, i) for i in range(self.num_of_links)]
-        self.constituent_phrases_flat = self._get_constituent_phrases(linkage_swig_obj, flat=True)
-        self.constituent_phrases_nested = self._get_constituent_phrases(linkage_swig_obj, flat=False)
         self.diagram = clg.linkage_print_diagram(linkage_swig_obj)
         self.senses = clg.linkage_print_senses(linkage_swig_obj)
         self.links_and_domains = clg.linkage_print_links_and_domains(linkage_swig_obj)
         self.postscript_snippet = clg.linkage_print_postscript(linkage_swig_obj, 0)
         self.postscript = clg.linkage_print_postscript(linkage_swig_obj, 1)
 
-        clg.linkage_compute_union(linkage_swig_obj)
-        self.sublinkages = []
-        if calculate_sub_linkages:
-            for i in range(0,self.num_of_sublinkages + 1,1):
-                clg.linkage_set_current_sublinkage(linkage_swig_obj, i)
-                self.sublinkages.append(Linkage(linkage_swig_obj, calculate_sub_linkages=False))
-            self.union = self.sublinkages.pop(-1)
-
-    def _get_constituent_phrases(self, linkage_swig_obj, flat=False):
-        node = clg.linkage_constituent_tree(linkage_swig_obj)
-        result = self._build_constituent_phrases(node, flat)
-        clg.linkage_free_constituent_tree(node)
-        return result
-
-    def _build_constituent_phrases(self, node, flat):
-        label = clg.linkage_constituent_node_get_label(node)
-        if label in ['NP','VP','S','PP', 'SBAR', 'WHNP','WHPP', 'SINV', 'QP', 'WHADVP', 'PRT', 'ADJP','ADVP']:
-            ret = [ConstituentNode(label)]
-        else:
-            ret = [label]
-        child = clg.linkage_constituent_node_get_child(node)
-        if child:
-            children = self._build_constituent_phrases(child, flat)
-            words = [c for c in children if not isinstance(c, ConstituentNode) and not isinstance(c, list) and len(c) > 0]
-            child_nodes = [c for c in children if isinstance(c, ConstituentNode) or (isinstance(c,list) and len(c) > 0)]
-            ret[-1].words = words
-            if flat:
-                ret.extend(child_nodes)
-            else:
-                ret.append(child_nodes)
-            
-        sibling = clg.linkage_constituent_node_get_next(node)
-        if sibling:
-            ret.extend(self._build_constituent_phrases(sibling, flat))
-            
-        return ret
-
-class ConstituentNode(object):
-    def __init__(self,type, words=None):
-        self.type = type
-        if not words:
-            words = []
-        self.words = words
-        
-    def __repr__(self):
-        if self.words:
-            return "<%s: %s>" % (self.type, ', '.join(self.words))
-        else:
-            return "<%s>" % self.type
-
-    def __eq__(self, other):
-        return self.type == other.type and self.words == other.words
