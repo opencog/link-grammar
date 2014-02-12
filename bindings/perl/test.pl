@@ -1,8 +1,8 @@
 #! /usr/bin/env perl
 #
 
-use link_grammar_perl;
+use clinkgrammar;
 
-$ver = link_grammar_perl::linkgrammar_get_version();
+$ver = clinkgrammar::linkgrammar_get_version();
 
 print "Hello world, found version $ver\n";
