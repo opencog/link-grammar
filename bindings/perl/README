@@ -1,8 +1,5 @@
 
-Experimental perl bindings.
+         Perl bindings to Link Grammar
 
-Incomplete. It seems like the perl module is being created correctly
-and so is the wrapper library, however, the module is not installed
-and the library is installed in the wrong place. Alas ...
+See example.pl for a demo
 
-Will take some autoconf fiddling to fix correctly.

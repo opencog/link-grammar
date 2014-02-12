@@ -40,6 +40,7 @@ $(BUILT_SOURCES): $(SWIG_SOURCES)
 
 EXTRA_DIST =     \
    README        \
+   example.pl    \
    test.pl
 
 
