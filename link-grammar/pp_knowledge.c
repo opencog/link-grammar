@@ -104,7 +104,7 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   int n_strings,i;
   pp_linkset *ls;
   if (!pp_lexer_set_label(k->lt, label)) {
-    if (verbosity>0)
+    if (1 < verbosity)
       printf("PP warning: Link set %s not defined: assuming empty.\n",label);
     n_strings = 0;
   }
@@ -152,7 +152,7 @@ static void read_connected_rule(pp_knowledge *k, const char *label)
   if (!pp_lexer_set_label(k->lt, label))
     {
       k->connected_rules[0].msg=0;  /* rule not there */
-      if (0 < verbosity) printf("PP warning: Not using 'link is connected' rule\n");
+      if (1 < verbosity) printf("PP warning: Not using 'link is connected' rule\n");
       return;
     }
   if (pp_lexer_count_tokens_of_label(k->lt)>1)
