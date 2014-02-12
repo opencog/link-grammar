@@ -158,13 +158,3 @@ int linkage_link_cost(Linkage linkage);
 double linkage_corpus_cost(Linkage linkage);
 const char * linkage_get_violation_name(Linkage linkage);
 
-
-/**********************************************************************
-*
-* Functions that allow special-purpose post-processing of linkages
-*
-***********************************************************************/
-PostProcessor * post_process_open(char *path);
-void post_process_close(PostProcessor *);
-void linkage_post_process(Linkage, PostProcessor *);
-
