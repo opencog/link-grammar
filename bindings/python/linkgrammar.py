@@ -4,7 +4,7 @@
 
 import locale
 
-# import clinkgrammar as clg
+import clinkgrammar as clg
 
 class Parser(object):
     def __init__(self, verbosity=0,

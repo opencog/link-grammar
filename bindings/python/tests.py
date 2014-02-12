@@ -5,7 +5,7 @@ from itertools import chain
 import unittest
 
 from linkgrammar import Parser, Linkage, ParseOptions, Link
-# import clinkgrammar as clg
+import clinkgrammar as clg
 
 class ParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):

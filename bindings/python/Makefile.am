@@ -1,6 +1,8 @@
 #
 # Makefile for generating python bindings
 #
+# Created by Linas Vepstas February 2014
+#
 
 SWIG_SOURCES = ../swig/link_grammar.i
 BUILT_SOURCES = $(top_builddir)/bindings/python/lg_python_wrap.cc
@@ -10,25 +12,26 @@ pkgpython_PYTHON =                                 \
    $(top_builddir)/bindings/python/__init__.py     \
    $(top_builddir)/bindings/python/clinkgrammar.py
 
-# The la MUST have the same name as the pm, 
+# The la MUST have the same name as the pm,
 # which MUST be the swig -module name!
 # We're calling this clinkgrammar, since its a direct map of the C
 # interfaces.
-pkgpyexec_LTLIBRARIES = clinkgrammar.la
+pkgpyexec_LTLIBRARIES = _clinkgrammar.la
 
-clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
+_clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
 
-clinkgrammar_la_CPPFLAGS =      \
+_clinkgrammar_la_CPPFLAGS =     \
    $(SWIG_PYTHON_CPPFLAGS)      \
    $(PYTHON_CPPFLAGS)           \
    -I$(top_srcdir)/link-grammar \
-   $(ANSI_CFLAGS) 
+   $(ANSI_CFLAGS)
 
-clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -module
-clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
+_clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -module
+_clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
 $(BUILT_SOURCES): $(SWIG_SOURCES)
-	$(SWIG) $(SWIG_PYTHON_OPT) -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+	$(SWIG) $(SWIG_PYTHON_OPT) -I$(top_srcdir)/link-grammar -o $@ $<
+#	$(SWIG) $(SWIG_PYTHON_OPT) -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 
 EXTRA_DIST =         \
    AUTHORS           \

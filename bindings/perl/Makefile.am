@@ -1,6 +1,8 @@
 #
 # Makefile for generating perl bindings
 #
+# Created by Linas Vepstas February 2014
+#
 
 SWIG_SOURCES = ../swig/link_grammar.i
 BUILT_SOURCES = $(top_builddir)/bindings/perl/lg_perl_wrap.cc
@@ -11,7 +13,7 @@ pkgperldir = @PERL_EXT_LIB@
 pkgperl_SCRIPTS = \
    $(top_builddir)/bindings/perl/clinkgrammar.pm
 
-# The la MUST have the same name as the pm, 
+# The la MUST have the same name as the pm,
 # which MUST be the swig -module name!
 # We're calling this clinkgrammar, since its a direct map of the C
 # interfaces.
