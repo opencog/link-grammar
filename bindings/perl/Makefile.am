@@ -13,6 +13,11 @@ pkgperldir = @PERL_EXT_LIB@
 dist_pkgperl_SCRIPTS = \
    $(top_builddir)/bindings/perl/clinkgrammar.pm
 
+if HAVE_SWIG
+$(BUILT_SOURCES): $(SWIG_SOURCES)
+	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+endif
+
 # The la MUST have the same name as the pm,
 # which MUST be the swig -module name!
 # We're calling this clinkgrammar, since its a direct map of the C
@@ -37,9 +42,6 @@ endif
 if HAVE_ASPELL
 clinkgrammar_la_LIBADD  += ${ASPELL_LIBS}
 endif
-
-$(BUILT_SOURCES): $(SWIG_SOURCES)
-	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 
 
 EXTRA_DIST =     \
