@@ -58,11 +58,11 @@ external poSetAllShortConnectors : parseOptions -> int -> unit = "po_set_all_sho
 *)
 type dictionary;;
 
-external dictCreateBase : string -> string -> string -> string -> dictionary = "dict_create";;
+external dictCreateBase : string -> dictionary = "dict_create";;
 external freeDict : dictionary -> unit = "free_dict";;
 
-let dictCreate s1 s2 s3 s4 =
-  let v = dictCreateBase s1 s2 s3 s4 in
+let dictCreate s1 =
+  let v = dictCreateBase s1 in
   let () = Gc.finalise freeDict v in
     v
 ;;
@@ -83,22 +83,12 @@ let sentCreate dict s =
 
 external sentParse : sentence -> parseOptions -> int = "sent_parse";;
 external sentLength : sentence -> int = "sent_length";;
-external sentGetWord : sentence -> int -> string = "sent_get_word";;
 external sentNullCount : sentence -> int = "sent_null_count";;
 external sentNumLinkagesFound : sentence -> int = "sent_num_linkages_found";;
 external sentNumValidLinkages : sentence -> int = "sent_num_valid_linkages";;
 external sentNumLinkagesPP : sentence -> int = "sent_num_linkages_post_processed";;
 external sentNumViolations : sentence -> int -> int = "sent_num_violations";;
 external sentDisjunctCost : sentence -> int -> int = "sent_disjunct_cost";;
-
-let sentGetWords sent = 
-  let wList = ref [] in
-  let () = 
-    for i = 0 to (sentLength sent)-1 do
-      wList := List.append !wList [sentGetWord sent i]
-    done
-  in
-    !wList
 
 (**
    {b -------linkage and operations on it--------}
@@ -114,10 +104,6 @@ let linkageCreate sent ith po =
     v
 ;;
 
-
-external linkageGetNumSublinkages : linkage -> int = "link_get_num_sublinkages";;
-external linkageSetSublinkage : linkage -> int -> unit = "link_set_current_sublinkage";;
-external linkageComputeUnion : linkage -> unit = "link_compute_union";;
 
 external linkageGetNumWords : linkage -> int = "link_get_num_words";;
 external linkageGetWord : linkage -> int -> string = "link_get_word";;
@@ -161,83 +147,5 @@ let linkageGetLinkDomainNames linkage link_ind =
 
 external linkageUnusedWordCost : linkage -> int = "link_unused_word_cost"
 external linkageDisjunctCost : linkage -> int = "link_disjunct_cost"
-external linkageAndCost : linkage -> int = "link_and_cost"
 external linkageLinkCost : linkage -> int = "link_link_cost"
-
-(**
-   {b -------constituent tree and operations on it--------}
-*)
-type cnode
-
-external getCnodeRootBase : linkage -> cnode = "get_constituent_tree";;
-external freeCnode : cnode -> unit = "free_cnode_tree";;
-
-let getCnodeRoot link =
-  let v = getCnodeRootBase link in
-  let () = Gc.finalise freeCnode v in
-    v
-;;
-
-external getCnodeLabel : cnode -> string = "get_cnode_label";;
-external getCnodeStart : cnode -> int = "get_cnode_start";;
-external getCnodeEnd : cnode -> int = "get_cnode_end";;
-external isCnodeLeaf : cnode -> bool = "is_leaf_cnode";;
-external getCnodeNumChildren : cnode -> int = "get_cnode_num_children";;
-external getCnodeChild : cnode -> int -> cnode = "get_cnode_childi";;
-
-
-type cTree = 
-  | Node of string * int * int * cTree list
-;;
-
-let getConstituentTree link = 
-  let rec buildTree cn =
-    if (isCnodeLeaf cn) then
-      Node ((getCnodeLabel cn),(getCnodeStart cn),(getCnodeEnd cn), [])
-    else
-      let childList = ref [] in
-      let () =
-	for i = 0 to ((getCnodeNumChildren cn)-1) do
-	  childList := (List.append !childList [buildTree (getCnodeChild cn i)])
-	done in
-	Node ((getCnodeLabel cn),(getCnodeStart cn),(getCnodeEnd cn), !childList)
-  in
-  let root = getCnodeRoot link in
-  let tree = buildTree root in
-    tree
-;;
-
-let printIndent indent = 
-  let () = 
-    for i = 1 to indent do
-      Printf.printf "  "
-    done
-  in
-    ()
-;;
-  
-let rec printTree indent tree = 
-  let Node(str, st, en, lis) = tree in
-    if (List.length lis) = 0 then
-      let () = printIndent indent in
-      let () = Printf.printf "%s\n" str;flush stdout in
-	()
-    else
-      let () = printIndent indent in
-      let () = Printf.printf "%s\n" str;flush stdout in
-	List.iter (printTree (indent+1)) lis
-;;
-
-let printConstituentTree link = 
-  let tree = getConstituentTree link in
-    printTree 1 tree
-;;
-
-
-    
-    
-
-
-
-
 

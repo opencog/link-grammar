@@ -20,14 +20,13 @@
 /********************************************/
 /* Link Grammar Includes                    */
 /********************************************/
-#include <link-includes.h>
+#include <link-grammar/link-includes.h>
 
 
 #define Po_val(v) (*((Parse_Options *)Data_custom_val(v)))
 #define Dict_val(v) (*((Dictionary *)Data_custom_val(v)))
 #define Sent_val(v) (*((Sentence *)Data_custom_val(v)))
 #define Linkage_val(v) (*((Linkage *)Data_custom_val(v)))
-#define CNode_val(v) (*((CNode **)Data_custom_val(v)))
 
 #define CAML_GC_ALLOC_USED (1)
 #define CAML_GC_ALLOC_MAX (10)
@@ -233,18 +232,15 @@ value po_set_all_short_connectors(value po, value count) {
 /* end of operations on parse_options */
 
 /* start of operations on dictionary */
-value dict_create(value dn, value ppfn, value ckn, value an) {
-  CAMLparam4(dn, ppfn, ckn, an);
+value dict_create(value lang) {
+  CAMLparam1(lang);
   CAMLlocal1(block);
-  char *dn_str = String_val(dn);
-  char *ppfn_str = String_val(ppfn);
-  char *ckn_str = String_val(ckn);
-  char *an_str = String_val(an);
+  char *lang_str = String_val(lang);
 
-  Dictionary dict = dictionary_create(dn_str, ppfn_str, ckn_str, an_str);
+  Dictionary dict = dictionary_create_lang(lang_str);
 
   if (!dict) {
-    printf("Cant open Dictionary!\n");fflush(stdout);
+    printf("Cant open Dictionary!\n"); fflush(stdout);
     raise_not_found();
   }
 
@@ -393,28 +389,6 @@ value free_linkage(value l) {
 }
 
 
-value link_get_num_sublinkages(value l) {
-  CAMLparam1(l);
-  Linkage link = Linkage_val(l);
-  int val = linkage_get_num_sublinkages(link);
-  CAMLreturn(Val_long(val));
-}
-
-
-value link_set_current_sublinkage(value l, value curr) {
-  CAMLparam2(l,curr);
-  Linkage link = Linkage_val(l);
-  linkage_set_current_sublinkage(link, Long_val(curr));
-  CAMLreturn(Val_unit);
-}
-
-value link_compute_union(value l) {
-  CAMLparam1(l);
-  Linkage link = Linkage_val(l);
-  linkage_compute_union(link);
-  CAMLreturn(Val_unit);
-}
-
 value link_get_num_words(value l) {
   CAMLparam1(l);
   Linkage link = Linkage_val(l);
@@ -556,13 +530,6 @@ value link_disjunct_cost(value l) {
   CAMLreturn(Val_long(val));
 }
 
-value link_and_cost(value l) {
-  CAMLparam1(l);
-  Linkage link = Linkage_val(l);
-  int val = linkage_and_cost(link);
-  return Val_long(val);
-}
-
 value link_link_cost(value l) {
   CAMLparam1(l);
   Linkage link = Linkage_val(l);
@@ -570,90 +537,3 @@ value link_link_cost(value l) {
   CAMLreturn(Val_long(val));
 }
 /* end of operations on linkages */
-
-/* start of operations on constituent trees */
-value get_constituent_tree(value l) {
-  CAMLparam1(l);
-  CAMLlocal1(block);
-  Linkage link = Linkage_val(l);
-
-  CNode *tree = linkage_constituent_tree(link);
-
-  block = alloc_custom(&custom_default_ops, sizeof(CNode *), 
-		       CAML_GC_ALLOC_USED, CAML_GC_ALLOC_MAX);
-  CNode_val(block) = tree;
-  
-  CAMLreturn(block);
-}
-
-value get_cnode_label(value l) {
-  CAMLparam1(l);
-  CAMLlocal1(block);
-  CNode *node = CNode_val(l);
-  block = copy_string(node->label);
-  /* printf("label %s\n",node->label);fflush(stdout); */
-  CAMLreturn(block);
-}
-
-value get_cnode_start(value l) {
-  CAMLparam1(l);
-  CNode *node = CNode_val(l);
-  CAMLreturn (Val_long(node->start));
-}
-
-value get_cnode_end(value l) {
-  CAMLparam1(l);
-  CNode *node = CNode_val(l);
-  CAMLreturn(Val_long(node->end));
-}
-
-value is_leaf_cnode(value l) {
-  CAMLparam1(l);
-  CNode *node = CNode_val(l);
-  /* printf("is_leaf %d\n",node->child);fflush(stdout); */
-  if (!node->child)
-    CAMLreturn(Val_true);
-  else
-    CAMLreturn (Val_false);
-}
-
-value get_cnode_num_children(value l) {
-  CAMLparam1(l);
-  int count = 0;
-  CNode *node = CNode_val(l);
-  CNode *childi = node->child;
-  while (childi) {
-    count++;
-    childi = childi->next;
-  }
-  /* printf("num child %d\n", Long_val(count));fflush(stdout); */
-  CAMLreturn( Val_long(count));
-}
-
-value get_cnode_childi(value l, value ith) {
-  CAMLparam2(l,ith);
-  CAMLlocal1(block);
-  block = alloc_custom(&custom_default_ops, sizeof(CNode *), 
-		       CAML_GC_ALLOC_USED, CAML_GC_ALLOC_MAX);
-  CNode *node = CNode_val(l);
-  CNode *childi = node->child;
-  /* printf("child %d\n", Long_val(ith));fflush(stdout); */
-  int count = 0;
-  while (childi) {
-    if (count == Long_val(ith)) {
-      CNode_val(block) = childi;
-      CAMLreturn(block);
-    }
-    childi = childi->next;
-    count++;
-  }
-  printf("assert: child not found\n"); fflush(stdout);
-  exit(10);
-}
-
-value free_cnode_tree(value l) {
-  CNode *node = CNode_val(l);
-  /*printf("free cnode %x\n",(unsigned int)node);fflush(stdout); */
-  linkage_free_constituent_tree(node);
-  return Val_unit;
-}

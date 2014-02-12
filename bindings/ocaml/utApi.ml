@@ -8,8 +8,7 @@ open Linkgrammar;;
 let po = poCreate ();;
 let () = poSetLinkageLimit po 1000;;
 
-let dict = dictCreate ("4.0.dict") ("4.0.knowledge") 
-  ("4.0.constituent-knowledge") ("4.0.affix");;
+let dict = dictCreate ("en");;
 
 let str = "Janet, who is an expert on dogs, helped me choose one";;
 
@@ -29,8 +28,6 @@ let _ = sentGetWords sent;;
 
 
 let link = linkageCreate sent 0 po;;
-let _ = linkageGetNumSublinkages link;;
-let _ = linkageSetSublinkage link 0;;
 let _ = linkageGetNumWords link;;
 let _ = linkageGetNumLinks link;;
 let _ = linkageGetLinkLength link 0;;
@@ -47,21 +44,10 @@ let _ = linkageGetLinkDomainNames link 3;;
 let _ = linkageGetLinkDomainNames link 4;;
 let _ = linkageUnusedWordCost link;;
 let _ = linkageDisjunctCost link;;
-let _ = linkageAndCost link;;
 let _ = linkageLinkCost link;;
 
 let () = Printf.printf "linkage = \n%s\n" (linkagePrintDiagram link);;
 let () = Printf.printf "linkage ps = \n%s\n" (linkagePrintPostscript link 0);;
 let () = Printf.printf "links and domains \n%s\n" (linkagePrintLinksAndDomains link);;
-
-let tree = getConstituentTree link;;
-let _ = printConstituentTree link;;
-
-
-
-
-
-
-
 
 

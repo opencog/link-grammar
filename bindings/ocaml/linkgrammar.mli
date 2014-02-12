@@ -1,8 +1,6 @@
 (**
   Module [LinkGrammar]: Provides an Ocaml interface to LinkGrammar --
-   A parser for english sentences
-
-   For more info on LinkGrammar refer http://www.link.cs.cmu.edu/link/
+   A parser for sentences
 
    The Ocaml API maps almost 1-1 with the LinkGrammar C API -
    see description of the C API at: 
@@ -57,7 +55,7 @@ type dictionary
        See notes in the README file on specifying paths to
        dictionary files
 *)
-val dictCreate : string -> string -> string -> string -> dictionary
+val dictCreate : string -> dictionary
 
 
 (**
@@ -69,8 +67,6 @@ type sentence
 val sentCreate : dictionary -> string -> sentence
 val sentParse : sentence -> parseOptions -> int
 val sentLength : sentence -> int
-val sentGetWord : sentence -> int -> string
-val sentGetWords : sentence -> string list
 val sentNullCount : sentence -> int
 val sentNumLinkagesFound : sentence -> int
 val sentNumValidLinkages : sentence -> int
@@ -86,9 +82,6 @@ val sentDisjunctCost : sentence -> int -> int
 type linkage
 
 val linkageCreate : sentence -> int -> parseOptions -> linkage
-val linkageGetNumSublinkages : linkage -> int
-val linkageSetSublinkage : linkage -> int -> unit
-val linkageComputeUnion : linkage -> unit
 val linkageGetNumWords : linkage -> int
 val linkageGetNumLinks : linkage -> int
 val linkageGetLinkLength : linkage -> int -> int
@@ -107,18 +100,5 @@ val linkageGetLinkDomainNames : linkage -> int -> string list
 val linkageGetViolationName : linkage -> string
 val linkageUnusedWordCost : linkage -> int
 val linkageDisjunctCost : linkage -> int
-val linkageAndCost : linkage -> int
 val linkageLinkCost : linkage -> int
-
-
-(**
-   {b -------constituent tree and operations on it--------}
-*)
-
-type cTree =
-  | Node of string * int * int * cTree list
-;;
-
-val getConstituentTree : linkage -> cTree
-val printConstituentTree : linkage -> unit
 

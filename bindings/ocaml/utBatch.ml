@@ -11,9 +11,6 @@
 (* file containing about 900 sentences that is part of the      *)
 (* linkgrammar distribution under "data" directory              *)
 (*                                                              *)
-(* For more info on LinkGrammar                                 *)
-(* refer: http://www.link.cs.cmu.edu/link/                      *)
-(*                                                              *)
 (* Author: Ramu Ramamurthy ramu_ramamurthy at yahoo dot com     *)
 (* (C) 2006                                                     *)
 (*                                                              *)
@@ -78,8 +75,7 @@ let parseFromFile dict po fname =
 let po = poCreate ();;
 let () = poSetLinkageLimit po 1000;;
 
-let defaultDict = dictCreate ("4.0.dict") ("4.0.knowledge") 
-  ("4.0.constituent-knowledge") ("4.0.affix");;
+let defaultDict = dictCreate ("en");;
 
 let () = Printf.printf "Enter input file:\n";;
 

@@ -6,6 +6,7 @@ Version 4.8.7 (XXX 2014)
  * Adopt the orphaned/unsupported pylinkgrammar Python bindings.
  * Deprecate the obsolete CNode interface.
  * Provide low-level perl bindings.
+ * Adopt the orphaned/unsupported Ocaml bindings.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

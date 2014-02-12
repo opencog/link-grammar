@@ -12,6 +12,8 @@ if HAVE_ANT
 SUBDIRS += java
 endif
 
+SUBDIRS += ocaml
+
 if HAVE_SWIG
 if HAVE_PERL
 SUBDIRS += perl
