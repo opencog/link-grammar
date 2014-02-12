@@ -382,16 +382,6 @@
     ((po :foreign-address))
   :returning :int)
 
-(ff:def-foreign-call parse_options_set_display_union
-    ((po :foreign-address)
-     (param :int fixnum))
-  :returning :void)
-
-(ff:def-foreign-call parse_options_get_display_union
-    ((po :foreign-address))
-  :returning :int)
-
-
 (ff:def-foreign-call parse_options_set_display_disjuncts
     ((po :foreign-address)
      (param :int fixnum))
@@ -434,7 +424,6 @@
 (ff:def-foreign-type Sentence
     (:struct (dict (* Dictionary))
 	     (word (:array (* char)))
-	     (is_conjunction (* char))
 	     (deletable (* (* char)))
 	     (dptr (* (* char)))
 	     (effective_dist (* (* char)))
@@ -497,25 +486,10 @@
   :returning :int)
 
 ;; This is in the API, but not the documentation.
-(ff:def-foreign-call sentence_and_cost
-    ((sent :foreign-address)
-     (i :int))
-  :returning :int)
-
 (ff:def-foreign-call sentence_disjunct_cost
     ((sent :foreign-address)
      (i :int))
   :returning :int)
-
-(ff:def-foreign-call sentence_get_nth_word
-    ((sent :foreign-address)
-     (i :int))
-  :returning ((* :char)))
-
-(ff:def-foreign-call sentence_nth_word_has_disjunction
-    ((sent :foreign-address)
-     (i :int))
-  :returning ((* :char)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -528,11 +502,6 @@
      (sent :foreign-address)
      (opts :foreign-address))
   :returning :foreign-address)
-
-(ff:def-foreign-call linkage_set_current_sublinkage
-    ((linkage :foreign-address)
-     (index :int))
-  :returning :int)
 
 (ff:def-foreign-call linkage_delete ((linkage :foreign-address))
   :returning :void)
@@ -548,10 +517,6 @@
 
 (ff:def-foreign-call linkage_get_sentence ((linkage :foreign-address))
   :returning :foreign-address)
-
-(ff:def-foreign-call linkage_get_num_sublinkages
-    ((linkage :foreign-address))
-  :returning :int)
 
 (ff:def-foreign-call linkage_get_num_words
     ((linkage :foreign-address))
@@ -707,29 +672,13 @@
 	(linkage_free_postscript foreign-str)
 	nil))))
 
-(ff:def-foreign-call linkage_compute_union ((linkage :foreign-address))
-  :returning :int)
-
 (ff:def-foreign-call linkage_unused_word_cost ((linkage :foreign-address))
   :returning :int)
 
 (ff:def-foreign-call linkage_disjunct_cost ((linkage :foreign-address))
   :returning :int)
 
-(ff:def-foreign-call linkage_and_cost ((linkage :foreign-address))
-  :returning :int)
-
 (ff:def-foreign-call linkage_link_cost ((linkage :foreign-address))
-  :returning :int)
-
-(ff:def-foreign-call linkage_is_canonical ((linkage :foreign-address))
-  :returning :int)
-
-(ff:def-foreign-call linkage_is_improper ((linkage :foreign-address))
-  :returning :int)
-
-(ff:def-foreign-call linkage_has_inconsistent_domains
-    ((linkage :foreign-address))
   :returning :int)
 
 (ff:def-foreign-call linkage_get_violation_name
@@ -762,66 +711,6 @@
 	   ,@b)
        (when (and ,name (not (zerop ,name)))
 	 (post_process_close ,name)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Constituent Structure
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(ff:def-foreign-type CNode
-    (:struct (label (* :char))
-	     (child (* CNode))
-	     (next (* CNode))
-	     (start :int)
-	     (end :int)))
-
-(ff:def-foreign-call linkage_constituent_tree
-    ((linkage :foreign-address))
-  :returning ((* CNode)))
-
-(ff:def-foreign-call linkage_free_constituent_tree 
-    ((node CNode))
-  :returning :void)
-
-;; This could also be just
-;; (ff:slot-value-typed 'CNode :foreign linkage 'label)
-(ff:def-foreign-call linkage_constituent_node_get_label
-    ((linkage :foreign-address))
-  :returning ((* :char)))
-
-;; This could also be just
-;; (ff:slot-value-typed 'CNode :foreign linkage 'child)
-(ff:def-foreign-call linkage_constituent_node_get_child
-    ((linkage :foreign-address))
-  :returning ((* CNode)))
-
-;; This could also be just
-;; (ff:slot-value-typed 'CNode :foreign linkage 'next)
-(ff:def-foreign-call linkage_constituent_node_get_next
-    ((linkage :foreign-address))
-  :returning ((* CNode)))
-
-;; This could also be just
-;; (ff:slot-value-typed 'CNode :foreign linkage 'start)
-(ff:def-foreign-call linkage_constituent_node_get_start
-    ((linkage :foreign-address))
-  :returning :int)
-
-;; This could also be just
-;; (ff:slot-value-typed 'CNode :foreign linkage 'end)
-(ff:def-foreign-call linkage_constituent_node_get_end
-    ((linkage :foreign-address))
-  :returning :int)
-
-(defmacro with-constituent-tree ((name linkage) &body b)
-  `(let ((,name nil))
-     (unwind-protect
-	 (unless
-	     (zerop (setq ,name (linkage_constituent_tree ,linkage)))
-	   ,@b)
-       (when (and ,name (not (zerop ,name)))
-	 (linkage_free_constituent_tree ,name)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
