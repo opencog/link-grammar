@@ -7,37 +7,40 @@ import locale
 import _clinkgrammar as clg
 
 class Parser(object):
-    def __init__(self, verbosity=0,
-                       linkage_limit=100,
-                       min_null_count=0,
-                       max_null_count=0,
-                       null_block=1,
-                       islands_ok=False,
-                       short_length=6,
-                       all_short_connectors=False,
-                       display_walls=False,
-                       allow_null=True,
-                       screen_width=180,
-                       max_parse_time=5,
-                       disjunct_cost=10000,
-                       max_sentence_length=170):
-        locale.setlocale(locale.LC_ALL,"en_US.UTF-8")
-        self.dictionary = Dictionary("en")
-        self.parse_options = ParseOptions(verbosity=verbosity,
-                                          linkage_limit=linkage_limit,
-                                          min_null_count=min_null_count,
-                                          max_null_count=max_null_count,
-                                          null_block=null_block,
-                                          islands_ok=islands_ok,
-                                          short_length=short_length,
-                                          display_walls=display_walls,
-                                          allow_null=allow_null,
-                                          screen_width=screen_width,
-                                          max_parse_time=max_parse_time,
-                                          disjunct_cost=disjunct_cost,
-                                          max_sentence_length=max_sentence_length)
-        
-        
+    def __init__(self, lang = "en",
+                       verbosity = 0,
+                       linkage_limit = 100,
+                       min_null_count = 0,
+                       max_null_count = 0,
+                       null_block = 1,
+                       islands_ok = False,
+                       short_length = 6,
+                       all_short_connectors = False,
+                       display_suffixes = False,
+                       display_walls = False,
+                       allow_null = True,
+                       screen_width = 180,
+                       max_parse_time = 5,
+                       disjunct_cost = 10000,
+                       max_sentence_length = 170):
+        locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+        self.dictionary = Dictionary(lang)
+        self.parse_options = ParseOptions(verbosity = verbosity,
+                                          linkage_limit = linkage_limit,
+                                          min_null_count = min_null_count,
+                                          max_null_count = max_null_count,
+                                          null_block = null_block,
+                                          islands_ok = islands_ok,
+                                          short_length = short_length,
+                                          display_suffixes = display_suffixes,
+                                          display_walls = display_walls,
+                                          allow_null = allow_null,
+                                          screen_width = screen_width,
+                                          max_parse_time = max_parse_time,
+                                          disjunct_cost = disjunct_cost,
+                                          max_sentence_length = max_sentence_length)
+
+
     def parse_sent(self, txt):
         sent = clg.sentence_create(txt,self.dictionary._dict)
         n = clg.sentence_parse(sent, self.parse_options._po)
@@ -47,28 +50,29 @@ class Parser(object):
             linkages = []
         clg.sentence_delete(sent)
         return linkages
-   
+
     @property
     def version(self):
         return clg.linkgrammar_get_version()
 
 class ParseOptions(object):
-    def __init__(self,verbosity=0,
-                       linkage_limit=100,
-                       min_null_count=0,
-                       max_null_count=0,
-                       null_block=1,
-                       islands_ok=False,
-                       short_length=6,
-                       all_short_connectors=False,
-                       display_walls=False,
-                       allow_null=True,
-                       screen_width=180,
-                       max_parse_time=-1,
-                       disjunct_cost=10000,
-                       max_sentence_length=170):
-    
-        
+    def __init__(self, verbosity = 0,
+                       linkage_limit = 100,
+                       min_null_count = 0,
+                       max_null_count = 0,
+                       null_block = 1,
+                       islands_ok = False,
+                       short_length = 6,
+                       all_short_connectors = False,
+                       display_suffixes = False,
+                       display_walls = False,
+                       allow_null = True,
+                       screen_width = 180,
+                       max_parse_time = -1,
+                       disjunct_cost = 10000,
+                       max_sentence_length = 170):
+
+
         self._po = clg.parse_options_create()
         self.verbosity = verbosity
         self.linkage_limit = linkage_limit
@@ -78,13 +82,14 @@ class ParseOptions(object):
         self.islands_ok = islands_ok
         self.short_length = short_length
         self.all_short_connectors = all_short_connectors
+        self.display_suffixes = display_suffixes
         self.display_walls = display_walls
         self.screen_width = screen_width
         self.max_parse_time = max_parse_time
         self.disjunct_cost = disjunct_cost
         self.max_sentence_length = max_sentence_length
         self.allow_null = allow_null
-    
+
     def __del__(self):
         if self._po is not None and clg is not None:
             clg.parse_options_delete(self._po)
@@ -100,9 +105,9 @@ class ParseOptions(object):
             if value not in [0, 1, 2]:
                 raise ValueError("Verbosity levels can be 0, 1, or 2")
             clg.parse_options_set_verbosity(self._po, value)
-        return locals() 
+        return locals()
     verbosity = property(**verbosity())
-    
+
     def linkage_limit():
         doc = "This parameter determines the maximum number of linkages that are considered in post-processing. If more than linkage_limit linkages found, then a random sample of linkage_limit is chosen for post-processing. When this happen a warning is displayed at verbosity levels bigger than 1."
         def fget(self):
@@ -113,9 +118,9 @@ class ParseOptions(object):
             if value < 0:
                 raise ValueError("Linkage Limit must be positive")
             clg.parse_options_set_linkage_limit(self._po, value)
-        return locals() 
+        return locals()
     linkage_limit = property(**linkage_limit())
-    
+
     def disjunct_cost():
         doc = "Determines the maximum disjunct cost used during parsing, where the cost of a disjunct is equal to the maximum cost of all of its connectors. The default is that all disjuncts, no matter what their cost, are considered."
         def fget(self):
@@ -124,7 +129,7 @@ class ParseOptions(object):
             if not isinstance(value, int):
                 raise TypeError("Distjunct cost must be set to an integer")
             clg.parse_options_set_disjunct_cost(self._po, value)
-        return locals() 
+        return locals()
     disjunct_cost = property(**disjunct_cost())
 
     def min_null_count():
@@ -152,7 +157,7 @@ class ParseOptions(object):
             clg.parse_options_set_max_null_count(self._po, value)
         return locals()
     max_null_count = property(**max_null_count())
-            
+
     def null_block():
         doc = "This allows null links to be counted in \"bunches.\" For example, if null_block is 4, then a linkage with 1,2,3 or 4 null links has a null cost of 1, a linkage with 5,6,7 or 8 null links has a null cost of 2, etc. (This is only in effect if islands are not allowed; see below.)"
         def fget(self):
@@ -165,7 +170,7 @@ class ParseOptions(object):
             clg.parse_options_set_null_block(self._po, value)
         return locals()
     null_block = property(**null_block())
-            
+
     def short_length():
         doc = "The short_length parameter determines how long the links are allowed to be. The intended use of this is to speed up parsing by not considering very long links for most connectors, since they are very rarely used in a correct parse. An entry for UNLIMITED-CONNECTORS in the dictionary will specify which connectors are exempt from the length limit."
         def fget(self):
@@ -178,7 +183,7 @@ class ParseOptions(object):
             clg.parse_options_set_short_length(self._po, value)
         return locals()
     short_length = property(**short_length())
-            
+
     def max_sentence_length():
         doc = ""
         def fget(self):
@@ -191,14 +196,14 @@ class ParseOptions(object):
             clg.parse_options_set_max_sentence_length(self._po, value)
         return locals()
     max_sentence_length = property(**max_sentence_length())
-            
+
     def islands_ok():
         doc = """
         This option determines whether or not "islands" of links are allowed. For example, the following linkage has an island:
-            +------Wd-----+                                           
+            +------Wd-----+
             |     +--Dsu--+---Ss--+-Paf-+      +--Dsu--+---Ss--+--Pa-+
             |     |       |       |     |      |       |       |     |
-          ///// this sentence.n is.v false.a this sentence.n is.v true.a 
+          ///// this sentence.n is.v false.a this sentence.n is.v true.a
         """
         def fget(self):
             return clg.parse_options_get_islands_ok(self._po) == 1
@@ -208,7 +213,7 @@ class ParseOptions(object):
             clg.parse_options_set_islands_ok(self._po, 1 if value else 0)
         return locals()
     islands_ok = property(**islands_ok())
-            
+
     def max_parse_time():
         doc = "Determines the approximate maximum time (in seconds) that parsing is allowed to take. The way it works is that after this time has expired, the parsing process is artificially forced to complete quickly by pretending that no further solutions (entries in the hash table) can be constructed. The actual parsing time might be slightly longer."
         def fget(self):
@@ -219,7 +224,7 @@ class ParseOptions(object):
             clg.parse_options_set_max_parse_time(self._po, value)
         return locals()
     max_parse_time = property(**max_parse_time())
-    
+
     def screen_width():
         doc = "The width of the screen (in characters) for displaying linkages."
         def fget(self):
@@ -232,7 +237,7 @@ class ParseOptions(object):
             clg.parse_options_set_screen_width(self._po, value)
         return locals()
     screen_width = property(**screen_width())
-    
+
     def allow_null():
         doc = "Whether or not to allow linkages to have null links."
         def fget(self):
@@ -244,6 +249,17 @@ class ParseOptions(object):
         return locals()
     allow_null = property(**allow_null())
 
+    def display_suffixes():
+        doc = "Whether or not to show word morphology when a linkage diagram is printed."
+        def fget(self):
+            return clg.parse_options_get_display_suffixes(self._po) == 1
+        def fset(self, value):
+            if not isinstance(value, bool):
+                raise TypeError("display_suffixes must be set to an integer")
+            clg.parse_options_set_display_suffixes(self._po, 1 if value else 0)
+        return locals()
+    display_suffixes = property(**display_suffixes())
+
     def display_walls():
         doc = "Whether or not to show the wall word(s) when a linkage diagram is printed."
         def fget(self):
@@ -254,7 +270,7 @@ class ParseOptions(object):
             clg.parse_options_set_display_walls(self._po, 1 if value else 0)
         return locals()
     display_walls = property(**display_walls())
-            
+
     def all_short_connectors():
         doc = "If true, then all connectors have length restrictions imposed on them -- they can be no farther than short_length apart. This is used when parsing in \"panic\" mode, for example."
         def fget(self):
@@ -265,39 +281,39 @@ class ParseOptions(object):
             clg.parse_options_set_all_short_connectors(self._po, 1 if value else 0)
         return locals()
     all_short_connectors = property(**all_short_connectors())
-            
-            
+
+
 
 class Dictionary(object):
-    def __init__(self,lang):
+    def __init__(self, lang):
         self._dict = clg.dictionary_create_lang(lang)
-    
+
     def __del__(self):
         if self._dict is not None and clg is not None:
             clg.dictionary_delete(self._dict)
             self._dict = None
-            
+
 class Link(object):
     def __init__(self, left_word, left_link, right_link, right_word):
         self.left_word = left_word
         self.right_word = right_word
         self.left_link = left_link
         self.right_link = right_link
-        
+
     def __eq__(self, other):
         return self.left_word == other.left_word and self.left_link == other.left_link and \
                self.right_word == other.right_word and self.right_link == other.right_link
-                               
+
     def __unicode__(self):
         if self.left_link == self.right_link:
             return u"%s-%s-%s" % (self.left_word, self.left_link, self.right_word)
         else:
             return u"%s-%s-%s-%s" % (self.left_word, self.left_link, self.right_link, self.right_word)
-            
+
     def __repr__(self):
         return "Link: %s" % unicode(self)
-        
-    
+
+
 class Linkage(object):
     @classmethod
     def create_from_sentence(cls, idx, sentence, parse_options):
@@ -310,7 +326,7 @@ class Linkage(object):
         self.num_of_words = clg.linkage_get_num_words(linkage_swig_obj)
         self.num_of_links = clg.linkage_get_num_links(linkage_swig_obj)
         self.link_cost = clg.linkage_link_cost(linkage_swig_obj)
-        
+
         self.words = [clg.linkage_get_word(linkage_swig_obj,i) for i in range(self.num_of_words)]
         self.links = [Link(self.words[clg.linkage_get_link_lword(linkage_swig_obj,i)],
                            clg.linkage_get_link_llabel(linkage_swig_obj,i),
