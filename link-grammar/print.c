@@ -42,34 +42,21 @@
 
 #define HIDE_SUFFIX   (!display_suffixes)
 
-/* XXX FIXME
- * There are several problems with the handling of suffixes here.
- * 1) Valid English constructions like "I think that 2 + 2 = 4" display
- *    bizarrely.  This needs fixing.
- * 2) Engish sentences like "this is a hey= =.zzz test" display
- *    unexpectely. (because the suffixes were contracted!)
- * In brief, the mechanism should be disabled for English.
- */
-
 /**
  * Return TRUE if the word is a suffix.
  *
  * Suffixes have the form =asdf.asdf and "null" suffixes have the form =.asdf.
  * Ordinary equals signs appearing in regular text are either = or =[!].
- * In the English dict, equals signs appear as =.v and =.eq and are handled
- * specially below. This works only because these do not appear in the
- * Russian dict.  It will get nastier as more languages are added.
- * This is a bit of a mess, but I can't think of a better way ...
- * Perhaps a different character, perhaps some obscure UTF-8 marker?
- * At this time, suffixes are used only in the Russian dicts.
  */
 static Boolean is_suffix(const char* w)
 {
 	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
 	if (1 == strlen(w)) return FALSE;
+#if SUBSCRIPT_MARK == '.'
 	if (0 == strcmp("=[!]", w)) return FALSE;
 	if (0 == strcmp("=.v", w)) return FALSE;
 	if (0 == strcmp("=.eq", w)) return FALSE;
+#endif
 	return TRUE;
 }
 
@@ -762,12 +749,12 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		top_row = 2*top_row + 2;
 	}
 	
-	/* we've built the picture, now print it out */
+	/* We've built the picture, now print it out. */
 	
 	if (print_word_0) i = 0; else i = 1;
 
-	/* start locations, for each row.  These may vary, due to different
-	 * utf8 character widths */
+	/* Start locations, for each row.  These may vary, due to different
+	 * utf8 character widths. */
 	top_row_p1 = top_row + 1;
 	for (row = 0; row < top_row_p1; row++)
 		start[row] = 0;
