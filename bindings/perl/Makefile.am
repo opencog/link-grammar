@@ -5,14 +5,14 @@
 SWIG_SOURCES = ../swig/link_grammar.i
 BUILT_SOURCES = $(top_builddir)/bindings/perl/link_grammar_wrap.cc
 
-# /usr/local/lib/perl/5.14.2/auto
-# /usr/local/share/perl/5.14.2
+# PERL_EXT_LIB become /usr/local/share/perl/5.14.2 or something like that...
+pkgperldir = @PERL_EXT_LIB@
 
-# XXX this is wrong, its failing to install the perl module in a sane place ..
-pkgperl_PERL = \
+pkgperl_SCRIPTS = \
    $(top_builddir)/bindings/perl/clinkgrammar.pm
 
-# XXX this is wrong; this should be installed with the perl module.
+# Hmmm .. what's the right place ???
+# pkgperl_LTLIBRARIES = liblink-grammar-perl.la
 lib_LTLIBRARIES = liblink-grammar-perl.la
 
 liblink_grammar_perl_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)

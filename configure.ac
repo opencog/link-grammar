@@ -576,19 +576,33 @@ dnl ===================================================================
 
 AC_PROG_SWIG(2.0.0)
 SWIG_ENABLE_CXX
-SWIG_PYTHON
 
 AC_CHECK_PROG(SWIGfound, swig, yes, no)
 AM_CONDITIONAL(HAVE_SWIG, test x${SWIGfound} = xyes)
 
 if test "x$SWIGfound" = "xyes"; then
-   # XXX where is AM_PATH_PERL ???
-   # AM_PATH_PERL
-   PERL_GUESS=`perl -MConfig -e 'print $Config{archlib}'`
-   CPPFLAGS="${CPPFLAGS} -I${PERL_GUESS} -I${PERL_GUESS}/CORE"
+   # AX_PERL_EXT isn't working for me ... 
+   # AX_PATH_EXT
+   if test -z "$PERL_EXT_INC" ; then
+      PERL_EXT_INC=`perl -MConfig -e 'print $Config{archlib}'`
+      CPPFLAGS="${CPPFLAGS} -I${PERL_EXT_INC} -I${PERL_EXT_INC}/CORE"
+   fi
+   AC_MSG_RESULT([$PERL_EXT_INC])
+   AC_SUBST(PERL_EXT_INC)
+
+   # PERL_EXT_LIB is where to install, typically /usr/local/lib/perl/5.14.2
+   # or similar.
+   if test -z "$PERL_EXT_LIB" ; then
+      PERL_EXT_LIB=`perl -MConfig -e 'print $Config{sitearchexp}'`
+   fi
+   AC_MSG_RESULT([$PERL_EXT_LIB])
+   AC_SUBST(PERL_EXT_LIB)
+
    AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
    AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
 
+   # Find python things
+   SWIG_PYTHON
    AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
    AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 else
@@ -652,6 +666,7 @@ $PACKAGE-$VERSION
 	Java interfaces:                ${ANTfound}
 	Swig interfaces generator:      ${SWIGfound}
 	Perl interfaces:                ${PerlFound}
+	Perl install location:          ${PERL_EXT_LIB}
 	Python interfaces:              ${PythonFound}
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
