@@ -222,9 +222,9 @@ class ParsingTestCase(unittest.TestCase):
         
     def test_getting_link_distances(self):
         result = self.p.parse_sent("This is a sentence.")[0]
-        self.assertEqual(result.link_distances, [5,1,1,2,1,1])
+        self.assertEqual(result.link_distances, [5,2,1,1,2,1,1])
         result = self.p.parse_sent("This is a silly sentence.")[0]
-        self.assertEqual(result.link_distances, [6,1,1,3,2,1,1])
+        self.assertEqual(result.link_distances, [6,2,1,1,3,2,1,1])
 
 class LinkageTestCase(unittest.TestCase):
     def setUp(self):
@@ -244,14 +244,16 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.links[0],
                          Link('LEFT-WALL','Xp','Xp','.'))
         self.assertEqual(linkage.links[1],
-                         Link('LEFT-WALL','Wd','Wd','this.p'))
+                         Link('LEFT-WALL','WV','WV','is.v'))
         self.assertEqual(linkage.links[2],
-                         Link('this.p','Ss*b','Ss','is.v'))
+                         Link('LEFT-WALL','Wd','Wd','this.p'))
         self.assertEqual(linkage.links[3],
-                         Link('is.v','O*t','Os','sentence.n'))
+                         Link('this.p','Ss*b','Ss','is.v'))
         self.assertEqual(linkage.links[4],
-                         Link('a','Ds','Ds','sentence.n'))
+                         Link('is.v','O*t','Os','sentence.n'))
         self.assertEqual(linkage.links[5],
+                         Link('a','Ds','Ds','sentence.n'))
+        self.assertEqual(linkage.links[6],
                          Link('.','RW','RW','RIGHT-WALL'))
             
    

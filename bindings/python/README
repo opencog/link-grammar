@@ -6,6 +6,10 @@ Description
 ===========
 This directory contains a Python interface to the Link Grammar C library.
 
+Testing
+=======
+The test collection "tests.py" should run 45 tests, which should all pass.
+
 How to use
 ==========
 Parsing simple sentences::
