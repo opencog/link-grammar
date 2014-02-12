@@ -38,6 +38,6 @@ EXTRA_DIST =         \
    README            \
    __init__.py.in    \
    linkgrammar.py    \
-   tests.py          \
-   setup.py
+   example.py        \
+   tests.py
 

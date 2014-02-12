@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Python link-grammar test script
 #

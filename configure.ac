@@ -627,6 +627,7 @@ bindings/Makefile
 bindings/java-jni/Makefile
 bindings/java/Makefile
 bindings/java/build.xml
+bindings/ocaml/Makefile
 bindings/perl/Makefile
 bindings/python/Makefile
 bindings/python/__init__.py
