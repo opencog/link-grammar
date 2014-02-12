@@ -152,7 +152,7 @@ static void read_connected_rule(pp_knowledge *k, const char *label)
   if (!pp_lexer_set_label(k->lt, label))
     {
       k->connected_rules[0].msg=0;  /* rule not there */
-      if (verbosity>0) printf("PP warning: Not using 'link is connected' rule\n");
+      if (0 < verbosity) printf("PP warning: Not using 'link is connected' rule\n");
       return;
     }
   if (pp_lexer_count_tokens_of_label(k->lt)>1)
@@ -172,8 +172,8 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_form_a_cycle_rules = 0;
-      if (verbosity>0)
-	printf("PP warning: Not using any 'form a cycle' rules\n");
+      if (1 < verbosity)
+          printf("PP warning: Not using any 'form a cycle' rules\n");
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -215,7 +215,7 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
   int n_commas, n_tokens, r;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
-      if (verbosity>0) printf("PP warning: Not using any 'bounded' rules\n");
+      if (1 < verbosity) printf("PP warning: Not using any 'bounded' rules\n");
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
@@ -257,7 +257,7 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
       *nRules = 0;
-      if (verbosity>0) printf("PP warning: Not using any %s rules\n", label);
+      if (1 < verbosity) printf("PP warning: Not using any %s rules\n", label);
   }
   else {
     n_commas = pp_lexer_count_commas_of_label(k->lt);
