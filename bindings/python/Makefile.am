@@ -30,8 +30,8 @@ _clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -modul
 _clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
 $(BUILT_SOURCES): $(SWIG_SOURCES)
-	$(SWIG) $(SWIG_PYTHON_OPT) -I$(top_srcdir)/link-grammar -o $@ $<
-#	$(SWIG) $(SWIG_PYTHON_OPT) -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+	$(SWIG) $(SWIG_PYTHON_OPT) -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+#	$(SWIG) $(SWIG_PYTHON_OPT) -I$(top_srcdir)/link-grammar -o $@ $<
 
 EXTRA_DIST =         \
    AUTHORS           \
