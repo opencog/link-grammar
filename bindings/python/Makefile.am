@@ -5,9 +5,9 @@
 SWIG_SOURCES = ../swig/link_grammar.i
 BUILT_SOURCES = $(top_builddir)/bindings/python/lg_python_wrap.cc
 
-pkgpython_PYTHON =    \
-   __init__.py     \
-   linkgrammar.py     \
+pkgpython_PYTHON =                                 \
+   linkgrammar.py                                  \
+   $(top_builddir)/bindings/python/__init__.py     \
    $(top_builddir)/bindings/python/clinkgrammar.py
 
 # The la MUST have the same name as the pm, 
@@ -18,7 +18,7 @@ pkgpyexec_LTLIBRARIES = clinkgrammar.la
 
 clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
 
-clinkgrammar_la_CPPFLAGS = \
+clinkgrammar_la_CPPFLAGS =      \
    $(SWIG_PYTHON_CPPFLAGS)      \
    $(PYTHON_CPPFLAGS)           \
    -I$(top_srcdir)/link-grammar \
@@ -34,7 +34,7 @@ EXTRA_DIST =         \
    AUTHORS           \
    LICENSE           \
    README            \
-   __init__.py       \
+   __init__.py.in    \
    linkgrammar.py    \
    tests.py          \
    setup.py

@@ -629,6 +629,7 @@ bindings/java/Makefile
 bindings/java/build.xml
 bindings/perl/Makefile
 bindings/python/Makefile
+bindings/python/__init__.py
 link-parser/Makefile
 data/Makefile
 data/any/Makefile

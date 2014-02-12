@@ -1,6 +1,10 @@
+#
+# High-level Python bindings build on top of the low-level
+# C API (clinkgrammar)
+
 import locale
 
-import clinkgrammar as clg
+# import clinkgrammar as clg
 
 class Parser(object):
     def __init__(self, verbosity=0,
