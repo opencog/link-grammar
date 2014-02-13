@@ -436,7 +436,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				/* Convert the badly-printing ^C into a period */
 				s = strdup(t);
 				u = strrchr(s, SUBSCRIPT_MARK);
-				if (u) *u = '.';
+				if (u) *u = SUBSCRIPT_DOT;
 				t = string_set_add(s, sent->string_set);
 				free(s);
 			}

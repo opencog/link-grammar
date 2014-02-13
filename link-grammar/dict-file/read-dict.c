@@ -524,7 +524,7 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 
 	if (*s == '*') return 0;
 
-	return (((*s == '.')?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
+	return (((*s == SUBSCRIPT_DOT)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
 }
 
 
@@ -865,7 +865,7 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 void patch_subscript(char * s)
 {
 	char *ds, *de;
-	ds = strrchr(s, '.');
+	ds = strrchr(s, SUBSCRIPT_DOT);
 	if (!ds) return;
 
 	/* a dot at the end or a dot followed by a number is NOT
@@ -1511,7 +1511,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 		ec.sent = NULL;
 		
 		u = strchr(dn->string, SUBSCRIPT_MARK);
-		if (u) *u = '.';
+		if (u) *u = SUBSCRIPT_DOT;
 		err_msg(&ec, Warn, "Warning: The word \"%s\" "
 		          "found near line %d of %s matches the following words:",
 	             dn->string, dict->line_number, dict->name);
@@ -2082,7 +2082,7 @@ static void display_counts(Dict_node *dn)
 		unsigned int len = count_disjunct_for_dict_node(dn);
 		char * s = strdup(dn->string);
 		char * t = strrchr(s, SUBSCRIPT_MARK);
-		if (t) *t = '.';
+		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
 		left_print_string(stdout, s, "                         ");
 		free(s);
@@ -2113,7 +2113,7 @@ static void display_expr(Dict_node *dn)
 	{
 		char * s = strdup(dn->string);
 		char * t = strrchr(s, SUBSCRIPT_MARK);
-		if (t) *t = '.';
+		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
 		left_print_string(stdout, s, "                         ");
 		free(s);

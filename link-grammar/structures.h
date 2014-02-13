@@ -100,8 +100,8 @@
 /* Word subscripts come after the subscript mark (ASCII ETX) */
 /* #define SUBSCRIPT_MARK '.' */
 #define SUBSCRIPT_MARK 0x3
-/* #define EMPTY_WORD  "=.zzz" */
-#define EMPTY_WORD  "=zzz"
+#define SUBSCRIPT_DOT '.'
+#define EMPTY_WORD  "=.zzz"  /* Attention! Has SUBSCRIPT_DOT in it! */
 
 #ifdef USE_FAT_LINKAGES
   #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
