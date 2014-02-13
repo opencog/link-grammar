@@ -442,7 +442,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			}
 
 			/* Suppress the empty word. */
-			if (0 == strcmp(t, EMPTY_WORD))
+			if (0 == strcmp(t, EMPTY_WORD_DOT))
 			{
 				t = string_set_add("", sent->string_set);
 			}
@@ -474,7 +474,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				    (pi->chosen_disjuncts[i+1]))
 				{
 					const char * next = pi->chosen_disjuncts[i+1]->string;
-					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD))
+					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
 					{
 						t = string_set_add("", sent->string_set);
 					}
