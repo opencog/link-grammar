@@ -1057,6 +1057,10 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
  * тес.= and =.ndmsi are linked -- but this is not the original word; 
  * its junk.  This routine marks such linkages as 'bad'.  Really, the
  * dictionary should be fixed, but what the hell. This check isn't hard.
+ *
+ * XXX Note also: the below is implemented incorrectly!!! Instead of
+ * trying to join the *strings* together, we should instea try to
+ * make sure that all parts come from the same *alternative* in the word!
  */
 static void sane_morphism(Sentence sent, Parse_Options opts)
 {
