@@ -1072,7 +1072,7 @@ TODO -- Working Notes:
     "First.. next..."
     "If ... then ..."
 
-    'Then' is optional, for example:
+    'Then' is optional ('then' is a 'null word'), for example:
     "If it is raining, stay inside!"
     "If it is raining, [then] stay inside!"
 
