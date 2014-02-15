@@ -1074,6 +1074,7 @@ TODO -- Working Notes:
 
     'Then' is optional, for example:
     "If it is raining, stay inside!"
+    "If it is raining, [then] stay inside!"
 
     "if ... only ..." "If there were only more like you!"
     "... not only, ... but also ..."
