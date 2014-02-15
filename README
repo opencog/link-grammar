@@ -1168,6 +1168,8 @@ TODO -- Working Notes:
       Word struct.  Originally, these were morphological split alternatives
       for the Russian dicts, but really, they are a way of hierarchically
       arranging choices for words...
+      1) create struct alternative for struct word
+      2) fix sane_morpheme to use that.
 
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
