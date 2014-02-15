@@ -1162,6 +1162,13 @@ TODO -- Working Notes:
       > along with many other words such as godel "size" and migdal
       > "tower".
 
+   Alternatives:
+      A partial solution to the morphology problem and the idiom problem
+      in link-grammar is to elevate the use of "alternatives" in the 
+      Word struct.  Originally, these were morphological split alternatives
+      for the Russian dicts, but really, they are a way of hierarchically
+      arranging choices for words...
+
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
          e.g. the max number of characters in a word, or max words
