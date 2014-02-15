@@ -1143,6 +1143,22 @@ TODO -- Working Notes:
     More generally, all of link-grammar could benefit from a MTT-izing
     of infrastructure.
 
+   Compare the above problem to Hebrew morphologica analysis. To quote 
+      Wikipedia:
+
+      > This distinction between the word as a unit of speech and the
+      > root as a unit of meaning is even more important in the case of
+      > languages where roots have many different forms when used in
+      > actual words, as is the case in Semitic languages. In these,
+      > roots are formed by consonants alone, and different words
+      > (belonging to different parts of speech) are derived from the
+      > same root by inserting vowels. For example, in Hebrew, the root
+      > gdl represents the idea of largeness, and from it we have gadol
+      > and gdola (masculine and feminine forms of the adjective "big"),
+      > gadal "he grew", higdil "he magnified" and magdelet "magnifier",
+      > along with many other words such as godel "size" and migdal
+      > "tower".
+
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
          e.g. the max number of characters in a word, or max words
