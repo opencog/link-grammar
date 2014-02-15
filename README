@@ -1052,7 +1052,9 @@ TODO -- Working Notes:
      The other mechanism is by means of post-processing rules.
      However, rules for many common forms have not yet been written.
      The general problem is of supporting structures that have "holes"
-     in the middle. For example, the adposition:
+     in the middle, that require "lacing" to tie them together.
+
+     For example, the adposition:
 
         ... from [xxx] on.
 
