@@ -266,12 +266,13 @@ changecom(`%')
 CAPITALIZED-WORDS INITIALS <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
-      ([<noun-sub-s> & (JG- or <noun-main-s>)] or
-       <noun-and-s> or
-       YS+)) or
-    ({[[@MX+]]} & AN+) or G+))) or
-  (MXs+ & (<noun-main-s> or <noun-and-s>)) or
-  <directive-opener>;
+        ([<noun-sub-s> & (JG- or <noun-main-s>)]
+        or <noun-and-s>
+        or YS+
+        or Wa-))
+      or ({[[@MX+]]} & AN+) or G+)))
+  or (MXs+ & (<noun-main-s> or <noun-and-s>))
+  or <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural:
@@ -280,39 +281,40 @@ CAPITALIZED-WORDS INITIALS <entity-singular>:
 PL-CAPITALIZED-WORDS:
   ({NM+} & {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & ({Dmc-} or {Ds-})]] or ({@A-} & Jd- & Dmc-) } &
-      ([<noun-sub-x> & (JG- or <noun-main-x>)] or
-      <noun-and-x> or
-      YS+ or
-      YP+)) or
-    AN+ or
-    G+)) or
-  <directive-opener>;
+        ([<noun-sub-x> & (JG- or <noun-main-x>)]
+        or <noun-and-x>
+        or YS+
+        or YP+
+        or Wa-))
+      or AN+
+      or G+))
+  or <directive-opener>;
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
 <proper-names>:
-({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-(({@MX+} & (JG- or <noun-main-s>)) or (YS+ or YP+))) or AN+ or G+));
+  ({G-} & {[MG+]} & (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+    (({@MX+} & (JG- or <noun-main-s>)) or YS+ or YP+ or Wa-)) or AN+ or G+));
 
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
 % Wi-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
 <given-names>:
-  ({G-} & {[MG+]} &
+  {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
       (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or
-        YS+ or YP+))
+        YS+ or YP+ or Wa-))
     or AN+
-    or G+))
-  or Wi-;
+    or G+);
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
 <entity-entire>:
   ({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-    (({@MX+} & <noun-main-s>) or <noun-and-s> or YS+)) or
+    (({@MX+} & <noun-main-s>) or <noun-and-s> or YS+ or Wa-)) or
   AN+;
 
+% XXX These should be removed, they're junk.
 personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
 personID10 personID11 personID12 personID13 personID14 personID15 personID16 personID17 personID18 personID19
 personID20 personID21 personID22 personID23 personID24 personID25 personID26 personID27 personID28 personID29
@@ -363,7 +365,7 @@ locationID60: <marker-entity> or <entity-entire>;
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
 <entity-id>:
   ({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+)) or AN+;
+    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+ or Wa-)) or AN+;
 
 entityID0 entityID1 entityID2 entityID3 entityID4 entityID5 entityID6 entityID7 entityID8 entityID9
 entityID10 entityID11 entityID12 entityID13 entityID14 entityID15 entityID16 entityID17 entityID18 entityID19
@@ -388,6 +390,7 @@ entityID60: <marker-entity> or <entity-id>;
     or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
+    or Wa-
     or Us-);
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
@@ -410,6 +413,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or SJrp-
     or (YP+ & {Dmc-})
     or (GN+ & (DD- or [()]))
+    or Wa-
     or Up-);
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
@@ -547,6 +551,7 @@ HYPHENATED-WORDS.n:
     or SJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
+    or Wa-
     or Us-);
 
 /en/words/words.n.1
@@ -575,6 +580,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
       ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or <noun-and-s>))
     or (YS+ & {Dmc-})
     or (GN+ & (DD- or [()]))
+    or Wa-
     or Up-));
 
 % XXX should probably eliminate <noun-and-p,u> and replace by <noun-and-u>
@@ -591,6 +597,7 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
       & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
     or (GN+ & (DD- or [()]))
+    or Wa-
     or Up-);
 
 % nouns that are mass only
@@ -616,22 +623,23 @@ tom.n-u: [<marker-common-entity> or <mass-noun>];
 % In other respects, these are kind-of-like mass nouns...
 auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n
 tawny.n ultramarine.n yellow.n:
-  <marker-common-entity> or
-  (<noun-modifiers> &
-    ((({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>])) or
-    (YS+ & {Dmu-}) or
-    (GN+ & (DD- or [()])) or
-    Up-));
+  <marker-common-entity>
+  or (<noun-modifiers> &
+    ((({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>]))
+    or (YS+ & {Dmu-})
+    or (GN+ & (DD- or [()]))
+    or Wa-
+    or Up-));
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
 /en/words/entities.us-states.sing:
-  <marker-entity> or
-  ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-    (({MG+} & {@MX+} & (JG- or <noun-main-s> or <noun-and-s>)) or
-    G+ or
-    ({[[MG+]]} & (AN+ or YS+ or YP+)))) or
-  (Xc+ & Xd- & G- & AN+);
+  <marker-entity>
+  or ({G-} & {DG- or [[GN-]] or [[{@A-} & {D-}]]} &
+    (({MG+} & {@MX+} & (JG- or <noun-main-s> or <noun-and-s>))
+    or G+
+    or ({[[MG+]]} & (AN+ or YS+ or YP+ or Wa-))))
+  or (Xc+ & Xd- & G- & AN+);
 
 % SINGULAR ENTITIES FOR ENTITY EXTRACTION
 % This must appear after other categories so it doesnt interfere with those.
@@ -8368,7 +8376,7 @@ UNKNOWN-WORD.v:
 UNKNOWN-WORD.a: <ordinary-adj>;
 
 LEFT-WALL:
-  (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
+  (Wa+ or Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
     & {WV+}
     & {CP+} & {Xx+} & {RW+ or Xp+};
 
