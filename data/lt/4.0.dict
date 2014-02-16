@@ -97,28 +97,52 @@ mokytoja studentė: DVm- & {Xp+} & {Wd-};
 % reikalauja veiksmažodi ant kairės.
 laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-} & {Xp+};
 
+% -------------------------------
+% Linksniai
+<v-kas>: & {DVv-} & VJ+ & {Wd-};
+<k-ko>: DK+;
+<n-kam>: & DN+;
+<g-ka>: & VG+;
+<i-kuo>: & VM+ & {Wd-};
+<v-kur>: & VM+ & {Wd-};
+<s-o>: & Wa-;
+
+% -------------------------------
 % Pirmoji linksniuotė
 kaim.= nam.= tilt.= : LLPIRMa+;
 brol.= kurm.= : LLPIRMi+;
 
 % Pirmoji linksniuotė vienaskaita
-=as.pvv: LLPIRMa- & {DVv-} & VJ+ & {Wd-};
-=is.pvv: LLPIRMi- & {DVv-} & VJ+ & {Wd-};
-=o.pvk: LLPIRMa- & DK+;
-=io.pvk: LLPIRMi- & DK+;
-=ui.pvn: LLPIRMa- & DN+;
-=iui.pvn: LLPIRMi- & DN+;
-=ą.pvg: LLPIRMa- & VG+;
-=į.pvg: LLPIRMi- & VG+;
-=u.pvi: LLPIRMa- & VM+ & {Wd-};
-=iu.pvi: LLPIRMi- & VM+ & {Wd-};
-=e.pvu: LLPIRMa- & VM+ & {Wd-};
-=yje.pvu: LLPIRMi- & VM+ & {Wd-};
-=e.pvs: LLPIRMa- & Wa-;
-=i.pvs: LLPIRMi- & Wa-;
+=as.pvv:  LLPIRMa- & <v-kas>;
+=is.pvv:  LLPIRMi- & <v-kas>;
+=o.pvk:   LLPIRMa- & <k-kuo>;
+=io.pvk:  LLPIRMi- & <k-kuo>;
+=ui.pvn:  LLPIRMa- & <n-kam>;
+=iui.pvn: LLPIRMi- & <n-kam>;
+=ą.pvg:   LLPIRMa- & <g-ka>;
+=į.pvg:   LLPIRMi- & <g-ka>;
+=u.pvi:   LLPIRMa- & <i-kuo>;
+=iu.pvi:  LLPIRMi- & <i-kuo>;
+=e.pvu:   LLPIRMa- & <v-kur>;
+=yje.pvu: LLPIRMi- & <v-kur>;
+=e.pvs:   LLPIRMa- & <s-o>;
+=i.pvs:   LLPIRMi- & <s-o>;
 
 % Pirmoji linksniuotė daugiskaita
-%=o.pvk: LLPIRM-;
+=ai.pdv:    LLPIRMa- & <v-kas>;
+=iai.pdv:   LLPIRMi- & <v-kas>;
+=ų.pdk:     LLPIRMa- & <k-kuo>;
+=ių.pdk:    LLPIRMi- & <k-kuo>;
+=ams.pdn:   LLPIRMa- & <n-kam>;
+=iams.pdn:  LLPIRMi- & <n-kam>;
+=us.pdg:    LLPIRMa- & <g-ka>;
+=ius.pdg:   LLPIRMi- & <g-ka>;
+=ais.pdi:   LLPIRMa- & <i-kuo>;
+=iais.pdi:  LLPIRMi- & <i-kuo>;
+=uose.pdu:  LLPIRMa- & <v-kur>;
+=iuose.pdu: LLPIRMi- & <v-kur>;
+=ai.pds:    LLPIRMa- & <s-o>;
+=iai.pds:   LLPIRMi- & <s-o>;
 
 % -------------------------------
 % Būdvardžiai
