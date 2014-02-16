@@ -232,7 +232,7 @@
 
 % The use of COa here needs to be carefully re-examined; it is used much too freely.
 <directive-opener>:
-  {[[Wi-]]} &
+  {[[Wa-]]} &
     ((Xc+ & Ic+) or
     ({Xd-} & (Xc+ or [[()]]) & [[COa+]]));
 
@@ -294,7 +294,7 @@ PL-CAPITALIZED-WORDS:
 
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
-% Wi-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
+% Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
@@ -9554,10 +9554,11 @@ wholly fully critically greatly grossly duly unduly:
   EA+ or ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or Em+ or Qe+ or <advcl-verb>));
 
 seemingly utterly: EA+ or Em+;
-barely scarcely hardly merely truly practically: Em+ or EBm- or EA+;
+barely just_barely scarcely hardly merely truly practically:
+  Em+ or EBm- or EA+ or Wa-;
 
 partly.e largely.e mostly.e chiefly.e simply.e purely.e solely.e:
-  Em+ or EA+ or EB-
+  Em+ or EA+ or EB- or Wa-
   or (MVl- & (MVp+ or MVa+ or MVs+));
 
 % Em+: "It sure is great"
@@ -9565,9 +9566,9 @@ sure.ee: Em+;
 
 % Em+: "It sure the fuck is great to see you, man!"
 % "It sure the hell is!"
-the_fuck the_hell: [Em+];
+the_fuck the_hell: [Em+] or Wa-;
 
-more_and_more less_and_less more_or_less: Em+;
+more_and_more less_and_less more_or_less: Em+ or Wa-;
 
 % Adverbs like "biochemically". These tend to answer the question "how?"
 % with a noun-form (as opposed to being verb-derived) A lot of these are
@@ -9601,7 +9602,7 @@ in_pencil in_pen to_scale for_trial all_right full_time part_time by_proxy:
 % These are more or less adverbs ...
 dry.e flat.e blind.e tired.e refreshed.e fresh.e exhausted.e rejuvenated.e:
   ({EE- or EF+ } & (MVa- or AJra- or AJla+)) or
-  (EE- & (AJrc- or AJlc+));
+  (EE- & (AJrc- or AJlc+)) or Wa-;
 
 wild.e rampant.e shut.e tight.e
 open.e loud.e hot.e cold.e free.e:
@@ -9619,8 +9620,16 @@ high.e deep.e low.e:
     <advcl-verb> or
     Qe+);
 
-left.e right.e straight.e: ({EE- or EF+} & (({Xd- & Xc+} & MVa-) or
-({Xc+ & {Xd-}} & CO+) or Qe+ or <advcl-verb>)) or (Kx- & Ky+) or (Pp- & Pp+);
+left.e right.e straight.e:
+  ({EE- or EF+} &
+    (({Xd- & Xc+} & MVa-)
+    or ({Xc+ & {Xd-}} & CO+)
+    or Qe+
+    or <advcl-verb>))
+  or (Kx- & Ky+)
+  or (Pp- & Pp+)
+  or Wa-;
+
 short.e: {Yd- or EE- or EF+} & {OF+} & ({Xd- & Xc+} & MVa-);
 
 % ---------------------------------------------------------
@@ -9841,7 +9850,7 @@ ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
 hah.ij hey.ij well.ij wtf.ij hell_yes of_course oh_no
 yikes ouch:
   <directive-opener>
-  or Wi-;
+  or Wa-;
 
 % Like above, but also used as plain-old interjections, so treat
 % as adjectives, as well.
@@ -9853,17 +9862,17 @@ sonuvabitch aw aww awww oh_great oh_wow:
   <ordinary-adj>
   or ({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+)
   or <directive-opener>
-  or Wi-;
+  or Wa-;
 
 % A single plain hello all by itself.  Costly, because its not normally
 % a sentence opener.
 hello.ij hello_there shh shhh:
-  Wi-
+  Wa-
   or [[<directive-opener>]];
 
 % Single plain word by itself.  "OK, Bye!"
 bye.ij goodbye.ij:
-  Wi-;
+  Wa-;
 
 % Openers to directives, commands (Ic+ connection to infinitives)
 anyhow.ij anyway.ij afterwards.ij afterward.ij instead.ij
@@ -9952,9 +9961,13 @@ too:
     or ({Xd- & Xc+} & MVa-)
     or (Xd- & Xc+ & E+));
 
-so: (EAxk+ & {HA+}) or ({EZ-} & EExk+) or
-((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+))
-or (Wq- & (PF+ or CQ+)) or O- or Js-;
+so:
+  (EAxk+ & {HA+})
+  or ({EZ-} & EExk+)
+  or ((({Xd-} & CC-) or ({Xc+} & Wc-)) & (Wd+ or Qd+ or Ws+ or Wq+))
+  or (Wq- & (PF+ or CQ+))
+  or O-
+  or Js-;
 
 % original
 % sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-);
@@ -10001,7 +10014,7 @@ emoticonID45 emoticonID46 emoticonID47 emoticonID48 emoticonID49
 emoticonID50 emoticonID51 emoticonID52 emoticonID53 emoticonID54
 emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
   <ordinary-adj> or
-  ({{Ic-} & [[Wi-]]} & {{Xd-} & Xc+} & Ic+);
+  ({{Ic-} & [[Wa-]]} & {{Xd-} & Xc+} & Ic+);
 
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin." 
@@ -10281,7 +10294,7 @@ UNKNOWN-WORD.n:
     or U-);
 
 UNKNOWN-WORD.v:
-  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wi- & <verb-wall>)) & {B- or O+} & {@MV+};
+  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {B- or O+} & {@MV+};
 
 UNKNOWN-WORD.a: <ordinary-adj>;
 
@@ -10293,20 +10306,6 @@ LEFT-WALL:
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
 RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
-
-% XXX ANDABLE-CONNECTORS is now deprecated, needs to be removed for 
-% version 5.0. These were used with fat-links, which are now gone.
-ANDABLE-CONNECTORS:   % these are the connectors that can be combined by
-                      % conjunctions. They are listed alphabetically.
-
-A+ & A- & AF- & AN+ & B+ & B- & BI- & C+ & C- & CC+ & CO+ & CO- & D+ &
-D- & DD- & DT- & E+ & E- & EA- & G+ & GN+ & GN- & I+ & I- & IN- & J+ &
-J- & JT- & K- & L- & M+ & M- & MV- & MV+ & MX- & ND+ & NM+ & NIn+ & O+ & O- & ON- &
-QI+ & QI- & P- & PP- & Q- & R+ & RS- & S+ & S- & SI- & TA- & TD+ & TD-
-& TH+ & TH- & TI- & TM- & TO- & TS- & U- & Wd- & Wi- & Wq- & Ws- & Xc+
-& Xd- & YP+ & YS+ & Z-;
-
-
 
 UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
                          % to the length limit.  Always use "+" for these.
