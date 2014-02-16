@@ -5,7 +5,7 @@
 % Experimental and incomplete ... 
 % It can parse 4.0.batch more or less correctly.
 %
-% Copyright (c) 2008, 2013 Linas Vepstas (Vepštas) linas@linas.org
+% Copyright (c) 2008, 2014 Linas Vepstas (Vepštas) linas@linas.org
 %
 % This file uses utf-8 characater encoding.
 % If editing with "vi", be sure to "set encoding=utf-8"
@@ -109,13 +109,18 @@ laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-} & {Xp+};
 
 % -------------------------------
 % Pirmoji linksniuotė
+% I forma
 kaim.= nam.= tilt.= : LLPIRMIas+;
 piršt.= rakt.=: LLPIRMIas+;
 
 brol.= kurm.= : LLPIRMIis+;
 
+% II forma
 med.= : LLPIRMIIdis+;
 šal.= : LLPIRMIItis+;
+
+% III forma
+arkl.=: LLPIRMIIIys+;
 
 
 % Pirmoji linksniuotė vienaskaita I forma
