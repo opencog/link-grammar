@@ -8,6 +8,7 @@ Version 4.8.7 (XXX 2014)
  * Provide low-level perl bindings.
  * Adopt the orphaned/unsupported Ocaml bindings.
  * Support affirmative replies: "Who did it?" "John's evil twin."
+ * Expanded Lithuanian dictionary.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

@@ -82,7 +82,7 @@ yra: (VJv- & (DVv+ or Bv+)) or (VJm- & (DVm+ or Bm+));
 
 % prieveiksmi iš dešinės: "Mes einame namo"
 % arba prielinksni: "eina į mokyklą"
-einame: {VM-} & (LI+ or PV+) & {Wd-};
+einame einam gyvename gyvenam: VM- or ({VM-} & (LI+ or PV+) & {Wd- or Wi-});
 eina: {VJ-} & (LI+ or PV+);
 
 % -------------------------------
@@ -110,12 +110,12 @@ brol.= kurm.= : LLPIRMi+;
 =iui.pvn: LLPIRMi- & DN+;
 =ą.pvg: LLPIRMa- & VG+;
 =į.pvg: LLPIRMi- & VG+;
-=u.pvi: LLPIRMa-;
-=iu.pvi: LLPIRMi-;
-=e.pvu: LLPIRMa-;
-=yje.pvu: LLPIRMi-;
-=e.pvs: LLPIRMa-;
-=i.pvs: LLPIRMi-;
+=u.pvi: LLPIRMa- & VM+ & {Wd-};
+=iu.pvi: LLPIRMi- & VM+ & {Wd-};
+=e.pvu: LLPIRMa- & VM+ & {Wd-};
+=yje.pvu: LLPIRMi- & VM+ & {Wd-};
+=e.pvs: LLPIRMa- & Wa-;
+=i.pvs: LLPIRMi- & Wa-;
 
 % Pirmoji linksniuotė daugiskaita
 %=o.pvk: LLPIRM-;
@@ -169,9 +169,13 @@ namo: PV+ or (PV- & {Xp+});
 % taškas
 ".": Xp-;
 
+% keblęlis
+% Xx- & Wi+:  "Broli, ename namo."
+",": Xx- & Wi+;
+
 % Žodžiai, kurie gali pradėti sakini.
 CAPITALIZED-WORDS: Wd-;
-LEFT-WALL: Wd+;
+LEFT-WALL: (Wd+ or Wa+ or Wi+) & {Xx+};
 
 % With the following line in the dictionary, the parser will simply 
 % skip over (null-link) unknown words. If you remove it, the parser 
