@@ -6609,7 +6609,7 @@ or.j-a:
 % "neither" will be used together with "nor".
 nor.j-a: AJn- & AJ+ & (A+ or Pa- or [MVa-]);
 
-% compartives:
+% comparatives:
 % he is bigger, and badder, than the pope.
 % If one comma is there, then the other must be also.
 and.j-c or.j-c but.j-c yet.j-c:
@@ -6700,30 +6700,33 @@ and.j-n but_not and_not ,_not:
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
     or SIp-
+    or Wa-
     or [{Ds-} & Os-]
     or <post-nominal-s>))
   or (<noun-conj-dep-p> & <noun-sub-p> & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
     or SIp-
+    or Wa-
     or [{{Jd-} & Dmc-} & Op-]
     or <post-nominal-p>))
   or (<noun-conj-dep-u> & <noun-sub-x> & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
     or SIu-
+    or Wa-
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>));
 
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> &
-    (<noun-conj-head> or (S*x+ & <CLAUSE>) or SI- or [Os-] or <post-nominal-s>)) or
+    (<noun-conj-head> or (S*x+ & <CLAUSE>) or SI- or [Os-] or Wa- or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> &
-    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or <post-nominal-p>));
+    (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
 % "neither" will be used together with "nor".
-nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or SJn+);
+nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJn+);
 
 % The Dn- link is used for both nouns, as above, and on neither..nor for verbs
 % e.g. "We neither ate nor drank"
