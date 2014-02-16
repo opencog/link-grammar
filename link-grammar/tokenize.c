@@ -1078,9 +1078,11 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		}
 	}
 
-	/* Set up affix tables.  */
+	/* strip affixes from candidate word, using a linear splittng
+	 * algorithm */
 	if (dict->affix_table != NULL)
 	{
+		/* Set up affix tables.  */
 		Dictionary afdict = dict->affix_table;
 		r_strippable = afdict->r_strippable;
 		l_strippable = afdict->l_strippable;
@@ -1224,7 +1226,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	if (FALSE == word_is_in_dict)
 	{
 		/* w points to the remaining word, 
-i		 * "wend" to the end of the word. */
+		 * "wend" to the end of the word. */
 		sz = MIN(wend-w, MAX_WORD);
 		strncpy(word, w, sz);
 		word[sz] = '\0';

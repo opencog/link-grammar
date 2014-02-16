@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.8.6 (formatted as V4v8v6+)
-<dictionary-version-number>: V4v8v6+;
+% Dictionary version number is 4.8.7 (formatted as V4v8v7+)
+<dictionary-version-number>: V4v8v7+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -1944,7 +1944,7 @@ per "/.per": Us+ & Mp-;
 
 % <verb-wall>: these connect to the head verb:
 % WV connects the wall to the head-verb,
-% CV connects the dominant clause to the head verb,
+% CV connects the dominating clause to the head verb of the dependent clause.
 % IV connects infinitives to the head-verb
 %
 % There are some other such connectors that don't quite fit this patten:
