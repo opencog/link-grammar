@@ -6317,6 +6317,10 @@ which:
   or [QI-]
   or Jw-;
 
+% <directive-opener> or Wi-: "Which way, left or right?"
+which_way:
+  <directive-opener> or Wi-;
+
 whom:
   (R- & <porcl-verb>)
   or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
@@ -6404,7 +6408,7 @@ when:
 % N-: "why not?"  "Why the hell not?"
 why:
   ({EL+} & (
-    ({EW-} & Wq- & Q+)
+    ({EW-} & Wi- & Q+)
     or (QI- & (<subcl-verb> or <ton-verb> or [()]))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or ((Wi- or <directive-opener>) & {N+})
