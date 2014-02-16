@@ -3271,7 +3271,8 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % Hmm ... changes to go.v seem to have obsoleted the need for this ...
 % go.w: {E-} & (Wi- or S-) & I+;
 
-<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+} & {@MV+};
+% B-: "which way did it go?"
+<vc-go>: {K+ or [[Pa+]] or [Pg+] or I*g+ or B-} & {@MV+};
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
@@ -3284,6 +3285,7 @@ went.v-d:
   (<verb-and-sp-i-> & <vc-go>) or (<vc-go> & <verb-and-sp-i+>);
 
 gone.v: VERB_PP(<vc-go>);
+
 % The keys are gone.  The popcorn is all gone.
 gone.a:
   ({@E-} & Pa-) or
