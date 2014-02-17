@@ -31,7 +31,8 @@ if WITH_FAT_LINKS
 DEFS += -DUSE_FAT_LINKAGES
 endif
 
-INCLUDES = -I$(top_srcdir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
+# $(top_builddir) to pick up autogened link-grammar/link-features.h 
+INCLUDES = -I$(top_srcdir) -I$(top_builddir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
 

@@ -49,11 +49,11 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif
 
-#include "link-includes.h"
+#include <link-grammar/link-includes.h>
 #include "command-line.h"
-#include "expand.h"
 #include "lg_readline.h"
-#include "utilities.h"     /* For MSVC portability */
+#include "../link-grammar/expand.h"
+#include "../link-grammar/utilities.h"     /* For MSVC portability */
 #include "../viterbi/viterbi.h"
 
 #define MAX_INPUT 1024

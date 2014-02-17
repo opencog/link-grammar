@@ -29,7 +29,8 @@ clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
 clinkgrammar_la_CPPFLAGS = \
    $(SWIG_PERL_CPPFLAGS)           \
    $(PERL_CFLAGS)                  \
-   -I$(top_srcdir)/link-grammar    \
+   -I$(top_srcdir)                 \
+   -I$(top_builddir)               \
    $(ANSI_CFLAGS)
 
 clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PERL_LDFLAGS) -module

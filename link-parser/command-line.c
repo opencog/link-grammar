@@ -16,8 +16,8 @@
 #include <wctype.h>
 
 #include "command-line.h"
-#include "link-includes.h"
-#include "utilities.h"  /* For MSWindows portability */
+#include <link-grammar/link-includes.h>
+#include "../link-grammar/utilities.h"  /* For MSWindows portability */
 
 static struct
 {
