@@ -323,7 +323,7 @@ namo: PV+ or (PV- & {Xp+});
 % taškas
 ".": Xp-;
 
-% keblęlis
+% kablęlis
 % Xx- & Wi+:  "Broli, ename namo."
 ",": Xx- & Wi+;
 
