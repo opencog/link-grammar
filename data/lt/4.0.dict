@@ -71,7 +71,7 @@
 %
 % Xp == taškas gale sakinio (panašiai į anglų žodyna)
 
-Jonas Linas Saulius: VJv+ & {Wd-};
+Saulius: VJv+ & {Wd-};
 Audra Gintarė: VJm+ & {Wd-};
 
 % "Aš esu studentas.", "Aš esu studentė"
@@ -98,14 +98,23 @@ mokytoja studentė: DVm- & {Xp+} & {Wd-};
 laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-} & {Xp+};
 
 % -------------------------------
-% Linksniai
-<v-kas>: & {DVv-} & VJ+ & {Wd-};
-<k-ko>: DK+;
-<n-kam>: & DN+;
-<g-ka>: & VG+;
-<i-kuo>: & VM+ & {Wd-};
-<v-kur>: & VM+ & {Wd-};
-<s-o>: & Wa-;
+% Linksniai -- vyriški
+<v-v-kas>: {DVv-} & VJv+ & {Wd-};
+<v-k-ko>: DK+;
+<v-n-kam>: DN+;
+<v-g-ka>: VG+;
+<v-i-kuo>: VM+ & {Wd-};
+<v-v-kur>: VM+ & {Wd-};
+<v-s-o>: Wa-;
+
+% Linksniai -- moteriški
+<m-v-kas>: {DVm-} & VJm+ & {Wd-};
+<m-k-ko>: DK+;
+<m-n-kam>: DN+;
+<m-g-ka>: VG+;
+<m-i-kuo>: VM+ & {Wd-};
+<m-v-kur>: VM+ & {Wd-};
+<m-s-o>: Wa-;
 
 % -------------------------------
 % Pirmoji linksniuotė
@@ -132,7 +141,12 @@ niekš.= pad.= parš.= prot.= rąst.= rašt.= skund.= turt.= :
   LLPIRMIas+;
 
 % Vardai .. Jonas it t.t.
-Jon.= : LLPIRMIas+;
+Jon.= Lin.= Tom.= : LLPIRMIas+;
+
+% ??? Ambraška-Žiugžda sako, kad II-o kirčio, bet nematau...
+% Man, lyg tai I kirč -is ...
+dalg.= kel.= kirv.= kišk.= kump.= latv.= niek.= plik.= syk.=
+smūg.= širm.= šok.= virž.= žal.= žingsn.= LLPIRMIis+;
 
 med.= žard.= žod.= :
   LLPIRMIIis+;
@@ -153,140 +167,140 @@ gaid.= : LLPIRMIVys+;
 sve.= : LLPIRMIVtys+;
 
 % Pirmoji linksniuotė vienaskaita I kirčiuotė
-=as.pvv:  LLPIRMIas- & <v-kas>;
-=o.pvk:   LLPIRMIas- & <k-kuo>;
-=ui.pvn:  LLPIRMIas- & <n-kam>;
-=ą.pvg:   LLPIRMIas- & <g-ka>;
-=u.pvi:   LLPIRMIas- & <i-kuo>;
-=e.pvu:   LLPIRMIas- & <v-kur>;
-=e.pvs:   LLPIRMIas- & <s-o>;
+=as.pvv:  LLPIRMIas- & <v-v-kas>;
+=o.pvk:   LLPIRMIas- & <v-k-kuo>;
+=ui.pvn:  LLPIRMIas- & <v-n-kam>;
+=ą.pvg:   LLPIRMIas- & <v-g-ka>;
+=u.pvi:   LLPIRMIas- & <v-i-kuo>;
+=e.pvu:   LLPIRMIas- & <v-v-kur>;
+=e.pvs:   LLPIRMIas- & <v-s-o>;
 
-=is.pvv:  LLPIRMIis- & <v-kas>;
-=io.pvk:  LLPIRMIis- & <k-kuo>;
-=iui.pvn: LLPIRMIis- & <n-kam>;
-=į.pvg:   LLPIRMIis- & <g-ka>;
-=iu.pvi:  LLPIRMIis- & <i-kuo>;
-=yje.pvu: LLPIRMIis- & <v-kur>;
-=i.pvs:   LLPIRMIis- & <s-o>;
+=is.pvv:  LLPIRMIis- & <v-v-kas>;
+=io.pvk:  LLPIRMIis- & <v-k-kuo>;
+=iui.pvn: LLPIRMIis- & <v-n-kam>;
+=į.pvg:   LLPIRMIis- & <v-g-ka>;
+=iu.pvi:  LLPIRMIis- & <v-i-kuo>;
+=yje.pvu: LLPIRMIis- & <v-v-kur>;
+=i.pvs:   LLPIRMIis- & <v-s-o>;
 
 % Pirmoji linksniuotė daugiskaita I kirčiuotė
-=ai.pdv:    LLPIRMIas- & <v-kas>;
-=ų.pdk:     LLPIRMIas- & <k-kuo>;
-=ams.pdn:   LLPIRMIas- & <n-kam>;
-=us.pdg:    LLPIRMIas- & <g-ka>;
-=ais.pdi:   LLPIRMIas- & <i-kuo>;
-=uose.pdu:  LLPIRMIas- & <v-kur>;
-=ai.pds:    LLPIRMIas- & <s-o>;
+=ai.pdv:    LLPIRMIas- & <v-v-kas>;
+=ų.pdk:     LLPIRMIas- & <v-k-kuo>;
+=ams.pdn:   LLPIRMIas- & <v-n-kam>;
+=us.pdg:    LLPIRMIas- & <v-g-ka>;
+=ais.pdi:   LLPIRMIas- & <v-i-kuo>;
+=uose.pdu:  LLPIRMIas- & <v-v-kur>;
+=ai.pds:    LLPIRMIas- & <v-s-o>;
 
-=iai.pdv:   LLPIRMIis- & <v-kas>;
-=ių.pdk:    LLPIRMIis- & <k-kuo>;
-=iams.pdn:  LLPIRMIis- & <n-kam>;
-=ius.pdg:   LLPIRMIis- & <g-ka>;
-=iais.pdi:  LLPIRMIis- & <i-kuo>;
-=iuose.pdu: LLPIRMIis- & <v-kur>;
-=iai.pds:   LLPIRMIis- & <s-o>;
+=iai.pdv:   LLPIRMIis- & <v-v-kas>;
+=ių.pdk:    LLPIRMIis- & <v-k-kuo>;
+=iams.pdn:  LLPIRMIis- & <v-n-kam>;
+=ius.pdg:   LLPIRMIis- & <v-g-ka>;
+=iais.pdi:  LLPIRMIis- & <v-i-kuo>;
+=iuose.pdu: LLPIRMIis- & <v-v-kur>;
+=iai.pds:   LLPIRMIis- & <v-s-o>;
 
 % Pirmoji linksniuotė vienaskaita II kirčiuotė
-=is.pvv    LLPIRMIIis- & <v-kas>;
-=žio.pvk:  LLPIRMIIis- & <k-kuo>;
-=žiui.pvn: LLPIRMIIis- & <n-kam>;
-=į.pvg:    LLPIRMIIis- & <g-ka>;
-=žiu.pvi:  LLPIRMIIis- & <i-kuo>;
-=yje.pvu:  LLPIRMIIis- & <v-kur>;
-=i.pvs:    LLPIRMIIis- & <s-o>;
+=is.pvv    LLPIRMIIis- & <v-v-kas>;
+=žio.pvk:  LLPIRMIIis- & <v-k-kuo>;
+=žiui.pvn: LLPIRMIIis- & <v-n-kam>;
+=į.pvg:    LLPIRMIIis- & <v-g-ka>;
+=žiu.pvi:  LLPIRMIIis- & <v-i-kuo>;
+=yje.pvu:  LLPIRMIIis- & <v-v-kur>;
+=i.pvs:    LLPIRMIIis- & <v-s-o>;
 
-=tis.pvv:  LLPIRMIItis- & <v-kas>;
-=čio.pvk:  LLPIRMIItis- & <k-kuo>;
-=čiui.pvn: LLPIRMIItis- & <n-kam>;
-=tį.pvg:   LLPIRMIItis- & <g-ka>;
-=čiu.pvi:  LLPIRMIItis- & <i-kuo>;
-=tyje.pvu: LLPIRMIItis- & <v-kur>;
-=ti.pvs:   LLPIRMIItis- & <s-o>;
+=tis.pvv:  LLPIRMIItis- & <v-v-kas>;
+=čio.pvk:  LLPIRMIItis- & <v-k-kuo>;
+=čiui.pvn: LLPIRMIItis- & <v-n-kam>;
+=tį.pvg:   LLPIRMIItis- & <v-g-ka>;
+=čiu.pvi:  LLPIRMIItis- & <v-i-kuo>;
+=tyje.pvu: LLPIRMIItis- & <v-v-kur>;
+=ti.pvs:   LLPIRMIItis- & <v-s-o>;
 
 % Pirmoji linksniuotė daugiskaita II kirčiuotė
-=žiai.pdv:   LLPIRMIIis- & <v-kas>;
-=žių.pdk:    LLPIRMIIis- & <k-kuo>;
-=žiams.pdn:  LLPIRMIIis- & <n-kam>;
-=žius.pdg:   LLPIRMIIis- & <g-ka>;
-=žiais.pdi:  LLPIRMIIis- & <i-kuo>;
-=žiuose.pdu: LLPIRMIIis- & <v-kur>;
-=ziai.pds:   LLPIRMIIis- & <s-o>;
+=žiai.pdv:   LLPIRMIIis- & <v-v-kas>;
+=žių.pdk:    LLPIRMIIis- & <v-k-kuo>;
+=žiams.pdn:  LLPIRMIIis- & <v-n-kam>;
+=žius.pdg:   LLPIRMIIis- & <v-g-ka>;
+=žiais.pdi:  LLPIRMIIis- & <v-i-kuo>;
+=žiuose.pdu: LLPIRMIIis- & <v-v-kur>;
+=ziai.pds:   LLPIRMIIis- & <v-s-o>;
 
-=čiai.pdv:   LLPIRMIItis- & <v-kas>;
-=čių.pdk:    LLPIRMIItis- & <k-kuo>;
-=čiams.pdn:  LLPIRMIItis- & <n-kam>;
-=čius.pdg:   LLPIRMIItis- & <g-ka>;
-=čiais.pdi:  LLPIRMIItis- & <i-kuo>;
-=čiuose.pdu: LLPIRMIItis- & <v-kur>;
-=čiai.pds:   LLPIRMIItis- & <s-o>;
+=čiai.pdv:   LLPIRMIItis- & <v-v-kas>;
+=čių.pdk:    LLPIRMIItis- & <v-k-kuo>;
+=čiams.pdn:  LLPIRMIItis- & <v-n-kam>;
+=čius.pdg:   LLPIRMIItis- & <v-g-ka>;
+=čiais.pdi:  LLPIRMIItis- & <v-i-kuo>;
+=čiuose.pdu: LLPIRMIItis- & <v-v-kur>;
+=čiai.pds:   LLPIRMIItis- & <v-s-o>;
 
 % Pirmoji linksniuotė vienaskaita III kirčiuotė
-=ias.pvv   LLPIRMIIIias- & <v-kas>;
-=io.pvk:   LLPIRMIIIias- & <k-kuo>;
-=iui.pvn:  LLPIRMIIIias- & <n-kam>;
-=ią.pvg:   LLPIRMIIIias- & <g-ka>;
-=iu.pvi:   LLPIRMIIIias- & <i-kuo>;
-=yje.pvu:  LLPIRMIIIias- & <v-kur>;
-=e.pvs:    LLPIRMIIIias- & <s-o>;
+=ias.pvv   LLPIRMIIIias- & <v-v-kas>;
+=io.pvk:   LLPIRMIIIias- & <v-k-kuo>;
+=iui.pvn:  LLPIRMIIIias- & <v-n-kam>;
+=ią.pvg:   LLPIRMIIIias- & <v-g-ka>;
+=iu.pvi:   LLPIRMIIIias- & <v-i-kuo>;
+=yje.pvu:  LLPIRMIIIias- & <v-v-kur>;
+=e.pvs:    LLPIRMIIIias- & <v-s-o>;
 
-=ys.pvv:   LLPIRMIIIys- & <v-kas>;
-=io.pvk:   LLPIRMIIIys- & <k-kuo>;
-=iui.pvn:  LLPIRMIIIys- & <n-kam>;
-=į.pvg:    LLPIRMIIIys- & <g-ka>;
-=iu.pvi:   LLPIRMIIIys- & <i-kuo>;
-=yje.pvu:  LLPIRMIIIys- & <v-kur>;
-=y.pvs:    LLPIRMIIIys- & <s-o>;
+=ys.pvv:   LLPIRMIIIys- & <v-v-kas>;
+=io.pvk:   LLPIRMIIIys- & <v-k-kuo>;
+=iui.pvn:  LLPIRMIIIys- & <v-n-kam>;
+=į.pvg:    LLPIRMIIIys- & <v-g-ka>;
+=iu.pvi:   LLPIRMIIIys- & <v-i-kuo>;
+=yje.pvu:  LLPIRMIIIys- & <v-v-kur>;
+=y.pvs:    LLPIRMIIIys- & <v-s-o>;
 
 % Pirmoji linksniuotė daugiskaita III kirčiuotė
-=iai.pdv:   LLPIRMIIIias- & <v-kas>;
-=ių.pdk:    LLPIRMIIIias- & <k-kuo>;
-=iams.pdn:  LLPIRMIIIias- & <n-kam>;
-=ius.pdg:   LLPIRMIIIias- & <g-ka>;
-=iais.pdi:  LLPIRMIIIias- & <i-kuo>;
-=iuose.pdu: LLPIRMIIIias- & <v-kur>;
-=iai.pds:   LLPIRMIIIias- & <s-o>;
+=iai.pdv:   LLPIRMIIIias- & <v-v-kas>;
+=ių.pdk:    LLPIRMIIIias- & <v-k-kuo>;
+=iams.pdn:  LLPIRMIIIias- & <v-n-kam>;
+=ius.pdg:   LLPIRMIIIias- & <v-g-ka>;
+=iais.pdi:  LLPIRMIIIias- & <v-i-kuo>;
+=iuose.pdu: LLPIRMIIIias- & <v-v-kur>;
+=iai.pds:   LLPIRMIIIias- & <v-s-o>;
 
-=iai.pdv:   LLPIRMIIIys- & <v-kas>;
-=ių.pdk:    LLPIRMIIIys- & <k-kuo>;
-=iams.pdn:  LLPIRMIIIys- & <n-kam>;
-=ius.pdg:   LLPIRMIIIys- & <g-ka>;
-=iais.pdi:  LLPIRMIIIys- & <i-kuo>;
-=iuose.pdu: LLPIRMIIIys- & <v-kur>;
-=iai.pds:   LLPIRMIIIys- & <s-o>;
+=iai.pdv:   LLPIRMIIIys- & <v-v-kas>;
+=ių.pdk:    LLPIRMIIIys- & <v-k-kuo>;
+=iams.pdn:  LLPIRMIIIys- & <v-n-kam>;
+=ius.pdg:   LLPIRMIIIys- & <v-g-ka>;
+=iais.pdi:  LLPIRMIIIys- & <v-i-kuo>;
+=iuose.pdu: LLPIRMIIIys- & <v-v-kur>;
+=iai.pds:   LLPIRMIIIys- & <v-s-o>;
 
 % Pirmoji linksniuotė vienaskaita IV kirčiuotė
-=ys.pvv    LLPIRMIVys- & <v-kas>;
-=žio.pvk:  LLPIRMIVys- & <k-kuo>;
-=žiui.pvn: LLPIRMIVys- & <n-kam>;
-=į.pvg:    LLPIRMIVys- & <g-ka>;
-=žiu.pvi:  LLPIRMIVys- & <i-kuo>;
-=yje.pvu:  LLPIRMIVys- & <v-kur>;
-=y.pvs:    LLPIRMIVys- & <s-o>;
+=ys.pvv    LLPIRMIVys- & <v-v-kas>;
+=žio.pvk:  LLPIRMIVys- & <v-k-kuo>;
+=žiui.pvn: LLPIRMIVys- & <v-n-kam>;
+=į.pvg:    LLPIRMIVys- & <v-g-ka>;
+=žiu.pvi:  LLPIRMIVys- & <v-i-kuo>;
+=yje.pvu:  LLPIRMIVys- & <v-v-kur>;
+=y.pvs:    LLPIRMIVys- & <v-s-o>;
 
-=tys.pvv =čias.pvv:  LLPIRMIVtys- & <v-kas>;
-=čio.pvk:  LLPIRMIVtys- & <k-kuo>;
-=čiui.pvn: LLPIRMIVtys- & <n-kam>;
-=tį.pvg =čią.pvg:   LLPIRMIVtys- & <g-ka>;
-=čiu.pvi:  LLPIRMIVtys- & <i-kuo>;
-=tyje.pvu: LLPIRMIVtys- & <v-kur>;
-=ty.pvs:   LLPIRMIVtys- & <s-o>;
+=tys.pvv =čias.pvv:  LLPIRMIVtys- & <v-v-kas>;
+=čio.pvk:  LLPIRMIVtys- & <v-k-kuo>;
+=čiui.pvn: LLPIRMIVtys- & <v-n-kam>;
+=tį.pvg =čią.pvg:   LLPIRMIVtys- & <v-g-ka>;
+=čiu.pvi:  LLPIRMIVtys- & <v-i-kuo>;
+=tyje.pvu: LLPIRMIVtys- & <v-v-kur>;
+=ty.pvs:   LLPIRMIVtys- & <v-s-o>;
 
 % Pirmoji linksniuotė daugiskaita IV kirčiuotė
-=žiai.pdv:   LLPIRMIVys- & <v-kas>;
-=žių.pdk:    LLPIRMIVys- & <k-kuo>;
-=žiams.pdn:  LLPIRMIVys- & <n-kam>;
-=žius.pdg:   LLPIRMIVys- & <g-ka>;
-=žiais.pdi:  LLPIRMIVys- & <i-kuo>;
-=žiuose.pdu: LLPIRMIVys- & <v-kur>;
-=ziai.pds:   LLPIRMIVys- & <s-o>;
+=žiai.pdv:   LLPIRMIVys- & <v-v-kas>;
+=žių.pdk:    LLPIRMIVys- & <v-k-kuo>;
+=žiams.pdn:  LLPIRMIVys- & <v-n-kam>;
+=žius.pdg:   LLPIRMIVys- & <v-g-ka>;
+=žiais.pdi:  LLPIRMIVys- & <v-i-kuo>;
+=žiuose.pdu: LLPIRMIVys- & <v-v-kur>;
+=ziai.pds:   LLPIRMIVys- & <v-s-o>;
 
-=čiai.pdv:   LLPIRMIVtys- & <v-kas>;
-=čių.pdk:    LLPIRMIVtys- & <k-kuo>;
-=čiams.pdn:  LLPIRMIVtys- & <n-kam>;
-=čius.pdg:   LLPIRMIVtys- & <g-ka>;
-=čiais.pdi:  LLPIRMIVtys- & <i-kuo>;
-=čiuose.pdu: LLPIRMIVtys- & <v-kur>;
-=čiai.pds:   LLPIRMIVtys- & <s-o>;
+=čiai.pdv:   LLPIRMIVtys- & <v-v-kas>;
+=čių.pdk:    LLPIRMIVtys- & <v-k-kuo>;
+=čiams.pdn:  LLPIRMIVtys- & <v-n-kam>;
+=čius.pdg:   LLPIRMIVtys- & <v-g-ka>;
+=čiais.pdi:  LLPIRMIVtys- & <v-i-kuo>;
+=čiuose.pdu: LLPIRMIVtys- & <v-v-kur>;
+=čiai.pds:   LLPIRMIVtys- & <v-s-o>;
 
 % -------------------------------
 % Būdvardžiai
