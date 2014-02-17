@@ -393,8 +393,8 @@ drob.= : LLANTRIe+;
 % -------------------------------
 % Būdvardžiai
 
-didelis geras gražus medinis: Bv- & {Xp+};
-didelė gera graži medine: Bm- & {Xp+};
+didelis geras gražus medinis baltas: (Bv- & {Xp+}) or DVv+;
+didelė gera graži medine balta: (Bm- & {Xp+}) or DVm+;
 
 % -------------------------------
 % Veiksmažodžiai
