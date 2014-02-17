@@ -120,11 +120,25 @@ brol.= kurm.= ber.= joud.= kail.= kerš.= marg.= mol.= palš.= pant.=
 samt.= šuol.= tvart.= uos.= uošv.= žirn.= žvirbl.= :
   LLPIRMIis+;
 
-% II kirčiuotė
+% tiktai daugistkaita (miltai ir t.t.)
+milt.= žąsl.= : LLPIRMIas+;
+siel.= LLPIRMIis+;
+
+% II kirčiuotė ---------------------
 % Kirčiai skirtingi nuo I-os kirčiuotės
-piršt.= rakt.=: LLPIRMIas+;
-med.= : LLPIRMIIdis+;
-šal.= : LLPIRMIItis+;
+piršt.= rakt.= aūt.= būgn.= but.= dirž.= dvar.= gandr.= ginč.=
+ginkl.= gražt.= grumst.= gryb.= karkl.= lap.= mat.= men.= 
+niekš.= pad.= parš.= prot.= rąst.= rašt.= skund.= turt.= :
+  LLPIRMIas+;
+
+% Vardai .. Jonas it t.t.
+Jon.= : LLPIRMIas+;
+
+med.= žard.= žod.= :
+  LLPIRMIIis+;
+
+šal.= dang.= kamš.= karš.= kar.= kir.= paukš.= rė.= sar.= :
+  LLPIRMIItis+;
 
 % III kirčiuotė
 % Kirčiai skirtingi nuo I-os kirčioutės
@@ -173,13 +187,13 @@ sve.= : LLPIRMIVtys+;
 =iai.pds:   LLPIRMIis- & <s-o>;
 
 % Pirmoji linksniuotė vienaskaita II kirčiuotė
-=dis.pvv   LLPIRMIIdis- & <v-kas>;
-=žio.pvk:  LLPIRMIIdis- & <k-kuo>;
-=žiui.pvn: LLPIRMIIdis- & <n-kam>;
-=dį.pvg:   LLPIRMIIdis- & <g-ka>;
-=žiu.pvi:  LLPIRMIIdis- & <i-kuo>;
-=dyje.pvu: LLPIRMIIdis- & <v-kur>;
-=di.pvs:   LLPIRMIIdis- & <s-o>;
+=is.pvv    LLPIRMIIis- & <v-kas>;
+=žio.pvk:  LLPIRMIIis- & <k-kuo>;
+=žiui.pvn: LLPIRMIIis- & <n-kam>;
+=į.pvg:    LLPIRMIIis- & <g-ka>;
+=žiu.pvi:  LLPIRMIIis- & <i-kuo>;
+=yje.pvu:  LLPIRMIIis- & <v-kur>;
+=i.pvs:    LLPIRMIIis- & <s-o>;
 
 =tis.pvv:  LLPIRMIItis- & <v-kas>;
 =čio.pvk:  LLPIRMIItis- & <k-kuo>;
@@ -190,13 +204,13 @@ sve.= : LLPIRMIVtys+;
 =ti.pvs:   LLPIRMIItis- & <s-o>;
 
 % Pirmoji linksniuotė daugiskaita II kirčiuotė
-=žiai.pdv:   LLPIRMIIdis- & <v-kas>;
-=žių.pdk:    LLPIRMIIdis- & <k-kuo>;
-=žiams.pdn:  LLPIRMIIdis- & <n-kam>;
-=žius.pdg:   LLPIRMIIdis- & <g-ka>;
-=žiais.pdi:  LLPIRMIIdis- & <i-kuo>;
-=žiuose.pdu: LLPIRMIIdis- & <v-kur>;
-=ziai.pds:   LLPIRMIIdis- & <s-o>;
+=žiai.pdv:   LLPIRMIIis- & <v-kas>;
+=žių.pdk:    LLPIRMIIis- & <k-kuo>;
+=žiams.pdn:  LLPIRMIIis- & <n-kam>;
+=žius.pdg:   LLPIRMIIis- & <g-ka>;
+=žiais.pdi:  LLPIRMIIis- & <i-kuo>;
+=žiuose.pdu: LLPIRMIIis- & <v-kur>;
+=ziai.pds:   LLPIRMIIis- & <s-o>;
 
 =čiai.pdv:   LLPIRMIItis- & <v-kas>;
 =čių.pdk:    LLPIRMIItis- & <k-kuo>;
