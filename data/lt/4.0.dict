@@ -201,15 +201,15 @@ sak.= : LLPIRMIas+;
 =ą.pvg:   LLPIRMIas- & <v-g-ka>;
 =u.pvi:   LLPIRMIas- & <v-i-kuo>;
 =e.pvu:   LLPIRMIas- & <v-v-kur>;
-=e.pvs:   LLPIRMIas- & <v-s-o>;
+=e.pvs1:  LLPIRMIas- & <v-s-o>;
 
-=is.pvv:  LLPIRMIis- & <v-v-kas>;
-=io.pvk:  LLPIRMIis- & <v-k-ko>;
-=iui.pvn: LLPIRMIis- & <v-n-kam>;
-=į.pvg:   LLPIRMIis- & <v-g-ka>;
-=iu.pvi:  LLPIRMIis- & <v-i-kuo>;
-=yje.pvu: LLPIRMIis- & <v-v-kur>;
-=i.pvs:   LLPIRMIis- & <v-s-o>;
+=is.pvv1:  LLPIRMIis- & <v-v-kas>;
+=io.pvk:   LLPIRMIis- & <v-k-ko>;
+=iui.pvn1: LLPIRMIis- & <v-n-kam>;
+=į.pvg1:   LLPIRMIis- & <v-g-ka>;
+=iu.pvi1:  LLPIRMIis- & <v-i-kuo>;
+=yje.pvu1: LLPIRMIis- & <v-v-kur>;
+=i.pvs1:   LLPIRMIis- & <v-s-o>;
 
 % Pirmoji linksniuotė daugiskaita I kirčiuotė
 =ai.pdv:    LLPIRMIas- & <v-v-kas>;
@@ -220,22 +220,22 @@ sak.= : LLPIRMIas+;
 =uose.pdu:  LLPIRMIas- & <v-v-kur>;
 =ai.pds:    LLPIRMIas- & <v-s-o>;
 
-=iai.pdv:   LLPIRMIis- & <v-v-kas>;
-=ių.pdk:    LLPIRMIis- & <v-k-ko>;
-=iams.pdn:  LLPIRMIis- & <v-n-kam>;
-=ius.pdg:   LLPIRMIis- & <v-g-ka>;
-=iais.pdi:  LLPIRMIis- & <v-i-kuo>;
-=iuose.pdu: LLPIRMIis- & <v-v-kur>;
-=iai.pds:   LLPIRMIis- & <v-s-o>;
+=iai.pdv:    LLPIRMIis- & <v-v-kas>;
+=ių.pdk:     LLPIRMIis- & <v-k-ko>;
+=iams.pdn1:  LLPIRMIis- & <v-n-kam>;
+=ius.pdg1:   LLPIRMIis- & <v-g-ka>;
+=iais.pdi1:  LLPIRMIis- & <v-i-kuo>;
+=iuose.pdu1: LLPIRMIis- & <v-v-kur>;
+=iai.pds1:   LLPIRMIis- & <v-s-o>;
 
 % Pirmoji linksniuotė vienaskaita II kirčiuotė
-=is.pvv:   LLPIRMIIis- & <v-v-kas>;
+=is.pvv2:  LLPIRMIIis- & <v-v-kas>;
 =žio.pvk:  LLPIRMIIis- & <v-k-ko>;
 =žiui.pvn: LLPIRMIIis- & <v-n-kam>;
-=į.pvg:    LLPIRMIIis- & <v-g-ka>;
+=į.pvg2:   LLPIRMIIis- & <v-g-ka>;
 =žiu.pvi:  LLPIRMIIis- & <v-i-kuo>;
-=yje.pvu:  LLPIRMIIis- & <v-v-kur>;
-=i.pvs:    LLPIRMIIis- & <v-s-o>;
+=yje.pvu2: LLPIRMIIis- & <v-v-kur>;
+=i.pvs2:   LLPIRMIIis- & <v-s-o>;
 
 =tis.pvv:  LLPIRMIItis- & <v-v-kas>;
 =čio.pvk:  LLPIRMIItis- & <v-k-ko>;
@@ -246,13 +246,13 @@ sak.= : LLPIRMIas+;
 =ti.pvs:   LLPIRMIItis- & <v-s-o>;
 
 % Pirmoji linksniuotė daugiskaita II kirčiuotė
-=žiai.pdv:   LLPIRMIIis- & <v-v-kas>;
-=žių.pdk:    LLPIRMIIis- & <v-k-ko>;
-=žiams.pdn:  LLPIRMIIis- & <v-n-kam>;
-=žius.pdg:   LLPIRMIIis- & <v-g-ka>;
-=žiais.pdi:  LLPIRMIIis- & <v-i-kuo>;
-=žiuose.pdu: LLPIRMIIis- & <v-v-kur>;
-=ziai.pds:   LLPIRMIIis- & <v-s-o>;
+=žiai.pdv:    LLPIRMIIis- & <v-v-kas>;
+=žių.pdk:     LLPIRMIIis- & <v-k-ko>;
+=žiams.pdn:   LLPIRMIIis- & <v-n-kam>;
+=žius.pdg:    LLPIRMIIis- & <v-g-ka>;
+=žiais.pdi:   LLPIRMIIis- & <v-i-kuo>;
+=žiuose.pdu2: LLPIRMIIis- & <v-v-kur>;
+=ziai.pds:    LLPIRMIIis- & <v-s-o>;
 
 =čiai.pdv:   LLPIRMIItis- & <v-v-kas>;
 =čių.pdk:    LLPIRMIItis- & <v-k-ko>;
@@ -263,46 +263,46 @@ sak.= : LLPIRMIas+;
 =čiai.pds:   LLPIRMIItis- & <v-s-o>;
 
 % Pirmoji linksniuotė vienaskaita III kirčiuotė
-=ias.pvv   LLPIRMIIIias- & <v-v-kas>;
-=io.pvk:   LLPIRMIIIias- & <v-k-ko>;
-=iui.pvn:  LLPIRMIIIias- & <v-n-kam>;
+=ias.pvv:  LLPIRMIIIias- & <v-v-kas>;
+=io.pvk3:  LLPIRMIIIias- & <v-k-ko>;
+=iui.pvn3: LLPIRMIIIias- & <v-n-kam>;
 =ią.pvg:   LLPIRMIIIias- & <v-g-ka>;
-=iu.pvi:   LLPIRMIIIias- & <v-i-kuo>;
-=yje.pvu:  LLPIRMIIIias- & <v-v-kur>;
-=e.pvs:    LLPIRMIIIias- & <v-s-o>;
+=iu.pvi3:  LLPIRMIIIias- & <v-i-kuo>;
+=yje.pvu3: LLPIRMIIIias- & <v-v-kur>;
+=e.pvs3:   LLPIRMIIIias- & <v-s-o>;
 
-=ys.pvv:   LLPIRMIIIys- & <v-v-kas>;
-=io.pvk:   LLPIRMIIIys- & <v-k-ko>;
-=iui.pvn:  LLPIRMIIIys- & <v-n-kam>;
-=į.pvg:    LLPIRMIIIys- & <v-g-ka>;
-=iu.pvi:   LLPIRMIIIys- & <v-i-kuo>;
-=yje.pvu:  LLPIRMIIIys- & <v-v-kur>;
-=y.pvs:    LLPIRMIIIys- & <v-s-o>;
+=ys.pvv:    LLPIRMIIIys- & <v-v-kas>;
+=io.pvk3y:  LLPIRMIIIys- & <v-k-ko>;
+=iui.pvn3y: LLPIRMIIIys- & <v-n-kam>;
+=į.pvg3y:   LLPIRMIIIys- & <v-g-ka>;
+=iu.pvi3y:  LLPIRMIIIys- & <v-i-kuo>;
+=yje.pvu3y: LLPIRMIIIys- & <v-v-kur>;
+=y.pvs:     LLPIRMIIIys- & <v-s-o>;
 
 % Pirmoji linksniuotė daugiskaita III kirčiuotė
-=iai.pdv:   LLPIRMIIIias- & <v-v-kas>;
-=ių.pdk:    LLPIRMIIIias- & <v-k-ko>;
-=iams.pdn:  LLPIRMIIIias- & <v-n-kam>;
-=ius.pdg:   LLPIRMIIIias- & <v-g-ka>;
-=iais.pdi:  LLPIRMIIIias- & <v-i-kuo>;
-=iuose.pdu: LLPIRMIIIias- & <v-v-kur>;
-=iai.pds:   LLPIRMIIIias- & <v-s-o>;
+=iai.pdv3:   LLPIRMIIIias- & <v-v-kas>;
+=ių.pdk3:    LLPIRMIIIias- & <v-k-ko>;
+=iams.pdn3:  LLPIRMIIIias- & <v-n-kam>;
+=ius.pdg3:   LLPIRMIIIias- & <v-g-ka>;
+=iais.pdi3:  LLPIRMIIIias- & <v-i-kuo>;
+=iuose.pdu3: LLPIRMIIIias- & <v-v-kur>;
+=iai.pds3:   LLPIRMIIIias- & <v-s-o>;
 
-=iai.pdv:   LLPIRMIIIys- & <v-v-kas>;
-=ių.pdk:    LLPIRMIIIys- & <v-k-ko>;
-=iams.pdn:  LLPIRMIIIys- & <v-n-kam>;
-=ius.pdg:   LLPIRMIIIys- & <v-g-ka>;
-=iais.pdi:  LLPIRMIIIys- & <v-i-kuo>;
-=iuose.pdu: LLPIRMIIIys- & <v-v-kur>;
-=iai.pds:   LLPIRMIIIys- & <v-s-o>;
+=iai.pdv3y:   LLPIRMIIIys- & <v-v-kas>;
+=ių.pdk3y:    LLPIRMIIIys- & <v-k-ko>;
+=iams.pdn3y:  LLPIRMIIIys- & <v-n-kam>;
+=ius.pdg3y:   LLPIRMIIIys- & <v-g-ka>;
+=iais.pdi3y:  LLPIRMIIIys- & <v-i-kuo>;
+=iuose.pdu3y: LLPIRMIIIys- & <v-v-kur>;
+=iai.pds3y:   LLPIRMIIIys- & <v-s-o>;
 
 % Pirmoji linksniuotė vienaskaita IV kirčiuotė
-=ys.pvv    LLPIRMIVys- & <v-v-kas>;
+=ys.pvv:   LLPIRMIVys- & <v-v-kas>;
 =žio.pvk:  LLPIRMIVys- & <v-k-ko>;
 =žiui.pvn: LLPIRMIVys- & <v-n-kam>;
-=į.pvg:    LLPIRMIVys- & <v-g-ka>;
+=į.pvg4:   LLPIRMIVys- & <v-g-ka>;
 =žiu.pvi:  LLPIRMIVys- & <v-i-kuo>;
-=yje.pvu:  LLPIRMIVys- & <v-v-kur>;
+=yje4.pvu: LLPIRMIVys- & <v-v-kur>;
 =y.pvs:    LLPIRMIVys- & <v-s-o>;
 
 =tys.pvv =čias.pvv:  LLPIRMIVtys- & <v-v-kas>;
@@ -337,13 +337,13 @@ sak.= : LLPIRMIas+;
 
 % ---------------------------------------
 % Antroji linksniuotė vienaskaita I kirčiuotė
-=a.pvv:   LLANTRIa- & <m-v-kas>;
-=os.pvk:  LLANTRIa- & <m-k-ko>;
-=ai.pvn:  LLANTRIa- & <m-n-kam>;
-=ą.pvg:   LLANTRIa- & <m-g-ka>;
-=a.pvi:   LLANTRIa- & <m-i-kuo>;
-=oje.pvu: LLANTRIa- & <m-v-kur>;
-=a.pvs:   LLANTRIa- & <m-s-o>;
+=a.avv:   LLANTRIa- & <m-v-kas>;
+=os.avk:  LLANTRIa- & <m-k-ko>;
+=ai.avn:  LLANTRIa- & <m-n-kam>;
+=ą.avg:   LLANTRIa- & <m-g-ka>;
+=a.avi:   LLANTRIa- & <m-i-kuo>;
+=oje.avu: LLANTRIa- & <m-v-kur>;
+=a.avs:   LLANTRIa- & <m-s-o>;
 
 % -------------------------------
 % Būdvardžiai
