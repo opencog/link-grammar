@@ -146,26 +146,48 @@ Jon.= Lin.= Tom.= : LLPIRMIas+;
 % ??? Ambraška-Žiugžda sako, kad II-o kirčio, bet nematau...
 % Man, lyg tai I kirč -is ...
 dalg.= kel.= kirv.= kišk.= kump.= latv.= niek.= plik.= syk.=
-smūg.= širm.= šok.= virž.= žal.= žingsn.= LLPIRMIis+;
+smūg.= širm.= šok.= virž.= žal.= žingsn.= :
+  LLPIRMIis+;
 
-med.= žard.= žod.= :
+med.= rud.= vamzd.= žard.= žod.= :
   LLPIRMIIis+;
 
 šal.= dang.= kamš.= karš.= kar.= kir.= paukš.= rė.= sar.= :
   LLPIRMIItis+;
 
-% III kirčiuotė
-% Kirčiai skirtingi nuo I-os kirčioutės
-kaln.=: LLPIRMIas+;
-veln.=: LLPIRMIIIias+;
-arkl.= vež.=: LLPIRMIIIys+;
+% tik daugistkaita
+ikr.= vart.= : LLPIRMIas+;
+grik.= LLPIRMIis+;
 
-% IV kirčiuotė
+% III kirčiuotė -------------------------
+% Kirčiai skirtingi nuo I-os kirčioutės
+kaln.= bern.= daikt.= driež.= irkl.= kelm.= kov.= laišk.= or.=
+plauk.= rand.= ryt.= sarg.= spirg.= stieb.= stog.= šern.= šiaud.=
+tėv.= uod.= veid.= verg.= vor.= žand.= žirg.= :
+  LLPIRMIas+;
+
+veln.=: LLPIRMIIIias+;
+arkl.= vež.= ož.= žalt.= : LLPIRMIIIys+;
+
+% IV kirčiuotė ----------------------
 % Kirčiai skirtingi nuo I-os formos.
-lauk.= kakl.=: LLPIRMIas+;
-gaid.= : LLPIRMIVys+;
+lauk.= kakl.= aul.= baln.= bals.= darž.= Diev.= dumbl.= gal.= gand.=
+gars.= jausm.= kamp.= kap.= krant.= krašt.= krauj.= laik.= laiv.=
+lank.= lizd.= mišk.= nag.= purv.= rag.= sparn.= tak.= tarn.= vaik.=
+vard.= varg.= varn.= varp.= verksm.= vilk.= :
+  LLPIRMIas+;
+
+% kelias ???
+
+gaid.= garn.= gen.= koud.= lyd.= piršl.= smėl.= šaul.= šikšn.= žyn.= :
+  LLPIRMIVys+;
+
 sve.= : LLPIRMIVtys+;
 
+% tik daugistkaita
+sak.= : LLPIRMIas+;
+
+% ---------------------------------------
 % Pirmoji linksniuotė vienaskaita I kirčiuotė
 =as.pvv:  LLPIRMIas- & <v-v-kas>;
 =o.pvk:   LLPIRMIas- & <v-k-kuo>;
@@ -301,6 +323,21 @@ sve.= : LLPIRMIVtys+;
 =čiais.pdi:  LLPIRMIVtys- & <v-i-kuo>;
 =čiuose.pdu: LLPIRMIVtys- & <v-v-kur>;
 =čiai.pds:   LLPIRMIVtys- & <v-s-o>;
+
+% -------------------------------
+% Antroji linksniuotė
+% I kirčiuotė
+šark.= jur.= prog.= : LLANTRIa+;
+
+% ---------------------------------------
+% Antroji linksniuotė vienaskaita I kirčiuotė
+=a.pvv:   LLANTRIa- & <m-v-kas>;
+=os.pvk:  LLANTRIa- & <m-k-kuo>;
+=ai.pvn:  LLANTRIa- & <m-n-kam>;
+=ą.pvg:   LLANTRIa- & <m-g-ka>;
+=a.pvi:   LLANTRIa- & <m-i-kuo>;
+=oje.pvu: LLANTRIa- & <m-v-kur>;
+=a.pvs:   LLANTRIa- & <m-s-o>;
 
 % -------------------------------
 % Būdvardžiai
