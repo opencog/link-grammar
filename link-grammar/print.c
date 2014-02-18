@@ -245,11 +245,8 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	Sentence sent = linkage->sent;
 	int nwords = sent->length;
 
-	/* Decrement nwords, so as to ignore the RIGHT-WALL */
-	nwords --;
-
 	/* Loop over each word in the sentence */
-	for (w=0; w<=nwords; w++)
+	for (w=0; w<nwords; w++)
 	{
 		Disjunct *disj = linkage->sent->parse_info->chosen_disjuncts[w];
 		if (NULL == disj) continue;
