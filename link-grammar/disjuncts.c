@@ -95,11 +95,11 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 
 	/* Process each word in the sentence (skipping LEFT-WALL, which is
 	 * word 0. */
-	for (w=1; w<nwords; w++)
+	for (w = 0; w <= nwords; w++)
 	{
 		/* Sort the disjuncts for this word. -- bubble sort */
 		int slot = djcount[w];
-		for (i=0; i<slot; i++)
+		for (i = 0; i < slot; i++)
 		{
 			int j;
 			for (j=i+1; j<slot; j++)
@@ -119,7 +119,7 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 		/* Create the disjunct string */
 		left = sizeof(djstr);
 		copied = 0;
-		for (i=0; i<slot; i++)
+		for (i = 0; i < slot; i++)
 		{
 			int dj = djlist[w*nlinks + i];
 			copied += lg_strlcpy(djstr+copied, pi->link_array[dj].name, left);
