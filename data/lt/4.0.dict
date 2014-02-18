@@ -44,7 +44,7 @@
 % Mišrusis tarinys
 % 
 % 
-% 
+% Reikia čia viska visai perašyti, išmesti ...   
 % D  == Daiktavardis
 % DV == Vardininkas Kas?  DVv == vyriška, DVm == moteriška giminė
 % DK == Kilmininkas Ko?
@@ -367,6 +367,21 @@ sak.= : LLPIRMIas+;
 šark.= jur.= prog.= : LLANTRIa+;
 drob.= : LLANTRIe+;
 
+% II kirčiuotė rašosi taip pat kaip pirma ...
+rank.= dirv.= : LLANTRIa+;
+lap.= up.= : LLANTRIe+;
+
+% III kirčiuotė rašosi taip pat kaip pirma ...
+galv.= trob.= :  LLANTRIa+;
+giesm.= gerkl.= : LLANTRIe+;
+
+% IV kirčiuotė
+mar.= : LLANTRIVti+;
+
+% Dauguma IV-os kirčiuotes rašosi taip pat kaip pirma ...
+dain.= valdž.= : LLANTRIa+;
+eil.= : LLANTRIe+;
+
 % ---------------------------------------
 % Antroji linksniuotė vienaskaita I kirčiuotė
 =a.avv1:   LLANTRIa- & <mv-v-kas>;
@@ -402,6 +417,29 @@ drob.= : LLANTRIe+;
 =ėse.adu1:  LLANTRIe- & <md-v-kur>;
 =ės.ads1:   LLANTRIe- & <md-s-o>;
 
+% Antroji linksniuotė II ir III kirčiuotė rašosi taip pat kaip pirma ...
+
+% Antroji linksniuotė vienaskaita IV kirčiuotė
+=ti.avv1:    LLANTRIVti- & <mv-v-kas>;
+=čios.avk1:  LLANTRIVti- & <mv-k-ko>;
+=čiai.avn1:  LLANTRIVti- & <mv-n-kam>;
+=čią.avg1:   LLANTRIVti- & <mv-g-ka>;
+=čia.avi1:   LLANTRIVti- & <mv-i-kuo>;
+=čioje.avu1: LLANTRIVti- & <mv-v-kur>;
+=čia.avs1:   LLANTRIVti- & <mv-s-o>;
+
+% Antroji linksniuotė daugiskaita IV kirčiuotė
+=čios.adv1:   LLANTRIVti- & <md-v-kas>;
+=čių.adk1:    LLANTRIVti- & <md-k-ko>;
+=čioms.adn1:  LLANTRIVti- & <md-n-kam>;
+=čias.adg1:   LLANTRIVti- & <md-g-ka>;
+=čiomis.adi1: LLANTRIVti- & <md-i-kuo>;
+=čiose.adu1:  LLANTRIVti- & <md-v-kur>;
+=čios.ads1:   LLANTRIVti- & <md-s-o>;
+
+% -------------------------------
+% Trečioji linksniuotė
+%
 % -------------------------------
 % Būdvardžiai
 
