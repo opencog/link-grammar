@@ -248,9 +248,8 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	/* Decrement nwords, so as to ignore the RIGHT-WALL */
 	nwords --;
 
-	/* Loop over each word in the sentence (skipping LEFT-WALL, which is
-	 * word 0. */
-	for (w=1; w<nwords; w++)
+	/* Loop over each word in the sentence */
+	for (w=0; w<=nwords; w++)
 	{
 		Disjunct *disj = linkage->sent->parse_info->chosen_disjuncts[w];
 		if (NULL == disj) continue;
@@ -258,6 +257,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		infword = disj->string;
 
 		dj = linkage_get_disjunct_str(linkage, w);
+		if (NULL == dj) dj = "";
 		cost = linkage_get_disjunct_cost(linkage, w);
 
 #ifdef USE_CORPUS
