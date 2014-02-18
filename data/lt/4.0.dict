@@ -33,6 +33,17 @@
 % JAV LB Kultūros Fondas
 % Perspausdinta iš pirmos 1937 M. Sakalo b-vės laidos
 % VI laida Morkūno Spaustuvė, Čikago IL 1966 Jaunimo metai.
+%
+% Veiksnys (subject)  kas?
+% Papildinys (object) ko? ką? kam? kuo?
+%
+% Tarinys (predicate)
+% Grynasis tarinys
+% Suvestinis tarinys
+% Sudurtinis tarinys
+% Mišrusis tarinys
+% 
+% 
 % 
 % D  == Daiktavardis
 % DV == Vardininkas Kas?  DVv == vyriška, DVm == moteriška giminė
@@ -54,7 +65,8 @@
 % VOv == Jie
 % VOm == Jos
 %
-% B == Būdvardis
+% A == Būdvardis
+% B == Predikatinis Būdvardis
 %
 % P == Prieveiksmis
 % PB == būdo
