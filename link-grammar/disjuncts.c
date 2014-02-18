@@ -59,10 +59,7 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 	djlist = djcount + nwords;
 	djloco = djlist + nwords*nlinks;
 
-	/* Decrement nwords, so as to ignore the RIGHT-WALL */
-	nwords --;
-
-	for (w=0; w<nwords; w++)
+	for (w = 0; w < nwords; w++)
 	{
 		djcount[w] = 0;
 	}
@@ -93,9 +90,9 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 #endif
 	}
 
-	/* Process each word in the sentence (skipping LEFT-WALL, which is
-	 * word 0. */
-	for (w = 0; w <= nwords; w++)
+	/* Process each word in the sentence
+	 * (Hmm... should we be skipping LEFT-WALL, which is word 0? */
+	for (w = 0; w < nwords; w++)
 	{
 		/* Sort the disjuncts for this word. -- bubble sort */
 		int slot = djcount[w];
