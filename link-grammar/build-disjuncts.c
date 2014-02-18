@@ -19,6 +19,7 @@
 #include "build-disjuncts.h"
 #include "dict-api.h"
 #include "disjunct-utils.h"
+#include "externs.h"
 #include "word-utils.h"
 #include "utilities.h" /* For Win32 compatibility features */
 
@@ -505,9 +506,13 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 	X_node * x, * y;
 
 	dn_head = dictionary_lookup_list(dict, s);
-	dn = dn_head;
+	if (3 < verbosity) /* DEBUG */
+	{
+		printf("word %s num disjuncts=%u\n", s, count_disjunct_for_dict_node(dn_head));
+	}
 
 	x = NULL;
+	dn = dn_head;
 	while (dn != NULL)
 	{
 		add_empty_word(dict, dn);
