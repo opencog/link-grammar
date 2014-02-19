@@ -237,21 +237,24 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	double score;
 #endif
 	double cost;
-	const char * infword;
+	const char infword[MAX_WORD];
 	const char * dj;
-	char * djs;
+	char * djs, *mark;
 	int w;
 	String * s = string_new();
 	Sentence sent = linkage->sent;
 	int nwords = sent->length;
 
 	/* Loop over each word in the sentence */
-	for (w=0; w<nwords; w++)
+	for (w = 0; w < nwords; w++)
 	{
 		Disjunct *disj = linkage->sent->parse_info->chosen_disjuncts[w];
 		if (NULL == disj) continue;
 
-		infword = disj->string;
+		/* Cleanup the subscript mark before printing. */
+		strncpy(infword, disj->string, MAX_WORD);
+		mark = strchr(infword, SUBSCRIPT_MARK);
+		if (mark) *mark = '.';
 
 		dj = linkage_get_disjunct_str(linkage, w);
 		if (NULL == dj) dj = "";
