@@ -14,7 +14,6 @@
 #include "api-types.h"
 #include "link-includes.h"
 
-void       prune(Sentence sent);
 int        power_prune(Sentence sent, int mode, Parse_Options opts);
 void       pp_and_power_prune(Sentence sent, int mode, Parse_Options opts);
 int        prune_match(int dist, Connector * left, Connector * right);

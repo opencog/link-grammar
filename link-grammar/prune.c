@@ -313,6 +313,7 @@ static void insert_connector(connector_table *ct, Connector * c)
 	ct[h] = c;
 }
 
+#ifdef DEAD_CODE_NOT_USED_ANYWHERE
 void prune(Sentence sent)
 {
 	Connector *e, *f;
@@ -327,7 +328,7 @@ void prune(Sentence sent)
 #endif /* USE_FAT_LINKAGES */
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
-	while(1)
+	while (1)
 	{
 		/* Left-to-right pass */
 		zero_connector_table(ct);
@@ -337,6 +338,7 @@ void prune(Sentence sent)
 		{
 			d = &fake_head;
 			d->next = sent->word[w].d;
+printf("duuude word=%d %s\n", w, sent->word[w].unsplit_word);
 
 			/* For every disjunct of word */
 			while ((d1 = d->next))
@@ -360,6 +362,7 @@ void prune(Sentence sent)
 				if (e)
 				{
 					N_deleted ++;
+printf ("duuude delete dj=%s\n", d1->string);
 					free_connectors(d1->left);
 					free_connectors(d1->right);
 					d->next = d1->next;
@@ -446,6 +449,7 @@ void prune(Sentence sent)
 		N_deleted = 0;
 	}
 }
+#endif /* DEAD_CODE_NOT_USED_ANYWHERE */
 
 /*
    The second algorithm eliminates disjuncts that are dominated by
