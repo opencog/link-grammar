@@ -1448,7 +1448,9 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	return numcon_subl;
 }
 
-static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage, int numcon_total)
+static char * 
+exprint_constituent_structure(con_context_t *ctxt,
+                              Linkage linkage, int numcon_total)
 {
 	int have_opened = 1;
 	int c, w;
@@ -1456,7 +1458,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 	int rightdone[MAXCONSTITUENTS];
 	int best, bestright, bestleft;
 	Sentence sent;
-	char s[100], * p;
+	char s[MAX_WORD], *p;
 	String * cs = string_new();
 
 	assert (numcon_total < MAXCONSTITUENTS, "Too many constituents (b)");
@@ -1471,12 +1473,11 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 	if (verbosity >= 2)
 		printf("\n");			
 
+	/* Skip left wall; don't skip right wall, since it may
+	 * have constituent boundaries. */
 	for (w = 1; w < linkage->num_words; w++)
 	{
-		/* Skip left wall; don't skip right wall, since it may
-		   have constituent boundaries */
-
-		while(1)
+		while (1)
 		{
 			best = -1;
 			bestright = -1;
@@ -1484,7 +1485,8 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			{
 				if ((ctxt->constituent[c].left == w) &&
 					(leftdone[c] == 0) && (ctxt->constituent[c].valid == 1) &&
-					(ctxt->constituent[c].right >= bestright)) {
+					(ctxt->constituent[c].right >= bestright))
+				{
 					best = c;
 					bestright = ctxt->constituent[c].right;
 				}
@@ -1507,21 +1509,22 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			/* XXX FIXME -- using alternatives[0] is wrong here,
 			 * especially for Russian. We'll punt for now, though.
 			 * Consider using linkage->word[w] instead. */
-			strcpy(s, sent->word[w].alternatives[0]);
+			strncpy(s, sent->word[w].alternatives[0], MAX_WORD);
+			s[MAX_WORD-1] = 0;
 
 			/* Constituent processing will crash if the sentence contains
 			 * square brackets, so we have to do something ... replace
 			 * them with curly braces ... will have to do.
 			 */
 			p = strchr(s, OPEN_BRACKET);
-			while(p)
+			while (p)
 			{
 				*p = '{';
 				p = strchr(p, OPEN_BRACKET);
 			}
 
 			p = strchr(s, CLOSE_BRACKET);
-			while(p)
+			while (p)
 			{
 				*p = '}';
 				p = strchr(p, CLOSE_BRACKET);
@@ -1534,7 +1537,7 @@ static char * exprint_constituent_structure(con_context_t *ctxt, Linkage linkage
 			append_string(cs, "%s ", s);
 		}
 
-		while(1)
+		while (1)
 		{
 			best = -1;
 			bestleft = -1;
