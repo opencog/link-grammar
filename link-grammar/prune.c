@@ -13,6 +13,7 @@
 
 #include "api-structures.h"
 #include "count.h"
+#include "dict-api.h"  /* for print_expression when debugging */
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "post-process.h"
@@ -286,7 +287,7 @@ static void zero_connector_table(connector_table *ct)
 	memset(ct, 0, sizeof(Connector *) * CONTABSZ);
 }
 
-/** 
+/**
  * This function puts connector c into the connector table
  * if one like it isn't already there.
  */
@@ -300,7 +301,7 @@ static void insert_connector(connector_table *ct, Connector * c)
 	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
 #ifdef USE_FAT_LINKAGES
-		if ((strcmp(c->string, e->string) == 0) && 
+		if ((strcmp(c->string, e->string) == 0) &&
 		    (c->priority == e->priority) &&
 		    (c->label == e->label))
 			return;
@@ -338,7 +339,6 @@ void prune(Sentence sent)
 		{
 			d = &fake_head;
 			d->next = sent->word[w].d;
-printf("duuude word=%d %s\n", w, sent->word[w].unsplit_word);
 
 			/* For every disjunct of word */
 			while ((d1 = d->next))
@@ -362,7 +362,6 @@ printf("duuude word=%d %s\n", w, sent->word[w].unsplit_word);
 				if (e)
 				{
 					N_deleted ++;
-printf ("duuude delete dj=%s\n", d1->string);
 					free_connectors(d1->left);
 					free_connectors(d1->right);
 					d->next = d1->next;
@@ -474,7 +473,7 @@ printf ("duuude delete dj=%s\n", d1->string);
       think it does the fat link matches properly.   (See the comment
       in and.c for more information about matching fat links.)  This is
       irrelevant because of (1).
-   
+
   (3) The linkage that is eliminated by this, might just be the one that
       passes post-processing, as the following example shows.
       This is pretty silly, and should probably be changed.
@@ -483,8 +482,8 @@ printf ("duuude delete dj=%s\n", d1->string);
 Accepted (2 linkages, 1 with no P.P. violations)
   Linkage 1, cost vector = (0, 0, 7)
 
-   +------------------G-----------------+      
-   +-----R-----+----CL----+             |      
+   +------------------G-----------------+
+   +-----R-----+----CL----+             |
    +---O---+   |   +---D--+---S---+     +--I-+-AI-+
    |       |   |   |      |       |     |    |    |
 telling.g John how our program.n works would be stupid
@@ -503,8 +502,8 @@ telling.g John how our program.n works would be stupid
 >
   Linkage 2 (bad), cost vector = (0, 0, 7)
 
-   +------------------G-----------------+      
-   +-----R-----+----CL----+             |      
+   +------------------G-----------------+
+   +-----R-----+----CL----+             |
    +---O---+   |   +---D--+---S---+     +--I-+-AI-+
    |       |   |   |      |       |     |    |    |
 telling.g John how our program.n works would be stupid
@@ -951,7 +950,7 @@ static void clean_up_expressions(Sentence sent, int w)
 }
 
 /* #define DBG(X) X */
-#define DBG(X) 
+#define DBG(X)
 
 void expression_prune(Sentence sent)
 {
@@ -965,7 +964,7 @@ void expression_prune(Sentence sent)
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 
-	while(1)
+	while (1)
 	{
 		/* Left-to-right pass */
 		/* For every word */
@@ -1217,7 +1216,7 @@ static power_table * power_table_new(Sentence sent)
 		/* The below uses variable-sized hash tables. This seems to
 		 * provide performance that is equal or better than the best
 		 * fixed-size prformance.
-		 * The best fixed-size performance seems to come at about 
+		 * The best fixed-size performance seems to come at about
 		 * a 1K table size, for both English and Russian. (Both have
 		 * about 100 fixed link-types, and many thousands of auto-genned
 		 * link types (IDxxx idioms for both, LLxxx suffix links for
@@ -1422,7 +1421,7 @@ left_table_search(prune_context *pc, int w, Connector *c,
 /**
  * Take this connector list, and try to match it with the words
  * w-1, w-2, w-3...  Returns the word to which the first connector of
- * the list could possibly be matched.  If c is NULL, returns w.  If 
+ * the list could possibly be matched.  If c is NULL, returns w.  If
  * there is no way to match this list, it returns a negative number.
  * If it does find a way to match it, it updates the c->word fields
  * correctly.

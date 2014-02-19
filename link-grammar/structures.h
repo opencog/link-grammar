@@ -97,14 +97,17 @@
 #define LEFT_WALL_WORD   ("LEFT-WALL")
 #define RIGHT_WALL_WORD  ("RIGHT-WALL")
 
-/* Word subscripts come after the subscript mark (ASCII ETX) */
-/* Arghhh. This doesn't qork quite right yet. Needs debugging still. */
-#define SUBSCRIPT_MARK '.'
-/* #define SUBSCRIPT_MARK 0x3 */
+/* Word subscripts come after the subscript mark (ASCII ETX)
+ * In the dictionary, a dot is used; but that dot interfers with dots
+ * in the input stream, and so we convert dictionary dots into the
+ * subscript mark, which we don't expect to see in user input.
+ */
+/* #define SUBSCRIPT_MARK '.' */
+#define SUBSCRIPT_MARK 0x3 
 #define SUBSCRIPT_DOT '.'
 #define EMPTY_WORD_DOT   "=.zzz"  /* Has SUBSCRIPT_DOT in it! */
-/* #define EMPTY_WORD_MARK  "=zzz"  Has SUBSCRIPT_MARK in it! */
-#define EMPTY_WORD_MARK  EMPTY_WORD_DOT
+#define EMPTY_WORD_MARK  "=zzz" /* Has SUBSCRIPT_MARK in it! */
+/* #define EMPTY_WORD_MARK  EMPTY_WORD_DOT */
 
 #ifdef USE_FAT_LINKAGES
   #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
