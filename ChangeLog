@@ -9,6 +9,7 @@ Version 4.8.7 (XXX 2014)
  * Adopt the orphaned/unsupported Ocaml bindings.
  * Support affirmative replies: "Who did it?" "John's evil twin."
  * Expanded Lithuanian dictionary.
+ * Minor disjunct printing fixes.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

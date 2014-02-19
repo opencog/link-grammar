@@ -236,8 +236,6 @@ char * linkage_print_disjuncts(const Linkage linkage)
 #ifdef USE_CORPUS
 	double score;
 #endif
-	double cost;
-	const char infword[MAX_WORD];
 	const char * dj;
 	char * djs, *mark;
 	int w;
@@ -248,6 +246,9 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	/* Loop over each word in the sentence */
 	for (w = 0; w < nwords; w++)
 	{
+		int pad = 21;
+		double cost;
+		char infword[MAX_WORD];
 		Disjunct *disj = linkage->sent->parse_info->chosen_disjuncts[w];
 		if (NULL == disj) continue;
 
@@ -256,15 +257,18 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		mark = strchr(infword, SUBSCRIPT_MARK);
 		if (mark) *mark = '.';
 
+		/* Make sure the glyphs align during printing. */
+		pad += strlen(infword) - utf8_strlen(infword);
+
 		dj = linkage_get_disjunct_str(linkage, w);
 		if (NULL == dj) dj = "";
 		cost = linkage_get_disjunct_cost(linkage, w);
 
 #ifdef USE_CORPUS
 		score = linkage_get_disjunct_corpus_score(linkage, w);
-		append_string(s, "%21s    %5.1f %6.3f %s\n", infword, cost, score, dj);
+		append_string(s, "%*s    %5.1f %6.3f %s\n", pad, infword, cost, score, dj);
 #else
-		append_string(s, "%21s    %5.1f  %s\n", infword, cost, dj);
+		append_string(s, "%*s    %5.1f  %s\n", pad, infword, cost, dj);
 #endif
 	}
 	djs = string_copy(s);
