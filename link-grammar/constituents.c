@@ -1506,15 +1506,15 @@ exprint_constituent_structure(con_context_t *ctxt,
 		if (have_opened && (w < linkage->num_words - 1))
 		{
 			char *p;
-			/* XXX FIXME -- using alternatives[0] is wrong here,
-			 * especially for Russian. We'll punt for now, though.
-			 * Consider using linkage->word[w] instead. */
-			strncpy(s, sent->word[w].alternatives[0], MAX_WORD);
+			strncpy(s, linkage->word[w], MAX_WORD);
 			s[MAX_WORD-1] = 0;
 
 			/* Constituent processing will crash if the sentence contains
 			 * square brackets, so we have to do something ... replace
-			 * them with curly braces ... will have to do.
+			 * them with curly braces ... this is a terrible hack, but
+			 * will have to do; for now.  A better solution would be to
+			 * allow the user to specify some reserved char as the
+			 * bracket symbol, e.g. SOH and EOT or something like that.
 			 */
 			p = strchr(s, OPEN_BRACKET);
 			while (p)
