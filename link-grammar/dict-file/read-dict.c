@@ -1768,7 +1768,8 @@ static void print_expression_parens(Exp * n, int need_parens)
 	    el && el->e && (NULL == el->e->u.l))
 	{
 		printf ("{");
-		print_expression_parens(el->next->e, FALSE);
+		if (NULL == el->next) printf("error-no-next");
+		else print_expression_parens(el->next->e, FALSE);
 		printf ("}");
 		return;
 	}
