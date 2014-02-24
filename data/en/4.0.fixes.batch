@@ -1042,6 +1042,32 @@ The cold froze the mud solid.
 % Like the above, but can only be used with "dead"
 He was slain dead by the arrows.
 
+% Many common adjectives should take the B+ connector.
+Mary is too angry to talk to
+Mary is too abrasive to talk to
+Mary is too abrupt to talk to
+Mary is too abstruse to talk to
+Mary is too abstract to talk to
+Mary is too crazy to talk to
+Mary is too depressing to talk to
+Mary is too silly to talk to
+Mary is too scary to talk to
+Mary is too boring to talk to
+Mary is too boring and depressing to talk to
+He is too hard to talk to
+It is too far to walk to
+It is too far to hike to
+Arizona is too hot to move to
+The show is too expensive to go to.
+It was too far to come back from.
+He was too far gone to come back from such a loss
+
+the inflamation is too acute to suppress
+He is too adventuresome to allow on this project
+The material is too advanced to present in this talk
+
+He is too easy to make fun of
+
 % paint, color, with color names; constructions like 
 % "pale yellow" mean that the color names are nouns (O*n) and
 % not predicative adjectives (Pa**j)
@@ -1883,12 +1909,6 @@ They have talked of the soldiers' fear
 % More particles
 Your grammar should be worked on.
 Your grammar should be worked upon.
-
-% Dangling particles
-Mary is too angry to talk to
-It is too far to walk to
-
-xxxxxxxxxxxx
 
 % Transitive sports activities
 I biked Johnson Creek.

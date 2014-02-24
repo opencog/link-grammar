@@ -10,6 +10,7 @@ Version 4.8.7 (XXX 2014)
  * Support affirmative replies: "Who did it?" "John's evil twin."
  * Expanded Lithuanian dictionary.
  * Minor disjunct printing fixes.
+ * Fix: "Mary is too XXX to talk to."
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

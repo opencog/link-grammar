@@ -6851,12 +6851,16 @@ n't n’t: N- or EB-;
 
 % Ordinary adjectives
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a
-% "the rich and powerful": [[{DD-} & <noun-and-p>]]
-
+%
+% [[{DD-} & <noun-and-p>]]:  "the rich and powerful":
+%
+% Lots and lots, but not all ordinary adjs can take <tot-verb>:
+% Pa- & <tot-verb>: "... is too abrasive to talk to."
+%
 <ordinary-adj>:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+})
+    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
