@@ -6842,11 +6842,12 @@ n't n’t: N- or EB-;
 
 % Common disjuncts shared by virtually all adjectives.
 % Dn- & AJn+: for neither...nor constructions.
-<adj-op>: [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]] or
-  (AJra- & {@MV+}) or
-  ({@MV+} & AJla+) or
-  (Dn- & AJn+) or
-  ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
+<adj-op>:
+  [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]]
+  or (AJra- & {@MV+})
+  or ({@MV+} & AJla+)
+  or (Dn- & AJn+)
+  or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
 
 % Ordinary adjectives
 % abject.a abnormal.a abominable.a abortive.a abrasive.a abrupt.a
@@ -6854,13 +6855,13 @@ n't n’t: N- or EB-;
 
 <ordinary-adj>:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Pa- or AF+ or Ma- or MJra-) & {@MV+}) or
-    ({@MV+} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    <adj-op>);
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Pa- or AF+ or Ma- or MJra-) & {@MV+})
+    or ({@MV+} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or <adj-op>);
 
 /en/words/words.adj.1:
   <marker-common-entity> or
@@ -6915,17 +6916,17 @@ aged.i: <aged>;
 ages.i: [<aged>];
 
 % The following all have a very regular pattern, with just one variable
-% part, the TO TH type section.  This regularity should be exploted so
+% part, the TO TH type section.  This regularity should be exploited to
 % simplify the expressions ...
 easy.a hard.a simple.a difficult.a fun.a expensive.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
-    ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb>} & <adj-op>));
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<tot-verb>} & <adj-op>));
 
 % M-: "Do you have an example ready?"
 % Although we'd like to use Ma- for the above, post-processing prevents this.
@@ -6943,13 +6944,13 @@ ready.a:
 silly.a nasty.a pleasant.a unpleasant.a dangerous.a cruel.a standard.a safe.a
 legal.a illegal.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}}) or
-    ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb>} & <adj-op>));
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<tot-verb>} & <adj-op>));
 
 <adj-good>:
   {EA- or EF+} &
@@ -6978,6 +6979,8 @@ important.a essential.a crucial.a necessary.a imperative.a vital.a:
     [[{DD-} & <noun-and-p>]] or
     ({<tot-verb>} & <adj-op>)));
 
+% XXX FIXME The below probably needs a <tot-verb> like above ... 
+%
 common.a practical.a original.a normal.a helpful.a striking.a
 confusing.a frustrating.a disturbing.a
 logical.a illogical.a elegant.a efficient.a awful.a just.a unjust.a
