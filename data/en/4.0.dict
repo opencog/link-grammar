@@ -531,6 +531,8 @@ HYPHENATED-WORDS.n:
 % The naked SJr- allows article to be skipped in conjunction (and,or)
 % constructions ("the hammer and sickle")
 %
+% ({NMa+} & AN+): He takes vitamin D supplements.
+%
 % XXX TODO fixme: there are many gerund-like nouns in here (e.g. "reading")
 % which screw things up when linking to "be" (e.g. "I have to be reading now")
 % by appearing as objects (O-) connector when really the verb form (Pg-)
@@ -538,7 +540,7 @@ HYPHENATED-WORDS.n:
 % words.n.3)
 <common-noun>:
   <noun-modifiers> &
-    (AN+
+    (({NMa+} & AN+)
     or ((NM+ or ({[NM+]} & (Ds- or <null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
