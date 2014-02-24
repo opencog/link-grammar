@@ -6959,13 +6959,13 @@ legal.a illegal.a:
 
 <adj-good>:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}}) or
-    ({@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb>} & <adj-op>));
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}})
+    or ({@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<tot-verb>} & <adj-op>));
 
 good.a bad.a unusual.a useful.a a_bitch nice.a
 strange.a wonderful.a terrible.a possible.a impossible.a annoying.a
@@ -6976,16 +6976,14 @@ great.a: <marker-common-entity> or <adj-good>;
 important.a essential.a crucial.a necessary.a imperative.a vital.a:
   <marker-common-entity> or
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>)) or
-    ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    ({<tot-verb>} & <adj-op>)));
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
+    or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<tot-verb>} & <adj-op>)));
 
-% XXX FIXME The below probably needs a <tot-verb> like above ... 
-%
 common.a practical.a original.a normal.a helpful.a striking.a
 confusing.a frustrating.a disturbing.a
 logical.a illogical.a elegant.a efficient.a awful.a just.a unjust.a
@@ -6994,13 +6992,13 @@ detestable.a scary.a shocking.a
 poetical.a:
   <marker-common-entity> or
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <toi-verb>) & {LE+}}) or
-    ({@MV+} & {(THi+ or <toi-verb>) & {LE+}} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    <adj-op>));
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <toi-verb>) & {LE+}})
+    or ({@MV+} & {(THi+ or <toi-verb>) & {LE+}} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or <adj-op>));
 
 surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
 rare.a embarrassing.a:
@@ -7015,13 +7013,13 @@ rare.a embarrassing.a:
 
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}}) or
-    ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+) or
-    AA+ or
-    [[DD- & <noun-main-p>]] or
-    [[{DD-} & <noun-and-p>]] or
-    ({<to-verb>} & <adj-op>));
+    (({[[@Ec-]]} & {Xc+} & A+)
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}})
+    or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<to-verb>} & <adj-op>));
 
 wise.a unwise.a smart.a intelligent.a:
   {EA- or EF+} &
