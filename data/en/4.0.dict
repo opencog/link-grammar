@@ -8505,13 +8505,14 @@ and.j-g: [[G- & G+]];
 % MVa is given a cost, so that Pa is used, if possible.
 % (In general, we want to never use MVa if Pa is possible... )
 % AJla- & AJr*+ allows "he is clever and funnier than Mike."
+% <tot-verb>: "Mary is too boring and depressing to talk to"
 %
 % AJ*a: ordinary adjectives
 % AJ*c: comparative adjectives
 % AJ*s: superlative adjectives
 %
 and.j-a but.j-a yet.j-a and_yet:
-  ({Xd-} & AJla- & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-);
+  ({Xd-} & AJla- & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-) & {<tot-verb>};
 
 or.j-a:
   ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
