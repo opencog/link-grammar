@@ -6993,7 +6993,7 @@ poetical.a:
   <marker-common-entity> or
   ({EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <toi-verb>) & {LE+}})
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <toi-verb> or <tot-verb>) & {LE+}})
     or ({@MV+} & {(THi+ or <toi-verb>) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -7004,7 +7004,7 @@ surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
 rare.a embarrassing.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <toi-verb>) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or <fitcl-verb> or <toi-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
@@ -7014,7 +7014,7 @@ rare.a embarrassing.a:
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+)
-    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}})
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
     or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & MJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -7024,7 +7024,7 @@ crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
 wise.a unwise.a smart.a intelligent.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb>) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<to-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(<to-verb> or <toi-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
@@ -7062,7 +7062,7 @@ lamentable.a regrettable.a
 well-known.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb>) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
@@ -7072,7 +7072,7 @@ well-known.a:
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or QIi+) & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(THi+ or QIi+ or <tot-verb>) & {LE+}}) or
     ({@MV+} & {(THi+ or QIi+) & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
@@ -7094,7 +7094,7 @@ preferable.a senseless.a trivial.a wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a enjoyable.a idiotic.a inconvenient.a unkind.a pointless.a:
   {EA- or EF+} &
     (({[[@Ec-]]} & {Xc+} & A+) or
-    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {<toi-verb> & {LE+}}) or
+    ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}}) or
     ({@MV+} & {<toi-verb> & {LE+}} & MJla+) or
     AA+ or
     [[DD- & <noun-main-p>]] or
@@ -7131,6 +7131,8 @@ sure.a unsure.a uncertain.a careful.a:
     [[{DD-} & <noun-and-p>]] or
     ({<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-op>));
 
+% XXX FIXME: many of the below should probably take <tot-verb> like the
+% above...
 % common adjectives, taking "to", "that" e.g. "was incorrect that"
 correct.a incorrect.a right.a excited.a
 disappointed.a upset.a sorry.a content.a determined.a
