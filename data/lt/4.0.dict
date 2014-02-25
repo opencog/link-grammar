@@ -155,7 +155,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 % Pirmoji linksniuotė
 % I kirčiuotė
 kaim.= nam.= tilt.= auks.= burt.= būst.= dūm.= elni.= grob.=
-inkst.= kalt.= kaul.= kauš.= kelt.= krūm.= kūn.= kurt.= lenk.= moksl.=
+inkst.= kalt.= kaul.= kauš.= kelt.= krūm.= kūn.= kurt.= moksl.=
 pien.= piūkl.= prūs.= poud.= rūm.= siūl.= sost.= sviest.= šaukšt.=
 šon.= tarp.= vyr.= žaisl.= žent.= :
   LLPIRMIas+;
@@ -168,7 +168,6 @@ tvart.= : LLPIRMIas+ or  LLPIRMIis+;
 
 % tiktai daugistkaita (miltai ir t.t.)
 milt.= žąsl.= : LLPIRMIas+;
-siel.= : LLPIRMIis+;
 
 % II kirčiuotė ---------------------
 % Kirčiai skirtingi nuo I-os kirčiuotės
@@ -215,7 +214,7 @@ arkl.= : LLPIRMIas+ or LLPIRMIIIys+;
 lauk.= kakl.= aul.= baln.= bals.= darž.= Diev.= dumbl.= gal.= gand.=
 gars.= jausm.= kamp.= kap.= krant.= krašt.= krauj.= laik.= laiv.=
 lank.= lizd.= mišk.= nag.= purv.= rag.= sparn.= tak.= tarn.= vaik.=
-vard.= varg.= varn.= varp.= verksm.= vilk.= :
+vard.= varg.= varn.= verksm.= vilk.= :
   LLPIRMIas+;
 
 % kelias ???
@@ -370,8 +369,8 @@ sak.= : LLPIRMIas+;
 % I kirčiuotė
 šark.= jur.= prog.= bob.= duon.= geld.= gėd.= ien.= yl.= jauj.= 
 juost.= karp.= kilp.= kink.= kuop.= kuos.= liep.= lov.= lūp.= malk.=
-maršk.= nuom.= piev.= plunksn.= sauj.= sien.= siel.= smilg.= start.=
-stirn.= šluot.= tuop.= ūdr.= vant.= varp.= varž.= vėtr.= vinkšn.= 
+maršk.= nuom.= piev.= plunksn.= sauj.= sien.= smilg.= start.=
+stirn.= šluot.= tuop.= ūdr.= vant.= varž.= vėtr.= vinkšn.= 
   : LLANTRIa+;
 
 % tiktai daugiskaita:
@@ -380,7 +379,7 @@ stirn.= šluot.= tuop.= ūdr.= vant.= varp.= varž.= vėtr.= vinkšn.=
 
 drob.= aib.= aukl.= baim.= buož.= dirs.= dulk.= gemb.= karv.=
 kaug.= kerp.= kiaun.= kiel.= kriauš.= kurp.= laim.= laisv.= lendr.=
-lenk.= ling.= lys.= meil.= menk.= pelk.= pemp.= rykšt.= rop.= 
+ling.= lys.= meil.= menk.= pelk.= pemp.= rykšt.= rop.= 
 saul.= seil.= smarv.= šiaur.= teis.= zyl.= žiurk.= žvyn.=
   : LLANTRIe+;
 
@@ -405,7 +404,15 @@ eil.= : LLANTRIe+;
 
 % ---------------------------------------
 % lapas, lapė
-lap.= :  LLPIRMIas+ or LLANTRIe+;
+% lenkas, lenkė
+lap.= lenk.=:  LLPIRMIas+ or LLANTRIe+;
+
+% varpas, varpa
+varp.= : LLPIRMIas+ or LLANTRIa+;
+
+% sieliai, siela
+siel.= : LLPIRMIis+ or LLANTRIa+;
+
 
 % ---------------------------------------
 % Antroji linksniuotė vienaskaita I kirčiuotė
