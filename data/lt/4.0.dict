@@ -38,7 +38,7 @@
 % Papildinys (object) ko? ką? kam? kuo?
 %
 % Tarinys (predicate)
-% Grynasis tarinys
+% Grynasis tarinys      
 % Suvestinis tarinys
 % Sudurtinis tarinys
 % Mišrusis tarinys
@@ -448,6 +448,9 @@ didelė gera graži medine balta: (Bm- & {Xp+}) or DVm+;
 
 % -------------------------------
 % Veiksmažodžiai
+
+skauda: VJv- & T-;
+
 išvažiavo: {PV-} & VO- & {Xp+};
 
 atvažiavom: {VM-} & (LI+ or PV+) & {Wd-};
@@ -458,6 +461,29 @@ irkluoja skaite skaito skaitys: VJ- & {DG+};
 skaitau: {VA- or DN-} & {DG+} & {Wd-};
 
 sumušiau: VG- & {Wd-} & {VI+};
+
+% <veiks-tevp> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita p=pirmasis
+% <veiks-teva> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita a=antrasis
+% <veiks-tevt> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita t=trečiasis
+%
+% <veiks-tedp> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita p=pirmasis
+% <veiks-teda> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita a=antrasis
+% <veiks-tedt> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita t=trečiasis
+%
+% Pirmoji asmenuotė
+% augti
+aug.= : LLAPIRMti+;
+
+% ----- Tiesioginė nuosaka  Esamasis laikas
+=u.tevp : LLAPIRMti- & <veiks-tevp>;
+=i.teva : LLAPIRMti- & <veiks-teva>;
+=a.tevt : LLAPIRMti- & <veiks-tevt>;
+
+=ame.tedp : LLAPIRMti- & <veiks-tedp>;
+=ate.teda : LLAPIRMti- & <veiks-teda>;
+=a.tedt : LLAPIRMti- & <veiks-tedt>;
+
+% ----- Tiesioginė nuosaka  Būtasis kartinis laikas
 
 % -------------------------------
 % Įvardžiai
@@ -495,7 +521,7 @@ namo: PV+ or (PV- & {Xp+});
 
 % Žodžiai, kurie gali pradėti sakini.
 CAPITALIZED-WORDS: Wd-;
-LEFT-WALL: (Wd+ or Wa+ or Wi+) & {Xx+};
+LEFT-WALL: ((Wd+ or Wa+ or Wi+) & {Xx+}) or T+;
 
 % With the following line in the dictionary, the parser will simply 
 % skip over (null-link) unknown words. If you remove it, the parser 
