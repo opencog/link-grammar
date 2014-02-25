@@ -503,56 +503,66 @@ sumušiau: VG- & {Wd-} & {VI+};
 % <veiks-rda> Veiksmažodis - rd r=tariamoji d=daugiskaita a=antrasis
 % <veiks-rdt> Veiksmažodis - rd r=tariamoji d=daugiskaita t=trečiasis
 %
+% <veiks-lva> Veiksmažodis - lv l=liepiamoji v=vienaskaita a=antrasis
+% <veiks-ldp> Veiksmažodis - ld l=liepiamoji d=daugiskaita p=pirmasis
+% <veiks-lda> Veiksmažodis - ld l=liepiamoji d=daugiskaita a=antrasis
+%
 % Pirmoji asmenuotė
 % augti
-aug.= : LLAPIRMti+;
+au.= : LLAPIRMgti+;
 
 % ----- Tiesioginė nuosaka  Esamasis laikas
-=u.tevp : LLAPIRMti- & <veiks-tevp>;
-=i.teva : LLAPIRMti- & <veiks-teva>;
-=a.tevt : LLAPIRMti- & <veiks-tevt>;
+=gu.tevp : LLAPIRMgti- & <veiks-tevp>;
+=gi.teva : LLAPIRMgti- & <veiks-teva>;
+=ga.tevt : LLAPIRMgti- & <veiks-tevt>;
 
-=ame.tedp : LLAPIRMti- & <veiks-tedp>;
-=ate.teda : LLAPIRMti- & <veiks-teda>;
-=a.tedt   : LLAPIRMti- & <veiks-tedt>;
+=game.tedp : LLAPIRMgti- & <veiks-tedp>;
+=gate.teda : LLAPIRMgti- & <veiks-teda>;
+=ga.tedt   : LLAPIRMgti- & <veiks-tedt>;
 
 % ----- Tiesioginė nuosaka  Būtasis kartinis laikas
-=au.tkvp : LLAPIRMti- & <veiks-tkvp>;
-=ai.tkva : LLAPIRMti- & <veiks-tkva>;
-=o.tkvt  : LLAPIRMti- & <veiks-tkvt>;
+=gau.tkvp : LLAPIRMgti- & <veiks-tkvp>;
+=gai.tkva : LLAPIRMgti- & <veiks-tkva>;
+=go.tkvt  : LLAPIRMgti- & <veiks-tkvt>;
 
-=ome.tkdp : LLAPIRMti- & <veiks-tkdp>;
-=ote.tkda : LLAPIRMti- & <veiks-tkda>;
-=o.tkdt   : LLAPIRMti- & <veiks-tkdt>;
+=gome.tkdp : LLAPIRMgti- & <veiks-tkdp>;
+=gote.tkda : LLAPIRMgti- & <veiks-tkda>;
+=go.tkdt   : LLAPIRMgti- & <veiks-tkdt>;
 
 % ----- Tiesioginė nuosaka  Būtasis dažninis laikas
-=davau.tzvp : LLAPIRMti- & <veiks-tzvp>;
-=davai.tzva : LLAPIRMti- & <veiks-tzva>;
-=davo.tzvt  : LLAPIRMti- & <veiks-tzvt>;
+=gdavau.tzvp : LLAPIRMgti- & <veiks-tzvp>;
+=gdavai.tzva : LLAPIRMgti- & <veiks-tzva>;
+=gdavo.tzvt  : LLAPIRMgti- & <veiks-tzvt>;
 
-=davome.tzdp : LLAPIRMti- & <veiks-tzdp>;
-=davote.tzda : LLAPIRMti- & <veiks-tzda>;
-=davo.tzdt   : LLAPIRMti- & <veiks-tzdt>;
+=gdavome.tzdp : LLAPIRMgti- & <veiks-tzdp>;
+=gdavote.tzda : LLAPIRMgti- & <veiks-tzda>;
+=gdavo.tzdt   : LLAPIRMgti- & <veiks-tzdt>;
 
 % ----- Tiesioginė nuosaka  Būsimasis laikas
-=siu.tuvp : LLAPIRMti- & <veiks-tuvp>;
-=si.tuva  : LLAPIRMti- & <veiks-tuva>;
-=s.tuvt   : LLAPIRMti- & <veiks-tuvt>;
+=gsiu.tuvp : LLAPIRMgti- & <veiks-tuvp>;
+=gsi.tuva  : LLAPIRMgti- & <veiks-tuva>;
+=gs.tuvt   : LLAPIRMgti- & <veiks-tuvt>;
 
-=sime.tudp : LLAPIRMti- & <veiks-tudp>;
-=site.tuda : LLAPIRMti- & <veiks-tuda>;
-=s.tudt    : LLAPIRMti- & <veiks-tudt>;
-
+=gsime.tudp : LLAPIRMgti- & <veiks-tudp>;
+=gsite.tuda : LLAPIRMgti- & <veiks-tuda>;
+=gs.tudt    : LLAPIRMgti- & <veiks-tudt>;
 
 % ----- Tariamoji nuosaka
-=čiau.rvp : LLAPIRMti- & <veiks-rvp>;
-=tum.rva  : LLAPIRMti- & <veiks-rva>;
-=tų.rvt   : LLAPIRMti- & <veiks-rvt>;
+=gčiau.rvp : LLAPIRMgti- & <veiks-rvp>;
+=gtum.rva  : LLAPIRMgti- & <veiks-rva>;
+=gtų.rvt   : LLAPIRMgti- & <veiks-rvt>;
 
-=tume.rdp : LLAPIRMti- & <veiks-rdp>;
-=tute.rda : LLAPIRMti- & <veiks-rda>;
-=tų.rdt   : LLAPIRMti- & <veiks-rdt>;
+=gtume.rdp : LLAPIRMgti- & <veiks-rdp>;
+=gtute.rda : LLAPIRMgti- & <veiks-rda>;
+=gtų.rdt   : LLAPIRMgti- & <veiks-rdt>;
 
+% ----- Liepiamoji nuosaka
+=k.lva    : LLAPIRMgti- & <veiks-lva>;
+=kime.ldp : LLAPIRMgti- & <veiks-ldp>;
+=kite.lda : LLAPIRMgti- & <veiks-lda>;
+
+% ----- Geidžiamoji nuosaka
+% teaugie  ....
 
 % -------------------------------
 % Įvardžiai
