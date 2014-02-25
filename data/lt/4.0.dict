@@ -597,6 +597,66 @@ au.= : LLAPIRMgti+;
 % ----- Geidžiamoji nuosaka
 % teaugie  ....
 
+% ---------------------------------------------------------
+%
+% Trečioji asmenuotė
+% mokyti skatyti
+mok.= : LLATREyti+;
+skai.= : LLATREtyti+;
+
+% ----- Tiesioginė nuosaka  Esamasis laikas
+=au.tevp : LLATREyti- & <veiks-tevp>;
+=ai.teva : LLATREyti- & <veiks-teva>;
+=o.tevt  : LLATREyti- & <veiks-tevt>;
+
+=ome.tedp : LLATREyti- & <veiks-tedp>;
+=ote.teda : LLATREyti- & <veiks-teda>;
+=o.tedt   : LLATREyti- & <veiks-tedt>;
+
+% ----- Tiesioginė nuosaka  Būtasis kartinis laikas
+=iau.tkvp : LLATREyti- & <veiks-tkvp>;
+=ei.tkva  : LLATREyti- & <veiks-tkva>;
+=ė.tkvt   : LLATREyti- & <veiks-tkvt>;
+
+=ėme.tkdp : LLATREyti- & <veiks-tkdp>;
+=ėte.tkda : LLATREyti- & <veiks-tkda>;
+=ė.tkdt   : LLATREyti- & <veiks-tkdt>;
+
+% ----- Tiesioginė nuosaka  Būtasis dažninis laikas
+=ydavau.tzvp : LLATREyti- & <veiks-tzvp>;
+=ydavai.tzva : LLATREyti- & <veiks-tzva>;
+=ydavo.tzvt  : LLATREyti- & <veiks-tzvt>;
+
+=ydavome.tzdp : LLATREyti- & <veiks-tzdp>;
+=ydavote.tzda : LLATREyti- & <veiks-tzda>;
+=ydavo.tzdt   : LLATREyti- & <veiks-tzdt>;
+
+% ----- Tiesioginė nuosaka  Būsimasis laikas
+=ysiu.tuvp : LLATREyti- & <veiks-tuvp>;
+=ysi.tuva  : LLATREyti- & <veiks-tuva>;
+=ys.tuvt   : LLATREyti- & <veiks-tuvt>;
+
+=ysime.tudp : LLATREyti- & <veiks-tudp>;
+=ysite.tuda : LLATREyti- & <veiks-tuda>;
+=ys.tudt    : LLATREyti- & <veiks-tudt>;
+
+% ----- Tariamoji nuosaka
+=yčiau.rvp : LLATREyti- & <veiks-rvp>;
+=ytum.rva  : LLATREyti- & <veiks-rva>;
+=ytų.rvt   : LLATREyti- & <veiks-rvt>;
+
+=ytume.rdp : LLATREyti- & <veiks-rdp>;
+=ytute.rda : LLATREyti- & <veiks-rda>;
+=ytų.rdt   : LLATREyti- & <veiks-rdt>;
+
+% ----- Liepiamoji nuosaka
+=yk.lva    : LLATREyti- & <veiks-lva>;
+=ykime.ldp : LLATREyti- & <veiks-ldp>;
+=ykite.lda : LLATREyti- & <veiks-lda>;
+
+% ----- Geidžiamoji nuosaka
+% temokai  ....
+
 % -------------------------------
 % Įvardžiai
 % Asmeniniai įvardžiai
