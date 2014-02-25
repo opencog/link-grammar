@@ -44,13 +44,12 @@
 % Mišrusis tarinys
 % 
 % 
-% Reikia čia viska visai perašyti, išmesti ...   
 % D  == Daiktavardis
 % DV == Vardininkas Kas?
 %   DVv == vyriška, DVm == moteriška giminė
 %   DV*v == vienaskaita  DV*d == daugiskaita
 %   DV**p == pirmoji DV**a == antroji DV**t == trečioji  asmenuotė
-
+%
 % DK == Kilmininkas Ko?
 % DN == Naudininkas Kam?
 % DG == Galininkas Ką?
@@ -59,6 +58,7 @@
 % DS == Šauksmininkas O!
 %
 %
+% Reikia čia viska visai perašyti, išmesti ...   
 % V  == Veiksmažodis
 % VA == Aš
 % VT == Tu
@@ -103,7 +103,7 @@ einame einam gyvename gyvenam: VM- or ({VM-} & (LI+ or PV+) & {Wd- or Wi-});
 eina: {VJ-} & (LI+ or PV+);
 
 % -------------------------------
-% Daiktavardžai ...
+% Daiktavardžai ... XXX
 svečiai: VO+ & {Wd-};
 šachmatais: VI-;
 
@@ -112,11 +112,11 @@ mokytojas studentas: DVv- & {Xp+} & {Wd-};
 mokytoja studentė: DVm- & {Xp+} & {Wd-};
 
 % reikalauja veiksmažodi ant kairės.
-laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-} & {Xp+};
+laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-};
 
 % -------------------------------
 % Linksniai -- vyriški vienaskaita
-<vv-v-kas>: {DVv-} & VJv+ & {Wd-};
+<vv-v-kas>: DVvvt+;
 <vv-k-ko>: DK+;
 <vv-n-kam>: DN+;
 <vv-g-ka>: VG+;
@@ -125,7 +125,7 @@ laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-} & {Xp+};
 <vv-s-o>: Wa-;
 
 % vyriški daugiskaita
-<vd-v-kas>: {DVv-} & VJv+ & {Wd-};
+<vd-v-kas>: DVvdt+;
 <vd-k-ko>: DK+;
 <vd-n-kam>: DN+;
 <vd-g-ka>: VG+;
@@ -473,81 +473,82 @@ sumušiau: VG- & {Wd-} & {VI+};
 % Nousaka -- laikas -- skaičius -- asmuo
 % <veiks-tevp> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita p=pirmasis
 % DV-: aš skaitau
-<veiks-tevp>: {DV*vp-} & T- & {Xp+};
+% DG+: skaitau knygą
+<veiks-tevp>: {DV*vp-} & T- & {DG+} & {Xp+};
 % <veiks-teva> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita a=antrasis
-<veiks-teva>: {DV*va-} & T- & {Xp+};
+<veiks-teva>: {DV*va-} & T- & {DG+} & {Xp+};
 % <veiks-tevt> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita t=trečiasis
-<veiks-tevt>: {DV*vt-} & T- & {Xp+};
+<veiks-tevt>: {DV*vt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-tedp> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita p=pirmasis
-<veiks-tedp>: {DV*dp-} & T- & {Xp+};
+<veiks-tedp>: {DV*dp-} & T- & {DG+} & {Xp+};
 % <veiks-teda> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita a=antrasis
-<veiks-teda>: {DV*da-} & T- & {Xp+};
+<veiks-teda>: {DV*da-} & T- & {DG+} & {Xp+};
 % <veiks-tedt> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita t=trečiasis
-<veiks-tedt>: {DV*dt-} & T- & {Xp+};
+<veiks-tedt>: {DV*dt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-tkvp> Veiksmažodis - tkv t=tiesioginė k=būtasis kartinis v=vienaskaita p=pirmasis
-<veiks-tkvp>: {DV*vp-} & T- & {Xp+};
+<veiks-tkvp>: {DV*vp-} & T- & {DG+} & {Xp+};
 % <veiks-tkva> Veiksmažodis - tkv t=tiesioginė k=būtasis kartinis v=vienaskaita a=antrasis
-<veiks-tkva>: {DV*va-} & T- & {Xp+};
+<veiks-tkva>: {DV*va-} & T- & {DG+} & {Xp+};
 % <veiks-tkvt> Veiksmažodis - tkv t=tiesioginė k=būtasis kartinis v=vienaskaita t=trečiasis
-<veiks-tkvt>: {DV*vt-} & T- & {Xp+};
+<veiks-tkvt>: {DV*vt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-tkdp> Veiksmažodis - tkd t=tiesioginė k=būtasis kartinis d=daugiskaita p=pirmasis
-<veiks-tkdp>: {DV*dp-} & T- & {Xp+};
+<veiks-tkdp>: {DV*dp-} & T- & {DG+} & {Xp+};
 % <veiks-tkda> Veiksmažodis - tkd t=tiesioginė k=būtasis kartinis d=daugiskaita a=antrasis
-<veiks-tkda>: {DV*da-} & T- & {Xp+};
+<veiks-tkda>: {DV*da-} & T- & {DG+} & {Xp+};
 % <veiks-tkdt> Veiksmažodis - tkd t=tiesioginė k=būtasis kartinis d=daugiskaita t=trečiasis
-<veiks-tkdt>: {DV*dt-} & T- & {Xp+};
+<veiks-tkdt>: {DV*dt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-tzvp> Veiksmažodis - tzv t=tiesioginė z=būtasis dažninis v=vienaskaita p=pirmasis
-<veiks-tzvp>: {DV*vp-} & T- & {Xp+};
+<veiks-tzvp>: {DV*vp-} & T- & {DG+} & {Xp+};
 % <veiks-tzva> Veiksmažodis - tzv t=tiesioginė z=būtasis dažninis v=vienaskaita a=antrasis
-<veiks-tzva>: {DV*va-} & T- & {Xp+};
+<veiks-tzva>: {DV*va-} & T- & {DG+} & {Xp+};
 % <veiks-tzvt> Veiksmažodis - tzv t=tiesioginė z=būtasis dažninis v=vienaskaita t=trečiasis
-<veiks-tzvt>: {DV*vt-} & T- & {Xp+};
+<veiks-tzvt>: {DV*vt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-tzdp> Veiksmažodis - tzd t=tiesioginė z=būtasis dažninis d=daugiskaita p=pirmasis
-<veiks-tzdp>: {DV*dp-} & T- & {Xp+};
+<veiks-tzdp>: {DV*dp-} & T- & {DG+} & {Xp+};
 % <veiks-tzda> Veiksmažodis - tzd t=tiesioginė z=būtasis dažninis d=daugiskaita a=antrasis
-<veiks-tzda>: {DV*da-} & T- & {Xp+};
+<veiks-tzda>: {DV*da-} & T- & {DG+} & {Xp+};
 % <veiks-tzdt> Veiksmažodis - tzd t=tiesioginė z=būtasis dažninis d=daugiskaita t=trečiasis
-<veiks-tzdt>: {DV*dt-} & T- & {Xp+};
+<veiks-tzdt>: {DV*dt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-tuvp> Veiksmažodis - tuv t=tiesioginė z=būsimasis v=vienaskaita p=pirmasis
-<veiks-tuvp>: {DV*vp-} & T- & {Xp+};
+<veiks-tuvp>: {DV*vp-} & T- & {DG+} & {Xp+};
 % <veiks-tuva> Veiksmažodis - tuv t=tiesioginė z=būsimasis v=vienaskaita a=antrasis
-<veiks-tuva>: {DV*va-} & T- & {Xp+};
+<veiks-tuva>: {DV*va-} & T- & {DG+} & {Xp+};
 % <veiks-tuvt> Veiksmažodis - tuv t=tiesioginė z=būsimasis v=vienaskaita t=trečiasis
-<veiks-tuvt>: {DV*vt-} & T- & {Xp+};
+<veiks-tuvt>: {DV*vt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-tudp> Veiksmažodis - tud t=tiesioginė z=būsimasis d=daugiskaita p=pirmasis
-<veiks-tudp>: {DV*dp-} & T- & {Xp+};
+<veiks-tudp>: {DV*dp-} & T- & {DG+} & {Xp+};
 % <veiks-tuda> Veiksmažodis - tud t=tiesioginė z=būsimasis d=daugiskaita a=antrasis
-<veiks-tuda>: {DV*da-} & T- & {Xp+};
+<veiks-tuda>: {DV*da-} & T- & {DG+} & {Xp+};
 % <veiks-tudt> Veiksmažodis - tud t=tiesioginė z=būsimasis d=daugiskaita t=trečiasis
-<veiks-tudt>: {DV*dt-} & T- & {Xp+};
+<veiks-tudt>: {DV*dt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-rvp> Veiksmažodis - rv r=tariamoji v=vienaskaita p=pirmasis
-<veiks-rvp>: {DV*vp-} & T- & {Xp+};
+<veiks-rvp>: {DV*vp-} & T- & {DG+} & {Xp+};
 % <veiks-rva> Veiksmažodis - rv r=tariamoji v=vienaskaita a=antrasis
-<veiks-rva>: {DV*va-} & T- & {Xp+};
+<veiks-rva>: {DV*va-} & T- & {DG+} & {Xp+};
 % <veiks-rvt> Veiksmažodis - rv r=tariamoji v=vienaskaita t=trečiasis
-<veiks-rvt>: {DV*vt-} & T- & {Xp+};
+<veiks-rvt>: {DV*vt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-rdp> Veiksmažodis - rd r=tariamoji d=daugiskaita p=pirmasis
-<veiks-rdp>: {DV*dp-} & T- & {Xp+};
+<veiks-rdp>: {DV*dp-} & T- & {DG+} & {Xp+};
 % <veiks-rda> Veiksmažodis - rd r=tariamoji d=daugiskaita a=antrasis
-<veiks-rda>: {DV*da-} & T- & {Xp+};
+<veiks-rda>: {DV*da-} & T- & {DG+} & {Xp+};
 % <veiks-rdt> Veiksmažodis - rd r=tariamoji d=daugiskaita t=trečiasis
-<veiks-rdt>: {DV*dt-} & T- & {Xp+};
+<veiks-rdt>: {DV*dt-} & T- & {DG+} & {Xp+};
 %
 % <veiks-lva> Veiksmažodis - lv l=liepiamoji v=vienaskaita a=antrasis
-<veiks-lva>: {DV*va-} & T- & {Xp+};
+<veiks-lva>: {DV*va-} & T- & {DG+} & {Xp+};
 % <veiks-ldp> Veiksmažodis - ld l=liepiamoji d=daugiskaita p=pirmasis
-<veiks-ldp>: {DV*dp-} & T- & {Xp+};
+<veiks-ldp>: {DV*dp-} & T- & {DG+} & {Xp+};
 % <veiks-lda> Veiksmažodis - ld l=liepiamoji d=daugiskaita a=antrasis
-<veiks-lda>: {DV*da-} & T- & {Xp+};
+<veiks-lda>: {DV*da-} & T- & {DG+} & {Xp+};
 %
 % Pirmoji asmenuotė
 % augti
@@ -558,7 +559,7 @@ au.= : LLAPIRMgti+;
 =gi.teva : LLAPIRMgti- & <veiks-teva>;
 =ga.tevt : LLAPIRMgti- & <veiks-tevt>;
 
-=game.tedp : LLAPIRMgti- & <veiks-tedp>;
+=game.tedp =gam.tedp : LLAPIRMgti- & <veiks-tedp>;
 =gate.teda : LLAPIRMgti- & <veiks-teda>;
 =ga.tedt   : LLAPIRMgti- & <veiks-tedt>;
 
@@ -617,7 +618,7 @@ mok.= : LLATREyti+;
 =ai.teva : LLATREyti- & <veiks-teva>;
 =o.tevt  : LLATREyti- & <veiks-tevt>;
 
-=ome.tedp : LLATREyti- & <veiks-tedp>;
+=ome.tedp =om.tedp : LLATREyti- & <veiks-tedp>;
 =ote.teda : LLATREyti- & <veiks-teda>;
 =o.tedt   : LLATREyti- & <veiks-tedt>;
 
@@ -676,7 +677,7 @@ skai.= : LLATREtyti+;
 =tai.teva : LLATREtyti- & <veiks-teva>;
 =to.tevt  : LLATREtyti- & <veiks-tevt>;
 
-=tome.tedp : LLATREtyti- & <veiks-tedp>;
+=tome.tedp =tom.tedp : LLATREtyti- & <veiks-tedp>;
 =tote.teda : LLATREtyti- & <veiks-teda>;
 =to.tedt   : LLATREtyti- & <veiks-tedt>;
 
