@@ -11,8 +11,8 @@
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
-% Dictionary version number is 4.8.7 (formatted as V4v8v7+)
-<dictionary-version-number>: V4v8v7+;
+% Dictionary version number is 4.9.0 (formatted as V4v9v0+)
+<dictionary-version-number>: V4v9v0+;
 
 % Empty word; required for basic morphology analysis.
 =.zzz: ZZZ-;
@@ -112,14 +112,14 @@ mokytojas studentas: DVv- & {Xp+} & {Wd-};
 mokytoja studentė: DVm- & {Xp+} & {Wd-};
 
 % reikalauja veiksmažodi ant kairės.
-laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-};
+laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 
 % -------------------------------
 % Linksniai -- vyriški vienaskaita
 <vv-v-kas>: DVvvt+;
 <vv-k-ko>: DK+;
 <vv-n-kam>: DN+;
-<vv-g-ka>: VG+;
+<vv-g-ka>:  {DK-} & DG-;  %%%% VG+;
 <vv-i-kuo>: VM+ & {Wd-};
 <vv-v-kur>: VM+ & {Wd-};
 <vv-s-o>: Wa-;
@@ -128,7 +128,7 @@ laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-};
 <vd-v-kas>: DVvdt+;
 <vd-k-ko>: DK+;
 <vd-n-kam>: DN+;
-<vd-g-ka>: VG+;
+<vd-g-ka>: {DK-} & DG-; %%% VG+;
 <vd-i-kuo>: VM+ & {Wd-};
 <vd-v-kur>: VM+ & {Wd-};
 <vd-s-o>: Wa-;
@@ -137,7 +137,7 @@ laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-};
 <mv-v-kas>: {DVm-} & VJm+ & {Wd-};
 <mv-k-ko>: DK+;
 <mv-n-kam>: DN+;
-<mv-g-ka>: VG+;
+<mv-g-ka>: {DK-} & DG-; %%% VG+;
 <mv-i-kuo>: VM+ & {Wd-};
 <mv-v-kur>: VM+ & {Wd-};
 <mv-s-o>: Wa-;
@@ -146,7 +146,7 @@ laivelį knygą mokyklą sodžių: {DK-} & DG- & {LI-};
 <md-v-kas>: {DVm-} & VJm+ & {Wd-};
 <md-k-ko>: DK+;
 <md-n-kam>: DN+;
-<md-g-ka>: VG+;
+<md-g-ka>: {DK-} & DG-; %%% VG+;
 <md-i-kuo>: VM+ & {Wd-};
 <md-v-kur>: VM+ & {Wd-};
 <md-s-o>: Wa-;
@@ -372,7 +372,7 @@ sak.= : LLPIRMIas+;
 drob.= : LLANTRIe+;
 
 % II kirčiuotė rašosi taip pat kaip pirma ...
-rank.= dirv.= : LLANTRIa+;
+rank.= dirv.= knyg.= : LLANTRIa+;
 up.= : LLANTRIe+;
 
 % III kirčiuotė rašosi taip pat kaip pirma ...
@@ -577,7 +577,7 @@ au.= : LLAPIRMgti+;
 =gdavai.tzva : LLAPIRMgti- & <veiks-tzva>;
 =gdavo.tzvt  : LLAPIRMgti- & <veiks-tzvt>;
 
-=gdavome.tzdp : LLAPIRMgti- & <veiks-tzdp>;
+=gdavome.tzdp =gdavom.tzdp : LLAPIRMgti- & <veiks-tzdp>;
 =gdavote.tzda : LLAPIRMgti- & <veiks-tzda>;
 =gdavo.tzdt   : LLAPIRMgti- & <veiks-tzdt>;
 
@@ -636,7 +636,7 @@ mok.= : LLATREyti+;
 =ydavai.tzva : LLATREyti- & <veiks-tzva>;
 =ydavo.tzvt  : LLATREyti- & <veiks-tzvt>;
 
-=ydavome.tzdp : LLATREyti- & <veiks-tzdp>;
+=ydavome.tzdp =ydavom.tzdp : LLATREyti- & <veiks-tzdp>;
 =ydavote.tzda : LLATREyti- & <veiks-tzda>;
 =ydavo.tzdt   : LLATREyti- & <veiks-tzdt>;
 
@@ -695,7 +695,7 @@ skai.= : LLATREtyti+;
 =tydavai.tzva : LLATREtyti- & <veiks-tzva>;
 =tydavo.tzvt  : LLATREtyti- & <veiks-tzvt>;
 
-=tydavome.tzdp : LLATREtyti- & <veiks-tzdp>;
+=tydavome.tzdp =tydavom.tzdp : LLATREtyti- & <veiks-tzdp>;
 =tydavote.tzda : LLATREtyti- & <veiks-tzda>;
 =tydavo.tzdt   : LLATREtyti- & <veiks-tzdt>;
 

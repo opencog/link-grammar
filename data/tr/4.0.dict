@@ -1,5 +1,8 @@
-% Dictionary version number is 4.8.1 (formatted as V4v8v1+)
-<dictionary-version-number>: V4v8v1+;
+%
+% Turkish dictionary -- experimental
+%
+% Dictionary version number is 4.9.0 (formatted as V4v9v0+)
+<dictionary-version-number>: V4v9v0+;
 % The empty word.
 =.zzz: ZZZ-;
 
