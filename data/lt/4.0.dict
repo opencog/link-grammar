@@ -710,8 +710,8 @@ skai.= : LLATREtyti+;
 =tei.tkva  : LLATREtyti- & <veiks-tkva>;
 =tė.tkvt   : LLATREtyti- & <veiks-tkvt>;
 
-=tėme.tkdp : LLATREtyti- & <veiks-tkdp>;
-=tėte.tkda : LLATREtyti- & <veiks-tkda>;
+=tėme.tkdp =tėm.tkdp : LLATREtyti- & <veiks-tkdp>;
+=tėte.tkda =tėt.tkda : LLATREtyti- & <veiks-tkda>;
 =tė.tkdt   : LLATREtyti- & <veiks-tkdt>;
 
 % ----- Tiesioginė nuosaka  Būtasis dažninis laikas
@@ -720,7 +720,7 @@ skai.= : LLATREtyti+;
 =tydavo.tzvt  : LLATREtyti- & <veiks-tzvt>;
 
 =tydavome.tzdp =tydavom.tzdp : LLATREtyti- & <veiks-tzdp>;
-=tydavote.tzda : LLATREtyti- & <veiks-tzda>;
+=tydavote.tzda =tydavot.tzda : LLATREtyti- & <veiks-tzda>;
 =tydavo.tzdt   : LLATREtyti- & <veiks-tzdt>;
 
 % ----- Tiesioginė nuosaka  Būsimasis laikas
@@ -728,26 +728,26 @@ skai.= : LLATREtyti+;
 =tysi.tuva  : LLATREtyti- & <veiks-tuva>;
 =tys.tuvt   : LLATREtyti- & <veiks-tuvt>;
 
-=tysime.tudp : LLATREtyti- & <veiks-tudp>;
-=tysite.tuda : LLATREtyti- & <veiks-tuda>;
+=tysime.tudp =tysim.tudp : LLATREtyti- & <veiks-tudp>;
+=tysite.tuda =tysit.tuda : LLATREtyti- & <veiks-tuda>;
 =tys.tudt    : LLATREtyti- & <veiks-tudt>;
 
 % ----- Tariamoji nuosaka
 =tyčiau.rvp : LLATREtyti- & <veiks-rvp>;
-=tytum.rva  : LLATREtyti- & <veiks-rva>;
+=tytum.rva =tytumei.rva : LLATREtyti- & <veiks-rva>;
 =tytų.rvt   : LLATREtyti- & <veiks-rvt>;
 
-=tytume.rdp : LLATREtyti- & <veiks-rdp>;
-=tytute.rda : LLATREtyti- & <veiks-rda>;
+=tytume.rdp =tytumėm.rdp =tytumėme.rdp : LLATREtyti- & <veiks-rdp>;
+=tytute.rda =tytumėte.rda =tytumėt.rda : LLATREtyti- & <veiks-rda>;
 =tytų.rdt   : LLATREtyti- & <veiks-rdt>;
 
 % ----- Liepiamoji nuosaka
-=tyk.lva    : LLATREtyti- & <veiks-lva>;
-=tykime.ldp : LLATREtyti- & <veiks-ldp>;
-=tykite.lda : LLATREtyti- & <veiks-lda>;
+=tyk.lva =tyki.lva   : LLATREtyti- & <veiks-lva>;
+=tykime.ldp =tykim.ldp : LLATREtyti- & <veiks-ldp>;
+=tykite.lda =tykit.lda : LLATREtyti- & <veiks-lda>;
 
 % ----- Geidžiamoji nuosaka
-% temokai  ....
+% teskaito teskaitai ....
 
 % -------------------------------
 % Įvardžiai
