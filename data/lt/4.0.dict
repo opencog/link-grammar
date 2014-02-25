@@ -470,6 +470,22 @@ sumušiau: VG- & {Wd-} & {VI+};
 % <veiks-teda> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita a=antrasis
 % <veiks-tedt> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita t=trečiasis
 %
+% <veiks-tkvp> Veiksmažodis - tev t=tiesioginė k=būtasis kartinis v=vienaskaita p=pirmasis
+% <veiks-tkva> Veiksmažodis - tev t=tiesioginė k=būtasis kartinis v=vienaskaita a=antrasis
+% <veiks-tkvt> Veiksmažodis - tev t=tiesioginė k=būtasis kartinis v=vienaskaita t=trečiasis
+%
+% <veiks-tkdp> Veiksmažodis - ted t=tiesioginė k=būtasis kartinis d=daugiskaita p=pirmasis
+% <veiks-tkda> Veiksmažodis - ted t=tiesioginė k=būtasis kartinis d=daugiskaita a=antrasis
+% <veiks-tkdt> Veiksmažodis - ted t=tiesioginė k=būtasis kartinis d=daugiskaita t=trečiasis
+%
+% <veiks-tzvp> Veiksmažodis - tev t=tiesioginė z=būtasis dažninis v=vienaskaita p=pirmasis
+% <veiks-tzva> Veiksmažodis - tev t=tiesioginė z=būtasis dažninis v=vienaskaita a=antrasis
+% <veiks-tzvt> Veiksmažodis - tev t=tiesioginė z=būtasis dažninis v=vienaskaita t=trečiasis
+%
+% <veiks-tzdp> Veiksmažodis - ted t=tiesioginė z=būtasis dažninis d=daugiskaita p=pirmasis
+% <veiks-tzda> Veiksmažodis - ted t=tiesioginė z=būtasis dažninis d=daugiskaita a=antrasis
+% <veiks-tzdt> Veiksmažodis - ted t=tiesioginė z=būtasis dažninis d=daugiskaita t=trečiasis
+%
 % Pirmoji asmenuotė
 % augti
 aug.= : LLAPIRMti+;
@@ -484,6 +500,23 @@ aug.= : LLAPIRMti+;
 =a.tedt : LLAPIRMti- & <veiks-tedt>;
 
 % ----- Tiesioginė nuosaka  Būtasis kartinis laikas
+=au.tkvp : LLAPIRMti- & <veiks-tkvp>;
+=ai.tkva : LLAPIRMti- & <veiks-tkva>;
+=o.tkvt : LLAPIRMti- & <veiks-tkvt>;
+
+=ome.tkdp : LLAPIRMti- & <veiks-tkdp>;
+=ote.tkda : LLAPIRMti- & <veiks-tkda>;
+=o.tkdt : LLAPIRMti- & <veiks-tkdt>;
+
+% ----- Tiesioginė nuosaka  Būtasis dažninis laikas
+=davau.tzvp : LLAPIRMti- & <veiks-tzvp>;
+=davai.tzva : LLAPIRMti- & <veiks-tzva>;
+=davo.tzvt : LLAPIRMti- & <veiks-tzvt>;
+
+=davome.tzdp : LLAPIRMti- & <veiks-tzdp>;
+=davote.tzda : LLAPIRMti- & <veiks-tzda>;
+=davo.tzdt : LLAPIRMti- & <veiks-tzdt>;
+
 
 % -------------------------------
 % Įvardžiai
