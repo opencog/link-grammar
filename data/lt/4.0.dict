@@ -116,20 +116,21 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 
 % -------------------------------
 % Linksniai -- bendri
+<k-ko>: DK+ or [DK-];
 <g-ka>: ({DK-} & (DG- or DG+)) or [(DG- or DG+) & DK+];
 
 % Linksniai -- vyriški vienaskaita
-<vv-v-kas>: DVvvt+;
-<vv-k-ko>: DK+;
+<vv-v-kas>: DVvv+ or DVvv-;
+<vv-k-ko>: <k-ko>;
 <vv-n-kam>: DN+;
-<vv-g-ka>:  <g-ka>;
+<vv-g-ka>: <g-ka>;
 <vv-i-kuo>: VM+ & {Wd-};
 <vv-v-kur>: VM+ & {Wd-};
 <vv-s-o>: Wa-;
 
 % vyriški daugiskaita
-<vd-v-kas>: DVvdt+;
-<vd-k-ko>: DK+;
+<vd-v-kas>: DVvd+ or DVvd-;
+<vd-k-ko>: <k-ko>;
 <vd-n-kam>: DN+;
 <vd-g-ka>: <g-ka>;
 <vd-i-kuo>: VM+ & {Wd-};
@@ -137,8 +138,8 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <vd-s-o>: Wa-;
 
 % Linksniai -- moteriški vienaskaita
-<mv-v-kas>: {DVm-} & VJm+ & {Wd-};
-<mv-k-ko>: DK+;
+<mv-v-kas>: DVmv+ or DVmv-;
+<mv-k-ko>: <k-ko>;
 <mv-n-kam>: DN+;
 <mv-g-ka>: <g-ka>;
 <mv-i-kuo>: VM+ & {Wd-};
@@ -146,8 +147,8 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <mv-s-o>: Wa-;
 
 % moteriški daugiskaita
-<md-v-kas>: {DVm-} & VJm+ & {Wd-};
-<md-k-ko>: DK+;
+<md-v-kas>: DVmd+ or DVmd-;
+<md-k-ko>: <k-ko>;
 <md-n-kam>: DN+;
 <md-g-ka>: <g-ka>;
 <md-i-kuo>: VM+ & {Wd-};
@@ -196,7 +197,7 @@ med.= rud.= vamzd.= žod.= :
 šal.= dang.= kamš.= karš.= kar.= kir.= paukš.= rė.= sar.= :
   LLPIRMIItis+;
 
-% tik daugistkaita
+% tiktai daugistkaita
 ikr.= vart.= : LLPIRMIas+;
 grik.= : LLPIRMIis+;
 
@@ -491,25 +492,30 @@ išvažiavo: {PV-} & VO- & {Xp+};
 atvažiavom: {VM-} & (LI+ or PV+) & {Wd-};
 
 % gali turėti galininka iš dešines.
-irkluoja skaite skaito skaitys: VJ- & {DG+}; 
-
-skaitau: {VA- or DN-} & {DG+} & {Wd-};
+irkluoja: VJ- & {DG+}; 
 
 sumušiau: VG- & {Wd-} & {VI+};
 
 % Grynasis Tarinys
 % DG+: skaitau knygą
 % DG-: knygą skaitau
-<gryn-tarinys>: ({DG-} & T- & {Xp+}) or (T- & {Xp+} & DG+ & {Xp+});
+<gryn-tarinys>: ({DG-} & T- & {Xp+}) or (T- & DG+ & {Xp+});
 
 % Nousaka -- laikas -- skaičius -- asmuo
 % <veiks-tevp> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita p=pirmasis
 % DV-: aš skaitau
-<veiks-tevp>: {DV*vp-} & <gryn-tarinys>;
+<veiks-tevp>: ({DV*vp-} & <gryn-tarinys>) or (T- & DG+ & {DV*vp+} & {Xp+});
 % <veiks-teva> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita a=antrasis
 <veiks-teva>: {DV*va-} & <gryn-tarinys>;
+
 % <veiks-tevt> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita t=trečiasis
-<veiks-tevt>: {DV*vt-} & <gryn-tarinys>;
+% T- & DG+ & {DV*vt+}: "skaito knygą Jonas"
+% T- & DV*vt+ & DG+: "skaito Jonas knygą"
+<veiks-tevt>:
+  ({DV*vt-} & <gryn-tarinys>)
+  or (DG- & T- & {DV*vt+} & {Xp+})
+  or (T- & DG+ & {DV*vt+ or DV*vt-} & {Xp+})
+  or (T- & DV*vt+ & DG+ & {Xp+});
 %
 % <veiks-tedp> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita p=pirmasis
 <veiks-tedp>: {DV*dp-} & <gryn-tarinys>;
@@ -759,21 +765,22 @@ skai.= : LLATREtyti+;
 % -------------------------------
 % Įvardžiai
 % Asmeniniai įvardžiai
-aš:  DV*vp+;
-tu:  DV*va+;
-jis: DVvvt+;
-ji:  DVmvt+;
+aš:  DV*vp+ or DV*vp-;
+tu:  DV*va+ or DV*va-;
+jis: DVvvt+ or DVvvt-;
+ji:  DVmvt+ or DVmvt-;
 
-mes: DV*dp+;
-jus: DV*da+;
-jie: DVvdt+;
-jos: DVmdt+;
+mes: DV*dp+ or DV*dp-;
+jūs: DV*da+ or DV*da-;
+jie: DVvdt+ or DVvdt-;
+jos: DVmdt+ or DVmdt-;
 
 % Savybiniai įvardžiai
-mano tavo savo: DV+ & {Wd-};
+mano tavo savo: DV+;
 
 % -------------------------------
 % Prieveiksmiai ... 
+% XXX viskas čia blogai
 laukan miškan oran kairėn dešinėn: PV-;
 % "Einame namo", "Svečiai namo išvažiavo"
 namo: PV+ or (PV- & {Xp+});
