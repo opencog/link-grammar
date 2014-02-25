@@ -1171,6 +1171,15 @@ TODO -- Working Notes:
       1) create struct alternative for struct word
       2) fix sane_morpheme to use that.
 
+   Morphology printing:
+      -- Instead of hard-coding LL, declare which links are morpho links
+         in the dict.
+
+   Word-order flexibility:
+      -- For Lithuanian, the following are desperately needed:
+         -- connectors with * direction, i.e. either left or right.
+         -- symmetric (commuting) version of &.
+
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
          e.g. the max number of characters in a word, or max words
