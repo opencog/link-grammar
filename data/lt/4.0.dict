@@ -600,9 +600,8 @@ au.= : LLAPIRMgti+;
 % ---------------------------------------------------------
 %
 % Trečioji asmenuotė
-% mokyti skatyti
+% mokyti 
 mok.= : LLATREyti+;
-skai.= : LLATREtyti+;
 
 % ----- Tiesioginė nuosaka  Esamasis laikas
 =au.tevp : LLATREyti- & <veiks-tevp>;
@@ -653,6 +652,65 @@ skai.= : LLATREtyti+;
 =yk.lva    : LLATREyti- & <veiks-lva>;
 =ykime.ldp : LLATREyti- & <veiks-ldp>;
 =ykite.lda : LLATREyti- & <veiks-lda>;
+
+% ----- Geidžiamoji nuosaka
+% temokai  ....
+
+% ---------------------------------------------------------
+%
+% Trečioji asmenuotė
+% skatyti
+skai.= : LLATREtyti+;
+
+% ----- Tiesioginė nuosaka  Esamasis laikas
+=tau.tevp : LLATREtyti- & <veiks-tevp>;
+=tai.teva : LLATREtyti- & <veiks-teva>;
+=to.tevt  : LLATREtyti- & <veiks-tevt>;
+
+=tome.tedp : LLATREtyti- & <veiks-tedp>;
+=tote.teda : LLATREtyti- & <veiks-teda>;
+=to.tedt   : LLATREtyti- & <veiks-tedt>;
+
+% ----- Tiesioginė nuosaka  Būtasis kartinis laikas
+=čiau.tkvp : LLATREtyti- & <veiks-tkvp>;
+=tei.tkva  : LLATREtyti- & <veiks-tkva>;
+=tė.tkvt   : LLATREtyti- & <veiks-tkvt>;
+
+=tėme.tkdp : LLATREtyti- & <veiks-tkdp>;
+=tėte.tkda : LLATREtyti- & <veiks-tkda>;
+=tė.tkdt   : LLATREtyti- & <veiks-tkdt>;
+
+% ----- Tiesioginė nuosaka  Būtasis dažninis laikas
+=tydavau.tzvp : LLATREtyti- & <veiks-tzvp>;
+=tydavai.tzva : LLATREtyti- & <veiks-tzva>;
+=tydavo.tzvt  : LLATREtyti- & <veiks-tzvt>;
+
+=tydavome.tzdp : LLATREtyti- & <veiks-tzdp>;
+=tydavote.tzda : LLATREtyti- & <veiks-tzda>;
+=tydavo.tzdt   : LLATREtyti- & <veiks-tzdt>;
+
+% ----- Tiesioginė nuosaka  Būsimasis laikas
+=tysiu.tuvp : LLATREtyti- & <veiks-tuvp>;
+=tysi.tuva  : LLATREtyti- & <veiks-tuva>;
+=tys.tuvt   : LLATREtyti- & <veiks-tuvt>;
+
+=tysime.tudp : LLATREtyti- & <veiks-tudp>;
+=tysite.tuda : LLATREtyti- & <veiks-tuda>;
+=tys.tudt    : LLATREtyti- & <veiks-tudt>;
+
+% ----- Tariamoji nuosaka
+=tyčiau.rvp : LLATREtyti- & <veiks-rvp>;
+=tytum.rva  : LLATREtyti- & <veiks-rva>;
+=tytų.rvt   : LLATREtyti- & <veiks-rvt>;
+
+=tytume.rdp : LLATREtyti- & <veiks-rdp>;
+=tytute.rda : LLATREtyti- & <veiks-rda>;
+=tytų.rdt   : LLATREtyti- & <veiks-rdt>;
+
+% ----- Liepiamoji nuosaka
+=tyk.lva    : LLATREtyti- & <veiks-lva>;
+=tykime.ldp : LLATREtyti- & <veiks-ldp>;
+=tykite.lda : LLATREtyti- & <veiks-lda>;
 
 % ----- Geidžiamoji nuosaka
 % temokai  ....
