@@ -169,7 +169,7 @@ siel.= : LLPIRMIis+;
 % II kirčiuotė ---------------------
 % Kirčiai skirtingi nuo I-os kirčiuotės
 piršt.= rakt.= aūt.= būgn.= but.= dirž.= dvar.= gandr.= ginč.=
-ginkl.= gražt.= grumst.= gryb.= karkl.= lap.= mat.= men.= 
+ginkl.= gražt.= grumst.= gryb.= karkl.= mat.= men.= 
 niekš.= pad.= parš.= prot.= rąst.= rašt.= skund.= turt.= :
   LLPIRMIas+;
 
@@ -283,7 +283,7 @@ sak.= : LLPIRMIas+;
 =žius.pdg2:    LLPIRMIIis- & <vd-g-ka>;
 =žiais.pdi2:   LLPIRMIIis- & <vd-i-kuo>;
 =žiuose.pdu2:  LLPIRMIIis- & <vd-v-kur>;
-=ziai.pds2:    LLPIRMIIis- & <vd-s-o>;
+=žiai.pds2:    LLPIRMIIis- & <vd-s-o>;
 
 =čiai.pdv2:   LLPIRMIItis- & <vd-v-kas>;
 =čių.pdk2:    LLPIRMIItis- & <vd-k-ko>;
@@ -333,7 +333,7 @@ sak.= : LLPIRMIas+;
 =žiui.pvn4: LLPIRMIVys- & <vv-n-kam>;
 =į.pvg44:   LLPIRMIVys- & <vv-g-ka>;
 =žiu.pvi4:  LLPIRMIVys- & <vv-i-kuo>;
-=yje4.pvu4: LLPIRMIVys- & <vv-v-kur>;
+=yje.pvu4:  LLPIRMIVys- & <vv-v-kur>;
 =y.pvs4:    LLPIRMIVys- & <vv-s-o>;
 
 =tys.pvv =čias.pvv4:  LLPIRMIVtys- & <vv-v-kas>;
@@ -369,7 +369,7 @@ drob.= : LLANTRIe+;
 
 % II kirčiuotė rašosi taip pat kaip pirma ...
 rank.= dirv.= : LLANTRIa+;
-lap.= up.= : LLANTRIe+;
+up.= : LLANTRIe+;
 
 % III kirčiuotė rašosi taip pat kaip pirma ...
 galv.= trob.= :  LLANTRIa+;
@@ -381,6 +381,10 @@ mar.= : LLANTRIVti+;
 % Dauguma IV-os kirčiuotes rašosi taip pat kaip pirma ...
 dain.= valdž.= : LLANTRIa+;
 eil.= : LLANTRIe+;
+
+% ---------------------------------------
+% lapas, lapė
+lap.= :  LLPIRMIas+ or LLANTRIe+;
 
 % ---------------------------------------
 % Antroji linksniuotė vienaskaita I kirčiuotė
@@ -458,7 +462,7 @@ atvažiavom: {VM-} & (LI+ or PV+) & {Wd-};
 % gali turėti galininka iš dešines.
 irkluoja skaite skaito skaitys: VJ- & {DG+}; 
 
-skaitau: {VA- or DN-} & {DG+} & {Wd-};
+% skaitau: {VA- or DN-} & {DG+} & {Wd-};
 
 sumušiau: VG- & {Wd-} & {VI+};
 
