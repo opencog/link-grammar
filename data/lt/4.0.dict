@@ -368,8 +368,25 @@ sak.= : LLPIRMIas+;
 % -------------------------------
 % Antroji linksniuotė
 % I kirčiuotė
-šark.= jur.= prog.= : LLANTRIa+;
-drob.= : LLANTRIe+;
+šark.= jur.= prog.= bob.= duon.= geld.= gėd.= ien.= yl.= jauj.= 
+juost.= karp.= kilp.= kink.= kuop.= kuos.= liep.= lov.= lūp.= malk.=
+maršk.= nuom.= piev.= plunksn.= sauj.= sien.= siel.= smilg.= start.=
+stirn.= šluot.= tuop.= ūdr.= vant.= varp.= varž.= vėtr.= vinkšn.= 
+  : LLANTRIa+;
+
+% tiktai daugiskaita:
+ėdži.= girn.= lėš.= strėn.= 
+  : LLANTRIa+;
+
+drob.= aib.= aukl.= baim.= buož.= dirs.= dulk.= gemb.= karv.=
+kaug.= kerp.= kiaun.= kiel.= kriauš.= kurp.= laim.= laisv.= lendr.=
+lenk.= ling.= lys.= meil.= menk.= pelk.= pemp.= rykšt.= rop.= 
+saul.= seil.= smarv.= šiaur.= teis.= zyl.= žiurk.= žvyn.=
+  : LLANTRIe+;
+
+% tiktai daugiskaita:
+dumpl.= riauš.= žirkl.= žnypl.=
+  : LLANTRIe+;
 
 % II kirčiuotė rašosi taip pat kaip pirma ...
 rank.= dirv.= knyg.= : LLANTRIa+;
