@@ -640,6 +640,7 @@ data/any/Makefile
 data/de/Makefile
 data/en/Makefile
 data/en/words/Makefile
+data/he/Makefile
 data/lt/Makefile
 data/ru/Makefile
 data/ru/words/Makefile
