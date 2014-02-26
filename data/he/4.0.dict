@@ -1,0 +1,243 @@
+ %***************************************************************************%
+ %                                                                           %
+ %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
+ %       http://www.link.cs.cmu.edu/link                                     %
+ %                                                                           %
+ %***************************************************************************%
+
+% *Nonsense* Hebrew dictionary, for initial checks. [ap]
+%
+% It is essentially the English tiny.dict, in which I translated some words
+% and added a few more, for the purpose of checking:
+% - tokenizing, including prefix split
+% - the resolver behavior with multi-prefix linkages
+% - result printing
+%
+% Please be aware that the grammar here is still mainly the English one,
+% so it is incorrect for Hebrew.
+% A few connector and other changes have been done for Hebrew.
+% [ap]
+
+% The empty word.
+% It is needed for connecting the balancing words.
+=.zzz: ZZZ- & {ZZZ+};
+
+% alternatives terminating dummy word (test)
+alternative-terminator.zzz: ();
+
+%#dog cat woman man park yard bone neighbor store street bird hammer nose
+%#party friend house movie brother sister diner student exam:
+%# {@A-} & Ds- & {@M+ or (R+ & Bs+)} & 
+%# (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
+כלב חתול אישה איש פארק חצר עצם שכן חנות רחוב ציפור פטיש אף
+מסיבה חבר בית סרט אח אחות ארוחה סטודנט מבחן ניסוי לב ורד:
+ {@A-} & {Ds-} & {@M+ or (R+ & Bs+)} & 
+ (J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
+
+%#dogs cats women men
+%#parks yards bones neighbors stores streets birds hammers noses
+%#parties friends houses movies brothers sisters diners students exams
+%#wars winters actions laws successes:
+%#{@A-} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+%# (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
+כלבים חתולים נשים גברים פארקים חצרות עצמות שכנים חנויות רחובות ציפורים פטישים אפים
+מסיבות חברים ביתים סרטים אחים אחויות ארוחות סטודנטים מבחנים:
+{@A-} & {Dmc-} & {@M+ or (R+ & Bp+)} & 
+ (J- or Op- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-);
+
+%#water anger money politics trouble:
+%#{@A-} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+%#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
+מים כעס כסף פוליטיקה:
+{@A-} & {Dmu-} & {@M+ or (R+ & Bs+)} & 
+(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
+
+%#law winter action war success:
+%#{@A-} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+%#(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
+חוק חורף פעולה מלחמה הצלחה:
+{@A-} & {D*u-} & {@M+ or (R+ & Bs+)} & 
+(J- or Os- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-);
+
+%#CAPITALIZED-WORDS: J- or O- or (S+ & (({@CO-} & {C-}) or R-)) or SI-;
+
+%#she he: (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
+%#me him them us: J- or O-;
+אותי אותו אותה אותם אותנו: J- or O-;
+%#her: D+ or J- or O-;
+%#its my your their our: D+;
+%#his: D+;
+שלה שלו שלי שלך שלהם שלנו: D+;
+
+%#you they we I: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
+אתם אתן הם הן אנחנו: J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-;
+%#it: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-;
+%# lines 2-3 are from "is" [ap]
+היא הוא: J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-
+ or (({Ss-} or (RS- & Bs-) or ({Q-} & SIs+))
+ & (((O+ or B-) & {@MV+}) or P+ or AF-));
+
+%#this: (J- or O- or (Ss+ & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
+זה: (J- or O- or ((Ss+ or Os+) & (({@CO-} & {C-}) or R-)) or SIs-) or D*u+;
+%#these: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
+אלו: (J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp-) or Dmc+;
+%#those: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+%#(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
+הללו: (Dmc+) or (({P+} or {{C+} & Bp+}) &
+(J- or O- or (Sp+ & (({@CO-} & {C-}) or R-)) or SIp- or Xb-));
+%#the: D+;
+ה=: D+;
+%#a: Ds+;
+
+%#did: ({Q-} & SI+ & I+) or ({@E-} & (S- or 
+%#(RS- & B-)) & (((B- or O+) & {@MV+}) or I+));
+%#do: (SIp+ & I+) or ({@E-} & (Sp- or 
+%#(RS- & Bp-) or I-) &
+%#(((B- or O+) & {@MV+}) or I+));
+%#does: ({Q-} & SIs+ & I+) or ({@E-} & (Ss- or (RS- & Bs-)) &
+%#(((B- or O+) & {@MV+}) or I+));
+%#done: {@E-} & (Pv- or M- or (PP- & (B- or O+) & {@MV+}));
+%#doing: {@E-} & (Pg- or Mg-) & (O+ or B-) & {@MV+};
+
+%#has: ({Q-} & SIs+ & PP+) or ({@E-} & (Ss- or (RS- & B-)) &
+%#(TO+ or ((B- or O+) & {@MV+}) or PP+));
+%#have: ({Q-} & SIp+ & PP+) or ({@E-} & (Sp- or
+%#(RS- & Bp-) or I-) &
+%#(TO+ or ((B- or O+) & {@MV+})));
+%#had: ({Q-} & SI+ & PP+) or ({@E-} & (S- or (RS- & B-) or PP-) &
+%#(TO+ or ((B- or O+) & {@MV+}) or PP+));
+%#having: {@E-} & (M- or Pg-) & (TO+ or ((B- or O+) & {@MV+}) or PP+);
+
+%#is was: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
+%# & (((O+ or B-) & {@MV+}) or P+ or AF-));
+הינו היה: ((Ss- or (RS- & Bs-) or ({Q-} & SIs+))
+ & (((O+ or B-) & {@MV+}) or P+ or AF-));
+%#are were am: ((Sp- or (RS- & Bp-) or ({Q-} &
+%#SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
+הינם היו היני: ((Sp- or (RS- & Bp-) or ({Q-} &
+SIp+)) & (((O+ or B-) & {@MV+}) or P+ or AF-));
+%#be: I- & (((O+ or B-) & {@MV+}) or P+ or AF-);
+%#been: PP- & (((O+ or B-) & {@MV+}) or P+ or AF-);
+%#being: {@E-} & (M- or Pg-) & (((O+ or B-) & {@MV+}) or P+ or AF-);
+
+%#will can.v may must could should would might: (({Q-} & 
+%#SI+) or S- or (RS- & B-)) & I+;
+
+%#run come: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+רצים באים הולכתם: {@E-} & (Sp- or (RS- & Bp-) or I- or W- or PP-) & {@MV+};
+%#runs comes goes: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
+רץ רצה בא באה הולך: {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
+%#ran came went: {@E-} & (S- or (RS- & B-)) & {@MV+};
+%#go: {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
+%#gone: {@E-} & PP- & {@MV+};
+%#going: {@E-} & (Pg- or M-) & {TO+} & {@MV+};
+%#running coming: {@E-} & (Pg- or M-) & {@MV+};
+
+%#talk arrive die:
+%#   {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
+מדבר מגיע מת:
+   {@E-} & (Sp- or (RS- & Bp-) or I-) & {@MV+};
+%#talks.v arrives dies:
+%#   {@E-} & (Ss- or (RS- & Bs-)) & {@MV+};
+%#talked arrived died:
+%#   {@E-} & (S- or (RS- & B-) or PP-) & {@MV+};
+%#talking arriving dying:
+%#   {@E-} & (Pg- or M-) & {@MV+};
+
+%#see meet chase invite arrest:
+%#   {@E-} & (Sp- or (RS- & Bp-) or I-) & (O+ or B-) & {@MV+};
+%#sees meets chases invites arrests:
+%#   {@E-} & (Ss- or (RS- & Bs-)) & (O+ or B-) & {@MV+};
+%#met chased invited arrested:
+%#{@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (B- or O+))) & {@MV+};
+פגש רדף הזמין אסר:
+{@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (B- or O+))) & {@MV+};
+%#saw: {@E-} & (S- or (RS- & B-)) & (B- or O+) & {@MV+};
+%#seen: {@E-} & (Pv- or M- or (PP- & (B- or O+))) & {@MV+};
+%#seeing meeting chasing inviting arresting:
+%#{@E-} & (Pg- or M-) & (O+ or B-) & {@MV+};
+
+%#tell: {@E-} & (Sp- or (RS- & Bp-) or I-) & ((O+ or B-) &
+%#{TH+ or C+ or QI+ or @MV+});
+מספרים: {@E-} & (Sp- or (RS- & Bp-) or I-) & ((O+ or B-) &
+{TH+ or C+ or QI+ or @MV+});
+%#tells: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+ 
+%#or QI+ or @MV+});
+מספר: {@E-} & (Ss- or (RS- & Bs-)) & ((O+ or B-) & {TH+ or C+ 
+or QI+ or @MV+});
+%#told: {@E-} & (M- or Pv- or ((S- or (RS- & B-) or PP-) & (O+ or B-))) &
+%#{TH+ or C+ or QI+ or @MV+};
+%#telling: {@E-} & (Pg- or M-) & ((O+ or B-) & {TH+ or C+ or QI+ or
+%#@MV+});
+
+%#recently sometimes soon gradually specifically generally initially
+%#ultimately already now sadly broadly:
+%#E+ or MV-;
+לאחרונה לפעמים בקרוב בהדרגה במיוחד באופן_כללי בתחילה
+לבסוף כבר עכשיו בעצבות בהרחבה:
+E+ or MV-;
+
+%#from with at against behind between below above
+%#without under for in across through
+%#by out up down along like.p on over into about:
+%#J+ & (Mp- or MV- or Pp-);
+מ= ב= נגד מאחור בין מלמטה מעל
+בלי מתחת בשביל בתוך עבור מעבר דרך ע״י xחוץ למעלה למטה לאורך כ= על לתוך בערך:
+J+ & (Mp- or MV- or Pp-);
+
+%#of: J+ & Mp-;
+של: J+ & Mp-;
+
+%#here there: MV- or Mp- or Pp-;
+כאן שם: MV- or Mp- or Pp-;
+
+%#that: (C+ & TH-) 
+%#or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+%#{{@CO-} & {C-}}) or J- or O-;
+ש=: (C+ & TH-) 
+or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
+{{@CO-} & {C-}}) or J- or O-;
+
+%#to: (I+ & TO-) or ((MV- or Mp- or Pp-) & J+);
+ל=: (I+ & TO-) or ((MV- or Mp- or Pp-) & J+);
+
+%#who: (R- & (C+ or RS+)) or S+ or B+;
+מי: (R- & (C+ or RS+)) or S+ or B+;
+%#what: S+ or B+;
+מה: S+ or B+;
+%#which: (R- & (C+ or RS+)) or S+ or B-;
+איזה: (R- & (C+ or RS+)) or S+ or B-;
+
+%#because unless though although: (C+ & (({Xc+} & CO+) or MV-));
+%#after before since until: (C+ or J+) & (({Xc+} & CO+) or MV- or Mp-);
+אחרי לפני מאז עד: (C+ or J+) & (({Xc+} & CO+) or MV- or Mp-);
+%#if: C+ & (({Xc+} & CO+) or MV-);
+אם: C+ & (({Xc+} & CO+) or MV-);
+
+%#when: (QI- & C+) or Q+ or (C+ & (({Xc+} & CO+) or MV-));
+מתי: (QI- & C+) or Q+ or (C+ & (({Xc+} & CO+) or MV-));
+%#where:(QI- & C+) or Q+;
+איפה:(QI- & C+) or Q+;
+%#how:  (QI- & (C+ or EA+)) or Q+ or EA+;
+איך:  (QI- & (C+ or EA+)) or Q+ or EA+;
+
+%#fast slow short long black white big small beautiful ugly tired angry:
+%#  {EA-} & (A+ or ((Pa- or AF+) & {@MV+}));
+מהר לאט קצר ארוך שחור לבן גדול קטן יפה מכוער עיף כועס:
+   {EA-} & (A+ or ((Pa- or AF+) & {@MV+}));
+
+%#glad afraid scared.a fortunate unfortunate lucky unlucky certain sure:
+%#{EA-} & (A+ or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
+שמח מפחד מפוחד בר_מזל ביש_מזל בטוח:
+ {EA-} & (A+ or ((Pa- or AF+) & {@MV+} & {C+ or TO+ or TH+}));
+
+%#very: EA+;
+מאד: EA+;
+
+%#but and: MV- & C+;
+אבל ו=: MV- & C+;
+
+",": Xc-;
+
+ANDABLE-CONNECTORS: S+ & S- & A+ & A- & MV+ & MV- & D- & O+ & O- &
+J+ & J- & C-;

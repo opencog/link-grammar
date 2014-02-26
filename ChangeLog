@@ -1,7 +1,7 @@
 Version 4.9.0 (XXX 2014)
  * Initial support for Hebrew tokenization, from Amir P.
  * Fix wild-card matching for user-supplied word lookup.
- * Add prototype Turkish dictionary from Can Bruce.
+ * Prototype Turkish dictionary from Can Bruce.
  * Re-arrange programming language bindings directory.
  * Adopt the orphaned/unsupported pylinkgrammar Python bindings.
  * Deprecate the obsolete CNode interface.
@@ -11,6 +11,7 @@ Version 4.9.0 (XXX 2014)
  * Expanded Lithuanian dictionary.
  * Minor disjunct printing fixes.
  * Fix: "Mary is too XXX to talk to."
+ * Prototype Hebrew dictionary from Amir P
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.
