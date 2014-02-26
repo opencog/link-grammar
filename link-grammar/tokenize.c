@@ -437,6 +437,12 @@ static void altappend(Sentence sent, int word_index, const char *w)
  * Balance all alternatives using empty words.
  * Do not add an empty string (as first token)
  * (Can it happen? I couldn't find such a case. [ap])
+ *
+ * To test: add .zzz to empty words used for balancing,
+ * in a try to prevent fetching up of all possible null suffixes.
+ * To that end, a small change in separate_word()
+ * is neede (in the code that fetches a stem).
+ *
  */
 static void add_alternative(Sentence sent,
                             int prefnum, const char **prefix,
@@ -541,7 +547,6 @@ static void add_alternative(Sentence sent,
 						buff[sz] = SUBSCRIPT_MARK;
 						buff[sz+1] = INFIX_MARK;
 						buff[sz+2] = 0;
-						/* strcat(buff, ".zzz");*/ /* test - currently doesn't work [reminder: add 4 to buff size] */
 					}
 					break;
 				case SUFFIX:	/* =word */
@@ -802,6 +807,10 @@ static int revcmplen(const void *a, const void *b)
  * If the whole word (i.e. including the prefixes) is in the dictionary,
  * the word will be added in separate_word().
  *
+ * Note: This function currently does more than absolutely needed for LG,
+ * in order to simplify the initial Hebrew dictionary.
+ * It may be latter replaced by a simpler version.
+ *
  * These algorithm is most probably very Hebrew-specific.
  * These assumptions are used:
  * - the prefix consists of subwords
@@ -830,24 +839,31 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 	const char *w;
 	int sz;
 	Boolean word_is_in_dict;
-	int split_prefix_i = 0;				/* split prefix index */
-	const char *split_prefix[HEB_PRENUM_MAX];	/* all prefix  */
+	int split_prefix_i = 0;			/* split prefix index */
+	const char *split_prefix[HEB_PRENUM_MAX]; /* all prefix  */
 	/* pseen is a simple prefix combination filter */
-	Boolean pseen[HEB_MPREFIX_MAX];			/* prefix "subword" seen */
+	Boolean pseen[HEB_MPREFIX_MAX];		/* prefix "subword" seen */
 	Dictionary afdict;
-	int wordlen = strlen(word);	/* guaranteed < MAX_WORD by separate_word() */
+	int wordlen = strlen(word); /* guaranteed < MAX_WORD by separate_word() */
+	int wlen;
+	int plen;
+
+	/* skip debug prefixes */
+	if (wordlen > HEB_UTF8_BYTES && word[2] == '=') return FALSE;
 
 	/* set up affix table  */
 	afdict = dict->affix_table;
 	if (NULL == afdict) return FALSE;
-
 	mp_strippable = afdict->mp_strippable;
+	if (0 == mp_strippable) return FALSE;
+
 	if (!mprefix_sorted)
 	{
 #define s_xstr(s) s_str(s)
 #define s_str(s) #s
 		/* sanity check */
-		assert(mp_strippable <= HEB_MPREFIX_MAX, "mp_strippable>" s_xstr(HEB_MPREFIX_MAX));
+		assert(mp_strippable <= HEB_MPREFIX_MAX,
+			"mp_strippable>" s_xstr(HEB_MPREFIX_MAX));
 #undef s_xstr
 #undef s_str
 		/* Longer subwords have priority over shorter ones,
@@ -861,68 +877,49 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 	memset(pseen, 0, sizeof(pseen));
 	word_is_in_dict = FALSE;
 	w = word;
-if (verbosity > 4) printf("mprefix_split: word %s\n", word);
 	do
 	{
 		for (i=0; i<mp_strippable; i++)
-		{
-			int wlen;
-			int plen;
-if (verbosity > 4) printf("mprefix_split: check subword %s; seen: %d\n", mprefix[i], pseen[i]);
-
-			if (pseen[i]) continue;	/* subwords in a prefix are unique */
-			if ((split_prefix_i > 0) && HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(w, "ו")))
-			{
-				/* the letter "ו" can only be the first prefix subword */
+		{	
+			/* subwords in a prefix are unique */
+			if (pseen[i])
 				continue;
-			}
+
+			/* the letter "ו" can only be the first prefix subword */
+			if ((split_prefix_i > 0) && HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(w, "ו")))
+				continue;
 
 			plen = strlen(mprefix[i]);
 			wlen = strlen(w);
 			sz = wlen - plen;
-if (verbosity > 4) printf("mprefix_split: strncmp remaining %s subword %s plen %d\n", w, mprefix[i], plen);
 			if (strncmp(w, mprefix[i], plen) == 0)
 			{
-				int prefix_valid = TRUE;
-if (verbosity > 4) printf("mprefix_split: subword %s found\n",  mprefix[i]);
 				newword = w + plen;
-				if (!HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(w, "ו"))) /* non-vav before vav */
+				/* check for non-vav before vav */
+				if (!HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(newword, "ו")))
 				{
-					if (HEB_CHAREQ(w+HEB_UTF8_BYTES, "ו") && w[HEB_UTF8_BYTES+1])
-					{
-						/* non-vav before 2-vav
-						 * (TBD: check also without skipping) */
+					/* non-vav before a single-vav - not in a prefix */
+					if (!HEB_CHAREQ(newword+HEB_UTF8_BYTES, "ו"))
+						break;
+
+					/* non-vav before 2-vav */
+					if (newword[HEB_UTF8_BYTES+1])
 						newword += HEB_UTF8_BYTES; /* strip one 'ו' */
-						sz -= HEB_UTF8_BYTES;      /* newword is now shorter */
-					}
-					else if (!HEB_CHAREQ(w+HEB_UTF8_BYTES, "ו"))
-					{
-						/* non-vav before a single-vav - not in a prefix */
-						prefix_valid = FALSE;
-						newword = w;
-						sz = wlen;
-					}
-if (verbosity > 4) printf("mprefix_split: force last iteration, prefix_valid %d\n", prefix_valid);
-					i = mp_strippable;	/* force last iteration */
+					/* TBD: check word also without stripping. */
 				}
-				if (prefix_valid)
-				{
-if (verbosity > 4) printf("mprefix_split: prefix valid\n");
-					pseen[i] = TRUE;
-					split_prefix[split_prefix_i++] = mprefix[i];
-				}
+				pseen[i] = TRUE;
+				split_prefix[split_prefix_i++] = mprefix[i];
 				if (0 == sz) /* empty word */
 				{
-if (verbosity > 4) printf("mprefix_split: word exhasuted\n");
 					word_is_in_dict = TRUE;
 					/* add the prefix alone */
 					if (2 < verbosity)
 						printf("Whole-word prefix: %s\n", word);
 					add_alternative(sent, split_prefix_i,split_prefix, 0,0, 0,0);
-					/* if the prefix is a valid word, it has been added in separate_word() as a word */
+					/* if the prefix is a valid word,
+					 * it has been added in separate_word() as a word */
 					break;
 				}
-if (verbosity > 4) printf("mprefix_split: check newword %s\n", newword);
 				if (find_word_in_dict(dict, newword))
 				{
 					word_is_in_dict = TRUE;
@@ -934,9 +931,9 @@ if (verbosity > 4) printf("mprefix_split: check newword %s\n", newword);
 				break;
 			}
 		}
-	} while ((sz > 0) && (i < mp_strippable) && (split_prefix_i < HEB_PRENUM_MAX));
+	/* "wlen + sz < wordlen" is true if a vav has been stripped */
+	} while ((sz > 0) && (i < mp_strippable) && (newword != w + plen) && (split_prefix_i < HEB_PRENUM_MAX));
 
-if (verbosity > 4) printf("mprefix_split: return %d\n", word_is_in_dict);
 	return word_is_in_dict;
 }
 
@@ -1264,17 +1261,11 @@ if (ALTOLD)
 		{
 			if (word_is_in_dict)
 			{
+				const char *wp = word;
+
 				if (2 < verbosity)
 					printf("Info: Adding %s + empty-word\n", word);
-				if (ALTOLD)
-				{
-					add_suffix_alternatives(tokenizer, word, "");
-				}
-				else
-				{
-					const char *wp = word;
-					add_alternative(sent, 0,0, 1,&wp, 0,0);
-				}
+				add_alternative(sent, 0,0, 1,&wp, 0,0);
 			}
 			word_is_in_dict = TRUE;
 		}
