@@ -1067,6 +1067,12 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	int lk, i;
 	Parse_info pi = sent->parse_info;
 
+	/* XXX skip cheking if we handle prefixes, until this function is fixed */
+	if (sent->dict->affix_table->mp_strippable || sent->dict->affix_table->p_strippable) {
+		/* printf("Info: skipping sane_morphism()\n"); */
+		return;
+	}
+
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
 		Linkage_info *lifo = &sent->link_info[lk];
@@ -1196,11 +1202,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				}
 			}
 
-			if (verbosity > 4)
-				printf("%%%%>>>%d FAILED\n", lk);
 			/* Oh no ... we've joined together the stem and suffix incorrectly! */
 			sent->num_valid_linkages --;
 			lifo->N_violations ++;
+			if (verbosity > 4)
+				printf("%%%%>>>%d FAILED %d, remaining %d\n", lk, lifo->N_violations, sent->num_valid_linkages);
 			break;
 		}
 	}
