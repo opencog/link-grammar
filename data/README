@@ -3,18 +3,23 @@
 Language Directories
 --------------------
 
-de -- German. Contains distionaries for a few thousand words, that's
+de -- German. Contains dictionaries for a few thousand words, that's
       all. Incomplete.
 
 en -- English. Complete set.
 
-lt -- Lithuanian. Contains dictionaries for a few dozen words, and no
-      more. Enough for simple tests.
+he -- Hebrew. Experimental prototype. Contains a few dozen words.
 
-ru -- Russian.  Fairly complete set of dictionaries, should parse most
-      text. Could use work on supporting regular expressions for numbers,
+lt -- Lithuanian. Experimental prototype. Contains a few hundred words,
+      and implements only a few parts of speech.
+
+ru -- Russian.  Complete set of dictionaries, should parse most text.
+      Support needs to be added for conjunctions (and, or, but...)
+      Could use work on supporting regular expressions for numbers,
       Russian-ized Latin technical terms, etc.  See the English 4.0.regex
       file for more.
+
+tr -- Turkish. Experimental prototype. Contains a few dozen words.
 
 any -- Will parse "any" language, exploring all combinatoric possibilities.
        This is useful for certain machine-learning tasks, when one might
