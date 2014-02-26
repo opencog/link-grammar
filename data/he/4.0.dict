@@ -1,7 +1,10 @@
  %***************************************************************************%
  %                                                                           %
- %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
- %       http://www.link.cs.cmu.edu/link                                     %
+ % Experimental prototype Hebrew dictionary                                  %
+ %                                                                           %
+ %       Copyright (C) 2014  Amir Plivatsky                                  %
+ %                                                                           %
+ %  See file "LICENSE" for information about commercial use of this system   %
  %                                                                           %
  %***************************************************************************%
 
@@ -17,6 +20,9 @@
 % so it is incorrect for Hebrew.
 % A few connector and other changes have been done for Hebrew.
 % [ap]
+
+% Dictionary version number is 4.9.0 (formatted as V4v9v0+)
+<dictionary-version-number>: V4v9v0+;
 
 % The empty word.
 % It is needed for connecting the balancing words.
@@ -239,5 +245,3 @@ or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 
 ",": Xc-;
 
-ANDABLE-CONNECTORS: S+ & S- & A+ & A- & MV+ & MV- & D- & O+ & O- &
-J+ & J- & C-;
