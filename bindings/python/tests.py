@@ -203,10 +203,11 @@ class ParserTestCase(unittest.TestCase):
 
     def test_that_parser_can_be_destroyed_when_linkages_still_exist(self):
         """
-        Unless the swig objects associated with sentences, linkages, etc. are free'd before
-        the parser is deleted linkrgammar will crap its pants.  This test ensures that
-        parsers can be created and deleted without regard for the existence of PYTHON Linkage
-        objects
+        If the parser is deleted before the associated swig objects
+        are, there will be bad pointer dereferences (as the swig
+        objects will be pointing into freed memory).  This test ensures
+        that parsers can be created and deleted without regard for
+        the existence of PYTHON Linkage objects
         """
         p = Parser()
         linkages = p.parse_sent('This is a sentence.')
@@ -242,7 +243,7 @@ class LinkageTestCase(unittest.TestCase):
 
     def test_getting_words(self):
         self.assertEqual(self.p.parse_sent('This is a sentence.')[0].words,
-                         ['LEFT-WALL', 'this.p', 'is.v', 'a', 'sentence.n', '.', 'RIGHT-WALL'])
+             ['LEFT-WALL', 'this.p', 'is.v', 'a', 'sentence.n', '.', 'RIGHT-WALL'])
 
     def test_getting_num_of_words(self):
         #Words include punctuation and a 'LEFT-WALL' and 'RIGHT_WALL'
