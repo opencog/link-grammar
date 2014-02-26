@@ -59,7 +59,7 @@ public class ParseResult implements Iterable<Linkage>
 	 * Use Linkage.wordAt instead.
 	 *
 	 * This method will return misleading results for languages
-	 * with prefixes/suffixes in the dictionary (such as Russian).
+	 * which perform morphological analysis (Russian, Hebrew, Turkish, etc.).
 	 * @deprecated
 	 */
 	@Deprecated public String wordAt(int i)
@@ -71,7 +71,7 @@ public class ParseResult implements Iterable<Linkage>
 	 * Use Linkage.getWords instead.
 	 *
 	 * This method will return misleading results for languages
-	 * with prefixes/suffixes in the dictionary (such as Russian).
+	 * which perform morphological analysis (Russian, Hebrew, Turkish, etc.).
 	 * @deprecated
 	 */
 	@Deprecated public String[] getWords()

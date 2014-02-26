@@ -52,7 +52,7 @@ static struct
 	int display_walls;
 	int display_disjuncts;
 	int display_senses;
-	int display_suffixes;
+	int display_morphology;
 } local;
 
 typedef enum
@@ -86,6 +86,7 @@ static Switch default_switches[] =
    {"links",      Bool, "Display of complete link data",   &local.display_links},
    {"max-length", Int,  "Maximum sentence length",         &local.max_sentence_length},
    {"memory",     Int,  "Max memory allowed",              &local.memory},
+   {"morphology", Bool, "Display word morphology",         &local.display_morphology},
    {"null",       Bool, "Allow null links",                &local.allow_null},
    {"null-block", Int,  "Size of blocks with null count 1", &local.null_block},
    {"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
@@ -95,7 +96,6 @@ static Switch default_switches[] =
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
    {"spell",      Bool, "Use spell-guesser for unknown words",  &local.spell_guess},
 #endif /* HAVE_HUNSPELL */
-   {"suffixes",   Bool, "Display of word stems+suffixes",  &local.display_suffixes},
    {"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_FAT_LINKAGES
    {"union",      Bool, "Display of 'union' linkage",      &local.display_union},
@@ -422,8 +422,8 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.display_bad = parse_options_get_display_bad(opts);
 	local.display_disjuncts = parse_options_get_display_disjuncts(opts);
 	local.display_links = parse_options_get_display_links(opts);
+	local.display_morphology = parse_options_get_display_morphology(opts);
 	local.display_senses = parse_options_get_display_senses(opts);
-	local.display_suffixes = parse_options_get_display_suffixes(opts);
 	local.display_walls = parse_options_get_display_walls(opts);
 }
 
@@ -461,8 +461,8 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_display_bad(opts, local.display_bad);
 	parse_options_set_display_disjuncts(opts, local.display_disjuncts);
 	parse_options_set_display_links(opts, local.display_links);
+	parse_options_set_display_morphology(opts, local.display_morphology);
 	parse_options_set_display_senses(opts, local.display_senses);
-	parse_options_set_display_suffixes(opts, local.display_suffixes);
 	parse_options_set_display_walls(opts, local.display_walls);
 }
 

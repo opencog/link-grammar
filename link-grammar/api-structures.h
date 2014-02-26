@@ -102,8 +102,8 @@ struct Parse_Options_s
 	Boolean display_bad;       /* if true, bad linkages are displayed */
 	Boolean display_disjuncts; /* if true, print disjuncts that were used */
 	Boolean display_links;     /* if true, a list o' links is printed out */
+	Boolean display_morphology;/* if true, print morpho analysis of words */
 	Boolean display_senses;    /* if true, sense candidates are printed out */
-	Boolean display_suffixes;
 };
 
 struct Connector_set_s

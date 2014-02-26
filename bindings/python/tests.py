@@ -160,14 +160,14 @@ class ParseOptionsTestCase(unittest.TestCase):
         po = ParseOptions()
         self.assertRaises(TypeError, setattr, po, "allow_null", "a")
 
-    def test_setting_display_suffixes(self):
+    def test_setting_display_morphology(self):
         po = ParseOptions()
-        po.display_suffixes = True
-        self.assertEqual(po.display_suffixes, True)
-        self.assertEqual(clg.parse_options_get_display_suffixes(po._po), 1)
-        po.display_suffixes = False
-        self.assertEqual(po.display_suffixes, False)
-        self.assertEqual(clg.parse_options_get_display_suffixes(po._po), 0)
+        po.display_morphology = True
+        self.assertEqual(po.display_morphology, True)
+        self.assertEqual(clg.parse_options_get_display_morphology(po._po), 1)
+        po.display_morphology = False
+        self.assertEqual(po.display_morphology, False)
+        self.assertEqual(clg.parse_options_get_display_morphology(po._po), 0)
 
     def test_setting_display_walls(self):
         po = ParseOptions()

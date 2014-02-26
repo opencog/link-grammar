@@ -16,7 +16,7 @@ class Parser(object):
                        islands_ok = False,
                        short_length = 6,
                        all_short_connectors = False,
-                       display_suffixes = False,
+                       display_morphology = False,
                        display_walls = False,
                        allow_null = True,
                        screen_width = 180,
@@ -32,7 +32,7 @@ class Parser(object):
                                           null_block = null_block,
                                           islands_ok = islands_ok,
                                           short_length = short_length,
-                                          display_suffixes = display_suffixes,
+                                          display_morphology = display_morphology,
                                           display_walls = display_walls,
                                           allow_null = allow_null,
                                           screen_width = screen_width,
@@ -64,7 +64,7 @@ class ParseOptions(object):
                        islands_ok = False,
                        short_length = 6,
                        all_short_connectors = False,
-                       display_suffixes = False,
+                       display_morphology = False,
                        display_walls = False,
                        allow_null = True,
                        screen_width = 180,
@@ -82,7 +82,7 @@ class ParseOptions(object):
         self.islands_ok = islands_ok
         self.short_length = short_length
         self.all_short_connectors = all_short_connectors
-        self.display_suffixes = display_suffixes
+        self.display_morphology = display_morphology
         self.display_walls = display_walls
         self.screen_width = screen_width
         self.max_parse_time = max_parse_time
@@ -249,16 +249,16 @@ class ParseOptions(object):
         return locals()
     allow_null = property(**allow_null())
 
-    def display_suffixes():
+    def display_morphology():
         doc = "Whether or not to show word morphology when a linkage diagram is printed."
         def fget(self):
-            return clg.parse_options_get_display_suffixes(self._po) == 1
+            return clg.parse_options_get_display_morphology(self._po) == 1
         def fset(self, value):
             if not isinstance(value, bool):
-                raise TypeError("display_suffixes must be set to an integer")
-            clg.parse_options_set_display_suffixes(self._po, 1 if value else 0)
+                raise TypeError("display_morphology must be set to an integer")
+            clg.parse_options_set_display_morphology(self._po, 1 if value else 0)
         return locals()
-    display_suffixes = property(**display_suffixes())
+    display_morphology = property(**display_morphology())
 
     def display_walls():
         doc = "Whether or not to show the wall word(s) when a linkage diagram is printed."

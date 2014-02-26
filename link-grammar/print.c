@@ -40,7 +40,7 @@
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
-#define HIDE_SUFFIX   (!display_suffixes)
+#define HIDE_MORPHO   (!display_morphology)
 
 /**
  * Return TRUE if the word is a suffix.
@@ -65,14 +65,14 @@ set_centers(const Linkage linkage, int center[],
             Boolean print_word_0, int N_words_to_print)
 {
 	int i, len, tot;
-	Boolean display_suffixes = linkage->opts->display_suffixes;
+	Boolean display_morphology = linkage->opts->display_morphology;
 
 	tot = 0;
 	if (print_word_0) i=0; else i=1;
 	for (; i < N_words_to_print; i++)
 	{
-		/* Ignore suffixes. */
-		if (HIDE_SUFFIX && is_suffix(linkage->word[i]))
+		/* Ignore morphological analysis. */
+		if (HIDE_MORPHO && is_suffix(linkage->word[i]))
 		{
 			center[i] = tot;
 			tot++;  // hack alert -- a trailing blank gets printed anyway ...
@@ -278,7 +278,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 
 /**
  * XXX TODO: port over the suppression of ZZZ links, and also
- * the HIDE_SUFFIX stuff, fom the ascii printing code, way below.
+ * the HIDE_MORPHO stuff, fom the ascii printing code, way below.
  */
 static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *pctx)
 {
@@ -400,7 +400,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 	Parse_info pi = sent->parse_info;
 	const char * chosen_words[MAX_SENTENCE];
 	Parse_Options opts = linkage->opts;
-	Boolean display_suffixes = opts->display_suffixes;
+	Boolean display_morphology = opts->display_morphology;
 
 	for (i=0; i<sent->length; i++)
 	{
@@ -452,7 +452,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			}
 
 			/* Concatenate the stem and the suffix together into one word */
-			if (HIDE_SUFFIX)
+			if (HIDE_MORPHO)
 			{
 				if (is_suffix(t) && pi->chosen_disjuncts[i-1])
 				{
@@ -552,7 +552,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	char xpicture[MAX_HEIGHT][MAX_LINE];
 	size_t start[MAX_HEIGHT];
 
-	Boolean display_suffixes = opts->display_suffixes;
+	Boolean display_morphology = opts->display_morphology;
 
 	string = string_new();
 
@@ -631,7 +631,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			/* Get rid of links to empty words */
 			if (0 == strcmp(ppla[j]->name, EMPTY_WORD_SUPPRESS)) continue;
 
-			if (HIDE_SUFFIX &&
+			if (HIDE_MORPHO &&
 			    0 == strncmp(ppla[j]->name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L))
 				continue;
 

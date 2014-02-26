@@ -12,6 +12,7 @@ Version 4.9.0 (XXX 2014)
  * Minor disjunct printing fixes.
  * Fix: "Mary is too XXX to talk to."
  * Prototype Hebrew dictionary from Amir P
+ * Change !suffixes flag to !morphology
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.
