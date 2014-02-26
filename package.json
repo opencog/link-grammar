@@ -1,6 +1,6 @@
 {
   "name": "link-grammar",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Link grammar library node interface",
   "main": "./build/index.js",
   "repository": "",
@@ -16,15 +16,21 @@
   "dependencies": {
     "ffi": "latest",
     "ref": "latest",
-    "ref-struct": "latest"
+    "ref-struct": "latest",
+    "underscore": "latest"
+  },
+  "devDependencies": {
+    "coffee-script": "latest",
+    "mocha": "latest",
+    "should": "latest"
   },
   "homepage": "https://github.com/rompetoto/link-grammar",
   "bugs": "https://github.com/rompetoto/link-grammar/issues",
   "scripts": {
-    "clean": "rm -f build/*.js && rm -f tests/*.js",
-    "compile": "mkdir -p build/ && kal -o build/ src/*kal && kal -o tests/ tests/*.kal",
-    "test": "mocha -R spec -b tests/",
-    "make": "npm run-script clean && npm run-script compile && npm run-script test"
+    "clean": "rm -f -R build",
+    "compile": "node node_modules/coffee-script/bin/coffee -l -o build src",
+    "test": "node node_modules/mocha/bin/mocha -R spec -b build/test/",
+    "make": "npm run clean && npm run compile && npm run test"
   },
   "repository": {
     "type": "git",

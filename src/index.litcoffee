@@ -1,22 +1,4 @@
-
 # Link Grammar Parser
-
-A node library which interfaces a well known link grammar native [library](<http://www.link.cs.cmu.edu/link/>)
-
-The point of this project is to make the library easier to use, especially in node!
-
-## Building Yourself
-
-	npm install
-	npm run make
-
-Which will install, clean, compile, and test the project.
-
-# Documentation
-
-*Review list of Grammar Links [here](<http://www.link.cs.cmu.edu/link/dict/>)*.
-
-# 
 
 The parser is built using the awesome ffi library which allows us to communicate with a native library under the covers.
 Along with ffi, we also use ref library to reference the native objects used by the library.
@@ -195,3 +177,5 @@ Get list of connector links for a specific word
                         source: link.right
                         target: link.left
             words
+    
+    module.exports = LinkGrammar
