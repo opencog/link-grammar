@@ -13,7 +13,8 @@ Version 4.9.0 (XXX 2014)
  * Fix: "Mary is too XXX to talk to."
  * Prototype Hebrew dictionary from Amir P.
  * Change !suffixes flag to !morphology.
- * Introduce a bi-directional connector.
+ * Introduce a bi-directional connector, for free-word-order languages.
+ * Introduce a symmetric-AND operator, for free-word-order languages.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.
