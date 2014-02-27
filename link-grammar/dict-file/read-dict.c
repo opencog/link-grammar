@@ -1262,6 +1262,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		return NULL;
 	}
 
+	/* Non-commuting AND */
 	if (is_equal(dict, '&') || (strcmp(dict->token, "and") == 0))
 	{
 		Exp *nr;
@@ -1278,6 +1279,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		}
 		return make_and_node(dict, nl, nr);
 	}
+	/* Commuting OR */
 	else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
 	{
 		Exp *nr;
@@ -1293,6 +1295,30 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 			return NULL;
 		}
 		return make_or_node(dict, nl, nr);
+	}
+	/* Commuting AND */
+	else if (is_equal(dict, SYM_AND) || (strcmp(dict->token, "sym") == 0))
+	{
+		Exp *nr, *na, *nb, *or;
+
+		if (!and_ok) {
+			warning(dict, "\"and\" and \"or\" at the same level in an expression");
+		}
+		if (!link_advance(dict)) {
+			return NULL;
+		}
+		nr = restricted_expression(dict, TRUE, FALSE);
+		if (nr == NULL) {
+			return NULL;
+		}
+
+		/* Expand A ^ B into the expr ((A & B) or (B & A)).
+		 * Must be wrapped in unary node so that it can be
+		 * mixed with ordinary ands at the same level. */
+		na = make_and_node(dict, nl, nr);
+		nb = make_and_node(dict, nr, nl);
+		or = make_or_node(dict, na, nb);
+		return make_unary_node(dict, or);
 	}
 
 	return nl;
