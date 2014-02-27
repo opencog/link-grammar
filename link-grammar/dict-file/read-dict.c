@@ -828,20 +828,21 @@ static Exp * make_dir_connector(Dictionary dict, int i)
  * Create an OR_type expression. The expressions nl, nr will be
  * OR'-ed together.
  */
-static Exp * make_or_expr(Dictionary dict, Exp* nl, Exp* nr)
+static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
 {
 	E_list *ell, *elr;
 	Exp* n;
 
 	n = Exp_create(dict);
+	n->type = OR_type;
+	n->cost = 0.0f;
+
 	n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
 	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
 	elr->next = NULL;
 
 	ell->e = nl;
 	elr->e = nr;
-	n->type = OR_type;
-	n->cost = 0.0f;
 	return n;
 }
 
@@ -852,17 +853,7 @@ static Exp * make_or_expr(Dictionary dict, Exp* nl, Exp* nr)
  */
 static Exp * make_optional_node(Dictionary dict, Exp * e)
 {
-	Exp * n;
-	E_list *el, *elx;
-	n = Exp_create(dict);
-	n->type = OR_type;
-	n->cost = 0.0f;
-	n->u.l = el = (E_list *) xalloc(sizeof(E_list));
-	el->e = make_zeroary_node(dict);
-	el->next = elx = (E_list *) xalloc(sizeof(E_list));
-	elx->next = NULL;
-	elx->e = e;
-	return n;
+	return make_or_node(dict, make_zeroary_node(dict), e);
 }
 
 /* ======================================================================== */
@@ -938,7 +929,7 @@ static Exp * connector(Dictionary dict)
 			dict->token[i] = '-';
 			min = make_dir_connector(dict, i);
 
-			n = make_or_expr(dict, plu, min);
+			n = make_or_node(dict, plu, min);
 		}
 		else
 		{
@@ -1287,7 +1278,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (nr == NULL) {
 			return NULL;
 		}
-		return make_or_expr(dict, nl, nr);
+		return make_or_node(dict, nl, nr);
 	}
 
 	return nl;
