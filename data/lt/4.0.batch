@@ -83,7 +83,46 @@ Skaitau knygą broliui.
 Knygą skaitau broliui.
 Broliui knygą skaitau.
 
-Sesers knygą broliui skaitau.
+% 4 words means there are 4-factorial = 24 word order choices.
+% Of these, 18 are grammatical. So its almost free word order,
+% and it appears that the disallowed orders are exactly those
+% constrained by the no-link-cross rule! Cool -- projectivity
+% works well for Lithuanian!
+%
+% Note that the possesive migrates from "father's book" to 
+% "father's brother", depending on the link-length.
+Tėvo knygą broliui skaitau.
+Tėvo knygą skaitau broliui.
+% Atsargiai! Kam !
+Tėvo broliui knygą skaitau.
+Tėvo broliui skaitau knygą.
+*Tėvo skaitau knygą broliui.
+*Tėvo skaitau broliui knygą.
+
+Broliui skaitau tėvo knygą.
+Broliui skaitau knygą tėvo.
+Broliui tėvo knygą skaitau.
+% Aieee! Next two sentences requires link crossing: this can never parse!
+% link broliui-skaitau would cross over knygą-tėvo.
+% Fortunately, this is more or less linguistically insane. ... phew.
+*Broliui tėvo skaitau knygą.
+*Broliui knygą skaitau tėvo.
+Broliui knygą tėvo skaitau.
+
+% Atsargiai! Kam !
+Knygą skaitau tėvo broliui.
+Knygą skaitau broliui tėvo.
+*Knygą broliui skaitau tėvo.
+*Knygą broliui tėvo skaitau.
+Knygą tėvo skaitau broliui.
+Knygą tėvo broliui skaitau.
+
+Skaitau knygą tėvo broliui.
+Skaitau knygą broliui tėvo.
+Skaitau broliui tėvo knygą.
+Skaitau broliui knygą tėvo.
+Skaitau tėvo broliui knygą.
+Skaitau tėvo knygą broliui.
 
 
 % ---- įkį čia
