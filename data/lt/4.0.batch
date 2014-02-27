@@ -35,6 +35,17 @@ Jūs skaitote.
 Jie skaito.
 Jos skaito.
 
+% Subject-verb agreement
+*Aš skaitai.
+*Tu skaito.
+*Jis skaitom.
+*Ji skaitote.
+*Mes skaito.
+*Mes skaitot.
+*Jūs skaitai.
+*Jie skaitau.
+*Jos skaitom.
+
 Aš skaičiau knygą
 Tu skaitai knygą.
 Jonas skaitė knygą.
@@ -43,11 +54,7 @@ Ji skaitė knygą
 Knygą skaitė Jonas.
 Skaitė knygą Jonas.
 
-Aš skaitydavau brolio knygas.
-Mes skaitydavom brolio knygas.
-Skaitau brolio knygą.
-Skaitau knygą brolio.
-
+% Future tense
 Mes skaitysime knygą.
 Mes skaitysim knygą.
 Jūs skaitysite knygą.
@@ -55,10 +62,28 @@ Jūs skaitysit knygą.
 Jie skaitys knygą.
 Jos skaitys knygą.
 
+% Free word order.
 Skaito Jonas knygą.
 Skaito knygą Jonas.
 Knygą skaito Jonas.
 Knygą Jonas skaito.
+
+% Simple possessive
+Aš skaitydavau brolio knygas.
+Mes skaitydavom brolio knygas.
+Skaitau brolio knygą.
+Skaitau knygą brolio.
+
+Brolio knygą skaitau.
+Brolio knygą skaitydavau.
+
+% Naudiningkas kam?
+Broliui skaitau knygą.
+Skaitau knygą broliui.
+Knygą skaitau broliui.
+Broliui knygą skaitau.
+
+Sesers knygą broliui skaitau.
 
 
 % ---- įkį čia
@@ -81,13 +106,6 @@ Tiltas yra gražus.
 % Pirmoji linksniuotė vienaskaita -is
 % brolis brolio broliui brolį broliu brolyje broli
 Brolis eina į mokyklą.
-Skaitau brolio knygą.
-% brolio knygą skaitau.
-% brolio knygą skaitydavau.
-Broliui skaitau knygą.
-% Skaitau knygą broliui.
-% Knygą skaitau broliui.
-% Broliui knygą skaitau.
 Brolį sumušiau.
 Brolį sumušiau šachmatais.
 Tiltu einam.
