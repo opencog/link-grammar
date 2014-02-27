@@ -379,36 +379,36 @@ static int is_equal(Dictionary dict, char c)
  * Return 1 if the connector is valid, else return 0,
  * and print an appropriate warning message.
  */
-static int check_connector(Dictionary dict, const char * s)
+static Boolean check_connector(Dictionary dict, const char * s)
 {
 	int i;
 	i = strlen(s);
 	if (i < 1) {
 		dict_error(dict, "Expecting a connector.");
-		return 0;
+		return FALSE;
 	}
 	i = s[i-1];  /* the last character of the token */
-	if ((i!='+') && (i!='-')) {
-		dict_error(dict, "A connector must end in a \"+\" or \"-\".");
-		return 0;
+	if ((i != '+') && (i != '-') && (i != '*')) {
+		dict_error(dict, "A connector must end in a \"+\", \"-\" or \"*\".");
+		return FALSE;
 	}
 	if (*s == '@') s++;
 	if (!isupper((int)*s)) {
 		dict_error(dict, "The first letter of a connector must be in [A--Z].");
-		return 0;
+		return FALSE;
 	}
 	if ((*s == 'I') && (*(s+1) == 'D')) {
 		dict_error(dict, "Connectors beginning with \"ID\" are forbidden");
-		return 0;
+		return FALSE;
 	}
 	while (*(s+1)) {
 		if ((!isalnum((int)*s)) && (*s != '*') && (*s != '^')) {
 			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
-			return 0;
+			return FALSE;
 		}
 		s++;
 	}
-	return 1;
+	return TRUE;
 }
 
 /* ======================================================================== */
@@ -877,6 +877,53 @@ void patch_subscript(char * s)
 }
 
 /**
+ * make_dir_connector() -- make a single node for a connector
+ * that is a + or a - connector.
+ *
+ * Assumes the current token is the connector.
+ */
+static Exp * make_dir_connector(Dictionary dict, int i)
+{
+	Exp* n = Exp_create(dict);
+	n->dir = dict->token[i];
+	dict->token[i] = '\0';				   /* get rid of the + or - */
+	if (dict->token[0] == '@')
+	{
+		n->u.string = string_set_add(dict->token+1, dict->string_set);
+		n->multi = TRUE;
+	}
+	else
+	{
+		n->u.string = string_set_add(dict->token, dict->string_set);
+		n->multi = FALSE;
+	}
+	n->type = CONNECTOR_type;
+	n->cost = 0.0f;
+	return n;
+}
+
+/**
+ * Create an OR_type expression. The expressions nl, nr will be
+ * OR'-ed together.
+ */
+static Exp * make_or_expr(Dictionary dict, Exp* nl, Exp* nr)
+{
+	E_list *ell, *elr;
+	Exp* n;
+
+	n = Exp_create(dict);
+	n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
+	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+	elr->next = NULL;
+
+	ell->e = nl;
+	elr->e = nr;
+	n->type = OR_type;
+	n->cost = 0.0f;
+	return n;
+}
+
+/**
  * connector() -- make a node for a connector or dictionary word.
  *
  * Assumes the current token is a connector or dictionary word.
@@ -887,8 +934,10 @@ static Exp * connector(Dictionary dict)
 	Dict_node *dn, *dn_head;
 	int i;
 
-	i = strlen(dict->token) - 1;  /* this must be + or - if a connector */
-	if ((dict->token[i] != '+') && (dict->token[i] != '-'))
+	i = strlen(dict->token) - 1;  /* this must be +, - or * if a connector */
+	if ((dict->token[i] != '+') && 
+	    (dict->token[i] != '-') &&
+	    (dict->token[i] != '*'))
 	{
 		/* If we are here, token is a word */
 		patch_subscript(dict->token);
@@ -916,21 +965,28 @@ static Exp * connector(Dictionary dict)
 		{
 			return NULL;
 		}
-		n = Exp_create(dict);
-		n->dir = dict->token[i];
-		dict->token[i] = '\0';				   /* get rid of the + or - */
-		if (dict->token[0] == '@')
+		if ((dict->token[i] == '+') || (dict->token[i] == '-'))
 		{
-			n->u.string = string_set_add(dict->token+1, dict->string_set);
-			n->multi = TRUE;
+			/* A simple, unidirectional connector. Just make that. */
+			n = make_dir_connector(dict, i);
+		}
+		else if (dict->token[i] == '*')
+		{
+			Exp *plu, *min;
+			/* If we are here, then its a bi-directional connector.
+			 * Make both a + and a - version, and or them together.  */
+			dict->token[i] = '+';
+			plu = make_dir_connector(dict, i);
+			dict->token[i] = '-';
+			min = make_dir_connector(dict, i);
+
+			n = make_or_expr(dict, plu, min);
 		}
 		else
 		{
-			n->u.string = string_set_add(dict->token, dict->string_set);
-			n->multi = FALSE;
+			dict_error(dict, "Unknown connector direction type.");
+			return NULL;
 		}
-		n->type = CONNECTOR_type;
-		n->cost = 0.0f;
 	}
 
 	if (!link_advance(dict))
@@ -977,7 +1033,9 @@ static Exp * make_optional_node(Dictionary dict, Exp * e)
 
 /* ======================================================================== */
 
-#if ! defined INFIX_NOTATION
+/* INFIX_NOTATION is always defined; we simply never use the format below. */
+/* #if ! defined INFIX_NOTATION */
+#if 0
 
 static Exp * expression(Dictionary dict);
 /**
@@ -1213,28 +1271,17 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 	}
 	else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
 	{
-		Exp *n;
-
 		if (!or_ok) {
 			warning(dict, "\"and\" and \"or\" at the same level in an expression");
 		}
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nr = restricted_expression(dict, FALSE,TRUE);
+		nr = restricted_expression(dict, FALSE, TRUE);
 		if (nr == NULL) {
 			return NULL;
 		}
-		n = Exp_create(dict);
-		n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-		ell->next = elr = (E_list *) xalloc(sizeof(E_list));
-		elr->next = NULL;
-
-		ell->e = nl;
-		elr->e = nr;
-		n->type = OR_type;
-		n->cost = 0.0f;
-		return n;
+		return make_or_expr(dict, nl, nr);
 	}
 
 	return nl;
@@ -1686,7 +1733,9 @@ syntax_error:
 	return FALSE;
 }
 
-#if ! defined INFIX_NOTATION
+/* INFIX_NOTATION is always defined; we simply never use the format below. */
+/* #if ! defined INFIX_NOTATION */
+#if 0
 /**
  * print the expression, in prefix-style
  */
