@@ -499,24 +499,21 @@ sumušiau: VG- & {Wd-} & {VI+};
 % Grynasis Tarinys
 % DG+: skaitau knygą
 % DG-: knygą skaitau
-<gryn-tarinys>: ({DG-} & T- & {Xp+}) or (T- & DG+ & {Xp+});
+% DV-: aš skaitau
+% T- & DG+ & {DV*vt+}: "skaito knygą Jonas"
+% T- & DV*vt+ & DG+: "skaito Jonas knygą"
+<gryn-tarinys>: (T- ^ ({DG$} ^ {DV$})) & {Xp+};
 
 % Nousaka -- laikas -- skaičius -- asmuo
 % <veiks-tevp> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita p=pirmasis
-% DV-: aš skaitau
-<veiks-tevp>: ({DV*vp-} & <gryn-tarinys>) or (T- & DG+ & {DV*vp+} & {Xp+});
+<veiks-tevp>: (T- ^ ({DG$} ^ {DV*vp$})) & {Xp+};
+
 % <veiks-teva> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita a=antrasis
-<veiks-teva>: {DV*va-} & <gryn-tarinys>;
+<veiks-teva>: (T- ^ ({DG$} ^ {DV*va$})) & {Xp+};
 
 % <veiks-tevt> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita t=trečiasis
-% T- & DG+ & {DV*vt+}: "skaito knygą Jonas"
-% T- & DV*vt+ & DG+: "skaito Jonas knygą"
-<veiks-tevt>:
-  ({DV*vt-} & <gryn-tarinys>)
-  or (DG- & T- & {DV*vt+} & {Xp+})
-  or (T- & DG+ & {DV*vt$} & {Xp+})
-  or (T- & DV*vt+ & DG+ & {Xp+});
-%
+<veiks-tevt>: (T- ^ ({DG$} ^ {DV*vt$})) & {Xp+};
+
 % <veiks-tedp> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita p=pirmasis
 <veiks-tedp>: {DV*dp-} & <gryn-tarinys>;
 % <veiks-teda> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita a=antrasis
