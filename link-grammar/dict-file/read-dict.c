@@ -374,9 +374,12 @@ static int is_equal(Dictionary dict, char c)
 	        dict->token[1] == '\0');
 }
 
+#define ANY_DIR '^'
+#define WILD_TYPE '*'
+
 /**
  * Make sure the string s is a valid connector.
- * Return 1 if the connector is valid, else return 0,
+ * Return TRUE if the connector is valid, else return FALSE,
  * and print an appropriate warning message.
  */
 static Boolean check_connector(Dictionary dict, const char * s)
@@ -388,8 +391,8 @@ static Boolean check_connector(Dictionary dict, const char * s)
 		return FALSE;
 	}
 	i = s[i-1];  /* the last character of the token */
-	if ((i != '+') && (i != '-') && (i != '*')) {
-		dict_error(dict, "A connector must end in a \"+\", \"-\" or \"*\".");
+	if ((i != '+') && (i != '-') && (i != ANY_DIR)) {
+		dict_error(dict, "A connector must end in a \"+\", \"-\" or \"^\".");
 		return FALSE;
 	}
 	if (*s == '@') s++;
@@ -402,7 +405,7 @@ static Boolean check_connector(Dictionary dict, const char * s)
 		return FALSE;
 	}
 	while (*(s+1)) {
-		if ((!isalnum((int)*s)) && (*s != '*') && (*s != '^')) {
+		if ((!isalnum((int)*s)) && (*s != WILD_TYPE)) {
 			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
 			return FALSE;
 		}
@@ -522,7 +525,7 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
 
-	if (*s == '*') return 0;
+	if (*s == WILD_TYPE) return 0;
 
 	return (((*s == SUBSCRIPT_DOT)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
 }
@@ -937,7 +940,7 @@ static Exp * connector(Dictionary dict)
 	i = strlen(dict->token) - 1;  /* this must be +, - or * if a connector */
 	if ((dict->token[i] != '+') && 
 	    (dict->token[i] != '-') &&
-	    (dict->token[i] != '*'))
+	    (dict->token[i] != ANY_DIR))
 	{
 		/* If we are here, token is a word */
 		patch_subscript(dict->token);
@@ -970,7 +973,7 @@ static Exp * connector(Dictionary dict)
 			/* A simple, unidirectional connector. Just make that. */
 			n = make_dir_connector(dict, i);
 		}
-		else if (dict->token[i] == '*')
+		else if (dict->token[i] == ANY_DIR)
 		{
 			Exp *plu, *min;
 			/* If we are here, then its a bi-directional connector.
