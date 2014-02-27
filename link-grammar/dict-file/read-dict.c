@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright 2013 Linas Vepstas                                          */
+/* Copyright 2013, 2014 Linas Vepstas                                    */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -265,7 +265,16 @@ static utf8char get_character(Dictionary dict, int quote_mode)
  * This set of 10 characters are the ones defining the syntax of the
  * dictionary.
  */
-#define SPECIAL "(){};[]&|:"
+#define SPECIAL "(){};[]&^:"
+
+/* Commutative (symmetric) AND */
+#define SYM_AND '^'
+
+/* Bi-directional connector: + or - */
+#define ANY_DIR '$'
+
+/* Wild-card link type */
+#define WILD_TYPE '*'
 
 /**
  * Return true if the input character is one of the special
@@ -373,9 +382,6 @@ static int is_equal(Dictionary dict, char c)
 	        c == dict->token[0] &&
 	        dict->token[1] == '\0');
 }
-
-#define ANY_DIR '$'
-#define WILD_TYPE '*'
 
 /**
  * Make sure the string s is a valid connector.
@@ -745,91 +751,6 @@ Boolean find_word_in_dict(Dictionary dict, const char * word)
 
 
 /* ======================================================================== */
-/* Empty-word handling. */
-
-/* stems, by definition, always end with ".=" */
-#define STEM_MARK '='
-#define EMPTY_CONNECTOR "ZZZ"
-
-static Exp * make_optional_node(Dictionary dict, Exp * e);
-
-/**
- * Insert empty-word connectors.
- *
- * Empty words are used to work around a fundamental parser design flaw.
- * The flaw is that the parser assumes that there exist a fixed number of
- * words in a sentence, independent of tokenization.  Unfortuntely, this
- * is not true when correcting spelling errors, or when the dictionary
- * contains entries for plain words and also as stems.  For example,
- * in the Russian dictionary, это.msi appears as a single word, but can
- * also be split into эт.= =о.mnsi. The problem arises because это.msi
- * is a single word, while эт.= =о.mnsi counts as two words, and there
- * is no pretty way to handle both during parsing.  Thus a work-around
- * is introduced: add the empty wored =.zzz: ZZZ+; to the dictionary.
- * This becomes a pseudo-suffix that can attach to any plain word.  It
- * can attach to any plain word only because the routine below,
- * add_empty_word(), adds the corresponding connector ZZZ- to the plain
- * word.  This is done "on the fly", because we don't want to pollute the
- * dictionary with this stuff. Besides, the Russian dictionary has
- * more then 23K words that qualify for this treatment (It has 22.5K
- * words that appear both as plain words, and as stems, and can thus
- * attach to null suffixes. For non-null suffix splits, there are
- * clearly many more.)
- *
- * Note that the printing of ZZZ connectors is supressed in print.c,
- * although API users will see this link.
- */
-
-void add_empty_word(Dictionary dict, Dict_node * dn)
-{
-	size_t len;
-	Exp *zn, *an;
-	E_list *elist, *flist;
-
-	if (! dict->empty_word_defined) return;
-
-	if (STEM_MARK == dn->string[0]) return;
-
-	len = strlen(dn->string);
-	if (STEM_MARK == dn->string[len-1]) return;
-	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
-	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
-
-	/* If we are here, then this appears to be not a stem, not a
-	 * suffix, and not an idiom word.
-	 * Create {ZZZ+} & (plain-word-exp). */
-
-	/* zn points at {ZZZ+} */
-	zn = Exp_create(dict);
-	zn->dir = '+';
-	zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
-	zn->multi = FALSE;
-	zn->type = CONNECTOR_type;
-	zn->cost = 0.0f;
-	zn = make_optional_node(dict, zn);
-
-	/* flist is plain-word-exp */
-	flist = (E_list *) xalloc(sizeof(E_list));
-	flist->next = NULL;
-	flist->e = dn->exp;
-
-	/* elist is {ZZZ+} */
-	elist = (E_list *) xalloc(sizeof(E_list));
-	elist->next = flist;
-	elist->e = zn;
-
-	/* an will be {ZZZ+} & (plain-word-exp) */
-	an = Exp_create(dict);
-	an->type = AND_type;
-	an->cost = 0.0f;
-	an->u.l = elist;
-
-	/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
-	dn->exp = an;
-}
-
-
-/* ======================================================================== */
 /**
  * Allocate a new Exp node and link it into the exp_list for freeing later.
  */
@@ -847,7 +768,20 @@ static inline void exp_free(Exp * e)
 	xfree((char *)e, sizeof(Exp));
 }
 
-/* ======================================================================== */
+/**
+ * This creates a node with zero children.  Initializes
+ * the cost to zero.
+ */
+static Exp * make_zeroary_node(Dictionary dict)
+{
+	Exp * n;
+	n = Exp_create(dict);
+	n->type = AND_type;  /* these must be AND types */
+	n->cost = 0.0f;
+	n->u.l = NULL;
+	return n;
+}
+
 /**
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
@@ -862,21 +796,6 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	n->u.l->next = NULL;
 	n->u.l->e = e;
 	return n;
-}
-
-/* Replace the right-most dot with SUBSCRIPT_MARK */
-void patch_subscript(char * s)
-{
-	char *ds, *de;
-	ds = strrchr(s, SUBSCRIPT_DOT);
-	if (!ds) return;
-
-	/* a dot at the end or a dot followed by a number is NOT
-	 * considered a subscript */
-	de = ds + 1;
-	if (*de == '\0') return;
-	if (isdigit((int)*de)) return;
-	*ds = SUBSCRIPT_MARK;
 }
 
 /**
@@ -924,6 +843,42 @@ static Exp * make_or_expr(Dictionary dict, Exp* nl, Exp* nr)
 	n->type = OR_type;
 	n->cost = 0.0f;
 	return n;
+}
+
+/**
+ * This creates an OR node with two children, one the given node,
+ * and the other as zeroary node.  This has the effect of creating
+ * what used to be called an optional node.
+ */
+static Exp * make_optional_node(Dictionary dict, Exp * e)
+{
+	Exp * n;
+	E_list *el, *elx;
+	n = Exp_create(dict);
+	n->type = OR_type;
+	n->cost = 0.0f;
+	n->u.l = el = (E_list *) xalloc(sizeof(E_list));
+	el->e = make_zeroary_node(dict);
+	el->next = elx = (E_list *) xalloc(sizeof(E_list));
+	elx->next = NULL;
+	elx->e = e;
+	return n;
+}
+
+/* ======================================================================== */
+/* Replace the right-most dot with SUBSCRIPT_MARK */
+void patch_subscript(char * s)
+{
+	char *ds, *de;
+	ds = strrchr(s, SUBSCRIPT_DOT);
+	if (!ds) return;
+
+	/* a dot at the end or a dot followed by a number is NOT
+	 * considered a subscript */
+	de = ds + 1;
+	if (*de == '\0') return;
+	if (isdigit((int)*de)) return;
+	*ds = SUBSCRIPT_MARK;
 }
 
 /**
@@ -1000,38 +955,86 @@ static Exp * connector(Dictionary dict)
 	return n;
 }
 
-/**
- * This creates a node with zero children.  Initializes
- * the cost to zero.
- */
-static Exp * make_zeroary_node(Dictionary dict)
-{
-	Exp * n;
-	n = Exp_create(dict);
-	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0.0f;
-	n->u.l = NULL;
-	return n;
-}
+/* ======================================================================== */
+/* Empty-word handling. */
+
+/* stems, by definition, always end with ".=" */
+#define STEM_MARK '='
+#define EMPTY_CONNECTOR "ZZZ"
 
 /**
- * This creates an OR node with two children, one the given node,
- * and the other as zeroary node.  This has the effect of creating
- * what used to be called an optional node.
+ * Insert empty-word connectors.
+ *
+ * Empty words are used to work around a fundamental parser design flaw.
+ * The flaw is that the parser assumes that there exist a fixed number of
+ * words in a sentence, independent of tokenization.  Unfortuntely, this
+ * is not true when correcting spelling errors, or when the dictionary
+ * contains entries for plain words and also as stems.  For example,
+ * in the Russian dictionary, это.msi appears as a single word, but can
+ * also be split into эт.= =о.mnsi. The problem arises because это.msi
+ * is a single word, while эт.= =о.mnsi counts as two words, and there
+ * is no pretty way to handle both during parsing.  Thus a work-around
+ * is introduced: add the empty wored =.zzz: ZZZ+; to the dictionary.
+ * This becomes a pseudo-suffix that can attach to any plain word.  It
+ * can attach to any plain word only because the routine below,
+ * add_empty_word(), adds the corresponding connector ZZZ- to the plain
+ * word.  This is done "on the fly", because we don't want to pollute the
+ * dictionary with this stuff. Besides, the Russian dictionary has
+ * more then 23K words that qualify for this treatment (It has 22.5K
+ * words that appear both as plain words, and as stems, and can thus
+ * attach to null suffixes. For non-null suffix splits, there are
+ * clearly many more.)
+ *
+ * Note that the printing of ZZZ connectors is supressed in print.c,
+ * although API users will see this link.
  */
-static Exp * make_optional_node(Dictionary dict, Exp * e)
+
+void add_empty_word(Dictionary dict, Dict_node * dn)
 {
-	Exp * n;
-	E_list *el, *elx;
-	n = Exp_create(dict);
-	n->type = OR_type;
-	n->cost = 0.0f;
-	n->u.l = el = (E_list *) xalloc(sizeof(E_list));
-	el->e = make_zeroary_node(dict);
-	el->next = elx = (E_list *) xalloc(sizeof(E_list));
-	elx->next = NULL;
-	elx->e = e;
-	return n;
+	size_t len;
+	Exp *zn, *an;
+	E_list *elist, *flist;
+
+	if (! dict->empty_word_defined) return;
+
+	if (STEM_MARK == dn->string[0]) return;
+
+	len = strlen(dn->string);
+	if (STEM_MARK == dn->string[len-1]) return;
+	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
+	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
+
+	/* If we are here, then this appears to be not a stem, not a
+	 * suffix, and not an idiom word.
+	 * Create {ZZZ+} & (plain-word-exp). */
+
+	/* zn points at {ZZZ+} */
+	zn = Exp_create(dict);
+	zn->dir = '+';
+	zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
+	zn->multi = FALSE;
+	zn->type = CONNECTOR_type;
+	zn->cost = 0.0f;
+	zn = make_optional_node(dict, zn);
+
+	/* flist is plain-word-exp */
+	flist = (E_list *) xalloc(sizeof(E_list));
+	flist->next = NULL;
+	flist->e = dn->exp;
+
+	/* elist is {ZZZ+} */
+	elist = (E_list *) xalloc(sizeof(E_list));
+	elist->next = flist;
+	elist->e = zn;
+
+	/* an will be {ZZZ+} & (plain-word-exp) */
+	an = Exp_create(dict);
+	an->type = AND_type;
+	an->cost = 0.0f;
+	an->u.l = elist;
+
+	/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
+	dn->exp = an;
 }
 
 /* ======================================================================== */
