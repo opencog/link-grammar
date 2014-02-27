@@ -265,7 +265,7 @@ static utf8char get_character(Dictionary dict, int quote_mode)
  * This set of 10 characters are the ones defining the syntax of the
  * dictionary.
  */
-#define SPECIAL "(){};[]&^:"
+#define SPECIAL "(){};[]&^|:"
 
 /* Commutative (symmetric) AND */
 #define SYM_AND '^'
@@ -799,34 +799,30 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 }
 
 /**
- * make_dir_connector() -- make a single node for a connector
- * that is a + or a - connector.
- *
- * Assumes the current token is the connector.
+ * Create an AND_type expression. The expressions nl, nr will be
+ * AND-ed together.
  */
-static Exp * make_dir_connector(Dictionary dict, int i)
+static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
 {
-	Exp* n = Exp_create(dict);
-	n->dir = dict->token[i];
-	dict->token[i] = '\0';				   /* get rid of the + or - */
-	if (dict->token[0] == '@')
-	{
-		n->u.string = string_set_add(dict->token+1, dict->string_set);
-		n->multi = TRUE;
-	}
-	else
-	{
-		n->u.string = string_set_add(dict->token, dict->string_set);
-		n->multi = FALSE;
-	}
-	n->type = CONNECTOR_type;
+	E_list *ell, *elr;
+	Exp* n;
+
+	n = Exp_create(dict);
+	n->type = AND_type;
 	n->cost = 0.0f;
+
+	n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
+	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+	elr->next = NULL;
+
+	ell->e = nl;
+	elr->e = nr;
 	return n;
 }
 
 /**
  * Create an OR_type expression. The expressions nl, nr will be
- * OR'-ed together.
+ * OR-ed together.
  */
 static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
 {
@@ -854,6 +850,32 @@ static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
 static Exp * make_optional_node(Dictionary dict, Exp * e)
 {
 	return make_or_node(dict, make_zeroary_node(dict), e);
+}
+
+/**
+ * make_dir_connector() -- make a single node for a connector
+ * that is a + or a - connector.
+ *
+ * Assumes the current token is the connector.
+ */
+static Exp * make_dir_connector(Dictionary dict, int i)
+{
+	Exp* n = Exp_create(dict);
+	n->dir = dict->token[i];
+	dict->token[i] = '\0';				   /* get rid of the + or - */
+	if (dict->token[0] == '@')
+	{
+		n->u.string = string_set_add(dict->token+1, dict->string_set);
+		n->multi = TRUE;
+	}
+	else
+	{
+		n->u.string = string_set_add(dict->token, dict->string_set);
+		n->multi = FALSE;
+	}
+	n->type = CONNECTOR_type;
+	n->cost = 0.0f;
+	return n;
 }
 
 /* ======================================================================== */
@@ -1167,8 +1189,7 @@ static Exp * expression(Dictionary dict)
 
 static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 {
-	Exp *nl = NULL, *nr;
-	E_list *ell, *elr;
+	Exp *nl = NULL;
 
 	if (is_equal(dict, '('))
 	{
@@ -1243,7 +1264,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 
 	if (is_equal(dict, '&') || (strcmp(dict->token, "and") == 0))
 	{
-		Exp *n;
+		Exp *nr;
 
 		if (!and_ok) {
 			warning(dict, "\"and\" and \"or\" at the same level in an expression");
@@ -1255,19 +1276,12 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (nr == NULL) {
 			return NULL;
 		}
-		n = Exp_create(dict);
-		n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-		ell->next = elr = (E_list *) xalloc(sizeof(E_list));
-		elr->next = NULL;
-
-		ell->e = nl;
-		elr->e = nr;
-		n->type = AND_type;
-		n->cost = 0.0f;
-		return n;
+		return make_and_node(dict, nl, nr);
 	}
 	else if (is_equal(dict, '|') || (strcmp(dict->token, "or") == 0))
 	{
+		Exp *nr;
+
 		if (!or_ok) {
 			warning(dict, "\"and\" and \"or\" at the same level in an expression");
 		}
