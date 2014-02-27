@@ -117,10 +117,10 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 % -------------------------------
 % Linksniai -- bendri
 <k-ko>: DK+ or [DK-];
-<g-ka>: ({DK-} & (DG- or DG+)) or [(DG- or DG+) & DK+];
+<g-ka>: ({DK-} & (DG$)) or [(DG$) & DK+];
 
 % Linksniai -- vyriški vienaskaita
-<vv-v-kas>: DVvv+ or DVvv-;
+<vv-v-kas>: DVvv$;
 <vv-k-ko>: <k-ko>;
 <vv-n-kam>: DN+;
 <vv-g-ka>: <g-ka>;
@@ -129,7 +129,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <vv-s-o>: Wa-;
 
 % vyriški daugiskaita
-<vd-v-kas>: DVvd+ or DVvd-;
+<vd-v-kas>: DVvd$;
 <vd-k-ko>: <k-ko>;
 <vd-n-kam>: DN+;
 <vd-g-ka>: <g-ka>;
@@ -138,7 +138,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <vd-s-o>: Wa-;
 
 % Linksniai -- moteriški vienaskaita
-<mv-v-kas>: DVmv+ or DVmv-;
+<mv-v-kas>: DVmv$;
 <mv-k-ko>: <k-ko>;
 <mv-n-kam>: DN+;
 <mv-g-ka>: <g-ka>;
@@ -147,7 +147,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <mv-s-o>: Wa-;
 
 % moteriški daugiskaita
-<md-v-kas>: DVmd+ or DVmd-;
+<md-v-kas>: DVmd$;
 <md-k-ko>: <k-ko>;
 <md-n-kam>: DN+;
 <md-g-ka>: <g-ka>;
@@ -514,7 +514,7 @@ sumušiau: VG- & {Wd-} & {VI+};
 <veiks-tevt>:
   ({DV*vt-} & <gryn-tarinys>)
   or (DG- & T- & {DV*vt+} & {Xp+})
-  or (T- & DG+ & {DV*vt+ or DV*vt-} & {Xp+})
+  or (T- & DG+ & {DV*vt$} & {Xp+})
   or (T- & DV*vt+ & DG+ & {Xp+});
 %
 % <veiks-tedp> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita p=pirmasis
@@ -765,15 +765,15 @@ skai.= : LLATREtyti+;
 % -------------------------------
 % Įvardžiai
 % Asmeniniai įvardžiai
-aš:  DV*vp+ or DV*vp-;
-tu:  DV*va+ or DV*va-;
-jis: DVvvt+ or DVvvt-;
-ji:  DVmvt+ or DVmvt-;
+aš:  DV*vp$;
+tu:  DV*va$;
+jis: DVvvt$;
+ji:  DVmvt$;
 
-mes: DV*dp+ or DV*dp-;
-jūs: DV*da+ or DV*da-;
-jie: DVvdt+ or DVvdt-;
-jos: DVmdt+ or DVmdt-;
+mes: DV*dp$;
+jūs: DV*da$;
+jie: DVvdt$;
+jos: DVmdt$;
 
 % Savybiniai įvardžiai
 mano tavo savo: DV+;

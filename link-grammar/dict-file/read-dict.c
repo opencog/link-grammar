@@ -374,7 +374,7 @@ static int is_equal(Dictionary dict, char c)
 	        dict->token[1] == '\0');
 }
 
-#define ANY_DIR '^'
+#define ANY_DIR '$'
 #define WILD_TYPE '*'
 
 /**
