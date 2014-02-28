@@ -203,26 +203,28 @@ ikr.= vart.= : LLPIRMIas+;
 grik.= : LLPIRMIis+;
 
 % III kirčiuotė -------------------------
-% Kirčiai skirtingi nuo I-os kirčioutės (Ambrška+Žiugžda)
+% Kirčiai skirtingi nuo I-os kirčioutės (pagal Ambrška+Žiugžda)
 kaln.= bern.= daikt.= driež.= irkl.= kelm.= kov.= laišk.= or.=
 plauk.= rand.= ryt.= sarg.= spirg.= stieb.= stog.= šern.= šiaud.=
 tėv.= uod.= veid.= verg.= vor.= žand.= žirg.= :
   LLPIRMIas+;
 
+% (pagal Ambrška+Žiugžda)
 veln.=: LLPIRMIIIias+;
 vež.= ož.= žalt.= : LLPIRMIIIys+;
+
+% (pagal wiktionary)
+tev.= :
+  LLPIRMIas+;
 
 arkl.= : LLPIRMIas+ or LLPIRMIIIys+;
 
 % IV kirčiuotė ----------------------
-% Kirčiai skirtingi nuo I-os formos. (Ambrška+Žiugžda)
+% Kirčiai skirtingi nuo I-os formos. (pagal Ambrška+Žiugžda)
 lauk.= kakl.= aul.= baln.= bals.= darž.= Diev.= dumbl.= gal.= gand.=
 gars.= jausm.= kamp.= kap.= krant.= krašt.= krauj.= laik.= laiv.=
 lank.= lizd.= mišk.= nag.= purv.= rag.= sparn.= tak.= tarn.= vaik.=
 vard.= varg.= varn.= verksm.= vilk.= :
-  LLPIRMIas+;
-
-tev.= :
   LLPIRMIas+;
 
 % kelias ???
