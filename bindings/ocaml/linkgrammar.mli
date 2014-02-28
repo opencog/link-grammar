@@ -4,7 +4,7 @@
 
    The Ocaml API maps almost 1-1 with the LinkGrammar C API -
    see description of the C API at: 
-   http://www.link.cs.cmu.edu/link/api/index.html
+   http://abisource.com/projects/link-grammar/api/index.html
 
   Author: Ramu Ramamurthy ramu_ramamurthy at yahoo dot com   
   (C) 2006                                                     

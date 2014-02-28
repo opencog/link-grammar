@@ -3,7 +3,7 @@
 (* LinkGrammar - A parser for english sentences                 *)
 (*                                                              *)
 (* For more info on LinkGrammar                                 *)
-(* refer: http://www.link.cs.cmu.edu/link/                      *)
+(* refer: http://abisource.com/projects/link-grammar/           *)
 (*                                                              *)
 (* Author: Ramu Ramamurthy ramu_ramamurthy at yahoo dot com     *)
 (* (C) 2006                                                     *)
