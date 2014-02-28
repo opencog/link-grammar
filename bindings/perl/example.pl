@@ -3,6 +3,8 @@
 # Example usage of the low-level link-grammar perl bindings
 # You should not really use this directly; a higher-level wrapper
 # would be far more appropriate.
+#
+# Copyright (c) 2014, Linas Vepstas
 
 use clinkgrammar;
 
