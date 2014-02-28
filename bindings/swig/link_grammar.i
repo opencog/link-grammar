@@ -120,8 +120,8 @@ int  sentence_link_cost(Sentence sent, int i);
 
 /**********************************************************************
 *
-*These functions allocate strings to be returned, so need to be
-*newobject'd to avoid memory leaks
+* These functions allocate strings to be returned, so need to be
+* newobject'd to avoid memory leaks
 *
 ***********************************************************************/
 %newobject linkage_print_senses;
