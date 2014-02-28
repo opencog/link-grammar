@@ -104,10 +104,8 @@ eina: {VJ-} & (LI+ or PV+);
 
 % -------------------------------
 % Daiktavardžai ... XXX
-svečiai: VO+ & {Wd-};
 šachmatais: VI-;
 
-svečias: DVv- & VJv+ & {Wd-};
 mokytojas studentas: DVv- & {Xp+} & {Wd-};
 mokytoja studentė: DVm- & {Xp+} & {Wd-};
 
@@ -117,53 +115,55 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 % -------------------------------
 % Linksniai -- bendri
 <k-ko>: DK+ or [DK-];
-<g-ka>: ({DK-} & (DG$)) or [(DG$) & DK+];
+<n-kam>: DN$ ^ {DK$};
+<g-ka>: DG$ ^ {DK$};
 
 % Linksniai -- vyriški vienaskaita
 <vv-v-kas>: DVvv$;
-<vv-k-ko>: <k-ko>;
-<vv-n-kam>: DN$;
-<vv-g-ka>: <g-ka>;
+<vv-k-ko>:  <k-ko>;
+<vv-n-kam>: <n-kam>;
+<vv-g-ka>:  <g-ka>;
 <vv-i-kuo>: VM+ & {Wd-};
 <vv-v-kur>: VM+ & {Wd-};
 <vv-s-o>: Wa-;
 
 % vyriški daugiskaita
 <vd-v-kas>: DVvd$;
-<vd-k-ko>: <k-ko>;
-<vd-n-kam>: DN$;
-<vd-g-ka>: <g-ka>;
+<vd-k-ko>:  <k-ko>;
+<vd-n-kam>: <n-kam>;
+<vd-g-ka>:  <g-ka>;
 <vd-i-kuo>: VM+ & {Wd-};
 <vd-v-kur>: VM+ & {Wd-};
 <vd-s-o>: Wa-;
 
 % Linksniai -- moteriški vienaskaita
 <mv-v-kas>: DVmv$;
-<mv-k-ko>: <k-ko>;
-<mv-n-kam>: DN$;
-<mv-g-ka>: <g-ka>;
+<mv-k-ko>:  <k-ko>;
+<mv-n-kam>: <n-kam>;
+<mv-g-ka>:  <g-ka>;
 <mv-i-kuo>: VM+ & {Wd-};
 <mv-v-kur>: VM+ & {Wd-};
 <mv-s-o>: Wa-;
 
 % moteriški daugiskaita
 <md-v-kas>: DVmd$;
-<md-k-ko>: <k-ko>;
-<md-n-kam>: DN$;
-<md-g-ka>: <g-ka>;
+<md-k-ko>:  <k-ko>;
+<md-n-kam>: <n-kam>;
+<md-g-ka>:  <g-ka>;
 <md-i-kuo>: VM+ & {Wd-};
 <md-v-kur>: VM+ & {Wd-};
 <md-s-o>: Wa-;
 
 % -------------------------------
 % Pirmoji linksniuotė
-% I kirčiuotė
+% I kirčiuotė (Ambrška+Žiugžda)
 kaim.= nam.= tilt.= auks.= burt.= būst.= dūm.= elni.= grob.=
 inkst.= kalt.= kaul.= kauš.= kelt.= krūm.= kūn.= kurt.= moksl.=
 pien.= piūkl.= prūs.= poud.= rūm.= siūl.= sost.= sviest.= šaukšt.=
 šon.= tarp.= vyr.= žaisl.= žent.= :
   LLPIRMIas+;
 
+% (Ambrška+Žiugžda)
 brol.= kurm.= ber.= joud.= kail.= kerš.= marg.= mol.= palš.= pant.=
 samt.= šuol.= uos.= uošv.= žirn.= žvirbl.= :
   LLPIRMIis+;
@@ -174,7 +174,7 @@ tvart.= : LLPIRMIas+ or  LLPIRMIis+;
 milt.= žąsl.= : LLPIRMIas+;
 
 % II kirčiuotė ---------------------
-% Kirčiai skirtingi nuo I-os kirčiuotės
+% Kirčiai skirtingi nuo I-os kirčiuotės (Ambrška+Žiugžda)
 piršt.= rakt.= aūt.= būgn.= but.= dirž.= dvar.= gandr.= ginč.=
 ginkl.= gražt.= grumst.= gryb.= karkl.= mat.= men.= 
 niekš.= pad.= parš.= prot.= rąst.= rašt.= skund.= turt.= :
@@ -194,6 +194,7 @@ med.= rud.= vamzd.= žod.= :
 
 žard.= : LLPIRMIas+ or LLPIRMIIis+;
 
+% (Ambrška+Žiugžda)
 šal.= dang.= kamš.= karš.= kar.= kir.= paukš.= rė.= sar.= :
   LLPIRMIItis+;
 
@@ -202,7 +203,7 @@ ikr.= vart.= : LLPIRMIas+;
 grik.= : LLPIRMIis+;
 
 % III kirčiuotė -------------------------
-% Kirčiai skirtingi nuo I-os kirčioutės
+% Kirčiai skirtingi nuo I-os kirčioutės (Ambrška+Žiugžda)
 kaln.= bern.= daikt.= driež.= irkl.= kelm.= kov.= laišk.= or.=
 plauk.= rand.= ryt.= sarg.= spirg.= stieb.= stog.= šern.= šiaud.=
 tėv.= uod.= veid.= verg.= vor.= žand.= žirg.= :
@@ -214,15 +215,19 @@ vež.= ož.= žalt.= : LLPIRMIIIys+;
 arkl.= : LLPIRMIas+ or LLPIRMIIIys+;
 
 % IV kirčiuotė ----------------------
-% Kirčiai skirtingi nuo I-os formos.
+% Kirčiai skirtingi nuo I-os formos. (Ambrška+Žiugžda)
 lauk.= kakl.= aul.= baln.= bals.= darž.= Diev.= dumbl.= gal.= gand.=
 gars.= jausm.= kamp.= kap.= krant.= krašt.= krauj.= laik.= laiv.=
 lank.= lizd.= mišk.= nag.= purv.= rag.= sparn.= tak.= tarn.= vaik.=
 vard.= varg.= varn.= verksm.= vilk.= :
   LLPIRMIas+;
 
+tev.= :
+  LLPIRMIas+;
+
 % kelias ???
 
+% (Ambrška+Žiugžda)
 gaid.= garn.= gen.= koud.= lyd.= piršl.= smėl.= šaul.= šikšn.= žyn.= :
   LLPIRMIVys+;
 
