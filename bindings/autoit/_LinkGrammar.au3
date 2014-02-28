@@ -274,12 +274,6 @@ Func _LG_SentenceLength($hSentence)
 	Return $result[0]
 EndFunc   ;==>_LG_SentenceLength
 
-Func _LG_SentenceGetWord($hSentence, $iWord)
-	;const char * sentence_get_word(Sentence sent, int w);
-	$result = DllCall($_LG_DLL, "str:cdecl", "sentence_get_word", "ptr", $hSentence, "int", $iWord)
-	Return $result[0]
-EndFunc   ;==>_LG_SentenceGetWord
-
 Func _LG_SentenceNullCount($hSentence)
 	;int sentence_null_count(Sentence sent);
 	$result = DllCall($_LG_DLL, "int:cdecl", "sentence_null_count", "ptr", $hSentence)
@@ -322,35 +316,11 @@ Func _LG_SentenceLinkCost($hSentence, $iNumber)
 	Return $result[0]
 EndFunc   ;==>_LG_SentenceLinkCost
 
-Func _LG_SentenceAndCost($hSentence, $iNumber)
-	;int sentence_and_cost(Sentence sent, int i);
-	$result = DllCall($_LG_DLL, "int:cdecl", "sentence_and_cost", "ptr", $hSentence, "int", $iNumber)
-	Return $result[0]
-EndFunc   ;==>_LG_SentenceAndCost
-
 Func _LG_LinkageCreate($iIndex, $hSentence, $hOptions)
 	;Linkage  linkage_create(int index, Sentence sent, Parse_Options opts);
 	$result = DllCall($_LG_DLL, "ptr:cdecl", "linkage_create", "int", $iIndex, "ptr", $hSentence, "ptr", $hOptions)
 	Return $result[0]
 EndFunc   ;==>_LG_LinkageCreate
-
-Func _LG_LinkageGetNumSublinkages($hLinkage)
-	;int linkage_get_num_sublinkages(Linkage linkage);
-	$result = DllCall($_LG_DLL, "int:cdecl", "linkage_get_num_sublinkages", "ptr", $hLinkage)
-	Return $result[0]
-EndFunc   ;==>_LG_LinkageGetNumSublinkages
-
-Func _LG_LinkageSetCurrentSublinkage($hLinkage, $iIndex)
-	;int linkage_set_current_sublinkage(Linkage linkage, int index);
-	$result = DllCall($_LG_DLL, "int:cdecl", "linkage_set_current_sublinkage", "ptr", $hLinkage, "int", $iIndex)
-	Return $result[0]
-EndFunc   ;==>_LG_LinkageSetCurrentSublinkage
-
-Func _LG_LinkageComputeUnion($hLinkage)
-	;int linkage_compute_union(Linkage linkage);
-	$result = DllCall($_LG_DLL, "int:cdecl", "linkage_compute_union", "ptr", $hLinkage)
-	Return $result[0]
-EndFunc   ;==>_LG_LinkageComputeUnion
 
 Func _LG_LinkageGetNumWords($hLinkage)
 	;int linkage_get_num_words(Linkage linkage);
@@ -487,29 +457,11 @@ Func _LG_LinkageDisjunctCost($hLinkage)
 	Return $result[0]
 EndFunc   ;==>_LG_LinkageDisjunctCost
 
-Func _LG_LinkageAndCost($hLinkage)
-	;int linkage_and_cost(Linkage linkage);
-	$result = DllCall($_LG_DLL, "int:cdecl", "linkage_and_cost", "ptr", $hLinkage)
-	Return $result[0]
-EndFunc   ;==>_LG_LinkageAndCost
-
 Func _LG_LinkageLinkCost($hLinkage)
 	;int linkage_link_cost(Linkage linkage);
 	$result = DllCall($_LG_DLL, "int:cdecl", "linkage_link_cost", "ptr", $hLinkage)
 	Return $result[0]
 EndFunc   ;==>_LG_LinkageLinkCost
-
-Func _LG_LinkageIsCanonical($hLinkage)
-	;int linkage_is_canonical(Linkage linkage);
-	$result = DllCall($_LG_DLL, "int:cdecl", "linkage_is_canonical", "ptr", $hLinkage)
-	Return $result[0]
-EndFunc   ;==>_LG_LinkageIsCanonical
-
-Func _LG_LinkageIsImproper($hLinkage)
-	;int linkage_is_improper(Linkage linkage);
-	$result = DllCall($_LG_DLL, "int:cdecl", "linkage_is_improper", "ptr", $hLinkage)
-	Return $result[0]
-EndFunc   ;==>_LG_LinkageIsImproper
 
 Func _LG_LinkageHasInconsistentDomains($hLinkage)
 	;int linkage_has_inconsistent_domains(Linkage linkage);
