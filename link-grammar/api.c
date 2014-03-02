@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+/* Temporary for fast switching between the new and old sane_morphism() */
+//#define OLD_SANE_MORPHISM
+
 #include <limits.h>
 #include <math.h>
 #include <string.h>
@@ -1045,6 +1048,287 @@ int sentence_nth_word_has_disjunction(Sentence sent, int i)
 
 #define INFIX_MARK '='
 
+#ifndef OLD_SANE_MORPHISM
+size_t altlen(const char **); /* XXX move to .h */
+
+static inline Boolean is_AFFIXTYPE_STEM(const char *a, size_t len)
+	{ return (SUBSCRIPT_MARK == a[len]) && (INFIX_MARK == a[len+1]); }
+static inline Boolean is_AFFIXTYPE_PREFIX(const char *a, size_t len)
+	{ return INFIX_MARK == a[len-1]; }
+static inline Boolean is_AFFIXTYPE_SUFFIX(const char *a)
+	{ return (INFIX_MARK == a[0]); }
+static inline Boolean is_AFFIXTYPE_EMPTY(const char *a, size_t len)
+	{ return (len == 5) && (0 == strcmp(a, EMPTY_WORD_MARK)); }
+
+#define lgdebug(level, format, ...) if(verbosity>level){printf(format, __VA_ARGS__);}
+/* These letters create a string that should be matched by a SANEMORPHISM regex,
+ * given in the affix file. The empty word doesn't have a letter.
+ * E.g. for the Russian dictionary: "w|ts". It is converted here to:  "^((w|ts)b)+$".
+ * It matches "wbtsbwbtsbwb" but not "wbtsbwsbtsb". */
+#define AFFIXTYPE_PREFIX	'p'	/* prefix */
+#define AFFIXTYPE_STEM		't'	/* stem */
+#define AFFIXTYPE_SUFFIX	's'	/* suffix */
+#define AFFIXTYPE_WORD		'w'	/* regular word */
+#define AFFIXTYPE_END		'b'	/* end of input word */
+
+/**
+ * Validate that all the chosen disjuncts for each input word are from the same
+ * alternative, and vise versa.
+ *
+ * Optionally (if SANEMORPHISM regex is defined in the affix file),
+ * also validate that the morpheme-type sequence is permitted for the
+ * language. This is a sanity check of the program and the dictionary.
+ */
+static void sane_morphism(Sentence sent, Parse_Options opts)
+{
+	int lk, i;
+	Parse_info pi = sent->parse_info;
+	Dictionary afdict = sent->dict->affix_table;
+
+	/* Store the SANEMORPHISM regex in the unused (up to now)
+	 * regex_root element of the affix dictionary, and precompile it */
+	if ((NULL != afdict) && (NULL == afdict->regex_root) &&
+	   (0 != afdict->sm_total)) {
+		int rc;
+		Regex_node * sm_re = (Regex_node *) malloc(sizeof(Regex_node));
+		char rebuf[MAX_WORD + 16] = "^((";
+
+		/* The regex is converted to: ^((original-regex)b)+$ */
+		strcat(rebuf, afdict->sane_morphism[0]);
+		strcat(rebuf, ")b)+$");
+
+		afdict->regex_root = sm_re;
+		sm_re->pattern = strdup(rebuf);
+		sm_re->name = strdup("%"); /* exists in the affix dictionary */
+		sm_re->re = NULL;
+		sm_re->next = NULL;
+		rc = compile_regexs(afdict);
+		if (rc) {
+			prt_error("Error: sane_morphism: Failed to compile "
+			    "regex '%s', return code %d\n", sm_re->pattern, rc);
+		}
+		lgdebug(4, "%%%%>>regex %s\n", sm_re->pattern);
+	}
+
+	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
+	{
+		Linkage_info *lifo = &sent->link_info[lk];
+		size_t numalt;		/* number of alternatives */
+		size_t ai;		/* index of checked alternative */
+		int unsplit_i;		/* unsplit word index */
+		const char * unsplit = NULL;	/* unsplit word */
+		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
+		char * affix_types_p = affix_types;
+		Boolean match_found = FALSE;	/* djw matched a morpheme */
+		int matched_alts[MAX_SENTENCE];	/* number of morphemes that have
+						 * matched the chosen disjuncts
+						 * for the unsplit_word, so far
+						 * (index: ai) */
+
+		/* Don't bother with linkages that already failed post-processing... */
+		if (0 != lifo->N_violations)
+			continue;
+		extract_links(lifo->index, pi);
+		for (i=0; i<sent->length; i++)
+		{
+			const char * djw; /* disjunct word - the chosen word */
+			size_t djwlen;	 /* disjunct total length */
+			size_t len;	 /* disjunct length w/o subscript*/
+			const char * mark; /* char position of SUBSCRIPT_MARK */
+			Boolean empty_word = FALSE; /* is this an empty word? */
+			Disjunct * cdj = pi->chosen_disjuncts[i];
+
+			lgdebug(4, "%%%%>>%d Checking word %d/%d\n",
+			    lk, i, sent->length);
+
+			/* Ignore island words */
+			if (NULL == cdj)
+			{
+				lgdebug(4, "%%>%d ignored island word\n", lk);
+				unsplit = NULL;	/* mark it as island */
+				continue;
+			}
+
+			if (NULL != sent->word[i].unsplit_word)
+			{
+				/* This is an input word -
+ * 				 * remember its parameters */
+				unsplit_i = i;
+				unsplit = sent->word[i].unsplit_word;
+				numalt = altlen(sent->word[i].alternatives);
+
+				for (ai = 0; ai < numalt; ai++) matched_alts[ai] = 0;
+				lgdebug(4, "%%>%d unsplit word %s, numalt %d\n",
+				    lk, unsplit, (int)numalt);
+			}
+			if (NULL == unsplit)
+			{
+				lgdebug(4, "%%>%d ignore morphemes of an island word\n", lk);
+				continue;
+			}
+
+			djw = cdj->string;
+			djwlen = strlen(djw);
+			mark = strchr(djw, SUBSCRIPT_MARK);
+			len = NULL != mark ? (size_t)(mark - djw) : djwlen;
+
+			/* Find morpheme type */
+			if (is_AFFIXTYPE_EMPTY(djw, djwlen))
+			{
+				/* Ignore the empty word */;
+				empty_word = TRUE;
+			}
+			else
+			if (is_AFFIXTYPE_SUFFIX(djw))
+			{
+				*affix_types_p = AFFIXTYPE_SUFFIX;
+			}
+			else
+			if (is_AFFIXTYPE_STEM(djw, len))
+			{
+				*affix_types_p = AFFIXTYPE_STEM;
+			}
+			else
+			if (is_AFFIXTYPE_PREFIX(djw, len))
+			{
+				*affix_types_p = AFFIXTYPE_PREFIX;
+			}
+			else
+			{
+				*affix_types_p = AFFIXTYPE_WORD;
+			}
+
+			lgdebug(4, "%%>%d djw %s affixtype %c len %d\n",
+			    lk, djw, empty_word ? 'E' : *affix_types_p, (int)len);
+
+			if (! empty_word) affix_types_p++;
+			
+			lgdebug(4, "%%>%d djw %s matched alternatives no.:", lk, djw);
+			match_found = FALSE;
+
+			/* Compare the chosen word djw to the alternatives */
+			for (ai = 0; ai < numalt; ai++)
+			{
+				const char * s, * t;
+				const char *a = sent->word[i].alternatives[ai];
+				char downcased[MAX_WORD+1] = "";
+			
+				if (-1 == matched_alts[ai])
+					continue; /* already didn't match */
+
+				s = a;
+try_again:
+				t = djw;
+				//lgdebug(4, "\n%%>%d COMPARING alt%d s %s djw %s: ", lk, (int)ai, s, t);
+				/* Rules of match:
+				 * Morpheme with a subscript needs an exact match to djw.
+				 * Morpheme w/o a subscript needs a match to djw w/o a subscript. */
+				while (*s != '\0' && *s == *t) {s++; t++;}
+				/* Possibilities:
+				 *** Match (the last one is for words ending with [!]):
+				 * s==\0 && t==\0
+				 * s==\0 && t==SUBSCRIPT_MARK
+				 * s==\0 && t==[
+				 *** Continue to check:
+				 * s==.  && t==SUBSCRIPT_MARK
+				 */
+				if (*s == SUBSCRIPT_DOT && *t == SUBSCRIPT_MARK)
+				{
+					s++; t++;
+					while ((*s != '\0') && (*s == *t)) {s++; t++;}
+				}
+				if ((*s == '\0') &&
+				   ((*t == '\0') || (*t == SUBSCRIPT_MARK) || (*t == '[')))
+				{
+					//lgdebug(4, "%s\n", "EQUAL");
+					lgdebug(4, " %d", (int)ai);
+					match_found = TRUE;
+					/* Count matched morphemes in this alternative */
+					matched_alts[ai]++;
+				}
+				else {
+					//lgdebug(4,"%s\n", "NOTEQ");
+					/* If we are here, it didn't match. Is that because of
+					 * capitalization? Lets check. */
+					if ((sent->word[i].firstupper) &&
+					   ('\0' == downcased[0]) && (unsplit_i == i) && ('\0' != a[0]))
+					{
+						downcase_utf8_str(downcased, a, MAX_WORD);
+						lgdebug(4, "\n%%>%d downcasing %s>%s\n",
+							lk, a, downcased);
+						s = downcased;
+						goto try_again;
+					}
+					/* No match, disregard this alternative from now on */
+					matched_alts[ai] = -1;
+				}
+			}
+			if (! match_found) 
+			{
+				lgdebug(4, " %s\n", "none");
+				break;
+			}
+			lgdebug(4, "%s", "\n");
+
+			/* If this is the last morpheme of the alternatives,
+			 * then make sure all of them exist in the linkage */
+			if ((i+1 == sent->length) || (NULL != sent->word[i+1].unsplit_word))
+			{
+				int num_morphemes = i - unsplit_i + 1;
+
+				lgdebug(4, "%%>%d end of input word, num_morphemes %d\n", lk, num_morphemes);
+				*affix_types_p++ = AFFIXTYPE_END;
+
+				/* Make sure that there exists an alternative in
+				 * which all the morpmenes have been matched.
+				 * ??? This disallows island morphemes -
+				 * should we allow them? */
+				match_found = FALSE;
+				for (ai = 0; ai < numalt; ai++)
+				{
+					if (matched_alts[ai] == num_morphemes)
+					{
+						match_found = TRUE;
+						break;
+					}
+				}
+
+				if (! match_found)
+				{
+					lgdebug(4, "%%>%d morphemes are missing in this linkage\n", lk);
+					break;
+				}
+				lgdebug(4, "%%> %s\n", "Perfect match");
+			}
+		}
+		*affix_types_p = '\0';
+
+		/* Check morpheme type combination */
+		if (match_found && (NULL != afdict) && (NULL != afdict->regex_root) &&
+		    (NULL == match_regex(afdict, affix_types)))
+		{
+			/* Morpheme type combination not valid */
+			match_found = FALSE;
+			/* XXX we should have a better way to notify */
+			if (0 < verbosity)
+				printf("Warning: Invalid morpheme type combination %s, "
+				       "run with verbosity=4 to debug\n", affix_types);
+		}
+		else
+			lgdebug(4, "%%>%d morpheme type combination %s\n", lk, affix_types);
+
+		if (! match_found)
+		{
+			/* Oh no ... invalid morpheme combination! */
+			sent->num_valid_linkages --;
+			lifo->N_violations ++;
+			lgdebug(4, "%%>%d FAILED, remaining %d\n", lk, sent->num_valid_linkages);
+		}
+	}
+}
+#endif /* !OLD_SANE_MORPHISM */
+
+#ifdef OLD_SANE_MORPHISM
 /**
  * This routine solves the problem of mis-linked stem + suffix.
  * It checks that the actual stem+suffix, when concatenated, restores
@@ -1066,7 +1350,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	int lk, i;
 	Parse_info pi = sent->parse_info;
 
-	/* XXX skip cheking if we handle prefixes, until this function is fixed */
+	/* XXX skip checking if we handle prefixes, until this function is fixed */
 	if (sent->dict->affix_table->mp_strippable || sent->dict->affix_table->p_strippable) {
 		/* printf("Info: skipping sane_morphism()\n"); */
 		return;
@@ -1205,11 +1489,12 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			sent->num_valid_linkages --;
 			lifo->N_violations ++;
 			if (verbosity > 4)
-				printf("%%%%>>>%d FAILED %d, remaining %d\n", lk, lifo->N_violations, sent->num_valid_linkages);
+				printf("%%%%>>>%d FAILED, remaining %d\n", lk, sent->num_valid_linkages);
 			break;
 		}
 	}
 }
+#endif /* OLD_SANE_MORPHISM */
 
 static void chart_parse(Sentence sent, Parse_Options opts)
 {

@@ -133,18 +133,21 @@ struct Dictionary_s
 	int s_strippable; /* generic suffix */
 	int p_strippable; /* generic prefix */
 	int mp_strippable; /* multi-prefix */
+	int sm_total;	  /* sane-morphism regexp count (0 or 1) */
 	int r_stripped;
 	int l_stripped;
 	int u_stripped;
 	int s_stripped;
 	int p_stripped;
 	int mp_stripped;
+	int sm_current_count;
 	const char ** strip_left;
 	const char ** strip_right;
 	const char ** strip_units;
 	const char ** prefix;
 	const char ** mprefix;
 	const char ** suffix;
+	const char ** sane_morphism;
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker; /* spell checker handle */

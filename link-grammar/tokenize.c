@@ -39,6 +39,8 @@
 
 #define MAX_STRIP 10
 
+size_t altlen(const char **arr); /* XXX move to .h */
+
 /* These are no longer in use, but are read from the 4.0.affix file */
 /* I've left these here, as an example of what to expect. */
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
@@ -252,7 +254,7 @@ else
 }
 }
 
-static size_t altlen(const char **arr)
+size_t altlen(const char **arr)
 {
 	size_t len = 0;
 	if (arr)
