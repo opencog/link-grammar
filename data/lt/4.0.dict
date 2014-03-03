@@ -482,6 +482,30 @@ siel.= : LLPIRMIis+ or LLANTRIa+;
 
 % -------------------------------
 % Trečioji linksniuotė
+
+% (Ambrška+Žiugžda)
+an.= :
+  LLTRETItis+;
+
+% Trečioji linksniuotė vienaskaita I kirčiuotė
+
+=tis.avv1:   LLTRETIa- & <mv-v-kas>;
+=ties.avk1:  LLTRETIa- & <mv-k-ko>;
+=čiai.avn1:  LLTRETIa- & <mv-n-kam>;
+=tį.avg1:    LLTRETIa- & <mv-g-ka>;
+=timi.avi1:  LLTRETIa- & <mv-i-kuo>;
+=tyje.avu1:  LLTRETIa- & <mv-v-kur>;
+=tie.avs1:   LLTRETIa- & <mv-s-o>;
+
+% Trečioji linksniuotė daugiskaita I kirčiuotė
+=tys.adv1:   LLTRETIa- & <md-v-kas>;
+=čių.adk1:   LLTRETIa- & <md-k-ko>;
+=tims.adn1:  LLTRETIa- & <md-n-kam>;
+=tis.adg1:   LLTRETIa- & <md-g-ka>;
+=timis.adi1: LLTRETIa- & <md-i-kuo>;
+=tyse.adu1:  LLTRETIa- & <md-v-kur>;
+=tys.ads1:   LLTRETIa- & <md-s-o>;
+
 %
 % =================================================================
 % Būdvardžiai
