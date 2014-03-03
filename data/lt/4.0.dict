@@ -429,8 +429,24 @@ giesm.= gerkl.= aikšt.= varšk.= versm.= : LLANTRIe+;
 mar.= : LLANTRIVti+;
 
 % Dauguma IV-os kirčiuotes rašosi taip pat kaip pirma ...
-dain.= valdž.= : LLANTRIa+;
-eil.= : LLANTRIe+;
+dain.= valdž.= ang.= ąs.= aušr.= band.= bang.= barzd.= daub.= dien.=
+giedr.= iev.= kalb.= kamš.= karn.= kart.= kruv.=  lank.= lazd.= lent.=
+mald.= merg.= rib.= sal.= sausr.= skol.= spalv.= sul.= šak.= tams.=
+taut.= ties.= tvor.= uol.= valk.= žaizd.= žiem.=
+  : LLANTRIa+;
+
+dali.= gauj.= gij.= vej.= žini.=
+  : LLANTRIa+;
+
+eil.= derm.= drausm.= duob.= garb.= gelm.= gėl.= kat.= kert.= kregžd.=
+lėl.= mįsl.= pel.= prasm.= pūsl.= raupl.= riek.= siul.= skyl.= srov.=
+sterbl.= šlov.= tarm.= taur.= varl.= vert.= vėž.= žiev.= žym.= žyn.=
+žol.= žūkl.= žvaigžd.=
+  : LLANTRIe+;
+
+% Tiktai daugiskaita:
+miel.=
+  : LLANTRIe+;
 
 % ---------------------------------------
 % lapas, lapė
