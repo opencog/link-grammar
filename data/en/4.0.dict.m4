@@ -105,21 +105,18 @@ changecom(`%')
 % noun-main-x -- singular or plural or mass.
 <noun-main-x>:
   (S+ & <CLAUSE>) or SI- or J- or O-
-  or Wa-
   or <post-nominal-x>
   or <costly-null>;
 
 % noun-main-s -- singular
 <noun-main-s>:
   (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
-  or Wa-
   or <post-nominal-s>
   or <costly-null>;
 
 % noun-main-p -- plural
 <noun-main-p>:
   (Sp+ & <CLAUSE>) or SIp- or Jp-
-  or Wa-
   or Op-
   or <post-nominal-p>
   or <costly-null>;
@@ -129,7 +126,6 @@ changecom(`%')
 % Doing this requires adding Su- links to many entries
 <noun-main-u>:
   (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-  or Wa-
   or <post-nominal-s>
   or <costly-null>;
 
@@ -140,7 +136,6 @@ changecom(`%')
 % uncountable form, which will use <noun-main-u>
 <noun-main-m>:
   (Ss+ & <CLAUSE>) or SIs- or Jp- or Os-
-  or Wa-
   or <post-nominal-s>
   or <costly-null>;
 
@@ -277,6 +272,7 @@ CAPITALIZED-WORDS INITIALS <entity-singular>:
         ))
       or ({[[@MX+]]} & AN+) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
+  or Wa-
   or <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
@@ -293,6 +289,7 @@ PL-CAPITALIZED-WORDS:
         ))
       or AN+
       or G+))
+  or Wa-
   or <directive-opener>;
 
 % capitalized words ending in s
@@ -310,14 +307,16 @@ PL-CAPITALIZED-WORDS:
       (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or
         YS+ or YP+))
     or AN+
+    or Wa-
     or G+);
 
 % Whole, entire entities, cannot participate in G links
 % because the entire entity has already been identified.
 <entity-entire>:
   ({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-    (({@MX+} & <noun-main-s>) or <noun-and-s> or YS+)) or
-  AN+;
+    (({@MX+} & <noun-main-s>) or <noun-and-s> or YS+))
+  or Wa-
+  or AN+;
 
 % XXX These should be removed, they're junk.
 personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
@@ -370,7 +369,9 @@ locationID60: <marker-entity> or <entity-entire>;
 % entity IDs (mirror Capitalized-words - a mix of plural and singular)
 <entity-id>:
   ({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+)) or AN+;
+    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+))
+  or AN+
+  or Wa-;
 
 entityID0 entityID1 entityID2 entityID3 entityID4 entityID5 entityID6 entityID7 entityID8 entityID9
 entityID10 entityID11 entityID12 entityID13 entityID14 entityID15 entityID16 entityID17 entityID18 entityID19
@@ -395,7 +396,7 @@ entityID60: <marker-entity> or <entity-id>;
     or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
-    or Us-);
+    or Us- or Wa-);
 
 GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
 
@@ -417,7 +418,8 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or SJrp-
     or (YP+ & {Dmc-})
     or (GN+ & (DD- or [()]))
-    or Up-);
+    or Up-
+    or Wa-);
 
 genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
 genericID10 genericID11 genericID12 genericID13 genericID14 genericID15 genericID16 genericID17 genericID18 genericID19
@@ -433,6 +435,7 @@ genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
   or ({EN-} & (NIfn+ or NItn-))
   or NN+
   or AN+
+  or Wa-
   or ((Xd- & TY- & Xc+) or TY-)
   or ({EN- or NIc-}
     & (ND+
@@ -523,10 +526,11 @@ USMC.y USN.y:
 HYPHENATED-WORDS.n:
   [[({@AN-} & {@A-} &
     (({NM+ or D-} &
-      ((<noun-sub-x> & (<noun-main-x> or <rel-clause-x>)) or
-      <noun-and-x>)) or
-     U-)) or
-  ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
+      ((<noun-sub-x> & (<noun-main-x> or <rel-clause-x>))
+      or <noun-and-x>))
+     or U-
+     or Wa-))
+  or ((YS+ or YP+) & {@AN-} & {@A-} & {D-})]];
 
 % NOUNS --------------------------------------------------------
 % Nouns typically take determiners (a, the). The minor flags are:
@@ -556,7 +560,8 @@ HYPHENATED-WORDS.n:
     or SJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
-    or Us-);
+    or Us-
+    or Wa-);
 
 /en/words/words.n.1
 /en/words/words.n.1.gerund :
@@ -584,7 +589,8 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
       ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or <noun-and-s>))
     or (YS+ & {Dmc-})
     or (GN+ & (DD- or [()]))
-    or Up-));
+    or Up-
+    or Wa-));
 
 % XXX should probably eliminate <noun-and-p,u> and replace by <noun-and-u>
 % but this requires other spread-out changes
@@ -600,7 +606,8 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
       & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
     or (GN+ & (DD- or [()]))
-    or Up-);
+    or Up-
+    or Wa-);
 
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
@@ -630,7 +637,8 @@ tawny.n ultramarine.n yellow.n:
     ((({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>]))
     or (YS+ & {Dmu-})
     or (GN+ & (DD- or [()]))
-    or Up-));
+    or Up-
+    or Wa-));
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
@@ -640,7 +648,8 @@ tawny.n ultramarine.n yellow.n:
     (({MG+} & {@MX+} & (JG- or <noun-main-s> or <noun-and-s>))
     or G+
     or ({[[MG+]]} & (AN+ or YS+ or YP+))))
-  or (Xc+ & Xd- & G- & AN+);
+  or (Xc+ & Xd- & G- & AN+)
+  or Wa-;
 
 % SINGULAR ENTITIES FOR ENTITY EXTRACTION
 % This must appear after other categories so it doesnt interfere with those.
@@ -713,7 +722,8 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or SJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
-    or Us-);
+    or Us-
+    or Wa-);
 
 % determiner constructions, with a dangling of: "a number of", "a lot of"
 % "I have a number of cookies"
@@ -744,14 +754,16 @@ kind_of:
     or ({Ds-} & <noun-and-s>)
     or Us-))]
   or EA+
-  or EE+;
+  or EE+
+  or Wa-;
 
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 type_of sort_of breed_of:
   [{{@AN-} & @A-} & U+ &
     ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
     or ({Ds-} & <noun-and-s>)
-    or Us-)];
+    or Us-
+    or Wa-)];
 
 % This gets a cost, so that the {Jd-} link for measures.2 is prefered.
 kinds_of types_of sorts_of breeds_of:
@@ -1124,10 +1136,27 @@ ourselves yourselves thyself oneself one's one’s:
 
 each_other: J- or O- or YS+;
 
-his her:
+his:
   J- or Ox- or DP+
   or ({AL-} & {@L+} & (D+ or DD+))
-  or [<noun-main-x>];
+  or [<noun-main-x>]
+  or Wa-;
+
+her:
+  J- or Ox- or DP+
+  or ({AL-} & {@L+} & (D+ or DD+))
+  or Wa-;
+
+others:
+  {{Jd-} & Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
+
+mine.p yours theirs hers ours:
+  <noun-main-x>
+  or Wa-
+  or SJl+
+  or SJr-
+  or (Dn- & SJn+);
+
 
 its my.p your their our:
   DP+
@@ -1184,13 +1213,14 @@ them_all us_all you_all: Ox- or J-;
 it_all: [[Ox-]] or J-;
 
 something someone somebody:
-  {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
+  {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+ or Wa-);
+
 nothing no_one nobody:
-  {EN-} & {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
+  {EN-} & {EL+} & (({Pa+} & <noun-sub-s> & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+ or Wa-);
 
 everything everyone anyone everybody anybody anything:
   {EN-} & {EL+}
-    & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+);
+    & (((({Pa+} & <noun-sub-s>) or CX+) & {@MXs+} & <noun-main-s>) or <noun-and-s> or YS+ or Wa-);
 
 % EL-: "what the fuck happened?" "what else happened?"
 % Amazing how profanity works this way...
@@ -1219,13 +1249,6 @@ exactly.ee precisely.ee really.ee:
 fucking.e bleeping.e flat_out:
   EL- or E+;
 
-others:
-  {{Jd-} & Dmc-} & ((<noun-sub-p> & <noun-main-p>) or <noun-and-p>);
-
-mine.p yours theirs hers ours:
-  <noun-main-x> or SJl+ or SJr- or (Dn- & SJn+);
-
-
 % ====================================================================
 % DETERMINERS
 
@@ -1239,7 +1262,8 @@ the:
 % this as a pronoun
 this.p:
   <noun-main-h>
-  or <noun-and-s>;
+  or <noun-and-s>
+  or Wa-;
 
 % this as a determiner
 this.d: ({AL-} & D*u+) or DTn+;
@@ -1254,7 +1278,8 @@ these:
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
   or [[<noun-main-p>]]
-  or <noun-and-p>;
+  or <noun-and-p>
+  or Wa-;
 
 % [[<noun-main-p>]] costs so that ditranstive verbs don't suffer,
 % and get the D+ link instead of the O- link.
@@ -1264,17 +1289,19 @@ those:
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
   or (<noun-sub-p> & ([[<noun-main-p>]] or RJlr+ or RJrr-))
-  or <noun-and-p>;
+  or <noun-and-p>
+  or Wa-;
 
 % "Them there beans ought to be picked"
 them_there:
-  Dm+;
+  Dm+ or Wa-;
 
 both.d:
-  Dmc+ or
-  E+ or
-  ({M+ or (ALx+ & Jp+)} & <noun-main-p>) or
-  <noun-and-p>;
+  Dmc+
+  or E+
+  or ({M+ or (ALx+ & Jp+)} & <noun-main-p>)
+  or <noun-and-p>
+  or Wa-;
 
 both.a: Paf- or AJra-;
 
@@ -1328,12 +1355,13 @@ one:
   ({NA-} & {EN-} & (({DD-} & Ds+) or ({{@A- & {[[@AN-]]}} & Ds-} &
     (YS+ or
     (<noun-sub-s> & (<noun-main-s> or <rel-clause-s>)) or
-    <noun-and-s>)))) or
-  NIm+ or
-  NSn+ or
-  (NA- & ND+) or
-  DTi+ or
-  (NA- & Xd- & TY- & Xc+);
+    <noun-and-s>))))
+  or NIm+
+  or NSn+
+  or (NA- & ND+)
+  or DTi+
+  or (NA- & Xd- & TY- & Xc+)
+  or Wa-;
 
 ones:
   {@A- & {[[@AN-]]}} & {Dmc-} &
@@ -1362,17 +1390,17 @@ such_a such_an: Ds*k+;
 a_lot:
   [[<noun-and-p>]]
 %  or [[(<noun-sub-p> & <noun-main-p>)]]
-  or EC+ or MVa- or <adv-of>;
+  or EC+ or MVa- or <adv-of> or Wa-;
 
 % OFd+ & Dmc+: "I ate a few of the cookies."
 few:
   (OFd+ & Dmc+ & {A-} & (D- or EA-))
   or ({EA- or EF+ or ({EA-} & DD-)} &
-     (Dmc+ or [<noun-sub-p> & <noun-main-p>] or <noun-and-p>));
+     (Dmc+ or [<noun-sub-p> & <noun-main-p>] or <noun-and-p> or Wa-));
 
 a_couple:
 %  [[<noun-sub-p> & <noun-main-p>]] or
-  <noun-and-p>;
+  <noun-and-p> or Wa-;
 
 % NNumeric modifier: "a couple of thousand dollars"
 a_couple_of:
@@ -1384,6 +1412,7 @@ a_few:
   or ND+
   or NIn+
   or ECa+
+  or Wa-
   or ({EN-} &
     (Dmc+
     or ND+
@@ -1400,7 +1429,8 @@ some:
   or MF+
   or [<noun-sub-x> & <noun-main-x>]
   or <noun-and-x>
-  or [[<adv-of>]];
+  or [[<adv-of>]]
+  or Wa-;
 
 little.i:
   ({EE-} & (MVa- or <advcl-verb> or Qe+))
@@ -1451,7 +1481,8 @@ none:
   (OFd+ & Dm+)
   or [<noun-sub-x> & <noun-main-x>]
   or <noun-and-x>
-  or [[<adv-of>]];
+  or [[<adv-of>]]
+  or Wa-;
 
 % costly <adv-of> so that OFd+ is prefered.
 rest.i:
@@ -1461,7 +1492,8 @@ plenty:
   (OFd+ & Dm+)
   or ({@M+} & ([<noun-main-x>] or <noun-and-x>))
   or [[<adv-of>]]
-  or [MVa-];
+  or [MVa-]
+  or Wa-;
 
 other:
   Dmu+ or
@@ -1482,7 +1514,8 @@ another:
   or NIc+
   or [<noun-sub-s> & <noun-main-s>]
   or <noun-and-s>
-  or YS+;
+  or YS+
+  or Wa-;
 
 one_another: (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or YS+;
 
@@ -1493,59 +1526,68 @@ each:
   or <noun-and-s>
   or DTn+
   or E+
-  or MVa-;
+  or MVa-
+  or Wa-;
 
 no.misc-d: ({EN-} & D+) or EC+;
 
 a_little:
   [<noun-sub-s> & <noun-main-s>]
   or <noun-and-s>
-  or EA+ or EC+ or EE+ or MVa-;
+  or EA+ or EC+ or EE+ or MVa- or Wa-;
 
 a_great_deal:
   EC+
   or MVa-
   or (OFd+ & Dmu+)
   or [<noun-sub-s> & <noun-main-s>]
-  or <noun-and-s>;
+  or <noun-and-s>
+  or Wa-;
 
 many_more a_few_more a_couple_more plenty_more a_lot_more:
   Dmcc+
   or (OFd+ & Dm+)
   or [<noun-sub-p> & <noun-main-p>]
-  or <noun-and-p>;
+  or <noun-and-p>
+  or Wa-;
 
 some_more:
   MVa-
   or Dm+
   or (OFd+ & Dmu+)
   or [<noun-sub-x> & <noun-main-x>]
-  or <noun-and-x>;
+  or <noun-and-x>
+  or Wa-;
 
 one_more:
-  Ds+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
+  Ds+ or (<noun-sub-s> & <noun-main-s>) or <noun-and-s> or Wa-;
 
 not_many:
   ({OFd+} & Dmc+)
-  or [<noun-sub-p> & <noun-main-p>];
+  or [<noun-sub-p> & <noun-main-p>]
+  or Wa-;
 
 not_much:
   ({OFd+} & Dmu+)
-  or [<noun-sub-x> & <noun-main-u>];
+  or [<noun-sub-x> & <noun-main-u>]
+  or Wa-;
 
 not_all not_everything:
   ({OFd+} & Dm+)
-  or (((ALx+ & Jp+) or <noun-sub-x>) & [S+] & <CLAUSE>);
+  or (((ALx+ & Jp+) or <noun-sub-x>) & [S+] & <CLAUSE>)
+  or Wa-;
 
 not_one:
   Ds+
   or (OFd+ & Dm+)
-  or (<noun-sub-s> & [Ss+] & <CLAUSE>);
+  or (<noun-sub-s> & [Ss+] & <CLAUSE>)
+  or Wa-;
 
 enough.n:
   (OFd+ & Dmu+)
   or [{OF+} & <noun-main-s>]
-  or <noun-and-s>;
+  or <noun-and-s>
+  or Wa-;
 
 % EF-: "He is good enough" but *He is very good enough
 enough.r: EF-;
@@ -1558,7 +1600,8 @@ enough.ij: Wi- & {Pg+};
 not_enough:
   (OFd+ & Dm+)
   or [{OF+} & <noun-main-s>]
-  or <noun-and-s>;
+  or <noun-and-s>
+  or Wa-;
 
 % =================================================================
 % NUMERICAL EXPRESSIONS
@@ -1622,10 +1665,11 @@ several:
   ({EN- or NIc- or NA-} & (ND+ or NIn+ or
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
   (NA- & {<noun-sub-p> & <noun-main-p>}) or
-  (NA- & Xd- & TY- & Xc+);
+  (NA- & Xd- & TY- & Xc+)
+  or Wa-;
 
 oh.zero: (NA- & NA+);
-zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>);
+zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>) or Wa-;
 
 % the generic "number" category
 % AN+ is needed for date-ranges
@@ -1642,7 +1686,8 @@ NUMBERS FRACTION:
   ({EN- or NIc-} & (ND+ or NIn+ or OD- or
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
   EQt+ or
-  EQt-;
+  EQt- or
+  Wa-;
 
 % HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
 % and should probably have a narrower set of parse patterns than numbers in
@@ -6036,7 +6081,8 @@ last_time next_time:
   <prep-main-t>
   or JT-
   or YS+
-  or [[<noun-main-s>]];
+  or [[<noun-main-s>]]
+  or Wa-;
 
 % Js-: "show results from last week"
 day.r week.r month.r year.r weekend.r morning.r afternoon.r evening.r
@@ -6083,7 +6129,8 @@ July August.i September.i October November December:
     or ON-
     or JT-
     or [[<noun-main-s> or MVp- or Mp- or AN+]]))
-  or AN+;
+  or AN+
+  or Wa-;
 
 AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock: ND- & {@MX+} & <noun-main-s> & {TZ+} ;
 
