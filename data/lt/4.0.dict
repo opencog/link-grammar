@@ -527,27 +527,46 @@ kamš.= : LLPIRMIItis+ or LLANTRIa+;
 % Trečioji linksniuotė
 
 % (Ambrška+Žiugžda)
-an.= :
-  LLTRETItis+;
+an.= skil.=
+  : LLTRETItis+;
+
+toš.= rūš.=
+  : LLTRETIis+;
 
 % Trečioji linksniuotė vienaskaita I kirčiuotė
 
-=tis.tvv1:   LLTRETIa- & <mv-v-kas>;
-=ties.tvk1:  LLTRETIa- & <mv-k-ko>;
-=čiai.tvn1:  LLTRETIa- & <mv-n-kam>;
-=tį.tvg1:    LLTRETIa- & <mv-g-ka>;
-=timi.tvi1:  LLTRETIa- & <mv-i-kuo>;
-=tyje.tvu1:  LLTRETIa- & <mv-v-kur>;
-=tie.tvs1:   LLTRETIa- & <mv-s-o>;
+=tis.tvv1:   LLTRETItis- & <mv-v-kas>;
+=ties.tvk1:  LLTRETItis- & <mv-k-ko>;
+=čiai.tvn1:  LLTRETItis- & <mv-n-kam>;
+=tį.tvg1:    LLTRETItis- & <mv-g-ka>;
+=timi.tvi1:  LLTRETItis- & <mv-i-kuo>;
+=tyje.tvu1:  LLTRETItis- & <mv-v-kur>;
+=tie.tvs1:   LLTRETItis- & <mv-s-o>;
+
+=is.tvv1:   LLTRETIis- & <mv-v-kas>;
+=ies.tvk1:  LLTRETIis- & <mv-k-ko>;
+=iai.tvn1:  LLTRETIis- & <mv-n-kam>;
+=į.tvg1:    LLTRETIis- & <mv-g-ka>;
+=imi.tvi1:  LLTRETIis- & <mv-i-kuo>;
+=yje.tvu1:  LLTRETIis- & <mv-v-kur>;
+=ie.tvs1:   LLTRETIis- & <mv-s-o>;
 
 % Trečioji linksniuotė daugiskaita I kirčiuotė
-=tys.tdv1:   LLTRETIa- & <md-v-kas>;
-=čių.tdk1:   LLTRETIa- & <md-k-ko>;
-=tims.tdn1:  LLTRETIa- & <md-n-kam>;
-=tis.tdg1:   LLTRETIa- & <md-g-ka>;
-=timis.tdi1: LLTRETIa- & <md-i-kuo>;
-=tyse.tdu1:  LLTRETIa- & <md-v-kur>;
-=tys.tds1:   LLTRETIa- & <md-s-o>;
+=tys.tdv1:   LLTRETItis- & <md-v-kas>;
+=čių.tdk1:   LLTRETItis- & <md-k-ko>;
+=tims.tdn1:  LLTRETItis- & <md-n-kam>;
+=tis.tdg1:   LLTRETItis- & <md-g-ka>;
+=timis.tdi1: LLTRETItis- & <md-i-kuo>;
+=tyse.tdu1:  LLTRETItis- & <md-v-kur>;
+=tys.tds1:   LLTRETItis- & <md-s-o>;
+
+=ys.tdv1:   LLTRETIis- & <md-v-kas>;
+=ių.tdk1:   LLTRETIis- & <md-k-ko>;
+=ims.tdn1:  LLTRETIis- & <md-n-kam>;
+=is.tdg1:   LLTRETIis- & <md-g-ka>;
+=imis.tdi1: LLTRETIis- & <md-i-kuo>;
+=yse.tdu1:  LLTRETIis- & <md-v-kur>;
+=ys.tds1:   LLTRETIis- & <md-s-o>;
 
 %
 % =================================================================
