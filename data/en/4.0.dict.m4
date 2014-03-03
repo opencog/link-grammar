@@ -1123,11 +1123,16 @@ ourselves yourselves thyself oneself one's one’s:
   J- or O- or E+ or MVa-;
 
 each_other: J- or O- or YS+;
-her.d: ({AL-} & {@L+} & (D+ or DD+)) or DP+;
-her.p: J- or Ox-;
-its my your their our: ({AL-} & {@L+} & (D+ or DD+)) or DP+;
-his: DP+ or ({AL-} & {@L+} & (D+ or DD+)) or
-[<noun-main-x>];
+
+his her:
+  J- or Ox- or DP+
+  or ({AL-} & {@L+} & (D+ or DD+))
+  or [<noun-main-x>];
+
+its my.p your their our:
+  DP+
+  or ({AL-} & {@L+} & (D+ or DD+));
+
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
 
 % Ox-: "leave it alone" "make it rain"
@@ -7963,8 +7968,9 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij hell_yes of_course oh_no
-yikes ouch:
+hah.ij hey.ij well.ij wtf.ij hell_yes of_course 
+oh_no oh_my oh_dear dear.ij Lordy
+yikes ouch my.ij my_my my_my_my tsk tsk_tsk tsk_tsk_tsk:
   <directive-opener>
   or Wa-;
 
