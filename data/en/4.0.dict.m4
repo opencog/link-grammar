@@ -1137,13 +1137,15 @@ ourselves yourselves thyself oneself one's one’s:
 each_other: J- or O- or YS+;
 
 his:
-  J- or Ox- or DP+
+  DP+
   or ({AL-} & {@L+} & (D+ or DD+))
   or [<noun-main-x>]
   or Wa-;
 
+% J-: "... with her"
 her:
-  J- or Ox- or DP+
+  J- or Ox-
+  or DP+
   or ({AL-} & {@L+} & (D+ or DD+))
   or Wa-;
 
