@@ -527,10 +527,14 @@ kamš.= : LLPIRMIItis+ or LLANTRIa+;
 % Trečioji linksniuotė
 
 % (Ambrška+Žiugžda)
-an.= skil.=
+an.= skil.= kar.= pal.= pin.= svir.= val.=
   : LLTRETItis+;
 
-toš.= rūš.=
+toš.= rūš.= krosn.= 
+  : LLTRETIis+;
+
+% Tiktai daugiskaita:
+pirš.= 
   : LLTRETIis+;
 
 % Trečioji linksniuotė vienaskaita I kirčiuotė
