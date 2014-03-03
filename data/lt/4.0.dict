@@ -394,18 +394,37 @@ ling.= lys.= meil.= menk.= pelk.= pemp.= rykšt.= rop.=
 saul.= seil.= smarv.= šiaur.= teis.= zyl.= žiurk.= žvyn.=
   : LLANTRIe+;
 
-% tiktai daugiskaita:
+% Tiktai daugiskaita:
 dumpl.= riauš.= žirkl.= žnypl.=
   : LLANTRIe+;
 
-% II kirčiuotė rašosi taip pat kaip pirma ...
-rank.= dirv.= knyg.= : LLANTRIa+;
-up.= : LLANTRIe+;
+% --------
+% II kirčiuotė rašoma taip pat kaip pirma ...
+rank.= dirv.= knyg.= bal.= drusk.= plyt.= plut.= pup.= put.= rūt.=
+viet.=
+  : LLANTRIa+;
+dvasi.= gaili.= giri.= vali.=
+  : LLANTRIa+;
 
+% II kirčiuotė rašoma taip pat kaip pirma ...
+up.= bit.= blak.= deiv.= dygl.= draug.= egl= gil.= kiaul.= laum.= liž.=
+pus.= silk.= švent.= veisl.= virv.= žagr.= žem.=
+  : LLANTRIe+;
+Tilž.=
+  : LLANTRIe+;
+
+% Tiktai daugiskaita:
+lub.= šlaj.= šuk.= vadži.=
+  : LLANTRIa+;
+drign.= repl.= rog.= stakl.= šak.=
+  : LLANTRIe+;
+
+% --------
 % III kirčiuotė rašosi taip pat kaip pirma ...
-galv.= trob.= :  LLANTRIa+;
-giesm.= gerkl.= : LLANTRIe+;
+galv.= trob.= burn.= naud.= ožk.= pėd.= skiedr.= žmon.= :  LLANTRIa+;
+giesm.= gerkl.= aikšt.= varšk.= versm.= : LLANTRIe+;
 
+% --------
 % IV kirčiuotė
 mar.= : LLANTRIVti+;
 
