@@ -2793,6 +2793,7 @@ dealings.n
 deals.n
 deaneries.n
 deans.n
+dears.n
 deathbeds.n
 deathblows.n
 deaths.n
