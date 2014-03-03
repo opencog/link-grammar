@@ -195,7 +195,7 @@ med.= rud.= vamzd.= žod.= :
 žard.= : LLPIRMIas+ or LLPIRMIIis+;
 
 % (Ambrška+Žiugžda)
-šal.= dang.= kamš.= karš.= kar.= kir.= paukš.= rė.= sar.= :
+šal.= dang.= karš.= kar.= kir.= paukš.= rė.= sar.= :
   LLPIRMIItis+;
 
 % tiktai daugistkaita
@@ -223,14 +223,14 @@ arkl.= : LLPIRMIas+ or LLPIRMIIIys+;
 % Kirčiai skirtingi nuo I-os formos. (pagal Ambrška+Žiugžda)
 lauk.= kakl.= aul.= baln.= bals.= darž.= Diev.= dumbl.= gal.= gand.=
 gars.= jausm.= kamp.= kap.= krant.= krašt.= krauj.= laik.= laiv.=
-lank.= lizd.= mišk.= nag.= purv.= rag.= sparn.= tak.= tarn.= vaik.=
+lizd.= mišk.= nag.= purv.= rag.= sparn.= tak.= tarn.= vaik.=
 vard.= varg.= varn.= verksm.= vilk.= :
   LLPIRMIas+;
 
 % kelias ???
 
 % (Ambrška+Žiugžda)
-gaid.= garn.= gen.= koud.= lyd.= piršl.= smėl.= šaul.= šikšn.= žyn.= :
+gaid.= garn.= gen.= koud.= lyd.= piršl.= smėl.= šaul.= šikšn.= :
   LLPIRMIVys+;
 
 sve.= : LLPIRMIVtys+;
@@ -416,7 +416,7 @@ Tilž.=
 % Tiktai daugiskaita:
 lub.= šlaj.= šuk.= vadži.=
   : LLANTRIa+;
-drign.= repl.= rog.= stakl.= šak.=
+drign.= repl.= rog.= stakl.=
   : LLANTRIe+;
 
 % --------
@@ -430,8 +430,8 @@ mar.= : LLANTRIVti+;
 
 % Dauguma IV-os kirčiuotes rašosi taip pat kaip pirma ...
 dain.= valdž.= ang.= ąs.= aušr.= band.= bang.= barzd.= daub.= dien.=
-giedr.= iev.= kalb.= kamš.= karn.= kart.= kruv.=  lank.= lazd.= lent.=
-mald.= merg.= rib.= sal.= sausr.= skol.= spalv.= sul.= šak.= tams.=
+giedr.= iev.= kalb.= karn.= kart.= kruv.=  lazd.= lent.=
+mald.= merg.= rib.= sal.= sausr.= skol.= spalv.= sul.= tams.=
 taut.= ties.= tvor.= uol.= valk.= žaizd.= žiem.=
   : LLANTRIa+;
 
@@ -440,7 +440,7 @@ dali.= gauj.= gij.= vej.= žini.=
 
 eil.= derm.= drausm.= duob.= garb.= gelm.= gėl.= kat.= kert.= kregžd.=
 lėl.= mįsl.= pel.= prasm.= pūsl.= raupl.= riek.= siul.= skyl.= srov.=
-sterbl.= šlov.= tarm.= taur.= varl.= vert.= vėž.= žiev.= žym.= žyn.=
+sterbl.= šlov.= tarm.= taur.= varl.= vert.= vėž.= žiev.= žym.=
 žol.= žūkl.= žvaigžd.=
   : LLANTRIe+;
 
@@ -453,12 +453,20 @@ miel.=
 % lenkas, lenkė
 lap.= lenk.=:  LLPIRMIas+ or LLANTRIe+;
 
-% varpas, varpa
-varp.= : LLPIRMIas+ or LLANTRIa+;
+% varpas, varpa ; lankas lanka
+lank.= varp.= : LLPIRMIas+ or LLANTRIa+;
 
 % sieliai, siela
 siel.= : LLPIRMIis+ or LLANTRIa+;
 
+% kamštis, kamša
+kamš.= : LLPIRMIItis+ or LLANTRIa+;
+
+% žynys, žynė
+žyn.= : LLPIRMIVys+ or LLANTRIe+;
+
+% šaka, šakės
+šak.=: LLANTRIa+ or LLANTRIe+;
 
 % ---------------------------------------
 % Antroji linksniuotė vienaskaita I kirčiuotė
@@ -524,22 +532,22 @@ an.= :
 
 % Trečioji linksniuotė vienaskaita I kirčiuotė
 
-=tis.avv1:   LLTRETIa- & <mv-v-kas>;
-=ties.avk1:  LLTRETIa- & <mv-k-ko>;
-=čiai.avn1:  LLTRETIa- & <mv-n-kam>;
-=tį.avg1:    LLTRETIa- & <mv-g-ka>;
-=timi.avi1:  LLTRETIa- & <mv-i-kuo>;
-=tyje.avu1:  LLTRETIa- & <mv-v-kur>;
-=tie.avs1:   LLTRETIa- & <mv-s-o>;
+=tis.tvv1:   LLTRETIa- & <mv-v-kas>;
+=ties.tvk1:  LLTRETIa- & <mv-k-ko>;
+=čiai.tvn1:  LLTRETIa- & <mv-n-kam>;
+=tį.tvg1:    LLTRETIa- & <mv-g-ka>;
+=timi.tvi1:  LLTRETIa- & <mv-i-kuo>;
+=tyje.tvu1:  LLTRETIa- & <mv-v-kur>;
+=tie.tvs1:   LLTRETIa- & <mv-s-o>;
 
 % Trečioji linksniuotė daugiskaita I kirčiuotė
-=tys.adv1:   LLTRETIa- & <md-v-kas>;
-=čių.adk1:   LLTRETIa- & <md-k-ko>;
-=tims.adn1:  LLTRETIa- & <md-n-kam>;
-=tis.adg1:   LLTRETIa- & <md-g-ka>;
-=timis.adi1: LLTRETIa- & <md-i-kuo>;
-=tyse.adu1:  LLTRETIa- & <md-v-kur>;
-=tys.ads1:   LLTRETIa- & <md-s-o>;
+=tys.tdv1:   LLTRETIa- & <md-v-kas>;
+=čių.tdk1:   LLTRETIa- & <md-k-ko>;
+=tims.tdn1:  LLTRETIa- & <md-n-kam>;
+=tis.tdg1:   LLTRETIa- & <md-g-ka>;
+=timis.tdi1: LLTRETIa- & <md-i-kuo>;
+=tyse.tdu1:  LLTRETIa- & <md-v-kur>;
+=tys.tds1:   LLTRETIa- & <md-s-o>;
 
 %
 % =================================================================
