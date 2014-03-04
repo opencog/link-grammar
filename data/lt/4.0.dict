@@ -556,6 +556,16 @@ vilt.= : LLTRETItis+;
 vin.=
   : LLTRETIis+;
 
+% IV kirčiuotė kieta kilminiko ų
+aus.=
+  : LLTRETIVis+;
+
+dan.=
+  : LLTRETIVtis+;
+
+vag.=
+  : LLTRETIViui+;
+
 % Trečioji linksniuotė vienaskaita I kirčiuotė
 
 =tis.tvv1:   LLTRETItis- & <mv-v-kas>;
@@ -621,6 +631,22 @@ vin.=
 =yje.tvu4:  LLTRETIVis- & <mv-v-kur>;
 =ie.tvs4:   LLTRETIVis- & <mv-s-o>;
 
+=tis.tvv4:   LLTRETIVtis- & <mv-v-kas>;
+=ties.tvk4:  LLTRETIVtis- & <mv-k-ko>;
+=čiui.tvn4:  LLTRETIVtis- & <mv-n-kam>;
+=tį.tvg4:    LLTRETIVtis- & <mv-g-ka>;
+=timi.tvi4:  LLTRETIVtis- & <mv-i-kuo>;
+=tyje.tvu4:  LLTRETIVtis- & <mv-v-kur>;
+=tie.tvs4:   LLTRETIVtis- & <mv-s-o>;
+
+=is.tvv4u:   LLTRETIViui- & <mv-v-kas>;
+=ies.tvk4u:  LLTRETIViui- & <mv-k-ko>;
+=iui.tvn4u:  LLTRETIViui- & <mv-n-kam>;
+=į.tvg4u:    LLTRETIViui- & <mv-g-ka>;
+=imi.tvi4u:  LLTRETIViui- & <mv-i-kuo>;
+=yje.tvu4u:  LLTRETIViui- & <mv-v-kur>;
+=ie.tvs4u:   LLTRETIViui- & <mv-s-o>;
+
 % Trečioji linksniuotė daugiskaita IV kirčiuotė
 % kieta kilmininko ų
 
@@ -631,6 +657,23 @@ vin.=
 =imis.tdi4: LLTRETIVis- & <md-i-kuo>;
 =yse.tdu4:  LLTRETIVis- & <md-v-kur>;
 =ys.tds4:   LLTRETIVis- & <md-s-o>;
+
+=tys.tdv4:   LLTRETIVtis- & <md-v-kas>;
+=tų.tdk4:    LLTRETIVtis- & <md-k-ko>;
+=tims.tdn4:  LLTRETIVtis- & <md-n-kam>;
+=tis.tdg4:   LLTRETIVtis- & <md-g-ka>;
+=timis.tdi4: LLTRETIVtis- & <md-i-kuo>;
+=tyse.tdu4:  LLTRETIVtis- & <md-v-kur>;
+=tys.tds4:   LLTRETIVtis- & <md-s-o>;
+
+% minkšta kilmininko ų
+=ys.tdv4u:   LLTRETIViui- & <md-v-kas>;
+=ių.tdk4u:   LLTRETIViui- & <md-k-ko>;
+=ims.tdn4u:  LLTRETIViui- & <md-n-kam>;
+=is.tdg4u:   LLTRETIViui- & <md-g-ka>;
+=imis.tdi4u: LLTRETIViui- & <md-i-kuo>;
+=yse.tdu4u:  LLTRETIViui- & <md-v-kur>;
+=ys.tds4u:   LLTRETIViui- & <md-s-o>;
 
 %
 % =================================================================
