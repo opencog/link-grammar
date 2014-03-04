@@ -195,7 +195,7 @@ med.= rud.= vamzd.= žod.= :
 žard.= : LLPIRMIas+ or LLPIRMIIis+;
 
 % (Ambrška+Žiugžda)
-šal.= dang.= karš.= kar.= kir.= paukš.= rė.= sar.= :
+šal.= dang.= karš.= kir.= paukš.= rė.= sar.= :
   LLPIRMIItis+;
 
 % tiktai daugistkaita
@@ -468,6 +468,10 @@ kamš.= : LLPIRMIItis+ or LLANTRIa+;
 % šaka, šakės
 šak.=: LLANTRIa+ or LLANTRIe+;
 
+% kartis - pirmoji linksniuotė: matas grūdams seikėti, kaušas, seikas
+% kartis - trečioji linksniuotė:  gyvulio kartis (?)
+kar.=: LLPIRMIItis+ or LLTRETItis+;
+
 % ---------------------------------------
 % Antroji linksniuotė vienaskaita I kirčiuotė
 =a.avv1:   LLANTRIa- & <mv-v-kas>;
@@ -527,7 +531,7 @@ kamš.= : LLPIRMIItis+ or LLANTRIa+;
 % Trečioji linksniuotė
 
 % (Ambrška+Žiugžda)
-an.= skil.= kar.= pal.= pin.= svir.= val.=
+an.= skil.= pal.= pin.= svir.= val.=
   : LLTRETItis+;
 
 toš.= rūš.= krosn.= 
@@ -537,12 +541,20 @@ toš.= rūš.= krosn.=
 pirš.= 
   : LLTRETIis+;
 
-% Trečioji kirčiuotė kaip pirmoji:
+% II kirčiuotė, tiktai daugiskaita, taip pat kaip IV kirčiuotė:
+dur.= 
+  : LLTRETIVis+;
+
+% III kirčiuotė kaip pirmoji:
 vilt.= : LLTRETItis+;
 žver.= : LLTRETIis+;
 
 šird.= šerd.= 
   : LLTRETIIIis+;
+
+% IV kirčiuotė kaip pirmoji:
+vin.=
+  : LLTRETIis+;
 
 % Trečioji linksniuotė vienaskaita I kirčiuotė
 
@@ -598,6 +610,27 @@ vilt.= : LLTRETItis+;
 =imis.tdi3: LLTRETIIIis- & <md-i-kuo>;
 =yse.tdu3:  LLTRETIIIis- & <md-v-kur>;
 =ys.tds3:   LLTRETIIIis- & <md-s-o>;
+
+% Trečioji linksniuotė vienaskaita IV kirčiuotė
+
+=is.tvv4:   LLTRETIVis- & <mv-v-kas>;
+=ies.tvk4:  LLTRETIVis- & <mv-k-ko>;
+=iai.tvn4:  LLTRETIVis- & <mv-n-kam>;
+=į.tvg4:    LLTRETIVis- & <mv-g-ka>;
+=imi.tvi4:  LLTRETIVis- & <mv-i-kuo>;
+=yje.tvu4:  LLTRETIVis- & <mv-v-kur>;
+=ie.tvs4:   LLTRETIVis- & <mv-s-o>;
+
+% Trečioji linksniuotė daugiskaita IV kirčiuotė
+% kieta kilmininko ų
+
+=ys.tdv4:   LLTRETIVis- & <md-v-kas>;
+=ų.tdk4:    LLTRETIVis- & <md-k-ko>;
+=ims.tdn4:  LLTRETIVis- & <md-n-kam>;
+=is.tdg4:   LLTRETIVis- & <md-g-ka>;
+=imis.tdi4: LLTRETIVis- & <md-i-kuo>;
+=yse.tdu4:  LLTRETIVis- & <md-v-kur>;
+=ys.tds4:   LLTRETIVis- & <md-s-o>;
 
 %
 % =================================================================
