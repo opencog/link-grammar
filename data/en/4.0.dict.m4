@@ -8465,10 +8465,9 @@ UNKNOWN-WORD.a: <ordinary-adj>;
 % to the wall.  e.g. "A woman lives next door, who is a nurse."
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 LEFT-WALL:
-  Wa+
-  or (Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
-    & {WV+}
-    & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+};
+  (Wa+ & {RW+ or Xp+})
+  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
+    & {WV+} & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+});
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
