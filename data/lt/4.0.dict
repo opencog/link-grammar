@@ -469,7 +469,7 @@ kamš.= : LLPIRMIItis+ or LLANTRIa+;
 šak.=: LLANTRIa+ or LLANTRIe+;
 
 % kartis - pirmoji linksniuotė: matas grūdams seikėti, kaušas, seikas
-% kartis - trečioji linksniuotė:  gyvulio kartis (?)
+% kartis - trečioji linksniuotė:  gyvulio kartis (?) bet irgi karčių tvora
 kar.=: LLPIRMIItis+ or LLTRETItis+;
 
 % ---------------------------------------
@@ -552,19 +552,27 @@ vilt.= : LLTRETItis+;
 šird.= šerd.= 
   : LLTRETIIIis+;
 
-% IV kirčiuotė kaip pirmoji:
-vin.=
+% IV kirčiuotė kaip pirmoji (minkšta -ių duag. kilm.)
+vin.= ak.= ang.= angl.= aš.= av.= blužn.= dal.= krūt.= pusn.= puš.=
+ugn.= usn.= 
   : LLTRETIis+;
 
-% IV kirčiuotė kieta kilminiko ų
-aus.=
+% IV kirčiuotė kieta daug. kilminiko ų
+% [[LLTRETIis+]] leistu tyrinėti klaidas, pvz: "žuvių" vietoj "žuvų"
+aus.= šakn.= tulž.= viln.= žąs.= žuv.=
   : LLTRETIVis+;
+%  : LLTRETIVis+ or [[LLTRETIis+]];
 
-dan.=
+dan.= ly.= min.= mir.= nak.= pir.= rakš.= sag.=
   : LLTRETIVtis+;
 
 vag.=
   : LLTRETIViui+;
+
+% Tiktai daugiskaita:
+makš.=
+  : LLTRETIVtis+;
+
 
 % Trečioji linksniuotė vienaskaita I kirčiuotė
 
@@ -674,6 +682,12 @@ vag.=
 =imis.tdi4u: LLTRETIViui- & <md-i-kuo>;
 =yse.tdu4u:  LLTRETIViui- & <md-v-kur>;
 =ys.tds4u:   LLTRETIViui- & <md-s-o>;
+
+% -------------------------------
+% Ketvirtoji linksniuotė
+
+% -------------------------------
+% Penktoji linksniuotė
 
 %
 % =================================================================
