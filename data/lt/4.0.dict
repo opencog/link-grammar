@@ -537,6 +537,13 @@ toš.= rūš.= krosn.=
 pirš.= 
   : LLTRETIis+;
 
+% Trečioji kirčiuotė kaip pirmoji:
+vilt.= : LLTRETItis+;
+žver.= : LLTRETIis+;
+
+šird.= šerd.= 
+  : LLTRETIIIis+;
+
 % Trečioji linksniuotė vienaskaita I kirčiuotė
 
 =tis.tvv1:   LLTRETItis- & <mv-v-kas>;
@@ -571,6 +578,26 @@ pirš.=
 =imis.tdi1: LLTRETIis- & <md-i-kuo>;
 =yse.tdu1:  LLTRETIis- & <md-v-kur>;
 =ys.tds1:   LLTRETIis- & <md-s-o>;
+
+% Trečioji linksniuotė vienaskaita III kirčiuotė
+
+=is.tvv3:   LLTRETIIIis- & <mv-v-kas>;
+=ies.tvk3:  LLTRETIIIis- & <mv-k-ko>;
+=žiai.tvn3: LLTRETIIIis- & <mv-n-kam>;
+=į.tvg3:    LLTRETIIIis- & <mv-g-ka>;
+=imi.tvi3:  LLTRETIIIis- & <mv-i-kuo>;
+=yje.tvu3:  LLTRETIIIis- & <mv-v-kur>;
+=ie.tvs3:   LLTRETIIIis- & <mv-s-o>;
+
+% Trečioji linksniuotė daugiskaita III kirčiuotė
+
+=ys.tdv3:   LLTRETIIIis- & <md-v-kas>;
+=žių.tdk3:  LLTRETIIIis- & <md-k-ko>;
+=ims.tdn3:  LLTRETIIIis- & <md-n-kam>;
+=is.tdg3:   LLTRETIIIis- & <md-g-ka>;
+=imis.tdi3: LLTRETIIIis- & <md-i-kuo>;
+=yse.tdu3:  LLTRETIIIis- & <md-v-kur>;
+=ys.tds3:   LLTRETIIIis- & <md-s-o>;
 
 %
 % =================================================================
