@@ -6,7 +6,7 @@ DICTS=                           \
       4.0.knowledge              \
       4.0.regex
 
-dictdir=$(pkgdatadir)/any
+dictdir=$(pkgdatadir)/he
 dict_DATA = $(DICTS)
 
 EXTRA_DIST = $(DICTS)
