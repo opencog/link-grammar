@@ -1,13 +1,13 @@
-AC_INIT([link-grammar],[4.9.0],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.0.0],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
 PACKAGE=link-grammar
 dnl     4a) Increment when removing or changing interfaces.
-LINK_MAJOR_VERSION=4
+LINK_MAJOR_VERSION=5
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=9
+LINK_MINOR_VERSION=0
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.

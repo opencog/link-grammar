@@ -1,4 +1,5 @@
-Version 4.9.0 (XXX 2014)
+Version 5.0.0 (XXX 2014)
+ * License upgrade to LGPLv2.1
  * Support for Hebrew tokenization, from Amir P.
  * Fix wild-card matching for user-supplied word lookup.
  * Prototype Turkish dictionary from Can Bruce.
