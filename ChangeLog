@@ -1,5 +1,7 @@
 Version 5.0.0 (XXX 2014)
  * License upgrade to LGPLv2.1
+ * Arabic dictionaries, from Jon Dehdari
+ * Persian dictionaries, from Jon Dehdari
  * Support for Hebrew tokenization, from Amir P.
  * Fix wild-card matching for user-supplied word lookup.
  * Prototype Turkish dictionary from Can Bruce.
