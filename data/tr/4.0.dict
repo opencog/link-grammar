@@ -1,8 +1,8 @@
 %
-% Turkish dictionary -- experimental
+% Turkish dictionary -- experimental -- 2014 -- Can John Bruce
 %
-% Dictionary version number is 4.9.0 (formatted as V4v9v0+)
-<dictionary-version-number>: V4v9v0+;
+% Dictionary version number is 5.0.0 (formatted as V5v0v0+)
+<dictionary-version-number>: V5v0v0+;
 % The empty word.
 =.zzz: ZZZ-;
 
