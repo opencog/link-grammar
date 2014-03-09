@@ -634,6 +634,9 @@ bindings/ocaml/Makefile
 bindings/perl/Makefile
 bindings/python/Makefile
 bindings/python/__init__.py
+morphology/Makefile
+morphology/ar/Makefile
+morphology/fa/Makefile
 link-parser/Makefile
 data/Makefile
 data/any/Makefile

@@ -6,6 +6,7 @@ SUBDIRS =               \
    viterbi              \
    bindings             \
    link-parser          \
+   morphology           \
    data                 \
    man                  \
    link-grammar.xcode   \

@@ -3,10 +3,14 @@
 Language Directories
 --------------------
 
+ar -- Arabic.  To be used with morphology engine; see morphology/ar
+
 de -- German. Contains dictionaries for a few thousand words, that's
       all. Incomplete.
 
 en -- English. Complete set.
+
+fa -- Farsi.  To be used with morphology engine; see morphology/fa
 
 he -- Hebrew. Experimental prototype. Contains a few dozen words.
 
