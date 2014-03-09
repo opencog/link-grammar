@@ -637,6 +637,7 @@ bindings/python/__init__.py
 morphology/Makefile
 morphology/ar/Makefile
 morphology/fa/Makefile
+morphology/fa/scripts/Makefile
 link-parser/Makefile
 data/Makefile
 data/any/Makefile
