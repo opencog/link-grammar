@@ -5,7 +5,6 @@ SUBDIRS=scripts
 EXTRA_DIST=           \
    orthography.tex    \
    orthography.txt    \
-   persianlg.sh       \
    persianparse.sh    \
    README             \
    stemmer.pl

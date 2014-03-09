@@ -1,28 +1,14 @@
-PersianLG installation instructions
 
-1. Download the Link Grammar parser, available at:  http://www.link.cs.cmu.edu/link/
+            PersianLG operating instructions
 
-2. Install it.  On newer Unix/Linux systems you can type 'tar -zxvf link-4.1b.tar.gz'.
-   On older systems you can type 'tar -xvf link-4.1b.tar.gz; gunzip link-4.1b.tar'.
-   Then 'cd link-4.1;  ./configure;  make'  As root, type 'make install'.  
-   Now you have the link grammar parser installed.
+The persianparse.sh shows how the stemmer and the parser can be used
+together.  In essence, its just:
 
-3. In order to run persianparse.sh (the short way of parsing a sentence), type
-   the full path of the link grammar parser binary followed by the full path
-   of the Persian version of the file 4.0.dict into the file persianparse.sh .
+   echo -e "my sentence\n" | stemmer.pl -u | link-parser fa
 
-4. Now you run persianparse.sh, by typing:
-   persianparse.sh 'my sentence'
+You can run persianparse.sh, by typing:
 
-5. In order to run persianlg.sh (the long, but more customizable way of parsing
-   a sentence), type the full path of the parser binary after the 
-   word LGPARSERHOME.  Then type the full path of the Persian version of the
-   file 4.0.dict after the word FA_LGHOME.
-
-6. Now you run persianlg.sh, by typing:
-   source persianlg.sh
-   echo -e "my sentence\n" | /path/to/stemmer.pl <any flags> | persianlg
-
+   ./persianparse.sh 'my sentence'
 
 Most of the scripts included under the 'scripts' directory can be run by
 typing (in this directory) './myscript.pl < myinput.txt > myoutput.txt'
