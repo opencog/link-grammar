@@ -10,4 +10,4 @@ DICTS=					\
 dictdir=$(pkgdatadir)/fa
 dict_DATA = $(DICTS)
 
-EXTRA_DIST = $(DICTS)
+EXTRA_DIST = README $(DICTS)
