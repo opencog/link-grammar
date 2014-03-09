@@ -10,6 +10,9 @@
 %
 %*****************************************************************************
 
+% Dictionary version number is 5.0.0 (formatted as V5v0v0+)
+<dictionary-version-number>: V5v0v0+;
+
 % PERSIAN SYNTAX NOTES:
 %	-Normal Order:	(S) (PP) (O) V
 % 	-If Object if Definite:	(S) (O & rA) (PP) V
@@ -163,7 +166,7 @@
 <left-wall-declarative>:	{Wd-};
 
 
-/words_fa/words.n /words_fa/words.proper UNKNOWN-WORD.n :	% Nouns, normal
+/fa/words/words.n /words_fa/words.proper UNKNOWN-WORD.n :	% Nouns, normal
   (	% Nouns in prepositional phrases
     {<noun-morph-suffix>}
     & {<ezafe-comp>}
@@ -230,7 +233,7 @@ NMSp-;
 "i.nms" "|i.nms":	% Noun morphemes, indefinite suffix
 NMSi-;
 
-/words_fa/words.n.compound /words_fa/words.adj.compound UNKNOWN-WORD.nk:	% Noun component of compound verbs
+/fa/words/words.n.compound /words_fa/words.adj.compound UNKNOWN-WORD.nk:	% Noun component of compound verbs
 %?  (	% Rule out non-compounding possiblities, like 'yek jAru zad' or 'jAru rA zad'
 %    <postposition-acc>
 %    & <noun-acc>
@@ -318,7 +321,7 @@ or
   [[<pronoun-nom-3s>]]
 ;
 
-/words_fa/words.numbers:
+/fa/words/words.numbers:
 {ORDM+}
 & (
   D+
@@ -393,7 +396,7 @@ ORDM-;
 & {[(Wi- or C- or CC-)]}
 ;
 
-/words_fa/words.v UNKNOWN-WORD.v:
+/fa/words/words.v UNKNOWN-WORD.v:
 (	% For Non-Future tense (Normal)
 <verb-prefix>
 & {@AV-}	% Adverbs can occur almost anywhere, at a phrasal level
@@ -418,7 +421,7 @@ or
 
 
 % IV.	Verbs	B. Intransitive Verbs
-/words_fa/words.v.intransitive:
+/fa/words/words.v.intransitive:
 (	% for non-future tense
   <verb-prefix>
   & {@AV-}
@@ -447,7 +450,7 @@ or
 
 % IV.	Verbs	C. Compound Verbs
 
-/words_fa/words.v.compound:
+/fa/words/words.v.compound:
 (( <verb-prefix>
    & {( [[PP-]] or VMO- )}  % For prep. phrases or acc. enclitics  between noun.k and light verb
    & K-	%  "K"ompound verbs.  This gives false positives (eg. German "*Du sprichst auf")
@@ -466,7 +469,7 @@ or
 
 % IV.	Verbs	E. Subordinating Verbs
 
-/words_fa/words.v.sub "bAid.auxpr" "bAis.auxpa" "tuAn.auxpr" "tuAns.auxpa" "xuAs.auxpa" "AyA.q" "AiA.q" "]iA.q" :	% Simple subordinating verbs and Y/N
+/fa/words/words.v.sub "bAid.auxpr" "bAis.auxpa" "tuAn.auxpr" "tuAns.auxpa" "xuAs.auxpa" "AyA.q" "AiA.q" "]iA.q" :	% Simple subordinating verbs and Y/N
 <verb-prefix>
 & {@AV-}
 & <verb-left-side>
@@ -474,7 +477,7 @@ or
 & <verb-right-side-comp>
 ;
 
-/words_fa/words.v.compound.sub:	% Compound subordinating verbs
+/fa/words/words.v.compound.sub:	% Compound subordinating verbs
 <verb-prefix>
 & {@AV-}
 & K-
@@ -652,7 +655,7 @@ VPPP-
 
 % V.	Prepositions and Case Particles
 
-/words_fa/words.pp:	% Preposition, normal
+/fa/words/words.pp:	% Preposition, normal
 ( 
     {EZ+}
     & (
@@ -673,8 +676,8 @@ PA-;
 <conjunction-adj-pred>:		(CCAPR- or CCAPl+);
 
 
-%/words_fa/words.adj UNKNOWN-WORD.adj:	% Adjectives, normal
-/words_fa/words.adj:	% Adjectives, normal
+%/fa/words/words.adj UNKNOWN-WORD.adj:	% Adjectives, normal
+/fa/words/words.adj:	% Adjectives, normal
 ( 
   { AJM+ }
   &(
@@ -706,7 +709,7 @@ AJM-;
 
 % VII.	Adverbs
 
-/words_fa/words.adv "kojA.wh" "kjA.wh":	% Adverbs, normal
+/fa/words/words.adv "kojA.wh" "kjA.wh":	% Adverbs, normal
 AV+;	% A.K.A. in English as MVa, CO, Em (Quickly I go, I quickly go, I go quickly)
 
 

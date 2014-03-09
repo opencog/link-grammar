@@ -642,6 +642,8 @@ data/ar/words/Makefile
 data/de/Makefile
 data/en/Makefile
 data/en/words/Makefile
+data/fa/Makefile
+data/fa/words/Makefile
 data/he/Makefile
 data/lt/Makefile
 data/ru/Makefile
