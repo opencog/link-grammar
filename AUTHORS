@@ -12,7 +12,10 @@ The SAT parser code was developed by
 Filip Maric <filipmaric_at_gmail.com> 
 as a part of the 2008 Google Summer of Code (GSoC) project for OpenCog.
 
-The Russian dictionaries were provided by
+Arabic dictionaries were provided by
+Warren Casbeer and Jon Dehdari
+
+Russian dictionaries were provided by
 Sergey Protasov <svp_at_tj.ru>
 
 Turkish dictionaries by 

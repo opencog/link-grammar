@@ -637,6 +637,8 @@ bindings/python/__init__.py
 link-parser/Makefile
 data/Makefile
 data/any/Makefile
+data/ar/Makefile
+data/ar/words/Makefile
 data/de/Makefile
 data/en/Makefile
 data/en/words/Makefile
