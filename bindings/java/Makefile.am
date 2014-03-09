@@ -2,8 +2,19 @@
 # Makefile for the Java wrapper jar file
 #
 
+JAVA_SRCS =                             \
+   org/linkgrammar/JSONReader.java      \
+   org/linkgrammar/JSONUtils.java       \
+   org/linkgrammar/LGConfig.java        \
+   org/linkgrammar/LGRemoteClient.java  \
+   org/linkgrammar/LGService.java       \
+   org/linkgrammar/Linkage.java         \
+   org/linkgrammar/LinkGrammar.java     \
+   org/linkgrammar/Link.java            \
+   org/linkgrammar/ParseResult.java
+
 # Build and install the jar file in $(PREFIX)/share/java ...
-linkgrammar-@VERSION@.jar:
+linkgrammar-@VERSION@.jar: $(JAVA_SRCS)
 	ant
 
 javadir=$(datadir)/java
@@ -22,13 +33,4 @@ install-data-hook:
 EXTRA_DIST =                         \
    README                            \
    link-grammar-server.sh            \
-   org/linkgrammar/JSONReader.java   \
-   org/linkgrammar/JSONUtils.java    \
-   org/linkgrammar/LGConfig.java     \
-   org/linkgrammar/LGRemoteClient.java  \
-   org/linkgrammar/LGService.java    \
-   org/linkgrammar/Linkage.java      \
-   org/linkgrammar/LinkGrammar.java  \
-   org/linkgrammar/Link.java         \
-   org/linkgrammar/ParseResult.java
-
+   ${JAVA_SRCS}

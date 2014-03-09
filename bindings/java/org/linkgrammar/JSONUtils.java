@@ -115,6 +115,7 @@ public class JSONUtils
 		for (int offset = 0; offset < length - 1; offset++)
 		{
 			char c = buf[offset];
+System.out.println("duuude st=" + start + " col=" + column + " c=" + c); 
 			if (start == -1)
 				start = offset;
 			else if (c == ':' && column == -1)
@@ -142,6 +143,7 @@ public class JSONUtils
 				start = column = -1;
 			}
 		}
+System.out.println("duuude done st=" + start + " col=" + column + " len=" + length); 
 
 		// If we are here, the the last byte wasn't null. This is the
 		// normal exit, I guess ...
