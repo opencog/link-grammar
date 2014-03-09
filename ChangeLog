@@ -16,6 +16,7 @@ Version 4.9.0 (XXX 2014)
  * Introduce a bi-directional connector, for free-word-order languages.
  * Introduce a symmetric-AND operator, for free-word-order languages.
  * Add demo shell script for running the Java server.
+ * Bugfix: Java server failing when input sentence has commas in it!
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.
