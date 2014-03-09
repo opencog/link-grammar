@@ -7,3 +7,11 @@ not extend the parsing algorithms already present in Link-Grammar in
 any way. They do, however, allow certain types of remote/server
 operation, and, in particular, are needed for use by the RelEx
 dependency parser.
+
+The shell script link-grammar-server.sh demonstrates how to run the
+parser server.  Once the server is started, parses can be obtained
+by using ordinary TCPIP sockets; so, for example:
+
+   echo "text:\"this is a test\"" | nc localhost 9000
+
+will return a JSON-encoded parse of the sentence "this is a test"

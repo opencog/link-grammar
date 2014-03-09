@@ -1,5 +1,5 @@
 Version 4.9.0 (XXX 2014)
- * Initial support for Hebrew tokenization, from Amir P.
+ * Support for Hebrew tokenization, from Amir P.
  * Fix wild-card matching for user-supplied word lookup.
  * Prototype Turkish dictionary from Can Bruce.
  * Re-arrange programming language bindings directory.
@@ -15,6 +15,7 @@ Version 4.9.0 (XXX 2014)
  * Change !suffixes flag to !morphology.
  * Introduce a bi-directional connector, for free-word-order languages.
  * Introduce a symmetric-AND operator, for free-word-order languages.
+ * Add demo shell script for running the Java server.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

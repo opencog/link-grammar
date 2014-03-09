@@ -21,6 +21,7 @@ install-data-hook:
 
 EXTRA_DIST =                         \
    README                            \
+   link-grammar-server.sh            \
    org/linkgrammar/JSONReader.java   \
    org/linkgrammar/JSONUtils.java    \
    org/linkgrammar/LGConfig.java     \
