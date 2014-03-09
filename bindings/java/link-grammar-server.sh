@@ -32,8 +32,13 @@
 #
 # Putting this all together:
 #
-#  echo "text:\"this is a test\"" | nc localhost 9000
+#   echo "text:this is a test" | nc localhost 9000
 #
+# returns the parse; and 
+#
+#   echo "storeDiagramString:true, text:this is a test" | nc localhost 9000
+#
+# returns the parse and diagram string.
 
 export LANG=en_US.UTF-8
 
