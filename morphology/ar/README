@@ -1,6 +1,22 @@
 
 
-        Assorted stemming and morphology tools and data for Arabic
-        ----------------------------------------------------------
+                  Morphology tools for Arabic
+                  ---------------------------
 
-These are needed to use Link Grammar with Arabic.
+The Link Grammar Arabic dictionaries require that the input has
+been previously stemmed with the aramorph-1.2.1 Arabic stemming
+package.  Aramorph is available at 
+
+   http://sourceforge.net/projects/aramorph/
+
+as well as at other locations.
+
+The shell script ./arabiclg_one_sentence.sh can be used as
+
+   ./arabiclg_one_sentence.sh "input test sentence"
+
+It then invokes the morphology analyzer, then a small perl script
+to clean up the output, and then passes the whole thing to the 
+arabic link-grammar parser.
+
+Examples of pre-analyzed sentences can be found in /data/ar/4.0.batch
