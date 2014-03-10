@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Buckwalter Arabic Morphological Analyzer</title>
+<!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
+<!-- <meta http-equiv=Content-Type content="text/html; charset=windows-1256">  -->
+</head>
+<body>
+
+<div align="center"><b><big><big>Buckwalter Arabic Morphological Analyzer</big></big><br/><br/><br/>
+</b></div> <br/>
+<br/>
+Morphological analyzer by <a href="http://www.qamus.org">Tim Buckwalter</a><br>
+Web interface &amp; optimizations by <a href="http://home.byu.net/jmd56">Jon Dehdari</a><br/>
+<br/><br/><br/>
+
+<form action="cgi-bin/aramorph_fast.cgi" method="post" enctype="multipart/form-data">
+<acronym title="Note: Copying and Pasting often changes the encoding type.">Encoding</acronym>:  
+<select name="input_type">
+	<option value="dt">Dil's Transliteration</option>
+	<option value="roman">Buckwalter Transliteration</option>
+	<option value="utf8" selected="selected">UTF-8 - Arabic script</option>
+<!--	<option value="unidec">Unicode Decimal</option> -->
+	<option value="cp1256">Windows 1256 - Arabic script</option>
+<!--	<option value="uniname">Unicode Name</option> -->
+<!--	<option value="iso88596">ISO 8859-6</option> -->
+<!--	<option value="arabtex">ArabTeX</option> -->
+</select> 
+<!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Width: 
+<input type="text" name="width" maxlength="3" value="150" >
+-->
+
+
+
+<br/><br/><br/>
+
+<!-- <input name="use_web_page" type="checkbox" value="true"> Use Web Page: <input name="web_page" type="text" maxlength="511" size="41" value="http://"><br/><br/> -->
+ <input name="use_file" type="checkbox" value="true"> Upload Text File: <input name="uploaded_file" type="file" size="30"> 
+ <br/><br/>
+
+Text:<br/>
+<textarea name="text_from" maxlength="800"  wrap="virtual" rows="05" cols="60"></textarea>
+<br/><br/>
+<input type="submit" value="Submit"><br/><br/>
+<!-- <input type="reset" value="Reset"><br/><br/> -->
+
+<!-- <b><font color="#ff0000">Note</font></b>: The System Administrators are continually messing with the server, so they might break functionality on this site without my knowledge.<br/><br/><br/><br/> -->
+</form>
+
+
+<pre>
+Roman	Unicode-Name
+______________________________________________________
+'       ARABIC LETTER HAMZA
+|       ARABIC LETTER ALEF WITH MADDA ABOVE
+&gt;       ARABIC LETTER ALEF WITH HAMZA ABOVE
+&amp;       ARABIC LETTER WAW WITH HAMZA ABOVE
+&lt;       ARABIC LETTER ALEF WITH HAMZA BELOW
+}       ARABIC LETTER YEH WITH HAMZA ABOVE
+A       ARABIC LETTER ALEF
+b       ARABIC LETTER BEH
+p       ARABIC LETTER TEH MARBUTA
+t       ARABIC LETTER TEH
+v       ARABIC LETTER THEH
+j       ARABIC LETTER JEEM
+H       ARABIC LETTER HAH
+x       ARABIC LETTER KHAH
+d       ARABIC LETTER DAL
+*       ARABIC LETTER THAL
+r       ARABIC LETTER REH
+z       ARABIC LETTER ZAIN
+s       ARABIC LETTER SEEN
+$       ARABIC LETTER SHEEN
+S       ARABIC LETTER SAD
+D       ARABIC LETTER DAD
+T       ARABIC LETTER TAH
+Z       ARABIC LETTER ZAH
+E       ARABIC LETTER AIN
+g       ARABIC LETTER GHAIN
+_       ARABIC TATWEEL
+f       ARABIC LETTER FEH
+q       ARABIC LETTER QAF
+k       ARABIC LETTER KAF
+l       ARABIC LETTER LAM
+m       ARABIC LETTER MEEM
+n       ARABIC LETTER NOON
+h       ARABIC LETTER HEH
+w       ARABIC LETTER WAW
+Y       ARABIC LETTER ALEF MAKSURA
+y       ARABIC LETTER YEH
+F       ARABIC FATHATAN
+N       ARABIC DAMMATAN
+K       ARABIC KASRATAN
+a       ARABIC FATHA
+u       ARABIC DAMMA
+i       ARABIC KASRA
+~       ARABIC SHADDA
+o       ARABIC SUKUN
+`       ARABIC LETTER SUPERSCRIPT ALEF
+{       ARABIC LETTER ALEF WASLA
+P       ARABIC LETTER PEH
+J       ARABIC LETTER TCHEH
+V       ARABIC LETTER VEH
+G       ARABIC LETTER GAF
+</pre>
+
+
+<a href="cgi-bin/aramorph_fast_cgi">Source Code</a><br/>
+<a href="cgi-bin/aramorph_fast.pl">Optimized Engine</a> -- file <a href="cgi-bin/dictStems.tsv">dictStems.tsv</a> (4.9M) supplants dictStems.
+<br/>
+
+</body>
+</html>
