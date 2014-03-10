@@ -1,0 +1,1584 @@
+; ===================================================================
+; "tableBC"  
+; Portions (c) 2002 QAMUS LLC (www.qamus.org), 
+; (c) 2002 Trustees of the University of Pennsylvania 
+;
+; This program is free software; you can redistribute it and/or
+; modify it under the terms of the GNU General Public License
+; as published by the Free Software Foundation version 2.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details (../gpl.txt).
+;
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+; 
+; You can contact LDC by sending electronic mail to: ldc@ldc.upenn.edu
+; or by writing to:
+;                Linguistic Data Consortium
+;                3600 Market Street
+;                Suite 810
+;                Philadelphia, PA, 19104-2653, USA.
+;  
+; ===================================================================
+;
+; Function Words + null suffix
+FW Suff-0
+FW-Wa Suff-0
+FW-WaBi Suff-0
+;
+; <ilay-, Ealay-, laday-, fiy-
+FW-Wa-y FWSuff-hi
+FW-Wa-y FWSuff-k
+FW-Wa-y FWSuff-~a
+FW-Wa-y FWSuff-nA-us
+;
+; >an~a, bi>an~a, <in~a, ka>an~a, li>an~a, l`kin~a
+FW-Wa-n~a FWSuff-hu-he
+FW-Wa-n~a FWSuff-k
+FW-Wa-n~a FWSuff-niy-I
+FW-Wa-n~a FWSuff-nA-we
+;
+; 
+FW-Wa-A FWSuff-hu-him
+FW-Wa-A FWSuff-k
+FW-Wa-A FWSuff-ya
+FW-Wa-A FWSuff-niy-me
+FW-Wa-A FWSuff-nA-us
+;
+; >an~, bi>an~, <in~, ka>an~, li>an~, l`kin~
+FW-Wa-n~ FWSuff-iy-I
+FW-Wa-n~ FWSuff-A
+;
+; Ean-, min-, ladun-
+FW-Wa-n FWSuff-hu-him
+FW-Wa-n FWSuff-k
+FW-Wa-n FWSuff-~iy
+FW-Wa-n FWSuff-~A
+;
+; maEa, baEoda, bayona, taHota, Hawola, Einoda, tujAha, fawoqa, qabola, etc
+FW-Wa-a FWSuff-hu-him
+FW-Wa-a FWSuff-k
+FW-Wa-o FWSuff-iy-me
+FW-Wa-a FWSuff-nA-us
+;
+FW-Wa-i FWSuff-hi
+FW-Wa-i FWSuff-k
+FW-Wa-i FWSuff-nA-us
+;
+;
+;==============================
+; NOUNS
+;==============================
+;
+N-ap Suff-0
+N-ap NSuff-u
+N-ap NSuff-a
+N-ap NSuff-i
+N-ap NSuff-N
+N-ap NSuff-K
+N-ap NSuff-AF
+N-ap NSuff-Ah
+N-ap NSuff-An
+N-ap NSuff-ap
+N-ap NSuff-apu
+N-ap NSuff-apa
+N-ap NSuff-api
+N-ap NSuff-apN
+N-ap NSuff-apF
+N-ap NSuff-apK
+N-ap NSuff-atAh
+N-ap NSuff-atAn
+N-ap NSuff-ath
+N-ap NSuff-ayh
+N-ap NSuff-ayn
+N-ap NSuff-h
+N-ap NSuff-iy
+N-ap NSuff-tay
+N-ap NSuff-tayn
+;
+N-ap_L Suff-0
+N-ap_L NSuff-u
+N-ap_L NSuff-a
+N-ap_L NSuff-i
+N-ap_L NSuff-N
+N-ap_L NSuff-K
+N-ap_L NSuff-AF
+N-ap_L NSuff-Ah
+N-ap_L NSuff-An
+N-ap_L NSuff-ap
+N-ap_L NSuff-apu
+N-ap_L NSuff-apa
+N-ap_L NSuff-api
+N-ap_L NSuff-apN
+N-ap_L NSuff-apF
+N-ap_L NSuff-apK
+N-ap_L NSuff-atAh
+N-ap_L NSuff-atAn
+N-ap_L NSuff-ath
+N-ap_L NSuff-ayh
+N-ap_L NSuff-ayn
+N-ap_L NSuff-h
+N-ap_L NSuff-iy
+N-ap_L NSuff-tay
+N-ap_L NSuff-tayn
+;
+N/At Suff-0
+N/At NSuff-u
+N/At NSuff-a
+N/At NSuff-i
+N/At NSuff-N
+N/At NSuff-K
+N/At NSuff-AF
+N/At NSuff-At
+N/At NSuff-Atu
+N/At NSuff-Ati
+N/At NSuff-AtN
+N/At NSuff-AtK
+N/At NSuff-Ath
+N/At NSuff-h
+N/At NSuff-iy
+;
+N/At_L Suff-0
+N/At_L NSuff-u
+N/At_L NSuff-a
+N/At_L NSuff-i
+N/At_L NSuff-N
+N/At_L NSuff-K
+N/At_L NSuff-At
+N/At_L NSuff-Atu
+N/At_L NSuff-Ati
+N/At_L NSuff-AtN
+N/At_L NSuff-AtK
+N/At_L NSuff-Ath
+N/At_L NSuff-h
+N/At_L NSuff-iy
+;
+N/ap Suff-0
+N/ap NSuff-u
+N/ap NSuff-a
+N/ap NSuff-i
+N/ap NSuff-N
+N/ap NSuff-K
+N/ap NSuff-AF
+N/ap NSuff-Ah
+N/ap NSuff-An
+N/ap NSuff-At
+N/ap NSuff-Atu
+N/ap NSuff-Ati
+N/ap NSuff-AtN
+N/ap NSuff-AtK
+N/ap NSuff-Ath
+N/ap NSuff-ap
+N/ap NSuff-apu
+N/ap NSuff-apa
+N/ap NSuff-api
+N/ap NSuff-apN
+N/ap NSuff-apF
+N/ap NSuff-apK
+N/ap NSuff-atAh
+N/ap NSuff-atAn
+N/ap NSuff-ath
+N/ap NSuff-ayh
+N/ap NSuff-ayn
+N/ap NSuff-h
+N/ap NSuff-iy
+N/ap NSuff-tay
+N/ap NSuff-tayn
+;
+N/ap_L Suff-0
+N/ap_L NSuff-u
+N/ap_L NSuff-a
+N/ap_L NSuff-i
+N/ap_L NSuff-N
+N/ap_L NSuff-K
+N/ap_L NSuff-AF
+N/ap_L NSuff-Ah
+N/ap_L NSuff-An
+N/ap_L NSuff-At
+N/ap_L NSuff-Atu
+N/ap_L NSuff-Ati
+N/ap_L NSuff-AtN
+N/ap_L NSuff-AtK
+N/ap_L NSuff-Ath
+N/ap_L NSuff-ap
+N/ap_L NSuff-apu
+N/ap_L NSuff-apa
+N/ap_L NSuff-api
+N/ap_L NSuff-apN
+N/ap_L NSuff-apF
+N/ap_L NSuff-apK
+N/ap_L NSuff-atAh
+N/ap_L NSuff-atAn
+N/ap_L NSuff-ath
+N/ap_L NSuff-ayh
+N/ap_L NSuff-ayn
+N/ap_L NSuff-h
+N/ap_L NSuff-iy
+N/ap_L NSuff-tay
+N/ap_L NSuff-tayn
+;
+N0F Suff-0
+N0F NSuff-AF
+;
+N0F_Nh Suff-0
+N0F_Nh NSuff-AF
+N0F_Nh NSuff-h
+;
+N0F_Nh_L Suff-0
+N0F_Nh_L NSuff-AF
+N0F_Nh_L NSuff-h
+;
+N0 Suff-0
+;
+N0_L Suff-0
+;
+; was Ndip
+N0_Nh Suff-0
+N0_Nh NSuff-u
+N0_Nh NSuff-a
+N0_Nh NSuff-i
+N0_Nh NSuff-h
+;
+N0_Nh_L Suff-0
+N0_Nh_L NSuff-u
+N0_Nh_L NSuff-a
+N0_Nh_L NSuff-i
+N0_Nh_L NSuff-h
+;
+N0_Nhy Suff-0
+N0_Nhy NSuff-u
+N0_Nhy NSuff-a
+N0_Nhy NSuff-i
+N0_Nhy NSuff-h
+N0_Nhy NSuff-iy
+;
+Ndip Suff-0
+Ndip NSuff-u
+Ndip NSuff-a
+Ndip NSuff-i
+Ndip NSuff-h
+Ndip NSuff-iy
+;
+N0_Nhy_L Suff-0
+N0_Nhy_L NSuff-u
+N0_Nhy_L NSuff-a
+N0_Nhy_L NSuff-i
+N0_Nhy_L NSuff-h
+N0_Nhy_L NSuff-iy
+;
+Ndip_L Suff-0
+Ndip_L NSuff-u
+Ndip_L NSuff-a
+Ndip_L NSuff-i
+Ndip_L NSuff-h
+Ndip_L NSuff-iy
+;
+NAn_Nayn NSuff-Ah
+NAn_Nayn NSuff-An
+NAn_Nayn NSuff-ayh
+NAn_Nayn NSuff-ayn
+;
+NAn_Nayn_L NSuff-Ah
+NAn_Nayn_L NSuff-An
+NAn_Nayn_L NSuff-ayh
+NAn_Nayn_L NSuff-ayn
+;
+NAn_Nayn_NAt NSuff-Ah
+NAn_Nayn_NAt NSuff-An
+NAn_Nayn_NAt NSuff-At
+NAn_Nayn_NAt NSuff-Atu
+NAn_Nayn_NAt NSuff-Ati
+NAn_Nayn_NAt NSuff-AtN
+NAn_Nayn_NAt NSuff-AtK
+NAn_Nayn_NAt NSuff-Ath
+;
+NAt NSuff-At
+NAt NSuff-Atu
+NAt NSuff-Ati
+NAt NSuff-AtN
+NAt NSuff-AtK
+NAt NSuff-Ath
+;
+NAt_L NSuff-At
+NAt_L NSuff-Atu
+NAt_L NSuff-Ati
+NAt_L NSuff-AtN
+NAt_L NSuff-AtK
+NAt_L NSuff-Ath
+;
+N-|t NSuff-|t
+N-|t NSuff-|tu
+N-|t NSuff-|ti
+N-|t NSuff-|tN
+N-|t NSuff-|tK
+N-|t NSuff-|th
+;
+NF NSuff-AF
+;
+NF_Nhy NSuff-u
+NF_Nhy NSuff-a
+NF_Nhy NSuff-i
+NF_Nhy NSuff-N
+NF_Nhy NSuff-K
+NF_Nhy NSuff-AF
+NF_Nhy NSuff-h
+NF_Nhy NSuff-iy
+;
+NK Suff-0
+NK NSuff-K
+;
+N Suff-0
+N NSuff-u
+N NSuff-a
+N NSuff-i
+N NSuff-N
+N NSuff-K
+N NSuff-AF
+N NSuff-h
+N NSuff-iy
+;
+N_L Suff-0
+N_L NSuff-u
+N_L NSuff-a
+N_L NSuff-i
+N_L NSuff-N
+N_L NSuff-K
+N_L NSuff-AF
+N_L NSuff-h
+N_L NSuff-iy
+;
+Nall Suff-0
+Nall NSuff-u
+Nall NSuff-a
+Nall NSuff-i
+Nall NSuff-N
+Nall NSuff-K
+Nall NSuff-AF
+Nall NSuff-Ah
+Nall NSuff-An
+Nall NSuff-At
+Nall NSuff-Atu
+Nall NSuff-Ati
+Nall NSuff-AtN
+Nall NSuff-AtK
+Nall NSuff-Ath
+Nall NSuff-ap
+Nall NSuff-apu
+Nall NSuff-apa
+Nall NSuff-api
+Nall NSuff-apN
+Nall NSuff-apF
+Nall NSuff-apK
+Nall NSuff-atAh
+Nall NSuff-atAn
+Nall NSuff-ath
+Nall NSuff-ayh
+Nall NSuff-ayn
+Nall NSuff-h
+Nall NSuff-iy
+Nall NSuff-iyh
+Nall NSuff-iyna
+Nall NSuff-tay
+Nall NSuff-tayn
+Nall NSuff-wh
+Nall NSuff-wn
+;
+Nall_L Suff-0
+Nall_L NSuff-u
+Nall_L NSuff-a
+Nall_L NSuff-i
+Nall_L NSuff-N
+Nall_L NSuff-K
+Nall_L NSuff-AF
+Nall_L NSuff-Ah
+Nall_L NSuff-An
+Nall_L NSuff-At
+Nall_L NSuff-Atu
+Nall_L NSuff-Ati
+Nall_L NSuff-AtN
+Nall_L NSuff-AtK
+Nall_L NSuff-Ath
+Nall_L NSuff-ap
+Nall_L NSuff-apu
+Nall_L NSuff-apa
+Nall_L NSuff-api
+Nall_L NSuff-apN
+Nall_L NSuff-apF
+Nall_L NSuff-apK
+Nall_L NSuff-atAh
+Nall_L NSuff-atAn
+Nall_L NSuff-ath
+Nall_L NSuff-ayh
+Nall_L NSuff-ayn
+Nall_L NSuff-h
+Nall_L NSuff-iy
+Nall_L NSuff-iyh
+Nall_L NSuff-iyna
+Nall_L NSuff-tay
+Nall_L NSuff-tayn
+Nall_L NSuff-wh
+Nall_L NSuff-wn
+;
+NapAt NSuff-At
+NapAt NSuff-Atu
+NapAt NSuff-Ati
+NapAt NSuff-AtN
+NapAt NSuff-AtK
+NapAt NSuff-Ath
+NapAt NSuff-ap
+NapAt NSuff-apu
+NapAt NSuff-apa
+NapAt NSuff-api
+NapAt NSuff-apN
+NapAt NSuff-apF
+NapAt NSuff-apK
+NapAt NSuff-atAh
+NapAt NSuff-atAn
+NapAt NSuff-ath
+NapAt NSuff-tay
+NapAt NSuff-tayn
+;
+NapAt_L NSuff-At
+NapAt_L NSuff-Atu
+NapAt_L NSuff-Ati
+NapAt_L NSuff-AtN
+NapAt_L NSuff-AtK
+NapAt_L NSuff-Ath
+NapAt_L NSuff-ap
+NapAt_L NSuff-apu
+NapAt_L NSuff-apa
+NapAt_L NSuff-api
+NapAt_L NSuff-apN
+NapAt_L NSuff-apF
+NapAt_L NSuff-apK
+NapAt_L NSuff-atAh
+NapAt_L NSuff-atAn
+NapAt_L NSuff-ath
+NapAt_L NSuff-tay
+NapAt_L NSuff-tayn
+;
+Nap NSuff-ap
+Nap NSuff-apu
+Nap NSuff-apa
+Nap NSuff-api
+Nap NSuff-apN
+Nap NSuff-apF
+Nap NSuff-apK
+Nap NSuff-ath
+;
+Nap_L NSuff-ap
+Nap_L NSuff-apu
+Nap_L NSuff-apa
+Nap_L NSuff-api
+Nap_L NSuff-apN
+Nap_L NSuff-apF
+Nap_L NSuff-apK
+Nap_L NSuff-ath
+;
+Napdu NSuff-ap
+Napdu NSuff-apu
+Napdu NSuff-apa
+Napdu NSuff-api
+Napdu NSuff-apN
+Napdu NSuff-apF
+Napdu NSuff-apK
+Napdu NSuff-atAh
+Napdu NSuff-atAn
+Napdu NSuff-ath
+Napdu NSuff-tay
+Napdu NSuff-tayn
+;
+Napdu_L NSuff-ap
+Napdu_L NSuff-apu
+Napdu_L NSuff-apa
+Napdu_L NSuff-api
+Napdu_L NSuff-apN
+Napdu_L NSuff-apF
+Napdu_L NSuff-apK
+Napdu_L NSuff-atAh
+Napdu_L NSuff-atAn
+Napdu_L NSuff-ath
+Napdu_L NSuff-tay
+Napdu_L NSuff-tayn
+;
+Nayn NSuff-ayh
+Nayn NSuff-ayn
+;
+NduAt Suff-0
+NduAt NSuff-u
+NduAt NSuff-a
+NduAt NSuff-i
+NduAt NSuff-N
+NduAt NSuff-K
+NduAt NSuff-AF
+NduAt NSuff-Ah
+NduAt NSuff-An
+NduAt NSuff-At
+NduAt NSuff-Atu
+NduAt NSuff-Ati
+NduAt NSuff-AtN
+NduAt NSuff-AtK
+NduAt NSuff-Ath
+NduAt NSuff-ayh
+NduAt NSuff-ayn
+NduAt NSuff-h
+NduAt NSuff-iy
+;
+NduAt_L Suff-0
+NduAt_L NSuff-u
+NduAt_L NSuff-a
+NduAt_L NSuff-i
+NduAt_L NSuff-N
+NduAt_L NSuff-K
+NduAt_L NSuff-AF
+NduAt_L NSuff-Ah
+NduAt_L NSuff-An
+NduAt_L NSuff-At
+NduAt_L NSuff-Atu
+NduAt_L NSuff-Ati
+NduAt_L NSuff-AtN
+NduAt_L NSuff-AtK
+NduAt_L NSuff-Ath
+NduAt_L NSuff-ayh
+NduAt_L NSuff-ayn
+NduAt_L NSuff-h
+NduAt_L NSuff-iy
+;
+Ndu Suff-0
+Ndu NSuff-u
+Ndu NSuff-a
+Ndu NSuff-i
+Ndu NSuff-N
+Ndu NSuff-K
+Ndu NSuff-AF
+Ndu NSuff-Ah
+Ndu NSuff-An
+Ndu NSuff-ayh
+Ndu NSuff-ayn
+Ndu NSuff-h
+Ndu NSuff-iy
+;
+Ndu_L Suff-0
+Ndu_L NSuff-u
+Ndu_L NSuff-a
+Ndu_L NSuff-i
+Ndu_L NSuff-N
+Ndu_L NSuff-K
+Ndu_L NSuff-AF
+Ndu_L NSuff-Ah
+Ndu_L NSuff-An
+Ndu_L NSuff-ayh
+Ndu_L NSuff-ayn
+Ndu_L NSuff-h
+Ndu_L NSuff-iy
+;
+Nel Suff-0
+Nel NSuff-u
+Nel NSuff-a
+Nel NSuff-i
+Nel NSuff-Ah
+Nel NSuff-An
+Nel NSuff-ayh
+Nel NSuff-ayn
+Nel NSuff-h
+Nel NSuff-iy
+;
+Nh NSuff-h
+Nh_L NSuff-h
+;
+Nh_NAn_Nayn Suff-0
+Nh_NAn_Nayn NSuff-u
+Nh_NAn_Nayn NSuff-a
+Nh_NAn_Nayn NSuff-i
+Nh_NAn_Nayn NSuff-N
+Nh_NAn_Nayn NSuff-K
+Nh_NAn_Nayn NSuff-AF
+Nh_NAn_Nayn NSuff-Ah
+Nh_NAn_Nayn NSuff-An
+Nh_NAn_Nayn NSuff-ayh
+Nh_NAn_Nayn NSuff-ayn
+;
+Nh_NAn_Nayn_L Suff-0
+Nh_NAn_Nayn_L NSuff-u
+Nh_NAn_Nayn_L NSuff-a
+Nh_NAn_Nayn_L NSuff-i
+Nh_NAn_Nayn_L NSuff-N
+Nh_NAn_Nayn_L NSuff-K
+Nh_NAn_Nayn_L NSuff-AF
+Nh_NAn_Nayn_L NSuff-Ah
+Nh_NAn_Nayn_L NSuff-An
+Nh_NAn_Nayn_L NSuff-ayh
+Nh_NAn_Nayn_L NSuff-ayn
+;
+Nh_Niyn NSuff-h
+Nh_Niyn NSuff-iyh
+Nh_Niyn NSuff-iyna
+;
+Nh_Nuwn NSuff-h
+Nh_Nuwn NSuff-wh
+Nh_Nuwn NSuff-wn
+;
+Nhy NSuff-h
+Nhy NSuff-iy
+;
+Nhy_L NSuff-h
+Nhy_L NSuff-iy
+;
+Nhy_Nayn NSuff-ayh
+Nhy_Nayn NSuff-ayn
+Nhy_Nayn NSuff-h
+Nhy_Nayn NSuff-iy
+;
+;
+; maboda|-ni, juzo|-ni
+N-| NSuff-|-ni
+N-| NSuff-|h
+;
+Nprop Suff-0
+;
+Numb NSuff-iyna
+Numb NSuff-wn
+;
+Nuwn_Niyn NSuff-iyh
+Nuwn_Niyn NSuff-iyna
+Nuwn_Niyn NSuff-wh
+Nuwn_Niyn NSuff-wn
+Nuwn_Niyn_L NSuff-iyh
+Nuwn_Niyn_L NSuff-iyna
+Nuwn_Niyn_L NSuff-wh
+Nuwn_Niyn_L NSuff-wn
+;
+;==============================
+; IMPERFECT VERBS
+;==============================
+;
+IV Suff-0
+IV IVSuff-A
+IV IVSuff-Ah
+IV IVSuff-Ak
+IV IVSuff-An
+IV IVSuff-Anh
+IV IVSuff-Ank
+IV IVSuff-h
+IV IVSuff-k
+IV IVSuff-n
+IV IVSuff-nh
+IV IVSuff-nk
+IV IVSuff-ny-nA
+IV IVSuff-wA
+IV IVSuff-wh
+IV IVSuff-wk
+IV IVSuff-wn
+IV IVSuff-wnh
+IV IVSuff-wnk
+IV IVSuff-y
+IV IVSuff-yh
+IV IVSuff-yn
+IV IVSuff-ynh
+;
+; same, but for "yu-", "tu-", ">u-", "nu-"
+IV_yu Suff-0
+IV_yu IVSuff-A
+IV_yu IVSuff-Ah
+IV_yu IVSuff-Ak
+IV_yu IVSuff-An
+IV_yu IVSuff-Anh
+IV_yu IVSuff-Ank
+IV_yu IVSuff-h
+IV_yu IVSuff-k
+IV_yu IVSuff-n
+IV_yu IVSuff-nh
+IV_yu IVSuff-nk
+IV_yu IVSuff-ny-nA
+IV_yu IVSuff-wA
+IV_yu IVSuff-wh
+IV_yu IVSuff-wk
+IV_yu IVSuff-wn
+IV_yu IVSuff-wnh
+IV_yu IVSuff-wnk
+IV_yu IVSuff-y
+IV_yu IVSuff-yh
+IV_yu IVSuff-yn
+IV_yu IVSuff-ynh
+; passive
+IV_Pass_yu Suff-0
+IV_Pass_yu IVSuff-A
+IV_Pass_yu IVSuff-An
+IV_Pass_yu IVSuff-n
+IV_Pass_yu IVSuff-wA
+IV_Pass_yu IVSuff-wn
+IV_Pass_yu IVSuff-y
+IV_Pass_yu IVSuff-yn
+;
+; intransitive
+IV_intr Suff-0
+IV_intr IVSuff-A
+IV_intr IVSuff-An
+IV_intr IVSuff-n
+IV_intr IVSuff-wA
+IV_intr IVSuff-wn
+IV_intr IVSuff-y
+IV_intr IVSuff-yn
+; same, but for "yu-", "tu-", ">u-", "nu-"
+IV_intr_yu Suff-0
+IV_intr_yu IVSuff-A
+IV_intr_yu IVSuff-An
+IV_intr_yu IVSuff-n
+IV_intr_yu IVSuff-wA
+IV_intr_yu IVSuff-wn
+IV_intr_yu IVSuff-y
+IV_intr_yu IVSuff-yn
+;
+IV_0 Suff-0
+; IV_0_need-Pref-A Suff-0
+; IV_0_need-Pref-| Suff-0
+IV_0_no-Pref-A Suff-0
+;
+IV_0_yu Suff-0
+IV_0_Pass_yu Suff-0
+; IV_0_need-Pref-A_yu Suff-0
+; IV_0_no-Pref-A_yu Suff-0
+;
+;
+IV_0hAnn Suff-0
+IV_0hAnn IVSuff-A
+IV_0hAnn IVSuff-Ah
+IV_0hAnn IVSuff-Ak
+IV_0hAnn IVSuff-An
+IV_0hAnn IVSuff-Anh
+IV_0hAnn IVSuff-Ank
+IV_0hAnn IVSuff-h
+IV_0hAnn IVSuff-k
+IV_0hAnn IVSuff-n
+IV_0hAnn IVSuff-nh
+IV_0hAnn IVSuff-nk
+IV_0hAnn IVSuff-ny-nA
+;
+IV_0hAnn_yu Suff-0
+IV_0hAnn_yu IVSuff-A
+IV_0hAnn_yu IVSuff-Ah
+IV_0hAnn_yu IVSuff-Ak
+IV_0hAnn_yu IVSuff-An
+IV_0hAnn_yu IVSuff-Anh
+IV_0hAnn_yu IVSuff-Ank
+IV_0hAnn_yu IVSuff-h
+IV_0hAnn_yu IVSuff-k
+IV_0hAnn_yu IVSuff-n
+IV_0hAnn_yu IVSuff-nh
+IV_0hAnn_yu IVSuff-nk
+IV_0hAnn_yu IVSuff-ny-nA
+;
+;
+IV_0hAnn_no-Pref-A Suff-0
+IV_0hAnn_no-Pref-A IVSuff-A
+IV_0hAnn_no-Pref-A IVSuff-Ah
+IV_0hAnn_no-Pref-A IVSuff-Ak
+IV_0hAnn_no-Pref-A IVSuff-An
+IV_0hAnn_no-Pref-A IVSuff-Anh
+IV_0hAnn_no-Pref-A IVSuff-Ank
+IV_0hAnn_no-Pref-A IVSuff-h
+IV_0hAnn_no-Pref-A IVSuff-k
+IV_0hAnn_no-Pref-A IVSuff-n
+IV_0hAnn_no-Pref-A IVSuff-nh
+IV_0hAnn_no-Pref-A IVSuff-nk
+IV_0hAnn_no-Pref-A IVSuff-ny-nA
+;
+;
+IV_0h Suff-0
+IV_0h IVSuff-h
+IV_0h IVSuff-k
+IV_0h IVSuff-n
+IV_0h IVSuff-nh
+IV_0h IVSuff-nk
+IV_0h IVSuff-ny-nA
+;
+;
+; ya-boda|-ni
+IV-| IVSuff-|
+IV-| IVSuff-|h
+IV-| IVSuff-|k
+IV-| IVSuff-|n
+IV-| IVSuff-|nh
+IV-| IVSuff-|nk
+;
+;
+;
+IV_0hwnyn Suff-0
+IV_0hwnyn IVSuff-h
+IV_0hwnyn IVSuff-k
+IV_0hwnyn IVSuff-ny-nA
+IV_0hwnyn IVSuff-wA
+IV_0hwnyn IVSuff-wh
+IV_0hwnyn IVSuff-wk
+IV_0hwnyn IVSuff-wn
+IV_0hwnyn IVSuff-wnh
+IV_0hwnyn IVSuff-wnk
+IV_0hwnyn IVSuff-y
+IV_0hwnyn IVSuff-yh
+IV_0hwnyn IVSuff-yn
+IV_0hwnyn IVSuff-ynh
+;
+IV_0hwnyn_yu Suff-0
+IV_0hwnyn_yu IVSuff-h
+IV_0hwnyn_yu IVSuff-k
+IV_0hwnyn_yu IVSuff-ny-nA
+IV_0hwnyn_yu IVSuff-wA
+IV_0hwnyn_yu IVSuff-wh
+IV_0hwnyn_yu IVSuff-wk
+IV_0hwnyn_yu IVSuff-wn
+IV_0hwnyn_yu IVSuff-wnh
+IV_0hwnyn_yu IVSuff-wnk
+IV_0hwnyn_yu IVSuff-y
+IV_0hwnyn_yu IVSuff-yh
+IV_0hwnyn_yu IVSuff-yn
+IV_0hwnyn_yu IVSuff-ynh
+;
+;
+IV_0hwnyn_no-Pref-A Suff-0
+IV_0hwnyn_no-Pref-A IVSuff-h
+IV_0hwnyn_no-Pref-A IVSuff-k
+IV_0hwnyn_no-Pref-A IVSuff-ny-nA
+IV_0hwnyn_no-Pref-A IVSuff-wA
+IV_0hwnyn_no-Pref-A IVSuff-wh
+IV_0hwnyn_no-Pref-A IVSuff-wk
+IV_0hwnyn_no-Pref-A IVSuff-wn
+IV_0hwnyn_no-Pref-A IVSuff-wnh
+IV_0hwnyn_no-Pref-A IVSuff-wnk
+IV_0hwnyn_no-Pref-A IVSuff-y
+IV_0hwnyn_no-Pref-A IVSuff-yh
+IV_0hwnyn_no-Pref-A IVSuff-yn
+IV_0hwnyn_no-Pref-A IVSuff-ynh
+;
+;
+IV_Ann IVSuff-A
+IV_Ann IVSuff-Ah
+IV_Ann IVSuff-Ak
+IV_Ann IVSuff-An
+IV_Ann IVSuff-Anh
+IV_Ann IVSuff-Ank
+IV_Ann IVSuff-n
+IV_Ann IVSuff-nh
+IV_Ann IVSuff-nk
+;
+;
+IV_Ann_Pass_yu IVSuff-A
+IV_Ann_Pass_yu IVSuff-An
+IV_Ann_Pass_yu IVSuff-n
+;
+;
+IV_Ann_no-Pref-A IVSuff-A
+IV_Ann_no-Pref-A IVSuff-Ah
+IV_Ann_no-Pref-A IVSuff-Ak
+IV_Ann_no-Pref-A IVSuff-An
+IV_Ann_no-Pref-A IVSuff-Anh
+IV_Ann_no-Pref-A IVSuff-Ank
+IV_Ann_no-Pref-A IVSuff-n
+IV_Ann_no-Pref-A IVSuff-nh
+IV_Ann_no-Pref-A IVSuff-nk
+;
+;
+; "IV_C" applies to -o (jussive: A-qul-o, y-qul-o, t-qul-o, n-qul-o) and -n (t-qul-na, y-qul-na, t-morur-na, y-morur-na)
+IV_C Suff-0
+IV_C IVSuff-h
+IV_C IVSuff-k
+IV_C IVSuff-n
+IV_C IVSuff-nh
+IV_C IVSuff-nk
+IV_C IVSuff-ny-nA
+;
+IV_C_yu Suff-0
+IV_C_yu IVSuff-h
+IV_C_yu IVSuff-k
+IV_C_yu IVSuff-n
+IV_C_yu IVSuff-nh
+IV_C_yu IVSuff-nk
+IV_C_yu IVSuff-ny-nA
+;
+; passive: (jussive: Au-qal-o, yu-qal-o, tu-qal-o, nu-qal-o) and -n (tu-qal-na, yu-qal-na, tu-morar-na, yu-morar-na)
+IV_C_Pass_yu Suff-0
+IV_C_Pass_yu IVSuff-n
+;
+;
+IV_C_intr Suff-0
+IV_C_intr IVSuff-n
+;
+IV_C_intr_yu Suff-0
+IV_C_intr_yu IVSuff-n
+;
+;
+; Antun~a ta-Toma>onin-~a, hun~a ya-Toma>onin-~a
+IV_Cn IVSuff-~n
+IV_Cn IVSuff-~nh
+IV_Cn IVSuff-~nk
+;
+IV_Cn_intr IVSuff-~n
+;
+;
+IV_V Suff-0
+IV_V IVSuff-A
+IV_V IVSuff-Ah
+IV_V IVSuff-Ak
+IV_V IVSuff-An
+IV_V IVSuff-Anh
+IV_V IVSuff-Ank
+IV_V IVSuff-h
+IV_V IVSuff-k
+IV_V IVSuff-ny-nA
+IV_V IVSuff-wA
+IV_V IVSuff-wh
+IV_V IVSuff-wk
+IV_V IVSuff-wn
+IV_V IVSuff-wnh
+IV_V IVSuff-wnk
+IV_V IVSuff-y
+IV_V IVSuff-yh
+IV_V IVSuff-yn
+IV_V IVSuff-ynh
+;
+IV_V_yu Suff-0
+IV_V_yu IVSuff-A
+IV_V_yu IVSuff-Ah
+IV_V_yu IVSuff-Ak
+IV_V_yu IVSuff-An
+IV_V_yu IVSuff-Anh
+IV_V_yu IVSuff-Ank
+IV_V_yu IVSuff-h
+IV_V_yu IVSuff-k
+IV_V_yu IVSuff-ny-nA
+IV_V_yu IVSuff-wA
+IV_V_yu IVSuff-wh
+IV_V_yu IVSuff-wk
+IV_V_yu IVSuff-wn
+IV_V_yu IVSuff-wnh
+IV_V_yu IVSuff-wnk
+IV_V_yu IVSuff-y
+IV_V_yu IVSuff-yh
+IV_V_yu IVSuff-yn
+IV_V_yu IVSuff-ynh
+;
+;
+IV_V_Pass_yu Suff-0
+IV_V_Pass_yu IVSuff-A
+IV_V_Pass_yu IVSuff-An
+IV_V_Pass_yu IVSuff-wA
+IV_V_Pass_yu IVSuff-wn
+IV_V_Pass_yu IVSuff-y
+IV_V_Pass_yu IVSuff-yn
+;
+;
+IV_V_need-Pref-| Suff-0
+IV_V_need-Pref-| IVSuff-Anh
+IV_V_need-Pref-| IVSuff-Ank
+IV_V_need-Pref-| IVSuff-h
+IV_V_need-Pref-| IVSuff-k
+;
+;
+IV_V_intr Suff-0
+IV_V_intr IVSuff-A
+IV_V_intr IVSuff-An
+IV_V_intr IVSuff-wA
+IV_V_intr IVSuff-wn
+IV_V_intr IVSuff-y
+IV_V_intr IVSuff-yn
+;
+IV_V_intr_yu Suff-0
+IV_V_intr_yu IVSuff-A
+IV_V_intr_yu IVSuff-An
+IV_V_intr_yu IVSuff-wA
+IV_V_intr_yu IVSuff-wn
+IV_V_intr_yu IVSuff-y
+IV_V_intr_yu IVSuff-yn
+;
+;
+IV_V_no-Pref-A Suff-0
+IV_V_no-Pref-A IVSuff-A
+IV_V_no-Pref-A IVSuff-Ah
+IV_V_no-Pref-A IVSuff-Ak
+IV_V_no-Pref-A IVSuff-An
+IV_V_no-Pref-A IVSuff-Anh
+IV_V_no-Pref-A IVSuff-Ank
+IV_V_no-Pref-A IVSuff-h
+IV_V_no-Pref-A IVSuff-k
+IV_V_no-Pref-A IVSuff-ny-nA
+IV_V_no-Pref-A IVSuff-wA
+IV_V_no-Pref-A IVSuff-wh
+IV_V_no-Pref-A IVSuff-wk
+IV_V_no-Pref-A IVSuff-wn
+IV_V_no-Pref-A IVSuff-wnh
+IV_V_no-Pref-A IVSuff-wnk
+IV_V_no-Pref-A IVSuff-y
+IV_V_no-Pref-A IVSuff-yh
+IV_V_no-Pref-A IVSuff-yn
+IV_V_no-Pref-A IVSuff-ynh
+;
+;
+IV_hAnynwn IVSuff-A
+IV_hAnynwn IVSuff-Ah
+IV_hAnynwn IVSuff-Ak
+IV_hAnynwn IVSuff-An
+IV_hAnynwn IVSuff-Anh
+IV_hAnynwn IVSuff-Ank
+IV_hAnynwn IVSuff-h
+IV_hAnynwn IVSuff-k
+IV_hAnynwn IVSuff-ny-nA
+IV_hAnynwn IVSuff-wA
+IV_hAnynwn IVSuff-wh
+IV_hAnynwn IVSuff-wk
+IV_hAnynwn IVSuff-wn
+IV_hAnynwn IVSuff-wnh
+IV_hAnynwn IVSuff-wnk
+IV_hAnynwn IVSuff-y
+IV_hAnynwn IVSuff-yh
+IV_hAnynwn IVSuff-yn
+IV_hAnynwn IVSuff-ynh
+;
+;
+IV_h IVSuff-h
+IV_h IVSuff-k
+IV_h IVSuff-ny-nA
+;
+;
+IV_h_need-Pref-| IVSuff-h
+IV_h_need-Pref-| IVSuff-k
+;
+;
+IV_h_no-Pref-A IVSuff-h
+IV_h_no-Pref-A IVSuff-k
+IV_h_no-Pref-A IVSuff-ny-nA
+;
+IV_h_no-Pref-A_yu IVSuff-h
+IV_h_no-Pref-A_yu IVSuff-k
+IV_h_no-Pref-A_yu IVSuff-ny-nA
+;
+;
+IV_hwn IVSuff-h
+IV_hwn IVSuff-k
+IV_hwn IVSuff-ny-nA
+IV_hwn IVSuff-wA
+IV_hwn IVSuff-wh
+IV_hwn IVSuff-wk
+IV_hwn IVSuff-wn
+IV_hwn IVSuff-wnh
+IV_hwn IVSuff-wnk
+;
+;
+IV_need-Pref-A Suff-0
+IV_need-Pref-A IVSuff-h
+IV_need-Pref-A IVSuff-k
+;
+IV_need-Pref-A_yu Suff-0
+IV_need-Pref-A_yu IVSuff-h
+IV_need-Pref-A_yu IVSuff-k
+;
+;
+IV_need-Pref-| Suff-0
+IV_need-Pref-| IVSuff-h
+IV_need-Pref-| IVSuff-k
+;
+;
+IV_no-Pref-A Suff-0
+IV_no-Pref-A IVSuff-A
+IV_no-Pref-A IVSuff-Ah
+IV_no-Pref-A IVSuff-Ak
+IV_no-Pref-A IVSuff-An
+IV_no-Pref-A IVSuff-Anh
+IV_no-Pref-A IVSuff-Ank
+IV_no-Pref-A IVSuff-h
+IV_no-Pref-A IVSuff-k
+IV_no-Pref-A IVSuff-n
+IV_no-Pref-A IVSuff-nh
+IV_no-Pref-A IVSuff-nk
+IV_no-Pref-A IVSuff-ny-nA
+IV_no-Pref-A IVSuff-wA
+IV_no-Pref-A IVSuff-wh
+IV_no-Pref-A IVSuff-wk
+IV_no-Pref-A IVSuff-wn
+IV_no-Pref-A IVSuff-wnh
+IV_no-Pref-A IVSuff-wnk
+IV_no-Pref-A IVSuff-y
+IV_no-Pref-A IVSuff-yh
+IV_no-Pref-A IVSuff-yn
+IV_no-Pref-A IVSuff-ynh
+;
+IV_no-Pref-A_yu Suff-0
+IV_no-Pref-A_yu IVSuff-A
+IV_no-Pref-A_yu IVSuff-Ah
+IV_no-Pref-A_yu IVSuff-Ak
+IV_no-Pref-A_yu IVSuff-An
+IV_no-Pref-A_yu IVSuff-Anh
+IV_no-Pref-A_yu IVSuff-Ank
+IV_no-Pref-A_yu IVSuff-h
+IV_no-Pref-A_yu IVSuff-k
+IV_no-Pref-A_yu IVSuff-n
+IV_no-Pref-A_yu IVSuff-nh
+IV_no-Pref-A_yu IVSuff-nk
+IV_no-Pref-A_yu IVSuff-ny-nA
+IV_no-Pref-A_yu IVSuff-wA
+IV_no-Pref-A_yu IVSuff-wh
+IV_no-Pref-A_yu IVSuff-wk
+IV_no-Pref-A_yu IVSuff-wn
+IV_no-Pref-A_yu IVSuff-wnh
+IV_no-Pref-A_yu IVSuff-wnk
+IV_no-Pref-A_yu IVSuff-y
+IV_no-Pref-A_yu IVSuff-yh
+IV_no-Pref-A_yu IVSuff-yn
+IV_no-Pref-A_yu IVSuff-ynh
+;
+;
+IV-n Suff-0
+IV-n IVSuff-A
+IV-n IVSuff-Ah
+IV-n IVSuff-Ak
+IV-n IVSuff-An
+IV-n IVSuff-Anh
+IV-n IVSuff-Ank
+IV-n IVSuff-h
+IV-n IVSuff-k
+IV-n IVSuff-~n
+IV-n IVSuff-~nh
+IV-n IVSuff-~nk
+IV-n IVSuff-ny-nA
+IV-n IVSuff-wA
+IV-n IVSuff-wh
+IV-n IVSuff-wk
+IV-n IVSuff-wn
+IV-n IVSuff-wnh
+IV-n IVSuff-wnk
+IV-n IVSuff-y
+IV-n IVSuff-yh
+IV-n IVSuff-yn
+IV-n IVSuff-ynh
+;
+IV-n_intr Suff-0
+IV-n_intr IVSuff-A
+IV-n_intr IVSuff-An
+IV-n_intr IVSuff-~n
+IV-n_intr IVSuff-wA
+IV-n_intr IVSuff-wn
+IV-n_intr IVSuff-y
+IV-n_intr IVSuff-yn
+;
+IV-n_yu Suff-0
+IV-n_yu IVSuff-A
+IV-n_yu IVSuff-Ah
+IV-n_yu IVSuff-Ak
+IV-n_yu IVSuff-An
+IV-n_yu IVSuff-Anh
+IV-n_yu IVSuff-Ank
+IV-n_yu IVSuff-h
+IV-n_yu IVSuff-k
+IV-n_yu IVSuff-~n
+IV-n_yu IVSuff-~nh
+IV-n_yu IVSuff-~nk
+IV-n_yu IVSuff-ny-nA
+IV-n_yu IVSuff-wA
+IV-n_yu IVSuff-wh
+IV-n_yu IVSuff-wk
+IV-n_yu IVSuff-wn
+IV-n_yu IVSuff-wnh
+IV-n_yu IVSuff-wnk
+IV-n_yu IVSuff-y
+IV-n_yu IVSuff-yh
+IV-n_yu IVSuff-yn
+IV-n_yu IVSuff-ynh
+;
+;
+IV-n_Pass_yu Suff-0
+IV-n_Pass_yu IVSuff-A
+IV-n_Pass_yu IVSuff-An
+IV-n_Pass_yu IVSuff-wA
+IV-n_Pass_yu IVSuff-wn
+IV-n_Pass_yu IVSuff-~n
+IV-n_Pass_yu IVSuff-y
+IV-n_Pass_yu IVSuff-yn
+;
+;
+IV-n_no-Pref-A Suff-0
+IV-n_no-Pref-A IVSuff-A
+IV-n_no-Pref-A IVSuff-Ah
+IV-n_no-Pref-A IVSuff-Ak
+IV-n_no-Pref-A IVSuff-An
+IV-n_no-Pref-A IVSuff-Anh
+IV-n_no-Pref-A IVSuff-Ank
+IV-n_no-Pref-A IVSuff-h
+IV-n_no-Pref-A IVSuff-k
+IV-n_no-Pref-A IVSuff-~n
+IV-n_no-Pref-A IVSuff-~nh
+IV-n_no-Pref-A IVSuff-~nk
+IV-n_no-Pref-A IVSuff-ny-nA
+IV-n_no-Pref-A IVSuff-wA
+IV-n_no-Pref-A IVSuff-wh
+IV-n_no-Pref-A IVSuff-wk
+IV-n_no-Pref-A IVSuff-wn
+IV-n_no-Pref-A IVSuff-wnh
+IV-n_no-Pref-A IVSuff-wnk
+IV-n_no-Pref-A IVSuff-y
+IV-n_no-Pref-A IVSuff-yh
+IV-n_no-Pref-A IVSuff-yn
+IV-n_no-Pref-A IVSuff-ynh
+;
+IV-n_no-Pref-A_yu Suff-0
+IV-n_no-Pref-A_yu IVSuff-A
+IV-n_no-Pref-A_yu IVSuff-Ah
+IV-n_no-Pref-A_yu IVSuff-Ak
+IV-n_no-Pref-A_yu IVSuff-An
+IV-n_no-Pref-A_yu IVSuff-Anh
+IV-n_no-Pref-A_yu IVSuff-Ank
+IV-n_no-Pref-A_yu IVSuff-h
+IV-n_no-Pref-A_yu IVSuff-k
+IV-n_no-Pref-A_yu IVSuff-~n
+IV-n_no-Pref-A_yu IVSuff-~nh
+IV-n_no-Pref-A_yu IVSuff-~nk
+IV-n_no-Pref-A_yu IVSuff-ny-nA
+IV-n_no-Pref-A_yu IVSuff-wA
+IV-n_no-Pref-A_yu IVSuff-wh
+IV-n_no-Pref-A_yu IVSuff-wk
+IV-n_no-Pref-A_yu IVSuff-wn
+IV-n_no-Pref-A_yu IVSuff-wnh
+IV-n_no-Pref-A_yu IVSuff-wnk
+IV-n_no-Pref-A_yu IVSuff-y
+IV-n_no-Pref-A_yu IVSuff-yh
+IV-n_no-Pref-A_yu IVSuff-yn
+IV-n_no-Pref-A_yu IVSuff-ynh
+;
+;-------------------------------------
+; ya-boniy-0 --> ya-bon-uwna
+IV_wn IVSuff-wA
+IV_wn IVSuff-wh
+IV_wn IVSuff-wk
+IV_wn IVSuff-wn
+IV_wn IVSuff-wnh
+IV_wn IVSuff-wnk
+;
+IV_wn_intr IVSuff-wA
+IV_wn_intr IVSuff-wn
+;
+IV_wn_yu IVSuff-wA
+IV_wn_yu IVSuff-wh
+IV_wn_yu IVSuff-wk
+IV_wn_yu IVSuff-wn
+IV_wn_yu IVSuff-wnh
+IV_wn_yu IVSuff-wnk
+;
+IV_wn_intr_yu IVSuff-wA
+IV_wn_intr_yu IVSuff-wn
+;
+IV_wn_Pass_yu IVSuff-wA
+IV_wn_Pass_yu IVSuff-wn
+;
+;-------------------------------------
+; ya-boqaY-0 --> ya-boq-awona
+IV_awn IVSuff-awA
+IV_awn IVSuff-awh
+IV_awn IVSuff-awk
+IV_awn IVSuff-awn
+IV_awn IVSuff-awnh
+IV_awn IVSuff-awnk
+;
+IV_awn_intr IVSuff-awA
+IV_awn_intr IVSuff-awn
+;
+IV_awn_yu IVSuff-awA
+IV_awn_yu IVSuff-awh
+IV_awn_yu IVSuff-awk
+IV_awn_yu IVSuff-awn
+IV_awn_yu IVSuff-awnh
+IV_awn_yu IVSuff-awnk
+;
+IV_awn_intr_yu IVSuff-awA
+IV_awn_intr_yu IVSuff-awn
+;
+IV_awn_Pass_yu IVSuff-awA
+IV_awn_Pass_yu IVSuff-awn
+;
+;=================================
+;
+IV_yn IVSuff-y
+IV_yn IVSuff-yh
+IV_yn IVSuff-yn
+IV_yn IVSuff-ynh
+;
+IV_yn_intr IVSuff-y
+IV_yn_intr IVSuff-yn
+;
+IV_yn_yu IVSuff-y
+IV_yn_yu IVSuff-yh
+IV_yn_yu IVSuff-yn
+IV_yn_yu IVSuff-ynh
+;
+IV_yn_intr_yu IVSuff-y
+IV_yn_intr_yu IVSuff-yn
+;
+IV_yn_Pass_yu IVSuff-y
+IV_yn_Pass_yu IVSuff-yn
+;
+;
+;
+; ------------------
+; Imperative Verb (CV = Command Verb, PV = Perfect Verb, IV = Imperfect Verb)
+; ------------------
+CV CVSuff-o
+CV CVSuff-oh
+CV CVSuff-y
+CV CVSuff-yh
+CV CVSuff-wA
+CV CVSuff-wh
+;
+CV_intr CVSuff-o
+CV_intr CVSuff-y
+CV_intr CVSuff-wA
+;
+CV_C CVSuff-o
+;
+CV_V CVSuff-y
+CV_V CVSuff-yh
+CV_V CVSuff-wA
+CV_V CVSuff-wh
+;
+CV_V_intr CVSuff-y
+CV_V_intr CVSuff-wA
+;
+; --------------------------
+; Perfect Verb
+; ------------------
+; katab
+PV PVSuff-a
+PV PVSuff-ah
+PV PVSuff-A
+PV PVSuff-Ah
+PV PVSuff-at
+PV PVSuff-ath
+PV PVSuff-n
+PV PVSuff-nh
+PV PVSuff-t
+PV PVSuff-th
+PV PVSuff-uwA
+PV PVSuff-uwh
+;
+PV_intr PVSuff-a
+PV_intr PVSuff-A
+PV_intr PVSuff-at
+PV_intr PVSuff-n
+PV_intr PVSuff-t
+PV_intr PVSuff-uwA
+;
+PV_Pass PVSuff-a
+PV_Pass PVSuff-A
+PV_Pass PVSuff-at
+PV_Pass PVSuff-n
+PV_Pass PVSuff-t
+PV_Pass PVSuff-uwA
+;
+; -a only: qiyl-a)
+PV_Pass-a PVSuff-a
+;
+; >uEoTiy -a -A -at -atA
+PV_Pass-aAat PVSuff-a
+PV_Pass-aAat PVSuff-A
+PV_Pass-aAat PVSuff-at
+;
+;
+; barohan-a (stems ending in n)
+PV-n PVSuff-a
+PV-n PVSuff-ah
+PV-n PVSuff-A
+PV-n PVSuff-Ah
+PV-n PVSuff-uwA
+PV-n PVSuff-uwh
+PV-n PVSuff-at
+PV-n PVSuff-ath
+PV-n PVSuff-~n
+PV-n PVSuff-~nh
+PV-n PVSuff-t
+PV-n PVSuff-th
+;
+PV-n_Pass PVSuff-a
+PV-n_Pass PVSuff-A
+PV-n_Pass PVSuff-uwA
+PV-n_Pass PVSuff-at
+PV-n_Pass PVSuff-~n
+PV-n_Pass PVSuff-t
+;
+PV-n_intr PVSuff-a
+PV-n_intr PVSuff-A
+PV-n_intr PVSuff-uwA
+PV-n_intr PVSuff-at
+PV-n_intr PVSuff-~n
+PV-n_intr PVSuff-t
+;
+;
+; >avobat-a (stems ending in t)
+PV-t PVSuff-a
+PV-t PVSuff-ah
+PV-t PVSuff-A
+PV-t PVSuff-Ah
+PV-t PVSuff-uwA
+PV-t PVSuff-uwh
+PV-t PVSuff-at
+PV-t PVSuff-ath
+PV-t PVSuff-n
+PV-t PVSuff-nh
+PV-t PVSuff-~t
+PV-t PVSuff-~th
+;
+PV-t_intr PVSuff-a
+PV-t_intr PVSuff-A
+PV-t_intr PVSuff-uwA
+PV-t_intr PVSuff-at
+PV-t_intr PVSuff-n
+PV-t_intr PVSuff-~t
+;
+;
+; qAl, jar~ (hollow/doubled + vowel)
+PV_V PVSuff-a
+PV_V PVSuff-ah
+PV_V PVSuff-A
+PV_V PVSuff-Ah
+PV_V PVSuff-at
+PV_V PVSuff-ath
+PV_V PVSuff-uwA
+PV_V PVSuff-uwh
+;
+PV_V_intr PVSuff-a
+PV_V_intr PVSuff-A
+PV_V_intr PVSuff-at
+PV_V_intr PVSuff-uwA
+;
+PV_V_Pass PVSuff-a
+PV_V_Pass PVSuff-A
+PV_V_Pass PVSuff-at
+PV_V_Pass PVSuff-uwA
+;
+; qiyl-a
+PV_V_Pass-a PVSuff-a
+;
+; qul, jarar (hollow/doubled + consonant)
+PV_C PVSuff-n
+PV_C PVSuff-nh
+PV_C PVSuff-t
+PV_C PVSuff-th
+;
+PV_C_intr PVSuff-n
+PV_C_intr PVSuff-t
+;
+PV_C_Pass PVSuff-n
+PV_C_Pass PVSuff-t
+;
+;
+; >adan, $anan (hollow/doubled ending in n + consonant)
+PV_Cn PVSuff-~n
+PV_Cn PVSuff-~nh
+PV_Cn PVSuff-t
+PV_Cn PVSuff-th
+;
+PV_Cn_intr PVSuff-~n
+PV_Cn_intr PVSuff-t
+;
+;
+; >abat-~u, batat-~u (hollow/doubled ending in n + consonant)
+PV_Ct PVSuff-n
+PV_Ct PVSuff-nh
+PV_Ct PVSuff-~t
+PV_Ct PVSuff-~th
+;
+PV_Ct_intr PVSuff-n
+PV_Ct_intr PVSuff-~t
+;
+;
+; PV stems ending in > (bada>)
+PV-> PVSuff-a
+PV-> PVSuff-ah
+PV-> PVSuff-uwA
+PV-> PVSuff-uwh
+PV-> PVSuff-at
+PV-> PVSuff-ath
+PV-> PVSuff-n
+PV-> PVSuff-nh
+PV-> PVSuff-t
+PV-> PVSuff-th
+;
+PV->_intr PVSuff-a
+PV->_intr PVSuff-uwA
+PV->_intr PVSuff-at
+PV->_intr PVSuff-n
+PV->_intr PVSuff-t
+;
+; PV stems ending in | (dual: bada|)
+PV-| PVSuff-|
+PV-| PVSuff-|h
+PV-|_intr PVSuff-|
+;
+;
+; xa$iy-a
+PV_no-w PVSuff-a
+PV_no-w PVSuff-ah
+PV_no-w PVSuff-A
+PV_no-w PVSuff-Ah
+PV_no-w PVSuff-at
+PV_no-w PVSuff-ath
+PV_no-w PVSuff-n
+PV_no-w PVSuff-nh
+PV_no-w PVSuff-t
+PV_no-w PVSuff-th
+;
+PV_no-w_intr PVSuff-a
+PV_no-w_intr PVSuff-A
+PV_no-w_intr PVSuff-at
+PV_no-w_intr PVSuff-n
+PV_no-w_intr PVSuff-t
+;
+; tuwuf~iy
+PV_no-w_Pass PVSuff-a
+PV_no-w_Pass PVSuff-A
+PV_no-w_Pass PVSuff-at
+PV_no-w_Pass PVSuff-n
+PV_no-w_Pass PVSuff-t
+;
+; xa$ -uwA -uwhu
+PV_w PVSuff-uwA
+PV_w PVSuff-uwh
+;
+PV_w_intr PVSuff-uwA
+;
+; tuwuf~ -uwA
+PV_w_Pass PVSuff-uwA
+;
+;
+;
+; banaY
+PV_0 PVSuff-0a
+; banA-h
+PV_h PVSuff-0ah
+; daEA, daEA-h
+PV_0h PVSuff-0a
+PV_0h PVSuff-0ah
+;
+; banay-A, banay-ta, banay-ona
+; daEaw-A, daEaw-ta, daEaw-ona
+PV_Atn PVSuff-A
+PV_Atn PVSuff-Ah
+PV_Atn PVSuff-t
+PV_Atn PVSuff-th
+PV_Atn PVSuff-n
+PV_Atn PVSuff-nh
+;
+PV_Atn_intr PVSuff-A
+PV_Atn_intr PVSuff-t
+PV_Atn_intr PVSuff-n
+;
+;
+; banaY: ban-at, ban-atA, ban-awoA 
+; daEA:  daE-at, daE-atA, daE-awoA
+PV_ttAw PVSuff-at
+PV_ttAw PVSuff-ath
+PV_ttAw PVSuff-awA
+PV_ttAw PVSuff-awh
+;
+PV_ttAw_intr PVSuff-at
+PV_ttAw_intr PVSuff-awA
+;
+;

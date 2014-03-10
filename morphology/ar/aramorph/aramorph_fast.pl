@@ -78,12 +78,12 @@ if ($input_type eq "utf8") {
 else { unimport encoding "utf8";}
  
 # load 3 compatibility tables (load these first so when we load the lexicons we can check for undeclared $cat values)
-%hash_AB = load_table("tableAB"); # load compatibility table for prefixes-stems    (AB)
-%hash_AC = load_table("tableAC"); # load compatibility table for prefixes-suffixes (AC)
-%hash_BC = load_table("tableBC"); # load compatibility table for stems-suffixes    (BC)
+%hash_AB = load_table("data/tableAB"); # load compatibility table for prefixes-stems    (AB)
+%hash_AC = load_table("data/tableAC"); # load compatibility table for prefixes-suffixes (AC)
+%hash_BC = load_table("data/tableBC"); # load compatibility table for stems-suffixes    (BC)
 
 # load 3 lexicons
-%prefix_hash = load_dict("dictPrefixes"); # dict of prefixes (A)
+%prefix_hash = load_dict("data/dictPrefixes"); # dict of prefixes (A)
 #%stem_hash   = load_dict("dictStems");    # dict of stems    (B)
 print STDERR "loading dictStems ...\n" unless $suppress;
 if ($db) {

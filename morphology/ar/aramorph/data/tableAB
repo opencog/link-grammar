@@ -1,0 +1,2276 @@
+; ==================================================================
+; "tableAB"  
+; Portions (c) 2002 QAMUS LLC (www.qamus.org), 
+; (c) 2002 Trustees of the University of Pennsylvania 
+;
+; This program is free software; you can redistribute it and/or
+; modify it under the terms of the GNU General Public License
+; as published by the Free Software Foundation version 2.
+;
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details (../gpl.txt).
+;
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+; 
+; You can contact LDC by sending electronic mail to: ldc@ldc.upenn.edu
+; or by writing to:
+;                Linguistic Data Consortium
+;                3600 Market Street
+;                Suite 810
+;                Philadelphia, PA, 19104-2653, USA.
+;
+; ==================================================================
+;
+;
+Pref-0 FW
+Pref-0 FW-Wa
+Pref-0 FW-WaBi
+Pref-0 FW-Wa-y
+Pref-0 FW-Wa-A
+Pref-0 FW-Wa-n~a
+Pref-0 FW-Wa-n~
+Pref-0 FW-Wa-n
+Pref-0 FW-Wa-a
+Pref-0 FW-Wa-i
+Pref-0 FW-Wa-o
+Pref-0 N
+Pref-0 N-ap
+Pref-0 N-ap_L
+Pref-0 N/At
+Pref-0 N/At_L
+Pref-0 N/ap
+Pref-0 N/ap_L
+Pref-0 N0
+Pref-0 N0F
+Pref-0 N0F_Nh
+Pref-0 N0_L
+Pref-0 N0_Nh
+Pref-0 N0_Nh_L
+Pref-0 N0_Nh_Nayn
+Pref-0 N0_Nhy
+Pref-0 N0_Nhy_L
+Pref-0 Ndip
+Pref-0 Ndip_L
+Pref-0 NAn_Nayn
+Pref-0 NAn_Nayn_L
+Pref-0 NAn_Nayn_NAt
+Pref-0 NAt
+Pref-0 NAt_L
+Pref-0 N-|t
+Pref-0 NF
+Pref-0 NF_Nhy
+Pref-0 NK
+Pref-0 N_L
+Pref-0 Nall
+Pref-0 Nall_L
+Pref-0 Nap
+Pref-0 NapAt
+Pref-0 NapAt_L
+Pref-0 Nap_L
+Pref-0 Napdu
+Pref-0 Napdu_L
+Pref-0 Nayn
+Pref-0 Ndu
+Pref-0 NduAt
+Pref-0 NduAt_L
+Pref-0 Ndu_L
+Pref-0 Nel
+Pref-0 Nh
+Pref-0 Nh_L
+Pref-0 Nh_NAn_Nayn
+Pref-0 Nh_Niyn
+Pref-0 Nh_Nuwn
+Pref-0 Nhy
+Pref-0 Nhy_L
+Pref-0 Nhy_Nayn
+Pref-0 N-|
+Pref-0 Nom
+Pref-0 Nprop
+Pref-0 Numb
+Pref-0 Nuwn_Niyn
+Pref-0 Nuwn_Niyn_L
+;
+Pref-0 PV
+Pref-0 PV->
+Pref-0 PV->_intr
+Pref-0 PV-n
+Pref-0 PV-n_Pass
+Pref-0 PV-n_intr
+Pref-0 PV-t
+Pref-0 PV-t_intr
+Pref-0 PV-|
+Pref-0 PV-|_intr
+Pref-0 PV_0
+Pref-0 PV_0h
+Pref-0 PV_Atn
+Pref-0 PV_C
+Pref-0 PV_C_Pass
+Pref-0 PV_C_intr
+Pref-0 PV_Cn
+Pref-0 PV_Cn_intr
+Pref-0 PV_Ct
+Pref-0 PV_Ct_intr
+Pref-0 PV_Pass
+Pref-0 PV_Pass-a
+Pref-0 PV_Pass-aAat
+Pref-0 PV_V
+Pref-0 PV_V_Pass
+Pref-0 PV_V_Pass-a
+Pref-0 PV_V_intr
+Pref-0 PV_h
+Pref-0 PV_intr
+Pref-0 PV_no-w
+Pref-0 PV_no-w_intr
+Pref-0 PV_no-w_Pass
+Pref-0 PV_ttAw
+Pref-0 PV_ttAw_intr
+Pref-0 PV_w
+Pref-0 PV_w_intr
+Pref-0 PV_w_Pass
+;
+; Imperative
+Pref-0 CV
+Pref-0 CV_intr
+Pref-0 CV_C
+Pref-0 CV_C_intr
+Pref-0 CV_V
+Pref-0 CV_V_intr
+;
+Pref-Wa FW-Wa
+Pref-Wa FW-WaBi
+Pref-Wa FW-Wa-y
+Pref-Wa FW-Wa-A
+Pref-Wa FW-Wa-n~a
+Pref-Wa FW-Wa-n~
+Pref-Wa FW-Wa-n
+Pref-Wa FW-Wa-a
+Pref-Wa FW-Wa-i
+Pref-Wa FW-Wa-o
+Pref-Wa N
+Pref-Wa N-ap
+Pref-Wa N-ap_L
+Pref-Wa N/At
+Pref-Wa N/At_L
+Pref-Wa N/ap
+Pref-Wa N/ap_L
+Pref-Wa N0
+Pref-Wa N0F
+Pref-Wa N0F_Nh
+Pref-Wa N0_L
+Pref-Wa N0_Nh
+Pref-Wa N0_Nh_L
+Pref-Wa N0_Nh_Nayn
+Pref-Wa N0_Nhy
+Pref-Wa N0_Nhy_L
+Pref-Wa Ndip
+Pref-Wa Ndip_L
+Pref-Wa NAn_Nayn
+Pref-Wa NAn_Nayn_L
+Pref-Wa NAn_Nayn_NAt
+Pref-Wa NAt
+Pref-Wa NAt_L
+Pref-Wa N-|t
+Pref-Wa NF
+Pref-Wa NF_Nhy
+Pref-Wa NK
+Pref-Wa N_L
+Pref-Wa Nall
+Pref-Wa Nall_L
+Pref-Wa Nap
+Pref-Wa NapAt
+Pref-Wa NapAt_L
+Pref-Wa Nap_L
+Pref-Wa Napdu
+Pref-Wa Napdu_L
+Pref-Wa Nayn
+Pref-Wa Ndu
+Pref-Wa NduAt
+Pref-Wa NduAt_L
+Pref-Wa Ndu_L
+Pref-Wa Nel
+Pref-Wa Nh
+Pref-Wa Nh_L
+Pref-Wa Nh_NAn_Nayn
+Pref-Wa Nh_Niyn
+Pref-Wa Nh_Nuwn
+Pref-Wa Nhy
+Pref-Wa Nhy_L
+Pref-Wa Nhy_Nayn
+Pref-Wa N-|
+Pref-Wa Nom
+Pref-Wa Nprop
+Pref-Wa Numb
+Pref-Wa Nuwn_Niyn
+Pref-Wa Nuwn_Niyn_L
+;
+Pref-Wa PV
+Pref-Wa PV->
+Pref-Wa PV->_intr
+Pref-Wa PV-n
+Pref-Wa PV-n_Pass
+Pref-Wa PV-n_intr
+Pref-Wa PV-t
+Pref-Wa PV-t_intr
+Pref-Wa PV-|
+Pref-Wa PV-|_intr
+Pref-Wa PV_0
+Pref-Wa PV_0h
+Pref-Wa PV_Atn
+Pref-Wa PV_C
+Pref-Wa PV_C_Pass
+Pref-Wa PV_C_intr
+Pref-Wa PV_Cn
+Pref-Wa PV_Cn_intr
+Pref-Wa PV_Ct
+Pref-Wa PV_Ct_intr
+Pref-Wa PV_Pass
+Pref-Wa PV_Pass-a
+Pref-Wa PV_Pass-aAat
+Pref-Wa PV_V
+Pref-Wa PV_V_Pass
+Pref-Wa PV_V_Pass-a
+Pref-Wa PV_V_intr
+Pref-Wa PV_h
+Pref-Wa PV_intr
+Pref-Wa PV_no-w
+Pref-Wa PV_no-w_intr
+Pref-Wa PV_no-w_Pass
+Pref-Wa PV_ttAw
+Pref-Wa PV_ttAw_intr
+Pref-Wa PV_w
+Pref-Wa PV_w_intr
+Pref-Wa PV_w_Pass
+;
+; imperative
+Pref-Wa CV
+Pref-Wa CV_intr
+Pref-Wa CV_C
+Pref-Wa CV_C_intr
+Pref-Wa CV_V
+Pref-Wa CV_V_intr
+;
+NPref-Al N
+NPref-Al N-ap
+NPref-Al N-ap_L
+NPref-Al N/At
+NPref-Al N/At_L
+NPref-Al N/ap
+NPref-Al N/ap_L
+NPref-Al N0
+NPref-Al N0F
+NPref-Al N0F_Nh
+NPref-Al N0_L
+NPref-Al N0_Nh
+NPref-Al N0_Nh_L
+NPref-Al N0_Nh_Nayn
+NPref-Al N0_Nhy
+NPref-Al N0_Nhy_L
+NPref-Al Ndip
+NPref-Al Ndip_L
+NPref-Al NAn_Nayn
+NPref-Al NAn_Nayn_L
+NPref-Al NAn_Nayn_NAt
+NPref-Al NAt
+NPref-Al NAt_L
+NPref-Al N-|t
+NPref-Al N_L
+NPref-Al Nall
+NPref-Al Nall_L
+NPref-Al Nap
+NPref-Al NapAt
+NPref-Al NapAt_L
+NPref-Al Nap_L
+NPref-Al Napdu
+NPref-Al Napdu_L
+NPref-Al Nayn
+NPref-Al Ndu
+NPref-Al NduAt
+NPref-Al NduAt_L
+NPref-Al Ndu_L
+NPref-Al Nel
+NPref-Al Nh_NAn_Nayn
+NPref-Al Nh_Niyn
+NPref-Al Nh_Nuwn
+NPref-Al Nhy_Nayn
+NPref-Al N-|
+NPref-Al Nom
+NPref-Al Numb
+NPref-Al Nuwn_Niyn
+NPref-Al Nuwn_Niyn_L
+;
+NPref-BiAl N
+NPref-BiAl N-ap
+NPref-BiAl N-ap_L
+NPref-BiAl N/At
+NPref-BiAl N/At_L
+NPref-BiAl N/ap
+NPref-BiAl N/ap_L
+NPref-BiAl N0
+NPref-BiAl N0F
+NPref-BiAl N0F_Nh
+NPref-BiAl N0_L
+NPref-BiAl N0_Nh
+NPref-BiAl N0_Nh_L
+NPref-BiAl N0_Nh_Nayn
+NPref-BiAl N0_Nhy
+NPref-BiAl N0_Nhy_L
+NPref-BiAl Ndip
+NPref-BiAl Ndip_L
+NPref-BiAl NAn_Nayn
+NPref-BiAl NAn_Nayn_L
+NPref-BiAl NAn_Nayn_NAt
+NPref-BiAl NAt
+NPref-BiAl NAt_L
+NPref-BiAl N-|t
+NPref-BiAl N_L
+NPref-BiAl Nall
+NPref-BiAl Nall_L
+NPref-BiAl Nap
+NPref-BiAl NapAt
+NPref-BiAl NapAt_L
+NPref-BiAl Nap_L
+NPref-BiAl Napdu
+NPref-BiAl Napdu_L
+NPref-BiAl Nayn
+NPref-BiAl Ndu
+NPref-BiAl NduAt
+NPref-BiAl NduAt_L
+NPref-BiAl Ndu_L
+NPref-BiAl Nel
+NPref-BiAl Nh_NAn_Nayn
+NPref-BiAl Nh_Niyn
+NPref-BiAl Nhy_Nayn
+NPref-BiAl Numb
+NPref-BiAl Nuwn_Niyn
+NPref-BiAl Nuwn_Niyn_L
+;
+NPref-Bi FW-WaBi
+NPref-Bi N
+NPref-Bi N-ap
+NPref-Bi N-ap_L
+NPref-Bi N/At
+NPref-Bi N/At_L
+NPref-Bi N/ap
+NPref-Bi N/ap_L
+NPref-Bi N0
+NPref-Bi N0F
+NPref-Bi N0F_Nh
+NPref-Bi N0_L
+NPref-Bi N0_Nh
+NPref-Bi N0_Nh_L
+NPref-Bi N0_Nh_Nayn
+NPref-Bi N0_Nhy
+NPref-Bi N0_Nhy_L
+NPref-Bi Ndip
+NPref-Bi Ndip_L
+NPref-Bi NAn_Nayn
+NPref-Bi NAn_Nayn_L
+NPref-Bi NAn_Nayn_NAt
+NPref-Bi NAt
+NPref-Bi NAt_L
+NPref-Bi N-|t
+NPref-Bi NF_Nhy
+NPref-Bi NK
+NPref-Bi N_L
+NPref-Bi Nall
+NPref-Bi Nall_L
+NPref-Bi Nap
+NPref-Bi NapAt
+NPref-Bi NapAt_L
+NPref-Bi Nap_L
+NPref-Bi Napdu
+NPref-Bi Napdu_L
+NPref-Bi Nayn
+NPref-Bi Ndu
+NPref-Bi NduAt
+NPref-Bi NduAt_L
+NPref-Bi Ndu_L
+NPref-Bi Nel
+NPref-Bi Nh
+NPref-Bi Nh_L
+NPref-Bi Nh_NAn_Nayn
+NPref-Bi Nh_Niyn
+NPref-Bi Nh_Nuwn
+NPref-Bi Nhy
+NPref-Bi Nhy_L
+NPref-Bi Nhy_Nayn
+NPref-Bi Nprop
+NPref-Bi Numb
+NPref-Bi Nuwn_Niyn
+NPref-Bi Nuwn_Niyn_L
+;
+; emphatic particle before ? (not likely)
+; NPref-La FW-WaBi
+;
+NPref-La N
+NPref-La N-ap
+NPref-La N-ap_L
+NPref-La N/At
+NPref-La N/At_L
+NPref-La N/ap
+NPref-La N/ap_L
+NPref-La N0
+NPref-La N0F
+NPref-La N0F_Nh
+NPref-La N0_L
+NPref-La N0_Nh
+NPref-La N0_Nh_L
+NPref-La N0_Nh_Nayn
+NPref-La N0_Nhy
+NPref-La N0_Nhy_L
+NPref-La Ndip
+NPref-La Ndip_L
+NPref-La NAn_Nayn
+NPref-La NAn_Nayn_L
+NPref-La NAn_Nayn_NAt
+NPref-La NAt
+NPref-La NAt_L
+NPref-La N-|t
+NPref-La NF_Nhy
+NPref-La NK
+NPref-La N_L
+NPref-La Nall
+NPref-La Nall_L
+NPref-La Nap
+NPref-La NapAt
+NPref-La NapAt_L
+NPref-La Nap_L
+NPref-La Napdu
+NPref-La Napdu_L
+NPref-La Nayn
+NPref-La Ndu
+NPref-La NduAt
+NPref-La NduAt_L
+NPref-La Ndu_L
+NPref-La Nel
+NPref-La Nh
+NPref-La Nh_L
+NPref-La Nh_NAn_Nayn
+NPref-La Nh_Niyn
+NPref-La Nh_Nuwn
+NPref-La Nhy
+NPref-La Nhy_L
+NPref-La Nhy_Nayn
+NPref-La N-|
+NPref-La Nom
+NPref-La Nprop
+NPref-La Numb
+NPref-La Nuwn_Niyn
+NPref-La Nuwn_Niyn_L
+;
+NPref-Li FW-WaBi
+NPref-Li N
+NPref-Li N-ap
+NPref-Li N-ap_L
+NPref-Li N/At
+NPref-Li N/At_L
+NPref-Li N/ap
+NPref-Li N/ap_L
+NPref-Li N0
+NPref-Li N0F
+NPref-Li N0F_Nh
+NPref-Li N0_L
+NPref-Li N0_Nh
+NPref-Li N0_Nh_L
+NPref-Li N0_Nh_Nayn
+NPref-Li N0_Nhy
+NPref-Li N0_Nhy_L
+NPref-Li Ndip
+NPref-Li Ndip_L
+NPref-Li NAn_Nayn
+NPref-Li NAn_Nayn_L
+NPref-Li NAn_Nayn_NAt
+NPref-Li NAt
+NPref-Li NAt_L
+NPref-Li N-|t
+NPref-Li NF_Nhy
+NPref-Li NK
+NPref-Li N_L
+NPref-Li Nall
+NPref-Li Nall_L
+NPref-Li Nap
+NPref-Li NapAt
+NPref-Li NapAt_L
+NPref-Li Nap_L
+NPref-Li Napdu
+NPref-Li Napdu_L
+NPref-Li Nayn
+NPref-Li Ndu
+NPref-Li NduAt
+NPref-Li NduAt_L
+NPref-Li Ndu_L
+NPref-Li Nel
+NPref-Li Nh
+NPref-Li Nh_L
+NPref-Li Nh_NAn_Nayn
+NPref-Li Nh_Niyn
+NPref-Li Nh_Nuwn
+NPref-Li Nhy
+NPref-Li Nhy_L
+NPref-Li Nhy_Nayn
+NPref-Li Nprop
+NPref-Li Numb
+NPref-Li Nuwn_Niyn
+NPref-Li Nuwn_Niyn_L
+;
+NPref-Lil N
+NPref-Lil N-ap
+NPref-Lil N/At
+NPref-Lil N/ap
+NPref-Lil N0
+NPref-Lil N0F
+NPref-Lil N0F_Nh
+NPref-Lil N0_Nh
+NPref-Lil N0_Nh_Nayn
+NPref-Lil N0_Nhy
+NPref-Lil Ndip
+NPref-Lil NAn_Nayn
+NPref-Lil NAn_Nayn_NAt
+NPref-Lil NAt
+NPref-Lil N-|t
+NPref-Lil Nall
+NPref-Lil Nap
+NPref-Lil NapAt
+NPref-Lil Napdu
+NPref-Lil Nayn
+NPref-Lil Ndu
+NPref-Lil NduAt
+NPref-Lil Nel
+NPref-Lil Nh_NAn_Nayn
+NPref-Lil Nh_Niyn
+NPref-Lil Nhy_Nayn
+NPref-Lil Numb
+NPref-Lil Nuwn_Niyn
+;
+NPref-LiAl N-ap_L
+NPref-LiAl N/At_L
+NPref-LiAl N/ap_L
+NPref-LiAl N0_L
+NPref-LiAl N0_Nh_L
+NPref-LiAl N0_Nhy_L
+NPref-LiAl Ndip_L
+NPref-LiAl NAn_Nayn_L
+NPref-LiAl NAt_L
+NPref-LiAl N_L
+NPref-LiAl Nall_L
+NPref-LiAl NapAt_L
+NPref-LiAl Nap_L
+NPref-LiAl Napdu_L
+NPref-LiAl NduAt_L
+NPref-LiAl Ndu_L
+NPref-LiAl Nh_L
+NPref-LiAl Nhy_L
+NPref-LiAl Nuwn_Niyn_L
+;
+PVPref-La PV
+PVPref-La PV->
+PVPref-La PV->_intr
+PVPref-La PV-n
+PVPref-La PV-n_Pass
+PVPref-La PV-n_intr
+PVPref-La PV-t
+PVPref-La PV-t_intr
+PVPref-La PV-|
+PVPref-La PV-|_intr
+PVPref-La PV_0
+PVPref-La PV_0h
+PVPref-La PV_Atn
+PVPref-La PV_C
+PVPref-La PV_C_Pass
+PVPref-La PV_C_intr
+PVPref-La PV_Cn
+PVPref-La PV_Cn_intr
+PVPref-La PV_Ct
+PVPref-La PV_Ct_intr
+PVPref-La PV_Pass
+PVPref-La PV_Pass-a
+PVPref-La PV_Pass-aAat
+PVPref-La PV_V
+PVPref-La PV_V_Pass
+PVPref-La PV_V_Pass-a
+PVPref-La PV_V_intr
+PVPref-La PV_h
+PVPref-La PV_intr
+PVPref-La PV_no-w
+PVPref-La PV_no-w_intr
+PVPref-La PV_no-w_Pass
+PVPref-La PV_ttAw
+PVPref-La PV_ttAw_intr
+PVPref-La PV_w
+PVPref-La PV_w_intr
+PVPref-La PV_w_Pass
+;
+; -----------------------------------------------
+;
+IVPref-AnA->a IV
+IVPref-AnA->a IV_intr
+IVPref-AnA->a IV_0
+; IVPref-AnA->a IV_0_need-Pref-A
+IVPref-AnA->a IV_0h
+; IVPref-AnA->a IV_0hA
+IVPref-AnA->a IV_0hAnn
+IVPref-AnA->a IV_V
+IVPref-AnA->a IV_V_intr
+IVPref-AnA->a IV_h
+IVPref-AnA->a IV_hAnynwn
+; IVPref-AnA->a IV_need-Pref-A
+IVPref-AnA->a IV-n
+IVPref-AnA->a IV-n_intr
+; was missing (e.g.: lm AtaxaT~a AlHAjz Alnfsy...)
+IVPref-AnA->a IV_0hwnyn
+;
+; imperfect verb prefix for stems of forms II, III, IV and all passives
+IVPref-AnA->u IV_yu
+IVPref-AnA->u IV_intr_yu
+IVPref-AnA->u IV_Pass_yu
+IVPref-AnA->u IV_0_yu
+IVPref-AnA->u IV_0_Pass_yu
+; IVPref-AnA->u IV_0_need-Pref-A_yu
+; IVPref-AnA->u IV_0h_yu
+; IVPref-AnA->u IV_0hA_yu
+IVPref-AnA->u IV_0hAnn_yu
+IVPref-AnA->u IV_V_yu
+; IVPref-AnA->u IV_V_intr_yu
+; IVPref-AnA->u IV_h_yu
+; IVPref-AnA->u IV_hAnynwn_yu
+IVPref-AnA->u IV_need-Pref-A_yu
+IVPref-AnA->u IV-n_yu
+;
+IVPref-AnA->u IV_V_Pass_yu
+IVPref-AnA->u IV-n_Pass_yu
+;
+; IVPref-AnA-| IV_0_need-Pref-|
+IVPref-AnA-| IV_V_need-Pref-|
+IVPref-AnA-| IV_h_need-Pref-|
+IVPref-AnA-| IV_need-Pref-|
+;
+;
+IVPref-AnA-li>a IV
+IVPref-AnA-li>a IV_intr
+IVPref-AnA-li>a IV_0
+IVPref-AnA-li>a IV_0h
+; IVPref-AnA-li>a IV_0hA
+IVPref-AnA-li>a IV_0hAnn
+IVPref-AnA-li>a IV_0hwnyn
+; IVPref-AnA-li>a IV_0wnyn_intr
+IVPref-AnA-li>a IV_V
+; IVPref-AnA-li>a IV_V_Pass
+IVPref-AnA-li>a IV_V_intr
+IVPref-AnA-li>a IV_h
+IVPref-AnA-li>a IV_hAnynwn
+IVPref-AnA-li>a IV_hwn
+; IVPref-AnA-li>a IV_hyn
+IVPref-AnA-li>a IV-n
+IVPref-AnA-li>a IV-n_intr
+; IVPref-AnA-li>a IV-n_Pass
+;
+IVPref-AnA-li>u IV_yu
+IVPref-AnA-li>u IV_intr_yu
+IVPref-AnA-li>u IV_Pass_yu
+IVPref-AnA-li>u IV_0_yu
+IVPref-AnA-li>u IV_0_Pass_yu
+; IVPref-AnA-li>u IV_0h_yu
+; IVPref-AnA-li>u IV_0hA_yu
+IVPref-AnA-li>u IV_0hAnn_yu
+IVPref-AnA-li>u IV_0hwnyn_yu
+; IVPref-AnA-li>u IV_0wnyn_intr_yu
+IVPref-AnA-li>u IV_V_yu
+IVPref-AnA-li>u IV_V_Pass_yu
+IVPref-AnA-li>u IV_V_intr_yu
+; IVPref-AnA-li>u IV_h_yu
+; IVPref-AnA-li>u IV_hAnynwn_yu
+; IVPref-AnA-li>u IV_hwn_yu
+; IVPref-AnA-li>u IV_hyn_yu
+IVPref-AnA-li>u IV-n_yu
+IVPref-AnA-li>u IV-n_Pass_yu
+;
+;
+; IVPref-AnA-li| IV_0_need-Pref-|
+IVPref-AnA-li| IV_need-Pref-|
+;
+; -----------------------------------------
+;
+IVPref-Anta-ta IV
+IVPref-Anta-ta IV_intr
+IVPref-Anta-ta IV_0
+IVPref-Anta-ta IV_0_no-Pref-A
+IVPref-Anta-ta IV_0h
+; IVPref-Anta-ta IV_0hA
+IVPref-Anta-ta IV_0hAnn
+IVPref-Anta-ta IV_0hAnn_no-Pref-A
+IVPref-Anta-ta IV_0hwnyn
+IVPref-Anta-ta IV_0hwnyn_no-Pref-A
+; IVPref-Anta-ta IV_0wnyn_intr
+IVPref-Anta-ta IV_Ann
+; IVPref-Anta-ta IV_Ann_Pass
+IVPref-Anta-ta IV_Ann_no-Pref-A
+IVPref-Anta-ta IV_C
+IVPref-Anta-ta IV_C_intr
+IVPref-Anta-ta IV_V
+; IVPref-Anta-ta IV_V_Pass
+IVPref-Anta-ta IV_V_intr
+IVPref-Anta-ta IV_V_no-Pref-A
+IVPref-Anta-ta IV_h
+IVPref-Anta-ta IV_hAnynwn
+IVPref-Anta-ta IV_h_no-Pref-A
+IVPref-Anta-ta IV_hwn
+; IVPref-Anta-ta IV_hyn
+IVPref-Anta-ta IV_no-Pref-A
+IVPref-Anta-ta IV-n
+IVPref-Anta-ta IV-n_intr
+; IVPref-Anta-ta IV-n_Pass
+IVPref-Anta-ta IV-n_no-Pref-A
+;
+IVPref-Anta-tu IV_yu
+IVPref-Anta-tu IV_intr_yu
+IVPref-Anta-tu IV_Pass_yu
+IVPref-Anta-tu IV_0_yu
+IVPref-Anta-tu IV_0_Pass_yu
+; IVPref-Anta-tu IV_0_no-Pref-A_yu
+; IVPref-Anta-tu IV_0h_yu
+; IVPref-Anta-tu IV_0hA_yu
+IVPref-Anta-tu IV_0hAnn_yu
+; IVPref-Anta-tu IV_0hAnn_no-Pref-A_yu
+IVPref-Anta-tu IV_0hwnyn_yu
+; IVPref-Anta-tu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Anta-tu IV_0wnyn_intr_yu
+; IVPref-Anta-tu IV_Ann_yu
+IVPref-Anta-tu IV_Ann_Pass_yu
+; IVPref-Anta-tu IV_Ann_no-Pref-A_yu
+IVPref-Anta-tu IV_C_yu
+IVPref-Anta-tu IV_C_Pass_yu
+; IVPref-Anta-tu IV_C_intr_yu
+IVPref-Anta-tu IV_V_yu
+IVPref-Anta-tu IV_V_Pass_yu
+IVPref-Anta-tu IV_V_intr_yu
+; IVPref-Anta-tu IV_V_no-Pref-A_yu
+; IVPref-Anta-tu IV_h_yu
+; IVPref-Anta-tu IV_hAnynwn_yu
+IVPref-Anta-tu IV_h_no-Pref-A_yu
+; IVPref-Anta-tu IV_hwn_yu
+; IVPref-Anta-tu IV_hyn_yu
+IVPref-Anta-tu IV_no-Pref-A_yu
+IVPref-Anta-tu IV-n_yu
+IVPref-Anta-tu IV-n_Pass_yu
+IVPref-Anta-tu IV-n_no-Pref-A_yu
+;
+;
+IVPref-Anta-lita IV
+IVPref-Anta-lita IV_intr
+IVPref-Anta-lita IV_0
+IVPref-Anta-lita IV_0_no-Pref-A
+IVPref-Anta-lita IV_0h
+; IVPref-Anta-lita IV_0hA
+IVPref-Anta-lita IV_0hAnn
+IVPref-Anta-lita IV_0hAnn_no-Pref-A
+IVPref-Anta-lita IV_0hwnyn
+IVPref-Anta-lita IV_0hwnyn_no-Pref-A
+; IVPref-Anta-lita IV_0wnyn_intr
+IVPref-Anta-lita IV_Ann
+; IVPref-Anta-lita IV_Ann_Pass
+IVPref-Anta-lita IV_Ann_no-Pref-A
+IVPref-Anta-lita IV_C
+IVPref-Anta-lita IV_C_intr
+IVPref-Anta-lita IV_V
+; IVPref-Anta-lita IV_V_Pass
+IVPref-Anta-lita IV_V_intr
+IVPref-Anta-lita IV_V_no-Pref-A
+IVPref-Anta-lita IV_h
+IVPref-Anta-lita IV_hAnynwn
+IVPref-Anta-lita IV_h_no-Pref-A
+IVPref-Anta-lita IV_hwn
+; IVPref-Anta-lita IV_hyn
+IVPref-Anta-lita IV_no-Pref-A
+IVPref-Anta-lita IV-n
+IVPref-Anta-lita IV-n_intr
+; IVPref-Anta-lita IV-n_Pass
+IVPref-Anta-lita IV-n_no-Pref-A
+;
+IVPref-Anta-litu IV_yu
+IVPref-Anta-litu IV_intr_yu
+IVPref-Anta-litu IV_Pass_yu
+IVPref-Anta-litu IV_0_yu
+IVPref-Anta-litu IV_0_Pass_yu
+; IVPref-Anta-litu IV_0_no-Pref-A_yu
+; IVPref-Anta-litu IV_0h_yu
+; IVPref-Anta-litu IV_0hA_yu
+IVPref-Anta-litu IV_0hAnn_yu
+; IVPref-Anta-litu IV_0hAnn_no-Pref-A_yu
+IVPref-Anta-litu IV_0hwnyn_yu
+; IVPref-Anta-litu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Anta-litu IV_0wnyn_intr_yu
+; IVPref-Anta-litu IV_Ann_yu
+IVPref-Anta-litu IV_Ann_Pass_yu
+; IVPref-Anta-litu IV_Ann_no-Pref-A_yu
+IVPref-Anta-litu IV_C_yu
+IVPref-Anta-litu IV_C_Pass_yu
+IVPref-Anta-litu IV_C_intr_yu
+IVPref-Anta-litu IV_V_yu
+IVPref-Anta-litu IV_V_Pass_yu
+IVPref-Anta-litu IV_V_intr_yu
+; IVPref-Anta-litu IV_V_no-Pref-A_yu
+; IVPref-Anta-litu IV_h_yu
+; IVPref-Anta-litu IV_hAnynwn_yu
+IVPref-Anta-litu IV_h_no-Pref-A_yu
+; IVPref-Anta-litu IV_hwn_yu
+; IVPref-Anta-litu IV_hyn_yu
+IVPref-Anta-litu IV_no-Pref-A_yu
+IVPref-Anta-litu IV-n_yu
+IVPref-Anta-litu IV-n_Pass_yu
+IVPref-Anta-litu IV-n_no-Pref-A_yu
+;
+; --------------------------------------
+;
+IVPref-Anti-ta IV
+IVPref-Anti-ta IV_intr
+IVPref-Anti-ta IV_0
+IVPref-Anti-ta IV_0_no-Pref-A
+IVPref-Anti-ta IV_0h
+; IVPref-Anti-ta IV_0hA
+IVPref-Anti-ta IV_0hAnn
+IVPref-Anti-ta IV_0hAnn_no-Pref-A
+IVPref-Anti-ta IV_0hwnyn
+IVPref-Anti-ta IV_0hwnyn_no-Pref-A
+; IVPref-Anti-ta IV_0wnyn_intr
+IVPref-Anti-ta IV_Ann
+; IVPref-Anti-ta IV_Ann_Pass
+IVPref-Anti-ta IV_Ann_no-Pref-A
+; IVPref-Anti-ta IV_C
+; IVPref-Anti-ta IV_C_intr
+IVPref-Anti-ta IV_V
+; IVPref-Anti-ta IV_V_Pass
+IVPref-Anti-ta IV_V_intr
+IVPref-Anti-ta IV_V_no-Pref-A
+IVPref-Anti-ta IV_h
+IVPref-Anti-ta IV_hAnynwn
+IVPref-Anti-ta IV_h_no-Pref-A
+IVPref-Anti-ta IV_hwn
+; IVPref-Anti-ta IV_hyn
+IVPref-Anti-ta IV_no-Pref-A
+IVPref-Anti-ta IV-n
+IVPref-Anti-ta IV-n_intr
+; IVPref-Anti-ta IV-n_Pass
+IVPref-Anti-ta IV-n_no-Pref-A
+IVPref-Anti-ta IV_yn
+IVPref-Anti-ta IV_yn_intr
+;
+IVPref-Anti-tu IV_yu
+IVPref-Anti-tu IV_intr_yu
+IVPref-Anti-tu IV_Pass_yu
+IVPref-Anti-tu IV_0_yu
+IVPref-Anti-tu IV_0_Pass_yu
+; IVPref-Anti-tu IV_0_no-Pref-A_yu
+; IVPref-Anti-tu IV_0h_yu
+; IVPref-Anti-tu IV_0hA_yu
+IVPref-Anti-tu IV_0hAnn_yu
+; IVPref-Anti-tu IV_0hAnn_no-Pref-A_yu
+IVPref-Anti-tu IV_0hwnyn_yu
+; IVPref-Anti-tu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Anti-tu IV_0wnyn_intr_yu
+; IVPref-Anti-tu IV_Ann_yu
+IVPref-Anti-tu IV_Ann_Pass_yu
+; IVPref-Anti-tu IV_Ann_no-Pref-A_yu
+; IVPref-Anti-tu IV_C_yu
+IVPref-Anti-tu IV_C_intr_yu
+IVPref-Anti-tu IV_V_yu
+IVPref-Anti-tu IV_V_Pass_yu
+IVPref-Anti-tu IV_V_intr_yu
+; IVPref-Anti-tu IV_V_no-Pref-A_yu
+; IVPref-Anti-tu IV_h_yu
+; IVPref-Anti-tu IV_hAnynwn_yu
+IVPref-Anti-tu IV_h_no-Pref-A_yu
+; IVPref-Anti-tu IV_hwn_yu
+; IVPref-Anti-tu IV_hyn_yu
+IVPref-Anti-tu IV_no-Pref-A_yu
+IVPref-Anti-tu IV-n_yu
+IVPref-Anti-tu IV-n_Pass_yu
+IVPref-Anti-tu IV-n_no-Pref-A_yu
+IVPref-Anti-tu IV_yn_yu
+IVPref-Anti-tu IV_yn_intr_yu
+IVPref-Anti-tu IV_yn_Pass_yu
+;
+;
+IVPref-Anti-lita IV
+IVPref-Anti-lita IV_intr
+IVPref-Anti-lita IV_0
+IVPref-Anti-lita IV_0_no-Pref-A
+IVPref-Anti-lita IV_0h
+; IVPref-Anti-lita IV_0hA
+IVPref-Anti-lita IV_0hAnn
+IVPref-Anti-lita IV_0hAnn_no-Pref-A
+IVPref-Anti-lita IV_0hwnyn
+IVPref-Anti-lita IV_0hwnyn_no-Pref-A
+; IVPref-Anti-lita IV_0wnyn_intr
+IVPref-Anti-lita IV_Ann
+; IVPref-Anti-lita IV_Ann_Pass
+IVPref-Anti-lita IV_Ann_no-Pref-A
+; IVPref-Anti-lita IV_C
+; IVPref-Anti-lita IV_C_intr
+IVPref-Anti-lita IV_V
+; IVPref-Anti-lita IV_V_Pass
+IVPref-Anti-lita IV_V_intr
+IVPref-Anti-lita IV_V_no-Pref-A
+IVPref-Anti-lita IV_h
+IVPref-Anti-lita IV_hAnynwn
+IVPref-Anti-lita IV_h_no-Pref-A
+IVPref-Anti-lita IV_hwn
+; IVPref-Anti-lita IV_hyn
+IVPref-Anti-lita IV_no-Pref-A
+IVPref-Anti-lita IV-n
+IVPref-Anti-lita IV-n_intr
+; IVPref-Anti-lita IV-n_Pass
+IVPref-Anti-lita IV-n_no-Pref-A
+IVPref-Anti-lita IV_yn
+IVPref-Anti-lita IV_yn_intr
+;
+IVPref-Anti-litu IV_yu
+IVPref-Anti-litu IV_intr_yu
+IVPref-Anti-litu IV_Pass_yu
+IVPref-Anti-litu IV_0_yu
+IVPref-Anti-litu IV_0_Pass_yu
+; IVPref-Anti-litu IV_0_no-Pref-A_yu
+; IVPref-Anti-litu IV_0h_yu
+; IVPref-Anti-litu IV_0hA_yu
+IVPref-Anti-litu IV_0hAnn_yu
+; IVPref-Anti-litu IV_0hAnn_no-Pref-A_yu
+IVPref-Anti-litu IV_0hwnyn_yu
+; IVPref-Anti-litu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Anti-litu IV_0wnyn_intr_yu
+; IVPref-Anti-litu IV_Ann_yu
+IVPref-Anti-litu IV_Ann_Pass_yu
+; IVPref-Anti-litu IV_Ann_no-Pref-A_yu
+; IVPref-Anti-litu IV_C_yu
+IVPref-Anti-litu IV_C_intr_yu
+IVPref-Anti-litu IV_V_yu
+IVPref-Anti-litu IV_V_Pass_yu
+IVPref-Anti-litu IV_V_intr_yu
+; IVPref-Anti-litu IV_V_no-Pref-A_yu
+; IVPref-Anti-litu IV_h_yu
+; IVPref-Anti-litu IV_hAnynwn_yu
+IVPref-Anti-litu IV_h_no-Pref-A_yu
+; IVPref-Anti-litu IV_hwn_yu
+; IVPref-Anti-litu IV_hyn_yu
+IVPref-Anti-litu IV_no-Pref-A_yu
+IVPref-Anti-litu IV-n_yu
+IVPref-Anti-litu IV-n_Pass_yu
+IVPref-Anti-litu IV-n_no-Pref-A_yu
+IVPref-Anti-litu IV_yn_yu
+IVPref-Anti-litu IV_yn_intr_yu
+IVPref-Anti-litu IV_yn_Pass_yu
+;
+; -------------------------------------------------
+;
+IVPref-Antm-ta IV
+IVPref-Antm-ta IV_intr
+IVPref-Antm-ta IV_0
+IVPref-Antm-ta IV_0_no-Pref-A
+IVPref-Antm-ta IV_0h
+; IVPref-Antm-ta IV_0hA
+IVPref-Antm-ta IV_0hAnn
+IVPref-Antm-ta IV_0hAnn_no-Pref-A
+IVPref-Antm-ta IV_0hwnyn
+IVPref-Antm-ta IV_0hwnyn_no-Pref-A
+; IVPref-Antm-ta IV_0wnyn_intr
+IVPref-Antm-ta IV_Ann
+; IVPref-Antm-ta IV_Ann_Pass
+IVPref-Antm-ta IV_Ann_no-Pref-A
+; IVPref-Antm-ta IV_C
+; IVPref-Antm-ta IV_C_intr
+IVPref-Antm-ta IV_V
+; IVPref-Antm-ta IV_V_Pass
+IVPref-Antm-ta IV_V_intr
+IVPref-Antm-ta IV_V_no-Pref-A
+IVPref-Antm-ta IV_h
+IVPref-Antm-ta IV_hAnynwn
+IVPref-Antm-ta IV_h_no-Pref-A
+IVPref-Antm-ta IV_hwn
+; IVPref-Antm-ta IV_hyn
+IVPref-Antm-ta IV_no-Pref-A
+IVPref-Antm-ta IV-n
+IVPref-Antm-ta IV-n_intr
+; IVPref-Antm-ta IV-n_Pass
+IVPref-Antm-ta IV-n_no-Pref-A
+;
+IVPref-Antm-ta IV_wn
+IVPref-Antm-ta IV_wn_intr
+IVPref-Antm-ta IV_awn
+IVPref-Antm-ta IV_awn_intr
+;
+IVPref-Antm-tu IV_yu
+IVPref-Antm-tu IV_intr_yu
+IVPref-Antm-tu IV_Pass_yu
+IVPref-Antm-tu IV_0_yu
+IVPref-Antm-tu IV_0_Pass_yu
+; IVPref-Antm-tu IV_0_no-Pref-A_yu
+; IVPref-Antm-tu IV_0h_yu
+; IVPref-Antm-tu IV_0hA_yu
+IVPref-Antm-tu IV_0hAnn_yu
+; IVPref-Antm-tu IV_0hAnn_no-Pref-A_yu
+IVPref-Antm-tu IV_0hwnyn_yu
+; IVPref-Antm-tu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Antm-tu IV_0wnyn_intr_yu
+; IVPref-Antm-tu IV_Ann_yu
+IVPref-Antm-tu IV_Ann_Pass_yu
+; IVPref-Antm-tu IV_Ann_no-Pref-A_yu
+; IVPref-Antm-tu IV_C_yu
+IVPref-Antm-tu IV_C_intr_yu
+IVPref-Antm-tu IV_V_yu
+IVPref-Antm-tu IV_V_Pass_yu
+IVPref-Antm-tu IV_V_intr_yu
+; IVPref-Antm-tu IV_V_no-Pref-A_yu
+; IVPref-Antm-tu IV_h_yu
+; IVPref-Antm-tu IV_hAnynwn_yu
+IVPref-Antm-tu IV_h_no-Pref-A_yu
+; IVPref-Antm-tu IV_hwn_yu
+; IVPref-Antm-tu IV_hyn_yu
+IVPref-Antm-tu IV_no-Pref-A_yu
+IVPref-Antm-tu IV-n_yu
+IVPref-Antm-tu IV-n_Pass_yu
+IVPref-Antm-tu IV-n_no-Pref-A_yu
+;
+IVPref-Antm-tu IV_wn_yu
+IVPref-Antm-tu IV_wn_intr_yu
+IVPref-Antm-tu IV_wn_Pass_yu
+IVPref-Antm-tu IV_awn_yu
+IVPref-Antm-tu IV_awn_intr_yu
+IVPref-Antm-tu IV_awn_Pass_yu
+;
+;
+IVPref-Antm-lita IV
+IVPref-Antm-lita IV_intr
+IVPref-Antm-lita IV_0
+IVPref-Antm-lita IV_0_no-Pref-A
+IVPref-Antm-lita IV_0h
+; IVPref-Antm-lita IV_0hA
+IVPref-Antm-lita IV_0hAnn
+IVPref-Antm-lita IV_0hAnn_no-Pref-A
+IVPref-Antm-lita IV_0hwnyn
+IVPref-Antm-lita IV_0hwnyn_no-Pref-A
+; IVPref-Antm-lita IV_0wnyn_intr
+IVPref-Antm-lita IV_Ann
+; IVPref-Antm-lita IV_Ann_Pass
+IVPref-Antm-lita IV_Ann_no-Pref-A
+; IVPref-Antm-lita IV_C
+; IVPref-Antm-lita IV_C_intr
+IVPref-Antm-lita IV_V
+; IVPref-Antm-lita IV_V_Pass
+IVPref-Antm-lita IV_V_intr
+IVPref-Antm-lita IV_V_no-Pref-A
+IVPref-Antm-lita IV_h
+IVPref-Antm-lita IV_hAnynwn
+IVPref-Antm-lita IV_h_no-Pref-A
+IVPref-Antm-lita IV_hwn
+; IVPref-Antm-lita IV_hyn
+IVPref-Antm-lita IV_no-Pref-A
+IVPref-Antm-lita IV-n
+IVPref-Antm-lita IV-n_intr
+; IVPref-Antm-lita IV-n_Pass
+IVPref-Antm-lita IV-n_no-Pref-A
+;
+IVPref-Antm-lita IV_wn
+IVPref-Antm-lita IV_wn_intr
+IVPref-Antm-lita IV_awn
+IVPref-Antm-lita IV_awn_intr
+;
+IVPref-Antm-litu IV_yu
+IVPref-Antm-litu IV_intr_yu
+IVPref-Antm-litu IV_Pass_yu
+IVPref-Antm-litu IV_0_yu
+IVPref-Antm-litu IV_0_Pass_yu
+; IVPref-Antm-litu IV_0_no-Pref-A_yu
+; IVPref-Antm-litu IV_0h_yu
+; IVPref-Antm-litu IV_0hA_yu
+IVPref-Antm-litu IV_0hAnn_yu
+; IVPref-Antm-litu IV_0hAnn_no-Pref-A_yu
+IVPref-Antm-litu IV_0hwnyn_yu
+; IVPref-Antm-litu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Antm-litu IV_0wnyn_intr_yu
+; IVPref-Antm-litu IV_Ann_yu
+IVPref-Antm-litu IV_Ann_Pass_yu
+; IVPref-Antm-litu IV_Ann_no-Pref-A_yu
+; IVPref-Antm-litu IV_C_yu
+IVPref-Antm-litu IV_C_intr_yu
+IVPref-Antm-litu IV_V_yu
+IVPref-Antm-litu IV_V_Pass_yu
+IVPref-Antm-litu IV_V_intr_yu
+; IVPref-Antm-litu IV_V_no-Pref-A_yu
+; IVPref-Antm-litu IV_h_yu
+; IVPref-Antm-litu IV_hAnynwn_yu
+IVPref-Antm-litu IV_h_no-Pref-A_yu
+; IVPref-Antm-litu IV_hwn_yu
+; IVPref-Antm-litu IV_hyn_yu
+IVPref-Antm-litu IV_no-Pref-A_yu
+IVPref-Antm-litu IV-n_yu
+IVPref-Antm-litu IV-n_Pass_yu
+IVPref-Antm-litu IV-n_no-Pref-A_yu
+;
+IVPref-Antm-litu IV_wn_yu
+IVPref-Antm-litu IV_wn_intr_yu
+IVPref-Antm-litu IV_wn_Pass_yu
+IVPref-Antm-litu IV_awn_yu
+IVPref-Antm-litu IV_awn_intr_yu
+IVPref-Antm-litu IV_awn_Pass_yu
+;
+; ------------------------------------------------
+;
+IVPref-AntmA-ta IV
+IVPref-AntmA-ta IV_intr
+IVPref-AntmA-ta IV_0
+IVPref-AntmA-ta IV_0_no-Pref-A
+IVPref-AntmA-ta IV_0h
+; IVPref-AntmA-ta IV_0hA
+IVPref-AntmA-ta IV_0hAnn
+IVPref-AntmA-ta IV_0hAnn_no-Pref-A
+IVPref-AntmA-ta IV-|
+IVPref-AntmA-ta IV_0hwnyn
+IVPref-AntmA-ta IV_0hwnyn_no-Pref-A
+; IVPref-AntmA-ta IV_0wnyn_intr
+IVPref-AntmA-ta IV_Ann
+; IVPref-AntmA-ta IV_Ann_Pass
+IVPref-AntmA-ta IV_Ann_no-Pref-A
+; IVPref-AntmA-ta IV_C
+; IVPref-AntmA-ta IV_C_intr
+IVPref-AntmA-ta IV_V
+; IVPref-AntmA-ta IV_V_Pass
+IVPref-AntmA-ta IV_V_intr
+IVPref-AntmA-ta IV_V_no-Pref-A
+IVPref-AntmA-ta IV_h
+IVPref-AntmA-ta IV_hAnynwn
+IVPref-AntmA-ta IV_h_no-Pref-A
+IVPref-AntmA-ta IV_hwn
+; IVPref-AntmA-ta IV_hyn
+IVPref-AntmA-ta IV_no-Pref-A
+IVPref-AntmA-ta IV-n
+IVPref-AntmA-ta IV-n_intr
+; IVPref-AntmA-ta IV-n_Pass
+IVPref-AntmA-ta IV-n_no-Pref-A
+;
+IVPref-AntmA-tu IV_yu
+IVPref-AntmA-tu IV_intr_yu
+IVPref-AntmA-tu IV_Pass_yu
+IVPref-AntmA-tu IV_0_yu
+IVPref-AntmA-tu IV_0_Pass_yu
+; IVPref-AntmA-tu IV_0_no-Pref-A_yu
+; IVPref-AntmA-tu IV_0h_yu
+; IVPref-AntmA-tu IV_0hA_yu
+IVPref-AntmA-tu IV_0hAnn_yu
+; IVPref-AntmA-tu IV_0hAnn_no-Pref-A_yu
+IVPref-AntmA-tu IV_0hwnyn_yu
+; IVPref-AntmA-tu IV_0hwnyn_no-Pref-A_yu
+; IVPref-AntmA-tu IV_0wnyn_intr_yu
+; IVPref-AntmA-tu IV_Ann_yu
+IVPref-AntmA-tu IV_Ann_Pass_yu
+; IVPref-AntmA-tu IV_Ann_no-Pref-A_yu
+; IVPref-AntmA-tu IV_C_yu
+IVPref-AntmA-tu IV_C_intr_yu
+IVPref-AntmA-tu IV_V_yu
+IVPref-AntmA-tu IV_V_Pass_yu
+IVPref-AntmA-tu IV_V_intr_yu
+; IVPref-AntmA-tu IV_V_no-Pref-A_yu
+; IVPref-AntmA-tu IV_h_yu
+; IVPref-AntmA-tu IV_hAnynwn_yu
+IVPref-AntmA-tu IV_h_no-Pref-A_yu
+; IVPref-AntmA-tu IV_hwn_yu
+; IVPref-AntmA-tu IV_hyn_yu
+IVPref-AntmA-tu IV_no-Pref-A_yu
+IVPref-AntmA-tu IV-n_yu
+IVPref-AntmA-tu IV-n_Pass_yu
+IVPref-AntmA-tu IV-n_no-Pref-A_yu
+;
+IVPref-AntmA-lita IV
+IVPref-AntmA-lita IV_intr
+IVPref-AntmA-lita IV_0
+IVPref-AntmA-lita IV_0_no-Pref-A
+IVPref-AntmA-lita IV_0h
+; IVPref-AntmA-lita IV_0hA
+IVPref-AntmA-lita IV_0hAnn
+IVPref-AntmA-lita IV_0hAnn_no-Pref-A
+IVPref-AntmA-lita IV-|
+IVPref-AntmA-lita IV_0hwnyn
+IVPref-AntmA-lita IV_0hwnyn_no-Pref-A
+; IVPref-AntmA-lita IV_0wnyn_intr
+IVPref-AntmA-lita IV_Ann
+; IVPref-AntmA-lita IV_Ann_Pass
+IVPref-AntmA-lita IV_Ann_no-Pref-A
+; IVPref-AntmA-lita IV_C
+; IVPref-AntmA-lita IV_C_intr
+IVPref-AntmA-lita IV_V
+; IVPref-AntmA-lita IV_V_Pass
+IVPref-AntmA-lita IV_V_intr
+IVPref-AntmA-lita IV_V_no-Pref-A
+IVPref-AntmA-lita IV_h
+IVPref-AntmA-lita IV_hAnynwn
+IVPref-AntmA-lita IV_h_no-Pref-A
+IVPref-AntmA-lita IV_hwn
+; IVPref-AntmA-lita IV_hyn
+IVPref-AntmA-lita IV_no-Pref-A
+IVPref-AntmA-lita IV-n
+IVPref-AntmA-lita IV-n_intr
+; IVPref-AntmA-lita IV-n_Pass
+IVPref-AntmA-lita IV-n_no-Pref-A
+;
+IVPref-AntmA-litu IV_yu
+IVPref-AntmA-litu IV_intr_yu
+IVPref-AntmA-litu IV_Pass_yu
+IVPref-AntmA-litu IV_0_yu
+IVPref-AntmA-litu IV_0_Pass_yu
+; IVPref-AntmA-litu IV_0_no-Pref-A_yu
+; IVPref-AntmA-litu IV_0h_yu
+; IVPref-AntmA-litu IV_0hA_yu
+IVPref-AntmA-litu IV_0hAnn_yu
+; IVPref-AntmA-litu IV_0hAnn_no-Pref-A_yu
+IVPref-AntmA-litu IV_0hwnyn_yu
+; IVPref-AntmA-litu IV_0hwnyn_no-Pref-A_yu
+; IVPref-AntmA-litu IV_0wnyn_intr_yu
+; IVPref-AntmA-litu IV_Ann_yu
+IVPref-AntmA-litu IV_Ann_Pass_yu
+; IVPref-AntmA-litu IV_Ann_no-Pref-A_yu
+; IVPref-AntmA-litu IV_C_yu
+IVPref-AntmA-litu IV_C_intr_yu
+IVPref-AntmA-litu IV_V_yu
+IVPref-AntmA-litu IV_V_Pass_yu
+IVPref-AntmA-litu IV_V_intr_yu
+; IVPref-AntmA-litu IV_V_no-Pref-A_yu
+; IVPref-AntmA-litu IV_h_yu
+; IVPref-AntmA-litu IV_hAnynwn_yu
+IVPref-AntmA-litu IV_h_no-Pref-A_yu
+; IVPref-AntmA-litu IV_hwn_yu
+; IVPref-AntmA-litu IV_hyn_yu
+IVPref-AntmA-litu IV_no-Pref-A_yu
+IVPref-AntmA-litu IV-n_yu
+IVPref-AntmA-litu IV-n_Pass_yu
+IVPref-AntmA-litu IV-n_no-Pref-A_yu
+;
+; -------------------------------------------
+;
+IVPref-Antn-ta IV
+IVPref-Antn-ta IV_intr
+IVPref-Antn-ta IV_0
+IVPref-Antn-ta IV_0_no-Pref-A
+IVPref-Antn-ta IV_0h
+; IVPref-Antn-ta IV_0hA
+IVPref-Antn-ta IV_0hAnn
+IVPref-Antn-ta IV_0hAnn_no-Pref-A
+IVPref-Antn-ta IV_0hwnyn
+IVPref-Antn-ta IV_0hwnyn_no-Pref-A
+; IVPref-Antn-ta IV_0wnyn_intr
+IVPref-Antn-ta IV_Ann
+; IVPref-Antn-ta IV_Ann_Pass
+IVPref-Antn-ta IV_Ann_no-Pref-A
+IVPref-Antn-ta IV_C
+IVPref-Antn-ta IV_C_intr
+IVPref-Antn-ta IV_Cn
+IVPref-Antn-ta IV_Cn_intr
+IVPref-Antn-ta IV_V
+; IVPref-Antn-ta IV_V_Pass
+IVPref-Antn-ta IV_V_intr
+IVPref-Antn-ta IV_V_no-Pref-A
+IVPref-Antn-ta IV_h
+IVPref-Antn-ta IV_hAnynwn
+IVPref-Antn-ta IV_h_no-Pref-A
+IVPref-Antn-ta IV_hwn
+; IVPref-Antn-ta IV_hyn
+IVPref-Antn-ta IV_no-Pref-A
+IVPref-Antn-ta IV-n
+IVPref-Antn-ta IV-n_intr
+; IVPref-Antn-ta IV-n_Pass
+IVPref-Antn-ta IV-n_no-Pref-A
+;
+IVPref-Antn-tu IV_yu
+IVPref-Antn-tu IV_intr_yu
+IVPref-Antn-tu IV_Pass_yu
+IVPref-Antn-tu IV_0_yu
+IVPref-Antn-tu IV_0_Pass_yu
+; IVPref-Antn-tu IV_0_no-Pref-A_yu
+; IVPref-Antn-tu IV_0h_yu
+; IVPref-Antn-tu IV_0hA_yu
+IVPref-Antn-tu IV_0hAnn_yu
+; IVPref-Antn-tu IV_0hAnn_no-Pref-A_yu
+IVPref-Antn-tu IV_0hwnyn_yu
+; IVPref-Antn-tu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Antn-tu IV_0wnyn_intr_yu
+; IVPref-Antn-tu IV_Ann_yu
+IVPref-Antn-tu IV_Ann_Pass_yu
+; IVPref-Antn-tu IV_Ann_no-Pref-A_yu
+IVPref-Antn-tu IV_C_yu
+IVPref-Antn-tu IV_C_Pass_yu
+IVPref-Antn-tu IV_C_intr_yu
+IVPref-Antn-tu IV_V_yu
+IVPref-Antn-tu IV_V_Pass_yu
+IVPref-Antn-tu IV_V_intr_yu
+; IVPref-Antn-tu IV_V_no-Pref-A_yu
+; IVPref-Antn-tu IV_h_yu
+; IVPref-Antn-tu IV_hAnynwn_yu
+IVPref-Antn-tu IV_h_no-Pref-A_yu
+; IVPref-Antn-tu IV_hwn_yu
+; IVPref-Antn-tu IV_hyn_yu
+IVPref-Antn-tu IV_no-Pref-A_yu
+IVPref-Antn-tu IV-n_yu
+IVPref-Antn-tu IV-n_Pass_yu
+IVPref-Antn-tu IV-n_no-Pref-A_yu
+;
+IVPref-Antn-lita IV
+IVPref-Antn-lita IV_intr
+IVPref-Antn-lita IV_0
+IVPref-Antn-lita IV_0_no-Pref-A
+IVPref-Antn-lita IV_0h
+; IVPref-Antn-lita IV_0hA
+IVPref-Antn-lita IV_0hAnn
+IVPref-Antn-lita IV_0hAnn_no-Pref-A
+IVPref-Antn-lita IV_0hwnyn
+IVPref-Antn-lita IV_0hwnyn_no-Pref-A
+; IVPref-Antn-lita IV_0wnyn_intr
+IVPref-Antn-lita IV_Ann
+; IVPref-Antn-lita IV_Ann_Pass
+IVPref-Antn-lita IV_Ann_no-Pref-A
+IVPref-Antn-lita IV_C
+IVPref-Antn-lita IV_C_intr
+IVPref-Antn-lita IV_Cn
+IVPref-Antn-lita IV_Cn_intr
+IVPref-Antn-lita IV_V
+; IVPref-Antn-lita IV_V_Pass
+IVPref-Antn-lita IV_V_intr
+IVPref-Antn-lita IV_V_no-Pref-A
+IVPref-Antn-lita IV_h
+IVPref-Antn-lita IV_hAnynwn
+IVPref-Antn-lita IV_h_no-Pref-A
+IVPref-Antn-lita IV_hwn
+; IVPref-Antn-lita IV_hyn
+IVPref-Antn-lita IV_no-Pref-A
+IVPref-Antn-lita IV-n
+IVPref-Antn-lita IV-n_intr
+; IVPref-Antn-lita IV-n_Pass
+IVPref-Antn-lita IV-n_no-Pref-A
+;
+IVPref-Antn-litu IV_yu
+IVPref-Antn-litu IV_intr_yu
+IVPref-Antn-litu IV_Pass_yu
+IVPref-Antn-litu IV_0_yu
+IVPref-Antn-litu IV_0_Pass_yu
+; IVPref-Antn-litu IV_0_no-Pref-A_yu
+; IVPref-Antn-litu IV_0h_yu
+; IVPref-Antn-litu IV_0hA_yu
+IVPref-Antn-litu IV_0hAnn_yu
+; IVPref-Antn-litu IV_0hAnn_no-Pref-A_yu
+IVPref-Antn-litu IV_0hwnyn_yu
+; IVPref-Antn-litu IV_0hwnyn_no-Pref-A_yu
+; IVPref-Antn-litu IV_0wnyn_intr_yu
+; IVPref-Antn-litu IV_Ann_yu
+IVPref-Antn-litu IV_Ann_Pass_yu
+; IVPref-Antn-litu IV_Ann_no-Pref-A_yu
+IVPref-Antn-litu IV_C_yu
+IVPref-Antn-litu IV_C_Pass_yu
+IVPref-Antn-litu IV_C_intr_yu
+IVPref-Antn-litu IV_V_yu
+IVPref-Antn-litu IV_V_Pass_yu
+IVPref-Antn-litu IV_V_intr_yu
+; IVPref-Antn-litu IV_V_no-Pref-A_yu
+; IVPref-Antn-litu IV_h_yu
+; IVPref-Antn-litu IV_hAnynwn_yu
+IVPref-Antn-litu IV_h_no-Pref-A_yu
+; IVPref-Antn-litu IV_hwn_yu
+; IVPref-Antn-litu IV_hyn_yu
+IVPref-Antn-litu IV_no-Pref-A_yu
+IVPref-Antn-litu IV-n_yu
+IVPref-Antn-litu IV-n_Pass_yu
+IVPref-Antn-litu IV-n_no-Pref-A_yu
+;
+; ---------------------------------------------
+;
+IVPref-hm-ya IV
+IVPref-hm-ya IV_intr
+IVPref-hm-ya IV_0
+IVPref-hm-ya IV_0_no-Pref-A
+IVPref-hm-ya IV_0h
+; IVPref-hm-ya IV_0hA
+IVPref-hm-ya IV_0hAnn
+IVPref-hm-ya IV_0hAnn_no-Pref-A
+IVPref-hm-ya IV_0hwnyn
+IVPref-hm-ya IV_0hwnyn_no-Pref-A
+; IVPref-hm-ya IV_0wnyn_intr
+IVPref-hm-ya IV_Ann
+; IVPref-hm-ya IV_Ann_Pass
+IVPref-hm-ya IV_Ann_no-Pref-A
+IVPref-hm-ya IV_C
+IVPref-hm-ya IV_C_intr
+IVPref-hm-ya IV_V
+; IVPref-hm-ya IV_V_Pass
+IVPref-hm-ya IV_V_intr
+IVPref-hm-ya IV_V_no-Pref-A
+IVPref-hm-ya IV_h
+IVPref-hm-ya IV_hAnynwn
+IVPref-hm-ya IV_h_no-Pref-A
+IVPref-hm-ya IV_hwn
+; IVPref-hm-ya IV_hyn
+IVPref-hm-ya IV_no-Pref-A
+IVPref-hm-ya IV-n
+IVPref-hm-ya IV-n_intr
+; IVPref-hm-ya IV-n_Pass
+IVPref-hm-ya IV-n_no-Pref-A
+;
+IVPref-hm-ya IV_wn
+IVPref-hm-ya IV_wn_intr
+IVPref-hm-ya IV_awn
+IVPref-hm-ya IV_awn_intr
+;
+IVPref-hm-yu IV_yu
+IVPref-hm-yu IV_intr_yu
+IVPref-hm-yu IV_Pass_yu
+IVPref-hm-yu IV_0_yu
+IVPref-hm-yu IV_0_Pass_yu
+; IVPref-hm-yu IV_0_no-Pref-A_yu
+; IVPref-hm-yu IV_0h_yu
+; IVPref-hm-yu IV_0hA_yu
+IVPref-hm-yu IV_0hAnn_yu
+; IVPref-hm-yu IV_0hAnn_no-Pref-A_yu
+IVPref-hm-yu IV_0hwnyn_yu
+; IVPref-hm-yu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hm-yu IV_0wnyn_intr_yu
+; IVPref-hm-yu IV_Ann_yu
+IVPref-hm-yu IV_Ann_Pass_yu
+; IVPref-hm-yu IV_Ann_no-Pref-A_yu
+IVPref-hm-yu IV_C_yu
+IVPref-hm-yu IV_C_intr_yu
+IVPref-hm-yu IV_V_yu
+IVPref-hm-yu IV_V_Pass_yu
+IVPref-hm-yu IV_V_intr_yu
+; IVPref-hm-yu IV_V_no-Pref-A_yu
+; IVPref-hm-yu IV_h_yu
+; IVPref-hm-yu IV_hAnynwn_yu
+IVPref-hm-yu IV_h_no-Pref-A_yu
+; IVPref-hm-yu IV_hwn_yu
+; IVPref-hm-yu IV_hyn_yu
+IVPref-hm-yu IV_no-Pref-A_yu
+IVPref-hm-yu IV-n_yu
+IVPref-hm-yu IV-n_Pass_yu
+IVPref-hm-yu IV-n_no-Pref-A_yu
+;
+IVPref-hm-yu IV_wn_yu
+IVPref-hm-yu IV_wn_intr_yu
+IVPref-hm-yu IV_wn_Pass_yu
+IVPref-hm-yu IV_awn_yu
+IVPref-hm-yu IV_awn_intr_yu
+IVPref-hm-yu IV_awn_Pass_yu
+;
+IVPref-hm-liya IV
+IVPref-hm-liya IV_intr
+IVPref-hm-liya IV_0
+IVPref-hm-liya IV_0_no-Pref-A
+IVPref-hm-liya IV_0h
+; IVPref-hm-liya IV_0hA
+IVPref-hm-liya IV_0hAnn
+IVPref-hm-liya IV_0hAnn_no-Pref-A
+IVPref-hm-liya IV_0hwnyn
+IVPref-hm-liya IV_0hwnyn_no-Pref-A
+; IVPref-hm-liya IV_0wnyn_intr
+IVPref-hm-liya IV_Ann
+; IVPref-hm-liya IV_Ann_Pass
+IVPref-hm-liya IV_Ann_no-Pref-A
+IVPref-hm-liya IV_C
+IVPref-hm-liya IV_C_intr
+IVPref-hm-liya IV_V
+; IVPref-hm-liya IV_V_Pass
+IVPref-hm-liya IV_V_intr
+IVPref-hm-liya IV_V_no-Pref-A
+IVPref-hm-liya IV_h
+IVPref-hm-liya IV_hAnynwn
+IVPref-hm-liya IV_h_no-Pref-A
+IVPref-hm-liya IV_hwn
+; IVPref-hm-liya IV_hyn
+IVPref-hm-liya IV_no-Pref-A
+IVPref-hm-liya IV-n
+IVPref-hm-liya IV-n_intr
+; IVPref-hm-liya IV-n_Pass
+IVPref-hm-liya IV-n_no-Pref-A
+IVPref-hm-liya IV_wn
+IVPref-hm-liya IV_awn
+;
+IVPref-hm-liyu IV_yu
+IVPref-hm-liyu IV_intr_yu
+IVPref-hm-liyu IV_Pass_yu
+IVPref-hm-liyu IV_0_yu
+IVPref-hm-liyu IV_0_Pass_yu
+; IVPref-hm-liyu IV_0_no-Pref-A_yu
+; IVPref-hm-liyu IV_0h_yu
+; IVPref-hm-liyu IV_0hA_yu
+IVPref-hm-liyu IV_0hAnn_yu
+; IVPref-hm-liyu IV_0hAnn_no-Pref-A_yu
+IVPref-hm-liyu IV_0hwnyn_yu
+; IVPref-hm-liyu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hm-liyu IV_0wnyn_intr_yu
+; IVPref-hm-liyu IV_Ann_yu
+IVPref-hm-liyu IV_Ann_Pass_yu
+; IVPref-hm-liyu IV_Ann_no-Pref-A_yu
+IVPref-hm-liyu IV_C_yu
+IVPref-hm-liyu IV_C_intr_yu
+IVPref-hm-liyu IV_V_yu
+IVPref-hm-liyu IV_V_Pass_yu
+IVPref-hm-liyu IV_V_intr_yu
+; IVPref-hm-liyu IV_V_no-Pref-A_yu
+; IVPref-hm-liyu IV_h_yu
+; IVPref-hm-liyu IV_hAnynwn_yu
+IVPref-hm-liyu IV_h_no-Pref-A_yu
+; IVPref-hm-liyu IV_hwn_yu
+; IVPref-hm-liyu IV_hyn_yu
+IVPref-hm-liyu IV_no-Pref-A_yu
+IVPref-hm-liyu IV-n_yu
+IVPref-hm-liyu IV-n_Pass_yu
+IVPref-hm-liyu IV-n_no-Pref-A_yu
+IVPref-hm-liyu IV_wn_yu
+IVPref-hm-liyu IV_awn_yu
+;
+; ---------------------------------------
+;
+IVPref-hmA-ta IV
+IVPref-hmA-ta IV_intr
+IVPref-hmA-ta IV_0
+IVPref-hmA-ta IV_0_no-Pref-A
+IVPref-hmA-ta IV_0h
+; IVPref-hmA-ta IV_0hA
+IVPref-hmA-ta IV_0hAnn
+IVPref-hmA-ta IV_0hAnn_no-Pref-A
+IVPref-hmA-ta IV-|
+IVPref-hmA-ta IV_0hwnyn
+IVPref-hmA-ta IV_0hwnyn_no-Pref-A
+; IVPref-hmA-ta IV_0wnyn_intr
+IVPref-hmA-ta IV_Ann
+; IVPref-hmA-ta IV_Ann_Pass
+IVPref-hmA-ta IV_Ann_no-Pref-A
+IVPref-hmA-ta IV_C
+IVPref-hmA-ta IV_C_intr
+IVPref-hmA-ta IV_V
+; IVPref-hmA-ta IV_V_Pass
+IVPref-hmA-ta IV_V_intr
+IVPref-hmA-ta IV_V_no-Pref-A
+IVPref-hmA-ta IV_h
+IVPref-hmA-ta IV_hAnynwn
+IVPref-hmA-ta IV_h_no-Pref-A
+IVPref-hmA-ta IV_hwn
+; IVPref-hmA-ta IV_hyn
+IVPref-hmA-ta IV_no-Pref-A
+IVPref-hmA-ta IV-n
+IVPref-hmA-ta IV-n_intr
+; IVPref-hmA-ta IV-n_Pass
+IVPref-hmA-ta IV-n_no-Pref-A
+;
+IVPref-hmA-tu IV_yu
+IVPref-hmA-tu IV_intr_yu
+IVPref-hmA-tu IV_Pass_yu
+IVPref-hmA-tu IV_0_yu
+IVPref-hmA-tu IV_0_Pass_yu
+; IVPref-hmA-tu IV_0_no-Pref-A_yu
+; IVPref-hmA-tu IV_0h_yu
+; IVPref-hmA-tu IV_0hA_yu
+IVPref-hmA-tu IV_0hAnn_yu
+; IVPref-hmA-tu IV_0hAnn_no-Pref-A_yu
+IVPref-hmA-tu IV_0hwnyn_yu
+; IVPref-hmA-tu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hmA-tu IV_0wnyn_intr_yu
+; IVPref-hmA-tu IV_Ann_yu
+IVPref-hmA-tu IV_Ann_Pass_yu
+; IVPref-hmA-tu IV_Ann_no-Pref-A_yu
+IVPref-hmA-tu IV_C_yu
+IVPref-hmA-tu IV_C_intr_yu
+IVPref-hmA-tu IV_V_yu
+IVPref-hmA-tu IV_V_Pass_yu
+IVPref-hmA-tu IV_V_intr_yu
+; IVPref-hmA-tu IV_V_no-Pref-A_yu
+; IVPref-hmA-tu IV_h_yu
+; IVPref-hmA-tu IV_hAnynwn_yu
+IVPref-hmA-tu IV_h_no-Pref-A_yu
+; IVPref-hmA-tu IV_hwn_yu
+; IVPref-hmA-tu IV_hyn_yu
+IVPref-hmA-tu IV_no-Pref-A_yu
+IVPref-hmA-tu IV-n_yu
+IVPref-hmA-tu IV-n_Pass_yu
+IVPref-hmA-tu IV-n_no-Pref-A_yu
+;
+IVPref-hmA-lita IV
+IVPref-hmA-lita IV_intr
+IVPref-hmA-lita IV_0
+IVPref-hmA-lita IV_0_no-Pref-A
+IVPref-hmA-lita IV_0h
+; IVPref-hmA-lita IV_0hA
+IVPref-hmA-lita IV_0hAnn
+IVPref-hmA-lita IV_0hAnn_no-Pref-A
+IVPref-hmA-lita IV-|
+IVPref-hmA-lita IV_0hwnyn
+IVPref-hmA-lita IV_0hwnyn_no-Pref-A
+; IVPref-hmA-lita IV_0wnyn_intr
+IVPref-hmA-lita IV_Ann
+; IVPref-hmA-lita IV_Ann_Pass
+IVPref-hmA-lita IV_Ann_no-Pref-A
+IVPref-hmA-lita IV_C
+IVPref-hmA-lita IV_C_intr
+IVPref-hmA-lita IV_V
+; IVPref-hmA-lita IV_V_Pass
+IVPref-hmA-lita IV_V_intr
+IVPref-hmA-lita IV_V_no-Pref-A
+IVPref-hmA-lita IV_h
+IVPref-hmA-lita IV_hAnynwn
+IVPref-hmA-lita IV_h_no-Pref-A
+IVPref-hmA-lita IV_hwn
+; IVPref-hmA-lita IV_hyn
+IVPref-hmA-lita IV_no-Pref-A
+IVPref-hmA-lita IV-n
+IVPref-hmA-lita IV-n_intr
+; IVPref-hmA-lita IV-n_Pass
+IVPref-hmA-lita IV-n_no-Pref-A
+;
+IVPref-hmA-litu IV_yu
+IVPref-hmA-litu IV_intr_yu
+IVPref-hmA-litu IV_Pass_yu
+IVPref-hmA-litu IV_0_yu
+IVPref-hmA-litu IV_0_Pass_yu
+; IVPref-hmA-litu IV_0_no-Pref-A_yu
+; IVPref-hmA-litu IV_0h_yu
+; IVPref-hmA-litu IV_0hA_yu
+IVPref-hmA-litu IV_0hAnn_yu
+; IVPref-hmA-litu IV_0hAnn_no-Pref-A_yu
+IVPref-hmA-litu IV_0hwnyn_yu
+; IVPref-hmA-litu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hmA-litu IV_0wnyn_intr_yu
+; IVPref-hmA-litu IV_Ann_yu
+IVPref-hmA-litu IV_Ann_Pass_yu
+; IVPref-hmA-litu IV_Ann_no-Pref-A_yu
+IVPref-hmA-litu IV_C_yu
+IVPref-hmA-litu IV_C_intr_yu
+IVPref-hmA-litu IV_V_yu
+IVPref-hmA-litu IV_V_Pass_yu
+IVPref-hmA-litu IV_V_intr_yu
+; IVPref-hmA-litu IV_V_no-Pref-A_yu
+; IVPref-hmA-litu IV_h_yu
+; IVPref-hmA-litu IV_hAnynwn_yu
+IVPref-hmA-litu IV_h_no-Pref-A_yu
+; IVPref-hmA-litu IV_hwn_yu
+; IVPref-hmA-litu IV_hyn_yu
+IVPref-hmA-litu IV_no-Pref-A_yu
+IVPref-hmA-litu IV-n_yu
+IVPref-hmA-litu IV-n_Pass_yu
+IVPref-hmA-litu IV-n_no-Pref-A_yu
+;
+; ---------------------------------------------------
+;
+IVPref-hmA-ya IV
+IVPref-hmA-ya IV_intr
+IVPref-hmA-ya IV_0
+IVPref-hmA-ya IV_0_no-Pref-A
+IVPref-hmA-ya IV_0h
+; IVPref-hmA-ya IV_0hA
+IVPref-hmA-ya IV_0hAnn
+IVPref-hmA-ya IV_0hAnn_no-Pref-A
+IVPref-hmA-ya IV-|
+IVPref-hmA-ya IV_0hwnyn
+IVPref-hmA-ya IV_0hwnyn_no-Pref-A
+; IVPref-hmA-ya IV_0wnyn_intr
+IVPref-hmA-ya IV_Ann
+; IVPref-hmA-ya IV_Ann_Pass
+IVPref-hmA-ya IV_Ann_no-Pref-A
+IVPref-hmA-ya IV_C
+IVPref-hmA-ya IV_C_intr
+IVPref-hmA-ya IV_V
+; IVPref-hmA-ya IV_V_Pass
+IVPref-hmA-ya IV_V_intr
+IVPref-hmA-ya IV_V_no-Pref-A
+IVPref-hmA-ya IV_h
+IVPref-hmA-ya IV_hAnynwn
+IVPref-hmA-ya IV_h_no-Pref-A
+IVPref-hmA-ya IV_hwn
+; IVPref-hmA-ya IV_hyn
+IVPref-hmA-ya IV_no-Pref-A
+IVPref-hmA-ya IV-n
+IVPref-hmA-ya IV-n_intr
+; IVPref-hmA-ya IV-n_Pass
+IVPref-hmA-ya IV-n_no-Pref-A
+;
+IVPref-hmA-yu IV_yu
+IVPref-hmA-yu IV_intr_yu
+IVPref-hmA-yu IV_Pass_yu
+IVPref-hmA-yu IV_0_yu
+IVPref-hmA-yu IV_0_Pass_yu
+; IVPref-hmA-yu IV_0_no-Pref-A_yu
+; IVPref-hmA-yu IV_0h_yu
+; IVPref-hmA-yu IV_0hA_yu
+IVPref-hmA-yu IV_0hAnn_yu
+; IVPref-hmA-yu IV_0hAnn_no-Pref-A_yu
+IVPref-hmA-yu IV_0hwnyn_yu
+; IVPref-hmA-yu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hmA-yu IV_0wnyn_intr_yu
+; IVPref-hmA-yu IV_Ann_yu
+IVPref-hmA-yu IV_Ann_Pass_yu
+; IVPref-hmA-yu IV_Ann_no-Pref-A_yu
+IVPref-hmA-yu IV_C_yu
+IVPref-hmA-yu IV_C_intr_yu
+IVPref-hmA-yu IV_V_yu
+IVPref-hmA-yu IV_V_Pass_yu
+IVPref-hmA-yu IV_V_intr_yu
+; IVPref-hmA-yu IV_V_no-Pref-A_yu
+; IVPref-hmA-yu IV_h_yu
+; IVPref-hmA-yu IV_hAnynwn_yu
+IVPref-hmA-yu IV_h_no-Pref-A_yu
+; IVPref-hmA-yu IV_hwn_yu
+; IVPref-hmA-yu IV_hyn_yu
+IVPref-hmA-yu IV_no-Pref-A_yu
+IVPref-hmA-yu IV-n_yu
+IVPref-hmA-yu IV-n_Pass_yu
+IVPref-hmA-yu IV-n_no-Pref-A_yu
+;
+IVPref-hmA-liya IV
+IVPref-hmA-liya IV_intr
+IVPref-hmA-liya IV_0
+IVPref-hmA-liya IV_0_no-Pref-A
+IVPref-hmA-liya IV_0h
+; IVPref-hmA-liya IV_0hA
+IVPref-hmA-liya IV_0hAnn
+IVPref-hmA-liya IV_0hAnn_no-Pref-A
+IVPref-hmA-liya IV-|
+IVPref-hmA-liya IV_0hwnyn
+IVPref-hmA-liya IV_0hwnyn_no-Pref-A
+; IVPref-hmA-liya IV_0wnyn_intr
+IVPref-hmA-liya IV_Ann
+; IVPref-hmA-liya IV_Ann_Pass
+IVPref-hmA-liya IV_Ann_no-Pref-A
+IVPref-hmA-liya IV_C
+IVPref-hmA-liya IV_C_intr
+IVPref-hmA-liya IV_V
+; IVPref-hmA-liya IV_V_Pass
+IVPref-hmA-liya IV_V_intr
+IVPref-hmA-liya IV_V_no-Pref-A
+IVPref-hmA-liya IV_h
+IVPref-hmA-liya IV_hAnynwn
+IVPref-hmA-liya IV_h_no-Pref-A
+IVPref-hmA-liya IV_hwn
+; IVPref-hmA-liya IV_hyn
+IVPref-hmA-liya IV_no-Pref-A
+IVPref-hmA-liya IV-n
+IVPref-hmA-liya IV-n_intr
+; IVPref-hmA-liya IV-n_Pass
+IVPref-hmA-liya IV-n_no-Pref-A
+;
+IVPref-hmA-liyu IV_yu
+IVPref-hmA-liyu IV_intr_yu
+IVPref-hmA-liyu IV_Pass_yu
+IVPref-hmA-liyu IV_0_yu
+IVPref-hmA-liyu IV_0_Pass_yu
+; IVPref-hmA-liyu IV_0_no-Pref-A_yu
+; IVPref-hmA-liyu IV_0h_yu
+; IVPref-hmA-liyu IV_0hA_yu
+IVPref-hmA-liyu IV_0hAnn_yu
+; IVPref-hmA-liyu IV_0hAnn_no-Pref-A_yu
+IVPref-hmA-liyu IV_0hwnyn_yu
+; IVPref-hmA-liyu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hmA-liyu IV_0wnyn_intr_yu
+; IVPref-hmA-liyu IV_Ann_yu
+IVPref-hmA-liyu IV_Ann_Pass_yu
+; IVPref-hmA-liyu IV_Ann_no-Pref-A_yu
+IVPref-hmA-liyu IV_C_yu
+IVPref-hmA-liyu IV_C_intr_yu
+IVPref-hmA-liyu IV_V_yu
+IVPref-hmA-liyu IV_V_Pass_yu
+IVPref-hmA-liyu IV_V_intr_yu
+; IVPref-hmA-liyu IV_V_no-Pref-A_yu
+; IVPref-hmA-liyu IV_h_yu
+; IVPref-hmA-liyu IV_hAnynwn_yu
+IVPref-hmA-liyu IV_h_no-Pref-A_yu
+; IVPref-hmA-liyu IV_hwn_yu
+; IVPref-hmA-liyu IV_hyn_yu
+IVPref-hmA-liyu IV_no-Pref-A_yu
+IVPref-hmA-liyu IV-n_yu
+IVPref-hmA-liyu IV-n_Pass_yu
+IVPref-hmA-liyu IV-n_no-Pref-A_yu
+;
+; --------------------------------------------
+;
+IVPref-hn-ya IV
+IVPref-hn-ya IV_intr
+IVPref-hn-ya IV_0
+IVPref-hn-ya IV_0_no-Pref-A
+IVPref-hn-ya IV_0h
+; IVPref-hn-ya IV_0hA
+IVPref-hn-ya IV_0hAnn
+IVPref-hn-ya IV_0hAnn_no-Pref-A
+IVPref-hn-ya IV_0hwnyn
+IVPref-hn-ya IV_0hwnyn_no-Pref-A
+; IVPref-hn-ya IV_0wnyn_intr
+IVPref-hn-ya IV_Ann
+; IVPref-hn-ya IV_Ann_Pass
+IVPref-hn-ya IV_Ann_no-Pref-A
+IVPref-hn-ya IV_C
+IVPref-hn-ya IV_C_intr
+IVPref-hn-ya IV_Cn
+IVPref-hn-ya IV_Cn_intr
+IVPref-hn-ya IV_V
+; IVPref-hn-ya IV_V_Pass
+IVPref-hn-ya IV_V_intr
+IVPref-hn-ya IV_V_no-Pref-A
+IVPref-hn-ya IV_h
+IVPref-hn-ya IV_hAnynwn
+IVPref-hn-ya IV_h_no-Pref-A
+IVPref-hn-ya IV_hwn
+; IVPref-hn-ya IV_hyn
+IVPref-hn-ya IV_no-Pref-A
+IVPref-hn-ya IV-n
+IVPref-hn-ya IV-n_intr
+; IVPref-hn-ya IV-n_Pass
+IVPref-hn-ya IV-n_no-Pref-A
+;
+IVPref-hn-yu IV_yu
+IVPref-hn-yu IV_intr_yu
+IVPref-hn-yu IV_Pass_yu
+IVPref-hn-yu IV_0_yu
+IVPref-hn-yu IV_0_Pass_yu
+; IVPref-hn-yu IV_0_no-Pref-A_yu
+; IVPref-hn-yu IV_0h_yu
+; IVPref-hn-yu IV_0hA_yu
+IVPref-hn-yu IV_0hAnn_yu
+; IVPref-hn-yu IV_0hAnn_no-Pref-A_yu
+IVPref-hn-yu IV_0hwnyn_yu
+; IVPref-hn-yu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hn-yu IV_0wnyn_intr_yu
+; IVPref-hn-yu IV_Ann_yu
+IVPref-hn-yu IV_Ann_Pass_yu
+; IVPref-hn-yu IV_Ann_no-Pref-A_yu
+IVPref-hn-yu IV_C_yu
+IVPref-hn-yu IV_C_Pass_yu
+IVPref-hn-yu IV_C_intr_yu
+IVPref-hn-yu IV_V_yu
+IVPref-hn-yu IV_V_Pass_yu
+IVPref-hn-yu IV_V_intr_yu
+; IVPref-hn-yu IV_V_no-Pref-A_yu
+; IVPref-hn-yu IV_h_yu
+; IVPref-hn-yu IV_hAnynwn_yu
+IVPref-hn-yu IV_h_no-Pref-A_yu
+; IVPref-hn-yu IV_hwn_yu
+; IVPref-hn-yu IV_hyn_yu
+IVPref-hn-yu IV_no-Pref-A_yu
+IVPref-hn-yu IV-n_yu
+IVPref-hn-yu IV-n_Pass_yu
+IVPref-hn-yu IV-n_no-Pref-A_yu
+;
+IVPref-hn-liya IV
+IVPref-hn-liya IV_intr
+IVPref-hn-liya IV_0
+IVPref-hn-liya IV_0_no-Pref-A
+IVPref-hn-liya IV_0h
+; IVPref-hn-liya IV_0hA
+IVPref-hn-liya IV_0hAnn
+IVPref-hn-liya IV_0hAnn_no-Pref-A
+IVPref-hn-liya IV_0hwnyn
+IVPref-hn-liya IV_0hwnyn_no-Pref-A
+; IVPref-hn-liya IV_0wnyn_intr
+IVPref-hn-liya IV_Ann
+; IVPref-hn-liya IV_Ann_Pass
+IVPref-hn-liya IV_Ann_no-Pref-A
+IVPref-hn-liya IV_C
+IVPref-hn-liya IV_C_intr
+IVPref-hn-liya IV_Cn
+IVPref-hn-liya IV_Cn_intr
+IVPref-hn-liya IV_V
+; IVPref-hn-liya IV_V_Pass
+IVPref-hn-liya IV_V_intr
+IVPref-hn-liya IV_V_no-Pref-A
+IVPref-hn-liya IV_h
+IVPref-hn-liya IV_hAnynwn
+IVPref-hn-liya IV_h_no-Pref-A
+IVPref-hn-liya IV_hwn
+; IVPref-hn-liya IV_hyn
+IVPref-hn-liya IV_no-Pref-A
+IVPref-hn-liya IV-n
+IVPref-hn-liya IV-n_intr
+; IVPref-hn-liya IV-n_Pass
+IVPref-hn-liya IV-n_no-Pref-A
+;
+IVPref-hn-liyu IV_yu
+IVPref-hn-liyu IV_intr_yu
+IVPref-hn-liyu IV_Pass_yu
+IVPref-hn-liyu IV_0_yu
+IVPref-hn-liyu IV_0_Pass_yu
+; IVPref-hn-liyu IV_0_no-Pref-A_yu
+; IVPref-hn-liyu IV_0h_yu
+; IVPref-hn-liyu IV_0hA_yu
+IVPref-hn-liyu IV_0hAnn_yu
+; IVPref-hn-liyu IV_0hAnn_no-Pref-A_yu
+IVPref-hn-liyu IV_0hwnyn_yu
+; IVPref-hn-liyu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hn-liyu IV_0wnyn_intr_yu
+; IVPref-hn-liyu IV_Ann_yu
+IVPref-hn-liyu IV_Ann_Pass_yu
+; IVPref-hn-liyu IV_Ann_no-Pref-A_yu
+IVPref-hn-liyu IV_C_yu
+IVPref-hn-liyu IV_C_Pass_yu
+IVPref-hn-liyu IV_C_intr_yu
+IVPref-hn-liyu IV_V_yu
+IVPref-hn-liyu IV_V_Pass_yu
+IVPref-hn-liyu IV_V_intr_yu
+; IVPref-hn-liyu IV_V_no-Pref-A_yu
+; IVPref-hn-liyu IV_h_yu
+; IVPref-hn-liyu IV_hAnynwn_yu
+IVPref-hn-liyu IV_h_no-Pref-A_yu
+; IVPref-hn-liyu IV_hwn_yu
+; IVPref-hn-liyu IV_hyn_yu
+IVPref-hn-liyu IV_no-Pref-A_yu
+IVPref-hn-liyu IV-n_yu
+IVPref-hn-liyu IV-n_Pass_yu
+IVPref-hn-liyu IV-n_no-Pref-A_yu
+;
+; ----------------------------------------
+;
+IVPref-hw-ya IV
+IVPref-hw-ya IV_intr
+IVPref-hw-ya IV_0
+IVPref-hw-ya IV_0_no-Pref-A
+IVPref-hw-ya IV_0h
+; IVPref-hw-ya IV_0hA
+IVPref-hw-ya IV_0hAnn
+IVPref-hw-ya IV_0hAnn_no-Pref-A
+IVPref-hw-ya IV_0hwnyn
+IVPref-hw-ya IV_0hwnyn_no-Pref-A
+; IVPref-hw-ya IV_0wnyn_intr
+IVPref-hw-ya IV_Ann
+; IVPref-hw-ya IV_Ann_Pass
+IVPref-hw-ya IV_Ann_no-Pref-A
+IVPref-hw-ya IV_C
+IVPref-hw-ya IV_C_intr
+IVPref-hw-ya IV_V
+; IVPref-hw-ya IV_V_Pass
+IVPref-hw-ya IV_V_intr
+IVPref-hw-ya IV_V_no-Pref-A
+IVPref-hw-ya IV_h
+IVPref-hw-ya IV_hAnynwn
+IVPref-hw-ya IV_h_no-Pref-A
+IVPref-hw-ya IV_hwn
+; IVPref-hw-ya IV_hyn
+IVPref-hw-ya IV_no-Pref-A
+IVPref-hw-ya IV-n
+IVPref-hw-ya IV-n_intr
+; IVPref-hw-ya IV-n_Pass
+IVPref-hw-ya IV-n_no-Pref-A
+;
+IVPref-hw-yu IV_yu
+IVPref-hw-yu IV_intr_yu
+IVPref-hw-yu IV_Pass_yu
+IVPref-hw-yu IV_0_yu
+IVPref-hw-yu IV_0_Pass_yu
+; IVPref-hw-yu IV_0_no-Pref-A_yu
+; IVPref-hw-yu IV_0h_yu
+; IVPref-hw-yu IV_0hA_yu
+IVPref-hw-yu IV_0hAnn_yu
+; IVPref-hw-yu IV_0hAnn_no-Pref-A_yu
+IVPref-hw-yu IV_0hwnyn_yu
+; IVPref-hw-yu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hw-yu IV_0wnyn_intr_yu
+; IVPref-hw-yu IV_Ann_yu
+IVPref-hw-yu IV_Ann_Pass_yu
+; IVPref-hw-yu IV_Ann_no-Pref-A_yu
+IVPref-hw-yu IV_C_yu
+IVPref-hw-yu IV_C_intr_yu
+IVPref-hw-yu IV_V_yu
+IVPref-hw-yu IV_V_Pass_yu
+IVPref-hw-yu IV_V_intr_yu
+; IVPref-hw-yu IV_V_no-Pref-A_yu
+; IVPref-hw-yu IV_h_yu
+; IVPref-hw-yu IV_hAnynwn_yu
+IVPref-hw-yu IV_h_no-Pref-A_yu
+; IVPref-hw-yu IV_hwn_yu
+; IVPref-hw-yu IV_hyn_yu
+IVPref-hw-yu IV_no-Pref-A_yu
+IVPref-hw-yu IV-n_yu
+IVPref-hw-yu IV-n_Pass_yu
+IVPref-hw-yu IV-n_no-Pref-A_yu
+;
+IVPref-hw-liya IV
+IVPref-hw-liya IV_intr
+IVPref-hw-liya IV_0
+IVPref-hw-liya IV_0_no-Pref-A
+IVPref-hw-liya IV_0h
+; IVPref-hw-liya IV_0hA
+IVPref-hw-liya IV_0hAnn
+IVPref-hw-liya IV_0hAnn_no-Pref-A
+IVPref-hw-liya IV_0hwnyn
+IVPref-hw-liya IV_0hwnyn_no-Pref-A
+; IVPref-hw-liya IV_0wnyn_intr
+IVPref-hw-liya IV_Ann
+; IVPref-hw-liya IV_Ann_Pass
+IVPref-hw-liya IV_Ann_no-Pref-A
+IVPref-hw-liya IV_C
+IVPref-hw-liya IV_C_intr
+IVPref-hw-liya IV_V
+; IVPref-hw-liya IV_V_Pass
+IVPref-hw-liya IV_V_intr
+IVPref-hw-liya IV_V_no-Pref-A
+IVPref-hw-liya IV_h
+IVPref-hw-liya IV_hAnynwn
+IVPref-hw-liya IV_h_no-Pref-A
+IVPref-hw-liya IV_hwn
+; IVPref-hw-liya IV_hyn
+IVPref-hw-liya IV_no-Pref-A
+IVPref-hw-liya IV-n
+IVPref-hw-liya IV-n_intr
+; IVPref-hw-liya IV-n_Pass
+IVPref-hw-liya IV-n_no-Pref-A
+;
+IVPref-hw-liyu IV_yu
+IVPref-hw-liyu IV_intr_yu
+IVPref-hw-liyu IV_Pass_yu
+IVPref-hw-liyu IV_0_yu
+IVPref-hw-liyu IV_0_Pass_yu
+; IVPref-hw-liyu IV_0_no-Pref-A_yu
+; IVPref-hw-liyu IV_0h_yu
+; IVPref-hw-liyu IV_0hA_yu
+IVPref-hw-liyu IV_0hAnn_yu
+; IVPref-hw-liyu IV_0hAnn_no-Pref-A_yu
+IVPref-hw-liyu IV_0hwnyn_yu
+; IVPref-hw-liyu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hw-liyu IV_0wnyn_intr_yu
+; IVPref-hw-liyu IV_Ann_yu
+IVPref-hw-liyu IV_Ann_Pass_yu
+; IVPref-hw-liyu IV_Ann_no-Pref-A_yu
+IVPref-hw-liyu IV_C_yu
+IVPref-hw-liyu IV_C_intr_yu
+IVPref-hw-liyu IV_V_yu
+IVPref-hw-liyu IV_V_Pass_yu
+IVPref-hw-liyu IV_V_intr_yu
+; IVPref-hw-liyu IV_V_no-Pref-A_yu
+; IVPref-hw-liyu IV_h_yu
+; IVPref-hw-liyu IV_hAnynwn_yu
+IVPref-hw-liyu IV_h_no-Pref-A_yu
+; IVPref-hw-liyu IV_hwn_yu
+; IVPref-hw-liyu IV_hyn_yu
+IVPref-hw-liyu IV_no-Pref-A_yu
+IVPref-hw-liyu IV-n_yu
+IVPref-hw-liyu IV-n_Pass_yu
+IVPref-hw-liyu IV-n_no-Pref-A_yu
+;
+; --------------------------------------------
+;
+IVPref-hy-ta IV
+IVPref-hy-ta IV_intr
+IVPref-hy-ta IV_0
+IVPref-hy-ta IV_0_no-Pref-A
+IVPref-hy-ta IV_0h
+; IVPref-hy-ta IV_0hA
+IVPref-hy-ta IV_0hAnn
+IVPref-hy-ta IV_0hAnn_no-Pref-A
+IVPref-hy-ta IV_0hwnyn
+IVPref-hy-ta IV_0hwnyn_no-Pref-A
+; IVPref-hy-ta IV_0wnyn_intr
+IVPref-hy-ta IV_Ann
+; IVPref-hy-ta IV_Ann_Pass
+IVPref-hy-ta IV_Ann_no-Pref-A
+IVPref-hy-ta IV_C
+IVPref-hy-ta IV_C_intr
+IVPref-hy-ta IV_V
+; IVPref-hy-ta IV_V_Pass
+IVPref-hy-ta IV_V_intr
+IVPref-hy-ta IV_V_no-Pref-A
+IVPref-hy-ta IV_h
+IVPref-hy-ta IV_hAnynwn
+IVPref-hy-ta IV_h_no-Pref-A
+IVPref-hy-ta IV_hwn
+; IVPref-hy-ta IV_hyn
+IVPref-hy-ta IV_no-Pref-A
+IVPref-hy-ta IV-n
+IVPref-hy-ta IV-n_intr
+; IVPref-hy-ta IV-n_Pass
+IVPref-hy-ta IV-n_no-Pref-A
+;
+IVPref-hy-tu IV_yu
+IVPref-hy-tu IV_intr_yu
+IVPref-hy-tu IV_Pass_yu
+IVPref-hy-tu IV_0_yu
+IVPref-hy-tu IV_0_Pass_yu
+; IVPref-hy-tu IV_0_no-Pref-A_yu
+; IVPref-hy-tu IV_0h_yu
+; IVPref-hy-tu IV_0hA_yu
+IVPref-hy-tu IV_0hAnn_yu
+; IVPref-hy-tu IV_0hAnn_no-Pref-A_yu
+IVPref-hy-tu IV_0hwnyn_yu
+; IVPref-hy-tu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hy-tu IV_0wnyn_intr_yu
+; IVPref-hy-tu IV_Ann_yu
+IVPref-hy-tu IV_Ann_Pass_yu
+; IVPref-hy-tu IV_Ann_no-Pref-A_yu
+IVPref-hy-tu IV_C_yu
+IVPref-hy-tu IV_C_intr_yu
+IVPref-hy-tu IV_V_yu
+IVPref-hy-tu IV_V_Pass_yu
+IVPref-hy-tu IV_V_intr_yu
+; IVPref-hy-tu IV_V_no-Pref-A_yu
+; IVPref-hy-tu IV_h_yu
+; IVPref-hy-tu IV_hAnynwn_yu
+IVPref-hy-tu IV_h_no-Pref-A_yu
+; IVPref-hy-tu IV_hwn_yu
+; IVPref-hy-tu IV_hyn_yu
+IVPref-hy-tu IV_no-Pref-A_yu
+IVPref-hy-tu IV-n_yu
+IVPref-hy-tu IV-n_Pass_yu
+IVPref-hy-tu IV-n_no-Pref-A_yu
+;
+IVPref-hy-lita IV
+IVPref-hy-lita IV_intr
+IVPref-hy-lita IV_0
+IVPref-hy-lita IV_0_no-Pref-A
+IVPref-hy-lita IV_0h
+; IVPref-hy-lita IV_0hA
+IVPref-hy-lita IV_0hAnn
+IVPref-hy-lita IV_0hAnn_no-Pref-A
+IVPref-hy-lita IV_0hwnyn
+IVPref-hy-lita IV_0hwnyn_no-Pref-A
+; IVPref-hy-lita IV_0wnyn_intr
+IVPref-hy-lita IV_Ann
+; IVPref-hy-lita IV_Ann_Pass
+IVPref-hy-lita IV_Ann_no-Pref-A
+IVPref-hy-lita IV_C
+IVPref-hy-lita IV_C_intr
+IVPref-hy-lita IV_V
+; IVPref-hy-lita IV_V_Pass
+IVPref-hy-lita IV_V_intr
+IVPref-hy-lita IV_V_no-Pref-A
+IVPref-hy-lita IV_h
+IVPref-hy-lita IV_hAnynwn
+IVPref-hy-lita IV_h_no-Pref-A
+IVPref-hy-lita IV_hwn
+; IVPref-hy-lita IV_hyn
+IVPref-hy-lita IV_no-Pref-A
+IVPref-hy-lita IV-n
+IVPref-hy-lita IV-n_intr
+; IVPref-hy-lita IV-n_Pass
+IVPref-hy-lita IV-n_no-Pref-A
+;
+IVPref-hy-litu IV_yu
+IVPref-hy-litu IV_intr_yu
+IVPref-hy-litu IV_Pass_yu
+IVPref-hy-litu IV_0_yu
+IVPref-hy-litu IV_0_Pass_yu
+; IVPref-hy-litu IV_0_no-Pref-A_yu
+; IVPref-hy-litu IV_0h_yu
+; IVPref-hy-litu IV_0hA_yu
+IVPref-hy-litu IV_0hAnn_yu
+; IVPref-hy-litu IV_0hAnn_no-Pref-A_yu
+IVPref-hy-litu IV_0hwnyn_yu
+; IVPref-hy-litu IV_0hwnyn_no-Pref-A_yu
+; IVPref-hy-litu IV_0wnyn_intr_yu
+; IVPref-hy-litu IV_Ann_yu
+IVPref-hy-litu IV_Ann_Pass_yu
+; IVPref-hy-litu IV_Ann_no-Pref-A_yu
+IVPref-hy-litu IV_C_yu
+IVPref-hy-litu IV_C_intr_yu
+IVPref-hy-litu IV_V_yu
+IVPref-hy-litu IV_V_Pass_yu
+IVPref-hy-litu IV_V_intr_yu
+; IVPref-hy-litu IV_V_no-Pref-A_yu
+; IVPref-hy-litu IV_h_yu
+; IVPref-hy-litu IV_hAnynwn_yu
+IVPref-hy-litu IV_h_no-Pref-A_yu
+; IVPref-hy-litu IV_hwn_yu
+; IVPref-hy-litu IV_hyn_yu
+IVPref-hy-litu IV_no-Pref-A_yu
+IVPref-hy-litu IV-n_yu
+IVPref-hy-litu IV-n_Pass_yu
+IVPref-hy-litu IV-n_no-Pref-A_yu
+;
+; -------------------------------------------
+;
+IVPref-nHn-na IV
+IVPref-nHn-na IV_intr
+IVPref-nHn-na IV_0
+IVPref-nHn-na IV_0_no-Pref-A
+IVPref-nHn-na IV_0h
+; IVPref-nHn-na IV_0hA
+IVPref-nHn-na IV_0hAnn
+IVPref-nHn-na IV_0hAnn_no-Pref-A
+IVPref-nHn-na IV_0hwnyn
+IVPref-nHn-na IV_0hwnyn_no-Pref-A
+; IVPref-nHn-na IV_0wnyn_intr
+IVPref-nHn-na IV_V
+; IVPref-nHn-na IV_V_Pass
+IVPref-nHn-na IV_V_intr
+IVPref-nHn-na IV_V_no-Pref-A
+IVPref-nHn-na IV_h
+IVPref-nHn-na IV_hAnynwn
+IVPref-nHn-na IV_h_no-Pref-A
+IVPref-nHn-na IV_no-Pref-A
+IVPref-nHn-na IV-n
+IVPref-nHn-na IV-n_intr
+; IVPref-nHn-na IV-n_Pass
+IVPref-nHn-na IV-n_no-Pref-A
+;
+IVPref-nHn-nu IV_yu
+IVPref-nHn-nu IV_intr_yu
+IVPref-nHn-nu IV_Pass_yu
+IVPref-nHn-nu IV_0_yu
+IVPref-nHn-nu IV_0_Pass_yu
+; IVPref-nHn-nu IV_0_no-Pref-A_yu
+; IVPref-nHn-nu IV_0h_yu
+; IVPref-nHn-nu IV_0hA_yu
+IVPref-nHn-nu IV_0hAnn_yu
+; IVPref-nHn-nu IV_0hAnn_no-Pref-A_yu
+IVPref-nHn-nu IV_0hwnyn_yu
+; IVPref-nHn-nu IV_0hwnyn_no-Pref-A_yu
+; IVPref-nHn-nu IV_0wnyn_intr_yu
+IVPref-nHn-nu IV_V_yu
+IVPref-nHn-nu IV_V_Pass_yu
+IVPref-nHn-nu IV_V_intr_yu
+; IVPref-nHn-nu IV_V_no-Pref-A_yu
+; IVPref-nHn-nu IV_h_yu
+; IVPref-nHn-nu IV_hAnynwn_yu
+IVPref-nHn-nu IV_h_no-Pref-A_yu
+IVPref-nHn-nu IV_no-Pref-A_yu
+IVPref-nHn-nu IV-n_yu
+IVPref-nHn-nu IV-n_Pass_yu
+IVPref-nHn-nu IV-n_no-Pref-A_yu
+;
+IVPref-nHn-lina IV
+IVPref-nHn-lina IV_intr
+IVPref-nHn-lina IV_0
+IVPref-nHn-lina IV_0_no-Pref-A
+IVPref-nHn-lina IV_0h
+; IVPref-nHn-lina IV_0hA
+IVPref-nHn-lina IV_0hAnn
+IVPref-nHn-lina IV_0hAnn_no-Pref-A
+IVPref-nHn-lina IV_0hwnyn
+IVPref-nHn-lina IV_0hwnyn_no-Pref-A
+; IVPref-nHn-lina IV_0wnyn_intr
+IVPref-nHn-lina IV_V
+; IVPref-nHn-lina IV_V_Pass
+IVPref-nHn-lina IV_V_intr
+IVPref-nHn-lina IV_V_no-Pref-A
+IVPref-nHn-lina IV_h
+IVPref-nHn-lina IV_hAnynwn
+IVPref-nHn-lina IV_h_no-Pref-A
+IVPref-nHn-lina IV_no-Pref-A
+IVPref-nHn-lina IV-n
+IVPref-nHn-lina IV-n_intr
+; IVPref-nHn-lina IV-n_Pass
+IVPref-nHn-lina IV-n_no-Pref-A
+;
+IVPref-nHn-linu IV_yu
+IVPref-nHn-linu IV_intr_yu
+IVPref-nHn-linu IV_Pass_yu
+IVPref-nHn-linu IV_0_yu
+IVPref-nHn-linu IV_0_Pass_yu
+; IVPref-nHn-linu IV_0_no-Pref-A_yu
+; IVPref-nHn-linu IV_0h_yu
+; IVPref-nHn-linu IV_0hA_yu
+IVPref-nHn-linu IV_0hAnn_yu
+; IVPref-nHn-linu IV_0hAnn_no-Pref-A_yu
+IVPref-nHn-linu IV_0hwnyn_yu
+; IVPref-nHn-linu IV_0hwnyn_no-Pref-A_yu
+; IVPref-nHn-linu IV_0wnyn_intr_yu
+IVPref-nHn-linu IV_V_yu
+IVPref-nHn-linu IV_V_Pass_yu
+IVPref-nHn-linu IV_V_intr_yu
+; IVPref-nHn-linu IV_V_no-Pref-A_yu
+; IVPref-nHn-linu IV_h_yu
+; IVPref-nHn-linu IV_hAnynwn_yu
+IVPref-nHn-linu IV_h_no-Pref-A_yu
+IVPref-nHn-linu IV_no-Pref-A_yu
+IVPref-nHn-linu IV-n_yu
+IVPref-nHn-linu IV-n_Pass_yu
+IVPref-nHn-linu IV-n_no-Pref-A_yu
+;
+;
