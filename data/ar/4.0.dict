@@ -70,7 +70,7 @@
 );
 
 
-/ar/words/words.n /words_ar/words.noun /words_ar/words.Ndip /words_ar/words.N0 /words_ar/words.years UNKNOWN-WORD.n : (<noun-local> or <noun-idafa>) & <noun-modify> & <noun-common>;
+/ar/words/words.n /ar/words/words.noun /ar/words/words.Ndip /ar/words/words.N0 /ar/words/words.years UNKNOWN-WORD.n : (<noun-local> or <noun-idafa>) & <noun-modify> & <noun-common>;
 /ar/words/words.Ndu        : {NSUFFPLd+}   & (<noun-local> or <noun-idafa>) & <noun-modify> & <noun-common>;
 /ar/words/words.Nap        : NSUFFFEMsg+   & (<noun-local> or <noun-idafa>) & <noun-modify> & <noun-common>;
 /ar/words/words.NAt        : NSUFFFEMpl+   & (<noun-local> or <noun-idafa>) & <noun-modify> & <noun-common>;
@@ -80,7 +80,7 @@
 /ar/words/words.Nall       : (NSUFFFEM+ or NSUFFPL+) & (<noun-local> or <noun-idafa>) & <noun-modify> & <noun-common>;
 /ar/words/words.N_slash_ap : {NSUFFPLd+ or NSUFFFEMsg+ or NSUFFFEMpl+} & (<noun-local> or <noun-idafa>) & <noun-modify> & <noun-common>;
 
-/ar/words/words.Nprop /words_ar/words.noun_prop UNKNOWN-WORD.Nprop:
+/ar/words/words.Nprop /ar/words/words.noun_prop UNKNOWN-WORD.Nprop:
 (({G+} & <noun-local> & <noun-modify> & <noun-common>) or (G- & {G+}));	% Proper nouns
 
 % Quantifiers
@@ -162,7 +162,7 @@ or
 ;
 
 %% Perfect Verbs
-/ar/words/words.PV /words_ar/words.PV_V /words_ar/words.PV_C /words_ar/words.PV_Atn /words_ar/words.PV_0 UNKNOWN-WORD.PV :
+/ar/words/words.PV /ar/words/words.PV_V /ar/words/words.PV_C /ar/words/words.PV_Atn /ar/words/words.PV_0 UNKNOWN-WORD.PV :
 {PVSUFFSUBJ+} & {NEGp-} & {C- or CCVr-} & ((VSUFFDO+ & {S+ or CCSUBJ+}) or ({S+ or CCSUBJ+} & [<adjunct>] & {[O+ or CCOBJ+]})) & <adjunct> & {SUB+ or CCVl+}; 
 
 %% Intransitive Perfect Verbs
@@ -184,7 +184,7 @@ AUXfut+;
 PVSUFFSUBJ-;
 
 %% Imperfect Verbs
-/ar/words/words.IV /words_ar/words.IV_yu /words_ar/words.IV_0 UNKNOWN-WORD.IV :
+/ar/words/words.IV /ar/words/words.IV_yu /ar/words/words.IV_0 UNKNOWN-WORD.IV :
 IVPRE- & {NEGi- or AUX-} & {C- or CCVr-} & {IVSUFFSUBJ+} & (({VSUFFDO+} & {S+ or CCSUBJ+}) or ({S+ or CCSUBJ+} & [<adjunct>] )) & {[O+ or CCOBJ+]} & <adjunct> & {SUB+ or CCVl+} ;
 
 %% Intransitive Imperfect Verbs
