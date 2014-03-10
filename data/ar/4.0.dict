@@ -203,8 +203,12 @@ IVPRE+;
 IVSUFFSUBJ-;
 
 %% Verb Direct Object Enclitics
-"h.VSUFFDO" "hu.VSUFFDO" "hmA.VSUFFDO" "humA.VSUFFDO" "hm.VSUFFDO" "hum.VSUFFDO" "hA.VSUFFDO" hn.VSUFFDO" "hun~a.VSUFFDO" "k.VSUFFDO" "ka.VSUFFDO" "ki.VSUFFDO" "kmA.VSUFFDO" "kumA.VSUFFDO" "km.VSUFFDO" "kum.VSUFFDO" "kn.VSUFFDO" "kun~a.VSUFFDO" "ny.VSUFFDO" "niy.VSUFFDO" "nA.VSUFFDO":
-VSUFFDO- or PO- or QO-;
+"h.VSUFFDO" "hu.VSUFFDO" "hmA.VSUFFDO" "humA.VSUFFDO" "hm.VSUFFDO"
+"hum.VSUFFDO" "hA.VSUFFDO" "hn.VSUFFDO" "hun~a.VSUFFDO" "k.VSUFFDO"
+"ka.VSUFFDO" "ki.VSUFFDO" "kmA.VSUFFDO" "kumA.VSUFFDO" "km.VSUFFDO"
+"kum.VSUFFDO" "kn.VSUFFDO" "kun~a.VSUFFDO" "ny.VSUFFDO" "niy.VSUFFDO"
+"nA.VSUFFDO":
+  VSUFFDO- or PO- or QO-;
 
 
 % Etc. grammatical words
@@ -229,7 +233,17 @@ REL- & Crel+;
 {PO-} & SUB- & Csub+;
 
 %% Coordination
-"w.conj" "wa.conj" ">w.conj" "Aw.conj" ">aw.conj" "lkn.conj" "l`kin.conj" "l`kin~a.conj" "f.conj" "fa.conj" "bl.conj" "bal.conj" "bEdmA.conj" "baEodamA.conj" "byd.conj" "bayoda.conj" "bynmA.conj" "bayonamA.conj" HsbmA.conj" "HasobamA.conj" "HAlmA.conj" "HAlamA.conj" "Hyv.conj" "Hayovu.conj" "HyvmA.conj" "HayovumA.conj" "HynmA.conj" "HiynamA.conj" "ryvmA.conj" "rayovamA.conj" "TAlmA.conj" "TAlamA.conj" "EndmA.conj" "EinodamA.conj" "fymA.conj" "fiymA.conj" "qblmA.conj" "qabolamA.conj" "klmA.conj" "kul~amA.conj" "kmA.conj" "kamA.conj" "lky.conj" "likay.conj" "kymA.conj" "kayomA.conj" "mAlm.conj" "mAlam.conj" "lw.conj" "law.conj" "mn*.conj" "muno*u.conj" "<*A.conj" "A*A.conj" "<i*A.conj" ">yD.conj" :
+"w.conj" "wa.conj" ">w.conj" "Aw.conj" ">aw.conj" "lkn.conj"
+"l`kin.conj" "l`kin~a.conj" "f.conj" "fa.conj" "bl.conj" 
+"bal.conj" "bEdmA.conj" "baEodamA.conj" "byd.conj" "bayoda.conj"
+"bynmA.conj" "bayonamA.conj" "HsbmA.conj" "HasobamA.conj" "HAlmA.conj"
+"HAlamA.conj" "Hyv.conj" "Hayovu.conj" "HyvmA.conj" "HayovumA.conj"
+"HynmA.conj" "HiynamA.conj" "ryvmA.conj" "rayovamA.conj" "TAlmA.conj"
+"TAlamA.conj" "EndmA.conj" "EinodamA.conj" "fymA.conj" "fiymA.conj"
+"qblmA.conj" "qabolamA.conj" "klmA.conj" "kul~amA.conj" "kmA.conj"
+"kamA.conj" "lky.conj" "likay.conj" "kymA.conj" "kayomA.conj"
+"mAlm.conj" "mAlam.conj" "lw.conj" "law.conj" "mn*.conj" "muno*u.conj"
+"<*A.conj" "A*A.conj" "<i*A.conj" ">yD.conj" :
 %{COMMA-} &
 %Wdc+ or  % for sentence-initial conjunctions
 ( % Multiple Verbs
