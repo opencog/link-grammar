@@ -166,7 +166,7 @@
 <left-wall-declarative>:	{Wd-};
 
 
-/fa/words/words.n /words_fa/words.proper UNKNOWN-WORD.n :	% Nouns, normal
+/fa/words/words.n /fa/words/words.proper UNKNOWN-WORD.n :	% Nouns, normal
   (	% Nouns in prepositional phrases
     {<noun-morph-suffix>}
     & {<ezafe-comp>}
@@ -233,7 +233,7 @@ NMSp-;
 "i.nms" "|i.nms":	% Noun morphemes, indefinite suffix
 NMSi-;
 
-/fa/words/words.n.compound /words_fa/words.adj.compound UNKNOWN-WORD.nk:	% Noun component of compound verbs
+/fa/words/words.n.compound /fa/words/words.adj.compound UNKNOWN-WORD.nk:	% Noun component of compound verbs
 %?  (	% Rule out non-compounding possiblities, like 'yek jAru zad' or 'jAru rA zad'
 %    <postposition-acc>
 %    & <noun-acc>

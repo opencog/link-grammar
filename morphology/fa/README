@@ -1,14 +1,19 @@
 
             PersianLG operating instructions
+            --------------------------------
 
-The persianparse.sh shows how the stemmer and the parser can be used
-together.  In essence, its just:
+The link-grammar parser is meant to be used together with the stemmer in
+this directory.  Using this is as simple as saying:
 
-   echo -e "my sentence\n" | stemmer.pl -u | link-parser fa
+   echo -e "my sentence\n" | ./stemmer.pl -u | link-parser fa
 
-You can run persianparse.sh, by typing:
+The above is wrapped up in a very short shell script called persianparse.sh
+To use this script, just say:
 
    ./persianparse.sh 'my sentence'
 
 Most of the scripts included under the 'scripts' directory can be run by
 typing (in this directory) './myscript.pl < myinput.txt > myoutput.txt'
+
+For more information about the Persian link-grammar, see the README file
+in the /data/fa directory.
