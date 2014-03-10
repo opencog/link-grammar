@@ -95,7 +95,7 @@ if ($db) {
  $sth = $dbh->prepare("SELECT * FROM stems WHERE short_ar=? ") or die "Query preparation died", $dbh->errstr;
 }
 else {
- open (IN, 'dictStems.tsv') || die "cannot open: $!";
+ open (IN, 'data/dictStems.tsv') || die "cannot open: $!";
  while (<IN>) {
     chomp;
     m/^(.*?)\t/o;
@@ -103,7 +103,7 @@ else {
  }
  close IN;
 }
-%suffix_hash = load_dict("dictSuffixes"); # dict of suffixes (C)
+%suffix_hash = load_dict("data/dictSuffixes"); # dict of suffixes (C)
 
 while (<STDIN>) {
   $_ =~ s/\s+$//; # chops all line-final \r, \n, \t, spaces, etc. *Makes input dos/unix independent*
