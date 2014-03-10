@@ -1,3 +1,16 @@
+
+!verbosity=1
+!echo
+!limit=1000
+!batch
+!short=20
+!constituents=1
+!spell=0
+
+% Misc arabaic test sentences. All of these should parse.
+% These have been pre-morpho-analyzed by aramorph, and should 
+% "just plain work".
+
 w nql AlvlAvp AlY mst$fY fy Alqds
 w sjl jylyyjyfs 8 hdf AlmbArAp AlwHyd
 w sjl Aymrtwn 12 w zdrylyt$ 66 Alhdfyn
