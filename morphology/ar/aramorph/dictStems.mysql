@@ -1,0 +1,24 @@
+-- Create MySQL database 'dictStems' and table 'stems'
+-- To run this type 'mysql < dictStems.mysql' from the command-line.  You must have appropriate permissions.
+
+DROP DATABASE IF EXISTS dictStems;
+
+CREATE DATABASE dictStems;
+
+USE dictStems;
+
+DROP TABLE IF EXISTS stems; 
+
+CREATE TABLE stems (
+  short_ar char(20), 
+  long_ar char(24), 
+  pos char(22), 
+  gloss char(90), 
+  tagged_ar char(70), 
+  sense_ar char(40), 
+  INDEX (short_ar) 
+) PACK_KEYS = 1 ;
+
+LOAD DATA LOCAL INFILE 'dictStems.tsv' INTO TABLE stems;
+
+OPTIMIZE TABLE stems;

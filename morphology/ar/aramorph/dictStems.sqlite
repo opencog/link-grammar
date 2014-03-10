@@ -1,0 +1,21 @@
+-- Create SQLite3 table 'stems'
+-- To run this type 'sqlite3 dictStems.db < dictStems.sqlite' from the command-line.
+
+DROP TABLE IF EXISTS stems;
+
+CREATE TABLE stems (
+  short_ar text, 
+  long_ar text, 
+  pos text, 
+  gloss text, 
+  tagged_ar text, 
+  sense_ar text
+);
+
+CREATE INDEX short_ar_index ON stems (short_ar);
+
+.separator "\t"
+
+.import dictStems.tsv stems
+
+vacuum stems;
