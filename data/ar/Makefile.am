@@ -11,4 +11,5 @@ dictdir=$(pkgdatadir)/ar
 dict_DATA = $(DICTS)
 
 EXTRA_DIST = $(DICTS)         \
-   4.0.batch
+   4.0.batch                  \
+   4.0.batch-expected-out
