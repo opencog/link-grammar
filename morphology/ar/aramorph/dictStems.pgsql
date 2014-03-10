@@ -12,6 +12,6 @@ CREATE TABLE stems (
 
 CREATE INDEX short_ar_index ON stems (short_ar);
 
-\copy stems from 'dictStems.tsv'
+\copy stems from 'data/dictStems.tsv'
 
 VACUUM stems;

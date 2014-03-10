@@ -2,7 +2,6 @@ SUBDIRS=words
 
 DICTS=                         \
    4.0.affix                   \
-   4.0.batch                   \
    4.0.constituent-knowledge   \
    4.0.dict                    \
    4.0.knowledge               \
@@ -11,4 +10,5 @@ DICTS=                         \
 dictdir=$(pkgdatadir)/fa
 dict_DATA = $(DICTS)
 
-EXTRA_DIST = README $(DICTS)
+EXTRA_DIST = README $(DICTS)   \
+   4.0.batch

@@ -19,6 +19,6 @@ CREATE TABLE stems (
   INDEX (short_ar) 
 ) PACK_KEYS = 1 ;
 
-LOAD DATA LOCAL INFILE 'dictStems.tsv' INTO TABLE stems;
+LOAD DATA LOCAL INFILE 'data/dictStems.tsv' INTO TABLE stems;
 
 OPTIMIZE TABLE stems;

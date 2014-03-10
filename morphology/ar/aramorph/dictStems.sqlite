@@ -16,6 +16,6 @@ CREATE INDEX short_ar_index ON stems (short_ar);
 
 .separator "\t"
 
-.import dictStems.tsv stems
+.import data/dictStems.tsv stems
 
 vacuum stems;
