@@ -59,6 +59,8 @@ struct Resources_s
 struct Parse_Options_s
 {
 	int verbosity;         /* Level of detail to give about the computation 0 */
+	char * debug;          /* comma-sparated function names to debug "" */
+	char * test;           /* comma-sparated features to test "" */
 	Boolean use_sat_solver;/* Use the Boolean SAT based parser */
 	Boolean use_viterbi;   /* Use the Viterbi decoder-based parser */
 	int linkage_limit;     /* The maximum number of linkages processed 100 */

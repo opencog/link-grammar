@@ -312,6 +312,7 @@ size_t lg_strlcpy(char * dest, const char *src, size_t size);
 void safe_strcpy(char *u, const char * v, size_t usize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
+size_t altlen(const char **arr);
 
 /* routines for allocating basic objects */
 void init_memusage(void);

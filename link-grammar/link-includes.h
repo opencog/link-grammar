@@ -79,6 +79,14 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_verbosity(Parse_Options opts);
 link_public_api(void)
+     parse_options_set_debug(Parse_Options opts, const char * debug);
+link_public_api(char *)
+     parse_options_get_debug(Parse_Options opts);
+link_public_api(void)
+     parse_options_set_test(Parse_Options opts, const char * test);
+link_public_api(char *)
+     parse_options_get_test(Parse_Options opts);
+link_public_api(void)
      parse_options_set_linkage_limit(Parse_Options opts, int linkage_limit);
 link_public_api(int)
      parse_options_get_linkage_limit(Parse_Options opts);

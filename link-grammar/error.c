@@ -74,4 +74,29 @@ void prt_error(const char *fmt, ...)
 	va_end(args);
 }
 
+#define MAX_FUNCTION_NAME_SIZE 128
+/**
+ * Check whether the given feature is enabled. It is considered
+ * enabled if it is found in the comma-separated list of features.
+ * This list, if not empty, has a leading and a trailing comma.
+ */
+Boolean feature_enabled(const char * list, const char * feature) {
+	char buff[MAX_FUNCTION_NAME_SIZE] = ",";
+	size_t len;
+
+	strncpy(buff+1, feature, sizeof(buff));
+	len = strlen(feature);
+	if (len < sizeof(buff)-2)
+	{
+		buff[len+1] = ',';
+		buff[len+2] = '\0';
+	}
+	else
+	{
+		buff[sizeof(buff)] = '\0';
+	}
+	return NULL != strstr(list, buff);
+}
+
+
 /* ============================================================ */

@@ -12,6 +12,8 @@
 
 /* verbosity global is held in utilities.c */
 extern int verbosity;          /* the verbosity level for error messages */
+extern char * debug;           /* comma-separated function list to debug */
+extern char * test;            /* comma-separated function list to debug */
 
 /* size of random table for computing the
    hash functions.  must be a power of 2 */

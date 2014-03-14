@@ -51,7 +51,9 @@
 #define DEFAULTPATH DICTIONARY_DIR
 
 /* This file contains certain general utilities. */
-int   verbosity;
+int    verbosity;
+char * debug;
+char * test;
 
 /* ============================================================= */
 /* String utilities */
@@ -1105,6 +1107,17 @@ char * get_default_locale(void)
 		*needle = '\0';
 
 	return locale;
+}
+
+/* ============================================================= */
+/* Alternatives utilities */
+
+size_t altlen(const char **arr)
+{
+	size_t len = 0;
+	if (arr)
+		while (arr[len] != NULL) len++;
+	return len;
 }
 
 /* ========================== END OF FILE =================== */

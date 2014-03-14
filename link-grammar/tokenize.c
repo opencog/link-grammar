@@ -1,10 +1,7 @@
-/*
- * ALTOLD - Switch between old and new "alternatives" code,
- *          in case a regression is suspected (to be cleaned up later).
- * ALTOLD=0	Use the new alternatives handling.
- * ALTOLD=1	Use the old alternative handling (as in version 4.8.6)
+/* XXX
+ * !test=altold - use the old alternatives handling (as of version 4.8.6)
+ * in case a regression is suspected (to be cleaned up later).
  */
-#define ALTOLD 0
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
@@ -38,8 +35,6 @@
 #include "stdarg.h"
 
 #define MAX_STRIP 10
-
-size_t altlen(const char **arr); /* XXX move to .h */
 
 /* These are no longer in use, but are read from the 4.0.affix file */
 /* I've left these here, as an example of what to expect. */
@@ -219,7 +214,7 @@ static void print_sentence_word_alternatives(Sentence);
  */
 static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_found)
 {
-if (ALTOLD)
+if (test_enabled("altold"))
 {
 	size_t len = sent->length;
 
@@ -252,14 +247,6 @@ else
 		add_alternative(sent, 0,0, 1,&s, 0,0);
 		(void) issue_alternatives1(sent, s, quote_found);
 }
-}
-
-size_t altlen(const char **arr)
-{
-	size_t len = 0;
-	if (arr)
-		while (arr[len] != NULL) len++;
-	return len;
 }
 
 static const char ** resize_alts(const char **arr, size_t len)
@@ -442,20 +429,22 @@ static void altappend(Sentence sent, int word_index, const char *w)
  * To test: add .zzz to empty words used for balancing,
  * in a try to prevent fetching up of all possible null suffixes.
  * To that end, a small change in separate_word()
- * is neede (in the code that fetches a stem).
+ * is needed (in the code that fetches a stem).
  *
+ * BALANCING: the parser needs it for now. It is porobaly better
+ * to move it to build_sentence_expressions().
  */
 static void add_alternative(Sentence sent,
-                            int prefnum, const char **prefix,
-			    int stemnum, const char **stem,
-			    int suffnum, const char **suffix)
+				int prefnum, const char **prefix,
+				int stemnum, const char **stem,
+				int suffnum, const char **suffix)
 {
-	int t_start = sent->t_start;	/* word starting the current token sequence */
-	int t_count = sent->t_count;	/* number of words in it */
-	int len;			/* word index */
-	int ai = 0;			/* affix index */
+	int t_start = sent->t_start; /* word starting the current token sequence */
+	int t_count = sent->t_count; /* number of words in it */
+	int len;                     /* word index */
+	int ai = 0;                  /* affix index */
 	char infix_string[] = { INFIX_MARK, '\0' };
-	const char **affix;		/* affix list pointer */
+	const char **affix;          /* affix list pointer */
 	const char **affixlist[] = { prefix, stem, suffix, NULL };
 	int numlist[] = { prefnum, stemnum, suffnum };
 	enum affixtype { PREFIX, STEM, SUFFIX, END };
@@ -479,8 +468,8 @@ static void add_alternative(Sentence sent,
 			assert(ai <= t_count, "add_alternative: word index > t_count");
 			if (ai == 0 && *affix[0] == '\0')	/* can it happen? */
 			{
-				if (1 < verbosity) /* DEBUG */
-					printf("add_alternative(): skipping given empty string"
+				if (0 < verbosity) /* DEBUG */
+					printf("add_alternative(): empty string given - shouldn't happen"
 					       " (type %d, argnum %d/%d/%d)\n",
 						at, prefnum, stemnum, suffnum);
 				return;
@@ -501,7 +490,7 @@ static void add_alternative(Sentence sent,
 				t_count++;
 				if (t_count > 1) /* not first added word */
 				{
-					/* BALANCING: complete alternative total number at the added new word */
+					/* BALANCING alternative total number at the added new word */
 					int i;
 
 					int numalt = altlen(sent->word[t_start].alternatives)-1;
@@ -540,10 +529,9 @@ static void add_alternative(Sentence sent,
 					{
 						/*
 						 * There is a suffix, so we must dictionary-fetch only a stem.
-						 * NOTE: This check guarantees the suffix is not the empty word.
-						 * If it is the empty word, we should not make this stem marking,
-						 * since potentially this is not a stem, but a regular word
-						 * (this happens a lot in the Russian dictionary).
+						 * However - if it is the empty word, we should not make this
+						 * stem marking, since potentially this is not a stem, but a
+						 * regular word (this happens in the Russian dictionary).
 						 */
 						buff[sz] = SUBSCRIPT_MARK;
 						buff[sz+1] = INFIX_MARK;
@@ -559,7 +547,8 @@ static void add_alternative(Sentence sent,
 				case END:
 					assert(TRUE, "affixtype END reached");
 			}
-			if (is_utf8_upper(buff)) sent->word[t_start].firstupper = TRUE; /* suffixes start with INFIX_MARK... */
+			/* suffixes start with INFIX_MARK */
+			if (is_utf8_upper(buff)) sent->word[t_start].firstupper = TRUE;
 			altappend(sent, t_start + ai, buff);
 		}
 	}
@@ -716,7 +705,7 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 				if (2 < verbosity)
 					printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
 
-				if (ALTOLD)
+				if (test_enabled("altold"))
 				{
 				add_suffix_alternatives(tokenizer, newword, suffix[i]);
 				}
@@ -803,10 +792,12 @@ static int revcmplen(const void *a, const void *b)
  * Split word into multiple prefix "subwords" (1-3 characters each)
  * and an unprefixed word (which must be in the dictionary or be null)
  * in all possible ways (even when the prefix combination is not valid,
- * the LG rulse will resolve that).
- * Add all the alternatives.
+ * the LG rules will resolve that).
  * If the whole word (i.e. including the prefixes) is in the dictionary,
  * the word will be added in separate_word().
+ * Add all the alternatives.
+ * The assumptions used prevent a vast number of false splits.
+ * They may be relaxed later.
  *
  * Note: This function currently does more than absolutely needed for LG,
  * in order to simplify the initial Hebrew dictionary.
@@ -817,15 +808,15 @@ static int revcmplen(const void *a, const void *b)
  * - the prefix consists of subwords
  * - longer subwords have priority over shorter ones
  * - subwords in a prefix are unique ('ככ' is considered here as one "subword")
- * - words with length <= 2 don't have a prefix
+ * - input words with length <= 2 don't have a prefix
  * - each character uses 2 bytes
- * - less than 16 prefix types - 13 are actually defined (for Boolean array limit)
- * - the given word contains only Hebrew characters (mixed words are to be split beforehand)
+ * - less than 16 prefix types - 13 are actually defined (Boolean array limit)
+ * - the input word contains only Hebrew characters
  * - the letter "ו" (vav) can only be the first prefix subword
- * - if the last prefix subword is not "ו" and the word (length>2) starts with 2 "ו",
- *   the acatual word to be looked up starts with one "ו" (see also TBD there)
- * - no one-letter words with a prefix
- * - a prefix can be stand-alone (as if it prefixs a null word)
+ * - if the last prefix subword is not "ו" and the word (length>2) starts
+ *   with 2 "ו", the acatual word to be looked up starts with one "ו"
+ *   (see also TBD there)
+ * - a prefix can be stand-alone (an input word that consists of prefixes)
  *
  * To implement this function in a way which is appropriate for more languages,
  * Hunspell-like definitions (but more general) are needed.
@@ -939,7 +930,7 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 }
 
 /* Return TRUE if the word might be capitalized by convention:
- * -- if its the first word of a sentencorde
+ * -- if its the first word of a sentence
  * -- if its the first word following a colon
  * -- if its the first word of a quote
  *
@@ -1076,7 +1067,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		}
 	}
 
-	/* strip affixes from candidate word, using a linear splittng
+	/* strip affixes from candidate word, using a linear splitting
 	 * algorithm */
 	if (dict->affix_table != NULL)
 	{
@@ -1113,7 +1104,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		{
 			for (i=0; i<l_strippable; i++)
 			{
-				/* This is UTF8-safe, I beleive ... */
+				/* This is UTF8-safe, I believe ... */
 				sz = strlen(strip_left[i]);
 				if (strncmp(w, strip_left[i], sz) == 0)
 				{
@@ -1174,7 +1165,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		if ((FALSE == word_is_in_dict) && contains_digits(word))
 		{
 			/* Same as above, but with a twist: the only thing that can
-			 * preceed a units suffix is a number. This is so that we can
+			 * precede a units suffix is a number. This is so that we can
 			 * split up things like "12ft" (twelve feet) but not split up
 			 * things like "Delft blue". Multiple passes allow for
 			 * constructions such as 12sq.ft.
@@ -1247,7 +1238,7 @@ do_suffix_processing:
 		 * then we need to insert a two-word version, with the second
 		 * word being the empty word.  This is a crazy hack to always
 		 * keep a uniform word-count */
-if (ALTOLD)
+if (test_enabled("altold"))
 {
 		if (word_is_in_dict)
 		{
@@ -1287,15 +1278,18 @@ if (ALTOLD)
 
 				word[sz] = '\0'; /* remove the stem suffix */
 				if (2 < verbosity)
-					printf("Info: Cannot split stem %s: Adding %s + empty-word\n", word, word);
+					printf("Info: Cannot split stem %s: Adding %s + empty-word\n",
+							word, word);
 				add_alternative(sent, 0,0, 1,&wp, 1,&empty_word);
 				/* word is not used from now on in this loop iteration */
 			}
 			else
 			{
-				word[sz] = '\0'; /* still need to issue the word - remove the stem suffix */
+				/* still need to issue the word - remove the stem suffix */
+				word[sz] = '\0';
 				if (2 < verbosity)
-					printf("Info: Cannot split non-stem %s - will be added alone\n", word);
+					printf("Info: Cannot split non-stem %s - will be added alone\n",
+						  	word);
 			}
 			
 		}
@@ -1380,7 +1374,7 @@ do_mprefix_processing:
 
 	if (FALSE == issued)
 	{
-		if (ALTOLD)
+		if (test_enabled("altold"))
 		issued = issue_alternatives(sent, quote_found);
 		else
 		issued = issue_alternatives1(sent, word, quote_found);
@@ -1629,7 +1623,7 @@ static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
  * Else leave the disjuncts alone.
  *
  * XXX There is a fundamental algorithmic failure here, with regards to
- * spell guessing.  If the mispelled word "dont" shows up, the
+ * spell guessing.  If the misspelled word "dont" shows up, the
  * spell-guesser will offer both "done" and "don't" as alternatives.
  * The second alternative should really be affix-stripped, and issued
  * as two words, not one. But the former only issues as one word.  So,
