@@ -9,7 +9,7 @@
  * other process (machine-learning algo) to dynamically update
  * the dictionary.
  *
- * Copyright (c) 2013 Linas Vepstas <linasvepstas@gmail.com>
+ * Copyright (c) 2014 Linas Vepstas <linasvepstas@gmail.com>
  */
 
 #ifdef HAVE_SQLITE
