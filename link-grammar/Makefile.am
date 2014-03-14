@@ -1,4 +1,4 @@
-# 
+#
 # Automake file for building liblink-grammar.so
 #
 
@@ -31,7 +31,7 @@ if WITH_FAT_LINKS
 DEFS += -DUSE_FAT_LINKAGES
 endif
 
-# $(top_builddir) to pick up autogened link-grammar/link-features.h 
+# $(top_builddir) to pick up autogened link-grammar/link-features.h
 INCLUDES = -I$(top_srcdir) -I$(top_builddir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
 lib_LTLIBRARIES = liblink-grammar.la
@@ -156,9 +156,11 @@ liblink_grammar_include_HEADERS =   \
 	dict-api.h                       \
 	dict-structures.h
 
-EXTRA_DIST=                               \
-	prefix.h                               \
-	link-grammar.def
+EXTRA_DIST=                         \
+	prefix.h                         \
+	link-grammar.def                 \
+	dict-sql/dict.sql                \
+	dict-sql/README
 
 # -----------------------------------------------------------
 install-data-local: install-libtool-import-lib

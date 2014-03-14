@@ -681,6 +681,7 @@ $PACKAGE-$VERSION
 	HunSpell dictionary location:   ${HunSpellDictDir}
 	Generate 'fat' linkages:        ${enable_fat_links}
 	Boolean SAT parser:             ${enable_sat_solver}
+	SQLite-backed dictionary:       ${SQLiteFound}
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
 "

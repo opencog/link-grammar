@@ -1,0 +1,24 @@
+
+                  SQLite-based dictionary
+                  -----------------------
+
+The SQLite-based dictionary storage is meant to provide a simple
+machine-readable interface to the Link Grammar dictionaries.
+
+Traditionally, the Lik Grammar dictionaries are stored in text files
+that are hand-edited. This is fine for manual maintenance of the
+dictionary entries, but is a stumbling block when it is desired that
+the dictionary be maintained in an automated fashion, e.g. by
+language-learning tools.  The SQLite-based dictionary provides this
+simpler interface.
+
+The current interface remains a hybrid: some of the data will remain
+in text files, until the system is more fully developed.
+
+The SQLite format also offers another distinct advantage over the
+text-bases system: an improved mechanism for handling non-integer
+costs.  In an automated language learning system, the costs will
+typically be log-liklihoods, and thus have fractional values; this
+is in contrast to the current text system, which only offers an
+integer-valued cost system.
+
