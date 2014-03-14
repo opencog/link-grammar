@@ -647,6 +647,7 @@ data/lt/Makefile
 data/ru/Makefile
 data/ru/words/Makefile
 data/tr/Makefile
+data/demo-sql/Makefile
 man/Makefile
 autopackage/default.apspec
 link-grammar.xcode/Makefile
