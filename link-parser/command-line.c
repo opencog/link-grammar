@@ -21,6 +21,8 @@
 static struct
 {
 	int verbosity;
+	char * debug;
+   char * test;
 	int timeout;
 	int memory;
 	int linkage_limit;
@@ -59,6 +61,7 @@ typedef enum
 	Int,
 	Bool,
 	Float,
+	String,
 } ParamType;
 
 typedef struct
@@ -104,6 +107,8 @@ static Switch default_switches[] =
    {"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
    {"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
+   {"debug",      String, "comma-separated function list to debug", &local.debug},
+   {"test",      String, "comma-separated features to test", &local.test},
 #ifdef USE_VITERBI
    {"viterbi",    Bool, "Use Viterbit-based parser",       &local.use_viterbi},
 #endif
@@ -259,8 +264,14 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 				printf("%5.2f", (double) (*((float *)as[i].ptr)));
 			}
 			else
+			if ((Bool == as[i].param_type) || Int == as[i].param_type)
 			{
 				printf("%5d", ival(as[i]));
+			}
+			else
+			if (String == as[i].param_type)
+			{
+				printf("%5s", *(char **)as[i].ptr);
 			}
 			if (Bool == as[i].param_type)
 			{
@@ -332,7 +343,7 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 			return -1;
 		}
 
-		if (as[j].param_type != Float)
+		if ((as[j].param_type == Int) || (as[j].param_type == Bool))
 		{
 			int val = -1;
 			if (is_numerical_rhs(y)) val = atoi(y);
@@ -351,6 +362,7 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 			return 0;
 		}
 		else
+		if (as[j].param_type == Float)
 		{
 			float val = -1.0;
 			val = (float) atof(y);
@@ -363,6 +375,18 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 			*((float *) as[j].ptr) = val;
 			printf("%s set to %5.2f\n", as[j].string, val);
 			return 0;
+		}
+		else
+		if (as[j].param_type == String)
+		{
+			*((char **) as[j].ptr) = y;
+			printf("%s set to %s\n", (char *)as[j].string, y);
+			return 0;
+		}
+		else
+		{
+			printf("Internal error: Unknown variable type %d\n", as[j].param_type);
+			return -1;
 		}
 	}
 
@@ -392,6 +416,8 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 static void put_opts_in_local_vars(Parse_Options opts)
 {
 	local.verbosity = parse_options_get_verbosity(opts);
+	local.debug = parse_options_get_debug(opts);
+	local.test = parse_options_get_test(opts);
 	local.timeout = parse_options_get_max_parse_time(opts);;
 	local.memory = parse_options_get_max_memory(opts);;
 	local.linkage_limit = parse_options_get_linkage_limit(opts);
@@ -429,6 +455,8 @@ static void put_opts_in_local_vars(Parse_Options opts)
 static void put_local_vars_in_opts(Parse_Options opts)
 {
 	parse_options_set_verbosity(opts, local.verbosity);
+	parse_options_set_debug(opts, local.debug);
+	parse_options_set_test(opts, local.test);
 	parse_options_set_max_parse_time(opts, local.timeout);
 	parse_options_set_max_memory(opts, local.memory);
 	parse_options_set_linkage_limit(opts, local.linkage_limit);
