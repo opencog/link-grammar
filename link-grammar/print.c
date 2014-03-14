@@ -423,7 +423,23 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				xfree(s, l+1);
 			}
 			else
-				t = string_set_add("", sent->string_set);
+			{
+				/* Altrnative token island.
+				 * Show the internal word number and its list of alternatives. */
+				String * s = string_new();
+				const char ** a;
+				char * a_list;
+
+				append_string(s, "[%d", i);
+				for (a = sent->word[i].alternatives; *a; a++) {
+					append_string(s, " %s", *a);
+				}
+				append_string(s, "]");
+				a_list = string_copy(s);
+				t = string_set_add(a_list, sent->string_set);
+				string_delete(s);
+				exfree(a_list, strlen(a_list)+1);
+			}
 		}
 		else if (opts->display_word_subscripts)
 		{
