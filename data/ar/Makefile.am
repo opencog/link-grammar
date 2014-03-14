@@ -10,6 +10,7 @@ DICTS=                        \
 dictdir=$(pkgdatadir)/ar
 dict_DATA = $(DICTS)
 
+# Do NOT install the batch files!
 EXTRA_DIST = $(DICTS)         \
    4.0.batch                  \
    4.0.batch-expected-out

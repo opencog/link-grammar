@@ -10,5 +10,6 @@ DICTS=                         \
 dictdir=$(pkgdatadir)/fa
 dict_DATA = $(DICTS)
 
+# Do NOT install the batch files!
 EXTRA_DIST = README $(DICTS)   \
    4.0.batch
