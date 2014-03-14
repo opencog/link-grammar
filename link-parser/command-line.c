@@ -22,7 +22,7 @@ static struct
 {
 	int verbosity;
 	char * debug;
-   char * test;
+	char * test;
 	int timeout;
 	int memory;
 	int linkage_limit;
@@ -108,7 +108,7 @@ static Switch default_switches[] =
 #endif /* USE_SAT_SOLVER */
    {"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
    {"debug",      String, "comma-separated function list to debug", &local.debug},
-   {"test",      String, "comma-separated features to test", &local.test},
+   {"test",       String, "comma-separated features to test", &local.test},
 #ifdef USE_VITERBI
    {"viterbi",    Bool, "Use Viterbit-based parser",       &local.use_viterbi},
 #endif
@@ -250,14 +250,14 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 
 	if (strcmp(s, "variables") == 0)
 	{
-        printf(" Variable     Controls                                      Value\n");
-        printf(" --------     --------                                      -----\n");
+		printf(" Variable     Controls                                      Value\n");
+		printf(" --------     --------                                      -----\n");
 		for (i = 0; as[i].string != NULL; i++)
 		{
 			printf(" ");
-            left_print_string(stdout, as[i].string, "             ");
-            left_print_string(stdout, as[i].description,
-                   "                                              ");
+			left_print_string(stdout, as[i].string, "             ");
+			left_print_string(stdout, as[i].description,
+			            "                                              ");
 			if (Float == as[i].param_type)
 			{
 				/* Float point print! */
@@ -291,8 +291,8 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 		printf("can be abbreviated.  Here is a list of the commands:\n\n");
 		for (i=0; user_command[i].s != NULL; i++) {
 			printf(" !");
-            left_print_string(stdout, user_command[i].s, "               ");
-            left_print_string(stdout, user_command[i].str, "                                                    ");
+			left_print_string(stdout, user_command[i].s, "               ");
+			left_print_string(stdout, user_command[i].str, "                                                    ");
 			printf("\n");
 		}
 		printf(" !!<string>      Print all the dictionary word that matchs <string>.\n");
