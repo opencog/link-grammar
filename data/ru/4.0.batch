@@ -3,7 +3,7 @@
 !verbosity=1
 !echo
 !limit=1000
-!suffixes=1
+!morphology=1
 
 % test
 это тест
