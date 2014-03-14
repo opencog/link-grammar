@@ -120,6 +120,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-dict.h            \
 	dict-file/read-regex.h           \
 	dict-file/word-file.h            \
+	dict-sql/read-sql.h              \
 	dict-api.h                       \
 	dict-structures.h                \
 	disjunct-utils.h                 \

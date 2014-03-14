@@ -1,6 +1,6 @@
 
 /*
- * read-sql.c
+ * read-sql.h
  *
  * Read in dictionary from an SQL DB.
  * Keeping it simple for just right now, and using SQLite.
@@ -12,20 +12,9 @@
  * Copyright (c) 2014 Linas Vepstas <linasvepstas@gmail.com>
  */
 
-#ifdef HAVE_SQLITE
+#ifndef READ_SQL_H
+#define READ_SQL_H
 
-#include <sqlite3.h>
+char * get_db_contents(const char *dbname);
 
-#include "utilities.h"
-
-#include "read-sql.h"
-
-char * get_db_contents(const char *dbname)
-{
-	printf ("Hello world\n");
-	return NULL;
-
-}
-
-
-#endif /* HAVE_SQLITE */
+#endif /* READ_SQL_H */

@@ -1678,7 +1678,7 @@ static Boolean read_entry(Dictionary dict)
 			instr = get_file_contents(dict_name);
 			if (NULL == instr)
 			{
-				prt_error("Error: Could not open dictionary %s", dict_name);
+				prt_error("Error: Could not open subdictionary %s", dict_name);
 				goto syntax_error;
 			}
 			dict->input = instr;

@@ -22,6 +22,7 @@
 #include "structures.h"
 #include "utilities.h"
 #include "word-utils.h"
+#include "dict-sql/read-sql.h"  /* Temporary hack */
 
 
 /***************************************************************
@@ -248,6 +249,7 @@ dictionary_six_str(const char * lang,
 		dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 		if (dict->affix_table == NULL)
 		{
+			prt_error("Error: Could not open affix file %s", affix_name);
 			goto failure;
 		}
 		affix_list_create(dict->affix_table);
@@ -317,6 +319,11 @@ dictionary_six(const char * lang, const char * dict_name,
 	Dictionary dict;
 
 	char* input = get_file_contents(dict_name);
+	if (NULL == input)
+	{
+		/* If the file isn't found, try again with the database */
+		input = get_db_contents(dict_name);
+	}
 	if (NULL == input)
 	{
 		prt_error("Error: Could not open dictionary %s", dict_name);
