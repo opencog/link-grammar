@@ -80,11 +80,12 @@ void prt_error(const char *fmt, ...)
  * enabled if it is found in the comma-separated list of features.
  * This list, if not empty, has a leading and a trailing comma.
  */
-Boolean feature_enabled(const char * list, const char * feature) {
+Boolean feature_enabled(const char * list, const char * feature)
+{
 	char buff[MAX_FUNCTION_NAME_SIZE] = ",";
 	size_t len;
 
-	strncpy(buff+1, feature, sizeof(buff));
+	strncpy(buff+1, feature, sizeof(buff)-2);
 	len = strlen(feature);
 	if (len < sizeof(buff)-2)
 	{
@@ -93,7 +94,7 @@ Boolean feature_enabled(const char * list, const char * feature) {
 	}
 	else
 	{
-		buff[sizeof(buff)] = '\0';
+		buff[sizeof(buff)-1] = '\0';
 	}
 	return NULL != strstr(list, buff);
 }
