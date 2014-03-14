@@ -224,7 +224,7 @@ void parse_options_set_debug(Parse_Options opts, const char * dummy)
 		}
 		else
 		{
-			buff[sizeof(buff)] = '\0';
+			buff[sizeof(buff)-1] = '\0';
 		}
 	}
 	opts->debug = buff;
@@ -261,7 +261,7 @@ void parse_options_set_test(Parse_Options opts, const char * dummy)
 		}
 		else
 		{
-			buff[sizeof(buff)] = '\0';
+			buff[sizeof(buff)-1] = '\0';
 		}
 	}
 	opts->test = buff;
@@ -1359,9 +1359,9 @@ else
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
 		Linkage_info *lifo = &sent->link_info[lk];
-		size_t numalt;                   /* number of alternatives */
+		size_t numalt = 1;               /* number of alternatives */
 		size_t ai;                       /* index of checked alternative */
-		int unsplit_i;                   /* unsplit word index */
+		int unsplit_i = 0;               /* unsplit word index */
 		const char * unsplit = NULL;     /* unsplit word */
 		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
 		char * affix_types_p = affix_types;
