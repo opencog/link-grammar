@@ -23,6 +23,7 @@
 #include "string-set.h"
 #include "tokenize.h"
 #include "word-file.h"
+#include "utilities.h"
 
 const char * linkgrammar_get_version(void)
 {
@@ -2079,14 +2080,6 @@ void free_dictionary(Dictionary dict)
 	free_dict_node_recursive(dict->root);
 	free_Word_file(dict->word_file_header);
 	free_Exp_list(dict->exp_list);
-}
-
-static size_t altlen(const char **arr)
-{
-	size_t len = 0;
-	if (arr)
-		while (arr[len] != NULL) len++;
-	return len;
 }
 
 /**
