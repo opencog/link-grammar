@@ -21,6 +21,9 @@ CREATE TABLE Morphemes
 	classname TEXT
 );
 
+-- We want fast lookup of words.
+CREATE INDEX morph_idx ON Morphemes(morpheme);
+
 CREATE TABLE Disjuncts
 (
 	-- All words/morphemes sharing this classname also share this
@@ -45,3 +48,6 @@ CREATE TABLE Disjuncts
 	-- Cost of using this disjunct.
 	cost REAL
 );
+
+-- We want fast lookup of classnames.
+CREATE INDEX class_idx ON Disjuncts(classname);

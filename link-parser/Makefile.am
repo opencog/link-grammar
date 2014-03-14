@@ -24,6 +24,9 @@ link_parser_SOURCES = link-parser.c \
 
 link_parser_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
 link_parser_LDADD += $(LIBEDIT_LIBS)
+if HAVE_SQLITE
+link_parser_LDADD += $(SQLITE3_LIBS)
+endif
 
 if WITH_SAT_SOLVER
 link_parser_LDADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la

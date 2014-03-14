@@ -20,11 +20,37 @@
 
 #include "read-sql.h"
 
-char * get_db_contents(const char *dbname)
+char * get_db_contents(const char *dbname_)
 {
-	printf ("Hello world\n");
-	return NULL;
+	sqlite3 *db;
+	int rc;
+	char *slash, *dbn, *dbname;
 
+	/* XXX HACK ALERT: for right now, we're going to just mangle
+	 * the dbname from 4.0.dict to dict.db. Some more elegant
+	 * solution should be provided in the future.
+	 */
+	dbn = strdup(dbname_);
+	slash = strrchr (dbn, '/'); /* DIR_SEPARATOR */
+	if (slash) *slash = 0x0;
+	dbname = join_path (dbn, "dict.db");
+	free(dbn);
+
+	rc = sqlite3_open(dbname, &db);
+	if (rc)
+	{
+		prt_error("Error: Can't open %s database: %s\n",
+			dbname, sqlite3_errmsg(db));
+		free(dbname);
+		sqlite3_close(db);
+		return NULL;
+	}
+	free(dbname);
+	printf ("Hello world\n");
+
+
+	sqlite3_close(db);
+	return NULL;
 }
 
 

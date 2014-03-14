@@ -328,7 +328,7 @@ void * xrealloc(void *, size_t oldsize, size_t newsize) GNUC_MALLOC;
   /* **MUST** define for win32, Mac OSX, because xfree is listed in
    * link-grammar.def and the win/osx linker fails if there is no
    * xfree. So, keep the linker happy. (xfree is used in both dict-file
-   * and sat solver)
+   * and sat solver.)
    */
   #define TRACK_SPACE_USAGE 1
 #endif /* defined(_WIN32) || __APPLE__ */
