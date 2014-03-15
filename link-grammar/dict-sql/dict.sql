@@ -1,8 +1,15 @@
 --
+-- dict.sql
 --
--- SQLite3 style SQL commands to create a table holding the various
+-- SQLite3 style SQL commands to create the tables holding the various
 -- dictionary bits and pieces.  Right now, this is just a very simple
--- table that holds all the disjuncts for a given word.
+-- pair of tables, one to hold word classes, and another to hold all
+-- the disjuncts for that class.
+--
+-- To create a new database, simply say:
+--    cat dict.sql | sqlite3 dict.db
+-- To populate it with the demo data:
+--    cat demo.sql | sqlite3 dict.db
 --
 
 CREATE TABLE Morphemes

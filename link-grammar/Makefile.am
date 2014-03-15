@@ -161,6 +161,7 @@ EXTRA_DIST=                         \
 	prefix.h                         \
 	link-grammar.def                 \
 	dict-sql/dict.sql                \
+	dict-sql/demo.sql                \
 	dict-sql/README
 
 # -----------------------------------------------------------
