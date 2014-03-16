@@ -312,6 +312,19 @@ size_t lg_strlcpy(char * dest, const char *src, size_t size);
 void safe_strcpy(char *u, const char * v, size_t usize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
+
+/* Simple, cheap, easy dynamic string. */
+typedef struct
+{
+  char *str;
+  size_t end;
+  size_t len;
+} dyn_str;
+
+dyn_str* dyn_str_new(void);
+void dyn_str_delete(dyn_str*);
+void dyn_strcat(dyn_str*, const char*);
+
 size_t altlen(const char **arr);
 
 /* routines for allocating basic objects */

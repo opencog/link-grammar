@@ -20,9 +20,17 @@
 
 #include "read-sql.h"
 
+typedef struct 
+{
+	dyn_str *ds;
+	sqlite3 *db;
+} bigstr;
+
+
+/*
 static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 {
-	sqlite3* db = user_data;
+	bigstr* bs = user_data;
 
 	int i;
 	for (i=0; i<argc; i++)
@@ -30,6 +38,52 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 printf("duude %s = %s\n", colName[i], argv[i] ? argv[i] : "NULL");
 	}
 printf("\n");
+
+	return 0;
+}
+*/
+
+static int morph_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	bigstr* bs = user_data;
+
+	assert(1 == argc, "Bad column count");
+	assert(argv[0], "NULL column value");
+
+	int i;
+	for (i=0; i<argc; i++)
+	{
+printf("duude %s = %s\n", colName[i], argv[i] ? argv[i] : "NULL");
+	}
+printf("\n");
+
+	return 0;
+}
+
+static int classname_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	bigstr* bs = user_data;
+	char *exec_err_msg;
+	int rc;
+	dyn_str *qry;
+
+	assert(1 == argc, "Bad column count");
+	assert(argv[0], "NULL column value");
+
+	/* The classname field joins the two tables together. */
+	qry = dyn_str_new();
+	dyn_strcat(qry, "SELECT subscript FROM Morphemes WHERE classname = \'");
+	dyn_strcat(qry, argv[0]);
+	dyn_strcat(qry, "\';");
+
+	rc = sqlite3_exec(bs->db, qry->str, morph_cb, bs, &exec_err_msg);
+	if (SQLITE_OK != rc)
+	{
+		prt_error("Error: Failure reading classname %s: %s\n",
+			argv[0], exec_err_msg);
+	}
+	dyn_str_delete(qry);
+
 	return 0;
 }
 
@@ -48,6 +102,8 @@ char * get_db_contents(const char *dbname_)
 	int rc;
 	char *slash, *dbn, *dbname;
 	char *exec_err_msg;
+	bigstr bs;
+	bs.ds = dyn_str_new();
 
 	/* XXX HACK ALERT: for right now, we're going to just mangle
 	 * the dbname from 4.0.dict to dict.db. Some more elegant
@@ -67,9 +123,12 @@ char * get_db_contents(const char *dbname_)
 			dbname, sqlite3_errmsg(db));
 		goto failure;
 	}
-	printf ("Hello world\n");
+	bs.db = db;
 
-	rc = sqlite3_exec(db, "SELECT * FROM Morphemes;", morph_cb, db, &exec_err_msg);
+	/* The classname field joins the two tables together. */
+	rc = sqlite3_exec(db,
+		"SELECT DISTINCT classname FROM Morphemes;",
+		 classname_cb, &bs, &exec_err_msg);
 	if (SQLITE_OK != rc)
 	{
 		prt_error("Error: Failure reading %s: %s\n",
@@ -79,6 +138,7 @@ char * get_db_contents(const char *dbname_)
 
 	/* Close the database */
 failure:
+	dyn_str_delete(bs.ds);
 	free(dbname);
 	sqlite3_close(db);
 	return NULL;

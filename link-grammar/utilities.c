@@ -60,7 +60,7 @@ char * test;
 
 char *safe_strdup(const char *u)
 {
-	if(u)
+	if (u)
 		return strdup(u);
 	return NULL;
 }
@@ -560,6 +560,38 @@ void exfree(void * p, size_t size)
 	free(p);
 }
 #endif /* TRACK_SPACE_USAGE */
+
+/* =========================================================== */
+/* Simple, cheap, easy dynamic string. */
+
+dyn_str* dyn_str_new(void)
+{
+	dyn_str *ds = malloc(sizeof(dyn_str));
+	ds->len = 250;
+	ds->end = 0;
+	ds->str = malloc(ds->len);
+	ds->str[0] = 0x0;
+	return ds;
+}
+ 
+void dyn_str_delete(dyn_str* ds)
+{
+	free(ds->str);
+	free(ds);
+}
+
+void dyn_strcat(dyn_str* ds, const char *str)
+{
+	size_t l = strlen(str);
+	if (ds->end+l+1 >= ds->len)
+	{
+		ds->len = 2 * ds->len + l;
+		ds->str = realloc(ds->str, ds->len);
+	}
+	strcpy (ds->str+ds->end, str);
+	ds->end += l;
+}
+ 
 
 /* =========================================================== */
 /* File path and dictionary open routines below */

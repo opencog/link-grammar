@@ -16,16 +16,16 @@ CREATE TABLE Morphemes
 (
 	-- For English, the 'morpheme' is the 'word'. A given morpheme
 	-- may appear mutiple times in this table.
-	morpheme TEXT,
+	morpheme TEXT NOT NULL,
 
 	-- The subscripted form of the above.  The subscripted forms are
 	-- always unique for the dictionary.
-	subscript TEXT UNIQUE,
+	subscript TEXT UNIQUE NOT NULL,
 
 	-- The classname is the set that the subscripted 'word' belongs to.
 	-- All members of the class share a common set of disjuncts, with
 	-- a common set of costs.
-	classname TEXT
+	classname TEXT NOT NULL
 );
 
 -- We want fast lookup of words.
@@ -35,7 +35,7 @@ CREATE TABLE Disjuncts
 (
 	-- All words/morphemes sharing this classname also share this
 	-- disjunct and cost.
-	classname TEXT,
+	classname TEXT NOT NULL,
 
 	-- The standard Link Grammar disjunct, expressed as an ASCII string.
 	-- The disjunct can be composed of the & operator, and the optional
@@ -50,7 +50,7 @@ CREATE TABLE Disjuncts
 	-- An example of an INVALID disjunct:
 	--     (A+ & B-) & {Ca*bc*f+ or [D-]} & @Mpqr-
 	--
-	disjunct TEXT,
+	disjunct TEXT NOT NULL,
 
 	-- Cost of using this disjunct.
 	cost REAL
