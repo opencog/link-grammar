@@ -1,6 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2004                                                    */
-/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2013, 2014 Linas Vepstas                                */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -10,16 +9,23 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_READ_DICT_H_
-#define  _LG_READ_DICT_H_
+#include "dict-common.h"
+#include "structures.h"
+#include "utilities.h"
 
-#include <link-grammar/dict-structures.h>
+/* ======================================================================== */
+/* Replace the right-most dot with SUBSCRIPT_MARK */
+void patch_subscript(char * s)
+{
+	char *ds, *de;
+	ds = strrchr(s, SUBSCRIPT_DOT);
+	if (!ds) return;
 
-void print_dictionary_data(Dictionary dict);
-void print_dictionary_words(Dictionary dict);
+	/* a dot at the end or a dot followed by a number is NOT
+	 * considered a subscript */
+	de = ds + 1;
+	if (*de == '\0') return;
+	if (isdigit((int)*de)) return;
+	*ds = SUBSCRIPT_MARK;
+}
 
-Boolean find_word_in_dict(Dictionary dict, const char *);
-
-int  delete_dictionary_words(Dictionary dict, const char *);
-
-#endif /* _LG_READ_DICT_H_ */

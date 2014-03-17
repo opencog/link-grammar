@@ -79,6 +79,7 @@ liblink_grammar_la_SOURCES =        \
 	build-disjuncts.c                \
 	constituents.c                   \
 	count.c                          \
+	dict-common.c                    \
 	dict-file/dictionary.c           \
 	dict-file/read-dict.c            \
 	dict-file/read-regex.c           \
@@ -122,6 +123,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/word-file.h            \
 	dict-sql/read-sql.h              \
 	dict-api.h                       \
+	dict-common.h                    \
 	dict-structures.h                \
 	disjunct-utils.h                 \
 	disjuncts.h                      \

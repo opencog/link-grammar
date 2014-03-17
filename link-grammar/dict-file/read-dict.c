@@ -15,6 +15,7 @@
 #include <string.h>
 #include "build-disjuncts.h"
 #include "dict-api.h"
+#include "dict-common.h"
 #include "disjunct-utils.h"
 #include "error.h"
 #include "idiom.h"
@@ -879,21 +880,6 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 }
 
 /* ======================================================================== */
-/* Replace the right-most dot with SUBSCRIPT_MARK */
-void patch_subscript(char * s)
-{
-	char *ds, *de;
-	ds = strrchr(s, SUBSCRIPT_DOT);
-	if (!ds) return;
-
-	/* a dot at the end or a dot followed by a number is NOT
-	 * considered a subscript */
-	de = ds + 1;
-	if (*de == '\0') return;
-	if (isdigit((int)*de)) return;
-	*ds = SUBSCRIPT_MARK;
-}
-
 /**
  * connector() -- make a node for a connector or dictionary word.
  *

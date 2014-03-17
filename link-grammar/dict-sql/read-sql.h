@@ -15,6 +15,9 @@
 #ifndef READ_SQL_H
 #define READ_SQL_H
 
-char * get_db_contents(const char *dbname);
+#include "link-includes.h"
+
+char * check_db(const char *dbname);
+void get_db_contents(Dictionary dict, const char *dbname);
 
 #endif /* READ_SQL_H */

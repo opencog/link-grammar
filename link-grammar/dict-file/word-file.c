@@ -11,6 +11,7 @@
 /***************************************************************************/
 
 #include "error.h"
+#include "dict-common.h"
 #include "string-set.h"
 #include "structures.h"
 #include "word-file.h"

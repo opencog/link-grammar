@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
+/* Copyright (c) 2013, 2014 Linas Vepstas                                */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -10,16 +11,22 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _LG_READ_DICT_H_
-#define  _LG_READ_DICT_H_
+#ifndef _LG_DICT_COMMON_H_
+#define  _LG_DICT_COMMON_H_
 
-#include <link-grammar/dict-structures.h>
+#include "dict-structures.h"
 
-void print_dictionary_data(Dictionary dict);
-void print_dictionary_words(Dictionary dict);
+/* The functions here are for link-grammar internal use only.
+ * They are not part of the public API. */
 
-Boolean find_word_in_dict(Dictionary dict, const char *);
+void    free_dictionary(Dictionary dict);
 
-int  delete_dictionary_words(Dictionary dict, const char *);
+/* XXX this belongs in the dict-file directory, only. FIXME ... */
+Boolean read_dictionary(Dictionary dict);
 
-#endif /* _LG_READ_DICT_H_ */
+Exp * Exp_create(Dictionary);
+void add_empty_word(Dictionary, Dict_node *);
+
+void patch_subscript(char*);
+
+#endif /* _LG_DICT_COMMON_H_ */
