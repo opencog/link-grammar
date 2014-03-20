@@ -17,6 +17,10 @@ JAVA_SRCS =                             \
 linkgrammar-@VERSION@.jar: $(JAVA_SRCS)
 	ant
 
+# Let ant delete the files that ant creates.
+clean-local:
+	ant clean
+
 javadir=$(datadir)/java
 java_DATA = linkgrammar-@VERSION@.jar
 
