@@ -12,6 +12,12 @@ pkgpython_PYTHON =                                 \
    $(top_builddir)/bindings/python/__init__.py     \
    $(top_builddir)/bindings/python/clinkgrammar.py
 
+
+CLEANFILES =                                       \
+	$(BUILT_SOURCES)                                \
+   $(top_builddir)/bindings/python/__init__.py     \
+   $(top_builddir)/bindings/python/clinkgrammar.py
+
 if HAVE_SWIG
 $(BUILT_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) $(SWIG_PYTHON_OPT) -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
