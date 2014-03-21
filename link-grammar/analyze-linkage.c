@@ -1108,7 +1108,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 
 	/* The code below can be used to generate the "islands" array.
 	 * For this to work, however, you have to call "build_digraph"
-	 * first (as in analyze_fat_linkage). and then "free_digraph".
+	 * first (as in analyze_fat_linkage), and then "free_digraph".
 	 */
 	pp = post_process(postprocessor, opts, sent, sublinkage, TRUE);
 

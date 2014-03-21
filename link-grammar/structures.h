@@ -78,8 +78,8 @@
 
  is_conjunction[]
     An array of chars, one for each word.  TRUE if the word is a conjunction
-    ("and", "or", "nor", or "but" at the moment).  False otherwise. 
-#endif USE_FAT_LINKAGES 
+    ("and", "or", "nor", or "but" at the moment).  False otherwise.
+#endif USE_FAT_LINKAGES
 */
 
 
@@ -103,7 +103,7 @@
  * subscript mark, which we don't expect to see in user input.
  */
 /* #define SUBSCRIPT_MARK '.' */
-#define SUBSCRIPT_MARK 0x3 
+#define SUBSCRIPT_MARK 0x3
 #define SUBSCRIPT_DOT '.'
 #define EMPTY_WORD_DOT   "=.zzz"  /* Has SUBSCRIPT_DOT in it! */
 #define EMPTY_WORD_MARK  "=zzz" /* Has SUBSCRIPT_MARK in it! */
@@ -144,11 +144,11 @@
 
 #ifndef _MSC_VER
 typedef long long s64; /* signed 64-bit integer, even on 32-bit cpus */
-#define PARSE_NUM_OVERFLOW (1LL<<24)  
+#define PARSE_NUM_OVERFLOW (1LL<<24)
 #else
 /* Microsoft Visual C Version 6 doesn't support long long. */
 typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
-#define PARSE_NUM_OVERFLOW (((s64)1)<<24)  
+#define PARSE_NUM_OVERFLOW (((s64)1)<<24)
 #endif
 
 #ifdef USE_FAT_LINKAGES
@@ -281,20 +281,13 @@ struct Andlist_struct
 };
 #endif /* USE_FAT_LINKAGES */
 
-/** 
- * This is for building the graphs of links in post-processing and 
+/**
+ * This is for building the graphs of links in post-processing and
  * fat link extraction.
  */
 struct Linkage_info_struct
 {
     int index;
-#ifdef USE_FAT_LINKAGES
-    Boolean canonical;
-    Boolean fat;
-    Boolean improper_fat_linkage;
-    Boolean inconsistent_domains;
-    short and_cost;
-#endif /* USE_FAT_LINKAGES */
     short N_violations;
     short null_cost;
     short unused_word_cost;
@@ -304,8 +297,14 @@ struct Linkage_info_struct
     int island[MAX_SENTENCE];
     size_t nwords;
 #ifdef USE_FAT_LINKAGES
+    Boolean canonical;
+    Boolean fat;
+    Boolean improper_fat_linkage;
+    Boolean inconsistent_domains;
+    short and_cost;
     Andlist * andlist;
 #endif /* USE_FAT_LINKAGES */
+    char *pp_violation_msg;
     char **disjunct_list_str;
 #ifdef USE_CORPUS
     Sense **sense_list;
@@ -322,7 +321,7 @@ struct List_o_links_struct
 
 #ifdef USE_FAT_LINKAGES
 /* These parameters tell power_pruning, to tell whether this is before
- * or after generating and disjuncts.  GENTLE is before RUTHLESS is 
+ * or after generating and disjuncts.  GENTLE is before RUTHLESS is
  * after.
  */
 #define GENTLE 1
