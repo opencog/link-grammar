@@ -82,7 +82,7 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 static int CORP_compare_parse(Linkage_info * p1, Linkage_info * p2)
 {
 	double diff = p1->corpus_cost - p2->corpus_cost;
-	if (fabs(diff) < 1.0e-5) 
+	if (fabs(diff) < 1.0e-5)
 		return VDAL_compare_parse(p1, p2);
 	if (diff < 0.0f) return -1;
 	return 1;
@@ -100,7 +100,7 @@ Parse_Options parse_options_create(void)
 	po = (Parse_Options) xalloc(sizeof(struct Parse_Options_s));
 
 	/* Here's where the values are initialized */
-	po->verbosity	 = 1;
+	po->verbosity = 1;
 	po->debug = (char *)"";
 	po->test = (char *)"";
 	po->linkage_limit = 100;
@@ -116,7 +116,7 @@ Parse_Options parse_options_create(void)
 #ifdef XXX_USE_CORPUS
 	/* Use the corpus cost model, if available.
 	 * It really does a better job at parse ranking.
-	 * Err .. sometimes ... 
+	 * Err .. sometimes ...
 	 */
 	po->cost_model.compare_fn = &CORP_compare_parse;
 	po->cost_model.type = CORPUS;
@@ -490,7 +490,7 @@ void parse_options_set_display_constituents(Parse_Options opts, ConstituentDispl
 	             "   1 (treebank style, multi-line indented)\n"
 	             "   2 (flat tree, square brackets)\n"
 	             "   3 (flat treebank style)\n");
-	   opts->display_constituents = NO_DISPLAY;
+		opts->display_constituents = NO_DISPLAY;
 	}
 	else opts->display_constituents = dummy;
 }
@@ -694,7 +694,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			err_ctxt ec;
 			ec.sent = sent;
 			err_msg(&ec, Warn, "Warning: Considering a random subset of %d of %d linkages\n",
-				  N_linkages_alloced, N_linkages_found);
+			        N_linkages_alloced, N_linkages_found);
 		}
 	}
 	else
@@ -725,7 +725,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			frac /= (double) N_linkages_alloced;
 			block_bottom = (int) (((double) in) * frac);
 			block_top = (int) (((double) (in+1)) * frac);
-			indices[in] = block_bottom + 
+			indices[in] = block_bottom +
 				(rand_r(&sent->rand_state) % (block_top-block_bottom));
 		}
 	}
@@ -920,7 +920,7 @@ static void set_is_conjunction(Sentence sent)
 	const char * s;
 	for (w=0; w<sent->length; w++) {
 		s = sent->word[w].alternatives[0];
-		sent->is_conjunction[w] = 
+		sent->is_conjunction[w] =
 			/* English, obviously ... */
 			(strcmp(s, "and") == 0) ||
 			(strcmp(s, "or" ) == 0) ||
@@ -939,9 +939,9 @@ int sentence_split(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 
-	/* Cleanup stuff previously allocated. This is because some free 
+	/* Cleanup stuff previously allocated. This is because some free
 	 * routines depend on sent-length, which might change in different
-	 * parse-opts settings. 
+	 * parse-opts settings.
 	 */
 #ifdef USE_FAT_LINKAGES
 	free_deletable(sent);
@@ -1140,9 +1140,9 @@ static inline Boolean is_AFFIXTYPE_EMPTY(const char *a, size_t len)
  * the original word.  This is a work-around for somewhat sloppy
  * dictionaries, which aren't entirely careful with making sure
  * that the stem+suffix links are unique. Here's an illustration of
- * the problem: The word Russian "тест" can be split into 
- * тест.= =.ndmsi and also тес.= =т.amss  Then, during linkage, 
- * тес.= and =.ndmsi are linked -- but this is not the original word; 
+ * the problem: The word Russian "тест" can be split into
+ * тест.= =.ndmsi and also тес.= =т.amss  Then, during linkage,
+ * тес.= and =.ndmsi are linked -- but this is not the original word;
  * its junk.  This routine marks such linkages as 'bad'.  Really, the
  * dictionary should be fixed, but what the hell. This check isn't hard.
  *
@@ -1227,14 +1227,14 @@ static void old_sane_morphism(Sentence sent, Parse_Options opts)
 			 */
 			len = strlen(djw);
 			if ((INFIX_MARK != djw[len-1]) &&
-			    ((i+1) < sent->length) && 
+			    ((i+1) < sent->length) &&
 			    (NULL != pi->chosen_disjuncts[i+1]) &&
 			    (INFIX_MARK != pi->chosen_disjuncts[i+1]->string[0]))
-			    {
+			{
 				if (verbosity > 4)
 					printf("%%%%>>>%d OK djw!=stem %s!=suffix\n", lk, pi->chosen_disjuncts[i+1]->string);
 				continue;
-			    }
+			}
 
 			/* check why non-stems are in the position of a split stem */
 			if (((verbosity > 4) && (INFIX_MARK != djw[len-1])) ||
@@ -1254,7 +1254,7 @@ static void old_sane_morphism(Sentence sent, Parse_Options opts)
 			 * the stem, it recreates the original word, then we
 			 * are very happy, and keep going. */
 			if ((INFIX_MARK == djw[len-1]) &&
-			    ((i+1) < sent->length) && 
+			    ((i+1) < sent->length) &&
 			    (NULL != pi->chosen_disjuncts[i+1]) &&
 			    (INFIX_MARK == pi->chosen_disjuncts[i+1]->string[0]))
 			{
@@ -1351,7 +1351,7 @@ else
 		rc = compile_regexs(afdict);
 		if (rc) {
 			prt_error("Error: sane_morphism: Failed to compile "
-				 "regex '%s', return code %d\n", sm_re->pattern, rc);
+			       "regex '%s', return code %d\n", sm_re->pattern, rc);
 		}
 		lgdebug(4, "%%%%>>regex %s\n", sm_re->pattern);
 	}
@@ -1441,11 +1441,11 @@ else
 				*affix_types_p = AFFIXTYPE_WORD;
 			}
 
-			lgdebug(4, "%%>%d djw %s affixtype %c len %lu\n",
-				 lk, djw, empty_word ? 'E' : *affix_types_p, len);
+			lgdebug(4, "%%>%d djword=%s affixtype=%c wordlen=%lu\n",
+			        lk, djw, empty_word ? 'E' : *affix_types_p, len);
 
 			if (! empty_word) affix_types_p++;
-			
+
 			lgdebug(4, "%%>%d djw %s matched alternatives no.:", lk, djw);
 			match_found = FALSE;
 
@@ -1455,7 +1455,7 @@ else
 				const char * s, * t;
 				const char *a = sent->word[i].alternatives[ai];
 				char downcased[MAX_WORD+1] = "";
-			
+
 				if (-1 == matched_alts[ai])
 					continue; /* already didn't match */
 
@@ -1484,7 +1484,7 @@ try_again:
 					((*t == '\0') || (*t == SUBSCRIPT_MARK) || (*t == '[')))
 				{
 					//lgdebug(4, "EQUAL\n");
-					lgdebug(4, " %d", (int)ai);
+					lgdebug(4, " %lu", ai);
 					match_found = TRUE;
 					/* Count matched morphemes in this alternative */
 					matched_alts[ai]++;
@@ -1506,7 +1506,7 @@ try_again:
 					matched_alts[ai] = -1;
 				}
 			}
-			if (! match_found) 
+			if (! match_found)
 			{
 				lgdebug(4, " none\n");
 				break;
@@ -1524,7 +1524,7 @@ try_again:
 				*affix_types_p++ = AFFIXTYPE_END;
 
 				/* Make sure that there exists an alternative in
-				 * which all the morpmenes have been matched.
+				 * which all the morphemes have been matched.
 				 * ??? This disallows island morphemes -
 				 * should we allow them? */
 				match_found = FALSE;
@@ -1562,7 +1562,7 @@ try_again:
 			/* XXX we should have a better way to notify */
 			if (0 < verbosity)
 				printf("Warning: Invalid morpheme type combination %s, "
-						 "run with verbosity=4 to debug\n", affix_types);
+				       "run with verbosity=4 to debug\n", affix_types);
 		}
 		else
 			lgdebug(4, "%%>%d morpheme type combination %s\n", lk, affix_types);
@@ -1666,7 +1666,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	/* Check for bad sentence length */
 	if (MAX_SENTENCE <= sent->length)
 	{
-		prt_error("Error: sentence too long, contains more than %d words\n", 
+		prt_error("Error: sentence too long, contains more than %d words\n",
 			MAX_SENTENCE);
 		return -2;
 	}
@@ -1698,7 +1698,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Finished parse");
 
-	if ((verbosity > 0) && 
+	if ((verbosity > 0) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
 		prt_error("WARNING: Combinatorial explosion! nulls=%d cnt=%d\n"
@@ -1759,20 +1759,20 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 
 	if (sent->dict->postprocessor != NULL)
 	{
-	   linkage_post_process(linkage, sent->dict->postprocessor);
+		linkage_post_process(linkage, sent->dict->postprocessor);
 	}
 
 	return linkage;
 }
 
 int linkage_get_current_sublinkage(const Linkage linkage)
-{ 
+{
 #ifdef USE_FAT_LINKAGES
-	return linkage->current; 
+	return linkage->current;
 #else
 	return 0;
 #endif /* USE_FAT_LINKAGES */
-} 
+}
 
 int linkage_set_current_sublinkage(Linkage linkage, int index)
 {
@@ -2150,7 +2150,7 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, int w)
 	/* dj may be null, if the word didn't participate in the parse. */
 	if (NULL == dj) return 99.999;
 
-	return lg_corpus_disjunct_score(linkage, w); 
+	return lg_corpus_disjunct_score(linkage, w);
 }
 
 const char * linkage_get_word(const Linkage linkage, int w)
