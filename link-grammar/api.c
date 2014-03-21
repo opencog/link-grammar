@@ -1441,8 +1441,8 @@ else
 				*affix_types_p = AFFIXTYPE_WORD;
 			}
 
-			lgdebug(4, "%%>%d djw %s affixtype %c len %d\n",
-				 lk, djw, empty_word ? 'E' : *affix_types_p, (int)len);
+			lgdebug(4, "%%>%d djw %s affixtype %c len %lu\n",
+				 lk, djw, empty_word ? 'E' : *affix_types_p, len);
 
 			if (! empty_word) affix_types_p++;
 			
