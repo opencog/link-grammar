@@ -271,7 +271,7 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 	{
 		linkage_set_current_sublinkage(linkage, j);
 #endif /* USE_FAT_LINKAGES */
-		if (parse_options_display_bad(opts))
+		if (parse_options_get_display_bad(opts))
 		{
 			string = linkage_print_pp_msgs(linkage);
 			fprintf(stdout, "%s", string);
