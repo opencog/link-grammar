@@ -229,12 +229,35 @@ class ParsingTestCase(unittest.TestCase):
     def test_utf8_encoded_string(self):
         result = self.p.parse_sent("I love going to the café.")
         self.assertTrue(isinstance(result, list))
+        self.assertTrue(1 < len(result))
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
     def test_unicode_encoded_string(self):
         result = self.p.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
         self.assertTrue(isinstance(result, list))
+        self.assertTrue(1 < len(result))
+        self.assertTrue(isinstance(result[0], Linkage))
+        self.assertTrue(isinstance(result[1], Linkage))
+
+    def test_unknown_word(self):
+        result = self.p.parse_sent("I love going to the qertfdwedadt.")
+        self.assertTrue(isinstance(result, list))
+        self.assertTrue(1 < len(result))
+        self.assertTrue(isinstance(result[0], Linkage))
+        self.assertTrue(isinstance(result[1], Linkage))
+
+    def test_unknown_euro_utf8_word(self):
+        result = self.p.parse_sent("I love going to the qéáéğíóşúüñ.")
+        self.assertTrue(isinstance(result, list))
+        self.assertTrue(1 < len(result))
+        self.assertTrue(isinstance(result[0], Linkage))
+        self.assertTrue(isinstance(result[1], Linkage))
+
+    def test_unknown_cyrillic_utf8_word(self):
+        result = self.p.parse_sent("I love going to the доктором.")
+        self.assertTrue(isinstance(result, list))
+        self.assertTrue(1 < len(result))
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
