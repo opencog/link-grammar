@@ -21,6 +21,7 @@ Version 5.0.0 (XXX March 2014)
  * Add demo shell script for running the JSON parse server.
  * Bugfix: Java server failing when input sentence has commas in it!
  * New !test and !debug commands for selective debugging support.
+ * Print post-processing rejection message, when !bad is enabled.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

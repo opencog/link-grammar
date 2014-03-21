@@ -271,6 +271,12 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 	{
 		linkage_set_current_sublinkage(linkage, j);
 #endif /* USE_FAT_LINKAGES */
+		if (parse_options_display_bad(opts))
+		{
+			string = linkage_print_pp_msgs(linkage);
+			fprintf(stdout, "%s", string);
+			linkage_free_pp_msgs(string);
+		}
 		if (parse_options_get_display_on(opts))
 		{
 			string = linkage_print_diagram(linkage);
@@ -578,11 +584,12 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_spell_guess(opts, FALSE);
 }
 
-static void print_usage(char *str) {
+static void print_usage(char *str)
+{
 	fprintf(stderr,
 			"Usage: %s [language|dictionary location]\n"
-			"		  [-<special \"!\" command>]\n"
-			"		  [--version]\n", str);
+			"                   [-<special \"!\" command>]\n"
+			"                   [--version]\n", str);
 
 	fprintf(stderr, "\nSpecial commands are:\n");
 	opts = parse_options_create();
