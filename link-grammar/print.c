@@ -5,7 +5,7 @@
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
-/* license set forth in the LICENSE file included with this software.    */ 
+/* license set forth in the LICENSE file included with this software.    */
 /* This license allows free redistribution and use in source and binary  */
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
@@ -59,7 +59,7 @@ static Boolean is_suffix(const char* w)
 	return TRUE;
 }
 
-static void 
+static void
 set_centers(const Linkage linkage, int center[],
             Boolean print_word_0, int N_words_to_print)
 {
@@ -78,7 +78,7 @@ set_centers(const Linkage linkage, int center[],
 			continue;
 		}
 
-		/* Centers obtained by counting the characters, 
+		/* Centers obtained by counting the characters,
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
 		 * len = mbsrtowcs(NULL, &linkage->word[i], 0, &mbss);
@@ -129,7 +129,7 @@ static void print_a_link(String * s, const Linkage linkage, int link)
 	Dictionary dict = sent->dict;
 	int l, r;
 	const char *label, *llabel, *rlabel;
-	
+
 	l      = linkage_get_link_lword(linkage, link);
 	r      = linkage_get_link_rword(linkage, link);
 	label  = linkage_get_link_label(linkage, link);
@@ -139,14 +139,14 @@ static void print_a_link(String * s, const Linkage linkage, int link)
 	if ((l == 0) && dict->left_wall_defined) {
 		left_append_string(s, LEFT_WALL_DISPLAY,"               ");
 	} else if ((l == (linkage_get_num_words(linkage)-1)) && dict->right_wall_defined) {
-		left_append_string(s, RIGHT_WALL_DISPLAY,"               ");	
+		left_append_string(s, RIGHT_WALL_DISPLAY,"               ");
 	} else {
 		left_append_string(s, linkage_get_word(linkage, l), "               ");
 	}
 	left_append_string(s, llabel, "     ");
-	append_string(s, "   <---"); 
+	append_string(s, "   <---");
 	left_append_string(s, label, "-----");
-	append_string(s, "->  "); 
+	append_string(s, "->  ");
 	left_append_string(s, rlabel, "     ");
 	append_string(s, "     %s\n", linkage_get_word(linkage, r));
 }
@@ -156,7 +156,7 @@ static void print_a_link(String * s, const Linkage linkage, int link)
  * To the left of each link, print the sequence of domains it is in.
  * Printing a domain means printing its type.
  * Takes info from pp_link_array and pp and chosen_words.
- */    
+ */
 char * linkage_print_links_and_domains(const Linkage linkage)
 {
 	int link, longest, j;
@@ -168,7 +168,7 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	longest = 0;
 	for (link=0; link<N_links; link++) {
 		if (linkage_get_link_lword(linkage, link) == -1) continue;
-		if (linkage_get_link_num_domains(linkage, link) > longest) 
+		if (linkage_get_link_num_domains(linkage, link) > longest)
 			longest = linkage_get_link_num_domains(linkage, link);
 	}
 	for (link=0; link<N_links; link++) {
@@ -188,10 +188,10 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 		append_string(s, "P.P. violations:\n");
 		append_string(s, "        %s\n\n", linkage_get_violation_name(linkage));
 	}
-	
+
 	links_string = string_copy(s);
 	string_delete(s);
-	return links_string; 
+	return links_string;
 }
 
 char * linkage_print_senses(Linkage linkage)
@@ -302,7 +302,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	N_wall_connectors = 0;
 	if (dict->left_wall_defined) {
 		suppressor_used = FALSE;
-		if (!opts->display_walls) 
+		if (!opts->display_walls)
 			for (j=0; j<N_links; j++) {
 				if (ppla[j]->l == 0) {
 					if (ppla[j]->r == linkage->num_words-1) continue;
@@ -312,7 +312,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 					}
 				}
 			}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0)) 
+		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
 						|| (N_wall_connectors > 1) || opts->display_walls);
 	} else {
 		print_word_0 = TRUE;
@@ -329,9 +329,9 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0)) 
+		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
 						|| (N_wall_connectors > 1) || opts->display_walls);
-	} 
+	}
 	else {
 		print_word_N = TRUE;
 	}
@@ -360,7 +360,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 		if ((j%7 == 0) && (j>0)) append_string(string,"\n");
 		j++;
 		append_string(string,"[%d %d %d",
-				ppla[link]->l-d, ppla[link]->r-d, 
+				ppla[link]->l-d, ppla[link]->r-d,
 				pctx->link_heights[link]);
 #ifdef USE_FAT_LINKAGES
 		if (ppla[link]->lc->label < 0) {
@@ -385,7 +385,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 
 	ps_string = string_copy(string);
 	string_delete(string);
-	return ps_string; 
+	return ps_string;
 }
 
 /**
@@ -443,7 +443,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		}
 		else if (opts->display_word_subscripts)
 		{
-			t = pi->chosen_disjuncts[i]->string;        
+			t = pi->chosen_disjuncts[i]->string;
 			/* get rid of those ugly ".Ixx" */
 			if (is_idiom_word(t)) {
 				s = strdup(t);
@@ -503,10 +503,10 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		else
 		{
 			/* XXX This is wrong, since it fails to indicate what
-			 * was actally used for the parse, which might not actually 
+			 * was actally used for the parse, which might not actually
 			 * be alternative 0.  We should do like the above, and then
 			 * manually strip the subscript.
-			 * Except that this code is never ever reached, because 
+			 * Except that this code is never ever reached, because
 			 * opts->display_word_subscripts is always true...
 			 */
 			t = sent->word[i].alternatives[0];
@@ -530,13 +530,13 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 
 #define MAX_HEIGHT 30
 
-/** 
+/**
  * Print the indicated linkage into a utf8-diagram.
  * Works fine for general utf8 multi-byte sentences.
  * Links and connectors are still mostly assumed to be ASCII, though;
  * to fix this, grep for "strlen" in the code below, replace by utf8 len.
  *
- * Returned string is allocated with exalloc.  
+ * Returned string is allocated with exalloc.
  * Needs to be freed with linkage_free_diagram()
  */
 static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
@@ -576,7 +576,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	if (dict->left_wall_defined)
 	{
 		suppressor_used = FALSE;
-		if (!opts->display_walls) 
+		if (!opts->display_walls)
 		{
 			for (j=0; j<N_links; j++)
 			{
@@ -591,9 +591,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 				}
 			}
 		}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0)) 
+		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
 						|| (N_wall_connectors > 1) || opts->display_walls);
-	} 
+	}
 	else
 	{
 		print_word_0 = TRUE;
@@ -615,9 +615,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0)) 
+		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
 						|| (N_wall_connectors > 1) || opts->display_walls);
-	} 
+	}
 	else
 	{
 		print_word_N = TRUE;
@@ -628,13 +628,13 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 
 	set_centers(linkage, center, print_word_0, N_words_to_print);
 	line_len = center[N_words_to_print-1]+1;
-	
+
 	for (k=0; k<MAX_HEIGHT; k++) {
 		for (j=0; j<line_len; j++) picture[k][j] = ' ';
 		picture[k][line_len] = '\0';
 	}
 	top_row = 0;
-	
+
 	for (link_length = 1; link_length < N_words_to_print; link_length++) {
 		for (j=0; j<N_links; j++) {
 			if (ppla[j]->l == -1) continue;
@@ -642,7 +642,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			  continue;
 			if (!print_word_0 && (ppla[j]->l == 0)) continue;
 			/* gets rid of the irrelevant link to the left wall */
-			if (!print_word_N && (ppla[j]->r == linkage->num_words-1)) continue;            
+			if (!print_word_N && (ppla[j]->r == linkage->num_words-1)) continue;
 			/* Get rid of links to empty words */
 			if (0 == strcmp(ppla[j]->name, EMPTY_WORD_SUPPRESS)) continue;
 
@@ -665,22 +665,22 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			/* we know it fits, so put it in this row */
 
 			pctx->link_heights[j] = row;
-			
+
 			if (2*row+2 > MAX_HEIGHT-1) {
 				append_string(string, "The diagram is too high.\n");
 				gr_string = string_copy(string);
 				string_delete(string);
-				return gr_string; 
+				return gr_string;
 			}
 			if (row > top_row) top_row = row;
-			
+
 			picture[row][cl] = '+';
 			picture[row][cr] = '+';
 			for (k=cl+1; k<cr; k++) {
 				picture[row][k] = '-';
 			}
 			s = ppla[j]->name;
-			
+
 			/* display_link_subscripts is always true ... hard-coded */
 			if (opts->display_link_subscripts)
 			{
@@ -709,9 +709,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			}
 			s = connector;
 			if (opts->display_link_subscripts)
-				while ((*s != '\0') && (*t == '-')) *t++ = *s++; 
+				while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 			else
-				while (isupper((int)*s) && (*t == '-')) *t++ = *s++; 
+				while (isupper((int)*s) && (*t == '-')) *t++ = *s++;
 
 			/* now put in the | below this one, where needed */
 			for (k=0; k<row; k++) {
@@ -724,9 +724,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			}
 		}
 	}
-	
+
 	/* we have the link picture, now put in the words and extra "|"s */
-	
+
 	t = xpicture[0];
 	if (print_word_0) k = 0; else k = 1;
 	for (; k<N_words_to_print; k++) {
@@ -739,7 +739,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		*t++ = ' ';
 	}
 	*t = '\0';
-	
+
 	if (opts->display_short) {
 		for (k=0; picture[0][k] != '\0'; k++) {
 			if ((picture[0][k] == '+') || (picture[0][k] == '|')) {
@@ -767,9 +767,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		}
 		top_row = 2*top_row + 2;
 	}
-	
+
 	/* We've built the picture, now print it out. */
-	
+
 	if (print_word_0) i = 0; else i = 1;
 
 	/* Start locations, for each row.  These may vary, due to different
@@ -821,7 +821,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 				for (j = k; (mbcnt < uwidth) && (xpicture[row][j] != '\0'); )
 				{
 					/* Copy exactly one multi-byte character to buf */
-					j += append_utf8_char(string, &xpicture[row][j]); 
+					j += append_utf8_char(string, &xpicture[row][j]);
 					mbcnt ++;
 				}
 				append_string(string, "\n");
@@ -831,10 +831,10 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	}
 	gr_string = string_copy(string);
 	string_delete(string);
-	return gr_string; 
+	return gr_string;
 }
 
-/** 
+/**
  * Print the indicated linkage as utf8-art intp the given string.
  * The width of the diagram is given by the terminal width, taken
  * from the parse options.
@@ -885,11 +885,11 @@ char * linkage_print_postscript(Linkage linkage, int mode)
 
 	ps = build_linkage_postscript_string(linkage, &ctx);
 	size = strlen(header(mode)) + strlen(ps) + strlen(trailer(mode)) + 1;
-	
+
 	qs = (char *) exalloc(sizeof(char)*size);
 	sprintf(qs, "%s%s%s", header(mode), ps, trailer(mode));
 	exfree(ps, strlen(ps)+1);
-	 
+
 	return qs;
 }
 

@@ -459,7 +459,7 @@ static int advance_CON(CON_node *);
  * Cyclically advance the current state of this DIS node.
  * If it's now at the beginning of its cycle, return FALSE;
  * otherwise return TRUE. Together with the advance_CON()
- * function, this can be used to iterate over the entire 
+ * function, this can be used to iterate over the entire
  * DIS_CON tree.
  */
 static int advance_DIS(DIS_node * dn)
@@ -476,7 +476,7 @@ static int advance_DIS(DIS_node * dn)
  * Cyclically advance the current state of this CON node.
  * If it's now at the beginning of its cycle return FALSE,
  * otherwise return TRUE. Together with the advance_CON()
- * function, this can be used to iterate over the entire 
+ * function, this can be used to iterate over the entire
  * DIS_CON tree.
  */
 static int advance_CON(CON_node * cn)
@@ -770,7 +770,7 @@ static int unused_word_cost(Parse_info pi)
 	return lcost;
 }
 
-/** 
+/**
  * Computes the cost of the current parse of the current sentence
  * due to the cost of the chosen disjuncts.
  */
@@ -826,7 +826,7 @@ static int strictly_smaller_name(const char * s, const char * t)
 /**
  * The name of the link is set to be the GCD of the names of
  * its two endpoints. Must be called after each extract_links(),
- * etc. since that call issues a brand-new set of links into 
+ * etc. since that call issues a brand-new set of links into
  * parse_info.
  */
 static void compute_link_names(Sentence sent)
@@ -1180,7 +1180,7 @@ void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 static void prt_lol(Sentence sent , List_o_links *lol)
 {
 	/* It appears that the list of links is always even in length:
-	 * The head word first, followed by a modifier. 
+	 * The head word first, followed by a modifier.
 	 */
 	while (lol)
 	{
@@ -1210,7 +1210,7 @@ static void prt_dis_list(Sentence sent, DIS_list *dis)
 			prt_lol(sent, dis->dn->lol);
 			printf("]");
 		}
-		else 
+		else
 		{
 			int wd = dis->dn->word;
 			printf("%s ", sent->word[wd].string);
