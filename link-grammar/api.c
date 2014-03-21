@@ -1331,10 +1331,20 @@ else
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table;
 
+	/* Skip checking, if dictioary specifies neither prefixes nor sufixes.
+	 * This special-cases English, more or less. */
+	if (0 == afdict->mp_strippable &&
+	    0 == afdict->p_strippable &&
+	    0 == afdict->s_strippable)
+	{
+		return;
+	}
+
 	/* Store the SANEMORPHISM regex in the unused (up to now)
 	 * regex_root element of the affix dictionary, and precompile it */
 	if ((NULL != afdict) && (NULL == afdict->regex_root) &&
-		(0 != afdict->sm_total)) {
+		(0 != afdict->sm_total))
+	{
 		int rc;
 		Regex_node * sm_re = (Regex_node *) malloc(sizeof(Regex_node));
 		char rebuf[MAX_WORD + 16] = "^((";
@@ -1367,8 +1377,8 @@ else
 		char * affix_types_p = affix_types;
 		Boolean match_found = FALSE;     /* djw matched a morpheme */
 		int matched_alts[MAX_SENTENCE];  /* number of morphemes that have matched
-                                        * the chosen disjuncts for the
-                                        * unsplit_word, so far (index: ai) */
+		                                  * the chosen disjuncts for the
+		                                  * unsplit_word, so far (index: ai) */
 
 		/* Don't bother with linkages that already failed post-processing... */
 		if (0 != lifo->N_violations)
