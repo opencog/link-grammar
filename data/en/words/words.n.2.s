@@ -1458,6 +1458,7 @@ cadres.n
 cads.n
 caesuras.n
 cafes.n
+cafés.n
 cafeterias.n
 caftans.n
 cages.n
