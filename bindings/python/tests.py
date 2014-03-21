@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding: utf8
 #
 # Python link-grammar test script
 #
@@ -226,6 +227,12 @@ class ParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
     def test_utf8_encoded_string(self):
+        result = self.p.parse_sent("I love going to the café.")
+        self.assertTrue(isinstance(result, list))
+        self.assertTrue(isinstance(result[0], Linkage))
+        self.assertTrue(isinstance(result[1], Linkage))
+
+    def test_unicode_encoded_string(self):
         result = self.p.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
         self.assertTrue(isinstance(result, list))
         self.assertTrue(isinstance(result[0], Linkage))
