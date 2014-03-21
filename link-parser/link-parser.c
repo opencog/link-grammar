@@ -83,7 +83,7 @@ static char* oem_to_utf8(char *instring)
 	int cv;
 	unsigned int consolecp;
 
-	consolecp = GetConsoleOutputCP(); 
+	consolecp = GetConsoleOutputCP();
 
 	/* Convert input string to wide chars. */
 	len = strlen(instring) + 1;
@@ -143,10 +143,10 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 #else
 	static char input_string[MAX_INPUT];
 
-	if (NULL == in) return NULL; 
+	if (NULL == in) return NULL;
 
-	if ((!parse_options_get_batch_mode(opts)) && 
-	    (verbosity > 0) && 
+	if ((!parse_options_get_batch_mode(opts)) &&
+	    (verbosity > 0) &&
 	    (!input_pending))
 	{
 		fprintf(out, "linkparser> ");
@@ -181,10 +181,10 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 		 * wide chars here, and convert to multi-byte UTF-8 on the fly.
 		 */
 		wchar_t winput_string[MAX_INPUT];
-		if (fgetws(winput_string, MAX_INPUT, in)) 
+		if (fgetws(winput_string, MAX_INPUT, in))
 		{
 			size_t nc = wcstombs(input_string, winput_string, MAX_INPUT);
-			if (nc && (((size_t) -1) != nc)) 
+			if (nc && (((size_t) -1) != nc))
 			{
 				char *cr, *lf;
 				cr = strchr(input_string, '\r');
@@ -497,7 +497,7 @@ static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
 	return FALSE;
 }
 
-static void batch_process_some_linkages(Label label, 
+static void batch_process_some_linkages(Label label,
                                         Sentence sent,
                                         Parse_Options opts)
 {
@@ -591,8 +591,8 @@ static void print_usage(char *str) {
 }
 
 /**
- * On Unix, this checks for the current window size, 
- * and sets the output screen width accordingly. 
+ * On Unix, this checks for the current window size,
+ * and sets the output screen width accordingly.
  * Not sure how MS Windows does this.
  */
 static void check_winsize(Parse_Options popts)
@@ -653,25 +653,25 @@ int main(int argc, char * argv[])
 	}
 
 #if !defined(_MSC_VER) && !defined(__MINGW32__)
-	/* Get the locale from the environment... 
+	/* Get the locale from the environment...
 	 * Perhaps we should someday get it from the dictionary ??
 	 */
 	locale = setlocale(LC_ALL, "");
 
 	/* Check to make sure the current locale is UTF8; if its not,
-	 * then force-set this to the english utf8 locale 
+	 * then force-set this to the english utf8 locale
 	 */
 	codeset = nl_langinfo(CODESET);
 	if (!strstr(codeset, "UTF") && !strstr(codeset, "utf"))
 	{
-		fprintf(stderr, 
+		fprintf(stderr,
 		    "%s: Warning: locale %s was not UTF-8; force-setting to en_US.UTF-8\n",
 		     argv[0], codeset);
 		locale = setlocale(LC_CTYPE, "en_US.UTF-8");
 	}
 #else
  #pragma message("WARNING: Windows console (cmd.exe) does not support unicode input!\nWill attempt to convert from the native encoding!");
-	fprintf(stderr, 
+	fprintf(stderr,
 	    "%s: Warning: Windows console (cmd.exe) does not support unicode\n"
 	    "input!  Will attempt to convert from the native encoding!", argv[0]);
 #endif
@@ -854,10 +854,10 @@ int main(int argc, char * argv[])
 			 * of newspaper headlines and other clipped speech.
 			 *
 			 * XXX Unfortunately, this also allows for the parsing of
-			 * all sorts of ungrammatical sentences which should not 
+			 * all sorts of ungrammatical sentences which should not
 			 * parse, and leads to bad parses of many other unparsable
 			 * but otherwise grammatical sentences.  Thus, this trick
-			 * pretty much fails; we leave it here to document the 
+			 * pretty much fails; we leave it here to document the
 			 * experiment.
 			 */
 			if (num_linkages == 0)
