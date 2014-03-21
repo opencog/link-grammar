@@ -274,7 +274,7 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 		if (parse_options_get_display_bad(opts))
 		{
 			string = linkage_print_pp_msgs(linkage);
-			fprintf(stdout, "%s", string);
+			fprintf(stdout, "%s\n", string);
 			linkage_free_pp_msgs(string);
 		}
 		if (parse_options_get_display_on(opts))

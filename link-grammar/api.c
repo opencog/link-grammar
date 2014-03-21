@@ -1576,6 +1576,7 @@ try_again:
 			/* Oh no ... invalid morpheme combination! */
 			sent->num_valid_linkages --;
 			lifo->N_violations ++;
+			lifo->pp_violation_msg = "Invalid morphism construction.";
 			lgdebug(4, "%%>%d FAILED, remaining %d\n", lk, sent->num_valid_linkages);
 		}
 	}
