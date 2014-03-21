@@ -18,6 +18,7 @@ class Parser(object):
                        all_short_connectors = False,
                        display_morphology = False,
                        display_walls = False,
+                       spell_guess = False,
                        allow_null = True,
                        screen_width = 180,
                        max_parse_time = 5,
@@ -34,6 +35,7 @@ class Parser(object):
                                           short_length = short_length,
                                           display_morphology = display_morphology,
                                           display_walls = display_walls,
+                                          spell_guess = spell_guess,
                                           allow_null = allow_null,
                                           screen_width = screen_width,
                                           max_parse_time = max_parse_time,
@@ -66,6 +68,7 @@ class ParseOptions(object):
                        all_short_connectors = False,
                        display_morphology = False,
                        display_walls = False,
+                       spell_guess = False,
                        allow_null = True,
                        screen_width = 180,
                        max_parse_time = -1,
@@ -84,6 +87,7 @@ class ParseOptions(object):
         self.all_short_connectors = all_short_connectors
         self.display_morphology = display_morphology
         self.display_walls = display_walls
+        self.spell_guess = spell_guess
         self.screen_width = screen_width
         self.max_parse_time = max_parse_time
         self.disjunct_cost = disjunct_cost
@@ -209,7 +213,7 @@ class ParseOptions(object):
             return clg.parse_options_get_islands_ok(self._po) == 1
         def fset(self, value):
             if not isinstance(value, bool):
-                raise TypeError("islands_ok must be set to an integer")
+                raise TypeError("islands_ok must be set to a bool")
             clg.parse_options_set_islands_ok(self._po, 1 if value else 0)
         return locals()
     islands_ok = property(**islands_ok())
@@ -244,7 +248,7 @@ class ParseOptions(object):
             return clg.parse_options_get_allow_null(self._po) == 1
         def fset(self, value):
             if not isinstance(value, bool):
-                raise TypeError("allow_null must be set to an integer")
+                raise TypeError("allow_null must be set to a bool")
             clg.parse_options_set_allow_null(self._po, 1 if value else 0)
         return locals()
     allow_null = property(**allow_null())
@@ -255,7 +259,7 @@ class ParseOptions(object):
             return clg.parse_options_get_display_morphology(self._po) == 1
         def fset(self, value):
             if not isinstance(value, bool):
-                raise TypeError("display_morphology must be set to an integer")
+                raise TypeError("display_morphology must be set to a bool")
             clg.parse_options_set_display_morphology(self._po, 1 if value else 0)
         return locals()
     display_morphology = property(**display_morphology())
@@ -266,10 +270,21 @@ class ParseOptions(object):
             return clg.parse_options_get_display_walls(self._po) == 1
         def fset(self, value):
             if not isinstance(value, bool):
-                raise TypeError("display_walls must be set to an integer")
+                raise TypeError("display_walls must be set to a bool")
             clg.parse_options_set_display_walls(self._po, 1 if value else 0)
         return locals()
     display_walls = property(**display_walls())
+
+    def spell_guess():
+        doc = "Whether or not to running the spelling guesser on unknown words."
+        def fget(self):
+            return clg.parse_options_get_spell_guess(self._po) == 1
+        def fset(self, value):
+            if not isinstance(value, bool):
+                raise TypeError("spell_guess must be set to a bool")
+            clg.parse_options_set_spell_guess(self._po, 1 if value else 0)
+        return locals()
+    spell_guess = property(**spell_guess())
 
     def all_short_connectors():
         doc = "If true, then all connectors have length restrictions imposed on them -- they can be no farther than short_length apart. This is used when parsing in \"panic\" mode, for example."
@@ -277,7 +292,7 @@ class ParseOptions(object):
             return clg.parse_options_get_all_short_connectors(self._po) == 1
         def fset(self, value):
             if not isinstance(value, bool):
-                raise TypeError("all_short_connectors must be set to an integer")
+                raise TypeError("all_short_connectors must be set to a bool")
             clg.parse_options_set_all_short_connectors(self._po, 1 if value else 0)
         return locals()
     all_short_connectors = property(**all_short_connectors())
