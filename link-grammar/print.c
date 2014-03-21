@@ -895,7 +895,19 @@ char * linkage_print_postscript(Linkage linkage, int mode)
 
 void linkage_free_postscript(char * s)
 {
-		exfree(s, strlen(s)+1);
+	exfree(s, strlen(s)+1);
+}
+
+char * linkage_print_pp_msgs(Linkage linkage)
+{
+	if (linkage && linkage->info && linkage->info->pp_violation_msg)
+		return strdup(linkage->info->pp_violation_msg);
+	return strdup("");
+}
+
+void linkage_free_pp_msgs(char * s)
+{
+	exfree(s, strlen(s)+1);
 }
 
 void print_disjunct_counts(Sentence sent)

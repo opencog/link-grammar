@@ -1140,6 +1140,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	else if (pp->violation != NULL)
 	{
 		li.N_violations++;
+		li.pp_violation_msg = pp->violation;
 	}
 
 	free_sublinkage(sublinkage);

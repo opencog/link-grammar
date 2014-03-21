@@ -304,7 +304,7 @@ struct Linkage_info_struct
     short and_cost;
     Andlist * andlist;
 #endif /* USE_FAT_LINKAGES */
-    char *pp_violation_msg;
+    const char *pp_violation_msg;
     char **disjunct_list_str;
 #ifdef USE_CORPUS
     Sense **sense_list;

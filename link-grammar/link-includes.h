@@ -327,6 +327,14 @@ link_public_api(double)
 link_public_api(const char *)
      linkage_get_word(const Linkage linkage, int w);
 link_public_api(char *)
+     linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
+link_public_api(void)
+     linkage_free_constituent_tree_str(char *str);
+link_public_api(char *)
+     linkage_print_diagram(const Linkage linkage);
+link_public_api(void)
+     linkage_free_diagram(char * str);
+link_public_api(char *)
      linkage_print_disjuncts(const Linkage linkage);
 link_public_api(void)
      linkage_free_disjuncts(char *str);
@@ -335,21 +343,17 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_links_and_domains(char *str);
 link_public_api(char *)
-     linkage_print_senses(Linkage linkage);
-link_public_api(void)
-     linkage_free_senses(char *str);
-link_public_api(char *)
-     linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
-link_public_api(void)
-     linkage_free_constituent_tree_str(char *str);
-link_public_api(char *)
      linkage_print_postscript(Linkage linkage, int mode);
 link_public_api(void)
      linkage_free_postscript(char * str);
 link_public_api(char *)
-     linkage_print_diagram(const Linkage linkage);
+     linkage_print_pp_msgs(Linkage linkage);
 link_public_api(void)
-     linkage_free_diagram(char * str);
+     linkage_free_pp_msgs(char * str);
+link_public_api(char *)
+     linkage_print_senses(Linkage linkage);
+link_public_api(void)
+     linkage_free_senses(char *str);
 link_public_api(int)
      linkage_unused_word_cost(const Linkage linkage);
 link_public_api(int)
