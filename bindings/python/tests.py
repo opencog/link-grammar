@@ -297,6 +297,18 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.links[6],
                          Link('.','RW','RW','RIGHT-WALL'))
 
+    def test_spell_guessing_on(self):
+        self.p = Parser(spell_guess = True)
+        result = self.p.parse_sent("I love going to shoop.")
+        self.assertEqual(result[0].words,
+             ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shop[~].v', '.', 'RIGHT-WALL'])
+
+    def test_spell_guessing_off(self):
+        self.p = Parser(spell_guess = False)
+        result = self.p.parse_sent("I love going to shoop.")
+        self.assertEqual(result[0].words,
+             ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shoop[?].v', '.', 'RIGHT-WALL'])
+
 
 class LinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type(self):
