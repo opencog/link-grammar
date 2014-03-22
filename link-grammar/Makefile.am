@@ -52,6 +52,10 @@ if HAVE_ASPELL
 liblink_grammar_la_LIBADD  +=  ${ASPELL_LIBS}
 endif
 
+if HAVE_SQLITE
+liblink_grammar_la_LIBADD  +=  ${SQLITE3_LIBS}
+endif
+
 if WITH_SAT_SOLVER
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/sat-solver/libsat-solver.la
 liblink_grammar_la_LIBADD  += $(top_builddir)/link-grammar/minisat/libminisat.la
