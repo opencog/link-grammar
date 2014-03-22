@@ -152,11 +152,16 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define TRUE 1
 #endif
 
-#define assert(ex,string) {                                       \
-    if (!(ex)) {                                                  \
-        prt_error("Assertion failed: %s\n", string);              \
-        exit(1);                                                  \
-    }                                                             \
+#define STR(x) #x
+#define STRINGIFY(x) STR(x)
+
+#define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
+#define assert(ex, ...) {                                                   \
+	if (!(ex)) {                                                             \
+		prt_error("\nAssertion ("#ex") failed at "FILELINE": "  __VA_ARGS__); \
+		fflush(stdout);                                                       \
+		exit(1);                                                              \
+	}                                                                        \
 }
 
 #if defined(__UCLIBC__)
