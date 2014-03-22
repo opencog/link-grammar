@@ -162,7 +162,7 @@ static void resources_print_total_space(int verbosity, Resources r)
 		printf("++++");
 		left_print_string(stdout, "Total space",
 		                  "                                            ");
-		printf("%lu bytes (%lu max)\n", 
+		printf("%zu bytes (%zu max)\n", 
 			(long unsigned int) get_space_in_use(), 
 			(long unsigned int) get_max_space_used());
 	}

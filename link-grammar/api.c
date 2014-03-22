@@ -1413,7 +1413,7 @@ else
 				*affix_types_p = AFFIXTYPE_WORD;
 			}
 
-			lgdebug(4, "%%>%d djword=%s affixtype=%c wordlen=%lu\n",
+			lgdebug(4, "%%>%d djword=%s affixtype=%c wordlen=%zu\n",
 			        lk, djw, empty_word ? 'E' : *affix_types_p, len);
 
 			if (! empty_word) affix_types_p++;
@@ -1456,7 +1456,7 @@ try_again:
 					((*t == '\0') || (*t == SUBSCRIPT_MARK) || (*t == '[')))
 				{
 					//lgdebug(4, "EQUAL\n");
-					lgdebug(4, " %lu", ai);
+					lgdebug(4, " %zu", ai);
 					match_found = TRUE;
 					/* Count matched morphemes in this alternative */
 					matched_alts[ai]++;
