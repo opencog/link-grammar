@@ -51,7 +51,7 @@ struct Exp_struct
         E_list * l;           /* Only needed for non-terminals */
         const char * string;  /* Only needed if it's a connector */
     } u;
-    float cost;    /* The cost of using this expression.
+    double cost;   /* The cost of using this expression.
                       Only used for non-terminals */
 };
 

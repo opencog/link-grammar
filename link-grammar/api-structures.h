@@ -64,7 +64,7 @@ struct Parse_Options_s
 	Boolean use_sat_solver;/* Use the Boolean SAT based parser */
 	Boolean use_viterbi;   /* Use the Viterbi decoder-based parser */
 	int linkage_limit;     /* The maximum number of linkages processed 100 */
-	float disjunct_cost;   /* Max disjunct cost to allow */
+	double disjunct_cost;  /* Max disjunct cost to allow */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
 	int null_block;        /* consecutive blocks of this many words are

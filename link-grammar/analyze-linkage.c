@@ -774,10 +774,10 @@ static int unused_word_cost(Parse_info pi)
  * Computes the cost of the current parse of the current sentence
  * due to the cost of the chosen disjuncts.
  */
-static float disjunct_cost(Parse_info pi)
+static double disjunct_cost(Parse_info pi)
 {
 	int i;
-	float lcost;
+	double lcost;
 	lcost =  0.0;
 	for (i = 0; i < pi->N_words; i++)
 	{

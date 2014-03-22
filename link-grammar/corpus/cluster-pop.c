@@ -237,8 +237,8 @@ int main (int argc, char * argv[])
 
 	printf("Examined %d clusters, recorded %d\n", clu_cnt, rec_cnt);
 	printf("Examined %d words, and %d disjuncts\n", wrd_cnt, dj_cnt);
-	float avg_wrd = ((float) wrd_cnt) / clu_cnt;
-	float avg_dj = ((float) dj_cnt) / rec_cnt;
+	double avg_wrd = ((double) wrd_cnt) / clu_cnt;
+	double avg_dj = ((double) dj_cnt) / rec_cnt;
 	printf("Average %f words/cluster; average %f dj's/recored-cluster\n", 
 		avg_wrd, avg_dj);
 

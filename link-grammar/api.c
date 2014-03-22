@@ -312,11 +312,11 @@ int parse_options_get_linkage_limit(Parse_Options opts)
 	return opts->linkage_limit;
 }
 
-void parse_options_set_disjunct_cost(Parse_Options opts, float dummy)
+void parse_options_set_disjunct_cost(Parse_Options opts, double dummy)
 {
 	opts->disjunct_cost = dummy;
 }
-float parse_options_get_disjunct_cost(Parse_Options opts)
+double parse_options_get_disjunct_cost(Parse_Options opts)
 {
 	return opts->disjunct_cost;
 }

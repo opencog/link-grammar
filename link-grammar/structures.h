@@ -200,7 +200,7 @@ struct Disjunct_struct
     Disjunct *next;
     const char * string;
     Connector *left, *right;
-    float cost;
+    double cost;
     char marked;
 };
 
@@ -292,7 +292,7 @@ struct Linkage_info_struct
     short null_cost;
     short unused_word_cost;
     short link_cost;
-    float disjunct_cost;
+    double disjunct_cost;
     double corpus_cost;
     int island[MAX_SENTENCE];
     size_t nwords;

@@ -36,8 +36,8 @@ typedef struct clause_struct Clause;
 struct clause_struct
 {
 	Clause * next;
-	float cost;
-	float maxcost;
+	double cost;
+	double maxcost;
 	Tconnector * c;
 };
 
@@ -164,7 +164,7 @@ static Tconnector * build_terminal(Exp * e)
 }
 
 #ifdef UNUSED_FUNCTION
-static xxxfloat-int maxcost_of_expression(Exp *e)
+static xxxdouble-int maxcost_of_expression(Exp *e)
 {
 	E_list * e_list;
 	int m, m1;
@@ -184,7 +184,7 @@ static xxxfloat-int maxcost_of_expression(Exp *e)
  * This returns the maximum maxcost of any disjunct in the sentence
  * Assumes the sentence expressions have been constructed
  */
-static xxx-float-int maxcost_of_sentence(Sentence sent)
+static xxx-double-int maxcost_of_sentence(Sentence sent)
 {
 	X_node * x;
 	int w, m, m1;
@@ -364,7 +364,7 @@ static Connector * extract_connectors(Tconnector *e, int c)
  * string is the print name of word that generated this disjunct.
  */
 static Disjunct *
-build_disjunct(Clause * cl, const char * string, float cost_cutoff)
+build_disjunct(Clause * cl, const char * string, double cost_cutoff)
 {
 	Disjunct *dis, *ndis;
 	dis = NULL;
@@ -384,7 +384,7 @@ build_disjunct(Clause * cl, const char * string, float cost_cutoff)
 	return dis;
 }
 
-Disjunct * build_disjuncts_for_X_node(X_node * x, float cost_cutoff)
+Disjunct * build_disjuncts_for_X_node(X_node * x, double cost_cutoff)
 {
 	Clause *c ;
 	Disjunct * dis;
@@ -531,7 +531,7 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
  * Turn sentence expressions into disjuncts.
  * Sentence expressions must have been built, before calling this routine.
  */
-void build_sentence_disjuncts(Sentence sent, float cost_cutoff)
+void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
 {
 	Disjunct * d;
 	X_node * x;

@@ -42,7 +42,7 @@ static struct
 	int use_viterbi;
 	int echo_on;
 	Cost_Model_type cost_model;
-	float max_cost;
+	double max_cost;
 	int screen_width;
 	int display_on;
 	ConstituentDisplayStyle display_constituents;
@@ -261,7 +261,7 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 			if (Float == as[i].param_type)
 			{
 				/* Float point print! */
-				printf("%5.2f", (double) (*((float *)as[i].ptr)));
+				printf("%5.2f", *((double *)as[i].ptr));
 			}
 			else
 			if ((Bool == as[i].param_type) || Int == as[i].param_type)
@@ -364,15 +364,15 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 		else
 		if (as[j].param_type == Float)
 		{
-			float val = -1.0;
-			val = (float) atof(y);
-			if (val < 0.0f)
+			double val = -1.0;
+			val = (double) atof(y);
+			if (val < 0.0)
 			{
 				printf("Invalid value %s for variable %s Type \"!help\" or \"!variables\"\n", y, as[j].string);
 				return -1;
 			}
 
-			*((float *) as[j].ptr) = val;
+			*((double *) as[j].ptr) = val;
 			printf("%s set to %5.2f\n", as[j].string, val);
 			return 0;
 		}

@@ -800,7 +800,7 @@ void print_AND_statistics(Sentence sent)
 	printf("Number of disjuncts in the table: %d\n", sent->and_data.STAT_N_disjuncts);
 	if (sent->and_data.LT_size != 0) {
 	  printf("average list length: %f\n",
-			 (float)sent->and_data.STAT_N_disjuncts/sent->and_data.LT_size);
+			 (double)sent->and_data.STAT_N_disjuncts/sent->and_data.LT_size);
 	}
 	printf("Number of equality tests: %d\n", sent->and_data.STAT_calls_to_equality_test);
 }
