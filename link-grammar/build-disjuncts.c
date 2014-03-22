@@ -488,7 +488,7 @@ static unsigned int count_clause(Exp *e)
  */
 unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 {
-	return count_clause(dn->exp);
+	return (NULL == dn) ? 0 : count_clause(dn->exp);
 }
 #endif /* OBSOLETE_MEMORY_PIGGY */
 
