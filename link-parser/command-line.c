@@ -271,7 +271,7 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 			else
 			if (String == as[i].param_type)
 			{
-				printf("%5s", *(char **)as[i].ptr);
+				printf("%s", *(char **)as[i].ptr);
 			}
 			if (Bool == as[i].param_type)
 			{
@@ -305,8 +305,8 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 
 	if (s[0] == '!')
 	{
-		dict_display_word_info(dict, s+1);
-		dict_display_word_expr(dict, s+1);
+		dict_display_word_info(dict, s+1, opts);
+		dict_display_word_expr(dict, s+1, opts);
 		return 0;
 	}
 
