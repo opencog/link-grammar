@@ -18,7 +18,7 @@ CLEANFILES =                                       \
    $(BUILT_SOURCES)                                \
    $(top_builddir)/bindings/python/clinkgrammar.py
 
-DISTCLEANFILES = 
+DISTCLEANFILES =                                   \
    $(top_builddir)/bindings/python/__init__.py
 
 if HAVE_SWIG
