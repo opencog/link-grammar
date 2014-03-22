@@ -36,11 +36,9 @@ Boolean feature_enabled(const char *, const char *);
 # define __func__ __FUNCTION__
 #endif
 #define lgdebug(level, ...) \
-	{ if ((verbosity > level) && \
-	 	(('\0' == debug[0]) || feature_enabled(debug, __func__))) \
-	 	{ printf(__VA_ARGS__); } \
-	}
-
+	if ((verbosity > level) && \
+	 (('\0' == debug[0]) || feature_enabled(debug, __func__))) \
+	 { printf(__VA_ARGS__); }
 #define test_enabled(feature) \
 	(('\0' != test) && feature_enabled(test, feature))
 
