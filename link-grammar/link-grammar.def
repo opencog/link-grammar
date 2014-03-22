@@ -4,7 +4,6 @@ dictionary_create_from_utf8
 dictionary_create_lang
 dictionary_create_default_lang
 dictionary_delete
-dictionary_get_max_cost
 dictionary_get_data_dir
 dictionary_set_data_dir
 dictionary_lookup_list

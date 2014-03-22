@@ -218,7 +218,6 @@ dictionary_six_str(const char * lang,
 	dict->name = string_set_add(dict_name, dict->string_set);
 	dict->version = NULL;
 
-	dict->max_cost = 1000;
 	dict->num_entries = 0;
 	dict->is_special = FALSE;
 	dict->already_got_it = '\0';
@@ -457,9 +456,3 @@ int dictionary_delete(Dictionary dict)
 
 	return 0;
 }
-
-int dictionary_get_max_cost(Dictionary dict)
-{
-	return dict->max_cost;
-}
-
