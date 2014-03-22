@@ -18,11 +18,14 @@
 #include "dict-common.h"
 #include "disjunct-utils.h"
 #include "error.h"
+#include "print.h"
+#include "externs.h"
 #include "idiom.h"
 #include "read-dict.h"
 #include "regex-morph.h"
 #include "string-set.h"
 #include "tokenize.h"
+#include "utilities.h"
 #include "word-file.h"
 #include "utilities.h"
 
@@ -43,7 +46,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 
 	/* The newer dictionaries should contain a macro of the form:
 	 * <dictionary-version-number>: V4v6v6+;
-	 * which would indicate dictionary verison 4.6.6
+	 * which would indicate dictionary version 4.6.6
 	 * Older dictionaries contain no version info.
 	 */
 	dn = dictionary_lookup_list(dict, "<dictionary-version-number>");
@@ -80,13 +83,13 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
   "()", "{}", and "[]".  The terminal symbols of this grammar are the
   connectors, which are strings of letters or numbers or *s.
   Expressions may be written in prefix or infix form. In prefix-form,
-  the expressions are lisp-like, with the operators &, | preceeding
+  the expressions are lisp-like, with the operators &, | preceding
   the operands. In infix-form, the operators are in the middle. The
   current dictionaries are in infix form.  If the C preprocessor
   constant INFIX_NOTATION is defined, then the dictionary is assumed
   to be in infix form.
 
-  The connector begins with an optinal @, which is followed by an upper
+  The connector begins with an optional @, which is followed by an upper
   case sequence of letters. Each subsequent *, lower case letter or
   number is a subscript. At the end is a + or - sign.  The "@" allows
   this connector to attach to one or more other connectors.
@@ -105,16 +108,16 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 
   If a word is of the form "/foo", then the file current-dir/foo
   is a so-called word file, and is read in as a list of words.
-  A word file is just a list of words separted by blanks or newlines.
+  A word file is just a list of words separated by blanks or newlines.
 
   A word that contains the character "_" defines an idiomatic use of
   the words separated by the "_".  For example "kind of" is an idiomatic
   expression, so a word "kind_of" is defined in the dictionary.
-  Idomatic expressions of any number of words can be defined in this way.
+  Idiomatic expressions of any number of words can be defined in this way.
   When the word "kind" is encountered, all the idiomatic uses of the word
   are considered.
 
-  An expresion enclosed in "[..]" is give a cost of 1.  This means
+  An expression enclosed in "[..]" is give a cost of 1.  This means
   that if any of the connectors inside the square braces are used,
   a cost of 1 is incurred.  (This cost is the first element of the cost
   vector printed when a sentence is parsed.)  Of course if something is
@@ -131,7 +134,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
   cost of 1 incurred for choosing not to use "A+".  The expression
   "(EXP1 & [EXP2])" is exactly the same as "[EXP1 & EXP2]".  The difference
   between "({[A+]} & B+)" and "([{A+}] & B+)" is that the latter always
-  incurrs a cost of 1, while the former only gets a cost of 1 if "A+" is
+  incurs a cost of 1, while the former only gets a cost of 1 if "A+" is
   used.
 
   The dictionary writer is not allowed to use connectors that begin in
@@ -207,7 +210,7 @@ static void warning(Dictionary dict, const char * s)
 /**
  * This gets the next UTF8 character from the input, eliminating comments.
  * If we're in quote mode, it does not consider the % character for
- * comments.   Note that the returned chacracter is a wide character!
+ * comments.   Note that the returned character is a wide character!
  */
 typedef char* utf8char;
 static utf8char get_character(Dictionary dict, int quote_mode)
@@ -512,9 +515,14 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
  * This routine is used to support command-line parser users who
  * want to search for all dictionary entries of some given word or
  * partial word, containing a wild-card. This is done by using the
- * !!blah* command at the command-line.  sers need this function to
+ * !!blah* command at the command-line.  Users need this function to
  * debug the dictionary.  This is the ONLY place in the link-parser
  * where wild-card search is needed; ordinary parsing does not use it.
+ *
+ * !!blah*.sub is also supported.
+ *
+ * XXX Why doesn't it match s="."?
+ * (It matches other one-character words, like ",".)
  *
  * Assuming that s is a pointer to a search string, and that
  * t is a pointer to a dictionary string, this returns 0 if they
@@ -524,19 +532,36 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
  * you come to the end of one of them, or until you find unequal
  * characters.  A "*" matches anything.  Otherwise, replace "."
  * by "\0", and take the difference.  This behavior matches that
- * of the function dict_order_internal().
+ * of the function dict_order_bare().
  */
 static inline int dict_order_wild(const char * s, Dict_node * dn)
 {
 	const char * t = dn->string;
+	char * ds = strrchr(s, SUBSCRIPT_DOT); /* we need to do this to ensure that
+	                                          "i.e." does not match "i.e" */
 
+	lgdebug(+5, "search-word='%s' dict-word='%s'\n", s, t);
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
+	if (*s == WILD_TYPE)
+	{
+		/* Skip the rest of t */
+		s++;
+		while((*t != '\0') && (*t != SUBSCRIPT_MARK)) t++;
+	}
+	lgdebug(5, "Rest: '%s' '%s'\n", s, t);
 
-	if (*s == WILD_TYPE) return 0;
+	/* If both words have a subscript, and without the subscripts they are
+	 * equal, then compare the subscripts. */
+	if ((s == ds) &&	(*t == SUBSCRIPT_MARK))
+	{
+		lgdebug(5, "Comparing subscripts: %s %s\n", s, t);
+		do {s++; t++;} while ((*s != '\0') && (*s == *t));
+	}
 
-	return (((*s == SUBSCRIPT_DOT)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
+	lgdebug(5, "Result: '%s'-'%s'=%d\n",
+	 s, t, (((s == ds)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t))));
+	return (((s == ds)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
 }
-
 
 /**
  * dict_match --  return true if strings match, else false.
@@ -544,7 +569,7 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
  * string with a suffix; so, for example, "make" and "make.n" are
  * a match.  If both strings have subscripts, then the subscripts must match.
  *
- * A subscript is the part that followes the SUBSCRIPT_MARK.
+ * A subscript is the part that follows the SUBSCRIPT_MARK.
  */
 static Boolean dict_match(const char * s, const char * t)
 {
@@ -704,7 +729,8 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 
 static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 {
-	return rdictionary_lookup(NULL, dict->root, s, TRUE, TRUE);
+	Boolean lookup_idioms = test_enabled("lookup-idioms");
+	return rdictionary_lookup(NULL, dict->root, s, lookup_idioms, TRUE);
 }
 
 /**
@@ -966,14 +992,14 @@ static Exp * connector(Dictionary dict)
  *
  * Empty words are used to work around a fundamental parser design flaw.
  * The flaw is that the parser assumes that there exist a fixed number of
- * words in a sentence, independent of tokenization.  Unfortuntely, this
+ * words in a sentence, independent of tokenization.  Unfortunately, this
  * is not true when correcting spelling errors, or when the dictionary
  * contains entries for plain words and also as stems.  For example,
  * in the Russian dictionary, это.msi appears as a single word, but can
  * also be split into эт.= =о.mnsi. The problem arises because это.msi
  * is a single word, while эт.= =о.mnsi counts as two words, and there
  * is no pretty way to handle both during parsing.  Thus a work-around
- * is introduced: add the empty wored =.zzz: ZZZ+; to the dictionary.
+ * is introduced: add the empty word =.zzz: ZZZ+; to the dictionary.
  * This becomes a pseudo-suffix that can attach to any plain word.  It
  * can attach to any plain word only because the routine below,
  * add_empty_word(), adds the corresponding connector ZZZ- to the plain
@@ -984,7 +1010,7 @@ static Exp * connector(Dictionary dict)
  * attach to null suffixes. For non-null suffix splits, there are
  * clearly many more.)
  *
- * Note that the printing of ZZZ connectors is supressed in print.c,
+ * Note that the printing of ZZZ connectors is suppressed in print.c,
  * although API users will see this link.
  */
 
@@ -1362,7 +1388,7 @@ static int tree_balance(Dict_node *n)
 /**
  * Rebalance the dictionary tree.
  * This recomputes the tree depth wayy too often, but so what.. this
- * only wastes cpu time during the initial dictinary read.
+ * only wastes cpu time during the initial dictionary read.
  */
 static Dict_node *rebalance(Dict_node *root)
 {
@@ -1393,7 +1419,7 @@ static Dict_node *rebalance(Dict_node *root)
 /* ======================================================================== */
 /* Implementation of the DSW algo for rebalancing a binary tree.
  * The point is -- after building the dictionary tree, we rebalance it
- * once at the end. This is a **LOT LOT** quicker than maintaing an
+ * once at the end. This is a **LOT LOT** quicker than maintaining an
  * AVL tree along the way (less than quarter-of-a-second vs. about
  * a minute or more!) FWIW, the DSW tree is even more balanced than
  * the AVL tree is (its less deep, more full).
@@ -1535,7 +1561,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
  * its origins as a lame attempt to hack around the fact that the
  * resulting binary tree is rather badly unbalanced. This has been
  * fixed by using the DSW rebalancing algo. Now, that would seem
- * to render this crazy bisected-insertion algo obsoloete, but ..
+ * to render this crazy bisected-insertion algo obsolete, but ..
  * oddly enough, it seems to make the DSW balancing go really fast!
  * Faster than a simple insertion. Go figure. I think this has
  * something to do with the fact that the dictionaries are in
@@ -1899,7 +1925,7 @@ static void rprint_dictionary_data(Dict_node * n)
 	rprint_dictionary_data(n->left);
 	printf("%s: ", n->string);
 	print_expression(n->exp);
-	printf("\n");
+	printf("-6-\n");
 	rprint_dictionary_data(n->right);
 }
 
@@ -2068,6 +2094,73 @@ void free_dictionary(Dictionary dict)
 	free_Exp_list(dict->exp_list);
 }
 
+static Boolean display_word_split(Dictionary dict, const char * word, Parse_Options opts, void (*display)(Dictionary, const char *))
+{
+	Sentence sent;
+	struct Parse_Options_s display_word_opts = *opts;
+
+	parse_options_set_spell_guess(&display_word_opts, 0);
+	sent = sentence_create(word, dict);
+	(void) separate_sentence(sent, &display_word_opts);
+
+	/* List the splits */
+	print_sentence_word_alternatives(sent, FALSE, NULL, NULL);
+	/* List the disjuncts information */
+	print_sentence_word_alternatives(sent, FALSE, display, NULL);
+
+	sentence_delete(sent);
+	return TRUE;
+}
+
+static void display_counts(const char *, Dict_node *);
+static void display_expr(const char *, Dict_node *);
+
+static void display_word_info(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	Dict_node *dn_head;
+
+	dn_head = dictionary_lookup_wild(dict, word);
+	if (dn_head)
+	{
+		display_counts(word, dn_head);
+		free_lookup_list(dn_head);
+		return;
+	}
+
+	/* Recurse, if its a regex match */
+	regex_name = match_regex(dict, word);
+	if (regex_name)
+	{
+		display_word_info(dict, regex_name);
+		return;
+	}
+	printf("matches nothing in the dictionary.");
+}
+
+static void display_word_expr(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	Dict_node *dn_head;
+
+	dn_head = dictionary_lookup_wild(dict, word);
+	if (dn_head)
+	{
+		display_expr(word, dn_head);
+		free_lookup_list(dn_head);
+		return;
+	}
+
+	/* Recurse, if its a regex match */
+	regex_name = match_regex(dict, word);
+	if (regex_name)
+	{
+		display_word_expr(dict, regex_name);
+		return;
+	}
+	printf("matches nothing in the dictionary.");
+}
+
 /**
  * dict_display_word_info() - display the information about the given word.
  *
@@ -2075,8 +2168,8 @@ void free_dictionary(Dictionary dict)
  * get a list of all words that match up to the wild-card.
  */
 static void display_word(Dictionary dict, const char * word,
-                         void (*disp_node)(Dict_node*),
-                         void (*recurse)(Dictionary, const char *))
+				 Parse_Options opts, void (*disp_node)(const char *,Dict_node*),
+				 void (*recurse)(Dictionary, const char *, Parse_Options opts))
 
 {
 	Tokenizer toker;
@@ -2086,7 +2179,7 @@ static void display_word(Dictionary dict, const char * word,
 	dn_head = dictionary_lookup_wild(dict, word);
 	if (dn_head)
 	{
-		disp_node(dn_head);
+		disp_node(word, dn_head);
 		free_lookup_list(dn_head);
 		return;
 	}
@@ -2095,7 +2188,7 @@ static void display_word(Dictionary dict, const char * word,
 	regex_name = match_regex(dict, word);
 	if (regex_name)
 	{
-		recurse(dict, regex_name);
+		recurse(dict, regex_name, opts);
 		return;
 	}
 
@@ -2116,42 +2209,47 @@ static void display_word(Dictionary dict, const char * word,
 		{
 			printf("\nPrefix ===================================================\n\n");
 			for (i=0; NULL != toker.pref_alternatives[i]; i++)
-				recurse(dict, toker.pref_alternatives[i]);
+				recurse(dict, toker.pref_alternatives[i], opts);
 		}
 		if (stemlen)
 		{
 			printf("\nStem ===================================================\n\n");
 			for (i=0; NULL != toker.stem_alternatives[i]; i++)
-				recurse(dict, toker.stem_alternatives[i]);
+				recurse(dict, toker.stem_alternatives[i], opts);
 		}
 		if (sufflen)
 		{
 			printf("\nSuffix ===================================================\n\n");
 			for (i=0; NULL != toker.suff_alternatives[i]; i++)
-				recurse(dict, toker.suff_alternatives[i]);
+				recurse(dict, toker.suff_alternatives[i], opts);
 		}
 		return;
 	}
 
-	printf("	\"%s\" matches nothing in the dictionary.\n", word);
+	printf("        \"%s\" matches nothing in the dictionary.\n", word);
 }
 
 /**
- * Display the number of disjuncts associated wth this dict node
+ * Display the number of disjuncts associated with this dict node
  */
-static void display_counts(Dict_node *dn)
+static void display_counts(const char *word, Dict_node *dn)
 {
-	printf("Matches:\n");
+	printf("matches:\n");
+
 	for (; dn != NULL; dn = dn->right)
 	{
-		unsigned int len = count_disjunct_for_dict_node(dn);
-		char * s = strdup(dn->string);
-		char * t = strrchr(s, SUBSCRIPT_MARK);
+		unsigned int len;
+		char * s;
+		char * t;
+
+		len = count_disjunct_for_dict_node(dn);
+		s = strdup(dn->string);
+		t = strrchr(s, SUBSCRIPT_MARK);
 		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
 		left_print_string(stdout, s, "                         ");
 		free(s);
-		printf(" %5u  disjuncts ", len);
+		printf(" %8u  disjuncts ", len);
 		if (dn->file != NULL)
 		{
 			printf("<%s>", dn->file->file);
@@ -2163,34 +2261,54 @@ static void display_counts(Dict_node *dn)
 /**
  *  dict_display_word_info() - display the information about the given word.
  */
-void dict_display_word_info(Dictionary dict, const char * word)
+void dict_display_word_info(Dictionary dict, const char * word,
+		Parse_Options opts)
 {
-	display_word(dict, word, display_counts, dict_display_word_info);
+if (test_enabled("altold")) /* XXX need to remove old code */
+{
+	display_word(dict, word, opts, display_counts, dict_display_word_info);
+}
+else
+{
+	display_word_split(dict, word, opts, display_word_info);
+}
 }
 
 /**
- * Display the number of disjuncts associated wth this dict node
+ * Display the number of disjuncts associated with this dict node
  */
-static void display_expr(Dict_node *dn)
+static void display_expr(const char *word, Dict_node *dn)
 {
-	printf("\nExpressions:\n");
+	printf("expressions:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		char * s = strdup(dn->string);
-		char * t = strrchr(s, SUBSCRIPT_MARK);
+		char * s;
+		char * t;
+
+		s = strdup(dn->string);
+		t = strrchr(s, SUBSCRIPT_MARK);
 		if (t) *t = SUBSCRIPT_DOT;
 		printf("    ");
 		left_print_string(stdout, s, "                         ");
 		free(s);
 		print_expression(dn->exp);
-		printf("\n\n");
+		if (NULL != dn->right) /* avoid extra newlines at the end */
+			printf("\n\n");
 	}
 }
 
 /**
  *  dict_display_word_expr() - display the connector info for a given word.
  */
-void dict_display_word_expr(Dictionary dict, const char * word)
+void dict_display_word_expr(Dictionary dict, const char * word, Parse_Options opts)
 {
-	display_word(dict, word, display_expr, dict_display_word_expr);
+if (test_enabled("altold"))
+{
+	display_word(dict, word, opts, display_expr, dict_display_word_expr);
+}
+else
+{
+	display_word_split(dict, word, opts, display_word_expr);
+}
+
 }

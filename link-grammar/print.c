@@ -15,6 +15,7 @@
 #include <stdarg.h>
 
 #include "print.h"
+#include "externs.h"
 #include "api-structures.h"
 #include "corpus/corpus.h"
 #include "idiom.h"
@@ -1311,4 +1312,174 @@ static const char * header(int mode)
 		;
 	if (mode==1) return header_string;
 	else return "";
+}
+
+/**
+ *   print_sentence_word_alternatives(sent, FALSE, display_func, NULL)
+ * Iterate over the sentence words and their alternatives.
+ * Handle each alternative using the display() function if it is supplied,
+ * or else just print them.
+ * The returned value is not relevant in ths case.
+ *
+ *   print_sentence_word_alternatives(sent, FALSE, NULL, token)
+ * Return the word and alternative index of first occurrence in the sentence
+ * of the given token. This is used to prevent duplicate inforamtion display
+ * for repeated morphemes (if there are multiples splits, each of several
+ * morphemes, then many of them may repeat).
+ *
+ *   print_sentence_word_alternatives(sent, TRUE, NULL, NULL)
+ * If debugprint is TRUE, this is a debug printout of the sentence.
+ * (The debug printouts are with level 0 because this function is
+ * invoked for debug on certain positive level.)
+ * The returned value is not relevant in ths case.
+ *
+ */
+
+struct tokenpos print_sentence_word_alternatives(Sentence sent,
+		Boolean debugprint, void (*display)(Dictionary, const char *),
+		const char * findtoken)
+{
+	int wi;   /* internal sentence word index */
+	int ai;   /* index of a word alternative */
+	int sentlen = sent->length;	     /* shortened if there is a right-wall */
+	int first_sentence_word = 0;       /* used for skipping a left-wall */
+	int word_split = FALSE;            /* !!word got split */
+	struct tokenpos tokenpos = {0, 0}; /* token index to prevent duplicates */
+
+	if (0 == sentlen)
+	{
+		/* It should not happen, but if it actually happens due to some
+		 * strange conditions, it's better not to abort the program. */
+		prt_error("Error: Sentence length is 0 (reason unknown)\n");
+		return tokenpos;
+	}
+
+	if (debugprint) lgdebug(1, "Words and alternatives:\n");
+	else if (findtoken)
+		; /* do nothing */
+	else
+	{
+		/* For analyzing words we need to ignore the left/right walls */
+		if ((sentlen >= 0) &&
+		 (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD)))
+			first_sentence_word = 1;
+		if ((sentlen >= 0) && (NULL != sent->word[sentlen-1].unsplit_word) &&
+		 (0 == strcmp(sent->word[sentlen-1].unsplit_word, RIGHT_WALL_WORD)))
+			sentlen--;
+
+		/* Find if a word got split. This is indicated by:
+		 * 1. More than one word in the sentence
+		 * (no check if it actually results from !!w1 w2 ...).
+		 * 2. A word containing more than one alternative. */
+		if (sentlen - first_sentence_word > 1)
+		{
+			word_split = TRUE;
+		}
+		else
+		{
+			for (wi=first_sentence_word; wi<sentlen; wi++)
+			{
+				Word w = sent->word[wi];
+
+				/* There should always be at least one alternative */
+				assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
+				 ('\0' != w.alternatives[0][0]), "Missing alt for word %d\n", wi);
+
+				if (NULL != w.alternatives[1])
+				{
+					word_split = TRUE;
+					break;
+				}
+			}
+		}
+		/* "String", because it can be a word, morpheme, or (TBD) idiom */
+		if (word_split && (NULL == display)) printf("String splits to:\n");
+	}
+
+	/* Iterate over sentence input words */
+	for (wi=first_sentence_word; wi<sentlen; wi++)
+	{
+		Word w = sent->word[wi];
+		int w_start = wi;   /* input word index */
+
+		if (debugprint) lgdebug(0, "  word%d: %s\n  ", wi, w.unsplit_word);
+
+		/* There should always be at least one alternative */
+		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
+		 ('\0' != w.alternatives[0][0]), "Missing alt for word %d\n", wi);
+
+		/* Iterate over alternatives */
+		for (ai=0; ;  ai++)
+		{
+			Boolean alt_exists = w.alternatives[ai] != NULL;
+
+			if (alt_exists && debugprint)
+				lgdebug(0, "   alt%d:", ai);
+			for (wi = w_start; (wi == w_start) ||
+			 ((wi < sentlen) && (! sent->word[wi].unsplit_word)); wi++)
+			{
+				/* Check extra balancing */
+				assert((NULL != w.alternatives[ai]) ||
+				 (NULL == sent->word[wi].alternatives[ai]),
+				 "Extra alt %d for word %d\n", wi, ai);
+
+				if (alt_exists)
+				{
+					const char *wt = sent->word[wi].alternatives[ai];
+					const char *st = NULL;
+					char w[MAX_WORD*2];
+
+					/* Don't display information again for the same word */
+					if (findtoken && (0 == strcmp(findtoken, wt)))
+					{
+						tokenpos.wi = wi;
+						tokenpos.ai = ai;
+						return tokenpos;
+					}
+					if ((NULL != display))
+					{
+						tokenpos =
+						 print_sentence_word_alternatives(sent, FALSE, NULL, wt);
+						if ((tokenpos.wi != wi) || (tokenpos.ai != ai))
+						{
+							/* We encountered this token earlier */
+							lgdebug(5, "Skiping repeated %s\n", wt);
+							continue;
+						}
+					}
+
+					/* restore SUBSCRIPT_DOT for printing */
+					st = strrchr(wt, SUBSCRIPT_MARK);
+					if (st)
+					{
+						strcpy(w, wt);
+						w[st-wt] = SUBSCRIPT_DOT;
+						wt = w;
+					}
+					if (debugprint) lgdebug(0, " %s", wt);
+
+					/* For now each word component is called "Token".
+					 * TODO: Its type can be decoded and a more precise
+					 * term (stem, prefix, etc.) can be used.
+					 * Display the features of the token */
+					if (! findtoken && (NULL != display))
+					{
+						printf("Token \"%s\" ", wt);
+						display(sent->dict, wt);
+						printf("\n");
+					}
+					else if (word_split) printf("  %s", wt);
+				}
+			}
+			if (!alt_exists)
+				break;
+			if (word_split && NULL == display) printf("\n");
+		}
+		wi--;
+		if (debugprint) lgdebug(0, "\n");
+	}
+	if (debugprint) lgdebug(0, "\n");
+	else if (word_split) printf("\n");
+
+	return tokenpos;
 }

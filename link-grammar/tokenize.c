@@ -21,6 +21,7 @@
 #endif
 #include <limits.h>
 
+#include "print.h"
 #include "build-disjuncts.h"
 #include "dict-api.h"
 #include "error.h"
@@ -203,7 +204,6 @@ static Boolean contains_digits(const char * s)
 
 static void add_alternative(Sentence, int, const char **, int, const char **, int, const char **);
 static Boolean issue_alternatives1(Sentence, const char *, Boolean);
-static void print_sentence_word_alternatives(Sentence);
 /** 
  * Make the string 's' be the next word of the sentence. 
  * That is, it looks like 's' is a word we can handle, so record it
@@ -494,7 +494,8 @@ static void add_alternative(Sentence sent,
 					int i;
 
 					int numalt = altlen(sent->word[t_start].alternatives)-1;
-					const char **alt = (const char **)malloc((numalt+1) * sizeof(const char *));
+					const char **alt =
+					 (const char **)malloc((numalt+1) * sizeof(const char *));
 					for (i = 0; i < numalt; i++)
 						alt[i] = string_set_add(infix_string, sent->string_set);
 					alt[numalt] = NULL;
@@ -508,8 +509,10 @@ static void add_alternative(Sentence sent,
 			 * - Similarly for stem if no prefix
 			 * - No handling for suffix
 			 * Algorithm here (still not generally good [ap]):
-			 * - Mark first word of an alternative sequence if any prefix or stem is capitalized.
-			 * This is intended to be the same as previously done for en and ru (prefix is not used).
+			 * - Mark first word of an alternative sequence if any prefix or stem
+			 *   is capitalized.
+			 * This is intended to be the same as previously done for en and ru
+			 * (prefix is not used).
 			 */
 			switch (at)
 			{
@@ -561,28 +564,30 @@ static void add_alternative(Sentence sent,
 	sent->t_count = t_count;
 }
 
-static Boolean issue_alternatives1(Sentence sent, const char *word, Boolean quote_found)
+static Boolean issue_alternatives1(Sentence sent,
+		const char *word, Boolean quote_found)
 {
-		int t_start = sent->t_start;
-		int t_count = sent->t_count;
+	int t_start = sent->t_start;
+	int t_count = sent->t_count;
 
-		if (0 == t_count) return FALSE;
+	if (0 == t_count) return FALSE;
 
-		sent->word[t_start].unsplit_word = string_set_add(word, sent->string_set);
-		sent->post_quote = (Boolean *)realloc(sent->post_quote, (t_start+1) * sizeof(Boolean));
-		sent->post_quote[t_start] = quote_found;
+	sent->word[t_start].unsplit_word = string_set_add(word, sent->string_set);
+	sent->post_quote =
+	 (Boolean *)realloc(sent->post_quote, (t_start+1) * sizeof(Boolean));
+	sent->post_quote[t_start] = quote_found;
 
-		sent->length += t_count;
-		sent->t_start = sent->length;
-		sent->t_count = 0;
+	sent->length += t_count;
+	sent->t_start = sent->length;
+	sent->t_count = 0;
 
-		if (3 < verbosity)
-		{
-			printf("issue_alternatives1:\n");
-			print_sentence_word_alternatives(sent);
-		}
+	if (3 < verbosity)
+	{
+		printf("issue_alternatives1:\n");
+		print_sentence_word_alternatives(sent, TRUE, NULL, NULL);
+	}
 
-		return TRUE;
+	return TRUE;
 }
 
 /*
@@ -851,15 +856,12 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 
 	if (!mprefix_sorted)
 	{
-#define s_xstr(s) s_str(s)
-#define s_str(s) #s
 		/* sanity check */
 		assert(mp_strippable <= HEB_MPREFIX_MAX,
-			"mp_strippable>" s_xstr(HEB_MPREFIX_MAX));
-#undef s_xstr
-#undef s_str
+			"mp_strippable>" STRINGIFY(HEB_MPREFIX_MAX));
+
 		/* Longer subwords have priority over shorter ones,
-		 * revers-sort by length. */
+		 * reverse-sort by length. */
 		qsort(afdict->mprefix, mp_strippable, sizeof(char *), revcmplen);
 		mprefix_sorted = 1;
 	}
@@ -1812,52 +1814,4 @@ Boolean sentence_in_dictionary(Sentence sent)
 		err_msg(&ec, Error, "Error: Sentence not in dictionary\n%s\n", temp);
 	}
 	return ok_so_far;
-}
-
-/* DEBUG */
-static void print_sentence_word_alternatives(Sentence sent)
-{
-	int wi;
-	int ai;
-	printf("Words and alternatives:\n");
-	for (wi=0; wi<sent->length; wi++)
-	{
-		Word w = sent->word[wi];
-		printf("  word%d: %s\n  ", wi, w.unsplit_word);
-		if (w.alternatives && w.alternatives[0])
-			{
-			int w_start = wi;
-			for (ai=0; ;  ai++)
-			{
-				Boolean alt_exists = w.alternatives[ai] != NULL;
-				if (alt_exists)
-					printf("   alt%d:", ai);
-				for (wi=w_start; wi==w_start || (wi<sent->length && !sent->word[wi].unsplit_word); wi++)
-					{
-					if (w.alternatives[ai] == NULL && sent->word[wi].alternatives[ai])
-					{
-						char errmsg[128];
-						sprintf(errmsg, "  Internal error: extra alt %d for word %d\n", wi, ai);
-						assert(0, errmsg);
-					}
-					if (alt_exists)
-					{
-						const char *wt = sent->word[wi].alternatives[ai];
-						const char *st = NULL;
-						if (wt)
-							st = strchr(wt, SUBSCRIPT_MARK);
-						if (st)
-							printf(" %.*s.%s", (int)(st-wt), wt, st+1);
-						else
-							printf(" %s", wt);
-					}
-				}
-				if (!alt_exists)
-					break;
-			}
-			wi--;
-			printf("\n");
-		}
-	}
-	printf("\n");
 }

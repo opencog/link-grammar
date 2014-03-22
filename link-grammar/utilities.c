@@ -52,8 +52,10 @@
 
 /* This file contains certain general utilities. */
 int    verbosity;
-char * debug;
-char * test;
+/* debug and test should not be NULL since they can be used before they
+ * are assigned a value by parse_options_get_...() */
+char * debug = (char *)"";
+char * test = (char *)"";
 
 /* ============================================================= */
 /* String utilities */
@@ -103,24 +105,15 @@ void safe_strcat(char *u, const char *v, size_t usize)
 }
 
 /**
- * prints s then prints the last |t|-|s| characters of t.
- * if s is longer than t, it truncates s.
- *
- * XXX This is not UTF8-correct, which mostly doesn't matter,
- * unless printing dictionary entries... FIXME someday.
+ * Prints s in a field width of string ti, with no truncation.
+ * FIXME: make t a number.
+ * (In a previous version of this function s got truncated to the
+ * field width.)
  */
 void left_print_string(FILE * fp, const char * s, const char * t)
 {
-	int i, j, k;
-	j = strlen(t);
-	k = strlen(s);
-	for (i=0; i<j; i++) {
-		if (i<k) {
-			fprintf(fp, "%c", s[i]);
-		} else {
-			fprintf(fp, "%c", t[i]);
-		}
-	}
+	int width = strlen(t) + strlen(s) - utf8_strlen(s);
+	fprintf(fp, "%-*s", width, s);
 }
 
 #ifdef _WIN32  /* should be !defined(HAVE_STRTOK_R) */
@@ -267,8 +260,8 @@ static int wctomb_check(char *s, wchar_t wc)
 
 /**
  * Downcase the first letter of the word.
- * XXX FIXME This works 'most of the time', but is not techically correct.
- * This is because towlower() and towupper() are locale dependant, and also
+ * XXX FIXME This works 'most of the time', but is not technically correct.
+ * This is because towlower() and towupper() are locale dependent, and also
  * because the byte-counts might not match up, e.g. German ß and SS.
  * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
@@ -309,8 +302,8 @@ void downcase_utf8_str(char *to, const char * from, size_t usize)
 
 /**
  * Upcase the first letter of the word.
- * XXX FIXME This works 'most of the time', but is not techically correct.
- * This is because towlower() and towupper() are locale dependant, and also
+ * XXX FIXME This works 'most of the time', but is not technically correct.
+ * This is because towlower() and towupper() are locale dependent, and also
  * because the byte-counts might not match up, e.g. German ß and SS.
  * The correct long-term fix is to use ICU or glib g_utf8_strup(), etc.
  */
@@ -712,7 +705,7 @@ path_get_dirname (const char *file_name)
 }
 #endif /* _WIN32 */
 
-/* global - but thats OK, since this is set only during initialization,
+/* global - but that's OK, since this is set only during initialization,
  * and is is thenceforth a read-only item. So it doesn't need to be
  * locked.
  */
@@ -875,7 +868,7 @@ void * object_open(const char *filename,
 			 * For unix, this should look like:
 			 * /usr/share/link-grammar:.:data:..:../data:
 			 * For windows:
-			 * C:\SOMWHERE;.;data;..;..\data;
+			 * C:\SOMEWHERE;.;data;..;..\data;
 			 */
 			snprintf(fulldictpath, MAX_PATH_NAME,
 			         "%s%c%s%c%s%c%s%c%s%c%s%c%s%c",
@@ -930,7 +923,7 @@ FILE *dictopen(const char *filename, const char *how)
 
 	/* If not the first time through, look for the other dictionaries
 	 * in the *same* directory in which the first one was found.
-	 * (The first one is typcailly "en/4.0.dict")
+	 * (The first one is typically "en/4.0.dict")
 	 * The global "path_found" records where the first dict was found.
 	 * The goal here is to avoid insanity due to user's fractured installs.
 	 */

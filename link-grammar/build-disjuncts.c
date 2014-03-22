@@ -505,11 +505,6 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 	X_node * x, * y;
 
 	dn_head = dictionary_lookup_list(dict, s);
-	if (3 < verbosity) /* DEBUG */
-	{
-		printf("word %s num disjuncts=%u\n", s, count_disjunct_for_dict_node(dn_head));
-	}
-
 	x = NULL;
 	dn = dn_head;
 	while (dn != NULL)
