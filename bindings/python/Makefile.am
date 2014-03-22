@@ -13,10 +13,13 @@ pkgpython_PYTHON =                                 \
    $(top_builddir)/bindings/python/clinkgrammar.py
 
 
+# Don't remove __init__.py; that one is build by configure!
 CLEANFILES =                                       \
-	$(BUILT_SOURCES)                                \
-   $(top_builddir)/bindings/python/__init__.py     \
+   $(BUILT_SOURCES)                                \
    $(top_builddir)/bindings/python/clinkgrammar.py
+
+DISTCLEANFILES = 
+   $(top_builddir)/bindings/python/__init__.py
 
 if HAVE_SWIG
 $(BUILT_SOURCES): $(SWIG_SOURCES)
