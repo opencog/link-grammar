@@ -14,7 +14,6 @@ class Parser(object):
                        max_null_count = 0,
                        null_block = 1,
                        islands_ok = False,
-                       use_spell_guess = True,
                        short_length = 6,
                        all_short_connectors = False,
                        display_morphology = False,
@@ -33,7 +32,6 @@ class Parser(object):
                                           max_null_count = max_null_count,
                                           null_block = null_block,
                                           islands_ok = islands_ok,
-                                          use_spell_guess = use_spell_guess,
                                           short_length = short_length,
                                           display_morphology = display_morphology,
                                           display_walls = display_walls,
@@ -66,7 +64,6 @@ class ParseOptions(object):
                        max_null_count = 0,
                        null_block = 1,
                        islands_ok = False,
-                       use_spell_guess = True,
                        short_length = 6,
                        all_short_connectors = False,
                        display_morphology = False,
@@ -86,7 +83,6 @@ class ParseOptions(object):
         self.max_null_count = max_null_count
         self.null_block = null_block
         self.islands_ok = islands_ok
-        self.use_spell_guess = use_spell_guess
         self.short_length = short_length
         self.all_short_connectors = all_short_connectors
         self.display_morphology = display_morphology
@@ -256,17 +252,6 @@ class ParseOptions(object):
             clg.parse_options_set_allow_null(self._po, 1 if value else 0)
         return locals()
     allow_null = property(**allow_null())
-
-    def use_spell_guess():
-        doc = "Whether or not to use spell-guesser for unknown words."
-        def fget(self):
-            return clg.parse_options_get_spell_guess(self._po) == 1
-        def fset(self, value):
-            if not isinstance(value, bool):
-                raise TypeError("use_spell_guess must be set to an integer")
-            clg.parse_options_set_spell_guess(self._po, 1 if value else 0)
-        return locals()
-    use_spell_guess = property(**use_spell_guess())
 
     def display_morphology():
         doc = "Whether or not to show word morphology when a linkage diagram is printed."

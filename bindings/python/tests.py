@@ -227,12 +227,6 @@ class ParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
     def test_utf8_encoded_string(self):
-        po = ParseOptions()
-        po.use_spell_guess = False;
-
-        self.assertEqual(po.use_spell_guess, False)
-        self.assertEqual(clg.parse_options_get_spell_guess(po._po), 0)
-
         result = self.p.parse_sent("I love going to the café.")
         self.assertTrue(isinstance(result, list))
         self.assertTrue(1 < len(result))
@@ -240,9 +234,6 @@ class ParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
     def test_unicode_encoded_string(self):
-        po = ParseOptions()
-        po.use_spell_guess = False;
-
         result = self.p.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
         self.assertTrue(isinstance(result, list))
         self.assertTrue(1 < len(result))
