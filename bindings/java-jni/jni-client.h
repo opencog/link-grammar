@@ -23,7 +23,7 @@ JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setMaxParseSeconds
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_org_linkgrammar_LinkGrammar_setMaxCost
-	(JNIEnv *, jclass, jint);
+	(JNIEnv *, jclass, jdouble);
 
 /*
  * Class:     LinkGrammar

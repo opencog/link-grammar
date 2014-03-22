@@ -74,7 +74,7 @@ static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 static void setup_panic_parse_options(Parse_Options opts)
 {
 	parse_options_set_repeatable_rand(opts, FALSE);
-	parse_options_set_disjunct_costf(opts, 3.0f);
+	parse_options_set_disjunct_cost(opts, 3.0f);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
 	parse_options_set_max_parse_time(opts, 60);
@@ -144,7 +144,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	 * for grammar learning. That is, for the 'any' language.
 	 */
 	parse_options_set_repeatable_rand(ptd->opts, FALSE);
-	parse_options_set_disjunct_costf(ptd->opts, 2.0f);
+	parse_options_set_disjunct_cost(ptd->opts, 2.0f);
 	parse_options_set_max_sentence_length(ptd->opts, MAX_SENTENCE-3);
 	parse_options_set_max_parse_time(ptd->opts, 30);
 	parse_options_set_linkage_limit(ptd->opts, 1000);
@@ -232,7 +232,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	}
 
 	/* First parse with cost 0 or 1 and no null links or fat links */
-	parse_options_set_disjunct_costf(opts, 2.0f);
+	parse_options_set_disjunct_cost(opts, 2.0f);
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
 	parse_options_reset_resources(opts);
@@ -328,7 +328,7 @@ Java_org_linkgrammar_LinkGrammar_setMaxParseSeconds(JNIEnv *env, jclass cls, jin
 }
 
 JNIEXPORT void JNICALL
-Java_org_linkgrammar_LinkGrammar_setMaxCost(JNIEnv *env, jclass cls, jint maxCost)
+Java_org_linkgrammar_LinkGrammar_setMaxCost(JNIEnv *env, jclass cls, jdouble maxCost)
 {
 	per_thread_data *ptd = get_ptd(env, cls);;
 	parse_options_set_disjunct_cost(ptd->opts, maxCost);

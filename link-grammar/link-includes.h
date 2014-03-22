@@ -91,13 +91,9 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_linkage_limit(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_disjunct_cost(Parse_Options opts, int disjunct_cost);
-link_public_api(void)
-     parse_options_set_disjunct_costf(Parse_Options opts, float disjunct_cost);
-link_public_api(int)
-     parse_options_get_disjunct_cost(Parse_Options opts);
+     parse_options_set_disjunct_cost(Parse_Options opts, float disjunct_cost);
 link_public_api(float)
-     parse_options_get_disjunct_costf(Parse_Options opts);
+     parse_options_get_disjunct_cost(Parse_Options opts);
 link_public_api(void)
      parse_options_set_min_null_count(Parse_Options opts, int null_count);
 link_public_api(int)

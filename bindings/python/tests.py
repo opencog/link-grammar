@@ -42,7 +42,7 @@ class ParseOptionsTestCase(unittest.TestCase):
     def test_setting_disjunct_cost(self):
         po = ParseOptions()
         po.disjunct_cost = 3.0
-        self.assertEqual(clg.parse_options_get_disjunct_costf(po._po), 3.0)
+        self.assertEqual(clg.parse_options_get_disjunct_cost(po._po), 3.0)
 
     def test_setting_disjunct_cost_to_non_integer_raises_type_error(self):
         po = ParseOptions()

@@ -128,11 +128,11 @@ class ParseOptions(object):
     def disjunct_cost():
         doc = "Determines the maximum disjunct cost used during parsing, where the cost of a disjunct is equal to the maximum cost of all of its connectors. The default is that only disjuncts of cost 2 or less are considered."
         def fget(self):
-            return clg.parse_options_get_disjunct_costf(self._po)
+            return clg.parse_options_get_disjunct_cost(self._po)
         def fset(self, value):
             if not isinstance(value, float):
                 raise TypeError("Distjunct cost must be set to a float")
-            clg.parse_options_set_disjunct_costf(self._po, value)
+            clg.parse_options_set_disjunct_cost(self._po, value)
         return locals()
     disjunct_cost = property(**disjunct_cost())
 

@@ -426,7 +426,7 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.spell_guess = parse_options_get_spell_guess(opts);
 	local.short_length = parse_options_get_short_length(opts);
 	local.cost_model = parse_options_get_cost_model_type(opts);
-	local.max_cost = parse_options_get_disjunct_costf(opts);
+	local.max_cost = parse_options_get_disjunct_cost(opts);
 	local.echo_on = parse_options_get_echo_on(opts);
 	local.batch_mode = parse_options_get_batch_mode(opts);
 	local.panic_mode = parse_options_get_panic_mode(opts);
@@ -466,7 +466,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_short_length(opts, local.short_length);
 	parse_options_set_echo_on(opts, local.echo_on);
 	parse_options_set_cost_model_type(opts, local.cost_model);
-	parse_options_set_disjunct_costf(opts, local.max_cost);
+	parse_options_set_disjunct_cost(opts, local.max_cost);
 	parse_options_set_batch_mode(opts, local.batch_mode);
 	parse_options_set_panic_mode(opts, local.panic_mode);
 	parse_options_set_screen_width(opts, local.screen_width);

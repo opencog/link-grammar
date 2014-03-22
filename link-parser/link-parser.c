@@ -570,7 +570,7 @@ static Label strip_off_label(char * input_string)
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
-	parse_options_set_disjunct_costf(opts, 3.0f);
+	parse_options_set_disjunct_cost(opts, 3.0f);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, 100);
 	parse_options_set_max_parse_time(opts, 60);
@@ -725,7 +725,7 @@ int main(int argc, char * argv[])
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
 	parse_options_set_short_length(opts, 10);
-	parse_options_set_disjunct_costf(opts, 2.0f);
+	parse_options_set_disjunct_cost(opts, 2.0f);
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
 
@@ -840,7 +840,7 @@ int main(int argc, char * argv[])
 			sent = sentence_create(input_string, dict);
 
 			/* First parse with cost 0 or 1 and no null links */
-			// parse_options_set_disjunct_costf(opts, 2.0f);
+			// parse_options_set_disjunct_cost(opts, 2.0f);
 			parse_options_set_min_null_count(opts, 0);
 			parse_options_set_max_null_count(opts, 0);
 			parse_options_reset_resources(opts);
@@ -869,7 +869,7 @@ int main(int argc, char * argv[])
 			 */
 			if (num_linkages == 0)
 			{
-				parse_options_set_disjunct_costf(opts, 3.5f);
+				parse_options_set_disjunct_cost(opts, 3.5f);
 				num_linkages = sentence_parse(sent, opts);
 				if (num_linkages < 0) continue;
 			}
@@ -884,7 +884,7 @@ int main(int argc, char * argv[])
 			{
 				int expanded;
 				if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
-				parse_options_set_disjunct_costf(opts, 2.9f);
+				parse_options_set_disjunct_cost(opts, 2.9f);
 				expanded = lg_expand_disjunct_list(sent);
 				if (expanded)
 				{
