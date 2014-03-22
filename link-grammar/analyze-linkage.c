@@ -951,7 +951,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	}
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
-	li.corpus_cost = -1.0f;
+	li.corpus_cost = -1.0;
 	li.and_cost = 0;
 	li.andlist = NULL;
 
@@ -1131,7 +1131,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	}
 	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
-	li.corpus_cost = -1.0f;
+	li.corpus_cost = -1.0;
 
 	if (pp == NULL)
 	{

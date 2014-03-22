@@ -84,7 +84,7 @@ static int CORP_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	double diff = p1->corpus_cost - p2->corpus_cost;
 	if (fabs(diff) < 1.0e-5)
 		return VDAL_compare_parse(p1, p2);
-	if (diff < 0.0f) return -1;
+	if (diff < 0.0) return -1;
 	return 1;
 }
 #endif
@@ -104,7 +104,7 @@ Parse_Options parse_options_create(void)
 	po->debug = (char *)"";
 	po->test = (char *)"";
 	po->linkage_limit = 100;
-	po->disjunct_cost = 2.0f;   /* Maybe should be 1.0f ?? */
+	po->disjunct_cost = 2.0;   /* Maybe should be 1.0 ?? */
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->null_block = 1;
@@ -1064,13 +1064,13 @@ int sentence_and_cost(Sentence sent, int i) {
 #endif /* USE_FAT_LINKAGES */
 }
 
-int sentence_disjunct_cost(Sentence sent, int i)
+double sentence_disjunct_cost(Sentence sent, int i)
 {
-	if (!sent) return 0;
+	if (!sent) return 0.0;
 
 	/* The sat solver (currently) fails to fill in link_info */
-	if (!sent->link_info) return 0;
-	return (int) ceilf(sent->link_info[i].disjunct_cost);
+	if (!sent->link_info) return 0.0;
+	return sent->link_info[i].disjunct_cost;
 }
 
 int sentence_link_cost(Sentence sent, int i)
@@ -2138,11 +2138,11 @@ int linkage_unused_word_cost(const Linkage linkage)
 	return linkage->info->unused_word_cost;
 }
 
-int linkage_disjunct_cost(const Linkage linkage)
+double linkage_disjunct_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return 0;
-	return (int) floorf(linkage->info->disjunct_cost);
+	if (!linkage->info) return 0.0;
+	return linkage->info->disjunct_cost;
 }
 
 int linkage_is_fat(const Linkage linkage)

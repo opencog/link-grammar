@@ -426,7 +426,7 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 #ifdef USE_FAT_LINKAGES
 			if (corpus_cost < 0.0f)
 			{
-				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d FAT=%d AND=%d LEN=%d)\n",
+				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.2f FAT=%d AND=%d LEN=%d)\n",
 				       linkage_unused_word_cost(linkage),
 				       linkage_disjunct_cost(linkage),
 				       linkage_is_fat(linkage),
@@ -435,7 +435,7 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 			}
 			else
 			{
-				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%d FAT=%d AND=%d LEN=%d)\n",
+				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%5.2f FAT=%d AND=%d LEN=%d)\n",
 				       corpus_cost,
 				       linkage_unused_word_cost(linkage),
 				       linkage_disjunct_cost(linkage),
@@ -446,14 +446,14 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 #else
 			if (corpus_cost < 0.0f)
 			{
-				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%d LEN=%d)\n",
+				fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.2f LEN=%d)\n",
 				       linkage_unused_word_cost(linkage),
 				       linkage_disjunct_cost(linkage),
 				       linkage_link_cost(linkage));
 			}
 			else
 			{
-				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%d LEN=%d)\n",
+				fprintf(stdout, "cost vector = (CORP=%6.4f UNUSED=%d DIS=%5.2f LEN=%d)\n",
 				       corpus_cost,
 				       linkage_unused_word_cost(linkage),
 				       linkage_disjunct_cost(linkage),
@@ -489,7 +489,7 @@ static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
 			batch_errors++;
 			return UNGRAMMATICAL;
 		}
-		if ((sentence_disjunct_cost(sent, 0) == 0) &&
+		if ((sentence_disjunct_cost(sent, 0) == 0.0) &&
 			(label == PARSE_WITH_DISJUNCT_COST_GT_0)) {
 			batch_errors++;
 			return PARSE_WITH_DISJUNCT_COST_GT_0;
@@ -725,7 +725,7 @@ int main(int argc, char * argv[])
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
 	parse_options_set_short_length(opts, 10);
-	parse_options_set_disjunct_cost(opts, 2.0f);
+	parse_options_set_disjunct_cost(opts, 2.0);
 	parse_options_set_min_null_count(opts, 0);
 	parse_options_set_max_null_count(opts, 0);
 
@@ -840,7 +840,7 @@ int main(int argc, char * argv[])
 			sent = sentence_create(input_string, dict);
 
 			/* First parse with cost 0 or 1 and no null links */
-			// parse_options_set_disjunct_cost(opts, 2.0f);
+			// parse_options_set_disjunct_cost(opts, 2.0);
 			parse_options_set_min_null_count(opts, 0);
 			parse_options_set_max_null_count(opts, 0);
 			parse_options_reset_resources(opts);
@@ -869,7 +869,7 @@ int main(int argc, char * argv[])
 			 */
 			if (num_linkages == 0)
 			{
-				parse_options_set_disjunct_cost(opts, 3.5f);
+				parse_options_set_disjunct_cost(opts, 3.5);
 				num_linkages = sentence_parse(sent, opts);
 				if (num_linkages < 0) continue;
 			}
@@ -884,7 +884,7 @@ int main(int argc, char * argv[])
 			{
 				int expanded;
 				if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
-				parse_options_set_disjunct_cost(opts, 2.9f);
+				parse_options_set_disjunct_cost(opts, 2.9);
 				expanded = lg_expand_disjunct_list(sent);
 				if (expanded)
 				{

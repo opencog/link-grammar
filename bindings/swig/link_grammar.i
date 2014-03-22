@@ -106,7 +106,7 @@ int  sentence_num_linkages_found(Sentence sent);
 int  sentence_num_valid_linkages(Sentence sent);
 int  sentence_num_linkages_post_processed(Sentence sent);
 int  sentence_num_violations(Sentence sent, int i);
-int  sentence_disjunct_cost(Sentence sent, int i);
+double sentence_disjunct_cost(Sentence sent, int i);
 int  sentence_link_cost(Sentence sent, int i);
 
 /**********************************************************************
@@ -154,7 +154,7 @@ char * linkage_print_senses(Linkage linkage);
 char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 char * linkage_print_postscript(Linkage linkage, int mode);
 int linkage_unused_word_cost(Linkage linkage);
-int linkage_disjunct_cost(Linkage linkage);
+double linkage_disjunct_cost(Linkage linkage);
 int linkage_link_cost(Linkage linkage);
 double linkage_corpus_cost(Linkage linkage);
 const char * linkage_get_violation_name(Linkage linkage);

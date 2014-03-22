@@ -267,7 +267,7 @@ link_public_api(int)
      sentence_num_linkages_post_processed(Sentence sent);
 link_public_api(int)
      sentence_num_violations(Sentence sent, int i);
-link_public_api(int)
+link_public_api(double)
      sentence_disjunct_cost(Sentence sent, int i);
 link_public_api(int)
      sentence_link_cost(Sentence sent, int i);
@@ -350,7 +350,7 @@ link_public_api(void)
      linkage_free_senses(char *str);
 link_public_api(int)
      linkage_unused_word_cost(const Linkage linkage);
-link_public_api(int)
+link_public_api(double)
      linkage_disjunct_cost(const Linkage linkage);
 link_public_api(int)
      linkage_link_cost(const Linkage linkage);

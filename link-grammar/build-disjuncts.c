@@ -217,8 +217,8 @@ static Clause * build_clause(Exp *e)
 		c1 = (Clause *) xalloc(sizeof (Clause));
 		c1->c = NULL;
 		c1->next = NULL;
-		c1->cost = 0.0f;
-		c1->maxcost = 0.0f ;
+		c1->cost = 0.0;
+		c1->maxcost = 0.0;
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
 		{
 			c2 = build_clause(e_list->e);
@@ -260,8 +260,8 @@ static Clause * build_clause(Exp *e)
 	{
 		c = (Clause *) xalloc(sizeof(Clause));
 		c->c = build_terminal(e);
-		c->cost = 0.0f;
-		c->maxcost = 0.0f;
+		c->cost = 0.0;
+		c->maxcost = 0.0;
 		c->next = NULL;
 	}
 	else

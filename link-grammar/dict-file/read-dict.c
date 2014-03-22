@@ -778,7 +778,7 @@ static Exp * make_zeroary_node(Dictionary dict)
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0.0f;
+	n->cost = 0.0;
 	n->u.l = NULL;
 	return n;
 }
@@ -792,7 +792,7 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
 	Exp * n;
 	n = Exp_create(dict);
 	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0.0f;
+	n->cost = 0.0;
 	n->u.l = (E_list *) xalloc(sizeof(E_list));
 	n->u.l->next = NULL;
 	n->u.l->e = e;
@@ -810,7 +810,7 @@ static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
 
 	n = Exp_create(dict);
 	n->type = AND_type;
-	n->cost = 0.0f;
+	n->cost = 0.0;
 
 	n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
 	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
@@ -832,7 +832,7 @@ static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
 
 	n = Exp_create(dict);
 	n->type = OR_type;
-	n->cost = 0.0f;
+	n->cost = 0.0;
 
 	n->u.l = ell = (E_list *) xalloc(sizeof(E_list));
 	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
@@ -875,7 +875,7 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 		n->multi = FALSE;
 	}
 	n->type = CONNECTOR_type;
-	n->cost = 0.0f;
+	n->cost = 0.0;
 	return n;
 }
 
@@ -1013,7 +1013,7 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
 	zn->multi = FALSE;
 	zn->type = CONNECTOR_type;
-	zn->cost = 0.0f;
+	zn->cost = 0.0;
 	zn = make_optional_node(dict, zn);
 
 	/* flist is plain-word-exp */
@@ -1029,7 +1029,7 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	/* an will be {ZZZ+} & (plain-word-exp) */
 	an = Exp_create(dict);
 	an->type = AND_type;
-	an->cost = 0.0f;
+	an->cost = 0.0;
 	an->u.l = elist;
 
 	/* replace the plain-word-exp with {ZZZ+} & (plain-word-exp) */
@@ -1055,7 +1055,7 @@ static Exp * operator_exp(Dictionary dict, int type)
 	E_list * elist;
 	n = Exp_create(dict);
 	n->type = type;
-	n->cost = 0.0f;
+	n->cost = 0.0;
 	elist = &first;
 	while((!is_equal(dict, ')')) && (!is_equal(dict, ']')) && (!is_equal(dict, '}'))) {
 		elist->next = (E_list *) xalloc(sizeof(E_list));
@@ -1142,7 +1142,7 @@ static Exp * expression(Dictionary dict)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		n->cost += 1.0f;
+		n->cost += 1.0;
 	} else if (!dict->is_special) {
 		n = connector(dict);
 		if (n == NULL) {
@@ -1228,7 +1228,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nl->cost += 1.0f;
+		nl->cost += 1.0;
 	}
 	else if (!dict->is_special)
 	{
