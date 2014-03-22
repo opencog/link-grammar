@@ -86,6 +86,8 @@ void parse_options_set_display_morphology(Parse_Options opts, int val);
 int  parse_options_get_display_morphology(Parse_Options opts);
 void parse_options_set_display_walls(Parse_Options opts, int val);
 int  parse_options_get_display_walls(Parse_Options opts);
+void parse_options_set_spell_guess(Parse_Options opts, int val);
+int  parse_options_get_spell_guess(Parse_Options opts);
 void parse_options_set_all_short_connectors(Parse_Options opts, int val);
 int  parse_options_get_all_short_connectors(Parse_Options opts);
 void parse_options_reset_resources(Parse_Options opts);
