@@ -22,6 +22,8 @@ Version 5.0.0 (XXX March 2014)
  * Bugfix: Java server failing when input sentence has commas in it!
  * New !test and !debug commands for selective debugging support.
  * Print post-processing rejection message, when !bad is enabled.
+ * Remove soem deprecated functions for C API.
+ * Remove all deprecated functions from Java API.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.

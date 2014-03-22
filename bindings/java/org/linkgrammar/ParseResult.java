@@ -19,8 +19,7 @@ import java.util.List;
  * Represents the result of parsing a piece of text. The result
  * consists of some global meta information about the whole parse
  * and a list of <code>Linkage</code>s returned by the parser. The
- * original parsed text is available as the <code>text</code> attribute
- * and a tokenized version as the <code>String[] words</code> attribute.
+ * original parsed text is available as the <code>text</code> attribute.
  * </p>
  *
  * @author Borislav Iordanov
@@ -31,7 +30,6 @@ public class ParseResult implements Iterable<Linkage>
 	String parserVersion;
 	String dictVersion;
 	String text;
-	String [] words;
 	List<Linkage> linkages = new ArrayList<Linkage>();
 	int numSkippedWords;
 
@@ -53,35 +51,6 @@ public class ParseResult implements Iterable<Linkage>
 	public void setText(String text)
 	{
 		this.text = text;
-	}
-
-	/**
-	 * Use Linkage.wordAt instead.
-	 *
-	 * This method will return misleading results for languages
-	 * which perform morphological analysis (Russian, Hebrew, Turkish, etc.).
-	 * @deprecated
-	 */
-	@Deprecated public String wordAt(int i)
-	{
-		return words[i];
-	}
-
-	/**
-	 * Use Linkage.getWords instead.
-	 *
-	 * This method will return misleading results for languages
-	 * which perform morphological analysis (Russian, Hebrew, Turkish, etc.).
-	 * @deprecated
-	 */
-	@Deprecated public String[] getWords()
-	{
-		return words;
-	}
-
-	@Deprecated public void setWords(String[] words)
-	{
-		this.words = words;
 	}
 
 	public int getNumSkippedWords()

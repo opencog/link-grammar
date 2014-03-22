@@ -1023,29 +1023,6 @@ int sentence_length(Sentence sent)
 	return sent->length;
 }
 
-/**
- * Deprecated; fails to indicate which alternative was
- * actually used in the parse!  Well, OK, this works for
- * ENglish, but is a failure for Russian.
- */
-const char * sentence_get_word(Sentence sent, int index)
-{
-	if (!sent) return NULL;
-	if (index >= sent->length) return NULL;
-	return sent->word[index].alternatives[0];
-}
-
-/**
- * Deprecated; fails to indicate which alternative was
- * actually used in the parse!
- */
-const char * sentence_get_nth_word(Sentence sent, int index)
-{
-	if (!sent) return NULL;
-	if (index >= sent->length) return NULL;
-	return sent->word[index].alternatives[0];
-}
-
 int sentence_null_count(Sentence sent) {
 	if (!sent) return 0;
 	return sent->null_count;
@@ -1111,13 +1088,6 @@ int sentence_link_cost(Sentence sent, int i)
 	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->link_info) return 0;
 	return sent->link_info[i].link_cost;
-}
-
-int sentence_nth_word_has_disjunction(Sentence sent, int i)
-{
-	if (!sent) return 0;
-	prt_error("Warning: sentence_nth_word_has_disjunction() is deprecated!\n");
-	return (sent->parse_info->chosen_disjuncts[i] != NULL);
 }
 
 /* ============================================================== */

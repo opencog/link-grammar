@@ -81,8 +81,6 @@ public class LinkGrammar
     // C sentence access functions
     public static native int getNumWords();
 
-    @Deprecated public static native String getWord(int i);
-
     // Get the subscripted form of the word.
     public static native String getLinkageWord(int i);
 

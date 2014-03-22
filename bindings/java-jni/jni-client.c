@@ -443,29 +443,6 @@ Java_org_linkgrammar_LinkGrammar_getNumWords(JNIEnv *env, jclass cls)
 	return linkage_get_num_words(ptd->linkage);
 }
 
-/*
- * This is making a call to a deprecated API function. The coresponding
- * java function should be marked deprecated as well.
- * Class:      LinkGrammar
- * Method:     getWord
- * Signature: (I)Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL
-Java_org_linkgrammar_LinkGrammar_getWord(JNIEnv *env, jclass cls, jint i)
-{
-	per_thread_data *ptd = get_ptd(env, cls);
-
-	/* Does not need to be freed, points into sentence */
-	const char * w = sentence_get_word(ptd->sent, i);
-
-	/* FWIW, j will be null if w is utf8-encoded Japanese or Chinese.
-	 * I guess my JVM is not capable of handling Chinese/Japanese ??
-	 * Maybe some special java thing needs to be installed?
-	 */
-	jstring j = (*env)->NewStringUTF(env, w);
-	return j;
-}
-
 JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageWord(JNIEnv *env, jclass cls, jint i)
 {

@@ -502,23 +502,6 @@ MS_DEPRECATED link_public_api(void)
 MS_DEPRECATED link_public_api(int)
      parse_options_get_display_union(Parse_Options opts) GNUC_DEPRECATED;
 
-/* For languages with regular prefix/suffix structure, this
- * function returns misleading information. Do not use it
- * in new code! use linkage_get_word() instead! */
-MS_DEPRECATED link_public_api(const char *)
-     sentence_get_word(Sentence sent, int wordnum) GNUC_DEPRECATED;
-
-/* Identical to sentence_get_word()
- * XXX TBD: make this go away in Version 5.0. */
-MS_DEPRECATED link_public_api(const char *)
-     sentence_get_nth_word(Sentence sent, int i) GNUC_DEPRECATED;
-
-/* Who uses this function, anyway? How did this get exported?
- * XXX TBD: make this go away in Version 5.0. */
-MS_DEPRECATED link_public_api(int)
-     sentence_nth_word_has_disjunction(Sentence sent, int i) GNUC_DEPRECATED;
-
-
 /**********************************************************************
  *
  * Constituent node

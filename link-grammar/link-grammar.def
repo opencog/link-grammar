@@ -98,7 +98,6 @@ sentence_delete
 sentence_split
 sentence_parse
 sentence_length
-sentence_get_word
 sentence_null_count
 sentence_num_linkages_found
 sentence_num_valid_linkages
@@ -108,8 +107,6 @@ sentence_num_violations
 sentence_and_cost
 sentence_disjunct_cost
 sentence_link_cost
-sentence_get_nth_word
-sentence_nth_word_has_disjunction
 sentence_contains_conjunction
 linkage_create
 linkage_get_current_sublinkage

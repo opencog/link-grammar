@@ -172,13 +172,6 @@ public class LGService
 		parseResult.setDictVersion(LinkGrammar.getDictVersion());
 		parseResult.numSkippedWords = LinkGrammar.getNumSkippedWords();
 
-		parseResult.words = new String[LinkGrammar.getNumWords()];
-		for (int i = 0; i < parseResult.words.length; i++)
-		{
-			// XXX fixme, should get words from linkage ...
-			parseResult.words[i] = LinkGrammar.getWord(i);
-		}
-
 		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());
 		for (int li = 0; li < maxLinkages; li++)
 		{
@@ -223,7 +216,6 @@ public class LGService
 	public static String getEmptyJSONResult(LGConfig config)
 	{
 		StringBuffer buf = new StringBuffer();
-		buf.append("{\"tokens\":[],");
 		buf.append("\"numSkippedWords\":0,");
 		buf.append("\"linkages\":[],");
 		buf.append("\"version\":\"" + LinkGrammar.getVersion() + "\",");
@@ -241,14 +233,7 @@ public class LGService
 		int numWords = LinkGrammar.getNumWords();
 		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());
 		StringBuffer buf = new StringBuffer();
-		buf.append("{\"tokens\":[");
-		for (int i = 0; i < numWords; i++)
-		{
-			buf.append(JSONUtils.jsonString(LinkGrammar.getWord(i)));
-			if (i + 1 < numWords)
-				buf.append(",");
-		}
-		buf.append("],\"numSkippedWords\":" + LinkGrammar.getNumSkippedWords());
+		buf.append("\"numSkippedWords\":" + LinkGrammar.getNumSkippedWords());
 		buf.append(",\"linkages\":[");
 		for (int li = 0; li < maxLinkages; li++)
 		{

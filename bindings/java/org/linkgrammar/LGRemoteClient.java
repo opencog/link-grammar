@@ -40,14 +40,13 @@ public class LGRemoteClient
     private int connectRetryCount = Integer.MAX_VALUE;
     private long connectRetryWait = 1000l;
 
-    @SuppressWarnings({"unchecked", "deprecation"})
+    @SuppressWarnings({"unchecked"})
     private ParseResult jsonToParseResult(String json)
     {
         JSONReader reader = new JSONReader();
         Map top = (Map)reader.read(json);
         ParseResult result = new ParseResult();
         result.setParserVersion((String)top.get("version"));
-        result.setWords(((List<String>)(top.get("tokens"))).toArray(new String[0]));
         result.setNumSkippedWords(((Number)top.get("numSkippedWords")).intValue());
         for (Map x : (List<Map>)top.get("linkages"))
         {
