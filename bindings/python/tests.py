@@ -20,7 +20,7 @@ class ParseOptionsTestCase(unittest.TestCase):
 
     def test_setting_verbosity_to_not_allow_value_raises_value_error(self):
         po = ParseOptions()
-        self.assertRaises(ValueError, setattr, po, "verbosity", 4)
+        self.assertRaises(ValueError, setattr, po, "verbosity", 14)
 
     def test_setting_verbosity_to_non_integer_raises_type_error(self):
         po = ParseOptions()
@@ -41,8 +41,8 @@ class ParseOptionsTestCase(unittest.TestCase):
 
     def test_setting_disjunct_cost(self):
         po = ParseOptions()
-        po.disjunct_cost = 3
-        self.assertEqual(clg.parse_options_get_disjunct_cost(po._po), 3)
+        po.disjunct_cost = 3.0
+        self.assertEqual(clg.parse_options_get_disjunct_costf(po._po), 3.0)
 
     def test_setting_disjunct_cost_to_non_integer_raises_type_error(self):
         po = ParseOptions()
@@ -291,7 +291,7 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.links[3],
                          Link('this.p','Ss*b','Ss','is.v'))
         self.assertEqual(linkage.links[4],
-                         Link('is.v','O*t','Os','sentence.n'))
+                         Link('is.v','O*m','Os','sentence.n'))
         self.assertEqual(linkage.links[5],
                          Link('a','Ds','Ds','sentence.n'))
         self.assertEqual(linkage.links[6],
