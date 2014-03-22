@@ -22,7 +22,7 @@ class Parser(object):
                        allow_null = True,
                        screen_width = 180,
                        max_parse_time = 5,
-                       disjunct_cost = 10000,
+                       disjunct_cost = 2.0,
                        max_sentence_length = 170):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
         self.dictionary = Dictionary(lang)
@@ -106,8 +106,8 @@ class ParseOptions(object):
         def fset(self, value):
             if not isinstance(value, int):
                 raise TypeError("Verbosity must be set to an integer")
-            if value not in [0, 1, 2]:
-                raise ValueError("Verbosity levels can be 0, 1, or 2")
+            if value not in [0, 1, 2, 3, 4, 5, 6]:
+                raise ValueError("Verbosity levels can be any integer between 0 and 6 inclusive")
             clg.parse_options_set_verbosity(self._po, value)
         return locals()
     verbosity = property(**verbosity())
@@ -126,13 +126,13 @@ class ParseOptions(object):
     linkage_limit = property(**linkage_limit())
 
     def disjunct_cost():
-        doc = "Determines the maximum disjunct cost used during parsing, where the cost of a disjunct is equal to the maximum cost of all of its connectors. The default is that all disjuncts, no matter what their cost, are considered."
+        doc = "Determines the maximum disjunct cost used during parsing, where the cost of a disjunct is equal to the maximum cost of all of its connectors. The default is that only disjuncts of cost 2 or less are considered."
         def fget(self):
-            return clg.parse_options_get_disjunct_cost(self._po)
+            return clg.parse_options_get_disjunct_costf(self._po)
         def fset(self, value):
-            if not isinstance(value, int):
-                raise TypeError("Distjunct cost must be set to an integer")
-            clg.parse_options_set_disjunct_cost(self._po, value)
+            if not isinstance(value, float):
+                raise TypeError("Distjunct cost must be set to a float")
+            clg.parse_options_set_disjunct_costf(self._po, value)
         return locals()
     disjunct_cost = property(**disjunct_cost())
 
