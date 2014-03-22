@@ -72,7 +72,7 @@ class ParseOptions(object):
                        allow_null = True,
                        screen_width = 180,
                        max_parse_time = -1,
-                       disjunct_cost = 10000,
+                       disjunct_cost = 2.0,
                        max_sentence_length = 170):
 
 
@@ -338,6 +338,9 @@ class Linkage(object):
         return linkage_obj
 
     def __init__(self, linkage_swig_obj, calculate_sub_linkages=True, null_count=0):
+
+        # XXX FIXME Most of the initialization below just wasts CPU time,
+        # especially if the user does not need this stuff.
         self.num_of_words = clg.linkage_get_num_words(linkage_swig_obj)
         self.num_of_links = clg.linkage_get_num_links(linkage_swig_obj)
         self.link_cost = clg.linkage_link_cost(linkage_swig_obj)
@@ -349,6 +352,8 @@ class Linkage(object):
                            self.words[clg.linkage_get_link_rword(linkage_swig_obj,i)]) for i in range(self.num_of_links)]
         self.null_count = null_count
         self.link_distances = [clg.linkage_get_link_length(linkage_swig_obj, i) for i in range(self.num_of_links)]
+
+        # XXX FIXME: doing the below, if not needed, is a bit of a cpu-waster!
         self.diagram = clg.linkage_print_diagram(linkage_swig_obj)
         self.senses = clg.linkage_print_senses(linkage_swig_obj)
         self.links_and_domains = clg.linkage_print_links_and_domains(linkage_swig_obj)
