@@ -39,7 +39,6 @@ const char * linkgrammar_get_dict_version(Dictionary dict);
 Dictionary dictionary_create_lang(const char * lang);
 Dictionary dictionary_create_default_lang(void);
 int dictionary_delete(Dictionary dict);
-int dictionary_get_max_cost(Dictionary dict);
 void dictionary_set_data_dir(const char * path);
 char * dictionary_get_data_dir(void);
 

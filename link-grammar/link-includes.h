@@ -48,8 +48,6 @@ link_public_api(Dictionary)
 
 link_public_api(int)
      dictionary_delete(Dictionary dict);
-link_public_api(int)
-     dictionary_get_max_cost(Dictionary dict);
 
 link_public_api(void)
      dictionary_set_data_dir(const char * path);
