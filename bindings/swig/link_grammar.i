@@ -22,7 +22,7 @@ typedef enum
 
 typedef enum
 {
-   VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
+   VDAL=1, /* Sort by Violations, Disjunct cost, Link cost */
    CORPUS, /* Sort by Corpus cost */
 } Cost_Model_type;
 
@@ -55,8 +55,8 @@ void parse_options_set_verbosity(Parse_Options opts, int verbosity);
 int  parse_options_get_verbosity(Parse_Options opts);
 void parse_options_set_linkage_limit(Parse_Options opts, int linkage_limit);
 int  parse_options_get_linkage_limit(Parse_Options opts);
-void parse_options_set_disjunct_cost(Parse_Options opts, int disjunct_cost);
-int  parse_options_get_disjunct_cost(Parse_Options opts);
+void parse_options_set_disjunct_costf(Parse_Options opts, float disjunct_cost);
+float parse_options_get_disjunct_costf(Parse_Options opts);
 void parse_options_set_min_null_count(Parse_Options opts, int null_count);
 int  parse_options_get_min_null_count(Parse_Options opts);
 void parse_options_set_max_null_count(Parse_Options opts, int null_count);
