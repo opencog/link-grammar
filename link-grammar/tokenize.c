@@ -49,7 +49,7 @@
 /**
  * is_common_entity - Return true if word is a common noun or adjective
  * Common nouns and adjectives are typically used in corporate entity
- * names -- e.g. "Sun State Bank" -- "sun", "state" and "bank" are all 
+ * names -- e.g. "Sun State Bank" -- "sun", "state" and "bank" are all
  * common nouns.
  */
 static Boolean is_common_entity(Dictionary dict, const char * str)
@@ -73,9 +73,9 @@ static Boolean is_entity(Dictionary dict, const char * str)
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 /**
  * Return TRUE if word is a proper name.
- * XXX This is a cheap hack that works only in English, and is 
+ * XXX This is a cheap hack that works only in English, and is
  * broken for German!  We need to replace this with something
- * language-specific. 
+ * language-specific.
  *
  * Basically, if word starts with upper-case latter, we assume
  * its a proper name, and that's that.
@@ -90,7 +90,7 @@ static Boolean is_proper_name(const char * word)
  * be a quotation mark. This works, because link-grammar is more
  * or less ignorant of quotes at this time.
  */
-static const wchar_t* list_of_quotes(void) 
+static const wchar_t* list_of_quotes(void)
 {
 #ifdef _MSC_VER
 	/* Microsoft Visual Studio understands these unicode chars as
@@ -183,7 +183,7 @@ static Boolean is_number(const char * s)
 }
 
 /**
- * Returns true if the word contains digits. 
+ * Returns true if the word contains digits.
  */
 static Boolean contains_digits(const char * s)
 {
@@ -204,13 +204,13 @@ static Boolean contains_digits(const char * s)
 
 static void add_alternative(Sentence, int, const char **, int, const char **, int, const char **);
 static Boolean issue_alternatives1(Sentence, const char *, Boolean);
-/** 
- * Make the string 's' be the next word of the sentence. 
+/**
+ * Make the string 's' be the next word of the sentence.
  * That is, it looks like 's' is a word we can handle, so record it
  * as a bona-fide word in the sentence.  Increment the sentence length
  * when done.
  *
- * Do not issue the empty string.  
+ * Do not issue the empty string.
  */
 static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_found)
 {
@@ -257,14 +257,14 @@ static const char ** resize_alts(const char **arr, size_t len)
 }
 
 /**
- * Accumulate different word-stemming possibilities 
+ * Accumulate different word-stemming possibilities
  */
 static void add_suffix_alternatives(Tokenizer * tok,
                                    const char * stem, const char * suffix)
 {
 	char buff[MAX_WORD+1];
 	size_t sz;
-	
+
 	size_t stemlen = altlen(tok->stem_alternatives);
 	size_t sufflen = altlen(tok->suff_alternatives);
 
@@ -376,9 +376,10 @@ static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
 		if (0 == preflen)
 		{
 			size_t i;
-			for (i = 0; NULL != tokenizer->stem_alternatives[i]; i++) {
+			for (i = 0; NULL != tokenizer->stem_alternatives[i]; i++)
+			{
 				const char *s = tokenizer->stem_alternatives[i];
-		   	if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
+				if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
 			}
 		}
 
@@ -495,7 +496,7 @@ static void add_alternative(Sentence sent,
 
 					int numalt = altlen(sent->word[t_start].alternatives)-1;
 					const char **alt =
-					 (const char **)malloc((numalt+1) * sizeof(const char *));
+					   (const char **)malloc((numalt+1) * sizeof(const char *));
 					for (i = 0; i < numalt; i++)
 						alt[i] = string_set_add(infix_string, sent->string_set);
 					alt[numalt] = NULL;
@@ -646,7 +647,7 @@ static Boolean issue_alternatives1(Sentence sent,
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
 /**
- * Split word into prefix, stem and suffix. 
+ * Split word into prefix, stem and suffix.
  * Record all of the alternative splittings in the tokenizer
  * alternatives arrays.
  */
@@ -678,7 +679,7 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 	for (i=0; i <= s_strippable; i++)
 	{
 		Boolean s_ok = FALSE;
-		/* Go through once for each suffix; then go through one 
+		/* Go through once for each suffix; then go through one
 		 * final time for the no-suffix case (i.e. to look for
 		 * prefixes only, without suffixes.) */
 		if (i < s_strippable)
@@ -716,9 +717,9 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 				}
 				else
 				{
-				/* XXX-start TO BE REMOVED on code cleanup */
-				  /* We still use here the original suffix_split() that uses the Tokenizer struct as first argument,
-				   * but we need struct sent for add_alternative().
+					/* XXX-start TO BE REMOVED on code cleanup */
+					/* We still use here the original suffix_split() that uses the Tokenizer struct as first argument,
+					 *  but we need struct sent for add_alternative().
 				   * So for the purpose of this test code, compute the location of struct sent from the value of tokenizer.
 				   */
 				#include <stddef.h>
@@ -732,7 +733,7 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 				word_is_in_dict = TRUE;
 			}
 
-			/* If the remainder isn't in the dictionary, 
+			/* If the remainder isn't in the dictionary,
 			 * try stripping off prefixes */
 			else
 			{
@@ -774,7 +775,7 @@ if (2 < verbosity && find_word_in_dict(dict, newword)) {
 }
 
 /**
- * Split word into prefix, stem and suffix. 
+ * Split word into prefix, stem and suffix.
  * Record all of the alternative splittings in the tokenizer
  * alternatives arrays.
  */
@@ -785,7 +786,7 @@ Boolean split_word(Tokenizer *tokenizer, Dictionary dict, const char *word)
 
 static int revcmplen(const void *a, const void *b)
 {
-           return strlen(*(char * const *)b) - strlen(*(char * const *)a);
+	return strlen(*(char * const *)b) - strlen(*(char * const *)a);
 }
 
 #define HEB_PRENUM_MAX	5	/* no more than 5 prefix "subwords" */
@@ -874,7 +875,7 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 	do
 	{
 		for (i=0; i<mp_strippable; i++)
-		{	
+		{
 			/* subwords in a prefix are unique */
 			if (pseen[i])
 				continue;
@@ -1028,7 +1029,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * In which case, we have to try them out.
 	 */
 	/* XXX FIXME: currently, we are doing a check for capitalized first
-	 * words in the build_sentence_expressions() routine, but really, 
+	 * words in the build_sentence_expressions() routine, but really,
 	 * we should be doing it here, and building two alternatives, one
 	 * capitalized, and one not.  This is particularly true for the
 	 * Russian dictionaries, where captialization and suffix splitting
@@ -1096,8 +1097,8 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		 * "By the '50s, he was very prosperous."
 		 * where the leading quote is striped, and then "50s," cannot be
 		 * found in the dict.  Next, the comma is removed, and "50s" is still
-		 * not in the dict ... the trick was that the comma should be 
-		 * right-stripped first, then the possible quotes. 
+		 * not in the dict ... the trick was that the comma should be
+		 * right-stripped first, then the possible quotes.
 		 * More generally, the current implementation of the link-parser algo
 		 * does not support multiple alternative tokenizations; the viterbi
 		 * parser, under development, should be able to do better.
@@ -1132,7 +1133,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		 * When it breaks out of this loop, n_stripped will be the number
 		 * of strings stripped off.
 		 */
-		for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+		for (n_r_stripped = 0; n_r_stripped < MAX_STRIP; n_r_stripped++)
 		{
 			sz = MIN(wend-w, MAX_WORD);
 			strncpy(word, w, sz);
@@ -1174,7 +1175,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			 */
 			n_r_stripped_save = n_r_stripped;
 			wend_save = wend;
-			for (; n_r_stripped < MAX_STRIP; n_r_stripped++) 
+			for (; n_r_stripped < MAX_STRIP; n_r_stripped++)
 			{
 				size_t sz = MIN(wend-w, MAX_WORD);
 				strncpy(word, w, sz);
@@ -1216,7 +1217,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	/* Umm, double-check, if need be ... !??  Why? */
 	if (FALSE == word_is_in_dict)
 	{
-		/* w points to the remaining word, 
+		/* w points to the remaining word,
 		 * "wend" to the end of the word. */
 		sz = MIN(wend-w, MAX_WORD);
 		strncpy(word, w, sz);
@@ -1291,9 +1292,9 @@ if (test_enabled("altold"))
 				word[sz] = '\0';
 				if (2 < verbosity)
 					printf("Info: Cannot split non-stem %s - will be added alone\n",
-						  	word);
+					       word);
 			}
-			
+
 		}
 	}
 }
@@ -1316,7 +1317,7 @@ do_mprefix_processing:
 	issued = FALSE;
 
 	/* If n_r_stripped exceed max, the "word" is most likely a long
-	 * sequence of periods.  Just accept it as an unknown "word", 
+	 * sequence of periods.  Just accept it as an unknown "word",
 	 * and move on.
 	 */
 	if (n_r_stripped >= MAX_STRIP)
@@ -1326,12 +1327,12 @@ do_mprefix_processing:
 	}
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-	/* If the word is still not being found, then it might be 
+	/* If the word is still not being found, then it might be
 	 * a run-on of two words. Ask the spell-checker to split
 	 * the word in two, if possible. Do this only if the word
 	 * is not a proper name, and if spell-checking is enabled.
 	 */
-	if ((FALSE == word_is_in_dict) && 
+	if ((FALSE == word_is_in_dict) &&
 	    TRUE == opts->use_spell_guess &&
 	    dict->spell_checker &&
 	    (FALSE == is_proper_name(word)))
@@ -1413,7 +1414,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 	/* Reset the multibyte shift state to the initial state */
 	memset(&mbs, 0, sizeof(mbs));
 
-	for(;;) 
+	for(;;)
 	{
 		int isq;
 		wchar_t c;
@@ -1441,7 +1442,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 
 		if ('\0' == *word_start) break;
 
-      /* Loop over non-blank characters until word-end is found. */
+		/* Loop over non-blank characters until word-end is found. */
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
@@ -1452,7 +1453,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 			if (0 > nb) goto failure;
 		}
 
-      /* Perform prefix, suffix splitting, if needed */
+		/* Perform prefix, suffix splitting, if needed */
 		separate_word(sent, opts, word_start, word_end, quote_found);
 		word_start = word_end;
 		if ('\0' == *word_start) break;
@@ -1501,11 +1502,11 @@ static X_node * build_regex_expressions(Sentence sent, int i,
 }
 
 /**
- * Puts into word[i].x the expression for the unknown word 
- * the parameter s is the word that was not in the dictionary 
- * it massages the names to have the corresponding subscripts 
+ * Puts into word[i].x the expression for the unknown word
+ * the parameter s is the word that was not in the dictionary
+ * it massages the names to have the corresponding subscripts
  * to those of the unknown words
- * so "grok" becomes "grok[?].v" 
+ * so "grok" becomes "grok[?].v"
  */
 static X_node * handle_unknown_word(Sentence sent, int i, const char * s)
 {
@@ -1533,7 +1534,7 @@ static X_node * handle_unknown_word(Sentence sent, int i, const char * s)
 
 /**
  * If a word appears to be mis-spelled, then add alternate
- * spellings. Maybe one of those will do ... 
+ * spellings. Maybe one of those will do ...
  */
 static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
 {
@@ -1549,7 +1550,7 @@ static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
 		return handle_unknown_word(sent, i, s);
 	}
 
-	/* If the spell-checker knows about this word, and we don't ... 
+	/* If the spell-checker knows about this word, and we don't ...
 	 * Dang. We should fix it someday. Accept it as such. */
 	spelling_ok = spellcheck_test(dict->spell_checker, s);
 	if (spelling_ok)
@@ -1672,7 +1673,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 					we = handle_unknown_word(sent, i, s);
 				}
 			}
-			else 
+			else
 			{
 				/* The reason I can assert this is that the word
 				 * should have been looked up already if we get here.
@@ -1681,7 +1682,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			}
 
 			/* Under certain cases--if it's the first word of the sentence,
-			 * or if it follows a colon or a quotation mark--a word that's 
+			 * or if it follows a colon or a quotation mark--a word that's
 			 * capitalized has to be looked up as an uncapitalized word
 			 * (possibly also as well as a capitalized word).
 			 *
@@ -1696,9 +1697,9 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			 */
 			if (is_capitalizable(sent, i) && is_utf8_upper(s))
 			{
-				/* If the lower-case version of this word is in the dictionary, 
+				/* If the lower-case version of this word is in the dictionary,
 				 * then add the disjuncts for the lower-case version. The upper
-				 * case version disjuncts had previously come from matching the 
+				 * case version disjuncts had previously come from matching the
 				 * CAPITALIZED-WORDS regex.
 				 *
 				 * Err .. add the lower-case version only if the lower-case word
@@ -1711,7 +1712,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 				 *
 				 * Arghh. This is still messed up. The capitalized-regex runs
 				 * too early, I think. We need to *add* Sue.f (female name Sue)
-				 * even though sue.v (the verb "to sue") is in the dict. So 
+				 * even though sue.v (the verb "to sue") is in the dict. So
 				 * test for capitalized entity names. Glurg. Too much complexity
 				 * here, it seems to me.
 				 *
@@ -1724,17 +1725,17 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 
 				downcase_utf8_str(temp_word, s, MAX_WORD);
 				lc = string_set_add(temp_word, sent->string_set);
-	
-				/* The lower-case dict lookup might trigger regex 
+
+				/* The lower-case dict lookup might trigger regex
 				 * matches in the dictionary. We want to avoid these.
 				 * e.g. "Cornwallis" triggers both PL-CAPITALIZED_WORDS
-				 * and S-WORDS. Since its not an entity, the regex 
+				 * and S-WORDS. Since its not an entity, the regex
 				 * matches will erroneously discard the upper-case version.
 				 */
 				if (boolean_dictionary_lookup(sent->dict, lc))
 				{
 					if (2 < verbosity)
-						printf ("Info: First word: %s is_entity=%d is_common=%d\n", 
+						printf ("Info: First word: %s is_entity=%d is_common=%d\n",
 						        s, is_entity(sent->dict,s),
 						        is_common_entity(sent->dict,lc));
 
@@ -1751,8 +1752,8 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 					{
 						if (2 < verbosity)
 							printf("Info: First word: %s downcase only\n", lc);
-	
-						/* If we are here, then we want the lower-case 
+
+						/* If we are here, then we want the lower-case
 						 * expressions only.  Erase the upper-case ones, built
 						 * previously up above. */
 						sent->word[i].alternatives[ialt] = lc;  /* lc already in sent->string-set */
