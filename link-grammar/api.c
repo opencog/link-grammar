@@ -238,7 +238,7 @@ char * parse_options_get_debug(Parse_Options opts) {
 
 void parse_options_set_test(Parse_Options opts, const char * dummy)
 {
-	/* The comma-separated list of functions is limited to this size.
+	/* The comma-separated test features is limited to this size.
 	 * Can be easily dynamically allocated. In any case it is not reentrant
 	 * because the "test" variable is static. */
 	static char buff[256];
@@ -1325,7 +1325,7 @@ else
 			prt_error("Error: sane_morphism: Failed to compile "
 			       "regex '%s', return code %d\n", sm_re->pattern, rc);
 		}
-		lgdebug(4, "%%%%>>regex %s\n", sm_re->pattern);
+		lgdebug(4, ">regex %s\n", sm_re->pattern);
 	}
 
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
@@ -1338,7 +1338,7 @@ else
 		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
 		char * affix_types_p = affix_types;
 		Boolean match_found = FALSE;     /* djw matched a morpheme */
-		int matched_alts[MAX_SENTENCE];  /* number of morphemes that have matched
+		int matched_alts[MAX_SENTENCE];	/* number of morphemes that have matched
 		                                  * the chosen disjuncts for the
 		                                  * unsplit_word, so far (index: ai) */
 
@@ -1355,12 +1355,12 @@ else
 			Boolean empty_word = FALSE;   /* is this an empty word? */
 			Disjunct * cdj = pi->chosen_disjuncts[i];
 
-			lgdebug(4, "%%%%>>%d Checking word %d/%d\n", lk, i, sent->length);
+			lgdebug(+4, ">%d Checking word %d/%d\n", lk, i, sent->length);
 
 			/* Ignore island words */
 			if (NULL == cdj)
 			{
-				lgdebug(4, "%%>%d ignored island word\n", lk);
+				lgdebug(4, "%d ignored island word\n", lk);
 				unsplit = NULL; /* mark it as island */
 				continue;
 			}
@@ -1373,12 +1373,12 @@ else
 				numalt = altlen(sent->word[i].alternatives);
 
 				for (ai = 0; ai < numalt; ai++) matched_alts[ai] = 0;
-				lgdebug(4, "%%>%d unsplit word %s, numalt %d\n",
+				lgdebug(4, "%d unsplit word %s, numalt %d\n",
 						lk, unsplit, (int)numalt);
 			}
 			if (NULL == unsplit)
 			{
-				lgdebug(4, "%%>%d ignore morphemes of an island word\n", lk);
+				lgdebug(4, "%d ignore morphemes of an island word\n", lk);
 				continue;
 			}
 
@@ -1418,7 +1418,7 @@ else
 
 			if (! empty_word) affix_types_p++;
 
-			lgdebug(4, "%%>%d djw %s matched alternatives no.:", lk, djw);
+			lgdebug(4, "%d djw %s matched alternatives no.:", lk, djw);
 			match_found = FALSE;
 
 			/* Compare the chosen word djw to the alternatives */
@@ -1434,11 +1434,13 @@ else
 				s = a;
 try_again:
 				t = djw;
-				//lgdebug(4, "\n%%>%d COMPARING alt%d s %s djw %s: ", lk, (int)ai, s, t);
+				//lgdebug(4, "\n%d COMPARING alt%d s %s djw %s: ", lk, (int)ai, s, t);
 				/* Rules of match:
-				 * A morpheme with a subscript needs an exact match to djw
-				 * A morpheme w/o a subscript needs a match to djw w/o a subscript*/
-				while (*s != '\0' && *s == *t) {s++; t++;}
+				 * A morpheme with a subscript needs an exact match to djw.
+				 * A morpheme w/o a subscript needs an exact match to djw
+				 * disregarding its subscript.
+				 * XXX To check: words that contain a dot as part of them. */
+				while ((*s != '\0') && (*s == *t)) {s++; t++;}
 				/* Possibilities:
 				 *** Match (the last one is for words ending with [!]):
 				 * s==\0 && t==\0
@@ -1469,8 +1471,8 @@ try_again:
 						('\0' == downcased[0]) && ('\0' != a[0]))
 					{
 						downcase_utf8_str(downcased, a, MAX_WORD);
-						lgdebug(4, "\n%%>%d downcasing %s>%s\n",
-							lk, a, downcased);
+						lgdebug(4, "\n");
+						lgdebug(4, "%d downcasing %s>%s\n", lk, a, downcased);
 						s = downcased;
 						goto try_again;
 					}
@@ -1491,7 +1493,7 @@ try_again:
 			{
 				int num_morphemes = i - unsplit_i + 1;
 
-				lgdebug(4, "%%>%d end of input word, num_morphemes %d\n",
+				lgdebug(4, "%d end of input word, num_morphemes %d\n",
 						lk, num_morphemes);
 				*affix_types_p++ = AFFIXTYPE_END;
 
@@ -1511,13 +1513,10 @@ try_again:
 
 				if (! match_found)
 				{
-					lgdebug(4, "%%>%d morphemes are missing in this linkage\n", lk);
+					lgdebug(4, "%d morphemes are missing in this linkage\n", lk);
 					break;
 				}
-				else
-				{
-					lgdebug(4, "%%>%d Perfect match\n", lk);
-				}
+				lgdebug(4, "%d Perfect match\n", lk);
 			}
 		}
 		*affix_types_p = '\0';
@@ -1537,11 +1536,11 @@ try_again:
 				       "run with verbosity=4 to debug\n", affix_types);
 		}
 		else
-			lgdebug(4, "%%>%d morpheme type combination %s\n", lk, affix_types);
+			lgdebug(4, "%d morpheme type combination %s\n", lk, affix_types);
 
 		if (match_found)
 		{
-			lgdebug(4, "%%>%d SUCCEEDED\n", lk);
+			lgdebug(4, "%d SUCCEEDED\n", lk);
 		}
 		else
 		{
@@ -1549,7 +1548,7 @@ try_again:
 			sent->num_valid_linkages --;
 			lifo->N_violations ++;
 			lifo->pp_violation_msg = "Invalid morphism construction.";
-			lgdebug(4, "%%>%d FAILED, remaining %d\n", lk, sent->num_valid_linkages);
+			lgdebug(4, "%d FAILED, remaining %d\n", lk, sent->num_valid_linkages);
 		}
 	}
 }
