@@ -2692,6 +2692,8 @@ They were assigned separate seats such that they had enough space.
 % i.e. the subject is "I", topic (object) is "that". There can be no Wd
 % to the LEFT-WALL for this sentence.
 That I did not know!
+This I did not know!
+This, I did not know!
 
 
 % Opening idioms
@@ -2983,10 +2985,16 @@ Which way, left or right?
 Straight.
 Which one?
 This.
+This one.
 That one.
 Those.
 Them there.
 Both.
+Both of them.
+Either.
+Either of them.
+Neither.
+Neither of them.
 How many do you want?
 A lot.
 A few.

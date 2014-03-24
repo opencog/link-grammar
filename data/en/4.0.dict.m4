@@ -1264,11 +1264,13 @@ the:
 % this as a pronoun
 this.p:
   <noun-main-h>
-  or <noun-and-s>
-  or Wa-;
+  or <noun-and-s>;
 
 % this as a determiner
-this.d: ({AL-} & D*u+) or DTn+;
+this.d:
+  ({AL-} & D*u+)
+  or DTn+
+  or Wa-;
 
 % [[<noun-main-p>]] costs so that ditranstive verbs don't suffer:
 % "I taught these mice to jump", taught is ditransitive, we don't want
@@ -1298,12 +1300,13 @@ those:
 them_there:
   Dm+ or Wa-;
 
+% (Wa- & {Mp+}): "Both of them."
 both.d:
   Dmc+
   or E+
   or ({M+ or (ALx+ & Jp+)} & <noun-main-p>)
   or <noun-and-p>
-  or Wa-;
+  or (Wa- & {Mp+});
 
 both.a: Paf- or AJra-;
 
@@ -1349,6 +1352,7 @@ all_this: (<noun-sub-s> & <noun-main-s>) or <noun-and-s>;
 
 all_those all_these: [[<noun-sub-p> & <noun-main-p>]] or <noun-and-p>;
 
+% ({Ds-} & Wa-): "That one."
 one:
   NA+ or
   NMw- or
@@ -1363,7 +1367,7 @@ one:
   or (NA- & ND+)
   or DTi+
   or (NA- & Xd- & TY- & Xc+)
-  or Wa-;
+  or ({Ds-} & Wa-);
 
 ones:
   {@A- & {[[@AN-]]}} & {Dmc-} &
@@ -6526,6 +6530,10 @@ that.j-r:
 % naked Osn-: "give me that"
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 
+% "that" as topic, *and* no link to LEFT-WALL!  "That I did not know".
+that.j-t: {R+} & B+ & {R+};
+kno: {I-} ^ {B-} ^ {WV-};
+
 % "No one is sitting at that there table"
 that_there: Ds+;
 
@@ -6858,8 +6866,21 @@ but.j-r: {Xd-} & XJi- & I+;
 
 % XXX to-do: should have special linkage for either... or ....
 % instead of dependeingg on the E+ link. See neither..nor... for examples.
-either.r: Ds+ or E+ or ({OF+} & <noun-main-x>) or ({Xd+ & Xc-} & MVa-);
-neither.r: Ds+ or E+ or ({OF+} & <noun-main-x>);
+% (Wa- & {OF+}): "Either of them."
+either.r:
+  Ds+
+  or E+
+  or ({OF+} & <noun-main-x>)
+  or ({Xd+ & Xc-} & MVa-)
+  or (Wa- & {OF+});
+
+% (Wa- & {OF+}): "Neither of them."
+neither.r:
+  Ds+
+  or E+
+  or ({OF+} & <noun-main-x>)
+  or (Wa- & {OF+});
+
 nor.r: ((Xd- & CC-) or Wd-) & Qd+;
 for.r: [[(({Xd-} & CC-) or Wc-) & (Wd+ or Qd+ or Ws+ or Wq+)]];
 yet.r: ((({Xd-} & CC-) or Wc-) & Wd+) or E+ or MVa- or ({Xd-} & Xc+ & CO+);
@@ -8463,9 +8484,11 @@ UNKNOWN-WORD.a: <ordinary-adj>;
 
 % The WV+ after the Xx+ allows the root verb after the punct to attach
 % to the wall.  e.g. "A woman lives next door, who is a nurse."
+% The naked WV+ without any W+ allows "that I did not know."
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 LEFT-WALL:
   (Wa+ & {RW+ or Xp+})
+  or (WV+ & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
     & (WV+ or [[()]]) & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+});
 
