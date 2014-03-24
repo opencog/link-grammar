@@ -676,7 +676,7 @@ modus_vivendi head_of_state tour_de_force:
 
 kung_fu joie_de_vivre op_art noblesse_oblige force_majeure 
 lese_majesty lese_majeste lèse_majesty lèse_majesté lèse-majesté leze_majesty
-a_must time_of_day time_of_year top_dollar year_end skim_milk
+a_must time_of_day time_of_year top_dollar year_end 
 breach_of_contract sleight_of_hand power_of_attorney word_of_mouth
 carte_blanche:
   (<noun-modifiers> &
