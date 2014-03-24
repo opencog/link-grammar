@@ -674,8 +674,9 @@ modus_vivendi head_of_state tour_de_force:
     (GN+ & (DD- or [()])))) or
   AN+;
 
-kung_fu joie_de_vivre op_art noblesse_oblige lese_majesty a_must
-time_of_day time_of_year force_majeure top_dollar year_end skim_milk
+kung_fu joie_de_vivre op_art noblesse_oblige force_majeure 
+lese_majesty lese_majeste lèse_majesty lèse_majesté lèse-majesté leze_majesty
+a_must time_of_day time_of_year top_dollar year_end skim_milk
 breach_of_contract sleight_of_hand power_of_attorney word_of_mouth
 carte_blanche:
   (<noun-modifiers> &
@@ -685,6 +686,9 @@ carte_blanche:
     (YS+ & {Dmu-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
+
+% XXX FIXME plurals:
+% lese_majesties or lèse_majestés
 
 % title nouns (president, chairman)
 % auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t
