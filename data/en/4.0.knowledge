@@ -90,10 +90,16 @@ MUST_FORM_A_CYCLE_LINKS:  R#*  TOt  EXx  HA  SFsic  Jd  Jr  JQ  OFd Xca  WV CV I
 
 ; ----------------------------------------------------------------------
 ; These links are not traced further if they point back before the root word.
+;
+; XXX FIXME: I get "Unbounded r domain79" errors on the following sentences,
+; when the WV link is used:
+;  "That I did not know"
+;  "Only you would say that."
+;
 ; The creation of Rw necessitated making B#m a restricted link, to
 ; prevent the (e) domain, started by Ce, from extending around through
 ; the Rw link.
-; Reverted.
+; Reverted the B#m thing ...
 ; This breaks parsing of 
 ;    How fast a program does he think it is
 ;    I wonder how fast a program he thinks it is

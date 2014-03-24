@@ -2033,6 +2033,9 @@ per "/.per": Us+ & Mp-;
 % <verb-wall>: WV- or CV- or IV-;
 
 % Pv- & <verb-wall>: "a historic new law was passed"
+%
+% XXX FIXME: for certain transitive verbs, we really want verb-ico to be
+% in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 
 <verb-ico>: {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi-));
 <verb-pl,i>: ({@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-))) or <verb-ico>;
@@ -6530,9 +6533,8 @@ that.j-r:
 % naked Osn-: "give me that"
 that.j-p: ({[[M+]]} & <noun-main-h>) or <noun-and-s>;
 
-% "that" as topic, *and* no link to LEFT-WALL!  "That I did not know".
-that.j-t: {R+} & B+ & {R+};
-kno: {I-} ^ {B-} ^ {WV-};
+% "that" as topic. Wt is a topic link to LEFT-WALL.  "That I did not know".
+that.j-t: Wt- & {Xc+} & Rn+ & B+;
 
 % "No one is sitting at that there table"
 that_there: Ds+;
@@ -8489,7 +8491,7 @@ UNKNOWN-WORD.a: <ordinary-adj>;
 LEFT-WALL:
   (Wa+ & {RW+ or Xp+})
   or (WV+ & {RW+ or Xp+})
-  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Qd+)
+  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Wt+ or Qd+)
     & (WV+ or [[()]]) & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+});
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
