@@ -7854,9 +7854,9 @@ nearby close_by:
   or ({EE-} & FM-)
   or ({EE-} & {Xc+} & COp+);
 
-% XXX almost like <prep-main-b> .... is it?
+% similar to <prep-main-b> but not quite ...
 all_over all_around:
-  {J+} & (MVp- or Mp- or Pp- or FM- or [({Xc+ & {Xd-}} & CO+)]);
+  {J+} & (Mp- or Pp- or MVp- or [({Xc+ & {Xd-}} & CO+)] or FM-);
 
 % Consider "Here's the ball." We have two choices: SFst+ as a filler-it,
 % or the more questionable [Wq- & PF+].  Note that (Wd- & PF+) is barred
