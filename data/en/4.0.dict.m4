@@ -4251,8 +4251,8 @@ leaving.v: <verb-pg> & <vc-leave>;
 leaving.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
 <vc-keep>:
-  ((O+ or (K+ & {[[@MV+]]} & O*n+) or [[@MV+ & O*n+]] or Vk+) & {@MV+}) or
-  ({O+ or B-} & ((K+ & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pg+ or Pv+))));
+  ((O+ or (K+ & {[[@MV+]]} & O*n+) or [[@MV+ & O*n+]] or Vk+) & {@MV+})
+  or ({O+ or B-} & (([K+] & {@MV+}) or ({@MV+} & (Pa+ or AF- or Pg+ or Pv+))));
 
 keep.v: VERB_PLI(<vc-keep>);
 keeps.v: VERB_S_T(<vc-keep>);
@@ -5943,16 +5943,12 @@ near.p:
 % SFpp+: "nearby are more ruins"
 % {EE-} & {Xc+} & COp+: "{somewhere} nearby, a mouse scratched"
 % {EE-} & FM-: "The ticking came from {somewhere} nearby."
-nearby:
+nearby close_by:
   A+
   or MVp-
   or Pp-
   or (SF*p+ & <CLAUSE>)
   or ({EE-} & FM-)
-  or ({EE-} & {Xc+} & COp+);
-
-close_by:
-  (SF*p+ & <CLAUSE>)
   or ({EE-} & {Xc+} & COp+);
 
 % XXX almost like <prep-main-b> .... is it?
