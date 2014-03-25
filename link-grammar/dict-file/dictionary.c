@@ -320,15 +320,8 @@ dictionary_six(const char * lang, const char * dict_name,
                 const char * affix_name, const char * regex_name)
 {
 	Dictionary dict;
-	Boolean have_db = FALSE;
 
 	char* input = get_file_contents(dict_name);
-	if (NULL == input)
-	{
-		/* If the file isn't found, try again with the database */
-		input = check_db(dict_name);
-		if (input) have_db = TRUE;
-	}
 	if (NULL == input)
 	{
 		prt_error("Error: Could not open dictionary %s", dict_name);
@@ -338,16 +331,11 @@ dictionary_six(const char * lang, const char * dict_name,
 	dict = dictionary_six_str(lang, input, dict_name, pp_name,
 	                          cons_name, affix_name, regex_name);
 
-	if (have_db)
-	{
-		get_db_contents(dict, dict_name);
-	}
-
 	free(input);
 	return dict;
 }
 
-Dictionary dictionary_create_lang(const char * lang)
+Dictionary dictionary_file_create_lang(const char * lang)
 {
 	Dictionary dictionary;
 

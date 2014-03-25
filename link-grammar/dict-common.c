@@ -12,6 +12,8 @@
 #include "dict-common.h"
 #include "structures.h"
 #include "utilities.h"
+#include "dict-sql/read-sql.h"
+#include "dict-file/read-dict.h"
 
 /* ======================================================================== */
 /* Replace the right-most dot with SUBSCRIPT_MARK */
@@ -43,6 +45,21 @@ Dictionary dictionary_create_default_lang(void)
 	} else {
 		/* Default to en when locales are broken (e.g. WIN32) */
 		dictionary = dictionary_create_lang("en");
+	}
+
+	return dictionary;
+}
+
+Dictionary dictionary_create_lang(const char * lang)
+{
+	Dictionary dictionary = NULL;
+	Boolean have_db = FALSE;
+
+	have_db = check_db(lang);
+
+	// if (!have_db)
+	{
+		dictionary = dictionary_file_create_lang(lang);
 	}
 
 	return dictionary;

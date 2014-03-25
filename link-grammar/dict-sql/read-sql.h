@@ -17,7 +17,7 @@
 
 #include "link-includes.h"
 
-char * check_db(const char *dbname);
+Boolean check_db(const char *lang);
 void get_db_contents(Dictionary dict, const char *dbname);
 
 #endif /* READ_SQL_H */

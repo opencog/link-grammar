@@ -154,22 +154,14 @@ failure:
 }
 
 
-char * check_db(const char *dbname_)
+Boolean check_db(const char *lang)
 {
 	sqlite3 *db;
 	int rc;
-	char *slash, *dbn, *dbname;
-	char *retval = strdup("<sqlite3> : XXX+;");
+	char *dbname;
+	Boolean retval = TRUE;
 
-	/* XXX HACK ALERT: for right now, we're going to just mangle
-	 * the dbname from 4.0.dict to dict.db. Some more elegant
-	 * solution should be provided in the future.
-	 */
-	dbn = strdup(dbname_);
-	slash = strrchr (dbn, '/'); /* DIR_SEPARATOR */
-	if (slash) *slash = 0x0;
-	dbname = join_path (dbn, "dict.db");
-	free(dbn);
+	dbname = join_path (lang, "dict.db");
 
 	/* If the database opens without error, then report Oll Korrect */
 	rc = sqlite3_open(dbname, &db);
@@ -177,8 +169,7 @@ char * check_db(const char *dbname_)
 	{
 		prt_error("Error: Can't open %s database: %s\n",
 			dbname, sqlite3_errmsg(db));
-		free(retval);
-		retval = NULL;
+		retval = FALSE;
 	}
 
 	/* Close the database */
