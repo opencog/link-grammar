@@ -156,6 +156,10 @@ struct Dictionary_s
 #if USE_CORPUS
 	Corpus *        corpus; /* Statistics database */
 #endif
+#ifdef HAVE_SQLITE
+	void *          db_handle; /* database handle */
+#endif
+
 
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;

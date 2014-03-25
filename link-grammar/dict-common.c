@@ -29,3 +29,22 @@ void patch_subscript(char * s)
 	*ds = SUBSCRIPT_MARK;
 }
 
+/* ======================================================================== */
+
+Dictionary dictionary_create_default_lang(void)
+{
+	Dictionary dictionary;
+	char * lang;
+
+	lang = get_default_locale();
+	if (lang && *lang) {
+		dictionary = dictionary_create_lang(lang);
+		free(lang);
+	} else {
+		/* Default to en when locales are broken (e.g. WIN32) */
+		dictionary = dictionary_create_lang("en");
+	}
+
+	return dictionary;
+}
+

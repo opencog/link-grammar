@@ -230,6 +230,9 @@ dictionary_six_str(const char * lang,
 
 	/* To disable spell-checking, just set the cheker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
+#ifdef HAVE_SQLITE
+	dict->db_handle = NULL;
+#endif
 
 	/* Read dictionary from the input string. */
 	dict->input = input;
@@ -381,22 +384,6 @@ Dictionary dictionary_create_lang(const char * lang)
 	return dictionary;
 }
 
-Dictionary dictionary_create_default_lang(void)
-{
-	Dictionary dictionary;
-	char * lang;
-
-	lang = get_default_locale();
-	if (lang && *lang) {
-		dictionary = dictionary_create_lang(lang);
-		free(lang);
-	} else {
-		/* Default to en when locales are broken (e.g. WIN32) */
-		dictionary = dictionary_create_lang("en");
-	}
-
-	return dictionary;
-}
 
 /**
  * Use "string" as the input dictionary. All of the other parts,
