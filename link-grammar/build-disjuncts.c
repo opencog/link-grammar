@@ -17,6 +17,7 @@
 #include "api-structures.h"
 #include "build-disjuncts.h"
 #include "dict-api.h"
+#include "dict-common.h"
 #include "disjunct-utils.h"
 #include "externs.h"
 #include "word-utils.h"

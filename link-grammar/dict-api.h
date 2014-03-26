@@ -19,6 +19,12 @@
 
 LINK_BEGIN_DECLS
 
+/**
+ * Declaration of dictionary-related functions that link-grammar users
+ * are free to use in their applications.  That is, these are a part of
+ * the public API to the link-parser system.
+ */
+
 Dictionary dictionary_create_from_utf8(const char * input);
 
 Boolean boolean_dictionary_lookup(Dictionary dict, const char *);
@@ -33,11 +39,6 @@ void free_lookup_list(Dict_node *);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
 void print_expression(Exp *);
-
-/* Below are not really for public consumption.
- * These need to be moved to a private header file. TODO XXX */
-Exp *       Exp_create(Dictionary dict);
-void add_empty_word(Dictionary dict, Dict_node *);
 
 LINK_END_DECLS
 

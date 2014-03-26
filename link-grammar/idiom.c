@@ -13,6 +13,7 @@
 #include "api-structures.h"
 #include "api-types.h"
 #include "dict-api.h"
+#include "dict-common.h"
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
