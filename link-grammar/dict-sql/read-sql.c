@@ -1,11 +1,10 @@
-
 /*
  * read-sql.c
  *
- * Read in dictionary from an SQL DB.
+ * Look up words in an SQL DB.
  * Keeping it simple for just right now, and using SQLite.
  *
- * The goal of reading the dictioary from SQL is to enable some 
+ * The goal of using an SQL-backed dictionary is to enable some 
  * other process (machine-learning algo) to dynamically update
  * the dictionary.
  *
@@ -27,24 +26,6 @@
 #include "word-utils.h"
 
 #include "read-sql.h"
-
-/*
-
-
-static int morph_cb(void *user_data, int argc, char **argv, char **colName)
-{
-	bigstr* bs = user_data;
-
-	int i;
-	for (i=0; i<argc; i++)
-	{
-printf("duude %s = %s\n", colName[i], argv[i] ? argv[i] : "NULL");
-	}
-printf("\n");
-
-	return 0;
-}
-*/
 
 /* ========================================================= */
 /* Mini expression-parsing library.  This is a simplified subset of
@@ -87,7 +68,6 @@ static Exp * make_expression(const char *exp_str)
 				e->u.string = strndup(con_start, p-con_start);
 				e->multi = FALSE;
 			}
-printf("duuude connector is %s\n", e->u.string);
 
 			rest = make_expression(++p);
 			if (NULL == rest)
@@ -132,13 +112,13 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
    {
 		Exp *e;
       dn = llist->right;
-		e = dn->exp;
+		e = llist->exp;
 		if (e)
 		{
 			if (CONNECTOR_type == e->type) free((void *) e->u.string);
 			xfree((char *)e, sizeof(Exp));
 		}
-		xfree((char *)dn, sizeof(Dict_node));
+		xfree((char *)llist, sizeof(Dict_node));
       llist = dn;
    }
 }
@@ -151,8 +131,8 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
-printf("duuude exph cb found disj %s cost %s\n", argv[0], argv[1]);
 	bs->exp = make_expression(argv[0]);
+	/* print_expression(bs->exp); */
 
 	if (bs->exp)
 		bs->exp->cost = atof(argv[1]);
@@ -165,8 +145,6 @@ db_lookup_exp(Dictionary dict, const char *s, cbdata* bs)
 {
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
-
-printf("duude look for wordexps for  %s\n", s);
 
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
@@ -187,7 +165,6 @@ static int exists_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
-printf("duuude boolean lookup found %s\n", argv[0]);
 	bs->found = TRUE;
 	return 0;
 }
@@ -203,8 +180,6 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(argv[0], "NULL column value");
 	scriword = argv[0];
 	wclass = argv[1];
-
-printf("duuude morph cb found word= %s clas %s\n", argv[0], argv[1]);
 
 	/* Put each word into a Dict_node. */
 	dn = (Dict_node *) xalloc(sizeof(Dict_node));
@@ -228,8 +203,6 @@ db_lookup_common(Dictionary dict, const char *s,
 {
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
-
-printf("duude look for word  %s\n", s);
 
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();

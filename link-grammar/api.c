@@ -1293,8 +1293,9 @@ else
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table;
 
-	/* Skip checking, if dictioary specifies neither prefixes nor sufixes.
+	/* Skip checking, if dictionary specifies neither prefixes nor sufixes.
 	 * This special-cases English, more or less. */
+	if (NULL == afdict) return;
 	if (0 == afdict->mp_strippable &&
 	    0 == afdict->p_strippable &&
 	    0 == afdict->s_strippable)
