@@ -519,7 +519,7 @@ X_node * build_word_expressions(Dictionary dict, const char * s)
 		x->string = dn->string;
 		dn = dn->right;
 	}
-	free_lookup_list (dn_head);
+	free_lookup_list (dict, dn_head);
 	return x;
 }
 

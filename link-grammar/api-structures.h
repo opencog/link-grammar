@@ -160,6 +160,11 @@ struct Dictionary_s
 	void *          db_handle; /* database handle */
 #endif
 
+	Dict_node* (*lookup_list)(Dictionary, const char*);
+	void (*free_lookup)(Dictionary, Dict_node*);
+	Boolean (*lookup)(Dictionary, const char*);
+	void (*close)(Dictionary);
+
 
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;

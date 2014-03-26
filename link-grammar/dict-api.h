@@ -34,8 +34,9 @@ Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
 
 Boolean find_word_in_dict(Dictionary dict, const char *);
 
-void free_lookup_list(Dict_node *);
+void free_lookup_list(Dictionary, Dict_node *);
 
+/* XXX the below probably does not belong ...  ?? */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
 void print_expression(Exp *);

@@ -161,6 +161,11 @@ static void affix_list_create(Dictionary dict)
 	iterate_on_dictionary(dict, dict->root, load_affix);
 }
 
+static void free_llist(Dictionary dict, Dict_node *llist)
+{
+	free_lookup(llist);
+}
+
 static Dictionary
 dictionary_six(const char * lang, const char * dict_name,
                 const char * pp_name, const char * cons_name,
@@ -206,6 +211,10 @@ dictionary_six_str(const char * lang,
 
 	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
+
+	dict->lookup_list = lookup_list;
+	dict->free_lookup = free_llist;
+	dict->lookup = boolean_lookup;
 
 	/* Read dictionary from the input string. */
 	dict->input = input;
@@ -267,7 +276,7 @@ dictionary_six_str(const char * lang,
 	} else {
 		dict->andable_connector_set = NULL;
 	}
-	free_lookup_list(dict_node);
+	free_lookup(dict_node);
 #endif /* USE_FAT_LINKAGES */
 
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
@@ -276,7 +285,7 @@ dictionary_six_str(const char * lang,
 	} else {
 		dict->unlimited_connector_set = NULL;
 	}
-	free_lookup_list(dict_node);
+	free_lookup(dict_node);
 
 	return dict;
 

@@ -463,19 +463,18 @@ Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
 /* ======================================================== */
 /* Dictionary utilities ... */
 
-static int dn_word_contains(Dictionary dict,
-                            Dict_node * w_dn, const char * macro)
+static Boolean dn_word_contains(Dictionary dict,
+                                Dict_node * w_dn, const char * macro)
 {
 	Exp * m_exp;
 	Dict_node *m_dn;
 
-	if (w_dn == NULL) return 0;
+	if (w_dn == NULL) return FALSE;
 
 	m_dn = dictionary_lookup_list(dict, macro);
-	if (m_dn == NULL) return 0;
+	if (m_dn == NULL) return FALSE;
 
 	m_exp = m_dn->exp;
-	free_lookup_list(m_dn);
 
 #ifdef DEBUG
 	printf("\nWORD: ");
@@ -488,9 +487,13 @@ static int dn_word_contains(Dictionary dict,
 	for (;w_dn != NULL; w_dn = w_dn->right)
 	{
 		if (1 == exp_contains(w_dn->exp, m_exp))
-			return 1;
+		{
+			free_lookup_list(dict, m_dn);
+			return TRUE;
+		}
 	}
-	return 0;
+	free_lookup_list(dict, m_dn);
+	return FALSE;
 }
 
 /**
@@ -500,13 +503,13 @@ static int dn_word_contains(Dictionary dict,
  * @return: true if word's expression contains macro's expression,
  * false otherwise.
  */
-int word_contains(Dictionary dict, const char * word, const char * macro)
+Boolean word_contains(Dictionary dict, const char * word, const char * macro)
 {
 	Dict_node *w_dn;
-	int ret;
+	Boolean ret;
 	w_dn = abridged_lookup_list(dict, word);
 	ret = dn_word_contains(dict, w_dn, macro);
-	free_lookup_list(w_dn);
+	free_lookup_list(dict, w_dn);
 	return ret;
 }
 

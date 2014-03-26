@@ -121,8 +121,8 @@ static const char * build_idiom_word_name(Dictionary dict, const char * s)
 	int count;
 
 	Dict_node *dn = dictionary_lookup_list(dict, s);
-	count = max_postfix_found(dn)+1;
-	free_lookup_list(dn);
+	count = max_postfix_found(dn) + 1;
+	free_lookup_list(dict, dn);
 
 	x = buff;
 	while((*s != '\0') && (*s != SUBSCRIPT_MARK))

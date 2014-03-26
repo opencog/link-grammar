@@ -60,23 +60,30 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
 	Dict_node *dn;
-	char *word;
+	char *scriword, *wclass;
 
-	assert(3 == argc, "Bad column count");
+	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
-	word = argv[0];
+	scriword = argv[0];
+	wclass = argv[1];
+
+printf("duuude morph cb found word= %s clas %s\n", argv[0], argv[1]);
 
 	/* Put each word into a Dict_node. */
 	dn = (Dict_node *) xalloc(sizeof(Dict_node));
-	patch_subscript(word);
-	dn->string = string_set_add(word, bs->dict->string_set);
-	dn->left = bs->dn;
+	dn->string = string_set_add(scriword, bs->dict->string_set);
+	dn->right = bs->dn;
 	bs->dn = dn;
 
 	return 0;
 }
 
-Dict_node * dictionary_db_lookup_list(Dictionary dict, const char *s)
+static Boolean db_lookup(Dictionary dict, const char *s)
+{
+	return FALSE;
+}
+
+static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 {
 	sqlite3 *db = dict->db_handle;
 	cbdata bs;
@@ -87,7 +94,7 @@ printf("duude look %s\n", s);
 
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
-	dyn_strcat(qry, "SELECT * FROM Morphemes WHERE morpheme = \'");
+	dyn_strcat(qry, "SELECT subscript, classname FROM Morphemes WHERE morpheme = \'");
 	dyn_strcat(qry, s);
 	dyn_strcat(qry, "\';");
 
@@ -135,6 +142,15 @@ static void db_setup(Dictionary dict)
 	dict->db_handle = db;
 }
 
+static void db_close(Dictionary dict)
+{
+	sqlite3 *db = dict->db_handle;
+	if (db)
+		sqlite3_close(db);
+
+	dict->db_handle = NULL;
+}
+
 Dictionary dictionary_create_from_db(const char *lang)
 {
 	char *dbname;
@@ -168,6 +184,10 @@ Dictionary dictionary_create_from_db(const char *lang)
 	/* Set up the database */
 	db_setup(dict);
 
+	dict->lookup_list = db_lookup_list;
+	dict->lookup = db_lookup;
+	dict->close = db_close;
+
 	/* Misc remaining common (generic) dict setup work */
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
@@ -183,18 +203,9 @@ Dictionary dictionary_create_from_db(const char *lang)
 	} else {
 		dict->unlimited_connector_set = NULL;
 	}
-	free_lookup_list(dict_node);
+	free_lookup_list(dict, dict_node);
 
 	return dict;
-}
-
-void dictionary_db_close(Dictionary dict)
-{
-	sqlite3 *db = dict->db_handle;
-	if (db)
-		sqlite3_close(db);
-
-	dict->db_handle = NULL;
 }
 
 #endif /* HAVE_SQLITE */

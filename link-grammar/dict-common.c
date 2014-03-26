@@ -94,18 +94,17 @@ Dictionary dictionary_create_lang(const char * lang)
  */
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
 {
-	if (dict->db_handle)
-		return dictionary_db_lookup_list(dict, s);
+	return dict->lookup_list(dict, s);
+}
 
-	return dictionary_file_lookup_list(dict, s);
+void free_lookup_list(Dictionary dict, Dict_node *llist)
+{
+	dict->free_lookup(dict, llist);
 }
 
 Boolean boolean_dictionary_lookup(Dictionary dict, const char *s)
 {
-	Dict_node *llist = dictionary_lookup_list(dict, s);
-	Boolean boool = (llist != NULL);
-	free_lookup_list(llist);
-	return boool;
+	return dict->lookup(dict, s);
 }
 
 /**
@@ -264,17 +263,6 @@ static void free_Exp_list(Exp * e)
 	}
 }
 
-void free_lookup_list(Dict_node *llist)
-{
-	Dict_node * n;
-	while (llist != NULL)
-	{
-		n = llist->right;
-		free_dict_node(llist);
-		llist = n;
-	}
-}
-
 static void free_dict_node_recursive(Dict_node * dn)
 {
 	if (dn == NULL) return;
@@ -341,7 +329,7 @@ void dictionary_delete(Dictionary dict)
 #endif /* USE_FAT_LINKAGES */
 	connector_set_delete(dict->unlimited_connector_set);
 
-	dictionary_db_close(dict);
+	if (dict->close) dict->close(dict);
 
 	post_process_close(dict->postprocessor);
 	post_process_close(dict->constituent_pp);

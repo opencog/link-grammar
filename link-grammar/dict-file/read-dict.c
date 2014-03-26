@@ -49,7 +49,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	 * which would indicate dictionary version 4.6.6
 	 * Older dictionaries contain no version info.
 	 */
-	dn = dictionary_file_lookup_list(dict, "<dictionary-version-number>");
+	dn = lookup_list(dict, "<dictionary-version-number>");
 	if (NULL == dn) return "[unknown]";
 
 	e = dn->exp;
@@ -61,7 +61,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 		p = strchr(p+1, 'v');
 	}
 
-	free_lookup_list(dn);
+	free_lookup(dn);
 	dict->version = string_set_add(ver, dict->string_set);
 	free(ver);
 	return dict->version;
@@ -690,8 +690,7 @@ rdictionary_lookup(Dict_node *llist,
 }
 
 /**
- * dictionary_file_lookup_list() - return list of words in the file-
- * backed dictionary.
+ * lookup_list() - return list of words in the file-backed dictionary.
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
  * Matches include words that appear in idioms.  To exclude idioms, use
@@ -700,14 +699,34 @@ rdictionary_lookup(Dict_node *llist,
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
- * The returned list must be freed with free_lookup_list().
+ * The returned list must be freed with free_lookup().
  */
-Dict_node * dictionary_file_lookup_list(Dictionary dict, const char *s)
+Dict_node * lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
+
+Boolean boolean_lookup(Dictionary dict, const char *s)
+{
+	Dict_node *llist = lookup_list(dict, s);
+	Boolean boool = (llist != NULL);
+	free_lookup(llist);
+	return boool;
+}
+
+void free_lookup(Dict_node *llist)
+{
+	Dict_node * n;
+	while (llist != NULL)
+	{
+		n = llist->right;
+		free_dict_node(llist);
+		llist = n;
+	}
+}
+
 
 static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 {
@@ -725,7 +744,7 @@ static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
- * The returned list must be freed with free_lookup_list().
+ * The returned list must be freed with free_lookup().
  */
 Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
@@ -890,14 +909,14 @@ static Exp * connector(Dictionary dict)
 		}
 		if (dn == NULL)
 		{
-			free_lookup_list(dn_head);
+			free_lookup(dn_head);
 			dict_error(dict, "\nPerhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps a word is used before it is defined.\n");
 			return NULL;
 		}
 		n = make_unary_node(dict, dn->exp);
-		free_lookup_list(dn_head);
+		free_lookup(dn_head);
 	}
 	else
 	{
@@ -1573,7 +1592,7 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 			fprintf(stderr, "\t%s", dnx->string);
 		}
 		fprintf(stderr, "\n\tThis word will be ignored.\n");
-		free_lookup_list(dn_head);
+		free_lookup(dn_head);
 		free_dict_node(dn);
 	}
 	else
@@ -1736,7 +1755,7 @@ static Boolean read_entry(Dictionary dict)
 	return TRUE;
 
 syntax_error:
-	free_lookup_list(dn);
+	free_lookup(dn);
 	return FALSE;
 }
 
@@ -1950,7 +1969,7 @@ static void display_word_info(Dictionary dict, const char * word)
 	if (dn_head)
 	{
 		display_counts(word, dn_head);
-		free_lookup_list(dn_head);
+		free_lookup(dn_head);
 		return;
 	}
 
@@ -1973,7 +1992,7 @@ static void display_word_expr(Dictionary dict, const char * word)
 	if (dn_head)
 	{
 		display_expr(word, dn_head);
-		free_lookup_list(dn_head);
+		free_lookup(dn_head);
 		return;
 	}
 
@@ -2006,7 +2025,7 @@ static void display_word(Dictionary dict, const char * word,
 	if (dn_head)
 	{
 		disp_node(word, dn_head);
-		free_lookup_list(dn_head);
+		free_lookup(dn_head);
 		return;
 	}
 

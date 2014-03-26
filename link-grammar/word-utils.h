@@ -53,7 +53,7 @@ Boolean word_has_connector(Dict_node *, const char *, char);
 
 
 /* Dictionary utilities ... */
-int word_contains(Dictionary dict, const char * word, const char * macro);
+Boolean word_contains(Dictionary dict, const char * word, const char * macro);
 
 static inline int string_hash(const char *s)
 {
