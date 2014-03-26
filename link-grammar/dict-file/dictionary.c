@@ -399,9 +399,9 @@ Dictionary dictionary_create_from_utf8(const char * input)
 	return dictionary;
 }
 
-int dictionary_delete(Dictionary dict)
+void dictionary_delete(Dictionary dict)
 {
-	if (!dict) return 0;
+	if (!dict) return;
 
 	if (verbosity > 0) {
 		prt_error("Info: Freeing dictionary %s", dict->name);
@@ -428,6 +428,4 @@ int dictionary_delete(Dictionary dict)
 	free_regexs(dict);
 	free_dictionary(dict);
 	xfree(dict, sizeof(struct Dictionary_s));
-
-	return 0;
 }

@@ -46,7 +46,7 @@ link_public_api(Dictionary)
 link_public_api(Dictionary)
      dictionary_create_default_lang(void);
 
-link_public_api(int)
+link_public_api(void)
      dictionary_delete(Dictionary dict);
 
 link_public_api(void)
