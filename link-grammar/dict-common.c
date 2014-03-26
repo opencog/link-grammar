@@ -57,7 +57,7 @@ Dictionary dictionary_create_lang(const char * lang)
 
 	have_db = check_db(lang);
 
-	// if (!have_db)
+	if (!have_db)
 	{
 		dictionary = dictionary_file_create_lang(lang);
 	}

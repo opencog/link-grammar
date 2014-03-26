@@ -371,6 +371,7 @@ void * object_open(const char *filename,
                    void * (*opencb)(const char *, void *),
                    void * user_data);
 
+Boolean file_exists(const char * dict_name);
 char * get_file_contents(const char *filename);
 
 /**

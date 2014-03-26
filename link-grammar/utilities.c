@@ -951,6 +951,34 @@ FILE *dictopen(const char *filename, const char *how)
 /* ======================================================== */
 
 /**
+ * Check to see if a file exists.
+ */
+Boolean file_exists(const char * dict_name)
+{
+	Boolean retval = FALSE;
+	int fd;
+	struct stat buf;
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
+	/* binary, otherwise fstat file length is confused by crlf
+	 * counted as one byte. */
+	FILE *fp = dictopen(dict_name, "rb");
+#else
+	FILE *fp = dictopen(dict_name, "r");
+#endif
+	if (fp == NULL)
+		return FALSE;
+
+	/* Get the file size, in bytes. */
+	fd = fileno(fp);
+	fstat(fd, &buf);
+	if (0 < buf.st_size) retval = TRUE;
+
+  	fclose(fp);
+	return retval;
+}
+
+/**
  * Read in the whole stinkin file. This routine returns
  * malloced memory, which should be freed as soon as possible.
  */

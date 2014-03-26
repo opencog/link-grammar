@@ -156,25 +156,9 @@ failure:
 
 Boolean check_db(const char *lang)
 {
-	sqlite3 *db;
-	int rc;
-	char *dbname;
-	Boolean retval = TRUE;
-
-	dbname = join_path (lang, "dict.db");
-
-	/* If the database opens without error, then report Oll Korrect */
-	rc = sqlite3_open(dbname, &db);
-	if (rc)
-	{
-		prt_error("Error: Can't open %s database: %s\n",
-			dbname, sqlite3_errmsg(db));
-		retval = FALSE;
-	}
-
-	/* Close the database */
+	char *dbname = join_path (lang, "dict.db");
+	Boolean retval = file_exists(dbname);
 	free(dbname);
-	sqlite3_close(db);
 	return retval;
 }
 
