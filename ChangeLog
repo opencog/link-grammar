@@ -24,6 +24,7 @@ Version 5.0.0 (XXX March 2014)
  * Print post-processing rejection message, when !bad is enabled.
  * Remove soem deprecated functions for C API.
  * Remove all deprecated functions from Java API.
+ * Initial support for an SQL-backed dynamic dictionary.
 
 Version 4.8.6 (2 February 2014)
  * Fix minor OSX compiler warnings.
