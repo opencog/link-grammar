@@ -201,7 +201,7 @@ dictionary_six_str(const char * lang,
 	dict->affix_table = NULL;
 	dict->recursive_error = FALSE;
 
-	/* To disable spell-checking, just set the cheker to NULL */
+	/* To disable spell-checking, just set the checker to NULL */
 	dict->spell_checker = spellcheck_create(dict->lang);
 #ifdef HAVE_SQLITE
 	dict->db_handle = NULL;
@@ -254,14 +254,15 @@ dictionary_six_str(const char * lang,
 
 	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
 
-	dict->postprocessor	  = post_process_open(pp_name);
+	dict->postprocessor	 = post_process_open(pp_name);
 	dict->constituent_pp	 = post_process_open(cons_name);
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
 	dict->use_unknown_word = TRUE;
 
 #ifdef USE_FAT_LINKAGES
-	if ((dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD)) != NULL) {
+	dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD);
+	if (dict_node != NULL) {
 		dict->andable_connector_set = connector_set_create(dict_node->exp);
 	} else {
 		dict->andable_connector_set = NULL;
@@ -269,7 +270,8 @@ dictionary_six_str(const char * lang,
 	free_lookup_list(dict_node);
 #endif /* USE_FAT_LINKAGES */
 
-	if ((dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD)) != NULL) {
+	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
+	if (dict_node != NULL) {
 		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
 	} else {
 		dict->unlimited_connector_set = NULL;

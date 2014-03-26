@@ -17,10 +17,14 @@
 #include <sqlite3.h>
 
 #include "api-structures.h"
+#include "dict-api.h"
 #include "dict-common.h"
 #include "dict-structures.h"
+#include "spellcheck.h"
 #include "string-set.h"
+#include "structures.h"
 #include "utilities.h"
+#include "word-utils.h"
 
 #include "read-sql.h"
 
@@ -164,8 +168,52 @@ Boolean check_db(const char *lang)
 
 Dictionary dictionary_create_from_db(const char *lang)
 {
-	return NULL;
+	char *dbname;
+	const char * t;
+	Dictionary dict;
+	Dict_node *dict_node;
 
+	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
+	memset(dict, 0, sizeof(struct Dictionary_s));
+
+	dict->string_set = string_set_create();
+
+	dict->lang = lang;
+	t = strrchr (lang, '/');
+	if (t) dict->lang = string_set_add(t+1, dict->string_set);
+
+	dbname = join_path (lang, "dict.db");
+	dict->name = string_set_add(dbname, dict->string_set);
+	free(dbname);
+	dict->version = NULL;
+
+	dict->num_entries = 0;
+	dict->affix_table = NULL;
+	dict->regex_root = NULL;
+
+	/* To disable spell-checking, just set the checker to NULL */
+	dict->spell_checker = spellcheck_create(dict->lang);
+	dict->postprocessor	 = NULL;
+	dict->constituent_pp  = NULL;
+
+
+	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
+	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
+
+	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
+
+	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
+	dict->use_unknown_word = TRUE;
+
+	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
+	if (dict_node != NULL) {
+		dict->unlimited_connector_set = connector_set_create(dict_node->exp);
+	} else {
+		dict->unlimited_connector_set = NULL;
+	}
+	free_lookup_list(dict_node);
+
+	return dict;
 }
 
 
