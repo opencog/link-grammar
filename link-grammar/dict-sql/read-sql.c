@@ -34,63 +34,59 @@
 
 static Exp * make_expression(const char *exp_str)
 {
+	Exp* e;
+	Exp* and;
+	Exp* rest;
+	E_list *ell, *elr;
+
 	const char * p = exp_str;
-	const char * con_start = exp_str;
+	const char * con_start = NULL;
 
-	while (*p)
+	/* search for the start of a conector */
+	while (*p && (lg_isspace(*p) || '&' == *p)) p++;
+	con_start = p;
+
+	if (0 == *p) return NULL;
+
+	/* search for the end of a conector */
+	while (*p && (isalnum(*p) || '*' == *p)) p++;
+		
+	/* Connectors always end with a + or - */
+	assert (('+' == *p) || ('-' == *p),
+			"Missing direction character in connector string: %s", con_start);
+
+	/* Create an expression to hold the connector */
+	e = (Exp *) xalloc(sizeof(Exp));
+	e->dir = *p;
+	e->type = CONNECTOR_type;
+	e->cost = 0.0;
+	if ('@' == *con_start)
 	{
-		if (lg_isspace(*p) || '&' == *p)
-		{
-			p++;
-			con_start = p;
-			continue;
-		}
-
-		/* connectors always end with a + or - */
-		else if (('+' == *p) || ('-' == *p))
-		{
-			Exp* and;
-			Exp* rest;
-			E_list *ell, *elr;
-
-			/* Create an expression to hold the connector */
-			Exp* e = (Exp *) xalloc(sizeof(Exp));
-			e->dir = *p;
-			e->type = CONNECTOR_type;
-			e->cost = 0.0;
-			if ('@' == *con_start)
-			{
-				e->u.string = strndup(con_start+1, p-con_start-1);
-				e->multi = TRUE;
-			}
-			else
-			{
-				e->u.string = strndup(con_start, p-con_start);
-				e->multi = FALSE;
-			}
-
-			rest = make_expression(++p);
-			if (NULL == rest)
-				return e;
-
-			/* Join it all together with an AND node */
-			and = (Exp *) xalloc(sizeof(Exp));
-			and->type = AND_type;
-			and->cost = 0.0;
-			and->u.l = ell = (E_list *) xalloc(sizeof(E_list));
-			ell->next = elr = (E_list *) xalloc(sizeof(E_list));
-			elr->next = NULL;
-
-			ell->e = e;
-			elr->e = rest;
-
-			return and;
-		}
-
-		p++;
+		e->u.string = strndup(con_start+1, p-con_start-1);
+		e->multi = TRUE;
+	}
+	else
+	{
+		e->u.string = strndup(con_start, p-con_start);
+		e->multi = FALSE;
 	}
 
-	return NULL;
+	rest = make_expression(++p);
+	if (NULL == rest)
+		return e;
+
+	/* Join it all together with an AND node */
+	and = (Exp *) xalloc(sizeof(Exp));
+	and->type = AND_type;
+	and->cost = 0.0;
+	and->u.l = ell = (E_list *) xalloc(sizeof(E_list));
+	ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+	elr->next = NULL;
+
+	ell->e = e;
+	elr->e = rest;
+
+	return and;
 }
 
 

@@ -20,7 +20,7 @@ INSERT INTO Morphemes VALUES ('this', 'this.p', 'this');
 INSERT INTO Disjuncts VALUES ('this', 'Wd- & Ss*b+', 0.1);
 
 INSERT INTO Morphemes VALUES ('is', 'is.v', 'is');
-INSERT INTO Disjuncts VALUES ('is', 'Ss & WV- & O*m+', 0.214159265358979);
+INSERT INTO Disjuncts VALUES ('is', 'Ss- & WV- & O*m+', 0.214159265358979);
 
 INSERT INTO Morphemes VALUES ('a', 'a', '(article)');
 INSERT INTO Morphemes VALUES ('another', 'another', '(article)');
