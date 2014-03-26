@@ -47,6 +47,52 @@ printf("\n");
 */
 
 /* ========================================================= */
+/* Mini expression-parsing library.  This is a simplified subset of
+ * what can be found in the file-backed dictionary.
+ */
+
+static Exp * make_expression(const char *exp_str)
+{
+	const char * p = exp_str;
+	const char * con_start = exp_str;
+
+	while (*p)
+	{
+printf("duuude hey %s\n", p);
+		if (lg_isspace(*p))
+		{
+			con_start = p;
+			p++;
+			continue;
+		}
+		else if (('+' == *p) || ('-' == *p))
+		{
+			Exp* e = (Exp *) xalloc(sizeof(Exp));
+			e->dir = *p;
+			e->type = CONNECTOR_type;
+			e->cost = 0.0;
+			if ('@' == *con_start)
+			{
+				e->u.string = strndup(con_start+1, p-con_start-1);
+				e->multi = TRUE;
+			}
+			else
+			{
+				e->u.string = strndup(con_start, p-con_start);
+				e->multi = FALSE;
+			}
+printf("duuude connector is %s\n", e->u.string);
+			p++;
+			continue;
+		}
+		p++;
+	}
+
+	return NULL;
+}
+
+
+/* ========================================================= */
 /* Dictionary word lookup proceedures. */
 
 typedef struct 
@@ -62,9 +108,14 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
    Dict_node * dn;
    while (llist != NULL)
    {
+		Exp *e;
       dn = llist->right;
-// XXX uncomment later ...
-		// xfree((char *)dn->exp, sizeof(Exp));
+		e = dn->exp;
+		if (e)
+		{
+			if (CONNECTOR_type == e->type) free(e->u.string);
+			xfree((char *)e, sizeof(Exp));
+		}
 		xfree((char *)dn, sizeof(Dict_node));
       llist = dn;
    }
@@ -79,6 +130,11 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(argv[0], "NULL column value");
 
 printf("duuude exph cb found disj %s cost %s\n", argv[0], argv[1]);
+	bs->exp = make_expression(argv[0]);
+
+	if (bs->exp)
+		bs->exp->cost = atof(argv[1]);
+
 	return 0;
 }
 

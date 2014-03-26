@@ -883,11 +883,11 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 
 /* ======================================================================== */
 /**
- * connector() -- make a node for a connector or dictionary word.
+ * make_connector() -- make a node for a connector or dictionary word.
  *
  * Assumes the current token is a connector or dictionary word.
  */
-static Exp * connector(Dictionary dict)
+static Exp * make_connector(Dictionary dict)
 {
 	Exp * n;
 	Dict_node *dn, *dn_head;
@@ -1146,7 +1146,7 @@ static Exp * expression(Dictionary dict)
 		}
 		n->cost += 1.0;
 	} else if (!dict->is_special) {
-		n = connector(dict);
+		n = make_connector(dict);
 		if (n == NULL) {
 			return NULL;
 		}
@@ -1170,7 +1170,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok);
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
  */
-static Exp * expression(Dictionary dict)
+static Exp * make_expression(Dictionary dict)
 {
 	return restricted_expression(dict, TRUE, TRUE);
 }
@@ -1184,7 +1184,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nl = expression(dict);
+		nl = make_expression(dict);
 		if (nl == NULL) {
 			return NULL;
 		}
@@ -1201,7 +1201,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nl = expression(dict);
+		nl = make_expression(dict);
 		if (nl == NULL) {
 			return NULL;
 		}
@@ -1219,7 +1219,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nl = expression(dict);
+		nl = make_expression(dict);
 		if (nl == NULL) {
 			return NULL;
 		}
@@ -1234,7 +1234,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 	}
 	else if (!dict->is_special)
 	{
-		nl = connector(dict);
+		nl = make_connector(dict);
 		if (nl == NULL) {
 			return NULL;
 		}
@@ -1724,7 +1724,7 @@ static Boolean read_entry(Dictionary dict)
 		goto syntax_error;
 	}
 
-	n = expression(dict);
+	n = make_expression(dict);
 	if (n == NULL)
 	{
 		goto syntax_error;
