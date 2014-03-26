@@ -53,15 +53,20 @@ Dictionary dictionary_create_default_lang(void)
 Dictionary dictionary_create_lang(const char * lang)
 {
 	Dictionary dictionary = NULL;
-	Boolean have_db = FALSE;
 
-	have_db = check_db(lang);
-
-	if (!have_db)
+	/* If an sql database exists, try to read that. */
+	if (check_db(lang))
 	{
-		dictionary = dictionary_file_create_lang(lang);
+		dictionary = dictionary_create_from_db(lang);
+	}
+
+	/* Fallback to a plain-text dictionary */
+	if (NULL == dictionary)
+	{
+		dictionary = dictionary_create_from_file(lang);
 	}
 
 	return dictionary;
 }
+
 

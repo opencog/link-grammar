@@ -335,7 +335,7 @@ dictionary_six(const char * lang, const char * dict_name,
 	return dict;
 }
 
-Dictionary dictionary_file_create_lang(const char * lang)
+Dictionary dictionary_create_from_file(const char * lang)
 {
 	Dictionary dictionary;
 

@@ -162,5 +162,10 @@ Boolean check_db(const char *lang)
 	return retval;
 }
 
+Dictionary dictionary_create_from_db(const char *lang)
+{
+
+}
+
 
 #endif /* HAVE_SQLITE */

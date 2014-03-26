@@ -22,7 +22,7 @@ Boolean find_word_in_dict(Dictionary dict, const char *);
 
 int  delete_dictionary_words(Dictionary dict, const char *);
 
-Dictionary dictionary_file_create_lang(const char * lang);
+Dictionary dictionary_create_from_file(const char * lang);
 
 
 #endif /* _LG_READ_DICT_H_ */

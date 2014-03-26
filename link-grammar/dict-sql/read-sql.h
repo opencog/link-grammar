@@ -18,6 +18,7 @@
 #include "link-includes.h"
 
 Boolean check_db(const char *lang);
+Dictionary dictionary_create_from_db(const char *lang);
 void get_db_contents(Dictionary dict, const char *dbname);
 
 #endif /* READ_SQL_H */
