@@ -211,16 +211,16 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->affix_table = NULL;
 	dict->regex_root = NULL;
 
-	/* To disable spell-checking, just set the checker to NULL */
-	dict->spell_checker = spellcheck_create(dict->lang);
-	dict->postprocessor	 = NULL;
-	dict->constituent_pp  = NULL;
-
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
 	dict->lang = lang;
 	t = strrchr (lang, '/');
 	if (t) dict->lang = string_set_add(t+1, dict->string_set);
+
+	/* To disable spell-checking, just set the checker to NULL */
+	dict->spell_checker = spellcheck_create(dict->lang);
+	dict->postprocessor	 = NULL;
+	dict->constituent_pp  = NULL;
 
 	dbname = join_path (lang, "dict.db");
 	dict->name = string_set_add(dbname, dict->string_set);

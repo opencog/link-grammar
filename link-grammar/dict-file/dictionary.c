@@ -192,12 +192,10 @@ dictionary_six_str(const char * lang,
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
 	dict->recursive_error = FALSE;
-
+	dict->version = NULL;
 #ifdef HAVE_SQLITE
 	dict->db_handle = NULL;
 #endif
-	/* To disable spell-checking, just set the checker to NULL */
-	dict->spell_checker = spellcheck_create(dict->lang);
 
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
@@ -205,7 +203,9 @@ dictionary_six_str(const char * lang,
 	t = strrchr (lang, '/');
 	if (t) dict->lang = string_set_add(t+1, dict->string_set);
 	dict->name = string_set_add(dict_name, dict->string_set);
-	dict->version = NULL;
+
+	/* To disable spell-checking, just set the checker to NULL */
+	dict->spell_checker = spellcheck_create(dict->lang);
 
 	/* Read dictionary from the input string. */
 	dict->input = input;
