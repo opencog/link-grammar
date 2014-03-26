@@ -314,7 +314,7 @@ static void insert_connector(connector_table *ct, Connector * c)
 	ct[h] = c;
 }
 
-#ifdef DEAD_CODE_NOT_USED_ANYWHERE
+#if 0 /* DEAD_CODE_NOT_USED_ANYWHERE */
 void prune(Sentence sent)
 {
 	Connector *e, *f;

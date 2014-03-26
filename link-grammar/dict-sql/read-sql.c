@@ -19,6 +19,7 @@
 #include "dict-api.h"
 #include "dict-common.h"
 #include "dict-structures.h"
+#include "externs.h"
 #include "spellcheck.h"
 #include "string-set.h"
 #include "structures.h"
@@ -32,13 +33,14 @@
  * what can be found in the file-backed dictionary.
  */
 
-static Exp * make_expression(const char *exp_str)
+static Exp * make_expression(Dictionary dict, const char *exp_str)
 {
 	Exp* e;
 	Exp* and;
 	Exp* rest;
 	E_list *ell, *elr;
 
+	char *constr = NULL;
 	const char * p = exp_str;
 	const char * con_start = NULL;
 
@@ -62,16 +64,22 @@ static Exp * make_expression(const char *exp_str)
 	e->cost = 0.0;
 	if ('@' == *con_start)
 	{
-		e->u.string = strndup(con_start+1, p-con_start-1);
+		constr = strndup(con_start+1, p-con_start-1);
 		e->multi = TRUE;
 	}
 	else
 	{
-		e->u.string = strndup(con_start, p-con_start);
+		constr = strndup(con_start, p-con_start);
 		e->multi = FALSE;
 	}
 
-	rest = make_expression(++p);
+	/* We have to use the string set, mostly because copy_Exp
+	 * in build_disjuncts fails to copy the string ...
+	 */
+	e->u.string = string_set_add(constr, dict->string_set);
+	free(constr);
+
+	rest = make_expression(dict, ++p);
 	if (NULL == rest)
 		return e;
 
@@ -110,10 +118,7 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
       dn = llist->right;
 		e = llist->exp;
 		if (e)
-		{
-			if (CONNECTOR_type == e->type) free((void *) e->u.string);
 			xfree((char *)e, sizeof(Exp));
-		}
 		xfree((char *)llist, sizeof(Dict_node));
       llist = dn;
    }
@@ -127,8 +132,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
-	bs->exp = make_expression(argv[0]);
-	/* print_expression(bs->exp); */
+	bs->exp = make_expression(bs->dict, argv[0]);
 
 	if (bs->exp)
 		bs->exp->cost = atof(argv[1]);
@@ -150,6 +154,12 @@ db_lookup_exp(Dictionary dict, const char *s, cbdata* bs)
 
 	sqlite3_exec(db, qry->str, exp_cb, bs, NULL);
 	dyn_str_delete(qry);
+
+	if (4 < verbosity)
+	{
+		printf("Found expression for class %s: ", s);
+		print_expression(bs->exp);
+	}
 }
 
 
@@ -225,6 +235,18 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 	bs.dict = dict;
 	bs.dn = NULL;
 	db_lookup_common(dict, s, morph_cb, &bs);
+	if (3 < verbosity)
+	{
+		if (bs.dn)
+		{
+			printf("Found expression for word %s: ", s);
+			print_expression(bs.dn->exp);
+		}
+		else
+		{
+			printf("No expression for word %s\n", s);
+		}
+	}
 	return bs.dn;
 }
 

@@ -1767,6 +1767,11 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			/* At last .. concatentate the word expressions we build for
 			 * this alternative. */
 			sent->word[i].x = catenate_X_nodes(sent->word[i].x, we);
+			if (3 < verbosity)
+			{
+				printf("Tokenize word=%d %s expr=", i, sent->word[i].unsplit_word);
+				print_expression(sent->word[i].x->exp);
+			}
 		}
 	}
 }
