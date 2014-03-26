@@ -52,8 +52,9 @@ printf("\n");
 typedef struct 
 {
 	Dictionary dict;
-	Dict_node *dn;
+	Dict_node* dn;
 	Boolean found;
+	Exp* exp;
 } cbdata;
 
 static void db_free_llist(Dictionary dict, Dict_node *llist)
@@ -69,7 +70,38 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
    }
 }
 
+/* callback -- set bs->exp to the expressions for a class in the dict */
+static int exp_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
 
+	assert(2 == argc, "Bad column count");
+	assert(argv[0], "NULL column value");
+
+printf("duuude exph cb found disj %s cost %s\n", argv[0], argv[1]);
+	return 0;
+}
+
+static void
+db_lookup_exp(Dictionary dict, const char *s, cbdata* bs)
+{
+	sqlite3 *db = dict->db_handle;
+	dyn_str *qry;
+
+printf("duude look for wordexps for  %s\n", s);
+
+	/* The token to look up is called the 'morpheme'. */
+	qry = dyn_str_new();
+	dyn_strcat(qry, "SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
+	dyn_strcat(qry, s);
+	dyn_strcat(qry, "\';");
+
+	sqlite3_exec(db, qry->str, exp_cb, bs, NULL);
+	dyn_str_delete(qry);
+}
+
+
+/* callback -- set bs->found to true if the word is in the dict */
 static int exists_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
@@ -82,6 +114,7 @@ printf("duuude boolean lookup found %s\n", argv[0]);
 	return 0;
 }
 
+/* callback -- set bs->dn to the dict nodes for a word in the dict */
 static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
@@ -100,6 +133,11 @@ printf("duuude morph cb found word= %s clas %s\n", argv[0], argv[1]);
 	dn->string = string_set_add(scriword, bs->dict->string_set);
 	dn->right = bs->dn;
 	bs->dn = dn;
+
+	/* Now look up the expressions for each word */
+	bs->exp = NULL;
+	db_lookup_exp(bs->dict, wclass, bs);
+	bs->dn->exp = bs->exp;
 
 	return 0;
 }
