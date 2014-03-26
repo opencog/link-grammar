@@ -727,7 +727,6 @@ void free_lookup(Dict_node *llist)
 	}
 }
 
-
 static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 {
 	Boolean lookup_idioms = test_enabled("lookup-idioms");

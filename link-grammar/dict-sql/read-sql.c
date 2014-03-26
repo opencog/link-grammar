@@ -53,8 +53,34 @@ typedef struct
 {
 	Dictionary dict;
 	Dict_node *dn;
+	Boolean found;
 } cbdata;
 
+static void db_free_llist(Dictionary dict, Dict_node *llist)
+{
+   Dict_node * dn;
+   while (llist != NULL)
+   {
+      dn = llist->right;
+// XXX uncomment later ...
+		// xfree((char *)dn->exp, sizeof(Exp));
+		xfree((char *)dn, sizeof(Dict_node));
+      llist = dn;
+   }
+}
+
+
+static int exists_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+
+	assert(2 == argc, "Bad column count");
+	assert(argv[0], "NULL column value");
+
+printf("duuude boolean lookup found %s\n", argv[0]);
+	bs->found = TRUE;
+	return 0;
+}
 
 static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 {
@@ -78,19 +104,16 @@ printf("duuude morph cb found word= %s clas %s\n", argv[0], argv[1]);
 	return 0;
 }
 
-static Boolean db_lookup(Dictionary dict, const char *s)
-{
-	return FALSE;
-}
 
-static Dict_node * db_lookup_list(Dictionary dict, const char *s)
+static void
+db_lookup_common(Dictionary dict, const char *s,
+                 int (*cb)(void *, int, char **, char **),
+                 cbdata* bs)
 {
 	sqlite3 *db = dict->db_handle;
-	cbdata bs;
 	dyn_str *qry;
-	int rc;
 
-printf("duude look %s\n", s);
+printf("duude look for word  %s\n", s);
 
 	/* The token to look up is called the 'morpheme'. */
 	qry = dyn_str_new();
@@ -98,18 +121,25 @@ printf("duude look %s\n", s);
 	dyn_strcat(qry, s);
 	dyn_strcat(qry, "\';");
 
+	sqlite3_exec(db, qry->str, cb, bs, NULL);
+	dyn_str_delete(qry);
+}
+
+static Boolean db_lookup(Dictionary dict, const char *s)
+{
+	cbdata bs;
+	bs.dict = dict;
+	bs.found = FALSE;
+	db_lookup_common(dict, s, exists_cb, &bs);
+	return bs.found;
+}
+
+static Dict_node * db_lookup_list(Dictionary dict, const char *s)
+{
+	cbdata bs;
 	bs.dict = dict;
 	bs.dn = NULL;
-
-	rc = sqlite3_exec(db, qry->str, morph_cb, &bs, NULL);
-	if (SQLITE_OK != rc)
-	{
-		/* Normal exit, if the word is not in the dict. */
-		dyn_str_delete(qry);
-		return NULL;
-	}
-	dyn_str_delete(qry);
-
+	db_lookup_common(dict, s, morph_cb, &bs);
 	return bs.dn;
 }
 
@@ -185,6 +215,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	db_setup(dict);
 
 	dict->lookup_list = db_lookup_list;
+	dict->free_lookup = db_free_llist;
 	dict->lookup = db_lookup;
 	dict->close = db_close;
 
