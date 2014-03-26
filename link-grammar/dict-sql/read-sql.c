@@ -58,15 +58,21 @@ static Exp * make_expression(const char *exp_str)
 
 	while (*p)
 	{
-printf("duuude hey %s\n", p);
-		if (lg_isspace(*p))
+		if (lg_isspace(*p) || '&' == *p)
 		{
-			con_start = p;
 			p++;
+			con_start = p;
 			continue;
 		}
+
+		/* connectors always end with a + or - */
 		else if (('+' == *p) || ('-' == *p))
 		{
+			Exp* and;
+			Exp* rest;
+			E_list *ell, *elr;
+
+			/* Create an expression to hold the connector */
 			Exp* e = (Exp *) xalloc(sizeof(Exp));
 			e->dir = *p;
 			e->type = CONNECTOR_type;
@@ -82,9 +88,25 @@ printf("duuude hey %s\n", p);
 				e->multi = FALSE;
 			}
 printf("duuude connector is %s\n", e->u.string);
-			p++;
-			continue;
+
+			rest = make_expression(++p);
+			if (NULL == rest)
+				return e;
+
+			/* Join it all together with an AND node */
+			and = (Exp *) xalloc(sizeof(Exp));
+			and->type = AND_type;
+			and->cost = 0.0;
+			and->u.l = ell = (E_list *) xalloc(sizeof(E_list));
+			ell->next = elr = (E_list *) xalloc(sizeof(E_list));
+			elr->next = NULL;
+
+			ell->e = e;
+			elr->e = rest;
+
+			return and;
 		}
+
 		p++;
 	}
 
@@ -113,7 +135,7 @@ static void db_free_llist(Dictionary dict, Dict_node *llist)
 		e = dn->exp;
 		if (e)
 		{
-			if (CONNECTOR_type == e->type) free(e->u.string);
+			if (CONNECTOR_type == e->type) free((void *) e->u.string);
 			xfree((char *)e, sizeof(Exp));
 		}
 		xfree((char *)dn, sizeof(Dict_node));
