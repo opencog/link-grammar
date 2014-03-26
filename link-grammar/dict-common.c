@@ -340,3 +340,142 @@ void dictionary_delete(Dictionary dict)
 }
 
 /* ======================================================================== */
+
+/* INFIX_NOTATION is always defined; we simply never use the format below. */
+/* #if ! defined INFIX_NOTATION */
+#if 0
+/**
+ * print the expression, in prefix-style
+ */
+void print_expression(Exp * n)
+{
+	E_list * el;
+	int i, icost;
+
+	if (n == NULL)
+	{
+		printf("NULL expression");
+		return;
+	}
+
+	icost = (int) (n->cost);
+	if (n->type == CONNECTOR_type)
+	{
+		for (i=0; i<icost; i++) printf("[");
+		if (n->multi) printf("@");
+		printf("%s%c", n->u.string, n->dir);
+		for (i=0; i<icost; i++) printf("]");
+		if (icost > 0) printf(" ");
+	}
+	else
+	{
+		for (i=0; i<icost; i++) printf("[");
+		if (icost == 0) printf("(");
+		if (n->type == AND_type) printf("& ");
+		if (n->type == OR_type) printf("or ");
+		for (el = n->u.l; el != NULL; el = el->next)
+		{
+			print_expression(el->e);
+		}
+		for (i=0; i<icost; i++) printf("]");
+		if (icost > 0) printf(" ");
+		if (icost == 0) printf(") ");
+	}
+}
+
+#else /* INFIX_NOTATION */
+
+/**
+ * print the expression, in infix-style
+ */
+static void print_expression_parens(Exp * n, int need_parens)
+{
+	E_list * el;
+	int i, icost;
+
+	if (n == NULL)
+	{
+		printf("NULL expression");
+		return;
+	}
+
+	icost = (int) (n->cost);
+	/* print the connector only */
+	if (n->type == CONNECTOR_type)
+	{
+		for (i=0; i<icost; i++) printf("[");
+		if (n->multi) printf("@");
+		printf("%s%c", n->u.string, n->dir);
+		for (i=0; i<icost; i++) printf("]");
+		return;
+	}
+
+	/* Look for optional, and print only that */
+	el = n->u.l;
+	if (el == NULL)
+	{
+		for (i=0; i<icost; i++) printf("[");
+		printf ("()");
+		for (i=0; i<icost; i++) printf("]");
+		return;
+	}
+
+	for (i=0; i<icost; i++) printf("[");
+	if ((n->type == OR_type) &&
+	    el && el->e && (NULL == el->e->u.l))
+	{
+		printf ("{");
+		if (NULL == el->next) printf("error-no-next");
+		else print_expression_parens(el->next->e, FALSE);
+		printf ("}");
+		return;
+	}
+
+	if ((icost == 0) && need_parens) printf("(");
+
+	/* print left side of binary expr */
+	print_expression_parens(el->e, TRUE);
+
+	/* get a funny "and optional" when its a named expression thing. */
+	if ((n->type == AND_type) && (el->next == NULL))
+	{
+		for (i=0; i<icost; i++) printf("]");
+		if ((icost == 0) && need_parens) printf(")");
+		return;
+	}
+
+	if (n->type == AND_type) printf(" & ");
+	if (n->type == OR_type) printf(" or ");
+
+	/* print right side of binary expr */
+	el = el->next;
+	if (el == NULL)
+	{
+		printf ("()");
+	}
+	else
+	{
+		if (el->e->type == n->type)
+		{
+			print_expression_parens(el->e, FALSE);
+		}
+		else
+		{
+			print_expression_parens(el->e, TRUE);
+		}
+		if (el->next != NULL)
+			printf ("\nERROR! Unexpected list!\n");
+	}
+
+	for (i=0; i<icost; i++) printf("]");
+	if ((icost == 0) && need_parens) printf(")");
+}
+
+void print_expression(Exp * n)
+{
+	print_expression_parens(n, FALSE);
+	printf("\n");
+}
+#endif /* INFIX_NOTATION */
+
+/* ======================================================================== */
