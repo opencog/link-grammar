@@ -18,7 +18,7 @@
 void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);
 
-Boolean find_word_in_dict(Dictionary dict, const char *);
+Dict_node * dictionary_file_lookup_list(Dictionary dict, const char *);
 
 int  delete_dictionary_words(Dictionary dict, const char *);
 

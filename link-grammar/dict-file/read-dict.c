@@ -49,7 +49,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	 * which would indicate dictionary version 4.6.6
 	 * Older dictionaries contain no version info.
 	 */
-	dn = dictionary_lookup_list(dict, "<dictionary-version-number>");
+	dn = dictionary_file_lookup_list(dict, "<dictionary-version-number>");
 	if (NULL == dn) return "[unknown]";
 
 	e = dn->exp;
@@ -647,17 +647,6 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 	return llist;
 }
 
-void free_lookup_list(Dict_node *llist)
-{
-	Dict_node * n;
-	while (llist != NULL)
-	{
-		n = llist->right;
-		free_dict_node(llist);
-		llist = n;
-	}
-}
-
 /* ======================================================================== */
 /**
  * rdictionary_lookup() -- recursive dictionary lookup
@@ -701,7 +690,8 @@ rdictionary_lookup(Dict_node *llist,
 }
 
 /**
- * dictionary_lookup_list() - return lookup list of words in the dictionary
+ * dictionary_file_lookup_list() - return list of words in the file-
+ * backed dictionary.
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
  * Matches include words that appear in idioms.  To exclude idioms, use
@@ -712,7 +702,7 @@ rdictionary_lookup(Dict_node *llist,
  *
  * The returned list must be freed with free_lookup_list().
  */
-Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
+Dict_node * dictionary_file_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE);
 	llist = prune_lookup_list(llist, s);
@@ -744,30 +734,6 @@ Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
-
-Boolean boolean_dictionary_lookup(Dictionary dict, const char *s)
-{
-	Dict_node *llist = dictionary_lookup_list(dict, s);
-	Boolean boool = (llist != NULL);
-	free_lookup_list(llist);
-	return boool;
-}
-
-/**
- * Return true if word is in dictionary, or if word is matched by
- * regex.
- */
-Boolean find_word_in_dict(Dictionary dict, const char * word)
-{
-	const char * regex_name;
-	if (boolean_dictionary_lookup (dict, word)) return TRUE;
-
-	regex_name = match_regex(dict, word);
-	if (NULL == regex_name) return FALSE;
-
-	return boolean_dictionary_lookup(dict, regex_name);
-}
-
 
 /* ======================================================================== */
 /**

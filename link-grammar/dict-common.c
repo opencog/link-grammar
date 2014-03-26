@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include "dict-api.h"
 #include "dict-common.h"
 #include "externs.h"
 #include "regex-morph.h"
@@ -74,6 +75,52 @@ Dictionary dictionary_create_lang(const char * lang)
 	}
 
 	return dictionary;
+}
+
+/* ======================================================================== */
+/* Dictionary lookup stuff */
+
+/**
+ * dictionary_lookup_list() - return list of words in the dictionary.
+ *
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ * Matches include words that appear in idioms.  To exclude idioms, use
+ * abridged_lookup_list() to obtain matches.
+ *
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * The returned list must be freed with free_lookup_list().
+ */
+Dict_node * dictionary_lookup_list(Dictionary dict, const char *s)
+{
+	if (dict->db_handle)
+		return dictionary_db_lookup_list(dict, s);
+
+	return dictionary_file_lookup_list(dict, s);
+}
+
+Boolean boolean_dictionary_lookup(Dictionary dict, const char *s)
+{
+	Dict_node *llist = dictionary_lookup_list(dict, s);
+	Boolean boool = (llist != NULL);
+	free_lookup_list(llist);
+	return boool;
+}
+
+/**
+ * Return true if word is in dictionary, or if word is matched by
+ * regex.
+ */
+Boolean find_word_in_dict(Dictionary dict, const char * word)
+{
+	const char * regex_name;
+	if (boolean_dictionary_lookup (dict, word)) return TRUE;
+
+	regex_name = match_regex(dict, word);
+	if (NULL == regex_name) return FALSE;
+
+	return boolean_dictionary_lookup(dict, regex_name);
 }
 
 /* ======================================================================== */
@@ -214,6 +261,17 @@ static void free_Exp_list(Exp * e)
 		   free_Elist(e->u.l);
 		}
 		exp_free(e);
+	}
+}
+
+void free_lookup_list(Dict_node *llist)
+{
+	Dict_node * n;
+	while (llist != NULL)
+	{
+		n = llist->right;
+		free_dict_node(llist);
+		llist = n;
 	}
 }
 

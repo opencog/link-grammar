@@ -28,6 +28,7 @@
 
 #include "read-sql.h"
 
+#ifdef LATER
 typedef struct 
 {
 	Dictionary dict;
@@ -156,7 +157,18 @@ failure:
 	free(dbname);
 	sqlite3_close(db);
 }
+#endif
 
+/* ========================================================= */
+/* Dictinoary word lookup proceedures. */
+
+Dict_node * dictionary_db_lookup_list(Dictionary dict, const char *s)
+{
+	return NULL;
+}
+
+/* ========================================================= */
+/* Dictionary creation, setup, open proceedures */
 
 Boolean check_db(const char *lang)
 {
@@ -183,7 +195,6 @@ static void db_setup(Dictionary dict)
 
 	dict->db_handle = db;
 }
-
 
 Dictionary dictionary_create_from_db(const char *lang)
 {

@@ -19,8 +19,7 @@
 
 Boolean check_db(const char *lang);
 Dictionary dictionary_create_from_db(const char *lang);
-void get_db_contents(Dictionary dict, const char *dbname);
 void dictionary_db_close(Dictionary dict);
-
+Dict_node * dictionary_db_lookup_list(Dictionary dict, const char *s);
 
 #endif /* READ_SQL_H */
