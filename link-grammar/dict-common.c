@@ -81,14 +81,14 @@ Dictionary dictionary_create_lang(const char * lang)
 /* Dictionary lookup stuff */
 
 /**
- * dictionary_lookup_list() - return list of words in the dictionary.
+ * dictionary_lookup_list() - get list of matching words in the dictionary.
  *
- * Returns a pointer to a lookup list of the words in the dictionary.
- * Matches include words that appear in idioms.  To exclude idioms, use
- * abridged_lookup_list() to obtain matches.
+ * Returns a pointer to a list of dict_nodes for matching words in the
+ * dictionary.  Matches include words that appear in idioms.  To exclude
+ * idioms, use abridged_lookup_list() to obtain matches.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
- * The node, file and string fields are copied from the dictionary.
+ * The exp, file and string fields are copied from the dictionary.
  *
  * The returned list must be freed with free_lookup_list().
  */

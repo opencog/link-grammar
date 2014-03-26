@@ -15,7 +15,8 @@
 CREATE TABLE Morphemes
 (
 	-- For English, the 'morpheme' is the 'word'. A given morpheme
-	-- may appear mutiple times in this table.
+	-- may appear mutiple times in this table.  This is the field that
+	-- the tokenizer uses to determine if a token is in the dictionary.
 	morpheme TEXT NOT NULL,
 
 	-- The subscripted form of the above.  The subscripted forms are
