@@ -77,6 +77,161 @@ Dictionary dictionary_create_lang(const char * lang)
 }
 
 /* ======================================================================== */
+/* the following functions are for handling deletion */
+
+#ifdef USEFUL_BUT_NOT_CURRENTLY_USED
+/**
+ * Returns true if it finds a non-idiom dict_node in a file that matches
+ * the string s.
+ *
+ * Also sets parent and to_be_deleted appropriately.
+ * Note: this function is used in only one place: delete_dictionary_words()
+ * which is, itself, not currently used ...
+ */
+static Boolean find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
+                                   const char * s,
+                                   Dict_node **parent, Dict_node **to_be_deleted)
+{
+	int m;
+	if (dn == NULL) return FALSE;
+	m = dict_order_bare(s, dn);
+	if (m <= 0) {
+		if (find_one_non_idiom_node(dn, dn->left, s, parent, to_be_deleted)) return TRUE;
+	}
+/*	if ((m == 0) && (!is_idiom_word(dn->string)) && (dn->file != NULL)) { */
+	if ((m == 0) && (!is_idiom_word(dn->string))) {
+		*to_be_deleted = dn;
+		*parent = p;
+		return TRUE;
+	}
+	if (m >= 0) {
+		if (find_one_non_idiom_node(dn, dn->right, s, parent, to_be_deleted)) return TRUE;
+	}
+	return FALSE;
+}
+
+static void set_parent_of_node(Dictionary dict,
+                               Dict_node *p,
+                               Dict_node * del,
+                               Dict_node * newnode)
+{
+	if (p == NULL) {
+		dict->root = newnode;
+	} else {
+		if (p->left == del) {
+			p->left = newnode;
+		} else if (p->right == del) {
+			p->right = newnode;
+		} else {
+			assert(FALSE, "Dictionary broken?");
+		}
+	}
+}
+
+/**
+ * This deletes all the non-idiom words of the dictionary that match
+ * the given string.  Returns TRUE if some deleted, FALSE otherwise.
+ *
+ * XXX Note: this function is not currently used anywhere in the code,
+ * but it could be useful for general dictionary editing.
+ */
+int delete_dictionary_words(Dictionary dict, const char * s)
+{
+	Dict_node *pred, *pred_parent;
+	Dict_node *parent, *to_be_deleted;
+
+	if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return FALSE;
+	for(;;) {
+		/* now parent and to_be_deleted are set */
+		if (to_be_deleted->file != NULL) {
+			to_be_deleted->file->changed = TRUE;
+		}
+		if (to_be_deleted->left == NULL) {
+			set_parent_of_node(dict, parent, to_be_deleted, to_be_deleted->right);
+			free_dict_node(to_be_deleted);
+		} else {
+			pred_parent = to_be_deleted;
+			pred = to_be_deleted->left;
+			while(pred->right != NULL) {
+				pred_parent = pred;
+				pred = pred->right;
+			}
+			to_be_deleted->string = pred->string;
+			to_be_deleted->file = pred->file;
+			to_be_deleted->exp = pred->exp;
+			set_parent_of_node(dict, pred_parent, pred, pred->left);
+			free_dict_node(pred);
+		}
+		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return TRUE;
+	}
+}
+#endif /* USEFUL_BUT_NOT_CURRENTLY_USED */
+
+static void free_Word_file(Word_file * wf)
+{
+	Word_file *wf1;
+
+	for (;wf != NULL; wf = wf1) {
+		wf1 = wf->next;
+		xfree((char *) wf, sizeof(Word_file));
+	}
+}
+
+/**
+ * The following two functions free the Exp s and the
+ * E_lists of the dictionary.  Not to be confused with
+ * free_E_list in utilities.c
+ */
+static void free_Elist(E_list * l)
+{
+	E_list * l1;
+
+	for (; l != NULL; l = l1) {
+		l1 = l->next;
+		xfree(l, sizeof(E_list));
+	}
+}
+
+static inline void exp_free(Exp * e)
+{
+	xfree((char *)e, sizeof(Exp));
+}
+
+static inline void free_dict_node(Dict_node *dn)
+{
+	xfree((char *)dn, sizeof(Dict_node));
+}
+
+
+static void free_Exp_list(Exp * e)
+{
+	Exp * e1;
+	for (; e != NULL; e = e1)
+	{
+		e1 = e->next;
+		if (e->type != CONNECTOR_type)
+		{
+		   free_Elist(e->u.l);
+		}
+		exp_free(e);
+	}
+}
+
+static void free_dict_node_recursive(Dict_node * dn)
+{
+	if (dn == NULL) return;
+	free_dict_node_recursive(dn->left);
+	free_dict_node_recursive(dn->right);
+	free_dict_node(dn);
+}
+
+static void free_dictionary(Dictionary dict)
+{
+	free_dict_node_recursive(dict->root);
+	free_Word_file(dict->word_file_header);
+	free_Exp_list(dict->exp_list);
+}
+
 
 static void affix_list_delete(Dictionary dict)
 {

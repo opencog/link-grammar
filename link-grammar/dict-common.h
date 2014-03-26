@@ -19,8 +19,6 @@
 /* The functions here are for link-grammar internal use only.
  * They are not part of the public API. */
 
-void free_dictionary(Dictionary dict);
-
 Exp * Exp_create(Dictionary);
 void add_empty_word(Dictionary, Dict_node *);
 
