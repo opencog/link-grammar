@@ -161,33 +161,6 @@ static void affix_list_create(Dictionary dict)
 	iterate_on_dictionary(dict, dict->root, load_affix);
 }
 
-static void affix_list_delete(Dictionary dict)
-{
-	int i;
-	for (i=0; i<dict->l_strippable; i++)
-	{
-		free((char *)dict->strip_left[i]);
-	}
-	for (i=0; i<dict->r_strippable; i++)
-	{
-		free((char *)dict->strip_right[i]);
-	}
-	for (i=0; i<dict->u_strippable; i++)
-	{
-		free((char *)dict->strip_units[i]);
-	}
-	xfree(dict->strip_right, dict->r_strippable * sizeof(char *));
-	xfree(dict->strip_left, dict->l_strippable * sizeof(char *));
-	xfree(dict->strip_units, dict->u_strippable * sizeof(char *));
-
-	/* The prefix and suffix words are in the string set,
-	 * and are deleted here. */
-	xfree(dict->suffix, dict->s_strippable * sizeof(char *));
-	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
-	xfree(dict->mprefix, dict->mp_strippable * sizeof(char *));
-	xfree(dict->sane_morphism, dict->sm_total * sizeof(char *));
-}
-
 static Dictionary
 dictionary_six(const char * lang, const char * dict_name,
                 const char * pp_name, const char * cons_name,
@@ -399,33 +372,3 @@ Dictionary dictionary_create_from_utf8(const char * input)
 	return dictionary;
 }
 
-void dictionary_delete(Dictionary dict)
-{
-	if (!dict) return;
-
-	if (verbosity > 0) {
-		prt_error("Info: Freeing dictionary %s", dict->name);
-	}
-
-#ifdef USE_CORPUS
-	lg_corpus_delete(dict->corpus);
-#endif
-
-	if (dict->affix_table != NULL) {
-		affix_list_delete(dict->affix_table);
-		dictionary_delete(dict->affix_table);
-	}
-	spellcheck_destroy(dict->spell_checker);
-
-#ifdef USE_FAT_LINKAGES
-	connector_set_delete(dict->andable_connector_set);
-#endif /* USE_FAT_LINKAGES */
-	connector_set_delete(dict->unlimited_connector_set);
-
-	post_process_close(dict->postprocessor);
-	post_process_close(dict->constituent_pp);
-	string_set_delete(dict->string_set);
-	free_regexs(dict);
-	free_dictionary(dict);
-	xfree(dict, sizeof(struct Dictionary_s));
-}
