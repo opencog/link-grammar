@@ -183,14 +183,6 @@ dictionary_six_str(const char * lang,
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
-	dict->string_set = string_set_create();
-
-	dict->lang = lang;
-	t = strrchr (lang, '/');
-	if (t) dict->lang = string_set_add(t+1, dict->string_set);
-	dict->name = string_set_add(dict_name, dict->string_set);
-	dict->version = NULL;
-
 	dict->num_entries = 0;
 	dict->is_special = FALSE;
 	dict->already_got_it = '\0';
@@ -201,11 +193,19 @@ dictionary_six_str(const char * lang,
 	dict->affix_table = NULL;
 	dict->recursive_error = FALSE;
 
-	/* To disable spell-checking, just set the checker to NULL */
-	dict->spell_checker = spellcheck_create(dict->lang);
 #ifdef HAVE_SQLITE
 	dict->db_handle = NULL;
 #endif
+	/* To disable spell-checking, just set the checker to NULL */
+	dict->spell_checker = spellcheck_create(dict->lang);
+
+	/* Language and file-name stuff */
+	dict->string_set = string_set_create();
+	dict->lang = lang;
+	t = strrchr (lang, '/');
+	if (t) dict->lang = string_set_add(t+1, dict->string_set);
+	dict->name = string_set_add(dict_name, dict->string_set);
+	dict->version = NULL;
 
 	/* Read dictionary from the input string. */
 	dict->input = input;

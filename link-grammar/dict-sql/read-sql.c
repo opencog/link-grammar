@@ -166,6 +166,25 @@ Boolean check_db(const char *lang)
 	return retval;
 }
 
+static void db_setup(Dictionary dict)
+{
+	sqlite3 *db;
+	int rc;
+
+	/* Open the database */
+	rc = sqlite3_open(dict->name, &db);
+	if (rc)
+	{
+		prt_error("Error: Can't open %s database: %s\n",
+			dict->name, sqlite3_errmsg(db));
+		sqlite3_close(db);
+		return;
+	}
+
+	dict->db_handle = db;
+}
+
+
 Dictionary dictionary_create_from_db(const char *lang)
 {
 	char *dbname;
@@ -176,17 +195,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict = (Dictionary) xalloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
-	dict->string_set = string_set_create();
-
-	dict->lang = lang;
-	t = strrchr (lang, '/');
-	if (t) dict->lang = string_set_add(t+1, dict->string_set);
-
-	dbname = join_path (lang, "dict.db");
-	dict->name = string_set_add(dbname, dict->string_set);
-	free(dbname);
 	dict->version = NULL;
-
 	dict->num_entries = 0;
 	dict->affix_table = NULL;
 	dict->regex_root = NULL;
@@ -196,7 +205,20 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->postprocessor	 = NULL;
 	dict->constituent_pp  = NULL;
 
+	/* Language and file-name stuff */
+	dict->string_set = string_set_create();
+	dict->lang = lang;
+	t = strrchr (lang, '/');
+	if (t) dict->lang = string_set_add(t+1, dict->string_set);
 
+	dbname = join_path (lang, "dict.db");
+	dict->name = string_set_add(dbname, dict->string_set);
+	free(dbname);
+
+	/* Set up the database */
+	db_setup(dict);
+
+	/* Misc remaining common (generic) dict setup work */
 	dict->left_wall_defined  = boolean_dictionary_lookup(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = boolean_dictionary_lookup(dict, RIGHT_WALL_WORD);
 
@@ -216,5 +238,13 @@ Dictionary dictionary_create_from_db(const char *lang)
 	return dict;
 }
 
+void dictionary_db_close(Dictionary dict)
+{
+	sqlite3 *db = dict->db_handle;
+	if (db)
+		sqlite3_close(db);
+
+	dict->db_handle = NULL;
+}
 
 #endif /* HAVE_SQLITE */

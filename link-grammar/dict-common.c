@@ -283,6 +283,8 @@ void dictionary_delete(Dictionary dict)
 #endif /* USE_FAT_LINKAGES */
 	connector_set_delete(dict->unlimited_connector_set);
 
+	dictionary_db_close(dict);
+
 	post_process_close(dict->postprocessor);
 	post_process_close(dict->constituent_pp);
 	string_set_delete(dict->string_set);
