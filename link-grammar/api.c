@@ -125,33 +125,33 @@ Parse_Options parse_options_create(void)
 	po->cost_model.type = VDAL;
 #endif /* USE_CORPUS */
 	po->short_length = 10;
-	po->all_short = FALSE;
+	po->all_short = false;
 	po->twopass_length = 30;
 	po->max_sentence_length = MAX_SENTENCE-3;
-	po->repeatable_rand = TRUE;
+	po->repeatable_rand = true;
 	po->resources = resources_create();
-	po->display_short = TRUE;
-	po->display_word_subscripts = TRUE;
-	po->display_link_subscripts = TRUE;
-	po->display_walls = FALSE;
+	po->display_short = true;
+	po->display_word_subscripts = true;
+	po->display_link_subscripts = true;
+	po->display_walls = false;
 #ifdef USE_FAT_LINKAGES
-	po->use_fat_links = FALSE;
-	po->display_union = FALSE;
+	po->use_fat_links = false;
+	po->display_union = false;
 #endif /* USE_FAT_LINKAGES */
-	po->allow_null = TRUE;
-	po->use_cluster_disjuncts = FALSE;
-	po->echo_on = FALSE;
-	po->batch_mode = FALSE;
-	po->panic_mode = FALSE;
+	po->allow_null = true;
+	po->use_cluster_disjuncts = false;
+	po->echo_on = false;
+	po->batch_mode = false;
+	po->panic_mode = false;
 	po->screen_width = 79;
-	po->display_on = TRUE;
-	po->display_postscript = FALSE;
+	po->display_on = true;
+	po->display_postscript = false;
 	po->display_constituents = NO_DISPLAY;
-	po->display_bad = FALSE;
-	po->display_disjuncts = FALSE;
-	po->display_links = FALSE;
-	po->display_morphology = FALSE;
-	po->display_senses = FALSE;
+	po->display_bad = false;
+	po->display_disjuncts = false;
+	po->display_links = false;
+	po->display_morphology = false;
+	po->display_senses = false;
 
 	return po;
 }
@@ -769,14 +769,14 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		Linkage_info *lifo = &link_info[N_linkages_post_processed];
 		extract_links(indices[in], sent->parse_info);
 #ifdef USE_FAT_LINKAGES
-		lifo->fat = FALSE;
-		lifo->canonical = TRUE;
+		lifo->fat = false;
+		lifo->canonical = true;
 		if (set_has_fat_down(sent))
 		{
 			canonical = is_canonical_linkage(sent);
 			if (only_canonical_allowed && !canonical) continue;
 			*lifo = analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
-			lifo->fat = TRUE;
+			lifo->fat = true;
 			lifo->canonical = canonical;
 		}
 		else
@@ -788,7 +788,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		{
 			N_valid_linkages++;
 #ifdef USE_FAT_LINKAGES
-			if (FALSE == lifo->fat)
+			if (false == lifo->fat)
 				N_thin_linkages++;
 #endif /* USE_FAT_LINKAGES */
 		}
@@ -877,7 +877,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->string_set = string_set_create();
 	sent->rand_state = global_rand_state;
 
-	sent->q_pruned_rules = FALSE;
+	sent->q_pruned_rules = false;
 #ifdef USE_FAT_LINKAGES
 	sent->deletable = NULL;
 	sent->is_conjunction = NULL;
@@ -945,7 +945,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		return -1;
 	}
 
-	sent->q_pruned_rules = FALSE; /* for post processing */
+	sent->q_pruned_rules = false; /* for post processing */
 #ifdef USE_FAT_LINKAGES
 	sent->is_conjunction = (char *) xalloc(sizeof(char)*sent->length);
 	set_is_conjunction(sent);
@@ -1338,7 +1338,7 @@ else
 		const char * unsplit = NULL;     /* unsplit word */
 		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
 		char * affix_types_p = affix_types;
-		Boolean match_found = FALSE;     /* djw matched a morpheme */
+		Boolean match_found = false;     /* djw matched a morpheme */
 		int matched_alts[MAX_SENTENCE];	/* number of morphemes that have matched
 		                                  * the chosen disjuncts for the
 		                                  * unsplit_word, so far (index: ai) */
@@ -1353,7 +1353,7 @@ else
 			size_t djwlen;                /* disjunct total length */
 			size_t len;                   /* disjunct length w/o subscript*/
 			const char * mark;            /* char position of SUBSCRIPT_MARK */
-			Boolean empty_word = FALSE;   /* is this an empty word? */
+			Boolean empty_word = false;   /* is this an empty word? */
 			Disjunct * cdj = pi->chosen_disjuncts[i];
 
 			lgdebug(+4, ">%d Checking word %d/%d\n", lk, i, sent->length);
@@ -1392,7 +1392,7 @@ else
 			if (is_AFFIXTYPE_EMPTY(djw, djwlen))
 			{
 				/* Ignore the empty word */;
-				empty_word = TRUE;
+				empty_word = true;
 			}
 			else
 			if (is_AFFIXTYPE_SUFFIX(djw))
@@ -1420,7 +1420,7 @@ else
 			if (! empty_word) affix_types_p++;
 
 			lgdebug(4, "%d djw %s matched alternatives no.:", lk, djw);
-			match_found = FALSE;
+			match_found = false;
 
 			/* Compare the chosen word djw to the alternatives */
 			for (ai = 0; ai < numalt; ai++)
@@ -1460,7 +1460,7 @@ try_again:
 				{
 					//lgdebug(4, "EQUAL\n");
 					lgdebug(4, " %zu", ai);
-					match_found = TRUE;
+					match_found = true;
 					/* Count matched morphemes in this alternative */
 					matched_alts[ai]++;
 				}
@@ -1502,12 +1502,12 @@ try_again:
 				 * which all the morphemes have been matched.
 				 * ??? This disallows island morphemes -
 				 * should we allow them? */
-				match_found = FALSE;
+				match_found = false;
 				for (ai = 0; ai < numalt; ai++)
 				{
 					if (matched_alts[ai] == num_morphemes)
 					{
-						match_found = TRUE;
+						match_found = true;
 						break;
 					}
 				}
@@ -1530,7 +1530,7 @@ try_again:
 			(NULL == match_regex(afdict, affix_types)))
 		{
 			/* Morpheme type combination not valid */
-			match_found = FALSE;
+			match_found = false;
 			/* XXX we should have a better way to notify */
 			if (0 < verbosity)
 				printf("Warning: Invalid morpheme type combination %s, "
@@ -1709,7 +1709,7 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	linkage->info = &sent->link_info[k];
 #ifdef USE_FAT_LINKAGES
 	linkage->sublinkage = NULL;
-	linkage->unionized = FALSE;
+	linkage->unionized = false;
 	linkage->current = 0;
 	linkage->num_sublinkages=0;
 	linkage->dis_con_tree = NULL;
@@ -1829,10 +1829,10 @@ static int link_already_appears(Linkage linkage, Link *link, int a)
 
 	for (i=0; i<a; ++i) {
 		for (j=0; j<linkage->sublinkage[i].num_links; ++j) {
-			if (links_are_equal(linkage->sublinkage[i].link[j], link)) return TRUE;
+			if (links_are_equal(linkage->sublinkage[i].link[j], link)) return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 static PP_info excopy_pp_info(PP_info ppi)
@@ -1905,7 +1905,7 @@ int linkage_compute_union(Linkage linkage)
 		return 0;
 	}
 	if (num_subs == 1) {
-		linkage->unionized = TRUE;
+		linkage->unionized = true;
 		return 1;
 	}
 
@@ -1927,7 +1927,7 @@ int linkage_compute_union(Linkage linkage)
 
 	linkage->num_sublinkages++;
 
-	linkage->unionized = TRUE;
+	linkage->unionized = true;
 	linkage->current = linkage->num_sublinkages-1;
 	return 1;
 #else
@@ -1966,7 +1966,7 @@ int linkage_get_num_links(const Linkage linkage)
 
 static inline Boolean verify_link_index(const Linkage linkage, int index)
 {
-	if (!linkage) return FALSE;
+	if (!linkage) return false;
 	if ((index < 0) ||
 #ifdef USE_FAT_LINKAGES
 		(index >= linkage->sublinkage[linkage->current].num_links))
@@ -1974,9 +1974,9 @@ static inline Boolean verify_link_index(const Linkage linkage, int index)
 		(index >= linkage->sublinkage.num_links))
 #endif /* USE_FAT_LINKAGES */
 	{
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 int linkage_get_link_length(const Linkage linkage, int index)
@@ -1991,23 +1991,23 @@ int linkage_get_link_length(const Linkage linkage, int index)
 	if (!verify_link_index(linkage, index)) return -1;
 
 	for (i=0; i<linkage->num_words+1; ++i) {
-		word_has_link[i] = FALSE;
+		word_has_link[i] = false;
 	}
 
 #ifdef USE_FAT_LINKAGES
 	for (i=0; i<linkage->sublinkage[current].num_links; ++i)
 	{
 		link = linkage->sublinkage[current].link[i];
-		word_has_link[link->l] = TRUE;
-		word_has_link[link->r] = TRUE;
+		word_has_link[link->l] = true;
+		word_has_link[link->r] = true;
 	}
 	link = linkage->sublinkage[current].link[index];
 #else
 	for (i=0; i<linkage->sublinkage.num_links; ++i)
 	{
 		link = linkage->sublinkage.link[i];
-		word_has_link[link->l] = TRUE;
-		word_has_link[link->r] = TRUE;
+		word_has_link[link->l] = true;
+		word_has_link[link->r] = true;
 	}
 	link = linkage->sublinkage.link[index];
 #endif /* USE_FAT_LINKAGES */
@@ -2152,7 +2152,7 @@ int linkage_is_fat(const Linkage linkage)
 	if (!linkage->info) return 0;
 	return linkage->info->fat;
 #else
-	return FALSE;
+	return false;
 #endif /* USE_FAT_LINKAGES */
 }
 
@@ -2218,10 +2218,10 @@ int linkage_is_canonical(const Linkage linkage)
 {
 #ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return TRUE;
+	if (!linkage->info) return true;
 	return linkage->info->canonical;
 #else
-	return TRUE;
+	return true;
 #endif /* USE_FAT_LINKAGES */
 }
 
@@ -2229,10 +2229,10 @@ int linkage_is_improper(const Linkage linkage)
 {
 #ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return FALSE;
+	if (!linkage->info) return false;
 	return linkage->info->improper_fat_linkage;
 #else
-	return FALSE;
+	return false;
 #endif /* USE_FAT_LINKAGES */
 }
 
@@ -2240,10 +2240,10 @@ int linkage_has_inconsistent_domains(const Linkage linkage)
 {
 #ifdef USE_FAT_LINKAGES
 	/* The sat solver (currently) fails to fill in info */
-	if (!linkage->info) return FALSE;
+	if (!linkage->info) return false;
 	return linkage->info->inconsistent_domains;
 #else
-	return FALSE;
+	return false;
 #endif /* USE_FAT_LINKAGES */
 }
 
@@ -2298,7 +2298,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 		else
 #endif /* USE_FAT_LINKAGES */
 		{
-			pp = post_process(postprocessor, opts, sent, subl, FALSE);
+			pp = post_process(postprocessor, opts, sent, subl, false);
 			/* This can return NULL, for example if there is no
 			   post-processor */
 		}
