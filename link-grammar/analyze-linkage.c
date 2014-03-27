@@ -917,11 +917,9 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 		}
 	}
 }
-#endif /* USE_FAT_LINKAGES */
 
 /********************** exported functions *****************************/
 
-#ifdef USE_FAT_LINKAGES
 void init_analyze(Sentence s)
 {
 	analyze_context_t *actx = s->analyze_ctxt;
