@@ -108,10 +108,10 @@ Parse_Options parse_options_create(void)
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->null_block = 1;
-	po->islands_ok = FALSE;
-	po->use_spell_guess = TRUE;
-	po->use_sat_solver = FALSE;
-	po->use_viterbi = FALSE;
+	po->islands_ok = false;
+	po->use_spell_guess = true;
+	po->use_sat_solver = false;
+	po->use_viterbi = false;
 
 #ifdef XXX_USE_CORPUS
 	/* Use the corpus cost model, if available.
@@ -273,7 +273,7 @@ char * parse_options_get_test(Parse_Options opts) {
 	return opts->test;
 }
 
-void parse_options_set_use_sat_parser(Parse_Options opts, int dummy) {
+void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
 #ifdef USE_SAT_SOLVER
 	opts->use_sat_solver = dummy;
 #else
@@ -282,15 +282,15 @@ void parse_options_set_use_sat_parser(Parse_Options opts, int dummy) {
 #endif
 }
 
-int parse_options_get_use_sat_parser(Parse_Options opts) {
+bool parse_options_get_use_sat_parser(Parse_Options opts) {
 	return opts->use_sat_solver;
 }
 
-void parse_options_set_use_viterbi(Parse_Options opts, int dummy) {
+void parse_options_set_use_viterbi(Parse_Options opts, bool dummy) {
 	opts->use_viterbi = dummy;
 }
 
-int parse_options_get_use_viterbi(Parse_Options opts) {
+bool parse_options_get_use_viterbi(Parse_Options opts) {
 	return opts->use_viterbi;
 }
 
@@ -343,19 +343,19 @@ int parse_options_get_null_block(Parse_Options opts) {
 	return opts->null_block;
 }
 
-void parse_options_set_islands_ok(Parse_Options opts, int dummy) {
+void parse_options_set_islands_ok(Parse_Options opts, bool dummy) {
 	opts->islands_ok = dummy;
 }
 
-int parse_options_get_islands_ok(Parse_Options opts) {
+bool parse_options_get_islands_ok(Parse_Options opts) {
 	return opts->islands_ok;
 }
 
-void parse_options_set_spell_guess(Parse_Options opts, int dummy) {
+void parse_options_set_spell_guess(Parse_Options opts, bool dummy) {
 	opts->use_spell_guess = dummy;
 }
 
-int parse_options_get_spell_guess(Parse_Options opts) {
+bool parse_options_get_spell_guess(Parse_Options opts) {
 	return opts->use_spell_guess;
 }
 
@@ -367,19 +367,19 @@ int parse_options_get_short_length(Parse_Options opts) {
 	return opts->short_length;
 }
 
-void parse_options_set_all_short_connectors(Parse_Options opts, int val) {
+void parse_options_set_all_short_connectors(Parse_Options opts, bool val) {
 	opts->all_short = val;
 }
 
-int parse_options_get_all_short_connectors(Parse_Options opts) {
+bool parse_options_get_all_short_connectors(Parse_Options opts) {
 	return opts->all_short;
 }
 
-void parse_options_set_repeatable_rand(Parse_Options opts, int val) {
+void parse_options_set_repeatable_rand(Parse_Options opts, bool val) {
 	opts->repeatable_rand = val;
 }
 
-int parse_options_get_repeatable_rand(Parse_Options opts) {
+bool parse_options_get_repeatable_rand(Parse_Options opts) {
 	return opts->repeatable_rand;
 }
 
@@ -431,19 +431,19 @@ int parse_options_get_panic_mode(Parse_Options opts) {
 	return opts->panic_mode;
 }
 
-void parse_options_set_allow_null(Parse_Options opts, int dummy) {
+void parse_options_set_allow_null(Parse_Options opts, bool dummy) {
 	opts->allow_null = dummy;
 }
 
-int parse_options_get_allow_null(Parse_Options opts) {
+bool parse_options_get_allow_null(Parse_Options opts) {
 	return opts->allow_null;
 }
 
-void parse_options_set_use_cluster_disjuncts(Parse_Options opts, int dummy) {
+void parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool dummy) {
 	opts->use_cluster_disjuncts = dummy;
 }
 
-int parse_options_get_use_cluster_disjuncts(Parse_Options opts) {
+bool parse_options_get_use_cluster_disjuncts(Parse_Options opts) {
 	return opts->use_cluster_disjuncts;
 }
 
@@ -532,11 +532,11 @@ int parse_options_get_display_senses(Parse_Options opts) {
 	return opts->display_senses;
 }
 
-void parse_options_set_display_walls(Parse_Options opts, int dummy) {
+void parse_options_set_display_walls(Parse_Options opts, bool dummy) {
 	opts->display_walls = dummy;
 }
 
-int parse_options_get_display_walls(Parse_Options opts) {
+bool parse_options_get_display_walls(Parse_Options opts) {
 	return opts->display_walls;
 }
 
@@ -554,15 +554,15 @@ void parse_options_set_display_union(Parse_Options opts, int dummy) {
 #endif /* USE_FAT_LINKAGES */
 }
 
-int parse_options_timer_expired(Parse_Options opts) {
+bool parse_options_timer_expired(Parse_Options opts) {
 	return resources_timer_expired(opts->resources);
 }
 
-int parse_options_memory_exhausted(Parse_Options opts) {
+bool parse_options_memory_exhausted(Parse_Options opts) {
 	return resources_memory_exhausted(opts->resources);
 }
 
-int parse_options_resources_exhausted(Parse_Options opts) {
+bool parse_options_resources_exhausted(Parse_Options opts) {
 	return (resources_timer_expired(opts->resources) || resources_memory_exhausted(opts->resources));
 }
 

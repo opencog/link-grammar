@@ -114,12 +114,12 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_null_block(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_islands_ok(Parse_Options opts, int islands_ok);
-link_public_api(int)
+     parse_options_set_islands_ok(Parse_Options opts, bool islands_ok);
+link_public_api(bool)
      parse_options_get_islands_ok(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_spell_guess(Parse_Options opts, int spell_guess);
-link_public_api(int)
+     parse_options_set_spell_guess(Parse_Options opts, bool spell_guess);
+link_public_api(bool)
      parse_options_get_spell_guess(Parse_Options opts);
 link_public_api(void)
      parse_options_set_short_length(Parse_Options opts, int short_length);
@@ -142,42 +142,42 @@ link_public_api(void)
 link_public_api(Cost_Model_type)
      parse_options_get_cost_model_type(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_use_sat_parser(Parse_Options opts, int use_sat_solver);
-link_public_api(int)
+     parse_options_set_use_sat_parser(Parse_Options opts, bool use_sat_solver);
+link_public_api(bool)
      parse_options_get_use_sat_parser(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_use_viterbi(Parse_Options opts, int use_viterbi);
-link_public_api(int)
+     parse_options_set_use_viterbi(Parse_Options opts, bool use_viterbi);
+link_public_api(bool)
      parse_options_get_use_viterbi(Parse_Options opts);
-link_public_api(int)
+link_public_api(bool)
      parse_options_timer_expired(Parse_Options opts);
-link_public_api(int)
+link_public_api(bool)
      parse_options_memory_exhausted(Parse_Options opts);
-link_public_api(int)
+link_public_api(bool)
      parse_options_resources_exhausted(Parse_Options opts);
 link_public_api(void)
      parse_options_set_screen_width(Parse_Options opts, int val);
 link_public_api(int)
      parse_options_get_screen_width(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_allow_null(Parse_Options opts, int val);
-link_public_api(int)
+     parse_options_set_allow_null(Parse_Options opts, bool val);
+link_public_api(bool)
      parse_options_get_allow_null(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_use_cluster_disjuncts(Parse_Options opts, int val);
-link_public_api(int)
+     parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool val);
+link_public_api(bool)
      parse_options_get_use_cluster_disjuncts(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_display_walls(Parse_Options opts, int val);
-link_public_api(int)
+     parse_options_set_display_walls(Parse_Options opts, bool val);
+link_public_api(bool)
      parse_options_get_display_walls(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_all_short_connectors(Parse_Options opts, int val);
-link_public_api(int)
+     parse_options_set_all_short_connectors(Parse_Options opts, bool val);
+link_public_api(bool)
      parse_options_get_all_short_connectors(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_repeatable_rand(Parse_Options opts, int val);
-link_public_api(int)
+     parse_options_set_repeatable_rand(Parse_Options opts, bool val);
+link_public_api(bool)
      parse_options_get_repeatable_rand(Parse_Options opts);
 link_public_api(void)
      parse_options_reset_resources(Parse_Options opts);
