@@ -13,6 +13,10 @@
 
 #ifdef HAVE_SQLITE
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <sqlite3.h>
 
 #include "api-structures.h"
@@ -261,22 +265,36 @@ Boolean check_db(const char *lang)
 	return retval;
 }
 
-static void db_setup(Dictionary dict)
+static void* db_open(const char * fullname, void * user_data)
 {
+	int fd;
+	struct stat buf;
 	sqlite3 *db;
-	int rc;
 
-	/* Open the database */
-	rc = sqlite3_open(dict->name, &db);
-	if (rc)
+	/* Is there a file here that can be read? */
+	FILE * fh =  fopen(fullname, "r");
+	if (NULL == fh)
+		return NULL;
+
+	/* Get the file size, in bytes. */
+	/* SQLite has a habit of leaving zero-length DB's lying around */
+	fd = fileno(fh);
+	fstat(fd, &buf);
+	if (0 == buf.st_size)
 	{
-		prt_error("Error: Can't open %s database: %s\n",
-			dict->name, sqlite3_errmsg(db));
-		sqlite3_close(db);
-		return;
+		fclose(fh);
+		return NULL;
 	}
 
-	dict->db_handle = db;
+	/* Found a file, of non-zero length. See if that works. */
+	if (sqlite3_open(fullname, &db))
+	{
+		prt_error("Error: Can't open database %s: %s\n",
+			fullname, sqlite3_errmsg(db));
+		sqlite3_close(db);
+		return NULL;
+	}
+	return (void *) db;
 }
 
 static void db_close(Dictionary dict)
@@ -319,7 +337,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	free(dbname);
 
 	/* Set up the database */
-	db_setup(dict);
+	dict->db_handle = object_open(dict->name, db_open, NULL);
 
 	dict->lookup_list = db_lookup_list;
 	dict->free_lookup = db_free_llist;
