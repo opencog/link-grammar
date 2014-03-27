@@ -19,10 +19,10 @@ void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);
 
 Dictionary dictionary_create_from_file(const char * lang);
-Boolean read_dictionary(Dictionary dict);
+bool read_dictionary(Dictionary dict);
 
 Dict_node * lookup_list(Dictionary dict, const char *s);
-Boolean boolean_lookup(Dictionary dict, const char *s);
+bool boolean_lookup(Dictionary dict, const char *s);
 void free_lookup(Dict_node *llist);
 
 #endif /* _LG_READ_DICT_H_ */

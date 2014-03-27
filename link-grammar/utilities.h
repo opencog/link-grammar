@@ -144,12 +144,16 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
    (Or in linux when I compile with -ansi) */
 #endif
 
+#ifndef Boolean
+#define Boolean bool
+#endif
+
 #ifndef FALSE
-#define FALSE 0
+#define FALSE false
 #endif
 
 #ifndef TRUE
-#define TRUE 1
+#define TRUE true
 #endif
 
 #define STR(x) #x

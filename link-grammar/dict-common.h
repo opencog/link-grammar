@@ -19,7 +19,7 @@
 /* The functions here are for link-grammar internal use only.
  * They are not part of the public API. */
 
-Boolean find_word_in_dict(Dictionary dict, const char *);
+bool find_word_in_dict(Dictionary dict, const char *);
 
 Exp * Exp_create(Dictionary);
 void add_empty_word(Dictionary, Dict_node *);

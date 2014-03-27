@@ -27,12 +27,12 @@ LINK_BEGIN_DECLS
 
 Dictionary dictionary_create_from_utf8(const char * input);
 
-Boolean boolean_dictionary_lookup(Dictionary dict, const char *);
+bool boolean_dictionary_lookup(Dictionary dict, const char *);
 
 Dict_node * abridged_lookup_list(Dictionary dict, const char *);
 Dict_node * dictionary_lookup_list(Dictionary dict, const char *);
 
-Boolean find_word_in_dict(Dictionary dict, const char *);
+bool find_word_in_dict(Dictionary dict, const char *);
 
 void free_lookup_list(Dictionary, Dict_node *);
 

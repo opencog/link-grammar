@@ -61,50 +61,50 @@ struct Parse_Options_s
 	int verbosity;         /* Level of detail to give about the computation 0 */
 	char * debug;          /* comma-sparated function names to debug "" */
 	char * test;           /* comma-sparated features to test "" */
-	Boolean use_sat_solver;/* Use the Boolean SAT based parser */
-	Boolean use_viterbi;   /* Use the Viterbi decoder-based parser */
+	bool use_sat_solver;   /* Use the Boolean SAT based parser */
+	bool use_viterbi;      /* Use the Viterbi decoder-based parser */
 	int linkage_limit;     /* The maximum number of linkages processed 100 */
 	double disjunct_cost;  /* Max disjunct cost to allow */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
 	int null_block;        /* consecutive blocks of this many words are
 	                          considered as one null link  (default=1) */
-	Boolean islands_ok;    /* If TRUE, then linkages with islands
+	bool islands_ok;       /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
 	int twopass_length;    /* min length for two-pass post processing */
 	int max_sentence_length;
 	int short_length;      /* Links that are limited in length can be
 	                        * no longer than this.  Default = 6 */
-	Boolean all_short;     /* If true, there can be no connectors that are exempt */
-	Boolean use_spell_guess; /* Perform spell-guessing of unknown words. */ 
-	Boolean repeatable_rand; /* Reset rand number gen after every parse. */
+	bool all_short;        /* If true, there can be no connectors that are exempt */
+	bool use_spell_guess;  /* Perform spell-guessing of unknown words. */ 
+	bool repeatable_rand;  /* Reset rand number gen after every parse. */
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
 	Resources resources;   /* For deciding when to abort the parsing */
 
 	/* Flags governing the command-line client; not used by parser */
-	Boolean display_short;
-	Boolean display_word_subscripts;  /* as in "dog.n" as opposed to "dog" */
-	Boolean display_link_subscripts;  /* as in "Ss" as opposed to "S" */
-	Boolean display_walls;
+	bool display_short;
+	bool display_word_subscripts;  /* as in "dog.n" as opposed to "dog" */
+	bool display_link_subscripts;  /* as in "Ss" as opposed to "S" */
+	bool display_walls;
 #ifdef USE_FAT_LINKAGES
-	Boolean use_fat_links;     /* Look for fat linkages */
-	Boolean display_union;     /* print squashed version of linkage with conjunction? */
+	bool use_fat_links;     /* Look for fat linkages */
+	bool display_union;     /* print squashed version of linkage with conjunction? */
 #endif /* USE_FAT_LINKAGES */
-	Boolean allow_null;        /* true if we allow null links in parsing */
-	Boolean use_cluster_disjuncts;    /* if true, atttempt using a borader list of disjuncts */
-	Boolean echo_on;           /* true if we should echo the input sentence */
-	Boolean batch_mode;        /* if true, process sentences non-interactively */
-	Boolean panic_mode;        /* if true, parse in "panic mode" after all else fails */
-	int screen_width;          /* width of screen for displaying linkages */
-	Boolean display_on;        /* if true, output graphical linkage diagram */
-	Boolean display_postscript;    /* if true, output postscript linkage */
-	ConstituentDisplayStyle display_constituents;     /* style for displaying constituent structure */
-	Boolean display_bad;       /* if true, bad linkages are displayed */
-	Boolean display_disjuncts; /* if true, print disjuncts that were used */
-	Boolean display_links;     /* if true, a list o' links is printed out */
-	Boolean display_morphology;/* if true, print morpho analysis of words */
-	Boolean display_senses;    /* if true, sense candidates are printed out */
+	bool allow_null;        /* true if we allow null links in parsing */
+	bool use_cluster_disjuncts; /* if true, atttempt using a borader list of disjuncts */
+	bool echo_on;           /* true if we should echo the input sentence */
+	bool batch_mode;        /* if true, process sentences non-interactively */
+	bool panic_mode;        /* if true, parse in "panic mode" after all else fails */
+	int screen_width;       /* width of screen for displaying linkages */
+	bool display_on;        /* if true, output graphical linkage diagram */
+	bool display_postscript;/* if true, output postscript linkage */
+	ConstituentDisplayStyle display_constituents; /* style for displaying constituent structure */
+	bool display_bad;       /* if true, bad linkages are displayed */
+	bool display_disjuncts; /* if true, print disjuncts that were used */
+	bool display_links;     /* if true, a list o' links is printed out */
+	bool display_morphology;/* if true, print morpho analysis of words */
+	bool display_senses;    /* if true, sense candidates are printed out */
 };
 
 struct Connector_set_s
@@ -121,11 +121,11 @@ struct Dictionary_s
 	const char *    lang;
 	const char *    version;
 
-	Boolean         use_unknown_word;
-	Boolean         unknown_word_defined;
-	Boolean         left_wall_defined;
-	Boolean         right_wall_defined;
-	Boolean         empty_word_defined;
+	bool         use_unknown_word;
+	bool         unknown_word_defined;
+	bool         left_wall_defined;
+	bool         right_wall_defined;
+	bool         empty_word_defined;
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
@@ -162,7 +162,7 @@ struct Dictionary_s
 
 	Dict_node* (*lookup_list)(Dictionary, const char*);
 	void (*free_lookup)(Dictionary, Dict_node*);
-	Boolean (*lookup)(Dictionary, const char*);
+	bool (*lookup)(Dictionary, const char*);
 	void (*close)(Dictionary);
 
 
@@ -187,8 +187,8 @@ struct Dictionary_s
 	const char    * input;
 	const char    * pin;
 	char            token[MAX_TOKEN_LENGTH];
-	Boolean         recursive_error;
-	Boolean         is_special;
+	bool            recursive_error;
+	bool            is_special;
 	char            already_got_it;
 	int             line_number;
 };
@@ -240,7 +240,7 @@ struct Parse_info_struct
 
 	/* Array of boolean flags, one per word. Set to TRUE if this 
 	 * word has a fat down link. FALSE otherise */
-	Boolean *has_fat_down;
+	bool *has_fat_down;
 #endif /* USE_FAT_LINKAGES */
 
 	/* thread-safe random number state */
@@ -276,13 +276,13 @@ struct Sentence_s
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
 	int    num_valid_linkages;  /* number with no pp violations */
-	Boolean        null_links;  /* null links allowed */
+	bool   null_links;          /* null links allowed */
 	int    null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 
 	/* Tokenizer internal/private state */
-	Boolean       *post_quote;
+	bool       *post_quote;
 	int           t_start;	    /* start word of the current token sequence */
 	int           t_count;	    /* number of words in the current token sequence */
 	Tokenizer     tokenizer;
@@ -304,7 +304,7 @@ struct Sentence_s
 #endif /* USE_FAT_LINKAGES */
 
 	/* Post-processor private/internal state */
-	Boolean  q_pruned_rules;    /* don't prune rules more than once in p.p. */
+	bool  q_pruned_rules;       /* don't prune rules more than once in p.p. */
 
 	/* thread-safe random number state */
 	unsigned int rand_state;

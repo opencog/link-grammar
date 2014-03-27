@@ -30,7 +30,7 @@ typedef enum
 } severity;
 
 void err_msg(err_ctxt *, severity, const char *fmt, ...) GNUC_PRINTF(3,4);
-Boolean feature_enabled(const char *, const char *);
+bool feature_enabled(const char *, const char *);
 
 #ifdef _WIN32
 # define __func__ __FUNCTION__

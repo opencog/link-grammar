@@ -14,5 +14,5 @@
 #include "link-includes.h"
 
 void insert_idiom(Dictionary dict, Dict_node *);
-Boolean  contains_underbar(const char *);
-Boolean  is_idiom_word(const char *);
+bool  contains_underbar(const char *);
+bool  is_idiom_word(const char *);

@@ -19,5 +19,5 @@ struct tokenpos
 {
 	int wi;
 	int ai;
-} print_sentence_word_alternatives(Sentence sent, Boolean debugprint,
+} print_sentence_word_alternatives(Sentence sent, bool debugprint,
 			void (*display)(Dictionary, const char *), const char * findtoken);

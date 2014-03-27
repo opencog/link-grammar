@@ -13,13 +13,22 @@
 #ifndef _LINKINCLUDESH_
 #define _LINKINCLUDESH_
 
-#include <stdio.h>  /* Needed for FILE* below */
+#include <stdbool.h> /* Needed for bool typedef */
+#include <stdio.h>   /* Needed for FILE* below */
 #include <link-grammar/link-features.h>
 
 LINK_BEGIN_DECLS
 
-/* Unused in the API, at the moment, but needed for structures. */
-typedef char Boolean;
+#ifndef __bool_true_false_are_defined
+	#ifdef _Bool
+		#define bool                        _Bool
+	#else
+		#define bool                        int
+	#endif
+	#define true                            1
+	#define false                           0
+	#define __bool_true_false_are_defined   1
+#endif
 
 /**********************************************************************
  *
@@ -62,7 +71,7 @@ link_public_api(char *)
 
 typedef enum
 {
-	VDAL=1, /* Sort by Violations, Disjunct cost, And cost, Link cost */
+	VDAL=1, /* Sort by Violations, Disjunct cost, Link cost */
 	CORPUS, /* Sort by Corpus cost */
 } Cost_Model_type;
 
@@ -418,7 +427,8 @@ link_public_api(void)
 /*******************************************************
  *
  * Obsolete functions -- do not use these in new code!
- * XXX TBD: These will all go away in Version 5.0.
+ * XXX TODO: These will all be removed, once the Russian dicts support
+ * conjunctions; Russian is the last remaining user of these functions.
  *
  ********************************************************/
 

@@ -46,7 +46,7 @@ struct Exp_struct
     Exp * next;    /* Used only for mem management,for freeing */
     Exp_type type; /* One of three types, see above */
     char dir;      /* '-' means to the left, '+' means to right (for connector) */
-    Boolean multi; /* TRUE if a multi-connector (for connector)  */
+    bool multi;    /* TRUE if a multi-connector (for connector)  */
     union {
         E_list * l;           /* Only needed for non-terminals */
         const char * string;  /* Only needed if it's a connector */

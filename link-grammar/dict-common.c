@@ -102,7 +102,7 @@ void free_lookup_list(Dictionary dict, Dict_node *llist)
 	dict->free_lookup(dict, llist);
 }
 
-Boolean boolean_dictionary_lookup(Dictionary dict, const char *s)
+bool boolean_dictionary_lookup(Dictionary dict, const char *s)
 {
 	return dict->lookup(dict, s);
 }
@@ -111,13 +111,13 @@ Boolean boolean_dictionary_lookup(Dictionary dict, const char *s)
  * Return true if word is in dictionary, or if word is matched by
  * regex.
  */
-Boolean find_word_in_dict(Dictionary dict, const char * word)
+bool find_word_in_dict(Dictionary dict, const char * word)
 {
 	const char * regex_name;
-	if (boolean_dictionary_lookup (dict, word)) return TRUE;
+	if (boolean_dictionary_lookup (dict, word)) return true;
 
 	regex_name = match_regex(dict, word);
-	if (NULL == regex_name) return FALSE;
+	if (NULL == regex_name) return false;
 
 	return boolean_dictionary_lookup(dict, regex_name);
 }
@@ -134,26 +134,26 @@ Boolean find_word_in_dict(Dictionary dict, const char * word)
  * Note: this function is used in only one place: delete_dictionary_words()
  * which is, itself, not currently used ...
  */
-static Boolean find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
+static bool find_one_non_idiom_node(Dict_node * p, Dict_node * dn,
                                    const char * s,
                                    Dict_node **parent, Dict_node **to_be_deleted)
 {
 	int m;
-	if (dn == NULL) return FALSE;
+	if (dn == NULL) return false;
 	m = dict_order_bare(s, dn);
 	if (m <= 0) {
-		if (find_one_non_idiom_node(dn, dn->left, s, parent, to_be_deleted)) return TRUE;
+		if (find_one_non_idiom_node(dn, dn->left, s, parent, to_be_deleted)) return true;
 	}
 /*	if ((m == 0) && (!is_idiom_word(dn->string)) && (dn->file != NULL)) { */
 	if ((m == 0) && (!is_idiom_word(dn->string))) {
 		*to_be_deleted = dn;
 		*parent = p;
-		return TRUE;
+		return true;
 	}
 	if (m >= 0) {
-		if (find_one_non_idiom_node(dn, dn->right, s, parent, to_be_deleted)) return TRUE;
+		if (find_one_non_idiom_node(dn, dn->right, s, parent, to_be_deleted)) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 static void set_parent_of_node(Dictionary dict,
@@ -169,14 +169,14 @@ static void set_parent_of_node(Dictionary dict,
 		} else if (p->right == del) {
 			p->right = newnode;
 		} else {
-			assert(FALSE, "Dictionary broken?");
+			assert(false, "Dictionary broken?");
 		}
 	}
 }
 
 /**
  * This deletes all the non-idiom words of the dictionary that match
- * the given string.  Returns TRUE if some deleted, FALSE otherwise.
+ * the given string.  Returns true if some deleted, false otherwise.
  *
  * XXX Note: this function is not currently used anywhere in the code,
  * but it could be useful for general dictionary editing.
@@ -186,11 +186,11 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 	Dict_node *pred, *pred_parent;
 	Dict_node *parent, *to_be_deleted;
 
-	if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return FALSE;
+	if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return false;
 	for(;;) {
 		/* now parent and to_be_deleted are set */
 		if (to_be_deleted->file != NULL) {
-			to_be_deleted->file->changed = TRUE;
+			to_be_deleted->file->changed = true;
 		}
 		if (to_be_deleted->left == NULL) {
 			set_parent_of_node(dict, parent, to_be_deleted, to_be_deleted->right);
@@ -208,7 +208,7 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 			set_parent_of_node(dict, pred_parent, pred, pred->left);
 			free_dict_node(pred);
 		}
-		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return TRUE;
+		if (!find_one_non_idiom_node(NULL, dict->root, s, &parent, &to_be_deleted)) return true;
 	}
 }
 #endif /* USEFUL_BUT_NOT_CURRENTLY_USED */
@@ -426,7 +426,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 	{
 		printf ("{");
 		if (NULL == el->next) printf("error-no-next");
-		else print_expression_parens(el->next->e, FALSE);
+		else print_expression_parens(el->next->e, false);
 		printf ("}");
 		return;
 	}
@@ -434,7 +434,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 	if ((icost == 0) && need_parens) printf("(");
 
 	/* print left side of binary expr */
-	print_expression_parens(el->e, TRUE);
+	print_expression_parens(el->e, true);
 
 	/* get a funny "and optional" when its a named expression thing. */
 	if ((n->type == AND_type) && (el->next == NULL))
@@ -457,11 +457,11 @@ static void print_expression_parens(Exp * n, int need_parens)
 	{
 		if (el->e->type == n->type)
 		{
-			print_expression_parens(el->e, FALSE);
+			print_expression_parens(el->e, false);
 		}
 		else
 		{
-			print_expression_parens(el->e, TRUE);
+			print_expression_parens(el->e, true);
 		}
 		if (el->next != NULL)
 			printf ("\nERROR! Unexpected list!\n");
@@ -473,7 +473,7 @@ static void print_expression_parens(Exp * n, int need_parens)
 
 void print_expression(Exp * n)
 {
-	print_expression_parens(n, FALSE);
+	print_expression_parens(n, false);
 	printf("\n");
 }
 #endif /* INFIX_NOTATION */
