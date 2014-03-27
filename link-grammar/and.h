@@ -10,11 +10,10 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "link-includes.h"
-
 #ifdef USE_FAT_LINKAGES
 
 #include "api-types.h"
+#include "link-includes.h"
 
 #if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)) && defined(__ELF__)
 #define link_private    __attribute__((__visibility__("hidden")))
@@ -38,4 +37,3 @@ link_private void       compute_pp_link_array_connectors(Sentence sent, Sublinka
 /* Following need to be visible to sat solver, can't be private */
 int        set_has_fat_down(Sentence sent);
 #endif /* USE_FAT_LINKAGES */
-const char * intersect_strings(Sentence sent, const char * s, const char * t);

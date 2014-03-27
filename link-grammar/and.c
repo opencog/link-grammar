@@ -10,13 +10,13 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef USE_FAT_LINKAGES
+
 #include "and.h"
 #include "api-structures.h"
 #include "dict-structures.h"
 #include "structures.h"
 #include "string-set.h"
-
-#ifdef USE_FAT_LINKAGES
 
 #include "count.h"
 #include "disjunct-utils.h"
@@ -436,49 +436,7 @@ static int disjunct_types_equal(Disjunct * d1, Disjunct * d2)
 	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
 	return TRUE;
 }
-#endif /* USE_FAT_LINKAGES */
 
-/**
- * This returns a string that is the the GCD of the two given strings.
- * If the GCD is equal to one of them, a pointer to it is returned.
- * Otherwise a new string for the GCD is xalloced and put on the
- * "free later" list.
- */
-const char * intersect_strings(Sentence sent, const char * s, const char * t)
-{
-	int i, j, d;
-	const char *w, *s0;
-	char u0[MAX_TOKEN_LENGTH]; /* Links are *always* less than 10 chars long */
-	char *u;
-	if (strcmp(s,t)==0) return s;  /* would work without this */
-	i = strlen(s);
-	j = strlen(t);
-	if (j > i) {
-		w = s; s = t; t = w;
-	}
-	/* s is now the longer (at least not the shorter) string */
-	u = u0;
-	d = 0;
-	s0 = s;
-	while (*t != '\0') {
-		if ((*s == *t) || (*t == '*')) {
-			*u = *s;
-		} else {
-			d++;
-			if (*s == '*') *u = *t;
-			else *u = '^';
-		}
-		s++; t++; u++;
-	}
-	if (d==0) {
-		return s0;
-	} else {
-		strcpy(u, s);   /* get the remainder of s */
-		return string_set_add(u0, sent->string_set);
-	}
-}
-
-#ifdef USE_FAT_LINKAGES
 /**
  * Two connectors are said to be equal if they are of the same type
  * (defined above), they have the same multi field, and they have

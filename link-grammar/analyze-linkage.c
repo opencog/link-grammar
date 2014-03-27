@@ -14,13 +14,14 @@
 
 #include <stdarg.h>
 #include "analyze-linkage.h"
-#include "and.h"
 #include "api-structures.h"
 #include "post-process.h"
+#include "string-set.h"
 #include "structures.h"
 #include "word-utils.h"
 
 #ifdef USE_FAT_LINKAGES
+#include "and.h"
 #include "count.h"
 
 /**
@@ -778,6 +779,65 @@ static double disjunct_cost(Parse_info pi)
 	return lcost;
 }
 
+/**
+ * This returns a string that is the the GCD of the two given strings.
+ * If the GCD is equal to one of them, a pointer to it is returned.
+ * Otherwise a new string for the GCD is xalloced and put on the
+ * "free later" list.
+ */
+const char * intersect_strings(Sentence sent, const char * s, const char * t)
+{
+	int i, j, d;
+	const char *w, *s0;
+	char u0[MAX_TOKEN_LENGTH]; /* Links are *always* less than 10 chars long */
+	char *u;
+	if (strcmp(s,t)==0) return s;  /* would work without this */
+	i = strlen(s);
+	j = strlen(t);
+	if (j > i) {
+		w = s; s = t; t = w;
+	}
+	/* s is now the longer (at least not the shorter) string */
+	u = u0;
+	d = 0;
+	s0 = s;
+	while (*t != '\0') {
+		if ((*s == *t) || (*t == '*')) {
+			*u = *s;
+		} else {
+			d++;
+			if (*s == '*') *u = *t;
+			else *u = '^';
+		}
+		s++; t++; u++;
+	}
+	if (d==0) {
+		return s0;
+	} else {
+		strcpy(u, s);   /* get the remainder of s */
+		return string_set_add(u0, sent->string_set);
+	}
+}
+
+/**
+ * The name of the link is set to be the GCD of the names of
+ * its two endpoints. Must be called after each extract_links(),
+ * etc. since that call issues a brand-new set of links into
+ * parse_info.
+ */
+static void compute_link_names(Sentence sent)
+{
+	int i;
+	Parse_info pi = sent->parse_info;
+
+	for (i = 0; i < pi->N_links; i++)
+	{
+		pi->link_array[i].name = intersect_strings(sent,
+			connector_get_string(pi->link_array[i].lc),
+			connector_get_string(pi->link_array[i].rc));
+	}
+}
+
 #ifdef USE_FAT_LINKAGES
 /**
  * Returns TRUE if string s represents a strictly smaller match set
@@ -812,28 +872,7 @@ static int strictly_smaller_name(const char * s, const char * t)
 	}
 	return (strictness > 0);
 }
-#endif /* USE_FAT_LINKAGES */
 
-/**
- * The name of the link is set to be the GCD of the names of
- * its two endpoints. Must be called after each extract_links(),
- * etc. since that call issues a brand-new set of links into
- * parse_info.
- */
-static void compute_link_names(Sentence sent)
-{
-	int i;
-	Parse_info pi = sent->parse_info;
-
-	for (i = 0; i < pi->N_links; i++)
-	{
-		pi->link_array[i].name = intersect_strings(sent,
-			connector_get_string(pi->link_array[i].lc),
-			connector_get_string(pi->link_array[i].rc));
-	}
-}
-
-#ifdef USE_FAT_LINKAGES
 /**
  * This fills in the sublinkage->link[].name field.  We assume that
  * link_array[].name have already been filled in.  As above, in the
