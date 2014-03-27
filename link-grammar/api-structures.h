@@ -384,7 +384,10 @@ struct Postprocessor_s
 
 /* XXX FIXME When fat links are removed, there will only ever be
  * just one sublinkage, and so this struct can be merged into 
- * Linkage_s below, and removed from the API.
+ * Linkage_s below, and removed from the API. Well, sort-of. The
+ * analyze_thin_linkage() routine still wants to malloc a temp
+ * Sublinkage struct, for post-processing.  So we should wait until
+ * post-processing is removed....
  */
 struct Sublinkage_s
 {
