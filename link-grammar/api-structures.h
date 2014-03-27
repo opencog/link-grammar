@@ -288,7 +288,9 @@ struct Sentence_s
 	Tokenizer     tokenizer;
 
 	/* parser internal/private state */
+#ifdef USE_FAT_LINKAGES
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
+#endif /* USE_FAT_LINKAGES */
 	count_context_t * count_ctxt; /* private state info used for counting */
 	match_context_t * match_ctxt; /* private state info used for matching */
 

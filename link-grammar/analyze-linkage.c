@@ -22,7 +22,6 @@
 
 #ifdef USE_FAT_LINKAGES
 #include "count.h"
-#endif /* USE_FAT_LINKAGES */
 
 /**
  * The functions in this file do several things: () take a linkage
@@ -62,7 +61,6 @@ struct analyze_context_s
 	Patch_element patch_array[MAX_LINKS];
 };
 
-#ifdef USE_FAT_LINKAGES
 typedef struct CON_node_struct CON_node;
 typedef struct CON_list_struct CON_list;
 typedef struct DIS_list_struct DIS_list;
@@ -884,6 +882,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 
 /********************** exported functions *****************************/
 
+#ifdef USE_FAT_LINKAGES
 void init_analyze(Sentence s)
 {
 	analyze_context_t *actx = s->analyze_ctxt;
@@ -903,7 +902,6 @@ void free_analyze(Sentence s)
 	s->analyze_ctxt = NULL;
 }
 
-#ifdef USE_FAT_LINKAGES
 /**
  * This uses link_array.  It enumerates and post-processes
  * all the linkages represented by this one.  We know this contains

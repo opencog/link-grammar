@@ -1001,8 +1001,8 @@ void sentence_delete(Sentence sent)
 #endif /* USE_FAT_LINKAGES */
 
 	free_count(sent);
-	free_analyze(sent);
 #ifdef USE_FAT_LINKAGES
+	free_analyze(sent);
 	if (sent->is_conjunction) xfree(sent->is_conjunction, sizeof(char)*sent->length);
 #endif /* USE_FAT_LINKAGES */
 	global_rand_state = sent->rand_state;
@@ -1655,7 +1655,9 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		return 0;
 	}
 
+#ifdef USE_FAT_LINKAGES
 	init_analyze(sent);
+#endif /* USE_FAT_LINKAGES */
 
 	/* Expressions were previously set up during the tokenize stage. */
 	expression_prune(sent);

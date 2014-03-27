@@ -289,7 +289,6 @@ struct Linkage_info_struct
 {
     int index;
     short N_violations;
-    short null_cost;
     short unused_word_cost;
     short link_cost;
     double disjunct_cost;
