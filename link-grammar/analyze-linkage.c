@@ -37,8 +37,8 @@
 typedef struct patch_element_struct Patch_element;
 struct patch_element_struct
 {
-	char used;   /* TRUE if this link is used, else FALSE  */
-	char changed;/* TRUE if this link changed, else FALSE  */
+	bool used;   /* TRUE if this link is used, else FALSE  */
+	bool changed;/* TRUE if this link changed, else FALSE  */
 	int newl;    /* the new value of the left end          */
 	int newr;    /* the new value of the right end         */
 };
@@ -754,13 +754,6 @@ static int link_cost(Parse_info pi)
 	return lcost;
 }
 
-static int null_cost(Parse_info pi)
-{
-  /* computes the number of null links in the linkage */
-  /* No one seems to care about this -- ALB */
-  return 0;
-}
-
 static int unused_word_cost(Parse_info pi)
 {
 	int lcost, i;
@@ -949,7 +942,6 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	{
 		li.disjunct_cost = disjunct_cost(pi);
 	}
-	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
 	li.corpus_cost = -1.0;
 	li.and_cost = 0;
@@ -1129,7 +1121,6 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	{
 		li.disjunct_cost = disjunct_cost(pi);
 	}
-	li.null_cost = null_cost(pi);
 	li.link_cost = link_cost(pi);
 	li.corpus_cost = -1.0;
 
