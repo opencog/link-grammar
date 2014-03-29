@@ -300,7 +300,10 @@ class LinkageTestCase(unittest.TestCase):
     def test_spell_guessing_on(self):
         self.p = Parser(spell_guess = True)
         result = self.p.parse_sent("I love going to shoop.")
-        self.assertEqual(result[0].words,
+        for resultx in result:
+            if resultx.words[5] == 'shop[~].v':
+                break;
+        self.assertEqual(resultx.words,
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shop[~].v', '.', 'RIGHT-WALL'])
 
     def test_spell_guessing_off(self):
