@@ -1,3 +1,6 @@
+Version 5.0.1 (XXX 2014)
+ * Something ....
+
 Version 5.0.0 (1 April 2014)
  * License upgrade to LGPLv2.1
  * Arabic dictionaries, from Jon Dehdari
@@ -9,7 +12,7 @@ Version 5.0.0 (1 April 2014)
  * Adopt the orphaned/unsupported pylinkgrammar Python bindings.
  * Deprecate the obsolete CNode interface.
  * Provide low-level perl bindings.
- * Adopt the orphaned/unsupported Ocaml bindings.
+ * Adopt the orphaned/unsupported OCaML bindings.
  * Support affirmative replies: "Who did it?" "John's evil twin."
  * Expanded Lithuanian dictionary.
  * Minor disjunct printing fixes.
@@ -22,7 +25,7 @@ Version 5.0.0 (1 April 2014)
  * Bugfix: Java server failing when input sentence has commas in it!
  * New !test and !debug commands for selective debugging support.
  * Print post-processing rejection message, when !bad is enabled.
- * Remove soem deprecated functions for C API.
+ * Remove some deprecated functions for C API.
  * Remove all deprecated functions from Java API.
  * Initial support for an SQL-backed dynamic dictionary.
 
