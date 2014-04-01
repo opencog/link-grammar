@@ -20,17 +20,18 @@ How to use
 ==========
 Parsing simple sentences::
 
-    >>> from pylinkgrammar.linkgrammar import Parser
+    >>> from linkgrammar import Parser
     >>> p = Parser()
     >>> linkages = p.parse_sent("This is a simple sentence.")
     >>> len(linkages)
-    2
+    4
     >>> print linkages[0].diagram
     
-            +-------------------Xp------------------+
-            |              +--------Ost-------+     |
-            |              |  +-------Ds------+     |
-            +---Wd---+-Ss*b+  |     +----A----+     |
-            |        |     |  |     |         |     |
-        LEFT-WALL this.p is.v a simple.a sentence.n . 
+        +-------------------Xp------------------+
+        |              +--------Ost-------+     |
+        +------WV------+  +-------Ds------+     |
+        +---Wd---+-Ss*b+  |     +----A----+     |
+        |        |     |  |     |         |     |
+    LEFT-WALL this.p is.v a simple.a sentence.n . 
+
 
