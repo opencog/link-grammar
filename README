@@ -3,21 +3,22 @@
                        -------------------
                           Version 5.0.0
 
+
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
 an extended, expanded version of the last official CMU release, and
 includes many enhancements and fixes created by many different
-developers.  This latest version incorporates a substantial part (but
-not all) of the BioLG project.
+developers.
 
-This code is released under the BSD license (which is GPL compatible),
-making it freely available for private and commercial use, with
-few restrictions.  The terms of the license are given in the
-LICENSE file included with this software.
+This code is released under the LGPL license, making it freely
+available for both private and commercial use, with few restrictions.
+The terms of the license are given in the LICENSE file included with
+this software.
 
 Please see the web page http://www.abisource.com/projects/link-grammar/
 for more information.  This version is a continuation of the original
 parser posted at http://www.link.cs.cmu.edu/link
+
 
 CONTENTS of this directory:
 ---------------------------
@@ -29,10 +30,12 @@ CONTENTS of this directory:
    link-grammar/sat-solver  Optional SAT Solver. (Written in C++)
    link-grammar/viterbi     Experimental Viterbi algorithm parser.
 
-   link-grammar/bindings/autoit/* Optional AutoIt language bindings.
-   link-grammar/bindings/java/*   Optional Java language bindings.
-   link-grammar/bindings/perl/*   Optional Java language bindings.
-   link-grammar/bindings/python/* Optional Java language bindings.
+   bindings/autoit/*        Optional AutoIt language bindings.
+   bindings/java/*          Optional Java language bindings.
+   bindings/lisp/*          Optional Common Lisp language bindings.
+   bindings/ocaml/*         Optional OCaML language bindings.
+   bindings/python/*        Optional Python language bindings.
+   bindings/swig/*          SWIG interface file, for other FFI interfaces.
 
    data/en/*                English language dictionaries.
    data/en/4.0.dict         The file containing the dictionary definitions.
@@ -48,9 +51,15 @@ CONTENTS of this directory:
                             run through the parser with the command
                             "./link-parser < 4.0.*.batch"
    data/ru/*                A full-fledged Russian dictionary
-   data/de/*                A small German dictionary
-   data/lt/*                A experimental Lithuanian dictionary
-   data/tr/*                A experimental Turkish dictionary
+   data/ar/*                An Arabic dictionary
+   data/fa/*                A Persian (Farsi) dictionary
+   data/de/*                A small prototype German dictionary
+   data/lt/*                A prototype Lithuanian dictionary
+   data/he/*                An experimental Hebrew dictionary
+   data/tr/*                An experimental Turkish dictionary
+
+   morphology/ar            An Arabic morphology analyzer
+   morphology/fa            An Persian morphology analyzer
 
    COPYING                  The license for this code and data
    ChangeLog                A compendium of recent changes.
@@ -405,6 +414,10 @@ TESTING the program:
    been fixed since the original 4.1 release of link-grammar. The
    "4.0.biolg.batch" contains biology/medical-text sentences from the
    BioLG project.
+
+   The bindings/python directory contains a unit test for the python
+   bindings. It also performs several basic checks that stress the
+   link-grammar libraries.
 
 
 USING the parser in your own applications:
