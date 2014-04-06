@@ -21,10 +21,15 @@
 #include "utilities.h"
 
 /** 
+ * Find if a string signifies an idiom.
  * Returns TRUE if the string contains an underbar character.
+ * The check of s[0] prevents inclusion of "_". In that case no check for
+ * length=1 is done because it is not going to be a valid idiom anyway.
+ *
  */
 Boolean contains_underbar(const char * s)
 {
+	if (s[0] == '_') return FALSE;
 	while(*s != '\0') {
 		if (*s == '_') return TRUE;
 		s++;
