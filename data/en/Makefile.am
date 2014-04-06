@@ -15,7 +15,6 @@ EXTRA_DIST = $(DICTS)         \
 	4.0.dict.m4                \
 	4.0.batch                  \
 	4.0.biolg.batch            \
-	4.0.enwiki.batch           \
 	4.0.fixes.batch            \
 	4.0.voa.batch              \
 	tiny.dict
