@@ -54,6 +54,7 @@
 #include "../link-grammar/expand.h"
 #include "../link-grammar/utilities.h"     /* For MSVC portability */
 #include "../viterbi/viterbi.h"
+#include "../link-grammar/error.h"
 
 #define MAX_INPUT 1024
 #define DISPLAY_MAX 1024
@@ -64,6 +65,8 @@ static int input_pending=FALSE;
 static Parse_Options  opts;
 static Parse_Options  panic_parse_opts;
 static int verbosity = 0;
+static char * debug = (char *)"";
+static char * test = (char *)"";
 
 typedef enum
 {
@@ -533,6 +536,13 @@ static void batch_process_some_linkages(Label label,
 		}
 		fprintf(stdout, "+++++ error %d\n", batch_errors);
 	}
+	else
+	{
+		if (strstr(test, ",batch_print_parse_statistics,"))
+		{
+			print_parse_statistics(sent, opts);
+		}
+	}
 }
 
 static int special_command(char *input_string, Dictionary dict)
@@ -767,6 +777,9 @@ int main(int argc, char * argv[])
 	}
 
 	verbosity = parse_options_get_verbosity(opts);
+	debug = parse_options_get_debug(opts);
+	test = parse_options_get_test(opts);
+
 	check_winsize(opts);
 #ifdef _WIN32
 	parse_options_set_screen_width(opts, 79);
@@ -820,7 +833,7 @@ int main(int argc, char * argv[])
 		if (special_command(input_string, dict)) continue;
 		if (parse_options_get_echo_on(opts))
 		{
-			printf("%s ", input_string);
+			printf("%s\n", input_string);
 		}
 
 		if (parse_options_get_batch_mode(opts))
