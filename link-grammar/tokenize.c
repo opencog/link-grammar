@@ -1,7 +1,3 @@
-/* XXX
- * !test=altold - use the old alternatives handling (as of version 4.8.6)
- * in case a regression is suspected (to be cleaned up later).
- */
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
@@ -21,11 +17,12 @@
 #endif
 #include <limits.h>
 
-#include "print.h"
 #include "build-disjuncts.h"
 #include "dict-api.h"
+#include "dict-common.h"
 #include "error.h"
 #include "externs.h"
+#include "print.h"
 #include "regex-morph.h"
 #include "spellcheck.h"
 #include "string-set.h"
@@ -90,39 +87,30 @@ static Boolean is_proper_name(const char * word)
  * be a quotation mark. This works, because link-grammar is more
  * or less ignorant of quotes at this time.
  */
-static const wchar_t* list_of_quotes(void)
+static const wchar_t * list_of_quotes(Sentence sent)
 {
-#ifdef _MSC_VER
-	/* Microsoft Visual Studio understands these unicode chars as
-	 * wide chars, so just return them as-is.  At least, this is what
-	 * Alexander Tkachuk reports, circa 17 April 2013.
-	 */
-	static const wchar_t* wqs = "\"«»《》【】『』`„“";
-#else
-	/* Unix (Linux) and GCC understand the embedded unicode chars
-	 * as utf8, so convert them to wide chars before use.
-	 */
-#define QUSZ 50
-	static wchar_t wqs[QUSZ];
-	mbstate_t mbs;
-	/* Single-quotes are used for abbreviations, don't mess with them */
-	/* const char * qs = "\"\'«»《》【】『』‘’`„“"; */
-	const char* qs = "\"«»《》【】『』`„“";
+	Affix_table_con q_list;
+	
+	q_list = affix_list_find(sent->dict->affix_table, AFDICT_QUOTES);
+	sent->list_of_quotes = (wchar_t *)q_list->string;
 
-	const char* pqs = qs;
-	memset(&mbs, 0, sizeof(mbs));
-	mbsrtowcs(wqs, &pqs, QUSZ, &mbs);
-#endif /* _MSC_VER */
-	return wqs;
+	/* These are no longer in use, but are read from the 4.0.affix file */
+	/* I've left these here, as an example of what to expect. */
+
+	/* Single-quotes are used for abbreviations, don't mess with them */
+	/* //const char * qs = "\"\'«»《》【】『』‘’`„“"; */
+	/* const char* qs = "\"«»《》【】『』`„“"; */
+
+	return sent->list_of_quotes;
 }
 
 /**
  * Return TRUE if the character is a quotation character.
  */
-static Boolean is_quote(wchar_t wc)
+static Boolean is_quote(Sentence sent, wchar_t wc)
 {
 	static const wchar_t *quotes = NULL;
-	if (NULL == quotes) quotes = list_of_quotes();
+	if (NULL == quotes) quotes = list_of_quotes(sent);
 
 	if (NULL !=  wcschr(quotes, wc)) return TRUE;
 	return FALSE;
@@ -203,7 +191,7 @@ static Boolean contains_digits(const char * s)
 }
 
 static void add_alternative(Sentence, int, const char **, int, const char **, int, const char **);
-static Boolean issue_alternatives1(Sentence, const char *, Boolean);
+static Boolean issue_alternatives(Sentence, const char *, Boolean);
 /**
  * Make the string 's' be the next word of the sentence.
  * That is, it looks like 's' is a word we can handle, so record it
@@ -214,39 +202,8 @@ static Boolean issue_alternatives1(Sentence, const char *, Boolean);
  */
 static void issue_sentence_word(Sentence sent, const char * s, Boolean quote_found)
 {
-if (test_enabled("altold"))
-{
-	size_t len = sent->length;
-
-	if (*s == '\0') return;
-
-	sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
-	sent->post_quote[len] = quote_found;
-
-	sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
-	sent->word[len].x = NULL;
-	sent->word[len].d = NULL;
-
-	sent->word[len].alternatives = (const char **) malloc(2*sizeof(const char *));
-	sent->word[len].alternatives[0] = string_set_add(s, sent->string_set);
-	sent->word[len].alternatives[1] = NULL;
-
-	/* Record the original form, as well. */
-	sent->word[len].unsplit_word = sent->word[len].alternatives[0];
-
-	/* Now we record whether the first character of the word is upper-case.
-	   (The first character may be made lower-case
-	   later, but we may want to get at the original version) */
-	if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
-	else sent->word[len].firstupper = FALSE;
-
-	sent->length++;
-}
-else
-{
-		add_alternative(sent, 0,0, 1,&s, 0,0);
-		(void) issue_alternatives1(sent, s, quote_found);
-}
+	add_alternative(sent, 0,NULL, 1,&s, 0,NULL);
+	(void) issue_alternatives(sent, s, quote_found);
 }
 
 static const char ** resize_alts(const char **arr, size_t len)
@@ -256,159 +213,13 @@ static const char ** resize_alts(const char **arr, size_t len)
 	return arr;
 }
 
-/**
- * Accumulate different word-stemming possibilities
- */
-static void add_suffix_alternatives(Tokenizer * tok,
-                                   const char * stem, const char * suffix)
-{
-	char buff[MAX_WORD+1];
-	size_t sz;
-
-	size_t stemlen = altlen(tok->stem_alternatives);
-	size_t sufflen = altlen(tok->suff_alternatives);
-
-	tok->stem_alternatives = resize_alts(tok->stem_alternatives, stemlen);
-	tok->stem_alternatives[stemlen] = string_set_add(stem, tok->string_set);
-
-	if (NULL == suffix)
-		return;
-
-	tok->suff_alternatives = resize_alts(tok->suff_alternatives, sufflen);
-
-	/* Add an equals-sign to the suffix.  This is needed to distinguish
-	 * suffixes that were stripped off from ordinary words that just
-	 * happen to be the same as the suffix. Kind-of a weird hack,
-	 * but I'm not sure what else to do... */
-	sz = MIN(strlen(suffix) + 2, MAX_WORD);
-	buff[0] = INFIX_MARK;
-	strncpy(&buff[1], suffix, sz);
-	buff[sz] = 0;
-
-	tok->suff_alternatives[sufflen] = string_set_add(buff, tok->string_set);
-}
-
-static void add_presuff_alternatives(Tokenizer * tok, const char * prefix,
-                                    const char * stem, const char * suffix)
-{
-	char buff[MAX_WORD+1];
-	size_t sz;
-
-	size_t preflen = altlen(tok->pref_alternatives);
-	size_t stemlen = altlen(tok->stem_alternatives);
-	size_t sufflen = altlen(tok->suff_alternatives);
-
-	tok->pref_alternatives = resize_alts(tok->pref_alternatives, preflen);
-	tok->pref_alternatives[preflen] = string_set_add(prefix, tok->string_set);
-
-	tok->stem_alternatives = resize_alts(tok->stem_alternatives, stemlen);
-	tok->stem_alternatives[stemlen] = string_set_add(stem, tok->string_set);
-
-	if (NULL == suffix)
-		return;
-
-	tok->suff_alternatives = resize_alts(tok->suff_alternatives, sufflen);
-
-	/* Add an equals-sign to the suffix.  This is needed to distinguish
-	 * suffixes that were stripped off from ordinary words that just
-	 * happen to be the same as the suffix. Kind-of a weird hack,
-	 * but I'm not sure what else to do... */
-	sz = MIN(strlen(suffix) + 2, MAX_WORD);
-	buff[0] = '=';
-	strncpy(&buff[1], suffix, sz);
-	buff[sz] = 0;
-
-	tok->suff_alternatives[sufflen] = string_set_add(buff, tok->string_set);
-}
 
 /**
  * Same as issue_sentence_word, except that here, we issue multiple
  * alternative prefix-stem-suffix possibilities. Up to three "words"
  * may be issued.
  */
-static Boolean issue_alternatives(Sentence sent, Boolean quote_found)
-{
-	Boolean issued = FALSE;
-	Tokenizer *tokenizer = &sent->tokenizer;
-	size_t len = sent->length;
-	size_t preflen = altlen(tokenizer->pref_alternatives);
-	size_t stemlen = altlen(tokenizer->stem_alternatives);
-	size_t sufflen = altlen(tokenizer->suff_alternatives);
-
-	if (preflen)
-	{
-		size_t i;
-
-		sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
-		sent->post_quote[len] = quote_found;
-
-		sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
-		sent->word[len].x = NULL;
-		sent->word[len].d = NULL;
-		sent->word[len].unsplit_word = NULL;
-
-		sent->word[len].alternatives = tokenizer->pref_alternatives;
-		tokenizer->pref_alternatives = NULL;
-
-		sent->word[len].firstupper = FALSE;
-		for (i=0; NULL != tokenizer->pref_alternatives[i]; i++) {
-			const char *s = tokenizer->pref_alternatives[i];
-		   if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
-		}
-
-		len++;
-		issued = TRUE;
-	}
-	if (stemlen)
-	{
-		sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
-		sent->post_quote[len] = preflen ? FALSE : quote_found;
-
-		sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
-		sent->word[len].x = NULL;
-		sent->word[len].d = NULL;
-		sent->word[len].unsplit_word = tokenizer->unsplit_word;
-
-		sent->word[len].alternatives = tokenizer->stem_alternatives;
-
-		/* Perform a check for captialization only if no prefixes. */
-		sent->word[len].firstupper = FALSE;
-		if (0 == preflen)
-		{
-			size_t i;
-			for (i = 0; NULL != tokenizer->stem_alternatives[i]; i++)
-			{
-				const char *s = tokenizer->stem_alternatives[i];
-				if (is_utf8_upper(s)) sent->word[len].firstupper = TRUE;
-			}
-		}
-
-		tokenizer->stem_alternatives = NULL;
-		len++;
-		issued = TRUE;
-	}
-
-	if (sufflen)
-	{
-		sent->post_quote = (Boolean *)realloc(sent->post_quote, (len+1) * sizeof(Boolean));
-		sent->post_quote[len] = FALSE;
-
-		sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
-		sent->word[len].x = NULL;
-		sent->word[len].d = NULL;
-		sent->word[len].unsplit_word = NULL;
-
-		sent->word[len].alternatives = tokenizer->suff_alternatives;
-		tokenizer->suff_alternatives = NULL;
-
-		sent->word[len].firstupper = FALSE;
-		len++;
-		issued = TRUE;
-	}
-
-	sent->length = len;
-	return issued;
-}
+//was issue_alternatives()
 
 static void altappend(Sentence sent, int word_index, const char *w)
 {
@@ -420,6 +231,8 @@ static void altappend(Sentence sent, int word_index, const char *w)
 }
 
 /**
+ * Accumulate different word-stemming possibilities.
+ *
  * Add to the sentence prefnum elements from prefix,
  * stemnum elements from stem, and suffnum elements from suffix.
  * Mark the prefixes and suffixes.
@@ -431,6 +244,8 @@ static void altappend(Sentence sent, int word_index, const char *w)
  * in a try to prevent fetching up of all possible null suffixes.
  * To that end, a small change in separate_word()
  * is needed (in the code that fetches a stem).
+ *
+ * TODO: Support middle morphemes.
  *
  * BALANCING: the parser needs it for now. It is porobaly better
  * to move it to build_sentence_expressions().
@@ -565,7 +380,11 @@ static void add_alternative(Sentence sent,
 	sent->t_count = t_count;
 }
 
-static Boolean issue_alternatives1(Sentence sent,
+/**
+ * Terminate issuing alternatives to the current input word.
+ * The word argument is the input word.
+ */
+static Boolean issue_alternatives(Sentence sent,
 		const char *word, Boolean quote_found)
 {
 	int t_start = sent->t_start;
@@ -583,10 +402,7 @@ static Boolean issue_alternatives1(Sentence sent,
 	sent->t_count = 0;
 
 	if (3 < verbosity)
-	{
-		printf("issue_alternatives1:\n");
 		print_sentence_word_alternatives(sent, TRUE, NULL, NULL);
-	}
 
 	return TRUE;
 }
@@ -648,32 +464,27 @@ static Boolean issue_alternatives1(Sentence sent,
 
 /**
  * Split word into prefix, stem and suffix.
- * Record all of the alternative splittings in the tokenizer
- * alternatives arrays.
+ *
+ * XXX The prefix code is not validated yet by actual use.
  */
-static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
-                            const char *w, const char *wend)
+static Boolean suffix_split(Sentence sent, const char *w, const char *wend)
 {
 	int i, j, len;
+	Affix_table_con prefix_list, suffix_list;
 	int p_strippable, s_strippable;
 	const char **prefix, **suffix;
 	char newword[MAX_WORD+1];
 	Boolean word_is_in_dict = FALSE;
+	Dictionary dict = sent->dict;
 
 	/* Set up affix tables.  */
-	Dictionary afdict = dict->affix_table;
-	if (NULL == afdict) return FALSE;
-
-	/* Record the original word */
-	len = MIN(wend-w, MAX_WORD);
-	strncpy(newword, w, len);
-	newword[len] = '\0';
-	tokenizer->unsplit_word = string_set_add(newword, tokenizer->string_set);
-
-	p_strippable = afdict->p_strippable;
-	s_strippable = afdict->s_strippable;
-	prefix = afdict->prefix;
-	suffix = afdict->suffix;
+	if (NULL == dict->affix_table) return FALSE;
+	prefix_list = affix_list_find(dict->affix_table, AFDICT_PRE);
+	suffix_list = affix_list_find(dict->affix_table, AFDICT_SUF);
+	p_strippable = prefix_list->length;
+	s_strippable = suffix_list->length;
+	prefix = prefix_list->string;
+	suffix = suffix_list->string;
 
 	j = 0;
 	for (i=0; i <= s_strippable; i++)
@@ -708,28 +519,13 @@ static Boolean suffix_split(Tokenizer *tokenizer, Dictionary dict,
 			if ((i < s_strippable) &&
 			    find_word_in_dict(dict, newword))
 			{
+				const char * suffixp = suffix[i];
+				const char * nwp = newword;
+
 				if (2 < verbosity)
 					printf("Splitting word into two: %s-%s\n", newword, suffix[i]);
 
-				if (test_enabled("altold"))
-				{
-				add_suffix_alternatives(tokenizer, newword, suffix[i]);
-				}
-				else
-				{
-					/* XXX-start TO BE REMOVED on code cleanup */
-					/* We still use here the original suffix_split() that uses the Tokenizer struct as first argument,
-					 *  but we need struct sent for add_alternative().
-				   * So for the purpose of this test code, compute the location of struct sent from the value of tokenizer.
-				   */
-				#include <stddef.h>
-				const char *wp = suffix[i], *nw = newword;
-				Sentence sent;
-				sent = (Sentence)((size_t)tokenizer - offsetof(struct Sentence_s, tokenizer));
-				/* XXX-end TO BE REMOVED on code cleanup */
-
-				add_alternative(sent, 0,0, 1,&nw, 1,&wp);
-				}
+				add_alternative(sent, 0,NULL, 1,&nwp, 1,&suffixp);
 				word_is_in_dict = TRUE;
 			}
 
@@ -749,6 +545,10 @@ if (2 < verbosity && find_word_in_dict(dict, newword)) {
 						newword[sz] = '\0';
 						if (find_word_in_dict(dict, newword))
 						{
+							const char * prefixp = prefix[i];
+							const char * suffixp = suffix[i];
+							const char * nwp = newword;
+
 							if (2 < verbosity)
 							{
 								if (i < s_strippable)
@@ -760,9 +560,9 @@ if (2 < verbosity && find_word_in_dict(dict, newword)) {
 							}
 							word_is_in_dict = TRUE;
 							if (i < s_strippable)
-								add_presuff_alternatives(tokenizer, prefix[j], newword, suffix[i]);
+								add_alternative(sent, 0,&prefixp, 0,&nwp, 0,&suffixp);
 							else
-								add_presuff_alternatives(tokenizer, prefix[j], newword, NULL);
+								add_alternative(sent, 0,&prefixp, 0,&nwp, 0,NULL);
 						}
 					}
 				}
@@ -772,21 +572,6 @@ if (2 < verbosity && find_word_in_dict(dict, newword)) {
 	}
 
 	return word_is_in_dict;
-}
-
-/**
- * Split word into prefix, stem and suffix.
- * Record all of the alternative splittings in the tokenizer
- * alternatives arrays.
- */
-Boolean split_word(Tokenizer *tokenizer, Dictionary dict, const char *word)
-{
-	return suffix_split(tokenizer, dict, word, word + strlen(word));
-}
-
-static int revcmplen(const void *a, const void *b)
-{
-	return strlen(*(char * const *)b) - strlen(*(char * const *)a);
 }
 
 #define HEB_PRENUM_MAX	5	/* no more than 5 prefix "subwords" */
@@ -802,7 +587,7 @@ static int revcmplen(const void *a, const void *b)
  * If the whole word (i.e. including the prefixes) is in the dictionary,
  * the word will be added in separate_word().
  * Add all the alternatives.
- * The assumptions used prevent a vast number of false splits.
+ * The assumptions used prevent a large number of false splits.
  * They may be relaxed later.
  *
  * Note: This function currently does more than absolutely needed for LG,
@@ -827,10 +612,10 @@ static int revcmplen(const void *a, const void *b)
  * To implement this function in a way which is appropriate for more languages,
  * Hunspell-like definitions (but more general) are needed.
  */
-static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
+static Boolean mprefix_split(Sentence sent, const char *word)
 {
-	static int mprefix_sorted = 0;			/* need longer prefixes first */
 	int i;
+	Affix_table_con mprefix_list;
 	int mp_strippable;
 	const char **mprefix;
 	const char *newword;
@@ -841,32 +626,21 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 	const char *split_prefix[HEB_PRENUM_MAX]; /* all prefix  */
 	/* pseen is a simple prefix combination filter */
 	Boolean pseen[HEB_MPREFIX_MAX];		/* prefix "subword" seen */
-	Dictionary afdict;
+	Dictionary dict = sent->dict;
 	int wordlen = strlen(word); /* guaranteed < MAX_WORD by separate_word() */
 	int wlen;
 	int plen;
 
-	/* skip debug prefixes */
-	if (wordlen > HEB_UTF8_BYTES && word[2] == '=') return FALSE;
-
 	/* set up affix table  */
-	afdict = dict->affix_table;
-	if (NULL == afdict) return FALSE;
-	mp_strippable = afdict->mp_strippable;
+	if (NULL == dict->affix_table) return FALSE;
+	mprefix_list = affix_list_find(dict->affix_table, AFDICT_MPRE);
+	mp_strippable = mprefix_list->length;
 	if (0 == mp_strippable) return FALSE;
-
-	if (!mprefix_sorted)
-	{
-		/* sanity check */
-		assert(mp_strippable <= HEB_MPREFIX_MAX,
-			"mp_strippable>" STRINGIFY(HEB_MPREFIX_MAX));
-
-		/* Longer subwords have priority over shorter ones,
-		 * reverse-sort by length. */
-		qsort(afdict->mprefix, mp_strippable, sizeof(char *), revcmplen);
-		mprefix_sorted = 1;
-	}
-	mprefix = afdict->mprefix;
+	assert(mp_strippable <= HEB_MPREFIX_MAX, /* sanity check */
+		"mp_strippable>" STRINGIFY(HEB_MPREFIX_MAX));
+	/* The mprefix list is revered-sorted according to prefix length.
+	 * The code here depends on that. */
+	mprefix = mprefix_list->string;
 
 	/* zero-out pseen[], assuming zeroed-out bytes are interpreted as FALSE */
 	memset(pseen, 0, sizeof(pseen));
@@ -881,8 +655,11 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 				continue;
 
 			/* the letter "ו" can only be the first prefix subword */
-			if ((split_prefix_i > 0) && HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(w, "ו")))
+			if ((split_prefix_i > 0) &&
+			 HEB_CHAREQ(mprefix[i], "ו") && (HEB_CHAREQ(w, "ו")))
+			{
 				continue;
+			}
 
 			plen = strlen(mprefix[i]);
 			wlen = strlen(w);
@@ -910,7 +687,7 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 					/* add the prefix alone */
 					if (2 < verbosity)
 						printf("Whole-word prefix: %s\n", word);
-					add_alternative(sent, split_prefix_i,split_prefix, 0,0, 0,0);
+					add_alternative(sent, split_prefix_i,split_prefix, 0,NULL, 0,NULL);
 					/* if the prefix is a valid word,
 					 * it has been added in separate_word() as a word */
 					break;
@@ -920,14 +697,15 @@ static Boolean mprefix_split(Sentence sent, Dictionary dict, const char *word)
 					word_is_in_dict = TRUE;
 					if (2 < verbosity)
 						printf("Splitting off a prefix: %.*s-%s\n", wordlen-sz, word, newword);
-					add_alternative(sent, split_prefix_i,split_prefix, 1,&newword, 0,0);
+					add_alternative(sent, split_prefix_i,split_prefix, 1,&newword, 0,NULL);
 				}
 				w = newword;
 				break;
 			}
 		}
 	/* "wlen + sz < wordlen" is true if a vav has been stripped */
-	} while ((sz > 0) && (i < mp_strippable) && (newword != w + plen) && (split_prefix_i < HEB_PRENUM_MAX));
+	} while ((sz > 0) && (i < mp_strippable) && (newword != w + plen) &&
+	 (split_prefix_i < HEB_PRENUM_MAX));
 
 	return word_is_in_dict;
 }
@@ -1006,12 +784,13 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
 
 	Dictionary dict = sent->dict;
+	Dictionary afdict = sent->dict->affix_table;
 
-	if (dict->affix_table != NULL)
+	if (afdict != NULL)
 	{
-		have_suffix = (0 < dict->affix_table->s_strippable) ||
-		              (0 < dict->affix_table->p_strippable);
-		have_mprefix = (0 < dict->affix_table->mp_strippable);
+		have_suffix = (0 < affix_list_find(afdict, AFDICT_SUF)->length) ||
+		              (0 < affix_list_find(afdict, AFDICT_PRE)->length);
+		have_mprefix = (0 < affix_list_find(afdict, AFDICT_MPRE)->length);
 	}
 
 	/* First, see if we can already recognize the word as-is. If
@@ -1072,20 +851,26 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	/* strip affixes from candidate word, using a linear splitting
 	 * algorithm */
-	if (dict->affix_table != NULL)
+	if (afdict != NULL)
 	{
 		/* Set up affix tables.  */
-		Dictionary afdict = dict->affix_table;
-		r_strippable = afdict->r_strippable;
-		l_strippable = afdict->l_strippable;
-		u_strippable = afdict->u_strippable;
+		Affix_table_con rpunc_list, lpunc_list, units_list;
+		lpunc_list = affix_list_find(afdict, AFDICT_LPUNC);
+		rpunc_list = affix_list_find(afdict, AFDICT_RPUNC);
+		units_list = affix_list_find(afdict, AFDICT_UNITS);
+		l_strippable = lpunc_list->length;
+		r_strippable = rpunc_list->length;
+		u_strippable = units_list->length;
 
-		strip_left = afdict->strip_left;
-		strip_right = afdict->strip_right;
-		strip_units = afdict->strip_units;
+		strip_left = lpunc_list->string;
+		strip_right = rpunc_list->string;
+		strip_units = units_list->string;
 
 		/* If we found the word in the dict, but it also can have an
 		 * empty suffix, then just skip right over to suffix processing.
+		 *
+		 * XXX If suffix processing is done, multi-prefix processing is not done.
+		 * TODO: Multi-suffix processing.
 		 */
 		if (word_is_in_dict && have_suffix)
 			goto do_suffix_processing;
@@ -1230,29 +1015,11 @@ do_suffix_processing:
 	/* OK, now try to strip suffixes. */
 	if (!word_is_in_dict || have_suffix)
 	{
-		Tokenizer *tokenizer = &sent->tokenizer;
-
-		tokenizer->string_set = dict->string_set;
-		tokenizer->pref_alternatives = NULL;
-		tokenizer->stem_alternatives = NULL;
-		tokenizer->suff_alternatives = NULL;
-
 		/* If the word is in the dict and can also be split into two,
 		 * then we need to insert a two-word version, with the second
 		 * word being the empty word.  This is a crazy hack to always
 		 * keep a uniform word-count */
-if (test_enabled("altold"))
-{
-		if (word_is_in_dict)
-		{
-			if (2 < verbosity)
-				printf("Info: Adding %s + empty-word\n", word);
-			add_suffix_alternatives(tokenizer, word, "");
-		}
-
-		word_is_in_dict |= suffix_split(tokenizer, dict, w, wend);
-} else {
-		if (suffix_split(tokenizer, dict, w, wend))
+		if (suffix_split(sent, w, wend))
 		{
 			if (word_is_in_dict)
 			{
@@ -1260,7 +1027,7 @@ if (test_enabled("altold"))
 
 				if (2 < verbosity)
 					printf("Info: Adding %s + empty-word\n", word);
-				add_alternative(sent, 0,0, 1,&wp, 0,0);
+				add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 			}
 			word_is_in_dict = TRUE;
 		}
@@ -1283,7 +1050,7 @@ if (test_enabled("altold"))
 				if (2 < verbosity)
 					printf("Info: Cannot split stem %s: Adding %s + empty-word\n",
 							word, word);
-				add_alternative(sent, 0,0, 1,&wp, 1,&empty_word);
+				add_alternative(sent, 0,NULL, 1,&wp, 1,&empty_word);
 				/* word is not used from now on in this loop iteration */
 			}
 			else
@@ -1297,7 +1064,6 @@ if (test_enabled("altold"))
 
 		}
 	}
-}
 
 do_mprefix_processing:
 	if (!word_is_in_dict || have_mprefix)
@@ -1305,9 +1071,9 @@ do_mprefix_processing:
 		if (word_is_in_dict)
 		{
 			const char *wp = word;
-			add_alternative(sent, 0,0, 1,&wp, 0,0);
+			add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 		}
-		if (mprefix_split(sent, dict, word))
+		if (mprefix_split(sent, word))
 		{
 			word_is_in_dict = TRUE;
 		}
@@ -1377,10 +1143,7 @@ do_mprefix_processing:
 
 	if (FALSE == issued)
 	{
-		if (test_enabled("altold"))
-		issued = issue_alternatives(sent, quote_found);
-		else
-		issued = issue_alternatives1(sent, word, quote_found);
+		issued = issue_alternatives(sent, word, quote_found);
 	}
 
 	if (FALSE == issued)
@@ -1428,7 +1191,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 		 * not have any intelligent support for quoted character
 		 * strings at this time.
 		 */
-		isq = is_quote (c);
+		isq = is_quote (sent, c);
 		if (isq) quote_found = TRUE;
 		while (is_space(c) || isq)
 		{
@@ -1436,7 +1199,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 			nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
 			if (0 == nb) break;
 			if (0 > nb) goto failure;
-			isq = is_quote (c);
+			isq = is_quote (sent, c);
 			if (isq) quote_found = TRUE;
 		}
 
@@ -1446,7 +1209,7 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
-		while (!is_space(c) && !is_quote(c) && (c != 0) && (0 < nb))
+		while (!is_space(c) && !is_quote(sent, c) && (c != 0) && (0 < nb))
 		{
 			word_end += nb;
 			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);

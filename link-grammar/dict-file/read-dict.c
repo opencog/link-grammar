@@ -326,7 +326,11 @@ static Boolean link_advance(Dictionary dict)
 			return FALSE;
 		}
 		if (quote_mode) {
-			if (c[0] == '\"') {
+			if (c[0] == '\"' &&
+			    /* Check the next character too, to allow " in words */
+			    (*dict->pin == ':' || *dict->pin == ';' ||
+			    lg_isspace(*dict->pin))) {
+
 				quote_mode = FALSE;
 				dict->token[i] = '\0';
 				return TRUE;
@@ -1543,7 +1547,7 @@ Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode)
  * something to do with the fact that the dictionaries are in
  * alphabetical order! This subdivision helps randomize a bit.
  */
-static void insert_list(Dictionary dict, Dict_node * p, int l)
+void insert_list(Dictionary dict, Dict_node * p, int l)
 {
 	Dict_node * dn, *dn_head, *dn_second_half;
 	int k, i; /* length of first half */
@@ -1569,10 +1573,10 @@ static void insert_list(Dictionary dict, Dict_node * p, int l)
 	{
 		err_ctxt ec;
 		ec.sent = NULL;
-		err_msg(&ec, Warn, "Warning: Word \"%s\" found near line %d.\n"
+		err_msg(&ec, Warn, "Warning: Word \"%s\" found near line %d of %s.\n"
 		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
 		        "\tThis word will be ignored.",
-		        dn->string, dict->line_number);
+		        dn->string, dict->line_number, dict->name);
 		free_dict_node(dn);
 	}
 	else if ((dn_head = abridged_lookup_list(dict, dn->string)) != NULL)
@@ -1750,7 +1754,7 @@ static Boolean read_entry(Dictionary dict)
 		dnx->exp = n;
 		i++;
 	}
-	insert_list(dict, dn, i);
+	dict->insert_entry(dict, dn, i);
 	return TRUE;
 
 syntax_error:
@@ -1799,6 +1803,16 @@ Boolean read_dictionary(Dictionary dict)
 
 /* ======================================================================= */
 
+/**
+ * Display the information about the given word.
+ * If the word can split, display the information about each part.
+ * Note that the splits may be invalid grammatically.
+ *
+ * Wild-card search is supported; the command-line user can type in !!word* or
+ * !!word*.sub and get a list of all words that match up to the wild-card.
+ * In this case no split is done.
+ */
+
 static Boolean display_word_split(Dictionary dict,
                                   const char * word,
                                   Parse_Options opts,
@@ -1820,8 +1834,57 @@ static Boolean display_word_split(Dictionary dict,
 	return TRUE;
 }
 
-static void display_counts(const char *, Dict_node *);
-static void display_expr(const char *, Dict_node *);
+/**
+ * Display the number of disjuncts associated with this dict node
+ */
+static void display_counts(const char *word, Dict_node *dn)
+{
+	printf("matches:\n");
+
+	for (; dn != NULL; dn = dn->right)
+	{
+		unsigned int len;
+		char * s;
+		char * t;
+
+		len = count_disjunct_for_dict_node(dn);
+		s = strdup(dn->string);
+		t = strrchr(s, SUBSCRIPT_MARK);
+		if (t) *t = SUBSCRIPT_DOT;
+		printf("    ");
+		left_print_string(stdout, s, "                         ");
+		free(s);
+		printf(" %8u  disjuncts ", len);
+		if (dn->file != NULL)
+		{
+			printf("<%s>", dn->file->file);
+		}
+		printf("\n");
+	}
+}
+
+/**
+ * Display the number of disjuncts associated with this dict node
+ */
+static void display_expr(const char *word, Dict_node *dn)
+{
+	printf("expressions:\n");
+	for (; dn != NULL; dn = dn->right)
+	{
+		char * s;
+		char * t;
+
+		s = strdup(dn->string);
+		t = strrchr(s, SUBSCRIPT_MARK);
+		if (t) *t = SUBSCRIPT_DOT;
+		printf("    ");
+		left_print_string(stdout, s, "                         ");
+		free(s);
+		print_expression(dn->exp);
+		if (NULL != dn->right) /* avoid extra newlines at the end */
+			printf("\n\n");
+	}
+}
 
 static void display_word_info(Dictionary dict, const char * word)
 {
@@ -1870,139 +1933,12 @@ static void display_word_expr(Dictionary dict, const char * word)
 }
 
 /**
- * dict_display_word_info() - display the information about the given word.
- *
- * Supports wild-card search; the command-line user can type in !!word* and
- * get a list of all words that match up to the wild-card.
- */
-static void display_word(Dictionary dict, const char * word,
-				 Parse_Options opts, void (*disp_node)(const char *,Dict_node*),
-				 void (*recurse)(Dictionary, const char *, Parse_Options opts))
-
-{
-	Tokenizer toker;
-	const char * regex_name;
-	Dict_node *dn_head;
-
-	dn_head = dictionary_lookup_wild(dict, word);
-	if (dn_head)
-	{
-		disp_node(word, dn_head);
-		free_lookup(dn_head);
-		return;
-	}
-
-	/* Recurse, if its a regex match */
-	regex_name = match_regex(dict, word);
-	if (regex_name)
-	{
-		recurse(dict, regex_name, opts);
-		return;
-	}
-
-	/* If word still wasn't found, try splitting it into
-	 * prefix-stem-suffix, and print the dict entries for those */
-	toker.pref_alternatives = NULL;
-	toker.stem_alternatives = NULL;
-	toker.suff_alternatives = NULL;
-	toker.string_set = dict->string_set;
-	if (split_word (&toker, dict, word))
-	{
-		size_t i;
-		size_t preflen = altlen(toker.pref_alternatives);
-		size_t stemlen = altlen(toker.stem_alternatives);
-		size_t sufflen = altlen(toker.suff_alternatives);
-
-		if (preflen)
-		{
-			printf("\nPrefix ===================================================\n\n");
-			for (i=0; NULL != toker.pref_alternatives[i]; i++)
-				recurse(dict, toker.pref_alternatives[i], opts);
-		}
-		if (stemlen)
-		{
-			printf("\nStem ===================================================\n\n");
-			for (i=0; NULL != toker.stem_alternatives[i]; i++)
-				recurse(dict, toker.stem_alternatives[i], opts);
-		}
-		if (sufflen)
-		{
-			printf("\nSuffix ===================================================\n\n");
-			for (i=0; NULL != toker.suff_alternatives[i]; i++)
-				recurse(dict, toker.suff_alternatives[i], opts);
-		}
-		return;
-	}
-
-	printf("        \"%s\" matches nothing in the dictionary.\n", word);
-}
-
-/**
- * Display the number of disjuncts associated with this dict node
- */
-static void display_counts(const char *word, Dict_node *dn)
-{
-	printf("matches:\n");
-
-	for (; dn != NULL; dn = dn->right)
-	{
-		unsigned int len;
-		char * s;
-		char * t;
-
-		len = count_disjunct_for_dict_node(dn);
-		s = strdup(dn->string);
-		t = strrchr(s, SUBSCRIPT_MARK);
-		if (t) *t = SUBSCRIPT_DOT;
-		printf("    ");
-		left_print_string(stdout, s, "                         ");
-		free(s);
-		printf(" %8u  disjuncts ", len);
-		if (dn->file != NULL)
-		{
-			printf("<%s>", dn->file->file);
-		}
-		printf("\n");
-	}
-}
-
-/**
  *  dict_display_word_info() - display the information about the given word.
  */
 void dict_display_word_info(Dictionary dict, const char * word,
 		Parse_Options opts)
 {
-if (test_enabled("altold")) /* XXX need to remove old code */
-{
-	display_word(dict, word, opts, display_counts, dict_display_word_info);
-}
-else
-{
 	display_word_split(dict, word, opts, display_word_info);
-}
-}
-
-/**
- * Display the number of disjuncts associated with this dict node
- */
-static void display_expr(const char *word, Dict_node *dn)
-{
-	printf("expressions:\n");
-	for (; dn != NULL; dn = dn->right)
-	{
-		char * s;
-		char * t;
-
-		s = strdup(dn->string);
-		t = strrchr(s, SUBSCRIPT_MARK);
-		if (t) *t = SUBSCRIPT_DOT;
-		printf("    ");
-		left_print_string(stdout, s, "                         ");
-		free(s);
-		print_expression(dn->exp);
-		if (NULL != dn->right) /* avoid extra newlines at the end */
-			printf("\n\n");
-	}
 }
 
 /**
@@ -2010,13 +1946,5 @@ static void display_expr(const char *word, Dict_node *dn)
  */
 void dict_display_word_expr(Dictionary dict, const char * word, Parse_Options opts)
 {
-if (test_enabled("altold"))
-{
-	display_word(dict, word, opts, display_expr, dict_display_word_expr);
-}
-else
-{
 	display_word_split(dict, word, opts, display_word_expr);
-}
-
 }

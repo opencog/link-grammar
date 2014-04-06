@@ -487,7 +487,6 @@ void * xalloc(size_t size)
 	return p;
 }
 
-#ifdef USE_FAT_LINKAGES
 void * xrealloc(void *p, size_t oldsize, size_t newsize)
 {
 #ifdef TRACK_SPACE_USAGE
@@ -509,7 +508,6 @@ void * xrealloc(void *p, size_t oldsize, size_t newsize)
 #endif /* TRACK_SPACE_USAGE */
 	return p;
 }
-#endif /* USE_FAT_LINKAGES */
 
 #ifdef TRACK_SPACE_USAGE
 void xfree(void * p, size_t size)

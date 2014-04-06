@@ -281,29 +281,12 @@ static void free_dictionary(Dictionary dict)
 
 static void affix_list_delete(Dictionary dict)
 {
-	int i;
-	for (i=0; i<dict->l_strippable; i++)
+	Affix_table_con atc;
+	for (atc = dict->affix_table_con; 0 != atc->length; atc++)
 	{
-		free((char *)dict->strip_left[i]);
+		xfree((void *)atc->string, atc->mem_elems);
 	}
-	for (i=0; i<dict->r_strippable; i++)
-	{
-		free((char *)dict->strip_right[i]);
-	}
-	for (i=0; i<dict->u_strippable; i++)
-	{
-		free((char *)dict->strip_units[i]);
-	}
-	xfree(dict->strip_right, dict->r_strippable * sizeof(char *));
-	xfree(dict->strip_left, dict->l_strippable * sizeof(char *));
-	xfree(dict->strip_units, dict->u_strippable * sizeof(char *));
-
-	/* The prefix and suffix words are in the string set,
-	 * and are deleted here. */
-	xfree(dict->suffix, dict->s_strippable * sizeof(char *));
-	xfree(dict->prefix, dict->p_strippable * sizeof(char *));
-	xfree(dict->mprefix, dict->mp_strippable * sizeof(char *));
-	xfree(dict->sane_morphism, dict->sm_total * sizeof(char *));
+	free(dict->affix_table_con);
 }
 
 void dictionary_delete(Dictionary dict)

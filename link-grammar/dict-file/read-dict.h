@@ -24,5 +24,6 @@ bool read_dictionary(Dictionary dict);
 Dict_node * lookup_list(Dictionary dict, const char *s);
 bool boolean_lookup(Dictionary dict, const char *s);
 void free_lookup(Dict_node *llist);
+void insert_list(Dictionary dict, Dict_node * p, int l);
 
 #endif /* _LG_READ_DICT_H_ */

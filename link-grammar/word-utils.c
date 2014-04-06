@@ -460,6 +460,18 @@ Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
 }
 #endif /* CRAZY_OBESE_CHECKING_AGLO */
 
+/**
+ * If word has a connector, return it.
+ * If word has more than one connector, return NULL.
+ */
+const char * word_only_connector(Dict_node * dn)
+{
+   Exp * e = dn->exp;
+   if (CONNECTOR_type == e->type)
+      return e->u.string;
+   return NULL;
+}
+
 /* ======================================================== */
 /* Dictionary utilities ... */
 

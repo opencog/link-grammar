@@ -36,6 +36,7 @@
 #include "dict-structures.h"
 #include "corpus/corpus.h"
 #include "error.h"
+#include "utilities.h"	/* For wchar_t */
 
 struct Cost_Model_s
 {
@@ -113,6 +114,14 @@ struct Connector_set_s
 	unsigned int table_size;
 };
 
+struct Affix_table_con_struct
+{
+	const char * name;    /* affix class name */
+	size_t mem_elems;     /* number of memory elements alolocated */
+	size_t length;        /* number of strings */
+	char const ** string;
+};
+
 struct Dictionary_s
 {
 	Dict_node *     root;
@@ -129,27 +138,7 @@ struct Dictionary_s
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
-	int r_strippable; /* right */
-	int l_strippable; /* left */
-	int u_strippable; /* units on left */
-	int s_strippable; /* generic suffix */
-	int p_strippable; /* generic prefix */
-	int mp_strippable; /* multi-prefix */
-	int sm_total;	  /* sane-morphism regexp count (0 or 1) */
-	int r_stripped;
-	int l_stripped;
-	int u_stripped;
-	int s_stripped;
-	int p_stripped;
-	int mp_stripped;
-	int sm_current_count;
-	const char ** strip_left;
-	const char ** strip_right;
-	const char ** strip_units;
-	const char ** prefix;
-	const char ** mprefix;
-	const char ** suffix;
-	const char ** sane_morphism;
+	Affix_table_con affix_table_con;
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker; /* spell checker handle */
@@ -160,6 +149,7 @@ struct Dictionary_s
 	void *          db_handle; /* database handle */
 #endif
 
+	void (*insert_entry)(Dictionary, Dict_node *, int);
 	Dict_node* (*lookup_list)(Dictionary, const char*);
 	void (*free_lookup)(Dictionary, Dict_node*);
 	bool (*lookup)(Dictionary, const char*);
@@ -247,15 +237,6 @@ struct Parse_info_struct
 	unsigned int rand_state;
 };
 
-struct Tokenizer_struct
-{
-	String_set  * string_set;
-	const char * unsplit_word;
-	const char ** pref_alternatives;
-	const char ** stem_alternatives;
-	const char ** suff_alternatives;
-};
-
 struct Sentence_s
 {
 	Dictionary  dict;           /* words are defined from this dictionary */
@@ -282,10 +263,10 @@ struct Sentence_s
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 
 	/* Tokenizer internal/private state */
-	bool       *post_quote;
-	int           t_start;	    /* start word of the current token sequence */
-	int           t_count;	    /* number of words in the current token sequence */
-	Tokenizer     tokenizer;
+	bool   * post_quote;
+	int    t_start;             /* start word of the current token sequence */
+	int    t_count;             /* word count in the current token sequence */
+	wchar_t * list_of_quotes;   /* from the AFDICT_QUOTES entry */
 
 	/* parser internal/private state */
 #ifdef USE_FAT_LINKAGES

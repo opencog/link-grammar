@@ -60,7 +60,7 @@ typedef struct Link_s Link;
 typedef struct List_o_links_struct List_o_links;
 typedef struct Parse_set_struct Parse_set;
 typedef struct String_set_s String_set;
-typedef struct Tokenizer_struct Tokenizer;
+typedef struct Affix_table_con_struct *Affix_table_con;
 typedef struct Word_struct Word;
 typedef struct X_table_connector_struct X_table_connector;
 

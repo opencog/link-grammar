@@ -1,7 +1,3 @@
-/* XXX
- * !test=old_sane_morphism - use the old sane_morphism (as of version 4.8.6)
- * in case a regression is suspected (to be cleaned up later).
- */
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
@@ -22,6 +18,7 @@
 #include "analyze-linkage.h"
 #include "corpus/corpus.h"
 #include "count.h"
+#include "dict-common.h"
 #include "disjuncts.h"
 #include "disjunct-utils.h"
 #include "error.h"
@@ -1092,175 +1089,29 @@ static inline Boolean is_AFFIXTYPE_STEM(const char *a, size_t len)
 static inline Boolean is_AFFIXTYPE_PREFIX(const char *a, size_t len)
 	{ return INFIX_MARK == a[len-1]; }
 static inline Boolean is_AFFIXTYPE_SUFFIX(const char *a)
-	{ return (INFIX_MARK == a[0]); }
+	{ return (INFIX_MARK == a[0] && '\0' != a[1]); }
 static inline Boolean is_AFFIXTYPE_EMPTY(const char *a, size_t len)
 	{ return (len == 5) && (0 == strcmp(a, EMPTY_WORD_MARK)); }
 
 /**
- * This routine solves the problem of mis-linked stem + suffix.
- * It checks that the actual stem+suffix, when concatenated, restores
- * the original word.  This is a work-around for somewhat sloppy
- * dictionaries, which aren't entirely careful with making sure
- * that the stem+suffix links are unique. Here's an illustration of
- * the problem: The word Russian "тест" can be split into
- * тест.= =.ndmsi and also тес.= =т.amss  Then, during linkage,
- * тес.= and =.ndmsi are linked -- but this is not the original word;
- * its junk.  This routine marks such linkages as 'bad'.  Really, the
- * dictionary should be fixed, but what the hell. This check isn't hard.
+ * This routine solves the problem of mis-linked alternatives,
+ * i.e a morpheme in one alternative that is linked to a morpheme in
+ * another alternative. This can happen due to the way in which word
+ * alternatives are implemeted.
  *
- * XXX Note also: the below is implemented incorrectly!!! Instead of
- * trying to join the *strings* together, we should instea try to
- * make sure that all parts come from the same *alternative* in the word!
+ * It does so by checking that all the chosen disjuncts for each input word
+ * come from the same alternative in the word.
+ *
+ * It also validates that there is one alternative in which all the tokens
+ * are chosen. XXX This may disallow island morphemes, and may need to be
+ * relaxed.
+ *
+ * Optionally (if SANEMORPHISM regex is defined in the affix file), it
+ * also validates that the morpheme-type sequence is permitted for the
+ * language. This is a sanity check of the program and the dictionary.
+ *
+ * TODO (if needed): support a midle morpheme type.
  */
-static void old_sane_morphism(Sentence sent, Parse_Options opts)
-{
-	int lk, i;
-	Parse_info pi = sent->parse_info;
-
-	/* XXX skip checking if we handle prefixes, until this function is fixed */
-	if (sent->dict->affix_table->mp_strippable || sent->dict->affix_table->p_strippable) {
-		/* printf("Info: skipping sane_morphism()\n"); */
-		return;
-	}
-
-	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
-	{
-		Linkage_info *lifo = &sent->link_info[lk];
-
-		/* Don't bother with linkages that already failed post-processing... */
-		if (0 != lifo->N_violations)
-			continue;
-
-		extract_links(lifo->index, pi);
-		for (i=0; i<sent->length; i++)
-		{
-			const char *djw;
-			size_t len;
-			const char *unsplit = sent->word[i].unsplit_word;
-			size_t unlen;
-
-			if (verbosity > 4)
-				printf("%%%%>>>%d  Checking word %d/%d\n", lk, i, sent->length);
-			/* Ignore island words */
-			if (NULL == pi->chosen_disjuncts[i])
-			{
-				if (verbosity > 4)
-					printf("%%%%>>>%d ignore island\n", lk);
-				continue;
-			}
-
-			/* Ignore suffixes, for now */
-			if (NULL == unsplit)
-			{
-				if (verbosity > 4)
-					printf("%%%%>>>%d ignore suffix\n", lk);
-				continue;
-			}
-
-			/* If its a perfect match, then keep going */
-			unlen = strlen(unsplit);
-			djw = pi->chosen_disjuncts[i]->string;
-			if (verbosity > 4)
-				printf("%%%%>>>%d unsplit=%s, djw=%s\n", lk, unsplit, djw);
-			if (0 == strncmp(djw, unsplit, unlen))
-			{
-				if (verbosity > 4)
-					printf("%%%%>>>%d OK perfect match\n", lk);
-				continue;
-			}
-
-			/* Perhaps its a perfect match after capitalization. */
-			if (sent->word[i].firstupper)
-			{
-				char temp_word[MAX_WORD+1];
-				downcase_utf8_str(temp_word, unsplit, MAX_WORD);
-				if (0 == strncmp(djw, temp_word, strlen(temp_word)))
-				{
-					if (verbosity > 4)
-						printf("%%%%>>>%d OK perfect Match\n", lk);
-					continue;
-				}
-			}
-
-			/* If this word isn't a stem, **and** the next word isn't
-			 * a suffix, there's nothing to check. (We do need to reject
-			 * the case where this word is a stem but the next is not a
-			 * suffix, or vice-versa.)
-			 */
-			len = strlen(djw);
-			if ((INFIX_MARK != djw[len-1]) &&
-			    ((i+1) < sent->length) &&
-			    (NULL != pi->chosen_disjuncts[i+1]) &&
-			    (INFIX_MARK != pi->chosen_disjuncts[i+1]->string[0]))
-			{
-				if (verbosity > 4)
-					printf("%%%%>>>%d OK djw!=stem %s!=suffix\n", lk, pi->chosen_disjuncts[i+1]->string);
-				continue;
-			}
-
-			/* check why non-stems are in the position of a split stem */
-			if (((verbosity > 4) && (INFIX_MARK != djw[len-1])) ||
-			(((i+1) < sent->length) &&
-			(NULL != pi->chosen_disjuncts[i+1]) &&
-			(INFIX_MARK != pi->chosen_disjuncts[i+1]->string[0])))
-			{
-				const char **a;
-				printf("%%%%>>>%d Alternatives for word %d:", lk, i);
-				for (a = sent->word[i].alternatives; *a; a++) {
-					printf(" %s", *a);
-				}
-				printf("\n");
-			}
-
-			/* If the next word is a suffix, and, when united with
-			 * the stem, it recreates the original word, then we
-			 * are very happy, and keep going. */
-			if ((INFIX_MARK == djw[len-1]) &&
-			    ((i+1) < sent->length) &&
-			    (NULL != pi->chosen_disjuncts[i+1]) &&
-			    (INFIX_MARK == pi->chosen_disjuncts[i+1]->string[0]))
-			{
-				char *p;
-				char newword[MAX_WORD+1];
-				if (verbosity > 4)
-					printf("%%%%>>>%d Checking word %d, djw=%s djw+1=%s\n", lk, i, djw, pi->chosen_disjuncts[i+1]->string);
-				strcpy(newword, djw);
-				p = strrchr(newword, SUBSCRIPT_MARK);
-				if (p) *p = 0x0;
-				strcat(newword, pi->chosen_disjuncts[i+1]->string+1);
-
-				/* OK, we built the concatenation .. does it match? */
-				if (0 == strncmp(newword, unsplit, unlen))
-				{
-					if (verbosity > 4)
-						printf("%%%%>>>%d OK perfect match\n", lk);
-					continue;
-				}
-
-				/* If we are here, it didn't match. Is that because of
-				 * capitalization? Lets check. */
-				if (sent->word[i].firstupper)
-				{
-					char temp_word[MAX_WORD+1];
-					downcase_utf8_str(temp_word, unsplit, MAX_WORD);
-					if (0 == strncmp(newword, temp_word, strlen(temp_word)))
-					{
-						if (verbosity > 4)
-							printf("%%%%>>>%d OK perfect Match\n", lk);
-						continue;
-					}
-				}
-			}
-
-			/* Oh no ... we've joined together the stem and suffix incorrectly! */
-			sent->num_valid_linkages --;
-			lifo->N_violations ++;
-			if (verbosity > 4)
-				printf("%%%%>>>%d FAILED, remaining %d\n", lk, sent->num_valid_linkages);
-			break;
-		}
-	}
-}
 
 /* These letters create a string that should be matched by a SANEMORPHISM regex,
  * given in the affix file. The empty word doesn't have a letter. E.g. for the
@@ -1272,22 +1123,7 @@ static void old_sane_morphism(Sentence sent, Parse_Options opts)
 #define AFFIXTYPE_WORD		'w'	/* regular word */
 #define AFFIXTYPE_END		'b'	/* end of input word */
 
-/**
- * Validate that all the chosen disjuncts for each input word are from the same
- * alternative, and vise versa.
- *
- * Optionally (if SANEMORPHISM regex is defined in the affix file),
- * also validate that the morpheme-type sequence is permitted for the
- * language. This is a sanity check of the program and the dictionary.
- */
 static void sane_morphism(Sentence sent, Parse_Options opts)
-{
-if (test_enabled("old_sane_morphism"))
-{
-	old_sane_morphism(sent, opts);
-	return;
-}
-else
 {
 	int lk, i;
 	Parse_info pi = sent->parse_info;
@@ -1296,37 +1132,11 @@ else
 	/* Skip checking, if dictionary specifies neither prefixes nor sufixes.
 	 * This special-cases English, more or less. */
 	if (NULL == afdict) return;
-	if (0 == afdict->mp_strippable &&
-	    0 == afdict->p_strippable &&
-	    0 == afdict->s_strippable)
+	if ((0 == affix_list_find(afdict, AFDICT_PRE)->length) &&
+		 (0 == affix_list_find(afdict, AFDICT_MPRE)->length) &&
+		 (0 == affix_list_find(afdict, AFDICT_SUF)->length))
 	{
 		return;
-	}
-
-	/* Store the SANEMORPHISM regex in the unused (up to now)
-	 * regex_root element of the affix dictionary, and precompile it */
-	if ((NULL != afdict) && (NULL == afdict->regex_root) &&
-		(0 != afdict->sm_total))
-	{
-		int rc;
-		Regex_node * sm_re = (Regex_node *) malloc(sizeof(Regex_node));
-		char rebuf[MAX_WORD + 16] = "^((";
-
-		/* The regex is converted to: ^((original-regex)b)+$ */
-		strcat(rebuf, afdict->sane_morphism[0]);
-		strcat(rebuf, ")b)+$");
-
-		afdict->regex_root = sm_re;
-		sm_re->pattern = strdup(rebuf);
-		sm_re->name = strdup("%"); /* exists in the affix dictionary */
-		sm_re->re = NULL;
-		sm_re->next = NULL;
-		rc = compile_regexs(afdict);
-		if (rc) {
-			prt_error("Error: sane_morphism: Failed to compile "
-			       "regex '%s', return code %d\n", sm_re->pattern, rc);
-		}
-		lgdebug(4, ">regex %s\n", sm_re->pattern);
 	}
 
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
@@ -1414,7 +1224,7 @@ else
 				*affix_types_p = AFFIXTYPE_WORD;
 			}
 
-			lgdebug(4, "%%>%d djword=%s affixtype=%c wordlen=%zu\n",
+			lgdebug(4, "%d djw=%s affixtype=%c wordlen=%zu\n",
 			        lk, djw, empty_word ? 'E' : *affix_types_p, len);
 
 			if (! empty_word) affix_types_p++;
@@ -1553,7 +1363,6 @@ try_again:
 		}
 	}
 }
-}
 
 static void chart_parse(Sentence sent, Parse_Options opts)
 {
@@ -1622,8 +1431,21 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	verbosity = opts->verbosity;
 	debug = opts->debug;
 	test = opts->test;
-	if ('\0' != test[0])
-		printf("Warning: Tests enabled: %s\n", test);
+
+	if ('\0' != test[0]) /* remind the developer this is not a normal mode */
+	{
+		/* Static variable - reentrancy is not needed */
+		static Boolean batch_in_progress = FALSE;
+
+		/* In batch mode warn only once */
+		if (! batch_in_progress)
+		{
+			fflush(stdout);
+			fprintf(stderr, "Warning: Tests enabled: %s\n", test);
+			if (parse_options_get_batch_mode(opts))
+				batch_in_progress = 1;
+		}
+	}
 
 	/* If the sentence has not yet been split, do so now.
 	 * This is for backwards compatibility, for existing programs
