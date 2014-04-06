@@ -6,7 +6,10 @@
 !constituents=1
 !spell=0
 
-%UNITS
+% Test sentences taken from bio-medical, biochemistry journal articles.
+% These tests sentences are originally from the biolg project.
+
+% UNITS --------------------------------------------------------
 
 % Some basic cases
 The 50 kDa protein is examined
@@ -26,7 +29,7 @@ The rate is 10nm per msec
 The rate is 10nm per 1msec of time
 The last 195bp of the DNA are examined
 
-% A number derived units are also recognized
+% Number derived units are also recognized
 The rate is 10 mg/sec
 The rate is 10 mol/day
 The rate is 10 micrograms/mouse/day
@@ -51,7 +54,7 @@ The 10 bp longer sequence is examined
 % This one doesn't work because of "leftmost"
 The leftmost 195 bp of the DNA are examined
 
-% NUMERIC RANGES
+% NUMERIC RANGES ------------------------------------------------
 
 The 50 to 100 kDa protein is examined
 Exons 40 to 50 were examined
@@ -106,7 +109,7 @@ The activity is stable between pH 6 and 12
 An 80 to 100-fold increase was observed
 Antigens ranged 82 to 90%
 
-% FOLD-WORDS
+% FOLD-WORDS --------------------------------------------------------
 
 This included an up to threefold increase
 There were increases in proteins, including actin (twofold to threefold)
@@ -125,7 +128,7 @@ loci increased more than twofold
 It corresponds to one- , two- and threefold phosphorilated proteins
 The structure shows a fold consisting of a beta-sheet
 
-% EQUATIONS ETC.
+% EQUATIONS ETC. --------------------------------------------------
 
 non-denaturing gradient gel electrophoresis (r = 0.859) was used
 preparations of 5 x 10(8) cfu/ml are made
@@ -142,13 +145,13 @@ A single cell inside a pool of 5 x 10(4) could be quantified
 We consider the MPO --> PAG pathway
 Codon 311 (Cys --> Ser) polymorphism is associated with apolipoprotein E4
 
-% GREEK LETTERS
+% GREEK LETTERS ----------------------------------------------------------
 minicells revealed the expression of both lambda and SPP1 genes
 We cloned a new gene encoding an alternative sigma factor
 The sigma factor sigma 35 of B. thuringiensis is homologous
 Each polymerase had a subunit composition analogous to beta beta2 alpha sigma delta omega 1 omega 2
 
-% SOME ADVERB CASES
+% MISC ADVERB CASES ----------------------------------------------------
 % compare
 patients are treated, therefore, even if they are negative
 patients are treated, however, even if they are negative
@@ -198,8 +201,7 @@ Dystrophin can attach to the cytoskeleton
 this study examined whether AQP1 is present in HPMC
 
 
-
-% from PASBio
+% from PASBio -------------------------------------------------------
 
 % abolish.01
 % MEDLINE No.1
