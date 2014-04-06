@@ -1322,6 +1322,7 @@ static const char * header(int mode)
  * The returned value is not relevant in ths case.
  *
  *   print_sentence_word_alternatives(sent, FALSE, NULL, token)
+ * NOTE: Not reentrant - used for dictionary debug only.
  * Return the word and alternative index of first occurrence in the sentence
  * of the given token. This is used to prevent duplicate inforamtion display
  * for repeated morphemes (if there are multiples splits, each of several
@@ -1341,10 +1342,10 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 {
 	int wi;   /* internal sentence word index */
 	int ai;   /* index of a word alternative */
-	int sentlen = sent->length;	     /* shortened if there is a right-wall */
+	int sentlen = sent->length;        /* shortened if there is a right-wall */
 	int first_sentence_word = 0;       /* used for skipping a left-wall */
 	int word_split = FALSE;            /* !!word got split */
-	struct tokenpos tokenpos = {0, 0}; /* token index to prevent duplicates */
+	static struct tokenpos tokenpos = {0, 0}; /* prevent duplicates */
 
 	if (0 == sentlen)
 	{
@@ -1354,7 +1355,7 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 		return tokenpos;
 	}
 
-	if (debugprint) lgdebug(1, "Words and alternatives:\n");
+	if (debugprint) lgdebug(+0, "\n");
 	else if (findtoken)
 		; /* do nothing */
 	else
@@ -1402,7 +1403,9 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 		Word w = sent->word[wi];
 		int w_start = wi;   /* input word index */
 
-		if (debugprint) lgdebug(0, "  word%d: %s\n  ", wi, w.unsplit_word);
+		if (debugprint) lgdebug(0, "  word%d %c%c: %s\n   ",
+		 wi, w.firstupper ? 'C' : ' ', sent->post_quote[wi] ? 'Q' : ' ',
+		 w.unsplit_word);
 
 		/* There should always be at least one alternative */
 		assert((NULL != w.alternatives) && (NULL != w.alternatives[0]) &&
