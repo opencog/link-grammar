@@ -2,6 +2,8 @@
 ")" "%" "," "." ":" ";" "?" "!" "''" "'": RPUNC+;
 "(" "$" "``": LPUNC+;
 
+""«»《》【】『』`„“": QUOTES+;
+
 % Pirmoji linksnioutė I kirčiuotė
 as  o  ui ą  u   e 
 is io iui į iu yje i
@@ -46,6 +48,3 @@ tyčiau tytum tytumei tytų
 tytume tytumėm tytumėme tytute tytumėte tytumėt
 tyk tyki tykime tykim tykite tykit
   : SUF+;
-
-
-

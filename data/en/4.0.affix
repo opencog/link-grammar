@@ -20,6 +20,8 @@
 £ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#": LPUNC+;
 
+""«»《》【】『』`„“": QUOTES+;
+
 /en/words/units.1: UNITS+;
 /en/words/units.1.dot: UNITS+;
 /en/words/units.3: UNITS+;

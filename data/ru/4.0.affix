@@ -2,6 +2,8 @@
 ")" "%" "," "." ":" ";" "?" "!" "''" "'": RPUNC+;
 "(" "$" "``": LPUNC+;
 
+""«»《》【】『』`„“": QUOTES+;
+
 /ru/words/suff-list: SUF+;
 
 "w|ts": SANEMORPHISM+;
