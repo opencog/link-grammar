@@ -428,11 +428,12 @@ kurz.a lang.a gut.a schlecht.a gescheit.a dumm.a froh.a erstaunt.a besorgt.a sch
 {FP-} & {EA-} & (Pa- or PIa+ or (FSe+ & Ae+) or (FSn+ & An+) or (FSr+ & Ar+) or (FSs+ & As+) or 
 (FSm+ & Am+));
 
-e: FSe-;
-en: FSn-;
-er.f: FSr-;
-es.f: FSs-;
-em: FSm-;
+% Suffixes, appearing in 4.0.affix
+=e: FSe-;
+=en: FSn-;
+=er.f: FSr-;
+=es.f: FSs-;
+=em: FSm-;
 
 %grosse.a kleine.a alte.a junge.a rote.a blaue.a gelbe.a gruene.a schwarze.a weisse.a
 %billige.a teuere.a lange.a kurze.a gute.a schlechte.a gescheite.a dumme.a frohe.a 
