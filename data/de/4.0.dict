@@ -433,7 +433,7 @@ kurz.a lang.a gut.a schlecht.a gescheit.a dumm.a froh.a erstaunt.a besorgt.a sch
 gross.= klein.= alt.= jung.= rot.= blau.= gelb.= gruen.= schwarz.= weiss.= billig.= teuer.=
 kurz.= lang.= gut.= schlecht.= gescheit.= dumm.= froh.= erstaunt.= besorgt.= schoen.=: 
   {FP-} & {EA-} & (
-    or (FSe+ & Ae+)
+    (FSe+ & Ae+)
     or (FSn+ & An+)
     or (FSr+ & Ar+)
     or (FSs+ & As+)
