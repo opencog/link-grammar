@@ -10,6 +10,9 @@
 % Dictionary version number is 5.0.1 (formatted as V5v0v1+)
 <dictionary-version-number>: V5v0v1+;
 
+% Word-count balancing for suffixes
+=.zzz: ZZZ-;
+
 
 % NOUNS, PRONOUNS
 
@@ -425,8 +428,16 @@ aber denn: {Xd-} & SC- & W+; % und?
 
 gross.a klein.a alt.a jung.a rot.a blau.a gelb.a gruen.a schwarz.a weiss.a billig.a teuer.a
 kurz.a lang.a gut.a schlecht.a gescheit.a dumm.a froh.a erstaunt.a besorgt.a schoen.a: 
-{FP-} & {EA-} & (Pa- or PIa+ or (FSe+ & Ae+) or (FSn+ & An+) or (FSr+ & Ar+) or (FSs+ & As+) or 
-(FSm+ & Am+));
+  {FP-} & {EA-} & ( Pa- or PIa+);
+
+gross.= klein.= alt.= jung.= rot.= blau.= gelb.= gruen.= schwarz.= weiss.= billig.= teuer.=
+kurz.= lang.= gut.= schlecht.= gescheit.= dumm.= froh.= erstaunt.= besorgt.= schoen.=: 
+  {FP-} & {EA-} & (
+    or (FSe+ & Ae+)
+    or (FSn+ & An+)
+    or (FSr+ & Ar+)
+    or (FSs+ & As+)
+    or (FSm+ & Am+));
 
 % Suffixes, appearing in 4.0.affix
 =e: FSe-;
