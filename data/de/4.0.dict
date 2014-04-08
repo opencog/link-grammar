@@ -426,11 +426,11 @@ aber denn: {Xd-} & SC- & W+; % und?
 
 % ADJECTIVES
 
-gross.a klein.a alt.a jung.a rot.a blau.a gelb.a gruen.a schwarz.a weiss.a billig.a teuer.a
+groß.a gross.a klein.a alt.a jung.a rot.a blau.a gelb.a gruen.a schwarz.a weiss.a billig.a teuer.a
 kurz.a lang.a gut.a schlecht.a gescheit.a dumm.a froh.a erstaunt.a besorgt.a schoen.a: 
   {FP-} & {EA-} & ( Pa- or PIa+);
 
-gross.= klein.= alt.= jung.= rot.= blau.= gelb.= gruen.= schwarz.= weiss.= billig.= teuer.=
+groß.= gross.= klein.= alt.= jung.= rot.= blau.= gelb.= gruen.= schwarz.= weiss.= billig.= teuer.=
 kurz.= lang.= gut.= schlecht.= gescheit.= dumm.= froh.= erstaunt.= besorgt.= schoen.=: 
   LLFSe+ or LLFSn+ or LLFSr+ or LLFSs+ or LLFSm+;
 
@@ -469,12 +469,14 @@ sehr.e ziemlich.e: EA+ or EE+;
 
 schnell.e: {EE-} & (MV- or MVI+);
 
-und: {@XL-} & XR+ & 
-(({GE+} & {D-} & (S+ or SI- or O- or B+ or J- or GE- or (Xd- & Xc+ & MX-))) or
-({EA-} & (A+ or ({@MV-} & (P- or PI+)))) or ({@MVI-} & (I- or II+)) or
-(J+ & (MV- or MVI+)) or
-W- or
-((((S- or ({CO-} & SI+)) & {@MV+} & W-) or ({@MVI-} & S- & C-)) & {SC+}));
+und: 
+  {@XL-} & XR+ & (
+    ({GE+} & {D-} & (S+ or SI- or O- or B+ or J- or GE- or (Xd- & Xc+ & MX-)))
+    or ({EA-} & (A+ or ({@MV-} & (P- or PI+))))
+    or ({@MVI-} & (I- or II+))
+    or (J+ & (MV- or MVI+))
+    or W-
+    or ((((S- or ({CO-} & SI+)) & {@MV+} & W-) or ({@MVI-} & S- & C-)) & {SC+}));
 
 ",": Xc- or Xd+;
 
