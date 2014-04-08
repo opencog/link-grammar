@@ -163,8 +163,12 @@ bin.v war.i: (((Si- or ({CO-} & SIi+)) & (O+ or P+) & W-)
 or ((B- or PI-) & (Si- & C-))) & {SC+};
 bist.v warst.v: (((Sd- or ({CO-} & SId+)) & (O+ or P+) & W-)
  or ((B- or PI-) & (Sd- & C-))) & {SC+};
-ist.v war.s: (((Ss- or ({CO-} & SIs+)) & (O+ or P+) & W-) 
-or ((B- or PI-) & ((Ss- & C-) or RSs-))) & {SC+};
+
+ist.v war.s: 
+  (((Ss- or ({CO-} & SIs+)) & (O+ or P+) & W-) 
+    or ((B- or PI-) & ((Ss- & C-) or RSs-)))
+  & {SC+};
+
 sind.v waren.v: (((Sp- or ({CO-} & SIp+)) & (O+ or P+) & W-) or
 ((B- or PI-) & ((Sp- & C-) or RSp-))) & {SC+};
 seid.v wart.v: (((Sr- or ({CO-} & SIr+)) & (O+ or P+) & W-) 
