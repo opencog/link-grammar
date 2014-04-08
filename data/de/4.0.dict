@@ -21,17 +21,20 @@ Hund.n Mann.n Brief.n Stein.n Freund.n Koenig.n Punkt.n Schuh.n Mond.n Ball.n Ma
 Hof.n Rock.n Sohn.n Baum.n Traum.n Arzt.n Satz.n Monat.n Bericht.n Erfolg.n Versuch.n
 Professor.n Doktor.n Staat.n Junge.n Bauer.n Nachbar.n Name.n Lehrer.s Vater.n Bruder.n
 Schlussel.s Vogel.n Apfel.n Garten.n Tag.n Park.n: 
-{GE+} & {Rm+ or @M+} & {@MX+} & 
-(((({@Ae-} & Dnmd-) or ({@Ar-} & Dnmi-)) & (Ss+ or SIs- or (Xd- & Xc+ & MX-))) or 
-({@An-} & Dam- & (O- or J*a- or B+)) or ({@An-} & Ddm- & (J*d- or JB+)));
+  {GE+} & {Rm+ or @M+} & {@MX+} & (
+    ((({@Ae-} & Dnmd-) or ({@Ar-} & Dnmi-)) & (Ss+ or SIs- or (Xd- & Xc+ & MX-) or XR- or XL+))
+    or ({@An-} & Dam- & (O- or J*a- or B+))
+    or ({@An-} & Ddm- & (J*d- or JB+)));
 
 % Feminine singular
 Katze.n Frau.n Hand.n Bank.n Nacht.n Stadt.n Wand.n Wurst.n Form.n
 Bahn.n Uhr.n Zahl.n Zeit.n Ansicht.n Gestalt.n Krankheit.n Bibliothek.n 
 Blume.n Ecke.n Farbe.n Geige.n Karte.n Kueche.n Nase.n Reise.n Sache.n Strasse.n Woche.n
 Regel.n Schwester.n Tochter.n Mutter.n Tuer.n Geschichte.n: 
-{GE+} & {Rf+ or @M+} & {@MX+} & (({@Ae-} & Dnf- & (Ss+ or SIs- or O- or B+ or J*a- or (Xd- & Xc+ & MX-))) or 
-({@An-} & ((Ddf- & (J*d- or JB+)) or (Dgf- & GE-))));
+  {GE+} & {Rf+ or @M+} & {@MX+} & (
+    ({@Ae-} & Dnf- & (Ss+ or SIs- or O- or B+ or J*a- or (Xd- & Xc+ & MX-) or XR- or XL+))
+    or ({@An-} & Ddf- & (J*d- or JB+))
+    or ({@An-} & Dgf- & GE-));
 
 % Neuter singular
 Maedchen.s Haus.n Jahr.n Bein.n Stueck.n Teil.n Geschenk.n Geschaeft.n Papier.n 
