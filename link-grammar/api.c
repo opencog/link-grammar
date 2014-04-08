@@ -1132,9 +1132,9 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	/* Skip checking, if dictionary specifies neither prefixes nor sufixes.
 	 * This special-cases English, more or less. */
 	if (NULL == afdict) return;
-	if ((0 == affix_list_find(afdict, AFDICT_PRE)->length) &&
-		 (0 == affix_list_find(afdict, AFDICT_MPRE)->length) &&
-		 (0 == affix_list_find(afdict, AFDICT_SUF)->length))
+	if ((0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
+		 (0 == AFCLASS(afdict, AFDICT_MPRE)->length) &&
+		 (0 == AFCLASS(afdict, AFDICT_SUF)->length))
 	{
 		return;
 	}

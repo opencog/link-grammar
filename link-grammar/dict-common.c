@@ -281,12 +281,12 @@ static void free_dictionary(Dictionary dict)
 
 static void affix_list_delete(Dictionary dict)
 {
-	Affix_table_con atc;
-	for (atc = dict->affix_table_con; 0 != atc->length; atc++)
+	Afdict_class atc;
+	for (atc = dict->afdict_class; 0 != atc->length; atc++)
 	{
 		xfree((void *)atc->string, atc->mem_elems);
 	}
-	free(dict->affix_table_con);
+	free(dict->afdict_class);
 }
 
 void dictionary_delete(Dictionary dict)

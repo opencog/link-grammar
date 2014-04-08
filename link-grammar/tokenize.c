@@ -38,6 +38,9 @@
 /* I've left these here, as an example of what to expect. */
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
+/* Single-quotes are used for abbreviations, don't mess with them */
+/*//const char * qs = "\"\'«»《》【】『』‘’`„“"; */
+/*const char* qs = "\"«»《》【】『』`„“"; */
 
 #define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
@@ -83,37 +86,19 @@ static Boolean is_proper_name(const char * word)
 }
 #endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
-/* Create a string containing anything that can be construed to
- * be a quotation mark. This works, because link-grammar is more
- * or less ignorant of quotes at this time.
- */
-static const wchar_t * list_of_quotes(Sentence sent)
-{
-	Affix_table_con q_list;
-	
-	q_list = affix_list_find(sent->dict->affix_table, AFDICT_QUOTES);
-	sent->list_of_quotes = (wchar_t *)q_list->string;
-
-	/* These are no longer in use, but are read from the 4.0.affix file */
-	/* I've left these here, as an example of what to expect. */
-
-	/* Single-quotes are used for abbreviations, don't mess with them */
-	/* //const char * qs = "\"\'«»《》【】『』‘’`„“"; */
-	/* const char* qs = "\"«»《》【】『』`„“"; */
-
-	return sent->list_of_quotes;
-}
-
 /**
+ * AFDICT_QUOTES defines a string containing anything that can be
+ * construed to be a quotation mark. This works, because link-grammar
+ * is more or less ignorant of quotes at this time.
  * Return TRUE if the character is a quotation character.
  */
 static Boolean is_quote(Sentence sent, wchar_t wc)
 {
-	static const wchar_t *quotes = NULL;
-	if (NULL == quotes) quotes = list_of_quotes(sent);
+	const wchar_t *quotes =
+		(const wchar_t *)AFCLASS(sent->dict->affix_table, AFDICT_QUOTES)->string;
 
-	if (NULL !=  wcschr(quotes, wc)) return TRUE;
-	return FALSE;
+	if (NULL == quotes) return FALSE;
+	return (NULL !=  wcschr(quotes, wc));
 }
 
 /**
@@ -290,6 +275,11 @@ static void add_alternative(Sentence sent,
 						at, prefnum, stemnum, suffnum);
 				return;
 			}
+			if (test_enabled("no-stems") ||
+				(0 == strncmp(sent->dict->lang, "de", 2)))
+			{
+				if ('\0' == *affix[0]) break;
+			}
 
 			if (ai == t_count)	/* need to add a word */
 			{
@@ -344,6 +334,7 @@ static void add_alternative(Sentence sent,
 					sz = MIN(strlen(*affix), MAX_WORD);
 					strncpy(buff, *affix, sz);
 					buff[sz] = 0;
+					if (test_enabled("no-stems")) break;
 					if (suffnum && *suffix[0] != '\0')
 					{
 						/*
@@ -359,6 +350,12 @@ static void add_alternative(Sentence sent,
 					break;
 				case SUFFIX:	/* =word */
 					sz = MIN(strlen(*affix) + 2, MAX_WORD);
+					if (test_enabled("no-suffixes"))
+					{
+						strncpy(buff, *affix, sz);
+						buff[sz] = 0;
+						break;
+					}
 					buff[0] = INFIX_MARK;
 					strncpy(&buff[1], *affix, sz);
 					buff[sz] = 0;
@@ -470,7 +467,7 @@ static Boolean issue_alternatives(Sentence sent,
 static Boolean suffix_split(Sentence sent, const char *w, const char *wend)
 {
 	int i, j, len;
-	Affix_table_con prefix_list, suffix_list;
+	Afdict_class prefix_list, suffix_list;
 	int p_strippable, s_strippable;
 	const char **prefix, **suffix;
 	char newword[MAX_WORD+1];
@@ -479,8 +476,8 @@ static Boolean suffix_split(Sentence sent, const char *w, const char *wend)
 
 	/* Set up affix tables.  */
 	if (NULL == dict->affix_table) return FALSE;
-	prefix_list = affix_list_find(dict->affix_table, AFDICT_PRE);
-	suffix_list = affix_list_find(dict->affix_table, AFDICT_SUF);
+	prefix_list = AFCLASS(dict->affix_table, AFDICT_PRE);
+	suffix_list = AFCLASS(dict->affix_table, AFDICT_SUF);
 	p_strippable = prefix_list->length;
 	s_strippable = suffix_list->length;
 	prefix = prefix_list->string;
@@ -615,7 +612,7 @@ if (2 < verbosity && find_word_in_dict(dict, newword)) {
 static Boolean mprefix_split(Sentence sent, const char *word)
 {
 	int i;
-	Affix_table_con mprefix_list;
+	Afdict_class mprefix_list;
 	int mp_strippable;
 	const char **mprefix;
 	const char *newword;
@@ -633,7 +630,7 @@ static Boolean mprefix_split(Sentence sent, const char *word)
 
 	/* set up affix table  */
 	if (NULL == dict->affix_table) return FALSE;
-	mprefix_list = affix_list_find(dict->affix_table, AFDICT_MPRE);
+	mprefix_list = AFCLASS(dict->affix_table, AFDICT_MPRE);
 	mp_strippable = mprefix_list->length;
 	if (0 == mp_strippable) return FALSE;
 	assert(mp_strippable <= HEB_MPREFIX_MAX, /* sanity check */
@@ -788,9 +785,9 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	if (afdict != NULL)
 	{
-		have_suffix = (0 < affix_list_find(afdict, AFDICT_SUF)->length) ||
-		              (0 < affix_list_find(afdict, AFDICT_PRE)->length);
-		have_mprefix = (0 < affix_list_find(afdict, AFDICT_MPRE)->length);
+		have_suffix = (0 < AFCLASS(afdict, AFDICT_SUF)->length) ||
+		              (0 < AFCLASS(afdict, AFDICT_PRE)->length);
+		have_mprefix = (0 < AFCLASS(afdict, AFDICT_MPRE)->length);
 	}
 
 	/* First, see if we can already recognize the word as-is. If
@@ -854,10 +851,10 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	if (afdict != NULL)
 	{
 		/* Set up affix tables.  */
-		Affix_table_con rpunc_list, lpunc_list, units_list;
-		lpunc_list = affix_list_find(afdict, AFDICT_LPUNC);
-		rpunc_list = affix_list_find(afdict, AFDICT_RPUNC);
-		units_list = affix_list_find(afdict, AFDICT_UNITS);
+		Afdict_class rpunc_list, lpunc_list, units_list;
+		lpunc_list = AFCLASS(afdict, AFDICT_LPUNC);
+		rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
+		units_list = AFCLASS(afdict, AFDICT_UNITS);
 		l_strippable = lpunc_list->length;
 		r_strippable = rpunc_list->length;
 		u_strippable = units_list->length;
@@ -1532,7 +1529,8 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			sent->word[i].x = catenate_X_nodes(sent->word[i].x, we);
 			if (3 < verbosity)
 			{
-				printf("Tokenize word=%d %s expr=", i, sent->word[i].unsplit_word);
+				printf("Tokenize word=%d '%s' alt=%zd '%s' expr=",
+				       i, sent->word[i].unsplit_word, ialt, s);
 				print_expression(sent->word[i].x->exp);
 			}
 		}

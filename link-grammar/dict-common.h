@@ -27,19 +27,31 @@ void add_empty_word(Dictionary, Dict_node *);
 
 void patch_subscript(char *);
 
-Affix_table_con affix_list_find(Dictionary affix_table, const char *);
+/* Connector names for the affix class lists in the affix file */
 
-/* Connector names for the lists in the affix file */
-#define AFDICT_RPUNC "RPUNC"
-#define AFDICT_LPUNC "LPUNC"
-#define AFDICT_QUOTES "QUOTES"
-#define AFDICT_UNITS "UNITS"
+enum {
+	AFDICT_RPUNC=0,
+	AFDICT_LPUNC,
+	AFDICT_QUOTES,
+	AFDICT_UNITS,
+	AFDICT_SUF,
+	AFDICT_PRE,
+	AFDICT_MPRE,
+	AFDICT_SANEMORPHISM,
+	AFDICT_END /* must be last */
+} afdict_classnum;
 
-/* SUF is used in the Russian dict; PRE is not used anywhere, yet ... */
-#define AFDICT_SUF "SUF"
-#define AFDICT_PRE "PRE"
-#define AFDICT_MPRE "MPRE" /* Multi-prefix, currently for Hebrew */
-#define AFDICT_SANEMORPHISM "SANEMORPHISM" /* Regexp for sane_morphism() */
+#define AFDICT_CLASSNAMES \
+	"RPUNC", \
+	"LPUNC", \
+	"QUOTES", \
+	"UNITS", \
+	"SUF",          /* SUF is used in the Russian dict */ \
+	"PRE",          /* PRE is not used anywhere, yet... */ \
+	"MPRE",         /* Multi-prefix, currently for Hebrew */ \
+	"SANEMORPHISM"  /* Regexp for sane_morphism() */
+
+#define AFCLASS(afdict, class) (&afdict->afdict_class[class])
 
 #define AFFIX_COUNT_MEM_INCREMENT 64
 

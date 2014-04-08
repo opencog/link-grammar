@@ -49,79 +49,57 @@ static inline char * deinflect(const char * str)
 	return s;
 }
 
-/* Affix_table_con is a pointer to a dynamically allocated array with
+/* The affix dictionary is represented as a dynamically allocated array with
  * an element for each class (connector type) in the affix file. Each element
  * has a pointer to an array of strings which are the punctuation/affix
- * names. The array is terminated by a dummy element with a null-string
- * connector name, and a string array length of 0. A pointer to this
- * dummy element is returned to signify that a connector was not found. */
+ * names. */
 
-static size_t affix_table_len(Affix_table_con atc)
-{
-	size_t atl = 0;
-	while (0 != atc[atl].length) atl++;
-	return atl;
-}
+const char const * afdict_classname[] = { AFDICT_CLASSNAMES };
 
 /**
- * Add a new affix table class, and return a pointer to its entry.
- */
-static Affix_table_con affix_table_append(Dictionary affix_table,
-	  	const char * con)
-{
-	Affix_table_con atc = affix_table->affix_table_con;
-	size_t len = affix_table_len(atc);
-
-	atc = realloc((void *)atc, (len + 2) * sizeof(*atc));
-	affix_table->affix_table_con = atc;
-	atc[len].name = string_set_add(con, affix_table->string_set);
-	atc[len].length = 0;
-	atc[len].mem_elems = 0;
-	atc[len].string = NULL;
-
-	/* terminator entry */
-	atc[len+1].length = 0;
-	atc[len+1].string = NULL;
-
-	return &atc[len];
-}
-
-static void affix_list_resize(Affix_table_con atc)
-{
-	size_t old_mem_elems = atc->mem_elems;
-
-	atc->mem_elems += AFFIX_COUNT_MEM_INCREMENT;
-	atc->string = xrealloc((void *)atc->string, old_mem_elems,
-	 atc->mem_elems * sizeof(*atc->string));
-}
-
-/**
- * LG intenal use only:
  * Find the affix table entry for given connector name.
- * If the connector name is not in the table, return a pointer to its
- * termination entry, which has a zero length field to signify "not found".
+ * If the connector name is not in the table, return NULL.
  */
-Affix_table_con affix_list_find(Dictionary affix_table, const char * con)
+static Afdict_class afdict_find(Dictionary afdict, const char * con)
 {
-	Affix_table_con atc = affix_table->affix_table_con;
+	const char ** ac;
 
-	while (0 != atc->length && strcmp(atc->name, con)) atc++;
-	return atc;
+	for (ac = afdict_classname; ac < &afdict_classname[AFDICT_END]; ac++)
+	{
+		if (0 == strcmp(*ac, con))
+			return &afdict->afdict_class[ac - afdict_classname];
+	}
+	return NULL;
 }
 
-static void affix_list_add(Dictionary affix_table, const char * name,
+static void affix_list_resize(Afdict_class ac)
+{
+	size_t old_mem_elems = ac->mem_elems;
+
+	ac->mem_elems += AFFIX_COUNT_MEM_INCREMENT;
+	ac->string = xrealloc((void *)ac->string, old_mem_elems,
+	 ac->mem_elems * sizeof(*ac->string));
+}
+
+static void affix_list_add(Dictionary afdict, const char * name,
 		const char * affix)
 {
-	Affix_table_con atc = affix_list_find(affix_table, name);
-	if (0 == atc->length)
-		atc = affix_table_append(affix_table, name);
-	if (atc->length == atc->mem_elems)
-		affix_list_resize(atc);
-	atc->string[atc->length] = string_set_add(affix, affix_table->string_set);
-	atc->length++;
+	Afdict_class ac = afdict_find(afdict, name);
+
+	if (NULL == ac)
+	{
+		prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
+				  "\tThis class name will be ignored.",
+				  name, afdict->line_number, afdict->name);
+		return;
+	}
+	if (ac->length == ac->mem_elems)
+		affix_list_resize(ac);
+	ac->string[ac->length] = string_set_add(affix, afdict->string_set);
+	ac->length++;
 }
 
-static void load_affix(Dictionary affix_table, Dict_node *dn, int l)
+static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 {
 	char *string;
 	const char *con;
@@ -134,7 +112,7 @@ static void load_affix(Dictionary affix_table, Dict_node *dn, int l)
 			{
 				prt_error("Warning: Idiom %s found near line %d of %s.\n"
 						  "\tIt will be ignored since it is meaningless there.",
-						  dn->string, affix_table->line_number, affix_table->name);
+						  dn->string, afdict->line_number, afdict->name);
 			}
 			return; /* Don't load idioms */
 		}
@@ -146,11 +124,11 @@ static void load_affix(Dictionary affix_table, Dict_node *dn, int l)
 			prt_error("Warning: Word \"%s\" found near line %d of %s.\n"
 					  "\tWord has more than one connector.\n"
 					  "\tThis word will be ignored.",
-					  dn->string, affix_table->line_number, affix_table->name);
+					  dn->string, afdict->line_number, afdict->name);
 			return;
 		}
 		string = deinflect(dn->string);
-		affix_list_add(affix_table, con, string);
+		affix_list_add(afdict, con, string);
 		free(string);
 	}
 }
@@ -166,60 +144,63 @@ static int revcmplen(const void *a, const void *b)
  * function needs to be invoked again after the affix table structure
  * is re-constructed.
  */
-static bool affix_list_init(Dictionary affix_table)
+static bool afdict_init(Dictionary afdict)
 {
-	Affix_table_con atc;
+	Afdict_class ac;
 
 	if (0) verbosity = 5; /* debug - !verbosity is not set so early for now */
 	if (4 < verbosity)
 	{
 		size_t l;
-		for (atc = affix_table->affix_table_con; atc->length; atc++)
+
+		for (ac = afdict->afdict_class; ac->length; ac++)
 		{
-				lgdebug(+0, "Class=%s:", atc->name);
-				for (l = 0; l < atc->length; l++)
-					lgdebug(0, " '%s'", atc->string[l]);
+				lgdebug(+0, "Class %s:", afdict_classname[ac-afdict->afdict_class]);
+				for (l = 0; l < ac->length; l++)
+					lgdebug(0, " '%s'", ac->string[l]);
 				lgdebug(0, "\n");
 		}
 	}
 
 	/* Store the SANEMORPHISM regex in the unused (up to now)
 	 * regex_root element of the affix dictionary, and precompile it */
-	assert(NULL == affix_table->regex_root, "SM regex is already assigned");
-	atc = affix_list_find(affix_table, AFDICT_SANEMORPHISM);
-	if (0 != atc->length)
+	assert(NULL == afdict->regex_root, "SM regex is already assigned");
+	ac = AFCLASS(afdict, AFDICT_SANEMORPHISM);
+	if (0 != ac->length)
 	{
 		int rc;
+
 		Regex_node * sm_re = (Regex_node *) malloc(sizeof(Regex_node));
 		char rebuf[MAX_WORD + 16] = "^((";
 
 		/* The regex is converted to: ^((original-regex)b)+$ */
-		strcat(rebuf, atc->string[0]);
+		strcat(rebuf, ac->string[0]);
 		strcat(rebuf, ")b)+$");
 
-		affix_table->regex_root = sm_re;
+		afdict->regex_root = sm_re;
 		sm_re->pattern = strdup(rebuf);
-		sm_re->name = strdup(atc->name);
+		sm_re->name = strdup(afdict_classname[AFDICT_SANEMORPHISM]);
 		sm_re->re = NULL;
 		sm_re->next = NULL;
-		rc = compile_regexs(affix_table);
+		rc = compile_regexs(afdict);
 		if (rc) {
 			prt_error("Error: sane_morphism: Failed to compile "
 			          "regex '%s' in file %s, return code %d\n",
-			          atc->name, affix_table->name, rc);
+			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name, rc);
 			return FALSE;
 		}
-		lgdebug(+5, "%s regex %s\n", atc->name, sm_re->pattern);
+		lgdebug(+5, "%s regex %s\n",
+		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
 	}
 
 	/* pre-sort the MPRE list */
-	atc = affix_list_find(affix_table, AFDICT_MPRE);
-	if (0 < atc->length)
+	ac = AFCLASS(afdict, AFDICT_MPRE);
+	if (0 < ac->length)
 	{
 		/* Longer subwords have priority over shorter ones,
 		 * reverse-sort by length.
 		 * XXX mprefix_suffix() for Hebrew depends on that. */
-		qsort(atc->string, atc->length, sizeof(char *), revcmplen);
+		qsort(ac->string, ac->length, sizeof(char *), revcmplen);
 	}
 
 	{
@@ -230,10 +211,10 @@ static bool affix_list_init(Dictionary affix_table)
 		dyn_str * qs;
 		const char *pqs;
 
-		atc = affix_list_find(affix_table, AFDICT_QUOTES);
+		ac = AFCLASS(afdict, AFDICT_QUOTES);
 		qs = dyn_str_new();
-		for (i = 0; i < atc->length; i++)
-			dyn_strcat(qs, atc->string[i]);
+		for (i = 0; i < ac->length; i++)
+			dyn_strcat(qs, ac->string[i]);
 
 		/*
 		 * Convert utf8 to wide chars before use.
@@ -245,18 +226,19 @@ static bool affix_list_init(Dictionary affix_table)
 		if (0 > w)
 		{
 			prt_error("Error: Affix dictionary: %s: "
-						 "Invalid utf8 character\n", AFDICT_QUOTES);
+						 "Invalid utf8 character\n", afdict_classname[AFDICT_QUOTES]);
 			return FALSE;
 		}
 
 		/* Store the wide char version at the AFDICT_QUOTES entry.
-		 */
-		atc->string = xrealloc((void *)atc->string, atc->mem_elems,
-		  sizeof(*wqs) * w);
-		atc->mem_elems =  sizeof(*wqs) * w;
-		wqs = (wchar_t *)atc->string;
+		 */ 
+		ac->string = xrealloc((void *)ac->string, ac->mem_elems,
+		             sizeof(*wqs) * (w+1));
+		ac->mem_elems =  sizeof(*wqs) * (w+1);
+		wqs = (wchar_t *)ac->string;
 		pqs = qs->str;
-		(void) mbsrtowcs(wqs, &pqs, w, &mbs);
+		(void)mbsrtowcs(wqs, &pqs, w, &mbs);
+		wqs[w] = L'\0';
 
 		dyn_str_delete(qs);
 	}
@@ -303,7 +285,7 @@ dictionary_six_str(const char * lang,
 	dict->num_entries = 0;
 	dict->is_special = FALSE;
 	dict->already_got_it = '\0';
-	dict->line_number = 1;
+	dict->line_number = 0;
 	dict->root = NULL;
 	dict->regex_root = NULL;
 	dict->word_file_header = NULL;
@@ -323,7 +305,7 @@ dictionary_six_str(const char * lang,
 	dict->name = string_set_add(dict_name, dict->string_set);
 
 	/*
-	 * Special setup per dictionary type. The check here assumes the affix
+	 * A special setup per dictionary type. The check here assumes the affix
 	 * dictionary name contains "affix". FIXME: For not using this
 	 * assumption, the dictionary creating stuff needs a rearrangement.
 	 */
@@ -342,14 +324,20 @@ dictionary_six_str(const char * lang,
 		/*
 		 * Affix dictionary.
 		 */
-		dict->insert_entry = load_affix;
+		size_t i;
 
-		/* initialize the connector table */
-		dict->affix_table_con = malloc(sizeof(*dict->affix_table_con));
-		/* dummy element - terminator entry */
-		dict->affix_table_con->length = 0;
-		dict->affix_table_con->string = NULL;
+		dict->insert_entry = load_affix;
 		dict->lookup = return_true;
+
+		/* initialize the class table */
+		dict->afdict_class = malloc(sizeof(*dict->afdict_class)*AFDICT_END);
+		for (i = 0; i < AFDICT_END; i++)
+		{
+			dict->afdict_class[i].mem_elems = 0;
+			dict->afdict_class[i].length = 0;
+			dict->afdict_class[i].string = NULL;
+		}
+
 	}
 
 	/* Read dictionary from the input string. */
@@ -382,7 +370,7 @@ dictionary_six_str(const char * lang,
 		prt_error("Error: Could not open affix file %s", affix_name);
 		goto failure;
 	}
-	if (! affix_list_init(dict->affix_table))
+	if (! afdict_init(dict->affix_table))
 		goto failure;
 
 	if (read_regex_file(dict, regex_name)) goto failure;

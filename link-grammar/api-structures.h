@@ -114,9 +114,8 @@ struct Connector_set_s
 	unsigned int table_size;
 };
 
-struct Affix_table_con_struct
+struct Afdict_class_struct
 {
-	const char * name;    /* affix class name */
 	size_t mem_elems;     /* number of memory elements alolocated */
 	size_t length;        /* number of strings */
 	char const ** string;
@@ -138,7 +137,7 @@ struct Dictionary_s
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
-	Affix_table_con affix_table_con;
+	Afdict_class afdict_class;
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker; /* spell checker handle */
@@ -266,7 +265,6 @@ struct Sentence_s
 	bool   * post_quote;
 	int    t_start;             /* start word of the current token sequence */
 	int    t_count;             /* word count in the current token sequence */
-	wchar_t * list_of_quotes;   /* from the AFDICT_QUOTES entry */
 
 	/* parser internal/private state */
 #ifdef USE_FAT_LINKAGES
