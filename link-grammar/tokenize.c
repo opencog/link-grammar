@@ -275,8 +275,7 @@ static void add_alternative(Sentence sent,
 						at, prefnum, stemnum, suffnum);
 				return;
 			}
-			if (test_enabled("no-stems") ||
-				(0 == strncmp(sent->dict->lang, "de", 2)))
+			if (test_enabled("no-stems"))
 			{
 				if ('\0' == *affix[0]) break;
 			}
