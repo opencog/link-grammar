@@ -510,7 +510,7 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
-	return ((*s == SUBSCRIPT_MARK)?(0):(*s))  -  ((*t == SUBSCRIPT_MARK)?(0):(*t));
+	return (*s)  -  ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
 /**
