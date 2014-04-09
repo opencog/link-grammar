@@ -21,7 +21,7 @@ class Parser(object):
                        spell_guess = False,
                        allow_null = True,
                        screen_width = 180,
-                       max_parse_time = 5,
+                       max_parse_time = 30,
                        disjunct_cost = 2.0,
                        max_sentence_length = 170):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
@@ -219,7 +219,7 @@ class ParseOptions(object):
     islands_ok = property(**islands_ok())
 
     def max_parse_time():
-        doc = "Determines the approximate maximum time (in seconds) that parsing is allowed to take. The way it works is that after this time has expired, the parsing process is artificially forced to complete quickly by pretending that no further solutions (entries in the hash table) can be constructed. The actual parsing time might be slightly longer."
+        doc = "Determines the approximate maximum time (in seconds) that parsing is allowed to take. After this time has expired, the parsing process is artificially forced to complete quickly by pretending that no further solutions can be constructed. The actual parsing time might be slightly longer."
         def fget(self):
             return clg.parse_options_get_max_parse_time(self._po)
         def fset(self, value):
@@ -339,7 +339,7 @@ class Linkage(object):
 
     def __init__(self, linkage_swig_obj, calculate_sub_linkages=True, null_count=0):
 
-        # XXX FIXME Most of the initialization below just wasts CPU time,
+        # XXX FIXME Most of the initialization below just wastes CPU time,
         # especially if the user does not need this stuff.
         self.num_of_words = clg.linkage_get_num_words(linkage_swig_obj)
         self.num_of_links = clg.linkage_get_num_links(linkage_swig_obj)
