@@ -563,8 +563,8 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 	}
 
 	lgdebug(5, "Result: '%s'-'%s'=%d\n",
-	 s, t, (((s == ds)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t))));
-	return (((s == ds)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
+	 s, t, (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
+	return (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
 /**

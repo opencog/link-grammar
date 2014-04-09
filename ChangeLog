@@ -4,6 +4,7 @@ Version 5.0.1 (9 April 2014)
  * Generalize the notion of prefix/suffix to arbitrary classes (Amir P)
  * Fixes for German adjectives.
  * Fix build break when sqlite3-dev not installed.
+ * Fix regression in Russian morphology handling.
 
 Version 5.0.0 (1 April 2014)
  * License upgrade to LGPLv2.1
