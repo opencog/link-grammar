@@ -323,19 +323,19 @@ class LinkTestCase(unittest.TestCase):
                          u'Left-Link-Link*-Right')
 
 # Tests are run in alphabetical order; do the language tests last.
-class AZLangTestCaseDE(unittest.TestCase):
+class ZLangTestCaseDE(unittest.TestCase):
     def setUp(self):
         self.p = Parser(lang = 'de')
 
-    def test_a_getting_words(self):
-        self.assertEqual(self.p.parse_sent('Der Hund jagte ihn durch den Park.')[0].words,
-            ['LEFT-WALL', 'der.d', 'Hund.n', 'jagte.s', 'ihn', 'durch',
-               'den.d', 'Park.n', '.', 'RIGHT-WALL'])
-
-    def test_b_getting_num_of_words(self):
+    def test_a_getting_num_of_words(self):
         #Words include punctuation and a 'LEFT-WALL' and 'RIGHT_WALL'
         self.assertEqual(self.p.parse_sent('Dies ist den Traum.')[0].num_of_words, 7)
         self.assertEqual(self.p.parse_sent('Der Hund jagte ihn durch den Park.')[0].num_of_words, 10)
+
+    def test_b_getting_words(self):
+        self.assertEqual(self.p.parse_sent('Der Hund jagte ihn durch den Park.')[0].words,
+            ['LEFT-WALL', 'der.d', 'Hund.n', 'jagte.s', 'ihn', 'durch',
+               'den.d', 'Park.n', '.', 'RIGHT-WALL'])
 
     def test_c_getting_links(self):
         sent = 'Dies ist den Traum.'
@@ -350,6 +350,37 @@ class AZLangTestCaseDE(unittest.TestCase):
                          Link('ist.v','O','O','Traum.n'))
         self.assertEqual(linkage.links[4],
                          Link('den.d','Dam','Dam','Traum.n'))
+        self.assertEqual(linkage.links[5],
+                         Link('.','RW','RW','RIGHT-WALL'))
+
+# Tests are run in alphabetical order; do the language tests last.
+class ZLangTestCaseRU(unittest.TestCase):
+    def setUp(self):
+        self.p = Parser(lang = 'ru')
+
+    def test_a_getting_num_of_words(self):
+        #Words include punctuation and a 'LEFT-WALL' and 'RIGHT_WALL'
+        self.assertEqual(self.p.parse_sent('это тести.')[0].num_of_words, 5)
+        self.assertEqual(self.p.parse_sent('вверху плыли редкие облачка.')[0].num_of_words, 7)
+
+    def test_b_getting_words(self):
+        self.assertEqual(self.p.parse_sent('вверху плыли редкие облачка.')[0].words,
+            ['LEFT-WALL', 'вверху.e', 'плыли.vnndpp', 'редкие.api',
+                'облачка.ndnpi', '.', 'RIGHT-WALL'])
+
+    def test_c_getting_links(self):
+        sent = 'вверху плыли редкие облачка.'
+        linkage = self.p.parse_sent(sent)[0]
+        self.assertEqual(linkage.links[0],
+                         Link('LEFT-WALL','Xp','Xp','.'))
+        self.assertEqual(linkage.links[1],
+                         Link('LEFT-WALL','W','Wd','плыли.vnndpp'))
+        self.assertEqual(linkage.links[2],
+                         Link('вверху.e','EI','EI','плыли.vnndpp'))
+        self.assertEqual(linkage.links[3],
+                         Link('плыли.vnndpp','SIp','SIp','облачка.ndnpi'))
+        self.assertEqual(linkage.links[4],
+                         Link('редкие.api','Api','Api','облачка.ndnpi'))
         self.assertEqual(linkage.links[5],
                          Link('.','RW','RW','RIGHT-WALL'))
 
