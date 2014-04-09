@@ -1,8 +1,9 @@
-Version 5.0.1 (XXX 2014)
+Version 5.0.1 (9 April 2014)
  * Dictionary debugging print fixes from Amir P
  * Print summary of parse statistics when in batch mode (from AmirP)
  * Generalize the notion of prefix/suffix to arbitrary classes (Amir P)
  * Fixes for German adjectives.
+ * Fix build break when sqlite3-dev not installed.
 
 Version 5.0.0 (1 April 2014)
  * License upgrade to LGPLv2.1
