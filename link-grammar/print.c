@@ -1318,46 +1318,48 @@ static const char * header(int mode)
  *   print_sentence_word_alternatives(sent, FALSE, display_func, NULL)
  * Iterate over the sentence words and their alternatives.
  * Handle each alternative using the display() function if it is supplied,
- * or else just print them.
- * The returned value is not relevant in ths case.
+ * or else (if it is NULL) just print them.
  *
- *   print_sentence_word_alternatives(sent, FALSE, NULL, token)
- * NOTE: Not reentrant - used for dictionary debug only.
- * Return the word and alternative index of first occurrence in the sentence
- * of the given token. This is used to prevent duplicate inforamtion display
- * for repeated morphemes (if there are multiples splits, each of several
- * morphemes, then many of them may repeat).
+ *   print_sentence_word_alternatives(sent, FALSE, NULL, tokenpos)
+ * Return trough the tokenpos structure the index of the first occurrence
+ * in the sentence of the given token. This is used to prevent duplicate
+ * inforamtion display for repeated morphemes (if there are multiples
+ * splits, each of several morphemes, then many of them may repeat).
  *
  *   print_sentence_word_alternatives(sent, TRUE, NULL, NULL)
  * If debugprint is TRUE, this is a debug printout of the sentence.
  * (The debug printouts are with level 0 because this function is
  * invoked for debug on certain positive level.)
- * The returned value is not relevant in ths case.
  *
  */
 
-struct tokenpos print_sentence_word_alternatives(Sentence sent,
-		Boolean debugprint, void (*display)(Dictionary, const char *),
-		const char * findtoken)
+struct tokenpos /* First position of the given token - to prevent duplicates */
 {
-	int wi;   /* internal sentence word index */
-	int ai;   /* index of a word alternative */
-	int sentlen = sent->length;        /* shortened if there is a right-wall */
-	int first_sentence_word = 0;       /* used for skipping a left-wall */
+	const char * token;
+	int wi;
+	int ai;
+};
+
+void print_sentence_word_alternatives(Sentence sent, Boolean debugprint,
+     void (*display)(Dictionary, const char *), struct tokenpos * tokenpos)
+{
+	int wi;   /* Internal sentence word index */
+	int ai;   /* Index of a word alternative */
+	int sentlen = sent->length;        /* Shortened if there is a right-wall */
+	int first_sentence_word = 0;       /* Used for skipping a left-wall */
 	int word_split = FALSE;            /* !!word got split */
-	static struct tokenpos tokenpos = {0, 0}; /* prevent duplicates */
 
 	if (0 == sentlen)
 	{
 		/* It should not happen, but if it actually happens due to some
 		 * strange conditions, it's better not to abort the program. */
 		prt_error("Error: Sentence length is 0 (reason unknown)\n");
-		return tokenpos;
+		return;
 	}
 
 	if (debugprint) lgdebug(+0, "\n");
-	else if (findtoken)
-		; /* do nothing */
+	else if (NULL != tokenpos)
+		; /* Do nothing */
 	else
 	{
 		/* For analyzing words we need to ignore the left/right walls */
@@ -1393,7 +1395,7 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 				}
 			}
 		}
-		/* "String", because it can be a word, morpheme, or (TBD) idiom */
+		/* "String", because it can be a word, morpheme, or (TODO) idiom */
 		if (word_split && (NULL == display)) printf("String splits to:\n");
 	}
 
@@ -1433,17 +1435,18 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 					char w[MAX_WORD*2];
 
 					/* Don't display information again for the same word */
-					if (findtoken && (0 == strcmp(findtoken, wt)))
+					if (NULL != tokenpos && (0 == strcmp(tokenpos->token, wt)))
 					{
-						tokenpos.wi = wi;
-						tokenpos.ai = ai;
-						return tokenpos;
+						tokenpos->wi = wi;
+						tokenpos->ai = ai;
+						return;
 					}
 					if ((NULL != display))
 					{
-						tokenpos =
-						 print_sentence_word_alternatives(sent, FALSE, NULL, wt);
-						if ((tokenpos.wi != wi) || (tokenpos.ai != ai))
+						struct tokenpos firstpos = { wt };
+
+						print_sentence_word_alternatives(sent, FALSE, NULL, &firstpos);
+						if ((firstpos.wi != wi) || (firstpos.ai != ai))
 						{
 							/* We encountered this token earlier */
 							lgdebug(5, "Skiping repeated %s\n", wt);
@@ -1451,7 +1454,7 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 						}
 					}
 
-					/* restore SUBSCRIPT_DOT for printing */
+					/* Restore SUBSCRIPT_DOT for printing */
 					st = strrchr(wt, SUBSCRIPT_MARK);
 					if (st)
 					{
@@ -1465,7 +1468,7 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 					 * TODO: Its type can be decoded and a more precise
 					 * term (stem, prefix, etc.) can be used.
 					 * Display the features of the token */
-					if (! findtoken && (NULL != display))
+					if (NULL == tokenpos && (NULL != display))
 					{
 						printf("Token \"%s\" ", wt);
 						display(sent->dict, wt);
@@ -1483,6 +1486,4 @@ struct tokenpos print_sentence_word_alternatives(Sentence sent,
 	}
 	if (debugprint) lgdebug(0, "\n");
 	else if (word_split) printf("\n");
-
-	return tokenpos;
 }
