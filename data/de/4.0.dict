@@ -7,8 +7,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.0.1 (formatted as V5v0v1+)
-<dictionary-version-number>: V5v0v1+;
+% Dictionary version number is 5.0.2 (formatted as V5v0v2+)
+<dictionary-version-number>: V5v0v2+;
 
 % Word-count balancing for suffixes
 =.zzz: ZZZ-;

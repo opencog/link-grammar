@@ -322,4 +322,35 @@ class LinkTestCase(unittest.TestCase):
         self.assertEqual(unicode(Link('Left','Link','Link*','Right')),
                          u'Left-Link-Link*-Right')
 
+# Tests are run in alphabetical order; do the language tests last.
+class AZLangTestCaseDE(unittest.TestCase):
+    def setUp(self):
+        self.p = Parser(lang = 'de')
+
+    def test_a_getting_words(self):
+        self.assertEqual(self.p.parse_sent('Der Hund jagte ihn durch den Park.')[0].words,
+            ['LEFT-WALL', 'der.d', 'Hund.n', 'jagte.s', 'ihn', 'durch',
+               'den.d', 'Park.n', '.', 'RIGHT-WALL'])
+
+    def test_b_getting_num_of_words(self):
+        #Words include punctuation and a 'LEFT-WALL' and 'RIGHT_WALL'
+        self.assertEqual(self.p.parse_sent('Dies ist den Traum.')[0].num_of_words, 7)
+        self.assertEqual(self.p.parse_sent('Der Hund jagte ihn durch den Park.')[0].num_of_words, 10)
+
+    def test_c_getting_links(self):
+        sent = 'Dies ist den Traum.'
+        linkage = self.p.parse_sent(sent)[0]
+        self.assertEqual(linkage.links[0],
+                         Link('LEFT-WALL','Xp','Xp','.'))
+        self.assertEqual(linkage.links[1],
+                         Link('LEFT-WALL','W','W','ist.v'))
+        self.assertEqual(linkage.links[2],
+                         Link('dies','Ss','Ss','ist.v'))
+        self.assertEqual(linkage.links[3],
+                         Link('ist.v','O','O','Traum.n'))
+        self.assertEqual(linkage.links[4],
+                         Link('den.d','Dam','Dam','Traum.n'))
+        self.assertEqual(linkage.links[5],
+                         Link('.','RW','RW','RIGHT-WALL'))
+
 unittest.main()
