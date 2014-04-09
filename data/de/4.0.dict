@@ -22,7 +22,7 @@ Hof.n Rock.n Sohn.n Baum.n Traum.n Arzt.n Satz.n Monat.n Bericht.n Erfolg.n Vers
 Professor.n Doktor.n Staat.n Junge.n Bauer.n Nachbar.n Name.n Lehrer.s Vater.n Bruder.n
 Schlussel.s Vogel.n Apfel.n Garten.n Tag.n Park.n: 
   {GE+} & {Rm+ or @M+} & {@MX+} & (
-    ((({@Ae-} & Dnmd-) or ({@Ar-} & Dnmi-)) & (Ss+ or SIs- or (Xd- & Xc+ & MX-) or XR- or XL+))
+    ((({@Ae-} & Dnmd-) or ({@Ar-} & Dnmi-)) & (Ss+ or SIs- or (Xd- & Xc+ & MX-) or SJr- or SJl+))
     or ({@An-} & Dam- & (O- or J*a- or B+))
     or ({@An-} & Ddm- & (J*d- or JB+)));
 
@@ -32,7 +32,7 @@ Bahn.n Uhr.n Zahl.n Zeit.n Ansicht.n Gestalt.n Krankheit.n Bibliothek.n
 Blume.n Ecke.n Farbe.n Geige.n Karte.n Kueche.n Nase.n Reise.n Sache.n Strasse.n Woche.n
 Regel.n Schwester.n Tochter.n Mutter.n Tuer.n Geschichte.n: 
   {GE+} & {Rf+ or @M+} & {@MX+} & (
-    ({@Ae-} & Dnf- & (Ss+ or SIs- or O- or B+ or J*a- or (Xd- & Xc+ & MX-) or XR- or XL+))
+    ({@Ae-} & Dnf- & (Ss+ or SIs- or O- or B+ or J*a- or (Xd- & Xc+ & MX-) or SJr- or SJl+))
     or ({@An-} & Ddf- & (J*d- or JB+))
     or ({@An-} & Dgf- & GE-));
 
@@ -40,8 +40,10 @@ Regel.n Schwester.n Tochter.n Mutter.n Tuer.n Geschichte.n:
 Maedchen.s Haus.n Jahr.n Bein.n Stueck.n Teil.n Geschenk.n Geschaeft.n Papier.n 
 Glas.n Land.n Wort.n Buch.n Bild.n Kind.n Bett.n Auge.n Ende.n Buero.n Auto.n Kino.n
 Fenster.s Messer.s Verbrechen.s Halsband.n: 
-{GE+} & {Rn+ or @M+} & {@MX+} & (((({@Ae-} & Dnnd-) or ({@As-} & Dnni-)) & (Ss+ or SIs- or O- or J*a- or B+
-or (Xd- & Xc+ & MX-))) or ({@An-} & Ddn- & (J*d- or JB+)));
+  {GE+} & {Rn+ or @M+} & {@MX+} & (
+    ((({@Ae-} & Dnnd-) or ({@As-} & Dnni-)) 
+       & (Ss+ or SIs- or O- or J*a- or B+ or (Xd- & Xc+ & MX-) or SJr- or SJl+))
+    or ({@An-} & Ddn- & (J*d- or JB+)));
 
 % Masculine genitive
 Hundes.n Mannes.n Briefes.n Steines.n Freundes.n Koeniges.n Punktes.n Schuhes.n Mondes.n
@@ -49,7 +51,7 @@ Balles.n Marktes.n Frosches.n Hofes.n Rockes.n Sohnes.n Baumes.n Traumes.n Arzte
 Satzes.n Monates.n Berichtes.n Erfolges.n Versuches.n
 Professores.n Doktors.n Staates.n Junges.n Bauern.s Nachbares.n Names.n Lehrers.s
 Vaters.n Bruders.n Schlusseles.s Vogeles.n Apfeles.n Gartenes.n Tages.n Parkes.n:
-{GE+} & {Rn+ or @M+} & {@MX+} & {@An-} & Dgm- & GE-;
+  {GE+} & {Rn+ or @M+} & {@MX+} & {@An-} & Dgm- & GE-;
 
 % Neuter genitive
 Maedchenes.s Hauses.n Jahres.n Beines.n Stueckes.n Teiles.n Geschenkes.n
@@ -57,7 +59,7 @@ Geschaeftes.n Papieres.n
 Glases.n Landes.n Wortes.n Buches.n Bildes.n Kindes.n Bettes.n Auges.n Endes.n
 Bueros.s Autos.s Kinos.s
 Fensters.n Messers.n Verbrechenes.n: 
-{GE+} & {Rn+ or @M+} & {@MX+} & {@An-} & Dgn- & GE-;
+  {GE+} & {Rn+ or @M+} & {@MX+} & {@An-} & Dgn- & GE-;
 
 % Plural
 Maenner.n Hunde.n Katzen.n Frauen.n Hauser.n Maedchenen.n Briefe.n Steine.n Freunde.n Koenige.n
@@ -74,33 +76,39 @@ Jahre.n Beine.n Stuecke.n Teile.n Geschenke.n Geschaefte.n Papiere.n
 Glaeser.n Laender.n Woerter.n Buecher.n Bilder.n Gelder.n Kinder.n Betten.n Augen.n Enden.n
 Bueros.p Autos.p Kinos.p Fenster.p Messer.p Verbrechen.p Maedchen.p
 Tagen.n Parke.n Tueren.n Halsbaender.n Geschichten.n: 
-{GE+} & {Rp+ or @M+} & {@MX+} & 
-{@An-} & ((Dnp- & (Sp+ or SIp- or O- or J*a- or B+ or (Xd- & Xc+ & MX-))) or (Ddp- & (J*d- or 
-JB+)) or (Dgp- & GE-));
+  {GE+} & {Rp+ or @M+} & {@MX+} & {@An-} & (
+    (Dnp- & (Sp+ or SIp- or O- or J*a- or B+ or (Xd- & Xc+ & MX-) or SJr- or SJl+))
+    or (Ddp- & (J*d- or JB+))
+    or (Dgp- & GE-));
 
 %Masculine mass
 Kaese.n:
-{GE+} & {Rm+ or @M+} & {@MX+} & 
-((((({@Ae-} & Dnmd-) or ({@Ar-} & {Dnmi- or Dm-}))) & (Ss+ or SIs- or (Xd- & Xc+ & MX-))) or 
-(({@An-} & {Dam- or Dm-}) & (O- or J*a- or B+)) or ((({@An-} & Ddm-) or ({@Am-} & {Dm-})) & (J*d- or JB+)));
+  {GE+} & {Rm+ or @M+} & {@MX+} & (
+    (((({@Ae-} & Dnmd-) or ({@Ar-} & {Dnmi- or Dm-}))) & (Ss+ or SIs- or (Xd- & Xc+ & MX-)))
+    or (({@An-} & {Dam- or Dm-}) & (O- or J*a- or B+))
+    or ((({@An-} & Ddm-) or ({@Am-} & {Dm-})) & (J*d- or JB+)));
 
 %Feminine mass
 Arbeit.n Luft.n Milch.n:
-{GE+} & {Rf+ or @M+} & {@MX+} & ((({@Ae-} & {Dnf- or Dm-}) & (Ss+ or SIs- or O- or B+ or J*a- or (Xd- & Xc+ & MX-))) or 
-((({@An-} & Ddf-) or ({@Ar-} & {Dm-})) & (J*d- or JB+)) or ((({@An-} & Dgf-) or ({@Ar-} & {Dm-})) & GE-));
+  {GE+} & {Rf+ or @M+} & {@MX+} & (
+    (({@Ae-} & {Dnf- or Dm-}) & (Ss+ or SIs- or O- or B+ or J*a- or (Xd- & Xc+ & MX-)))
+    or ((({@An-} & Ddf-) or ({@Ar-} & {Dm-})) & (J*d- or JB+))
+    or ((({@An-} & Dgf-) or ({@Ar-} & {Dm-})) & GE-));
 
 %Neuter mass
 Geld.n Wasser.n Bier.n Brot.n:
-{GE+} & {Rn+ or @M+} & {@MX+} & (((({@Ae-} & Dnnd-) or ({@As-} & {Dnni- or Dm-})) & (Ss+ or SIs- or O- or J*a- or B+
-or (Xd- & Xc+ & MX-))) or ((({@An-} & Ddn-) or ({@Am-} & {Dm-})) & (J*d- or JB+)));
+  {GE+} & {Rn+ or @M+} & {@MX+} & (
+    ((({@Ae-} & Dnnd-) or ({@As-} & {Dnni- or Dm-}))
+      & (Ss+ or SIs- or O- or J*a- or B+ or (Xd- & Xc+ & MX-)))
+    or ((({@An-} & Ddn-) or ({@Am-} & {Dm-})) & (J*d- or JB+)));
 
 %Masculine mass genitive
 Kaeses.n:
-{GE+} & {Rn+ or @M+} & {@MX+} & (({@An-} & Dgm-) or ({@As-} & {Dm-})) & GE-;
+  {GE+} & {Rn+ or @M+} & {@MX+} & (({@An-} & Dgm-) or ({@As-} & {Dm-})) & GE-;
 
 %Neuter mass genitive
 Geldes.n Wassers.n Bieres.n Brotes.n:
-{GE+} & {Rn+ or @M+} & {@MX+} & (({@An-} & Dgn-) or ({@As-} & {Dm-})) & GE-;
+  {GE+} & {Rn+ or @M+} & {@MX+} & (({@An-} & Dgn-) or ({@As-} & {Dm-})) & GE-;
 
 %PRONOUNS AND DETERMINERS
 
@@ -476,8 +484,9 @@ sehr.e ziemlich.e: EA+ or EE+;
 
 schnell.e: {EE-} & (MV- or MVI+);
 
+% SJl, SJr, connects nouns only; use AJ for adjectives, VJ for verbs ... etc.
 und: 
-  {@XL-} & XR+ & (
+  {@SJl-} & SJr+ & (
     ({GE+} & {D-} & (S+ or SI- or O- or B+ or J- or GE- or (Xd- & Xc+ & MX-)))
     or ({EA-} & (A+ or ({@MV-} & (P- or PI+))))
     or ({@MVI-} & (I- or II+))
