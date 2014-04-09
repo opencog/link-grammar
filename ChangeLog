@@ -1,3 +1,6 @@
+Version 5.0.2 (XXX 2014)
+ * stuff
+
 Version 5.0.1 (9 April 2014)
  * Dictionary debugging print fixes from Amir P
  * Print summary of parse statistics when in batch mode (from AmirP)
