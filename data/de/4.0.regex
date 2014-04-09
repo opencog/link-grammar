@@ -45,12 +45,17 @@ NUMBERS: /^[0-9.,-]*[0-9][0-9.,-]*\([0-9:.,-]*[0-9][0-9.,-]*\)$/
 
 % Roman numerals
 % The first expr has the problem that it matches an empty string.
-% Thus, the next three rules have at least one section is non-empty.
+% Thus, the next four rules have at least one section is non-empty.
 % (This is an issue for er in german, which is both a word and a suffix.)
 % ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
+ROMAN-NUMERAL-WORDS: /^M+(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 ROMAN-NUMERAL-WORDS: /^M*(CM|DC{0,3}|C{1,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|LX{0,3}|X{1,3}|XL)(IX|V?I{0,3}|IV)$/
 ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|VI{0,3}|I{1,3}|IV)$/
+% The look-ahead below would be a better solution, than the four lines
+% above, but it seems that neither gnu-regex nor bsd-regex support
+% load-ahead, and so we can't use this.
+% ROMAN-NUMERAL-WORDS: /^(?=.+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 
 % Strings of initials. e.g "Dr. J.G.D. Smith lives on Main St."
 INITIALS: /^([A-Z]\.)+$/
