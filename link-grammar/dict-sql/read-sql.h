@@ -22,8 +22,8 @@ Boolean check_db(const char *lang);
 Dictionary dictionary_create_from_db(const char *lang);
 #else
 
-Boolean check_db(const char *lang) { return false; }
-Dictionary dictionary_create_from_db(const char *lang) { return NULL; }
+static inline Boolean check_db(const char *lang) { return false; }
+static inline Dictionary dictionary_create_from_db(const char *lang) { return NULL; }
 #endif /* HAVE_SQLITE */
 
 #endif /* READ_SQL_H */
