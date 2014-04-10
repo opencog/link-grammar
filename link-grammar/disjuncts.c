@@ -43,18 +43,19 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	size_t copied, left;
-	int i, w;
+	size_t w;
+	int i;
 	size_t nwords = sent->length;
 	Parse_info pi = sent->parse_info;
 	int nlinks = pi->N_links;
-	int *djlist, *djloco, *djcount;
+	size_t *djlist, *djloco, *djcount;
 
 	if (lifo->disjunct_list_str) return;
 	lifo->nwords = nwords;
 	lifo->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
 	memset(lifo->disjunct_list_str, 0, nwords * sizeof(char *));
 
-	djcount = (int *) malloc (sizeof(int) * (nwords + 2*nwords*nlinks));
+	djcount = (size_t *) malloc (sizeof(size_t) * (nwords + 2*nwords*nlinks));
 	djlist = djcount + nwords;
 	djloco = djlist + nwords*nlinks;
 

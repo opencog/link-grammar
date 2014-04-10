@@ -781,7 +781,7 @@ static void mark_region(Sentence sent,
 
 void delete_unmarked_disjuncts(Sentence sent)
 {
-	int w;
+	size_t w;
 	Disjunct *d_head, *d, *dx;
 
 	for (w=0; w<sent->length; w++) {

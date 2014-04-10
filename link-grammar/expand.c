@@ -37,7 +37,7 @@ static Disjunct * build_expansion_disjuncts(Cluster *clu, X_node *x)
  */
 int lg_expand_disjunct_list(Sentence sent)
 {
-	int w;
+	size_t w;
 
 	Cluster *clu = lg_cluster_new();
 

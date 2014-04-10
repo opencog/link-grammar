@@ -38,7 +38,7 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 
 	if ((Info != sev) && ec->sent != NULL)
 	{
-		int i;
+		size_t i;
 		fprintf(stderr, "\tFailing sentence was:\n\t");
 		for (i=0; i<ec->sent->length; i++)
 		{

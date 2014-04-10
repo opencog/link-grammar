@@ -636,7 +636,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	num_lists = 0;
 	for (c1 = 0; c1 < numcon_total; c1++)
 	{
-		if (ctxt->constituent[c1].valid == 0) continue;
+		if (ctxt->constituent[c1].valid == false) continue;
 		num_elements = 1;
 		ctxt->templist[0] = c1;
 		num_lists = find_next_element(ctxt, linkage, c1, numcon_total,

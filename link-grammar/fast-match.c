@@ -100,7 +100,7 @@ static void free_match_list(Match_node * t)
  */
 void free_fast_matcher(Sentence sent)
 {
-	int w;
+	size_t w;
 	unsigned int i;
 	match_context_t *ctxt = sent->match_ctxt;
 
@@ -212,7 +212,8 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 void init_fast_matcher(Sentence sent)
 {
    unsigned int size, i;
-	int w, len;
+	size_t w;
+	int len;
 	Match_node ** t;
 	Disjunct * d;
 	match_context_t *ctxt;
