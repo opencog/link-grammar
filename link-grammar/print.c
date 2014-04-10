@@ -12,7 +12,7 @@
 /*************************************************************************/
 
 
-#include <stdarg.h>
+#include <stdint.h>
 
 #include "print.h"
 #include "externs.h"
@@ -305,8 +305,8 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 		suppressor_used = FALSE;
 		if (!opts->display_walls)
 			for (j=0; j<N_links; j++) {
-				if (ppla[j]->l == 0) {
-					if (ppla[j]->r == linkage->num_words-1) continue;
+				if (ppla[j]->lw == 0) {
+					if (ppla[j]->rw == linkage->num_words-1) continue;
 					N_wall_connectors ++;
 					if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0) {
 						suppressor_used = TRUE;
@@ -323,7 +323,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	if (dict->right_wall_defined) {
 		suppressor_used = FALSE;
 		for (j=0; j<N_links; j++) {
-			if (ppla[j]->r == linkage->num_words-1) {
+			if (ppla[j]->rw == linkage->num_words-1) {
 				N_wall_connectors ++;
 				if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
 					suppressor_used = TRUE;
@@ -355,22 +355,22 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	append_string(string,"[");
 	j = 0;
 	for (link=0; link<N_links; link++) {
-		if (!print_word_0 && (ppla[link]->l == 0)) continue;
-		if (!print_word_N && (ppla[link]->r == linkage->num_words-1)) continue;
-		if (ppla[link]->l == -1) continue;
+		if (!print_word_0 && (ppla[link]->lw == 0)) continue;
+		if (!print_word_N && (ppla[link]->rw == linkage->num_words-1)) continue;
+		if (ppla[link]->lw == SIZE_MAX) continue;
 		if ((j%7 == 0) && (j>0)) append_string(string,"\n");
 		j++;
 		append_string(string,"[%d %d %d",
-				ppla[link]->l-d, ppla[link]->r-d,
+				ppla[link]->lw - d, ppla[link]->rw - d,
 				pctx->link_heights[link]);
 #ifdef USE_FAT_LINKAGES
 		if (ppla[link]->lc->label < 0) {
-			append_string(string," (%s)]", ppla[link]->name);
+			append_string(string," (%s)]", ppla[link]->link_name);
 		} else {
 			append_string(string," ()]");
 		}
 #else
-		append_string(string," (%s)]", ppla[link]->name);
+		append_string(string," (%s)]", ppla[link]->link_name);
 #endif /* USE_FAT_LINKAGES */
 
 	}
@@ -595,9 +595,9 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		{
 			for (j=0; j<N_links; j++)
 			{
-				if (0 == ppla[j]->l)
+				if (0 == ppla[j]->lw)
 				{
-					if (ppla[j]->r == linkage->num_words-1) continue;
+					if (ppla[j]->rw == linkage->num_words-1) continue;
 					N_wall_connectors ++;
 					if (0 == strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS))
 					{
@@ -621,7 +621,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 		suppressor_used = FALSE;
 		for (j=0; j<N_links; j++)
 		{
-			if (ppla[j]->r == linkage->num_words-1)
+			if (ppla[j]->rw == linkage->num_words-1)
 			{
 				N_wall_connectors ++;
 				if (0 == strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS))
@@ -652,25 +652,25 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 
 	for (link_length = 1; link_length < N_words_to_print; link_length++) {
 		for (j=0; j<N_links; j++) {
-			if (ppla[j]->l == -1) continue;
-			if (((unsigned int) (ppla[j]->r - ppla[j]->l)) != link_length)
+			if (ppla[j]->lw == SIZE_MAX) continue;
+			if (((unsigned int) (ppla[j]->rw - ppla[j]->lw)) != link_length)
 			  continue;
-			if (!print_word_0 && (ppla[j]->l == 0)) continue;
+			if (!print_word_0 && (ppla[j]->lw == 0)) continue;
 			/* gets rid of the irrelevant link to the left wall */
-			if (!print_word_N && (ppla[j]->r == linkage->num_words-1)) continue;
+			if (!print_word_N && (ppla[j]->rw == linkage->num_words-1)) continue;
 			/* Get rid of links to empty words */
-			if (0 == strcmp(ppla[j]->name, EMPTY_WORD_SUPPRESS)) continue;
+			if (0 == strcmp(ppla[j]->link_name, EMPTY_WORD_SUPPRESS)) continue;
 
 			if (HIDE_MORPHO &&
-			    0 == strncmp(ppla[j]->name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L))
+			    0 == strncmp(ppla[j]->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L))
 				continue;
 
 			/* gets rid of the irrelevant link to the right wall */
 			/* ??? */
 
 			/* put it into the lowest position */
-			cl = center[ppla[j]->l];
-			cr = center[ppla[j]->r];
+			cl = center[ppla[j]->lw];
+			cr = center[ppla[j]->rw];
 			for (row=0; row < MAX_HEIGHT; row++) {
 				for (k=cl+1; k<cr; k++) {
 					if (picture[row][k] != ' ') break;
@@ -694,7 +694,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 			for (k=cl+1; k<cr; k++) {
 				picture[row][k] = '-';
 			}
-			s = ppla[j]->name;
+			s = ppla[j]->link_name;
 
 			/* display_link_subscripts is always true ... hard-coded */
 			if (opts->display_link_subscripts)

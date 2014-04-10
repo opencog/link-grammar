@@ -278,11 +278,11 @@ Link * excopy_link(Link * l)
 	if (l == NULL) return NULL;
 
 	newl = (Link *) exalloc(sizeof(Link));
-	s = (char *) exalloc(sizeof(char)*(strlen(l->name)+1));
-	strcpy(s, l->name);
-	newl->name = s;
-	newl->l = l->l;
-	newl->r = l->r;
+	s = (char *) exalloc(sizeof(char)*(strlen(l->link_name)+1));
+	strcpy(s, l->link_name);
+	newl->link_name = s;
+	newl->lw = l->lw;
+	newl->rw = l->rw;
 	newl->lc = excopy_connectors(l->lc);
 	newl->rc = excopy_connectors(l->rc);
 
@@ -293,7 +293,7 @@ void exfree_link(Link * l)
 {
 	exfree_connectors(l->rc);
 	exfree_connectors(l->lc);
-	exfree((void *)l->name, sizeof(char)*(strlen(l->name)+1));
+	exfree((void *)l->link_name, sizeof(char)*(strlen(l->link_name)+1));
 	exfree(l, sizeof(Link));
 }
 

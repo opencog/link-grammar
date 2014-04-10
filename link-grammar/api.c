@@ -14,6 +14,7 @@
 #include <limits.h>
 #include <math.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "analyze-linkage.h"
 #include "corpus/corpus.h"
@@ -1593,9 +1594,9 @@ static void exfree_pp_info(PP_info *ppi)
 void linkage_delete(Linkage linkage)
 {
 #ifdef USE_FAT_LINKAGES
-	int i;
+	size_t i;
 #endif /* USE_FAT_LINKAGES */
-	int j;
+	size_t j;
 	Sublinkage *s;
 
 	/* Can happen on panic timeout or user error */
@@ -1773,7 +1774,7 @@ int linkage_get_num_words(const Linkage linkage)
 	return linkage->num_words;
 }
 
-int linkage_get_num_links(const Linkage linkage)
+size_t linkage_get_num_links(const Linkage linkage)
 {
 #ifdef USE_FAT_LINKAGES
 	int current;
@@ -1786,14 +1787,13 @@ int linkage_get_num_links(const Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 }
 
-static inline Boolean verify_link_index(const Linkage linkage, int index)
+static inline Boolean verify_link_index(const Linkage linkage, size_t index)
 {
 	if (!linkage) return false;
-	if ((index < 0) ||
 #ifdef USE_FAT_LINKAGES
-		(index >= linkage->sublinkage[linkage->current].num_links))
+	if	(index >= linkage->sublinkage[linkage->current].num_links)
 #else
-		(index >= linkage->sublinkage.num_links))
+	if	(index >= linkage->sublinkage.num_links)
 #endif /* USE_FAT_LINKAGES */
 	{
 		return false;
@@ -1805,7 +1805,7 @@ int linkage_get_link_length(const Linkage linkage, int index)
 {
 	Link *link;
 	int word_has_link[MAX_SENTENCE];
-	int i, length;
+	size_t i, length;
 #ifdef USE_FAT_LINKAGES
 	int current = linkage->current;
 #endif /* USE_FAT_LINKAGES */
@@ -1820,52 +1820,52 @@ int linkage_get_link_length(const Linkage linkage, int index)
 	for (i=0; i<linkage->sublinkage[current].num_links; ++i)
 	{
 		link = linkage->sublinkage[current].link[i];
-		word_has_link[link->l] = true;
-		word_has_link[link->r] = true;
+		word_has_link[link->lw] = true;
+		word_has_link[link->rw] = true;
 	}
 	link = linkage->sublinkage[current].link[index];
 #else
 	for (i=0; i<linkage->sublinkage.num_links; ++i)
 	{
 		link = linkage->sublinkage.link[i];
-		word_has_link[link->l] = true;
-		word_has_link[link->r] = true;
+		word_has_link[link->lw] = true;
+		word_has_link[link->rw] = true;
 	}
 	link = linkage->sublinkage.link[index];
 #endif /* USE_FAT_LINKAGES */
 
-	length = link->r - link->l;
-	for (i= link->l+1; i < link->r; ++i) {
+	length = link->rw - link->lw;
+	for (i= link->lw+1; i < link->rw; ++i) {
 		if (!word_has_link[i]) length--;
 	}
 	return length;
 }
 
-int linkage_get_link_lword(const Linkage linkage, int index)
+size_t linkage_get_link_lword(const Linkage linkage, size_t index)
 {
 	Link *link;
-	if (!verify_link_index(linkage, index)) return -1;
+	if (!verify_link_index(linkage, index)) return SIZE_MAX;
 #ifdef USE_FAT_LINKAGES
 	link = linkage->sublinkage[linkage->current].link[index];
 #else
 	link = linkage->sublinkage.link[index];
 #endif /* USE_FAT_LINKAGES */
-	return link->l;
+	return link->lw;
 }
 
-int linkage_get_link_rword(const Linkage linkage, int index)
+size_t linkage_get_link_rword(const Linkage linkage, size_t index)
 {
 	Link *link;
-	if (!verify_link_index(linkage, index)) return -1;
+	if (!verify_link_index(linkage, index)) return SIZE_MAX;
 #ifdef USE_FAT_LINKAGES
 	link = linkage->sublinkage[linkage->current].link[index];
 #else
 	link = linkage->sublinkage.link[index];
 #endif /* USE_FAT_LINKAGES */
-	return link->r;
+	return link->rw;
 }
 
-const char * linkage_get_link_label(const Linkage linkage, int index)
+const char * linkage_get_link_label(const Linkage linkage, size_t index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -1874,10 +1874,10 @@ const char * linkage_get_link_label(const Linkage linkage, int index)
 #else
 	link = linkage->sublinkage.link[index];
 #endif /* USE_FAT_LINKAGES */
-	return link->name;
+	return link->link_name;
 }
 
-const char * linkage_get_link_llabel(const Linkage linkage, int index)
+const char * linkage_get_link_llabel(const Linkage linkage, size_t index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -1889,7 +1889,7 @@ const char * linkage_get_link_llabel(const Linkage linkage, int index)
 	return link->lc->string;
 }
 
-const char * linkage_get_link_rlabel(const Linkage linkage, int index)
+const char * linkage_get_link_rlabel(const Linkage linkage, size_t index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -2078,7 +2078,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 	Sentence sent = linkage->sent;
 	Sublinkage * subl;
 	PP_node * pp;
-	int j, k;
+	size_t j, k;
 	D_type_list * d;
 
 #ifdef USE_FAT_LINKAGES

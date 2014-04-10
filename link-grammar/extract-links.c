@@ -64,13 +64,13 @@ make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
 	pc = (Parse_choice *) xalloc(sizeof(*pc));
 	pc->next = NULL;
 	pc->set[0] = lset;
-	pc->link[0].l = llw;
-	pc->link[0].r = lrw;
+	pc->link[0].lw = llw;
+	pc->link[0].rw = lrw;
 	pc->link[0].lc = llc;
 	pc->link[0].rc = lrc;
 	pc->set[1] = rset;
-	pc->link[1].l = rlw;
-	pc->link[1].r = rrw;
+	pc->link[1].lw = rlw;
+	pc->link[1].rw = rrw;
 	pc->link[1].lc = rlc;
 	pc->link[1].rc = rrc;
 	pc->ld = ld;
@@ -511,8 +511,8 @@ static void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, Link link)
 	pi->link_array[pi->N_links] = link;
 	pi->N_links++;
 
-	pi->chosen_disjuncts[link.l] = ld;
-	pi->chosen_disjuncts[link.r] = rd;
+	pi->chosen_disjuncts[link.lw] = ld;
+	pi->chosen_disjuncts[link.rw] = rd;
 }
 
 static void issue_links_for_choice(Parse_info pi, Parse_choice *pc)

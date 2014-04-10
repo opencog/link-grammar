@@ -104,7 +104,7 @@ struct Links_to_patch_struct
 
 void zero_sublinkage(Sublinkage *s)
 {
-	int i;
+	size_t i;
 	s->pp_info = NULL;
 	s->violation = NULL;
 	for (i=0; i<s->num_links; i++) s->link[i] = NULL;
@@ -735,7 +735,7 @@ static Andlist * build_andlist(analyze_context_t *actx, Sentence sent)
  */
 static inline int cost_for_length(int length)
 {
-	  return length-1;
+	return length-1;
 }
 
 /**
@@ -748,7 +748,7 @@ static int link_cost(Parse_info pi)
 	lcost =  0;
 	for (i = 0; i < pi->N_links; i++)
 	{
-		lcost += cost_for_length(pi->link_array[i].r - pi->link_array[i].l);
+		lcost += cost_for_length(pi->link_array[i].rw - pi->link_array[i].lw);
 	}
 	return lcost;
 }
@@ -832,7 +832,7 @@ static void compute_link_names(Sentence sent)
 
 	for (i = 0; i < pi->N_links; i++)
 	{
-		pi->link_array[i].name = intersect_strings(sent,
+		pi->link_array[i].link_name = intersect_strings(sent,
 			connector_get_string(pi->link_array[i].lc),
 			connector_get_string(pi->link_array[i].rc));
 	}

@@ -44,7 +44,7 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
 	size_t copied, left;
 	int i, w;
-	int nwords = sent->length;
+	size_t nwords = sent->length;
 	Parse_info pi = sent->parse_info;
 	int nlinks = pi->N_links;
 	int *djlist, *djloco, *djcount;
@@ -66,8 +66,8 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 	/* Create a table of disjuncts for each word. */
 	for (i=0; i<nlinks; i++)
 	{
-		int lword = pi->link_array[i].l;
-		int rword = pi->link_array[i].r;
+		size_t lword = pi->link_array[i].lw;
+		size_t rword = pi->link_array[i].rw;
 		int slot = djcount[lword];
 
 		/* Skip over RW link to the right wall */
@@ -118,7 +118,7 @@ void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 		for (i = 0; i < slot; i++)
 		{
 			int dj = djlist[w*nlinks + i];
-			copied += lg_strlcpy(djstr+copied, pi->link_array[dj].name, left);
+			copied += lg_strlcpy(djstr+copied, pi->link_array[dj].link_name, left);
 			left = sizeof(djstr) - copied;
 			if (djloco[w*nlinks + i] < w)
 				copied += lg_strlcpy(djstr+copied, "-", left--);

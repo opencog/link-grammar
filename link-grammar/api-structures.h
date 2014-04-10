@@ -206,9 +206,11 @@ struct And_data_s
 
 struct Link_s
 {
-	short l, r;
-	Connector * lc, * rc;
-	const char * name;				  /* spelling of full link name */
+	size_t lw;              /* Offset into Linkage->word NOT Sentence->word */
+	size_t rw;              /* Offset into Linkage->word NOT Sentence->word */
+	Connector * lc;
+	Connector * rc;
+	const char * link_name; /* Spelling of full link name */
 };
 
 struct Parse_info_struct
@@ -240,7 +242,7 @@ struct Sentence_s
 {
 	Dictionary  dict;           /* words are defined from this dictionary */
 	const char *orig_sentence;  /* Copy of original sentence */
-	int    length;              /* number of words */
+	size_t length;              /* number of words */
 	Word  *word;                /* array of words after tokenization */
 	String_set *   string_set;  /* used for word names, not connectors */
 
@@ -370,7 +372,7 @@ struct Postprocessor_s
  */
 struct Sublinkage_s
 {
-	int       num_links;          /* Number of links in array */
+	size_t    num_links;          /* Number of links in array */
 	Link **   link;               /* Array of links */
 	PP_info * pp_info;            /* PP info for each link */
 	const char * violation;       /* Name of violation, if any */
@@ -379,7 +381,7 @@ struct Sublinkage_s
 
 struct Linkage_s
 {
-	int             num_words;  /* number of (tokenized) words */
+	size_t          num_words;  /* number of (tokenized) words */
 	const char *  * word;       /* array of word spellings */
 	Linkage_info*   info;       /* index and cost information */
 #ifdef USE_FAT_LINKAGES

@@ -301,20 +301,20 @@ link_public_api(Sentence)
      linkage_get_sentence(const Linkage linkage);
 link_public_api(int)
      linkage_get_num_words(const Linkage linkage);
-link_public_api(int)
+link_public_api(size_t)
      linkage_get_num_links(const Linkage linkage);
-link_public_api(int)
-     linkage_get_link_lword(const Linkage linkage, int index);
-link_public_api(int)
-     linkage_get_link_rword(const Linkage linkage, int index);
+link_public_api(size_t)
+     linkage_get_link_lword(const Linkage linkage, size_t index);
+link_public_api(size_t)
+     linkage_get_link_rword(const Linkage linkage, size_t index);
 link_public_api(int)
      linkage_get_link_length(const Linkage linkage, int index);
 link_public_api(const char *)
-     linkage_get_link_label(const Linkage linkage, int index);
+     linkage_get_link_label(const Linkage linkage, size_t index);
 link_public_api(const char *)
-     linkage_get_link_llabel(const Linkage linkage, int index);
+     linkage_get_link_llabel(const Linkage linkage, size_t index);
 link_public_api(const char *)
-     linkage_get_link_rlabel(const Linkage linkage, int index);
+     linkage_get_link_rlabel(const Linkage linkage, size_t index);
 link_public_api(int)
      linkage_get_link_num_domains(const Linkage linkage, int index);
 link_public_api(const char **)

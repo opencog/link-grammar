@@ -207,27 +207,27 @@ struct Match_node_struct
 typedef struct X_node_struct X_node;
 struct X_node_struct
 {
-    const char * string;  /* the word itself */
-    Exp * exp;
-    X_node *next;
+	const char * string;  /* the word itself */
+	Exp * exp;
+	X_node *next;
 };
 
 struct Word_struct
 {
-    const char *unsplit_word;
-    const char **alternatives;
-    X_node * x;      /* sentence starts out with these */
-    Disjunct * d;    /* eventually these get generated */
-    Boolean firstupper;
+	const char *unsplit_word;
+	const char **alternatives;
+	X_node * x;          /* Sentence starts out with these, */
+	Disjunct * d;        /* eventually these get generated. */
+	Boolean firstupper;  /* TRUE if capitalized, and is first word of sentence */
 };
 
 
 /* The structure below stores a list of dictionary word files. */
 struct Word_file_struct
 {
-    char file[MAX_PATH_NAME+1];   /* the file name */
-    int changed;             /* TRUE if this file has been changed */
-    Word_file * next;
+	Word_file * next;
+	char file[MAX_PATH_NAME+1];   /* the file name */
+	Boolean changed;              /* TRUE if this file has been changed */
 };
 
 /* The regexs are stored as a linked list of the following nodes. */
@@ -306,8 +306,8 @@ struct Linkage_info_struct
 struct List_o_links_struct
 {
     int link;       /* the link number */
-    short word;       /* the word at the other end of this link */
-    short dir;        /* 0: undirected, 1: away from me, -1: toward me */
+    short word;     /* the word at the other end of this link */
+    short dir;      /* 0: undirected, 1: away from me, -1: toward me */
     List_o_links * next;
 };
 
