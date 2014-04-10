@@ -1523,6 +1523,8 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 
 	if ((k >= sent->num_linkages_post_processed) || (k < 0)) return NULL;
 
+	extract_links(sent->link_info[k].index, sent->parse_info);
+
 	/* Using exalloc since this is external to the parser itself. */
 	linkage = (Linkage) exalloc(sizeof(struct Linkage_s));
 
@@ -1535,14 +1537,9 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	linkage->sublinkage = NULL;
 	linkage->unionized = false;
 	linkage->current = 0;
-	linkage->num_sublinkages=0;
+	linkage->num_sublinkages = 0;
 	linkage->dis_con_tree = NULL;
-#endif /* USE_FAT_LINKAGES */
 
-	extract_links(sent->link_info[k].index, sent->parse_info);
-	compute_chosen_words(sent, linkage);
-
-#ifdef USE_FAT_LINKAGES
 	if (set_has_fat_down(sent))
 	{
 		extract_fat_linkage(sent, opts, linkage);
@@ -1552,6 +1549,8 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 	{
 		extract_thin_linkage(sent, opts, linkage);
 	}
+
+	compute_chosen_words(sent, linkage);
 
 	if (sent->dict->postprocessor != NULL)
 	{
