@@ -531,7 +531,7 @@ void build_sentence_disjuncts(Sentence sent, double cost_cutoff)
 {
 	Disjunct * d;
 	X_node * x;
-	int w;
+	size_t w;
 	for (w = 0; w < sent->length; w++)
 	{
 		d = NULL;
