@@ -312,8 +312,8 @@ struct Domain_s
 	List_o_links * lol;
 	DTreeLeaf *    child;
 	Domain *       parent;
-	int            size;
-	int            start_link;  /* the link that started this domain */
+	size_t         size;
+	size_t         start_link;  /* the link that started this domain */
 	char           type;        /* one letter name */
 };
 

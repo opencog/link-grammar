@@ -313,21 +313,21 @@ static void reset_pp_node(Postprocessor *pp)
 
 /************************ rule application *******************************/
 
-static int apply_rules(Postprocessor *pp,
-							 int (applyfn) (Postprocessor *,Sublinkage *,pp_rule *),
+static bool apply_rules(Postprocessor *pp,
+							 bool (applyfn) (Postprocessor *, Sublinkage *, pp_rule *),
 							 Sublinkage *sublinkage,
 							 pp_rule *rule_array,
 							 const char **msg)
 {
 	int i;
 	for (i=0; (*msg=rule_array[i].msg)!=NULL; i++)
-		if (!applyfn(pp, sublinkage, &(rule_array[i]))) return 0;
-	return 1;
+		if (!applyfn(pp, sublinkage, &(rule_array[i]))) return false;
+	return true;
 }
 
-static int
+static bool
 apply_relevant_rules(Postprocessor *pp,
-						 int(applyfn)(Postprocessor *pp,Sublinkage*,pp_rule *rule),
+						 bool(applyfn)(Postprocessor *, Sublinkage*, pp_rule *),
 						 Sublinkage *sublinkage,
 						 pp_rule *rule_array,
 						 int *relevant_rules,
@@ -343,10 +343,10 @@ apply_relevant_rules(Postprocessor *pp,
 
 	/* we did, and we don't */
 	for (i=0; (idx=relevant_rules[i])!=-1; i++) {
-			*msg = rule_array[idx].msg;	 /* Adam had forgotten this -- DS 4/9/98 */
-			if (!applyfn(pp, sublinkage, &(rule_array[idx]))) return 0;
+			*msg = rule_array[idx].msg;
+			if (!applyfn(pp, sublinkage, &(rule_array[idx]))) return false;
 	}
-	return 1;
+	return true;
 }
 
 /**
@@ -354,7 +354,7 @@ apply_relevant_rules(Postprocessor *pp,
  * contain at least one from the required list.	(as determined by exact
  * string matching)
  */
-static int
+static bool
 apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
 	DTreeLeaf * dtl;
@@ -441,13 +441,13 @@ apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *ru
 	if (count == 0) return FALSE; else return TRUE;
 }
 
-static int
+static bool
 apply_connected(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
 	/* There is actually just one (or none, if user didn't specify it)
 		 rule asserting that linkage is connected. */
-	if (!is_connected(pp)) return 0;
-	return 1;
+	if (!is_connected(pp)) return false;
+	return true;
 }
 
 #if 0
@@ -478,7 +478,8 @@ apply_connected_without(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 	 end points of that link are still connected.
 */
 
-static void reachable_without_dfs(Postprocessor *pp, Sublinkage *sublinkage, int a, int b, int w)
+static void reachable_without_dfs(Postprocessor *pp,
+                Sublinkage *sublinkage, size_t a, size_t b, size_t w)
 {
 	/* This is a depth first search of words reachable from w, excluding
 	 * any direct edge between word a and word b. */
@@ -540,7 +541,8 @@ apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage, pp_rule *rule)
 static bool
 apply_bounded(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
-	size_t d, lw, d_type;
+	size_t d, lw;
+	char d_type;
 	List_o_links * lol;
 	d_type = rule->domain;
 	for (d=0; d<pp->pp_data.N_domains; d++)
@@ -571,7 +573,7 @@ static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 
 	for (link=0; link<sublinkage->num_links; link++)
 	{
-		if (sublinkage->link[link]->lw == -1) continue;
+		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, sublinkage->link[link]->link_name))
 		{
 			lol = (List_o_links *) xalloc(sizeof(List_o_links));
@@ -618,7 +620,7 @@ static void add_link_to_domain(Postprocessor *pp, int link)
 }
 
 static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-									 size_t w, int root,int start_link)
+									 size_t w, size_t root, size_t start_link)
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
@@ -637,7 +639,7 @@ static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 }
 
 static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-									 int w, int root, int start_link)
+                                 size_t w, size_t root, size_t start_link)
 {
 	List_o_links * lol;
 	pp->visited[w] = TRUE;
@@ -656,7 +658,7 @@ static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 }
 
 static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-								 size_t w, int root, int right, int start_link)
+                    size_t w, size_t root, size_t right, size_t start_link)
 {
 	List_o_links * lol;
 	pp->visited[w] = TRUE;
@@ -676,7 +678,7 @@ static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 }
 
 static void left_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-															 size_t w, int right, int start_link)
+                               size_t w, size_t right, size_t start_link)
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
@@ -839,7 +841,7 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 #endif
 
 	/* The order below should be optimal for most cases */
-	if (!apply_relevant_rules(pp,apply_contains_one, sublinkage,
+	if (!apply_relevant_rules(pp, apply_contains_one, sublinkage,
 								pp->knowledge->contains_one_rules,
 								pp->relevant_contains_one_rules, msg))	return 1;
 	if (!apply_relevant_rules(pp,apply_contains_none, sublinkage,
@@ -982,7 +984,7 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 	if (sent->length < opts->twopass_length) return;
 	for (i=0; i<sublinkage->num_links; i++)
 	{
-		if (sublinkage->link[i]->lw == -1) continue;
+		if (sublinkage->link[i]->lw == SIZE_MAX) continue;
 		p = string_set_add(sublinkage->link[i]->link_name, pp->sentence_link_name_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
 	}
