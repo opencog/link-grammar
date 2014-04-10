@@ -1007,7 +1007,7 @@ DBG(printf("after purging: "); print_expression(x->exp); printf("\n"););
 
 		/* Right-to-left pass */
 		N_deleted = 0;
-		for (w = sent->length-1; w >= 0; w--)
+		for (w = sent->length-1; w != (size_t) -1; w--)
 		{
 			for (x = sent->word[w].x; x != NULL; x = x->next)
 			{
@@ -1168,10 +1168,10 @@ static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, 
 	m->shallow = shal;
 }
 
-static int set_dist_fields(Connector * c, int w, int delta)
+static int set_dist_fields(Connector * c, size_t w, int delta)
 {
 	int i;
-	if (c==NULL) return w;
+	if (c == NULL) return (int) w;
 	i = set_dist_fields(c->next, w, delta) + delta;
 	c->word = i;
 	return i;
@@ -1200,7 +1200,7 @@ static power_table * power_table_new(Sentence sent)
 	  for (d=sent->word[w].d; d!=NULL; d=xd) {
 		  xd = d->next;
 		  if ((set_dist_fields(d->left, w, -1) < 0) ||
-			  (set_dist_fields(d->right, w, 1) >= sent->length)) {
+			  (set_dist_fields(d->right, w, 1) >= (int) sent->length)) {
 			  d->next = NULL;
 			  free_disjuncts(d);
 		  } else {
@@ -1495,7 +1495,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	prune_context *pc;
 	Disjunct *d, *free_later, *dx, *nd;
 	Connector *c;
-	int w, N_deleted, total_deleted;
+	size_t w, N_deleted, total_deleted;
 
 	pc = (prune_context *) xalloc (sizeof(prune_context));
 	pc->power_cost = 0;
@@ -1548,7 +1548,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 		if (verbosity > 2) {
-			printf("l->r pass changed %d and deleted %d\n",pc->N_changed,N_deleted);
+			printf("l->r pass changed %zu and deleted %d\n",pc->N_changed, N_deleted);
 		}
 
 		if (pc->N_changed == 0) break;
@@ -1556,7 +1556,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		pc->N_changed = N_deleted = 0;
 		/* right-to-left pass */
 
-		for (w = sent->length-1; w >= 0; w--) {
+		for (w = sent->length-1; w != (size_t) -1; w--) {
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
@@ -1583,7 +1583,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		}
 
 		if (verbosity > 2) {
-			printf("r->l pass changed %d and deleted %d\n", pc->N_changed,N_deleted);
+			printf("r->l pass changed %zu and deleted %d\n", pc->N_changed, N_deleted);
 		}
 
 		if (pc->N_changed == 0) break;

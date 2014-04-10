@@ -63,32 +63,29 @@ static void read_starting_link_table(pp_knowledge *k)
 {
   const char *p;
   const char label[] = "STARTING_LINK_TYPE_TABLE";
-  int i, n_tokens;
-  if (!pp_lexer_set_label(k->lt, label))
-  {
-    prt_error("Fatal error: post_process: Couldn't find starting link table %s",label);
-    exit(1);
-  }
+  size_t i, n_tokens;
+
+  assert(pp_lexer_set_label(k->lt, label),
+    "Fatal error: post_process: Couldn't find starting link table %s", label);
+
   n_tokens = pp_lexer_count_tokens_of_label(k->lt);
-  if (n_tokens %2)
-  {
-    prt_error("Fatal error: post_process: Link table must have format [<link> <domain name>]+");
-    exit(1);
-  }
+  assert((0 == n_tokens %2),
+    "Fatal error: post_process: Link table must have format [<link> <domain name>]+");
+
   k->nStartingLinks = n_tokens/2;
   k->starting_link_lookup_table = (StartingLinkAndDomain*)
     xalloc((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain));
   for (i=0; i<k->nStartingLinks; i++)
-    {
+  {
       /* read the starting link itself */
       k->starting_link_lookup_table[i].starting_link =
-	string_set_add(pp_lexer_get_next_token_of_label(k->lt),k->string_set);
+         string_set_add(pp_lexer_get_next_token_of_label(k->lt),k->string_set);
 
       /* read the domain type of the link */
       p = pp_lexer_get_next_token_of_label(k->lt);
       check_domain_is_legal(p);
       k->starting_link_lookup_table[i].domain = (int) p[0];
-    }
+  }
 
   /* end sentinel */
   k->starting_link_lookup_table[k->nStartingLinks].domain = -1;
@@ -166,7 +163,8 @@ static void read_connected_rule(pp_knowledge *k, const char *label)
 
 static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
 {
-  int n_commas, n_tokens, r, i;
+  size_t n_commas, n_tokens;
+  size_t r, i;
   pp_linkset *lsHandle;
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {
@@ -211,7 +209,8 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
 static void read_bounded_rules(pp_knowledge *k, const char *label)
 {
   const char **tokens;
-  int n_commas, n_tokens, r;
+  int n_commas, n_tokens;
+  size_t r;
   if (!pp_lexer_set_label(k->lt, label)) {
       k->n_bounded_rules = 0;
       if (1 < verbosity) printf("PP warning: Not using any 'bounded' rules\n");
@@ -227,7 +226,7 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Fatal Error: post_process: Invalid syntax: rule %i of %s",r+1,label);
+        prt_error("Fatal Error: post_process: Invalid syntax: rule %zu of %s",r+1,label);
         exit(1);
       }
       k->bounded_rules[r].domain = (int) tokens[0][0];
@@ -236,7 +235,7 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
-        prt_error("Fatal Error: post_process: Invalid syntax: rule %i of %s",r+1,label);
+        prt_error("Fatal Error: post_process: Invalid syntax: rule %zu of %s",r+1,label);
         exit(1);
       }
       k->bounded_rules[r].msg = string_set_add(tokens[0], k->string_set);
@@ -247,11 +246,11 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
 }
 
 static void read_contains_rules(pp_knowledge *k, const char *label,
-				pp_rule **rules, int *nRules)
+				pp_rule **rules, size_t *nRules)
 {
   /* Reading the 'contains_one_rules' and reading the
      'contains_none_rules' into their respective arrays */
-  int n_commas, n_tokens, i, r;
+  size_t n_commas, n_tokens, i, r;
   const char *p;
   const char **tokens;
   if (!pp_lexer_set_label(k->lt, label)) {

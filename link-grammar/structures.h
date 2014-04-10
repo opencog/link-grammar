@@ -423,11 +423,11 @@ struct pp_knowledge_s
     pp_rule *contains_one_rules, *contains_none_rules;
     pp_rule *bounded_rules;
 
-    int n_connected_rules, n_form_a_cycle_rules;
-    int n_contains_one_rules, n_contains_none_rules;
-    int n_bounded_rules;
+    size_t n_connected_rules, n_form_a_cycle_rules;
+    size_t n_contains_one_rules, n_contains_none_rules;
+    size_t n_bounded_rules;
 
-    int nStartingLinks;
+    size_t nStartingLinks;
     pp_linkset *set_of_links_starting_bounded_domain;
     StartingLinkAndDomain *starting_link_lookup_table;
     String_set *string_set;
