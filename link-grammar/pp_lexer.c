@@ -1220,7 +1220,7 @@ int pp_lexer_count_commas_of_label(PPLexTable *lt)
   return n;
 }
 
-const char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt, int *n_tokens)
+const char **pp_lexer_get_next_group_of_tokens_of_label(PPLexTable *lt, size_t *n_tokens)
 { 
   /* all tokens until next comma, null-terminated */
   int n;
