@@ -511,7 +511,7 @@ static void batch_process_some_linkages(Label label,
                                         Parse_Options opts)
 {
 	if (there_was_an_error(label, sent, opts)) {
-		/* If linkages were found, prnt them */
+		/* If linkages were found, print them */
 		if (sentence_num_linkages_found(sent) > 0) {
 			Linkage linkage = NULL;
 			/* If we found at least one good linkage, print it. */
@@ -829,6 +829,9 @@ int main(int argc, char * argv[])
 			}
 			continue;
 		}
+
+		/* If the input string is just whitespace, then ignore it. */
+		if (strspn(input_string, " \t\v") == strlen(input_string)) continue;
 
 		if (special_command(input_string, dict)) continue;
 		if (parse_options_get_echo_on(opts))
