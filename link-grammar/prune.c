@@ -1548,7 +1548,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			sent->word[w].d = nd;
 		}
 		if (verbosity > 2) {
-			printf("l->r pass changed %zu and deleted %d\n",pc->N_changed, N_deleted);
+			printf("l->r pass changed %d and deleted %zu\n", pc->N_changed, N_deleted);
 		}
 
 		if (pc->N_changed == 0) break;
@@ -1583,7 +1583,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		}
 
 		if (verbosity > 2) {
-			printf("r->l pass changed %zu and deleted %d\n", pc->N_changed, N_deleted);
+			printf("r->l pass changed %d and deleted %zu\n", pc->N_changed, N_deleted);
 		}
 
 		if (pc->N_changed == 0) break;
