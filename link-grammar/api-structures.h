@@ -64,7 +64,7 @@ struct Parse_Options_s
 	char * test;           /* comma-sparated features to test "" */
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
 	bool use_viterbi;      /* Use the Viterbi decoder-based parser */
-	int linkage_limit;     /* The maximum number of linkages processed 100 */
+	size_t linkage_limit;     /* The maximum number of linkages processed 100 */
 	double disjunct_cost;  /* Max disjunct cost to allow */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
@@ -73,9 +73,9 @@ struct Parse_Options_s
 	bool islands_ok;       /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
-	int twopass_length;    /* min length for two-pass post processing */
-	int max_sentence_length;
-	int short_length;      /* Links that are limited in length can be
+	size_t twopass_length; /* min length for two-pass post processing */
+	size_t max_sentence_length;
+	size_t short_length;   /* Links that are limited in length can be
 	                        * no longer than this.  Default = 6 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */
 	bool use_spell_guess;  /* Perform spell-guessing of unknown words. */ 
@@ -249,17 +249,17 @@ struct Sentence_s
 	/* Parse results */
 	int    num_linkages_found;  /* total number before postprocessing.  This
 	                               is returned by the count() function */
-	int    num_linkages_alloced;/* total number of linkages allocated.
+	size_t num_linkages_alloced;/* total number of linkages allocated.
 	                               the number post-processed might be fewer
 	                               because some are non-canonical */
-	int    num_linkages_post_processed;
+	size_t num_linkages_post_processed;
 	                            /* The number of linkages that are actually
 	                               put into the array that was alloced.
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
-	int    num_valid_linkages;  /* number with no pp violations */
+	size_t num_valid_linkages;  /* number with no pp violations */
 	bool   null_links;          /* null links allowed */
-	int    null_count;          /* number of null links in linkages */
+	size_t null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 

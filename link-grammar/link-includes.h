@@ -294,7 +294,7 @@ link_public_api(int)
 typedef struct Linkage_s * Linkage;
 
 link_public_api(Linkage)
-     linkage_create(int index, Sentence sent, Parse_Options opts);
+     linkage_create(size_t index, Sentence sent, Parse_Options opts);
 link_public_api(void)
      linkage_delete(Linkage linkage);
 link_public_api(Sentence)

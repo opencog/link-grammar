@@ -638,15 +638,15 @@ static void free_post_processing(Sentence sent)
 static void post_process_linkages(Sentence sent, Parse_Options opts)
 {
 	int *indices;
-	int in, block_bottom, block_top;
-	int N_linkages_found, N_linkages_alloced;
-	int N_linkages_post_processed, N_valid_linkages;
-	int overflowed;
+	size_t in, block_bottom, block_top;
+	size_t N_linkages_found, N_linkages_alloced;
+	size_t N_linkages_post_processed, N_valid_linkages;
+	bool overflowed;
 	Linkage_info *link_info;
 #ifdef USE_FAT_LINKAGES
-	int N_thin_linkages;
-	int only_canonical_allowed;
-	int canonical;
+	size_t N_thin_linkages;
+	bool only_canonical_allowed;
+	bool canonical;
 #endif /* USE_FAT_LINKAGES */
 
 	free_post_processing(sent);
@@ -659,7 +659,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		err_ctxt ec;
 		ec.sent = sent;
 		err_msg(&ec, Warn, "Warning: Count overflow.\n"
-		  "Considering a random subset of %d of an unknown and large number of linkages\n",
+		  "Considering a random subset of %zu of an unknown and large number of linkages\n",
 			opts->linkage_limit);
 	}
 	N_linkages_found = sent->num_linkages_found;
@@ -683,8 +683,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		{
 			err_ctxt ec;
 			ec.sent = sent;
-			err_msg(&ec, Warn, "Warning: Considering a random subset of %d of %d linkages\n",
-			        N_linkages_alloced, N_linkages_found);
+			err_msg(&ec, Warn,
+			    "Warning: Considering a random subset of %zu of %zu linkages\n",
+			    N_linkages_alloced, N_linkages_found);
 		}
 	}
 	else
@@ -817,8 +818,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			err_ctxt ec;
 			ec.sent = sent;
 			err_msg(&ec, Error, "Error: None of the linkages is canonical\n"
-			          "\tN_linkages_post_processed=%d "
-			          "N_linkages_found=%d\n",
+			          "\tN_linkages_post_processed=%zu "
+			          "N_linkages_found=%zu\n",
 			          N_linkages_post_processed,
 			          N_linkages_found);
 		}
@@ -828,7 +829,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	{
 		err_ctxt ec;
 		ec.sent = sent;
-		err_msg(&ec, Info, "Info: %d of %d linkages with no P.P. violations\n",
+		err_msg(&ec, Info, "Info: %zu of %zu linkages with no P.P. violations\n",
 				N_valid_linkages, N_linkages_post_processed);
 	}
 
@@ -969,7 +970,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 
 static void free_sentence_words(Sentence sent)
 {
-	int i;
+	size_t i;
 	for (i = 0; i < sent->length; i++)
 	{
 		free_X_nodes(sent->word[i].x);
@@ -1126,7 +1127,7 @@ static inline Boolean is_AFFIXTYPE_EMPTY(const char *a, size_t len)
 
 static void sane_morphism(Sentence sent, Parse_Options opts)
 {
-	int lk, i;
+	size_t lk, i;
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table;
 
@@ -1167,12 +1168,12 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 			Boolean empty_word = false;   /* is this an empty word? */
 			Disjunct * cdj = pi->chosen_disjuncts[i];
 
-			lgdebug(+4, ">%d Checking word %d/%d\n", lk, i, sent->length);
+			lgdebug(+4, ">%zu Checking word %zu/%zu\n", lk, i, sent->length);
 
 			/* Ignore island words */
 			if (NULL == cdj)
 			{
-				lgdebug(4, "%d ignored island word\n", lk);
+				lgdebug(4, "%zu ignored island word\n", lk);
 				unsplit = NULL; /* mark it as island */
 				continue;
 			}
@@ -1185,12 +1186,12 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				numalt = altlen(sent->word[i].alternatives);
 
 				for (ai = 0; ai < numalt; ai++) matched_alts[ai] = 0;
-				lgdebug(4, "%d unsplit word %s, numalt %d\n",
+				lgdebug(4, "%zu unsplit word %s, numalt %d\n",
 						lk, unsplit, (int)numalt);
 			}
 			if (NULL == unsplit)
 			{
-				lgdebug(4, "%d ignore morphemes of an island word\n", lk);
+				lgdebug(4, "%zu ignore morphemes of an island word\n", lk);
 				continue;
 			}
 
@@ -1225,12 +1226,12 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				*affix_types_p = AFFIXTYPE_WORD;
 			}
 
-			lgdebug(4, "%d djw=%s affixtype=%c wordlen=%zu\n",
+			lgdebug(4, "%zu djw=%s affixtype=%c wordlen=%zu\n",
 			        lk, djw, empty_word ? 'E' : *affix_types_p, len);
 
 			if (! empty_word) affix_types_p++;
 
-			lgdebug(4, "%d djw %s matched alternatives no.:", lk, djw);
+			lgdebug(4, "%zu djw %s matched alternatives no.:", lk, djw);
 			match_found = false;
 
 			/* Compare the chosen word djw to the alternatives */
@@ -1284,7 +1285,7 @@ try_again:
 					{
 						downcase_utf8_str(downcased, a, MAX_WORD);
 						lgdebug(4, "\n");
-						lgdebug(4, "%d downcasing %s>%s\n", lk, a, downcased);
+						lgdebug(4, "%zu downcasing %s>%s\n", lk, a, downcased);
 						s = downcased;
 						goto try_again;
 					}
@@ -1305,7 +1306,7 @@ try_again:
 			{
 				int num_morphemes = i - unsplit_i + 1;
 
-				lgdebug(4, "%d end of input word, num_morphemes %d\n",
+				lgdebug(4, "%zu end of input word, num_morphemes %d\n",
 						lk, num_morphemes);
 				*affix_types_p++ = AFFIXTYPE_END;
 
@@ -1325,10 +1326,10 @@ try_again:
 
 				if (! match_found)
 				{
-					lgdebug(4, "%d morphemes are missing in this linkage\n", lk);
+					lgdebug(4, "%zu morphemes are missing in this linkage\n", lk);
 					break;
 				}
-				lgdebug(4, "%d Perfect match\n", lk);
+				lgdebug(4, "%zu Perfect match\n", lk);
 			}
 		}
 		*affix_types_p = '\0';
@@ -1348,11 +1349,11 @@ try_again:
 				       "run with verbosity=4 to debug\n", affix_types);
 		}
 		else
-			lgdebug(4, "%d morpheme type combination %s\n", lk, affix_types);
+			lgdebug(4, "%zu morpheme type combination %s\n", lk, affix_types);
 
 		if (match_found)
 		{
-			lgdebug(4, "%d SUCCEEDED\n", lk);
+			lgdebug(4, "%zu SUCCEEDED\n", lk);
 		}
 		else
 		{
@@ -1360,7 +1361,7 @@ try_again:
 			sent->num_valid_linkages --;
 			lifo->N_violations ++;
 			lifo->pp_violation_msg = "Invalid morphism construction.";
-			lgdebug(4, "%d FAILED, remaining %d\n", lk, sent->num_valid_linkages);
+			lgdebug(4, "%zu FAILED, remaining %zu\n", lk, sent->num_valid_linkages);
 		}
 	}
 }
@@ -1390,7 +1391,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 
 		if (verbosity > 1)
 		{
-			prt_error("Info: Total count with %d null links:   %lld\n",
+			prt_error("Info: Total count with %zu null links:   %lld\n",
 				sent->null_count, total);
 		}
 
@@ -1416,7 +1417,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 
 static void free_sentence_disjuncts(Sentence sent)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < sent->length; ++i)
 	{
@@ -1498,12 +1499,11 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if ((verbosity > 0) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
-		prt_error("WARNING: Combinatorial explosion! nulls=%d cnt=%d\n"
+		prt_error("WARNING: Combinatorial explosion! nulls=%zu cnt=%d\n"
 			"Consider retrying the parse with the max allowed disjunct cost set lower.\n"
 			"At the command line, use !cost-max\n",
 			sent->null_count, sent->num_linkages_found);
 	}
-	assert(0 <= sent->num_valid_linkages, "Miscount of valid linkages!")
 	return sent->num_valid_linkages;
 }
 
@@ -1513,7 +1513,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 *
 ****************************************************************/
 
-Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
+Linkage linkage_create(size_t k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
 
@@ -1522,7 +1522,7 @@ Linkage linkage_create(int k, Sentence sent, Parse_Options opts)
 		return sat_create_linkage(k, sent, opts);
 	}
 
-	if ((k >= sent->num_linkages_post_processed) || (k < 0)) return NULL;
+	if (k >= sent->num_linkages_post_processed) return NULL;
 
 	extract_links(sent->link_info[k].index, sent->parse_info);
 
