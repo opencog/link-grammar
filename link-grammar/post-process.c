@@ -778,22 +778,20 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 	size_t d, d1, link;
 	DTreeLeaf * dtl;
 	if (pp->pp_data.N_domains > 0)
+	{
 		pp->pp_data.domain_array[pp->pp_data.N_domains-1].parent = NULL;
-	for (d=0; d < pp->pp_data.N_domains-1; d++) {
-		for (d1 = d+1; d1 < pp->pp_data.N_domains; d1++) {
-			if (contained_in(&pp->pp_data.domain_array[d],&pp->pp_data.domain_array[d1],sublinkage))
-			{
-				pp->pp_data.domain_array[d].parent = &pp->pp_data.domain_array[d1];
-				break;
+		for (d=0; d < pp->pp_data.N_domains-1; d++) {
+			for (d1 = d+1; d1 < pp->pp_data.N_domains; d1++) {
+				if (contained_in(&pp->pp_data.domain_array[d],&pp->pp_data.domain_array[d1],sublinkage))
+				{
+					pp->pp_data.domain_array[d].parent = &pp->pp_data.domain_array[d1];
+					break;
+				}
 			}
-		}
-		if (d1 == pp->pp_data.N_domains) {
-			/* we know this domain is a root of a new tree */
-			pp->pp_data.domain_array[d].parent = NULL;
-			/* It's now ok for this to happen.	It used to do:
-		 printf("I can't find a parent domain for this domain\n");
-		 print_domain(d);
-		 exit(1); */
+			if (d1 == pp->pp_data.N_domains) {
+				/* we know this domain is a root of a new tree */
+				pp->pp_data.domain_array[d].parent = NULL;
+			}
 		}
 	}
 	/* the parent links of domain nodes have been established.
