@@ -525,9 +525,6 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
  *
  * !!blah*.sub is also supported.
  *
- * XXX Why doesn't it match s="."?
- * (It matches other one-character words, like ",".)
- *
  * Assuming that s is a pointer to a search string, and that
  * t is a pointer to a dictionary string, this returns 0 if they
  * match, >0 if s>t, and <0 if s<t.
