@@ -833,7 +833,7 @@ static Exp* purge_Exp(Exp *e)
 /**
  * Returns TRUE if c can match anything in the set S.
  */
-static inline int matches_S(connector_table *ct, Connector * c, int dir)
+static inline bool matches_S(connector_table *ct, Connector * c, char dir)
 {
 	Connector * e;
 	unsigned int h = hash_S(c);
@@ -861,7 +861,7 @@ static inline int matches_S(connector_table *ct, Connector * c, int dir)
  * in e that are not matched by anything in the current set.
  * Returns the number of connectors so marked.
  */
-static int mark_dead_connectors(connector_table *ct, Exp * e, int dir)
+static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
 {
 	int count;
 	count = 0;
@@ -956,7 +956,7 @@ void expression_prune(Sentence sent)
 {
 	int N_deleted;
 	X_node * x;
-	int w;
+	size_t w;
 	Connector *ct[CONTABSZ];
 	Connector *dummy_list = NULL;
 
@@ -1183,7 +1183,7 @@ static int set_dist_fields(Connector * c, int w, int delta)
 static power_table * power_table_new(Sentence sent)
 {
 	power_table *pt;
-	int w, len;
+	size_t w, len;
 	unsigned int i, size;
 	C_list ** t;
 	Disjunct * d, * xd, * head;
@@ -1461,12 +1461,12 @@ left_connector_list_update(prune_context *pc, Connector *c,
  * N_words - 1.   If it does find a way to match it, it updates the
  * c->word fields correctly.
  */
-static int
+static size_t
 right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
-                            int word_c, int w, Boolean shallow)
+                            size_t word_c, size_t w, bool shallow)
 {
-	int n;
-	int foundmatch;
+	size_t n;
+	bool foundmatch;
 
 	if (c == NULL) return w;
 	n = right_connector_list_update(pc, sent, c->next, word_c, w, FALSE) + 1;
@@ -1847,7 +1847,8 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	pp_rule rule;
 	const char * selector;
 	pp_linkset * link_set;
-	int i, w, dir;
+	size_t i, w;
+	char dir;
 	Disjunct *d;
 	Connector *c;
 	int change, total_deleted, N_deleted, deleteme;

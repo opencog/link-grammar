@@ -168,12 +168,14 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 
 	longest = 0;
 	for (link=0; link<N_links; link++) {
-		if (linkage_get_link_lword(linkage, link) == -1) continue;
+		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
+		assert (linkage_get_link_lword(linkage, link) != SIZE_MAX);
 		if (linkage_get_link_num_domains(linkage, link) > longest)
 			longest = linkage_get_link_num_domains(linkage, link);
 	}
 	for (link=0; link<N_links; link++) {
-		if (linkage_get_link_lword(linkage, link) == -1) continue;
+		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
+		assert (linkage_get_link_lword(linkage, link) != SIZE_MAX);
 		dname = linkage_get_link_domain_names(linkage, link);
 		for (j=0; j<linkage_get_link_num_domains(linkage, link); ++j) {
 			append_string(s, " (%s)", dname[j]);
@@ -357,10 +359,11 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	for (link=0; link<N_links; link++) {
 		if (!print_word_0 && (ppla[link]->lw == 0)) continue;
 		if (!print_word_N && (ppla[link]->rw == linkage->num_words-1)) continue;
-		if (ppla[link]->lw == SIZE_MAX) continue;
+		// if (ppla[link]->lw == SIZE_MAX) continue;
+		assert (ppla[link]->lw != SIZE_MAX);
 		if ((j%7 == 0) && (j>0)) append_string(string,"\n");
 		j++;
-		append_string(string,"[%d %d %d",
+		append_string(string,"[%zu %zu %d",
 				ppla[link]->lw - d, ppla[link]->rw - d,
 				pctx->link_heights[link]);
 #ifdef USE_FAT_LINKAGES
@@ -403,7 +406,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
  */
 void compute_chosen_words(Sentence sent, Linkage linkage)
 {
-	int i, l;
+	size_t i, l;
 	char * s, *u;
 	Parse_info pi = sent->parse_info;
 	const char * chosen_words[MAX_SENTENCE];
@@ -439,7 +442,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 				const char ** a;
 				char * a_list;
 
-				append_string(s, "[%d", i);
+				append_string(s, "[%zu", i);
 				for (a = sent->word[i].alternatives; *a; a++) {
 					append_string(s, " %s", *a);
 				}
@@ -652,7 +655,8 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 
 	for (link_length = 1; link_length < N_words_to_print; link_length++) {
 		for (j=0; j<N_links; j++) {
-			if (ppla[j]->lw == SIZE_MAX) continue;
+			// if (ppla[j]->lw == SIZE_MAX) continue;
+			assert (ppla[j]->lw != SIZE_MAX);
 			if (((unsigned int) (ppla[j]->rw - ppla[j]->lw)) != link_length)
 			  continue;
 			if (!print_word_0 && (ppla[j]->lw == 0)) continue;
@@ -927,7 +931,7 @@ void linkage_free_pp_msgs(char * s)
 
 void print_disjunct_counts(Sentence sent)
 {
-	int i;
+	size_t i;
 	int c;
 	Disjunct *d;
 	for (i=0; i<sent->length; i++) {
@@ -944,14 +948,14 @@ void print_disjunct_counts(Sentence sent)
 void print_expression_sizes(Sentence sent)
 {
 	X_node * x;
-	int w, size;
+	size_t w, size;
 	for (w=0; w<sent->length; w++) {
 		size = 0;
 		for (x=sent->word[w].x; x!=NULL; x = x->next) {
 			size += size_of_expression(x->exp);
 		}
 		/* XXX alternatives[0] is not really correct, here .. */
-		printf("%s[%d] ",sent->word[w].alternatives[0], size);
+		printf("%s[%zu] ",sent->word[w].alternatives[0], size);
 	}
 	printf("\n\n");
 }
