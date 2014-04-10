@@ -269,8 +269,8 @@ set_connector_list_length_limit(Sentence sent,
 
 static void set_connector_length_limits(Sentence sent, Parse_Options opts)
 {
-	int i;
-	int len;
+	size_t i;
+	size_t len;
 	Disjunct *d;
 
 	len = opts->short_length;
@@ -322,9 +322,9 @@ int sentence_contains_conjunction(Sentence sent)
  */
 void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
-	int i;
+	size_t i;
 #ifdef USE_FAT_LINKAGES
-	int has_conjunction;
+	bool has_conjunction;
 #endif /* USE_FAT_LINKAGES */
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost);

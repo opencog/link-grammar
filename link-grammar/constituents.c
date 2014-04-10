@@ -1162,9 +1162,9 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 #endif /* USE_FAT_LINKAGES */
                                           )
 {
-	size_t l, w2;
+	size_t d, l, w2;
 	size_t leftmost, rightmost, leftlimit;
-	int d, c, w, c2, numcon_subl = 0;
+	int c, w, c2, numcon_subl = 0;
 	List_o_links * dlink;
 	int rootleft;
 	Sublinkage * subl;

@@ -305,9 +305,9 @@ struct Linkage_info_struct
 
 struct List_o_links_struct
 {
-    int link;       /* the link number */
-    short word;     /* the word at the other end of this link */
-    short dir;      /* 0: undirected, 1: away from me, -1: toward me */
+    size_t link;     /* the link number */
+    size_t word;      /* the word at the other end of this link */
+    signed char dir; /* 0: undirected, 1: away from me, -1: toward me */
     List_o_links * next;
 };
 

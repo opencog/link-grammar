@@ -76,14 +76,14 @@ static int string_in_list(const char * s, const char * a[])
  * Return the name of the domain associated with the provided starting
  * link. Return -1 if link isn't associated with a domain.
  */
-static int find_domain_name(Postprocessor *pp, const char *link)
+static size_t find_domain_name(Postprocessor *pp, const char *link)
 {
-	int i,domain;
+	size_t i, domain;
 	StartingLinkAndDomain *sllt = pp->knowledge->starting_link_lookup_table;
 	for (i=0;;i++)
 	{
 		domain = sllt[i].domain;
-		if (domain==-1) return -1;					/* hit the end-of-list sentinel */
+		if (domain == SIZE_MAX) return SIZE_MAX;  /* hit the end-of-list sentinel */
 		if (post_process_match(sllt[i].starting_link, link)) return domain;
 	}
 }
@@ -103,7 +103,7 @@ static int contained_in(const Domain * d1, const Domain * d2,
 }
 
 /** Returns the predicate "the given link is in the given domain" */
-static int link_in_domain(int link, const Domain * d)
+static bool link_in_domain(size_t link, const Domain * d)
 {
 	List_o_links * lol;
 	for (lol = d->lol; lol != NULL; lol = lol->next)
@@ -117,7 +117,7 @@ static int link_in_domain(int link, const Domain * d)
 /* Although this is no longer used, I'm leaving the code here for future reference --DS 3/98 */
 
 /* Returns TRUE if the domains actually form a properly nested structure */
-static int check_domain_nesting(Postprocessor *pp, int num_links)
+static bool check_domain_nesting(Postprocessor *pp, int num_links)
 {
 	Domain * d1, * d2;
 	int counts[4];
@@ -175,7 +175,7 @@ static void free_D_tree_leaves(DTreeLeaf *dtl)
  */
 void post_process_free_data(PP_data * ppd)
 {
-	int w, d;
+	size_t w, d;
 	for (w = 0; w < ppd->length; w++)
 	{
 		free_List_o_links(ppd->word_links[w]);
@@ -220,9 +220,9 @@ static void mark_reachable_words(Postprocessor *pp, int w)
  * Returns true if the linkage is connected, considering words
  * that have at least one edge....this allows conjunctive sentences
  * not to be thrown out. */
-static int is_connected(Postprocessor *pp)
+static bool is_connected(Postprocessor *pp)
 {
-	int i;
+	size_t i;
 	for (i=0; i<pp->pp_data.length; i++)
 		pp->visited[i] = (pp->pp_data.word_links[i] == NULL);
 	mark_reachable_words(pp, 0);
@@ -235,7 +235,7 @@ static int is_connected(Postprocessor *pp)
 static void build_type_array(Postprocessor *pp)
 {
 	D_type_list * dtl;
-	int d;
+	size_t d;
 	List_o_links * lol;
 	for (d=0; d<pp->pp_data.N_domains; d++)
 	{
@@ -358,7 +358,7 @@ static int
 apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
 	DTreeLeaf * dtl;
-	int d, count;
+	size_t d, count;
 	for (d=0; d<pp->pp_data.N_domains; d++)
 		{
 			for (dtl = pp->pp_data.domain_array[d].child;
@@ -389,19 +389,19 @@ apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
  * all groups containing the selector link do not contain anything
  * from the link_array contained in the rule. Uses exact string matching.
  */
-static int
+static bool
 apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 {
-	DTreeLeaf * dtl;
-	int d;
+	size_t d;
 	for (d=0; d<pp->pp_data.N_domains; d++)
-		{
-			for (dtl = pp->pp_data.domain_array[d].child;
+	{
+		DTreeLeaf * dtl;
+		for (dtl = pp->pp_data.domain_array[d].child;
 			 dtl != NULL &&
 				 !post_process_match(rule->selector,
 								 sublinkage->link[dtl->link]->link_name);
 			 dtl = dtl->next) {}
-			if (dtl != NULL)
+		if (dtl != NULL)
 		{
 			/* selector link of rule appears in this domain */
 			for (dtl = pp->pp_data.domain_array[d].child; dtl != NULL; dtl = dtl->next)
@@ -409,7 +409,7 @@ apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 									 rule->link_array))
 					return FALSE;
 		}
-		}
+	}
 	return TRUE;
 }
 
@@ -504,7 +504,7 @@ static bool
 apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage, pp_rule *rule)
 {
 	List_o_links *lol;
-	int w;
+	size_t w;
 	for (w=0; w<pp->pp_data.length; w++)
 	{
 		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
@@ -618,7 +618,7 @@ static void add_link_to_domain(Postprocessor *pp, int link)
 }
 
 static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-									 int w, int root,int start_link)
+									 size_t w, int root,int start_link)
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
@@ -656,7 +656,7 @@ static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 }
 
 static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-								 int w, int root, int right, int start_link)
+								 size_t w, int root, int right, int start_link)
 {
 	List_o_links * lol;
 	pp->visited[w] = TRUE;
@@ -676,7 +676,7 @@ static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 }
 
 static void left_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-															 int w, int right,int start_link)
+															 size_t w, int right, int start_link)
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
@@ -701,7 +701,7 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 	pp->pp_data.N_domains = 0;
 
 	for (link = 0; link<sublinkage->num_links; link++) {
-		if (sublinkage->link[link]->lw == -1) continue;
+		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
 		s = sublinkage->link[link]->link_name;
 
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
@@ -760,7 +760,7 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 	/* sanity check: all links in all domains have a legal domain name */
 	for (d=0; d<pp->pp_data.N_domains; d++) {
 		i = find_domain_name(pp, pp->pp_data.domain_array[d].string);
-		if (i == -1)
+		if (i == SIZE_MAX)
 			 prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE",
 					 pp->pp_data.domain_array[d].string);
 		pp->pp_data.domain_array[d].type = i;
@@ -813,7 +813,7 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 static int
 internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 {
-	int i;
+	size_t i;
 	/* quick test: try applying just the relevant global rules */
 	if (!apply_relevant_rules(pp,apply_contains_one_globally,
 								sublinkage,

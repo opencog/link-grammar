@@ -327,16 +327,16 @@ struct DTreeLeaf_s
 
 struct PP_data_s
 {
-	int N_domains;
+	size_t N_domains;
 	List_o_links * word_links[MAX_SENTENCE];
 	List_o_links * links_to_ignore;
 	Domain domain_array[MAX_LINKS]; /* the domains, sorted by size */
-	int length;                     /* length of current sentence */
+	size_t length;                  /* length of current sentence */
 };
 
 struct PP_info_s
 {
-	int       num_domains;
+	size_t          num_domains;
 	const char **   domain_name;
 };
 
@@ -351,7 +351,7 @@ struct Postprocessor_s
 	int *relevant_contains_none_rules;
 	/* the following maintain state during a call to post_process() */
 	String_set *sentence_link_name_set;        /* link names seen for sentence */
-	int visited[MAX_SENTENCE];                   /* for the depth-first search */
+	bool visited[MAX_SENTENCE];                 /* for the depth-first search */
 	PP_node *pp_node;
 	PP_data pp_data;
 };

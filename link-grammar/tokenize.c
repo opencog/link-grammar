@@ -1157,7 +1157,7 @@ do_mprefix_processing:
  * the sent->word[] array.  Returns TRUE if all is well, FALSE otherwise.
  * Quote marks are treated just like blanks.
  */
-Boolean separate_sentence(Sentence sent, Parse_Options opts)
+bool separate_sentence(Sentence sent, Parse_Options opts)
 {
 	const char * word_end;
 	Boolean quote_found;
@@ -1221,8 +1221,8 @@ Boolean separate_sentence(Sentence sent, Parse_Options opts)
 	if (dict->right_wall_defined)
 		issue_sentence_word(sent, RIGHT_WALL_WORD, FALSE);
 
-	return (sent->length > (dict->left_wall_defined ? 1 : 0) +
-	       (dict->right_wall_defined ? 1 : 0));
+	return (sent->length > dict->left_wall_defined) ||
+	       dict->right_wall_defined;
 
 failure:
 	prt_error("Unable to process UTF8 input string in current locale %s\n",
@@ -1396,7 +1396,7 @@ static X_node * guess_misspelled_word(Sentence sent, int i, const char * s)
  */
 void build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
-	int i;
+	size_t i;
 	const char *s;
 	const char * regex_name;
 	X_node * e;
@@ -1528,7 +1528,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			sent->word[i].x = catenate_X_nodes(sent->word[i].x, we);
 			if (3 < verbosity)
 			{
-				printf("Tokenize word=%d '%s' alt=%zd '%s' expr=",
+				printf("Tokenize word=%zu '%s' alt=%zd '%s' expr=",
 				       i, sent->word[i].unsplit_word, ialt, s);
 				print_expression(sent->word[i].x->exp);
 			}
@@ -1545,10 +1545,10 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
  *
  * This code is called only is the 'unknown-words' flag is set.
  */
-Boolean sentence_in_dictionary(Sentence sent)
+bool sentence_in_dictionary(Sentence sent)
 {
-	Boolean ok_so_far;
-	int w;
+	bool ok_so_far;
+	size_t w;
 	const char * s;
 	Dictionary dict = sent->dict;
 	char temp[1024];
