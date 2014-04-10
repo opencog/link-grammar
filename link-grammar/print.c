@@ -523,16 +523,22 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		chosen_words[i] = t;
 	}
 
-	if (sent->dict->left_wall_defined) {
-		chosen_words[0] = LEFT_WALL_DISPLAY;
+	if (sent->dict->left_wall_defined)
+	{
+		chosen_words[0] =  string_set_add(LEFT_WALL_DISPLAY, sent->string_set);
 	}
-	if (sent->dict->right_wall_defined) {
-		chosen_words[sent->length-1] = RIGHT_WALL_DISPLAY;
+	if (sent->dict->right_wall_defined)
+	{
+		chosen_words[sent->length-1] = string_set_add(RIGHT_WALL_DISPLAY, sent->string_set);
 	}
-	for (i=0; i<linkage->num_words; ++i) {
-		s = (char *) exalloc(strlen(chosen_words[i])+1);
-		strcpy(s, chosen_words[i]);
-		linkage->word[i] = s;
+
+	/* At this time, we expect both the sent length and the linkage
+	 * length to be identical.  In the future, this may change ...
+	 */
+	assert (sent->length == linkage->num_words, "Unexpected linkage length");
+	for (i=0; i<linkage->num_words; ++i)
+	{
+		linkage->word[i] = chosen_words[i];
 	}
 }
 

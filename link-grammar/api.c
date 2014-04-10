@@ -1593,16 +1593,15 @@ static void exfree_pp_info(PP_info *ppi)
 
 void linkage_delete(Linkage linkage)
 {
-	int i, j;
+#ifdef USE_FAT_LINKAGES
+	int i;
+#endif /* USE_FAT_LINKAGES */
+	int j;
 	Sublinkage *s;
 
 	/* Can happen on panic timeout or user error */
 	if (NULL == linkage) return;
 
-	for (i = 0; i < linkage->num_words; ++i)
-	{
-		exfree((void *) linkage->word[i], strlen(linkage->word[i])+1);
-	}
 	exfree((void *) linkage->word, sizeof(const char *) * linkage->num_words);
 
 #ifdef USE_FAT_LINKAGES
