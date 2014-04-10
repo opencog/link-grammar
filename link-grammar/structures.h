@@ -62,13 +62,6 @@
     current linkage.  It is used to compute the cost of the linkage, and
     also by compute_chosen_words() to compute the chosen_words[].
 
- chosen_words[]
-    An array of pointers to strings.  These are the words to be displayed
-    when printing the solution, the links, etc.  Computed as a function of
-    chosen_disjuncts[] by compute_chosen_words().  This differs from
-    sentence[].string because it contains the suffixes.  It differs from
-    chosen_disjunct[].string in that the idiom symbols have been removed.
-
 #ifdef USE_FAT_LINKAGES
  has_fat_down[]
     An array of chars, one for each word.  TRUE if there is a fat link

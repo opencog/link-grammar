@@ -392,6 +392,14 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 /**
  * This takes the current chosen_disjuncts array and uses it to
  * compute the chosen_words array.  "I.xx" suffixes are eliminated.
+ *
+ * chosen_words[]
+ *    An array of pointers to strings.  These are the words to be displayed
+ *    when printing the solution, the links, etc.  Computed as a function of
+ *    chosen_disjuncts[] by compute_chosen_words().  This differs from
+ *    sentence[].string because it contains the suffixes.  It differs from
+ *    chosen_disjunct[].string in that the idiom symbols have been removed.
+ *
  */
 void compute_chosen_words(Sentence sent, Linkage linkage)
 {
@@ -425,7 +433,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 			}
 			else
 			{
-				/* Altrnative token island.
+				/* Alternative token island.
 				 * Show the internal word number and its list of alternatives. */
 				String * s = string_new();
 				const char ** a;
@@ -504,7 +512,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		else
 		{
 			/* XXX This is wrong, since it fails to indicate what
-			 * was actally used for the parse, which might not actually
+			 * was actually used for the parse, which might not actually
 			 * be alternative 0.  We should do like the above, and then
 			 * manually strip the subscript.
 			 * Except that this code is never ever reached, because
