@@ -1,5 +1,6 @@
-Version 5.0.2 (XXX 2014)
+Version 5.0.2 (10 April 2014)
  * Expanded unit tests
+ * Fix another sqlite3-dev build break 
 
 Version 5.0.1 (9 April 2014)
  * Dictionary debugging print fixes from Amir P
