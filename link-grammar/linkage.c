@@ -30,11 +30,23 @@
 
 /**
  * The functions defined in this file are primarily a part of the user API
- * for working with linakges.
+ * for working with linkages.
  */
 
-/* The Russian dictionary makes use of the empty word to deal with
- * the splitting of words into variable-length word-counts */
+/*
+ * The "empty word" is an ugly, hacky concept used to work around
+ * fixed-length parsing within the parser. That is, the tokenizer
+ * may or may not split a word into morphemes, and the number 
+ * of morphemes may be variable.  However, the parser, as currently
+ * written, expects sentences to be of fixed length. Thus, the "empty
+ * word" is automatically inserted into a sentence, so as to balance
+ * the total count.  However, its resence is entirely bogus, and so,
+ * below, we remove it from the linkage, as well as the links that
+ * connect to it.
+ *
+ * The empty-word device is emplyed by every non-Enlgish dictionary.
+ * (viz. Russian, German, Lithuanian, ...)
+ */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
 #define SUFFIX_WORD ("=")      /* suffixes start with this */
