@@ -12,9 +12,19 @@
 
 #include "link-includes.h"
 
+#define LEFT_WALL_DISPLAY  ("LEFT-WALL")  /* the string to use to show the wall */
+#define RIGHT_WALL_DISPLAY ("RIGHT-WALL") /* the string to use to show the wall */
+
+#define SUFFIX_WORD ("=")      /* suffixes start with this */
+#define SUFFIX_WORD_L 1        /* length of above */
+
+#define HIDE_MORPHO   (!display_morphology)
+
 void   print_disjunct_counts(Sentence sent);
 void   print_expression_sizes(Sentence sent);
-void   compute_chosen_words(Sentence sent, Linkage linkage);
 struct tokenpos;
 void   print_sentence_word_alternatives(Sentence sent, bool debugprint,
        void (*display)(Dictionary, const char *), struct tokenpos *);
+
+bool is_suffix(const char* w);
+

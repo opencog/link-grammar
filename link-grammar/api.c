@@ -20,7 +20,6 @@
 #include "corpus/corpus.h"
 #include "count.h"
 #include "dict-common.h"
-#include "disjuncts.h"
 #include "disjunct-utils.h"
 #include "error.h"
 #include "externs.h"

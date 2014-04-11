@@ -18,20 +18,175 @@
 #include "api-structures.h"
 #include "disjuncts.h"
 #include "extract-links.h"
+#include "idiom.h"
 #include "link-includes.h"
 #include "post-process.h"
 #include "print.h"
+#include "print-util.h"
 #include "sat-solver/sat-encoder.h"
 #include "string-set.h"
 #include "structures.h"
 #include "word-utils.h"
 
+/**
+ * The functions defined in this file are primarily a part of the user API
+ * for working with linakges.
+ */
 
-/***************************************************************
-*
-* Routines which allow user access to Linkages.
-*
-****************************************************************/
+/**
+ * This takes the current chosen_disjuncts array and uses it to
+ * compute the chosen_words array.  "I.xx" suffixes are eliminated.
+ *
+ * chosen_words[]
+ *    An array of pointers to strings.  These are the words to be displayed
+ *    when printing the solution, the links, etc.  Computed as a function of
+ *    chosen_disjuncts[] by compute_chosen_words().  This differs from
+ *    sentence[].string because it contains the suffixes.  It differs from
+ *    chosen_disjunct[].string in that the idiom symbols have been removed.
+ *
+ */
+static void compute_chosen_words(Sentence sent, Linkage linkage)
+{
+	size_t i, l;
+	char * s, *u;
+	Parse_info pi = sent->parse_info;
+	const char * chosen_words[MAX_SENTENCE];
+	Parse_Options opts = linkage->opts;
+	Boolean display_morphology = opts->display_morphology;
+
+	for (i=0; i<sent->length; i++)
+	{
+		const char *t;
+		/* If chosen_disjuncts is NULL, then this is an 'island' word
+		 * that has not been linked to. */
+		if (pi->chosen_disjuncts[i] == NULL)
+		{
+			/* The unsplit_word is the original word; if its been split
+			 * into stem+suffix, and either one hasn't been choosen, then
+			 * neither should be printed.  Do, however, put brackets around
+			 * the original word, and print that.
+			 */
+			t = sent->word[i].unsplit_word;
+			if (t)
+			{
+				l = strlen(t) + 2;
+				s = (char *) xalloc(l+1);
+				sprintf(s, "[%s]", t);
+				t = string_set_add(s, sent->string_set);
+				xfree(s, l+1);
+			}
+			else
+			{
+				/* Alternative token island.
+				 * Show the internal word number and its list of alternatives. */
+				String * s = string_new();
+				const char ** a;
+				char * a_list;
+
+				append_string(s, "[%zu", i);
+				for (a = sent->word[i].alternatives; *a; a++) {
+					append_string(s, " %s", *a);
+				}
+				append_string(s, "]");
+				a_list = string_copy(s);
+				t = string_set_add(a_list, sent->string_set);
+				string_delete(s);
+				exfree(a_list, strlen(a_list)+1);
+			}
+		}
+		else if (opts->display_word_subscripts)
+		{
+			t = pi->chosen_disjuncts[i]->string;
+			/* get rid of those ugly ".Ixx" */
+			if (is_idiom_word(t)) {
+				s = strdup(t);
+				u = strrchr(s, SUBSCRIPT_MARK);
+				*u = '\0';
+				t = string_set_add(s, sent->string_set);
+				free(s);
+			} else {
+				/* Convert the badly-printing ^C into a period */
+				s = strdup(t);
+				u = strrchr(s, SUBSCRIPT_MARK);
+				if (u) *u = SUBSCRIPT_DOT;
+				t = string_set_add(s, sent->string_set);
+				free(s);
+			}
+
+			/* Suppress the empty word. */
+			if (0 == strcmp(t, EMPTY_WORD_DOT))
+			{
+				t = string_set_add("", sent->string_set);
+			}
+
+			/* Concatenate the stem and the suffix together into one word */
+			if (HIDE_MORPHO)
+			{
+				if (is_suffix(t) && pi->chosen_disjuncts[i-1])
+				{
+					const char * stem = pi->chosen_disjuncts[i-1]->string;
+					size_t len = strlen(stem) + strlen (t);
+					char * join = (char *)malloc(len+1);
+					strcpy(join, stem);
+					u = strrchr(join, SUBSCRIPT_MARK);
+
+					/* u can be null, if the the sentence happens to have
+					 * an equals sign in it, for other reasons. */
+					if (u)
+					{
+						*u = '\0';
+						strcat(join, t + SUFFIX_WORD_L);
+						t = string_set_add(join, sent->string_set);
+					}
+					free(join);
+				}
+
+				/* Suppress printing of the stem, if the next word is the suffix */
+				if ((i+1 < sent->length) &&
+				    (pi->chosen_disjuncts[i+1]))
+				{
+					const char * next = pi->chosen_disjuncts[i+1]->string;
+					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
+					{
+						t = string_set_add("", sent->string_set);
+					}
+				}
+			}
+		}
+		else
+		{
+			/* XXX This is wrong, since it fails to indicate what
+			 * was actually used for the parse, which might not actually
+			 * be alternative 0.  We should do like the above, and then
+			 * manually strip the subscript.
+			 * Except that this code is never ever reached, because
+			 * opts->display_word_subscripts is always true...
+			 */
+			t = sent->word[i].alternatives[0];
+		}
+		chosen_words[i] = t;
+	}
+
+	if (sent->dict->left_wall_defined)
+	{
+		chosen_words[0] =  string_set_add(LEFT_WALL_DISPLAY, sent->string_set);
+	}
+	if (sent->dict->right_wall_defined)
+	{
+		chosen_words[sent->length-1] = string_set_add(RIGHT_WALL_DISPLAY, sent->string_set);
+	}
+
+	/* At this time, we expect both the sent length and the linkage
+	 * length to be identical.  In the future, this may change ...
+	 */
+	assert (sent->length == linkage->num_words, "Unexpected linkage length");
+	for (i=0; i<linkage->num_words; ++i)
+	{
+		linkage->word[i] = chosen_words[i];
+	}
+}
+
+
 
 Linkage linkage_create(size_t k, Sentence sent, Parse_Options opts)
 {

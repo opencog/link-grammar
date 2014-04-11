@@ -18,29 +18,23 @@
 #include "externs.h"
 #include "api-structures.h"
 #include "corpus/corpus.h"
-#include "idiom.h"
 #include "print-util.h"
 #include "string-set.h"
 #include "structures.h" /* needed for EMPTY_WORD */
 #include "utilities.h"
 #include "word-utils.h"
 
-#define LEFT_WALL_DISPLAY  ("LEFT-WALL")   /* the string to use to show the wall */
 #define LEFT_WALL_SUPPRESS ("Wd") /* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
-#define RIGHT_WALL_DISPLAY  ("RIGHT-WALL") /* the string to use to show the wall */
-#define RIGHT_WALL_SUPPRESS ("RW") /* If this connector is used on the wall, */
+#define RIGHT_WALL_SUPPRESS ("RW")/* If this connector is used on the wall, */
+                                  /* then suppress the display of the wall. */
 
 /* The Russian dictionary makes use of the empty word to deal with
  * the splitting of words into variable-length word-counts */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
-#define SUFFIX_WORD ("=")      /* suffixes start with this */
-#define SUFFIX_WORD_L 1        /* length of above */
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
-
-#define HIDE_MORPHO   (!display_morphology)
 
 /**
  * Return TRUE if the word is a suffix.
@@ -48,7 +42,7 @@
  * Suffixes have the form =asdf.asdf and "null" suffixes have the form =.asdf.
  * Ordinary equals signs appearing in regular text are either = or =[!].
  */
-static Boolean is_suffix(const char* w)
+bool is_suffix(const char* w)
 {
 	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
 	if (1 == strlen(w)) return FALSE;
@@ -390,159 +384,6 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	ps_string = string_copy(string);
 	string_delete(string);
 	return ps_string;
-}
-
-/**
- * This takes the current chosen_disjuncts array and uses it to
- * compute the chosen_words array.  "I.xx" suffixes are eliminated.
- *
- * chosen_words[]
- *    An array of pointers to strings.  These are the words to be displayed
- *    when printing the solution, the links, etc.  Computed as a function of
- *    chosen_disjuncts[] by compute_chosen_words().  This differs from
- *    sentence[].string because it contains the suffixes.  It differs from
- *    chosen_disjunct[].string in that the idiom symbols have been removed.
- *
- */
-void compute_chosen_words(Sentence sent, Linkage linkage)
-{
-	size_t i, l;
-	char * s, *u;
-	Parse_info pi = sent->parse_info;
-	const char * chosen_words[MAX_SENTENCE];
-	Parse_Options opts = linkage->opts;
-	Boolean display_morphology = opts->display_morphology;
-
-	for (i=0; i<sent->length; i++)
-	{
-		const char *t;
-		/* If chosen_disjuncts is NULL, then this is an 'island' word
-		 * that has not been linked to. */
-		if (pi->chosen_disjuncts[i] == NULL)
-		{
-			/* The unsplit_word is the original word; if its been split
-			 * into stem+suffix, and either one hasn't been choosen, then
-			 * neither should be printed.  Do, however, put brackets around
-			 * the original word, and print that.
-			 */
-			t = sent->word[i].unsplit_word;
-			if (t)
-			{
-				l = strlen(t) + 2;
-				s = (char *) xalloc(l+1);
-				sprintf(s, "[%s]", t);
-				t = string_set_add(s, sent->string_set);
-				xfree(s, l+1);
-			}
-			else
-			{
-				/* Alternative token island.
-				 * Show the internal word number and its list of alternatives. */
-				String * s = string_new();
-				const char ** a;
-				char * a_list;
-
-				append_string(s, "[%zu", i);
-				for (a = sent->word[i].alternatives; *a; a++) {
-					append_string(s, " %s", *a);
-				}
-				append_string(s, "]");
-				a_list = string_copy(s);
-				t = string_set_add(a_list, sent->string_set);
-				string_delete(s);
-				exfree(a_list, strlen(a_list)+1);
-			}
-		}
-		else if (opts->display_word_subscripts)
-		{
-			t = pi->chosen_disjuncts[i]->string;
-			/* get rid of those ugly ".Ixx" */
-			if (is_idiom_word(t)) {
-				s = strdup(t);
-				u = strrchr(s, SUBSCRIPT_MARK);
-				*u = '\0';
-				t = string_set_add(s, sent->string_set);
-				free(s);
-			} else {
-				/* Convert the badly-printing ^C into a period */
-				s = strdup(t);
-				u = strrchr(s, SUBSCRIPT_MARK);
-				if (u) *u = SUBSCRIPT_DOT;
-				t = string_set_add(s, sent->string_set);
-				free(s);
-			}
-
-			/* Suppress the empty word. */
-			if (0 == strcmp(t, EMPTY_WORD_DOT))
-			{
-				t = string_set_add("", sent->string_set);
-			}
-
-			/* Concatenate the stem and the suffix together into one word */
-			if (HIDE_MORPHO)
-			{
-				if (is_suffix(t) && pi->chosen_disjuncts[i-1])
-				{
-					const char * stem = pi->chosen_disjuncts[i-1]->string;
-					size_t len = strlen(stem) + strlen (t);
-					char * join = (char *)malloc(len+1);
-					strcpy(join, stem);
-					u = strrchr(join, SUBSCRIPT_MARK);
-
-					/* u can be null, if the the sentence happens to have
-					 * an equals sign in it, for other reasons. */
-					if (u)
-					{
-						*u = '\0';
-						strcat(join, t + SUFFIX_WORD_L);
-						t = string_set_add(join, sent->string_set);
-					}
-					free(join);
-				}
-
-				/* Suppress printing of the stem, if the next word is the suffix */
-				if ((i+1 < sent->length) &&
-				    (pi->chosen_disjuncts[i+1]))
-				{
-					const char * next = pi->chosen_disjuncts[i+1]->string;
-					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
-					{
-						t = string_set_add("", sent->string_set);
-					}
-				}
-			}
-		}
-		else
-		{
-			/* XXX This is wrong, since it fails to indicate what
-			 * was actually used for the parse, which might not actually
-			 * be alternative 0.  We should do like the above, and then
-			 * manually strip the subscript.
-			 * Except that this code is never ever reached, because
-			 * opts->display_word_subscripts is always true...
-			 */
-			t = sent->word[i].alternatives[0];
-		}
-		chosen_words[i] = t;
-	}
-
-	if (sent->dict->left_wall_defined)
-	{
-		chosen_words[0] =  string_set_add(LEFT_WALL_DISPLAY, sent->string_set);
-	}
-	if (sent->dict->right_wall_defined)
-	{
-		chosen_words[sent->length-1] = string_set_add(RIGHT_WALL_DISPLAY, sent->string_set);
-	}
-
-	/* At this time, we expect both the sent length and the linkage
-	 * length to be identical.  In the future, this may change ...
-	 */
-	assert (sent->length == linkage->num_words, "Unexpected linkage length");
-	for (i=0; i<linkage->num_words; ++i)
-	{
-		linkage->word[i] = chosen_words[i];
-	}
 }
 
 
