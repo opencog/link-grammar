@@ -65,9 +65,9 @@ typedef struct
 	String_set * phrase_ss;
 	WType wordtype[MAX_SENTENCE];
 #ifdef USE_FAT_LINKAGES
-	int word_used[MAXSUBL][MAX_SENTENCE];
+	bool word_used[MAXSUBL][MAX_SENTENCE];
 #else
-	int word_used[MAX_SENTENCE];
+	bool word_used[MAX_SENTENCE];
 #endif /* USE_FAT_LINKAGES */
 	int templist[MAX_ELTS];
 	constituent_t constituent[MAXCONSTITUENTS];
@@ -95,9 +95,9 @@ static void adjust_for_left_comma(con_context_t * ctxt, Linkage linkage, int c)
 		w++;
 		while (1) {
 #ifdef USE_FAT_LINKAGES
-			if (ctxt->word_used[linkage->current][w] == 1) break;
+			if (ctxt->word_used[linkage->current][w]) break;
 #else
-			if (ctxt->word_used[w] == 1) break;
+			if (ctxt->word_used[w]) break;
 #endif /* USE_FAT_LINKAGES */
 			w++;
 		}
@@ -116,9 +116,9 @@ static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 		while (1)
 		{
 #ifdef USE_FAT_LINKAGES
-			if (ctxt->word_used[linkage->current][w]==1) break;
+			if (ctxt->word_used[linkage->current][w]) break;
 #else
-			if (ctxt->word_used[w]==1) break;
+			if (ctxt->word_used[w]) break;
 #endif /* USE_FAT_LINKAGES */
 			w--;
 		}
@@ -269,9 +269,9 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 						w = ctxt->constituent[c1].right+1;
 						while(1) {
 #ifdef USE_FAT_LINKAGES
-							if (ctxt->word_used[linkage->current][w] == 1)
+							if (ctxt->word_used[linkage->current][w])
 #else
-							if (ctxt->word_used[w] == 1)
+							if (ctxt->word_used[w])
 #endif /* USE_FAT_LINKAGES */
 								break;
 							w++;
@@ -288,9 +288,9 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 						w = ctxt->constituent[c1].left-1;
 						while(1) {
 #ifdef USE_FAT_LINKAGES
-							if (ctxt->word_used[linkage->current][w] == 1)
+							if (ctxt->word_used[linkage->current][w])
 #else
-							if (ctxt->word_used[w] == 1)
+							if (ctxt->word_used[w])
 #endif /* USE_FAT_LINKAGES */
 								break;
 							w--;
@@ -379,9 +379,9 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 						w = ctxt->constituent[c].left-1;
 						while (true) {
 #ifdef USE_FAT_LINKAGES
-							if (ctxt->word_used[linkage->current][w] == 1) break;
+							if (ctxt->word_used[linkage->current][w]) break;
 #else
-							if (ctxt->word_used[w] == 1) break;
+							if (ctxt->word_used[w]) break;
 #endif /* USE_FAT_LINKAGES */
 							w--;
 						}
@@ -1042,40 +1042,40 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 
 	for (i=0; i<num_subl; i++)
 	{
-		for (w = 0; w < linkage->num_words; w++) ctxt->word_used[i][w] = 0;
+		for (w = 0; w < linkage->num_words; w++) ctxt->word_used[i][w] = false;
 		linkage->current = i;
 
 		for (link = 0; link < linkage_get_num_links(linkage); link++)
 		{
-			ctxt->word_used[i][linkage_get_link_lword(linkage, link)] = 1;
-			ctxt->word_used[i][linkage_get_link_rword(linkage, link)] = 1;
+			ctxt->word_used[i][linkage_get_link_lword(linkage, link)] = true;
+			ctxt->word_used[i][linkage_get_link_rword(linkage, link)] = true;
 		}
 		if (verbosity >= 2)
 		{
 			printf("Sublinkage %d: ", i);
 			for (w = 0; w < linkage->num_words; w++)
 			{
-				if (ctxt->word_used[i][w] == 0) printf("0 ");
-				if (ctxt->word_used[i][w] == 1) printf("1 ");
+				if (ctxt->word_used[i][w]) printf("1 ");
+				else printf("0 ");
 			}
 			printf("\n");
 		}
 	}
 #else
-	for (w = 0; w < linkage->num_words; w++) ctxt->word_used[w] = 0;
+	for (w = 0; w < linkage->num_words; w++) ctxt->word_used[w] = false;
 
 	for (link = 0; link < linkage_get_num_links(linkage); link++)
 	{
-		ctxt->word_used[linkage_get_link_lword(linkage, link)] = 1;
-		ctxt->word_used[linkage_get_link_rword(linkage, link)] = 1;
+		ctxt->word_used[linkage_get_link_lword(linkage, link)] = true;
+		ctxt->word_used[linkage_get_link_rword(linkage, link)] = true;
 	}
 	if (verbosity >= 2)
 	{
 		printf("Word used: ");
 		for (w = 0; w < linkage->num_words; w++)
 		{
-			if (ctxt->word_used[w] == 0) printf("0 ");
-			if (ctxt->word_used[w] == 1) printf("1 ");
+			if (ctxt->word_used[w]) printf("1 ");
+			else printf("0 ");
 		}
 		printf("\n");
 	}
