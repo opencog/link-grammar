@@ -50,7 +50,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 	size_t i, l;
 	char * s, *u;
 	Parse_info pi = sent->parse_info;
-	const char * chosen_words[MAX_SENTENCE];
+	const char * chosen_words[sent->length];
 	Parse_Options opts = linkage->opts;
 	Boolean display_morphology = opts->display_morphology;
 
@@ -169,11 +169,11 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 
 	if (sent->dict->left_wall_defined)
 	{
-		chosen_words[0] =  string_set_add(LEFT_WALL_DISPLAY, sent->string_set);
+		chosen_words[0] = LEFT_WALL_DISPLAY;
 	}
 	if (sent->dict->right_wall_defined)
 	{
-		chosen_words[sent->length-1] = string_set_add(RIGHT_WALL_DISPLAY, sent->string_set);
+		chosen_words[sent->length-1] = RIGHT_WALL_DISPLAY;
 	}
 
 	/* At this time, we expect both the sent length and the linkage
@@ -479,7 +479,7 @@ static inline Boolean verify_link_index(const Linkage linkage, size_t index)
 int linkage_get_link_length(const Linkage linkage, int index)
 {
 	Link *link;
-	int word_has_link[MAX_SENTENCE];
+	bool word_has_link[linkage->num_words+1];
 	size_t i, length;
 #ifdef USE_FAT_LINKAGES
 	int current = linkage->current;

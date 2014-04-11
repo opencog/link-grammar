@@ -405,7 +405,7 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	char *t;
 	Boolean print_word_0 = 0, print_word_N = 0;
 	int N_wall_connectors, suppressor_used;
-	int center[MAX_SENTENCE];
+	int center[linkage->num_words+1];
 	char connector[MAX_TOKEN_LENGTH];
 	unsigned int line_len, link_length;
 #ifdef USE_FAT_LINKAGES

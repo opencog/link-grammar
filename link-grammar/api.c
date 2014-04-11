@@ -1150,7 +1150,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
 		char * affix_types_p = affix_types;
 		Boolean match_found = false;     /* djw matched a morpheme */
-		int matched_alts[MAX_SENTENCE];	/* number of morphemes that have matched
+		int matched_alts[MAX_SENTENCE];  /* number of morphemes that have matched
 		                                  * the chosen disjuncts for the
 		                                  * unsplit_word, so far (index: ai) */
 

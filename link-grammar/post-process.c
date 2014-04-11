@@ -92,9 +92,9 @@ static size_t find_domain_name(Postprocessor *pp, const char *link)
 static int contained_in(const Domain * d1, const Domain * d2,
                         const Sublinkage *sublinkage)
 {
-	char mark[MAX_LINKS];
+	bool mark[sublinkage->num_links];
 	List_o_links * lol;
-	memset(mark, 0, sublinkage->num_links*(sizeof mark[0]));
+	memset(mark, 0, sublinkage->num_links*(sizeof(bool)));
 	for (lol=d2->lol; lol != NULL; lol = lol->next)
 		mark[lol->link] = TRUE;
 	for (lol=d1->lol; lol != NULL; lol = lol->next)
