@@ -149,7 +149,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 					const char * next = pi->chosen_disjuncts[i+1]->string;
 					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
 					{
-						t = string_set_add("", sent->string_set);
+						t = NULL;
 					}
 				}
 			}
@@ -194,14 +194,16 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 	}
 	linkage->num_words = j;
 
-	/* Now, trim the links, as well. */
+	/* Now, discard links to the empty word.  If morphology printing
+	 * is being suppressed, then all links connecting morphemes will
+	 * be discarded as well.
+	 */
 	for (i=0, j=0; i<linkage->sublinkage.num_links; i++)
 	{
 		Link * lnk = linkage->sublinkage.link[i];
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
-// printf("duude dump the link %s from %zu to %zu\n", lnk->link_name, lnk->lw, lnk->rw);
 			exfree_link(lnk);
 		}
 		else
