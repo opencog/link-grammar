@@ -286,7 +286,6 @@ struct Linkage_info_struct
     short link_cost;
     double disjunct_cost;
     double corpus_cost;
-    int island[MAX_SENTENCE];
     size_t nwords;
 #ifdef USE_FAT_LINKAGES
     Boolean canonical;
@@ -306,7 +305,7 @@ struct Linkage_info_struct
 struct List_o_links_struct
 {
     size_t link;     /* the link number */
-    size_t word;      /* the word at the other end of this link */
+    size_t word;     /* the word at the other end of this link */
     signed char dir; /* 0: undirected, 1: away from me, -1: toward me */
     List_o_links * next;
 };
