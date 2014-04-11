@@ -39,13 +39,14 @@ static int right_disjunct_list_length(const Disjunct * d)
 
 struct match_context_s
 {
+	size_t size;
 	int match_cost;
-	unsigned int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
-	unsigned int r_table_size[MAX_SENTENCE];
+	unsigned int *l_table_size;  /* the sizes of the hash tables */
+	unsigned int *r_table_size;
 
 	/* the beginnings of the hash tables */
-	Match_node ** l_table[MAX_SENTENCE];
-	Match_node ** r_table[MAX_SENTENCE];
+	Match_node *** l_table;
+	Match_node *** r_table;
 
 	/* I'll pedantically maintain my own list of these cells */
 	Match_node * mn_free_list;
@@ -121,6 +122,8 @@ void free_fast_matcher(Sentence sent)
 	free_match_list(ctxt->mn_free_list);
 	ctxt->mn_free_list = NULL;
 
+	xfree(ctxt->l_table_size, ctxt->size * sizeof(unsigned int));
+	xfree(ctxt->l_table, ctxt->size * sizeof(Match_node **));
 	xfree(ctxt, sizeof(match_context_t));
 	sent->match_ctxt = NULL;
 }
@@ -219,10 +222,15 @@ void init_fast_matcher(Sentence sent)
 	match_context_t *ctxt;
 
 	ctxt = (match_context_t *) xalloc(sizeof(match_context_t));
-	sent->match_ctxt = ctxt;
-
+	ctxt->size = sent->length;
+	ctxt->l_table_size = xalloc(2 * sent->length * sizeof(unsigned int));
+	ctxt->r_table_size = ctxt->l_table_size + sent->length;
+	ctxt->l_table = xalloc(2 * sent->length * sizeof(Match_node **));
+	ctxt->r_table = ctxt->l_table + sent->length;
 	ctxt->match_cost = 0;
 	ctxt->mn_free_list = NULL;
+
+	sent->match_ctxt = ctxt;
 
 	for (w=0; w<sent->length; w++)
 	{
