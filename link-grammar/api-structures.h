@@ -387,7 +387,7 @@ struct Linkage_s
 #ifdef USE_FAT_LINKAGES
 	Sublinkage *    sublinkage; /* A parse with conjunctions will have several */
 #else
-	Sublinkage      sublinkage; /* A parse with conjunctions will have several */
+	Sublinkage      sublinkage; /* Just one */
 #endif /* USE_FAT_LINKAGES */
 
 	Sentence        sent;
@@ -396,7 +396,7 @@ struct Linkage_s
 #ifdef USE_FAT_LINKAGES
 	int             num_sublinkages; /* One for thin linkages, bigger for fat */
 	int             current;    /* Allows user to select particular sublinkage */
-	int             unionized;  /* if TRUE, union of links has been computed */
+	bool            unionized;  /* if TRUE, union of links has been computed */
 	DIS_node      * dis_con_tree; /* Disjunction-conjunction tree */
 #endif /* USE_FAT_LINKAGES */
 

@@ -166,7 +166,7 @@ struct Connector_struct
                      this is strictly a funcion of the connector
                      name, efficiency is the only reason to store
                      this.  If no limit, the value is set to 255. */
-    char multi;   /* TRUE if this is a multi-connector */
+    bool multi;   /* TRUE if this is a multi-connector */
 #ifdef USE_FAT_LINKAGES
     Priority priority;/* one of the three priorities above */
     short label;
@@ -212,6 +212,7 @@ struct X_node_struct
 	X_node *next;
 };
 
+/* Word, as represented shortly after tokenization, but before parsing. */
 struct Word_struct
 {
 	const char *unsplit_word;
