@@ -47,10 +47,11 @@
  */
 static void compute_chosen_words(Sentence sent, Linkage linkage)
 {
-	size_t i, l;
+	size_t i, j, l;
 	char * s, *u;
 	Parse_info pi = sent->parse_info;
 	const char * chosen_words[sent->length];
+	size_t remap[sent->length];
 	Parse_Options opts = linkage->opts;
 	Boolean display_morphology = opts->display_morphology;
 
@@ -116,13 +117,13 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 			/* Suppress the empty word. */
 			if (0 == strcmp(t, EMPTY_WORD_DOT))
 			{
-				t = string_set_add("", sent->string_set);
+				t = NULL;
 			}
 
 			/* Concatenate the stem and the suffix together into one word */
 			if (HIDE_MORPHO)
 			{
-				if (is_suffix(t) && pi->chosen_disjuncts[i-1])
+				if (t && is_suffix(t) && pi->chosen_disjuncts[i-1])
 				{
 					const char * stem = pi->chosen_disjuncts[i-1]->string;
 					size_t len = strlen(stem) + strlen (t);
@@ -180,10 +181,38 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 	 * length to be identical.  In the future, this may change ...
 	 */
 	assert (sent->length == linkage->num_words, "Unexpected linkage length");
-	for (i=0; i<linkage->num_words; ++i)
+
+	/* Copy over the chosen words, dropping the empty words. */
+	for (i=0, j=0; i<sent->length; ++i)
 	{
-		linkage->word[i] = chosen_words[i];
+		if (chosen_words[i])
+		{
+			linkage->word[j] = chosen_words[i];
+			remap[i] = j;
+			j++;
+		}
 	}
+	linkage->num_words = j;
+
+	/* Now, trim the links, as well. */
+	for (i=0, j=0; i<linkage->sublinkage.num_links; i++)
+	{
+		Link * lnk = linkage->sublinkage.link[i];
+		if (NULL == chosen_words[lnk->lw] ||
+		    NULL == chosen_words[lnk->rw])
+		{
+// printf("duude dump the link %s from %zu to %zu\n", lnk->link_name, lnk->lw, lnk->rw);
+			exfree_link(lnk);
+		}
+		else
+		{
+			lnk->lw = remap[lnk->lw];
+			lnk->rw = remap[lnk->rw];
+			linkage->sublinkage.link[j] = lnk;
+			j++;
+		}
+	}
+	linkage->sublinkage.num_links = j;
 }
 
 
@@ -272,7 +301,6 @@ void linkage_delete(Linkage linkage)
 	size_t i;
 #endif /* USE_FAT_LINKAGES */
 	size_t j;
-	Sublinkage *s;
 
 	/* Can happen on panic timeout or user error */
 	if (NULL == linkage) return;
@@ -284,9 +312,9 @@ void linkage_delete(Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 	{
 #ifdef USE_FAT_LINKAGES
-		s = &(linkage->sublinkage[i]);
+		Sublinkage *s = &(linkage->sublinkage[i]);
 #else
-		s = &(linkage->sublinkage);
+		Sublinkage *s = &(linkage->sublinkage);
 #endif /* USE_FAT_LINKAGES */
 		for (j = 0; j < s->num_links; ++j) {
 			exfree_link(s->link[j]);
