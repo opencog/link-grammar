@@ -29,13 +29,6 @@
 #define RIGHT_WALL_SUPPRESS ("RW")/* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
 
-/* The Russian dictionary makes use of the empty word to deal with
- * the splitting of words into variable-length word-counts */
-#define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
-
-#define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
-#define SUFFIX_SUPPRESS_L 2    /* length of above */
-
 /**
  * Return TRUE if the word is a suffix.
  *
@@ -426,8 +419,6 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	char xpicture[MAX_HEIGHT][MAX_LINE];
 	size_t start[MAX_HEIGHT];
 
-	Boolean display_morphology = opts->display_morphology;
-
 	string = string_new();
 
 	/* Do we want to print the left wall? */
@@ -494,30 +485,24 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	}
 	top_row = 0;
 
-	for (link_length = 1; link_length < N_words_to_print; link_length++) {
-		for (j=0; j<N_links; j++) {
-			// if (ppla[j]->lw == SIZE_MAX) continue;
+	for (link_length = 1; link_length < N_words_to_print; link_length++)
+	{
+		for (j=0; j<N_links; j++)
+		{
 			assert (ppla[j]->lw != SIZE_MAX);
 			if (((unsigned int) (ppla[j]->rw - ppla[j]->lw)) != link_length)
 			  continue;
 			if (!print_word_0 && (ppla[j]->lw == 0)) continue;
 			/* gets rid of the irrelevant link to the left wall */
 			if (!print_word_N && (ppla[j]->rw == linkage->num_words-1)) continue;
-			/* Get rid of links to empty words */
-			if (0 == strcmp(ppla[j]->link_name, EMPTY_WORD_SUPPRESS)) continue;
-
-			if (HIDE_MORPHO &&
-			    0 == strncmp(ppla[j]->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L))
-				continue;
-
-			/* gets rid of the irrelevant link to the right wall */
-			/* ??? */
 
 			/* put it into the lowest position */
 			cl = center[ppla[j]->lw];
 			cr = center[ppla[j]->rw];
-			for (row=0; row < MAX_HEIGHT; row++) {
-				for (k=cl+1; k<cr; k++) {
+			for (row=0; row < MAX_HEIGHT; row++)
+			{
+				for (k=cl+1; k<cr; k++)
+				{
 					if (picture[row][k] != ' ') break;
 				}
 				if (k == cr) break;

@@ -33,6 +33,13 @@
  * for working with linakges.
  */
 
+/* The Russian dictionary makes use of the empty word to deal with
+ * the splitting of words into variable-length word-counts */
+#define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
+
+#define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
+#define SUFFIX_SUPPRESS_L 2    /* length of above */
+
 /**
  * This takes the current chosen_disjuncts array and uses it to
  * compute the chosen_words array.  "I.xx" suffixes are eliminated.
@@ -53,7 +60,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 	const char * chosen_words[sent->length];
 	size_t remap[sent->length];
 	Parse_Options opts = linkage->opts;
-	Boolean display_morphology = opts->display_morphology;
+	bool display_morphology = opts->display_morphology;
 
 	for (i=0; i<sent->length; i++)
 	{
@@ -204,6 +211,10 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
+			bool sane = (0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS));
+			sane = sane || (HIDE_MORPHO &&
+             0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
+			assert(sane, "Something wrong with linkage processing");
 			exfree_link(lnk);
 		}
 		else
