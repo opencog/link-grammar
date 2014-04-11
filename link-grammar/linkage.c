@@ -37,8 +37,33 @@
  * the splitting of words into variable-length word-counts */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
+#define SUFFIX_WORD ("=")      /* suffixes start with this */
+#define SUFFIX_WORD_L 1        /* length of above */
+
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
+
+#define HIDE_MORPHO   (!display_morphology)
+
+/**
+ * Return TRUE if the word is a suffix.
+ *
+ * Suffixes have the form =asdf.asdf and "null" suffixes have the form
+ * =.asdf.
+ * Ordinary equals signs appearing in regular text are either = or =[!].
+ */
+static bool is_suffix(const char* w)
+{
+	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
+	if (1 == strlen(w)) return FALSE;
+#if SUBSCRIPT_MARK == '.'
+	if (0 == strcmp("=[!]", w)) return FALSE;
+	if (0 == strcmp("=.v", w)) return FALSE;
+	if (0 == strcmp("=.eq", w)) return FALSE;
+#endif
+	return TRUE;
+}
+
 
 /**
  * This takes the current chosen_disjuncts array and uses it to

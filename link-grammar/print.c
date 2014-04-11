@@ -29,43 +29,16 @@
 #define RIGHT_WALL_SUPPRESS ("RW")/* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
 
-/**
- * Return TRUE if the word is a suffix.
- *
- * Suffixes have the form =asdf.asdf and "null" suffixes have the form =.asdf.
- * Ordinary equals signs appearing in regular text are either = or =[!].
- */
-bool is_suffix(const char* w)
-{
-	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
-	if (1 == strlen(w)) return FALSE;
-#if SUBSCRIPT_MARK == '.'
-	if (0 == strcmp("=[!]", w)) return FALSE;
-	if (0 == strcmp("=.v", w)) return FALSE;
-	if (0 == strcmp("=.eq", w)) return FALSE;
-#endif
-	return TRUE;
-}
-
 static void
 set_centers(const Linkage linkage, int center[],
             Boolean print_word_0, int N_words_to_print)
 {
 	int i, len, tot;
-	Boolean display_morphology = linkage->opts->display_morphology;
 
 	tot = 0;
 	if (print_word_0) i=0; else i=1;
 	for (; i < N_words_to_print; i++)
 	{
-		/* Ignore morphological analysis. */
-		if (HIDE_MORPHO && is_suffix(linkage->word[i]))
-		{
-			center[i] = tot;
-			tot++;  // hack alert -- a trailing blank gets printed anyway ...
-			continue;
-		}
-
 		/* Centers obtained by counting the characters,
 		 * not the bytes in the string.
 		 * len = strlen(linkage->word[i]);
@@ -266,8 +239,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 }
 
 /**
- * XXX TODO: port over the suppression of ZZZ links, and also
- * the HIDE_MORPHO stuff, fom the ascii printing code, way below.
+ * postscript printing ...
  */
 static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *pctx)
 {
