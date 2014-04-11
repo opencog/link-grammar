@@ -47,10 +47,10 @@ typedef struct power_table_s power_table;
 struct power_table_s
 {
 	unsigned int power_table_size;
-	unsigned int l_table_size[MAX_SENTENCE];  /* the sizes of the hash tables */
-	unsigned int r_table_size[MAX_SENTENCE];
-	C_list ** l_table[MAX_SENTENCE];
-	C_list ** r_table[MAX_SENTENCE];
+	unsigned int *l_table_size;  /* the sizes of the hash tables */
+	unsigned int *r_table_size;
+	C_list *** l_table;
+	C_list *** r_table;
 };
 
 typedef struct cms_struct Cms;
@@ -1149,6 +1149,8 @@ static void power_table_delete(power_table *pt)
 		}
 		xfree((char *)pt->r_table[w], pt->r_table_size[w] * sizeof (C_list *));
 	}
+	xfree(pt->l_table_size, 2 * pt->power_table_size * sizeof(unsigned int));
+	xfree(pt->l_table, 2 * pt->power_table_size * sizeof(C_list **));
 	xfree(pt, sizeof(power_table));
 }
 
@@ -1191,6 +1193,10 @@ static power_table * power_table_new(Sentence sent)
 
 	pt = (power_table *) xalloc (sizeof(power_table));
 	pt->power_table_size = sent->length;
+	pt->l_table_size = xalloc (2 * sent->length * sizeof(unsigned int));
+	pt->r_table_size = pt->l_table_size + sent->length;
+	pt->l_table = xalloc (2 * sent->length * sizeof(C_list **));
+	pt->r_table = pt->l_table + sent->length;
 
    /* First, we initialize the word fields of the connectors, and
 	  eliminate those disjuncts with illegal connectors */
