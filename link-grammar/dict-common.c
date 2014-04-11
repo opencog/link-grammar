@@ -22,6 +22,7 @@
 #include "word-utils.h"
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
+#include "dict-file/word-file.h"
 
 /* ======================================================================== */
 /* Replace the right-most dot with SUBSCRIPT_MARK */
@@ -212,16 +213,6 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 	}
 }
 #endif /* USEFUL_BUT_NOT_CURRENTLY_USED */
-
-static void free_Word_file(Word_file * wf)
-{
-	Word_file *wf1;
-
-	for (;wf != NULL; wf = wf1) {
-		wf1 = wf->next;
-		xfree((char *) wf, sizeof(Word_file));
-	}
-}
 
 /**
  * The following two functions free the Exp s and the

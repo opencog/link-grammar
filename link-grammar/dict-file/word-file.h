@@ -12,6 +12,17 @@
 /*************************************************************************/
 
 #include "dict-api.h"
+#include "structures.h"
+
+/* The structure below stores a list of dictionary word files. */
+struct Word_file_struct
+{
+	Word_file * next;
+	char file[MAX_PATH_NAME+1];   /* the file name */
+	Boolean changed;              /* TRUE if this file has been changed */
+};
+
+void free_Word_file(Word_file * wf);
 
 Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename);
 

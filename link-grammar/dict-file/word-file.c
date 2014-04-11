@@ -4,7 +4,7 @@
 /* All rights reserved                                                     */
 /*                                                                         */
 /* Use of the link grammar parsing system is subject to the terms of the   */
-/* license set forth in the LICENSE file included with this software.      */ 
+/* license set forth in the LICENSE file included with this software.      */
 /* This license allows free redistribution and use in source and binary    */
 /* forms, with or without modification, subject to certain conditions.     */
 /*                                                                         */
@@ -91,5 +91,15 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 	}
 	fclose(fp);
 	return dn;
+}
+
+void free_Word_file(Word_file * wf)
+{
+	Word_file *wf1;
+
+	for (;wf != NULL; wf = wf1) {
+		wf1 = wf->next;
+		xfree((char *) wf, sizeof(Word_file));
+	}
 }
 

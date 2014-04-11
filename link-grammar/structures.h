@@ -222,14 +222,6 @@ struct Word_struct
 };
 
 
-/* The structure below stores a list of dictionary word files. */
-struct Word_file_struct
-{
-	Word_file * next;
-	char file[MAX_PATH_NAME+1];   /* the file name */
-	Boolean changed;              /* TRUE if this file has been changed */
-};
-
 /* The regexs are stored as a linked list of the following nodes. */
 struct Regex_node_s
 {
