@@ -97,6 +97,7 @@ liblink_grammar_la_SOURCES =        \
 	fast-match.c                     \
 	fat.c                            \
 	idiom.c                          \
+	linkage.c                        \
 	massage.c                        \
 	post-process.c                   \
 	pp_knowledge.c                   \
