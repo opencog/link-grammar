@@ -541,7 +541,7 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 	char * ds = strrchr(s, SUBSCRIPT_DOT); /* we need to do this to ensure that
 	                                          "i.e." does not match "i.e" */
 
-	lgdebug(+5, "search-word='%s' dict-word='%s'\n", s, t);
+	lgdebug(5, "search-word='%s' dict-word='%s'\n", s, t);
 	while((*s != '\0') && (*s == *t)) {s++; t++;}
 	if (*s == WILD_TYPE)
 	{
@@ -560,8 +560,8 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 	}
 
 	lgdebug(5, "Result: '%s'-'%s'=%d\n",
-	 s, t, (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
-	return (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
+	 s, t, ((*s == SUBSCRIPT_DOT)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
+	return ((*s == SUBSCRIPT_DOT)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
 /**
@@ -1810,17 +1810,17 @@ Boolean read_dictionary(Dictionary dict)
  * In this case no split is done.
  */
 
-static Boolean display_word_split(Dictionary dict,
-                                  const char * word,
-                                  Parse_Options opts,
-                                  void (*display)(Dictionary, const char *))
+static void display_word_split(Dictionary dict,
+                               const char * word,
+                               Parse_Options opts,
+                               void (*display)(Dictionary, const char *))
 {
 	Sentence sent;
 	struct Parse_Options_s display_word_opts = *opts;
 
 	parse_options_set_spell_guess(&display_word_opts, 0);
 	sent = sentence_create(word, dict);
-	(void) separate_sentence(sent, &display_word_opts);
+	separate_sentence(sent, &display_word_opts);
 
 	/* List the splits */
 	print_sentence_word_alternatives(sent, FALSE, NULL, NULL);
@@ -1828,7 +1828,6 @@ static Boolean display_word_split(Dictionary dict,
 	print_sentence_word_alternatives(sent, FALSE, display, NULL);
 
 	sentence_delete(sent);
-	return TRUE;
 }
 
 /**
