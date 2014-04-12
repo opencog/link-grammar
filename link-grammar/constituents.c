@@ -1168,7 +1168,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	List_o_links * dlink;
 	int rootleft;
 	Sublinkage * subl;
-	const char * name;
+	const char * name = "";
 	Domain domain;
 
 #ifdef USE_FAT_LINKAGES

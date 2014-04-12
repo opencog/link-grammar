@@ -164,7 +164,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 	if (!(ex)) {                                                             \
 		prt_error("\nAssertion ("#ex") failed at "FILELINE": "  __VA_ARGS__); \
 		fflush(stdout);                                                       \
-		exit(1);                                                              \
+		*((int*) 0x0) = 42;  /* leave stack trace in debugger */              \
 	}                                                                        \
 }
 

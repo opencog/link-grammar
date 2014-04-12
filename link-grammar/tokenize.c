@@ -1409,7 +1409,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 		size_t ialt;
 		for (ialt=0; NULL != sent->word[i].alternatives[ialt]; ialt++)
 		{
-			X_node *we;
+			X_node *we = NULL;
 
 			s = sent->word[i].alternatives[ialt];
 			if (boolean_dictionary_lookup(sent->dict, s))
