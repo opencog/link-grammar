@@ -151,7 +151,7 @@ CREATING the system:
    you do not plan to use link-grammar with perl or python.  Both of
    these provide a low-level interface, called clinkgrammar.  This
    low-level interface should not be used in new code; only the
-   high-level interfaces should be used. 
+   high-level interfaces should be used.
 
    The linkgrammar.py module provides a high-level interface in Python.
    A high-level interface for perl is yet to be developed.
@@ -726,6 +726,9 @@ Fat Links:
    The use of fat links by the Russian dictionaries is the major
    road-block to the removal of the fat links code.
 
+   As of version 5.0.0: Expect to see 37 errors in the 4.0.btch file
+   (Versions 4.7.12 - 4.8.6 reported only 36 errors; they mised a spot).
+
 
 SAT solver:
 -----------
@@ -1158,7 +1161,7 @@ TODO -- Working Notes:
     More generally, all of link-grammar could benefit from a MTT-izing
     of infrastructure.
 
-   Compare the above problem to Hebrew morphologica analysis. To quote 
+   Compare the above problem to Hebrew morphologica analysis. To quote
       Wikipedia:
 
       > This distinction between the word as a unit of speech and the
@@ -1176,7 +1179,7 @@ TODO -- Working Notes:
 
    Alternatives:
       A partial solution to the morphology problem and the idiom problem
-      in link-grammar is to elevate the use of "alternatives" in the 
+      in link-grammar is to elevate the use of "alternatives" in the
       Word struct.  Originally, these were morphological split alternatives
       for the Russian dicts, but really, they are a way of hierarchically
       arranging choices for words...
