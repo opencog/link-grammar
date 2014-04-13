@@ -1323,84 +1323,6 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 #endif
 
 /* ======================================================================== */
-/* Tree balancing utilities, used to implement an AVL tree.
- * Unfortunately, AVL tree insertion is very slowww, unusably
- * slow for creating the dictionary. The code is thus ifdef'ed out
- * but is left here for debugging and other sundry purposes.
- * A better way to rebalance the tree is the DSW algo, implemented
- * further below.
- */
-
-static Dict_node *rotate_right(Dict_node *root)
-{
-	Dict_node *pivot = root->left;
-	root->left = pivot->right;
-	pivot->right = root;
-	return pivot;
-}
-
-#ifdef USE_AVL_TREE_FOR_INSERTION
-
-static Dict_node *rotate_left(Dict_node *root)
-{
-	Dict_node *pivot = root->right;
-	root->right = pivot->left;
-	pivot->left = root;
-	return pivot;
-}
-
-/* Return tree height. XXX this is not tail-recursive! */
-static int tree_depth (Dict_node *n)
-{
-	int l, r;
-	if (NULL == n) return 0;
-	if (NULL == n->left) return 1+tree_depth(n->right);
-	if (NULL == n->right) return 1+tree_depth(n->left);
-	l = tree_depth(n->left);
-	r = tree_depth(n->right);
-	if (l < r) return r+1;
-	return l+1;
-}
-
-static int tree_balance(Dict_node *n)
-{
-	int l = tree_depth(n->left);
-	int r = tree_depth(n->right);
-	return r-l;
-}
-
-/**
- * Rebalance the dictionary tree.
- * This recomputes the tree depth wayy too often, but so what.. this
- * only wastes cpu time during the initial dictionary read.
- */
-static Dict_node *rebalance(Dict_node *root)
-{
-	int bal = tree_balance(root);
-	if (2 == bal)
-	{
-		bal = tree_balance(root->right);
-		if (-1 == bal)
-		{
-			root->right = rotate_right (root->right);
-		}
-		return rotate_left(root);
-	}
-	else if (-2 == bal)
-	{
-		bal = tree_balance(root->left);
-		if (1 == bal)
-		{
-			root->left = rotate_left (root->left);
-		}
-		return rotate_right(root);
-	}
-	return root;
-}
-
-#endif /* USE_AVL_TREE_FOR_INSERTION */
-
-/* ======================================================================== */
 /* Implementation of the DSW algo for rebalancing a binary tree.
  * The point is -- after building the dictionary tree, we rebalance it
  * once at the end. This is a **LOT LOT** quicker than maintaining an
@@ -1415,6 +1337,14 @@ static Dict_node *rebalance(Dict_node *root)
  * (December 2002), pp. 85-88
  * http://penguin.ewu.edu/~trolfe/DSWpaper/
  */
+
+static Dict_node *rotate_right(Dict_node *root)
+{
+	Dict_node *pivot = root->left;
+	root->left = pivot->right;
+	pivot->right = root;
+	return pivot;
+}
 
 static Dict_node * dsw_tree_to_vine (Dict_node *root)
 {
