@@ -1,6 +1,7 @@
 Version 5.0.3 (XXX 2014)
  * Minor memory usage optimization
  * Fix unit test: suppress printing of empty word, and of morphology.
+ * Fixes for swig/python checking during configure.
 
 Version 5.0.2 (10 April 2014)
  * Expanded unit tests

@@ -602,8 +602,15 @@ AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
 CPPFLAGS=$save_cpp_flags
 
 # Find python things
-SWIG_PYTHON
 AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
+
+if test $PythonFound = "yes"; then
+	# AX_SWIG_PYTHON
+	SWIG_PYTHON
+	if test x$PYTHON_VERSION=x; then
+		PythonFound=no
+	fi 
+fi
 AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 
 AC_SUBST(CFLAGS)
