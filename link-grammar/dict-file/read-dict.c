@@ -531,37 +531,30 @@ static inline int dict_order_bare(const char *s, Dict_node * dn)
  *
  * The matching is done as follows.  Walk down the strings until
  * you come to the end of one of them, or until you find unequal
- * characters.  A "*" matches anything.  Otherwise, replace "."
- * by "\0", and take the difference.  This behavior matches that
- * of the function dict_order_bare().
+ * characters.  A "*" matches anything before the subscript mark.
+ * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
+ * his behavior matches that of the function dict_order_bare().
  */
 static inline int dict_order_wild(const char * s, Dict_node * dn)
 {
 	const char * t = dn->string;
-	char * ds = strrchr(s, SUBSCRIPT_DOT); /* we need to do this to ensure that
-	                                          "i.e." does not match "i.e" */
 
-	lgdebug(5, "search-word='%s' dict-word='%s'\n", s, t);
-	while((*s != '\0') && (*s == *t)) {s++; t++;}
+	lgdebug(+5, "search-word='%s' dict-word='%s'\n", s, t);
+	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (*s == *t)) {s++; t++;}
+
 	if (*s == WILD_TYPE)
 	{
 		/* Skip the rest of t */
 		s++;
 		while((*t != '\0') && (*t != SUBSCRIPT_MARK)) t++;
 	}
-	lgdebug(5, "Rest: '%s' '%s'\n", s, t);
 
-	/* If both words have a subscript, and without the subscripts they are
-	 * equal, then compare the subscripts. */
-	if ((s == ds) &&	(*t == SUBSCRIPT_MARK))
-	{
-		lgdebug(5, "Comparing subscripts: %s %s\n", s, t);
-		do {s++; t++;} while ((*s != '\0') && (*s == *t));
-	}
+	lgdebug(5, "Rest: '%s' '%s'\n", s, t);
+	while(*s != '\0' && *s == *t) {s++; t++;}
 
 	lgdebug(5, "Result: '%s'-'%s'=%d\n",
-	 s, t, ((*s == SUBSCRIPT_DOT)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
-	return ((*s == SUBSCRIPT_DOT)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
+	 s, t, (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
+	return (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
 /**
@@ -659,8 +652,8 @@ static Dict_node *
 rdictionary_lookup(Dict_node *llist,
                    Dict_node * dn,
                    const char * s,
-                   Boolean match_idiom,
-                   Boolean wild_lookup)
+                   bool match_idiom,
+                   bool wild_lookup)
 {
 	/* see comment in dictionary_lookup below */
 	int m;
@@ -730,8 +723,22 @@ void free_lookup(Dict_node *llist)
 
 static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 {
-	Boolean lookup_idioms = test_enabled("lookup-idioms");
-	return rdictionary_lookup(NULL, dict->root, s, lookup_idioms, TRUE);
+	bool lookup_idioms = test_enabled("lookup-idioms");
+	char * ds = strrchr(s, SUBSCRIPT_DOT); /* Only the rightmost dot is a
+	                                          candidate for SUBSCRIPT_DOT */
+	char * ws = strrchr(s, WILD_TYPE);     /* A SUBSCRIPT_DOT can only appear
+                                             after a wild-card */
+	Dict_node * result;
+	char * stmp = strdup(s);
+
+	/* It is not a SUBSCRIPT_DOT if it is at the end or before the wild-card.
+	 * E.g: "Dr.", "i.*", "." */
+	if ((NULL != ds) && ('\0' != ds[1]) && ((NULL == ws) || (ds > ws)))
+		stmp[ds-s] = SUBSCRIPT_MARK;
+
+	result = rdictionary_lookup(NULL, dict->root, stmp, lookup_idioms, TRUE);
+	free(stmp);
+	return result;
 }
 
 /**
