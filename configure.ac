@@ -170,9 +170,15 @@ AM_CONDITIONAL(WITH_PTHREADS, test x${enable_pthreads} = xyes)
 dnl ====================================================================
 
 AC_ARG_ENABLE( java-bindings,
-  [  --disable-java-bindings disable build of java bindings],
+  [  --disable-java-bindings disable build of java bindings (default is enabled)],
   [],
   [enable_java_bindings=yes])
+
+AC_ARG_ENABLE( python-bindings,
+  [  --enable-python-bindings  create python bindings to the link-grammar library],
+  [],
+  [enable_python_bindings=no]
+)
 
 dnl ====================================================================
 
@@ -605,15 +611,19 @@ AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
 CPPFLAGS=$save_cpp_flags
 
 dnl ===================================================================
-# Find python things.  If there is no python header file, then assume
-# that the user is not interested in the python bindings.
-# Note that AX_PYTHON_DEVEL will hard-fail if python-devel is not installed.
-AC_CHECK_HEADER([Python.h], [PythonFound=yes], [PythonFound=no])
-if test "x$PythonFound" = "xyes"; then
+# Find python things.  
+#
+# Since AX_PYTHON_DEVEL will hard-fail if python-devel is not installed,
+# it is up to the user to explicitly ask for python, if they want it.
+
+PythonFound=no
+if test "x$enable_python_bindings" = "xyes"; then
 	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
 	AX_PYTHON_DEVEL
+	AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
+else
+	AM_CONDITIONAL(HAVE_PYTHON, false)
 fi
-AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 
 dnl ===================================================================
 

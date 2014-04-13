@@ -144,17 +144,22 @@ CREATING the system:
 
       ./configure --disable-java-bindings
 
-   Perl, Python Bindings
+   If JAVA_HOME isn't set, if jni.h isn't found, or if ant isn't found,
+   then the java bindings will not be built.
+
+   Python Bindings
    ---------------------
-   By default, the Makefiles attempt to build perl and Python bindings.
-   The use of the Java bindings is *OPTIONAL*; you do not need these if
-   you do not plan to use link-grammar with perl or python.  Both of
-   these provide a low-level interface, called clinkgrammar.  This
-   low-level interface should not be used in new code; only the
-   high-level interfaces should be used.
+   The pythoon bindings are NOT built by default. To enable this, run
+   configure as follows:
+
+      ./configure --enable-python-bindings
+
+   The use of the Python bindings is *OPTIONAL*; you do not need these if
+   you do not plan to use link-grammar with python.  If you do enable the
+   python bindings, besure to install the python-devel package.
 
    The linkgrammar.py module provides a high-level interface in Python.
-   A high-level interface for perl is yet to be developed.
+   The example.py script provides a demo. and tests.py runs unit tests.
 
    Install location
    ----------------
