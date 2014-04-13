@@ -601,22 +601,20 @@ AC_CHECK_HEADER([EXTERN.h], [PerlFound=yes], [PerlFound=no])
 AM_CONDITIONAL(HAVE_PERL, test x${PerlFound} = xyes)
 CPPFLAGS=$save_cpp_flags
 
-# Find python things
-AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
-
-if test $PythonFound = "yes"; then
-	# AX_SWIG_PYTHON
-	SWIG_PYTHON
-	if test x$PYTHON_VERSION=x; then
-		PythonFound=no
-	fi 
+# Find python things.  If there is no python header file, then assume
+# that the user is not interested in the python bindings.
+# Note that AX_PYTHON_DEVEL will hard-fail if python-devel is not installed.
+AC_CHECK_HEADER([Python.h], [PythonFound=yes], [PythonFound=no])
+if test "x$PythonFound" = "xyes"; then
+	AM_PATH_PYTHON(2.6, [PythonFound=yes], [PythonFound=no])
+	AX_PYTHON_DEVEL
 fi
 AM_CONDITIONAL(HAVE_PYTHON, test x${PythonFound} = xyes)
 
+dnl ===================================================================
+
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
-
-dnl ===================================================================
 
 AC_CONFIG_FILES([
 Makefile
