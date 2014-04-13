@@ -14,13 +14,11 @@ endif
 
 SUBDIRS += ocaml
 
-if HAVE_SWIG
 if HAVE_PERL
 SUBDIRS += perl
 endif
 if HAVE_PYTHON
 SUBDIRS += python
-endif
 endif
 
 
