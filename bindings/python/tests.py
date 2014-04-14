@@ -312,11 +312,20 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(result[0].words,
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shoop[?].v', '.', 'RIGHT-WALL'])
 
-    # Stress-test first-word-capitalized in various different ways,
+    # Stress-test first-word-capitalized in various different ways.
+    # Roughly, the test matrix is this: 
+    # -- word is/isn't in dict as lower-case word
+    # -- word is/isn't in dict as upper-case word
+    # -- word is/isn't matched with CAPITALIZED_WORDS regex
+    # -- word is/isn't split by suffix splitter
+    # -- the one that is in the dict is not the grammatically appropriate word.
+    #
+    # Let's is NOT split into two! Its in the dict as one word, lower-case only.
     def test_f_captilization_a(self):
         self.assertEqual(self.p.parse_sent('Let\'s eat.')[0].words,
              ['LEFT-WALL', 'let\'s', 'eat', '.', 'RIGHT-WALL'])
 
+    # He's is split into two words, he is in dict, lower-case only.
     def test_f_captilization_b(self):
         self.assertEqual(self.p.parse_sent('He\'s going.')[0].words,
              ['LEFT-WALL', 'he', '\'s.v', 'going.v', '.', 'RIGHT-WALL'])
@@ -330,6 +339,11 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(self.p.parse_sent('Jumbo\'s going?')[0].words,
              ['LEFT-WALL', 'Jumbo[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
+    def test_f_captilization_d2(self):
+        self.assertEqual(self.p.parse_sent('Jumbo\'s shoe fell off.')[0].words,
+             ['LEFT-WALL', 'Jumbo[!]',
+              '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
+
     def test_f_captilization_e(self):
         self.assertEqual(self.p.parse_sent('Jumbo sat down.')[0].words,
              ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
@@ -338,6 +352,11 @@ class LinkageTestCase(unittest.TestCase):
     def test_f_captilization_f(self):
         self.assertEqual(self.p.parse_sent('Red\'s going?')[0].words,
              ['LEFT-WALL', 'Red[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
+
+    def test_f_captilization_f2(self):
+        self.assertEqual(self.p.parse_sent('Red\'s shoe fell off.')[0].words,
+             ['LEFT-WALL', 'Red[!]',
+              '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
     def test_f_captilization_g(self):
         self.assertEqual(self.p.parse_sent('Red sat down.')[1].words,
@@ -356,6 +375,11 @@ class LinkageTestCase(unittest.TestCase):
     def test_f_captilization_j(self):
         self.assertEqual(self.p.parse_sent('McGyver\'s going?')[0].words,
              ['LEFT-WALL', 'McGyver[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
+
+    def test_f_captilization_j2(self):
+        self.assertEqual(self.p.parse_sent('McGyver\'s shoe fell off.')[0].words,
+             ['LEFT-WALL', 'McGyver[!]',
+              '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
     def test_f_captilization_k(self):
         self.assertEqual(self.p.parse_sent('McGyver sat down.')[0].words,
