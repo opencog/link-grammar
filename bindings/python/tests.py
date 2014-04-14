@@ -384,4 +384,16 @@ class ZLangTestCaseRU(unittest.TestCase):
         self.assertEqual(linkage.links[5],
                          Link('.','RW','RW','RIGHT-WALL'))
 
+
+    def test_d_morphology(self):
+        self.p = Parser(lang = 'ru', display_morphology = True)
+        self.assertEqual(self.p.parse_sent('вверху плыли редкие облачка.')[0].words,
+            ['LEFT-WALL', 
+             'вверху.e',
+             'плы.=', '=ли.vnndpp',
+             'ре.=', '=дкие.api',
+             'облачк.=', '=а.ndnpi',
+             '.', 'RIGHT-WALL'])
+
+
 unittest.main()
