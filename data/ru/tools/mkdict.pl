@@ -195,6 +195,7 @@ foreach my $suftag(@ssuftagli) {
     my @sleftli = sort @leftli;
 
     next if ($#sleftli eq -1 and $suftag =~ m/^\=/);
+    next if ( $suftag =~ m/^\=\./ );
 
     # Compute the connection string....
     # suftag:=а.cmv constr:(LLDTX- or LLDTY-)
@@ -355,16 +356,6 @@ foreach my $stems ( sort keys %fwd ) {
     my @nums = split /:/, $fwd{$stems};
     next unless $#nums > -1;
 
-    my %emptysuflinks = ();
-    foreach my $snum ( @nums ) {
-        if ( defined $rHse->{$snum} ) {
-            foreach my $key ( keys %{$rHse->{$snum}} ) {
-                next unless defined $posex{$key};
-                $emptysuflinks{$key}++;
-            }
-        }
-    }
-
     # write inline if less than 40 words, else dump to a file
     if ( $#words < 40 ) {
         my $cnt = 0;
@@ -390,25 +381,6 @@ foreach my $stems ( sort keys %fwd ) {
     my @links = map { "LL".alnum($_)."+" }  @nums;
     print RTS "  ".eu(join(" or ", @links)).";\n\n";
     $revcnt ++;
-
-    next unless scalar( keys %emptysuflinks ) > 0;
-
-    # write inline if less than 40 words, else dump to a file
-    foreach my $key (keys %emptysuflinks ) {
-        my $cnt = 0;
-        foreach my $w ( @words ) {
-             my $wkey = $w.".".parse($key);
-             next if ( defined $skipwords{$wkey} );
-             next if ( defined $skipwords{$w} );
-             print RTS eu($wkey)." ";
-             $cnt++;
-             if (5 < $cnt) {
-                 print RTS "\n";
-                 $cnt = 0;
-             }
-        }
-        print RTS ":  ".eu("<morph-$key>").";\n\n";
-    }
 }
 # print "% duude revers=$revcnt\n";
 close(RTS);
