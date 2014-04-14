@@ -233,28 +233,28 @@ class ParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
-    def test_unicode_encoded_string(self):
+        # def test_unicode_encoded_string(self):
         result = self.p.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
         self.assertTrue(isinstance(result, list))
         self.assertTrue(1 < len(result))
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
-    def test_unknown_word(self):
+        # def test_unknown_word(self):
         result = self.p.parse_sent("I love going to the qertfdwedadt.")
         self.assertTrue(isinstance(result, list))
         self.assertTrue(1 < len(result))
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
-    def test_unknown_euro_utf8_word(self):
+        # def test_unknown_euro_utf8_word(self):
         result = self.p.parse_sent("I love going to the qéáéğíóşúüñ.")
         self.assertTrue(isinstance(result, list))
         self.assertTrue(1 < len(result))
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
 
-    def test_unknown_cyrillic_utf8_word(self):
+        # def test_unknown_cyrillic_utf8_word(self):
         result = self.p.parse_sent("I love going to the доктором.")
         self.assertTrue(isinstance(result, list))
         self.assertTrue(1 < len(result))
@@ -321,89 +321,72 @@ class LinkageTestCase(unittest.TestCase):
     # -- the one that is in the dict is not the grammatically appropriate word.
     #
     # Let's is NOT split into two! Its in the dict as one word, lower-case only.
-    def test_f_captilization_a(self):
+    def test_f_captilization(self):
         self.assertEqual(self.p.parse_sent('Let\'s eat.')[0].words,
              ['LEFT-WALL', 'let\'s', 'eat', '.', 'RIGHT-WALL'])
 
-    # He's is split into two words, he is in dict, lower-case only.
-    def test_f_captilization_b(self):
+        # He's is split into two words, he is in dict, lower-case only.
         self.assertEqual(self.p.parse_sent('He\'s going.')[0].words,
              ['LEFT-WALL', 'he', '\'s.v', 'going.v', '.', 'RIGHT-WALL'])
 
-    def test_f_captilization_c(self):
         self.assertEqual(self.p.parse_sent('You\'re going?')[0].words,
              ['LEFT-WALL', 'you', '\'re', 'going.v', '?', 'RIGHT-WALL'])
 
-    # Jumbo only in dict as adjective, lower-case, but not noun.
-    def test_f_captilization_d(self):
+        # Jumbo only in dict as adjective, lower-case, but not noun.
         self.assertEqual(self.p.parse_sent('Jumbo\'s going?')[0].words,
              ['LEFT-WALL', 'Jumbo[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
-    def test_f_captilization_d2(self):
         self.assertEqual(self.p.parse_sent('Jumbo\'s shoe fell off.')[0].words,
              ['LEFT-WALL', 'Jumbo[!]',
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
-    def test_f_captilization_e(self):
         self.assertEqual(self.p.parse_sent('Jumbo sat down.')[0].words,
              ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
-    # Red is in dict, lower-case, as noun, too.
-    def test_f_captilization_f(self):
+        # Red is in dict, lower-case, as noun, too.
         self.assertEqual(self.p.parse_sent('Red\'s going?')[0].words,
              ['LEFT-WALL', 'Red[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
-    def test_f_captilization_f2(self):
         self.assertEqual(self.p.parse_sent('Red\'s shoe fell off.')[0].words,
              ['LEFT-WALL', 'Red[!]',
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
-    def test_f_captilization_g(self):
         self.assertEqual(self.p.parse_sent('Red sat down.')[1].words,
              ['LEFT-WALL', 'Red[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
-    # May in dict as noun, capitalized, and as lower-case verb.
-    def test_f_captilization_h(self):
+        # May in dict as noun, capitalized, and as lower-case verb.
         self.assertEqual(self.p.parse_sent('May\'s going?')[0].words,
              ['LEFT-WALL', 'May.f', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
-    def test_f_captilization_i(self):
         self.assertEqual(self.p.parse_sent('May sat down.')[0].words,
              ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
-    # McGyver is not in the dict, but is regex-matched.
-    def test_f_captilization_j(self):
+        # McGyver is not in the dict, but is regex-matched.
         self.assertEqual(self.p.parse_sent('McGyver\'s going?')[0].words,
              ['LEFT-WALL', 'McGyver[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
 
-    def test_f_captilization_j2(self):
         self.assertEqual(self.p.parse_sent('McGyver\'s shoe fell off.')[0].words,
              ['LEFT-WALL', 'McGyver[!]',
               '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
-    def test_f_captilization_k(self):
         self.assertEqual(self.p.parse_sent('McGyver sat down.')[0].words,
              ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
-    def test_f_captilization_l(self):
         self.assertEqual(self.p.parse_sent('McGyver Industries stock declined.')[0].words,
              ['LEFT-WALL', 'McGyver[!]', 'Industries[!]',
               'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
 
-    # King in dict as both upper and lower case.
-    def test_f_captilization_m(self):
+        # King in dict as both upper and lower case.
         self.assertEqual(self.p.parse_sent('King Industries stock declined.')[0].words,
              ['LEFT-WALL', 'King.b', 'Industries[!]',
               'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
 
-    # Jumbo in dict only lower-case, as adjective
-    def test_f_captilization_n(self):
+        # Jumbo in dict only lower-case, as adjective
         self.assertEqual(self.p.parse_sent('Jumbo Industries stock declined.')[0].words,
              ['LEFT-WALL', 'Jumbo[!]', 'Industries[!]',
               'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
 
-    # Thomas in dict only as upper case.
-    def test_f_captilization_o(self):
+        # Thomas in dict only as upper case.
         self.assertEqual(self.p.parse_sent('Thomas Industries stock declined.')[0].words,
              ['LEFT-WALL', 'Thomas.b', 'Industries[!]',
               'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
