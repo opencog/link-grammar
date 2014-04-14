@@ -271,15 +271,15 @@ class LinkageTestCase(unittest.TestCase):
     def setUp(self):
         self.p = Parser()
 
-    def test_getting_words(self):
+    def test_a_getting_words(self):
         self.assertEqual(self.p.parse_sent('This is a sentence.')[0].words,
              ['LEFT-WALL', 'this.p', 'is.v', 'a', 'sentence.n', '.', 'RIGHT-WALL'])
 
-    def test_getting_num_of_words(self):
+    def test_b_getting_num_of_words(self):
         #Words include punctuation and a 'LEFT-WALL' and 'RIGHT_WALL'
         self.assertEqual(self.p.parse_sent('This is a sentence.')[0].num_of_words, 7)
 
-    def test_getting_links(self):
+    def test_c_getting_links(self):
         sent = 'This is a sentence.'
         linkage = self.p.parse_sent(sent)[0]
         self.assertEqual(linkage.links[0],
@@ -297,7 +297,7 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.links[6],
                          Link('.','RW','RW','RIGHT-WALL'))
 
-    def test_spell_guessing_on(self):
+    def test_d_spell_guessing_on(self):
         self.p = Parser(spell_guess = True)
         result = self.p.parse_sent("I love going to shoop.")
         for resultx in result:
@@ -306,11 +306,83 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(resultx.words,
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shop[~].v', '.', 'RIGHT-WALL'])
 
-    def test_spell_guessing_off(self):
+    def test_e_spell_guessing_off(self):
         self.p = Parser(spell_guess = False)
         result = self.p.parse_sent("I love going to shoop.")
         self.assertEqual(result[0].words,
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shoop[?].v', '.', 'RIGHT-WALL'])
+
+    # Stress-test first-word-capitalized in various different ways,
+    def test_f_captilization_a(self):
+        self.assertEqual(self.p.parse_sent('Let\'s eat.')[0].words,
+             ['LEFT-WALL', 'let\'s', 'eat', '.', 'RIGHT-WALL'])
+
+    def test_f_captilization_b(self):
+        self.assertEqual(self.p.parse_sent('He\'s going.')[0].words,
+             ['LEFT-WALL', 'he', '\'s.v', 'going.v', '.', 'RIGHT-WALL'])
+
+    def test_f_captilization_c(self):
+        self.assertEqual(self.p.parse_sent('You\'re going?')[0].words,
+             ['LEFT-WALL', 'you', '\'re', 'going.v', '?', 'RIGHT-WALL'])
+
+    # Jumbo only in dict as adjective, lower-case, but not noun.
+    def test_f_captilization_d(self):
+        self.assertEqual(self.p.parse_sent('Jumbo\'s going?')[0].words,
+             ['LEFT-WALL', 'Jumbo[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
+
+    def test_f_captilization_e(self):
+        self.assertEqual(self.p.parse_sent('Jumbo sat down.')[0].words,
+             ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+
+    # Red is in dict, lower-case, as noun, too.
+    def test_f_captilization_f(self):
+        self.assertEqual(self.p.parse_sent('Red\'s going?')[0].words,
+             ['LEFT-WALL', 'Red[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
+
+    def test_f_captilization_g(self):
+        self.assertEqual(self.p.parse_sent('Red sat down.')[1].words,
+             ['LEFT-WALL', 'Red[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+
+    # May in dict as noun, capitalized, and as lower-case verb.
+    def test_f_captilization_h(self):
+        self.assertEqual(self.p.parse_sent('May\'s going?')[0].words,
+             ['LEFT-WALL', 'May.f', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
+
+    def test_f_captilization_i(self):
+        self.assertEqual(self.p.parse_sent('May sat down.')[0].words,
+             ['LEFT-WALL', 'May.f', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+
+    # McGyver is not in the dict, but is regex-matched.
+    def test_f_captilization_j(self):
+        self.assertEqual(self.p.parse_sent('McGyver\'s going?')[0].words,
+             ['LEFT-WALL', 'McGyver[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
+
+    def test_f_captilization_k(self):
+        self.assertEqual(self.p.parse_sent('McGyver sat down.')[0].words,
+             ['LEFT-WALL', 'McGyver[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+
+    def test_f_captilization_l(self):
+        self.assertEqual(self.p.parse_sent('McGyver Industries stock declined.')[0].words,
+             ['LEFT-WALL', 'McGyver[!]', 'Industries[!]',
+              'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
+
+    # King in dict as both upper and lower case.
+    def test_f_captilization_m(self):
+        self.assertEqual(self.p.parse_sent('King Industries stock declined.')[0].words,
+             ['LEFT-WALL', 'King.b', 'Industries[!]',
+              'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
+
+    # Jumbo in dict only lower-case, as adjective
+    def test_f_captilization_n(self):
+        self.assertEqual(self.p.parse_sent('Jumbo Industries stock declined.')[0].words,
+             ['LEFT-WALL', 'Jumbo[!]', 'Industries[!]',
+              'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
+
+    # Thomas in dict only as upper case.
+    def test_f_captilization_o(self):
+        self.assertEqual(self.p.parse_sent('Thomas Industries stock declined.')[0].words,
+             ['LEFT-WALL', 'Thomas.b', 'Industries[!]',
+              'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
 
 
 class LinkTestCase(unittest.TestCase):
@@ -385,6 +457,7 @@ class ZLangTestCaseRU(unittest.TestCase):
                          Link('.','RW','RW','RIGHT-WALL'))
 
 
+    # Expect morphological splitting to apply.
     def test_d_morphology(self):
         self.p = Parser(lang = 'ru', display_morphology = True)
         self.assertEqual(self.p.parse_sent('вверху плыли редкие облачка.')[0].words,
