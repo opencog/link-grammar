@@ -657,6 +657,7 @@ tawny.n ultramarine.n yellow.n:
 <marker-entity> or <entity-singular>;
 
 % Enable parsing of "Mother likes her"
+% Informal only, see formal version below.
 auntie.f dad.m daddy.m granny.f
 granddad.m grandpa.f grandpop.m mom.f mommy.f
 pop.m papa.m poppy.m pops.m sis.f:
@@ -666,7 +667,8 @@ pop.m papa.m poppy.m pops.m sis.f:
 % things, e.g. colliding with mother.n-f
 % MX-: Shem, brother of Jopheth, left the village.
 aunt.f brother.m father.m grandmother.f grandfather.m mother.f
-sister.f uncle.m child.s son.m daughter.f:
+sister.f uncle.m child.s son.m daughter.f grandson.m granddaughter.f
+granduncle.m grandaunt.f:
   <entity-singular>
   or (OF+ & {@MV+} & Xd- & Xc+ & MX*a-);
 
