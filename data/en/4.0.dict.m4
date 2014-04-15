@@ -2093,7 +2093,7 @@ per "/.per": Us+ & Mp-;
 
 % Relative clause, or question.
 % Q-: "where are they?"
-<verb-rq>: ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]);
+<verb-rq>: Rw- or ({Ic-} & Q- & <verb-wall>) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -2306,18 +2306,18 @@ do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & I*d+) or CQ-))
+  or ((SIp+ or SFIp+) & ((<verb-rq> & I*d+) or CQ-))
   or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & <verb-wall>)
   or ({@E-} & I- & CV-);
 
 does.v:
   VERB_X_S(<vc-do>)
-  or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & I*d+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq> & I*d+) or CQ-));
 
 did.v-d:
   (<verb-x-sp> & <vc-do>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & I*d+) or CQ-));
+  or ((SI+ or SFI+) & ((<verb-rq> & I*d+) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
@@ -2346,15 +2346,15 @@ doing.g: ((O+ or B- or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 don't don’t:
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+) & I*d+) or
+  ((<verb-rq> & (SIp+ or SFIp+) & I*d+) or
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)))) & (I*d+ or [[()]]);
 
 doesn't doesn’t:
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+) & I*d+) or
+  ((<verb-rq> & (SIs+ or SFIs+) & I*d+) or
   <verb-x-s>) & (I*d+ or [[()]]);
 
 didn't.v-d didn’t.v-d:
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or
+  ((<verb-rq> & (SI+ or SFI+)) or
     ({@E-} & (S- or SF- or (RS- & B-)))) & (I*d+ or [[()]]);
 
 daren't mayn't shan't oughtn't mightn't
@@ -2377,17 +2377,17 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 
 have.v:
   VERB_X_PLI(<vc-have>)
-  or ((SIp+ or SFIp+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
+  or ((SIp+ or SFIp+) & ((<verb-rq> & PP+) or CQ-));
 
 %I've they've you've we've: PP+ & <CLAUSE>;
 ’ve 've: Sp- & PP+;
 
 has.v:
   VERB_X_S(<vc-have>)
-  or ((SIs+ or SFIs+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq> & PP+) or CQ-));
 
 had.v-d:
-  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q-) or [()]) & PP+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
   (<verb-x-sp> & <vc-have>) or
   (<verb-and-sp-i-> & <vc-have>) or (<vc-have> & <verb-and-sp-i+>) or
   (<verb-x-pp> &
@@ -2403,16 +2403,16 @@ having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
 hasn't hasn’t:
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SIs+ or SFIs+)) or (<verb-x-s>)) &
+  ((<verb-rq> & (SIs+ or SFIs+)) or (<verb-x-s>)) &
     (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
 haven't haven’t:
-  (((Rw- or ({Ic-} & Q-) or [()]) & (SIp+ or SFIp+)) or
+  ((<verb-rq> & (SIp+ or SFIp+)) or
   ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) &
     (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
 hadn't.v-d hadn’t.v-d:
-(((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+)) or ({@E-} &
+((<verb-rq> & (SI+ or SFI+)) or ({@E-} &
 (S- or SFs- or SFp- or (RS- & B-)))) &
 (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
@@ -2493,7 +2493,7 @@ hadn't.v-d hadn’t.v-d:
 is.v:
   (<verb-x-s,u> & <vc-be>) or
   (<verb-and-s-> & <vc-be-and>) or (<vc-be-and> & <verb-and-s+>) or
-  (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIs+ or SFIs+)) & <vc-be>);
+  ((<verb-rq> & (SIs+ or SFIs+)) & <vc-be>);
 
 's.v ’s.v: [[(<verb-x-s,u> &
 (({@EBm+} & ((((O*t+ & <verb-wall>) or [K+] or BI+ or OF+ or
@@ -2503,7 +2503,7 @@ is.v:
 
 % are.v:
 %  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) or
-%    ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+))) & <vc-be>;
+%    (<verb-rq> & (SIpx+ or SFIp+))) & <vc-be>;
 
 % Don't allow are.v with uncountable noun objects.
 % Ss*t- & <vc-be-obj-p>:  (requires a plural object)
@@ -2512,7 +2512,7 @@ is.v:
 are.v:
  ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
  ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>) or
- ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
+ (<verb-rq> & (SIpx+ or SFIp+) & <vc-be-sp>);
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or
@@ -2528,12 +2528,12 @@ was.v-d:
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
-  or (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
+  or ((<verb-rq> & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be>)
-  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>)
+  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be>)
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
@@ -2542,7 +2542,7 @@ were.v-d:
 % Ss*w-: allows Wh subjets: "Who am I?"
 am.v:
   ({@E-} & SX- & <vc-be>)
-  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & SXI+ & <vc-be>)
+  or (<verb-rq> & SXI+ & <vc-be>)
   or (Ss*w- & <vc-be>)
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>);
@@ -2580,25 +2580,25 @@ being.v:
    or (S- & Xd- & MVg- & Pa+ & <verb-wall>);
 
 isn't isn’t:
-  (<verb-x-s> or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIs+ or SFIs+))) & <vc-be>;
+  (<verb-x-s> or (<verb-rq> & (SIs+ or SFIs+))) & <vc-be>;
 
 wasn't.v-d wasn’t.v-d:
   (({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)))
-  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
+  or (<verb-rq> & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
 
 aren't aren’t:
   (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
-  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
+  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be>);
 
 % [[Ss-]]: "If it weren't for Joe, ..."
 weren't.v-d weren’t.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be>)
-  or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SIpx+ or SFIp+) & <vc-be>);
+  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be>);
 
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
 will.v can.v may.v must.v could.v might.v shall.v:
-  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & I+) or CQ-))
+  ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
   or ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]]))
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
   or ({N+} & {@E-} & I+ & <verb-and-sp+>);
@@ -2607,31 +2607,31 @@ will.v can.v may.v must.v could.v might.v shall.v:
 ’ll 'll: S- & I+;
 
 should.v:
-  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-)) or
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
 would.v:
-  ((SI+ or SFI+) & (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & {Vw+} & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq> & {Vw+} & I+) or CQ-)) or
   ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or (CX- & {@MV+}) or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
 ought.v:
-  (((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SI+ or SFI+)) or
+  ((<verb-rq> & (SI+ or SFI+)) or
     ({@E-} & (S- or SF- or (RS- & B-))) or
     <verb-and-sp->) &
   (<to-verb> or (N+ & I+));
 
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
-  ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & (SI+ or SFI+) & I+) or
+  (<verb-rq> & (SI+ or SFI+) & I+) or
   ({@E-} & (S- or SF- or (RS- & B-)) & (I+ or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>);
 
 wouldn't wouldn’t:
-  ((Rw- or ({Ic-} & Q-) or [()]) & (SI+ or SFI+) & {RT+} & I+) or
+  (<verb-rq> & (SI+ or SFI+) & {RT+} & I+) or
   ({@E-} & (S- or SF- or (RS- & B-)) & (({RT+} & I+) or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
