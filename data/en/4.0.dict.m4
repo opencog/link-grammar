@@ -1204,14 +1204,16 @@ we:
 % SJrp-: allows only "...and I", disallows "I and ..."
 % Ds- & SJl+: "Either I or ..."
 % Dn- & SJn+: "Neither I not ..."
+% Ox-: Who am I?
 I.p:
-  <marker-entity> or
-  ((Sp*i+ or SX+) & <CLAUSE>) or
-  SIp*i- or
-  SJr- or
-  (Ds- & SJl+) or
-  (Dn- & SJn+) or
-  SXI-;
+  <marker-entity>
+  or ((Sp*i+ or SX+) & <CLAUSE>)
+  or SIp*i-
+  or SJr-
+  or (Ds- & SJl+)
+  or (Dn- & SJn+)
+  or SXI-
+  or [[Oxt-]];
 
 them_all us_all you_all: Ox- or J-;
 % it_all gets a cost when used as direct object (Ox) to avoid
@@ -2467,14 +2469,15 @@ hadn't.v-d hadn’t.v-d:
 <vc-be-obj-p>:
   {@EBm+} & (Opt+ or Omm+) & {@MV+};
 
-<vc-be-obj-sp>:
-  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+};
+% Ox+: pronoun objects: "Who are they?"
+<vc-be-obj-spx>:
+  {@EBm+} & (Ost+ or Opt+ or Oxt+ or Omm+) & {@MV+};
 
 <vc-be-obj-u>:
   {@EBm+} & Out+ & {@MV+};
 
 <vc-be>:    <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
-<vc-be-sp>: <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
+<vc-be-spx>: <vc-be-no-obj> or (<vc-be-obj-spx> & <verb-wall>);
 <vc-be-and>:<vc-be-no-obj-no-wall> or <vc-be-obj>;
 
 % Colon can be used as a synonym for "is"
@@ -2506,9 +2509,9 @@ is.v:
 %        "What he wants are the cats"
 %        "What John loves about this movie are the sound effects"
 are.v:
- ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
+ ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-spx>) or
  ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>) or
- ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-sp>);
+ ((Rw- or ({Ic-} & Q-) or [()]) & (SIpx+ or SFIp+) & <vc-be-spx>);
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or
@@ -2535,8 +2538,9 @@ were.v-d:
 
 % XXX the verb-and construction is probably too broad.
 am.v:
-  ((({@E-} & SX-) or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & SXI+)) & <vc-be>) or
-  (<verb-and-sp-> & <vc-be-and>) or (<vc-be-and> & <verb-and-sp+>);
+  ((({@E-} & SX-) or ((Rw- or ({Ic-} & Q- & <verb-wall>) or [()]) & SXI+)) & <vc-be>)
+  or (<verb-and-sp-> & <vc-be-and>)
+  or (<vc-be-and> & <verb-and-sp+>);
 
 % I'm == I am
 ’m 'm:
