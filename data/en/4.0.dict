@@ -10134,12 +10134,12 @@ EMOTICON :
 ":.j": [<colon>] or ({NI-} & Wd- & W+);
 
 % ({NI-} & Wd- & W+): Optionally numbered, bulleted lists
-*.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○ 。゜✿☆＊◕●∇□◇＠◎:
+*.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
   <colon> or ({NI-} & Wd- & W+);
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
-–━ー --.r -.r 、 ～.r ~.r ‧ :
+– ━ ー --.r -.r 、 ～.r ~.r ‧ :
   [[<colon>]] or
   ({@Xca-} & (({EBx+} & Xd+) or Xc-)) or
   ({NI-} & Wd- & W+);

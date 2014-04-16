@@ -2690,6 +2690,22 @@ B: Press button firmly.
 B: Press the button firmly.
 C: Cover ears immediately.
 
+% Bulleted lists
+* this is an item
+• this is a bullet
+⁂ this is a bullet
+❧ this is a bullet
+☞ this is a bullet
+◊ this is a bullet
+※  this is a bullet
+✿ this is a bullet
+☆ this is a bullet
+＊ this is a bullet
+● this is a bullet
+□ this is a bullet
+◇ this is a bullet
+◎ this is a bullet
+
 % quoted words and phrases:
 We should distinguish between "who" and "whom" but who fucking cares?
 He said "blah blah blah".
