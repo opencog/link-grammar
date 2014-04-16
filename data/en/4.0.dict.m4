@@ -8167,21 +8167,16 @@ so_on the_like vice_versa v.v.:
 
 % Assorted interjections, treat like unknown adjectives.
 er err.ij errr um.ij umm uh uhh ooo hoo zowie hubba Kee-reist whammo
-heck anyways honey.ij man.ij baby.ij hush.ij 
-emoticonID0 emoticonID1 emoticonID2 emoticonID3 emoticonID4
-emoticonID5 emoticonID6 emoticonID7 emoticonID8 emoticonID9
-emoticonID10 emoticonID11 emoticonID12 emoticonID13 emoticonID14
-emoticonID15 emoticonID16 emoticonID17 emoticonID18 emoticonID19
-emoticonID20 emoticonID21 emoticonID22 emoticonID23 emoticonID24
-emoticonID25 emoticonID26 emoticonID27 emoticonID28 emoticonID29
-emoticonID30 emoticonID31 emoticonID32 emoticonID33 emoticonID34
-emoticonID35 emoticonID36 emoticonID37 emoticonID38 emoticonID39
-emoticonID40 emoticonID41 emoticonID42 emoticonID43 emoticonID44
-emoticonID45 emoticonID46 emoticonID47 emoticonID48 emoticonID49
-emoticonID50 emoticonID51 emoticonID52 emoticonID53 emoticonID54
-emoticonID55 emoticonID56 emoticonID57 emoticonID58 emoticonID59:
+heck anyways honey.ij man.ij baby.ij hush.ij:
   <ordinary-adj> or
   ({{Ic-} & [[Wa-]]} & {{Xd-} & Xc+} & Ic+);
+
+% Emoticons ... at start or end of sentences ...
+EMOTICON :
+  CO+
+  or Wa-
+  or ((Xp- or ({@Xca-} & [[Xc-]])) & RW+)
+  or Xi-;
 
 % Cost on Xc- because Xc is intended for commas, not periods.
 % Without this cost, lists, such as "Paris, London and Berlin." 
@@ -8350,7 +8345,7 @@ rbracketID50 rbracketID51 rbracketID52 rbracketID53 rbracketID54
 rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 ")" "]": {@Xca-} & Xc-;
 
-foo: F+;
+% foo: F+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing for unknown words.
