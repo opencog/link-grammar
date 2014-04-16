@@ -2631,7 +2631,9 @@ equiv.v sim.v simeq.v approx.v ~.v ～.v:
 % Here EQt attaches only to terms, which may be numbers or letters.
 % By contrast, EQrr can only attach to relations (=, < > etc.)
 +.eq -.eq *.eq "/.eq" x.eqn:
-(EQt+ & EQt-) & (EQrr- or EQrr+ or AN+);
+  (EQt+ & EQt- & (EQrr- or EQrr+ or AN+))
+  or (EQt- & Xd- & EQt+ & EQt- & Xc+)
+  or (Xd- & EQt+ & EQt- & Xc+ & EQt+);
 
 ->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
 
