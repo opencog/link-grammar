@@ -309,31 +309,6 @@ PL-CAPITALIZED-WORDS:
   or Wa-
   or AN+;
 
-% XXX These should be removed, they're junk.
-personID0 personID1 personID2 personID3 personID4 personID5 personID6 personID7 personID8 personID9
-personID10 personID11 personID12 personID13 personID14 personID15 personID16 personID17 personID18 personID19
-personID20 personID21 personID22 personID23 personID24 personID25 personID26 personID27 personID28 personID29
-personID30 personID31 personID32 personID33 personID34 personID35 personID36 personID37 personID38 personID39
-personID40 personID41 personID42 personID43 personID44 personID45 personID46 personID47 personID48 personID49
-personID50 personID51 personID52 personID53 personID54 personID55 personID56 personID57 personID58 personID59
-personID60: <marker-entity> or <entity-entire>;
-
-organizationID0 organizationID1 organizationID2 organizationID3 organizationID4 organizationID5 organizationID6 organizationID7 organizationID8 organizationID9
-organizationID10 organizationID11 organizationID12 organizationID13 organizationID14 organizationID15 organizationID16 organizationID17 organizationID18 organizationID19
-organizationID20 organizationID21 organizationID22 organizationID23 organizationID24 organizationID25 organizationID26 organizationID27 organizationID28 organizationID29
-organizationID30 organizationID31 organizationID32 organizationID33 organizationID34 organizationID35 organizationID36 organizationID37 organizationID38 organizationID39
-organizationID40 organizationID41 organizationID42 organizationID43 organizationID44 organizationID45 organizationID46 organizationID47 organizationID48 organizationID49
-organizationID50 organizationID51 organizationID52 organizationID53 organizationID54 organizationID55 organizationID56 organizationID57 organizationID58 organizationID59
-organizationID60: <marker-entity> or <entity-entire>;
-
-locationID0 locationID1 locationID2 locationID3 locationID4 locationID5 locationID6 locationID7 locationID8 locationID9
-locationID10 locationID11 locationID12 locationID13 locationID14 locationID15 locationID16 locationID17 locationID18 locationID19
-locationID20 locationID21 locationID22 locationID23 locationID24 locationID25 locationID26 locationID27 locationID28 locationID29
-locationID30 locationID31 locationID32 locationID33 locationID34 locationID35 locationID36 locationID37 locationID38 locationID39
-locationID40 locationID41 locationID42 locationID43 locationID44 locationID45 locationID46 locationID47 locationID48 locationID49
-locationID50 locationID51 locationID52 locationID53 locationID54 locationID55 locationID56 locationID57 locationID58 locationID59
-locationID60: <marker-entity> or <entity-entire>;
-
 % Words that are also given names
 % Cannot take A or D links.
 % Art Bell Bill Bob Buck Bud
@@ -355,22 +330,6 @@ locationID60: <marker-entity> or <entity-entire>;
 
 /en/words/entities.locations.sing:
   <marker-entity> or <entity-singular>;
-
-%
-% entity IDs (mirror Capitalized-words - a mix of plural and singular)
-<entity-id>:
-  ({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-    (({@MX+} & <noun-main-x>) or <noun-and-x> or YS+ or YP+))
-  or AN+
-  or Wa-;
-
-entityID0 entityID1 entityID2 entityID3 entityID4 entityID5 entityID6 entityID7 entityID8 entityID9
-entityID10 entityID11 entityID12 entityID13 entityID14 entityID15 entityID16 entityID17 entityID18 entityID19
-entityID20 entityID21 entityID22 entityID23 entityID24 entityID25 entityID26 entityID27 entityID28 entityID29
-entityID30 entityID31 entityID32 entityID33 entityID34 entityID35 entityID36 entityID37 entityID38 entityID39
-entityID40 entityID41 entityID42 entityID43 entityID44 entityID45 entityID46 entityID47 entityID48 entityID49
-entityID50 entityID51 entityID52 entityID53 entityID54 entityID55 entityID56 entityID57 entityID58 entityID59
-entityID60: <marker-entity> or <entity-id>;
 
 % words.n.4: nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
@@ -412,14 +371,6 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or Up-
     or Wa-);
 
-genericID0 genericID1 genericID2 genericID3 genericID4 genericID5 genericID6 genericID7 genericID8 genericID9
-genericID10 genericID11 genericID12 genericID13 genericID14 genericID15 genericID16 genericID17 genericID18 genericID19
-genericID20 genericID21 genericID22 genericID23 genericID24 genericID25 genericID26 genericID27 genericID28 genericID29
-genericID30 genericID31 genericID32 genericID33 genericID34 genericID35 genericID36 genericID37 genericID38 genericID39
-genericID40 genericID41 genericID42 genericID43 genericID44 genericID45 genericID46 genericID47 genericID48 genericID49
-genericID50 genericID51 genericID52 genericID53 genericID54 genericID55 genericID56 genericID57 genericID58 genericID59
-genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
-
 %from words.y year numbers
 <date-id>:
   NMd-
@@ -434,14 +385,6 @@ genericID60: <marker-entity> or <generic-singular-id> or <generic-plural-id>;
       or ({{@L+} & DD-}
          & ([[Dmcn+]]
            or ((<noun-sub-x> or TA-) & (JT- or IN- or [[<noun-main-x>]]))))));
-
-dateID0 dateID1 dateID2 dateID3 dateID4 dateID5 dateID6 dateID7 dateID8 dateID9
-dateID10 dateID11 dateID12 dateID13 dateID14 dateID15 dateID16 dateID17 dateID18 dateID19
-dateID20 dateID21 dateID22 dateID23 dateID24 dateID25 dateID26 dateID27 dateID28 dateID29
-dateID30 dateID31 dateID32 dateID33 dateID34 dateID35 dateID36 dateID37 dateID38 dateID39
-dateID40 dateID41 dateID42 dateID43 dateID44 dateID45 dateID46 dateID47 dateID48 dateID49
-dateID50 dateID51 dateID52 dateID53 dateID54 dateID55 dateID56 dateID57 dateID58 dateID59
-dateID60: <date-id>;
 
 % Number abbreviations: no.x No.x
 % pp. paragraph, page   art article
