@@ -1721,7 +1721,7 @@ DECADE-TIME
 
 % year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
-/en/words/words.y: NUMBERS or <date-id> or [[G+]];
+YEAR-TIME: NUMBERS or <date-id> or [[G+]];
 
 % Years: e.g. '47 Ford Fairlane or '57 Chevy
 '00 '01 '02 '03 '04 '05 '06 '07 '08 '09
