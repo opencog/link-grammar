@@ -1663,6 +1663,8 @@ ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
 % NMa-: Allow post-posed letter moifiers: e.g. "Vitamin A"
 % NIa+: Alow numbered, bulleted lists: "B: Press button firmly"
+% XXX Right now, the first-uppercase-letter logic is screwing up
+% sentences that start with these. This needs fixing ...
 A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
    NMa- or NIa+;
@@ -10132,12 +10134,12 @@ EMOTICON :
 ":.j": [<colon>] or ({NI-} & Wd- & W+);
 
 % ({NI-} & Wd- & W+): Optionally numbered, bulleted lists
-*.j "•" ⁂ ❧ ☞ ◊ ※  "….j":
+*.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○ 。゜✿☆＊◕●∇□◇＠◎:
   <colon> or ({NI-} & Wd- & W+);
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
-– --.r -.r 、 ～.r ~.r ‧ :
+–━ー --.r -.r 、 ～.r ~.r ‧ :
   [[<colon>]] or
   ({@Xca-} & (({EBx+} & Xd+) or Xc-)) or
   ({NI-} & Wd- & W+);
