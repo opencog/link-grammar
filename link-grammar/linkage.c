@@ -44,8 +44,14 @@
  * below, we remove it from the linkage, as well as the links that
  * connect to it.
  *
- * The empty-word device is emplyed by every non-Enlgish dictionary.
+ * The empty-word device is emplyed by every non-English dictionary.
  * (viz. Russian, German, Lithuanian, ...)
+ *
+ * XXX TODO ... the = sign should be replaced by something else, say,
+ * 0x4, during dictionary read, and then converted back to equals sign
+ * during printing.  The problem is tht equals signs can also show up
+ * in equations, which makes things confusing during the printing steps
+ * done below, where we try to glue words back together again.
  */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
@@ -55,27 +61,43 @@
 #define SUFFIX_SUPPRESS ("LL") /* suffix links start with this */
 #define SUFFIX_SUPPRESS_L 2    /* length of above */
 
+#define STEM_MARK "="        /* stems end with this. */
+
 #define HIDE_MORPHO   (!display_morphology)
 
 /**
  * Return TRUE if the word is a suffix.
  *
- * Suffixes have the form =asdf.asdf and "null" suffixes have the form
- * =.asdf.
+ * Suffixes have the form =asdf.asdf or possibly just =asdf without
+ * the dot (subscript mark). The "null" suffixes have the form
+ * =.asdf (always with the ubscript mark, as there are several).
  * Ordinary equals signs appearing in regular text are either = or =[!].
  */
 static bool is_suffix(const char* w)
 {
 	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
 	if (1 == strlen(w)) return FALSE;
-#if SUBSCRIPT_MARK == '.'
 	if (0 == strcmp("=[!]", w)) return FALSE;
+#if SUBSCRIPT_MARK == '.'
+	/* Hmmm ... equals signs look like suffixes, but they are not ... */
 	if (0 == strcmp("=.v", w)) return FALSE;
 	if (0 == strcmp("=.eq", w)) return FALSE;
 #endif
 	return TRUE;
 }
 
+/* Return TRUE if the word seems to be in stem form.
+ * Stems have the distinctive 'shape', that the end with the = sign
+ * and are preceeded by the subscript mark. 
+ */
+static bool is_stem(const char* w)
+{
+	size_t l = strlen(w);
+	if (l < 2) return FALSE;
+   if (strcmp(STEM_MARK, w+l-2)) return FALSE;
+
+	return TRUE;
+}
 
 /**
  * This takes the current chosen_disjuncts array and uses it to
@@ -167,10 +189,11 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 			/* Concatenate the stem and the suffix together into one word */
 			if (HIDE_MORPHO)
 			{
-				if (t && is_suffix(t) && pi->chosen_disjuncts[i-1])
+				if (t && is_suffix(t) && pi->chosen_disjuncts[i-1] &&
+				    is_stem(pi->chosen_disjuncts[i-1]->string))
 				{
 					const char * stem = pi->chosen_disjuncts[i-1]->string;
-					size_t len = strlen(stem) + strlen (t);
+					size_t len = strlen(stem) + strlen(t);
 					char * join = (char *)malloc(len+1);
 					strcpy(join, stem);
 					u = strrchr(join, SUBSCRIPT_MARK);
@@ -188,7 +211,8 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 
 				/* Suppress printing of the stem, if the next word is the suffix */
 				if ((i+1 < sent->length) &&
-				    (pi->chosen_disjuncts[i+1]))
+				    pi->chosen_disjuncts[i+1] &&
+				    is_stem(pi->chosen_disjuncts[i+1]->string))
 				{
 					const char * next = pi->chosen_disjuncts[i+1]->string;
 					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
