@@ -68,8 +68,7 @@ WORDS=			\
 	words.v.8.2	\
 	words.v.8.3	\
 	words.v.8.4	\
-	words.v.8.5	\
-	words.y
+	words.v.8.5
 
 
 wordsdir=$(pkgdatadir)/en/words

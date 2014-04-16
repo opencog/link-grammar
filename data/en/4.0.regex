@@ -23,11 +23,11 @@ HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?(AM|PM|am|pm)?$/
 
 % e.g. 1950's leading number can be higher, for science fiction.
 % Must be four digits, or possible three. Must end in s, 's ’s
-DECADE-TIME: /^([1-4][0-9][0-9]|[1-9][0-9])0(s|'s|’s)$/
+DECADE-DATE: /^([1-4][0-9][0-9]|[1-9][0-9])0(s|'s|’s)$/
 
 % Similar to above, but does not end in s. Only allows four digits.
 % We process this before NUMBERS below, so that this is matched first.
-YEAR-TIME: /^([1-4][0-9]{3}|[1-9][0-9]{0,2})$/
+YEAR-DATE: /^([1-4][0-9]{3}|[1-9][0-9]{0,2})$/
 
 % Day-of-month names; this regex will match before the one below.
 DAY-ORDINALS: /^(1st|2nd|3rd|[4-9]th|1[0-9]th|2(0th|1st|2nd|3rd|[4-9]th)|30th|31st)$/
