@@ -1631,13 +1631,20 @@ not_enough:
 % Allowing EC+ for "two to threefold more abundant". This allows also the
 % nonsense "two to three more abundant", but this is likely harmless.
 -.j-ru --.j-ru ---.j-ru or.j-ru to.j-ru ->.j-ru -->.j-ru:
-(NIfn- & {NIr-} & NItn+ & (NM- or EC+ or
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-(NIfu- & {NIr-} & NItu+ &
-(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+)) or
-(NIfp- & {NIr-} & NItp+ & (NM- or AN+ or ({Xc+ & Xd-} & Ma-) or (Wq- & PF+)
-or MVp- or Pp- or FM- or (Xc+ & Xd- & (MVx- or MX-))));
+  (NIfn- & {NIr-} & NItn+ & (
+    NM- or EC+ or MVp-
+    or NN+ or [[NF+]]
+    or ({EN- or NIc-} & (ND+ or OD-
+      or ({{@L+} & DD-} & (Dmcn+
+        or (<noun-sub-p> & [<noun-main-p>])))))))
+  or (NIfu- & {NIr-} & NItu+ & (
+    ((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+}))
+    or AN+ or Yd+ or Ya+))
+  or (NIfp- & {NIr-} & NItp+ & (
+    NM- or AN+ or ({Xc+ & Xd-} & Ma-)
+    or (Wq- & PF+)
+    or MVp- or Pp- or FM-
+    or (Xc+ & Xd- & (MVx- or MX-))));
 
 and.j-ru:
 (NIfn- & {NIr-} & NItn+ & (NM- or
