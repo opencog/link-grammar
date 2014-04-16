@@ -1,4 +1,4 @@
-Version 5.0.4 (XXX 2014)
+Version 5.0.4 (16 April 2014)
  * Expanded unit tests for capitalization.
  * Fix who questions: "Who are they?", "Who are you?", etc.
  * Provide verb-wall linkage for many questions.
