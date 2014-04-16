@@ -2626,8 +2626,8 @@ wouldn't wouldn’t:
 equiv.v sim.v simeq.v approx.v ~.v ～.v:
   (<verb-x-s> & <vc-be>)
   or (([S- & <verb-wall>] or EQ*r-)
-     & ([O+] or EQ*r+)
-     & (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-)));
+     & ([O+] or ({EQ*r-} & EQ*r+))
+     & (MX- or MVa-));
 
 % Binary operators:
 % these occur in "simple" expressions
