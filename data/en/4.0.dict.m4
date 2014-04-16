@@ -2505,10 +2505,13 @@ hadn't.v-d hadn’t.v-d:
 % verb-x-s,u: "there is blood on his hands"
 % Unfortunately, this allows "There is chasing dogs", which pairs SFu to Op
 % and has to be removed via post-processing.
+% EQ: "Everyone knows that 2 + 2 is 4"
 is.v:
-  (<verb-x-s,u> & <vc-be>) or
-  (<verb-and-s-> & <vc-be-and>) or (<vc-be-and> & <verb-and-s+>) or
-  ((<verb-rq> & (SIs+ or SFIs+)) & <vc-be>);
+  (<verb-x-s,u> & <vc-be>)
+  or (<verb-and-s-> & <vc-be-and>)
+  or (<vc-be-and> & <verb-and-s+>)
+  or ((<verb-rq> & (SIs+ or SFIs+)) & <vc-be>) 
+  or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
 's.v ’s.v: [[(<verb-x-s,u> &
 (({@EBm+} & ((((O*t+ & <verb-wall>) or [K+] or BI+ or OF+ or
@@ -2668,7 +2671,8 @@ wouldn't wouldn’t:
 =.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
 equiv.v sim.v simeq.v approx.v ~.v ～.v:
   (<verb-x-s> & <vc-be>)
-  or (([S- & <verb-wall>] or EQ*r-)
+  or (EQ*r- & S- & <verb-wall> & EQ*r+)
+  or (EQ*r-
      & ([O+] or ({EQ*r-} & EQ*r+))
      & (MX- or MVa-));
 
