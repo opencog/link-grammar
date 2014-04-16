@@ -29,7 +29,7 @@ void patch_subscript(char *);
 
 /* Connector names for the affix class lists in the affix file */
 
-enum {
+typedef enum {
 	AFDICT_RPUNC=0,
 	AFDICT_LPUNC,
 	AFDICT_QUOTES,
