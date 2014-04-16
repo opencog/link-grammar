@@ -13,11 +13,12 @@ pkgpython_PYTHON =                                 \
    $(top_builddir)/bindings/python/clinkgrammar.py
 
 
-# Don't remove __init__.py; that one is build by configure!
-CLEANFILES =                                       \
-   $(BUILT_SOURCES)                                \
-   $(top_builddir)/bindings/python/clinkgrammar.py
+# These are packaged in the tarball; make clean should not remove them.
+maintainer-clean-local:
+	-rm -f $(BUILT_SOURCES)
+	-rm -f $(top_builddir)/bindings/python/clinkgrammar.py
 
+# Don't remove __init__.py; that one is build by configure!
 DISTCLEANFILES =                                   \
    $(top_builddir)/bindings/python/__init__.py
 

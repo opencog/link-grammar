@@ -4,6 +4,7 @@ Version 5.0.4 (XXX 2014)
  * Provide verb-wall linkage for many questions.
  * Add Biblical naming idioms: "Lud, son of Shem, ..."
  * Fix MacOSX build break.
+ * Fix the 'make clean' target to not remove critical files.
 
 Version 5.0.3 (13 April 2014)
  * Minor memory usage optimization

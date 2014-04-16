@@ -18,7 +18,9 @@ $(BUILT_SOURCES): $(SWIG_SOURCES)
 	$(SWIG) -perl5 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 endif
 
-CLEANFILES = $(BUILT_SOURCES) $(dist_pkgperl_SCRIPTS)
+# These are packaged in the tarball; make clean should not remove them.
+maintainer-clean-local:
+	-rm -f $(BUILT_SOURCES) $(dist_pkgperl_SCRIPTS)
 
 # The la MUST have the same name as the pm,
 # which MUST be the swig -module name!
