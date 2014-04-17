@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.0.4 (formatted as V5v0v4+)
-<dictionary-version-number>: V5v0v4+;
+% Dictionary version number is 5.0.5 (formatted as V5v0v5+)
+<dictionary-version-number>: V5v0v5+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -371,7 +371,7 @@ GREEK-LETTER-AND-NUMBER pH.i x.n: <noun-mass-count>;
     or Up-
     or Wa-);
 
-%from words.y year numbers
+%for YEAR-DATE year numbers
 <date-id>:
   NMd-
   or ({EN-} & (NIfn+ or NItn-))
@@ -1701,9 +1701,9 @@ thirty-first.ti DAY-ORDINALS.ti: TM-;
 90 91 92 93 94 95 96 97 98 99:
   NUMBERS or <date-id> or [[G+]];
 
-% the DECADE-TIME regex matches 1950s 1950's 1950’s etc.
+% the DECADE-DATE regex matches 1950s 1950's 1950’s etc.
 % A+: It's an old 50's love song
-DECADE-TIME
+DECADE-DATE
 '00s '10s '20s '30s '40s '50s '60s '70s '80s '90s
 ‘00s ‘10s ‘20s ‘30s ‘40s ‘50s ‘60s ‘70s ‘80s ‘90s
 00's 10's 20's 30's 40's 50's 60's 70's 80's 90's:
@@ -1712,7 +1712,7 @@ DECADE-TIME
 
 % year numbers
 % 1910 1911 1912 1913 1914 1915 1916 1917 1918 1919
-YEAR-TIME: NUMBERS or <date-id> or [[G+]];
+YEAR-DATE: NUMBERS or <date-id> or [[G+]];
 
 % Years: e.g. '47 Ford Fairlane or '57 Chevy
 '00 '01 '02 '03 '04 '05 '06 '07 '08 '09
