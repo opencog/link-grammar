@@ -1,3 +1,6 @@
+Version 5.0.5 (17 April 2014)
+ * Fix packaging bug with the English dictionary.
+
 Version 5.0.4 (16 April 2014)
  * Expanded unit tests for capitalization.
  * Fix who questions: "Who are they?", "Who are you?", etc.
