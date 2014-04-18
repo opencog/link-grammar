@@ -1,4 +1,4 @@
-Version 5.0.6 (XXX 2014)
+Version 5.0.6 (18 April 2014)
  * Fix: JSON output format missing brace; from Matt Kruse.
  * Fix: serious error in Russian morphology printing.
 
