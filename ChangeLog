@@ -1,3 +1,6 @@
+Version 5.0.6 (XXX 2014)
+ * Fix: JSON output format missing brace; from Matt Kruse.
+
 Version 5.0.5 (17 April 2014)
  * Fix packaging bug with the English dictionary.
 

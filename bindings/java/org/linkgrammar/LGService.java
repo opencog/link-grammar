@@ -233,7 +233,7 @@ public class LGService
 		int numWords = LinkGrammar.getNumWords();
 		int maxLinkages = Math.min(config.getMaxLinkages(), LinkGrammar.getNumLinkages());
 		StringBuffer buf = new StringBuffer();
-		buf.append("\"numSkippedWords\":" + LinkGrammar.getNumSkippedWords());
+		buf.append("{\"numSkippedWords\":" + LinkGrammar.getNumSkippedWords());
 		buf.append(",\"linkages\":[");
 		for (int li = 0; li < maxLinkages; li++)
 		{
