@@ -36,7 +36,7 @@
 /*
  * The "empty word" is an ugly, hacky concept used to work around
  * fixed-length parsing within the parser. That is, the tokenizer
- * may or may not split a word into morphemes, and the number 
+ * may or may not split a word into morphemes, and the number
  * of morphemes may be variable.  However, the parser, as currently
  * written, expects sentences to be of fixed length. Thus, the "empty
  * word" is automatically inserted into a sentence, so as to balance
@@ -88,7 +88,7 @@ static bool is_suffix(const char* w)
 
 /* Return TRUE if the word seems to be in stem form.
  * Stems have the distinctive 'shape', that the end with the = sign
- * and are preceeded by the subscript mark. 
+ * and are preceeded by the subscript mark.
  */
 static bool is_stem(const char* w)
 {
@@ -172,53 +172,56 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 				t = string_set_add(s, sent->string_set);
 				free(s);
 			} else {
-				/* Convert the badly-printing ^C into a period */
-				s = strdup(t);
-				u = strrchr(s, SUBSCRIPT_MARK);
-				if (u) *u = SUBSCRIPT_DOT;
-				t = string_set_add(s, sent->string_set);
-				free(s);
-			}
 
-			/* Suppress the empty word. */
-			if (0 == strcmp(t, EMPTY_WORD_DOT))
-			{
-				t = NULL;
-			}
-
-			/* Concatenate the stem and the suffix together into one word */
-			if (HIDE_MORPHO)
-			{
-				if (t && is_suffix(t) && pi->chosen_disjuncts[i-1] &&
-				    is_stem(pi->chosen_disjuncts[i-1]->string))
+				/* Suppress the empty word. */
+				if (0 == strcmp(t, EMPTY_WORD_MARK))
 				{
-					const char * stem = pi->chosen_disjuncts[i-1]->string;
-					size_t len = strlen(stem) + strlen(t);
-					char * join = (char *)malloc(len+1);
-					strcpy(join, stem);
-					u = strrchr(join, SUBSCRIPT_MARK);
-
-					/* u can be null, if the the sentence happens to have
-					 * an equals sign in it, for other reasons. */
-					if (u)
-					{
-						*u = '\0';
-						strcat(join, t + SUFFIX_WORD_L);
-						t = string_set_add(join, sent->string_set);
-					}
-					free(join);
+					t = NULL;
 				}
 
-				/* Suppress printing of the stem, if the next word is the suffix */
-				if ((i+1 < sent->length) &&
-				    pi->chosen_disjuncts[i+1] &&
-				    is_stem(pi->chosen_disjuncts[i+1]->string))
+				/* Concatenate the stem and the suffix together into one word */
+				if (t && HIDE_MORPHO)
 				{
-					const char * next = pi->chosen_disjuncts[i+1]->string;
-					if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
+					if (is_suffix(t) && pi->chosen_disjuncts[i-1] &&
+					    is_stem(pi->chosen_disjuncts[i-1]->string))
 					{
-						t = NULL;
+						const char * stem = pi->chosen_disjuncts[i-1]->string;
+						size_t len = strlen(stem) + strlen(t);
+						char * join = (char *)malloc(len+1);
+						strcpy(join, stem);
+						u = strrchr(join, SUBSCRIPT_MARK);
+
+						/* u can be null, if the the sentence happens to have
+						 * an equals sign in it, for other reasons. */
+						if (u)
+						{
+							*u = '\0';
+							strcat(join, t + SUFFIX_WORD_L);
+							t = string_set_add(join, sent->string_set);
+						}
+						free(join);
 					}
+
+					/* Suppress printing of the stem, if the next word is the suffix */
+					if (is_stem(t) && (i+1 < sent->length) &&
+					    pi->chosen_disjuncts[i+1])
+					{
+						const char * next = pi->chosen_disjuncts[i+1]->string;
+						if (is_suffix(next) && 0 != strcmp(next, EMPTY_WORD_MARK))
+						{
+							t = NULL;
+						}
+					}
+				}
+
+				/* Convert the badly-printing ^C into a period */
+				if (t)
+				{
+					s = strdup(t);
+					u = strrchr(s, SUBSCRIPT_MARK);
+					if (u) *u = SUBSCRIPT_DOT;
+					t = string_set_add(s, sent->string_set);
+					free(s);
 				}
 			}
 		}
