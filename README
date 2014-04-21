@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 5.0.6
+                          Version 5.0.7
 
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
@@ -79,7 +79,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-5.0.6.tar.gz.asc
+   gpg --verify link-grammar-5.0.7.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -746,7 +746,9 @@ SAT solver:
    but is faster for long sentences.  To work properly, it needs to be
    attached to a parse ranking system.  This work is incomplete,
    although the prototype works.  it is not yet well-integrated with
-   the system, and needs cleanup.
+   the system, and needs cleanup.  In particular, it fails to handle
+   morphemes correctly (i.e. to use compute_chosen_words() in 
+   SATEncoder::create_linkage() -- this needs fixing.)
 
    The SAT solver is enabled by specifying
 
