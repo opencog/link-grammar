@@ -2,12 +2,6 @@
            Directories
            -----------
 
-These directories contain bindings for different programming languages:
-
-autoit -- contains AutoIt bindings
-java   -- contains Java bindings
-lisp   -- contains Lisp bindings
-
 The minisat and sat-solver directories contain code for the Boolean-SAT
 parser.
 

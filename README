@@ -738,16 +738,15 @@ Fat Links:
 SAT solver:
 -----------
    The current parser uses an algorithm that runs in O(N^3) time, for
-   a sentence containing N words. This algorithm is more or less a
-   chart parser, a variant of the Earley parser.
+   a sentence containing N words. 
 
-   The SAT solver aims to replace the chart parser with an algorithm
-   based on Boolean Satisfiability Theory; specifically using the
-   MiniSAT solver. The SAT solver has a bit more overhead for shorter
-   sentences, but is significantly faster for long sentences.  To work
-   properly, it needs to be attached to a parse ranking system.  This
-   work is incomplete, although the prototype works.  it is not yet
-   well-integrated with the system, and needs cleanup.
+   The SAT solver aims to replace this parser with an algorithm based
+   on Boolean Satisfiability Theory; specifically using the MiniSAT
+   solver. The SAT solver has a bit more overhead for shorter sentences,
+   but is faster for long sentences.  To work properly, it needs to be
+   attached to a parse ranking system.  This work is incomplete,
+   although the prototype works.  it is not yet well-integrated with
+   the system, and needs cleanup.
 
    The SAT solver is enabled by specifying
 
