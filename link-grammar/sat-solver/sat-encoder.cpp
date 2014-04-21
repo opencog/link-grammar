@@ -246,8 +246,9 @@ void SATEncoder::encode() {
 /*-------------------------------------------------------------------------*
  *                         W O R D - T A G S                               *
  *-------------------------------------------------------------------------*/
-void SATEncoder::build_word_tags() {
-  for (int w = 0; w < _sent->length; w++) {
+void SATEncoder::build_word_tags()
+{
+  for (size_t w = 0; w < _sent->length; w++) {
     _word_tags.push_back(WordTag(w, _variables, _sent, _opts));
     int dfs_position = 0;
 
@@ -266,7 +267,7 @@ void SATEncoder::build_word_tags() {
 #endif
 
     char name[MAX_VARIABLE_NAME];
-    sprintf(name, "w%d", w);
+    sprintf(name, "w%zu", w);
     bool leading_right = true;
     bool leading_left = true;
     std::vector<int> eps_right, eps_left;
@@ -277,8 +278,8 @@ void SATEncoder::build_word_tags() {
       free_alternatives(exp);
   }
 
-  for (int wl = 0; wl < _sent->length - 1; wl++) {
-    for (int wr = wl + 1; wr < _sent->length; wr++) {
+  for (size_t wl = 0; wl < _sent->length - 1; wl++) {
+    for (size_t wr = wl + 1; wr < _sent->length; wr++) {
       _word_tags[wl].add_matches_with_word(_word_tags[wr]);
     }
   }
@@ -311,8 +312,9 @@ bool SATEncoder::matches_in_interval(int wi, int pi, int l, int r) {
  *                     S A T I S F A C T I O N                             *
  *-------------------------------------------------------------------------*/
 
-void SATEncoder::generate_satisfaction_conditions() {
-  for (int w = 0; w < _sent->length; w++) {
+void SATEncoder::generate_satisfaction_conditions()
+{
+  for (size_t w = 0; w < _sent->length; w++) {
     if (_sent->word[w].x == NULL) {
       DEBUG_print("Word: " << _sent->word[w].string << " : " << "(null)" << endl);
       handle_null_expression(w);
@@ -329,7 +331,7 @@ void SATEncoder::generate_satisfaction_conditions() {
 #endif
 
     char name[MAX_VARIABLE_NAME];
-    sprintf(name, "w%d", w);
+    sprintf(name, "w%zu", w);
 
     determine_satisfaction(w, name);
     int dfs_position = 0;
@@ -859,10 +861,10 @@ bool SATEncoder::connectivity_components(std::vector<int>& components) {
   // determine the connectivity components
   components.resize(_sent->length);
   std::fill(components.begin(), components.end(), -1);
-  for (int node = 0; node < _sent->length; node++)
+  for (size_t node = 0; node < _sent->length; node++)
     dfs(node, graph, node, components);
   bool connected = true;
-  for (int node = 0; node < _sent->length; node++) {
+  for (size_t node = 0; node < _sent->length; node++) {
     if (components[node] != 0) {
       connected = false;
     }
@@ -900,14 +902,15 @@ void SATEncoder::generate_disconnectivity_prohibiting(std::vector<int> component
 /*--------------------------------------------------------------------------*
  *                           P L A N A R I T Y                              *
  *--------------------------------------------------------------------------*/
-void SATEncoder::generate_planarity_conditions() {
+void SATEncoder::generate_planarity_conditions()
+{
   vec<Lit> clause;
-  for (int wi1 = 0; wi1 < _sent->length; wi1++) {
-    for (int wj1 = wi1+1; wj1 < _sent->length; wj1++) {
-      for (int wi2 = wj1+1; wi2 < _sent->length; wi2++) {
+  for (size_t wi1 = 0; wi1 < _sent->length; wi1++) {
+    for (size_t wj1 = wi1+1; wj1 < _sent->length; wj1++) {
+      for (size_t wi2 = wj1+1; wi2 < _sent->length; wi2++) {
         if (!_linked_possible(wi1, wi2))
           continue;
-        for (int wj2 = wi2+1; wj2 < _sent->length; wj2++) {
+        for (size_t wj2 = wi2+1; wj2 < _sent->length; wj2++) {
           if (!_linked_possible(wj1, wj2))
             continue;
           clause.growTo(2);
@@ -926,8 +929,9 @@ void SATEncoder::generate_planarity_conditions() {
  *               P O W E R     P R U N I N G                                *
  *--------------------------------------------------------------------------*/
 
-void SATEncoder::generate_epsilon_definitions() {
-  for (int w = 0; w < _sent->length; w++) {
+void SATEncoder::generate_epsilon_definitions()
+{
+  for (size_t w = 0; w < _sent->length; w++) {
     if (_sent->word[w].x == NULL) {
       continue;
     }
@@ -936,7 +940,7 @@ void SATEncoder::generate_epsilon_definitions() {
     Exp* exp = join ? join_alternatives(w) : _sent->word[w].x->exp;
 
     char name[MAX_VARIABLE_NAME];
-    sprintf(name, "w%d", w);
+    sprintf(name, "w%zu", w);
 
     int dfs_position;
 
@@ -1064,13 +1068,14 @@ bool SATEncoder::generate_epsilon_for_expression(int w, int& dfs_position, Exp* 
   return false;
 }
 
-void SATEncoder::power_prune() {
+void SATEncoder::power_prune()
+{
   generate_epsilon_definitions();
 
   // on two non-adjacent words, a pair of connectors can be used only
   // if not [both of them are the deepest].
 
-  for (int wl = 0; wl < _sent->length - 2; wl++) {
+  for (size_t wl = 0; wl < _sent->length - 2; wl++) {
     const std::vector<PositionConnector>& rc = _word_tags[wl].get_right_connectors();
     std::vector<PositionConnector>::const_iterator rci;
     for (rci = rc.begin(); rci != rc.end(); rci++) {
@@ -1185,7 +1190,7 @@ void SATEncoder::pp_prune()
   pp_knowledge * knowledge;
   knowledge = _sent->dict->postprocessor->knowledge;
 
-  for (int i=0; i<knowledge->n_contains_one_rules; i++)
+  for (size_t i=0; i<knowledge->n_contains_one_rules; i++)
   {
     pp_rule rule = knowledge->contains_one_rules[i];
     // const char * selector = rule.selector;         /* selector string for this rule */
@@ -1279,7 +1284,7 @@ Linkage SATEncoder::create_linkage()
      compute_chosen_words. */
   // XXX should not use alternatives[0], need to try all of them!
   // XXX why are we doing a strcpy? Should be using the stringset!
-  for (int i = 0; i < _sent->length; i++) {
+  for (size_t i = 0; i < _sent->length; i++) {
     char *s = (char *) exalloc(strlen(_sent->word[i].alternatives[0])+1);
     strcpy(s, _sent->word[i].alternatives[0]);
     linkage->word[i] = s;
@@ -1403,12 +1408,13 @@ void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(int
 #endif
 }
 
-void SATEncoderConjunctionFreeSentences::generate_linked_definitions() {
+void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
+{
   _linked_possible.resize(_sent->length, 1);
 
   DEBUG_print("------- linked definitions");
-  for (int w1 = 0; w1 < _sent->length; w1++) {
-    for (int w2 = w1 + 1; w2 < _sent->length; w2++) {
+  for (size_t w1 = 0; w1 < _sent->length; w1++) {
+    for (size_t w2 = w1 + 1; w2 < _sent->length; w2++) {
       DEBUG_print("---------- ." << w1 << ". ." << w2 << ".");
       Lit lhs = Lit(_variables->linked(w1, w2));
 
@@ -1429,10 +1435,11 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions() {
   DEBUG_print("------- end linked definitions");
 }
 
-void SATEncoder::generate_linked_min_max_planarity() {
+void SATEncoder::generate_linked_min_max_planarity()
+{
   DEBUG_print("---- linked_max");
-  for (int w1 = 0; w1 < _sent->length; w1++) {
-    for (int w2 = 0; w2 < _sent->length; w2++) {
+  for (size_t w1 = 0; w1 < _sent->length; w1++) {
+    for (size_t w2 = 0; w2 < _sent->length; w2++) {
       Lit lhs = Lit(_variables->linked_max(w1, w2));
       vec<Lit> rhs;
       if (w2 < _sent->length - 1) {
@@ -1447,8 +1454,8 @@ void SATEncoder::generate_linked_min_max_planarity() {
 
 
   DEBUG_print("---- linked_min");
-  for (int w1 = 0; w1 < _sent->length; w1++) {
-    for (int w2 = 0; w2 < _sent->length; w2++) {
+  for (size_t w1 = 0; w1 < _sent->length; w1++) {
+    for (size_t w2 = 0; w2 < _sent->length; w2++) {
       Lit lhs = Lit(_variables->linked_min(w1, w2));
       vec<Lit> rhs;
       if (w2 > 0) {
@@ -1463,9 +1470,9 @@ void SATEncoder::generate_linked_min_max_planarity() {
 
 
   vec<Lit> clause;
-  for (int wi = 3; wi < _sent->length; wi++) {
-    for (int wj = 1; wj < wi - 1; wj++) {
-      for (int wl = wj + 1; wl < wi; wl++) {
+  for (size_t wi = 3; wi < _sent->length; wi++) {
+    for (size_t wj = 1; wj < wi - 1; wj++) {
+      for (size_t wl = wj + 1; wl < wi; wl++) {
         clause.growTo(3);
         clause[0] = ~Lit(_variables->linked_min(wi, wj));
         clause[1] = ~Lit(_variables->linked_max(wi, wl - 1));
@@ -1477,9 +1484,9 @@ void SATEncoder::generate_linked_min_max_planarity() {
 
   DEBUG_print("------------");
 
-  for (int wi = 0; wi < _sent->length - 1; wi++) {
-    for (int wj = wi + 1; wj < _sent->length - 1; wj++) {
-      for (int wl = wi+1; wl < wj; wl++) {
+  for (size_t wi = 0; wi < _sent->length - 1; wi++) {
+    for (size_t wj = wi + 1; wj < _sent->length - 1; wj++) {
+      for (size_t wl = wi+1; wl < wj; wl++) {
         clause.growTo(3);
         clause[0] = ~Lit(_variables->linked_max(wi, wj));
         clause[1] = ~Lit(_variables->linked_min(wi, wl + 1));
@@ -1491,9 +1498,9 @@ void SATEncoder::generate_linked_min_max_planarity() {
 
   DEBUG_print("------------");
   clause.clear();
-  for (int wi = 1; wi < _sent->length; wi++) {
-    for (int wj = wi + 2; wj < _sent->length - 1; wj++) {
-      for (int wl = wi + 1; wl < wj; wl++) {
+  for (size_t wi = 1; wi < _sent->length; wi++) {
+    for (size_t wj = wi + 2; wj < _sent->length - 1; wj++) {
+      for (size_t wl = wi + 1; wl < wj; wl++) {
         clause.growTo(2);
         clause[0] = ~Lit(_variables->linked_min(wi, wj));
         clause[1] = Lit(_variables->linked_min(wl, wi));
@@ -1521,8 +1528,8 @@ bool SATEncoderConjunctionFreeSentences::extract_links(Parse_info pi)
     if (_solver->model[_variables->linked(var->left_word, var->right_word)] != l_True)
       continue;
 
-    pi->link_array[current_link].l = var->left_word;
-    pi->link_array[current_link].r = var->right_word;
+    pi->link_array[current_link].lw = var->left_word;
+    pi->link_array[current_link].rw = var->right_word;
     //    pi->link_array[j].name = var->label;
 
     Connector* connector;

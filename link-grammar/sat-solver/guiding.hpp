@@ -166,7 +166,8 @@ public:
   }
 #endif /* USE_FAT_LINKAGES */
 
-  void setThinLinkParameters(int var, int i, int j) {
+  void setThinLinkParameters(int var, int i, int j)
+  {
     bool isDecision = true;
 
     double priority = (double)(j - i);
@@ -176,11 +177,11 @@ public:
 #endif /* USE_FAT_LINKAGES */
 
     double polarity = j - i == 1 ? 1.0 : 0.0;
-    if (i == 0 && j == _sent->length - 2 &&
+    if (i == 0 && j == (int) _sent->length - 2 &&
        isEndingInterpunction(_sent->word[j].alternatives[0])) {
       polarity = 1.0;
     }
-    if (i == 0 && j == _sent->length - 1 &&
+    if (i == 0 && j == (int) _sent->length - 1 &&
       !isEndingInterpunction(_sent->word[j - 1].alternatives[0])) {
       polarity = 1.0;
     }
