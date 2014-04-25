@@ -1,5 +1,6 @@
 Version 5.0.7 (XXX 2014)
  * Compile fixes in SAT solver.
+ * Add missing verb-wall connectors for is, hasn't, haven't, hadn't, etc.
 
 Version 5.0.6 (18 April 2014)
  * Fix: JSON output format missing brace; from Matt Kruse.

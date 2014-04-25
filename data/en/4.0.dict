@@ -2320,18 +2320,21 @@ having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
 hasn't hasn’t:
-  ((<verb-rq> & (SIs+ or SFIs+)) or (<verb-x-s>)) &
-    (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  ((<verb-rq> & (SIs+ or SFIs+)) or (<verb-x-s>))
+  & <verb-wall>
+  & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
 haven't haven’t:
-  ((<verb-rq> & (SIp+ or SFIp+)) or
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) &
-    (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  ((<verb-rq> & (SIp+ or SFIp+))
+     or ({@E-} & (Sp- or SFp- or (RS- & Bp-))))
+  & <verb-wall>
+  & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
 hadn't.v-d hadn’t.v-d:
-((<verb-rq> & (SI+ or SFI+)) or ({@E-} &
-(S- or SFs- or SFp- or (RS- & B-)))) &
-(PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  ((<verb-rq> & (SI+ or SFI+))
+     or ({@E-} & (S- or SFs- or SFp- or (RS- & B-))))
+  & <verb-wall>
+  & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
 
 % Give [K+] a cost so as to prefer Pp+ in general
 %<vc-be>:
