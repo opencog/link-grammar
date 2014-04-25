@@ -10376,11 +10376,13 @@ UNKNOWN-WORD.a: <ordinary-adj>;
 % The WV+ after the Xx+ allows the root verb after the punct to attach
 % to the wall.  e.g. "A woman lives next door, who is a nurse."
 % The naked WV+ without any W+ allows "that I did not know."
+% The naked Wi+, without a WV+, links to imperatives: "put it on the table".
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
 LEFT-WALL:
   (Wa+ & {RW+ or Xp+})
   or (WV+ & {RW+ or Xp+})
-  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or Wi+ or We+ or Wt+ or Qd+)
+  or (Wi+ & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+})
+  or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+ or Qd+)
     & (WV+ or [[()]]) & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+});
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
