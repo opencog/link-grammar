@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.0.5 (formatted as V5v0v5+)
-<dictionary-version-number>: V5v0v5+;
+% Dictionary version number is 5.0.7 (formatted as V5v0v7+)
+<dictionary-version-number>: V5v0v7+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -2362,22 +2362,21 @@ had.v-d:
 having.v: <verb-pg> & <vc-have>;
 having.g: (<vc-have> & <verb-ge>) or <verb-ge-d>;
 
+% PP is disjoined with <verb-wall> because when PP is used, has/have/had
+% is an auxiliarry verb, an should not get a wall connection!
 hasn't hasn’t:
   ((<verb-rq> & (SIs+ or SFIs+)) or (<verb-x-s>))
-  & <verb-wall>
-  & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  & (PP+ or ((([[O+]] & {@MV+}) or [[()]]) & <verb-wall>));
 
 haven't haven’t:
   ((<verb-rq> & (SIp+ or SFIp+))
      or ({@E-} & (Sp- or SFp- or (RS- & Bp-))))
-  & <verb-wall>
-  & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  & (PP+ or ((([[O+]] & {@MV+}) or [[()]]) & <verb-wall>));
 
 hadn't.v-d hadn’t.v-d:
   ((<verb-rq> & (SI+ or SFI+))
      or ({@E-} & (S- or SFs- or SFp- or (RS- & B-))))
-  & <verb-wall>
-  & (PP+ or ([[O+]] & {@MV+}) or [[()]]);
+  & (PP+ or ((([[O+]] & {@MV+}) or [[()]]) & <verb-wall>));
 
 % Give [K+] a cost so as to prefer Pp+ in general
 %<vc-be>:
