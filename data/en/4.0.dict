@@ -2359,7 +2359,7 @@ hadn't.v-d hadn’t.v-d:
   ({@EBm+} & ((([{CV-} & B**t-] or [K+] or (<verb-wall> & BI+) or OF+ or PF- or
       (Osi+ & R+ & Bs+ & <verb-wall>) or
       (Opi+ & R+ & Bp+ & <verb-wall>) or
-      [[()]]) & {@MV+}) or
+      ([[()]] & <verb-wall>)) & {@MV+}) or
     (<verb-wall> & Pp+ & {THi+ or @MV+}) or
     THb+ or
     <to-verb> or
