@@ -2702,6 +2702,8 @@ Step 4. Hit it hard.
 Step 5. Hit it hard.
 Step 6. Hit it hard.
 
+% The below fails because a determiner is desired. But determiners
+% are optional for imperatives and commands.
 A: Open cover gently.
 B: Press button firmly.
 B: Press the button firmly.
@@ -2711,6 +2713,14 @@ Step A: Open cover gently.
 Step B: Press button firmly.
 Step C: Press the button firmly.
 Step D: Cover ears immediately.
+
+% The below fails because the INITIALS regex accepts A. which then
+% prevents the dot from being split off the end.  Numbered, dotted
+% lists do seem to work.
+Step A. Open cover gently.
+Step B. Press button firmly.
+Step C. Press the button firmly.
+Step D. Cover ears immediately.
 
 I. Ancient Greece
 II. Ancient Rome
