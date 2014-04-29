@@ -43,6 +43,7 @@ typedef enum {
 } afdict_classnum;
 
 #define AFDICT_CLASSNAMES \
+	"invalid classname", \
 	"RPUNC", \
 	"LPUNC", \
 	"UNITS", \
