@@ -272,7 +272,7 @@ CAPITALIZED-WORDS INITIALS <entity-singular>:
         ))
       or ({[[@MX+]]} & AN+) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
-  or Wa-
+  or ({A- or G-} & Wa-)
   or <directive-opener>;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
@@ -289,7 +289,7 @@ PL-CAPITALIZED-WORDS:
         ))
       or AN+
       or G+))
-  or Wa-
+  or ({A- or G-} & Wa-)
   or <directive-opener>;
 
 % capitalized words ending in s
@@ -1646,16 +1646,17 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>) or Wa-;
 % Not clear why we use Dmcn+ here, instead of allowing nouns to take ND-
 % as effectively Dmcn and ND are the "same thing" more or less.
 NUMBERS FRACTION:
-  NMn- or
-  ({EN-} & (NIfn+ or NItn-)) or
-  NN+ or
-  [[NF+]] or
-  [[AN+]] or
-  ({EN- or NIc-} & (ND+ or NIn+ or OD- or
-    ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>]))))) or
-  EQt+ or
-  EQt- or
-  Wa-;
+  NMn-
+  or ({EN-} & (NIfn+ or NItn-))
+  or NN+
+  or [[NF+]]
+  or [[AN+]]
+  or ({EN- or NIc-} & (ND+ or NIn+ or OD- or
+    ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))
+  or EQt+
+  or EQt-
+  or (Wd- & NIa+)
+  or Wa-;
 
 % HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
 % and should probably have a narrower set of parse patterns than numbers in
@@ -1664,7 +1665,9 @@ HMS-TIME: NUMBERS & {TZ+};
 
 % Allowing postposed roman numerals only for now.
 % e.g "Pope Pious XII"
-ROMAN-NUMERAL-WORDS.rn: NMr-;
+ROMAN-NUMERAL-WORDS.rn:
+  NMr-
+  or (Wd- & NIa+);
 
 % nouns that look like roman numerals. Limited requirements to avoid
 % excessive ambiguity.
