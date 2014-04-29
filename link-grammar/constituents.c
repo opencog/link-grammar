@@ -41,7 +41,7 @@ typedef struct
 #ifdef USE_FAT_LINKAGES
 	int subl;
 #endif /* USE_FAT_LINKAGES */
-	bool canon;
+	int canon;
 	bool valid;
 	char domain_type;
 } constituent_t;
