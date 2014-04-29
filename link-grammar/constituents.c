@@ -538,9 +538,9 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 		ctxt->constituent[c1].valid = true;
 
 		/* Find and invalidate any constituents with negative length */
-		if(ctxt->constituent[c1].right < ctxt->constituent[c1].left)
+		if (ctxt->constituent[c1].right < ctxt->constituent[c1].left)
 		{
-			if(verbosity >= 2)
+			if (verbosity >= 2)
 			{
 				err_ctxt ec;
 				ec.sent = linkage->sent;
