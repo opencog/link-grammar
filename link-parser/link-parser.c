@@ -746,17 +746,7 @@ int main(int argc, char * argv[])
 	/* Process the command line like commands */
 	for (i=1; i<argc; i++)
 	{
-		/* TBD remove these in version 5.0 */
-		if ((strcmp("-pp", argv[i]) == 0) ||
-			(strcmp("-c", argv[i]) == 0) ||
-			(strcmp("-a", argv[i]) == 0) ||
-			(strcmp("-ppoff", argv[i]) == 0) ||
-			(strcmp("-coff", argv[i]) == 0) ||
-			(strcmp("-aoff", argv[i]) == 0))
-		{
-			i++;
-		}
-		else if (argv[i][0] == '-')
+		if (argv[i][0] == '-')
 		{
 			int rc;
 			if (argv[i][1] == '!')
