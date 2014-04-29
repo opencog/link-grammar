@@ -708,7 +708,7 @@ static Boolean mprefix_split(Sentence sent, const char *word)
 					/* add the prefix alone */
 					if (2 < verbosity)
 						printf("Whole-word prefix: %s\n", word);
-					add_alternative(sent, split_prefix_i,split_prefix, 0,NULL, 0,NULL);
+					add_alternative(sent, split_prefix_i, split_prefix, 0,NULL, 0,NULL);
 					/* if the prefix is a valid word,
 					 * it has been added in separate_word() as a word */
 					break;
