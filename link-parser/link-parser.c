@@ -702,13 +702,6 @@ int main(int argc, char * argv[])
 				printf("Version: %s\n", linkgrammar_get_version());
 				exit(0);
 			}
-			/* TBD remove these in version 5.0 */
-			else if ((strcmp("-ppoff", argv[i])==0) ||
-			         (strcmp("-coff", argv[i])==0) ||
-			         (strcmp("-aoff", argv[i])==0))
-			{
-				fprintf(stderr, "%s: Warning: %s flag ignored\n", argv[0], argv[i]);
-			}
 		}
 		else
 		{
