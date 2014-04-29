@@ -1463,7 +1463,6 @@ static char *
 exprint_constituent_structure(con_context_t *ctxt,
                               Linkage linkage, int numcon_total)
 {
-	bool have_opened = true;
 	size_t w;
 	int c;
 	bool leftdone[MAXCONSTITUENTS];
@@ -1507,15 +1506,11 @@ exprint_constituent_structure(con_context_t *ctxt,
 				break;
 
 			leftdone[best] = true;
-			/* have_open is a hack to avoid printing anything until
-			 * bracket is opened */
-			if (w == 1) have_opened = 0;
-			have_opened = 1;
 			append_string(cs, "%c%s ", OPEN_BRACKET, ctxt->constituent[best].type);
 		}
 
 		/* Don't print out right wall */
-		if (have_opened && (w < linkage->num_words - 1))
+		if (w < linkage->num_words - 1)
 		{
 			char *p;
 			strncpy(s, linkage->word[w], MAX_WORD);
