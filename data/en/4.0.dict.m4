@@ -8235,7 +8235,7 @@ EMOTICON :
 ":.j": [<colon>] or ({NI-} & Wd- & W+);
 
 % ({NI-} & Wd- & W+): Optionally numbered, bulleted lists
-*.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
+..j *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
   <colon> or ({NI-} & Wd- & W+);
 
 % 、 is the "enumeration-comma" used like a dash ...
