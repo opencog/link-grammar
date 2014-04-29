@@ -30,13 +30,14 @@ void patch_subscript(char *);
 /* Connector names for the affix class lists in the affix file */
 
 typedef enum {
-	AFDICT_RPUNC=0,
+	AFDICT_RPUNC=1,
 	AFDICT_LPUNC,
-	AFDICT_QUOTES,
 	AFDICT_UNITS,
 	AFDICT_SUF,
 	AFDICT_PRE,
 	AFDICT_MPRE,
+	AFDICT_QUOTES,
+	AFDICT_BULLETS,
 	AFDICT_SANEMORPHISM,
 	AFDICT_END /* must be last */
 } afdict_classnum;
@@ -44,11 +45,12 @@ typedef enum {
 #define AFDICT_CLASSNAMES \
 	"RPUNC", \
 	"LPUNC", \
-	"QUOTES", \
 	"UNITS", \
 	"SUF",          /* SUF is used in the Russian dict */ \
 	"PRE",          /* PRE is not used anywhere, yet... */ \
 	"MPRE",         /* Multi-prefix, currently for Hebrew */ \
+	"QUOTES", \
+	"BULLETS", \
 	"SANEMORPHISM"  /* Regexp for sane_morphism() */
 
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])

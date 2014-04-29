@@ -92,13 +92,38 @@ static Boolean is_proper_name(const char * word)
  * is more or less ignorant of quotes at this time.
  * Return TRUE if the character is a quotation character.
  */
-static Boolean is_quote(Sentence sent, wchar_t wc)
+static bool is_quote(Dictionary dict, wchar_t wc)
 {
 	const wchar_t *quotes =
-		(const wchar_t *)AFCLASS(sent->dict->affix_table, AFDICT_QUOTES)->string;
+		(const wchar_t *)AFCLASS(dict->affix_table, AFDICT_QUOTES)->string;
 
 	if (NULL == quotes) return FALSE;
 	return (NULL !=  wcschr(quotes, wc));
+}
+
+/**
+ * AFDICT_BULLETS defines a string containing anything that can be
+ * construed to be a bullet.  Return TRUE if the character is a bullet
+ * character.
+ */
+static bool is_bullet(Dictionary dict, wchar_t wc)
+{
+	const wchar_t *bullets =
+		(const wchar_t *)AFCLASS(dict->affix_table, AFDICT_BULLETS)->string;
+
+	if (NULL == bullets) return FALSE;
+	return (NULL !=  wcschr(bullets, wc));
+}
+
+static bool is_bullet_str(Dictionary dict, const char * str)
+{
+	mbstate_t mbs;
+	wchar_t c;
+	int nb;
+	memset(&mbs, 0, sizeof(mbs));
+	nb = mbrtowc(&c, str, MB_CUR_MAX, &mbs);
+	if (0 > nb) return false;
+	return is_bullet(dict, c);
 }
 
 /**
@@ -708,7 +733,8 @@ static Boolean mprefix_split(Sentence sent, const char *word)
 
 /* Return TRUE if the word might be capitalized by convention:
  * -- if its the first word of a sentence
- * -- if its the first word following a colon
+ * -- if its the first word following a colon, a period, or any bullet
+ *    (For example:  VII. Ancient Rome)
  * -- if its the first word of a quote
  *
  * XXX FIXME: These rules are rather English-centric.  Someone should
@@ -726,11 +752,17 @@ static Boolean is_capitalizable(Sentence sent, int curr_word)
 	}
 
 	/* Words at the start of sentences are capitalizable */
-	if (curr_word == first_word) return TRUE;
+	if (curr_word == first_word) return true;
 
 	/* Words following colons are capitalizable */
-	if (curr_word > 0 && strcmp(":", sent->word[curr_word-1].alternatives[0])==0)
-		return TRUE;
+	if (curr_word > 0)
+	{
+		if (strcmp(":", sent->word[curr_word-1].alternatives[0]) == 0 ||
+		    strcmp(".", sent->word[curr_word-1].alternatives[0]) == 0 )
+			return true;
+		if (is_bullet_str(dict, sent->word[curr_word-1].alternatives[0]))
+			return true;
+	}
 
 	/* First word after a quote mark can be capitalized */
 	if (sent->post_quote[curr_word])
@@ -1175,7 +1207,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 
 	for(;;)
 	{
-		int isq;
+		bool isq;
 		wchar_t c;
 		int nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
 		quote_found = FALSE;
@@ -1187,7 +1219,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		 * not have any intelligent support for quoted character
 		 * strings at this time.
 		 */
-		isq = is_quote (sent, c);
+		isq = is_quote (dict, c);
 		if (isq) quote_found = TRUE;
 		while (is_space(c) || isq)
 		{
@@ -1195,7 +1227,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 			nb = mbrtowc(&c, word_start, MB_CUR_MAX, &mbs);
 			if (0 == nb) break;
 			if (0 > nb) goto failure;
-			isq = is_quote (sent, c);
+			isq = is_quote (dict, c);
 			if (isq) quote_found = TRUE;
 		}
 
@@ -1205,7 +1237,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) goto failure;
-		while (!is_space(c) && !is_quote(sent, c) && (c != 0) && (0 < nb))
+		while (!is_space(c) && !is_quote(dict, c) && (c != 0) && (0 < nb))
 		{
 			word_end += nb;
 			nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
