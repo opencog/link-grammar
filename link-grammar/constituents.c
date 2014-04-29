@@ -361,7 +361,7 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 			 (post_process_match("MVg", ctxt->constituent[c].start_link) == 1))
 		{
 			done = false;
-			for (w2 = ctxt->constituent[c].left-1; (done==0) && w2 != (size_t) -1; w2--)
+			for (w2 = ctxt->constituent[c].left-1; (false == done) && w2 != (size_t) -1; w2--)
 			{
 				for (c2 = numcon_total; c2 < numcon_total + numcon_subl; c2++)
 				{
@@ -430,7 +430,7 @@ static int find_next_element(con_context_t *ctxt,
 	{
 		constituent_t *cc = &ctxt->constituent[c];
 
-		if (cc->valid == 0)
+		if (false == cc->valid)
 			continue;
 		if (strcmp(ctxt->constituent[ctxt->templist[0]].type, cc->type) != 0)
 			continue;
@@ -535,7 +535,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 
 	for (c1=0; c1<numcon_total; c1++)
 	{
-		ctxt->constituent[c1].valid = 1;
+		ctxt->constituent[c1].valid = true;
 
 		/* Find and invalidate any constituents with negative length */
 		if(ctxt->constituent[c1].right < ctxt->constituent[c1].left)
@@ -547,7 +547,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 				err_msg(&ec, Warn, 
 					"Warning: Constituent %d has negative length. Deleting it.\n", c1);
 			}
-			ctxt->constituent[c1].valid = 0;
+			ctxt->constituent[c1].valid = false;
 		}
 		ctxt->constituent[c1].canon = c1;
 	}
@@ -578,7 +578,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	 */
 	for (c1 = 0; c1 < numcon_total; c1++)
 	{
-		if (ctxt->constituent[c1].valid == 0) continue;
+		if (false == ctxt->constituent[c1].valid) continue;
 		for (c2 = 0; c2 < numcon_total; c2++)
 		{
 			if (ctxt->constituent[c2].subl == ctxt->constituent[c1].subl) continue;
@@ -602,14 +602,14 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 				(ctxt->constituent[c1].right > ctxt->constituent[c2].right) &&
 				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
 			{
-				ctxt->constituent[c2].valid = 0;
+				ctxt->constituent[c2].valid = false;
 			}
 
 			if ((ctxt->constituent[c1].left < ctxt->constituent[c2].left) &&
 				(ctxt->constituent[c1].right == ctxt->constituent[c2].right) &&
 				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
 			{
-				ctxt->constituent[c2].valid = 0;
+				ctxt->constituent[c2].valid = false;
 			}
 		}
 	}
@@ -621,11 +621,11 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	 */
 	for (c1 = 0; c1 < numcon_total; c1++)
 	{
-		if (ctxt->constituent[c1].valid == 0) continue;
+		if (false == ctxt->constituent[c1].valid) continue;
 		for (c2 = c1 + 1; c2 < numcon_total; c2++)
 		{
 			if (ctxt->constituent[c2].canon == ctxt->constituent[c1].canon)
-				ctxt->constituent[c2].valid = 0;
+				ctxt->constituent[c2].valid = false;
 		}
 	}
 
@@ -667,7 +667,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	 */
 	for (n = 0; n < num_lists; n++)
 	{
-		ctxt->andlist[n].valid = 1;
+		ctxt->andlist[n].valid = true;
 		for (n2 = 0; n2 < num_lists; n2++)
 		{
 			if (n2 == n) continue;
@@ -686,7 +686,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 				if (match == 0) listmatch = 0;
 				/* At least one element was not matched by n2 */
 			}
-			if (listmatch == 1) ctxt->andlist[n].valid = 0;
+			if (listmatch == 1) ctxt->andlist[n].valid = false;
 		}
 	}
 
@@ -695,13 +695,13 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	 */
 	for (n = 0; n < num_lists; n++)
 	{
-		if (ctxt->andlist[n].valid == 0)
+		if (ctxt->andlist[n].valid == false)
 			continue;
 		for (a = 0; (a < ctxt->andlist[n].num) && (ctxt->andlist[n].valid); a++)
 		{
 			for (n2 = 0; (n2 < num_lists) && (ctxt->andlist[n].valid); n2++)
 			{
-				if ((n2 == n) || (ctxt->andlist[n2].valid == 0))
+				if ((n2 == n) || (ctxt->andlist[n2].valid == false))
 					continue;
 				for (a2 = 0; (a2 < ctxt->andlist[n2].num) && (ctxt->andlist[n].valid); a2++)
 				{
@@ -731,7 +731,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 					}
 					if (ok != 0)
 						continue;
-					ctxt->andlist[n].valid = 0;
+					ctxt->andlist[n].valid = false;
 					if (verbosity >= 2)
 					{
 						printf("Eliminating andlist, " \
@@ -752,7 +752,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	{
 		printf("And-lists after pruning:\n");
 		for (n=0; n<num_lists; n++) {
-			if (ctxt->andlist[n].valid==0)
+			if (false == ctxt->andlist[n].valid)
 				continue;
 			printf("  %d: ", n);
 			for (a=0; a<ctxt->andlist[n].num; a++) {
@@ -766,7 +766,7 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 	for (n = 0; n < num_lists; n++)
 	{
 		size_t leftend, rightend;
-		if (ctxt->andlist[n].valid == 0) continue;
+		if (false == ctxt->andlist[n].valid) continue;
 		leftend = SIZE_MAX;
 		rightend = 0;
 		for (a = 0; a < ctxt->andlist[n].num; a++)
@@ -879,7 +879,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 
 		if (uppercompare(ctxt->constituent[c].start_link, "CP") == 0)
 		{
-			ctxt->constituent[c].valid = 0;
+			ctxt->constituent[c].valid = false;
 		}
 
 		/* If it's a possessive with an "'s", the NP on the left
@@ -913,7 +913,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		if ((strcmp(ctxt->constituent[c].start_link, "Wdc") == 0) &&
 			(ctxt->constituent[c].left == 2))
 		{
-			ctxt->constituent[c].valid = 0;
+			ctxt->constituent[c].valid = false;
 		}
 
 		/* For prenominal adjectives, an ADJP constituent is assigned
@@ -930,7 +930,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 			(ctxt->constituent[c].domain_type == 'h')) {
 			if (ctxt->constituent[c].right-ctxt->constituent[c].left == 0)
 			{
-				ctxt->constituent[c].valid = 0;
+				ctxt->constituent[c].valid = false;
 			}
 		}
 
@@ -963,8 +963,9 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	global_rightend_found = false;
 	for (c = 0; c < numcon_total; c++)
 	{
-		if ((ctxt->constituent[c].left == 1) && (strcmp(ctxt->constituent[c].type, "S") == 0) &&
-			(ctxt->constituent[c].valid == true))
+		if ((ctxt->constituent[c].left == 1) && 
+		   (strcmp(ctxt->constituent[c].type, "S") == 0) &&
+			ctxt->constituent[c].valid)
 		{
 			global_leftend_found = true;
 		}
@@ -972,7 +973,8 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	for (c = 0; c < numcon_total; c++)
 	{
 		if ((ctxt->constituent[c].right >= lastword) &&
-			(strcmp(ctxt->constituent[c].type, "S") == 0) && (ctxt->constituent[c].valid == 1))
+			(strcmp(ctxt->constituent[c].type, "S") == 0) &&
+		   ctxt->constituent[c].valid)
 		{
 			global_rightend_found = true;
 		}
@@ -983,7 +985,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		ctxt->constituent[c].left = 1;
 		ctxt->constituent[c].right = linkage->num_words-1;
 		ctxt->constituent[c].type = string_set_add("S", ctxt->phrase_ss);
-		ctxt->constituent[c].valid = 1;
+		ctxt->constituent[c].valid = true;
 		ctxt->constituent[c].domain_type = 'x';
 		numcon_total++;
 		if (verbosity >= 2)
@@ -999,10 +1001,10 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 		bool adjustment_made = false;
 		for (c = 0; c < numcon_total; c++)
 		{
-			if(ctxt->constituent[c].valid == 0) continue;
+			if (false == ctxt->constituent[c].valid) continue;
 			for (c2 = 0; c2 < numcon_total; c2++)
 			{
-				if(ctxt->constituent[c2].valid == 0) continue;
+				if (false == ctxt->constituent[c2].valid) continue;
 				if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
 					(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
 					(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
@@ -1499,7 +1501,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 			for (c = 0; c < numcon_total; c++)
 			{
 				if ((ctxt->constituent[c].left == w) &&
-					(leftdone[c] == false) && (ctxt->constituent[c].valid == true) &&
+					(leftdone[c] == false) && ctxt->constituent[c].valid &&
 					((int) ctxt->constituent[c].right >= bestright))
 				{
 					best = c;
@@ -1559,7 +1561,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 			for(c = 0; c < numcon_total; c++)
 			{
 				if ((ctxt->constituent[c].right == w) &&
-					(rightdone[c] == false) && (ctxt->constituent[c].valid == true) &&
+					(rightdone[c] == false) && ctxt->constituent[c].valid &&
 					((int) ctxt->constituent[c].left > bestleft)) {
 					best = c;
 					bestleft = ctxt->constituent[c].left;
