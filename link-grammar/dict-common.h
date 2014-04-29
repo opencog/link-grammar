@@ -56,6 +56,4 @@ typedef enum {
 
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])
 
-#define AFFIX_COUNT_MEM_INCREMENT 64
-
 #endif /* _LG_DICT_COMMON_H_ */

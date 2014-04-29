@@ -72,13 +72,15 @@ static Afdict_class afdict_find(Dictionary afdict, const char * con)
 	return NULL;
 }
 
+#define AFFIX_COUNT_MEM_INCREMENT 64
+
 static void affix_list_resize(Afdict_class ac)
 {
 	size_t old_mem_elems = ac->mem_elems;
 
 	ac->mem_elems += AFFIX_COUNT_MEM_INCREMENT;
 	ac->string = xrealloc((void *)ac->string, old_mem_elems,
-	 ac->mem_elems * sizeof(*ac->string));
+	      ac->mem_elems * sizeof(*ac->string));
 }
 
 static void affix_list_add(Dictionary afdict, const char * name,
