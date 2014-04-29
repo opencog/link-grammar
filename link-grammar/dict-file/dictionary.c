@@ -60,7 +60,7 @@ const char const * afdict_classname[] = { AFDICT_CLASSNAMES };
  * Find the affix table entry for given connector name.
  * If the connector name is not in the table, return NULL.
  */
-static Afdict_class afdict_find(Dictionary afdict, const char * con)
+static Afdict_class * afdict_find(Dictionary afdict, const char * con)
 {
 	const char ** ac;
 
@@ -74,7 +74,7 @@ static Afdict_class afdict_find(Dictionary afdict, const char * con)
 
 #define AFFIX_COUNT_MEM_INCREMENT 64
 
-static void affix_list_resize(Afdict_class ac)
+static void affix_list_resize(Afdict_class* ac)
 {
 	size_t old_mem_elems = ac->mem_elems;
 
@@ -86,7 +86,7 @@ static void affix_list_resize(Afdict_class ac)
 static void affix_list_add(Dictionary afdict, const char * name,
 		const char * affix)
 {
-	Afdict_class ac = afdict_find(afdict, name);
+	Afdict_class* ac = afdict_find(afdict, name);
 
 	if (NULL == ac)
 	{
@@ -141,6 +141,58 @@ static int revcmplen(const void *a, const void *b)
 }
 
 /**
+ * Convert a list of utf8 chars to wide-chars.  The reason for doing
+ * this is kind-of dorky: its so that we can easily find,
+ * character-by-character, if a given character is a quotation mark
+ * or a bullet.  This works only because the quotation marks and
+ * bullets are exactly one (wide) character in length. I would like
+ * it better if we didn't do this wide-char conversion, since wide-chars
+ * are badly-behaved in crazy locales, and on MS Windows.
+ */
+static bool afdict_to_wide(Dictionary afdict, int classno)
+{
+	Afdict_class * ac;
+	wchar_t * wqs;
+	mbstate_t mbs;
+	size_t i;
+	int w;
+	dyn_str * qs;
+	const char *pqs;
+
+	ac = AFCLASS(afdict, classno);
+	qs = dyn_str_new();
+	for (i = 0; i < ac->length; i++)
+		dyn_strcat(qs, ac->string[i]);
+
+	/*
+	 * Convert utf8 to wide chars before use.
+	 * In case of error the result is undefined.
+	 */
+	pqs = qs->str;
+	memset(&mbs, 0, sizeof(mbs));
+	w = mbsrtowcs(NULL, &pqs, 0, &mbs);
+	if (0 > w)
+	{
+		prt_error("Error: Affix dictionary: %s: "
+		          "Invalid utf8 character\n", afdict_classname[classno]);
+		return false;
+	}
+
+	/* Store the wide char version at the AFDICT_QUOTES entry. */ 
+	ac->string = xrealloc((void *)ac->string, ac->mem_elems,
+	             sizeof(*wqs) * (w+1));
+	ac->mem_elems =  sizeof(*wqs) * (w+1);
+	wqs = (wchar_t *)ac->string;
+	pqs = qs->str;
+	(void)mbsrtowcs(wqs, &pqs, w, &mbs);
+	wqs[w] = L'\0';
+
+	dyn_str_delete(qs);
+
+	return true;
+}
+
+/**
  * Initialize several classes.
  * In case of a future dynamic change of the affix table, this
  * function needs to be invoked again after the affix table structure
@@ -148,7 +200,7 @@ static int revcmplen(const void *a, const void *b)
  */
 static bool afdict_init(Dictionary afdict)
 {
-	Afdict_class ac;
+	Afdict_class * ac;
 
 	if (0) verbosity = 5; /* debug - !verbosity is not set so early for now */
 	if (4 < verbosity)
@@ -205,47 +257,10 @@ static bool afdict_init(Dictionary afdict)
 		qsort(ac->string, ac->length, sizeof(char *), revcmplen);
 	}
 
-	{
-		wchar_t * wqs;
-		mbstate_t mbs;
-		size_t i;
-		int w;
-		dyn_str * qs;
-		const char *pqs;
+	if (! afdict_to_wide(afdict, AFDICT_QUOTES)) return false;
+	if (! afdict_to_wide(afdict, AFDICT_BULLETS)) return false;
 
-		ac = AFCLASS(afdict, AFDICT_QUOTES);
-		qs = dyn_str_new();
-		for (i = 0; i < ac->length; i++)
-			dyn_strcat(qs, ac->string[i]);
-
-		/*
-		 * Convert utf8 to wide chars before use.
-		 * In case of error the result is undefined.
-		 */
-		pqs = qs->str;
-		memset(&mbs, 0, sizeof(mbs));
-		w = mbsrtowcs(NULL, &pqs, 0, &mbs);
-		if (0 > w)
-		{
-			prt_error("Error: Affix dictionary: %s: "
-						 "Invalid utf8 character\n", afdict_classname[AFDICT_QUOTES]);
-			return FALSE;
-		}
-
-		/* Store the wide char version at the AFDICT_QUOTES entry.
-		 */ 
-		ac->string = xrealloc((void *)ac->string, ac->mem_elems,
-		             sizeof(*wqs) * (w+1));
-		ac->mem_elems =  sizeof(*wqs) * (w+1);
-		wqs = (wchar_t *)ac->string;
-		pqs = qs->str;
-		(void)mbsrtowcs(wqs, &pqs, w, &mbs);
-		wqs[w] = L'\0';
-
-		dyn_str_delete(qs);
-	}
-
-	return TRUE;
+	return true;
 }
 
 static void free_llist(Dictionary dict, Dict_node *llist)

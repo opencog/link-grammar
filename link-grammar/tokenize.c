@@ -491,7 +491,7 @@ static Boolean issue_alternatives(Sentence sent,
 static Boolean suffix_split(Sentence sent, const char *w, const char *wend)
 {
 	int i, j, len;
-	Afdict_class prefix_list, suffix_list;
+	Afdict_class *prefix_list, *suffix_list;
 	int p_strippable, s_strippable;
 	const char **prefix, **suffix;
 	char newword[MAX_WORD+1];
@@ -636,7 +636,7 @@ if (2 < verbosity && find_word_in_dict(dict, newword)) {
 static Boolean mprefix_split(Sentence sent, const char *word)
 {
 	int i;
-	Afdict_class mprefix_list;
+	Afdict_class *mprefix_list;
 	int mp_strippable;
 	const char **mprefix;
 	const char *newword;
@@ -882,7 +882,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	if (afdict != NULL)
 	{
 		/* Set up affix tables.  */
-		Afdict_class rpunc_list, lpunc_list, units_list;
+		Afdict_class *rpunc_list, *lpunc_list, *units_list;
 		lpunc_list = AFCLASS(afdict, AFDICT_LPUNC);
 		rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
 		units_list = AFCLASS(afdict, AFDICT_UNITS);
