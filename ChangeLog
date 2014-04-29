@@ -1,8 +1,11 @@
+Version 5.0.8 (XXX 2014)
+ * Fix handling of initial letters in ordered lists.
+
 Version 5.0.7 (29 April 2014)
  * Compile fixes in SAT solver.
  * Add missing verb-wall connectors for is, hasn't, haven't, hadn't, etc.
  * Remove verb-wall connector for imperative verbs.
- * Fix seriious error in constituent printing, introduced in 5.0.3
+ * Fix serious error in constituent printing, introduced in 5.0.3
  * Fix old bug in command-line handling of options.
  * Fix parsing of various ordered lists, including some tables of contents.
 

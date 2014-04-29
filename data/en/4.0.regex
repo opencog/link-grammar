@@ -56,7 +56,9 @@ ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^(?=.+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 
 % Strings of initials. e.g "Dr. J.G.D. Smith lives on Main St."
-INITIALS: /^([A-Z]\.)+$/
+% Make it at least two letters long, as otherwise it clobbers
+% single-letter handling in the dict, which is different.
+INITIALS: /^[A-Z]\.([A-Z]\.)+$/
 
 % Greek letters with numbers
 GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
