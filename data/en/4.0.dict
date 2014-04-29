@@ -1662,15 +1662,17 @@ ROMAN-NUMERAL-WORDS.rn: NMr-;
 ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
 % NMa-: Allow post-posed letter moifiers: e.g. "Vitamin A"
-% NIa+: Alow numbered, bulleted lists: "B: Press button firmly"
+% Wd- & NIa+: Allow numbered, bulleted lists: "B: Press button firmly"
 % XXX Right now, the first-uppercase-letter logic is screwing up
 % sentences that start with these. This needs fixing ...
 A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
-   NMa- or NIa+;
+   NMa- or (Wd- & NIa+);
+
+xx: Wd- & NIa+;
 
 % Avoid having I.id interfere with pronoun I.
-I.id: [[NMa- or NIa+]];
+I.id: [[NMa- or (Wd- & NIa+)]];
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
@@ -10135,18 +10137,24 @@ EMOTICON :
   {@Xca-} & ((Xx- & (W+ or J+ or Qd+ or TH+ or <ton-verb>) & {Xx+}) or Xe-);
 
 % Put a cost on this, because  we want to find other uses first ...
-":.j": [<colon>] or ({NI-} & Wd- & W+);
+":.j":
+  [<colon>]
+  or (Wd- & W+)
+  or (NI- & WV- & W+);
 
-% ({NI-} & Wd- & W+): Optionally numbered, bulleted lists
+% (NI- & WV- & W+): Optionally numbered, bulleted lists
 ..j *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
-  <colon> or ({NI-} & Wd- & W+);
+  <colon>
+  or (Wd- & W+)
+  or (NI- & WV- & W+);
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
 – ━ ー --.r -.r 、 ～.r ~.r ‧ :
-  [[<colon>]] or
-  ({@Xca-} & (({EBx+} & Xd+) or Xc-)) or
-  ({NI-} & Wd- & W+);
+  [[<colon>]]
+  or ({@Xca-} & (({EBx+} & Xd+) or Xc-))
+  or (Wd- & W+)
+  or (NI- & WV- & W+);
 
 % ellipsis ... at the end, trailing off ...
 ....y ….y:
