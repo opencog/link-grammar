@@ -8244,7 +8244,7 @@ EMOTICON :
   or (NI- & WV- & W+);
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
-..j *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
+..y *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
   <colon>
   or (Wd- & W+)
   or (NI- & WV- & W+);

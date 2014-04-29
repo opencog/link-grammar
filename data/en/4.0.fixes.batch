@@ -2681,7 +2681,7 @@ Step 3: Pry off the lid.
 
 The big question: Did he do it?
 
-% Numbered lists
+% Numbered, bulleted, ordered lists
 Step 1: Get hammer.
 Step 1: Get a hammer.
 2: Get nail.
@@ -2701,20 +2701,20 @@ VI. Ancient China
 VII. Egypt
 
 % Bulleted lists
-* this is an item
-• this is a bullet
-⁂ this is a bullet
-❧ this is a bullet
-☞ this is a bullet
-◊ this is a bullet
-※  this is a bullet
-✿ this is a bullet
-☆ this is a bullet
-＊ this is a bullet
-● this is a bullet
-□ this is a bullet
-◇ this is a bullet
-◎ this is a bullet
+* This is an item
+• This is a bullet
+⁂ This is a bullet
+❧ This is a bullet
+☞ This is a bullet
+◊ This is a bullet
+※  This is a bullet
+✿ This is a bullet
+☆ This is a bullet
+＊ This is a bullet
+● This is a bullet
+□ This is a bullet
+◇ This is a bullet
+◎ This is a bullet
 
 % quoted words and phrases:
 We should distinguish between "who" and "whom" but who fucking cares?
