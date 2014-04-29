@@ -695,17 +695,10 @@ int main(int argc, char * argv[])
 
 	for (; i<argc; i++)
 	{
-		if (argv[i][0] == '-')
+		if (argv[i][0] == '-' && strcmp("--version", argv[i]) == 0)
 		{
-			if (strcmp("--version", argv[i])==0)
-			{
-				printf("Version: %s\n", linkgrammar_get_version());
-				exit(0);
-			}
-		}
-		else
-		{
-			print_usage(argv[0]);
+			printf("Version: %s\n", linkgrammar_get_version());
+			exit(0);
 		}
 	}
 
@@ -743,13 +736,13 @@ int main(int argc, char * argv[])
 		exit(-1);
 	}
 
-	/* Process the command line like commands */
-	for (i=1; i<argc; i++)
+	/* Process the command line commands */
+	for (i = 1; i<argc; i++)
 	{
 		if (argv[i][0] == '-')
 		{
 			int rc;
-			if (argv[i][1] == '!')
+			if (argv[i][1] == '!' || argv[i][1] == '-')
 				rc = issue_special_command(argv[i]+2, opts, dict);
 			else
 				rc = issue_special_command(argv[i]+1, opts, dict);
