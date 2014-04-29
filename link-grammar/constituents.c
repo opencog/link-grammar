@@ -996,31 +996,26 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 	/* Check once more to see if constituents are nested (checking 
 	 * BETWEEN sublinkages this time). This code probably goes away
 	 * when fat-links get removed. */
-	while (1)
+	for (c = 0; c < numcon_total; c++)
 	{
-		bool adjustment_made = false;
-		for (c = 0; c < numcon_total; c++)
+		if (false == ctxt->constituent[c].valid) continue;
+		for (c2 = 0; c2 < numcon_total; c2++)
 		{
-			if (false == ctxt->constituent[c].valid) continue;
-			for (c2 = 0; c2 < numcon_total; c2++)
+			if (false == ctxt->constituent[c2].valid) continue;
+			if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
+				(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
+				(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
 			{
-				if (false == ctxt->constituent[c2].valid) continue;
-				if ((ctxt->constituent[c].left < ctxt->constituent[c2].left) &&
-					(ctxt->constituent[c].right < ctxt->constituent[c2].right) &&
-					(ctxt->constituent[c].right >= ctxt->constituent[c2].left))
+				if (verbosity >= 2)
 				{
-					if (verbosity >= 2)
-					{
-						err_ctxt ec;
-						ec.sent = linkage->sent;
-						err_msg(&ec, Warn, "Warning: the constituents aren't nested! "
-						          "Adjusting them. (%d, %d)\n", c, c2);
-					}
-					ctxt->constituent[c].left = ctxt->constituent[c2].left;
+					err_ctxt ec;
+					ec.sent = linkage->sent;
+					err_msg(&ec, Warn, "Warning: the constituents aren't nested! "
+					          "Adjusting them. (%d, %d)\n", c, c2);
 				}
+				ctxt->constituent[c].left = ctxt->constituent[c2].left;
 			}
 		}
-		if (adjustment_made == false) break;
 	}
 	return numcon_total;
 }
