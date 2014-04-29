@@ -8193,6 +8193,7 @@ heck anyways honey.ij man.ij baby.ij hush.ij:
 % Emoticons ... at start or end of sentences ...
 EMOTICON :
   CO+
+  or (Wd- & NIa+)
   or Wa-
   or ((Xp- or ({@Xca-} & [[Xc-]])) & RW+)
   or Xi-;
