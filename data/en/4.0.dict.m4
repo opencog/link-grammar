@@ -1655,7 +1655,7 @@ NUMBERS FRACTION:
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))
   or EQt+
   or EQt-
-  or (Wd- & NIa+)
+  or ((Wd- or NMn-) & NIa+)
   or Wa-;
 
 % HMS-TIME consists of HH:MM:SS(AM|PM) type expressions
@@ -1667,7 +1667,7 @@ HMS-TIME: NUMBERS & {TZ+};
 % e.g "Pope Pious XII"
 ROMAN-NUMERAL-WORDS.rn:
   NMr-
-  or (Wd- & NIa+);
+  or ((Wd- or NMr-) & NIa+);
 
 % nouns that look like roman numerals. Limited requirements to avoid
 % excessive ambiguity.
@@ -1682,7 +1682,7 @@ A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
   <marker-entity>
   or NMa-
-  or (Wd- & NIa+);
+  or ((Wd- or NMa-) & NIa+);
 
 % Avoid having I.id interfere with pronoun I.
 I.id: [[<marker-entity> or NMa- or (Wd- & NIa+)]];
@@ -1751,7 +1751,7 @@ YEAR-DATE: NUMBERS or <date-id> or [[G+]];
     ({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>])))))
   or TM-
   or NSn+
-  or (Wd- & NIa+)
+  or ((Wd- or NMn-) & NIa+)
   or EQt+ or EQt-;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
@@ -1762,7 +1762,7 @@ YEAR-DATE: NUMBERS or <date-id> or [[G+]];
   or [[NF+]]
   or ({EN- or NIc-} & (ND+ or NIn+ or OD- or
     ({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
-  or (Wd- & NIa+)
+  or ((Wd- or NMn-) & NIa+)
   or NSn+;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
@@ -2013,8 +2013,10 @@ per "/.per": Us+ & Mp-;
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
+%
+% Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 
-<verb-ico>: {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi-));
+<verb-ico>: {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi- & {NM+}));
 <verb-pl,i>: ({@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-))) or <verb-ico>;
 <verb-pl>: {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-s>: {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
