@@ -1670,18 +1670,19 @@ ROMAN-NUMERAL-WORDS.rn: NMr-;
 % excessive ambiguity.
 ROMAN-NUMERAL-WORDS.n: {@MX+} & (<noun-main-s>);
 
-% NMa-: Allow post-posed letter moifiers: e.g. "Vitamin A"
+% NMa-: Allow post-posed letter modifiers: e.g. "Vitamin A"
 % Wd- & NIa+: Allow numbered, bulleted lists: "B: Press button firmly"
-% XXX Right now, the first-uppercase-letter logic is screwing up
-% sentences that start with these. This needs fixing ...
+%
+% <marker-entity>: without this, the tokenizer destroys the upper-case,
+%   when it occurs as the first letter in the sentence.
 A.id B.id C.id D.id E.id F.id G.id H.id J.id K.id L.id M.id N.id
 O.id P.id Q.id R.id S.id T.id U.id V.id W.id X.id Y.id Z.id:
-   NMa- or (Wd- & NIa+);
-
-xx: Wd- & NIa+;
+  <marker-entity>
+  or NMa-
+  or (Wd- & NIa+);
 
 % Avoid having I.id interfere with pronoun I.
-I.id: [[NMa- or (Wd- & NIa+)]];
+I.id: [[<marker-entity> or NMa- or (Wd- & NIa+)]];
 
 % Days of month
 % Note, however, this over-rides generic numbers in this range
@@ -1940,7 +1941,7 @@ ninety-first.ord ninety-second.ord ninety-third.ord
 ninety-fourth.ord ninety-fifth.ord ninety-sixth.ord
 ninety-seventh.ord ninety-eighth.ord ninety-ninth.ord
 DAY-ORDINALS.ord ORDINALS.ord :
-(Wd- & {M+} & Ss*o+);
+  (Wd- & {M+} & Ss*o+);
 
 % TODO: un-parenthesized cases, e.g.
 % - preparations of 5 x 10(8) cfu/ml are made
@@ -1951,7 +1952,7 @@ A.eq B.eq C.eq D.eq E.eq F.eq G.eq H.eq I.eq J.eq K.eq L.eq M.eq
 N.eq O.eq P.eq Q.eq R.eq S.eq T.eq U.eq V.eq W.eq X.eq Y.eq Z.eq
 a.eq b.eq c.eq d.eq e.eq f.eq g.eq h.eq i.eq j.eq k.eq l.eq m.eq
 n.eq o.eq p.eq q.eq r.eq s.eq t.eq u.eq v.eq w.eq x.eq y.eq z.eq:
-EQt+ or EQt-;
+  EQt+ or EQt-;
 
 fiscal.i: TY+ & <noun-main-s>;
 
@@ -6131,7 +6132,7 @@ HAY.tz HNA.tz HNC.tz HNE.tz HNP.tz HNR.tz HNT.tz HNY.tz I.tz IST.tz
 K.tz L.tz M.tz MDT.tz MESZ.tz MEZ.tz MSD MSK.tz MST.tz N.tz NDT.tz
 NFT.tz NST.tz O.tz P.tz PDT.tz PST.tz Q.tz R.tz S.tz T.tz U.tz UTC.tz
 V.tz W.tz WDT.tz WEDT WEST.tz WET.tz WST.tz X.tz Y.tz Z.tz:
-{Xd-} & TZ-;
+  {Xd-} & TZ-;
 
 % Abbreviated month names.
 Jan.x Feb.x Mar.x Apr.x May.x Jun.x Jul.x Aug.x Sep.x Sept.x Oct.x Nov.x Dec.x:
