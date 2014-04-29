@@ -1734,19 +1734,26 @@ YEAR-DATE: NUMBERS or <date-id> or [[G+]];
 
 
 1:
-  NMn- or ({EN-} & (NIfn+ or NItn-)) or
-  NN+ or [[NF+]] or
-  ({EN- or NIc-} & (ND+ or NIm+ or OD- or
-  ({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>]))))) or
-  TM- or NSn+ or
-  EQt+ or EQt-;
+  NMn-
+  or ({EN-} & (NIfn+ or NItn-))
+  or NN+
+  or [[NF+]]
+  or ({EN- or NIc-} & (ND+ or NIm+ or OD- or
+    ({{@L+} & DD-} & (D**n+ or (<noun-sub-x> & [<noun-main-x>])))))
+  or TM-
+  or NSn+
+  or (Wd- & NIa+)
+  or EQt+ or EQt-;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
 0:
-  NMn- or ({EN-} & (NIfn+ or NItn-)) or
-  NN+ or [[NF+]] or
-  ({EN- or NIc-} & (ND+ or NIn+ or OD- or
-  ({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
+  NMn-
+  or ({EN-} & (NIfn+ or NItn-))
+  or NN+
+  or [[NF+]]
+  or ({EN- or NIc-} & (ND+ or NIn+ or OD- or
+    ({{@L+} & DD-} & (Dmcn+ or [[Ds+]] or (<noun-sub-p> & [<noun-main-p>])))))
+  or (Wd- & NIa+)
   or NSn+;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 

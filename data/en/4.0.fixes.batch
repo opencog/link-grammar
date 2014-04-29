@@ -2684,8 +2684,16 @@ The big question: Did he do it?
 % Numbered, bulleted, ordered lists
 Step 1: Get hammer.
 Step 1: Get a hammer.
+1: Get a hammer.
 2: Get nail.
 3: Hit it hard.
+
+1. Get a hammer.
+2. Get nail.
+3. Hit it hard.
+4. Hit it hard.
+5. Hit it hard.
+6. Hit it hard.
 
 A: Open cover gently.
 B: Press button firmly.
