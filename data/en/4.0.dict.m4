@@ -8260,8 +8260,7 @@ EMOTICON :
 
 % (NI- & WV- & W+): Optionally numbered, bulleted lists
 ..y *.j "•" ⁂ ❧ ☞ ◊ ※  "….j" ○  。 ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎:
-  <colon>
-  or (Wd- & W+)
+  (Wd- & W+)
   or (NI- & WV- & W+);
 
 % 、 is the "enumeration-comma" used like a dash ...
