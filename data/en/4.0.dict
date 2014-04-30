@@ -2002,6 +2002,7 @@ per "/.per": Us+ & Mp-;
 
 % When we are done, remove the option costly NULL below.
 <WALL>: WV+ or [[()]];
+% <WALL>: WV+;
 
 % Pv- & <verb-wall>: "a historic new law was passed"
 %
@@ -2010,17 +2011,18 @@ per "/.per": Us+ & Mp-;
 %
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 
-<verb-ico>: {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi- & {NM+}));
-<verb-pl,i>: ({@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-))) or <verb-ico>;
-<verb-pl>: {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
-<verb-s>: {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
-<verb-i>: {@E-} & I- & <verb-wall>;
-<verb-sp,pp>: {@E-} & (((S- or PP-) & <verb-wall>) or (RS- & B-));
-<verb-sp>: {@E-} & ((S- & <verb-wall>) or (RS- & B-));
-<verb-pp>: {@E-} & PP- & <verb-wall>;
-<verb-pg>: {@E-} & ((Pg- & <verb-wall>) or Mg-);
-<verb-pv>: {@E-} & ((Pv- & <verb-wall>) or Mv-) & {@MV+};
+<verb-s>:    {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
+<verb-pl>:   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
+<verb-sp>:   {@E-} & ((S- & <verb-wall>) or (RS- & B-));
+<verb-pp>:   {@E-} & PP- & <verb-wall>;
+<verb-pg>:   {@E-} & ((Pg- & <verb-wall>) or Mg-);
+<verb-pv>:   {@E-} & ((Pv- & <verb-wall>) or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & ((Pv- & <verb-wall>) or Mv-);
+<verb-sp,pp>: <verb-sp> or <verb-pp>;
+
+<verb-i>:    {@E-} & I- & <verb-wall>;
+<verb-ico>:  {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi- & {NM+}));
+<verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-ge>:
   {@E-} & (
