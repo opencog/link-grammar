@@ -2018,7 +2018,6 @@ per "/.per": Us+ & Mp-;
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 %
-% Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 
 <verb-s>:    {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
 <verb-pl>:   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
@@ -2029,9 +2028,25 @@ per "/.per": Us+ & Mp-;
 <verb-pv-b>: {@E-} & ((Pv- & <verb-wall>) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
+% Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
 <verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & <verb-wall> & {@E-}) or ({CO-} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
+
+% <b-minus> is meant to be a generic replacement in the naked B- in
+% many transitive verb constructions.  For quetions, we need to force
+% a verb-wall connector; this is what the (B*w- or B*m-) & <verb-wall>
+% part does. For the other B- forms, we don't need the wall.  To force
+% the wall, we just list all the others.
+% XXX FIXME: the verb-i above may need to be changed to make the wall
+% optional, because "Which dog did you chase" requires a I- & B*m- & WV-
+% By contrast, "Who do you think Bill will bring?" requires a
+% I- & CV- & B*w- & WV- on bring: that is, two walls.
+%
+% B*w- "that, I did not know" needs a wall,
+% B*d-: "Whatever you want to do is fine" can't have a wall.
+
+<b-minus>: B*d- or B*j- or ((B*w- or B*m-) & <verb-wall>);
 
 <verb-ge>:
   {@E-} & (
@@ -2950,9 +2965,9 @@ and.v-fill:
 %    *This is the man we love him
 <vc-trans>:
   (O+
-   or B-
+   or <b-minus>
    or [[@MV+ & O*n+]]
-   or ({@E-} & B- & O+)
+   or ({@E-} & <b-minus> & O+)
   ) & {@MV+};
 
 /en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
@@ -3080,8 +3095,8 @@ buttering.g:
 %
 <vc-kick>:
   ((K+ & {[[@MV+]]} & O*n+)
-  or ((O+ or B-) & {K+})
-  or ({@E-} & B- & O+ & {K+})
+  or ((O+ or <b-minus>) & {K+})
+  or ({@E-} & <b-minus> & O+ & {K+})
   or [[@MV+ & O*n+]]) & {@MV+};
 
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
