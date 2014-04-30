@@ -10115,7 +10115,9 @@ EMOTICON :
 
 "!" "?" ‽ ؟ ？！: ((Xp- or ({@Xca-} & Xc-)) & RW+) or ({@Xca-} & Xq+);
 
-<semicol>: {@Xca-} & Xx- & (W+ or Qd+) & {Xx+};
+% Almost any W+ link appears here, except Wa, which clearly is wrong after
+% a semicolon.
+<semicol>: {@Xca-} & Xx- & (Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Qd+) & {Xx+};
 ";" ；: <semicol>;
 
 % comma, as a conjunction
