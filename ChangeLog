@@ -1,6 +1,7 @@
 Version 5.0.8 (XXX 2014)
  * Fix handling of initial letters in ordered lists.
- * Fix another serious error in constituent printing, introduced in 4.8.0
+ * Fix another serious error in constituent printing, introduced in 4.8.0.
+ * New emoticon support was clobbering certain number expressions.
 
 Version 5.0.7 (29 April 2014)
  * Compile fixes in SAT solver.

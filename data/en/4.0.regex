@@ -111,9 +111,13 @@ UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
 % XXX: Don't use [:punct:].  Do NOT include period!!
 % XXX: The problem with below is that 5. 7. 8. get recognized as emoticons,
 % which then prevents splitting for list numbers.  (e.g "step 5. Do this.")
+%
+% Arghh. Other valid number expressions are clobbered by the emoticons.
+% For example: $5 $7 8%  The quick fix is to remove the numbers.
+%
 % EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 % EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
-EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+EMOTICON: /^[[:punct:];BDOpTXＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<bcdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 
 
 % fold-words. Matches NUMBER-fold, where NUMBER can be either numeric
