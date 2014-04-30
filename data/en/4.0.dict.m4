@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.0.7 (formatted as V5v0v7+)
-<dictionary-version-number>: V5v0v7+;
+% Dictionary version number is 5.0.8 (formatted as V5v0v8+)
+<dictionary-version-number>: V5v0v8+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -8266,7 +8266,7 @@ EMOTICON :
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
-– ━ ー --.r -.r 、 ～.r ~.r ‧ :
+– ━ ー --.r -.r 、 ～.r ~.r ‧.r :
   [[<colon>]]
   or ({@Xca-} & (({EBx+} & Xd+) or Xc-))
   or (Wd- & W+)
