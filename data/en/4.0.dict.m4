@@ -2045,6 +2045,7 @@ per "/.per": Us+ & Mp-;
 %
 % B*w- "that, I did not know" needs a wall,
 % B*d-: "Whatever you want to do is fine" can't have a wall.
+% XXX FIXME -- most of the naked B- below should probably be <b-minus>
 
 <b-minus>: B*d- or B*j- or ((B*w- or B*m-) & <verb-wall>);
 
@@ -2878,9 +2879,9 @@ rising.v falling.v:
 % e.g.  *they're building a skyscraper tall
 <vc-fill>:
   ((K+ & {[[@MV+]]} & O*n+)
-    or ({O+ or B-} & {K+})
-    or ((O+ or B-) & ({@MV+} & Pa**j+))
-    or ({@E-} & B- & O+ & {Pa**j+ or K+})
+    or ({O+ or <b-minus>} & {K+})
+    or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
+    or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
     or [[@MV+ & O*n+]]
   ) & {@MV+};
 
@@ -4717,7 +4718,7 @@ coloring.g colouring.g painting.g:
 %
 % <vc-opt-ditrans> & TH+: "he wrote her that he loved her"
 <vc-write>:
-  ({(B- & {O+ or K+})
+  ({(<b-minus> & {O+ or K+})
     or (<vc-opt-ditrans> & {TH+})
     or (O+ & K+)
     or (K+ & {{[[@MV+]]} & O*n+})
@@ -4732,15 +4733,15 @@ wrote.v-d drew.v-d: VERB_SP_T(<vc-write>);
 read.v-d:
   VERB_SPPP_T(<vc-write>) or
   (<verb-ico> & <vc-write>) or
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 charged.v-d:
   VERB_SPPP_T(<vc-write>) or
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 written.v drawn.v:
   VERB_PP(<vc-write>) or
-  (<verb-pv-b> & {O+ or B- or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & {@MV+}) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
   ({@E-} & A+);
 
