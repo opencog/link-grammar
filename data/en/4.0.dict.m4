@@ -6465,7 +6465,7 @@ when:
 % N-: "why not?"  "Why the hell not?"
 why:
   ({EL+} & (
-    ({EW-} & Wi- & Q+)
+    ({EW-} & (Wi- or Wq-) & Q+)
     or (QI- & (<subcl-verb> or <ton-verb> or [()]))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or ((Wi- or <directive-opener>) & {N+})
