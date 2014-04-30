@@ -3903,7 +3903,7 @@ recall.v reveal.v state.v observe.v indicate.v
 analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
 hypothesize.v hypothesise.v document.v envisage.v:
   VERB_PLI(<vc-predict>)
-  or (I- & B- & <embed-verb>);
+  or (I- & <b-minus> & <embed-verb>);
 
 predicts.v realizes.v discovers.v determines.v announces.v says.v
 mentions.v admits.v recalls.v reveals.v states.v observes.v indicates.v
