@@ -2000,6 +2000,9 @@ per "/.per": Us+ & Mp-;
 <verb-wall>: WV- or CV- or IV- or [[()]];
 % <verb-wall>: WV- or CV- or IV-;
 
+% When we are done, remove the option costly NULL below.
+<WALL>: WV+ or [[()]];
+
 % Pv- & <verb-wall>: "a historic new law was passed"
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
@@ -10117,7 +10120,11 @@ EMOTICON :
 
 % Almost any W+ link appears here, except Wa, which clearly is wrong after
 % a semicolon.
-<semicol>: {@Xca-} & Xx- & (Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Qd+) & {Xx+};
+<semicol>:
+  {@Xca-} & Xx- 
+  & (Wd+ or Ws+ or Wq+ or Wj+ or Wt+ or Wi+ or Wc+ or Qd+)
+  & <WALL> & {Xx+};
+
 ";" ；: <semicol>;
 
 % comma, as a conjunction
@@ -10406,12 +10413,13 @@ UNKNOWN-WORD.a: <ordinary-adj>;
 % The naked WV+ without any W+ allows "that I did not know."
 % The naked Wi+, without a WV+, links to imperatives: "put it on the table".
 % XXX TODO: afer all WV's work, the WV link should no longer be optional...
+% XXX that is, change <WALL> to just WV+
 LEFT-WALL:
   (Wa+ & {RW+ or Xp+})
   or (WV+ & {RW+ or Xp+})
   or (Wi+ & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+ or Qd+)
-    & (WV+ or [[()]]) & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+});
+    & <WALL> & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+});
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
