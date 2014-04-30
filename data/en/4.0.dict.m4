@@ -3904,9 +3904,10 @@ envisaged.v-d:
   ({@E-} & A+) or
   <verb-phrase-opener>;
 
+% the second line is almost, not quite, <verb-s-pv>
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
-  ({@E-} & (Pvf- or [[Mv-]]) & <verb-wall> & {@MV+} & {THi+}) or
+  ({@E-} & ((Pvf- & <verb-wall>) or [[Mv-]]) & {@MV+} & {THi+}) or
   [[{@E-} & A+]] or
   [[<verb-phrase-opener>]];
 
@@ -4157,8 +4158,13 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 take.v: VERB_S_PLI(<vc-take>);
 takes.v: <verb-s-s> & <vc-take>;
 took.v-d: <verb-s-sp> & <vc-take>;
-taken.v: (<verb-s-pp> & <vc-take>) or (<verb-pv-b> &
-{K+} & {@MV+}) or ({@E-} & A+) or ({K+} & <verb-phrase-opener>) or (Pvf- & Vtg+ & THi+);
+taken.v:
+  (<verb-s-pp> & <vc-take>)
+  or (<verb-pv-b> & {K+} & {@MV+})
+  or ({@E-} & A+)
+  or ({K+} & <verb-phrase-opener>)
+  or (Pvf- & <verb-wall> & Vtg+ & THi+);
+
 taking.v: <verb-s-pg> & <vc-take>;
 taking.g: (<vc-take> & <verb-ge>) or <verb-ge-d>;
 for_granted: Vtg-;
