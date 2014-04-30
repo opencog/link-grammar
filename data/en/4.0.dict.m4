@@ -2292,17 +2292,18 @@ define(`VERB_Y_PLI',`'
 
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
 <vc-do>:
-  ((B- or (O+ & <verb-wall>) or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
+  ((<b-minus> or (O+ & <verb-wall>) or [[@MV+ & O*n+]] or Vd+ or ({N+} & (CX- or [[()]]))) & {@MV+})
   or ({N+} & I*d+);
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
 % I- & CV-: "What did John say you should do?"
+% XXX todo : is the options {<verb-wall>} below even needed????
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & I*d+) or CQ-))
-  or ({@E-} & I- & ((B- or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & <verb-wall>)
+  or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-);
 
 does.v:
@@ -4543,8 +4544,8 @@ hearing.v: <verb-pg> & <vc-hear>;
 
 % Xc+: poor comma choice: "The man that you saw laugh, jumped off a cliff".
 <vc-see>:
-  ((B- or O+) & {@MV+} & {I*j+ or Pg+ or AZ+ or Pv+})
-  or (B- & {@MV+} & [I*j+ & Xc+])
+  ((<b-minus> or O+) & {@MV+} & {I*j+ or Pg+ or AZ+ or Pv+})
+  or (<b-minus> & {@MV+} & [I*j+ & Xc+])
   or ({@MV+} & {TH+ or Zs- or QI+ or <embed-verb>})
   or ([[@MV+ & O*n+]]);
 
