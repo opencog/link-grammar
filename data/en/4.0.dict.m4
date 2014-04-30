@@ -3906,7 +3906,7 @@ envisaged.v-d:
 
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
-  ({@E-} & (Pvf- or [[Mv-]]) & {@MV+} & {THi+}) or
+  ({@E-} & (Pvf- or [[Mv-]]) & <verb-wall> & {@MV+} & {THi+}) or
   [[{@E-} & A+]] or
   [[<verb-phrase-opener>]];
 

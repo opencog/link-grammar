@@ -4740,7 +4740,7 @@ said.v-d:
   (<verb-and-sp-i-> & (([<vc-predict>]) or ())) or
   ((<vc-predict>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t> or
-  ({@E-} & (Pvf- or [[Mv-]]) & {@MV+} & {THi+}) or
+  ({@E-} & (Pvf- or [[Mv-]]) & <verb-wall> & {@MV+} & {THi+}) or
   [[{@E-} & A+]] or
   [[<verb-phrase-opener>]];
 
