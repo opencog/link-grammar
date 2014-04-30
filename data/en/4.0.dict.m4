@@ -8043,9 +8043,9 @@ instead.e maybe.e:
 % so they've got to parse!
 no.ij nope.ij nah.ij no_way yes.ij yeah.ij yep.ij yup.ij
 ok.ij okay.ij OK.ij fine.ij exactly.ij sure.ij whatever.ij
-hah.ij hey.ij well.ij wtf.ij hell_yes of_course 
+hah.ij hey.ij well.ij wtf.ij hell_yes hell_no of_course 
 oh_no oh_my oh_dear dear.ij Lordy
-yikes ouch my.ij my_my my_my_my tsk tsk_tsk tsk_tsk_tsk:
+yikes ouch my.ij my_oh_my my_my my_my_my tsk tsk_tsk tsk_tsk_tsk:
   <directive-opener>
   or Wa-;
 
