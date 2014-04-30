@@ -8466,12 +8466,12 @@ that.j-t: Wt- & {Xc+} & Rn+ & B+;
 % "No one is sitting at that there table"
 that_there: Ds+;
 
-% (Rnx+ & CV+ & <CLAUSE-E>): "Because I said so"
+% (Rnx+ & <verb-wall> & <CLAUSE-E>): "Because I said so"
 % Not using Rnx+ & B+ above, because B+ goes too far...
 because:
   (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or BIh- or ({Xd- & Xc+} & MVs-)))
   or (OF+ & (({Xc+ & {Xd-}} & CO+) or BIh- or ({Xd- & Xc+} & MVa-)))
-  or (Rnx+ & CV+ & <CLAUSE-E>);
+  or (Rnx+ & <verb-wall> & <CLAUSE-E>);
 
 now_that just_as if_only in_case whereby whereupon insofar_as
 inasmuch_as ere on_the_grounds_that on_grounds_that in_that

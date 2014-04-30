@@ -21,9 +21,16 @@
 
 ; The following links start a domain. Each must be given a name in the
 ; table below (STARTING_LINK_TYPE_TABLE)
+;
+; Removed Rn as a starter link, since it doesn't seem to be needed,
+; and also because it interferes with a verb-wall link for sentences
+; like: "only you would say that" and "that I did not know". When Rn is
+; allowed to start an r domain, the above sentences then hit the 
+; "unbounded r domain" rule below, on the WV link.
   
 DOMAIN_STARTER_LINKS: 
- W   Ce   Cs   Ca   Cc   Ci   R*   Rn   Re   RSe  Mr   QI#d   Mv*   Jr  Mj   Qd  
+;W   Ce   Cs   Ca   Cc   Ci   R*   Rn   Re   RSe  Mr   QI#d   Mv*   Jr  Mj   Qd  
+ W   Ce   Cs   Ca   Cc   Ci   R*   Re   RSe  Mr   QI#d   Mv*   Jr  Mj   Qd  
  TOn   TOi   Mg*   MVi  Ss#d   Bsd   ER   Z  Ma#*   SIs#g  BIqx   MX#p   MX#a  
  MX#r   MX#j   MV#o   MV#p  Eq   COq   CCq  AFd   PFc 
 
@@ -91,11 +98,6 @@ MUST_FORM_A_CYCLE_LINKS:  R#*  TOt  EXx  HA  SFsic  Jd  Jr  JQ  OFd Xca  WV CV I
 ; ----------------------------------------------------------------------
 ; These links are not traced further if they point back before the root word.
 ;
-; XXX FIXME: I get "Unbounded r domain79" errors on the following sentences,
-; when the WV link is used:
-;  "That I did not know"
-;  "Only you would say that."
-;
 ; The creation of Rw necessitated making B#m a restricted link, to
 ; prevent the (e) domain, started by Ce, from extending around through
 ; the Rw link.
@@ -126,11 +128,13 @@ RESTRICTED_LINKS:
 ; The following table associates a domain type with each possible
 ; starting link. It contains pairs: the first of each pair is a link
 ; type, and the second is the domain to which that link type belongs.
+;
+; Rn commented out, as per above.
 
 STARTING_LINK_TYPE_TABLE: 
  Ce    e  
  R*    r  
- Rn    r
+; Rn    r
  Re    r  
  W     m  
  RSe   e  
