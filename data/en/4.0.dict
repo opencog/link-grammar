@@ -9971,10 +9971,15 @@ prima_facie before_long
 by_hand by_car by_plane by_boat by_bus by_train by_phone
 by_telephone in_person at_long_last on_cue
 on_arrival by_request in_total in_turn
-time_and_again over_and_over later_on for_now
-day_by_day day_after_day step_by_step one_by_one
-even_so more_often_than_not all_of_a_sudden:
+later_on for_now more_often_than_not:
   <directive-opener>
+  or ({Xd- & Xc+} & MVa-);
+
+again_and_again time_and_again over_and_over
+day_by_day day_after_day step_by_step one_by_one
+even_so all_of_a_sudden:
+  <directive-opener>
+  or E+
   or ({Xd- & Xc+} & MVa-);
 
 for_sure for_certain for_real:
