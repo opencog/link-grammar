@@ -404,7 +404,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 		print_time(opts, "Constructed fat disjuncts");
 
-		prune(sent);
+		fat_prune(sent);
 		print_time(opts, "Pruned fat disjuncts");
 
 		for (i=0; i<sent->length; i++) {

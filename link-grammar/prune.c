@@ -314,8 +314,8 @@ static void insert_connector(connector_table *ct, Connector * c)
 	ct[h] = c;
 }
 
-#if 0 /* DEAD_CODE_NOT_USED_ANYWHERE */
-void prune(Sentence sent)
+#ifdef USE_FAT_LINKAGES
+void fat_prune(Sentence sent)
 {
 	Connector *e, *f;
 	int w;
@@ -323,10 +323,8 @@ void prune(Sentence sent)
 	Connector *ct[CONTABSZ];
 	Disjunct fake_head, *d, *d1;
 
-#ifdef USE_FAT_LINKAGES
 	/* XXX why is this here ?? */
 	count_set_effective_distance(sent);
-#endif /* USE_FAT_LINKAGES */
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	while (1)
@@ -448,7 +446,7 @@ void prune(Sentence sent)
 		N_deleted = 0;
 	}
 }
-#endif /* DEAD_CODE_NOT_USED_ANYWHERE */
+#endif /* USE_FAT_LINKAGES */
 
 /*
    The second algorithm eliminates disjuncts that are dominated by

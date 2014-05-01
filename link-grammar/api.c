@@ -605,9 +605,9 @@ static void linkage_info_delete(Linkage_info *link_info, int sz)
 #ifdef USE_FAT_LINKAGES
 static void free_andlists(Sentence sent)
 {
-	int L;
+	size_t L;
 	Andlist * andlist, * next;
-	for(L=0; L<sent->num_linkages_post_processed; L++) {
+	for (L=0; L<sent->num_linkages_post_processed; L++) {
 		/* printf("%d ", sent->link_info[L].canonical);  */
 		/* if (sent->link_info[L].canonical==0) continue; */
 		andlist = sent->link_info[L].andlist;
@@ -907,7 +907,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
  */
 static void set_is_conjunction(Sentence sent)
 {
-	int w;
+	size_t w;
 	const char * s;
 	for (w=0; w<sent->length; w++) {
 		s = sent->word[w].alternatives[0];

@@ -13,7 +13,10 @@
 #include "api-types.h"
 #include "link-includes.h"
 
-int        power_prune(Sentence sent, int mode, Parse_Options opts);
-void       pp_and_power_prune(Sentence sent, int mode, Parse_Options opts);
+#ifdef USE_FAT_LINKAGES
+void       fat_prune(Sentence);
+#endif
+int        power_prune(Sentence, int mode, Parse_Options);
+void       pp_and_power_prune(Sentence, int mode, Parse_Options);
 int        prune_match(int dist, Connector * left, Connector * right);
-void       expression_prune(Sentence sent);
+void       expression_prune(Sentence);
