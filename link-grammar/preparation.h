@@ -20,5 +20,5 @@ void build_effective_dist(Sentence sent, int has_conjunction);
 void build_deletable(Sentence sent, int has_conjunction);
 #endif /* USE_FAT_LINKAGES */
 
-void prepare_to_parse(Sentence, match_context_t*, Parse_Options);
+void prepare_to_parse(Sentence, Parse_Options);
 

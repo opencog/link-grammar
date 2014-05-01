@@ -1369,14 +1369,12 @@ try_again:
 static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
+	match_context_t * mchxt;
 
 	/* Build lists of disjuncts */
-	match_context_t *mchxt = alloc_fast_matcher(sent);
-	prepare_to_parse(sent, mchxt, opts);
-	free_fast_matcher(mchxt);
+	prepare_to_parse(sent, opts);
 
 	mchxt = alloc_fast_matcher(sent);
-
 	init_count(sent);
 
 	/* A parse set may have been already been built for this sentence,

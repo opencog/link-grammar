@@ -810,7 +810,7 @@ void delete_unmarked_disjuncts(Sentence sent)
  * marking them all as irrelevant, and then marking the ones that
  * might be useable.  Finally, the unmarked ones are removed.
  */
-void conjunction_prune(Sentence sent, match_context_t *mchxt, Parse_Options opts)
+void conjunction_prune(Sentence sent, Parse_Options opts)
 {
 	Disjunct * d;
 	int w;
@@ -831,7 +831,7 @@ void conjunction_prune(Sentence sent, match_context_t *mchxt, Parse_Options opts
 		}
 	}
 
-	init_fast_matcher(sent);
+	match_context_t *mchxt = alloc_fast_matcher(sent);
 	ctxt->local_sent = sent->word;
 	ctxt->null_links = (opts->min_null_count > 0);
 	/*
@@ -863,7 +863,7 @@ void conjunction_prune(Sentence sent, match_context_t *mchxt, Parse_Options opts
 
 	delete_unmarked_disjuncts(sent);
 
-	free_fast_matcher(sent);
+	free_fast_matcher(mchxt);
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
