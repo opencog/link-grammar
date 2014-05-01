@@ -1370,10 +1370,12 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
 
-	match_context_t *mchxt = init_fast_matcher(sent);
-
 	/* Build lists of disjuncts */
+	match_context_t *mchxt = init_fast_matcher(sent);
 	prepare_to_parse(sent, mchxt, opts);
+	free_fast_matcher(mchxt, sent->length);
+
+	mchxt = init_fast_matcher(sent);
 
 	init_count(sent);
 
