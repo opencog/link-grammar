@@ -74,10 +74,9 @@ static Match_node * get_match_node(match_context_t *ctxt)
 /**
  * Put these nodes back onto my free list
  */
-void put_match_list(Sentence sent, Match_node *m)
+void put_match_list(match_context_t *ctxt, Match_node *m)
 {
 	Match_node * xm;
-	match_context_t *ctxt = sent->match_ctxt;
 
 	for (; m != NULL; m = xm)
 	{
@@ -337,7 +336,7 @@ form_match_list(Sentence sent, int w,
 		}
 	}
 	mr = front;  /* mr is now the abbreviated right list */
-	put_match_list(sent, free_later);
+	put_match_list(ctxt, free_later);
 
 	/* now catenate the two lists */
 	if (mr == NULL) return ml;

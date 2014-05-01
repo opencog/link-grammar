@@ -426,7 +426,7 @@ static Parse_set * parse_set(Sentence sent,
 				}
 			}
 		}
-		put_match_list(sent, m1);
+		put_match_list(sent->match_ctxt, m1);
 	}
 	xt->set->current = xt->set->first;
 	return xt->set;

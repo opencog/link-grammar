@@ -517,13 +517,13 @@ static s64 do_count(Sentence sent, int lw, int rw,
 					{
 						total = INT_MAX;
 						t->count = total;
-						put_match_list(sent, m1);
+						put_match_list(sent->match_ctxt, m1);
 						return total;
 					}
 				}
 			}
 		}
-		put_match_list(sent, m1);
+		put_match_list(sent->match_ctxt, m1);
 	}
 	t->count = total;
 	return total;
@@ -666,7 +666,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 				break;
 			}
 		}
-		put_match_list(sent, m1);
+		put_match_list(sent->match_ctxt, m1);
 		if (found != 0) break;
 	}
 	table_store(ctxt, lw, rw, le, re, 0, found);
@@ -774,7 +774,7 @@ static void mark_region(Sentence sent,
 				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
 			}
 		}
-		put_match_list(sent, m1);
+		put_match_list(sent->match_ctxt, m1);
 	}
 }
 #endif /* USE_FAT_LINKAGES */
