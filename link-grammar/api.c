@@ -1370,10 +1370,11 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
 
-	/* Build lists of disjuncts */
-	prepare_to_parse(sent, opts);
+	match_context_t *mchxt = init_fast_matcher(sent);
 
-	init_fast_matcher(sent);
+	/* Build lists of disjuncts */
+	prepare_to_parse(sent, mchxt, opts);
+
 	init_count(sent);
 
 	/* A parse set may have been already been built for this sentence,
@@ -1387,7 +1388,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		s64 total;
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
-		total = do_parse(sent, sent->match_ctxt, sent->null_count, opts);
+		total = do_parse(sent, mchxt, sent->null_count, opts);
 
 		if (verbosity > 1)
 		{
@@ -1402,7 +1403,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		post_process_linkages(sent, sent->match_ctxt, opts);
+		post_process_linkages(sent, mchxt, opts);
 		sane_morphism(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 
@@ -1412,7 +1413,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	}
 
 	free_count(sent);
-	free_fast_matcher(sent);
+	free_fast_matcher(mchxt, sent->length);
 }
 
 static void free_sentence_disjuncts(Sentence sent)

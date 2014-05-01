@@ -13,7 +13,7 @@
 #include "link-includes.h"
 #include "structures.h"
 
-void init_fast_matcher(Sentence sent);
-void free_fast_matcher(Sentence sent);
+match_context_t* init_fast_matcher(Sentence sent);
+void free_fast_matcher(match_context_t*, unsigned int sent_length);
 void put_match_list(match_context_t *, Match_node *);
 Match_node * form_match_list(match_context_t *, int, Connector *, int, Connector *, int);

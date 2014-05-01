@@ -322,7 +322,7 @@ int sentence_contains_conjunction(Sentence sent)
  * Assumes that the sentence expression lists have been generated.
  * This does all the necessary pruning and building of fat-link structures.
  */
-void prepare_to_parse(Sentence sent, Parse_Options opts)
+void prepare_to_parse(Sentence sent, match_context_t* mchxt, Parse_Options opts)
 {
 	size_t i;
 #ifdef USE_FAT_LINKAGES
@@ -385,7 +385,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		}
 		*/
 		/* already reported -- print_time(opts, "Finished gentle power pruning"); */
-		conjunction_prune(sent, sent->match_ctxt, opts);
+		conjunction_prune(sent, mchxt, opts);
 		if (verbosity > 2) {
 			printf("\nAfter conjunction pruning:\n");
 			print_disjunct_counts(sent);

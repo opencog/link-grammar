@@ -98,33 +98,31 @@ static void free_match_list(Match_node * t)
 /**
  * Free all of the hash tables and Match_nodes 
  */
-void free_fast_matcher(Sentence sent)
+void free_fast_matcher(match_context_t *mchxt, unsigned int length)
 {
 	size_t w;
 	unsigned int i;
-	match_context_t *ctxt = sent->match_ctxt;
 
-	if (verbosity > 1) printf("%d Match cost\n", ctxt->match_cost);
-	for (w = 0; w < sent->length; w++)
+	if (verbosity > 1) printf("%d Match cost\n", mchxt->match_cost);
+	for (w = 0; w < length; w++)
 	{
-		for (i = 0; i < ctxt->l_table_size[w]; i++)
+		for (i = 0; i < mchxt->l_table_size[w]; i++)
 		{
-			free_match_list(ctxt->l_table[w][i]);
+			free_match_list(mchxt->l_table[w][i]);
 		}
-		xfree((char *)ctxt->l_table[w], ctxt->l_table_size[w] * sizeof (Match_node *));
-		for (i = 0; i < ctxt->r_table_size[w]; i++)
+		xfree((char *)mchxt->l_table[w], mchxt->l_table_size[w] * sizeof (Match_node *));
+		for (i = 0; i < mchxt->r_table_size[w]; i++)
 		{
-			free_match_list(ctxt->r_table[w][i]);
+			free_match_list(mchxt->r_table[w][i]);
 		}
-		xfree((char *)ctxt->r_table[w], ctxt->r_table_size[w] * sizeof (Match_node *));
+		xfree((char *)mchxt->r_table[w], mchxt->r_table_size[w] * sizeof (Match_node *));
 	}
-	free_match_list(ctxt->mn_free_list);
-	ctxt->mn_free_list = NULL;
+	free_match_list(mchxt->mn_free_list);
+	mchxt->mn_free_list = NULL;
 
-	xfree(ctxt->l_table_size, ctxt->size * sizeof(unsigned int));
-	xfree(ctxt->l_table, ctxt->size * sizeof(Match_node **));
-	xfree(ctxt, sizeof(match_context_t));
-	sent->match_ctxt = NULL;
+	xfree(mchxt->l_table_size, mchxt->size * sizeof(unsigned int));
+	xfree(mchxt->l_table, mchxt->size * sizeof(Match_node **));
+	xfree(mchxt, sizeof(match_context_t));
 }
 
 /**
@@ -211,7 +209,7 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	}
 }
 
-void init_fast_matcher(Sentence sent)
+match_context_t* init_fast_matcher(Sentence sent)
 {
    unsigned int size, i;
 	size_t w;
@@ -228,8 +226,6 @@ void init_fast_matcher(Sentence sent)
 	ctxt->r_table = ctxt->l_table + sent->length;
 	ctxt->match_cost = 0;
 	ctxt->mn_free_list = NULL;
-
-	sent->match_ctxt = ctxt;
 
 	for (w=0; w<sent->length; w++)
 	{
@@ -261,6 +257,8 @@ void init_fast_matcher(Sentence sent)
 			}
 		}
 	}
+
+	return ctxt;
 }
 
 /**

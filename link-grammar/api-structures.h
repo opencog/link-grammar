@@ -273,7 +273,6 @@ struct Sentence_s
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
 #endif /* USE_FAT_LINKAGES */
 	count_context_t * count_ctxt; /* private state info used for counting */
-	match_context_t * match_ctxt; /* private state info used for matching */
 
 #ifdef USE_FAT_LINKAGES
 	int    num_thin_linkages;   /* valid linkages which are not fat */
