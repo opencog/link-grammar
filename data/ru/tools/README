@@ -19,6 +19,11 @@ the link-grammar dictionaries:
 This should take abput 25 seconds or less.  After this, the Russian
 dictionaries are ready to be used!
 
+The query-morph.pl tool will examine the morphology candidates for a
+given word. For example:
+
+  ./query-morph.pl тест
+
 
 
 Misc notes:
