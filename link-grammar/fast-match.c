@@ -98,13 +98,13 @@ static void free_match_list(Match_node * t)
 /**
  * Free all of the hash tables and Match_nodes 
  */
-void free_fast_matcher(match_context_t *mchxt, unsigned int length)
+void free_fast_matcher(match_context_t *mchxt)
 {
 	size_t w;
 	unsigned int i;
 
 	if (verbosity > 1) printf("%d Match cost\n", mchxt->match_cost);
-	for (w = 0; w < length; w++)
+	for (w = 0; w < mchxt->size; w++)
 	{
 		for (i = 0; i < mchxt->l_table_size[w]; i++)
 		{
@@ -209,7 +209,7 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	}
 }
 
-match_context_t* init_fast_matcher(Sentence sent)
+match_context_t* alloc_fast_matcher(const Sentence sent)
 {
    unsigned int size, i;
 	size_t w;

@@ -1371,11 +1371,11 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	int nl;
 
 	/* Build lists of disjuncts */
-	match_context_t *mchxt = init_fast_matcher(sent);
+	match_context_t *mchxt = alloc_fast_matcher(sent);
 	prepare_to_parse(sent, mchxt, opts);
-	free_fast_matcher(mchxt, sent->length);
+	free_fast_matcher(mchxt);
 
-	mchxt = init_fast_matcher(sent);
+	mchxt = alloc_fast_matcher(sent);
 
 	init_count(sent);
 
@@ -1415,7 +1415,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	}
 
 	free_count(sent);
-	free_fast_matcher(mchxt, sent->length);
+	free_fast_matcher(mchxt);
 }
 
 static void free_sentence_disjuncts(Sentence sent)
