@@ -9298,12 +9298,13 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 %COMPARATIVES AND SUPERLATIVES
 
 % Omm-: "I want more" -- the second m blocks O*t+ on <vc-be>
+% Cost on Omm- so that EA+ is prefered.
 more:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or AJrc- or AJlc+))
   or ({OF+} & (
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
-    or ({ECn- or ECx- or ND-} & (Omm- or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
+    or ({ECn- or ECx- or ND-} & ([Omm-] or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 more_of_a more_of_an: Ds*m+;
