@@ -1,6 +1,8 @@
 
                   Regenerating the Russian Dictionaries
                   -------------------------------------
+                             May 2014
+
 
 The raw data is located in the file morphs20030410.mrd.  This is the
 master morphology file from 2003. The corresponding grammatical
@@ -33,7 +35,7 @@ the "seman" project:
 
   http://seman.sourceforge.net/
 
-Source data for the morphology is available at:
+Source data for the morphology is available under the LGPL license at:
 
   http://sourceforge.net/p/seman/svn/HEAD/tree/trunk/
 
@@ -41,12 +43,17 @@ A read-only version can be obtained as:
 
   svn checkout svn://svn.code.sf.net/p/seman/svn/trunk seman-svn
 
-So, for example, rgram.tab is in trunk/Dicts/Morph/ and the
+So, for example, rgramtab.tab is in trunk/Dicts/Morph/ and the
 morphs.mrd is in trunk/Dicts/SrcMorph/RusSrc/morphs.mrd  These files
 are encoded in KOI8-R.  The iconv command can be used to convert
 KOI8-R to UTF, as folllows: 
 
-      iconv -f KOI8-R -t UTF-8  <infile>  >   <outfile>
+   iconv -f KOI8-R -t UTF-8  <infile>  >   <outfile>
 
 So:
-    iconv -f KOI8-R -t UTF-8 morphs.mrd > morphs-utf8.mrd
+   iconv -f KOI8-R -t UTF-8 morphs.mrd > morphs-utf8.mrd
+   iconv -f KOI8-R -t UTF-8 rgramtab.tab > rgramtab-utf8.tab
+
+
+The End.
+--------
