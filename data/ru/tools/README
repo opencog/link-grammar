@@ -3,7 +3,8 @@
                   -------------------------------------
 
 The raw data is located in the file morphs20030410.mrd.  This is the
-master morphology file from 2003.
+master morphology file from 2003. The corresponding grammatical
+markup is in rgramtab20030306.tab.
 
 It is to be converted to Berkley DB files by running:
 
