@@ -353,8 +353,8 @@ Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
 
-				Lmatch = (le != NULL) && (d->left != NULL) && do_match(sent, le, d->left, lw, w);
-				Rmatch = (d->right != NULL) && (re != NULL) && do_match(sent, d->right, re, w, rw);
+				Lmatch = (le != NULL) && (d->left != NULL) && do_match(ctxt, le, d->left, lw, w);
+				Rmatch = (d->right != NULL) && (re != NULL) && do_match(ctxt, d->right, re, w, rw);
 				for (i=0; i<4; i++) {ls[i] = rs[i] = NULL;}
 				if (Lmatch)
 				{

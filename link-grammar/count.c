@@ -123,7 +123,7 @@ void count_unset_effective_distance(Sentence sent)
  * is different depending on which of the two priority cases is being
  * considered.  See the comments below. 
  */
-int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
+int do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
 	int x, y;
@@ -149,8 +149,6 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
 	if (aw == 0 && bw == 0) {
 		dist = 0;
 	} else {
-		count_context_t *ctxt;
-		ctxt = sent->count_ctxt;
 		assert(aw < bw, "match() did not receive params in the natural order.");
 		dist = ctxt->effective_dist[aw][bw];
 	}
@@ -232,7 +230,7 @@ int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
  * The sequence of upper case letters must match exactly.  After these comes
  * a sequence of lower case letters or "*"s. 
  */
-int do_match(Sentence sent, Connector *a, Connector *b, int aw, int bw)
+int do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
 {
    return prune_match(bw - aw, a, b);
 }
@@ -452,9 +450,9 @@ static s64 do_count(Sentence sent, int lw, int rw,
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
 				Lmatch = (le != NULL) && (d->left != NULL) && 
-				         do_match(sent, le, d->left, lw, w);
+				         do_match(ctxt, le, d->left, lw, w);
 				Rmatch = (d->right != NULL) && (re != NULL) && 
-				         do_match(sent, d->right, re, w, rw);
+				         do_match(ctxt, d->right, re, w, rw);
 
 				rightcount = leftcount = 0;
 				if (Lmatch)
