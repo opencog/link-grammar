@@ -15,6 +15,7 @@
 #include <stdlib.h>
 
 #include "analyze-linkage.h"
+#include "and.h"
 #include "api-structures.h"
 #include "disjuncts.h"
 #include "extract-links.h"
@@ -269,9 +270,17 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 	 * is being suppressed, then all links connecting morphemes will
 	 * be discarded as well.
 	 */
+#ifdef USE_FAT_LINKAGES
+	for (i=0, j=0; i<linkage->sublinkage[linkage->current].num_links; i++)
+#else
 	for (i=0, j=0; i<linkage->sublinkage.num_links; i++)
+#endif
 	{
+#ifdef USE_FAT_LINKAGES
+		Link * lnk = linkage->sublinkage[linkage->current].link[i];
+#else
 		Link * lnk = linkage->sublinkage.link[i];
+#endif
 		if (NULL == chosen_words[lnk->lw] ||
 		    NULL == chosen_words[lnk->rw])
 		{
@@ -285,11 +294,19 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 		{
 			lnk->lw = remap[lnk->lw];
 			lnk->rw = remap[lnk->rw];
+#ifdef USE_FAT_LINKAGES
+			linkage->sublinkage[linkage->current].link[j] = lnk;
+#else
 			linkage->sublinkage.link[j] = lnk;
+#endif
 			j++;
 		}
 	}
+#ifdef USE_FAT_LINKAGES
+	linkage->sublinkage[linkage->current].num_links = j;
+#else
 	linkage->sublinkage.num_links = j;
+#endif
 }
 
 
@@ -421,9 +438,9 @@ void linkage_delete(Linkage linkage)
 }
 
 #ifdef USE_FAT_LINKAGES
-static int links_are_equal(Link *l, Link *m)
+static bool links_are_equal(Link *l, Link *m)
 {
-	return ((l->l == m->l) && (l->r == m->r) && (strcmp(l->name, m->name)==0));
+	return ((l->lw == m->lw) && (l->rw == m->rw) && (strcmp(l->link_name, m->link_name)==0));
 }
 
 static int link_already_appears(Linkage linkage, Link *link, int a)
