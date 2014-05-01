@@ -243,7 +243,8 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  * This code is similar to code in count.c
  * (grep for end_word in these files).
  */
-static Parse_set * parse_set(Sentence sent,
+static
+Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int cost,
                  Boolean islands_ok, Parse_info pi)
@@ -260,16 +261,14 @@ static Parse_set * parse_set(Sentence sent,
 	X_table_connector *xt;
 	s64 count;
 
-	match_context_t *mchxt = sent->match_ctxt;
-
-	assert(cost < 0x7fff, "parse_set() called with cost < 0.");
+	assert(cost < 0x7fff, "mk_parse_set() called with cost < 0.");
 
 	count = table_lookup(sent, lw, rw, le, re, cost);
 
 	/*
-	  assert(count >= 0, "parse_set() called on params that were not in the table.");
+	  assert(count >= 0, "mk_parse_set() called on params that were not in the table.");
 	  Actually, we can't assert this, because of the pseudocount technique that's
-	  used in count().  It's not the case that every call to parse_set() has already
+	  used in count().  It's not the case that every call to mk_parse_set() has already
 	  been put into the table.
 	 */
 
@@ -299,7 +298,7 @@ static Parse_set * parse_set(Sentence sent,
 		{
 			if (dis->left == NULL)
 			{
-				rs[0] = parse_set(sent, dis, NULL, w, rw, dis->right,
+				rs[0] = mk_parse_set(sent, mchxt, dis, NULL, w, rw, dis->right,
 				                  NULL, cost-1, islands_ok, pi);
 				if (rs[0] == NULL) continue;
 				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
@@ -308,7 +307,7 @@ static Parse_set * parse_set(Sentence sent,
 				put_choice_in_set(xt->set, a_choice);
 			}
 		}
-		rs[0] = parse_set(sent, NULL, NULL, w, rw, NULL, NULL,
+		rs[0] = mk_parse_set(sent, mchxt, NULL, NULL, w, rw, NULL, NULL,
 		                  cost-1, islands_ok, pi);
 		if (rs[0] != NULL)
 		{
@@ -358,17 +357,17 @@ static Parse_set * parse_set(Sentence sent,
 				for (i=0; i<4; i++) {ls[i] = rs[i] = NULL;}
 				if (Lmatch)
 				{
-					ls[0] = parse_set(sent, ld, d, lw, w, le->next, d->left->next, lcost, islands_ok, pi);
-					if (le->multi) ls[1] = parse_set(sent, ld, d, lw, w, le, d->left->next, lcost, islands_ok, pi);
-					if (d->left->multi) ls[2] = parse_set(sent, ld, d, lw, w, le->next, d->left, lcost, islands_ok, pi);
-					if (le->multi && d->left->multi) ls[3] = parse_set(sent, ld, d, lw, w, le, d->left, lcost, islands_ok, pi);
+					ls[0] = mk_parse_set(sent, mchxt, ld, d, lw, w, le->next, d->left->next, lcost, islands_ok, pi);
+					if (le->multi) ls[1] = mk_parse_set(sent, mchxt, ld, d, lw, w, le, d->left->next, lcost, islands_ok, pi);
+					if (d->left->multi) ls[2] = mk_parse_set(sent, mchxt, ld, d, lw, w, le->next, d->left, lcost, islands_ok, pi);
+					if (le->multi && d->left->multi) ls[3] = mk_parse_set(sent, mchxt, ld, d, lw, w, le, d->left, lcost, islands_ok, pi);
 				}
 				if (Rmatch)
 				{
-					rs[0] = parse_set(sent, d, rd, w, rw, d->right->next, re->next, rcost, islands_ok, pi);
-					if (d->right->multi) rs[1] = parse_set(sent, d, rd, w,rw,d->right,re->next, rcost, islands_ok, pi);
-					if (re->multi) rs[2] = parse_set(sent, d, rd, w, rw, d->right->next, re, rcost, islands_ok, pi);
-					if (d->right->multi && re->multi) rs[3] = parse_set(sent, d, rd, w, rw, d->right, re, rcost, islands_ok, pi);
+					rs[0] = mk_parse_set(sent, mchxt, d, rd, w, rw, d->right->next, re->next, rcost, islands_ok, pi);
+					if (d->right->multi) rs[1] = mk_parse_set(sent, mchxt, d, rd, w,rw,d->right,re->next, rcost, islands_ok, pi);
+					if (re->multi) rs[2] = mk_parse_set(sent, mchxt, d, rd, w, rw, d->right->next, re, rcost, islands_ok, pi);
+					if (d->right->multi && re->multi) rs[3] = mk_parse_set(sent, mchxt, d, rd, w, rw, d->right, re, rcost, islands_ok, pi);
 				}
 
 				for (i=0; i<4; i++)
@@ -389,7 +388,7 @@ static Parse_set * parse_set(Sentence sent,
 				if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
 				{
 					/* evaluate using the left match, but not the right */
-					rset = parse_set(sent, d, rd, w, rw, d->right, re, rcost, islands_ok, pi);
+					rset = mk_parse_set(sent, mchxt, d, rd, w, rw, d->right, re, rcost, islands_ok, pi);
 					if (rset != NULL)
 					{
 						for (i=0; i<4; i++)
@@ -409,7 +408,7 @@ static Parse_set * parse_set(Sentence sent,
 				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 				{
 					/* evaluate using the right match, but not the left */
-					lset = parse_set(sent, ld, d, lw, w, le, d->left, lcost, islands_ok, pi);
+					lset = mk_parse_set(sent, mchxt, ld, d, lw, w, le, d->left, lcost, islands_ok, pi);
 
 					if (lset != NULL)
 					{
@@ -487,9 +486,10 @@ static Boolean verify_set(Parse_info pi)
 int build_parse_set(Sentence sent, unsigned int cost, Parse_Options opts)
 {
 	Parse_set * whole_set;
+	match_context_t *mchxt = sent->match_ctxt;
 
 	whole_set =
-		parse_set(sent, NULL, NULL, -1, sent->length, NULL, NULL, cost+1,
+		mk_parse_set(sent, mchxt, NULL, NULL, -1, sent->length, NULL, NULL, cost+1,
 		          opts->islands_ok, sent->parse_info);
 
 	if ((whole_set != NULL) && (whole_set->current != NULL)) {
