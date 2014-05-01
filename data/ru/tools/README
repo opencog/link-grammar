@@ -1,11 +1,28 @@
 
-The original dictionaries are in KOI8-R  ... to convert to UTF8, do this:
+                  Regenerating the Russian Dictionaries
+                  -------------------------------------
+
+The raw data is located in the file morphs20030410.mrd.  This is the
+master morphology file from 2003.
+
+It is to be converted to Berkley DB files by running:
+
+  time ./make-hash-db.pl
+
+This will create the files root.db root.db and tail.db.  It should
+take about 45 seconds or less to run.  These are then used to create
+the link-grammar dictionaries:
+
+  time ./mkdict.pl
+
+This should take abput 25 seconds or less.  After this, the Russian
+dictionaries are ready to be used!
+
+
+
+Misc notes:
+-----------
+iconv can be used to convert KOI8-R to UTF, as folllows:
 
       iconv -f KOI8-R -t UTF-8  <infile>  >   <outfile>
 
-Morphological dictionary encoded in *.db files; to convert
-to the current form, run this script:
-
-time ./mkdict.pl
-
-This should take about 20 seconds (or less, on newer cpus).
