@@ -71,14 +71,14 @@ struct DIS_node_struct
 {
 	CON_list * cl;     /* the list of children */
 	List_o_links * lol;/* the links that comprise this region of the graph */
-	int word;          /* the word defining this node */
+	size_t word;          /* the word defining this node */
 };
 
 struct CON_node_struct
 {
 	DIS_list * dl;     /* the list of children */
 	DIS_list * current;/* defines the current child */
-	int word;          /* the word defining this node */
+	size_t word;          /* the word defining this node */
 };
 
 struct DIS_list_struct

@@ -12,6 +12,7 @@
 
 #ifdef USE_FAT_LINKAGES
 
+#include "analyze-linkage.h"
 #include "and.h"
 #include "api-structures.h"
 #include "dict-structures.h"
@@ -1181,12 +1182,12 @@ int set_has_fat_down(Sentence sent)
 		if (pi->link_array[link].lc->priority == DOWN_priority)
 		{
 			N_fat ++;
-			pi->has_fat_down[pi->link_array[link].l] = TRUE;
+			pi->has_fat_down[pi->link_array[link].lw] = TRUE;
 		}
 		else if (pi->link_array[link].rc->priority == DOWN_priority)
 		{
 			N_fat ++;
-			pi->has_fat_down[pi->link_array[link].r] = TRUE;
+			pi->has_fat_down[pi->link_array[link].rw] = TRUE;
 		}
 	}
 	return (N_fat > 0);
@@ -1230,7 +1231,7 @@ static void build_image_array(Sentence sent)
 		{
 			if (end < 0)
 			{
-				word = pi->link_array[link].l;
+				word = pi->link_array[link].lw;
 				if (!pi->has_fat_down[word]) continue;
 				this_end_con = pi->link_array[link].lc;
 				other_end_con = pi->link_array[link].rc;
@@ -1239,7 +1240,7 @@ static void build_image_array(Sentence sent)
 			}
 			else
 			{
-				word = pi->link_array[link].r;
+				word = pi->link_array[link].rw;
 				if (!pi->has_fat_down[word]) continue;
 				this_end_con = pi->link_array[link].rc;
 				other_end_con = pi->link_array[link].lc;
@@ -1464,6 +1465,8 @@ int is_canonical_linkage(Sentence sent)
 	return (w == pi->N_words);
 }
 
+#define UNUSED_CONNECTION ((size_t) -1)
+
 /**
  * This takes as input link_array[], sublinkage->link[]->l and
  * sublinkage->link[]->r (and also has_fat_down[word], which has been
@@ -1483,23 +1486,23 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 	{
 		for (link=0; link<pi->N_links; link++)
 		{
-			if (sublinkage->link[link]->l == -1) continue;
+			if (sublinkage->link[link]->lw == UNUSED_CONNECTION) continue;
 			if (end < 0)
 			{
-				word = pi->link_array[link].l;
+				word = pi->link_array[link].lw;
 				if (!pi->has_fat_down[word]) continue;
 				this_end_con = pi->link_array[link].lc;
 				dis = pi->chosen_disjuncts[word];
-				mydis = pi->chosen_disjuncts[sublinkage->link[link]->l];
+				mydis = pi->chosen_disjuncts[sublinkage->link[link]->lw];
 				clist = dis->right;
 			}
 			else
 			{
-				word = pi->link_array[link].r;
+				word = pi->link_array[link].rw;
 				if (!pi->has_fat_down[word]) continue;
 				this_end_con = pi->link_array[link].rc;
 				dis = pi->chosen_disjuncts[word];
-				mydis = pi->chosen_disjuncts[sublinkage->link[link]->r];
+				mydis = pi->chosen_disjuncts[sublinkage->link[link]->rw];
 				clist = dis->left;
 			}
 
@@ -1543,10 +1546,10 @@ void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 				mycon = mydis->right;
 			} else {
 				printf("word = %d\n", word);
-				printf("fat link: [%d, %d]\n",
-					   pi->link_array[link].l, pi->link_array[link].r);
-				printf("thin link: [%d, %d]\n",
-					   sublinkage->link[link]->l, sublinkage->link[link]->r);
+				printf("fat link: [%zu, %zu]\n",
+					   pi->link_array[link].lw, pi->link_array[link].rw);
+				printf("thin link: [%zu, %zu]\n",
+					   sublinkage->link[link]->lw, sublinkage->link[link]->rw);
 				assert(FALSE, "There should be a fat UP link here");
 			}
 
