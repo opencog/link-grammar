@@ -365,7 +365,7 @@ void connector_set_delete(Connector_set * conset)
  * d='+' means this connector is on the right side of the disjunct.
  * d='-' means this connector is on the left side of the disjunct.
  */
-Boolean match_in_connector_set(Sentence sent, Connector_set *conset, Connector * c, int d)
+Boolean match_in_connector_set(count_context_t * ctxt, Connector_set *conset, Connector * c, int d)
 {
 	unsigned int h;
 	Connector * c1;
@@ -373,7 +373,7 @@ Boolean match_in_connector_set(Sentence sent, Connector_set *conset, Connector *
 	h = connector_set_hash(conset, c->string, d);
 	for (c1 = conset->hash_table[h]; c1 != NULL; c1 = c1->next)
 	{
-		if (do_match(sent, c1, c, 0, 0) && (d == c1->word)) return TRUE;
+		if (do_match(ctxt, c1, c, 0, 0) && (d == c1->word)) return TRUE;
 	}
 	return FALSE;
 }

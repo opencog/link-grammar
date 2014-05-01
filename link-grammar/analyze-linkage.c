@@ -888,6 +888,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 	int i;
 	const char * s;
 	Parse_info pi = sent->parse_info;
+	count_context_t * ctxt = sent->count_ctxt;
 
 	for (i = 0; i < pi->N_links; i++)
 	{
@@ -900,7 +901,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 		 */
 		if (NULL == sublinkage->link[i]->lc) continue;
 		if (NULL == sublinkage->link[i]->rc) continue;
-		if (!do_match(sent, sublinkage->link[i]->lc, sublinkage->link[i]->rc, 0, 0))
+		if (!do_match(ctxt, sublinkage->link[i]->lc, sublinkage->link[i]->rc, 0, 0))
 		{
 			replace_link_name(sublinkage->link[i], pi->link_array[i].name);
 		}

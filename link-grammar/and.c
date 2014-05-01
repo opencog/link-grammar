@@ -383,14 +383,16 @@ static inline int and_hash_disjunct(Disjunct *d)
 static int is_appropriate(Sentence sent, Disjunct * d)
 {
 	Connector * c;
+	count_context_t * ctxt = sent->count_ctxt;
+	Connector_set * acs = sent->dict->andable_connector_set;
 
-	if (sent->dict->andable_connector_set == NULL) return TRUE;
+	if (acs == NULL) return TRUE;
 	/* if no set, then everything is considered andable */
 	for (c = d->right; c!=NULL; c=c->next) {
-		if (!match_in_connector_set(sent, sent->dict->andable_connector_set, c, '+')) return FALSE;
+		if (!match_in_connector_set(ctxt, acs, c, '+')) return FALSE;
 	}
 	for (c = d->left; c!=NULL; c=c->next) {
-		if (!match_in_connector_set(sent, sent->dict->andable_connector_set, c, '-')) return FALSE;
+		if (!match_in_connector_set(ctxt, acs, c, '-')) return FALSE;
 	}
 	return TRUE;
 }
@@ -1358,9 +1360,9 @@ static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label)
 	return d;
 }
 
-static int x_match(Sentence sent, Connector *a, Connector *b)
+static int x_match(count_context_t * ctxt, Connector *a, Connector *b)
 {
-   return do_match(sent, a, b, 0, 0);
+   return do_match(ctxt, a, b, 0, 0);
 }
 
 /**
@@ -1376,6 +1378,7 @@ int is_canonical_linkage(Sentence sent)
 	Disjunct *dis, *chosen_d;
 	Image_node * in;
 	Parse_info pi = sent->parse_info;
+	count_context_t * ctxt = sent->count_ctxt;
 
 	init_connector(&dummy_connector);
 	dummy_connector.priority = UP_priority;
@@ -1437,17 +1440,17 @@ int is_canonical_linkage(Sentence sent)
 					}
 
 					/* I hope using x_match here is right */
-					if (!x_match(sent, &dummy_connector, in->c)) break;  
+					if (!x_match(ctxt, &dummy_connector, in->c)) break;  
 				} else if (place > 0) {
 					for (c=dis->right; place > 1; place--) {
 						c = c->next;
 					}
-					if (!x_match(sent, c, in->c)) break;	/* Ditto above comment  --DS 07/97*/
+					if (!x_match(ctxt, c, in->c)) break;	/* Ditto above comment  --DS 07/97*/
 				} else {
 					for (c=dis->left; place < -1; place++) {
 						c = c->next;
 					}
-					if (!x_match(sent, c, in->c)) break;  /* Ditto Ditto */
+					if (!x_match(ctxt, c, in->c)) break;  /* Ditto Ditto */
 				}
 			}
 
