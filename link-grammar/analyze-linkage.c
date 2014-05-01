@@ -159,10 +159,10 @@ static void replace_link_name(Link *l, const char *s)
 {
 	/* XXX can get some perf improvement by avoiding strlen! */
 	char * t;
-	exfree((char *) l->name, sizeof(char)*(strlen(l->name)+1));
+	exfree((char *) l->link_name, sizeof(char)*(strlen(l->link_name)+1));
 	t = (char *) exalloc(sizeof(char)*(strlen(s)+1));
 	strcpy(t, s);
-	l->name = t;
+	l->link_name = t;
 }
 #endif /* USE_FAT_LINKAGES */
 
@@ -206,10 +206,10 @@ static void build_digraph(analyze_context_t *actx, Parse_info pi)
 		}
 
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = actx->word_links[lp->l];
-		actx->word_links[lp->l] = lol;
+		lol->next = actx->word_links[lp->lw];
+		actx->word_links[lp->lw] = lol;
 		lol->link = link;
-		lol->word = lp->r;
+		lol->word = lp->rw;
 		p = lp->lc->priority;
 		if (p == THIN_priority) {
 			lol->dir = 0;
@@ -220,10 +220,10 @@ static void build_digraph(analyze_context_t *actx, Parse_info pi)
 		}
 
 		lol = (List_o_links *) xalloc(sizeof(List_o_links));
-		lol->next = actx->word_links[lp->r];
-		actx->word_links[lp->r] = lol;
+		lol->next = actx->word_links[lp->rw];
+		actx->word_links[lp->rw] = lol;
 		lol->link = link;
-		lol->word = lp->l;
+		lol->word = lp->lw;
 		p = lp->rc->priority;
 		if (p == THIN_priority) {
 			lol->dir = 0;
@@ -873,6 +873,8 @@ static int strictly_smaller_name(const char * s, const char * t)
 	return (strictness > 0);
 }
 
+#define UNUSED_CONNECTION ((size_t) -1)
+
 /**
  * This fills in the sublinkage->link[].name field.  We assume that
  * link_array[].name have already been filled in.  As above, in the
@@ -892,7 +894,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 
 	for (i = 0; i < pi->N_links; i++)
 	{
-		if (sublinkage->link[i]->l == -1) continue;
+		if (sublinkage->link[i]->lw == UNUSED_CONNECTION) continue;
 		/* NULL's here are quite unexpected -- I think there's a bug
 		 * elsewhere in the code. But for now, punt.  Here's a sentence
 		 * that triggers a NULL -- "His convalescence was relatively brief
@@ -903,7 +905,7 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 		if (NULL == sublinkage->link[i]->rc) continue;
 		if (!do_match(ctxt, sublinkage->link[i]->lc, sublinkage->link[i]->rc, 0, 0))
 		{
-			replace_link_name(sublinkage->link[i], pi->link_array[i].name);
+			replace_link_name(sublinkage->link[i], pi->link_array[i].link_name);
 		}
 		else
 		{
@@ -911,8 +913,8 @@ static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 				connector_get_string(sublinkage->link[i]->lc),
 				connector_get_string(sublinkage->link[i]->rc));
 
-			if (strictly_smaller_name(s, pi->link_array[i].name))
-				replace_link_name(sublinkage->link[i], pi->link_array[i].name);
+			if (strictly_smaller_name(s, pi->link_array[i].link_name))
+				replace_link_name(sublinkage->link[i], pi->link_array[i].link_name);
 			else
 				replace_link_name(sublinkage->link[i], s);
 		}
@@ -991,7 +993,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		free_DIS_tree(d_root);
 		for (i = 0; i < pi->N_links; i++)
 		{
-			pi->link_array[i].name = "";
+			pi->link_array[i].link_name = "";
 		}
 		return li;
 	}
@@ -1014,8 +1016,8 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		for (i=0; i<pi->N_links; i++)
 		{
 			actx->patch_array[i].used = actx->patch_array[i].changed = FALSE;
-			actx->patch_array[i].newl = pi->link_array[i].l;
-			actx->patch_array[i].newr = pi->link_array[i].r;
+			actx->patch_array[i].newl = pi->link_array[i].lw;
+			actx->patch_array[i].newr = pi->link_array[i].rw;
 			copy_full_link(&sublinkage->link[i], &(pi->link_array[i]));
 		}
 		fill_patch_array_DIS(actx, d_root, NULL);
@@ -1024,13 +1026,13 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		{
 			if (actx->patch_array[i].changed || actx->patch_array[i].used)
 			{
-				sublinkage->link[i]->l = actx->patch_array[i].newl;
-				sublinkage->link[i]->r = actx->patch_array[i].newr;
+				sublinkage->link[i]->lw = actx->patch_array[i].newl;
+				sublinkage->link[i]->rw = actx->patch_array[i].newr;
 			}
-			else if ((actx->dfs_root_word[pi->link_array[i].l] != -1) &&
-					 (actx->dfs_root_word[pi->link_array[i].r] != -1))
+			else if ((actx->dfs_root_word[pi->link_array[i].lw] != -1) &&
+					 (actx->dfs_root_word[pi->link_array[i].rw] != -1))
 			{
-				sublinkage->link[i]->l = -1;
+				sublinkage->link[i]->lw = UNUSED_CONNECTION;
 			}
 		}
 
@@ -1041,7 +1043,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 		}
 
 		/* 'analyze_pass' logic added ALB 1/97 */
-		if (analyze_pass==PP_FIRST_PASS) {
+		if (analyze_pass == PP_FIRST_PASS) {
 			post_process_scan_linkage(postprocessor,opts,sent,sublinkage);
 			if (!advance_DIS(d_root)) break;
 			else continue;
@@ -1057,7 +1059,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 			   ancestry for a link in each of its sentences is consistent. */
 
 			for (i=0; i<pi->N_links; i++) {
-				if (sublinkage->link[i]->l == -1) continue;
+				if (sublinkage->link[i]->lw == -1) continue;
 				if (accum.d_type_array[i] == NULL) {
 					accum.d_type_array[i] = copy_d_type(pp->d_type_array[i]);
 				} else {
@@ -1328,8 +1330,8 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		for (i = 0; i < pi->N_links; i++)
 		{
 			actx->patch_array[i].used = actx->patch_array[i].changed = FALSE;
-			actx->patch_array[i].newl = pi->link_array[i].l;
-			actx->patch_array[i].newr = pi->link_array[i].r;
+			actx->patch_array[i].newl = pi->link_array[i].lw;
+			actx->patch_array[i].newr = pi->link_array[i].rw;
 			copy_full_link(&sublinkage->link[i], &(pi->link_array[i]));
 		}
 		fill_patch_array_DIS(actx, d_root, NULL);
@@ -1338,13 +1340,13 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		{
 			if (actx->patch_array[i].changed || actx->patch_array[i].used)
 			{
-				sublinkage->link[i]->l = actx->patch_array[i].newl;
-				sublinkage->link[i]->r = actx->patch_array[i].newr;
+				sublinkage->link[i]->lw = actx->patch_array[i].newl;
+				sublinkage->link[i]->rw = actx->patch_array[i].newr;
 			}
-			else if ((actx->dfs_root_word[pi->link_array[i].l] != -1) &&
-					   (actx->dfs_root_word[pi->link_array[i].r] != -1))
+			else if ((actx->dfs_root_word[pi->link_array[i].lw] != -1) &&
+					   (actx->dfs_root_word[pi->link_array[i].rw] != -1))
 			{
-				sublinkage->link[i]->l = -1;
+				sublinkage->link[i]->lw = UNUSED_CONNECTION;
 			}
 		}
 
@@ -1358,7 +1360,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 		N_thin_links = 0;
 		for (i = 0; i < pi->N_links; ++i)
 		{
-			if (sublinkage->link[i]->l == -1) continue;
+			if (sublinkage->link[i]->lw == UNUSED_CONNECTION) continue;
 			N_thin_links++;
 		}
 
@@ -1370,7 +1372,7 @@ void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 
 		for (i = 0, j = 0; i < pi->N_links; ++i)
 		{
-			if (sublinkage->link[i]->l == -1) continue;
+			if (sublinkage->link[i]->lw == UNUSED_CONNECTION) continue;
 			linkage->sublinkage[num_sublinkages].link[j++] =
 				excopy_link(sublinkage->link[i]);
 		}
