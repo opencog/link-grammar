@@ -16,4 +16,4 @@
 void init_fast_matcher(Sentence sent);
 void free_fast_matcher(Sentence sent);
 void put_match_list(match_context_t *, Match_node *);
-Match_node * form_match_list(Sentence, int, Connector *, int, Connector *, int);
+Match_node * form_match_list(match_context_t *, int, Connector *, int, Connector *, int);

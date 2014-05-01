@@ -436,7 +436,7 @@ static s64 do_count(Sentence sent, int lw, int rw,
 
 	for (w = start_word; w < end_word; w++)
 	{
-		m1 = m = form_match_list(sent, w, le, lw, re, rw);
+		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m != NULL; m = m->next)
 		{
 			unsigned int null_count_p1;
@@ -642,7 +642,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 
 	for (w=start_word; w < end_word; w++)
 	{
-		m1 = m = form_match_list(sent, w, le, lw, re, rw);
+		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next)
 		{
 			d = m->d;
@@ -724,7 +724,7 @@ static void mark_region(Sentence sent,
 
 	for (w=start_word; w < end_word; w++)
 	{
-		m1 = m = form_match_list(sent, w, le, lw, re, rw);
+		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next)
 		{
 			d = m->d;

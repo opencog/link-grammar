@@ -260,6 +260,8 @@ static Parse_set * parse_set(Sentence sent,
 	X_table_connector *xt;
 	s64 count;
 
+	match_context_t *mchxt = sent->match_ctxt;
+
 	assert(cost < 0x7fff, "parse_set() called with cost < 0.");
 
 	count = table_lookup(sent, lw, rw, le, re, cost);
@@ -338,7 +340,7 @@ static Parse_set * parse_set(Sentence sent,
 
 	for (w = start_word; w < end_word; w++)
 	{
-		m1 = m = form_match_list(sent, w, le, lw, re, rw);
+		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m!=NULL; m=m->next)
 		{
 			d = m->d;

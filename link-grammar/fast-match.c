@@ -273,13 +273,11 @@ void init_fast_matcher(Sentence sent)
  * to fix this.
  */
 Match_node * 
-form_match_list(Sentence sent, int w, 
+form_match_list(match_context_t *ctxt, int w, 
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
 	Match_node *ml, *mr, *mx, *my, * mz, *front, *free_later;
-
-	match_context_t *ctxt = sent->match_ctxt;
 
 	if (lc != NULL) {
 		ml = ctxt->l_table[w][connector_hash(lc) & (ctxt->l_table_size[w]-1)];
