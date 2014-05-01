@@ -679,7 +679,7 @@ static int region_valid(Sentence sent, match_context_t *mchxt,
  * this region itself is not valid, then this fact will be recorded
  * in the table, and nothing else happens.
  */
-static void mark_region(Sentence sent,
+static void mark_region(Sentence sent, match_context_t *mchxt,
                         int lw, int rw, Connector *le, Connector *re)
 {
 
@@ -689,7 +689,6 @@ static void mark_region(Sentence sent,
 	int w;
 	Match_node * m, *m1;
 	count_context_t *ctxt = sent->count_ctxt;
-	match_context_t *mchxt = sent->match_ctxt;
 
 	i = region_valid(sent, mchxt, lw, rw, le, re);
 	if ((i==0) || (i==2)) return;
@@ -701,10 +700,10 @@ static void mark_region(Sentence sent,
 		for (d = ctxt->local_sent[w].d; d != NULL; d = d->next) {
 			if ((d->left == NULL) && region_valid(sent, mchxt, w, rw, d->right, NULL)) {
 				d->marked = TRUE;
-				mark_region(sent, w, rw, d->right, NULL);
+				mark_region(sent, mchxt, w, rw, d->right, NULL);
 			}
 		}
-		mark_region(sent, w, rw, NULL, NULL);
+		mark_region(sent, mchxt, w, rw, NULL, NULL);
 		return;
 	}
 
@@ -744,34 +743,34 @@ static void mark_region(Sentence sent,
 			if (left_valid && region_valid(sent, mchxt, w, rw, d->right, re))
 			{
 				d->marked = TRUE;
-				mark_region(sent, w, rw, d->right, re);
-				mark_region(sent, lw, w, le->next, d->left->next);
-				if (le->multi) mark_region(sent, lw, w, le, d->left->next);
-				if (d->left->multi) mark_region(sent, lw, w, le->next, d->left);
-				if (le->multi && d->left->multi) mark_region(sent, lw, w, le, d->left);
+				mark_region(sent, mchxt, w, rw, d->right, re);
+				mark_region(sent, mchxt, lw, w, le->next, d->left->next);
+				if (le->multi) mark_region(sent, mchxt, lw, w, le, d->left->next);
+				if (d->left->multi) mark_region(sent, mchxt, lw, w, le->next, d->left);
+				if (le->multi && d->left->multi) mark_region(sent, mchxt, lw, w, le, d->left);
 			}
 
 			if (right_valid && region_valid(sent, mchxt, lw, w, le, d->left))
 			{
 				d->marked = TRUE;
-				mark_region(sent, lw, w, le, d->left);
-				mark_region(sent, w, rw, d->right->next,re->next);
-				if (d->right->multi) mark_region(sent, w,rw,d->right,re->next);
-				if (re->multi) mark_region(sent, w, rw, d->right->next, re);
-				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
+				mark_region(sent, mchxt, lw, w, le, d->left);
+				mark_region(sent, mchxt, w, rw, d->right->next,re->next);
+				if (d->right->multi) mark_region(sent, mchxt, w, rw, d->right, re->next);
+				if (re->multi) mark_region(sent, mchxt, w, rw, d->right->next, re);
+				if (d->right->multi && re->multi) mark_region(sent, mchxt, w, rw, d->right, re);
 			}
 
 			if (left_valid && right_valid)
 			{
 				d->marked = TRUE;
-				mark_region(sent, lw, w, le->next, d->left->next);
-				if (le->multi) mark_region(sent, lw, w, le, d->left->next);
-				if (d->left->multi) mark_region(sent, lw, w, le->next, d->left);
-				if (le->multi && d->left->multi) mark_region(sent, lw, w, le, d->left);
-				mark_region(sent, w, rw, d->right->next,re->next);
-				if (d->right->multi) mark_region(sent, w,rw,d->right,re->next);
-				if (re->multi) mark_region(sent, w, rw, d->right->next, re);
-				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
+				mark_region(sent, mchxt, lw, w, le->next, d->left->next);
+				if (le->multi) mark_region(sent, mchxt, lw, w, le, d->left->next);
+				if (d->left->multi) mark_region(sent, mchxt, lw, w, le->next, d->left);
+				if (le->multi && d->left->multi) mark_region(sent, mchxt, lw, w, le, d->left);
+				mark_region(sent, mchxt, w, rw, d->right->next,re->next);
+				if (d->right->multi) mark_region(sent, mchxt, w, rw, d->right, re->next);
+				if (re->multi) mark_region(sent, mchxt, w, rw, d->right->next, re);
+				if (d->right->multi && re->multi) mark_region(sent, mchxt, w, rw, d->right, re);
 			}
 		}
 		put_match_list(mchxt, m1);
@@ -811,7 +810,7 @@ void delete_unmarked_disjuncts(Sentence sent)
  * marking them all as irrelevant, and then marking the ones that
  * might be useable.  Finally, the unmarked ones are removed.
  */
-void conjunction_prune(Sentence sent, Parse_Options opts)
+void conjunction_prune(Sentence sent, match_context_t *mchxt, Parse_Options opts)
 {
 	Disjunct * d;
 	int w;
@@ -838,15 +837,15 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	/*
 	for (d = sent->word[0].d; d != NULL; d = d->next) {
 		if ((d->left == NULL) && region_valid(sent, mchxt, 0, sent->length, d->right, NULL)) {
-			mark_region(sent, 0, sent->length, d->right, NULL);
+			mark_region(sent, mchxt, 0, sent->length, d->right, NULL);
 			d->marked = TRUE;
 		}
 	}
-	mark_region(sent, 0, sent->length, NULL, NULL);
+	mark_region(sent, mchxt, 0, sent->length, NULL, NULL);
 	*/
 
 	if (ctxt->null_links) {
-		mark_region(sent, -1, sent->length, NULL, NULL);
+		mark_region(sent, mchxt, -1, sent->length, NULL, NULL);
 	} else {
 		for (w=0; w<sent->length; w++) {
 		  /* consider removing the words [0,w-1] from the beginning
@@ -854,7 +853,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 			if (ctxt->deletable[-1][w]) {
 				for (d = sent->word[w].d; d != NULL; d = d->next) {
 					if ((d->left == NULL) && region_valid(sent, mchxt, w, sent->length, d->right, NULL)) {
-						mark_region(sent, w, sent->length, d->right, NULL);
+						mark_region(sent, mchxt, w, sent->length, d->right, NULL);
 						d->marked = TRUE;
 					}
 				}
