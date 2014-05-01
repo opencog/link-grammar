@@ -12,12 +12,11 @@ use warnings;
 use BerkeleyDB;
 use Encode;
 use utf8;
-use vars qw( %rule %tail %add %root );
+use vars qw( %rule %tail %root );
 
-tie %rule, "BerkeleyDB::Hash", -Filename => "rule.db",  -Flags => DB_RDONLY  or die "cant";
-tie %tail, "BerkeleyDB::Hash", -Filename => "tail.db",  -Flags => DB_RDONLY  or die "cant";
-tie %add,  "BerkeleyDB::Hash", -Filename => "add.db",   -Flags => DB_RDONLY  or die "cant";
-tie %root, "BerkeleyDB::Hash", -Filename => "root.db",  -Flags => DB_RDONLY  or die "cant";
+tie %rule, "BerkeleyDB::Hash", -Filename => "rule.db",  -Flags => DB_RDONLY  or die "run ./make-hash-db.pl first!";
+tie %tail, "BerkeleyDB::Hash", -Filename => "tail.db",  -Flags => DB_RDONLY  or die "run ./make-hash-db.pl first!";
+tie %root, "BerkeleyDB::Hash", -Filename => "root.db",  -Flags => DB_RDONLY  or die "run ./make-hash-db.pl first!";
 
 sub lgtrim($) {
         my ($cur) = @_;
@@ -25,6 +24,8 @@ sub lgtrim($) {
         chomp;
         s/имя,//;
         s/фам,//;
+        s/Н,относ/Н/;
+        s/Н,вопр>/Н/;
         return $_;
 }
 
@@ -54,11 +55,11 @@ my $rHskipstemcon = ();
 foreach my $nw1 ( @nonwords2 ) {
     for(my $i=0; $i <= length $nw1; $i++) {
         my ($left, $right) = (substr($nw1,0,$i), substr($nw1,$i));
-        if(my $d = $root{encode("KOI8-R",$left)}) {
+        if(my $d = $root{ek($left)}) {
             my @num = split(/:/, $d);
             shift @num;
             foreach my $num(@num){
-                if(my $c = decode("KOI8-R",$tail{encode("KOI8-R","$num:$right")})) {
+                if(my $c = dk($tail{ek("$num:$right")})) {
                     my $alcon = "LL".alnum($num)."+";
                     $rHskipstemcon->{$left}->{$num}++;
                     $rHskipstemcon->{"=".$right}->{$num}++;
@@ -77,23 +78,25 @@ while (my ($stem, $val) = each(%root)){
    $nums_for_empty_stem{$_}++ foreach @nums;
 }
 
+print scalar(keys %rule) . "  n rules\n";
+
 my $tcnt=0; my %uniqon = (); my %lefties = (); my %righties = (); my %suftags = ();
 my %alltags = (); my $rHse = {};
 
 while (my ($numsuf, $modestr) = each(%tail)){
-    $numsuf = decode("KOI8-R", $numsuf); 
-    #print "[".eu($numsuf)."][".eu(decode("KOI8-R",$modestr))."]\n"; # [439:дившегося][ÕÂÕÇÕÐ]
+    $numsuf = dk($numsuf); 
 
     chomp $numsuf;
     my ($lcon, $suf) = split(/:/, $numsuf);
     $suf = "=".$suf;
     $uniqon{$lcon} += 1; # 439
 
-    my @modeli = unpack "A2" x (length($modestr)/2), $modestr;
+    my @modeli = unpack "A2" x (length($modestr)/2), dk($modestr);
     my @res = ();
     foreach my $mode ( @modeli ) { # 
-       my $pos = decode("KOI8-R", $rule{$mode});
+       my $pos = defined $rule{ek($mode)} ? dk($rule{ek($mode)}) : "U";
        chomp $pos; 
+       print eu($mode) . " U\n" if ( $pos eq "U" );
        #print eu($pos)."\n"; # Г,св,пе,прч,прш,дст,ед,мр,тв
        # copied straight from TestLem.pm
        if ( $pos =~ /мр-жр/ ) {
@@ -102,6 +105,7 @@ while (my ($numsuf, $modestr) = each(%tail)){
        } else {
            push @res, $pos;
        }
+       #print eu($pos) . "\n";
     }
 
     # copied straight from TestLem.pm
@@ -152,6 +156,7 @@ while (my ($numsuf, $modestr) = each(%tail)){
 
        my $rcontor = "<morph-" . $pos . ">";
        $righties{$suftag} .= $rcontor . " ";
+       #print eu($suftag)." .=\t$rcontor\n";
 
        $suftags{$suftag} = 1;
     }
@@ -167,6 +172,8 @@ print SUF "% Tagged Suffix Table\n";
 print SUF "%\n";
 print SUF "% Total number of suffixes = $tcnt\n";
 print SUF "% Total number of tagged suffixes = $scnt\n";
+print "% Total number of suffixes = $tcnt\n";
+print "% Total number of tagged suffixes = $scnt\n";
 
 my $un = scalar(keys %uniqon);
 print SUF "% Number of unique stem-to-suffix connectors = $un\n";
@@ -177,12 +184,12 @@ my @ssuftagli = sort @suftagli;
 
 my %common=();
 my $nsf = 0;
-foreach my $suftag(@ssuftagli) {
-    my $left = defined $lefties{$suftag} ? $lefties{$suftag} : "";
+foreach my $suftag ( @ssuftagli ) {
+    my $left  = defined $lefties{$suftag}  ? $lefties{$suftag}  : "";
     my $right = defined $righties{$suftag} ? $righties{$suftag} : "";
 
-    chomp $left;
-    chomp $right;
+    chomp $left; chomp $right;
+    #print eu("$suftag\t[$left][$right]\n");
     
     my @rightli = split / /, $right;
     my %runiq = map { $_ => 1 } @rightli;
@@ -194,7 +201,8 @@ foreach my $suftag(@ssuftagli) {
     my @leftli = split / /, $left;
     my @sleftli = sort @leftli;
 
-    next if ($#sleftli eq -1 and $suftag =~ m/^\=/);
+    next if ( $#sleftli eq -1 and $suftag =~ m/^\=/ );
+    next if ( $suftag =~ m/^\=\./ );
 
     # Compute the connection string....
     # suftag:=а.cmv constr:(LLDTX- or LLDTY-)
@@ -208,9 +216,12 @@ foreach my $suftag(@ssuftagli) {
 }
 
 print SUF "%\n% Total number of suftags = $nsf\n%\n";
+print "% Total number of suftags = $nsf\n";
 
 $nsf = scalar(keys %common);
 print SUF "%\n% Total number of entries = $nsf\n%\n";
+print "% Total number of entries = $nsf\n";
+
 
 # reverse the thin, so that we can alphabetize it.
 my %rev = ();
@@ -226,11 +237,6 @@ foreach my $sufs( sort keys %rev ) {
 }
 close(SUF);
 
-sub eu {
-    my $s = shift;
-    return encode("UTF-8", $s);
-}
-
 # mkmorph
 
 my %cat2 = (); my %uni = (); my %ord = (); my %cmnt = ();
@@ -243,10 +249,10 @@ while (<FILE>) {
    next unless /^\%/;
 
    # Save the inline comments for later re-printing.
-   if (!/morph/) { $comment .= decode("utf-8",$_); }
+   if (!/morph/) { $comment .= du($_); }
 
    next unless /morph/;
-   my $str = decode("utf-8",$_);
+   my $str = du($_);
    chomp $str;
 
    #% morph{"ПРЕДК,нст"} ="<глагол-пе-пр-sub> &  (<глагол-pr> or <макро-глагол-pr>)";
@@ -282,6 +288,7 @@ EOF
 
 my $mcnt = scalar( keys %cat2 );
 print MRF "%\n% Total number of rules = $mcnt\n%\n";
+print "% Total number of rules = $mcnt\n";
 
 my $rcnt=1; my %posex = ();
 foreach my $cnt ( sort { $a <=> $b } values %uni ) {
@@ -306,19 +313,25 @@ foreach my $tag ( sort keys %alltags ) {
 print MRF "   : XXX+;\n";
 close(MRF);
 
+system("mkdir ./words") if ( ! -d "./words");
+
 # mkroot mkstem
 
 $rcnt = 0; my %uniq = (); %rev = ();
 
 while (my ($stem, $val) = each(%root)){
-   chomp $val; $val =~ s/^://;
+   chomp $val;
+   $stem = dk($stem);
+   $val = dk($val);
+   $val =~ s/^://;
+
    my @nums = split(/:/, $val);
-   foreach my $num(@nums){
+   foreach my $num (@nums){
        $uniq{$num} = 1;
    }
    $rcnt++;
    $rev{$val} .= " " . $stem;
-#   print"duuude $stem is $val\n";
+   #print eu("duuude $stem is $val\n");
 }
 # There are 135775 stems according to this...
 # and something like 2997 connectors! WoW! why so many connectors ???
@@ -333,11 +346,14 @@ print RTS "%\n% Stems (roots)\n%\n% Total number of stems = $rcnt\n";
 print RTS "% Number of stem connectors = $un\n";
 print RTS "% Number of stem classes = $revcnt\n";
 print RTS "%\n";
+print "% Total number of stems = $rcnt\n";
+print "% Number of stem connectors = $un\n";
+print "% Number of stem classes = $revcnt\n";
 
 # put back in an order where we can sort alphabetically
 my %fwd= ();
 while (my ($nums, $stems) = each(%rev)){
-    $stems = decode("KOI8-R", $stems);
+    #print eu("$stems\t\t$nums\n");
     chomp $stems; $stems =~ s/^\s+|\s+$//g;
     # вист грипп блеф кейф кикс флирт 16:1383
     $fwd{$stems} = $nums;
@@ -352,11 +368,12 @@ foreach my $stems ( sort keys %fwd ) {
     next if ( $stems eq "" ); # skip nums_for_empty_stem
     next unless defined $fwd{$stems};
     my @words = sort split(/\s+/, $stems);
-    my @nums = split /:/, $fwd{$stems};
-    next unless $#nums > -1;
+    my @paradigms = split /:/, $fwd{$stems};
+    next unless $#paradigms > -1;
+    #print eu("$stems\n\t\t$fwd{$stems}\n");
 
     my %emptysuflinks = ();
-    foreach my $snum ( @nums ) {
+    foreach my $snum ( @paradigms ) {
         if ( defined $rHse->{$snum} ) {
             foreach my $key ( keys %{$rHse->{$snum}} ) {
                 next unless defined $posex{$key};
@@ -387,7 +404,7 @@ foreach my $stems ( sort keys %fwd ) {
         $filecnt++;
     }
 
-    my @links = map { "LL".alnum($_)."+" }  @nums;
+    my @links = map { "LL".alnum($_)."+" }  @paradigms;
     print RTS "  ".eu(join(" or ", @links)).";\n\n";
     $revcnt ++;
 
@@ -412,6 +429,13 @@ foreach my $stems ( sort keys %fwd ) {
 }
 # print "% duude revers=$revcnt\n";
 close(RTS);
+
+if ( -d "../words" ) {
+    system("cp *.dict ../");
+    system("rm -f ../words/words.*");
+    system("cp words/words.* ../words/");
+}
+
 
 sub parse
 {
@@ -471,5 +495,21 @@ sub parse
         $res .= "f" if $s =~ /,фам(,|$)/; # фамилия
         $res .= "n" if $s =~ /,имя(,|$)/; # имя 
         return $res;
+}
+
+sub eu {
+    return encode("utf-8",shift);
+}
+
+sub du {
+    return decode("utf-8",shift);
+}
+
+sub ek {
+    return encode("koi8-r",shift);
+}
+
+sub dk {
+    return decode("koi8-r",shift);
 }
 
