@@ -292,10 +292,10 @@ find_table_pointer(count_context_t *ctxt,
 }
 
 /** returns the count for this quintuple if there, -1 otherwise */
-s64 table_lookup(Sentence sent, 
+s64 table_lookup(count_context_t * ctxt, 
                  int lw, int rw, Connector *le, Connector *re, unsigned int cost)
 {
-	Table_connector *t = find_table_pointer(sent->count_ctxt, lw, rw, le, re, cost);
+	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
 
 	if (t == NULL) return -1; else return t->count;
 }
@@ -320,11 +320,11 @@ static void table_update(count_context_t *ctxt, int lw, int rw,
  * Returns 0 if and only if this entry is in the hash table 
  * with a count value of 0.
  */
-static s64 pseudocount(Sentence sent,
+static s64 pseudocount(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re, unsigned int cost)
 {
 	s64 count;
-	count = table_lookup(sent, lw, rw, le, re, cost);
+	count = table_lookup(ctxt, lw, rw, le, re, cost);
 	if (count == 0) return 0; else return 1;
 }
 
@@ -459,18 +459,18 @@ static s64 do_count(Sentence sent, int lw, int rw,
 				rightcount = leftcount = 0;
 				if (Lmatch)
 				{
-					leftcount = pseudocount(sent, lw, w, le->next, d->left->next, lcost);
-					if (le->multi) leftcount += pseudocount(sent, lw, w, le, d->left->next, lcost);
-					if (d->left->multi) leftcount += pseudocount(sent, lw, w, le->next, d->left, lcost);
-					if (le->multi && d->left->multi) leftcount += pseudocount(sent, lw, w, le, d->left, lcost);
+					leftcount = pseudocount(ctxt, lw, w, le->next, d->left->next, lcost);
+					if (le->multi) leftcount += pseudocount(ctxt, lw, w, le, d->left->next, lcost);
+					if (d->left->multi) leftcount += pseudocount(ctxt, lw, w, le->next, d->left, lcost);
+					if (le->multi && d->left->multi) leftcount += pseudocount(ctxt, lw, w, le, d->left, lcost);
 				}
 
 				if (Rmatch)
 				{
-					rightcount = pseudocount(sent, w, rw, d->right->next, re->next, rcost);
-					if (d->right->multi) rightcount += pseudocount(sent, w,rw,d->right,re->next, rcost);
-					if (re->multi) rightcount += pseudocount(sent, w, rw, d->right->next, re, rcost);
-					if (d->right->multi && re->multi) rightcount += pseudocount(sent, w, rw, d->right, re, rcost);
+					rightcount = pseudocount(ctxt, w, rw, d->right->next, re->next, rcost);
+					if (d->right->multi) rightcount += pseudocount(ctxt, w,rw,d->right,re->next, rcost);
+					if (re->multi) rightcount += pseudocount(ctxt, w, rw, d->right->next, re, rcost);
+					if (d->right->multi && re->multi) rightcount += pseudocount(ctxt, w, rw, d->right, re, rcost);
 				}
 
 				/* total number where links are used on both sides */
@@ -478,11 +478,11 @@ static s64 do_count(Sentence sent, int lw, int rw,
 
 				if (leftcount > 0) {
 					/* evaluate using the left match, but not the right */
-					pseudototal += leftcount * pseudocount(sent, w, rw, d->right, re, rcost);
+					pseudototal += leftcount * pseudocount(ctxt, w, rw, d->right, re, rcost);
 				}
 				if ((le == NULL) && (rightcount > 0)) {
 					/* evaluate using the right match, but not the left */
-					pseudototal += rightcount * pseudocount(sent, lw, w, le, d->left, lcost);
+					pseudototal += rightcount * pseudocount(ctxt, lw, w, le, d->left, lcost);
 				}
 
 				/* now pseudototal is 0 implies that we know that the true total is 0 */
@@ -619,7 +619,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 	count_context_t *ctxt = sent->count_ctxt;
 	match_context_t *mchxt = sent->match_ctxt;
 
-	i = table_lookup(sent, lw, rw, le, re, 0);
+	i = table_lookup(ctxt, lw, rw, le, re, 0);
 	if (i >= 0) return i;
 
 	if ((le == NULL) && (re == NULL) && ctxt->deletable[lw][rw]) {

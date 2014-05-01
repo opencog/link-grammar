@@ -261,9 +261,10 @@ Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
 	X_table_connector *xt;
 	s64 count;
 
+	count_context_t * ctxt = sent->count_ctxt;
 	assert(cost < 0x7fff, "mk_parse_set() called with cost < 0.");
 
-	count = table_lookup(sent, lw, rw, le, re, cost);
+	count = table_lookup(ctxt, lw, rw, le, re, cost);
 
 	/*
 	  assert(count >= 0, "mk_parse_set() called on params that were not in the table.");
