@@ -14,8 +14,6 @@
 % But first ... some simple sentences that work fine with the old
 % link-grammar, but cause trouble for the new WV and CV links. 
 I am having trouble with it.
-A historic new law was passed
-*How tired are you that John is coming
 
 
 %
@@ -744,6 +742,35 @@ There was a great degree of haste in the proceedings.
 
 plenty of others thought so too
 
+% ===================================================================
+% Subject verb inversion
+% Examples from wikipedia
+% Currently, these all fail very badly.
+
+under the tree sat Jim
+*Under the tree sat he.
+
+beside the river sat Jim
+beside the river ran Jim
+Along the vines lay Jim
+Beside Sally ran Jim
+
+Down the stairs came the dog
+*Down the stairs came it.
+
+A good gift is flowers
+*A good gift is they
+
+% Locative inversion
+In the corner lay a lamp.
+*In the corner lay it.
+
+% Direeective inversion
+Into the room came two students.
+*Into the room came they.
+Out of the tree fell the squirrel.
+*Out of the tree fell it.
+
 
 % ===================================================================
 % assorted mis-classified verbs.
@@ -770,12 +797,6 @@ There it was, just as I had said.
 As mentioned before, we are creating a business service.
 
 
-
-% Buggy opening clauses
-Some days, the trains run on time.
-Some of the time, I really  hate it.
-The rest of the time, we goof off.
-Part of the year, we goof off. 
 
 % up as prep vs. up as verb
 He forced it up the stairs.
@@ -1121,6 +1142,7 @@ It has begun in Cincinatti; it won't be long now.
 It really began in Chicago in the spring.
 It really began in Chicago last spring.
 
+% =================================================
 % subject-verb number agreement
 *She are going shopping.
 
@@ -2802,6 +2824,12 @@ That I did not know!
 This I did not know!
 This, I did not know!
 
+
+% Buggy opening clauses
+Some days, the trains run on time.
+Some of the time, I really  hate it.
+The rest of the time, we goof off.
+Part of the year, we goof off. 
 
 % Opening idioms
 % some of these have a phantom-that e.g. "I'm telling you that ..."
