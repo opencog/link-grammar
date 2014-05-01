@@ -341,6 +341,7 @@ static s64 do_count(Sentence sent, int lw, int rw,
 	Table_connector *t;
 
 	count_context_t *ctxt = sent->count_ctxt;
+	match_context_t *mchxt = sent->match_ctxt;
 
 	if (null_count < 0) return 0;  /* can this ever happen?? */
 
@@ -517,13 +518,13 @@ static s64 do_count(Sentence sent, int lw, int rw,
 					{
 						total = INT_MAX;
 						t->count = total;
-						put_match_list(sent->match_ctxt, m1);
+						put_match_list(mchxt, m1);
 						return total;
 					}
 				}
 			}
 		}
-		put_match_list(sent->match_ctxt, m1);
+		put_match_list(mchxt, m1);
 	}
 	t->count = total;
 	return total;
@@ -616,6 +617,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 	Match_node * m, *m1;
 
 	count_context_t *ctxt = sent->count_ctxt;
+	match_context_t *mchxt = sent->match_ctxt;
 
 	i = table_lookup(sent, lw, rw, le, re, 0);
 	if (i >= 0) return i;
@@ -666,7 +668,7 @@ static int region_valid(Sentence sent, int lw, int rw, Connector *le, Connector 
 				break;
 			}
 		}
-		put_match_list(sent->match_ctxt, m1);
+		put_match_list(mchxt, m1);
 		if (found != 0) break;
 	}
 	table_store(ctxt, lw, rw, le, re, 0, found);
@@ -690,6 +692,7 @@ static void mark_region(Sentence sent,
 	int w;
 	Match_node * m, *m1;
 	count_context_t *ctxt = sent->count_ctxt;
+	match_context_t *mchxt = sent->match_ctxt;
 
 	i = region_valid(sent, lw, rw, le, re);
 	if ((i==0) || (i==2)) return;
@@ -774,7 +777,7 @@ static void mark_region(Sentence sent,
 				if (d->right->multi && re->multi) mark_region(sent, w, rw, d->right, re);
 			}
 		}
-		put_match_list(sent->match_ctxt, m1);
+		put_match_list(mchxt, m1);
 	}
 }
 #endif /* USE_FAT_LINKAGES */
