@@ -76,7 +76,7 @@ void build_deletable(Sentence sent, int has_conjunction)
 	sent->dptr = (char **) xalloc((sent->length + 1) * sizeof(char *));
 	sent->deletable = sent->dptr + 1;  /* we need to be able to access the [-1] position in this array */
 
-	for (i = -1; i<sent->length; i++)
+	for (i = -1; i< (int) sent->length; i++)
 	{
 		sent->deletable[i] = (char *) xalloc((sent->length+1) * sizeof(char));
 		/* the +1 is to allow us to have the info for the last word
