@@ -428,7 +428,7 @@ Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
 				}
 			}
 		}
-		put_match_list(sent->match_ctxt, m1);
+		put_match_list(mchxt, m1);
 	}
 	xt->set->current = xt->set->first;
 	return xt->set;
@@ -484,10 +484,10 @@ static Boolean verify_set(Parse_info pi)
  * This routine returns TRUE iff overflowed occurred.
  */
 
-int build_parse_set(Sentence sent, unsigned int cost, Parse_Options opts)
+int build_parse_set(Sentence sent, match_context_t *mchxt,
+                    unsigned int cost, Parse_Options opts)
 {
 	Parse_set * whole_set;
-	match_context_t *mchxt = sent->match_ctxt;
 
 	whole_set =
 		mk_parse_set(sent, mchxt, NULL, NULL, -1, sent->length, NULL, NULL, cost+1,
