@@ -326,7 +326,9 @@ static s64 pseudocount(count_context_t * ctxt,
 	if (count == 0) return 0; else return 1;
 }
 
-static s64 do_count(Sentence sent, match_context_t *mchxt, int lw, int rw,
+static s64 do_count(match_context_t *mchxt, 
+                    count_context_t *ctxt,
+                    int lw, int rw,
                     Connector *le, Connector *re, int null_count)
 {
 	s64 total;
@@ -337,8 +339,6 @@ static s64 do_count(Sentence sent, match_context_t *mchxt, int lw, int rw,
 
 	Match_node * m, *m1;
 	Table_connector *t;
-
-	count_context_t *ctxt = sent->count_ctxt;
 
 	if (null_count < 0) return 0;  /* can this ever happen?? */
 
@@ -402,10 +402,10 @@ static s64 do_count(Sentence sent, match_context_t *mchxt, int lw, int rw,
 			{
 				if (d->left == NULL)
 				{
-					total += do_count(sent, mchxt, w, rw, d->right, NULL, null_count-1);
+					total += do_count(mchxt, ctxt, w, rw, d->right, NULL, null_count-1);
 				}
 			}
-			total += do_count(sent, mchxt, w, rw, NULL, NULL, null_count-1);
+			total += do_count(mchxt, ctxt, w, rw, NULL, NULL, null_count-1);
 			t->count = total;
 		}
 		return t->count;
@@ -486,28 +486,28 @@ static s64 do_count(Sentence sent, match_context_t *mchxt, int lw, int rw,
 				if (pseudototal != 0) {
 					rightcount = leftcount = 0;
 					if (Lmatch) {
-						leftcount = do_count(sent, mchxt, lw, w, le->next, d->left->next, lcost);
-						if (le->multi) leftcount += do_count(sent, mchxt, lw, w, le, d->left->next, lcost);
-						if (d->left->multi) leftcount += do_count(sent, mchxt, lw, w, le->next, d->left, lcost);
-						if (le->multi && d->left->multi) leftcount += do_count(sent, mchxt, lw, w, le, d->left, lcost);
+						leftcount = do_count(mchxt, ctxt, lw, w, le->next, d->left->next, lcost);
+						if (le->multi) leftcount += do_count(mchxt, ctxt, lw, w, le, d->left->next, lcost);
+						if (d->left->multi) leftcount += do_count(mchxt, ctxt, lw, w, le->next, d->left, lcost);
+						if (le->multi && d->left->multi) leftcount += do_count(mchxt, ctxt, lw, w, le, d->left, lcost);
 					}
 
 					if (Rmatch) {
-						rightcount = do_count(sent, mchxt, w, rw, d->right->next, re->next, rcost);
-						if (d->right->multi) rightcount += do_count(sent, mchxt, w, rw, d->right,re->next, rcost);
-						if (re->multi) rightcount += do_count(sent, mchxt, w, rw, d->right->next, re, rcost);
-						if (d->right->multi && re->multi) rightcount += do_count(sent, mchxt, w, rw, d->right, re, rcost);
+						rightcount = do_count(mchxt, ctxt, w, rw, d->right->next, re->next, rcost);
+						if (d->right->multi) rightcount += do_count(mchxt, ctxt, w, rw, d->right,re->next, rcost);
+						if (re->multi) rightcount += do_count(mchxt, ctxt, w, rw, d->right->next, re, rcost);
+						if (d->right->multi && re->multi) rightcount += do_count(mchxt, ctxt, w, rw, d->right, re, rcost);
 					}
 
 					total += leftcount*rightcount;  /* total number where links are used on both sides */
 
 					if (leftcount > 0) {
 						/* evaluate using the left match, but not the right */
-						total += leftcount * do_count(sent, mchxt, w, rw, d->right, re, rcost);
+						total += leftcount * do_count(mchxt, ctxt, w, rw, d->right, re, rcost);
 					}
 					if ((le == NULL) && (rightcount > 0)) {
 						/* evaluate using the right match, but not the left */
-						total += rightcount * do_count(sent, mchxt, lw, w, le, d->left, lcost);
+						total += rightcount * do_count(mchxt, ctxt, lw, w, le, d->left, lcost);
 					}
 
 					/* Sigh. Overflows can and do occur, esp for the ANY language. */
@@ -550,7 +550,7 @@ s64 do_parse(Sentence sent, match_context_t *mchxt, int null_count, Parse_Option
 	ctxt->null_block = opts->null_block;
 	ctxt->islands_ok = opts->islands_ok;
 
-	total = do_count(sent, mchxt, -1, sent->length, NULL, NULL, null_count+1);
+	total = do_count(mchxt, ctxt, -1, sent->length, NULL, NULL, null_count+1);
 
 	ctxt->local_sent = NULL;
 	ctxt->current_resources = NULL;
