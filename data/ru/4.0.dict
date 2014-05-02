@@ -1086,6 +1086,9 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 % suffixes
 #include "/ru/suffix.dict";
 
+% unknown-word morphology endings
+#include "/ru/morph-ends.dict";
+
 % With the following line in the dictionary, the parser will simply
 % skip over (null-link) unknown words. If you remove it, the parser
 % will output an error for any unknown words.

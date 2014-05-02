@@ -1,3 +1,9 @@
+%
+% Unknown-word morphology endings.  This is used together with 4.0.regex
+% to guess how unknown words should be treated, based only on their suffix.
+%
+% Copyright (c) 2014, Sergei Protasov
+%
 <MORPH-END-оряя>:	<morph-Г,нс,пе,дст,дпр,нст>;
 <MORPH-END-еряя>:	<morph-Г,нс,пе,дст,дпр,нст>;
 <MORPH-END-шняя>:	<morph-П,жр,ед,им>;

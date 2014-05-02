@@ -1,5 +1,6 @@
 Version 5.0.9 (XXX 2014)
- * Updated Russian dictionaries from Sergi Protasov
+ * Updated Russian dictionaries from Sergi Protasov.
+ * Added morphology-based unknown-word handling for Russian, from Sergi.
  * Fix up fat-linkage code, which was recently broken...
 
 Version 5.0.8 (30 April 2014)
