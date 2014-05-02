@@ -117,7 +117,11 @@ public:
     if (parse_options_get_all_short_connectors(_opts)) {
       c->length_limit = short_len;
     }
+#ifdef USE_FAT_LINKAGES
     else if (conset == NULL || match_in_connector_set(_sent->count_ctxt, conset, c, '+')) {
+#else
+    else if (conset == NULL || match_in_connector_set(NULL, conset, c, '+')) {
+#endif
       c->length_limit = UNLIMITED_LEN;
     } else {
       c->length_limit = short_len;
