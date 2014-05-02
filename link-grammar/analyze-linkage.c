@@ -1049,7 +1049,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 			else continue;
 		}
 
-		pp = post_process(postprocessor, opts, sent, sublinkage, TRUE);
+		pp = do_post_process(postprocessor, opts, sent, sublinkage, TRUE);
 
 		if (pp==NULL) {
 			if (postprocessor != NULL) li.N_violations = 1;
@@ -1140,7 +1140,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	 * For this to work, however, you have to call "build_digraph"
 	 * first (as in analyze_fat_linkage), and then "free_digraph".
 	 */
-	pp = post_process(postprocessor, opts, sent, sublinkage, TRUE);
+	pp = do_post_process(postprocessor, opts, sent, sublinkage, TRUE);
 
 	memset(&li, 0, sizeof(li));
 	li.N_violations = 0;

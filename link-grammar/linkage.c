@@ -917,7 +917,7 @@ void linkage_post_process(Linkage linkage, Postprocessor * postprocessor)
 		else
 #endif /* USE_FAT_LINKAGES */
 		{
-			pp = post_process(postprocessor, opts, sent, subl, false);
+			pp = do_post_process(postprocessor, opts, sent, subl, false);
 			/* This can return NULL, for example if there is no
 			   post-processor */
 		}

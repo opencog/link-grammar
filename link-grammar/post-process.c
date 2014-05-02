@@ -305,11 +305,6 @@ static void alloc_pp_node(Postprocessor *pp)
 		pp->pp_node->d_type_array[i] = NULL;
 }
 
-static void reset_pp_node(Postprocessor *pp)
-{
-	free_pp_node(pp);
-	alloc_pp_node(pp);
-}
 
 /************************ rule application *******************************/
 
@@ -1016,7 +1011,7 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
  * NB: sublinkage->link[i]->l=-1 means that this connector
  * is to be ignored
  */
-PP_node *post_process(Postprocessor *pp, Parse_Options opts,
+PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 							Sentence sent, Sublinkage *sublinkage, int cleanup)
 {
 	const char *msg;
@@ -1029,13 +1024,14 @@ PP_node *post_process(Postprocessor *pp, Parse_Options opts,
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
 	 * it out after every call, without relying on the user to do so. */
-	reset_pp_node(pp);
+	free_pp_node(pp);
+	alloc_pp_node(pp);
 
 	/* The first time we see a sentence, prune the rules which we won't be
 	 * needing during postprocessing the linkages of this sentence */
-	if (sent->q_pruned_rules==FALSE && sent->length >= opts->twopass_length)
+	if (sent->q_pruned_rules == FALSE && sent->length >= opts->twopass_length)
 		prune_irrelevant_rules(pp);
-	sent->q_pruned_rules=TRUE;
+	sent->q_pruned_rules = TRUE;
 
 	switch (internal_process(pp, sublinkage, &msg))
 	{
