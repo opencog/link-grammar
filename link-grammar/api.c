@@ -995,16 +995,14 @@ void sentence_delete(Sentence sent)
 	if (sent->parse_info) free_parse_info(sent->parse_info);
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
+
 #ifdef USE_FAT_LINKAGES
 	free_deletable(sent);
 	free_effective_dist(sent);
-#endif /* USE_FAT_LINKAGES */
-
-	free_count(sent);
-#ifdef USE_FAT_LINKAGES
 	free_analyze(sent);
 	if (sent->is_conjunction) xfree(sent->is_conjunction, sizeof(char)*sent->length);
 #endif /* USE_FAT_LINKAGES */
+
 	global_rand_state = sent->rand_state;
 	xfree((char *) sent, sizeof(struct Sentence_s));
 }
@@ -1371,12 +1369,13 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
 	match_context_t * mchxt;
+	count_context_t * ctxt;
 
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
 
 	mchxt = alloc_fast_matcher(sent);
-	init_count(sent);
+	ctxt = alloc_count_context(sent->length);
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before
@@ -1389,7 +1388,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		s64 total;
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
-		total = do_parse(sent, mchxt, sent->count_ctxt, sent->null_count, opts);
+		total = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
 
 		if (verbosity > 1)
 		{
@@ -1404,7 +1403,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		post_process_linkages(sent, mchxt, sent->count_ctxt, opts);
+		post_process_linkages(sent, mchxt, ctxt, opts);
 		sane_morphism(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 
@@ -1413,7 +1412,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		if (PARSE_NUM_OVERFLOW < total) break;
 	}
 
-	free_count(sent);
+	free_count_context(ctxt);
 	free_fast_matcher(mchxt);
 }
 

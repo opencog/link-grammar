@@ -869,20 +869,18 @@ void conjunction_prune(Sentence sent, count_context_t *ctxt, Parse_Options opts)
 }
 #endif /* USE_FAT_LINKAGES */
 
-void init_count(Sentence sent)
+/* sent_length is used only as a hint for the hash table size ... */
+count_context_t * alloc_count_context(size_t sent_length)
 {
-	if (NULL == sent->count_ctxt)
-		sent->count_ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
-	memset(sent->count_ctxt, 0, sizeof(count_context_t));
+	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
+	memset(ctxt, 0, sizeof(count_context_t));
 
-	init_table(sent->count_ctxt, sent->length);
+	init_table(ctxt, sent_length);
+	return ctxt;
 }
 
-void free_count(Sentence sent)
+void free_count_context(count_context_t *ctxt)
 {
-	if (NULL == sent->count_ctxt) return;
-
-	free_table(sent->count_ctxt);
-	xfree(sent->count_ctxt, sizeof(count_context_t));
-	sent->count_ctxt = NULL;
+	free_table(ctxt);
+	xfree(ctxt, sizeof(count_context_t));
 }

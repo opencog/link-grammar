@@ -326,6 +326,7 @@ int sentence_contains_conjunction(Sentence sent)
 void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
 	size_t i;
+	count_context_t* ctxt;
 #ifdef USE_FAT_LINKAGES
 	bool has_conjunction;
 #endif /* USE_FAT_LINKAGES */
@@ -368,10 +369,10 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	 */
 	build_deletable(sent, has_conjunction);
 	build_effective_dist(sent, has_conjunction);
-#endif /* USE_FAT_LINKAGES */
-	init_count(sent);
 
-#ifdef USE_FAT_LINKAGES
+	ctxt = alloc_count_context(sent->length);
+	sent->count_ctxt = ctxt;
+
 	if (!has_conjunction)
 	{
 		pp_and_power_prune(sent, RUTHLESS, opts);
@@ -386,7 +387,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		}
 		*/
 		/* already reported -- print_time(opts, "Finished gentle power pruning"); */
-		conjunction_prune(sent, sent->count_ctxt, opts);
+		conjunction_prune(sent, ctxt, opts);
 		if (verbosity > 2) {
 			printf("\nAfter conjunction pruning:\n");
 			print_disjunct_counts(sent);
@@ -399,7 +400,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 			printf("After conjunctions, disjuncts counts:\n");
 			print_disjunct_counts(sent);
 		}
-		set_connector_length_limits(sent, sent->count_ctxt, opts);
+		set_connector_length_limits(sent, ctxt, opts);
 		/* have to do this again cause of the
 		 * new fat connectors and disjuncts */
 
@@ -421,11 +422,10 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 		power_prune(sent, RUTHLESS, opts);
 	}
+	free_count(ctxt);
 #else
 	pp_and_power_prune(sent, RUTHLESS, opts);
 #endif /* USE_FAT_LINKAGES */
-
-	free_count(sent);
 
 	/*
 	if (verbosity > 2) {
