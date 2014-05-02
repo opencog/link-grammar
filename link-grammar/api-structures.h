@@ -271,10 +271,8 @@ struct Sentence_s
 	/* parser internal/private state */
 #ifdef USE_FAT_LINKAGES
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
-#endif /* USE_FAT_LINKAGES */
 	count_context_t * count_ctxt; /* private state info used for counting */
 
-#ifdef USE_FAT_LINKAGES
 	int    num_thin_linkages;   /* valid linkages which are not fat */
 	/* Obsolete fat-linkage state */
 	char * is_conjunction;      /* Array of flags, one per word; set to

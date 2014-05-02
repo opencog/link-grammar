@@ -267,6 +267,7 @@ set_connector_list_length_limit(count_context_t * ctxt,
 	}
 }
 
+/* XXX FIXME -- only fat links need to count_context_t argument! */
 static void 
 set_connector_length_limits(Sentence sent, count_context_t * ctxt,
                             Parse_Options opts)
@@ -359,10 +360,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	{
 		has_conjunction = FALSE;
 	}
-#endif /* USE_FAT_LINKAGES */
 
-	set_connector_length_limits(sent, sent->count_ctxt, opts);
-#ifdef USE_FAT_LINKAGES
 	/* The deletable region depends on whether null links are in use;
 	 * with null_links everything is deletable. Thus, this processing
 	 * cannot be done earlier than here.
@@ -371,6 +369,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	build_effective_dist(sent, has_conjunction);
 
 	ctxt = alloc_count_context(sent->length);
+	set_connector_length_limits(sent, ctxt, opts);
 	sent->count_ctxt = ctxt;
 
 	if (!has_conjunction)
@@ -424,6 +423,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	free_count(ctxt);
 #else
+	set_connector_length_limits(sent, NULL, opts);
 	pp_and_power_prune(sent, RUTHLESS, opts);
 #endif /* USE_FAT_LINKAGES */
 
