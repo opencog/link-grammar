@@ -42,13 +42,13 @@ struct count_context_s
 #endif /* USE_FAT_LINKAGES */
 	Word *  local_sent;
 	int     null_block;
-	Boolean islands_ok;
-	Boolean null_links;
+	bool    islands_ok;
+	bool    null_links;
 	int     table_size;
 	int     log2_table_size;
 	Table_connector ** table;
 	Resources current_resources;
-	Boolean exhausted;
+	bool    exhausted;
 	int     checktimer;  /* Avoid excess system calls */
 };
 

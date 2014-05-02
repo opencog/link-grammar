@@ -267,12 +267,13 @@ set_connector_list_length_limit(count_context_t * ctxt,
 	}
 }
 
-static void set_connector_length_limits(Sentence sent, Parse_Options opts)
+static void 
+set_connector_length_limits(Sentence sent, count_context_t * ctxt,
+                            Parse_Options opts)
 {
 	size_t i;
 	size_t len;
 	Disjunct *d;
-	count_context_t * ctxt = sent->count_ctxt;
 	Connector_set * ucs = sent->dict->unlimited_connector_set;
 
 	len = opts->short_length;
@@ -359,12 +360,12 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 #endif /* USE_FAT_LINKAGES */
 
+	set_connector_length_limits(sent, sent->count_ctxt, opts);
+#ifdef USE_FAT_LINKAGES
 	/* The deletable region depends on whether null links are in use;
 	 * with null_links everything is deletable. Thus, this processing
 	 * cannot be done earlier than here.
 	 */
-	set_connector_length_limits(sent, opts);
-#ifdef USE_FAT_LINKAGES
 	build_deletable(sent, has_conjunction);
 	build_effective_dist(sent, has_conjunction);
 #endif /* USE_FAT_LINKAGES */
