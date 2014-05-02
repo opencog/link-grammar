@@ -1557,11 +1557,11 @@ bool SATEncoderConjunctionFreeSentences::extract_links(Parse_info pi)
  *******************************************************************************/
 
 // Check if a connector is andable
-static int is_andable(Sentence sent, Connector* c, char dir) {
-        /* if no set, then everything is considered andable */
-        if (sent->dict->andable_connector_set == NULL)
-          return TRUE;
-        return match_in_connector_set(sent, sent->dict->andable_connector_set, c, dir);
+static bool is_andable(count_context_t* ctxt, Connector_set *acs, Connector* c, char dir)
+{
+   /* if no set, then everything is considered andable */
+   if (acs == NULL) return true;
+   return match_in_connector_set(ctxt, acs, c, dir);
 }
 
 void SATEncoderConjunctiveSentences::handle_null_expression(int w)
@@ -1611,7 +1611,9 @@ void SATEncoderConjunctiveSentences::generate_satisfaction_for_connector(int wi,
   conn.label = NORMAL_LABEL;
   conn.priority = THIN_priority;
   conn.string = Ci;
-  bool andable_opposite = is_andable(_sent, &conn, dir == '+' ? '-' : '+');
+  bool andable_opposite = is_andable(_sent->count_ctxt,
+    _sent->dict->andable_connector_set,
+    &conn, dir == '+' ? '-' : '+');
 
   std::vector<int> _w_;
   for (int wj = low; wj < hi; wj++) {
@@ -2447,7 +2449,9 @@ bool SATEncoderConjunctiveSentences::link_cw_possible_with_fld(int wi, int pi, c
   conn.label = NORMAL_LABEL;
   conn.priority = THIN_priority;
   conn.string = Ci;
-  bool andable_opposite = is_andable(_sent, &conn, dir == '+' ? '-' : '+');
+  bool andable_opposite = is_andable(_sent->count_ctxt,
+    _sent->dict->andable_connector_set, 
+    &conn, dir == '+' ? '-' : '+');
 
   if (!andable_opposite) {
     return false;
@@ -2633,7 +2637,6 @@ void SATEncoderConjunctiveSentences::generate_linked_definitions() {
 
 void SATEncoderConjunctiveSentences::get_satisfied_link_top_cw_connectors(int word, int top_word,
                                                                           std::vector<int>& link_top_cw_vars) {
-  static int tab = 0;
 
   // Check if top_word acts as an ordinary or as a special connective words
   char str[MAX_VARIABLE_NAME];
@@ -2690,8 +2693,8 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
       _solver->model[_variables->fat_link(var->right_word, var->left_word)] == l_True;
     if (fl_lr || fl_rl) {
       // a fat link
-      pi->link_array[current_link].l = var->left_word;
-      pi->link_array[current_link].r = var->right_word;
+      pi->link_array[current_link].lw = var->left_word;
+      pi->link_array[current_link].rw = var->right_word;
 
       Connector* connector;
 
@@ -2740,8 +2743,8 @@ bool SATEncoderConjunctiveSentences::extract_links(Parse_info pi)
         right_string = intersect_strings(_sent, right_string, *ri);
       }
 
-      pi->link_array[current_link].l = var->left_word;
-      pi->link_array[current_link].r = var->right_word;
+      pi->link_array[current_link].lw = var->left_word;
+      pi->link_array[current_link].rw = var->right_word;
 
       Connector* connector;
 
@@ -2775,10 +2778,8 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
 #ifdef USE_FAT_LINKAGES
   build_deletable(sent, 0);
   build_effective_dist(sent, 0);
-#endif /* USE_FAT_LINKAGES */
-  init_count(sent);
-#ifdef USE_FAT_LINKAGES
-  count_set_effective_distance(sent);
+  sent->count_ctxt = alloc_count_context(sent->length);
+  count_set_effective_distance(sent->count_ctxt, sent);
 
   bool conjunction = FALSE;
   if (parse_options_get_use_fat_links(opts)) {

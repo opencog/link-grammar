@@ -117,7 +117,7 @@ public:
     if (parse_options_get_all_short_connectors(_opts)) {
       c->length_limit = short_len;
     }
-    else if (conset == NULL || match_in_connector_set(_sent, conset, c, '+')) {
+    else if (conset == NULL || match_in_connector_set(_sent->count_ctxt, conset, c, '+')) {
       c->length_limit = UNLIMITED_LEN;
     } else {
       c->length_limit = short_len;
@@ -135,7 +135,7 @@ public:
         throw std::string("Unknown connector direction: ") + dir;
       }
     } else {
-      return ::do_match(_sent, &cntr1, &cntr2, w1, w2);
+      return ::do_match(_sent->count_ctxt, &cntr1, &cntr2, w1, w2);
     }
   }
 
