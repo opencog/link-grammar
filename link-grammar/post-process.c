@@ -423,8 +423,11 @@ apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *ru
 {
 	size_t i,j,count;
 	for (i=0; i<sublinkage->num_links; i++) {
-		// if (sublinkage->link[i]->lw == SIZE_MAX) continue;
+#ifdef USE_FAT_LINKAGES
+		if (sublinkage->link[i]->lw == SIZE_MAX) continue;
+#else
 		assert (sublinkage->link[i]->lw != SIZE_MAX);
+#endif
 		if (post_process_match(rule->selector,sublinkage->link[i]->link_name)) break;
 	}
 	if (i == sublinkage->num_links) return TRUE;
@@ -432,8 +435,11 @@ apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *ru
 	/* selector link of rule appears in sentence */
 	count = 0;
 	for (j=0; j<sublinkage->num_links && count==0; j++) {
-		// if (sublinkage->link[j]->lw == SIZE_MAX) continue;
+#ifdef USE_FAT_LINKAGES
+		if (sublinkage->link[j]->lw == SIZE_MAX) continue;
+#else
 		assert (sublinkage->link[j]->lw != SIZE_MAX);
+#endif
 		if (string_in_list(sublinkage->link[j]->link_name, rule->link_array))
 		{
 			count=1;
@@ -575,8 +581,11 @@ static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 
 	for (link=0; link<sublinkage->num_links; link++)
 	{
-		// if (sublinkage->link[link]->lw == SIZE_MAX) continue;
+#ifdef USE_FAT_LINKAGES
+		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
+#else
 		assert (sublinkage->link[link]->lw != SIZE_MAX);
+#endif
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, sublinkage->link[link]->link_name))
 		{
 			lol = (List_o_links *) xalloc(sizeof(List_o_links));
@@ -706,8 +715,11 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 	pp->pp_data.N_domains = 0;
 
 	for (link = 0; link<sublinkage->num_links; link++) {
-		// if (sublinkage->link[link]->lw == SIZE_MAX) continue;
+#ifdef USE_FAT_LINKAGES
+		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
+#else
 		assert (sublinkage->link[link]->lw != SIZE_MAX);
+#endif
 		s = sublinkage->link[link]->link_name;
 
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
@@ -800,7 +812,11 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 		pp->pp_data.domain_array[d].child = NULL;
 	}
 	for (link=0; link < sublinkage->num_links; link++) {
+#ifdef USE_FAT_LINKAGES
+		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
+#else
 		assert (sublinkage->link[link]->lw != SIZE_MAX);
+#endif
 		for (d=0; d<pp->pp_data.N_domains; d++) {
 			if (link_in_domain(link, &pp->pp_data.domain_array[d])) {
 				dtl = (DTreeLeaf *) xalloc(sizeof(DTreeLeaf));
