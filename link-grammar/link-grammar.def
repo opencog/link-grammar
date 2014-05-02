@@ -192,7 +192,7 @@ count_disjuncts
 print_one_disjunct
 build_disjuncts_for_X_node
 sentence_contains_conjunction
-init_count
+alloc_count_context
 parse_info_new
 free_parse_info
 connector_new
