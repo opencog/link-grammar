@@ -1008,6 +1008,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 
 	compute_link_names(sent);
 
+	accum.d_type_array = xalloc(pi->N_links * sizeof(D_type_list *));
 	for (i=0; i<pi->N_links; i++) accum.d_type_array[i] = NULL;
 
 	/* loop through all the sub linkages */
@@ -1087,6 +1088,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	for (i=0; i<pi->N_links; ++i) {
 		free_d_type(accum.d_type_array[i]);
 	}
+	xfree(accum.d_type_array, pi->N_links * sizeof(D_type_list *);
 
 	/* if (display_on && (li.N_violations != 0) &&
 	   (verbosity > 3) && should_print_messages)

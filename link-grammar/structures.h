@@ -247,8 +247,9 @@ struct D_type_list_struct
 
 struct PP_node_struct
 {
-    D_type_list *d_type_array[MAX_LINKS];
-    const char *violation;
+	size_t dtsz;
+	D_type_list **d_type_array;
+	const char *violation;
 };
 
 /* Davy added these */

@@ -231,6 +231,16 @@ static bool is_connected(Postprocessor *pp)
 	return TRUE;
 }
 
+static void chk_d_type(PP_node* ppn, size_t idx)
+{
+	if (ppn->dtsz <= idx)
+	{
+		size_t oldsz = ppn->dtsz;
+		ppn->dtsz = 2 * ppn->dtsz + 10;
+		ppn->d_type_array = xrealloc(ppn->d_type_array, 
+			oldsz * sizeof(D_type_list*), ppn->dtsz * sizeof(D_type_list*));
+	}
+}
 
 static void build_type_array(Postprocessor *pp)
 {
@@ -241,10 +251,11 @@ static void build_type_array(Postprocessor *pp)
 	{
 		for (lol=pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
+			chk_d_type(pp->pp_node, lol->link);
 			dtl = (D_type_list *) xalloc(sizeof(D_type_list));
 			dtl->next = pp->pp_node->d_type_array[lol->link];
-			pp->pp_node->d_type_array[lol->link] = dtl;
 			dtl->type = pp->pp_data.domain_array[d].type;
+			pp->pp_node->d_type_array[lol->link] = dtl;
 		}
 	}
 }
@@ -282,27 +293,39 @@ D_type_list * copy_d_type(const D_type_list * dtl)
 /** free the pp node from last time */
 static void free_pp_node(Postprocessor *pp)
 {
-	int i;
+	size_t i;
 	PP_node *ppn = pp->pp_node;
 	pp->pp_node = NULL;
 	if (ppn == NULL) return;
 
-	for (i=0; i<MAX_LINKS; i++)
+	for (i=0; i<ppn->dtsz; i++)
 	{
 		free_d_type(ppn->d_type_array[i]);
 	}
+	xfree(ppn->d_type_array, ppn->dtsz * sizeof(D_type_list *));
 	xfree((void*) ppn, sizeof(PP_node));
 }
-
 
 /** set up a fresh pp_node for later use */
 static void alloc_pp_node(Postprocessor *pp)
 {
-	int i;
-	pp->pp_node=(PP_node *) xalloc(sizeof(PP_node));
-	pp->pp_node->violation = NULL;
-	for (i=0; i<MAX_LINKS; i++)
-		pp->pp_node->d_type_array[i] = NULL;
+	PP_node *ppn = (PP_node *) xalloc(sizeof(PP_node));
+
+	/* highly unlikely that the number of links will ever exceed this */
+	ppn->dtsz = 2 * pp->pp_data.length;
+	ppn->d_type_array = (D_type_list **) xalloc (ppn->dtsz * sizeof(D_type_list*));
+	pp->pp_node = ppn;
+}
+
+static void clear_pp_node(Postprocessor *pp)
+{
+	size_t i;
+	PP_node *ppn = pp->pp_node;
+	if (NULL == ppn) { alloc_pp_node(pp); ppn = pp->pp_node; }
+
+	ppn->violation = NULL;
+	for (i=0; i<ppn->dtsz; i++)
+		ppn->d_type_array[i] = NULL;
 }
 
 
@@ -1024,8 +1047,7 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 	/* In the name of responsible memory management, we retain a copy of the
 	 * returned data structure pp_node as a field in pp, so that we can clear
 	 * it out after every call, without relying on the user to do so. */
-	free_pp_node(pp);
-	alloc_pp_node(pp);
+	clear_pp_node(pp);
 
 	/* The first time we see a sentence, prune the rules which we won't be
 	 * needing during postprocessing the linkages of this sentence */
