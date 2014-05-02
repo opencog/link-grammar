@@ -121,7 +121,7 @@ static bool check_domain_nesting(Postprocessor *pp, int num_links)
 {
 	Domain * d1, * d2;
 	int counts[4];
-	char mark[MAX_LINKS];
+	char mark[MAX_NUM_LINKS];
 	List_o_links * lol;
 	int i;
 	for (d1=pp->pp_data.domain_array; d1 < pp->pp_data.domain_array + pp->pp_data.N_domains; d1++) {
@@ -742,48 +742,47 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
 		if (pp_linkset_match(pp->knowledge->domain_starter_links, s))
-			{
-		setup_domain_array(pp, pp->pp_data.N_domains, s, link);
-				if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
-			add_link_to_domain(pp, link);
-		depth_first_search(pp,sublinkage,sublinkage->link[link]->rw,
+		{
+			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
+				add_link_to_domain(pp, link);
+			depth_first_search(pp,sublinkage,sublinkage->link[link]->rw,
 							 sublinkage->link[link]->lw, link);
 
-		pp->pp_data.N_domains++;
-				assert(pp->pp_data.N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
-			}
-		else {
-			if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links,s))
+			pp->pp_data.N_domains++;
+			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS, "raise value of PP_MAX_DOMAINS");
+		}
+		else
+		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links,s))
 		{
 			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp, link);
 			bad_depth_first_search(pp,sublinkage,sublinkage->link[link]->rw,
-								 sublinkage->link[link]->lw, link);
+							 sublinkage->link[link]->lw, link);
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
-			else
-		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links,s))
-			{
-				setup_domain_array(pp, pp->pp_data.N_domains, s, link);
-				/* do not add the starter link to its urfl_only domain */
-				d_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
-								 sublinkage->link[link]->lw,
-								 sublinkage->link[link]->rw, link);
-				pp->pp_data.N_domains++;
-				assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
-			}
 		else
-			if (pp_linkset_match(pp->knowledge->left_domain_starter_links, s))
-				{
-					setup_domain_array(pp, pp->pp_data.N_domains, s, link);
-					/* do not add the starter link to a left domain */
-					left_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
-									 sublinkage->link[link]->rw, link);
-					pp->pp_data.N_domains++;
-					assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
-				}
+		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links,s))
+		{
+			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			/* do not add the starter link to its urfl_only domain */
+			d_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
+							 sublinkage->link[link]->lw,
+							 sublinkage->link[link]->rw, link);
+			pp->pp_data.N_domains++;
+			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
+		}
+		else
+		if (pp_linkset_match(pp->knowledge->left_domain_starter_links, s))
+		{
+			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
+			/* do not add the starter link to a left domain */
+			left_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
+							 sublinkage->link[link]->rw, link);
+			pp->pp_data.N_domains++;
+			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
 	}
 
