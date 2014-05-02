@@ -421,7 +421,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 		power_prune(sent, RUTHLESS, opts);
 	}
-	free_count(ctxt);
+	free_count_context(ctxt);
 #else
 	set_connector_length_limits(sent, NULL, opts);
 	pp_and_power_prune(sent, RUTHLESS, opts);
