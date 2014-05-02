@@ -18,7 +18,7 @@ s64  table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigne
 int  do_match(count_context_t *, Connector *a, Connector *b, int wa, int wb);
 s64  do_parse(Sentence, match_context_t*, count_context_t*, int mincost, Parse_Options);
 #ifdef USE_FAT_LINKAGES
-void conjunction_prune(Sentence sent, Parse_Options opts);
+void conjunction_prune(Sentence sent, count_context_t*, Parse_Options opts);
 void count_set_effective_distance(Sentence sent);
 void count_unset_effective_distance(Sentence sent);
 #endif /* USE_FAT_LINKAGES */

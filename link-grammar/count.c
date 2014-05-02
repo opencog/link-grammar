@@ -70,20 +70,18 @@ static void free_table(count_context_t *ctxt)
 	ctxt->table_size = 0;
 }
 
-static void init_table(Sentence sent)
+static void init_table(count_context_t *ctxt, size_t sent_len)
 {
 	unsigned int shift;
 	/* A piecewise exponential function determines the size of the
 	 * hash table. Probably should make use of the actual number of
 	 * disjuncts, rather than just the number of words.
 	 */
-	count_context_t *ctxt = sent->count_ctxt;
-
 	if (ctxt->table) free_table(ctxt);
 
-	if (sent->length >= 10)
+	if (sent_len >= 10)
 	{
-		shift = 12 + (sent->length) / 6 ; 
+		shift = 12 + (sent_len) / 6 ; 
 	} 
 	else
 	{
@@ -100,14 +98,14 @@ static void init_table(Sentence sent)
 }
 
 #ifdef USE_FAT_LINKAGES
-void count_set_effective_distance(Sentence sent)
+void count_set_effective_distance(count_context_t* ctxt, Sentence sent)
 {
-	sent->count_ctxt->effective_dist = sent->effective_dist;
+	ctxt->effective_dist = sent->effective_dist;
 }
 
-void count_unset_effective_distance(Sentence sent)
+void count_unset_effective_distance(count_context_t* ctxt)
 {
-	sent->count_ctxt->effective_dist = NULL;
+	ctxt->effective_dist = NULL;
 }
 
 /*
@@ -546,7 +544,7 @@ s64 do_parse(Sentence sent,
 	ctxt->checktimer = 0;
 	ctxt->local_sent = sent->word;
 #ifdef USE_FAT_LINKAGES
-	count_set_effective_distance(sent);
+	count_set_effective_distance(ctxt, sent);
 	ctxt->deletable = sent->deletable;
 #endif /* USE_FAT_LINKAGES */
 	ctxt->null_block = opts->null_block;
@@ -809,15 +807,14 @@ void delete_unmarked_disjuncts(Sentence sent)
  * marking them all as irrelevant, and then marking the ones that
  * might be useable.  Finally, the unmarked ones are removed.
  */
-void conjunction_prune(Sentence sent, Parse_Options opts)
+void conjunction_prune(Sentence sent, count_context_t *ctxt, Parse_Options opts)
 {
 	Disjunct * d;
 	int w;
-	count_context_t *ctxt = sent->count_ctxt;
 
 	ctxt->current_resources = opts->resources;
 	ctxt->deletable = sent->deletable;
-	count_set_effective_distance(sent);
+	count_set_effective_distance(ctxt, sent);
 
 	/* We begin by unmarking all disjuncts.  This would not be necessary if
 	   whenever we created a disjunct we cleared its marked field.
@@ -868,7 +865,7 @@ void conjunction_prune(Sentence sent, Parse_Options opts)
 	ctxt->current_resources = NULL;
 	ctxt->checktimer = 0;
 	ctxt->deletable = NULL;
-	count_unset_effective_distance(sent);
+	count_unset_effective_distance(ctxt);
 }
 #endif /* USE_FAT_LINKAGES */
 
@@ -878,7 +875,7 @@ void init_count(Sentence sent)
 		sent->count_ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(sent->count_ctxt, 0, sizeof(count_context_t));
 
-	init_table(sent);
+	init_table(sent->count_ctxt, sent->length);
 }
 
 void free_count(Sentence sent)
