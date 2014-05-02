@@ -381,11 +381,9 @@ static inline int and_hash_disjunct(Disjunct *d)
  * Check here that the connectors are from some small set.
  * This will disallow, for example "the and their dog ran".
  */
-static int is_appropriate(Sentence sent, Disjunct * d)
+static bool is_appropriate(count_context_t *ctxt, Connector_set *acs, Disjunct * d)
 {
 	Connector * c;
-	count_context_t * ctxt = sent->count_ctxt;
-	Connector_set * acs = sent->dict->andable_connector_set;
 
 	if (acs == NULL) return TRUE;
 	/* if no set, then everything is considered andable */
@@ -611,12 +609,15 @@ static void put_disjunct_into_table(Sentence sent, Disjunct *d)
 static void extract_all_fat_links(Sentence sent, Disjunct * d)
 {
 	Connector * cl, * cr, *tl, *tr;
+	Connector_set * andablecs = sent->dict->andable_connector_set;
+	count_context_t *ctxt = sent->count_ctxt;
+
 	tl = d->left;
 	d->left = NULL;
 	for (cr = d->right; cr!=NULL; cr = cr->next) {
 		tr = cr->next;
 		cr->next = NULL;
-		if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
+		if (is_appropriate(ctxt, andablecs, d)) put_disjunct_into_table(sent, d);
 		cr->next = tr;
 	}
 	d->left = tl;
@@ -626,7 +627,7 @@ static void extract_all_fat_links(Sentence sent, Disjunct * d)
 	for (cl = d->left; cl!=NULL; cl = cl->next) {
 		tl = cl->next;
 		cl->next = NULL;
-		if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
+		if (is_appropriate(ctxt, andablecs, d)) put_disjunct_into_table(sent, d);
 		cl->next = tl;
 	}
 	d->right = tr;
@@ -637,7 +638,7 @@ static void extract_all_fat_links(Sentence sent, Disjunct * d)
 			tr = cr->next;
 			cl->next = cr->next = NULL;
 
-			if (is_appropriate(sent, d)) put_disjunct_into_table(sent, d);
+			if (is_appropriate(ctxt, andablecs, d)) put_disjunct_into_table(sent, d);
 
 			cl->next = tl;
 			cr->next = tr;
@@ -810,6 +811,9 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
 {
 	Connector * cl, * cr, *tl, *tr, *wc, work_connector;
 	Disjunct *d1, *wd, work_disjunct, *d_list;
+	Connector_set * andablecs = sent->dict->andable_connector_set;
+	count_context_t *ctxt = sent->count_ctxt;
+
 	if (d==NULL) return NULL;
 	wd = &work_disjunct;
 	wc = init_connector(&work_connector);
@@ -820,7 +824,7 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
 	for (cr = d->right; cr!=NULL; cr = cr->next) {
 		tr = cr->next;
 		cr->next = NULL;
-		if (is_appropriate(sent, d)) {
+		if (is_appropriate(ctxt, andablecs, d)) {
 			connector_for_disjunct(sent, d, wc);
 			wd->left = tl;
 			wd->right = wc;
@@ -844,7 +848,7 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
 	for (cl = d->left; cl!=NULL; cl = cl->next) {
 		tl = cl->next;
 		cl->next = NULL;
-		if (is_appropriate(sent, d)) {
+		if (is_appropriate(ctxt, andablecs, d)) {
 			connector_for_disjunct(sent, d, wc);
 			wd->left = tl;
 			wd->right = wc;
@@ -868,7 +872,7 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
 			tl = cl->next;
 			tr = cr->next;
 			cl->next = cr->next = NULL;
-			if (is_appropriate(sent, d)) {
+			if (is_appropriate(ctxt, andablecs, d)) {
 				connector_for_disjunct(sent, d, wc);
 				wd->left = tl;
 				wd->right = wc;
