@@ -349,9 +349,9 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
+#ifdef USE_FAT_LINKAGES
 	sent->null_links = (opts->min_null_count > 0);
 
-#ifdef USE_FAT_LINKAGES
 	if (opts->use_fat_links)
 	{
 		has_conjunction = sentence_contains_conjunction(sent);

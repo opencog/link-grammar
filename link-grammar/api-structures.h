@@ -258,7 +258,6 @@ struct Sentence_s
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
 	size_t num_valid_linkages;  /* number with no pp violations */
-	bool   null_links;          /* null links allowed */
 	size_t null_count;          /* number of null links in linkages */
 	Parse_info     parse_info;  /* set of parses for the sentence */
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
@@ -268,11 +267,12 @@ struct Sentence_s
 	int    t_start;             /* start word of the current token sequence */
 	int    t_count;             /* word count in the current token sequence */
 
-	/* parser internal/private state */
 #ifdef USE_FAT_LINKAGES
+	/* parser internal/private state */
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
 	count_context_t * count_ctxt; /* private state info used for counting */
 
+	bool   null_links;          /* null links allowed */
 	int    num_thin_linkages;   /* valid linkages which are not fat */
 	/* Obsolete fat-linkage state */
 	char * is_conjunction;      /* Array of flags, one per word; set to
