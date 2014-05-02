@@ -635,6 +635,7 @@ static void free_post_processing(Sentence sent)
 }
 
 static void post_process_linkages(Sentence sent, match_context_t* mchxt, 
+                                  count_context_t* ctxt,
                                   Parse_Options opts)
 {
 	int *indices;
@@ -651,7 +652,7 @@ static void post_process_linkages(Sentence sent, match_context_t* mchxt,
 
 	free_post_processing(sent);
 
-	overflowed = build_parse_set(sent, mchxt, sent->null_count, opts);
+	overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
 	if (overflowed && (1 < opts->verbosity))
@@ -1403,7 +1404,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		post_process_linkages(sent, mchxt, opts);
+		post_process_linkages(sent, mchxt, sent->count_ctxt, opts);
 		sane_morphism(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 

@@ -399,7 +399,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 			printf("After conjunctions, disjuncts counts:\n");
 			print_disjunct_counts(sent);
 		}
-		set_connector_length_limits(sent, opts);
+		set_connector_length_limits(sent, sent->count_ctxt, opts);
 		/* have to do this again cause of the
 		 * new fat connectors and disjuncts */
 
