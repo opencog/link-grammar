@@ -112,6 +112,10 @@ Parse_info parse_info_new(int nwords)
 	pi = (Parse_info) xalloc(sizeof(struct Parse_info_struct));
 	memset(pi, 0, sizeof(struct Parse_info_struct));
 	pi->N_words = nwords;
+
+	/* very unlikely that more than this many links will be needed...*/
+	pi->lasz = 2 * nwords;
+	pi->link_array = (Link*) xalloc(pi->lasz * sizeof(Link));
 	pi->parse_set = NULL;
 
 	pi->chosen_disjuncts = (Disjunct **) xalloc(nwords * sizeof(Disjunct *));
@@ -153,6 +157,8 @@ void free_parse_info(Parse_info pi)
 	unsigned int i;
 	int len;
 	X_table_connector *t, *x;
+
+	xfree(pi->link_array, pi->lasz * sizeof(Link));
 
 	len = pi->N_words;
 	xfree(pi->chosen_disjuncts, len * sizeof(Disjunct *));
@@ -512,7 +518,12 @@ static void initialize_links(Parse_info pi)
 
 static void issue_link(Parse_info pi, Disjunct * ld, Disjunct * rd, Link link)
 {
-	assert(pi->N_links <= MAX_LINKS-1, "Too many links");
+	if (pi->lasz <= pi->N_links)
+	{
+		size_t oldsz = pi->lasz;
+		pi->lasz = 2 * pi->lasz + 10;
+		pi->link_array = xrealloc(pi->link_array, oldsz * sizeof(Link), pi->lasz * sizeof(Link));
+	}
 	pi->link_array[pi->N_links] = link;
 	pi->N_links++;
 
