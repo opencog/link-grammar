@@ -1388,7 +1388,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		s64 total;
 		if (resources_exhausted(opts->resources)) break;
 		sent->null_count = nl;
-		total = do_parse(sent, mchxt, sent->null_count, opts);
+		total = do_parse(sent, mchxt, sent->count_ctxt, sent->null_count, opts);
 
 		if (verbosity > 1)
 		{

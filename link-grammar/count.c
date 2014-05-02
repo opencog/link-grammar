@@ -534,10 +534,12 @@ static s64 do_count(match_context_t *mchxt,
  * initialized, and is freed later. The "null_count" here is the
  * number of words that are allowed to have no links to them.
  */
-s64 do_parse(Sentence sent, match_context_t *mchxt, int null_count, Parse_Options opts)
+s64 do_parse(Sentence sent,
+             match_context_t *mchxt,
+             count_context_t *ctxt,
+             int null_count, Parse_Options opts)
 {
 	s64 total;
-	count_context_t *ctxt = sent->count_ctxt;
 
 	ctxt->current_resources = opts->resources;
 	ctxt->exhausted = resources_exhausted(ctxt->current_resources);
