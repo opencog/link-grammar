@@ -2,6 +2,7 @@
  %                                                                           %
  %  Copyright (C) 2005, 2006 Sampo Pyysalo, Sophie Aubin                     %
  %  Copyright (C) 2009, 2012 Linas Vepstas                                   %
+ %  Copyright (C) 2014 Sergey Protasov                                       %
  %  See file "LICENSE" for information about commercial use of this system   %
  %                                                                           %
  %***************************************************************************%
@@ -14,8 +15,6 @@
 % be attempted in the order in which the regexs appear in this file,
 % and only the first match will be used.
 %
-% XXXXXXXX TODO: the russian dictionary currently does not use this!
-
 % Allows at most two colons in hour-muinute-second HH:MM:SS expressions
 % Allows at most two digits between colons
 % HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?(AM|PM|am|pm)?$/
