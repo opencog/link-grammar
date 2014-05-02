@@ -807,12 +807,12 @@ static void connector_for_disjunct(Sentence sent, Disjunct * d, Connector * c)
  * fat link, in two possible positions.  Does not effect d.
  * The cost of d is inherited by all of the disjuncts in the result.
  */
-static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
+static Disjunct * build_fat_link_substitutions(Sentence sent,
+                         count_context_t* ctxt, Disjunct *d)
 {
 	Connector * cl, * cr, *tl, *tr, *wc, work_connector;
 	Disjunct *d1, *wd, work_disjunct, *d_list;
 	Connector_set * andablecs = sent->dict->andable_connector_set;
-	count_context_t *ctxt = sent->count_ctxt;
 
 	if (d==NULL) return NULL;
 	wd = &work_disjunct;
@@ -900,12 +900,11 @@ static Disjunct * build_fat_link_substitutions(Sentence sent, Disjunct *d)
  */
 Disjunct * explode_disjunct_list(Sentence sent, Disjunct *d)
 {
-   Disjunct *d1;
-
-   d1 = NULL;
+   Disjunct *d1 = NULL;
+	count_context_t * ctxt = sent->count_ctxt;
 
    for (; d!=NULL; d = d->next) {
-	   d1 = catenate_disjuncts(d1, build_fat_link_substitutions(sent, d));
+	   d1 = catenate_disjuncts(d1, build_fat_link_substitutions(sent, ctxt, d));
    }
    return d1;
 }
@@ -964,12 +963,13 @@ Disjunct * build_AND_disjunct_list(Sentence sent, const char * s)
 	int lab;
 	Disjunct *d_list, *d1, *d3, *d, *d_copy;
 	Connector *c1, *c2, *c3;
+	count_context_t *ctxt = sent->count_ctxt;
 
 	d_list = NULL;  /* where we put the list we're building */
 
 	for (lab = 0; lab < sent->and_data.LT_size; lab++) {
 		for (d = sent->and_data.label_table[lab]; d!=NULL; d=d->next) {
-			d1 = build_fat_link_substitutions(sent, d);
+			d1 = build_fat_link_substitutions(sent, ctxt, d);
 			d_copy = copy_disjunct(d);  /* also include the thing itself! */
 			d_copy->next = d1;
 			d1 = d_copy;

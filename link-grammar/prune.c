@@ -324,7 +324,7 @@ void fat_prune(Sentence sent)
 	Disjunct fake_head, *d, *d1;
 
 	/* XXX why is this here ?? */
-	count_set_effective_distance(sent);
+	count_set_effective_distance(sent->count_ctxt, sent);
 
 	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
 	while (1)
@@ -1511,7 +1511,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	pc->power_prune_mode = mode;
 	pc->deletable = sent->deletable;
 	pc->effective_dist = sent->effective_dist;
-	count_set_effective_distance(sent);
+	count_set_effective_distance(sent->count_ctxt, sent);
 #endif /* USE_FAT_LINKAGES */
 
 	pt = power_table_new(sent);
