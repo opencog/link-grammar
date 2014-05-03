@@ -124,7 +124,6 @@ Parse_Options parse_options_create(void)
 	po->short_length = 10;
 	po->all_short = false;
 	po->twopass_length = 30;
-	po->max_sentence_length = MAX_SENTENCE-3;
 	po->repeatable_rand = true;
 	po->resources = resources_create();
 	po->display_walls = false;
@@ -378,14 +377,6 @@ void parse_options_set_max_memory(Parse_Options opts, int dummy) {
 
 int parse_options_get_max_memory(Parse_Options opts) {
 	return opts->resources->max_memory;
-}
-
-void parse_options_set_max_sentence_length(Parse_Options opts, int dummy) {
-	opts->max_sentence_length = dummy;
-}
-
-int parse_options_get_max_sentence_length(Parse_Options opts) {
-	return opts->max_sentence_length;
 }
 
 void parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool dummy) {

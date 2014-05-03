@@ -46,7 +46,6 @@ static struct
 	int screen_width;
 	int display_on;
 	ConstituentDisplayStyle display_constituents;
-	int max_sentence_length;
 	int display_postscript;
 	int display_bad;
 	int display_links;
@@ -86,7 +85,6 @@ static Switch default_switches[] =
    {"islands-ok", Bool, "Use of null-linked islands",      &local.islands_ok},
    {"limit",      Int,  "The maximum linkages processed",  &local.linkage_limit},
    {"links",      Bool, "Display of complete link data",   &local.display_links},
-   {"max-length", Int,  "Maximum sentence length",         &local.max_sentence_length},
    {"memory",     Int,  "Max memory allowed",              &local.memory},
    {"morphology", Bool, "Display word morphology",         &local.display_morphology},
    {"null",       Bool, "Allow null links",                &local.allow_null},
@@ -435,7 +433,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 #endif /* USE_FAT_LINKAGES */
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.use_viterbi = parse_options_get_use_viterbi(opts);
-	local.max_sentence_length = parse_options_get_max_sentence_length(opts);
 
 	local.screen_width = copts->screen_width;
 	local.echo_on = copts->echo_on;
@@ -482,7 +479,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 #endif
 	parse_options_set_use_viterbi(opts, local.use_viterbi);
 	parse_options_set_display_morphology(opts, local.display_morphology);
-	parse_options_set_max_sentence_length(opts, local.max_sentence_length);
 
 	copts->screen_width = local.screen_width;
 	copts->echo_on = local.echo_on;

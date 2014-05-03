@@ -75,7 +75,6 @@ struct Parse_Options_s
 	                          will be generated (default=FALSE) */
 	bool use_cluster_disjuncts; /* if true, atttempt using a broader list of disjuncts */
 	size_t twopass_length; /* min length for two-pass post processing */
-	size_t max_sentence_length;
 	size_t short_length;   /* Links that are limited in length can be
 	                        * no longer than this.  Default = 6 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */

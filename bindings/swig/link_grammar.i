@@ -68,8 +68,6 @@ void parse_options_set_short_length(Parse_Options opts, int short_length);
 int  parse_options_get_short_length(Parse_Options opts);
 void parse_options_set_max_memory(Parse_Options  opts, int mem);
 int  parse_options_get_max_memory(Parse_Options opts);
-void parse_options_set_max_sentence_length(Parse_Options  opts, int len);
-int  parse_options_get_max_sentence_length(Parse_Options opts);
 void parse_options_set_max_parse_time(Parse_Options  opts, int secs);
 int  parse_options_get_max_parse_time(Parse_Options opts);
 void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm);

@@ -130,10 +130,6 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_max_memory(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_max_sentence_length(Parse_Options  opts, int len);
-link_public_api(int)
-     parse_options_get_max_sentence_length(Parse_Options opts);
-link_public_api(void)
      parse_options_set_max_parse_time(Parse_Options  opts, int secs);
 link_public_api(int)
      parse_options_get_max_parse_time(Parse_Options opts);

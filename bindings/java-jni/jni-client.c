@@ -144,7 +144,6 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	 */
 	parse_options_set_repeatable_rand(ptd->opts, FALSE);
 	parse_options_set_disjunct_cost(ptd->opts, 2.0f);
-	parse_options_set_max_sentence_length(ptd->opts, MAX_SENTENCE-3);
 	parse_options_set_max_parse_time(ptd->opts, 30);
 	parse_options_set_linkage_limit(ptd->opts, 1000);
 	parse_options_set_short_length(ptd->opts, 10);
@@ -196,7 +195,6 @@ static void finish(per_thread_data *ptd)
 
 static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 {
-	int maxlen;
 	Parse_Options opts = ptd->opts;
 	int jverbosity = parse_options_get_verbosity(opts);
 
@@ -216,18 +214,6 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	if (ptd->sent == NULL)
 		return;
 
-	maxlen = parse_options_get_max_sentence_length(ptd->opts);
-	if (maxlen < sentence_length(ptd->sent))
-	{
-		if (jverbosity > 0) {
-			prt_error("Error: JNI: Sentence length (%d words) exceeds maximum allowable (%d words)\n",
-				sentence_length(ptd->sent), maxlen);
-		}
-		sentence_delete(ptd->sent);
-		ptd->sent = NULL;
-		return;
-	}
-
 	/* First parse with cost 0 or 1 and no null links or fat links */
 	parse_options_set_disjunct_cost(opts, 2.0f);
 	parse_options_set_min_null_count(opts, 0);
@@ -235,6 +221,14 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	parse_options_reset_resources(opts);
 
 	ptd->num_linkages = sentence_parse(ptd->sent, ptd->opts);
+
+	/* If failed bad. Give up. */
+	if (ptd->num_linkages < 0)
+	{
+		sentence_delete(ptd->sent);
+		ptd->sent = NULL;
+		return;
+	}
 
 	/* If failed, try again with null links */
 	if (0 == ptd->num_linkages)

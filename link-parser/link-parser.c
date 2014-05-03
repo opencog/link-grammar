@@ -717,7 +717,6 @@ int main(int argc, char * argv[])
 	}
 
 	setup_panic_parse_options(copts->panic_opts);
-	parse_options_set_max_sentence_length(opts, 230);
 	copts->panic_mode = true;
 
 	parse_options_set_max_parse_time(opts, 30);
