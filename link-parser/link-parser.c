@@ -583,7 +583,7 @@ static Label strip_off_label(char * input_string)
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
-	parse_options_set_disjunct_cost(opts, 3.0f);
+	parse_options_set_disjunct_cost(opts, 4.0f);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, 100);
 	parse_options_set_max_parse_time(opts, 60);
@@ -716,16 +716,6 @@ int main(int argc, char * argv[])
 		exit(-1);
 	}
 
-	setup_panic_parse_options(copts->panic_opts);
-	copts->panic_mode = true;
-
-	parse_options_set_max_parse_time(opts, 30);
-	parse_options_set_linkage_limit(opts, 1000);
-	parse_options_set_short_length(opts, 10);
-	parse_options_set_disjunct_cost(opts, 2.0);
-	parse_options_set_min_null_count(opts, 0);
-	parse_options_set_max_null_count(opts, 0);
-
 	if (language && *language)
 		dict = dictionary_create_lang(language);
 	else
@@ -736,6 +726,23 @@ int main(int argc, char * argv[])
 		fprintf(stderr, "%s: Fatal error: Unable to open dictionary.\n", argv[0]);
 		exit(-1);
 	}
+
+	setup_panic_parse_options(copts->panic_opts);
+	copts->panic_mode = true;
+
+	parse_options_set_max_parse_time(opts, 30);
+	parse_options_set_linkage_limit(opts, 1000);
+	parse_options_set_min_null_count(opts, 0);
+	parse_options_set_max_null_count(opts, 0);
+	parse_options_set_short_length(opts, 10);
+
+	/* The Russian dictionaries need a cost of 3. This is because they use
+	 * costed regex matches, which have a cost of 1, that wrap rules that
+	 * have a cost of 2, resulting in a cost of 3 for "normal" parsing.
+	 */
+	parse_options_set_disjunct_cost(opts, 2.0);
+	if (0 == strcmp(dictionary_get_lang(dict), "ru"))
+		parse_options_set_disjunct_cost(opts, 3.0);
 
 	/* Process the command line commands */
 	for (i = 1; i<argc; i++)
@@ -862,7 +869,7 @@ int main(int argc, char * argv[])
 			 */
 			if (num_linkages == 0)
 			{
-				parse_options_set_disjunct_cost(opts, 3.5);
+				parse_options_set_disjunct_cost(opts, 4.5);
 				num_linkages = sentence_parse(sent, opts);
 				if (num_linkages < 0) continue;
 			}
@@ -877,7 +884,7 @@ int main(int argc, char * argv[])
 			{
 				int expanded;
 				if (verbosity > 0) fprintf(stdout, "No standard linkages, expanding disjunct set.\n");
-				parse_options_set_disjunct_cost(opts, 2.9);
+				parse_options_set_disjunct_cost(opts, 3.9);
 				expanded = lg_expand_disjunct_list(sent);
 				if (expanded)
 				{
