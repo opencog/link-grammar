@@ -121,6 +121,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 	size_t remap[sent->length];
 	Parse_Options opts = linkage->opts;
 	bool display_morphology = opts->display_morphology;
+	bool display_word_subscripts = true;
 
 	for (i=0; i<sent->length; i++)
 	{
@@ -162,8 +163,9 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 				exfree(a_list, strlen(a_list)+1);
 			}
 		}
-		else if (opts->display_word_subscripts)
+		else if (display_word_subscripts) 
 		{
+			/* print the subscript, as in "dog.n" as opposed to "dog" */
 			t = pi->chosen_disjuncts[i]->string;
 			/* get rid of those ugly ".Ixx" */
 			if (is_idiom_word(t)) {
@@ -233,7 +235,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 			 * be alternative 0.  We should do like the above, and then
 			 * manually strip the subscript.
 			 * Except that this code is never ever reached, because
-			 * opts->display_word_subscripts is always true...
+			 * display_word_subscripts is always true...
 			 */
 			t = sent->word[i].alternatives[0];
 		}

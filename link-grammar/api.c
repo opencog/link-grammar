@@ -127,7 +127,6 @@ Parse_Options parse_options_create(void)
 	po->max_sentence_length = MAX_SENTENCE-3;
 	po->repeatable_rand = true;
 	po->resources = resources_create();
-	po->display_word_subscripts = true;
 	po->display_walls = false;
 #ifdef USE_FAT_LINKAGES
 	po->use_fat_links = false;

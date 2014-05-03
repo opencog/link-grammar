@@ -88,7 +88,6 @@ struct Parse_Options_s
 #endif /* USE_FAT_LINKAGES */
 
 	/* Flags governing the operation of the printer */
-	bool display_word_subscripts;  /* as in "dog.n" as opposed to "dog" */
 	bool display_walls;
 	bool display_morphology;/* if true, print morpho analysis of words */
 };
