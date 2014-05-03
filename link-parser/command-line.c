@@ -446,11 +446,13 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_postscript = parse_options_get_display_postscript(opts);
 	local.display_constituents = parse_options_get_display_constituents(opts);
 	local.max_sentence_length = parse_options_get_max_sentence_length(opts);
-	local.display_bad = parse_options_get_display_bad(opts);
-	local.display_disjuncts = parse_options_get_display_disjuncts(opts);
-	local.display_links = parse_options_get_display_links(opts);
+
+	local.display_bad = copts->display_bad;
+	local.display_disjuncts = copts->display_disjuncts;
+	local.display_links = copts->display_links;
+	local.display_senses = copts->display_senses;
+
 	local.display_morphology = parse_options_get_display_morphology(opts);
-	local.display_senses = parse_options_get_display_senses(opts);
 	local.display_walls = parse_options_get_display_walls(opts);
 }
 
@@ -482,17 +484,19 @@ static void put_local_vars_in_opts(Command_Options* copts)
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif
+	parse_options_set_display_morphology(opts, local.display_morphology);
 	parse_options_set_use_viterbi(opts, local.use_viterbi);
 	parse_options_set_screen_width(opts, local.screen_width);
 	parse_options_set_display_on(opts, local.display_on);
 	parse_options_set_display_postscript(opts, local.display_postscript);
 	parse_options_set_display_constituents(opts, local.display_constituents);
 	parse_options_set_max_sentence_length(opts, local.max_sentence_length);
-	parse_options_set_display_bad(opts, local.display_bad);
-	parse_options_set_display_disjuncts(opts, local.display_disjuncts);
-	parse_options_set_display_links(opts, local.display_links);
-	parse_options_set_display_morphology(opts, local.display_morphology);
-	parse_options_set_display_senses(opts, local.display_senses);
+
+	copts->display_bad = local.display_bad;
+	copts->display_disjuncts = local.display_disjuncts;
+	copts->display_links = local.display_links;
+	copts->display_senses = local.display_senses;
+
 	parse_options_set_display_walls(opts, local.display_walls);
 }
 
@@ -511,6 +515,9 @@ Command_Options* command_options_create(void)
 	Command_Options* co = malloc(sizeof (Command_Options));
 	co->popts = parse_options_create();
 	co->panic_opts = parse_options_create();
+	co->display_bad = false;
+	co->display_disjuncts = false;
+	co->display_links = false;
 	co->display_senses = false;
 	return co;
 }

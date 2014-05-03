@@ -19,7 +19,10 @@ LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
 typedef struct {
 	Parse_Options popts;
 	Parse_Options panic_opts;
-	bool display_senses;
+	bool display_bad;       /* if true, bad linkages are displayed */
+	bool display_disjuncts; /* if true, print disjuncts that were used */
+	bool display_links;     /* if true, a list o' links is printed out */
+	bool display_senses;    /* if true, sense candidates are printed out */
 } Command_Options;
 
 link_public_api(int)

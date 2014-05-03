@@ -104,10 +104,6 @@ struct Parse_Options_s
 	bool display_on;        /* if true, output graphical linkage diagram */
 	bool display_postscript;/* if true, output postscript linkage */
 	ConstituentDisplayStyle display_constituents; /* style for displaying constituent structure */
-	bool display_bad;       /* if true, bad linkages are displayed */
-	bool display_disjuncts; /* if true, print disjuncts that were used */
-	bool display_links;     /* if true, a list o' links is printed out */
-	bool display_senses;    /* if true, sense candidates are printed out */
 };
 
 struct Connector_set_s

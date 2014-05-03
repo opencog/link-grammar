@@ -245,10 +245,11 @@ static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 *
 **************************************************************************/
 
-static void process_linkage(Linkage linkage, Parse_Options opts)
+static void process_linkage(Linkage linkage, Command_Options* copts)
 {
 	char * string;
 	ConstituentDisplayStyle mode;
+	Parse_Options opts = copts->popts;
 #ifdef USE_FAT_LINKAGES
 	int j, first_sublinkage;
 	int nlink;
@@ -273,7 +274,7 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 	{
 		linkage_set_current_sublinkage(linkage, j);
 #endif /* USE_FAT_LINKAGES */
-		if (parse_options_get_display_bad(opts))
+		if (copts->display_bad)
 		{
 			string = linkage_print_pp_msgs(linkage);
 			fprintf(stdout, "%s\n", string);
@@ -285,19 +286,19 @@ static void process_linkage(Linkage linkage, Parse_Options opts)
 			fprintf(stdout, "%s", string);
 			linkage_free_diagram(string);
 		}
-		if (parse_options_get_display_links(opts))
+		if (copts->display_links)
 		{
 			string = linkage_print_links_and_domains(linkage);
 			fprintf(stdout, "%s", string);
 			linkage_free_links_and_domains(string);
 		}
-		if (parse_options_get_display_senses(opts))
+		if (copts->display_senses)
 		{
 			string = linkage_print_senses(linkage);
 			fprintf(stdout, "%s", string);
 			linkage_free_senses(string);
 		}
-		if (parse_options_get_display_disjuncts(opts))
+		if (copts->display_disjuncts)
 		{
 			string = linkage_print_disjuncts(linkage);
 			fprintf(stdout, "%s", string);
@@ -358,17 +359,18 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts)
 }
 
 
-static int process_some_linkages(Sentence sent, Parse_Options opts)
+static int process_some_linkages(Sentence sent, Command_Options* copts)
 {
 	int c;
 	int i, num_to_query, num_to_display, num_displayed;
 	Linkage linkage;
 	double corpus_cost;
+	Parse_Options opts = copts->popts;
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
 	num_to_query = MIN(sentence_num_linkages_post_processed(sent),
 	                   DISPLAY_MAX);
-	if (!parse_options_get_display_bad(opts))
+	if (!copts->display_bad)
 	{
 		num_to_display = MIN(sentence_num_valid_linkages(sent),
 		                     DISPLAY_MAX);
@@ -382,7 +384,7 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 	for (i=0, num_displayed=0; i<num_to_query; i++)
 	{
 		if ((sentence_num_violations(sent, i) > 0) &&
-			(!parse_options_get_display_bad(opts)))
+			!copts->display_bad)
 		{
 			continue;
 		}
@@ -395,11 +397,11 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 		if (verbosity > 0)
 		{
 			if ((sentence_num_valid_linkages(sent) == 1) &&
-				(!parse_options_get_display_bad(opts)))
+				!copts->display_bad)
 			{
 				fprintf(stdout, "	Unique linkage, ");
 			}
-			else if ((parse_options_get_display_bad(opts)) &&
+			else if (copts->display_bad &&
 			         (sentence_num_violations(sent, i) > 0))
 			{
 				fprintf(stdout, "	Linkage %d (bad), ", num_displayed+1);
@@ -464,7 +466,7 @@ static int process_some_linkages(Sentence sent, Parse_Options opts)
 #endif /* USE_FAT_LINKAGES */
 		}
 
-		process_linkage(linkage, opts);
+		process_linkage(linkage, copts);
 		linkage_delete(linkage);
 
 		if (++num_displayed < num_to_display)
@@ -507,9 +509,12 @@ static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
 
 static void batch_process_some_linkages(Label label,
                                         Sentence sent,
-                                        Parse_Options opts)
+                                        Command_Options* copts)
 {
-	if (there_was_an_error(label, sent, opts)) {
+	Parse_Options opts = copts->popts;
+
+	if (there_was_an_error(label, sent, opts))
+	{
 		/* If linkages were found, print them */
 		if (sentence_num_linkages_found(sent) > 0) {
 			Linkage linkage = NULL;
@@ -530,7 +535,7 @@ static void batch_process_some_linkages(Label label,
 				/* This linkage will be bad; no good ones were found. */
 				linkage = linkage_create(0, sent, opts);
 			}
-			process_linkage(linkage, opts);
+			process_linkage(linkage, copts);
 			linkage_delete(linkage);
 		}
 		fprintf(stdout, "+++++ error %d\n", batch_errors);
@@ -888,7 +893,7 @@ int main(int argc, char * argv[])
 			/* If asked to show bad linkages, then show them. */
 			if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
 			{
-				if (parse_options_get_display_bad(opts))
+				if (copts->display_bad)
 				{
 					num_linkages = sentence_num_linkages_found(sent);
 				}
@@ -938,11 +943,11 @@ int main(int argc, char * argv[])
 
 			if (parse_options_get_batch_mode(opts))
 			{
-				batch_process_some_linkages(label, sent, opts);
+				batch_process_some_linkages(label, sent, copts);
 			}
 			else
 			{
-				int c = process_some_linkages(sent, opts);
+				int c = process_some_linkages(sent, copts);
 				if (c == EOF)
 				{
 					sentence_delete(sent);

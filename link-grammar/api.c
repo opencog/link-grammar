@@ -144,11 +144,7 @@ Parse_Options parse_options_create(void)
 	po->display_on = true;
 	po->display_postscript = false;
 	po->display_constituents = NO_DISPLAY;
-	po->display_bad = false;
-	po->display_disjuncts = false;
-	po->display_links = false;
 	po->display_morphology = false;
-	po->display_senses = false;
 
 	return po;
 }
@@ -489,44 +485,12 @@ ConstituentDisplayStyle parse_options_get_display_constituents(Parse_Options opt
 	return opts->display_constituents;
 }
 
-void parse_options_set_display_bad(Parse_Options opts, int dummy) {
-	opts->display_bad = dummy;
-}
-
-int parse_options_get_display_bad(Parse_Options opts) {
-	return opts->display_bad;
-}
-
-void parse_options_set_display_disjuncts(Parse_Options opts, int dummy) {
-	opts->display_disjuncts = dummy;
-}
-
-int parse_options_get_display_disjuncts(Parse_Options opts) {
-	return opts->display_disjuncts;
-}
-
-void parse_options_set_display_links(Parse_Options opts, int dummy) {
-	opts->display_links = dummy;
-}
-
-int parse_options_get_display_links(Parse_Options opts) {
-	return opts->display_links;
-}
-
 int parse_options_get_display_morphology(Parse_Options opts) {
 	return opts->display_morphology;
 }
 
 void parse_options_set_display_morphology(Parse_Options opts, int dummy) {
 	opts->display_morphology = dummy;
-}
-
-void parse_options_set_display_senses(Parse_Options opts, int dummy) {
-	opts->display_senses = dummy;
-}
-
-int parse_options_get_display_senses(Parse_Options opts) {
-	return opts->display_senses;
 }
 
 void parse_options_set_display_walls(Parse_Options opts, bool dummy) {

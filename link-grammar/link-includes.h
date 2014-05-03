@@ -224,25 +224,9 @@ link_public_api(void)
 link_public_api(ConstituentDisplayStyle)
      parse_options_get_display_constituents(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_display_bad(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_display_bad(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_display_disjuncts(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_display_disjuncts(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_display_links(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_display_links(Parse_Options opts);
-link_public_api(void)
      parse_options_set_display_morphology(Parse_Options opts, int val);
 link_public_api(int)
      parse_options_get_display_morphology(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_display_senses(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_display_senses(Parse_Options opts);
 link_public_api(void)
      parse_options_set_echo_on(Parse_Options opts, int val);
 link_public_api(int)
