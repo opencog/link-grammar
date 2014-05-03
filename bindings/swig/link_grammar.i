@@ -79,8 +79,6 @@ int  parse_options_memory_exhausted(Parse_Options opts);
 int  parse_options_resources_exhausted(Parse_Options opts);
 void parse_options_set_screen_width(Parse_Options opts, int val);
 int  parse_options_get_screen_width(Parse_Options opts);
-void parse_options_set_allow_null(Parse_Options opts, int val);
-int  parse_options_get_allow_null(Parse_Options opts);
 void parse_options_set_display_morphology(Parse_Options opts, int val);
 int  parse_options_get_display_morphology(Parse_Options opts);
 void parse_options_set_display_walls(Parse_Options opts, int val);

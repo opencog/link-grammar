@@ -153,7 +153,6 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_spell_guess(ptd->opts, FALSE);
 	parse_options_set_screen_width(ptd->opts, 4096);
 
-	parse_options_set_panic_mode(ptd->opts, TRUE);
 	ptd->panic_parse_opts = parse_options_create();
 	setup_panic_parse_options(ptd->panic_parse_opts);
 
@@ -243,12 +242,9 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	if (0 == ptd->num_linkages)
 	{
 		if (jverbosity > 0) prt_error("Warning: JNI: No complete linkages found.\n");
-		if (parse_options_get_allow_null(opts))
-		{
-			parse_options_set_min_null_count(opts, 1);
-			parse_options_set_max_null_count(opts, sentence_length(ptd->sent));
-			ptd->num_linkages = sentence_parse(ptd->sent, opts);
-		}
+		parse_options_set_min_null_count(opts, 1);
+		parse_options_set_max_null_count(opts, sentence_length(ptd->sent));
+		ptd->num_linkages = sentence_parse(ptd->sent, opts);
 	}
 
 	if (jverbosity > 0)
@@ -261,8 +257,7 @@ static void jParse(JNIEnv *env, per_thread_data *ptd, char* inputString)
 	}
 
 	if ((ptd->num_linkages == 0) &&
-	    parse_options_resources_exhausted(opts) &&
-	    parse_options_get_panic_mode(opts))
+	    parse_options_resources_exhausted(opts))
 	{
 		parse_options_print_total_time(opts);
 		if (jverbosity > 0) prt_error("Warning: JNI: Entering \"panic\" mode...\n");

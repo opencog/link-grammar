@@ -19,6 +19,20 @@ LINK_BEGIN_DECLS  /* Needed to keep MSVC6 happy */
 typedef struct {
 	Parse_Options popts;
 	Parse_Options panic_opts;
+
+#ifdef USE_FAT_LINKAGES
+	bool display_union;     /* print squashed version of linkage with conjunction? */
+#endif /* USE_FAT_LINKAGES */
+
+	bool batch_mode;        /* if true, process sentences non-interactively */
+	bool allow_null;        /* true if we allow null links in parsing */
+	bool echo_on;           /* true if we should echo the input sentence */
+	bool panic_mode;        /* if true, parse in "panic mode" after all else fails */
+	int screen_width;       /* width of screen for displaying linkages */
+	bool display_on;        /* if true, output graphical linkage diagram */
+	bool display_postscript;/* if true, output postscript linkage */
+	ConstituentDisplayStyle display_constituents; /* style for displaying constituent structure */
+
 	bool display_bad;       /* if true, bad linkages are displayed */
 	bool display_disjuncts; /* if true, print disjuncts that were used */
 	bool display_links;     /* if true, a list o' links is printed out */
@@ -26,7 +40,7 @@ typedef struct {
 } Command_Options;
 
 link_public_api(int)
-     issue_special_command(const char * line, Command_Options *opts, Dictionary dict);
+	issue_special_command(const char * line, Command_Options *opts, Dictionary dict);
 
 LINK_END_DECLS
 

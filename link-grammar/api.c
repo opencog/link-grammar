@@ -133,17 +133,9 @@ Parse_Options parse_options_create(void)
 	po->display_walls = false;
 #ifdef USE_FAT_LINKAGES
 	po->use_fat_links = false;
-	po->display_union = false;
 #endif /* USE_FAT_LINKAGES */
-	po->allow_null = true;
 	po->use_cluster_disjuncts = false;
-	po->echo_on = false;
-	po->batch_mode = false;
-	po->panic_mode = false;
 	po->screen_width = 79;
-	po->display_on = true;
-	po->display_postscript = false;
-	po->display_constituents = NO_DISPLAY;
 	po->display_morphology = false;
 
 	return po;
@@ -400,38 +392,6 @@ int parse_options_get_max_sentence_length(Parse_Options opts) {
 	return opts->max_sentence_length;
 }
 
-void parse_options_set_echo_on(Parse_Options opts, int dummy) {
-	opts->echo_on = dummy;
-}
-
-int parse_options_get_echo_on(Parse_Options opts) {
-	return opts->echo_on;
-}
-
-void parse_options_set_batch_mode(Parse_Options opts, int dummy) {
-	opts->batch_mode = dummy;
-}
-
-int parse_options_get_batch_mode(Parse_Options opts) {
-	return opts->batch_mode;
-}
-
-void parse_options_set_panic_mode(Parse_Options opts, int dummy) {
-	opts->panic_mode = dummy;
-}
-
-int parse_options_get_panic_mode(Parse_Options opts) {
-	return opts->panic_mode;
-}
-
-void parse_options_set_allow_null(Parse_Options opts, bool dummy) {
-	opts->allow_null = dummy;
-}
-
-bool parse_options_get_allow_null(Parse_Options opts) {
-	return opts->allow_null;
-}
-
 void parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool dummy) {
 	opts->use_cluster_disjuncts = dummy;
 }
@@ -448,43 +408,6 @@ int parse_options_get_screen_width(Parse_Options opts) {
 	return opts->screen_width;
 }
 
-
-void parse_options_set_display_on(Parse_Options opts, int dummy) {
-	opts->display_on = dummy;
-}
-
-int parse_options_get_display_on(Parse_Options opts) {
-	return opts->display_on;
-}
-
-void parse_options_set_display_postscript(Parse_Options opts, int dummy) {
-	opts->display_postscript = dummy;
-}
-
-int parse_options_get_display_postscript(Parse_Options opts)
-{
-	return opts->display_postscript;
-}
-
-void parse_options_set_display_constituents(Parse_Options opts, ConstituentDisplayStyle dummy)
-{
-	if (dummy > MAX_STYLES)
-	{
-		prt_error("Possible values for constituents: \n"
-	             "   0 (no display)\n"
-	             "   1 (treebank style, multi-line indented)\n"
-	             "   2 (flat tree, square brackets)\n"
-	             "   3 (flat treebank style)\n");
-		opts->display_constituents = NO_DISPLAY;
-	}
-	else opts->display_constituents = dummy;
-}
-
-ConstituentDisplayStyle parse_options_get_display_constituents(Parse_Options opts)
-{
-	return opts->display_constituents;
-}
-
 int parse_options_get_display_morphology(Parse_Options opts) {
 	return opts->display_morphology;
 }
@@ -499,20 +422,6 @@ void parse_options_set_display_walls(Parse_Options opts, bool dummy) {
 
 bool parse_options_get_display_walls(Parse_Options opts) {
 	return opts->display_walls;
-}
-
-int parse_options_get_display_union(Parse_Options opts) {
-#ifdef USE_FAT_LINKAGES
-	return opts->display_union;
-#else
-	return 0;
-#endif /* USE_FAT_LINKAGES */
-}
-
-void parse_options_set_display_union(Parse_Options opts, int dummy) {
-#ifdef USE_FAT_LINKAGES
-	opts->display_union = dummy;
-#endif /* USE_FAT_LINKAGES */
 }
 
 bool parse_options_timer_expired(Parse_Options opts) {
@@ -1398,21 +1307,6 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	verbosity = opts->verbosity;
 	debug = opts->debug;
 	test = opts->test;
-
-	if ('\0' != test[0]) /* remind the developer this is not a normal mode */
-	{
-		/* Static variable - reentrancy is not needed */
-		static Boolean batch_in_progress = FALSE;
-
-		/* In batch mode warn only once */
-		if (! batch_in_progress)
-		{
-			fflush(stdout);
-			fprintf(stderr, "Warning: Tests enabled: %s\n", test);
-			if (parse_options_get_batch_mode(opts))
-				batch_in_progress = 1;
-		}
-	}
 
 	/* If the sentence has not yet been split, do so now.
 	 * This is for backwards compatibility, for existing programs

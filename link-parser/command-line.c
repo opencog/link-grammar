@@ -429,23 +429,27 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.short_length = parse_options_get_short_length(opts);
 	local.cost_model = parse_options_get_cost_model_type(opts);
 	local.max_cost = parse_options_get_disjunct_cost(opts);
-	local.echo_on = parse_options_get_echo_on(opts);
-	local.batch_mode = parse_options_get_batch_mode(opts);
-	local.panic_mode = parse_options_get_panic_mode(opts);
-	local.screen_width = parse_options_get_screen_width(opts);
-	local.allow_null = parse_options_get_allow_null(opts);
 	local.use_cluster_disjuncts = parse_options_get_use_cluster_disjuncts(opts);
 #ifdef USE_FAT_LINKAGES
 	local.use_fat_links = parse_options_get_use_fat_links(opts);
-	local.display_union = parse_options_get_display_union(opts);
 #endif /* USE_FAT_LINKAGES */
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.use_viterbi = parse_options_get_use_viterbi(opts);
 	local.screen_width = parse_options_get_screen_width(opts);
-	local.display_on = parse_options_get_display_on(opts);
-	local.display_postscript = parse_options_get_display_postscript(opts);
-	local.display_constituents = parse_options_get_display_constituents(opts);
 	local.max_sentence_length = parse_options_get_max_sentence_length(opts);
+
+	local.screen_width = parse_options_get_screen_width(opts);
+
+	local.echo_on = copts->echo_on;
+	local.batch_mode = copts->batch_mode;
+	local.panic_mode = copts->panic_mode;
+	local.allow_null = copts->allow_null;
+#ifdef USE_FAT_LINKAGES
+	local.display_union = copts->display_union;
+#endif /* USE_FAT_LINKAGES */
+	local.display_on = copts->display_on;
+	local.display_postscript = copts->display_postscript;
+	local.display_constituents = copts->display_constituents;
 
 	local.display_bad = copts->display_bad;
 	local.display_disjuncts = copts->display_disjuncts;
@@ -469,28 +473,30 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_islands_ok(opts, local.islands_ok);
 	parse_options_set_spell_guess(opts, local.spell_guess);
 	parse_options_set_short_length(opts, local.short_length);
-	parse_options_set_echo_on(opts, local.echo_on);
 	parse_options_set_cost_model_type(opts, local.cost_model);
 	parse_options_set_disjunct_cost(opts, local.max_cost);
-	parse_options_set_batch_mode(opts, local.batch_mode);
-	parse_options_set_panic_mode(opts, local.panic_mode);
-	parse_options_set_screen_width(opts, local.screen_width);
-	parse_options_set_allow_null(opts, local.allow_null);
 	parse_options_set_use_cluster_disjuncts(opts, local.use_cluster_disjuncts);
 #ifdef USE_FAT_LINKAGES
 	parse_options_set_use_fat_links(opts, local.use_fat_links);
-	parse_options_set_display_union(opts, local.display_union);
 #endif /* USE_FAT_LINKAGES */
 #ifdef USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif
-	parse_options_set_display_morphology(opts, local.display_morphology);
 	parse_options_set_use_viterbi(opts, local.use_viterbi);
-	parse_options_set_screen_width(opts, local.screen_width);
-	parse_options_set_display_on(opts, local.display_on);
-	parse_options_set_display_postscript(opts, local.display_postscript);
-	parse_options_set_display_constituents(opts, local.display_constituents);
+	parse_options_set_display_morphology(opts, local.display_morphology);
 	parse_options_set_max_sentence_length(opts, local.max_sentence_length);
+	parse_options_set_screen_width(opts, local.screen_width);
+
+	copts->echo_on = local.echo_on;
+	copts->batch_mode = local.batch_mode;
+	copts->panic_mode = local.panic_mode;
+	copts->allow_null = local.allow_null;
+#ifdef USE_FAT_LINKAGES
+	copts->display_union = local.display_union;
+#endif /* USE_FAT_LINKAGES */
+	copts->display_on = local.display_on;
+	copts->display_postscript = local.display_postscript;
+	copts->display_constituents = local.display_constituents;
 
 	copts->display_bad = local.display_bad;
 	copts->display_disjuncts = local.display_disjuncts;
@@ -515,6 +521,17 @@ Command_Options* command_options_create(void)
 	Command_Options* co = malloc(sizeof (Command_Options));
 	co->popts = parse_options_create();
 	co->panic_opts = parse_options_create();
+
+#ifdef USE_FAT_LINKAGES
+	co->display_union = false;
+#endif /* USE_FAT_LINKAGES */
+	co->allow_null = true;
+	co->echo_on = false;
+	co->panic_mode = false;
+	co->display_on = true;
+	co->display_postscript = false;
+	co->display_constituents = NO_DISPLAY;
+
 	co->display_bad = false;
 	co->display_disjuncts = false;
 	co->display_links = false;

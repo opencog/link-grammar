@@ -105,7 +105,7 @@ static char* oem_to_utf8(char *instring)
 #endif
 
 static char *
-fget_input_string(FILE *in, FILE *out, Parse_Options opts)
+fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 {
 #ifdef HAVE_EDITLINE
 	static char * pline = NULL;
@@ -130,9 +130,7 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 		input_pending = FALSE;
 		return pline;
 	}
-	if (parse_options_get_batch_mode(opts) ||
-	    (verbosity == 0) ||
-	    input_pending)
+	if (copts->batch_mode || verbosity == 0 || input_pending)
 	{
 		prompt = "";
 	}
@@ -147,9 +145,7 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 
 	if (NULL == in) return NULL;
 
-	if ((!parse_options_get_batch_mode(opts)) &&
-	    (verbosity > 0) &&
-	    (!input_pending))
+	if (!copts->batch_mode && verbosity > 0 && !input_pending)
 	{
 		fprintf(out, "linkparser> ");
 		fflush(out);
@@ -206,10 +202,10 @@ fget_input_string(FILE *in, FILE *out, Parse_Options opts)
 #endif
 }
 
-static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
+static int fget_input_char(FILE *in, FILE *out, Command_Options* copts)
 {
 #ifdef HAVE_EDITLINE
-	char * pline = fget_input_string(in, out, opts);
+	char * pline = fget_input_string(in, out, copts);
 	if (NULL == pline) return EOF;
 	if (*pline)
 	{
@@ -221,7 +217,7 @@ static int fget_input_char(FILE *in, FILE *out, Parse_Options opts)
 #else
 	int c;
 
-	if (!parse_options_get_batch_mode(opts) && (verbosity > 0))
+	if (!copts->batch_mode && verbosity > 0)
 		fprintf(out, "linkparser> ");
 	fflush(out);
 
@@ -249,8 +245,8 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 {
 	char * string;
 	ConstituentDisplayStyle mode;
-	Parse_Options opts = copts->popts;
 #ifdef USE_FAT_LINKAGES
+	Parse_Options opts = copts->popts;
 	int j, first_sublinkage;
 	int nlink;
 #endif /* USE_FAT_LINKAGES */
@@ -280,7 +276,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 			fprintf(stdout, "%s\n", string);
 			linkage_free_pp_msgs(string);
 		}
-		if (parse_options_get_display_on(opts))
+		if (copts->display_on)
 		{
 			string = linkage_print_diagram(linkage);
 			fprintf(stdout, "%s", string);
@@ -304,7 +300,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 			fprintf(stdout, "%s", string);
 			linkage_free_disjuncts(string);
 		}
-		if (parse_options_get_display_postscript(opts))
+		if (copts->display_postscript)
 		{
 			string = linkage_print_postscript(linkage, FALSE);
 			fprintf(stdout, "%s\n", string);
@@ -313,7 +309,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 #ifdef USE_FAT_LINKAGES
 	}
 #endif /* USE_FAT_LINKAGES */
-	if ((mode = parse_options_get_display_constituents(opts)))
+	if ((mode = copts->display_constituents))
 	{
 		string = linkage_print_constituent_tree(linkage, mode);
 		if (string != NULL)
@@ -475,7 +471,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 			{
 				fprintf(stdout, "Press RETURN for the next linkage.\n");
 			}
-			c = fget_input_char(stdin, stdout, opts);
+			c = fget_input_char(stdin, stdout, copts);
 			if (c != '\n') return c;
 		}
 		else
@@ -722,7 +718,8 @@ int main(int argc, char * argv[])
 
 	setup_panic_parse_options(copts->panic_opts);
 	parse_options_set_max_sentence_length(opts, 230);
-	parse_options_set_panic_mode(opts, TRUE);
+	copts->panic_mode = true;
+
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
 	parse_options_set_short_length(opts, 10);
@@ -780,7 +777,7 @@ int main(int argc, char * argv[])
 		char *input_string;
 		Sentence sent = NULL;
 
-		input_string = fget_input_string(input_fh, stdout, opts);
+		input_string = fget_input_string(input_fh, stdout, copts);
 		check_winsize(opts);
 
 		if (NULL == input_string)
@@ -815,12 +812,12 @@ int main(int argc, char * argv[])
 		if (strspn(input_string, " \t\v") == strlen(input_string)) continue;
 
 		if (special_command(input_string, copts, dict)) continue;
-		if (parse_options_get_echo_on(opts))
+		if (copts->echo_on)
 		{
 			printf("%s\n", input_string);
 		}
 
-		if (parse_options_get_batch_mode(opts))
+		if (copts->batch_mode)
 		{
 			label = strip_off_label(input_string);
 		}
@@ -891,7 +888,7 @@ int main(int argc, char * argv[])
 			}
 
 			/* If asked to show bad linkages, then show them. */
-			if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
+			if ((num_linkages == 0) && (!copts->batch_mode))
 			{
 				if (copts->display_bad)
 				{
@@ -900,11 +897,11 @@ int main(int argc, char * argv[])
 			}
 
 			/* Now parse with null links */
-			if ((num_linkages == 0) && (!parse_options_get_batch_mode(opts)))
+			if (num_linkages == 0 && !copts->batch_mode)
 			{
 				if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
 
-				if (parse_options_get_allow_null(opts))
+				if (copts->allow_null)
 				{
 					/* XXX should use expanded disjunct list here too */
 					parse_options_set_min_null_count(opts, 1);
@@ -923,8 +920,8 @@ int main(int argc, char * argv[])
 			}
 
 			if ((num_linkages == 0) &&
-				parse_options_resources_exhausted(opts) &&
-				parse_options_get_panic_mode(opts))
+				copts->panic_mode &&
+				parse_options_resources_exhausted(opts))
 			{
 				/* print_total_time(opts); */
 				batch_errors++;
@@ -941,7 +938,7 @@ int main(int argc, char * argv[])
 
 			/* print_total_time(opts); */
 
-			if (parse_options_get_batch_mode(opts))
+			if (copts->batch_mode)
 			{
 				batch_process_some_linkages(label, sent, copts);
 			}
@@ -962,7 +959,7 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	if (parse_options_get_batch_mode(opts))
+	if (copts->batch_mode)
 	{
 		/* print_time(opts, "Total"); */
 		fprintf(stderr,

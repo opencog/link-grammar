@@ -160,10 +160,6 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_screen_width(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_allow_null(Parse_Options opts, bool val);
-link_public_api(bool)
-     parse_options_get_allow_null(Parse_Options opts);
-link_public_api(void)
      parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool val);
 link_public_api(bool)
      parse_options_get_use_cluster_disjuncts(Parse_Options opts);
@@ -204,33 +200,9 @@ typedef enum
 
 
 link_public_api(void)
-     parse_options_set_batch_mode(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_batch_mode(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_panic_mode(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_panic_mode(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_display_on(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_display_on(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_display_postscript(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_display_postscript(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_display_constituents(Parse_Options opts, ConstituentDisplayStyle val);
-link_public_api(ConstituentDisplayStyle)
-     parse_options_get_display_constituents(Parse_Options opts);
-link_public_api(void)
      parse_options_set_display_morphology(Parse_Options opts, int val);
 link_public_api(int)
      parse_options_get_display_morphology(Parse_Options opts);
-link_public_api(void)
-     parse_options_set_echo_on(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_echo_on(Parse_Options opts);
 
 /**********************************************************************
  *

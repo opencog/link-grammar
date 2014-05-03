@@ -94,16 +94,8 @@ struct Parse_Options_s
 	/* Flags governing the command-line client; not used by parser */
 #ifdef USE_FAT_LINKAGES
 	bool use_fat_links;     /* Look for fat linkages */
-	bool display_union;     /* print squashed version of linkage with conjunction? */
 #endif /* USE_FAT_LINKAGES */
-	bool allow_null;        /* true if we allow null links in parsing */
-	bool echo_on;           /* true if we should echo the input sentence */
-	bool batch_mode;        /* if true, process sentences non-interactively */
-	bool panic_mode;        /* if true, parse in "panic mode" after all else fails */
 	int screen_width;       /* width of screen for displaying linkages */
-	bool display_on;        /* if true, output graphical linkage diagram */
-	bool display_postscript;/* if true, output postscript linkage */
-	ConstituentDisplayStyle display_constituents; /* style for displaying constituent structure */
 };
 
 struct Connector_set_s
