@@ -59,12 +59,20 @@ struct Resources_s
 
 struct Parse_Options_s
 {
+	/* General options */
 	int verbosity;         /* Level of detail to give about the computation 0 */
 	char * debug;          /* comma-sparated function names to debug "" */
 	char * test;           /* comma-sparated features to test "" */
+	Resources resources;   /* For deciding when to abort the parsing */
+
+	/* Options governing the tokenizer (sentence-splitter) */
+	bool use_spell_guess;  /* Perform spell-guessing of unknown words. */ 
+
+	/* Choice of the parser to use */
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
 	bool use_viterbi;      /* Use the Viterbi decoder-based parser */
-	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
+
+	/* Options governing the parser internals operation */
 	double disjunct_cost;  /* Max disjunct cost to allow */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
@@ -72,19 +80,21 @@ struct Parse_Options_s
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
 	bool use_cluster_disjuncts; /* Attempt using a broader list of disjuncts */
-	size_t twopass_length; /* min sent length for two-pass post processing */
 	size_t short_length;   /* Links that are limited in length can be
 	                        * no longer than this.  Default = 6 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */
-	bool use_spell_guess;  /* Perform spell-guessing of unknown words. */ 
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
-	Cost_Model cost_model; /* For sorting linkages in post_processing */
-	Resources resources;   /* For deciding when to abort the parsing */
+
 #ifdef USE_FAT_LINKAGES
 	bool use_fat_links;     /* Look for fat linkages */
 #endif /* USE_FAT_LINKAGES */
 
-	/* Flags governing the operation of the printer */
+	/* Options governing post-processing */
+	size_t twopass_length; /* min sent length for two-pass post processing */
+	Cost_Model cost_model; /* For sorting linkages in post_processing */
+
+	/* Options governing the generation of linkages. */
+	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
 	bool display_morphology;/* if true, print morpho analysis of words */
 };
 
