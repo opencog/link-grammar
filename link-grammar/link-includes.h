@@ -110,10 +110,6 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_max_null_count(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_null_block(Parse_Options opts, int null_block);
-link_public_api(int)
-     parse_options_get_null_block(Parse_Options opts);
-link_public_api(void)
      parse_options_set_islands_ok(Parse_Options opts, bool islands_ok);
 link_public_api(bool)
      parse_options_get_islands_ok(Parse_Options opts);

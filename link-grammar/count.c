@@ -547,7 +547,10 @@ s64 do_parse(Sentence sent,
 	count_set_effective_distance(ctxt, sent);
 	ctxt->deletable = sent->deletable;
 #endif /* USE_FAT_LINKAGES */
-	ctxt->null_block = opts->null_block;
+
+	/* consecutive blocks of this many words are considered as
+	 * one null link. */
+	ctxt->null_block = 1;
 	ctxt->islands_ok = opts->islands_ok;
 
 	total = do_count(mchxt, ctxt, -1, sent->length, NULL, NULL, null_count+1);

@@ -104,7 +104,6 @@ Parse_Options parse_options_create(void)
 	po->disjunct_cost = 2.0;   /* Maybe should be 1.0 ?? */
 	po->min_null_count = 0;
 	po->max_null_count = 0;
-	po->null_block = 1;
 	po->islands_ok = false;
 	po->use_spell_guess = true;
 	po->use_sat_solver = false;
@@ -313,14 +312,6 @@ void parse_options_set_max_null_count(Parse_Options opts, int val) {
 }
 int parse_options_get_max_null_count(Parse_Options opts) {
 	return opts->max_null_count;
-}
-
-
-void parse_options_set_null_block(Parse_Options opts, int dummy) {
-	opts->null_block = dummy;
-}
-int parse_options_get_null_block(Parse_Options opts) {
-	return opts->null_block;
 }
 
 void parse_options_set_islands_ok(Parse_Options opts, bool dummy) {

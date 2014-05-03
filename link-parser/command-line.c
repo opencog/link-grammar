@@ -26,7 +26,6 @@ static struct
 	int timeout;
 	int memory;
 	int linkage_limit;
-	int null_block;
 	int islands_ok;
 	int spell_guess;
 	int short_length;
@@ -88,7 +87,6 @@ static Switch default_switches[] =
    {"memory",     Int,  "Max memory allowed",              &local.memory},
    {"morphology", Bool, "Display word morphology",         &local.display_morphology},
    {"null",       Bool, "Allow null links",                &local.allow_null},
-   {"null-block", Int,  "Size of blocks with null count 1", &local.null_block},
    {"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
    {"postscript", Bool, "Generate postscript output",      &local.display_postscript},
    {"senses",     Bool, "Display of word senses",          &local.display_senses},
@@ -421,7 +419,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.timeout = parse_options_get_max_parse_time(opts);;
 	local.memory = parse_options_get_max_memory(opts);;
 	local.linkage_limit = parse_options_get_linkage_limit(opts);
-	local.null_block = parse_options_get_null_block(opts);
 	local.islands_ok = parse_options_get_islands_ok(opts);
 	local.spell_guess = parse_options_get_spell_guess(opts);
 	local.short_length = parse_options_get_short_length(opts);
@@ -464,7 +461,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_max_parse_time(opts, local.timeout);
 	parse_options_set_max_memory(opts, local.memory);
 	parse_options_set_linkage_limit(opts, local.linkage_limit);
-	parse_options_set_null_block(opts, local.null_block);
 	parse_options_set_islands_ok(opts, local.islands_ok);
 	parse_options_set_spell_guess(opts, local.spell_guess);
 	parse_options_set_short_length(opts, local.short_length);

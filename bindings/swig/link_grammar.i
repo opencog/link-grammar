@@ -60,8 +60,6 @@ void parse_options_set_min_null_count(Parse_Options opts, int null_count);
 int  parse_options_get_min_null_count(Parse_Options opts);
 void parse_options_set_max_null_count(Parse_Options opts, int null_count);
 int  parse_options_get_max_null_count(Parse_Options opts);
-void parse_options_set_null_block(Parse_Options opts, int null_block);
-int  parse_options_get_null_block(Parse_Options opts);
 void parse_options_set_islands_ok(Parse_Options opts, int islands_ok);
 int  parse_options_get_islands_ok(Parse_Options opts);
 void parse_options_set_short_length(Parse_Options opts, int short_length);

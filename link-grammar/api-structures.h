@@ -68,8 +68,6 @@ struct Parse_Options_s
 	double disjunct_cost;  /* Max disjunct cost to allow */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
-	int null_block;        /* consecutive blocks of this many words are
-	                          considered as one null link  (default=1) */
 	bool islands_ok;       /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
