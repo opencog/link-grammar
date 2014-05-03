@@ -742,9 +742,9 @@ static inline int cost_for_length(int length)
  * Computes the cost of the current parse of the current sentence,
  * due to the length of the links.
  */
-static int link_cost(Parse_info pi)
+static size_t link_cost(Parse_info pi)
 {
-	int lcost, i;
+	size_t lcost, i;
 	lcost =  0;
 	for (i = 0; i < pi->N_links; i++)
 	{
@@ -827,7 +827,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
  */
 static void compute_link_names(Sentence sent)
 {
-	int i;
+	size_t i;
 	Parse_info pi = sent->parse_info;
 
 	for (i = 0; i < pi->N_links; i++)
@@ -1107,7 +1107,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
  */
 Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze_pass)
 {
-	int i;
+	size_t i;
 	Linkage_info li;
 	PP_node * pp;
 	Postprocessor * postprocessor;
@@ -1183,7 +1183,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 
 void extract_thin_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 {
-	int i;
+	size_t i;
 	Parse_info pi = sent->parse_info;
 
 #ifdef USE_FAT_LINKAGES

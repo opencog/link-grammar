@@ -327,7 +327,6 @@ int sentence_contains_conjunction(Sentence sent)
 void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
 	size_t i;
-	count_context_t* ctxt;
 #ifdef USE_FAT_LINKAGES
 	bool has_conjunction;
 #endif /* USE_FAT_LINKAGES */
