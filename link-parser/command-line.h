@@ -24,11 +24,11 @@ typedef struct {
 	bool display_union;     /* print squashed version of linkage with conjunction? */
 #endif /* USE_FAT_LINKAGES */
 
+	size_t screen_width;    /* width of screen for displaying linkages */
 	bool batch_mode;        /* if true, process sentences non-interactively */
 	bool allow_null;        /* true if we allow null links in parsing */
 	bool echo_on;           /* true if we should echo the input sentence */
 	bool panic_mode;        /* if true, parse in "panic mode" after all else fails */
-	int screen_width;       /* width of screen for displaying linkages */
 	bool display_on;        /* if true, output graphical linkage diagram */
 	bool display_postscript;/* if true, output postscript linkage */
 	ConstituentDisplayStyle display_constituents; /* style for displaying constituent structure */

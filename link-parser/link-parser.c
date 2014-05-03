@@ -278,7 +278,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		}
 		if (copts->display_on)
 		{
-			string = linkage_print_diagram(linkage);
+			string = linkage_print_diagram(linkage, copts->screen_width);
 			fprintf(stdout, "%s", string);
 			linkage_free_diagram(string);
 		}
@@ -616,7 +616,7 @@ static void print_usage(char *str)
  * and sets the output screen width accordingly.
  * Not sure how MS Windows does this.
  */
-static void check_winsize(Parse_Options popts)
+static void check_winsize(Command_Options* copts)
 {
 /* Neither windows nor MSYS have the ioctl support needed for this. */
 #ifdef _WIN32
@@ -641,7 +641,7 @@ static void check_winsize(Parse_Options popts)
 	 */
 	if ((10 < ws.ws_col) && (16123 > ws.ws_col))
 	{
-		parse_options_set_screen_width(popts, ws.ws_col - 1);
+		copts->screen_width = ws.ws_col - 1;
 	}
 #endif /* _WIN32 */
 }
@@ -758,7 +758,7 @@ int main(int argc, char * argv[])
 	debug = parse_options_get_debug(opts);
 	test = parse_options_get_test(opts);
 
-	check_winsize(opts);
+	check_winsize(copts);
 #ifdef _WIN32
 	parse_options_set_screen_width(opts, 79);
 #endif
@@ -778,7 +778,7 @@ int main(int argc, char * argv[])
 		Sentence sent = NULL;
 
 		input_string = fget_input_string(input_fh, stdout, copts);
-		check_winsize(opts);
+		check_winsize(copts);
 
 		if (NULL == input_string)
 		{

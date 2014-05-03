@@ -1,7 +1,8 @@
-Version 5.0.9 (XXX 2014)
+Version 5.1.0 (XXX 2014)
  * Updated Russian dictionaries from Sergi Protasov.
  * Added morphology-based unknown-word handling for Russian, from Sergi.
  * Fix up fat-linkage code, which was recently broken...
+ * API cleanup: many command-line options never belonged in the API.
 
 Version 5.0.8 (30 April 2014)
  * Fix handling of initial letters in ordered lists.

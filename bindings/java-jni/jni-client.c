@@ -84,7 +84,6 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_linkage_limit(opts, 100);
 	parse_options_set_verbosity(opts, 0);
 	parse_options_set_spell_guess(opts, FALSE);
-	parse_options_set_screen_width(opts, 4096);
 }
 
 static inline void test(void)
@@ -151,7 +150,6 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_short_length(ptd->opts, 10);
 	parse_options_set_verbosity(ptd->opts, 0);
 	parse_options_set_spell_guess(ptd->opts, FALSE);
-	parse_options_set_screen_width(ptd->opts, 4096);
 
 	ptd->panic_parse_opts = parse_options_create();
 	setup_panic_parse_options(ptd->panic_parse_opts);
@@ -700,7 +698,7 @@ JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
-	char *s = linkage_print_diagram(ptd->linkage);
+	char *s = linkage_print_diagram(ptd->linkage, 4096);
 	jstring j = (*env)->NewStringUTF(env, s);
 	linkage_free_diagram(s);
 	return j;

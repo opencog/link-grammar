@@ -95,7 +95,6 @@ struct Parse_Options_s
 #ifdef USE_FAT_LINKAGES
 	bool use_fat_links;     /* Look for fat linkages */
 #endif /* USE_FAT_LINKAGES */
-	int screen_width;       /* width of screen for displaying linkages */
 };
 
 struct Connector_set_s

@@ -435,11 +435,9 @@ static void put_opts_in_local_vars(Command_Options* copts)
 #endif /* USE_FAT_LINKAGES */
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
 	local.use_viterbi = parse_options_get_use_viterbi(opts);
-	local.screen_width = parse_options_get_screen_width(opts);
 	local.max_sentence_length = parse_options_get_max_sentence_length(opts);
 
-	local.screen_width = parse_options_get_screen_width(opts);
-
+	local.screen_width = copts->screen_width;
 	local.echo_on = copts->echo_on;
 	local.batch_mode = copts->batch_mode;
 	local.panic_mode = copts->panic_mode;
@@ -485,8 +483,8 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_use_viterbi(opts, local.use_viterbi);
 	parse_options_set_display_morphology(opts, local.display_morphology);
 	parse_options_set_max_sentence_length(opts, local.max_sentence_length);
-	parse_options_set_screen_width(opts, local.screen_width);
 
+	copts->screen_width = local.screen_width;
 	copts->echo_on = local.echo_on;
 	copts->batch_mode = local.batch_mode;
 	copts->panic_mode = local.panic_mode;
@@ -522,6 +520,7 @@ Command_Options* command_options_create(void)
 	co->popts = parse_options_create();
 	co->panic_opts = parse_options_create();
 
+	co->screen_width = 79;
 #ifdef USE_FAT_LINKAGES
 	co->display_union = false;
 #endif /* USE_FAT_LINKAGES */

@@ -135,7 +135,6 @@ Parse_Options parse_options_create(void)
 	po->use_fat_links = false;
 #endif /* USE_FAT_LINKAGES */
 	po->use_cluster_disjuncts = false;
-	po->screen_width = 79;
 	po->display_morphology = false;
 
 	return po;
@@ -398,14 +397,6 @@ void parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool dummy) {
 
 bool parse_options_get_use_cluster_disjuncts(Parse_Options opts) {
 	return opts->use_cluster_disjuncts;
-}
-
-void parse_options_set_screen_width(Parse_Options opts, int dummy) {
-	opts->screen_width = dummy;
-}
-
-int parse_options_get_screen_width(Parse_Options opts) {
-	return opts->screen_width;
 }
 
 int parse_options_get_display_morphology(Parse_Options opts) {

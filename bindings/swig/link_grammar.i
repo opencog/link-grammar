@@ -77,8 +77,6 @@ Cost_Model_type  parse_options_get_cost_model_type(Parse_Options opts);
 int  parse_options_timer_expired(Parse_Options opts);
 int  parse_options_memory_exhausted(Parse_Options opts);
 int  parse_options_resources_exhausted(Parse_Options opts);
-void parse_options_set_screen_width(Parse_Options opts, int val);
-int  parse_options_get_screen_width(Parse_Options opts);
 void parse_options_set_display_morphology(Parse_Options opts, int val);
 int  parse_options_get_display_morphology(Parse_Options opts);
 void parse_options_set_display_walls(Parse_Options opts, int val);
@@ -131,7 +129,7 @@ int  sentence_link_cost(Sentence sent, int i);
 
 Linkage linkage_create(int index, Sentence sent, Parse_Options opts);
 void linkage_delete(Linkage linkage);
-char * linkage_print_diagram(Linkage linkage);
+char * linkage_print_diagram(Linkage linkage, size_t screen_width);
 
 Sentence linkage_get_sentence(Linkage linkage);
 int linkage_get_num_words(Linkage linkage);

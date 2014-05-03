@@ -156,10 +156,6 @@ link_public_api(bool)
 link_public_api(bool)
      parse_options_resources_exhausted(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_screen_width(Parse_Options opts, int val);
-link_public_api(int)
-     parse_options_get_screen_width(Parse_Options opts);
-link_public_api(void)
      parse_options_set_use_cluster_disjuncts(Parse_Options opts, bool val);
 link_public_api(bool)
      parse_options_get_use_cluster_disjuncts(Parse_Options opts);
@@ -290,7 +286,7 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_constituent_tree_str(char *str);
 link_public_api(char *)
-     linkage_print_diagram(const Linkage linkage);
+     linkage_print_diagram(const Linkage linkage, size_t screen_width);
 link_public_api(void)
      linkage_free_diagram(char * str);
 link_public_api(char *)

@@ -363,7 +363,10 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
  * Returned string is allocated with exalloc.
  * Needs to be freed with linkage_free_diagram()
  */
-static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
+static char * 
+linkage_print_diagram_ctxt(const Linkage linkage,
+                           size_t x_screen_width,
+                           ps_ctxt_t *pctx)
 {
 	unsigned int i, j, k, cl, cr, row, top_row, top_row_p1;
 	const char *s;
@@ -384,7 +387,6 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
 	char * gr_string;
 	Dictionary dict = linkage->sent->dict;
 	Parse_Options opts = linkage->opts;
-	size_t x_screen_width = parse_options_get_screen_width(opts);
 	unsigned int N_words_to_print;
 
 	char picture[MAX_HEIGHT][MAX_LINE];
@@ -659,11 +661,11 @@ static char * linkage_print_diagram_ctxt(const Linkage linkage, ps_ctxt_t *pctx)
  * The returned string is malloced, and needs to be freed with
  * linkage_free_diagram()
  */
-char * linkage_print_diagram(const Linkage linkage)
+char * linkage_print_diagram(const Linkage linkage, size_t screen_width)
 {
 	ps_ctxt_t ctx;
 	if (!linkage) return NULL;
-	return linkage_print_diagram_ctxt(linkage, &ctx);
+	return linkage_print_diagram_ctxt(linkage, screen_width, &ctx);
 }
 
 void linkage_free_diagram(char * s)
@@ -697,7 +699,7 @@ char * linkage_print_postscript(Linkage linkage, int mode)
 
 	/* call the ascii printer to initialize the row size stuff. */
 	ps_ctxt_t ctx;
-	char * ascii = linkage_print_diagram_ctxt(linkage, &ctx);
+	char * ascii = linkage_print_diagram_ctxt(linkage, 8000, &ctx);
 	linkage_free_diagram(ascii);
 
 	ps = build_linkage_postscript_string(linkage, &ctx);
