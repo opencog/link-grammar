@@ -129,7 +129,6 @@ Parse_Options parse_options_create(void)
 	po->resources = resources_create();
 	po->display_short = true;
 	po->display_word_subscripts = true;
-	po->display_link_subscripts = true;
 	po->display_walls = false;
 #ifdef USE_FAT_LINKAGES
 	po->use_fat_links = false;
