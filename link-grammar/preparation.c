@@ -340,6 +340,10 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	for (i=0; i<sent->length; i++) {
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d);
+
+		/* Some long Russian sentences can really blow up, here. */
+		if (resources_exhausted(opts->resources))
+			return;
 	}
 	print_time(opts, "Eliminated duplicate disjuncts");
 
@@ -425,14 +429,4 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	set_connector_length_limits(sent, NULL, opts);
 	pp_and_power_prune(sent, RUTHLESS, opts);
 #endif /* USE_FAT_LINKAGES */
-
-	/*
-	if (verbosity > 2) {
-		printf("\nAfter RUTHLESS power-pruning:\n");
-		print_disjunct_counts(sent);
-	}
-	*/
-	/* print time for power pruning used to be here */
-	/* now done in power_prune itself */
-	print_time(opts, "Initialized fast matcher and hash table");
 }
