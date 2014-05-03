@@ -13,7 +13,6 @@
 #include "api-structures.h"
 #include "externs.h"
 #include "fast-match.h"
-#include "resources.h"
 #include "word-utils.h"
 
 /** 
@@ -210,7 +209,7 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	}
 }
 
-match_context_t* alloc_fast_matcher(const Sentence sent, Resources rsrcs)
+match_context_t* alloc_fast_matcher(const Sentence sent)
 {
    unsigned int size, i;
 	size_t w;
@@ -257,19 +256,6 @@ match_context_t* alloc_fast_matcher(const Sentence sent, Resources rsrcs)
 			{
 				put_into_match_table(size, t, d, d->right, 1);
 			}
-		}
-
-		/* Some Russian sentences can have more than 50K entries,
-		 * in which case, the above can take a huge amount of time.
-		 * Maybe the Russian dict could be fixed ...!?
-		 */
-		if (resources_exhausted(rsrcs))
-		{
-			if (verbosity > 2) {
-				prt_error("Warning: Resources echausted building fast matcher!");
-			}
-			free_fast_matcher(ctxt);
-			return NULL;
 		}
 	}
 

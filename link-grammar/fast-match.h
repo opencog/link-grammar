@@ -13,7 +13,7 @@
 #include "link-includes.h"
 #include "structures.h"
 
-match_context_t* alloc_fast_matcher(const Sentence, Resources);
+match_context_t* alloc_fast_matcher(const Sentence);
 void free_fast_matcher(match_context_t*);
 
 void put_match_list(match_context_t *, Match_node *);

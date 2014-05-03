@@ -1209,7 +1209,7 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
 
-	mchxt = alloc_fast_matcher(sent, opts->resources);
+	mchxt = alloc_fast_matcher(sent);
 	ctxt = alloc_count_context(sent->length);
 	print_time(opts, "Initialized fast matcher");
 	if (resources_exhausted(opts->resources)) return;
