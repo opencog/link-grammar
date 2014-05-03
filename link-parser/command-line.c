@@ -440,6 +440,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_union = copts->display_union;
 #endif /* USE_FAT_LINKAGES */
 	local.display_on = copts->display_on;
+	local.display_walls = copts->display_walls;
 	local.display_postscript = copts->display_postscript;
 	local.display_constituents = copts->display_constituents;
 
@@ -449,7 +450,6 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_senses = copts->display_senses;
 
 	local.display_morphology = parse_options_get_display_morphology(opts);
-	local.display_walls = parse_options_get_display_walls(opts);
 }
 
 static void put_local_vars_in_opts(Command_Options* copts)
@@ -485,6 +485,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_union = local.display_union;
 #endif /* USE_FAT_LINKAGES */
 	copts->display_on = local.display_on;
+	copts->display_walls = local.display_walls;
 	copts->display_postscript = local.display_postscript;
 	copts->display_constituents = local.display_constituents;
 
@@ -492,8 +493,6 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_disjuncts = local.display_disjuncts;
 	copts->display_links = local.display_links;
 	copts->display_senses = local.display_senses;
-
-	parse_options_set_display_walls(opts, local.display_walls);
 }
 
 int issue_special_command(const char * line, Command_Options* opts, Dictionary dict)
@@ -520,6 +519,7 @@ Command_Options* command_options_create(void)
 	co->echo_on = false;
 	co->panic_mode = false;
 	co->display_on = true;
+	co->display_walls = false;
 	co->display_postscript = false;
 	co->display_constituents = NO_DISPLAY;
 

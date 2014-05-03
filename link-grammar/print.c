@@ -241,7 +241,9 @@ char * linkage_print_disjuncts(const Linkage linkage)
 /**
  * postscript printing ...
  */
-static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *pctx)
+static char * 
+build_linkage_postscript_string(const Linkage linkage,
+                                bool display_walls, ps_ctxt_t *pctx)
 {
 	int link, i,j;
 	int d;
@@ -256,7 +258,6 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	String  * string;
 	char * ps_string;
 	Dictionary dict = linkage->sent->dict;
-	Parse_Options opts = linkage->opts;
 	int N_words_to_print;
 
 	string = string_new();
@@ -264,7 +265,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 	N_wall_connectors = 0;
 	if (dict->left_wall_defined) {
 		suppressor_used = FALSE;
-		if (!opts->display_walls)
+		if (!display_walls)
 			for (j=0; j<N_links; j++) {
 				if (ppla[j]->lw == 0) {
 					if (ppla[j]->rw == linkage->num_words-1) continue;
@@ -275,7 +276,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 				}
 			}
 		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || opts->display_walls);
+						|| (N_wall_connectors > 1) || display_walls);
 	} else {
 		print_word_0 = TRUE;
 	}
@@ -292,7 +293,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
 			}
 		}
 		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || opts->display_walls);
+						|| (N_wall_connectors > 1) || display_walls);
 	}
 	else {
 		print_word_N = TRUE;
@@ -365,6 +366,7 @@ static char * build_linkage_postscript_string(const Linkage linkage, ps_ctxt_t *
  */
 static char * 
 linkage_print_diagram_ctxt(const Linkage linkage,
+                           bool display_walls,
                            size_t x_screen_width,
                            ps_ctxt_t *pctx)
 {
@@ -387,7 +389,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	String * string;
 	char * gr_string;
 	Dictionary dict = linkage->sent->dict;
-	Parse_Options opts = linkage->opts;
 	unsigned int N_words_to_print;
 
 	char picture[MAX_HEIGHT][MAX_LINE];
@@ -401,7 +402,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	if (dict->left_wall_defined)
 	{
 		suppressor_used = FALSE;
-		if (!opts->display_walls)
+		if (!display_walls)
 		{
 			for (j=0; j<N_links; j++)
 			{
@@ -417,7 +418,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			}
 		}
 		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || opts->display_walls);
+						|| (N_wall_connectors > 1) || display_walls);
 	}
 	else
 	{
@@ -441,7 +442,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			}
 		}
 		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors > 1) || opts->display_walls);
+						|| (N_wall_connectors > 1) || display_walls);
 	}
 	else
 	{
@@ -649,11 +650,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
  * The returned string is malloced, and needs to be freed with
  * linkage_free_diagram()
  */
-char * linkage_print_diagram(const Linkage linkage, size_t screen_width)
+char * linkage_print_diagram(const Linkage linkage, bool display_walls, size_t screen_width)
 {
 	ps_ctxt_t ctx;
 	if (!linkage) return NULL;
-	return linkage_print_diagram_ctxt(linkage, screen_width, &ctx);
+	return linkage_print_diagram_ctxt(linkage, display_walls, screen_width, &ctx);
 }
 
 void linkage_free_diagram(char * s)
@@ -677,24 +678,24 @@ void linkage_free_senses(char * s)
 }
 
 /* Forward declarations, the gunk is at the bottom. */
-static const char * trailer(int mode);
-static const char * header(int mode);
+static const char * trailer(bool print_ps_header);
+static const char * header(bool print_ps_header);
 
-char * linkage_print_postscript(Linkage linkage, int mode)
+char * linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header)
 {
 	char * ps, * qs;
 	int size;
 
 	/* call the ascii printer to initialize the row size stuff. */
 	ps_ctxt_t ctx;
-	char * ascii = linkage_print_diagram_ctxt(linkage, 8000, &ctx);
+	char * ascii = linkage_print_diagram_ctxt(linkage, display_walls, 8000, &ctx);
 	linkage_free_diagram(ascii);
 
-	ps = build_linkage_postscript_string(linkage, &ctx);
-	size = strlen(header(mode)) + strlen(ps) + strlen(trailer(mode)) + 1;
+	ps = build_linkage_postscript_string(linkage, display_walls, &ctx);
+	size = strlen(header(print_ps_header)) + strlen(ps) + strlen(trailer(print_ps_header)) + 1;
 
 	qs = (char *) exalloc(sizeof(char)*size);
-	sprintf(qs, "%s%s%s", header(mode), ps, trailer(mode));
+	sprintf(qs, "%s%s%s", header(print_ps_header), ps, trailer(print_ps_header));
 	exfree(ps, strlen(ps)+1);
 
 	return qs;
@@ -748,7 +749,7 @@ void print_expression_sizes(Sentence sent)
 	printf("\n\n");
 }
 
-static const char * trailer(int mode)
+static const char * trailer(bool print_ps_header)
 {
 	static const char * trailer_string=
 		"diagram\n"
@@ -756,11 +757,11 @@ static const char * trailer(int mode)
 		"%%EndDocument\n"
 		;
 
-	if (mode==1) return trailer_string;
+	if (print_ps_header) return trailer_string;
 	else return "";
 }
 
-static const char * header(int mode)
+static const char * header(bool print_ps_header)
 {
 	static const char * header_string=
 		"%!PS-Adobe-2.0 EPSF-1.2\n"
@@ -1116,7 +1117,7 @@ static const char * header(int mode)
 		"     end\n"
 		"} def \n"
 		;
-	if (mode==1) return header_string;
+	if (print_ps_header) return header_string;
 	else return "";
 }
 

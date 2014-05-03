@@ -278,7 +278,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		}
 		if (copts->display_on)
 		{
-			string = linkage_print_diagram(linkage, copts->screen_width);
+			string = linkage_print_diagram(linkage, copts->display_walls, copts->screen_width);
 			fprintf(stdout, "%s", string);
 			linkage_free_diagram(string);
 		}
@@ -302,7 +302,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 		}
 		if (copts->display_postscript)
 		{
-			string = linkage_print_postscript(linkage, FALSE);
+			string = linkage_print_postscript(linkage, copts->display_walls, false);
 			fprintf(stdout, "%s\n", string);
 			linkage_free_postscript(string);
 		}

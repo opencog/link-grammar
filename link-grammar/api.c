@@ -125,7 +125,6 @@ Parse_Options parse_options_create(void)
 	po->twopass_length = 30;
 	po->repeatable_rand = true;
 	po->resources = resources_create();
-	po->display_walls = false;
 #ifdef USE_FAT_LINKAGES
 	po->use_fat_links = false;
 #endif /* USE_FAT_LINKAGES */
@@ -384,14 +383,6 @@ int parse_options_get_display_morphology(Parse_Options opts) {
 
 void parse_options_set_display_morphology(Parse_Options opts, int dummy) {
 	opts->display_morphology = dummy;
-}
-
-void parse_options_set_display_walls(Parse_Options opts, bool dummy) {
-	opts->display_walls = dummy;
-}
-
-bool parse_options_get_display_walls(Parse_Options opts) {
-	return opts->display_walls;
 }
 
 bool parse_options_timer_expired(Parse_Options opts) {

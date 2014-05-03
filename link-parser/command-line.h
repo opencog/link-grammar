@@ -30,6 +30,7 @@ typedef struct {
 	bool echo_on;           /* true if we should echo the input sentence */
 	bool panic_mode;        /* if true, parse in "panic mode" after all else fails */
 	bool display_on;        /* if true, output graphical linkage diagram */
+	bool display_walls;     /* if true, show the wall words in the linkage diagram */
 	bool display_postscript;/* if true, output postscript linkage */
 	ConstituentDisplayStyle display_constituents; /* style for displaying constituent structure */
 

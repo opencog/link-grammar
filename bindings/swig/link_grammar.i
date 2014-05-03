@@ -75,8 +75,6 @@ int  parse_options_memory_exhausted(Parse_Options opts);
 int  parse_options_resources_exhausted(Parse_Options opts);
 void parse_options_set_display_morphology(Parse_Options opts, int val);
 int  parse_options_get_display_morphology(Parse_Options opts);
-void parse_options_set_display_walls(Parse_Options opts, int val);
-int  parse_options_get_display_walls(Parse_Options opts);
 void parse_options_set_spell_guess(Parse_Options opts, int val);
 int  parse_options_get_spell_guess(Parse_Options opts);
 void parse_options_set_all_short_connectors(Parse_Options opts, int val);
@@ -119,13 +117,13 @@ int  sentence_link_cost(Sentence sent, int i);
 ***********************************************************************/
 %newobject linkage_print_senses;
 %newobject linkage_print_links_and_domains;
-%newobject linkage_print_postscript;
-%newobject linkage_print_postscript;
 %newobject linkage_print_diagram;
+%newobject linkage_print_postscript;
 
 Linkage linkage_create(int index, Sentence sent, Parse_Options opts);
 void linkage_delete(Linkage linkage);
-char * linkage_print_diagram(Linkage linkage, size_t screen_width);
+char * linkage_print_diagram(Linkage linkage, bool display_walls, size_t screen_width);
+char * linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header);
 
 Sentence linkage_get_sentence(Linkage linkage);
 int linkage_get_num_words(Linkage linkage);
@@ -144,7 +142,6 @@ const char *  linkage_get_word(Linkage linkage, int w);
 char * linkage_print_links_and_domains(Linkage linkage);
 char * linkage_print_senses(Linkage linkage);
 char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
-char * linkage_print_postscript(Linkage linkage, int mode);
 int linkage_unused_word_cost(Linkage linkage);
 double linkage_disjunct_cost(Linkage linkage);
 int linkage_link_cost(Linkage linkage);

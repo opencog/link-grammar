@@ -152,10 +152,6 @@ link_public_api(void)
 link_public_api(bool)
      parse_options_get_use_cluster_disjuncts(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_display_walls(Parse_Options opts, bool val);
-link_public_api(bool)
-     parse_options_get_display_walls(Parse_Options opts);
-link_public_api(void)
      parse_options_set_all_short_connectors(Parse_Options opts, bool val);
 link_public_api(bool)
      parse_options_get_all_short_connectors(Parse_Options opts);
@@ -278,9 +274,13 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_constituent_tree_str(char *str);
 link_public_api(char *)
-     linkage_print_diagram(const Linkage linkage, size_t screen_width);
+     linkage_print_diagram(const Linkage linkage, bool display_walls, size_t screen_width);
 link_public_api(void)
      linkage_free_diagram(char * str);
+link_public_api(char *)
+     linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header);
+link_public_api(void)
+     linkage_free_postscript(char * str);
 link_public_api(char *)
      linkage_print_disjuncts(const Linkage linkage);
 link_public_api(void)
@@ -289,10 +289,6 @@ link_public_api(char *)
      linkage_print_links_and_domains(const Linkage linkage);
 link_public_api(void)
      linkage_free_links_and_domains(char *str);
-link_public_api(char *)
-     linkage_print_postscript(Linkage linkage, int mode);
-link_public_api(void)
-     linkage_free_postscript(char * str);
 link_public_api(char *)
      linkage_print_pp_msgs(Linkage linkage);
 link_public_api(void)

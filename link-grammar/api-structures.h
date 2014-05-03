@@ -71,8 +71,8 @@ struct Parse_Options_s
 	bool islands_ok;       /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
-	bool use_cluster_disjuncts; /* if true, atttempt using a broader list of disjuncts */
-	size_t twopass_length; /* min length for two-pass post processing */
+	bool use_cluster_disjuncts; /* Attempt using a broader list of disjuncts */
+	size_t twopass_length; /* min sent length for two-pass post processing */
 	size_t short_length;   /* Links that are limited in length can be
 	                        * no longer than this.  Default = 6 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */
@@ -85,7 +85,6 @@ struct Parse_Options_s
 #endif /* USE_FAT_LINKAGES */
 
 	/* Flags governing the operation of the printer */
-	bool display_walls;
 	bool display_morphology;/* if true, print morpho analysis of words */
 };
 

@@ -692,7 +692,7 @@ JNIEXPORT jstring JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkString(JNIEnv *env, jclass cls)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
-	char *s = linkage_print_diagram(ptd->linkage, 4096);
+	char *s = linkage_print_diagram(ptd->linkage, true, 8100);
 	jstring j = (*env)->NewStringUTF(env, s);
 	linkage_free_diagram(s);
 	return j;
