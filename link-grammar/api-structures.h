@@ -73,6 +73,7 @@ struct Parse_Options_s
 	bool islands_ok;       /* If TRUE, then linkages with islands
 	                          (separate component of the link graph)
 	                          will be generated (default=FALSE) */
+	bool use_cluster_disjuncts; /* if true, atttempt using a broader list of disjuncts */
 	size_t twopass_length; /* min length for two-pass post processing */
 	size_t max_sentence_length;
 	size_t short_length;   /* Links that are limited in length can be
@@ -83,17 +84,19 @@ struct Parse_Options_s
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
 	Resources resources;   /* For deciding when to abort the parsing */
 
-	/* Flags governing the command-line client; not used by parser */
+	/* Flags governing the operation of the printer */
 	bool display_short;
 	bool display_word_subscripts;  /* as in "dog.n" as opposed to "dog" */
 	bool display_link_subscripts;  /* as in "Ss" as opposed to "S" */
 	bool display_walls;
+	bool display_morphology;/* if true, print morpho analysis of words */
+
+	/* Flags governing the command-line client; not used by parser */
 #ifdef USE_FAT_LINKAGES
 	bool use_fat_links;     /* Look for fat linkages */
 	bool display_union;     /* print squashed version of linkage with conjunction? */
 #endif /* USE_FAT_LINKAGES */
 	bool allow_null;        /* true if we allow null links in parsing */
-	bool use_cluster_disjuncts; /* if true, atttempt using a borader list of disjuncts */
 	bool echo_on;           /* true if we should echo the input sentence */
 	bool batch_mode;        /* if true, process sentences non-interactively */
 	bool panic_mode;        /* if true, parse in "panic mode" after all else fails */
@@ -104,7 +107,6 @@ struct Parse_Options_s
 	bool display_bad;       /* if true, bad linkages are displayed */
 	bool display_disjuncts; /* if true, print disjuncts that were used */
 	bool display_links;     /* if true, a list o' links is printed out */
-	bool display_morphology;/* if true, print morpho analysis of words */
 	bool display_senses;    /* if true, sense candidates are printed out */
 };
 
@@ -116,7 +118,7 @@ struct Connector_set_s
 
 struct Afdict_class_struct
 {
-	size_t mem_elems;     /* number of memory elements alolocated */
+	size_t mem_elems;     /* number of memory elements allocated */
 	size_t length;        /* number of strings */
 	char const ** string;
 };
