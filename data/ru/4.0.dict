@@ -13,6 +13,8 @@
 % The empty word.
 =.zzz: ZZZ-;
 
+<costly-null>: [[[[]]]];
+
 <наречие-куда>: ({Xc-} & Ed-) or ({XIc+} & EId+) or ({Xt- & S-});
 <наречие-откуда>: ({Xc-} & Es-) or ({XIc+} & EIs+) or Mp- or ({Xt-} & S-);
 <наречие-где>: ({Xc-} & Ew-) or ({XIc+} & EIw+) or ({Xt-} & S-);
@@ -148,27 +150,27 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 %% СУЩЕСТВИТЕЛЬНЫЕ
 <сущ-i>: Ji- or (Sp+ or SIp- or [[Wd-]]) or ((Xt- or [[]]) & S-) or Nip-;
 <макро-сущ-i> : NXi+ 
-	or (Xc- & NXi- & (NXi+ or [[[{Api-} & {AIpi+} & {Ppi+} & {PIpi-} & <сущ-i>]]]))
+	or (Xc- & NXi- & (NXi+ or [[[[{Api-} & {AIpi+} & {Ppi+} & {PIpi-} & <сущ-i>]]]]))
 	or (Xi- & NXi- & {Api-} & {AIpi+} & {Ppi+} & {PIpi-} & <сущ-i>);
 <сущ-g>: Jg- or [Mg-] or [[MVag- or MVIag+]] or Ngp-;
 <макро-сущ-g> : NXg+
-	or (Xc- & NXg- & (NXg+ or [[[{Apg-} & {AIpg+} & {Ppg+} & {PIpg-} & <сущ-g>]]]))
+	or (Xc- & NXg- & (NXg+ or [[[[{Apg-} & {AIpg+} & {Ppg+} & {PIpg-} & <сущ-g>]]]]))
 	or (Xi- & NXg- & {Apg-} & {AIpg+} & {Ppg+} & {PIpg-} & <сущ-g>);
 <сущ-d>: Jd- or [[MVad-]] or [[MVIad+]] or Ndp-;
 <макро-сущ-d> : NXd+
-	or (Xc- & NXd- & (NXd+ or [[[{Apd-} & {AIpd+} & {Ppd+} & {PIpd-} & <сущ-d>]]]))
+	or (Xc- & NXd- & (NXd+ or [[[[{Apd-} & {AIpd+} & {Ppd+} & {PIpd-} & <сущ-d>]]]]))
 	or (Xi- & NXd- & {Apd-} & {AIpd+} & {Ppd+} & {PIpd-} & <сущ-d>);
 <сущ-v>: Jv- or [MVv-] or [MVIv+] or Nvp-;
 <макро-сущ-v> : NXv+
-	or (Xc- & NXv- & (NXv+ or [[[{Apv-} & {AIpv+} & {Ppv+} & {PIpv-} & <сущ-v>]]]))
+	or (Xc- & NXv- & (NXv+ or [[[[{Apv-} & {AIpv+} & {Ppv+} & {PIpv-} & <сущ-v>]]]]))
 	or (Xi- & NXv- & {Apv-} & {AIpv+} & {Ppv+} & {PIpv-} & <сущ-v>);
 <сущ-t>: Jt- or AP- or [[MVat- or MVIat+]] or Ntp-;
 <макро-сущ-t> : NXt+
-	or (Xc- & NXt- & (NXt+ or [[[{Apt-} & {AIpt+} & {Ppt+} & {PIpt-} & <сущ-t>]]]))
+	or (Xc- & NXt- & (NXt+ or [[[[{Apt-} & {AIpt+} & {Ppt+} & {PIpt-} & <сущ-t>]]]]))
 	or (Xi- & NXt- & {Apt-} & {AIpt+} & {Ppt+} & {PIpt-} & <сущ-t>);
 <сущ-p>: Jp- or Npp-;
 <макро-сущ-p> : NXp+
-	or (Xc- & NXp- & (NXp+ or [[[{App-} & {AIpp+} & {Ppp+} & {PIpp-} & <сущ-p>]]]))
+	or (Xc- & NXp- & (NXp+ or [[[[{App-} & {AIpp+} & {Ppp+} & {PIpp-} & <сущ-p>]]]]))
 	or (Xi- & NXp- & {App-} & {AIpp+} & {Ppp+} & {PIpp-} & <сущ-p>);
 <существительное-mi>: ((({M+} & {[[Ami-]]}) or ({Ami-} & {[[AImi+]]}) or ({M+} & {[[AImi+]]}) or {G+}) & {@Pmi+ or @PImi-} & {Xn-} & {Xia-} & {@EI-} & {I+} & (Ji- or (Sm3+ or MVAim- or SIm3- or [[Wd-]]) or ((Xt- or [[]]) & S-) or Nim- or <макро-сущ-i>)) or (Ami- & Ami- & {Xia-} & Sm3+ );
 <существительное-ni>: (({M+} & {[[Ani-]]}) or {[[AIni+]]} or {G+}) & {@Pni+ or @PIni-} & {Xn-} & {Xia-} & {@EI-} & (Ji- or (Sn3+ or MVAin- or SIn3- or [[Wd-]]) or ((Xt- or [[]]) & S-) or Nin- or <макро-сущ-i>);
@@ -472,8 +474,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXi- & (VXi+ or [<глагол-i>]))
 	or (Xi- & VXi- & <глагол-i>)
 	or [[]];
-<глагол-pmi>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmid- ) or PImid+;
-<глагол-smi>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmis- ) or PImis+;
+<глагол-pmi>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmid- ) or PImid+;
+<глагол-smi>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmis- ) or PImis+;
 <макро-глагол-pmi> : VXpmi+
 	or (Xc- & VXpmi- & (VXpmi+ or [<глагол-pmi>]))
 	or (Xi- & VXpmi- & <глагол-pmi>)
@@ -482,8 +484,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsmi- & (VXsmi+ or [<глагол-smi>]))
 	or (Xi- & VXsmi- & <глагол-smi>)
 	or [[]];
-<глагол-pmg>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmgd- ) or PImgd+;
-<глагол-smg>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmgs- ) or PImgs+;
+<глагол-pmg>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmgd- ) or PImgd+;
+<глагол-smg>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmgs- ) or PImgs+;
 <макро-глагол-pmg> : VXpmg+
 	or (Xc- & VXpmg- & (VXpmg+ or [<глагол-pmg>]))
 	or (Xi- & VXpmg- & <глагол-pmg>)
@@ -492,8 +494,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsmg- & (VXsmg+ or [<глагол-smg>]))
 	or (Xi- & VXsmg- & <глагол-smg>)
 	or [[]];
-<глагол-pmd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmdd- ) or PImdd+;
-<глагол-smd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmds- ) or PImds+;
+<глагол-pmd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmdd- ) or PImdd+;
+<глагол-smd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmds- ) or PImds+;
 <макро-глагол-pmd> : VXpmd+
 	or (Xc- & VXpmd- & (VXpmd+ or [<глагол-pmd>]))
 	or (Xi- & VXpmd- & <глагол-pmd>)
@@ -502,8 +504,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsmd- & (VXsmd+ or [<глагол-smd>]))
 	or (Xi- & VXsmd- & <глагол-smd>)
 	or [[]];
-<глагол-pmv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmvd- ) or PImvd+;
-<глагол-smv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmvs- ) or PImvs+;
+<глагол-pmv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmvd- ) or PImvd+;
+<глагол-smv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmvs- ) or PImvs+;
 <макро-глагол-pmv> : VXpmv+
 	or (Xc- & VXpmv- & (VXpmv+ or [<глагол-pmv>]))
 	or (Xi- & VXpmv- & <глагол-pmv>)
@@ -512,8 +514,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsmv- & (VXsmv+ or [<глагол-smv>]))
 	or (Xi- & VXsmv- & <глагол-smv>)
 	or [[]];
-<глагол-pmt>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmtd- ) or PImtd+;
-<глагол-smt>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmts- ) or PImts+;
+<глагол-pmt>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmtd- ) or PImtd+;
+<глагол-smt>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmts- ) or PImts+;
 <макро-глагол-pmt> : VXpmt+
 	or (Xc- & VXpmt- & (VXpmt+ or [<глагол-pmt>]))
 	or (Xi- & VXpmt- & <глагол-pmt>)
@@ -522,8 +524,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsmt- & (VXsmt+ or [<глагол-smt>]))
 	or (Xi- & VXsmt- & <глагол-smt>)
 	or [[]];
-<глагол-pmp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmpd- ) or PImpd+;
-<глагол-smp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pmps- ) or PImps+;
+<глагол-pmp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmpd- ) or PImpd+;
+<глагол-smp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pmps- ) or PImps+;
 <макро-глагол-pmp> : VXpmp+
 	or (Xc- & VXpmp- & (VXpmp+ or [<глагол-pmp>]))
 	or (Xi- & VXpmp- & <глагол-pmp>)
@@ -532,8 +534,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsmp- & (VXsmp+ or [<глагол-smp>]))
 	or (Xi- & VXsmp- & <глагол-smp>)
 	or [[]];
-<глагол-pni>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnid- ) or PInid+;
-<глагол-sni>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnis- ) or PInis+;
+<глагол-pni>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnid- ) or PInid+;
+<глагол-sni>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnis- ) or PInis+;
 <макро-глагол-pni> : VXpni+
 	or (Xc- & VXpni- & (VXpni+ or [<глагол-pni>]))
 	or (Xi- & VXpni- & <глагол-pni>)
@@ -542,8 +544,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsni- & (VXsni+ or [<глагол-sni>]))
 	or (Xi- & VXsni- & <глагол-sni>)
 	or [[]];
-<глагол-png>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pngd- ) or PIngd+;
-<глагол-sng>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pngs- ) or PIngs+;
+<глагол-png>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pngd- ) or PIngd+;
+<глагол-sng>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pngs- ) or PIngs+;
 <макро-глагол-png> : VXpng+
 	or (Xc- & VXpng- & (VXpng+ or [<глагол-png>]))
 	or (Xi- & VXpng- & <глагол-png>)
@@ -552,8 +554,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsng- & (VXsng+ or [<глагол-sng>]))
 	or (Xi- & VXsng- & <глагол-sng>)
 	or [[]];
-<глагол-pnd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pndd- ) or PIndd+;
-<глагол-snd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnds- ) or PInds+;
+<глагол-pnd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pndd- ) or PIndd+;
+<глагол-snd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnds- ) or PInds+;
 <макро-глагол-pnd> : VXpnd+
 	or (Xc- & VXpnd- & (VXpnd+ or [<глагол-pnd>]))
 	or (Xi- & VXpnd- & <глагол-pnd>)
@@ -562,8 +564,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsnd- & (VXsnd+ or [<глагол-snd>]))
 	or (Xi- & VXsnd- & <глагол-snd>)
 	or [[]];
-<глагол-pnv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnvd- ) or PInvd+;
-<глагол-snv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnvs- ) or PInvs+;
+<глагол-pnv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnvd- ) or PInvd+;
+<глагол-snv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnvs- ) or PInvs+;
 <макро-глагол-pnv> : VXpnv+
 	or (Xc- & VXpnv- & (VXpnv+ or [<глагол-pnv>]))
 	or (Xi- & VXpnv- & <глагол-pnv>)
@@ -572,8 +574,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsnv- & (VXsnv+ or [<глагол-snv>]))
 	or (Xi- & VXsnv- & <глагол-snv>)
 	or [[]];
-<глагол-pnt>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pntd- ) or PIntd+;
-<глагол-snt>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnts- ) or PInts+;
+<глагол-pnt>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pntd- ) or PIntd+;
+<глагол-snt>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnts- ) or PInts+;
 <макро-глагол-pnt> : VXpnt+
 	or (Xc- & VXpnt- & (VXpnt+ or [<глагол-pnt>]))
 	or (Xi- & VXpnt- & <глагол-pnt>)
@@ -582,8 +584,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsnt- & (VXsnt+ or [<глагол-snt>]))
 	or (Xi- & VXsnt- & <глагол-snt>)
 	or [[]];
-<глагол-pnp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnpd- ) or PInpd+;
-<глагол-snp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pnps- ) or PInps+;
+<глагол-pnp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnpd- ) or PInpd+;
+<глагол-snp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pnps- ) or PInps+;
 <макро-глагол-pnp> : VXpnp+
 	or (Xc- & VXpnp- & (VXpnp+ or [<глагол-pnp>]))
 	or (Xi- & VXpnp- & <глагол-pnp>)
@@ -592,8 +594,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsnp- & (VXsnp+ or [<глагол-snp>]))
 	or (Xi- & VXsnp- & <глагол-snp>)
 	or [[]];
-<глагол-pfi>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfid- ) or PIfid+;
-<глагол-sfi>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfis- ) or PIfis+;
+<глагол-pfi>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfid- ) or PIfid+;
+<глагол-sfi>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfis- ) or PIfis+;
 <макро-глагол-pfi> : VXpfi+
 	or (Xc- & VXpfi- & (VXpfi+ or [<глагол-pfi>]))
 	or (Xi- & VXpfi- & <глагол-pfi>)
@@ -602,8 +604,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsfi- & (VXsfi+ or [<глагол-sfi>]))
 	or (Xi- & VXsfi- & <глагол-sfi>)
 	or [[]];
-<глагол-pfg>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfgd- ) or PIfgd+;
-<глагол-sfg>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfgs- ) or PIfgs+;
+<глагол-pfg>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfgd- ) or PIfgd+;
+<глагол-sfg>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfgs- ) or PIfgs+;
 <макро-глагол-pfg> : VXpfg+
 	or (Xc- & VXpfg- & (VXpfg+ or [<глагол-pfg>]))
 	or (Xi- & VXpfg- & <глагол-pfg>)
@@ -612,8 +614,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsfg- & (VXsfg+ or [<глагол-sfg>]))
 	or (Xi- & VXsfg- & <глагол-sfg>)
 	or [[]];
-<глагол-pfd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfdd- ) or PIfdd+;
-<глагол-sfd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfds- ) or PIfds+;
+<глагол-pfd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfdd- ) or PIfdd+;
+<глагол-sfd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfds- ) or PIfds+;
 <макро-глагол-pfd> : VXpfd+
 	or (Xc- & VXpfd- & (VXpfd+ or [<глагол-pfd>]))
 	or (Xi- & VXpfd- & <глагол-pfd>)
@@ -622,8 +624,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsfd- & (VXsfd+ or [<глагол-sfd>]))
 	or (Xi- & VXsfd- & <глагол-sfd>)
 	or [[]];
-<глагол-pfv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfvd- ) or PIfvd+;
-<глагол-sfv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfvs- ) or PIfvs+;
+<глагол-pfv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfvd- ) or PIfvd+;
+<глагол-sfv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfvs- ) or PIfvs+;
 <макро-глагол-pfv> : VXpfv+
 	or (Xc- & VXpfv- & (VXpfv+ or [<глагол-pfv>]))
 	or (Xi- & VXpfv- & <глагол-pfv>)
@@ -632,8 +634,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsfv- & (VXsfv+ or [<глагол-sfv>]))
 	or (Xi- & VXsfv- & <глагол-sfv>)
 	or [[]];
-<глагол-pft>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pftd- ) or PIftd+;
-<глагол-sft>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfts- ) or PIfts+;
+<глагол-pft>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pftd- ) or PIftd+;
+<глагол-sft>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfts- ) or PIfts+;
 <макро-глагол-pft> : VXpft+
 	or (Xc- & VXpft- & (VXpft+ or [<глагол-pft>]))
 	or (Xi- & VXpft- & <глагол-pft>)
@@ -642,8 +644,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsft- & (VXsft+ or [<глагол-sft>]))
 	or (Xi- & VXsft- & <глагол-sft>)
 	or [[]];
-<глагол-pfp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfpd- ) or PIfpd+;
-<глагол-sfp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pfps- ) or PIfps+;
+<глагол-pfp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfpd- ) or PIfpd+;
+<глагол-sfp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pfps- ) or PIfps+;
 <макро-глагол-pfp> : VXpfp+
 	or (Xc- & VXpfp- & (VXpfp+ or [<глагол-pfp>]))
 	or (Xi- & VXpfp- & <глагол-pfp>)
@@ -652,8 +654,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXsfp- & (VXsfp+ or [<глагол-sfp>]))
 	or (Xi- & VXsfp- & <глагол-sfp>)
 	or [[]];
-<глагол-ppi>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppid- ) or PIpid+;
-<глагол-spi>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppis- ) or PIpis+;
+<глагол-ppi>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppid- ) or PIpid+;
+<глагол-spi>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppis- ) or PIpis+;
 <макро-глагол-ppi> : VXppi+
 	or (Xc- & VXppi- & (VXppi+ or [<глагол-ppi>]))
 	or (Xi- & VXppi- & <глагол-ppi>)
@@ -662,8 +664,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXspi- & (VXspi+ or [<глагол-spi>]))
 	or (Xi- & VXspi- & <глагол-spi>)
 	or [[]];
-<глагол-ppg>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppgd- ) or PIpgd+;
-<глагол-spg>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppgs- ) or PIpgs+;
+<глагол-ppg>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppgd- ) or PIpgd+;
+<глагол-spg>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppgs- ) or PIpgs+;
 <макро-глагол-ppg> : VXppg+
 	or (Xc- & VXppg- & (VXppg+ or [<глагол-ppg>]))
 	or (Xi- & VXppg- & <глагол-ppg>)
@@ -672,8 +674,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXspg- & (VXspg+ or [<глагол-spg>]))
 	or (Xi- & VXspg- & <глагол-spg>)
 	or [[]];
-<глагол-ppd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppdd- ) or PIpdd+;
-<глагол-spd>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppds- ) or PIpds+;
+<глагол-ppd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppdd- ) or PIpdd+;
+<глагол-spd>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppds- ) or PIpds+;
 <макро-глагол-ppd> : VXppd+
 	or (Xc- & VXppd- & (VXppd+ or [<глагол-ppd>]))
 	or (Xi- & VXppd- & <глагол-ppd>)
@@ -682,8 +684,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXspd- & (VXspd+ or [<глагол-spd>]))
 	or (Xi- & VXspd- & <глагол-spd>)
 	or [[]];
-<глагол-ppv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppvd- ) or PIpvd+;
-<глагол-spv>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppvs- ) or PIpvs+;
+<глагол-ppv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppvd- ) or PIpvd+;
+<глагол-spv>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppvs- ) or PIpvs+;
 <макро-глагол-ppv> : VXppv+
 	or (Xc- & VXppv- & (VXppv+ or [<глагол-ppv>]))
 	or (Xi- & VXppv- & <глагол-ppv>)
@@ -692,8 +694,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXspv- & (VXspv+ or [<глагол-spv>]))
 	or (Xi- & VXspv- & <глагол-spv>)
 	or [[]];
-<глагол-ppt>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pptd- ) or PIptd+;
-<глагол-spt>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppts- ) or PIpts+;
+<глагол-ppt>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pptd- ) or PIptd+;
+<глагол-spt>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppts- ) or PIpts+;
 <макро-глагол-ppt> : VXppt+
 	or (Xc- & VXppt- & (VXppt+ or [<глагол-ppt>]))
 	or (Xi- & VXppt- & <глагол-ppt>)
@@ -702,8 +704,8 @@ CAPITALIZED-WORDS: ({Xia-} & {@EI-} & {Xp+} & {G+} & (
 	or (Xc- & VXspt- & (VXspt+ or [<глагол-spt>]))
 	or (Xi- & VXspt- & <глагол-spt>)
 	or [[]];
-<глагол-ppp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Pppd- ) or PIppd+;
-<глагол-spp>: ( (Xc- or [[[[]]]]) & (XIc+ or [[[[]]]]) & Ppps- ) or PIpps+;
+<глагол-ppp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Pppd- ) or PIppd+;
+<глагол-spp>: ( (Xc- or <costly-null>) & (XIc+ or <costly-null>) & Ppps- ) or PIpps+;
 <макро-глагол-ppp> : VXppp+
 	or (Xc- & VXppp- & (VXppp+ or [<глагол-ppp>]))
 	or (Xi- & VXppp- & <глагол-ppp>)
