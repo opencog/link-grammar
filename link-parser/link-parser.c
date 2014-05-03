@@ -1,7 +1,7 @@
 /***************************************************************************/
 /* Copyright (c) 2004                                                      */
 /* Daniel Sleator, David Temperley, and John Lafferty                      */
-/* Copyright (c) 2008 Linas Vepstas                                        */
+/* Copyright (c) 2008, 2014 Linas Vepstas                                  */
 /* All rights reserved                                                     */
 /*                                                                         */
 /* Use of the link grammar parsing system is subject to the terms of the   */
@@ -61,19 +61,18 @@
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
 
 static int batch_errors = 0;
-static int input_pending=FALSE;
-static Parse_Options  opts;
-static Parse_Options  panic_parse_opts;
+static int input_pending = FALSE;
 static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
 
 typedef enum
 {
-	UNGRAMMATICAL='*',
-	PARSE_WITH_DISJUNCT_COST_GT_0=':',  /* Not used anywhere, currently ... */
-	NO_LABEL=' '
+	UNGRAMMATICAL = '*',
+	PARSE_WITH_DISJUNCT_COST_GT_0 = ':',  /* Not used anywhere, currently ... */
+	NO_LABEL = ' '
 } Label;
+
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 /* Windows console (cmd.exe) input to utf8 */
@@ -545,18 +544,21 @@ static void batch_process_some_linkages(Label label,
 	}
 }
 
-static int special_command(char *input_string, Dictionary dict)
+static bool special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
 	if (input_string[0] == '\n') return TRUE;
 	if (input_string[0] == COMMENT_CHAR) return TRUE;
 	if (input_string[0] == '!') {
 		if (strncmp(input_string, "!panic_", 7) == 0)
 		{
-			issue_special_command(input_string+7, panic_parse_opts, dict);
+			Parse_Options save = copts->popts;
+			copts->popts = copts->panic_opts;
+			issue_special_command(input_string+7, copts, dict);
+			copts->popts = save;
 			return TRUE;
 		}
 
-		issue_special_command(input_string+1, opts, dict);
+		issue_special_command(input_string+1, copts, dict);
 		return TRUE;
 	}
 	return FALSE;
@@ -596,14 +598,15 @@ static void setup_panic_parse_options(Parse_Options opts)
 
 static void print_usage(char *str)
 {
+	Command_Options *copts;
 	fprintf(stderr,
 			"Usage: %s [language|dictionary location]\n"
 			"                   [-<special \"!\" command>]\n"
 			"                   [--version]\n", str);
 
 	fprintf(stderr, "\nSpecial commands are:\n");
-	opts = parse_options_create();
-	issue_special_command("var", opts, NULL);
+	copts = command_options_create();
+	issue_special_command("var", copts, NULL);
 	exit(-1);
 }
 
@@ -651,6 +654,8 @@ int main(int argc, char * argv[])
 	Label           label = NO_LABEL;
 	const char      *codeset;
 	const char      *locale = NULL;
+	Command_Options *copts;
+	Parse_Options   opts;
 
 #if LATER
 	/* Try to catch the SIGWINCH ... except this is not working. */
@@ -702,20 +707,15 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	opts = parse_options_create();
-	if (opts == NULL)
+	copts = command_options_create();
+	opts = copts->popts;
+	if (copts == NULL || opts == NULL || copts->panic_opts == NULL)
 	{
 		fprintf(stderr, "%s: Fatal error: unable to create parse options\n", argv[0]);
 		exit(-1);
 	}
 
-	panic_parse_opts = parse_options_create();
-	if (panic_parse_opts == NULL)
-	{
-		fprintf(stderr, "%s: Fatal error: unable to create panic parse options\n", argv[0]);
-		exit(-1);
-	}
-	setup_panic_parse_options(panic_parse_opts);
+	setup_panic_parse_options(copts->panic_opts);
 	parse_options_set_max_sentence_length(opts, 230);
 	parse_options_set_panic_mode(opts, TRUE);
 	parse_options_set_max_parse_time(opts, 30);
@@ -743,9 +743,9 @@ int main(int argc, char * argv[])
 		{
 			int rc;
 			if (argv[i][1] == '!' || argv[i][1] == '-')
-				rc = issue_special_command(argv[i]+2, opts, dict);
+				rc = issue_special_command(argv[i]+2, copts, dict);
 			else
-				rc = issue_special_command(argv[i]+1, opts, dict);
+				rc = issue_special_command(argv[i]+1, copts, dict);
 
 			if (rc)
 				print_usage(argv[0]);
@@ -809,7 +809,7 @@ int main(int argc, char * argv[])
 		/* If the input string is just whitespace, then ignore it. */
 		if (strspn(input_string, " \t\v") == strlen(input_string)) continue;
 
-		if (special_command(input_string, dict)) continue;
+		if (special_command(input_string, copts, dict)) continue;
 		if (parse_options_get_echo_on(opts))
 		{
 			printf("%s\n", input_string);
@@ -924,12 +924,12 @@ int main(int argc, char * argv[])
 				/* print_total_time(opts); */
 				batch_errors++;
 				if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
-				parse_options_reset_resources(panic_parse_opts);
-				parse_options_set_verbosity(panic_parse_opts, verbosity);
-				num_linkages = sentence_parse(sent, panic_parse_opts);
+				parse_options_reset_resources(copts->panic_opts);
+				parse_options_set_verbosity(copts->panic_opts, verbosity);
+				num_linkages = sentence_parse(sent, copts->panic_opts);
 				if (verbosity > 0)
 				{
-					if (parse_options_timer_expired(panic_parse_opts))
+					if (parse_options_timer_expired(copts->panic_opts))
 						fprintf(stdout, "Panic timer is expired!\n");
 				}
 			}
@@ -965,8 +965,7 @@ int main(int argc, char * argv[])
 	}
 
 	/* Free stuff, so that mem-leak detectors don't commplain. */
-	parse_options_delete(panic_parse_opts);
-	parse_options_delete(opts);
+	command_options_delete(copts);
 	dictionary_delete(dict);
 	fget_input_string(NULL, NULL, NULL);
 

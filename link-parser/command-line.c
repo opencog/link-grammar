@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2008, 2009, 2011 Linas Vepstas                          */
+/* Copyright (c) 2008, 2009, 2011, 2014 Linas Vepstas                    */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -190,11 +190,12 @@ static inline void setival(Switch s, int val)
 	*((int *) s.ptr) = val;
 }
 
-static int x_issue_special_command(const char * line, Parse_Options opts, Dictionary dict)
+static int x_issue_special_command(const char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, myline[1000], *x, *y;
 	int i, count, j, k;
 	Switch * as = default_switches;
+	Parse_Options opts = copts->popts;
 
 	strncpy(myline, line, sizeof(myline));
 	myline[sizeof(myline)-1] = '\0';
@@ -413,8 +414,9 @@ static int x_issue_special_command(const char * line, Parse_Options opts, Dictio
 	return -1;
 }
 
-static void put_opts_in_local_vars(Parse_Options opts)
+static void put_opts_in_local_vars(Command_Options* copts)
 {
+	Parse_Options opts = copts->popts;
 	local.verbosity = parse_options_get_verbosity(opts);
 	local.debug = parse_options_get_debug(opts);
 	local.test = parse_options_get_test(opts);
@@ -452,8 +454,9 @@ static void put_opts_in_local_vars(Parse_Options opts)
 	local.display_walls = parse_options_get_display_walls(opts);
 }
 
-static void put_local_vars_in_opts(Parse_Options opts)
+static void put_local_vars_in_opts(Command_Options* copts)
 {
+	Parse_Options opts = copts->popts;
 	parse_options_set_verbosity(opts, local.verbosity);
 	parse_options_set_debug(opts, local.debug);
 	parse_options_set_test(opts, local.test);
@@ -493,7 +496,7 @@ static void put_local_vars_in_opts(Parse_Options opts)
 	parse_options_set_display_walls(opts, local.display_walls);
 }
 
-int issue_special_command(const char * line, Parse_Options opts, Dictionary dict)
+int issue_special_command(const char * line, Command_Options* opts, Dictionary dict)
 {
 	int rc;
 	put_opts_in_local_vars(opts);
@@ -503,3 +506,18 @@ int issue_special_command(const char * line, Parse_Options opts, Dictionary dict
 }
 
 
+Command_Options* command_options_create(void)
+{
+	Command_Options* co = malloc(sizeof (Command_Options));
+	co->popts = parse_options_create();
+	co->panic_opts = parse_options_create();
+	co->display_senses = false;
+	return co;
+}
+
+void command_options_delete(Command_Options* co)
+{
+	parse_options_delete(co->panic_opts);
+	parse_options_delete(co->popts);
+	free(co);
+}
