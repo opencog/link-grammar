@@ -368,10 +368,11 @@ linkage_print_diagram_ctxt(const Linkage linkage,
                            size_t x_screen_width,
                            ps_ctxt_t *pctx)
 {
+	bool display_short = true;
 	unsigned int i, j, k, cl, cr, row, top_row, top_row_p1;
 	const char *s;
 	char *t;
-	Boolean print_word_0 = 0, print_word_N = 0;
+	bool print_word_0 = 0, print_word_N = 0;
 	int N_wall_connectors, suppressor_used;
 	int center[linkage->num_words+1];
 	char connector[MAX_TOKEN_LENGTH];
@@ -543,7 +544,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	}
 	*t = '\0';
 
-	if (opts->display_short) {
+	/* If display_short is NOT true, then the linkage diagram is printed
+	 * in the "tall" style, with an extra row of vertical descenders
+	 * between each level. */
+	if (display_short) {
 		for (k=0; picture[0][k] != '\0'; k++) {
 			if ((picture[0][k] == '+') || (picture[0][k] == '|')) {
 				xpicture[1][k] = '|';
