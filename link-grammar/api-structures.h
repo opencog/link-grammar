@@ -64,7 +64,7 @@ struct Parse_Options_s
 	char * test;           /* comma-sparated features to test "" */
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
 	bool use_viterbi;      /* Use the Viterbi decoder-based parser */
-	size_t linkage_limit;     /* The maximum number of linkages processed 100 */
+	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
 	double disjunct_cost;  /* Max disjunct cost to allow */
 	int min_null_count;    /* The minimum number of null links to allow */
 	int max_null_count;    /* The maximum number of null links to allow */
@@ -83,6 +83,9 @@ struct Parse_Options_s
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
 	Resources resources;   /* For deciding when to abort the parsing */
+#ifdef USE_FAT_LINKAGES
+	bool use_fat_links;     /* Look for fat linkages */
+#endif /* USE_FAT_LINKAGES */
 
 	/* Flags governing the operation of the printer */
 	bool display_short;
@@ -90,11 +93,6 @@ struct Parse_Options_s
 	bool display_link_subscripts;  /* as in "Ss" as opposed to "S" */
 	bool display_walls;
 	bool display_morphology;/* if true, print morpho analysis of words */
-
-	/* Flags governing the command-line client; not used by parser */
-#ifdef USE_FAT_LINKAGES
-	bool use_fat_links;     /* Look for fat linkages */
-#endif /* USE_FAT_LINKAGES */
 };
 
 struct Connector_set_s
