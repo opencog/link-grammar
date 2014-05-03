@@ -3,6 +3,7 @@ linkgrammar_get_dict_version
 dictionary_create_from_utf8
 dictionary_create_lang
 dictionary_create_default_lang
+dictionary_get_lang
 dictionary_delete
 dictionary_get_data_dir
 dictionary_set_data_dir

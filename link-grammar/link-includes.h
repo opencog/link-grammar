@@ -54,9 +54,11 @@ link_public_api(Dictionary)
      dictionary_create_lang(const char * lang);
 link_public_api(Dictionary)
      dictionary_create_default_lang(void);
+link_public_api(const char *)
+     dictionary_get_lang(Dictionary);
 
 link_public_api(void)
-     dictionary_delete(Dictionary dict);
+     dictionary_delete(Dictionary);
 
 link_public_api(void)
      dictionary_set_data_dir(const char * path);

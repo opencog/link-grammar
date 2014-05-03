@@ -78,6 +78,12 @@ Dictionary dictionary_create_lang(const char * lang)
 	return dictionary;
 }
 
+const char * dictionary_get_lang(Dictionary dict)
+{
+	if (!dict) return "";
+	return dict->lang;
+}
+
 /* ======================================================================== */
 /* Dictionary lookup stuff */
 
