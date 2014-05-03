@@ -101,7 +101,7 @@ Parse_Options parse_options_create(void)
 	po->debug = (char *)"";
 	po->test = (char *)"";
 	po->linkage_limit = 100;
-	po->disjunct_cost = 2.0;   /* Maybe should be 1.0 ?? */
+	po->disjunct_cost = 2.0; /* 3.0 is needed for Russian dicts */
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->islands_ok = false;
