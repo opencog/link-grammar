@@ -1207,9 +1207,12 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
+	if (resources_exhausted(opts->resources)) return;
 
-	mchxt = alloc_fast_matcher(sent);
+	mchxt = alloc_fast_matcher(sent, opts->resources);
 	ctxt = alloc_count_context(sent->length);
+	print_time(opts, "Initialized fast matcher");
+	if (resources_exhausted(opts->resources)) return;
 
 	/* A parse set may have been already been built for this sentence,
 	 * if it was previously parsed.  If so we free it up before
@@ -1269,6 +1272,8 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	debug = opts->debug;
 	test = opts->test;
 
+	sent->num_valid_linkages = 0;
+
 	/* If the sentence has not yet been split, do so now.
 	 * This is for backwards compatibility, for existing programs
 	 * that do not explicitly call the splitter.
@@ -1294,10 +1299,8 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 #endif /* USE_FAT_LINKAGES */
 	resources_reset_space(opts->resources);
 
-	if (resources_exhausted(opts->resources)) {
-		sent->num_valid_linkages = 0;
+	if (resources_exhausted(opts->resources))
 		return 0;
-	}
 
 #ifdef USE_FAT_LINKAGES
 	init_analyze(sent);

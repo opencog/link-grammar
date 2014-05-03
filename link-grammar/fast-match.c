@@ -13,6 +13,7 @@
 #include "api-structures.h"
 #include "externs.h"
 #include "fast-match.h"
+#include "resources.h"
 #include "word-utils.h"
 
 /** 
@@ -209,7 +210,7 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	}
 }
 
-match_context_t* alloc_fast_matcher(const Sentence sent)
+match_context_t* alloc_fast_matcher(const Sentence sent, Resources rsrcs)
 {
    unsigned int size, i;
 	size_t w;
@@ -224,6 +225,7 @@ match_context_t* alloc_fast_matcher(const Sentence sent)
 	ctxt->r_table_size = ctxt->l_table_size + sent->length;
 	ctxt->l_table = xalloc(2 * sent->length * sizeof(Match_node **));
 	ctxt->r_table = ctxt->l_table + sent->length;
+	memset(ctxt->l_table, 0, 2 * sent->length * sizeof(Match_node **));
 	ctxt->match_cost = 0;
 	ctxt->mn_free_list = NULL;
 
@@ -233,7 +235,7 @@ match_context_t* alloc_fast_matcher(const Sentence sent)
 		size = next_power_of_two_up(len);
 		ctxt->l_table_size[w] = size;
 		t = ctxt->l_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
-		for (i = 0; i < size; i++) t[i] = NULL;
+		memset(t, 0, size * sizeof(Match_node *));
 
 		for (d = sent->word[w].d; d != NULL; d = d->next)
 		{
@@ -247,7 +249,7 @@ match_context_t* alloc_fast_matcher(const Sentence sent)
 		size = next_power_of_two_up(len);
 		ctxt->r_table_size[w] = size;
 		t = ctxt->r_table[w] = (Match_node **) xalloc(size * sizeof(Match_node *));
-		for (i = 0; i < size; i++) t[i] = NULL;
+		memset(t, 0, size * sizeof(Match_node *));
 
 		for (d = sent->word[w].d; d != NULL; d = d->next)
 		{
@@ -255,6 +257,19 @@ match_context_t* alloc_fast_matcher(const Sentence sent)
 			{
 				put_into_match_table(size, t, d, d->right, 1);
 			}
+		}
+
+		/* Some Russian sentences can have more than 50K entries,
+		 * in which case, the above can take a huge amount of time.
+		 * Maybe the Russian dict could be fixed ...!?
+		 */
+		if (resources_exhausted(rsrcs))
+		{
+			if (verbosity > 2) {
+				prt_error("Warning: Resources echausted building fast matcher!");
+			}
+			free_fast_matcher(ctxt);
+			return NULL;
 		}
 	}
 
