@@ -59,8 +59,11 @@
 % Currently, both have the same cost: using the less costly null results
 % in too many sentences being parsed incorrectly.  Oh well.
 
-<null>: [[[()]]];
-<costly-null>: [[[()]]];
+% Default cost=4.  This allows the Russian dicts to use a cost of 3 for
+% various things, including regex matches for unknown words.
+
+<null>: [[[[()]]]];
+<costly-null>: [[[[()]]]];
 
 % NOUNS
 
