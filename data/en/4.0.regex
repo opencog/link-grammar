@@ -106,20 +106,6 @@ UNITS: /^[a-zA-Z\/.1-]+\.((m|micro)?[lLg]|mg|kg|mol|min|day|h|hr)(-1|\(-1\))$/
 % Comment out above, it screws up handling of unit suffixes, for
 % example: "Zangbert stock fell 30% to $2.50 yesterday."
 
-% Emoticons must be entirely made of punctuation, length 2 or longer ;) 
-% XXX [:punct:] is strangely broken, I have to add ;-< explicitly
-% XXX: Don't use [:punct:].  Do NOT include period!!
-% XXX: The problem with below is that 5. 7. 8. get recognized as emoticons,
-% which then prevents splitting for list numbers.  (e.g "step 5. Do this.")
-%
-% Arghh. Other valid number expressions are clobbered by the emoticons.
-% For example: $5 $7 8%  The quick fix is to remove the numbers.
-%
-% EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
-% EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
-EMOTICON: /^[[:punct:];BDOpTXＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<bcdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
-
-
 % fold-words. Matches NUMBER-fold, where NUMBER can be either numeric
 % or a spelled-out number, and the hyphen is optional. Note that for
 % spelled-out numbers, anything is allowed between the "initial" number
@@ -247,6 +233,24 @@ LATIN-ADJ-S-NOUN-WORDS: /^\w.+um$/
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
 HYPHENATED-WORDS:
   /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
+
+% Emoticon checks must come *after* the above, so that the above take precedence.
+%
+% Emoticons must be entirely made of punctuation, length 2 or longer ;) 
+% XXX [:punct:] is strangely broken, I have to add ;-< explicitly
+% XXX: Don't use [:punct:].  Do NOT include period!!
+% XXX: The problem with below is that 5. 7. 8. get recognized as emoticons,
+% which then prevents splitting for list numbers.  (e.g "step 5. Do this.")
+%
+% Arghh. Other valid number expressions are clobbered by the emoticons.
+% For example: $5 $7 8%  The quick fix is to remove the numbers.
+% Other breakages: The below clobbers "Bob, who ..." becuase it
+% matches Bob, as an emoticon.
+%
+% EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+% EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
+
 
 
 % Sequence of punctuation marks. If some mark appears in the affix table
