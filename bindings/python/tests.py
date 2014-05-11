@@ -74,19 +74,6 @@ class ParseOptionsTestCase(unittest.TestCase):
         po = ParseOptions()
         self.assertRaises(ValueError, setattr, po, "max_null_count", -1)
 
-    def test_setting_null_block(self):
-        po = ParseOptions()
-        po.null_block = 3
-        self.assertEqual(clg.parse_options_get_null_block(po._po), 3)
-
-    def test_setting_null_block_to_non_integer_raises_type_error(self):
-        po = ParseOptions()
-        self.assertRaises(TypeError, setattr, po, "null_block", "a")
-
-    def test_setting_null_block_to_negative_number_raises_value_error(self):
-        po = ParseOptions()
-        self.assertRaises(ValueError, setattr, po, "null_block", -1)
-
     def test_setting_short_length(self):
         po = ParseOptions()
         po.short_length = 3
@@ -99,19 +86,6 @@ class ParseOptionsTestCase(unittest.TestCase):
     def test_setting_short_length_to_negative_number_raises_value_error(self):
         po = ParseOptions()
         self.assertRaises(ValueError, setattr, po, "short_length", -1)
-
-    def test_setting_max_sentence_length(self):
-        po = ParseOptions()
-        po.max_sentence_length = 3
-        self.assertEqual(clg.parse_options_get_max_sentence_length(po._po), 3)
-
-    def test_setting_max_sentence_length_to_non_integer_raises_type_error(self):
-        po = ParseOptions()
-        self.assertRaises(TypeError, setattr, po, "max_sentence_length", "a")
-
-    def test_setting_max_sentence_length_to_negative_number_raises_value_error(self):
-        po = ParseOptions()
-        self.assertRaises(ValueError, setattr, po, "max_sentence_length", -1)
 
     def test_setting_islands_ok(self):
         po = ParseOptions()
@@ -135,32 +109,6 @@ class ParseOptionsTestCase(unittest.TestCase):
         po = ParseOptions()
         self.assertRaises(TypeError, setattr, po, "max_parse_time", "a")
 
-    def test_setting_screen_width(self):
-        po = ParseOptions()
-        po.screen_width = 3
-        self.assertEqual(clg.parse_options_get_screen_width(po._po), 3)
-
-    def test_setting_screen_width_to_non_integer_raises_type_error(self):
-        po = ParseOptions()
-        self.assertRaises(TypeError, setattr, po, "screen_width", "a")
-
-    def test_setting_screen_width_to_negative_number_raises_value_error(self):
-        po = ParseOptions()
-        self.assertRaises(ValueError, setattr, po, "screen_width", -1)
-
-    def test_setting_allow_null(self):
-        po = ParseOptions()
-        po.allow_null = True
-        self.assertEqual(po.allow_null, True)
-        self.assertEqual(clg.parse_options_get_allow_null(po._po), 1)
-        po.allow_null = False
-        self.assertEqual(po.allow_null, False)
-        self.assertEqual(clg.parse_options_get_allow_null(po._po), 0)
-
-    def test_setting_allow_null_to_non_boolean_raises_type_error(self):
-        po = ParseOptions()
-        self.assertRaises(TypeError, setattr, po, "allow_null", "a")
-
     def test_setting_display_morphology(self):
         po = ParseOptions()
         po.display_morphology = True
@@ -169,19 +117,6 @@ class ParseOptionsTestCase(unittest.TestCase):
         po.display_morphology = False
         self.assertEqual(po.display_morphology, False)
         self.assertEqual(clg.parse_options_get_display_morphology(po._po), 0)
-
-    def test_setting_display_walls(self):
-        po = ParseOptions()
-        po.display_walls = True
-        self.assertEqual(po.display_walls, True)
-        self.assertEqual(clg.parse_options_get_display_walls(po._po), 1)
-        po.display_walls = False
-        self.assertEqual(po.display_walls, False)
-        self.assertEqual(clg.parse_options_get_display_walls(po._po), 0)
-
-    def test_setting_display_walls_to_non_boolean_raises_type_error(self):
-        po = ParseOptions()
-        self.assertRaises(TypeError, setattr, po, "display_walls", "a")
 
     def test_setting_all_short_connectors(self):
         po = ParseOptions()
@@ -300,10 +235,11 @@ class LinkageTestCase(unittest.TestCase):
     def test_d_spell_guessing_on(self):
         self.p = Parser(spell_guess = True)
         result = self.p.parse_sent("I love going to shoop.")
+        resultx = result[0] if result else []
         for resultx in result:
             if resultx.words[5] == 'shop[~].v':
                 break;
-        self.assertEqual(resultx.words,
+        self.assertEqual(resultx.words if resultx else [],
              ['LEFT-WALL', 'I.p', 'love.v', 'going.v', 'to.r', 'shop[~].v', '.', 'RIGHT-WALL'])
 
     def test_e_spell_guessing_off(self):
