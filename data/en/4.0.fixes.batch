@@ -2205,6 +2205,14 @@ The event, historically important , will be long commemorated
 the argument, fundamentally flawed, was soon destroyed
 the argument, being fundamentally flawed, was soon destroyed
 
+% another zero-copula
+Shades of Cyc, where apples were fruit, but oranges weren't, Kennedy was a president, but Nixon a statesman.
+
+% A phantom subject.
+Shades of Cyc! 
+Where apples were fruit, but oranges weren't, Kennedy was a president, but Nixon a statesman.
+
+
 % Impersonal, passive "be" linking to passive participle.
 It is normal that such directives be worked upon.
 It is normal that such directives are worked upon.
