@@ -211,7 +211,7 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 
 match_context_t* alloc_fast_matcher(const Sentence sent)
 {
-   unsigned int size, i;
+   unsigned int size;
 	size_t w;
 	int len;
 	Match_node ** t;
