@@ -47,6 +47,10 @@ _clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PYTHON_LDFLAGS) -modul
 _clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
 
+# Run tests.py if the user says 'make check'
+TESTS = tests.py
+
+
 EXTRA_DIST =         \
    AUTHORS           \
    LICENSE           \
