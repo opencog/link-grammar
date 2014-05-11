@@ -851,6 +851,10 @@ TODO -- Working Notes:
     words. This needs to be fixed. See tokenize.c circa line 586 for
     details.  Also line 1131.
 
+    Maybe captialization could be handled in the same way that a/an
+    could be handled!  After all, its essentially a nearest-neighbor
+    phenomenon!
+
   Head words:
     The head-word of a sentences is usually the verb; head-words should
     attach to walls, and not nouns, the way the current link-grammar
