@@ -1,6 +1,6 @@
 {
   "name": "link-grammar",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Link grammar library node interface",
   "main": "./build/index.js",
   "repository": "",
