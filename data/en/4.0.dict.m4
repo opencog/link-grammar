@@ -1004,6 +1004,7 @@ way.n:
     (GN+ & (DD- or [()])))) or
   AN+;
 
+% NMa+: "Go to place X on the map."
 place.n:
   (<noun-modifiers> &
     ((Ds- & {@M+} & {<ton-verb> or TH+ or <embed-verb> or (R+ & Bs+)} & {@MXs+} &
@@ -1011,19 +1012,24 @@ place.n:
       <noun-main-s> or
       <rel-clause-s>)) or
     ({Ds-} & <noun-and-s>) or
-    <noun-main-m> or
+    (<noun-main-m> & {NMa+}) or
     Us- or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
+
+% NMa+: "Go to spot X on the map."
+spot.n:
+  <marker-common-entity> or (<common-noun> & {NMa+});
+
 
 % NMa+: "It all happens at time T."
 time.n:
   (<noun-modifiers> &
     (({D*u-} & {@M+} & {<ton-verb> or WN+ or TH+ or <embed-verb> or (R+ & Bs+)} & {@MXs+} &
       ([[MVa-]] or
-      <noun-main-m> or
-      <rel-clause-s>) & {NMa+}) or
+      (<noun-main-m> & {NMa+}) or
+      <rel-clause-s>)) or
     ({D*u-} & <noun-and-x>) or
     Us- or
     (YS+ & {D*u-}) or

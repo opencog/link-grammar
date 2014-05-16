@@ -4,6 +4,7 @@ Version 5.1.0 (XXX 2014)
  * Fix up fat-linkage code, which was recently broken...
  * API cleanup: many command-line options never belonged in the API.
  * New emoticon support was clobbering certain dictionary words.
+ * Fix: "Go to spot X", "It happens at time T."
 
 Version 5.0.8 (30 April 2014)
  * Fix handling of initial letters in ordered lists.
