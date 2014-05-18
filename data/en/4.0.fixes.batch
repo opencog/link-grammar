@@ -30,10 +30,13 @@ Don't overexcite him!
 Don't overextend yourself!
 This code deadlocks.
 It is deadlocking right here.
+It is deadlocking over there.
 He sunburns easily.
 We had the painter texture the ceiling for us.
 
-
+% Parses, but not correctly! 
+% Any wxpression with "right" mis-parses.
+*It is sitting right over here.
 
 % Misc stuff
 I know which book he read.
