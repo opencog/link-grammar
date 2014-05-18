@@ -33,9 +33,10 @@ It is deadlocking right here.
 It is deadlocking over there.
 He sunburns easily.
 We had the painter texture the ceiling for us.
+This particular ceramic finish crazes easily.
 
 % Parses, but not correctly! 
-% Any wxpression with "right" mis-parses.
+% Any expression with an exclamatory "right" mis-parses.
 *It is sitting right over here.
 
 % Misc stuff

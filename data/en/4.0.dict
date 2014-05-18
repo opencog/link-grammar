@@ -2097,7 +2097,7 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & ((Sp- & <verb-wall>) or If- or (RS- & Bp-) or Wi-);
+<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
 <verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
 <verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
 <verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
@@ -2131,7 +2131,7 @@ per "/.per": Us+ & Mp-;
 % Almost identical to the above, except that the verb attaches to the
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
 % of sentences like  "there appears to be a problem".
-<verb-y-pl,i>: {@E-} & (((Sp- or SFp-) & <verb-wall>) or If- or (RS- & Bp-) or Wi-);
+<verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
 <verb-y-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-sp,pp>: {@E-} & (((S- or SF- or PPf-) & <verb-wall>) or (RS- & B-));
@@ -3485,7 +3485,8 @@ sworn.v:
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-appear>: {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [[Pv+]]};
+<vc-appear>:
+  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [[Pv+]]};
 appear.v: 
   ((<verb-y-pl,i> & (<vc-appear>))
   or (<verb-and-sp-i-> & ([(<vc-appear>)] or ()))
@@ -3500,7 +3501,8 @@ appeared.v-d:
   ((<vc-appear>) & <verb-and-sp-i+>));
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-<vc-seem>: {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [[Pv+]]);
+<vc-seem>:
+  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [[Pv+]]);
 seem.v: 
   ((<verb-y-pl,i> & (<vc-seem>))
   or (<verb-and-sp-i-> & ([(<vc-seem>)] or ()))
@@ -5049,12 +5051,14 @@ turns.v:
   (<verb-and-sp-i-> & (([<vc-turn>]) or ())) or
   ((<vc-turn>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
-turned.v-d: 
+turned.v-d:
+  
   ((<verb-sp,pp> & (<vc-turn>)) or
   (<verb-and-sp-i-> & (([<vc-turn>]) or ())) or
   ((<vc-turn>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or (<verb-pv-b> & {K+} & {@MV+})
-or ({K+} & <verb-phrase-opener>);
+  <verb-and-sp-t>
+  or (<verb-pv-b> & {K+} & {@MV+})
+  or ({K+} & <verb-phrase-opener>);
 turning.v: <verb-pg> & <vc-turn>;
 turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 
@@ -5092,8 +5096,12 @@ remaining.g: (<vc-remain> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 remaining.v: <verb-pg> & <vc-remain>;
 
 % <vc-trans> plus particle
-<vc-grow>: ({@MV+} & (AF- or Pa+)) or ((({O+ or <b-minus>} & {K+}) or
-(K+ & {[[@MV+]]} & O*n+) or [[@MV+ & O*n+]]) & {@MV+});
+<vc-grow>:
+  ({@MV+} & (AF- or Pa+))
+  or ((({O+ or <b-minus>} & {K+})
+    or (K+ & {[[@MV+]]} & O*n+)
+    or [[@MV+ & O*n+]]) & {@MV+});
+
 grow.v: 
   ((<verb-pl,i> & (<vc-grow>)) or
   (<verb-and-pl-> & ([(<vc-grow>)] or ())) or
@@ -5160,8 +5168,11 @@ disposing.g conceiving.g: (<vc-dispose> & <verb-ge>) or <verb-ge-d>;
 disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
 
 % <vc-trans> plus particle
-<vc-speak>: ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+}) or
-[[@MV+ & O*n+]] or OF+) & {@MV+};
+<vc-speak>: 
+  ((K+ & {[[@MV+]]} & O*n+)
+    or ({O+ or <b-minus>} & {K+})
+    or [[@MV+ & O*n+]]
+    or OF+) & {@MV+};
 speak.v: 
   ((<verb-pl,i> & (<vc-speak>)) or
   (<verb-and-pl-> & ([(<vc-speak>)] or ())) or
@@ -5187,8 +5198,9 @@ spoken.v:
 speaking.v: <verb-pg> & <vc-speak>;
 speaking.g: (<vc-speak> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
-<vc-taste>: <vc-trans> or
-({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+));
+<vc-taste>:
+  <vc-trans>
+  or ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+));
 taste.v: 
   ((<verb-pl,i> & (<vc-taste>)) or
   (<verb-and-pl-> & ([(<vc-taste>)] or ())) or
@@ -5206,8 +5218,9 @@ tasted.v-d:
 tasting.g: (<vc-taste> & <verb-ge>) or <verb-ge-d>;
 tasting.v: <verb-pg> & <vc-taste>;
 
-<vc-smell>: {<vc-trans>} or
-({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+));
+<vc-smell>:
+  {<vc-trans>}
+  or ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+));
 reek.v smell.v: 
   ((<verb-pl,i> & (<vc-smell>)) or
   (<verb-and-pl-> & ([(<vc-smell>)] or ())) or
