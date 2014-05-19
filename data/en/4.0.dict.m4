@@ -5563,7 +5563,7 @@ asking.q: [[{@E-} & Pg- & {O+} & <vc-paraph>]];
 
 % idiomatic "voted yes/no" expressions using the V link.
 % "he answered yes", "say yes!", "Just say no!"
-<vc-vote>: Vv+ & {@MV+};
+<vc-vote>: {Xc+} & Vv+ & {@MV+};
 answer.w reply.w say.w vote.w: VERB_PLI(<vc-vote>);
 answers.w replies.w says.w votes.w: VERB_S_I(<vc-vote>);
 answered.w-d replied.w said.w-d voted.w-d: VERB_SPPP_I(<vc-vote>);
@@ -8108,11 +8108,17 @@ sonuvabitch aw aww awww oh_great oh_wow:
   or <directive-opener>
   or Wa-;
 
-% A single plain hello all by itself.  Costly, because its not normally
-% a sentence opener.
-hello.ij hello_there shh shhh:
-  Wa-
-  or [[<directive-opener>]];
+% A single plain hello all by itself.  Costly, because these days, 
+% its not normally a sentence opener.
+% Vv-:  "I said, hello!"
+% Ds- & Jv-: "He greeted me with a loud hello"
+% Perhaps these should also appear as nouns? hello.n does ... 
+hello.ij hello_there hallo halloo hollo hullo hillo hi
+ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
+  [<directive-opener>]
+  or Vv-
+  or ({A-} & Ds- & Jv-)
+  or Wa-;
 
 % Single plain word by itself.  "OK, Bye!"
 bye.ij goodbye.ij:
