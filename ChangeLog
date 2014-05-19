@@ -5,7 +5,8 @@ Version 5.1.0 (XXX 2014)
  * API cleanup: many command-line options never belonged in the API.
  * New emoticon support was clobbering certain dictionary words.
  * Fix: "Go to spot X", "It happens at time T."
- * Fix: add a dozen missing verbs.
+ * Add a dozen missing verbs.
+ * Minor work on greetings.
 
 Version 5.0.8 (30 April 2014)
  * Fix handling of initial letters in ordered lists.
