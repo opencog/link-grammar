@@ -262,7 +262,10 @@ changecom(`%')
 % To help discourage capitalized use when the lower-case is in the dict,
 % we give a slight cost to [<noun-sub-s> & (JG- or <noun-main-s>)] to
 % discourage use as a common noun, so that the lower-case version can
-% play this role.
+% play this role.  Likewise th cost on [AN+].
+%
+% The cost on AN+ also discourages crazy AN links to noun cognates of verbs:
+% e.g.  "The Western Railroad runs through town" -- down't want AN to runs.n.
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
@@ -273,7 +276,7 @@ CAPITALIZED-WORDS INITIALS <entity-singular>:
         or <noun-and-s>
         or YS+
         ))
-      or ({[[@MX+]]} & AN+) or G+)))
+      or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
   or ({A- or G-} & Wa-)
   or <directive-opener>;
@@ -6704,7 +6707,7 @@ and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 % The Great Southern and Western Railroad
 % Hmm, Maybe should use MG- & JG+ here, to be consistent with "of", "for":
 % "The Society of Engineers", "The League for Abstinence"
-and.j-g: [[G- & G+]];
+and.j-g: G- & G+;
 
 % Conjoined adjectival modifiers.
 % The black and white cat sleeps
