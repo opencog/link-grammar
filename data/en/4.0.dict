@@ -176,7 +176,10 @@
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
-<noun-modifiers>: {@AN-} & {@A- & {[[@AN-]]}};
+% [@AN-].1: add a tiny cost so that A- is preferredt to AN- when there
+% is a choice. The is because some nouns are also listed as adjectives,
+% and we want to use the adjective version A- link in such cases.
+<noun-modifiers>: {[@AN-].1} & {@A- & {[[@AN-]]}};
 
 % conjoined nouns or noun-phrases.
 % The l and r prevent two nouns from hooking up directly, they
@@ -2409,8 +2412,11 @@ hadn't.v-d hadn’t.v-d:
 % [{CV-} & B**t-]: "How fast a program does he think it is?"
 % CV- optional to parse: "How efficient a program is it?"
 % O*i+ & R+ & Bs+ & <verb-wall>: "I believe it was John"
-% [pv+].4: this gives Pv+ a fractional cost, so that Pa+ is preferred.
-%     for example: "the player is injured" should get Pa+ not Pv+.
+% [pv+].1: this gives Pv+ a fractional cost, so that Pa+ is preferred
+%     over Pv+ whenever the same word appears as both adjective and verb.
+%     For example, "injured.a" vs. injured.v-d" in "the player is injured",
+%     which should get Pa+ not Pv+.
+
 <vc-be-no-obj>:
   ({@EBm+} & ((([{CV-} & B**t-] or [K+] or (<verb-wall> & BI+) or OF+ or PF- or
       (Osi+ & R+ & Bs+ & <verb-wall>) or
@@ -2420,7 +2426,7 @@ hadn't.v-d hadn’t.v-d:
     THb+ or
     <to-verb> or
     (Pa+ & <verb-wall>))) or
-  ({N+} & (AF- or [Pv+].4 or I*v+)) or
+  ({N+} & (AF- or [Pv+].1 or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v" constructions,
@@ -2434,7 +2440,7 @@ hadn't.v-d hadn’t.v-d:
     THb+ or
     <to-verb> or
     Pa+)) or
-  ({N+} & (AF- or [Pv+].4 or I*v+)) or
+  ({N+} & (AF- or [Pv+].1 or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+);
 
 % O*m+ allows "If only there were more!"
