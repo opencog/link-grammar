@@ -125,6 +125,11 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
   These costs are called "disjunct costs".  The linkages are printed out
   in order of non-increasing disjunct cost.
 
+  A number following a square bracket over-rides the cost of that bracket.
+  Thus, [...].5 has a cost of 0.5 while [...]2.0 has a cost of 2; that
+  is it is the same as [[...]].  Any floating point number (including
+  exponents!) is allowed.
+
   The expression "(A+ or ())" means that you can choose either "A+" or
   the empty expression "()", that is, that the connector "A+" is
   optional.  This is more compactly expressed as "{A+}".  In other words,
