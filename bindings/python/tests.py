@@ -327,6 +327,16 @@ class LinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'Thomas.b', 'Industries[!]',
               'stock.n-u', 'declined.v-d', '.', 'RIGHT-WALL'])
 
+    # Some parses are fractionally preferred over others...
+    def test_g_fractions(self):
+        self.assertEqual(self.p.parse_sent('A player who is injured has to leave the field')[0].words,
+             ['LEFT-WALL', 'a', 'player.n', 'who', 'is.v', 'injured.a', 'has.v', 'to.r', 'leave.v', 'the', 'field.n', 'RIGHT-WALL'])
+
+        self.assertEqual(self.p.parse_sent('They ate a special curry which was recommended by the restaurant\'s owner')[0].words,
+             ['LEFT-WALL', 'they', 'ate.v-d', 'a', 'special.a', 'curry.s',
+              'which', 'was.v-d', 'recommended.v-d', 'by', 'the', 'restaurant.n',
+              '\'s.p', 'owner.n', 'RIGHT-WALL'])
+
 
 class LinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type(self):
