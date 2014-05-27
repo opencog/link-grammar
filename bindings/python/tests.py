@@ -337,6 +337,21 @@ class LinkageTestCase(unittest.TestCase):
               'which', 'was.v-d', 'recommended.v-d', 'by', 'the', 'restaurant.n',
               '\'s.p', 'owner.n', 'RIGHT-WALL'])
 
+    # Verify that we are getting the linkages tthat we want
+    # XXX TODO we really should pull these from a test file ...
+    def test_h_getting_links(self):
+        sent = 'Scientists sometimes may repeat experiments or use groups.'
+        linkage = self.p.parse_sent(sent)[0]
+        self.assertEqual(linkage.diagram, 
+"\n    +---------------------------------------Xp--------------------------------------+"
+"\n    +-----------------------------WV-----------------------------+                  |"
+"\n    |                              +--------------I--------------+                  |"
+"\n    |           +--------Sp--------+       +---------VJlp--------+                  |"
+"\n    +-----Wd----+          +---E---+       +----Op----+          +-VJrp+---Op--+    |"
+"\n    |           |          |       |       |          |          |     |       |    |"
+"\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n . "
+"\n\n")
+
 
 class LinkTestCase(unittest.TestCase):
     def test_link_display_with_identical_link_type(self):

@@ -256,7 +256,7 @@ class Linkage(object):
         clg.linkage_delete(linkage_swig_obj)
         return linkage_obj
 
-    def __init__(self, linkage_swig_obj, calculate_sub_linkages=True, null_count=0):
+    def __init__(self, linkage_swig_obj, null_count=0):
 
         # XXX FIXME Most of the initialization below just wastes CPU time,
         # especially if the user does not need this stuff.
@@ -274,11 +274,11 @@ class Linkage(object):
 
         # XXX FIXME: doing the below, if not needed, is a bit of a cpu-waster!
         #
-        # XXX Adding after parameter cleanup: display_walls=1, screen_width=180
-        self.diagram = clg.linkage_print_diagram(linkage_swig_obj, 1, 180)
+        # display_walls=0, screen_width=180
+        self.diagram = clg.linkage_print_diagram(linkage_swig_obj, 0, 180)
         self.senses = clg.linkage_print_senses(linkage_swig_obj)
         self.links_and_domains = clg.linkage_print_links_and_domains(linkage_swig_obj)
-        # XXX Adding after parameter cleanup: display_walls=1
-        self.postscript_snippet = clg.linkage_print_postscript(linkage_swig_obj, 1, 0)
-        self.postscript = clg.linkage_print_postscript(linkage_swig_obj, 1, 1)
+        # Disable postscript. Lets be real, no one will use this.
+        # self.postscript_snippet = clg.linkage_print_postscript(linkage_swig_obj, 1, 0)
+        # self.postscript = clg.linkage_print_postscript(linkage_swig_obj, 1, 1)
 
