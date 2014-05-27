@@ -6420,10 +6420,6 @@ forcing.v: <verb-pg> & <vc-force>;
 
 % -----------------------------------------
 
-% Hmm. So: "The question is who we should invite" uses the B- link below.
-% when coupled to the I link in <verb-pl,i>, it should NOT use <verb-wall>
-% The the O+ link below should use <verb-wall>.  I don't see any non-awkward
-% "boil the ocean" fix for this. Arghhh.
 <vc-design>:
   (B- & {@MV+} & {<too-verb>}) or
   (O+ & {@MV+} & {<too-verb>}) or
