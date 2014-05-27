@@ -2194,11 +2194,18 @@ per "/.per": Us+ & Mp-;
   (VJn*t+ & Dn-);
 
 % Verb macros making use of above connectors.
-% plural-infinitive macro; the cost on $1 encourages any MV links to
-% attach to the "and.j-v" instead of to the individual verb.
+% Many of these use a cost on $1 encourages any MV links to attach to
+% the "and.j-v" instead of to the individual verb.  Unfortunately, this
+% can often be too broad: so, we *want* transitive objects to attach
+% to the local verb.  So really, there should be two args: those for MV,
+% which connect to and.j-v, and those that connect to local verb...
+%
+% plural-or-infinitive macro; 
+% "Scientists sometimes may repeat experiments or use groups."
+%   Want "groups" to connect to "use", not "and".
 define(`VERB_PLI',`'
   ((<verb-pl,i> & ($1)) or
-  (<verb-and-pl-> & ([($1)] or ())) or
+  (<verb-and-pl-> & (($1) or ())) or
   (($1) & <verb-and-pl+>)))
 
 % singular present tense macro; same comments as above...
