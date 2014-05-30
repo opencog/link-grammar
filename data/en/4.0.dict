@@ -2057,11 +2057,13 @@ per "/.per": Us+ & Mp-;
 % By contrast, "Who do you think Bill will bring?" requires a
 % I- & CV- & B*w- & WV- on bring: that is, two walls.
 %
-% B*w- "that, I did not know" needs a wall,
 % B*d-: "Whatever you want to do is fine" can't have a wall.
+% B*w- "that, I did not know" needs a wall, but
+%      "Pizza, which most people love, is not very healthy" can't have a wall.
+%      so the wall on B*w- is optional.
 % XXX FIXME -- most of the naked B- below should probably be <b-minus>
 
-<b-minus>: B*d- or B*j- or ((B*w- or B*m-) & <verb-wall>);
+<b-minus>: B*d- or B*j- or (B*w- & {<verb-wall>}) or (B*m- & <verb-wall>);
 
 <verb-ge>:
   {@E-} & (
