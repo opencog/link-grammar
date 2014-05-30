@@ -272,7 +272,7 @@ changecom(`%')
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
-CAPITALIZED-WORDS INITIALS <entity-singular>:
+INITIALS <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
         ([<noun-sub-s> & (JG- or <noun-main-s>)]
@@ -283,6 +283,11 @@ CAPITALIZED-WORDS INITIALS <entity-singular>:
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
   or ({A- or G-} & Wa-)
   or <directive-opener>;
+
+% As above, but with a tiny extra cost, so that a dictionary word is
+% prefered to the regex match (i.e. for a common noun starting a
+% sentence).
+CAPITALIZED-WORDS: [<entity-singular>]0.1;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural:
