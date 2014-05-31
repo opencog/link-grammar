@@ -176,10 +176,18 @@
 <noun-sub-s>: {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+};
 <noun-sub-p>: {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+};
 
-% [@AN-].1: add a tiny cost so that A- is preferredt to AN- when there
+% [@AN-].1: add a tiny cost so that A- is preferred to AN- when there
 % is a choice. The is because some nouns are also listed as adjectives,
 % and we want to use the adjective version A- link in such cases.
-<noun-modifiers>: {[@AN-].1} & {@A- & {[[@AN-]]}};
+% [@AN- & @A-] has cost so that G links are prefered.
+% {[@AN-].1} & {@A- & {[[@AN-]]}};
+<noun-modifiers>: 
+  (@A- & {[[@AN-]]})
+  or [@AN-]0.1
+  or ([[@AN-].1 & @A-] & {[[@AN-]]})
+  or ();
+
+
 
 % conjoined nouns or noun-phrases.
 % The l and r prevent two nouns from hooking up directly, they
