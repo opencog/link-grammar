@@ -2037,6 +2037,7 @@ per "/.per": Us+ & Mp-;
 % <WALL>: WV+;
 
 % Pv- & <verb-wall>: "a historic new law was passed"
+% Pg- is naked, no verb-wall: "I like eating bass."
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
@@ -2046,7 +2047,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl>:   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-sp>:   {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & <verb-wall>;
-<verb-pg>:   {@E-} & ((Pg- & <verb-wall>) or Mg-);
+<verb-pg>:   {@E-} & (Pg- or Mg-);
 <verb-pv>:   {@E-} & ((Pv- & <verb-wall>) or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & ((Pv- & <verb-wall>) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
@@ -2101,10 +2102,10 @@ per "/.per": Us+ & Mp-;
     <MX-PHRASE>
     or <OPENER>
     or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
-    or Mg-
-    or Pg-
     or [DP- & J-]
-    or [[Wq- & PF+ & {@MV+}]]);
+    or [[Wq- & PF+ & {@MV+}]]
+    or Mg-
+    or Pg-);
 
 <verb-phrase-opener>:
   {@E-} & {@MV+} & (
@@ -4392,16 +4393,18 @@ intending.v: <verb-pg> & <vc-intend>;
 
 dare.v: VERB_PLI(<vc-dare>);
 dares.v: VERB_S_T(<vc-dare>);
-dared.v-d: VERB_SPPP_T(<vc-dare>) or (<verb-pv> & <to-verb>) or
-({@MV+} & <to-verb> & <verb-phrase-opener>);
+dared.v-d:
+  VERB_SPPP_T(<vc-dare>)
+  or (<verb-pv> & <to-verb>)
+  or ({@MV+} & <to-verb> & <verb-phrase-opener>);
 daring.g: (<vc-dare> & <verb-ge>) or <verb-ge-d>;
 daring.v: <verb-pg> & <vc-dare>;
 
 % [TO+]: allows null-infinitive: "Yes, I'd love to."
 <vc-like>:
-  ({@MV+} & (<to-verb> or [TO+] or Pg+)) or
-  ((O+ or <b-minus> or OX+) & {@MV+} & {<too-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ({@MV+} & (<to-verb> or [TO+] or Pg+))
+  or ((O+ or <b-minus> or OX+) & {@MV+} & {<too-verb>})
+  or ([[@MV+ & O*n+]]);
 
 like.v: VERB_PLI(<vc-like>);
 likes.v: VERB_S_T(<vc-like>);
