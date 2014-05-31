@@ -657,6 +657,7 @@ int main(int argc, char * argv[])
 	const char      *locale = NULL;
 	Command_Options *copts;
 	Parse_Options   opts;
+	bool batch_in_progress = false;
 
 #if LATER
 	/* Try to catch the SIGWINCH ... except this is not working. */
@@ -760,10 +761,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	verbosity = parse_options_get_verbosity(opts);
-	debug = parse_options_get_debug(opts);
-	test = parse_options_get_test(opts);
-
 	check_winsize(copts);
 #ifdef _WIN32
 	parse_options_set_screen_width(opts, 79);
@@ -782,6 +779,10 @@ int main(int argc, char * argv[])
 	{
 		char *input_string;
 		Sentence sent = NULL;
+
+		verbosity = parse_options_get_verbosity(opts);
+		debug = parse_options_get_debug(opts);
+		test = parse_options_get_test(opts);
 
 		input_string = fget_input_string(input_fh, stdout, copts);
 		check_winsize(copts);
@@ -818,6 +819,20 @@ int main(int argc, char * argv[])
 		if (strspn(input_string, " \t\v") == strlen(input_string)) continue;
 
 		if (special_command(input_string, copts, dict)) continue;
+
+		if (!copts->batch_mode) batch_in_progress = false;
+		if ('\0' != test[0])
+		{
+			/* In batch mode warn only once */
+			if (!batch_in_progress)
+			{
+				fflush(stdout);
+				/* Remind the developer this is a test mode. */
+				fprintf(stderr, "Warning: Tests enabled: %s\n", test);
+				if (copts->batch_mode) batch_in_progress = true;
+			}
+		}
+		
 		if (copts->echo_on)
 		{
 			printf("%s\n", input_string);
