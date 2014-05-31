@@ -2827,8 +2827,9 @@ came.v-d: VERB_SPPP_I(<vc-come>);
 /en/words/words.v.2.4:
   <verb-pg> & <vc-tr,intr>;
 
+% [A+]0.5: avoid gerunds as adjectives...
 /en/words/words.v.2.5:
-  (<vc-tr,intr> & <verb-ge>) or ({@E-} & A+) or <verb-ge-d>;
+  (<vc-tr,intr> & <verb-ge>) or ({@E-} & [A+]0.5) or <verb-ge-d>;
 
 shrank.v-d withdrew.v-d sank.v-d forgave.v-d hove.v-d
 spoilt.v-d unbent.v-d overfed.v-d:
@@ -2982,10 +2983,11 @@ run.v: VERB_PLI(<vc-fill>) or
   (<verb-pg> & <vc-fill>) or
   <verb-and-pg-> or <verb-and-pg+>;
 
+% [A+]0.5: "I like eating bass": eating is not the adjective, here.
 /en/words/words.v.6.5:
   (<vc-fill> & <verb-ge>) or
   <verb-ge-d> or
-  ({@E-} & A+);
+  ({@E-} & [A+]0.5);
 
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
   VERB_PLI(<vc-fill>);
