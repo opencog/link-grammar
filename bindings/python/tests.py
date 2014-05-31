@@ -280,12 +280,14 @@ class LinkageTestCase(unittest.TestCase):
              ['LEFT-WALL', 'Jumbo[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
         # Red is in dict, lower-case, as noun, too.
-        self.assertEqual(self.p.parse_sent('Red\'s going?')[0].words,
-             ['LEFT-WALL', 'Red[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
-
-        self.assertEqual(self.p.parse_sent('Red\'s shoe fell off.')[0].words,
-             ['LEFT-WALL', 'Red[!]',
-              '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
+        # There's no way to really know, syntactically, that Red 
+        # should be taken as a proper noun (given name).
+        #self.assertEqual(self.p.parse_sent('Red\'s going?')[0].words,
+        #     ['LEFT-WALL', 'Red[!]', '\'s.v', 'going.v', '?', 'RIGHT-WALL'])
+        #
+        #self.assertEqual(self.p.parse_sent('Red\'s shoe fell off.')[0].words,
+        #     ['LEFT-WALL', 'Red[!]',
+        #      '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
 
         self.assertEqual(self.p.parse_sent('Red sat down.')[1].words,
              ['LEFT-WALL', 'Red[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
