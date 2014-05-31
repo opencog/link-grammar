@@ -351,6 +351,17 @@ class LinkageTestCase(unittest.TestCase):
 "\n    |           |          |       |       |          |          |     |       |    |"
 "\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n . "
 "\n\n")
+        sent = 'I enjoy eating bass.'
+        linkage = self.p.parse_sent(sent)[0]
+        self.assertEqual(linkage.diagram, 
+"\n    +-----------------Xp----------------+"
+"\n    +-----WV-----+                      |"
+"\n    +--Wd--+-Sp*i+---Pg---+---Ou---+    |"
+"\n    |      |     |        |        |    |"
+"\nLEFT-WALL I.p enjoy.v eating.v bass.n-u . "
+"\n\n")
+
+
 
 
 class LinkTestCase(unittest.TestCase):
