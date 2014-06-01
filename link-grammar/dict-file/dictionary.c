@@ -100,23 +100,10 @@ static void affix_list_add(Dictionary afdict, Afdict_class * ac,
 
 static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 {
-	char *string;
-	const char *con;
-
 	for (; NULL != dn; dn = dn->left)
 	{
-		if (contains_underbar(dn->string))
-		{
-			if (NULL == dn->file)
-			{
-				prt_error("Warning: Idiom %s found near line %d of %s.\n"
-						  "\tIt will be ignored since it is meaningless there.",
-						  dn->string, afdict->line_number, afdict->name);
-			}
-			return; /* Don't load idioms */
-		}
-
-		con = word_only_connector(dn);
+		char *string;
+		const char *con = word_only_connector(dn);
 		if (NULL == con)
 		{
 			/* ??? should we support here more than one class? */
@@ -428,14 +415,13 @@ dictionary_six_str(const char * lang,
 
 		/* initialize the class table */
 		dict->afdict_class =
-		 malloc(sizeof(*dict->afdict_class)*NUMELEMS(afdict_classname));
+		   malloc(sizeof(*dict->afdict_class) * NUMELEMS(afdict_classname));
 		for (i = 0; i < NUMELEMS(afdict_classname); i++)
 		{
 			dict->afdict_class[i].mem_elems = 0;
 			dict->afdict_class[i].length = 0;
 			dict->afdict_class[i].string = NULL;
 		}
-
 	}
 
 	/* Read dictionary from the input string. */

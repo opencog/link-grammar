@@ -921,11 +921,20 @@ static const char * strip_left(Sentence sent, const char * w, bool quote_found)
 /**
  * Split off punctuation and units from the right.
  *
- * The only thing that can precede a units suffix is a number. This is so that
- * we can split up things like "12ft" (twelve feet) but not split up things like
- * "Delft blue". It is actually enough to ensure the word precedes by a digit.
+ * Punctuation and units are removed from the right-hand side of a word,
+ * one at a time, until the stem is found in the dictionary; then the
+ * stripping stops.  That is, the first dictionary hit wins. This makes
+ * sense for punctuation and units, but wouldn't work for morphology
+ * in general.
  *
- * Multiple passes allow for constructions such as 12sq.ft.
+ * The only thing allowed to precede a units suffix is a number. This
+ * is so that strings such as "12ft" (twelve feet) are split, but words
+ * that accidentally end in "ft" are not split (e.g. "Delft blue")
+ * It is enough to ensure that the string starts with a digit.
+ *
+ * Multiple passes allow for constructions such as 12sq.ft. That is,
+ * first, "ft." is stripped, then "sq." is stripped, then "12" is found
+ * in the dict.
  *
  * w points to the string starting just to the right of any left-stripped
  * characters.
@@ -934,7 +943,7 @@ static const char * strip_left(Sentence sent, const char * w, bool quote_found)
  * etc.
  * When it breaks out of this loop, n_r_stripped will be the number of strings
  * stripped off. It is returned trough the parameter.
- * The function returns a pointer to one character after teh end of the
+ * The function returns a pointer to one character after the end of the
  * remaining word.
  */
 static const char * strip_right(Sentence sent, const char * w,
@@ -972,11 +981,11 @@ static const char * strip_right(Sentence sent, const char * w,
 		word[sz] = '\0';
 		if (temp_wend == w) break;  /* It will work without this. */
 
-// printf("duuude check for word=%s\n", word);
 		/* Any remaining valid word, including numbers, stops the right stripping. */
 		if (find_word_in_dict(dict, word))
 		{
 			*word_is_in_dict = true;
+			lgdebug(2, "rpunct+unit strip to root word '%s'\n", word);
 			break;
 		}
 
@@ -1007,7 +1016,7 @@ static const char * strip_right(Sentence sent, const char * w,
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "w='%s' unit '%s'\n", temp_wend-len, t);
+				lgdebug(2, "rpunct-unit strip: w='%s' unit '%s'\n", temp_wend-len, t);
 				if (i < r_strippable)
 				{
 					/* We have just stripped punctuation */
@@ -1028,7 +1037,7 @@ static const char * strip_right(Sentence sent, const char * w,
 		if (i >= r_strippable && !starts_with_number) break; /* No number+unit */
 	}
 
-	// lgdebug(2, "root word '%s' word_is_in_dict=%d\n", word, *word_is_in_dict);
+	lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n", w, *word_is_in_dict);
 	if (!previous_is_unit || starts_with_number)
 	{
 		*n_r_stripped = nrs;
