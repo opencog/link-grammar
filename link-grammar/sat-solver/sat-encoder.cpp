@@ -1269,7 +1269,8 @@ Linkage SATEncoder::create_linkage()
 
   if (_sent->parse_info) {
     Parse_info pi = _sent->parse_info;
-    for (int i=0; i< MAX_LINKS; i++) {
+    // ??? there's no link-array entry for the right wall..?
+    for (int i=0; i < _sent->length-1; i++) {
       free_connectors(pi->link_array[i].lc);
       free_connectors(pi->link_array[i].rc);
     }
@@ -2829,7 +2830,7 @@ extern "C" void sat_sentence_delete(Sentence sent)
   if (sent->parse_info) {
     Parse_info pi = sent->parse_info;
     // ??? there's no link-array entry for the right wall..?
-    for (int i=0; i< sent->length-1; i++) {
+    for (int i=0; i < sent->length-1; i++) {
       free_connectors(pi->link_array[i].lc);
       free_connectors(pi->link_array[i].rc);
     }
