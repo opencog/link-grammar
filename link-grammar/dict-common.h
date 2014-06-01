@@ -38,8 +38,9 @@ typedef enum {
 	AFDICT_MPRE,
 	AFDICT_QUOTES,
 	AFDICT_BULLETS,
-	AFDICT_SANEMORPHISM,
-	AFDICT_END /* must be last */
+	AFDICT_INFIXMARK,
+	AFDICT_STEMSUBSCR,
+	AFDICT_SANEMORPHISM
 } afdict_classnum;
 
 #define AFDICT_CLASSNAMES \
@@ -52,6 +53,8 @@ typedef enum {
 	"MPRE",         /* Multi-prefix, currently for Hebrew */ \
 	"QUOTES", \
 	"BULLETS", \
+	"INFIXMARK",    /* Prepended to suffixes, appended to pefixes */ \
+	"STEMSUBSCR",   /* Subscripts for stems */ \
 	"SANEMORPHISM"  /* Regexp for sane_morphism() */
 
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])

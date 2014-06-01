@@ -9,6 +9,7 @@ Version 5.1.0 (XXX 2014)
  * Minor work on greetings.
  * Add mechanism for denoting fractional costs in the file-backed dict.
  * Fix: broken handling of gerunds (due to bad verb-wall connectors)
+ * Major redesign of morpheme splitting mechanism (from AmirP)
 
 Version 5.0.8 (30 April 2014)
  * Fix handling of initial letters in ordered lists.

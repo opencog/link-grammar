@@ -1,7 +1,10 @@
 
 ")" "%" "," "." ":" ";" "?" "!" "''" "'" "'s": RPUNC+;
 "(" "$" "``": LPUNC+;
-e en er es em: SUF+;
+
+%e en er es em: SUF+;
+.=: STEMSUBSCR+;
+=: INFIXMARK+;
 
 ""«»《》【】『』`„“": QUOTES+;
 

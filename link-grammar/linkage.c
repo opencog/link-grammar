@@ -154,6 +154,10 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 
 				append_string(s, "[%zu", i);
 				for (a = sent->word[i].alternatives; *a; a++) {
+					/* Don't show an empty word - it is not an island. */
+					if (0 == strcmp(*a, EMPTY_WORD_MARK)) continue;
+					if ((EMPTY_WORD_MARK[0] == (*a)[0]) &&
+					   ('\0' == (*a)[1])) continue;
 					append_string(s, " %s", *a);
 				}
 				append_string(s, "]");

@@ -55,6 +55,7 @@ static inline char * deinflect(const char * str)
  * names. */
 
 const char const * afdict_classname[] = { AFDICT_CLASSNAMES };
+#define NUMELEMS(a) (sizeof(a) / sizeof(a[0]))
 
 /**
  * Find the affix table entry for given connector name.
@@ -64,17 +65,21 @@ static Afdict_class * afdict_find(Dictionary afdict, const char * con)
 {
 	const char ** ac;
 
-	for (ac = afdict_classname; ac < &afdict_classname[AFDICT_END]; ac++)
+	for (ac = afdict_classname;
+	     ac < &afdict_classname[NUMELEMS(afdict_classname)]; ac++)
 	{
 		if (0 == strcmp(*ac, con))
 			return &afdict->afdict_class[ac - afdict_classname];
 	}
+	prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
+			  "\tThis class name will be ignored.",
+			  con, afdict->line_number, afdict->name);
 	return NULL;
 }
 
 #define AFFIX_COUNT_MEM_INCREMENT 64
 
-static void affix_list_resize(Afdict_class* ac)
+static void affix_list_resize(Afdict_class * ac)
 {
 	size_t old_mem_elems = ac->mem_elems;
 
@@ -83,18 +88,10 @@ static void affix_list_resize(Afdict_class* ac)
 	      ac->mem_elems * sizeof(*ac->string));
 }
 
-static void affix_list_add(Dictionary afdict, const char * name,
+static void affix_list_add(Dictionary afdict, Afdict_class * ac,
 		const char * affix)
 {
-	Afdict_class* ac = afdict_find(afdict, name);
-
-	if (NULL == ac)
-	{
-		prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
-				  "\tThis class name will be ignored.",
-				  name, afdict->line_number, afdict->name);
-		return;
-	}
+	if (NULL == ac)  return; /* ignore unknown class name */
 	if (ac->length == ac->mem_elems)
 		affix_list_resize(ac);
 	ac->string[ac->length] = string_set_add(affix, afdict->string_set);
@@ -130,14 +127,67 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 			return;
 		}
 		string = deinflect(dn->string);
-		affix_list_add(afdict, con, string);
+		affix_list_add(afdict, afdict_find(afdict, con), string);
 		free(string);
 	}
 }
 
+#ifdef AFDICT_ORDER_NOT_PRESERVED
 static int revcmplen(const void *a, const void *b)
 {
 	return strlen(*(char * const *)b) - strlen(*(char * const *)a);
+}
+#endif /* AFDICT_ORDER_NOT_PRESERVED */
+
+/**
+ * Traverse the main dict in dictionary order, and extract all the suffixes
+ * and prefixes - every time we see a new suffix/prefix (the previous one is
+ * remembered by w_last), we save it in the the corresponding affix-class list.
+ * The saved affixes don't include the infix mark.
+ *
+ * The empty word is not an affix so it is ignored.
+ */
+static void get_dict_affixes(Dictionary dict, Dict_node * dn,
+                             char infix_mark, char * w_last)
+{
+	const char *w;         /* current dict word */
+	const char *w_sm;      /* SUBSCRIPT_MARK position in the dict word */
+	size_t w_len;          /* length of the dict word */
+	Dictionary afdict = dict->affix_table;
+
+   if (dn == NULL) return;
+   get_dict_affixes(dict, dn->right, infix_mark, w_last);
+
+	w = dn->string;
+	w_sm = strrchr(w, SUBSCRIPT_MARK);
+	w_len = (NULL == w_sm) ? strlen(w) : (size_t)(w_sm - w);
+	if (w_len > MAX_WORD)
+	{
+		prt_error("Error: word '%s' too long (%zd), program may malfunction\n",
+				w, w_len);
+		w_len = MAX_WORD;
+	}
+	/* (strlen(w_last) can be cached for speedup) */
+	if ((strlen(w_last) != w_len) || (0 != strncmp(w_last, w, w_len)))
+	{
+		strncpy(w_last, w, w_len);
+		w_last[w_len] = '\0';
+
+		if ((INFIX_MARK == w_last[0]) &&
+			 (0 != strcmp(w_last, EMPTY_WORD_MARK)))
+		{
+			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], w_last+1);
+		}
+		else
+		if (INFIX_MARK == w_last[w_len-1])
+		{
+			w_last[w_len-1] = '\0';
+			affix_list_add(afdict, &afdict->afdict_class[AFDICT_PRE], w_last);
+			w_last[w_len-1] = INFIX_MARK;
+		}
+	}
+
+   get_dict_affixes(dict, dn->left, infix_mark, w_last);
 }
 
 /**
@@ -196,20 +246,48 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
  * Initialize several classes.
  * In case of a future dynamic change of the affix table, this
  * function needs to be invoked again after the affix table structure
- * is re-constructed.
+ * is re-constructed (changes may be needed).
  */
-static bool afdict_init(Dictionary afdict)
+static bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
+	Dictionary afdict = dict->affix_table;
+	char last_entry[MAX_WORD+1] = "";
 
-	if (0) verbosity = 5; /* debug - !verbosity is not set so early for now */
-	if (4 < verbosity)
+	/* Create the affix lists */
+	ac = AFCLASS(afdict, AFDICT_INFIXMARK);
+	if ((1 < ac->length) || ((1 == ac->length) && (1 != strlen(ac->string[0])))) 
+	{
+		prt_error("Error: afdict_init: Invalid value for class %s in file %s"
+					 " (should have been one ASCII punctuation - ignored)\n",
+					  afdict_classname[AFDICT_INFIXMARK], afdict->name);
+		xfree((void *)ac->string, ac->mem_elems);
+		ac->length = 0;
+		ac->mem_elems = 0;
+	}
+	/* XXX For now there is a possibility to use predefined SUF and PRE lists.
+	 * So if SUF or PRE are defined, don't extract any of them from the dict. */
+	if (1 == ac->length && (0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
+			                 (0 == AFCLASS(afdict, AFDICT_SUF)->length))
+	{
+			get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
+	}
+	else
+	{
+		/* No INFIX_MARK - create a dummy one that always mismatches */
+		affix_list_add(afdict, &afdict->afdict_class[AFDICT_INFIXMARK], "");
+	}
+
+	if (0 || 4 < verbosity) /* debug - !verbosity is not set so early for now */
 	{
 		size_t l;
 
-		for (ac = afdict->afdict_class; ac->length; ac++)
+		for (ac = afdict->afdict_class;
+		     ac < &afdict->afdict_class[NUMELEMS(afdict_classname)]; ac++)
 		{
-				lgdebug(+0, "Class %s:", afdict_classname[ac-afdict->afdict_class]);
+				if (0 == ac->length) continue;
+				lgdebug(+0, "Class %s, %zd items:",
+						  afdict_classname[ac-afdict->afdict_class], ac->length);
 				for (l = 0; l < ac->length; l++)
 					lgdebug(0, " '%s'", ac->string[l]);
 				lgdebug(0, "\n");
@@ -238,7 +316,7 @@ static bool afdict_init(Dictionary afdict)
 		sm_re->next = NULL;
 		rc = compile_regexs(afdict);
 		if (rc) {
-			prt_error("Error: sane_morphism: Failed to compile "
+			prt_error("Error: afdict_init: Failed to compile "
 			          "regex '%s' in file %s, return code %d\n",
 			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name, rc);
 			return FALSE;
@@ -247,6 +325,7 @@ static bool afdict_init(Dictionary afdict)
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
 	}
 
+#ifdef AFDICT_ORDYER_NOT_PRESERVED
 	/* pre-sort the MPRE list */
 	ac = AFCLASS(afdict, AFDICT_MPRE);
 	if (0 < ac->length)
@@ -256,6 +335,7 @@ static bool afdict_init(Dictionary afdict)
 		 * XXX mprefix_suffix() for Hebrew depends on that. */
 		qsort(ac->string, ac->length, sizeof(char *), revcmplen);
 	}
+#endif /* AFDICT_ORDER_NOT_PRESERVED */
 
 	if (! afdict_to_wide(afdict, AFDICT_QUOTES)) return false;
 	if (! afdict_to_wide(afdict, AFDICT_BULLETS)) return false;
@@ -347,8 +427,9 @@ dictionary_six_str(const char * lang,
 		dict->lookup = return_true;
 
 		/* initialize the class table */
-		dict->afdict_class = malloc(sizeof(*dict->afdict_class)*AFDICT_END);
-		for (i = 0; i < AFDICT_END; i++)
+		dict->afdict_class =
+		 malloc(sizeof(*dict->afdict_class)*NUMELEMS(afdict_classname));
+		for (i = 0; i < NUMELEMS(afdict_classname); i++)
 		{
 			dict->afdict_class[i].mem_elems = 0;
 			dict->afdict_class[i].length = 0;
@@ -387,7 +468,7 @@ dictionary_six_str(const char * lang,
 		prt_error("Error: Could not open affix file %s", affix_name);
 		goto failure;
 	}
-	if (! afdict_init(dict->affix_table))
+	if (! afdict_init(dict))
 		goto failure;
 
 	if (read_regex_file(dict, regex_name)) goto failure;

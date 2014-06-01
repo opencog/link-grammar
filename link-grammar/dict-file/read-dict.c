@@ -547,19 +547,11 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
 	lgdebug(+5, "search-word='%s' dict-word='%s'\n", s, t);
 	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (*s == *t)) {s++; t++;}
 
-	if (*s == WILD_TYPE)
-	{
-		/* Skip the rest of t */
-		s++;
-		while((*t != '\0') && (*t != SUBSCRIPT_MARK)) t++;
-	}
-
-	lgdebug(5, "Rest: '%s' '%s'\n", s, t);
-	while(*s != '\0' && *s == *t) {s++; t++;}
+	if (*s == WILD_TYPE) return 0;
 
 	lgdebug(5, "Result: '%s'-'%s'=%d\n",
-	 s, t, (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
-	return (*s) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
+	 s, t, ((*s == SUBSCRIPT_MARK)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t)));
+	return ((*s == SUBSCRIPT_MARK)?(0):(*s)) - ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
 /**
@@ -647,6 +639,19 @@ static Dict_node * prune_lookup_list(Dict_node *llist, const char * s)
 }
 
 /* ======================================================================== */
+static bool subscr_match(const char *s, Dict_node * dn)
+{
+	const char * s_sub = strrchr(s, SUBSCRIPT_MARK);
+	const char * t_sub;
+
+	if (NULL == s_sub) return true;
+	t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
+	if (NULL == t_sub) return false;
+	if ( 0 == strcmp(s_sub, t_sub)) return true;
+
+	return false;
+}
+
 /**
  * rdictionary_lookup() -- recursive dictionary lookup
  * Walk binary tree, given by 'dn', looking for the string 's'.
@@ -658,23 +663,21 @@ rdictionary_lookup(Dict_node *llist,
                    Dict_node * dn,
                    const char * s,
                    bool match_idiom,
-                   bool wild_lookup)
+                   int dict_order(const char *, Dict_node *))
 {
 	/* see comment in dictionary_lookup below */
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return llist;
 
-	if (wild_lookup)
-		m = dict_order_wild(s, dn);
-	else
-		m = dict_order_bare(s, dn);
+	m = dict_order(s, dn);
 
 	if (m >= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, dict_order);
 	}
-	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)))
+	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)) &&
+		 (dict_order != dict_order_wild || subscr_match(s, dn)))
 	{
 		dn_new = dict_node_new();
 		*dn_new = *dn;
@@ -683,7 +686,7 @@ rdictionary_lookup(Dict_node *llist,
 	}
 	if (m <= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, wild_lookup);
+		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, dict_order);
 	}
 	return llist;
 }
@@ -702,7 +705,8 @@ rdictionary_lookup(Dict_node *llist,
  */
 Dict_node * lookup_list(Dictionary dict, const char *s)
 {
-	Dict_node * llist = rdictionary_lookup(NULL, dict->root, s, TRUE, FALSE);
+	Dict_node * llist =
+		rdictionary_lookup(NULL, dict->root, s, TRUE, dict_order_bare);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -741,7 +745,8 @@ static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 	if ((NULL != ds) && ('\0' != ds[1]) && ((NULL == ws) || (ds > ws)))
 		stmp[ds-s] = SUBSCRIPT_MARK;
 
-	result = rdictionary_lookup(NULL, dict->root, stmp, lookup_idioms, TRUE);
+	result =
+	 rdictionary_lookup(NULL, dict->root, stmp, lookup_idioms, dict_order_wild);
 	free(stmp);
 	return result;
 }
@@ -761,7 +766,7 @@ static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, FALSE, FALSE);
+	llist = rdictionary_lookup(NULL, dict->root, s, FALSE, dict_order_bare);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -1008,13 +1013,17 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	size_t len;
 	Exp *zn, *an;
 	E_list *elist, *flist;
+	/* We assume the affix file has been read by now, so INFIX_MARK is set */
+	Dictionary afdict = dict->affix_table; /* for INFIX_MARK only */
+	char infix_mark = INFIX_MARK;
 
 	if (! dict->empty_word_defined) return;
 
-	if (STEM_MARK == dn->string[0]) return;
+	if (infix_mark == dn->string[0]) return;
 
 	len = strlen(dn->string);
 	if (STEM_MARK == dn->string[len-1]) return;
+	if (infix_mark == dn->string[len-1]) return;
 	if (0 == strcmp(dn->string, LEFT_WALL_WORD)) return;
 	if (0 == strcmp(dn->string, RIGHT_WALL_WORD)) return;
 
@@ -1755,7 +1764,11 @@ Boolean read_dictionary(Dictionary dict)
 	{
 		return FALSE;
 	}
-	while (dict->token[0] != '\0')
+	/* The last character of a dictionary is NUL.
+	 * Note: At the end of reading a dictionary, dict->pin points to one
+	 * character after the input. Referring its [-1] element is safe even if
+	 * the dict file size is 0. */
+	while ('\0' != dict->pin[-1])
 	{
 		if (!read_entry(dict))
 		{
@@ -1787,7 +1800,7 @@ static void display_word_split(Dictionary dict,
 	Sentence sent;
 	struct Parse_Options_s display_word_opts = *opts;
 
-	parse_options_set_spell_guess(&display_word_opts, 0);
+	parse_options_set_spell_guess(&display_word_opts, false);
 	sent = sentence_create(word, dict);
 	separate_sentence(sent, &display_word_opts);
 

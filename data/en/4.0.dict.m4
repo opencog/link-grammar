@@ -57,6 +57,9 @@ changecom(`%')
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
 
+% Word-count balancing for 'x (e.g. 's) splits
+=.zzz: ZZZ-;
+
 % Null links. These are used to drop the requirement for certain words
 % to appear during parsing. Basically, if a parse fails at a given cost,
 % it is retried at a higher cost (by raising the disjunct_cost).

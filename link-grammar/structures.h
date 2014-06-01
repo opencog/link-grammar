@@ -102,6 +102,15 @@
 #define EMPTY_WORD_MARK  "=zzz" /* Has SUBSCRIPT_MARK in it! */
 /* #define EMPTY_WORD_MARK  EMPTY_WORD_DOT */
 
+/* Suffixes start with it.
+ * This is needed to distinguish suffixes that were stripped off from
+ * ordinary words that just happen to be the same as the suffix.
+ * Kind-of a weird hack, but I'm not sure what else to do...
+ * Similarly, prefixes end with it.
+ */
+#define INFIX_MARK \
+ ((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
+
 #ifdef USE_FAT_LINKAGES
   #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
 

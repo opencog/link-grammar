@@ -1,9 +1,12 @@
-
 ")" "%" "," "." ":" ";" "?" "!" "''" "'": RPUNC+;
 "(" "$" "``": LPUNC+;
 
 ""«»《》【】『』`„“": QUOTES+;
 
-/ru/words/suff-list: SUF+;
+%"": SUF+; % We have null suffixes
+%/ru/words/suff-list: SUF+;
+=: INFIXMARK+;
 
 "w|ts": SANEMORPHISM+;
+
+.=: STEMSUBSCR+;
