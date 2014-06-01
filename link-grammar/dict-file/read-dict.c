@@ -663,7 +663,7 @@ rdictionary_lookup(Dict_node *llist,
                    Dict_node * dn,
                    const char * s,
                    bool match_idiom,
-                   int dict_order(const char *, Dict_node *))
+                   int (*dict_order)(const char *, Dict_node *))
 {
 	/* see comment in dictionary_lookup below */
 	int m;
