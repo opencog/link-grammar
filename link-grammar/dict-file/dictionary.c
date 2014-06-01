@@ -113,7 +113,26 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 					  dn->string, afdict->line_number, afdict->name);
 			return;
 		}
-		string = deinflect(dn->string);
+
+		/* The affix files serve a dual purpose: they indicate both
+		 * what a unit is, connector-wise, and what is strippable, as
+		 * a string.  When the unit is an 'idiom' (i.e. two words,
+		 * e.g. base_pair or degrees_C) then only the first word can
+		 * be stripped away from a run-on expression (e.g. "86degrees C")
+		 */
+		if (contains_underbar(dn->string))
+		{
+			char *p;
+			string = strdup(dn->string);
+			p = string+1;
+			while (*p != '_' && *p != '\0') p++;
+			*p = '\0';
+		}
+		else
+		{
+			string = deinflect(dn->string);
+		}
+
 		affix_list_add(afdict, afdict_find(afdict, con), string);
 		free(string);
 	}
