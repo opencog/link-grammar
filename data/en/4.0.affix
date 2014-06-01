@@ -10,8 +10,8 @@
 % 。is an end-of-sentence marker used in Japanese texts.
 
 % Punctuation appearing on the right-side of words.
-")" "}" "]" ">" » 〉 ） 〕 》 】 ］ 』」 "’’" "’" ''.y '.y ' `
-"%" "," "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？！ ….y ....y "”" ━.y –.y ー.y ‐.y 、.y ～
+")" "}" "]" ">" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ''.y '.y ' `
+"%" "," "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！ ….y ....y "”" ━.y –.y ー.y ‐.y 、.y ～
 ¢ ₵ ™ ℠ : RPUNC+; 
 
 % Punctuation appearing on the left-side of words.
