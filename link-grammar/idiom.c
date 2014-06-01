@@ -20,64 +20,64 @@
 #include "structures.h"
 #include "utilities.h"
 
-/** 
+/**
  * Find if a string signifies an idiom.
- * Returns TRUE if the string contains an underbar character.
+ * Returns true if the string contains an underbar character.
  * The check of s[0] prevents inclusion of "_". In that case no check for
  * length=1 is done because it is not going to be a valid idiom anyway.
  *
  */
-Boolean contains_underbar(const char * s)
+bool contains_underbar(const char * s)
 {
-	if (s[0] == '_') return FALSE;
-	while(*s != '\0') {
-		if (*s == '_') return TRUE;
+	if (s[0] == '_') return false;
+	while (*s != '\0') {
+		if (*s == '_') return true;
 		s++;
 	}
-	return FALSE;
+	return false;
 }
 
-/** 
- * Returns FALSE if it is not a correctly formed idiom string.
+/**
+ * Returns false if it is not a correctly formed idiom string.
  * Such a string is correct if it:
  *   () contains no SUBSCRIPT_MARK
  *   () non-empty strings separated by _
  */
-static Boolean is_idiom_string(const char * s)
+static bool is_idiom_string(const char * s)
 {
 	size_t len;
 	const char * t;
 
 	for (t = s; *t != '\0'; t++)
 	{
-		if (*t == SUBSCRIPT_MARK) return FALSE;
+		if (*t == SUBSCRIPT_MARK) return false;
 	}
 
 	len = strlen(s);
 	if ((s[0] == '_') || (s[len-1] == '_'))
 	{
-		return FALSE;
+		return false;
 	}
 
 	for (t = s; *t != '\0'; t++)
 	{
-		if ((*t == '_') && (*(t+1) == '_')) return FALSE;
+		if ((*t == '_') && (*(t+1) == '_')) return false;
 	}
-	return TRUE;
+	return true;
 }
 
-/** 
- * return TRUE if the string s is a sequence of digits.
+/**
+ * return true if the string s is a sequence of digits.
  */
-static Boolean is_number(const char *s)
+static bool is_number(const char *s)
 {
 	int nb;
 	while(*s != '\0') {
 		nb = is_utf8_digit(s);
-		if (!nb) return FALSE;
+		if (!nb) return false;
 		s += nb;
 	}
-	return TRUE;
+	return true;
 }
 
 /**
@@ -94,7 +94,7 @@ static int numberfy(const char * s)
 	return atoi(s);
 }
 
-/** 
+/**
  * Look for words that end in ".Ix" where x is a number.
  * Return the largest x found.
  */
@@ -154,7 +154,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 {
 	Dict_node * dn, * dn_new;
 	char * t, *s, *p;
-	Boolean more;
+	bool more;
 	unsigned int sz;
 	dn = NULL;
 
@@ -166,10 +166,10 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 		t = s;
 		while ((*s != '\0') && (*s != '_')) s++;
 		if (*s == '_') {
-			more = TRUE;
+			more = true;
 			*s = '\0';
 		} else {
-			more = FALSE;
+			more = false;
 		}
 		dn_new = (Dict_node *) xalloc(sizeof (Dict_node));
 		dn_new->right = dn;
@@ -278,7 +278,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	nc = Exp_create(dict);
 	nc->u.string = generate_id_connector(dict);
 	nc->dir = '-';
-	nc->multi = FALSE;
+	nc->multi = false;
 	nc->type = CONNECTOR_type;
 	nc->cost = 0;
 
@@ -295,7 +295,8 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	dn_list = dn_list->right;
 
-	while(dn_list->right != NULL) {
+	while(dn_list->right != NULL)
+	{
 		/* generate the expression for a middle idiom word */
 
 		n1 = Exp_create(dict);
@@ -309,7 +310,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		nc = Exp_create(dict);
 		nc->u.string = generate_id_connector(dict);
 		nc->dir = '+';
-		nc->multi = FALSE;
+		nc->multi = false;
 		nc->type = CONNECTOR_type;
 		nc->cost = 0;
 		elr->e = nc;
@@ -319,7 +320,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 		nc = Exp_create(dict);
 		nc->u.string = generate_id_connector(dict);
 		nc->dir = '-';
-		nc->multi = FALSE;
+		nc->multi = false;
 		nc->type = CONNECTOR_type;
 		nc->cost = 0;
 
@@ -334,7 +335,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	nc = Exp_create(dict);
 	nc->u.string = generate_id_connector(dict);
 	nc->dir = '+';
-	nc->multi = FALSE;
+	nc->multi = false;
 	nc->type = CONNECTOR_type;
 	nc->cost = 0;
 
@@ -348,7 +349,8 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	dn_list = start_dn_list;
 
-	while (dn_list != NULL) {
+	while (dn_list != NULL)
+	{
 		xdn = dn_list->right;
 		dn_list->left = dn_list->right = NULL;
 		dn_list->string = build_idiom_word_name(dict, dn_list->string);
@@ -359,27 +361,10 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	/* xfree((char *)s, s_length+1); strings are handled by string_set */
 }
 
-/** 
- * returns TRUE if this is a word ending in ".Ix", where x is a number.
+/**
+ * returns true if this is a word ending in ".Ix", where x is a number.
  */
-Boolean is_idiom_word(const char * s)
+bool is_idiom_word(const char * s)
 {
 	return (numberfy(s) != -1) ;
 }
-
-#ifdef THIS_IS_NOT_USED
-/*
-  returns TRUE if the list of words contains only words that are
-  idiom words.  This is useful, because under this condition you want
-   to be able to insert the word anyway, as long as it doesn't match
-   exactly.
-*/
-Boolean only_idiom_words(Dict_node * dn)
-{
-	while(dn != NULL) {
-		if (!is_idiom_word(dn->string)) return FALSE;
-		dn = dn->right;
-	}
-	return TRUE;
-}
-#endif
