@@ -95,7 +95,7 @@ static bool is_stem(const char* w)
 {
 	size_t l = strlen(w);
 	if (l < 2) return FALSE;
-   if (strcmp(STEM_MARK, w+l-2)) return FALSE;
+	if (strcmp(STEM_MARK, w+l-2)) return FALSE;
 
 	return TRUE;
 }
@@ -292,7 +292,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage)
 		{
 			bool sane = (0 == strcmp(lnk->link_name, EMPTY_WORD_SUPPRESS));
 			sane = sane || (HIDE_MORPHO &&
-             0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
+			     0 == strncmp(lnk->link_name, SUFFIX_SUPPRESS, SUFFIX_SUPPRESS_L));
 			assert(sane, "Something wrong with linkage processing");
 			exfree_link(lnk);
 		}

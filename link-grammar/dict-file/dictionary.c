@@ -155,8 +155,8 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 	size_t w_len;          /* length of the dict word */
 	Dictionary afdict = dict->affix_table;
 
-   if (dn == NULL) return;
-   get_dict_affixes(dict, dn->right, infix_mark, w_last);
+	if (dn == NULL) return;
+	get_dict_affixes(dict, dn->right, infix_mark, w_last);
 
 	w = dn->string;
 	w_sm = strrchr(w, SUBSCRIPT_MARK);
@@ -187,7 +187,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 		}
 	}
 
-   get_dict_affixes(dict, dn->left, infix_mark, w_last);
+	get_dict_affixes(dict, dn->left, infix_mark, w_last);
 }
 
 /**

@@ -455,22 +455,22 @@ Disjunct * build_disjuncts_for_dict_node(Dict_node *dn)
  */
 static unsigned int count_clause(Exp *e)
 {
-   unsigned int cnt = 0;
+	unsigned int cnt = 0;
 	E_list * e_list;
 
 	assert(e != NULL, "count_clause called with null parameter");
 	if (e->type == AND_type)
 	{
-      /* multiplicative combinatorial explosion */
+		/* multiplicative combinatorial explosion */
 		cnt = 1;
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
 			cnt *= count_clause(e_list->e);
 	}
 	else if (e->type == OR_type)
 	{
-      /* Just additive */
+		/* Just additive */
 		for (e_list = e->u.l; e_list != NULL; e_list = e_list->next)
-         cnt += count_clause(e_list->e);
+			cnt += count_clause(e_list->e);
 	}
 	else if (e->type == CONNECTOR_type)
 	{

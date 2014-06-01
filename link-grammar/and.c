@@ -699,7 +699,7 @@ static void compute_matchers_for_a_label(Sentence sent, int k)
 	while(d != NULL) {
 		i = 0;
 		for (c=d->left; c != NULL; c = c->next) {
-         cs = skip_utf8_upper(c->string);
+			cs = skip_utf8_upper(c->string);
 			j = strlen(cs);
 			if (j > lengths[i]) lengths[i] = j;
 			i++;
@@ -900,13 +900,13 @@ static Disjunct * build_fat_link_substitutions(Sentence sent,
  */
 Disjunct * explode_disjunct_list(Sentence sent, Disjunct *d)
 {
-   Disjunct *d1 = NULL;
+	Disjunct *d1 = NULL;
 	count_context_t * ctxt = sent->count_ctxt;
 
-   for (; d!=NULL; d = d->next) {
+	for (; d!=NULL; d = d->next) {
 	   d1 = catenate_disjuncts(d1, build_fat_link_substitutions(sent, ctxt, d));
-   }
-   return d1;
+	}
+	return d1;
 }
 
 /**
@@ -1367,7 +1367,7 @@ static Disjunct * find_subdisjunct(Sentence sent, Disjunct * dis, int label)
 
 static int x_match(count_context_t * ctxt, Connector *a, Connector *b)
 {
-   return do_match(ctxt, a, b, 0, 0);
+	return do_match(ctxt, a, b, 0, 0);
 }
 
 /**

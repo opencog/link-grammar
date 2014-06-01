@@ -466,10 +466,10 @@ Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
  */
 const char * word_only_connector(Dict_node * dn)
 {
-   Exp * e = dn->exp;
-   if (CONNECTOR_type == e->type)
-      return e->u.string;
-   return NULL;
+	Exp * e = dn->exp;
+	if (CONNECTOR_type == e->type)
+		return e->u.string;
+	return NULL;
 }
 
 /* ======================================================== */

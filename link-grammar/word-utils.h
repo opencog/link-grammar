@@ -173,6 +173,6 @@ static inline unsigned int pair_hash(unsigned int log2_table_size,
 	i = ((unsigned long) re) + (i << 6) + (i << 16) - i;
 #endif
 
-   return i & (table_size-1);
+	return i & (table_size-1);
 }
 #endif /* _LINK_GRAMMAR_WORD_UTILS_H_ */

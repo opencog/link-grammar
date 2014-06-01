@@ -230,7 +230,7 @@ int do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
  */
 int do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
 {
-   return prune_match(bw - aw, a, b);
+	return prune_match(bw - aw, a, b);
 }
 #endif /* not USE_FAT_LINKAGES */
 

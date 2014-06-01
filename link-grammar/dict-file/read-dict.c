@@ -1065,7 +1065,7 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 /** Return true if the string is a (floating point) number */
 static bool is_number(const char * str)
 {
-   if (strspn(str, "0123456789.") == strlen(str))
+	if (strspn(str, "0123456789.") == strlen(str))
 		return true;
 
 	return false;

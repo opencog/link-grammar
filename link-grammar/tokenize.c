@@ -462,8 +462,8 @@ static bool issue_alternatives(Sentence sent,
 static bool add_alternative_with_subscr(Sentence sent, const char * prefix,
                                         const char * word, const char * suffix)
 {
-   Dictionary dict = sent->dict;
-   Dictionary afdict = dict->affix_table; /* Known to be non-NULL. */
+	Dictionary dict = sent->dict;
+	Dictionary afdict = dict->affix_table; /* Known to be non-NULL. */
 	Afdict_class * stemsubscr_list =
 	   AFCLASS(afdict, AFDICT_STEMSUBSCR);
 	const char ** stemsubscr = stemsubscr_list->string;
@@ -506,7 +506,7 @@ static bool add_alternative_with_subscr(Sentence sent, const char * prefix,
 		}
 	}
 
-   return word_is_in_dict;
+	return word_is_in_dict;
 }
 
 /**
@@ -578,7 +578,7 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 		/*
 		 * Try stripping off prefixes.
 		 * XXX Not validated yet by actual use.
-   	 */
+		 */
 		for (j = 0; j < p_strippable; j++)
 		{
 			if (strncmp(w, prefix[j], strlen(prefix[j])) == 0)
@@ -767,9 +767,9 @@ static bool is_capitalizable(Sentence sent, size_t curr_word)
 			return true;
 	}
 
-   /* First word after a quote mark can be capitalized */
-   if ((curr_word < sent->length) && sent->post_quote[curr_word])
-      return true;
+	/* First word after a quote mark can be capitalized */
+	if ((curr_word < sent->length) && sent->post_quote[curr_word])
+		return true;
 
 	return false;
 }
@@ -788,7 +788,7 @@ static bool guess_misspelled_word(Sentence sent, const char * word,
 	char **alternates = NULL;
 
 	/* For some reason spellcheck_suggest() returns guesses for numbers. */
-   if (is_number(word)) return false;
+	if (is_number(word)) return false;
 
 	/* If the spell-checker knows about this word, and we don't ...
 	 * Dang. We should fix it someday. Accept it as such. */
@@ -1162,13 +1162,13 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		word_is_in_dict = true;
 	}
 
-   /* If the word is capitalized, add as alternatives:
+	/* If the word is capitalized, add as alternatives:
 	 * - Add it in only case a regex match of it is needed, to prevent adding an
 	 *   unknown word. If it can split, it was already added if neded.
 	 *   (FIXME: make a better comment.)
 	 * - Add its lowercase if it is in the dict.
-    * FIXME: Capitalization handling should be done using the dict.
-    */
+	 * FIXME: Capitalization handling should be done using the dict.
+	 */
 	if (is_utf8_upper(word))
 	{
 		if (!word_can_split && match_regex(sent->dict, wp))
@@ -1355,7 +1355,7 @@ static void mark_replace_x_node_words(Sentence sent,  X_node * head,
 	char * buff = str;
 	size_t buff_len = sizeof(str);
 
-   if (NULL != word_type) mi_len += strlen(word_type);
+	if (NULL != word_type) mi_len += strlen(word_type);
 
 	for (e = head; e != NULL; e = e->next)
 	{
@@ -1387,7 +1387,7 @@ static X_node * build_regex_expressions(Sentence sent, int i,
 
 	we = build_word_expressions(sent->dict, word_type);
 	if (!opts->display_morphology) word_type = "";
-   mark_replace_x_node_words(sent, we, word, '!', word_type);
+	mark_replace_x_node_words(sent, we, word, '!', word_type);
 
 	return we;
 }
