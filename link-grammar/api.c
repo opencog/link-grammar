@@ -1020,6 +1020,16 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				unsplit_i = i;
 				unsplit = sent->word[i].unsplit_word;
 				numalt = altlen(sent->word[i].alternatives);
+				/* Check for a potential out of boundary condition.
+				 * FIXME: allocate matched_alts[] dynamically. */
+				if (numalt > MAX_SENTENCE)
+				{
+					prt_error("Error: sane_morphism(): word %zd: "
+					          "numalt %zd>MAX_SENTENCE(%d), all linkages skipped\n",
+								 i, numalt, MAX_SENTENCE);
+					match_found = false;
+					break;
+				}
 
 				lgdebug(4, "%zu unsplit word %s, alts:", lk+1, unsplit);
 				for (ai = 0; ai < numalt; ai++)
