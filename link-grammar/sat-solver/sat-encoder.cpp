@@ -2828,7 +2828,8 @@ extern "C" void sat_sentence_delete(Sentence sent)
   // That's because it will screw up the regular parser.
   if (sent->parse_info) {
     Parse_info pi = sent->parse_info;
-    for (int i=0; i< MAX_LINKS; i++) {
+    // ??? there's no link-array entry for the right wall..?
+    for (int i=0; i< sent->length-1; i++) {
       free_connectors(pi->link_array[i].lc);
       free_connectors(pi->link_array[i].rc);
     }
