@@ -9,12 +9,12 @@
 % 
 % 。is an end-of-sentence marker used in Japanese texts.
 
-")" "}" "]" ">" » 〉 ） 〕 》 】 ］ 』」 "’’" "’" ''.y '.y
+% Punctuation appearing on the right-side of words.
+")" "}" "]" ">" » 〉 ） 〕 》 】 ］ 』」 "’’" "’" ''.y '.y ' `
 "%" "," "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？！ ….y ....y "”" ━.y –.y ー.y ‐.y 、.y ～
 ¢ ₵ ™ ℠ : RPUNC+; 
 
-'s 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m ' `: SUF+;
-
+% Punctuation appearing on the left-side of words.
 "(" "{" "[" "<" « 〈 （ 〔 《 【 ［ 『 「 、.x ` `` „ “ ‘ ''.x '.x ….x ....x
 ¿ ¡
 "$" US$ USD C$ 
@@ -23,6 +23,9 @@
 * • ⁂ ❧ ☞ ◊ ※  ○  。.x ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎ 
 –.x ━.x ー.x -- - ‧.x
   : LPUNC+;
+
+% Suffixes
+'s 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!
