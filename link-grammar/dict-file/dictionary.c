@@ -325,7 +325,7 @@ static bool afdict_init(Dictionary dict)
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
 	}
 
-#ifdef AFDICT_ORDYER_NOT_PRESERVED
+#ifdef AFDICT_ORDER_NOT_PRESERVED
 	/* pre-sort the MPRE list */
 	ac = AFCLASS(afdict, AFDICT_MPRE);
 	if (0 < ac->length)
