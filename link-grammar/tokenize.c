@@ -950,7 +950,6 @@ static const char * strip_right(Sentence sent, const char * w,
 	const char * temp_wend = wend;
 	bool previous_is_unit = false;
 	bool starts_with_number = is_utf8_digit(w);
-	char word[MAX_WORD+1];
 
 	Afdict_class * rpunc_list;
 	const char * const * rpunc;
@@ -967,11 +966,13 @@ static const char * strip_right(Sentence sent, const char * w,
 
 	for (nrs = 0; nrs < MAX_STRIP; nrs++)
 	{
-		size_t sz = MIN(temp_wend-w, MAX_WORD);
+		size_t sz = temp_wend-w;
+		char* word = alloca(sz+1);
 		strncpy(word, w, sz);
 		word[sz] = '\0';
 		if (temp_wend == w) break;  /* It will work without this. */
 
+// printf("duuude check for word=%s\n", word);
 		/* Any remaining valid word, including numbers, stops the right stripping. */
 		if (find_word_in_dict(dict, word))
 		{
@@ -984,13 +985,16 @@ static const char * strip_right(Sentence sent, const char * w,
 			const char * t = (i < r_strippable) ? rpunc[i] : unit[i-r_strippable];
 			size_t len = strlen(t);
 
-			/* Check whether we can strip units. */
+			/* First try all right-strip characters, then try unit stripping */
 			if (i >= r_strippable)
 			{
-				/* Units must be preceeding with a number */
+				/* Units must be preceeded by a number (? is this always true?
+				   shouldn't the grammar decide if the trip is OK or not? XXX) */
 				if (!starts_with_number) break;
 				/* A unit must be at word end or after a punctuation.
-				 * This check prevents separation of 12sqft. (but not 12sq.ft.)*/
+				 * This check prevents separation of 12sqft. (but not 12sq.ft.)
+				 * (Huh?? Shouldn't the grammar decide if its valid!?  There 
+				 * may be multiple units to strip, right? */
 				if (previous_is_unit)
 				{
 					i = r_strippable+u_strippable; /* We are done */
@@ -1000,6 +1004,7 @@ static const char * strip_right(Sentence sent, const char * w,
 
 			/* The remaining w is too short for a possible match */
 			if ((temp_wend-w) < (int)len) continue;
+
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
 				lgdebug(2, "w='%s' unit '%s'\n", temp_wend-len, t);
@@ -1009,7 +1014,8 @@ static const char * strip_right(Sentence sent, const char * w,
 					previous_is_unit = false;
 					*n_r_stripped = nrs;
 					wend = temp_wend;
-				} else
+				}
+				else
 				{
 					previous_is_unit = true;
 				}
@@ -1022,14 +1028,14 @@ static const char * strip_right(Sentence sent, const char * w,
 		if (i >= r_strippable && !starts_with_number) break; /* No number+unit */
 	}
 
-	lgdebug(2, "root word '%s' word_is_in_dict=%d\n", word, *word_is_in_dict);
+	// lgdebug(2, "root word '%s' word_is_in_dict=%d\n", word, *word_is_in_dict);
 	if (!previous_is_unit || starts_with_number)
 	{
 		*n_r_stripped = nrs;
 		wend = temp_wend;
 	}
 
-	return (wend);
+	return wend;
 }
 
 /**
@@ -1469,7 +1475,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 		{
 			const char * s = sent->word[i].alternatives[ialt];
 			const char * origword = s;
-			X_node * we;
+			X_node * we = NULL;
 			const char * regex_name;
 			const char * spell_mark;
 			char word[MAX_WORD+1];
