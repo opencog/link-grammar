@@ -139,7 +139,8 @@ public:
         throw std::string("Unknown connector direction: ") + dir;
       }
     } else {
-      return ::do_match(_sent->count_ctxt, &cntr1, &cntr2, w1, w2);
+      // return ::do_match(_sent->count_ctxt, &cntr1, &cntr2, w1, w2);
+      return ::do_match(NULL, &cntr1, &cntr2, w1, w2);
     }
   }
 
