@@ -2702,7 +2702,10 @@ wouldn't wouldn’t:
 % The parenthetical remarks must be offset by parenthesis, and
 % must link back to main clause with MV or MX.
 =.v <.v >.v =<.v >=.v ==.v eq.v ne.v lt.v lte.v le.v gt.v gte.v ge.v
-equiv.v sim.v simeq.v approx.v ~.v ～.v:
+equiv.v sim.v simeq.v approx.v ~.v ～.v
+equals.eq
+is_less_than is_greater_than is_equal_to
+is_less_than_or_equal_to is_gretr_than_or_equal_to:
   (<verb-x-s> & <vc-be>)
   or (EQ*r- & S- & <verb-wall> & EQ*r+)
   or (EQ*r-
@@ -2718,15 +2721,18 @@ equiv.v sim.v simeq.v approx.v ~.v ～.v:
 % Binary operators, strict:
 % Here EQt attaches only to terms, which may be numbers or letters.
 % By contrast, EQrr can only attach to relations (=, < > etc.)
-+.eq -.eq *.eq "/.eq" x.eqn:
++.eq -.eq *.eq "/.eq" x.eqn plus.eq minus.eq times.eq divided_by:
   (EQt+ & EQt- & (EQrr- or EQrr+ or AN+))
   or (EQt- & Xd- & EQt+ & EQt- & Xc+)
   or (Xd- & EQt+ & EQt- & Xc+ & EQt+);
 
-->.eq -->.eq: (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
+% turnstiles, implication, assignment
+->.eq -->.eq "|-.eq" "|=.eq" ":-.eq" ":=.eq" <-.eq <--.eq :
+  (S- & O+ ) & (AN+ or (Xd- & Xc+ & MX-)) & <verb-wall>;
 
 % "adverb" use, e.g. "< 10" for "less than 10"
-=.eq <.e =<.e <=.e >.e >=.e +.e -.e x.e: EN+;
+=.eq <.e =<.e <=.e >.e >=.e +.e -.e <<.e >>.e x.e:
+   EN+;
 
 % ===================================================================
 % COMMON VERB CATEGORIES (The last number of the file name indicates
