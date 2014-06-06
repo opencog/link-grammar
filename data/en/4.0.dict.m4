@@ -1685,7 +1685,7 @@ NUMBERS FRACTION:
   or [[AN+]]
   or ({EN- or NIc-} & (ND+ or NIn+ or OD- or
     ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))
-  or EQt+
+  or ({Wd-} & EQt+)
   or EQt-
   or ((Wd- or NMn-) & NIa+)
   or Wa-;
@@ -1786,7 +1786,7 @@ YEAR-DATE: NUMBERS or <date-id> or [[G+]];
   or TM-
   or NSn+
   or ((Wd- or NMn-) & NIa+)
-  or EQt+ or EQt-;
+  or ({Wd-} & EQt+) or EQt-;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
 0:
@@ -2707,7 +2707,7 @@ equals.eq
 is_less_than is_greater_than is_equal_to
 is_less_than_or_equal_to is_gretr_than_or_equal_to:
   (<verb-x-s> & <vc-be>)
-  or (EQ*r- & S- & <verb-wall> & EQ*r+)
+  or (EQ*r- & {S-} & <verb-wall> & EQ*r+)
   or (EQ*r-
      & ([O+] or ({EQ*r-} & EQ*r+))
      & (MX- or MVa-));
