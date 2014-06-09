@@ -57,10 +57,13 @@ changecom(`%')
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
 
-% The empty word is a place holder in positions when "no word" is a possibility to consider.
-% It is currently used in spell suggestions which have a variable number of words, and in
-% apostrophe splits when the unsplit word also exists in the dictionary (like let's).
-% It is also currently used for "balancing" of the word count in alternatives.
+% The empty word is a place holder in positions when "no word" is a
+% possibility to consider.  It is currently used in spell suggestions
+% which have a variable number of words, and in apostrophe splits when
+% the unsplit word also exists in the dictionary (like let's).  It is
+% also currently used for "balancing" of the word count in alternatives.
+% See also EMPTY-WORD.x for the highly-unusual situation that EMPTY-WORD
+% appears in the input text.
 EMPTY-WORD.zzz: ZZZ-;
 
 % Null links. These are used to drop the requirement for certain words
@@ -302,6 +305,9 @@ INITIALS <entity-singular>:
 % prefered to the regex match (i.e. for a common noun starting a
 % sentence).
 CAPITALIZED-WORDS: [<entity-singular>]0.1;
+
+% Hack, see EMPTY-WORD, up top.
+EMPTY-WORD.x: CAPITALIZED-WORDS;
 
 % Capitalized words that seem to be plural (by ending with an s, etc)
 % -- But not all words that end with an 's' are plural:
