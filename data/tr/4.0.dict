@@ -4,7 +4,7 @@
 % Dictionary version number is 5.0.1 (formatted as V5v0v1+)
 <dictionary-version-number>: V5v0v1+;
 % The empty word.
-=.zzz: ZZZ-;
+EMPTY-WORD.zzz: ZZZ-;
 
 %adjectives: fat, sick, angry
 şişman.a hasta.a kızgın.a : {W-} & {EA-} & (({AJl+} & {AJr-}) or {A+}) ;

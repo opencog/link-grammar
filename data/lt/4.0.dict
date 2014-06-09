@@ -15,7 +15,7 @@
 <dictionary-version-number>: V5v0v1+;
 
 % Empty word; required for basic morphology analysis.
-=.zzz: ZZZ-;
+EMPTY-WORD.zzz: ZZZ-;
 %
 %
 % Ženklai:

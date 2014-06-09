@@ -11,7 +11,7 @@
 <dictionary-version-number>: V5v1v0+;
 
 % The empty word.
-=.zzz: ZZZ-;
+EMPTY-WORD.zzz: ZZZ-;
 
 <costly-null>: [[[[]]]];
 

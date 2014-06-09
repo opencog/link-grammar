@@ -11,7 +11,7 @@
 <dictionary-version-number>: V5v0v2+;
 
 % Word-count balancing for suffixes
-=.zzz: ZZZ-;
+EMPTY-WORD.zzz: ZZZ-;
 
 
 % NOUNS, PRONOUNS

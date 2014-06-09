@@ -28,7 +28,7 @@
 
 % The empty word.
 % It is needed for connecting the balancing words.
-=.zzz: ZZZ- & {ZZZ+};
+EMPTY-WORD.zzz: ZZZ- & {ZZZ+};
 
 % alternatives terminating dummy word (test)
 alternative-terminator.zzz: ();

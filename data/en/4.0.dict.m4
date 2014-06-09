@@ -57,8 +57,11 @@ changecom(`%')
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
 
-% Word-count balancing for 'x (e.g. 's) splits
-=.zzz: ZZZ-;
+% The empty word is a place holder in positions when "no word" is a possibility to consider.
+% It is currently used in spell suggestions which have a variable number of words, and in
+% apostrophe splits when the unsplit word also exists in the dictionary (like let's).
+% It is also currently used for "balancing" of the word count in alternatives.
+EMPTY-WORD.zzz: ZZZ-;
 
 % Null links. These are used to drop the requirement for certain words
 % to appear during parsing. Basically, if a parse fails at a given cost,
