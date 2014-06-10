@@ -98,7 +98,8 @@ public:
     return _right_connectors;
   }
 
-  PositionConnector* get(int dfs_position) {
+  PositionConnector* get(int dfs_position)
+  {
     switch (_dir[dfs_position - 1]) {
     case '+':
       return &_right_connectors[_position[dfs_position - 1]];
@@ -108,7 +109,8 @@ public:
     return NULL;
   }
 
-  void set_connector_length_limit(Connector* c) {
+  void set_connector_length_limit(Connector* c)
+  {
     int short_len = _opts->short_length;
     if (short_len > UNLIMITED_LEN)
       short_len = UNLIMITED_LEN;
@@ -117,17 +119,19 @@ public:
     if (parse_options_get_all_short_connectors(_opts)) {
       c->length_limit = short_len;
     }
-    else if (conset == NULL || match_in_connector_set(NULL, conset, c, '+')) {
+    else if (conset == NULL || match_in_connector_set(conset, c, '+')) {
       c->length_limit = UNLIMITED_LEN;
     } else {
       c->length_limit = short_len;
     }
   }
 
-  int match(int w1, Connector& cntr1, char dir, int w2, Connector& cntr2)
+  bool match(int w1, Connector& cntr1, char dir, int w2, Connector& cntr2)
   {
-      // return ::do_match(_sent->count_ctxt, &cntr1, &cntr2, w1, w2);
-      return ::do_match(NULL, &cntr1, &cntr2, w1, w2);
+      int dist = w2 - w1;
+      assert(0 < dist, "match() did not receive words in the natural order.");
+      if (dist > cntr1.length_limit || dist > cntr2.length_limit) return false;
+      return easy_match(cntr1.string, cntr2.string);
   }
 
   void insert_connectors(Exp* exp, int& dfs_position,
@@ -148,7 +152,8 @@ public:
 
   // A simpler function: Can any connector in this word match a connector wi, pi?
   // It is assumed that
-  bool match_possible(int wi, int pi) {
+  bool match_possible(int wi, int pi)
+  {
     return _match_possible[wi].find(pi) != _match_possible[wi].end();
   }
 

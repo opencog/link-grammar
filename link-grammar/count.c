@@ -220,13 +220,7 @@ bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 
 /*
  * Returns TRUE if s and t match according to the connector matching
- * rules.  The connector strings must be properly formed, starting with
- * zero or more upper case letters, followed by some other letters, and
- * The algorithm is symmetric with respect to a and b.
- *
- * It works as follows:  The labels must match.  
- * The sequence of upper case letters must match exactly.  After these comes
- * a sequence of lower case letters or "*"s. 
+ * rules.
  */
 bool do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
 {

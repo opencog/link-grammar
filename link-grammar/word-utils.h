@@ -48,15 +48,24 @@ void        exfree_link(Link *);
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
-bool match_in_connector_set(count_context_t*, Connector_set*, Connector*, int);
 Boolean word_has_connector(Dict_node *, const char *, char);
 const char * word_only_connector(Dict_node *);
+#ifdef USE_FAT_LINKAGES
+bool match_in_connector_set(count_context_t*, Connector_set*, Connector*, int);
+#else
+bool match_in_connector_set(Connector_set*, Connector*, int dir);
+#endif
 
 
 /**
- * This is like the basic "match" function in count.c - the basic
- * connector-matching function used in parsing - except it ignores
- * "priority" (used to handle fat links)
+ * Returns TRUE if s and t match according to the connector matching
+ * rules.  The connector strings must be properly formed, starting with
+ * zero or more upper case letters, followed by some other letters, and
+ * The algorithm is symmetric with respect to a and b.
+ *
+ * It works as follows:  The labels must match.  
+ * The sequence of upper case letters must match exactly.  After these
+ * comes a sequence of lower case letters or "*"s. 
  */
 static inline bool easy_match(const char * s, const char * t)
 {

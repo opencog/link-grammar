@@ -246,7 +246,6 @@ static void install_fat_connectors(Sentence sent)
 		}
 	}
 }
-#endif /* USE_FAT_LINKAGES */
 
 static void 
 set_connector_list_length_limit(count_context_t * ctxt,
@@ -267,7 +266,6 @@ set_connector_list_length_limit(count_context_t * ctxt,
 	}
 }
 
-/* XXX FIXME -- only fat links need to count_context_t argument! */
 static void 
 set_connector_length_limits(Sentence sent, count_context_t * ctxt,
                             Parse_Options opts)
@@ -288,7 +286,6 @@ set_connector_length_limits(Sentence sent, count_context_t * ctxt,
 	}
 }
 
-#ifdef USE_FAT_LINKAGES
 /**
  * Return true if the sentence contains a conjunction.  Assumes
  * is_conjunction[] has been initialized.
@@ -310,16 +307,6 @@ int sentence_contains_conjunction(Sentence sent)
 	return FALSE;
 }
 
-#else
-
-int sentence_contains_conjunction(Sentence sent)
-{
-	return FALSE;
-}
-
-#endif /* USE_FAT_LINKAGES */
-
-
 /**
  * Assumes that the sentence expression lists have been generated.
  * This does all the necessary pruning and building of fat-link structures.
@@ -327,9 +314,7 @@ int sentence_contains_conjunction(Sentence sent)
 void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
 	size_t i;
-#ifdef USE_FAT_LINKAGES
 	bool has_conjunction;
-#endif /* USE_FAT_LINKAGES */
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost);
 	if (verbosity > 2) {
@@ -352,7 +337,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		print_disjunct_counts(sent);
 	}
 
-#ifdef USE_FAT_LINKAGES
 	sent->null_links = (opts->min_null_count > 0);
 
 	if (opts->use_fat_links)
@@ -425,8 +409,81 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		power_prune(sent, RUTHLESS, opts);
 	}
 	free_count_context(ctxt);
-#else
-	set_connector_length_limits(sent, NULL, opts);
-	pp_and_power_prune(sent, RUTHLESS, opts);
-#endif /* USE_FAT_LINKAGES */
 }
+
+#else
+
+static void 
+set_connector_list_length_limit(Connector *c,
+                                Connector_set *conset,
+                                int short_len,
+                                Parse_Options opts)
+{
+	for (; c!=NULL; c=c->next) {
+		if (parse_options_get_all_short_connectors(opts)) {
+			c->length_limit = short_len;
+		}
+		else if (conset == NULL || match_in_connector_set(conset, c, '+')) {
+			c->length_limit = UNLIMITED_LEN;
+		} else {
+			c->length_limit = short_len;
+		}
+	}
+}
+
+static void 
+set_connector_length_limits(Sentence sent, Parse_Options opts)
+{
+	size_t i;
+	size_t len = opts->short_length;
+	Connector_set * ucs = sent->dict->unlimited_connector_set;
+
+	if (len > UNLIMITED_LEN) len = UNLIMITED_LEN;
+
+	for (i=0; i<sent->length; i++) {
+		Disjunct *d;
+		for (d = sent->word[i].d; d != NULL; d = d->next) {
+			set_connector_list_length_limit(d->left, ucs, len, opts);
+			set_connector_list_length_limit(d->right, ucs, len, opts);
+		}
+	}
+}
+
+/**
+ * Assumes that the sentence expression lists have been generated.
+ */
+void prepare_to_parse(Sentence sent, Parse_Options opts)
+{
+	size_t i;
+
+	build_sentence_disjuncts(sent, opts->disjunct_cost);
+	if (verbosity > 2) {
+		printf("After expanding expressions into disjuncts:");
+		print_disjunct_counts(sent);
+	}
+	print_time(opts, "Built disjuncts");
+
+	for (i=0; i<sent->length; i++) {
+		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d);
+
+		/* Some long Russian sentences can really blow up, here. */
+		if (resources_exhausted(opts->resources))
+			return;
+	}
+	print_time(opts, "Eliminated duplicate disjuncts");
+
+	if (verbosity > 2) {
+		printf("\nAfter expression pruning and duplicate elimination:\n");
+		print_disjunct_counts(sent);
+	}
+
+	set_connector_length_limits(sent, opts);
+	pp_and_power_prune(sent, RUTHLESS, opts);
+}
+
+int sentence_contains_conjunction(Sentence sent)
+{
+	return FALSE;
+}
+
+#endif /* USE_FAT_LINKAGES */

@@ -365,6 +365,7 @@ void connector_set_delete(Connector_set * conset)
  * d='+' means this connector is on the right side of the disjunct.
  * d='-' means this connector is on the left side of the disjunct.
  */
+#ifdef USE_FAT_LINKAGES
 bool match_in_connector_set(count_context_t * ctxt, Connector_set *conset, Connector * c, int d)
 {
 	unsigned int h;
@@ -377,6 +378,21 @@ bool match_in_connector_set(count_context_t * ctxt, Connector_set *conset, Conne
 	}
 	return false;
 }
+#else /* USE_FAT_LINKAGES */
+
+bool match_in_connector_set(Connector_set *conset, Connector * c, int dir)
+{
+	unsigned int h;
+	Connector * c1;
+	if (conset == NULL) return false;
+	h = connector_set_hash(conset, c->string, dir);
+	for (c1 = conset->hash_table[h]; c1 != NULL; c1 = c1->next)
+	{
+		if (easy_match(c1->string, c->string) && (dir == c1->word)) return true;
+	}
+	return false;
+}
+#endif /* not USE_FAT_LINKAGES */
 
 /* ======================================================== */
 /* More connector utilities ... */
