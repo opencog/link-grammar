@@ -364,6 +364,14 @@ class LinkageTestCase(unittest.TestCase):
 "\n\n")
 
 
+        sent = 'We are from the planet Gorpon'
+        linkage = self.p.parse_sent(sent)[0]
+        self.assertEqual(linkage.diagram, 
+"\n    +----WV----+     +---------Js--------+"
+"\n    +--Wd--+Spx+--Pp-+   +--DD--+---GN---+"
+"\n    |      |   |     |   |      |        |"
+"\nLEFT-WALL we are.v from the planet.n Gorpon[!] "
+"\n\n")
 
 
 class LinkTestCase(unittest.TestCase):
