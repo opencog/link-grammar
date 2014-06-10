@@ -121,7 +121,7 @@ void count_unset_effective_distance(count_context_t* ctxt)
  * is different depending on which of the two priority cases is being
  * considered.  See the comments below. 
  */
-int do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
+bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 {
 	const char *s, *t;
 	int x, y;
@@ -228,8 +228,9 @@ int do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
  * The sequence of upper case letters must match exactly.  After these comes
  * a sequence of lower case letters or "*"s. 
  */
-int do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
+bool do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
 {
+	assert(aw <= bw, "do_match() did not receive params in the natural order.");
 	return prune_match(bw - aw, a, b);
 }
 #endif /* not USE_FAT_LINKAGES */

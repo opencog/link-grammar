@@ -252,21 +252,21 @@ int prune_match(int dist, Connector *a, Connector *b)
 
 #else /* not USE_FAT_LINKAGES */
 
-int prune_match(int dist, Connector *a, Connector *b)
+bool prune_match(int dist, Connector *a, Connector *b)
 {
 	const char *s, *t;
+
+	if (dist > a->length_limit || dist > b->length_limit) return false;
 
 	s = a->string;
 	t = b->string;
 
-	while(isupper((int)*s) || isupper((int)*t))
+	while (isupper((int)*s) || isupper((int)*t))
 	{
-		if (*s != *t) return FALSE;
+		if (*s != *t) return false;
 		s++;
 		t++;
 	}
-
-	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
 
 	while ((*s != '\0') && (*t != '\0'))
 	{
@@ -276,9 +276,9 @@ int prune_match(int dist, Connector *a, Connector *b)
 			t++;
 		}
 		else
-			return FALSE;
+			return false;
 	}
-	return TRUE;
+	return true;
 }
 #endif /* USE_FAT_LINKAGES */
 
@@ -829,7 +829,7 @@ static Exp* purge_Exp(Exp *e)
 }
 
 /**
- * Returns TRUE if c can match anything in the set S.
+ * Returns TRUE if c can match anything in the set S (err. the connector table ct).
  */
 static inline bool matches_S(connector_table *ct, Connector * c, char dir)
 {

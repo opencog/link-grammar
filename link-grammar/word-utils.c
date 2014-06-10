@@ -386,10 +386,10 @@ bool match_in_connector_set(count_context_t * ctxt, Connector_set *conset, Conne
  * connector-matching function used in parsing - except it ignores
  * "priority" (used to handle fat links)
  */
-static Boolean easy_match(const char * s, const char * t)
+static bool easy_match(const char * s, const char * t)
 {
-	while(isupper((int)*s) || isupper((int)*t)) {
-		if (*s != *t) return FALSE;
+	while (isupper((int)*s) || isupper((int)*t)) {
+		if (*s != *t) return false;
 		s++;
 		t++;
 	}
@@ -399,9 +399,9 @@ static Boolean easy_match(const char * s, const char * t)
 		   ((*s == *t) && (*s != '^'))) {
 		s++;
 		t++;
-		} else return FALSE;
+		} else return false;
 	}
-	return TRUE;
+	return false;
 }
 
 /**
@@ -438,20 +438,20 @@ Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
 }
 #else /* CRAZY_OBESE_CHECKING_AGLO */
 
-static Boolean exp_has_connector(Exp * e, const char * cs, char direction)
+static bool exp_has_connector(Exp * e, const char * cs, char direction)
 {
 	E_list * el;
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction == e->dir)
 			return easy_match(e->u.string, cs);
-		return FALSE;
+		return false;
 	}
 	for (el = e->u.l; el != NULL; el = el->next)
 	{
-		if (exp_has_connector(el->e, cs, direction)) return TRUE;
+		if (exp_has_connector(el->e, cs, direction)) return false;
 	}
-	return FALSE;
+	return false;
 }
 
 Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)

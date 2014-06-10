@@ -18,5 +18,5 @@ void       fat_prune(Sentence);
 #endif
 int        power_prune(Sentence, int mode, Parse_Options);
 void       pp_and_power_prune(Sentence, int mode, Parse_Options);
-int        prune_match(int dist, Connector * left, Connector * right);
+bool       prune_match(int dist, Connector * left, Connector * right);
 void       expression_prune(Sentence);
