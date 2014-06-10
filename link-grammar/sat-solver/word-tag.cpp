@@ -5,7 +5,8 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                                 bool& leading_right, bool& leading_left,
                                 std::vector<int>& eps_right,
                                 std::vector<int>& eps_left,
-                                char* var, bool root, int parrent_cost) {
+                                char* var, bool root, int parrent_cost)
+{
   int cost = parrent_cost + exp->cost;
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
@@ -113,14 +114,11 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
 
 
 
-void WordTag::find_matches(int w, const char* C, char dir, std::vector<PositionConnector*>& matches) {
+void WordTag::find_matches(int w, const char* C, char dir, std::vector<PositionConnector*>& matches)
+{
   //  cout << "Look connection on: ." << _word << ". ." << w << ". " << C << dir << endl;
   Connector search_cntr;
   init_connector(&search_cntr);
-#ifdef USE_FAT_LINKAGES
-  search_cntr.label = NORMAL_LABEL;
-  search_cntr.priority = THIN_priority;
-#endif /* USE_FAT_LINKAGES */
   search_cntr.string = C;
   set_connector_length_limit(&search_cntr);
 
@@ -136,20 +134,16 @@ void WordTag::find_matches(int w, const char* C, char dir, std::vector<PositionC
     throw std::string("Unknown connector direction: ") + dir;
   }
 
-#ifdef USE_FAT_LINKAGES
-  bool conjunction = sentence_contains_conjunction(_sent);
-#else
-  bool conjunction = false;
-#endif /* USE_FAT_LINKAGES */
   std::vector<PositionConnector>::iterator i;
   for (i = connectors->begin(); i != connectors->end(); i++) {
-    if (WordTag::match(w, search_cntr, dir, (*i).word, *((*i).connector),  conjunction)) {
+    if (WordTag::match(w, search_cntr, dir, (*i).word, *((*i).connector))) {
       matches.push_back(&(*i));
     }
   }
 }
 
-void WordTag::add_matches_with_word(WordTag& tag) {
+void WordTag::add_matches_with_word(WordTag& tag)
+{
   std::vector<PositionConnector>::iterator i;
   for (i = _right_connectors.begin(); i != _right_connectors.end(); i++) {
     std::vector<PositionConnector*> connector_matches;

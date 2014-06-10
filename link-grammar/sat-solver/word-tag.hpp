@@ -117,31 +117,17 @@ public:
     if (parse_options_get_all_short_connectors(_opts)) {
       c->length_limit = short_len;
     }
-#ifdef USE_FAT_LINKAGES
-    else if (conset == NULL || match_in_connector_set(_sent->count_ctxt, conset, c, '+')) {
-#else
     else if (conset == NULL || match_in_connector_set(NULL, conset, c, '+')) {
-#endif
       c->length_limit = UNLIMITED_LEN;
     } else {
       c->length_limit = short_len;
     }
   }
 
-  int match(int w1, Connector& cntr1, char dir, int w2, Connector& cntr2, bool conjunction) {
-    if (conjunction) {
-      switch (dir) {
-      case '+':
-        return ::prune_match(0, &cntr1, &cntr2);
-      case '-':
-        return ::prune_match(0, &cntr2, &cntr1);
-      default:
-        throw std::string("Unknown connector direction: ") + dir;
-      }
-    } else {
+  int match(int w1, Connector& cntr1, char dir, int w2, Connector& cntr2)
+  {
       // return ::do_match(_sent->count_ctxt, &cntr1, &cntr2, w1, w2);
       return ::do_match(NULL, &cntr1, &cntr2, w1, w2);
-    }
   }
 
   void insert_connectors(Exp* exp, int& dfs_position,
