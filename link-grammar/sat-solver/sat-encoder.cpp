@@ -468,13 +468,13 @@ void SATEncoder::free_alternatives(Exp* exp)
 }
 
 
-void SATEncoder::generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci,
-                                                      char dir, double cost, int wj)
+void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi, const char* Ci,
+                                                      char dir, double cost, size_t wj)
 {
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
 
   char str[MAX_VARIABLE_NAME];
-  sprintf(str, "w%d", wj);
+  sprintf(str, "w%zd", wj);
   Lit condition = Lit(_variables->string(str));
 
   vec<Lit> rhs;
@@ -1239,7 +1239,7 @@ Linkage SATEncoder::create_linkage()
   if (_sent->parse_info) {
     Parse_info pi = _sent->parse_info;
     // ??? there's no link-array entry for the right wall..?
-    for (int i=0; i < _sent->length-1; i++) {
+    for (size_t i=0; i < _sent->length-1; i++) {
       free_connectors(pi->link_array[i].lc);
       free_connectors(pi->link_array[i].rc);
     }
