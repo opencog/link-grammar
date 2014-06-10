@@ -328,14 +328,14 @@ static void add_alternative(Sentence sent,
 					sz = MIN(strlen(*affix), MAX_WORD);
 					strncpy(buff, *affix, sz);
 					buff[sz] = infix_mark;
-					buff[sz+1] = 0;
+					buff[sz+1] = '\0';
 					break;
 				case STEM:   /* already word, word.=, word.=x */
 					/* Stems are already marked with a stem subscript, if needed.
 					 * The possible marks are set in the affix class STEMSUBSCR. */
 					sz = MIN(strlen(*affix), MAX_WORD);
 					strncpy(buff, *affix, sz);
-					buff[sz] = 0;
+					buff[sz] = '\0';
 					break;
 				case SUFFIX: /* set to =word */
 					/* If the suffix starts with an apostroph, don't mark it */
@@ -344,13 +344,13 @@ static void add_alternative(Sentence sent,
 					{
 						sz = MIN(strlen(*affix), MAX_WORD);
 						strncpy(buff, *affix, sz);
-						buff[sz] = 0;
+						buff[sz] = '\0';
 						break;
 					}
 					sz = MIN(strlen(*affix) + 1, MAX_WORD);
 					buff[0] = infix_mark;
 					strncpy(&buff[1], *affix, sz);
-					buff[sz] = 0;
+					buff[sz] = '\0';
 					break;
 				case END:
 					assert(true, "affixtype END reached");
@@ -475,7 +475,7 @@ static bool add_alternative_with_subscr(Sentence sent, const char * prefix,
 		add_alternative(sent, (prefix ? 1 : 0),&prefix, 1,&word,
 		                      (suffix ? 1 : 0),&suffix);
 
-		/* If this is not a morpheme split (INFIXMARK==NUL), the word is not
+		/* If this is not a morpheme split (INFIX_MARK==NUL), the word is not
 		 * considred to be in the dict. This is important since then it can match
 		 * a regex. For example: 1960's, which may get split to: 1960 's */
 		if ('\0' != INFIX_MARK) word_is_in_dict = true;
@@ -542,7 +542,7 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 	/* Go through once for each suffix; then go through one
 	 * final time for the no-suffix case (i.e. to look for
 	 * prefixes only, without suffixes). */
-	for (i = 0, suffix = suffix_list->string; i <=s_strippable; i++, suffix++)
+	for (i = 0; i <= s_strippable; i++, suffix++)
 	{
 		if (i < s_strippable)
 		{
@@ -805,10 +805,10 @@ static bool guess_misspelled_word(Sentence sent, const char * word,
 			printf("- %s\n", alternates[j]);
 		}
 	}
-	/* FIXME: Word split for run-on and guessed words.
-	 * But since we don't have multi-level hierarchical alternatives
+	/* Word split for run-on and guessed words.
+	 * FIXME: Since we don't have multi-level hierarchical alternatives
 	 * (or even 2-level), we can do it only for certain cases.
-	 * For a a general implementation of word splits, we need to issue
+	 * For a general implementation of word splits, we need to issue
 	 * run-on words as separate words, with a 2nd-level alternatives
 	 * marks.
 	 */
@@ -1147,21 +1147,22 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	/* OK, now try to strip affixes. */
 
 	word_can_split = suffix_split(sent, w, wend);
-	lgdebug(+2, "Tried to split word='%s', now word_is_in_dict=%d\n",
-			  word, word_is_in_dict);
+	lgdebug(+2, "Tried to split word='%s', word_can_split=%d\n",
+			  word, word_can_split);
 
 	if ((is_capitalizable(sent, sent->length) || quote_found) &&
 		 is_utf8_upper(word))
 	{
 		downcase_utf8_str(downcase, word, MAX_WORD);
 		word_can_split |= suffix_split(sent, downcase, downcase+(wend-w));
-		lgdebug(+2, "Tried to split lc='%s'\n", downcase);
+		lgdebug(+2, "Tried to split lc='%s', now word_can_split=%d\n",
+		        downcase, word_can_split);
 	}
 
 	/* FIXME: Unify with suffix_split(). */
 	word_can_split |= mprefix_split(sent, word);
 
-	lgdebug(+2, "After split step, word='%s' word_can_split=%d\n",
+	lgdebug(+2, "After split step, word='%s' now word_can_split=%d\n",
 	        word, word_can_split);
 
 	/* word is now what remains after all the stripping has been done */
@@ -1178,7 +1179,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	}
 
 	/* If the word is capitalized, add as alternatives:
-	 * - Add it in only case a regex match of it is needed, to prevent adding an
+	 * - Add it only in case a regex match of it is needed, to prevent adding an
 	 *   unknown word. If it can split, it was already added if neded.
 	 *   (FIXME: make a better comment.)
 	 * - Add its lowercase if it is in the dict.
@@ -1271,7 +1272,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	for (i = n_r_stripped - 1; i >= 0; i--)
 	{
-		lgdebug(2, "issue remembered r_stripped w='%s'\n", r_stripped[i]);
+		lgdebug(+2, "issue remembered r_stripped w='%s'\n", r_stripped[i]);
 		issue_sentence_word(sent, r_stripped[i], false);
 	}
 }
@@ -1480,6 +1481,9 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 	for (i=0; i<sent->length; i++)
 	{
 		size_t ialt;
+		/* Optimization - load the empty-word disjucts only once per word */
+		bool empty_word_encountered = false;
+
 		for (ialt=0; NULL != sent->word[i].alternatives[ialt]; ialt++)
 		{
 			const char * s = sent->word[i].alternatives[ialt];
@@ -1491,6 +1495,23 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			
 			const char * regex_mark;
 			const char * regex_it = s;
+
+			if (test_enabled("avoid-extra-empty-words") &&
+			    (0 == strcmp(s, EMPTY_WORD_MARK)))
+			{
+				if (empty_word_encountered)
+				{
+					if (test_enabled("avoid-extra-empty-words-print"))
+					{
+						static int c = 0;
+						fprintf(stderr,
+						 "Sentence '%s': %d: Word %zu: EMPTY_WORD_MARK skipped\n",
+						 sent->orig_sentence, c++, i);
+					}
+					continue;
+				}
+				empty_word_encountered = true;
+			}
 
 			/* The word can be a spell-suggested one. */
 			spell_mark = strstr(s, "[~");
@@ -1620,7 +1641,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			sent->word[i].x = catenate_X_nodes(sent->word[i].x, we);
 			if (3 < verbosity)
 			{
-				printf("Tokenize word#=%zu '%s' alt#=%zd '%s' string='%s' expr=",
+				printf("Tokenize word#=%zu '%s' alt#=%zu '%s' string='%s' expr=",
 				       i, sent->word[i].unsplit_word, ialt, s, we->string);
 				print_expression(sent->word[i].x->exp);
 			}
