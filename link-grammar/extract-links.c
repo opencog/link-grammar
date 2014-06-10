@@ -444,21 +444,21 @@ Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
  * return TRUE if and only if overflow in the number of parses occured.
  * Use a 64-bit int for counting.
  */
-static int verify_set_node(Parse_set *set)
+static bool verify_set_node(Parse_set *set)
 {
 	Parse_choice *pc;
-	s64 n;
-	if (set == NULL || set->first == NULL) return FALSE;
-	n = 0;
+	s64 n = 0;
+	if (set == NULL || set->first == NULL) return false;
+
 	for (pc = set->first; pc != NULL; pc = pc->next)
 	{
 		n  += pc->set[0]->count * pc->set[1]->count;
-		if (PARSE_NUM_OVERFLOW < n) return TRUE;
+		if (PARSE_NUM_OVERFLOW < n) return true;
 	}
-	return FALSE;
+	return false;
 }
 
-static Boolean verify_set(Parse_info pi)
+static bool verify_set(Parse_info pi)
 {
 	unsigned int i;
 
@@ -468,10 +468,10 @@ static Boolean verify_set(Parse_info pi)
 		X_table_connector *t;
 		for(t = pi->x_table[i]; t != NULL; t = t->next)
 		{
-			if (verify_set_node(t->set)) return TRUE;
+			if (verify_set_node(t->set)) return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 /**
@@ -490,7 +490,7 @@ static Boolean verify_set(Parse_info pi)
  * This routine returns TRUE iff overflowed occurred.
  */
 
-int build_parse_set(Sentence sent, match_context_t *mchxt,
+bool build_parse_set(Sentence sent, match_context_t *mchxt,
                     count_context_t *ctxt,
                     unsigned int cost, Parse_Options opts)
 {

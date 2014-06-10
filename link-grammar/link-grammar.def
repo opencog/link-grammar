@@ -142,10 +142,7 @@ post_process_match
 match_in_connector_set
 build_deletable
 exalloc
-analyze_fat_linkage
 init_connector
-set_has_fat_down
-extract_fat_linkage
 analyze_thin_linkage
 build_effective_dist
 prune_match
@@ -153,7 +150,6 @@ lg_strlcpy
 lg_compute_disjunct_strings
 lg_expand_disjunct_list
 object_open
-do_match
 free_disjuncts
 eliminate_duplicate_disjuncts
 catenate_disjuncts
