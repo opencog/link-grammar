@@ -8506,6 +8506,10 @@ rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 % Morphology guessing for unknown words.
 % Given a particular kind of ending to a word, try to guess
 % its part-of-speech.
+%
+% All of these have a cost of 0.1, so that the CAPTIALIZED-WORDS
+% regex gets priority. (CAPITALIZED-WORDS has a cost of 0.05)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % ING-WORDS.g: (<verb-pg> & <vc-tr,intr>) or (<vc-tr,intr> & <verb-ge>)
 % or ({@E-} & A+) or <verb-ge>;
@@ -8553,8 +8557,6 @@ LY-WORDS.e:
 % Words guessed based on morphology.
 % These occur primarily in biomedical and chemistry texts.
 % These are processed via regular-expression matching, in 4.0.regex
-% All of these have a cost of 0.1, so that the CAPTIALIZED-WORDS
-% regex gets priority. (CAPITALIZED-WORDS has a cost of 0.05)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % guessed nouns that can be mass or countable
