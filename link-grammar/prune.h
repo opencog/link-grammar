@@ -15,8 +15,8 @@
 
 #ifdef USE_FAT_LINKAGES
 void       fat_prune(Sentence);
+bool       prune_match(int dist, Connector * left, Connector * right);
 #endif
 int        power_prune(Sentence, int mode, Parse_Options);
 void       pp_and_power_prune(Sentence, int mode, Parse_Options);
-bool       prune_match(int dist, Connector * left, Connector * right);
 void       expression_prune(Sentence);

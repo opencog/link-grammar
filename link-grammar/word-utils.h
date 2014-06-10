@@ -53,6 +53,40 @@ Boolean word_has_connector(Dict_node *, const char *, char);
 const char * word_only_connector(Dict_node *);
 
 
+/**
+ * This is like the basic "match" function in count.c - the basic
+ * connector-matching function used in parsing - except it ignores
+ * "priority" (used to handle fat links)
+ */
+static inline bool easy_match(const char * s, const char * t)
+{
+	while (isupper((int)*s) || isupper((int)*t))
+	{
+		if (*s != *t) return false;
+		s++;
+		t++;
+	}
+
+	while ((*s!='\0') && (*t!='\0'))
+	{
+		if ((*s == '*') || (*t == '*') || 
+#ifdef USE_FAT_LINKAGS
+			((*s == *t) && (*s != '^'))
+#else
+			(*s == *t)
+#endif
+		)
+		{
+			s++;
+			t++;
+		}
+		else
+			return false;
+	}
+	return false;
+}
+
+
 /* Dictionary utilities ... */
 Boolean word_contains(Dictionary dict, const char * word, const char * macro);
 

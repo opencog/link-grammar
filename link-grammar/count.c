@@ -230,8 +230,10 @@ bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
  */
 bool do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
 {
+	int dist = bw - aw;
 	assert(aw <= bw, "do_match() did not receive params in the natural order.");
-	return prune_match(bw - aw, a, b);
+	if (dist > a->length_limit || dist > b->length_limit) return false;
+	return easy_match(a->string, b->string);
 }
 #endif /* not USE_FAT_LINKAGES */
 

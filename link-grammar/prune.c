@@ -252,33 +252,9 @@ int prune_match(int dist, Connector *a, Connector *b)
 
 #else /* not USE_FAT_LINKAGES */
 
-bool prune_match(int dist, Connector *a, Connector *b)
+static inline bool prune_match(int dist, Connector *a, Connector *b)
 {
-	const char *s, *t;
-
-	if (dist > a->length_limit || dist > b->length_limit) return false;
-
-	s = a->string;
-	t = b->string;
-
-	while (isupper((int)*s) || isupper((int)*t))
-	{
-		if (*s != *t) return false;
-		s++;
-		t++;
-	}
-
-	while ((*s != '\0') && (*t != '\0'))
-	{
-		if ((*s == '*') || (*t == '*') || (*s == *t))
-		{
-			s++;
-			t++;
-		}
-		else
-			return false;
-	}
-	return true;
+	return easy_match(a->string, b->string);
 }
 #endif /* USE_FAT_LINKAGES */
 
@@ -1346,20 +1322,21 @@ static Boolean possible_connection(prune_context *pc,
 }
 #else /* not USE_FAT_LINKAGES */
 
-static Boolean possible_connection(prune_context *pc,
+static bool possible_connection(prune_context *pc,
                                Connector *lc, Connector *rc,
                                Boolean lshallow, Boolean rshallow,
                                int lword, int rword)
 {
-	if ((!lshallow) && (!rshallow)) return FALSE;
+	int dist;
+	if ((!lshallow) && (!rshallow)) return false;
 	  /* two deep connectors can't work */
-	if ((lc->word > rword) || (rc->word < lword)) return FALSE;
+	if ((lc->word > rword) || (rc->word < lword)) return false;
 	  /* word range constraints */
 
 	assert(lword < rword, "Bad word order in possible connection.");
 
 	if (lword == rword-1) {
-		if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
+		if (!((lc->next == NULL) && (rc->next == NULL))) return false;
 	}
 	else
 	if ((!pc->null_links) &&
@@ -1367,9 +1344,13 @@ static Boolean possible_connection(prune_context *pc,
 	    (rc->next == NULL) &&
 	    (!lc->multi) && (!rc->multi))
 	{
-		return FALSE;
+		return false;
 	}
-	return prune_match(rword - lword, lc, rc);
+
+	dist = rword - lword;
+	if (dist > lc->length_limit || dist > rc->length_limit) return false;
+
+	return easy_match(lc->string, rc->string);
 }
 #endif /* USE_FAT_LINKAGES */
 

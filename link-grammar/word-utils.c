@@ -382,29 +382,6 @@ bool match_in_connector_set(count_context_t * ctxt, Connector_set *conset, Conne
 /* More connector utilities ... */
 
 /**
- * This is like the basic "match" function in count.c - the basic
- * connector-matching function used in parsing - except it ignores
- * "priority" (used to handle fat links)
- */
-static bool easy_match(const char * s, const char * t)
-{
-	while (isupper((int)*s) || isupper((int)*t)) {
-		if (*s != *t) return false;
-		s++;
-		t++;
-	}
-
-	while ((*s!='\0') && (*t!='\0')) {
-		if ((*s == '*') || (*t == '*') ||
-		   ((*s == *t) && (*s != '^'))) {
-		s++;
-		t++;
-		} else return false;
-	}
-	return false;
-}
-
-/**
  * word_has_connector() -- return TRUE if dictionary expression has connector
  * This function takes a dict_node (corresponding to an entry in a
  * given dictionary), a string (representing a connector), and a
@@ -454,7 +431,7 @@ static bool exp_has_connector(Exp * e, const char * cs, char direction)
 	return false;
 }
 
-Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
+bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 {
 	return exp_has_connector(dn->exp, cs, direction);
 }
