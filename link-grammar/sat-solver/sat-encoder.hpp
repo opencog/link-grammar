@@ -46,7 +46,8 @@ protected:
   void generate_satisfaction_conditions();
 
   // Generates satisfaction conditions for the word-tag expression e
-  void generate_satisfaction_for_expression(int w, int& dfs_position, Exp* e, char* var, int parrent_cost);
+  void generate_satisfaction_for_expression(int w, int& dfs_position, Exp* e, char* var,
+                                            double parent_cost);
 
   // Handle the case of NULL expression of a word
   virtual void handle_null_expression(int w) = 0;
@@ -56,10 +57,11 @@ protected:
 
   // Generates satisfaction condition for the connector (wi, pi)
   virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                   char dir, bool multi, int cost, char* var) = 0;
+                                                   char dir, bool multi, double cost, char* var) = 0;
 
   // Definition of link_cw((wi, pi), wj) variables when wj is an ordinary word
-  void generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci, char dir, int cost, int wj);
+  void generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci, char dir,
+                                            double cost, int wj);
 
   // Generates order constraints for the elements of a conjunction.
   void generate_conjunct_order_constraints(int w, Exp *e1, Exp* e2, int& dfs_position);
@@ -181,8 +183,8 @@ protected:
   // Cost cutoff treshold value. Nodes of the expression tree are
   // pruned if their cost exceeds this value. Cost cutoff is performed
   // during satisfaction condition generating.
-  static const int _cost_cutoff = 2;
-
+  // XXX FIXME, this should be taken from parse options.
+  static const double _cost_cutoff = 2.7;
 
   /**
    *   Creating clauses and passing them to the MiniSAT solver
@@ -243,7 +245,7 @@ protected:
 
 
   // Find all matching connectors between two words
-  void find_all_matches_between_words(int w1, int w2,
+  void find_all_matches_between_words(size_t w1, size_t w2,
                                       std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches);
 
   // Check if the connector (wi, pi) can match any word in [l, r)
@@ -302,7 +304,7 @@ public:
   virtual void handle_null_expression(int w);
   virtual void determine_satisfaction(int w, char* name);
   virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                   char dir, bool multi, int cost, char* var);
+                                                   char dir, bool multi, double cost, char* var);
 
 
   virtual void generate_linked_definitions();

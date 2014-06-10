@@ -33,14 +33,16 @@ public:
   /* Abstract functions that calculate params for each type of variable */
 
   /* string variables */
-  virtual void setStringParameters  (int var, const char* str) {
+  virtual void setStringParameters  (int var, const char* str)
+  {
     bool isDecision = false;
     setParameters(var, isDecision, 0.0, 0.0);
   }
-  virtual void setStringParameters  (int var, const char* str, int cost) = 0;
+  virtual void setStringParameters  (int var, const char* str, double cost) = 0;
 
   /* epsilon variables */
-  virtual void setEpsilonParameters (int var) {
+  virtual void setEpsilonParameters (int var)
+  {
     bool isDecision = false;
     setParameters(var, isDecision, 0.0, 0.0);
   }
@@ -48,15 +50,17 @@ public:
   /* link_cc variables */
   virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label) = 0;
   virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label,
-                                     int cost) = 0;
+                                     double cost) = 0;
 
   /* linked_variables */
-  virtual void setLinkedParameters  (int var, int wi, int wj) {
+  virtual void setLinkedParameters  (int var, int wi, int wj)
+  {
     bool isDecision = false;
     setParameters(var, isDecision, 0.0, 0.0);
   }
 
-  virtual void setLinkedMinMaxParameters  (int var, int wi, int wj) {
+  virtual void setLinkedMinMaxParameters  (int var, int wi, int wj)
+  {
     bool isDecision = false;
     setParameters(var, isDecision, 0.0, 0.0);
   }
@@ -115,24 +119,27 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////
-class CostDistanceGuiding : public Guiding {
+class CostDistanceGuiding : public Guiding
+{
 public:
-  double cost2priority(int cost) const {
-    return cost == 0 ? 0.0 : (double)(_sent->length + cost);
+  double cost2priority(double cost) const {
+    return cost == 0.0 ? 0.0 : ((double)(_sent->length) + cost);
   }
 
   CostDistanceGuiding(Sentence sent)
     : Guiding(sent) {
   }
 
-  virtual void setStringParameters  (int var, const char* str, int cost) {
+  virtual void setStringParameters(int var, const char* str, double cost)
+  {
     bool isDecision = cost > 0.0;
     double priority = cost2priority(cost);
     double polarity = 0.0;
     setParameters(var, isDecision, priority, polarity);
   }
 
-  virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label) {
+  virtual void setLinkParameters(int var, int wi, const char* ci, int wj, const char* cj, const char* label)
+  {
     bool isDecision = true;
     double priority = 0.0;
     double polarity = 0.0;
@@ -140,7 +147,8 @@ public:
   }
 
   virtual void setLinkParameters(int var, int i, const char* ci, int j, const char* cj, const char* label,
-                                 int cost)  {
+                                 double cost)
+  {
     bool isDecision = true;
     double priority = cost2priority(cost);
     double polarity = 0.0;
@@ -174,7 +182,8 @@ public:
 
 
 ////////////////////////////////////////////////////////////////////////////
-class CostDistanceGuidingOnlyLink : public Guiding {
+class CostDistanceGuidingOnlyLink : public Guiding
+{
 public:
   double cost2priority(int cost) const {
     return cost == 0 ? 0.0 : (double)(_sent->length + cost);
@@ -184,14 +193,16 @@ public:
     : Guiding(sent) {
   }
 
-  virtual void setStringParameters  (int var, const char* str, int cost) {
+  virtual void setStringParameters  (int var, const char* str, double cost)
+  {
     bool isDecision = cost > 0.0;
     double priority = cost2priority(cost);
     double polarity = 0.0;
     setParameters(var, isDecision, priority, polarity);
   }
 
-  virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label) {
+  virtual void setLinkParameters    (int var, int wi, const char* ci, int wj, const char* cj, const char* label)
+  {
     bool isDecision = true;
     double priority = _sent->length - (wj - wi);
     double polarity = wj - wi <= 3 ? 1.0 : 0.0;;
@@ -199,9 +210,10 @@ public:
   }
 
   virtual void setLinkParameters(int var, int wi, const char* ci, int wj, const char* cj, const char* label,
-                                 int cost)  {
+                                 double cost)
+  {
     bool isDecision = true;
-    double priority = cost > 0 ? cost2priority(cost) : wj - wi;
+    double priority = cost > 0.0 ? cost2priority(cost) : wj - wi;
     double polarity = wj - wi <= 3 ? 1.0 : 0.0;
     setParameters(var, isDecision, priority, polarity);
   }

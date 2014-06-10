@@ -86,7 +86,8 @@ public:
    */
 
   // If guiding params are unknown, they are set do default
-  int string(const char* name) {
+  int string(const char* name)
+  {
     int var;
     if (!get_var_from_trie(name, var)) {
 #ifdef _VARS
@@ -100,7 +101,8 @@ public:
 
   // If the cost is explicitely given, guiding params are calculated
   // using the cost. Any params set earlier are overridden.
-  int string_cost(const char* name, int cost) {
+  int string_cost(const char* name, double cost)
+  {
     int var;
     var = string(name);
     _guiding->setStringParameters(var, name, cost);
@@ -206,7 +208,8 @@ public:
   // If the cost is specified, guiding params are calculated
   // using the cost. Any guiding params that are set earlier are overridden
   int link_cost(int wi, int pi, const char* ci, int wj, int pj, const char* cj,
-                int cost) {
+                double cost)
+  {
     assert(wi < wj, "Variables: link should be ordered");
     int var = link(wi, pi, ci, wj, pj, cj);
     _guiding->setLinkParameters(var, wi, ci, wj, cj, link_variable(var)->label, cost);

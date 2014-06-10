@@ -5,9 +5,9 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
                                 bool& leading_right, bool& leading_left,
                                 std::vector<int>& eps_right,
                                 std::vector<int>& eps_left,
-                                char* var, bool root, int parrent_cost)
+                                char* var, bool root, double parent_cost)
 {
-  int cost = parrent_cost + exp->cost;
+  double cost = parent_cost + exp->cost;
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
 

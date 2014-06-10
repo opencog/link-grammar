@@ -260,7 +260,7 @@ void SATEncoder::build_word_tags()
   }
 }
 
-void SATEncoder::find_all_matches_between_words(int w1, int w2,
+void SATEncoder::find_all_matches_between_words(size_t w1, size_t w2,
                                                 std::vector<std::pair<const PositionConnector*, const PositionConnector*> >& matches) {
   const std::vector<PositionConnector>& w1_right = _word_tags[w1].get_right_connectors();
   std::vector<PositionConnector>::const_iterator i;
@@ -318,9 +318,11 @@ void SATEncoder::generate_satisfaction_conditions()
 }
 
 
-void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, Exp* e, char* var, int parrent_cost) {
+void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, Exp* e,
+                                                      char* var, double parent_cost)
+{
   E_list *l;
-  int total_cost = parrent_cost + e->cost;
+  double total_cost = parent_cost + e->cost;
 
   if (e->type == CONNECTOR_type) {
     dfs_position++;
@@ -428,7 +430,8 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
   }
 }
 
-Exp* SATEncoder::join_alternatives(int w) {
+Exp* SATEncoder::join_alternatives(int w)
+{
   // join all alternatives using and OR_type node
   Exp* exp;
   E_list* or_list = NULL;;
@@ -445,15 +448,16 @@ Exp* SATEncoder::join_alternatives(int w) {
       y->next = new_node;
     }
   }
-  exp = (Exp*)xalloc(sizeof(Exp));
+  exp = (Exp*) xalloc(sizeof(Exp));
   exp->type = OR_type;
   exp->u.l = or_list;
-  exp->cost = 0;
+  exp->cost = 0.0;
 
   return exp;
 }
 
-void SATEncoder::free_alternatives(Exp* exp) {
+void SATEncoder::free_alternatives(Exp* exp)
+{
   E_list *l = exp->u.l;
   while (l != NULL) {
     E_list* next = l->next;
@@ -464,7 +468,9 @@ void SATEncoder::free_alternatives(Exp* exp) {
 }
 
 
-void SATEncoder::generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci, char dir, int cost, int wj) {
+void SATEncoder::generate_link_cw_ordinary_definition(int wi, int pi, const char* Ci,
+                                                      char dir, double cost, int wj)
+{
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
 
   char str[MAX_VARIABLE_NAME];
@@ -1241,7 +1247,7 @@ Linkage SATEncoder::create_linkage()
     _sent->parse_info = NULL;
   }
   Parse_info pi = _sent->parse_info = parse_info_new(_sent->length);
-  bool fat = extract_links(pi);
+  extract_links(pi);
 
   //  compute_chosen_words(sent, linkage);
   /* TODO: this is just a simplified version of the
@@ -1316,13 +1322,14 @@ void SATEncoderConjunctionFreeSentences::handle_null_expression(int w) {
   add_clause(clause);
 }
 
-void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* name) {
+void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* name)
+{
   // All tags must be satisfied
   generate_literal(Lit(_variables->string(name)));
 }
 
 void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                                             char dir, bool multi, int cost, char* var)
+                                                                             char dir, bool multi, double cost, char* var)
 {
   Lit lhs = Lit(_variables->string_cost(var, cost));
 
@@ -1548,7 +1555,7 @@ extern "C" void sat_sentence_delete(Sentence sent)
   if (sent->parse_info) {
     Parse_info pi = sent->parse_info;
     // ??? there's no link-array entry for the right wall..?
-    for (int i=0; i < sent->length-1; i++) {
+    for (size_t i=0; i < sent->length-1; i++) {
       free_connectors(pi->link_array[i].lc);
       free_connectors(pi->link_array[i].rc);
     }

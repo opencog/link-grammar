@@ -16,10 +16,11 @@ extern "C" {
 #include "variables.hpp"
 
 
-struct PositionConnector {
-  PositionConnector(Connector* c, char d, int w, int p, int cst, int pcst,
+struct PositionConnector
+{
+  PositionConnector(Connector* c, char d, int w, int p, double cst, double pcst,
                     bool lr, bool ll, const std::vector<int>& er, const std::vector<int>& el)
-    : connector(c), dir(d), word(w), position(p), cost(cst), parrent_cost(pcst),
+    : connector(c), dir(d), word(w), position(p), cost(cst), parent_cost(pcst),
       leading_right(lr), leading_left(ll),
       eps_right(er), eps_left(el)
   {
@@ -42,13 +43,13 @@ struct PositionConnector {
   // Direction
   char dir;
   // word in a sentence that this connector belongs to
-  int word;
+  size_t word;
   // position in the word tag
   int position;
   // cost of the connector
-  int cost;
-  // parrent cost
-  int parrent_cost;
+  double cost;
+  // parent cost
+  double parent_cost;
 
   bool leading_right;
   bool leading_left;
@@ -138,7 +139,7 @@ public:
                          bool& leading_right, bool& leading_left,
                          std::vector<int>& eps_right,
                          std::vector<int>& eps_left,
-                         char* var, bool root, int parrent_cost);
+                         char* var, bool root, double parent_cost);
 
   // Caches information about the found matches to the _matches vector, and also
   // updates the _matches vector of all connectors in the given tag.
