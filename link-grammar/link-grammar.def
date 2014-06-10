@@ -163,3 +163,4 @@ free_parse_info
 connector_new
 free_connectors
 left_print_string
+compute_chosen_words

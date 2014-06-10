@@ -266,7 +266,7 @@ protected:
    */
 
   // Convert propositional model to a parse info structure
-  virtual bool extract_links(Parse_info pi) = 0;
+  virtual bool sat_extract_links(Parse_info pi) = 0;
 
   // Create linkage from a propositional model
   Linkage create_linkage();
@@ -308,7 +308,7 @@ public:
 
 
   virtual void generate_linked_definitions();
-  virtual bool extract_links(Parse_info pi);
+  virtual bool sat_extract_links(Parse_info pi);
 
   virtual void generate_encoding_specific_clauses();
 };

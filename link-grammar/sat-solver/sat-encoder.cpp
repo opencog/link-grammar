@@ -21,8 +21,8 @@ using std::endl;
 
 extern "C" {
 #include "analyze-linkage.h"
-#include "and.h"
 #include "extract-links.h"
+#include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
 #include "dict-file/read-dict.h"
@@ -507,7 +507,8 @@ void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi, const c
 /*--------------------------------------------------------------------------*
  *               C O N J U N C T    O R D E R I N G                         *
  *--------------------------------------------------------------------------*/
-int SATEncoder::num_connectors(Exp* e) {
+int SATEncoder::num_connectors(Exp* e)
+{
   if (e->type == CONNECTOR_type)
     return 1;
   else {
@@ -519,7 +520,8 @@ int SATEncoder::num_connectors(Exp* e) {
   }
 }
 
-int SATEncoder::empty_connectors(Exp* e, char dir) {
+int SATEncoder::empty_connectors(Exp* e, char dir)
+{
   if (e->type == CONNECTOR_type) {
     return e->dir != dir;
   } else if (e->type == OR_type) {
@@ -538,7 +540,8 @@ int SATEncoder::empty_connectors(Exp* e, char dir) {
     throw std::string("Unkown connector type");
 }
 
-int SATEncoder::non_empty_connectors(Exp* e, char dir) {
+int SATEncoder::non_empty_connectors(Exp* e, char dir)
+{
   if (e->type == CONNECTOR_type) {
     return e->dir == dir;
   } else if (e->type == OR_type) {
@@ -558,7 +561,8 @@ int SATEncoder::non_empty_connectors(Exp* e, char dir) {
 }
 
 bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& dfs_position,
-                                             std::vector<PositionConnector*>& connectors) {
+                                             std::vector<PositionConnector*>& connectors)
+{
   if (l == NULL) {
     return true;
   } else {
@@ -572,7 +576,8 @@ bool SATEncoder::trailing_connectors_and_aux(int w, E_list* l, char dir, int& df
 }
 
 void SATEncoder::trailing_connectors(int w, Exp* exp, char dir, int& dfs_position,
-                                     std::vector<PositionConnector*>& connectors) {
+                                     std::vector<PositionConnector*>& connectors)
+{
   if (exp->type == CONNECTOR_type) {
     dfs_position++;
     if (exp->dir == dir) {
@@ -1164,7 +1169,6 @@ void SATEncoder::pp_prune()
 {
   const std::vector<int>& link_variables = _variables->link_variables();
 
-
   if (_sent->dict->postprocessor == NULL)
     return;
 
@@ -1224,6 +1228,10 @@ bool SATEncoder::post_process_linkage(Linkage linkage)
 /*--------------------------------------------------------------------------*
  *                         D E C O D I N G                                  *
  *--------------------------------------------------------------------------*/
+
+/* This is is almost identical to linkage_create(), except that
+ * sat_extract_links is called, instead of normal extract_links.
+ */
 Linkage SATEncoder::create_linkage()
 {
   /* Using exalloc since this is external to the parser itself. */
@@ -1246,23 +1254,14 @@ Linkage SATEncoder::create_linkage()
     free_parse_info(_sent->parse_info);
     _sent->parse_info = NULL;
   }
-  Parse_info pi = _sent->parse_info = parse_info_new(_sent->length);
-  extract_links(pi);
-
-  //  compute_chosen_words(sent, linkage);
-  /* TODO: this is just a simplified version of the
-     compute_chosen_words. */
-  // XXX should not use alternatives[0], need to try all of them!
-  // XXX why are we doing a strcpy? Should be using the stringset!
-  for (size_t i = 0; i < _sent->length; i++) {
-    char *s = (char *) exalloc(strlen(_sent->word[i].alternatives[0])+1);
-    strcpy(s, _sent->word[i].alternatives[0]);
-    linkage->word[i] = s;
-  }
-  linkage->num_words = _sent->length;
+  Parse_info pi = parse_info_new(_sent->length);
+  sat_extract_links(pi);
   pi->N_words = _sent->length;
+  _sent->parse_info = pi;
 
   extract_thin_linkage(_sent, _opts, linkage);
+
+  compute_chosen_words(_sent, linkage);
 
   return linkage;
 }
@@ -1477,7 +1476,7 @@ void SATEncoder::generate_linked_min_max_planarity()
   }
 }
 
-bool SATEncoderConjunctionFreeSentences::extract_links(Parse_info pi)
+bool SATEncoderConjunctionFreeSentences::sat_extract_links(Parse_info pi)
 {
   int current_link = 0;
   const std::vector<int>& link_variables = _variables->link_variables();
@@ -1536,6 +1535,9 @@ extern "C" int sat_parse(Sentence sent, Parse_Options  opts)
   return 0;
 }
 
+// XXX Caution -- assumes that k increases by one every time this
+// is called ... we should check and assert if this is not the case.
+// XXX FIXME
 extern "C" Linkage sat_create_linkage(int k, Sentence sent, Parse_Options  opts)
 {
   SATEncoder* encoder = (SATEncoder*) sent->hook;

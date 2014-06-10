@@ -139,6 +139,7 @@ liblink_grammar_la_SOURCES =        \
 	fast-match.h                     \
 	idiom.h                          \
 	link-includes.h                  \
+	linkage.h                        \
 	massage.h                        \
 	post-process.h                   \
 	pp_knowledge.h                   \

@@ -21,6 +21,7 @@
 #include "extract-links.h"
 #include "idiom.h"
 #include "link-includes.h"
+#include "linkage.h"
 #include "post-process.h"
 #include "print.h"
 #include "print-util.h"
@@ -112,7 +113,7 @@ static bool is_stem(const char* w)
  *    chosen_disjunct[].string in that the idiom symbols have been removed.
  *
  */
-static void compute_chosen_words(Sentence sent, Linkage linkage)
+void compute_chosen_words(Sentence sent, Linkage linkage)
 {
 	size_t i, j, l;
 	char * s, *u;
