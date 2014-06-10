@@ -50,27 +50,6 @@ static char* construct_link_label(const char* connector1, const char* connector2
   return result;
 }
 
-#ifdef USE_FAT_LINKAGES
-static bool labels_match(const char* label1, const char* label2) {
-  //  printf("Compare: %s %s\n", label1, label2);
-
-  if ((label1[0] == 'S' &&  label2[0] == 'S') &&
-      (label1[1] == 's' || label1[1] == 'p') &&
-      (label2[1] == 's' || label2[1] == 'p')) {
-    label1 += 2;
-    label2 += 2;
-  }
-
-  while(*label1 != '\0' && *label2 != '\0') {
-    if (*label1 != '*' && *label2 != '*' &&
-        *label1 != *label2)
-      return false;
-
-    label1++; label2++;
-  }
-  return true;
-}
-#endif /* USE_FAT_LINKAGES */
 
 ////////////////////////////////////////////////////////////////////////////
 class Variables
@@ -82,10 +61,6 @@ public:
     ,_linked_variable_map(sent->length, -1)
     ,_linked_min_variable_map(sent->length, -1)
     ,_linked_max_variable_map(sent->length, -1)
-#ifdef USE_FAT_LINKAGES
-    ,_fat_link_variable_map(sent->length, -1)
-    ,_link_top_ww_variable_map(sent->length, -1)
-#endif /* USE_FAT_LINKAGES */
     ,_thin_link_variable_map(sent->length, -1)
     ,_link_top_cw_variable_map(sent->length)
     ,_link_cw_variable_map(sent->length)
@@ -239,57 +214,6 @@ public:
     return var;
   }
 
-#ifdef USE_FAT_LINKAGES
-  /*
-   * The following types of variables are used for conjunction handling
-   */
-  /*
-   *                  fat_link(wi, wj)
-   * Variables that specify that there is a fat link from the word i
-   * up to the word j
-   */
-
-  // If guiding params for this variable are not set earlier, they are
-  // now set to default
-  int fat_link(int wi, int wj) {
-    assert(_sent->is_conjunction[wj] || strcmp(_sent->word[wj].alternatives[0], ",") == 0,
-           "Fat link can up only to a connective word");
-    int var;
-    if (!get_fat_link_variable(wi, wj, var)) {
-#ifdef _VARS
-      var_defs_stream << "fatlink_" << wi << "_" << wj << "\t" << var << endl;
-#endif
-      add_fatlink_variable(wi, wj, var);
-      _guiding->setFatLinkParameters(var, wi, wj);
-    }
-    assert(var != -1, "Var == -1");
-    return var;
-  }
-
-  /*
-   *                   fat_link_neighbor(w)
-   * It seems that connective words usually have fat links to at least one
-   * neighboring word. This is a definitional variable for that notion and
-   * it can positively affect the search guiding.
-   */
-  int neighbor_fat_link(int w) {
-    assert(_sent->is_conjunction[w] || strcmp(_sent->word[w].alternatives[0], ",") == 0,
-           "Only connective words can have fat links down");
-    int var;
-    char name[MAX_VARIABLE_NAME];
-    sprintf(name, "nfl_%d", w);
-    if (!get_var_from_trie(name, var)) {
-#ifdef _VARS
-      var_defs_stream << name << "\t" << var << endl;
-#endif
-      _guiding->setNeighborFatLinkParameters(var, w);
-    }
-    assert(var != -1, "Var == -1");
-    return var;
-  }
-#endif /* USE_FAT_LINKAGES */
-
-
   /*
    *             thin_link(wi, wj)
    * Variables that specify that two words are linked by a thin link
@@ -357,28 +281,6 @@ public:
     assert(var != -1, "Var == -1");
     return var;
   }
-
-#ifdef USE_FAT_LINKAGES
-  /*
-   *             link_top_ww(wi, wj)
-   * Variables that specify that word wi is linked to the word wj, and
-   * wj is a top of the fat-link tree.
-   */
-
-  // If guiding params are unknown, they are set do default
-  int link_top_ww(int wi, int wj) {
-    int var;
-    if (!get_link_top_ww_variable(wi, wj, var)) {
-#ifdef _VARS
-      var_defs_stream << "link_top_ww_" << wi << "_" << wj << "\t" << var << endl;
-#endif
-      _guiding->setLinkTopWWParameters(var, wi, wj);
-    }
-    assert(var != -1, "Var == -1");
-    return var;
-  }
-#endif /* USE_FAT_LINKAGES */
-
 
 
 #ifdef _CONNECTIVITY_
@@ -497,31 +399,6 @@ public:
     return _link_top_cw_variables[var];
   }
 
-#ifdef USE_FAT_LINKAGES
-  /*
-   *           fat_link(wi, wj)
-   */
-  // Returns indices of all fat-link variables
-  const std::vector<int>& fat_link_variables() const {
-    return _fat_link_variables_indices;
-  }
-
-  // Additional info about the fatlink(wi, wj) variable
-  struct FatLinkVar {
-    FatLinkVar(int down, int up)
-      : down_word(down), up_word(up) {
-    }
-
-    int down_word;
-    int up_word;
-  };
-
-  // Return additional info about the given fat-link variable
-  const FatLinkVar* fat_link_variable(int var) const {
-    return _fat_link_variables[var];
-  }
-#endif /* USE_FAT_LINKAGES */
-
   /* Pass SAT search parameters to the MiniSAT solver */
   void setVariableParameters(Solver* solver) {
     _guiding->passParametersToSolver(solver);
@@ -612,35 +489,6 @@ private:
 
   // What is the number of the linked_max(i, j) variable?
   Matrix<int> _linked_max_variable_map;
-
-#ifdef USE_FAT_LINKAGES
-  /*
-   * Information about the fat_link(i, j) variables
-   */
-  // What is the number of the fatlink(wi, wj) variable?
-  Matrix<int> _fat_link_variable_map;
-
-  // What are the numbers of all fatlink(wi wj) variables?
-  std::vector<int>  _fat_link_variables_indices;
-
-  // Additional info about the fatlink(wi, wj) variable with the given number
-  std::vector<FatLinkVar*> _fat_link_variables;
-
-  // Set the additional info
-  void add_fatlink_variable(int i, int j, int var) {
-    if (var >= _fat_link_variables.size()) {
-      _fat_link_variables.resize(var + 1, 0);
-    }
-    _fat_link_variables[var] = new FatLinkVar(i, j);
-    _fat_link_variables_indices.push_back(var);
-  }
-
-  /*
-   * Information about the link_top_ww(i, j) variables
-   */
-  // What is the number of the link_top_ww(i, j) variable?
-  Matrix<int> _link_top_ww_variable_map;
-#endif /* USE_FAT_LINKAGES */
 
   /*
    * Information about the thin_link(i, j) variables
@@ -791,15 +639,6 @@ private:
   bool get_linked_max_variable(int i, int j, int& var) {
     return get_2int_variable(i, j, var, _linked_max_variable_map);
   }
-
-#ifdef USE_FAT_LINKAGES
-  bool get_fat_link_variable(int i, int j, int& var) {
-    return get_2int_variable(i, j, var, _fat_link_variable_map);
-  }
-  bool get_link_top_ww_variable(int i, int j, int& var) {
-    return get_2int_variable(i, j, var, _link_top_ww_variable_map);
-  }
-#endif /* USE_FAT_LINKAGES */
 
   bool get_thin_link_variable(int i, int j, int& var) {
     return get_2int_variable(i, j, var, _thin_link_variable_map);
