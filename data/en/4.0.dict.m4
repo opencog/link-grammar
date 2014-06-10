@@ -337,11 +337,16 @@ PL-CAPITALIZED-WORDS:
 % "Tom" is a given name, but can also be a proper name, so e.g.
 % "The late Mr. Tom will be missed." which needs A-, D- links
 % Wa-: A single exclamation: "Tom!  Hey, Tom! Oh, hello John!"
+% <noun-and-s> cannot be used with [[...]] connectors, to avoid
+% bad parse of "This is the dog and cat Pat and I chased and ate"
 <given-names>:
   {G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[{@A-} & {D-}]]} &
-      (({@MX+} & {NMr+} & (JG- or <noun-main-s> or <noun-and-s>)) or
-        YS+ or YP+))
+      (({@MX+} & {NMr+} & (JG- or <noun-main-s>))
+        or YS+
+        or YP+))
+    or ({DG-} &
+      ({@MX+} & {NMr+} & <noun-and-s>))
     or AN+
     or Wa-
     or G+);
