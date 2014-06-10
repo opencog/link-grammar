@@ -95,12 +95,10 @@
  * in the input stream, and so we convert dictionary dots into the
  * subscript mark, which we don't expect to see in user input.
  */
-/* #define SUBSCRIPT_MARK '.' */
-#define SUBSCRIPT_MARK 0x3
+#define SUBSCRIPT_MARK '\3'
 #define SUBSCRIPT_DOT '.'
-#define EMPTY_WORD_DOT   "=.zzz"  /* Has SUBSCRIPT_DOT in it! */
-#define EMPTY_WORD_MARK  "=zzz" /* Has SUBSCRIPT_MARK in it! */
-/* #define EMPTY_WORD_MARK  EMPTY_WORD_DOT */
+#define EMPTY_WORD_DOT   "EMPTY-WORD.zzz"  /* Has SUBSCRIPT_DOT in it! */
+#define EMPTY_WORD_MARK  "EMPTY-WORD\3zzz" /* Has SUBSCRIPT_MARK in it! */
 
 /* Suffixes start with it.
  * This is needed to distinguish suffixes that were stripped off from
