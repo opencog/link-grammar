@@ -11,7 +11,8 @@ extern "C" void sat_sentence_delete(Sentence sent);
 /**
  *    Base class for all SAT encodings
  */
-class SATEncoder {
+class SATEncoder
+{
 public:
 
   // Construct the encoder based on given sentence
@@ -226,9 +227,6 @@ protected:
   void generate_and(vec<Lit>& vect);
   void generate_or(vec<Lit>& vect);
   void generate_xor_conditions(vec<Lit>& vect);
-#ifdef USE_FAT_LINKAGES
-  void generate_conditional_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs);
-#endif /* USE_FAT_LINKAGES */
   void generate_conditional_lr_implication_or_definition(Lit condition, Lit lhs, vec<Lit>& rhs);
   void generate_conditional_lr_implication_or_definition(Lit condition1, Lit condition2, Lit lhs, vec<Lit>& rhs);
 
@@ -292,9 +290,10 @@ protected:
 
 
 /*******************************************************************************
- *       SAT encoding for sentences that do not contain conjunction.           *
+ *       SAT encoding for sentences                                            *
  *******************************************************************************/
-class SATEncoderConjunctionFreeSentences : public SATEncoder {
+class SATEncoderConjunctionFreeSentences : public SATEncoder
+{
 public:
   SATEncoderConjunctionFreeSentences(Sentence sent, Parse_Options  opts)
     : SATEncoder(sent, opts) {
@@ -312,75 +311,3 @@ public:
   virtual void generate_encoding_specific_clauses();
 };
 
-/*******************************************************************************
- *              SAT encoding for sentences that contain conjunction.           *
- *******************************************************************************/
-#ifdef USE_FAT_LINKAGES
-class SATEncoderConjunctiveSentences : public SATEncoder {
-public:
-  SATEncoderConjunctiveSentences(Sentence sent, Parse_Options  opts)
-    : SATEncoder(sent, opts) {
-    init_connective_words();
-  }
-
-private:
-  virtual void handle_null_expression(int w);
-  virtual void determine_satisfaction(int w, char* name);
-
-  virtual void generate_satisfaction_for_connector(int wi, int pi, const char* Ci,
-                                                   char dir, bool multi, int cost, char* var);
-
-  virtual void add_additional_power_pruning_conditions(vec<Lit>& clause, int wl, int wr);
-
-  virtual void generate_encoding_specific_clauses();
-
-  // various fat-link conditions
-  void either_tag_or_fat_link(int w, Lit tag);
-  void generate_fat_link_up_definitions();
-  void generate_fat_link_down_definitions();
-  void generate_fat_link_up_between_down_conditions();
-  void generate_fat_link_comma_conditions();
-  void generate_fat_link_crossover_conditions();
-  void generate_fat_link_Left_Wall_not_inside();
-  void generate_fat_link_linked_upperside();
-  void generate_fat_link_existence();
-  void generate_fat_link_neighbor();
-  void generate_label_compatibility();
-
-  // link_cw variables
-
-  bool link_cw_possible(int wi, int pi, const char* Ci, char dir, int w, int llim, int rlim);
-  bool link_cw_possible_with_fld(int wi, int pi, const char* Ci, char dir, int w, int llim, int rlim);
-
-  void generate_link_cw_connective_impossible         (int wi, int pi, const char* Ci, int wj);
-  void generate_link_cw_connective_definition         (int wi, int pi, const char* Cj, int wj);
-
-  // link_top_cw variables
-  void generate_link_top_cw_up_definition                  (int wi,
-                                                            int wj, int pj, const char* Cj, bool multi);
-  void generate_link_top_cw_iff_link_cw                    (int wi,
-                                                            int wj, int pj, const char* Cj);
-  // link_top_ww
-  void generate_link_top_ww_connective_comma_definition    (Lit lhs, int wi, int wj);
-
-  // link_ww
-  virtual void generate_linked_definitions();
-
-  // Linkage extraction from the model
-  void get_satisfied_link_top_cw_connectors(int word, int top_word, std::vector<int>& link_top_cw_vars);
-  virtual bool extract_links(Parse_info pi);
-
-  // Initialize the vector of connective words of this sentence
-  void init_connective_words();
-
-  // Words that are connectives or commas
-  std::vector<int> _connectives;
-
-  // Cache isConnectiveOrComma results for faster checking
-  std::vector<bool> _is_connective_or_comma;
-
-  bool isConnectiveOrComma(int w) const {
-    return _is_connective_or_comma[w];
-  }
-};
-#endif /* USE_FAT_LINKAGES */

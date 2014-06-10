@@ -79,12 +79,6 @@ public:
     setParameters(var, isDecision, 0.0, 0.0);
   }
 
-#ifdef USE_FAT_LINKAGES
-  /* fat_link variables */
-  virtual void setFatLinkParameters (int var, int wi, int wj) = 0;
-  /* neighbor fat link variables */
-  virtual void setNeighborFatLinkParameters (int var, int w) = 0;
-#endif /* USE_FAT_LINKAGES */
   /* thin_link variables */
   virtual void setThinLinkParameters (int var, int wi, int wj) = 0;
 
@@ -153,29 +147,16 @@ public:
     setParameters(var, isDecision, priority, polarity);
   }
 
-#ifdef USE_FAT_LINKAGES
-  void setFatLinkParameters(int var, int i, int j) {
-    bool isDecision = true;
-    double priority = (double)abs(j - i);
-
-    if (_sent->is_conjunction[i])
-      priority = 0.0;
-
-    double polarity = abs(j - i) == 1 ? 1.0 : 0.0;
-    setParameters(var, isDecision, priority, polarity);
-  }
-#endif /* USE_FAT_LINKAGES */
-
   void setThinLinkParameters(int var, int i, int j)
   {
     bool isDecision = true;
 
     double priority = (double)(j - i);
-#ifdef USE_FAT_LINKAGES
-    if (_sent->is_conjunction[i] || _sent->is_conjunction[j])
-      priority /= 2;
-#endif /* USE_FAT_LINKAGES */
 
+    // XXX this is wrong, isEndingInterpunction is just wrong, and
+    // must be killed FIXME I think that this is just looking for the
+    // one single long link from left-wall to right-punctuation.
+    // seems like a hack, why is such an exception needed???
     double polarity = j - i == 1 ? 1.0 : 0.0;
     if (i == 0 && j == (int) _sent->length - 2 &&
        isEndingInterpunction(_sent->word[j].alternatives[0])) {
@@ -188,16 +169,6 @@ public:
 
     setParameters(var, isDecision, priority, polarity);
   }
-
-#ifdef USE_FAT_LINKAGES
-  void setNeighborFatLinkParameters(int var, int w) {
-    bool isDecision = true;
-    double priority = _sent->length;
-    double polarity = 1.0;
-    setParameters(var, isDecision, priority, polarity);
-  }
-#endif /* USE_FAT_LINKAGES */
-
 };
 
 
@@ -235,32 +206,9 @@ public:
     setParameters(var, isDecision, priority, polarity);
   }
 
-#ifdef USE_FAT_LINKAGES
-  void setFatLinkParameters(int var, int i, int j) {
-    bool isDecision = true;
-    double priority = (double)abs(j - i);
-
-    if (_sent->is_conjunction[i])
-      priority = 0.0;
-
-    double polarity = abs(j - i) == 1 ? 1.0 : 0.0;
-    setParameters(var, isDecision, priority, polarity);
-  }
-#endif /* USE_FAT_LINKAGES */
-
   void setThinLinkParameters(int var, int i, int j) {
     bool isDecision = false;
     setParameters(var, isDecision, 0.0, 0.0);
   }
-
-#ifdef USE_FAT_LINKAGES
-  void setNeighborFatLinkParameters(int var, int w) {
-    bool isDecision = true;
-    double priority = _sent->length;
-    double polarity = 1.0;
-    setParameters(var, isDecision, priority, polarity);
-  }
-#endif /* USE_FAT_LINKAGES */
-
 };
 #endif

@@ -3,7 +3,6 @@
 extern "C" {
 #include "api-structures.h"
 #include "structures.h"
-#include "utilities.h"
 };
 
 bool isEndingInterpunction(const char* str)
@@ -13,7 +12,8 @@ bool isEndingInterpunction(const char* str)
     strcmp(str, "!") == 0;
 }
 
-const char* word(Sentence sent, int w) {
+const char* word(Sentence sent, int w)
+{
   // XXX FIXME this is fundamentally wrong, should explore all alternatives!
   return sent->word[w].alternatives[0];
 }
