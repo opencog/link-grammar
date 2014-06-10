@@ -7,6 +7,9 @@ import locale
 import _clinkgrammar as clg
 
 class Parser(object):
+    # A cost of 2.7 allows the usual cost-2 connectors, plus the
+    # assorted fractional costs, without going to cost 3.0, which
+    # is used only during panic-parsing.
     def __init__(self, lang = "en",
                        verbosity = 0,
                        linkage_limit = 100,
@@ -18,7 +21,7 @@ class Parser(object):
                        display_morphology = False,
                        spell_guess = False,
                        max_parse_time = 30,
-                       disjunct_cost = 2.0):
+                       disjunct_cost = 2.7):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
         self.dictionary = Dictionary(lang)
         self.parse_options = ParseOptions(verbosity = verbosity,
@@ -58,7 +61,7 @@ class ParseOptions(object):
                        display_morphology = False,
                        spell_guess = False,
                        max_parse_time = -1,
-                       disjunct_cost = 2.0):
+                       disjunct_cost = 2.7):
 
 
         self._po = clg.parse_options_create()
@@ -106,7 +109,7 @@ class ParseOptions(object):
     linkage_limit = property(**linkage_limit())
 
     def disjunct_cost():
-        doc = "Determines the maximum disjunct cost used during parsing, where the cost of a disjunct is equal to the maximum cost of all of its connectors. The default is that only disjuncts of cost 2 or less are considered."
+        doc = "Determines the maximum disjunct cost used during parsing, where the cost of a disjunct is equal to the maximum cost of all of its connectors. The default is that only disjuncts of cost 2.7 or less are considered."
         def fget(self):
             return clg.parse_options_get_disjunct_cost(self._po)
         def fset(self, value):

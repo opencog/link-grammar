@@ -737,13 +737,11 @@ int main(int argc, char * argv[])
 	parse_options_set_max_null_count(opts, 0);
 	parse_options_set_short_length(opts, 10);
 
-	/* The Russian dictionaries need a cost of 3. This is because they use
-	 * costed regex matches, which have a cost of 1, that wrap rules that
-	 * have a cost of 2, resulting in a cost of 3 for "normal" parsing.
+	/* The English and Russian dicts use a cost of 2.7, which allows
+	 * regexes with a fractional cost of less than 1 to be used with
+	 * rules that have a cost of 2.0.
 	 */
-	parse_options_set_disjunct_cost(opts, 2.0);
-	if (0 == strcmp(dictionary_get_lang(dict), "ru"))
-		parse_options_set_disjunct_cost(opts, 3.0);
+	parse_options_set_disjunct_cost(opts, 2.7);
 
 	/* Process the command line commands */
 	for (i = 1; i<argc; i++)
@@ -855,7 +853,7 @@ int main(int argc, char * argv[])
 			sent = sentence_create(input_string, dict);
 
 			/* First parse with cost 0 or 1 and no null links */
-			// parse_options_set_disjunct_cost(opts, 2.0);
+			// parse_options_set_disjunct_cost(opts, 2.7);
 			parse_options_set_min_null_count(opts, 0);
 			parse_options_set_max_null_count(opts, 0);
 			parse_options_reset_resources(opts);
