@@ -294,8 +294,10 @@ INITIALS <entity-singular>:
 
 % As above, but with a tiny extra cost, so that a dictionary word is
 % prefered to the regex match (i.e. for a common noun starting a
-% sentence).
-CAPITALIZED-WORDS: [<entity-singular>]0.1;
+% sentence). However, the other regex matches (e.g. MC-NOUN-WORDS)
+% should have a cost that is even higher (so that we take the
+% capitalized version before we take any other matches.)
+CAPITALIZED-WORDS: [<entity-singular>]0.05;
 
 % Hack, see EMPTY-WORD, up top.
 EMPTY-WORD.x: CAPITALIZED-WORDS;
@@ -10412,7 +10414,7 @@ rbracketID55 rbracketID56 rbracketID57 rbracketID58 rbracketID59
 % or ({@E-} & A+) or <verb-ge>;
 
 ING-WORDS.g:
-  [(<verb-pg> & <vc-tr,intr>)] or
+  [[(<verb-pg> & <vc-tr,intr>)] or
   [(<vc-tr,intr> & <verb-ge>)] or
   [({@E- or EA-}  & A+)] or
   [<verb-ge>] or
@@ -10423,84 +10425,88 @@ ING-WORDS.g:
     (GN+ & (DD- or [()])) or
     Us-)) or
   AN+ or
-  {AN-});
+  {AN-})]0.1;
 
-ED-WORDS.v-d: 
+ED-WORDS.v-d:
+  [ 
   ((<verb-sp,pp> & (<vc-tr,intr>)) or
   (<verb-and-sp-i-> & (([<vc-tr,intr>]) or ())) or
   ((<vc-tr,intr>) & <verb-and-sp-i+>)) or
-  <verb-and-sp-t> or <verb-pv> or ({@E-} & A+);
+  <verb-and-sp-t>
+    or <verb-pv> or ({@E-} & A+)]0.1;
 
-S-WORDS.v: 
+S-WORDS.v: [ 
   ((<verb-s> & (<vc-tr,intr>)) or
   (<verb-and-sp-i-> & (([<vc-tr,intr>]) or ())) or
   ((<vc-tr,intr>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) ]0.1;
 
 S-WORDS.n:
-  (<noun-modifiers> &
+  [(<noun-modifiers> &
     (({NM+ or Dmc-} & <noun-sub-p> & (<noun-main-p> or Bpm+)) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     (YP+ & {Dmc-}) or
     (GN+ & (DD- or [()])) or
     Up-)) or
-  [[AN+]];
+  [[AN+]]]0.1;
 
 LY-WORDS.e:
-  {EE- or EF+} & (
+  [{EE- or EF+} & (
     ({Xd- & Xc+} & MVa-)
     or Em+
     or ({Xc+ & {Xd-}} & CO+)
     or Qe+
     or <advcl-verb>
-    or [[EA+]]);
+    or [[EA+]])]0.1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Morphology guessing extension rules from BioLG-1.1.12
 % Words guessed based on morphology.
 % These occur primarily in biomedical and chemistry texts.
 % These are processed via regular-expression matching, in 4.0.regex
+% All of these have a cost of 0.1, so that the CAPTIALIZED-WORDS
+% regex gets priority. (CAPITALIZED-WORDS has a cost of 0.05)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % guessed nouns that can be mass or countable
 % (-in, -ine, -ion, -yl, -ose, -ol, -ide, -ity)
 MC-NOUN-WORDS.n:
-  <noun-mass-count>;
+  [<noun-mass-count>]0.1;
 
 % guessed nouns that are signular countable (-on, -or)
 C-NOUN-WORDS.n:
-  <common-noun>;
+  [<common-noun>]0.1;
 
 % guessed adjectives (-ous, -ar, -ic)
 ADJ-WORDS.a:
-  <ordinary-adj>;
+  [<ordinary-adj>]0.1;
 
 % guessed adjectives/adverbs suffixed by "fold" with or without hyphen
 FOLD-WORDS:
-  ({EN-} & (MVp- or EC+ or A+)) or Em+;
+  [({EN-} & (MVp- or EC+ or A+)) or Em+]0.1;
 
 % latin (postposed) adjectives considered as mass nouns
 % in the current version (is this right???)
 LATIN-ADJ-WORDS.a:
-  <noun-mass-count>;
+  [<noun-mass-count>]0.1;
 
 % latin (postposed) adjectives or latin plural noun
 % always considered as nouns in the current version
 % XXX maybe should be same as words.n.2.x instead of <generic-plural-id> ???
 LATIN-ADJ-P-NOUN-WORDS:
-  <generic-plural-id>;
+  [<generic-plural-id>]0.1;
 
 % latin (postposed) adjectives or latin singular noun
 % always considered as nouns in the current version
 % XXX this is <common-noun> with weird plural-like stuff ?? is this right?
 LATIN-ADJ-S-NOUN-WORDS:
-  <noun-modifiers> &
+  [<noun-modifiers> &
    (AN+
    or ({NM+ or D*u-} & <noun-sub-s> & (<noun-main-m> or <rel-clause-s>))
    or ({NM+ or D*u-} & <noun-and-p,u>)
    or (YS+ & {D*u-})
    or (GN+ & (DD- or [()]))
-   or Us-);
+   or Us-)]0.1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
