@@ -210,6 +210,10 @@ fi
 
 AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
 
+if test "x$enable_sat_solver" = "xyes" && test x${enable_fat_links} = xyes ; then
+	AC_MSG_ERROR([The SAT solver cannot be built with fat linkage support.])
+fi
+
 dnl ====================================================================
 
 AC_ARG_ENABLE( viterbi,
