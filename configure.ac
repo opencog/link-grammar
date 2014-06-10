@@ -192,9 +192,9 @@ AM_CONDITIONAL(WITH_FAT_LINKS, test x${enable_fat_links} = xyes)
 dnl ====================================================================
 
 AC_ARG_ENABLE( sat-solver,
-  [  --enable-sat-solver     enable use of the Boolean SAT parser],
+  [  --disable-sat-solver     disable use of the Boolean SAT parser (default is enabled)],
   [],
-  [enable_sat_solver=no]
+  [enable_sat_solver=yes]
 )
 
 if test "x$enable_sat_solver" = "xyes"; then

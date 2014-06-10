@@ -12,6 +12,7 @@ Version 5.1.0 (XXX 2014)
  * Major redesign of morpheme splitting mechanism (from AmirP)
  * Minor extensions to support numeric formulas, e.g. 1 + 1 = 2.
  * Remove fat linkage support from the SAT solver.
+ * Enable build of SAT solver by default.
 
 Version 5.0.8 (30 April 2014)
  * Fix handling of initial letters in ordered lists.
