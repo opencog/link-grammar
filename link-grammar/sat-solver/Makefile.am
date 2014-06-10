@@ -1,6 +1,5 @@
 
 VERSION=0.0.1
-dnl Version info for libraries = CURRENT:REVISION:AGE
 SATSOLVER_VERSION_INFO=1:0:1
 
 libsat_solver_la_LDFLAGS = -version-info $(SATSOLVER_VERSION_INFO)
