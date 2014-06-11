@@ -79,7 +79,7 @@ static inline bool easy_match(const char * s, const char * t)
 	while ((*s!='\0') && (*t!='\0'))
 	{
 		if ((*s == '*') || (*t == '*') || 
-#ifdef USE_FAT_LINKAGS
+#ifdef USE_FAT_LINKAGES
 			((*s == *t) && (*s != '^'))
 #else
 			(*s == *t)
@@ -92,7 +92,7 @@ static inline bool easy_match(const char * s, const char * t)
 		else
 			return false;
 	}
-	return false;
+	return true;
 }
 
 
