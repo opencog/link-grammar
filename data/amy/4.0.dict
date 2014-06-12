@@ -1,0 +1,17 @@
+
+ %***************************************************************************%
+ %                                                                           %
+ %       Copyright (C) 2013 Linas Vepstas                                    %
+ %                                                                           %
+ %  See file "README" for information about commercial use of this system    %
+ %                                                                           %
+ %***************************************************************************%
+
+% Dictionary version number is 4.8.1 (formatted as V4v8v1+)
+<dictionary-version-number>: V4v8v1+;
+
+LEFT-WALL: ANY+;
+ANY-WORD: {@ANY-} & {@ANY+};
+ANY-PUNCT: {@ANY-} & {@ANY+};
+
+JUNK: {@ANY-} & {@ANY+};
