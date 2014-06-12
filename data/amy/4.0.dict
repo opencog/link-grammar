@@ -19,8 +19,8 @@ ANY-PUNCT: {@ANY-} & {@ANY+};
 JUNK: {@ANY-} & {@ANY+};
 
 
-MOR-SUF: MOR- & {@ANY-} & {@ANY+};
-MOR-STEM: MOR+;
+MOR-SUF: LL- & {@ANY-} & {@ANY+};
+MOR-STEM: LL+;
 
-th.=: MOR+;
-=is.blah: MOR- & {@ANY-} & {@ANY+};
+th.=: LL+;
+% =is.blah: LL- & {@ANY-} & {@ANY+};
