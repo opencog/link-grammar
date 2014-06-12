@@ -846,6 +846,15 @@ TODO -- Working Notes:
   i.e provide word index.   Also .. provide a clear word API,
   showing word extent, suffix, etc.
 
+  Directional links:
+    There is a real need for directional links for e.g. Lithuanian,
+    Turkish and other free word-order languages. The goal is to have 
+    a link clearly indicate which word is the head word, and which is
+    the dependent. This could be acheived by prefixing connectors with
+    a single *lower case* letter or symbol, e.g. h,d or ^,- so that
+    h matches either nothing or d, and d matches h or nothing. Should
+    be easy to implement.
+
   Capitalized first words:
     There are subtle technical issues for handling capitalized first
     words. This needs to be fixed. See tokenize.c circa line 586 for
