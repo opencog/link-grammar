@@ -7,11 +7,17 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 4.8.1 (formatted as V4v8v1+)
-<dictionary-version-number>: V4v8v1+;
+% Dictionary version number is 5.1.0 (formatted as V5v1v0+)
+<dictionary-version-number>: V5v1v0+;
+
+EMPTY-WORD.zzz: ZZZ-;
 
 LEFT-WALL: ANY+;
 ANY-WORD: {@ANY-} & {@ANY+};
 ANY-PUNCT: {@ANY-} & {@ANY+};
 
 JUNK: {@ANY-} & {@ANY+};
+
+
+MOR-SUF: MOR- & {@ANY-} & {@ANY+};
+MOR-STEM: MOR+;

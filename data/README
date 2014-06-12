@@ -29,5 +29,9 @@ any -- Will parse "any" language, exploring all combinatoric possibilities.
        This is useful for certain machine-learning tasks, when one might
        want to iterate over all possible parse trees in every way.
 
+amy -- Will parse "any" language, exploring all possible morphological
+       decompositions of the words in a sentence, as well as using
+       random linkages between words and morphemes.
+
 demo-sql -- An almost empty demonstration dictionary, showing what an
        SQLite-backed dictionary might look like.

@@ -8,5 +8,13 @@
 £ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#": LPUNC+;
 
+""«»《》【】『』`„“": QUOTES+;
+
+
+=: INFIXMARK+;
+
+"w|ts": SANEMORPHISM+;
+
+.=: STEMSUBSCR+;
 
 
