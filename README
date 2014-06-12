@@ -1,7 +1,7 @@
 
                        Link Grammar Parser
                        -------------------
-                          Version 5.0.8
+                          Version 5.1.0
 
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
@@ -79,7 +79,7 @@ UNPACKING and signature verification:
    no malicious changes were made to the code internals by third
    parties. The signatures can be checked with the gpg command:
 
-   gpg --verify link-grammar-5.0.8.tar.gz.asc
+   gpg --verify link-grammar-5.1.0.tar.gz.asc
 
    which should generate output identical to (except for the date):
 
@@ -855,17 +855,6 @@ TODO -- Working Notes:
     could be handled!  After all, its essentially a nearest-neighbor
     phenomenon!
 
-  Head words:
-    The head-word of a sentences is usually the verb; head-words should
-    attach to walls, and not nouns, the way the current link-grammar
-    does it.  Why?  Because this allows for a more correct handling of
-    many clause openers, such as "the blah being blah, ..." e.g
-      * Cutting was difficult, the knife being dull.
-    In the above, "being" can only be used in this way, in such compound
-    sentences.  The head-word is already correctly linked with C for
-    subordinate clauses.  "I told him I was angry", with "told" being the
-    head-word.
-
   Zero/phantom words:  Expressions such as "Looks good" have an implicit
     "it" (also called a zero-it or phantom-it) in them; that is, the
     sentence should really parse as "(it) looks good".  The dictionary
@@ -882,13 +871,8 @@ TODO -- Working Notes:
     * determiner agreement errors: "a books"
     * aux verb agreement errors: "to be hooks up"
 
-  A/An determiners before consonants/vowels:  fix this. Just adding
-    linkages in a naive way is not enough, because there's no restriction
-    on neighboring words: "I ate an apple." vs. "I ate a green apple".
-    Should this be done in post-processing? or in pre-processing?
-    (maybe easier to post-process, but more biologically natural as
-    a pre-process step.)
-
+  A/An determiners before consonants/vowels:  fix this.  There's a
+    detailed proposal on the mailing list, involving a new PH link type.
 
   Poor linkage choices:
     Compare "she will be happier than before" to "she will be more happy
@@ -898,6 +882,8 @@ TODO -- Working Notes:
     the dependent.  This would harmonize rules for comparatives... and
     would eliminate/simplify rules for less,more.
 
+    However, this idea needs to be double-checked against, e.g. Hudson's
+    word grammar.  I'm confused on this issue ... 
 
   Repulsive parses: Sometimes, the existance of one parse should suggest
     that another parse must surely be wrong: if one parse is possible,
@@ -1030,6 +1016,9 @@ TODO -- Working Notes:
      See http://goertzel.org/ProwlGrammar.pdf for details.
      See also: http://www.phon.ucl.ac.uk/home/dick/enc/syntax.htm
 
+     Related notions:
+     http://en.wikipedia.org/wiki/Catena_(linguistics)
+
   "to be fishing": Link grammar offers four parses of "I was fishing for
      evidence", two of which are given low scores, and two are given
      high scores. Of the two with high scores, one parse is clearly bad.
@@ -1078,6 +1067,9 @@ TODO -- Working Notes:
      However, rules for many common forms have not yet been written.
      The general problem is of supporting structures that have "holes"
      in the middle, that require "lacing" to tie them together.
+
+     For a general theory, see:
+     http://en.wikipedia.org/wiki/Catena_(linguistics)
 
      For example, the adposition:
 
