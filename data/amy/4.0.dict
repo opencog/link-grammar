@@ -1,7 +1,7 @@
 
  %***************************************************************************%
  %                                                                           %
- %       Copyright (C) 2013 Linas Vepstas                                    %
+ %       Copyright (C) 2013, 2014 Linas Vepstas                              %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
@@ -21,3 +21,6 @@ JUNK: {@ANY-} & {@ANY+};
 
 MOR-SUF: MOR- & {@ANY-} & {@ANY+};
 MOR-STEM: MOR+;
+
+th.=: MOR+;
+=is.blah: MOR- & {@ANY-} & {@ANY+};
