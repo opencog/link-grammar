@@ -8,11 +8,11 @@
 % Want to match apostrophes, for abreviations (I'm I've, etc.) since these
 % cannot be auto-split with the current splitter.  Also want to accept
 % hyphenated words, and word with underbars in them.
-ANY-WORD:  /^x[[:alnum:]_'-]+$/
+ANY-WORD:  /^[[:alnum:]_'-]+$/
 ANY-PUNCT:  /^[[:punct:]]+$/
 
 % Random morphology: match any string of one or more letters as stem, or suffix.
-MOR-SUF: /[[:alnum:]_'-]+$/
+MOR-SUFF: /[[:alnum:]_'-]+$/
 MOR-STEM: /^[[:alnum:]_'-]+/
 
 % Match anything that doesn't match the above.
