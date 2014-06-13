@@ -254,18 +254,18 @@ struct Sentence_s
 	Linkage_info * link_info;   /* array of valid and invalid linkages (sorted) */
 
 	/* Tokenizer internal/private state */
-	bool   * post_quote;
+	bool   * post_quote;        /* Array, one entry per word, true if quote */
 	int    t_start;             /* start word of the current token sequence */
 	int    t_count;             /* word count in the current token sequence */
 
 #ifdef USE_FAT_LINKAGES
 	/* parser internal/private state */
+	/* Obsolete fat-linkage state */
 	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
 	count_context_t * count_ctxt; /* private state info used for counting */
 
 	bool   null_links;          /* null links allowed */
 	int    num_thin_linkages;   /* valid linkages which are not fat */
-	/* Obsolete fat-linkage state */
 	char * is_conjunction;      /* Array of flags, one per word; set to
 	                               TRUE if conjunction, as defined by dictionary */
 	char** deletable;           /* deletable regions in a sentence with conjunction */

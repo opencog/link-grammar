@@ -777,7 +777,7 @@ static Exp* purge_Exp(Exp *e)
 			return NULL;
 		}
 	}
-	else
+	else /* if we are here, its OR_type */
 	{
 		e->u.l = or_purge_E_list(e->u.l);
 		if (e->u.l == NULL)

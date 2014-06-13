@@ -44,7 +44,7 @@ typedef enum
 struct Exp_struct
 {
     Exp * next;    /* Used only for mem management,for freeing */
-    Exp_type type; /* One of three types, see above */
+    Exp_type type; /* One of three types: AND, OR, or connector. */
     char dir;      /* '-' means to the left, '+' means to right (for connector) */
     bool multi;    /* TRUE if a multi-connector (for connector)  */
     union {

@@ -338,7 +338,7 @@ static void add_alternative(Sentence sent,
 					buff[sz] = '\0';
 					break;
 				case SUFFIX: /* set to =word */
-					/* If the suffix starts with an apostroph, don't mark it */
+					/* If the suffix starts with an apostrophe, don't mark it */
 					if ((('\0' != (*affix)[0]) && !is_utf8_alpha(*affix)) ||
 					    '\0' == infix_mark || test_enabled("no-suffixes"))
 					{
@@ -385,7 +385,7 @@ static bool issue_alternatives(Sentence sent,
 
 	sent->word[t_start].unsplit_word = string_set_add(word, sent->string_set);
 	sent->post_quote =
-	 (bool *)realloc(sent->post_quote, (t_start+1) * sizeof(bool));
+	 (bool *) realloc(sent->post_quote, (t_start+1) * sizeof(bool));
 	sent->post_quote[t_start] = quote_found;
 
 	sent->length += t_count;
@@ -569,7 +569,8 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 						add_alternative_with_subscr(sent, NULL, newword, *suffix);
 				}
 			}
-		} else
+		}
+		else
 		{
 				len = 0;
 				suffix = &no_suffix;
@@ -652,7 +653,7 @@ static bool mprefix_split(Sentence sent, const char *word)
 	/* pseen is a simple prefix combination filter */
 	bool pseen[HEB_MPREFIX_MAX]; /* prefix "subword" seen */
 	Dictionary dict = sent->dict;
-	int wordlen = strlen(word);  /* guaranteed < MAX_WORD by separate_word() */
+	int wordlen;
 	int wlen;
 	int plen;
 
@@ -671,6 +672,7 @@ static bool mprefix_split(Sentence sent, const char *word)
 	memset(pseen, 0, sizeof(pseen));
 	word_is_in_dict = false;
 	w = word;
+	wordlen = strlen(word);  /* guaranteed < MAX_WORD by separate_word() */
 	do
 	{
 		for (i=0; i<mp_strippable; i++)
