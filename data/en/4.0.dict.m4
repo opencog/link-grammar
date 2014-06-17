@@ -8432,7 +8432,11 @@ EMOTICON :
 % ellipsis in the middle
 % Cr- & S+: "... chances that ... could be ..."
 ....xy ….xy:
-   Cr- & S+;
+  Cr- & S+;
+
+% Relative clause: "I need to find someone who ..."
+....wh ….wh:
+  RS- & B-;
 
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%
