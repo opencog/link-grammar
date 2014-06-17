@@ -8832,8 +8832,8 @@ but.j-n:
 % The weirdo (B- & {B+}) allows the following to parse:
 % "This is a problem Moscow created and failed to solve."
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (RS- & Bs-) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (RS- & Bp-) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
   (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
   (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
   (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
