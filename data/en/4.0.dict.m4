@@ -224,7 +224,7 @@ EMPTY-WORD.zzz: ZZZ-;
 % Looks like only a proper semantic decision can determine the correct parse here ...
 %
 % Add cost to M+, so that "a number of recommendations and suggestions"
-%   gts priority in modifying the and.j-n
+%   gets priority in modifying the and.j-n
 <noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-) or (Dn- & SJn+);
 <noun-and-p>: ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or (Dn- & SJn+);
 <noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-) or (Dn- & SJn+);
@@ -2851,10 +2851,12 @@ came.v-d: VERB_SPPP_I(<vc-come>);
 
 /en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
 /en/words/words.v.2.2: VERB_S_T(`<vc-tr,intr>');
+
+% Put a very small cost on A+ to allow verb conjunctions to come first.
 /en/words/words.v.2.3:
   VERB_SPPP_T(`<vc-tr,intr>') or
   <verb-pv> or
-  ({@E-} & A+) or
+  ({@E-} & [A+]0.05) or
   <verb-phrase-opener>;
 
 /en/words/words.v.2.4:
