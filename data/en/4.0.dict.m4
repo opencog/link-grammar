@@ -121,6 +121,10 @@ EMPTY-WORD.zzz: ZZZ-;
   or <costly-null>;
 
 % noun-main-s -- singular
+% XXX FIXME: <noun-main-?> is often used with <noun-sub-?> and sub
+% has a R+ & B+ on it. The problem here is that R+ & B+ should not
+% be used with the J- here.  This needs to be refactored to prevent
+% this, or at least, cost it in some way.
 <noun-main-s>:
   (Ss+ & <CLAUSE>) or SIs- or Js- or Os-
   or <post-nominal-s>
