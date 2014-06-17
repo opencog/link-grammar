@@ -283,7 +283,7 @@ EMPTY-WORD.zzz: ZZZ-;
 INITIALS <entity-singular>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [[GN-]] or [[@A- & @AN-]] or [[{@A-} & {D-}]] or ({@A-} & Jd- & Dmc-)} &
-        ([<noun-sub-s> & (JG- or <noun-main-s>)]
+        ((<noun-sub-s> & (JG- or <noun-main-s>))
         or <noun-and-s>
         or YS+
         ))
