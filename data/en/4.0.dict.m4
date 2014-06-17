@@ -5780,7 +5780,9 @@ just_about nearly_about almost_about right_about:
 
 % EN- & Pp-: "you are half-way through"
 % EN- & J-: "He stopped, about half-way through"
-through.r:
+% right/straight through: right/straight needs to modify through, so
+% so that conjunctions can work correctly.
+through.r right_through straight_through:
   ({JQ+} & J+ & (<prep-main-a> or FM-))
   or (EN- & (Pp- or J-))
   or [MVp- & B-];
