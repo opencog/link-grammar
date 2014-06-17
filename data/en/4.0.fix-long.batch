@@ -1,0 +1,50 @@
+
+!verbosity=1
+!echo
+!limit=1000
+!batch
+!short=20
+!constituents=1
+!spell=0
+!use-fat=0
+
+% Example sentences showing BUG FIXES since link-grammar 4.1b
+% as well as demonstating bugs that remain to be fixed.
+%
+% The below either caused crashes, or take too long to parse.
+
+% --------------------------------------------------------------------
+
+% Crashes of various sorts.
+Населенные пункты Калининградской области и их прежние названия = Ortsnamenverzeichnis Gebiet Kaliningrad (nordliches Ostpreussen) / Сост.
+His convalescence was relatively brief and he was able to return and fight at The Wilderness, Spotsylvania and Cold Harbor.
+Hot runners usually make the mold more expensive to manufacture and run, but allow savings by reducing plastic waste and by reducing the cycle time.
+Dietrich A. Loeber, ‘“Socialist” Features of Soviet Copyright Law’, Columbia Journal of Transnational Law, vol. 23, pp 297--313, 1984.
+
+% Overly long sentences leading to overflow
+I think one of the chief differences between the main Filipino language, which is Tagalog, and English, when I hear Tagalog speakers speaking English, is that they tend to place the stress on the wrong syllable of a word or they stress the wrong word in the sentence or in the question.
+
+% long sentence leading to crash.
+Cortes in his various letters again and again claims the Emperor's patronage of his bold defiance of the Emperor's officers on the ground that the latter in their action were moved solely by considerations of their personal gain, whereas he, Cortes, was striving to endow his sovereign with a rich new empire and boundless treasure whilst carrying into the dark pagan land, at the sword's point, the gentle creed of the Christian God.
+
+% A no-canonical-parses error
+Well, say, Joe, you can be Friar Tuck or Much the miller's son, and lam me with a quarter-staff; or I'll be the Sheriff of Nottingham and you be Robin Hood a little while and kill me.
+
+% When constituent tree printing is enabled, this causes 
+% a cascade of and-list overflow errors:
+I have not seen the grysbok, or the suni, or the dibitag, or the lechwi, or the aoul, or the gerenuk, or the blaauwbok, or the chevrotain, or lots of others, but who in the world could guess what they were or what they looked like, judging only from the names?
+
+% Overflow + no complete linakges.
+In 1608 he wrote a treatise of the Errors, False Gods, and Other Superstitions of the Indians of the Provinces of Huarochiri, Mama, and Chaclla, of which unfortunately only the first six chapters are known to exist and have been translated into English.
+
+The strongest rain ever recorded in India shut down the financial hub of Mumbai, snapped communication lines, closed airports and forced thousands of people to sleep in their offices or walk home during the night, officials said today.
+
+% No complete linkages found.
+New York Post: The new Mel Brooks/Susan Stroman musical extravaganza ...  is nearly very good indeed - but it is not the The Producers ... this story ... does not lend itself to stage adaptation in the way of the earlier movie ... Now for the good news ... Brooks and Stroman pull out every stop.
+
+% Combinatorial explosion
+However, the few tracts, the poetry, and the novels that embodied the social vision of Young England were directed to a New Generation of educated, religious, and socially conscious conservatives, who, like Young Englanders, were appalled at the despiritualizing effects of industrialization and the perceived amorality of Benthamite philosophy, which they blamed equally for Victorian social injustices.
+
+In vivo studies of the activity of four of the kinases, KinA, KinC, KinD (ykvD) and KinE (ykrQ), using abrB transcription as an indicator of Spo0A~P level, revealed that KinC and KinD were responsible for Spo0A~P production during the exponential phase of growth in the absence of KinA and KinB.
+
+
