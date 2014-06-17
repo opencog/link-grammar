@@ -2229,11 +2229,12 @@ per "/.per": Us+ & Mp-;
   (VJn*t+ & Dn-);
 
 % Verb macros making use of above connectors.
-% Many of these use a cost on $1 encourages any MV links to attach to
+% Many of these use a cost on $1 to encourage any MV links to attach to
 % the "and.j-v" instead of to the individual verb.  Unfortunately, this
 % can often be too broad: so, we *want* transitive objects to attach
-% to the local verb.  So really, there should be two args: those for MV,
-% which connect to and.j-v, and those that connect to local verb...
+% to the local verb.  The appropriate fix seems to be to remove the cost
+% here, and add a tiny cost to those MV's that are being incorrectly attached.
+% XXX TODO: do the above, as tehy show up...
 %
 % plural-or-infinitive macro; 
 % "Scientists sometimes may repeat experiments or use groups."
@@ -2265,7 +2266,7 @@ define(`VERB_SPPP_I',`'
 % past tense macro, transitive variation
 define(`VERB_SPPP_T',`'
   ((<verb-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & (([$1]) or ())) or
+  (<verb-and-sp-i-> & (($1) or ())) or
   (($1) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>)
 
@@ -6767,7 +6768,8 @@ and/or: [(({Xd-} & CC-) or Wc-) & (Wdc+ or Qd+ or Ws+ or Wq+)];
 % The Great Southern and Western Railroad
 % Hmm, Maybe should use MG- & JG+ here, to be consistent with "of", "for":
 % "The Society of Engineers", "The League for Abstinence"
-and.j-g: G- & G+;
+% Add a tiny cost, so that other conjunctions get a shot, first.
+and.j-g: [G- & G+]0.05;
 
 % Conjoined adjectival modifiers.
 % The black and white cat sleeps
