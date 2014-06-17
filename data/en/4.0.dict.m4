@@ -6932,15 +6932,18 @@ but.j-n:
 % Pass through singular/plural agreement of subject.
 % The weirdo (B- & {B+}) allows the following to parse:
 % "This is a problem Moscow created and failed to solve."
+% [I-]0.2, [<verb-ico>]0.2: avoid I links to conjoined non-infinitives.
+% XXX This is hacky, we should just prevent such infinitive links from
+% occuring at all.
 <verb-conjunction>:
-  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (RS- & Bs-) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
-  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (RS- & Bp-) or (I- & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
-  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or (I- & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or (I- & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (RS- & Bs-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
+  (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (RS- & Bp-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
+  (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
+  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
   (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
   ((VJlg- & VJrg+) & (J-)) or
-  ((VJlp- & VJrp+) & <verb-ico>) or
-  ((VJls- & VJrs+) & <verb-ico>);
+  ((VJlp- & VJrp+) & [<verb-ico>]0.2) or
+  ((VJls- & VJrs+) & [<verb-ico>]0.2);
 
 and.j-v or.j-v: <verb-conjunction>;
 
