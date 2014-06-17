@@ -228,9 +228,9 @@ char * linkage_print_disjuncts(const Linkage linkage)
 
 #ifdef USE_CORPUS
 		score = linkage_get_disjunct_corpus_score(linkage, w);
-		append_string(s, "%*s    %5.1f %6.3f %s\n", pad, infword, cost, score, dj);
+		append_string(s, "%*s    %5.2f %6.3f %s\n", pad, infword, cost, score, dj);
 #else
-		append_string(s, "%*s    %5.1f  %s\n", pad, infword, cost, dj);
+		append_string(s, "%*s    %5.2f  %s\n", pad, infword, cost, dj);
 #endif
 	}
 	djs = string_copy(s);
