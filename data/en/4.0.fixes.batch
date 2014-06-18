@@ -2359,7 +2359,14 @@ A miner's inch is defined as 1/60 ft³/s.
 A miner's inch is defined as 1/60 ft³ / s.
 A miner's inch is defined as 1 / 60 ft³/s.
 A miner's inch is defined as 1 / 60 ft³ / s.
-A miner's inch is defined as 472mL/s.
+The drip rate is 472 mL/s
+The drip rate is 4.72 mL/s
+The drip rate is 472mL/s.
+The drip rate is 472 mL/s.
+The drip rate is 472 mL / s
+The drip rate is 472 mL / s.
+The drip rate is 472 mL/s, but we have a comma here.
+The drip rate is 472mL/s, but we have a comma here.
 A miner's inch is defined as 472 mL/s.
 A miner's inch is defined as 472 mL / s.
 
@@ -2568,7 +2575,7 @@ He's an old 1920's crooner.
 These ideas date back to the 60's
 These ideas date back to the 1860's
 
-% Simple mathematical equation parsing:
+% Simple mathematical formula and equation parsing:
 Phosphorylation was observed (P = 0.06).
 Phosphorylation was observed (probability = 0.06).
 The sun is distant (L = 1 AU).
@@ -2592,6 +2599,8 @@ I think that X + Y is equal to Z
 I say that X plus Y = Z
 I say that X plus Y equals Z
 1 + 1 = 2
+(1 + 1) = 2
+2 = (1 + 1)
 2 + 2 = 4
 539 + 22 = 561
 

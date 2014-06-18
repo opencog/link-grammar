@@ -2687,7 +2687,8 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
   (<verb-x-s> & <vc-be>)
   or (EQ*r- & {S-} & <verb-wall> & EQ*r+)
   or (EQ*r-
-     & ([O+] or ({EQ*r-} & EQ*r+))
+     & {Xd-} 
+     & ([O+] or ({EQ*r-} & EQ*r+ & {Xc+}))
      & (MX- or MVa-));
 
 % Binary operators:
@@ -2701,6 +2702,7 @@ is_less_than_or_equal_to is_gretr_than_or_equal_to:
 % By contrast, EQrr can only attach to relations (=, < > etc.)
 +.eq -.eq *.eq "/.eq" x.eqn plus.eq minus.eq times.eq divided_by:
   (EQt+ & EQt- & (EQrr- or EQrr+ or AN+))
+  or (EQt+ & Xc+ & EQt- & Xd- & (EQrr- or EQrr+ or AN+))
   or (EQt- & Xd- & EQt+ & EQt- & Xc+)
   or (Xd- & EQt+ & EQt- & Xc+ & EQt+);
 
@@ -10370,7 +10372,8 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 "'s.p" "’s.p":
   YS- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
-"(" "[": {EBx+} & Xd+;
+% Wd-: allowed "(1 + 1) = 2"
+"(" "[": {Wd-} & {EBx+} & Xd+;
 
 ")" "]": {@Xca-} & Xc-;
 
