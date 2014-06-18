@@ -8159,7 +8159,9 @@ July August.i September.i October November December:
   or AN+
   or Wa-;
 
-AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock: ND- & {@MX+} & <noun-main-s> & {TZ+} ;
+% AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock:
+/en/words/units.5:
+  ND- & {@MX+} & <noun-main-s> & {TZ+} ;
 
 % Time-zone names
 A.tz ACDT.tz ACST.tz ADT.tz AEDT.tz AEST.tz AKDT.tz AKST.tz AST.tz

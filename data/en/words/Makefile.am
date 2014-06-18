@@ -15,6 +15,7 @@ WORDS=			\
 	units.3 \
 	units.4 \
 	units.4.dot \
+	units.5 \
 	words.adj.1	\
 	words.adj.2	\
 	words.adj.3	\
