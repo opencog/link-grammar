@@ -972,9 +972,6 @@ static const char * strip_units(Sentence sent, const char * w,
 	for (nrs = *n_r_stripped; nrs < MAX_STRIP; nrs++)
 	{
 		size_t sz = temp_wend-w;
-		char* word = alloca(sz+1);
-		strncpy(word, w, sz);
-		word[sz] = '\0';
 		if (temp_wend == w) break;  /* It will work without this. */
 	
 		/* Any string ending with a number halts strippng. */
@@ -982,7 +979,13 @@ static const char * strip_units(Sentence sent, const char * w,
 		if (is_utf8_digit(temp_wend-1))
 		{
 			*word_is_in_dict = true;
-			lgdebug(2, "unit strip to root word '%s'\n", word);
+			if (2 <= verbosity)
+			{
+				char* word = alloca(sz+1);
+				strncpy(word, w, sz);
+				word[sz] = '\0';
+				lgdebug(2, "unit strip to root word '%s'\n", word);
+			}
 			break;
 		}
 	
