@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2009, 2012, 2013 Linas Vepstas                          */
+/* Copyright (c) 2009, 2012-2014 Linas Vepstas                           */
 /* Copyright (c) 2014 Amir Plivatsky                                     */
 /* All rights reserved                                                   */
 /*                                                                       */
@@ -1046,14 +1046,14 @@ static const char * strip_units(Sentence sent, const char * w,
  * in the dict.
  *
  * This code is incredibly delicate and fragile. For example, it needs
- * to parse "November 17th, 1771" with the comma stripped, the 17th 
- * matched by a regex, but not get a units split for h, i.e. not get 
+ * to parse "November 17th, 1771" with the comma stripped, the 17th
+ * matched by a regex, but not get a units split for h, i.e. not get
  * the "17t h" split where h==hours-unit.
  *
  * It must also parse "7grams," with the comma split, the s in grams
  * NOT matched by S-WORD regex.
  *
- * Also, 7am must split, even though there's a regex that matches 
+ * Also, 7am must split, even though there's a regex that matches
  * this (the HMS-TIME regex).
  *
  *Also, we have to split "mL/s," into "mL / s ," with no number.
