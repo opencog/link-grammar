@@ -1642,11 +1642,11 @@ not_enough:
     or (Xc+ & Xd- & (MVx- or MX-))));
 
 and.j-ru:
-(NIfn- & {NIr-} & NItn+ & (NM- or
-(NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or
-({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
-(NIfu- & {NIr-} & NItu+ &
-(((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
+  (NIfn- & {NIr-} & NItn+ & (NM- or Jp- or
+  (NN+ or [[NF+]] or ({EN- or NIc-} & (ND+ or OD- or
+  ({{@L+} & DD-} & (Dmcn+ or (<noun-sub-p> & [<noun-main-p>])))))))) or
+  (NIfu- & {NIr-} & NItu+ &
+  (((<noun-sub-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
 
 % and.j-sum is used in numerical sums: "It's a hundred and two in the shade."
 % It's a hundred 'n two in the shade."
@@ -1697,9 +1697,11 @@ zero.n: (NA- & NA+) or NN+ or Ds+ or (<noun-sub-s> & <noun-main-s>) or Wa-;
 % Ditto for fractions ...
 % Not clear why we use Dmcn+ here, instead of allowing nouns to take ND-
 % as effectively Dmcn and ND are the "same thing" more or less.
+%
+% ({ND+} & NIfn+) or (NItn- & {ND+}): "between 7:30AM and 9:30AM"
 NUMBERS FRACTION:
   NMn-
-  or ({EN-} & (NIfn+ or NItn-))
+  or ({EN-} & (({ND+} & NIfn+) or (NItn- & {ND+})))
   or NN+
   or [[NF+]]
   or [[AN+]]
@@ -6258,9 +6260,11 @@ July August.i September.i October November December:
   or AN+
   or Wa-;
 
+% The naked ND- can occur with tiem intervals:
+% "I can't decide between 7:30AM and 9:30AM"
 % AM.ti PM.ti am.ti pm.ti a.m. p.m. o'clock:
 /en/words/units.5:
-  ND- & {@MX+} & <noun-main-s> & {TZ+} ;
+  ND- & {{@MX+} & <noun-main-s> & {TZ+}} ;
 
 % Time-zone names
 A.tz ACDT.tz ACST.tz ADT.tz AEDT.tz AEST.tz AKDT.tz AKST.tz AST.tz
@@ -8469,7 +8473,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 "'s.p" "’s.p":
   YS- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
-% Wd-: allowed "(1 + 1) = 2"
+% Wd-: allows "(1 + 1) = 2"
 "(" "[": {Wd-} & {EBx+} & Xd+;
 
 ")" "]": {@Xca-} & Xc-;
