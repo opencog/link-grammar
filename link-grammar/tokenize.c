@@ -932,9 +932,14 @@ static const char * strip_left(Sentence sent, const char * w, bool quote_found)
  * that accidentally end in "ft" are not split (e.g. "Delft blue")
  * It is enough to ensure that the string starts with a digit.
  *
- * Multiple passes allow for constructions such as 12sq.ft. That is,
- * first, "ft." is stripped, then "sq." is stripped, then "12" is found
- * in the dict.
+ * There's one exception to this: this routine must split expressions
+ * such as "mL/s" into "mL / s" (milli-liters per second) so that the
+ * slash tokenizes the word.  Note there is no number, but the
+ * expression split completely!
+ *
+ * Multiple passes allow for constructions such as 12sq.ft. or
+ * 12ft.lbs. That is, first, "ft." is stripped, then "sq." is
+ * stripped, then "12" is found in the dict.
  *
  * w points to the string starting just to the right of any left-stripped
  * characters.
@@ -958,10 +963,8 @@ static const char * strip_units(Sentence sent, const char * w,
 	size_t nrs = 0, i = 0;
 	bool successful_strip = false;
 	const char * temp_wend = wend;
-	bool starts_with_number = is_utf8_digit(w);
 
 	if (NULL == afdict) return wend;
-	if (!starts_with_number) return wend;
 
 	/* Strip away units until expression ends with a number.  */
 	unit_list = AFCLASS(afdict, AFDICT_UNITS);
@@ -972,11 +975,12 @@ static const char * strip_units(Sentence sent, const char * w,
 	 * right-punctuation! */
 	for (nrs = *n_r_stripped; nrs < MAX_STRIP; nrs++)
 	{
-		if (temp_wend == w) break;  /* It will work without this. */
-
-		/* Any string ending with a number halts strippng. */
-		/* back up by one byte, since temp_wend is null byte. */
-		if (is_utf8_digit(temp_wend-1))
+		/* Any string ending with a number halts stripping.
+		 * Alternately, if the expression has been completly split,
+		 * with nothing left, that's accepted too. */
+		/* Back up by one byte, since temp_wend is null byte. */
+		if ((temp_wend == w) ||
+		   ((w < temp_wend) && is_utf8_digit(temp_wend-1)))
 		{
 			// word_is_in_dict might already be true ...
 			*word_is_in_dict = true;
@@ -1052,6 +1056,8 @@ static const char * strip_units(Sentence sent, const char * w,
  * Also, 7am must split, even though there's a regex that matches 
  * this (the HMS-TIME regex).
  *
+ *Also, we have to split "mL/s," into "mL / s ," with no number.
+ *
  * Basically, don't fuck with this code, unless you run the full
  * set of units sentences in 4.0.fixes.batch.
  *
@@ -1093,13 +1099,15 @@ static const char * strip_right(Sentence sent, const char * w,
 	 * any units, then we try punctuation, and then units. This
 	 * allows commas to be removed (e.g. 7grams,)
 	 */
-	if (starts_with_number)
-	{
-		*n_r_stripped = 0;
-		temp_wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
+	*n_r_stripped = 0;
+	temp_wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
 
-		/* If we stripped anything off, we are done. */
-		if (0 < *n_r_stripped) return temp_wend;
+	/* If we stripped anything off, and ended up with a numeric string,
+	 * or nothing at all, then we are done. */
+	if ((0 < *n_r_stripped) &&
+	    (starts_with_number || w == temp_wend))
+	{
+		return temp_wend;
 	}
 
 	rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
@@ -1151,21 +1159,19 @@ static const char * strip_right(Sentence sent, const char * w,
 		if (i == r_strippable) break;
 	}
 
-	/* Units must be preceeded by a number (? is this always true?
-	 * shouldn't the grammar decide if the strip is OK or not? XXX) */
-	if (!starts_with_number)
-	{
-		*n_r_stripped = nrs;
-		return temp_wend;
-	}
-
-	/* If we are here, then the expression starts with a number,
-	 * and we have poossibly removed some punctuation already.
-	 */
+	/* We may or have may not removed punctuation. Try to handle units.  */
 	*n_r_stripped = nrs;
 	temp_wend = strip_units(sent, w, temp_wend, r_stripped, n_r_stripped, word_is_in_dict);
 
-	lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n", w, *word_is_in_dict);
+	if (2 <= verbosity)
+	{
+		size_t sz = temp_wend-w;
+		char* word = alloca(sz+1);
+		strncpy(word, w, sz);
+		word[sz] = '\0';
+		lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n", w, *word_is_in_dict);
+	}
+
 	if (*word_is_in_dict)
 	{
 		wend = temp_wend;

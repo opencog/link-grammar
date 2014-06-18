@@ -251,8 +251,8 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 /* Compare lengths of strings, for qsort */
 static int cmplen(const void *a, const void *b)
 {
-	const char **sa = (const char **) a;
-	const char **sb = (const char **) b;
+	const char * const *sa = a;
+	const char * const *sb = b;
 	return strlen(*sb) - strlen(*sa);
 }
 
