@@ -40,4 +40,8 @@
 /en/words/units.4: UNITS+;
 /en/words/units.4.dot: UNITS+;
 /en/words/units.5: UNITS+;
+%
+% units.6 contains just a single, sole slash in it. This allows units
+% such as mL/s to be split at the slash.
+/en/words/units.6: UNITS+;
 
