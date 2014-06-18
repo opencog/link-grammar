@@ -2364,6 +2364,8 @@ A miner's inch is defined as 472 mL / s.
 the weight was 7grams
 the weight was 7grams, but we wanted a comma after the unit.
 the weight was 7lbs., but we wanted a comma after the unit.
+I'd like 2 lbs. of coffee
+I'd like 2lbs. of coffee
 
 % Lack of space between numbers and letters causes problems
 It was 10:30AM in the morning.
