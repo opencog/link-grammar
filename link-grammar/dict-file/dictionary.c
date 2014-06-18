@@ -248,6 +248,14 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 	return true;
 }
 
+/* Compare lengths of strings, for qsort */
+static int cmplen(const void *a, const void *b)
+{
+	const char **sa = a;
+	const char **sb = b;
+	return strlen(*sb) - strlen(*sa);
+}
+
 /**
  * Initialize several classes.
  * In case of a future dynamic change of the affix table, this
@@ -329,6 +337,17 @@ static bool afdict_init(Dictionary dict)
 		}
 		lgdebug(+5, "%s regex %s\n",
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+	}
+
+	/* sort the UNITS list */
+	/* Longer unit names must get split off before shorter ones.
+	 * This prevents single-letter splits from screwing things
+	 * up. e.g. split 7gram before 7am before 7m
+	 */
+	ac = AFCLASS(afdict, AFDICT_UNITS);
+	if (0 < ac->length)
+	{
+		qsort(ac->string, ac->length, sizeof(char *), cmplen);
 	}
 
 #ifdef AFDICT_ORDER_NOT_PRESERVED
