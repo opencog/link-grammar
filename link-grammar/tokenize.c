@@ -921,6 +921,96 @@ static const char * strip_left(Sentence sent, const char * w, bool quote_found)
 }
 
 /**
+ * Split off units from the right.
+ *
+ * Units are removed from the right-hand side of a word, one at a time,
+ * until a bare number is obtained; then the stripping stops.  This
+ * could probably be unified with m,orphology processing someday...
+ *
+ * The only thing allowed to precede a units suffix is a number. This
+ * is so that strings such as "12ft" (twelve feet) are split, but words
+ * that accidentally end in "ft" are not split (e.g. "Delft blue")
+ * It is enough to ensure that the string starts with a digit.
+ *
+ * Multiple passes allow for constructions such as 12sq.ft. That is,
+ * first, "ft." is stripped, then "sq." is stripped, then "12" is found
+ * in the dict.
+ *
+ * w points to the string starting just to the right of any left-stripped
+ * characters.
+ * n_r_stripped is the index of the r_stripped array, consisting of strings
+ * stripped off; r_stripped[0] is the number of the first string stripped off,
+ * etc.
+ * When it breaks out of this loop, n_r_stripped will be the number of strings
+ * stripped off. It is returned through the parameter.
+ * The function returns a pointer to one character after the end of the
+ * remaining word.
+ */
+static const char * strip_units(Sentence sent, const char * w,
+                                const char * wend, char const * r_stripped[],
+                                size_t * n_r_stripped, bool * word_is_in_dict)
+{
+	Dictionary dict = sent->dict;
+	Dictionary afdict = dict->affix_table;
+	Afdict_class * unit_list;
+	const char * const * unit;
+	size_t u_strippable;
+	size_t nrs = 0, i = 0;
+	const char * temp_wend = wend;
+	bool starts_with_number = is_utf8_digit(w);
+
+	if (NULL == afdict) return wend;
+	if (!starts_with_number) return wend;
+
+	/* Strip away units until expression ends with a number.  */
+	unit_list = AFCLASS(afdict, AFDICT_UNITS);
+	u_strippable = unit_list->length;
+	unit = unit_list->string;
+
+	/* Start nrs with n_r_stripped, as we may have already removed
+	 * right-punctuation! */
+	for (nrs = *n_r_stripped; nrs < MAX_STRIP; nrs++)
+	{
+		size_t sz = temp_wend-w;
+		char* word = alloca(sz+1);
+		strncpy(word, w, sz);
+		word[sz] = '\0';
+		if (temp_wend == w) break;  /* It will work without this. */
+	
+		/* Any string ending with a number halts strippng. */
+		/* back up by one byte, since temp_wend is null byte. */
+		if (is_utf8_digit(temp_wend-1))
+		{
+			*word_is_in_dict = true;
+			lgdebug(2, "unit strip to root word '%s'\n", word);
+			break;
+		}
+	
+		for (i = 0; i < u_strippable; i++)
+		{
+			const char * t = unit[i];
+			size_t len = strlen(t);
+	
+			/* The remaining w is too short for a possible match */
+			if ((temp_wend-w) < (int)len) continue;
+
+			if (strncmp(temp_wend-len, t, len) == 0)
+			{
+				lgdebug(2, "unit strip: w='%s' unit '%s'\n", temp_wend-len, t);
+				r_stripped[nrs] = t;
+				temp_wend -= len;
+				break;
+			}
+		}
+		/* If we've tried them all, and got nothing, we are done. */
+		if (i == u_strippable) break;
+	}
+
+	*n_r_stripped = nrs;
+	return temp_wend;
+}
+
+/**
  * Split off punctuation and units from the right.
  *
  * Punctuation and units are removed from the right-hand side of a word,
@@ -944,7 +1034,7 @@ static const char * strip_left(Sentence sent, const char * w, bool quote_found)
  * stripped off; r_stripped[0] is the number of the first string stripped off,
  * etc.
  * When it breaks out of this loop, n_r_stripped will be the number of strings
- * stripped off. It is returned trough the parameter.
+ * stripped off. It is returned through the parameter.
  * The function returns a pointer to one character after the end of the
  * remaining word.
  */
@@ -954,12 +1044,8 @@ static const char * strip_right(Sentence sent, const char * w,
 {
 	Dictionary dict = sent->dict;
 	Dictionary afdict = dict->affix_table;
-	Afdict_class * unit_list;
-	const char * const * unit;
-	size_t u_strippable;
-	size_t nrs, i = 0;
+	size_t nrs = 0, i = 0;
 	const char * temp_wend = wend;
-	bool previous_is_unit = false;
 	bool starts_with_number = is_utf8_digit(w);
 
 	Afdict_class * rpunc_list;
@@ -967,14 +1053,34 @@ static const char * strip_right(Sentence sent, const char * w,
 	size_t r_strippable;
 
 	if (NULL == afdict) return (wend);
+	nrs = 0;
+
+	/* Try units, the rpunc, then units again.  We do this to handle
+	 * expressions such as 12sqft. or 12lbs.  That is, we want to 
+	 * strip off the "lbs." with the dot, first, rather than stripping
+	 * the dot as puncutation.  But if we are NOT able to strip off
+	 * any units, then we try punctuation, and then units. This 
+	 * allows commas to be removed (e.g. 7grams,)
+	 */
+	if (starts_with_number)
+	{
+		*n_r_stripped = 0;
+		wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
+
+		/* If we stripped anything off, we are done. */
+		if (0 < *n_r_stripped) return wend;
+	}
+
 	rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
 	r_strippable = rpunc_list->length;
 	rpunc = rpunc_list->string;
 
-	unit_list = AFCLASS(afdict, AFDICT_UNITS);
-	u_strippable = unit_list->length;
-	unit = unit_list->string;
-
+	/* First, try to strip right-punctuation. Only later do we try
+	 * to strip units. The reason for this is that we can use regexes
+	 * to find a word in the dict when working with punctuation, but
+	 * we must not use regexes when strippng units. because the S-WORD
+	 * regex goofs up units. The HMS-TIME regex too ...
+	 */
 	for (nrs = 0; nrs < MAX_STRIP; nrs++)
 	{
 		size_t sz = temp_wend-w;
@@ -983,70 +1089,50 @@ static const char * strip_right(Sentence sent, const char * w,
 		word[sz] = '\0';
 		if (temp_wend == w) break;  /* It will work without this. */
 
-		/* Any remaining valid word, including numbers, but not
-		 * including regex's, stops the right stripping. */
+		/* Any remaining valid word, including numbers and
+		 * regex's, stops the right-punctuation stripping. */
 		if (find_word_in_dict(dict, word))
 		{
 			*word_is_in_dict = true;
-			lgdebug(2, "rpunct+unit strip to root word '%s'\n", word);
+			lgdebug(2, "rpunct strip to root word '%s'\n", word);
 			break;
 		}
 
-		for (i = 0; i < r_strippable+u_strippable; i++)
+		for (i = 0; i < r_strippable; i++)
 		{
-			const char * t = (i < r_strippable) ? rpunc[i] : unit[i-r_strippable];
+			const char * t = rpunc[i];
 			size_t len = strlen(t);
-
-			/* First try all right-strip characters, then try unit stripping */
-			if (i >= r_strippable)
-			{
-				/* Units must be preceeded by a number (? is this always true?
-				   shouldn't the grammar decide if the trip is OK or not? XXX) */
-				if (!starts_with_number) break;
-				/* A unit must be at word end or after a punctuation.
-				 * This check prevents separation of 12sqft. (but not 12sq.ft.)
-				 * (Huh?? Shouldn't the grammar decide if its valid!?  There 
-				 * may be multiple units to strip, right? */
-				if (previous_is_unit)
-				{
-					i = r_strippable+u_strippable; /* We are done */
-					break;
-				}
-			}
 
 			/* The remaining w is too short for a possible match */
 			if ((temp_wend-w) < (int)len) continue;
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "rpunct-unit strip: w='%s' unit '%s'\n", temp_wend-len, t);
-				if (i < r_strippable)
-				{
-					/* We have just stripped punctuation */
-					previous_is_unit = false;
-					*n_r_stripped = nrs;
-					wend = temp_wend;
-				}
-				else
-				{
-					previous_is_unit = true;
-				}
+				lgdebug(2, "rpunct strip: w='%s' unit '%s'\n", temp_wend-len, t);
+				*n_r_stripped = nrs;
+				wend = temp_wend;
 				r_stripped[nrs] = t;
 				temp_wend -= len;
 				break;
 			}
 		}
-		if (i == r_strippable+u_strippable) break;           /* Cannot strip */
-		if (i >= r_strippable && !starts_with_number) break; /* No number+unit */
+		/* If we tried them all, got nothing, then we're done */
+		if (i == r_strippable) break;
 	}
+	*n_r_stripped = nrs;
+	wend = temp_wend;
+
+	/* Units must be preceeded by a number (? is this always true?
+	 * shouldn't the grammar decide if the strip is OK or not? XXX) */
+	if (!starts_with_number)
+		return wend;
+
+	/* If we are here, then the expression starts with a number,
+	 * and we have poossibly removed some punctuation already.
+	 */
+	wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
 
 	lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n", w, *word_is_in_dict);
-	if (!previous_is_unit || starts_with_number)
-	{
-		*n_r_stripped = nrs;
-		wend = temp_wend;
-	}
-
 	return wend;
 }
 
