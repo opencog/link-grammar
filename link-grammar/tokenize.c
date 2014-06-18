@@ -956,6 +956,7 @@ static const char * strip_units(Sentence sent, const char * w,
 	const char * const * unit;
 	size_t u_strippable;
 	size_t nrs = 0, i = 0;
+	bool successful_strip = false;
 	const char * temp_wend = wend;
 	bool starts_with_number = is_utf8_digit(w);
 
@@ -971,16 +972,18 @@ static const char * strip_units(Sentence sent, const char * w,
 	 * right-punctuation! */
 	for (nrs = *n_r_stripped; nrs < MAX_STRIP; nrs++)
 	{
-		size_t sz = temp_wend-w;
 		if (temp_wend == w) break;  /* It will work without this. */
 
 		/* Any string ending with a number halts strippng. */
 		/* back up by one byte, since temp_wend is null byte. */
 		if (is_utf8_digit(temp_wend-1))
 		{
+			// word_is_in_dict might already be true ...
 			*word_is_in_dict = true;
+			successful_strip = true;
 			if (2 <= verbosity)
 			{
+				size_t sz = temp_wend-w;
 				char* word = alloca(sz+1);
 				strncpy(word, w, sz);
 				word[sz] = '\0';
@@ -999,7 +1002,7 @@ static const char * strip_units(Sentence sent, const char * w,
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "unit strip: w='%s' unit '%s'\n", temp_wend-len, t);
+				lgdebug(2, "candidate unit strip: w='%s' unit '%s'\n", temp_wend-len, t);
 				r_stripped[nrs] = t;
 				temp_wend -= len;
 				break;
@@ -1009,7 +1012,10 @@ static const char * strip_units(Sentence sent, const char * w,
 		if (i == u_strippable) break;
 	}
 
-	if (0 < nrs && *word_is_in_dict)
+	/* Need independent test, since word_is_in_dict might have been
+	 * previously true ... */
+	/* if (0 < nrs && *word_is_in_dict) */
+	if (0 < nrs && successful_strip)
 	{
 		*n_r_stripped = nrs;
 		wend = temp_wend;
@@ -1072,10 +1078,10 @@ static const char * strip_right(Sentence sent, const char * w,
 	if (starts_with_number)
 	{
 		*n_r_stripped = 0;
-		wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
+		temp_wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
 
 		/* If we stripped anything off, we are done. */
-		if (0 < *n_r_stripped) return wend;
+		if (0 < *n_r_stripped) return temp_wend;
 	}
 
 	rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
