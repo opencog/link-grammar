@@ -565,7 +565,7 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 				 * not boolean_dictionary_lookup(). */
 				if (find_word_in_dict(dict, newword))
 				{
-					word_can_split |= 
+					word_can_split |=
 						add_alternative_with_subscr(sent, NULL, newword, *suffix);
 				}
 			}
@@ -590,7 +590,7 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 				/* ??? Do we need a regex match? */
 				if (boolean_dictionary_lookup(dict, newword))
 				{
-					word_can_split |= 
+					word_can_split |=
 					 add_alternative_with_subscr(sent, prefix[j], newword, *suffix);
 				}
 			}
@@ -819,7 +819,7 @@ static bool guess_misspelled_word(Sentence sent, const char * word,
 		/* The word might be a run-on of two or more words. */
 		sp = strchr(alternates[j], ' ');
 		if (sp)
-		{	
+		{
 			/* Run-on words */
 			/* It may be 2 run-on words or more. Loop over all */
 			const char **runon_word = NULL;
@@ -973,7 +973,7 @@ static const char * strip_units(Sentence sent, const char * w,
 	{
 		size_t sz = temp_wend-w;
 		if (temp_wend == w) break;  /* It will work without this. */
-	
+
 		/* Any string ending with a number halts strippng. */
 		/* back up by one byte, since temp_wend is null byte. */
 		if (is_utf8_digit(temp_wend-1))
@@ -988,12 +988,12 @@ static const char * strip_units(Sentence sent, const char * w,
 			}
 			break;
 		}
-	
+
 		for (i = 0; i < u_strippable; i++)
 		{
 			const char * t = unit[i];
 			size_t len = strlen(t);
-	
+
 			/* The remaining w is too short for a possible match */
 			if ((temp_wend-w) < (int)len) continue;
 
@@ -1059,10 +1059,10 @@ static const char * strip_right(Sentence sent, const char * w,
 	nrs = 0;
 
 	/* Try units, the rpunc, then units again.  We do this to handle
-	 * expressions such as 12sqft. or 12lbs.  That is, we want to 
+	 * expressions such as 12sqft. or 12lbs.  That is, we want to
 	 * strip off the "lbs." with the dot, first, rather than stripping
 	 * the dot as puncutation.  But if we are NOT able to strip off
-	 * any units, then we try punctuation, and then units. This 
+	 * any units, then we try punctuation, and then units. This
 	 * allows commas to be removed (e.g. 7grams,)
 	 */
 	if (starts_with_number)
@@ -1185,7 +1185,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	/* First, see if we can already recognize the word as-is,
 	 * as a dictionary word, but not as a regex match. If so,
-	 * then we are mostly done(*). If not found, we'll try 
+	 * then we are mostly done(*). If not found, we'll try
 	 * stripping left and right punctutation, and units.
 	 * We don't want to do regex matching yet, because the
 	 * S-WORDS regex prevents striping units that end in 's',
@@ -1541,7 +1541,7 @@ static void mark_x_node_words(Sentence sent, X_node * head, char const * mark)
 		max_len = MAX(max_len, strlen(d->string));
 
 	str = alloca(max_len + strlen(mark) + 1);   /* 1 for NUL */
- 
+
 	for (d = head; d != NULL; d = d->next)
 	{
 		char const * sm = strrchr(d->string, SUBSCRIPT_MARK);
@@ -1593,7 +1593,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 			const char * regex_name;
 			const char * spell_mark;
 			char word[MAX_WORD+1];
-			
+
 			const char * regex_mark;
 			const char * regex_it = s;
 
