@@ -1041,6 +1041,24 @@ static const char * strip_units(Sentence sent, const char * w,
  * first, "ft." is stripped, then "sq." is stripped, then "12" is found
  * in the dict.
  *
+ * This code is incredibly delicate and fragile. For example, it needs
+ * to parse "November 17th, 1771" with the comma stripped, the 17th 
+ * matched by a regex, but not get a units split for h, i.e. not get 
+ * the "17t h" split where h==hours-unit.
+ *
+ * It must also parse "7grams," with the comma split, the s in grams
+ * NOT matched by S-WORD regex.
+ *
+ * Also, 7am must split, even though there's a regex that matches 
+ * this (the HMS-TIME regex).
+ *
+ * Basically, don't fuck with this code, unless you run the full
+ * set of units sentences in 4.0.fixes.batch.
+ *
+ * Perhaps someday, improved morphology handling will render this code
+ * obsolete. But don't your breath: the interplay between morphology
+ * and regex is also quite nasty.
+ *
  * w points to the string starting just to the right of any left-stripped
  * characters.
  * n_r_stripped is the index of the r_stripped array, consisting of strings
@@ -1132,22 +1150,24 @@ static const char * strip_right(Sentence sent, const char * w,
 		/* If we tried them all, got nothing, then we're done */
 		if (i == r_strippable) break;
 	}
-	*n_r_stripped = nrs;
 
 	/* Units must be preceeded by a number (? is this always true?
 	 * shouldn't the grammar decide if the strip is OK or not? XXX) */
 	if (!starts_with_number)
+	{
+		*n_r_stripped = nrs;
 		return temp_wend;
+	}
 
 	/* If we are here, then the expression starts with a number,
 	 * and we have poossibly removed some punctuation already.
 	 */
+	*n_r_stripped = nrs;
 	temp_wend = strip_units(sent, w, temp_wend, r_stripped, n_r_stripped, word_is_in_dict);
 
 	lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n", w, *word_is_in_dict);
 	if (*word_is_in_dict)
 	{
-		*n_r_stripped = nrs;
 		wend = temp_wend;
 	}
 	return wend;
