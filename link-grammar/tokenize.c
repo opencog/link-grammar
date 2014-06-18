@@ -983,7 +983,8 @@ static const char * strip_right(Sentence sent, const char * w,
 		word[sz] = '\0';
 		if (temp_wend == w) break;  /* It will work without this. */
 
-		/* Any remaining valid word, including numbers, stops the right stripping. */
+		/* Any remaining valid word, including numbers, but not
+		 * including regex's, stops the right stripping. */
 		if (find_word_in_dict(dict, word))
 		{
 			*word_is_in_dict = true;
@@ -1093,19 +1094,28 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	strncpy(word, w, sz);
 	word[sz] = '\0';
 
-	/* First, see if we can already recognize the word as-is (a dictionary
-	 * word or a regex match). If so, then we are mostly done(*). Else
-	 * we'll try stripping prefixes, suffixes.
+	/* First, see if we can already recognize the word as-is,
+	 * as a dictionary word, but not as a regex match. If so,
+	 * then we are mostly done(*). If not found, we'll try 
+	 * stripping left and right punctutation, and units.
+	 * We don't want to do regex matching yet, because the
+	 * S-WORDS regex prevents striping units that end in 's',
+	 * while the HMS-time regex halts separation of 7am into
+	 * two.
 	 *
-	 * (*)... unless the word can split or we need to handle captalization
-	 * We check that later. */
-	word_is_in_dict = find_word_in_dict(dict, word);
-	lgdebug(+2, "Initial check: word='%s' find_word_in_dict=%d\n",
+	 * XXX TODO: perhaps postive regex matches should be treated
+	 * as alternaitves?
+	 *
+	 * (*)... unless the word can split or we need to handle
+	 * captalization. We check that later.
+	 */
+	word_is_in_dict = boolean_dictionary_lookup(dict, word);
+	lgdebug(+2, "Initial check: word='%s' boolean_dictionary_lookup=%d\n",
 	        word, word_is_in_dict);
 
-
-	/* Strip punctuation from candidate word, using a linear splitting
-	 * algorithm. FIXME: Handle punctuation strip as alternatives. */
+	/* Strip punctuation, units from candidate word, using
+	 * a linear splitting algorithm. FIXME: Handle punctuation
+	 * strip as alternatives. */
 	if (!word_is_in_dict)
 	{
 		/* Strip off punctuation, etc. on the left-hand side. */
