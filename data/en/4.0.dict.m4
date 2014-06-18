@@ -6389,7 +6389,7 @@ mile.n:
 a_long_way: Yd+;
 point.i percentage_point:
 (NS- or NIe-) & {NJ-} & (Yd+ or OD-);
-points.u percentage_points: ND- & (Yd+ or MVp-);
+points.i percentage_points: ND- & (Yd+ or MVp-);
 
 dollars.i cents.i:  NIn- & (EC+ or Yd+ or OD-);
 1_dollar one_dollar a_dollar 1_cent

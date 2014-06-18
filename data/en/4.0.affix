@@ -34,13 +34,10 @@
 % spaces in between the various symbols!!
 "()¿¡†‡§¶©®℗№#*•⁂❧☞◊※○。゜✿☆＊◕●∇□◇＠◎–━ー---‧": BULLETS+;
 
-% Order matters!  units.5 has AM, PM in it.  units.1 has naked M in it
-% If we split M first, then A, P are not found. So split AM, PM first...
-% But am screws up gram ... argh ...
-/en/words/units.5: UNITS+;
 /en/words/units.1: UNITS+;
 /en/words/units.1.dot: UNITS+;
 /en/words/units.3: UNITS+;
 /en/words/units.4: UNITS+;
 /en/words/units.4.dot: UNITS+;
+/en/words/units.5: UNITS+;
 
