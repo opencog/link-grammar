@@ -1009,8 +1009,12 @@ static const char * strip_units(Sentence sent, const char * w,
 		if (i == u_strippable) break;
 	}
 
-	*n_r_stripped = nrs;
-	return temp_wend;
+	if (0 < nrs && *word_is_in_dict)
+	{
+		*n_r_stripped = nrs;
+		wend = temp_wend;
+	}
+	return wend;
 }
 
 /**
@@ -1123,19 +1127,23 @@ static const char * strip_right(Sentence sent, const char * w,
 		if (i == r_strippable) break;
 	}
 	*n_r_stripped = nrs;
-	wend = temp_wend;
 
 	/* Units must be preceeded by a number (? is this always true?
 	 * shouldn't the grammar decide if the strip is OK or not? XXX) */
 	if (!starts_with_number)
-		return wend;
+		return temp_wend;
 
 	/* If we are here, then the expression starts with a number,
 	 * and we have poossibly removed some punctuation already.
 	 */
-	wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
+	temp_wend = strip_units(sent, w, temp_wend, r_stripped, n_r_stripped, word_is_in_dict);
 
 	lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n", w, *word_is_in_dict);
+	if (*word_is_in_dict)
+	{
+		*n_r_stripped = nrs;
+		wend = temp_wend;
+	}
 	return wend;
 }
 
