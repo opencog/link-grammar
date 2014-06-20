@@ -7739,7 +7739,7 @@ worst.a-s longest.a-s fastest.a-s furthest.a-s farthest.a-s slowest.a-s:
   AJrs- or AJls+;
 
 % "he likes you best of all" has no determiner, just uses MVa-.
-best.a-s:
+best.a-s personal_best:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
   ({NR- or ND-} & DD- & ((<noun-sub-x> & {<ton-verb>} & <noun-main-x>) or (MVa- & {Mp+}))) or
   [[E+]] or
