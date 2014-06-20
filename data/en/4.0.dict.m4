@@ -3720,7 +3720,11 @@ bear.v:
   (<verb-pl> & <vc-bear>);
 bears.v: VERB_S_T(<vc-bear>);
 bore.v-d: VERB_SPPP_T(<vc-bear>);
-born.v: VERB_PP(<vc-bear>) or <verb-pv> or <verb-phrase-opener>;
+born.v:
+  VERB_PP(<vc-bear>)
+  or <verb-pv>
+  or <verb-phrase-opener>;
+
 bearing.g: (<vc-bear> & <verb-ge>) or <verb-ge-d>;
 bearing.v: <verb-pg> & <vc-bear>;
 
@@ -6242,6 +6246,7 @@ Monday Tuesday Wednesday Thursday Friday Saturday Sunday.i:
 morning.i afternoon.i night.i evening.i:
   TD-;
 
+% (ND- & TY+ & MVp-): "John (born 20 December 1975) is clever"
 January.i February March April.i May.i June.i
 July August.i September.i October November December:
   ((DTn- or DTie- or ({TA-} & {TY+})) &
@@ -6257,6 +6262,7 @@ July August.i September.i October November December:
     or ON-
     or JT-
     or [[<noun-main-s> or MVp- or Mp- or AN+]]))
+  or (ND- & TY+ & MVp-)
   or AN+
   or Wa-;
 

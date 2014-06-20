@@ -4382,10 +4382,14 @@ bore.v-d:
   (<verb-and-sp-i-> & ((<vc-bear>) or ())) or
   ((<vc-bear>) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>;
-born.v: 
+born.v:
+  
   ((<verb-pp> & (<vc-bear>)) or
   (<verb-and-had-> & (([<vc-bear>]) or ())) or
-  ((<vc-bear>) & <verb-and-had+>)) or <verb-pv> or <verb-phrase-opener>;
+  ((<vc-bear>) & <verb-and-had+>))
+  or <verb-pv>
+  or <verb-phrase-opener>;
+
 bearing.g: (<vc-bear> & <verb-ge>) or <verb-ge-d>;
 bearing.v: <verb-pg> & <vc-bear>;
 
@@ -8145,6 +8149,7 @@ Monday Tuesday Wednesday Thursday Friday Saturday Sunday.i:
 morning.i afternoon.i night.i evening.i:
   TD-;
 
+% (ND- & TY+ & MVp-): "John (born 20 December 1975) is clever"
 January.i February March April.i May.i June.i
 July August.i September.i October November December:
   ((DTn- or DTie- or ({TA-} & {TY+})) &
@@ -8160,6 +8165,7 @@ July August.i September.i October November December:
     or ON-
     or JT-
     or [[<noun-main-s> or MVp- or Mp- or AN+]]))
+  or (ND- & TY+ & MVp-)
   or AN+
   or Wa-;
 
