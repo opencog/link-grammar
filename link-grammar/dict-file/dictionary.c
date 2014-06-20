@@ -234,7 +234,7 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 		return false;
 	}
 
-	/* Store the wide char version at the AFDICT_QUOTES entry. */ 
+	/* Store the wide char version at the AFCLASS entry. */ 
 	ac->string = xrealloc((void *)ac->string, ac->mem_elems,
 	             sizeof(*wqs) * (w+1));
 	ac->mem_elems =  sizeof(*wqs) * (w+1);
@@ -357,7 +357,7 @@ static bool afdict_init(Dictionary dict)
 	{
 		/* Longer subwords have priority over shorter ones,
 		 * reverse-sort by length.
-		 * XXX mprefix_suffix() for Hebrew depends on that. */
+		 * XXX mprefix_split() for Hebrew depends on that. */
 		qsort(ac->string, ac->length, sizeof(char *), revcmplen);
 	}
 #endif /* AFDICT_ORDER_NOT_PRESERVED */
@@ -375,7 +375,7 @@ static void free_llist(Dictionary dict, Dict_node *llist)
 
 /**
  * Dummy lookup function for the affix dictionary -
- * compile_regexs() needs needs it.
+ * compile_regexs() needs it.
  */
 static bool return_true(Dictionary dict, const char *name)
 {
@@ -604,7 +604,7 @@ Dictionary dictionary_create_from_file(const char * lang)
 /**
  * Use "string" as the input dictionary. All of the other parts,
  * including post-processing, affix table, etc, are NULL.
- * This routine is itended for unit-testing ONLY.
+ * This routine is intended for unit-testing ONLY.
  */
 Dictionary dictionary_create_from_utf8(const char * input)
 {

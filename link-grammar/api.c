@@ -991,7 +991,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		const char * unsplit = NULL;     /* unsplit word */
 		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
 		char * affix_types_p = affix_types;
-		bool match_found = false;     /* djw matched a morpheme */
+		bool match_found = false;        /* djw matched a morpheme */
 		int matched_alts[MAX_SENTENCE];  /* number of morphemes that have matched
 		                                  * the chosen disjuncts for the
 		                                  * unsplit_word, so far (index: ai) */
@@ -1029,8 +1029,8 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				 * FIXME: allocate matched_alts[] dynamically. */
 				if (numalt > MAX_SENTENCE)
 				{
-					prt_error("Error: sane_morphism(): word %zd: "
-					          "numalt %zd>MAX_SENTENCE(%d), all linkages skipped\n",
+					prt_error("Error: sane_morphism(): word %zu: "
+					          "numalt %zu>MAX_SENTENCE(%d), all linkages skipped\n",
 								 i, numalt, MAX_SENTENCE);
 					match_found = false;
 					break;
@@ -1040,7 +1040,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				for (ai = 0; ai < numalt; ai++)
 				{
 					matched_alts[ai] = 0;
-					lgdebug(4, " %zd:%s", ai, sent->word[i].alternatives[ai]);
+					lgdebug(4, " %zu:%s", ai, sent->word[i].alternatives[ai]);
 				}
 				lgdebug(4, "\n");
 			}
