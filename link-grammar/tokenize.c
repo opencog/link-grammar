@@ -1056,7 +1056,12 @@ static const char * strip_units(Sentence sent, const char * w,
  * Also, 7am must split, even though there's a regex that matches
  * this (the HMS-TIME regex).
  *
- *Also, we have to split "mL/s," into "mL / s ," with no number.
+ * Also, we have to split "mL/s," into "mL / s ," with no number.
+ *
+ * However, do NOT strip "sin." into "s in." (seconds, inches)
+ * or "mold." into "mol d ." (chemistry mol, dioptre)
+ * or "call." int "cal l ." (calorie litre)
+ * Here, the period means that "sin." is not in the dict.
  *
  * Basically, don't fuck with this code, unless you run the full
  * set of units sentences in 4.0.fixes.batch.
@@ -1101,12 +1106,61 @@ static const char * strip_right(Sentence sent, const char *w,
 	if (NULL == afdict) return (wend);
 	nrs = 0;
 
-	/* Try units, the rpunc, then units again.  We do this to handle
-	 * expressions such as 12sqft. or 12lbs.  That is, we want to
-	 * strip off the "lbs." with the dot, first, rather than stripping
-	 * the dot as puncutation.  But if we are NOT able to strip off
-	 * any units, then we try punctuation, and then units. This
-	 * allows commas to be removed (e.g. 7grams,)
+	rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
+	r_strippable = rpunc_list->length;
+	rpunc = rpunc_list->string;
+
+	/* Step 1: First, try to strip off a single punctuation
+	 * typically a comma or period, and see if the resulting
+	 * word is in the dict (but not the  regex). This allows
+	 * "sin." and "call." to be recognized. If we don't do
+	 * this now, then the next stage will split "sin." into
+	 * seconds-inches, and "call." into calories-liters.
+	 */
+	for (i = 0; i < r_strippable; i++)
+	{
+		const char * t = rpunc[i];
+		size_t len = strlen(t);
+
+		/* The remaining w is too short for a possible match */
+		if ((temp_wend-w) < (int)len) continue;
+
+		if (strncmp(temp_wend-len, t, len) == 0)
+		{
+			lgdebug(2, "prelim rpunct strip: w='%s' punct '%s'\n", temp_wend-len, t);
+			*n_r_stripped = nrs;
+			wend = temp_wend;
+			r_stripped[nrs] = t;
+			temp_wend -= len;
+			break;
+		}
+	}
+
+	/* If we got one, see if the resulting word is in dict
+	 * (but not regex). If it is, we are done. */
+	if (i < r_strippable)
+	{
+		size_t sz = temp_wend-w;
+		char* word = alloca(sz+1);
+		strncpy(word, w, sz);
+		word[sz] = '\0';
+
+		/* If its in the ordinary dict (not regex) we are done. */
+		if (boolean_dictionary_lookup(dict, word))
+		{
+			*n_r_stripped = 1;
+			return temp_wend;
+		}
+	}
+
+	/* Next step: Try units, then rpunc, then units again.  We do this
+	 * to handle expressions such as 12sqft. or 12lbs. (notice the
+	 * period at end). That is, we want to strip off the "lbs." with
+	 * the dot, first, rather than stripping the dot as puncutation,
+	 * and then coming up empty-handed for "sq.ft" (without the dot)
+	 * in the dict.  But if we are NOT able to strip off any units,
+	 * then we try punctuation, and then units. This allows commas to
+	 * be removed (e.g. 7grams,)
 	 */
 	*units_wend = temp_wend; /* Potential end of units */
 	*n_r_stripped = 0;
@@ -1122,11 +1176,7 @@ static const char * strip_right(Sentence sent, const char *w,
 	}
 	/* No units found */
 	*units_wend = NULL;
-   *n_r_units = 0;
-
-	rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
-	r_strippable = rpunc_list->length;
-	rpunc = rpunc_list->string;
+	*n_r_units = 0;
 
 	/* First, try to strip right-punctuation. Only later do we try
 	 * to strip units. The reason for this is that we can use regexes
@@ -1161,7 +1211,7 @@ static const char * strip_right(Sentence sent, const char *w,
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "rpunct strip: w='%s' unit '%s'\n", temp_wend-len, t);
+				lgdebug(2, "rpunct strip: w='%s' punct '%s'\n", temp_wend-len, t);
 				*n_r_stripped = nrs;
 				wend = temp_wend;
 				r_stripped[nrs] = t;
@@ -1310,7 +1360,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			}
 
 			/* But if the original word matches a regex, don't miss it -
-			 * issue it as an alternative (later on) */ 
+			 * issue it as an alternative (later on) */
 		}
 	}
 
