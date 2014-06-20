@@ -8153,7 +8153,7 @@ July August.i September.i October November December:
     or YS+
     or IN-
     or [<noun-and-s>]
-    or [[<noun-main-s>]]))
+    or [[{ND-} & <noun-main-s>]]))
   or ((DTn- or DTie-) & <prep-main-t>)
   or (TM+ & {TY+} &
     ((Xd- & Xc+ & TW-)
