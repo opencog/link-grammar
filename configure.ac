@@ -268,11 +268,9 @@ AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 # recommend that user install MacPorts http://www.macports.org/
 if test "x${SQLiteFound}" = "xyes"; then
  	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
-	if test "x${SQLiteFound}" = "xyes"; then
-		AC_SUBST(SQLITE3_LIBS)
-		AC_SUBST(SQLITE3_CFLAGS)
-	fi
 fi
+AC_SUBST(SQLITE3_LIBS)
+AC_SUBST(SQLITE3_CFLAGS)
 
 dnl Set Default Spell Checker settings
 
