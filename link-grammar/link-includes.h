@@ -197,6 +197,7 @@ link_public_api(int)
  ***********************************************************************/
 
 typedef struct Sentence_s * Sentence;
+typedef size_t LinkageNum;
 
 link_public_api(Sentence)
      sentence_create(const char *input_string, Dictionary dict);
@@ -217,11 +218,11 @@ link_public_api(int)
 link_public_api(int)
      sentence_num_linkages_post_processed(Sentence sent);
 link_public_api(int)
-     sentence_num_violations(Sentence sent, int linkage_num);
+     sentence_num_violations(Sentence sent, LinkageNum linkage_num);
 link_public_api(double)
-     sentence_disjunct_cost(Sentence sent, int linkage_num);
+     sentence_disjunct_cost(Sentence sent, LinkageNum linkage_num);
 link_public_api(int)
-     sentence_link_cost(Sentence sent, int linkage_num);
+     sentence_link_cost(Sentence sent, LinkageNum linkage_num);
 
 /**********************************************************************
  *
@@ -437,7 +438,7 @@ MS_DEPRECATED link_public_api(int)
 
 /* and cost is always zero without fat links */
 MS_DEPRECATED link_public_api(int)
-     sentence_and_cost(Sentence sent, int i) GNUC_DEPRECATED;
+     sentence_and_cost(Sentence sent, LinkageNum i) GNUC_DEPRECATED;
 
 /* Fat linkages will be going away "real soon now" */
 MS_DEPRECATED link_public_api(void)
