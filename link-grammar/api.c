@@ -886,7 +886,7 @@ int sentence_num_linkages_post_processed(Sentence sent)
 	return sent->num_linkages_post_processed;
 }
 
-int sentence_num_violations(Sentence sent, LinkageNum i)
+int sentence_num_violations(Sentence sent, LinkageIdx i)
 {
 	if (!sent) return 0;
 
@@ -896,7 +896,7 @@ int sentence_num_violations(Sentence sent, LinkageNum i)
 	return sent->link_info[i].N_violations;
 }
 
-int sentence_and_cost(Sentence sent, LinkageNum i) {
+int sentence_and_cost(Sentence sent, LinkageIdx i) {
 #ifdef USE_FAT_LINKAGES
 	if (!sent) return 0;
 
@@ -909,7 +909,7 @@ int sentence_and_cost(Sentence sent, LinkageNum i) {
 #endif /* USE_FAT_LINKAGES */
 }
 
-double sentence_disjunct_cost(Sentence sent, LinkageNum i)
+double sentence_disjunct_cost(Sentence sent, LinkageIdx i)
 {
 	if (!sent) return 0.0;
 
@@ -919,7 +919,7 @@ double sentence_disjunct_cost(Sentence sent, LinkageNum i)
 	return sent->link_info[i].disjunct_cost;
 }
 
-int sentence_link_cost(Sentence sent, LinkageNum i)
+int sentence_link_cost(Sentence sent, LinkageIdx i)
 {
 	if (!sent) return 0;
 

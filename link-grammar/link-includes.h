@@ -197,7 +197,7 @@ link_public_api(int)
  ***********************************************************************/
 
 typedef struct Sentence_s * Sentence;
-typedef size_t LinkageNum;
+typedef size_t LinkageIdx;
 
 link_public_api(Sentence)
      sentence_create(const char *input_string, Dictionary dict);
@@ -218,11 +218,11 @@ link_public_api(int)
 link_public_api(int)
      sentence_num_linkages_post_processed(Sentence sent);
 link_public_api(int)
-     sentence_num_violations(Sentence sent, LinkageNum linkage_num);
+     sentence_num_violations(Sentence sent, LinkageIdx linkage_num);
 link_public_api(double)
-     sentence_disjunct_cost(Sentence sent, LinkageNum linkage_num);
+     sentence_disjunct_cost(Sentence sent, LinkageIdx linkage_num);
 link_public_api(int)
-     sentence_link_cost(Sentence sent, LinkageNum linkage_num);
+     sentence_link_cost(Sentence sent, LinkageIdx linkage_num);
 
 /**********************************************************************
  *
@@ -235,7 +235,7 @@ link_public_api(int)
  ***********************************************************************/
 
 typedef struct Linkage_s * Linkage;
-typedef size_t WordNum;
+typedef size_t WordIdx;
 
 link_public_api(Linkage)
      linkage_create(size_t index, Sentence sent, Parse_Options opts);
@@ -266,13 +266,13 @@ link_public_api(const char **)
 link_public_api(const char **)
      linkage_get_words(const Linkage linkage);
 link_public_api(const char *)
-     linkage_get_disjunct_str(const Linkage linkage, WordNum word_num);
+     linkage_get_disjunct_str(const Linkage linkage, WordIdx word_num);
 link_public_api(double)
-     linkage_get_disjunct_cost(const Linkage linkage, WordNum word_num);
+     linkage_get_disjunct_cost(const Linkage linkage, WordIdx word_num);
 link_public_api(double)
-     linkage_get_disjunct_corpus_score(const Linkage linkage, WordNum word_num);
+     linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx word_num);
 link_public_api(const char *)
-     linkage_get_word(const Linkage linkage, WordNum word_num);
+     linkage_get_word(const Linkage linkage, WordIdx word_num);
 link_public_api(char *)
      linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 link_public_api(void)
@@ -438,7 +438,7 @@ MS_DEPRECATED link_public_api(int)
 
 /* and cost is always zero without fat links */
 MS_DEPRECATED link_public_api(int)
-     sentence_and_cost(Sentence sent, LinkageNum i) GNUC_DEPRECATED;
+     sentence_and_cost(Sentence sent, LinkageIdx i) GNUC_DEPRECATED;
 
 /* Fat linkages will be going away "real soon now" */
 MS_DEPRECATED link_public_api(void)

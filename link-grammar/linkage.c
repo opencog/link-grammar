@@ -713,7 +713,7 @@ Sentence linkage_get_sentence(const Linkage linkage)
 	return linkage->sent;
 }
 
-const char * linkage_get_disjunct_str(const Linkage linkage, WordNum w)
+const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 {
 	Disjunct *dj;
 
@@ -733,7 +733,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordNum w)
 	return linkage->info->disjunct_list_str[w];
 }
 
-double linkage_get_disjunct_cost(const Linkage linkage, WordNum w)
+double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
 {
 	Disjunct *dj;
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
@@ -746,7 +746,7 @@ double linkage_get_disjunct_cost(const Linkage linkage, WordNum w)
 	return 0.0;
 }
 
-double linkage_get_disjunct_corpus_score(const Linkage linkage, WordNum w)
+double linkage_get_disjunct_corpus_score(const Linkage linkage, WordIdx w)
 {
 	Disjunct *dj;
 
@@ -760,7 +760,7 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, WordNum w)
 	return lg_corpus_disjunct_score(linkage, w);
 }
 
-const char * linkage_get_word(const Linkage linkage, WordNum w)
+const char * linkage_get_word(const Linkage linkage, WordIdx w)
 {
 	if (!linkage) return NULL;
 	if (linkage->num_words <= w) return NULL; /* bounds-check */
