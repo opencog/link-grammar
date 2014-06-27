@@ -713,7 +713,7 @@ Sentence linkage_get_sentence(const Linkage linkage)
 	return linkage->sent;
 }
 
-const char * linkage_get_disjunct_str(const Linkage linkage, int w)
+const char * linkage_get_disjunct_str(const Linkage linkage, size_t w)
 {
 	Disjunct *dj;
 
@@ -723,6 +723,9 @@ const char * linkage_get_disjunct_str(const Linkage linkage, int w)
 		lg_compute_disjunct_strings(linkage->sent, linkage->info);
 	}
 
+	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
+	if (linkage->num_words <= w) return NULL; /* bounds-check */
+
 	/* dj will be null if the word wasn't used in the parse. */
 	dj = linkage->sent->parse_info->chosen_disjuncts[w];
 	if (NULL == dj) return "";
@@ -730,17 +733,23 @@ const char * linkage_get_disjunct_str(const Linkage linkage, int w)
 	return linkage->info->disjunct_list_str[w];
 }
 
-double linkage_get_disjunct_cost(const Linkage linkage, int w)
+double linkage_get_disjunct_cost(const Linkage linkage, size_t w)
 {
-	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	Disjunct *dj;
+	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
+	if (linkage->num_words <= w) return 0.0; /* bounds-check */
+
+	dj = linkage->sent->parse_info->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
 	if (dj) return dj->cost;
 	return 0.0;
 }
 
-double linkage_get_disjunct_corpus_score(const Linkage linkage, int w)
+double linkage_get_disjunct_corpus_score(const Linkage linkage, size_t w)
 {
+	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
+	if (linkage->num_words <= w) return NULL; /* bounds-check */
 	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
@@ -749,9 +758,10 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, int w)
 	return lg_corpus_disjunct_score(linkage, w);
 }
 
-const char * linkage_get_word(const Linkage linkage, int w)
+const char * linkage_get_word(const Linkage linkage, size_t w)
 {
 	if (!linkage) return NULL;
+	if ((w<0) || (linkage->num_words <= w)) return NULL; /* bounds-check */
 	return linkage->word[w];
 }
 
