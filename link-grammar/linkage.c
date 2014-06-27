@@ -713,7 +713,7 @@ Sentence linkage_get_sentence(const Linkage linkage)
 	return linkage->sent;
 }
 
-const char * linkage_get_disjunct_str(const Linkage linkage, size_t w)
+const char * linkage_get_disjunct_str(const Linkage linkage, WordNum w)
 {
 	Disjunct *dj;
 
@@ -733,7 +733,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, size_t w)
 	return linkage->info->disjunct_list_str[w];
 }
 
-double linkage_get_disjunct_cost(const Linkage linkage, size_t w)
+double linkage_get_disjunct_cost(const Linkage linkage, WordNum w)
 {
 	Disjunct *dj;
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
@@ -746,11 +746,13 @@ double linkage_get_disjunct_cost(const Linkage linkage, size_t w)
 	return 0.0;
 }
 
-double linkage_get_disjunct_corpus_score(const Linkage linkage, size_t w)
+double linkage_get_disjunct_corpus_score(const Linkage linkage, WordNum w)
 {
+	Disjunct *dj;
+
 	/* XXX FIXME in the future, linkage->num_words might not match sent->length */
-	if (linkage->num_words <= w) return NULL; /* bounds-check */
-	Disjunct *dj = linkage->sent->parse_info->chosen_disjuncts[w];
+	if (linkage->num_words <= w) return 99.999; /* bounds-check */
+	dj = linkage->sent->parse_info->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
 	if (NULL == dj) return 99.999;
@@ -758,10 +760,10 @@ double linkage_get_disjunct_corpus_score(const Linkage linkage, size_t w)
 	return lg_corpus_disjunct_score(linkage, w);
 }
 
-const char * linkage_get_word(const Linkage linkage, size_t w)
+const char * linkage_get_word(const Linkage linkage, WordNum w)
 {
 	if (!linkage) return NULL;
-	if ((w<0) || (linkage->num_words <= w)) return NULL; /* bounds-check */
+	if (linkage->num_words <= w) return NULL; /* bounds-check */
 	return linkage->word[w];
 }
 

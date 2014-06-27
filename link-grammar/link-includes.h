@@ -234,6 +234,7 @@ link_public_api(int)
  ***********************************************************************/
 
 typedef struct Linkage_s * Linkage;
+typedef size_t WordNum;
 
 link_public_api(Linkage)
      linkage_create(size_t index, Sentence sent, Parse_Options opts);
@@ -264,13 +265,13 @@ link_public_api(const char **)
 link_public_api(const char **)
      linkage_get_words(const Linkage linkage);
 link_public_api(const char *)
-     linkage_get_disjunct_str(const Linkage linkage, size_t word_num);
+     linkage_get_disjunct_str(const Linkage linkage, WordNum word_num);
 link_public_api(double)
-     linkage_get_disjunct_cost(const Linkage linkage, size_t word_num);
+     linkage_get_disjunct_cost(const Linkage linkage, WordNum word_num);
 link_public_api(double)
-     linkage_get_disjunct_corpus_score(const Linkage linkage, size_t word_num);
+     linkage_get_disjunct_corpus_score(const Linkage linkage, WordNum word_num);
 link_public_api(const char *)
-     linkage_get_word(const Linkage linkage, size_t word_num);
+     linkage_get_word(const Linkage linkage, WordNum word_num);
 link_public_api(char *)
      linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle mode);
 link_public_api(void)
