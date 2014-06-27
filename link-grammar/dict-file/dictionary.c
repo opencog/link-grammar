@@ -216,6 +216,8 @@ static bool afdict_to_wide(Dictionary afdict, int classno)
 	const char *pqs;
 
 	ac = AFCLASS(afdict, classno);
+	if (0 == ac->length) return true;
+
 	qs = dyn_str_new();
 	for (i = 0; i < ac->length; i++)
 		dyn_strcat(qs, ac->string[i]);
@@ -278,6 +280,7 @@ static bool afdict_init(Dictionary dict)
 		xfree((void *)ac->string, ac->mem_elems);
 		ac->length = 0;
 		ac->mem_elems = 0;
+		ac->string = NULL;
 	}
 	/* XXX For now there is a possibility to use predefined SUF and PRE lists.
 	 * So if SUF or PRE are defined, don't extract any of them from the dict. */
@@ -333,7 +336,7 @@ static bool afdict_init(Dictionary dict)
 			prt_error("Error: afdict_init: Failed to compile "
 			          "regex '%s' in file %s, return code %d\n",
 			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name, rc);
-			return FALSE;
+			return false;
 		}
 		lgdebug(+5, "%s regex %s\n",
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
@@ -379,7 +382,7 @@ static void free_llist(Dictionary dict, Dict_node *llist)
  */
 static bool return_true(Dictionary dict, const char *name)
 {
-	return TRUE;
+	return true;
 }
 
 static Dictionary
@@ -405,7 +408,7 @@ dictionary_six_str(const char * lang,
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	dict->num_entries = 0;
-	dict->is_special = FALSE;
+	dict->is_special = false;
 	dict->already_got_it = '\0';
 	dict->line_number = 0;
 	dict->root = NULL;
@@ -413,7 +416,7 @@ dictionary_six_str(const char * lang,
 	dict->word_file_header = NULL;
 	dict->exp_list = NULL;
 	dict->affix_table = NULL;
-	dict->recursive_error = FALSE;
+	dict->recursive_error = false;
 	dict->version = NULL;
 #ifdef HAVE_SQLITE
 	dict->db_handle = NULL;
@@ -511,7 +514,7 @@ dictionary_six_str(const char * lang,
 	dict->constituent_pp  = post_process_open(cons_name);
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
-	dict->use_unknown_word = TRUE;
+	dict->use_unknown_word = true;
 
 #ifdef USE_FAT_LINKAGES
 	dict_node = dictionary_lookup_list(dict, ANDABLE_CONNECTORS_WORD);
