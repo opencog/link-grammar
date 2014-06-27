@@ -444,7 +444,7 @@ apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *ru
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[i]->lw == SIZE_MAX) continue;
 #else
-		assert (sublinkage->link[i]->lw != SIZE_MAX);
+		assert(sublinkage->link[i]->lw != SIZE_MAX);
 #endif
 		if (post_process_match(rule->selector,sublinkage->link[i]->link_name)) break;
 	}
@@ -456,7 +456,7 @@ apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *ru
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[j]->lw == SIZE_MAX) continue;
 #else
-		assert (sublinkage->link[j]->lw != SIZE_MAX);
+		assert(sublinkage->link[j]->lw != SIZE_MAX);
 #endif
 		if (string_in_list(sublinkage->link[j]->link_name, rule->link_array))
 		{
@@ -476,34 +476,12 @@ apply_connected(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 	return true;
 }
 
-#if 0
-/* replaced in 3/98 with a slightly different algorithm shown below	---DS*/
-static int
-apply_connected_without(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
-{
-	/* Returns true if the linkage is connected when ignoring the links
-		 whose names are in the given list of link names.
-		 Actually, what it does is this: it returns FALSE if the connectivity
-		 of the subgraph reachable from word 0 changes as a result of deleting
-		 these links. */
-	int i;
-	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
-	mark_reachable_words(pp, 0);
-	for (i=0; i<pp->pp_data.length; i++)
-		pp->visited[i] = !pp->visited[i];
-	connectivity_dfs(pp, sublinkage, 0, rule->link_set);
-	for (i=0; i<pp->pp_data.length; i++)
-		if (pp->visited[i] == FALSE) return FALSE;
-	return TRUE;
-}
-#else
-
-/* Here's the new algorithm: For each link in the linkage that is in the
-	 must_form_a_cycle list, we want to make sure that that link
-	 is in a cycle.	We do this simply by deleting the link, then seeing if the
-	 end points of that link are still connected.
-*/
-
+/**
+ * For each link in the linkage that is in the must_form_a_cycle list,
+ * we want to make sure that that link is in a cycle.  We do this
+ * simply by deleting the link, then seeing if the end points of that
+ * link are still connected.
+ */
 static void reachable_without_dfs(Postprocessor *pp,
                 Sublinkage *sublinkage, size_t a, size_t b, size_t w)
 {
@@ -513,7 +491,9 @@ static void reachable_without_dfs(Postprocessor *pp,
 	pp->visited[w] = TRUE;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
-		if (!pp->visited[lol->word] && !(w == a && lol->word == b) && ! (w == b && lol->word == a))
+		if (!pp->visited[lol->word] && 
+          !(w == a && lol->word == b) && 
+          !(w == b && lol->word == a))
 		{
 				reachable_without_dfs(pp, sublinkage, a, b, lol->word);
 		}
@@ -551,13 +531,11 @@ apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage, pp_rule *rule)
 		if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->link_name)) continue;
 		memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 		reachable_without_dfs(pp, sublinkage, w, lol->word, w);
-		if (!pp->visited[lol->word]) return FALSE;
+		if (!pp->visited[lol->word]) return false;
 	}
 
-	return TRUE;
+	return true;
 }
-
-#endif
 
 /**
  * Checks to see that all domains with this name have the property that
