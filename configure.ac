@@ -657,6 +657,7 @@ morphology/fa/Makefile
 morphology/fa/scripts/Makefile
 link-parser/Makefile
 data/Makefile
+data/amy/Makefile
 data/any/Makefile
 data/ar/Makefile
 data/ar/words/Makefile
