@@ -401,36 +401,36 @@ static int is_equal(Dictionary dict, char c)
  * Return TRUE if the connector is valid, else return FALSE,
  * and print an appropriate warning message.
  */
-static Boolean check_connector(Dictionary dict, const char * s)
+static bool check_connector(Dictionary dict, const char * s)
 {
 	int i;
 	i = strlen(s);
 	if (i < 1) {
 		dict_error(dict, "Expecting a connector.");
-		return FALSE;
+		return false;
 	}
 	i = s[i-1];  /* the last character of the token */
 	if ((i != '+') && (i != '-') && (i != ANY_DIR)) {
-		dict_error(dict, "A connector must end in a \"+\", \"-\" or \"^\".");
-		return FALSE;
+		dict_error(dict, "A connector must end in a \"+\", \"-\" or \"$\".");
+		return false;
 	}
 	if (*s == '@') s++;
-	if (!isupper((int)*s)) {
-		dict_error(dict, "The first letter of a connector must be in [A--Z].");
-		return FALSE;
+	if (!isupper((int)*s) && ('h' != *s) && ('d' != *s)) {
+		dict_error(dict, "The first letter of a connector must be h,d or uppercase.");
+		return false;
 	}
 	if ((*s == 'I') && (*(s+1) == 'D')) {
 		dict_error(dict, "Connectors beginning with \"ID\" are forbidden");
-		return FALSE;
+		return false;
 	}
 	while (*(s+1)) {
 		if ((!isalnum((int)*s)) && (*s != WILD_TYPE)) {
 			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
-			return FALSE;
+			return false;
 		}
 		s++;
 	}
-	return TRUE;
+	return true;
 }
 
 /* ======================================================================== */

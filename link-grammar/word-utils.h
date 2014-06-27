@@ -60,15 +60,29 @@ bool match_in_connector_set(Connector_set*, Connector*, int dir);
 /**
  * Returns TRUE if s and t match according to the connector matching
  * rules.  The connector strings must be properly formed, starting with
- * zero or more upper case letters, followed by some other letters, and
+ * zero or one lower case letters, followed by one or more upper case 
+ * letters, followed by some other letters.
+ *
  * The algorithm is symmetric with respect to a and b.
  *
- * It works as follows:  The labels must match.  
- * The sequence of upper case letters must match exactly.  After these
- * comes a sequence of lower case letters or "*"s. 
+ * Connectors starting with lower-case letters match ONLY if the initial
+ * letters are DIFFERENT.  Otherwise, connectors only match if the
+ * upper-case letters are the same, and the trailing lower case letters
+ * are the same (or have wildcards).
+ *
+ * The initial lower-case letters allow an initial 'h' (denoting 'head
+ * word') to match an initial 'd' (denoting 'dependent word'), while
+ * rejecting a match 'h' to 'h' or 'd' to 'd'.  This allows the parser
+ * to work with catena, instead of just links.
  */
 static inline bool easy_match(const char * s, const char * t)
 {
+	char is = 0, it = 0;
+   if (islower((int) *s)) { is = *s; s++; }
+   if (islower((int) *t)) { it = *t; t++; }
+
+   if (is != 0 && it != 0 && is == it) return false;
+
 	while (isupper((int)*s) || isupper((int)*t))
 	{
 		if (*s != *t) return false;
