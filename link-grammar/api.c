@@ -866,26 +866,31 @@ int sentence_num_thin_linkages(Sentence sent) {
 #endif /* USE_FAT_LINKAGES */
 }
 
-int sentence_num_linkages_found(Sentence sent) {
+int sentence_num_linkages_found(Sentence sent)
+{
 	if (!sent) return 0;
 	return sent->num_linkages_found;
 }
 
-int sentence_num_valid_linkages(Sentence sent) {
+int sentence_num_valid_linkages(Sentence sent)
+{
 	if (!sent) return 0;
 	return sent->num_valid_linkages;
 }
 
-int sentence_num_linkages_post_processed(Sentence sent) {
+int sentence_num_linkages_post_processed(Sentence sent)
+{
 	if (!sent) return 0;
 	return sent->num_linkages_post_processed;
 }
 
-int sentence_num_violations(Sentence sent, int i) {
+int sentence_num_violations(Sentence sent, int i)
+{
 	if (!sent) return 0;
 
 	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->link_info) return 0;
+	if ((i<0) || (sent->num_linkages_alloced <= i)) return 0; /* bounds check */
 	return sent->link_info[i].N_violations;
 }
 
@@ -895,6 +900,7 @@ int sentence_and_cost(Sentence sent, int i) {
 
 	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->link_info) return 0;
+	if ((i<0) || (sent->num_linkages_alloced <= i)) return 0; /* bounds check */
 	return sent->link_info[i].and_cost;
 #else
 	return 0;
@@ -907,6 +913,7 @@ double sentence_disjunct_cost(Sentence sent, int i)
 
 	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->link_info) return 0.0;
+	if ((i<0) || (sent->num_linkages_alloced <= i)) return 0.0; /* bounds check */
 	return sent->link_info[i].disjunct_cost;
 }
 
@@ -916,6 +923,7 @@ int sentence_link_cost(Sentence sent, int i)
 
 	/* The sat solver (currently) fails to fill in link_info */
 	if (!sent->link_info) return 0;
+	if ((i<0) || (sent->num_linkages_alloced <= i)) return 0; /* bounds check */
 	return sent->link_info[i].link_cost;
 }
 

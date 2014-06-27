@@ -217,11 +217,11 @@ link_public_api(int)
 link_public_api(int)
      sentence_num_linkages_post_processed(Sentence sent);
 link_public_api(int)
-     sentence_num_violations(Sentence sent, int i);
+     sentence_num_violations(Sentence sent, int linkage_num);
 link_public_api(double)
-     sentence_disjunct_cost(Sentence sent, int i);
+     sentence_disjunct_cost(Sentence sent, int linkage_num);
 link_public_api(int)
-     sentence_link_cost(Sentence sent, int i);
+     sentence_link_cost(Sentence sent, int linkage_num);
 
 /**********************************************************************
  *
