@@ -153,6 +153,7 @@ static inline int connector_hash(Connector * c)
 	i = ((i << 5) + i) + (0xff & c->label);
 #endif /* USE_FAT_LINKAGES */
 	s = c->string;
+	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i = ((i << 5) + i) + *s;
@@ -166,6 +167,7 @@ static inline int connector_hash(Connector * c)
 	/* Jenkins one-at-a-time hash */
 	i = 0;
 	s = c->string;
+	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
 	{
 		i += *s;
@@ -186,6 +188,7 @@ static inline int connector_hash(Connector * c)
 	i = 0;
 #endif /* USE_FAT_LINKAGES */
 	s = c->string;
+	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	while (isupper((int) *s))
 	{
 		i = *s + (i << 6) + (i << 16) - i;
