@@ -19,62 +19,6 @@
 #include "dict-structures.h"  /* For Exp, Exp_list */
 #include "utilities.h"  /* Needed for inline defn in Windows */
 
-/*
- Global variable descriptions
-  -- Most of these global variables have been eliminated.
-     I've left this comment here for historical purposes --DS 4/98
-
- N_words:
-    The number of words in the current sentence.  Computed by
-    separate_sentence().
-
- N_links:
-    The number of links in the current linkage.  Computed by
-    extract_linkage().
-
- sentence[].string:
-    Contains a slightly modified form of the words typed by the user.
-    Computed by separate_sentence().
-
- sentence[].x:
-    Contains, for each word, a pointer to a list of expressions from the
-    dictionary that match the word in sentence[].string.
-    Computed by build_sentence_expressions().
-
- sentence[].d
-    Contains for each word, a pointer to a list of disjuncts for this word.
-    Computed by: parepare_to_parse(), but modified by pruning and power
-    pruning.
-
- link_array[]
-    This is an array of links.  These links define the current linkage.
-    It is computed by extract_links().  It is used by analyze_linkage() to
-    compute pp_linkage[].  It may contain fat links.
-
- pp_link_array[]   ** eliminated (ALB)
-    Another array of links.  Here all fat links have been expunged.
-    It is computed by analyze_linkage(), and used by post_process() and by
-    print_links();
-
- chosen_disjuncts[]
-    This is an array pointers to disjuncts, one for each word, that is
-    computed by extract_links().  It represents the chosen disjuncts for the
-    current linkage.  It is used to compute the cost of the linkage, and
-    also by compute_chosen_words() to compute the chosen_words[].
-
-#ifdef USE_FAT_LINKAGES
- has_fat_down[]
-    An array of chars, one for each word.  TRUE if there is a fat link
-    down from this word, FALSE otherwise.  (Only set if there is at least
-    one fat link.)  Set by set_has_fat_down_array() and used by
-    analyze_linkage() and is_canonical().
-
- is_conjunction[]
-    An array of chars, one for each word.  TRUE if the word is a conjunction
-    ("and", "or", "nor", or "but" at the moment).  False otherwise.
-#endif USE_FAT_LINKAGES
-*/
-
 
 #define NEGATIVECOST -1000000
 /* This is a hack that allows one to discard disjuncts containing
@@ -219,7 +163,18 @@ struct X_node_struct
 	X_node *next;
 };
 
-/* Word, as represented shortly after tokenization, but before parsing. */
+/**
+ * Word, as represented shortly after tokenization, but before parsing.
+ *
+ * X_node* x:
+ *    Contains a pointer to a list of expressions from the dictionary,
+ *    Computed by build_sentence_expressions().
+ *
+ * Disjunct* d:
+ *   Contains a pointer to a list of disjuncts for this word.
+ *   Computed by: parepare_to_parse(), but modified by pruning and power
+ *   pruning.
+ */
 struct Word_struct
 {
 	const char *unsplit_word;
