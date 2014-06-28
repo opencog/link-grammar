@@ -791,7 +791,11 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 	const char *w, *s0;
 	char u0[MAX_TOKEN_LENGTH]; /* Links are *always* less than 10 chars long */
 	char *u;
-	if (strcmp(s,t)==0) return s;  /* would work without this */
+
+	if (islower((int) *s)) s++;  /* skip the head-dependent indicator */
+	if (islower((int) *t)) t++;  /* skip the head-dependent indicator */
+
+	if (strcmp(s,t) == 0) return s;  /* would work without this */
 	i = strlen(s);
 	j = strlen(t);
 	if (j > i) {
@@ -811,7 +815,7 @@ const char * intersect_strings(Sentence sent, const char * s, const char * t)
 		}
 		s++; t++; u++;
 	}
-	if (d==0) {
+	if (d == 0) {
 		return s0;
 	} else {
 		strcpy(u, s);   /* get the remainder of s */
