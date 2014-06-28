@@ -377,7 +377,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	bool print_word_0 = 0, print_word_N = 0;
 	int N_wall_connectors, suppressor_used;
 	int center[linkage->num_words+1];
-	char connector[MAX_TOKEN_LENGTH];
 	unsigned int line_len, link_length;
 #ifdef USE_FAT_LINKAGES
 	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
@@ -483,8 +482,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				}
 				if (k == cr) break;
 			}
-			/* we know it fits, so put it in this row */
 
+			/* we know it fits, so put it in this row */
 			pctx->link_heights[j] = row;
 
 			if (2*row+2 > MAX_HEIGHT-1) {
@@ -507,15 +506,12 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			  s = "";  /* Don't print fat link connector name */
 #endif /* USE_FAT_LINKAGES */
 
-			strncpy(connector, s, MAX_TOKEN_LENGTH-1);
-			connector[MAX_TOKEN_LENGTH-1] = '\0';
-			k = strlen(connector);
+			k = strlen(s);
 			if ((cl+cr-k)/2 + 1 <= cl) {
 				t = picture[row] + cl + 1;
 			} else {
 				t = picture[row] + (cl + cr + 2 - k)/2;
 			}
-			s = connector;
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
 			/* now put in the | below this one, where needed */
