@@ -306,6 +306,8 @@ void exfree_link(Link * l)
 static unsigned int connector_set_hash(Connector_set *conset, const char * s, int d)
 {
 	unsigned int i;
+	if (islower((int)*s)) s++; /* skip head-dependent indicator */
+
 	/* djb2 hash */
 	i = 5381;
 	i = ((i << 5) + i) + d;

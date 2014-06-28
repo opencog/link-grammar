@@ -38,9 +38,10 @@
  * ordinary char for matching purposes.
  */
 
-int post_process_match(const char *s, const char *t)
+bool post_process_match(const char *s, const char *t)
 {
 	char c;
+	if (islower((int)*t)) t++; /* Skip head-dependent indicator */
 	while (isupper((int)*s) || isupper((int)*t))
 	{
 		if (*s != *t) return FALSE;
@@ -52,12 +53,12 @@ int post_process_match(const char *s, const char *t)
 		if (*s != '#')
 		{
 			if (*t == '\0') c = '*'; else c = *t;
-			if (*s != c) return FALSE;
+			if (*s != c) return false;
 		}
 		s++;
 		if (*t != '\0') t++;
 	}
-	return TRUE;
+	return true;
 }
 
 /***************** utility routines (not exported) ***********************/

@@ -158,7 +158,7 @@ int prune_match(int dist, Connector *a, Connector *b)
 	s = a->string;
 	t = b->string;
 
-	while(isupper((int)*s) || isupper((int)*t))
+	while (isupper((int)*s) || isupper((int)*t))
 	{
 		if (*s != *t) return FALSE;
 		s++;
@@ -1711,7 +1711,8 @@ static void cms_table_delete(multiset_table *mt)
 static unsigned int cms_hash(const char * s)
 {
 	unsigned int i = 5381;
-	while (isupper((int) *s)) /* connector names are not yet UTF8-capable */
+	if (islower((int) *s)) s++; /* skip head-dependent indicator */
+	while (isupper((int) *s))
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -1795,9 +1796,16 @@ static Boolean rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 			/* now we want to see if we can satisfy this criterion link */
 			/* with a collection of the links in the cms table */
 
-			for (s = name; isupper((int)*s); s++) {}
+			s = name;
+			if (islower((int)*s)) s++; /* skip head-dependent indicator */
+			for (; isupper((int)*s); s++) {}
 			for (;*s != '\0'; s++) if (*s != '*') *s = '#';
-			for (s = name, t = p->str; isupper((int) *s); s++, t++) {}
+
+			s = name;
+			t = p->str;
+			if (islower((int)*s)) s++; /* skip head-dependent indicator */
+			if (islower((int)*t)) t++; /* skip head-dependent indicator */
+			for (; isupper((int) *s); s++, t++) {}
 
 			/* s and t remain in lockstep */
 			bad = 0;

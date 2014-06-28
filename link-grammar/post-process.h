@@ -38,7 +38,7 @@ void     post_process_scan_linkage(Postprocessor * pp, Parse_Options opts,
                                    Sentence sent , Sublinkage * sublinkage);
 PP_node *do_post_process(Postprocessor * pp, Parse_Options opts, 
                          Sentence sent, Sublinkage *, int cleanup);
-int      post_process_match(const char *s, const char *t);  /* utility function */
+bool     post_process_match(const char *s, const char *t);  /* utility function */
 
 void          free_d_type(D_type_list * dtl);
 D_type_list * copy_d_type(const D_type_list * dtl);

@@ -41,14 +41,16 @@ static void initialize(pp_linkset *ls, int size)
 }
 
 static unsigned int compute_hash(pp_linkset *ls, const char *str)
- {
-   /* hash is computed from capitalized prefix only */
-  unsigned int i, hashval;
-  hashval = LINKSET_SEED_VALUE;
-  for (i = 0; isupper((int)str[i]); i++)
-    hashval = str[i] + 31*hashval;
-  hashval %= ls->hash_table_size;
-  return hashval;
+{
+	/* hash is computed from capitalized prefix only */
+	unsigned int i, hashval;
+	hashval = LINKSET_SEED_VALUE;
+	i = 0;
+	if (islower((int)str[0])) i++; /* skip head-dependent indicator */
+	for (; isupper((int)str[i]); i++)
+		hashval = str[i] + 31*hashval;
+	hashval %= ls->hash_table_size;
+	return hashval;
 }
 
 static pp_linkset_node *add_internal(pp_linkset *ls, const char *str)
