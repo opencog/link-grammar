@@ -468,10 +468,10 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			if (((unsigned int) (ppla[j]->rw - ppla[j]->lw)) != link_length)
 			  continue;
 			if (!print_word_0 && (ppla[j]->lw == 0)) continue;
-			/* gets rid of the irrelevant link to the left wall */
+			/* Gets rid of the irrelevant link to the left wall */
 			if (!print_word_N && (ppla[j]->rw == linkage->num_words-1)) continue;
 
-			/* put it into the lowest position */
+			/* Put it into the lowest position */
 			cl = center[ppla[j]->lw];
 			cr = center[ppla[j]->rw];
 			for (row=0; row < MAX_HEIGHT; row++)
@@ -483,7 +483,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				if (k == cr) break;
 			}
 
-			/* we know it fits, so put it in this row */
+			/* We know it fits, so put it in this row */
 			pctx->link_heights[j] = row;
 
 			if (2*row+2 > MAX_HEIGHT-1) {
@@ -512,9 +512,23 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			} else {
 				t = picture[row] + (cl + cr + 2 - k)/2;
 			}
+
+			/* Add direction indicator */
+			if ('d' == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
+			if ('h' == ppla[j]->lc->string[0]) { *(t-1) = '>'; }
+
+			/* Copy connector name; stop short if no room */
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
-			/* now put in the | below this one, where needed */
+			/* Add direction indicator */
+			if ('d' == ppla[j]->rc->string[0]) { *t = '>'; }
+			if ('h' == ppla[j]->rc->string[0]) { *t = '<'; }
+
+			/* The direction indicators maye have clobbered these. */
+			picture[row][cl] = '+';
+			picture[row][cr] = '+';
+
+			/* Now put in the | below this one, where needed */
 			for (k=0; k<row; k++) {
 				if (picture[k][cl] == ' ') {
 					picture[k][cl] = '|';
@@ -526,8 +540,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		}
 	}
 
-	/* we have the link picture, now put in the words and extra "|"s */
-
+	/* We have the link picture, now put in the words and extra "|"s */
 	t = xpicture[0];
 	if (print_word_0) k = 0; else k = 1;
 	for (; k<N_words_to_print; k++) {

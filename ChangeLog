@@ -16,6 +16,7 @@ Version 5.1.0 (XXX 2014)
  * Fix multiple bugs with unit stripping.
  * Add bounds-checking to the C API.
  * Fix the old disjunct-printing implementation.
+ * Add support for easy-to-use link direction indicator.
 
 Version 5.0.8 (30 April 2014)
  * Fix handling of initial letters in ordered lists.
