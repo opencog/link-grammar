@@ -54,7 +54,7 @@ static char * reversed_conlist_str(Connector* c, char dir, char* buf, size_t sz)
 static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
 {
 	char* p;
-	if (NULL == dj) { *buf = 0; return; ]
+	if (NULL == dj) { *buf = 0; return; }
 	p = reversed_conlist_str(dj->left, '-', buf, sz);
 	reversed_conlist_str(dj->right, '+', p, sz - (p-buf));
 }
