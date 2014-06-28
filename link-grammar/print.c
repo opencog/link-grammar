@@ -84,11 +84,11 @@ static void left_append_string(String * string, const char * s, const char * t)
 	}
 }
 
-static void print_a_link(String * s, const Linkage linkage, int link)
+static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 {
 	Sentence sent = linkage_get_sentence(linkage);
 	Dictionary dict = sent->dict;
-	int l, r;
+	WordIdx l, r;
 	const char *label, *llabel, *rlabel;
 
 	l      = linkage_get_link_lword(linkage, link);

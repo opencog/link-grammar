@@ -320,6 +320,7 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
 
+	if (sent->num_linkages_alloced <= k) return NULL; /* bounds check */
 	if (opts->use_sat_solver)
 	{
 		return sat_create_linkage(k, sent, opts);
@@ -373,17 +374,16 @@ int linkage_get_current_sublinkage(const Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 }
 
-int linkage_set_current_sublinkage(Linkage linkage, int index)
+bool linkage_set_current_sublinkage(Linkage linkage, LinkageIdx index)
 {
 #ifdef USE_FAT_LINKAGES
-	if ((index < 0) ||
-		(index >= linkage->num_sublinkages))
+	if (index >= linkage->num_sublinkages)
 	{
-		return 0;
+		return false;
 	}
 	linkage->current = index;
 #endif /* USE_FAT_LINKAGES */
-	return 1;
+	return true;
 }
 
 static void exfree_pp_info(PP_info *ppi)

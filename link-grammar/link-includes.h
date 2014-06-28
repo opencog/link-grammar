@@ -406,8 +406,8 @@ MS_DEPRECATED link_public_api(int)
      linkage_get_num_sublinkages(const Linkage linkage) GNUC_DEPRECATED;
 
 /* When fat links go away, the only valid sublinkage will be zero. */
-MS_DEPRECATED link_public_api(int)
-     linkage_set_current_sublinkage(Linkage linkage, int index) GNUC_DEPRECATED;
+MS_DEPRECATED link_public_api(bool)
+     linkage_set_current_sublinkage(Linkage linkage, LinkageIdx index) GNUC_DEPRECATED;
 
 /* When fat links go away, the only valid sublinkage will be zero. */
 MS_DEPRECATED link_public_api(int)
