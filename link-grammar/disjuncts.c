@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (c) 2008, 2009 Linas Vepstas                                */
+/* Copyright (c) 2008, 2009, 2014 Linas Vepstas                          */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -12,7 +12,7 @@
  * disjuncts.c
  *
  * Miscellaneous utilities for returning the list of disjuncts that
- * were acutally used in a given parse of a sentence.
+ * were actually used in a given parse of a sentence.
  */
 
 #include <stdlib.h>
@@ -22,7 +22,41 @@
 #include "structures.h"
 #include "utilities.h"
 
-/* ========================================================= */
+/**
+ * Print connector list to string.
+ * This reverses the order of the connecters in the connector list,
+ * so that the resulting list is in the same order as it would appear
+ * in the dictionary. The character 'dir' is appended to each connector.
+ */
+static char * reversed_conlist_str(Connector* c, char dir, char* buf, size_t sz)
+{
+	char* p;
+	size_t len;
+
+	if (NULL == c) return buf;
+	p = reversed_conlist_str(c->next, dir, buf, sz);
+
+	sz -= (p-buf);
+	len = lg_strlcpy(p, c->string, sz);
+	if (3 < sz-len)
+	{
+		p[len++] = dir;
+		p[len++] = ' ';
+		p[len] = 0x0;
+	}
+	return p+len;
+}
+
+/**
+ * Print disjunct to string.  The resulting list is in the same order
+ * as it would appear in the dictionary.
+ */
+static void disjunct_str(Disjunct* dj, char* buf, size_t sz)
+{
+	char* p;
+	p = reversed_conlist_str(dj->left, '-', buf, sz);
+	reversed_conlist_str(dj->right, '+', p, sz - (p-buf));
+}
 
 /**
  * lg_compute_disjunct_strings -- Given sentence, compute disjuncts.
@@ -30,107 +64,27 @@
  * This routine will compute the string representation of the disjunct
  * used for each word in parsing the given sentence. A string
  * representation of the disjunct is needed for most of the corpus
- * statistics functions: this string, together with the "inflected"
+ * statistics functions: this string, together with the subscripted
  * word, is used as a key to index the statistics information in the
  * database. 
- *
- * XXX This implementation works, but I don't think its the simplest
- * one. I think that a better implementation would have used
- * sent->parse_info->chosen_disjuncts[w] to get the one that was used,
- * and then print_disjuncts() to print it.
  */
 void lg_compute_disjunct_strings(Sentence sent, Linkage_info *lifo)
 {
 	char djstr[MAX_TOKEN_LENGTH*20]; /* no word will have more than 20 links */
-	size_t copied, left;
-	size_t w;
-	int i;
 	size_t nwords = sent->length;
 	Parse_info pi = sent->parse_info;
-	int nlinks = pi->N_links;
-	size_t *djlist, *djloco, *djcount;
 
 	if (lifo->disjunct_list_str) return;
 	lifo->nwords = nwords;
 	lifo->disjunct_list_str = (char **) malloc(nwords * sizeof(char *));
 	memset(lifo->disjunct_list_str, 0, nwords * sizeof(char *));
 
-	djcount = (size_t *) malloc (sizeof(size_t) * (nwords + 2*nwords*nlinks));
-	djlist = djcount + nwords;
-	djloco = djlist + nwords*nlinks;
-
-	for (w = 0; w < nwords; w++)
+	for (WordIdx w=0; w< nwords; w++)
 	{
-		djcount[w] = 0;
-	}
-
-	/* Create a table of disjuncts for each word. */
-	for (i=0; i<nlinks; i++)
-	{
-		size_t lword = pi->link_array[i].lw;
-		size_t rword = pi->link_array[i].rw;
-		int slot = djcount[lword];
-
-		/* Skip over RW link to the right wall */
-		if (nwords <= rword) continue;
-
-		djlist[lword*nlinks + slot] = i;
-		djloco[lword*nlinks + slot] = rword;
-		djcount[lword] ++;
-
-		slot = djcount[rword];
-		djlist[rword*nlinks + slot] = i;
-		djloco[rword*nlinks + slot] = lword;
-		djcount[rword] ++;
-
-#ifdef DEBUG
-		printf("Link: %d is %s--%s--%s\n", i, 
-			sent->word[lword].string, pi->link_array[i].name,
-			sent->word[rword].string);
-#endif
-	}
-
-	/* Process each word in the sentence
-	 * (Hmm... should we be skipping LEFT-WALL, which is word 0? */
-	for (w = 0; w < nwords; w++)
-	{
-		/* Sort the disjuncts for this word. -- bubble sort */
-		int slot = djcount[w];
-		for (i = 0; i < slot; i++)
-		{
-			int j;
-			for (j=i+1; j<slot; j++)
-			{
-				if (djloco[w*nlinks + i] > djloco[w*nlinks + j])
-				{
-					int tmp = djloco[w*nlinks + i];
-					djloco[w*nlinks + i] = djloco[w*nlinks + j];
-					djloco[w*nlinks + j] = tmp;
-					tmp = djlist[w*nlinks + i];
-					djlist[w*nlinks + i] = djlist[w*nlinks + j];
-					djlist[w*nlinks + j] = tmp;
-				}
-			}
-		}
-
-		/* Create the disjunct string */
-		left = sizeof(djstr);
-		copied = 0;
-		for (i = 0; i < slot; i++)
-		{
-			int dj = djlist[w*nlinks + i];
-			copied += lg_strlcpy(djstr+copied, pi->link_array[dj].link_name, left);
-			left = sizeof(djstr) - copied;
-			if (djloco[w*nlinks + i] < w)
-				copied += lg_strlcpy(djstr+copied, "-", left--);
-			else
-				copied += lg_strlcpy(djstr+copied, "+", left--);
-			copied += lg_strlcpy(djstr+copied, " ", left--);
-		}
+		Disjunct* dj = pi->chosen_disjuncts[w];
+		disjunct_str(dj, djstr, sizeof(djstr));
 
 		lifo->disjunct_list_str[w] = strdup(djstr);
 	}
-
-	free (djcount);
 }
 

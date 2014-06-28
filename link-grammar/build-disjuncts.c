@@ -314,11 +314,13 @@ static void print_connector_list(Connector * e)
 	for (;e != NULL; e=e->next)
 	{
 		printf("%s",e->string);
+#ifdef USE_FAT_LINKAGES
 		if (e->label != NORMAL_LABEL) {
 			printf("%3d", e->label);
 		} else {
 			printf("   ");
 		}
+#endif /* USE_FAT_LINKAGES */
 		if (e->next != NULL) printf(" ");
 	}
 }
