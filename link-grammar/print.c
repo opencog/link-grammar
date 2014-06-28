@@ -29,6 +29,9 @@
 #define RIGHT_WALL_SUPPRESS ("RW")/* If this connector is used on the wall, */
                                   /* then suppress the display of the wall. */
 
+#define HEAD_CHR ('h') /* Single char marking head-word. */
+#define DEPT_CHR ('d') /* Single char marking dependent word */
+
 static void
 set_centers(const Linkage linkage, int center[],
             Boolean print_word_0, int N_words_to_print)
@@ -97,17 +100,34 @@ static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 	llabel = linkage_get_link_llabel(linkage, link);
 	rlabel = linkage_get_link_rlabel(linkage, link);
 
-	if ((l == 0) && dict->left_wall_defined) {
-		left_append_string(s, LEFT_WALL_DISPLAY,"               ");
-	} else if ((l == (linkage_get_num_words(linkage)-1)) && dict->right_wall_defined) {
-		left_append_string(s, RIGHT_WALL_DISPLAY,"               ");
-	} else {
+	if ((l == 0) && dict->left_wall_defined)
+	{
+		left_append_string(s, LEFT_WALL_DISPLAY, "               ");
+	}
+	else if ((l == (linkage_get_num_words(linkage)-1)) && 
+	         dict->right_wall_defined)
+	{
+		left_append_string(s, RIGHT_WALL_DISPLAY, "               ");
+	}
+	else
+	{
 		left_append_string(s, linkage_get_word(linkage, l), "               ");
 	}
 	left_append_string(s, llabel, "     ");
-	append_string(s, "   <---");
+	if (DEPT_CHR == llabel[0])
+		append_string(s, "   <---");
+	else if (HEAD_CHR == llabel[0])
+		append_string(s, "   >---");
+	else
+		append_string(s, "   ----");
+
 	left_append_string(s, label, "-----");
-	append_string(s, "->  ");
+	if (DEPT_CHR == rlabel[0])
+		append_string(s, "->  ");
+	else if (HEAD_CHR == rlabel[0])
+		append_string(s, "-<  ");
+	else
+		append_string(s, "--  ");
 	left_append_string(s, rlabel, "     ");
 	append_string(s, "     %s\n", linkage_get_word(linkage, r));
 }
@@ -127,20 +147,22 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	const char ** dname;
 
 	longest = 0;
-	for (link=0; link<N_links; link++) {
+	for (link=0; link<N_links; link++)
+	{
 		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
 		assert (linkage_get_link_lword(linkage, link) != SIZE_MAX);
 		if (linkage_get_link_num_domains(linkage, link) > longest)
 			longest = linkage_get_link_num_domains(linkage, link);
 	}
-	for (link=0; link<N_links; link++) {
+	for (link=0; link<N_links; link++)
+	{
 		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
 		assert (linkage_get_link_lword(linkage, link) != SIZE_MAX);
 		dname = linkage_get_link_domain_names(linkage, link);
 		for (j=0; j<linkage_get_link_num_domains(linkage, link); ++j) {
 			append_string(s, " (%s)", dname[j]);
 		}
-		for (;j<longest; j++) {
+		for (; j<longest; j++) {
 			append_string(s, "    ");
 		}
 		append_string(s, "   ");
@@ -514,15 +536,15 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			}
 
 			/* Add direction indicator */
-			if ('d' == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
-			if ('h' == ppla[j]->lc->string[0]) { *(t-1) = '>'; }
+			if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
+			if (HEAD_CHR == ppla[j]->lc->string[0]) { *(t-1) = '>'; }
 
 			/* Copy connector name; stop short if no room */
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
 			/* Add direction indicator */
-			if ('d' == ppla[j]->rc->string[0]) { *t = '>'; }
-			if ('h' == ppla[j]->rc->string[0]) { *t = '<'; }
+			if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
+			if (HEAD_CHR == ppla[j]->rc->string[0]) { *t = '<'; }
 
 			/* The direction indicators maye have clobbered these. */
 			picture[row][cl] = '+';
