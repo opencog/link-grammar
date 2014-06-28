@@ -10,16 +10,20 @@ Release: %{release}
 Group: System Environment/Libraries
 License: LGPL
 
-Source: %{name}-%{version}.tar.gz
+Source: http://www.abisource.com/downloads/link-grammar/%{version}/link-grammar-%{version}.tar.gz
 Buildroot: /var/tmp/%{name}-%{version}-%{release}-root
-URL: http://www.link.cs.cmu.edu/link/
+URL: http://abisource.com/projects/link-grammar/
 
 #Requires: 
-#BuildRequires: 
+BuildRequires: hunspell-devel, java-devel, jpackage-utils, libedit-devel, ant
 
 %description
-The Link Grammar Parser is a natural language parser based on 
-link grammar theories of natural language. 
+The Link Grammar Parser is a syntactic parser of English, Russian,
+Arabic, Persian and other languages.  It is based on Link Grammar, an theory of 
+natural language syntax. Given a sentence, the system assigns to it
+a syntactic structure, which consists of a set of labeled links connecting
+pairs of words.  The parser also produces a HPSG-style representation of a
+sentence (showing noun phrases, verb phrases, etc.).
 
 %package devel
 Summary: Support files necessary to compile applications with link-grammar.
@@ -34,14 +38,19 @@ Libraries, headers, and support files necessary to compile applications using li
 %setup
 
 %build
+# help configure find jni.h
+export JAVA_HOME=%{java_home}
+
 %ifarch alpha
   MYARCH_FLAGS="--host=alpha-redhat-linux"
 %endif
 
 if [ ! -f configure ]; then
-CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh --prefix=%{_prefix}
+CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh --prefix=%{_prefix} --no-configure
 fi
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{_prefix} 
+
+%configure
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{_prefix} --enable-python-bindings --disable-sat-solver --disable-aspell
 
 if [ "$SMP" != "" ]; then
   (%__make "MAKE=%__make -k -j $SMP"; exit 0)
@@ -57,7 +66,7 @@ find $RPM_BUILD_ROOT/%{_libdir} -name \*.la -exec rm -f \{\} \;
 
 %files
 %defattr(644,root,root,755)
-%doc LICENSE README
+%doc LICENSE README ChangeLog
 %attr(755,root,root)%{_bindir}/*
 %{_libdir}/lib*.so*
 %{_datadir}/link-grammar/*
@@ -72,5 +81,7 @@ find $RPM_BUILD_ROOT/%{_libdir} -name \*.la -exec rm -f \{\} \;
 %__rm -r $RPM_BUILD_ROOT
 
 %changelog
+* Fri Jun 27 2014 Linas Vepstas <linasvepstas@gmail.com>
+- Freshen with newer URL, dependencies.
 * Sat Feb 5 2005 Dom Lachowicz <cinamod@hotmail.com>
 - Initial version
