@@ -236,33 +236,34 @@ link_public_api(int)
 
 typedef struct Linkage_s * Linkage;
 typedef size_t WordIdx;
+typedef size_t LinkIdx;
 
 link_public_api(Linkage)
-     linkage_create(size_t index, Sentence sent, Parse_Options opts);
+     linkage_create(LinkageIdx linkage_num, Sentence sent, Parse_Options opts);
 link_public_api(void)
      linkage_delete(Linkage linkage);
 link_public_api(Sentence)
      linkage_get_sentence(const Linkage linkage);
-link_public_api(int)
+link_public_api(size_t)
      linkage_get_num_words(const Linkage linkage);
 link_public_api(size_t)
      linkage_get_num_links(const Linkage linkage);
-link_public_api(size_t)
-     linkage_get_link_lword(const Linkage linkage, size_t index);
-link_public_api(size_t)
-     linkage_get_link_rword(const Linkage linkage, size_t index);
+link_public_api(WordIdx)
+     linkage_get_link_lword(const Linkage linkage, LinkIdx index);
+link_public_api(WordIdx)
+     linkage_get_link_rword(const Linkage linkage, LinkIdx index);
 link_public_api(int)
-     linkage_get_link_length(const Linkage linkage, int index);
+     linkage_get_link_length(const Linkage linkage, LinkIdx index);
 link_public_api(const char *)
-     linkage_get_link_label(const Linkage linkage, size_t index);
+     linkage_get_link_label(const Linkage linkage, LinkIdx index);
 link_public_api(const char *)
-     linkage_get_link_llabel(const Linkage linkage, size_t index);
+     linkage_get_link_llabel(const Linkage linkage, LinkIdx index);
 link_public_api(const char *)
-     linkage_get_link_rlabel(const Linkage linkage, size_t index);
+     linkage_get_link_rlabel(const Linkage linkage, LinkIdx index);
 link_public_api(int)
-     linkage_get_link_num_domains(const Linkage linkage, int index);
+     linkage_get_link_num_domains(const Linkage linkage, LinkIdx index);
 link_public_api(const char **)
-     linkage_get_link_domain_names(const Linkage linkage, int index);
+     linkage_get_link_domain_names(const Linkage linkage, LinkIdx index);
 link_public_api(const char **)
      linkage_get_words(const Linkage linkage);
 link_public_api(const char *)
@@ -438,7 +439,7 @@ MS_DEPRECATED link_public_api(int)
 
 /* and cost is always zero without fat links */
 MS_DEPRECATED link_public_api(int)
-     sentence_and_cost(Sentence sent, LinkageIdx i) GNUC_DEPRECATED;
+     sentence_and_cost(Sentence sent, LinkageIdx linkage_num) GNUC_DEPRECATED;
 
 /* Fat linkages will be going away "real soon now" */
 MS_DEPRECATED link_public_api(void)

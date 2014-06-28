@@ -316,7 +316,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 
 
 
-Linkage linkage_create(size_t k, Sentence sent, Parse_Options opts)
+Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
 
@@ -570,7 +570,7 @@ int linkage_get_num_sublinkages(const Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 }
 
-int linkage_get_num_words(const Linkage linkage)
+size_t linkage_get_num_words(const Linkage linkage)
 {
 	if (!linkage) return 0;
 	return linkage->num_words;
@@ -589,7 +589,7 @@ size_t linkage_get_num_links(const Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 }
 
-static inline Boolean verify_link_index(const Linkage linkage, size_t index)
+static inline Boolean verify_link_index(const Linkage linkage, LinkIdx index)
 {
 	if (!linkage) return false;
 #ifdef USE_FAT_LINKAGES
@@ -603,7 +603,7 @@ static inline Boolean verify_link_index(const Linkage linkage, size_t index)
 	return true;
 }
 
-int linkage_get_link_length(const Linkage linkage, int index)
+int linkage_get_link_length(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	bool word_has_link[linkage->num_words+1];
@@ -643,7 +643,7 @@ int linkage_get_link_length(const Linkage linkage, int index)
 	return length;
 }
 
-size_t linkage_get_link_lword(const Linkage linkage, size_t index)
+WordIdx linkage_get_link_lword(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
@@ -655,7 +655,7 @@ size_t linkage_get_link_lword(const Linkage linkage, size_t index)
 	return link->lw;
 }
 
-size_t linkage_get_link_rword(const Linkage linkage, size_t index)
+WordIdx linkage_get_link_rword(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return SIZE_MAX;
@@ -667,7 +667,7 @@ size_t linkage_get_link_rword(const Linkage linkage, size_t index)
 	return link->rw;
 }
 
-const char * linkage_get_link_label(const Linkage linkage, size_t index)
+const char * linkage_get_link_label(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -679,7 +679,7 @@ const char * linkage_get_link_label(const Linkage linkage, size_t index)
 	return link->link_name;
 }
 
-const char * linkage_get_link_llabel(const Linkage linkage, size_t index)
+const char * linkage_get_link_llabel(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -691,7 +691,7 @@ const char * linkage_get_link_llabel(const Linkage linkage, size_t index)
 	return link->lc->string;
 }
 
-const char * linkage_get_link_rlabel(const Linkage linkage, size_t index)
+const char * linkage_get_link_rlabel(const Linkage linkage, LinkIdx index)
 {
 	Link *link;
 	if (!verify_link_index(linkage, index)) return NULL;
@@ -817,7 +817,7 @@ double linkage_corpus_cost(const Linkage linkage)
 	return linkage->info->corpus_cost;
 }
 
-int linkage_get_link_num_domains(const Linkage linkage, int index)
+int linkage_get_link_num_domains(const Linkage linkage, LinkIdx index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return -1;
@@ -829,7 +829,7 @@ int linkage_get_link_num_domains(const Linkage linkage, int index)
 	return pp_info->num_domains;
 }
 
-const char ** linkage_get_link_domain_names(const Linkage linkage, int index)
+const char ** linkage_get_link_domain_names(const Linkage linkage, LinkIdx index)
 {
 	PP_info *pp_info;
 	if (!verify_link_index(linkage, index)) return NULL;
