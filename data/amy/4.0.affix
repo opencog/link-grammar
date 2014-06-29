@@ -11,10 +11,37 @@
 ""«»《》【】『』`„“": QUOTES+;
 
 
-=: INFIXMARK+;
+% =: INFIXMARK+;
+% 
+% "w|ts": SANEMORPHISM+;
+% 
+% .=: STEMSUBSCR+;
 
-"w|ts": SANEMORPHISM+;
+% Anysplit parameters
 
-.=: STEMSUBSCR+;
+% Maximum number of word partitions - 0 disables Anysplit
+6: REGPARTS+;
 
+% Number of alternatives to issue for a word. Two values: minimum and maximum.
+% If the word has more possibilities to split than the minimum, but less
+% then the maximum, then issue them unconditionally.
+10 20: REGALTS+;
+
+% When word parts match these regexes, they are issued as alternatives.
+% Multiple regexes are permitted.
+%
+% If needed, add the same regex in more than one definition.
+
+% Regex to match the prefix
+".*" : REGPRE+;
+
+% Regex to match the middle parts (not including the prefix or the suffix)
+".*": REGMID+;
+%".{2,}": REGMID+;
+
+% Regex to match the suffix (cannot be the prefix)
+".*": REGSUF+;
+%"[aeiouy]" "[rst]": REGSUF+;
+
+% End of Anysplit parameters
 
