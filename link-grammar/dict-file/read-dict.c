@@ -154,7 +154,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
   to distinguish different word senses.
 */
 
-static Boolean link_advance(Dictionary dict);
+static bool link_advance(Dictionary dict);
 
 static void dict_error2(Dictionary dict, const char * s, const char *s2)
 {
@@ -166,7 +166,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	/* The link_advance used to print the error message can
 	 * throw more errors while printing... */
 	if (dict->recursive_error) return;
-	dict->recursive_error = TRUE;
+	dict->recursive_error = true;
 
 	tokens[0] = '\0';
 	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
@@ -195,7 +195,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 		        dict->name,
 		        s, dict->line_number, tokens);
 	}
-	dict->recursive_error = FALSE;
+	dict->recursive_error = false;
 }
 
 static void dict_error(Dictionary dict, const char * s)
@@ -289,7 +289,7 @@ static utf8char get_character(Dictionary dict, int quote_mode)
  * Return true if the input character is one of the special
  * characters used to define the syntax of the dictionary.
  */
-static Boolean char_is_special(char c)
+static bool char_is_special(char c)
 {
 	return (NULL != strchr(SPECIAL, c));
 }
@@ -298,13 +298,13 @@ static Boolean char_is_special(char c)
  * This reads the next token from the input into 'token'.
  * Return 1 if a character was read, else return 0 (and print a warning).
  */
-static Boolean link_advance(Dictionary dict)
+static bool link_advance(Dictionary dict)
 {
 	utf8char c;
 	int nr, i;
 	int quote_mode;
 
-	dict->is_special = FALSE;
+	dict->is_special = false;
 
 	if (dict->already_got_it != '\0')
 	{
@@ -316,19 +316,19 @@ static Boolean link_advance(Dictionary dict)
 			dict->token[1] = '\0';
 		}
 		dict->already_got_it = '\0';
-		return TRUE;
+		return true;
 	}
 
-	do { c = get_character(dict, FALSE); } while (lg_isspace(c[0]));
+	do { c = get_character(dict, false); } while (lg_isspace(c[0]));
 
-	quote_mode = FALSE;
+	quote_mode = false;
 
 	i = 0;
 	for (;;)
 	{
 		if (i > MAX_TOKEN_LENGTH-3) {
 			dict_error(dict, "Token too long");
-			return FALSE;
+			return false;
 		}
 		if (quote_mode) {
 			if (c[0] == '\"' &&
@@ -336,13 +336,13 @@ static Boolean link_advance(Dictionary dict)
 			    (*dict->pin == ':' || *dict->pin == ';' ||
 			    lg_isspace(*dict->pin))) {
 
-				quote_mode = FALSE;
+				quote_mode = false;
 				dict->token[i] = '\0';
-				return TRUE;
+				return true;
 			}
 			if (lg_isspace(c[0])) {
 				dict_error(dict, "White space inside of token");
-				return FALSE;
+				return false;
 			}
 
 			nr = 0;
@@ -354,28 +354,28 @@ static Boolean link_advance(Dictionary dict)
 				{
 					dict->token[0] = c[0];  /* special toks are one char always */
 					dict->token[1] = '\0';
-					dict->is_special = TRUE;
-					return TRUE;
+					dict->is_special = true;
+					return true;
 				}
 				dict->token[i] = '\0';
 				dict->already_got_it = c[0];
-				return TRUE;
+				return true;
 			}
 			if (c[0] == 0x0) {
 				if (i == 0) {
 					dict->token[0] = '\0';
-					return TRUE;
+					return true;
 				}
 				dict->token[i] = '\0';
 				dict->already_got_it = '\0';
-				return TRUE;
+				return true;
 			}
 			if (lg_isspace(c[0])) {
 				dict->token[i] = '\0';
-				return TRUE;
+				return true;
 			}
 			if (c[0] == '\"') {
-				quote_mode = TRUE;
+				quote_mode = true;
 			} else {
 				nr = 0;
 				while (c[nr]) {dict->token[i] = c[nr]; i++; nr++; }
@@ -383,11 +383,11 @@ static Boolean link_advance(Dictionary dict)
 		}
 		c = get_character(dict, quote_mode);
 	}
-	return TRUE;
+	return true;
 }
 
 /**
- * Returns TRUE if this token is a special token and it is equal to c
+ * Returns true if this token is a special token and it is equal to c
  */
 static int is_equal(Dictionary dict, char c)
 {
@@ -398,7 +398,7 @@ static int is_equal(Dictionary dict, char c)
 
 /**
  * Make sure the string s is a valid connector.
- * Return TRUE if the connector is valid, else return FALSE,
+ * Return true if the connector is valid, else return false,
  * and print an appropriate warning message.
  */
 static bool check_connector(Dictionary dict, const char * s)
@@ -562,7 +562,7 @@ static inline int dict_order_wild(const char * s, Dict_node * dn)
  *
  * A subscript is the part that follows the SUBSCRIPT_MARK.
  */
-static Boolean dict_match(const char * s, const char * t)
+static bool dict_match(const char * s, const char * t)
 {
 	char *ds, *dt;
 	ds = strrchr(s, SUBSCRIPT_MARK);
@@ -579,10 +579,10 @@ static Boolean dict_match(const char * s, const char * t)
 
 	/* dt is NULL when there's no prefix ... */
 	if (dt == NULL && ds != NULL) {
-		if (((int)strlen(t)) > (ds-s)) return FALSE;   /* we need to do this to ensure that */
+		if (((int)strlen(t)) > (ds-s)) return false;   /* we need to do this to ensure that */
 		return (strncmp(s, t, ds-s) == 0);	           /* "i.e." does not match "i.e" */
 	} else if (dt != NULL && ds == NULL) {
-		if (((int)strlen(s)) > (dt-t)) return FALSE;
+		if (((int)strlen(s)) > (dt-t)) return false;
 		return (strncmp(s, t, dt-t) == 0);
 	} else {
 		return (strcmp(s, t) == 0);
@@ -706,15 +706,15 @@ rdictionary_lookup(Dict_node *llist,
 Dict_node * lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node * llist =
-		rdictionary_lookup(NULL, dict->root, s, TRUE, dict_order_bare);
+		rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
 
-Boolean boolean_lookup(Dictionary dict, const char *s)
+bool boolean_lookup(Dictionary dict, const char *s)
 {
 	Dict_node *llist = lookup_list(dict, s);
-	Boolean boool = (llist != NULL);
+	bool boool = (llist != NULL);
 	free_lookup(llist);
 	return boool;
 }
@@ -766,7 +766,7 @@ static Dict_node * dictionary_lookup_wild(Dictionary dict, const char *s)
 Dict_node * abridged_lookup_list(Dictionary dict, const char *s)
 {
 	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, FALSE, dict_order_bare);
+	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
@@ -887,12 +887,12 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 	if (dict->token[0] == '@')
 	{
 		n->u.string = string_set_add(dict->token+1, dict->string_set);
-		n->multi = TRUE;
+		n->multi = true;
 	}
 	else
 	{
 		n->u.string = string_set_add(dict->token, dict->string_set);
-		n->multi = FALSE;
+		n->multi = false;
 	}
 	n->type = CONNECTOR_type;
 	n->cost = 0.0;
@@ -1035,7 +1035,7 @@ void add_empty_word(Dictionary dict, Dict_node * dn)
 	zn = Exp_create(dict);
 	zn->dir = '+';
 	zn->u.string = string_set_add(EMPTY_CONNECTOR, dict->string_set);
-	zn->multi = FALSE;
+	zn->multi = false;
 	zn->type = CONNECTOR_type;
 	zn->cost = 0.0;
 	zn = make_optional_node(dict, zn);
@@ -1205,7 +1205,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok);
  */
 static Exp * make_expression(Dictionary dict)
 {
-	return restricted_expression(dict, TRUE, TRUE);
+	return restricted_expression(dict, true, true);
 }
 
 static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
@@ -1310,7 +1310,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nr = restricted_expression(dict, TRUE, FALSE);
+		nr = restricted_expression(dict, true, false);
 		if (nr == NULL) {
 			return NULL;
 		}
@@ -1327,7 +1327,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nr = restricted_expression(dict, FALSE, TRUE);
+		nr = restricted_expression(dict, false, true);
 		if (nr == NULL) {
 			return NULL;
 		}
@@ -1344,7 +1344,7 @@ static Exp * restricted_expression(Dictionary dict, int and_ok, int or_ok)
 		if (!link_advance(dict)) {
 			return NULL;
 		}
-		nr = restricted_expression(dict, TRUE, FALSE);
+		nr = restricted_expression(dict, true, false);
 		if (nr == NULL) {
 			return NULL;
 		}
@@ -1590,7 +1590,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
  * and is terminated by a semi-colon.
  * Add these words to the dictionary.
  */
-static Boolean read_entry(Dictionary dict)
+static bool read_entry(Dictionary dict)
 {
 	Exp *n;
 	int i;
@@ -1616,16 +1616,16 @@ static Boolean read_entry(Dictionary dict)
 				err_ctxt ec;
 				ec.sent = NULL;
 				err_msg(&ec, Error, "Error opening word file %s", dict->token);
-				return FALSE;
+				return false;
 			}
 		}
 		else if ((dict->token[0] == '#') && (0 == strcmp(dict->token, "#include")))
 		{
-			Boolean rc;
+			bool rc;
 			char* instr;
 			char* dict_name;
 			const char * save_name;
-			Boolean save_is_special;
+			bool save_is_special;
 			const char * save_input;
 			const char * save_pin;
 			char save_already_got_it;
@@ -1678,7 +1678,7 @@ static Boolean read_entry(Dictionary dict)
 				if (!link_advance(dict)) goto syntax_error;
 			}
 
-			return TRUE;
+			return true;
 		}
 		else
 		{
@@ -1689,6 +1689,8 @@ static Boolean read_entry(Dictionary dict)
 			dn = dn_new;
 			dn->file = NULL;
 
+			/* Note: The follwoing patches a dot in regexes appearing in
+			 * the affix file... It is corrected later. */
 			patch_subscript(dict->token);
 			dn->string = string_set_add(dict->token, dict->string_set);
 		}
@@ -1730,11 +1732,11 @@ static Boolean read_entry(Dictionary dict)
 		i++;
 	}
 	dict->insert_entry(dict, dn, i);
-	return TRUE;
+	return true;
 
 syntax_error:
 	free_lookup(dn);
-	return FALSE;
+	return false;
 }
 
 
@@ -1758,11 +1760,11 @@ void print_dictionary_data(Dictionary dict)
 	rprint_dictionary_data(dict->root);
 }
 
-Boolean read_dictionary(Dictionary dict)
+bool read_dictionary(Dictionary dict)
 {
 	if (!link_advance(dict))
 	{
-		return FALSE;
+		return false;
 	}
 	/* The last character of a dictionary is NUL.
 	 * Note: At the end of reading a dictionary, dict->pin points to one
@@ -1772,12 +1774,12 @@ Boolean read_dictionary(Dictionary dict)
 	{
 		if (!read_entry(dict))
 		{
-			return FALSE;
+			return false;
 		}
 	}
 	dict->root = dsw_tree_to_vine(dict->root);
 	dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
-	return TRUE;
+	return true;
 }
 
 /* ======================================================================= */
@@ -1805,9 +1807,9 @@ static void display_word_split(Dictionary dict,
 	separate_sentence(sent, &display_word_opts);
 
 	/* List the splits */
-	print_sentence_word_alternatives(sent, FALSE, NULL, NULL);
+	print_sentence_word_alternatives(sent, false, NULL, NULL);
 	/* List the disjuncts information */
-	print_sentence_word_alternatives(sent, FALSE, display, NULL);
+	print_sentence_word_alternatives(sent, false, display, NULL);
 
 	sentence_delete(sent);
 }
@@ -1878,7 +1880,7 @@ static void display_word_info(Dictionary dict, const char * word)
 	}
 
 	/* Recurse, if its a regex match */
-	regex_name = match_regex(dict, word);
+	regex_name = match_regex(dict->regex_root, word);
 	if (regex_name)
 	{
 		display_word_info(dict, regex_name);
@@ -1901,7 +1903,7 @@ static void display_word_expr(Dictionary dict, const char * word)
 	}
 
 	/* Recurse, if its a regex match */
-	regex_name = match_regex(dict, word);
+	regex_name = match_regex(dict->regex_root, word);
 	if (regex_name)
 	{
 		display_word_expr(dict, regex_name);

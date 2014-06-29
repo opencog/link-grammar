@@ -981,9 +981,14 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
 	char infix_mark = INFIX_MARK;
+	int * matched_alts = NULL;       /* number of morphemes that have matched
+												 * the chosen disjuncts for the
+												 * unsplit_word, so far (index: ai) */
+	size_t matched_alts_num = 0;     /* matched_alts number of elements */
+#define MATCHED_ALTS_MIN_INC 16     /* don't allocate matched_alts often */
 
-	/* Skip checking, if dictionary specifies neither prefixes nor sufixes.
-	 * This special-cases English, more or less. */
+#if 0	/* Now it can always be enabled. Anyway, it is needed for "any". */
+	/* Skip checking, if dictionary specifies neither prefixes nor sufixes. */
 	if (NULL == afdict) return;
 	if ((0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
 	    (0 == AFCLASS(afdict, AFDICT_MPRE)->length) &&
@@ -991,6 +996,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	{
 		return;
 	}
+#endif
 
 	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
 	{
@@ -1002,9 +1008,6 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
 		char * affix_types_p = affix_types;
 		bool match_found = false;        /* djw matched a morpheme */
-		int matched_alts[MAX_SENTENCE];  /* number of morphemes that have matched
-		                                  * the chosen disjuncts for the
-		                                  * unsplit_word, so far (index: ai) */
 
 		/* Don't bother with linkages that already failed post-processing... */
 		if (0 != lifo->N_violations)
@@ -1035,15 +1038,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 				unsplit_i = i;
 				unsplit = sent->word[i].unsplit_word;
 				numalt = altlen(sent->word[i].alternatives);
-				/* Check for a potential out of boundary condition.
-				 * FIXME: allocate matched_alts[] dynamically. */
-				if (numalt > MAX_SENTENCE)
+				if (numalt > matched_alts_num)
 				{
-					prt_error("Error: sane_morphism(): word %zu: "
-					          "numalt %zu>MAX_SENTENCE(%d), all linkages skipped\n",
-								 i, numalt, MAX_SENTENCE);
-					match_found = false;
-					break;
+					matched_alts_num = numalt + MATCHED_ALTS_MIN_INC;
+					matched_alts =
+						realloc(matched_alts, sizeof(*matched_alts)*matched_alts_num);
 				}
 
 				lgdebug(4, "%zu unsplit word %s, alts:", lk+1, unsplit);
@@ -1207,7 +1206,7 @@ try_again:
 		 * due to morpheme islands, so skip this check. */
 		if (match_found && 0 == sent->null_count &&
 			(NULL != afdict) && (NULL != afdict->regex_root) &&
-			(NULL == match_regex(afdict, affix_types)))
+			(NULL == match_regex(afdict->regex_root, affix_types)))
 		{
 			/* Morpheme type combination not valid */
 			match_found = false;
@@ -1233,6 +1232,8 @@ try_again:
 			        sent->num_valid_linkages);
 		}
 	}
+
+	free(matched_alts);
 }
 
 static void chart_parse(Sentence sent, Parse_Options opts)

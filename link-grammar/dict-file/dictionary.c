@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef USE_ANYSPLIT
+#include "anysplit.h"
+#endif
 #include "api-structures.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -268,7 +271,24 @@ static bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
 	Dictionary afdict = dict->affix_table;
-	char last_entry[MAX_WORD+1] = "";
+
+	/* FIXME: read_entry() builds word lists in reverse order (can we just create
+	 * the list top-down without breaking anything?). Unless it is fixed to
+	 * preserve the order, reverse here the word list for each affix class. */
+	for (ac = afdict->afdict_class;
+		  ac < &afdict->afdict_class[NUMELEMS(afdict_classname)]; ac++)
+	{
+		int i;
+		int l = ac->length - 1;
+		const char * t;
+
+		for (i = 0;  i < l; i++, l--)
+		{
+			t = ac->string[i];
+			ac->string[i] = ac->string[l];
+			ac->string[l] = t;
+		}
+	}
 
 	/* Create the affix lists */
 	ac = AFCLASS(afdict, AFDICT_INFIXMARK);
@@ -287,7 +307,8 @@ static bool afdict_init(Dictionary dict)
 	if (1 == ac->length && (0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
 			                 (0 == AFCLASS(afdict, AFDICT_SUF)->length))
 	{
-			get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
+		char last_entry[MAX_WORD+1] = "";
+		get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
 	}
 	else
 	{
@@ -331,7 +352,7 @@ static bool afdict_init(Dictionary dict)
 		sm_re->name = strdup(afdict_classname[AFDICT_SANEMORPHISM]);
 		sm_re->re = NULL;
 		sm_re->next = NULL;
-		rc = compile_regexs(afdict);
+		rc = compile_regexs(afdict->regex_root, afdict);
 		if (rc) {
 			prt_error("Error: afdict_init: Failed to compile "
 			          "regex '%s' in file %s, return code %d\n",
@@ -367,6 +388,10 @@ static bool afdict_init(Dictionary dict)
 
 	if (! afdict_to_wide(afdict, AFDICT_QUOTES)) return false;
 	if (! afdict_to_wide(afdict, AFDICT_BULLETS)) return false;
+
+#ifdef USE_ANYSPLIT
+	if (! anysplit_init(afdict)) return false;
+#endif
 
 	return true;
 }
@@ -420,6 +445,9 @@ dictionary_six_str(const char * lang,
 	dict->version = NULL;
 #ifdef HAVE_SQLITE
 	dict->db_handle = NULL;
+#endif
+#ifdef USE_ANYSPLIT
+	dict->anysplit = NULL;
 #endif
 
 	/* Language and file-name stuff */
@@ -499,7 +527,7 @@ dictionary_six_str(const char * lang,
 		goto failure;
 
 	if (read_regex_file(dict, regex_name)) goto failure;
-	if (compile_regexs(dict)) goto failure;
+	if (compile_regexs(dict->regex_root, dict)) goto failure;
 
 #ifdef USE_CORPUS
 	dict->corpus = lg_corpus_new();

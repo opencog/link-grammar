@@ -11,6 +11,6 @@
 
 #include "api-structures.h"
 
-int compile_regexs(Dictionary);
-const char *match_regex(Dictionary, const char *);
-void free_regexs(Dictionary dict);
+int compile_regexs(Regex_node *, Dictionary);
+const char *match_regex(Regex_node *, const char *);
+void free_regexs(Regex_node *);

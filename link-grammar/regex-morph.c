@@ -25,15 +25,32 @@
  * using standard POSIX regex.
  */
 
-/* Compiles all the regexs in the Dictionary. Returns 0 on success,
+/**
+ * Notify an error message according to the error code.
+ */
+static void prt_regerror(const char *msg, Regex_node *re, int rc)
+{
+	const size_t errbuf_size = regerror(rc, re->re, NULL, 0);
+	char * const errbuf = malloc(errbuf_size);
+
+	/*
+	prt_error("Error: Failed to compile regex '%s' (%s) at %d: %s\n",
+					re->pattern, re->name, erroroffset, error);
+	*/
+	regerror(rc, re->re, errbuf, errbuf_size);
+	prt_error("Error: %s: \"%s\" (%s): %s", msg, re->pattern, re->name, errbuf);
+	free(errbuf);
+}
+
+/**
+ * Compiles all the given regexs. Returns 0 on success,
  * else an error code.
  */
-int compile_regexs(Dictionary dict)
+int compile_regexs(Regex_node *re, Dictionary dict)
 {
 	regex_t *preg;
 	int rc;
 
-	Regex_node *re = dict->regex_root;
 	while (re != NULL)
 	{
 		/* If re->re non-null, assume compiled already. */
@@ -47,17 +64,12 @@ int compile_regexs(Dictionary dict)
 			rc = regcomp(preg, re->pattern, REG_EXTENDED);
 			if (rc)
 			{
-				/*
-				prt_error("Error: Failed to compile regex '%s' (%s) at %d: %s\n",
-								re->pattern, re->name, erroroffset, error);
-				*/
-				prt_error("Error: Failed to compile regex '%s' (%s)\n",
-								re->pattern, re->name);
+				prt_regerror("Failed to compile regex", re, rc);
 				return rc;
 			}
 
 			/* Check that the regex name is defined in the dictionary. */
-			if (!boolean_dictionary_lookup(dict, re->name))
+			if ((NULL != dict) && !boolean_dictionary_lookup(dict, re->name))
 			{
 				/* TODO: better error handing. Maybe remove the regex? */
 				prt_error("Error: Regex name %s not found in dictionary!\n",
@@ -74,11 +86,10 @@ int compile_regexs(Dictionary dict)
  * On match, returns the name of the first matching regex.
  * If no match is found, returns NULL.
  */
-const char *match_regex(Dictionary dict, const char *s)
+const char *match_regex(Regex_node *re, const char *s)
 {
 	int rc;
 
-	Regex_node *re = dict->regex_root;
 	while (re != NULL)
 	{
 		if (re->re == NULL)
@@ -100,7 +111,7 @@ const char *match_regex(Dictionary dict, const char *s)
 		else if (rc != REG_NOMATCH)
 		{
 			/* We have an error. TODO: more appropriate error handling.*/
-			fprintf(stderr,"Regex matching error %d occurred!\n", rc);
+			prt_regerror("Regex matching error", re, rc);
 		}
 		re = re->next;
 	}
@@ -110,9 +121,8 @@ const char *match_regex(Dictionary dict, const char *s)
 /**
  * Delete associated storage
  */
-void free_regexs(Dictionary dict)
+void free_regexs(Regex_node *re)
 {
-	Regex_node *re = dict->regex_root;
 	while (re != NULL)
 	{
 		Regex_node *next = re->next;

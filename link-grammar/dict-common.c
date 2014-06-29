@@ -11,6 +11,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef USE_ANYSPLIT
+#include "anysplit.h"
+#endif
 #include "dict-api.h"
 #include "dict-common.h"
 #include "externs.h"
@@ -123,7 +126,7 @@ bool find_word_in_dict(Dictionary dict, const char * word)
 	const char * regex_name;
 	if (boolean_dictionary_lookup (dict, word)) return true;
 
-	regex_name = match_regex(dict, word);
+	regex_name = match_regex(dict->regex_root, word);
 	if (NULL == regex_name) return false;
 
 	return boolean_dictionary_lookup(dict, regex_name);
@@ -314,7 +317,10 @@ void dictionary_delete(Dictionary dict)
 	post_process_close(dict->postprocessor);
 	post_process_close(dict->constituent_pp);
 	string_set_delete(dict->string_set);
-	free_regexs(dict);
+	free_regexs(dict->regex_root);
+#ifdef USE_ANYSPLIT
+	free_anysplit(dict);
+#endif
 	free_dictionary(dict);
 	xfree(dict, sizeof(struct Dictionary_s));
 }

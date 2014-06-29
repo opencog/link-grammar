@@ -17,6 +17,9 @@
 #endif
 #include <limits.h>
 
+#ifdef USE_ANYSPLIT
+#include "anysplit.h"
+#endif
 #include "build-disjuncts.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -63,7 +66,7 @@ static bool is_entity(Dictionary dict, const char * str)
 	const char * regex_name;
 	if (word_contains(dict, str, ENTITY_MARKER) == 1)
 		return true;
-	regex_name = match_regex(dict, str);
+	regex_name = match_regex(dict->regex_root, str);
 	if (NULL == regex_name) return false;
 	return word_contains(dict, regex_name, ENTITY_MARKER);
 }
@@ -201,37 +204,6 @@ static bool contains_digits(const char * s)
 }
 #endif
 
-static void add_alternative(Sentence, int, const char **, int, const char **, int, const char **);
-static bool issue_alternatives(Sentence, const char *, bool);
-/**
- * Make the string 's' be the next word of the sentence.
- * That is, it looks like 's' is a word we can handle, so record it
- * as a bona-fide word in the sentence.  Increment the sentence length
- * when done.
- *
- * Do not issue the empty string.
- */
-static void issue_sentence_word(Sentence sent, const char * s, bool quote_found)
-{
-	add_alternative(sent, 0,NULL, 1,&s, 0,NULL);
-	(void) issue_alternatives(sent, s, quote_found);
-}
-
-static const char ** resize_alts(const char **arr, size_t len)
-{
-	arr = (const char **)realloc(arr, (len+2) * sizeof(const char *));
-	arr[len+1] = NULL;
-	return arr;
-}
-
-static void altappend(Sentence sent, const char ***altp, const char *w)
-{
-	int n = altlen(*altp);
-
-	*altp = resize_alts(*altp, n);
-	(*altp)[n] = string_set_add(w, sent->string_set);
-}
-
 /**
  * Accumulate different word-stemming possibilities.
  *
@@ -247,7 +219,10 @@ static void altappend(Sentence sent, const char ***altp, const char *w)
  * BALANCING: the parser needs it for now. It is probably better
  * to move it to build_sentence_expressions().
  */
-static void add_alternative(Sentence sent,
+#ifndef USE_ANYSPLIT
+static
+#endif
+void add_alternative(Sentence sent,
 				int prefnum, const char **prefix,
 				int stemnum, const char **stem,
 				int suffnum, const char **suffix)
@@ -396,6 +371,20 @@ static bool issue_alternatives(Sentence sent,
 		print_sentence_word_alternatives(sent, true, NULL, NULL);
 
 	return true;
+}
+
+/**
+ * Make the string 's' be the next word of the sentence.
+ * That is, it looks like 's' is a word we can handle, so record it
+ * as a bona-fide word in the sentence.  Increment the sentence length
+ * when done.
+ *
+ * Do not issue the empty string (checked in add_alternative()).
+ */
+static void issue_sentence_word(Sentence sent, const char * s, bool quote_found)
+{
+	add_alternative(sent, 0,NULL, 1,&s, 0,NULL);
+	(void) issue_alternatives(sent, s, quote_found);
 }
 
 /*
@@ -1080,9 +1069,9 @@ static const char * strip_units(Sentence sent, const char * w,
  * The function returns a pointer to one character after the end of the
  * remaining word.
  *
- * In case of unit strips that end up in a null root word, we later need
- * to add the unstripped word (consisting of units only, without punctuations)
- * as an alternative. This is done if it can match a reegex.
+ * In case of units strip that end up in a null root word, we later need
+ * to add the unstripped word (consisting of units only, without punctuation)
+ * as an alternative. This is done if it can match a regex.
  * To that end, the following "by result" parameters are used here:
  * units_wend - end of word consisting of units only
  * n_r_unit - number of stripped units
@@ -1156,7 +1145,7 @@ static const char * strip_right(Sentence sent, const char *w,
 	/* Next step: Try units, then rpunc, then units again.  We do this
 	 * to handle expressions such as 12sqft. or 12lbs. (notice the
 	 * period at end). That is, we want to strip off the "lbs." with
-	 * the dot, first, rather than stripping the dot as puncutation,
+	 * the dot, first, rather than stripping the dot as punctuation,
 	 * and then coming up empty-handed for "sq.ft" (without the dot)
 	 * in the dict.  But if we are NOT able to strip off any units,
 	 * then we try punctuation, and then units. This allows commas to
@@ -1181,7 +1170,7 @@ static const char * strip_right(Sentence sent, const char *w,
 	/* First, try to strip right-punctuation. Only later do we try
 	 * to strip units. The reason for this is that we can use regexes
 	 * to find a word in the dict when working with punctuation, but
-	 * we must not use regexes when strippng units. because the S-WORD
+	 * we must not use regexes when stripping units. because the S-WORD
 	 * regex goofs up units. The HMS-TIME regex too ...
 	 */
 	for (nrs = 0; nrs < MAX_STRIP; nrs++)
@@ -1304,7 +1293,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	/* First, see if we can already recognize the word as-is,
 	 * as a dictionary word, but not as a regex match. If so,
 	 * then we are mostly done(*). If not found, we'll try
-	 * stripping left and right punctutation, and units.
+	 * stripping left and right punctuation, and units.
 	 * We don't want to do regex matching yet, because the
 	 * S-WORDS regex prevents striping units that end in 's',
 	 * while the HMS-time regex halts separation of 7am into
@@ -1346,7 +1335,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			strncpy(word, w, sz);
 			word[sz] = '\0';
 
-			if (NULL == match_regex(sent->dict, word))
+			if (NULL == match_regex(sent->dict->regex_root, word))
 			{
 				for (i = n_r_stripped - 1; i >= 0; i--)
 				{
@@ -1416,6 +1405,10 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	/* FIXME: Unify with suffix_split(). */
 	word_can_split |= mprefix_split(sent, word);
 
+#ifdef USE_ANYSPLIT
+	word_can_split |= anysplit(sent, word);
+#endif
+
 	lgdebug(+2, "After split step, word='%s' now word_can_split=%d\n",
 	        word, word_can_split);
 
@@ -1440,7 +1433,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 */
 	if (is_utf8_upper(word))
 	{
-		if (!word_can_split && match_regex(sent->dict, wp))
+		if (!word_can_split && match_regex(sent->dict->regex_root, wp))
 		{
 			lgdebug(+2, "Adding uc word=%s\n", wp);
 			add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
@@ -1485,10 +1478,10 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			wp = str;
 		}
 
-		if (NULL != match_regex(sent->dict, wp))
+		if (NULL != match_regex(sent->dict->regex_root, wp))
 		{
 			lgdebug(+2, "Adding '%s' as word to regex (match=%s)\n",
-			        wp, match_regex(sent->dict, wp));
+			        wp, match_regex(sent->dict->regex_root, wp));
 			add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 
 		   word_is_in_dict = true;
@@ -1519,7 +1512,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	if (NULL != units_wend)
 	{
-		/* We arrive here if we added the unstriped word as an alternative.
+		/* We arrive here if we added the unstripped word as an alternative.
 		 * Now we need to add the units as another alternative. */
 		const char **r_stripped_words = NULL;
 
@@ -1812,7 +1805,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 					mark_x_node_words(sent, we, spell_mark);
 				}
 			}
-			else if ((NULL != (regex_name = match_regex(sent->dict, regex_it))) &&
+			else if ((NULL != (regex_name = match_regex(sent->dict->regex_root, regex_it))) &&
 			         boolean_dictionary_lookup(sent->dict, regex_name))
 			{
 				we = build_regex_expressions(sent, i, regex_name, regex_it, opts);
