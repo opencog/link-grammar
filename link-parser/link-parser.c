@@ -365,7 +365,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
 	num_to_query = MIN(sentence_num_linkages_post_processed(sent),
-	                   DISPLAY_MAX);
+	                   parse_options_get_linkage_limit(opts));
 	if (!copts->display_bad)
 	{
 		num_to_display = MIN(sentence_num_valid_linkages(sent),
