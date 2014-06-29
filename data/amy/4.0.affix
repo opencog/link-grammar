@@ -20,12 +20,14 @@
 % Anysplit parameters
 
 % Maximum number of word partitions - 0 disables Anysplit
-6: REGPARTS+;
+% 6: REGPARTS+;
+2: REGPARTS+;
 
 % Number of alternatives to issue for a word. Two values: minimum and maximum.
 % If the word has more possibilities to split than the minimum, but less
 % then the maximum, then issue them unconditionally.
-10 20: REGALTS+;
+% 10 20: REGALTS+;
+2 10: REGALTS+;
 
 % When word parts match these regexes, they are issued as alternatives.
 % Multiple regexes are permitted.
