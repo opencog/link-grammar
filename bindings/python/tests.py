@@ -9,7 +9,19 @@ import unittest
 from linkgrammar import Parser, Linkage, ParseOptions, Link
 import _clinkgrammar as clg
 
-class ParseOptionsTestCase(unittest.TestCase):
+# The tests are run in alphabetical order....
+#
+# First test: test the test framework itself ...
+class AAALinkTestCase(unittest.TestCase):
+    def test_link_display_with_identical_link_type(self):
+        self.assertEqual(unicode(Link('Left','Link','Link','Right')),
+                         u'Left-Link-Right')
+
+    def test_link_display_with_identical_link_type(self):
+        self.assertEqual(unicode(Link('Left','Link','Link*','Right')),
+                         u'Left-Link-Link*-Right')
+
+class BParseOptionsTestCase(unittest.TestCase):
     def test_setting_verbosity(self):
         po = ParseOptions()
         po.verbosity = 2
@@ -132,7 +144,7 @@ class ParseOptionsTestCase(unittest.TestCase):
         self.assertRaises(TypeError, setattr, po, "all_short_connectors", "a")
 
 
-class ParserTestCase(unittest.TestCase):
+class CParserTestCase(unittest.TestCase):
     def test_specifying_options_when_instantiating_parser(self):
         p = Parser(linkage_limit=10)
         self.assertEqual(clg.parse_options_get_linkage_limit(p.parse_options._po), 10)
@@ -150,8 +162,7 @@ class ParserTestCase(unittest.TestCase):
         del p
 
 
-
-class ParsingTestCase(unittest.TestCase):
+class DParsingTestCase(unittest.TestCase):
     def setUp(self):
         self.p = Parser()
 
@@ -202,7 +213,8 @@ class ParsingTestCase(unittest.TestCase):
         result = self.p.parse_sent("This is a silly sentence.")[0]
         self.assertEqual(result.link_distances, [6,2,1,1,3,2,1,1])
 
-class LinkageTestCase(unittest.TestCase):
+
+class ELinkageTestCase(unittest.TestCase):
     def setUp(self):
         self.p = Parser()
 
@@ -398,17 +410,8 @@ class LinkageTestCase(unittest.TestCase):
         parses.close()
 
 
-class LinkTestCase(unittest.TestCase):
-    def test_link_display_with_identical_link_type(self):
-        self.assertEqual(unicode(Link('Left','Link','Link','Right')),
-                         u'Left-Link-Right')
-
-    def test_link_display_with_identical_link_type(self):
-        self.assertEqual(unicode(Link('Left','Link','Link*','Right')),
-                         u'Left-Link-Link*-Right')
-
 # Tests are run in alphabetical order; do the language tests last.
-class ZLangTestCaseDE(unittest.TestCase):
+class ZDELangTestCase(unittest.TestCase):
     def setUp(self):
         self.p = Parser(lang = 'de')
 
@@ -438,8 +441,9 @@ class ZLangTestCaseDE(unittest.TestCase):
         self.assertEqual(linkage.links[5],
                          Link('.','RW','RW','RIGHT-WALL'))
 
+
 # Tests are run in alphabetical order; do the language tests last.
-class ZLangTestCaseRU(unittest.TestCase):
+class ZRULangTestCase(unittest.TestCase):
     def setUp(self):
         self.p = Parser(lang = 'ru')
 
