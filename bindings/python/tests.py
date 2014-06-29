@@ -339,8 +339,8 @@ class LinkageTestCase(unittest.TestCase):
               'which', 'was.v-d', 'recommended.v-d', 'by', 'the', 'restaurant.n',
               '\'s.p', 'owner.n', 'RIGHT-WALL'])
 
-    # Verify that we are getting the linkages tthat we want
-    # XXX TODO we really should pull these from a test file ...
+    # Verify that we are getting the linkages that we want
+    # See below, remainder of parses are in text files
     def test_h_getting_links(self):
         sent = 'Scientists sometimes may repeat experiments or use groups.'
         linkage = self.p.parse_sent(sent)[0]
@@ -372,6 +372,30 @@ class LinkageTestCase(unittest.TestCase):
 "\n    |      |   |     |   |      |        |"
 "\nLEFT-WALL we are.v from the planet.n Gorpon[!] "
 "\n\n")
+
+
+    # Reads linkages from a test-file.
+    def test_i_getting_links(self):
+        parses = open("en-parses.txt")
+        diagram = None
+        sent = None
+        for line in parses :
+            # Lines starting with I are the input sentences
+            if 'I' == line[0] :
+                sent = line[1:]
+                diagram = ""
+
+            # Lines starting with O are the parse diagrams
+            if 'O' == line[0] :
+                diagram += line[1:]
+
+                # We have a complete diagram if it ends with an
+                # empty line.
+                if '\n' == line[1] and 1 < len(diagram) :
+                    linkage = self.p.parse_sent(sent)[0]
+                    self.assertEqual(linkage.diagram, diagram)
+
+        parses.close()
 
 
 class LinkTestCase(unittest.TestCase):
