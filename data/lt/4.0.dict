@@ -11,8 +11,8 @@
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
-% Dictionary version number is 5.0.1 (formatted as V5v0v1+)
-<dictionary-version-number>: V5v0v1+;
+% Dictionary version number is 5.1.0 (formatted as V5v1v0+)
+<dictionary-version-number>: V5v1v0+;
 
 % Empty word; required for basic morphology analysis.
 EMPTY-WORD.zzz: ZZZ-;
@@ -553,11 +553,12 @@ vilt.= : LLTRETItis+;
   : LLTRETIIIis+;
 
 % IV kirčiuotė kaip pirmoji (minkšta -ių duag. kilm.)
-vin.= ak.= ang.= angl.= aš.= av.= blužn.= dal.= krūt.= pusn.= puš.=
+% ang.=   XXXXX
+vin.= ak.= angl.= aš.= av.= blužn.= dal.= krūt.= pusn.= puš.=
 ugn.= usn.= 
   : LLTRETIis+;
 
-% IV kirčiuotė kieta daug. kilminiko ų
+% IV kirčiuotė kieta daug. kilmininko ų
 % [[LLTRETIis+]] leistu tyrinėti klaidas, pvz: "žuvių" vietoj "žuvų"
 aus.= šakn.= tulž.= viln.= žąs.= žuv.=
   : LLTRETIVis+;
@@ -1004,7 +1005,7 @@ skai.= : LLATREtyti+;
 % -------------------------------
 % Įvardžiai
 % Asmeniniai įvardžiai
-aš:  DV*vp$;
+aš.i:  DV*vp$;
 tu:  DV*va$;
 jis: DVvvt$;
 ji:  DVmvt$;
