@@ -41,22 +41,43 @@ typedef enum {
 	AFDICT_INFIXMARK,
 	AFDICT_STEMSUBSCR,
 	AFDICT_SANEMORPHISM
+#ifdef USE_ANYSPLIT
+	,
+	AFDICT_REGPRE,
+	AFDICT_REGMID,
+	AFDICT_REGSUF,
+	AFDICT_REGALTS ,
+	AFDICT_REGPARTS
+#endif
 } afdict_classnum;
 
-#define AFDICT_CLASSNAMES \
+#define AFDICT_CLASSNAMES1 \
 	"invalid classname", \
 	"RPUNC", \
 	"LPUNC", \
 	"UNITS", \
-	"SUF",          /* SUF is used in the Russian dict */ \
-	"PRE",          /* PRE is not used anywhere, yet... */ \
-	"MPRE",         /* Multi-prefix, currently for Hebrew */ \
+	"SUF",         /* SUF is used in the Russian dict */ \
+	"PRE",         /* PRE is not used anywhere, yet... */ \
+	"MPRE",        /* Multi-prefix, currently for Hebrew */ \
 	"QUOTES", \
 	"BULLETS", \
-	"INFIXMARK",    /* Prepended to suffixes, appended to pefixes */ \
-	"STEMSUBSCR",   /* Subscripts for stems */ \
-	"SANEMORPHISM"  /* Regexp for sane_morphism() */
+	"INFIXMARK",   /* Prepended to suffixes, appended to pefixes */ \
+	"STEMSUBSCR",  /* Subscripts for stems */ \
+	"SANEMORPHISM" /* Regex for sane_morphism() */
 
+#ifdef USE_ANYSPLIT
+#define AFDICT_CLASSNAMES2 \
+	, \
+	"REGPRE",      /* Regex for prefix */ \
+	"REGMID",      /* Regex for middle parts */ \
+	"REGSUF",      /* Regex for suffix */ \
+	"REGALTS",     /* Min&max number of alternatives to issue for a word */\
+	"REGPARTS"     /* Max number of word partitions */
+#else
+#define AFDICT_CLASSNAMES2
+#endif
+
+#define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])
 
 #endif /* _LG_DICT_COMMON_H_ */

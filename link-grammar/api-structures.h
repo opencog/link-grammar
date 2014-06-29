@@ -128,6 +128,9 @@ struct Dictionary_s
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
 	Afdict_class *  afdict_class;
+#ifdef USE_ANYSPLIT
+	struct anysplit_params * anysplit;
+#endif
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker; /* spell checker handle */

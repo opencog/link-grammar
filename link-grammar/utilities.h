@@ -334,7 +334,8 @@ dyn_str* dyn_str_new(void);
 void dyn_str_delete(dyn_str*);
 void dyn_strcat(dyn_str*, const char*);
 
-size_t altlen(const char **arr);
+size_t altlen(const char **);
+void altappend(Sentence, const char ***, const char *);
 
 /* routines for allocating basic objects */
 void init_memusage(void);

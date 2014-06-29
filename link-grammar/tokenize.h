@@ -12,3 +12,9 @@
 Boolean separate_sentence(Sentence, Parse_Options);
 void build_sentence_expressions(Sentence, Parse_Options);
 Boolean sentence_in_dictionary(Sentence);
+#ifdef USE_ANYSPLIT
+void add_alternative(Sentence sent,
+                     int prefnum, const char **prefix,
+                     int stemnum, const char **stem,
+                     int suffnum, const char **suffix);
+#endif

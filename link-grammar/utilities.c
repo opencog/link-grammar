@@ -28,6 +28,7 @@
 #include <pthread.h>
 #endif
 
+#include "string-set.h"
 #include "structures.h"
 #include "utilities.h"
 
@@ -1164,12 +1165,27 @@ char * get_default_locale(void)
 /* ============================================================= */
 /* Alternatives utilities */
 
+static const char ** resize_alts(const char **arr, size_t len)
+{
+	arr = (const char **)realloc(arr, (len+2) * sizeof(const char *));
+	arr[len+1] = NULL;
+	return arr;
+}
+
 size_t altlen(const char **arr)
 {
 	size_t len = 0;
 	if (arr)
 		while (arr[len] != NULL) len++;
 	return len;
+}
+
+void altappend(Sentence sent, const char ***altp, const char *w)
+{
+	int n = altlen(*altp);
+
+	*altp = resize_alts(*altp, n);
+	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
 /* ========================== END OF FILE =================== */
