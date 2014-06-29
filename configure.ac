@@ -261,6 +261,20 @@ AM_CONDITIONAL(WITH_CORPUS, test x${enable_corpus_stats} = xyes)
 
 dnl ====================================================================
 
+AC_ARG_ENABLE( anysplit,
+  [  --enable-anysplit       enable use of the "any" language word splitter],
+  [],
+  [enable_anysplit=no]
+)
+if test "x$enable_anysplit" = "xyes"
+then
+	CPPFLAGS="${CPPFLAGS} -DUSE_ANYSPLIT=1"
+fi
+
+AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_anysplit} = xyes)
+
+dnl ====================================================================
+
 AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
 AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 
@@ -709,4 +723,5 @@ $PACKAGE-$VERSION
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
+	Anysplit word splitter:         ${enable_anysplit}
 "

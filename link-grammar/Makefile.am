@@ -79,6 +79,7 @@ liblink_grammar_la_LIBADD  += -lm
 liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
 	and.c                            \
+	anysplit.c                       \
 	api.c                            \
 	build-disjuncts.c                \
 	constituents.c                   \
@@ -116,6 +117,7 @@ liblink_grammar_la_SOURCES =        \
 	tokenize.c                       \
 	utilities.c                      \
 	word-utils.c                     \
+	anysplit.h                       \
 	api-structures.h                 \
 	api-types.h                      \
 	analyze-linkage.h                \
