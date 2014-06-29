@@ -114,12 +114,12 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 
 % -------------------------------
 % Linksniai -- bendri
-<k-ko>: DK+ or [DK-];
-<n-kam>: DN$ ^ {DK$};
-<g-ka>: DG$ ^ {DK$};
+<k-ko>: dDK+ or [dDK-];
+<n-kam>: dDN$ ^ {dDK$};
+<g-ka>: dDG$ ^ {dDK$};
 
 % Linksniai -- vyriški vienaskaita
-<vv-v-kas>: DVvv$;
+<vv-v-kas>: dDVvv$;
 <vv-k-ko>:  <k-ko>;
 <vv-n-kam>: <n-kam>;
 <vv-g-ka>:  <g-ka>;
@@ -128,7 +128,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <vv-s-o>: Wa-;
 
 % vyriški daugiskaita
-<vd-v-kas>: DVvd$;
+<vd-v-kas>: dDVvd$;
 <vd-k-ko>:  <k-ko>;
 <vd-n-kam>: <n-kam>;
 <vd-g-ka>:  <g-ka>;
@@ -137,7 +137,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <vd-s-o>: Wa-;
 
 % Linksniai -- moteriški vienaskaita
-<mv-v-kas>: DVmv$;
+<mv-v-kas>: dDVmv$;
 <mv-k-ko>:  <k-ko>;
 <mv-n-kam>: <n-kam>;
 <mv-g-ka>:  <g-ka>;
@@ -146,7 +146,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 <mv-s-o>: Wa-;
 
 % moteriški daugiskaita
-<md-v-kas>: DVmd$;
+<md-v-kas>: dDVmd$;
 <md-k-ko>:  <k-ko>;
 <md-n-kam>: <n-kam>;
 <md-g-ka>:  <g-ka>;
