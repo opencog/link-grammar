@@ -9,12 +9,19 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef USE_ANYSPLIT
+
+/**
+ * anysplit.c -- code that splits words into random morphemes.
+ * This is used for the language-learning/morpheme-learning project.
+ * This code is conditionally compiled, because ...
+ */
+
 /* General assumptions:
  * - false is binary 0 (for memset())
  * - int is >= 32 bit (for random number)
  */
 
-#ifdef USE_ANYSPLIT
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
