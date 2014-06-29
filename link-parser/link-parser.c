@@ -364,8 +364,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 	Parse_Options opts = copts->popts;
 
 	if (verbosity > 0) print_parse_statistics(sent, opts);
-	num_to_query = MIN(sentence_num_linkages_post_processed(sent),
-	                   parse_options_get_linkage_limit(opts));
+	num_to_query = sentence_num_linkages_post_processed(sent);
 	if (!copts->display_bad)
 	{
 		num_to_display = MIN(sentence_num_valid_linkages(sent),
@@ -373,8 +372,7 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 	}
 	else
 	{
-		num_to_display = MIN(sentence_num_linkages_post_processed(sent),
-		                     DISPLAY_MAX);
+		num_to_display = MIN(num_to_query, DISPLAY_MAX);
 	}
 
 	for (i=0, num_displayed=0; i<num_to_query; i++)
