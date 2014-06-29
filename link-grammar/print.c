@@ -104,7 +104,7 @@ static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 	{
 		left_append_string(s, LEFT_WALL_DISPLAY, "               ");
 	}
-	else if ((l == (linkage_get_num_words(linkage)-1)) && 
+	else if ((l == (linkage_get_num_words(linkage)-1)) &&
 	         dict->right_wall_defined)
 	{
 		left_append_string(s, RIGHT_WALL_DISPLAY, "               ");
@@ -113,7 +113,10 @@ static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 	{
 		left_append_string(s, linkage_get_word(linkage, l), "               ");
 	}
-	left_append_string(s, llabel, "     ");
+
+	/* XXX FIXME -- the space allocated to a link name should depend
+	 * on the longest link-name in the sentence! */
+	left_append_string(s, llabel, "           ");
 	if (DEPT_CHR == llabel[0])
 		append_string(s, "   <---");
 	else if (HEAD_CHR == llabel[0])
@@ -128,7 +131,7 @@ static void print_a_link(String * s, const Linkage linkage, LinkIdx link)
 		append_string(s, "-<  ");
 	else
 		append_string(s, "--  ");
-	left_append_string(s, rlabel, "     ");
+	left_append_string(s, rlabel, "           ");
 	append_string(s, "     %s\n", linkage_get_word(linkage, r));
 }
 
@@ -263,7 +266,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 /**
  * postscript printing ...
  */
-static char * 
+static char *
 build_linkage_postscript_string(const Linkage linkage,
                                 bool display_walls, ps_ctxt_t *pctx)
 {
@@ -386,7 +389,7 @@ build_linkage_postscript_string(const Linkage linkage,
  * Returned string is allocated with exalloc.
  * Needs to be freed with linkage_free_diagram()
  */
-static char * 
+static char *
 linkage_print_diagram_ctxt(const Linkage linkage,
                            bool display_walls,
                            size_t x_screen_width,
@@ -537,7 +540,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 			/* Add direction indicator */
 			// if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
-			if (DEPT_CHR == ppla[j]->lc->string[0] && 
+			if (DEPT_CHR == ppla[j]->lc->string[0] &&
 			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
 			if (HEAD_CHR == ppla[j]->lc->string[0]) { *(t-1) = '>'; }
 
