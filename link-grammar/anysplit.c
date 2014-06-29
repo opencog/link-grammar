@@ -98,10 +98,6 @@ static void printps(int *ps, int n)
 }
 #endif
 
-/**
- * ord:		Requested ordinal position of word breakout
- */
-
 static void cache_partitions(p_list pl, int *ps, int p)
 {
 	memcpy(pl, ps, sizeof(p_start) * p);
@@ -350,11 +346,12 @@ bool anysplit_init(Dictionary afdict)
 	Afdict_class *regalts = AFCLASS(afdict, AFDICT_REGALTS);
 	Afdict_class *regparts = AFCLASS(afdict, AFDICT_REGPARTS);
 
-	/* FIXME: Early assignment of verbosity by -v=x argument. */
-	if (verbosity > 1 && (0 == regparts->length))
+	if (0 == regparts->length)
 	{
-		prt_error("Warning: file %s: Anysplit disabled (%s not defined)",
-		          afdict->name, afdict_classname[AFDICT_REGPARTS]);
+		/* FIXME: Early assignment of verbosity by -v=x argument. */
+		if (verbosity > 1)
+			prt_error("Warning: file %s: Anysplit disabled (%s not defined)",
+		             afdict->name, afdict_classname[AFDICT_REGPARTS]);
 		return true;
 	}
 	if (1 != regparts->length)
