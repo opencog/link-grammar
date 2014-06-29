@@ -59,5 +59,6 @@ EXTRA_DIST =         \
    linkgrammar.py    \
    example.py        \
    en-parses.py      \
+   lt-parses.py      \
    tests.py
 
