@@ -346,10 +346,10 @@ class LinkageTestCase(unittest.TestCase):
         linkage = self.p.parse_sent(sent)[0]
         self.assertEqual(linkage.diagram, 
 "\n    +---------------------------------------Xp--------------------------------------+"
-"\n    +-----------------------------WV-----------------------------+                  |"
-"\n    |                              +--------------I--------------+                  |"
-"\n    |           +--------Sp--------+       +---------VJlp--------+                  |"
-"\n    +-----Wd----+          +---E---+       +----Op----+          +-VJrp+---Op--+    |"
+"\n    +---------------------------->WV---------------------------->+                  |"
+"\n    |           +-----------------------Sp-----------------------+                  |"
+"\n    |           |                  +------------VJlpi------------+                  |"
+"\n    +-----Wd----+          +---E---+---I---+----Op----+          +VJrpi+---Op--+    |"
 "\n    |           |          |       |       |          |          |     |       |    |"
 "\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n . "
 "\n\n")
@@ -357,7 +357,7 @@ class LinkageTestCase(unittest.TestCase):
         linkage = self.p.parse_sent(sent)[0]
         self.assertEqual(linkage.diagram, 
 "\n    +-----------------Xp----------------+"
-"\n    +-----WV-----+                      |"
+"\n    +---->WV---->+                      |"
 "\n    +--Wd--+-Sp*i+---Pg---+---Ou---+    |"
 "\n    |      |     |        |        |    |"
 "\nLEFT-WALL I.p enjoy.v eating.v bass.n-u . "
@@ -367,7 +367,7 @@ class LinkageTestCase(unittest.TestCase):
         sent = 'We are from the planet Gorpon'
         linkage = self.p.parse_sent(sent)[0]
         self.assertEqual(linkage.diagram, 
-"\n    +----WV----+     +---------Js--------+"
+"\n    +--->WV--->+     +---------Js--------+"
 "\n    +--Wd--+Spx+--Pp-+   +--DD--+---GN---+"
 "\n    |      |   |     |   |      |        |"
 "\nLEFT-WALL we are.v from the planet.n Gorpon[!] "
