@@ -536,14 +536,17 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			}
 
 			/* Add direction indicator */
-			if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
+			// if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
+			if (DEPT_CHR == ppla[j]->lc->string[0] && 
+			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
 			if (HEAD_CHR == ppla[j]->lc->string[0]) { *(t-1) = '>'; }
 
 			/* Copy connector name; stop short if no room */
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
 			/* Add direction indicator */
-			if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
+			// if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
+			if (DEPT_CHR == ppla[j]->rc->string[0]) { picture[row][cr-1] = '>'; }
 			if (HEAD_CHR == ppla[j]->rc->string[0]) { *t = '<'; }
 
 			/* The direction indicators maye have clobbered these. */
