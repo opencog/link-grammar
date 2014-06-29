@@ -117,7 +117,7 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 % ko, kieno: dDK maža d tai reiškia 'dependent' ant kito daiktavardžio
 % ka: hDK maža h tai reiškia 'head' (galva), leidžia daiktavardi.
 <k-ko>: dDK+ or [dDK-];
-<n-kam>: DN$ ^ {hDK$};
+<n-kam>: dDN$ ^ {hDK$};
 <g-ka>: dDG$ ^ {hDK$};
 
 % Linksniai -- vyriški vienaskaita
