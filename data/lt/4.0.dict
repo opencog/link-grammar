@@ -114,9 +114,11 @@ laivelį mokyklą sodžių: {DK-} & DG- & {LI-};
 
 % -------------------------------
 % Linksniai -- bendri
+% ko, kieno: dDK maža d tai reiškia 'dependent' ant kito daiktavardžio
+% ka: hDK maža h tai reiškia 'head' (galva), leidžia daiktavardi.
 <k-ko>: dDK+ or [dDK-];
-<n-kam>: dDN$ ^ {dDK$};
-<g-ka>: dDG$ ^ {dDK$};
+<n-kam>: DN$ ^ {hDK$};
+<g-ka>: dDG$ ^ {hDK$};
 
 % Linksniai -- vyriški vienaskaita
 <vv-v-kas>: dDVvv$;
@@ -1005,18 +1007,18 @@ skai.= : LLATREtyti+;
 % -------------------------------
 % Įvardžiai
 % Asmeniniai įvardžiai
-aš.i:  DV*vp$;
-tu:  DV*va$;
-jis: DVvvt$;
-ji:  DVmvt$;
+aš.i:  dDV*vp$;
+tu:  dDV*va$;
+jis: dDVvvt$;
+ji:  dDVmvt$;
 
-mes: DV*dp$;
-jūs: DV*da$;
-jie: DVvdt$;
-jos: DVmdt$;
+mes: dDV*dp$;
+jūs: dDV*da$;
+jie: dDVvdt$;
+jos: dDVmdt$;
 
 % Savybiniai įvardžiai
-mano tavo savo: DV+;
+mano tavo savo: dDV+;
 
 % -------------------------------
 % Prieveiksmiai ... 
