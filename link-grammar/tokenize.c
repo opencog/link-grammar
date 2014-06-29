@@ -1052,6 +1052,10 @@ static const char * strip_units(Sentence sent, const char * w,
  * or "call." int "cal l ." (calorie litre)
  * Here, the period means that "sin." is not in the dict.
  *
+ * Finally, it must strip the punctuation off of words that are NOT
+ * in the dictionary, but will later be split into morphemes, for
+ * example, in Lithuanian: "Skaitau knygą."  The period must come off.
+ *
  * Basically, don't fuck with this code, unless you run the full
  * set of units sentences in 4.0.fixes.batch.
  *
@@ -1167,8 +1171,8 @@ static const char * strip_right(Sentence sent, const char *w,
 	*units_wend = NULL;
 	*n_r_units = 0;
 
-	/* First, try to strip right-punctuation. Only later do we try
-	 * to strip units. The reason for this is that we can use regexes
+	/* Now, try to strip right-punctuation, and finally, try to
+	 * strip units. The reason for this is that we can use regexes
 	 * to find a word in the dict when working with punctuation, but
 	 * we must not use regexes when stripping units. because the S-WORD
 	 * regex goofs up units. The HMS-TIME regex too ...
@@ -1212,10 +1216,11 @@ static const char * strip_right(Sentence sent, const char *w,
 		if (i == r_strippable) break;
 	}
 
-	/* We may or have may not removed punctuation. Try to handle units.  */
+	/* We may or have may not removed punctuation. Try to handle units. */
 	*units_wend = temp_wend; /* Potential end of units */
 	*n_r_stripped = nrs;
-	temp_wend = strip_units(sent, w, temp_wend, r_stripped, n_r_stripped, word_is_in_dict);
+	temp_wend = strip_units(sent, w, temp_wend,
+	                     r_stripped, n_r_stripped, word_is_in_dict);
 	if (*units_wend == temp_wend)
 	{
 		*units_wend = NULL;
@@ -1231,13 +1236,16 @@ static const char * strip_right(Sentence sent, const char *w,
 		char* word = alloca(sz+1);
 		strncpy(word, w, sz);
 		word[sz] = '\0';
-		lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n", w, *word_is_in_dict);
+		lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n",
+		        w, *word_is_in_dict);
 	}
 
-	if (*word_is_in_dict)
-	{
-		wend = temp_wend;
-	}
+	/* At this point, we accept whatever punctuation was stripped.
+	 * We might not have found the stripped word in the dict,
+	 * becasuse it has yet to be broken up into morphemes by later
+	 * stages...
+	 */
+	wend = temp_wend;
 	return wend;
 }
 
