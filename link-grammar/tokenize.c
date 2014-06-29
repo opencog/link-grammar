@@ -1103,7 +1103,7 @@ static const char * strip_right(Sentence sent, const char *w,
 	r_strippable = rpunc_list->length;
 	rpunc = rpunc_list->string;
 
-	/* Step 1: First, try to strip off a single punctuation
+	/* Step 1: First, try to strip off a single punctuation,
 	 * typically a comma or period, and see if the resulting
 	 * word is in the dict (but not the  regex). This allows
 	 * "sin." and "call." to be recognized. If we don't do
@@ -1273,7 +1273,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	size_t sz;
 	int i;
 	size_t  n_r_stripped = 0;
-	bool word_is_in_dict;
+	bool word_is_in_dict = false;
 	bool word_can_split = false;
 	bool issued = false;
 
@@ -1312,9 +1312,14 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * (*)... unless the word can split or we need to handle
 	 * captalization. We check that later.
 	 */
+#if UNCONDITIONAL_PUNCT_STRIP_CAUSE_AMIR_ASKED_FOR_THIS
+// The below allows "Mr. Smith is late" to parse, but ruins
+// the parsing of "The record skips halfway in."  because
+// "in." shows up in the dictionary as inches.
 	word_is_in_dict = boolean_dictionary_lookup(dict, word);
 	lgdebug(+2, "Initial check: word='%s' boolean_dictionary_lookup=%d\n",
 	        word, word_is_in_dict);
+#endif
 
 	/* Strip punctuation, units from candidate word, using
 	 * a linear splitting algorithm. FIXME: Handle punctuation
