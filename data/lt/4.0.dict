@@ -722,108 +722,108 @@ sumušiau: VG- & {Wd-} & {VI+};
 % <veiks-nlsa>: nousaka -- laikas -- skaičius -- asmuo
 % -------
 % <veiks-tevp> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita p=pirmasis
-<veiks-tevp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
+<veiks-tevp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
 
 % <veiks-teva> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita a=antrasis
-<veiks-teva>: (T- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
+<veiks-teva>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
 
 % <veiks-tevt> Veiksmažodis - tev t=tiesioginė e=esamasis v=vienaskaita t=trečiasis
-<veiks-tevt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
+<veiks-tevt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
 
 % <veiks-tedp> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita p=pirmasis
-<veiks-tedp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
+<veiks-tedp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
 
 % <veiks-teda> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita a=antrasis
-<veiks-teda>: (T- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
+<veiks-teda>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
 
 % <veiks-tedt> Veiksmažodis - ted t=tiesioginė e=esamasis d=daugiskaita t=trečiasis
-<veiks-tedt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
+<veiks-tedt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
 
 % -------
 % <veiks-tkvp> Veiksmažodis - tkv t=tiesioginė k=būtasis kartinis v=vienaskaita p=pirmasis
-<veiks-tkvp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
+<veiks-tkvp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
 
 % <veiks-tkva> Veiksmažodis - tkv t=tiesioginė k=būtasis kartinis v=vienaskaita a=antrasis
-<veiks-tkva>: (T- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
+<veiks-tkva>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
 
 % <veiks-tkvt> Veiksmažodis - tkv t=tiesioginė k=būtasis kartinis v=vienaskaita t=trečiasis
-<veiks-tkvt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
+<veiks-tkvt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
 
 % <veiks-tkdp> Veiksmažodis - tkd t=tiesioginė k=būtasis kartinis d=daugiskaita p=pirmasis
-<veiks-tkdp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
+<veiks-tkdp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
 
 % <veiks-tkda> Veiksmažodis - tkd t=tiesioginė k=būtasis kartinis d=daugiskaita a=antrasis
-<veiks-tkda>: (T- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
+<veiks-tkda>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
 
 % <veiks-tkdt> Veiksmažodis - tkd t=tiesioginė k=būtasis kartinis d=daugiskaita t=trečiasis
-<veiks-tkdt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
+<veiks-tkdt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
 
 % -------
 % <veiks-tzvp> Veiksmažodis - tzv t=tiesioginė z=būtasis dažninis v=vienaskaita p=pirmasis
-<veiks-tzvp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
+<veiks-tzvp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
 
 % <veiks-tzva> Veiksmažodis - tzv t=tiesioginė z=būtasis dažninis v=vienaskaita a=antrasis
-<veiks-tzva>: (T- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
+<veiks-tzva>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
 
 % <veiks-tzvt> Veiksmažodis - tzv t=tiesioginė z=būtasis dažninis v=vienaskaita t=trečiasis
-<veiks-tzvt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
+<veiks-tzvt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
 
 % <veiks-tzdp> Veiksmažodis - tzd t=tiesioginė z=būtasis dažninis d=daugiskaita p=pirmasis
-<veiks-tzdp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
+<veiks-tzdp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
 
 % <veiks-tzda> Veiksmažodis - tzd t=tiesioginė z=būtasis dažninis d=daugiskaita a=antrasis
-<veiks-tzda>: (T- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
+<veiks-tzda>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
 
 % <veiks-tzdt> Veiksmažodis - tzd t=tiesioginė z=būtasis dažninis d=daugiskaita t=trečiasis
-<veiks-tzdt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
+<veiks-tzdt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
 
 % -------
 % <veiks-tuvp> Veiksmažodis - tuv t=tiesioginė u=būsimasis v=vienaskaita p=pirmasis
-<veiks-tuvp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
+<veiks-tuvp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
 
 % <veiks-tuva> Veiksmažodis - tuv t=tiesioginė u=būsimasis v=vienaskaita a=antrasis
-<veiks-tuva>: (T- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
+<veiks-tuva>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
 
 % <veiks-tuvt> Veiksmažodis - tuv t=tiesioginė u=būsimasis v=vienaskaita t=trečiasis
-<veiks-tuvt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
+<veiks-tuvt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
 
 % <veiks-tudp> Veiksmažodis - tud t=tiesioginė u=būsimasis d=daugiskaita p=pirmasis
-<veiks-tudp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
+<veiks-tudp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
 
 % <veiks-tuda> Veiksmažodis - tud t=tiesioginė u=būsimasis d=daugiskaita a=antrasis
-<veiks-tuda>: (T- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
+<veiks-tuda>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
 
 % <veiks-tudt> Veiksmažodis - tud t=tiesioginė u=būsimasis d=daugiskaita t=trečiasis
-<veiks-tudt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
+<veiks-tudt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
 
 % -------
 % <veiks-rvp> Veiksmažodis - rv r=tariamoji v=vienaskaita p=pirmasis
-<veiks-rvp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
+<veiks-rvp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vp$})) & {Xp+};
 
 % <veiks-rva> Veiksmažodis - rv r=tariamoji v=vienaskaita a=antrasis
-<veiks-rva>: (T- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
+<veiks-rva>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
 
 % <veiks-rvt> Veiksmažodis - rv r=tariamoji v=vienaskaita t=trečiasis
-<veiks-rvt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
+<veiks-rvt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*vt$})) & {Xp+};
 
 % <veiks-rdp> Veiksmažodis - rd r=tariamoji d=daugiskaita p=pirmasis
-<veiks-rdp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
+<veiks-rdp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
 
 % <veiks-rda> Veiksmažodis - rd r=tariamoji d=daugiskaita a=antrasis
-<veiks-rda>: (T- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
+<veiks-rda>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
 
 % <veiks-rdt> Veiksmažodis - rd r=tariamoji d=daugiskaita t=trečiasis
-<veiks-rdt>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
+<veiks-rdt>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dt$})) & {Xp+};
 
 % -------
 % <veiks-lva> Veiksmažodis - lv l=liepiamoji v=vienaskaita a=antrasis
-<veiks-lva>: (T- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
+<veiks-lva>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*va$})) & {Xp+};
 
 % <veiks-ldp> Veiksmažodis - ld l=liepiamoji d=daugiskaita p=pirmasis
-<veiks-ldp>: (T- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
+<veiks-ldp>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*dp$})) & {Xp+};
 
 % <veiks-lda> Veiksmažodis - ld l=liepiamoji d=daugiskaita a=antrasis
-<veiks-lda>: (T- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
+<veiks-lda>: (dT- ^ ({DN$} ^ {DG$} ^ {DV*da$})) & {Xp+};
 
 % =================================================================
 %
@@ -1040,7 +1040,7 @@ namo: PV+ or (PV- & {Xp+});
 
 % Žodžiai, kurie gali pradėti sakini.
 CAPITALIZED-WORDS: Wd-;
-LEFT-WALL: ((Wd+ or Wa+ or Wi+) & {Xx+}) or (T+ & {Xx+});
+LEFT-WALL: ((Wd+ or Wa+ or Wi+) & {Xx+}) or (hT+ & {Xx+});
 
 % With the following line in the dictionary, the parser will simply 
 % skip over (null-link) unknown words. If you remove it, the parser 
