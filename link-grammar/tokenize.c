@@ -1331,15 +1331,18 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		if (w >= wend) return;
 
 		/* Strip off punctuation and units, etc. on the right-hand side. */
-		wend = strip_right(sent, w, wend, &units_wend, &n_r_units, r_stripped, &n_r_stripped, &word_is_in_dict);
+		wend = strip_right(sent, w, wend, &units_wend,
+		           &n_r_units, r_stripped, &n_r_stripped, &word_is_in_dict);
 
+#if 0
 		/* If the remaining word is a null string it means we have just
 		 * right-stripped everything off the original word.
 		 */
 		if (w >= wend)
 		{
 			/* Remaining word is a null string - restore the original word. */
-			sz = MIN(units_wend-w, MAX_WORD);
+			sz = MIN(wend-w, MAX_WORD);
+??? this doesn't make sense, if w > wend, then sz is negative.  I don't get it.
 			strncpy(word, w, sz);
 			word[sz] = '\0';
 
@@ -1359,6 +1362,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			/* But if the original word matches a regex, don't miss it -
 			 * issue it as an alternative (later on) */
 		}
+#endif
 	}
 
 	/* w points to the remaining word,
