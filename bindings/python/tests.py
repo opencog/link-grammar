@@ -162,7 +162,7 @@ class CParserTestCase(unittest.TestCase):
         del p
 
 
-class DParsingTestCase(unittest.TestCase):
+class DBasicParsingTestCase(unittest.TestCase):
     def setUp(self):
         self.p = Parser()
 
@@ -214,7 +214,7 @@ class DParsingTestCase(unittest.TestCase):
         self.assertEqual(result.link_distances, [6,2,1,1,3,2,1,1])
 
 
-class ELinkageTestCase(unittest.TestCase):
+class EEnglishLinkageTestCase(unittest.TestCase):
     def setUp(self):
         self.p = Parser()
 
@@ -386,9 +386,13 @@ class ELinkageTestCase(unittest.TestCase):
 "\n\n")
 
 
+class ZENLangTestCase(unittest.TestCase):
+    def setUp(self):
+        self.p = Parser(lang = 'en')
+
     # Reads linkages from a test-file.
-    def test_i_getting_links(self):
-        parses = open("en-parses.txt")
+    def test_getting_links(self):
+        parses = open("parses-en.txt")
         diagram = None
         sent = None
         for line in parses :
@@ -440,6 +444,33 @@ class ZDELangTestCase(unittest.TestCase):
                          Link('den.d','Dam','Dam','Traum.n'))
         self.assertEqual(linkage.links[5],
                          Link('.','RW','RW','RIGHT-WALL'))
+
+class ZLTLangTestCase(unittest.TestCase):
+    def setUp(self):
+        self.p = Parser(lang = 'lt')
+
+    # Reads linkages from a test-file.
+    def test_getting_links(self):
+        parses = open("parses-lt.txt")
+        diagram = None
+        sent = None
+        for line in parses :
+            # Lines starting with I are the input sentences
+            if 'I' == line[0] :
+                sent = line[1:]
+                diagram = ""
+
+            # Lines starting with O are the parse diagrams
+            if 'O' == line[0] :
+                diagram += line[1:]
+
+                # We have a complete diagram if it ends with an
+                # empty line.
+                if '\n' == line[1] and 1 < len(diagram) :
+                    linkage = self.p.parse_sent(sent)[0]
+                    self.assertEqual(linkage.diagram, diagram)
+
+        parses.close()
 
 
 # Tests are run in alphabetical order; do the language tests last.

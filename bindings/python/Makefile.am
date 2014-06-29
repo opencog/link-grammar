@@ -58,7 +58,7 @@ EXTRA_DIST =         \
    __init__.py.in    \
    linkgrammar.py    \
    example.py        \
-   en-parses.py      \
-   lt-parses.py      \
+   parses-en.py      \
+   parses-lt.py      \
    tests.py
 
