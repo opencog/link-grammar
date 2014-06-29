@@ -2062,12 +2062,12 @@ per "/.per": Us+ & Mp-;
 %
 % Also: CP-, Eq+ and COq+ all connect to verbs, and are so disjoined with <verb-wall>
 %
-<verb-wall>: WV- or CV- or IV- or [[()]];
-% <verb-wall>: WV- or CV- or IV-;
+<verb-wall>: dWV- or dCV- or dIV- or [[()]];
+% <verb-wall>: dWV- or dCV- or dIV-;
 
 % When we are done, remove the option costly NULL below.
-<WALL>: WV+ or [[()]];
-% <WALL>: WV+;
+<WALL>: hWV+ or [[()]];
+% <WALL>: hWV+;
 
 % Pv- & <verb-wall>: "a historic new law was passed"
 % Pg- is naked, no verb-wall: "I like eating bass."
@@ -8609,10 +8609,9 @@ UNKNOWN-WORD.a: <ordinary-adj>;
 % XXX that is, change <WALL> to just WV+
 LEFT-WALL:
   (Wa+ & {RW+ or Xp+})
-  or (WV+ & {RW+ or Xp+})
-  or (Wi+ & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+})
+  or (Wi+ & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+})
   or ((Wd+ or Wq+ or Ws+ or Wj+ or Wc+ or We+ or Wt+ or Qd+)
-    & <WALL> & {CP+} & {Xx+ & {WV+}} & {RW+ or Xp+});
+    & <WALL> & {CP+} & {Xx+ & {hWV+}} & {RW+ or Xp+});
 
 % Cost on Xc- because Xc is intended for commas, not sentence-ends.
 % Without this cost, the right wall gets used incorrectly with MX links.
