@@ -220,7 +220,7 @@ class LinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.links[0],
                          Link('LEFT-WALL','Xp','Xp','.'))
         self.assertEqual(linkage.links[1],
-                         Link('LEFT-WALL','WV','WV','is.v'))
+                         Link('LEFT-WALL','hWV','dWV','is.v'))
         self.assertEqual(linkage.links[2],
                          Link('LEFT-WALL','Wd','Wd','this.p'))
         self.assertEqual(linkage.links[3],
@@ -288,9 +288,9 @@ class LinkageTestCase(unittest.TestCase):
         #self.assertEqual(self.p.parse_sent('Red\'s shoe fell off.')[0].words,
         #     ['LEFT-WALL', 'Red[!]',
         #      '\'s.p', 'shoe.n', 'fell.v-d', 'off', '.', 'RIGHT-WALL'])
-
-        self.assertEqual(self.p.parse_sent('Red sat down.')[1].words,
-             ['LEFT-WALL', 'Red[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
+        #
+        #self.assertEqual(self.p.parse_sent('Red sat down.')[1].words,
+        #     ['LEFT-WALL', 'Red[!]', 'sat.v-d', 'down.r', '.', 'RIGHT-WALL'])
 
         # May in dict as noun, capitalized, and as lower-case verb.
         self.assertEqual(self.p.parse_sent('May\'s going?')[0].words,
