@@ -148,7 +148,6 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 		//printf("New number of partitions: n=%d\n", n);
 		do
 		{
-
 			/* set next initial partitions lengths to 1 */
 			//printf("Initialize: m=%d\n", m);
 			for (t = m; t < n; t++)
@@ -496,7 +495,7 @@ bool anysplit(Sentence sent, const char *word)
 	
 	lgdebug(2, "Results: word '%s' (length=%d): %zu/%zu:\n", word, l, rndissued, nsplits);
 
-	for(i = 0; i < nsplits; i++)
+	for (i = 0; i < nsplits; i++)
 	{
 		const char **alternatives = NULL;
 		int numalts = 0;
