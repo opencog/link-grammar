@@ -47,7 +47,7 @@ typedef struct split_cache /* split cached by word length */
 {
 	size_t nsplits;      /* number of splits */
 	p_list sp;           /* list of splits */
-	bool *p_tried;   	   /* list of tried splits */
+	bool *p_tried;       /* list of tried splits */
 	bool *p_selected;    /* list of selectd splits */
 } split_cache;
 
@@ -408,6 +408,7 @@ bool anysplit(Sentence sent, const char *word)
 {
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as;
+	const Afdict_class * stemsubscr = AFCLASS(afdict, AFDICT_STEMSUBSCR);
 
 	int l = strlen(word);
 	p_list pl;
@@ -418,7 +419,7 @@ bool anysplit(Sentence sent, const char *word)
 	size_t rndissued = 0;
 	size_t i;
 	unsigned int seed = 0;
-	char * const word_part = alloca(l+1);
+	char * const word_part = alloca(l+2+1); /* word + ".=" + NUL */
 	bool use_sampling = true;
 
 	
@@ -462,6 +463,7 @@ bool anysplit(Sentence sent, const char *word)
 		if (use_sampling)
 		{
 			sample_point = rng_uniform(&seed, nsplits);
+
 			if (sample_point < 0) /* Cannot happen with rand_r() */
 			{
 				prt_error("Error: rng: %s\n", strerror(errno));
@@ -497,8 +499,8 @@ bool anysplit(Sentence sent, const char *word)
 
 	for (i = 0; i < nsplits; i++)
 	{
-		const char **alternatives = NULL;
-		int numalts = 0;
+		const char **parts = NULL;
+		int numparts = 0;
 		
 		if (!as->scl[l].p_selected[i]) continue;
 
@@ -506,18 +508,38 @@ bool anysplit(Sentence sent, const char *word)
 		pos = 0;
 		for (p = 0; p < as->nparts; p++)
 		{
-			strncpy(word_part, &word[pos], pl[p]-pos);
-			word_part[pl[p]-pos] = '\0';
+			if (pl[0] == l)  /* This is the whole word */
+			{
+				strncpy(word_part, &word[pos], pl[p]-pos);
+				word_part[pl[p]-pos] = '\0';
+			}
+			else
+			if (0 == pos)   /* The first but not the only morpheme */
+			{
+				strncpy(word_part, &word[pos], pl[p]-pos);
+				word_part[pl[p]-pos] = '\0';
 
-			altappend(sent, &alternatives, word_part);
-			numalts++;
+				if (0 != stemsubscr->length)
+					strcat(word_part, stemsubscr->string[0]);
+			}
+			else           /* 2nd and on morphemes */
+			{
+				/* A hack - instead of using the suffix argument of
+				 * add_alternative(). */
+				word_part[0] = INFIX_MARK; /* INFIX_MARK=='\0' when no INFIX_MARK */
+				word_part[1] = '\0';
+				strncat(word_part, &word[pos], pl[p]-pos);
+			}
+
+			altappend(sent, &parts, word_part);
+			numparts++;
 
 			pos = pl[p];
 			if (pos == l) break;
 		}
 
-		add_alternative(sent, 0,NULL, numalts,alternatives, 0,NULL);
-		free(alternatives);
+		add_alternative(sent, 0,NULL, numparts,parts, 0,NULL);
+		free(parts);
 	}
 
 	return true;

@@ -10,12 +10,21 @@
 
 ""«»《》【】『』`„“": QUOTES+;
 
+% Mark the first morpheme by appending STEMSUBSCR.
+.=: STEMSUBSCR+;
 
-% =: INFIXMARK+;
-% 
-% "w|ts": SANEMORPHISM+;
-% 
-% .=: STEMSUBSCR+;
+% Mark the rest of morphemes by prepending INFIXMARK;
+=: INFIXMARK+;
+
+% Program and dictionary sanity check: Allow only these combinations.
+% (w: word, t:stem, s: suffix)
+
+% For REGPARTS == 2
+"w|ts": SANEMORPHISM+;
+
+% For REGPARTS > 2
+%"w|ts+": SANEMORPHISM+;
+
 
 % Anysplit parameters
 
@@ -25,12 +34,14 @@
 
 % Number of alternatives to issue for a word. Two values: minimum and maximum.
 % If the word has more possibilities to split than the minimum, but less
-% then the maximum, then issue them unconditionally.
+% then the maximum, then issue them without sampling. Else use pseudo-random
+% sampling until the minimum number is reached or all possibilities exhausted.
 % 10 20: REGALTS+;
 2 10: REGALTS+;
 
-% When word parts match these regexes, they are issued as alternatives.
-% Multiple regexes are permitted.
+% When all word parts match these regexes,
+% the word is issued as an alternatives.
+% Multiple regexes per class are permitted.
 %
 % If needed, add the same regex in more than one definition.
 
