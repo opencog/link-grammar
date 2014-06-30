@@ -427,7 +427,7 @@ TESTING the program:
    en/4.0.batch:         53 errors
    en/4.0.fixes.batch:   452 errors
    lt/4.0.batch:         17 errors
-   ru/4.0.batch:         47 errors
+   ru/4.0.batch:         47 errors  (XXX should be 37, the regex changes messed it up)
 
    The bindings/python directory contains a unit test for the python
    bindings. It also performs several basic checks that stress the
@@ -729,19 +729,15 @@ Fat Links:
    must be run with the --enable-fat-links flag.  Enabling this will
    generate a lot of warning messages during compilation.
 
+   The only reason that fat link code is still available is that the
+   Russian dictionaries still depend on them to support conjunctions.
+
    Older versions of the link-grammar parser used "fat links" to
    support conjunctions (and, or, but, ...). However, this leads
    to a number of complications, including poor performance due to
    a combinatorial explosion of linkage possibilities, as well as
    an excessively complex parse algorithm.  As a result, the function
    is now deprecated, and will be removed in some future version.
-
-   The Russian dictionaries still use fat links to support conjunctions.
-   The use of fat links by the Russian dictionaries is the major
-   road-block to the removal of the fat links code.
-
-   As of version 5.0.0: Expect to see 37 errors in the 4.0.btch file
-   (Versions 4.7.12 - 4.8.6 reported only 36 errors; they mised a spot).
 
 
 SAT solver:
