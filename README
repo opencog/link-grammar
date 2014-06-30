@@ -427,7 +427,7 @@ TESTING the program:
    en/4.0.batch:         53 errors
    en/4.0.fixes.batch:   452 errors
    lt/4.0.batch:         17 errors
-   ru/4.0.batch:         47 errors  (XXX should be 37, the regex changes messed it up)
+   ru/4.0.batch:         47 errors
 
    The bindings/python directory contains a unit test for the python
    bindings. It also performs several basic checks that stress the
