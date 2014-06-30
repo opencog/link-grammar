@@ -67,6 +67,11 @@
 
 #define HIDE_MORPHO   (!display_morphology)
 
+/* FIXME for is_*:
+ * - Use INFIX_MARK and STEMSUBSCR, to match the corrsponding affix classes.
+ * - There are versions of these functions in api.c - unify them.
+ */
+
 /**
  * Return TRUE if the word is a suffix.
  *
@@ -91,12 +96,18 @@ static bool is_suffix(const char* w)
 /* Return TRUE if the word seems to be in stem form.
  * Stems have the distinctive 'shape', that the end with the = sign
  * and are preceeded by the subscript mark.
+ * Examples (. represented the subscript mark): word.= word.=[!]
  */
 static bool is_stem(const char* w)
 {
 	size_t l = strlen(w);
-	if (l < 2) return FALSE;
-	if (strcmp(STEM_MARK, w+l-2)) return FALSE;
+	const char *subscrmark;
+
+	if (l < 3) return FALSE;
+
+	subscrmark = strchr(w, SUBSCRIPT_MARK);
+	if (NULL == subscrmark) return FALSE;
+	if (0 != strncmp(subscrmark, STEM_MARK, sizeof(STEM_MARK)-1)) return FALSE;
 
 	return TRUE;
 }
@@ -589,7 +600,7 @@ size_t linkage_get_num_links(const Linkage linkage)
 #endif /* USE_FAT_LINKAGES */
 }
 
-static inline Boolean verify_link_index(const Linkage linkage, LinkIdx index)
+static inline bool verify_link_index(const Linkage linkage, LinkIdx index)
 {
 	if (!linkage) return false;
 #ifdef USE_FAT_LINKAGES
