@@ -382,7 +382,7 @@ PL-CAPITALIZED-WORDS:
 %
 % This class has now been eliminated: nouns are either singular, plural
 % or mass. If they can be more than one, then they are listed separately
-% in each class e.g. words.n.1 and/or words.n.2 and/or words.n.3, etc.
+% in each class e.g. nouns.1 and/or words.n.2 and/or words.n.3, etc.
 % (Only a few screwball exceptions below; should be fixed ...)
 <noun-mass-count>:
   <noun-modifiers> &
@@ -518,7 +518,7 @@ HYPHENATED-WORDS.n:
 % position 2 can be c for count, u for uncountable
 % position 3 can be k,m,y for comparatives, w for questions.
 
-% words.n.1: Common nouns
+% nouns.1-vowel nouns.1-const: Common nouns
 % activist.n actor.n actress.n actuary.n ad.n adage.n adagio.n adapter.n
 % The naked SJr- allows article to be skipped in conjunction (and,or)
 % constructions ("the hammer and sickle")
@@ -542,7 +542,8 @@ HYPHENATED-WORDS.n:
     or Us-
     or Wa-);
 
-/en/words/words.n.1
+/en/words/nouns.1-vowel
+/en/words/nouns.1-const
 /en/words/words.n.1.gerund :
   <marker-common-entity> or <common-noun>;
 
