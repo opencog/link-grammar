@@ -7125,10 +7125,19 @@ n't n’t: N- or EB-;
     or [[{DD-} & <noun-and-p>]]
     or <adj-op>);
 
-/en/words/adj.1-vowel
+<ordinary-vowel-adj>:
+  <ordinary-adj> & {PHv-};
+
+<ordinary-const-adj>:
+  <ordinary-adj> & {PHc-};
+
+/en/words/adj.1-vowel :
+  <marker-common-entity> or
+  <ordinary-vowel-adj>;
+
 /en/words/adj.1-const :
   <marker-common-entity> or
-  <ordinary-adj>;
+  <ordinary-const-adj>;
 
 HYPHENATED-WORDS.a:
   ({EA- or EF+} & (({[[@Ec-]]} & {Xc+} & Ah+) or (Pa- & {@MV+}))) or [[AN+]];
