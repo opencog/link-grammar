@@ -200,6 +200,11 @@ EMPTY-WORD.zzz: ZZZ-;
   or ([[@AN-].1 & @A-] & {[[@AN-]]})
   or ();
 
+<nn-modifiers>: 
+  (@A- & {[[@AN-]]})
+  or [@AN-]0.1
+  or ([[@AN-].1 & @A-] & {[[@AN-]]});
+
 
 
 % conjoined nouns or noun-phrases.
@@ -542,8 +547,47 @@ HYPHENATED-WORDS.n:
     or Us-
     or Wa-);
 
-/en/words/nouns.1-vowel
-/en/words/nouns.1-const
+% Preliminary experimental split for supporting a/an phonetic change
+% for common nouns starting with vowels or const's.
+% XXX not yet functional
+<common-vowel-noun>:
+  (<noun-modifiers> &
+    (SJrs-
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or Wa-))
+  or (<nn-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]} & (Ds*x- or <null>)))
+      & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+        or <noun-and-s>))
+    or (YS+ & Ds*x-)
+    ))
+  or 
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]} & (Ds*v- or <null>)))
+      & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+        or <noun-and-s>))
+    or (YS+ & Ds*v-)
+    );
+
+<common-const-noun>:
+  <noun-modifiers> &
+    (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]} & (Ds- or <null>)))
+      & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+        or <noun-and-s>))
+    or SJrs-
+    or (YS+ & Ds*c-)
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or Wa-);
+
+/en/words/nouns.1-vowel :
+  <marker-common-entity> or <common-vowel-noun>;
+/en/words/nouns.1-const :
+  <marker-common-entity> or <common-const-noun>;
+
 /en/words/words.n.1.gerund :
   <marker-common-entity> or <common-noun>;
 
