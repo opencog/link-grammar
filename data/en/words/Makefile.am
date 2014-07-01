@@ -17,7 +17,8 @@ WORDS=			\
 	units.4.dot \
 	units.5 \
 	units.6 \
-	words.adj.1	\
+	adj.1-vowel	\
+	adj.1-const	\
 	words.adj.2	\
 	words.adj.3	\
 	words.adv.1	\
