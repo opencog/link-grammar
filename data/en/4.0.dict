@@ -606,12 +606,13 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
   <marker-common-entity> or
   (<noun-modifiers> &
     ([[AN+]]
+    or (GN+ & (DD- or [()]))
+    or Up-
+    or Wa-
     or ({NM+ or ({Jd-} & Dmc-)} &
       ((<noun-sub-p> & (<noun-main-p> or <rel-clause-p>)) or <noun-and-s>))
     or (YS+ & {Dmc-})
-    or (GN+ & (DD- or [()]))
-    or Up-
-    or Wa-));
+    ));
 
 % XXX should probably eliminate <noun-and-p,u> and replace by <noun-and-u>
 % but this requires other spread-out changes
@@ -623,18 +624,40 @@ PL-GREEK-LETTER-AND-NUMBER: <generic-plural-id>;
 <mass-noun>:
   <noun-modifiers> &
     (AN+
+    or (GN+ & (DD- or [()]))
+    or Up-
+    or Wa-
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
-    or (GN+ & (DD- or [()]))
+    );
+
+<mass-phonetic>:
+  <noun-modifiers> &
+    ((GN+ & (DD- or [()]))
     or Up-
-    or Wa-);
+    or Wa-
+    or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
+      & ((<noun-sub-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or (YS+ & {Dmu-})
+    );
+
+<mass-vowel-noun>:
+  <mass-phonetic>
+  or (AN+ & {PHv-})
+  or (<nn-modifiers> & AN+);
+
+<mass-const-noun>:
+  <mass-phonetic>
+  or (AN+ & {PHc-})
+  or (<nn-modifiers> & AN+);
 
 % nouns that are mass only
 % absolutism.n absorption.n abstinence.n abundance.n academia.n
-/en/words/words.n.3-vowel
+/en/words/words.n.3-vowel:
+  <marker-common-entity> or <mass-vowel-noun>;
 /en/words/words.n.3-const:
-  <marker-common-entity> or <mass-noun>;
+  <marker-common-entity> or <mass-const-noun>;
 
 % Gonna treat these as mass nouns, not sure if this is correct.
 % "She wished me goodnight" "She wishes you well"
