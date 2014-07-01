@@ -31,7 +31,8 @@ WORDS=			\
 	words.n.1.gerund	\
 	words.n.2.s	\
 	words.n.2.x	\
-	words.n.3	\
+	words.n.3-vowel	\
+	words.n.3-const	\
 	words.n.3.y	\
 	words.n.t	\
 	words-medical.prep.1	\
