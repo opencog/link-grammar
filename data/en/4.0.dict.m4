@@ -7584,7 +7584,8 @@ more:
     or ({ECn- or ECx- or ND-} & ([Omm-]1.1 or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
-more_of_a more_of_an: Ds*m+;
+more_of_a:  Ds*mc+ or (<PHc> & Ds*mx+);
+more_of_an: Ds*mv+ or (<PHv> & Ds*mx+);
 
 less:
   ({ECn-} & (Dmum+ or Om- or Jm- or (Ss+ & <CLAUSE>) or Bsm+)) or
