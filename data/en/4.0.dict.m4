@@ -7125,7 +7125,8 @@ n't n’t: N- or EB-;
     or [[{DD-} & <noun-and-p>]]
     or <adj-op>);
 
-/en/words/words.adj.1:
+/en/words/adj.1-vowel
+/en/words/adj.1-const :
   <marker-common-entity> or
   <ordinary-adj>;
 
