@@ -1564,7 +1564,9 @@ one_other every_other: <noun-main-s> or <noun-and-s> or Ds+;
 any_other no_other: <noun-main-s> or <noun-and-s> or D+;
 all_other: Dm+;
 most_other: Dmc+;
-quite_a quite_an one_such not_every: Ds+;
+quite_a : Ds**c+ or (<PHc> & Ds**x+);
+quite_an : Ds**v+ or (<PHv> & Ds**x+);
+one_such not_every: Ds+;
 some_other no_such: D+;
 every.d: {EN-} & (Ds+ or DTn+ or [[NIc+]]);
 
