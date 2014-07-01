@@ -40,6 +40,7 @@ Hi, can you please freind me?
 % Any expression with an exclamatory "right" mis-parses.
 *It is sitting right over here.
 
+% ----------------------------------------------------------
 % Phonetics: distinguish a/an usage with vowels/consonants:
 *I ate a apple.
 I ate an apple.
@@ -77,7 +78,7 @@ There is a way
 There is a place
 
 
-
+% ----------------------------------------------------------
 % Misc stuff
 I know which book he read.
 I know what book he read.

@@ -557,9 +557,9 @@ HYPHENATED-WORDS.n:
     or Wa-);
 
 % Preliminary experimental split for supporting a/an phonetic change
-% for common nouns starting with vowels or const's.
-% XXX not yet functional
-<common-vowel-noun>:
+% for common nouns starting with vowels or consonant's.
+% XXX not yet fully tested
+<common-phonetic>:
   (<noun-modifiers> &
     (SJrs-
     or (GN+ & (DD- or [()]))
@@ -571,18 +571,23 @@ HYPHENATED-WORDS.n:
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (YS+ & Ds**x-)
-    ))
-  or 
-    (({NMa+} & AN+)
+    ));
+
+<common-vowel-noun>:
+  <common-phonetic>
+  or (({NMa+} & AN+)
     or ((NM+ or ({[NM+]} & (Ds**v- or <null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
-    or (YS+ & Ds**v-)
-    );
+    or (YS+ & Ds**v-));
 
-% XXX unifnished, needs to be like above ...
 <common-const-noun>:
-  <common-noun>;
+  <common-phonetic>
+  or (({NMa+} & AN+)
+    or ((NM+ or ({[NM+]} & (Ds**c- or <null>)))
+      & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+        or <noun-and-s>))
+    or (YS+ & Ds**c-));
 
 /en/words/nouns.1-vowel :
   <marker-common-entity> or <common-vowel-noun>;
