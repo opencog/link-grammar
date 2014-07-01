@@ -567,30 +567,22 @@ HYPHENATED-WORDS.n:
     or Wa-))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds*x- or <null>)))
+    or ((NM+ or ({[NM+]} & (Ds**x- or <null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
-    or (YS+ & Ds*x-)
+    or (YS+ & Ds**x-)
     ))
   or 
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds*v- or <null>)))
+    or ((NM+ or ({[NM+]} & (Ds**v- or <null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
-    or (YS+ & Ds*v-)
+    or (YS+ & Ds**v-)
     );
 
+% XXX unifnished, needs to be like above ...
 <common-const-noun>:
-  <noun-modifiers> &
-    (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds- or <null>)))
-      & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
-        or <noun-and-s>))
-    or SJrs-
-    or (YS+ & Ds*c-)
-    or (GN+ & (DD- or [()]))
-    or Us-
-    or Wa-);
+  <common-noun>;
 
 /en/words/nouns.1-vowel :
   <marker-common-entity> or <common-vowel-noun>;
@@ -1435,10 +1427,24 @@ any:
     <noun-and-x>)) or
   EC+;
 
+% PHc+ : must link to consonant immediately to the right
+% PHv+ : must link to vowel immediately to the right
+% Currently costed to allow stupid users to write "a apple" "an banana"
+% without utterly, miserably failing.
+% XXX FIXME Currently costed very low, while we deebug things ... 
+<PHc> : PHc+ or [()]0.1;
+<PHv> : PHv+ or [()]0.1;
 % XXX why doesn't this clash with a.eq ??
-a an: ({(AA- & HA-) or ALa- or [[Lf+]]} & Ds+) or NN+ or NSa+ or NIm+;
+
+a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
+  or NN+ or NSa+ or NIm+;
+
+an: ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**v+ or (<PHv> & Ds**x+)))
+  or NN+ or NSa+ or NIm+;
+
 such: (ND- & Dmc+) or Dm*k+;
-such_a such_an: Ds*k+;
+such_a:  Ds*kc+ or (<PHc> & Ds*kx+);
+such_an: Ds*kv+ or (<PHv> & Ds*kx+);
 
 
 % "all of the time". These are all temporal modifiers: use MVw ("when")
