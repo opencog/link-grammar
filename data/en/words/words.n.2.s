@@ -1,4 +1,4 @@
-﻿abacuses.n
+abacuses.n
 abbes.n
 abbesses.n
 abbeys.n
