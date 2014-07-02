@@ -12,6 +12,7 @@ ANY-WORD:  /^[[:alnum:]_'-]+$/
 ANY-PUNCT:  /^[[:punct:]]+$/
 
 % Random morphology: match any string of one or more letters as stem, or suffix.
+% We are currently using .= to denote the end of a stem.
 MOR-SUFF: /[[:alnum:]_'-]+$/
 MOR-STEM: /^[[:alnum:]_'-]+.=/
 
