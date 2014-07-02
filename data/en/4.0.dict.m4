@@ -824,23 +824,28 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
   or <marker-common-entity>
   or [<generic-plural-id>];
 
+<kind-of>:
+  ({@AN-} & @A- & U+ &
+    ((Ds**x- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+    or ({Ds**x-} & <noun-and-s>)
+    or Us-))
+  or (U+ &
+    ((Ds**c- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
+    or ({Ds**c-} & <noun-and-s>)
+    or Us-));
+
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 kind_of:
-  [({{@AN-} & @A-} & U+ &
-    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
-    or ({Ds-} & <noun-and-s>)
-    or Us-))]
+  [<kind-of>]
   or EA+
   or EE+
   or Wa-;
 
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
 type_of sort_of breed_of:
-  [{{@AN-} & @A-} & U+ &
-    ((Ds- & <noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
-    or ({Ds-} & <noun-and-s>)
-    or Us-
-    or Wa-)];
+  [<kind-of>]
+  or [Us-]
+  or [Wa-];
 
 % This gets a cost, so that the {Jd-} link for measures.2 is prefered.
 kinds_of types_of sorts_of breeds_of:
