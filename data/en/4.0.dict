@@ -1465,13 +1465,14 @@ any:
 
 % PHc+ : must link to consonant immediately to the right
 % PHv+ : must link to vowel immediately to the right
-% Currently costed to allow stupid users to write "a apple" "an banana"
-% without utterly, miserably failing.
-% XXX FIXME Currently costed very low, while we deebug things ... 
+% The plain [()]0.1 allows stupid users to write "a apple" "an banana"
+% without utterly, miserably failing.  The cost is very low, right now,
+% because not everything has been sorted into vowels & consonants.
+% XXX FIXME Someday, remove the [()]0.1 entirely to force agreement.
 <PHc> : PHc+ or [()]0.1;
 <PHv> : PHv+ or [()]0.1;
+% 
 % XXX why doesn't this clash with a.eq ??
-
 a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
   or NN+ or NSa+ or NIm+;
 
@@ -9109,7 +9110,7 @@ HYPHENATED-WORDS.a:
     [[DD- & <noun-main-p>]] or
     [[{DD-} & <noun-and-p>]]);
 
-done.c gone.c through.c: <adj-stuff>;
+done.c gone.c through.c: <adj-stuff> & {PHc-};
 
 responsible.a accountable.a:
   {EA- or EF+} &
@@ -9122,20 +9123,20 @@ responsible.a accountable.a:
     <adj-op>);
 
 long.a:
-  <ordinary-adj>
+  (<ordinary-adj> & {PHc-})
   or ((Ya- or Yt-) & (Pa- or Ma- or MJra- or MJla+))
   or (H- & (BT+ or Yt+));
 
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
 wide.a tall.a deep.a distant.a:
-  <ordinary-adj> or
-  (Ya- & (Pa- or Ma- or MJra- or <adj-op>) & {@MV+}) or
-  (Ya- & {@MV+} & MJla+);
+  (<ordinary-adj> & {PHc-})
+  or (Ya- & (Pa- or Ma- or MJra- or <adj-op>) & {@MV+})
+  or (Ya- & {@MV+} & MJla+);
 
 old.a:
-  <ordinary-adj> or
-  (Ytm- & (Pa- or Ma- or <adj-op> or MJra- or MJla+));
+  (<ordinary-adj> & {PHv-})
+  or (Ytm- & (Pa- or Ma- or <adj-op> or MJra- or MJla+));
 
 % ??? adj-op already has MX*a- in it, why do we need a bare MX- here ?
 <aged>: NM+ & (Pa- or Max- or <adj-op> or (Xd- & MX- & Xc+) or MJra- or MJla+);
@@ -9161,7 +9162,7 @@ easy.a hard.a simple.a difficult.a fun.a expensive.a:
 % Although we'd like to use Ma- for the above, post-processing prevents this.
 ready.a:
   {EA- or EF+} & (
-    ({[[@Ec-]]} & {Xc+} & A+)
+    ({[[@Ec-]]} & {Xc+} & A+ & {PHc-})
     or ((Pa- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <to-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <to-verb>) & {LE+}} & MJla+)
     or AA+
@@ -9170,10 +9171,20 @@ ready.a:
     or [[{DD-} & <noun-and-p>]]
     or ({<to-verb> or <tot-verb>} & <adj-op>));
 
-silly.a nasty.a pleasant.a unpleasant.a dangerous.a cruel.a standard.a safe.a
-legal.a illegal.a:
+silly.a nasty.a pleasant.a dangerous.a cruel.a standard.a safe.a legal.a:
   {EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+)
+    (({[[@Ec-]]} & {Xc+} & A+ & {PHc-})
+    or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<tot-verb>} & <adj-op>));
+
+% Identical to above, but starts with vowel
+unpleasant.a illegal.a:
+  {EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+ & {PHv-})
     or ((Paf- or AF+ or Ma- or MJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & MJla+)
     or AA+
@@ -9191,16 +9202,23 @@ legal.a illegal.a:
     or [[{DD-} & <noun-and-p>]]
     or ({<tot-verb>} & <adj-op>));
 
-good.a bad.a unusual.a useful.a a_bitch nice.a
-strange.a wonderful.a terrible.a possible.a impossible.a annoying.a
-fair.a unfair.a tough.a: <adj-good>;
+good.a bad.a nice.a strange.a wonderful.a terrible.a possible.a fair.a
+tough.a:
+  <adj-good> & {PHc-};
 
-great.a: <marker-common-entity> or <adj-good>;
+unusual.a useful.a impossible.a annoying.a unfair.a :
+  <adj-good> & {PHv-};
 
-important.a essential.a crucial.a necessary.a imperative.a vital.a:
+a_bitch :
+  <adj-good>;
+
+great.a: <marker-common-entity> or (<adj-good> & {PHc-});
+
+% Identical to below, but starts with vowel.
+important.a essential.a imperative.a:
   <marker-common-entity> or
   ({EA- or EF+} &
-    (({[[@Ec-]]} & {Xc+} & A+)
+    (({[[@Ec-]]} & {Xc+} & A+ & {PHv-})
     or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
     or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+)
     or AA+
@@ -9208,6 +9226,20 @@ important.a essential.a crucial.a necessary.a imperative.a vital.a:
     or [[{DD-} & <noun-and-p>]]
     or ({<tot-verb>} & <adj-op>)));
 
+% Identical to above, but starts with consonant
+crucial.a necessary.a vital.a:
+  <marker-common-entity> or
+  ({EA- or EF+} &
+    (({[[@Ec-]]} & {Xc+} & A+ & {PHc-})
+    or ((Paf- or AF+ or Ma- or MJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
+    or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & MJla+)
+    or AA+
+    or [[DD- & <noun-main-p>]]
+    or [[{DD-} & <noun-and-p>]]
+    or ({<tot-verb>} & <adj-op>)));
+
+% XXX FIXME Most of the below need to be sorted into vowel/consonant groups.
+%
 common.a practical.a original.a normal.a helpful.a striking.a
 confusing.a frustrating.a disturbing.a
 logical.a illogical.a elegant.a efficient.a awful.a just.a unjust.a
