@@ -558,7 +558,7 @@ HYPHENATED-WORDS.n:
 
 % Preliminary experimental split for supporting a/an phonetic change
 % for common nouns starting with vowels or consonant's.
-% XXX not yet fully tested
+% XXX not yet fully tested; seems over-complicated.
 <common-phonetic>:
   (<noun-modifiers> &
     (SJrs-
@@ -766,19 +766,27 @@ carte_blanche:
 % Ds- & {NM+} & <noun-sub-x> &.. "the number 12 is a lucky number"
 % above has cost to give "a number of" priority.
 number.n:
-  (<noun-modifiers> & (
-    [Ds- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]
-    or ({Ds-} & {NM+} & <noun-and-x>)
+  (<nn-modifiers> & (
+    [Ds**x- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    or ({Ds**x-} & {NM+} & <noun-and-x>)
   ))
+  or (
+    [Ds**c- & {NM+} & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    or ({Ds**c-} & {NM+} & <noun-and-x>)
+  )
   or AN+;
 
 % Almost identical to above.
 % Differing in strange ways from <common-noun>
 majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
-  (<noun-modifiers> & (
-    [Ds- & <noun-sub-x> & (<noun-main-x> or B*x+)]
-    or ({Ds-} & <noun-and-x>)
+  (<nn-modifiers> & (
+    [Ds**x- & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    or ({Ds**x-} & <noun-and-x>)
   ))
+  or (
+    [Ds**c- & <noun-sub-x> & (<noun-main-x> or B*x+)]
+    or ({Ds**c-} & <noun-and-x>)
+  )
   or AN+;
 
 % Identical to <common-noun>, except that D- costs extra
