@@ -13,7 +13,7 @@ ANY-PUNCT:  /^[[:punct:]]+$/
 
 % Random morphology: match any string of one or more letters as stem, or suffix.
 MOR-SUFF: /[[:alnum:]_'-]+$/
-MOR-STEM: /^[[:alnum:]_'-]+/
+MOR-STEM: /^[[:alnum:]_'-]+.=/
 
 % Match anything that doesn't match the above.
 % Match anything that isn't white-space.
