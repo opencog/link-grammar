@@ -781,6 +781,10 @@ plenty of others thought so too
 % Examples from wikipedia
 % Currently, these all fail very badly.
 
+% Archaic fairy-tale / children's book registers (inverted subject/object)
+Far out in the sea lived a fish.
+A fish lived far out in the sea.
+
 under the tree sat Jim
 *Under the tree sat he.
 
@@ -2268,10 +2272,6 @@ Peace be unto you.
 % Archaic use of "be" with passive participles:
 Where be those roses gone which sweetened so our eyes?
 They be shooting and fishing out at the Forestry Lakes.
-
-% Archaic fairy-tale / children's book registers (inverted subject/object)
-Far out in the sea lived a fish.
-A fish lived far out in the sea.
 
 % old as noun
 The seven year old kicked me in the shins.
