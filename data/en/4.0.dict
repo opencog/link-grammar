@@ -681,12 +681,13 @@ tom.n-u: [<marker-common-entity> or <mass-noun>];
 auburn.n black.n blue.n brown.n green.n gray.n pink.n purple.n red.n
 tawny.n ultramarine.n yellow.n:
   <marker-common-entity>
-  or (<noun-modifiers> &
-    ((({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>]))
-    or (YS+ & {Dmu-})
-    or (GN+ & (DD- or [()]))
+  or (<noun-modifiers> & (
+    (GN+ & (DD- or [()]))
     or Up-
-    or Wa-));
+    or Wa-
+    or (({Dmu- or [[Ds-]]}) & <noun-sub-s> & ([<noun-main-m> or <rel-clause-s>]))
+    or (YS+ & {Dmu-})
+    ));
 
 % US state names and abbreviations
 % NM N.M. NY N.Y. NC N.C. ND N.D. Ohio Okla.
