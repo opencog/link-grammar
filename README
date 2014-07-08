@@ -425,7 +425,7 @@ TESTING the program:
    are as follows:
 
    en/4.0.batch:         53 errors
-   en/4.0.fixes.batch:   452 errors
+   en/4.0.fixes.batch:   449 errors
    lt/4.0.batch:         17 errors
    ru/4.0.batch:         47 errors
 
