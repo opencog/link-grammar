@@ -843,13 +843,13 @@ kind_of:
   or Wa-;
 
 % This gets a cost, so that the {Jd-} link for measures.1 is prefered.
-type_of sort_of breed_of:
+type_of sort_of breed_of species_of:
   [<kind-of>]
   or [Us-]
   or [Wa-];
 
 % This gets a cost, so that the {Jd-} link for measures.2 is prefered.
-kinds_of types_of sorts_of breeds_of:
+kinds_of types_of sorts_of breeds_of species_of:
   [{{@AN-} & @A-} & U+ &
     (({Dmc-} & <noun-sub-p> & (<noun-main-p> or <rel-clause-p>))
     or ({Dmc-} & <noun-and-p>)
