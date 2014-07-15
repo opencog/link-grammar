@@ -7023,10 +7023,11 @@ and.j-n but_not and_not ,_not:
     or [{{Jd-} & Dmu-} &  Ou-]
     or <post-nominal-u>));
 
+% {XJo-}: "I can use either this or that".
 or.j-n:
-  (<noun-conj-dep-s> & <noun-sub-s> &
+  (<noun-conj-dep-s> & <noun-sub-s> & {XJo-} &
     (<noun-conj-head> or (S*x+ & <CLAUSE>) or SI- or [Os-] or Wa- or <post-nominal-s>)) or
-  (<noun-conj-dep-p> & <noun-sub-p> &
+  (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
 
 % The SJn, Dn links are propagated through the linkage, guaranteeing that
@@ -7095,17 +7096,17 @@ not_only: Db+;
 
 % XJ: collocations with holes, i.e. "... blah blah X um um Y"
 % where "blah blah" is always used with "um um".
-% XJ*i: with infinitives
+% XJi: with infinitives
 % ... not only X, but Y
 % "you should not only ask for your money back, but demand it"
 not_only: I- & I+ & XJi+;
 but.j-r: {Xd-} & XJi- & I+;
 
-% XXX to-do: should have special linkage for either... or ....
-% instead of dependeingg on the E+ link. See neither..nor... for examples.
 % (Wa- & {OF+}): "Either of them."
+% XJo+: "... either X or Y"
 either.r:
   Ds+
+  or XJo+
   or E+
   or ({OF+} & <noun-main-x>)
   or ({Xd+ & Xc-} & MVa-)
