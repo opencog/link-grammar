@@ -212,7 +212,6 @@ EMPTY-WORD.zzz: ZZZ-;
 % must hook up to a conjunction (and, or) in the middle.
 % SJl == connect to left
 % SJr == connect to right
-% SJn == Neither ... nor pass-through
 % SJ*s == singular
 % SJ*p == plural
 % SJ*u == mass
@@ -225,13 +224,13 @@ EMPTY-WORD.zzz: ZZZ-;
 %
 % Add cost to M+, so that "a number of recommendations and suggestions"
 %   gets priority in modifying the and.j-n
-<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-) or (Dn- & SJn+);
-<noun-and-p>: ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or (Dn- & SJn+);
-<noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-) or (Dn- & SJn+);
-<noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-) or (Dn- & SJn+);
+<noun-and-s>: ({@M+} & SJls+) or ({[@M+]} & SJrs-);
+<noun-and-p>: ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-);
+<noun-and-u>: ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
+<noun-and-x>: ({[@M+]} & SJl+) or ({[[@M+]]} & SJr-);
 <noun-and-p,u>:
   ({[@M+]} & SJlp+) or ({[[@M+]]} & SJrp-) or
-  ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-) or (Dn- & SJn+);
+  ({[@M+]} & SJlu+) or ({[[@M+]]} & SJru-);
 
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
@@ -1192,7 +1191,7 @@ times.n:
 %PRONOUNS
 
 she he:
-  {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+ or (Dn- & SJn+));
+  {[[R+ & Bs+]]} & ((Ss+ & <CLAUSE>) or SIs- or SJls+);
 
 % The E- is for "It's either us or them" ... not ideal, but OK
 me him:
@@ -1237,15 +1236,13 @@ mine.p yours theirs hers ours:
   <noun-main-x>
   or Wa-
   or SJl+
-  or SJr-
-  or (Dn- & SJn+);
-
+  or SJr-;
 
 its my.p your their our:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
-you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+ or (Dn- & SJn+);
+you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+;
 
 % Ox-: "leave it alone" "make it rain"
 % Errr. what's the difference between Ox- and Os- ??
@@ -1260,34 +1257,31 @@ it:
    or (Jd- & Dmu- & {Wd-} & S+)
    or ((Ss+ or SFsi+) & <CLAUSE>)
    or SIs- or SFIsi- or OXi- or Vp-
-   or SJls+ or SJrs- or (Dn- & SJn+);
+   or SJls+ or SJrs-;
 
 % O*c: "we will go faster than they"
 they:
   ({[[R+ & Bp+]]} & ((Sp+ & <CLAUSE>) or SIp-)) or
   Ox- or
-  SJlp+ or SJrp- or (Dn- & SJn+);
+  SJlp+ or SJrp-;
 
 % DD+: "... how we two should work together"
 we:
   (Sp+ & <CLAUSE>)
   or Ox-
   or DD+
-  or SIp- or SJlp+ or SJrp- or (Dn- & SJn+);
+  or SIp- or SJlp+ or SJrp-;
 
 % XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make I've work?
 % We use <marker-entity> here to prevent lower-case magnling by
 % the tokenizer.
 % SJrp-: allows only "...and I", disallows "I and ..."
-% Ds- & SJl+: "Either I or ..."
-% Dn- & SJn+: "Neither I not ..."
 I.p:
   <marker-entity>
   or ((Sp*i+ or SX+) & <CLAUSE>)
   or SIp*i-
   or SJr-
-  or (Ds- & SJl+)
-  or (Dn- & SJn+)
+  or SJl+
   or SXI-;
 
 them_all us_all you_all: Ox- or J-;
@@ -2055,8 +2049,7 @@ DAY-ORDINALS.a ORDINALS.a:
   G+ or
   [A+] or
   AJla+ or
-  ({Ds-} & AJra-) or
-  (Dn- & AJn+);
+  ({Ds-} & AJra-);
 
 % "Next on our list..." are ordinals.
 % XXX should be converted to regex...
@@ -2289,7 +2282,6 @@ per "/.per": Us+ & Mp-;
 % VJl == right
 % VJb == but
 % VJd == ditransitive
-% VJn == neither-nor
 %
 % VJ*s == singular subject
 % VJ*p == plural subject
@@ -2312,7 +2304,7 @@ per "/.per": Us+ & Mp-;
 <verb-and-sp->: {@E-} & VJr-;
 <verb-and-sp+>: {@E-} & VJl+;
 <verb-and-sp-i->: {@E-} & VJr*i-;
-<verb-and-sp-i+>: ({@E-} & VJl*i+) or (VJn*i+ & Dn-) or (VJb*i+ & Db-);
+<verb-and-sp-i+>: ({@E-} & VJl*i+) or (VJb*i+ & Db-);
 <verb-and-sp-t->: {@E-} & VJr*t-;
 <verb-and-sp-t+>: {@E-} & VJl*t+;
 <verb-and-pg->: {@E-} & VJrg-;
@@ -2322,8 +2314,7 @@ per "/.per": Us+ & Mp-;
 
 <verb-and-sp-t>:
   <verb-and-sp-t-> or
-  <verb-and-sp-t+> or
-  (VJn*t+ & Dn-);
+  <verb-and-sp-t+>;
 
 % Verb macros making use of above connectors.
 % Many of these use a cost on $1 to encourage any MV links to attach to
@@ -8810,12 +8801,12 @@ and.j-g: [G- & G+]0.05;
 and.j-a but.j-a yet.j-a and_yet:
   ({Xd-} & AJla- & {EBb+} & AJr+) & (A+ or Pa- or [MVa-] or AJra-) & {<tot-verb>};
 
+% XJo-: either ... or ... 
 or.j-a:
-  ({Xd-} & AJla- & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
+  ({Xd-} & AJla- & {XJo-} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
-% The SJn, Dn links are propagated through the linkage, guaranteeing that
-% "neither" will be used together with "nor".
-nor.j-a: AJn- & AJ+ & (A+ or Pa- or [MVa-]);
+% XJn-: neither ... nor ...
+nor.j-a: AJ- & XJn- & AJ+ & (A+ or Pa- or [MVa-]);
 
 % comparatives:
 % he is bigger, and badder, than the pope.
@@ -8933,13 +8924,10 @@ or.j-n:
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
 
-% The SJn, Dn links are propagated through the linkage, guaranteeing that
-% "neither" will be used together with "nor".
-nor.j-n: SJn- & SJ+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJn+);
+% XJn-" "neither this nor that"
+nor.j-n: SJl- & XJn- & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJr+);
 
-% The Dn- link is used for both nouns, as above, and on neither..nor for verbs
-% e.g. "We neither ate nor drank"
-neither.j: Dn+;
+neither.j: XJn+;
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
@@ -8961,8 +8949,7 @@ but.j-n:
   (({Xd-} & VJlsi- & VJrsi+) & (({@MV+} & Ss- & <verb-wall>) or (RS- & Bs-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrsi-))) or
   (({Xd-} & VJlpi- & VJrpi+) & (({@MV+} & Sp- & <verb-wall>) or (RS- & Bp-) or ([I-]0.2 & {@MV+} & <verb-wall>) or ({Xd-} & VJrpi-))) or
   (({Xd-} & VJlst- & VJrst+) & ((({@MV+} & Ss- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or
-  (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
+  (({Xd-} & VJlpt- & VJrpt+) & ((({@MV+} & Sp- & <verb-wall>) or ([I-]0.2 & {@MV+} & <verb-wall>)) & (O+ or (B- & {B+})))) or (({Xd-} & VJlh- & VJrh+) & (PP- & {@MV+} & <verb-wall>)) or
   ((VJlg- & VJrg+) & (J-)) or
   ((VJlp- & VJrp+) & [<verb-ico>]0.2) or
   ((VJls- & VJrs+) & [<verb-ico>]0.2);
@@ -8978,10 +8965,10 @@ and.j-v or.j-v: <verb-conjunction>;
 
 and.j-o or.j-o: <ditransitive-conjunction>;
 
-% The VJn- gaurentees that nor.j-v is used with neither.j-v
+% XJn-: neither ... nor ...
 nor.j-v:
-  (VJn*i- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
-  (VJn*t- & VJr*t+ & ({@MV+} & S- & O+ & <verb-wall>));
+  (VJl*i- & XJn- & VJr*i+ & ({@MV+} & S- & <verb-wall>)) or
+  (VJl*t- & XJn- & VJr*t+ & ({@MV+} & S- & O+ & <verb-wall>));
 
 % Similar to and, but allows optional comma before "but"
 % "blah blah, but blah"
@@ -9058,12 +9045,10 @@ n't n’t: N- or EB-;
 %ADJECTIVES
 
 % Common disjuncts shared by virtually all adjectives.
-% Dn- & AJn+: for neither...nor constructions.
 <adj-op>:
   [[{@E-} & Wq- & {@MV+} & PF+ & {@MV+} & {CC+}]]
   or (AJra- & {@MV+})
   or ({@MV+} & AJla+)
-  or (Dn- & AJn+)
   or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
 
 % Ordinary adjectives
@@ -10448,8 +10433,7 @@ EMOTICON :
   or <comma-adj-conjunction>
   or <comma-adv-conjunction>
   or <verb-conjunction>
-  or (SJl- & SJr+ & SJl+)
-  or (SJn- & SJr+ & SJn+);
+  or (SJl- & SJr+ & SJl+);
 
 % :.j
 <colon>:
