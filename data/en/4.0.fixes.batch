@@ -2459,8 +2459,13 @@ It was 3 miles east.
 It was about 3 miles out.
 It is a few miles over.
 
+% Numeric comparatives
+I ran 10 fewer miles than Ben.
+I ran 10 more miles than Ben.
+
+
 % XXX These parse, but there's an explosion of parses generated.
-% Basically, miles.n is fucking things up -- we ned to trim it down.
+% Basically, miles.n is fucking things up -- we need to trim it down.
 It is between 5 miles and 15 miles long.
 It is between 5 miles and 15 miles distant.
 
