@@ -1385,8 +1385,10 @@ them_there:
   Dm+ or Wa-;
 
 % (Wa- & {Mp+}): "Both of them."
+% XJa+: "Both June and Tom are coming"
 both.d:
   Dmc+
+  or XJa+
   or E+
   or ({M+ or (ALx+ & Jp+)} & <noun-main-p>)
   or <noun-and-p>
@@ -7009,23 +7011,25 @@ and.j-r or.j-r:
 %   with "number of" modifying the and.j-n
 % [[<noun-conj-head>]] costs so that above is prefered: (huh????)
 % "there was enough of the beer and sandwiches"
+%
+% XJa-: "Both June and Tom are coming"
 
 and.j-n but_not and_not ,_not:
-  (<noun-conj-dep-s> & <noun-sub-s> & (
+  (<noun-conj-dep-s> & <noun-sub-s> & {XJa-} & (
     <noun-conj-head>
     or (Spx+ & <CLAUSE>)
     or SIp-
     or Wa-
     or [{Ds-} & Os-]
     or <post-nominal-s>))
-  or (<noun-conj-dep-p> & <noun-sub-p> & (
+  or (<noun-conj-dep-p> & <noun-sub-p> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Spx+ & <CLAUSE>)
     or SIp-
     or Wa-
     or [{{Jd-} & Dmc-} & Op-]
     or <post-nominal-p>))
-  or (<noun-conj-dep-u> & <noun-sub-x> & (
+  or (<noun-conj-dep-u> & <noun-sub-x> & {XJa-} & (
     <noun-conj-head>
     or ({Jd- & Dm-} & Sux+ & <CLAUSE>)
     or SIu-
