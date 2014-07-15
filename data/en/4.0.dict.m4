@@ -2363,9 +2363,11 @@ define(`VERB_SPPP_I',`'
   (($1) & <verb-and-sp-i+>)))
 
 % past tense macro, transitive variation
+% ([$1]0.2 or ()): we want the modifiers to act on the conjunction, usually:
+% for example: "We neither ate nor drank for three days"
 define(`VERB_SPPP_T',`'
   ((<verb-sp,pp> & ($1)) or
-  (<verb-and-sp-i-> & (($1) or ())) or
+  (<verb-and-sp-i-> & ([$1]0.2 or ())) or
   (($1) & <verb-and-sp-i+>)) or
   <verb-and-sp-t>)
 
