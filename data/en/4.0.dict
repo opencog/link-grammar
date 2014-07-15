@@ -2281,7 +2281,6 @@ per "/.per": Us+ & Mp-;
 % conjoined verbs.
 % VJr == left
 % VJl == right
-% VJb == but
 % VJd == ditransitive
 %
 % VJ*s == singular subject
@@ -2305,7 +2304,7 @@ per "/.per": Us+ & Mp-;
 <verb-and-sp->: {@E-} & VJr-;
 <verb-and-sp+>: {@E-} & VJl+;
 <verb-and-sp-i->: {@E-} & VJr*i-;
-<verb-and-sp-i+>: ({@E-} & VJl*i+) or (VJb*i+ & Db-);
+<verb-and-sp-i+>: ({@E-} & VJl*i+);
 <verb-and-sp-t->: {@E-} & VJr*t-;
 <verb-and-sp-t+>: {@E-} & VJl*t+;
 <verb-and-pg->: {@E-} & VJrg-;
@@ -8949,10 +8948,15 @@ nor.j-n: SJl- & XJn- & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJr+);
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
+% XJb-: "not only this but also that"
 but.j-n:
   ((Xd- & SJl- & EBb+ & SJr+ & Xc+) & (Wd- & Ssx+)) or
   ((Xd- & SJl- & EBy- & SJr+) & (Wd- & Ssx+)) or
-  (({Xd-} & SJl- & EBy- & SJr+) & Ou-);
+  (({Xd-} & SJl- & EBy- & SJr+) & Ou-) or
+  (({Xd-} & SJl- & XJb- & SJr+) & Ou-);
+
+but_also:
+  {Xd-} & SJl- & XJb- & SJr+ & Ou-;
 
 % --------------------------------------------------------------------------
 % Conjoined verbs/verb phrases
@@ -8995,12 +8999,12 @@ but.j-v:
   ((({Xd-} & VJlp-) & VJrp+) & ((Sp- & <verb-wall>) or ({Xd-} & VJrp-))) or
   ((VJl- & VJr+) & ((I- & <verb-wall>) or <verb-ico>));
 
-% The VJb- guarentees that bit.j-b is used with not_only
+% The XJb- guarentees that but.j-b is used with not_only
 % "We not only X'ed but also Y'ed".
-% This is the same pattern as the neither..nor... pattern above.
+% This is the same pattern as the neither... nor... pattern above.
+not_only: XJb+;
 but.j-b:
-  (VJb*i- & VJr*i+ & ({@MV+} & S- & <verb-wall>));
-not_only: Db+;
+  (VJl*i- & XJb- & VJr*i+ & ({@MV+} & S- & <verb-wall>));
 
 % XJ: collocations with holes, i.e. "... blah blah X um um Y"
 % where "blah blah" is always used with "um um".
