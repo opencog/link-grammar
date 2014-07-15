@@ -1142,8 +1142,38 @@ TODO -- Working Notes:
     keep the lengths of X and Y approximately equal can help, it would
     be even better to recognize the "...from ... and from..." pattern.
 
-    One possible way to implement this would be to give preference to
-    and-links that have the same word on either end.
+    The correct solution for the "Either ... or ..." appears to be this:
+
+        ---------------------------+---SJrs--+
+               +------???----------+         |
+               |     +Ds**c+--SJls-+    +Ds**+
+               |     |     |       |    |    |
+           either.r the lorry.n or.j-n the van.n
+
+    The wrong solution is 
+
+         --------------------------+           
+              +-----Dn-----+       +---SJrs---+    
+              |      +Ds**c+--SJn--+     +Ds**+
+              |      |     |       |     |    |    
+          neither.j the lorry.n nor.j-n the van.n 
+
+    The problem with this is that "neither" must coordinate with "nor".
+    That is, one cannot say "either.. nor..." "neither ... or ... "
+    "neither ...and..." "but ... nor ..."  The way I originally solved
+    the coordination problem was to invent a new link called Dn, and a
+    link SJn and to make sure that Dn could only connect to SJn, and
+    nothing else. Thus, the lower-case "n" was used to propagate the
+    coordination across two links. This demonstrates how powerful the
+    link-grammar theory is: with proper subscripts, constraints can be
+    propagated along links over large distances. However, this also
+    makes the dictionary more complex, and the rules harder to write:
+    coordination requires a lot of different links to be hooked together.
+    And so I think that creating a single, new link, called ???, will
+    make the coordination easy and direct. That is why I like that idea.
+
+    The ??? link should be the XJ link, which-see.
+
 
     More idiomatic than the above examples:
     "...the chip on X's shoulder"
