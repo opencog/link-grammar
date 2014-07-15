@@ -2048,6 +2048,7 @@ Pa- or MVa- or ({Xc+ & {Xd-}} & CO+) or
 
 % Miscellaneous ordinal numbers, adjectival usage
 % prefer G+ over A+ in general, as these are typically parts of names.
+% ({Ds-} & AJla+): "he is in either the X or the Y battalion"
 1º.a 2º.a 3º.a 4º.a 5º.a 6º.a 7º.a 8º.a 9º.a
 DAY-ORDINALS.a ORDINALS.a:
   Pa- or
@@ -2057,7 +2058,7 @@ DAY-ORDINALS.a ORDINALS.a:
   NR+ or
   G+ or
   [A+] or
-  AJla+ or
+  ({Ds-} & AJla+) or
   ({Ds-} & AJra-);
 
 % "Next on our list..." are ordinals.
@@ -6903,7 +6904,10 @@ or.j-a:
   ({Xd-} & AJla- & {XJo-} & AJra+) & (A+ or Pa- or [MVa-] or AJra-);
 
 % XJn-: neither ... nor ...
-nor.j-a: AJ- & XJn- & AJ+ & (A+ or Pa- or [MVa-]);
+% Its marked optional only to solve the ugly case of
+% "he is in neither the 105th nor the 106th battalion"
+% At issue is that nouns really really want to get a determiner, so we give it one.
+nor.j-a: AJ- & {XJn-} & AJ+ & (A+ or Pa- or [MVa-]);
 
 % comparatives:
 % he is bigger, and badder, than the pope.
