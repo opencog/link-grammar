@@ -8825,13 +8825,29 @@ and.j-s:
   (AJle- & AJre+ & [MVa-]) or
   (AJld- & AJrd+ & (D+ or DD+));
 
-% conjoined post-nominal modifiers
+% conjoined post-nominal modifiers, to be used with conjunctions below.
+<post-nom-a>: [Ma-] or (Xd- & Xc+ & MX*a-);
+<post-nom-p>: Mp- or MVp- or (Xc+ & CO+);
+<post-nom-j>: J+ & ([Mp-] or Pp- or MVp-);
+
 % [Ma-]: it  is more grammatically correct to have commas ...
 % {EBb+}: "blah but not blah", "blah and not blah"
-but.j-m and.j-m or.j-m:
-  (({Xd-} & MJla- & {EBb+} & MJra+) & ([Ma-] or (Xd- & Xc+ & MX*a-))) or
-  (({Xd-} & MJlp- & {EBb+} & MJrp+) & (Mp- or MVp- or (Xc+ & CO+))) or
-  (({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+}) & J+ & ([Mp-] or Pp- or MVp-));
+but.j-m and.j-m:
+  ({Xd-} & MJla- & {EBb+} & MJra+ & <post-nom-a>) or
+  ({Xd-} & MJlp- & {EBb+} & MJrp+ & <post-nom-p>) or
+  ({Xd-} & MJlj- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>);
+
+% {XJo-}: Either .. or ...
+or.j-m:
+  ({Xd-} & MJla- & {XJo-} & {EBb+} & MJra+ & <post-nom-a>) or
+  ({Xd-} & MJlp- & {XJo-} & {EBb+} & MJrp+ & <post-nom-p>) or
+  ({Xd-} & MJlj- & {XJo-} & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>);
+
+% XJn-: Neither .. nor ...
+nor.j-m:
+  ({Xd-} & MJla- & XJn- & {EBb+} & MJra+ & <post-nom-a>) or
+  ({Xd-} & MJlp- & XJn- & {EBb+} & MJrp+ & <post-nom-p>) or
+  ({Xd-} & MJlj- & XJn- & {EBb+} & MJrj+ & {Xc+} & <post-nom-j>);
 
 % Conjoined question words.
 % When and where is the party?
@@ -8927,8 +8943,6 @@ or.j-n:
 % XJn-" "neither this nor that"
 nor.j-n: SJl- & XJn- & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJr+);
 
-neither.j: XJn+;
-
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
 but.j-n:
@@ -8994,19 +9008,23 @@ but.j-r: {Xd-} & XJi- & I+;
 
 % (Wa- & {OF+}): "Either of them."
 % XJo+: "... either X or Y"
+% [MVa] has a cost because we want Xjo to get priority.
+% MVa-: "He is either here or he is there."  which is fucked up... but hey ...
+% it would need a crossing-link to fix ...
 either.r:
   Ds+
   or XJo+
   or E+
-  or ({OF+} & <noun-main-x>)
-  or ({Xd+ & Xc-} & MVa-)
+  or (OF+ & <noun-main-x>)
+  or [{Xd+ & Xc-} & MVa-]
   or (Wa- & {OF+});
 
 % (Wa- & {OF+}): "Neither of them."
 neither.r:
   Ds+
+  or XJn+
   or E+
-  or ({OF+} & <noun-main-x>)
+  or (OF+ & <noun-main-x>)
   or (Wa- & {OF+});
 
 nor.r: ((Xd- & CC-) or Wd-) & Qd+;
