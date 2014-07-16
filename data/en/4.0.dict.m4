@@ -7747,11 +7747,12 @@ as_achieved:
 MVz- or
 (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-));
 
-% MODIFIED 'THAN' so that it links to the clause following it
-% using 'C' links -- like a relative clause
+% Cc+ & CV+: C links to the head-noun of the followig clause, and CV+
+%            links to the head verb. Must form a cycle.
+%            Example: "I run more often than Ben climbs"
 than:
-  (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+}) or
-                Mpc+ or S**c+ or MVat+ or MVpt+ or Cc+ or Pafc+))
+  (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+})
+           or Mpc+ or S**c+ or MVat+ or MVpt+ or (Cc+ & CV+) or Pafc+))
   or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
   or ((MVti- or LEi-) & AFdi+ & {Pa+})
   or (((LE- & {AFd+}) or (LEi- & {AFdi+}))
