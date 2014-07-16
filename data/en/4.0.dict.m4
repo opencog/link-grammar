@@ -7049,7 +7049,10 @@ or.j-n:
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
 
 % XJn-" "neither this nor that"
-nor.j-n: SJl- & XJn- & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJr+);
+% SJl- & SJr+ & SJl+: cascading nor's: "Neither snow nor rain nor heat..."
+nor.j-n:
+  (SJl- & XJn- & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa-))
+  or (SJl- & SJr+ & SJl+);
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
