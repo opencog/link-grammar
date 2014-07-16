@@ -262,6 +262,7 @@ EMPTY-WORD.zzz: ZZZ-;
 <advcl-verb>: Ca+ & CV+;
 <fitcl-verb>: Ci+ & CV+;
 <porcl-verb>: Cr+ & CV+;
+<thncl-verb>: Cc+ & CV+;
 % We don't handle Ct,Cta in the above, because the AF and B link plays
 % the role of CV, connecting to the head-verb.
 
