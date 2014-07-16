@@ -7724,6 +7724,7 @@ as.e:
   or [[(PFc+ or CQ+) & ({Xd- & Xc+} & MVs-)]];
 
 as_possible: MVz-;
+
 as_expected as_reported as_imagined as_suspected as_anticipated as_predicted
 as_realized as_proposed as_intended as_supposed
 as_hypothesized as_hypothesised as_discussed as_established
@@ -7744,8 +7745,9 @@ as_caused as_summarized as_prepared as_outlined as_occurred
 as_modified as_localized as_involved as_implied as_gauged as_exhibited
 as_encountered as_displayed as_contained as_catalyzed as_advocated
 as_achieved:
-MVz- or
-(({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVs-));
+  MVz-
+  or ({Xc+ & {Xd-}} & CO+)
+  or ({Xd- & Xc+} & MVs-);
 
 % Cc+ & CV+: C links to the head-noun of the followig clause, and CV+
 %            links to the head verb. Must form a cycle.
