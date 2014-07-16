@@ -6449,7 +6449,7 @@ second.n decade.n century.n:
 
 day.n night.n:
   {NM+} & ((<noun-modifiers> &
-    (({D*u-} & {@M+} & {WN+ or TH+ or [[<embed-verb>]] or (R+ & Bs+)} & {@MXs+} &
+    (({D*u- or @M+} & {WN+ or TH+ or [[<embed-verb>]] or (R+ & Bs+)} & {@MXs+} &
       (<noun-main-m> or
       <rel-clause-s> or
       <noun-and-x>)) or
@@ -6458,10 +6458,12 @@ day.n night.n:
     (GN+ & (DD- or [()])))) or
   AN+);
 
+% {Dmc- or @M+}: avoid used Dmc together with M when parsing sentences like
+% "She is two years older than me"
 days.n weeks.n moments.n hours.n minutes.n years.n instants.n periods.n months.n
 nights.n seconds.n decades.n centuries.n:
   {NM+} & ((<noun-modifiers> &
-    (({Dmc-} & {@M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
+    (({Dmc- or @M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
       (<noun-main-p> or
       <rel-clause-p> or
       <noun-and-p>)) or
@@ -7107,7 +7109,7 @@ but.j-v:
 % "We not only X'ed but also Y'ed".
 % This is the same pattern as the neither... nor... pattern above.
 not_only: XJb+;
-but.j-b:
+but_also:
   (VJl*i- & XJb- & VJr*i+ & ({@MV+} & S- & <verb-wall>));
 
 % XJ: collocations with holes, i.e. "... blah blah X um um Y"
