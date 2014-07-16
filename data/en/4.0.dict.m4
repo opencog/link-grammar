@@ -7126,13 +7126,19 @@ but.j-r: {Xd-} & XJi- & I+;
 % (Wa- & {OF+}): "Either of them."
 % XJo+: "... either X or Y"
 % [MVa] has a cost because we want Xjo to get priority.
-% MVa-: "He is either here or he is there."  which is fucked up... but hey ...
-% it would need a crossing-link to fix ...
+% MVa-: "He is either here or he is there."  which is fucked up...
+% but hey ...  it would need a crossing-link to fix ...
+%
+% The costly [[<noun-main-x>]] is quite ugly and unappealing, but is
+% needed to parse "he is either in the 105th nor the 106th battalion".
+% The problem here is that "either in" seems to be order-reversed from
+% "in either", and doing it right would require link-corssing.
 either.r:
   Ds+
   or XJo+
   or E+
   or (OF+ & <noun-main-x>)
+  or [[<noun-main-x>]]
   or [{Xd+ & Xc-} & MVa-]
   or (Wa- & {OF+});
 
@@ -7142,6 +7148,7 @@ neither.r:
   or XJn+
   or E+
   or (OF+ & <noun-main-x>)
+  or [[<noun-main-x>]]
   or (Wa- & {OF+});
 
 nor.r: ((Xd- & CC-) or Wd-) & Qd+;
