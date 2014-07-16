@@ -1035,6 +1035,24 @@ TODO -- Working Notes:
      Related notions:
      http://en.wikipedia.org/wiki/Catena_(linguistics)
 
+     Places where no-links-cross seems to be violated in English:
+     "He is either in the 105th or the 106th battalion."
+     "He is in either the 105th or the 106th battalion."
+     Both seem to be acceptable in English, but require two different
+     parse trees when no-links is enforced. Similarly:
+     "He is either here or he is there."
+     "He either is here or he is there."
+
+
+  punctuation, zero-copula, zero-that:
+     Poorly punctuated sentences cause problems:  for example:
+     "Mike was not first, nor was he last."
+     "Mike was not first nor was he last."
+     The one without the comma currently fails to parse.  How can we
+     deal with this in a simple, fast, elegant way?  Similar questions
+     for zero-copula and zero-that sentences.
+
+
   "to be fishing": Link grammar offers four parses of "I was fishing for
      evidence", two of which are given low scores, and two are given
      high scores. Of the two with high scores, one parse is clearly bad.
