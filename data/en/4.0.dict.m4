@@ -7042,17 +7042,19 @@ and.j-n but_not and_not ,_not:
     or <post-nominal-u>));
 
 % {XJo-}: "I can use either this or that".
+%
 or.j-n:
   (<noun-conj-dep-s> & <noun-sub-s> & {XJo-} &
     (<noun-conj-head> or (S*x+ & <CLAUSE>) or SI- or [Os-] or Wa- or <post-nominal-s>)) or
   (<noun-conj-dep-p> & <noun-sub-p> & {XJo-} &
     (<noun-conj-head> or (Spx+ & <CLAUSE>) or SIp- or [Op-] or Wa- or <post-nominal-p>));
 
-% XJn-" "neither this nor that"
+% XJn-" "neither this nor that"  
+% XJn- is optional: "I don't like dogs nor cats" but not having it is given
+%     a cost only because its a kind of a strange construction ...
 % SJl- & SJr+ & SJl+: cascading nor's: "Neither snow nor rain nor heat..."
 nor.j-n:
-  (SJl- & XJn- & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa-))
-  or (SJl- & SJr+ & SJl+);
+  SJl- & (XJn- or [()]) & SJr+ & ((Wd- & S*x+) or SI- or Os- or Wa- or SJl+);
 
 % Force use of commas: "Mary, but not Louise, is coming to the party"
 % Not John, but Mary led the way.
