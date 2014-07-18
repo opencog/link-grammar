@@ -2178,8 +2178,10 @@ per "/.per": Us+ & Mp-;
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
+% [Wi-] has a cost for only one stupid reason: because "frank.v" interferes
+% with the given name "Frank.b".  Ouch. XXX FIXME. Give frank.v special treatment.
 <verb-i>:    {@E-} & I- & <verb-wall>;
-<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & {<verb-wall>} & {@E-}) or ({CO-} & [Wi-] & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 % <b-minus> is meant to be a generic replacement in the naked B- in
