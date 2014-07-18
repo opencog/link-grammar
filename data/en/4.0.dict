@@ -3659,7 +3659,7 @@ sworn.v:
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
-% XXX Why is there a cost on Pv+ ??
+% XXX Why is there a cost on Pv+ ?? "John appeared vindicated"
 <vc-appear>:
   {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [Pv+]};
 appear.v: 
@@ -3676,7 +3676,7 @@ appeared.v-d:
   ((<vc-appear>) & <verb-and-sp-i+>));
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
-% XXX Why is there a cost on Pv+ ??
+% XXX Why is there a cost on Pv+ ?? "John seemed vindicated"
 <vc-seem>:
   {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [Pv+]);
 seem.v: 
