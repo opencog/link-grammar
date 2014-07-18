@@ -2167,6 +2167,12 @@ per "/.per": Us+ & Mp-;
 % <WALL>: hWV+;
 
 % Pv- & <verb-wall>: "a historic new law was passed"
+% Pv- & no wall: "John felt vindicated"
+% The problem here is that for passives (i.e. to-be), The Pv should get the wall
+% but in the other cases it should not. We could/should tighten this up by using
+% Pvp+ on to-be, using Pvv for the others, and demaninds the wall only for Pvp.
+% XXX FIXME, the above needs fixing.
+%
 % Pg- is naked, no verb-wall: "I like eating bass."
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
@@ -2182,8 +2188,8 @@ per "/.per": Us+ & Mp-;
 <verb-sp>:   {@E-} & ((S- & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (Pg- or Mg-);
-<verb-pv>:   {@E-} & ((Pv- & <verb-wall>) or Mv-) & {@MV+};
-<verb-pv-b>: {@E-} & ((Pv- & <verb-wall>) or Mv-);
+<verb-pv>:   {@E-} & ((Pv- & {<verb-wall>}) or Mv-) & {@MV+};
+<verb-pv-b>: {@E-} & ((Pv- & {<verb-wall>}) or Mv-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
