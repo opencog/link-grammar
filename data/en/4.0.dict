@@ -3659,8 +3659,9 @@ sworn.v:
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
+% XXX Why is there a cost on Pv+ ??
 <vc-appear>:
-  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [[Pv+]]};
+  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [Pv+]};
 appear.v: 
   ((<verb-y-pl,i> & (<vc-appear>))
   or (<verb-and-sp-i-> & ([(<vc-appear>)] or ()))
@@ -3675,8 +3676,9 @@ appeared.v-d:
   ((<vc-appear>) & <verb-and-sp-i+>));
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
+% XXX Why is there a cost on Pv+ ??
 <vc-seem>:
-  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [[Pv+]]);
+  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [Pv+]);
 seem.v: 
   ((<verb-y-pl,i> & (<vc-seem>))
   or (<verb-and-sp-i-> & ([(<vc-seem>)] or ()))
@@ -5058,8 +5060,9 @@ requested.v-d:
 requesting.g: (<vc-request> & <verb-ge>) or <verb-ge-d>;
 requesting.v: <verb-pg> & <vc-request>;
 
+% XXX why is there a cost on Pv ??
 <vc-feel>: <vc-trans> or
-  ({@MV+} & (Pa+ or TH+ or <embed-verb> or RSe+ or AF- or Vf+ or (LI+ or {@MV+}) or [[Pv+]]));
+  ({@MV+} & (Pa+ or TH+ or <embed-verb> or RSe+ or AF- or Vf+ or (LI+ or {@MV+}) or [Pv+]));
 feel.v: 
   ((<verb-pl,i> & (<vc-feel>)) or
   (<verb-and-pl-> & ((<vc-feel>) or ())) or
@@ -5240,8 +5243,9 @@ turned.v-d:
 turning.v: <verb-pg> & <vc-turn>;
 turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 
+% XXX Why is there a cost on Pv+ ???
 % <vc-trans> plus TI
-<vc-become>: ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or [[Pv+]])
+<vc-become>: ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or [Pv+])
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: 
   ((<verb-s-pl,i> & (<vc-become>)) or
@@ -5253,9 +5257,10 @@ became.v-d: <verb-s-sp> & <vc-become>;
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
 becoming.v: <verb-pg> & <vc-become>;
 
+% XXX Why is there a cost on Pv+ ???
 % <vc-trans> plus TI
 <vc-remain>: ({@MV+} & (AF- or Pa+)) or ({O+ or <b-minus> or TI+ or
-[[@MV+ & (O*n+ or TI+)]] or [[Pv+]]} & {@MV+});
+[[@MV+ & (O*n+ or TI+)]] or [Pv+]} & {@MV+});
 remain.v: 
   ((<verb-pl,i> & (<vc-remain>)) or
   (<verb-and-pl-> & ((<vc-remain>) or ())) or
@@ -7581,11 +7586,12 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.10.2:
   [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
 
+% XXX Why is there a cost on Pvf- ??? 
 /en/words/words.v.10.3:
   {@E-} & (
     ((S- or PP-) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
-    or [[Pvf- & <vc-it-paraph>]]);
+    or [Pvf- & <vc-it-paraph>]);
 
 read.q-d:
    {@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));

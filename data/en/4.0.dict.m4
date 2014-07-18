@@ -3399,15 +3399,17 @@ sworn.v: VERB_PP(<vc-hope>) or ({@E-} & A+);
 hoping.v agreeing.v pretending.v swearing.v praying.v vowing.v voting.v:
 (<vc-hope> & <verb-pg,ge>) or <verb-ge-d>;
 
+% XXX Why is there a cost on Pv+ ??
 <vc-appear>:
-  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [[Pv+]]};
+  {@MV+} & {(Pa+ & <verb-wall>) or <tof-verb> or THi+ or AF- or [Pv+]};
 appear.v: VERB_Y_PLI(<vc-appear>);
 appears.v: VERB_Y_S(<vc-appear>);
 appeared.v-d: VERB_Y_SPPP(<vc-appear>);
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
+% XXX Why is there a cost on Pv+ ??
 <vc-seem>:
-  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [[Pv+]]);
+  {@MV+} & ((Pa+ & <verb-wall>) or <tof-verb> or LI+ or THi+ or AF- or [Pv+]);
 seem.v: VERB_Y_PLI(<vc-seem>);
 seems.v: VERB_Y_S(<vc-seem>);
 seemed.v-d: VERB_Y_SPPP(<vc-seem>);
@@ -4184,8 +4186,9 @@ requested.v-d:
 requesting.g: (<vc-request> & <verb-ge>) or <verb-ge-d>;
 requesting.v: <verb-pg> & <vc-request>;
 
+% XXX why is there a cost on Pv ??
 <vc-feel>: <vc-trans> or
-  ({@MV+} & (Pa+ or TH+ or <embed-verb> or RSe+ or AF- or Vf+ or (LI+ or {@MV+}) or [[Pv+]]));
+  ({@MV+} & (Pa+ or TH+ or <embed-verb> or RSe+ or AF- or Vf+ or (LI+ or {@MV+}) or [Pv+]));
 feel.v: VERB_PLI(<vc-feel>);
 feels.v: VERB_S_T(<vc-feel>);
 felt.v-d: VERB_SPPP_T(<vc-feel>) or (<verb-s-pv> & {THi+}) or <verb-phrase-opener>;
@@ -4282,8 +4285,9 @@ turned.v-d:
 turning.v: <verb-pg> & <vc-turn>;
 turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 
+% XXX Why is there a cost on Pv+ ???
 % <vc-trans> plus TI
-<vc-become>: ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or [[Pv+]])
+<vc-become>: ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or [Pv+])
 & {@MV+}) or ({@MV+} & (AF- or Pa+));
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: <verb-s-s> & <vc-become>;
@@ -4291,9 +4295,10 @@ became.v-d: <verb-s-sp> & <vc-become>;
 becoming.g: (<vc-become> & <verb-ge>) or <verb-ge-d>;
 becoming.v: <verb-pg> & <vc-become>;
 
+% XXX Why is there a cost on Pv+ ???
 % <vc-trans> plus TI
 <vc-remain>: ({@MV+} & (AF- or Pa+)) or ({O+ or <b-minus> or TI+ or
-[[@MV+ & (O*n+ or TI+)]] or [[Pv+]]} & {@MV+});
+[[@MV+ & (O*n+ or TI+)]] or [Pv+]} & {@MV+});
 remain.v: VERB_PLI(<vc-remain>);
 remains.v: VERB_S_T(<vc-remain>);
 remained.v-d: VERB_SPPP_T(<vc-remain>);
@@ -5698,11 +5703,12 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 /en/words/words.v.10.2:
   [[{@E-} & ((Ss- & <vc-paraph>) or (SIsj+ & <vc-paraph-inv>))]];
 
+% XXX Why is there a cost on Pvf- ??? 
 /en/words/words.v.10.3:
   {@E-} & (
     ((S- or PP-) & <vc-paraph>)
     or (SI*j+ & <vc-paraph-inv>)
-    or [[Pvf- & <vc-it-paraph>]]);
+    or [Pvf- & <vc-it-paraph>]);
 
 read.q-d:
    {@E-} & (((S- or I- or PP-) & <vc-paraph>) or (SI*j+ & <vc-paraph-inv>));
