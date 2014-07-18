@@ -2163,11 +2163,15 @@ per "/.per": Us+ & Mp-;
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 %
+% XXX FIXME: <verb-pp> is almost surely wrong; it should be a plain PP-
+% and the wall, if any, should ride with something else.
+% Example: " Joan made sure to thank Susan for all the help she had given."
+% The PP on "given" can't take a wall, it should take a B-.
 
 <verb-s>:    {@E-} & ((Ss- & <verb-wall>) or (RS- & Bs-));
 <verb-pl>:   {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-));
 <verb-sp>:   {@E-} & ((S- & <verb-wall>) or (RS- & B-));
-<verb-pp>:   {@E-} & PP- & <verb-wall>;
+<verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (Pg- or Mg-);
 <verb-pv>:   {@E-} & ((Pv- & <verb-wall>) or Mv-) & {@MV+};
 <verb-pv-b>: {@E-} & ((Pv- & <verb-wall>) or Mv-);
