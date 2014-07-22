@@ -8720,7 +8720,7 @@ as_soon_as:
   <subcl-verb> & {Xc+ & {Xd-}} & CO*s+;
 
 % J+ & CO+: "Until yesterday, ..."
-until 'til ’til ‘til `til til:
+until 'til ’til ‘til `til til till.r:
   ((Mgp+ or J+ or JT+ or UN+)
     & (({Xc+ & {Xd-}} & CO+) or ({Xd- & Xc+} & MVp-) or [Mp-]))
   or (<subcl-verb> & (({Xc+ & {Xd-}} & CO*s+) or ({Xd- & Xc+} & MVs-)));
