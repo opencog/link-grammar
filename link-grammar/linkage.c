@@ -36,24 +36,21 @@
  */
 
 /*
- * The "empty word" is an ugly, hacky concept used to work around
- * fixed-length parsing within the parser. That is, the tokenizer
- * may or may not split a word into morphemes, and the number
- * of morphemes may be variable.  However, the parser, as currently
- * written, expects sentences to be of fixed length. Thus, the "empty
- * word" is automatically inserted into a sentence, so as to balance
- * the total count.  However, its resence is entirely bogus, and so,
- * below, we remove it from the linkage, as well as the links that
- * connect to it.
+ * The "empty word" is a concept used in order to make the current parser able
+ * to parse "alternatives" within a sentence. The "empty word" can link to any
+ * word, hence it is issued when a word is optional.  Currently, for coding
+ * convenience, the "empty * word" is also automatically inserted into a
+ * sentence, so as to balance the total count of words in alternatives.
  *
- * The empty-word device is emplyed by every non-English dictionary.
- * (viz. Russian, German, Lithuanian, ...)
+ * However, the empty words are not needed after the linkage step, and so,
+ * below, we remove them from the linkage, as well as the links that
+ * connect to them.
  *
- * XXX TODO ... the = sign should be replaced by something else, say,
- * 0x4, during dictionary read, and then converted back to equals sign
- * during printing.  The problem is tht equals signs can also show up
- * in equations, which makes things confusing during the printing steps
- * done below, where we try to glue words back together again.
+ * The empty word device is employed by every non-English dictionary. (viz.
+ * Russian, German, Lithuanian, ...). Recently it has been added to the English
+ * dictionary, and is issued in cases of contraction splitting, spell guesses,
+ * and unit-strip alternatives. For more information, see EMPTY_WORD.zzz in the
+ * dict file.
  */
 #define EMPTY_WORD_SUPPRESS ("ZZZ") /* link to pure whitespace */
 
@@ -68,7 +65,7 @@
 #define HIDE_MORPHO   (!display_morphology)
 
 /* FIXME for is_*:
- * - Use INFIX_MARK and STEMSUBSCR, to match the corrsponding affix classes.
+ * - Use INFIX_MARK and STEMSUBSCR, to match the corresponding affix classes.
  * - There are versions of these functions in api.c - unify them.
  */
 
@@ -95,7 +92,7 @@ static bool is_suffix(const char* w)
 
 /* Return TRUE if the word seems to be in stem form.
  * Stems have the distinctive 'shape', that the end with the = sign
- * and are preceeded by the subscript mark.
+ * and are preceded by the subscript mark.
  * Examples (. represented the subscript mark): word.= word.=[!]
  */
 static bool is_stem(const char* w)
@@ -143,7 +140,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage)
 		if (pi->chosen_disjuncts[i] == NULL)
 		{
 			/* The unsplit_word is the original word; if its been split
-			 * into stem+suffix, and either one hasn't been choosen, then
+			 * into stem+suffix, and either one hasn't been chosen, then
 			 * neither should be printed.  Do, however, put brackets around
 			 * the original word, and print that.
 			 */
