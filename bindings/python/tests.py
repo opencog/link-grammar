@@ -9,6 +9,15 @@ import unittest
 from linkgrammar import Parser, Linkage, ParseOptions, Link
 import _clinkgrammar as clg
 
+import os
+
+def setUpModule():
+    datadir = os.getenv("LINK_GRAMMAR_DATA", "");
+    if datadir:
+        # Make sure we use an absolute path, else "Error opening word file..."
+        datadir = os.path.abspath(datadir)
+        clg.dictionary_set_data_dir(datadir)
+
 # The tests are run in alphabetical order....
 #
 # First test: test the test framework itself ...
