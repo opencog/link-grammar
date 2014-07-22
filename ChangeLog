@@ -17,7 +17,7 @@ Version 5.1.0 (XXX 2014)
  * Add bounds-checking to the C API.
  * Fix the old disjunct-printing implementation.
  * Add support for easy-to-use link direction indicator.
- * Add random morphology generator tool
+ * Add random morphology generator tool.
  * Partial support for phonetic use of "a" vs. "an" for English.
  * Rework how coordination between conjunctions works: "either... or ...", etc.
 
