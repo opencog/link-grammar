@@ -69,18 +69,19 @@ EMPTY-WORD.zzz: ZZZ-;
 % Null links. These are used to drop the requirement for certain words
 % to appear during parsing. Basically, if a parse fails at a given cost,
 % it is retried at a higher cost (by raising the disjunct_cost).
-% Currently, two different nulls are defined: a regular null, and a
-% costly null.  The regular null is used to make determiners optional;
+% Currently, two different nulls are defined: a no-det-null, and a
+% costly null.  The no-det-null is used to make determiners optional;
 % this allows for the parsing of newspaper headlines and clipped
 % technical speech (e.g. medical, engineering, where determiners are
 % often dropped).  The costly-null is used during panic parsing.
-% Currently, both have the same cost: using the less costly null results
+% Currently, both have the same cost: using a less costly null results
 % in too many sentences being parsed incorrectly.  Oh well.
 
 % Default cost=4.  This allows the Russian dicts to use a cost of 3 for
-% various things, including regex matches for unknown words.
+% various things, including regex matches for unknown words. (i.e. panic
+% parsing is set to 4 at this time.)
 
-<null>: [[[[()]]]];
+<no-det-null>: [[[[()]]]];
 <costly-null>: [[[[()]]]];
 
 % NOUNS
@@ -547,7 +548,7 @@ HYPHENATED-WORDS.n:
 <common-noun>:
   <noun-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds- or <null>)))
+    or ((NM+ or ({[NM+]} & (Ds- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
@@ -567,7 +568,7 @@ HYPHENATED-WORDS.n:
     or Wa-))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds**x- or <null>)))
+    or ((NM+ or ({[NM+]} & (Ds**x- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (YS+ & Ds**x-)
@@ -576,7 +577,7 @@ HYPHENATED-WORDS.n:
 <common-vowel-noun>:
   <common-phonetic>
   or (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds**v- or <null>)))
+    or ((NM+ or ({[NM+]} & (Ds**v- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (YS+ & Ds**v-));
@@ -584,7 +585,7 @@ HYPHENATED-WORDS.n:
 <common-const-noun>:
   <common-phonetic>
   or (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds**c- or <null>)))
+    or ((NM+ or ({[NM+]} & (Ds**c- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (YS+ & Ds**c-));
@@ -794,7 +795,7 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
 <costly-common-noun>:
   <noun-modifiers> &
     (AN+
-    or ((NM+ or [[{[NM+]} & (Ds- or <null>) ]] )
+    or ((NM+ or [[{[NM+]} & (Ds- or <no-det-null>) ]] )
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
@@ -7922,8 +7923,14 @@ favorite.a favourite.a: <superlatives> or
 ([[Ds-]] & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
 
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
-same.a own.a: ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-(DD- & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
+
+% (DD- or [[()]]): allows optional but costly omission of "the"
+% e.g. "Amen’s hair is (the) same as Ben’s" which is not terribly
+% grammatical, but is not uncommon.
+same.a own.a:
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
+  ((DD- or [[()]]) & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
+
 the_same: {EZ-} & (D**y+ or Oy- or Jy- or MVy-);
 next.a: ({Xc+ & {Xd-}} & CO+) or MVp- or DTi+ or NR+ or
 ({Xc+} & {[[@Ec-]]} & L-)
