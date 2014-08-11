@@ -877,6 +877,16 @@ TODO -- Working Notes:
     Other examples, with the phantom word in parenthesis, include:
     * I ate all (of) the cookies.
     * I taught him (how) to swim.
+    * I told him (that) it was gone.
+    * (It) looks good.
+
+  punctuation, zero-copula, zero-that:
+     Poorly punctuated sentences cause problems:  for example:
+     "Mike was not first, nor was he last."
+     "Mike was not first nor was he last."
+     The one without the comma currently fails to parse.  How can we
+     deal with this in a simple, fast, elegant way?  Similar questions
+     for zero-copula and zero-that sentences.
 
 
   Bad grammar: When a sentence fails to parse, look for:
@@ -1042,15 +1052,6 @@ TODO -- Working Notes:
      parse trees when no-links is enforced. Similarly:
      "He is either here or he is there."
      "He either is here or he is there."
-
-
-  punctuation, zero-copula, zero-that:
-     Poorly punctuated sentences cause problems:  for example:
-     "Mike was not first, nor was he last."
-     "Mike was not first nor was he last."
-     The one without the comma currently fails to parse.  How can we
-     deal with this in a simple, fast, elegant way?  Similar questions
-     for zero-copula and zero-that sentences.
 
 
   "to be fishing": Link grammar offers four parses of "I was fishing for
@@ -1261,7 +1262,7 @@ TODO -- Working Notes:
          -- connectors with * direction, i.e. either left or right.
          -- symmetric (commuting) version of &.
          -- DONE, the new symbols are ^ for commuting-& and $ to mean either + or -.
-            This still nees to be documented.
+            This still needs to be documented.
 
    Assorted minor cleanup:
       -- Should provide a query that returns compile-time consts,
