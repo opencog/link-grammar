@@ -762,14 +762,23 @@ SAT solver:
    prior to compiling.
 
 
-COMMERCIAL use:
----------------
-   The original authors would be pleased to discuss alternate
-   licensing terms and/or additional research work, with those
-   wanting to use this system under a paid contract.
+Directional Links
+-----------------
+   Directional links are needed for some languages, such as Lithuanian,
+   Turkish and other free word-order languages. The goal is to have 
+   a link clearly indicate which word is the head word, and which is
+   the dependent. This is acheived by prefixing connectors with
+   a single *lower case* letter: h,d, indicating 'head' and 'dependent'.
+   The linkage rules are such that h matches either nothing or d, and
+   d matches h or nothing. New feature in version 5.1.0.
 
-   Academic products or papers should reference the various
-   link grammar publications.
+
+Phonetics
+---------
+   A/An phonetic determiners before consonants/vowels are handled by a
+   new PH link type, linking the determiner to the word immediately
+   folowing it.  Status: mostly done, more testing needded. The rules
+   could be simplified.  Many spcial-case nouns are unfinished.
 
 
 ADDRESSES
@@ -851,15 +860,6 @@ TODO -- Working Notes:
   i.e provide word index.   Also .. provide a clear word API,
   showing word extent, suffix, etc.
 
-  Directional links:
-    There is a real need for directional links for e.g. Lithuanian,
-    Turkish and other free word-order languages. The goal is to have 
-    a link clearly indicate which word is the head word, and which is
-    the dependent. This could be acheived by prefixing connectors with
-    a single *lower case* letter or symbol, e.g. h,d or ^,- so that
-    h matches either nothing or d, and d matches h or nothing. Should
-    be easy to implement.
-
   Capitalized first words:
     There are subtle technical issues for handling capitalized first
     words. This needs to be fixed. See tokenize.c circa line 586 for
@@ -880,6 +880,11 @@ TODO -- Working Notes:
     * I told him (that) it was gone.
     * (It) looks good.
 
+    One poossible solution to the unvoiced-word problem might be to
+    allow the LG rules to insert alternatives during the early culling
+    stages.  This avoids the need to pre-insert all possible
+    alternatives during tokenization...
+
   punctuation, zero-copula, zero-that:
      Poorly punctuated sentences cause problems:  for example:
      "Mike was not first, nor was he last."
@@ -894,11 +899,6 @@ TODO -- Working Notes:
     * missing apostrophes in possessives: "the peoples desires"
     * determiner agreement errors: "a books"
     * aux verb agreement errors: "to be hooks up"
-
-  A/An phonetic determiners before consonants/vowels:  fix this.  There's
-    a detailed proposal on the mailing list, involving a new PH link type.
-    Status: mostly done-ish. More testing needded. The rules could be
-    simplified.  Many spcial-case nouns are unfinished.
 
   Poor linkage choices:
     Compare "she will be happier than before" to "she will be more happy
@@ -1052,6 +1052,14 @@ TODO -- Working Notes:
      parse trees when no-links is enforced. Similarly:
      "He is either here or he is there."
      "He either is here or he is there."
+
+     Other examples, per And Rosta:
+     "He had been allowed to eat a cake by Sophy that she had made him
+     specially" -- The allowed--by link crosses cake--that
+
+     "a very much easier book indeed": an--book, very--indeed
+     "an easy book to read": an--book, easy--to
+     "a more difficult book than that one": a--book, more--than
 
 
   "to be fishing": Link grammar offers four parses of "I was fishing for
