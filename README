@@ -743,7 +743,7 @@ Fat Links:
 SAT solver:
 -----------
    The current parser uses an algorithm that runs in O(N^3) time, for
-   a sentence containing N words. 
+   a sentence containing N words.
 
    The SAT solver aims to replace this parser with an algorithm based
    on Boolean Satisfiability Theory; specifically using the MiniSAT
@@ -752,7 +752,7 @@ SAT solver:
    attached to a parse ranking system.  This work is incomplete,
    although the prototype works.  it is not yet well-integrated with
    the system, and needs cleanup.  In particular, it fails to handle
-   morphemes correctly (i.e. to use compute_chosen_words() in 
+   morphemes correctly (i.e. to use compute_chosen_words() in
    SATEncoder::create_linkage() -- this needs fixing.)
 
    The SAT solver is enabled by specifying
@@ -765,7 +765,7 @@ SAT solver:
 Directional Links
 -----------------
    Directional links are needed for some languages, such as Lithuanian,
-   Turkish and other free word-order languages. The goal is to have 
+   Turkish and other free word-order languages. The goal is to have
    a link clearly indicate which word is the head word, and which is
    the dependent. This is acheived by prefixing connectors with
    a single *lower case* letter: h,d, indicating 'head' and 'dependent'.
@@ -909,7 +909,7 @@ TODO -- Working Notes:
     would eliminate/simplify rules for less,more.
 
     However, this idea needs to be double-checked against, e.g. Hudson's
-    word grammar.  I'm confused on this issue ... 
+    word grammar.  I'm confused on this issue ...
 
   Repulsive parses: Sometimes, the existance of one parse should suggest
     that another parse must surely be wrong: if one parse is possible,
@@ -1004,6 +1004,11 @@ TODO -- Working Notes:
       ungrammatical sentences parse, with strange parses; while some
       grammatical sentences, which should parse, but currently don't,
       become parseable, but with crazy results.
+
+      More examples, from And Rosta:
+      "when boy meets girl"
+      "when bat strikes ball"
+      "both mother and baby are well"
 
 
    Hand-refining verb patterns:
@@ -1177,13 +1182,13 @@ TODO -- Working Notes:
                |     |     |       |    |    |
            either.r the lorry.n or.j-n the van.n
 
-    The wrong solution is 
+    The wrong solution is
 
-         --------------------------+           
-              +-----Dn-----+       +---SJrs---+    
+         --------------------------+
+              +-----Dn-----+       +---SJrs---+
               |      +Ds**c+--SJn--+     +Ds**+
-              |      |     |       |     |    |    
-          neither.j the lorry.n nor.j-n the van.n 
+              |      |     |       |     |    |
+          neither.j the lorry.n nor.j-n the van.n
 
     The problem with this is that "neither" must coordinate with "nor".
     That is, one cannot say "either.. nor..." "neither ... or ... "
