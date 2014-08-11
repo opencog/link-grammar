@@ -8638,11 +8638,12 @@ EMOTICON :
 
 % ellipsis ... at the start
 % We- is used only for connecting ellipsis to the left wall.
-% We- & J+: ... a ballroom polished like a skull.
+% We- & J+: "... a ballroom polished like a skull."
 % S+ has a cost so that the infinitive I+ is preferred.
 % BI+, QI+: "... how those two should work together"
+% TH+: "... that it rained."
 ....x ….x:
-  We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or QI+ or (R+ & B+ & {S+}));
+  We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or TH+ or QI+ or (R+ & B+ & {S+}));
 
 % Elipsis as verb: "Lud, son of Shem, ..."
 ....v ….v:
