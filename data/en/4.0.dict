@@ -5388,7 +5388,7 @@ spoken.v:
 speaking.v: <verb-pg> & <vc-speak>;
 speaking.g: (<vc-speak> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
-% [[@MV+]]: "The cofee tastes as it did last year."
+% [[@MV+]]: "The coffee tastes as it did last year."
 <vc-taste>:
   <vc-trans>
   or ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+))
