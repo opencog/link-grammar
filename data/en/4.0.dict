@@ -9645,8 +9645,9 @@ further.r:
 as.e-y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
 
 % uses comparative links
+% Cc+: "The coffee tastes the same as it did last year."
 as.e-c:
-  (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or Cc+))
+  (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or <thncl-verb>))
   or (MVzo- & Ct+ & Bc+ & {U+})
   or (MVzp- & (CX+ or CQ+))
   or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
