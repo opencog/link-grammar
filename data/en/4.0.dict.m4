@@ -4365,11 +4365,11 @@ spoken.v:
 speaking.v: <verb-pg> & <vc-speak>;
 speaking.g: (<vc-speak> & <verb-ge>) or <verb-ge-d> or ({@E-} & A+);
 
-% [[@MV+]]: "The coffee tastes as it did last year."
+% @MV+: "The coffee tastes (the same) as it did last year." (do not want O for "the same")
 <vc-taste>:
   <vc-trans>
   or ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+))
-  or [[@MV+]];
+  or @MV+;
 taste.v: VERB_PLI(<vc-taste>);
 tastes.v: VERB_S_T(<vc-taste>);
 tasted.v-d: VERB_SPPP_T(<vc-taste>) or <verb-pv> or <verb-phrase-opener>;
@@ -4378,7 +4378,8 @@ tasting.v: <verb-pg> & <vc-taste>;
 
 <vc-smell>:
   {<vc-trans>}
-  or ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+));
+  or ({@MV+} & ((LI+ & {@MV+}) or AF- or Pa+ or OF+))
+  or @MV+;
 reek.v smell.v: VERB_PLI(<vc-smell>);
 reeks.v smells.v: VERB_S_T(<vc-smell>);
 reeked.v-d smelled.v-d: VERB_SPPP_T(<vc-smell>) or <verb-pv> or <verb-phrase-opener>;
@@ -7921,24 +7922,34 @@ nothing_but: Vd- & I+;
 
 /en/words/words.adj.3: <superlatives>;
 
-favorite.a favourite.a: <superlatives> or
-({Xc+} & {[[@Ec-]]} & [[Lf-]]) or
-([[Ds-]] & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
+favorite.a favourite.a:
+  <superlatives>
+  or ({Xc+} & {[[@Ec-]]} & [[Lf-]])
+  or ([[Ds-]] & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
 
 sole.a main.a: {Xc+} & {NR-} & {[[@Ec-]]} & L-;
 
 % (DD- or [[()]]): allows optional but costly omission of "the"
 % e.g. "Amen’s hair is (the) same as Ben’s" which is not terribly
 % grammatical, but is not uncommon.
+% [<noun-main-x>]0.1: prefer MVy for comparatives (see the_same, below).
+% "The coffee tastes the same as it did last year."
 same.a own.a:
   ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or
-  ((DD- or [[()]]) & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
+  ((DD- or [[()]]) & <noun-sub-x> & {<ton-verb>} & [<noun-main-x>]0.1);
 
-the_same: {EZ-} & (D**y+ or Oy- or Jy- or MVy-);
-next.a: ({Xc+ & {Xd-}} & CO+) or MVp- or DTi+ or NR+ or
-({Xc+} & {[[@Ec-]]} & L-)
-or (DD- & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
+% [Oy-]0.1: see immediately above.
+the_same:
+  {EZ-} & (D**y+ or [Oy-]0.1 or Jy- or MVy-);
+
+next.a:
+  ({Xc+ & {Xd-}} & CO+)
+  or MVp- or DTi+ or NR+
+  or ({Xc+} & {[[@Ec-]]} & L-)
+  or (DD- & <noun-sub-x> & {<ton-verb>} & <noun-main-x>);
+
 past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+});
+
 following.a remaining.a top.i: L-;
 
 hardest.a-s easiest.a-s:
