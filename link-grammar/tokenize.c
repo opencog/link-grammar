@@ -153,6 +153,7 @@ static bool is_space(wchar_t wc)
 	return false;
 }
 
+#if 0
 /**
  * Returns true if the word can be interpreted as a number.
  * The ":" is included here so we allow "10:30" to be a number.
@@ -181,8 +182,8 @@ static bool is_number(const char * s)
 	}
 	return true;
 }
+#endif
 
-#if 0
 /**
  * Returns true if the word contains digits.
  */
@@ -202,7 +203,6 @@ static bool contains_digits(const char * s)
 	}
 	return false;
 }
-#endif
 
 /**
  * Accumulate different word-stemming possibilities.
@@ -344,6 +344,14 @@ void add_alternative(Sentence sent,
 		altappend(sent, &sent->word[len].alternatives, EMPTY_WORD_MARK);
 	}
 	sent->t_count = t_count;
+}
+
+/**
+ * Return true if an alternative has been issued for the current word.
+ */
+static bool word_has_alternative(Sentence sent) {
+	if (NULL == sent->word[sent->t_start].unsplit_word) return true;
+	return false;
 }
 
 /**
@@ -766,7 +774,21 @@ static bool is_capitalizable(Sentence sent, size_t curr_word)
 }
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-#define MAX_NUM_SPELL_GUESSES 60 /* ??? Is it useful to have a limit? */
+/* ??? Is it useful to have a limit to the number of guesses? Will it be
+ * better to change !spell to be an integer which will be this limit? */
+#define MAX_NUM_SPELL_GUESSES 60
+/**
+ * Try to spell guess an unknown word, and issue the results as alternatives.
+ * There are two kind of guesses:
+ * - Separating run-on words into an exact combination of words, usually 2.
+ * - Find similar words.
+ *
+ * Return true of corrections have been issued, else false.
+ *
+ * Note: spellcheck_suggest(), which is invoked by this function, returns
+ * guesses for words containing numbers (including words consisting of digits
+ * only). Hence this function should not  be called for such words.
+ */
 static bool guess_misspelled_word(Sentence sent, const char * word,
                                   bool quote_found, Parse_Options opts)
 {
@@ -777,9 +799,6 @@ static bool guess_misspelled_word(Sentence sent, const char * word,
 	char *sp = NULL;
 	const char *wp;
 	char **alternates = NULL;
-
-	/* For some reason spellcheck_suggest() returns guesses for numbers. */
-	if (is_number(word)) return false;
 
 	/* If the spell-checker knows about this word, and we don't ...
 	 * Dang. We should fix it someday. Accept it as such. */
@@ -877,7 +896,8 @@ static bool guess_misspelled_word(Sentence sent, const char * word,
  * does not support multiple alternative tokenizations; the viterbi
  * parser, under development, should be able to do better.
  */
-static const char * strip_left(Sentence sent, const char * w, bool quote_found)
+static const char * strip_left(Sentence sent, const char * w,
+                               bool quote_found)
 {
 	Dictionary afdict = sent->dict->affix_table;
 	Afdict_class * lpunc_list;
@@ -910,115 +930,12 @@ static const char * strip_left(Sentence sent, const char * w, bool quote_found)
 }
 
 /**
- * Split off units from the right.
- *
- * Units are removed from the right-hand side of a word, one at a time,
- * until a bare number is obtained; then the stripping stops.  This
- * could probably be unified with morphology processing someday...
- *
- * The only thing allowed to precede a units suffix is a number. This
- * is so that strings such as "12ft" (twelve feet) are split, but words
- * that accidentally end in "ft" are not split (e.g. "Delft blue")
- * It is enough to ensure that the string starts with a digit.
- *
- * There's one exception to this: this routine must split expressions
- * such as "mL/s" into "mL / s" (milli-liters per second) so that the
- * slash tokenizes the word.  Note there is no number, but the
- * expression split completely!
- *
- * Multiple passes allow for constructions such as 12sq.ft. or
- * 12ft.lbs. That is, first, "ft." is stripped, then "sq." is
- * stripped, then "12" is found in the dict.
- *
- * w points to the string starting just to the right of any left-stripped
- * characters.
- * n_r_stripped is the index of the r_stripped array, consisting of strings
- * stripped off; r_stripped[0] is the number of the first string stripped off,
- * etc.
- * When it breaks out of this loop, n_r_stripped will be the number of strings
- * stripped off. It is returned through the parameter.
- * The function returns a pointer to one character after the end of the
- * remaining word.
- */
-static const char * strip_units(Sentence sent, const char * w,
-                                const char * wend, char const * r_stripped[],
-                                size_t * n_r_stripped, bool * word_is_in_dict)
-{
-	Dictionary dict = sent->dict;
-	Dictionary afdict = dict->affix_table;
-	Afdict_class * unit_list;
-	const char * const * unit;
-	size_t u_strippable;
-	size_t nrs = 0, i = 0;
-	bool successful_strip = false;
-	const char * temp_wend = wend;
-
-	if (NULL == afdict) return wend;
-
-	/* Strip away units until expression ends with a number.  */
-	unit_list = AFCLASS(afdict, AFDICT_UNITS);
-	u_strippable = unit_list->length;
-	unit = unit_list->string;
-
-	/* Start nrs with n_r_stripped, as we may have already removed
-	 * right-punctuation! */
-	for (nrs = *n_r_stripped; nrs < MAX_STRIP; nrs++)
-	{
-		/* Any string ending with a number halts stripping.
-		 * Alternately, if the expression has been completely split,
-		 * with nothing left, that's accepted too. */
-		/* Back up by one byte, since temp_wend is null byte. */
-		if ((temp_wend == w) ||
-		   ((w < temp_wend) && is_utf8_digit(temp_wend-1)))
-		{
-			// word_is_in_dict might already be true ...
-			*word_is_in_dict = true;
-			successful_strip = true;
-			if (2 <= verbosity)
-			{
-				size_t sz = temp_wend-w;
-				char* word = alloca(sz+1);
-				strncpy(word, w, sz);
-				word[sz] = '\0';
-				lgdebug(2, "unit strip to root word '%s'\n", word);
-			}
-			break;
-		}
-
-		for (i = 0; i < u_strippable; i++)
-		{
-			const char * t = unit[i];
-			size_t len = strlen(t);
-
-			/* The remaining w is too short for a possible match */
-			if ((temp_wend-w) < (int)len) continue;
-
-			if (strncmp(temp_wend-len, t, len) == 0)
-			{
-				lgdebug(2, "candidate unit strip: w='%s' unit '%s'\n", temp_wend-len, t);
-				r_stripped[nrs] = t;
-				temp_wend -= len;
-				break;
-			}
-		}
-		/* If we've tried them all, and got nothing, we are done. */
-		if (i == u_strippable) break;
-	}
-
-	/* Need independent test, since word_is_in_dict might have been
-	 * previously true ... */
-	/* if (0 < nrs && *word_is_in_dict) */
-	if (0 < nrs && successful_strip)
-	{
-		*n_r_stripped = nrs;
-		wend = temp_wend;
-	}
-	return wend;
-}
-
-/**
  * Split off punctuation and units from the right.
  *
+ * Comments from a previous rewrite try of right stripping, not exactly apllied
+ * to the current method but discusses some relevant problems.
+ * ---
+ * FIXME: Adapt and move to separate_word().
  * Punctuation and units are removed from the right-hand side of a word,
  * one at a time, until the stem is found in the dictionary; then the
  * stripping stops.  That is, the first dictionary hit wins. This makes
@@ -1045,8 +962,6 @@ static const char * strip_units(Sentence sent, const char * w,
  * Also, 7am must split, even though there's a regex that matches
  * this (the HMS-TIME regex).
  *
- * Also, we have to split "mL/s," into "mL / s ," with no number.
- *
  * However, do NOT strip "sin." into "s in." (seconds, inches)
  * or "mold." into "mol d ." (chemistry mol, dioptre)
  * or "call." int "cal l ." (calorie litre)
@@ -1062,191 +977,113 @@ static const char * strip_units(Sentence sent, const char * w,
  * Perhaps someday, improved morphology handling will render this code
  * obsolete. But don't your breath: the interplay between morphology
  * and regex is also quite nasty.
+ * ---
+ *
+ * The classnum parameter is the affix class of strings to strip.
+ * The rootdigit parameter adds a check that the root ends with a digit.  It is
+ * used when stripping units, so we don't strip units names off potentially real
+ * words.
  *
  * w points to the string starting just to the right of any left-stripped
  * characters.
  * n_r_stripped is the index of the r_stripped array, consisting of strings
  * stripped off; r_stripped[0] is the number of the first string stripped off,
  * etc.
- * When it breaks out of this loop, n_r_stripped will be the number of strings
- * stripped off. It is returned through the parameter.
- * The function returns a pointer to one character after the end of the
- * remaining word.
  *
- * In case of units strip that end up in a null root word, we later need
- * to add the unstripped word (consisting of units only, without punctuation)
- * as an alternative. This is done if it can match a regex.
- * To that end, the following "by result" parameters are used here:
- * units_wend - end of word consisting of units only
- * n_r_unit - number of stripped units
- * FIXME: This is ridiculously complicated.
+ * When it breaks out of this loop, n_r_stripped will be the number of strings
+ * stripped off. It is returned through the parameter, after possibly adjusting
+ * it so the root will not be null. A pointer to one character after the end of
+ * the remaining word is retunred truough the parameter wend.
+ *
+ * The function returns true if an affix has been stripped (even if it
+ * adjusts n_r_stripped back to 0 if the root was null), else false.
+ *
+ * p is a mark of the invocation position, for debugging.
  */
-static const char * strip_right(Sentence sent, const char *w,
-                                const char *wend, const char **units_wend,
-                                size_t *n_r_units, char const *r_stripped[],
-                                size_t *n_r_stripped, bool *word_is_in_dict)
+extern const char const *afdict_classname[]; /* For debug message only */
+static bool strip_right(Sentence sent,
+		                  const char *w,
+                        const char **wend,
+                        char const *r_stripped[],
+                        size_t *n_r_stripped,
+                        afdict_classnum classnum,
+                        bool rootdigit,
+							  	int p)
 {
 	Dictionary dict = sent->dict;
 	Dictionary afdict = dict->affix_table;
-	size_t nrs = 0, i = 0;
-	const char * temp_wend = wend;
-	bool starts_with_number = is_utf8_digit(w);
+	const char * temp_wend = *wend;
+	char *word = alloca(temp_wend-w);
+	size_t sz;
+	size_t i;
+	size_t nrs = 0;
+	size_t len;
+	bool stripped = false;
 
-	Afdict_class * rpunc_list;
-	const char * const * rpunc;
-	size_t r_strippable;
+	Afdict_class *rword_list;
+	size_t rword_num;
+	const char * const * rword;
 
-	if (NULL == afdict) return (wend);
-	nrs = 0;
+	assert(temp_wend>w, "strip_right: unexpected empty word");
+	if (NULL == afdict) return false;
 
-	rpunc_list = AFCLASS(afdict, AFDICT_RPUNC);
-	r_strippable = rpunc_list->length;
-	rpunc = rpunc_list->string;
+	rword_list = AFCLASS(afdict, classnum);
+	rword_num = rword_list->length;
+	rword = rword_list->string;
 
-	/* Step 1: First, try to strip off a single punctuation,
-	 * typically a comma or period, and see if the resulting
-	 * word is in the dict (but not the  regex). This allows
-	 * "sin." and "call." to be recognized. If we don't do
-	 * this now, then the next stage will split "sin." into
-	 * seconds-inches, and "call." into calories-liters.
-	 */
-	for (i = 0; i < r_strippable; i++)
+	do
 	{
-		const char * t = rpunc[i];
-		size_t len = strlen(t);
-
-		/* The remaining w is too short for a possible match */
-		if ((temp_wend-w) < (int)len) continue;
-
-		if (strncmp(temp_wend-len, t, len) == 0)
+		for (i = 0; i < rword_num; i++)
 		{
-			lgdebug(2, "prelim rpunct strip: w='%s' punct '%s'\n", temp_wend-len, t);
-			*n_r_stripped = nrs;
-			wend = temp_wend;
-			r_stripped[nrs] = t;
-			temp_wend -= len;
-			break;
-		}
-	}
+			const char *t = rword[i];
 
-	/* If we got one, see if the resulting word is in dict
-	 * (but not regex). If it is, we are done. */
-	if (i < r_strippable)
-	{
-		size_t sz = temp_wend-w;
-		char* word = alloca(sz+1);
-		strncpy(word, w, sz);
-		word[sz] = '\0';
-
-		/* If its in the ordinary dict (not regex) we are done. */
-		if (boolean_dictionary_lookup(dict, word))
-		{
-			*n_r_stripped = 1;
-			return temp_wend;
-		}
-	}
-
-	/* Next step: Try units, then rpunc, then units again.  We do this
-	 * to handle expressions such as 12sqft. or 12lbs. (notice the
-	 * period at end). That is, we want to strip off the "lbs." with
-	 * the dot, first, rather than stripping the dot as punctuation,
-	 * and then coming up empty-handed for "sq.ft" (without the dot)
-	 * in the dict.  But if we are NOT able to strip off any units,
-	 * then we try punctuation, and then units. This allows commas to
-	 * be removed (e.g. 7grams,)
-	 */
-	*units_wend = temp_wend; /* Potential end of units */
-	*n_r_stripped = 0;
-	temp_wend = strip_units(sent, w, wend, r_stripped, n_r_stripped, word_is_in_dict);
-	*n_r_units = *n_r_stripped;
-
-	/* If we stripped anything off, and ended up with a numeric string,
-	 * or nothing at all, then we are done. */
-	if ((0 < *n_r_stripped) &&
-	    (starts_with_number || w == temp_wend))
-	{
-		return temp_wend;
-	}
-	/* No units found */
-	*units_wend = NULL;
-	*n_r_units = 0;
-
-	/* Now, try to strip right-punctuation, and finally, try to
-	 * strip units. The reason for this is that we can use regexes
-	 * to find a word in the dict when working with punctuation, but
-	 * we must not use regexes when stripping units. because the S-WORD
-	 * regex goofs up units. The HMS-TIME regex too ...
-	 */
-	for (nrs = 0; nrs < MAX_STRIP; nrs++)
-	{
-		size_t sz = temp_wend-w;
-		char* word = alloca(sz+1);
-		strncpy(word, w, sz);
-		word[sz] = '\0';
-		if (temp_wend == w) break;  /* It will work without this. */
-
-		/* Any remaining valid word, including numbers and
-		 * regex's, stops the right-punctuation stripping. */
-		if (find_word_in_dict(dict, word))
-		{
-			*word_is_in_dict = true;
-			lgdebug(2, "rpunct strip to root word '%s'\n", word);
-			break;
-		}
-
-		for (i = 0; i < r_strippable; i++)
-		{
-			const char * t = rpunc[i];
-			size_t len = strlen(t);
-
+			len = strlen(t);
 			/* The remaining w is too short for a possible match */
 			if ((temp_wend-w) < (int)len) continue;
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "rpunct strip: w='%s' punct '%s'\n", temp_wend-len, t);
-				*n_r_stripped = nrs;
-				wend = temp_wend;
-				r_stripped[nrs] = t;
+				lgdebug(2, "%d: right strip %s: w='%s' rword '%s'\n",
+				        p, afdict_classname[classnum], temp_wend-len, t);
+				r_stripped[*n_r_stripped+nrs] = t;
+				nrs++;
 				temp_wend -= len;
 				break;
 			}
 		}
-		/* If we tried them all, got nothing, then we're done */
-		if (i == r_strippable) break;
+	} while (i < rword_num && temp_wend > w && rootdigit);
+	assert(w<=temp_wend, "A word should never start after its end...");
+
+	sz = temp_wend-w;
+	strncpy(word, w, sz);
+	word[sz] = '\0';
+
+	/* If there is a non-null root, we require that it ends with a number,
+	 * to ensure we stripped off all units. This prevents striping
+	 * off "h." from "20th.".
+	 * FIXME: is_utf8_digit(temp_wend-1) here can only check ASCII digits,
+	 * since it is invoked with the last byte... */
+	if (rootdigit && (temp_wend > w) && !is_utf8_digit(temp_wend-1))
+	{
+		lgdebug(2, "%d: strip_right(%s): return FALSE; root='%s' (%c is not a digit)\n",
+			 p, afdict_classname[classnum], word, temp_wend[-1]);
+		return false;
 	}
 
-	/* We may or have may not removed punctuation. Try to handle units. */
-	*units_wend = temp_wend; /* Potential end of units */
-	*n_r_stripped = nrs;
-	temp_wend = strip_units(sent, w, temp_wend,
-	                     r_stripped, n_r_stripped, word_is_in_dict);
-	if (*units_wend == temp_wend)
+	stripped = nrs > 0;
+	if (temp_wend == w)
 	{
-		*units_wend = NULL;
-	}
-	else
-	{
-		*n_r_units = *n_r_stripped - nrs;
+		/* Null root - undo the last strip */
+		nrs--;
+		temp_wend += len;
 	}
 
-	if (2 <= verbosity)
-	{
-		size_t sz = temp_wend-w;
-		char* word = alloca(sz+1);
-		strncpy(word, w, sz);
-		word[sz] = '\0';
-		lgdebug(2, "rpunct+unit strip '%s' root is in dict=%d\n",
-		        w, *word_is_in_dict);
-	}
+	lgdebug(2, "%d: strip_right(%s): return %s; n_r_stripped=%d+%d, wend='%s' temp_wend='%s'\n",
+p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nrs,*wend,temp_wend);
 
-	/* At this point, we accept whatever punctuation was stripped.
-	 * We might not have found the stripped word in the dict,
-	 * becasuse it has yet to be broken up into morphemes by later
-	 * stages...
-	 */
-	wend = temp_wend;
-	return wend;
+	*n_r_stripped += nrs;
+	*wend = temp_wend;
+	return stripped;
 }
 
 /**
@@ -1264,127 +1101,259 @@ static const char * strip_right(Sentence sent, const char *w,
  * $10   ->  $ + 10 (dollar sign plus a number)
  * Surprise!  -> surprise + !  (pry the punctuation off the end of the word)
  * you've   -> you + 've  (undo contraction, treat 've as synonym for 'have')
+ *
+ * XXX This function is being rewritten (work in progress).
+ * FIXME: Rearrange comments.
  */
- /* XXX This function is being rewritten (work in progress). */
 static void separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
                          bool quote_found)
 {
-	size_t sz;
 	int i;
-	size_t  n_r_stripped = 0;
+	Dictionary dict = sent->dict;
 	bool word_is_in_dict = false;
 	bool word_can_split = false;
 	bool issued = false;
-
+	bool try_strip_left;     /* try to strip punctuation on the left-hand side */
+	bool units_alternative;                     /* units alternative is needed */
+	bool parallel_regex;                  /* regex unknown word that can split */
+	bool stripped;
 	const char *wp;
+	const char *temp_wend;
+
+	size_t n_r_stripped = 0;
+	const char *r_stripped[MAX_STRIP];   /* these were stripped from the right */
 
 	/* For units alternative */
-	const char *units_wend = NULL; /* end of string consisting of units */
-	size_t n_r_units;              /* number of stripped units */
+	const char *units_wend = NULL;        /* end of string consisting of units */
+	size_t units_n_r_stripped;
+	bool start_digit = false;
+	const char **r_stripped_alt;
+	int ntokens;
 
-	/* FIXME: A dynamic allocation. */
-	char word[MAX_WORD+2+1];
-	char str[MAX_WORD+1];
-	char downcase[MAX_WORD+1] = "";
+	size_t sz = wend - w;
+	/* Dynamic allocation of working buffers. */
+	char *word = alloca(sz+1);                   /* candidate word main buffer */
+	char *input_word = alloca(sz+1);  /* input word, possible after left-strip */
+	int downcase_size = sz+MB_LEN_MAX+1; /* pessimistic max. size of dc buffer */
+	char *downcase = alloca(downcase_size);               /* downcasing buffer */
+	char *str = alloca(downcase_size+sizeof("[!]"));        /* tmp word buffer */
 
-	const char *r_stripped[MAX_STRIP];  /* these were stripped from the right */
+	downcase[0] = '\0';
 
-	Dictionary dict = sent->dict;
-
-	/* XXX FIXME: Rearrange comments */
-
-	sz = MIN(wend-w, MAX_WORD);
 	strncpy(word, w, sz);
 	word[sz] = '\0';
 
-	/* First, see if we can already recognize the word as-is,
-	 * as a dictionary word, but not as a regex match. If so,
-	 * then we are mostly done(*). If not found, we'll try
-	 * stripping left and right punctuation, and units.
-	 * We don't want to do regex matching yet, because the
-	 * S-WORDS regex prevents striping units that end in 's',
-	 * while the HMS-time regex halts separation of 7am into
-	 * two.
-	 *
-	 * Regex matches are later treated as alternatives.
-	 *
-	 * (*)... unless the word can split or we need to handle
-	 * captalization. We check that later.
-	 */
-#if UNCONDITIONAL_PUNCT_STRIP_CAUSE_AMIR_ASKED_FOR_THIS
-// The below allows "Mr. Smith is late" to parse, but ruins
-// the parsing of "The record skips halfway in."  because
-// "in." shows up in the dictionary as inches.
-	word_is_in_dict = boolean_dictionary_lookup(dict, word);
-	lgdebug(+2, "Initial check: word='%s' boolean_dictionary_lookup=%d\n",
-	        word, word_is_in_dict);
-#endif
+	lgdebug(+2, "Processing input word: '%s'\n", word);
 
-	/* Strip punctuation, units from candidate word, using
-	 * a linear splitting algorithm. FIXME: Handle punctuation
-	 * strip as alternatives. */
-	if (!word_is_in_dict)
+	/* Strip punctuation and units from candidate word, using
+	 * a linear splitting algorithm. FIXME: Handle as alternatives. */
+
+	/* Strip off punctuation, etc. on the left-hand side.  But first check
+	 * whether it is better not to do so. This happens when:
+	 * 1. The word is known.
+	 * 2. The word is known after punctuation right-strip.
+	 * This solves the case of: By the '50s, he was very prosperous. */
+	try_strip_left = true;
+	if (boolean_dictionary_lookup(dict, word))
 	{
+		lgdebug(+2, "w='%s' in dict, try_strip_left=false\n", word);
+		try_strip_left = false;
+	}
+	if (try_strip_left)
+	{
+		lgdebug(+2, "Testing for RPUNC: ");
+		temp_wend = wend;
+		stripped = strip_right(sent, w, &temp_wend, r_stripped, &n_r_stripped,
+                              AFDICT_RPUNC, /*rootdigit*/false, 1);
+		if (stripped)
+		{
+			sz = temp_wend-w;
+			strncpy(str, w, sz);
+			str[sz] = '\0';
 
-		/* Strip off punctuation, etc. on the left-hand side. */
+			if (boolean_dictionary_lookup(dict, str))
+			{
+				try_strip_left = false;
+				lgdebug(+2, "w='%s' in dict, try_strip_left=false\n", str);
+			}
+			n_r_stripped = 0;
+		}
+	}
+	if (try_strip_left)
 		w = strip_left(sent, w, quote_found);
 
-		/* Its possible that the token consisted entirely of
-		 * left-punctuation, in which case, it has all been issued.
-		 * So -- we're done, return. */
-		if (w >= wend) return;
+	/* Its possible that the token consisted entirely of
+	 * left-punctuation, in which case, it has all been issued.
+	 * So -- we're done, return. */
+	if (w >= wend) return;
 
-		/* Strip off punctuation and units, etc. on the right-hand side. */
-		wend = strip_right(sent, w, wend, &units_wend,
-		           &n_r_units, r_stripped, &n_r_stripped, &word_is_in_dict);
+	/* Remember the input word. */
+	sz = wend-w;
+	strncpy(input_word, w, sz);
+	input_word[sz] = '\0';
 
-#if 0
-		/* If the remaining word is a null string it means we have just
-		 * right-stripped everything off the original word.
-		 */
-		if (w >= wend)
+	/* Strip off punctuation and units, etc. on the right-hand side.  Try rpunc,
+	 * then units, then rpunc, then units again, in a loop. We do this to handle
+	 * expressions such as 12sqft. or 12lbs. (notice the period at end). That is,
+	 * we want to strip off the "lbs." with the dot, first, rather than stripping
+	 * the dot as punctuation, and then coming up empty-handed for "sq.ft"
+	 * (without the dot) in the dict.  But if we are NOT able to strip off any
+	 * units, then we try punctuation, and then units. This allows commas to be
+	 * removed (e.g.  7grams,). */
+
+	do
+	{
+		int temp_n_r_stripped;
+		/* First, try to strip off a single punctuation, typically a comma or
+		 * period, and see if the resulting word is in the dict (but not the
+		 * regex). This allows "sin." and "call." to be recognized. If we don't
+		 * do this now, then the next stage will split "sin." into
+		 * seconds-inches, and "call." into calories-liters. */
+		temp_n_r_stripped = n_r_stripped;
+		temp_wend = wend;
+		stripped = strip_right(sent, w, &wend, r_stripped, &n_r_stripped,
+								 AFDICT_RPUNC, /*rootdigit*/false, 2);
+		if (stripped)
 		{
-			/* Remaining word is a null string - restore the original word. */
-			sz = MIN(wend-w, MAX_WORD);
-??? this doesn't make sense, if w > wend, then sz is negative.  I don't get it.
+			/* w points to the remaining word,
+			 * "wend" to the end of the word. */
+			sz = wend-w;
 			strncpy(word, w, sz);
 			word[sz] = '\0';
 
-			if (NULL == match_regex(sent->dict->regex_root, word))
-			{
-				for (i = n_r_stripped - 1; i >= 0; i--)
-				{
-					lgdebug(+2, "Issue r_stripped w='%s' (root='')\n", r_stripped[i]);
-					issue_sentence_word(sent, r_stripped[i], false);
-				}
-
-				/* No further handling is needed.
-				 * So -- we're done, return. */
-				return;
-			}
-
-			/* But if the original word matches a regex, don't miss it -
-			 * issue it as an alternative (later on) */
+			/* If the resulting word is in the dict, we are done. */
+			if (boolean_dictionary_lookup(dict, word)) break;
+			/* Undo the check. */
+			wend = temp_wend;
+			n_r_stripped = temp_n_r_stripped;
 		}
-#endif
-	}
 
-	/* w points to the remaining word,
-	 * "wend" to the end of the word. */
-	if (wend > w)
-	{
-		sz = MIN(wend-w, MAX_WORD);
+		/* Remember the results, for a potential alternative. */
+		units_wend = wend;
+		units_n_r_stripped = n_r_stripped;
+
+		/* Strip off all units, if possible. It is not likely that we strip here
+		 * a string like "in." which is not a unit since we require a
+		 * number before it when only a single component is stripped off. */
+		temp_wend = wend;
+		stripped = strip_right(sent, w, &wend, r_stripped, &n_r_stripped,
+									 AFDICT_UNITS, /*rootdigit*/true, 3);
+		if (!stripped)
+		{
+			units_wend = NULL;
+			/* Try to strip off punctuation, typically a comma or period. */
+			stripped = strip_right(sent, w, &wend, r_stripped, &n_r_stripped,
+									 AFDICT_RPUNC, /*rootdigit*/false, 4);
+		}
+
+		/* w points to the remaining word,
+		 * "wend" to the end of the word. */
+		sz = wend-w;
 		strncpy(word, w, sz);
 		word[sz] = '\0';
-		lgdebug(+2, "After right-strip: word='%s' find_word_in_dict=%d "
-				  "n_r_stripped=%zd\n", word, word_is_in_dict, n_r_stripped);
-		units_wend = NULL;
-	}
-	else
+
+	/* Any remaining dict word stops the right-punctuation stripping. */
+	} while (NULL == units_wend && stripped &&
+	         !boolean_dictionary_lookup(dict, word));
+
+	/* Check whenther the <number><units> "word" is in the dict
+	 * (including regex). In such a case we need to generate an alternative. */
+	if (units_wend) /* units found */
 	{
-		lgdebug(+2, "Further processing of original word='%s'\n", word);
+		sz = units_wend-w;
+		strncpy(str, w, sz);
+		str[sz] = '\0';
+		units_alternative = find_word_in_dict(dict, str);
 	}
+
+	/* Debug code. */
+	lgdebug(+2, "After strip_right: n_r_stripped=%zu (", n_r_stripped);
+	if (verbosity >= 2)
+	{
+		for (i = n_r_stripped - 1; i >= 0; i--)
+			printf("[%d]='%s'%s", i, r_stripped[i], i>0 ? "," : "");
+	}
+	lgdebug(2, "), w='%s' wend='%s' word='%s' units_wend='%s' input_word='%s' "
+           "units_alternative=%d\n", w, wend, word, units_wend, input_word,
+			  units_alternative);
+
+	/* If needed, add an alternative to the result of strip_right().
+	 * The following is a must for cases like that:
+	 * Input word: "Mr." - in the dict.
+	 * The dot is stripped - "Mr" in the dict.
+	 * However, the current dict doesn't accept "Mr .".
+	 *
+	 * For the word like "in." (units with dot) this problem doesn't happen
+	 * because the dict accepts "in ." also as unit.
+	 *
+	 * FIXME: This code is enough for all the relevant sentence examples in
+	 * en/4.0.*batch at the time of writing. It is not general at all.
+	 */
+	if ((n_r_stripped && (find_word_in_dict(dict, input_word))) ||
+	    units_alternative)
+	{
+		/* The input word is in the dict and also got stripped off
+		 * something - "word" here is what remained. */
+		word_is_in_dict = find_word_in_dict(dict, word);
+		lgdebug(+2, "Check stripped word='%s' boolean_dictionary_lookup=%d "
+		        "is_utf8_digit=%d\n", word, word_is_in_dict, start_digit);
+		if(word_is_in_dict || units_alternative)
+		{
+			/* Both input and stripped words are in the dict, issue the
+			 * stripped word + its stripped tokens as an alternative. */
+			wp = word;
+			r_stripped_alt = NULL;
+			ntokens = 1;
+			altappend(sent, &r_stripped_alt, wp);
+			lgdebug(+2, "Issue stripped word w='%s' (alt I)\n", wp);
+			for (i = n_r_stripped - 1; i >= 0; i--)
+			{
+				lgdebug(+2, "Issue r_stripped w='%s' (alt I)\n", r_stripped[i]);
+				altappend(sent, &r_stripped_alt, r_stripped[i]);
+				ntokens++;
+			}
+			add_alternative(sent, 0,NULL, ntokens,r_stripped_alt, 0,NULL);
+			free(r_stripped_alt);
+		}
+
+		/*Restore the input word, in case it needs a further handling. */
+		strcpy(word, input_word);    /* Recover the input word. */
+		n_r_stripped = 0;            /* Forget the stripping. */
+	}
+
+	/* If the Input word contains units and also got stripped off
+	 * punctuation, restore it here so it will be used as an alternative
+	 * without the punctuation. This happens if it is a part number, like
+	 * 1234-567A. */
+	if (units_alternative)
+	{
+		sz = units_wend-w;
+		strncpy(word, w, sz);
+		word[sz] = '\0';
+
+		wp = word;
+		r_stripped_alt = NULL;
+		ntokens = 1;
+		altappend(sent, &r_stripped_alt, wp);
+		lgdebug(+2, "Issue stripped word w='%s' (alt II)\n", wp);
+		for (i = units_n_r_stripped - 1; i >= 0; i--)
+		{
+			lgdebug(+2, "Issue r_stripped w='%s' (alt II)\n", r_stripped[i]);
+			altappend(sent, &r_stripped_alt, r_stripped[i]);
+			ntokens++;
+		}
+		add_alternative(sent, 0,NULL, ntokens,r_stripped_alt, 0,NULL);
+		free(r_stripped_alt);
+
+		/* FIXME: We suppose here that the input word cannot morpheme-split.
+		 * Anyway, the code infrastructure don't allow us to continue after
+		 * we issue alternatives for right-stripping. */
+		issue_alternatives(sent, input_word, quote_found);
+		return;
+	}
+
+	lgdebug(+2, "Continue with the input word '%s'\n", word);
 
 	/* From this point we need to handle regex matches separately.
 	 * Find if the word is a real dict word.
@@ -1413,7 +1382,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	if ((is_capitalizable(sent, sent->length) || quote_found) &&
 		 is_utf8_upper(word))
 	{
-		downcase_utf8_str(downcase, word, MAX_WORD);
+		downcase_utf8_str(downcase, word, downcase_size);
 		word_can_split |= suffix_split(sent, downcase, downcase+(wend-w));
 		lgdebug(+2, "Tried to split lc='%s', now word_can_split=%d\n",
 		        downcase, word_can_split);
@@ -1433,7 +1402,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	/* If n_r_stripped exceed max, the "word" is most likely a long
 	 * sequence of periods.  Just accept it as an unknown "word",
-	 * and move on.
+	 * and move on. FIXME: Check it earlier.
 	 */
 	if (n_r_stripped >= MAX_STRIP)
 	{
@@ -1457,7 +1426,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		}
 		if ((is_capitalizable(sent, sent->length) || quote_found))
 		{
-			downcase_utf8_str(downcase, word, MAX_WORD);
+			downcase_utf8_str(downcase, word, downcase_size);
 			if (boolean_dictionary_lookup(dict, downcase))
 			{
 				wp = downcase;
@@ -1469,16 +1438,19 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		}
 	}
 
+	parallel_regex = !word_is_in_dict && word_can_split &&
+	    test_enabled("parallel-regex");
+
 	word_is_in_dict |= word_can_split;
 
-	/* Handle regex match. This is done for words which are not in the dict.
-	 * We check here "issued" in order to avoid trying null string words,
-	 * due to the potential of an erroneous match.
-	 * The "parallel-regex" test tries regex match even for dict words. */
-	if (!word_is_in_dict || test_enabled("parallel-regex"))
+	/* Handle regex match. This is done for words which are not in the dict
+	 * and cannot split,
+	 * The "parallel-regex" test tries regex match for words that are not in the
+	 * dict but can split. */
+	if (!word_is_in_dict || parallel_regex)
 	{
 		wp = word;
-		if (test_enabled("parallels-regex"))
+		if (parallel_regex)
 		{
 			/* XXX We use the downcased version of the word, for not possibly
 			 * matching the regexes for capitalized words as first match. */
@@ -1486,22 +1458,26 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			lgdebug(+2,"Before match_regex: word=%s to_lc=%s word_is_in_dict=%d\n",
 					  word, word[0] != downcase[0] ? downcase : "", word_is_in_dict);
 
-			/* Append a [!] tag to the word to signify that this alternative
-			 * is only for regex. This tag will be redone after invoking
-			 * match_regex() again.
-			 * XXX sent.word.alternatives should have been a struct with
-			 * a field to mark such regex alternatives. */
-			snprintf(str, MAX_WORD, "%.*s[!]", MAX_WORD-3, wp);
+			strcpy(str, wp); /* str is big enough to contain downcase */
 			wp = str;
 		}
 
 		if (NULL != match_regex(sent->dict->regex_root, wp))
 		{
+			if (parallel_regex)
+			{
+				/* Append a [!] tag to the word to signify that this alternative
+				 * is only for regex. This tag will be redone after invoking
+				 * match_regex() again.
+				 * XXX sent.word.alternatives should have been a struct with
+				 * a field to mark such regex alternatives. */
+				strcat(str, "[!]"); /* str has extra space for that */
+			}
 			lgdebug(+2, "Adding '%s' as word to regex (match=%s)\n",
 			        wp, match_regex(sent->dict->regex_root, wp));
 			add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 
-		   word_is_in_dict = true;
+		   word_is_in_dict = true; /* make sure we skip spell guess */
 		}
 
 	}
@@ -1512,14 +1488,23 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * to split the word, if possible, and/or offer guesses.
 	 *
 	 * Do all of this only if the word is not a proper name, and if
-	 * spell-checking is enabled. Spell-guessing is disabled if no
-	 * spell-checker is specified.
+	 * spell-checking is enabled. A word which contains digits is considered
+	 * a proper name (maybe of a part number).
+	 *
+	 * Also skip the spell checks if we already issued any alternative for the
+	 * word, as currently we don't do spell checks in parallel (and the
+	 * infrastructure don't allow that anyway).
+	 * Usually word_is_in_dict is true in such cases, but in a case of a
+	 * contraction split word_is_in_dict is false, for a potential regex match.
+	 *
+	 * Spell-guessing is disabled if no spell-checker is specified.
 	 *
 	 * ??? Should we add spell guesses as alternatives in case:
 	 * 1. The word if not in the main dict but matches a regex.
 	 * 2. The word is a proper name.
 	 */
-	if (!word_is_in_dict && !is_proper_name(word) &&
+	if (!word_is_in_dict && !contains_digits(word) && !is_proper_name(word) &&
+	    !word_has_alternative(sent) &&
 	    opts->use_spell_guess && dict->spell_checker)
 	{
 		issued = guess_misspelled_word(sent, word, quote_found, opts);
@@ -1527,28 +1512,15 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	}
 #endif /* HAVE_HUNSPELL */
 
-	if (NULL != units_wend)
-	{
-		/* We arrive here if we added the unstripped word as an alternative.
-		 * Now we need to add the units as another alternative. */
-		const char **r_stripped_words = NULL;
-
-		for (i = n_r_stripped - 1; i >= (int)(n_r_stripped - n_r_units); i--)
-		{
-			lgdebug(+2, "Issue r_stripped w='%s' (alt)\n", r_stripped[i]);
-			altappend(sent, &r_stripped_words, r_stripped[i]);
-		}
-		add_alternative(sent, 0,NULL,
-							 altlen(r_stripped_words),r_stripped_words, 0,NULL);
-		free(r_stripped_words);
-		n_r_stripped = i+1; /* Still need to issue these */
-	}
-
 	if (false == issued)
 	{
+		/* Terminate issuing the alternatives and record the word that caused
+		 * their wgeneration. It can be the original input word or the word after
+		 * punctuation strip. */
 		issued = issue_alternatives(sent, word, quote_found);
 	}
 
+	/* If no alternatives, issue the word. */
 	if (false == issued)
 		issue_sentence_word(sent, word, quote_found);
 
