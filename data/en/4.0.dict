@@ -7723,6 +7723,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or [({Xc+ & {Xd-}} & CO+)]
   or (Xd- & Xc+ & (MX*x- or MVx-));
 
+% Wj- & Qd+: questions: By what means will you arrive?
 <prep-main-a>:
   <prep-main-b> or
   (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-))) or
@@ -7858,11 +7859,16 @@ out.r flat_out up.r down.r:
   or (EN- & (Pp- or J-))
   or [MVp- & B-];
 
+% (Wj- & JQ+ & J+): "By what means?"  kind of a hack, for null-verb question.
+% In what way?  To what end?
+<null-prep-qu>: Wj- & JQ+ & J+;
+
 by:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+ or JT+) & (<prep-main-a> or FM-))
   or K-
-  or [MVp- & B-];
+  or [MVp- & B-]
+  or <null-prep-qu>;
 
 % EN- & Pp-: "you are halfway in"
 % EN- & J-: "we stopped, about halfway in"
@@ -7872,7 +7878,8 @@ in.r:
   or K-
   or (EN- & (Pp- or J-))
   or [MVp- & B-]
-  or (MG- & JG+);
+  or (MG- & JG+)
+  or <null-prep-qu>;
 
 on upon:
   <alter-preps>
@@ -7936,7 +7943,8 @@ to.r:
   or (TO- & Xc+)
   or I*a+
   or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
-  or [MVp- & B-];
+  or [MVp- & B-]
+  or <null-prep-qu>;
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
 
