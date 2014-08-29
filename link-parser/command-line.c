@@ -17,6 +17,9 @@
 #include "command-line.h"
 #include <link-grammar/link-includes.h>
 #include "../link-grammar/utilities.h"  /* For MSWindows portability */
+#ifdef USE_REGEX_TOKENIZER
+#include "../link-grammar/regex-tokenizer.h" /* For testing */
+#endif
 
 static struct
 {
@@ -306,6 +309,14 @@ static int x_issue_special_command(const char * line, Command_Options *copts, Di
 		dict_display_word_expr(dict, s+1, opts);
 		return 0;
 	}
+#ifdef USE_REGEX_TOKENIZER
+	if (s[0] == '/')
+	{
+		int rc = regex_tokenizer_test(dict, s+1);
+		if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
+		return 0;
+	}
+#endif
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
 	for (x=s; (*x != '=') && (*x != '\0') ; x++)
