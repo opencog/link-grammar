@@ -199,24 +199,28 @@ static void printov(const char *str, ov *ov, int top, callout_data *cd, bool is_
 				printf(" %.*s (%d,%d)", ov[i].e - ov[i].s, str + ov[i].s, ov[i].s, ov[i].e);
 		}
 
-		if ((NULL != cd) && (NULL != cd->capture_level) &&
-		    (NULL != cd->cgnum) && (NULL != cd->cgnum[cd->capture_level[i]-1]))
+		/* Find the tokenizer capture group info for the currernt OV element:
+		 * - For PCRE OV, use its index (if > 0) as capture group.
+		 * - For the tokenizer OV, use the recorded capture level.
+		 *  Since the cgnum array is 0-based and the first parenthesized capture
+		 *  group is 1, substruct 1 to get the actual index. */
+		if ((NULL != cd) && (NULL != cd->capture_level) && (NULL != cd->cgnum) &&
+				(!is_pcreov || (i > 0)) && ov[i].e >= 0)
+			cgnump = cd->cgnum[(is_pcreov ? i : cd->capture_level[i]) - 1];
+
+		if (NULL != cgnump)
 		{
-			cgnum *cgnump = cd->cgnum[cd->capture_level[i]-1];
 			const char *a = "", *p = "";
 			char lookup_mark[10];
-			int i;
+			char *sm;
 
 			if (NULL != cgnump->lookup_mark)
 			{
 				if ('a' == cgnump->lookup_mark_pos)
 				{
-					for (i = 0; cgnump->lookup_mark[i] != 0; i++)
-					{
-						lookup_mark[i] = (SUBSCRIPT_MARK == cgnump->lookup_mark[i]) ?
-											  '.' : cgnump->lookup_mark[i];
-					}
-
+					safe_strcpy(lookup_mark, cgnump->lookup_mark, sizeof(lookup_mark));
+					sm = strrchr(lookup_mark, SUBSCRIPT_MARK);
+					if (NULL != sm) *sm = '.';
 					a = lookup_mark;
 				}
 				else
