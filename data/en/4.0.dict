@@ -2950,7 +2950,7 @@ lain.v:
 % --------------------------------------------------------------
 
 % irregular -- coming is in words.v.5.4 ...
-<vc-come>:  {(K+ & {Pa+}) or [[Pg+]]} & {@MV+};
+<vc-come>:  {(K+ & {Pa+}) or [[Pg+]] or <b-minus>} & {@MV+};
 come.v: 
   ((<verb-pl,i> & (<vc-come>)) or
   (<verb-and-pl-> & ((<vc-come>) or ())) or

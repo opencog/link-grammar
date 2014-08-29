@@ -2957,7 +2957,7 @@ lain.v: VERB_PP(<vc-bulge>);
 % --------------------------------------------------------------
 
 % irregular -- coming is in words.v.5.4 ...
-<vc-come>:  {(K+ & {Pa+}) or [[Pg+]]} & {@MV+};
+<vc-come>:  {(K+ & {Pa+}) or [[Pg+]] or <b-minus>} & {@MV+};
 come.v: VERB_PLI(<vc-come>) or
   VERB_PP(<vc-come>) or
   ({@E-} & Ix- & O*t+);
