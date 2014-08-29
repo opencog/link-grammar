@@ -47,8 +47,8 @@ typedef enum
 {
 	CALLBACK_REP,
 	CALLBACK_END,
-	CALLBACK_CONSTANT_START,	/* UNUSED */
-	CALLBACK_CONSTANT_END	   /* UNUSED */
+	CALLBACK_CONSTANT_START,   /* UNUSED */
+	CALLBACK_CONSTANT_END      /* UNUSED */
 } callback_num;
 
 typedef struct ov
@@ -117,8 +117,8 @@ static char *get_regex_by_name(Dictionary const dict, const char * const name)
 	Regex_node *re = dict->regex_root;
 	const char *p;
 
-   while (NULL != re)
-   {
+	while (NULL != re)
+	{
 		if (0 == strcmp(re->name, name))
 		{
 			/* re analyze state */
@@ -169,8 +169,8 @@ static char *get_regex_by_name(Dictionary const dict, const char * const name)
 				}
 			}
 		}
-      re = re->next;
-   }
+		re = re->next;
+	}
 
 	if ('\0' != pat->str[0]) result = strdup(pat->str);
 	dyn_str_delete(pat);
@@ -402,7 +402,7 @@ static int callout(pcre_callout_block *cb)
 					subp = &cd->subp[subp_i];
 
 					lgdebug(2, "Checking recorded sub-pattern %d: s=%d e=%d: ",
-							  subp_i, subp->s,  subp->e); 
+							  subp_i, subp->s,  subp->e);
 
 					if (cb_ov->s == subp->s)
 					{
@@ -528,7 +528,7 @@ static int callout(pcre_callout_block *cb)
 	}
 
 	return 0; /* Really unreached. */
-		
+
 /*
 	printf("Callout %d, data test %d\n"
 	       "version %d\n"
@@ -541,7 +541,7 @@ static int callout(pcre_callout_block *cb)
 			 "pattern_position %d\n"
 			 "next_item_length %d\n",
 			 cb->callout_number, ((callout_data *)cb->callout_data)->test,
-			 cb->version, cb->subject, cb->subject_length, cb->start_match, 
+			 cb->version, cb->subject, cb->subject_length, cb->start_match,
 
 			 cb->current_position,
 			 cb->capture_top,
@@ -584,7 +584,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	const char *group_name;
 	char *word_classname;
 	char c0[2] = "\0\0";
-	
+
 	/* FIXME: validate we use PCRE version 2 at least. */
 
 	/* Find the number of capturing grops in the input pattern. */
@@ -707,7 +707,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 			else
 				group_name = NULL;
 			break;
-	 	case '>':
+		case '>':
 			if (NULL != group_name)
 			{
 				/* Check if this is actually a group name */
