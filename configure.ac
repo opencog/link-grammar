@@ -402,6 +402,19 @@ else
 	edlin=no
 fi
 
+dnl ====================================================================
+
+# Tokenizing by RegEx
+AC_ARG_ENABLE( regex_tokenizer,
+  [  --enable-regex-tokenizer enable use of regex word splitter],
+  [],
+  [enable_regex_tokenizer=no]
+)
+if test "x$enable_regex_tokenizer" = "xyes"
+then
+	CPPFLAGS="${CPPFLAGS} -DUSE_REGEX_TOKENIZER=1"
+	AX_PATH_LIB_PCRE
+fi
 
 dnl ====================================================================
 
@@ -724,4 +737,5 @@ $PACKAGE-$VERSION
 	Viterbi algorithm parser:       ${enable_viterbi}
 	Corpus statistics database:     ${enable_corpus_stats}
 	Anysplit word splitter:         ${enable_anysplit}
+	RegEx tokenizer:                ${enable_regex_tokenizer}
 "

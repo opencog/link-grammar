@@ -110,6 +110,7 @@ liblink_grammar_la_SOURCES =        \
 	print-util.c                     \
 	prune.c                          \
 	regex-morph.c                    \
+	regex-tokenizer.c                \
 	resources.c                      \
 	spellcheck-aspell.c              \
 	spellcheck-hun.c                 \
@@ -152,6 +153,7 @@ liblink_grammar_la_SOURCES =        \
 	print-util.h                     \
 	prune.h                          \
 	regex-morph.h                    \
+	regex-tokenizer.h                \
 	resources.h                      \
 	spellcheck.h                     \
 	string-set.h                     \
