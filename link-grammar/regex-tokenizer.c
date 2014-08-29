@@ -960,7 +960,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	extra->callout_data = (void *)&callout_data;
 	extra->flags |= PCRE_EXTRA_CALLOUT_DATA;
 
-#ifdef 0
+#if 0
 	printf("CGNUM %d\n", cgnum);
 	if (NULL != callout_data.cgnum)
 	{
