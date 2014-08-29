@@ -1105,6 +1105,7 @@ p, afdict_classname[classnum],stripped?"TRUE":"FALSE",(int)*n_r_stripped,(int)nr
  * XXX This function is being rewritten (work in progress).
  * FIXME: Rearrange comments.
  */
+#define SWLEV +3
 static void separate_word(Sentence sent, Parse_Options opts,
                          const char *w, const char *wend,
                          bool quote_found)
@@ -1144,7 +1145,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	strncpy(word, w, sz);
 	word[sz] = '\0';
 
-	lgdebug(+2, "Processing input word: '%s'\n", word);
+	lgdebug(SWLEV, "Processing input word: '%s'\n", word);
 
 	/* Strip punctuation and units from candidate word, using
 	 * a linear splitting algorithm. FIXME: Handle as alternatives. */
@@ -1157,12 +1158,12 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	try_strip_left = true;
 	if (boolean_dictionary_lookup(dict, word))
 	{
-		lgdebug(+2, "w='%s' in dict, try_strip_left=false\n", word);
+		lgdebug(SWLEV, "w='%s' in dict, try_strip_left=false\n", word);
 		try_strip_left = false;
 	}
 	if (try_strip_left)
 	{
-		lgdebug(+2, "Testing for RPUNC: ");
+		lgdebug(SWLEV, "Testing for RPUNC: ");
 		temp_wend = wend;
 		stripped = strip_right(sent, w, &temp_wend, r_stripped, &n_r_stripped,
                               AFDICT_RPUNC, /*rootdigit*/false, 1);
@@ -1175,7 +1176,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			if (boolean_dictionary_lookup(dict, str))
 			{
 				try_strip_left = false;
-				lgdebug(+2, "w='%s' in dict, try_strip_left=false\n", str);
+				lgdebug(SWLEV, "w='%s' in dict, try_strip_left=false\n", str);
 			}
 			n_r_stripped = 0;
 		}
@@ -1268,13 +1269,13 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	}
 
 	/* Debug code. */
-	lgdebug(+2, "After strip_right: n_r_stripped=%zu (", n_r_stripped);
-	if (verbosity >= 2)
+	lgdebug(SWLEV, "After strip_right: n_r_stripped=%zu (", n_r_stripped);
+	if (SWLEV <= verbosity)
 	{
 		for (i = n_r_stripped - 1; i >= 0; i--)
 			printf("[%d]='%s'%s", i, r_stripped[i], i>0 ? "," : "");
 	}
-	lgdebug(2, "), w='%s' wend='%s' word='%s' units_wend='%s' input_word='%s' "
+	lgdebug(SWLEV, "), w='%s' wend='%s' word='%s' units_wend='%s' input_word='%s' "
            "units_alternative=%d\n", w, wend, word, units_wend, input_word,
 			  units_alternative);
 
@@ -1296,7 +1297,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		/* The input word is in the dict and also got stripped off
 		 * something - "word" here is what remained. */
 		word_is_in_dict = find_word_in_dict(dict, word);
-		lgdebug(+2, "Check stripped word='%s' boolean_dictionary_lookup=%d "
+		lgdebug(SWLEV, "Check stripped word='%s' boolean_dictionary_lookup=%d "
 		        "is_utf8_digit=%d\n", word, word_is_in_dict, start_digit);
 		if (word_is_in_dict || units_alternative)
 		{
@@ -1306,10 +1307,10 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			r_stripped_alt = NULL;
 			ntokens = 1;
 			altappend(sent, &r_stripped_alt, wp);
-			lgdebug(+2, "Issue stripped word w='%s' (alt I)\n", wp);
+			lgdebug(SWLEV, "Issue stripped word w='%s' (alt I)\n", wp);
 			for (i = n_r_stripped - 1; i >= 0; i--)
 			{
-				lgdebug(+2, "Issue r_stripped w='%s' (alt I)\n", r_stripped[i]);
+				lgdebug(SWLEV, "Issue r_stripped w='%s' (alt I)\n", r_stripped[i]);
 				altappend(sent, &r_stripped_alt, r_stripped[i]);
 				ntokens++;
 			}
@@ -1336,10 +1337,10 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		r_stripped_alt = NULL;
 		ntokens = 1;
 		altappend(sent, &r_stripped_alt, wp);
-		lgdebug(+2, "Issue stripped word w='%s' (alt II)\n", wp);
+		lgdebug(SWLEV, "Issue stripped word w='%s' (alt II)\n", wp);
 		for (i = units_n_r_stripped - 1; i >= 0; i--)
 		{
-			lgdebug(+2, "Issue r_stripped w='%s' (alt II)\n", r_stripped[i]);
+			lgdebug(SWLEV, "Issue r_stripped w='%s' (alt II)\n", r_stripped[i]);
 			altappend(sent, &r_stripped_alt, r_stripped[i]);
 			ntokens++;
 		}
@@ -1353,7 +1354,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		return;
 	}
 
-	lgdebug(+2, "Continue with the input word '%s'\n", word);
+	lgdebug(SWLEV, "Continue with the input word '%s'\n", word);
 
 	/* From this point we need to handle regex matches separately.
 	 * Find if the word is a real dict word.
@@ -1363,20 +1364,20 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	 * the candidate word from the start of this function, due to possible
 	 * punctuation strip. */
 	word_is_in_dict = boolean_dictionary_lookup(dict, word);
-	lgdebug(+2, "Recheck word='%s' boolean_dictionary_lookup=%d\n",
+	lgdebug(SWLEV, "Recheck word='%s' boolean_dictionary_lookup=%d\n",
 	        word, word_is_in_dict);
 
 	wp = word;
 	if (word_is_in_dict)
 	{
-		lgdebug(+2, "Adding '%s' as is, before split tries\n", wp);
+		lgdebug(SWLEV, "Adding '%s' as is, before split tries\n", wp);
 		add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 	}
 
 	/* OK, now try to strip affixes. */
 
 	word_can_split = suffix_split(sent, w, wend);
-	lgdebug(+2, "Tried to split word='%s', word_can_split=%d\n",
+	lgdebug(SWLEV, "Tried to split word='%s', word_can_split=%d\n",
 			  word, word_can_split);
 
 	if ((is_capitalizable(sent, sent->length) || quote_found) &&
@@ -1384,7 +1385,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	{
 		downcase_utf8_str(downcase, word, downcase_size);
 		word_can_split |= suffix_split(sent, downcase, downcase+(wend-w));
-		lgdebug(+2, "Tried to split lc='%s', now word_can_split=%d\n",
+		lgdebug(SWLEV, "Tried to split lc='%s', now word_can_split=%d\n",
 		        downcase, word_can_split);
 	}
 
@@ -1395,7 +1396,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	word_can_split |= anysplit(sent, word);
 #endif
 
-	lgdebug(+2, "After split step, word='%s' now word_can_split=%d\n",
+	lgdebug(SWLEV, "After split step, word='%s' now word_can_split=%d\n",
 	        word, word_can_split);
 
 	issued = false;
@@ -1421,7 +1422,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	{
 		if (!word_can_split && match_regex(sent->dict->regex_root, wp))
 		{
-			lgdebug(+2, "Adding uc word=%s\n", wp);
+			lgdebug(SWLEV, "Adding uc word=%s\n", wp);
 			add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 		}
 		if ((is_capitalizable(sent, sent->length) || quote_found))
@@ -1430,7 +1431,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			if (boolean_dictionary_lookup(dict, downcase))
 			{
 				wp = downcase;
-				lgdebug(+2, "Adding lc=%s, boolean_dictionary_lookup=1, is_capq=1\n", wp);
+				lgdebug(SWLEV, "Adding lc=%s, boolean_dictionary_lookup=1, is_capq=1\n", wp);
 				add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 
 				word_is_in_dict = true;
@@ -1455,7 +1456,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			/* XXX We use the downcased version of the word, for not possibly
 			 * matching the regexes for capitalized words as first match. */
 			if  ('\0' != downcase[0]) wp = downcase;
-			lgdebug(+2,"Before match_regex: word=%s to_lc=%s word_is_in_dict=%d\n",
+			lgdebug(SWLEV, "Before match_regex: word=%s to_lc=%s word_is_in_dict=%d\n",
 					  word, word[0] != downcase[0] ? downcase : "", word_is_in_dict);
 
 			strcpy(str, wp); /* str is big enough to contain downcase */
@@ -1473,7 +1474,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 				 * a field to mark such regex alternatives. */
 				strcat(str, "[!]"); /* str has extra space for that */
 			}
-			lgdebug(+2, "Adding '%s' as word to regex (match=%s)\n",
+			lgdebug(SWLEV, "Adding '%s' as word to regex (match=%s)\n",
 			        wp, match_regex(sent->dict->regex_root, wp));
 			add_alternative(sent, 0,NULL, 1,&wp, 0,NULL);
 
@@ -1508,7 +1509,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	    opts->use_spell_guess && dict->spell_checker)
 	{
 		issued = guess_misspelled_word(sent, word, quote_found, opts);
-		lgdebug(+2, "Spell suggest=%d\n", issued);
+		lgdebug(SWLEV, "Spell suggest=%d\n", issued);
 	}
 #endif /* HAVE_HUNSPELL */
 
@@ -1526,7 +1527,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	for (i = n_r_stripped - 1; i >= 0; i--)
 	{
-		lgdebug(+2, "Issue r_stripped w='%s'\n", r_stripped[i]);
+		lgdebug(SWLEV, "Issue r_stripped w='%s'\n", r_stripped[i]);
 		issue_sentence_word(sent, r_stripped[i], false);
 	}
 }
