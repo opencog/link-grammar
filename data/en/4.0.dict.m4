@@ -60,8 +60,9 @@ changecom(`%')
 % The empty word is a place holder in positions when "no word" is a
 % possibility to consider.  It is currently used in spell suggestions
 % which have a variable number of words, and in apostrophe splits when
-% the unsplit word also exists in the dictionary (like let's).  It is
-% also currently used for "balancing" of the word count in alternatives.
+% the unsplit word also exists in the dictionary (like let's). In addition
+% it is used when issuing alternatives to unit stripping. It is % also
+% currently used for "balancing" of the word count in alternatives.
 % See also EMPTY-WORD.x for the highly-unusual situation that EMPTY-WORD
 % appears in the input text.
 EMPTY-WORD.zzz: ZZZ-;
@@ -517,6 +518,7 @@ USMC.y USN.y:
     G+);
 
 % The generic category for strings containing a hyphen
+PART-NUMBER.n
 HYPHENATED-WORDS.n:
   [[({@AN-} & {@A-} &
     (({NM+ or D-} &

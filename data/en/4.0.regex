@@ -251,7 +251,18 @@ HYPHENATED-WORDS:
 % EMOTICON: /^[!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~;BDOpTX0578Ｃ☆ಠ●＠◎～][!"#$%&'()*+,\-/:;<=>?@[\\\]^_`{|}~<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdDLmoOpPSTvXಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
 
-
+% Part numbers should not match words with punctuation at their end.
+% Else sentences like "I saw him on January 21, 1990" have problems.
+% They should contain at least one number, and should not have a dashes at their
+% start or end. A $ sign at the start is also too confusing.
+% The current regex system and the systax of this file are not expressive anough
+% for things that should not be included. For example, we cannot prevent several
+% sequencial "#" or dashes. It may match a word consisting of number+units, but
+% seperate_word() will generate an alternative anyway.
+% The second part of this regex is for NNN-NNN in sentences like
+% "The plane is a 747-400".  However, such words currently match NUMBERS.
+PART-NUMBER:
+  /^[A-Z0-9#][A-Z0-9$\/#]*[A-Z0-9$\/#,.-]*[0-9][A-Z0-9$\/#,.-]*[A-Z0-9$\/#]+$|^[1-9][0-9]+[\/-][0-9+]$/
 
 % Sequence of punctuation marks. If some mark appears in the affix table
 % such as a period, comma, dash or underscore, and there's a sequence of
