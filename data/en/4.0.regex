@@ -17,7 +17,7 @@
 % Numbers.
 % XXX, we need to add utf8 U+00A0 "no-break space"
 % 
-% Allows at most two colons in hour-muinute-second HH:MM:SS expressions
+% Allows at most two colons in hour-minute-second HH:MM:SS expressions
 % Allows at most two digits between colons
 HMS-TIME: /^[0-9][0-9]?(:[0-9][0-9]?(:[0-9][0-9]?)?)?(AM|PM|am|pm)?$/
 
@@ -50,7 +50,7 @@ NUMBERS: /^[0-9.,-]*[0-9][0-9.,-]*\([0-9:.,-]*[0-9][0-9.,-]*\)$/
 % Roman numerals
 % The first expr has the problem that it matches an empty string.  The
 % cure for this is to use look-ahead, but neither the Gnu nor the BSD
-% regex libs support look-ahead. I cant' think of a bettter solution.
+% regex libs support look-ahead. I can't think of a better solution.
 ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^(?=(M|C|D|L|X|V|I)+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % ROMAN-NUMERAL-WORDS: /^(?=.+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
@@ -128,7 +128,7 @@ CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 
 % SUFFIX GUESSING
 % For all suffix-guessing patterns, we insist that the pattern start
-% with an alphanumeric. This is needed to guarentee that the
+% with an alphanumeric. This is needed to guarantee that the
 % prefix-stripping code works correctly, as otherwise, the regex will
 % gobble the prefix. So for example: "We left (carrying the dog) and
 % Fred followed."  Since "(carrying" is not in the dict, we need to be
@@ -149,7 +149,7 @@ ED-WORDS:         /^\w.+ed$/
 % Advebs ending -ly.
 LY-WORDS:         /^\w.+ly$/
 
-% Nouns ending in -ism, -asm (chiliasm .. ) Usualy mass nouns
+% Nouns ending in -ism, -asm (chiliasm .. ) Usually mass nouns
 % Stubbed out for now; I'm not convinced this improves accuracy.
 % ISM-WORDS:        /^\w.+asm$/
 % ISM-WORDS:        /^\w.+ism$/
@@ -244,7 +244,7 @@ HYPHENATED-WORDS:
 %
 % Arghh. Other valid number expressions are clobbered by the emoticons.
 % For example: $5 $7 8%  The quick fix is to remove the numbers.
-% Other breakages: The below clobbers "Bob, who ..." becuase it
+% Other breakages: The below clobbers "Bob, who ..." because it
 % matches Bob, as an emoticon.
 %
 % EMOTICON: /^[[:punct:];BDOpTX0578Ｃ☆ಠ●＠◎～][[:punct:]<bcdDLmoOpPSTvX0358ಠっ○ 。゜✿☆＊レツ◕●≧∇≦□◇＠◎∩ω旦ヨ彡ミ‿◠￣ー～━-]+$/
@@ -253,12 +253,12 @@ EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdD
 
 % Part numbers should not match words with punctuation at their end.
 % Else sentences like "I saw him on January 21, 1990" have problems.
-% They should contain at least one number, and should not have a dashes at their
+% They should contain at least one number, and should not have dashes at their
 % start or end. A $ sign at the start is also too confusing.
-% The current regex system and the systax of this file are not expressive anough
+% The current regex system and the syntax of this file are not expressive enough
 % for things that should not be included. For example, we cannot prevent several
-% sequencial "#" or dashes. It may match a word consisting of number+units, but
-% seperate_word() will generate an alternative anyway.
+% sequential "#" or dashes. It may match a word consisting of number+units, but
+% separate_word() will generate an alternative anyway.
 % The second part of this regex is for NNN-NNN in sentences like
 % "The plane is a 747-400".  However, such words currently match NUMBERS.
 PART-NUMBER:
@@ -268,7 +268,7 @@ PART-NUMBER:
 % such as a period, comma, dash or underscore, and there's a sequence of
 % these, then treat it as a "fill-in-the-blank" placeholder.
 % This matters only for punc. appearing in the affix table, since the
-% tokenizer explicitly mangles based on these punctution marks.
+% tokenizer explicitly mangles based on these punctuation marks.
 % 
 % Look for at least four in a row.
 UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/

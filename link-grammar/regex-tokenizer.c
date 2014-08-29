@@ -104,7 +104,7 @@ typedef struct callout_data
  * Get a regex (of 4.0.regex) by name.
  * Replace all capturing groups by non-capturing ones, since the invoking
  * function cannot currently handle them. Hence back references are not
- * suppoted. This can be fixed if needed.
+ * supported. This can be fixed if needed.
  *
  * If a regex name appears multiple times, concatenate them using an alternation
  * bar. Remove anchors ^ and $ if exist (suppose they can only appear at the
@@ -132,7 +132,7 @@ static char *get_regex_by_name(Dictionary const dict, const char * const name)
 			/* Change groups in POSIX regex to PCRE non-capturing groups.
 			 * FIXME: Add support for PCRE syntax,
 			 * especially, skip (?...) and (*...).
-			 * The following code supports backslash and squre brackets.
+			 * The following code supports backslash and square brackets.
 			 * It supposes the regex is valid. */
 			for (; '\0' != *p; p++)
 			{
@@ -199,11 +199,11 @@ static void printov(const char *str, ov *ov, int top, callout_data *cd, bool is_
 				printf(" %.*s (%d,%d)", ov[i].e - ov[i].s, str + ov[i].s, ov[i].s, ov[i].e);
 		}
 
-		/* Find the tokenizer capture group info for the currernt OV element:
+		/* Find the tokenizer capture group info for the current OV element:
 		 * - For PCRE OV, use its index (if > 0) as capture group.
 		 * - For the tokenizer OV, use the recorded capture level.
 		 *  Since the cgnum array is 0-based and the first parenthesized capture
-		 *  group is 1, substruct 1 to get the actual index. */
+		 *  group is 1, subtract 1 to get the actual index. */
 		if ((NULL != cd) && (NULL != cd->capture_level) && (NULL != cd->cgnum) &&
 				(!is_pcreov || (i > 0)) && ov[i].e >= 0)
 			cgnump = cd->cgnum[(is_pcreov ? i : cd->capture_level[i]) - 1];
@@ -587,7 +587,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 
 	/* FIXME: validate we use PCRE version 2 at least. */
 
-	/* Find the number of capturing grops in the input pattern. */
+	/* Find the number of capturing groups in the input pattern. */
 	cgnum = 0;
 	for (p = inpat; '\0' != *p; p++)
 	{
@@ -770,7 +770,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 				//printf("ALLOCATED cgnum[%d]=%p\n", cgnum, callout_data.cgnum[cgnum]);
 
 				/* A hack for testing: Handle WORDpX or WORDaX.
-				 * The above a/p marks mean appemd/prepend X to word before making
+				 * The above a/p marks mean append/prepend X to word before making
 				 * the lookup.
 				 * FIXME: Find another way to specify that, maybe in the affix file
 				 * or in a tokenizer definition file. */
@@ -880,7 +880,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 							return 250;
 						}
 						nplevel++;
-						/* fall throught */
+						/* fall through */
 						break;
 					case ')':
 						nplevel--;

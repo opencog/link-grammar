@@ -932,8 +932,8 @@ static const char * strip_left(Sentence sent, const char * w,
 /**
  * Split off punctuation and units from the right.
  *
- * Comments from a previous rewrite try of right stripping, not exactly apllied
- * to the current method but discusses some relevant problems.
+ * Comments from a previous rewrite try of right stripping, not exactly applied
+ * to the current method but discuss some relevant problems.
  * ---
  * FIXME: Adapt and move to separate_word().
  * Punctuation and units are removed from the right-hand side of a word,
@@ -993,7 +993,7 @@ static const char * strip_left(Sentence sent, const char * w,
  * When it breaks out of this loop, n_r_stripped will be the number of strings
  * stripped off. It is returned through the parameter, after possibly adjusting
  * it so the root will not be null. A pointer to one character after the end of
- * the remaining word is retunred truough the parameter wend.
+ * the remaining word is returned trough the parameter wend.
  *
  * The function returns true if an affix has been stripped (even if it
  * adjusts n_r_stripped back to 0 if the root was null), else false.
@@ -1258,7 +1258,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	} while (NULL == units_wend && stripped &&
 	         !boolean_dictionary_lookup(dict, word));
 
-	/* Check whenther the <number><units> "word" is in the dict
+	/* Check whether the <number><units> "word" is in the dict
 	 * (including regex). In such a case we need to generate an alternative. */
 	if (units_wend) /* units found */
 	{
@@ -1516,7 +1516,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	if (false == issued)
 	{
 		/* Terminate issuing the alternatives and record the word that caused
-		 * their wgeneration. It can be the original input word or the word after
+		 * their generation. It can be the original input word or the word after
 		 * punctuation strip. */
 		issued = issue_alternatives(sent, word, quote_found);
 	}
@@ -1736,7 +1736,7 @@ void build_sentence_expressions(Sentence sent, Parse_Options opts)
 	for (i=0; i<sent->length; i++)
 	{
 		size_t ialt;
-		/* Optimization - load the empty-word disjucts only once per word */
+		/* Optimization - load the empty-word disjuncts only once per word */
 		bool empty_word_encountered = false;
 
 		for (ialt=0; NULL != sent->word[i].alternatives[ialt]; ialt++)
