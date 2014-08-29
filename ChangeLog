@@ -2,8 +2,8 @@ Version 5.1.1 (XXX 2014)
  * ????
 
 Version 5.1.0 (29 August 2014)
- * Updated Russian dictionaries from Sergi Protasov.
- * Added morphology-based unknown-word handling for Russian, from Sergi.
+ * Updated Russian dictionaries from Sergei Protasov.
+ * Added morphology-based unknown-word handling for Russian, from Sergei.
  * Fix up fat-linkage code, which was recently broken...
  * API cleanup: many command-line options never belonged in the API.
  * New emoticon support was clobbering certain dictionary words.
