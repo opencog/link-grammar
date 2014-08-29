@@ -962,7 +962,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 
 		for (i = 0; i <= cgnum; i++)
 		{
-			printf("callout_data.cgnum[%d] %p\n", i, callout_da(I madeta.cgnum[i]);
+			printf("callout_data.cgnum[%d] %p\n", i, callout_data.cgnum[i]);
 		}
 	} else
 		printf("CGNUM %p\n", callout_data.cgnum);
