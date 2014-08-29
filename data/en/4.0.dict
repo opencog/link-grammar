@@ -10574,6 +10574,8 @@ EMOTICON :
   We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or TH+ or QI+ or (R+ & B+ & {S+}));
 
 % Elipsis as verb: "Lud, son of Shem, ..."
+% Arghh. I really want to have Qd- here too, to handle: "In what way...?"
+% but currently, the post-processing "S-V inversion required8" rule halts this.
 ....v ….v:
   S- & <verb-wall>;
 
