@@ -172,6 +172,7 @@ liblink_grammar_include_HEADERS =   \
 EXTRA_DIST=                         \
 	prefix.h                         \
 	link-grammar.def                 \
+	README                           \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
 	dict-sql/README
