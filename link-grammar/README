@@ -17,7 +17,7 @@ HOWTO use the new regex tokenizer/splitter
 ------------------------------------------
 Its new, experimental code. 
 
-To compile: ../configure 
+To compile: ../configure --enable-regex-tokenizer
 
 
 
@@ -105,14 +105,14 @@ supported (but there are currently none...).
 
 So this is not valid (a DICTWORD which matches a NUMBER)::
 /(?<DICTWORD(?<NUMBER>))/,qazwsx
-and this too (a nonsense constrant for demo):
+and this too (a nonsense constraint for demo):
 /(?<DICTWORD>([A-Z][0-9])*)/,qazwsx
 but this should be fine:
 /(?<DICTWORD>(?:[A-Z][0-9])*)/,qazwsx
 
 Some fun examples:
 
-!/(.*)/,test
+!/(.*)*/,test
 Modified pattern: (?:(.*)(?C))*$(?C1)
 Alternative 1:
  0 (1):  test (0,4)
