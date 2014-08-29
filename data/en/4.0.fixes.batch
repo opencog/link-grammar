@@ -1377,6 +1377,12 @@ By what means?
 In what way?
 To what end?
 For what reason?
+% Elipsis doesn't work, because the Qd- link can't be used without
+% the SI link, due to post-processing. Arghhh. 
+By what means ...?
+In what way ...?
+To what end ...?
+For what reason ...?
 
 
 Our neighbours have too big a dog to keep in the house
