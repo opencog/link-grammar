@@ -2654,10 +2654,12 @@ is.v:
 % Ss*t- & <vc-be-obj-p>:  (requires a plural object)
 %        "What he wants are the cats"
 %        "What John loves about this movie are the sound effects"
+% Qd- & (SIpx+ or SFIp+) & <vc-be-and> (no walls here:
+% for questions: "Are you insane?" "Are you the one?"
 are.v:
  ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>) or
  ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>) or
- (<verb-rq> & (SIpx+ or SFIp+) & <vc-be-sp>);
+ ((<verb-rq> or Qd-) & (SIpx+ or SFIp+) & <vc-be-and>);
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or

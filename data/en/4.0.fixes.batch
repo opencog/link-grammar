@@ -1375,6 +1375,10 @@ How big a dog did he buy?
 % Actually, the above is allowed, e.g. while talking about 
 % house prices, the conclusion might be: "So, how big did he buy?"
 
+Our neighbours have too big a dog to keep in the house
+Our neighbours have a dog too big to keep in the house
+Our neighbours have dogs too big to keep in the house
+
 % Prepositional questions with null verbs
 By what means?
 In what way?
@@ -1386,11 +1390,6 @@ By what means ...?
 In what way ...?
 To what end ...?
 For what reason ...?
-
-
-Our neighbours have too big a dog to keep in the house
-Our neighbours have a dog too big to keep in the house
-Our neighbours have dogs too big to keep in the house
 
 
 How much should I use?
@@ -1410,6 +1409,15 @@ How much of a dog is wanted?
 How much of a man is he?
 How much of a lie was it?
 How big a lie was it?
+
+% These cannot take WV links anywhere:
+Are you insane?
+Are you the one?
+Are you in the bathroom?
+Are we on time?
+Are we off?
+Is it in place?
+Is that when the meeting is?
 
 
 % This is blocked by post-processing....
