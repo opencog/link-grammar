@@ -993,7 +993,7 @@ static const char * strip_left(Sentence sent, const char * w,
  * When it breaks out of this loop, n_r_stripped will be the number of strings
  * stripped off. It is returned through the parameter, after possibly adjusting
  * it so the root will not be null. A pointer to one character after the end of
- * the remaining word is returned trough the parameter wend.
+ * the remaining word is returned through the parameter wend.
  *
  * The function returns true if an affix has been stripped (even if it
  * adjusts n_r_stripped back to 0 if the root was null), else false.
