@@ -96,7 +96,7 @@ typedef struct callout_data
 	int capture_last;			/* UNUSED */
 	const char ***wordlist;
 	cgnum **cgnum;
-	bool is_constant; /* a constant alternation - don't lookup (FIXME. UNUSED)*/
+	// bool is_constant; /* a constant alternation - don't lookup (FIXME. UNUSED)*/
 	int alt_counter;  /* counter for number of alternatives */
 } callout_data;
 
@@ -110,12 +110,12 @@ typedef struct callout_data
  * bar. Remove anchors ^ and $ if exist (suppose they can only appear at the
  * start and end of the regex, as currently in 4.0.regex).
  */
-static char *get_regex_by_name(Dictionary dict, const char *name)
+static char *get_regex_by_name(Dictionary const dict, const char * const name)
 {
-	dyn_str *pat = dyn_str_new();
+	dyn_str * const pat = dyn_str_new();
 	char *result = NULL;
 	Regex_node *re = dict->regex_root;
-	char *p;
+	const char *p;
 
    while (NULL != re)
    {
@@ -177,18 +177,20 @@ static char *get_regex_by_name(Dictionary dict, const char *name)
 	return result;
 }
 
-static void printov(const char *str, ov *ov, int top, callout_data *cd)
+static void printov(const char *str, ov *ov, int top, callout_data *cd, bool is_pcreov)
 {
 	int i;
+	const cgnum *cgnump = NULL;
 
 	for (i = 0; i < top; i++)
 	{
 		printf("%2d", i);
-		if (NULL != cd && NULL != cd->capture_level) printf(" (%d)", cd->capture_level[i]);
+		if (!is_pcreov && (NULL != cd) && (NULL != cd->capture_level))
+			printf(" (%d)", (ov[i].e < 0) ? 0 : cd->capture_level[i]);
 		printf(": ");
 		if (ov[i].s < 0)
 		{
-			printf(" <unset>\n");
+			printf(" <unset>");
 		} else
 		{
 			if (ov[i].e < 0)
@@ -238,14 +240,15 @@ static void printov(const char *str, ov *ov, int top, callout_data *cd)
  */
 static bool is_word(const char *word_start, int numchar, cgnum *cgnump)
 {
-	Dictionary dict = cgnump->dict;
-	const char *afclass = cgnump->afclass;
-	int lookup_mark_len = (NULL != cgnump->lookup_mark) ? strlen(cgnump->lookup_mark) : 0;
-	char *word = alloca(numchar+lookup_mark_len+1);
+	Dictionary const dict = cgnump->dict;
+	const char * const afclass = cgnump->afclass;
+	const int lookup_mark_len =
+		(NULL != cgnump->lookup_mark) ? strlen(cgnump->lookup_mark) : 0;
+	char * const word = alloca(numchar+lookup_mark_len+1);
 #ifdef AFFIX_DICTIONARY_TREE
-	Dict_node *dn;
+	const Dict_node *dn;
 #endif
-	Afdict_class *ac;
+	const Afdict_class *ac;
 	size_t i;
 
 	/* Append/prepend stem/infix marks. */
@@ -274,7 +277,7 @@ static bool is_word(const char *word_start, int numchar, cgnum *cgnump)
 		}
 	}
 
-	//printf("LOOKUP WORD '%s'\n", word);
+	lgdebug(7, "LOOKUP '%s' in %s: ", word, dict->name);
 	if (0 == afclass) return boolean_dictionary_lookup(dict, word);
 
 	/* We don't have for now a tree representation of the affix file, only lists */
@@ -334,7 +337,8 @@ static int callout(pcre_callout_block *cb)
 	lgdebug(6, "Callout %d: capture_last %d cgnum %p\n",
 	        cb->callout_number, cb->capture_last, cgnum);
 
-	if (verbosity >= 6) printov(cb->subject, (ov *)cb->offset_vector, cb->capture_top, cd);
+	if (verbosity >= 6)
+		printov(cb->subject, (ov *)cb->offset_vector, cb->capture_top, cd, /*is_pcreov*/true);
 
 	switch(cb->callout_number)
 	{
@@ -353,7 +357,7 @@ static int callout(pcre_callout_block *cb)
 			{
 				printf("INITIAL subp:\n");
 				if (cd->subp_ovfl) printf("OVERFLOW\n"); /* shouldn't happen */
-				printov(cb->subject, cd->subp, cd->subp_i+1, cd);
+				printov(cb->subject, cd->subp, cd->subp_i+1, cd, /*is_pcreov*/false);
 			}
 
 			/* Record all the captures into the subp (sub-pattern) vector.
@@ -415,15 +419,13 @@ static int callout(pcre_callout_block *cb)
 			{
 				printf("AFTER: subp:\n");
 				if (cd->subp_ovfl) printf("OVERFLOW\n"); /* shouldn't happen */
-				printov(cb->subject, cd->subp, cd->subp_i+1, cd);
+				printov(cb->subject, cd->subp, cd->subp_i+1, cd, /*is_pcreov*/false);
 			}
 
-			/* Make a dictionary lookup for NAME in capture groups (?<NAME>x) (x
-			 * is an optional constrain).
-			 * FIXME if possible: I don't know yet how to handle constant
-			 * alternations in named groups: (?<NAME>x|word1|word2)
-			 * if (cgnum && cd->is_constant) printf("is_constant\n");
-			 */
+			/* Make a dictionary lookup for NAME in capture groups (?<NAME>x)
+			 * (x is a constraint for the initial pattern-match comparison done by
+			 * PCRE). */
+			 // if (cgnum && * cd->is_constant) printf("is_constant\n");
 
 			/* If we have a cgnum structure with a dict, check if the string to be
 			 * matched is in the dict or belongs to the given affix class.
@@ -448,15 +450,18 @@ static int callout(pcre_callout_block *cb)
 					assert(0, "Error: Not in a named group!");
 				}
 				lgdebug(6, "GROUP NAME %.*s, cgnum %d, ptr %p, numchar %d\n",
-						  (int)(endname - openp - 4), openp+4, cb->capture_last-1, cgnum, numchar);
+						  (int)(endname - openp - 3), openp+3, cb->capture_last-1, cgnum, numchar);
 				/* End of debug sanity check. */
 
 				lgdebug(2, "Try match '%.*s': ", numchar, cb->subject+cb_ov->s);
+
+#if 0
 				if (0 == numchar)
 				{
 					lgdebug(2, "Zero match denied\n");
 					return 1;
 				}
+#endif
 
 				if (!is_word(cb->subject+cb_ov->s, numchar, cgnum))
 				{
@@ -475,18 +480,18 @@ static int callout(pcre_callout_block *cb)
 		}
 #endif
 
-		cd->is_constant = false;
+		// cd->is_constant = false;
 		return 0;
 		break;
 
 #if 0
 	case CALLBACK_CONSTANT_START:
-		cd->is_constant = true;
+		// cd->is_constant = true;
 		return 0;
 		break;
 
 	case CALLBACK_CONSTANT_END:
-		cd->is_constant = false;
+		// cd->is_constant = false;
 		return 0;
 		break;
 #endif
@@ -496,7 +501,7 @@ static int callout(pcre_callout_block *cb)
 		printf("Alternative %d:\n", cd->alt_counter);
 		/* See the comment for SUBP0END_DEBUG_SIGNATURE. */
 		assert(cd->subp[0].e>=0, "subp[0].e is %d!", cd->subp[0].e);
-		printov(cb->subject, cd->subp, cd->subp_i+1, cd);
+		printov(cb->subject, cd->subp, cd->subp_i+1, cd, /*is_pcreov*/false);
 
 		/* Remove the last sub-pattern, in case it is a null string (no need to
 		 * check, it can be removed anyway since if it is not a null string it is
@@ -510,7 +515,7 @@ static int callout(pcre_callout_block *cb)
 			cd->subp_i--;
 		}
 
-		cd->is_constant = false;
+		// cd->is_constant = false;
 		return 1;
 		break;
 
@@ -850,9 +855,6 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 					free(re);
 					re = NULL;
 				}
-				/* FIXME: Allow alternations after the above re. This was the
-				 * purpose of is_constant and CALLBACK_CONSTANT_START/END, but for
-				 * now I don't know how to do that. [ap] */
 			}
 			else
 			{
@@ -926,7 +928,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 		return 99;
 	}
 
-	/* TODO: Check using JT may optimize out some needed callouts. */
+	/* TODO: Check if using JIT may optimize out some needed callouts. */
 	options = 0; //PCRE_STUDY_JIT_COMPILE;
 	extra  = pcre_study(pcre, options, &errptr);
 	if (NULL == extra)
@@ -954,7 +956,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	extra->callout_data = (void *)&callout_data;
 	extra->flags |= PCRE_EXTRA_CALLOUT_DATA;
 
-#ifdef DEBUG
+#ifdef 0
 	printf("CGNUM %d\n", cgnum);
 	if (NULL != callout_data.cgnum)
 	{
@@ -990,14 +992,14 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	  printf("ovector only has room for %d captured substrings\n", rc - 1);
 	}
 
-	printov(str, (ov *)ovector, rc, NULL);
+	printov(str, (ov *)ovector, rc, NULL, /*is_pcreov*/true);
 
 	if (verbosity > 6)
 	{
 		if (0 != callout_data.subp_i)
 		{
 			printf("Callout stack:\n");
-			printov(str, callout_data.subp, callout_data.subp_i, &callout_data);
+			printov(str, callout_data.subp, callout_data.subp_i, &callout_data, /*is_pcreov*/false);
 		}
 	}
 
