@@ -21,6 +21,7 @@
  * They are not part of the public API. */
 
 bool find_word_in_dict(Dictionary dict, const char *);
+Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err);
 
 Exp * Exp_create(Dictionary);
 void add_empty_word(Dictionary, Dict_node *);
