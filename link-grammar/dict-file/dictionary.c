@@ -64,7 +64,7 @@ const char const * afdict_classname[] = { AFDICT_CLASSNAMES };
  * Find the affix table entry for given connector name.
  * If the connector name is not in the table, return NULL.
  */
-static Afdict_class * afdict_find(Dictionary afdict, const char * con)
+Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 {
 	const char ** ac;
 
@@ -74,9 +74,11 @@ static Afdict_class * afdict_find(Dictionary afdict, const char * con)
 		if (0 == strcmp(*ac, con))
 			return &afdict->afdict_class[ac - afdict_classname];
 	}
-	prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
-			  "\tThis class name will be ignored.",
-			  con, afdict->line_number, afdict->name);
+	if (notify_err) {
+		prt_error("Warning: Unknown class name %s found near line %d of %s.\n"
+                "\tThis class name will be ignored.",
+                con, afdict->line_number, afdict->name);
+	}
 	return NULL;
 }
 
@@ -136,7 +138,8 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 			string = deinflect(dn->string);
 		}
 
-		affix_list_add(afdict, afdict_find(afdict, con), string);
+		affix_list_add(afdict, afdict_find(afdict, con,
+		               /*notify_err*/true), string);
 		free(string);
 	}
 }
