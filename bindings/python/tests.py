@@ -220,7 +220,7 @@ class DBasicParsingTestCase(unittest.TestCase):
         result = self.p.parse_sent("This is a sentence.")[0]
         self.assertEqual(result.link_distances, [5,2,1,1,2,1,1])
         result = self.p.parse_sent("This is a silly sentence.")[0]
-        self.assertEqual(result.link_distances, [6,2,1,1,3,2,1,1])
+        self.assertEqual(result.link_distances, [6,2,1,1,3,2,1,1,1])
 
 
 class EEnglishLinkageTestCase(unittest.TestCase):
@@ -249,7 +249,7 @@ class EEnglishLinkageTestCase(unittest.TestCase):
         self.assertEqual(linkage.links[4],
                          Link('is.v','O*m','Os','sentence.n'))
         self.assertEqual(linkage.links[5],
-                         Link('a','Ds','Ds','sentence.n'))
+                         Link('a','Ds**c','Ds**c','sentence.n'))
         self.assertEqual(linkage.links[6],
                          Link('.','RW','RW','RIGHT-WALL'))
 
