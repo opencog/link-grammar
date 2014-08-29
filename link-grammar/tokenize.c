@@ -1017,7 +1017,7 @@ static bool strip_right(Sentence sent,
 	size_t sz;
 	size_t i;
 	size_t nrs = 0;
-	size_t len;
+	size_t len = 0;
 	bool stripped = false;
 
 	Afdict_class *rword_list;
@@ -1052,7 +1052,7 @@ static bool strip_right(Sentence sent,
 			}
 		}
 	} while (i < rword_num && temp_wend > w && rootdigit);
-	assert(w<=temp_wend, "A word should never start after its end...");
+	assert(w <= temp_wend, "A word should never start after its end...");
 
 	sz = temp_wend-w;
 	strncpy(word, w, sz);
@@ -1115,7 +1115,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	bool word_can_split = false;
 	bool issued = false;
 	bool try_strip_left;     /* try to strip punctuation on the left-hand side */
-	bool units_alternative;                     /* units alternative is needed */
+	bool units_alternative = false;             /* units alternative is needed */
 	bool parallel_regex;                  /* regex unknown word that can split */
 	bool stripped;
 	const char *wp;
@@ -1126,7 +1126,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	/* For units alternative */
 	const char *units_wend = NULL;        /* end of string consisting of units */
-	size_t units_n_r_stripped;
+	size_t units_n_r_stripped = 0;
 	bool start_digit = false;
 	const char **r_stripped_alt;
 	int ntokens;
@@ -1298,7 +1298,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		word_is_in_dict = find_word_in_dict(dict, word);
 		lgdebug(+2, "Check stripped word='%s' boolean_dictionary_lookup=%d "
 		        "is_utf8_digit=%d\n", word, word_is_in_dict, start_digit);
-		if(word_is_in_dict || units_alternative)
+		if (word_is_in_dict || units_alternative)
 		{
 			/* Both input and stripped words are in the dict, issue the
 			 * stripped word + its stripped tokens as an alternative. */
