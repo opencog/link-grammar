@@ -2277,15 +2277,16 @@ per "/.per": Us+ & Mp-;
 <verb-x-sp>: {@E-} & (S- or SF- or (RS- & B-));
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
 <verb-x-pg>: {@E-} & (Pgf- or Mg-);
+
+% No verb-wall for <verb-x-pg>: "Is there going to be a problem?"
 <verb-x-pg,ge>:
-  {@E-} & (
+  <verb-x-pg>
+  or ({@E-} & (
     <MX-PHRASE>
     or <OPENER>
     or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
-    or Mg-
-    or Pgf-
     or [DP- & J-]
-    or [[Wq- & PF+ & {@MV+}]]);
+    or [[Wq- & PF+ & {@MV+}]]) & <verb-wall>);
 
 % Almost identical to the above, except that the verb attaches to the
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
@@ -3975,7 +3976,7 @@ gone.a:
 % XXX TODO maybe need VJ and-able links for going etc. ???
 % <tof-verb>: "there is going to be a meeting"
 going.v:
-  ((<tof-verb> or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge> & <verb-wall>) or
+  ((<tof-verb> or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
   ({@E-} & A+) or
   <verb-ge-d>;
 
