@@ -1,3 +1,6 @@
+Version 5.1.1 (XXX 2014)
+ * ????
+
 Version 5.1.0 (29 August 2014)
  * Updated Russian dictionaries from Sergi Protasov.
  * Added morphology-based unknown-word handling for Russian, from Sergi.
@@ -51,7 +54,7 @@ Version 5.0.4 (16 April 2014)
  * Fix MacOSX build break.
  * Fix the 'make clean' target to not remove critical files.
  * Fix broken emoticon support in English dict.
- * Remove obsolete entity detection tokens from Englsh dict.
+ * Remove obsolete entity detection tokens from English dict.
  * Fix broken equation parsing.
 
 Version 5.0.3 (13 April 2014)
@@ -61,7 +64,7 @@ Version 5.0.3 (13 April 2014)
 
 Version 5.0.2 (10 April 2014)
  * Expanded unit tests
- * Fix another sqlite3-dev build break 
+ * Fix another sqlite3-dev build break
 
 Version 5.0.1 (9 April 2014)
  * Dictionary debugging print fixes from Amir P
@@ -173,7 +176,7 @@ Version 4.7.12 (25 May 2013)
  * Make the fat linkages code be compile-time configurable.
  * Disable fat linkages by default; mark as deprecated.
  * Fix SAT-solver build; recent changes had broken it.
- * Export read-dict.h as a public API. 
+ * Export read-dict.h as a public API.
  * Ongoing development of the Viterbi prototype.
  * Windows: some UTF8/widechar refactoring.
  * Java bindings: add method to set the language.
@@ -299,7 +302,7 @@ Version 4.7.1 (11 December 2010):
  * Fix: Explicitly include <stddef.h> for Windows builds.
  * Fix: "John imagines himself lost".
  * Fix: predicative adjectives w/misc verbs: "You are driving me crazy"
- * Fix: "judge innocent", etc. 
+ * Fix: "judge innocent", etc.
  * Fix: many, many conjoined present tense verbs.
  * Fix: conjoined verbs with negations.
  * Fix: "to" as post-nominal modifier: "the inability to laugh"
@@ -315,7 +318,7 @@ Version 4.7.0 (12 September 2010):
  * Fix: "What does it come to?" and related.
  * Fix: null infinitive: "I'd like to, I want to."
  * Fix: "Because I said so."
- * Fix: "sure" as preverbal adverb: "It sure is." 
+ * Fix: "sure" as preverbal adverb: "It sure is."
  * Fix: Gerunds with determiners: "a running of the bulls"
  * SJ link for conjoined nouns/noun phrases.
  * Sort linkages according to whether fat linkage was used.
@@ -343,7 +346,7 @@ Version 4.6.6 (19 March 2010)
  * Fix: MSWindows+Cygwin/MingGW compilation issues.
  * Use pkgconfig for editline (from Vincent Untz)
  * Fix: "I want it back."
- * Additional titular prefixes, suffixes: Maj. Ph.D. 
+ * Additional titular prefixes, suffixes: Maj. Ph.D.
  * Add code to detect dictionary version number.
  * Fix: MS VC missing strdup() function.
  * Add AutoIt3 bindings from JRowe
@@ -353,7 +356,7 @@ Version 4.6.5 (3 November 2009)
  * Fix: Take more care in distinguishing mass and count nouns.
  * Fix: Old bug w/relative clauses: Rw+ is optional, not mandatory.
  * Provide tags identifying relative, superlative adjectives.
- * Remove BioLG NUMBER-AND-UNIT handling, its been superceded. 
+ * Remove BioLG NUMBER-AND-UNIT handling, its been superceded.
  * Fix handling of parenthetical phrases/clauses.
  * Fix: handling of capitalized first words ending in letter "s".
  * Fix: support "filler-it" SF link for "It was reasoned that..."
@@ -375,7 +378,7 @@ Version 4.6.4 (11 October 2009)
 
 Version 4.6.3 (4 October 2009)
  * Fix compilation bug on FreeBSD.
- * Fix: allow MX link to post-nominal ", to be ..., " 
+ * Fix: allow MX link to post-nominal ", to be ..., "
  * Fix: add idiom "time and again"
  * Fix: another BioLG regression in handling of possessives.
  * Fix: handling of period at end of number at end of sentence.
@@ -394,7 +397,7 @@ Version 4.6.2 (21 September 2009)
  * Fix handling of punctuation at the end of a capitalized word.
  * Fix misc verbs acting as adjectival modifiers: e.g. "given", "allied"
  * Fix bug in BioLG code regarding the handling of possessives.
- * Fix a (rare) crash in sentences with many conjunctions. 
+ * Fix a (rare) crash in sentences with many conjunctions.
  * Fix a crash involving long sequences of UTF8 punctuation marks.
 
 Version 4.6.1 (31 August 2009)
@@ -423,7 +426,7 @@ Version 4.5.9 (25 August 2009)
  * Add greeting to command-line client startup.
  * Print disjunct cost also, when requesting disjunct printing.
  * Add missing color names as mass nouns.
- * Fix: Reclassify musical instruments: "He plays piano" 
+ * Fix: Reclassify musical instruments: "He plays piano"
  * Add experimental word-clustering system.
  * Add CMake build file
  * Fix: "It takes longer than that."
@@ -531,7 +534,7 @@ Version 4.5.0 (10 April 2009) includes the following changes:
  * Fix: 'at risk of breakdown', 'under threat of fire'
  * Add regular-expression-based word guessing, from BioLG project.
    This provides support for many scientific/biomedical terms.
- * Add spell-guessing for unknown words. 
+ * Add spell-guessing for unknown words.
  * Fix UTF8 support to be correctly thread-safe.
  * BioLG: fix post-numbering: 'it started on day one'
  * BioLG: add number ranges: 'it takes 2 to 3 times the effort'
@@ -602,7 +605,7 @@ Version 4.3.9 (8 October 2008) includes the following changes:
  * Passive subjects with objects: "I was told that crap, too" "...was asked..."
  * Fixes for Apple Mac OSX (crash on non-executable stack)
  * Early version of Filip Maric's boolean SAT solver
- * fix: "He talked quietly of revolt." 
+ * fix: "He talked quietly of revolt."
  * fix: "It consists mostly of sand.", "He talks, mostly of revolution."
  * fix: "He talked mostly to Ann.", "He talks a lot."
  * fix: than_usual: "He is taking longer than usual."
@@ -697,7 +700,7 @@ Version 4.3.0 (30 January 2008) includes the following changes:
    cookies than Dave wants". The Rw link is used to link question words
    to the relative clauses that follow them.
  * Dictionary Fixes for "Expresso is a coffee drink", "Teach me fetch",
-   "I am pooped" as synonym for "I am tired", "Mother likes her", 
+   "I am pooped" as synonym for "I am tired", "Mother likes her",
    "Mommy loves me" and related. Also, directives involving "go":
    "Go play ball", "Go take a walk", "You and Rover go play with the
    ball."
