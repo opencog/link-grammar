@@ -7790,13 +7790,18 @@ among:
   ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
   or [MVp- & B-];
 
+% (Wj- & JQ+ & J+): "By what means?"  kind of a hack, for null-verb question.
+% In what way?  To what end?
+<null-prep-qu>: Wj- & JQ+ & J+;
+
 % FL+ "for long"
 for.p:
   ({JQ+} & (J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-))
   or (J+ & (RJrj- or RJlj+))
   or [MVp- & B-]
   or (MG- & JG+)
-  or (MVp- & FL+);
+  or (MVp- & FL+)
+  or <null-prep-qu>;
 
 into: ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>) or [MVp- & B-];
 
@@ -7858,10 +7863,6 @@ out.r flat_out up.r down.r:
   or ({Yd-} & Pp-)
   or (EN- & (Pp- or J-))
   or [MVp- & B-];
-
-% (Wj- & JQ+ & J+): "By what means?"  kind of a hack, for null-verb question.
-% In what way?  To what end?
-<null-prep-qu>: Wj- & JQ+ & J+;
 
 by:
   <alter-preps>
