@@ -340,7 +340,13 @@ static bool apply_rules(Postprocessor *pp,
 {
 	int i;
 	for (i = 0; (*msg = rule_array[i].msg) != NULL; i++)
-		if (!applyfn(pp, sublinkage, &(rule_array[i]))) return false;
+	{
+		if (!applyfn(pp, sublinkage, &(rule_array[i])))
+		{
+			rule_array[i].use_count ++;
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -951,9 +957,9 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 	if (verbosity > 1)
 	{
-		printf("Saw %i unique link names in all linkages.\n",
+		printf("PP: Saw %i unique link names in all linkages.\n",
 				pp_linkset_population(pp->set_of_links_of_sentence));
-		printf("Using %i 'contains one' rules and %i 'contains none' rules\n",
+		printf("PP: Using %i 'contains one' rules and %i 'contains none' rules\n",
 			   rcoIDX, rcnIDX);
 	}
 }
