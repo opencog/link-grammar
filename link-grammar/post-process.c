@@ -1072,19 +1072,19 @@ static void report_pp_stats(Postprocessor *pp)
 	printf("PP stats: local_rules_firing=%d\n", pp->n_local_rules_firing);
 	kno = pp->knowledge;
 
-	printf("PP stats: connected_rules\n");
+	printf("\nPP stats: connected_rules\n");
 	report_rule_use(kno->connected_rules);
 
-	printf("PP stats: form_a_cycle_rules\n");
+	printf("\nPP stats: form_a_cycle_rules\n");
 	report_rule_use(kno->form_a_cycle_rules);
 
-	printf("PP stats: contains_one_rules\n");
+	printf("\nPP stats: contains_one_rules\n");
 	report_rule_use(kno->contains_one_rules);
 
-	printf("PP stats: contains_none_rules\n");
+	printf("\nPP stats: contains_none_rules\n");
 	report_rule_use(kno->contains_none_rules);
 
-	printf("PP stats: bounded_rules\n");
+	printf("\nPP stats: bounded_rules\n");
 	report_rule_use(kno->bounded_rules);
 }
 
