@@ -339,10 +339,10 @@ static void clear_pp_node(Postprocessor *pp)
 /************************ rule application *******************************/
 
 static bool apply_rules(Postprocessor *pp,
-							 bool (applyfn) (Postprocessor *, Sublinkage *, pp_rule *),
-							 Sublinkage *sublinkage,
-							 pp_rule *rule_array,
-							 const char **msg)
+                        bool (applyfn) (Postprocessor *, Sublinkage *, pp_rule *),
+                        Sublinkage *sublinkage,
+                        pp_rule *rule_array,
+                        const char **msg)
 {
 	int i;
 	for (i = 0; (*msg = rule_array[i].msg) != NULL; i++)
@@ -358,11 +358,11 @@ static bool apply_rules(Postprocessor *pp,
 
 static bool
 apply_relevant_rules(Postprocessor *pp,
-						 bool (applyfn)(Postprocessor *, Sublinkage*, pp_rule *),
-						 Sublinkage *sublinkage,
-						 pp_rule *rule_array,
-						 int *relevant_rules,
-						 const char **msg)
+                     bool (applyfn)(Postprocessor *, Sublinkage*, pp_rule *),
+                     Sublinkage *sublinkage,
+                     pp_rule *rule_array,
+                     int *relevant_rules,
+                     const char **msg)
 {
 	int i, idx;
 
@@ -907,16 +907,16 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 	/* The order below should be optimal for most cases */
 	if (!apply_relevant_rules(pp, apply_contains_one, sublinkage,
 								pp->knowledge->contains_one_rules,
-								pp->relevant_contains_one_rules, msg))	return 1;
-	if (!apply_relevant_rules(pp,apply_contains_none, sublinkage,
+								pp->relevant_contains_one_rules, msg)) return 1;
+	if (!apply_relevant_rules(pp, apply_contains_none, sublinkage,
 								pp->knowledge->contains_none_rules,
 									pp->relevant_contains_none_rules, msg)) return 1;
-	if (!apply_rules(pp,apply_must_form_a_cycle, sublinkage,
-					 pp->knowledge->form_a_cycle_rules,msg))		 return 1;
-	if (!apply_rules(pp,apply_connected, sublinkage,
-					 pp->knowledge->connected_rules, msg))						return 1;
-	if (!apply_rules(pp,apply_bounded, sublinkage,
-					 pp->knowledge->bounded_rules, msg))							return 1;
+	if (!apply_rules(pp, apply_must_form_a_cycle, sublinkage,
+					 pp->knowledge->form_a_cycle_rules,msg)) return 1;
+	if (!apply_rules(pp, apply_connected, sublinkage,
+					 pp->knowledge->connected_rules, msg)) return 1;
+	if (!apply_rules(pp, apply_bounded, sublinkage,
+					 pp->knowledge->bounded_rules, msg)) return 1;
 	return 0; /* This linkage satisfied all the rules */
 }
 
