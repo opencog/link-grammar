@@ -48,9 +48,9 @@ static void initialize_set_of_links_starting_bounded_domain(pp_knowledge *k)
     {
       domain_of_rule = k->bounded_rules[i].domain;
       for (j=0; (d=(k->starting_link_lookup_table[j].domain))!=-1; j++)
-	if (d==domain_of_rule)
-	  pp_linkset_add(k->set_of_links_starting_bounded_domain,
-		      k->starting_link_lookup_table[j].starting_link);
+        if (d==domain_of_rule)
+          pp_linkset_add(k->set_of_links_starting_bounded_domain,
+                      k->starting_link_lookup_table[j].starting_link);
     }
 }
 
@@ -93,7 +93,7 @@ static void read_starting_link_table(pp_knowledge *k)
 }
 
 static pp_linkset *read_link_set(pp_knowledge *k,
-				 const char *label, String_set *ss)
+                                 const char *label, String_set *ss)
 {
   /* read link set, marked by label in knowledge file, into a set of links
      whose handle is returned. Return NULL if link set not defined in file,
@@ -109,7 +109,7 @@ static pp_linkset *read_link_set(pp_knowledge *k,
   ls = pp_linkset_open(n_strings);
   for (i=0; i<n_strings; i++)
     pp_linkset_add(ls,
-		   string_set_add(pp_lexer_get_next_token_of_label(k->lt),ss));
+                   string_set_add(pp_lexer_get_next_token_of_label(k->lt),ss));
   return ls;
 }
 
@@ -252,7 +252,7 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
 }
 
 static void read_contains_rules(pp_knowledge *k, const char *label,
-				pp_rule **rules, size_t *nRules)
+                                pp_rule **rules, size_t *nRules)
 {
   /* Reading the 'contains_one_rules' and reading the
      'contains_none_rules' into their respective arrays */
@@ -311,9 +311,9 @@ static void read_rules(pp_knowledge *k)
   read_connected_rule(k, "CONNECTED_RULES");
   read_bounded_rules(k,  "BOUNDED_RULES");
   read_contains_rules(k, "CONTAINS_ONE_RULES" ,
-		      &(k->contains_one_rules), &(k->n_contains_one_rules));
+                      &(k->contains_one_rules), &(k->n_contains_one_rules));
   read_contains_rules(k, "CONTAINS_NONE_RULES",
-		      &(k->contains_none_rules), &(k->n_contains_none_rules));
+                      &(k->contains_none_rules), &(k->n_contains_none_rules));
 }
 
 static void free_rules(pp_knowledge *k)
@@ -368,7 +368,7 @@ void pp_knowledge_close(pp_knowledge *k)
 {
   /* clear the memory taken up by k */
   xfree((void*)k->starting_link_lookup_table,
-	((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain)));
+        ((1+k->nStartingLinks)*sizeof(StartingLinkAndDomain)));
   free_link_sets(k);
   free_rules(k);
   pp_linkset_close(k->set_of_links_starting_bounded_domain);
@@ -376,7 +376,4 @@ void pp_knowledge_close(pp_knowledge *k)
   pp_lexer_close(k->lt);
   xfree((void*)k, sizeof(pp_knowledge));
 }
-
-
-
 
