@@ -238,7 +238,7 @@ static void chk_d_type(PP_node* ppn, size_t idx)
 	{
 		size_t oldsz = ppn->dtsz;
 		ppn->dtsz = 2 * ppn->dtsz + 10;
-		ppn->d_type_array = xrealloc(ppn->d_type_array, 
+		ppn->d_type_array = xrealloc(ppn->d_type_array,
 			oldsz * sizeof(D_type_list*), ppn->dtsz * sizeof(D_type_list*));
 	}
 }
@@ -484,7 +484,7 @@ apply_connected(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
  * link are still connected.
  */
 static void reachable_without_dfs(Postprocessor *pp,
-                Sublinkage *sublinkage, size_t a, size_t b, size_t w)
+                    Sublinkage *sublinkage, size_t a, size_t b, size_t w)
 {
 	/* This is a depth first search of words reachable from w, excluding
 	 * any direct edge between word a and word b. */
@@ -492,9 +492,9 @@ static void reachable_without_dfs(Postprocessor *pp,
 	pp->visited[w] = TRUE;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
-		if (!pp->visited[lol->word] && 
-          !(w == a && lol->word == b) && 
-          !(w == b && lol->word == a))
+		if (!pp->visited[lol->word] &&
+		    !(w == a && lol->word == b) &&
+		    !(w == b && lol->word == a))
 		{
 				reachable_without_dfs(pp, sublinkage, a, b, lol->word);
 		}
@@ -648,7 +648,7 @@ static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 }
 
 static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-                                 size_t w, size_t root, size_t start_link)
+                                   size_t w, size_t root, size_t start_link)
 {
 	List_o_links * lol;
 	pp->visited[w] = TRUE;
@@ -687,7 +687,7 @@ static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 }
 
 static void left_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-                               size_t w, size_t right, size_t start_link)
+                                    size_t w, size_t right, size_t start_link)
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
