@@ -44,7 +44,7 @@ bool post_process_match(const char *s, const char *t)
 	if (islower((int)*t)) t++; /* Skip head-dependent indicator */
 	while (isupper((int)*s) || isupper((int)*t))
 	{
-		if (*s != *t) return FALSE;
+		if (*s != *t) return false;
 		s++;
 		t++;
 	}
@@ -65,12 +65,12 @@ bool post_process_match(const char *s, const char *t)
 
 static int string_in_list(const char * s, const char * a[])
 {
-	/* returns FALSE if the string s does not match anything in
+	/* returns false if the string s does not match anything in
 		 the array.	The array elements are post-processing symbols */
 	int i;
 	for (i=0; a[i] != NULL; i++)
-		if (post_process_match(a[i], s)) return TRUE;
-	return FALSE;
+		if (post_process_match(a[i], s)) return true;
+	return false;
 }
 
 /**
@@ -89,7 +89,7 @@ static size_t find_domain_name(Postprocessor *pp, const char *link)
 	}
 }
 
-/** Returns TRUE if domain d1 is contained in domain d2 */
+/** Returns true if domain d1 is contained in domain d2 */
 static int contained_in(const Domain * d1, const Domain * d2,
                         const Sublinkage *sublinkage)
 {
@@ -97,10 +97,10 @@ static int contained_in(const Domain * d1, const Domain * d2,
 	List_o_links * lol;
 	memset(mark, 0, sublinkage->num_links*(sizeof(bool)));
 	for (lol=d2->lol; lol != NULL; lol = lol->next)
-		mark[lol->link] = TRUE;
+		mark[lol->link] = true;
 	for (lol=d1->lol; lol != NULL; lol = lol->next)
-		if (!mark[lol->link]) return FALSE;
-	return TRUE;
+		if (!mark[lol->link]) return false;
+	return true;
 }
 
 /** Returns the predicate "the given link is in the given domain" */
@@ -108,8 +108,8 @@ static bool link_in_domain(size_t link, const Domain * d)
 {
 	List_o_links * lol;
 	for (lol = d->lol; lol != NULL; lol = lol->next)
-		if (lol->link == link) return TRUE;
-	return FALSE;
+		if (lol->link == link) return true;
+	return false;
 }
 
 /* #define CHECK_DOMAIN_NESTING */
@@ -117,7 +117,7 @@ static bool link_in_domain(size_t link, const Domain * d)
 #if defined(CHECK_DOMAIN_NESTING)
 /* Although this is no longer used, I'm leaving the code here for future reference --DS 3/98 */
 
-/* Returns TRUE if the domains actually form a properly nested structure */
+/* Returns true if the domains actually form a properly nested structure */
 static bool check_domain_nesting(Postprocessor *pp, int num_links)
 {
 	Domain * d1, * d2;
@@ -138,10 +138,10 @@ static bool check_domain_nesting(Postprocessor *pp, int num_links)
 			for (i=0; i<num_links; i++)
 		counts[(int)mark[i]]++;/* (int) cast avoids compiler warning DS 7/97 */
 			if ((counts[1] > 0) && (counts[2] > 0) && (counts[3] > 0))
-		return FALSE;
+		return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 #endif
 
@@ -198,7 +198,7 @@ static void connectivity_dfs(Postprocessor *pp, Sublinkage *sublinkage,
                              int w, pp_linkset *ls)
 {
 	List_o_links *lol;
-	pp->visited[w] = TRUE;
+	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if (!pp->visited[lol->word] &&
@@ -212,7 +212,7 @@ static void mark_reachable_words(Postprocessor *pp, int w)
 {
 	List_o_links *lol;
 	if (pp->visited[w]) return;
-	pp->visited[w] = TRUE;
+	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 		mark_reachable_words(pp, lol->word);
 }
@@ -228,8 +228,8 @@ static bool is_connected(Postprocessor *pp)
 		pp->visited[i] = (pp->pp_data.word_links[i] == NULL);
 	mark_reachable_words(pp, 0);
 	for (i=0; i<pp->pp_data.length; i++)
-		if (!pp->visited[i]) return FALSE;
-	return TRUE;
+		if (!pp->visited[i]) return false;
+	return true;
 }
 
 static void chk_d_type(PP_node* ppn, size_t idx)
@@ -370,7 +370,7 @@ apply_relevant_rules(Postprocessor *pp,
 }
 
 /**
- * returns TRUE if and only if all groups containing the specified link
+ * returns true if and only if all groups containing the specified link
  * contain at least one from the required list.	(as determined by exact
  * string matching)
  */
@@ -399,15 +399,15 @@ apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 					break;
 				}
 			}
-			if (count == 0) return FALSE;
+			if (count == 0) return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 
 /**
- * Returns TRUE if and only if:
+ * Returns true if and only if:
  * all groups containing the selector link do not contain anything
  * from the link_array contained in the rule. Uses exact string matching.
  */
@@ -430,15 +430,15 @@ apply_contains_none(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 			{
 				if (string_in_list(sublinkage->link[dtl->link]->link_name,
 				                   rule->link_array))
-					return FALSE;
+					return false;
 			}
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 /**
- * Returns TRUE if and only if
+ * Returns true if and only if
  * (1) the sentence doesn't contain the selector link for the rule, or
  * (2) it does, and it also contains one or more from the rule's link set
  */
@@ -455,7 +455,7 @@ apply_contains_one_globally(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *
 #endif
 		if (post_process_match(rule->selector,sublinkage->link[i]->link_name)) break;
 	}
-	if (i == sublinkage->num_links) return TRUE;
+	if (i == sublinkage->num_links) return true;
 
 	/* selector link of rule appears in sentence */
 	count = 0;
@@ -472,7 +472,7 @@ apply_contains_one_globally(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *
 			break;
 		}
 	}
-	if (count == 0) return FALSE; else return TRUE;
+	if (count == 0) return false; else return true;
 }
 
 static bool
@@ -496,7 +496,7 @@ static void reachable_without_dfs(Postprocessor *pp,
 	/* This is a depth first search of words reachable from w, excluding
 	 * any direct edge between word a and word b. */
 	List_o_links *lol;
-	pp->visited[w] = TRUE;
+	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if (!pp->visited[lol->word] &&
@@ -509,9 +509,9 @@ static void reachable_without_dfs(Postprocessor *pp,
 }
 
 /**
- * Returns TRUE if the linkage is connected when ignoring the links
+ * Returns true if the linkage is connected when ignoring the links
  * whose names are in the given list of link names.
- * Actually, what it does is this: it returns FALSE if the connectivity
+ * Actually, what it does is this: it returns false if the connectivity
  * of the subgraph reachable from word 0 changes as a result of deleting
  * these links.
  */
@@ -528,7 +528,7 @@ apply_must_form_a_cycle(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule
 			if (!pp_linkset_match(rule->link_set, sublinkage->link[lol->link]->link_name)) continue;
 			memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 			reachable_without_dfs(pp, sublinkage, w, lol->word, w);
-			if (!pp->visited[lol->word]) return FALSE;
+			if (!pp->visited[lol->word]) return false;
 		}
 	}
 
@@ -563,10 +563,10 @@ apply_bounded(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 		lw = sublinkage->link[pp->pp_data.domain_array[d].start_link]->lw;
 		for (lol = pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
-			if (sublinkage->link[lol->link]->lw < lw) return FALSE;
+			if (sublinkage->link[lol->link]->lw < lw) return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 /**
@@ -617,7 +617,7 @@ static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 static void setup_domain_array(Postprocessor *pp,
                                int n, const char *string, int start_link)
 {
-	/* set pp->visited[i] to FALSE */
+	/* set pp->visited[i] to false */
 	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
 	pp->pp_data.domain_array[n].string = string;
 	pp->pp_data.domain_array[n].lol    = NULL;
@@ -639,7 +639,7 @@ static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
                                size_t w, size_t root, size_t start_link)
 {
 	List_o_links *lol;
-	pp->visited[w] = TRUE;
+	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if (lol->word < w && lol->link != start_link)
@@ -663,7 +663,7 @@ static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
                                    size_t w, size_t root, size_t start_link)
 {
 	List_o_links * lol;
-	pp->visited[w] = TRUE;
+	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if ((lol->word < w)	&& (lol->link != start_link) && (w != root))
@@ -687,7 +687,7 @@ static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
                     size_t w, size_t root, size_t right, size_t start_link)
 {
 	List_o_links * lol;
-	pp->visited[w] = TRUE;
+	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if ((lol->word < w) && (lol->link != start_link) && (w != root))
@@ -712,7 +712,7 @@ static void left_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
                                     size_t w, size_t right, size_t start_link)
 {
 	List_o_links *lol;
-	pp->visited[w] = TRUE;
+	pp->visited[w] = true;
 	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 	{
 		if (lol->word < w && lol->link != start_link)
@@ -1067,11 +1067,11 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 
 	/* The first time we see a sentence, prune the rules which we won't be
 	 * needing during postprocessing the linkages of this sentence */
-	if (sent->q_pruned_rules == FALSE && sent->length >= opts->twopass_length)
+	if (sent->q_pruned_rules == false && sent->length >= opts->twopass_length)
 	{
 		prune_irrelevant_rules(pp);
 	}
-	sent->q_pruned_rules = TRUE;
+	sent->q_pruned_rules = true;
 
 	switch (internal_process(pp, sublinkage, &msg))
 	{
