@@ -1837,9 +1837,6 @@ static Boolean rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 static int pp_prune(Sentence sent, Parse_Options opts)
 {
 	pp_knowledge * knowledge;
-	pp_rule rule;
-	const char * selector;
-	pp_linkset * link_set;
 	size_t i, w;
 	char dir;
 	Disjunct *d;
@@ -1866,20 +1863,25 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 	total_deleted = 0;
 	change = 1;
-	while (change > 0) {
+	while (change > 0)
+	{
 		change = 0;
 		N_deleted = 0;
-		for (w = 0; w < sent->length; w++) {
-			for (d = sent->word[w].d; d != NULL; d = d->next) {
+		for (w = 0; w < sent->length; w++)
+		{
+			for (d = sent->word[w].d; d != NULL; d = d->next)
+			{
 				if (!d->marked) continue;
 				deleteme = FALSE;
-				for (dir=0; dir < 2; dir++) {
-					for (c = ( (dir)?(d->left):(d->right) ); c!=NULL; c=c->next) {
-						for (i=0; i<knowledge->n_contains_one_rules; i++) {
-
-							rule = knowledge->contains_one_rules[i]; /* the ith rule */
-							selector = rule.selector;				/* selector string for this rule */
-							link_set = rule.link_set;				/* the set of criterion links */
+				for (dir = 0; dir < 2; dir++)
+				{
+					for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
+					{
+						for (i = 0; i < knowledge->n_contains_one_rules; i++)
+						{
+							pp_rule* rule = &knowledge->contains_one_rules[i]; /* the ith rule */
+							const char * selector = rule->selector;  /* selector string for this rule */
+							pp_linkset * link_set = rule->link_set;  /* the set of criterion links */
 
 							if (strchr(selector, '*') != NULL) continue;  /* If it has a * forget it */
 
@@ -1892,8 +1894,10 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 							/* We know c matches the trigger link of the rule. */
 							/* Now check the criterion links */
 
-							if (!rule_satisfiable(cmt, link_set)) {
+							if (!rule_satisfiable(cmt, link_set))
+							{
 								deleteme = TRUE;
+								rule->use_count++;
 							}
 							if (deleteme) break;
 						}
@@ -1902,12 +1906,15 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 					if (deleteme) break;
 				}
 
-				if (deleteme) {					/* now we delete this disjunct */
+				if (deleteme)         /* now we delete this disjunct */
+				{
 					N_deleted++;
 					total_deleted++;
 					d->marked = FALSE; /* mark for deletion later */
-					for (dir=0; dir < 2; dir++) {
-						for (c = ( (dir)?(d->left):(d->right) ); c!=NULL; c=c->next) {
+					for (dir=0; dir < 2; dir++)
+					{
+						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
+						{
 							change += delete_from_cms_table(cmt, c->string);
 						}
 					}
@@ -1915,15 +1922,16 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		if (verbosity > 2) {
+		if (verbosity > 2)
+		{
 			printf("pp_prune pass deleted %d\n", N_deleted);
 		}
-
 	}
 	delete_unmarked_disjuncts(sent);
 	cms_table_delete(cmt);
 
-	if (verbosity > 2) {
+	if (verbosity > 2)
+	{
 		printf("\nAfter pp_pruning:\n");
 		print_disjunct_counts(sent);
 	}
