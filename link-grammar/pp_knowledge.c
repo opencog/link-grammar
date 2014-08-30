@@ -145,19 +145,19 @@ static void read_connected_rule(pp_knowledge *k, const char *label)
      connectivity is there, or it isn't. The only information in the
      rule (besides its presence) is the error message to display if
      the rule is violated */
-  k->connected_rules = (pp_rule *) xalloc (sizeof(pp_rule));
+  k->connected_rules = (pp_rule *) xalloc (2*sizeof(pp_rule));
+  k->connected_rules[0].msg = 0;
+  k->connected_rules[1].msg = 0;
   k->connected_rules[0].use_count = 0;
+  k->connected_rules[1].use_count = 0;
   if (!pp_lexer_set_label(k->lt, label))
-    {
-      k->connected_rules[0].msg=0;  /* rule not there */
-      if (1 < verbosity) printf("PP warning: Not using 'link is connected' rule\n");
-      return;
-    }
-  if (pp_lexer_count_tokens_of_label(k->lt)>1)
   {
-    prt_error("Fatal Error: post_process(): Invalid syntax in %s", label);
-    exit(1);
+    if (1 < verbosity) printf("PP warning: Not using 'link is connected' rule\n");
+    return;
   }
+  assert(pp_lexer_count_tokens_of_label(k->lt) < 2,
+    "Fatal Error: post_process(): Invalid syntax in %s", label);
+
   k->connected_rules[0].msg =
     string_set_add(pp_lexer_get_next_token_of_label(k->lt), k->string_set);
 }
@@ -321,21 +321,23 @@ static void free_rules(pp_knowledge *k)
   size_t r;
   size_t rs = sizeof(pp_rule);
   pp_rule *rule;
-  for (r=0; k->contains_one_rules[r].msg!=0; r++) {
+  for (r=0; k->contains_one_rules[r].msg!=0; r++)
+  {
     rule = &(k->contains_one_rules[r]);    /* shorthand */
     xfree((void*) rule->link_array, (1+rule->link_set_size)*sizeof(char*));
     pp_linkset_close(rule->link_set);
   }
-  for (r=0; k->contains_none_rules[r].msg!=0; r++) {
+  for (r=0; k->contains_none_rules[r].msg!=0; r++)
+  {
     rule = &(k->contains_none_rules[r]);   /* shorthand */
     xfree((void *)rule->link_array, (1+rule->link_set_size)*sizeof(char*));
     pp_linkset_close(rule->link_set);
   }
 
-  for (r=0; r<k->n_form_a_cycle_rules; r++)
+  for (r = 0; r < k->n_form_a_cycle_rules; r++)
     pp_linkset_close(k->form_a_cycle_rules[r].link_set);
   xfree((void*)k->bounded_rules,           rs*(1+k->n_bounded_rules));
-  xfree((void*)k->connected_rules,         rs);
+  xfree((void*)k->connected_rules,         rs*2);
   xfree((void*)k->form_a_cycle_rules,      rs*(1+k->n_form_a_cycle_rules));
   xfree((void*)k->contains_one_rules,      rs*(1+k->n_contains_one_rules));
   xfree((void*)k->contains_none_rules,     rs*(1+k->n_contains_none_rules));

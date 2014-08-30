@@ -1055,10 +1055,10 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 	}
 }
 
-static void report_rule_use(pp_rule *set, size_t sz)
+static void report_rule_use(pp_rule *set)
 {
 	size_t i;
-	for (i=0; i < sz; i++)
+	for (i=0; set[i].msg != NULL; i++)
 	{
 		printf("rule: %s usage=%d\n", set[i].msg, set[i].use_count);
 	}
@@ -1073,19 +1073,19 @@ static void report_pp_stats(Postprocessor *pp)
 	kno = pp->knowledge;
 
 	printf("PP stats: connected_rules\n");
-	report_rule_use(kno->connected_rules, kno->n_connected_rules);
+	report_rule_use(kno->connected_rules);
 
 	printf("PP stats: form_a_cycle_rules\n");
-	report_rule_use(kno->form_a_cycle_rules, kno->n_form_a_cycle_rules);
+	report_rule_use(kno->form_a_cycle_rules);
 
 	printf("PP stats: contains_one_rules\n");
-	report_rule_use(kno->contains_one_rules, kno->n_contains_one_rules);
+	report_rule_use(kno->contains_one_rules);
 
 	printf("PP stats: contains_none_rules\n");
-	report_rule_use(kno->contains_none_rules, kno->n_contains_none_rules);
+	report_rule_use(kno->contains_none_rules);
 
 	printf("PP stats: bounded_rules\n");
-	report_rule_use(kno->bounded_rules, kno->n_bounded_rules);
+	report_rule_use(kno->bounded_rules);
 }
 
 /**
