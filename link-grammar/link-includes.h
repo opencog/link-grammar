@@ -283,7 +283,7 @@ link_public_api(char *)
 link_public_api(void)
      linkage_free_diagram(char * str);
 link_public_api(char *)
-     linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header);
+     linkage_print_postscript(const Linkage linkage, bool display_walls, bool print_ps_header);
 link_public_api(void)
      linkage_free_postscript(char * str);
 link_public_api(char *)

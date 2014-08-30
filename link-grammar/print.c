@@ -718,7 +718,7 @@ void linkage_free_senses(char * s)
 static const char * trailer(bool print_ps_header);
 static const char * header(bool print_ps_header);
 
-char * linkage_print_postscript(Linkage linkage, bool display_walls, bool print_ps_header)
+char * linkage_print_postscript(const Linkage linkage, bool display_walls, bool print_ps_header)
 {
 	char * ps, * qs;
 	int size;
