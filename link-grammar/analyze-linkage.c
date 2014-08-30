@@ -957,7 +957,7 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	Linkage_info li;
 	DIS_node *d_root;
 	PP_node *pp;
-	Postprocessor *postprocessor;
+	Postprocessor *postprocessor = sent->dict->postprocessor;
 	Sublinkage *sublinkage;
 	Parse_info pi = sent->parse_info;
 	PP_node accum;			   /* for domain ancestry check */
@@ -966,7 +966,6 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 	analyze_context_t *actx = sent->analyze_ctxt;
 
 	sublinkage = x_create_sublinkage(pi);
-	postprocessor = sent->dict->postprocessor;
 	build_digraph(actx, pi);
 	actx->structure_violation = FALSE;
 	d_root = build_DIS_CON_tree(actx, pi); /* may set structure_violation to TRUE */
@@ -1049,12 +1048,12 @@ Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_
 
 		/* 'analyze_pass' logic added ALB 1/97 */
 		if (analyze_pass == PP_FIRST_PASS) {
-			post_process_scan_linkage(postprocessor,opts,sent,sublinkage);
+			post_process_scan_linkage(postprocessor, opts, sent, sublinkage);
 			if (!advance_DIS(d_root)) break;
 			else continue;
 		}
 
-		pp = do_post_process(postprocessor, opts, sent, sublinkage, TRUE);
+		pp = do_post_process(postprocessor, opts, sent, sublinkage, true);
 
 		if (pp==NULL) {
 			if (postprocessor != NULL) li.N_violations = 1;
@@ -1114,15 +1113,14 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	size_t i;
 	Linkage_info li;
 	PP_node * pp;
-	Postprocessor * postprocessor;
 	Sublinkage *sublinkage;
+	Postprocessor * postprocessor = sent->dict->postprocessor;
 	Parse_info pi = sent->parse_info;
 #ifdef USE_FAT_LINKAGES
 	analyze_context_t *actx = sent->analyze_ctxt;
 #endif /* USE_FAT_LINKAGES */
 
 	sublinkage = x_create_sublinkage(pi);
-	postprocessor = sent->dict->postprocessor;
 
 	compute_link_names(sent);
 	for (i=0; i<pi->N_links; i++)
@@ -1146,7 +1144,7 @@ Linkage_info analyze_thin_linkage(Sentence sent, Parse_Options opts, int analyze
 	 * For this to work, however, you have to call "build_digraph"
 	 * first (as in analyze_fat_linkage), and then "free_digraph".
 	 */
-	pp = do_post_process(postprocessor, opts, sent, sublinkage, TRUE);
+	pp = do_post_process(postprocessor, opts, sent, sublinkage, true);
 
 	memset(&li, 0, sizeof(li));
 	li.N_violations = 0;

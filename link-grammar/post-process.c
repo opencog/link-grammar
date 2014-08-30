@@ -1057,7 +1057,7 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
  * is to be ignored
  */
 PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
-							Sentence sent, Sublinkage *sublinkage, int cleanup)
+                         Sentence sent, Sublinkage *sublinkage, bool cleanup)
 {
 	const char *msg;
 
