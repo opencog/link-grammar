@@ -145,7 +145,7 @@ struct Disjunct_struct
     const char * string;
     Connector *left, *right;
     double cost;
-    char marked;
+    bool marked;
 };
 
 typedef struct Match_node_struct Match_node;

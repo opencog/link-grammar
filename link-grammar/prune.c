@@ -599,26 +599,28 @@ static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
  * if this happens, it constitutes a proof that there is absolutely
  * no use for d2.
  */
-static int disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
+static bool disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
 {
 	Connector *e1, *e2;
-	if (d1->cost > d2->cost) return FALSE;
+	if (d1->cost > d2->cost) return false;
 	e1 = d1->left;
 	e2 = d2->left;
-	while((e1!=NULL) && (e2!=NULL)) {
+	while((e1!=NULL) && (e2!=NULL))
+	{
 		if (!connector_matches_alam(e1,e2)) break;
 		e1 = e1->next;
 		e2 = e2->next;
 	}
-	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	if ((e1!=NULL) || (e2!=NULL)) return false;
 	e1 = d1->right;
 	e2 = d2->right;
-	while((e1!=NULL) && (e2!=NULL)) {
+	while((e1!=NULL) && (e2!=NULL))
+	{
 		if (!connector_matches_alam(e1,e2)) break;
 		e1 = e1->next;
 		e2 = e2->next;
 	}
-	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	if ((e1!=NULL) || (e2!=NULL)) return false;
 	return (strcmp(d1->string, d2->string) == 0);
 }
 
@@ -816,17 +818,17 @@ static inline bool matches_S(connector_table *ct, Connector * c, char dir)
 	{
 		for (e = ct[h]; e != NULL; e = e->tableNext)
 		{
-			if (prune_match(0, e, c)) return TRUE;
+			if (prune_match(0, e, c)) return true;
 		}
-		return FALSE;
+		return false;
 	}
 	else
 	{
 		for (e = ct[h]; e != NULL; e = e->tableNext)
 		{
-			if (prune_match(0, c, e)) return TRUE;
+			if (prune_match(0, c, e)) return true;
 		}
-		return FALSE;
+		return false;
 	}
 }
 
@@ -1132,7 +1134,7 @@ static void power_table_delete(power_table *pt)
  * The disjunct d (whose left or right pointer points to c) is put
  * into the appropriate hash table
  */
-static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, Boolean shal)
+static void put_into_power_table(unsigned int size, C_list ** t, Connector * c, bool shal)
 {
 	unsigned int h;
 	C_list * m;
@@ -1219,9 +1221,9 @@ static power_table * power_table_new(Sentence sent)
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
 			c = d->left;
 			if (c != NULL) {
-				put_into_power_table(size, t, c, TRUE);
+				put_into_power_table(size, t, c, true);
 				for (c=c->next; c!=NULL; c=c->next){
-					put_into_power_table(size, t, c, FALSE);
+					put_into_power_table(size, t, c, false);
 				}
 			}
 		}
@@ -1236,9 +1238,9 @@ static power_table * power_table_new(Sentence sent)
 		for (d=sent->word[w].d; d!=NULL; d=d->next) {
 			c = d->right;
 			if (c != NULL) {
-				put_into_power_table(size, t, c, TRUE);
+				put_into_power_table(size, t, c, true);
 				for (c=c->next; c!=NULL; c=c->next){
-					put_into_power_table(size, t, c, FALSE);
+					put_into_power_table(size, t, c, false);
 				}
 			}
 		}
@@ -1277,14 +1279,14 @@ static void clean_table(unsigned int size, C_list ** t)
  * possible for these two to match based on local considerations.
  */
 #ifdef USE_FAT_LINKAGES
-static Boolean possible_connection(prune_context *pc,
+static bool possible_connection(prune_context *pc,
                                Connector *lc, Connector *rc,
-                               Boolean lshallow, Boolean rshallow,
+                               bool lshallow, bool rshallow,
                                int lword, int rword)
 {
-	if ((!lshallow) && (!rshallow)) return FALSE;
+	if ((!lshallow) && (!rshallow)) return false;
 	  /* two deep connectors can't work */
-	if ((lc->word > rword) || (rc->word < lword)) return FALSE;
+	if ((lc->word > rword) || (rc->word < lword)) return false;
 	  /* word range constraints */
 
 	assert(lword < rword, "Bad word order in possible connection.");
@@ -1297,24 +1299,24 @@ static Boolean possible_connection(prune_context *pc,
 
 	if (pc->power_prune_mode == RUTHLESS) {
 		if (lword == rword-1) {
-			if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
+			if (!((lc->next == NULL) && (rc->next == NULL))) return false;
 		} else {
 			if ((!pc->null_links) &&
 				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi)) {
-				return FALSE;
+				return false;
 			}
 		}
 		return do_match(pc->sent->count_ctxt, lc, rc, lword, rword);
 	} else {
 		if (lword == rword-1) {
-			if (!((lc->next == NULL) && (rc->next == NULL))) return FALSE;
+			if (!((lc->next == NULL) && (rc->next == NULL))) return false;
 		} else {
 			if ((!pc->null_links) &&
 				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi)
 				&& !pc->deletable[lword][rword]
 				)
 			{
-				return FALSE;
+				return false;
 			}
 		}
 		return prune_match(pc->effective_dist[lword][rword], lc, rc);
@@ -1359,9 +1361,9 @@ static bool possible_connection(prune_context *pc,
  * This returns TRUE if the right table of word w contains
  * a connector that can match to c.  shallow tells if c is shallow.
  */
-static Boolean
+static bool
 right_table_search(prune_context *pc, int w, Connector *c,
-                   Boolean shallow, int word_c)
+                   bool shallow, int word_c)
 {
 	unsigned int size, h;
 	C_list *cl;
@@ -1374,17 +1376,17 @@ right_table_search(prune_context *pc, int w, Connector *c,
 	{
 		if (possible_connection(pc, cl->c, c, cl->shallow, shallow, w, word_c))
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 /**
  * This returns TRUE if the right table of word w contains
  * a connector that can match to c.  shallows tells if c is shallow
  */
-static Boolean
+static bool
 left_table_search(prune_context *pc, int w, Connector *c,
                   Boolean shallow, int word_c)
 {
@@ -1398,9 +1400,9 @@ left_table_search(prune_context *pc, int w, Connector *c,
 	for (cl = pt->l_table[w][h]; cl != NULL; cl = cl->next)
 	{
 		if (possible_connection(pc, c, cl->c, shallow, cl->shallow, word_c, w))
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 /**
@@ -1413,25 +1415,28 @@ left_table_search(prune_context *pc, int w, Connector *c,
  */
 static int
 left_connector_list_update(prune_context *pc, Connector *c,
-                           int word_c, int w, Boolean shallow)
+                           int word_c, int w, bool shallow)
 {
 	int n;
-	int foundmatch;
+	bool foundmatch;
 
 	if (c == NULL) return w;
-	n = left_connector_list_update(pc, c->next, word_c, w, FALSE) - 1;
+	n = left_connector_list_update(pc, c->next, word_c, w, false) - 1;
 	if (((int) c->word) < n) n = c->word;
 
 	/* n is now the rightmost word we need to check */
-	foundmatch = FALSE;
-	for (; n >= 0 ; n--) {
+	foundmatch = false;
+	for (; n >= 0 ; n--)
+	{
 		pc->power_cost++;
-		if (right_table_search(pc, n, c, shallow, word_c)) {
-			foundmatch = TRUE;
+		if (right_table_search(pc, n, c, shallow, word_c))
+		{
+			foundmatch = true;
 			break;
 		}
 	}
-	if (n < ((int) c->word)) {
+	if (n < ((int) c->word))
+	{
 		c->word = n;
 		pc->N_changed++;
 	}
@@ -1454,15 +1459,17 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 	bool foundmatch;
 
 	if (c == NULL) return w;
-	n = right_connector_list_update(pc, sent, c->next, word_c, w, FALSE) + 1;
+	n = right_connector_list_update(pc, sent, c->next, word_c, w, false) + 1;
 	if (c->word > n) n = c->word;
 
 	/* n is now the leftmost word we need to check */
-	foundmatch = FALSE;
-	for (; n < sent->length ; n++) {
+	foundmatch = false;
+	for (; n < sent->length ; n++)
+	{
 		pc->power_cost++;
-		if (left_table_search(pc, n, c, shallow, word_c)) {
-			foundmatch = TRUE;
+		if (left_table_search(pc, n, c, shallow, word_c))
+		{
+			foundmatch = true;
 			break;
 		}
 	}
@@ -1724,14 +1731,14 @@ static unsigned int cms_hash(const char * s)
  * This returns TRUE if there is a connector name C in the table
  * such that post_process_match(pp_match_name, C) is TRUE
  */
-static int match_in_cms_table(multiset_table *cmt, const char * pp_match_name)
+static bool match_in_cms_table(multiset_table *cmt, const char * pp_match_name)
 {
 	Cms * cms;
 	for (cms = cmt->cms_table[cms_hash(pp_match_name)]; cms != NULL; cms = cms->next)
 	{
-		if(post_process_match(pp_match_name, cms->name)) return TRUE;
+		if (post_process_match(pp_match_name, cms->name)) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 static Cms * lookup_in_cms_table(multiset_table *cmt, const char * str)
@@ -1766,18 +1773,18 @@ static void insert_in_cms_table(multiset_table *cmt, const char * str)
  * Delete the given string from the table.  Return TRUE if
  * this caused a count to go to 0, return FALSE otherwise.
  */
-static int delete_from_cms_table(multiset_table *cmt, const char * str)
+static bool delete_from_cms_table(multiset_table *cmt, const char * str)
 {
-	Cms * cms;
-	cms = lookup_in_cms_table(cmt, str);
-	if (cms != NULL && cms->count > 0) {
+	Cms * cms = lookup_in_cms_table(cmt, str);
+	if (cms != NULL && cms->count > 0)
+	{
 		cms->count--;
 		return (cms->count == 0);
 	}
-	return FALSE;
+	return false;
 }
 
-static Boolean rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
+static bool rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 {
 	unsigned int hashval;
 	const char * t;
@@ -1828,17 +1835,18 @@ static Boolean rule_satisfiable(multiset_table *cmt, pp_linkset *ls)
 			/* now if bad==0 this criterion link does the job
 			   to satisfy the needs of the trigger link */
 
-			if (bad == 0) return TRUE;
+			if (bad == 0) return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 static int pp_prune(Sentence sent, Parse_Options opts)
 {
 	pp_knowledge * knowledge;
 	size_t i, w;
-	int change, total_deleted, N_deleted, deleteme;
+	int total_deleted, N_deleted;
+	bool change, deleteme;
 	multiset_table *cmt;
 
 	if (sent->dict->postprocessor == NULL) return 0;
@@ -1853,7 +1861,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		for (d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			char dir;
-			d->marked = TRUE;
+			d->marked = true;
 			for (dir=0; dir < 2; dir++)
 			{
 				Connector *c;
@@ -1866,10 +1874,10 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 	}
 
 	total_deleted = 0;
-	change = 1;
-	while (change > 0)
+	change = true;
+	while (change)
 	{
-		change = 0;
+		change = false;
 		N_deleted = 0;
 		for (w = 0; w < sent->length; w++)
 		{
@@ -1878,7 +1886,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 			{
 				char dir;
 				if (!d->marked) continue;
-				deleteme = FALSE;
+				deleteme = false;
 				for (dir = 0; dir < 2; dir++)
 				{
 					Connector *c;
@@ -1903,7 +1911,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 							if (!rule_satisfiable(cmt, link_set))
 							{
-								deleteme = TRUE;
+								deleteme = true;
 								rule->use_count++;
 							}
 							if (deleteme) break;
@@ -1918,13 +1926,13 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 					char dir;
 					N_deleted++;
 					total_deleted++;
-					d->marked = FALSE; /* mark for deletion later */
+					d->marked = false; /* mark for deletion later */
 					for (dir=0; dir < 2; dir++)
 					{
 						Connector *c;
 						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 						{
-							change += delete_from_cms_table(cmt, c->string);
+							change |= delete_from_cms_table(cmt, c->string);
 						}
 					}
 				}

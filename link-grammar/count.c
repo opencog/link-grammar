@@ -696,7 +696,7 @@ static void mark_region(match_context_t *mchxt, count_context_t *ctxt,
 		w = lw+1;
 		for (d = ctxt->local_sent[w].d; d != NULL; d = d->next) {
 			if ((d->left == NULL) && region_valid(mchxt, ctxt, w, rw, d->right, NULL)) {
-				d->marked = TRUE;
+				d->marked = true;
 				mark_region(mchxt, ctxt, w, rw, d->right, NULL);
 			}
 		}
@@ -739,7 +739,7 @@ static void mark_region(match_context_t *mchxt, count_context_t *ctxt,
 
 			if (left_valid && region_valid(mchxt, ctxt, w, rw, d->right, re))
 			{
-				d->marked = TRUE;
+				d->marked = true;
 				mark_region(mchxt, ctxt, w, rw, d->right, re);
 				mark_region(mchxt, ctxt, lw, w, le->next, d->left->next);
 				if (le->multi) mark_region(mchxt, ctxt, lw, w, le, d->left->next);
@@ -749,7 +749,7 @@ static void mark_region(match_context_t *mchxt, count_context_t *ctxt,
 
 			if (right_valid && region_valid(mchxt, ctxt, lw, w, le, d->left))
 			{
-				d->marked = TRUE;
+				d->marked = true;
 				mark_region(mchxt, ctxt, lw, w, le, d->left);
 				mark_region(mchxt, ctxt, w, rw, d->right->next,re->next);
 				if (d->right->multi) mark_region(mchxt, ctxt, w, rw, d->right, re->next);
@@ -759,7 +759,7 @@ static void mark_region(match_context_t *mchxt, count_context_t *ctxt,
 
 			if (left_valid && right_valid)
 			{
-				d->marked = TRUE;
+				d->marked = true;
 				mark_region(mchxt, ctxt, lw, w, le->next, d->left->next);
 				if (le->multi) mark_region(mchxt, ctxt, lw, w, le, d->left->next);
 				if (d->left->multi) mark_region(mchxt, ctxt, lw, w, le->next, d->left);
@@ -823,7 +823,7 @@ void conjunction_prune(Sentence sent, count_context_t *ctxt, Parse_Options opts)
 	   */
 	for (w=0; w<sent->length; w++) {
 		for (d=sent->word[w].d; d != NULL; d=d->next) {
-			d->marked = FALSE;
+			d->marked = false;
 		}
 	}
 
@@ -834,7 +834,7 @@ void conjunction_prune(Sentence sent, count_context_t *ctxt, Parse_Options opts)
 	for (d = sent->word[0].d; d != NULL; d = d->next) {
 		if ((d->left == NULL) && region_valid(mchxt, ctxt, 0, sent->length, d->right, NULL)) {
 			mark_region(mchxt, ctxt, 0, sent->length, d->right, NULL);
-			d->marked = TRUE;
+			d->marked = true;
 		}
 	}
 	mark_region(mchxt, ctxt, 0, sent->length, NULL, NULL);
@@ -850,7 +850,7 @@ void conjunction_prune(Sentence sent, count_context_t *ctxt, Parse_Options opts)
 				for (d = sent->word[w].d; d != NULL; d = d->next) {
 					if ((d->left == NULL) && region_valid(mchxt, ctxt, w, sent->length, d->right, NULL)) {
 						mark_region(mchxt, ctxt, w, sent->length, d->right, NULL);
-						d->marked = TRUE;
+						d->marked = true;
 					}
 				}
 			}
