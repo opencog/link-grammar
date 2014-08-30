@@ -146,6 +146,7 @@ static void read_connected_rule(pp_knowledge *k, const char *label)
      rule (besides its presence) is the error message to display if
      the rule is violated */
   k->connected_rules = (pp_rule *) xalloc (sizeof(pp_rule));
+  k->connected_rules[0].use_count = 0;
   if (!pp_lexer_set_label(k->lt, label))
     {
       k->connected_rules[0].msg=0;  /* rule not there */
@@ -191,7 +192,7 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
       lsHandle = pp_linkset_open(n_tokens);
       for (i=0; i<n_tokens; i++)
           pp_linkset_add(lsHandle,string_set_add(tokens[i], k->string_set));
-      k->form_a_cycle_rules[r].link_set=lsHandle;
+      k->form_a_cycle_rules[r].link_set = lsHandle;
 
       /* read error message */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
@@ -200,11 +201,13 @@ static void read_form_a_cycle_rules(pp_knowledge *k, const char *label)
          prt_error("Fatal Error: post_process: Invalid syntax (rule %zu of %s)",r+1,label);
          exit(1);
       }
-      k->form_a_cycle_rules[r].msg=string_set_add(tokens[0],k->string_set);
+      k->form_a_cycle_rules[r].msg = string_set_add(tokens[0], k->string_set);
+      k->form_a_cycle_rules[r].use_count = 0;
     }
 
   /* sentinel entry */
   k->form_a_cycle_rules[k->n_form_a_cycle_rules].msg = 0;
+  k->form_a_cycle_rules[k->n_form_a_cycle_rules].use_count = 0;
 }
 
 static void read_bounded_rules(pp_knowledge *k, const char *label)
@@ -223,7 +226,7 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
   k->bounded_rules = (pp_rule*) xalloc ((1+k->n_bounded_rules)*sizeof(pp_rule));
   for (r=0; r<k->n_bounded_rules; r++)
     {
-      /* read domain */	
+      /* read domain */
       tokens = pp_lexer_get_next_group_of_tokens_of_label(k->lt, &n_tokens);
       if (n_tokens!=1)
       {
@@ -240,10 +243,12 @@ static void read_bounded_rules(pp_knowledge *k, const char *label)
         exit(1);
       }
       k->bounded_rules[r].msg = string_set_add(tokens[0], k->string_set);
+      k->bounded_rules[r].use_count = 0;
     }
 
   /* sentinel entry */
   k->bounded_rules[k->n_bounded_rules].msg = 0;
+  k->bounded_rules[k->n_bounded_rules].use_count = 0;
 }
 
 static void read_contains_rules(pp_knowledge *k, const char *label,
@@ -291,10 +296,12 @@ static void read_contains_rules(pp_knowledge *k, const char *label,
         "Fatal Error: post_process: Invalid syntax in %s (rule %zu)", label, r+1);
 
       (*rules)[r].msg = string_set_add(tokens[0], k->string_set);
+      (*rules)[r].use_count = 0;
     }
 
   /* sentinel entry */
   (*rules)[*nRules].msg = 0;
+  (*rules)[*nRules].use_count = 0;
 }
 
 
@@ -329,7 +336,7 @@ static void free_rules(pp_knowledge *k)
     pp_linkset_close(k->form_a_cycle_rules[r].link_set);
   xfree((void*)k->bounded_rules,           rs*(1+k->n_bounded_rules));
   xfree((void*)k->connected_rules,         rs);
-  xfree((void*)k->form_a_cycle_rules, rs*(1+k->n_form_a_cycle_rules));
+  xfree((void*)k->form_a_cycle_rules,      rs*(1+k->n_form_a_cycle_rules));
   xfree((void*)k->contains_one_rules,      rs*(1+k->n_contains_one_rules));
   xfree((void*)k->contains_none_rules,     rs*(1+k->n_contains_none_rules));
 }

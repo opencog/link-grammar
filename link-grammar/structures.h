@@ -353,6 +353,7 @@ typedef struct pp_rule_s
     int   domain;         /* type of domain to which rule applies    */
     const char  **link_array; /* array holding the spelled-out names */
     const char  *msg;     /* explanation (NULL=end sentinel in array)*/
+    int use_count;        /* Number of times rule has been applied   */
 } pp_rule;
 
 typedef struct PPLexTable_s PPLexTable;
