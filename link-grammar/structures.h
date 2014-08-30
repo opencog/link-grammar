@@ -375,7 +375,6 @@ struct pp_knowledge_s
     pp_linkset *left_domain_starter_links;
 
     /* arrays of rules specified in knowledge file */
-    pp_rule *connected_rules;
     pp_rule *form_a_cycle_rules;
     pp_rule *contains_one_rules;
     pp_rule *contains_none_rules;

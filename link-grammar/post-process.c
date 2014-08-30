@@ -208,30 +208,6 @@ static void connectivity_dfs(Postprocessor *pp, Sublinkage *sublinkage,
 }
 #endif /* THIS_FUNCTION_IS_NOT_CURRENTLY_USED */
 
-static void mark_reachable_words(Postprocessor *pp, int w)
-{
-	List_o_links *lol;
-	if (pp->visited[w]) return;
-	pp->visited[w] = true;
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
-		mark_reachable_words(pp, lol->word);
-}
-
-/**
- * Returns true if the linkage is connected, considering words
- * that have at least one edge....this allows conjunctive sentences
- * not to be thrown out. */
-static bool is_connected(Postprocessor *pp)
-{
-	size_t i;
-	for (i=0; i<pp->pp_data.length; i++)
-		pp->visited[i] = (pp->pp_data.word_links[i] == NULL);
-	mark_reachable_words(pp, 0);
-	for (i=0; i<pp->pp_data.length; i++)
-		if (!pp->visited[i]) return false;
-	return true;
-}
-
 static void chk_d_type(PP_node* ppn, size_t idx)
 {
 	if (ppn->dtsz <= idx)
@@ -485,15 +461,6 @@ apply_contains_one_globally(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *
 		}
 	}
 	if (count == 0) return false; else return true;
-}
-
-static bool
-apply_connected(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
-{
-	/* There is actually just one (or none, if user didn't specify it)
-	 * rule asserting that linkage is connected. */
-	if (!is_connected(pp)) return false;
-	return true;
 }
 
 /**
@@ -913,8 +880,6 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 									pp->relevant_contains_none_rules, msg)) return 1;
 	if (!apply_rules(pp, apply_must_form_a_cycle, sublinkage,
 					 pp->knowledge->form_a_cycle_rules,msg)) return 1;
-	if (!apply_rules(pp, apply_connected, sublinkage,
-					 pp->knowledge->connected_rules, msg)) return 1;
 	if (!apply_rules(pp, apply_bounded, sublinkage,
 					 pp->knowledge->bounded_rules, msg)) return 1;
 	return 0; /* This linkage satisfied all the rules */
@@ -1091,9 +1056,6 @@ static void report_pp_stats(Postprocessor *pp)
 
 	printf("PP stats: local_rules_firing=%d\n", pp->n_local_rules_firing);
 	kno = pp->knowledge;
-
-	printf("\nPP stats: connected_rules\n");
-	rule_cnt += report_rule_use(kno->connected_rules);
 
 	printf("\nPP stats: form_a_cycle_rules\n");
 	rule_cnt += report_rule_use(kno->form_a_cycle_rules);
