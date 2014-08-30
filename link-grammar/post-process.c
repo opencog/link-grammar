@@ -248,9 +248,9 @@ static void build_type_array(Postprocessor *pp)
 	D_type_list * dtl;
 	size_t d;
 	List_o_links * lol;
-	for (d=0; d<pp->pp_data.N_domains; d++)
+	for (d = 0; d < pp->pp_data.N_domains; d++)
 	{
-		for (lol=pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
+		for (lol = pp->pp_data.domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
 			chk_d_type(pp->pp_node, lol->link);
 			dtl = (D_type_list *) xalloc(sizeof(D_type_list));
@@ -261,15 +261,22 @@ static void build_type_array(Postprocessor *pp)
 	}
 }
 
+#ifndef USE_FAT_LINKAGES
+static
+#endif /* USE_FAT_LINKAGES */
 void free_d_type(D_type_list * dtl)
 {
 	D_type_list * dtlx;
-	for (; dtl!=NULL; dtl=dtlx) {
+	for (; dtl != NULL; dtl = dtlx)
+	{
 		dtlx = dtl->next;
 		xfree((void*) dtl, sizeof(D_type_list));
 	}
 }
 
+#ifndef USE_FAT_LINKAGES
+static
+#endif /* USE_FAT_LINKAGES */
 D_type_list * copy_d_type(const D_type_list * dtl)
 {
 	D_type_list *dtlx, *dtlcurr=NULL, *dtlhead=NULL;
@@ -1049,6 +1056,10 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 	}
 }
 
+static void report_pp_stats(Postprocessor *pp)
+{
+}
+
 /**
  * Takes a sublinkage and returns:
  *  . for each link, the domain structure of that link
@@ -1085,6 +1096,7 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 			/* some global test failed even before we had to build the domains */
 			pp->n_global_rules_firing++;
 			pp->pp_node->violation = msg;
+			report_pp_stats(pp);
 			return pp->pp_node;
 			break;
 		case 1:
@@ -1097,6 +1109,8 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 			pp->pp_node->violation = NULL;
 			break;
 	}
+
+	report_pp_stats(pp);
 
 	build_type_array(pp);
 	if (cleanup)
