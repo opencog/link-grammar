@@ -1060,7 +1060,7 @@ static void report_rule_use(pp_rule *set)
 	size_t i;
 	for (i=0; set[i].msg != NULL; i++)
 	{
-		printf("rule: %s usage=%d\n", set[i].msg, set[i].use_count);
+		printf("usage: %d rule: %s\n", set[i].use_count, set[i].msg);
 	}
 }
 
