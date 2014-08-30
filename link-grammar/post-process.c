@@ -274,9 +274,7 @@ void free_d_type(D_type_list * dtl)
 	}
 }
 
-#ifndef USE_FAT_LINKAGES
-static
-#endif /* USE_FAT_LINKAGES */
+#ifdef USE_FAT_LINKAGES
 D_type_list * copy_d_type(const D_type_list * dtl)
 {
 	D_type_list *dtlx, *dtlcurr=NULL, *dtlhead=NULL;
@@ -297,6 +295,7 @@ D_type_list * copy_d_type(const D_type_list * dtl)
 	}
 	return dtlhead;
 }
+#endif /* USE_FAT_LINKAGES */
 
 /** free the pp node from last time */
 static void free_pp_node(Postprocessor *pp)
@@ -1056,8 +1055,37 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 	}
 }
 
+static void report_rule_use(pp_rule *set, size_t sz)
+{
+	size_t i;
+	for (i=0; i < sz; i++)
+	{
+		printf("rule: %s usage=%d\n", set[i].msg, set[i].use_count);
+	}
+}
+
 static void report_pp_stats(Postprocessor *pp)
 {
+	pp_knowledge * kno;
+	if (verbosity < 3) return;
+
+	printf("PP stats: local_rules_firing=%d\n", pp->n_local_rules_firing);
+	kno = pp->knowledge;
+
+	printf("PP stats: connected_rules\n");
+	report_rule_use(kno->connected_rules, kno->n_connected_rules);
+
+	printf("PP stats: form_a_cycle_rules\n");
+	report_rule_use(kno->form_a_cycle_rules, kno->n_form_a_cycle_rules);
+
+	printf("PP stats: contains_one_rules\n");
+	report_rule_use(kno->contains_one_rules, kno->n_contains_one_rules);
+
+	printf("PP stats: contains_none_rules\n");
+	report_rule_use(kno->contains_none_rules, kno->n_contains_none_rules);
+
+	printf("PP stats: bounded_rules\n");
+	report_rule_use(kno->bounded_rules, kno->n_bounded_rules);
 }
 
 /**
