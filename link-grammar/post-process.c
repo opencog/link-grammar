@@ -339,14 +339,14 @@ static bool apply_rules(Postprocessor *pp,
 							 const char **msg)
 {
 	int i;
-	for (i=0; (*msg=rule_array[i].msg)!=NULL; i++)
+	for (i=0; (*msg = rule_array[i].msg) != NULL; i++)
 		if (!applyfn(pp, sublinkage, &(rule_array[i]))) return false;
 	return true;
 }
 
 static bool
 apply_relevant_rules(Postprocessor *pp,
-						 bool(applyfn)(Postprocessor *, Sublinkage*, pp_rule *),
+						 bool (applyfn)(Postprocessor *, Sublinkage*, pp_rule *),
 						 Sublinkage *sublinkage,
 						 pp_rule *rule_array,
 						 int *relevant_rules,
@@ -356,12 +356,13 @@ apply_relevant_rules(Postprocessor *pp,
 
 	/* if we didn't accumulate link names for this sentence, we need to apply
 		 all rules */
-	if (pp_linkset_population(pp->set_of_links_of_sentence)==0) {
+	if (pp_linkset_population(pp->set_of_links_of_sentence) == 0) {
 			return apply_rules(pp, applyfn, sublinkage, rule_array, msg);
 	}
 
 	/* we did, and we don't */
-	for (i=0; (idx=relevant_rules[i])!=-1; i++) {
+	for (i = 0; (idx = relevant_rules[i]) != -1; i++)
+	{
 			*msg = rule_array[idx].msg;
 			if (!applyfn(pp, sublinkage, &(rule_array[idx]))) return false;
 	}
@@ -379,26 +380,28 @@ apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 	DTreeLeaf * dtl;
 	size_t d, count;
 	for (d=0; d<pp->pp_data.N_domains; d++)
-		{
-			for (dtl = pp->pp_data.domain_array[d].child;
-			 dtl != NULL &&
-				 !post_process_match(rule->selector,
-								 sublinkage->link[dtl->link]->link_name);
-			 dtl = dtl->next) {}
-			if (dtl != NULL)
+	{
+		for (dtl = pp->pp_data.domain_array[d].child;
+		     dtl != NULL &&
+		        !post_process_match(rule->selector,
+		           sublinkage->link[dtl->link]->link_name);
+		     dtl = dtl->next) {}
+		if (dtl != NULL)
 		{
 			/* selector link of rule appears in this domain */
 			count=0;
 			for (dtl = pp->pp_data.domain_array[d].child; dtl != NULL; dtl = dtl->next)
+			{
 				if (string_in_list(sublinkage->link[dtl->link]->link_name,
 									 rule->link_array))
-					{
-				count=1;
-				break;
-					}
+				{
+					count=1;
+					break;
+				}
+			}
 			if (count == 0) return FALSE;
 		}
-		}
+	}
 	return TRUE;
 }
 
@@ -416,17 +419,19 @@ apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 	{
 		DTreeLeaf * dtl;
 		for (dtl = pp->pp_data.domain_array[d].child;
-			 dtl != NULL &&
-				 !post_process_match(rule->selector,
-								 sublinkage->link[dtl->link]->link_name);
-			 dtl = dtl->next) {}
+		     dtl != NULL &&
+		         !post_process_match(rule->selector,
+		                  sublinkage->link[dtl->link]->link_name);
+		     dtl = dtl->next) {}
 		if (dtl != NULL)
 		{
 			/* selector link of rule appears in this domain */
 			for (dtl = pp->pp_data.domain_array[d].child; dtl != NULL; dtl = dtl->next)
+			{
 				if (string_in_list(sublinkage->link[dtl->link]->link_name,
-									 rule->link_array))
+				                   rule->link_array))
 					return FALSE;
+			}
 		}
 	}
 	return TRUE;
@@ -441,7 +446,8 @@ static bool
 apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
 {
 	size_t i,j,count;
-	for (i=0; i<sublinkage->num_links; i++) {
+	for (i=0; i<sublinkage->num_links; i++)
+	{
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[i]->lw == SIZE_MAX) continue;
 #else
@@ -453,7 +459,8 @@ apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *ru
 
 	/* selector link of rule appears in sentence */
 	count = 0;
-	for (j=0; j<sublinkage->num_links && count==0; j++) {
+	for (j = 0; j < sublinkage->num_links && count == 0; j++)
+	{
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[j]->lw == SIZE_MAX) continue;
 #else
@@ -461,7 +468,7 @@ apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *ru
 #endif
 		if (string_in_list(sublinkage->link[j]->link_name, rule->link_array))
 		{
-			count=1;
+			count = 1;
 			break;
 		}
 	}
@@ -472,7 +479,7 @@ static bool
 apply_connected(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
 	/* There is actually just one (or none, if user didn't specify it)
-		 rule asserting that linkage is connected. */
+	 * rule asserting that linkage is connected. */
 	if (!is_connected(pp)) return false;
 	return true;
 }
@@ -513,7 +520,7 @@ apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage, pp_rule *rule)
 {
 	List_o_links *lol;
 	size_t w;
-	for (w=0; w<pp->pp_data.length; w++)
+	for (w = 0; w < pp->pp_data.length; w++)
 	{
 		for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
 		{
@@ -550,7 +557,7 @@ apply_bounded(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 	char d_type;
 	List_o_links * lol;
 	d_type = rule->domain;
-	for (d=0; d<pp->pp_data.N_domains; d++)
+	for (d = 0; d < pp->pp_data.N_domains; d++)
 	{
 		if (pp->pp_data.domain_array[d].type != d_type) continue;
 		lw = sublinkage->link[pp->pp_data.domain_array[d].start_link]->lw;
@@ -573,10 +580,10 @@ static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 	size_t i, link;
 	List_o_links * lol;
 
-	for (i=0; i<pp->pp_data.length; i++)
+	for (i = 0; i < pp->pp_data.length; i++)
 		pp->pp_data.word_links[i] = NULL;
 
-	for (link=0; link<sublinkage->num_links; link++)
+	for (link = 0; link < sublinkage->num_links; link++)
 	{
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
@@ -608,7 +615,7 @@ static void build_graph(Postprocessor *pp, Sublinkage *sublinkage)
 }
 
 static void setup_domain_array(Postprocessor *pp,
-									 int n, const char *string, int start_link)
+                               int n, const char *string, int start_link)
 {
 	/* set pp->visited[i] to FALSE */
 	memset(pp->visited, 0, pp->pp_data.length*(sizeof pp->visited[0]));
@@ -629,21 +636,26 @@ static void add_link_to_domain(Postprocessor *pp, int link)
 }
 
 static void depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
-									 size_t w, size_t root, size_t start_link)
+                               size_t w, size_t root, size_t start_link)
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
-		if (lol->word < w && lol->link != start_link) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
+		if (lol->word < w && lol->link != start_link)
+		{
 			add_link_to_domain(pp, lol->link);
 		}
 	}
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
 		if (!pp->visited[lol->word] && (lol->word != root) &&
-		!(lol->word < root && lol->word < w &&
-					pp_linkset_match(pp->knowledge->restricted_links,
-							 sublinkage->link[lol->link]->link_name)))
+		       !(lol->word < root && lol->word < w &&
+		       pp_linkset_match(pp->knowledge->restricted_links,
+		                sublinkage->link[lol->link]->link_name)))
+		{
 			depth_first_search(pp, sublinkage, lol->word, root, start_link);
+		}
 	}
 }
 
@@ -652,17 +664,22 @@ static void bad_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 {
 	List_o_links * lol;
 	pp->visited[w] = TRUE;
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
-		if ((lol->word < w)	&& (lol->link != start_link) && (w != root)) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
+		if ((lol->word < w)	&& (lol->link != start_link) && (w != root))
+		{
 			add_link_to_domain(pp, lol->link);
 		}
 	}
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
 		if ((!pp->visited[lol->word]) && !(w == root && lol->word < w) &&
-		!(lol->word < root && lol->word < w &&
-					pp_linkset_match(pp->knowledge->restricted_links,
-							 sublinkage->link[lol->link]->link_name)))
+		     !(lol->word < root && lol->word < w &&
+		          pp_linkset_match(pp->knowledge->restricted_links,
+		                sublinkage->link[lol->link]->link_name)))
+		{
 			bad_depth_first_search(pp, sublinkage, lol->word, root, start_link);
+		}
 	}
 }
 
@@ -671,18 +688,23 @@ static void d_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 {
 	List_o_links * lol;
 	pp->visited[w] = TRUE;
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
-		if ((lol->word < w) && (lol->link != start_link) && (w != root)) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
+		if ((lol->word < w) && (lol->link != start_link) && (w != root))
+		{
 			add_link_to_domain(pp, lol->link);
 		}
 	}
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
 		if (!pp->visited[lol->word] && !(w == root && lol->word >= right) &&
-		!(w == root && lol->word < root) &&
-		!(lol->word < root && lol->word < w &&
-					pp_linkset_match(pp->knowledge->restricted_links,
-							 sublinkage->link[lol->link]->link_name)))
+		    !(w == root && lol->word < root) &&
+		       !(lol->word < root && lol->word < w &&
+		          pp_linkset_match(pp->knowledge->restricted_links,
+		                   sublinkage->link[lol->link]->link_name)))
+		{
 			d_depth_first_search(pp,sublinkage,lol->word,root,right,start_link);
+		}
 	}
 }
 
@@ -691,19 +713,26 @@ static void left_depth_first_search(Postprocessor *pp, Sublinkage *sublinkage,
 {
 	List_o_links *lol;
 	pp->visited[w] = TRUE;
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
-		if (lol->word < w && lol->link != start_link) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
+		if (lol->word < w && lol->link != start_link)
+		{
 			add_link_to_domain(pp, lol->link);
 		}
 	}
-	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next) {
+	for (lol = pp->pp_data.word_links[w]; lol != NULL; lol = lol->next)
+	{
 		if (!pp->visited[lol->word] && (lol->word != right))
+		{
 			depth_first_search(pp, sublinkage, lol->word, right, start_link);
+		}
 	}
 }
 
 static int domain_compare(const Domain * d1, const Domain * d2)
-{ return (d1->size-d2->size); /* for sorting the domains by size */ }
+{
+	return (d1->size - d2->size); /* for sorting the domains by size */
+}
 
 static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 {
@@ -711,7 +740,8 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 	const char *s;
 	pp->pp_data.N_domains = 0;
 
-	for (link = 0; link<sublinkage->num_links; link++) {
+	for (link = 0; link<sublinkage->num_links; link++)
+	{
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
 #else
@@ -738,7 +768,7 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp, link);
 			bad_depth_first_search(pp,sublinkage,sublinkage->link[link]->rw,
-							 sublinkage->link[link]->lw, link);
+			                       sublinkage->link[link]->lw, link);
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
@@ -748,8 +778,8 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
 			/* do not add the starter link to its urfl_only domain */
 			d_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
-							 sublinkage->link[link]->lw,
-							 sublinkage->link[link]->rw, link);
+			                     sublinkage->link[link]->lw,
+			                     sublinkage->link[link]->rw, link);
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
@@ -759,7 +789,7 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 			setup_domain_array(pp, pp->pp_data.N_domains, s, link);
 			/* do not add the starter link to a left domain */
 			left_depth_first_search(pp,sublinkage, sublinkage->link[link]->lw,
-							 sublinkage->link[link]->rw, link);
+			                        sublinkage->link[link]->rw, link);
 			pp->pp_data.N_domains++;
 			assert(pp->pp_data.N_domains<PP_MAX_DOMAINS,"raise PP_MAX_DOMAINS value");
 		}
@@ -772,7 +802,8 @@ static void build_domains(Postprocessor *pp, Sublinkage *sublinkage)
 		(int (*)(const void *, const void *)) domain_compare);
 
 	/* sanity check: all links in all domains have a legal domain name */
-	for (d=0; d<pp->pp_data.N_domains; d++) {
+	for (d = 0; d < pp->pp_data.N_domains; d++)
+	{
 		i = find_domain_name(pp, pp->pp_data.domain_array[d].string);
 		if (i == SIZE_MAX)
 			 prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE",
@@ -788,15 +819,18 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 	if (pp->pp_data.N_domains > 0)
 	{
 		pp->pp_data.domain_array[pp->pp_data.N_domains-1].parent = NULL;
-		for (d=0; d < pp->pp_data.N_domains-1; d++) {
-			for (d1 = d+1; d1 < pp->pp_data.N_domains; d1++) {
-				if (contained_in(&pp->pp_data.domain_array[d],&pp->pp_data.domain_array[d1],sublinkage))
+		for (d=0; d < pp->pp_data.N_domains-1; d++)
+		{
+			for (d1 = d+1; d1 < pp->pp_data.N_domains; d1++)
+			{
+				if (contained_in(&pp->pp_data.domain_array[d], &pp->pp_data.domain_array[d1], sublinkage))
 				{
 					pp->pp_data.domain_array[d].parent = &pp->pp_data.domain_array[d1];
 					break;
 				}
 			}
-			if (d1 == pp->pp_data.N_domains) {
+			if (d1 == pp->pp_data.N_domains)
+			{
 				/* we know this domain is a root of a new tree */
 				pp->pp_data.domain_array[d].parent = NULL;
 			}
@@ -804,17 +838,21 @@ static void build_domain_forest(Postprocessor *pp, Sublinkage *sublinkage)
 	}
 	/* the parent links of domain nodes have been established.
 		 now do the leaves */
-	for (d=0; d < pp->pp_data.N_domains; d++) {
+	for (d = 0; d < pp->pp_data.N_domains; d++)
+	{
 		pp->pp_data.domain_array[d].child = NULL;
 	}
-	for (link=0; link < sublinkage->num_links; link++) {
+	for (link=0; link < sublinkage->num_links; link++)
+	{
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[link]->lw == SIZE_MAX) continue;
 #else
 		assert (sublinkage->link[link]->lw != SIZE_MAX);
 #endif
-		for (d=0; d<pp->pp_data.N_domains; d++) {
-			if (link_in_domain(link, &pp->pp_data.domain_array[d])) {
+		for (d=0; d<pp->pp_data.N_domains; d++)
+		{
+			if (link_in_domain(link, &pp->pp_data.domain_array[d]))
+			{
 				dtl = (DTreeLeaf *) xalloc(sizeof(DTreeLeaf));
 				dtl->link = link;
 				dtl->parent = &pp->pp_data.domain_array[d];
@@ -832,11 +870,11 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
 	size_t i;
 	/* quick test: try applying just the relevant global rules */
 	if (!apply_relevant_rules(pp,apply_contains_one_globally,
-								sublinkage,
-								pp->knowledge->contains_one_rules,
-								pp->relevant_contains_one_rules, msg))
+	                          sublinkage,
+	                          pp->knowledge->contains_one_rules,
+	                          pp->relevant_contains_one_rules, msg))
 	{
-		for (i=0; i<pp->pp_data.length; i++)
+		for (i = 0; i < pp->pp_data.length; i++)
 			pp->pp_data.word_links[i] = NULL;
 		pp->pp_data.N_domains = 0;
 		return -1;
@@ -880,16 +918,16 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
  */
 static void prune_irrelevant_rules(Postprocessor *pp)
 {
-	 pp_rule *rule;
-	 int coIDX, cnIDX, rcoIDX=0, rcnIDX=0;
+	pp_rule *rule;
+	int coIDX, cnIDX, rcoIDX=0, rcnIDX=0;
 
 	/* If we didn't scan any linkages, there's no pruning to be done. */
-	if (pp_linkset_population(pp->set_of_links_of_sentence)==0) return;
+	if (pp_linkset_population(pp->set_of_links_of_sentence) == 0) return;
 
-	for (coIDX=0;;coIDX++)
+	for (coIDX = 0; ; coIDX++)
 	{
 		rule = &(pp->knowledge->contains_one_rules[coIDX]);
-		if (rule->msg==NULL) break;
+		if (rule->msg == NULL) break;
 		if (pp_linkset_match_bw(pp->set_of_links_of_sentence, rule->selector))
 		{
 			/* mark rule as being relevant to this sentence */
@@ -899,10 +937,10 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 	}
 	pp->relevant_contains_one_rules[rcoIDX] = -1;	/* end sentinel */
 
-	for (cnIDX=0;;cnIDX++)
+	for (cnIDX = 0; ; cnIDX++)
 	{
 		rule = &(pp->knowledge->contains_none_rules[cnIDX]);
-		if (rule->msg==NULL) break;
+		if (rule->msg == NULL) break;
 		if (pp_linkset_match_bw(pp->set_of_links_of_sentence, rule->selector))
 		{
 			pp->relevant_contains_none_rules[rcnIDX++] = cnIDX;
@@ -930,7 +968,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 Postprocessor * post_process_open(const char *path)
 {
 	Postprocessor *pp;
-	if (path==NULL) return NULL;
+	if (path == NULL) return NULL;
 
 	pp = (Postprocessor *) xalloc (sizeof(Postprocessor));
 	pp->knowledge	= pp_knowledge_open(path);
@@ -938,11 +976,11 @@ Postprocessor * post_process_open(const char *path)
 	pp->set_of_links_of_sentence = pp_linkset_open(1024);
 	pp->set_of_links_in_an_active_rule = pp_linkset_open(1024);
 	pp->relevant_contains_one_rules =
-			(int *) xalloc ((pp->knowledge->n_contains_one_rules+1)
-							*(sizeof pp->relevant_contains_one_rules[0]));
+	      (int *) xalloc ((pp->knowledge->n_contains_one_rules + 1)
+	                      *(sizeof pp->relevant_contains_one_rules[0]));
 	pp->relevant_contains_none_rules =
-			(int *) xalloc ((pp->knowledge->n_contains_none_rules+1)
-							*(sizeof pp->relevant_contains_none_rules[0]));
+	      (int *) xalloc ((pp->knowledge->n_contains_none_rules + 1)
+	                      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp->relevant_contains_one_rules[0]	= -1;
 	pp->relevant_contains_none_rules[0] = -1;
 	pp->pp_node = NULL;
@@ -955,16 +993,16 @@ Postprocessor * post_process_open(const char *path)
 void post_process_close(Postprocessor *pp)
 {
 	/* frees up memory associated with pp, previously allocated by open */
-	if (pp==NULL) return;
+	if (pp == NULL) return;
 	string_set_delete(pp->sentence_link_name_set);
 	pp_linkset_close(pp->set_of_links_of_sentence);
 	pp_linkset_close(pp->set_of_links_in_an_active_rule);
 	xfree(pp->relevant_contains_one_rules,
-		(1+pp->knowledge->n_contains_one_rules)
-		*(sizeof pp->relevant_contains_one_rules[0]));
+	      (1 + pp->knowledge->n_contains_one_rules)
+	      *(sizeof pp->relevant_contains_one_rules[0]));
 	xfree(pp->relevant_contains_none_rules,
-		(1+pp->knowledge->n_contains_none_rules)
-		*(sizeof pp->relevant_contains_none_rules[0]));
+	      (1 + pp->knowledge->n_contains_none_rules)
+	      *(sizeof pp->relevant_contains_none_rules[0]));
 	pp_knowledge_close(pp->knowledge);
 	free_pp_node(pp);
 	xfree(pp, sizeof(Postprocessor));
@@ -972,7 +1010,7 @@ void post_process_close(Postprocessor *pp)
 
 void post_process_close_sentence(Postprocessor *pp)
 {
-	if (pp==NULL) return;
+	if (pp == NULL) return;
 	pp_linkset_clear(pp->set_of_links_of_sentence);
 	pp_linkset_clear(pp->set_of_links_in_an_active_rule);
 	string_set_delete(pp->sentence_link_name_set);
@@ -996,9 +1034,9 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 	size_t i;
 	if (pp == NULL) return;
 	if (sent->length < opts->twopass_length) return;
-	for (i=0; i<sublinkage->num_links; i++)
+	for (i = 0; i < sublinkage->num_links; i++)
 	{
-		// if (sublinkage->link[i]->lw == SIZE_MAX) continue;
+		/* if (sublinkage->link[i]->lw == SIZE_MAX) continue; */
 		assert(sublinkage->link[i]->lw != SIZE_MAX);
 		p = string_set_add(sublinkage->link[i]->link_name, pp->sentence_link_name_set);
 		pp_linkset_add(pp->set_of_links_of_sentence, p);
@@ -1030,7 +1068,9 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
 	/* The first time we see a sentence, prune the rules which we won't be
 	 * needing during postprocessing the linkages of this sentence */
 	if (sent->q_pruned_rules == FALSE && sent->length >= opts->twopass_length)
+	{
 		prune_irrelevant_rules(pp);
+	}
 	sent->q_pruned_rules = TRUE;
 
 	switch (internal_process(pp, sublinkage, &msg))
@@ -1115,18 +1155,18 @@ PP_node *do_post_process(Postprocessor *pp, Parse_Options opts,
   In the following sentence, then, the "Urfl_Only Domain" of the G link
   would include only the "O" link:
 
-  +-----G----+
-  +---O--+   +-AI+
-  |      |   |   |
+     +-----G----+
+     +---O--+   +-AI+
+     |      |   |   |
   hitting dogs is fun.a
 
   In the following sentence it would include the "O", the "TT", the "I",
   the second "O", and the "A".
 
-  +----------------G---------------+
-  +-----TT-----+  +-----O-----+    |
-  +---O---+    +-I+    +---A--+    +-AI+
-  |       |    |  |    |      |    |   |
+     +----------------G---------------+
+     +-----TT-----+  +-----O-----+    |
+     +---O---+    +-I+    +---A--+    +-AI+
+     |       |    |  |    |      |    |   |
   telling people to do stupid things is fun.a
 
   This would allow us to judge the following:
