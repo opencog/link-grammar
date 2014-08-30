@@ -1838,9 +1838,6 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 {
 	pp_knowledge * knowledge;
 	size_t i, w;
-	char dir;
-	Disjunct *d;
-	Connector *c;
 	int change, total_deleted, N_deleted, deleteme;
 	multiset_table *cmt;
 
@@ -1850,11 +1847,18 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 	cmt = cms_table_new();
 
-	for (w = 0; w < sent->length; w++) {
-		for (d = sent->word[w].d; d != NULL; d = d->next) {
+	for (w = 0; w < sent->length; w++)
+	{
+		Disjunct *d;
+		for (d = sent->word[w].d; d != NULL; d = d->next)
+		{
+			char dir;
 			d->marked = TRUE;
-			for (dir=0; dir < 2; dir++) {
-				for (c = ( (dir)?(d->left):(d->right) ); c!=NULL; c=c->next) {
+			for (dir=0; dir < 2; dir++)
+			{
+				Connector *c;
+				for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
+				{
 					insert_in_cms_table(cmt, c->string);
 				}
 			}
@@ -1869,12 +1873,15 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 		N_deleted = 0;
 		for (w = 0; w < sent->length; w++)
 		{
+			Disjunct *d;
 			for (d = sent->word[w].d; d != NULL; d = d->next)
 			{
+				char dir;
 				if (!d->marked) continue;
 				deleteme = FALSE;
 				for (dir = 0; dir < 2; dir++)
 				{
+					Connector *c;
 					for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 					{
 						for (i = 0; i < knowledge->n_contains_one_rules; i++)
@@ -1908,11 +1915,13 @@ static int pp_prune(Sentence sent, Parse_Options opts)
 
 				if (deleteme)         /* now we delete this disjunct */
 				{
+					char dir;
 					N_deleted++;
 					total_deleted++;
 					d->marked = FALSE; /* mark for deletion later */
 					for (dir=0; dir < 2; dir++)
 					{
+						Connector *c;
 						for (c = ((dir) ? (d->left) : (d->right)); c != NULL; c = c->next)
 						{
 							change += delete_from_cms_table(cmt, c->string);
