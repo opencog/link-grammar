@@ -339,7 +339,7 @@ static bool apply_rules(Postprocessor *pp,
 							 const char **msg)
 {
 	int i;
-	for (i=0; (*msg = rule_array[i].msg) != NULL; i++)
+	for (i = 0; (*msg = rule_array[i].msg) != NULL; i++)
 		if (!applyfn(pp, sublinkage, &(rule_array[i]))) return false;
 	return true;
 }
@@ -357,14 +357,14 @@ apply_relevant_rules(Postprocessor *pp,
 	/* if we didn't accumulate link names for this sentence, we need to apply
 		 all rules */
 	if (pp_linkset_population(pp->set_of_links_of_sentence) == 0) {
-			return apply_rules(pp, applyfn, sublinkage, rule_array, msg);
+		return apply_rules(pp, applyfn, sublinkage, rule_array, msg);
 	}
 
 	/* we did, and we don't */
 	for (i = 0; (idx = relevant_rules[i]) != -1; i++)
 	{
-			*msg = rule_array[idx].msg;
-			if (!applyfn(pp, sublinkage, &(rule_array[idx]))) return false;
+		*msg = rule_array[idx].msg;
+		if (!applyfn(pp, sublinkage, &(rule_array[idx]))) return false;
 	}
 	return true;
 }
@@ -412,7 +412,7 @@ apply_contains_one(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
  * from the link_array contained in the rule. Uses exact string matching.
  */
 static bool
-apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
+apply_contains_none(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
 	size_t d;
 	for (d=0; d<pp->pp_data.N_domains; d++)
@@ -443,10 +443,10 @@ apply_contains_none(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
  * (2) it does, and it also contains one or more from the rule's link set
  */
 static bool
-apply_contains_one_globally(Postprocessor *pp,Sublinkage *sublinkage,pp_rule *rule)
+apply_contains_one_globally(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
-	size_t i,j,count;
-	for (i=0; i<sublinkage->num_links; i++)
+	size_t i, j, count;
+	for (i = 0; i < sublinkage->num_links; i++)
 	{
 #ifdef USE_FAT_LINKAGES
 		if (sublinkage->link[i]->lw == SIZE_MAX) continue;
@@ -516,7 +516,7 @@ static void reachable_without_dfs(Postprocessor *pp,
  * these links.
  */
 static bool
-apply_must_form_a_cycle(Postprocessor *pp,Sublinkage *sublinkage, pp_rule *rule)
+apply_must_form_a_cycle(Postprocessor *pp, Sublinkage *sublinkage, pp_rule *rule)
 {
 	List_o_links *lol;
 	size_t w;
@@ -913,13 +913,13 @@ internal_process(Postprocessor *pp, Sublinkage *sublinkage, const char **msg)
  * Call this (a) after having called post_process_scan_linkage() on all
  * generated linkages, but (b) before calling post_process() on any
  * particular linkage. Here we mark all rules which we know (from having
- * accumulated a set of link names appearing in *any* linkage) won't
+ * accumulated a set of link names appearing in *any* linkage) that won't
  * ever be needed.
  */
 static void prune_irrelevant_rules(Postprocessor *pp)
 {
 	pp_rule *rule;
-	int coIDX, cnIDX, rcoIDX=0, rcnIDX=0;
+	int coIDX, cnIDX, rcoIDX = 0, rcnIDX = 0;
 
 	/* If we didn't scan any linkages, there's no pruning to be done. */
 	if (pp_linkset_population(pp->set_of_links_of_sentence) == 0) return;
