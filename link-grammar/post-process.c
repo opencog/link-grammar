@@ -957,7 +957,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 	if (verbosity > 1)
 	{
-		printf("PP: Saw %i unique link names in all linkages.\n",
+		printf("PP: Saw %zd unique link names in all linkages.\n",
 				pp_linkset_population(pp->set_of_links_of_sentence));
 		printf("PP: Using %i 'contains one' rules and %i 'contains none' rules\n",
 			   rcoIDX, rcnIDX);
