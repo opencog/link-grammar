@@ -1055,17 +1055,37 @@ void post_process_scan_linkage(Postprocessor *pp, Parse_Options opts,
 	}
 }
 
-static void report_rule_use(pp_rule *set)
+static size_t report_rule_use(pp_rule *set)
 {
+	size_t cnt = 0;
 	size_t i;
 	for (i=0; set[i].msg != NULL; i++)
 	{
 		printf("usage: %d rule: %s\n", set[i].use_count, set[i].msg);
+		cnt++;
 	}
+	return cnt;
+}
+
+static size_t report_unused_rule(pp_rule *set)
+{
+	size_t i;
+	size_t cnt = 0;
+	for (i=0; set[i].msg != NULL; i++)
+	{
+		if (0 == set[i].use_count)
+		{
+			printf("Unsued rule: %s\n", set[i].msg);
+			cnt++;
+		}
+	}
+	return cnt;
 }
 
 static void report_pp_stats(Postprocessor *pp)
 {
+	size_t rule_cnt = 0;
+	size_t unused_cnt = 0;
 	pp_knowledge * kno;
 	if (verbosity < 3) return;
 
@@ -1073,19 +1093,27 @@ static void report_pp_stats(Postprocessor *pp)
 	kno = pp->knowledge;
 
 	printf("\nPP stats: connected_rules\n");
-	report_rule_use(kno->connected_rules);
+	rule_cnt += report_rule_use(kno->connected_rules);
 
 	printf("\nPP stats: form_a_cycle_rules\n");
-	report_rule_use(kno->form_a_cycle_rules);
+	rule_cnt += report_rule_use(kno->form_a_cycle_rules);
 
 	printf("\nPP stats: contains_one_rules\n");
-	report_rule_use(kno->contains_one_rules);
+	rule_cnt += report_rule_use(kno->contains_one_rules);
 
 	printf("\nPP stats: contains_none_rules\n");
-	report_rule_use(kno->contains_none_rules);
+	rule_cnt += report_rule_use(kno->contains_none_rules);
 
 	printf("\nPP stats: bounded_rules\n");
-	report_rule_use(kno->bounded_rules);
+	rule_cnt += report_rule_use(kno->bounded_rules);
+
+	printf("\nPP stats: Rules that were not used:\n");
+	unused_cnt += report_unused_rule(kno->form_a_cycle_rules);
+	unused_cnt += report_unused_rule(kno->contains_one_rules);
+	unused_cnt += report_unused_rule(kno->contains_none_rules);
+	unused_cnt += report_unused_rule(kno->bounded_rules);
+
+	printf("\nPP stats: %zd of %zd rules unused\n", unused_cnt, rule_cnt);
 }
 
 /**
