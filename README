@@ -895,7 +895,7 @@ TODO -- Working Notes:
 
 
   Bad grammar: When a sentence fails to parse, look for:
-    * confused words: its/it's, there/their, to/too, your/you're ...
+    * confused words: its/it's, there/their/they're, to/too, your/you're ...
     * missing apostrophes in possessives: "the peoples desires"
     * determiner agreement errors: "a books"
     * aux verb agreement errors: "to be hooks up"

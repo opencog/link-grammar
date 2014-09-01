@@ -1257,15 +1257,15 @@ its my.p your their our:
 
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+;
 
-% Ox-: "leave it alone" "make it rain"
-% Errr. what's the difference between Ox- and Os- ??
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
 % (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
 % (Jd- & Dmu- & Os-):  "there was enough of it"
-% (Osx- & {@M+}): "Do you have it ready?" (the x prevents links as indirect object)
+% (Osm- & {@M+}): "is this it?" "Do you have it ready?"
+%    "leave it alone" "make it rain"
+%   (the m prevents links as indirect object)
 it:
    [J-]
-   or (Osx- & {@M+})
+   or (Osm- & {@M+})
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
    or ((Ss+ or SFsi+) & <CLAUSE>)
