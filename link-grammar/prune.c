@@ -1517,7 +1517,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->left == NULL) continue;
-				if (left_connector_list_update(pc, d->left, w, w, TRUE) < 0) {
+				if (left_connector_list_update(pc, d->left, w, w, true) < 0) {
 					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
@@ -1552,7 +1552,7 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 			if ((2 == w%7) && parse_options_resources_exhausted(opts)) break;
 			for (d = sent->word[w].d; d != NULL; d = d->next) {
 				if (d->right == NULL) continue;
-				if (right_connector_list_update(pc, sent, d->right, w, w, TRUE) >= sent->length) {
+				if (right_connector_list_update(pc, sent, d->right, w, w, true) >= sent->length) {
 					for (c=d->right; c != NULL; c = c->next) c->word = BAD_WORD;
 					for (c=d->left;  c != NULL; c = c->next) c->word = BAD_WORD;
 					N_deleted++;
