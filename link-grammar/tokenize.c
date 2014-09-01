@@ -330,7 +330,7 @@ void add_alternative(Sentence sent,
 				case END:
 					assert(true, "affixtype END reached");
 			}
-			/* firstupper is false foor suffixes - start with INFIX_MARK */
+			/* firstupper is false for suffixes - start with INFIX_MARK */
 			if (is_utf8_upper(buff)) sent->word[t_start].firstupper = true;
 			lgdebug(3, " %s", ('\0' == buff[0]) ? "[empty_suffix]" : buff);
 			altappend(sent, &sent->word[t_start + ai].alternatives, buff);
@@ -348,10 +348,10 @@ void add_alternative(Sentence sent,
 
 /**
  * Return true if an alternative has been issued for the current word.
+ * t_count==0 if and only if no alternative has been issued yet.
  */
 static bool word_has_alternative(Sentence sent) {
-	if (NULL == sent->word[sent->t_start].unsplit_word) return true;
-	return false;
+	return (sent->t_count > 0);
 }
 
 /**
@@ -643,16 +643,16 @@ static bool mprefix_split(Sentence sent, const char *word)
 	const char **mprefix;
 	const char *newword;
 	const char *w;
-	int sz;
+	int sz = 0;
 	bool word_is_in_dict;
 	int split_prefix_i = 0;      /* split prefix index */
-	const char *split_prefix[HEB_PRENUM_MAX]; /* all prefix  */
+	const char *split_prefix[HEB_PRENUM_MAX]; /* the whole prefix */
 	/* pseen is a simple prefix combination filter */
 	bool pseen[HEB_MPREFIX_MAX]; /* prefix "subword" seen */
 	Dictionary dict = sent->dict;
 	int wordlen;
 	int wlen;
-	int plen;
+	int plen = 0;
 
 	/* set up affix table  */
 	if (NULL == dict->affix_table) return false;
@@ -1116,7 +1116,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	bool word_can_split = false;
 	bool issued = false;
 	bool try_strip_left;     /* try to strip punctuation on the left-hand side */
-	bool units_alternative = false;             /* units alternative is needed */
+	bool units_alternative = false;           /* a units alternative is needed */
 	bool parallel_regex;                  /* regex unknown word that can split */
 	bool stripped;
 	const char *wp;
@@ -1135,7 +1135,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 	size_t sz = wend - w;
 	/* Dynamic allocation of working buffers. */
 	char *word = alloca(sz+1);                   /* candidate word main buffer */
-	char *input_word = alloca(sz+1);  /* input word, possible after left-strip */
+	char *input_word = alloca(sz+1);  /* input word, possibly after left-strip */
 	int downcase_size = sz+MB_LEN_MAX+1; /* pessimistic max. size of dc buffer */
 	char *downcase = alloca(downcase_size);               /* downcasing buffer */
 	char *str = alloca(downcase_size+sizeof("[!]"));        /* tmp word buffer */
@@ -1318,7 +1318,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 			free(r_stripped_alt);
 		}
 
-		/*Restore the input word, in case it needs a further handling. */
+		/* Restore the input word, in case it needs a further handling. */
 		strcpy(word, input_word);    /* Recover the input word. */
 		n_r_stripped = 0;            /* Forget the stripping. */
 	}
@@ -1348,7 +1348,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		free(r_stripped_alt);
 
 		/* FIXME: We suppose here that the input word cannot morpheme-split.
-		 * Anyway, the code infrastructure don't allow us to continue after
+		 * Anyway, the code infrastructure doesn't allow us to continue after
 		 * we issue alternatives for right-stripping. */
 		issue_alternatives(sent, input_word, quote_found);
 		return;

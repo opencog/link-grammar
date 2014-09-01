@@ -581,7 +581,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 #ifdef notdef
 	dyn_str *wordalts;
 #endif
-	const char *group_name;
+	const char *group_name = NULL;
 	char *word_classname;
 	char c0[2] = "\0\0";
 
