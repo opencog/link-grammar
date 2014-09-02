@@ -2001,6 +2001,7 @@ clunks.n
 clusters.n
 clutches.n
 clutters.n
+co-stars.n
 coaches.n
 coalfields.n
 coalitions.n
