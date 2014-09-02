@@ -1376,6 +1376,8 @@ How big a dog did he buy?
 
 
 % The documentation for EAh discusses the below.
+% post-processing "Incorrect use of 'how'17" blocks some of these.
+% post-processing for how needs to be fixed ...
 it is how big?
 it is this big.
 he is how stupid?
