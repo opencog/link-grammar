@@ -1364,7 +1364,6 @@ I wonder why you said that?
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
-it is how big?
 It was too big a dog to fit
 It is too big a bank to fail.
 It was too big a dog to fit through the hole in the fence.
@@ -1374,6 +1373,13 @@ How big a dog did he buy?
 *How big did he buy?
 % Actually, the above is allowed, e.g. while talking about 
 % house prices, the conclusion might be: "So, how big did he buy?"
+
+
+% The documentation for EAh discusses the below.
+it is how big?
+it is this big.
+he is how stupid?
+he is that stupid.
 
 Our neighbours have too big a dog to keep in the house
 Our neighbours have a dog too big to keep in the house

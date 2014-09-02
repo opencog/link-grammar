@@ -1352,6 +1352,7 @@ the:
 % this as a pronoun
 this.p:
   <noun-main-h>
+  or EA+
   or <noun-and-s>;
 
 % this as a determiner
