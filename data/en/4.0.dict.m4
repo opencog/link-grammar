@@ -1251,11 +1251,12 @@ mine.p yours theirs hers ours:
   or SJl+
   or SJr-;
 
-its my.p your their our:
+its my.p your their our thy:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+;
+thou: Sp+ & <CLAUSE>;
 
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
 % (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
@@ -2791,7 +2792,7 @@ weren't.v-d weren’t.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
-will.v can.v may.v must.v could.v might.v shall.v:
+will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ((SI+ or SFI+) & ((<verb-rq> & I+) or CQ-))
   or ({N+} & {@E-} & (S- or SF- or (RS- & B-)) & (I+ or (CX- & {@MV+}) or [[()]]))
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
