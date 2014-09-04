@@ -285,7 +285,11 @@ How likely is it that he will come
 *How likely is John that he will come
 How certain does he seem to be that John is coming
 How efficient a program is it
-*Efficient a program is it
+
+% The below parses, because "Efficient" is taken to be someone's name
+% That is, similar to "Hey Joe, Coke is it!"
+% *Efficient a program is it
+*efficient a program is it
 *How fast programs are they
 *How fast the program is it
 How fast a program does he think it is
