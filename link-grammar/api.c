@@ -641,8 +641,10 @@ static void post_process_linkages(Sentence sent, match_context_t* mchxt,
 	qsort((void *)link_info, N_linkages_post_processed, sizeof(Linkage_info),
 		  (int (*)(const void *, const void *)) opts->cost_model.compare_fn);
 
+#ifdef USE_FAT_LINKAGES
 	if (!resources_exhausted(opts->resources))
 	{
+		/* This condition can ony happen w/ fat links */
 		if ((N_linkages_post_processed == 0) &&
 		    (N_linkages_found > 0) &&
 		    (N_linkages_found < opts->linkage_limit))
@@ -664,6 +666,7 @@ static void post_process_linkages(Sentence sent, match_context_t* mchxt,
 			          N_linkages_found);
 		}
 	}
+#endif /* USE_FAT_LINKAGES */
 
 	if (opts->verbosity > 1)
 	{
@@ -684,7 +687,6 @@ static void post_process_linkages(Sentence sent, match_context_t* mchxt,
 	sent->link_info = link_info;
 
 	xfree(indices, N_linkages_alloced * sizeof(int));
-	/*if(N_valid_linkages == 0) free_andlists(sent); */
 }
 
 /***************************************************************
