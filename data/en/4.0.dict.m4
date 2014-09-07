@@ -8684,7 +8684,7 @@ EMOTICON :
 % Arghh. I really want to have Qd- here too, to handle: "In what way...?"
 % but currently, the post-processing "S-V inversion required8" rule halts this.
 ....v ….v:
-  S- & <verb-wall>;
+  (S- or I-) & <verb-wall>;
 
 % ellipsis in the middle
 % Cr- & S+: "... chances that ... could be ..."
