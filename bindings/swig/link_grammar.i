@@ -89,6 +89,7 @@ void parse_options_reset_resources(Parse_Options opts);
 
 Sentence sentence_create(char *input_string, Dictionary dict);
 void sentence_delete(Sentence sent);
+int  sentence_split(Sentence sent, Parse_Options opts);
 int  sentence_parse(Sentence sent, Parse_Options opts);
 int  sentence_length(Sentence sent);
 int  sentence_null_count(Sentence sent);
