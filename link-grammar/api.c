@@ -1288,9 +1288,10 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		size_t ai;                       /* index of checked alternative */
 		int unsplit_i = 0;               /* unsplit word index */
 		const char * unsplit = NULL;     /* unsplit word */
-		char affix_types[MAX_SENTENCE+1];/* affix types sequence */
+		char affix_types[MAX_SENTENCE+1] = ""; /* affix types sequence */
 		char * affix_types_p = affix_types;
-		bool match_found = false;        /* djw matched a morpheme */
+		/* If all the words are null - behave as if everything matched. */
+		bool match_found = true;        /* djw matched a morpheme */
 
 		/* Don't bother with linkages that already failed post-processing... */
 		if (0 != lifo->N_violations)
@@ -1487,7 +1488,7 @@ try_again:
 		/* Check morpheme type combination.
 		 * If null_count > 0, the morpheme type combination may be invalid
 		 * due to morpheme islands, so skip this check. */
-		if (match_found && 0 == sent->null_count &&
+		if (match_found && (0 == sent->null_count) && ('\0' != affix_types[0]) &&
 			(NULL != afdict) && (NULL != afdict->regex_root) &&
 			(NULL == match_regex(afdict->regex_root, affix_types)))
 		{
@@ -1499,7 +1500,7 @@ try_again:
 				       "run with !bad and !verbosity=4 to debug\n", affix_types);
 		}
 		else
-			lgdebug(4, "%zu morpheme type combination %s\n", lk+1, affix_types);
+			lgdebug(4, "%zu morpheme type combination '%s'\n", lk+1, affix_types);
 
 		if (match_found)
 		{
