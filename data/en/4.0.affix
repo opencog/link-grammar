@@ -10,6 +10,8 @@
 % 。is an end-of-sentence marker used in Japanese texts.
 
 % Punctuation appearing on the right-side of words.
+% Note: the ellipsis ....y must appear *before* th dot ".", else the
+% splitting won't work right.
 ")" "}" "]" ">" » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ''.y '.y ' `
 "%" "," ....y "." 。.y ‧ ":" ";" "?" "!" ‽ ؟ ？ ！ ….y "”" ━.y –.y ー.y ‐.y 、.y
 ～ ¢ ₵ ™ ℠ : RPUNC+; 
