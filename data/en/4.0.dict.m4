@@ -8669,7 +8669,8 @@ EMOTICON :
 % ellipsis ... at the end, trailing off ...
 ....y ….y:
   (CO- & Wd-)
-  or O-;
+  or O-
+  or Xx-;
 
 % ellipsis ... at the start
 % We- is used only for connecting ellipsis to the left wall.
