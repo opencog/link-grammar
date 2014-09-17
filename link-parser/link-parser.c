@@ -465,12 +465,15 @@ static int process_some_linkages(Sentence sent, Command_Options* copts)
 
 		if (++num_displayed < num_to_display)
 		{
-			if (verbosity > 0)
+			if (!strstr(test, ",auto-next-linkage,"))
 			{
-				fprintf(stdout, "Press RETURN for the next linkage.\n");
+				if (verbosity > 0)
+				{
+					fprintf(stdout, "Press RETURN for the next linkage.\n");
+				}
+				c = fget_input_char(stdin, stdout, copts);
+				if (c != '\n') return c;
 			}
-			c = fget_input_char(stdin, stdout, copts);
-			if (c != '\n') return c;
 		}
 		else
 		{
