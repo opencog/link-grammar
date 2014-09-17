@@ -261,12 +261,15 @@ void add_alternative(Sentence sent,
 				len = t_start + t_count;
 
 				/* allocate new word */
-				sent->word = (Word *)realloc(sent->word, (len+1) * sizeof(Word));
+				sent->word = realloc(sent->word, (len+1)*sizeof(Word));
 				sent->word[len].x= NULL;
 				sent->word[len].d= NULL;
 				sent->word[len].alternatives = NULL;
 				sent->word[len].unsplit_word = NULL;
 				sent->word[len].firstupper = false;
+
+				sent->post_quote = realloc(sent->post_quote, (len+1)*sizeof(bool));
+				sent->post_quote[len] = false;
 
 				t_count++;
 				if (t_count > 1) /* not first added word */
@@ -367,8 +370,6 @@ static bool issue_alternatives(Sentence sent,
 	if (0 == t_count) return false;
 
 	sent->word[t_start].unsplit_word = string_set_add(word, sent->string_set);
-	sent->post_quote =
-	 (bool *) realloc(sent->post_quote, (t_start+1) * sizeof(bool));
 	sent->post_quote[t_start] = quote_found;
 
 	sent->length += t_count;
@@ -783,11 +784,11 @@ static bool is_capitalizable(Sentence sent, size_t curr_word)
  * - Separating run-on words into an exact combination of words, usually 2.
  * - Find similar words.
  *
- * Return true of corrections have been issued, else false.
+ * Return true if corrections have been issued, else false.
  *
  * Note: spellcheck_suggest(), which is invoked by this function, returns
  * guesses for words containing numbers (including words consisting of digits
- * only). Hence this function should not  be called for such words.
+ * only). Hence this function should not be called for such words.
  */
 static bool guess_misspelled_word(Sentence sent, const char * word,
                                   bool quote_found, Parse_Options opts)
