@@ -49,9 +49,15 @@
 *
 ****************************************************************/
 
+/**
+ * For sorting the linkages in postprocessing
+ */
+
 static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 {
-	/* for sorting the linkages in postprocessing */
+	/* Move the discarded entries to the end of the list */
+	if (p1->discarded || p2->discarded) return (p1->discarded - p2->discarded);
+
 	if (p1->N_violations != p2->N_violations) {
 		return (p1->N_violations - p2->N_violations);
 	}
@@ -79,6 +85,10 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 static int CORP_compare_parse(Linkage_info * p1, Linkage_info * p2)
 {
 	double diff = p1->corpus_cost - p2->corpus_cost;
+
+	/* Move the discarded entries to the end of the list */
+	if (p1->discarded || p2->discarded) return (p1->discarded - p2->discarded);
+
 	if (fabs(diff) < 1.0e-5)
 		return VDAL_compare_parse(p1, p2);
 	if (diff < 0.0) return -1;
@@ -473,7 +483,277 @@ static void free_post_processing(Sentence sent)
 	}
 }
 
-static void post_process_linkages(Sentence sent, match_context_t* mchxt, 
+static void select_linkages(Sentence sent, match_context_t* mchxt, 
+                            count_context_t* ctxt,
+                            Parse_Options opts)
+{
+	size_t in;
+	size_t N_linkages_found, N_linkages_alloced;
+	bool overflowed;
+	Linkage_info *link_info;
+
+	free_post_processing(sent);
+
+	overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
+	print_time(opts, "Built parse set");
+
+	if (overflowed && (1 < opts->verbosity))
+	{
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Warn, "Warning: Count overflow.\n"
+		  "Considering a random subset of %zu of an unknown and large number of linkages\n",
+			opts->linkage_limit);
+	}
+	N_linkages_found = sent->num_linkages_found;
+
+	if (sent->num_linkages_found == 0)
+	{
+		sent->num_linkages_alloced = 0;
+		sent->num_linkages_post_processed = 0;
+		sent->num_valid_linkages = 0;
+#ifdef USE_FAT_LINKAGES
+		sent->num_thin_linkages = 0;
+#endif /* USE_FAT_LINKAGES */
+		sent->link_info = NULL;
+		return;
+	}
+
+	if (N_linkages_found > opts->linkage_limit)
+	{
+		N_linkages_alloced = opts->linkage_limit;
+		if (opts->verbosity > 1)
+		{
+			err_ctxt ec;
+			ec.sent = sent;
+			err_msg(&ec, Warn,
+			    "Warning: Considering a random subset of %zu of %zu linkages\n",
+			    N_linkages_alloced, N_linkages_found);
+		}
+	}
+	else
+	{
+		N_linkages_alloced = N_linkages_found;
+	}
+
+	link_info = linkage_info_new(N_linkages_alloced);
+
+	/* Generate an array of linkage indices to examine */
+	if (overflowed)
+	{
+		for (in=0; in < N_linkages_alloced; in++)
+		{
+			link_info[in].index = -(in+1);
+		}
+	}
+	else
+	{
+		if (opts->repeatable_rand)
+			sent->rand_state = N_linkages_found + sent->length;
+
+		for (in=0; in<N_linkages_alloced; in++)
+		{
+			size_t block_bottom, block_top;
+			double frac = (double) N_linkages_found;
+
+			frac /= (double) N_linkages_alloced;
+			block_bottom = (int) (((double) in) * frac);
+			block_top = (int) (((double) (in+1)) * frac);
+			link_info[in].index = block_bottom +
+				(rand_r(&sent->rand_state) % (block_top-block_bottom));
+		}
+	}
+
+	sent->link_info = link_info;
+	sent->num_linkages_alloced = N_linkages_alloced;
+	/* Later we subtract the number of invalid linkages */
+	sent->num_valid_linkages = N_linkages_alloced;
+
+	/* Allow use of both old and new pp order, for tests.
+	 * FIXME In release code this assignment can be removed if sane_morphism()
+	 * is modified to loop over num_linkages_alloced. */
+	sent->num_linkages_post_processed = N_linkages_alloced;
+}
+
+static void post_process_linkages(Sentence sent, Parse_Options opts)
+{
+	Linkage_info *lifo;
+	size_t in;
+	size_t N_linkages_post_processed = 0;
+	size_t N_valid_linkages = sent->num_valid_linkages;
+	size_t N_linkages_alloced = sent->num_linkages_alloced;
+#ifdef USE_FAT_LINKAGES
+	size_t N_thin_linkages;
+	bool only_canonical_allowed;
+	bool canonical;
+#endif /* USE_FAT_LINKAGES */
+
+#ifdef USE_FAT_LINKAGES
+	/* When we're processing only a small subset of the linkages,
+	 * don't worry about restricting the set we consider to be
+	 * canonical ones.  In the extreme case where we are only
+	 * generating 1 in a million linkages, it's very unlikely
+	 * that we'll hit two symmetric variants of the same linkage
+	 * anyway.
+	 */
+	only_canonical_allowed = !(overflowed || (N_linkages_found > 2*opts->linkage_limit));
+#endif /* USE_FAT_LINKAGES */
+
+	/* (optional) first pass: just visit the linkages */
+	/* The purpose of these two passes is to make the post-processing
+	 * more efficient.  Because (hopefully) by the time you do the
+	 * real work in the 2nd pass you've pruned the relevant rule set
+	 * in the first pass.
+	 */
+	if (sent->length >= opts->twopass_length)
+	{
+		for (in=0; in < N_linkages_alloced; in++)
+		{
+			lifo = &sent->link_info[in];
+			if (lifo->discarded || lifo->N_violations) continue;
+			extract_links(lifo->index, sent->parse_info);
+#ifdef USE_FAT_LINKAGES
+			if (set_has_fat_down(sent))
+			{
+				if (only_canonical_allowed && !is_canonical_linkage(sent)) continue;
+				analyze_fat_linkage(sent, opts, PP_FIRST_PASS);
+			}
+			else
+#endif /* USE_FAT_LINKAGES */
+			{
+				analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
+			}
+			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
+		}
+	}
+
+	/* second pass: actually perform post-processing */
+#ifdef USE_FAT_LINKAGES
+	N_thin_linkages = 0;
+#endif /* USE_FAT_LINKAGES */
+	for (in=0; in < N_linkages_alloced; in++)
+	{
+		int index;
+
+		lifo = &sent->link_info[in];
+		if (lifo->discarded) continue;
+		if (lifo->N_violations)
+		{
+			/* Arrange for displaying "Invalid morphism construction" sentences
+			 * if they are not discarded (for debug). */
+			N_linkages_post_processed++;
+			continue;
+		}
+		index = lifo->index;
+		extract_links(index, sent->parse_info);
+#ifdef USE_FAT_LINKAGES
+		lifo->fat = false;
+		lifo->canonical = true;
+		if (set_has_fat_down(sent))
+		{
+			canonical = is_canonical_linkage(sent);
+			if (only_canonical_allowed && !canonical)
+			{
+				lifo->discarded = true;
+				continue;
+			}
+			*lifo = analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
+			lifo->fat = true;
+			lifo->canonical = canonical;
+		}
+		else
+#endif /* USE_FAT_LINKAGES */
+		{
+			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
+		}
+		if (0 == lifo->N_violations)
+		{
+#ifdef USE_FAT_LINKAGES
+			if (false == lifo->fat)
+				N_thin_linkages++;
+#endif /* USE_FAT_LINKAGES */
+		}
+		else
+		{
+			N_valid_linkages--;
+		}
+		lifo->index = index;
+		lg_corpus_score(sent, lifo);
+		N_linkages_post_processed++;
+		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
+	}
+
+	print_time(opts, "Postprocessed all linkages");
+
+#ifdef USE_FAT_LINKAGES
+	if (!resources_exhausted(opts->resources))
+	{
+		if ((N_linkages_post_processed == 0) &&
+		    (N_linkages_found > 0) &&
+		    (N_linkages_found <= opts->linkage_limit))
+		{
+			/* With the current parser, the following sentence will elicit
+			 * this error:
+			 *
+			 * Well, say, Joe, you can be Friar Tuck or Much the miller's
+			 * son, and lam me with a quarter-staff; or I'll be the Sheriff
+			 * of Nottingham and you be Robin Hood a little while and kill
+			 * me.
+			 */
+			err_ctxt ec;
+			ec.sent = sent;
+			err_msg(&ec, Error, "Error: None of the linkages is canonical\n"
+			          "\tN_linkages_post_processed=%zu "
+			          "N_linkages_found=%zu\n",
+			          N_linkages_post_processed,
+			          N_linkages_found);
+		}
+	}
+#endif /* USE_FAT_LINKAGES */
+
+	if (opts->verbosity > 1)
+	{
+		err_ctxt ec;
+		ec.sent = sent;
+		err_msg(&ec, Info, "Info: %zu of %zu linkages with no P.P. violations\n",
+				N_valid_linkages, N_linkages_post_processed);
+	}
+
+	sent->num_linkages_alloced = N_linkages_alloced;
+	sent->num_linkages_post_processed = N_linkages_post_processed;
+	sent->num_valid_linkages = N_valid_linkages;
+#ifdef USE_FAT_LINKAGES
+	sent->num_thin_linkages = N_thin_linkages;
+#endif /* USE_FAT_LINKAGES */
+}
+
+static void sort_linkages(Sentence sent, Parse_Options opts)
+{
+	qsort((void *)sent->link_info, sent->num_linkages_alloced,
+	      sizeof(Linkage_info),
+	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
+
+#if 0
+	/* num_linkages_post_processed sanity check (ONLY). */
+	{
+		size_t in;
+		size_t N_linkages_post_processed = 0;
+		for (in=0; in < sent->num_linkages_alloced; in++)
+		{
+			Linkage_info *lifo = &sent->link_info[in];
+			if (lifo->discarded) break;
+			N_linkages_post_processed++;
+		}
+		assert(sent->num_linkages_post_processed==N_linkages_post_processed,
+				 "Bad num_linkages_post_processed (%zu!=%zu)",
+				 sent->num_linkages_post_processed, N_linkages_post_processed);
+	}
+#endif
+
+	print_time(opts, "Sorted all linkages");
+}
+
+static void old_post_process_linkages(Sentence sent, match_context_t* mchxt, 
                                   count_context_t* ctxt,
                                   Parse_Options opts)
 {
@@ -979,6 +1259,7 @@ static inline bool
 
 static void sane_morphism(Sentence sent, Parse_Options opts)
 {
+	size_t N_invalid_morphism = 0;
 	size_t lk, i;
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
@@ -1000,7 +1281,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	}
 #endif
 
-	for (lk = 0; lk < sent->num_linkages_alloced; lk++)
+	for (lk = 0; lk < sent->num_linkages_post_processed; lk++)
 	{
 		Linkage_info *lifo = &sent->link_info[lk];
 		size_t numalt = 1;               /* number of alternatives */
@@ -1227,13 +1508,21 @@ try_again:
 		else
 		{
 			/* Oh no ... invalid morpheme combination! */
-			sent->num_valid_linkages --;
-			lifo->N_violations ++;
+			N_invalid_morphism++;
+			lifo->N_violations++;
 			lifo->pp_violation_msg = "Invalid morphism construction.";
-			lgdebug(4, "%zu FAILED, remaining %zu\n", lk+1,
-			        sent->num_valid_linkages);
+			if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
+			lgdebug(4, "%zu FAILED\n", lk+1);
 		}
 	}
+
+	if (opts->verbosity > 1)
+	{
+		prt_error("Info: sane_morphism(): %zu of %zu linkages with "
+					 "invalid morphism construction\n",
+		          N_invalid_morphism, sent->num_valid_linkages);
+	}
+	sent->num_valid_linkages -= N_invalid_morphism;
 
 	free(matched_alts);
 }
@@ -1279,8 +1568,18 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		post_process_linkages(sent, mchxt, ctxt, opts);
-		sane_morphism(sent, opts);
+		if (test_enabled("old-pp-order"))
+		{
+			old_post_process_linkages(sent, mchxt, ctxt, opts);
+			sane_morphism(sent, opts);
+		}
+		else
+		{
+			select_linkages(sent, mchxt, ctxt, opts);
+			sane_morphism(sent, opts);
+			post_process_linkages(sent, opts);
+			sort_linkages(sent, opts);
+		}
 		if (sent->num_valid_linkages > 0) break;
 
 		/* If we are here, then no valid linakges were found.

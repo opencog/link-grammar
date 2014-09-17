@@ -181,7 +181,7 @@ struct Word_struct
 	const char **alternatives;
 	X_node * x;          /* Sentence starts out with these, */
 	Disjunct * d;        /* eventually these get generated. */
-	Boolean firstupper;  /* TRUE if capitalized, and is first word of sentence */
+	bool firstupper;     /* TRUE if capitalized, and is first word of sentence */
 };
 
 
@@ -236,6 +236,7 @@ struct Andlist_struct
  */
 struct Linkage_info_struct
 {
+    bool discarded;
     int index;
     short N_violations;
     short unused_word_cost;
@@ -244,10 +245,10 @@ struct Linkage_info_struct
     double corpus_cost;
     size_t nwords;
 #ifdef USE_FAT_LINKAGES
-    Boolean canonical;
-    Boolean fat;
-    Boolean improper_fat_linkage;
-    Boolean inconsistent_domains;
+    bool canonical;
+    bool fat;
+    bool improper_fat_linkage;
+    bool inconsistent_domains;
     short and_cost;
     Andlist * andlist;
 #endif /* USE_FAT_LINKAGES */
