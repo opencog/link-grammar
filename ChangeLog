@@ -2,6 +2,7 @@ Version 5.1.1 (XXX 2014)
  * Minor post-processing cleanup.
  * English dict: Fix questions with "it".
  * swig: add missing API functions sentence_split, dictionary_get_lang
+ * Swap order of post-processing and bad morphology rejection.
 
 Version 5.1.0 (29 August 2014)
  * Updated Russian dictionaries from Sergei Protasov.
