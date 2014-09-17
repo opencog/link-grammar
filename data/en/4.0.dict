@@ -10,8 +10,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.1.0 (formatted as V5v1v0+)
-<dictionary-version-number>: V5v1v0+;
+% Dictionary version number is 5.1.1 (formatted as V5v1v1+)
+<dictionary-version-number>: V5v1v1+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -10573,7 +10573,7 @@ EMOTICON :
 ....y ….y:
   (CO- & Wd-)
   or O-
-  or X-;
+  or Xx-;
 
 % ellipsis ... at the start
 % We- is used only for connecting ellipsis to the left wall.
