@@ -9,6 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+/* FIXME: Fold long lines. */
+
 #ifdef USE_REGEX_TOKENIZER
 
 #include <stdlib.h>
@@ -367,7 +369,7 @@ static int callout(pcre_callout_block *cb)
 			/* Record all the captures into the subp (sub-pattern) vector.
 			 * If we capture a continuation to another capture then it is a new
 			 * capture. Else we update a previous position in subp. There should be
-			 * no gaps between in the capture strings.
+			 * no gaps between the capture strings.
 			 * FIXME: Handled null matches properly. Need to use cd->capture_level
 			 * to remember at which level a null match has been captured.
 			 * FIXME: Move after the word lookup (efficiency).
@@ -485,7 +487,7 @@ static int callout(pcre_callout_block *cb)
 #endif
 
 		// cd->is_constant = false;
-		return 0;
+		return 0; /* continue to match the rest of the regex */
 		break;
 
 #if 0
@@ -520,7 +522,7 @@ static int callout(pcre_callout_block *cb)
 		}
 
 		// cd->is_constant = false;
-		return 1;
+		return 1; /* signify a backtrack in order to find the next alternative */
 		break;
 
 	default:
@@ -592,10 +594,16 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	for (p = inpat; '\0' != *p; p++)
 	{
 		/* Count as capture groups only (string) or (?<name>). Especially, avoid
-		 * counting (?<=...) (positive look behind).
+		 * counting (?<=...) (positive look behind) and (?(condition)...) (the
+		 * (condition) part).
 		 * FIXME: support () inside [].
 		 * FIXME: support \. */
-		if (*p == '(' && *p != '*' && ((p[1] != '?') || ((p[2] == '<') && p[3] != '='))) cgnum++;
+		if ((*p == '(') && (*p != '*') &&
+		    ((p[1] != '?') || ((p[2] == '<') && (p[3] != '='))) &&
+			 ((p-inpat < 2) || (p[-2] != '(') || (p[-1] != '?')))
+		{
+			cgnum++;
+		}
 	}
 	if (0 == cgnum)
 	{
@@ -671,17 +679,19 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 		case '(':
 			if (cglevel > 0)
 			{
-				printf("Error at position %ld: Tokenizer regex capture groups cannot have nested groups\n", p-inpat);
+				printf("Error at position %ld: Tokenizer capture groups cannot have nested groups\n", p-inpat);
 			}
 			plevel++;
-			if (p[1] == '*' || ((p[1] == '?') && ((p[2] != '<') || (p[3] == '='))))
+			if ((p[1] == '*') ||
+			    ((p[1] == '?') && ((p[2] != '<') || (p[3] == '='))) ||
+			    ((p-inpat > 1) && (p[-2] == '(') && (p[-1] == '?')))
 			{
 				break;
 			}
 			cglevel++;
 			if (cglevel > 1)
 			{
-				printf("Error at position %ld: Tokenizer regex cannot have capture group level > 1\n", p-inpat);
+				printf("Error at position %ld: Tokenizer aregex cannot have capture group level > 1\n", p-inpat);
 				return 199;
 			}
 			cgnum++;
@@ -873,14 +883,14 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 					switch (p[1])
 					{
 					case '(':
-						if ('?' != p[2] && '*' != p[2])
+						if (('?' != p[2]) && ('*' != p[2]) &&
+						    ((p[-1] != '(') || (p[0] != '?')))
 						{
 							printf("%s: Capture_group %d: Nested capture group is not supported\n",
 							       prog, cgnum+1);
 							return 250;
 						}
 						nplevel++;
-						/* fall through */
 						break;
 					case ')':
 						nplevel--;
@@ -904,7 +914,7 @@ static int regex_split(const char *inpat, int flags, const char *str, Dictionary
 	}
 
 	/* Add '$' at the end if needed. */
-	if ('$' != pat->str[-1]) dyn_strcat(pat, "$");
+	if ('$' != pat->str[pat->end-1]) dyn_strcat(pat, "$");
 	/* Add the backtracking callback. */
 	dyn_strcat(pat, "(?C1)");
 

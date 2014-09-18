@@ -93,6 +93,9 @@ because the "-" character would create va hole in the result.
 But this is fine (and also not tested...):
 /(?<DICTWORD>)(-)(?<DICTWORD>)/,asdfkjajfahlad
 
+Currently, since named capturing groups are used for classes, if the same
+class name is used more than once, there may be a need to start the regex
+by (?J). This will be fixed later.
 
 - The regex cannot include nested capture groups, so inner groups, if
   needed, should be non-capturing ones.
@@ -176,7 +179,7 @@ linkparser>
 !/(?<NUMBERS>)(?<rUNITS>)*(?<RPUNC>)*/,123.2milligram/terag/?!
 (test it...)
 
-linkparser> !/(?<DICTWORD>)(?<SUF>)/,there's
+!/(?<DICTWORD>)(?<SUF>)/,there's
 Modified pattern: (?:(?<DICTWORD>.*)(?C))(?:(?<SUF>.*)(?C))$(?C1)
 Alternative 1:
  0 (1):  there (0,5) [DICTWORD]
@@ -184,12 +187,10 @@ Alternative 1:
 linkparser> 
 
 
-% For some reason we get, for each capture group, the longest match
-% only.
-% This may be fine, but we need to know the reason. (LPUNCT contains
-% both - and --).
+In the next example, we get only whole word and double-dash because
+it can only match wpwp (when w is DICTWORD and p is --).
 
-linkparser> !/(?:(?<DICTWORD>)(?<LPUNC>))+/,this--is--
+!/(?:(?<DICTWORD>)(?<LPUNC>))+/,this--is--
 Modified pattern: (?:(?:(?<DICTWORD>.*)(?C))(?:(?<LPUNC>.*)(?C)))+$(?C1)
 Alternative 1:
  0 (1):  this (0,4) [DICTWORD]
@@ -199,9 +200,59 @@ Alternative 1:
  4 (1):   (10,10) [DICTWORD]
 linkparser> 
 
-It seems as if conditional matching using (*THEN) can do some fun
-things, but I don't have examples yet.
+However, this breaks to single characters, as expected:
+!/(?:(?<DICTWORD>)(?:(?<LPUNC>))*)+/,this--is--
+...
+Alternative 360:
+ 0 (1):  t (0,1) [DICTWORD]
+ 1 (1):  h (1,2) [DICTWORD]
+ 2 (1):  i (2,3) [DICTWORD]
+ 3 (1):  s (3,4) [DICTWORD]
+ 4 (1):  - (4,5) [DICTWORD]
+ 5 (1):  - (5,6) [DICTWORD]
+ 6 (1):  i (6,7) [DICTWORD]
+ 7 (1):  s (7,8) [DICTWORD]
+ 8 (1):  - (8,9) [DICTWORD]
+ 9 (1):  - (9,10) [DICTWORD]
+10 (1):   (10,10) [DICTWORD]
+linkparser> 
+
+But this stops after the first match:
+!/(?:(?<DICTWORD>)(?:(?<LPUNC>)(*COMMIT))*)+/,this--is--
+Alternative 1:
+ 0 (1):  this (0,4) [DICTWORD]
+ 1 (2):  -- (4,6) [LPUNC]
+ 2 (1):  is (6,8) [DICTWORD]
+ 3 (2):  -- (8,10) [LPUNC]
+ 4 (1):   (10,10) [DICTWORD]
+linkparser> 
+
+And this is even more interesting:
+!/(?:(?<DICTWORD>)(*COMMIT)(?:(?<LPUNC>))*)+/,this--is--
+Alternative 1:
+ 0 (1):  this (0,4) [DICTWORD]
+ 1 (2):  -- (4,6) [LPUNC]
+ 2 (1):  is (6,8) [DICTWORD]
+ 3 (2):  -- (8,10) [LPUNC]
+ 4 (1):   (10,10) [DICTWORD]
+Alternative 2:
+ 0 (1):  this (0,4) [DICTWORD]
+ 1 (2):  -- (4,6) [LPUNC]
+ 2 (1):  is (6,8) [DICTWORD]
+ 3 (2):  - (8,9) [LPUNC]
+ 4 (2):  - (9,10) [LPUNC]
+ 5 (1):   (10,10) [DICTWORD]
+Alternative 3:
+ 0 (1):  this (0,4) [DICTWORD]
+ 1 (2):  -- (4,6) [LPUNC]
+ 2 (1):  is (6,8) [DICTWORD]
+ 3 (2):  - (8,9) [LPUNC]
+ 4 (1):  - (9,10) [DICTWORD]
+ 5 (1):   (10,10) [DICTWORD]
+linkparser> 
+
+It seems as if conditional matching using (?(condition)yes-pattern|no-pattern)
+or (*THEN) can do some fun things, but I don't have useful examples yet.
 
 The question is how to use this code for tokenization. I have some
 ideas, more on that later.
-
