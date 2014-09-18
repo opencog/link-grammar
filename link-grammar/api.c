@@ -483,7 +483,7 @@ static void free_post_processing(Sentence sent)
 	}
 }
 
-static void select_linkages(Sentence sent, match_context_t* mchxt, 
+static void select_linkages(Sentence sent, match_context_t* mchxt,
                             count_context_t* ctxt,
                             Parse_Options opts)
 {
@@ -753,7 +753,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	print_time(opts, "Sorted all linkages");
 }
 
-static void old_post_process_linkages(Sentence sent, match_context_t* mchxt, 
+static void old_post_process_linkages(Sentence sent, match_context_t* mchxt,
                                   count_context_t* ctxt,
                                   Parse_Options opts)
 {
@@ -1263,11 +1263,14 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 	size_t lk, i;
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
-	char infix_mark = INFIX_MARK;
+	const char infix_mark = INFIX_MARK;
 	int * matched_alts = NULL;       /* number of morphemes that have matched
 												 * the chosen disjuncts for the
 												 * unsplit_word, so far (index: ai) */
 	size_t matched_alts_num = 0;     /* matched_alts number of elements */
+	char * const affix_types =
+	   alloca(sent->length*2 + 1);   /* affix types sequence */
+
 #define MATCHED_ALTS_MIN_INC 16     /* don't allocate matched_alts often */
 
 #if 0	/* Now it can always be enabled. Anyway, it is needed for "any". */
@@ -1283,12 +1286,11 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 
 	for (lk = 0; lk < sent->num_linkages_post_processed; lk++)
 	{
-		Linkage_info *lifo = &sent->link_info[lk];
+		Linkage_info * const lifo = &sent->link_info[lk];
 		size_t numalt = 1;               /* number of alternatives */
 		size_t ai;                       /* index of checked alternative */
 		int unsplit_i = 0;               /* unsplit word index */
 		const char * unsplit = NULL;     /* unsplit word */
-		char affix_types[MAX_SENTENCE+1] = ""; /* affix types sequence */
 		char * affix_types_p = affix_types;
 		/* If all the words are null - behave as if everything matched. */
 		bool match_found = true;        /* djw matched a morpheme */
@@ -1297,6 +1299,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		if (0 != lifo->N_violations)
 			continue;
 		extract_links(lifo->index, pi);
+		*affix_types_p = '\0';
 		for (i=0; i<sent->length; i++)
 		{
 			const char * djw;          /* disjunct word - the chosen word */
