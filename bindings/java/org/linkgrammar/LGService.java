@@ -139,7 +139,7 @@ public class LGService
 	{
 		init();
 
-		if (config.getMaxCost() > -1)
+		if (config.getMaxCost() > -1.0)
 			LinkGrammar.setMaxCost(config.getMaxCost());
 		if (config.getMaxParseSeconds() > -1)
 			LinkGrammar.setMaxParseSeconds(config.getMaxParseSeconds());
@@ -253,9 +253,9 @@ public class LGService
 					buf.append(",");
 			}
 			buf.append("], \"disjunctCost\":");
-			buf.append(Integer.toString(LinkGrammar.getLinkageDisjunctCost()));
+			buf.append(Double.toString(LinkGrammar.getLinkageDisjunctCost()));
 			buf.append(", \"linkageCost\":");
-			buf.append(Integer.toString(LinkGrammar.getLinkageLinkCost()));
+			buf.append(Double.toString(LinkGrammar.getLinkageLinkCost()));
 			buf.append(", \"numViolations\":");
 			buf.append(Integer.toString(LinkGrammar.getLinkageNumViolations()));
 			if (config.isStoreConstituentString())
@@ -327,7 +327,7 @@ public class LGService
 			else
 			{
 				LGConfig config = new LGConfig();
-				config.setMaxCost(JSONUtils.getInt("maxCost", msg, config.getMaxCost()));
+				config.setMaxCost(JSONUtils.getDouble("maxCost", msg, config.getMaxCost()));
 				config.setMaxLinkages(JSONUtils.getInt("maxLinkages", msg, config.getMaxLinkages()));
 				config.setMaxParseSeconds(JSONUtils.getInt("maxParseSeconds", msg, config.getMaxParseSeconds()));
 				config.setStoreConstituentString(

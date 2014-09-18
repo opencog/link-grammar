@@ -21,7 +21,7 @@ public class LGConfig
 {
 	private int maxLinkages = 25;
 	private int maxParseSeconds = 60;
-	private int maxCost = -1;
+	private double maxCost = -1.0;
 	private boolean allowSkippedWords = true;
 	private boolean storeConstituentString = true;
 	private boolean storeDiagramString = false;
@@ -43,11 +43,11 @@ public class LGConfig
 	{
 		maxParseSeconds = m;
 	}
-	public int getMaxCost()
+	public double getMaxCost()
 	{
 		return maxCost;
 	}
-	public void setMaxCost(int m)
+	public void setMaxCost(double m)
 	{
 		maxCost = m;
 	}

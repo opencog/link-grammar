@@ -568,7 +568,7 @@ Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations(JNIEnv *env, jclass cls
  * Method:     linkageDisjunctCost
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL
+JNIEXPORT jdouble JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost(JNIEnv *env, jclass cls)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
@@ -580,11 +580,11 @@ Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost(JNIEnv *env, jclass cls)
  * Method:     linkageLinkCost
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL
+JNIEXPORT jdouble JNICALL
 Java_org_linkgrammar_LinkGrammar_getLinkageLinkCost(JNIEnv *env, jclass cls)
 {
 	per_thread_data *ptd = get_ptd(env, cls);
-	return sentence_link_cost(ptd->sent, ptd->cur_linkage);
+	return (jdouble) sentence_link_cost(ptd->sent, ptd->cur_linkage);
 }
 
 /*

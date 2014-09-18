@@ -144,7 +144,7 @@ JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageNumViolations
  * Method:    linkageDisjunctCost
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost
+JNIEXPORT jdouble JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost
 	(JNIEnv *, jclass);
 
 /*
@@ -152,7 +152,7 @@ JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageDisjunctCost
  * Method:    linkageLinkCost
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageLinkCost
+JNIEXPORT jdouble JNICALL Java_org_linkgrammar_LinkGrammar_getLinkageLinkCost
 	(JNIEnv *, jclass);
 
 /*

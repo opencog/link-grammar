@@ -61,7 +61,7 @@ public class LinkGrammar
     // C functions for changing linkparser options
     public static native void setMaxParseSeconds(int maxParseSeconds);
 
-    public static native void setMaxCost(int maxCost);
+    public static native void setMaxCost(double maxCost);
 
     public static native void setMaxLinkages(int maxLinkages);
     public static native int getMaxLinkages();
@@ -96,9 +96,9 @@ public class LinkGrammar
 
     public static native int getLinkageNumViolations();
 
-    public static native int getLinkageDisjunctCost();
+    public static native double getLinkageDisjunctCost();
 
-    public static native int getLinkageLinkCost();
+    public static native double getLinkageLinkCost();
 
     public static native int getNumLinks();
 

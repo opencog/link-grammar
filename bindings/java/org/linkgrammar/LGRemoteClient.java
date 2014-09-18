@@ -51,8 +51,8 @@ public class LGRemoteClient
         for (Map x : (List<Map>)top.get("linkages"))
         {
             Linkage linkage = new Linkage();
-            linkage.setDisjunctCost(((Number)x.get("disjunctCost")).intValue());
-            linkage.setLinkCost(((Number)x.get("linkageCost")).intValue());
+            linkage.setDisjunctCost(((Number)x.get("disjunctCost")).doubleValue());
+            linkage.setLinkCost(((Number)x.get("linkageCost")).doubleValue());
             linkage.setNumViolations(((Number)x.get("numViolations")).intValue());
             linkage.setWords(((List<String>)(x.get("words"))).toArray(new String[0]));
             linkage.setDisjuncts(((List<String>)(x.get("disjuncts"))).toArray(new String[0]));

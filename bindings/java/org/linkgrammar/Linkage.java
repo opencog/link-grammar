@@ -30,8 +30,8 @@ public class Linkage implements Iterable<Link>
 	private String constituentString;
 	private String diagramString;
 	private int linkedWordCount;
-	private int disjunctCost;
-	private int linkCost;
+	private double disjunctCost;
+	private double linkCost;
 	private int numViolations;
 
 	public List<Link> getLinks()
@@ -74,22 +74,22 @@ public class Linkage implements Iterable<Link>
 		this.words = words;
 	}
 
-	public int getDisjunctCost()
+	public double getDisjunctCost()
 	{
 		return disjunctCost;
 	}
 
-	public void setDisjunctCost(int disjunctCost)
+	public void setDisjunctCost(double disjunctCost)
 	{
 		this.disjunctCost = disjunctCost;
 	}
 
-	public int getLinkCost()
+	public double getLinkCost()
 	{
 		return linkCost;
 	}
 
-	public void setLinkCost(int linkCost)
+	public void setLinkCost(double linkCost)
 	{
 		this.linkCost = linkCost;
 	}

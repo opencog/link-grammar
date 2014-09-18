@@ -36,6 +36,12 @@ public class JSONUtils
 		return x == null ? def : Integer.parseInt(x);
 	}
 
+	public static double getDouble(String name, Map<String, String> msg, double def)
+	{
+		String x = msg.get(name);
+		return x == null ? def : Double.parseDouble(x);
+	}
+
 	static char[] hex = "0123456789ABCDEF".toCharArray();
 
 	public static String jsonString(String s)
