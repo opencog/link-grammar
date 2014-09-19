@@ -29,7 +29,7 @@
 
 void free_deletable(Sentence sent)
 {
-	int w;
+	size_t w;
 	if (sent->dptr != NULL)
 	{
 		for (w = 0; w <= sent->length; w++)
@@ -67,7 +67,7 @@ static int conj_in_range(Sentence sent, int lw, int rw)
  * words "either", "neither", "both", "not" and "not only" are all
  * deletable.
  */
-void build_deletable(Sentence sent, int has_conjunction)
+void build_deletable(Sentence sent, bool has_conjunction)
 {
 	int i,j,k;
 
@@ -128,7 +128,7 @@ void build_deletable(Sentence sent, int has_conjunction)
 
 void free_effective_dist(Sentence sent)
 {
-	int w;
+	size_t w;
 	if (sent->effective_dist != NULL) {
 		for (w=0; w<sent->length; w++) {
 			xfree((char *)sent->effective_dist[w],sizeof(char)*(sent->length+1));
@@ -157,9 +157,9 @@ void free_effective_dist(Sentence sent)
  * Just as deletable[i][j] is constructed for j=N_words (which is one
  * off the end of the sentence) we do that for effective_dist[][].
  */
-void build_effective_dist(Sentence sent, int has_conjunction)
+void build_effective_dist(Sentence sent, bool has_conjunction)
 {
-	int i, j, diff;
+	size_t i, j, diff;
 
 	free_effective_dist(sent);
 	sent->effective_dist = (char **) xalloc((sent->length)*sizeof(char *));
@@ -231,7 +231,7 @@ void build_effective_dist(Sentence sent, int has_conjunction)
  */
 static void install_fat_connectors(Sentence sent)
 {
-	int i;
+	size_t i;
 	for (i=0; i<sent->length; i++) {
 		if (sent->is_conjunction[i]) {
 			sent->word[i].d = catenate_disjuncts(sent->word[i].d,
@@ -298,13 +298,13 @@ set_connector_length_limits(Sentence sent, count_context_t * ctxt,
  */
 int sentence_contains_conjunction(Sentence sent)
 {
-	int w;
-	if (NULL == sent->is_conjunction) return FALSE;
+	size_t w;
+	if (NULL == sent->is_conjunction) return false;
 
 	for (w=0; w<sent->length; w++) {
-		if (sent->is_conjunction[w]) return TRUE;
+		if (sent->is_conjunction[w]) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 /**
@@ -484,7 +484,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 int sentence_contains_conjunction(Sentence sent)
 {
-	return FALSE;
+	return false;
 }
 
 #endif /* USE_FAT_LINKAGES */
