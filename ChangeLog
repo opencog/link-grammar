@@ -6,6 +6,7 @@ Version 5.1.1 (XXX 2014)
  * Fix handling of ellipsis when there's missing whitespace.
  * Java: API bugfix/change: costs should have been doubles not ints.
  * Fat-linkage code: fix it so it compiles again.
+ * Sat-solver: re-enable it so that it runs.
 
 Version 5.1.0 (29 August 2014)
  * Updated Russian dictionaries from Sergei Protasov.
