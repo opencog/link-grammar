@@ -5,6 +5,7 @@ Version 5.1.1 (XXX 2014)
  * Swap order of post-processing and bad morphology rejection.
  * Fix handling of ellipsis when there's missing whitespace.
  * Java: API bugfix/change: costs should have been doubles not ints.
+ * Fat-linkage code: fix it so it compiles again.
 
 Version 5.1.0 (29 August 2014)
  * Updated Russian dictionaries from Sergei Protasov.
