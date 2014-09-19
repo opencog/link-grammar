@@ -32,7 +32,7 @@ extern "C" {
 #ifdef _DEBUG
 #define DEBUG_print(x) (cout << x << endl)
 #else
-#define DEBUG_print(x) (0)
+#define DEBUG_print(x) 
 #endif
 
 /*-------------------------------------------------------------------------*
