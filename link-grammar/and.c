@@ -736,7 +736,7 @@ static void compute_matchers_for_a_label(Sentence sent, int k)
  */
 void build_conjunction_tables(Sentence sent)
 {
-	int w;
+	size_t w;
 	int k;
 	Disjunct * d;
 
@@ -1171,7 +1171,8 @@ struct Image_node_struct {
  */
 int set_has_fat_down(Sentence sent)
 {
-	int link, w, N_fat;
+	size_t link;
+	int w, N_fat;
 	Parse_info pi = sent->parse_info;
 
 	N_fat = 0;
@@ -1218,7 +1219,8 @@ static void free_image_array(Parse_info pi)
  */
 static void build_image_array(Sentence sent)
 {
-	int link, end, word;
+	size_t link;
+	int end, word;
 	Connector * this_end_con, *other_end_con, * upcon, * updiscon, *clist;
 	Disjunct * dis, * updis;
 	Image_node * in;
@@ -1481,8 +1483,9 @@ int is_canonical_linkage(Sentence sent)
  */
 void compute_pp_link_array_connectors(Sentence sent, Sublinkage *sublinkage)
 {
-	int link, end, word, place;
-	Connector * this_end_con, * upcon, * updiscon, *clist, *con, *mycon;
+	size_t link;
+	int end, word, place;
+	Connector * this_end_con, * upcon, * updiscon, *clist, *con, *mycon = NULL;
 	Disjunct * dis, * updis, *mydis;
 	Parse_info pi = sent->parse_info;
 
