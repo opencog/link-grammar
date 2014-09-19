@@ -30,6 +30,8 @@ public:
     : _sent(sent) {
   }
 
+  virtual ~Guiding() {}
+
   /* Abstract functions that calculate params for each type of variable */
 
   /* string variables */
