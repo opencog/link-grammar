@@ -315,6 +315,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
 	size_t i;
 	bool has_conjunction;
+	count_context_t * ctxt;
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost);
 	if (verbosity > 2) {
