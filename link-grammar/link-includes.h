@@ -446,10 +446,6 @@ MS_DEPRECATED link_public_api(void)
      parse_options_set_use_fat_links(Parse_Options opts, int use_fat_links) GNUC_DEPRECATED;
 MS_DEPRECATED link_public_api(int)
      parse_options_get_use_fat_links(Parse_Options opts) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(void)
-     parse_options_set_display_union(Parse_Options opts, int val) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(int)
-     parse_options_get_display_union(Parse_Options opts) GNUC_DEPRECATED;
 
 /**********************************************************************
  *

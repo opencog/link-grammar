@@ -255,7 +255,7 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 
 #ifdef USE_FAT_LINKAGES
 	if (parse_options_get_use_fat_links(opts) &&
-	    parse_options_get_display_union(opts))
+	    copts->display_union)
 	{
 		linkage_compute_union(linkage);
 		first_sublinkage = linkage_get_num_sublinkages(linkage)-1;
