@@ -186,7 +186,7 @@ static Disjunct * special_disjunct(int label, int dir, const char *cs, const cha
  */
 static void construct_comma(Sentence sent)
 {
-	int w;
+	size_t w;
 	for (w=0; w<sent->length-1; w++) {
 		if ((strcmp(sent->word[w].alternatives[0], ",")==0) && sent->is_conjunction[w+1]) {
 			sent->word[w].d = catenate_disjuncts(special_disjunct(COMMA_LABEL,'+',"", ","), sent->word[w].d);
@@ -199,7 +199,7 @@ static void construct_comma(Sentence sent)
 /** Returns TRUE if one of the words in the sentence is s */
 static int sentence_contains(Sentence sent, const char * s)
 {
-	int w;
+	size_t w;
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].alternatives[0], s) == 0) return TRUE;
 	}
@@ -217,7 +217,7 @@ Screw it. This code is obsolete, and will be removed before long.
 
 static void construct_either(Sentence sent)
 {
-	int w;
+	size_t w;
 	if (!sentence_contains(sent, "either")) return;
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].alternatives[0], "either") != 0) continue;
@@ -235,7 +235,7 @@ static void construct_either(Sentence sent)
 
 static void construct_neither(Sentence sent)
 {
-	int w;
+	size_t w;
 	if (!sentence_contains(sent, "neither")) {
 		/* I don't see the point removing disjuncts on "nor".  I
 		   Don't know why I did this.  What's the problem keeping the
@@ -265,7 +265,7 @@ static void construct_neither(Sentence sent)
 
 static void construct_notonlybut(Sentence sent)
 {
-	int w;
+	size_t w;
 	Disjunct *d;
 	if (!sentence_contains(sent, "not")) {
 		return;
@@ -307,7 +307,7 @@ static void construct_notonlybut(Sentence sent)
 
 static void construct_both(Sentence sent)
 {
-	int w;
+	size_t w;
 	if (!sentence_contains(sent, "both")) return;
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].alternatives[0], "both") != 0) continue;
