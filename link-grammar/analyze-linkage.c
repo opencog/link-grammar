@@ -187,7 +187,8 @@ static void copy_full_link(Link **dest, Link *src)
  */
 static void build_digraph(analyze_context_t *actx, Parse_info pi)
 {
-	int i, link;
+	size_t link;
+	int i;
 	Priority p;
 	Link *lp;
 	List_o_links * lol;
@@ -891,7 +892,7 @@ static int strictly_smaller_name(const char * s, const char * t)
  */
 static void compute_pp_link_names(Sentence sent, Sublinkage *sublinkage)
 {
-	int i;
+	size_t i;
 	const char * s;
 	Parse_info pi = sent->parse_info;
 	count_context_t * ctxt = sent->count_ctxt;
@@ -953,7 +954,7 @@ void free_analyze(Sentence s)
  */
 Linkage_info analyze_fat_linkage(Sentence sent, Parse_Options opts, int analyze_pass)
 {
-	int i;
+	size_t i;
 	Linkage_info li;
 	DIS_node *d_root;
 	PP_node *pp;
@@ -1279,7 +1280,8 @@ static inline void prt_dis_con_tree(Sentence sent, DIS_node *dis) {}
  */
 void extract_fat_linkage(Sentence sent, Parse_Options opts, Linkage linkage)
 {
-	int i, j, N_thin_links;
+	size_t i;
+	int j, N_thin_links;
 	DIS_node *d_root;
 	int num_sublinkages;
 	Sublinkage * sublinkage;
