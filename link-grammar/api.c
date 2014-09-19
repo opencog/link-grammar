@@ -583,6 +583,8 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 #ifdef USE_FAT_LINKAGES
+	bool overflowed = (sent->link_info[0].index < 0);
+	size_t N_linkages_found = sent->num_linkages_found;
 	size_t N_thin_linkages;
 	bool only_canonical_allowed;
 	bool canonical;
