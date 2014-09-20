@@ -55,7 +55,7 @@ int size_of_expression(Exp * e)
 	return size;
 }
 
-/** 
+/**
  * Build a copy of the given expression (don't copy strings, of course)
  */
 static E_list * copy_E_list(E_list * l);
@@ -126,7 +126,7 @@ static int exp_compare(Exp * e1, Exp * e2)
 }
 
 /**
- * Sub-expression matcher -- return 1 if sub is non-NULL and 
+ * Sub-expression matcher -- return 1 if sub is non-NULL and
  * contained in super, 0 otherwise.
  */
 static int exp_contains(Exp * super, Exp * sub)
@@ -135,7 +135,7 @@ static int exp_contains(Exp * super, Exp * sub)
 
 #ifdef DEBUG
 	printf("SUP: ");
-	if (super) print_expression(super); 
+	if (super) print_expression(super);
 	printf("\n");
 #endif
 
@@ -157,7 +157,7 @@ static int exp_contains(Exp * super, Exp * sub)
 
 /* ======================================================== */
 /* X_node utilities ... */
-/** 
+/**
  * frees the list of X_nodes pointed to by x, and all of the expressions
  */
 void free_X_nodes(X_node * x)
@@ -487,7 +487,7 @@ static Boolean dn_word_contains(Dictionary dict,
 	printf("\nWORD: ");
 	print_expression(w_dn->exp);
 	printf("\nMACR: ");
-	print_expression(m_exp); 
+	print_expression(m_exp);
 	printf("\n");
 #endif
 
@@ -518,6 +518,77 @@ Boolean word_contains(Dictionary dict, const char * word, const char * macro)
 	ret = dn_word_contains(dict, w_dn, macro);
 	free_lookup_list(dict, w_dn);
 	return ret;
+}
+
+/**
+ * This hash function only looks at the leading upper case letters of
+ * the connector string, and the label fields.  This ensures that if two
+ * strings match (formally), then they must hash to the same place.
+ */
+int calculate_connector_hash(Connector * c)
+{
+	const char *s;
+	unsigned int i;
+
+	/* For most situations, all three hashes are very nearly equal;
+	 * as to which is faster depends on the parsed text.
+	 * For both English and Russian, there are about 100 pre-defined
+	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
+	 * connectors, and the LLxxx suffix connectors for Russian).
+	 * Turns out the cost of settting up the hash table dominates the
+	 * cost of collistions. */
+#ifdef USE_DJB2
+	/* djb2 hash */
+	i = 5381;
+#ifdef USE_FAT_LINKAGES
+	i = ((i << 5) + i) + (0xff & c->label);
+#endif /* USE_FAT_LINKAGES */
+	s = c->string;
+	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
+	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i = ((i << 5) + i) + *s;
+		s++;
+	}
+	i += i>>14;
+#endif /* USE_DJB2 */
+
+#define USE_JENKINS
+#ifdef USE_JENKINS
+	/* Jenkins one-at-a-time hash */
+	i = 0;
+	s = c->string;
+	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
+	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	{
+		i += *s;
+		i += (i<<10);
+		i ^= (i>>6);
+		s++;
+	}
+	i += (i << 3);
+	i ^= (i >> 11);
+	i += (i << 15);
+#endif /* USE_JENKINS */
+
+#ifdef USE_SDBM
+	/* sdbm hash */
+#ifdef USE_FAT_LINKAGES
+	i = (0xff & c->label);
+#else
+	i = 0;
+#endif /* USE_FAT_LINKAGES */
+	s = c->string;
+	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
+	while (isupper((int) *s))
+	{
+		i = *s + (i << 6) + (i << 16) - i;
+		s++;
+	}
+#endif /* USE_SDBM */
+
+	c->hash = i;
+	return i;
 }
 
 /* ========================= END OF FILE ============================== */

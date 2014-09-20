@@ -5,7 +5,7 @@
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
-/* license set forth in the LICENSE file included with this software.    */ 
+/* license set forth in the LICENSE file included with this software.    */
 /* This license allows free redistribution and use in source and binary  */
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
@@ -60,7 +60,7 @@ bool match_in_connector_set(Connector_set*, Connector*, int dir);
 /**
  * Returns TRUE if s and t match according to the connector matching
  * rules.  The connector strings must be properly formed, starting with
- * zero or one lower case letters, followed by one or more upper case 
+ * zero or one lower case letters, followed by one or more upper case
  * letters, followed by some other letters.
  *
  * The algorithm is symmetric with respect to a and b.
@@ -78,10 +78,10 @@ bool match_in_connector_set(Connector_set*, Connector*, int dir);
 static inline bool easy_match(const char * s, const char * t)
 {
 	char is = 0, it = 0;
-   if (islower((int) *s)) { is = *s; s++; }
-   if (islower((int) *t)) { it = *t; t++; }
+	if (islower((int) *s)) { is = *s; s++; }
+	if (islower((int) *t)) { it = *t; t++; }
 
-   if (is != 0 && it != 0 && is == it) return false;
+	if (is != 0 && it != 0 && is == it) return false;
 
 	while (isupper((int)*s) || isupper((int)*t))
 	{
@@ -92,7 +92,7 @@ static inline bool easy_match(const char * s, const char * t)
 
 	while ((*s!='\0') && (*t!='\0'))
 	{
-		if ((*s == '*') || (*t == '*') || 
+		if ((*s == '*') || (*t == '*') ||
 #ifdef USE_FAT_LINKAGES
 			((*s == *t) && (*s != '^'))
 #else
@@ -127,77 +127,12 @@ static inline int string_hash(const char *s)
 	return i;
 }
 
-/**
- * This hash function only looks at the leading upper case letters of
- * the connector string, and the label fields.  This ensures that if two
- * strings match (formally), then they must hash to the same place.
- */
+int calculate_connector_hash(Connector *);
+
 static inline int connector_hash(Connector * c)
 {
-	const char *s;
-	unsigned int i;
-
 	if (-1 != c->hash) return c->hash;
-
-	/* For most situations, all three hashes are very nearly equal;
-	 * as to which is faster depends on the parsed text.
-	 * For both English and Russian, there are about 100 pre-defined
-	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
-	 * connectors, and the LLxxx suffix connectors for Russian).
-	 * Turns out the cost of settting up the hash table dominates the
-	 * cost of collistions. */
-#ifdef USE_DJB2
-	/* djb2 hash */
-	i = 5381;
-#ifdef USE_FAT_LINKAGES
-	i = ((i << 5) + i) + (0xff & c->label);
-#endif /* USE_FAT_LINKAGES */
-	s = c->string;
-	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
-	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
-	{
-		i = ((i << 5) + i) + *s;
-		s++;
-	}
-	i += i>>14;
-#endif /* USE_DJB2 */
-
-#define USE_JENKINS
-#ifdef USE_JENKINS
-	/* Jenkins one-at-a-time hash */
-	i = 0;
-	s = c->string;
-	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
-	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
-	{
-		i += *s;
-		i += (i<<10);
-		i ^= (i>>6);
-		s++;
-	}
-	i += (i << 3);
-	i ^= (i >> 11);
-	i += (i << 15);
-#endif /* USE_JENKINS */
-
-#ifdef USE_SDBM
-	/* sdbm hash */
-#ifdef USE_FAT_LINKAGES
-	i = (0xff & c->label);
-#else
-	i = 0;
-#endif /* USE_FAT_LINKAGES */
-	s = c->string;
-	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
-	while (isupper((int) *s))
-	{
-		i = *s + (i << 6) + (i << 16) - i;
-		s++;
-	}
-#endif /* USE_SDBM */
-
-	c->hash = i;
-	return i;
+	return calculate_connector_hash(c);
 }
 
 /**
