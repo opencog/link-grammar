@@ -614,7 +614,7 @@ static bool disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
 	if ((e1!=NULL) || (e2!=NULL)) return false;
 	e1 = d1->right;
 	e2 = d2->right;
-	while((e1!=NULL) && (e2!=NULL))
+	while ((e1!=NULL) && (e2!=NULL))
 	{
 		if (!connector_matches_alam(e1,e2)) break;
 		e1 = e1->next;
