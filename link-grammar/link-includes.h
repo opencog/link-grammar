@@ -343,7 +343,7 @@ link_public_api(void)
      dict_display_word_info(Dictionary dict, const char *, Parse_Options opts);
 link_public_api(void)
      left_print_string(FILE* fp, const char *, const char *);
-link_public_api(int)
+link_public_api(bool)
      lg_expand_disjunct_list(Sentence sent);
 
 

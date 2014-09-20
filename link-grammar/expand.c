@@ -35,13 +35,13 @@ static Disjunct * build_expansion_disjuncts(Cluster *clu, X_node *x)
  * sentence by working with word-clusters. Return true if the number
  * of disjuncts were expanded, else return false.
  */
-int lg_expand_disjunct_list(Sentence sent)
+bool lg_expand_disjunct_list(Sentence sent)
 {
 	size_t w;
 
 	Cluster *clu = lg_cluster_new();
 
-	int expanded = FALSE;
+	bool expanded = false;
 	for (w = 0; w < sent->length; w++)
 	{
 		X_node * x;
@@ -54,7 +54,7 @@ int lg_expand_disjunct_list(Sentence sent)
 				unsigned int cnt = count_disjuncts(d);
 				d = catenate_disjuncts(dx, d);
 				d = eliminate_duplicate_disjuncts(d);
-				if (cnt < count_disjuncts(d)) expanded = TRUE;
+				if (cnt < count_disjuncts(d)) expanded = true;
 			}
 		}
 		sent->word[w].d = d;

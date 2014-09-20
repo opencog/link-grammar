@@ -220,7 +220,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		}
 	}
 
-	if ((verbosity > 2) && (count != 0)) printf("killed %d duplicates\n", count);
+	if ((verbosity > 2) && (count != 0)) printf("killed %u duplicates\n", count);
 
 	disjunct_dup_table_delete(dt);
 	return d;
