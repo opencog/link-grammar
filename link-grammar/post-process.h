@@ -1,6 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
-/* Daniel Sleator, David Temperley, and John Lafferty                    */
+/*        Daniel Sleator, David Temperley, and John Lafferty             */
+/* Copyright (c) 2014 Linas Vepstas                                      */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -30,8 +31,6 @@
 #define PP_FIRST_PASS  1
 #define PP_SECOND_PASS 2
 
-/* Postprocessor * post_process_open(char *path);  this is in api-prototypes.h */
-
 void     post_process_free_data(PP_data * ppd);
 void     post_process_close_sentence(Postprocessor *);
 void     post_process_scan_linkage(Postprocessor * pp, Parse_Options opts,
@@ -44,5 +43,7 @@ bool     post_process_match(const char *s, const char *t);  /* utility function 
 void          free_d_type(D_type_list * dtl);
 D_type_list * copy_d_type(const D_type_list * dtl);
 #endif /* USE_FAT_LINKAGES */
+
+bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts);
 
 #endif

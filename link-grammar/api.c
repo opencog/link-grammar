@@ -1256,8 +1256,7 @@ static inline bool
 #define AFFIXTYPE_END		'b'	/* end of input word */
 
 /** return true if its good, else return false */
-static bool sane_linkage_morphism(Sentence sent, size_t lk,
-          Parse_Options opts)
+bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 {
 	bool is_valid_morphism = false;
 	size_t i;

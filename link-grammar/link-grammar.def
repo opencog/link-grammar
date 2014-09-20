@@ -139,6 +139,7 @@ xrealloc
 xfree
 analyze_thin_linkage
 extract_thin_linkage
+sane_linkage_morphism
 post_process_match
 match_in_connector_set
 init_connector

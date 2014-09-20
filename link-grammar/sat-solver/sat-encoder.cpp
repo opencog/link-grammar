@@ -1299,14 +1299,18 @@ Linkage SATEncoder::get_next_linkage()
     Linkage_info* lifo = &_sent->link_info[index];
 
     // Why is linkage_post_process() never called here?
-    // XXX TODO need to call sane_morphism here ...
     *lifo = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
     lifo->index = index;
     linkage->info = lifo;
 
     if (0 == lifo->N_violations) {
-      cout << "Linkage PP OK" << endl;
       _sent->num_valid_linkages++;
+      sane_linkage_morphism(_sent, index, _opts);
+    }
+
+    // sane_morphism will increment N_violations if its insane...
+    if (0 == lifo->N_violations) {
+      cout << "Linkage PP OK" << endl;
     } else {
       cout << "Linkage PP NOT OK" << endl;
     }
