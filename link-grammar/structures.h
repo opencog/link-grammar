@@ -142,7 +142,7 @@ static inline const char * connector_get_string(Connector *c)
 struct Disjunct_struct
 {
     Disjunct *next;
-    const char * string;
+    const char * string;      /* subscripted dictionary word */
     Connector *left, *right;
     double cost;
     bool marked;
