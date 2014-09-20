@@ -115,7 +115,7 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
  * is connectors_equal_AND(), but that ignores priorities,
  * this does not.
  */
-static int connectors_equal_prune(Connector *c1, Connector *c2)
+static bool connectors_equal_prune(Connector *c1, Connector *c2)
 {
 	return (c1->multi == c2->multi) &&
 #ifdef USE_FAT_LINKAGES
@@ -126,25 +126,29 @@ static int connectors_equal_prune(Connector *c1, Connector *c2)
 }
 
 /** returns TRUE if the disjuncts are exactly the same */
-static int disjuncts_equal(Disjunct * d1, Disjunct * d2)
+static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 {
 	Connector *e1, *e2;
 	e1 = d1->left;
 	e2 = d2->left;
-	while((e1!=NULL) && (e2!=NULL)) {
-		if (!connectors_equal_prune(e1,e2)) break;
+	while ((e1 != NULL) && (e2 != NULL)) {
+		if (!connectors_equal_prune(e1, e2)) return false;
 		e1 = e1->next;
 		e2 = e2->next;
 	}
-	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	if ((e1 != NULL) || (e2 != NULL)) return false;
+
 	e1 = d1->right;
 	e2 = d2->right;
-	while((e1!=NULL) && (e2!=NULL)) {
-		if (!connectors_equal_prune(e1,e2)) break;
+	while ((e1 != NULL) && (e2 != NULL)) {
+		if (!connectors_equal_prune(e1, e2)) return false;
 		e1 = e1->next;
 		e2 = e2->next;
 	}
-	if ((e1!=NULL) || (e2!=NULL)) return FALSE;
+	if ((e1 != NULL) || (e2 != NULL)) return false;
+
+	/* Save cpu time by comparing this last, since this will
+	 * almost always be true. */
 	return (strcmp(d1->string, d2->string) == 0);
 }
 
@@ -187,7 +191,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 		dn = d->next;
 		h = old_hash_disjunct(dt, d);
 
-		for (dx = dt->dup_table[h]; dx!=NULL; dx=dx->next)
+		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->next)
 		{
 			if (disjuncts_equal(dx, d)) break;
 		}
@@ -207,7 +211,7 @@ Disjunct * eliminate_duplicate_disjuncts(Disjunct * d)
 	}
 
 	/* d is already null */
-	for (i=0; i<dt->dup_table_size; i++)
+	for (i=0; i < dt->dup_table_size; i++)
 	{
 		for (dn = dt->dup_table[i]; dn != NULL; dn = dx) {
 			dx = dn->next;
