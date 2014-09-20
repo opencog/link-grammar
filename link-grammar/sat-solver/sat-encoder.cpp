@@ -1226,8 +1226,10 @@ void SATEncoder::pp_prune()
  *                         D E C O D I N G                                  *
  *--------------------------------------------------------------------------*/
 
-/* This is is almost identical to linkage_create(), except that
- * sat_extract_links is called, instead of normal extract_links.
+/* This is very similar to the api call linkage_create(), except that
+ * sat_extract_links is called, instead of normal extract_links().
+ * It would be good to refactor this and the other to make them even
+ * more similar, because right now, its confusing ...
  */
 Linkage SATEncoder::create_linkage()
 {
@@ -1239,7 +1241,7 @@ Linkage SATEncoder::create_linkage()
   linkage->word = (const char **) exalloc(linkage->num_words*sizeof(char *));
   linkage->sent = _sent;
   linkage->opts = _opts;
-  //  linkage->info = sent->link_info[k];
+  //  linkage->info = sent->link_info[k]; done later...
 
   if (_sent->parse_info) {
     Parse_info pi = _sent->parse_info;
@@ -1294,11 +1296,13 @@ Linkage SATEncoder::get_next_linkage()
     size_t nbytes = _sent->num_linkages_alloced * sizeof(Linkage_info);
     _sent->link_info = (Linkage_info*) xrealloc(_sent->link_info,
                        nbytes - sizeof(Linkage_info), nbytes);
-
     Linkage_info* lifo = &_sent->link_info[index];
+
+    // Why is linkage_post_process() never called here?
     // XXX TODO need to call sane_morphism here ...
     *lifo = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
     lifo->index = index;
+    linkage->info = lifo;
 
     if (0 == lifo->N_violations) {
       cout << "Linkage PP OK" << endl;

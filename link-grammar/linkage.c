@@ -333,10 +333,10 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 		return sat_create_linkage(k, sent, opts);
 	}
 
-	if (sent->num_linkages_alloced <= k) return NULL; /* bounds check */
-
 	if (k >= sent->num_linkages_post_processed) return NULL;
 
+	/* bounds check: link_info array is this size */
+	if (sent->num_linkages_alloced <= k) return NULL;
 	extract_links(sent->link_info[k].index, sent->parse_info);
 
 	/* Using exalloc since this is external to the parser itself. */
