@@ -1255,10 +1255,12 @@ static inline bool
 #define AFFIXTYPE_WORD		'w'	/* regular word */
 #define AFFIXTYPE_END		'b'	/* end of input word */
 
-static void sane_morphism(Sentence sent, Parse_Options opts)
+/** return true if its good, else return false */
+static bool sane_linkage_morphism(Sentence sent, size_t lk,
+          Parse_Options opts)
 {
-	size_t N_invalid_morphism = 0;
-	size_t lk, i;
+	bool is_valid_morphism = false;
+	size_t i;
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
 	const char infix_mark = INFIX_MARK;
@@ -1271,20 +1273,6 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 
 #define MATCHED_ALTS_MIN_INC 16     /* don't allocate matched_alts often */
 
-#if 0	/* Now it can always be enabled. Anyway, it is needed for "any". */
-	/* Skip checking, if dictionary specifies neither prefixes nor sufixes. */
-	if (NULL == afdict) return;
-	if ((0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
-	    (0 == AFCLASS(afdict, AFDICT_MPRE)->length) &&
-	    (0 == AFCLASS(afdict, AFDICT_SUF)->length))
-	{
-		return;
-	}
-#endif
-
-	for (lk = 0; lk < sent->num_linkages_post_processed; lk++)
-	{
-		Linkage_info * const lifo = &sent->link_info[lk];
 		size_t numalt = 1;               /* number of alternatives */
 		size_t ai;                       /* index of checked alternative */
 		int unsplit_i = 0;               /* unsplit word index */
@@ -1292,10 +1280,13 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 		char * affix_types_p = affix_types;
 		/* If all the words are null - behave as if everything matched. */
 		bool match_found = true;        /* djw matched a morpheme */
+ 
+		Linkage_info * const lifo = &sent->link_info[lk];
 
 		/* Don't bother with linkages that already failed post-processing... */
 		if (0 != lifo->N_violations)
-			continue;
+			return true;
+
 		extract_links(lifo->index, pi);
 		*affix_types_p = '\0';
 		for (i=0; i<sent->length; i++)
@@ -1510,23 +1501,36 @@ try_again:
 		else
 		{
 			/* Oh no ... invalid morpheme combination! */
-			N_invalid_morphism++;
+			sent->num_valid_linkages --;
+			is_valid_morphism = false;
 			lifo->N_violations++;
 			lifo->pp_violation_msg = "Invalid morphism construction.";
 			if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
 			lgdebug(4, "%zu FAILED\n", lk+1);
 		}
+
+	if (matched_alts) free(matched_alts);
+
+	return is_valid_morphism;
+}
+
+static void sane_morphism(Sentence sent, Parse_Options opts)
+{
+	size_t N_invalid_morphism = 0;
+	size_t lk;
+
+	for (lk = 0; lk < sent->num_linkages_post_processed; lk++)
+	{
+      if (!sane_linkage_morphism(sent, lk, opts))
+          N_invalid_morphism ++;
 	}
 
 	if (opts->verbosity > 1)
 	{
-		prt_error("Info: sane_morphism(): %zu of %zu linkages with "
-					 "invalid morphism construction\n",
+		prt_error("Info: sane_morphism(): %zu of %zu linkages had "
+					 "invalid morphology construction\n",
 		          N_invalid_morphism, sent->num_valid_linkages);
 	}
-	sent->num_valid_linkages -= N_invalid_morphism;
-
-	free(matched_alts);
 }
 
 static void chart_parse(Sentence sent, Parse_Options opts)
