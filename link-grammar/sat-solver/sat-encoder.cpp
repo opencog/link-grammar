@@ -1506,19 +1506,28 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Parse_info pi)
     if (_solver->model[_variables->linked(var->left_word, var->right_word)] != l_True)
       continue;
 
-    pi->link_array[current_link].lw = var->left_word;
-    pi->link_array[current_link].rw = var->right_word;
+    Link& clink = pi->link_array[current_link];
+    clink.lw = var->left_word;
+    clink.rw = var->right_word;
     //    pi->link_array[j].name = var->label;
 
     Connector* connector;
 
     connector = connector_new();
     connector->string = var->left_connector;
-    pi->link_array[current_link].lc = connector;
+    clink.lc = connector;
 
     connector = connector_new();
     connector->string = var->right_connector;
-    pi->link_array[current_link].rc = connector;
+    clink.rc = connector;
+
+    // Indicate the disjuncts, too.
+    // This is needed so that compute_chosen_word works correctly.
+#ifdef NO_DISJUNCT_INFO_AVAILABLE_WTF
+// XXX I think LinkVar needs to be extended to hold the disjunct
+    pi->chosen_disjuncts[clink.lw] = ld;
+    pi->chosen_disjuncts[clink.rw] = rd;
+#endif
 
     current_link++;
   }

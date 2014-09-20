@@ -726,8 +726,9 @@ Fat Links:
 
    As of version 4.7.12 (May 2013), the "fat link" code is no longer
    compiled by default.  To obtain the fat-link version, ./configure
-   must be run with the --enable-fat-links flag.  Enabling this will
-   generate a lot of warning messages during compilation.
+   must be run with the --enable-fat-links --disable-sat-solver flag.
+   Enabling this will generate a lot of warning messages during
+   compilation.
 
    The only reason that fat link code is still available is that the
    Russian dictionaries still depend on them to support conjunctions.
@@ -753,11 +754,14 @@ SAT solver:
    although the prototype works.  it is not yet well-integrated with
    the system, and needs cleanup.  In particular, it fails to handle
    morphemes correctly (i.e. to use compute_chosen_words() in
-   SATEncoder::create_linkage() -- this needs fixing.)
+   SATEncoder::create_linkage() -- this needs fixing.  The
+   chosen_disjuncts array is not filled out, and thus, there is no
+   awareness of disjunct costs, which is the most basic parse ranking
+   that we've got ...)
 
-   The SAT solver is enabled by specifying
+   The SAT solver is enabled by default.  It can be disabled by specifying
 
-      ./configure --enable-sat-solver
+      ./configure --disable-sat-solver
 
    prior to compiling.
 
