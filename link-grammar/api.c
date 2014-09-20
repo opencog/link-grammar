@@ -1273,241 +1273,241 @@ static bool sane_linkage_morphism(Sentence sent, size_t lk,
 
 #define MATCHED_ALTS_MIN_INC 16     /* don't allocate matched_alts often */
 
-		size_t numalt = 1;               /* number of alternatives */
-		size_t ai;                       /* index of checked alternative */
-		int unsplit_i = 0;               /* unsplit word index */
-		const char * unsplit = NULL;     /* unsplit word */
-		char * affix_types_p = affix_types;
-		/* If all the words are null - behave as if everything matched. */
-		bool match_found = true;        /* djw matched a morpheme */
+	size_t numalt = 1;               /* number of alternatives */
+	size_t ai;                       /* index of checked alternative */
+	int unsplit_i = 0;               /* unsplit word index */
+	const char * unsplit = NULL;     /* unsplit word */
+	char * affix_types_p = affix_types;
+	/* If all the words are null - behave as if everything matched. */
+	bool match_found = true;        /* djw matched a morpheme */
  
-		Linkage_info * const lifo = &sent->link_info[lk];
+	Linkage_info * const lifo = &sent->link_info[lk];
 
-		/* Don't bother with linkages that already failed post-processing... */
-		if (0 != lifo->N_violations)
-			return true;
+	/* Don't bother with linkages that already failed post-processing... */
+	if (0 != lifo->N_violations)
+		return true;
 
-		extract_links(lifo->index, pi);
-		*affix_types_p = '\0';
-		for (i=0; i<sent->length; i++)
+	extract_links(lifo->index, pi);
+	*affix_types_p = '\0';
+	for (i=0; i<sent->length; i++)
+	{
+		const char * djw;          /* disjunct word - the chosen word */
+		size_t djwlen;             /* disjunct total length */
+		size_t len;                /* disjunct length w/o subscript */
+		const char * mark;         /* char position of SUBSCRIPT_MARK */
+		bool empty_word = false;   /* is this an empty word? */
+		Disjunct * cdj = pi->chosen_disjuncts[i];
+
+		lgdebug(+4, "Linkage %zu, word %zu/%zu\n", lk+1, i, sent->length);
+
+		/* Ignore island words */
+		if (NULL == cdj)
 		{
-			const char * djw;          /* disjunct word - the chosen word */
-			size_t djwlen;             /* disjunct total length */
-			size_t len;                /* disjunct length w/o subscript */
-			const char * mark;         /* char position of SUBSCRIPT_MARK */
-			bool empty_word = false;   /* is this an empty word? */
-			Disjunct * cdj = pi->chosen_disjuncts[i];
+			lgdebug(4, "%zu ignored island word\n", lk+1);
+			unsplit = NULL; /* mark it as island */
+			continue;
+		}
 
-			lgdebug(+4, "Linkage %zu, word %zu/%zu\n", lk+1, i, sent->length);
-
-			/* Ignore island words */
-			if (NULL == cdj)
+		if (NULL != sent->word[i].unsplit_word)
+		{
+			/* This is an input word - remember its parameters */
+			unsplit_i = i;
+			unsplit = sent->word[i].unsplit_word;
+			numalt = altlen(sent->word[i].alternatives);
+			if (numalt > matched_alts_num)
 			{
-				lgdebug(4, "%zu ignored island word\n", lk+1);
-				unsplit = NULL; /* mark it as island */
-				continue;
+				matched_alts_num = numalt + MATCHED_ALTS_MIN_INC;
+				matched_alts =
+					realloc(matched_alts, sizeof(*matched_alts)*matched_alts_num);
 			}
 
-			if (NULL != sent->word[i].unsplit_word)
-			{
-				/* This is an input word - remember its parameters */
-				unsplit_i = i;
-				unsplit = sent->word[i].unsplit_word;
-				numalt = altlen(sent->word[i].alternatives);
-				if (numalt > matched_alts_num)
-				{
-					matched_alts_num = numalt + MATCHED_ALTS_MIN_INC;
-					matched_alts =
-						realloc(matched_alts, sizeof(*matched_alts)*matched_alts_num);
-				}
-
-				lgdebug(4, "%zu unsplit word %s, alts:", lk+1, unsplit);
-				for (ai = 0; ai < numalt; ai++)
-				{
-					matched_alts[ai] = 0;
-					lgdebug(4, " %zu:%s", ai, sent->word[i].alternatives[ai]);
-				}
-				lgdebug(4, "\n");
-			}
-			if (NULL == unsplit)
-			{
-				lgdebug(4, "%zu ignore morphemes of an island word\n", lk+1);
-				continue;
-			}
-
-			djw = cdj->string;
-			djwlen = strlen(djw);
-			mark = strchr(djw, SUBSCRIPT_MARK);
-			len = NULL != mark ? (size_t)(mark - djw) : djwlen;
-
-			/* Find morpheme type */
-			if (is_AFFIXTYPE_EMPTY(infix_mark, djw, djwlen))
-			{
-				/* Ignore the empty word */;
-				empty_word = true;
-			}
-			else
-			if (is_AFFIXTYPE_SUFFIX(infix_mark, djw))
-			{
-				*affix_types_p = AFFIXTYPE_SUFFIX;
-			}
-			else
-			if (is_AFFIXTYPE_STEM(infix_mark, djw, len))
-			{
-				*affix_types_p = AFFIXTYPE_STEM;
-			}
-			else
-			if (is_AFFIXTYPE_PREFIX(infix_mark, djw, len))
-			{
-				*affix_types_p = AFFIXTYPE_PREFIX;
-			}
-			else
-			{
-				*affix_types_p = AFFIXTYPE_WORD;
-			}
-
-			lgdebug(4, "%zu djw=%s affixtype=%c\n",
-			        lk+1, djw, empty_word ? 'E' : *affix_types_p);
-
-			if (! empty_word) affix_types_p++;
-
-			lgdebug(4, "%zu djw %s matched alt#:", lk+1, djw);
-			match_found = false;
-
-			/* Compare the chosen word djw to the alternatives */
+			lgdebug(4, "%zu unsplit word %s, alts:", lk+1, unsplit);
 			for (ai = 0; ai < numalt; ai++)
 			{
-				const char * s, * t;
-				const char *a = sent->word[i].alternatives[ai];
-				char downcased[MAX_WORD+1] = "";
-
-				if (-1 == matched_alts[ai])
-					continue; /* already didn't match */
-
-				s = a;
-try_again:
-				t = djw;
-				//lgdebug(4, "\n%d COMPARING alt%d s %s djw %s: ", lk+1, (int)ai, s, t);
-				/* Rules of match:
-				 * A morpheme with a subscript needs an exact match to djw.
-				 * A morpheme w/o a subscript needs an exact match to djw
-				 * disregarding its subscript.
-				 * XXX To check: words that contain a dot as part of them. */
-				while ((*s != '\0' && *s != '[') && (*s == *t)) {s++; t++;}
-				/* Possibilities:
-				 *** Match (the last two are for words ending with [...]):
-				 * s==\0 && t==\0
-				 * s==\0 && t==SUBSCRIPT_MARK
-				 * s==\0 && t==[
-				 * s==[ && t==[
-				 *** Continue to check:
-				 * s==.	&& t==SUBSCRIPT_MARK
-				 */
-				if (*s == SUBSCRIPT_DOT && *t == SUBSCRIPT_MARK)
-				{
-					s++; t++;
-					while ((*s != '\0') && (*s == *t)) {s++; t++;}
-				}
-				if (((*s == '\0') &&
-				   ((*t == '\0') || (*t == SUBSCRIPT_MARK) || (*t == '[')))
-				   ||
-				   ((*s == '[') && (*t == '[')))
-				{
-					//lgdebug(4, "EQUAL\n");
-					lgdebug(4, " %zu", ai);
-					match_found = true;
-					/* Count matched morphemes in this alternative */
-					matched_alts[ai]++;
-				}
-				else {
-					//lgdebug(4,"NOTEQ\n");
-					/* If we are here, it didn't match. Is that because of
-					 * capitalization? Lets check. */
-					if ((sent->word[i].firstupper) &&
-						('\0' == downcased[0]) && ('\0' != a[0]))
-					{
-						downcase_utf8_str(downcased, a, MAX_WORD);
-						lgdebug(4, "\n");
-						lgdebug(4, "%zu downcasing %s>%s\n", lk+1, a, downcased);
-						s = downcased;
-						goto try_again;
-					}
-					/* No match, disregard this alternative from now on */
-					matched_alts[ai] = -1;
-				}
-			}
-			if (! match_found)
-			{
-				lgdebug(4, " none\n");
-				break;
+				matched_alts[ai] = 0;
+				lgdebug(4, " %zu:%s", ai, sent->word[i].alternatives[ai]);
 			}
 			lgdebug(4, "\n");
+		}
+		if (NULL == unsplit)
+		{
+			lgdebug(4, "%zu ignore morphemes of an island word\n", lk+1);
+			continue;
+		}
 
-			/* If this is the last morpheme of the alternatives,
-			 * then make sure all of them exist in the linkage */
-			if ((i+1 == sent->length) || (NULL != sent->word[i+1].unsplit_word))
+		djw = cdj->string;
+		djwlen = strlen(djw);
+		mark = strchr(djw, SUBSCRIPT_MARK);
+		len = NULL != mark ? (size_t)(mark - djw) : djwlen;
+
+		/* Find morpheme type */
+		if (is_AFFIXTYPE_EMPTY(infix_mark, djw, djwlen))
+		{
+			/* Ignore the empty word */;
+			empty_word = true;
+		}
+		else
+		if (is_AFFIXTYPE_SUFFIX(infix_mark, djw))
+		{
+			*affix_types_p = AFFIXTYPE_SUFFIX;
+		}
+		else
+		if (is_AFFIXTYPE_STEM(infix_mark, djw, len))
+		{
+			*affix_types_p = AFFIXTYPE_STEM;
+		}
+		else
+		if (is_AFFIXTYPE_PREFIX(infix_mark, djw, len))
+		{
+			*affix_types_p = AFFIXTYPE_PREFIX;
+		}
+		else
+		{
+			*affix_types_p = AFFIXTYPE_WORD;
+		}
+
+		lgdebug(4, "%zu djw=%s affixtype=%c\n",
+		        lk+1, djw, empty_word ? 'E' : *affix_types_p);
+
+		if (! empty_word) affix_types_p++;
+
+		lgdebug(4, "%zu djw %s matched alt#:", lk+1, djw);
+		match_found = false;
+
+		/* Compare the chosen word djw to the alternatives */
+		for (ai = 0; ai < numalt; ai++)
+		{
+			const char * s, * t;
+			const char *a = sent->word[i].alternatives[ai];
+			char downcased[MAX_WORD+1] = "";
+
+			if (-1 == matched_alts[ai])
+				continue; /* already didn't match */
+
+			s = a;
+try_again:
+			t = djw;
+			//lgdebug(4, "\n%d COMPARING alt%d s %s djw %s: ", lk+1, (int)ai, s, t);
+			/* Rules of match:
+			 * A morpheme with a subscript needs an exact match to djw.
+			 * A morpheme w/o a subscript needs an exact match to djw
+			 * disregarding its subscript.
+			 * XXX To check: words that contain a dot as part of them. */
+			while ((*s != '\0' && *s != '[') && (*s == *t)) {s++; t++;}
+			/* Possibilities:
+			 *** Match (the last two are for words ending with [...]):
+			 * s==\0 && t==\0
+			 * s==\0 && t==SUBSCRIPT_MARK
+			 * s==\0 && t==[
+			 * s==[ && t==[
+			 *** Continue to check:
+			 * s==.	&& t==SUBSCRIPT_MARK
+			 */
+			if (*s == SUBSCRIPT_DOT && *t == SUBSCRIPT_MARK)
 			{
-				int num_morphemes = i - unsplit_i + 1;
-
-				lgdebug(4, "%zu end of input word, num_morphemes %d\n",
-						lk+1, num_morphemes);
-				*affix_types_p++ = AFFIXTYPE_END;
-
-				/* Make sure that there exists an alternative in
-				 * which all the morphemes have been matched.
-				 * ??? This disallows island morphemes -
-				 * should we allow them? */
-				match_found = false;
-				for (ai = 0; ai < numalt; ai++)
+				s++; t++;
+				while ((*s != '\0') && (*s == *t)) {s++; t++;}
+			}
+			if (((*s == '\0') &&
+			   ((*t == '\0') || (*t == SUBSCRIPT_MARK) || (*t == '[')))
+			   ||
+			   ((*s == '[') && (*t == '[')))
+			{
+				//lgdebug(4, "EQUAL\n");
+				lgdebug(4, " %zu", ai);
+				match_found = true;
+				/* Count matched morphemes in this alternative */
+				matched_alts[ai]++;
+			}
+			else {
+				//lgdebug(4,"NOTEQ\n");
+				/* If we are here, it didn't match. Is that because of
+				 * capitalization? Lets check. */
+				if ((sent->word[i].firstupper) &&
+					('\0' == downcased[0]) && ('\0' != a[0]))
 				{
-					if (matched_alts[ai] == num_morphemes)
-					{
-						match_found = true;
-						break;
-					}
+					downcase_utf8_str(downcased, a, MAX_WORD);
+					lgdebug(4, "\n");
+					lgdebug(4, "%zu downcasing %s>%s\n", lk+1, a, downcased);
+					s = downcased;
+					goto try_again;
 				}
-
-				if (! match_found)
-				{
-					lgdebug(4, "%zu morphemes are missing in this linkage\n", lk+1);
-					break;
-				}
-				lgdebug(4, "%zu Perfect match\n", lk+1);
+				/* No match, disregard this alternative from now on */
+				matched_alts[ai] = -1;
 			}
 		}
-		*affix_types_p = '\0';
-
-		/* Check morpheme type combination.
-		 * If null_count > 0, the morpheme type combination may be invalid
-		 * due to morpheme islands, so skip this check. */
-		if (match_found && (0 == sent->null_count) && ('\0' != affix_types[0]) &&
-			(NULL != afdict) && (NULL != afdict->regex_root) &&
-			(NULL == match_regex(afdict->regex_root, affix_types)))
+		if (! match_found)
 		{
-			/* Morpheme type combination not valid */
+			lgdebug(4, " none\n");
+			break;
+		}
+		lgdebug(4, "\n");
+
+		/* If this is the last morpheme of the alternatives,
+		 * then make sure all of them exist in the linkage */
+		if ((i+1 == sent->length) || (NULL != sent->word[i+1].unsplit_word))
+		{
+			int num_morphemes = i - unsplit_i + 1;
+
+			lgdebug(4, "%zu end of input word, num_morphemes %d\n",
+					lk+1, num_morphemes);
+			*affix_types_p++ = AFFIXTYPE_END;
+
+			/* Make sure that there exists an alternative in
+			 * which all the morphemes have been matched.
+			 * ??? This disallows island morphemes -
+			 * should we allow them? */
 			match_found = false;
-			/* XXX we should have a better way to notify */
-			if (0 < verbosity)
-				printf("Warning: Invalid morpheme type combination %s, "
-				       "run with !bad and !verbosity=4 to debug\n", affix_types);
-		}
-		else
-			lgdebug(4, "%zu morpheme type combination '%s'\n", lk+1, affix_types);
+			for (ai = 0; ai < numalt; ai++)
+			{
+				if (matched_alts[ai] == num_morphemes)
+				{
+					match_found = true;
+					break;
+				}
+			}
 
-		if (match_found)
-		{
-			lgdebug(4, "%zu SUCCEEDED\n", lk+1);
+			if (! match_found)
+			{
+				lgdebug(4, "%zu morphemes are missing in this linkage\n", lk+1);
+				break;
+			}
+			lgdebug(4, "%zu Perfect match\n", lk+1);
 		}
-		else
-		{
-			/* Oh no ... invalid morpheme combination! */
-			sent->num_valid_linkages --;
-			is_valid_morphism = false;
-			lifo->N_violations++;
-			lifo->pp_violation_msg = "Invalid morphism construction.";
-			if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
-			lgdebug(4, "%zu FAILED\n", lk+1);
-		}
+	}
+	*affix_types_p = '\0';
+
+	/* Check morpheme type combination.
+	 * If null_count > 0, the morpheme type combination may be invalid
+	 * due to morpheme islands, so skip this check. */
+	if (match_found && (0 == sent->null_count) && ('\0' != affix_types[0]) &&
+		(NULL != afdict) && (NULL != afdict->regex_root) &&
+		(NULL == match_regex(afdict->regex_root, affix_types)))
+	{
+		/* Morpheme type combination not valid */
+		match_found = false;
+		/* XXX we should have a better way to notify */
+		if (0 < verbosity)
+			printf("Warning: Invalid morpheme type combination %s, "
+			       "run with !bad and !verbosity=4 to debug\n", affix_types);
+	}
+	else
+		lgdebug(4, "%zu morpheme type combination '%s'\n", lk+1, affix_types);
+
+	if (match_found)
+	{
+		lgdebug(4, "%zu SUCCEEDED\n", lk+1);
+	}
+	else
+	{
+		/* Oh no ... invalid morpheme combination! */
+		sent->num_valid_linkages --;
+		is_valid_morphism = false;
+		lifo->N_violations++;
+		lifo->pp_violation_msg = "Invalid morphism construction.";
+		if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
+		lgdebug(4, "%zu FAILED\n", lk+1);
+	}
 
 	if (matched_alts) free(matched_alts);
 
