@@ -1218,13 +1218,6 @@ void SATEncoder::pp_prune()
   }
 }
 
-/* TODO: replace with analyze_xxx_linkage */
-bool SATEncoder::post_process_linkage(Linkage linkage)
-{
-  Linkage_info li = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
-  return li.N_violations == 0;
-}
-
 /*--------------------------------------------------------------------------*
  *                         D E C O D I N G                                  *
  *--------------------------------------------------------------------------*/
@@ -1291,11 +1284,14 @@ Linkage SATEncoder::get_next_linkage()
   if (connected) {
     // num_connected_linkages++;
 
-    if (post_process_linkage(linkage)) {
+    // XXX TODO need to call sane_morphism here ...
+    Linkage_info li = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
+
+    if (0 == li.N_violations) {
       cout << "Linkage PP OK" << endl;
       _sent->num_valid_linkages++;
     } else {
-           cout << "Linkage PP NOT OK" << endl;
+      cout << "Linkage PP NOT OK" << endl;
     }
 
     generate_linkage_prohibiting();

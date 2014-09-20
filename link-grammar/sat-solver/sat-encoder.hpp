@@ -151,11 +151,9 @@ protected:
 
   /**
    *   Post-processing - PP pruning
+   *   Generates PP pruning clauses.
    */
-
-  // Generates PP pruning clauses.
   void pp_prune();
-  bool post_process_linkage(Linkage linkage);
 
 
   /**
