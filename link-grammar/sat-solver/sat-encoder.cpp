@@ -1,3 +1,6 @@
+/**
+ * Encode link-grammar for solving with the SAT solver...
+ */
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -21,11 +24,12 @@ using std::endl;
 
 extern "C" {
 #include "analyze-linkage.h"
+#include "dict-file/read-dict.h"
 #include "extract-links.h"
 #include "linkage.h"
 #include "post-process.h"
 #include "preparation.h"
-#include "dict-file/read-dict.h"
+#include "utilities.h"
 }
 
 // Macro DEBUG_print is used to dump to stdout information while debugging
@@ -1284,10 +1288,19 @@ Linkage SATEncoder::get_next_linkage()
   if (connected) {
     // num_connected_linkages++;
 
-    // XXX TODO need to call sane_morphism here ...
-    Linkage_info li = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
+    // Expand the lifo array.
+    int index = _sent->num_linkages_alloced;
+    _sent->num_linkages_alloced++;
+    size_t nbytes = _sent->num_linkages_alloced * sizeof(Linkage_info);
+    _sent->link_info = (Linkage_info*) xrealloc(_sent->link_info,
+                       nbytes - sizeof(Linkage_info), nbytes);
 
-    if (0 == li.N_violations) {
+    Linkage_info* lifo = &_sent->link_info[index];
+    // XXX TODO need to call sane_morphism here ...
+    *lifo = analyze_thin_linkage(_sent, _opts, PP_SECOND_PASS);
+    lifo->index = index;
+
+    if (0 == lifo->N_violations) {
       cout << "Linkage PP OK" << endl;
       _sent->num_valid_linkages++;
     } else {
