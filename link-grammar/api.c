@@ -635,8 +635,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 #endif /* USE_FAT_LINKAGES */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
-		int index;
-
 		lifo = &sent->link_info[in];
 		if (lifo->discarded) continue;
 		if (lifo->N_violations)
@@ -646,8 +644,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			N_linkages_post_processed++;
 			continue;
 		}
-		index = lifo->index;
-		extract_links(index, sent->parse_info);
+		extract_links(lifo->index, sent->parse_info);
 #ifdef USE_FAT_LINKAGES
 		lifo->fat = false;
 		lifo->canonical = true;
@@ -679,7 +676,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		{
 			N_valid_linkages--;
 		}
-		lifo->index = index;
 		lg_corpus_score(sent, lifo);
 		N_linkages_post_processed++;
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
