@@ -1283,10 +1283,6 @@ static bool sane_linkage_morphism(Sentence sent, size_t lk,
  
 	Linkage_info * const lifo = &sent->link_info[lk];
 
-	/* Don't bother with linkages that already failed post-processing... */
-	if (0 != lifo->N_violations)
-		return true;
-
 	extract_links(lifo->index, pi);
 	*affix_types_p = '\0';
 	for (i=0; i<sent->length; i++)
@@ -1521,6 +1517,10 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 
 	for (lk = 0; lk < sent->num_linkages_post_processed; lk++)
 	{
+		/* Don't bother with linkages that already failed post-processing... */
+		Linkage_info * const lifo = &sent->link_info[lk];
+		if (0 != lifo->N_violations) continue;
+
       if (!sane_linkage_morphism(sent, lk, opts))
           N_invalid_morphism ++;
 	}
