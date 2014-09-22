@@ -78,7 +78,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 
 	wf = (Word_file *) xalloc(sizeof (Word_file));
 	safe_strcpy(wf->file, file_name_copy, sizeof(wf->file));
-	wf->changed = FALSE;
+	wf->changed = false;
 	wf->next = dict->word_file_header;
 	dict->word_file_header = wf;
 

@@ -79,15 +79,15 @@
  */
 static bool is_suffix(const char* w)
 {
-	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return FALSE;
-	if (1 == strlen(w)) return FALSE;
-	if (0 == strcmp("=[!]", w)) return FALSE;
+	if (0 != strncmp(SUFFIX_WORD, w, SUFFIX_WORD_L)) return false;
+	if (1 == strlen(w)) return false;
+	if (0 == strcmp("=[!]", w)) return false;
 #if SUBSCRIPT_MARK == '.'
 	/* Hmmm ... equals signs look like suffixes, but they are not ... */
-	if (0 == strcmp("=.v", w)) return FALSE;
-	if (0 == strcmp("=.eq", w)) return FALSE;
+	if (0 == strcmp("=.v", w)) return false;
+	if (0 == strcmp("=.eq", w)) return false;
 #endif
-	return TRUE;
+	return true;
 }
 
 /* Return TRUE if the word seems to be in stem form.
@@ -100,13 +100,13 @@ static bool is_stem(const char* w)
 	size_t l = strlen(w);
 	const char *subscrmark;
 
-	if (l < 3) return FALSE;
+	if (l < 3) return false;
 
 	subscrmark = strchr(w, SUBSCRIPT_MARK);
-	if (NULL == subscrmark) return FALSE;
-	if (0 != strncmp(subscrmark, STEM_MARK, sizeof(STEM_MARK)-1)) return FALSE;
+	if (NULL == subscrmark) return false;
+	if (0 != strncmp(subscrmark, STEM_MARK, sizeof(STEM_MARK)-1)) return false;
 
-	return TRUE;
+	return true;
 }
 
 /**

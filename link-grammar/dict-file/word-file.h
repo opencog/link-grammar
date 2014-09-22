@@ -19,7 +19,7 @@ struct Word_file_struct
 {
 	Word_file * next;
 	char file[MAX_PATH_NAME+1];   /* the file name */
-	Boolean changed;              /* TRUE if this file has been changed */
+	bool changed;                 /* TRUE if this file has been changed */
 };
 
 void free_Word_file(Word_file * wf);

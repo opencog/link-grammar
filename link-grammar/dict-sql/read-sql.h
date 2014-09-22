@@ -18,11 +18,11 @@
 #include "link-includes.h"
 
 #ifdef HAVE_SQLITE
-Boolean check_db(const char *lang);
+bool check_db(const char *lang);
 Dictionary dictionary_create_from_db(const char *lang);
 #else
 
-static inline Boolean check_db(const char *lang) { return false; }
+static inline bool check_db(const char *lang) { return false; }
 static inline Dictionary dictionary_create_from_db(const char *lang) { return NULL; }
 #endif /* HAVE_SQLITE */
 

@@ -113,7 +113,7 @@ static bool is_bullet(Dictionary dict, wchar_t wc)
 	const wchar_t *bullets =
 		(const wchar_t *)AFCLASS(dict->affix_table, AFDICT_BULLETS)->string;
 
-	if (NULL == bullets) return FALSE;
+	if (NULL == bullets) return false;
 	return (NULL !=  wcschr(bullets, wc));
 }
 

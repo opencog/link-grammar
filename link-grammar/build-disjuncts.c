@@ -267,7 +267,7 @@ static Clause * build_clause(Exp *e)
 	}
 	else
 	{
-		assert(FALSE, "an expression node with no type");
+		assert(false, "an expression node with no type");
 	}
 
 	/* c now points to the list of clauses */
@@ -480,7 +480,7 @@ static unsigned int count_clause(Exp *e)
 	}
 	else
 	{
-		assert(FALSE, "an expression node with no type");
+		assert(false, "an expression node with no type");
 	}
 
 	return cnt;

@@ -69,12 +69,12 @@ static Exp * make_expression(Dictionary dict, const char *exp_str)
 	if ('@' == *con_start)
 	{
 		constr = strndup(con_start+1, p-con_start-1);
-		e->multi = TRUE;
+		e->multi = true;
 	}
 	else
 	{
 		constr = strndup(con_start, p-con_start);
-		e->multi = FALSE;
+		e->multi = false;
 	}
 
 	/* We have to use the string set, mostly because copy_Exp
@@ -109,7 +109,7 @@ typedef struct
 {
 	Dictionary dict;
 	Dict_node* dn;
-	Boolean found;
+	bool found;
 	Exp* exp;
 } cbdata;
 
@@ -175,7 +175,7 @@ static int exists_cb(void *user_data, int argc, char **argv, char **colName)
 	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
-	bs->found = TRUE;
+	bs->found = true;
 	return 0;
 }
 
@@ -224,11 +224,11 @@ db_lookup_common(Dictionary dict, const char *s,
 	dyn_str_delete(qry);
 }
 
-static Boolean db_lookup(Dictionary dict, const char *s)
+static bool db_lookup(Dictionary dict, const char *s)
 {
 	cbdata bs;
 	bs.dict = dict;
-	bs.found = FALSE;
+	bs.found = false;
 	db_lookup_common(dict, s, exists_cb, &bs);
 	return bs.found;
 }
@@ -257,10 +257,10 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 /* ========================================================= */
 /* Dictionary creation, setup, open proceedures */
 
-Boolean check_db(const char *lang)
+bool check_db(const char *lang)
 {
 	char *dbname = join_path (lang, "dict.db");
-	Boolean retval = file_exists(dbname);
+	bool retval = file_exists(dbname);
 	free(dbname);
 	return retval;
 }
@@ -351,7 +351,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->empty_word_defined = boolean_dictionary_lookup(dict, EMPTY_WORD_MARK);
 
 	dict->unknown_word_defined = boolean_dictionary_lookup(dict, UNKNOWN_WORD);
-	dict->use_unknown_word = TRUE;
+	dict->use_unknown_word = true;
 
 	dict_node = dictionary_lookup_list(dict, UNLIMITED_CONNECTORS_WORD);
 	if (dict_node != NULL) {

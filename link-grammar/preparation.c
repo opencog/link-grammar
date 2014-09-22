@@ -45,12 +45,12 @@ void free_deletable(Sentence sent)
 /**
  *  Returns true if the range lw...rw inclusive contains a conjunction
  */
-static int conj_in_range(Sentence sent, int lw, int rw)
+static bool conj_in_range(Sentence sent, int lw, int rw)
 {
 	for (;lw < rw+1; lw++) {
-		if (sent->is_conjunction[lw]) return TRUE;
+		if (sent->is_conjunction[lw]) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -85,15 +85,15 @@ void build_deletable(Sentence sent, bool has_conjunction)
 		{
 			if (j == i+1)
 			{
-				sent->deletable[i][j] = TRUE;
+				sent->deletable[i][j] = true;
 			}
 			else if (sent->null_links)
 			{
-				sent->deletable[i][j] = TRUE;
+				sent->deletable[i][j] = true;
 			}
 			else if (!has_conjunction)
 			{
-				sent->deletable[i][j] = FALSE;
+				sent->deletable[i][j] = false;
 			}
 			else if ((j > i + 2) && (sent->is_conjunction[i+1] ||
 								 sent->is_conjunction[j-1] ||
@@ -102,7 +102,7 @@ void build_deletable(Sentence sent, bool has_conjunction)
 								 (strcmp(",",sent->word[j-1].alternatives[0]) == 0 &&
 								 conj_in_range(sent, j, sent->length - 1))))
 			{
-				sent->deletable[i][j] = TRUE;
+				sent->deletable[i][j] = true;
 			}
 			else if (j > i)
 			{
@@ -120,7 +120,7 @@ void build_deletable(Sentence sent, bool has_conjunction)
 			}
 			else
 			{
-				sent->deletable[i][j] = FALSE;
+				sent->deletable[i][j] = false;
 			}
 		}
 	}
@@ -346,7 +346,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	else
 	{
-		has_conjunction = FALSE;
+		has_conjunction = false;
 	}
 
 	/* The deletable region depends on whether null links are in use;

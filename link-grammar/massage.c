@@ -92,7 +92,7 @@ static Disjunct * glom_comma_connector(Disjunct * d)
  * use a neither.  (Not the case with "or".)  If necessary=FALSE, then
  * duplication is done, otherwise it isn't
  */
-static Disjunct * glom_aux_connector(Disjunct * d, int label, int necessary)
+static Disjunct * glom_aux_connector(Disjunct * d, int label, bool necessary)
 {
 	Disjunct * d_list, * d1, * d2;
 	Connector * c, * c1, *c2;
@@ -197,13 +197,13 @@ static void construct_comma(Sentence sent)
 
 
 /** Returns TRUE if one of the words in the sentence is s */
-static int sentence_contains(Sentence sent, const char * s)
+static bool sentence_contains(Sentence sent, const char * s)
 {
 	size_t w;
 	for (w=0; w<sent->length; w++) {
-		if (strcmp(sent->word[w].alternatives[0], s) == 0) return TRUE;
+		if (strcmp(sent->word[w].alternatives[0], s) == 0) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 /**
@@ -229,7 +229,7 @@ static void construct_either(Sentence sent)
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].alternatives[0], "or") != 0) continue;
 		sent->word[w].d = glom_aux_connector
-						  (sent->word[w].d, EITHER_LABEL, FALSE);
+						  (sent->word[w].d, EITHER_LABEL, false);
 	}
 }
 
@@ -259,7 +259,7 @@ static void construct_neither(Sentence sent)
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].alternatives[0], "nor") != 0) continue;
 		sent->word[w].d = glom_aux_connector
-						  (sent->word[w].d, NEITHER_LABEL, TRUE);
+						  (sent->word[w].d, NEITHER_LABEL, true);
 	}
 }
 
@@ -300,7 +300,7 @@ static void construct_notonlybut(Sentence sent)
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].alternatives[0], "but") != 0) continue;
 		sent->word[w].d = glom_aux_connector
-						  (sent->word[w].d, NOT_LABEL, FALSE);
+						  (sent->word[w].d, NOT_LABEL, false);
 		/* The above line use to have a TRUE in it */
 	}
 }
@@ -318,7 +318,7 @@ static void construct_both(Sentence sent)
 
 	for (w=0; w<sent->length; w++) {
 		if (strcmp(sent->word[w].alternatives[0], "and") != 0) continue;
-		sent->word[w].d = glom_aux_connector(sent->word[w].d, BOTH_LABEL, FALSE);
+		sent->word[w].d = glom_aux_connector(sent->word[w].d, BOTH_LABEL, false);
 	}
 }
 
