@@ -157,7 +157,7 @@ static void clean_up_string(char * s)
  * optional + or - followed by 1 or more
  *	digits.
  */
-static int is_numerical_rhs(char *s)
+static bool is_numerical_rhs(char *s)
 {
 	wchar_t p;
 	size_t len, w;
@@ -167,16 +167,16 @@ static int is_numerical_rhs(char *s)
 	len = strlen(s);
 
 	if (*s=='+' || *s == '-') s++;
-	if (*s == '\0') return FALSE;
+	if (*s == '\0') return false;
 
 	for (; *s != '\0'; s+=w)
 	{
 		w = mbrtowc(&p, s, len, &state); 
 		if (0 == w) break;
 		len -= w;
-		if(!iswdigit(p)) return FALSE;
+		if (!iswdigit(p)) return false;
 	}
-	return TRUE;
+	return true;
 }
 
 static inline int ival(Switch s)

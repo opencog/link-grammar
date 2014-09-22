@@ -61,7 +61,7 @@
 #define COMMENT_CHAR '%'  /* input lines beginning with this are ignored */
 
 static int batch_errors = 0;
-static int input_pending = FALSE;
+static bool input_pending = false;
 static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
@@ -120,21 +120,21 @@ fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 	if (in != stdin)
 	{
 		static char input_string[MAX_INPUT];
-		input_pending = FALSE;
+		input_pending = false;
 		if (fgets(input_string, MAX_INPUT, in)) return input_string;
 		return NULL;
 	}
 
 	if (input_pending && pline != NULL)
 	{
-		input_pending = FALSE;
+		input_pending = false;
 		return pline;
 	}
 	if (copts->batch_mode || verbosity == 0 || input_pending)
 	{
 		prompt = "";
 	}
-	input_pending = FALSE;
+	input_pending = false;
 	if (pline) free(pline);
 	pline = lg_readline(prompt);
 
@@ -150,7 +150,7 @@ fget_input_string(FILE *in, FILE *out, Command_Options* copts)
 		fprintf(out, "linkparser> ");
 		fflush(out);
 	}
-	input_pending = FALSE;
+	input_pending = false;
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 	/* Windows console input comes using the console codepage;
@@ -209,7 +209,7 @@ static int fget_input_char(FILE *in, FILE *out, Command_Options* copts)
 	if (NULL == pline) return EOF;
 	if (*pline)
 	{
-		input_pending = TRUE;
+		input_pending = true;
 		return *pline;
 	}
 	return '\n';
@@ -227,7 +227,7 @@ static int fget_input_char(FILE *in, FILE *out, Command_Options* copts)
 	if (c != '\n')
 	{
 		ungetc(c, in);
-		input_pending = TRUE;
+		input_pending = true;
 	}
 	return c;
 #endif
@@ -501,7 +501,7 @@ static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
 			return UNGRAMMATICAL;
 		}
 	}
-	return FALSE;
+	return 0;
 }
 
 static void batch_process_some_linkages(Label label,
@@ -548,8 +548,8 @@ static void batch_process_some_linkages(Label label,
 
 static bool special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
-	if (input_string[0] == '\n') return TRUE;
-	if (input_string[0] == COMMENT_CHAR) return TRUE;
+	if (input_string[0] == '\n') return true;
+	if (input_string[0] == COMMENT_CHAR) return true;
 	if (input_string[0] == '!') {
 		if (strncmp(input_string, "!panic_", 7) == 0)
 		{
@@ -557,13 +557,13 @@ static bool special_command(char *input_string, Command_Options* copts, Dictiona
 			copts->popts = copts->panic_opts;
 			issue_special_command(input_string+7, copts, dict);
 			copts->popts = save;
-			return TRUE;
+			return true;
 		}
 
 		issue_special_command(input_string+1, copts, dict);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 static Label strip_off_label(char * input_string)
@@ -595,7 +595,7 @@ static void setup_panic_parse_options(Parse_Options opts)
 	parse_options_set_short_length(opts, 6);
 	parse_options_set_all_short_connectors(opts, 1);
 	parse_options_set_linkage_limit(opts, 100);
-	parse_options_set_spell_guess(opts, FALSE);
+	parse_options_set_spell_guess(opts, false);
 }
 
 static void print_usage(char *str)

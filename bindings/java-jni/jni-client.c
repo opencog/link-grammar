@@ -73,17 +73,17 @@ static per_thread_data * get_ptd(JNIEnv *env, jclass cls)
 
 static void setup_panic_parse_options(Parse_Options opts)
 {
-	parse_options_set_repeatable_rand(opts, FALSE);
+	parse_options_set_repeatable_rand(opts, false);
 	parse_options_set_disjunct_cost(opts, 3.7f);
 	parse_options_set_min_null_count(opts, 1);
 	parse_options_set_max_null_count(opts, MAX_SENTENCE);
 	parse_options_set_max_parse_time(opts, 60);
-	parse_options_set_islands_ok(opts, TRUE);
+	parse_options_set_islands_ok(opts, true);
 	parse_options_set_short_length(opts, 6);
-	parse_options_set_all_short_connectors(opts, TRUE);
+	parse_options_set_all_short_connectors(opts, true);
 	parse_options_set_linkage_limit(opts, 100);
 	parse_options_set_verbosity(opts, 0);
-	parse_options_set_spell_guess(opts, FALSE);
+	parse_options_set_spell_guess(opts, false);
 }
 
 static inline void test(void)
@@ -142,7 +142,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	 * linkages overflow (very rare for mature grammars, but crucial
 	 * for grammar learning. That is, for the 'any' language.
 	 */
-	parse_options_set_repeatable_rand(ptd->opts, FALSE);
+	parse_options_set_repeatable_rand(ptd->opts, false);
 
 	/* A cost of 2.7 allows the usual cost-2 connectors, plus the
 	 * assorted fractional costs, without going to cost 3.0, which
@@ -153,7 +153,7 @@ static per_thread_data * init(JNIEnv *env, jclass cls)
 	parse_options_set_linkage_limit(ptd->opts, 1000);
 	parse_options_set_short_length(ptd->opts, 10);
 	parse_options_set_verbosity(ptd->opts, 0);
-	parse_options_set_spell_guess(ptd->opts, FALSE);
+	parse_options_set_spell_guess(ptd->opts, false);
 
 	ptd->panic_parse_opts = parse_options_create();
 	setup_panic_parse_options(ptd->panic_parse_opts);
