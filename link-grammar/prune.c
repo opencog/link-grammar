@@ -513,33 +513,33 @@ static int string_hash(disjunct_dup_table *dt, const char * s, int i)
  * remains TRUE if multi-match added to the first.
  * remains TRUE if subsrcripts deleted from the first.
  */
-int connector_matches_alam(Connector * a, Connector * b)
+static bool connector_matches_alam(Connector * a, Connector * b)
 {
 	char * s, * t, *u;
 	if (((!a->multi) && b->multi) ||
 		(a->label != b->label) ||
-		(a->priority != b->priority))  return FALSE;
+		(a->priority != b->priority))  return false;
 	s = a->string;
 	t = b->string;
 
 	/* isupper -- connectors cannot be UTF8 at this time */
-	while(isupper(*s) || isupper(*t))
+	while (isupper(*s) || isupper(*t))
 	{
 		if (*s == *t) {
 			s++;
 			t++;
-		} else return FALSE;
+		} else return false;
 	}
 	if (a->priority == DOWN_priority) {
 		u = s;
 		s = t;
 		t = u;
 	}
-	while((*s != '\0') && (*t != '\0')) {
+	while ((*s != '\0') && (*t != '\0')) {
 		if ((*s == *t) || (*s == '*') || (*t == '^')) {
 			s++;
 			t++;
-		} else return FALSE;
+		} else return false;
 	}
 	while ((*s != '\0') && (*s == '*')) s++;
 	return (*s == '\0');
@@ -605,7 +605,7 @@ static bool disjunct_matches_alam(Disjunct * d1, Disjunct * d2)
 	if (d1->cost > d2->cost) return false;
 	e1 = d1->left;
 	e2 = d2->left;
-	while((e1!=NULL) && (e2!=NULL))
+	while ((e1!=NULL) && (e2!=NULL))
 	{
 		if (!connector_matches_alam(e1,e2)) break;
 		e1 = e1->next;
