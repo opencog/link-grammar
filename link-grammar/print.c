@@ -272,7 +272,8 @@ build_linkage_postscript_string(const Linkage linkage,
 {
 	int link, i,j;
 	int d;
-	int print_word_0 = 0, print_word_N = 0, N_wall_connectors, suppressor_used;
+	int print_word_0 = 0, print_word_N = 0, N_wall_connectors;
+	bool suppressor_used;
 #ifdef USE_FAT_LINKAGES
 	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
 #else
@@ -289,14 +290,14 @@ build_linkage_postscript_string(const Linkage linkage,
 
 	N_wall_connectors = 0;
 	if (dict->left_wall_defined) {
-		suppressor_used = FALSE;
+		suppressor_used = false;
 		if (!display_walls)
 			for (j=0; j<N_links; j++) {
 				if (ppla[j]->lw == 0) {
 					if (ppla[j]->rw == linkage->num_words-1) continue;
 					N_wall_connectors ++;
 					if (strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS)==0) {
-						suppressor_used = TRUE;
+						suppressor_used = true;
 					}
 				}
 			}
@@ -308,12 +309,12 @@ build_linkage_postscript_string(const Linkage linkage,
 
 	N_wall_connectors = 0;
 	if (dict->right_wall_defined) {
-		suppressor_used = FALSE;
+		suppressor_used = false;
 		for (j=0; j<N_links; j++) {
 			if (ppla[j]->rw == linkage->num_words-1) {
 				N_wall_connectors ++;
 				if (strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS)==0){
-					suppressor_used = TRUE;
+					suppressor_used = true;
 				}
 			}
 		}
@@ -400,7 +401,8 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	const char *s;
 	char *t;
 	bool print_word_0 = 0, print_word_N = 0;
-	int N_wall_connectors, suppressor_used;
+	int N_wall_connectors;
+	bool suppressor_used;
 	int center[linkage->num_words+1];
 	unsigned int line_len, link_length;
 #ifdef USE_FAT_LINKAGES
@@ -425,7 +427,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	N_wall_connectors = 0;
 	if (dict->left_wall_defined)
 	{
-		suppressor_used = FALSE;
+		suppressor_used = false;
 		if (!display_walls)
 		{
 			for (j=0; j<N_links; j++)
@@ -436,7 +438,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 					N_wall_connectors ++;
 					if (0 == strcmp(ppla[j]->lc->string, LEFT_WALL_SUPPRESS))
 					{
-						suppressor_used = TRUE;
+						suppressor_used = true;
 					}
 				}
 			}
@@ -453,7 +455,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	N_wall_connectors = 0;
 	if (dict->right_wall_defined)
 	{
-		suppressor_used = FALSE;
+		suppressor_used = false;
 		for (j=0; j<N_links; j++)
 		{
 			if (ppla[j]->rw == linkage->num_words-1)
@@ -461,7 +463,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				N_wall_connectors ++;
 				if (0 == strcmp(ppla[j]->lc->string, RIGHT_WALL_SUPPRESS))
 				{
-					suppressor_used = TRUE;
+					suppressor_used = true;
 				}
 			}
 		}

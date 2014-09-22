@@ -38,9 +38,9 @@ struct disjunct_dup_table_s
 typedef struct c_list_s C_list;
 struct c_list_s
 {
-	Connector * c;
-	Boolean shallow;
 	C_list * next;
+	Connector * c;
+	bool shallow;
 };
 
 typedef struct power_table_s power_table;
@@ -71,7 +71,7 @@ struct multiset_table_s
 typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
-	Boolean null_links;
+	bool null_links;
 #ifdef USE_FAT_LINKAGES
 	char ** deletable;
 	char ** effective_dist;
@@ -1326,7 +1326,7 @@ static bool possible_connection(prune_context *pc,
 
 static bool possible_connection(prune_context *pc,
                                Connector *lc, Connector *rc,
-                               Boolean lshallow, Boolean rshallow,
+                               bool lshallow, bool rshallow,
                                int lword, int rword)
 {
 	int dist;
@@ -1388,7 +1388,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
  */
 static bool
 left_table_search(prune_context *pc, int w, Connector *c,
-                  Boolean shallow, int word_c)
+                  bool shallow, int word_c)
 {
 	unsigned int size, h;
 	C_list *cl;
