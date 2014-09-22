@@ -228,6 +228,14 @@ struct Andlist_struct
     int outside_word[MAX_SENTENCE];
     int cost;
 };
+
+/* These parameters tell power_pruning, to tell whether this is before
+ * or after generating and disjuncts.  GENTLE is before RUTHLESS is
+ * after.
+ */
+#define RUTHLESS 0
+#define GENTLE 1
+
 #endif /* USE_FAT_LINKAGES */
 
 /**
@@ -266,15 +274,6 @@ struct List_o_links_struct
     signed char dir; /* 0: undirected, 1: away from me, -1: toward me */
     List_o_links * next;
 };
-
-#ifdef USE_FAT_LINKAGES
-/* These parameters tell power_pruning, to tell whether this is before
- * or after generating and disjuncts.  GENTLE is before RUTHLESS is
- * after.
- */
-#define GENTLE 1
-#endif /* USE_FAT_LINKAGES */
-#define RUTHLESS 0
 
 typedef struct Parse_choice_struct Parse_choice;
 

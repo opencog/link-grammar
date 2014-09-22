@@ -1481,7 +1481,11 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 }
 
 /** The return value is the number of disjuncts deleted */
+#ifdef USE_FAT_LINKAGES
 int power_prune(Sentence sent, int mode, Parse_Options opts)
+#else
+int power_prune(Sentence sent, Parse_Options opts)
+#endif /* USE_FAT_LINKAGES */
 {
 	power_table *pt;
 	prune_context *pc;
@@ -1585,9 +1589,10 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 	power_table_delete(pt);
 	pt = NULL;
 	pc->pt = NULL;
-	
+
 	if (verbosity > 2) printf("%d power prune cost:\n", pc->power_cost);
 
+#ifdef USE_FAT_LINKAGES
 	if (mode == RUTHLESS) {
 		print_time(opts, "power pruned (ruthless)");
 	} else {
@@ -1602,6 +1607,13 @@ int power_prune(Sentence sent, int mode, Parse_Options opts)
 		}
 		print_disjunct_counts(sent);
 	}
+#else
+	print_time(opts, "power pruned");
+	if (verbosity > 2) {
+		printf("\nAfter power_pruning:\n");
+		print_disjunct_counts(sent);
+	}
+#endif /* USE_FAT_LINKAGES */
 
 	xfree(pc, sizeof(prune_context));
 	return total_deleted;
@@ -1964,6 +1976,7 @@ static int pp_prune(Sentence sent, Parse_Options opts)
  * power pp power pp power pp....
  * Make sure you do them both at least once.
  */
+#ifdef USE_FAT_LINKAGES
 void pp_and_power_prune(Sentence sent, int mode, Parse_Options opts)
 {
 	power_prune(sent, mode, opts);
@@ -1975,4 +1988,16 @@ void pp_and_power_prune(Sentence sent, int mode, Parse_Options opts)
 		if (power_prune(sent, mode, opts) == 0) break;
 	}
 }
+#else
+void pp_and_power_prune(Sentence sent, Parse_Options opts)
+{
+	power_prune(sent, opts);
 
+	for (;;) {
+		if (parse_options_resources_exhausted(opts)) break;
+		if (pp_prune(sent, opts) == 0) break;
+		if (parse_options_resources_exhausted(opts)) break;
+		if (power_prune(sent, opts) == 0) break;
+	}
+}
+#endif /* USE_FAT_LINKAGES */

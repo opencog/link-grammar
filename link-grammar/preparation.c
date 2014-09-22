@@ -43,7 +43,7 @@ void free_deletable(Sentence sent)
 }
 
 /**
- *  Returns true if the range lw...rw inclusive contains a conjunction 
+ *  Returns true if the range lw...rw inclusive contains a conjunction
  */
 static int conj_in_range(Sentence sent, int lw, int rw)
 {
@@ -247,7 +247,7 @@ static void install_fat_connectors(Sentence sent)
 	}
 }
 
-static void 
+static void
 set_connector_list_length_limit(count_context_t * ctxt,
                                 Connector *c,
                                 Connector_set *conset,
@@ -266,7 +266,7 @@ set_connector_list_length_limit(count_context_t * ctxt,
 	}
 }
 
-static void 
+static void
 set_connector_length_limits(Sentence sent, count_context_t * ctxt,
                             Parse_Options opts)
 {
@@ -414,7 +414,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 #else
 
-static void 
+static void
 set_connector_list_length_limit(Connector *c,
                                 Connector_set *conset,
                                 int short_len,
@@ -432,7 +432,7 @@ set_connector_list_length_limit(Connector *c,
 	}
 }
 
-static void 
+static void
 set_connector_length_limits(Sentence sent, Parse_Options opts)
 {
 	size_t i;
@@ -479,7 +479,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 
 	set_connector_length_limits(sent, opts);
-	pp_and_power_prune(sent, RUTHLESS, opts);
+	pp_and_power_prune(sent, opts);
 }
 
 int sentence_contains_conjunction(Sentence sent)
