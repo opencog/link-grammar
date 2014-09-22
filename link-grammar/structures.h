@@ -305,8 +305,8 @@ struct X_table_connector_struct
 /* from string-set.c */
 struct String_set_s
 {
-    unsigned int size;       /* the current size of the table */
-    unsigned int count;      /* number of things currently in the table */
+    size_t size;       /* the current size of the table */
+    size_t count;      /* number of things currently in the table */
     char ** table;  /* the table itself */
 };
 

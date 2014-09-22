@@ -61,10 +61,10 @@ static unsigned int stride_hash_string(const char *str, const String_set *ss)
 	return accum;
 }
 
-/* return the next prime up from start */
-static unsigned int next_prime_up(unsigned int start)
+/** Return the next prime up from start. */
+static size_t next_prime_up(size_t start)
 {
-	unsigned int i;
+	size_t i;
 	start |= 1; /* make it odd */
 	for (;;) {
 		for (i=3; (i <= (start/i)); i += 2) {
@@ -98,7 +98,7 @@ static unsigned int find_place(const char * str, String_set *ss)
 	unsigned int h, s, i;
 	h = hash_string(str, ss);
 	s = stride_hash_string(str, ss);
-	for (i=h; 1; i = (i + s)%(ss->size))
+	for (i=h; true; i = (i + s)%(ss->size))
 	{
 		if ((ss->table[i] == NULL) || (strcmp(ss->table[i], str) == 0)) return i;
 	}
@@ -107,7 +107,8 @@ static unsigned int find_place(const char * str, String_set *ss)
 static void grow_table(String_set *ss)
 {
 	String_set old;
-	unsigned int i, p;
+	size_t i;
+	unsigned int p;
 	
 	old = *ss;
 	ss->size = next_prime_up(2 * old.size);  /* at least double the size */
@@ -131,7 +132,8 @@ static void grow_table(String_set *ss)
 const char * string_set_add(const char * source_string, String_set * ss)
 {
 	char * str;
-	unsigned int len, p;
+	size_t len;
+	unsigned int p;
 	
 	assert(source_string != NULL, "STRING_SET: Can't insert a null string");
 
@@ -162,7 +164,7 @@ const char * string_set_lookup(const char * source_string, String_set * ss)
 
 void string_set_delete(String_set *ss)
 {
-	unsigned int i;
+	size_t i;
 	
 	if (ss == NULL) return;
 	for (i=0; i<ss->size; i++)
