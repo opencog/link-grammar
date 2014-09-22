@@ -127,8 +127,8 @@ Parse_info parse_info_new(int nwords)
 	pi->image_array = (Image_node **) xalloc(nwords * sizeof(Image_node *));
 	memset(pi->image_array, 0, nwords * sizeof(Image_node *));
 
-	pi->has_fat_down = (char *) xalloc(nwords * sizeof(Boolean));
-	memset(pi->has_fat_down, 0, nwords * sizeof(Boolean));
+	pi->has_fat_down = (char *) xalloc(nwords * sizeof(bool));
+	memset(pi->has_fat_down, 0, nwords * sizeof(bool));
 #endif /* USE_FAT_LINKAGES */
 
 	/* Alloc the x_table */
@@ -166,7 +166,7 @@ void free_parse_info(Parse_info pi)
 	xfree(pi->chosen_disjuncts, len * sizeof(Disjunct *));
 #ifdef USE_FAT_LINKAGES
 	xfree(pi->image_array, len * sizeof(Image_node*));
-	xfree(pi->has_fat_down, len * sizeof(Boolean));
+	xfree(pi->has_fat_down, len * sizeof(bool));
 #endif /* USE_FAT_LINKAGES */
 
 	for (i=0; i<pi->x_table_size; i++)
@@ -250,11 +250,11 @@ Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
                  count_context_t * ctxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
-                 Boolean islands_ok, Parse_info pi)
+                 bool islands_ok, Parse_info pi)
 {
 	Disjunct * d, * dis;
 	int start_word, end_word, w;
-	Boolean Lmatch, Rmatch;
+	bool Lmatch, Rmatch;
 	unsigned int lnull_count, rnull_count;
 	int i, j;
 	Parse_set *ls[4], *rs[4], *lset, *rset;

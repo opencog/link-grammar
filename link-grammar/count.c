@@ -127,14 +127,14 @@ bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 	int x, y;
 	int dist;
 
-	if (a->label != b->label) return FALSE;
+	if (a->label != b->label) return false;
 
 	s = a->string;
 	t = b->string;
 
 	while (isupper((int)*s) || isupper((int)*t))
 	{
-		if (*s != *t) return FALSE;
+		if (*s != *t) return false;
 		s++;
 		t++;
 	}
@@ -152,7 +152,7 @@ bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 	}
 	/*	printf("M: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
 		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
-	if (dist > a->length_limit || dist > b->length_limit) return FALSE;
+	if (dist > a->length_limit || dist > b->length_limit) return false;
 
 	if ((x == THIN_priority) && (y == THIN_priority))
 	{
@@ -171,9 +171,9 @@ bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 				t++;
 			}
 			else
-				return FALSE;
+				return false;
 		}
-		return TRUE;
+		return true;
 	}
 	else if ((x == UP_priority) && (y == DOWN_priority))
 	{
@@ -194,9 +194,9 @@ bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 			{
 				s++;
 				t++;
-			} else return FALSE;
+			} else return false;
 		}
-		return TRUE;
+		return true;
 	}
 	else if ((y == UP_priority) && (x == DOWN_priority))
 	{
@@ -208,12 +208,12 @@ bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
 				t++;
 			}
 			else
-				return FALSE;
+				return false;
 		}
-		return TRUE;
+		return true;
 	}
 	else
-		return FALSE;
+		return false;
 }
 
 #else /* not USE_FAT_LINKAGES */
@@ -278,7 +278,7 @@ find_table_pointer(count_context_t *ctxt,
 	                       (ctxt->current_resources != NULL) && 
 	                       resources_exhausted(ctxt->current_resources)))
 	{
-		ctxt->exhausted = TRUE;
+		ctxt->exhausted = true;
 		return table_store(ctxt, lw, rw, le, re, cost, 0);
 	}
 	else return NULL;
@@ -329,7 +329,7 @@ static s64 do_count(match_context_t *mchxt,
 	s64 total;
 	int start_word, end_word, w;
 	s64 leftcount, rightcount, pseudototal;
-	Boolean Lmatch, Rmatch;
+	bool Lmatch, Rmatch;
 	unsigned int lcost, rcost;
 
 	Match_node * m, *m1;
