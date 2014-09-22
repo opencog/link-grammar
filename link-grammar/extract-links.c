@@ -191,41 +191,34 @@ void free_parse_info(Parse_info pi)
 /**
  * Returns the pointer to this info, NULL if not there.
  */
-static X_table_connector * x_table_pointer(int lw, int rw, Connector *le, Connector *re,
-									unsigned int cost, Parse_info pi)
+static X_table_connector * x_table_pointer(int lw, int rw,
+                              Connector *le, Connector *re,
+                              unsigned int null_count, Parse_info pi)
 {
 	X_table_connector *t;
-	t = pi->x_table[pair_hash(pi->log2_x_table_size, lw, rw, le, re, cost)];
+	t = pi->x_table[pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count)];
 	for (; t != NULL; t = t->next) {
-		if ((t->lw == lw) && (t->rw == rw) && (t->le == le) && (t->re == re) && (t->cost == cost))  return t;
+		if ((t->lw == lw) && (t->rw == rw) &&
+		    (t->le == le) && (t->re == re) &&
+		    (t->cost == null_count))  return t;
 	}
 	return NULL;
 }
 
-#if DEAD_CODE
-Parse_set * x_table_lookup(int lw, int rw, Connector *le, Connector *re,
-                           unsigned int cost, Parse_info pi)
-{
-	/* returns the count for this quintuple if there, -1 otherwise */
-	X_table_connector *t = x_table_pointer(lw, rw, le, re, cost, pi);
-
-	if (t == NULL) return -1; else return t->set;
-}
-#endif
-
 /**
  * Stores the value in the x_table.  Assumes it's not already there.
  */
-static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connector *re,
-                                  unsigned int cost, Parse_info pi)
+static X_table_connector * x_table_store(int lw, int rw,
+                                  Connector *le, Connector *re,
+                                  unsigned int null_count, Parse_info pi)
 {
 	X_table_connector *t, *n;
 	unsigned int h;
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
 	n->set = empty_set();
-	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = cost;
-	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, cost);
+	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = null_count;
+	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count);
 	t = pi->x_table[h];
 	n->next = t;
 	pi->x_table[h] = n;
@@ -234,9 +227,10 @@ static X_table_connector * x_table_store(int lw, int rw, Connector *le, Connecto
 
 #ifdef UNUSED_FUNCTION
 static void x_table_update(int lw, int rw, Connector *le, Connector *re,
-					unsigned int cost, Parse_set * set, Parse_info pi) {
+                unsigned int null_count, Parse_set * set, Parse_info pi)
+{
 	/* Stores the value in the x_table.  Unlike x_table_store, it assumes it's already there */
-	X_table_connector *t = x_table_pointer(lw, rw, le, re, cost, pi);
+	X_table_connector *t = x_table_pointer(lw, rw, le, re, null_count, pi);
 
 	assert(t != NULL, "This entry is supposed to be in the x_table.");
 	t->set = set;
