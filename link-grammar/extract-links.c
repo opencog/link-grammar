@@ -200,7 +200,7 @@ static X_table_connector * x_table_pointer(int lw, int rw,
 	for (; t != NULL; t = t->next) {
 		if ((t->lw == lw) && (t->rw == rw) &&
 		    (t->le == le) && (t->re == re) &&
-		    (t->cost == null_count))  return t;
+		    (t->null_count == null_count))  return t;
 	}
 	return NULL;
 }
@@ -217,7 +217,7 @@ static X_table_connector * x_table_store(int lw, int rw,
 
 	n = (X_table_connector *) xalloc(sizeof(X_table_connector));
 	n->set = empty_set();
-	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->cost = null_count;
+	n->lw = lw; n->rw = rw; n->le = le; n->re = re; n->null_count = null_count;
 	h = pair_hash(pi->log2_x_table_size, lw, rw, le, re, null_count);
 	t = pi->x_table[h];
 	n->next = t;
