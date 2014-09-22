@@ -34,7 +34,7 @@
 
 static void
 set_centers(const Linkage linkage, int center[],
-            Boolean print_word_0, int N_words_to_print)
+            bool print_word_0, int N_words_to_print)
 {
 	int i, len, tot;
 
@@ -272,7 +272,8 @@ build_linkage_postscript_string(const Linkage linkage,
 {
 	int link, i,j;
 	int d;
-	int print_word_0 = 0, print_word_N = 0, N_wall_connectors;
+	int N_wall_connectors;
+	bool print_word_0 = false, print_word_N = false;
 	bool suppressor_used;
 #ifdef USE_FAT_LINKAGES
 	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
@@ -304,7 +305,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
 						|| (N_wall_connectors > 1) || display_walls);
 	} else {
-		print_word_0 = TRUE;
+		print_word_0 = true;
 	}
 
 	N_wall_connectors = 0;
@@ -322,7 +323,7 @@ build_linkage_postscript_string(const Linkage linkage,
 						|| (N_wall_connectors > 1) || display_walls);
 	}
 	else {
-		print_word_N = TRUE;
+		print_word_N = true;
 	}
 
 	if (print_word_0) d=0; else d=1;
@@ -400,7 +401,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	unsigned int i, j, k, cl, cr, row, top_row, top_row_p1;
 	const char *s;
 	char *t;
-	bool print_word_0 = 0, print_word_N = 0;
+	bool print_word_0 = false, print_word_N = false;
 	int N_wall_connectors;
 	bool suppressor_used;
 	int center[linkage->num_words+1];
@@ -448,7 +449,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	}
 	else
 	{
-		print_word_0 = TRUE;
+		print_word_0 = true;
 	}
 
 	/* Do we want to print the right wall? */
@@ -472,7 +473,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	}
 	else
 	{
-		print_word_N = TRUE;
+		print_word_N = true;
 	}
 
 	N_words_to_print = linkage->num_words;
@@ -649,7 +650,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			/* print each row of the picture */
 			/* 'blank' is used solely to detect blank lines */
 			unsigned int mbcnt = 0;
-			Boolean blank = TRUE;
+			bool blank = true;
 
 			row = top_row - revrs;
 			k = start[row];
@@ -1186,14 +1187,14 @@ struct tokenpos /* First position of the given token - to prevent duplicates */
 	int ai;
 };
 
-void print_sentence_word_alternatives(Sentence sent, Boolean debugprint,
+void print_sentence_word_alternatives(Sentence sent, bool debugprint,
      void (*display)(Dictionary, const char *), struct tokenpos * tokenpos)
 {
 	int wi;   /* Internal sentence word index */
 	int ai;   /* Index of a word alternative */
 	int sentlen = sent->length;        /* Shortened if there is a right-wall */
 	int first_sentence_word = 0;       /* Used for skipping a left-wall */
-	int word_split = FALSE;            /* !!word got split */
+	bool word_split = false;           /* !!word got split */
 
 	if (0 == sentlen)
 	{
@@ -1222,7 +1223,7 @@ void print_sentence_word_alternatives(Sentence sent, Boolean debugprint,
 		 * 2. A word containing more than one alternative. */
 		if (sentlen - first_sentence_word > 1)
 		{
-			word_split = TRUE;
+			word_split = true;
 		}
 		else
 		{
@@ -1236,7 +1237,7 @@ void print_sentence_word_alternatives(Sentence sent, Boolean debugprint,
 
 				if (NULL != w.alternatives[1])
 				{
-					word_split = TRUE;
+					word_split = true;
 					break;
 				}
 			}
@@ -1262,7 +1263,7 @@ void print_sentence_word_alternatives(Sentence sent, Boolean debugprint,
 		/* Iterate over alternatives */
 		for (ai=0; ;  ai++)
 		{
-			Boolean alt_exists = w.alternatives[ai] != NULL;
+			bool alt_exists = w.alternatives[ai] != NULL;
 
 			if (alt_exists && debugprint)
 				lgdebug(0, "   alt%d:", ai);
@@ -1291,7 +1292,7 @@ void print_sentence_word_alternatives(Sentence sent, Boolean debugprint,
 					{
 						struct tokenpos firstpos = { wt };
 
-						print_sentence_word_alternatives(sent, FALSE, NULL, &firstpos);
+						print_sentence_word_alternatives(sent, false, NULL, &firstpos);
 						if ((firstpos.wi != wi) || (firstpos.ai != ai))
 						{
 							/* We encountered this token earlier */
