@@ -93,7 +93,7 @@ void spellcheck_destroy(void * chk)
  * Ask the spell-checker if the spelling looks good.
  * Return true if the spelling is good, else false.
  */
-Boolean spellcheck_test(void * chk, const char * word)
+bool spellcheck_test(void * chk, const char * word)
 {
 	int val = 0;
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
@@ -101,7 +101,7 @@ Boolean spellcheck_test(void * chk, const char * word)
 		/* this can return -1 on failure */
 		val = aspell_speller_check(aspell->speller, word, -1);
 	}
-	return (val == 1) ? TRUE : FALSE;
+	return (val == 1);
 }
 
 int spellcheck_suggest(void * chk, char ***sug, const char * word)

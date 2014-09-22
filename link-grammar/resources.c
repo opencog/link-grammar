@@ -68,8 +68,8 @@ Resources resources_create(void)
 	r->space_when_parse_started = get_space_in_use();
 	r->max_memory = MAX_MEMORY_UNLIMITED;
 	r->cumulative_time = 0;
-	r->memory_exhausted = FALSE;
-	r->timer_expired = FALSE;
+	r->memory_exhausted = false;
+	r->timer_expired = false;
 
 	return r;
 }
@@ -83,8 +83,8 @@ void resources_reset(Resources r)
 {
 	r->when_last_called = r->time_when_parse_started = current_usage_time();
 	r->space_when_parse_started = get_space_in_use();
-	r->timer_expired = FALSE;
-	r->memory_exhausted = FALSE;
+	r->timer_expired = false;
+	r->memory_exhausted = false;
 }
 
 #if 0
@@ -99,30 +99,30 @@ void resources_reset_space(Resources r)
 	r->space_when_parse_started = get_space_in_use();
 }
 
-Boolean resources_exhausted(Resources r)
+bool resources_exhausted(Resources r)
 {
 	if (r->timer_expired || r->memory_exhausted)
-		return TRUE;
+		return true;
 
 	if (resources_timer_expired(r))
-		r->timer_expired = TRUE;
+		r->timer_expired = true;
 
 	if (resources_memory_exhausted(r))
-		r->memory_exhausted = TRUE;
+		r->memory_exhausted = true;
 
 	return (r->timer_expired || r->memory_exhausted);
 }
 
-Boolean resources_timer_expired(Resources r)
+bool resources_timer_expired(Resources r)
 {
-	if (r->max_parse_time == MAX_PARSE_TIME_UNLIMITED) return 0;
+	if (r->max_parse_time == MAX_PARSE_TIME_UNLIMITED) return false;
 	else return (r->timer_expired || 
 	     (current_usage_time() - r->time_when_parse_started > r->max_parse_time));
 }
 
-Boolean resources_memory_exhausted(Resources r)
+bool resources_memory_exhausted(Resources r)
 {
-	if (r->max_memory == MAX_MEMORY_UNLIMITED) return 0;
+	if (r->max_memory == MAX_MEMORY_UNLIMITED) return false;
 	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));
 }
 

@@ -53,8 +53,8 @@ struct Resources_s
 	double when_created;
 	double when_last_called;
 	double cumulative_time;
-	int    memory_exhausted;
-	int    timer_expired;
+	bool   memory_exhausted;
+	bool   timer_expired;
 };
 
 struct Parse_Options_s
