@@ -48,7 +48,7 @@ void        exfree_link(Link *);
 /* Connector-set utilities ... */
 Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
-Boolean word_has_connector(Dict_node *, const char *, char);
+bool word_has_connector(Dict_node *, const char *, char);
 const char * word_only_connector(Dict_node *);
 #ifdef USE_FAT_LINKAGES
 bool match_in_connector_set(count_context_t*, Connector_set*, Connector*, int);
@@ -111,7 +111,7 @@ static inline bool easy_match(const char * s, const char * t)
 
 
 /* Dictionary utilities ... */
-Boolean word_contains(Dictionary dict, const char * word, const char * macro);
+bool word_contains(Dictionary dict, const char * word, const char * macro);
 
 static inline int string_hash(const char *s)
 {

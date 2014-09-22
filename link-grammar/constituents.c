@@ -76,9 +76,9 @@ typedef struct
 
 /* ================================================================ */
 
-static inline int uppercompare(const char * s, const char * t)
+static inline bool uppercompare(const char * s, const char * t)
 {
-	return (FALSE == utf8_upper_match(s,t));
+	return (false == utf8_upper_match(s,t));
 }
 
 /**

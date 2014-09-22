@@ -223,7 +223,7 @@ Connector * connector_new(void)
 	c->label = NORMAL_LABEL;
 	c->priority = THIN_priority;
 #endif /* USE_FAT_LINKAGES */
-	c->multi = FALSE;
+	c->multi = false;
 	c->next = NULL;
 	c->tableNext = NULL;
 	return c;
@@ -411,25 +411,25 @@ bool match_in_connector_set(Connector_set *conset, Connector * c, int dir)
  * check uses a "smart-match", the same kind used by the parser.
  */
 #if CRAZY_OBESE_CHECKING_AGLO
-Boolean word_has_connector(Dict_node * dn, const char * cs, char direction)
+bool word_has_connector(Dict_node * dn, const char * cs, char direction)
 {
 	Connector * c2 = NULL;
 	Disjunct *d, *d0;
-	if (dn == NULL) return FALSE;
+	if (dn == NULL) return false;
 	d0 = d = build_disjuncts_for_dict_node(dn);
-	if (d == NULL) return FALSE;
+	if (d == NULL) return false;
 	for (; d != NULL; d = d->next) {
 		if (direction == '+') c2 = d->right;
 		if (direction == '-') c2 = d->left;
 		for (; c2 != NULL; c2 = c2->next) {
 			if (easy_match(c2->string, cs)) {
 				free_disjuncts(d0);
-				return TRUE;
+				return true;
 			}
 		}
 	}
 	free_disjuncts(d0);
-	return FALSE;
+	return false;
 }
 #else /* CRAZY_OBESE_CHECKING_AGLO */
 
@@ -470,16 +470,16 @@ const char * word_only_connector(Dict_node * dn)
 /* ======================================================== */
 /* Dictionary utilities ... */
 
-static Boolean dn_word_contains(Dictionary dict,
-                                Dict_node * w_dn, const char * macro)
+static bool dn_word_contains(Dictionary dict,
+                             Dict_node * w_dn, const char * macro)
 {
 	Exp * m_exp;
 	Dict_node *m_dn;
 
-	if (w_dn == NULL) return FALSE;
+	if (w_dn == NULL) return false;
 
 	m_dn = dictionary_lookup_list(dict, macro);
-	if (m_dn == NULL) return FALSE;
+	if (m_dn == NULL) return false;
 
 	m_exp = m_dn->exp;
 
@@ -496,11 +496,11 @@ static Boolean dn_word_contains(Dictionary dict,
 		if (1 == exp_contains(w_dn->exp, m_exp))
 		{
 			free_lookup_list(dict, m_dn);
-			return TRUE;
+			return true;
 		}
 	}
 	free_lookup_list(dict, m_dn);
-	return FALSE;
+	return false;
 }
 
 /**
@@ -510,12 +510,10 @@ static Boolean dn_word_contains(Dictionary dict,
  * @return: true if word's expression contains macro's expression,
  * false otherwise.
  */
-Boolean word_contains(Dictionary dict, const char * word, const char * macro)
+bool word_contains(Dictionary dict, const char * word, const char * macro)
 {
-	Dict_node *w_dn;
-	Boolean ret;
-	w_dn = abridged_lookup_list(dict, word);
-	ret = dn_word_contains(dict, w_dn, macro);
+	Dict_node *w_dn = abridged_lookup_list(dict, word);
+	bool ret = dn_word_contains(dict, w_dn, macro);
 	free_lookup_list(dict, w_dn);
 	return ret;
 }

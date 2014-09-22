@@ -425,9 +425,9 @@ void init_memusage(void)
 #ifdef USE_PTHREADS
 	pthread_once(&space_key_once, space_key_alloc);
 #else
-	static int mem_inited = FALSE;
+	static bool mem_inited = false;
 	if (mem_inited) return;
-	mem_inited = TRUE;
+	mem_inited = true;
 #endif
 	do_init_memusage();
 }
@@ -953,9 +953,9 @@ FILE *dictopen(const char *filename, const char *how)
 /**
  * Check to see if a file exists.
  */
-Boolean file_exists(const char * dict_name)
+bool file_exists(const char * dict_name)
 {
-	Boolean retval = FALSE;
+	bool retval = false;
 	int fd;
 	struct stat buf;
 
@@ -967,12 +967,12 @@ Boolean file_exists(const char * dict_name)
 	FILE *fp = dictopen(dict_name, "r");
 #endif
 	if (fp == NULL)
-		return FALSE;
+		return false;
 
 	/* Get the file size, in bytes. */
 	fd = fileno(fp);
 	fstat(fd, &buf);
-	if (0 < buf.st_size) retval = TRUE;
+	if (0 < buf.st_size) retval = true;
 
   	fclose(fp);
 	return retval;

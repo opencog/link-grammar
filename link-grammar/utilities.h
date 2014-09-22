@@ -290,7 +290,7 @@ static inline const char * skip_utf8_upper(const char * s)
  * two input strings match. Comparison stops when
  * both srings descend to lowercase.
  */
-static inline int utf8_upper_match(const char * s, const char * t)
+static inline bool utf8_upper_match(const char * s, const char * t)
 {
 	mbstate_t mbs, mbt;
 	wchar_t ws, wt;
@@ -301,17 +301,17 @@ static inline int utf8_upper_match(const char * s, const char * t)
 
 	ns = mbrtowc(&ws, s, MB_CUR_MAX, &mbs);
 	nt = mbrtowc(&wt, t, MB_CUR_MAX, &mbt);
-	if (ns < 0 || nt < 0) return FALSE;  /* invalid mb sequence */
+	if (ns < 0 || nt < 0) return false;  /* invalid mb sequence */
 	while (iswupper(ws) || iswupper(wt))
 	{
-		if (ws != wt) return FALSE;
+		if (ws != wt) return false;
 		s += ns;
 		t += nt;
 		ns = mbrtowc(&ws, s, MB_CUR_MAX, &mbs);
 		nt = mbrtowc(&wt, t, MB_CUR_MAX, &mbt);
-		if (ns < 0 || nt < 0) return FALSE;  /* invalid mb sequence */
+		if (ns < 0 || nt < 0) return false;  /* invalid mb sequence */
 	}
-	return TRUE;
+	return true;
 }
 
 void downcase_utf8_str(char *to, const char * from, size_t usize);
@@ -374,7 +374,7 @@ void * object_open(const char *filename,
                    void * (*opencb)(const char *, void *),
                    void * user_data);
 
-Boolean file_exists(const char * dict_name);
+bool file_exists(const char * dict_name);
 char * get_file_contents(const char *filename);
 
 /**
