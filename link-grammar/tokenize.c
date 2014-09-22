@@ -537,6 +537,8 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 	s_strippable = suffix_list->length;
 	suffix = suffix_list->string;
 
+	if (INT_MAX == s_strippable) return false;
+
 	/* Go through once for each suffix; then go through one
 	 * final time for the no-suffix case (i.e. to look for
 	 * prefixes only, without suffixes). */

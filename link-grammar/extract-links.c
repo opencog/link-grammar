@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <limits.h>  /* For UINT_MAX */
+
 #include "count.h"
 #include "fast-match.h"
 #include "extract-links.h"
@@ -344,6 +346,11 @@ Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
 		end_word = re->word + 1;
 	}
 
+	/* This condition can never be true here. It is included so GCC will be able
+	 * to optimize the loop over "cost".  Without this check, GCC thinks this
+	 * loop may be an infinite loop and it may omit some optimizations. */
+	if (UINT_MAX == cost) return NULL;
+
 	for (w = start_word; w < end_word; w++)
 	{
 		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
@@ -441,7 +448,7 @@ Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
 }
 
 /**
- * return TRUE if and only if overflow in the number of parses occured.
+ * return TRUE if and only if overflow in the number of parses occurred.
  * Use a 64-bit int for counting.
  */
 static bool verify_set_node(Parse_set *set)
