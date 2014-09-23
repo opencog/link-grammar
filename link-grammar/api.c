@@ -897,6 +897,7 @@ static void old_post_process_linkages(Sentence sent, match_context_t* mchxt,
 			canonical = is_canonical_linkage(sent);
 			if (only_canonical_allowed && !canonical) continue;
 			*lifo = analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
+			lifo->index = indices[in];
 			lifo->fat = true;
 			lifo->canonical = canonical;
 		}
@@ -904,6 +905,7 @@ static void old_post_process_linkages(Sentence sent, match_context_t* mchxt,
 #endif /* USE_FAT_LINKAGES */
 		{
 			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
+			lifo->index = indices[in];
 		}
 		if (0 == lifo->N_violations)
 		{
@@ -913,7 +915,6 @@ static void old_post_process_linkages(Sentence sent, match_context_t* mchxt,
 				N_thin_linkages++;
 #endif /* USE_FAT_LINKAGES */
 		}
-		lifo->index = indices[in];
 		lg_corpus_score(sent, lifo);
 		N_linkages_post_processed++;
 		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
