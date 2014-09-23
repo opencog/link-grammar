@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.1.1 (formatted as V5v1v1+)
-<dictionary-version-number>: V5v1v1+;
+% Dictionary version number is 5.1.2 (formatted as V5v1v2+)
+<dictionary-version-number>: V5v1v2+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -2479,14 +2479,16 @@ define(`VERB_Y_PLI',`'
 
 % I used verb-and-sp-i but maybe verb-and-pl is better?
 % I- & CV-: "What did John say you should do?"
-% XXX todo : is the options {<verb-wall>} below even needed????
+% XXX todo : is the option {<verb-wall>} below even needed????
+% Naked I*d-: "How do you do?"
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & I*d+) or CQ-))
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
-  or ({@E-} & I- & CV-);
+  or ({@E-} & I- & CV-)
+  or ({@E-} & I*d-);
 
 does.v:
   VERB_X_S(<vc-do>)
