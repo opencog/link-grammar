@@ -650,6 +650,7 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 		lifo->canonical = true;
 		if (set_has_fat_down(sent))
 		{
+			int index = lifo->index;
 			canonical = is_canonical_linkage(sent);
 			if (only_canonical_allowed && !canonical)
 			{
@@ -657,13 +658,16 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 				continue;
 			}
 			*lifo = analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
+			lifo->index = index;
 			lifo->fat = true;
 			lifo->canonical = canonical;
 		}
 		else
 #endif /* USE_FAT_LINKAGES */
 		{
+			int index = lifo->index;
 			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
+			lifo->index = index;
 		}
 		if (0 == lifo->N_violations)
 		{
