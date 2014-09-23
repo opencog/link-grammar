@@ -1,4 +1,4 @@
-Version 5.1.1 (22 September 2014)
+Version 5.1.1 (23 September 2014)
  * Minor post-processing cleanup.
  * English dict: Fix questions with "it".
  * swig: add missing API functions sentence_split, dictionary_get_lang
