@@ -6630,6 +6630,7 @@ who:
 % Xc+ & Ic+: "What, were you expecting Santa?"
 % Wd- & O+: "What a jerk!"
 % QI-: "I'll tell you what", "Say what?"
+% Jw-: "To what do you owe your success?"
 what:
   ({EL+} &
       (D**w+
@@ -6642,6 +6643,7 @@ what:
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
   or (Wd- & O+)
+  or Jw-
   or [QI-]
   or (Xc+ & Ic+);
 
