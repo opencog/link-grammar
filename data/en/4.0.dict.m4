@@ -550,7 +550,7 @@ HYPHENATED-WORDS.n:
 <common-noun>:
   <noun-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds- or <no-det-null>)))
+    or ((NM+ or ({[NM+]1.5} & (Ds- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
@@ -570,7 +570,7 @@ HYPHENATED-WORDS.n:
     or Wa-))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds**x- or <no-det-null>)))
+    or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (YS+ & Ds**x-)
@@ -579,7 +579,7 @@ HYPHENATED-WORDS.n:
 <common-vowel-noun>:
   <common-phonetic>
   or (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds**v- or <no-det-null>)))
+    or ((NM+ or ({[NM+]1.5} & (Ds**v- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (YS+ & Ds**v-));
@@ -587,7 +587,7 @@ HYPHENATED-WORDS.n:
 <common-const-noun>:
   <common-phonetic>
   or (({NMa+} & AN+)
-    or ((NM+ or ({[NM+]} & (Ds**c- or <no-det-null>)))
+    or ((NM+ or ({[NM+]1.5} & (Ds**c- or <no-det-null>)))
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (YS+ & Ds**c-));
@@ -797,7 +797,7 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
 <costly-common-noun>:
   <noun-modifiers> &
     (AN+
-    or ((NM+ or [[{[NM+]} & (Ds- or <no-det-null>) ]] )
+    or ((NM+ or [[{[NM+]1.5} & (Ds- or <no-det-null>) ]] )
       & ((<noun-sub-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or SJrs-
