@@ -145,7 +145,7 @@ struct Disjunct_struct
     const char * string;      /* subscripted dictionary word */
     Connector *left, *right;
     double cost;
-    bool marked;
+    bool marked;              /* unmarked disjuncts get deleted */
 };
 
 typedef struct Match_node_struct Match_node;
