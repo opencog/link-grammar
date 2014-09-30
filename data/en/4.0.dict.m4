@@ -2261,8 +2261,9 @@ per "/.per": Us+ & Mp-;
     or [[Wq- & PF+ & {@MV+} & {CC+}]]);
 
 % Relative clause, or question.
-% Q-: "where are they?"
-<verb-rq>: Rw- or ({Ic-} & Q- & <verb-wall>) or [()];
+% Q-: "where are they?" -- verb must connect to wall.
+% Qd-: "does he drink?" -- Qd connects directly to wall.
+<verb-rq>: Rw- or ({Ic-} & (Qd- or (Q- & <verb-wall>))) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -2682,13 +2683,12 @@ hadn't.v-d hadn’t.v-d:
 % Unfortunately, this allows "There is chasing dogs", which pairs SFu to Op
 % and has to be removed via post-processing.
 % EQ: "Everyone knows that 2 + 2 is 4"
-% Qd- & (SIs+ or SFIs+) & <vc-be-and> (no walls here:
-%    for questions: "Is it in place?")
+% <verb-rq> & (SIs+ or SFIs+):  "Is it in place?")
 is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or ((<verb-rq> or Qd-) & (SIs+ or SFIs+) & <vc-be-and>)
+  or (<verb-rq> & (SIs+ or SFIs+) & <vc-be-and>)
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
 's.v ’s.v: [[(<verb-x-s,u> &
@@ -2710,7 +2710,7 @@ is.v:
 are.v:
   ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>)
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
-  or ((<verb-rq> or Qd-) & (SIpx+ or SFIp+) & <vc-be-and>);
+  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be-and>);
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or
@@ -2727,7 +2727,7 @@ was.v-d:
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
-  or ((Rw- or [()]) & (SFIs+ or SIs+ or SXI+) & <vc-be>)
+  or ((Qd- or Rw- or [()]) & (SFIs+ or SIs+ or SXI+) & <vc-be>)
   or ({Ic-} & Q- & <verb-wall> & (SFIs+ or SIs+ or SXI+));
 
 % XXX probably should be verb-and-sp-i- etc !?
