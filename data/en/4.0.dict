@@ -2597,8 +2597,9 @@ hadn't.v-d hadn’t.v-d:
   ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
-% Identical to above, but no wall.  This is used only in "and.j-v" constructions,
-% so that WV links to the "and.j-v" instead of "be".
+% Identical to above, but no wall.  This is used only in "and.j-v"
+% constructions, so that WV links to the "and.j-v" instead of "be".
+%
 <vc-be-no-obj-no-wall>:
   ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PF- or
       (Osi+ & R+ & Bs+) or
@@ -2639,7 +2640,7 @@ hadn't.v-d hadn’t.v-d:
 % and has to be removed via post-processing.
 % EQ: "Everyone knows that 2 + 2 is 4"
 % Qd- & (SIs+ or SFIs+) & <vc-be-and> (no walls here:
-% for questions: "Is it in place?"
+%    for questions: "Is it in place?")
 is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
@@ -2677,12 +2678,14 @@ are.v:
   Spx- & (({@EBm+} & ((((O*t+ & <verb-wall>) or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or (Pa+ & <verb-wall>) )) or
     ({N+} & (Pg+ or Pv+)));
 
+% Q-: "How was the movie?"
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
-  or ((<verb-rq> & (SFIs+ or SIs+ or SXI+)) & <vc-be>);
+  or ((Rw- or [()]) & (SFIs+ or SIs+ or SXI+) & <vc-be>)
+  or ({Ic-} & Q- & <verb-wall> & (SFIs+ or SIs+ or SXI+));
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
