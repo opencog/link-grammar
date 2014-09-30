@@ -2645,7 +2645,7 @@ is.v:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
-  or (<verb-rq> & (SIs+ or SFIs+) & <vc-be-and>)
+  or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>})
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
 
 's.v ’s.v: [[(<verb-x-s,u> &
@@ -2667,7 +2667,7 @@ is.v:
 are.v:
   ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>)
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
-  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be-and>);
+  or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 %we're they're I'm you're:
 %(({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & {@MV+}) or <to-verb> or Pa+)) or
@@ -2684,13 +2684,12 @@ was.v-d:
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or ({@E-} & SX- & <vc-be> & <verb-wall>)
-  or ((Qd- or Rw- or [()]) & (SFIs+ or SIs+ or SXI+) & <vc-be>)
-  or ({Ic-} & Q- & <verb-wall> & (SFIs+ or SIs+ or SXI+));
+  or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
 were.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be>)
-  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be>)
+  or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>})
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
@@ -2699,7 +2698,7 @@ were.v-d:
 % Ss*w-: allows Wh subjets: "Who am I?"
 am.v:
   ({@E-} & SX- & <vc-be>)
-  or (<verb-rq> & SXI+ & <vc-be>)
+  or (<verb-rq> & SXI+ & {<vc-be>})
   or (Ss*w- & <vc-be>)
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>);
@@ -2737,20 +2736,21 @@ being.v:
    or (S- & Xd- & MVg- & Pa+ & <verb-wall>);
 
 isn't isn’t:
-  (<verb-x-s> or (<verb-rq> & (SIs+ or SFIs+))) & <vc-be>;
+  (<verb-x-s> & <vc-be>)
+  or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>});
 
 wasn't.v-d wasn’t.v-d:
-  (({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)))
-  or (<verb-rq> & (SI*+ or SXI+ or SFIs+))) & <vc-be>;
+  ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & <vc-be>)
+  or (<verb-rq> & (SI*+ or SXI+ or SFIs+) & {<vc-be>});
 
 aren't aren’t:
   (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
-  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be>);
+  or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % [[Ss-]]: "If it weren't for Joe, ..."
 weren't.v-d weren’t.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be>)
-  or (<verb-rq> & (SIpx+ or SFIp+) & <vc-be>);
+  or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
 % No <verb-wall> here, these are almost entirely just auxiliary verbs.
