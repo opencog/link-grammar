@@ -2594,7 +2594,7 @@ hadn't.v-d hadn’t.v-d:
     THb+ or
     <to-verb> or
     (Pa+ & {<verb-wall>}))) or
-  ({N+} & (AF- or [Pv+].1 or I*v+)) or
+  ({N+} & ((AF- & <verb-wall>) or [Pv+].1 or I*v+)) or
   (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v" constructions,
