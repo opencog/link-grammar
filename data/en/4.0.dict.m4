@@ -2737,7 +2737,6 @@ were.v-d:
   or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & CCq- & Xc+) or CCq- or ({{Xd-} & Xc+} & COp+))]];
 
-% XXX the verb-and construction is too broad, allowing crazy "am" constructuions.
 % Ss*w-: allows Wh subjets: "Who am I?"
 am.v:
   ({@E-} & SX- & <vc-be>)
