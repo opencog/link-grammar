@@ -330,7 +330,6 @@ static s64 do_count(match_context_t *mchxt,
 	int start_word, end_word, w;
 	s64 leftcount, rightcount, pseudototal;
 	bool Lmatch, Rmatch;
-	unsigned int lcost, rcost;
 
 	Match_node * m, *m1;
 	Table_connector *t;
@@ -431,6 +430,7 @@ static s64 do_count(match_context_t *mchxt,
 		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m != NULL; m = m->next)
 		{
+			unsigned int lcost, rcost;
 			unsigned int null_count_p1;
 			Disjunct * d;
 			d = m->d;
@@ -537,7 +537,7 @@ s64 do_parse(Sentence sent,
 	s64 total;
 
 	ctxt->current_resources = opts->resources;
-	ctxt->exhausted = resources_exhausted(ctxt->current_resources);
+	ctxt->exhausted = false;
 	ctxt->checktimer = 0;
 	ctxt->local_sent = sent->word;
 #ifdef USE_FAT_LINKAGES
