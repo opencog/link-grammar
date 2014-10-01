@@ -340,13 +340,11 @@ static s64 do_count(match_context_t *mchxt,
 
 	t = find_table_pointer(ctxt, lw, rw, le, re, null_count);
 
-	if (t == NULL) {
-		/* Create the table entry with a tentative null count of 0. 
-	    * This count must be updated before we return. */
-		t = table_store(ctxt, lw, rw, le, re, null_count, 0);
-	} else {
-		return t->count;
-	}
+	if (t) return t->count;
+
+	/* Create the table entry with a tentative null count of 0. 
+	 * This count must be updated before we return. */
+	t = table_store(ctxt, lw, rw, le, re, null_count, 0);
 
 	if (rw == 1+lw)
 	{
@@ -394,8 +392,8 @@ static s64 do_count(match_context_t *mchxt,
 		else
 		{
 			Disjunct * d;
-			total = 0;
-			w = lw+1;
+			s64 total = 0;
+			int w = lw + 1;
 			for (d = ctxt->local_sent[w].d; d != NULL; d = d->next)
 			{
 				if (d->left == NULL)
