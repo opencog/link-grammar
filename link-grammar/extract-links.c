@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2010 Linas Vepstas                                      */
+/* Copyright (c) 2010, 2014 Linas Vepstas                                */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -57,7 +57,7 @@ static void free_set(Parse_set *s)
 	xfree((void *)s, sizeof(*s));
 }
 
-static Parse_choice * 
+static Parse_choice *
 make_choice(Parse_set *lset, int llw, int lrw, Connector * llc, Connector * lrc,
             Parse_set *rset, int rlw, int rrw, Connector * rlc, Connector * rrc,
             Disjunct *ld, Disjunct *md, Disjunct *rd)
@@ -91,7 +91,7 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 	{
 		s->first = pc;
 	}
-	else 
+	else
 	{
 		s->current->next = pc;
 	}
@@ -242,8 +242,11 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
  *
- * This code is similar to code in count.c
- * (grep for end_word in these files).
+ * This code is similar to do_count() in count.c -- for a good reason:
+ * the do_count() function did a full parse, but didn't actually
+ * allocate an memory structures to hold the parse.  This also does
+ * a full parse, but it also allocates and fills out the various
+ * parse structures.
  */
 static
 Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
@@ -305,8 +308,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 				                  NULL, null_count-1, islands_ok, pi);
 				if (rs[0] == NULL) continue;
 				a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
-									   rs[0], w, rw, NULL, NULL,
-									   NULL, NULL, NULL);
+				                       rs[0], w, rw, NULL, NULL,
+				                       NULL, NULL, NULL);
 				put_choice_in_set(xt->set, a_choice);
 			}
 		}
@@ -315,8 +318,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 		if (rs[0] != NULL)
 		{
 			a_choice = make_choice(dummy_set(), lw, w, NULL, NULL,
-								   rs[0], w, rw, NULL, NULL,
-								   NULL, NULL, NULL);
+			                       rs[0], w, rw, NULL, NULL,
+			                       NULL, NULL, NULL);
 			put_choice_in_set(xt->set, a_choice);
 		}
 		return xt->set;
@@ -387,8 +390,8 @@ Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
 					{
 						if (rs[j] == NULL) continue;
 						a_choice = make_choice(ls[i], lw, w, le, d->left,
-											   rs[j], w, rw, d->right, re,
-											   ld, d, rd);
+						                       rs[j], w, rw, d->right, re,
+						                       ld, d, rd);
 						put_choice_in_set(xt->set, a_choice);
 					}
 				}
@@ -481,14 +484,13 @@ static bool verify_set(Parse_info pi)
  * table (x_table) which will be freed at the same time the
  * whole_set is freed.
  *
- * It also assumes that count() has been run, and that hash table is
- * filled with the values thus computed.  Therefore this function
- * must be structured just like parse() (the main function for
- * count()).
+ * This assumes that do_parse() has been run, and that the count_context
+ * is filled with the values thus computed.  This function is structured
+ * much like do_parse(), which wraps the main workhorse do_count().
  *
  * If the number of linkages gets huge, then the counts can overflow.
  * We check if this has happened when verifying the parse set.
- * This routine returns TRUE iff overflowed occurred.
+ * This routine returns TRUE iff an overflow occurred.
  */
 
 bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
@@ -498,9 +500,9 @@ bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
 	Parse_set * whole_set;
 
 	whole_set =
-		mk_parse_set(sent, mchxt, ctxt, 
-                NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
-		          opts->islands_ok, sent->parse_info);
+		mk_parse_set(sent, mchxt, ctxt,
+		             NULL, NULL, -1, sent->length, NULL, NULL, null_count+1,
+		             opts->islands_ok, sent->parse_info);
 
 	if ((whole_set != NULL) && (whole_set->current != NULL)) {
 		whole_set->current = whole_set->first;
