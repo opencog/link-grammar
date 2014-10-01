@@ -13,8 +13,9 @@
 #include "link-includes.h"
 #include "structures.h"
 
+/* See the source file for documentation. */
 match_context_t* alloc_fast_matcher(const Sentence);
 void free_fast_matcher(match_context_t*);
 
-void put_match_list(match_context_t *, Match_node *);
 Match_node * form_match_list(match_context_t *, int, Connector *, int, Connector *, int);
+void put_match_list(match_context_t *, Match_node *);

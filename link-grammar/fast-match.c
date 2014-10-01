@@ -1,6 +1,7 @@
 /**************************************************************************/
 /* Copyright (c) 2004                                                     */
 /* Daniel Sleator, David Temperley, and John Lafferty                     */
+/* Copyright (c) 2014 Linas Vepstas                                       */
 /* All rights reserved                                                    */
 /*                                                                        */
 /* Use of the link grammar parsing system is subject to the terms of the  */
@@ -15,7 +16,23 @@
 #include "fast-match.h"
 #include "word-utils.h"
 
-/** 
+/**
+ * The entire goal of this file is provide a fast lookup of all of the
+ * disjuncts on a given word that might be able to connect to a given
+ * connector on the left or the right. The main entry point is
+ * form_match_list(), which performs this lookup.
+ *
+ * The lookup is fast, because it uses a precomputed lookup table to
+ * find the match candidates.  The lookup table is stocked by looking
+ * at all disjuncts on all words, and sorting them into bins organized
+ * by connectors they could potentially connect to.  The lookup table
+ * is created by calling the alloc_fast_matcher() function.
+ *
+ * free_fast_matcher() is used to free the matcher.
+ * put_match_list() releases the memory that form_match_list returned.
+ */
+
+/**
  * returns the number of disjuncts in the list that have non-null
  * left connector lists.
  */
@@ -40,7 +57,7 @@ static int right_disjunct_list_length(const Disjunct * d)
 struct match_context_s
 {
 	size_t size;
-	int match_cost;
+	unsigned int match_cost;     /* used for nothing but debugging ... */
 	unsigned int *l_table_size;  /* the sizes of the hash tables */
 	unsigned int *r_table_size;
 
@@ -96,7 +113,7 @@ static void free_match_list(Match_node * t)
 }
 
 /**
- * Free all of the hash tables and Match_nodes 
+ * Free all of the hash tables and Match_nodes
  */
 void free_fast_matcher(match_context_t *mchxt)
 {
@@ -263,20 +280,23 @@ match_context_t* alloc_fast_matcher(const Sentence sent)
 }
 
 /**
- * Forms and returns a list of disjuncts that might match lc or rc or both.
- * lw and rw are the words from which lc and rc came respectively.
- * The list is formed by the link pointers of Match_nodes.
+ * Forms and returns a list of disjuncts coming from word w, that might
+ * match lc or rc or both. The lw and rw are the words from which lc
+ * and rc came respectively.
+ *
+ * The list is returned in a linked list of Match_nodes.
  * The list contains no duplicates.  A quadratic algorithm is used to
  * eliminate duplicates.  In practice the match_cost is less than the
  * parse_cost (and the loop is tiny), so there's no reason to bother
- * to fix this.
+ * to fix this.  The number of times through the loop is counted with
+ * 'match_cost', if verbosity>1, then it this will be prnted at the end.
  */
-Match_node * 
-form_match_list(match_context_t *ctxt, int w, 
+Match_node *
+form_match_list(match_context_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {
-	Match_node *ml, *mr, *mx, *my, * mz, *front, *free_later;
+	Match_node *ml, *mr, *mx, *my, *mz, *front, *free_later;
 
 	if (lc != NULL) {
 		ml = ctxt->l_table[w][connector_hash(lc) & (ctxt->l_table_size[w]-1)];
@@ -326,8 +346,7 @@ form_match_list(match_context_t *ctxt, int w,
 		if (my != NULL) { /* mx was in the l list */
 			mx->next = free_later;
 			free_later = mx;
-		}
-		if (my==NULL) {  /* it was not there */
+		} else {  /* it was not there */
 			mx->next = front;
 			front = mx;
 		}
@@ -337,6 +356,7 @@ form_match_list(match_context_t *ctxt, int w,
 
 	/* now catenate the two lists */
 	if (mr == NULL) return ml;
+	if (ml == NULL) return mr;
 	for (mx = mr; mx->next != NULL; mx = mx->next)
 	  ;
 	mx->next = ml;
