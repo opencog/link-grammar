@@ -316,10 +316,10 @@ static void table_update(count_context_t *ctxt, int lw, int rw,
  * with a count value of 0.
  */
 static s64 pseudocount(count_context_t * ctxt,
-                       int lw, int rw, Connector *le, Connector *re, unsigned int cost)
+                       int lw, int rw, Connector *le, Connector *re,
+                       unsigned int cost)
 {
-	s64 count;
-	count = table_lookup(ctxt, lw, rw, le, re, cost);
+	s64 count = table_lookup(ctxt, lw, rw, le, re, cost);
 	if (count == 0) return 0; else return 1;
 }
 
@@ -330,10 +330,6 @@ static s64 do_count(match_context_t *mchxt,
 {
 	s64 total;
 	int start_word, end_word, w;
-	s64 leftcount, rightcount, pseudototal;
-	bool Lmatch, Rmatch;
-
-	Match_node * m, *m1;
 	Table_connector *t;
 
 	if (null_count < 0) return 0;  /* can this ever happen?? */
@@ -429,6 +425,7 @@ static s64 do_count(match_context_t *mchxt,
 
 	for (w = start_word; w < end_word; w++)
 	{
+		Match_node *m, *m1;
 		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
 		for (; m != NULL; m = m->next)
 		{
@@ -439,6 +436,10 @@ static s64 do_count(match_context_t *mchxt,
 			null_count_p1 = null_count + 1; /* avoid gcc warning: unsafe loop opt */
 			for (lcost = 0; lcost < null_count_p1; lcost++)
 			{
+				bool Lmatch, Rmatch;
+				s64 leftcount = 0, rightcount = 0;
+				s64 pseudototal;
+
 				rcost = null_count - lcost;
 				/* Now lcost and rcost are the costs we're assigning
 				 * to those parts respectively */
@@ -450,7 +451,6 @@ static s64 do_count(match_context_t *mchxt,
 				Rmatch = (d->right != NULL) && (re != NULL) && 
 				         do_match(ctxt, d->right, re, w, rw);
 
-				rightcount = leftcount = 0;
 				if (Lmatch)
 				{
 					leftcount = pseudocount(ctxt, lw, w, le->next, d->left->next, lcost);
@@ -496,14 +496,15 @@ static s64 do_count(match_context_t *mchxt,
 						if (d->right->multi && re->multi) rightcount += do_count(mchxt, ctxt, w, rw, d->right, re, rcost);
 					}
 
-					total += leftcount*rightcount;  /* total number where links are used on both sides */
+					/* Total number where links are used on both sides */
+					total += leftcount*rightcount;
 
 					if (leftcount > 0) {
-						/* evaluate using the left match, but not the right */
+						/* Evaluate using the left match, but not the right */
 						total += leftcount * do_count(mchxt, ctxt, w, rw, d->right, re, rcost);
 					}
 					if ((le == NULL) && (rightcount > 0)) {
-						/* evaluate using the right match, but not the left */
+						/* Evaluate using the right match, but not the left */
 						total += rightcount * do_count(mchxt, ctxt, lw, w, le, d->left, lcost);
 					}
 
