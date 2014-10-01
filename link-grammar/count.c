@@ -27,9 +27,9 @@
 typedef struct Table_connector_s Table_connector;
 struct Table_connector_s
 {
+	unsigned short   cost;
 	short            lw, rw;
 	Connector        *le, *re;
-	unsigned short   cost;
 	s64              count;
 	Table_connector  *next;
 };
@@ -41,15 +41,15 @@ struct count_context_s
 	char ** effective_dist; 
 #endif /* USE_FAT_LINKAGES */
 	Word *  local_sent;
-	int     null_block;
+	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
 	bool    null_links;
+	bool    exhausted;
+	int     checktimer;  /* Avoid excess system calls */
 	int     table_size;
 	int     log2_table_size;
 	Table_connector ** table;
 	Resources current_resources;
-	bool    exhausted;
-	int     checktimer;  /* Avoid excess system calls */
 };
 
 static void free_table(count_context_t *ctxt)
@@ -367,8 +367,10 @@ static s64 do_count(match_context_t *mchxt,
 		{
 			/* If we don't allow islands (a set of words linked together
 			 * but separate from the rest of the sentence) then the
-			 * null_count of skipping n words is just n */
-			if (null_count == ((rw-lw-1) + ctxt->null_block-1)/ctxt->null_block)
+			 * null_count of skipping n words is just n. */
+			/* null_block is always 1 these days. */
+			/* if (null_count == ((rw-lw-1) + ctxt->null_block-1) / ctxt->null_block) */
+			if (null_count == (rw-lw-1))
 			{
 				/* If null_block=4 then the null_count of
 				   1,2,3,4 nulls is 1; and 5,6,7,8 is 2 etc. */
@@ -547,7 +549,7 @@ s64 do_parse(Sentence sent,
 
 	/* consecutive blocks of this many words are considered as
 	 * one null link. */
-	ctxt->null_block = 1;
+	/* ctxt->null_block = 1; */
 	ctxt->islands_ok = opts->islands_ok;
 
 	total = do_count(mchxt, ctxt, -1, sent->length, NULL, NULL, null_count+1);
