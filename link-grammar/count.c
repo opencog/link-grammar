@@ -27,11 +27,12 @@
 typedef struct Table_connector_s Table_connector;
 struct Table_connector_s
 {
-	unsigned short   cost;
-	short            lw, rw;
+	Table_connector  *next;
 	Connector        *le, *re;
 	s64              count;
-	Table_connector  *next;
+	short            lw, rw;
+	unsigned short   cost; /* Cost, here and below, is actually the
+	                        * null-count being considered. */
 };
 
 struct count_context_s
@@ -263,8 +264,9 @@ find_table_pointer(count_context_t *ctxt,
 	unsigned int h = pair_hash(ctxt->log2_table_size,lw, rw, le, re, cost);
 	t = ctxt->table[h];
 	for (; t != NULL; t = t->next) {
-		if ((t->lw == lw) && (t->rw == rw) && (t->le == le) && (t->re == re)
-			&& (t->cost == cost))  return t;
+		if ((t->lw == lw) && (t->rw == rw)
+		    && (t->le == le) && (t->re == re)
+		    && (t->cost == cost))  return t;
 	}
 
 	/* Create a new connector only if resources are exhausted.
