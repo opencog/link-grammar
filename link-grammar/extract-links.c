@@ -246,7 +246,7 @@ static void x_table_update(int lw, int rw, Connector *le, Connector *re,
  * (grep for end_word in these files).
  */
 static
-Parse_set * mk_parse_set(Sentence sent, match_context_t *mchxt,
+Parse_set * mk_parse_set(Sentence sent, fast_matcher_t *mchxt,
                  count_context_t * ctxt,
                  Disjunct *ld, Disjunct *rd, int lw, int rw,
                  Connector *le, Connector *re, unsigned int null_count,
@@ -491,7 +491,7 @@ static bool verify_set(Parse_info pi)
  * This routine returns TRUE iff overflowed occurred.
  */
 
-bool build_parse_set(Sentence sent, match_context_t *mchxt,
+bool build_parse_set(Sentence sent, fast_matcher_t *mchxt,
                     count_context_t *ctxt,
                     unsigned int null_count, Parse_Options opts)
 {

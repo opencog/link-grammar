@@ -323,7 +323,7 @@ static s64 pseudocount(count_context_t * ctxt,
 	if (count == 0) return 0; else return 1;
 }
 
-static s64 do_count(match_context_t *mchxt, 
+static s64 do_count(fast_matcher_t *mchxt, 
                     count_context_t *ctxt,
                     int lw, int rw,
                     Connector *le, Connector *re, int null_count)
@@ -533,7 +533,7 @@ static s64 do_count(match_context_t *mchxt,
  * number of words that are allowed to have no links to them.
  */
 s64 do_parse(Sentence sent,
-             match_context_t *mchxt,
+             fast_matcher_t *mchxt,
              count_context_t *ctxt,
              int null_count, Parse_Options opts)
 {
@@ -608,7 +608,7 @@ static int x_prune_match(count_context_t *ctxt,
  * links.  Returns 1 if it can, and it's not been marked, and returns
  * 2 if it can and it has been marked.
  */
-static int region_valid(match_context_t *mchxt, count_context_t *ctxt,
+static int region_valid(fast_matcher_t *mchxt, count_context_t *ctxt,
                         int lw, int rw, Connector *le, Connector *re)
 {
 	Disjunct * d;
@@ -680,7 +680,7 @@ static int region_valid(match_context_t *mchxt, count_context_t *ctxt,
  * this region itself is not valid, then this fact will be recorded
  * in the table, and nothing else happens.
  */
-static void mark_region(match_context_t *mchxt, count_context_t *ctxt,
+static void mark_region(fast_matcher_t *mchxt, count_context_t *ctxt,
                         int lw, int rw, Connector *le, Connector *re)
 {
 
@@ -830,7 +830,7 @@ void conjunction_prune(Sentence sent, count_context_t *ctxt, Parse_Options opts)
 		}
 	}
 
-	match_context_t *mchxt = alloc_fast_matcher(sent);
+	fast_matcher_t *mchxt = alloc_fast_matcher(sent);
 	ctxt->local_sent = sent->word;
 	ctxt->null_links = (opts->min_null_count > 0);
 	/*

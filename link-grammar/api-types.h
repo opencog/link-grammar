@@ -50,9 +50,11 @@ typedef struct Resources_s * Resources;
 typedef struct Sublinkage_s Sublinkage;
 
 /* Some of the more obscure typedefs */
-typedef struct analyze_context_s analyze_context_t;
 typedef struct count_context_s count_context_t;
-typedef struct match_context_s match_context_t;
+typedef struct fast_matcher_s fast_matcher_t;
+#ifdef USE_FAT_LINKAGES
+typedef struct analyze_context_s analyze_context_t;
+#endif /* USE_FAT_LINKAGES */
 
 typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;

@@ -483,7 +483,7 @@ static void free_post_processing(Sentence sent)
 	}
 }
 
-static void select_linkages(Sentence sent, match_context_t* mchxt,
+static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
                             count_context_t* ctxt,
                             Parse_Options opts)
 {
@@ -755,7 +755,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	print_time(opts, "Sorted all linkages");
 }
 
-static void old_post_process_linkages(Sentence sent, match_context_t* mchxt,
+static void old_post_process_linkages(Sentence sent, fast_matcher_t* mchxt,
                                   count_context_t* ctxt,
                                   Parse_Options opts)
 {
@@ -1538,7 +1538,7 @@ static void sane_morphism(Sentence sent, Parse_Options opts)
 static void chart_parse(Sentence sent, Parse_Options opts)
 {
 	int nl;
-	match_context_t * mchxt;
+	fast_matcher_t * mchxt;
 	count_context_t * ctxt;
 
 	/* Build lists of disjuncts */

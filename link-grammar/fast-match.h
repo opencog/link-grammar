@@ -14,8 +14,8 @@
 #include "structures.h"
 
 /* See the source file for documentation. */
-match_context_t* alloc_fast_matcher(const Sentence);
-void free_fast_matcher(match_context_t*);
+fast_matcher_t* alloc_fast_matcher(const Sentence);
+void free_fast_matcher(fast_matcher_t*);
 
-Match_node * form_match_list(match_context_t *, int, Connector *, int, Connector *, int);
-void put_match_list(match_context_t *, Match_node *);
+Match_node * form_match_list(fast_matcher_t *, int, Connector *, int, Connector *, int);
+void put_match_list(fast_matcher_t *, Match_node *);

@@ -54,7 +54,7 @@ static int right_disjunct_list_length(const Disjunct * d)
 	return i;
 }
 
-struct match_context_s
+struct fast_matcher_s
 {
 	size_t size;
 	unsigned int match_cost;     /* used for nothing but debugging ... */
@@ -73,7 +73,7 @@ struct match_context_s
 /**
  * Return a match node to be used by the caller
  */
-static Match_node * get_match_node(match_context_t *ctxt)
+static Match_node * get_match_node(fast_matcher_t *ctxt)
 {
 	Match_node * m;
 	if (ctxt->mn_free_list != NULL)
@@ -91,7 +91,7 @@ static Match_node * get_match_node(match_context_t *ctxt)
 /**
  * Put these nodes back onto my free list
  */
-void put_match_list(match_context_t *ctxt, Match_node *m)
+void put_match_list(fast_matcher_t *ctxt, Match_node *m)
 {
 	Match_node * xm;
 
@@ -115,7 +115,7 @@ static void free_match_list(Match_node * t)
 /**
  * Free all of the hash tables and Match_nodes
  */
-void free_fast_matcher(match_context_t *mchxt)
+void free_fast_matcher(fast_matcher_t *mchxt)
 {
 	size_t w;
 	unsigned int i;
@@ -139,7 +139,7 @@ void free_fast_matcher(match_context_t *mchxt)
 
 	xfree(mchxt->l_table_size, mchxt->size * sizeof(unsigned int));
 	xfree(mchxt->l_table, mchxt->size * sizeof(Match_node **));
-	xfree(mchxt, sizeof(match_context_t));
+	xfree(mchxt, sizeof(fast_matcher_t));
 }
 
 /**
@@ -226,16 +226,16 @@ static void put_into_match_table(unsigned int size, Match_node ** t,
 	}
 }
 
-match_context_t* alloc_fast_matcher(const Sentence sent)
+fast_matcher_t* alloc_fast_matcher(const Sentence sent)
 {
 	unsigned int size;
 	size_t w;
 	int len;
 	Match_node ** t;
 	Disjunct * d;
-	match_context_t *ctxt;
+	fast_matcher_t *ctxt;
 
-	ctxt = (match_context_t *) xalloc(sizeof(match_context_t));
+	ctxt = (fast_matcher_t *) xalloc(sizeof(fast_matcher_t));
 	ctxt->size = sent->length;
 	ctxt->l_table_size = xalloc(2 * sent->length * sizeof(unsigned int));
 	ctxt->r_table_size = ctxt->l_table_size + sent->length;
@@ -292,7 +292,7 @@ match_context_t* alloc_fast_matcher(const Sentence sent)
  * 'match_cost', if verbosity>1, then it this will be prnted at the end.
  */
 Match_node *
-form_match_list(match_context_t *ctxt, int w,
+form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw)
 {

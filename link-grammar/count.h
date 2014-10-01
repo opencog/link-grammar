@@ -16,7 +16,7 @@
 s64  table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
 /* XXX FIXME do_match does not need a context if its not fat ... */
 bool  do_match(count_context_t *, Connector *a, Connector *b, int wa, int wb);
-s64  do_parse(Sentence, match_context_t*, count_context_t*, int null_count, Parse_Options);
+s64  do_parse(Sentence, fast_matcher_t*, count_context_t*, int null_count, Parse_Options);
 #ifdef USE_FAT_LINKAGES
 void conjunction_prune(Sentence, count_context_t*, Parse_Options);
 void count_set_effective_distance(count_context_t*, Sentence);
