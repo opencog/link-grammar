@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[5.1.1],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.1.2],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=1
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=1
+LINK_MICRO_VERSION=2
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
