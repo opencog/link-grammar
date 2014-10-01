@@ -1263,7 +1263,6 @@ static inline bool
 /** return true if its good, else return false */
 bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts)
 {
-	bool is_valid_morphism = false;
 	size_t i;
 	Parse_info pi = sent->parse_info;
 	Dictionary afdict = sent->dict->affix_table; /* for INFIX_MARK only */
@@ -1494,24 +1493,23 @@ try_again:
 	else
 		lgdebug(4, "%zu morpheme type combination '%s'\n", lk+1, affix_types);
 
+	if (matched_alts) free(matched_alts);
+
 	if (match_found)
 	{
 		lgdebug(4, "%zu SUCCEEDED\n", lk+1);
+		return true;
 	}
 	else
 	{
 		/* Oh no ... invalid morpheme combination! */
 		sent->num_valid_linkages --;
-		is_valid_morphism = false;
 		lifo->N_violations++;
 		lifo->pp_violation_msg = "Invalid morphism construction.";
 		if (!test_enabled("display-invalid-morphism")) lifo->discarded = true;
 		lgdebug(4, "%zu FAILED\n", lk+1);
+		return false;
 	}
-
-	if (matched_alts) free(matched_alts);
-
-	return is_valid_morphism;
 }
 
 static void sane_morphism(Sentence sent, Parse_Options opts)
