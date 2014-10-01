@@ -123,7 +123,7 @@ struct Connector_struct
     short label;
 #endif /* USE_FAT_LINKAGES */
     Connector * next;
-    const char * string;
+    const char * string;  /* The connector name, e.g. AB+ */
 
     /* Hash table next pointer, used only during pruning. */
     Connector * tableNext;

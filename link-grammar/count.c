@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright (c) 2013 Linas Vepstas                                      */
+/* Copyright (c) 2013,2014 Linas Vepstas                                 */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -528,9 +528,26 @@ static s64 do_count(fast_matcher_t *mchxt,
 
 /** 
  * Returns the number of ways the sentence can be parsed with the
- * specified null count. Assumes that the hash table has already been
- * initialized, and is freed later. The "null_count" here is the
- * number of words that are allowed to have no links to them.
+ * specified null count. Assumes that the faster matcher and the count
+ * context have already been initialized, and are freed later. The
+ * "null_count" argument is the number of words that are allowed to
+ * have no links to them.
+ *
+ * This the full-fledged parser, but it only 'counts', in order to
+ * avoid an explosion of allocated memory structures to hold each
+ * possible parse.  Thus, to see an 'actual' parse, a second pass
+ * must be made, with build_parse_set(), to get actual parse structures.
+ *
+ * The work is split up this way for two reasons:
+ * 1) A given sentence may have thousands of parses, and the user is
+ *    interested in only a few.
+ * 2) A given sentence may have billions of parses, in which case,
+ *    allocating for each would blow out RAM.
+ * So, basically, its good to know how many parses to expect, before
+ * starting to allocate parse structures.
+ *
+ * The count returned here is mean to be completely accurate; it is
+ * not an approximation!
  */
 s64 do_parse(Sentence sent,
              fast_matcher_t *mchxt,
