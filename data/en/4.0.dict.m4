@@ -2489,7 +2489,7 @@ do.v:
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & I*d+) or CQ-))
-  or ({@E-} & I*t- & O+ & {@MV+} & {<verb-wall>})
+  or ({@E-} & I*t- & O+ & {@MV+} & IV-)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d-);
