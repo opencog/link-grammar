@@ -1605,8 +1605,8 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	if (dict->right_wall_defined)
 		issue_sentence_word(sent, RIGHT_WALL_WORD, false);
 
-	return (sent->length > dict->left_wall_defined) ||
-	       dict->right_wall_defined;
+	return (sent->length > (unsigned)
+	        (!!dict->left_wall_defined + !!dict->right_wall_defined));
 
 failure:
 	prt_error("Unable to process UTF8 input string in current locale %s\n",
