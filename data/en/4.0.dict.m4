@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.1.2 (formatted as V5v1v2+)
-<dictionary-version-number>: V5v1v2+;
+% Dictionary version number is 5.1.3 (formatted as V5v1v3+)
+<dictionary-version-number>: V5v1v3+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -2481,12 +2481,15 @@ define(`VERB_Y_PLI',`'
 % I used verb-and-sp-i but maybe verb-and-pl is better?
 % I- & CV-: "What did John say you should do?"
 % XXX todo : is the option {<verb-wall>} below even needed????
-% Naked I*d-: "How do you do?"
+% Naked I*d-: "How do you do?", "what is there to do?"
+% I*t- & O+: forces use of object in to-do expressions.
+%            "Are you really going to do it to them?"
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & I*d+) or CQ-))
+  or ({@E-} & I*t- & O+ & {@MV+} & {<verb-wall>})
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
   or ({@E-} & I*d-);
@@ -6044,14 +6047,15 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 % MX-PHRASE: The blah, to be blahed, will be blah.
 % TO- & Xc+: "I'd like to, I want to." (null infinitive)
 % give [J+] a cost, so that numeric intervals are peferred
+% I*t+ & TO- passes on the TO constraint downthe line
 to.r:
-  ({@E-} & {NT-} & I+ &
-    (TO- or
-    [{Xd- & Xc+} & MVi-] or
-    <MX-PHRASE> or
-    [<OPENER>] or
-    [[R-]] or
-    (SFsx+ & <S-CLAUSE>)))
+  ({@E-} & {NT-} & I*t+ & TO-)
+  or ({@E-} & {NT-} & I+ &
+    (<MX-PHRASE>
+    or (SFsx+ & <S-CLAUSE>)
+    or [{Xd- & Xc+} & MVi-]
+    or [<OPENER>]
+    or [[R-]] ))
   or (TO- & Xc+)
   or I*a+
   or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
