@@ -2437,7 +2437,7 @@ do.v:
   or ({@E-} & I*t- & O+ & {@MV+} & IV-)
   or ({@E-} & I- & ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & {@MV+}) & {<verb-wall>})
   or ({@E-} & I- & CV-)
-  or ({@E-} & I*d-);
+  or ({@E-} & I*d- & {<verb-wall>});
 
 does.v:
   
@@ -7950,9 +7950,11 @@ of_them: (ND- or MF-) & (J+ or Pa+) & Xd- & (MX*x- or MVx-) & Xc+;
 % MX-PHRASE: The blah, to be blahed, will be blah.
 % TO- & Xc+: "I'd like to, I want to." (null infinitive)
 % give [J+] a cost, so that numeric intervals are peferred
-% I*t+ & TO- passes on the TO constraint downthe line
+% I*t+ & TO-: passes on the TO constraint down the line
+% I+ & MVi-: allows "What is there to do?"
+%            but also incorrectly allows: "he is going to do"
 to.r:
-  ({@E-} & {NT-} & I*t+ & TO-)
+  ({@E-} & {N+} & I*t+ & TO-)
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
     or (SFsx+ & <S-CLAUSE>)
