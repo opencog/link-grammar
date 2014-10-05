@@ -152,7 +152,7 @@ bool Solver::addClause(vec<Lit>& ps)
 	uncheckedEnqueue(ps[0]);
 	return ok = (propagate() == NULL);
       } else {
-	Clause* c = Clause_new(ps, false);
+	Clause* c = Clause::Clause_new(ps, false);
 	clauses.push(c);
 	attachClause(*c);
       }
@@ -181,7 +181,7 @@ bool Solver::addClause(vec<Lit>& ps)
       uncheckedEnqueue(ps[0]);
       return ok = (propagate() == NULL);
     }else{
-      Clause* c = Clause_new(ps, false);
+      Clause* c = Clause::Clause_new(ps, false);
 
       clauses.push(c);
       attachClause(*c);
@@ -250,7 +250,7 @@ void Solver::addConflictingClause(vec<Lit>& lits) {
       }
     }
 
-    Clause* confl = Clause_new(lits, true);
+    Clause* confl = Clause::Clause_new(lits, true);
     clauses.push(confl);
     attachClause(*confl);
 
@@ -276,8 +276,8 @@ void Solver::addConflictingClause(vec<Lit>& lits) {
     
     if (learnt_clause.size() == 1){
       uncheckedEnqueue(learnt_clause[0]);
-    }else{
-      Clause* c = Clause_new(learnt_clause, true);
+    } else {
+      Clause* c = Clause::Clause_new(learnt_clause, true);
       learnts.push(c);
       attachClause(*c);
       claBumpActivity(*c);
@@ -818,7 +818,7 @@ lbool Solver::search(int nof_conflicts, int nof_learnts)
       if (learnt_clause.size() == 1){
 	uncheckedEnqueue(learnt_clause[0]);
       }else{
-	Clause* c = Clause_new(learnt_clause, true);
+	Clause* c = Clause::Clause_new(learnt_clause, true);
 	learnts.push(c);
 	attachClause(*c);
 	claBumpActivity(*c);

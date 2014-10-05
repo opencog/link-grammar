@@ -2,6 +2,7 @@ Version 5.1.2 (XXX 2014)
  * Fix greeting: "How do you do?"
  * Fix indirect object in 'what' questions: 'To what do you owe your success?'
  * Fix assorted questions with verb "to be".
+ * Compile fixes for Apple OSX version "Mavericks"
 
 Version 5.1.1 (23 September 2014)
  * Minor post-processing cleanup.

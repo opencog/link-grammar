@@ -119,7 +119,7 @@ class Clause {
 
   // -- use this function instead:
   template<class V>
-    friend Clause* Clause_new(const V& ps, bool learnt = false) {
+    static Clause* Clause_new(const V& ps, bool learnt = false) {
     void* mem = malloc(sizeof(Clause) + sizeof(uint32_t)*(ps.size()));
     return new (mem) Clause(ps, learnt); }
 
