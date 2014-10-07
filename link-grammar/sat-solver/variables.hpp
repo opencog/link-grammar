@@ -56,8 +56,7 @@ class Variables
 {
 public:
   Variables(Sentence sent)
-    :_sent(sent)
-    ,_link_variable_map(sent->length)
+    : _link_variable_map(sent->length)
     ,_linked_variable_map(sent->length, -1)
     ,_linked_min_variable_map(sent->length, -1)
     ,_linked_max_variable_map(sent->length, -1)
@@ -408,9 +407,6 @@ public:
   }
 
 private:
-  /* Sentence that is being parsed */
-  Sentence _sent;
-
   /*
    * Information about string variables
    */
