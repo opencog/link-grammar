@@ -291,14 +291,21 @@ AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_anysplit} = xyes)
 
 dnl ====================================================================
 
-AC_CHECK_HEADER([sqlite3.h], [CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1" SQLiteFound=yes], SQLiteFound=no)
-AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
+AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
 
 # If sqlite3 and pkg-config are not found on MacOS, then 
 # recommend that user install MacPorts http://www.macports.org/
 if test "x${SQLiteFound}" = "xyes"; then
  	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
 fi
+
+# Don't set the CPPFLAGS unless we can find the library too.
+# Which is insane, of course, except that some Apple OSX systems
+# appear to be borken... have header files but no libs ... 
+if test "x${SQLiteFound}" = "xyes"; then
+	CPPFLAGS="${CPPFLAGS} -DHAVE_SQLITE=1"
+fi
+AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
 AC_SUBST(SQLITE3_LIBS)
 AC_SUBST(SQLITE3_CFLAGS)
 
