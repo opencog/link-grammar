@@ -1097,5 +1097,15 @@ int regex_tokenizer_test(Dictionary dict, const char *line)
 	return regex_split(regex, tokenizer_flags, token, dict);
 }
 
+#else /* USE_REGEX_TOKENIZER */
+/* Mac OSX will fail to link if this dummy is not defined.
+ * But why is it needed?  Because it shows up in the exported
+ * symbols list (link-grammar.def) and if its there, it must
+ * also be in the code. Thus, the below.
+ */
+int regex_tokenizer_test(Dictionary dict, const char *line)
+{
+	return 0;
+}
 #endif /* USE_REGEX_TOKENIZER */
 
