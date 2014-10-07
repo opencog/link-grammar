@@ -487,8 +487,9 @@ AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
 	WARN_CFLAGS=""
 
 	# Some warning options are not supported by all versions of
-	# gcc, so test all desired options against the current
-	# compiler.
+	# gcc (or clang), so test all desired options against the
+	# current compiler. With only one issue: clang fails to return
+	# an error when it doesn't know the option. So this test fails.
 	#
 	# Note that there are some order dependencies
 	# here. Specifically, an option that disables a warning will
