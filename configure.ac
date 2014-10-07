@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[5.1.2],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.1.3],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -11,7 +11,7 @@ LINK_MINOR_VERSION=1
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=2
+LINK_MICRO_VERSION=3
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -103,6 +103,22 @@ else
 	# Else standard Linux/*BSD environment.
 	CFLAGS="${CFLAGS} -std=c99 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE"
 fi
+
+dnl ====================================================================
+
+# Even modern 64-bit Apple machines buld 32-bit binaries by default.
+# So force a 64-bit build if a 64-bit CPU is found.
+AC_MSG_CHECKING([for 64-bit Apple OSX])
+case "$host" in
+  x86_64-*-darwin*)
+    apple_osx=yes
+    CFLAGS="${CFLAGS} -arch x86_64"
+    ;;
+  *)
+    apple_osx=no
+    ;;
+esac
+AC_MSG_RESULT([$apple_osx])
 
 dnl ====================================================================
 
