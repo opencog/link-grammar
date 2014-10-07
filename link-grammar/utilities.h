@@ -131,7 +131,8 @@ void lg_mbrtowc();
 
 #endif /* _WIN32 */
 
-/* MSVC isspace asserts in debug mode, and mingw sometime returns true, when passed utf8 */
+/* MSVC isspace asserts in debug mode, and mingw sometime returns true,
+ * when passed utf8. Thus, limit to 7 bits for windows. */
 #if defined(_MSC_VER) || defined(__MINGW32__)
   #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
 #else
@@ -148,13 +149,24 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #define STRINGIFY(x) STR(x)
 
 #define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #define assert(ex, ...) {                                                   \
 	if (!(ex)) {                                                             \
 		prt_error("\nAssertion ("#ex") failed at "FILELINE": "  __VA_ARGS__); \
 		fflush(stdout);                                                       \
-		*((int*) 0x0) = 42;  /* leave stack trace in debugger */              \
+		*((volatile int*) 0x0) = 42;  /* leave stack trace in debugger */     \
 	}                                                                        \
 }
+#else
+#define assert(ex, ...) {                                                   \
+	if (!(ex)) {                                                             \
+		prt_error("\nAssertion ("#ex") failed at "FILELINE": "  __VA_ARGS__); \
+		fflush(stdout);                                                       \
+		__builtin_trap();  /* leave stack trace in debugger */                \
+	}                                                                        \
+}
+#endif
 
 #if defined(__UCLIBC__)
 #define fmaxf(a,b) ((a) > (b) ? (a) : (b))
