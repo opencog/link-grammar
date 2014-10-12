@@ -3605,9 +3605,8 @@ going.v:
 % "I'm gonna do it."
 % Sp*i- : "I gonna go".
 gonna.v:
-  ((IV+ or I*t+) & <verb-x-pg>);
-%  or
-%  {Sp*i- & WV-} & (IV+ or I*t+) & <verb-x-pg>;
+  (I*t+ & <verb-x-pg>)
+  or ({@E-} & Sp*i- & WV- & I*t+);
 
 % transitive: "stay the prisoner's execution"
 <vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+}) or (O+ & {@MV+})};
@@ -4505,8 +4504,8 @@ got.v-d: VERB_SPPP_T(<vc-get>);
 % basilect
 % "I gotta go now"
 gotta.v-d:
-  (IV+ or I*t+) & <verb-x-pg>;
-% xxxxx
+  (I*t+ & <verb-x-pg>)
+  or ({@E-} & Sp*i- & WV- & I*t+);
 
 gotten.v:
   VERB_PP(<vc-get>) or
