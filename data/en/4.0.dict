@@ -1246,6 +1246,7 @@ its my.p your their our thy:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
+% [<CLAUSE> & Pg+]: "you leaving already?"
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+
   or [<CLAUSE> & Pg+];
 thou: Sp+ & <CLAUSE>;
@@ -1256,7 +1257,7 @@ Y' y' y'all: Sp+ & <CLAUSE>;
 % basilect you
 % Pg+: "yo leavin' already?" verb "are" is missing.  
 yo: J- or Ox- or (Sp+ & <CLAUSE>) or SIp-
-  or ((Wd- or Ce-) & Pg+);
+  or (<CLAUSE> & Pg+);
 
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
 % (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
@@ -4000,7 +4001,7 @@ gone.a:
 
 % XXX TODO maybe need VJ and-able links for going etc. ???
 % <tof-verb>: "there is going to be a meeting"
-going.v:
+going.v goin'.v:
   ((<tof-verb> or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
   ({@E-} & A+) or
   <verb-ge-d>;

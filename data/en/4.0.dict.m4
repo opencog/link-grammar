@@ -3606,7 +3606,7 @@ gone.a:
 
 % XXX TODO maybe need VJ and-able links for going etc. ???
 % <tof-verb>: "there is going to be a meeting"
-going.v:
+going.v goin'.v:
   ((<tof-verb> or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
   ({@E-} & A+) or
   <verb-ge-d>;
