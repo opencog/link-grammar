@@ -515,11 +515,11 @@ static bool add_alternative_with_subscr(Sentence sent, const char * prefix,
  * Note: If a word can split it doesn't say it is a real dictionary word,
  * as there can still be no links between some of its parts.
  *
- * XXX The prefix code is not validated yet by actual use.
+ * The prefix code is only lightly validated by actual use.
  */
 static bool suffix_split(Sentence sent, const char *w, const char *wend)
 {
-	int i, j, len;
+	int i, j;
 	Afdict_class *prefix_list, *suffix_list;
 	int p_strippable, s_strippable;
 	const char **prefix, **suffix;
@@ -544,18 +544,20 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 	 * prefixes only, without suffixes). */
 	for (i = 0; i <= s_strippable; i++, suffix++)
 	{
+		bool did_split = false;
+		size_t suflen = 0;
 		if (i < s_strippable)
 		{
-			len = strlen(*suffix);
+			suflen = strlen(*suffix);
 			/* The remaining w is too short for a possible match. */
-			if ((wend-w) < len) continue;
+			if ((wend-suflen) < w) continue;
 
 			/* A lang like Russian allows empty suffixes, which have a real
 			 * morphological linkage. In the following check, the empty suffix
 			 * always matches. */
-			if (0 == strncmp(wend-len, *suffix, len))
+			if (0 == strncmp(wend-suflen, *suffix, suflen))
 			{
-				size_t sz = MIN((wend-len)-w, MAX_WORD);
+				size_t sz = MIN((wend-w)-suflen, MAX_WORD);
 				strncpy(newword, w, sz);
 				newword[sz] = '\0';
 
@@ -565,33 +567,42 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 				 * not boolean_dictionary_lookup(). */
 				if (find_word_in_dict(dict, newword))
 				{
-					word_can_split |=
+					did_split =
 						add_alternative_with_subscr(sent, NULL, newword, *suffix);
+					word_can_split |= did_split;
 				}
 			}
 		}
 		else
 		{
-				len = 0;
-				suffix = &no_suffix;
+			suflen = 0;
+			suffix = &no_suffix;
 		}
 
 		/*
-		 * Try stripping off prefixes.
-		 * XXX Not validated yet by actual use.
+		 * Try stripping off prefixes. Avoid double-counting and
+		 * other trouble by doing this only if we split off a suffix,
+		 * or if there is no suffix.
 		 */
-		for (j = 0; j < p_strippable; j++)
+		if (did_split || 0==suflen)
 		{
-			if (strncmp(w, prefix[j], strlen(prefix[j])) == 0)
+			for (j = 0; j < p_strippable; j++)
 			{
-				int sz = MIN((wend - len) - (w + strlen(prefix[j])), MAX_WORD);
-				strncpy(newword, w+strlen(prefix[j]), sz);
-				newword[sz] = '\0';
-				/* ??? Do we need a regex match? */
-				if (boolean_dictionary_lookup(dict, newword))
+				size_t prelen = strlen(prefix[j]);
+				/* The remaining w is too short for a possible match. */
+				if ((wend-w) - suflen < prelen) continue;
+				if (strncmp(w, prefix[j], prelen) == 0)
 				{
-					word_can_split |=
-					 add_alternative_with_subscr(sent, prefix[j], newword, *suffix);
+					size_t sz = MIN((wend-w) - suflen - prelen, MAX_WORD);
+
+					strncpy(newword, w+prelen, sz);
+					newword[sz] = '\0';
+					/* ??? Do we need a regex match? */
+					if (boolean_dictionary_lookup(dict, newword))
+					{
+						word_can_split |=
+					 	add_alternative_with_subscr(sent, prefix[j], newword, *suffix);
+					}
 				}
 			}
 		}
