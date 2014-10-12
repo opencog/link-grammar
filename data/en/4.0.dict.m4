@@ -1255,14 +1255,18 @@ its my.p your their our thy:
   DP+
   or ({AL-} & {@L+} & (D+ or DD+));
 
-you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+;
+% [<CLAUSE> & Pg+]: "you leaving already?"
+you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+
+  or [<CLAUSE> & Pg+];
 thou: Sp+ & <CLAUSE>;
 
 % Y'gotta, Y'gonna
-Y' y': Sp+ & <CLAUSE>;
+Y' y' y'all: Sp+ & <CLAUSE>;
 
 % basilect you
-yo: J- or Ox- or (Sp+ & <CLAUSE>) or SIp-;
+% Pg+: "yo leavin' already?" verb "are" is missing.  
+yo: J- or Ox- or (Sp+ & <CLAUSE>) or SIp-
+  or (<CLAUSE> & Pg+);
 
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
 % (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
@@ -1428,9 +1432,10 @@ many:
 % so that ditransitive verbs don't get spurious links to all.a
 % XXX can this be tighetend up??
 % <noun-main2-x> costs no mater what, so that Ofd+ is prefered.
+% [E+]0.5: all modifying a verb probably is not right.
 all.a:
   ({EN-} & (
-    E+
+    [E+]0.5
     or Dm+
     or NIc+
     or (
@@ -4530,8 +4535,8 @@ left.v-d:
   VERB_SPPP_T(<vc-leave>) or
   (<verb-pv-b> & (({K+ or AF-} & {@MV+}) or Pv+ or Pa+ or Pg+)) or
   ({K+ or ({@MV+} & (Pv+ or Pa+ or Pg+))} & <verb-phrase-opener>);
-leaving.v: <verb-pg> & <vc-leave>;
-leaving.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
+leaving.v leavin'.v: <verb-pg> & <vc-leave>;
+leaving.g leavin'.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
 <vc-keep>:
   ((O+ or (K+ & {[[@MV+]]} & O*n+) or [[@MV+ & O*n+]] or Vk+) & {@MV+})
