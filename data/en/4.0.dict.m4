@@ -19,8 +19,8 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.1.3 (formatted as V5v1v3+)
-<dictionary-version-number>: V5v1v3+;
+% Dictionary version number is 5.1.4 (formatted as V5v1v4+)
+<dictionary-version-number>: V5v1v4+;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
@@ -2783,6 +2783,12 @@ being.v:
 isn't isn’t:
   (<verb-x-s> & <vc-be>)
   or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>});
+
+% merge of isn't, aren't
+% ain't you gonna go?
+ain't ain’t:
+  (<verb-x-sp> & <vc-be>)
+  or (<verb-rq> & (SI+ or SFI+) & {<vc-be>});
 
 wasn't.v-d wasn’t.v-d:
   ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & <vc-be>)
