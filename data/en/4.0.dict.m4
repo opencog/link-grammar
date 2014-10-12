@@ -1258,6 +1258,9 @@ its my.p your their our thy:
 you: J- or Ox- or (Sp+ & <CLAUSE>) or SIp- or SJlp+;
 thou: Sp+ & <CLAUSE>;
 
+% Y'gotta, Y'gonna
+Y' y': Sp+ & <CLAUSE>;
+
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
 % (Jd- & Dmu- & {Wd-} & S+): "all of it was saved"
 % (Jd- & Dmu- & Os-):  "there was enough of it"
