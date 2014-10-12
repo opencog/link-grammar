@@ -5306,6 +5306,9 @@ told.v-d:
 telling.g: (<vc-tell> & <verb-ge>) or <verb-ge-d>;
 telling.v: <verb-pg> & <vc-tell>;
 
+% basilect telling
+tellin': <verb-pg> & <vc-tell>;
+
 % (QI+ & {MV+}): "I did not ask why until recently"
 <vc-ask>:
   ({(O+ & {O*n+}) or <b-minus>} & {@MV+} & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-}) or
