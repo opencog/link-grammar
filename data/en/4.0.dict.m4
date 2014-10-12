@@ -7724,9 +7724,9 @@ foster.a outright.a online.a: A+;
 pro_forma ad_hoc bona_fide: A+ or Pa-;
 a_priori a_posteriori: A+ or MVa- or ({Xc+ & {Xd-}} & CO+);
 
-asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a afloat.a afoot.a
-aghast.a aglow.a agog.a ajar.a amiss.a askew.a astir.a awash.a awry.a de_rigeur
-rife.a fraught.a lacking.a:
+asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a
+afloat.a afoot.a aghast.a aglow.a agog.a ajar.a amiss.a askew.a
+astir.a awash.a awry.a de_rigeur rife.a fraught.a lacking.a:
   ((Ma- or Pa- or MJra-) & {@MV+}) or
   ({@MV+} & MJla+) or
   <adj-op>;
@@ -7734,6 +7734,14 @@ rife.a fraught.a lacking.a:
 alone.a:
   ((Ma- or Pa- or MJra-) & {@MV+}) or
   ({@MV+} & MJla+) or
+  <adj-op> or
+  MVp- or
+  E+;
+
+% Like the above, but without the 'and' MJ links
+% {Xd-}: "Y'all ain't gonna leave me here, all alone?"
+all_alone:
+  ({Xd-} & (Ma- or Pa-) & {@MV+}) or
   <adj-op> or
   MVp- or
   E+;
