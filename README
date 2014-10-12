@@ -992,7 +992,7 @@ TODO -- Working Notes:
    per Morten Christiansen, Cornell professor of psychology.
 
 
-   Registers:
+   Registers, sociolects, dialects:
       Consider the sentence "Thieves rob bank" -- a typical newspaper
       headline. LG currently fails to parse this, because the determiner
       is missing ("bank" is a count noun, not a mass noun, and thus
@@ -1014,6 +1014,13 @@ TODO -- Working Notes:
       "when bat strikes ball"
       "both mother and baby are well"
 
+      A natural approach would be to replace fixed costs by formulas.
+      This would allow the dialect/sociolect to be dynamically
+      changable.  That is, rather than having a binary headline-flag,
+      there would be a formula for the cost, which could be changed
+      outside of the paring loop.  Such formulas could be used to
+      enable/disable parsing specific to different dialects/sociolects,
+      simply by altering the network of link costs.
 
    Hand-refining verb patterns:
       A good reference for refining verb usage patterns is:
