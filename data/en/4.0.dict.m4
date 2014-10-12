@@ -2785,7 +2785,7 @@ isn't isn’t:
   or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>});
 
 % merge of isn't, aren't
-% ain't you gonna go?
+% "ain't you gonna go?"
 ain't ain’t:
   (<verb-x-sp> & <vc-be>)
   or (<verb-rq> & (SI+ or SFI+) & {<vc-be>});
@@ -3599,6 +3599,15 @@ going.v:
   ((<tof-verb> or ({K+ or [[Pa+]]} & {@MV+})) & <verb-x-pg,ge>) or
   ({@E-} & A+) or
   <verb-ge-d>;
+
+% like "going to", except can't have both the IV ant I*t links at the
+% same time...
+% "I'm gonna do it."
+% Sp*i- : "I gonna go".
+gonna.v:
+  ((IV+ or I*t+) & <verb-x-pg>);
+%  or
+%  {Sp*i- & WV-} & (IV+ or I*t+) & <verb-x-pg>;
 
 % transitive: "stay the prisoner's execution"
 <vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & {@MV+}) or (O+ & {@MV+})};
@@ -4492,6 +4501,12 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 get.v: VERB_PLI(<vc-get>);
 gets.v: VERB_S_T(<vc-get>);
 got.v-d: VERB_SPPP_T(<vc-get>);
+
+% basilect
+% "I gotta go now"
+gotta.v-d:
+  (IV+ or I*t+) & <verb-x-pg>;
+% xxxxx
 
 gotten.v:
   VERB_PP(<vc-get>) or
