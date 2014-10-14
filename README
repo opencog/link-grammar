@@ -731,7 +731,10 @@ Fat Links:
    compilation.
 
    As of version 5.2.0 (XXX 2014/2015) the "fat link" code has been
-   removed.
+   removed. The fat-link code consisted of about 5 KLOC or about 1/6th
+   of the total code. About 23 KLOC of the core parser code remains.
+   Users of the Russian dicts must use versions prior to this to get
+   Russian sentences with conjunctions in them to parse.
 
    Older versions of the link-grammar parser used "fat links" to
    support conjunctions (and, or, but, ...). However, this leads
@@ -1309,11 +1312,10 @@ TODO -- Working Notes:
          http://www.gnu.org/software/libunistring/
 
   Version 6.0 TODO list:
-    Version 6.0 will completely eliminate both fat links, and vestiges thereof.
-    In particular, this will get rid of sublinkages, and all uses thereof.
-    -- in api.c, change many linkage_*() funs to linkage_get_*() funs
+    Version 6.0 will change Sentence, Linkage etc. to not be pointers.
+
+  Misc TODO:
     -- get rid of sublinkages.
-    -- Change Sentence, Linkage etc. to not be pointers.
 
 
 A performance diary:
