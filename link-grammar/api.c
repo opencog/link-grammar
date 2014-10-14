@@ -552,8 +552,9 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	/* second pass: actually perform post-processing */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
+		int index;
 		lifo = &sent->link_info[in];
-		int index = lifo->index;
+		index = lifo->index;
 		if (lifo->discarded) continue;
 		if (lifo->N_violations)
 		{
