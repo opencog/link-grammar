@@ -549,8 +549,9 @@ static bool suffix_split(Sentence sent, const char *w, const char *wend)
 		if (i < s_strippable)
 		{
 			suflen = strlen(*suffix);
-			/* The remaining w is too short for a possible match. */
-			if ((wend-suflen) < w) continue;
+			 /* The remaining w is too short for a possible match.
+			  * In addition, don't allow empty stems. */
+			if ((wend-suflen) < (w+1)) continue;
 
 			/* A lang like Russian allows empty suffixes, which have a real
 			 * morphological linkage. In the following check, the empty suffix
@@ -899,16 +900,8 @@ static bool guess_misspelled_word(Sentence sent, const char * word,
 }
 #endif /* HAVE_HUNSPELL */
 
-/* Strip off punctuation, etc. on the left-hand side. */
-/* XXX FIXME: this fails in certain cases: e.g.
- * "By the '50s, he was very prosperous."
- * where the leading quote is striped, and then "50s," cannot be
- * found in the dict.  Next, the comma is removed, and "50s" is still
- * not in the dict ... the trick was that the comma should be
- * right-stripped first, then the possible quotes.
- * More generally, the current implementation of the link-parser algo
- * does not support multiple alternative tokenizations; the viterbi
- * parser, under development, should be able to do better.
+/**
+ * Strip off punctuation, etc. on the left-hand side.
  */
 static const char * strip_left(Sentence sent, const char * w,
                                bool quote_found)
@@ -1014,7 +1007,7 @@ static const char * strip_left(Sentence sent, const char * w,
  *
  * p is a mark of the invocation position, for debugging.
  */
-extern const char const *afdict_classname[]; /* For debug message only */
+extern const char *const afdict_classname[]; /* For debug message only */
 static bool strip_right(Sentence sent,
 		                  const char *w,
                         const char **wend,
@@ -1057,7 +1050,7 @@ static bool strip_right(Sentence sent,
 
 			if (strncmp(temp_wend-len, t, len) == 0)
 			{
-				lgdebug(2, "%d: right strip %s: w='%s' rword '%s'\n",
+				lgdebug(2, "%d: strip_right(%s): w='%s' rword '%s'\n",
 				        p, afdict_classname[classnum], temp_wend-len, t);
 				r_stripped[*n_r_stripped+nrs] = t;
 				nrs++;
@@ -1274,7 +1267,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 
 	/* Check whether the <number><units> "word" is in the dict
 	 * (including regex). In such a case we need to generate an alternative. */
-	if (units_wend) /* units found */
+	if (units_n_r_stripped && units_wend) /* units found */
 	{
 		sz = units_wend-w;
 		strncpy(str, w, sz);
@@ -1289,7 +1282,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		for (i = n_r_stripped - 1; i >= 0; i--)
 			printf("[%d]='%s'%s", i, r_stripped[i], i>0 ? "," : "");
 	}
-	lgdebug(SWLEV, "), w='%s' wend='%s' word='%s' units_wend='%s' input_word='%s' "
+	lgdebug(0 SWLEV, "), w='%s' wend='%s' word='%s' units_wend='%s' input_word='%s' "
            "units_alternative=%d\n", w, wend, word, units_wend, input_word,
 			  units_alternative);
 
@@ -1311,7 +1304,7 @@ static void separate_word(Sentence sent, Parse_Options opts,
 		/* The input word is in the dict and also got stripped off
 		 * something - "word" here is what remained. */
 		word_is_in_dict = find_word_in_dict(dict, word);
-		lgdebug(SWLEV, "Check stripped word='%s' boolean_dictionary_lookup=%d "
+		lgdebug(SWLEV, "Check stripped word='%s' find_word_in_dict=%d "
 		        "is_utf8_digit=%d\n", word, word_is_in_dict, start_digit);
 		if (word_is_in_dict || units_alternative)
 		{
