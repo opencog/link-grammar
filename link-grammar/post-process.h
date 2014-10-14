@@ -39,11 +39,6 @@ PP_node *do_post_process(Postprocessor * pp, Parse_Options opts,
                          Sentence sent, Sublinkage *, bool cleanup);
 bool     post_process_match(const char *s, const char *t);  /* utility function */
 
-#ifdef USE_FAT_LINKAGES
-void          free_d_type(D_type_list * dtl);
-D_type_list * copy_d_type(const D_type_list * dtl);
-#endif /* USE_FAT_LINKAGES */
-
 bool sane_linkage_morphism(Sentence sent, size_t lk, Parse_Options opts);
 
 #endif

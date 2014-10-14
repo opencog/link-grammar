@@ -50,11 +50,7 @@ Connector_set * connector_set_create(Exp *e);
 void connector_set_delete(Connector_set * conset);
 bool word_has_connector(Dict_node *, const char *, char);
 const char * word_only_connector(Dict_node *);
-#ifdef USE_FAT_LINKAGES
-bool match_in_connector_set(count_context_t*, Connector_set*, Connector*, int);
-#else
 bool match_in_connector_set(Connector_set*, Connector*, int dir);
-#endif
 
 
 /**
@@ -92,13 +88,7 @@ static inline bool easy_match(const char * s, const char * t)
 
 	while ((*s!='\0') && (*t!='\0'))
 	{
-		if ((*s == '*') || (*t == '*') ||
-#ifdef USE_FAT_LINKAGES
-			((*s == *t) && (*s != '^'))
-#else
-			(*s == *t)
-#endif
-		)
+		if ((*s == '*') || (*t == '*') || (*s == *t))
 		{
 			s++;
 			t++;

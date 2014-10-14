@@ -53,18 +53,6 @@
 #define INFIX_MARK \
  ((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
 
-#ifdef USE_FAT_LINKAGES
-  #define ANDABLE_CONNECTORS_WORD ("ANDABLE-CONNECTORS")
-
-  /* conditional compiling flags */
-  #define PLURALIZATION
-			/* If defined, Turns on the pluralization operation in        */
-			/* "and", "or" and "nor" */
-
-  #define NORMAL_LABEL  (-1) /* used for normal connectors            */
-									  /* the labels >= 0 are used by fat links */
-#endif /* USE_FAT_LINKAGES */
-
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 
 #define UNKNOWN_WORD     ("UNKNOWN-WORD")
@@ -95,15 +83,6 @@ typedef signed __int64 s64; /* signed 64-bit integer, even on 32-bit cpus */
 #define PARSE_NUM_OVERFLOW (((s64)1)<<24)
 #endif
 
-#ifdef USE_FAT_LINKAGES
-typedef enum
-{
-	THIN_priority,
-	UP_priority,
-	DOWN_priority
-} Priority;
-#endif /* USE_FAT_LINKAGES */
-
 struct Connector_struct
 {
 	int hash;
@@ -118,10 +97,6 @@ struct Connector_struct
 						 name, efficiency is the only reason to store
 						 this.  If no limit, the value is set to 255. */
 	bool multi;  /* TRUE if this is a multi-connector */
-#ifdef USE_FAT_LINKAGES
-	Priority priority;/* one of the three priorities above */
-	short label;
-#endif /* USE_FAT_LINKAGES */
 	Connector * next;
 	const char * string;  /* The connector name, e.g. AB+ */
 
@@ -215,29 +190,6 @@ struct PP_node_struct
 };
 
 /* Davy added these */
-
-#ifdef USE_FAT_LINKAGES
-typedef struct Andlist_struct Andlist;
-struct Andlist_struct
-{
-	Andlist * next;
-	int conjunction;
-	int num_elements;
-	int element[MAX_SENTENCE];
-	int num_outside_words;
-	int outside_word[MAX_SENTENCE];
-	int cost;
-};
-
-/* These parameters tell power_pruning, to tell whether this is before
- * or after generating and disjuncts.  GENTLE is before RUTHLESS is
- * after.
- */
-#define RUTHLESS 0
-#define GENTLE 1
-
-#endif /* USE_FAT_LINKAGES */
-
 /**
  * This is for building the graphs of links in post-processing and
  * fat link extraction.
@@ -252,14 +204,6 @@ struct Linkage_info_struct
 	double disjunct_cost;
 	double corpus_cost;
 	size_t nwords;
-#ifdef USE_FAT_LINKAGES
-	bool canonical;
-	bool fat;
-	bool improper_fat_linkage;
-	bool inconsistent_domains;
-	short and_cost;
-	Andlist * andlist;
-#endif /* USE_FAT_LINKAGES */
 	const char *pp_violation_msg;
 	char **disjunct_list_str;
 #ifdef USE_CORPUS

@@ -20,12 +20,3 @@ void          extract_thin_linkage(Sentence, Parse_Options, Linkage);
 
 void zero_sublinkage(Sublinkage *s);
 
-#ifdef USE_FAT_LINKAGES
-void init_analyze(Sentence);
-void free_analyze(Sentence);
-
-void          free_DIS_tree(DIS_node *);
-Linkage_info  analyze_fat_linkage (Sentence, Parse_Options, int pass);
-void          extract_fat_linkage (Sentence, Parse_Options, Linkage);
-#endif /* USE_FAT_LINKAGES */
-

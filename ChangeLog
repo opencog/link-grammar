@@ -1,5 +1,6 @@
-Version 5.1.4 (XXX 2014)
+Version 5.2.0 (XXX 2014)
  * y'all, ain't, gonna, y'gotta: Beverly Hillbillies basilect
+ * Permanent removal of the fat-link code.
 
 Version 5.1.3 (7 October 2014)
  * More fixes for build breaks on Apple OSX.

@@ -30,10 +30,6 @@
 #define MAX_LINKS (2*MAX_SENTENCE-3) /* maximum number of links allowed */
 
 /* Widely used private typedefs */
-#ifdef USE_FAT_LINKAGES
-typedef struct And_data_s And_data;
-typedef struct DIS_node_struct DIS_node;
-#endif /* USE_FAT_LINKAGES */
 typedef struct Connector_struct Connector;
 typedef struct Cost_Model_s Cost_Model;
 typedef struct Domain_s Domain;
@@ -52,9 +48,6 @@ typedef struct Sublinkage_s Sublinkage;
 /* Some of the more obscure typedefs */
 typedef struct count_context_s count_context_t;
 typedef struct fast_matcher_s fast_matcher_t;
-#ifdef USE_FAT_LINKAGES
-typedef struct analyze_context_s analyze_context_t;
-#endif /* USE_FAT_LINKAGES */
 
 typedef struct Connector_set_s Connector_set;
 typedef struct Disjunct_struct Disjunct;
