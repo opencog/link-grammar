@@ -50,6 +50,7 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 		}
 	}
 	fprintf(stderr, "\n");
+	fflush(stderr); /* In case some OS does some strange thing */
 }
 
 void err_msg(err_ctxt *ec, severity sev, const char *fmt, ...)
