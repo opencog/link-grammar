@@ -37,10 +37,6 @@ struct Table_connector_s
 
 struct count_context_s
 {
-#ifdef USE_FAT_LINKAGES
-	char ** deletable;
-	char ** effective_dist; 
-#endif /* USE_FAT_LINKAGES */
 	Word *  local_sent;
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
@@ -98,127 +94,6 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	memset(ctxt->table, 0, ctxt->table_size*sizeof(Table_connector*));
 }
 
-#ifdef USE_FAT_LINKAGES
-void count_set_effective_distance(count_context_t* ctxt, Sentence sent)
-{
-	ctxt->effective_dist = sent->effective_dist;
-}
-
-void count_unset_effective_distance(count_context_t* ctxt)
-{
-	ctxt->effective_dist = NULL;
-}
-
-/*
- * Returns TRUE if s and t match according to the connector matching
- * rules.  The connector strings must be properly formed, starting with
- * zero or more upper case letters, followed by some other letters, and
- * The algorithm is symmetric with respect to a and b.
- *
- * It works as follows:  The labels must match.  The priorities must be
- * compatible (both THIN_priority, or one UP_priority and one DOWN_priority).
- * The sequence of upper case letters must match exactly.  After these comes
- * a sequence of lower case letters or "*"s.  The matching algorithm
- * is different depending on which of the two priority cases is being
- * considered.  See the comments below. 
- */
-bool do_match(count_context_t *ctxt, Connector *a, Connector *b, int aw, int bw)
-{
-	const char *s, *t;
-	int x, y;
-	int dist;
-
-	if (a->label != b->label) return false;
-
-	s = a->string;
-	t = b->string;
-
-	while (isupper((int)*s) || isupper((int)*t))
-	{
-		if (*s != *t) return false;
-		s++;
-		t++;
-	}
-
-	x = a->priority;
-	y = b->priority;
-
-	/* Probably not necessary, as long as 
-	 * effective_dist[0][0]=0 and is defined */
-	if (aw == 0 && bw == 0) {
-		dist = 0;
-	} else {
-		assert(aw < bw, "match() did not receive params in the natural order.");
-		dist = ctxt->effective_dist[aw][bw];
-	}
-	/*	printf("M: a=%4s b=%4s  ap=%d bp=%d  aw=%d  bw=%d  a->ll=%d b->ll=%d  dist=%d\n",
-		   s, t, x, y, aw, bw, a->length_limit, b->length_limit, dist); */
-	if (dist > a->length_limit || dist > b->length_limit) return false;
-
-	if ((x == THIN_priority) && (y == THIN_priority))
-	{
-		/*
-		   Remember that "*" matches anything, and "^" matches nothing
-		   (except "*").  Otherwise two characters match if and only if
-		   they're equal.  ("^" can be used in the dictionary just like
-		   any other connector.)
-		   */
-		while ((*s != '\0') && (*t != '\0'))
-		{
-			if ((*s == '*') || (*t == '*') ||
-			   ((*s == *t) && (*s != '^')))
-			{
-				s++;
-				t++;
-			}
-			else
-				return false;
-		}
-		return true;
-	}
-	else if ((x == UP_priority) && (y == DOWN_priority))
-	{
-		/*
-		   As you go up (namely from x to y) the set of strings that
-		   match (in the normal THIN sense above) should get no larger.
-		   Read the comment in and.c to understand this.
-		   In other words, the y string (t) must be weaker (or at least
-		   no stronger) that the x string (s).
-		
-		   This code is only correct if the strings are the same
-		   length.  This is currently true, but perhaps for safty
-		   this assumption should be removed.
-		   */
-		while ((*s != '\0') && (*t != '\0'))
-		{
-			if ((*s == *t) || (*s == '*') || (*t == '^'))
-			{
-				s++;
-				t++;
-			} else return false;
-		}
-		return true;
-	}
-	else if ((y == UP_priority) && (x == DOWN_priority))
-	{
-		while ((*s != '\0') && (*t != '\0'))
-		{
-			if ((*s == *t) || (*t == '*') || (*s == '^'))
-			{
-				s++;
-				t++;
-			}
-			else
-				return false;
-		}
-		return true;
-	}
-	else
-		return false;
-}
-
-#else /* not USE_FAT_LINKAGES */
-
 /*
  * Returns TRUE if s and t match according to the connector matching
  * rules.
@@ -230,7 +105,6 @@ bool do_match(count_context_t* ctxt, Connector *a, Connector *b, int aw, int bw)
 	if (dist > a->length_limit || dist > b->length_limit) return false;
 	return easy_match(a->string, b->string);
 }
-#endif /* not USE_FAT_LINKAGES */
 
 /** 
  * Stores the value in the table.  Assumes it's not already there.
@@ -294,22 +168,6 @@ s64 table_lookup(count_context_t * ctxt,
 
 	if (t == NULL) return -1; else return t->count;
 }
-
-#ifdef USE_FAT_LINKAGES
-/**
- * Stores the value in the table.  Unlike table_store, it assumes 
- * it's already there
- */
-static void table_update(count_context_t *ctxt, int lw, int rw, 
-                         Connector *le, Connector *re,
-                         int cost, s64 count)
-{
-	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, cost);
-
-	assert(t != NULL, "This entry is supposed to be in the table.");
-	t->count = count;
-}
-#endif /* USE_FAT_LINKAGES */
 
 /**
  * Returns 0 if and only if this entry is in the hash table 
@@ -560,10 +418,6 @@ s64 do_parse(Sentence sent,
 	ctxt->exhausted = false;
 	ctxt->checktimer = 0;
 	ctxt->local_sent = sent->word;
-#ifdef USE_FAT_LINKAGES
-	count_set_effective_distance(ctxt, sent);
-	ctxt->deletable = sent->deletable;
-#endif /* USE_FAT_LINKAGES */
 
 	/* consecutive blocks of this many words are considered as
 	 * one null link. */
@@ -577,223 +431,6 @@ s64 do_parse(Sentence sent,
 	ctxt->checktimer = 0;
 	return total;
 }
-
-#ifdef USE_FAT_LINKAGES
-/**
-   CONJUNCTION PRUNING.
-
-   The basic idea is this.  Before creating the fat disjuncts,
-   we run a modified version of the exhaustive search procedure.
-   Its purpose is to mark the disjuncts that can be used in any
-   linkage.  It's just like the normal exhaustive search, except that
-   if a subrange of words are deletable, then we treat them as though
-   they were not even there.  So, if we call the function in the
-   situation where the set of words between the left and right one
-   are deletable, and the left and right connector pointers
-   are NULL, then that range is considered to have a solution.
-
-   There are actually two procedures to implement this.  One is
-   mark_region() and the other is region_valid().  The latter just
-   checks to see if the given region can be completed (within it).
-   The former actually marks those disjuncts that can be used in
-   any valid linkage of the given region.
-
-   As in the standard search procedure, we make use of the fast-match
-   data structure (which requires power pruning to have been done), and
-   we also use a hash table.  The table is used differently in this case.
-   The meaning of values stored in the table are as follows:
-
-   -1  Nothing known (Actually, this is not stored.  It's returned
-   by table_lookup when nothing is known.)
-   0  This region can't be completed (marking is therefore irrelevant)
-   1  This region can be completed, but it's not yet marked
-   2  This region can be completed, and it's been marked.
-   */
-
-static int x_prune_match(count_context_t *ctxt,
-                         Connector *le, Connector *re, int lw, int rw)
-{
-	int dist;
-
-	assert(lw < rw, "prune_match() did not receive params in the natural order.");
-	dist = ctxt->effective_dist[lw][rw];
-	return prune_match(dist, le, re);
-}
-
-/**
- * Returns 0 if this range cannot be successfully filled in with
- * links.  Returns 1 if it can, and it's not been marked, and returns
- * 2 if it can and it has been marked.
- */
-static int region_valid(fast_matcher_t *mchxt, count_context_t *ctxt,
-                        int lw, int rw, Connector *le, Connector *re)
-{
-	Disjunct * d;
-	int left_valid, right_valid, found;
-	int i, start_word, end_word;
-	int w;
-	Match_node * m, *m1;
-
-	i = table_lookup(ctxt, lw, rw, le, re, 0);
-	if (i >= 0) return i;
-
-	if ((le == NULL) && (re == NULL) && ctxt->deletable[lw][rw]) {
-		table_store(ctxt, lw, rw, le, re, 0, 1);
-		return 1;
-	}
-
-	if (le == NULL) {
-		start_word = lw+1;
-	} else {
-		start_word = le->word;
-	}
-	if (re == NULL) {
-		end_word = rw;
-	} else {
-		end_word = re->word + 1;
-	}
-
-	found = 0;
-
-	for (w=start_word; w < end_word; w++)
-	{
-		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next)
-		{
-			d = m->d;
-			/* mark_cost++;*/
-			/* in the following expressions we use the fact that 0=FALSE. Could eliminate
-			   by always saying "region_valid(...) != 0"  */
-			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(ctxt, le, d->left, lw, w)) &&
-						  ((region_valid(mchxt, ctxt, lw, w, le->next, d->left->next)) ||
-						   ((le->multi) && region_valid(mchxt, ctxt, lw, w, le, d->left->next)) ||
-						   ((d->left->multi) && region_valid(mchxt, ctxt, lw, w, le->next, d->left)) ||
-						   ((le->multi && d->left->multi) && region_valid(mchxt, ctxt, lw, w, le, d->left))));
-			if (left_valid && region_valid(mchxt, ctxt, w, rw, d->right, re)) {
-				found = 1;
-				break;
-			}
-			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(ctxt, d->right, re, w, rw)) &&
-						   ((region_valid(mchxt, ctxt, w, rw, d->right->next,re->next))	||
-							((d->right->multi) && region_valid(mchxt, ctxt, w, rw, d->right,re->next))  ||
-							((re->multi) && region_valid(mchxt, ctxt, w, rw, d->right->next, re))  ||
-							((d->right->multi && re->multi) && region_valid(mchxt, ctxt, w, rw, d->right, re))));
-			if ((left_valid && right_valid) || (right_valid && region_valid(mchxt, ctxt, lw, w, le, d->left))) {
-				found = 1;
-				break;
-			}
-		}
-		put_match_list(mchxt, m1);
-		if (found != 0) break;
-	}
-	table_store(ctxt, lw, rw, le, re, 0, found);
-	return found;
-}
-
-/**
- * Mark as useful all disjuncts involved in some way to complete the
- * structure within the current region.  Note that only disjuncts
- * strictly between lw and rw will be marked.  If it so happens that
- * this region itself is not valid, then this fact will be recorded
- * in the table, and nothing else happens.
- */
-static void mark_region(fast_matcher_t *mchxt, count_context_t *ctxt,
-                        int lw, int rw, Connector *le, Connector *re)
-{
-
-	Disjunct * d;
-	int left_valid, right_valid, i;
-	int start_word, end_word;
-	int w;
-	Match_node * m, *m1;
-
-	i = region_valid(mchxt, ctxt, lw, rw, le, re);
-	if ((i==0) || (i==2)) return;
-	/* we only reach this point if it's a valid unmarked region, i=1 */
-	table_update(ctxt, lw, rw, le, re, 0, 2);
-
-	if ((le == NULL) && (re == NULL) && (ctxt->null_links) && (rw != 1+lw)) {
-		w = lw+1;
-		for (d = ctxt->local_sent[w].d; d != NULL; d = d->next) {
-			if ((d->left == NULL) && region_valid(mchxt, ctxt, w, rw, d->right, NULL)) {
-				d->marked = true;
-				mark_region(mchxt, ctxt, w, rw, d->right, NULL);
-			}
-		}
-		mark_region(mchxt, ctxt, w, rw, NULL, NULL);
-		return;
-	}
-
-	if (le == NULL) {
-		start_word = lw+1;
-	} else {
-		start_word = le->word;
-	}
-	if (re == NULL) {
-		end_word = rw;
-	} else {
-		end_word = re->word + 1;
-	}
-
-	for (w=start_word; w < end_word; w++)
-	{
-		m1 = m = form_match_list(mchxt, w, le, lw, re, rw);
-		for (; m!=NULL; m=m->next)
-		{
-			d = m->d;
-			/* mark_cost++;*/
-			left_valid = (((le != NULL) && (d->left != NULL) && x_prune_match(ctxt, le, d->left, lw, w)) &&
-						  ((region_valid(mchxt, ctxt, lw, w, le->next, d->left->next)) ||
-						   ((le->multi) && region_valid(mchxt, ctxt, lw, w, le, d->left->next)) ||
-						   ((d->left->multi) && region_valid(mchxt, ctxt, lw, w, le->next, d->left)) ||
-						   ((le->multi && d->left->multi) && region_valid(mchxt, ctxt, lw, w, le, d->left))));
-			right_valid = (((d->right != NULL) && (re != NULL) && x_prune_match(ctxt, d->right, re, w, rw)) &&
-						   ((region_valid(mchxt, ctxt, w, rw, d->right->next,re->next)) ||
-							((d->right->multi) && region_valid(mchxt, ctxt, w, rw, d->right,re->next))  ||
-							((re->multi) && region_valid(mchxt, ctxt, w, rw, d->right->next, re)) ||
-							((d->right->multi && re->multi) && region_valid(mchxt, ctxt, w, rw, d->right, re))));
-
-			/* The following if statements could be restructured to avoid superfluous calls
-			   to mark_region.  It didn't seem a high priority, so I didn't optimize this.
-			   */
-
-			if (left_valid && region_valid(mchxt, ctxt, w, rw, d->right, re))
-			{
-				d->marked = true;
-				mark_region(mchxt, ctxt, w, rw, d->right, re);
-				mark_region(mchxt, ctxt, lw, w, le->next, d->left->next);
-				if (le->multi) mark_region(mchxt, ctxt, lw, w, le, d->left->next);
-				if (d->left->multi) mark_region(mchxt, ctxt, lw, w, le->next, d->left);
-				if (le->multi && d->left->multi) mark_region(mchxt, ctxt, lw, w, le, d->left);
-			}
-
-			if (right_valid && region_valid(mchxt, ctxt, lw, w, le, d->left))
-			{
-				d->marked = true;
-				mark_region(mchxt, ctxt, lw, w, le, d->left);
-				mark_region(mchxt, ctxt, w, rw, d->right->next,re->next);
-				if (d->right->multi) mark_region(mchxt, ctxt, w, rw, d->right, re->next);
-				if (re->multi) mark_region(mchxt, ctxt, w, rw, d->right->next, re);
-				if (d->right->multi && re->multi) mark_region(mchxt, ctxt, w, rw, d->right, re);
-			}
-
-			if (left_valid && right_valid)
-			{
-				d->marked = true;
-				mark_region(mchxt, ctxt, lw, w, le->next, d->left->next);
-				if (le->multi) mark_region(mchxt, ctxt, lw, w, le, d->left->next);
-				if (d->left->multi) mark_region(mchxt, ctxt, lw, w, le->next, d->left);
-				if (le->multi && d->left->multi) mark_region(mchxt, ctxt, lw, w, le, d->left);
-				mark_region(mchxt, ctxt, w, rw, d->right->next,re->next);
-				if (d->right->multi) mark_region(mchxt, ctxt, w, rw, d->right, re->next);
-				if (re->multi) mark_region(mchxt, ctxt, w, rw, d->right->next, re);
-				if (d->right->multi && re->multi) mark_region(mchxt, ctxt, w, rw, d->right, re);
-			}
-		}
-		put_match_list(mchxt, m1);
-	}
-}
-#endif /* USE_FAT_LINKAGES */
 
 void delete_unmarked_disjuncts(Sentence sent)
 {
@@ -815,79 +452,6 @@ void delete_unmarked_disjuncts(Sentence sent)
 		sent->word[w].d = d_head;
 	}
 }
-
-#ifdef USE_FAT_LINKAGES
-/**
- * We've already built the sentence disjuncts, and we've pruned them
- * and power_pruned(GENTLE) them also.  The sentence contains a
- * conjunction.  deletable[][] has been initialized to indicate the
- * ranges which may be deleted in the final linkage.
- *
- * This routine deletes irrelevant disjuncts.  It finds them by first
- * marking them all as irrelevant, and then marking the ones that
- * might be useable.  Finally, the unmarked ones are removed.
- */
-void conjunction_prune(Sentence sent, count_context_t *ctxt, Parse_Options opts)
-{
-	Disjunct * d;
-	int w;
-
-	ctxt->current_resources = opts->resources;
-	ctxt->deletable = sent->deletable;
-	count_set_effective_distance(ctxt, sent);
-
-	/* We begin by unmarking all disjuncts.  This would not be necessary if
-	   whenever we created a disjunct we cleared its marked field.
-	   I didn't want to search the program for all such places, so
-	   I did this way. XXX FIXME, someday ... 
-	   */
-	for (w=0; w<sent->length; w++) {
-		for (d=sent->word[w].d; d != NULL; d=d->next) {
-			d->marked = false;
-		}
-	}
-
-	fast_matcher_t *mchxt = alloc_fast_matcher(sent);
-	ctxt->local_sent = sent->word;
-	ctxt->null_links = (opts->min_null_count > 0);
-	/*
-	for (d = sent->word[0].d; d != NULL; d = d->next) {
-		if ((d->left == NULL) && region_valid(mchxt, ctxt, 0, sent->length, d->right, NULL)) {
-			mark_region(mchxt, ctxt, 0, sent->length, d->right, NULL);
-			d->marked = true;
-		}
-	}
-	mark_region(mchxt, ctxt, 0, sent->length, NULL, NULL);
-	*/
-
-	if (ctxt->null_links) {
-		mark_region(mchxt, ctxt, -1, sent->length, NULL, NULL);
-	} else {
-		for (w=0; w<sent->length; w++) {
-		  /* consider removing the words [0,w-1] from the beginning
-			 of the sentence */
-			if (ctxt->deletable[-1][w]) {
-				for (d = sent->word[w].d; d != NULL; d = d->next) {
-					if ((d->left == NULL) && region_valid(mchxt, ctxt, w, sent->length, d->right, NULL)) {
-						mark_region(mchxt, ctxt, w, sent->length, d->right, NULL);
-						d->marked = true;
-					}
-				}
-			}
-		}
-	}
-
-	delete_unmarked_disjuncts(sent);
-
-	free_fast_matcher(mchxt);
-
-	ctxt->local_sent = NULL;
-	ctxt->current_resources = NULL;
-	ctxt->checktimer = 0;
-	ctxt->deletable = NULL;
-	count_unset_effective_distance(ctxt);
-}
-#endif /* USE_FAT_LINKAGES */
 
 /* sent_length is used only as a hint for the hash table size ... */
 count_context_t * alloc_count_context(size_t sent_length)

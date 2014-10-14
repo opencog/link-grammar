@@ -307,9 +307,6 @@ void dictionary_delete(Dictionary dict)
 	}
 	spellcheck_destroy(dict->spell_checker);
 
-#ifdef USE_FAT_LINKAGES
-	connector_set_delete(dict->andable_connector_set);
-#endif /* USE_FAT_LINKAGES */
 	connector_set_delete(dict->unlimited_connector_set);
 
 	if (dict->close) dict->close(dict);

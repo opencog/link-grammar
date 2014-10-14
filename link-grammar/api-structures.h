@@ -85,10 +85,6 @@ struct Parse_Options_s
 	bool all_short;        /* If true, there can be no connectors that are exempt */
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
 
-#ifdef USE_FAT_LINKAGES
-	bool use_fat_links;     /* Look for fat linkages */
-#endif /* USE_FAT_LINKAGES */
-
 	/* Options governing post-processing */
 	size_t twopass_length; /* min sent length for two-pass post processing */
 	Cost_Model cost_model; /* For sorting linkages in post_processing */
@@ -150,9 +146,6 @@ struct Dictionary_s
 
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
-#ifdef USE_FAT_LINKAGES
-	Connector_set * andable_connector_set;  /* NULL=everything is andable */
-#endif /* USE_FAT_LINKAGES */
 	Connector_set * unlimited_connector_set; /* NULL=everthing is unlimited */
 	String_set *    string_set;  /* Set of link names constructed during parsing */
 	int             num_entries;
@@ -182,20 +175,6 @@ struct Label_node_s
 };
 
 #define HT_SIZE (1<<10)
-
-#ifdef USE_FAT_LINKAGES
-struct And_data_s
-{
-	int          LT_bound;
-	int          LT_size;
-	Disjunct **  label_table;
-	Label_node * hash_table[HT_SIZE];
-
-	/* keeping statistics */
-	int STAT_N_disjuncts;
-	int STAT_calls_to_equality_test;
-};
-#endif /* USE_FAT_LINKAGES */
 
 struct Link_s
 {
@@ -239,16 +218,6 @@ struct Parse_info_struct
 	size_t         lasz;
 	Link           *link_array;
 
-#ifdef USE_FAT_LINKAGES
-	/* Points to the image structure for each word.
-	 * NULL if not a fat word. */
-	Image_node ** image_array;
-
-	/* Array of boolean flags, one per word. Set to TRUE if this 
-	 * word has a fat down link. FALSE otherise */
-	bool *has_fat_down;
-#endif /* USE_FAT_LINKAGES */
-
 	/* thread-safe random number state */
 	unsigned int rand_state;
 };
@@ -281,22 +250,6 @@ struct Sentence_s
 	bool   * post_quote;        /* Array, one entry per word, true if quote */
 	int    t_start;             /* start word of the current token sequence */
 	int    t_count;             /* word count in the current token sequence */
-
-#ifdef USE_FAT_LINKAGES
-	/* parser internal/private state */
-	/* Obsolete fat-linkage state */
-	analyze_context_t * analyze_ctxt; /* private state  used for analyzing */
-	count_context_t * count_ctxt; /* private state info used for counting */
-
-	bool   null_links;          /* null links allowed */
-	int    num_thin_linkages;   /* valid linkages which are not fat */
-	char * is_conjunction;      /* Array of flags, one per word; set to
-	                               TRUE if conjunction, as defined by dictionary */
-	char** deletable;           /* deletable regions in a sentence with conjunction */
-	char** dptr;                /* private pointer for mem management only */
-	char** effective_dist;
-	And_data       and_data;    /* used to keep track of fat disjuncts */
-#endif /* USE_FAT_LINKAGES */
 
 	/* Post-processor private/internal state */
 	bool  q_pruned_rules;       /* don't prune rules more than once in p.p. */
@@ -376,7 +329,7 @@ struct Postprocessor_s
  *
  **********************************************************/
 
-/* XXX FIXME When fat links are removed, there will only ever be
+/* XXX FIXME When fat FAT links are removed, there will only ever be
  * just one sublinkage, and so this struct can be merged into 
  * Linkage_s below, and removed from the API. Well, sort-of. The
  * analyze_thin_linkage() routine still wants to malloc a temp
@@ -397,22 +350,10 @@ struct Linkage_s
 	size_t          num_words;  /* number of (tokenized) words */
 	const char *  * word;       /* array of word spellings */
 	Linkage_info*   info;       /* index and cost information */
-#ifdef USE_FAT_LINKAGES
-	Sublinkage *    sublinkage; /* A parse with conjunctions will have several */
-#else
 	Sublinkage      sublinkage; /* Just one */
-#endif /* USE_FAT_LINKAGES */
 
 	Sentence        sent;
 	Parse_Options   opts;
-
-#ifdef USE_FAT_LINKAGES
-	int             num_sublinkages; /* One for thin linkages, bigger for fat */
-	int             current;    /* Allows user to select particular sublinkage */
-	bool            unionized;  /* if TRUE, union of links has been computed */
-	DIS_node      * dis_con_tree; /* Disjunction-conjunction tree */
-#endif /* USE_FAT_LINKAGES */
-
 };
 
 
