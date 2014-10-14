@@ -33,6 +33,10 @@ static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 
 static void verr_msg(err_ctxt *ec, severity sev, const char *fmt, va_list args)
 {
+	/* As we are printing to stderr, make sure that stdout has been
+	 * written out first. */
+	fflush(stdout);
+
 	fprintf(stderr, "link-grammar: ");
 	vfprintf(stderr, fmt, args);
 
