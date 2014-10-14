@@ -1,4 +1,4 @@
-AC_INIT([link-grammar],[5.1.3],[link-grammar@googlegroups.com])
+AC_INIT([link-grammar],[5.2.0],[link-grammar@googlegroups.com])
 
 dnl Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
@@ -7,11 +7,11 @@ dnl     4a) Increment when removing or changing interfaces.
 LINK_MAJOR_VERSION=5
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=1
+LINK_MINOR_VERSION=2
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=3
+LINK_MICRO_VERSION=0
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -198,15 +198,6 @@ AC_ARG_ENABLE( python-bindings,
 
 dnl ====================================================================
 
-AC_ARG_ENABLE( fat-links,
-  [  --enable-fat-links      enable use of fat linkages during parsing],
-  [],
-  [enable_fat_links=no])
-
-AM_CONDITIONAL(WITH_FAT_LINKS, test x${enable_fat_links} = xyes)
-
-dnl ====================================================================
-
 AC_ARG_ENABLE( sat-solver,
   [  --disable-sat-solver     disable use of the Boolean SAT parser (default is enabled)],
   [],
@@ -225,10 +216,6 @@ if test "x$enable_sat_solver" = "xyes"; then
 fi
 
 AM_CONDITIONAL(WITH_SAT_SOLVER, test x${enable_sat_solver} = xyes)
-
-if test "x$enable_sat_solver" = "xyes" && test x${enable_fat_links} = xyes ; then
-	AC_MSG_ERROR([The SAT solver cannot be built with fat linkage support.])
-fi
 
 dnl ====================================================================
 
@@ -755,7 +742,6 @@ $PACKAGE-$VERSION
 	ASpell spell checker:           ${ASpellFound}
 	HunSpell spell checker:         ${HunSpellFound}
 	HunSpell dictionary location:   ${HunSpellDictDir}
-	Generate 'fat' linkages:        ${enable_fat_links}
 	Boolean SAT parser:             ${enable_sat_solver}
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Viterbi algorithm parser:       ${enable_viterbi}

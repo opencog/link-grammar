@@ -26,11 +26,6 @@ endif
 
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
-# In link-grammar version 5, fat links will be gone!
-if WITH_FAT_LINKS
-DEFS += -DUSE_FAT_LINKAGES
-endif
-
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
 INCLUDES = -I$(top_srcdir) -I$(top_builddir) $(ANSI_CFLAGS) $(LINK_CFLAGS) $(HUNSPELL_CFLAGS)
 
@@ -78,7 +73,6 @@ liblink_grammar_la_LIBADD  += -lm
 
 liblink_grammar_la_SOURCES =        \
 	analyze-linkage.c                \
-	and.c                            \
 	anysplit.c                       \
 	api.c                            \
 	build-disjuncts.c                \
@@ -96,10 +90,8 @@ liblink_grammar_la_SOURCES =        \
 	expand.c                         \
 	extract-links.c                  \
 	fast-match.c                     \
-	fat.c                            \
 	idiom.c                          \
 	linkage.c                        \
-	massage.c                        \
 	post-process.c                   \
 	pp_knowledge.c                   \
 	pp_lexer.c                       \
@@ -122,7 +114,6 @@ liblink_grammar_la_SOURCES =        \
 	api-structures.h                 \
 	api-types.h                      \
 	analyze-linkage.h                \
-	and.h                            \
 	build-disjuncts.h                \
 	constituents.h                   \
 	count.h                          \
@@ -143,7 +134,6 @@ liblink_grammar_la_SOURCES =        \
 	idiom.h                          \
 	link-includes.h                  \
 	linkage.h                        \
-	massage.h                        \
 	post-process.h                   \
 	pp_knowledge.h                   \
 	pp_lexer.h                       \
