@@ -275,11 +275,7 @@ build_linkage_postscript_string(const Linkage linkage,
 	int N_wall_connectors;
 	bool print_word_0 = false, print_word_N = false;
 	bool suppressor_used;
-#ifdef USE_FAT_LINKAGES
-	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
-#else
 	Sublinkage *sublinkage = &(linkage->sublinkage);
-#endif /* USE_FAT_LINKAGES */
 	int N_links = sublinkage->num_links;
 	Link **ppla = sublinkage->link;
 	String  * string;
@@ -353,16 +349,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		append_string(string,"[%zu %zu %d",
 				ppla[link]->lw - d, ppla[link]->rw - d,
 				pctx->link_heights[link]);
-#ifdef USE_FAT_LINKAGES
-		if (ppla[link]->lc->label < 0) {
-			append_string(string," (%s)]", ppla[link]->link_name);
-		} else {
-			append_string(string," ()]");
-		}
-#else
 		append_string(string," (%s)]", ppla[link]->link_name);
-#endif /* USE_FAT_LINKAGES */
-
 	}
 	append_string(string,"]");
 	append_string(string,"\n");
@@ -406,11 +393,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	bool suppressor_used;
 	int center[linkage->num_words+1];
 	unsigned int line_len, link_length;
-#ifdef USE_FAT_LINKAGES
-	Sublinkage *sublinkage = &(linkage->sublinkage[linkage->current]);
-#else
 	Sublinkage *sublinkage = &(linkage->sublinkage);
-#endif /* USE_FAT_LINKAGES */
 	unsigned int N_links = sublinkage->num_links;
 	Link **ppla = sublinkage->link;
 	String * string;
@@ -528,11 +511,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 				picture[row][k] = '-';
 			}
 			s = ppla[j]->link_name;
-
-#ifdef USE_FAT_LINKAGES
-			if (!is_utf8_alpha(s))
-			  s = "";  /* Don't print fat link connector name */
-#endif /* USE_FAT_LINKAGES */
 
 			k = strlen(s);
 			if ((cl+cr-k)/2 + 1 <= cl) {

@@ -15,7 +15,6 @@
 #include <stdlib.h>
 
 #include "analyze-linkage.h"
-#include "and.h"
 #include "api-structures.h"
 #include "disjuncts.h"
 #include "extract-links.h"

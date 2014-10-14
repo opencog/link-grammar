@@ -72,15 +72,9 @@ typedef struct prune_context_s prune_context;
 struct prune_context_s
 {
 	bool null_links;
-#ifdef USE_FAT_LINKAGES
-	char ** deletable;
-	char ** effective_dist;
-	int power_prune_mode;  /* either GENTLE or RUTHLESS */
-#endif /* USE_FAT_LINKAGES */
 	int power_cost;
 	int N_changed;   /* counts the number of changes
 						   of c->word fields in a pass */
-
 	power_table *pt;
 	Sentence sent;
 };
@@ -147,116 +141,10 @@ static inline unsigned int hash_S(Connector * c)
  * on a word to its right.  This is what this version of match allows.
  * We assume that a is on a word to the left of b.
  */
-#ifdef USE_FAT_LINKAGES
-bool prune_match(int dist, Connector *a, Connector *b)
-{
-	const char *s, *t;
-	int x, y;
-
-	if (a->label != b->label) return false;
-
-	s = a->string;
-	t = b->string;
-
-	while (isupper((int)*s) || isupper((int)*t))
-	{
-		if (*s != *t) return false;
-		s++;
-		t++;
-	}
-
-	/*	printf("PM: a=%4s b=%4s  ap=%d bp=%d  a->ll=%d b->ll=%d  dist=%d\n",
-	   s, t, x, y, a->length_limit, b->length_limit, dist); */
-	if (dist > a->length_limit || dist > b->length_limit) return false;
-
-	x = a->priority;
-	y = b->priority;
-
-	if ((x == THIN_priority) && (y == THIN_priority))
-	{
-#if defined(PLURALIZATION)
-/*
-		if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&  (*t=='p')) {
-			return TRUE;
-		}
-*/
-/*
-   The above is a kludge to stop pruning from killing off disjuncts
-   which (because of pluralization in and) might become valid later.
-   Recall that "and" converts a singular subject into a plural one.
-   The (*s=='p') part is so that "he and I are good" doesn't get killed off.
-   The above hack is subsumed by the following one:
-*/
-		if ((*(a->string)=='S') && ((*s=='s') || (*s=='p')) &&
-			((*t=='p') || (*t=='s')) &&
-			((s-1 == a->string) || ((s-2 == a->string) && (*(s-1) == 'I')))){
-			return true;
-		}
-/*
-   This change is to accommodate "nor".  In particular we need to
-   prevent "neither John nor I likes dogs" from being killed off.
-   We want to allow this to apply to "are neither a dog nor a cat here"
-   and "is neither a dog nor a cat here".  This uses the "SI" connector.
-   The third line above ensures that the connector is either "S" or "SI".
-*/
-#endif
-		while ((*s != '\0') && (*t != '\0'))
-		{
-			if ((*s == '*') || (*t == '*') ||
-				((*s == *t) && (*s != '^')))
-			  /* this last case here is rather obscure.  It prevents
-				 '^' from matching '^'.....Is this necessary?
-					 ......yes, I think it is.   */
-			{
-				s++;
-				t++;
-			}
-			else
-				return false;
-		}
-		return true;
-	}
-	else if ((x == UP_priority) && (y == DOWN_priority))
-	{
-		while ((*s!='\0') && (*t!='\0'))
-		{
-			if ((*s == *t) || (*s == '*') || (*t == '^'))
-			{
-				/* that '^' should match on the DOWN_priority
-				   node is subtle, but correct */
-				s++;
-				t++;
-			}
-			else
-				return false;
-		}
-		return true;
-	}
-	else if ((y == UP_priority) && (x == DOWN_priority))
-	{
-		while ((*s!='\0') && (*t!='\0'))
-		{
-			if ((*s == *t) || (*t == '*') || (*s == '^'))
-			{
-				s++;
-				t++;
-			}
-			else
-				return false;
-		}
-		return true;
-	}
-	else
-		return false;
-}
-
-#else /* not USE_FAT_LINKAGES */
-
-static inline bool prune_match(int dist, Connector *a, Connector *b)
+static inline bool prune_match(Connector *a, Connector *b)
 {
 	return easy_match(a->string, b->string);
 }
-#endif /* USE_FAT_LINKAGES */
 
 static void zero_connector_table(connector_table *ct)
 {
@@ -276,153 +164,12 @@ static void insert_connector(connector_table *ct, Connector * c)
 
 	for (e = ct[h]; e != NULL; e = e->tableNext)
 	{
-#ifdef USE_FAT_LINKAGES
-		if ((strcmp(c->string, e->string) == 0) &&
-		    (c->priority == e->priority) &&
-		    (c->label == e->label))
-			return;
-#else /* USE_FAT_LINKAGES */
 		if (strcmp(c->string, e->string) == 0)
 			return;
-#endif /* USE_FAT_LINKAGES */
 	}
 	c->tableNext = ct[h];
 	ct[h] = c;
 }
-
-#ifdef USE_FAT_LINKAGES
-void fat_prune(Sentence sent)
-{
-	Connector *e, *f;
-	int w;
-	int N_deleted;
-	Connector *ct[CONTABSZ];
-	Disjunct fake_head, *d, *d1;
-
-	/* XXX why is this here ?? */
-	count_set_effective_distance(sent->count_ctxt, sent);
-
-	N_deleted = 1;  /* a lie to make it always do at least 2 passes */
-	while (1)
-	{
-		/* Left-to-right pass */
-		zero_connector_table(ct);
-
-		/* For every word */
-		for (w = 0; w < sent->length; w++)
-		{
-			d = &fake_head;
-			d->next = sent->word[w].d;
-
-			/* For every disjunct of word */
-			while ((d1 = d->next))
-			{
-				e = d1->left;
-
-				/* For every left clause of this disjunct */
-				while (e)
-				{
-					unsigned int h = hash_S(e);
-					for (f = ct[h]; f != NULL; f = f->tableNext)
-					{
-						if (prune_match(0, f, e)) break;
-					}
-					if (!f) break; /* If f null, not a single match was found */
-					e = e->next;
-				}
-
-				/* We know this disjunct is dead since no match
-				 * can be found on a required clause. */
-				if (e)
-				{
-					N_deleted ++;
-					free_connectors(d1->left);
-					free_connectors(d1->right);
-					d->next = d1->next;
-					xfree(d1, sizeof(Disjunct));
-				}
-				else
-				{
-			 		/* Store surviving disjunct in hash table */
-					for (e = d1->right; e != NULL; e = e->next)
-					{
-						insert_connector(ct, e);
-					}
-					d = d1; /* move on to next disjunct*/
-				}
-			}
-			sent->word[w].d = fake_head.next;
-		}
-
-		if (2 < verbosity)
-		{
-			printf("l->r pass removed %d\n", N_deleted);
-			print_disjunct_counts(sent);
-		}
-
-		/* We did nothing (and this is not the 1st pass) */
-		if (N_deleted == 0) break;
-
-		/* Right-to-left pass */
-		zero_connector_table(ct);
-		N_deleted = 0;
-
-		/* For every word */
-		for (w = sent->length-1; w >= 0; w--)
-		{
-			d = &fake_head;
-			d->next = sent->word[w].d;
-
-			while ((d1 = d->next))
-			{
-				e = d1->right;
-
-				while (e)
-				{
-					unsigned int h = hash_S(e);
-					for (f = ct[h]; f != NULL; f = f->tableNext)
-					{
-						if (prune_match(0, e, f)) break;
-					}
-					if (!f) break; /* If f null, not a single match was found */
-					e = e->next;
-				}
-
-				/* We know this disjunct is dead since it can't match
-				 * to the right*/
-				if(e)
-				{
-					N_deleted ++;
-					free_connectors(d1->left);
-					free_connectors(d1->right);
-					d->next = d1->next;
-					xfree(d1, sizeof(Disjunct));
-				}
-				else
-				{
-					/* Store surviving disjunct in hash table */
-					for (e = d1->left; e != NULL; e = e->next)
-					{
-						insert_connector(ct, e);
-					}
-					d = d1; /* move on to next disjunct*/
-				}
-				sent->word[w].d = fake_head.next;
-			}
-		}
-
-		if (verbosity > 2)
-		{
-			printf("r->l pass removed %d\n", N_deleted);
-			print_disjunct_counts(sent);
-		}
-
-		/* We made no change on this pass */
-		if (N_deleted == 0) break;
-		N_deleted = 0;
-	}
-}
-#endif /* USE_FAT_LINKAGES */
 
 /*
    The second algorithm eliminates disjuncts that are dominated by
@@ -818,7 +565,7 @@ static inline bool matches_S(connector_table *ct, Connector * c, char dir)
 	{
 		for (e = ct[h]; e != NULL; e = e->tableNext)
 		{
-			if (prune_match(0, e, c)) return true;
+			if (prune_match(e, c)) return true;
 		}
 		return false;
 	}
@@ -826,7 +573,7 @@ static inline bool matches_S(connector_table *ct, Connector * c, char dir)
 	{
 		for (e = ct[h]; e != NULL; e = e->tableNext)
 		{
-			if (prune_match(0, c, e)) return true;
+			if (prune_match(c, e)) return true;
 		}
 		return false;
 	}
@@ -847,10 +594,6 @@ static int mark_dead_connectors(connector_table *ct, Exp * e, char dir)
 		{
 			Connector dummy;
 			init_connector(&dummy);
-#ifdef USE_FAT_LINKAGES
-			dummy.label = NORMAL_LABEL;
-			dummy.priority = THIN_priority;
-#endif /* USE_FAT_LINKAGES */
 			dummy.string = e->u.string;
 			if (!matches_S(ct, &dummy, dir))
 			{
@@ -1278,52 +1021,6 @@ static void clean_table(unsigned int size, C_list ** t)
  * (and the two words that these came from) and returns TRUE if it is
  * possible for these two to match based on local considerations.
  */
-#ifdef USE_FAT_LINKAGES
-static bool possible_connection(prune_context *pc,
-                               Connector *lc, Connector *rc,
-                               bool lshallow, bool rshallow,
-                               int lword, int rword)
-{
-	if ((!lshallow) && (!rshallow)) return false;
-	  /* two deep connectors can't work */
-	if ((lc->word > rword) || (rc->word < lword)) return false;
-	  /* word range constraints */
-
-	assert(lword < rword, "Bad word order in possible connection.");
-
-	/* Now, notice that the only differences between the following two
-	   cases is that (1) ruthless uses do_match and gentle uses prune_match.
-	   and (2) ruthless doesn't use deletable[][].  This latter fact is
-	   irrelevant, since deletable[][] is now guaranteed to have been
-	   created. */
-
-	if (pc->power_prune_mode == RUTHLESS) {
-		if (lword == rword-1) {
-			if (!((lc->next == NULL) && (rc->next == NULL))) return false;
-		} else {
-			if ((!pc->null_links) &&
-				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi)) {
-				return false;
-			}
-		}
-		return do_match(pc->sent->count_ctxt, lc, rc, lword, rword);
-	} else {
-		if (lword == rword-1) {
-			if (!((lc->next == NULL) && (rc->next == NULL))) return false;
-		} else {
-			if ((!pc->null_links) &&
-				(lc->next == NULL) && (rc->next == NULL) && (!lc->multi) && (!rc->multi)
-				&& !pc->deletable[lword][rword]
-				)
-			{
-				return false;
-			}
-		}
-		return prune_match(pc->effective_dist[lword][rword], lc, rc);
-	}
-}
-#else /* not USE_FAT_LINKAGES */
-
 static bool possible_connection(prune_context *pc,
                                Connector *lc, Connector *rc,
                                bool lshallow, bool rshallow,
@@ -1354,8 +1051,6 @@ static bool possible_connection(prune_context *pc,
 
 	return easy_match(lc->string, rc->string);
 }
-#endif /* USE_FAT_LINKAGES */
-
 
 /**
  * This returns TRUE if the right table of word w contains
@@ -1481,11 +1176,7 @@ right_connector_list_update(prune_context *pc, Sentence sent, Connector *c,
 }
 
 /** The return value is the number of disjuncts deleted */
-#ifdef USE_FAT_LINKAGES
-int power_prune(Sentence sent, int mode, Parse_Options opts)
-#else
 int power_prune(Sentence sent, Parse_Options opts)
-#endif /* USE_FAT_LINKAGES */
 {
 	power_table *pt;
 	prune_context *pc;
@@ -1499,12 +1190,6 @@ int power_prune(Sentence sent, Parse_Options opts)
 	pc->N_changed = 1;  /* forces it always to make at least two passes */
 
 	pc->sent = sent;
-#ifdef USE_FAT_LINKAGES
-	pc->power_prune_mode = mode;
-	pc->deletable = sent->deletable;
-	pc->effective_dist = sent->effective_dist;
-	count_set_effective_distance(sent->count_ctxt, sent);
-#endif /* USE_FAT_LINKAGES */
 
 	pt = power_table_new(sent);
 	pc->pt = pt;
@@ -1592,28 +1277,11 @@ int power_prune(Sentence sent, Parse_Options opts)
 
 	if (verbosity > 2) printf("%d power prune cost:\n", pc->power_cost);
 
-#ifdef USE_FAT_LINKAGES
-	if (mode == RUTHLESS) {
-		print_time(opts, "power pruned (ruthless)");
-	} else {
-		print_time(opts, "power pruned (gentle)");
-	}
-
-	if (verbosity > 2) {
-		if (mode == RUTHLESS) {
-			printf("\nAfter power_pruning (ruthless):\n");
-		} else {
-			printf("\nAfter power_pruning (gentle):\n");
-		}
-		print_disjunct_counts(sent);
-	}
-#else
 	print_time(opts, "power pruned");
 	if (verbosity > 2) {
 		printf("\nAfter power_pruning:\n");
 		print_disjunct_counts(sent);
 	}
-#endif /* USE_FAT_LINKAGES */
 
 	xfree(pc, sizeof(prune_context));
 	return total_deleted;
@@ -1976,19 +1644,6 @@ static int pp_prune(Sentence sent, Parse_Options opts)
  * power pp power pp power pp....
  * Make sure you do them both at least once.
  */
-#ifdef USE_FAT_LINKAGES
-void pp_and_power_prune(Sentence sent, int mode, Parse_Options opts)
-{
-	power_prune(sent, mode, opts);
-
-	for (;;) {
-		if (parse_options_resources_exhausted(opts)) break;
-		if (pp_prune(sent, opts) == 0) break;
-		if (parse_options_resources_exhausted(opts)) break;
-		if (power_prune(sent, mode, opts) == 0) break;
-	}
-}
-#else
 void pp_and_power_prune(Sentence sent, Parse_Options opts)
 {
 	power_prune(sent, opts);
@@ -2000,4 +1655,3 @@ void pp_and_power_prune(Sentence sent, Parse_Options opts)
 		if (power_prune(sent, opts) == 0) break;
 	}
 }
-#endif /* USE_FAT_LINKAGES */

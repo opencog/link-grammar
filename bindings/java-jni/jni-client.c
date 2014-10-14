@@ -277,13 +277,6 @@ static void makeLinkage(per_thread_data *ptd)
 			linkage_delete(ptd->linkage);
 
 		ptd->linkage = linkage_create(ptd->cur_linkage, ptd->sent, ptd->opts);
-
-#ifdef USE_FAT_LINKAGES
-		if (!ptd->linkage) return;
-		linkage_compute_union(ptd->linkage);
-		linkage_set_current_sublinkage(ptd->linkage,
-		                        linkage_get_num_sublinkages(ptd->linkage)-1);
-#endif /* USE_FAT_LINKAGES */
 	}
 }
 
