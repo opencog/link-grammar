@@ -777,7 +777,11 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 
 	/* If there's a global S constituent that includes everything
 	   except a final period or question mark, extend it by one word */
-
+	/* XXX FIXME: the below is wrong, anyway, its not testing for 
+	 * exclamations, question marks, other utf8 sentence-terminators.
+	 * The correct fix is almost surely to look for an RW link to
+	 * the right wall ...
+	 */
 	for (c = 0; c < numcon_total; c++)
 	{
 		if ((ctxt->constituent[c].right == linkage->num_words -3) &&
