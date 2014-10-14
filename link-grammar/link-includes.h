@@ -389,27 +389,6 @@ link_public_api(void)
  #define MS_DEPRECATED
 #endif
 
-#ifdef USE_FAT_LINKAGES
-#pragma message("WARNING: Support for FAT linkages is going away!")
-#endif /* USE_FAT_LINKAGES */
-
-/* When fat links are gone, there's no union to compute. */
-MS_DEPRECATED link_public_api(int)
-     linkage_compute_union(Linkage linkage) GNUC_DEPRECATED;
-
-/* When fat links go away, the number of sublinkages will always be one */
-MS_DEPRECATED link_public_api(int)
-     linkage_get_num_sublinkages(const Linkage linkage) GNUC_DEPRECATED;
-
-/* When fat links go away, the only valid sublinkage will be zero. */
-MS_DEPRECATED link_public_api(bool)
-     linkage_set_current_sublinkage(Linkage linkage, LinkageIdx index) GNUC_DEPRECATED;
-
-/* When fat links go away, the only valid sublinkage will be zero. */
-MS_DEPRECATED link_public_api(int)
-     linkage_get_current_sublinkage(const Linkage linkage) GNUC_DEPRECATED;
-
-
 /**********************************************************************
  *
  * Constituent node
