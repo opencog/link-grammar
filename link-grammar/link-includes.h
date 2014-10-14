@@ -433,20 +433,6 @@ MS_DEPRECATED link_public_api(int)
 MS_DEPRECATED link_public_api(int)
      sentence_num_thin_linkages(Sentence sent) GNUC_DEPRECATED;
 
-/* Bogus/pointless when no fat links */
-MS_DEPRECATED link_public_api(int)
-     sentence_contains_conjunction(Sentence sent) GNUC_DEPRECATED;
-
-/* and cost is always zero without fat links */
-MS_DEPRECATED link_public_api(int)
-     sentence_and_cost(Sentence sent, LinkageIdx linkage_num) GNUC_DEPRECATED;
-
-/* Fat linkages will be going away "real soon now" */
-MS_DEPRECATED link_public_api(void)
-     parse_options_set_use_fat_links(Parse_Options opts, int use_fat_links) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(int)
-     parse_options_get_use_fat_links(Parse_Options opts) GNUC_DEPRECATED;
-
 /**********************************************************************
  *
  * Constituent node

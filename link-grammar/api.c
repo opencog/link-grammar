@@ -39,10 +39,6 @@
 #include "utilities.h"
 #include "word-utils.h"
 
-#ifdef USE_FAT_LINKAGES
-#include "and.h"
-#endif /* USE_FAT_LINKAGES */
-
 /***************************************************************
 *
 * Routines for setting Parse_Options
@@ -64,18 +60,8 @@ static int VDAL_compare_parse(Linkage_info * p1, Linkage_info * p2)
 	else if (p1->unused_word_cost != p2->unused_word_cost) {
 		return (p1->unused_word_cost - p2->unused_word_cost);
 	}
-#ifdef USE_FAT_LINKAGES
-	else if (p1->fat != p2->fat) {
-		return (p1->fat - p2->fat);
-	}
-#endif /* USE_FAT_LINKAGES */
 	else if (p1->disjunct_cost > p2->disjunct_cost) return 1;
 	else if (p1->disjunct_cost < p2->disjunct_cost) return -1;
-#ifdef USE_FAT_LINKAGES
-	else if (p1->and_cost != p2->and_cost) {
-		return (p1->and_cost - p2->and_cost);
-	}
-#endif /* USE_FAT_LINKAGES */
 	else {
 		return (p1->link_cost - p2->link_cost);
 	}
@@ -140,9 +126,6 @@ Parse_Options parse_options_create(void)
 	po->twopass_length = 30;
 	po->repeatable_rand = true;
 	po->resources = resources_create();
-#ifdef USE_FAT_LINKAGES
-	po->use_fat_links = false;
-#endif /* USE_FAT_LINKAGES */
 	po->use_cluster_disjuncts = false;
 	po->display_morphology = false;
 
@@ -286,15 +269,6 @@ void parse_options_set_use_viterbi(Parse_Options opts, bool dummy) {
 bool parse_options_get_use_viterbi(Parse_Options opts) {
 	return opts->use_viterbi;
 }
-
-#ifdef USE_FAT_LINKAGES
-void parse_options_set_use_fat_links(Parse_Options opts, int dummy) {
-	opts->use_fat_links = dummy;
-}
-int parse_options_get_use_fat_links(Parse_Options opts) {
-	return opts->use_fat_links;
-}
-#endif /* USE_FAT_LINKAGES */
 
 void parse_options_set_linkage_limit(Parse_Options opts, int dummy)
 {
@@ -451,33 +425,10 @@ static void linkage_info_delete(Linkage_info *link_info, int sz)
 	xfree(link_info, sz * sizeof(Linkage_info));
 }
 
-#ifdef USE_FAT_LINKAGES
-static void free_andlists(Sentence sent)
-{
-	size_t L;
-	Andlist * andlist, * next;
-	for (L=0; L<sent->num_linkages_post_processed; L++) {
-		/* printf("%d ", sent->link_info[L].canonical);  */
-		/* if (sent->link_info[L].canonical==0) continue; */
-		andlist = sent->link_info[L].andlist;
-		while(1) {
-			if(andlist == NULL) break;
-			next = andlist->next;
-			xfree((char *) andlist, sizeof(Andlist));
-			andlist = next;
-		}
-	}
-	/* printf("\n"); */
-}
-#endif /* USE_FAT_LINKAGES */
-
 static void free_post_processing(Sentence sent)
 {
 	if (sent->link_info != NULL) {
 		/* postprocessing must have been done */
-#ifdef USE_FAT_LINKAGES
-		free_andlists(sent);
-#endif /* USE_FAT_LINKAGES */
 		linkage_info_delete(sent->link_info, sent->num_linkages_alloced);
 		sent->link_info = NULL;
 	}
@@ -512,9 +463,6 @@ static void select_linkages(Sentence sent, fast_matcher_t* mchxt,
 		sent->num_linkages_alloced = 0;
 		sent->num_linkages_post_processed = 0;
 		sent->num_valid_linkages = 0;
-#ifdef USE_FAT_LINKAGES
-		sent->num_thin_linkages = 0;
-#endif /* USE_FAT_LINKAGES */
 		sent->link_info = NULL;
 		return;
 	}
@@ -582,24 +530,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	size_t N_linkages_post_processed = 0;
 	size_t N_valid_linkages = sent->num_valid_linkages;
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
-#ifdef USE_FAT_LINKAGES
-	bool overflowed = (sent->link_info[0].index < 0);
-	size_t N_linkages_found = sent->num_linkages_found;
-	size_t N_thin_linkages;
-	bool only_canonical_allowed;
-	bool canonical;
-#endif /* USE_FAT_LINKAGES */
-
-#ifdef USE_FAT_LINKAGES
-	/* When we're processing only a small subset of the linkages,
-	 * don't worry about restricting the set we consider to be
-	 * canonical ones.  In the extreme case where we are only
-	 * generating 1 in a million linkages, it's very unlikely
-	 * that we'll hit two symmetric variants of the same linkage
-	 * anyway.
-	 */
-	only_canonical_allowed = !(overflowed || (N_linkages_found > 2*opts->linkage_limit));
-#endif /* USE_FAT_LINKAGES */
 
 	/* (optional) first pass: just visit the linkages */
 	/* The purpose of these two passes is to make the post-processing
@@ -614,25 +544,12 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			lifo = &sent->link_info[in];
 			if (lifo->discarded || lifo->N_violations) continue;
 			extract_links(lifo->index, sent->parse_info);
-#ifdef USE_FAT_LINKAGES
-			if (set_has_fat_down(sent))
-			{
-				if (only_canonical_allowed && !is_canonical_linkage(sent)) continue;
-				analyze_fat_linkage(sent, opts, PP_FIRST_PASS);
-			}
-			else
-#endif /* USE_FAT_LINKAGES */
-			{
-				analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
-			}
+			analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
 			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
 		}
 	}
 
 	/* second pass: actually perform post-processing */
-#ifdef USE_FAT_LINKAGES
-	N_thin_linkages = 0;
-#endif /* USE_FAT_LINKAGES */
 	for (in=0; in < N_linkages_alloced; in++)
 	{
 		lifo = &sent->link_info[in];
@@ -645,36 +562,10 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 			continue;
 		}
 		extract_links(lifo->index, sent->parse_info);
-#ifdef USE_FAT_LINKAGES
-		lifo->fat = false;
-		lifo->canonical = true;
-		if (set_has_fat_down(sent))
-		{
-			int index = lifo->index;
-			canonical = is_canonical_linkage(sent);
-			if (only_canonical_allowed && !canonical)
-			{
-				lifo->discarded = true;
-				continue;
-			}
-			*lifo = analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
-			lifo->index = index;
-			lifo->fat = true;
-			lifo->canonical = canonical;
-		}
-		else
-#endif /* USE_FAT_LINKAGES */
 		{
 			int index = lifo->index;
 			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
 			lifo->index = index;
-		}
-		if (0 == lifo->N_violations)
-		{
-#ifdef USE_FAT_LINKAGES
-			if (false == lifo->fat)
-				N_thin_linkages++;
-#endif /* USE_FAT_LINKAGES */
 		}
 		else
 		{
@@ -687,32 +578,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 
 	print_time(opts, "Postprocessed all linkages");
 
-#ifdef USE_FAT_LINKAGES
-	if (!resources_exhausted(opts->resources))
-	{
-		if ((N_linkages_post_processed == 0) &&
-		    (N_linkages_found > 0) &&
-		    (N_linkages_found <= opts->linkage_limit))
-		{
-			/* With the current parser, the following sentence will elicit
-			 * this error:
-			 *
-			 * Well, say, Joe, you can be Friar Tuck or Much the miller's
-			 * son, and lam me with a quarter-staff; or I'll be the Sheriff
-			 * of Nottingham and you be Robin Hood a little while and kill
-			 * me.
-			 */
-			err_ctxt ec;
-			ec.sent = sent;
-			err_msg(&ec, Error, "Error: None of the linkages is canonical\n"
-			          "\tN_linkages_post_processed=%zu "
-			          "N_linkages_found=%zu\n",
-			          N_linkages_post_processed,
-			          N_linkages_found);
-		}
-	}
-#endif /* USE_FAT_LINKAGES */
-
 	if (opts->verbosity > 1)
 	{
 		err_ctxt ec;
@@ -724,9 +589,6 @@ static void post_process_linkages(Sentence sent, Parse_Options opts)
 	sent->num_linkages_alloced = N_linkages_alloced;
 	sent->num_linkages_post_processed = N_linkages_post_processed;
 	sent->num_valid_linkages = N_valid_linkages;
-#ifdef USE_FAT_LINKAGES
-	sent->num_thin_linkages = N_thin_linkages;
-#endif /* USE_FAT_LINKAGES */
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
@@ -753,223 +615,6 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 #endif
 
 	print_time(opts, "Sorted all linkages");
-}
-
-static void old_post_process_linkages(Sentence sent, fast_matcher_t* mchxt,
-                                  count_context_t* ctxt,
-                                  Parse_Options opts)
-{
-	int *indices;
-	size_t in, block_bottom, block_top;
-	size_t N_linkages_found, N_linkages_alloced;
-	size_t N_linkages_post_processed, N_valid_linkages;
-	bool overflowed;
-	Linkage_info *link_info;
-#ifdef USE_FAT_LINKAGES
-	size_t N_thin_linkages;
-	bool only_canonical_allowed;
-	bool canonical;
-#endif /* USE_FAT_LINKAGES */
-
-	free_post_processing(sent);
-
-	overflowed = build_parse_set(sent, mchxt, ctxt, sent->null_count, opts);
-	print_time(opts, "Built parse set");
-
-	if (overflowed && (1 < opts->verbosity))
-	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Warn, "Warning: Count overflow.\n"
-		  "Considering a random subset of %zu of an unknown and large number of linkages\n",
-			opts->linkage_limit);
-	}
-	N_linkages_found = sent->num_linkages_found;
-
-	if (sent->num_linkages_found == 0)
-	{
-		sent->num_linkages_alloced = 0;
-		sent->num_linkages_post_processed = 0;
-		sent->num_valid_linkages = 0;
-#ifdef USE_FAT_LINKAGES
-		sent->num_thin_linkages = 0;
-#endif /* USE_FAT_LINKAGES */
-		sent->link_info = NULL;
-		return;
-	}
-
-	if (N_linkages_found > opts->linkage_limit)
-	{
-		N_linkages_alloced = opts->linkage_limit;
-		if (opts->verbosity > 1)
-		{
-			err_ctxt ec;
-			ec.sent = sent;
-			err_msg(&ec, Warn,
-			    "Warning: Considering a random subset of %zu of %zu linkages\n",
-			    N_linkages_alloced, N_linkages_found);
-		}
-	}
-	else
-	{
-		N_linkages_alloced = N_linkages_found;
-	}
-
-	link_info = linkage_info_new(N_linkages_alloced);
-	N_valid_linkages = 0;
-
-	/* Generate an array of linkage indices to examine */
-	indices = (int *) xalloc(N_linkages_alloced * sizeof(int));
-	if (overflowed)
-	{
-		for (in=0; in < N_linkages_alloced; in++)
-		{
-			indices[in] = -(in+1);
-		}
-	}
-	else
-	{
-		if (opts->repeatable_rand)
-			sent->rand_state = N_linkages_found + sent->length;
-
-		for (in=0; in<N_linkages_alloced; in++)
-		{
-			double frac = (double) N_linkages_found;
-			frac /= (double) N_linkages_alloced;
-			block_bottom = (int) (((double) in) * frac);
-			block_top = (int) (((double) (in+1)) * frac);
-			indices[in] = block_bottom +
-				(rand_r(&sent->rand_state) % (block_top-block_bottom));
-		}
-	}
-
-#ifdef USE_FAT_LINKAGES
-	/* When we're processing only a small subset of the linkages,
-	 * don't worry about restricting the set we consider to be
-	 * canonical ones.  In the extreme case where we are only
-	 * generating 1 in a million linkages, it's very unlikely
-	 * that we'll hit two symmetric variants of the same linkage
-	 * anyway.
-	 */
-	only_canonical_allowed = !(overflowed || (N_linkages_found > 2*opts->linkage_limit));
-#endif /* USE_FAT_LINKAGES */
-
-	/* (optional) first pass: just visit the linkages */
-	/* The purpose of these two passes is to make the post-processing
-	 * more efficient.  Because (hopefully) by the time you do the
-	 * real work in the 2nd pass you've pruned the relevant rule set
-	 * in the first pass.
-	 */
-	if (sent->length >= opts->twopass_length)
-	{
-		for (in=0; in < N_linkages_alloced; in++)
-		{
-			extract_links(indices[in], sent->parse_info);
-#ifdef USE_FAT_LINKAGES
-			if (set_has_fat_down(sent))
-			{
-				if (only_canonical_allowed && !is_canonical_linkage(sent)) continue;
-				analyze_fat_linkage(sent, opts, PP_FIRST_PASS);
-			}
-			else
-#endif /* USE_FAT_LINKAGES */
-			{
-				analyze_thin_linkage(sent, opts, PP_FIRST_PASS);
-			}
-			if ((9 == in%10) && resources_exhausted(opts->resources)) break;
-		}
-	}
-
-	/* second pass: actually perform post-processing */
-	N_linkages_post_processed = 0;
-#ifdef USE_FAT_LINKAGES
-	N_thin_linkages = 0;
-#endif /* USE_FAT_LINKAGES */
-	for (in=0; in < N_linkages_alloced; in++)
-	{
-		Linkage_info *lifo = &link_info[N_linkages_post_processed];
-		extract_links(indices[in], sent->parse_info);
-#ifdef USE_FAT_LINKAGES
-		lifo->fat = false;
-		lifo->canonical = true;
-		if (set_has_fat_down(sent))
-		{
-			canonical = is_canonical_linkage(sent);
-			if (only_canonical_allowed && !canonical) continue;
-			*lifo = analyze_fat_linkage(sent, opts, PP_SECOND_PASS);
-			lifo->index = indices[in];
-			lifo->fat = true;
-			lifo->canonical = canonical;
-		}
-		else
-#endif /* USE_FAT_LINKAGES */
-		{
-			*lifo = analyze_thin_linkage(sent, opts, PP_SECOND_PASS);
-			lifo->index = indices[in];
-		}
-		if (0 == lifo->N_violations)
-		{
-			N_valid_linkages++;
-#ifdef USE_FAT_LINKAGES
-			if (false == lifo->fat)
-				N_thin_linkages++;
-#endif /* USE_FAT_LINKAGES */
-		}
-		lg_corpus_score(sent, lifo);
-		N_linkages_post_processed++;
-		if ((9 == in%10) && resources_exhausted(opts->resources)) break;
-	}
-
-	print_time(opts, "Postprocessed all linkages");
-	qsort((void *)link_info, N_linkages_post_processed, sizeof(Linkage_info),
-		  (int (*)(const void *, const void *)) opts->cost_model.compare_fn);
-
-#ifdef USE_FAT_LINKAGES
-	if (!resources_exhausted(opts->resources))
-	{
-		/* This condition can ony happen w/ fat links */
-		if ((N_linkages_post_processed == 0) &&
-		    (N_linkages_found > 0) &&
-		    (N_linkages_found < opts->linkage_limit))
-		{
-			/* With the current parser, the following sentence will elicit
-			 * this error:
-			 *
-			 * Well, say, Joe, you can be Friar Tuck or Much the miller's
-			 * son, and lam me with a quarter-staff; or I'll be the Sheriff
-			 * of Nottingham and you be Robin Hood a little while and kill
-			 * me.
-			 */
-			err_ctxt ec;
-			ec.sent = sent;
-			err_msg(&ec, Error, "Error: None of the linkages is canonical\n"
-			          "\tN_linkages_post_processed=%zu "
-			          "N_linkages_found=%zu\n",
-			          N_linkages_post_processed,
-			          N_linkages_found);
-		}
-	}
-#endif /* USE_FAT_LINKAGES */
-
-	if (opts->verbosity > 1)
-	{
-		err_ctxt ec;
-		ec.sent = sent;
-		err_msg(&ec, Info, "Info: %zu of %zu linkages with no P.P. violations\n",
-				N_valid_linkages, N_linkages_post_processed);
-	}
-
-	print_time(opts, "Sorted all linkages");
-
-	sent->num_linkages_alloced = N_linkages_alloced;
-	sent->num_linkages_post_processed = N_linkages_post_processed;
-	sent->num_valid_linkages = N_valid_linkages;
-#ifdef USE_FAT_LINKAGES
-	sent->num_thin_linkages = N_thin_linkages;
-#endif /* USE_FAT_LINKAGES */
-	sent->link_info = link_info;
-
-	xfree(indices, N_linkages_alloced * sizeof(int));
 }
 
 /***************************************************************
@@ -1002,12 +647,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->rand_state = global_rand_state;
 
 	sent->q_pruned_rules = false;
-#ifdef USE_FAT_LINKAGES
-	sent->deletable = NULL;
-	sent->is_conjunction = NULL;
-	sent->dptr = NULL;
-	sent->effective_dist = NULL;
-#endif /* USE_FAT_LINKAGES */
 
 #ifdef USE_SAT_SOLVER
 	sent->hook = NULL;
@@ -1022,35 +661,6 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	return sent;
 }
 
-#ifdef USE_FAT_LINKAGES
-/* XXX Extreme hack alert -- English-language words are used
- * completely naked in the C source code!!! FIXME !!!!
- * That's OK, this code is deprecated/obsolete, and will be
- * removed shortly.  We've added the Russian for now, but
- * really, the Russian dictionary needs to be fixed to support
- * conjunctions properly.
- */
-static void set_is_conjunction(Sentence sent)
-{
-	size_t w;
-	const char * s;
-	for (w=0; w<sent->length; w++) {
-		s = sent->word[w].alternatives[0];
-		sent->is_conjunction[w] =
-			/* English, obviously ... */
-			(strcmp(s, "and") == 0) ||
-			(strcmp(s, "or" ) == 0) ||
-			(strcmp(s, "but") == 0) ||
-			(strcmp(s, "nor") == 0) ||
-			/* Russian */
-			(strcmp(s, "и") == 0) ||
-			(strcmp(s, "или") == 0) ||
-			(strcmp(s, "но") == 0) ||
-			(strcmp(s, "ни") == 0);
-	}
-}
-#endif /* USE_FAT_LINKAGES */
-
 int sentence_split(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
@@ -1059,10 +669,6 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	 * routines depend on sent-length, which might change in different
 	 * parse-opts settings.
 	 */
-#ifdef USE_FAT_LINKAGES
-	free_deletable(sent);
-#endif /* USE_FAT_LINKAGES */
-
 	/* Tokenize */
 	if (!separate_sentence(sent, opts))
 	{
@@ -1070,11 +676,6 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	}
 
 	sent->q_pruned_rules = false; /* for post processing */
-#ifdef USE_FAT_LINKAGES
-	sent->is_conjunction = (char *) xalloc(sizeof(char)*sent->length);
-	set_is_conjunction(sent);
-	initialize_conjunction_tables(sent);
-#endif /* USE_FAT_LINKAGES */
 
 	/* If unknown_word is not defined, then no special processing
 	 * will be done for e.g. capitalized words. */
@@ -1111,21 +712,11 @@ void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
 	sat_sentence_delete(sent);
-#ifdef USE_FAT_LINKAGES
-	free_AND_tables(sent);
-#endif /* USE_FAT_LINKAGES */
 	free_sentence_words(sent);
 	string_set_delete(sent->string_set);
 	if (sent->parse_info) free_parse_info(sent->parse_info);
 	free_post_processing(sent);
 	post_process_close_sentence(sent->dict->postprocessor);
-
-#ifdef USE_FAT_LINKAGES
-	free_deletable(sent);
-	free_effective_dist(sent);
-	free_analyze(sent);
-	if (sent->is_conjunction) xfree(sent->is_conjunction, sizeof(char)*sent->length);
-#endif /* USE_FAT_LINKAGES */
 
 	global_rand_state = sent->rand_state;
 	xfree((char *) sent, sizeof(struct Sentence_s));
@@ -1146,11 +737,7 @@ int sentence_null_count(Sentence sent)
 int sentence_num_thin_linkages(Sentence sent)
 {
 	if (!sent) return 0;
-#ifdef USE_FAT_LINKAGES
-	return sent->num_thin_linkages;
-#else
 	return sent->num_valid_linkages;
-#endif /* USE_FAT_LINKAGES */
 }
 
 int sentence_num_linkages_found(Sentence sent)
@@ -1179,19 +766,6 @@ int sentence_num_violations(Sentence sent, LinkageIdx i)
 	if (!sent->link_info) return 0;
 	if (sent->num_linkages_alloced <= i) return 0; /* bounds check */
 	return sent->link_info[i].N_violations;
-}
-
-int sentence_and_cost(Sentence sent, LinkageIdx i) {
-#ifdef USE_FAT_LINKAGES
-	if (!sent) return 0;
-
-	/* The sat solver (currently) fails to fill in link_info */
-	if (!sent->link_info) return 0;
-	if (sent->num_linkages_alloced <= i) return 0; /* bounds check */
-	return sent->link_info[i].and_cost;
-#else
-	return 0;
-#endif /* USE_FAT_LINKAGES */
 }
 
 double sentence_disjunct_cost(Sentence sent, LinkageIdx i)
@@ -1576,18 +1150,10 @@ static void chart_parse(Sentence sent, Parse_Options opts)
 		sent->num_linkages_found = (int) total;
 		print_time(opts, "Counted parses");
 
-		if (test_enabled("old-pp-order"))
-		{
-			old_post_process_linkages(sent, mchxt, ctxt, opts);
-			sane_morphism(sent, opts);
-		}
-		else
-		{
-			select_linkages(sent, mchxt, ctxt, opts);
-			sane_morphism(sent, opts);
-			post_process_linkages(sent, opts);
-			sort_linkages(sent, opts);
-		}
+		select_linkages(sent, mchxt, ctxt, opts);
+		sane_morphism(sent, opts);
+		post_process_linkages(sent, opts);
+		sort_linkages(sent, opts);
 		if (sent->num_valid_linkages > 0) break;
 
 		/* If we are here, then no valid linakges were found.
@@ -1640,17 +1206,10 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	/* Initialize/free any leftover garbage */
 	free_sentence_disjuncts(sent);  /* Is this really needed ??? */
-#ifdef USE_FAT_LINKAGES
-	if (sentence_contains_conjunction(sent)) free_AND_tables(sent);
-#endif /* USE_FAT_LINKAGES */
 	resources_reset_space(opts->resources);
 
 	if (resources_exhausted(opts->resources))
 		return 0;
-
-#ifdef USE_FAT_LINKAGES
-	init_analyze(sent);
-#endif /* USE_FAT_LINKAGES */
 
 	/* Expressions were previously set up during the tokenize stage. */
 	expression_prune(sent);

@@ -219,10 +219,6 @@ Connector * connector_new(void)
 	c->length_limit = UNLIMITED_LEN;
 	c->string = "";
 	c->hash = -1;
-#ifdef USE_FAT_LINKAGES
-	c->label = NORMAL_LABEL;
-	c->priority = THIN_priority;
-#endif /* USE_FAT_LINKAGES */
 	c->multi = false;
 	c->next = NULL;
 	c->tableNext = NULL;
@@ -367,20 +363,6 @@ void connector_set_delete(Connector_set * conset)
  * d='+' means this connector is on the right side of the disjunct.
  * d='-' means this connector is on the left side of the disjunct.
  */
-#ifdef USE_FAT_LINKAGES
-bool match_in_connector_set(count_context_t * ctxt, Connector_set *conset, Connector * c, int d)
-{
-	unsigned int h;
-	Connector * c1;
-	if (conset == NULL) return false;
-	h = connector_set_hash(conset, c->string, d);
-	for (c1 = conset->hash_table[h]; c1 != NULL; c1 = c1->next)
-	{
-		if (do_match(ctxt, c1, c, 0, 0) && (d == c1->word)) return true;
-	}
-	return false;
-}
-#else /* USE_FAT_LINKAGES */
 
 bool match_in_connector_set(Connector_set *conset, Connector * c, int dir)
 {
@@ -394,7 +376,6 @@ bool match_in_connector_set(Connector_set *conset, Connector * c, int dir)
 	}
 	return false;
 }
-#endif /* not USE_FAT_LINKAGES */
 
 /* ======================================================== */
 /* More connector utilities ... */
@@ -538,9 +519,6 @@ int calculate_connector_hash(Connector * c)
 #ifdef USE_DJB2
 	/* djb2 hash */
 	i = 5381;
-#ifdef USE_FAT_LINKAGES
-	i = ((i << 5) + i) + (0xff & c->label);
-#endif /* USE_FAT_LINKAGES */
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
@@ -571,11 +549,7 @@ int calculate_connector_hash(Connector * c)
 
 #ifdef USE_SDBM
 	/* sdbm hash */
-#ifdef USE_FAT_LINKAGES
-	i = (0xff & c->label);
-#else
 	i = 0;
-#endif /* USE_FAT_LINKAGES */
 	s = c->string;
 	if (islower((int) *s)) s++; /* ignore head-dependent indicator */
 	while (isupper((int) *s))
