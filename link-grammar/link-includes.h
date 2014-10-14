@@ -371,9 +371,8 @@ link_public_api(void)
 
 /*******************************************************
  *
- * Obsolete functions -- do not use these in new code!
- * XXX TODO: These will all be removed, once the Russian dicts support
- * conjunctions; Russian is the last remaining user of these functions.
+ * Macros for marking obsolete functions -- but there aren't any,
+ * just right now.
  *
  ********************************************************/
 
@@ -388,29 +387,6 @@ link_public_api(void)
 #else
  #define MS_DEPRECATED
 #endif
-
-/**********************************************************************
- *
- * Constituent node
- *
- ***********************************************************************/
-
-typedef struct CNode_s CNode;
-
-MS_DEPRECATED link_public_api(CNode *)
-     linkage_constituent_tree(Linkage linkage) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(void)
-     linkage_free_constituent_tree(CNode * n) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(const char *)
-     linkage_constituent_node_get_label(const CNode *n) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(CNode *)
-     linkage_constituent_node_get_child(const CNode *n) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(CNode *)
-     linkage_constituent_node_get_next(const CNode *n) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(int)
-     linkage_constituent_node_get_start(const CNode *n) GNUC_DEPRECATED;
-MS_DEPRECATED link_public_api(int)
-     linkage_constituent_node_get_end(const CNode *n) GNUC_DEPRECATED;
 
 LINK_END_DECLS
 

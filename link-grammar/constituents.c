@@ -1812,7 +1812,7 @@ static int assign_spans(CNode * n, int start)
 	return num_words;
 }
 
-CNode * linkage_constituent_tree(Linkage linkage)
+static CNode * linkage_constituent_tree(Linkage linkage)
 {
 	char *p, *q, *saveptr;
 	int len;
@@ -1834,7 +1834,7 @@ CNode * linkage_constituent_tree(Linkage linkage)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-void linkage_free_constituent_tree(CNode * n)
+static void linkage_free_constituent_tree(CNode * n)
 {
 	CNode *m, *x;
 	for (m=n->child; m!=NULL; m=x) {
@@ -1886,28 +1886,3 @@ void linkage_free_constituent_tree_str(char * s)
 	exfree(s, strlen(s)+1);
 }
 
-const char * linkage_constituent_node_get_label(const CNode *n)
-{
-	return n->label;
-}
-
-
-CNode * linkage_constituent_node_get_child(const CNode *n)
-{
-	return n->child;
-}
-
-CNode * linkage_constituent_node_get_next(const CNode *n)
-{
-	return n->next;
-}
-
-int linkage_constituent_node_get_start(const CNode *n)
-{
-	return n->start;
-}
-
-int linkage_constituent_node_get_end(const CNode *n)
-{
-	return n->end;
-}

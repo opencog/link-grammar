@@ -12,6 +12,8 @@
 #ifndef _CONSTITUENTSH_
 #define _CONSTITUENTSH_
 
+typedef struct CNode_s CNode;
+
 /* Invariant: Leaf if child==NULL */
 struct CNode_s {
   char  * label;
