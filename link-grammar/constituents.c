@@ -25,10 +25,6 @@
 #define OPEN_BRACKET '['
 #define CLOSE_BRACKET ']'
 
-#ifdef USE_FAT_LINKAGES
-#define MAXSUBL 16
-#endif /* USE_FAT_LINKAGES */
-
 typedef enum {OPEN_TOK, CLOSE_TOK, WORD_TOK} CType;
 typedef enum {NONE, STYPE, PTYPE, QTYPE, QDTYPE} WType;
 
@@ -38,9 +34,6 @@ typedef struct
 	const char * start_link;
 	size_t left;      /* leftmost word */
 	size_t right;     /* rightmost word */
-#ifdef USE_FAT_LINKAGES
-	int subl;
-#endif /* USE_FAT_LINKAGES */
 	int canon;
 	bool valid;
 	char domain_type;
@@ -64,11 +57,7 @@ typedef struct
 {
 	String_set * phrase_ss;
 	WType wordtype[MAX_SENTENCE];
-#ifdef USE_FAT_LINKAGES
-	bool word_used[MAXSUBL][MAX_SENTENCE];
-#else
 	bool word_used[MAX_SENTENCE];
-#endif /* USE_FAT_LINKAGES */
 	int templist[MAX_ELTS];
 	constituent_t constituent[MAXCONSTITUENTS];
 	andlist_t andlist[MAX_ANDS];
@@ -94,11 +83,7 @@ static void adjust_for_left_comma(con_context_t * ctxt, Linkage linkage, int c)
 	{
 		w++;
 		while (1) {
-#ifdef USE_FAT_LINKAGES
-			if (ctxt->word_used[linkage->current][w]) break;
-#else
 			if (ctxt->word_used[w]) break;
-#endif /* USE_FAT_LINKAGES */
 			w++;
 		}
 	}
@@ -115,11 +100,7 @@ static void adjust_for_right_comma(con_context_t *ctxt, Linkage linkage, int c)
 		w--;
 		while (1)
 		{
-#ifdef USE_FAT_LINKAGES
-			if (ctxt->word_used[linkage->current][w]) break;
-#else
 			if (ctxt->word_used[w]) break;
-#endif /* USE_FAT_LINKAGES */
 			w--;
 		}
 	}
@@ -268,11 +249,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 								   RIGHT of c1 */
 						w = ctxt->constituent[c1].right+1;
 						while(1) {
-#ifdef USE_FAT_LINKAGES
-							if (ctxt->word_used[linkage->current][w])
-#else
 							if (ctxt->word_used[w])
-#endif /* USE_FAT_LINKAGES */
 								break;
 							w++;
 						}
@@ -287,11 +264,7 @@ static int gen_comp(con_context_t *ctxt, Linkage linkage,
 					else {
 						w = ctxt->constituent[c1].left-1;
 						while(1) {
-#ifdef USE_FAT_LINKAGES
-							if (ctxt->word_used[linkage->current][w])
-#else
 							if (ctxt->word_used[w])
-#endif /* USE_FAT_LINKAGES */
 								break;
 							w--;
 						}
@@ -378,11 +351,7 @@ static void adjust_subordinate_clauses(con_context_t *ctxt, Linkage linkage,
 					{
 						w = ctxt->constituent[c].left-1;
 						while (true) {
-#ifdef USE_FAT_LINKAGES
-							if (ctxt->word_used[linkage->current][w]) break;
-#else
 							if (ctxt->word_used[w]) break;
-#endif /* USE_FAT_LINKAGES */
 							w--;
 						}
 						ctxt->constituent[c2].right = w;
@@ -419,100 +388,8 @@ static int find_next_element(con_context_t *ctxt,
                              int num_lists)
 {
 	int a, addedone=0;
-#ifdef USE_FAT_LINKAGES
-	int ok, c, c2, c3;
-#endif /* USE_FAT_LINKAGES */
 
 	assert(num_elements <= MAX_ELTS, "Constutent element array overflow!\n");
-
-#ifdef USE_FAT_LINKAGES
-	for (c = start + 1; c < numcon_total; c++)
-	{
-		constituent_t *cc = &ctxt->constituent[c];
-
-		if (false == cc->valid)
-			continue;
-		if (strcmp(ctxt->constituent[ctxt->templist[0]].type, cc->type) != 0)
-			continue;
-
-		ok = 1;
-		/* We're considering adding constituent c to the andlist.
-		   If c is in the same sublinkage as one of the other andlist
-		   elements, don't add it. If it overlaps with one of the other
-		   constituents, don't add it. If there's a constituent
-		   identical to c that occurs in a sublinkage in which one of
-		   the other elements occurs, don't add it. */
-
-		for (a=0; a<num_elements; a++)
-		{
-			int t = ctxt->templist[a];
-			constituent_t *ct = &ctxt->constituent[t];
-
-			if (cc->subl == ct->subl)
-			{
-				ok = 0;
-				break;
-			}
-
-			/* It appears that none of this code matters when fat linkages
-			 * are disabled. There's probably lots more in this file that
-			 * isn't used when fat linkages are disabled... */ 
-			/* Check for overlapping intervals */
-			if (((cc->left < ct->left) && (cc->right > ct->left))
-				||
-				((cc->left < ct->right) && (cc->right > ct->right))
-				||
-				((cc->left > ct->left) && (cc->right < ct->right)))
-			{
-				ok = 0;
-				break;
-			}
-			for (c2=0; c2<numcon_total; c2++)
-			{
-				if (ctxt->constituent[c2].canon != cc->canon)
-					continue;
-				for (c3=0; c3<numcon_total; c3++)
-				{
-					if ((ctxt->constituent[c3].canon == ct->canon)
-						&& (ctxt->constituent[c3].subl == ctxt->constituent[c2].subl))
-					{
-						ok = 0;
-						break;
-					}
-				}
-				if (!ok)
-					break;
-			}
-			if (!ok)
-				break;
-		}
-
-		if (ok == 0) continue;
-
-		ctxt->templist[num_elements] = c;
-		addedone = 1;
-		num_lists = find_next_element(ctxt, linkage, c, numcon_total,
-		                              num_elements+1, num_lists);
-
-		/* Test for overlow of the and-list.
-		 * With the current parser, the following will cause an
-		 * overflow:
-		 *
-		 * I have not seen the grysbok, or the suni, or the dibitag, or
-		 * the lechwi, or the aoul, or the gerenuk, or the blaauwbok,
-		 * or the chevrotain, or lots of others, but who in the world
-		 * could guess what they were or what they looked like, judging
-		 * only from the names?
-		 */
-		if (MAX_ANDS <= num_lists)
-		{
-			err_ctxt ec;
-			ec.sent = linkage->sent;
-			err_msg(&ec, Error, "Error: Constituent overflowed andlist!\n");
-			return MAX_ANDS;
-		}
-	}
-#endif /* USE_FAT_LINKAGES */
 
 	if (addedone == 0 && num_elements > 1)
 	{
@@ -569,51 +446,6 @@ static int merge_constituents(con_context_t *ctxt, Linkage linkage, int numcon_t
 			}
 		}
 	}
-
-#ifdef USE_FAT_LINKAGES
-	/* If constituents A and B in different sublinkages X and Y
-	 * have one endpoint in common, but A is larger at the other end,
-	 * and B has no duplicate in X, then declare B invalid. (Example:
-	 * " [A [B We saw the cat B] and the dog A] "
-	 */
-	for (c1 = 0; c1 < numcon_total; c1++)
-	{
-		if (false == ctxt->constituent[c1].valid) continue;
-		for (c2 = 0; c2 < numcon_total; c2++)
-		{
-			if (ctxt->constituent[c2].subl == ctxt->constituent[c1].subl) continue;
-			ok = 1;
-			/* Does c2 have a duplicate in the sublinkage containing c1?
-			   If so, bag it */
-			for (c3 = 0; c3 < numcon_total; c3++)
-			{
-				if ((ctxt->constituent[c2].canon == ctxt->constituent[c3].canon) &&
-					(ctxt->constituent[c3].subl == ctxt->constituent[c1].subl))
-					ok = 0;
-			}
-			for (c3 = 0; c3 < numcon_total; c3++)
-			{
-				if ((ctxt->constituent[c1].canon == ctxt->constituent[c3].canon) &&
-					(ctxt->constituent[c3].subl == ctxt->constituent[c2].subl))
-					ok = 0;
-			}
-			if (ok == 0) continue;
-			if ((ctxt->constituent[c1].left == ctxt->constituent[c2].left) &&
-				(ctxt->constituent[c1].right > ctxt->constituent[c2].right) &&
-				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
-			{
-				ctxt->constituent[c2].valid = false;
-			}
-
-			if ((ctxt->constituent[c1].left < ctxt->constituent[c2].left) &&
-				(ctxt->constituent[c1].right == ctxt->constituent[c2].right) &&
-				(strcmp(ctxt->constituent[c1].type, ctxt->constituent[c2].type) == 0))
-			{
-				ctxt->constituent[c2].valid = false;
-			}
-		}
-	}
-#endif /* USE_FAT_LINKAGES */
 
 	/* Now go through and find duplicates; if a pair is found,
 	 * mark one as invalid. (It doesn't matter if they're in the
@@ -1028,37 +860,7 @@ static int last_minute_fixes(con_context_t *ctxt, Linkage linkage, int numcon_to
 static void count_words_used(con_context_t *ctxt, Linkage linkage)
 {
 	size_t w, link;
-#ifdef USE_FAT_LINKAGES
-	int i, num_subl;
 
-	num_subl = linkage->num_sublinkages;
-	if (linkage->unionized == 1 && num_subl > 1) num_subl--;
-
-	if (verbosity >= 2)
-		printf("Number of sublinkages = %d\n", num_subl);
-
-	for (i=0; i<num_subl; i++)
-	{
-		for (w = 0; w < linkage->num_words; w++) ctxt->word_used[i][w] = false;
-		linkage->current = i;
-
-		for (link = 0; link < linkage_get_num_links(linkage); link++)
-		{
-			ctxt->word_used[i][linkage_get_link_lword(linkage, link)] = true;
-			ctxt->word_used[i][linkage_get_link_rword(linkage, link)] = true;
-		}
-		if (verbosity >= 2)
-		{
-			printf("Sublinkage %d: ", i);
-			for (w = 0; w < linkage->num_words; w++)
-			{
-				if (ctxt->word_used[i][w]) printf("1 ");
-				else printf("0 ");
-			}
-			printf("\n");
-		}
-	}
-#else
 	for (w = 0; w < linkage->num_words; w++) ctxt->word_used[w] = false;
 
 	for (link = 0; link < linkage_get_num_links(linkage); link++)
@@ -1076,7 +878,6 @@ static void count_words_used(con_context_t *ctxt, Linkage linkage)
 		}
 		printf("\n");
 	}
-#endif /* USE_FAT_LINKAGES */
 }
 
 static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
@@ -1153,11 +954,7 @@ static const char * cons_of_domain(const Linkage linkage, char domain_type)
 }
 
 static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
-                                          int numcon_total
-#ifdef USE_FAT_LINKAGES
-                                          , int s
-#endif /* USE_FAT_LINKAGES */
-                                          )
+                                          int numcon_total)
 {
 	size_t d, l, w2;
 	size_t leftmost, rightmost, leftlimit;
@@ -1168,11 +965,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	const char * name = "";
 	Domain domain;
 
-#ifdef USE_FAT_LINKAGES
-	subl = &linkage->sublinkage[s];
-#else
 	subl = &linkage->sublinkage;
-#endif /* USE_FAT_LINKAGES */
 
 	for (d = 0, c = numcon_total; d < subl->pp_data.N_domains; d++, c++)
 	{
@@ -1327,12 +1120,7 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 	/* numcon_subl = handle_islands(linkage, numcon_total, numcon_subl);  */
 
 	if (verbosity >= 2)
-#ifdef USE_FAT_LINKAGES
-		printf("Constituents added at first stage for subl %d:\n",
-			   linkage->current);
-#else
 		printf("Constituents added at first stage:\n");
-#endif /* USE_FAT_LINKAGES */
 
 	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
 	{
@@ -1449,12 +1237,6 @@ static int read_constituents_from_domains(con_context_t *ctxt, Linkage linkage,
 		err_msg(&ec, Error, "Error: Too many constituents (a2).\n");
 		numcon_total = MAXCONSTITUENTS - numcon_subl;
 	}
-#ifdef USE_FAT_LINKAGES
-	for (c = numcon_total; c < numcon_total + numcon_subl; c++)
-	{
-		ctxt->constituent[c].subl = linkage->current;
-	}
-#endif /* USE_FAT_LINKAGES */
 
 	return numcon_subl;
 }
@@ -1575,9 +1357,6 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	Postprocessor * pp;
 	int numcon_total, numcon_subl;
 	char * q;
-#ifdef USE_FAT_LINKAGES
-	int s, num_subl;
-#endif /* USE_FAT_LINKAGES */
 
 	ctxt->phrase_ss = string_set_create();
 	pp = linkage->sent->dict->constituent_pp;
@@ -1585,44 +1364,17 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 
 	count_words_used(ctxt, linkage);
 
-#ifdef USE_FAT_LINKAGES
-	/* 1 < num_sublinkages only if a parse used fat links. */
-	/* A lot of the complixity here could go away once we
-	 * eliminate fat links for good ...  */
-	num_subl = linkage->num_sublinkages;
-	if (num_subl > MAXSUBL)
-	{
-	  num_subl = MAXSUBL;
-	  if (verbosity >= 2)
-		printf("Number of sublinkages exceeds maximum: only considering first %d sublinkages\n", MAXSUBL);
-	}
+	linkage_post_process(linkage, pp);
+	generate_misc_word_info(ctxt, linkage);
 
-	if (linkage->unionized == 1 && num_subl > 1) num_subl--;
-	for (s = 0; s < num_subl; s++)
-#endif /* USE_FAT_LINKAGES */
+	numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
+	numcon_total += numcon_subl;
+	if (MAXCONSTITUENTS <= numcon_total)
 	{
-#ifdef USE_FAT_LINKAGES
-		linkage_set_current_sublinkage(linkage, s);
-#endif /* USE_FAT_LINKAGES */
-		linkage_post_process(linkage, pp);
-		generate_misc_word_info(ctxt, linkage);
-
-#ifdef USE_FAT_LINKAGES
-		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total, s);
-#else
-		numcon_subl = read_constituents_from_domains(ctxt, linkage, numcon_total);
-#endif /* USE_FAT_LINKAGES */
-		numcon_total += numcon_subl;
-		if (MAXCONSTITUENTS <= numcon_total)
-		{
-			err_ctxt ec;
-			ec.sent = linkage->sent;
-			err_msg(&ec, Error, "Error: Too many constituents (c).\n");
-			numcon_total = MAXCONSTITUENTS-1;
-#ifdef USE_FAT_LINKAGES
-			break;
-#endif /* USE_FAT_LINKAGES */
-		}
+		err_ctxt ec;
+		ec.sent = linkage->sent;
+		err_msg(&ec, Error, "Error: Too many constituents (c).\n");
+		numcon_total = MAXCONSTITUENTS-1;
 	}
 	numcon_total = merge_constituents(ctxt, linkage, numcon_total);
 	if (MAXCONSTITUENTS <= numcon_total)
