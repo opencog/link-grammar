@@ -8920,7 +8920,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 UNLIMITED-CONNECTORS:    % These are the link-types that are not subject
                          % to the length limit.  Always use "+" for these.
       S+ & CO+ & C+ & Xc+ & MV+ & CC+ & TH+ & W+ & RW+ & Xp+ & Xx+ & CP+
-      & SFsx+;
+      & SFsx+ & WV+ & CV+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
